@@ -69,7 +69,7 @@
     .choice .key { display:grid; place-items:center; width:50px; height:50px; border-radius:12px; background:#f4ecd8; color:#2e2a26; font-size:26px; box-shadow:0 4px 0 #9c8e76; }
     .choice .timer { position:relative; width:120px; height:120px; flex:none; } .choice .timer svg { width:120px; height:120px; }
     .choice .n { position:absolute; inset:0; display:grid; place-items:center; font:900 54px/1 Kanit; opacity:0; }
-    .choice .who { margin-top:14px; font:700 30px/1 Kanit; color:#f2c55c; opacity:0; text-shadow:0 2px 8px #000; }
+    .choice .who2 { position:absolute; left:0; right:0; color:#7fd1b9; } .choice .who { margin-top:14px; font:700 30px/1 Kanit; color:#f2c55c; opacity:0; text-shadow:0 2px 8px #000; }
     .qte { text-align:center; }
     .qte .lbl { display:inline-block; font:900 44px/1 Kanit; letter-spacing:2px; padding:12px 30px 16px; border-radius:26px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); }
     .qte .btnwrap { position:relative; width:220px; height:220px; margin:10px auto 0; }
@@ -130,10 +130,33 @@
     .radar .rl { display:flex; flex-direction:column; gap:8px; font:900 40px/1.1 Kanit; text-shadow:0 2px 10px #000; } .radar .chip { background:#e8705a; width:max-content; }
     .memo { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:40px; display:flex; align-items:center; gap:12px; padding:8px 26px 8px 8px; font:900 32px/1 Kanit; overflow:hidden; }
     .memo .shine { position:absolute; top:0; bottom:0; left:0; width:30%; background:linear-gradient(90deg,transparent,rgba(242,197,92,.45),transparent); }
-    .pov { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; align-items:center; gap:10px; padding:10px 22px; font:900 32px/1 Kanit; }
+    .pov { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; }
     .pov .lb { font:700 24px/1 Kanit; color:rgba(244,236,216,.7); } .pov .rec { width:16px; height:16px; border-radius:50%; background:#e8705a; display:block; }
     .pov .bpm { display:flex; align-items:center; gap:6px; margin-left:10px; color:#e8705a; } .pov .bpm svg { width:30px; height:27px; overflow:visible; }
     .mm { display:flex; flex-direction:column; align-items:center; gap:8px; } .mm svg { width:230px; height:230px; filter:drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
+
+    .gui { --tone: #7fd1b9; --glow: .3; }
+    .tip, .fig, .clockw, .steps, .rel, .intro, .status, .phone, .memo, .pov { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(127,209,185,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.warn, .fig.warn { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(240,160,112,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.danger, .fig.danger, .status.danger { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(232,112,90,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.rule, .fig.rule { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(242,197,92,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .fx-ring { position: absolute; inset: -4px; border-radius: inherit; padding: 4px; pointer-events: none; --a: 0deg;
+      background: conic-gradient(from var(--a), transparent 0deg 210deg, var(--tone) 290deg, #fffbe8 312deg, var(--tone) 330deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+    .fx-shw { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+    .fx-sheen { position: absolute; top: -10%; bottom: -10%; left: 0; width: 30%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.2), transparent); transform: translateX(-160%); }
+    .fx-flash { position: absolute; inset: 0; border-radius: inherit; background: var(--tone); opacity: 0; pointer-events: none; }
+    .fx-shock { position: absolute; inset: -6px; border-radius: 50%; border: 4px solid var(--tone); opacity: 0; pointer-events: none; }
+    .fig .fx-shock, .clockw .fx-shock { border-radius: 26px; }
+    .fx-spk { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: #fff3c8; box-shadow: 0 0 10px var(--tone); opacity: 0; pointer-events: none; }
+    .tip .txt, .fig .txt { font-size: 44px; } .gui .chip { font-size: 24px; }
+    .pov { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 22px 14px; }
+    .pov .top { display: flex; align-items: center; gap: 10px; font: 900 32px/1 Kanit; }
+    .pov .row { display: flex; align-items: center; gap: 14px; }
+    .pov .bpmh { width: 74px; height: 70px; display: grid; place-items: center; } .pov .bpmh .hb { width: 70px; height: 64px; overflow: visible; filter: drop-shadow(0 0 12px rgba(232,112,90,.8)); }
+    .pov .bpmh .fx-shock { border-color: #e8705a; }
+    .pov .ecg2 { width: 170px; height: 54px; }
+    .pov .bnum { display: flex; align-items: baseline; gap: 6px; } .pov .bnum b { font: 900 60px/1 Kanit; } .pov .bnum span { font: 700 22px/1 Kanit; color: rgba(244,236,216,.7); }
     .mm .ml { display:flex; flex-direction:column; align-items:center; gap:6px; font:900 32px/1 Kanit; text-shadow:0 2px 10px #000; }
       .capwrap { z-index: 56; top: 1555px; }
       .capbox { background: rgba(15,21,24,.88); color: #f4ecd8; border: 2px solid rgba(244,236,216,.42); border-radius: 22px;
@@ -248,7 +271,7 @@
           { text: "“เดี๋ยวพี่ไป[ตามคนที่ป้อม]เอง”", x: 300, y: 700, t: vo("van", 2), end: voEnd("van", 2) + 0.3, tail: 420 },
         ],
         ui: [
-          { type: "figure", kind: "ignition", t: 0.25, end: vo("van", 1) - 0.1, artW: 230, tone: "warn", label: "รถตู้ค่าย", text: "สตาร์ท[ไม่ติด]", top: 150 },
+          { type: "figure", kind: "ignition", t: 0.25, end: vo("van", 1) - 0.1, artW: 340, tone: "warn", label: "รถตู้ค่าย", text: "สตาร์ท[ไม่ติด]", top: 150 },
           { type: "figure", kind: "signal", t: vo("van", 1) + 0.05, end: vo("van", 2) - 0.1, artW: 150, tone: "warn", label: "มือถือของกล้า", text: "[ไม่มีสัญญาณ]", top: 150 },
           { type: "figure", kind: "route", t: vo("van", 2) + 0.1, artW: 290, label: "พี่โจ้", text: "เดินไป[ตามคนที่ป้อม]", walk: 3.4, stopAt: 0.55, top: 150 },
         ],
