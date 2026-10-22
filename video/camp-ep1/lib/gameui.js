@@ -136,12 +136,12 @@
   C.choice = {
     html: (id, o) => `<div id="${id}" class="gui choice" style="${pos({ side: "center", w: 1000, ...o })}">
         <div class="q">${o.q}</div>
-        <div class="opts"><div class="opt A"><span class="key">◀</span><span>${o.a}</span></div>
+        <div class="opts"><div class="opt A"><span class="key">◀</span><span class="lbt">${o.a}</span>${o.possessed ? `<span class="lbg">${o.possessed.glitch || o.a}</span>` : ""}</div>
           <div class="timer"><svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="46" fill="rgba(16,22,26,.9)" stroke="rgba(244,236,216,.25)" stroke-width="9"/>
             <circle class="ring" cx="55" cy="55" r="46" fill="none" stroke="#f2c55c" stroke-width="9" stroke-linecap="round" stroke-dasharray="${RC}" stroke-dashoffset="0" transform="rotate(-90 55 55)"/></svg>
             ${Array.from({ length: (o.secs || 5) + 1 }, (_, n) => `<b class="n n${n}">${n}</b>`).join("")}</div>
           <div class="opt B"><span>${o.b}</span><span class="key">▶</span></div></div>
-        <div class="who">${o.who || ""}</div></div>`,
+        <div class="who">${o.who || (o.possessed && o.possessed.who) || ""}</div></div>`,
     anim(tl, id, t0, o) {
       const secs = o.secs || 5;
       const span = o.pickAt !== undefined ? o.pickAt - o.t : secs;
@@ -157,6 +157,15 @@
         tl.fromTo(`#${id} .n${n}`, { opacity: 1, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(3)", immediateRender: false }, at);
       }
       tl.fromTo(`#${id} .timer`, { scale: 1 }, { scale: 1.08, duration: 0.25, repeat: Math.ceil(span / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + span * 0.6);
+      if (o.possessed) {
+        const pa = o.t0abs + o.possessed.at, side = o.possessed.side === "b" ? "B" : "A", other = side === "A" ? "B" : "A";
+        tl.fromTo(`#${id} .opt.${side}`, { x: 0 }, { x: 7, duration: 0.05, repeat: 60, yoyo: true, immediateRender: false }, pa);
+        tl.to(`#${id} .opt.${side}`, { backgroundColor: "rgba(140,20,30,.92)", scale: 1.16, duration: 0.9, ease: "power2.in" }, pa);
+        tl.to(`#${id} .opt.${other}`, { opacity: 0.3, scale: 0.9, duration: 0.6 }, pa + 0.2);
+        tl.fromTo(`#${id} .opt.${side}`, { boxShadow: "0 0 0 0 rgba(232,80,80,.9)" }, { boxShadow: "0 0 0 30px rgba(232,80,80,0)", duration: 0.45, repeat: 4, immediateRender: false }, pa);
+        [0.15, 0.4, 0.62, 0.8, 0.95].forEach((k, i) => { tl.set(`#${id} .opt.${side} .lbt`, { opacity: i % 2 ? 1 : 0 }, pa + k); tl.set(`#${id} .opt.${side} .lbg`, { opacity: i % 2 ? 0 : 1 }, pa + k); });
+        tl.fromTo(`#${id} .who`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, pa + 0.5);
+      }
       if (o.pickAt !== undefined) {
         const pk = o.t0abs + o.pickAt, win = o.pick === "b" ? "B" : "A", lose = win === "A" ? "B" : "A";
         tl.to(`#${id} .opt.${win}`, { scale: 1.14, backgroundColor: "#f2c55c", color: INK, duration: 0.25, ease: "back.out(3)" }, pk);
@@ -174,7 +183,8 @@
         <div class="btnwrap"><svg class="tgt" viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" fill="none" stroke="#f4ecd8" stroke-width="5" stroke-dasharray="10 10" opacity=".8"/></svg>
           <svg class="hold" viewBox="0 0 200 200"><circle cx="100" cy="100" r="70" fill="rgba(16,22,26,.92)" stroke="rgba(244,236,216,.2)" stroke-width="12"/>
             <circle class="fill" cx="100" cy="100" r="70" fill="none" stroke="#7fd1b9" stroke-width="12" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 70}" stroke-dashoffset="${2 * Math.PI * 70}" transform="rotate(-90 100 100)"/></svg>
-          <div class="key">${o.key}</div><div class="ok">✓</div></div>
+          <div class="key">${o.key || SHH}</div><div class="ok">✓</div></div>
+        ${o.meter ? `<div class="meter"><span>${o.meter}</span><div class="mbar"><i></i><b></b></div></div>` : ""}
         <svg class="ecg" viewBox="0 0 600 70" preserveAspectRatio="none"><g class="ecgline"><path d="${Array.from({ length: 8 }, (_, i) => `M${i * 150},40h50l10,-26l12,52l10,-34l8,8h60`).join("")}" fill="none" stroke="#e8705a" stroke-width="5" stroke-linejoin="round"/></g></svg>
         <div class="res">${o.okText || "รอดแล้ว"}</div></div>`,
     anim(tl, id, t0, o) {
@@ -191,6 +201,12 @@
       tl.fromTo(`#${id} .hold`, { scale: 1 }, { scale: 1.12, duration: 0.18, yoyo: true, repeat: 1, immediateRender: false }, ok);
       tl.fromTo(`#${id} .res`, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.3, immediateRender: false }, ok + 0.1);
       tl.to(`#${id} .ecg path`, { attr: { stroke: "#7fd1b9" }, duration: 0.3 }, ok);
+      if (o.meter) { // noise level jitters just under the red line, then falls silent
+        let seed = 5; const r = () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+        for (let t = 0; t < span; t += 0.09) tl.set(`#${id} .mbar i`, { scaleX: 0.25 + 0.5 * r() + (t > span * 0.55 && t < span * 0.7 ? 0.22 : 0) }, t0 + t);
+        tl.to(`#${id} .mbar i`, { scaleX: 0.04, duration: 0.3 }, ok);
+        tl.fromTo(`#${id} .mbar b`, { opacity: 1 }, { opacity: 0.35, duration: 0.2, repeat: Math.ceil(span / 0.2), yoyo: true, immediateRender: false }, t0 + span * 0.55);
+      }
     },
   };
 
@@ -305,6 +321,221 @@
     },
   };
 
+
+  const SHH = `<svg viewBox="0 0 120 120" width="96" height="96"><circle cx="60" cy="60" r="44" fill="#efc6a0" stroke="${INK}" stroke-width="4"/>
+    <path d="M40,52q6,-5 12,0M68,52q6,-5 12,0" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M46,78q14,6 28,0" stroke="${INK}" stroke-width="4" fill="none"/>
+    <rect x="54" y="56" width="14" height="44" rx="7" fill="#efc6a0" stroke="${INK}" stroke-width="4"/></svg>`;
+  const pad2 = (n) => String(n).padStart(2, "0");
+  const lerpC = (a, b, k) => { const pa = [1, 3, 5].map((i) => parseInt(a.substr(i, 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.substr(i, 2), 16)); return "#" + pa.map((v, i) => pad2(Math.round(v + (pb[i] - v) * k).toString(16))).join(""); };
+  const clamp01 = (x) => Math.max(0, Math.min(1, x));
+
+  // analog clock whose hands sweep to the time being talked about; the sky inside the dial follows the hour
+  C.clock = {
+    html: (id, o) => `<div id="${id}" class="gui clockw" style="${pos(o)}">
+        <svg class="dial" viewBox="0 0 220 220"><defs><clipPath id="${id}-cc"><circle cx="110" cy="110" r="92"/></clipPath></defs>
+          <g clip-path="url(#${id}-cc)"><rect class="sky" width="220" height="220" fill="#e9a36a"/>
+            <g class="stars" opacity="0">${[[40, 60], [80, 40], [150, 70], [178, 100], [60, 100], [120, 52]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.2" fill="#f4ecd8"/>`).join("")}</g>
+            <circle class="sun" cx="66" cy="132" r="24" fill="#ffd27a"/><circle class="moon" cx="154" cy="240" r="17" fill="#f4ecd8"/>
+            <path d="M0,166L22,146L36,160L54,132L72,158L92,138L112,162L134,134L152,156L174,130L192,152L220,140V220H0Z" fill="#1b2a30"/></g>
+          <circle cx="110" cy="110" r="94" fill="none" stroke="#f4ecd8" stroke-width="9"/>
+          ${Array.from({ length: 12 }, (_, i) => `<path d="M110,22v${i % 3 ? 9 : 16}" stroke="#f4ecd8" stroke-width="${i % 3 ? 3 : 5}" transform="rotate(${i * 30} 110 110)"/>`).join("")}
+          <g class="hh"><path d="M110,116V64" stroke="${INK}" stroke-width="13" stroke-linecap="round"/><path d="M110,116V64" stroke="#f4ecd8" stroke-width="7" stroke-linecap="round"/></g>
+          <g class="mh"><path d="M110,120V34" stroke="${INK}" stroke-width="10" stroke-linecap="round"/><path d="M110,120V34" stroke="#f2c55c" stroke-width="5" stroke-linecap="round"/></g>
+          <circle cx="110" cy="110" r="9" fill="#e07a4f" stroke="${INK}" stroke-width="3"/></svg>
+        <div class="info"><div class="chip">${o.label}</div><div class="dig">${o.from}</div>${o.sub ? `<div class="sub">${o.who ? `<span class="fm sm">${face(o.who)}</span>` : ""}<span>${mark(o.sub)}</span><span class="dots"><i></i><i></i><i></i></span></div>` : ""}</div></div>`,
+    anim(tl, id, t0, o) {
+      inout(tl, `#${id}`, t0, o, { x: -80, y: 0, scale: 1 });
+      const el = document.getElementById(id), q = (c) => el.querySelector(c);
+      const toM = (str) => { const [h, m] = str.split(":").map(Number); return h * 60 + m; };
+      const a = toM(o.from), b = toM(o.to), p = { m: a };
+      const draw = () => {
+        const mm = ((p.m % 1440) + 1440) % 1440;
+        q(".hh").setAttribute("transform", `rotate(${(mm / 60) * 30} 110 110)`);
+        q(".mh").setAttribute("transform", `rotate(${p.m * 6} 110 110)`);
+        q(".dig").textContent = `${pad2(Math.floor(mm / 60))}:${pad2(Math.floor(mm % 60))}`;
+        const night = clamp01((mm - 17.5 * 60) / 100) * (mm > 8 * 60 ? 1 : 0) || (mm < 5 * 60 ? 1 : 0);
+        q(".sky").setAttribute("fill", lerpC("#e9a36a", "#14222c", night));
+        q(".sun").setAttribute("cy", (132 + 100 * night).toFixed(1));
+        q(".moon").setAttribute("cy", (240 - 150 * night).toFixed(1));
+        q(".stars").setAttribute("opacity", night.toFixed(2));
+      };
+      tl.to(p, { m: b, duration: o.sweep || 1.8, ease: "power2.inOut", onUpdate: draw, immediateRender: false }, t0 + 0.35);
+      draw();
+      tl.fromTo(`#${id} .dig`, { scale: 1 }, { scale: 1.25, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out", immediateRender: false }, t0 + 0.35 + (o.sweep || 1.8));
+      if (o.sub) {
+        tl.fromTo(`#${id} .sub`, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.3, immediateRender: false }, t0 + 0.5 + (o.sweep || 1.8));
+        document.querySelectorAll(`#${id} .dots i`).forEach((d, i) => tl.fromTo(d, { opacity: 0.2 }, { opacity: 1, duration: 0.3, repeat: 9, yoyo: true, immediateRender: false }, t0 + 0.6 + (o.sweep || 1.8) + i * 0.15));
+      }
+    },
+  };
+
+  // illustrated cards whose artwork acts out the line being said
+  const FIG = {
+    signal: {
+      vb: "0 0 170 200",
+      svg: () => `<g class="ph"><rect x="35" y="10" width="100" height="182" rx="16" fill="#3d3833" stroke="${INK}" stroke-width="4"/><rect x="45" y="28" width="80" height="136" rx="5" fill="#cfe2e6"/>
+        ${[0, 1, 2, 3].map((i) => `<rect class="b b${i}" x="${56 + i * 16}" y="${130 - i * 18}" width="11" height="${18 + i * 18}" rx="3" fill="#4f8f86"/>`).join("")}
+        <path class="x" d="M62,52l46,46M108,52l-46,46" stroke="#e8705a" stroke-width="11" stroke-linecap="round" opacity="0"/><circle cx="85" cy="178" r="5" fill="#f4ecd8"/></g>`,
+      anim(tl, id, t0) {
+        tl.fromTo(`#${id} .ph`, { rotation: -8 }, { rotation: 8, duration: 0.22, repeat: 5, yoyo: true, transformOrigin: "50% 100%", ease: "sine.inOut", immediateRender: false }, t0 + 0.2);
+        [3, 2, 1, 0].forEach((b, k) => tl.to(`#${id} .b${b}`, { attr: { fill: "#9aa3a5" }, opacity: 0.35, duration: 0.15 }, t0 + 0.45 + k * 0.22));
+        tl.fromTo(`#${id} .x`, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.3, ease: "back.out(3)", immediateRender: false }, t0 + 1.4);
+        tl.fromTo(`#${id} .x`, { opacity: 1 }, { opacity: 0.3, duration: 0.25, repeat: 8, yoyo: true, immediateRender: false }, t0 + 1.8);
+      },
+    },
+    ignition: {
+      vb: "0 0 240 200",
+      svg: () => `<rect x="8" y="20" width="224" height="170" rx="26" fill="#2a2f33" stroke="${INK}" stroke-width="4"/>
+        <path d="M30,118a52,52 0 0 1 104,0" fill="none" stroke="#4a5358" stroke-width="12"/><path d="M30,118a52,52 0 0 1 22,-42" fill="none" stroke="#e8705a" stroke-width="12"/>
+        <g class="needle"><path d="M82,118L46,96" stroke="#f2c55c" stroke-width="6" stroke-linecap="round"/></g><circle cx="82" cy="118" r="8" fill="#f4ecd8"/>
+        <text x="82" y="150" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="16" fill="#9aa3a5">RPM</text>
+        <circle cx="178" cy="112" r="38" fill="#3d4448" stroke="#9aa3a5" stroke-width="5"/>
+        <g class="key"><rect x="170" y="70" width="16" height="50" rx="4" fill="#c9bfa8" stroke="${INK}" stroke-width="3"/><circle cx="178" cy="62" r="20" fill="#d9a441" stroke="${INK}" stroke-width="4"/><circle cx="178" cy="62" r="6" fill="#2a2f33"/></g>
+        <g class="spark" opacity="0"><path d="M214,74l12,-10M218,96l16,0M210,52l6,-14" stroke="#f2c55c" stroke-width="5" stroke-linecap="round"/></g>
+        <g class="x" opacity="0"><circle cx="178" cy="112" r="40" fill="rgba(232,112,90,.25)"/><path d="M160,94l36,36M196,94l-36,36" stroke="#e8705a" stroke-width="10" stroke-linecap="round"/></g>`,
+      anim(tl, id, t0) {
+        [0.3, 1.0].forEach((k) => {
+          tl.fromTo(`#${id} .key`, { rotation: 0 }, { rotation: 55, duration: 0.18, svgOrigin: "178 112", immediateRender: false }, t0 + k);
+          tl.fromTo(`#${id} .needle`, { rotation: 0 }, { rotation: 38, duration: 0.15, svgOrigin: "82 118", yoyo: true, repeat: 1, immediateRender: false }, t0 + k + 0.1);
+          tl.fromTo(`#${id} .spark`, { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + k + 0.12);
+          tl.to(`#${id} .key`, { rotation: 0, duration: 0.2, svgOrigin: "178 112" }, t0 + k + 0.5);
+        });
+        tl.fromTo(`#${id} .x`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, transformOrigin: "178px 112px", duration: 0.3, ease: "back.out(3)", immediateRender: false }, t0 + 1.7);
+      },
+    },
+    route: {
+      vb: "0 0 300 190",
+      svg: (id) => `<rect x="4" y="4" width="292" height="182" rx="18" fill="#e9dcc0" stroke="${INK}" stroke-width="4"/>
+        ${[[30, 40], [60, 150], [120, 30], [150, 160], [210, 120], [250, 160], [270, 100], [100, 90], [180, 60]].map(([x, y]) => `<path d="M${x},${y}l10,-22l10,22z" fill="#7fa58a"/>`).join("")}
+        <path id="${id}-rt" d="M52,140C100,140 110,90 160,92S230,60 248,44" fill="none" stroke="#7a6c5d" stroke-width="5" stroke-dasharray="3 10" stroke-linecap="round"/>
+        <g transform="translate(52,140)"><path d="M-24,0Q-20,-30 0,-32Q20,-30 24,0Z" fill="#d9773f" stroke="${INK}" stroke-width="3"/></g>
+        <text x="52" y="172" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="18" fill="${INK}">แคมป์</text>
+        <g transform="translate(248,44)"><rect x="-22" y="-20" width="44" height="26" fill="#6b4a3a" stroke="${INK}" stroke-width="3"/><path d="M-28,-18L0,-38L28,-18Z" fill="#3b2c22" stroke="${INK}" stroke-width="3"/><circle cx="-8" cy="-8" r="5" fill="#ffd58a"/></g>
+        <text x="236" y="86" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="18" fill="${INK}">ป้อม</text>
+        <g class="who"><circle r="20" fill="#6e8f62" stroke="${INK}" stroke-width="4"/><text y="7" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="20" fill="#f4ecd8">โจ้</text></g>
+        <g class="q" opacity="0"><circle r="18" fill="#b9a8e8" stroke="${INK}" stroke-width="3"/><text y="8" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="${INK}">?</text></g>`,
+      anim(tl, id, t0, o) {
+        const path = document.getElementById(`${id}-rt`), len = path.getTotalLength(), who = document.querySelector(`#${id} .who`), qm = document.querySelector(`#${id} .q`);
+        const p = { k: 0 }, stop = o.stopAt ?? 1;
+        const go = () => { const pt = path.getPointAtLength(len * p.k * stop); who.setAttribute("transform", `translate(${pt.x.toFixed(1)},${pt.y.toFixed(1)})`); qm.setAttribute("transform", `translate(${(pt.x + 22).toFixed(1)},${(pt.y - 26).toFixed(1)})`); };
+        tl.to(p, { k: 1, duration: o.walk || 2.4, ease: "power1.inOut", onUpdate: go, immediateRender: false }, t0 + 0.3);
+        go();
+        if (o.lost) { tl.to(`#${id} .who`, { opacity: 0.25, duration: 0.4 }, t0 + 0.3 + (o.walk || 2.4)); tl.fromTo(`#${id} .q`, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(3)", immediateRender: false }, t0 + 0.4 + (o.walk || 2.4)); }
+      },
+    },
+    rules: {
+      vb: "0 0 300 200",
+      svg: () => `<g class="r1"><circle cx="50" cy="52" r="38" fill="#f4ecd8" stroke="${INK}" stroke-width="4"/>${Array.from({ length: 12 }, (_, i) => `<path d="M50,18v6" stroke="${INK}" stroke-width="3" transform="rotate(${i * 30} 50 52)"/>`).join("")}
+          <path d="M50,52V28M50,52L30,64" stroke="${INK}" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="52" r="4" fill="#e07a4f"/>
+          <path d="M150,82Q154,30 200,26Q246,30 250,82Z" fill="#d9773f" stroke="${INK}" stroke-width="4"/><path d="M120,90H280" stroke="#e8705a" stroke-width="6" stroke-dasharray="12 8"/>
+          <g class="walker"><circle cx="268" cy="46" r="9" fill="#efc6a0" stroke="${INK}" stroke-width="3"/><path d="M268,56v20M268,76l-8,14M268,76l8,14M268,62l-10,8M268,62l10,8" stroke="${INK}" stroke-width="4" stroke-linecap="round"/></g>
+          <path class="no1" d="M248,28l40,58M288,28l-40,58" stroke="#e8705a" stroke-width="7" stroke-linecap="round" opacity="0"/></g>
+        <g class="r2"><path d="M28,150q22,-34 44,0q-22,34 -44,0z" fill="#f4ecd8" stroke="${INK}" stroke-width="4"/><circle cx="50" cy="150" r="8" fill="${INK}"/>
+          ${[0, 1, 2].map((i) => `<path class="w" data-i="${i}" d="M${96 + i * 22},${126 - i * 4}q${12},${24 + i * 4} 0,${48 + i * 8}" stroke="#b9a8e8" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}
+          <text x="200" y="146" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="26" fill="#f4ecd8">“…ปิ่น”</text>
+          <g transform="translate(208,174)"><path d="M-30,0q30,-18 60,0q-30,18 -60,0z" fill="#efc6a0" stroke="${INK}" stroke-width="4"/><path class="no2" d="M-34,-20l68,40M34,-20l-68,40" stroke="#e8705a" stroke-width="7" stroke-linecap="round" opacity="0"/></g></g>`,
+      anim(tl, id, t0, o) {
+        tl.fromTo(`#${id} .r2`, { opacity: 0.15 }, { opacity: 1, duration: 0.3, immediateRender: false }, o.t0abs + o.second);
+        tl.fromTo(`#${id} .walker`, { x: -40 }, { x: 0, duration: 0.8, ease: "power1.out", immediateRender: false }, t0 + 0.3);
+        tl.fromTo(`#${id} .no1`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.3, ease: "back.out(3)", immediateRender: false }, t0 + 1.1);
+        document.querySelectorAll(`#${id} .w`).forEach((w, i) => tl.fromTo(w, { opacity: 0 }, { opacity: 1, duration: 0.25, repeat: 7, yoyo: true, immediateRender: false }, o.t0abs + o.second + i * 0.12));
+        tl.fromTo(`#${id} .no2`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.3, ease: "back.out(3)", immediateRender: false }, o.t0abs + o.second + 1.2);
+        tl.set(`#${id} .txt2`, { opacity: 1 }, o.t0abs + o.second);
+      },
+    },
+    eyeshine: {
+      vb: "0 0 330 190",
+      svg: (id) => `<rect x="4" y="4" width="156" height="182" rx="16" fill="#0d1418" stroke="#f4ecd8" stroke-width="3"/><rect x="170" y="4" width="156" height="182" rx="16" fill="#0d1418" stroke="#f4ecd8" stroke-width="3"/>
+        <path d="M10,180L60,60L110,70Z" fill="#fff3c8" opacity=".12"/><path d="M176,180L226,60L276,70Z" fill="#fff3c8" opacity=".12"/>
+        <g class="cat"><path d="M48,66l12,-26l12,22M96,62l12,-22l10,26" fill="#26343a"/><ellipse cx="84" cy="80" rx="46" ry="34" fill="#26343a"/>
+          <circle class="g" cx="66" cy="78" r="15" fill="#d8ff9a" opacity=".35"/><circle class="g" cx="102" cy="78" r="15" fill="#d8ff9a" opacity=".35"/>
+          <ellipse cx="66" cy="78" rx="8" ry="6" fill="#e9ffc0"/><ellipse cx="102" cy="78" rx="8" ry="6" fill="#e9ffc0"/></g>
+        <g><ellipse cx="248" cy="82" rx="42" ry="48" fill="#d6a27c" stroke="${INK}" stroke-width="3"/><circle cx="232" cy="78" r="9" fill="#fff"/><circle cx="264" cy="78" r="9" fill="#fff"/>
+          <circle cx="232" cy="78" r="4" fill="${INK}"/><circle cx="264" cy="78" r="4" fill="${INK}"/><path d="M238,104q10,6 20,0" stroke="${INK}" stroke-width="3" fill="none"/></g>
+        <text x="84" y="150" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#d8ff9a">สัตว์ ✓</text>
+        <text x="248" y="160" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#e8705a">คน ✕</text>`,
+      anim(tl, id, t0) {
+        tl.fromTo(`#${id} .g`, { opacity: 0.15, scale: 0.7 }, { opacity: 0.6, scale: 1.25, transformOrigin: "50% 50%", duration: 0.4, repeat: 9, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.3);
+      },
+    },
+  };
+  C.figure = {
+    html: (id, o) => `<div id="${id}" class="gui fig ${o.tone || ""}" style="${pos(o)}"><div class="art" style="width:${o.artW || 200}px"><svg viewBox="${FIG[o.kind].vb}">${FIG[o.kind].svg(id, o)}</svg></div>
+        <div class="body"><div class="chip">${o.label}</div><div class="txt">${mark(o.text)}</div>${o.text2 ? `<div class="txt txt2">${mark(o.text2)}</div>` : ""}</div></div>`,
+    anim(tl, id, t0, o) {
+      inout(tl, `#${id}`, t0, o, { x: o.side === "right" ? 90 : -90, y: 0, scale: 1 });
+      tl.fromTo(`#${id} .art`, { scale: 0.6, rotation: -8 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2)", immediateRender: false }, t0 + 0.05);
+      FIG[o.kind].anim(tl, id, t0, o);
+      if (o.text2) tl.fromTo(`#${id} .txt2`, { opacity: 0.15 }, { opacity: 1, duration: 0.3, immediateRender: false }, o.t0abs + (o.second ?? o.t + 0.6));
+    },
+  };
+
+  // sound-direction radar (the source pulses from the rim; 0deg = ahead, 180deg = behind)
+  C.radar = {
+    html: (id, o) => `<div id="${id}" class="gui radar" style="${pos(o)}"><svg viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="96" fill="rgba(16,22,26,.9)" stroke="rgba(244,236,216,.5)" stroke-width="3"/>
+        <circle cx="110" cy="110" r="64" fill="none" stroke="rgba(244,236,216,.2)" stroke-width="2"/><circle cx="110" cy="110" r="32" fill="none" stroke="rgba(244,236,216,.2)" stroke-width="2"/>
+        <text x="110" y="34" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="16" fill="rgba(244,236,216,.6)">หน้า</text>
+        <text x="110" y="198" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="16" fill="rgba(244,236,216,.6)">หลัง</text>
+        <g class="sweep"><path d="M110,110L110,14A96,96 0 0 1 178,42Z" fill="rgba(127,209,185,.18)"/></g>
+        <g transform="rotate(${o.dir} 110 110)"><path class="wedge" d="M110,110L84,20A96,96 0 0 1 136,20Z" fill="rgba(232,112,90,.35)" opacity="0"/>
+          ${[0, 1, 2].map((i) => `<circle class="pl p${i}" cx="110" cy="26" r="10" fill="none" stroke="#e8705a" stroke-width="5" opacity="0"/>`).join("")}<circle class="src" cx="110" cy="26" r="9" fill="#e8705a" opacity="0"/></g>
+        <circle cx="104" cy="112" r="7" fill="#7fd1b9"/><circle cx="118" cy="112" r="7" fill="#f2c55c"/></svg>
+        <div class="rl"><span class="chip">เสียง</span><b>${o.text}</b></div></div>`,
+    anim(tl, id, t0, o) {
+      inout(tl, `#${id}`, t0, o, { scale: 0.6, y: 0 });
+      const end = o.t0abs + (o.end ?? o.t + 4);
+      tl.fromTo(`#${id} .sweep`, { rotation: 0 }, { rotation: 360 * Math.ceil((end - t0) / 1.6), duration: 1.6 * Math.ceil((end - t0) / 1.6), ease: "none", svgOrigin: "110 110", immediateRender: false }, t0);
+      (o.pulses || [0.4]).forEach((pt, k) => {
+        const at = o.t0abs + pt;
+        tl.set([`#${id} .wedge`, `#${id} .src`], { opacity: 1 }, at);
+        tl.fromTo(`#${id} .p${k % 3}`, { attr: { r: 8 }, opacity: 1 }, { attr: { r: 46 }, opacity: 0, duration: 0.7, ease: "power2.out", immediateRender: false }, at);
+        tl.fromTo(`#${id}`, { x: 0 }, { x: 6, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, at);
+      });
+    },
+  };
+
+  // consequence banner: "X will remember that"
+  C.memo = {
+    html: (id, o) => `<div id="${id}" class="gui memo" style="${pos(o)}"><div class="fm sm">${face(o.who)}</div><span>${mark(o.text)}</span><i class="shine"></i></div>`,
+    anim(tl, id, t0, o) {
+      inout(tl, `#${id}`, t0, o, { x: -120, y: 0, scale: 1 });
+      tl.fromTo(`#${id} .shine`, { xPercent: -120 }, { xPercent: 420, duration: 0.9, ease: "power2.inOut", immediateRender: false }, t0 + 0.3);
+    },
+  };
+
+  // first-person tag with a live heart-rate readout
+  C.pov = {
+    html: (id, o) => `<div id="${id}" class="gui pov" style="${pos(o)}"><span class="rec"></span><span class="lb">มุมมองของ</span><b>${o.name}</b><span class="bpm">${heart("#e8705a", "hb")}<b class="n">${o.bpm[0]}</b></span></div>`,
+    anim(tl, id, t0, o) {
+      inout(tl, `#${id}`, t0, o, { x: -60, y: 0, scale: 1 });
+      const end = o.t0abs + (o.end ?? o.t + 4), n = document.querySelector(`#${id} .n`), p = { v: o.bpm[0] };
+      tl.to(p, { v: o.bpm[1], duration: end - t0, ease: "power1.in", onUpdate: () => { n.textContent = Math.round(p.v); }, immediateRender: false }, t0);
+      tl.fromTo(`#${id} .hb`, { scale: 1 }, { scale: 1.35, duration: 0.13, repeat: Math.ceil((end - t0) / 0.26), yoyo: true, immediateRender: false }, t0);
+      tl.fromTo(`#${id} .rec`, { opacity: 1 }, { opacity: 0.2, duration: 0.4, repeat: Math.ceil((end - t0) / 0.4), yoyo: true, immediateRender: false }, t0);
+    },
+  };
+
+  // minimap with the trail fading out under the walkers
+  C.minimap = {
+    html: (id, o) => `<div id="${id}" class="gui mm" style="${pos({ side: "right", ...o })}"><svg viewBox="0 0 240 240"><defs><clipPath id="${id}-mc"><circle cx="120" cy="120" r="110"/></clipPath></defs>
+        <g clip-path="url(#${id}-mc)"><rect width="240" height="240" fill="#1d2f2a"/>
+          ${Array.from({ length: 26 }, (_, i) => `<path d="M${(i * 53) % 230 + 6},${(i * 97) % 220 + 14}l9,-18l9,18z" fill="#2f4a3f"/>`).join("")}
+          <path class="trail" d="M120,236C120,190 92,170 104,140S140,104 126,70" fill="none" stroke="#c9b98f" stroke-width="7" stroke-dasharray="4 9" stroke-linecap="round"/>
+          <g class="qm"><circle cx="196" cy="44" r="16" fill="#b9a8e8" stroke="${INK}" stroke-width="3"/><text x="196" y="52" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="${INK}">?</text></g></g>
+        <circle cx="120" cy="120" r="110" fill="none" stroke="#f4ecd8" stroke-width="5"/><path d="M120,6v14" stroke="#e8705a" stroke-width="5"/><text x="120" y="38" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="16" fill="#e8705a">N</text>
+        <g class="me" transform="translate(116,120)"><circle r="16" fill="rgba(127,209,185,.3)"/><path d="M0,-12L9,10L0,5L-9,10Z" fill="#7fd1b9" stroke="${INK}" stroke-width="2"/></g></svg>
+        <div class="ml"><span class="chip">${o.label || "แผนที่"}</span><b class="mt">${o.text}</b></div></div>`,
+    anim(tl, id, t0, o) {
+      inout(tl, `#${id}`, t0, o, { scale: 0.6, y: 0 });
+      tl.fromTo(`#${id} .me`, { y: 50 }, { y: 0, duration: o.walk || 2.4, ease: "none", immediateRender: false }, t0 + 0.2);
+      tl.fromTo(`#${id} .trail`, { opacity: 1 }, { opacity: 0, duration: 1.2, immediateRender: false }, o.t0abs + o.lostAt);
+      tl.fromTo(`#${id} .me circle`, { attr: { r: 14 } }, { attr: { r: 26 }, duration: 0.5, repeat: 9, yoyo: true, immediateRender: false }, o.t0abs + o.lostAt);
+      tl.fromTo(`#${id} .qm`, { opacity: 0.4 }, { opacity: 1, duration: 0.4, repeat: 11, yoyo: true, immediateRender: false }, t0);
+      tl.fromTo(`#${id} .mt`, { color: "#f4ecd8" }, { color: "#e8705a", duration: 0.3, repeat: 5, yoyo: true, immediateRender: false }, o.t0abs + o.lostAt);
+    },
+  };
+
   const PANEL = "background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5);";
   const CSS = `
     .gui { position:absolute; z-index:58; opacity:0; color:#f4ecd8; font-family:Kanit; }
@@ -371,7 +602,33 @@
     .hud .lb { color:rgba(244,236,216,.7); font-size:22px; } .hud .sig.none span { color:#e8705a; }
     .chapter { text-align:center; text-shadow:0 3px 14px rgba(0,0,0,.8); }
     .chapter .sm { font:700 30px/1 Kanit; letter-spacing:10px; color:#f2c55c; } .chapter .big { font:900 92px/1.1 Kanit; margin-top:6px; }
-    .chapter svg { width:800px; height:20px; margin-top:6px; }`;
+    .chapter svg { width:800px; height:20px; margin-top:6px; }
+    .qte .meter { display:flex; align-items:center; gap:12px; justify-content:center; margin-top:6px; font:700 26px/1 Kanit; }
+    .qte .mbar { position:relative; width:300px; height:22px; border-radius:11px; background:rgba(16,22,26,.9); border:2px solid rgba(244,236,216,.5); overflow:hidden; }
+    .qte .mbar i { position:absolute; left:0; top:0; bottom:0; width:100%; background:linear-gradient(90deg,#7fd1b9,#f2c55c 70%,#e8705a); transform-origin:0 50%; transform:scaleX(.3); }
+    .qte .mbar b { position:absolute; left:72%; top:-2px; bottom:-2px; width:5px; background:#e8705a; }
+    .choice .opt { position:relative; } .choice .opt .lbg { position:absolute; left:90px; opacity:0; color:#ff9a9a; }
+    .gui .fm.sm { width:54px; height:54px; display:inline-block; vertical-align:middle; }
+    .clockw { ${PANEL} border-radius:30px; display:flex; align-items:center; gap:18px; padding:14px 26px 14px 14px; }
+    .clockw .dial { width:190px; height:190px; flex:none; }
+    .clockw .dig { font:900 74px/1 Kanit; margin-top:6px; letter-spacing:2px; transform-origin:0 50%; }
+    .clockw .sub { display:flex; align-items:center; gap:10px; margin-top:8px; font:900 30px/1.1 Kanit; color:#f2c55c; opacity:0; }
+    .clockw .dots { display:inline-flex; gap:5px; } .clockw .dots i { width:9px; height:9px; border-radius:50%; background:#f2c55c; display:block; }
+    .fig { ${PANEL} border-radius:30px; display:flex; align-items:center; gap:20px; padding:14px 28px 16px 14px; }
+    .fig .art { flex:none; background:radial-gradient(circle at 40% 35%, #fffaf0, #e6d6b4 80%); border:4px solid ${INK}; border-radius:24px; padding:8px; box-shadow:0 0 0 4px #f4ecd8; }
+    .fig .art svg { display:block; width:100%; height:auto; overflow:visible; }
+    .fig.dark .art { background:#0d1418; }
+    .fig .txt { font:900 40px/1.2 Kanit; margin-top:8px; white-space:nowrap; } .fig .txt2 { opacity:.15; }
+    .fig.warn .chip { background:#f0a070; } .fig.danger .chip { background:#e8705a; } .fig.rule .chip { background:#f2c55c; }
+    .radar { display:flex; align-items:center; gap:14px; } .radar svg { width:200px; height:200px; }
+    .radar .rl { display:flex; flex-direction:column; gap:8px; font:900 40px/1.1 Kanit; text-shadow:0 2px 10px #000; } .radar .chip { background:#e8705a; width:max-content; }
+    .memo { ${PANEL} border-radius:40px; display:flex; align-items:center; gap:12px; padding:8px 26px 8px 8px; font:900 32px/1 Kanit; overflow:hidden; }
+    .memo .shine { position:absolute; top:0; bottom:0; left:0; width:30%; background:linear-gradient(90deg,transparent,rgba(242,197,92,.45),transparent); }
+    .pov { ${PANEL} border-radius:30px; display:flex; align-items:center; gap:10px; padding:10px 22px; font:900 32px/1 Kanit; }
+    .pov .lb { font:700 24px/1 Kanit; color:rgba(244,236,216,.7); } .pov .rec { width:16px; height:16px; border-radius:50%; background:#e8705a; display:block; }
+    .pov .bpm { display:flex; align-items:center; gap:6px; margin-left:10px; color:#e8705a; } .pov .bpm svg { width:30px; height:27px; overflow:visible; }
+    .mm { display:flex; flex-direction:column; align-items:center; gap:8px; } .mm svg { width:230px; height:230px; filter:drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
+    .mm .ml { display:flex; flex-direction:column; align-items:center; gap:6px; font:900 32px/1 Kanit; text-shadow:0 2px 10px #000; }`;
 
   function add(div, tl, sid, start, u, k) {
     const id = `${sid}-g${k}`;

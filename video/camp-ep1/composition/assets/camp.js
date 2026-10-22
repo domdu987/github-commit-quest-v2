@@ -88,7 +88,7 @@
     let s = `<path d="M${x0},${y}Q${(x0 + x1) / 2},${y + 80} ${x1},${y}" fill="none" stroke="${INK}" stroke-width="3"/>`;
     for (let k = 1; k < 10; k++) {
       const u = k / 10, bx = x0 + (x1 - x0) * u, by = y + 160 * u * (1 - u) * 1.0 + 6;
-      s += `<circle cx="${bx}" cy="${by}" r="9" fill="${lit ? "#ffd58a" : "#c9bfa8"}" ${OUT}/>`;
+      s += `<circle class="bulb" data-i="${k - 1}" cx="${bx}" cy="${by}" r="9" fill="${lit ? "#ffd58a" : "#c9bfa8"}" ${OUT}/>`;
     }
     return s;
   }
@@ -125,7 +125,7 @@
       ${campfire("campfire", o.fireX ?? 560, 1630, 0.9, night)}`);
     if (night) {
       put(L.glow, `<circle class="fireglow" cx="${o.fireX ?? 560}" cy="1540" r="620" fill="url(#fireglow)"/>
-        ${Array.from({ length: 9 }, (_, k) => { const u = (k + 1) / 10; return `<circle cx="${300 + 680 * u}" cy="${1066 + 160 * u * (1 - u)}" r="34" fill="url(#winglow)"/>`; }).join("")}
+        ${Array.from({ length: 9 }, (_, k) => { const u = (k + 1) / 10; return `<circle class="bulbglow" data-i="${k}" cx="${300 + 680 * u}" cy="${1066 + 160 * u * (1 - u)}" r="34" fill="url(#winglow)"/>`; }).join("")}
         <circle cx="-60" cy="1440" r="160" fill="url(#winglow)" opacity=".7"/>`);
     }
     put(L.fg, `${tufts(r, -700, 1900, 1940, "#0a120d", 2.4)}${fern(-80, 1960, 1.6, "#0b140f")}${fern(1180, 1960, 1.8, "#0b140f")}`);

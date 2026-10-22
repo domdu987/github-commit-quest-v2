@@ -9,6 +9,7 @@
     <script src="assets/camp.js"></script>
     <script src="assets/ui.js"></script>
     <script src="assets/gameui.js"></script>
+    <script src="assets/fx.js"></script>
     <script src="assets/engine.js"></script>
     <style>
       @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
@@ -22,7 +23,6 @@
       .fgblur { filter: blur(6px); }
       .sfxw { position: absolute; font-family: Kanit; font-weight: 900; letter-spacing: -1px; opacity: 0;
         text-shadow: -4px -4px 0 #2e2a26, 4px -4px 0 #2e2a26, -4px 4px 0 #2e2a26, 4px 4px 0 #2e2a26, 8px 8px 0 #2e2a26; }
-      .sfxw.soft { text-shadow: 0 0 18px rgba(0,0,0,.9); font-weight: 700; letter-spacing: 4px; }
       .badge { z-index: 56; position: absolute; left: 36px; bottom: 210px; font: 700 26px/1 Kanit; color: #f4ecd8; opacity: .8; letter-spacing: 2px;
         background: rgba(5,8,10,.55); padding: 8px 14px 10px; border-radius: 10px; }
       #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 78% 62% at 50% 48%, transparent 52%, rgba(3,6,8,.78) 100%); }
@@ -31,7 +31,6 @@
       #black { z-index: 61; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
       /*__UICSS__*/
       /*__GAMECSS__*/
-      /* subtitles restyled to sit with the game HUD */
       .capwrap { z-index: 56; top: 1555px; }
       .capbox { background: rgba(15,21,24,.88); color: #f4ecd8; border: 2px solid rgba(244,236,216,.42); border-radius: 22px;
         box-shadow: 0 0 0 4px rgba(10,14,16,.5), 0 12px 26px rgba(0,0,0,.5); font: 900 52px/1.25 Kanit; padding: 12px 30px 16px; }
@@ -53,40 +52,43 @@
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
 
-      // extra poses for this episode
       Rig.MODES.crouchShush = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -100, faF: -150, torso: 14, head: -6 });
-      Rig.MODES.sitHurt = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: 20, faF: -20, uaB: 30, faB: -10, torso: -8 + 1.5 * Math.sin(u * 7), head: -10 });
+      Rig.MODES.torchLow = (u, o) => ({ ...Rig.MODES.torch(u, o), uaF: -40 + 3 * Math.sin(u * 1.1), faF: -10 });
 
       const cap = (k, text, t, end) => ({ text, t: t ?? vo(k), end });
-      const walkV = (s) => Rig.footSpeed(0.96, 16) * s;   // px/s that keeps a walking foot planted
+      const walkV = (s) => Rig.footSpeed(0.96, 16) * s;
       const runV = (s) => Rig.footSpeed(0.56, 30) * s;
       const shots = [];
       const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec });
-      const scope = (id) => `#${id}`;
-      const flick = (id, t0, k) => Camp.flicker(tl, scope(id), t0, D(k));
+      const flick = (id, t0, k) => Camp.flicker(tl, `#${id}`, t0, D(k));
+      const hand = (t) => ({ x: 9 * Math.sin(t * 2.3) + 4 * Math.sin(t * 7.1), y: 7 * Math.sin(t * 1.7 + 1) + 3 * Math.sin(t * 6.3) });
       const CAMP_DUSK = { time: "dusk" }, CAMP_NIGHT = { time: "night" };
+      const PIN_ARM = { sleeve: "#e8b98f", skin: "#e8b98f", cuff: "#4f8f86" }, KLA_ARM = { sleeve: "#9c4a3c", skin: "#d6a27c", cuff: "#6a2e25" };
 
-      // ---------- 1. cold open: a whisper on black, a torch clicks on, the choice appears ----------
+      // ---------- 1. cold open, Pin's eyes: black, a whisper, a torch clicks on ----------
+      const P1 = (id) => Fx.pov(id, { ...PIN_ARM, shake: hand, off: [[0, 1.15]], flicker: [[3.3, 0.6]], keys: [
+        { t: 0, x: 540, y: 1150, r: 220 }, { t: 1.6, x: 320, y: 1060, r: 240 }, { t: 3.0, x: 770, y: 990, r: 230 }, { t: 4.6, x: 500, y: 1120, r: 250 }, { t: 6.2, x: 800, y: 1050, r: 240 }, { t: 8.4, x: 420, y: 1000, r: 240 }] });
       add("open", {
-        set: "forest", setOpts: { seed: 7, width: 2400 }, dark: 0.62,
-        cam: { from: { x: 20, y: 240, s: 1.3 }, to: { x: 20, y: 190, s: 1.45 } },
-        actors: [{ who: "pin", x: 560, y: 1600, s: 1.1, flip: true, track: [
-          { t: 0, mode: "torch", torch: true, eyes: "wide", mouth: "o" },
-          { t: vo("open", 1) - 0.2, mode: "torch", torch: true, look: -10, eyes: "side", mouth: "flat", blend: 0.4 },
-          { t: vo("open", 1) + 2.8, mode: "tremble", torch: true, eyes: "wide", mouth: "o", blend: 0.5 }] }],
+        set: "forest", setOpts: { seed: 7, width: 2400 }, dark: 0.25,
+        cam: { from: { x: 0, y: 150, s: 1.05 }, to: { x: 30, y: 170, s: 1.12 } }, shake: (t) => hand(t).x * 0.4,
         captions: [cap("open", "ถ้าวันหนึ่ง… [ใครเรียกชื่อ]คุณกลางป่า", vo("open", 1))],
         sfxText: [{ text: "ปิ่น…", x: 760, y: 560, t: 0.45, end: 1.6, size: 64, color: "#9fb8bf", rot: -4 },
                   { text: "ปิ่นนน…", x: 120, y: 720, t: 1.8, end: 3.6, size: 58, color: "#7f969c", rot: 5 }],
-        ui: [{ type: "choice", t: vo("open", 1) + 2.6, q: "ถ้าเป็นคุณ… จะทำยังไง?", a: "ขานรับ", b: "เงียบไว้", secs: 5, top: 160 }],
+        ui: [
+          { type: "pov", t: 1.3, name: "ปิ่น", bpm: [96, 148], top: 150, x: 36 },
+          { type: "choice", t: vo("open", 1) + 2.6, q: "ถ้าเป็นคุณ… จะทำยังไง?", a: "ขานรับ", b: "เงียบไว้", secs: 5, top: 270 },
+        ],
+        extra(L, id) { this._pov = P1(id); L.light.insertAdjacentHTML("beforeend", this._pov.markup); },
         fx(tl, id, t0) {
-          tl.set("#black", { opacity: 1 }, t0); tl.set("#black", { opacity: 0 }, t0 + 1.15);
-          tl.fromTo(`#${id}-dark`, { opacity: 0.9 }, { opacity: 0.62, duration: 0.6, immediateRender: false }, t0 + 1.15);
+          this._pov.drive(tl, t0, D("open"));
+          Fx.heart(tl, t0 + 1.3, D("open") - 1.4, 0.72, 0.55); Fx.tunnel(tl, t0 + 2.2, t0 + D("open") - 0.1, 0.7);
+          Fx.glitch(tl, `#${id}`, t0 + 0.35, 0.3, 10, 4); Fx.glitch(tl, `#${id}`, t0 + 1.85, 0.3, 8, 5);
           tl.set("#black", { opacity: 1 }, t0 + D("open") - 0.16); tl.set("#black", { opacity: 0 }, t0 + D("open"));
           flick(id, t0, "open");
         },
       });
 
-      // ---------- 2. ten hours earlier: the camp at golden hour; cast intro tags ----------
+      // ---------- 2. five hours earlier: the clock winds back to golden hour; cast tags ----------
       add("arrive", {
         set: "camp", setOpts: CAMP_DUSK, dark: 0.04,
         cam: { from: { x: -140, y: 130, s: 1.0 }, to: { x: 30, y: 160, s: 1.07 } },
@@ -96,15 +98,17 @@
           { who: "pin", x: 230 - walkV(0.6) * 2.8, y: 1660, s: 0.6, track: [{ t: 0, mode: "walk" }, { t: 2.8, mode: "idle", blend: 0.4, look: -4 }], moveTo: { x: 230, dur: 2.8 } },
         ],
         ui: [
-          { type: "chapter", t: 0.35, end: 4.4, small: "10 ชั่วโมงก่อน · บทที่ 1", big: "คืนสุดท้าย", top: 190 },
-          { type: "intro", t: vo("arrive", 1) + 0.0, who: "kla", name: "กล้า", trait: "ชื่อกล้า · แต่ขี้กลัว", color: "#e8a08e", top: 170 },
+          { type: "clock", t: 0.2, end: vo("arrive", 1) - 0.15, from: "22:00", to: "17:00", sweep: 1.6, label: "ย้อนเวลา · 5 ชั่วโมงก่อน", top: 150 },
+          { type: "chapter", t: 2.1, end: vo("arrive", 1) - 0.1, small: "บทที่ 1", big: "เสียงเรียก", top: 470 },
+          { type: "intro", t: vo("arrive", 1), who: "kla", name: "กล้า", trait: "ชื่อกล้า · แต่ขี้กลัว", color: "#e8a08e", top: 170 },
           { type: "intro", t: vo("arrive", 1) + 0.55, who: "pin", name: "ปิ่น", trait: "ใจกล้า · ใจร้อน", color: "#7fd1b9", top: 320 },
           { type: "intro", t: vo("arrive", 1) + 1.1, who: "joe", name: "พี่โจ้", trait: "หัวหน้าค่าย · ใจดี", color: "#9cc48e", top: 470 },
         ],
         captions: [cap("arrive", "ค่ายอาสา… [วันสุดท้าย]", vo("arrive", 0), vo("arrive", 1) - 0.1)],
+        fx(tl, id, t0) { Fx.desat(tl, `#${id} .stage`, t0, t0 + 1.9, 0.2); Fx.glitch(tl, `#${id}`, t0 + 0.2, 0.25, 6, 8); },
       });
 
-      // ---------- 3. the ranger's warning ----------
+      // ---------- 3. the ranger's two rules ----------
       add("ranger", {
         set: "camp", setOpts: CAMP_DUSK, dark: 0.1,
         cam: { from: { x: -40, y: 290, s: 1.15 }, to: { x: -20, y: 300, s: 1.23 } },
@@ -115,270 +119,274 @@
           { who: "pin", x: 870, y: 1672, s: 0.8, flip: true, track: [{ t: 0, mode: "idle", look: -4, mouth: "smile" }, { t: 5.2, mode: "idle", eyes: "side", mouth: "flat", blend: 0.3 }] },
         ],
         bubbles: [
-          { text: "“หลัง[สองทุ่ม] อย่าออกนอกแคมป์”", x: 60, y: 560, t: vo("ranger"), end: vo("ranger") + 3.1, tail: 230 },
-          { text: "“ใครเรียกชื่อ… [อย่าขาน]”", x: 90, y: 560, t: vo("ranger") + 3.2, end: D("ranger") - 0.2, tail: 200 },
+          { text: "“หลัง[สองทุ่ม] อย่าออกนอกแคมป์”", x: 60, y: 620, t: vo("ranger"), end: vo("ranger") + 3.1, tail: 230 },
+          { text: "“ใครเรียกชื่อ… [อย่าขาน]”", x: 90, y: 620, t: vo("ranger") + 3.2, end: D("ranger") - 0.2, tail: 200 },
         ],
-        ui: [{ type: "tip", t: 2.0, end: D("ranger") - 0.1, ill: "rule", tone: "rule", label: "กฎของลุงชัย · เจ้าหน้าที่อุทยาน", text: "หลัง [20:00] ห้ามออกนอกแคมป์", top: 160 }],
+        ui: [{ type: "figure", kind: "rules", t: 1.2, end: D("ranger") - 0.1, artW: 250, tone: "rule", label: "กฎของลุงชัย", text: "หลัง 20:00 ห้ามออกนอกแคมป์", text2: "ได้ยินใครเรียก… [อย่าขาน]", second: vo("ranger") + 3.2, top: 150 }],
+        fx(tl, id, t0) { Fx.letterbox(tl, t0 + vo("ranger") + 3.2, t0 + D("ranger") - 0.05); Fx.punch(tl, `#${id} .stage`, t0 + vo("ranger") + 5.4, 1.07, 0.9); },
       });
 
-      // ---------- 4. the van will not start; Joe walks off to fetch help ----------
-      const JOE_GO = vo("van", 1) + 2.0;
+      // ---------- 4. the van is dead, no signal, Joe walks off to the ranger post ----------
+      const JOE_GO = vo("van", 2) + 2.0;
       add("van", {
         set: "camp", setOpts: { ...CAMP_DUSK, hood: true }, dark: 0.2,
         cam: { from: { x: 60, y: 290, s: 1.1 }, to: { x: 90, y: 300, s: 1.16 } },
         actors: [
-          { who: "joe", x: 770, y: 1650, s: 0.85, until: vo("van", 1) - 0.05, track: [{ t: 0, mode: "point", mouth: "flat", look: 6 }] },
-          { who: "joe", x: 770, y: 1650, s: 0.85, flip: true, from: vo("van", 1) - 0.05, until: JOE_GO, track: [{ t: 0, mode: "idle", mouth: "smile" }] },
+          { who: "joe", x: 770, y: 1650, s: 0.85, until: vo("van", 2) - 0.05, track: [{ t: 0, mode: "point", mouth: "flat", look: 6 }] },
+          { who: "joe", x: 770, y: 1650, s: 0.85, flip: true, from: vo("van", 2) - 0.05, until: JOE_GO, track: [{ t: 0, mode: "idle", mouth: "smile" }] },
           { who: "joe", x: 770, y: 1650, s: 0.85, from: JOE_GO, track: [{ t: 0, mode: "idle" }, { t: JOE_GO, mode: "walk" }], moveTo: { at: JOE_GO, x: 770 + walkV(0.85) * (D("van") - JOE_GO), dur: D("van") - JOE_GO } },
-          { who: "kla", x: 330, y: 1660, s: 0.82, prop: "phone", track: [{ t: 0, mode: "idle" }, { t: 0.7, mode: "raise", blend: 0.4, eyes: "side" }, { t: vo("van", 1), mode: "idle", blend: 0.4, mouth: "flat" }] },
+          { who: "kla", x: 330, y: 1660, s: 0.82, prop: "phone", track: [{ t: 0, mode: "idle", mouth: "flat" }, { t: vo("van", 1) - 0.3, mode: "raise", blend: 0.3, eyes: "side", mouth: "frown" }, { t: vo("van", 2), mode: "idle", blend: 0.4, mouth: "flat" }] },
           { who: "pin", x: 150, y: 1672, s: 0.8, track: [{ t: 0, mode: "idle", look: 4, mouth: "flat" }] },
         ],
         captions: [cap("van", "รถตู้… [สตาร์ทไม่ติด]", vo("van", 0), vo("van", 1) - 0.05)],
-        sfxText: [{ text: "แชะ… แชะ…", x: 640, y: 760, t: 0.5, end: 1.9, size: 70 }],
-        bubbles: [{ text: "“เดี๋ยวพี่ไป[ตามคนที่ป้อม]เอง”", x: 300, y: 620, t: vo("van", 1), end: voEnd("van", 1) + 0.3, tail: 420 }],
-        ui: [{ type: "hud", t: 0.9, items: [{ k: "sig", v: 0 }], top: 170 }],
+        bubbles: [
+          { text: "“[ไม่มีสัญญาณ]เลยพี่”", x: 120, y: 700, t: vo("van", 1), end: voEnd("van", 1) + 0.2, tail: 260 },
+          { text: "“เดี๋ยวพี่ไป[ตามคนที่ป้อม]เอง”", x: 300, y: 700, t: vo("van", 2), end: voEnd("van", 2) + 0.3, tail: 420 },
+        ],
+        ui: [
+          { type: "figure", kind: "ignition", t: 0.25, end: vo("van", 1) - 0.1, artW: 230, tone: "warn", label: "รถตู้ค่าย", text: "สตาร์ท[ไม่ติด]", top: 150 },
+          { type: "figure", kind: "signal", t: vo("van", 1) + 0.05, end: vo("van", 2) - 0.1, artW: 150, tone: "warn", label: "มือถือของกล้า", text: "[ไม่มีสัญญาณ]", top: 150 },
+          { type: "figure", kind: "route", t: vo("van", 2) + 0.1, artW: 290, label: "พี่โจ้", text: "เดินไป[ตามคนที่ป้อม]", walk: 3.4, stopAt: 0.55, top: 150 },
+        ],
+        fx(tl, id, t0) { [0.5, 0.85, 1.2].forEach((k) => Fx.punch(tl, `#${id} .stage`, t0 + k, 1.02, 0.15)); },
       });
 
-      // ---------- 5. 21:00 by the fire; a photo she never took ----------
+      // ---------- 5. the clock runs to 21:00; Joe is not back ----------
       add("fire", {
         set: "camp", setOpts: CAMP_NIGHT, dark: 0.5,
         cam: { from: { x: 20, y: 360, s: 1.12 }, to: { x: 60, y: 330, s: 1.2 } },
         actors: [
-          { who: "kla", x: 360, y: 1702, s: 0.85, track: [{ t: 0, mode: "sitChair", mouth: "flat" }, { t: vo("fire", 1) + 1.4, mode: "sitChair", look: 8, eyes: "wide", blend: 0.3 }] },
-          { who: "pin", x: 770, y: 1702, s: 0.82, flip: true, prop: "camera", track: [{ t: 0, mode: "sitChair", look: 6 }, { t: vo("fire", 1), mode: "sitChair", look: 12, eyes: "wide", mouth: "o", blend: 0.3 }] },
+          { who: "kla", x: 360, y: 1702, s: 0.85, track: [{ t: 0, mode: "sitChair", mouth: "flat" }] },
+          { who: "pin", x: 770, y: 1702, s: 0.82, flip: true, track: [{ t: 0, mode: "sitChair", look: 6, mouth: "flat" }, { t: 2.6, mode: "sitChair", look: -8, eyes: "side", blend: 0.4 }] },
         ],
-        captions: [cap("fire", "พี่โจ้… [ยังไม่กลับ]", vo("fire", 0), vo("fire", 1) - 0.05), cap("fire", "รูปที่เธอ[ไม่ได้ถ่าย]", vo("fire", 1))],
-        ui: [
-          { type: "hud", t: 0.3, items: [{ k: "clock", v: "21:00" }, { k: "bat", v: 62 }, { k: "sig", v: 0 }], top: 160, end: vo("fire", 1) + 0.1 },
-          { type: "polaroid", t: vo("fire", 1) + 0.5, scene: "snake", caption: "ลางบอกเหตุ", tag: "ภาพที่ยังไม่เกิดขึ้น", side: "right", x: 70, top: 200, end: D("fire") - 0.15 },
-        ],
-        fx(tl, id, t0) { flick(id, t0, "fire"); tl.set("#flashw", { opacity: 0.5 }, t0 + vo("fire", 1) + 0.45); tl.to("#flashw", { opacity: 0, duration: 0.25 }, t0 + vo("fire", 1) + 0.46); },
+        captions: [cap("fire", "พี่โจ้… [ยังไม่กลับ]")],
+        ui: [{ type: "clock", t: 0.15, from: "18:30", to: "21:00", sweep: 1.9, label: "สามทุ่ม", sub: "พี่โจ้ยังไม่กลับ", who: "joe", top: 150 }],
+        fx(tl, id, t0) { flick(id, t0, "fire"); },
       });
 
-      // ---------- 6. a voice from the trees ----------
+      // ---------- 6. the voice from the trees: lights die one by one ----------
       add("call", {
-        set: "camp", setOpts: CAMP_NIGHT, dark: 0.58,
+        set: "camp", setOpts: CAMP_NIGHT, dark: 0.55,
         cam: { from: { x: 180, y: 290, s: 1.2 }, to: { x: 220, y: 300, s: 1.36 } },
         actors: [
-          { who: "kla", x: 470, y: 1660, s: 0.86, track: [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat" }, { t: vo("call", 1) - 0.2, mode: "point", blend: 0.25, eyes: "wide", mouth: "o", sweat: true }] },
+          { who: "kla", x: 470, y: 1660, s: 0.86, track: [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat", sweat: true }] },
           { who: "pin", x: 700, y: 1668, s: 0.84, track: [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 2.2, mode: "walk", blend: 0.3, eyes: "wide" }, { t: 3.0, mode: "idle", blend: 0.4, eyes: "wide", mouth: "o", look: -6 }],
             moveTo: { at: 2.2, x: 700 + walkV(0.84) * 0.8, dur: 0.8 } },
         ],
-        sfxText: [{ text: "ปิ่น… ช่วยพี่ด้วย…", x: 560, y: 900, t: 0.9, end: 4.8, size: 50, color: "#9fb8bf", rot: -3 }],
-        bubbles: [{ text: "“[อย่าขาน]นะ! ลุงเขาเตือนแล้ว”", x: 80, y: 640, t: vo("call", 1), end: D("call") - 0.1, tail: 260 }],
-        extra(L, id) {
-          L.mid.insertAdjacentHTML("beforeend", `<g id="${id}-eyes" opacity="0"><ellipse cx="1240" cy="1180" rx="9" ry="5" fill="#e9f5b0"/><ellipse cx="1272" cy="1180" rx="9" ry="5" fill="#e9f5b0"/></g>`);
-        },
+        sfxText: [{ text: "ปิ่น… ช่วยพี่ด้วย…", x: 560, y: 980, t: 0.9, end: 4.4, size: 50, color: "#9fb8bf", rot: -3 }],
+        ui: [{ type: "radar", t: 0.5, dir: 55, text: "มาจากในป่า", pulses: [0.6, 2.0, 3.4], top: 160, side: "right", x: 40 }],
         fx(tl, id, t0) {
           flick(id, t0, "call");
-          tl.set(`#${id}-eyes`, { opacity: 1 }, t0 + 1.0);
-          [2.4, 4.1].forEach((b) => { tl.set(`#${id}-eyes`, { opacity: 0 }, t0 + b); tl.set(`#${id}-eyes`, { opacity: 1 }, t0 + b + 0.14); });
-          tl.set(`#${id}-eyes`, { opacity: 0 }, t0 + vo("call", 1));
+          Fx.lightsOut(tl, `#${id}`, t0 + 0.7, 0.28);
+          tl.to(`#${id} .fireglow`, { attr: { r: 300 }, duration: 2.5 }, t0 + 0.8);
+          [0.6, 2.0, 3.4].forEach((k, i) => Fx.glitch(tl, `#${id}`, t0 + k, 0.25, 9, 30 + i));
+          Fx.heart(tl, t0 + 1.2, D("call") - 1.2, 0.7, 0.5);
         },
       });
 
-      // ---------- 7. the choice; she runs into the dark, he follows ----------
-      const RUN_F = voEnd("choice") + 0.15, RUN_P = RUN_F + 0.7;
+      // ---------- 7. Pin's eyes: something blinks in the treeline; Kla's hand grabs her ----------
+      const P2 = (id) => Fx.pov(id, { ...PIN_ARM, shake: hand, keys: [{ t: 0, x: 380, y: 1060, r: 210 }, { t: 0.7, x: 640, y: 930, r: 220 }, { t: 2.8, x: 660, y: 920, r: 200 }] });
+      add("callpov", {
+        set: "camp", setOpts: CAMP_NIGHT, dark: 0.3,
+        cam: { from: { x: 300, y: 250, s: 1.4 }, to: { x: 320, y: 250, s: 1.5 } }, shake: (t) => hand(t).x * 0.5,
+        bubbles: [{ text: "“[อย่าขาน]นะ! ลุงเขาเตือนแล้ว”", x: 70, y: 1180, t: vo("callpov"), end: D("callpov") - 0.05, tail: 120 }],
+        ui: [{ type: "pov", t: 0.1, name: "ปิ่น", bpm: [128, 160], top: 150, x: 36 }],
+        extra(L, id) {
+          L.mid.insertAdjacentHTML("beforeend", `<g id="${id}-eyes"><ellipse cx="800" cy="1050" rx="10" ry="6" fill="#e9ffc0"/><ellipse cx="836" cy="1050" rx="10" ry="6" fill="#e9ffc0"/><circle cx="818" cy="1050" r="44" fill="#d8ff9a" opacity=".18"/></g>`);
+          this._pov = P2(id); L.light.insertAdjacentHTML("beforeend", this._pov.markup);
+          L.light.insertAdjacentHTML("beforeend", `<g id="${id}-grab"><path d="M-260,1500L120,1330L150,1400L-200,1600Z" fill="#9c4a3c" stroke="#2e2a26" stroke-width="5"/>
+            <ellipse cx="150" cy="1360" rx="56" ry="46" fill="#d6a27c" stroke="#2e2a26" stroke-width="5"/><path d="M170,1320q30,10 28,40M150,1316q34,14 30,52" stroke="#2e2a26" stroke-width="4" fill="none"/></g>`);
+        },
+        fx(tl, id, t0) {
+          this._pov.drive(tl, t0, D("callpov"));
+          tl.set(`#${id}-eyes`, { opacity: 0 }, t0 + 1.05); tl.set(`#${id}-eyes`, { opacity: 1 }, t0 + 1.2); tl.set(`#${id}-eyes`, { opacity: 0 }, t0 + 1.9);
+          tl.fromTo(`#${id}-grab`, { x: -420, y: 120 }, { x: 0, y: 0, duration: 0.22, ease: "power3.out", immediateRender: false }, t0 + vo("callpov") - 0.15);
+          Fx.punch(tl, `#${id} .stage`, t0 + 0.75, 1.1, 0.6); Fx.heart(tl, t0, D("callpov"), 0.6, 0.7); Fx.tunnel(tl, t0, t0 + D("callpov"), 0.6);
+        },
+      });
+
+      // ---------- 8. the choice; she runs into the dark, he follows ----------
+      const RUN_F = voEnd("choice") + 0.1, RUN_P = RUN_F + 0.6;
       add("choice", {
         set: "camp", setOpts: CAMP_NIGHT, dark: 0.55,
-        cam: { from: { x: 160, y: 300, s: 1.28 }, to: { x: 260, y: 300, s: 1.2 } },
+        cam: { from: { x: 160, y: 300, s: 1.28 }, to: { x: 280, y: 300, s: 1.2 } },
         actors: [
           { who: "kla", x: 500, y: 1660, s: 0.86, track: [{ t: 0, mode: "idle", eyes: "wide", mouth: "frown", sweat: true }, { t: RUN_P, mode: "run", blend: 0.25, torch: true, eyes: "wide", mouth: "o" }],
             moveTo: { at: RUN_P, x: 500 + runV(0.86) * (D("choice") - RUN_P), dur: D("choice") - RUN_P } },
           { who: "pin", x: 730, y: 1668, s: 0.84, track: [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat" }, { t: vo("choice") - 0.1, mode: "idle", look: -6, mouth: "scream", eyes: "pain", blend: 0.2 },
             { t: RUN_F, mode: "run", torch: true, blend: 0.25, eyes: "wide", mouth: "o" }], moveTo: { at: RUN_F, x: 730 + runV(0.84) * (D("choice") - RUN_F), dur: D("choice") - RUN_F } },
         ],
-        bubbles: [{ text: "“ถ้าพี่โจ้[เจ็บจริง]ล่ะ!”", x: 380, y: 640, t: vo("choice"), end: voEnd("choice") + 0.15, tail: 300 }],
+        bubbles: [{ text: "“ถ้าพี่โจ้[เจ็บจริง]ล่ะ!”", x: 380, y: 700, t: vo("choice"), end: voEnd("choice") + 0.1, tail: 300 }],
+        captions: [cap("choice", "ป่ากลางคืน… [ห้ามแยกกันเดิน]", vo("choice", 1))],
         ui: [
-          { type: "choice", t: 0.1, end: vo("choice") + 0.2, q: "ปิ่นจะทำยังไง?", a: "ตามเสียงไป", b: "อยู่ที่แคมป์", secs: 3, pickAt: 2.25, pick: "a", who: "ปิ่นเลือก… ตามเสียงไป", top: 160 },
-          { type: "tip", t: RUN_F + 0.1, end: D("choice") - 0.05, ill: "pair", label: "ความรู้เอาตัวรอด", text: "ป่ากลางคืน: [ห้ามแยกกันเดิน]", top: 170 },
+          { type: "choice", t: 0.1, end: 2.75, q: "ปิ่นจะทำยังไง?", a: "ตามเสียงไป", b: "อยู่ที่แคมป์", secs: 3, pickAt: 2.25, pick: "a", who: "ปิ่นเลือก… ตามเสียงไป", top: 160 },
+          { type: "memo", t: 2.85, end: vo("choice", 1) - 0.05, who: "kla", text: "กล้า[จะจำเรื่องนี้ไว้]", top: 170 },
+          { type: "tip", t: vo("choice", 1), end: D("choice") - 0.05, ill: "pair", label: "ความรู้เอาตัวรอด", text: "ป่ากลางคืน: [ห้ามแยกกันเดิน]", top: 170 },
         ],
-        fx(tl, id, t0) { flick(id, t0, "choice"); },
+        fx(tl, id, t0) {
+          flick(id, t0, "choice");
+          Fx.heart(tl, t0 + 0.2, 2.2, 0.55, 0.6); Fx.punch(tl, `#${id} .stage`, t0 + 2.25, 1.08, 0.5);
+          Fx.speed(tl, t0 + RUN_F, t0 + D("choice"));
+        },
       });
 
-      // ---------- 8. ten minutes later the trail is gone (tracking walk) ----------
+      // ---------- 9. ten minutes later the trail is gone (tracking walk + minimap) ----------
       const WALK_T = 2.7, WV = walkV(0.95);
       add("lost", {
         set: "forest", setOpts: { seed: 11, width: 3000 }, dark: 0.45,
         cam: { from: { x: 60, y: 180, s: 1.1 }, to: { x: 60 + WV * WALK_T, y: 180, s: 1.1 }, ease: "linear", dur: WALK_T },
         actors: [
           { who: "kla", x: 360, y: 1580, s: 0.95, track: [{ t: 0, mode: "walk", torch: true }, { t: WALK_T, mode: "idle", torch: true, blend: 0.4, look: -8, eyes: "side" }], moveTo: { x: 360 + WV * WALK_T, dur: WALK_T } },
-          { who: "pin", x: 640, y: 1590, s: 0.93, track: [{ t: 0, mode: "walk", torch: true, opts: { period: 0.96 } }, { t: WALK_T, mode: "torch", torch: true, blend: 0.4, eyes: "wide", mouth: "o" }], moveTo: { x: 640 + walkV(0.93) * WALK_T, dur: WALK_T } },
+          { who: "pin", x: 640, y: 1590, s: 0.93, track: [{ t: 0, mode: "walk", torch: true }, { t: WALK_T, mode: "torch", torch: true, blend: 0.4, eyes: "wide", mouth: "o" }], moveTo: { x: 640 + walkV(0.93) * WALK_T, dur: WALK_T } },
         ],
         captions: [cap("lost", "[10 นาทีต่อมา]… ทางหายไป")],
-        ui: [{ type: "rel", t: 0.3, end: 3.2, a: "kla", b: "pin", text: "กล้าตามปิ่นมา", from: 2, top: 170 }],
+        ui: [
+          { type: "clock", t: 0.15, from: "21:05", to: "21:15", sweep: 0.9, label: "10 นาทีต่อมา", top: 150 },
+          { type: "minimap", t: 0.4, text: "ทางเดินหายไป", label: "แผนที่", lostAt: 1.8, walk: 2.4, top: 520, side: "right", x: 30 },
+        ],
         fx(tl, id, t0) {
           flick(id, t0, "lost");
-          tl.fromTo(`#${id} .trail`, { opacity: 1 }, { opacity: 0.08, duration: 2.4, immediateRender: false }, t0 + 1.4);
+          tl.fromTo(`#${id} .trail`, { opacity: 1 }, { opacity: 0.08, duration: 2.0, immediateRender: false }, t0 + 1.6);
+          tl.fromTo(`#${id}-fog`, { opacity: 0 }, { opacity: 0.12, duration: 2.0, immediateRender: false }, t0 + 1.6);
         },
       });
 
-      // ---------- 9. S.T.O.P. ----------
+      // ---------- 10. S.T.O.P. ----------
       add("stop", {
         set: "forest", setOpts: { seed: 11, width: 3000, path: false }, dark: 0.45,
         cam: { from: { x: 940, y: 200, s: 1.15 }, to: { x: 940, y: 220, s: 1.22 } },
         actors: [
-          { who: "kla", x: 1290, y: 1590, s: 0.95, track: [{ t: 0, mode: "point", torch: false, mouth: "flat" }, { t: 2.6, mode: "idle", blend: 0.5, mouth: "flat" }] },
-          { who: "pin", x: 1570, y: 1598, s: 0.93, flip: true, track: [{ t: 0, mode: "torch", torch: true, eyes: "wide", mouth: "flat" }, { t: 2.8, mode: "idle", blend: 0.5, torch: false }] },
+          { who: "kla", x: 1290, y: 1590, s: 0.95, track: [{ t: 0, mode: "point", mouth: "flat" }, { t: 2.6, mode: "idle", blend: 0.5, mouth: "flat" }] },
+          { who: "pin", x: 1570, y: 1598, s: 0.93, flip: true, track: [{ t: 0, mode: "torch", torch: true, eyes: "wide", mouth: "flat" }, { t: 2.8, mode: "idle", blend: 0.5 }] },
         ],
         captions: [cap("stop", "หลงป่า = [หยุดอยู่กับที่]")],
         ui: [{ type: "steps", t: 0.25, end: D("stop") - 0.05, label: "หลงป่า · จำ 4 ข้อ", items: [["hand", "หยุด"], ["think", "คิด"], ["eye", "สังเกต"], ["map", "วางแผน"]], top: 160 }],
         fx(tl, id, t0) { flick(id, t0, "stop"); },
       });
 
-      // ---------- 10. three blasts… and three answer from behind ----------
-      const TURN = vo("whistle", 1) - 1.75;
+      // ---------- 11. three blasts… and three answer from behind ----------
+      const ANS = [vo("whistle", 1) - 2.1, vo("whistle", 1) - 1.65, vo("whistle", 1) - 1.2], TURN = vo("whistle", 1) - 0.5;
       add("whistle", {
         set: "forest", setOpts: { seed: 11, width: 3000, path: false }, dark: 0.5,
-        cam: { from: { x: 1000, y: 160, s: 1.2 }, to: { x: 960, y: 200, s: 1.36 } },
+        cam: { from: { x: 1000, y: 160, s: 1.2 }, to: { x: 960, y: 200, s: 1.38 } },
         actors: [
-          { who: "pin", x: 1540, y: 1598, s: 0.93, prop: "whistle", until: TURN, track: [{ t: 0, mode: "whistle", eyes: "closed" }, { t: 1.4, mode: "idle", blend: 0.4, eyes: "side" }] },
-          { who: "kla", x: 1300, y: 1590, s: 0.95, until: TURN, track: [{ t: 0, mode: "idle", mouth: "flat" }] },
+          { who: "pin", x: 1540, y: 1598, s: 0.93, prop: "whistle", until: TURN, track: [{ t: 0, mode: "whistle", eyes: "closed" }, { t: 1.4, mode: "idle", blend: 0.4, eyes: "side" }, { t: ANS[0], mode: "idle", eyes: "wide", mouth: "o" }] },
+          { who: "kla", x: 1300, y: 1590, s: 0.95, until: TURN, track: [{ t: 0, mode: "idle", mouth: "flat" }, { t: ANS[0], mode: "tremble", eyes: "wide", mouth: "o", blend: 0.2 }] },
           { who: "pin", x: 1540, y: 1598, s: 0.93, flip: true, from: TURN, track: [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o" }] },
           { who: "kla", x: 1300, y: 1590, s: 0.95, flip: true, from: TURN, track: [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o", sweat: true }] },
         ],
         sfxText: [0.15, 0.6, 1.05].map((t, i) => ({ text: "ปี๊ด!", x: 690 + i * 70, y: 640 - i * 60, t, end: t + 0.4, size: 64, color: "#f2c55c" }))
-          .concat([TURN - 1.3, TURN - 0.85, TURN - 0.4].map((t, i) => ({ text: "ปี๊ด…", x: 60 + i * 40, y: 900 + i * 50, t, end: t + 0.6, size: 46, color: "#7f969c", rot: 4 }))),
-        captions: [cap("whistle", "นกหวีด [3 ครั้ง] = ขอความช่วยเหลือ", vo("whistle", 0), voEnd("whistle", 0) + 0.3), cap("whistle", "เสียงตอบ… [จากข้างหลัง]", vo("whistle", 1))],
-        ui: [{ type: "tip", t: 1.5, end: voEnd("whistle", 0) + 0.4, ill: "whistle", label: "ความรู้เอาตัวรอด", text: "เป่า [3 ครั้ง] = ขอความช่วยเหลือ", top: 160 }],
-        shake: (t) => (t > TURN - 1.4 && t < TURN + 1.2 ? Math.sin(t * 61) * 3 : 0),
-        fx(tl, id, t0) { flick(id, t0, "whistle"); },
+          .concat(ANS.map((t, i) => ({ text: "ปี๊ด…", x: 60 + i * 40, y: 980 + i * 50, t, end: t + 0.6, size: 46, color: "#7f969c", rot: 4 }))),
+        captions: [cap("whistle", "นกหวีด [3 ครั้ง] = ขอความช่วยเหลือ", vo("whistle", 0), voEnd("whistle", 0) + 0.2), cap("whistle", "เสียงตอบ… [จากข้างหลัง]", vo("whistle", 1))],
+        ui: [
+          { type: "tip", t: 1.4, end: ANS[0] - 0.15, ill: "whistle", label: "ความรู้เอาตัวรอด", text: "เป่า [3 ครั้ง] = ขอความช่วยเหลือ", top: 160 },
+          { type: "radar", t: ANS[0] - 0.05, dir: 180, text: "ข้างหลัง!", pulses: ANS, end: D("whistle") - 0.05, top: 160, side: "right", x: 40 },
+        ],
+        shake: (t) => (t > ANS[0] && t < TURN + 1.0 ? Math.sin(t * 61) * 3 : 0),
+        fx(tl, id, t0) {
+          flick(id, t0, "whistle");
+          Fx.desat(tl, `#${id} .stage`, t0 + ANS[0], undefined, 0.3); Fx.letterbox(tl, t0 + ANS[0], t0 + D("whistle") + 4.2);
+          Fx.heart(tl, t0 + ANS[0], D("whistle") - ANS[0], 0.6, 0.55);
+        },
       });
 
-      // ---------- 11. a wild elephant; hide behind the big tree, stay silent ----------
-      add("hide", {
-        set: "forest", setOpts: { seed: 19, width: 2400, path: false, bigTree: 560, branch: false }, dark: 0.5,
-        cam: { from: { x: 60, y: 160, s: 1.06 }, to: { x: 40, y: 200, s: 1.16 } },
+      // ---------- 12. torch off, hold your breath (QTE with a noise meter) ----------
+      add("hush", {
+        set: "forest", setOpts: { seed: 13, width: 2400, path: false, branch: false }, dark: 0.72,
+        cam: { from: { x: 40, y: 330, s: 1.35 }, to: { x: 40, y: 360, s: 1.48 } },
         actors: [
-          { who: "kla", x: 330, y: 1600, s: 0.92, track: [{ t: 0, mode: "crouch", eyes: "wide" }, { t: 1.0, mode: "crouchShush", blend: 0.4, eyes: "wide", sweat: true }] },
-          { who: "pin", x: 180, y: 1610, s: 0.9, track: [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 2.5, mode: "crouch", eyes: "closed", mouth: "flat", blend: 0.3 }, { t: 6.4, mode: "crouch", eyes: "side", blend: 0.3 }] },
+          { who: "kla", x: 470, y: 1640, s: 0.95, track: [{ t: 0, mode: "crouchShush", eyes: "wide", sweat: true }] },
+          { who: "pin", x: 650, y: 1650, s: 0.92, flip: true, track: [{ t: 0, mode: "crouch", eyes: "closed", mouth: "flat" }, { t: 2.5, mode: "crouch", eyes: "wide", mouth: "flat", blend: 0.2 }] },
         ],
-        captions: [cap("hide", "ไม่ใช่คน… [ช้างป่า]", vo("hide", 0), vo("hide", 1) - 0.05)],
+        sfxText: [{ text: "กรอบ…", x: 760, y: 1240, t: 1.4, end: 2.2, size: 52, color: "#7f969c", rot: 8 }, { text: "แกรก…", x: 120, y: 1180, t: 2.6, end: 3.4, size: 52, color: "#7f969c", rot: -6 }],
+        ui: [{ type: "qte", t: 0.2, label: "กลั้นหายใจ · ห้ามส่งเสียง", okAt: 3.4, okText: "เงียบไว้ได้", meter: "เสียงของคุณ", top: 170 }],
+        fx(tl, id, t0) { Fx.tunnel(tl, t0, t0 + D("hush") + 0.2, 0.85); Fx.heart(tl, t0, D("hush"), 0.5, 0.6); Fx.hold(tl, `#${id} .stage`, t0, t0 + D("hush"), 1.05); },
+      });
+
+      // ---------- 13. Kla's eyes: the torch clicks on and finds "Joe" ----------
+      const FIND = 2.3;
+      const P3 = (id) => Fx.pov(id, { ...KLA_ARM, shake: hand, off: [[0, 0.5]], flicker: [[3.6, 0.5]], keys: [
+        { t: 0.5, x: 300, y: 1110, r: 230 }, { t: 1.3, x: 780, y: 1010, r: 240 }, { t: 1.9, x: 440, y: 960, r: 230 }, { t: FIND, x: 605, y: 960, r: 210 }, { t: 6.4, x: 600, y: 940, r: 190 }] });
+      add("reveal", {
+        set: "forest", setOpts: { seed: 13, width: 2400, path: false }, dark: 0.3,
+        cam: { from: { x: 0, y: 100, s: 1.1 }, to: { x: 0, y: 110, s: 1.16 } }, shake: (t) => hand(t).x * 0.5,
+        actors: [{ who: "joe", x: 595, y: 1415, s: 0.72, flip: true, blinks: [], track: [{ t: 0, mode: "idle", look: 22, eyes: "closed", mouth: "flat" }, { t: FIND + 0.25, mode: "idle", look: 0, eyes: "glow", mouth: "smile", blend: 0.5 }, { t: 4.8, mode: "idle", look: -14, eyes: "glow", mouth: "smile", blend: 0.6 }] }],
+        bubbles: [{ text: "“มาช้าจังนะ… [ปิ่น]”", x: 300, y: 1180, t: vo("reveal"), end: D("reveal") - 0.05, tail: 260 }],
+        ui: [{ type: "pov", t: 0.4, name: "กล้า", bpm: [132, 176], top: 150, x: 36 }],
+        extra(L, id) { this._pov = P3(id); L.light.insertAdjacentHTML("beforeend", this._pov.markup); },
+        fx(tl, id, t0) {
+          this._pov.drive(tl, t0, D("reveal"));
+          Fx.punch(tl, `#${id} .stage`, t0 + FIND, 1.12, 0.8); Fx.glitch(tl, `#${id}`, t0 + vo("reveal"), 0.4, 10, 41); Fx.glitch(tl, `#${id}`, t0 + vo("reveal") + 2.0, 0.3, 8, 42);
+          Fx.heart(tl, t0 + FIND, D("reveal") - FIND, 0.5, 0.7); Fx.tunnel(tl, t0 + FIND, t0 + D("reveal"), 0.6);
+        },
+      });
+
+      // ---------- 14. Pin runs toward him; Kla pulls her back ----------
+      add("twoshot", {
+        set: "forest", setOpts: { seed: 13, width: 2400, path: false }, dark: 0.55,
+        cam: { from: { x: -40, y: 260, s: 1.22 }, to: { x: 0, y: 270, s: 1.3 } },
+        actors: [
+          { who: "kla", x: 360, y: 1600, s: 0.95, track: [{ t: 0, mode: "torchLow", torch: true, eyes: "wide", mouth: "flat" }, { t: vo("twoshot", 1) - 0.3, mode: "point", blend: 0.25, torch: false, eyes: "wide", mouth: "o", sweat: true }] },
+          { who: "pin", x: 520, y: 1610, s: 0.93, track: [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("twoshot"), mode: "walk", blend: 0.3, mouth: "smile" }, { t: vo("twoshot") + 0.7, mode: "idle", blend: 0.4, mouth: "flat" },
+            { t: vo("twoshot", 1) + 0.6, mode: "tremble", eyes: "wide", mouth: "o", blend: 0.3 }], moveTo: { at: vo("twoshot"), x: 520 + walkV(0.93) * 0.7, dur: 0.7 } },
+        ],
+        bubbles: [
+          { text: "“พี่โจ้! [เป็นอะไรรึเปล่า]”", x: 420, y: 760, t: vo("twoshot"), end: voEnd("twoshot") + 0.1, tail: 160 },
+          { text: "“ปิ่น… [ดูตาพี่โจ้สิ]”", x: 90, y: 760, t: vo("twoshot", 1), end: D("twoshot") - 0.05, tail: 200 },
+        ],
+        extra(L) { L.glow.insertAdjacentHTML("beforeend", `<circle cx="1180" cy="1140" r="40" fill="#e9ffc0" opacity=".85"/><circle cx="1180" cy="1140" r="120" fill="#d8ff9a" opacity=".15"/>`); },
+        fx(tl, id, t0) { flick(id, t0, "twoshot"); Fx.heart(tl, t0 + vo("twoshot", 1), D("twoshot") - vo("twoshot", 1), 0.5, 0.7); Fx.punch(tl, `#${id} .stage`, t0 + vo("twoshot", 1), 1.06, 0.6); },
+      });
+
+      // ---------- 15. the eyes; a fact ----------
+      const P4 = (id) => Fx.pov(id, { ...KLA_ARM, shake: hand, keys: [{ t: 0, x: 540, y: 980, r: 320 }, { t: 4.7, x: 540, y: 990, r: 300 }] });
+      add("eyes", {
+        set: "forest", setOpts: { seed: 13, width: 2400, path: false }, dark: 0.3,
+        cam: { from: { x: 0, y: 120, s: 1.0 }, to: { x: 0, y: 120, s: 1.06 } }, shake: (t) => hand(t).x * 0.4,
+        actors: [{ who: "joe", x: 540, y: 1930, s: 1.75, flip: true, blinks: [], track: [{ t: 0, mode: "idle", eyes: "glow", mouth: "smile", look: -6 }, { t: 2.5, mode: "idle", eyes: "glow", mouth: "smile", look: -16, blend: 1.5 }] }],
+        captions: [cap("eyes", "ตาคน… [ไม่สะท้อนแสง]แบบนี้")],
+        ui: [{ type: "figure", kind: "eyeshine", t: 0.5, artW: 330, label: "ความรู้", text: "ตาเรืองแสงเมื่อโดนไฟ", text2: "= [ตาสัตว์กลางคืน]", second: 0.5, top: 150, side: "center", w: 1000 }],
+        extra(L, id) { this._pov = P4(id); L.light.insertAdjacentHTML("beforeend", this._pov.markup); },
+        fx(tl, id, t0) {
+          this._pov.drive(tl, t0, D("eyes"));
+          Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.15, 1.0); Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.35);
+          Fx.heart(tl, t0, D("eyes"), 0.48, 0.65); Fx.glitch(tl, `#${id}`, t0 + 0.05, 0.25, 12, 51);
+        },
+      });
+
+      // ---------- 16. "why didn't you answer?" — he lurches closer; the choice pulls toward "answer" ----------
+      const P5 = (id) => Fx.pov(id, { ...KLA_ARM, shake: (t) => ({ x: hand(t).x * 2, y: hand(t).y * 2 }), flicker: [[1.2, 0.5], [3.2, 0.7], [5.2, 1.2]], keys: [{ t: 0, x: 560, y: 1000, r: 260 }, { t: 6.8, x: 540, y: 980, r: 300 }] });
+      const LURCH = [1.3, 2.1, 2.9, 3.6];
+      add("final", {
+        set: "forest", setOpts: { seed: 13, width: 2400, path: false }, dark: 0.3,
+        cam: { from: { x: 0, y: 100, s: 1.05 }, to: { x: 0, y: 100, s: 1.12 } }, shake: (t) => hand(t).x,
+        bubbles: [{ text: "“ทำไม… [ไม่ขานล่ะ]”", x: 260, y: 1220, t: vo("final"), end: voEnd("final") + 0.2, tail: 240 }],
         ui: [
-          { type: "qte", t: 0.9, end: vo("hide", 1) - 0.1, label: "อยู่นิ่ง · ห้ามส่งเสียง", key: "กดค้าง", okAt: vo("hide", 1) - 0.8, okText: "เงียบไว้ได้", top: 160 },
-          { type: "tip", t: vo("hide", 1) + 0.1, end: D("hide") - 0.05, ill: "elephant", label: "เจอช้างป่าระยะใกล้", text: "[อย่าส่งเสียงไล่] · หลบหลังต้นไม้ใหญ่<br>แล้วค่อยๆ ถอยออก", top: 160 },
+          { type: "pov", t: 0.1, name: "กล้า", bpm: [160, 190], top: 150, x: 36 },
+          { type: "choice", t: voEnd("final") + 0.1, q: "จะทำยังไง?", a: "ขานรับ", b: "วิ่งหนี", secs: 3, top: 270,
+            possessed: { at: 0.9, side: "a", glitch: "ขานสิ…", who: "…มีบางอย่างอยากให้คุณ ขาน" } },
         ],
         extra(L, id) {
-          L.mid.insertAdjacentHTML("beforeend", `<g id="${id}-elw">${Sets.props.elephant(`${id}-el`, 0, 0, 1)}</g>`);
-          L.mid.insertAdjacentHTML("beforeend", `<rect x="-800" y="1480" width="3200" height="200" fill="#16252c"/>`);
+          L.act.insertAdjacentHTML("beforeend", `<g id="${id}-jw" transform="translate(560,1400) scale(.6)"></g>`);
+          Rig.build(document.getElementById(`${id}-jw`), `${id}-j`, Rig.CAST.joe).setAttribute("transform", "scale(-1,1)");
+          Rig.drive(tl, `${id}-j`, SH.final.start, D("final"), [{ t: 0, mode: "idle", eyes: "glow", mouth: "smile", look: -10 }, { t: LURCH[0], mode: "wave", eyes: "glow", mouth: "smile", blend: 0.2 }], []);
+          this._pov = P5(id); L.light.insertAdjacentHTML("beforeend", this._pov.markup);
         },
         fx(tl, id, t0) {
-          flick(id, t0, "hide");
-          const el = document.getElementById(`${id}-elw`), m = { k: 0 };
-          const place = () => el.setAttribute("transform", `translate(${(1650 - 1100 * m.k).toFixed(1)},1500) scale(.66)`);
-          tl.to(m, { k: 1, duration: D("hide"), ease: "none", onUpdate: place }, t0); place();
-          Camp.animElephant(tl, `${id}-el`, t0, D("hide"), { period: 1.6, raise: 0.4 });
+          this._pov.drive(tl, t0, D("final"));
+          [[0.75, 1440], [0.95, 1490], [1.2, 1560], [1.5, 1650]].forEach(([k, y], i) => {
+            tl.set(`#${id}-jw`, { attr: { transform: `translate(560,${y}) scale(${k})` } }, t0 + LURCH[i]);
+            Fx.punch(tl, `#${id} .stage`, t0 + LURCH[i], 1.04, 0.2);
+          });
+          Fx.glitch(tl, `#${id}`, t0 + vo("final"), 0.5, 12, 61); Fx.glitch(tl, `#${id}`, t0 + LURCH[3], 0.4, 14, 62);
+          Fx.heart(tl, t0, D("final"), 0.4, 0.8); Fx.tunnel(tl, t0, t0 + D("final") + 0.5, 0.8); Fx.letterbox(tl, t0, undefined);
+          tl.set("#black", { opacity: 1 }, t0 + D("final") - 0.22);
         },
-      });
-
-      // ---------- 12. the snake from the photo ----------
-      const STRIKE = 0.95;
-      add("snake", {
-        set: "forest", setOpts: { seed: 19, width: 2400, path: false, branch: false }, dark: 0.42,
-        cam: { from: { x: 260, y: 520, s: 1.65 }, to: { x: 200, y: 330, s: 1.22 }, at: STRIKE, dur: 1.4 },
-        actors: [
-          { who: "pin", x: 560, y: 1600, s: 0.92, track: [{ t: 0, mode: "walk", eyes: "side" }, { t: STRIKE, mode: "fall", eyes: "pain", mouth: "scream", blend: 0.08 }], moveTo: { x: 560 + walkV(0.92) * STRIKE, dur: STRIKE } },
-          { who: "kla", x: 300, y: 1592, s: 0.94, track: [{ t: 0, mode: "walk" }, { t: STRIKE + 0.2, mode: "idle", eyes: "wide", mouth: "o", blend: 0.3 }], moveTo: { x: 300 + walkV(0.94) * (STRIKE + 0.2), dur: STRIKE + 0.2 } },
-        ],
-        bubbles: [{ text: "“โอ๊ย! [งู!]”", x: 520, y: 700, t: vo("snake"), end: D("snake") - 0.1, tail: 120 }],
-        ui: [
-          { type: "status", t: vo("snake") + 0.5, who: "pin", eyes: "wide", name: "ปิ่น", text: "บาดเจ็บ · งูกัด", tone: "danger", side: "left", top: 170 },
-          { type: "polaroid", t: vo("snake") + 0.8, scene: "snake", caption: "ลางบอกเหตุ", tag: "…เกิดขึ้นจริง", side: "right", x: 60, top: 160, rot: 7 },
-        ],
-        extra(L, id) { L.fg.innerHTML = ""; L.act.insertAdjacentHTML("beforeend", `<g transform="translate(${560 + walkV(0.92) * STRIKE + 130},1606) scale(-0.8,0.8)">${Sets.props.snake(`${id}-sn`, 0, 0, 1)}</g>`); },
-        shake: (t) => (t > STRIKE && t < STRIKE + 0.5 ? Math.sin(t * 70) * 7 : 0),
-        fx(tl, id, t0) {
-          Camp.animSnake(tl, `${id}-sn`, t0, D("snake"), { strike: STRIKE - 0.12 });
-          tl.set("#flashw", { opacity: 0.55 }, t0 + STRIKE); tl.to("#flashw", { opacity: 0, duration: 0.2 }, t0 + STRIKE + 0.01);
-          flick(id, t0, "snake");
-        },
-      });
-
-      // ---------- 13. first aid: splint, keep still, get to a hospital ----------
-      const SPLINT = 2.6;
-      add("firstaid", {
-        set: "forest", setOpts: { seed: 23, width: 2400, path: false, branch: false }, dark: 0.45,
-        cam: { from: { x: 40, y: 380, s: 1.25 }, to: { x: 60, y: 360, s: 1.32 } },
-        actors: [
-          { who: "pin", x: 400, y: 1640, s: 0.95, track: [{ t: 0, mode: "sitHurt", eyes: "pain", mouth: "frown", sweat: true }, { t: vo("firstaid", 1), mode: "sitHurt", eyes: "wide", mouth: "flat", blend: 0.4 }] },
-          { who: "kla", x: 830, y: 1650, s: 0.92, flip: true, track: [{ t: 0, mode: "crouch", eyes: "wide", mouth: "flat" }, { t: vo("firstaid", 1), mode: "crouch", look: -10, mouth: "flat", blend: 0.4 }] },
-        ],
-        bubbles: [{ text: "“อย่าขยับนะ [ออกไปด้วยกัน]”", x: 320, y: 720, t: vo("firstaid", 1), end: voEnd("firstaid", 1) + 0.3, tail: 520 }],
-        ui: [
-          { type: "tip", t: 0.35, end: vo("firstaid", 1) - 0.1, ill: "snake", tone: "danger", label: "งูกัด · ปฐมพยาบาล", text: "ห้าม [กรีด · ดูด · ขันชะเนาะ]<br>ขยับให้น้อย → รีบไปโรงพยาบาล", top: 160 },
-          { type: "rel", t: vo("firstaid", 1) + 0.2, end: voEnd("firstaid", 1) + 0.25, a: "kla", b: "pin", text: "กล้า ↔ ปิ่น · ความไว้ใจ", from: 3, top: 170 },
-          { type: "tip", t: voEnd("firstaid", 1) + 0.3, ill: "map", tone: "rule", label: "เป้าหมายใหม่", text: "พาปิ่นไป [หน่วยพิทักษ์ป่า]", top: 170 },
-        ],
-        extra(L) { L.fg.innerHTML = ""; },
-        fx(tl, id, t0) {
-          // a splint (two sticks + cloth ties) on Pin's front shin; actors exist by the time fx runs
-          document.getElementById(`${id}-a0-shF`).insertAdjacentHTML("beforeend", `<g id="${id}-splint" opacity="0"><rect x="-27" y="4" width="10" height="126" rx="4" fill="#7a5c3c" stroke="#2e2a26" stroke-width="3"/>
-            <rect x="17" y="4" width="10" height="126" rx="4" fill="#7a5c3c" stroke="#2e2a26" stroke-width="3"/><rect x="-30" y="30" width="60" height="14" rx="5" fill="#e07a4f" stroke="#2e2a26" stroke-width="3"/>
-            <rect x="-30" y="92" width="60" height="14" rx="5" fill="#e07a4f" stroke="#2e2a26" stroke-width="3"/></g>`);
-          flick(id, t0, "firstaid"); tl.fromTo(`#${id}-splint`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + SPLINT); },
-      });
-
-      // ---------- 14. the ranger station: radio call, help is coming ----------
-      add("radio", {
-        set: "hut", dark: 0.12,
-        cam: { from: { x: 20, y: 200, s: 1.1 }, to: { x: 40, y: 210, s: 1.16 } },
-        actors: [
-          { who: "chai", x: 470, y: 1520, s: 0.95, flip: true, prop: "mic", track: [{ t: 0, mode: "phoneEar", mouth: "o", eyes: "wide" }, { t: vo("radio", 1), mode: "idle", blend: 0.5, mouth: "smile" }] },
-          { who: "pin", x: 640, y: 1540, s: 0.85, track: [{ t: 0, mode: "sitHurt", eyes: "pain", mouth: "frown" }, { t: vo("radio", 1) + 0.6, mode: "sit", eyes: "closed", mouth: "smile", blend: 0.6 }] },
-          { who: "kla", x: 900, y: 1530, s: 0.9, flip: true, track: [{ t: 0, mode: "idle", mouth: "flat", sweat: true }, { t: vo("radio", 1) + 0.4, mode: "idle", mouth: "smile", blend: 0.5 }] },
-        ],
-        bubbles: [{ text: "“ศูนย์ ศูนย์… [ขอรถฉุกเฉินด่วน]!”", x: 70, y: 700, t: vo("radio"), end: voEnd("radio") + 0.2, tail: 340 }],
-        captions: [cap("radio", "ทุกอย่าง… [กำลังจะโอเค]", vo("radio", 1))],
-        ui: [
-          { type: "tip", t: 0.6, end: voEnd("radio") + 0.2, ill: "sos", tone: "danger", label: "เจ็บป่วยฉุกเฉิน", text: "โทร [1669]", top: 160 },
-          { type: "status", t: vo("radio", 1) + 0.5, who: "pin", name: "ปิ่น", text: "ปลอดภัยแล้ว", tone: "safe", side: "right", top: 170 },
-        ],
-        fx(tl, id, t0) { flick(id, t0, "radio"); },
-      });
-
-      // ---------- 15. a message that was sent at 15:12 ----------
-      add("message", {
-        set: "hut", dark: 0.22,
-        cam: { from: { x: 20, y: -110, s: 1.4 }, to: { x: 30, y: -100, s: 1.56 } },
-        actors: [{ who: "kla", x: 540, y: 1560, s: 1.25, prop: "phone", track: [{ t: 0, mode: "phoneLook", mouth: "flat" }, { t: 1.5, mode: "phoneLook", eyes: "wide", mouth: "o", sweat: true, blend: 0.2 }] }],
-        bubbles: [{ text: "“พี่โจ้… [ไม่ได้ขึ้นมาตั้งแต่บ่าย]”", x: 160, y: 1180, t: vo("message"), end: D("message") - 0.1, tail: 300 }],
-        ui: [{ type: "phone", t: 0.15, who: "joe", name: "พี่โจ้ (หัวหน้าค่าย)", msg: "ติดธุระในเมือง [คืนนี้พี่ขึ้นไปไม่ทัน]<br>ฝากแคมป์ด้วยนะ", time: "15:12", typing: 1.0, top: 150 }],
-        extra(L) { L.glow.insertAdjacentHTML("beforeend", `<circle cx="790" cy="980" r="330" fill="url(#phoneglow)" opacity=".75"/>`); },
-      });
-
-      // ---------- 16. "then who was with us all day?" ----------
-      add("who", {
-        set: "hut", dark: 0.28,
-        cam: { from: { x: 0, y: -100, s: 1.45 }, to: { x: 0, y: -90, s: 1.6 } },
-        actors: [{ who: "pin", x: 560, y: 1580, s: 1.25, flip: true, track: [{ t: 0, mode: "tremble", eyes: "wide", mouth: "frown" }] }],
-        bubbles: [{ text: "“แล้วคนที่อยู่กับเราทั้งวัน… [คือใคร]”", x: 60, y: 1180, t: vo("who"), end: D("who") - 0.05, tail: 420 }],
-        ui: [{ type: "status", t: 1.0, who: "unknown", name: "“พี่โจ้” ที่แคมป์", text: "ไม่ทราบตัวตน", tone: "unknown", side: "right", top: 170 }],
-      });
-
-      // ---------- 17. he is waiting at the treeline… then at the glass ----------
-      const SCARE = D("window") - 0.95;
-      add("window", {
-        set: "hutWindow", dark: 0.3,
-        cam: { from: { x: 0, y: -40, s: 1.0 }, to: { x: 200, y: 60, s: 1.55 } },
-        extra(L, id) {
-          const view = document.getElementById(id).querySelector(".winview");
-          view.insertAdjacentHTML("beforeend", `<circle cx="740" cy="1010" r="120" fill="url(#lampglow)" opacity=".7"/>`);
-          Rig.build(view, `${id}-jf`, Rig.CAST.joe).setAttribute("transform", "translate(740,1110) scale(-0.3,0.3)");
-          Rig.drive(tl, `${id}-jf`, SH.window.start, D("window"), [{ t: 0, mode: "idle", mouth: "smile" }, { t: vo("window"), mode: "wave", blend: 0.6, mouth: "smile" }], []);
-          view.insertAdjacentHTML("beforeend", `<g id="${id}-big" opacity="0"><circle cx="740" cy="1010" r="300" fill="url(#lampglow)" opacity=".8"/></g>`);
-          Rig.build(document.getElementById(`${id}-big`), `${id}-jb`, Rig.CAST.joe).setAttribute("transform", "translate(740,2440) scale(-2.6,2.6)");
-          Rig.drive(tl, `${id}-jb`, SH.window.start, D("window"), [{ t: 0, mode: "idle", eyes: "wide", mouth: "smile" }], []);
-        },
-        fx(tl, id, t0) {
-          tl.set(`#${id}-jf`, { opacity: 0 }, t0 + SCARE); tl.set(`#${id}-big`, { opacity: 1 }, t0 + SCARE);
-          tl.set("#flashw", { opacity: 0.35 }, t0 + SCARE); tl.to("#flashw", { opacity: 0, duration: 0.12 }, t0 + SCARE + 0.01);
-          tl.set("#black", { opacity: 1 }, t0 + D("window") - 0.4);
-        },
-        shake: (t) => (t > SCARE ? Math.sin(t * 80) * 9 : 0),
       });
 
       // global overlays first: shot fx target them while the shots are being built
       root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">ค่ายคืนสุดท้าย · EP.1</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
+      Fx.setup(root);
 
       Engine.build(root, tl, shots);
 

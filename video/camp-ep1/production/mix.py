@@ -61,37 +61,50 @@ for s in SC["shots"]:
         place(vo, level(x, -18 + LINE_GAIN.get(v["id"], 0)), s["start"] + v["t"])
 
 # ---- sfx cues: (shot, t from shot start (negative = from its end), type, gain) ----
-open_choice = vo_t("open", 1) + 2.6
-turn = vo_t("whistle", 1) - 1.75
-strike = 0.95
-scare = SH["window"]["dur"] - 0.95
+D = {k: SH[k]["dur"] for k in SH}
+
+
+def beats(k, t0, dur, period, g=0.9):  # heartbeat sfx in step with Fx.heart
+    return [(k, t0 + i * period, "heartbeat", g) for i in range(int((dur - 0.1) / period) + 1)]
+
+
+def ticks(k, t0, t1, step, g=0.5):
+    n = int((t1 - t0) / step)
+    return [(k, t0 + i * step, "tick", g) for i in range(n)]
+
+
+oc = vo_t("open", 1) + 2.6
+run_f = vo_t("choice") + SH["choice"]["vo"][0]["dur"] + 0.1
+ans = [vo_t("whistle", 1) - d for d in (2.1, 1.65, 1.2)]
+find = 2.3
+lurch = [1.3, 2.1, 2.9, 3.6]
+fin_c = vo_t("final") + SH["final"]["vo"][0]["dur"] + 0.1
 CUES = [
-    ("open", 0.0, "crickets", 0.7), ("open", 0.0, "wind", 0.5), ("open", 1.15, "pop", 0.8),
-    *[("open", open_choice + k, "tick", 1.0) for k in range(4)], ("open", -0.2, "whoosh", 0.8),
-    ("arrive", 0.35, "swell", 0.5), *[("arrive", vo_t("arrive", 1) + k * 0.55, "pop", 0.6) for k in range(3)],
-    ("ranger", 0.0, "rustle", 0.6), ("ranger", 2.0, "notif", 0.5),
-    ("van", 0.5, "crank", 1.0), ("van", 0.9, "glitch", 0.35), ("van", -1.6, "rustle", 0.6),
-    ("fire", 0.0, "crackle", 1.0), ("fire", 0.0, "crickets", 0.6), ("fire", vo_t("fire", 1) + 0.45, "shutter", 1.0), ("fire", vo_t("fire", 1) + 0.5, "sting", 0.6),
-    ("call", 0.0, "crackle", 0.6), ("call", 0.0, "crickets", 0.5), ("call", 1.0, "rustle", 0.7),
-    *[("call", 1.5 + k * 0.8, "heartbeat", 0.9) for k in range(4)],
-    ("choice", 0.0, "crackle", 0.5), *[("choice", 0.1 + k * 0.75, "tick", 1.1) for k in range(4)], ("choice", 2.35, "ding", 0.7),
-    ("choice", vo_t("choice") + 2.1, "whoosh", 0.9), ("choice", vo_t("choice") + 2.2, "rustle", 0.9),
-    ("lost", 0.0, "crickets", 0.6), ("lost", 0.1, "rustle", 0.6), ("lost", 0.3, "notif", 0.4),
+    ("open", 0.0, "crickets", 0.7), ("open", 0.0, "wind", 0.5), ("open", 1.15, "pop", 0.9), ("open", 0.35, "glitch", 0.5), ("open", 1.85, "glitch", 0.4),
+    *beats("open", 1.3, D["open"] - 1.4, 0.72, 0.8), *[("open", oc + k, "tick", 1.0) for k in range(4)], ("open", -0.2, "whoosh", 0.8),
+    ("arrive", 0.2, "glitch", 0.4), ("arrive", 0.4, "whoosh", 0.7), *ticks("arrive", 0.55, 2.1, 0.07, 0.45), ("arrive", 2.1, "swell", 0.5),
+    *[("arrive", vo_t("arrive", 1) + k * 0.55, "pop", 0.6) for k in range(3)],
+    ("ranger", 0.0, "rustle", 0.6), ("ranger", 1.2, "notif", 0.45), ("ranger", vo_t("ranger") + 3.2, "sting", 0.45), ("ranger", vo_t("ranger") + 5.4, "boom", 0.35),
+    ("van", 0.25, "notif", 0.35), ("van", 0.5, "crank", 1.0), ("van", 1.95, "buzz", 0.5), ("van", vo_t("van", 1) + 0.05, "glitch", 0.35),
+    ("van", vo_t("van", 2) + 0.1, "notif", 0.35), ("van", vo_t("van", 2) + 2.0, "rustle", 0.6),
+    ("fire", 0.0, "crackle", 1.0), ("fire", 0.0, "crickets", 0.6), *ticks("fire", 0.5, 2.4, 0.08, 0.4), ("fire", 2.45, "ding", 0.5),
+    ("call", 0.0, "crackle", 0.6), ("call", 0.0, "crickets", 0.4), *[("call", 0.7 + i * 0.28, "pop", 0.35) for i in range(9)],
+    *[("call", k, "glitch", 0.45) for k in (0.6, 2.0, 3.4)], *beats("call", 1.2, D["call"] - 1.2, 0.7, 0.85),
+    *beats("callpov", 0.0, D["callpov"], 0.6, 0.9), ("callpov", 0.75, "sting", 0.8), ("callpov", vo_t("callpov") - 0.15, "whoosh", 0.8),
+    ("choice", 0.0, "crackle", 0.5), *[("choice", 0.1 + k * 0.75, "tick", 1.1) for k in range(4)], *beats("choice", 0.2, 2.2, 0.55, 0.8), ("choice", 2.25, "ding", 0.7),
+    ("choice", 2.85, "notif", 0.4), ("choice", run_f, "whoosh", 0.9), ("choice", run_f + 0.1, "rustle", 0.9), ("choice", run_f + 0.6, "rustle", 0.8),
+    ("lost", 0.0, "crickets", 0.6), ("lost", 0.1, "rustle", 0.6), *ticks("lost", 0.5, 1.4, 0.08, 0.35), ("lost", 0.4, "notif", 0.35), ("lost", 1.8, "sting", 0.35),
     ("stop", 0.0, "crickets", 0.6), *[("stop", 0.25 + k * 0.32, "pop", 0.45) for k in range(4)],
-    ("whistle", 0.0, "crickets", 0.5), *[("whistle", t, "whistle", 1.0) for t in (0.15, 0.6, 1.05)], ("whistle", 1.5, "notif", 0.35),
-    *[("whistle", turn - d, "whistlefar", 1.4) for d in (1.3, 0.85, 0.4)], ("whistle", turn, "sting", 0.9),
-    ("whistle", turn + 0.2, "heartbeat", 1.0), ("whistle", turn + 0.9, "heartbeat", 1.0),
-    ("hide", 0.15, "snap", 0.8), ("hide", 0.6, "trumpet", 1.0), *[("hide", 0.3 + k * 0.8, "stomp", 0.7 - k * 0.05) for k in range(11)],
-    *[("hide", 1.0 + k * 0.7, "heartbeat", 0.9) for k in range(3)], ("hide", vo_t("hide", 1) - 0.8, "ding", 0.6), ("hide", vo_t("hide", 1) + 0.1, "notif", 0.35),
-    ("snake", 0.0, "rustle", 0.7), ("snake", 0.3, "hiss", 0.9), ("snake", strike, "boom", 0.55), ("snake", strike, "sting", 1.0), ("snake", strike + 0.5, "glitch", 0.4),
-    ("firstaid", 0.0, "crickets", 0.5), ("firstaid", 2.6, "rustle", 0.6), ("firstaid", 0.35, "notif", 0.35),
-    ("firstaid", vo_t("firstaid", 1) + 0.2, "notif", 0.4), ("firstaid", -1.6, "ding", 0.5),
-    ("radio", 0.15, "static", 0.8), ("radio", 0.6, "notif", 0.35), ("radio", vo_t("radio", 1) - 0.1, "static", 0.5),
-    ("radio", vo_t("radio", 1) + 0.3, "siren", 0.45), ("radio", vo_t("radio", 1), "swell", 0.45),
-    ("message", 0.15, "notif", 1.0), ("message", 1.15, "ding", 0.6), *[("message", 1.6 + k * 0.75, "heartbeat", 1.0) for k in range(6)], ("message", vo_t("message"), "sting", 0.7),
-    ("who", 0.0, "hum", 0.7), ("who", 1.0, "glitch", 0.6), *[("who", 0.3 + k * 0.7, "heartbeat", 1.0) for k in range(6)],
-    ("window", 0.0, "wind", 0.5), ("window", 0.0, "crickets", 0.4), *[("window", 0.6 + k * 0.7, "heartbeat", 0.8 + k * 0.05) for k in range(6)],
-    ("window", scare, "sting", 1.5), ("window", scare, "boom", 1.0), ("window", scare, "glitch", 1.0),
+    ("whistle", 0.0, "crickets", 0.5), *[("whistle", t, "whistle", 1.0) for t in (0.15, 0.6, 1.05)], ("whistle", 1.4, "notif", 0.35),
+    *[("whistle", t, "whistlefar", 1.4) for t in ans], ("whistle", ans[0], "sting", 0.9), *beats("whistle", ans[0], D["whistle"] - ans[0], 0.6, 0.9),
+    *beats("hush", 0.0, D["hush"], 0.5, 1.0), ("hush", 1.2, "rustle", 0.7), ("hush", 1.4, "snap", 0.7), ("hush", 2.6, "snap", 0.9), ("hush", 3.4, "pop", 0.4),
+    ("reveal", 0.5, "pop", 0.9), ("reveal", 0.6, "rustle", 0.5), ("reveal", find, "sting", 1.3), ("reveal", find, "boom", 0.6),
+    ("reveal", vo_t("reveal"), "glitch", 0.6), ("reveal", vo_t("reveal") + 2.0, "glitch", 0.5), ("reveal", 3.6, "buzz", 0.5), *beats("reveal", find, D["reveal"] - find, 0.5, 0.9),
+    *beats("twoshot", vo_t("twoshot", 1), D["twoshot"] - vo_t("twoshot", 1), 0.5, 0.9), ("twoshot", vo_t("twoshot", 1), "sting", 0.6), ("twoshot", 0.1, "rustle", 0.6),
+    ("eyes", 0.05, "boom", 0.55), ("eyes", 0.05, "sting", 1.0), ("eyes", 0.05, "glitch", 0.6), ("eyes", 0.5, "notif", 0.3), *beats("eyes", 0.0, D["eyes"], 0.48, 0.9),
+    *beats("final", 0.0, D["final"] - 0.3, 0.4, 1.0), ("final", vo_t("final"), "glitch", 0.7), *[("final", t, "stomp", 0.7) for t in lurch], *[("final", t, "snap", 0.6) for t in lurch],
+    ("final", lurch[3], "glitch", 0.8), *[("final", t, "buzz", 0.45) for t in (1.2, 3.2, 5.2)], *[("final", fin_c + k * 0.5, "tick", 1.1) for k in range(int((D["final"] - 0.3 - fin_c) / 0.5))],
+    ("final", D["final"] - 2.3, "riser", 1.0),
 ]
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
         "sfx": [{"t": round(T(k, t), 3), "type": typ, "gain": g} for k, t, typ, g in CUES]}
@@ -115,18 +128,16 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(0.0, 1.1, 0.0, 0.05)                                           # cold open: the whisper on silence
-dip(T("call", 0.0), T("call", 4.0), 0.3)                           # the voice from the trees
-dip(T("whistle", turn - 1.6), T("whistle", turn + 0.4), 0.05)      # listening for the answer
-dip(T("hide", 0.0), T("hide", 1.6), 0.1)                           # the elephant arrives
-dip(T("snake", 0.4), T("snake", strike + 0.1), 0.05)               # silence before the strike
-dip(T("message", 0.8), T("message", -0.2), 0.25)                   # the twist lands
-dip(T("window", scare - 1.2), T("window", scare - 0.02), 0.03)     # nothing… then the face
+dip(0.0, 1.15, 0.0, 0.05)                                          # cold open: the whisper on silence
+dip(T("call", 0.0), T("callpov", -0.1), 0.25)                      # the voice from the trees
+dip(T("whistle", ans[0] - 0.6), T("whistle", -0.1), 0.15)          # listening for the answer
+dip(T("hush", 0.0), T("reveal", find - 0.05), 0.0, 0.1)            # silence: hold your breath
+dip(T("final", 0.0), T("final", -0.3), 0.45)
 mus = mus * gain
 fade = int(1.2 * SR)
-end = int(T("window", -0.4) * SR)
+end = int(T("final", -0.22) * SR)
 mus[end - fade:end] *= np.linspace(1, 0.25, fade)
-mus[end:] *= np.linspace(0.25, 0, N - end)
+mus[end:] = 0  # hard cut to black and silence
 
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
 mus = level(mus, -30)
@@ -136,6 +147,9 @@ duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 
 k = int(0.25 * SR)
 duck = box(duck, k)
 mix = vo + mus * duck + sfx
+cut = int(T("final", -0.22) * SR)  # the episode ends on a hard cut to black and silence
+mix[cut - 240:cut] *= np.linspace(1, 0, 240)
+mix[cut:] = 0
 peak = np.max(np.abs(mix))
 if peak > 0.98:
     mix = np.tanh(mix / peak * 1.2) * 0.95
