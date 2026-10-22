@@ -12,6 +12,7 @@
     <radialGradient id="winglow"><stop offset="0" stop-color="#ffd58a" stop-opacity=".6"/><stop offset="1" stop-color="#ffd58a" stop-opacity="0"/></radialGradient>
     <radialGradient id="phoneglow"><stop offset="0" stop-color="#cfe9f2" stop-opacity=".7"/><stop offset="1" stop-color="#cfe9f2" stop-opacity="0"/></radialGradient>
     <linearGradient id="shaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe2e6" stop-opacity=".16"/><stop offset="1" stop-color="#cfe2e6" stop-opacity="0"/></linearGradient>
+    <radialGradient id="beaconBlue"><stop offset="0" stop-color="#5fa8ff" stop-opacity=".85"/><stop offset="1" stop-color="#5fa8ff" stop-opacity="0"/></radialGradient>
     <linearGradient id="dawnsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e4d6e"/><stop offset=".55" stop-color="#b88a8a"/><stop offset="1" stop-color="#f2c08a"/></linearGradient>
     <linearGradient id="nightsky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c161d"/><stop offset=".6" stop-color="#1a2d38"/><stop offset="1" stop-color="#2b4552"/></linearGradient>`;
 
@@ -299,7 +300,7 @@
     let mid = "";
     for (let x = -600; x < 1700; x += 170 + r() * 140) if (x < 80 || x > 1000) mid += pine(x, 1440, 620 + r() * 300, 240 + r() * 110, "#1d323a", "#172930");
     put(L.mid, mid);
-    put(L.set, `<rect x="-600" y="1440" width="2280" height="520" fill="#16252c"/><path d="M380,1940L470,1500H610L700,1940Z" fill="#3b4f52" opacity=".8"/>
+    put(L.set, `<rect x="-600" y="1440" width="2280" height="1100" fill="#16252c"/><path d="M340,2400L470,1500H610L740,2400Z" fill="#3b4f52" opacity=".8"/>
       <g id="hutf"><path d="M130,1470V860H950V1470Z" fill="url(#planks)" stroke="${INK}" stroke-width="6"/>
         <path d="M60,880L540,560L1020,880Z" fill="#33251c" stroke="${INK}" stroke-width="6"/><path d="M100,870L540,600L980,870" fill="none" stroke="#5c4433" stroke-width="10"/>
         <path d="M800,690V420M800,430l60,40" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><circle cx="800" cy="420" r="9" fill="#e8705a"/>
@@ -328,13 +329,30 @@
     put(L.fg, `<rect x="-600" y="-40" width="2280" height="90" fill="#c9d6d0"/>`);
     return { ground: 1620 };
   }
+  // Thai ambulance van facing left (the way it drives in); origin = ground under the middle of the van
   function rescueTruck(id, x, y, s) {
-    return `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><path d="M-300,-60V-230Q-300,-260 -270,-260H40L120,-160H290Q320,-160 320,-130V-60Z" fill="#f4ecd8" stroke="${INK}" stroke-width="6"/>
-      <path d="M-300,-150H320" stroke="#e8705a" stroke-width="22"/><path d="M50,-250L110,-168H50Z" fill="#22303a" stroke="${INK}" stroke-width="4"/>
-      <text x="-130" y="-178" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#c8553d">กู้ภัย 1669</text>
-      <rect class="lbr" x="-200" y="-292" width="80" height="30" rx="8" fill="#e8705a" stroke="${INK}" stroke-width="4"/><rect class="lbb" x="-110" y="-292" width="80" height="30" rx="8" fill="#5fa8e8" stroke="${INK}" stroke-width="4"/>
-      <circle cx="-180" cy="-60" r="54" fill="#2a2420" stroke="${INK}" stroke-width="5"/><circle cx="-180" cy="-60" r="22" fill="#8a8a84"/><circle cx="200" cy="-60" r="54" fill="#2a2420" stroke="${INK}" stroke-width="5"/><circle cx="200" cy="-60" r="22" fill="#8a8a84"/>
-      <circle class="lbglow" cx="-115" cy="-277" r="160" fill="url(#beacon)" opacity=".8"/></g>`;
+    const wheel = (cx) => `<g transform="translate(${cx},-46)"><circle r="50" fill="#1f2326" stroke="${INK}" stroke-width="5"/><g class="spokes">
+        <circle r="24" fill="#b9c2c6" stroke="${INK}" stroke-width="3"/>${[0, 60, 120].map((a) => `<rect x="-3" y="-22" width="6" height="44" fill="#6b7478" transform="rotate(${a})"/>`).join("")}</g></g>`;
+    const checks = Array.from({ length: 28 }, (_, i) => `<rect x="${-268 + i * 20}" y="${-118 + (i % 2) * 10}" width="20" height="10" fill="#e8705a"/>`).join("");
+    return `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="4" rx="310" ry="24" fill="#060c10" opacity=".45"/>
+      <circle class="lbglow lbgr" cx="-120" cy="-300" r="220" fill="url(#beacon)" opacity=".7"/>
+      <defs><linearGradient id="${id}-hl" x1="1" x2="0"><stop offset="0" stop-color="#fff3c8" stop-opacity=".3"/><stop offset="1" stop-color="#fff3c8" stop-opacity="0"/></linearGradient></defs><path d="M-290,-96L-620,-30L-620,20L-290,-62Z" fill="url(#${id}-hl)"/>
+      <path d="M-278,-40V-150Q-278,-176 -256,-186L-196,-252Q-184,-264 -164,-264H252Q280,-264 280,-236V-40Z" fill="#f7f5ee" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M-250,-182L-196,-246H-150V-182Z" fill="#22303a" stroke="${INK}" stroke-width="4"/><path d="M-226,-196L-190,-238" stroke="#5f7d8a" stroke-width="6" opacity=".6"/>
+      <rect x="-128" y="-246" width="92" height="60" rx="6" fill="#22303a" stroke="${INK}" stroke-width="4"/><rect x="150" y="-246" width="104" height="60" rx="6" fill="#22303a" stroke="${INK}" stroke-width="4"/>
+      <rect x="-20" y="-250" width="150" height="206" rx="6" fill="none" stroke="#9aa3a5" stroke-width="4"/><rect x="104" y="-150" width="16" height="6" rx="3" fill="#6b7478"/>
+      <rect x="-278" y="-128" width="558" height="30" fill="#f7f5ee"/>${checks}<path d="M-278,-128H280M-278,-98H280" stroke="#c8553d" stroke-width="3"/>
+      <text x="-90" y="-148" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#c8553d">รถพยาบาล</text>
+      <text x="55" y="-146" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#2f6fb8">1669</text>
+      <g transform="translate(55,-212)"><circle r="28" fill="#2f6fb8" stroke="${INK}" stroke-width="3"/>${[0, 60, 120].map((a) => `<rect x="-6" y="-22" width="12" height="44" rx="2" fill="#f7f5ee" transform="rotate(${a})"/>`).join("")}<path d="M0,-16V16" stroke="#2f6fb8" stroke-width="3"/></g>
+      <rect x="-292" y="-66" width="44" height="28" rx="8" fill="#8a9499" stroke="${INK}" stroke-width="4"/><rect x="270" y="-66" width="20" height="28" rx="6" fill="#8a9499" stroke="${INK}" stroke-width="4"/>
+      <rect x="-284" y="-104" width="24" height="20" rx="5" fill="#ffd58a" stroke="${INK}" stroke-width="3"/><rect x="262" y="-104" width="16" height="20" rx="4" fill="#e8705a" stroke="${INK}" stroke-width="3"/>
+      <rect x="-222" y="-196" width="16" height="22" rx="4" fill="#3d3833" stroke="${INK}" stroke-width="3"/>
+      <path d="M-230,-40a62,62 0 0 1 124,0M110,-40a62,62 0 0 1 124,0" fill="#2a3135"/>
+      ${wheel(-168)}${wheel(172)}
+      <rect x="-160" y="-284" width="170" height="22" rx="8" fill="#3d3833" stroke="${INK}" stroke-width="4"/>
+      <rect class="lbr" x="-154" y="-282" width="78" height="18" rx="6" fill="#ff4a3a"/><rect class="lbb" x="-70" y="-282" width="78" height="18" rx="6" fill="#3f8fff"/>
+      <circle class="lbglow lbgb" cx="-30" cy="-300" r="200" fill="url(#beaconBlue)" opacity=".7"/></g>`;
   }
 
   // dark mimic silhouette with eyeshine (no rig: it should not move like a person)

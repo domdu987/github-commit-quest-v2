@@ -437,22 +437,23 @@
       // ---------- 10. dawn: the clock runs to 05:30, the rescue truck arrives ----------
       add("dawn", {
         set: "hutFront", setOpts: { dawn: true }, dark: 0.06,
-        cam: { from: { x: 0, y: 120, s: 1.0 }, to: { x: 40, y: 160, s: 1.08 } },
+        cam: { from: { x: 0, y: 300, s: 1.0 }, to: { x: 100, y: 320, s: 0.94 } }, // pulls back to take in the big truck
         actors: [
           { who: "chai", x: 430, y: 1750, s: 0.82, track: [{ t: 0, mode: "idle", mouth: "flat" }, { t: vo("dawn"), mode: "wave", blend: 0.4, mouth: "smile" }] },
           { who: "kla", x: 270, y: 1760, s: 0.8, track: [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }, { t: vo("dawn", 1), mode: "idle", mouth: "smile", blend: 0.4 }] },
-          { who: "pin", x: 120, y: 1770, s: 0.78, track: [{ t: 0, mode: "idle", eyes: "pain", mouth: "flat" }, { t: vo("dawn", 1) + 0.4, mode: "idle", eyes: "closed", mouth: "smile", blend: 0.5 }] },
+          { who: "pin", x: 140, y: 1770, s: 0.78, track: [{ t: 0, mode: "idle", eyes: "pain", mouth: "flat" }, { t: vo("dawn", 1) + 0.4, mode: "idle", eyes: "closed", mouth: "smile", blend: 0.5 }] },
         ],
         captions: [cap("dawn", "ตีห้าครึ่ง… [รถกู้ภัยมาถึง]", vo("dawn"), vo("dawn", 1) - 0.1), cap("dawn", "ทุกอย่าง… [กำลังจะโอเค]", vo("dawn", 1))],
         ui: [
           { type: "clock", t: 0.1, end: vo("dawn") + 2.0, from: "01:30", to: "05:30", sweep: 2.0, label: "ตีห้าครึ่ง", top: 150 },
           { type: "status", t: vo("dawn", 1) + 0.6, who: "pin", name: "ปิ่น", text: "ปลอดภัยแล้ว", tone: "safe", side: "right", top: 170 },
         ],
-        extra(L, id) { L.act.insertAdjacentHTML("beforeend", Sets.props.rescueTruck(`${id}-truck`, 1500, 1760, 0.8)); },
+        extra(L, id) { L.fg.innerHTML = ""; L.act.insertAdjacentHTML("beforeend", Sets.props.rescueTruck(`${id}-truck`, 1950, 1745, 1.75)); },
         fx(tl, id, t0) {
-          tl.fromTo(`#${id}-truck`, { attr: { transform: "translate(1500,1760) scale(.8)" } }, { attr: { transform: "translate(850,1760) scale(.8)" }, duration: 2.6, ease: "power2.out", immediateRender: false }, t0 + vo("dawn") + 0.4);
-          tl.fromTo(`#${id} .lbr`, { opacity: 1 }, { opacity: 0.25, duration: 0.25, repeat: 40, yoyo: true, immediateRender: false }, t0);
-          tl.fromTo(`#${id} .lbb`, { opacity: 0.25 }, { opacity: 1, duration: 0.25, repeat: 40, yoyo: true, immediateRender: false }, t0);
+          tl.fromTo(`#${id}-truck`, { attr: { transform: "translate(1950,1745) scale(1.75)" } }, { attr: { transform: "translate(1040,1745) scale(1.75)" }, duration: 2.8, ease: "power2.out", immediateRender: false }, t0 + vo("dawn") + 0.3);
+          tl.fromTo(`#${id} .spokes`, { rotation: 0 }, { rotation: -900, duration: 2.8, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, t0 + vo("dawn") + 0.3);
+          tl.fromTo([`#${id} .lbr`, `#${id} .lbgr`], { opacity: 1 }, { opacity: 0.15, duration: 0.22, repeat: 50, yoyo: true, immediateRender: false }, t0);
+          tl.fromTo([`#${id} .lbb`, `#${id} .lbgb`], { opacity: 0.15 }, { opacity: 1, duration: 0.22, repeat: 50, yoyo: true, immediateRender: false }, t0);
           tl.fromTo(`#${id}-dark`, { opacity: 0.6 }, { opacity: 0.06, duration: 2.4, immediateRender: false }, t0);
         },
       });

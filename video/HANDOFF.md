@@ -1,0 +1,353 @@
+# Handoff: ซีรีส์คลิป TikTok "ถ้าวันหนึ่ง… คุณ…" (แอนิเมชัน SVG + HyperFrames)
+
+เอกสารนี้สรุปทุกอย่างให้แชทใหม่ทำงานต่อหรือทำเรื่องใหม่แบบเดิมได้ทันที อ่านจบแล้วทำตามหัวข้อ "เริ่มงานในแชทใหม่" ได้เลย
+
+---
+
+## 0. เริ่มงานในแชทใหม่ (คัดลอกข้อความนี้ไปวางได้เลย)
+
+> อ่าน `video/HANDOFF.md` ใน repo นี้ให้จบก่อน แล้วรัน `bash video/workspace.sh <scratchpad>/work` เพื่อสร้างโฟลเดอร์ทำงาน
+> ตอบเป็นภาษาไทย ทำคลิปตามกติกาในหัวข้อ 2 ทุกข้อ งานถัดไปคือ: ______
+> push ขึ้น branch `ccr-fb88c4b3-kcqyid` เท่านั้น ห้ามเปิด PR เองถ้าไม่ได้สั่ง
+
+---
+
+## 1. เป้าหมาย
+
+- ซีรีส์คลิปแนวตั้งสำหรับ TikTok ภาษาไทย 1080×1920 ที่ 60fps แบบมินิมูฟวี่แอนิเมชัน
+  - ตัวละครและฉากวาดด้วย SVG และขยับด้วย GSAP บน HyperFrames
+- ทุกตอนเปิดด้วยประโยค **"ถ้าวันหนึ่ง… คุณ…"**
+- ต้องลุ้นแบบหนัง มีความรู้เอาตัวรอดที่ถูกต้องจริง (เช็กกับแหล่งข้อมูลก่อนใส่) และจบแบบค้างให้อยากดูตอนต่อไป
+- ตอบผู้ใช้เป็นภาษาไทย ถามผู้ใช้ว่าชอบแบบไหนเรื่อยๆ จนกว่าจะพอใจ (เสนอ 2–4 ตัวเลือกพร้อมตัวที่แนะนำ)
+- เรื่องปัจจุบันคือ **"ค่ายคืนสุดท้าย"** 3 ตอน ทำครบแล้ว รายละเอียดอยู่ในหัวข้อ 3
+
+---
+
+## 2. Decisions ที่ตัดสินแล้ว (ห้ามเปลี่ยนถ้าผู้ใช้ไม่สั่ง)
+
+### 2.1 เรื่องและรูปแบบ
+
+- **หนึ่งเรื่อง = 3 ตอน** ตอนสุดท้ายจบเรื่องหลัก แต่ยังทิ้งปมค้างไว้ (twist สุดท้าย)
+- **ทุกตอนจบแบบ cliffhanger** มีตัวเลือก 2 ทางบนจอ แล้ว "ถูกดึง" ไปเลือกทางที่น่ากลัวกว่า (กล่องตัวเลือกกระตุก ตัวหนังสือเพี้ยน) แล้วตัดดำทันที
+  - **ไม่มี end card ไม่มีหน้าจบ** เสียงต้องตัดเงียบพร้อมภาพ
+- **ตัวละครคิดใหม่ทุกเรื่องตามชื่อเรื่อง** ห้ามใช้ชุดตัวละครเดิมข้ามเรื่อง
+- **เรื่องต้องเป็นของเราเอง** เอาแรงบันดาลใจจากเกมหรือหนังได้แค่ระดับ premise
+  - เช่น "ค่ายคืนสุดท้าย" ได้ไอเดียจาก The Quarry แค่ว่าเป็นค่ายฤดูร้อนคืนสุดท้าย
+  - ห้ามลอกพล็อต ตัวละคร หรือ twist ที่มีลิขสิทธิ์
+- **ความรู้เอาตัวรอดต้องจริง** ค้นแหล่งข้อมูลยืนยันก่อน และสอดแทรกในเนื้อเรื่อง (ตัวละครเรียนรู้จากเหตุการณ์ ไม่ใช่บรรยายลอยๆ)
+- แต่ละตอนยาวประมาณ 1:30–2:05
+
+### 2.2 เสียง
+
+- **ผู้บรรยาย:** Gemini TTS เสียง **Puck** อ่านเรียบ เป็นกลาง ไม่มีอารมณ์ ใช้ style:
+  `อ่านแบบผู้บรรยายสารคดี น้ำเสียงเรียบ เป็นกลาง ไม่ใส่อารมณ์ ไม่ตื่นเต้น ไม่กระซิบ ชัดถ้อยชัดคำ จังหวะสม่ำเสมอ ไม่ลากเสียง` และ tempo 1.15
+- **ตัวละคร:** ใส่อารมณ์เต็มที่ เลือกเสียง Gemini ให้เข้ากับนิสัย
+  - เรื่องนี้ใช้: Achird = กล้า, Leda = ปิ่น, Umbriel = พี่โจ้, Algenib = ลุงชัย
+- **เสียงปลอมของสิ่งที่เลียนเสียง (mimic):** ใช้เสียงของคนที่มันเลียน ใส่ style ว่า "นิ่งผิดปกติ ลากเสียง น่าขนลุก" และใส่ `"af": "aecho=0.8:0.6:170|340:0.32|0.16"` ให้มีเสียงก้อง
+- **ทุก style ของตัวละครต้องลงท้าย** `พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ` เพราะ TTS ชอบพูดซ้ำ (เคยได้ไฟล์ 15 วินาที)
+- **ดนตรี:** `video/music/suno1.mp3` (ไฟล์ Suno ที่ผู้ใช้อัปโหลดเอง)
+  - เสียงพูดต้องดังกว่าดนตรีชัดเจน (VO −18 dB RMS, ดนตรี −30, SFX −27)
+  - ดนตรีหลบ (duck) ตอนมีเสียงพูด และ dip เงียบในจังหวะหลอน
+  - ทั้งคลิป normalize ที่ −14 LUFS
+- **SFX สังเคราะห์เองทั้งหมด** ด้วย `synth.py` ไม่ใช้ไฟล์เสียงจากที่อื่น
+
+### 2.3 ภาพและ UI (ผู้ใช้ให้ feedback มาเยอะ ทำตามนี้)
+
+- **สไตล์:** การ์ตูนเส้นหนา (`INK #2e2a26`) โทนกลางคืน ฟิล์มเกรน vignette ซับไตเติ้ลกล่องเข้ม ส่วนคำสำคัญเป็นป้ายสีเหลือง `#f2c55c`
+- **HUD:** ใช้โทน dark-glass เดิม แต่ต้อง "เด่นสะดุดตา" มีลูกเล่นและเอฟเฟกต์ แต่ไม่เด่นเกินเนื้อเรื่อง
+  - effect ชุดนี้อยู่ใน `fxPanel` ของ `gameui.js` ใช้กับทุกแผงอัตโนมัติ:
+    - เปิดแผงด้วย wipe, แฟลช และประกายไฟ
+    - ขอบเรืองแสงหมุน มีแสงวิ่งผ่าน และวงช็อก
+    - ตัวหนังสือเผยทีละส่วน
+- **ใส่ UI เฉพาะสิ่งที่ "พูดถึงในบท"** ห้ามใส่ chip หรือป้ายที่บทไม่ได้พูด (ผู้ใช้เคยสั่งให้เอาออก)
+  - ไม่ใส่ "ลางบอกเหตุ" ไม่ใส่คำว่า "กดค้าง"
+- **UI ต้องเล่นตามสิ่งที่พูด** เช่น
+  - บทพูด "สามทุ่ม" → นาฬิกาเข็มเดินไปถึง 21:00
+  - "สตาร์ทรถ" → หน้าปัดรถ เข็มรอบ ไฟเตือน กุญแจ "แชะ!" และตราประทับ "สตาร์ทไม่ติด"
+  - "ไม่มีสัญญาณ" → ขีดสัญญาณ
+  - งู → การ์ดจำลักษณะงู
+- **หัวใจเต้น (POV HUD) ต้องใหญ่และเต้นแรง** ตอนลุ้น
+- **ฉากแผนที่:** ซูมออกให้เห็นป่าทั้งผืน มีเส้นทางวาดตัวเอง หมุดสถานที่ และระยะทาง
+- **ฉากวิกฤตใช้มุมมองบุคคลที่ 1 (POV)** เห็นแขนถือไฟฉาย ลำแสงกวาดในความมืด มือสั่น และไฟฉายกะพริบ
+- **เอฟเฟกต์ลุ้นระทึกต้องเข้ากับสถานการณ์** (`fx.js`)
+  - heartbeat vignette แดง, tunnel vision, letterbox, glitch RGB, zoom punch
+  - desaturate, speed lines, ไฟกะพริบ, ไฟสายเส้นดับทีละดวง
+- **ฉากย่อง (stealth):** มีแถบ "เสียงที่ทำ" ค่อยๆ ขึ้น วงคลื่นเสียง และจุดเหยียบพลาด (ไม้ผุ "เอี๊ยด") จนมาตรเต็ม แล้วถูกพบ
+- **ห้ามให้ UI หรือซับบังตัวละคร/วัตถุสำคัญ**
+  - ซับอยู่ที่ top 1555px
+  - วัตถุสำคัญต้องอยู่เหนือ y ≈ 1500 ในเฟรม หรือขยับกล้องช่วย
+- **ยานพาหนะต้องหันถูกทาง มีสัดส่วนสมจริง และใหญ่พอ**
+  - ผู้ใช้ทักเรื่องรถพยาบาลสองรอบ: รอบแรก "แปลกๆ" รอบสอง "ใหญ่กว่านี้อีก"
+  - ตอนนี้รถสูงพอๆ กับคน และล้นขอบเฟรมด้านขวาได้ (แบบช็อตหนัง) แต่ต้องเห็นเครื่องหมาย/ตัวหนังสือสำคัญ
+
+### 2.4 กติกาการทำงาน
+
+- **API key ของ fal.ai อยู่ใน network secret ของ environment** proxy ใส่ให้อัตโนมัติเมื่อเรียก `fal.run`
+  - **ห้ามขอให้ผู้ใช้วาง key ในแชท**
+  - ถ้าเรียกไม่ได้ ให้ดูเอกสาร environment (read_documentation หัวข้อ environment.secrets / network)
+- **git:**
+  - ทำงานและ push ที่ branch `ccr-fb88c4b3-kcqyid` เท่านั้น
+  - ห้ามสร้าง PR ถ้าผู้ใช้ไม่สั่ง
+  - ห้ามใส่ชื่อหรือรหัสโมเดลใน commit
+- **ก่อนส่งคลิป ต้องตรวจเองก่อนทุกครั้ง:** snapshot หรือ frame strip ฉากที่แก้, LUFS และความยาว
+- **ส่งคลิปให้ผู้ใช้ด้วย SendUserFile** แล้วถามความเห็นเป็นภาษาไทย
+
+---
+
+## 3. สถานะล่าสุด (22 ต.ค. 2026)
+
+### เรื่อง "ค่ายคืนสุดท้าย"
+
+| ตอน | ชื่อ | ความยาว | ไฟล์ใน repo | สถานะ |
+|---|---|---|---|---|
+| EP.1 | เสียงเรียก | 1:42 | `video/camp-ep1/EP1-siang-riak-share.mp4` | เสร็จ กำลังเรนเดอร์ใหม่เพื่อแก้สีปุ่มตัวเลือก |
+| EP.2 | ตาสีเขียว | 1:35 | `video/camp-ep2/EP2-ta-see-kheaw-share.mp4` | เสร็จ เรนเดอร์ใหม่แก้สีปุ่มแล้ว ส่งผู้ใช้แล้ว |
+| EP.3 | อย่าขาน (ตอนจบ) | 2:03 | `video/camp-ep3/EP3-ya-khan-share.mp4` | เสร็จ กำลังเรนเดอร์ใหม่ด้วยรถพยาบาลคันใหญ่ |
+
+- **โครงเรื่องทั้ง 3 ตอน** และความรู้ที่สอดแทรกอยู่ใน `video/camp-ep1/production/ARC.md`
+- **ตัวละคร:**
+  - ปิ่น: ใจกล้า ใจร้อน
+  - กล้า: ชื่อกล้าแต่ขี้กลัว
+  - พี่โจ้: หัวหน้าค่าย ตัวที่อยู่ในค่ายทั้งวันคือ mimic
+  - ลุงชัย: เจ้าหน้าที่อุทยาน
+- **กฎของเรื่อง:** "หลังสองทุ่ม อย่าออกนอกแคมป์ ได้ยินใครเรียกชื่อ อย่าขาน"
+- **ปมค้างตอนจบ EP.3:** สามวันต่อมาที่โรงพยาบาล มือถือกล้าดัง ผู้โทรคือ "ปิ่น" ทั้งที่ปิ่นนั่งอยู่ข้างๆ ตัวเลือก "รับสาย" ถูกดึงไปที่ "รับสิ…" แล้วตัดดำ
+
+### การแก้ล่าสุดที่ผู้ใช้ขอ
+
+1. **ปุ่มตัวเลือกที่ถูกเลือก** ตัวหนังสือมองไม่เห็นเพราะ gradient ทับสีพื้น
+   แก้ใน `gameui.js` ให้ตั้ง `backgroundImage:"none"` ก่อนใส่สีทอง ต้องเรนเดอร์ EP.1 และ EP.2 ใหม่
+2. **รถพยาบาล EP.3 (ฉาก dawn)** วาดใหม่เป็นรถตู้พยาบาลไทยหันซ้าย มี:
+   - กระจก ประตูสไลด์ แถบลายตารางแดงขาว
+   - "รถพยาบาล" "1669" และ star of life สีฟ้าบนประตู
+   - ไฟไซเรนแดงน้ำเงินกะพริบ ล้อหมุน ไฟหน้าแบบ gradient จางลง
+
+   รอบล่าสุดขยายเป็น scale 1.75 (สูงพอๆ กับคน) วิ่งจาก x 1950 ไปจอดที่ 1040 และกล้องถอยออกเป็น `{x:100, y:320, s:0.94}`
+3. **พื้นฉาก hutFront** ขยายลงล่างแล้ว (ตอนกล้องเลื่อน ใต้ภาพเคยโหว่เห็นท้องฟ้า)
+
+### งานที่ยังค้าง (ถ้าแชทเก่าทำไม่ทัน)
+
+- EP.1 และ EP.3 เวอร์ชันใหม่: mux กับ `mix.wav` แล้วตรวจเฟรม ส่งผู้ใช้ และแทนไฟล์ `*-share.mp4` ใน repo แล้ว commit และ push
+  - ถ้าใน repo ยังเป็นไฟล์เก่า ให้เรนเดอร์ใหม่จาก workspace ตามหัวข้อ 5
+- รอผู้ใช้ตอบว่ารถพยาบาลใหญ่พอหรือยัง และจะทำเรื่องใหม่หรือไม่
+
+---
+
+## 4. Next steps ที่แนะนำ
+
+1. ปิดงานเรื่องนี้: ส่ง EP.1 และ EP.3 เวอร์ชันล่าสุด แล้วถามผู้ใช้ว่ามีจุดไหนอยากแก้อีก
+2. **เรื่องใหม่** ทำตามลำดับ:
+   1. เสนอ premise 3–4 แบบเป็นภาษาไทย ให้ผู้ใช้เลือก แต่ละแบบมี hook "ถ้าวันหนึ่ง…" และความรู้เอาตัวรอดที่จะสอน
+   2. เขียน ARC.md 3 ตอน: ตัวละครใหม่ กฎของเรื่อง ปมค้างแต่ละตอน และความรู้พร้อมแหล่งอ้างอิง
+   3. ทำ EP.1 ตาม pipeline หัวข้อ 5 แล้วส่งให้ผู้ใช้ดูก่อนทำตอนต่อไป
+3. ฉาก ตัวละคร และ props ใหม่ ให้เพิ่มในไฟล์ lib ใหม่ (เช่น `hf/lib/<story>.js` แบบเดียวกับ `camp.js`) และเพิ่ม CAST ใหม่ใน `rig.js`
+   ใช้ engine, gameui, fx เดิมได้เลย
+
+---
+
+## 5. Pipeline (คำสั่งจริง)
+
+**ต้องมี:** python3 + numpy, ffmpeg, node/npx และ Chromium (มีใน environment แล้ว)
+
+### ตั้ง workspace
+
+```bash
+W=<scratchpad>/work
+bash video/workspace.sh $W
+```
+
+ได้โครงสร้างแบบนี้:
+
+```
+$W/hf/lib/        rig.js sets.js camp.js ui.js gameui.js fx.js engine.js voice.py
+$W/hf/rig/        package.json hyperframes.json meta.json assets/fonts   (template ของโปรเจกต์ HyperFrames)
+$W/hf/camp, camp2, camp3   ← โปรเจกต์ที่ make.py สร้าง (index.html + assets/)
+$W/camp1, camp2, camp3     ← production ของแต่ละตอน (lines.json timing.py make.py mix.py ep.tmpl.html schedule.json vo/)
+$W/synth.py  $W/music/suno1.mp3
+```
+
+### ขั้นตอนต่อหนึ่งตอน (ตัวอย่าง EP.3 → `$W/camp3`)
+
+1. **เขียนบท** ใน `lines.json`: `[{id, text, voice, style, tempo, af?}]`
+   - id: นำหน้า `n`/`f` สำหรับผู้บรรยาย และ `d`/`g` สำหรับบทพูด (แค่ธรรมเนียม ไม่บังคับ)
+2. **สร้างเสียง:**
+   ```bash
+   python3 $W/hf/lib/voice.py lines.json vo
+   ```
+   - cache ด้วย hash ของ (voice|style|text) ในชื่อ `vo/<id>.<hash>.mp3`
+   - repo เก็บ cache mp3 ไว้ด้วย บรรทัดที่ไม่แก้จะไม่ถูกสร้างใหม่
+   - ถ้าได้ 422 "invalid argument" ให้เปลี่ยนถ้อยคำ เพราะตัวกรองของ Gemini ไม่ชอบบางวลี
+3. **กำหนดช็อต** ใน `timing.py` → SHOTS: `(key, [voice ids], pre, post, min)`
+   - รายการเสียงเขียนได้ 3 แบบ: `"id"` / `("id", gap)` / `("id", offset, "start")`
+   - รัน `python3 timing.py` จะได้ `schedule.json` (เวลาทุกช็อต ใช้ร่วมกันทั้งภาพและเสียง)
+4. **เขียนภาพ** ใน `ep.tmpl.html`: ช็อตละ `add("key", {...})` (สเปกดูหัวข้อ 6.1)
+   - ต้องแก้ `PROJ` ใน make.py ให้ชี้โฟลเดอร์ใหม่ถ้าทำเรื่องใหม่
+5. **build:**
+   ```bash
+   python3 make.py
+   ```
+   copy lib เข้า `hf/<proj>/assets` แล้วฉีด schedule, total และ CSS เข้า index.html
+6. **ตรวจ:**
+   ```bash
+   cd $W/hf/camp3
+   npx --yes hyperframes@0.8.185 check
+   npx --yes hyperframes@0.8.185 snapshot --at 12,30.5,61 --no-end --timeout 120000 --describe false
+   ```
+   - ดู `contact-sheet.jpg` ที่ snapshot ให้มา
+   - ถ้าจอว่าง ไม่มี UI หรือไม่มีแอนิเมชัน ให้ดู console error:
+     ```bash
+     cd $W/hf/camp3 && python3 -m http.server 8799 &
+     /opt/pw-browsers/chromium_headless_shell-*/chrome-linux/headless_shell --no-sandbox --enable-logging=stderr \
+       --virtual-time-budget=10000 --dump-dom http://localhost:8799/index.html 2>&1 | grep CONSOLE
+     ```
+7. **เรนเดอร์** (ประมาณ 15–25 นาทีต่อ 2 นาทีคลิป รันเป็น background):
+   ```bash
+   npx --yes hyperframes@0.8.185 render -f 60 -o $W/ep3-raw.mp4 --quiet
+   ```
+8. **เสียง:**
+   ```bash
+   python3 mix.py
+   ```
+   - CUES = `(shot, เวลาในช็อต (ลบ = นับจากท้าย), ชนิด SFX, gain)`
+   - `dip()` = ช่วงดนตรีเงียบ
+   - ได้ `mix.wav` ที่ −14 LUFS และตัดเงียบตอนจบ
+9. **mux:**
+   ```bash
+   ffmpeg -i ep3-raw.mp4 -i camp3/mix.wav -map 0:v -map 1:a -c:v libx264 -crf 22 -preset medium \
+     -pix_fmt yuv420p -c:a aac -b:a 192k -movflags +faststart EP3.mp4
+   ```
+10. **ตรวจไฟล์สุดท้าย:** ใช้ ffprobe ดูความยาว 1080×1920 60fps, ดึง frame strip ฉากที่แก้มาดูด้วยตา และวัด loudness ด้วย `ebur128`
+11. **เก็บเข้า repo:**
+    - คัดลอก lib → `video/<ep>/lib`, `hf/<proj>` → `composition`, production → `production` (รวม vo/ และ cache mp3)
+    - คัดลอก `mix.wav` และ `<EPx>-<ชื่อ>-share.mp4`
+    - commit แล้ว `git push -u origin ccr-fb88c4b3-kcqyid`
+
+---
+
+## 6. ไฟล์และโค้ดสำคัญ
+
+### 6.1 `engine.js`: Engine.build(root, tl, shots)
+
+ช็อตหนึ่งมี:
+
+```js
+add("dawn", {
+  set: "hutFront", setOpts: { dawn: true }, dark: 0.06,           // ฉากจาก Sets + ความมืดทับ
+  cam: { from: {x,y,s}, to: {x,y,s}, at?, dur?, ease? },           // กล้อง; จุดบนจอ = 540 + s·(wx − 540 − x)
+  shake: (t) => px,                                                 // กล้องสั่น
+  actors: [{ who: "chai", x, y, s, flip?, prop?, from?, until?,
+             track: [{ t, mode, blend, eyes, mouth, look, ... }] }],
+  captions: [cap("dawn", "ข้อความ [คำเด่น]", t, end)],
+  ui: [{ type: "clock", t, end, ... }],                              // GameUI.add (+ fxPanel อัตโนมัติ)
+  extra(L, id) { /* ใส่ SVG เพิ่มก่อนสร้างตัวละคร: L.sky/far/mid/set/act/fg */ },
+  fx(tl, id, t0) { /* tween เพิ่มหลังสร้างทุกอย่างแล้ว: t0 = เวลาเริ่มช็อต */ },
+});
+```
+
+- **ชั้นภาพ:** sky / far / mid / set / act / fg มี parallax ต่างกัน
+  - glow ตาม set
+  - light เป็น screen-space
+  - ของที่ใส่ใน `L.act` ระหว่าง `extra()` จะอยู่ "หลัง" ตัวละคร
+- **Helper ใน template:**
+  - `vo(k,i)` / `voEnd(k,i)` = เวลาเริ่มและจบเสียงในช็อต
+  - `D(k)` = ความยาวช็อต
+  - `cap()`, `Fx.pov()`
+  - ประกาศโหมดท่าทางเพิ่มได้ด้วย `Rig.MODES.x = (u,o)=>({...})`
+
+### 6.2 `rig.js`: ตัวละคร procedural (ฟังก์ชันของเวลา ไม่มีสุ่ม)
+
+- **CAST:** pin, kla, joe, chai (เรื่องเก่า: phum, fon)
+- **modes:** idle walk run crouch sit lie tremble holdHead sitChair raise phoneEar point torch whistle wave phoneLook fall
+- **โหมดที่ประกาศใน template:** crouchShush torchLow sitHurt sitPhone sneak
+- **ตา:** `EYES.glow` (ตาเรืองแสงของ mimic)
+- `prop` = ของในมือ: "mic" (วิทยุสื่อสาร), "phone", "whistle"
+  - ไฟฉายมากับโหมด torch/torchLow
+
+### 6.3 `camp.js`: ฉาก props และแอนิเมชันของเรื่องนี้
+
+- **Sets:**
+  - camp (dusk/night, ไฟสายเส้น `.bulb`/`.bulbglow` data-i, รถตู้)
+  - forest (bigTree, hut, trail)
+  - hut (วิทยุ ตะเกียง หน้าต่าง `.winview`)
+  - hutWindow
+  - forestMap (points, road ขาด X, หมุดรถพยาบาล, thing วนรอบ)
+  - hutFront (dawn ท้องฟ้า, พื้นยาว)
+  - clinic
+- **Props:** `Sets.props.{van, tent, campfire, elephant, snake, shade, rescueTruck}(id, x, y, s)`
+  origin ของทุกชิ้นคือจุดกลางที่พื้น
+- **Anim:** animElephant, animSnake, animMap(tl, scope, t0, dur, {drawAt, draw, circle}), flicker
+
+### 6.4 `gameui.js`: UI แบบเกม (type ใน `ui: []`)
+
+- **tip** (ill: pill/sos/whistle/elephant/snake/pair/map/rule…)
+- **steps**
+- **choice** (`pickAt`, `pick`, `who`, `possessed:{at, side, glitch, who}`)
+- **qte** (`meter`, `okAt`)
+- **rel**, **intro**, **status** (tone: warn/danger/rule/safe/unknown)
+- **polaroid**, **phone**, **hud**, **chapter**
+- **clock** (`from`, `to`, `sweep`, `label`)
+- **figure** (kind: signal, signalOn, ignition, route, rules, snakeid, eyeshine)
+- **radar** (`sources:[{dir, label, ring, color, pulses}]`)
+- **memo**, **pov** (bpm), **minimap**, **stealth** (`steps`, `creakAt`), **call**
+
+ตัวอย่างจริงของทุก type ดูได้ใน `video/camp-ep*/production/ep.tmpl.html`
+
+### 6.5 `fx.js`: เอฟเฟกต์จอ
+
+- `setup`, `heart(tl,t0,dur,period,amt)`, `tunnel`, `letterbox`
+- `glitch(tl,sel,t0,dur,amp,seed)`, `punch`, `hold`, `desat`, `speed`, `flicker`, `lightsOut`
+- `pov(id,{sleeve,skin,cuff,keys:[{t,x,y,r}],shake,off,flicker,dark})` → `{markup, drive(tl,t0,dur)}`
+
+### 6.6 เสียง
+
+- `voice.py`: fal `fal-ai/gemini-3.1-flash-tts`, ภาษา Thai, ตัดเงียบหัวท้าย, atempo, `af`
+- `synth.py`: SFX ทุกชนิด
+  heartbeat tick glitch rustle stomp snap pop notif sting boom crickets vibe ring whoosh knock ding buzz swell static riser wind whistle whistlefar crackle trumpet siren hum creak hiss crank shutter
+- `mix.py`: ปรับระดับทีละบรรทัด (`LINE_GAIN` ลดเสียง mimic −2/−3 dB), ducking ด้วย `box()` (cumsum ห้ามใช้ np.convolve เพราะช้ามาก), dip และ loudnorm
+
+---
+
+## 7. กับดักที่เจอแล้ว (อย่าพลาดซ้ำ)
+
+### Timeline และ lint
+
+- **ทุกอย่างต้อง deterministic:** สุ่มด้วย seeded LCG เท่านั้น ห้าม `Math.random`/`Date`
+- **timeline ต้อง paused** และ register ที่ `window.__timelines["main"]`
+- **tween ที่เริ่มทีหลังต้องใส่ `immediateRender:false`** ไม่งั้นค่าเริ่มจะทับตั้งแต่เฟรมแรก
+- **lint ไม่ยอมให้มี template literal ใน `querySelector`**
+  ใช้ `document.getElementById(id).querySelector(".x")` แทน
+- **โหมด Rig ที่ไม่มีจริง** ทำให้ทั้ง timeline พัง (ไม่มี UI ไม่มีแอนิเมชัน)
+  ต้องประกาศโหมดใน template ของทุกตอนที่ใช้
+
+### CSS และลำดับการวาด
+
+- **glitch ทิ้ง transform ไว้** → HUD ถูกทับ
+  `Fx.glitch` จึงจบด้วย `clearProps:"transform,filter"`
+- **gradient ของแผงทับ backgroundColor** → ต้องตั้ง `backgroundImage:"none"` ก่อนเปลี่ยนสี
+- **ของที่ต้องมีตัวละครอยู่ก่อน** (เช่น ผ้าพันแผล) ให้ใส่ใน `fx()` ไม่ใช่ `extra()`
+- **`url(#none)` ใน filter ทำให้ element หายไป**
+
+### TTS
+
+- **TTS พูดซ้ำ** → ใส่ "พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ"
+- **TTS 422** → เปลี่ยนถ้อยคำ เช่น "อย่าขาน" → "ห้ามใครขานเด็ดขาด"
+
+### คำสั่ง shell
+
+- **ห้าม `pkill -f "python3 mix.py"`** เพราะจะฆ่า shell ตัวเอง
+  ใช้ pattern แบบ `"hyperframes@0.8.18[5] render"`
+
+### การจัดเฟรม
+
+- ตัวละครหลุดขอบเฟรม
+- ป้ายแผนที่ตกจอ
+- พื้นไม่พอตอนกล้องเลื่อน
+
+ทุกครั้งที่เปลี่ยนกล้อง ให้ snapshot ต้น กลาง ท้ายช็อตก่อน render
+
+---
+
+## 8. ซีรีส์ก่อนหน้าใน repo (โครงสร้างแบบเดียวกัน แต่ lib คนละรุ่น)
+
+- `video/ep1/`: "กรุงเทพฯ ดับ" EP.1
+- `video/ghost-ep1/`: "บ้านไม้หลังนั้น" EP.1 (เริ่มใช้ rig, layered sets และ shot engine จากเรื่องนี้)

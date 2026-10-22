@@ -12,6 +12,8 @@
     <radialGradient id="winglow"><stop offset="0" stop-color="#ffd58a" stop-opacity=".6"/><stop offset="1" stop-color="#ffd58a" stop-opacity="0"/></radialGradient>
     <radialGradient id="phoneglow"><stop offset="0" stop-color="#cfe9f2" stop-opacity=".7"/><stop offset="1" stop-color="#cfe9f2" stop-opacity="0"/></radialGradient>
     <linearGradient id="shaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe2e6" stop-opacity=".16"/><stop offset="1" stop-color="#cfe2e6" stop-opacity="0"/></linearGradient>
+    <radialGradient id="beaconBlue"><stop offset="0" stop-color="#5fa8ff" stop-opacity=".85"/><stop offset="1" stop-color="#5fa8ff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="dawnsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e4d6e"/><stop offset=".55" stop-color="#b88a8a"/><stop offset="1" stop-color="#f2c08a"/></linearGradient>
     <linearGradient id="nightsky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c161d"/><stop offset=".6" stop-color="#1a2d38"/><stop offset="1" stop-color="#2b4552"/></linearGradient>`;
 
   // ---------- vegetation ----------
@@ -257,11 +259,16 @@
         ${[[-60, -20], [10, 30], [70, -30], [-10, -60]].map(([dx, dy]) => `<g transform="translate(${P.zone[0] + dx},${P.zone[1] + dy})"><ellipse rx="14" ry="17" fill="#f0a070" opacity=".85"/>${[-10, 0, 10].map((tx) => `<circle cx="${tx}" cy="-19" r="4" fill="#f0a070"/>`).join("")}</g>`).join("")}</g>
       <g class="mpost" transform="translate(${P.post[0]},${P.post[1]})"><circle r="90" fill="url(#winglow)"/><rect x="-36" y="-26" width="72" height="44" fill="#6b4a3a" stroke="#2e2a26" stroke-width="4"/><path d="M-46,-24L0,-58L46,-24Z" fill="#3b2c22" stroke="#2e2a26" stroke-width="4"/><rect x="-24" y="-14" width="18" height="16" fill="#ffd58a"/></g>
       <path id="${uid}-route" class="mroute" d="M${P.you[0]},${P.you[1]}C${P.you[0] + 60},${P.you[1] - 120} ${P.zone[0] - 80},${P.zone[1] + 60} ${P.zone[0]},${P.zone[1]}S${P.post[0] - 40},${P.post[1] + 120} ${P.post[0]},${P.post[1] + 40}" fill="none" stroke="#f2c55c" stroke-width="12" stroke-linecap="round" stroke-dasharray="1400" stroke-dashoffset="1400"/>
+      ${o.road ? `<path d="M1000,1960C960,1560 880,1140 ${P.post[0] + 90},${P.post[1] + 40}" fill="none" stroke="#5a5448" stroke-width="34" stroke-linecap="round"/>
+        <path d="M1000,1960C960,1560 880,1140 ${P.post[0] + 90},${P.post[1] + 40}" fill="none" stroke="#8a8270" stroke-width="4" stroke-dasharray="20 18"/>
+        <g class="mcut" transform="translate(858,1150)"><circle r="44" fill="rgba(232,112,90,.25)"/><path d="M-26,-26L26,26M26,-26L-26,26" stroke="#e8705a" stroke-width="12" stroke-linecap="round"/></g>
+        <g class="mamb" transform="translate(945,1420)"><rect x="-34" y="-20" width="68" height="40" rx="8" fill="#f4ecd8" stroke="#2e2a26" stroke-width="4"/><path d="M-6,0h12M0,-6v12" stroke="#e8705a" stroke-width="6"/>
+          <rect class="mlb" x="-20" y="-30" width="40" height="10" rx="4" fill="#e8705a"/></g>` : ""}
       <g class="mthing" transform="translate(${P.thing[0]},${P.thing[1]})"><circle r="60" fill="#d8ff9a" opacity=".12"/><ellipse cx="-12" cy="0" rx="9" ry="6" fill="#e9ffc0"/><ellipse cx="12" cy="0" rx="9" ry="6" fill="#e9ffc0"/></g>
       <g class="myou" transform="translate(${P.you[0]},${P.you[1]})"><circle class="mping" r="30" fill="none" stroke="#7fd1b9" stroke-width="6"/><circle cx="-14" r="15" fill="#9c4a3c" stroke="#f4ecd8" stroke-width="4"/><circle cx="14" r="15" fill="#4f8f86" stroke="#f4ecd8" stroke-width="4"/></g>
       ${lbl(P.camp[0], P.camp[1] + 170, "แคมป์")}${lbl(P.lost[0] - 10, P.lost[1] + 80, "หลงทางตรงนี้", "#e8705a", 26)}
       ${lbl(P.you[0] + 40, P.you[1] + 90, "คุณอยู่ที่นี่", "#7fd1b9")}${lbl(P.zone[0] + 30, P.zone[1] - 140, "เขตช้างป่า", "#f0a070")}
-      ${lbl(P.post[0] - 20, P.post[1] - 90, "ป้อมพิทักษ์ป่า", "#f2c55c")}
+      ${lbl(P.post[0] - 20, P.post[1] - 90, "ป้อมพิทักษ์ป่า", "#f2c55c")}${o.road ? lbl(800, 1240, "ถนนขาด", "#e8705a") + lbl(770, 1500, "รถกู้ภัย · รอถึงเช้า", "#f4ecd8", 26) : ""}
       <g class="mdist">${lbl(P.zone[0] + 230, P.zone[1] + 120, "≈ 1 กม.", "#f2c55c", 34)}</g>
       <g transform="translate(960,160)"><circle r="56" fill="rgba(10,14,16,.7)" stroke="#f4ecd8" stroke-width="3"/><path d="M0,-44L12,0L0,44L-12,0Z" fill="#f4ecd8"/><path d="M0,-44L12,0H-12Z" fill="#e8705a"/><text y="-60" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#f4ecd8">N</text></g>`);
     return { ground: 1500 };
@@ -275,19 +282,25 @@
     tl.fromTo(`${scope} .mdist`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.35, ease: "back.out(3)", immediateRender: false }, t0 + (o.drawAt ?? 2.0) + (o.draw || 1.6));
     document.querySelectorAll(`${scope} .mlabel`).forEach((g, i) => tl.fromTo(g, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.9 + i * 0.18));
     for (let k = 0.6; k < dur; k += 1.3) { tl.set(`${scope} .mthing`, { opacity: 0 }, t0 + k); tl.set(`${scope} .mthing`, { opacity: 1 }, t0 + k + 0.15); }
+    if (o.circle) { // the eyes prowl round the post
+      const th = document.querySelector(`${scope} .mthing`), c = { a: 0 };
+      tl.to(c, { a: Math.PI * 2 * (dur / 4), duration: dur, ease: "none", onUpdate: () => th.setAttribute("transform", `translate(${(o.circle[0] + Math.cos(c.a) * 170).toFixed(1)},${(o.circle[1] + Math.sin(c.a) * 130).toFixed(1)})`) }, t0);
+    }
+    if (document.querySelector(`${scope} .mlb`)) tl.fromTo(`${scope} .mlb`, { attr: { fill: "#e8705a" } }, { attr: { fill: "#5fa8e8" }, duration: 0.25, repeat: Math.ceil(dur / 0.25), yoyo: true, immediateRender: false }, t0);
   }
 
   // ---------------- the ranger post, front view at night ----------------
   function hutFront(L, o = {}) {
     const r = mk(o.seed || 61);
-    put(L.sky, `<rect x="-600" y="0" width="2280" height="1920" fill="url(#nightsky2)"/>${stars(r, 80)}<circle cx="860" cy="260" r="200" fill="url(#moonhalo)"/><circle cx="860" cy="260" r="48" fill="#f4ecd8"/>`);
+    if (o.dawn) put(L.sky, `<rect x="-600" y="0" width="2280" height="1920" fill="url(#dawnsky)"/><circle cx="200" cy="1180" r="380" fill="url(#sunhalo)"/><circle cx="200" cy="1180" r="70" fill="#ffd9a0"/>`);
+    else put(L.sky, `<rect x="-600" y="0" width="2280" height="1920" fill="url(#nightsky2)"/>${stars(r, 80)}<circle cx="860" cy="260" r="200" fill="url(#moonhalo)"/><circle cx="860" cy="260" r="48" fill="#f4ecd8"/>`);
     let far = `<rect x="-600" y="1000" width="2280" height="260" fill="url(#fogg)"/>`;
     for (let x = -600; x < 1700; x += 70 + r() * 60) far += pine(x, 1260, 360 + r() * 240, 150 + r() * 80, "#29434d", "#223943");
     put(L.far, far);
     let mid = "";
     for (let x = -600; x < 1700; x += 170 + r() * 140) if (x < 80 || x > 1000) mid += pine(x, 1440, 620 + r() * 300, 240 + r() * 110, "#1d323a", "#172930");
     put(L.mid, mid);
-    put(L.set, `<rect x="-600" y="1440" width="2280" height="520" fill="#16252c"/><path d="M380,1940L470,1500H610L700,1940Z" fill="#3b4f52" opacity=".8"/>
+    put(L.set, `<rect x="-600" y="1440" width="2280" height="1100" fill="#16252c"/><path d="M340,2400L470,1500H610L740,2400Z" fill="#3b4f52" opacity=".8"/>
       <g id="hutf"><path d="M130,1470V860H950V1470Z" fill="url(#planks)" stroke="${INK}" stroke-width="6"/>
         <path d="M60,880L540,560L1020,880Z" fill="#33251c" stroke="${INK}" stroke-width="6"/><path d="M100,870L540,600L980,870" fill="none" stroke="#5c4433" stroke-width="10"/>
         <path d="M800,690V420M800,430l60,40" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><circle cx="800" cy="420" r="9" fill="#e8705a"/>
@@ -300,6 +313,46 @@
     put(L.glow, `<circle class="hwglow" cx="290" cy="1145" r="260" fill="url(#winglow)"/><circle cx="680" cy="1052" r="120" fill="url(#winglow)" opacity=".7"/>`);
     put(L.fg, `${tufts(r, -600, 1700, 1930, "#0a120d", 2.2)}${fern(-60, 1960, 1.7, "#0b140f")}${fern(1150, 1960, 1.8, "#0b140f")}`);
     return { ground: 1500 };
+  }
+
+  // ---------------- hospital corridor, daytime ----------------
+  function clinic(L, o = {}) {
+    put(L.sky, `<rect x="-600" y="0" width="2280" height="1920" fill="#dfe8e2"/>`);
+    put(L.far, `<rect x="-600" y="0" width="2280" height="1180" fill="#e8efe9"/><rect x="-600" y="1180" width="2280" height="320" fill="#b9d3c6"/><path d="M-600,1180H1680" stroke="#8fb3a2" stroke-width="10"/>
+      <rect x="560" y="300" width="420" height="560" fill="#bfe0ef" stroke="${INK}" stroke-width="10"/><path d="M770,300V860M560,580H980" stroke="${INK}" stroke-width="8"/>
+      ${[0, 1, 2].map((i) => `<path d="M${590 + i * 130},860q30,-160 70,-260q30,90 50,260z" fill="#7fae7a"/>`).join("")}<circle cx="900" cy="380" r="40" fill="#fff6d8"/>
+      <rect x="-60" y="380" width="380" height="250" rx="10" fill="#f4ecd8" stroke="${INK}" stroke-width="5"/><text x="130" y="470" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#c8553d">1669</text>
+      <text x="130" y="540" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="${INK}">เจ็บป่วยฉุกเฉิน</text>
+      <rect x="-600" y="1480" width="2280" height="440" fill="#cfd8d4"/>${Array.from({ length: 12 }, (_, i) => `<path d="M${-600 + i * 200},1480V1920" stroke="#b9c4c0" stroke-width="4"/>`).join("")}`);
+    put(L.set, `<g transform="translate(540,1620)"><rect x="-380" y="-120" width="760" height="40" rx="10" fill="#4f8f86" stroke="${INK}" stroke-width="5"/><rect x="-380" y="-260" width="760" height="40" rx="10" fill="#4f8f86" stroke="${INK}" stroke-width="5"/>
+      <rect x="-350" y="-80" width="26" height="80" fill="#8a9499" stroke="${INK}" stroke-width="4"/><rect x="324" y="-80" width="26" height="80" fill="#8a9499" stroke="${INK}" stroke-width="4"/></g>`);
+    put(L.fg, `<rect x="-600" y="-40" width="2280" height="90" fill="#c9d6d0"/>`);
+    return { ground: 1620 };
+  }
+  // Thai ambulance van facing left (the way it drives in); origin = ground under the middle of the van
+  function rescueTruck(id, x, y, s) {
+    const wheel = (cx) => `<g transform="translate(${cx},-46)"><circle r="50" fill="#1f2326" stroke="${INK}" stroke-width="5"/><g class="spokes">
+        <circle r="24" fill="#b9c2c6" stroke="${INK}" stroke-width="3"/>${[0, 60, 120].map((a) => `<rect x="-3" y="-22" width="6" height="44" fill="#6b7478" transform="rotate(${a})"/>`).join("")}</g></g>`;
+    const checks = Array.from({ length: 28 }, (_, i) => `<rect x="${-268 + i * 20}" y="${-118 + (i % 2) * 10}" width="20" height="10" fill="#e8705a"/>`).join("");
+    return `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="4" rx="310" ry="24" fill="#060c10" opacity=".45"/>
+      <circle class="lbglow lbgr" cx="-120" cy="-300" r="220" fill="url(#beacon)" opacity=".7"/>
+      <path d="M-300,-96L-700,-40L-700,10L-300,-60Z" fill="#fff3c8" opacity=".18"/>
+      <path d="M-278,-40V-150Q-278,-176 -256,-186L-196,-252Q-184,-264 -164,-264H252Q280,-264 280,-236V-40Z" fill="#f7f5ee" stroke="${INK}" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M-250,-182L-196,-246H-150V-182Z" fill="#22303a" stroke="${INK}" stroke-width="4"/><path d="M-226,-196L-190,-238" stroke="#5f7d8a" stroke-width="6" opacity=".6"/>
+      <rect x="-128" y="-246" width="92" height="60" rx="6" fill="#22303a" stroke="${INK}" stroke-width="4"/><rect x="150" y="-246" width="104" height="60" rx="6" fill="#22303a" stroke="${INK}" stroke-width="4"/>
+      <rect x="-20" y="-250" width="150" height="206" rx="6" fill="none" stroke="#9aa3a5" stroke-width="4"/><rect x="104" y="-150" width="16" height="6" rx="3" fill="#6b7478"/>
+      <rect x="-278" y="-128" width="558" height="30" fill="#f7f5ee"/>${checks}<path d="M-278,-128H280M-278,-98H280" stroke="#c8553d" stroke-width="3"/>
+      <text x="-90" y="-148" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#c8553d">รถพยาบาล</text>
+      <text x="55" y="-146" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#2f6fb8">1669</text>
+      <g transform="translate(55,-212)"><circle r="28" fill="#2f6fb8" stroke="${INK}" stroke-width="3"/>${[0, 60, 120].map((a) => `<rect x="-6" y="-22" width="12" height="44" rx="2" fill="#f7f5ee" transform="rotate(${a})"/>`).join("")}<path d="M0,-16V16" stroke="#2f6fb8" stroke-width="3"/></g>
+      <rect x="-292" y="-66" width="44" height="28" rx="8" fill="#8a9499" stroke="${INK}" stroke-width="4"/><rect x="270" y="-66" width="20" height="28" rx="6" fill="#8a9499" stroke="${INK}" stroke-width="4"/>
+      <rect x="-284" y="-104" width="24" height="20" rx="5" fill="#ffd58a" stroke="${INK}" stroke-width="3"/><rect x="262" y="-104" width="16" height="20" rx="4" fill="#e8705a" stroke="${INK}" stroke-width="3"/>
+      <rect x="-222" y="-196" width="16" height="22" rx="4" fill="#3d3833" stroke="${INK}" stroke-width="3"/>
+      <path d="M-230,-40a62,62 0 0 1 124,0M110,-40a62,62 0 0 1 124,0" fill="#2a3135"/>
+      ${wheel(-168)}${wheel(172)}
+      <rect x="-160" y="-284" width="170" height="22" rx="8" fill="#3d3833" stroke="${INK}" stroke-width="4"/>
+      <rect class="lbr" x="-154" y="-282" width="78" height="18" rx="6" fill="#ff4a3a"/><rect class="lbb" x="-70" y="-282" width="78" height="18" rx="6" fill="#3f8fff"/>
+      <circle class="lbglow lbgb" cx="-30" cy="-300" r="200" fill="url(#beaconBlue)" opacity=".7"/></g>`;
   }
 
   // dark mimic silhouette with eyeshine (no rig: it should not move like a person)
@@ -399,7 +452,7 @@
     q(".led").forEach((el) => tl.fromTo(el, { opacity: 1 }, { opacity: 0.2, duration: 0.3, repeat: rep(0.3), yoyo: true, immediateRender: false }, t0));
   }
 
-  Object.assign(Sets, { camp, forest, hut, hutWindow, forestMap, hutFront });
-  Sets.props = Object.assign(Sets.props || {}, { van, tent, campfire, elephant, snake, shade });
+  Object.assign(Sets, { camp, forest, hut, hutWindow, forestMap, hutFront, clinic });
+  Sets.props = Object.assign(Sets.props || {}, { van, tent, campfire, elephant, snake, shade, rescueTruck });
   window.Camp = { animElephant, animSnake, animMap, attach, flicker, pine, hand };
 })();
