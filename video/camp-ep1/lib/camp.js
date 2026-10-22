@@ -231,6 +231,84 @@
     return { ground: 1500 };
   }
 
+  // ---------------- aerial forest map (top-down) for the zoom-out route shots ----------------
+  function forestMap(L, o = {}) {
+    const r = mk(o.seed || 51), uid = L.far.id;
+    const P = o.points || { camp: [300, 1520], lost: [520, 1060], you: [640, 900], post: [790, 380], zone: [720, 640], thing: [520, 1040] };
+    let crowns = "";
+    for (let i = 0; i < 520; i++) {
+      const x = r() * 1500 - 210, y = r() * 2300 - 190;
+      const near = (q, d) => Math.hypot(x - q[0], y - q[1]) < d;
+      if (near(P.camp, 170) || near(P.post, 90)) continue;
+      const rr = 34 + r() * 46, c = ["#2a4236", "#23392e", "#2f4a3c", "#1f3329"][Math.floor(r() * 4)];
+      crowns += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${rr.toFixed(0)}" fill="${c}"/><circle cx="${(x - rr * 0.3).toFixed(0)}" cy="${(y - rr * 0.3).toFixed(0)}" r="${(rr * 0.45).toFixed(0)}" fill="#3a5a48" opacity=".55"/>`;
+    }
+    const lbl = (x, y, t, c = "#f4ecd8", sz = 30) => `<g class="mlabel"><rect x="${x - t.length * sz * 0.29 - 14}" y="${y - sz - 6}" width="${t.length * sz * 0.58 + 28}" height="${sz + 18}" rx="${(sz + 18) / 2}" fill="rgba(10,14,16,.78)" stroke="${c}" stroke-width="2.5"/>
+      <text x="${x}" y="${y}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${sz}" fill="${c}">${t}</text></g>`;
+    put(L.set, `<rect x="-400" y="-400" width="1880" height="2720" fill="#16241e"/>
+      ${Array.from({ length: 7 }, (_, i) => `<path d="M-300,${300 + i * 260}q300,-90 700,10t900,-40" fill="none" stroke="#2b4034" stroke-width="3" opacity=".6"/>`).join("")}
+      <path d="M1400,-200C1100,300 1000,560 1180,900S700,1500 860,2300" fill="none" stroke="#2a4656" stroke-width="70" stroke-linecap="round"/>
+      <path d="M1400,-200C1100,300 1000,560 1180,900S700,1500 860,2300" fill="none" stroke="#3b6274" stroke-width="30" stroke-linecap="round" opacity=".6"/>
+      ${crowns}
+      <ellipse cx="${P.camp[0]}" cy="${P.camp[1]}" rx="150" ry="110" fill="#6b6a4a"/>${[[-50, -20, "#d9773f"], [30, 10, "#4f8f86"], [-10, 50, "#e8e0cc"]].map(([dx, dy, c]) => `<path d="M${P.camp[0] + dx - 26},${P.camp[1] + dy + 18}L${P.camp[0] + dx},${P.camp[1] + dy - 22}L${P.camp[0] + dx + 26},${P.camp[1] + dy + 18}Z" fill="${c}" stroke="#2e2a26" stroke-width="3"/>`).join("")}
+      <path class="mtrail" d="M${P.camp[0]},${P.camp[1] - 80}C${P.camp[0] + 40},1340 ${P.lost[0] - 60},1200 ${P.lost[0]},${P.lost[1]}" fill="none" stroke="#e9dcc0" stroke-width="10" stroke-dasharray="4 16" stroke-linecap="round"/>
+      <g transform="translate(${P.lost[0]},${P.lost[1]})"><path d="M-22,-22L22,22M22,-22L-22,22" stroke="#e8705a" stroke-width="10" stroke-linecap="round"/></g>
+      <g class="mzone"><ellipse cx="${P.zone[0]}" cy="${P.zone[1]}" rx="190" ry="120" fill="rgba(240,160,112,.18)" stroke="#f0a070" stroke-width="5" stroke-dasharray="16 12"/>
+        ${[[-60, -20], [10, 30], [70, -30], [-10, -60]].map(([dx, dy]) => `<g transform="translate(${P.zone[0] + dx},${P.zone[1] + dy})"><ellipse rx="14" ry="17" fill="#f0a070" opacity=".85"/>${[-10, 0, 10].map((tx) => `<circle cx="${tx}" cy="-19" r="4" fill="#f0a070"/>`).join("")}</g>`).join("")}</g>
+      <g class="mpost" transform="translate(${P.post[0]},${P.post[1]})"><circle r="90" fill="url(#winglow)"/><rect x="-36" y="-26" width="72" height="44" fill="#6b4a3a" stroke="#2e2a26" stroke-width="4"/><path d="M-46,-24L0,-58L46,-24Z" fill="#3b2c22" stroke="#2e2a26" stroke-width="4"/><rect x="-24" y="-14" width="18" height="16" fill="#ffd58a"/></g>
+      <path id="${uid}-route" class="mroute" d="M${P.you[0]},${P.you[1]}C${P.you[0] + 60},${P.you[1] - 120} ${P.zone[0] - 80},${P.zone[1] + 60} ${P.zone[0]},${P.zone[1]}S${P.post[0] - 40},${P.post[1] + 120} ${P.post[0]},${P.post[1] + 40}" fill="none" stroke="#f2c55c" stroke-width="12" stroke-linecap="round" stroke-dasharray="1400" stroke-dashoffset="1400"/>
+      <g class="mthing" transform="translate(${P.thing[0]},${P.thing[1]})"><circle r="60" fill="#d8ff9a" opacity=".12"/><ellipse cx="-12" cy="0" rx="9" ry="6" fill="#e9ffc0"/><ellipse cx="12" cy="0" rx="9" ry="6" fill="#e9ffc0"/></g>
+      <g class="myou" transform="translate(${P.you[0]},${P.you[1]})"><circle class="mping" r="30" fill="none" stroke="#7fd1b9" stroke-width="6"/><circle cx="-14" r="15" fill="#9c4a3c" stroke="#f4ecd8" stroke-width="4"/><circle cx="14" r="15" fill="#4f8f86" stroke="#f4ecd8" stroke-width="4"/></g>
+      ${lbl(P.camp[0], P.camp[1] + 170, "แคมป์")}${lbl(P.lost[0] - 10, P.lost[1] + 80, "หลงทางตรงนี้", "#e8705a", 26)}
+      ${lbl(P.you[0] + 40, P.you[1] + 90, "คุณอยู่ที่นี่", "#7fd1b9")}${lbl(P.zone[0] + 30, P.zone[1] - 140, "เขตช้างป่า", "#f0a070")}
+      ${lbl(P.post[0] - 20, P.post[1] - 90, "ป้อมพิทักษ์ป่า", "#f2c55c")}
+      <g class="mdist">${lbl(P.zone[0] + 230, P.zone[1] + 120, "≈ 1 กม.", "#f2c55c", 34)}</g>
+      <g transform="translate(960,160)"><circle r="56" fill="rgba(10,14,16,.7)" stroke="#f4ecd8" stroke-width="3"/><path d="M0,-44L12,0L0,44L-12,0Z" fill="#f4ecd8"/><path d="M0,-44L12,0H-12Z" fill="#e8705a"/><text y="-60" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#f4ecd8">N</text></g>`);
+    return { ground: 1500 };
+  }
+  // animate the map: route draws, zone and post pulse, "you" pings, the thing's eyes blink
+  function animMap(tl, scope, t0, dur, o = {}) {
+    const rt = document.querySelector(`${scope} .mroute`);
+    tl.to(rt, { attr: { "stroke-dashoffset": 0 }, duration: o.draw || 1.6, ease: "power1.inOut" }, t0 + (o.drawAt ?? 2.0));
+    tl.fromTo(`${scope} .mping`, { attr: { r: 20 }, opacity: 1 }, { attr: { r: 70 }, opacity: 0, duration: 0.9, repeat: Math.ceil(dur / 0.9), ease: "power2.out", immediateRender: false }, t0);
+    tl.fromTo(`${scope} .mzone`, { opacity: 0.55 }, { opacity: 1, duration: 0.5, repeat: Math.ceil(dur / 0.5), yoyo: true, immediateRender: false }, t0);
+    tl.fromTo(`${scope} .mdist`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.35, ease: "back.out(3)", immediateRender: false }, t0 + (o.drawAt ?? 2.0) + (o.draw || 1.6));
+    document.querySelectorAll(`${scope} .mlabel`).forEach((g, i) => tl.fromTo(g, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.9 + i * 0.18));
+    for (let k = 0.6; k < dur; k += 1.3) { tl.set(`${scope} .mthing`, { opacity: 0 }, t0 + k); tl.set(`${scope} .mthing`, { opacity: 1 }, t0 + k + 0.15); }
+  }
+
+  // ---------------- the ranger post, front view at night ----------------
+  function hutFront(L, o = {}) {
+    const r = mk(o.seed || 61);
+    put(L.sky, `<rect x="-600" y="0" width="2280" height="1920" fill="url(#nightsky2)"/>${stars(r, 80)}<circle cx="860" cy="260" r="200" fill="url(#moonhalo)"/><circle cx="860" cy="260" r="48" fill="#f4ecd8"/>`);
+    let far = `<rect x="-600" y="1000" width="2280" height="260" fill="url(#fogg)"/>`;
+    for (let x = -600; x < 1700; x += 70 + r() * 60) far += pine(x, 1260, 360 + r() * 240, 150 + r() * 80, "#29434d", "#223943");
+    put(L.far, far);
+    let mid = "";
+    for (let x = -600; x < 1700; x += 170 + r() * 140) if (x < 80 || x > 1000) mid += pine(x, 1440, 620 + r() * 300, 240 + r() * 110, "#1d323a", "#172930");
+    put(L.mid, mid);
+    put(L.set, `<rect x="-600" y="1440" width="2280" height="520" fill="#16252c"/><path d="M380,1940L470,1500H610L700,1940Z" fill="#3b4f52" opacity=".8"/>
+      <g id="hutf"><path d="M130,1470V860H950V1470Z" fill="url(#planks)" stroke="${INK}" stroke-width="6"/>
+        <path d="M60,880L540,560L1020,880Z" fill="#33251c" stroke="${INK}" stroke-width="6"/><path d="M100,870L540,600L980,870" fill="none" stroke="#5c4433" stroke-width="10"/>
+        <path d="M800,690V420M800,430l60,40" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><circle cx="800" cy="420" r="9" fill="#e8705a"/>
+        <rect x="320" y="900" width="440" height="80" fill="#5f7d5a" stroke="${INK}" stroke-width="5"/><text x="540" y="954" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#f4ecd8">หน่วยพิทักษ์ป่า</text>
+        <rect id="hutdoor" x="450" y="1040" width="180" height="420" fill="#2a1e17" stroke="${INK}" stroke-width="6"/><circle cx="605" cy="1260" r="10" fill="#c9bfa8"/>
+        <rect x="190" y="1060" width="200" height="170" fill="#ffd58a" stroke="${INK}" stroke-width="6"/><path d="M290,1060V1230M190,1145H390" stroke="${INK}" stroke-width="7"/>
+        <rect x="700" y="1060" width="200" height="170" fill="#1b2328" stroke="${INK}" stroke-width="6"/><path d="M800,1060V1230M700,1145H900" stroke="${INK}" stroke-width="7"/>
+        <rect x="100" y="1460" width="880" height="34" fill="#4a3426" stroke="${INK}" stroke-width="5"/><rect x="420" y="1492" width="240" height="26" fill="#3b2c22" stroke="${INK}" stroke-width="4"/>
+        <g id="hutlamp"><path d="M680,1000V1030" stroke="${INK}" stroke-width="4"/><rect x="664" y="1030" width="32" height="42" rx="7" fill="#ffd58a" stroke="${INK}" stroke-width="4"/></g></g>`);
+    put(L.glow, `<circle class="hwglow" cx="290" cy="1145" r="260" fill="url(#winglow)"/><circle cx="680" cy="1052" r="120" fill="url(#winglow)" opacity=".7"/>`);
+    put(L.fg, `${tufts(r, -600, 1700, 1930, "#0a120d", 2.2)}${fern(-60, 1960, 1.7, "#0b140f")}${fern(1150, 1960, 1.8, "#0b140f")}`);
+    return { ground: 1500 };
+  }
+
+  // dark mimic silhouette with eyeshine (no rig: it should not move like a person)
+  function shade(id, x, y, s) {
+    return `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><path d="M-46,0C-58,-160 -50,-330 -36,-430Q0,-470 36,-430C50,-330 58,-160 46,0Z" fill="#05090b" opacity=".95"/>
+      <ellipse cx="0" cy="-500" rx="40" ry="50" fill="#05090b"/><path d="M-36,-420Q-90,-300 -84,-170M36,-420Q92,-300 88,-160" stroke="#05090b" stroke-width="22" fill="none" stroke-linecap="round"/>
+      <g class="eyes"><circle cx="-14" cy="-506" r="16" fill="#d8ff9a" opacity=".25"/><circle cx="16" cy="-506" r="16" fill="#d8ff9a" opacity=".25"/><ellipse cx="-14" cy="-506" rx="8" ry="5" fill="#e9ffc0"/><ellipse cx="16" cy="-506" rx="8" ry="5" fill="#e9ffc0"/></g></g>`;
+  }
+
   // ---------------- creatures ----------------
   // wild elephant, side view facing left; legs, trunk and ear are animated by animElephant
   function elephant(id, x, y, s) {
@@ -321,7 +399,7 @@
     q(".led").forEach((el) => tl.fromTo(el, { opacity: 1 }, { opacity: 0.2, duration: 0.3, repeat: rep(0.3), yoyo: true, immediateRender: false }, t0));
   }
 
-  Object.assign(Sets, { camp, forest, hut, hutWindow });
-  Sets.props = Object.assign(Sets.props || {}, { van, tent, campfire, elephant, snake });
-  window.Camp = { animElephant, animSnake, attach, flicker, pine, hand };
+  Object.assign(Sets, { camp, forest, hut, hutWindow, forestMap, hutFront });
+  Sets.props = Object.assign(Sets.props || {}, { van, tent, campfire, elephant, snake, shade });
+  window.Camp = { animElephant, animSnake, animMap, attach, flicker, pine, hand };
 })();

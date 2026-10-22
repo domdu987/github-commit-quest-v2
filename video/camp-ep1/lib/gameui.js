@@ -141,7 +141,7 @@
             <circle class="ring" cx="55" cy="55" r="46" fill="none" stroke="#f2c55c" stroke-width="9" stroke-linecap="round" stroke-dasharray="${RC}" stroke-dashoffset="0" transform="rotate(-90 55 55)"/></svg>
             ${Array.from({ length: (o.secs || 5) + 1 }, (_, n) => `<b class="n n${n}">${n}</b>`).join("")}</div>
           <div class="opt B"><span>${o.b}</span><span class="key">▶</span></div></div>
-        <div class="who">${o.who || (o.possessed && o.possessed.who) || ""}</div></div>`,
+        <div class="who">${(o.possessed && o.possessed.who) || o.who || ""}</div>${o.possessed && o.who ? `<div class="who who2">${o.who}</div>` : ""}</div>`,
     anim(tl, id, t0, o) {
       const secs = o.secs || 5;
       const span = o.pickAt !== undefined ? o.pickAt - o.t : secs;
@@ -159,18 +159,23 @@
       tl.fromTo(`#${id} .timer`, { scale: 1 }, { scale: 1.08, duration: 0.25, repeat: Math.ceil(span / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + span * 0.6);
       if (o.possessed) {
         const pa = o.t0abs + o.possessed.at, side = o.possessed.side === "b" ? "B" : "A", other = side === "A" ? "B" : "A";
-        tl.fromTo(`#${id} .opt.${side}`, { x: 0 }, { x: 7, duration: 0.05, repeat: 60, yoyo: true, immediateRender: false }, pa);
+        const jit = o.pickAt !== undefined ? Math.max(1, Math.floor((o.pickAt - o.possessed.at) / 0.05)) : 60;
+        tl.fromTo(`#${id} .opt.${side}`, { x: 0 }, { x: 7, duration: 0.05, repeat: jit, yoyo: true, immediateRender: false }, pa);
         tl.to(`#${id} .opt.${side}`, { backgroundColor: "rgba(140,20,30,.92)", scale: 1.16, duration: 0.9, ease: "power2.in" }, pa);
         tl.to(`#${id} .opt.${other}`, { opacity: 0.3, scale: 0.9, duration: 0.6 }, pa + 0.2);
         tl.fromTo(`#${id} .opt.${side}`, { boxShadow: "0 0 0 0 rgba(232,80,80,.9)" }, { boxShadow: "0 0 0 30px rgba(232,80,80,0)", duration: 0.45, repeat: 4, immediateRender: false }, pa);
         [0.15, 0.4, 0.62, 0.8, 0.95].forEach((k, i) => { tl.set(`#${id} .opt.${side} .lbt`, { opacity: i % 2 ? 1 : 0 }, pa + k); tl.set(`#${id} .opt.${side} .lbg`, { opacity: i % 2 ? 0 : 1 }, pa + k); });
-        tl.fromTo(`#${id} .who`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, pa + 0.5);
+        tl.fromTo(`#${id} .who:not(.who2)`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, pa + 0.5);
+      }
+      if (o.pickAt !== undefined && o.possessed && o.who) {
+        tl.to(`#${id} .who:not(.who2)`, { opacity: 0, duration: 0.15 }, o.t0abs + o.pickAt);
+        tl.set(`#${id} .opt`, { x: 0 }, o.t0abs + o.pickAt);
       }
       if (o.pickAt !== undefined) {
         const pk = o.t0abs + o.pickAt, win = o.pick === "b" ? "B" : "A", lose = win === "A" ? "B" : "A";
         tl.to(`#${id} .opt.${win}`, { scale: 1.14, backgroundColor: "#f2c55c", color: INK, duration: 0.25, ease: "back.out(3)" }, pk);
         tl.to(`#${id} .opt.${lose}`, { opacity: 0.25, scale: 0.92, duration: 0.25 }, pk);
-        tl.fromTo(`#${id} .who`, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.25, immediateRender: false }, pk + 0.1);
+        tl.fromTo(`#${id} ${o.possessed ? ".who2" : ".who"}`, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.25, immediateRender: false }, pk + 0.1);
         tl.fromTo(`#${id} .opt.${win}`, { boxShadow: "0 0 0 0 rgba(242,197,92,.9)" }, { boxShadow: "0 0 0 26px rgba(242,197,92,0)", duration: 0.6, repeat: 1, ease: "power1.out", immediateRender: false }, pk);
       }
     },
@@ -384,23 +389,37 @@
       },
     },
     ignition: {
-      vb: "0 0 240 200",
-      svg: () => `<rect x="8" y="20" width="224" height="170" rx="26" fill="#2a2f33" stroke="${INK}" stroke-width="4"/>
-        <path d="M30,118a52,52 0 0 1 104,0" fill="none" stroke="#4a5358" stroke-width="12"/><path d="M30,118a52,52 0 0 1 22,-42" fill="none" stroke="#e8705a" stroke-width="12"/>
-        <g class="needle"><path d="M82,118L46,96" stroke="#f2c55c" stroke-width="6" stroke-linecap="round"/></g><circle cx="82" cy="118" r="8" fill="#f4ecd8"/>
-        <text x="82" y="150" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="16" fill="#9aa3a5">RPM</text>
-        <circle cx="178" cy="112" r="38" fill="#3d4448" stroke="#9aa3a5" stroke-width="5"/>
-        <g class="key"><rect x="170" y="70" width="16" height="50" rx="4" fill="#c9bfa8" stroke="${INK}" stroke-width="3"/><circle cx="178" cy="62" r="20" fill="#d9a441" stroke="${INK}" stroke-width="4"/><circle cx="178" cy="62" r="6" fill="#2a2f33"/></g>
-        <g class="spark" opacity="0"><path d="M214,74l12,-10M218,96l16,0M210,52l6,-14" stroke="#f2c55c" stroke-width="5" stroke-linecap="round"/></g>
-        <g class="x" opacity="0"><circle cx="178" cy="112" r="40" fill="rgba(232,112,90,.25)"/><path d="M160,94l36,36M196,94l-36,36" stroke="#e8705a" stroke-width="10" stroke-linecap="round"/></g>`,
+      vb: "0 0 320 220",
+      svg: () => `<rect x="6" y="10" width="308" height="204" rx="30" fill="#1f2529" stroke="${INK}" stroke-width="5"/><rect x="16" y="20" width="288" height="184" rx="24" fill="url(#dashg)"/>
+        <defs><linearGradient id="dashg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#323b40"/><stop offset="1" stop-color="#1a2024"/></linearGradient></defs>
+        <circle cx="100" cy="110" r="72" fill="#12171a" stroke="#4a5358" stroke-width="5"/>
+        ${Array.from({ length: 9 }, (_, i) => { const a = (-210 + i * 30) * Math.PI / 180; return `<path d="M${100 + Math.cos(a) * 58},${110 + Math.sin(a) * 58}L${100 + Math.cos(a) * 68},${110 + Math.sin(a) * 68}" stroke="${i > 6 ? "#e8705a" : "#cfd8d6"}" stroke-width="4"/>`; }).join("")}
+        <path d="M${100 + Math.cos(Math.PI / 6) * 64},${110 + Math.sin(Math.PI / 6) * 64}A64,64 0 0 0 ${100 + Math.cos(-Math.PI / 6) * 64},${110 + Math.sin(-Math.PI / 6) * 64}" fill="none" stroke="#e8705a" stroke-width="6" opacity=".7"/>
+        <g class="needle"><path d="M100,110L52,138" stroke="#f2c55c" stroke-width="7" stroke-linecap="round"/></g><circle cx="100" cy="110" r="10" fill="#f4ecd8"/>
+        <text x="100" y="164" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="17" fill="#9aa3a5">RPM ×1000</text>
+        <g class="wl wbat"><rect x="190" y="150" width="34" height="22" rx="4" fill="none" stroke="#e8705a" stroke-width="4"/><path d="M196,150v-5M218,150v-5M197,161h8M212,161h8M216,157v8" stroke="#e8705a" stroke-width="3"/></g>
+        <g class="wl weng"><path d="M240,170v-16h8l4,-4h14l4,6h6v14h-6l-4,4h-18z" fill="none" stroke="#f0a070" stroke-width="4" stroke-linejoin="round"/></g>
+        <circle cx="250" cy="90" r="40" fill="#2a3135" stroke="#9aa3a5" stroke-width="5"/><text x="250" y="48" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="14" fill="#9aa3a5">OFF · ON · START</text>
+        <g class="key"><rect x="242" y="44" width="16" height="54" rx="4" fill="#c9bfa8" stroke="${INK}" stroke-width="3"/><circle cx="250" cy="38" r="22" fill="#d9a441" stroke="${INK}" stroke-width="4"/><circle cx="250" cy="38" r="6" fill="#2a2f33"/></g>
+        <g class="arc" opacity="0"><path d="M206,60a50,50 0 0 1 30,-34" fill="none" stroke="#f2c55c" stroke-width="5" stroke-linecap="round" stroke-dasharray="6 7"/><path d="M228,22l10,4l-6,9" fill="none" stroke="#f2c55c" stroke-width="5" stroke-linecap="round"/></g>
+        <g class="spark" opacity="0"><path d="M286,58l14,-12M290,84l20,0M282,34l8,-16M292,112l14,8" stroke="#f2c55c" stroke-width="5" stroke-linecap="round"/></g>
+        <g class="chk" opacity="0"><rect x="196" y="112" width="104" height="30" rx="8" fill="#f2c55c"/><text x="248" y="134" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="${INK}">แชะ!</text></g>
+        <g class="stamp" opacity="0" transform="rotate(-12 160 112)"><rect x="40" y="82" width="240" height="62" rx="10" fill="rgba(232,112,90,.15)" stroke="#e8705a" stroke-width="7"/>
+          <text x="160" y="126" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="36" fill="#e8705a">สตาร์ทไม่ติด</text></g>`,
       anim(tl, id, t0) {
-        [0.3, 1.0].forEach((k) => {
-          tl.fromTo(`#${id} .key`, { rotation: 0 }, { rotation: 55, duration: 0.18, svgOrigin: "178 112", immediateRender: false }, t0 + k);
-          tl.fromTo(`#${id} .needle`, { rotation: 0 }, { rotation: 38, duration: 0.15, svgOrigin: "82 118", yoyo: true, repeat: 1, immediateRender: false }, t0 + k + 0.1);
-          tl.fromTo(`#${id} .spark`, { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + k + 0.12);
-          tl.to(`#${id} .key`, { rotation: 0, duration: 0.2, svgOrigin: "178 112" }, t0 + k + 0.5);
+        const q = (c) => `#${id} ${c}`;
+        [0.3, 0.95].forEach((k) => {
+          tl.fromTo(q(".key"), { rotation: 0 }, { rotation: 70, duration: 0.18, svgOrigin: "250 90", ease: "back.out(2)", immediateRender: false }, t0 + k);
+          tl.fromTo(q(".arc"), { opacity: 1 }, { opacity: 0, duration: 0.35, immediateRender: false }, t0 + k);
+          tl.fromTo(q(".needle"), { rotation: 0 }, { rotation: 55, duration: 0.12, svgOrigin: "100 110", ease: "power2.out", yoyo: true, repeat: 3, immediateRender: false }, t0 + k + 0.1);
+          tl.fromTo(q(".spark"), { opacity: 1, scale: 0.8 }, { opacity: 0, scale: 1.3, transformOrigin: "50% 50%", duration: 0.3, immediateRender: false }, t0 + k + 0.12);
+          tl.fromTo(q(".chk"), { opacity: 1, scale: 0.6 }, { opacity: 0, scale: 1.1, transformOrigin: "50% 50%", duration: 0.45, ease: "power2.out", immediateRender: false }, t0 + k + 0.12);
+          tl.fromTo([q(".wbat"), q(".weng")], { opacity: 1 }, { opacity: 0.15, duration: 0.07, repeat: 5, yoyo: true, immediateRender: false }, t0 + k + 0.1);
+          tl.to(q(".key"), { rotation: 0, duration: 0.25, svgOrigin: "250 90" }, t0 + k + 0.5);
         });
-        tl.fromTo(`#${id} .x`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, transformOrigin: "178px 112px", duration: 0.3, ease: "back.out(3)", immediateRender: false }, t0 + 1.7);
+        tl.set([q(".wbat"), q(".weng")], { opacity: 1 }, t0 + 1.6);
+        tl.fromTo(q(".stamp"), { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.22, ease: "power4.in", immediateRender: false }, t0 + 1.6);
+        tl.fromTo(`#${id} .art`, { x: 0 }, { x: 7, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, t0 + 1.82);
       },
     },
     route: {
@@ -443,6 +462,20 @@
         tl.set(`#${id} .txt2`, { opacity: 1 }, o.t0abs + o.second);
       },
     },
+    snakeid: {
+      vb: "0 0 300 200",
+      svg: () => `<rect x="4" y="4" width="292" height="192" rx="18" fill="#1d2f2a" stroke="#f4ecd8" stroke-width="3"/>
+        <path d="M30,150q40,-50 90,-20t80,-40t70,-30" fill="none" stroke="${INK}" stroke-width="24" stroke-linecap="round"/><path class="body" d="M30,150q40,-50 90,-20t80,-40t70,-30" fill="none" stroke="#7fae5a" stroke-width="16" stroke-linecap="round"/>
+        <path d="M30,150q-12,10 -22,6" stroke="#c8553d" stroke-width="13" stroke-linecap="round"/>
+        <g class="head"><path d="M262,46c26,-6 36,8 32,16c-4,10 -20,14 -38,6z" fill="#7fae5a" stroke="${INK}" stroke-width="4"/><circle cx="278" cy="52" r="4" fill="#f2c55c"/></g>
+        <g class="tag t1"><rect x="16" y="14" width="124" height="30" rx="15" fill="#c8553d"/><text x="78" y="36" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="18" fill="#fff">หางสีแดงอิฐ</text></g>
+        <g class="tag t2"><rect x="150" y="150" width="134" height="30" rx="15" fill="#7fae5a"/><text x="217" y="172" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="18" fill="${INK}">ตัวเขียว หัวสามเหลี่ยม</text></g>`,
+      anim(tl, id, t0) {
+        tl.fromTo(`#${id} .t1`, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3, immediateRender: false }, t0 + 0.6);
+        tl.fromTo(`#${id} .t2`, { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.3, immediateRender: false }, t0 + 1.0);
+        tl.fromTo(`#${id} .head`, { x: 0 }, { x: -6, duration: 0.3, repeat: 9, yoyo: true, immediateRender: false }, t0 + 0.4);
+      },
+    },
     eyeshine: {
       vb: "0 0 330 190",
       svg: (id) => `<rect x="4" y="4" width="156" height="182" rx="16" fill="#0d1418" stroke="#f4ecd8" stroke-width="3"/><rect x="170" y="4" width="156" height="182" rx="16" fill="#0d1418" stroke="#f4ecd8" stroke-width="3"/>
@@ -472,26 +505,28 @@
 
   // sound-direction radar (the source pulses from the rim; 0deg = ahead, 180deg = behind)
   C.radar = {
-    html: (id, o) => `<div id="${id}" class="gui radar" style="${pos(o)}"><svg viewBox="0 0 220 220">
+    html: (id, o) => { const src = o.sources || [{ dir: o.dir, pulses: o.pulses }];
+      return `<div id="${id}" class="gui radar" style="${pos(o)}"><svg viewBox="0 0 220 220">
         <circle cx="110" cy="110" r="96" fill="rgba(16,22,26,.9)" stroke="rgba(244,236,216,.5)" stroke-width="3"/>
         <circle cx="110" cy="110" r="64" fill="none" stroke="rgba(244,236,216,.2)" stroke-width="2"/><circle cx="110" cy="110" r="32" fill="none" stroke="rgba(244,236,216,.2)" stroke-width="2"/>
         <text x="110" y="34" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="16" fill="rgba(244,236,216,.6)">หน้า</text>
         <text x="110" y="198" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="16" fill="rgba(244,236,216,.6)">หลัง</text>
         <g class="sweep"><path d="M110,110L110,14A96,96 0 0 1 178,42Z" fill="rgba(127,209,185,.18)"/></g>
-        <g transform="rotate(${o.dir} 110 110)"><path class="wedge" d="M110,110L84,20A96,96 0 0 1 136,20Z" fill="rgba(232,112,90,.35)" opacity="0"/>
-          ${[0, 1, 2].map((i) => `<circle class="pl p${i}" cx="110" cy="26" r="10" fill="none" stroke="#e8705a" stroke-width="5" opacity="0"/>`).join("")}<circle class="src" cx="110" cy="26" r="9" fill="#e8705a" opacity="0"/></g>
-        <circle cx="104" cy="112" r="7" fill="#7fd1b9"/><circle cx="118" cy="112" r="7" fill="#f2c55c"/></svg>
-        <div class="rl"><span class="chip">เสียง</span><b>${o.text}</b></div></div>`,
+        ${src.map((sr, j) => `<g transform="rotate(${sr.dir} 110 110)"><path class="wedge w${j}" d="M110,110L84,20A96,96 0 0 1 136,20Z" fill="${sr.color || "rgba(232,112,90,.35)"}" opacity="0"/>
+          ${[0, 1, 2].map((i) => `<circle class="pl s${j}p${i}" cx="110" cy="26" r="10" fill="none" stroke="${sr.ring || "#e8705a"}" stroke-width="5" opacity="0"/>`).join("")}<circle class="src w${j}" cx="110" cy="26" r="9" fill="${sr.ring || "#e8705a"}" opacity="0"/>
+          ${sr.label ? `<text class="w${j}" x="110" y="64" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="${sr.ring || "#e8705a"}" opacity="0" transform="rotate(${-sr.dir} 110 64)">${sr.label}</text>` : ""}</g>`).join("")}
+        <circle cx="110" cy="112" r="8" fill="#7fd1b9"/></svg>
+        <div class="rl"><span class="chip">เสียง</span><b>${o.text}</b></div></div>`; },
     anim(tl, id, t0, o) {
       inout(tl, `#${id}`, t0, o, { scale: 0.6, y: 0 });
-      const end = o.t0abs + (o.end ?? o.t + 4);
+      const end = o.t0abs + (o.end ?? o.t + 4), src = o.sources || [{ dir: o.dir, pulses: o.pulses }];
       tl.fromTo(`#${id} .sweep`, { rotation: 0 }, { rotation: 360 * Math.ceil((end - t0) / 1.6), duration: 1.6 * Math.ceil((end - t0) / 1.6), ease: "none", svgOrigin: "110 110", immediateRender: false }, t0);
-      (o.pulses || [0.4]).forEach((pt, k) => {
+      src.forEach((sr, j) => (sr.pulses || [0.4]).forEach((pt, k) => {
         const at = o.t0abs + pt;
-        tl.set([`#${id} .wedge`, `#${id} .src`], { opacity: 1 }, at);
-        tl.fromTo(`#${id} .p${k % 3}`, { attr: { r: 8 }, opacity: 1 }, { attr: { r: 46 }, opacity: 0, duration: 0.7, ease: "power2.out", immediateRender: false }, at);
+        tl.set(`#${id} .w${j}`, { opacity: 1 }, at);
+        tl.fromTo(`#${id} .s${j}p${k % 3}`, { attr: { r: 8 }, opacity: 1 }, { attr: { r: 46 }, opacity: 0, duration: 0.7, ease: "power2.out", immediateRender: false }, at);
         tl.fromTo(`#${id}`, { x: 0 }, { x: 6, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, at);
-      });
+      }));
     },
   };
 
@@ -506,12 +541,27 @@
 
   // first-person tag with a live heart-rate readout
   C.pov = {
-    html: (id, o) => `<div id="${id}" class="gui pov" style="${pos(o)}"><span class="rec"></span><span class="lb">มุมมองของ</span><b>${o.name}</b><span class="bpm">${heart("#e8705a", "hb")}<b class="n">${o.bpm[0]}</b></span></div>`,
+    html: (id, o) => `<div id="${id}" class="gui pov" style="${pos(o)}"><div class="top"><span class="rec"></span><span class="lb">มุมมองของ</span><b>${o.name}</b></div>
+        <div class="row"><div class="bpmh">${heart("#e8705a", "hb")}</div>
+          <svg class="ecg2" viewBox="0 0 300 60" preserveAspectRatio="none"><g class="ecgl"><path d="${Array.from({ length: 8 }, (_, i) => `M${i * 75},34h22l6,-22l9,46l7,-30l5,6h26`).join("")}" fill="none" stroke="#e8705a" stroke-width="5" stroke-linejoin="round"/></g></svg>
+          <div class="bnum"><b class="n">${o.bpm[0]}</b><span>BPM</span></div></div></div>`,
     anim(tl, id, t0, o) {
-      inout(tl, `#${id}`, t0, o, { x: -60, y: 0, scale: 1 });
-      const end = o.t0abs + (o.end ?? o.t + 4), n = document.querySelector(`#${id} .n`), p = { v: o.bpm[0] };
-      tl.to(p, { v: o.bpm[1], duration: end - t0, ease: "power1.in", onUpdate: () => { n.textContent = Math.round(p.v); }, immediateRender: false }, t0);
-      tl.fromTo(`#${id} .hb`, { scale: 1 }, { scale: 1.35, duration: 0.13, repeat: Math.ceil((end - t0) / 0.26), yoyo: true, immediateRender: false }, t0);
+      inout(tl, `#${id}`, t0, o, { x: -80, y: 0, scale: 1 });
+      const end = o.t0abs + (o.end ?? o.t + 5), n = document.querySelector(`#${id} .n`), p = { v: o.bpm[0] };
+      const col = (v) => lerpC("#7fd1b9", "#ff5a4a", clamp01((v - 90) / 80));
+      tl.to(p, { v: o.bpm[1], duration: end - t0, ease: "power1.in", immediateRender: false, onUpdate: () => { n.textContent = Math.round(p.v); n.style.color = col(p.v); } }, t0);
+      // lub-dub beats whose spacing follows the rising BPM
+      let t = 0.1;
+      while (t0 + t < end) {
+        const bpm = o.bpm[0] + (o.bpm[1] - o.bpm[0]) * Math.pow(t / (end - t0), 1.5), per = 60 / bpm, big = 1.35 + 0.25 * clamp01((bpm - 100) / 80);
+        tl.fromTo(`#${id} .hb`, { scale: 1 }, { scale: big, duration: 0.07, ease: "power2.out", immediateRender: false }, t0 + t);
+        tl.to(`#${id} .hb`, { scale: 1.08, duration: 0.07 }, t0 + t + 0.07);
+        tl.to(`#${id} .hb`, { scale: big * 0.85, duration: 0.06 }, t0 + t + 0.14);
+        tl.to(`#${id} .hb`, { scale: 1, duration: Math.max(0.1, per * 0.5) }, t0 + t + 0.2);
+        tl.fromTo(`#${id} .bnum`, { scale: 1.12 }, { scale: 1, duration: 0.2, immediateRender: false }, t0 + t);
+        t += per;
+      }
+      tl.fromTo(`#${id} .ecgl`, { x: 0 }, { x: -75, duration: 0.42, repeat: Math.ceil((end - t0) / 0.42), ease: "none", immediateRender: false }, t0);
       tl.fromTo(`#${id} .rec`, { opacity: 1 }, { opacity: 0.2, duration: 0.4, repeat: Math.ceil((end - t0) / 0.4), yoyo: true, immediateRender: false }, t0);
     },
   };
@@ -563,7 +613,7 @@
     .choice .key { display:grid; place-items:center; width:50px; height:50px; border-radius:12px; background:#f4ecd8; color:${INK}; font-size:26px; box-shadow:0 4px 0 #9c8e76; }
     .choice .timer { position:relative; width:120px; height:120px; flex:none; } .choice .timer svg { width:120px; height:120px; }
     .choice .n { position:absolute; inset:0; display:grid; place-items:center; font:900 54px/1 Kanit; opacity:0; }
-    .choice .who { margin-top:14px; font:700 30px/1 Kanit; color:#f2c55c; opacity:0; text-shadow:0 2px 8px #000; }
+    .choice .who2 { position:absolute; left:0; right:0; color:#7fd1b9; } .choice .who { margin-top:14px; font:700 30px/1 Kanit; color:#f2c55c; opacity:0; text-shadow:0 2px 8px #000; }
     .qte { text-align:center; }
     .qte .lbl { display:inline-block; font:900 44px/1 Kanit; letter-spacing:2px; padding:12px 30px 16px; border-radius:26px; ${PANEL} }
     .qte .btnwrap { position:relative; width:220px; height:220px; margin:10px auto 0; }
@@ -624,16 +674,79 @@
     .radar .rl { display:flex; flex-direction:column; gap:8px; font:900 40px/1.1 Kanit; text-shadow:0 2px 10px #000; } .radar .chip { background:#e8705a; width:max-content; }
     .memo { ${PANEL} border-radius:40px; display:flex; align-items:center; gap:12px; padding:8px 26px 8px 8px; font:900 32px/1 Kanit; overflow:hidden; }
     .memo .shine { position:absolute; top:0; bottom:0; left:0; width:30%; background:linear-gradient(90deg,transparent,rgba(242,197,92,.45),transparent); }
-    .pov { ${PANEL} border-radius:30px; display:flex; align-items:center; gap:10px; padding:10px 22px; font:900 32px/1 Kanit; }
+    .pov { ${PANEL} border-radius:30px; display:flex; }
     .pov .lb { font:700 24px/1 Kanit; color:rgba(244,236,216,.7); } .pov .rec { width:16px; height:16px; border-radius:50%; background:#e8705a; display:block; }
     .pov .bpm { display:flex; align-items:center; gap:6px; margin-left:10px; color:#e8705a; } .pov .bpm svg { width:30px; height:27px; overflow:visible; }
     .mm { display:flex; flex-direction:column; align-items:center; gap:8px; } .mm svg { width:230px; height:230px; filter:drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
+
+    .gui { --tone: #7fd1b9; --glow: .3; }
+    .tip, .fig, .clockw, .steps, .rel, .intro, .status, .phone, .memo, .pov { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(127,209,185,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.warn, .fig.warn { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(240,160,112,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.danger, .fig.danger, .status.danger { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(232,112,90,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.rule, .fig.rule { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(242,197,92,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .fx-ring { position: absolute; inset: -4px; border-radius: inherit; padding: 4px; pointer-events: none; --a: 0deg;
+      background: conic-gradient(from var(--a), transparent 0deg 210deg, var(--tone) 290deg, #fffbe8 312deg, var(--tone) 330deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+    .fx-shw { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+    .fx-sheen { position: absolute; top: -10%; bottom: -10%; left: 0; width: 30%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.2), transparent); transform: translateX(-160%); }
+    .fx-flash { position: absolute; inset: 0; border-radius: inherit; background: var(--tone); opacity: 0; pointer-events: none; }
+    .fx-shock { position: absolute; inset: -6px; border-radius: 50%; border: 4px solid var(--tone); opacity: 0; pointer-events: none; }
+    .fig .fx-shock, .clockw .fx-shock { border-radius: 26px; }
+    .fx-spk { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: #fff3c8; box-shadow: 0 0 10px var(--tone); opacity: 0; pointer-events: none; }
+    .tip .txt, .fig .txt { font-size: 44px; } .gui .chip { font-size: 24px; }
+    .pov { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 22px 14px; }
+    .pov .top { display: flex; align-items: center; gap: 10px; font: 900 32px/1 Kanit; }
+    .pov .row { display: flex; align-items: center; gap: 14px; }
+    .pov .bpmh { width: 74px; height: 70px; display: grid; place-items: center; } .pov .bpmh .hb { width: 70px; height: 64px; overflow: visible; filter: drop-shadow(0 0 12px rgba(232,112,90,.8)); }
+    .pov .bpmh .fx-shock { border-color: #e8705a; }
+    .pov .ecg2 { width: 170px; height: 54px; }
+    .pov .bnum { display: flex; align-items: baseline; gap: 6px; } .pov .bnum b { font: 900 60px/1 Kanit; } .pov .bnum span { font: 700 22px/1 Kanit; color: rgba(244,236,216,.7); }
     .mm .ml { display:flex; flex-direction:column; align-items:center; gap:6px; font:900 32px/1 Kanit; text-shadow:0 2px 10px #000; }`;
+
+  // ---------- living panels: reveal wipe, flash, sparks, a light running round the rim, sheen, glowing keywords ----------
+  const TONES = { warn: "#f0a070", danger: "#e8705a", rule: "#f2c55c", safe: "#7fd1b9", unknown: "#b9a8e8" };
+  const FXP = ["tip", "steps", "rel", "intro", "status", "phone", "clockw", "fig", "memo", "pov"];
+  function fxPanel(tl, el, t0, t1) {
+    const cls = [...el.classList];
+    if (!FXP.some((c) => cls.includes(c))) return;
+    const tone = TONES[cls.find((c) => TONES[c])] || "#7fd1b9";
+    el.style.setProperty("--tone", tone);
+    el.insertAdjacentHTML("afterbegin", `<i class="fx-ring"></i><i class="fx-shw"><i class="fx-sheen"></i></i><i class="fx-flash"></i>`);
+    const med = el.querySelector(".med, .dial, .fm.big, .bpmh, .ic");
+    if (med) {
+      med.style.position = "relative";
+      med.insertAdjacentHTML("beforeend", `<i class="fx-shock"></i>` + Array.from({ length: 10 }, (_, i) => `<i class="fx-spk" data-i="${i}"></i>`).join(""));
+    }
+    const id = `#${el.id}`, D = Math.max(1, t1 - t0);
+    // entrance: wipe open left→right with a bright edge, flash, sparks out of the icon
+    tl.fromTo(id, { clipPath: "inset(-60px 100% -60px -60px round 30px)" }, { clipPath: "inset(-60px -60px -60px -60px round 30px)", duration: 0.5, ease: "power3.out", immediateRender: false }, t0);
+    tl.fromTo(`${id} > .fx-flash`, { opacity: 0.6 }, { opacity: 0, duration: 0.55, ease: "power2.out", immediateRender: false }, t0 + 0.05);
+    el.querySelectorAll(".fx-spk").forEach((sp, i) => {
+      const a = (i / 10) * Math.PI * 2 + 0.3, r = 70 + (i % 3) * 22;
+      tl.fromTo(sp, { x: 0, y: 0, opacity: 1, scale: 1 }, { x: Math.cos(a) * r, y: Math.sin(a) * r, opacity: 0, scale: 0.3, duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + 0.12);
+    });
+    // text types on; keywords pop and glow
+    el.querySelectorAll(".txt, .name, .nm, .dig, .msg").forEach((tx, i) =>
+      tl.fromTo(tx, { clipPath: "inset(-20px 100% -20px -10px)" }, { clipPath: "inset(-20px -20px -20px -10px)", duration: 0.55, ease: "power1.inOut", immediateRender: false }, t0 + 0.18 + i * 0.12));
+    el.querySelectorAll(".k").forEach((k, i) => {
+      tl.fromTo(k, { scale: 0.5 }, { scale: 1.18, duration: 0.18, ease: "back.out(3)", immediateRender: false }, t0 + 0.55 + i * 0.1);
+      tl.to(k, { scale: 1, duration: 0.2 }, t0 + 0.75 + i * 0.1);
+      tl.fromTo(k, { boxShadow: "0 0 0 0 rgba(242,197,92,.0)" }, { boxShadow: "0 0 22px 4px rgba(242,197,92,.75)", duration: 0.5, repeat: Math.ceil(D / 0.5), yoyo: true, immediateRender: false }, t0 + 0.75);
+    });
+    // living: light runs round the rim, sheen sweeps, icon shock rings, glow breathes
+    tl.fromTo(`${id} > .fx-ring`, { "--a": "0deg" }, { "--a": `${360 * Math.ceil(D / 2.4)}deg`, duration: 2.4 * Math.ceil(D / 2.4), ease: "none", immediateRender: false }, t0);
+    for (let t = 0.35; t < D; t += 2.3) tl.fromTo(`${id} .fx-sheen`, { xPercent: -160 }, { xPercent: 420, duration: 0.8, ease: "power2.inOut", immediateRender: false }, t0 + t);
+    const art = el.querySelector(".art");
+    if (art) tl.fromTo(art, { boxShadow: "0 0 0 4px #f4ecd8, 0 0 0 0 rgba(242,197,92,0)" }, { boxShadow: "0 0 0 4px #f4ecd8, 0 0 26px 6px rgba(242,197,92,.55)", duration: 0.8, repeat: Math.ceil(D / 0.8), yoyo: true, immediateRender: false }, t0 + 0.4);
+    if (med) tl.fromTo(`${id} .fx-shock`, { scale: 0.9, opacity: 0.9 }, { scale: 1.7, opacity: 0, duration: 1.1, repeat: Math.ceil(D / 1.1), ease: "power2.out", immediateRender: false }, t0 + 0.3);
+    tl.fromTo(id, { "--glow": "0.25" }, { "--glow": "0.6", duration: 0.9, repeat: Math.ceil(D / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+  }
 
   function add(div, tl, sid, start, u, k) {
     const id = `${sid}-g${k}`;
     div.insertAdjacentHTML("beforeend", C[u.type].html(id, u));
     C[u.type].anim(tl, id, start + u.t, { ...u, t0abs: start });
+    fxPanel(tl, document.getElementById(id), start + u.t, start + (u.end ?? u.t + 6));
   }
 
   window.GameUI = { C, CSS, ILL, face, add, mark };
