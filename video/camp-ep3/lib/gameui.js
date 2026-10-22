@@ -546,6 +546,42 @@
     },
   };
 
+  // stealth HUD: detection eye + footstep noise; a loud step fills detection and flashes "found"
+  C.stealth = {
+    html: (id, o) => `<div id="${id}" class="gui stealth" style="${pos(o)}">
+        <svg class="seye" viewBox="0 0 120 80"><path d="M6,40Q60,-6 114,40Q60,86 6,40z" fill="#0d1418" stroke="#f4ecd8" stroke-width="4"/>
+          <g class="iris"><circle cx="60" cy="40" r="20" fill="#e8705a"/><circle cx="60" cy="40" r="8" fill="#0d1418"/></g>
+          <path class="lidT" d="M6,40Q60,-6 114,40Q60,30 6,40z" fill="#2a3a40" stroke="#f4ecd8" stroke-width="3"/><path class="lidB" d="M6,40Q60,86 114,40Q60,50 6,40z" fill="#2a3a40" stroke="#f4ecd8" stroke-width="3"/></svg>
+        <div class="rows"><div class="chip">${o.label || "โหมดย่อง"}</div>
+          <div class="row"><span>ถูกตรวจจับ</span><div class="sbar det"><i></i></div><b class="pct">0%</b></div>
+          <div class="row"><span>เสียงฝีเท้า</span><div class="sbar noi"><i></i></div></div></div>
+        <div class="found">ถูกพบ!</div></div>`,
+    anim(tl, id, t0, o) {
+      inout(tl, `#${id}`, t0, o, { x: -80, y: 0, scale: 1 });
+      const q = (c) => `#${id} ${c}`, det = { v: 0 }, pct = document.querySelector(q(".pct"));
+      const setDet = () => { pct.textContent = Math.round(det.v) + "%"; };
+      tl.set(q(".det i"), { scaleX: 0 }, t0); tl.set(q(".noi i"), { scaleX: 0.04 }, t0);
+      let acc = 0;
+      (o.steps || []).forEach((st) => {
+        const at = o.t0abs + st; acc += 6;
+        tl.fromTo(q(".noi i"), { scaleX: 0.04 }, { scaleX: 0.22, duration: 0.08, yoyo: true, repeat: 1, immediateRender: false }, at);
+        tl.to(q(".det i"), { scaleX: acc / 100, duration: 0.3 }, at);
+        tl.to(det, { v: acc, duration: 0.3, onUpdate: setDet }, at);
+        tl.fromTo(q(".lidT"), { y: 0 }, { y: -4, duration: 0.15, yoyo: true, repeat: 1, immediateRender: false }, at);
+      });
+      const ck = o.t0abs + o.creakAt;
+      tl.to(q(".noi i"), { scaleX: 1, duration: 0.08 }, ck);
+      tl.to(q(".noi i"), { scaleX: 0.3, duration: 0.8 }, ck + 0.3);
+      tl.to(q(".det i"), { scaleX: 1, duration: 0.55, ease: "power2.in" }, ck);
+      tl.to(det, { v: 100, duration: 0.55, ease: "power2.in", onUpdate: setDet }, ck);
+      tl.to(q(".lidT"), { y: -26, duration: 0.4, ease: "power2.in" }, ck + 0.1); tl.to(q(".lidB"), { y: 26, duration: 0.4, ease: "power2.in" }, ck + 0.1);
+      tl.fromTo(q(".iris"), { scale: 1 }, { scale: 1.3, transformOrigin: "50% 50%", duration: 0.2, yoyo: true, repeat: 5, immediateRender: false }, ck + 0.55);
+      tl.fromTo(q(".found"), { opacity: 0, scale: 2.4, rotation: -14 }, { opacity: 1, scale: 1, rotation: -8, duration: 0.25, ease: "power4.in", immediateRender: false }, ck + 0.55);
+      tl.fromTo(`#${id}`, { x: 0 }, { x: 10, duration: 0.05, repeat: 9, yoyo: true, immediateRender: false }, ck + 0.8);
+      tl.fromTo(`#${id}`, { boxShadow: "0 0 0 0 rgba(232,80,80,.9)" }, { boxShadow: "0 0 0 30px rgba(232,80,80,0)", duration: 0.5, repeat: 3, immediateRender: false }, ck + 0.55);
+    },
+  };
+
   // incoming call on a phone held in the viewer's hand
   C.call = {
     html: (id, o) => `<div id="${id}" class="gui call" style="${pos({ side: "center", w: 520, ...o })}">
@@ -743,11 +779,20 @@
     .call .nm { font:900 76px/1 Kanit; margin-top:36px; } .call .sub { font:700 26px/1 Kanit; color:rgba(244,236,216,.6); margin-top:12px; }
     .call .bt { margin-top:auto; margin-bottom:70px; display:flex; gap:120px; } .call .bt span { width:110px; height:110px; border-radius:50%; display:grid; place-items:center; font:900 54px/1 Kanit; color:#fff; }
     .call .no { background:#e8705a; } .call .yes { background:#4fb37a; } .call .hand { position:absolute; left:0; right:0; bottom:-170px; width:520px; height:520px; }
+
+    .stealth { ${PANEL} border-radius:28px; display:flex; align-items:center; gap:18px; padding:14px 26px 16px 16px; }
+    .stealth .seye { width:130px; height:88px; flex:none; } .stealth .rows { display:flex; flex-direction:column; gap:8px; }
+    .stealth .row { display:flex; align-items:center; gap:12px; font:700 26px/1 Kanit; } .stealth .row span { width:130px; }
+    .stealth .sbar { position:relative; width:260px; height:20px; border-radius:10px; background:rgba(244,236,216,.15); overflow:hidden; border:2px solid rgba(244,236,216,.4); }
+    .stealth .sbar i { position:absolute; inset:0; transform-origin:0 50%; transform:scaleX(0); }
+    .stealth .det i { background:linear-gradient(90deg,#f2c55c,#e8705a); } .stealth .noi i { background:linear-gradient(90deg,#7fd1b9,#f2c55c 60%,#e8705a); }
+    .stealth .pct { font:900 30px/1 Kanit; color:#e8705a; width:70px; }
+    .stealth .found { position:absolute; right:-30px; top:-30px; font:900 54px/1 Kanit; color:#fff; background:#d8463a; padding:8px 22px 12px; border-radius:14px; border:4px solid #2e2a26; opacity:0; box-shadow:0 0 30px rgba(232,80,80,.8); }
     .mm .ml { display:flex; flex-direction:column; align-items:center; gap:6px; font:900 32px/1 Kanit; text-shadow:0 2px 10px #000; }`;
 
   // ---------- living panels: reveal wipe, flash, sparks, a light running round the rim, sheen, glowing keywords ----------
   const TONES = { warn: "#f0a070", danger: "#e8705a", rule: "#f2c55c", safe: "#7fd1b9", unknown: "#b9a8e8" };
-  const FXP = ["tip", "steps", "rel", "intro", "status", "phone", "clockw", "fig", "memo", "pov"];
+  const FXP = ["tip", "steps", "rel", "intro", "status", "phone", "clockw", "fig", "memo", "pov", "stealth"];
   function fxPanel(tl, el, t0, t1) {
     const cls = [...el.classList];
     if (!FXP.some((c) => cls.includes(c))) return;

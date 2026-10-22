@@ -55,6 +55,7 @@
       Rig.MODES.crouchShush = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -100, faF: -150, torso: 14, head: -6 });
       Rig.MODES.sitHurt = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: 20, faF: -20, uaB: 30, faB: -10, torso: -8 + 1.5 * Math.sin(u * 7), head: -10 });
       Rig.MODES.sitPhone = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -52 + Math.sin(u * 1.1), faF: -92, head: 12 });
+      Rig.MODES.sneak = (u, o) => { const g = Rig.MODES.walk(u, { period: 1.6, stride: 8, knee: 30, bob: 4, arm: 6, lean: 16 }); return { ...g, thF: g.thF - 38, thB: g.thB - 34, shF: g.shF + 60, shB: g.shB + 56, bodyY: g.bodyY + 82, torso: g.torso + 10, uaF: -55, faF: -45, uaB: -35, faB: -35, head: -14 }; };
       Rig.MODES.torchLow = (u, o) => ({ ...Rig.MODES.torch(u, o), uaF: -40 + 3 * Math.sin(u * 1.1), faF: -10 });
 
       const cap = (k, text, t, end) => ({ text, t: t ?? vo(k), end });
@@ -207,8 +208,66 @@
           KN.forEach((k) => Fx.punch(tl, `#${id} .stage`, t0 + k, 1.025, 0.15));
           tl.fromTo(`#${id} .lampglow`, { opacity: 0.55 }, { opacity: 0.15, duration: 0.07, repeat: 11, yoyo: true, immediateRender: false }, t0 + SV(0));
           Fx.glitch(tl, `#${id}`, t0 + SV(0), 0.5, 12, 83); Fx.heart(tl, t0, D("siege"), 0.45, 0.7);
-          Fx.letterbox(tl, t0 + SV(0), t0 + D("siege") + 9); Fx.tunnel(tl, t0 + voEnd("siege", 1), t0 + D("siege"), 0.8);
+          Fx.letterbox(tl, t0 + SV(0), t0 + D("siege") - 0.1); Fx.tunnel(tl, t0 + voEnd("siege", 1), t0 + D("siege"), 0.8);
         },
+      });
+
+      // ---------- 8b. sneak to the back window… a rotten plank creaks, it finds them ----------
+      const N = (i) => vo("sneak", i), S0 = N(1) - 0.2, CREAK = S0 + 3.0, FACE = CREAK + 1.2, SLAM = voEnd("sneak", 2) + 0.15;
+      const SNV = Rig.footSpeed(1.6, 8) * 0.92, STEPS = [0.4, 1.2, 2.0].map((k) => S0 + k), PLANK = 520 + SNV * 3.0;
+      add("sneak", {
+        set: "hut", dark: 0.38,
+        cam: { from: { x: 100, y: 200, s: 1.15 }, to: { x: 130, y: 210, s: 1.22 } },
+        actors: [
+          { who: "pin", x: 330, y: 1540, s: 0.86, track: [{ t: 0, mode: "sitHurt", eyes: "wide", mouth: "flat" }, { t: FACE, mode: "sitHurt", eyes: "wide", mouth: "scream", blend: 0.1 }] },
+          { who: "chai", x: 180, y: 1525, s: 0.93, track: [{ t: 0, mode: "whistle", eyes: "wide", mouth: "flat" }, { t: S0, mode: "idle", blend: 0.4, eyes: "wide" }, { t: CREAK, mode: "idle", eyes: "wide", mouth: "o", blend: 0.15 }] },
+          { who: "kla", x: 520, y: 1530, s: 0.92, until: SLAM - 0.4, track: [{ t: 0, mode: "crouch", eyes: "wide", sweat: true }, { t: S0, mode: "sneak", blend: 0.3, eyes: "side", mouth: "flat" },
+            { t: CREAK, mode: "crouch", eyes: "wide", mouth: "o", blend: 0.1 }, { t: FACE, mode: "tremble", eyes: "wide", mouth: "scream", blend: 0.1 }], moveTo: { at: S0, x: PLANK, dur: 3.0 } },
+          { who: "kla", x: PLANK, y: 1530, s: 0.92, from: SLAM - 0.4, track: [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }, { t: SLAM, mode: "raise", blend: 0.1, eyes: "closed", mouth: "frown" }], moveTo: { at: SLAM - 0.4, x: 905, dur: 0.4 } },
+        ],
+        bubbles: [
+          { text: "“หน้าต่างหลัง… [ย่องไปปิดเบาๆ]”", x: 80, y: 760, t: N(0), end: voEnd("sneak", 0) + 0.2, tail: 120 },
+          { text: "“ซวยแล้ว… [มันได้ยิน]”", x: 420, y: 760, t: N(2), end: SLAM + 0.3, tail: 320 },
+        ],
+        captions: [cap("sneak", "ในความมืด… [ทุกเสียง]คือการบอกตำแหน่ง", N(1), CREAK)],
+        sfxText: [{ text: "เอี๊ยด!!", x: 520, y: 1180, t: CREAK, end: CREAK + 1.0, size: 110, color: "#ff8a6a", rot: -8 }, { text: "ปัง!!", x: 640, y: 520, t: FACE, end: FACE + 0.8, size: 120, color: "#f4ecd8", rot: 6 },
+          { text: "ปึ้ง!", x: 700, y: 700, t: SLAM, end: SLAM + 0.7, size: 96, color: "#f2c55c", rot: -6 }],
+        ui: [
+          { type: "memo", t: voEnd("sneak", 0) - 0.5, end: S0 + 0.1, who: "kla", text: "ภารกิจ: [ย่องไปปิดหน้าต่าง]", top: 160 },
+          { type: "stealth", t: S0 + 0.15, steps: STEPS.map((x) => x), creakAt: CREAK, top: 160 },
+        ],
+        extra(L, id) {
+          L.far.insertAdjacentHTML("beforeend", `<g id="${id}-shL" transform="translate(560,420)"><rect width="220" height="520" fill="url(#planks)" stroke="#2e2a26" stroke-width="8"/></g>
+            <g id="${id}-shR" transform="translate(780,420)"><rect width="220" height="520" fill="url(#planks)" stroke="#2e2a26" stroke-width="8"/></g>`);
+          document.getElementById(id).querySelector(".winview").insertAdjacentHTML("beforeend", `<g id="${id}-face" opacity="0">${Sets.props.shade(`${id}-sh`, 650, 1460, 1.4)}</g>`);
+          L.act.insertAdjacentHTML("afterbegin", `<g id="${id}-hints" opacity="0">${[560, 640, 720].map((x) => `<ellipse cx="${x}" cy="1536" rx="14" ry="6" fill="#7fd1b9" opacity=".8"/>`).join("")}
+            <g transform="translate(${PLANK},1536)"><rect x="-56" y="-10" width="112" height="22" rx="4" fill="rgba(232,112,90,.45)" stroke="#e8705a" stroke-width="3"/><path d="M-40,0l14,-6l12,8l14,-7l12,6l14,-5" stroke="#2e2a26" stroke-width="3" fill="none"/>
+              <text x="0" y="-22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="26" fill="#e8705a">ไม้ผุ</text></g></g>`);
+          L.glow.insertAdjacentHTML("beforeend", STEPS.map((k, i) => `<ellipse id="${id}-ring${i}" cx="0" cy="1534" rx="30" ry="9" fill="none" stroke="#7fd1b9" stroke-width="4" opacity="0"/>`).join("") +
+            `<ellipse id="${id}-ringC" cx="${PLANK}" cy="1534" rx="40" ry="12" fill="none" stroke="#ff6a5a" stroke-width="8" opacity="0"/><ellipse id="${id}-ringC2" cx="${PLANK}" cy="1534" rx="40" ry="12" fill="none" stroke="#ff6a5a" stroke-width="5" opacity="0"/>`);
+        },
+        fx(tl, id, t0) {
+          flick(id, t0, "sneak");
+          tl.set([`#${id}-shL`, `#${id}-shR`], { opacity: 0 }, t0); tl.set([`#${id}-shL`, `#${id}-shR`], { opacity: 1 }, t0 + SLAM - 0.01);
+          tl.fromTo(`#${id}-shL`, { attr: { transform: "translate(360,420)" } }, { attr: { transform: "translate(560,420)" }, duration: 0.12, ease: "power3.in", immediateRender: false }, t0 + SLAM - 0.01);
+          tl.fromTo(`#${id}-shR`, { attr: { transform: "translate(980,420)" } }, { attr: { transform: "translate(780,420)" }, duration: 0.12, ease: "power3.in", immediateRender: false }, t0 + SLAM - 0.01);
+          tl.fromTo(`#${id}-hints`, { opacity: 0 }, { opacity: 1, duration: 0.4, immediateRender: false }, t0 + S0); tl.to(`#${id}-hints`, { opacity: 0, duration: 0.3 }, t0 + FACE);
+          STEPS.forEach((k, i) => {
+            const x = 520 + SNV * (k - S0);
+            tl.set(`#${id}-ring${i}`, { attr: { cx: x } }, t0);
+            tl.fromTo(`#${id}-ring${i}`, { attr: { rx: 20, ry: 6 }, opacity: 0.9 }, { attr: { rx: 110, ry: 30 }, opacity: 0, duration: 0.8, ease: "power2.out", immediateRender: false }, t0 + k);
+          });
+          [[`#${id}-ringC`, 0], [`#${id}-ringC2`, 0.18]].forEach(([sel, d]) => tl.fromTo(sel, { attr: { rx: 30, ry: 9 }, opacity: 1 }, { attr: { rx: 640, ry: 190 }, opacity: 0, duration: 1.2, ease: "power2.out", immediateRender: false }, t0 + CREAK + d));
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.9, immediateRender: false }, t0 + CREAK);
+          Fx.punch(tl, `#${id} .stage`, t0 + CREAK, 1.06, 0.4); Fx.glitch(tl, `#${id}`, t0 + CREAK + 0.5, 0.3, 12, 95);
+          tl.set(`#${id}-face`, { opacity: 1 }, t0 + FACE);
+          tl.set("#flashw", { opacity: 0.75 }, t0 + FACE); tl.to("#flashw", { opacity: 0, duration: 0.25 }, t0 + FACE + 0.01);
+          Fx.punch(tl, `#${id} .stage`, t0 + FACE, 1.14, 0.5); Fx.glitch(tl, `#${id}`, t0 + FACE, 0.4, 16, 96);
+          Fx.punch(tl, `#${id} .stage`, t0 + SLAM, 1.08, 0.3);
+          Fx.heart(tl, t0 + S0, D("sneak") - S0, 0.5, 0.55); Fx.desat(tl, `#${id} .stage`, t0 + S0, t0 + CREAK, 0.4);
+          Fx.letterbox(tl, t0 + S0, t0 + D("sneak") - 0.1);
+        },
+        shake: (t) => (t > FACE && t < FACE + 0.8 ? Math.sin(t * 80) * 12 : t > SLAM && t < SLAM + 0.3 ? Math.sin(t * 90) * 8 : 0),
       });
 
       // ---------- 9. Kla's eyes at the window: it calls every name it knows ----------

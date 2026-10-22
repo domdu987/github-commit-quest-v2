@@ -165,6 +165,15 @@
     .call .nm { font:900 76px/1 Kanit; margin-top:36px; } .call .sub { font:700 26px/1 Kanit; color:rgba(244,236,216,.6); margin-top:12px; }
     .call .bt { margin-top:auto; margin-bottom:70px; display:flex; gap:120px; } .call .bt span { width:110px; height:110px; border-radius:50%; display:grid; place-items:center; font:900 54px/1 Kanit; color:#fff; }
     .call .no { background:#e8705a; } .call .yes { background:#4fb37a; } .call .hand { position:absolute; left:0; right:0; bottom:-170px; width:520px; height:520px; }
+
+    .stealth { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; display:flex; align-items:center; gap:18px; padding:14px 26px 16px 16px; }
+    .stealth .seye { width:130px; height:88px; flex:none; } .stealth .rows { display:flex; flex-direction:column; gap:8px; }
+    .stealth .row { display:flex; align-items:center; gap:12px; font:700 26px/1 Kanit; } .stealth .row span { width:130px; }
+    .stealth .sbar { position:relative; width:260px; height:20px; border-radius:10px; background:rgba(244,236,216,.15); overflow:hidden; border:2px solid rgba(244,236,216,.4); }
+    .stealth .sbar i { position:absolute; inset:0; transform-origin:0 50%; transform:scaleX(0); }
+    .stealth .det i { background:linear-gradient(90deg,#f2c55c,#e8705a); } .stealth .noi i { background:linear-gradient(90deg,#7fd1b9,#f2c55c 60%,#e8705a); }
+    .stealth .pct { font:900 30px/1 Kanit; color:#e8705a; width:70px; }
+    .stealth .found { position:absolute; right:-30px; top:-30px; font:900 54px/1 Kanit; color:#fff; background:#d8463a; padding:8px 22px 12px; border-radius:14px; border:4px solid #2e2a26; opacity:0; box-shadow:0 0 30px rgba(232,80,80,.8); }
     .mm .ml { display:flex; flex-direction:column; align-items:center; gap:6px; font:900 32px/1 Kanit; text-shadow:0 2px 10px #000; }
       .capwrap { z-index: 56; top: 1555px; }
       .capbox { background: rgba(15,21,24,.88); color: #f4ecd8; border: 2px solid rgba(244,236,216,.42); border-radius: 22px;
@@ -174,11 +183,11 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="110.221" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="122.92" data-width="1080" data-height="1920">
       <svg id="grain" width="1200" height="2040"><filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5" /></filter><rect width="1200" height="2040" filter="url(#nz)" /></svg>
     </div>
     <script>
-      const SCHED = {"total": 110.221, "shots": [{"key": "open", "start": 0.0, "dur": 5.896, "vo": [{"id": "f00", "t": 0.3, "dur": 3.296}], "voEnd": 3.596}, {"key": "chai", "start": 5.896, "dur": 5.889, "vo": [{"id": "f01", "t": 1.0, "dur": 4.289}], "voEnd": 5.289}, {"key": "inside", "start": 11.785, "dur": 4.479, "vo": [{"id": "d08", "t": 0.6, "dur": 3.179}], "voEnd": 3.779}, {"key": "map", "start": 16.264, "dur": 9.65, "vo": [{"id": "f03", "t": 1.0, "dur": 7.25}], "voEnd": 8.25}, {"key": "signal", "start": 25.914, "dur": 10.493, "vo": [{"id": "f04", "t": 0.3, "dur": 3.197}, {"id": "d09", "t": 5.797, "dur": 4.096}], "voEnd": 9.893}, {"key": "who", "start": 36.407, "dur": 10.034, "vo": [{"id": "d10", "t": 0.3, "dur": 3.828}, {"id": "f05", "t": 4.328, "dur": 4.706}], "voEnd": 9.034}, {"key": "aspirin", "start": 46.441, "dur": 11.641, "vo": [{"id": "f06", "t": 0.3, "dur": 2.625}, {"id": "f07", "t": 3.125, "dur": 3.688}, {"id": "f08", "t": 7.013, "dur": 3.628}], "voEnd": 10.641}, {"key": "siege", "start": 58.082, "dur": 13.932, "vo": [{"id": "f09", "t": 1.7, "dur": 6.31}, {"id": "f10", "t": 8.41, "dur": 2.322}], "voEnd": 10.732}, {"key": "window", "start": 72.014, "dur": 8.921, "vo": [{"id": "d11", "t": 0.6, "dur": 4.173}, {"id": "f11", "t": 5.173, "dur": 2.748}], "voEnd": 7.921}, {"key": "dawn", "start": 80.935, "dur": 12.468, "vo": [{"id": "f12", "t": 2.4, "dur": 3.62}, {"id": "n15", "t": 7.42, "dur": 3.848}], "voEnd": 11.268}, {"key": "after", "start": 93.403, "dur": 4.575, "vo": [{"id": "f14", "t": 0.4, "dur": 2.775}], "voEnd": 3.175}, {"key": "call", "start": 97.978, "dur": 5.854, "vo": [{"id": "f15", "t": 1.4, "dur": 1.995}, {"id": "f16", "t": 3.895, "dur": 1.359}], "voEnd": 5.254}, {"key": "phone", "start": 103.832, "dur": 6.389, "vo": [{"id": "f17", "t": 0.6, "dur": 2.389}], "voEnd": 2.989}]};
+      const SCHED = {"total": 122.92, "shots": [{"key": "open", "start": 0.0, "dur": 5.896, "vo": [{"id": "f00", "t": 0.3, "dur": 3.296}], "voEnd": 3.596}, {"key": "chai", "start": 5.896, "dur": 5.889, "vo": [{"id": "f01", "t": 1.0, "dur": 4.289}], "voEnd": 5.289}, {"key": "inside", "start": 11.785, "dur": 4.479, "vo": [{"id": "d08", "t": 0.6, "dur": 3.179}], "voEnd": 3.779}, {"key": "map", "start": 16.264, "dur": 9.65, "vo": [{"id": "f03", "t": 1.0, "dur": 7.25}], "voEnd": 8.25}, {"key": "signal", "start": 25.914, "dur": 10.493, "vo": [{"id": "f04", "t": 0.3, "dur": 3.197}, {"id": "d09", "t": 5.797, "dur": 4.096}], "voEnd": 9.893}, {"key": "who", "start": 36.407, "dur": 10.034, "vo": [{"id": "d10", "t": 0.3, "dur": 3.828}, {"id": "f05", "t": 4.328, "dur": 4.706}], "voEnd": 9.034}, {"key": "aspirin", "start": 46.441, "dur": 11.641, "vo": [{"id": "f06", "t": 0.3, "dur": 2.625}, {"id": "f07", "t": 3.125, "dur": 3.688}, {"id": "f08", "t": 7.013, "dur": 3.628}], "voEnd": 10.641}, {"key": "siege", "start": 58.082, "dur": 13.932, "vo": [{"id": "f09", "t": 1.7, "dur": 6.31}, {"id": "f10", "t": 8.41, "dur": 2.322}], "voEnd": 10.732}, {"key": "sneak", "start": 72.014, "dur": 12.699, "vo": [{"id": "g01", "t": 0.3, "dur": 4.053}, {"id": "g02", "t": 4.853, "dur": 3.495}, {"id": "g03", "t": 9.148, "dur": 1.851}], "voEnd": 10.999}, {"key": "window", "start": 84.713, "dur": 8.921, "vo": [{"id": "d11", "t": 0.6, "dur": 4.173}, {"id": "f11", "t": 5.173, "dur": 2.748}], "voEnd": 7.921}, {"key": "dawn", "start": 93.634, "dur": 12.468, "vo": [{"id": "f12", "t": 2.4, "dur": 3.62}, {"id": "n15", "t": 7.42, "dur": 3.848}], "voEnd": 11.268}, {"key": "after", "start": 106.102, "dur": 4.575, "vo": [{"id": "f14", "t": 0.4, "dur": 2.775}], "voEnd": 3.175}, {"key": "call", "start": 110.677, "dur": 5.854, "vo": [{"id": "f15", "t": 1.4, "dur": 1.995}, {"id": "f16", "t": 3.895, "dur": 1.359}], "voEnd": 5.254}, {"key": "phone", "start": 116.531, "dur": 6.389, "vo": [{"id": "f17", "t": 0.6, "dur": 2.389}], "voEnd": 2.989}]};
       const SH = Object.fromEntries(SCHED.shots.map((s) => [s.key, s]));
       const vo = (k, i = 0) => SH[k].vo[i].t;            // voice start, relative to shot
       const voEnd = (k, i = 0) => SH[k].vo[i].t + SH[k].vo[i].dur;
@@ -190,6 +199,7 @@
       Rig.MODES.crouchShush = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -100, faF: -150, torso: 14, head: -6 });
       Rig.MODES.sitHurt = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: 20, faF: -20, uaB: 30, faB: -10, torso: -8 + 1.5 * Math.sin(u * 7), head: -10 });
       Rig.MODES.sitPhone = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -52 + Math.sin(u * 1.1), faF: -92, head: 12 });
+      Rig.MODES.sneak = (u, o) => { const g = Rig.MODES.walk(u, { period: 1.6, stride: 8, knee: 30, bob: 4, arm: 6, lean: 16 }); return { ...g, thF: g.thF - 38, thB: g.thB - 34, shF: g.shF + 60, shB: g.shB + 56, bodyY: g.bodyY + 82, torso: g.torso + 10, uaF: -55, faF: -45, uaB: -35, faB: -35, head: -14 }; };
       Rig.MODES.torchLow = (u, o) => ({ ...Rig.MODES.torch(u, o), uaF: -40 + 3 * Math.sin(u * 1.1), faF: -10 });
 
       const cap = (k, text, t, end) => ({ text, t: t ?? vo(k), end });
@@ -342,8 +352,66 @@
           KN.forEach((k) => Fx.punch(tl, `#${id} .stage`, t0 + k, 1.025, 0.15));
           tl.fromTo(`#${id} .lampglow`, { opacity: 0.55 }, { opacity: 0.15, duration: 0.07, repeat: 11, yoyo: true, immediateRender: false }, t0 + SV(0));
           Fx.glitch(tl, `#${id}`, t0 + SV(0), 0.5, 12, 83); Fx.heart(tl, t0, D("siege"), 0.45, 0.7);
-          Fx.letterbox(tl, t0 + SV(0), t0 + D("siege") + 9); Fx.tunnel(tl, t0 + voEnd("siege", 1), t0 + D("siege"), 0.8);
+          Fx.letterbox(tl, t0 + SV(0), t0 + D("siege") - 0.1); Fx.tunnel(tl, t0 + voEnd("siege", 1), t0 + D("siege"), 0.8);
         },
+      });
+
+      // ---------- 8b. sneak to the back window… a rotten plank creaks, it finds them ----------
+      const N = (i) => vo("sneak", i), S0 = N(1) - 0.2, CREAK = S0 + 3.0, FACE = CREAK + 1.2, SLAM = voEnd("sneak", 2) + 0.15;
+      const SNV = Rig.footSpeed(1.6, 8) * 0.92, STEPS = [0.4, 1.2, 2.0].map((k) => S0 + k), PLANK = 520 + SNV * 3.0;
+      add("sneak", {
+        set: "hut", dark: 0.38,
+        cam: { from: { x: 100, y: 200, s: 1.15 }, to: { x: 130, y: 210, s: 1.22 } },
+        actors: [
+          { who: "pin", x: 330, y: 1540, s: 0.86, track: [{ t: 0, mode: "sitHurt", eyes: "wide", mouth: "flat" }, { t: FACE, mode: "sitHurt", eyes: "wide", mouth: "scream", blend: 0.1 }] },
+          { who: "chai", x: 180, y: 1525, s: 0.93, track: [{ t: 0, mode: "whistle", eyes: "wide", mouth: "flat" }, { t: S0, mode: "idle", blend: 0.4, eyes: "wide" }, { t: CREAK, mode: "idle", eyes: "wide", mouth: "o", blend: 0.15 }] },
+          { who: "kla", x: 520, y: 1530, s: 0.92, until: SLAM - 0.4, track: [{ t: 0, mode: "crouch", eyes: "wide", sweat: true }, { t: S0, mode: "sneak", blend: 0.3, eyes: "side", mouth: "flat" },
+            { t: CREAK, mode: "crouch", eyes: "wide", mouth: "o", blend: 0.1 }, { t: FACE, mode: "tremble", eyes: "wide", mouth: "scream", blend: 0.1 }], moveTo: { at: S0, x: PLANK, dur: 3.0 } },
+          { who: "kla", x: PLANK, y: 1530, s: 0.92, from: SLAM - 0.4, track: [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }, { t: SLAM, mode: "raise", blend: 0.1, eyes: "closed", mouth: "frown" }], moveTo: { at: SLAM - 0.4, x: 905, dur: 0.4 } },
+        ],
+        bubbles: [
+          { text: "“หน้าต่างหลัง… [ย่องไปปิดเบาๆ]”", x: 80, y: 760, t: N(0), end: voEnd("sneak", 0) + 0.2, tail: 120 },
+          { text: "“ซวยแล้ว… [มันได้ยิน]”", x: 420, y: 760, t: N(2), end: SLAM + 0.3, tail: 320 },
+        ],
+        captions: [cap("sneak", "ในความมืด… [ทุกเสียง]คือการบอกตำแหน่ง", N(1), CREAK)],
+        sfxText: [{ text: "เอี๊ยด!!", x: 520, y: 1180, t: CREAK, end: CREAK + 1.0, size: 110, color: "#ff8a6a", rot: -8 }, { text: "ปัง!!", x: 640, y: 520, t: FACE, end: FACE + 0.8, size: 120, color: "#f4ecd8", rot: 6 },
+          { text: "ปึ้ง!", x: 700, y: 700, t: SLAM, end: SLAM + 0.7, size: 96, color: "#f2c55c", rot: -6 }],
+        ui: [
+          { type: "memo", t: voEnd("sneak", 0) - 0.5, end: S0 + 0.1, who: "kla", text: "ภารกิจ: [ย่องไปปิดหน้าต่าง]", top: 160 },
+          { type: "stealth", t: S0 + 0.15, steps: STEPS.map((x) => x), creakAt: CREAK, top: 160 },
+        ],
+        extra(L, id) {
+          L.far.insertAdjacentHTML("beforeend", `<g id="${id}-shL" transform="translate(560,420)"><rect width="220" height="520" fill="url(#planks)" stroke="#2e2a26" stroke-width="8"/></g>
+            <g id="${id}-shR" transform="translate(780,420)"><rect width="220" height="520" fill="url(#planks)" stroke="#2e2a26" stroke-width="8"/></g>`);
+          document.getElementById(id).querySelector(".winview").insertAdjacentHTML("beforeend", `<g id="${id}-face" opacity="0">${Sets.props.shade(`${id}-sh`, 650, 1460, 1.4)}</g>`);
+          L.act.insertAdjacentHTML("afterbegin", `<g id="${id}-hints" opacity="0">${[560, 640, 720].map((x) => `<ellipse cx="${x}" cy="1536" rx="14" ry="6" fill="#7fd1b9" opacity=".8"/>`).join("")}
+            <g transform="translate(${PLANK},1536)"><rect x="-56" y="-10" width="112" height="22" rx="4" fill="rgba(232,112,90,.45)" stroke="#e8705a" stroke-width="3"/><path d="M-40,0l14,-6l12,8l14,-7l12,6l14,-5" stroke="#2e2a26" stroke-width="3" fill="none"/>
+              <text x="0" y="-22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="26" fill="#e8705a">ไม้ผุ</text></g></g>`);
+          L.glow.insertAdjacentHTML("beforeend", STEPS.map((k, i) => `<ellipse id="${id}-ring${i}" cx="0" cy="1534" rx="30" ry="9" fill="none" stroke="#7fd1b9" stroke-width="4" opacity="0"/>`).join("") +
+            `<ellipse id="${id}-ringC" cx="${PLANK}" cy="1534" rx="40" ry="12" fill="none" stroke="#ff6a5a" stroke-width="8" opacity="0"/><ellipse id="${id}-ringC2" cx="${PLANK}" cy="1534" rx="40" ry="12" fill="none" stroke="#ff6a5a" stroke-width="5" opacity="0"/>`);
+        },
+        fx(tl, id, t0) {
+          flick(id, t0, "sneak");
+          tl.set([`#${id}-shL`, `#${id}-shR`], { opacity: 0 }, t0); tl.set([`#${id}-shL`, `#${id}-shR`], { opacity: 1 }, t0 + SLAM - 0.01);
+          tl.fromTo(`#${id}-shL`, { attr: { transform: "translate(360,420)" } }, { attr: { transform: "translate(560,420)" }, duration: 0.12, ease: "power3.in", immediateRender: false }, t0 + SLAM - 0.01);
+          tl.fromTo(`#${id}-shR`, { attr: { transform: "translate(980,420)" } }, { attr: { transform: "translate(780,420)" }, duration: 0.12, ease: "power3.in", immediateRender: false }, t0 + SLAM - 0.01);
+          tl.fromTo(`#${id}-hints`, { opacity: 0 }, { opacity: 1, duration: 0.4, immediateRender: false }, t0 + S0); tl.to(`#${id}-hints`, { opacity: 0, duration: 0.3 }, t0 + FACE);
+          STEPS.forEach((k, i) => {
+            const x = 520 + SNV * (k - S0);
+            tl.set(`#${id}-ring${i}`, { attr: { cx: x } }, t0);
+            tl.fromTo(`#${id}-ring${i}`, { attr: { rx: 20, ry: 6 }, opacity: 0.9 }, { attr: { rx: 110, ry: 30 }, opacity: 0, duration: 0.8, ease: "power2.out", immediateRender: false }, t0 + k);
+          });
+          [[`#${id}-ringC`, 0], [`#${id}-ringC2`, 0.18]].forEach(([sel, d]) => tl.fromTo(sel, { attr: { rx: 30, ry: 9 }, opacity: 1 }, { attr: { rx: 640, ry: 190 }, opacity: 0, duration: 1.2, ease: "power2.out", immediateRender: false }, t0 + CREAK + d));
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.9, immediateRender: false }, t0 + CREAK);
+          Fx.punch(tl, `#${id} .stage`, t0 + CREAK, 1.06, 0.4); Fx.glitch(tl, `#${id}`, t0 + CREAK + 0.5, 0.3, 12, 95);
+          tl.set(`#${id}-face`, { opacity: 1 }, t0 + FACE);
+          tl.set("#flashw", { opacity: 0.75 }, t0 + FACE); tl.to("#flashw", { opacity: 0, duration: 0.25 }, t0 + FACE + 0.01);
+          Fx.punch(tl, `#${id} .stage`, t0 + FACE, 1.14, 0.5); Fx.glitch(tl, `#${id}`, t0 + FACE, 0.4, 16, 96);
+          Fx.punch(tl, `#${id} .stage`, t0 + SLAM, 1.08, 0.3);
+          Fx.heart(tl, t0 + S0, D("sneak") - S0, 0.5, 0.55); Fx.desat(tl, `#${id} .stage`, t0 + S0, t0 + CREAK, 0.4);
+          Fx.letterbox(tl, t0 + S0, t0 + D("sneak") - 0.1);
+        },
+        shake: (t) => (t > FACE && t < FACE + 0.8 ? Math.sin(t * 80) * 12 : t > SLAM && t < SLAM + 0.3 ? Math.sin(t * 90) * 8 : 0),
       });
 
       // ---------- 9. Kla's eyes at the window: it calls every name it knows ----------

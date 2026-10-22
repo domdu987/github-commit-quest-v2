@@ -78,6 +78,10 @@ SV = lambda i: vo_t("siege", i)
 SE = lambda i: SV(i) + SH["siege"]["vo"][i]["dur"]
 msg = vo_t("signal", 1) - 2.2
 KN = [0.2, 0.55, 0.9, 1.25]
+s0 = vo_t("sneak", 1) - 0.2
+creak, face = s0 + 3.0, s0 + 4.2
+slam = vo_t("sneak", 2) + SH["sneak"]["vo"][2]["dur"] + 0.15
+sneak_steps = [s0 + k for k in (0.4, 1.2, 2.0)]
 CUES = [
     ("open", 0.0, "static", 0.8), ("open", 1.0, "static", 0.5), ("open", 0.2, "glitch", 0.6), *beats("open", 0.0, D["open"], 0.4, 0.9),
     *[("open", 0.15 + k * (pick - 0.15) / 3, "tick", 1.0) for k in range(3)], ("open", pick, "ding", 0.7), ("open", pick, "whoosh", 1.0),
@@ -90,6 +94,10 @@ CUES = [
     ("aspirin", 0.2, "rustle", 0.4), ("aspirin", vo_t("aspirin", 1), "sting", 0.5), ("aspirin", vo_t("aspirin", 2), "notif", 0.4),
     *[("siege", k, "knock", 1.2) for k in KN], ("siege", SV(0) - 0.2, "glitch", 0.7), ("siege", SV(0), "sting", 0.8), *beats("siege", 0.0, D["siege"], 0.45, 0.9),
     ("siege", SE(0) + 0.5, "knock", 0.9), ("siege", SE(1) + 1.5, "creak", 0.9), ("siege", SE(1) + 3.0, "knock", 1.0), ("siege", D["siege"] - 0.6, "pop", 0.4),
+    ("sneak", 0.0, "crickets", 0.3), *[("sneak", k, "rustle", 0.25) for k in sneak_steps], *[("sneak", k, "tick", 0.5) for k in sneak_steps],
+    ("sneak", creak, "creak", 2.2), ("sneak", creak, "sting", 0.7), ("sneak", creak + 0.55, "glitch", 0.6), ("sneak", creak + 0.55, "notif", 0.5),
+    ("sneak", face, "knock", 1.8), ("sneak", face, "boom", 0.9), ("sneak", face, "sting", 1.3), ("sneak", face + 0.3, "knock", 1.4), ("sneak", slam, "knock", 1.6), ("sneak", slam, "boom", 0.7),
+    *beats("sneak", s0, D["sneak"] - s0, 0.5, 0.85),
     ("window", 0.0, "wind", 0.6), *[("window", k, "glitch", 0.5) for k in (1.6, 3.1, 4.6, 6.6)], *[("window", k, "boom", 0.3) for k in (3.1, 6.6)], *beats("window", 0.0, D["window"], 0.42, 0.9),
     ("dawn", 0.0, "riser", 0.5), *ticks("dawn", 0.45, 2.45, 0.05, 0.35), ("dawn", 2.4, "swell", 0.6), ("dawn", vo_t("dawn") + 0.2, "siren", 0.9), ("dawn", vo_t("dawn") + 2.8, "siren", 0.7),
     ("dawn", vo_t("dawn", 1) + 0.6, "ding", 0.5),
@@ -121,7 +129,7 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 dip(0.0, pick - 0.05, 0.3)                                         # which voice is real
-dip(T("siege", 0.0), T("window", -0.2), 0.12)                      # the siege: knocks on near-silence
+dip(T("siege", 0.0), T("window", -0.2), 0.12)                      # the siege and the sneak: knocks and creaks on near-silence
 dip(T("call", vo_t("call", 1) - 0.1), T("phone", -0.3), 0.0, 0.05)  # the call: the music drops out
 mus = mus * gain
 fade = int(1.2 * SR)
