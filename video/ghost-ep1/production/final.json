@@ -1,0 +1,308 @@
+{
+ "series_title_th": "บ้านไม้หลังนั้น",
+ "ep1_title_th": "ตอนที่ 1: ใครเคาะ?",
+ "logline_th": "ภูมิกับฝนถูกส่งไปสำรวจไซต์งานต่างจังหวัด และที่พักที่เหลือมีแค่บ้านไม้ใต้ถุนสูงหลังเดียว คืนนั้นพายุเข้าจนไฟดับ ทั้งคู่ยกเครื่องปั่นไฟเข้าห้องหลังเพราะกลัวขโมย แล้วติดเครื่องในบ้าน หลังจากนั้นเสียงเคาะก็ดังทั้งคืน ส้มโอเดินเซ ภูมิปวดหัว ฝนคลื่นไส้ เวลาหายไปสองชั่วโมง และมีเงาผู้หญิงผมยาวนั่งอยู่ในมุ้ง ฝนสังเกตได้ว่าทุกคนป่วยพร้อมกัน และรู้ว่าตัวการคือก๊าซคาร์บอนมอนอกไซด์ที่มองไม่เห็นและไม่มีกลิ่น เธอพาทุกคนออกไปที่อากาศโล่ง ไม่ยอมให้ใครกลับเข้าไป และโทร 1669 ได้ทัน แต่หลังกลับจากโรงพยาบาลและบ้านปลอดภัยแล้ว ภูมิกลับพูดถึงผู้หญิงคนเดียวกันในมุ้ง",
+ "hook_th": "ถ้าวันหนึ่ง… คุณได้ยินเสียงนี้ทั้งคืน (ก๊อก… ก๊อก… ก๊อก) ในบ้านไม้เก่ากลางพายุ สิ่งที่อยู่ในบ้านนั้นมองไม่เห็น… แต่ฆ่าคนได้",
+ "beats": [
+  {
+   "t": "0:00-0:04",
+   "scene": "EXT. Old Thai wooden house on stilts, night storm, vertical 9:16. Frame 0 is pure black with the caption already on screen, for muted viewers. At 0:01 a lightning flash (4 frames) reveals the house from a low angle in the muddy yard. FG: wet banana leaves dripping (parallax layer). MG: the house, with one bedroom window glowing dim amber. BG: purple-blue storm clouds. A slow push-in follows. Lighting: cold blue moonlight plus the one warm window.",
+   "action": "No main characters. During the lightning flash a tall shadow slides past the lit window (shadow layer only, not a rigged character). The camera keeps creeping in.",
+   "narration_th": "ถ้าวันหนึ่ง… คุณได้ยินเสียงนี้ทั้งคืน",
+   "dialogue_th": "",
+   "caption_th": "ถ้าวันหนึ่ง… คุณได้ยิน[เสียงเคาะ]ทั้งคืน",
+   "ui_card": "",
+   "sfx": "Frame 0: ก๊อก… ก๊อก… ก๊อก on black, dry and close, no music. Save this as asset KNOCK_A and reuse the same file at 0:25, 0:35, 1:23 and 1:26. At 0:01 a thunder crack syncs with the flash and the heavy rain bed comes in. VO direction for Puck across the whole episode: bright, friendly storyteller, but drop to a hushed, close-mic delivery on the night beats and let every '…' breathe."
+  },
+  {
+   "t": "0:04-0:07",
+   "scene": "COLD-OPEN FLASH-FORWARD: 3 rapid shots of about 0.8 s each, handheld shake, desaturated. (1) Close-up of ฝน lit from below by her flashlight. (2) White mosquito net with a dark seated long-haired silhouette inside (shadow layer, no face, no gore). (3) ภูมิ's flashlight rolling off the mattress, its beam stuck on the plank wall. Smash to black for 6 frames or less. A small corner badge 'บ้านไม้หลังนั้น · EP.1' sits bottom-right so the top stays free for UI cards.",
+   "action": "ฝน: raises flashlight, trembles. Silhouette: static shadow layer. ภูมิ: off-screen (shot 3 is a prop-only shot).",
+   "narration_th": "มันมองไม่เห็น… แต่ฆ่าคนได้",
+   "dialogue_th": "",
+   "caption_th": "มองไม่เห็น… แต่[ฆ่าคนได้]",
+   "ui_card": "",
+   "sfx": "A whoosh-hit on each flash, one heartbeat thump, a reversed-cymbal title sting."
+  },
+  {
+   "t": "0:07-0:10",
+   "scene": "EXT. Rural road at golden hour. Corner timestamp '17:50'. Wide vertical shot with rice fields on both sides and the wooden stilt house at the end of the road. FG: roadside grass. MG: the characters. BG: the house and a warm sky. Lighting: warm, safe, friendly.",
+   "action": "ภูมิ walks holding a clipboard (prop), lanyard swinging. ฝน walks beside him already holding the house key (prop). Both stop at the foot of the stairs. The landlady (simple dark silhouette figure) stands on the verandah and points at the house. ส้มโอ sits on the bottom step and turns its head toward the back of the house.",
+   "narration_th": "ภูมิกับฝน ถูกส่งมาสำรวจไซต์งาน",
+   "dialogue_th": "",
+   "caption_th": "[8 ชั่วโมงก่อน] ที่พักเหลือหลังเดียว",
+   "ui_card": "",
+   "sfx": "Crickets, a distant motorbike, a friendly cat meow, a soft wind chime."
+  },
+  {
+   "t": "0:10-0:14",
+   "scene": "EXT/INT. Verandah at night in the storm, timestamp '21:20'. Medium-wide shot from inside the house looking out to the stairs. FG: verandah railing with rain sheeting down. MG: ภูมิ and ฝน. BG: the landlady silhouette under an umbrella at the foot of the stairs, next to a small red petrol generator. Lighting: the porch bulb pops out, leaving only lightning and flashlight beams.",
+   "action": "The bulb dies. ฝน raises her flashlight. ภูมิ turns his head toward the stairs. The landlady (holding the umbrella as a prop) points at the generator, then walks off into the rain.",
+   "narration_th": "พายุเข้า ไฟดับ… ป้าเจ้าของบ้านให้ยืมเครื่องปั่นไฟ",
+   "dialogue_th": "",
+   "caption_th": "ไฟดับ… ได้[เครื่องปั่นไฟ]มาแทน",
+   "ui_card": "",
+   "sfx": "Thunder, an electric 'ปึ้ก' as the power dies, rain roar, the generator's wheels creaking up the wooden steps."
+  },
+  {
+   "t": "0:14-0:18",
+   "scene": "INT. Back room / kitchen at the rear of the house: small, plank walls, two wooden shutters, one door to the hallway. The camera is inside the room, facing the doorway. A single bulb, now powered by the generator, swings overhead. Warm and cozy, deceptively safe. In the last 0.8 s: FREEZE FRAME. Everything desaturates except a thick pulsing red outline around the RUNNING GENERATOR (the main mistake) and a thin secondary outline around the shut shutters and door.",
+   "action": "ภูมิ walks in holding the generator handle (prop) and crouches beside it in the corner. CUT to a close-up of the generator; the start is heard only. ฝน closes both shutters (close-door move). ภูมิ stands, walks out and closes the door behind them. ส้มโอ lies curled up in the HALLWAY outside the door.",
+   "narration_th": "แล้วติดเครื่อง… ในบ้าน",
+   "dialogue_th": "ภูมิ: ไว้ห้องหลังนะ กันขโมย",
+   "caption_th": "พลาด[ข้อ 1]: ติดเครื่องปั่นไฟในบ้าน",
+   "ui_card": "",
+   "sfx": "Pull-start 'แคร่ก… บรื้นนน', then a steady engine loop 'แต๊ก-แต๊ก-แต๊ก'. Keep this loop under every later indoor beat as the ticking clock. Shutters bang, the door thuds, then a record-scratch freeze and one heavy heartbeat."
+  },
+  {
+   "t": "0:18-0:21",
+   "scene": "INT. Back room, macro close-up on the generator's exhaust outlet, timestamp '21:40'. Only a faint transparent heat shimmer: do NOT draw smoke or coloured gas, because CO is invisible. The camera glides out under the door gap into the dark hallway, passing ส้มโอ's tail, then RISES to pillow and mosquito-net height as it drifts into the bedroom. This shows CO mixing through the whole room rather than hugging the floor.",
+   "action": "No characters except ส้มโอ's tail at the edge of frame: it twitches, then goes still.",
+   "narration_th": "สิ่งที่ออกจากท่อ… ไม่มีใครเห็นเลย",
+   "dialogue_th": "",
+   "caption_th": "21:40 · ไม่มีใคร[เห็น]",
+   "ui_card": "",
+   "sfx": "Engine loop louder, a clock tick layered on top, low sub-bass rising. MICRO-SCARE: as the camera clears the door gap, one sharp KNOCK_A 'ก๊อก!' comes from INSIDE the sealed back room behind it."
+  },
+  {
+   "t": "0:21-0:25",
+   "scene": "INT. Hallway outside the back-room door, timestamp '22:15', dim flickering bulb. Low camera at cat height. FG: an untouched food bowl. MG: ส้มโอ. BG: the closed back-room door with light leaking under it.",
+   "action": "ส้มโอ walks, stumbles and lies down. ฝน walks in and crouches beside it. ส้มโอ slowly turns its head and stares at the closed back-room door; ฝน turns her head to follow its gaze.",
+   "narration_th": "ส้มโอเดินเซ ไม่กินข้าว… คนโบราณว่าแมวเห็นผี",
+   "dialogue_th": "",
+   "caption_th": "แมว[เห็นผี]?",
+   "ui_card": "",
+   "sfx": "A weak meow, one floorboard creak, the engine loop."
+  },
+  {
+   "t": "0:25-0:28",
+   "scene": "INT. Bedroom, timestamp '23:10': white mosquito net over a floor mattress, plank wall behind. Medium shot from the doorway. Lighting: a dim bulb that dips and flickers with the engine rhythm.",
+   "action": "ภูมิ, inside the net, sits up and turns his head toward the wall. The bulb dips and a tall shadow sweeps across the plank wall from left to right (shadow layer). This is JUMP SCARE 1. ภูมิ trembles.",
+   "narration_th": "ห้าทุ่มสิบ… เสียงเคาะเริ่มดัง",
+   "dialogue_th": "",
+   "caption_th": "[23:10] ก๊อก… ก๊อก… ก๊อก",
+   "ui_card": "",
+   "sfx": "KNOCK_A three times, 0.3 s of total silence, then a BANG sting and a shadow whoosh."
+  },
+  {
+   "t": "0:28-0:31",
+   "scene": "INT. Bedroom, extreme close-up of ภูมิ with his glasses crooked. Screen FX: double-vision blur and a dark vignette that pulses with each throb (no gore). Cut-in: his flashlight beam on the empty wall.",
+   "action": "ภูมิ sits trembling inside the net (the pulsing FX shows the headache; no hands on his head), then raises his flashlight toward the wall. Nothing is there.",
+   "narration_th": "แต่เสียงเคาะ… ดังตามจังหวะปวดหัวของภูมิ",
+   "dialogue_th": "",
+   "caption_th": "เคาะ หรือ[ปวดหัว]?",
+   "ui_card": "",
+   "sfx": "The knocks morph into a throbbing pulse 'ตุบ… ตุบ' with a faint high-pitched ear ring."
+  },
+  {
+   "t": "0:31-0:35",
+   "scene": "INT. Bedroom, vertical split-screen, timestamp '23:40', dimmer with a sickly green tint. TOP: ภูมิ under the net. BOTTOM: ฝน on a floor mat next to a leftover som-tam bag. In the last 0.6 s: FREEZE, desaturate, red outline around both lying figures.",
+   "action": "TOP: ภูมิ holds a pill bottle (prop), CUT to the bottle on the floor, then ภูมิ lies down. BOTTOM: ฝน sits holding the som-tam bag (prop), trembles, then lies down.",
+   "narration_th": "ภูมิกินยาแล้วนอน… ฝนคลื่นไส้ นึกว่าส้มตำเย็นนี้",
+   "dialogue_th": "",
+   "caption_th": "พลาด[ข้อ 2]: กินยาแล้วนอนต่อ",
+   "ui_card": "",
+   "sfx": "Pill-bottle rattle, plastic bag rustle, engine loop and clock tick slightly faster, one heartbeat on the freeze."
+  },
+  {
+   "t": "0:35-0:39",
+   "scene": "INT. Dark hallway near the back-room door, dutch angle. The beat opens on pure black, as a hard jump cut that feels like lost time. The only light is ฝน's phone screen showing '01:52'. BG: the back-room door with light under the gap.",
+   "action": "ฝน lies on the hallway floor (she got up feeling sick and collapsed on the way to the back). She opens her eyes, sits up, turns her head left and right in confusion, then looks down at the phone (prop).",
+   "narration_th": "ฝนลืมตาอีกที… นอนอยู่บนพื้น เกือบตีสอง",
+   "dialogue_th": "",
+   "caption_th": "เวลา[หายไป] 2 ชั่วโมง",
+   "ui_card": "",
+   "sfx": "All sound is out. One single KNOCK_A in the black (what woke her), then the engine loop slams back in. Clock tick twice."
+  },
+  {
+   "t": "0:39-0:43",
+   "scene": "INT. Bedroom, ฝน's POV. Her flashlight beam hits the mosquito net. Inside: ภูมิ lying still, and beside him a dark seated silhouette of a long-haired woman in profile (shadow layer, not a rigged character, no face, no gore). ภูมิ's dropped flashlight lies on the floor with its beam stuck on the wall, matching the cold open.",
+   "action": "ฝน raises her flashlight and trembles. The flashlight flickers off for 2 frames, and the silhouette swaps from profile to facing the camera (a 2-pose swap on the shadow layer). This is the BIGGEST JUMP SCARE.",
+   "narration_th": "ในมุ้ง… มีใครนั่งอยู่ข้างภูมิ",
+   "dialogue_th": "",
+   "caption_th": "ใคร[อยู่ในมุ้ง]?",
+   "ui_card": "",
+   "sfx": "1 s of dead silence, including the engine loop, then a high-string screech and a sub boom on the pose swap."
+  },
+  {
+   "t": "0:43-0:46",
+   "scene": "INT. Bedroom, same framing. Two black frames (ฝน blinks), then the silhouette is gone and the net is still swaying (a 3-frame drawn sway, no cloth sim). The camera moves inside the net.",
+   "action": "ภูมิ sits up ON HIS OWN, in exactly the spot where the silhouette sat. He turns his head toward ฝน in confusion, then stumbles and nearly falls back. ฝน stands frozen at the net and never touches him.",
+   "narration_th": "ภูมิตื่นเอง… แต่จำไม่ได้ว่าอยู่ไหน",
+   "dialogue_th": "",
+   "caption_th": "ภูมิ[สับสน]",
+   "ui_card": "",
+   "sfx": "Net rustle, an unintelligible mumble from ภูมิ, the ticking speeding up."
+  },
+  {
+   "t": "0:46-0:50",
+   "scene": "INT. Bedroom, close-up on ฝน's face, freeze. 0.5 s flash inserts around her: ภูมิ trembling under the pulsing vignette / ฝน with the som-tam bag / ส้มโอ lying down / the shut shutters / the running generator. The camera snaps to her eyes, then whip-pans toward the back-room door.",
+   "action": "ฝน stops, turns her head sharply toward the back room and points.",
+   "narration_th": "ปวดหัว เวียนหัว คลื่นไส้… ป่วยพร้อมกันทั้งบ้าน",
+   "dialogue_th": "",
+   "caption_th": "ทุกคนป่วย[พร้อมกัน]",
+   "ui_card": "ICON warning-triangle | อาการ: ปวดหัว เวียนหัว คลื่นไส้",
+   "sfx": "A rewind whoosh on each insert, camera-shutter clicks, the engine loop rising."
+  },
+  {
+   "t": "0:50-0:53",
+   "scene": "INT. Hallway, low close-up in ฝน's flashlight beam: ส้มโอ lying limp right beside the gap under the back-room door. The back-room door stays CLOSED.",
+   "action": "ฝน crouches and picks up ส้มโอ, holding it as a prop for the whole escape. She does NOT open the back-room door.",
+   "narration_th": "ส้มโอนอนติดห้องหลัง… ป่วยก่อนใคร",
+   "dialogue_th": "",
+   "caption_th": "[ส้มโอ] คือสัญญาณแรก",
+   "ui_card": "ICON cat | สัตว์เลี้ยงอาจมีอาการก่อนคน",
+   "sfx": "A weak meow, a heartbeat."
+  },
+  {
+   "t": "0:53-0:57",
+   "scene": "INT. Hallway, then a cutaway REVEAL: the camera pushes straight THROUGH the plank wall (cyan x-ray outline style) into the sealed back room. The generator is running, the shutters are shut, the door is closed. Still NO drawn smoke: the air looks empty, and that is the point. Harsh, cold light.",
+   "action": "FG: ฝน, holding ส้มโอ, turns her head toward the wall. BG: the generator vibrating.",
+   "narration_th": "อาการพวกนี้… ไม่ใช่ผี คือก๊าซคาร์บอนมอนอกไซด์",
+   "dialogue_th": "",
+   "caption_th": "[ไม่ใช่ผี] แต่อันตรายกว่า",
+   "ui_card": "ICON cloud | CO · ไม่มีสี ไม่มีกลิ่น",
+   "sfx": "The engine loop swells to deafening, then a reverse-swell stinger cuts it off. VO pronunciation note for Puck: คาร์-บอน-มอน-นอก-ไซด์, clear and unhurried."
+  },
+  {
+   "t": "0:57-1:01",
+   "scene": "INT to EXT tracking shot: hallway, front door, verandah, stilt stairs, yard. The rain has eased and the clouds break to show stars. Lighting shifts from cramped amber to open, cool blue night air.",
+   "action": "ฝน runs ahead holding ส้มโอ. She opens the front door and leaves it open, but she does NOT stop to open windows and does NOT go into the back room. At the door she stops and turns her head back to ภูมิ. ภูมิ runs behind on his own, stumbles on the stairs and keeps going. Both stop in the open yard.",
+   "narration_th": "เปิดหน้าต่างไม่พอ… ต้องออกไปข้างนอก เดี๋ยวนี้!",
+   "dialogue_th": "",
+   "caption_th": "ออกไป[ข้างนอก] เดี๋ยวนี้!",
+   "ui_card": "ICON open-door | ออกไปที่อากาศโล่งทันที",
+   "sfx": "Feet pounding wooden boards, a door bang, the engine fading behind them, big gasps of air."
+  },
+  {
+   "t": "1:01-1:04",
+   "scene": "EXT. Muddy yard at the foot of the stairs, medium shot. BG: the house looming over them. Through the open doorway, ภูมิ's laptop with the survey data glows on the floor just inside. The engine is still faintly running indoors.",
+   "action": "ภูมิ stops, turns his head toward the house and walks toward the stairs. ฝน, still holding ส้มโอ, runs past him, stops at the foot of the stairs to block them, and points at him. ภูมิ stops.",
+   "narration_th": "",
+   "dialogue_th": "ฝน: ห้ามกลับเข้าไป!",
+   "caption_th": "เกือบพลาด[ข้อ 3]: กลับไปเอางาน",
+   "ui_card": "ICON no-entry | ห้ามกลับเข้าไป จนกว่าเจ้าหน้าที่บอก",
+   "sfx": "A tense string hit as ภูมิ steps forward, a far-off thunder roll."
+  },
+  {
+   "t": "1:04-1:08",
+   "scene": "EXT. Rural road beside the house, misty after the rain, stars overhead. Insert: phone screen with 1 flickering signal bar and a ticking-clock overlay. Wide: ภูมิ sits on the roadside facing AWAY from the house with ส้มโอ beside him, still within ฝน's sight. ฝน is a few steps up the road.",
+   "action": "ฝน walks, raises the phone high (same arm move as raising the flashlight), stops when a bar appears, turns her head back to check on ภูมิ, then holds the phone to her ear. ภูมิ sits.",
+   "narration_th": "สัญญาณขีดเดียว… หนึ่ง หก หก เก้า… ติดแล้ว!",
+   "dialogue_th": "",
+   "caption_th": "โทร[1669]",
+   "ui_card": "ICON phone | โทร 1669",
+   "sfx": "Keypad beeps 1-6-6-9, the ticking accelerates, a call-connect tone, then the ticking stops dead."
+  },
+  {
+   "t": "1:08-1:12",
+   "scene": "EXT. Roadside, still night, stars, corner timestamp '02:31'. BG: the rescue pickup's orange flashing beacon (vehicle only, crew off-screen) and the dark house. MG: ภูมิ and ฝน, both holding oxygen masks; ฝน is wrapped in a blanket. FG: ส้มโอ sitting up. SEED SCARE: on ONE sweep of the beacon across the dark bedroom window, a seated long-haired silhouette is in the window (shadow layer). On the next sweep it is gone.",
+   "action": "ภูมิ and ฝน sit, each holding an oxygen mask to their face (prop). ฝน trembles, then exhales. ส้มโอ turns its head toward the window and stares; nobody else notices.",
+   "narration_th": "เจ้าหน้าที่บอก… ถ้าหลับต่ออีกนิด อาจไม่ได้ตื่นเลย",
+   "dialogue_th": "",
+   "caption_th": "[หลับอยู่] อาจไม่ตื่นอีกเลย",
+   "ui_card": "ICON moon | หลับ/เมา อาจเสียชีวิตก่อนรู้ตัว",
+   "sfx": "A short siren chirp, oxygen hiss. The faint indoor engine cuts out mid-beat (the crew switched it off, off-screen). One low string note on the window sweep."
+  },
+  {
+   "t": "1:12-1:16",
+   "scene": "EXT. Next morning, sun, wide shot. The house has EVERY door and shutter wide open. The generator now RUNS far out in the open yard, exhaust pointed away from the house, with a long extension cord to the verandah. A dashed in-scene ground line labelled '6 ม.+' runs from the generator to the nearest door/window. Warm golden light; everything feels safe.",
+   "action": "ภูมิ and ฝน sit on a bench in the yard, both wearing hospital wristbands (prop). The landlady's simple silhouette opens the last shutter (open-door move). ส้มโอ walks normally, tail up.",
+   "narration_th": "หมอตรวจแล้ว… เจ้าหน้าที่ก็ว่าบ้านปลอดภัย",
+   "dialogue_th": "",
+   "caption_th": "กลับจาก รพ. · บ้าน[ปลอดภัย]แล้ว",
+   "ui_card": "ICON generator | ปั่นไฟ เตาถ่าน · นอกบ้านเท่านั้น",
+   "sfx": "Rooster, birdsong, a distant generator hum outdoors, a short warm acoustic relief motif, cat purr."
+  },
+  {
+   "t": "1:16-1:19",
+   "scene": "EXT. Yard, two-shot of ภูมิ and ฝน on the bench, the house soft-focus behind them. Soft morning light.",
+   "action": "ฝน sits in silence, turns her head toward the house, then away; she says nothing. ภูมิ sits dozing, eyes closed, leaning back against the bench.",
+   "narration_th": "ฝนแอบคิด… เงาในมุ้ง คงแค่สับสนจากก๊าซ",
+   "dialogue_th": "",
+   "caption_th": "ก็แค่[สับสน]…ใช่ไหม?",
+   "ui_card": "ICON brain | บางรายสับสน จนเหมือนเห็นสิ่งที่ไม่มี",
+   "sfx": "Birds, a light breeze. The relief motif fades out on an unresolved note."
+  },
+  {
+   "t": "1:19-1:23",
+   "scene": "EXT. Yard, slow push-in on ภูมิ as he wakes, then a hard cut to a close-up of ฝน's bob hair and orange clip (clearly NOT long hair). The house in the BG is graded slightly darker than in the previous beat.",
+   "action": "ภูมิ opens his eyes, turns his head to ฝน and says it casually. Cut to ฝน: she stops dead and trembles. She never told anyone about the figure in the net, and she never touched him last night.",
+   "narration_th": "",
+   "dialogue_th": "ภูมิ: ผู้หญิงผมยาวที่ปลุกผม… ใครอะ?",
+   "caption_th": "สองคน… เห็น[คนเดียวกัน]",
+   "ui_card": "",
+   "sfx": "Birdsong drops out mid-line; one low drone note holds. No music, no narration, so the line lands clean."
+  },
+  {
+   "t": "1:23-1:26",
+   "scene": "EXT. Wide: ภูมิ, ฝน and ส้มโอ in the sunny FG, the wide-open house in the BG. Snap zoom into the bedroom window: the mosquito net billows INWARD (a 3-frame drawn swap, no cloth sim) while the trees outside are perfectly still.",
+   "action": "ส้มโอ crouches low and turns its head toward the house (the hiss is SFX only). ภูมิ and ฝน slowly turn their heads toward the house.",
+   "narration_th": "ก๊าซออกไปหมดแล้ว… แต่บางอย่าง ยังอยู่",
+   "dialogue_th": "",
+   "caption_th": "แล้ว[ใครเคาะ]?",
+   "ui_card": "",
+   "sfx": "All ambience, including the outdoor generator hum, drops out. From inside the empty house: KNOCK_A ก๊อก… ก๊อก… ก๊อก. Cat hiss. Hard cut to black."
+  },
+  {
+   "t": "1:26-1:30",
+   "scene": "END CARD over black with a faint mosquito-net texture. Centre: a big A/B card 'ผู้หญิงในมุ้ง… A: มาหลอก / B: มาช่วย'. Lower third: series logo 'บ้านไม้หลังนั้น' and a follow prompt. Top: the EP.2 UI card.",
+   "action": "ส้มโอ's silhouette sits at the edge of frame, turns its head to the camera and blinks (2-frame eye swap).",
+   "narration_th": "ผู้หญิงในมุ้ง… มาหลอกหรือมาช่วย? เม้นต์ เอ หรือ บี!",
+   "dialogue_th": "",
+   "caption_th": "[A หรือ B]? คอมเมนต์เลย",
+   "ui_card": "ICON play | ตอนที่ 2: ผู้หญิงในมุ้ง",
+   "sfx": "One soft, distant KNOCK_A, a meow, logo sting."
+  }
+ ],
+ "facts": [
+  {
+   "fact_th": "คาร์บอนมอนอกไซด์ (CO) เป็นก๊าซไม่มีสี ไม่มีกลิ่น เกิดจากการเผาไหม้เชื้อเพลิง เช่น เครื่องปั่นไฟ เตาถ่าน และเครื่องยนต์ จึงมองไม่เห็นและดมไม่รู้ ไอเสียเครื่องยนต์อาจมีกลิ่นน้ำมัน แต่ตัว CO เองไม่มีกลิ่น ไม่ได้กลิ่นไอเสียจึงไม่ได้แปลว่าปลอดภัย (บทจึงไม่วาดควันหรือก๊าซมีสีเลย)",
+   "source": "CDC – Carbon Monoxide Poisoning: About (https://www.cdc.gov/carbon-monoxide/about/index.html); NHS – Carbon monoxide poisoning (https://www.nhs.uk/conditions/carbon-monoxide-poisoning/); US CPSC – Portable Generator Safety Alert #5123 (https://www.cpsc.gov/s3fs-public/5123_SafetyAlert_PortableGenerators_102021.pdf): you cannot see or smell CO, and you may be exposed even if you do not smell exhaust fumes; WHO Guidelines for Indoor Air Quality: Selected Pollutants (2010), CO chapter"
+  },
+  {
+   "fact_th": "อาการที่พบบ่อย ได้แก่ ปวดหัว เวียนหัว อ่อนแรง คลื่นไส้หรืออาเจียน เจ็บหน้าอก และสับสน ถ้าได้รับในระดับต่ำ อาการอาจคล้ายอาหารเป็นพิษหรือไข้หวัด แต่ไม่มีไข้ (เป็นที่มาของฉากที่ฝนนึกว่าเป็นเพราะส้มตำ)",
+   "source": "CDC – Carbon Monoxide Poisoning: About (https://www.cdc.gov/carbon-monoxide/about/index.html); nidirect (NHS-derived) – Carbon monoxide poisoning (https://www.nidirect.gov.uk/conditions/carbon-monoxide-poisoning): symptoms similar to food poisoning and flu but no high temperature; กรมควบคุมโรค – Weekly Disease Forecast No.133: CO poisoning from gas water heater, 6-12 Nov 2017 (https://ddc.moph.go.th/uploads/files_en/filedata/Department of Disease Control Weekly Disease Forecast No.133 CO poisoning from gas water heater (6 Nov 2017).pdf), which lists dizziness, confusion, weakness, upset stomach, vomiting, chest pain, loss of consciousness and death"
+  },
+  {
+   "fact_th": "ถ้าคนในบ้านหลายคนและสัตว์เลี้ยงป่วยพร้อมกัน ให้สงสัยพิษ CO ไว้ก่อน สัตว์เลี้ยงได้รับพิษ CO ได้ (อ่อนแรง ซึม อาเจียน เดินเซ หายใจลำบาก) และอาจแสดงอาการก่อนที่เจ้าของจะทันสังเกต การ์ดจึงต้องใช้คำว่า 'อาจ' เพราะไม่ได้เป็นแบบนี้ทุกครั้ง",
+   "source": "nidirect (NHS-derived) – Carbon monoxide poisoning (https://www.nidirect.gov.uk/conditions/carbon-monoxide-poisoning): suspect CO if 'your pets also become ill'; Technical Safety BC & BC SPCA – Carbon monoxide poisoning and your pets: do you know the signs? (Nov 2024) (https://www.technicalsafetybc.ca/learn-about/technical-safety-bc/latest-news/carbon-monoxide-and-your-pets-do-you-know-the-signs)"
+  },
+  {
+   "fact_th": "คนที่หลับอยู่หรือเมา อาจเสียชีวิตจากพิษ CO ได้ก่อนที่จะมีอาการหรือรู้ตัว (ใช้ในฉากภูมิกินยาแล้วนอน และการ์ด 'หลับ/เมา อาจเสียชีวิตก่อนรู้ตัว')",
+   "source": "CDC – Carbon Monoxide Poisoning: About (https://www.cdc.gov/carbon-monoxide/about/index.html): people who are sleeping or drunk can die from CO poisoning before they have symptoms"
+  },
+  {
+   "fact_th": "ห้ามใช้เครื่องปั่นไฟหรือเตาถ่านในบ้าน โรงรถ ใต้ถุนบ้าน หรือพื้นที่กึ่งปิดใด ๆ แม้จะเปิดประตูหน้าต่างหรือเปิดพัดลมแล้วก็ตาม ในที่อับ เครื่องปั่นไฟสร้าง CO ถึงระดับอันตรายได้ภายในไม่กี่นาที ต้องตั้งไว้นอกบ้านเท่านั้น ห่างประตู หน้าต่าง และช่องลมมากกว่า 6 เมตร (20 ฟุต)",
+   "source": "CDC – Carbon Monoxide Poisoning: Prevention (https://www.cdc.gov/carbon-monoxide/prevention/index.html): never use a generator inside the home, basement or garage, or less than 20 ft from a window, door or vent, and never burn charcoal indoors; US CPSC – Portable Generator Safety Alert #5123 (outdoors only, at least 20 ft from doors, windows and vents; high CO levels within minutes in confined spaces); US CPSC – 'Charcoal should never be used indoors, even if ventilation is provided' (https://www.cpsc.gov/Newsroom/News-Releases/1999/CPSC-Warns-Never-Use-Charcoal-Grills-Indoors); US EPA – Protect Your Family and Yourself from Carbon Monoxide Poisoning"
+  },
+  {
+   "fact_th": "ถ้าสงสัยว่าได้รับ CO ให้พาทุกคน รวมถึงสัตว์เลี้ยง ออกไปที่อากาศโล่งทันที ปิดเครื่องเฉพาะเมื่อทำได้โดยไม่ต้องเข้าไปในห้อง ห้ามกลับเข้าไปจนกว่าเจ้าหน้าที่จะตรวจและบอกว่าปลอดภัย แล้วโทร 1669 ทันที (ในบท ฝนไม่เข้าห้องหลัง ไม่หยุดเปิดหน้าต่าง และขวางภูมิไม่ให้กลับเข้าไปเอาโน้ตบุ๊ก)",
+   "source": "CDC – Carbon Monoxide Poisoning (https://www.cdc.gov/carbon-monoxide/); NHS – Carbon monoxide poisoning: do not go back into the building until you have received advice; nidirect – the house needs to be checked for safety before anyone returns (https://www.nidirect.gov.uk/conditions/carbon-monoxide-poisoning); กรมควบคุมโรค – Weekly Disease Forecast No.133 (2017): in case of CO poisoning, call EMS hotline 1669 immediately"
+  },
+  {
+   "fact_th": "ในประเทศไทย แจ้งเหตุเจ็บป่วยฉุกเฉินได้ที่สายด่วน 1669 (บริการการแพทย์ฉุกเฉิน โทรฟรี 24 ชั่วโมง)",
+   "source": "สถาบันการแพทย์ฉุกเฉินแห่งชาติ (สพฉ.) – https://www.niems.go.th; กรมควบคุมโรค – Weekly Disease Forecast No.133 (2017)"
+  },
+  {
+   "fact_th": "อาการมักดีขึ้นเมื่อออกห่างจากแหล่ง CO แต่ทุกคนที่สงสัยว่าได้รับพิษต้องไปโรงพยาบาลให้แพทย์ประเมิน การรักษาหลักคือให้ออกซิเจนทางหน้ากาก และบางรายอาจมีอาการทางสมองตามมาภายหลังได้หลายวันถึงหลายสัปดาห์ (ในบท ทั้งภูมิและฝนได้ออกซิเจน และมีสายรัดข้อมือโรงพยาบาล)",
+   "source": "NHS – Carbon monoxide poisoning: Treatment (oxygen through a mask; hospital assessment) (https://www.nhs.uk/conditions/carbon-monoxide-poisoning/); Weaver LK. Clinical practice: Carbon monoxide poisoning. N Engl J Med. 2009;360(12):1217-1225 (delayed neurological sequelae)"
+  },
+  {
+   "fact_th": "พิษ CO ทำให้สับสนได้ (เป็นอาการที่อยู่ในรายการของ CDC) ส่วนการเห็นภาพหลอนพบได้แค่ในรายงานผู้ป่วยบางราย เช่น ผู้ป่วยหญิงที่ได้รับ CO แล้วมีภาพหลอนทางตา และเล่าว่าเห็นผีขณะอาบน้ำ อาการนี้ไม่อยู่ในรายการอาการหลักของ CDC หรือ NHS บทจึงใช้คำว่า 'บางราย' 'เหมือน' และ 'คง' เท่านั้น",
+   "source": "Ong JR, Hou SW, Shu HT, Chen HT, Chong CF. Diagnostic pitfall: carbon monoxide poisoning mimicking hyperventilation syndrome. Am J Emerg Med. 2005;23(7):903-904, doi:10.1016/j.ajem.2005.07.008 (visual hallucinations; patient 'recalled seeing a ghost while taking bath'); Wilmer WH. Effects of carbon monoxid upon the eye. Am J Ophthalmol. 1921;4(2):73-90 (the 'haunted house' case traced to a faulty furnace); CDC – Carbon Monoxide Poisoning: About (confusion is on the symptom list)"
+  },
+  {
+   "fact_th": "พิษ CO จากเตาถ่านในห้องที่อากาศไม่ถ่ายเทเกิดขึ้นจริงในไทย ปี 2566 มีผู้ป่วยจากร้านหม้อไฟในห้องเดียว 11 ราย และช่วงปี 2562 ถึงมิถุนายน 2566 พบเหตุคล้ายกันอีก 10 ครั้ง ผู้ป่วย 23 ราย เสียชีวิต 2 ราย (เหตุผลที่ใส่ 'เตาถ่าน' ไว้ในการ์ดด้วย)",
+   "source": "WHO Western Pacific Surveillance and Response Journal (WPSAR) – Investigation of the first carbon monoxide poisoning cluster associated with a hotpot restaurant in Thailand, 2023 (https://ojs.wpro.who.int/ojs/index.php/wpsar/article/view/1110)"
+  },
+  {
+   "fact_th": "หมายเหตุสำหรับทีมภาพ: CO มีความหนาแน่นใกล้เคียงอากาศ (ราว 0.97 เท่าของอากาศ) จึงกระจายไปทั่วห้อง ไม่ได้จมลงพื้น ช็อตกล้องที่ 0:18 จึงต้องยกขึ้นไประดับหมอนหรือมุ้ง และห้ามมีภาพหรือคำพูดที่สื่อว่า CO 'ลอยต่ำ' หรือ 'อยู่ระดับแมว'",
+   "source": "NIOSH Pocket Guide to Chemical Hazards – Carbon monoxide (relative gas density 0.97) (https://www.cdc.gov/niosh/npg/npgd0105.html)"
+  }
+ ],
+ "twist_th": "เช้าวันรุ่งขึ้น หมอตรวจทั้งคู่ที่โรงพยาบาลแล้ว เจ้าหน้าที่ยืนยันว่าบ้านปลอดภัย บ้านเปิดโล่งทุกบาน และเครื่องปั่นไฟถูกย้ายไปติดกลางลาน ห่างบ้านเกิน 6 เมตร ฝนนั่งเงียบและคิดในใจว่าเงาในมุ้งคงเป็นแค่อาการสับสนจากก๊าซ เธอไม่เคยเล่าเรื่องนี้ให้ใครฟัง แต่ภูมิตื่นจากงีบแล้วถามขึ้นมาเองว่า \"ผู้หญิงผมยาวที่ปลุกผม… ใครอะ?\" ฝนผมบ็อบ และเมื่อคืนเธอไม่ได้แตะตัวภูมิเลย ภูมิลุกขึ้นมาเองตรงจุดที่เงานั่งอยู่ สองคนจึงเห็นผู้หญิงคนเดียวกัน ซึ่งอาการสับสนอธิบายไม่ได้ ทันใดนั้นเสียงรอบตัวเงียบหมด ส้มโอหมอบต่ำจ้องบ้าน มุ้งในห้องนอนพลิ้วเข้าด้านในทั้งที่ไม่มีลม แล้วเสียงเคาะ 3 ครั้งแบบเดียวกับเมื่อคืนก็ดังมาจากในบ้านที่ว่างเปล่า ก๊าซออกไปหมดแล้ว แต่บางอย่างยังอยู่ ส่วนเงาที่แวบผ่านหน้าต่างตอนรถกู้ภัยมา และเสียงเคาะที่ปลุกฝนตอนตีสอง ปูไว้ว่าเธออาจมาช่วย ไม่ได้มาหลอก",
+ "ep2_title_th": "ตอนที่ 2: ผู้หญิงในมุ้ง",
+ "comment_question_th": "ผู้หญิงในมุ้งที่ปลุกภูมิ… เธอมาหลอก หรือมาช่วย? คอมเมนต์ A = มาหลอก / B = มาช่วย มาเลย!",
+ "season_arc_th": "ทั้งซีซัน ภูมิกับฝนต้องอยู่หมู่บ้านนี้จนงานสำรวจเสร็จ ทุกตอนมีเรื่องหลอนที่สุดท้ายกลายเป็นภัยจริงที่ป้องกันได้ เช่น ไฟดูดจากสายไฟเปียกฝน งูเข้าบ้าน ไฟไหม้จากปลั๊กพ่วง หรือน้ำป่าไหลหลาก แต่ละตอนนับ \"พลาดข้อ 1-2-3\" ให้คนดูจับผิดตาม ความรู้ขึ้นเป็นการ์ดเล็กด้านบนจอเท่านั้น และเสียงเคาะ 3 ครั้งจะดังเตือนก่อนเกิดเหตุทุกครั้ง ขณะเดียวกัน ปริศนา \"ผู้หญิงในมุ้ง\" จะค่อย ๆ คลี่ออก ทั้งเรื่องที่ป้าเจ้าของบ้านเคยล็อกห้องหลังไว้ และเรื่องที่ส้มโอจ้องห้องนั้นทุกคืน ตอนจบซีซันเฉลยว่าเธอไม่ได้มาหลอก แต่พยายามปลุกคนในบ้านทุกครั้งที่มีอันตราย เพราะหลายปีก่อนเธอเองหลับไปในห้องนั้นแล้วไม่ได้ตื่นอีกเลย หนังผีจึงหักมุมเป็นเรื่องของผีที่ช่วยชีวิตคน และพาข้อความด้านความปลอดภัยไปด้วยทุกตอน"
+}
