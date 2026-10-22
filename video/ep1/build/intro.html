@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="th" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 900; src: url(assets/fonts/f3.ttf); }
+      @font-face { font-family: 'Orbitron'; font-weight: 900; src: url(assets/fonts/f5.ttf); }
+      :root { --ink: #2e2a26; --cream: #f4ecd8; --paper: #e6d9bd; --terra: #e07a4f; --night: #2b4350; --night2: #1f3440; --warm: #f2d6a0; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--night2); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Kanit', sans-serif; color: var(--ink); }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .a { position: absolute; }
+      .o { stroke: var(--ink); stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; }
+      .o3 { stroke: var(--ink); stroke-width: 3.5; stroke-linejoin: round; stroke-linecap: round; }
+
+      /* comic narration caption */
+      .cap { position: absolute; left: 90px; right: 90px; top: 1250px; display: flex; justify-content: center; }
+      .cap .box { position: absolute; background: var(--cream); border: 5px solid var(--ink); border-radius: 6px;
+        box-shadow: 8px 8px 0 rgba(46,42,38,.85); padding: 18px 34px 22px; font: 900 64px/1.25 Kanit; text-align: center;
+        white-space: nowrap; transform-origin: 50% 50%; }
+      .cap .box:before { content: "บรรยาย"; position: absolute; top: -20px; left: 22px; background: var(--ink); color: var(--cream);
+        font: 700 18px/1 Kanit; letter-spacing: 4px; padding: 8px 14px 7px; transform: rotate(-2deg); }
+      .k { display: inline-block; line-height: 1.2; padding: 0 .18em .04em; margin: 0 .06em; color: var(--ink);
+        background: radial-gradient(circle, rgba(244,236,216,.3) 1.2px, transparent 1.8px) 0 0/6px 6px var(--terra);
+        border: 4px solid var(--ink); border-radius: 8px; box-shadow: 4px 4px 0 var(--ink); transform: rotate(-3deg); }
+      .sfx { font: 900 150px/1 Kanit; color: var(--terra); letter-spacing: -2px;
+        text-shadow: -4px -4px 0 var(--ink), 4px -4px 0 var(--ink), -4px 4px 0 var(--ink), 4px 4px 0 var(--ink),
+          0 -4px 0 var(--ink), 0 4px 0 var(--ink), -4px 0 0 var(--ink), 4px 0 0 var(--ink), 10px 10px 0 var(--ink); }
+
+      /* HUD card (one per shot) */
+      .hud { position: absolute; background: var(--cream); border: 5px solid var(--ink); border-radius: 6px;
+        box-shadow: 7px 7px 0 rgba(46,42,38,.85); font-family: Kanit; }
+      .tape:after { content: ""; position: absolute; top: -14px; left: 50%; width: 90px; height: 26px; margin-left: -45px;
+        background: rgba(224,122,79,.55); transform: rotate(-4deg); }
+
+      /* title card */
+      #s3 { background: radial-gradient(circle, #d4c4a2 1.6px, transparent 2.3px) 0 0/12px 12px var(--paper); }
+      .ttl { font: 900 186px/1 Kanit; letter-spacing: -4px; white-space: nowrap;
+        text-shadow: 12px 12px 0 var(--terra); color: var(--ink); }
+      .ttl b { color: #c8623d; font-weight: 900; text-shadow: -4px -4px 0 var(--ink), 4px -4px 0 var(--ink), -4px 4px 0 var(--ink), 4px 4px 0 var(--ink), 12px 12px 0 var(--ink); }
+      .stk { display: grid; place-items: center; width: 150px; height: 150px; border-radius: 50%; background: var(--terra);
+        border: 5px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); font: 900 40px/1 Kanit; color: var(--ink);
+        outline: 3px dashed rgba(46,42,38,.45); outline-offset: -16px; }
+      .stamp { color: #b0553a; border: 6px solid #b0553a; outline: 3px solid #b0553a; outline-offset: 4px; border-radius: 8px;
+        padding: 2px 22px 8px; font: 900 76px/1.2 Kanit; white-space: nowrap; }
+      .torn { background: #efe0b8; padding: 16px 34px 20px; font: 900 64px/1 Kanit; white-space: nowrap;
+        clip-path: polygon(0 0,100% 0,97% 14%,100% 28%,97% 42%,100% 57%,97% 71%,100% 86%,97% 100%,0 100%,3% 86%,0 71%,3% 57%,0 42%,3% 28%,0 14%);
+        filter: drop-shadow(5px 5px 0 rgba(46,42,38,.5)); }
+
+      /* film finish */
+      #grain { position: absolute; inset: -60px; pointer-events: none; opacity: .16; mix-blend-mode: multiply; }
+      #vig { position: absolute; inset: 0; pointer-events: none;
+        background: radial-gradient(ellipse 75% 62% at 50% 46%, transparent 55%, rgba(20,28,34,.55) 100%); }
+      #flash { position: absolute; inset: 0; background: var(--cream); opacity: 0; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="19.6" data-width="1080" data-height="1920">
+
+      <!-- ============ S1: Bangkok skyline goes dark ============ -->
+      <div id="s1" class="clip" data-start="0" data-duration="7.6" data-track-index="0">
+        <svg id="city" class="a" width="1080" height="1920" viewBox="0 0 1080 1920">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#1f3440" /><stop offset=".7" stop-color="#2b4350" /><stop offset="1" stop-color="#3b5560" />
+            </linearGradient>
+            <pattern id="htc" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+              <circle cx="4.5" cy="4.5" r="1.3" fill="#f4ecd8" opacity=".35" />
+            </pattern>
+            <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <path d="M0,0V8" stroke="#2e2a26" stroke-width="2" opacity=".55" />
+            </pattern>
+          </defs>
+          <rect width="1080" height="1920" fill="url(#sky)" />
+          <rect width="1080" height="900" fill="url(#htc)" opacity=".5" />
+          <g id="moon"><circle cx="820" cy="330" r="74" fill="#f4ecd8" class="o3" /><circle cx="845" cy="315" r="14" fill="#e6d9bd" /><circle cx="800" cy="355" r="9" fill="#e6d9bd" /></g>
+          <g id="cam">
+            <g id="far"></g>
+            <g id="near"></g>
+            <g id="tower"></g>
+            <rect x="-200" y="1640" width="1480" height="400" fill="#18262e" class="o" />
+          </g>
+        </svg>
+        <div id="pruep" class="a sfx" style="left:560px; top:520px; transform:rotate(-8deg)">พรึ่บ!</div>
+        <div id="tag27" class="hud tape a" style="left:120px; top:410px; padding:14px 28px 18px; font:900 54px/1 Kanit; transform:rotate(-4deg)">ชั้น 27 <span style="font-weight:700;font-size:34px">· คุณอยู่ตรงนี้</span></div>
+        <div class="cap"><div id="c1a" class="box">ถ้าวันหนึ่ง…</div><div id="c1b" class="box">ไฟดับ<span class="k">ทั้งกรุงเทพฯ</span></div><div id="c1c" class="box">ตอนที่คุณอยู่<span class="k">ชั้น 27</span></div></div>
+      </div>
+
+      <!-- ============ S2: the last drop ============ -->
+      <div id="s2" class="clip" data-start="7.6" data-duration="7.4" data-track-index="0">
+        <svg id="bath" class="a" width="1080" height="1920" viewBox="0 0 1080 1920">
+          <defs>
+            <pattern id="tile" width="180" height="180" patternUnits="userSpaceOnUse">
+              <rect width="180" height="180" fill="#3c5763" /><path d="M0,0H180V180" fill="none" stroke="#2e2a26" stroke-width="4" opacity=".7" />
+            </pattern>
+            <pattern id="ht2" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+              <circle cx="4" cy="4" r="1.6" fill="#2e2a26" opacity=".5" />
+            </pattern>
+            <radialGradient id="beam" cx=".5" cy=".42" r=".55">
+              <stop offset="0" stop-color="#f2d6a0" stop-opacity=".6" /><stop offset=".6" stop-color="#f2d6a0" stop-opacity=".14" /><stop offset="1" stop-color="#f2d6a0" stop-opacity="0" />
+            </radialGradient>
+          </defs>
+          <rect width="1080" height="1920" fill="url(#tile)" />
+          <rect width="1080" height="1920" fill="url(#ht2)" opacity=".55" />
+          <ellipse id="pool" cx="540" cy="760" rx="560" ry="640" fill="url(#beam)" />
+          <!-- faucet -->
+          <g id="faucet">
+            <rect x="120" y="300" width="300" height="120" rx="20" fill="#9fb3b8" class="o" />
+            <rect x="140" y="310" width="90" height="100" fill="url(#ht2)" opacity=".5" />
+            <path d="M400,330H640Q760,330 760,450V560H660V470Q660,430 620,430H400Z" fill="#b9cdd3" class="o" />
+            <path d="M420,345H630Q735,345 742,450" fill="none" stroke="#f4ecd8" stroke-width="10" stroke-linecap="round" opacity=".7" />
+            <rect x="645" y="550" width="130" height="50" rx="10" fill="#8ea3a9" class="o" />
+            <rect x="230" y="200" width="80" height="110" rx="12" fill="#9fb3b8" class="o" />
+            <rect x="170" y="170" width="200" height="50" rx="20" fill="#b9cdd3" class="o" />
+          </g>
+          <!-- basin / bucket -->
+          <g id="bucket">
+            <path d="M380,1080H900L860,1560H420Z" fill="#e07a4f" class="o" />
+            <path d="M380,1080H900L860,1560H420Z" fill="url(#ht2)" opacity=".45" />
+            <ellipse cx="640" cy="1080" rx="260" ry="46" fill="#2b4350" class="o" />
+            <ellipse id="water" cx="640" cy="1092" rx="200" ry="26" fill="#8fb0b8" opacity=".9" />
+            <path d="M420,1130H860" stroke="#2e2a26" stroke-width="5" opacity=".6" />
+          </g>
+          <g id="dropg" transform="translate(710,605)">
+            <path id="drop" d="M0,-30C14,-8 22,8 0,24C-22,8 -14,-8 0,-30Z" fill="#cfe2e6" class="o3" />
+            <path d="M-6,-6Q-10,4 -4,10" stroke="#f4ecd8" stroke-width="4" fill="none" stroke-linecap="round" />
+          </g>
+          <g id="splash" transform="translate(640,1092)" opacity="0">
+            <path d="M-70,0Q-90,-50 -60,-80M70,0Q90,-50 60,-80M0,-10V-90" stroke="#cfe2e6" stroke-width="10" fill="none" stroke-linecap="round" />
+            <ellipse rx="110" ry="18" fill="none" stroke="#f4ecd8" stroke-width="5" />
+          </g>
+        </svg>
+        <div id="batt" data-layout-allow-overlap data-layout-allow-overflow class="hud tape a" style="left:90px; top:700px; width:330px; padding:22px 24px 20px; transform:rotate(-3deg)">
+          <div style="font:700 32px/1 Kanit; letter-spacing:2px">แบตมือถือ</div>
+          <div style="display:flex; align-items:center; gap:14px; margin-top:12px">
+            <svg width="96" height="48" viewBox="0 0 96 48"><rect x="3" y="3" width="80" height="42" rx="8" fill="#f4ecd8" class="o3" /><rect x="84" y="15" width="9" height="18" rx="3" fill="#2e2a26" /><rect x="10" y="10" width="46" height="28" rx="4" fill="#8fb0b8" /></svg>
+            <div style="font:900 64px/1 Kanit">64%</div>
+          </div>
+          <div id="nope" class="a" style="left:60px; top:30px; color:#b0553a; border:6px solid #b0553a; border-radius:8px; padding:0 18px 6px; font:900 70px/1.15 Kanit; transform:rotate(-14deg); background:rgba(244,236,216,.85)">ไม่ใช่!</div>
+        </div>
+        <div id="tik" class="a sfx" style="left:780px; top:820px; font-size:96px; color:#f2d6a0; text-shadow: -4px -4px 0 #1f3440, 4px -4px 0 #1f3440, -4px 4px 0 #1f3440, 4px 4px 0 #1f3440, 8px 8px 0 #1f3440; transform:rotate(6deg)">ติ๋ง…</div>
+        <div class="cap" style="top:1640px"><div id="c2a" class="box">สิ่งแรกที่จะหมด</div><div id="c2b" class="box">ไม่ใช่แบตมือถือ</div><div id="c2c" class="box">แต่คือ <span class="k">น้ำ</span></div></div>
+      </div>
+
+      <!-- ============ S3: episode title card ============ -->
+      <div id="s3" class="clip" data-start="15.0" data-duration="4.6" data-track-index="0">
+        <div id="kick" class="a" style="left:0; right:0; top:470px; text-align:center; font:700 30px/1 Orbitron; letter-spacing:12px; color:#b0553a">BANGKOK BLACKOUT</div>
+        <svg id="bulb" class="a" style="left:400px; top:120px" width="280" height="330" viewBox="0 0 280 330">
+          <path d="M140,0V60" class="o" />
+          <g id="bulbsw">
+            <path d="M140,60C80,60 50,108 56,156C62,198 96,212 100,250H180C184,212 218,198 224,156C230,108 200,60 140,60Z" fill="#f4ecd8" class="o" />
+            <path d="M70,150C70,120 84,96 108,84" fill="none" stroke="#2e2a26" stroke-width="5" stroke-linecap="round" opacity=".35" />
+            <path d="M104,130l22,22m0,-22l-22,22M156,130l22,22m0,-22l-22,22" class="o" />
+            <path d="M118,190Q140,176 162,190" fill="none" class="o" />
+            <rect x="98" y="250" width="84" height="22" fill="#9fb3b8" class="o" /><rect x="104" y="272" width="72" height="20" fill="#9fb3b8" class="o" /><path d="M118,292h44l-8,18h-28z" fill="#2e2a26" />
+          </g>
+        </svg>
+        <div id="ttl" class="a ttl" style="left:0; right:0; top:600px; text-align:center">กรุงเทพฯ <b>ดับ</b></div>
+        <div id="ep" class="a stk" style="left:150px; top:930px; transform:rotate(-10deg)">EP.01</div>
+        <div id="day" class="a stamp" style="left:360px; top:950px; transform:rotate(-6deg)">วันที่ 1</div>
+        <div id="clock" class="a torn" style="left:690px; top:960px; transform:rotate(3deg)">19:42 น.</div>
+        <div id="sub" class="a" style="left:0; right:0; top:1190px; text-align:center; font:700 46px/1.3 Kanit">ชั้น 27 · <span style="color:#b0553a">ไฟยังไม่มีกำหนดกลับมา</span></div>
+      </div>
+
+      <svg id="grain" class="a" width="1200" height="2040"><filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" /><feColorMatrix values="0 0 0 0 .18  0 0 0 0 .16  0 0 0 0 .14  0 0 0 1.4 -.2" /></filter><rect width="1200" height="2040" filter="url(#nz)" /></svg>
+      <div id="vig"></div>
+      <div id="flash"></div>
+
+      <audio id="bed" src="assets/audio/bed.wav" data-start="0" data-duration="19.6" data-volume="0.55"></audio>
+      <audio id="vo1" src="assets/vo/l1t.wav" data-start="0.3" data-duration="7.27" data-volume="1"></audio>
+      <audio id="vo2" src="assets/vo/l2t.wav" data-start="7.7" data-duration="7.21" data-volume="1"></audio>
+      <audio id="vo3" src="assets/vo/l3t.wav" data-start="15.2" data-duration="2.81" data-volume="1"></audio>
+    </div>
+
+    <script>
+      // ---- build skyline deterministically (seeded LCG, no Math.random) ----
+      const NS = "http://www.w3.org/2000/svg";
+      let seed = 20261022;
+      const rnd = () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+      const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+      const DISTRICTS = 5;
+      function row(parent, y0, hMin, hMax, wMin, wMax, fill, winSize, cls) {
+        let x = -160;
+        while (x < 1240) {
+          const w = wMin + rnd() * (wMax - wMin), h = hMin + rnd() * (hMax - hMin);
+          const d = Math.min(DISTRICTS - 1, Math.floor(((x + 160) / 1400) * DISTRICTS));
+          const g = el("g", {}, parent);
+          el("rect", { x, y: y0 - h, width: w, height: h + 400, fill, class: cls }, g);
+          const lit = el("g", { class: "lit d" + d }, g);
+          for (let wy = y0 - h + 24; wy < y0 - 10; wy += winSize * 2.2)
+            for (let wx = x + 14; wx < x + w - winSize - 8; wx += winSize * 2)
+              if (rnd() < 0.55) el("rect", { x: wx, y: wy, width: winSize, height: winSize * 1.3, fill: "#f2d6a0" }, lit);
+          x += w + 6 + rnd() * 16;
+        }
+      }
+      row(document.getElementById("far"), 1250, 260, 620, 90, 170, "#324d59", 12, "o3");
+      row(document.getElementById("near"), 1660, 200, 520, 130, 230, "#22363f", 18, "o");
+      // hero condo tower, 30 floors, floor 27 highlighted later
+      const T = document.getElementById("tower");
+      el("rect", { x: 420, y: 520, width: 240, height: 1200, fill: "#2b4350", class: "o" }, T);
+      el("rect", { x: 440, y: 490, width: 200, height: 40, fill: "#22363f", class: "o3" }, T);
+      const tLit = el("g", { class: "lit d2" }, T);
+      for (let f = 0; f < 30; f++) {
+        const y = 1660 - (f + 1) * 38;
+        for (let c = 0; c < 5; c++) if (rnd() < 0.7 || f === 26) el("rect", { x: 442 + c * 44, y, width: 26, height: 22, fill: "#f2d6a0" }, tLit);
+      }
+      el("rect", { id: "f27", x: 428, y: 1660 - 27 * 38 - 8, width: 224, height: 38, fill: "none", stroke: "#e07a4f", "stroke-width": 7, rx: 4, opacity: 0 }, T);
+
+      // grain jitter frames (deterministic)
+      const grainPos = Array.from({ length: 40 }, () => [Math.round(-50 + rnd() * 50), Math.round(-50 + rnd() * 50)]);
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ---- S1 ----
+      tl.fromTo("#cam", { scale: 1, transformOrigin: "540px 1100px" }, { scale: 1.05, duration: 4, ease: "none" }, 0);
+      tl.fromTo("#moon", { y: 0 }, { y: -30, duration: 7.6, ease: "none" }, 0);
+      for (let d = 0; d < DISTRICTS; d++) tl.to(".d" + d, { opacity: 0, duration: 0.06, ease: "none" }, 1.7 + [0.0, 0.32, 0.6, 0.18, 0.46][d]);
+      tl.fromTo("#pruep", { scale: 0.2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.28, ease: "back.out(3)" }, 1.85);
+      tl.to("#pruep", { opacity: 0, y: -40, duration: 0.35 }, 3.3);
+      tl.fromTo("#city", { x: 0 }, { x: 10, duration: 0.05, repeat: 5, yoyo: true, ease: "none" }, 1.85);
+      tl.to("#cam", { scale: 1.7, transformOrigin: "540px 650px", duration: 3.4, ease: "power2.inOut" }, 4.0);
+      tl.to("#f27", { opacity: 1, duration: 0.1, repeat: 3, yoyo: true }, 6.1);
+      tl.set("#f27", { opacity: 1 }, 6.6);
+      tl.fromTo("#tag27", { scale: 0, opacity: 0, transformOrigin: "50% 100%" }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.5)" }, 5.6);
+      const capIn = (id, t, out) => {
+        tl.fromTo(id, { opacity: 0, y: 30, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.22, ease: "back.out(2)" }, t);
+        if (out) tl.to(id, { opacity: 0, duration: 0.12 }, out);
+      };
+      capIn("#c1a", 0.3, 1.6); capIn("#c1b", 1.66, 3.95); capIn("#c1c", 4.02, null);
+
+      // ---- S2 ----
+      tl.fromTo("#bath", { scale: 1.12, transformOrigin: "540px 700px" }, { scale: 1.0, duration: 7.4, ease: "power1.out" }, 7.6);
+      tl.fromTo("#pool", { opacity: 0.6 }, { opacity: 1, duration: 0.5, repeat: 6, yoyo: true, ease: "sine.inOut" }, 7.6);
+      capIn("#c2a", 7.7, 9.85); capIn("#c2b", 9.94, 12.25); capIn("#c2c", 12.36, null);
+      tl.fromTo("#batt", { x: -420, rotation: -12 }, { x: 0, rotation: -3, duration: 0.35, ease: "back.out(1.6)" }, 9.94);
+      tl.fromTo("#nope", { scale: 3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.2, ease: "power4.in" }, 10.9);
+      tl.to("#batt", { x: -520, rotation: -20, duration: 0.3, ease: "power2.in" }, 12.1);
+      tl.fromTo("#dropg", { scale: 0.1, transformOrigin: "50% 0%" }, { scale: 1.25, duration: 1.0, ease: "sine.in" }, 12.4);
+      tl.to("#dropg", { y: 470, duration: 0.32, ease: "power2.in" }, 13.4);
+      tl.set("#dropg", { opacity: 0 }, 13.72);
+      tl.fromTo("#splash", { opacity: 1, scale: 0.3 }, { scale: 1.2, opacity: 0, duration: 0.6, ease: "power2.out", immediateRender: false }, 13.72);
+      tl.fromTo("#water", { scaleY: 1 }, { scaleY: 1.8, transformOrigin: "50% 50%", duration: 0.2, yoyo: true, repeat: 1 }, 13.72);
+      tl.fromTo("#tik", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(3)" }, 13.72);
+
+      // ---- S3 ----
+      tl.fromTo("#flash", { opacity: 0.9 }, { opacity: 0, duration: 0.35, immediateRender: false }, 15.0);
+      tl.fromTo("#ttl", { scale: 2.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power4.in" }, 15.15);
+      tl.fromTo("#s3", { x: 0 }, { x: 12, duration: 0.04, repeat: 5, yoyo: true }, 15.45);
+      tl.fromTo("#kick", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3 }, 15.5);
+      tl.fromTo("#bulbsw", { rotation: 14, transformOrigin: "140px 0px" }, { rotation: -10, duration: 1.1, repeat: 3, yoyo: true, ease: "sine.inOut" }, 15.0);
+      tl.fromTo("#ep", { scale: 0, rotation: -60 }, { scale: 1, rotation: -10, duration: 0.3, ease: "back.out(2.5)" }, 16.66);
+      tl.fromTo("#day", { scale: 2.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.18, ease: "power4.in" }, 16.95);
+      tl.fromTo("#clock", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "back.out(2)" }, 17.2);
+      tl.fromTo("#sub", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 17.2);
+
+      // ---- film grain jitter: 12 steps/sec ----
+      for (let i = 0; i * 0.083 < 19.6; i++) { const p = grainPos[i % grainPos.length]; tl.set("#grain", { x: p[0], y: p[1] }, i * 0.083); }
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
