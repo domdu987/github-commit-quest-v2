@@ -423,9 +423,17 @@
       <path d="M-14,-40C-20,-80 0,-120 30,-140" stroke="#c8c48a" stroke-width="5" fill="none" opacity=".45" stroke-linecap="round"/>
       <path d="M70,-150q12,-4 20,6" stroke="#e8e2b0" stroke-width="3" fill="none" opacity=".6"/></g></g>`;
     put(L.set, f);
-    // reaching hand, in screen space under the POV darkness (animated in by the shot)
-    put(L.light, `<g id="${id}-hand" transform="translate(-700,820) scale(-1,1)"><path d="M0,0C-80,-30 -170,-40 -250,-20C-290,-10 -300,20 -270,34C-230,46 -190,40 -150,40C-200,60 -230,80 -220,104C-210,124 -170,118 -120,96C-60,70 0,70 60,80Z" fill="#e2ad85" ${OUT}/>
-      <path d="M-250,-20C-262,-6 -264,14 -250,24" stroke="#b9845e" stroke-width="4" fill="none"/><path d="M60,80L420,140L420,-60L0,0" fill="#e8b830" ${OUT}/></g>`);
+    // reaching hand, sized to the close-up: index finger and thumb about to pinch (screen space, under the POV darkness)
+    put(L.light, `<g id="${id}-hand" transform="translate(-520,1260) rotate(-20)">
+      <path d="M-560,-120L20,-96L30,104L-560,150Z" fill="#e8b830" ${OUT}/><path d="M-20,-100L-10,100" stroke="#c4931c" stroke-width="16"/>
+      <path d="M10,-80C70,-104 170,-110 236,-96C260,-60 262,40 240,84C170,112 70,108 14,88Z" fill="#e2ad85" ${OUT}/>
+      <path d="M236,-38C262,-40 270,-14 250,-4C266,6 262,30 240,30C258,40 252,66 230,66" stroke="${INK}" stroke-width="4" fill="#d89f78"/>
+      <path d="M214,-96C300,-118 380,-128 430,-122C458,-118 462,-82 434,-76C380,-70 300,-60 236,-44Z" fill="#e2ad85" ${OUT}/>
+      <path d="M404,-122C426,-124 446,-118 448,-102C436,-96 420,-96 404,-100Z" fill="#f4d9c6" stroke="#b9845e" stroke-width="3"/>
+      <path d="M320,-110q4,16 0,30M270,-102q4,14 0,26" stroke="#b9845e" stroke-width="3.5" fill="none"/>
+      <path d="M120,70C190,70 300,40 370,-20C392,-38 420,-20 404,4C360,64 250,116 140,118Z" fill="#e2ad85" ${OUT}/>
+      <path d="M368,-20C384,-30 400,-28 404,-12C394,-4 380,-4 368,-10Z" fill="#f4d9c6" stroke="#b9845e" stroke-width="3"/>
+      <path d="M60,-60Q120,-30 170,-56" stroke="#c48a64" stroke-width="4" fill="none" opacity=".7"/></g>`);
   }
 
   // ---------------- close-ups for removing a leech (stacked vignettes, camera cuts between them) ----------------

@@ -283,7 +283,7 @@
             this._pov.drive(tl, t0, D(k));
             Fx.heart(tl, t0, D(k), o.beat ?? 0.6, 0.6);
             if (o.reach !== undefined) {
-              tl.fromTo(`#${k}fc-hand`, { attr: { transform: "translate(-700,860) scale(-1,1)" } }, { attr: { transform: "translate(150,820) scale(-1,1)" }, duration: 1.0, ease: "power2.out", immediateRender: false }, t0 + o.reach);
+              tl.fromTo(`#${k}fc-hand`, { attr: { transform: "translate(-520,1260) rotate(-20)" } }, { attr: { transform: "translate(95,1060) rotate(-20)" }, duration: 1.0, ease: "power2.out", immediateRender: false }, t0 + o.reach);
               Fx.punch(tl, `#${id} .stage`, t0 + o.reach + 0.9, 1.1, 0.4);
               Fx.glitch(tl, `#${id}`, t0 + o.reach + 0.9, 0.35, 12, 11);
             }
@@ -513,7 +513,7 @@
         caps: caps("twoam", [0]),
         ui: [{ type: "clock", t: 0.05, end: vo("twoam", 1) + 0.2, from: "01:50", to: "02:00", sweep: 0.6, label: "ตีสอง", top: 150 }],
         after(tl, id, t0) {
-          tl.to(`#twoamfc-hand`, { attr: { transform: "translate(-120,880) scale(-1,1)" }, duration: 0.15, ease: "power3.out" }, t0 + vo("twoam", 2));
+          tl.to(`#twoamfc-hand`, { attr: { transform: "translate(-160,1160) rotate(-20)" }, duration: 0.15, ease: "power3.out" }, t0 + vo("twoam", 2));
           Fx.punch(tl, `#${id} .stage`, t0 + vo("twoam", 2), 1.12, 0.3);
           tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + vo("twoam", 2));
         } });
