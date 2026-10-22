@@ -38,6 +38,9 @@
     sos: `<g class="a-shake"><rect x="36" y="14" width="48" height="92" rx="10" fill="#3d3833" ${O}/><rect x="42" y="26" width="36" height="62" rx="4" fill="#cfe2e6"/>
       <text x="60" y="64" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="17" fill="#c8553d">1669</text><circle cx="60" cy="97" r="3.5" fill="#f4ecd8"/></g>
       ${[0, 1].map((i) => `<path class="a-wave" data-i="${i}" d="M${94 + i * 9},${44 - i * 6}q${8 + i * 3},${16 + i * 6} 0,${32 + i * 12}M${26 - i * 9},${44 - i * 6}q${-8 - i * 3},${16 + i * 6} 0,${32 + i * 12}" fill="none" stroke="#e8705a" stroke-width="5" stroke-linecap="round"/>`).join("")}`,
+    pill: `<g class="a-bob"><rect x="20" y="44" width="80" height="34" rx="17" fill="#f4ecd8" stroke="${INK}" stroke-width="4" transform="rotate(-30 60 61)"/>
+        <path d="M60,44v34" stroke="${INK}" stroke-width="4" transform="rotate(-30 60 61)"/><path d="M60,44h-23a17,17 0 0 0 0,34h23z" fill="#e8705a" transform="rotate(-30 60 61)"/></g>
+      <g class="a-pulse"><circle cx="60" cy="60" r="46" fill="none" stroke="#e8705a" stroke-width="8"/><path d="M28,28L92,92" stroke="#e8705a" stroke-width="8" stroke-linecap="round"/></g>`,
     rule: `<circle cx="60" cy="62" r="40" fill="#f4ecd8" ${O}/>${Array.from({ length: 12 }, (_, i) => `<path d="M60,26v6" stroke="${INK}" stroke-width="3" transform="rotate(${i * 30} 60 62)"/>`).join("")}
       <path d="M60,62v-24M60,62L40,74" stroke="${INK}" stroke-width="5" stroke-linecap="round"/><circle cx="60" cy="62" r="5" fill="#e07a4f"/>
       <g class="a-bob"><path d="M96,18a16,16 0 1 0 12,26a13,13 0 1 1 -12,-26z" fill="#f2c55c" ${O}/></g>`,
@@ -161,6 +164,7 @@
         const pa = o.t0abs + o.possessed.at, side = o.possessed.side === "b" ? "B" : "A", other = side === "A" ? "B" : "A";
         const jit = o.pickAt !== undefined ? Math.max(1, Math.floor((o.pickAt - o.possessed.at) / 0.05)) : 60;
         tl.fromTo(`#${id} .opt.${side}`, { x: 0 }, { x: 7, duration: 0.05, repeat: jit, yoyo: true, immediateRender: false }, pa);
+        tl.set(`#${id} .opt.${side}`, { backgroundImage: "none", backgroundColor: "rgba(20,26,30,.92)" }, pa);
         tl.to(`#${id} .opt.${side}`, { backgroundColor: "rgba(140,20,30,.92)", scale: 1.16, duration: 0.9, ease: "power2.in" }, pa);
         tl.to(`#${id} .opt.${other}`, { opacity: 0.3, scale: 0.9, duration: 0.6 }, pa + 0.2);
         tl.fromTo(`#${id} .opt.${side}`, { boxShadow: "0 0 0 0 rgba(232,80,80,.9)" }, { boxShadow: "0 0 0 30px rgba(232,80,80,0)", duration: 0.45, repeat: 4, immediateRender: false }, pa);
@@ -173,7 +177,8 @@
       }
       if (o.pickAt !== undefined) {
         const pk = o.t0abs + o.pickAt, win = o.pick === "b" ? "B" : "A", lose = win === "A" ? "B" : "A";
-        tl.to(`#${id} .opt.${win}`, { scale: 1.14, backgroundColor: "#f2c55c", color: INK, duration: 0.25, ease: "back.out(3)" }, pk);
+        tl.set(`#${id} .opt.${win}`, { backgroundImage: "none", backgroundColor: "#f2c55c", color: INK }, pk); // the panel gradient would hide the pick colour
+        tl.to(`#${id} .opt.${win}`, { scale: 1.14, duration: 0.25, ease: "back.out(3)" }, pk);
         tl.to(`#${id} .opt.${lose}`, { opacity: 0.25, scale: 0.92, duration: 0.25 }, pk);
         tl.fromTo(`#${id} ${o.possessed ? ".who2" : ".who"}`, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.25, immediateRender: false }, pk + 0.1);
         tl.fromTo(`#${id} .opt.${win}`, { boxShadow: "0 0 0 0 rgba(242,197,92,.9)" }, { boxShadow: "0 0 0 26px rgba(242,197,92,0)", duration: 0.6, repeat: 1, ease: "power1.out", immediateRender: false }, pk);
@@ -388,6 +393,17 @@
         tl.fromTo(`#${id} .x`, { opacity: 1 }, { opacity: 0.3, duration: 0.25, repeat: 8, yoyo: true, immediateRender: false }, t0 + 1.8);
       },
     },
+    signalOn: {
+      vb: "0 0 170 200",
+      svg: () => `<g class="ph"><rect x="35" y="10" width="100" height="182" rx="16" fill="#3d3833" stroke="${INK}" stroke-width="4"/><rect x="45" y="28" width="80" height="136" rx="5" fill="#cfe2e6"/>
+        ${[0, 1, 2, 3].map((i) => `<rect class="b b${i}" x="${56 + i * 16}" y="${130 - i * 18}" width="11" height="${18 + i * 18}" rx="3" fill="#9aa3a5" opacity=".35"/>`).join("")}
+        <g class="ok" opacity="0"><circle cx="85" cy="62" r="24" fill="#7fd1b9" stroke="${INK}" stroke-width="3"/><path d="M73,62l9,9l16,-18" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round"/></g><circle cx="85" cy="178" r="5" fill="#f4ecd8"/></g>`,
+      anim(tl, id, t0) {
+        [0, 1, 2, 3].forEach((b, k) => tl.to(`#${id} .b${b}`, { attr: { fill: "#4f8f86" }, opacity: 1, duration: 0.15 }, t0 + 0.5 + k * 0.25));
+        tl.fromTo(`#${id} .ok`, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.3, ease: "back.out(3)", immediateRender: false }, t0 + 1.6);
+        tl.fromTo(`#${id} .ph`, { y: 0 }, { y: -6, duration: 0.08, repeat: 7, yoyo: true, immediateRender: false }, t0 + 1.7);
+      },
+    },
     ignition: {
       vb: "0 0 320 220",
       svg: () => `<rect x="6" y="10" width="308" height="204" rx="30" fill="#1f2529" stroke="${INK}" stroke-width="5"/><rect x="16" y="20" width="288" height="184" rx="24" fill="url(#dashg)"/>
@@ -527,6 +543,24 @@
         tl.fromTo(`#${id} .s${j}p${k % 3}`, { attr: { r: 8 }, opacity: 1 }, { attr: { r: 46 }, opacity: 0, duration: 0.7, ease: "power2.out", immediateRender: false }, at);
         tl.fromTo(`#${id}`, { x: 0 }, { x: 6, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, at);
       }));
+    },
+  };
+
+  // incoming call on a phone held in the viewer's hand
+  C.call = {
+    html: (id, o) => `<div id="${id}" class="gui call" style="${pos({ side: "center", w: 520, ...o })}">
+        <div class="dev"><div class="scr"><div class="lbl">สายเรียกเข้า…</div><div class="av">${[0, 1, 2].map((i) => `<i class="rg r${i}"></i>`).join("")}<div class="fm">${face(o.who)}</div></div>
+          <div class="nm">${o.name}</div><div class="sub">${o.sub || "มือถือ"}</div>
+          <div class="bt"><span class="no">✕</span><span class="yes">✆</span></div></div></div>
+        <svg class="hand" viewBox="0 0 520 520"><path d="M60,520L110,300Q120,250 170,262L200,330L230,520Z" fill="${o.skin || "#d6a27c"}" stroke="${INK}" stroke-width="6"/>
+          <path d="M360,520L400,330Q420,290 450,310L470,420L440,520Z" fill="${o.skin || "#d6a27c"}" stroke="${INK}" stroke-width="6"/><path d="M0,520L40,430L180,520Z" fill="${o.sleeve || "#9c4a3c"}" stroke="${INK}" stroke-width="6"/></svg></div>`,
+    anim(tl, id, t0, o) {
+      tl.fromTo(`#${id}`, { opacity: 0, y: 260 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, t0);
+      const end = o.t0abs + (o.end ?? o.t + 6), D = end - t0;
+      for (let t = 0.5; t < D; t += 1.2) tl.fromTo(`#${id} .dev`, { x: 0, rotation: 0 }, { x: 6, rotation: 1.2, duration: 0.04, repeat: 9, yoyo: true, immediateRender: false }, t0 + t);
+      [0, 1, 2].forEach((i) => tl.fromTo(`#${id} .r${i}`, { scale: 1, opacity: 0.8 }, { scale: 2.1, opacity: 0, duration: 1.2, repeat: Math.ceil(D / 1.2), ease: "power1.out", immediateRender: false }, t0 + 0.3 + i * 0.4));
+      tl.fromTo(`#${id} .yes`, { scale: 1 }, { scale: 1.18, duration: 0.3, repeat: Math.ceil(D / 0.3), yoyo: true, immediateRender: false }, t0 + 0.5);
+      if (o.glitchAt !== undefined) for (let k = 0; k < 4; k++) { tl.set(`#${id} .nm`, { x: 8, color: "#ff9a9a" }, o.t0abs + o.glitchAt + k * 0.5); tl.set(`#${id} .nm`, { x: 0, color: "#f4ecd8" }, o.t0abs + o.glitchAt + k * 0.5 + 0.08); }
     },
   };
 
@@ -701,6 +735,14 @@
     .pov .bpmh .fx-shock { border-color: #e8705a; }
     .pov .ecg2 { width: 170px; height: 54px; }
     .pov .bnum { display: flex; align-items: baseline; gap: 6px; } .pov .bnum b { font: 900 60px/1 Kanit; } .pov .bnum span { font: 700 22px/1 Kanit; color: rgba(244,236,216,.7); }
+
+    .call { opacity:0; } .call .dev { position:relative; margin:0 auto; width:420px; height:760px; border-radius:56px; background:#1a1d20; border:6px solid ${INK}; box-shadow:0 30px 60px rgba(0,0,0,.6), 0 0 40px rgba(127,209,185,.25); padding:22px; }
+    .call .scr { width:100%; height:100%; border-radius:40px; background:linear-gradient(180deg,#24343c,#0f171b); display:flex; flex-direction:column; align-items:center; padding-top:60px; }
+    .call .lbl { font:700 28px/1 Kanit; color:rgba(244,236,216,.75); } .call .av { position:relative; width:180px; height:180px; margin-top:40px; }
+    .call .av .fm { position:absolute; inset:0; width:180px; height:180px; border-width:5px; } .call .rg { position:absolute; inset:0; border-radius:50%; border:4px solid #7fd1b9; }
+    .call .nm { font:900 76px/1 Kanit; margin-top:36px; } .call .sub { font:700 26px/1 Kanit; color:rgba(244,236,216,.6); margin-top:12px; }
+    .call .bt { margin-top:auto; margin-bottom:70px; display:flex; gap:120px; } .call .bt span { width:110px; height:110px; border-radius:50%; display:grid; place-items:center; font:900 54px/1 Kanit; color:#fff; }
+    .call .no { background:#e8705a; } .call .yes { background:#4fb37a; } .call .hand { position:absolute; left:0; right:0; bottom:-170px; width:520px; height:520px; }
     .mm .ml { display:flex; flex-direction:column; align-items:center; gap:6px; font:900 32px/1 Kanit; text-shadow:0 2px 10px #000; }`;
 
   // ---------- living panels: reveal wipe, flash, sparks, a light running round the rim, sheen, glowing keywords ----------
