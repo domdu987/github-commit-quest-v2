@@ -122,8 +122,12 @@ CUES = [
     ("hosp", 0.1, "siren", 0.25), ("hosp", frag("hosp", 0, 2) - 0.05, "notif", 0.7), ("hosp", frag("hosp", 0, 2), "sting", 0.6),
     ("door", 0.1, "knock", 0.5), *beats("door", 0.0, D["door"], 0.5, 0.5),
     ("sleeve", frag("sleeve", 0, 1), "rustle", 0.8), *beats("sleeve", 0.0, D["sleeve"], 0.55, 0.5),
-    ("sig", frag("sig", 0, 0) + 0.35, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.85, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.25, "ding", 0.6),
-    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "glitch", 0.6),
+    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
+    ("sig", frag("sig", 0, 0) + 0.3, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.62, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.15, "ding", 0.6),
+    ("sig", frag("sig", 0, 2), "glitch", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
+    *[("sig", frag("sig", 0, 2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],  # ticking that speeds up into the cross
+    ("sig", frag("sig", 0, 3) - 1.1, "riser", 0.6),
+    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.8), ("sig", frag("sig", 0, 3), "glitch", 0.7), ("sig", frag("sig", 0, 3) + 0.12, "slam", 0.7),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     *bed("crickets", T("night", 0), T("choice", -0.3), 0.25, 5.0), ("night", frag("night", 0, 1), "swell", 0.4),
     ("scar", frag("scar", 0, 1), "sting", 1.0), ("scar", frag("scar", 0, 1), "glitch", 0.6), *beats("scar", 0.0, D["scar"], 0.5, 0.7),
@@ -161,7 +165,7 @@ dip(T("rule", 0), T("rule", -0.1), 0.35)
 dip(T("floor19", 0), T("ambush", 0.45), 0.3)
 dip(T("inside", 0.1), T("inside", -0.05), 0.12, 0.08)                 # the door shut: near silence, the pounding
 dip(T("door", 0), T("sleeve", -0.1), 0.35)
-dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "เรื่องเดียว"
+dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("night", 0), T("scar", -0.05), 0.25)
 dip(T("choice", 0), T("choice", -0.3), 0.5)
 boost = np.ones(N, np.float32)  # the action plays with the music up

@@ -1,4 +1,7 @@
-"""Rebuild brand/signature.wav with a clearer "ถูกทาง".
+"""Superseded by make_signature.py (new wording). Kept to rebuild the old spliced line, signature-v2-splice.wav,
+which the เสียงกอย episodes were mixed with. It sounded choppy: two takes joined mid-line.
+
+Rebuild the old signature with a clearer "ถูกทาง".
 
 In the first take the narrator swallows the final ง, so "ถูกทาง" is heard as "ถูกทาก" (leech).
 This keeps that take (signature-v1.wav, the trimmed s01 at tempo 1.05) and swaps only its second
@@ -51,5 +54,5 @@ out = old.copy()
 out[start:ph[2][0]] = 0
 out[start:start + len(new)] = new
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", "-", "-c:a", "pcm_s16le",
-                os.path.join(HERE, "signature.wav")], input=out.astype(np.float32).tobytes(), check=True)
+                os.path.join(HERE, "signature-v2-splice.wav")], input=out.astype(np.float32).tobytes(), check=True)
 print("phrases (s):", [(round(p / SR, 2), round(q / SR, 2)) for p, q in ph], "new phrase:", round(start / SR, 2), "+", round(len(new) / SR, 2), "s")
