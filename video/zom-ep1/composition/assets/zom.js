@@ -1,7 +1,7 @@
 // Sets and props for "ชั้น 23": a Bangkok condo during an outbreak. A studio living room with the front door,
 // the corridor through the door's peephole (with a front-facing face for the jump scare), the bathroom sink
 // close-up of a bitten forearm, a bathtub being filled, the building's water system as a cross-section,
-// the fire stairs (side landing and looking down the shaft) and the city at dusk. Same layer contract as sets.js.
+// the dead lift panel in the lobby, the fire stairs (side landing and looking down the shaft) and the city at dusk. Same layer contract as sets.js.
 (function () {
   const INK = "#2e2a26";
   const OUT = `stroke="${INK}" stroke-width="4" stroke-linejoin="round"`;
@@ -90,7 +90,7 @@
     // ceiling lamp
     s += `<path d="M640,-600V120" stroke="#3a3f45" stroke-width="4"/><path d="M600,120h80l26,60h-132z" fill="#3a3f45"/>`;
     put(L.set, s);
-    if (!night) put(L.glow, `<circle cx="640" cy="200" r="380" fill="url(#lantern)" opacity=".35"/>`);
+    if (!night && o.lamp !== false) put(L.glow, `<circle cx="640" cy="200" r="380" fill="url(#lantern)" opacity=".35"/>`);  // lamp:false once the power is out
     if (o.rays !== false) { rays(L, 600, 1100, 300, 1160, G + 40, night); dust(L, 150, 1050, 350, 1450, 30, o.seed || 7, night ? "#cfdcff" : "#fff2dc"); }
   }
 
@@ -184,7 +184,18 @@
       ${arm(-1)}${arm(1)}${hand(-1)}${hand(1)}</g>`;
   }
 
-  // ---------------- close-up: a forearm under the tap (bite with soap, or an old healed scar) ----------------
+  // ---------------- close-up: a forearm under poured water (bite with soap, or an old healed scar) ----------------
+  // the taps are dry once the pump stops, so the water comes from the stored tub: her other hand tips a plastic ขัน
+  // (dipper) whose lip sits on the top of the stream at (690, 566)
+  const DIPPER = (skin, sleeve) => `<g transform="translate(584,492) rotate(35)">
+      <path d="M-940,-74L-300,-46L-300,46L-940,92Z" fill="${sleeve}" ${OUT}/><path d="M-900,40L-320,30" stroke="${INK}" stroke-width="3" opacity=".3"/>
+      <rect x="-312" y="-54" width="34" height="108" rx="14" fill="${sleeve}" ${OUT}/>
+      <rect x="-320" y="-14" width="230" height="30" rx="14" fill="#c24f7c" ${OUT}/>
+      <path d="M-130,0C-130,96 -78,140 0,140C78,140 130,96 130,0Z" fill="#e86f9b" ${OUT}/><path d="M-96,40C-90,96 -50,120 -10,124" stroke="#fff" stroke-width="10" fill="none" opacity=".28" stroke-linecap="round"/>
+      <ellipse cx="0" cy="0" rx="130" ry="34" fill="#c24f7c" ${OUT}/><ellipse cx="6" cy="4" rx="112" ry="24" fill="#bfe3ef"/><path d="M60,-6q30,6 56,4" stroke="#fff" stroke-width="5" opacity=".7" fill="none"/>
+      <path d="M118,6q14,10 10,30" stroke="#dff3fa" stroke-width="26" fill="none" stroke-linecap="round" opacity=".9"/>
+      <rect x="-286" y="-40" width="84" height="80" rx="30" fill="${skin}" ${OUT}/><path d="M-270,-14h52M-270,6h52M-270,24h48" stroke="${INK}" stroke-width="3" opacity=".45"/>
+      <ellipse cx="-214" cy="-30" rx="26" ry="14" fill="${skin}" ${OUT}/></g>`;
   function armClose(L, o = {}) {
     const id = o.id || "ac", r = mk(o.seed || 41), skin = o.skin || "#ecc29c", sleeve = o.sleeve || "#e07a3f", night = !!o.night;
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="${night ? "#0c0f14" : "#cfd8d5"}"/>`);
@@ -194,8 +205,8 @@
     let s = "";
     if (o.water !== false) {
       s += `<path d="M-200,1280Q540,1180 1300,1280V2400H-200Z" fill="#f4f6f4" ${OUT}/><ellipse cx="540" cy="1360" rx="520" ry="80" fill="#dfe6e4"/><ellipse cx="560" cy="1380" rx="60" ry="16" fill="#9aa6ad"/>
-        <g transform="translate(200,0)"><path d="M140,380h160q30,0 30,30v60h170q40,0 40,40v40h-60v-24h-180v60h-130z" fill="url(#zChrome)" ${OUT}/><rect x="120" y="300" width="80" height="60" rx="14" fill="url(#zChrome)" ${OUT}/></g>
-        <g id="${id}-stream" transform="translate(200,0)"><rect x="468" y="566" width="44" height="760" fill="url(#zWater)"/>${Array.from({ length: 8 }, (_, k) => `<path class="foam" d="M${478 + (k % 3) * 10},${580 + k * 90}v60" stroke="#ffffff" stroke-width="4" stroke-dasharray="20 30" opacity=".8"/>`).join("")}</g>`;
+        <g id="${id}-stream" transform="translate(200,0)"><rect x="468" y="566" width="44" height="760" fill="url(#zWater)"/>${Array.from({ length: 8 }, (_, k) => `<path class="foam" d="M${478 + (k % 3) * 10},${580 + k * 90}v60" stroke="#ffffff" stroke-width="4" stroke-dasharray="20 30" opacity=".8"/>`).join("")}</g>
+        <g id="${id}-dipper">${DIPPER(skin, sleeve)}</g>`;
     }
     // forearm from the right edge, hand palm-down on the left
     const arm = `<g id="${id}-arm"><path d="M1300,1000L640,1010C600,1010 560,1000 520,1006L500,1110C540,1116 600,1110 640,1110L1300,1130Z" fill="${skin}" ${OUT}/>
@@ -294,6 +305,43 @@
     <rect x="-12" y="-92" width="24" height="24" rx="4" fill="url(#zChrome)" ${OUT}/><path d="M-10,-92L-34,-104M10,-92L30,-110" stroke="#2e2a26" stroke-width="7" stroke-linecap="round"/><path d="M12,-82q36,20 26,90" stroke="#1b1816" stroke-width="10" fill="none" stroke-linecap="round"/>`;
   // a flickering fluorescent tube (class zflick, driven by zlife) with its glow in the glow layer
   const tube = (L, x, y, w = 260) => { put(L.glow, `<ellipse class="zflickg" cx="${x}" cy="${y + 160}" rx="${w * 1.6}" ry="460" fill="url(#zGlowW)" opacity=".35"/>`); return `<rect x="${x - w / 2 - 10}" y="${y - 16}" width="${w + 20}" height="22" rx="6" fill="#3a3f45"/><rect class="zflick" x="${x - w / 2}" y="${y + 4}" width="${w}" height="14" rx="7" fill="#f4fbff"/>`; };
+
+  // ---------------- the lift lobby with the power out: dead call panel (unlit ▼, blank display), lift doors on the left,
+  // the fire-stair door on the right under a battery-lit green ทางหนีไฟ sign. #id-hand is บอส's finger jabbing the button
+  // (fingertip at the local origin; the shot tweens its transform attribute).
+  function liftCall(L, o = {}) {
+    const id = o.id || "lc", G = 1500, skin = "#d39a6e";
+    const SIGN = `<g transform="translate(1110,560)"><rect x="-170" y="-66" width="340" height="132" rx="10" fill="#1fbf6a" ${OUT}/><rect x="-158" y="-54" width="316" height="108" rx="6" fill="none" stroke="#dfffe9" stroke-width="3" opacity=".6"/>
+        <g transform="translate(-112,-6)" fill="#fff"><circle cx="8" cy="-34" r="11"/><path d="M-6,-20l22,4l10,22l14,6l-4,8l-18,-6l-6,-8l-6,18l14,16l-4,28h-12l2,-22l-16,-14l-10,22l-20,6l-2,-10l14,-6l12,-30l4,-18l-10,6l-6,16l-10,-2l8,-22z"/></g>
+        <text x="40" y="-6" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#fff">ทางหนีไฟ</text><text x="40" y="38" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="28" fill="#fff" letter-spacing="3">FIRE EXIT</text></g>`;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#0b0d0e"/>`);
+    let s = `<rect x="-900" y="-600" width="2900" height="${G + 600}" fill="#6a6e6c"/>`;
+    for (let k = 0; k < 9; k++) s += `<path d="M-900,${-600 + k * 260}H2000" stroke="#5f6361" stroke-width="3"/>`;
+    // lift doors (left) with the hall lantern above them, blank
+    s += `<rect x="-300" y="420" width="700" height="${G - 420}" fill="#3b4044" ${OUT}/><rect x="-270" y="460" width="320" height="${G - 460}" fill="url(#zChrome)" opacity=".5"/>
+      <rect x="54" y="460" width="320" height="${G - 460}" fill="url(#zChrome)" opacity=".45"/><path d="M52,460V${G}" stroke="#16191b" stroke-width="8"/>
+      <rect x="-40" y="300" width="200" height="80" rx="10" fill="#060504" ${OUT}/><text x="60" y="364" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="66" fill="#241413">88</text>`;
+    // the call panel: brushed steel plate, a small floor display (dark, ghost segments only), one ▼ button that never lights
+    s += `<g transform="translate(640,1000)"><rect x="-80" y="-180" width="160" height="340" rx="16" fill="url(#zChrome)" ${OUT}/><rect x="-66" y="-166" width="132" height="312" rx="10" fill="none" stroke="#fff" stroke-width="3" opacity=".35"/>
+      <rect x="-56" y="-140" width="112" height="70" rx="8" fill="#08090a" ${OUT}/><text x="0" y="-86" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#1f1414">88</text><path d="M-46,-132h40" stroke="#fff" stroke-width="3" opacity=".18"/>
+      <circle cx="0" cy="0" r="46" fill="#9aa6ad" ${OUT}/><circle cx="0" cy="0" r="34" fill="#2a3034"/><path d="M-14,-8H14L0,12Z" fill="#59636a"/><path d="M-22,-22a32,32 0 0 1 18,-10" stroke="#fff" stroke-width="4" opacity=".25" fill="none"/>
+      <text x="0" y="110" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#4a5258">ชั้น 23</text></g>`;
+    // the fire-stair door and its sign
+    s += `<rect x="900" y="700" width="420" height="${G - 700}" fill="#4b5652" ${OUT}/><rect x="930" y="730" width="360" height="${G - 730}" fill="#5f6d67" ${OUT}/>
+      <rect x="1010" y="820" width="120" height="180" fill="url(#zWire)" stroke="${INK}" stroke-width="4"/><rect x="1010" y="820" width="120" height="180" fill="#1b2421" opacity=".7"/>
+      <rect x="950" y="1130" width="320" height="34" rx="12" fill="url(#zChrome)" ${OUT}/>`;
+    s += `<rect x="-900" y="${G - 20}" width="2900" height="20" fill="#2f3331"/><rect x="-900" y="${G}" width="2900" height="1200" fill="#4a4a44"/>`;
+    put(L.set, s);
+    put(L.glow, `<circle cx="1110" cy="560" r="560" fill="url(#zExit)"/>${SIGN}`);  // battery-lit, so above the darkness
+    // บอส's hand: index finger up, other fingers curled, red wristband, bare forearm (tank top)
+    put(L.act, `<g id="${id}-hand" transform="translate(560,1260) scale(1.15) rotate(24)"><g transform="translate(34,0)">
+      <path d="M-62,250L-74,980H70L50,250Z" fill="${skin}" ${OUT}/><path d="M30,280L44,960" stroke="${INK}" stroke-width="3" opacity=".25"/>
+      <rect x="-60" y="222" width="114" height="46" rx="12" fill="#e05a3a" ${OUT}/><path d="M-56,236h106" stroke="#fff" stroke-width="4" opacity=".35"/>
+      <rect x="-66" y="96" width="122" height="140" rx="40" fill="${skin}" ${OUT}/>
+      <path d="M-6,140q14,-10 28,0M26,148q12,-8 22,2" stroke="${INK}" stroke-width="3" fill="none" opacity=".45"/>
+      <ellipse cx="-66" cy="166" rx="20" ry="38" transform="rotate(-24 -66 166)" fill="${skin}" ${OUT}/></g>
+      <rect x="-15" y="0" width="30" height="134" rx="15" fill="${skin}" ${OUT}/><path d="M-8,12q8,-6 16,0" stroke="#f3d2b6" stroke-width="5" fill="none"/><path d="M-10,60h20M-10,90h18" stroke="${INK}" stroke-width="2.5" opacity=".4"/></g>`);
+  }
 
   // ---------------- fire stairs: a landing seen from the side, the floor number painted on the wall ----------------
   // o.up adds the flight going up on the left; o.ext puts an extinguisher cabinet on the wall; o.red a pulsing red emergency light
@@ -402,20 +450,85 @@
     dust(L, 200, 900, 500, 1500, 24, 17, "#fff6e6");
     put(L.act, zLunge(`${id}-z`, 0, 0, 1));
   }
-  // looking straight down the stairwell shaft: rails spiral away, something looks up from far below
+  // looking straight down the stairwell from the floor-19 landing: a real switchback stair in one-point perspective
+  // (eye 1.6 m above the landing, f = 600 px). Each floor: flight A down the left side (−Y → +Y), a landing at the far end,
+  // flight B back up the right side, the next landing at the near end; a well between the flights shows the floors below.
+  // Drawn deepest first with depth fog. #id-up = the infected one floor down, looking up; #id-hand = its hand on the rail.
   function stairShaft(L, o = {}) {
-    const id = o.id || "ss";
-    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#030404"/>`);
+    const id = o.id || "ss", f = 600, cx = 540, cy = 960, WX = 1.6, WY = 2.6, GAP = 0.42, LD = 1.25, RISE = 3, N = 7, TREADS = 10;
+    const P = (X, Y, Z) => `${f1(cx + (f * X) / Z)},${f1(cy + (f * Y) / Z)}`;
+    const mix = (hex, Z) => {
+      const k = Math.min(0.94, 1 - Math.exp(-(Z - 1.4) / 6.5)), c = parseInt(hex.slice(1), 16);
+      const ch = (sh) => Math.round(((c >> sh) & 255) * (1 - k) + 7 * k);
+      return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
+    };
+    const quad = (pts, fill, extra = "") => `<path d="M${pts.join("L")}Z" fill="${fill}" ${extra}/>`;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#050606"/>`);
     let s = "";
-    for (let k = 0; k < 9; k++) {
-      const w = 980 * Math.pow(0.78, k), h = 1500 * Math.pow(0.78, k), x = 540 - w / 2, y = 960 - h / 2;
-      s += `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(w)}" height="${f1(h)}" fill="none" stroke="${k % 2 ? "#5d6460" : "#7a807c"}" stroke-width="${f1(60 * Math.pow(0.8, k))}"/>`;
-      s += `<rect x="${f1(x + 8)}" y="${f1(y + 8)}" width="${f1(w - 16)}" height="${f1(h - 16)}" fill="none" stroke="#c9ccd0" stroke-width="${f1(8 * Math.pow(0.8, k))}" opacity=".7"/>`;
-      if (k % 2 === 0) s += `<circle cx="${f1(x + 30)}" cy="${f1(y + 30)}" r="${f1(140 * Math.pow(0.78, k))}" fill="url(#zExit)"/>`;
+    // shaft walls, banded per half floor so they darken with depth
+    for (let z = 0.75; z < 1.6 + RISE * N; z += 1.5) {
+      const z2 = z + 1.5;
+      s += quad([P(-WX, -WY, z), P(WX, -WY, z), P(WX, -WY, z2), P(-WX, -WY, z2)], mix("#545b57", z));
+      s += quad([P(-WX, WY, z), P(WX, WY, z), P(WX, WY, z2), P(-WX, WY, z2)], mix("#4e5551", z));
+      s += quad([P(-WX, -WY, z), P(-WX, WY, z), P(-WX, WY, z2), P(-WX, -WY, z2)], mix("#5d6460", z));
+      s += quad([P(WX, -WY, z), P(WX, WY, z), P(WX, WY, z2), P(WX, -WY, z2)], mix("#575e5a", z));
     }
-    s += `<g id="${id}-up" opacity="0" transform="translate(560,960) scale(.16)">${zFace(`${id}-uf`, 0, 0, 1).replace('opacity="0"', "")}</g>`;
-    s += `<g id="${id}-hand" opacity="0"><path d="M610,880q30,-10 50,4M612,892q34,-2 52,12M610,904q30,4 44,20" stroke="#a9b8a0" stroke-width="7" fill="none" stroke-linecap="round"/></g>`;
+    const flight = (x0, x1, yFrom, yTo, zTop) => { // treads deepest first; each tread a horizontal slab, its nosing drawn light
+      let t = "";
+      for (let k = TREADS - 1; k >= 0; k--) {
+        const ya = yFrom + ((yTo - yFrom) * k) / TREADS, yb = yFrom + ((yTo - yFrom) * (k + 1)) / TREADS, z = zTop + ((k + 1) * (RISE / 2)) / TREADS;
+        t += quad([P(x0, ya, z), P(x1, ya, z), P(x1, yb, z), P(x0, yb, z)], mix(k % 2 ? "#8f948f" : "#868b86", z));
+        t += `<path d="M${P(x0, ya, z)}L${P(x1, ya, z)}" stroke="${mix("#c9ccc4", z)}" stroke-width="${f1(Math.max(1, 26 / z))}"/>`;
+        t += quad([P(x0, ya, z - RISE / 2 / TREADS), P(x1, ya, z - RISE / 2 / TREADS), P(x1, ya, z), P(x0, ya, z)], mix("#5f645f", z));
+      }
+      return t;
+    };
+    const rail = (x, yA, zA, yB, zB) => { // sloped handrail 0.9 m above the nosings, with balusters
+      let t = "";
+      for (let k = 0; k <= 6; k++) { const y = yA + ((yB - yA) * k) / 6, z = zA + ((zB - zA) * k) / 6; t += `<path d="M${P(x, y, z - 0.9)}L${P(x, y, z)}" stroke="${mix("#9aa0a2", z)}" stroke-width="${f1(Math.max(1, 20 / z))}"/>`; }
+      return t + `<path d="M${P(x, yA, zA - 0.9)}L${P(x, yB, zB - 0.9)}" stroke="${mix("#d6d9dc", zA)}" stroke-width="${f1(Math.max(1.5, 46 / zA))}" stroke-linecap="round"/>`;
+    };
+    for (let n = N - 1; n >= 0; n--) {
+      const Z = 1.6 + RISE * n, fl = 19 - n;
+      // near landing of this floor (where the flight down starts)
+      s += quad([P(-WX, -WY, Z), P(WX, -WY, Z), P(WX, -WY + LD, Z), P(-WX, -WY + LD, Z)], mix("#7d827e", Z));
+      // flight B (right side) arrives here from the far landing below... drawn as part of the floor above it; this floor's own pieces:
+      s += flight(GAP, WX, WY - LD, -WY + LD, Z + RISE / 2);                         // B: far landing → next floor's near landing
+      s += quad([P(-WX, WY - LD, Z + RISE / 2), P(WX, WY - LD, Z + RISE / 2), P(WX, WY, Z + RISE / 2), P(-WX, WY, Z + RISE / 2)], mix("#7a7f7b", Z + RISE / 2));
+      s += rail(GAP, WY - LD, Z + RISE / 2, -WY + LD, Z + RISE);
+      s += `<path d="M${P(-GAP, WY - LD, Z + RISE / 2 - 0.9)}L${P(GAP, WY - LD, Z + RISE / 2 - 0.9)}" stroke="${mix("#d6d9dc", Z + 1.5)}" stroke-width="${f1(Math.max(1.5, 46 / (Z + 1.5)))}"/>`;
+      s += flight(-WX, -GAP, -WY + LD, WY - LD, Z);                                   // A: this landing → far landing
+      s += rail(-GAP, -WY + LD, Z, WY - LD, Z + RISE / 2);
+      if (n > 0) { // stencilled floor number on the landing, and the green exit sign glow on the near wall
+        s += `<text x="${f1(cx + (f * -0.9) / Z)}" y="${f1(cy + (f * (-WY + LD * 0.62)) / Z)}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${f1((f * 0.5) / Z)}" fill="${mix("#e8e2cf", Z)}" opacity=".8">${fl}</text>`;
+        s += `<circle cx="${f1(cx + (f * 1.2) / Z)}" cy="${f1(cy + (f * -WY) / Z)}" r="${f1((f * 0.9) / Z)}" fill="url(#zExit)" opacity="${f1(Math.max(0.15, 1 - n * 0.12))}"/>`;
+      }
+      if (n === 1) { // the infected (the office worker), one floor down in the well, face turned up, arms reaching up at her
+        const Zh = Z + 0.2, px = cx + (f * 0.05) / Zh, py = cy + (f * 0.9) / Zh, k = (0.62 / Zh) * 1.45;
+        const sk = "#b0b9a2", shirt = "#e6e8e2";
+        const claw = (d) => `<g transform="translate(${d * 470},-330) scale(${d * 1.9},1.9) rotate(-8)"><path d="M0,40C-60,20 -90,-40 -60,-90C-30,-120 30,-110 50,-70C70,-30 60,20 0,40Z" fill="${sk}" ${OUT}/>
+          ${[[-66, -66, -150, -150], [-36, -98, -80, -226], [2, -104, 20, -232], [38, -86, 104, -196], [56, -30, 140, -40]].map(([x0, y0, x1, y1]) => `<path d="M${x0},${y0}Q${(x0 + x1) / 2 - 10},${(y0 + y1) / 2 - 20} ${x1},${y1}" stroke="#2e2a26" stroke-width="30" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2 - 10},${(y0 + y1) / 2 - 20} ${x1},${y1}" stroke="${sk}" stroke-width="22" fill="none" stroke-linecap="round"/><path d="M${x1},${y1}l${(x1 - x0) * 0.22},${(y1 - y0) * 0.22 - 6}l8,14z" fill="#141010" stroke="#141010" stroke-width="4" stroke-linejoin="round"/>`).join("")}</g>`;
+        const arm = (d) => `<path d="M${d * 380},520C${d * 500},300 ${d * 520},0 ${d * 470},-260" stroke="#2e2a26" stroke-width="170" fill="none" stroke-linecap="round"/><path d="M${d * 380},520C${d * 500},300 ${d * 520},0 ${d * 470},-260" stroke="${shirt}" stroke-width="150" fill="none" stroke-linecap="round"/>
+          <path d="M${d * 360},300l${d * 60},-30l${d * -10},50" stroke="#8a8f88" stroke-width="10" fill="none"/>`;
+        s += `<g id="${id}-up" opacity="0"><circle cx="${f1(px)}" cy="${f1(py)}" r="170" fill="url(#zRed)" opacity=".9"/><g transform="translate(${f1(px)},${f1(py)}) scale(${f1(k)})">
+          <path d="M-600,900C-640,620 -520,460 -330,420Q0,380 330,420C520,460 640,620 600,900Z" fill="${shirt}" ${OUT}/>
+          <path d="M0,430L-46,620L0,780L46,620Z" fill="#3a4a7a" ${OUT}/><ellipse cx="-230" cy="600" rx="90" ry="70" fill="#7a1414" opacity=".85"/><ellipse cx="260" cy="700" rx="70" ry="54" fill="#7a1414" opacity=".8"/>
+          <path d="M-430,520l60,40l-20,60M380,480l-50,30" stroke="#8a8f88" stroke-width="8" fill="none"/>
+          ${arm(-1)}${arm(1)}
+          ${zFace(`${id}-uf`, 0, -20, 1).replace('opacity="0"', "").replace(/<path d="M-150,300L-180,620H180L150,300Z"[^>]*\/>/, "")}
+          ${claw(-1)}${claw(1)}</g></g>`;
+        s += `<g id="${id}-hand" opacity="0"></g>`;
+      }
+    }
     put(L.set, s);
+    // ข้าว's own hands on the rail in the foreground: this is her looking down
+    const fist = (x, d) => `<g transform="translate(${x},1722) scale(${d},1)">
+        <path d="M-78,40C-92,150 -84,300 -66,420H118C112,300 104,150 92,40Z" fill="#e07a3f" ${OUT}/><path d="M-70,40H96" stroke="#bb5f2a" stroke-width="10"/>
+        <path d="M-74,30C-80,-6 -66,-40 -34,-46L70,-50C96,-50 106,-30 104,0L100,34C70,52 -40,52 -74,30Z" fill="#ecc29c" ${OUT}/>
+        ${[-50, -18, 14, 46].map((fx, k) => `<path d="M${fx - 15},-44C${fx - 17},-70 ${fx + 17},-72 ${fx + 15},-44" fill="#ecc29c" ${OUT}/><path d="M${fx - 7},-58q7,-6 14,0" stroke="#cc9a74" stroke-width="3" fill="none"/>`).join("")}
+        <path d="M100,-6C126,-14 136,8 120,22L98,30" fill="#ecc29c" ${OUT}/><path d="M-40,8q30,10 80,0" stroke="#cc9a74" stroke-width="4" fill="none" opacity=".7"/></g>`;
+    put(L.fg, `<g id="${id}-me"><rect x="-200" y="1690" width="1480" height="40" rx="20" fill="url(#zChrome)" ${OUT}/>${fist(300, -1)}${fist(780, 1)}</g>`);
+    L.fg.classList.remove("fgblur");
   }
 
   // ---------------- cutaway: a noise on floor 19 spreads through the building; the infected on nearby floors turn to it ----------------
@@ -462,7 +575,7 @@
     q(".spin").forEach((el) => tl.fromTo(el, { rotation: 0 }, { rotation: 360 * Math.ceil(dur), svgOrigin: "0 0", duration: dur, ease: "none", immediateRender: false }, t0));
   }
 
-  Object.assign(Sets, { condo, peephole, armClose, bathroom, tower, stairwell, stairShaft, stairFlight, doorJam, corridorRun, noiseMap });
+  Object.assign(Sets, { condo, peephole, armClose, bathroom, tower, liftCall, stairwell, stairShaft, stairFlight, doorJam, corridorRun, noiseMap });
   if (window.Camp) Camp.hand.extinguisher = `<g transform="translate(0,${118 + 96}) rotate(180)">${EXT}</g>`; // held by the valve, swung like a club
   window.Zom = { zFace, zLunge, zlife, city, FLIGHT };
 })();
