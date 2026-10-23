@@ -1,0 +1,437 @@
+
+      // ---------- ชั้น 23 extras: poses, helpers, cards ----------
+      Rig.MODES.cover = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -96, faF: -60, torso: 6, head: 4 });          // a hand clamped over someone's mouth
+      Rig.MODES.phoneSit = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -52 + Math.sin(u * 1.1), faF: -92, uaB: -20, faB: -60, torso: 6, head: 12 });
+      Rig.MODES.stopHand = (u, o) => ({ ...Rig.MODES.idle(u, o), uaB: -70, faB: -60, uaF: -10, faF: -20, head: 10, torso: 4 });   // back arm out: stop
+      Rig.MODES.whisper = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -60, faF: -120, head: 4 + 2 * Math.sin(u * 2.1), torso: 4 });
+      Rig.MODES.sleep = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: -14, head: -24 + Math.sin(u * 1.2), uaF: 10, faF: -10, uaB: -6, faB: -12 });
+      Rig.MODES.grabbed = (u, o) => { const j = Math.sin(u * 31) * 3; return { ...Rig.MODES.idle(u, o), uaF: -100 + j, faF: -4, uaB: 30, faB: -40, torso: -12 + j * 0.5, head: -16, thF: 14, shF: 20, thB: -10, bodyY: 6 }; };
+      const KH = (x, y, s, track, extra = {}) => ({ who: "khao", x, y, s, track, ...extra });
+      const BO = (x, y, s, track, extra = {}) => ({ who: "boss", x, y, s, track, ...extra });
+      const JI = (x, y, s, track, extra = {}) => ({ who: "jit", x, y, s, track, ...extra });
+      const TOP = (L, el) => L.act.appendChild(el);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const knocks = (tl, sel, t0, n = 3, gap = 0.22) => { for (let k = 0; k < n; k++) tl.fromTo(sel, { x: 0 }, { x: -9, duration: 0.05, repeat: 1, yoyo: true, immediateRender: false }, t0 + k * gap); };
+
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .krule.z { background: linear-gradient(180deg, #23292a 0%, #151a1b 100%); border-color: #1fbf6a; box-shadow: 0 0 0 10px rgba(16,20,21,.92), 0 0 0 13px #c8392b, 0 26px 60px rgba(0,0,0,.65); }
+        .krule.z .cn { border-color: #1fbf6a; } .krule.z .cn::after { background: #1fbf6a; }
+        .krule.z .kr-h span { background: linear-gradient(180deg, #d8402f, #a72a1d); border-color: #f4ecd8; color: #fff; }
+        .krule.z .kr-i { background: radial-gradient(circle at 40% 35%, #ffffff, #dfe6e2); border-color: #1fbf6a; }
+        .krule.z .kr-t u::after { background: #1fbf6a; box-shadow: 0 0 14px #1fbf6a; }
+        .znews { position: absolute; left: 150px; width: 780px; z-index: 52; font-family: Kanit; }
+        .znews .nt { display: flex; gap: 18px; align-items: center; margin-bottom: 16px; padding: 18px 22px; border-radius: 26px; opacity: 0;
+          background: rgba(250,250,247,.95); box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+        .znews .nt i { flex: none; width: 64px; height: 64px; border-radius: 16px; background: #d8322a; color: #fff; font: 900 38px/64px Kanit; text-align: center; font-style: normal; }
+        .znews .nt b { display: block; font-weight: 900; font-size: 30px; color: #d8322a; } .znews .nt span { font-weight: 900; font-size: 46px; color: #1b1d20; line-height: 1.1; }
+        .zcount { position: absolute; right: 50px; z-index: 52; padding: 16px 26px; border-radius: 24px; background: rgba(16,20,24,.92); border: 4px solid #8fc3d6; font-family: Kanit; text-align: right; opacity: 0; }
+        .zcount .lbl { color: #8fc3d6; font-weight: 900; font-size: 30px; } .zcount .v { color: #f4ecd8; font-weight: 900; font-size: 84px; line-height: 1; } .zcount .v small { font-size: 36px; color: #9aa6ad; }
+        .zlit { position: absolute; left: 70px; width: 940px; z-index: 52; font-family: Kanit; }
+        .zlit .row { display: flex; align-items: center; gap: 20px; padding: 18px 24px; margin-bottom: 18px; border-radius: 28px; background: rgba(16,22,26,.93); border: 4px solid #8fc3d6; opacity: 0; box-shadow: 0 18px 40px rgba(0,0,0,.5); }
+        .zlit .eq { color: #f4ecd8; font-weight: 900; font-size: 50px; white-space: nowrap; } .zlit .eq em { font-style: normal; color: #8fc3d6; } .zlit .eq strong { color: #f2c55c; font-size: 66px; }
+        .zlit svg { flex: none; }
+        .ktimer { position: absolute; left: 90px; width: 900px; z-index: 52; display: flex; align-items: center; gap: 26px; padding: 18px 30px; border-radius: 30px; opacity: 0; box-sizing: border-box;
+          background: rgba(12,16,18,.93); border: 4px solid #8fc3d6; box-shadow: 0 20px 50px rgba(0,0,0,.6); font-family: Kanit; }
+        .ktimer svg { width: 170px; height: 170px; flex: none; } .ktimer .lbl { color: #8fc3d6; font-weight: 900; font-size: 38px; } .ktimer .big { color: #f4ecd8; font-weight: 900; font-size: 60px; line-height: 1.1; }
+      </style>`);
+      const BOTTLE = (c = "#8fc3d6") => `<svg width="46" height="92" viewBox="0 0 46 92"><rect x="15" y="0" width="16" height="12" rx="3" fill="#3f7fbf"/><path d="M12,12h22v8q8,6 8,16v48q0,8 -8,8h-22q-8,0 -8,-8v-48q0,-10 8,-16z" fill="${c}" stroke="#f4ecd8" stroke-width="3"/></svg>`;
+      const PERSON = `<svg width="54" height="92" viewBox="0 0 54 92"><circle cx="27" cy="18" r="14" fill="#f4ecd8"/><path d="M8,92V52q0,-18 19,-18t19,18v40z" fill="#f4ecd8"/></svg>`;
+      GameUI.C.zRule = {
+        html: (id, o) => `<div id="${id}" class="krule z" style="top:${o.top ?? 160}px"><i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i><i class="sheen"></i>
+          <div class="kr-h"><span>${o.label}</span></div>${o.rows.map(([ill, txt], i) => `<div class="kr-r" id="${id}-r${i}"><div class="kr-i"><svg viewBox="0 0 120 120">${ill}</svg></div><div class="kr-t">${txt}</div></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.7)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .kr-h span`, { scaleX: 0.2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.08);
+          tl.fromTo(`#${id} .sheen`, { x: 0 }, { x: 1500, duration: 0.9, ease: "power1.inOut", immediateRender: false }, t0 + 0.25);
+          o.at.forEach((at, i) => {
+            const r = el.querySelector(`#${id}-r${i}`);
+            tl.fromTo(r, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.28, ease: "power2.out", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector(".kr-i"), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, A(at));
+            const u = r.querySelector("u"); if (u) tl.fromTo(u, { "--k": 0 }, { "--k": 1, duration: 0.35, ease: "power2.out", immediateRender: false }, A(at) + 0.3);
+            el.querySelectorAll(`#${id}-r${i} .stamp`).forEach((s) => tl.fromTo(s, { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, svgOrigin: "60 60", duration: 0.22, ease: "power3.in", immediateRender: false }, A(at) + 0.2));
+          });
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, y: -30, duration: 0.25 }, A(o.end));
+        },
+      };
+      GameUI.C.news = {
+        html: (id, o) => `<div id="${id}" class="znews" style="top:${o.top ?? 220}px">${o.items.map(([h, t], i) => `<div class="nt" id="${id}-n${i}"><i>!</i><div><b>${h}</b><span>${t}</span></div></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          o.at.forEach((a, i) => tl.fromTo(`#${id}-n${i}`, { opacity: 0, y: -50, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, o.t0abs + a));
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, o.t0abs + o.end);
+        },
+      };
+      GameUI.C.counter = { // a number that counts to a value (water collected, floor); keys: [{t, v}] in shot time
+        html: (id, o) => `<div id="${id}" class="zcount" style="top:${o.top ?? 150}px;border-color:${o.color || "#8fc3d6"}"><div class="lbl" style="color:${o.color || "#8fc3d6"}">${o.label}</div><div class="v"><span class="num">${o.keys[0].v}</span>${o.unit ? ` <small>${o.unit}</small>` : ""}</div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), num = el.querySelector(".num"), c = { t: o.t };
+          tl.fromTo(`#${id}`, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(1.6)", immediateRender: false }, t0);
+          const at = (t) => { let i = 0; while (i + 1 < o.keys.length && o.keys[i + 1].t <= t) i++; const a = o.keys[i], b = o.keys[i + 1]; if (!b) return a.v; const k = Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t))); return a.v + (b.v - a.v) * k; };
+          const draw = () => { const v = at(c.t); num.textContent = Math.round(v); };
+          tl.to(c, { t: o.end ?? 30, duration: (o.end ?? 30) - o.t, ease: "none", immediateRender: false, onUpdate: draw }, t0);
+          (o.alarm !== undefined) && tl.to(`#${id}`, { borderColor: "#e8443a", duration: 0.2 }, o.t0abs + o.alarm) && tl.to(`#${id} .num`, { color: "#ff5a4a", duration: 0.2 }, o.t0abs + o.alarm);
+          draw();
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, o.t0abs + o.end);
+        },
+      };
+      GameUI.C.litres = {
+        html: (id, o) => `<div id="${id}" class="zlit" style="top:${o.top ?? 170}px">
+          <div class="row" id="${id}-a">${PERSON}<div class="eq">1 คน · 1 วัน = <strong>~4</strong> <em>ลิตร</em></div><div>${BOTTLE().repeat(4)}</div></div>
+          <div class="row" id="${id}-b"><div>${PERSON.repeat(3)}</div><div class="eq">× 3 วัน = <strong>36</strong> <em>ลิตร</em></div></div></div>`,
+        anim(tl, id, t0, o) {
+          tl.fromTo(`#${id}-a`, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, o.t0abs + o.at[0]);
+          document.querySelectorAll(`#${id}-a svg:not(:first-child)`).forEach((b, i) => tl.fromTo(b, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2, ease: "back.out(3)", immediateRender: false }, o.t0abs + o.at[1] + i * 0.12));
+          tl.fromTo(`#${id}-b`, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, o.t0abs + o.at[2]);
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, o.t0abs + o.end);
+        },
+      };
+      GameUI.C.timer = {
+        html: (id, o) => `<div id="${id}" class="ktimer" style="top:${o.top ?? 160}px"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="64" fill="rgba(20,26,30,.95)" stroke="rgba(244,236,216,.2)" stroke-width="13"/>
+          <circle class="ring" cx="80" cy="80" r="64" fill="none" stroke="#8fc3d6" stroke-width="13" stroke-linecap="round" stroke-dasharray="402.1" stroke-dashoffset="402.1" transform="rotate(-90 80 80)"/>
+          <text class="num" x="80" y="97" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#f4ecd8">0:00</text></svg>
+          <div><div class="lbl">${o.label}</div><div class="big">${Ui.mark(o.big)}</div></div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), num = el.querySelector(".num"), ring = el.querySelector(".ring"), c = { v: 0 }, M = o.to ?? 60;
+          tl.fromTo(`#${id}`, { opacity: 0, y: -30, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(1.8)", immediateRender: false }, t0);
+          const draw = () => { const v = Math.min(M, c.v); num.textContent = `${Math.floor(v / 60)}:${String(Math.floor(v % 60)).padStart(2, "0")}`; ring.setAttribute("stroke-dashoffset", (402.1 * (1 - v / M)).toFixed(1)); };
+          tl.to(c, { v: M, duration: o.count ?? 1.4, ease: "power1.in", immediateRender: false, onUpdate: draw }, t0 + 0.2);
+          draw();
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, o.t0abs + o.end);
+        },
+      };
+      Object.assign(GameUI.ILL, {
+        dogcat: `<path d="M18,96V62q0,-20 18,-26l-6,-16l14,8q10,-2 20,2l12,-10l-2,18q14,8 14,24v34z" fill="#c99a6a" stroke="#2e2a26" stroke-width="4"/><circle cx="40" cy="56" r="4" fill="#2e2a26"/><circle cx="62" cy="56" r="4" fill="#2e2a26"/><path d="M46,70q5,5 10,0" stroke="#2e2a26" stroke-width="3" fill="none"/>
+          <path class="a-pulse" d="M78,40q14,-14 28,0t-4,24" stroke="#e8443a" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M84,70l18,-6M86,80l18,-2" stroke="#e8443a" stroke-width="5" stroke-linecap="round"/>`,
+        doctor: `<rect x="20" y="30" width="80" height="70" rx="10" fill="#f4f4f0" stroke="#2e2a26" stroke-width="4"/><path class="a-pulse" d="M60,44V86M39,65H81" stroke="#d8322a" stroke-width="14"/><path d="M44,30V20h32v10" stroke="#2e2a26" stroke-width="4" fill="none"/>`,
+      });
+      const IC = {
+        tell: `<path d="M18,30h70a10,10 0 0 1 10,10v32a10,10 0 0 1 -10,10H52l-18,16v-16H18a10,10 0 0 1 -10,-10V40a10,10 0 0 1 10,-10z" fill="#f4ecd8" stroke="#2e2a26" stroke-width="4"/><path d="M30,56q8,-12 16,0t16,0t16,0" stroke="#d8322a" stroke-width="6" fill="none"/><path d="M84,96q10,-10 20,0" stroke="#8e1414" stroke-width="5" fill="none"/>`,
+        dark: `<circle cx="60" cy="60" r="40" fill="#1b2230"/><circle cx="74" cy="48" r="34" fill="#dfe6e2"/><rect x="30" y="64" width="34" height="46" rx="4" fill="#7a5a3e" stroke="#2e2a26" stroke-width="4"/><g class="stamp"><path d="M22,26L98,102M98,26L22,102" stroke="#d8322a" stroke-width="10" stroke-linecap="round"/></g>`,
+        knock: `<rect x="36" y="16" width="56" height="94" rx="6" fill="#7a5a3e" stroke="#2e2a26" stroke-width="4"/><circle cx="80" cy="64" r="5" fill="#c9b48a"/><path d="M16,40q-8,10 0,20M8,34q-12,16 0,32" stroke="#1fbf6a" stroke-width="5" fill="none" stroke-linecap="round"/><g class="stamp"><circle cx="60" cy="60" r="46" fill="none" stroke="#d8322a" stroke-width="9"/><path d="M28,28L92,92" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/></g>`,
+      };
+
+      // ---------- 1. hook: a bite under the tap; only a graze; don't just rinse it ----------
+      add("hook", {
+        set: "armClose", setOpts: { id: "hk" }, dark: 0.08, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(640, 1020, 0.95, 540, 900), drift: { s: 0.03 } }, { t: F("hook", 0, 1) - 0.05, ...fr(700, 1060, 2.1, 540, 900), drift: { s: 0.03 } },
+          { t: vo("hook", 1) - 0.05, ...fr(600, 1040, 1.25, 540, 900), drift: { s: 0.02 } }] },
+        shake: (t) => (t > vo("hook", 1) ? 5 * Math.sin(t * 29) : 0),
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          Koi.life(tl, `#${id}`, t0, D("hook"));
+          tl.fromTo("#hk-arm", { x: 0 }, { x: 260, duration: 0.45, ease: "power2.in", immediateRender: false }, t0 + vo("hook", 1) - 0.4);  // pulling away after a quick rinse...
+          tl.to("#hk-arm", { x: 0, duration: 0.3, ease: "back.out(2)" }, t0 + vo("hook", 1) + 0.15);                                // ...and back under
+          Fx.punch(tl, `#${id} .stage`, t0 + vo("hook", 1), 1.08, 0.4); Fx.glitch(tl, `#${id}`, t0 + vo("hook", 1), 0.3, 12, 41);
+          tl.fromTo("#fxred", { opacity: 0.7 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + vo("hook", 1));
+          Fx.heart(tl, t0 + 0.3, D("hook") - 0.3, 0.6, 0.5);
+          tl.set("#black", { opacity: 1 }, t0 + D("hook") - 0.12); tl.set("#black", { opacity: 0 }, t0 + D("hook"));
+        },
+      });
+
+      // ---------- 2. three hours earlier ----------
+      add("rewind", {
+        set: "condo", setOpts: { id: "rw" }, dark: 0.1, blur: { far: 6, mid: 5, set: 5 },
+        cam: { from: { ...fr(560, 1100, 1.15, 540, 960) }, to: { ...fr(560, 1100, 1.0, 540, 960) } },
+        captions: caps("rewind"),
+        ui: [{ type: "clock", t: 0.05, end: D("rewind") - 0.05, from: "19:40", to: "16:40", sweep: 0.9, label: "ย้อนเวลา", top: 150 }],
+        fx(tl, id, t0) { Fx.desat(tl, `#${id} .stage`, t0, t0 + D("rewind") - 0.3, 0.3); Fx.glitch(tl, `#${id}`, t0, 0.4, 14, 42); Fx.speed(tl, t0, t0 + 0.8); },
+      });
+
+      // ---------- 3. breaking news on her phone ----------
+      add("news", {
+        set: "condo", setOpts: { id: "nw" }, dark: 0.05, blur: { far: 4, mid: 6, set: 6 },
+        cam: { keys: [{ t: 0, ...fr(420, 1150, 1.6, 540, 1250), drift: { s: 0.02 } }] },
+        actors: [KH(430, 1500, 0.9, [{ t: 0, mode: "phoneSit", eyes: "normal", mouth: "flat" }, { t: F("news", 0, 1), mode: "phoneSit", eyes: "wide", mouth: "o" }], { prop: "phone" })],
+        captions: caps("news"),
+        ui: [{ type: "news", t: 0.1, at: [F("news", 0, 0) + 0.1, F("news", 0, 1), F("news", 0, 2)], end: D("news") - 0.05, top: 200,
+          items: [["ข่าวด่วน", "เหตุร้ายกลางเมือง"], ["ข่าวด่วน", "คนกัดคน"], ["ข่าวด่วน", "ทั่วกรุงเทพฯ"]] }],
+        extra(L) { L.glow.insertAdjacentHTML("beforeend", `<circle cx="470" cy="1100" r="260" fill="url(#zPhone)"/>`); },
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("news", 0, 1), D("news") - F("news", 0, 1), 0.6, 0.4); },
+      });
+
+      // ---------- 4. บอส: fake news! ----------
+      add("fake", {
+        set: "condo", setOpts: { id: "fk" }, dark: 0.04, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(700, 1180, 1.25, 540, 1050), drift: { s: 0.02 } }] },
+        actors: [KH(390, 1500, 0.9, [{ t: 0, mode: "phoneSit", eyes: "side", mouth: "flat", look: 8 }], { prop: "phone" }),
+          BO(780, 1500, 0.92, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile" }, { t: vo("fake") - 0.05, mode: "laugh", eyes: "closed", mouth: "scream" }, { t: F("fake", 0, 1), mode: "sitChair", eyes: "normal", mouth: "smile" }])],
+        bubbles: [bub("fake", 0, 330, 520, 380)],
+      });
+
+      // ---------- 5. until... a scream outside the door ----------
+      add("scream", {
+        set: "condo", setOpts: { id: "sc" }, dark: 0.06, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1180, 0.85, 540, 1000), drift: { s: 0.02 } }, { t: F("scream", 0, 2) - 0.05, ...fr(170, 1050, 1.6, 540, 900), drift: { s: 0.04 } }] },
+        shake: (t) => (t > F("scream", 0, 1) && t < F("scream", 0, 1) + 0.8 ? 9 * Math.sin(t * 37) : 0),
+        actors: [KH(390, 1500, 0.9, [{ t: 0, mode: "phoneSit", eyes: "normal", mouth: "flat" }, { t: F("scream", 0, 1), mode: "sitChair", eyes: "wide", mouth: "o", look: -10 }], { prop: "phone" }),
+          BO(780, 1500, 0.92, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile" }, { t: F("scream", 0, 1) + 0.08, mode: "sitChair", eyes: "wide", mouth: "o", look: -6 }])],
+        captions: caps("scream"),
+        fx(tl, id, t0) { knocks(tl, "#sc-door", t0 + F("scream", 0, 2), 4, 0.15); Fx.punch(tl, `#${id} .stage`, t0 + F("scream", 0, 1), 1.06, 0.4); Fx.heart(tl, t0 + F("scream", 0, 1), D("scream") - F("scream", 0, 1), 0.45, 0.6); },
+      });
+
+      // ---------- 6. through the peephole: the uncle next door... doesn't blink ----------
+      add("peep", {
+        set: "peephole", setOpts: { id: "pp" }, dark: 0.1, blur: {},
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 1.0, 540, 960), drift: { s: 0.02 } }, { t: F("peep", 0, 1) - 0.05, ...fr(600, 1050, 2.2, 540, 960), drift: { s: 0.03 } }] },
+        actors: [{ who: "z1", x: 600, y: 1560, s: 0.95, flip: true, blinks: [], track: [{ t: 0, mode: "shamble", eyes: "dead", mouth: "flat", opts: { period: 2.6 } }] }],
+        captions: caps("peep"),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("peep"), 0.6, 0.6); },
+      });
+
+      // ---------- 7. and it turned — toward the sound ----------
+      add("turn", {
+        set: "peephole", setOpts: { id: "tn", face: true }, dark: 0.1, blur: {},
+        cam: { keys: [{ t: 0, ...fr(600, 1050, 2.2, 540, 960), drift: { s: 0.02 } }, { t: F("turn", 0, 1) - 0.05, x: 0, y: 0, s: 1.0, drift: { s: 0.05 } }] },
+        shake: (t) => (t > F("turn", 0, 1) ? 10 * Math.sin(t * 41) : 0),
+        actors: [{ who: "z1", x: 600, y: 1560, s: 0.95, flip: true, blinks: [], until: F("turn", 0, 1) - 0.05, track: [{ t: 0, mode: "shamble", eyes: "dead", mouth: "flat", opts: { period: 2.6 } }, { t: 0.6, mode: "lunge", eyes: "dead", mouth: "snarl", blend: 0.4 }] }],
+        captions: caps("turn"),
+        fx(tl, id, t0) {
+          const j = t0 + F("turn", 0, 1) - 0.05;
+          tl.fromTo("#tn-face", { opacity: 1, scale: 0.35, svgOrigin: "540 960" }, { opacity: 1, scale: 1.12, svgOrigin: "540 960", duration: 0.22, ease: "power4.out", immediateRender: false }, j);
+          tl.fromTo("#tn-face-in", { rotation: -4 }, { rotation: 4, svgOrigin: "0 0", duration: 0.07, repeat: 9, yoyo: true, immediateRender: false }, j + 0.2);
+          Fx.glitch(tl, `#${id}`, j, 0.35, 18, 43); tl.fromTo("#fxred", { opacity: 0.8 }, { opacity: 0, duration: 0.6, immediateRender: false }, j);
+          Fx.punch(tl, `#${id} .stage`, j, 1.12, 0.4);
+          tl.set("#black", { opacity: 1 }, t0 + D("turn") - 0.15); tl.set("#black", { opacity: 0 }, t0 + D("turn"));
+        },
+      });
+
+      // ---------- 8. silence — then a knock, and a voice: "ข้าว! เปิด! ป้าเอง!" ----------
+      add("knock", {
+        set: "condo", setOpts: { id: "kn" }, dark: 0.22, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(300, 1120, 1.3, 540, 1050), drift: { s: 0.02 } }] },
+        actors: [BO(470, 1500, 0.92, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "flat" }]),
+          KH(380, 1500, 0.9, [{ t: 0, mode: "cover", eyes: "wide", mouth: "flat" }])],
+        bubbles: [bub("knock", 0, 40, 560, 140)],
+        fx(tl, id, t0) { knocks(tl, "#kn-door", t0 + 0.05, 3, 0.2); knocks(tl, "#kn-door", t0 + vo("knock") + 0.4, 3, 0.18); Fx.heart(tl, t0, D("knock"), 0.42, 0.7); },
+      });
+
+      // ---------- 9. ป้าจิต, the condo housekeeper: she knows every corner of this building ----------
+      add("jit", {
+        set: "condo", setOpts: { id: "jt" }, dark: 0.12, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(300, 1180, 1.05, 540, 1050), drift: { s: 0.015 } }, { t: F("jit", 0, 1) - 0.05, ...fr(250, 1020, 1.9, 540, 1150), drift: { s: 0.02 } }] },
+        actors: [JI(150, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "wide", mouth: "o" }, { t: 0.7, mode: "idle", eyes: "normal", mouth: "flat" }], { moveTo: { x: 260, dur: 0.7, ease: "power2.out" } }),
+          KH(460, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o", look: 4 }], { flip: true }), BO(600, 1500, 0.92, [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat" }], { flip: true })],
+        captions: caps("jit"),
+        ui: [{ type: "intro", t: F("jit", 0, 0) + 0.1, end: D("jit") - 0.05, who: "jit", name: "ป้าจิต", trait: "แม่บ้านคอนโด", top: 170, side: "left" }],
+        fx(tl, id, t0) {
+          tl.fromTo("#jt-door", { attr: { transform: "translate(56,0) scale(0.25,1) translate(-56,0)" } }, { attr: { transform: "translate(56,0) scale(1,1) translate(-56,0)" }, duration: 0.25, ease: "power3.in", immediateRender: false }, t0 + 0.6);
+          Fx.punch(tl, `#${id} .stage`, t0 + 0.85, 1.05, 0.3);
+        },
+      });
+
+      // ---------- 10. "they hear sound — remember three things" + the rule card ----------
+      add("rule", {
+        set: "condo", setOpts: { id: "rl" }, dark: 0.18, blur: { far: 5, mid: 4, set: 3 },
+        cam: { keys: [{ t: 0, ...fr(260, 1000, 2.3, 540, 1100), drift: { s: 0.012 } }, { t: vo("rule", 1) - 0.05, ...fr(260, 1040, 1.8, 540, 1250), drift: { s: 0.015 } }] },
+        actors: [JI(260, 1500, 0.9, [{ t: 0, mode: "whisper", eyes: "normal", mouth: "o" }, { t: vo("rule", 1) - 0.1, mode: "idle", eyes: "normal", mouth: "flat", look: 4 }])],
+        captions: caps("rule", [0]),
+        ui: [{ type: "zRule", t: vo("rule", 1) - 0.1, end: D("rule") - 0.1, at: [vo("rule", 1), F("rule", 1, 1) - 0.05, F("rule", 1, 2) - 0.05], top: 150, label: "กฎของป้าจิต",
+          rows: [[IC.tell, `<strong>โดนกัด</strong> ต้อง<u>บอก</u>`], [IC.dark, `มืดแล้ว <em>ห้าม<u>ออก</u></em>`], [IC.knock, `ใครเคาะ… <em>อย่า<u>ตอบ</u></em>`]] }],
+        fx(tl, id, t0) { Fx.letterbox(tl, t0, t0 + D("rule") - 0.3); },
+      });
+
+      // ---------- 11. but the new problem is water: when the power goes, the pump stops ----------
+      add("water", {
+        set: "tower", setOpts: { id: "tw" }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(560, 600, 1.15, 540, 760), drift: { s: 0.01 } }, { t: vo("water", 1) - 0.05, glide: 0.5, ...fr(540, 1060, 0.86, 540, 960), drift: { s: 0.01 } }] },
+        captions: caps("water", [0]),
+        bubbles: [bub("water", 1, 420, 1400, 200)],
+        fx(tl, id, t0) {
+          ["#tw-up", "#tw-down"].forEach((p, i) => tl.fromTo(p, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -540 }, duration: 1.2, repeat: Math.ceil(F("water", 1, 1) / 1.2), ease: "none", immediateRender: false }, t0));
+          const off = t0 + F("water", 1, 1);
+          tl.set(["#tw-up", "#tw-down"], { opacity: 0.15 }, off);
+          tl.fromTo("#tw-bolt", { opacity: 1 }, { opacity: 0.15, duration: 0.08, repeat: 5, yoyo: true, immediateRender: false }, t0 + vo("water", 1) + 0.2);
+          tl.fromTo("#tw-x", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, svgOrigin: "300 1700", duration: 0.25, ease: "back.out(2.5)", immediateRender: false }, off);
+          tl.fromTo("#tw-tank", { attr: { height: 70, y: -20 } }, { attr: { height: 18, y: 32 }, duration: D("water") - F("water", 1, 1), ease: "power1.in", immediateRender: false }, off);
+          Zom.zlife(tl, `#${id}`, t0, F("water", 1, 1));
+        },
+      });
+
+      // ---------- 12. one person, one day: about 4 litres; three people, three days: 36 litres ----------
+      add("litres", {
+        set: "bathroom", setOpts: { id: "lt" }, dark: 0.2, blur: { far: 8, set: 7 },
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 1150), drift: { s: 0.015 } }] },
+        captions: caps("litres"),
+        ui: [{ type: "litres", t: 0.1, at: [F("litres", 0, 0), F("litres", 0, 2), vo("litres", 1)], end: D("litres") - 0.05, top: 300 }],
+      });
+
+      // ---------- 13. so: fill everything you have ----------
+      add("fill", {
+        set: "bathroom", setOpts: { id: "fl" }, dark: 0.04, blur: { far: 2 },
+        cam: { keys: [{ t: 0, ...fr(560, 1260, 1.0, 540, 1150), drift: { s: 0.02 } }] },
+        actors: [KH(1000, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat", look: 8 }], { flip: true })],
+        captions: caps("fill"),
+        ui: [{ type: "counter", t: F("fill", 0, 1), end: D("fill") - 0.02, label: "รองน้ำได้", unit: "/ 36 ลิตร", keys: [{ t: F("fill", 0, 1), v: 0 }, { t: D("fill"), v: 8 }], top: 150 }],
+        fx(tl, id, t0) {
+          tl.fromTo("#fl-water", { attr: { y: 1480 } }, { attr: { y: 1330 }, duration: D("fill"), ease: "none", immediateRender: false }, t0);
+          ["#fl-b0", "#fl-b1"].forEach((b, i) => tl.fromTo(b, { attr: { y: 0 } }, { attr: { y: -110 - i * 20 }, duration: D("fill") - 0.4, ease: "none", immediateRender: false }, t0 + 0.3));
+        },
+      });
+
+      // ---------- 14. but the water stopped at the tenth litre ----------
+      add("stop", {
+        set: "bathroom", setOpts: { id: "st" }, dark: 0.08, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(420, 1050, 1.6, 540, 900), drift: { s: 0.03 } }] },
+        captions: caps("stop"),
+        ui: [{ type: "counter", t: 0, end: D("stop") - 0.02, label: "รองน้ำได้", unit: "/ 36 ลิตร", keys: [{ t: 0, v: 8 }, { t: F("stop", 0, 1), v: 10 }], alarm: F("stop", 0, 2), top: 150 }],
+        fx(tl, id, t0) {
+          tl.set("#st-water", { attr: { y: 1330 } }, t0);
+          const cut = t0 + F("stop", 0, 1);
+          tl.fromTo("#st-stream", { scaleY: 1, opacity: 1 }, { scaleY: 0.4, opacity: 0.6, transformOrigin: "50% 0%", duration: 0.08, repeat: 5, yoyo: true, immediateRender: false }, cut - 0.5);
+          tl.to("#st-stream", { scaleY: 0, opacity: 0, transformOrigin: "50% 0%", duration: 0.2 }, cut);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("stop", 0, 2), 1.06, 0.4);
+        },
+      });
+
+      // ---------- 15. บอส: there's bottled water downstairs, I'll go ----------
+      add("boss", {
+        set: "condo", setOpts: { id: "bs", time: "dusk" }, dark: 0.1, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1140, 1.3, 540, 1100), drift: { s: 0.02 } }] },
+        actors: [JI(250, 1500, 0.88, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }]), KH(420, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat" }]),
+          BO(690, 1500, 0.92, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }, { t: F("boss", 0, 1), mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
+        bubbles: [bub("boss", 0, 300, 520, 520)],
+      });
+
+      // ---------- 16. ข้าว follows him down the fire stairs: twenty-three floors ----------
+      add("stairs", {
+        set: "stairwell", setOpts: { id: "s23", floor: 23 }, dark: 0.18, blur: { far: 2 },
+        cam: { keys: [{ t: 0, ...fr(420, 1180, 0.95, 540, 1050), drift: { x: 60, s: 0.01 } }] },
+        actors: [BO(220, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: 840, dur: D("stairs") } }),
+          KH(-40, 1500, 0.88, [{ t: 0, mode: "walk", eyes: "wide", mouth: "flat" }], { moveTo: { x: 560, dur: D("stairs") } })],
+        captions: caps("stairs"),
+        ui: [{ type: "counter", t: F("stairs", 0, 2) - 0.1, end: D("stairs") - 0.02, label: "ชั้น", color: "#1fbf6a", keys: [{ t: 0, v: 23 }], top: 150 }],
+      });
+
+      // ---------- 17. floor 19... it is in the stairwell ----------
+      const F19 = F("floor19", 0, 1) - 0.05;
+      split("floor19", F19, {
+        set: "stairwell", setOpts: { id: "s19", floor: 19 }, dark: 0.22, blur: { far: 2 },
+        cam: { keys: [{ t: 0, ...fr(500, 1180, 1.1, 540, 1050), drift: { s: 0.02 } }] },
+        actors: [BO(560, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal" }, { t: 0.5, mode: "stopHand", eyes: "wide", mouth: "flat", look: 16 }], { moveTo: { x: 700, dur: 0.5 } }),
+          KH(330, 1500, 0.88, [{ t: 0, mode: "walk", eyes: "normal" }, { t: 0.55, mode: "idle", eyes: "wide", mouth: "o", look: 14 }], { moveTo: { x: 470, dur: 0.55 } })],
+        captions: caps("floor19"),
+        ui: [{ type: "counter", t: 0, end: F19, label: "ชั้น", color: "#1fbf6a", keys: [{ t: 0, v: 19 }], top: 150 }],
+        fx(tl, id, t0) { Fx.heart(tl, t0, F19, 0.5, 0.6); },
+      }, {
+        set: "stairShaft", setOpts: { id: "sh" }, dark: 0.05,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.06 } }] },
+        captions: capsFrom("floor19", F19),
+        fx(tl, id, t0) {
+          tl.fromTo("#sh-up", { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0 + 0.15);
+          tl.fromTo("#sh-hand", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, immediateRender: false }, t0 + 0.4);
+          Fx.punch(tl, `#${id} .stage`, t0 + 0.15, 1.08, 0.4); Fx.heart(tl, t0, D("floor19") - F19, 0.4, 0.8);
+          tl.fromTo("#fxred", { opacity: 0.5 }, { opacity: 0, duration: 0.5, immediateRender: false }, t0 + 0.15);
+        },
+      });
+
+      // ---------- 18. ข้าว is bitten ----------
+      add("bite", {
+        set: "stairwell", setOpts: { id: "sb", floor: 19 }, dark: 0.25, blur: { far: 2 },
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 1.35, 540, 1050), drift: { s: 0.03 } }] }, shake: (t) => 12 * Math.sin(t * 43),
+        actors: [KH(470, 1500, 0.88, [{ t: 0, mode: "grabbed", eyes: "pain", mouth: "scream" }]),
+          { who: "z3", x: 1100, y: 1500, s: 0.92, flip: true, blinks: [], track: [{ t: 0, mode: "lunge", eyes: "dead", mouth: "snarl" }], moveTo: { x: 640, dur: 0.35, ease: "power3.out" } },
+          BO(820, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { flip: true, from: 0.6, moveTo: { x: 700, at: 0.6, dur: 0.5 } })],
+        captions: caps("bite"),
+        fx(tl, id, t0) {
+          Fx.glitch(tl, `#${id}`, t0 + 0.3, 0.4, 18, 44); tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.8, immediateRender: false }, t0 + 0.35);
+          Fx.punch(tl, `#${id} .stage`, t0 + 0.35, 1.12, 0.4);
+          tl.set("#black", { opacity: 1 }, t0 + D("bite") - 0.25); tl.set("#black", { opacity: 0 }, t0 + D("bite"));
+        },
+      });
+
+      // ---------- 19. wash it with soap under running water, at least 15 minutes ----------
+      add("wash", {
+        set: "armClose", setOpts: { id: "ws" }, dark: 0.08, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(640, 1040, 1.3, 540, 1150), drift: { s: 0.03 } }] },
+        captions: caps("wash"),
+        ui: [{ type: "timer", t: F("wash", 0, 2) - 0.1, end: D("wash") - 0.05, label: "ล้างด้วยสบู่ + น้ำไหลผ่าน", big: "อย่างน้อย [15 นาที]", to: 900, count: 1.3, top: 160 }],
+        fx(tl, id, t0) { Koi.life(tl, `#${id}`, t0, D("wash")); tl.fromTo("#ws-foam", { opacity: 0 }, { opacity: 1, duration: 0.6, immediateRender: false }, t0 + F("wash", 0, 0) + 0.2); },
+      });
+
+      // ---------- 20. in real life: dog bites, cat scratches — the same; then get to a doctor ----------
+      add("real", {
+        set: "armClose", setOpts: { id: "re" }, dark: 0.3, blur: { far: 8, set: 8 },
+        cam: { keys: [{ t: 0, ...fr(640, 1040, 1.2, 540, 1150), drift: { s: 0.02 } }] },
+        captions: caps("real"),
+        ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: vo("real", 1) - 0.1, ill: "dogcat", label: "ในชีวิตจริง", text: "หมากัด แมวข่วน → ล้างสบู่ [15 นาที]", top: 360 },
+          { type: "tip", t: F("real", 1, 1) - 0.1, end: D("real") - 0.05, ill: "doctor", label: "ความรู้เอาตัวรอด", text: "แล้วรีบ[ไปหาหมอ]", top: 360 }],
+        fx(tl, id, t0) { tl.set("#re-foam", { opacity: 1 }, t0); Koi.life(tl, `#${id}`, t0, D("real")); },
+      });
+
+      // ---------- 21. but now... the hospitals take no one ----------
+      add("hosp", {
+        set: "condo", setOpts: { id: "hs", time: "dusk", smoke: true, hospital: 880 }, dark: 0.1, blur: { set: 3 },
+        cam: { keys: [{ t: 0, ...fr(860, 760, 1.35, 540, 900), drift: { s: 0.02 } }] },
+        captions: caps("hosp"),
+        ui: [{ type: "news", t: F("hosp", 0, 2) - 0.1, at: [F("hosp", 0, 2) - 0.05], end: D("hosp") - 0.05, top: 1180, items: [["ข่าวด่วน", "โรงพยาบาลไม่รับใครแล้ว"]] }],
+        fx(tl, id, t0) { Zom.zlife(tl, `#${id}`, t0, D("hosp")); },
+      });
+
+      // ---------- 22. ป้าจิต at the bathroom door: "are you okay?" — "I'm fine" ----------
+      add("door", {
+        set: "bathroom", setOpts: { id: "dr", door: true }, dark: 0.15, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(800, 1150, 1.2, 540, 1100), drift: { s: 0.02 } }, { t: vo("door", 1) - 0.05, ...fr(720, 1000, 2.0, 540, 1000), drift: { s: 0.03 } }] },
+        actors: [KH(720, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat", look: 4 }, { t: vo("door", 1), mode: "idle", eyes: "side", mouth: "flat" }])],
+        bubbles: [bub("door", 0, 560, 420, 520), bub("door", 1, 160, 640, 420)],
+        fx(tl, id, t0) { tl.fromTo("#dr-feet", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.1); Fx.heart(tl, t0, D("door"), 0.5, 0.5); },
+      });
+
+      // ---------- 23. the sleeve... pulled down over it ----------
+      add("sleeve", {
+        set: "armClose", setOpts: { id: "sv", water: false }, dark: 0.12, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(700, 1060, 1.9, 540, 1000), drift: { s: 0.03 } }] },
+        captions: caps("sleeve"),
+        fx(tl, id, t0) { tl.fromTo("#sv-cuff", { x: 400 }, { x: 0, duration: 0.5, ease: "power2.inOut", immediateRender: false }, t0 + F("sleeve", 0, 1)); Fx.heart(tl, t0, D("sleeve"), 0.55, 0.5); },
+      });
+
+      // ---------- 24. channel signature ----------
+      add("sig", {
+        set: "condo", setOpts: { id: "sg", time: "dusk" }, dark: 0.3, blur: { far: 10, mid: 9, set: 8 },
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("sig"),
+        ui: [{ type: "checklist", t: 0.05, title: "วันนี้ · เช็กลิสต์เอาตัวรอด", items: [["รองน้ำ", true], ["ไม่ส่งเสียง", true], ["ล้างแผล 15 นาที", true], ["???", false]],
+          show: [F("sig", 0, 0) + 0.05, F("sig", 0, 0) + 0.55, F("sig", 0, 1) - 0.1, F("sig", 0, 2)], mark: [F("sig", 0, 0) + 0.35, F("sig", 0, 0) + 0.85, F("sig", 0, 1) + 0.25, F("sig", 0, 3)], top: 470 }],
+        fx(tl, id, t0) {
+          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("sig", 0, 3), 1.08, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("sig", 0, 3), 0.3, 12, 74);
+          tl.fromTo("#fxred", { opacity: 0.8 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("sig", 0, 3));
+          Fx.heart(tl, t0 + F("sig", 0, 3), D("sig") - F("sig", 0, 3), 0.5, 0.5);
+        },
+      });
+
+      // ---------- 25. that night, ข้าว saw ป้าจิต's arm ----------
+      add("night", {
+        set: "condo", setOpts: { id: "nt", time: "night" }, dark: 0.55, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1180, 1.05, 540, 1050), drift: { s: 0.02 } }, { t: F("night", 0, 1) - 0.05, glide: 0.5, ...fr(760, 1240, 1.8, 540, 1050), drift: { s: 0.02 } }] },
+        actors: [KH(390, 1500, 0.9, [{ t: 0, mode: "phoneSit", eyes: "normal", mouth: "flat" }, { t: F("night", 0, 1) - 0.2, mode: "phoneSit", eyes: "wide", mouth: "flat", look: -6 }], { prop: "phone" }),
+          JI(760, 1500, 0.9, [{ t: 0, mode: "sleep", eyes: "closed", mouth: "flat" }], { blinks: [] })],
+        captions: caps("night"),
+        extra(L) { L.glow.insertAdjacentHTML("beforeend", `<circle cx="440" cy="1100" r="300" fill="url(#zPhone)"/><circle cx="760" cy="1250" r="200" fill="url(#zPhone)" opacity=".5"/>`); },
+      });
+
+      // ---------- 26. a bite scar... fully healed ----------
+      add("scar", {
+        set: "armClose", setOpts: { id: "sr", water: false, mark: "scar", skin: "#c99a74", sleeve: "#2f4a6e", night: true }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(700, 1060, 1.4, 540, 1000), drift: { s: 0.04 } }, { t: F("scar", 0, 1) - 0.05, ...fr(720, 1060, 2.4, 540, 1000), drift: { s: 0.03 } }] },
+        captions: caps("scar"),
+        fx(tl, id, t0) { tl.set("#sr-cuff", { x: 400 }, t0); Fx.punch(tl, `#${id} .stage`, t0 + F("scar", 0, 1), 1.08, 0.4); Fx.glitch(tl, `#${id}`, t0 + F("scar", 0, 1), 0.3, 12, 45); Fx.heart(tl, t0, D("scar"), 0.5, 0.7); },
+      });
+
+      // ---------- 27. tell ป้าจิต you were bitten? (pulled toward not telling) — her eyes open ----------
+      add("choice", {
+        set: "condo", setOpts: { id: "ch", time: "night" }, dark: 0.6, blur: { far: 6, mid: 5, set: 3 },
+        cam: { keys: [{ t: 0, ...fr(760, 1250, 1.6, 540, 1100), drift: { s: 0.03 } }, { t: D("choice") - 0.62, ...fr(735, 1150, 3.4, 540, 880) }] }, shake: (t) => shakeH(t) * 2,
+        actors: [JI(760, 1500, 0.9, [{ t: 0, mode: "sleep", eyes: "closed", mouth: "flat" }, { t: D("choice") - 0.62, mode: "sleep", eyes: "wide", mouth: "flat", startle: false }], { blinks: [] })],
+        ui: [{ type: "choice", t: 0.05, q: "จะบอกป้าจิตมั้ย ว่าโดนกัด?", a: "ไม่บอก", b: "บอก", secs: 3, top: 300,
+          possessed: { at: 1.0, side: "a", glitch: "ไม่บอก…", who: "…ป้าก็ไม่เคยบอกใคร" } }],
+        extra(L) { L.glow.insertAdjacentHTML("beforeend", `<circle cx="760" cy="1250" r="260" fill="url(#zPhone)" opacity=".6"/>`); },
+        fx(tl, id, t0) {
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
