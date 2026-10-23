@@ -5,7 +5,9 @@ import shutil
 import subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-LIB = os.path.join(HERE, "..", "hf", "lib")
+SHARED = os.path.join(HERE, "..", "hf", "lib")
+# the episode's own copies of the libraries it was rendered with (lib/, from video/koi-epN/lib) win over the newest shared ones
+LIB = os.path.join(HERE, "lib") if os.path.isdir(os.path.join(HERE, "lib")) else SHARED
 PROJ = os.path.join(HERE, "..", "hf", "koi2")
 
 os.makedirs(os.path.join(PROJ, "assets"), exist_ok=True)
@@ -16,6 +18,7 @@ if not os.path.exists(os.path.join(PROJ, "assets", "fonts")):
     shutil.copytree(os.path.join(HERE, "..", "hf", "rig", "assets", "fonts"), os.path.join(PROJ, "assets", "fonts"))
 for f in ("rig.js", "sets.js", "camp.js", "koi.js", "ui.js", "gameui.js", "fx.js", "engine.js"):
     shutil.copy(os.path.join(LIB, f), os.path.join(PROJ, "assets", f))
+shutil.copy(os.path.join(SHARED, "sig.js"), os.path.join(PROJ, "assets", "sig.js"))  # the channel signature card, shared by every series
 
 
 def css(lib, name):

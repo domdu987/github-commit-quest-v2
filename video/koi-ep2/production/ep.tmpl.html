@@ -10,6 +10,7 @@
     <script src="assets/koi.js"></script>
     <script src="assets/ui.js"></script>
     <script src="assets/gameui.js"></script>
+    <script src="assets/sig.js"></script>
     <script src="assets/fx.js"></script>
     <script src="assets/engine.js"></script>
     <style>
@@ -496,16 +497,10 @@
       // ---------- 20. channel signature ----------
       add("sig", {
         set: "treeNight", setOpts: { id: "sg2", time: "dawn" }, dark: 0.35, blur: { far: 10, mid: 9, set: 8 },
-        cam: { keys: [{ t: 0, ...fr(515, 1250, 1.2, 540, 960), drift: { s: 0.02 } }] },
+        cam: { keys: Sig.cam(F, { ...fr(515, 1250, 1.2, 540, 960) }) }, shake: Sig.shake(F),
         captions: caps("sig"),
-        ui: [{ type: "checklist", t: 0.05, title: "คืนนี้ · เช็กลิสต์เอาตัวรอด", items: [["ไม่วิ่ง", true], ["ปีนต้นไม้", true], ["เบียดกันกันลม", true], ["???", false]],
-          show: [F("sig", 0, 0) + 0.05, F("sig", 0, 0) + 0.55, F("sig", 0, 1) - 0.1, F("sig", 0, 2)], mark: [F("sig", 0, 0) + 0.35, F("sig", 0, 0) + 0.85, F("sig", 0, 1) + 0.25, F("sig", 0, 3)], top: 470 }],
-        fx(tl, id, t0) {
-          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
-          Fx.punch(tl, `#${id} .stage`, t0 + F("sig", 0, 3), 1.08, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("sig", 0, 3), 0.3, 12, 72);
-          tl.fromTo("#fxred", { opacity: 0.8 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("sig", 0, 3));
-          Fx.heart(tl, t0 + F("sig", 0, 3), D("sig") - F("sig", 0, 3), 0.5, 0.5);
-        },
+        ui: [Sig.ui(F, "คืนนี้ · เช็กลิสต์เอาตัวรอด", [["ไม่วิ่ง", true], ["ปีนต้นไม้", true], ["เบียดกันกันลม", true], ["???", false]], D("sig"))],
+        fx(tl, id, t0) { Sig.fx(tl, id, t0, F, D("sig")); },
       });
 
       // ---------- 21. she plays back what she filmed all night ----------

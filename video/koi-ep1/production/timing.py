@@ -78,6 +78,8 @@ def gaps(vid):
 
 def frag_starts(vid):
     """Start offset of each caption fragment of a line (first is 0)."""
+    if "frags" in LINES[vid]:  # set by hand from the loudness envelope (valid for this recording at this tempo)
+        return LINES[vid]["frags"]
     frags = LINES[vid].get("cap", LINES[vid]["text"]).split(" / ")
     if len(frags) == 1:
         return [0.0]

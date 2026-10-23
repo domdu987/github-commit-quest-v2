@@ -86,6 +86,8 @@ def bed(kind, a, b, g, step=4.6):  # overlapping 6 s copies of an ambience betwe
 
 
 hops = [0.1 + j * frag("arrive", 0, 1) / 4 for j in range(1, 5)]
+_a, _b = frag("sig", 0, 0), frag("sig", 0, 1) + 0.15  # ticks on the checklist, as spread by Sig.ui in sig.js
+SIG_TICKS = [_a + 0.3 + (_b - _a - 0.3) * i / (3 - 1) for i in range(3)] if 3 > 1 else [_b]
 CUES = [
     *bed("rain", 0.0, T("hook", -0.1), 0.5), *bed("wind", 0.0, T("hook", -0.1), 0.35, 5.0), ("hook", 0.3, "thunder", 0.5),
     ("hook", frag("hook", 0, 2), "sting", 0.7), *beats("hook", frag("hook", 1, 2), D["hook"] - frag("hook", 1, 2), 0.5, 0.8),
@@ -119,8 +121,11 @@ CUES = [
     ("dawn", vo_t("dawn", 1) - 0.1, "whoosh", 0.4), ("dawn", vo_t("dawn", 1) + 0.4, "creak", 0.6), ("dawn", vo_t("dawn", 1) + 1.6, "creak", 0.5),
     ("dawn", frag("dawn", 1, 1), "sting", 0.8), *beats("dawn", vo_t("dawn", 1), 3.0, 0.5, 0.5),
     # channel signature: three soft ticks, a held breath, then the cross
-    ("sig", frag("sig", 0, 0) + 0.35, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.85, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.25, "ding", 0.6),
-    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "glitch", 0.6),
+    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35), *[("sig", t, "ding", 0.6) for t in SIG_TICKS],
+    ("sig", frag("sig", 0, 2), "glitch", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
+    *[("sig", frag("sig", 0, 2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],  # ticking that speeds up into the cross
+    ("sig", frag("sig", 0, 3) - 1.1, "riser", 0.6),
+    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.8), ("sig", frag("sig", 0, 3), "glitch", 0.7), ("sig", frag("sig", 0, 3) + 0.12, "slam", 0.7),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     ("play", 0.2, "beep", 0.9), ("play", frag("play", 0, 1), "notif", 0.4),
     ("three", 0.0, "nv", 1.0), ("three", 0.0, "static", 0.25), *beats("three", 0.4, D["three"] - 0.4, 0.55, 0.6),
@@ -161,7 +166,7 @@ dip(T("flash", 0), T("flash", -0.1), 0.4)
 dip(T("feet", 0), T("feet", -0.1), 0.25)
 dip(T("waits", frag("waits", 0, 1)), T("waits", -0.05), 0.0, 0.1)   # silence: it waits too
 dip(T("dawn", vo_t("dawn", 1)), T("dawn", -0.1), 0.3)
-dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "เรื่องเดียว"
+dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("three", 0), T("three", -0.1), 0.25)
 dip(T("drip", 0), T("drip", -0.05), 0.0, 0.1)              # silence, then the drop
 dip(T("choice", 0), T("choice", -0.3), 0.5)

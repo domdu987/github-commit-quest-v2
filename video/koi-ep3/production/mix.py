@@ -89,6 +89,8 @@ HK = frag("hook", 0, 2) - 0.05
 walk_taps = [t for t in np.arange(0.1, D["walk"] - 0.2, 0.48)]
 w0 = vo_t("lure", 1)
 lure_taps = [t for t in np.arange(w0 + 0.3, D["lure"] - 0.8, 0.8)]
+_a, _b = frag("sig", 0, 0), frag("sig", 0, 1) + 0.15  # ticks on the checklist, as spread by Sig.ui in sig.js
+SIG_TICKS = [_a + 0.3 + (_b - _a - 0.3) * i / (3 - 1) for i in range(3)] if 3 > 1 else [_b]
 CUES = [
     *bed("stream", 0.0, T("hook", -0.1), 0.7, 3.0), *beats("hook", 0.6, D["hook"] - 0.6, 0.6, 0.6), ("hook", frag("hook", 0, 1), "rustle", 0.4),
     ("hook", HK, "whoosh", 0.6), ("hook", vo_t("hook", 1), "sting", 0.9), ("hook", vo_t("hook", 1), "boom", 0.6), ("hook", vo_t("hook", 1), "glitch", 0.6), ("hook", -0.25, "whoosh", 0.8),
@@ -113,8 +115,11 @@ CUES = [
     *bed("wind", T("lure", 0), T("lure", -0.1), 0.3, 5.0), *[("lure", t, "knock", 0.5 * (1 - (t - w0) / (D["lure"] - w0)) + 0.1) for t in lure_taps],
     *beats("tracks", 0.0, D["tracks"], 0.5, 0.7), ("tracks", frag("tracks", 0, 1), "sting", 1.0), ("tracks", frag("tracks", 0, 1), "glitch", 0.6),
     ("rescue", frag("rescue", 0, 1) - 0.1, "beep", 1.0), ("rescue", frag("rescue", 0, 1), "riser", 0.5),
-    ("sig", frag("sig", 0, 0) + 0.35, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.85, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.25, "ding", 0.6),
-    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "glitch", 0.6),
+    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35), *[("sig", t, "ding", 0.6) for t in SIG_TICKS],
+    ("sig", frag("sig", 0, 2), "glitch", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
+    *[("sig", frag("sig", 0, 2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],  # ticking that speeds up into the cross
+    ("sig", frag("sig", 0, 3) - 1.1, "riser", 0.6),
+    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.8), ("sig", frag("sig", 0, 3), "glitch", 0.7), ("sig", frag("sig", 0, 3) + 0.12, "slam", 0.7),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     *[(None, t, "beep", 0.22) for t in np.arange(T("hosp", 0.4), T("mud", -0.1), 1.05)], ("hosp", 0.2, "swell", 0.4),
     ("gone", frag("gone", 0, 1) + 0.55, "boom", 0.9), ("gone", frag("gone", 0, 1) + 0.55, "knock", 0.8), *beats("gone", frag("gone", 0, 1), D["gone"] - frag("gone", 0, 1), 0.55, 0.5),
@@ -171,7 +176,7 @@ dip(T("prints", frag("prints", 0, 1)), T("prints", -0.1), 0.3)
 dip(T("lure", 0), T("lure", -0.1), 0.3)
 dip(T("tracks", 0), T("tracks", -0.05), 0.0, 0.1)          # silence: one foot
 dip(T("rescue", 0), T("rescue", -0.1), 0.5)
-dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "เรื่องเดียว"
+dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("gone", 0), T("gone", -0.1), 0.4)
 dip(T("stick", 0), T("mud", -0.1), 0.25)
 dip(T("bed", 0), T("bed", -0.05), 0.0, 0.1)               # silence, then the whisper

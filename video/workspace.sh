@@ -7,7 +7,7 @@
 set -euo pipefail
 R="$(cd "$(dirname "$0")" && pwd)"
 W="${1:?usage: workspace.sh <work dir>}"
-LATEST="$R/zom-ep1"          # newest libraries (rig.js with smooth blends, zom.js, voice.py with "take", voice_qa.py)
+LATEST="$R/zom-ep1"          # newest libraries (rig.js with smooth blends, zom.js, sig.js, voice.py with "take", voice_qa.py)
 TEMPLATE="$R/koi-ep3"        # newest rendered composition: HyperFrames project files and fonts
 mkdir -p "$W/hf/lib" "$W/hf/rig/assets" "$W/music"
 cp "$LATEST"/lib/*.js "$LATEST"/lib/voice.py "$LATEST"/lib/voice_qa.py "$W/hf/lib/"
@@ -23,6 +23,7 @@ done
 for n in 1 2 3; do
   mkdir -p "$W/koi$n"
   cp -r "$R/koi-ep$n/production/." "$W/koi$n/"
+  cp -r "$R/koi-ep$n/lib" "$W/koi$n/lib"   # make.py builds from the episode's own libraries (as rendered) + the shared sig.js
   [ -f "$R/koi-ep$n/mix.wav" ] && cp "$R/koi-ep$n/mix.wav" "$W/koi$n/"
 done
 mkdir -p "$W/zom1"

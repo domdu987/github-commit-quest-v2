@@ -86,6 +86,8 @@ def bed(kind, a, b, g, step=4.6):  # overlapping 6 s copies of an ambience betwe
 
 
 hops = [0.2 + j * (D["sleep"] - 0.2) / 6 for j in range(1, 7)]
+_a, _b = frag("sig", 0, 0), frag("sig", 0, 1) + 0.15  # ticks on the checklist, as spread by Sig.ui in sig.js
+SIG_TICKS = [_a + 0.3 + (_b - _a - 0.3) * i / (2 - 1) for i in range(2)] if 2 > 1 else [_b]
 CUES = [
     *bed("rain", 0.0, T("hook", -0.1), 0.25), *beats("hook", 0.6, D["hook"] - 0.6, 0.6, 0.8), ("hook", frag("hook", 0, 2), "sting", 0.7),
     ("hook", vo_t("hook", 1) - 0.2, "rustle", 0.6), ("hook", vo_t("hook", 1) + 0.7, "glitch", 0.6), ("hook", -0.25, "whoosh", 0.8),
@@ -118,8 +120,11 @@ CUES = [
     *[("bleed", 0.25 + k * 1.1, "drip", 0.8) for k in range(3)],
     ("relief", 0.0, "rustle", 0.4),
     # channel signature: two soft ticks, a held breath, then the cross
-    ("sig", frag("sig", 0, 0) + 0.5, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.25, "ding", 0.6),
-    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "glitch", 0.6),
+    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35), *[("sig", t, "ding", 0.6) for t in SIG_TICKS],
+    ("sig", frag("sig", 0, 2), "glitch", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
+    *[("sig", frag("sig", 0, 2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],  # ticking that speeds up into the cross
+    ("sig", frag("sig", 0, 3) - 1.1, "riser", 0.6),
+    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.8), ("sig", frag("sig", 0, 3), "glitch", 0.7), ("sig", frag("sig", 0, 3) + 0.12, "slam", 0.7),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     *beats("print", 0.0, D["print"], 0.5, 0.8), ("print", 0.1, "squelch", 0.6), ("print", frag("print", 0, 1), "sting", 0.9), ("print", frag("print", 0, 1), "glitch", 0.5),
     *[("ring", 0.1 + k * 0.06, "tick", 0.3) for k in range(15)], *beats("ring", 0.0, D["ring"], 0.45, 0.85), ("ring", frag("ring", 0, 1), "boom", 0.6),
@@ -156,7 +161,7 @@ dip(T("cry", 0), T("cry", -0.1), 0.2)
 dip(T("phonecam", 0), T("phonecam", -0.1), 0.35)
 dip(T("feet", 0), T("feet", -0.05), 0.0, 0.1)              # silence: it is standing at her feet
 dip(T("twoam", 0), T("twoam", -0.1), 0.3)
-dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "เรื่องเดียว"
+dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("print", 0), T("hammock", -0.1), 0.45)
 dip(T("close", 0), T("close", -0.05), 0.0, 0.1)            # silence, then the whisper
 dip(T("choice", 0), T("choice", -0.3), 0.5)
