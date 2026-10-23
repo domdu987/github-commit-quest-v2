@@ -89,11 +89,12 @@
  },
  "d04": {
   "text": "โดนกัด ต้องบอก… มืดแล้ว ห้ามออก… ใครเคาะ… อย่าตอบ",
-  "heard": "โทนกัด ตรงโปรก มืดแล้ว หาบออก ใครขอบ ยัดตอบ",
-  "cer": 0.366,
-  "dur": 7.34,
-  "bad": true,
-  "long": false
+  "heard": "โดนกัดต้องบอก มืดแล้ว ห้ามออก ใครเขาะ อย่าตอบ",
+  "cer": 0.024,
+  "dur": 8.44,
+  "bad": false,
+  "long": true,
+  "note": "take 0 at tempo 1.08 picked by hand: the only take Whisper hears 'อย่าตอบ' in consistently; flagged long only because the delivery is deliberately slow"
  },
  "n09": {
   "text": "แต่ปัญหาใหม่… คือน้ำ",
@@ -209,10 +210,10 @@
  },
  "d07": {
   "text": "ข้าว… เป็นอะไรรึเปล่า",
-  "heard": "ข้าวเป็นอะไรหรือกล่าว",
-  "cer": 0.263,
-  "dur": 2.25,
-  "bad": true,
+  "heard": "ข้าว เป็นอะไรหรือเปล่า",
+  "cer": 0.158,
+  "dur": 2.43,
+  "bad": false,
   "long": false
  },
  "d08": {

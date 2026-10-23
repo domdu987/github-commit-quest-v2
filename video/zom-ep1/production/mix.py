@@ -62,7 +62,7 @@ def frag(k, i=0, j=0):
 
 
 # ---- voice: every line levelled on its own so whispers and shouts sit at a readable loudness ----
-LINE_GAIN = {"d02": -1, "d04": 1, "d07": 0, "d08": -1}
+LINE_GAIN = {"d02": -1, "d04": 0, "d07": 0, "d08": -1}
 vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
