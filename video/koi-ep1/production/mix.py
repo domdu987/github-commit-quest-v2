@@ -117,6 +117,10 @@ CUES = [
     ("howto", frag("howto", 1, 1), "whoosh", 0.4),
     *[("bleed", 0.25 + k * 1.1, "drip", 0.8) for k in range(3)],
     ("relief", 0.0, "rustle", 0.4),
+    # channel signature: two soft ticks, a held breath, then the cross
+    ("sig", frag("sig", 0, 0) + 0.5, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.25, "ding", 0.6),
+    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "glitch", 0.6),
+    *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     *beats("print", 0.0, D["print"], 0.5, 0.8), ("print", 0.1, "squelch", 0.6), ("print", frag("print", 0, 1), "sting", 0.9), ("print", frag("print", 0, 1), "glitch", 0.5),
     *[("ring", 0.1 + k * 0.06, "tick", 0.3) for k in range(15)], *beats("ring", 0.0, D["ring"], 0.45, 0.85), ("ring", frag("ring", 0, 1), "boom", 0.6),
     *[("hammock", 0.2 + k * 1.6, "creak", 0.6) for k in range(2)], *beats("hammock", 0.0, D["hammock"], 0.42, 0.9), ("hammock", frag("hammock", 0, 1), "sting", 0.8),
@@ -152,6 +156,7 @@ dip(T("cry", 0), T("cry", -0.1), 0.2)
 dip(T("phonecam", 0), T("phonecam", -0.1), 0.35)
 dip(T("feet", 0), T("feet", -0.05), 0.0, 0.1)              # silence: it is standing at her feet
 dip(T("twoam", 0), T("twoam", -0.1), 0.3)
+dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "เรื่องเดียว"
 dip(T("print", 0), T("hammock", -0.1), 0.45)
 dip(T("close", 0), T("close", -0.05), 0.0, 0.1)            # silence, then the whisper
 dip(T("choice", 0), T("choice", -0.3), 0.5)
