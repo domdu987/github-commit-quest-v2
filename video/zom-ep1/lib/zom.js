@@ -1,7 +1,7 @@
 // Sets and props for "ชั้น 23": a Bangkok condo during an outbreak. A studio living room with the front door,
 // the corridor through the door's peephole (with a front-facing face for the jump scare), the bathroom sink
 // close-up of a bitten forearm, a bathtub being filled, the building's water system as a cross-section,
-// the fire stairs (side landing and looking down the shaft) and the city at dusk. Same layer contract as sets.js.
+// the dead lift panel in the lobby, the fire stairs (side landing and looking down the shaft) and the city at dusk. Same layer contract as sets.js.
 (function () {
   const INK = "#2e2a26";
   const OUT = `stroke="${INK}" stroke-width="4" stroke-linejoin="round"`;
@@ -90,7 +90,7 @@
     // ceiling lamp
     s += `<path d="M640,-600V120" stroke="#3a3f45" stroke-width="4"/><path d="M600,120h80l26,60h-132z" fill="#3a3f45"/>`;
     put(L.set, s);
-    if (!night) put(L.glow, `<circle cx="640" cy="200" r="380" fill="url(#lantern)" opacity=".35"/>`);
+    if (!night && o.lamp !== false) put(L.glow, `<circle cx="640" cy="200" r="380" fill="url(#lantern)" opacity=".35"/>`);  // lamp:false once the power is out
     if (o.rays !== false) { rays(L, 600, 1100, 300, 1160, G + 40, night); dust(L, 150, 1050, 350, 1450, 30, o.seed || 7, night ? "#cfdcff" : "#fff2dc"); }
   }
 
@@ -184,7 +184,18 @@
       ${arm(-1)}${arm(1)}${hand(-1)}${hand(1)}</g>`;
   }
 
-  // ---------------- close-up: a forearm under the tap (bite with soap, or an old healed scar) ----------------
+  // ---------------- close-up: a forearm under poured water (bite with soap, or an old healed scar) ----------------
+  // the taps are dry once the pump stops, so the water comes from the stored tub: her other hand tips a plastic ขัน
+  // (dipper) whose lip sits on the top of the stream at (690, 566)
+  const DIPPER = (skin, sleeve) => `<g transform="translate(584,492) rotate(35)">
+      <path d="M-940,-74L-300,-46L-300,46L-940,92Z" fill="${sleeve}" ${OUT}/><path d="M-900,40L-320,30" stroke="${INK}" stroke-width="3" opacity=".3"/>
+      <rect x="-312" y="-54" width="34" height="108" rx="14" fill="${sleeve}" ${OUT}/>
+      <rect x="-320" y="-14" width="230" height="30" rx="14" fill="#c24f7c" ${OUT}/>
+      <path d="M-130,0C-130,96 -78,140 0,140C78,140 130,96 130,0Z" fill="#e86f9b" ${OUT}/><path d="M-96,40C-90,96 -50,120 -10,124" stroke="#fff" stroke-width="10" fill="none" opacity=".28" stroke-linecap="round"/>
+      <ellipse cx="0" cy="0" rx="130" ry="34" fill="#c24f7c" ${OUT}/><ellipse cx="6" cy="4" rx="112" ry="24" fill="#bfe3ef"/><path d="M60,-6q30,6 56,4" stroke="#fff" stroke-width="5" opacity=".7" fill="none"/>
+      <path d="M118,6q14,10 10,30" stroke="#dff3fa" stroke-width="26" fill="none" stroke-linecap="round" opacity=".9"/>
+      <rect x="-286" y="-40" width="84" height="80" rx="30" fill="${skin}" ${OUT}/><path d="M-270,-14h52M-270,6h52M-270,24h48" stroke="${INK}" stroke-width="3" opacity=".45"/>
+      <ellipse cx="-214" cy="-30" rx="26" ry="14" fill="${skin}" ${OUT}/></g>`;
   function armClose(L, o = {}) {
     const id = o.id || "ac", r = mk(o.seed || 41), skin = o.skin || "#ecc29c", sleeve = o.sleeve || "#e07a3f", night = !!o.night;
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="${night ? "#0c0f14" : "#cfd8d5"}"/>`);
@@ -194,8 +205,8 @@
     let s = "";
     if (o.water !== false) {
       s += `<path d="M-200,1280Q540,1180 1300,1280V2400H-200Z" fill="#f4f6f4" ${OUT}/><ellipse cx="540" cy="1360" rx="520" ry="80" fill="#dfe6e4"/><ellipse cx="560" cy="1380" rx="60" ry="16" fill="#9aa6ad"/>
-        <g transform="translate(200,0)"><path d="M140,380h160q30,0 30,30v60h170q40,0 40,40v40h-60v-24h-180v60h-130z" fill="url(#zChrome)" ${OUT}/><rect x="120" y="300" width="80" height="60" rx="14" fill="url(#zChrome)" ${OUT}/></g>
-        <g id="${id}-stream" transform="translate(200,0)"><rect x="468" y="566" width="44" height="760" fill="url(#zWater)"/>${Array.from({ length: 8 }, (_, k) => `<path class="foam" d="M${478 + (k % 3) * 10},${580 + k * 90}v60" stroke="#ffffff" stroke-width="4" stroke-dasharray="20 30" opacity=".8"/>`).join("")}</g>`;
+        <g id="${id}-stream" transform="translate(200,0)"><rect x="468" y="566" width="44" height="760" fill="url(#zWater)"/>${Array.from({ length: 8 }, (_, k) => `<path class="foam" d="M${478 + (k % 3) * 10},${580 + k * 90}v60" stroke="#ffffff" stroke-width="4" stroke-dasharray="20 30" opacity=".8"/>`).join("")}</g>
+        <g id="${id}-dipper">${DIPPER(skin, sleeve)}</g>`;
     }
     // forearm from the right edge, hand palm-down on the left
     const arm = `<g id="${id}-arm"><path d="M1300,1000L640,1010C600,1010 560,1000 520,1006L500,1110C540,1116 600,1110 640,1110L1300,1130Z" fill="${skin}" ${OUT}/>
@@ -294,6 +305,43 @@
     <rect x="-12" y="-92" width="24" height="24" rx="4" fill="url(#zChrome)" ${OUT}/><path d="M-10,-92L-34,-104M10,-92L30,-110" stroke="#2e2a26" stroke-width="7" stroke-linecap="round"/><path d="M12,-82q36,20 26,90" stroke="#1b1816" stroke-width="10" fill="none" stroke-linecap="round"/>`;
   // a flickering fluorescent tube (class zflick, driven by zlife) with its glow in the glow layer
   const tube = (L, x, y, w = 260) => { put(L.glow, `<ellipse class="zflickg" cx="${x}" cy="${y + 160}" rx="${w * 1.6}" ry="460" fill="url(#zGlowW)" opacity=".35"/>`); return `<rect x="${x - w / 2 - 10}" y="${y - 16}" width="${w + 20}" height="22" rx="6" fill="#3a3f45"/><rect class="zflick" x="${x - w / 2}" y="${y + 4}" width="${w}" height="14" rx="7" fill="#f4fbff"/>`; };
+
+  // ---------------- the lift lobby with the power out: dead call panel (unlit ▼, blank display), lift doors on the left,
+  // the fire-stair door on the right under a battery-lit green ทางหนีไฟ sign. #id-hand is บอส's finger jabbing the button
+  // (fingertip at the local origin; the shot tweens its transform attribute).
+  function liftCall(L, o = {}) {
+    const id = o.id || "lc", G = 1500, skin = "#d39a6e";
+    const SIGN = `<g transform="translate(1110,560)"><rect x="-170" y="-66" width="340" height="132" rx="10" fill="#1fbf6a" ${OUT}/><rect x="-158" y="-54" width="316" height="108" rx="6" fill="none" stroke="#dfffe9" stroke-width="3" opacity=".6"/>
+        <g transform="translate(-112,-6)" fill="#fff"><circle cx="8" cy="-34" r="11"/><path d="M-6,-20l22,4l10,22l14,6l-4,8l-18,-6l-6,-8l-6,18l14,16l-4,28h-12l2,-22l-16,-14l-10,22l-20,6l-2,-10l14,-6l12,-30l4,-18l-10,6l-6,16l-10,-2l8,-22z"/></g>
+        <text x="40" y="-6" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#fff">ทางหนีไฟ</text><text x="40" y="38" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="28" fill="#fff" letter-spacing="3">FIRE EXIT</text></g>`;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#0b0d0e"/>`);
+    let s = `<rect x="-900" y="-600" width="2900" height="${G + 600}" fill="#6a6e6c"/>`;
+    for (let k = 0; k < 9; k++) s += `<path d="M-900,${-600 + k * 260}H2000" stroke="#5f6361" stroke-width="3"/>`;
+    // lift doors (left) with the hall lantern above them, blank
+    s += `<rect x="-300" y="420" width="700" height="${G - 420}" fill="#3b4044" ${OUT}/><rect x="-270" y="460" width="320" height="${G - 460}" fill="url(#zChrome)" opacity=".5"/>
+      <rect x="54" y="460" width="320" height="${G - 460}" fill="url(#zChrome)" opacity=".45"/><path d="M52,460V${G}" stroke="#16191b" stroke-width="8"/>
+      <rect x="-40" y="300" width="200" height="80" rx="10" fill="#060504" ${OUT}/><text x="60" y="364" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="66" fill="#241413">88</text>`;
+    // the call panel: brushed steel plate, a small floor display (dark, ghost segments only), one ▼ button that never lights
+    s += `<g transform="translate(640,1000)"><rect x="-80" y="-180" width="160" height="340" rx="16" fill="url(#zChrome)" ${OUT}/><rect x="-66" y="-166" width="132" height="312" rx="10" fill="none" stroke="#fff" stroke-width="3" opacity=".35"/>
+      <rect x="-56" y="-140" width="112" height="70" rx="8" fill="#08090a" ${OUT}/><text x="0" y="-86" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#1f1414">88</text><path d="M-46,-132h40" stroke="#fff" stroke-width="3" opacity=".18"/>
+      <circle cx="0" cy="0" r="46" fill="#9aa6ad" ${OUT}/><circle cx="0" cy="0" r="34" fill="#2a3034"/><path d="M-14,-8H14L0,12Z" fill="#59636a"/><path d="M-22,-22a32,32 0 0 1 18,-10" stroke="#fff" stroke-width="4" opacity=".25" fill="none"/>
+      <text x="0" y="110" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#4a5258">ชั้น 23</text></g>`;
+    // the fire-stair door and its sign
+    s += `<rect x="900" y="700" width="420" height="${G - 700}" fill="#4b5652" ${OUT}/><rect x="930" y="730" width="360" height="${G - 730}" fill="#5f6d67" ${OUT}/>
+      <rect x="1010" y="820" width="120" height="180" fill="url(#zWire)" stroke="${INK}" stroke-width="4"/><rect x="1010" y="820" width="120" height="180" fill="#1b2421" opacity=".7"/>
+      <rect x="950" y="1130" width="320" height="34" rx="12" fill="url(#zChrome)" ${OUT}/>`;
+    s += `<rect x="-900" y="${G - 20}" width="2900" height="20" fill="#2f3331"/><rect x="-900" y="${G}" width="2900" height="1200" fill="#4a4a44"/>`;
+    put(L.set, s);
+    put(L.glow, `<circle cx="1110" cy="560" r="560" fill="url(#zExit)"/>${SIGN}`);  // battery-lit, so above the darkness
+    // บอส's hand: index finger up, other fingers curled, red wristband, bare forearm (tank top)
+    put(L.act, `<g id="${id}-hand" transform="translate(560,1260) scale(1.15) rotate(24)"><g transform="translate(34,0)">
+      <path d="M-62,250L-74,980H70L50,250Z" fill="${skin}" ${OUT}/><path d="M30,280L44,960" stroke="${INK}" stroke-width="3" opacity=".25"/>
+      <rect x="-60" y="222" width="114" height="46" rx="12" fill="#e05a3a" ${OUT}/><path d="M-56,236h106" stroke="#fff" stroke-width="4" opacity=".35"/>
+      <rect x="-66" y="96" width="122" height="140" rx="40" fill="${skin}" ${OUT}/>
+      <path d="M-6,140q14,-10 28,0M26,148q12,-8 22,2" stroke="${INK}" stroke-width="3" fill="none" opacity=".45"/>
+      <ellipse cx="-66" cy="166" rx="20" ry="38" transform="rotate(-24 -66 166)" fill="${skin}" ${OUT}/></g>
+      <rect x="-15" y="0" width="30" height="134" rx="15" fill="${skin}" ${OUT}/><path d="M-8,12q8,-6 16,0" stroke="#f3d2b6" stroke-width="5" fill="none"/><path d="M-10,60h20M-10,90h18" stroke="${INK}" stroke-width="2.5" opacity=".4"/></g>`);
+  }
 
   // ---------------- fire stairs: a landing seen from the side, the floor number painted on the wall ----------------
   // o.up adds the flight going up on the left; o.ext puts an extinguisher cabinet on the wall; o.red a pulsing red emergency light
@@ -527,7 +575,7 @@
     q(".spin").forEach((el) => tl.fromTo(el, { rotation: 0 }, { rotation: 360 * Math.ceil(dur), svgOrigin: "0 0", duration: dur, ease: "none", immediateRender: false }, t0));
   }
 
-  Object.assign(Sets, { condo, peephole, armClose, bathroom, tower, stairwell, stairShaft, stairFlight, doorJam, corridorRun, noiseMap });
+  Object.assign(Sets, { condo, peephole, armClose, bathroom, tower, liftCall, stairwell, stairShaft, stairFlight, doorJam, corridorRun, noiseMap });
   if (window.Camp) Camp.hand.extinguisher = `<g transform="translate(0,${118 + 96}) rotate(180)">${EXT}</g>`; // held by the valve, swung like a club
   window.Zom = { zFace, zLunge, zlife, city, FLIGHT };
 })();

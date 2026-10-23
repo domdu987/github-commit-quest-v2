@@ -35,6 +35,7 @@ SHOTS = [
     ("fill", ["n12"], 0.1, 0.2, 2.8),
     ("stop", ["n13"], 0.1, 0.35, 2.6),
     ("boss", ["d06"], 0.1, 0.2, 2.6),
+    ("lift", [], 0, 0, 1.75),  # no voice: the dead lift (the power cut also killed the lift), so it's the stairs
     ("stairs", ["n14"], 0.1, 0.2, 2.8),
     ("floor19", ["n15"], 0.15, 0.3, 2.6),
     # action, no voice: ambushed from behind, the bite, the extinguisher, the chase back up, the fire door, the corridor, home

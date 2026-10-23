@@ -233,7 +233,7 @@
           Koi.life(tl, `#${id}`, t0, D("hook"));
           const pull = vo("hook", 1) - 0.4, warn = vo("hook", 1);
           watchRun(tl, "hk", t0, D("hook"), (t) => (t < warn ? [mmss(Math.max(0, Math.min(t, pull) - 0.2)), WG, Math.floor(t * 2) % 2 === 0 && t < pull]
-            : [Math.floor((t - warn) * 5) % 2 ? "" : "0:03", WR, false]));   // only three seconds under the tap
+            : [Math.floor((t - warn) * 5) % 2 ? "" : "0:03", WR, false]));   // only three seconds under the water
           tl.fromTo("#hk-arm", { x: 0 }, { x: 260, duration: 0.45, ease: "power2.in", immediateRender: false }, t0 + vo("hook", 1) - 0.4);  // pulling away after a quick rinse...
           tl.to("#hk-arm", { x: 0, duration: 0.3, ease: "back.out(2)" }, t0 + vo("hook", 1) + 0.15);                                // ...and back under
           Fx.punch(tl, `#${id} .stage`, t0 + vo("hook", 1), 1.08, 0.4); Fx.glitch(tl, `#${id}`, t0 + vo("hook", 1), 0.3, 12, 41);
@@ -403,17 +403,36 @@
           const cut = t0 + F("stop", 0, 1);
           tl.fromTo("#st-stream", { scaleY: 1, opacity: 1 }, { scaleY: 0.4, opacity: 0.6, transformOrigin: "50% 0%", duration: 0.08, repeat: 5, yoyo: true, immediateRender: false }, cut - 0.5);
           tl.to("#st-stream", { scaleY: 0, opacity: 0, transformOrigin: "50% 0%", duration: 0.2 }, cut);
+          // the power is what failed: the light stutters with the sputtering tap and dies with it (so the lift is dead too)
+          [[-0.36, 0.45], [-0.3, 0.08], [-0.16, 0.5], [-0.1, 0.12], [0, 0.66]].forEach(([d, o]) => tl.set(`#${id}-dark`, { opacity: o }, cut + d));
           Fx.punch(tl, `#${id} .stage`, t0 + F("stop", 0, 2), 1.06, 0.4);
         },
       });
 
       // ---------- 15. บอส: there's bottled water downstairs, I'll go ----------
       add("boss", {
-        set: "condo", setOpts: { id: "bs", time: "dusk" }, dark: 0.1, blur: { far: 3 },
+        set: "condo", setOpts: { id: "bs", time: "dusk", lamp: false }, dark: 0.24, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1140, 1.3, 540, 1100), drift: { s: 0.02 } }] },
-        actors: [JI(250, 1500, 0.88, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }]), KH(420, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat" }]),
-          BO(690, 1500, 0.92, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }, { t: F("boss", 0, 1), mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
+        actors: [JI(250, 1500, 0.88, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }]), KH(400, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat" }]),
+          BO(790, 1500, 0.92, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }, { t: F("boss", 0, 1), mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
         bubbles: [bub("boss", 0, 300, 520, 520)],
+      });
+
+      const LIFT_PRESS = [0.24, 0.56, 0.76];  // fingertip on the button (mix.py clicks on the same times)
+      // ---------- 15b. no voice: the lift is dead — บอส jabs the call button three times, nothing lights; the only light is the green exit sign ----------
+      add("lift", {
+        set: "liftCall", setOpts: { id: "lf" }, dark: 0.42,
+        cam: { keys: [{ t: 0, ...fr(640, 1010, 1.7, 540, 960), drift: { s: 0.03 } }, { t: 1.28, glide: 0.32, ...fr(1110, 900, 1.05, 540, 900), drift: { s: 0.03 } }] },
+        fx(tl, id, t0) {
+          const P = (x, y, s, r) => `translate(${x},${y}) scale(${s}) rotate(${r})`, OUT = P(520, 1600, 1.2, 27), BACK = P(618, 1040, 1.06, 21), PRESS = P(640, 1000, 1, 20);
+          tl.set("#lf-hand", { attr: { transform: OUT } }, t0);
+          LIFT_PRESS.forEach((p, k) => {
+            tl.to("#lf-hand", { attr: { transform: PRESS }, duration: k ? 0.1 : 0.2, ease: "power2.in" }, t0 + p - (k ? 0.1 : 0.2));
+            tl.to("#lf-hand", { attr: { transform: BACK }, duration: 0.1, ease: "power1.out" }, t0 + p + 0.03);
+          });
+          tl.to("#lf-hand", { attr: { transform: OUT }, duration: 0.25, ease: "power2.in" }, t0 + 0.94);   // gives up, turns to the stairs
+          Fx.heart(tl, t0, D("lift"), 0.5, 0.4);
+        },
       });
 
       // ---------- 16. ข้าว follows him down the fire stairs: twenty-three floors ----------
@@ -584,7 +603,7 @@
 
       // ---------- 18g. inside 2306: the door slammed, บอส braced against it, ข้าว on her knees; then the pounding from outside ----------
       add("inside", {
-        set: "condo", setOpts: { id: "in", time: "dusk", smoke: true }, dark: 0.3, blur: { far: 4 },
+        set: "condo", setOpts: { id: "in", time: "dusk", smoke: true, lamp: false }, dark: 0.3, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(320, 1150, 1.3, 540, 1050), drift: { s: 0.03 } }] },
         shake: (t) => (t < 0.3 ? 14 * Math.sin(t * 60) * (0.3 - t) / 0.3 : t > 0.5 && t < 0.8 ? 5 * Math.sin(t * 70) : 0),
         actors: [BO(250, 1500, 0.92, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o" }]),
@@ -597,7 +616,7 @@
         },
       });
 
-      // ---------- 19. wash it with soap under running water, at least 15 minutes ----------
+      // ---------- 19. wash it with soap under running water, at least 15 minutes (poured from the stored tub with a ขัน: the taps are dry) ----------
       add("wash", {
         set: "armClose", setOpts: { id: "ws", watch: "15:00" }, dark: 0.08, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(640, 1040, 1.3, 540, 1150), drift: { s: 0.03 } }, { t: F("wash", 0, 2) - 0.05, glide: 0.35, ...fr(585, 1000, 3.0, 540, 880), drift: { s: 0.025 } }] },
@@ -624,7 +643,7 @@
 
       // ---------- 21. but now... the hospitals take no one ----------
       add("hosp", {
-        set: "condo", setOpts: { id: "hs", time: "dusk", smoke: true, hospital: 880 }, dark: 0.1, blur: { set: 3 },
+        set: "condo", setOpts: { id: "hs", time: "dusk", smoke: true, hospital: 880, lamp: false }, dark: 0.1, blur: { set: 3 },
         cam: { keys: [{ t: 0, ...fr(860, 760, 1.35, 540, 900), drift: { s: 0.02 } }] },
         captions: caps("hosp"),
         ui: [{ type: "news", t: F("hosp", 0, 2) - 0.1, at: [F("hosp", 0, 2) - 0.05], end: D("hosp") - 0.05, top: 1180, items: [["ข่าวด่วน", "โรงพยาบาลไม่รับใครแล้ว"]] }],
@@ -745,7 +764,7 @@
       };
       const SF = (j) => F("sig", 0, j);
       add("sig", {
-        set: "condo", setOpts: { id: "sg", time: "dusk" }, dark: 0.3, blur: { far: 10, mid: 9, set: 8 },
+        set: "condo", setOpts: { id: "sg", time: "dusk", lamp: false }, dark: 0.3, blur: { far: 10, mid: 9, set: 8 },
         cam: { keys: [{ t: 0, ...fr(560, 1100, 1.0, 540, 960), drift: { s: 0.02 } }, { t: SF(2), ...fr(560, 1080, 1.04, 540, 960), drift: { s: 0.045 } }, { t: SF(3), ...fr(560, 1060, 1.12, 540, 960), drift: { s: 0.02 } }] },
         shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
         captions: caps("sig"),
@@ -834,8 +853,8 @@
           L.sky.insertAdjacentHTML("beforeend", `<rect x="-900" y="-600" width="2900" height="3200" fill="#0b0d0e"/>
             <rect x="140" y="160" width="800" height="1700" fill="#3b4044"/><rect x="170" y="300" width="370" height="1560" fill="url(#zChrome)" opacity=".55"/><rect x="540" y="300" width="370" height="1560" fill="url(#zChrome)" opacity=".5"/>
             <path d="M540,300V1860" stroke="#16191b" stroke-width="8"/><rect x="420" y="180" width="240" height="90" rx="10" fill="#060504"/>
-            <text x="540" y="252" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="76" fill="#ff3a26" opacity=".9">23</text>`);
-          L.glow.insertAdjacentHTML("beforeend", `<path id="next-cone" d="M380,-40H700L1100,1500H-20Z" fill="url(#zCone)"/><circle cx="540" cy="225" r="140" fill="url(#zRed)" opacity=".7"/>`);
+            <text x="540" y="252" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="76" fill="#241413">88</text>`);  // power's out: the display is dead
+          L.glow.insertAdjacentHTML("beforeend", `<path id="next-cone" d="M380,-40H700L1100,1500H-20Z" fill="url(#zCone)"/>`);
         },
         ui: [{ type: "notice", t: 0.3, ep: "ตอนที่ 2", title: "มืดแล้ว<br>ห้ามออก", cta: "กดติดตาม เพื่อรับประกาศฉบับต่อไป", by: "ป้าจิต", role: "แม่บ้าน ชั้น 23", stamp: "ด่วนที่สุด", top: 470 }],
         fx(tl, id, t0) {

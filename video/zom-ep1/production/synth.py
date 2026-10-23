@@ -561,6 +561,18 @@ def sfx(kind):
             t = t_arr(d)
             add(out, (osc(f, d) * 0.6 + lp_fast(rng.standard_normal(len(t)), f * 2) * 0.6) * np.exp(-t * 60) * g, off)
         return out
+    if kind == "click":  # a dead lift call button: a dry plastic click and no chime
+        d = 0.08
+        t = t_arr(d)
+        return (osc(1700, d) * 0.4 + (rng.standard_normal(len(t)) - lp_fast(rng.standard_normal(len(t)), 1500)) * 0.6) * np.exp(-t * 110) * 0.5
+    if kind == "powerdown":  # the mains failing: a relay clunk, then the building's hum sliding down and dying
+        d = 1.3
+        t = t_arr(d)
+        ph = 2 * np.pi * np.cumsum(100 * np.exp(-t * 1.8) + 18) / SR
+        out = lp_fast(np.sin(ph) * 0.6 + np.sin(2 * ph) * 0.3 + rng.standard_normal(len(t)) * 0.03, 700) * np.exp(-t * 2.2) * 0.45
+        tc = t_arr(0.12)
+        add(out, (osc(120, 0.12) * 0.8 + lp_fast(rng.standard_normal(len(tc)), 500) * 0.9) * np.exp(-tc * 45), 0.0)
+        return out
     raise ValueError(kind)
 
 

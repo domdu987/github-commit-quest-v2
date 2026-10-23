@@ -1,5 +1,5 @@
 {
- "total": 119.045,
+ "total": 120.795,
  "shots": [
   {
    "key": "hook",
@@ -317,8 +317,15 @@
    "voEnd": 2.752
   },
   {
-   "key": "stairs",
+   "key": "lift",
    "start": 63.639,
+   "dur": 1.75,
+   "vo": [],
+   "voEnd": 0
+  },
+  {
+   "key": "stairs",
+   "start": 65.389,
    "dur": 2.8,
    "vo": [
     {
@@ -337,7 +344,7 @@
   },
   {
    "key": "floor19",
-   "start": 66.439,
+   "start": 68.189,
    "dur": 2.698,
    "vo": [
     {
@@ -355,14 +362,14 @@
   },
   {
    "key": "ambush",
-   "start": 69.137,
+   "start": 70.887,
    "dur": 1.75,
    "vo": [],
    "voEnd": 0
   },
   {
    "key": "bite",
-   "start": 70.887,
+   "start": 72.637,
    "dur": 1.628,
    "vo": [
     {
@@ -379,49 +386,49 @@
   },
   {
    "key": "swing",
-   "start": 72.515,
+   "start": 74.265,
    "dur": 2.3,
    "vo": [],
    "voEnd": 0
   },
   {
    "key": "noise",
-   "start": 74.815,
+   "start": 76.565,
    "dur": 1.6,
    "vo": [],
    "voEnd": 0
   },
   {
    "key": "chase",
-   "start": 76.415,
+   "start": 78.165,
    "dur": 1.7,
    "vo": [],
    "voEnd": 0
   },
   {
    "key": "jam",
-   "start": 78.115,
+   "start": 79.865,
    "dur": 1.45,
    "vo": [],
    "voEnd": 0
   },
   {
    "key": "corridor",
-   "start": 79.565,
+   "start": 81.315,
    "dur": 2.2,
    "vo": [],
    "voEnd": 0
   },
   {
    "key": "inside",
-   "start": 81.765,
+   "start": 83.515,
    "dur": 0.9,
    "vo": [],
    "voEnd": 0
   },
   {
    "key": "wash",
-   "start": 82.665,
+   "start": 84.415,
    "dur": 3.796,
    "vo": [
     {
@@ -440,7 +447,7 @@
   },
   {
    "key": "real",
-   "start": 86.461,
+   "start": 88.211,
    "dur": 6.346,
    "vo": [
     {
@@ -469,7 +476,7 @@
   },
   {
    "key": "hosp",
-   "start": 92.807,
+   "start": 94.557,
    "dur": 3.392,
    "vo": [
     {
@@ -488,7 +495,7 @@
   },
   {
    "key": "door",
-   "start": 96.199,
+   "start": 97.949,
    "dur": 4.011,
    "vo": [
     {
@@ -515,7 +522,7 @@
   },
   {
    "key": "sleeve",
-   "start": 100.21,
+   "start": 101.96,
    "dur": 2.566,
    "vo": [
     {
@@ -533,7 +540,7 @@
   },
   {
    "key": "sig",
-   "start": 102.776,
+   "start": 104.526,
    "dur": 4.819,
    "vo": [
     {
@@ -553,7 +560,7 @@
   },
   {
    "key": "night",
-   "start": 107.595,
+   "start": 109.345,
    "dur": 2.829,
    "vo": [
     {
@@ -571,7 +578,7 @@
   },
   {
    "key": "scar",
-   "start": 110.424,
+   "start": 112.174,
    "dur": 2.921,
    "vo": [
     {
@@ -589,14 +596,14 @@
   },
   {
    "key": "choice",
-   "start": 113.345,
+   "start": 115.095,
    "dur": 3.4,
    "vo": [],
    "voEnd": 0.0
   },
   {
    "key": "next",
-   "start": 116.745,
+   "start": 118.495,
    "dur": 2.3,
    "vo": [],
    "voEnd": 0.0

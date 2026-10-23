@@ -101,8 +101,9 @@ CUES = [
     ("water", 0.2, "hum", 0.4), ("water", frag("water", 1, 1), "buzz", 0.5), ("water", frag("water", 1, 1), "boom", 0.5), ("water", frag("water", 1, 1), "sting", 0.6),
     *[("litres", t, "marker", 0.7) for t in (frag("litres", 0, 0), frag("litres", 0, 0) + 0.45, frag("litres", 0, 2) + 0.1, vo_t("litres", 1), vo_t("litres", 1) + 0.5, frag("litres", 1, 1), frag("litres", 1, 1) + 0.5)],
     *bed("tap", T("fill", 0), T("stop", frag("stop", 0, 1)), 0.9, 2.4), *[("fill", 0.2 + k * 0.5, "tick", 0.2) for k in range(6)],
-    ("stop", frag("stop", 0, 1) - 0.5, "sputter", 1.0), ("stop", frag("stop", 0, 1) + 0.3, "drip", 0.8), ("stop", frag("stop", 0, 2), "sting", 0.7), ("stop", frag("stop", 0, 2), "beep", 0.6),
+    ("stop", frag("stop", 0, 1) - 0.5, "sputter", 1.0), ("stop", frag("stop", 0, 1), "powerdown", 1.0), ("stop", frag("stop", 0, 1) + 0.3, "drip", 0.8), ("stop", frag("stop", 0, 2), "sting", 0.7), ("stop", frag("stop", 0, 2), "beep", 0.6),
     ("boss", 0.2, "rustle", 0.5),
+    *[("lift", t, "click", 0.9) for t in (0.24, 0.56, 0.76)], *beats("lift", 0.0, D["lift"], 0.5, 0.5), ("lift", 0.98, "whoosh", 0.45),  # LIFT_PRESS in shots.part
     *[("stairs", 0.2 + k * 0.45, "stomp", 0.35) for k in range(7)], ("stairs", frag("stairs", 0, 2), "swell", 0.4),
     *[("floor19", 0.1 + k * 0.45, "stomp", 0.3) for k in range(2)], ("floor19", frag("floor19", 0, 1) - 0.05, "growl", 1.0), ("floor19", frag("floor19", 0, 1), "sting", 0.9), ("floor19", frag("floor19", 0, 1), "boom", 0.5),
     # ---- action: ambush, bite, the extinguisher, the chase, the fire door, the corridor, home ----
@@ -165,6 +166,7 @@ dip(0.0, T("hook", -0.1), 0.15, 0.05)                    # the cold open sits on
 dip(T("scream", 0), T("knock", -0.1), 0.3)
 dip(T("turn", frag("turn", 0, 1) - 0.1), T("knock", -0.1), 0.0, 0.05)  # silence after the jump scare, through the knocks
 dip(T("rule", 0), T("rule", -0.1), 0.35)
+dip(T("lift", 0.1), T("lift", -0.05), 0.25, 0.1)                     # the dead lift: near silence, three dry clicks
 dip(T("floor19", 0), T("ambush", 0.45), 0.3)
 dip(T("inside", 0.1), T("inside", -0.05), 0.12, 0.08)                 # the door shut: near silence, the pounding
 dip(T("door", 0), T("sleeve", -0.1), 0.35)
