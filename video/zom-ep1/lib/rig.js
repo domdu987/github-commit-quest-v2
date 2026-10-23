@@ -27,16 +27,22 @@
            <path d="M-22,-562q10,-5 18,-1M12,-563q10,-4 18,1" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
   };
   // the infected: milky eyes with pin pupils, and a torn-open snarl
-  EYES.dead = `<circle cx="-14" cy="-546" r="8.5" fill="#dfe6d8" ${OUT}/><circle cx="18" cy="-546" r="8.5" fill="#dfe6d8" ${OUT}/>
-           <circle cx="-12" cy="-544" r="1.6" fill="#55605a"/><circle cx="20" cy="-544" r="1.6" fill="#55605a"/>
-           <path d="M-25,-560q10,5 19,2M9,-558q10,3 19,-3" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  EYES.dead = `<ellipse cx="-14" cy="-545" rx="16" ry="14" fill="#1b211b" opacity=".8"/><ellipse cx="18" cy="-545" rx="16" ry="14" fill="#1b211b" opacity=".8"/>
+           <circle cx="-14" cy="-546" r="15" fill="#e9ffd0" opacity=".16"/><circle cx="18" cy="-546" r="15" fill="#e9ffd0" opacity=".16"/>
+           <circle cx="-14" cy="-546" r="9" fill="#e6eddc" stroke="#2e2a26" stroke-width="2"/><circle cx="18" cy="-546" r="9" fill="#e6eddc" stroke="#2e2a26" stroke-width="2"/>
+           <path d="M-22,-547l5,-1M-6,-549l-4,3M-15,-538l1,-4M10,-544l4,-1M26,-549l-5,2M19,-538l-1,-4" stroke="#b32020" stroke-width="1.6" stroke-linecap="round"/>
+           <circle cx="-12" cy="-545" r="2" fill="#7a1010"/><circle cx="20" cy="-545" r="2" fill="#7a1010"/>
+           <path d="M-29,-563q11,7 22,4M7,-559q11,4 22,-4" stroke="#2e2a26" stroke-width="5" fill="none" stroke-linecap="round"/>`;
   const MOUTH = {
     smile: `<path d="M-4,-520q6,4 12,0" stroke="#2e2a26" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
     flat: `<path d="M-5,-519h12" stroke="#2e2a26" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
     o: `<ellipse cx="2" cy="-518" rx="5" ry="7" fill="#2e2a26"/>`,
     frown: `<path d="M-5,-516q7,-5 14,0" stroke="#2e2a26" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
     scream: `<path d="M-7,-524q9,-3 18,0q-1,16 -9,16q-8,0 -9,-16z" fill="#2e2a26"/>`,
-    snarl: `<path d="M-12,-526q14,-6 28,0l-3,12q-11,6 -22,0z" fill="#3a0d0d" stroke="#2e2a26" stroke-width="3"/><path d="M-9,-525l3,5l3,-5l3,5l3,-5l3,5l3,-5" stroke="#e9e2cf" stroke-width="2.5" fill="none"/>`,
+    snarl: `<path d="M-17,-529q19,-9 38,0l-4,22q-15,11 -30,0z" fill="#220505" stroke="#2e2a26" stroke-width="3"/>
+      <path d="M-14,-528l3,7l3,-7l3,7l3,-7l3,7l3,-7l3,7l3,-7l3,7" stroke="#ece4cf" stroke-width="2.6" fill="none" stroke-linejoin="round"/>
+      <path d="M-9,-509l3,-6l3,6l3,-6l3,6l3,-6l3,6" stroke="#ece4cf" stroke-width="2.3" fill="none" stroke-linejoin="round"/>
+      <path d="M-6,-506q-3,14 -8,26M9,-507q3,10 1,20" stroke="#8a0f0f" stroke-width="4.5" stroke-linecap="round" fill="none"/>`,
   };
 
   function build(parent, id, P) {
@@ -54,7 +60,7 @@
       <ellipse id="${id}-shadow" cx="0" cy="4" rx="90" ry="14" fill="#060c10" opacity=".55"/>
       <g id="${id}-root"><g id="${id}-body">
         <g transform="translate(-20,-300)">${leg("B")}</g>
-        <g transform="translate(-46,-455)" opacity=".92">${arm("B")}</g>
+        <g transform="translate(-46,-455)" opacity=".92">${arm("B", P.hand || "")}</g>
         <g id="${id}-torso">
           <path d="M-62,-470Q-66,-482 -44,-486H44Q66,-482 62,-470L56,-300H-56Z" fill="${P.top}" ${OUT}/>
           <path d="M18,-482H40Q58,-478 54,-468L50,-302H24Z" fill="${P.topS}" opacity=".7"/>
@@ -73,7 +79,7 @@
           </g>
         </g>
         <g transform="translate(20,-300)">${leg("F")}</g>
-        <g transform="translate(46,-455)">${arm("F", torch)}</g>
+        <g transform="translate(46,-455)">${arm("F", torch + (P.hand || ""))}</g>
       </g></g></g>`;
     const g = document.createElementNS(NS, "g");
     g.innerHTML = html;
@@ -86,6 +92,10 @@
   const lerp = (a, b, k) => a + (b - a) * k;
   const JOINTS = ["thF", "thB", "shF", "shB", "uaF", "faF", "uaB", "faB", "torso", "head", "hair", "acc", "bodyY", "rootX", "rootY", "rootR"];
   const zero = () => Object.fromEntries(JOINTS.map((j) => [j, 0]));
+
+  // deterministic jerks for the infected: at random moments (rate per second) the value snaps to ±amp and holds
+  const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+  const twitch = (u, rate = 5, amp = 18) => { const k = Math.floor(u * rate); return hash(k) > 0.68 ? (hash(k + 0.37) - 0.5) * 2 * amp : 0; };
 
   // each mode returns joint angles (degrees) for local time u since the segment started
   const MODES = {
@@ -143,15 +153,37 @@
     phoneLook(u, o) { // looking down at something held in front (phone, camera)
       return { ...zero(), uaF: -52 + Math.sin(u * 1.1), faF: -92, uaB: 4, faB: -12, torso: 2, head: 10, bodyY: -1 };
     },
-    shamble(u, o) { // the infected: leaning in, one leg dragged stiff, arms hanging forward, a lurch every step
+    shamble(u, o) { // the infected: leaning in, one leg dragged stiff, arms hanging forward, a lurch every step, the head snapping
       const P = o.period || 1.3, th = (2 * Math.PI * u) / P, s = Math.sin(th), c = Math.cos(th);
-      const lurch = Math.max(0, s);
-      return { ...zero(), thF: 18 * s, shF: 34 * Math.max(0, -c), thB: -10 * s, shB: 6, torso: 14 + 4 * lurch, head: 18 + 6 * Math.sin(th * 0.5 + 1),
-        uaF: -24 + 10 * c, faF: -18, uaB: -14 - 8 * c, faB: -10, hair: -6 * s, bodyY: 10 * lurch - 4, rootR: 3 * Math.sin(th * 0.5) };
+      const lurch = Math.max(0, s), j = twitch(u, 5, 22);
+      return { ...zero(), thF: 18 * s, shF: 34 * Math.max(0, -c), thB: -10 * s, shB: 6, torso: 14 + 4 * lurch, head: 24 + 6 * Math.sin(th * 0.5 + 1) + j,
+        uaF: -24 + 10 * c + j * 0.6, faF: -18, uaB: -14 - 8 * c, faB: -10, hair: -6 * s, bodyY: 10 * lurch - 4, rootR: 3 * Math.sin(th * 0.5) };
     },
-    lunge(u, o) { // arms out, reaching, swaying
-      const b = Math.sin(u * 2 * Math.PI / 0.9);
-      return { ...zero(), thF: 20, shF: 30, thB: -14, shB: 10, torso: 20 + 3 * b, head: 6 + 4 * b, uaF: -88 + 6 * b, faF: -8, uaB: -78 - 6 * b, faB: -6, bodyY: 12 };
+    lunge(u, o) { // arms out, reaching, swaying, twitching
+      const b = Math.sin(u * 2 * Math.PI / 0.9), j = twitch(u, 7, 18);
+      return { ...zero(), thF: 20, shF: 30, thB: -14, shB: 10, torso: 20 + 3 * b, head: 6 + 4 * b + j, uaF: -88 + 6 * b + j, faF: -8, uaB: -78 - 6 * b - j, faB: -6, bodyY: 12 };
+    },
+    zrun(u, o) { // a sprinting infected: flat out, leaning hard, arms clawing ahead, head jerking
+      const g = gait(u, o.period || 0.42, 34, 95, 18, 10, 22, true), j = twitch(u, 8, 20);
+      return { ...g, uaF: -72 + 26 * Math.sin(u * 17) + j, faF: -22, uaB: -62 - 26 * Math.sin(u * 17), faB: -16, head: 12 + j, torso: g.torso + 6 };
+    },
+    swing(u, o) { // a two-handed swing from behind the shoulder to across the body in 0.22 s, then follow-through
+      const k = smooth(u / 0.22);
+      return { ...zero(), uaF: lerp(55, -128, k), faF: lerp(-70, -8, k), uaB: lerp(40, -110, k), faB: lerp(-60, -14, k), torso: lerp(-12, 16, k), head: lerp(-8, 6, k),
+        thF: 18, shF: 22, thB: -18, shB: 10, bodyY: 10 };
+    },
+    push(u, o) { // braced against a door: arms straight out, leaning in, shoving
+      const j = Math.sin(u * 23) * 2;
+      return { ...zero(), uaF: -86 + j, faF: -4, uaB: -80 - j, faB: -6, torso: 16, head: 4, thF: 26, shF: 28, thB: -30, shB: 10, bodyY: 12 + j };
+    },
+    knocked(u, o) { // hit: thrown backwards off its feet over 0.4 s
+      const k = smooth(u / 0.4);
+      return { ...zero(), rootR: lerp(0, -62, k), rootX: lerp(0, 70, k), torso: lerp(10, -18, k), head: lerp(10, -30, k), uaF: lerp(-80, 40, k), uaB: lerp(-70, 70, k),
+        thF: lerp(0, -40, k), shF: lerp(0, 50, k), thB: lerp(0, 20, k), shB: 20 };
+    },
+    drag(u, o) { // running while pulling someone behind by the hand
+      const g = gait(u, o.period || 0.5, 30, 80, 16, 30, 12, true);
+      return { ...g, uaB: 40 + 6 * Math.sin(u * 9), faB: -10 };
     },
     fall(u, o) { // stumble down onto the knees over ~0.6 s, then stay
       const k = smooth(u / 0.6);
@@ -343,7 +375,14 @@
     },
   });
   // ---- ชั้น 23 ----
-  const ZSKIN = { skin: "#a9b8a0", skinS: "#869780" };
+  const ZSKIN = { skin: "#9dac92", skinS: "#728269" };
+  const ZFACE = `<path d="M-42,-566q11,10 4,24q-6,11 3,21M38,-578q-9,13 0,23M-34,-502q11,-9 22,-2M22,-600q6,10 -2,20" stroke="#435541" stroke-width="2.6" fill="none" opacity=".9"/>
+    <ellipse cx="-31" cy="-522" rx="9" ry="5" fill="#56664f" opacity=".65"/><ellipse cx="34" cy="-520" rx="7" ry="4" fill="#56664f" opacity=".5"/>
+    <path d="M-15,-512q-7,17 -2,31q7,-9 7,-20z" fill="#7a1010" opacity=".85"/><path d="M14,-560l6,12" stroke="#7a1010" stroke-width="3" opacity=".7"/>`;
+  // bony fingers with long black nails, curled forward (hand group sits at the wrist; the palm is at +118)
+  const CLAWS = (skin) => `<g transform="translate(0,118)">${[[-13, 4, -20, 30, -13, 40], [-5, 10, -6, 36, 4, 46], [4, 10, 8, 34, 18, 42], [12, 4, 20, 24, 28, 30]].map(([x0, y0, cx, cy, x1, y1]) =>
+      `<path d="M${x0},${y0}Q${cx},${cy} ${x1},${y1}" stroke="#2e2a26" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${cx},${cy} ${x1},${y1}" stroke="${skin}" stroke-width="6" fill="none" stroke-linecap="round"/>
+       <path d="M${x1 - 3},${y1 - 3}l${(x1 - cx) * 0.5 + 4},${(y1 - cy) * 0.5 + 6}l2,-9z" fill="#1b1612" stroke="#1b1612" stroke-width="1.5" stroke-linejoin="round"/>`).join("")}</g>`;
   const blood = (pts) => pts.map(([x, y, r]) => `<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r * 0.8}" fill="#7a1414" opacity=".85"/>`).join("");
   Object.assign(CAST, {
     khao: { // ข้าว: works from home, orange hoodie with the hood down, low ponytail, grey sweatpants
@@ -371,25 +410,32 @@
         <path d="M-20,-600q14,-6 30,2M-40,-574q10,-14 26,-18" stroke="#b8b0a6" stroke-width="4" fill="none"/>`,
       face: `<path d="M-30,-560q8,-3 14,0M14,-560q8,-3 14,0" stroke="#7a5a44" stroke-width="2.5" fill="none"/><path d="M-26,-512q4,4 0,8M30,-512q-4,4 0,8" stroke="#a87a56" stroke-width="2" fill="none"/>`,
     },
-    z1: { ...ZSKIN, // the uncle from 2307: striped pyjamas, bald patch, blood down the front
+    z1: { ...ZSKIN, hand: CLAWS("#a9b8a0"), // the uncle from 2307: striped pyjamas, bald patch, blood down the front
       top: "#b9c4d6", topS: "#97a3b8", sleeve: "#b9c4d6", sleeveS: "#97a3b8", forearm: "#a9b8a0", forearmS: "#869780", pants: "#b9c4d6", pantsS: "#97a3b8", shoe: "#a9b8a0", belt: "#97a3b8",
       torsoExtra: `${[-40, -20, 0, 20, 40].map((x) => `<path d="M${x},-482V-306" stroke="#7b8aa6" stroke-width="5"/>`).join("")}${blood([[10, -470, 18], [-6, -430, 14], [14, -396, 10], [-20, -360, 8]])}`,
       hair: `<path d="M-46,-560q-6,22 4,36M46,-560q6,22 -4,36" stroke="#9a948c" stroke-width="10" fill="none" stroke-linecap="round"/>`,
-      face: `<path d="M-20,-510l8,10M18,-506l-6,12" stroke="#5f6b58" stroke-width="3"/><path d="M-36,-532q-6,10 0,18" stroke="#7a1414" stroke-width="4" fill="none"/>`,
+      face: ZFACE + `<path d="M-36,-532q-6,10 0,18" stroke="#7a1414" stroke-width="4" fill="none"/>`,
     },
-    z2: { ...ZSKIN, skin: "#b0b9a2", // an office worker: white shirt torn, loose tie
+    z2: { ...ZSKIN, skin: "#b0b9a2", hand: CLAWS("#b0b9a2"), // an office worker: white shirt torn, loose tie
       top: "#e6e8e2", topS: "#c3c8c0", sleeve: "#e6e8e2", sleeveS: "#c3c8c0", pants: "#2f3438", pantsS: "#22272a", shoe: "#1e1e1e", belt: "#22272a",
       torsoExtra: `<path d="M0,-484L-8,-440L0,-360L8,-440Z" fill="#3a4a7a" ${OUT}/><path d="M-50,-400l20,14l-6,20M40,-450l-18,10" stroke="#8a8f88" stroke-width="3" fill="none"/>${blood([[-24, -420, 16], [30, -380, 12]])}`,
       hair: `<path d="M-48,-552Q-52,-606 -4,-612Q46,-612 48,-556L36,-574L22,-560L6,-578L-12,-562L-28,-578Z" fill="#2a2422" ${OUT}/>`,
-      face: blood([[24, -514, 7]]),
+      face: ZFACE + blood([[24, -514, 7]]),
     },
-    z3: { ...ZSKIN, skin: "#a3b39c", // the night guard: grey uniform, cap
+    z3: { ...ZSKIN, skin: "#a3b39c", hand: CLAWS("#a3b39c"), // the night guard: grey uniform, cap
       top: "#6b7178", topS: "#555b61", sleeve: "#6b7178", sleeveS: "#555b61", pants: "#3a3f45", pantsS: "#2b2f34", shoe: "#1e1e1e", belt: "#2b2f34",
       torsoExtra: `<rect x="16" y="-460" width="24" height="18" rx="3" fill="#c9a55a"/>${blood([[-20, -450, 14], [-30, -410, 10]])}`,
       hair: `<path d="M-48,-566Q-48,-612 0,-614Q48,-612 48,-566Z" fill="#3a3f45" ${OUT}/><path d="M20,-572h52q8,0 4,9h-56z" fill="#2b2f34" ${OUT}/>`,
-      face: `<path d="M-30,-530l12,14" stroke="#7a1414" stroke-width="4"/>`,
+      face: ZFACE + `<path d="M-30,-530l12,14" stroke="#7a1414" stroke-width="4"/>`,
     },
   });
+  // a motorbike-taxi rider: orange numbered vest over a dark shirt, half-face helmet strap dangling
+  CAST.z4 = { ...ZSKIN, skin: "#98a88f", hand: CLAWS("#98a88f"),
+    top: "#2f3a44", topS: "#222b33", sleeve: "#2f3a44", sleeveS: "#222b33", pants: "#3a3f45", pantsS: "#2b2f34", shoe: "#1e1e1e", belt: "#2b2f34",
+    torsoExtra: `<path d="M-56,-476Q-40,-488 -22,-484L-18,-306H-56Z M56,-476Q40,-488 22,-484L18,-306H56Z" fill="#e8762a" ${OUT}/><rect x="-50" y="-420" width="30" height="34" rx="4" fill="#f4ecd8" ${OUT}/>
+      <text x="-35" y="-394" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#2e2a26">17</text>${blood([[10, -452, 16], [30, -400, 11], [-6, -350, 8]])}`,
+    hair: `<path d="M-50,-560Q-50,-620 0,-622Q50,-620 50,-560Q30,-574 0,-576Q-30,-574 -50,-560Z" fill="#f2f0ea" ${OUT}/><path d="M-50,-560q-4,30 8,50" stroke="#2e2a26" stroke-width="4" fill="none"/>`,
+    face: ZFACE + blood([[-26, -508, 6], [8, -590, 5]]) };
   CAST.faGown = { ...CAST.fa, top: "#a9cfe0", topS: "#86afc2", sleeve: "#a9cfe0", sleeveS: "#86afc2", forearm: "#ebbd95", forearmS: "#cb9670", pants: "#a9cfe0", pantsS: "#86afc2", shoe: "#ebbd95", belt: "#86afc2",
     torsoExtra: `<path d="M-30,-484Q0,-468 30,-484" stroke="#6f97ab" stroke-width="5" fill="none"/>${[[-20, -430], [16, -400], [-14, -360], [20, -340]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="#6f97ab"/>`).join("")}` };
 

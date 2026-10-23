@@ -105,7 +105,18 @@ CUES = [
     ("boss", 0.2, "rustle", 0.5),
     *[("stairs", 0.2 + k * 0.45, "stomp", 0.35) for k in range(7)], ("stairs", frag("stairs", 0, 2), "swell", 0.4),
     *[("floor19", 0.1 + k * 0.45, "stomp", 0.3) for k in range(2)], ("floor19", frag("floor19", 0, 1) - 0.05, "growl", 1.0), ("floor19", frag("floor19", 0, 1), "sting", 0.9), ("floor19", frag("floor19", 0, 1), "boom", 0.5),
-    ("bite", 0.0, "growl", 1.3), ("bite", 0.3, "scream", 0.8), ("bite", 0.35, "boom", 0.8), ("bite", 0.35, "glitch", 0.8), ("bite", 0.35, "squish", 0.8),
+    # ---- action: ambush, bite, the extinguisher, the chase, the fire door, the corridor, home ----
+    ("ambush", 0.3, "growl", 0.7), ("ambush", 0.5, "shriek", 0.9), ("ambush", 0.5, "steps", 1.0), ("ambush", 0.95, "whoosh", 0.9), ("ambush", 1.0, "scream", 0.7),
+    ("ambush", 1.02, "sting", 0.9), ("ambush", 1.02, "glitch", 0.5), *beats("ambush", 0.5, D["ambush"] - 0.5, 0.34, 0.6),
+    ("bite", 0.0, "growl", 1.3), ("bite", 0.2, "scream", 0.8), ("bite", 0.25, "boom", 0.8), ("bite", 0.2, "glitch", 0.8), ("bite", 0.25, "squish", 0.8),
+    ("swing", 0.0, "steps", 0.7), ("swing", 0.22, "whoosh", 0.9), ("swing", 0.42, "clang", 1.3), ("swing", 0.42, "boom", 0.8), ("swing", 0.42, "glitch", 0.5), ("swing", 0.92, "thud", 1.0),
+    ("swing", 1.45, "shriek", 0.8), ("swing", 1.55, "growl", 0.9), ("swing", 1.6, "steps", 0.8), *beats("swing", 1.55, D["swing"] - 1.55, 0.36, 0.6),
+    ("chase", 0.0, "steps", 1.0), ("chase", 0.65, "steps", 0.9), ("chase", 0.3, "growl", 0.9), ("chase", 0.9, "shriek", 0.7), ("chase", 0.53, "riser", 0.8), *beats("chase", 0.0, D["chase"], 0.32, 0.6),
+    ("jam", 0.0, "growl", 1.1), ("jam", 0.0, "knock", 0.7), ("jam", 0.62, "shriek", 0.8), ("jam", 0.83, "slam", 1.4), ("jam", 0.83, "boom", 0.9), ("jam", 0.9, "latch", 0.9),
+    ("jam", 0.95, "thud", 0.7), ("jam", 1.0, "growl", 0.6),
+    ("corridor", 0.0, "steps", 0.9), ("corridor", 0.65, "steps", 0.9), ("corridor", 1.3, "steps", 0.9), ("corridor", 0.7, "slam", 1.1), ("corridor", 0.7, "sting", 1.0),
+    ("corridor", 0.75, "shriek", 1.1), ("corridor", 1.15, "whoosh", 1.0), ("corridor", 1.16, "glitch", 0.6), *beats("corridor", 0.0, D["corridor"], 0.3, 0.6),
+    ("inside", 0.06, "slam", 1.4), ("inside", 0.08, "boom", 0.6), ("inside", 0.1, "latch", 0.8), ("inside", 0.5, "knock", 1.0),
     *bed("tap", T("wash", 0), T("real", -0.1), 0.6, 2.4), ("wash", frag("wash", 0, 2) - 0.1, "pop", 0.5), *[("wash", frag("wash", 0, 2) + 0.2 + k * 0.1, "tick", 0.3) for k in range(12)], ("wash", frag("wash", 0, 2) + 1.55, "ding", 0.6),
     ("real", frag("real", 0, 1) - 0.1, "pop", 0.5), ("real", frag("real", 1, 1) - 0.1, "ding", 0.6),
     ("hosp", 0.1, "siren", 0.25), ("hosp", frag("hosp", 0, 2) - 0.05, "notif", 0.7), ("hosp", frag("hosp", 0, 2), "sting", 0.6),
@@ -147,12 +158,16 @@ dip(0.0, T("hook", -0.1), 0.15, 0.05)                    # the cold open sits on
 dip(T("scream", 0), T("knock", -0.1), 0.3)
 dip(T("turn", frag("turn", 0, 1) - 0.1), T("knock", -0.1), 0.0, 0.05)  # silence after the jump scare, through the knocks
 dip(T("rule", 0), T("rule", -0.1), 0.35)
-dip(T("floor19", 0), T("bite", -0.1), 0.3)
+dip(T("floor19", 0), T("ambush", 0.45), 0.3)
+dip(T("inside", 0.1), T("inside", -0.05), 0.12, 0.08)                 # the door shut: near silence, the pounding
 dip(T("door", 0), T("sleeve", -0.1), 0.35)
 dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "เรื่องเดียว"
 dip(T("night", 0), T("scar", -0.05), 0.25)
 dip(T("choice", 0), T("choice", -0.3), 0.5)
-mus = mus * gain
+boost = np.ones(N, np.float32)  # the action plays with the music up
+a0, a1 = T("ambush", 0.45), T("corridor", -0.05)
+boost += 0.4 * (np.clip((t - a0) / 0.3, 0, 1) * np.clip((a1 - t) / 0.2, 0, 1)).astype(np.float32)
+mus = mus * gain * boost
 end = int(T("choice", -0.2) * SR)
 mus[end:] = 0  # hard cut to black and silence
 

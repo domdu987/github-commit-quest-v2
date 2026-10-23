@@ -20,35 +20,42 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01", ("n02", 0.3)], 0.5, 0.5, 6.0),
-    ("rewind", ["n03"], 0.25, 0.3, 1.6),
-    ("news", ["n04"], 0.2, 0.3, 3.2),
-    ("fake", ["d01"], 0.15, 0.3, 2.4),
-    ("scream", ["n05"], 0.2, 0.3, 3.4),
-    ("peep", ["n06"], 0.2, 0.4, 3.2),
-    ("turn", ["n07"], 0.15, 0.5, 2.8),
-    ("knock", ["d02"], 0.3, 0.3, 2.2),
-    ("jit", ["n08"], 0.15, 0.3, 3.4),
-    ("rule", ["d03", ("d04", 0.35)], 0.15, 0.4, 7.5),
-    ("water", ["n09", "d05"], 0.15, 0.4, 4.6),
-    ("litres", ["n10", "n11"], 0.15, 0.4, 6.4),
-    ("fill", ["n12"], 0.15, 0.3, 3.2),
-    ("stop", ["n13"], 0.15, 0.4, 3.0),
-    ("boss", ["d06"], 0.15, 0.3, 3.0),
-    ("stairs", ["n14"], 0.15, 0.3, 3.4),
-    ("floor19", ["n15"], 0.2, 0.4, 2.9),
-    ("bite", ["n16"], 0.25, 0.6, 2.0),
-    ("wash", ["n17"], 0.2, 0.4, 4.0),
-    ("real", ["n18", "n19"], 0.15, 0.4, 5.4),
-    ("hosp", ["n20"], 0.15, 0.4, 3.2),
-    ("door", ["d07", ("d08", 0.4)], 0.2, 0.3, 3.6),
-    ("sleeve", ["n21"], 0.15, 0.4, 2.8),
-    ("sig", ["s01"], 0.2, 0.55, 4.6),
-    ("night", ["n22"], 0.2, 0.3, 3.0),
-    ("scar", ["n23"], 0.2, 0.6, 3.2),
+    ("hook", ["n01", ("n02", 0.25)], 0.4, 0.45, 5.4),
+    ("rewind", ["n03"], 0.15, 0.2, 1.3),
+    ("news", ["n04"], 0.1, 0.25, 2.8),
+    ("fake", ["d01"], 0.1, 0.2, 2.2),
+    ("scream", ["n05"], 0.1, 0.25, 3.0),
+    ("peep", ["n06"], 0.1, 0.3, 2.8),
+    ("turn", ["n07"], 0.1, 0.45, 2.6),
+    ("knock", ["d02"], 0.3, 0.25, 2.2),
+    ("jit", ["n08"], 0.1, 0.2, 3.0),
+    ("rule", ["d03", ("d04", 0.25)], 0.1, 0.4, 7.0),
+    ("water", ["n09", "d05"], 0.1, 0.3, 4.0),
+    ("litres", ["n10", "n11"], 0.1, 0.35, 5.6),
+    ("fill", ["n12"], 0.1, 0.2, 2.8),
+    ("stop", ["n13"], 0.1, 0.35, 2.6),
+    ("boss", ["d06"], 0.1, 0.2, 2.6),
+    ("stairs", ["n14"], 0.1, 0.2, 2.8),
+    ("floor19", ["n15"], 0.15, 0.3, 2.6),
+    # action, no voice: ambushed from behind, the bite, the extinguisher, the chase back up, the fire door, the corridor, home
+    ("ambush", [], 0, 0, 1.75),
+    ("bite", ["n16"], 0.1, 0.4, 1.6),
+    ("swing", [], 0, 0, 2.3),
+    ("chase", [], 0, 0, 1.7),
+    ("jam", [], 0, 0, 1.45),
+    ("corridor", [], 0, 0, 2.2),
+    ("inside", [], 0, 0, 0.9),
+    ("wash", ["n17"], 0.15, 0.3, 3.4),
+    ("real", ["n18", "n19"], 0.1, 0.35, 4.8),
+    ("hosp", ["n20"], 0.1, 0.35, 2.8),
+    ("door", ["d07", ("d08", 0.3)], 0.15, 0.25, 3.0),
+    ("sleeve", ["n21"], 0.1, 0.35, 2.4),
+    ("sig", ["s01"], 0.15, 0.5, 4.2),
+    ("night", ["n22"], 0.15, 0.25, 2.6),
+    ("scar", ["n23"], 0.15, 0.55, 2.8),
     ("choice", [], 0.0, 0.0, 3.4),
 ]
-GAP = 0.14
+GAP = 0.08
 
 
 def gaps(vid):
@@ -75,6 +82,8 @@ def gaps(vid):
 
 def frag_starts(vid):
     """Start offset of each caption fragment of a line (first is 0)."""
+    if "frags" in LINES[vid]:  # set by hand from the loudness envelope (valid for this recording at this tempo)
+        return LINES[vid]["frags"]
     frags = LINES[vid].get("cap", LINES[vid]["text"]).split(" / ")
     if len(frags) == 1:
         return [0.0]
@@ -89,7 +98,7 @@ def frag_starts(vid):
         for g in cand:
             if g in used or g[0] + g[1] <= starts[-1] + 0.15:
                 continue
-            sc = g[1] - 0.5 * abs(g[0] + g[1] / 2 - guess)
+            sc = g[1] - abs(g[0] + g[1] / 2 - guess)
             if sc > score:
                 best, score = g, sc
         if best is not None and score > -0.35:

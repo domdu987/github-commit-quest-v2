@@ -95,10 +95,12 @@
 | พูดต่อเนื่องเฉลี่ยต่อท่อน | ~4 วิ | ~1.6–2 วิ |
 | ช่วงเงียบระหว่างท่อน | ~0.3 วิ | ~0.45–0.5 วิ |
 
-- **แผนที่เสนอผู้ใช้แล้ว (รอเขาตอบว่าให้เริ่มเมื่อไหร่)**
-  - เร่งผู้บรรยายเป้า ~8.5–9 ตัวอักษร/วิ (tempo ราว 1.22–1.25) แต่ต้องผ่าน `voice_qa.py`
-  - ลดช่องว่าง: `GAP` ใน timing.py 0.14 → ~0.08 และ pre/post ของช็อตให้น้อยลง ให้เสียงพูดกิน ~80% ของคลิป
-  - เร่ง tempo ทำได้โดย **ไม่ต้องใช้เครดิต fal** เพราะ `voice.py` ตัดและ atempo จาก mp3 cache ในเครื่อง
+- **ทำแล้วใน ชั้น 23 EP.1 (ใช้เป็นค่าตั้งต้นของตอนต่อไป)**
+  - ผู้บรรยาย tempo 1.12 → **1.2**, บอส (Fenrir) 1.0 → 1.06, ป้าจิต/ข้าว คงเดิม 1.0 (กฎ d04 ต้องชัด ห้ามเร่ง)
+  - `GAP` ใน timing.py 0.14 → **0.08**, pre ~0.1, post ~0.2–0.35, ลด min ทุกช็อต
+  - เร่ง tempo ทำได้โดย **ไม่ต้องใช้เครดิต fal** เพราะ `voice.py` ตัดและ atempo จาก mp3 cache ในเครื่อง (cache key ไม่รวม tempo)
+  - เวลาที่ประหยัดได้เอาไปใส่ฉากแอ็คชั่น ~9 วิ ความยาวรวมเท่าเดิม (~1:53)
+  - ถ้าตัดซับผิดท่อน ใส่ `"frags": [0, t1, t2]` ใน lines.json ได้ (ดูจากกราฟความดัง) ใช้กับ d01, n13 แล้ว
 - ตัวเลขของคลิปต้นแบบวัดจากไฟล์ใน uploads ของแชทเก่า ถ้าแชทใหม่ไม่มีไฟล์ ใช้ตัวเลขในตารางนี้ได้เลย
 
 ### 2.3 ภาพและ UI (ผู้ใช้ให้ feedback มาเยอะ ทำตามนี้)
@@ -118,7 +120,11 @@
   - ผู้ใช้เคยทัก "มือนิดเดียว" และ "รถพยาบาลใหญ่กว่านี้อีก"
   - ยานพาหนะต้องหันถูกทาง สูงพอๆ กับคนหรือมากกว่า
 - **ท่าทางต้องลื่น:** rig ใหม่ blend ท่าเอง สะดุ้งเอง ผมขยับตาม (หัวข้อ 6.2) ไม่ต้องใส่ `blend` เองทุกจุด
-- **ฉากแอ็คชั่น** (ผู้ใช้ขอล่าสุด): ช็อตที่ไม่มีเสียงพูดใส่ใน SHOTS ได้ `("fight", [], 0, 0, 2.4)` ให้ภาพกับ SFX เล่าเรื่อง
+- **ฉากแอ็คชั่น** (ผู้ใช้ขอ "ฉากแอคชั่นมันๆ ดูเพลิน แล้วทำซอมบี้ให้น่ากลัวกว่านี้"):
+  - ช็อตไม่มีเสียงพูดใส่ใน SHOTS ได้ `("swing", [], 0, 0, 2.3)` ให้ภาพกับ SFX เล่าเรื่อง ช็อตละ 1.4–2.3 วิ ตัดถี่
+  - สูตรที่ใช้ใน ชั้น 23 EP.1: ซุ่มจากข้างหลัง → กระโจน → ฟาดสวน (`impact()` แสงวาบ เฟรมกลับสี ดาว) → ไล่ล่าบนบันได → ประตูหนีบแขน → POV วิ่งหลบ → ปิดประตูหอบ (ช่วงเงียบ)
+  - ดนตรีดังขึ้น ~3 dB ตลอดฉากแอ็คชั่น (`boost` ใน mix.py) แล้วเงียบทันทีตอนปิดประตู
+- **ซอมบี้ต้องน่ากลัว:** ตาขุ่นเส้นเลือดแตก รูม่านตาจุดแดง เบ้าตาลึก เส้นเลือดดำ ปากฉีกฟันหัก เลือดไหล กรงเล็บดำ กระตุกหัวแบบไม่เป็นธรรมชาติ (`twitch`) วิ่งเร็ว (`zrun`)
 
 ### 2.4 กติกาการทำงาน (ทำแบบนี้ทุกครั้ง)
 
@@ -192,14 +198,15 @@
 - **แก้ล่าสุดตามผู้ใช้:** การ์ดกฎแบบใหม่ (`koiRule`) ทั้ง 3 ตอน และซิกเนเจอร์ "ถูกทาง" ชัดแล้ว
 - **ยังไม่ได้ทำ:** ตรวจเสียงย้อนหลังทั้ง 3 ตอนด้วย `voice_qa.py` (เริ่มแล้วแต่ผู้ใช้สั่งหยุด)
 
-### 3.3 "ชั้น 23" (ซอมบี้ในคอนโด, กำลังทำ, ผู้ใช้สั่งหยุดรอเติมเครดิต)
+### 3.3 "ชั้น 23" (ซอมบี้ในคอนโด, กำลังทำ, รอผู้ใช้เติมเครดิต fal เพื่ออัด 2 บรรทัดใหม่)
 
 - **โครงเรื่อง 3 ตอน ตัวละคร กฎ และความรู้พร้อมแหล่งอ้างอิง:** `video/zom/ARC.md`
 - **กฎ:** โดนกัด ต้องบอก / มืดแล้ว ห้ามออก / ใครเคาะ… อย่าตอบ
 - **ตัวละคร:** ข้าว (Leda), บอส (Fenrir), ป้าจิต (Gacrux), ผู้ติดเชื้อ z1/z2/z3
 - **EP.1 "โดนกัด ต้องบอก" (`video/zom-ep1/`)**
-  - บท 32 บรรทัด อัดเสียงครบ 27 ช็อต snapshot ตรวจแล้ว มิกซ์แล้ว (`mix.wav`)
-  - **ยังไม่ได้เรนเดอร์**
+  - บท 32 บรรทัด 34 ช็อต (27 ช็อตพูด + 7 ช็อตแอ็คชั่น) ยาว 113 วิ snapshot ตรวจทุกช็อตแล้ว มิกซ์แล้ว (`mix.wav` −15 LUFS)
+  - เร่งความเร็วพูดแล้ว + ฉากแอ็คชั่น + ซอมบี้น่ากลัวขึ้น (หัวข้อ 2.2.1, 2.3)
+  - **เรนเดอร์ preview แล้ว** (ยังใช้ d04/d07 เสียงเดิม) ส่งให้ผู้ใช้ดู
   - **ต้องอัดใหม่ 2 บรรทัด** (`voice_qa.py` จับได้):
     - `d04` กฎของป้าจิต: เสียงกระซิบฟังไม่ออก
     - `d07` "ข้าว… เป็นอะไรรึเปล่า": ฟังเพี้ยน
@@ -210,17 +217,8 @@
 
 ## 4. Next steps (ทำตามลำดับ)
 
-1. **ถามผู้ใช้ก่อน** ว่าเติมเครดิต fal แล้วหรือยัง และจะให้เร่งความเร็ว/เพิ่มแอ็คชั่นเลยไหม (หัวข้อ 0)
-2. **ชั้น 23 EP.1: ปรับความเร็วและแอ็คชั่น** (ไม่ต้องใช้เครดิต)
-   1. `lines.json`: narrator tempo 1.12 → ~1.22 แล้ว `python3 ../hf/lib/voice.py lines.json vo` (ใช้ cache ไม่เรียก API) แล้ว `cp video/brand/signature.wav vo/s01.wav`
-   2. `timing.py`: `GAP = 0.08`, ลด pre/post ของแต่ละช็อต (เช่น pre 0.1, post 0.2) และลด min ที่เกินเสียง
-   3. วัดด้วย `python3 video/tools/pace.py <whisper_dir> zom <mix.wav>` เป้า ~8.5–9 ตัวอักษร/วิ และ talk ≥ 78%
-   4. เพิ่มช็อตแอ็คชั่นที่ไม่มีเสียงพูดใน SHOTS + `shots.part`:
-      - **บันไดชั้น 19:** สโลว์โมชันตอนซอมบี้พุ่ง (`Fx.hold`/ลด speed), บอสต่อยสวน, ข้าวถูกดึง
-      - **หนีขึ้นบันได 4 ชั้น:** counter ชั้นวิ่ง 19→23, กล้องสั่น, เสียงเท้า + growl ไล่หลัง
-      - **ประตูหนีไฟกระแทกปิดทับแขนซอมบี้** (ใช้ set `stairwell` + door)
-      - **ซอมบี้ทุบประตูห้องจนบานสั่น** ระหว่างป้าจิตสอนกฎ (`knocks()` + SFX `slam`/`knock`)
-   5. `python3 timing.py && python3 make.py && python3 mix.py` → snapshot ทุกช็อต → แก้ → ส่ง snapshot ช็อตแอ็คชั่นให้ผู้ใช้ดูได้
+1. **ถามผู้ใช้ก่อน** ว่าเติมเครดิต fal แล้วหรือยัง และ feedback ต่อ preview ฉากแอ็คชั่น (หัวข้อ 0)
+2. ~~ชั้น 23 EP.1: ปรับความเร็วและแอ็คชั่น~~ ทำแล้ว (ดูหัวข้อ 3.3) ถ้าผู้ใช้ติอะไรให้แก้ใน `shots.part` ช็อต 18a–18g
 3. **เมื่อผู้ใช้บอกว่าเติมเครดิตแล้ว**
    1. แก้ style ของ `d04` เป็น "พูดเสียงต่ำ ช้า ชัดทุกคำ เว้นจังหวะระหว่างท่อน ไม่กระซิบ"
    2. `python3 ../hf/lib/voice_qa.py lines.json vo --fix 2` แล้วก๊อป signature กลับ
@@ -231,7 +229,8 @@
    - บรรทัดที่ BAD → ถามผู้ใช้ว่าจะให้อัดใหม่และเรนเดอร์ใหม่ไหม
    - ถ้าความยาวเสียงเปลี่ยนต้องเรนเดอร์ใหม่ เพราะ schedule เปลี่ยน
 5. **ชั้น 23 EP.2 และ EP.3** ตามโครงใน `video/zom/ARC.md` (โครงร่าง ยังแก้ได้)
-   - เขียนบทแบบ EP.1, ใส่แอ็คชั่นทุกตอน, ความรู้เฉพาะข้อที่ยืนยันแล้ว
+   - เขียนบทแบบ EP.1, ใส่แอ็คชั่นทุกตอน (สูตรในหัวข้อ 2.3), ความรู้เฉพาะข้อที่ยืนยันแล้ว
+   - ใช้ tempo/GAP ใหม่ตั้งแต่แรก (หัวข้อ 2.2.1)
    - ส่ง EP.2 ให้ดูก่อนทำ EP.3 ถ้าผู้ใช้ไม่ได้สั่ง "ทำให้ครบ"
 
 ---
@@ -358,9 +357,11 @@ add("key", {
 - **modes ในไฟล์:** idle walk run crouch sit lie tremble holdHead sitChair raise phoneEar point torch whistle wave phoneLook fall **shamble lunge** (ซอมบี้)
 - **modes ที่ประกาศใน template:**
   - เสียงกอย: shiver huddle climb pointDown phoneSit stickWalk lookUp block shakeBottle clipboard stick
-  - ชั้น 23: cover phoneSit stopHand whisper sleep grabbed
+  - ชั้น 23: cover phoneSit stopHand whisper sleep grabbed lookDown guard runReach (ประกาศใน shots.part)
+  - ใน rig.js: shamble lunge (กระตุกด้วย `twitch`) **zrun** (ซอมบี้วิ่งเร็ว) **swing** (ฟาดสองมือ ผ่านแนวนอนที่ ~0.15 วิ) **push** (ยันประตู) **knocked** (ถูกฟาดกระเด็น 0.4 วิ) **drag** (วิ่งลากมือคนข้างหลัง) fall
+- **นักแสดงซอมบี้:** z1 ลุง 2307 (ชุดนอนลาย), z2 พนักงานออฟฟิศ, z3 รปภ., **z4 วินมอเตอร์ไซค์ (เสื้อกั๊กส้มเบอร์ 17)** ทุกตัวมีกรงเล็บ (`hand: CLAWS(skin)` ติดทั้งสองมือ)
 - **ตาและปาก:** eyes normal wide closed pain glow side **dead** · mouth smile flat o frown scream **snarl**
-- **prop:** phone mic whistle camera stick bottle clip (เพิ่ม `Camp.hand.x` ใน template ได้)
+- **prop:** phone mic whistle camera stick bottle clip **extinguisher** (ถังดับเพลิง ~55 ซม. ถือที่วาล์ว เหวี่ยงแบบกระบอง มาจาก zom.js) (เพิ่ม `Camp.hand.x` ใน template ได้)
 - **ของใหม่ (ทำให้ท่าลื่น):**
   - เปลี่ยน mode → blend 0.22 วิอัตโนมัติ (แขน/หัว overshoot นิดๆ)
   - eyes เปลี่ยนเป็น wide → สะดุ้งเอง (ปิดด้วย `startle:false`)
@@ -381,8 +382,14 @@ add("key", {
   - peephole (`face:true` ใส่หน้าซอมบี้เต็มเลนส์ `${id}-face`)
   - armClose (`mark` bite/scar, `water`, `skin`, `sleeve`, `night`, แขนเสื้อ `${id}-cuff`)
   - bathroom (`${id}-water`, `-stream`, `-b0/-b1`, `door`, `${id}-feet`)
-  - tower (`-up -down -x -bolt -tank`), stairwell (`floor`), stairShaft (`-up -hand`)
-  - `Zom.zFace` `Zom.zlife` `Zom.city`
+  - tower (`-up -down -x -bolt -tank`), stairShaft (`-up -hand`)
+  - stairwell (`floor`, `up:true` บันไดขึ้นทางซ้าย, `ext:"full"|"open"` ตู้ถังดับเพลิง, `red` ไฟฉุกเฉินแดง) พื้นบันไดลง `DNF(x)` ขึ้น `UPF(x)` (ใน shots.part)
+  - stairFlight (บันไดยาวทั้งเฟรมสำหรับไล่ล่า เท้าอยู่ที่ `Zom.FLIGHT(x)`, `nums` เลขชั้นบนผนัง)
+  - doorJam (close-up ประตูหนีไฟ: `-door` เลื่อน x, `-zarm`/`-zarm-in` แขนตะกุย, `-face` หน้าแนบกระจก clip ในหน้าต่าง, `-hands` มือบอส, `-dust`)
+  - corridorRun (POV ทางเดิน perspective จริง f=935 ตา 1.6 ม., ประตู `-d2307` ปิด/`-d2307o` เปิด, ซอมบี้พุ่ง `-z`)
+  - หลอดไฟกะพริบ `.zflick`/`.zflickg` และไฟแดง `.zred` ขับด้วย `Zom.zlife`
+  - `Zom.zFace` (หน้าซอมบี้เต็มจอ น่ากลัวแล้ว) `Zom.zLunge` (ซอมบี้หน้าตรงพุ่งใส่กล้อง) `Zom.zlife` `Zom.city` `Zom.FLIGHT`
+- **helpers ใน shots.part ชั้น 23:** `route(tl, aid, t0, [{t,x,y,hop}], s, flip)` เดินตามจุด/กระโดดเป็นโค้ง, `impact(tl, id, L, t, x, y, s)` ฟาดโดน (ดาว+วาบ+กลับสี+punch) ใส่พิกัดจอ
 
 ### 6.4 `gameui.js` + การ์ดที่ประกาศใน template
 
@@ -405,7 +412,7 @@ add("key", {
   ```bash
   python3 video/tools/pace.py <whisper_dir> name1 file1 name2 file2 ...
   ```
-- `synth.py` ชนิด SFX: heartbeat tick glitch rustle stomp snap pop notif sting boom crickets vibe ring whoosh knock ding buzz swell static riser wind whistle whistlefar crackle trumpet siren hum creak hiss crank shutter rain stream roar drip squelch rewind gong ching beep squish nv **scream growl tap sputter slam**
+- `synth.py` ชนิด SFX: heartbeat tick glitch rustle stomp snap pop notif sting boom crickets vibe ring whoosh knock ding buzz swell static riser wind whistle whistlefar crackle trumpet siren hum creak hiss crank shutter rain stream roar drip squelch rewind gong ching beep squish nv scream growl tap sputter slam **clang shriek thud steps latch**
 - `mix.py`: `LINE_GAIN`, `bed()`, `beats()`, `dip()`, ducking ด้วย `box()` (ห้าม np.convolve), loudnorm −14
 - `video/brand/`: signature.wav / signature-v1.wav / s01-tang.mp3 / splice_signature.py / signature.json
 

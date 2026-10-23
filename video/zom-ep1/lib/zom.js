@@ -21,6 +21,9 @@
     <radialGradient id="zExit"><stop offset="0" stop-color="#4dff9a" stop-opacity=".55"/><stop offset=".5" stop-color="#1fbf6a" stop-opacity=".18"/><stop offset="1" stop-color="#1fbf6a" stop-opacity="0"/></radialGradient>
     <radialGradient id="zPhone"><stop offset="0" stop-color="#cfe6ff" stop-opacity=".7"/><stop offset=".5" stop-color="#9cc4ff" stop-opacity=".2"/><stop offset="1" stop-color="#9cc4ff" stop-opacity="0"/></radialGradient>
     <radialGradient id="zLens" cx=".5" cy=".5" r=".5"><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset=".97" stop-color="#000" stop-opacity=".85"/><stop offset="1" stop-color="#000"/></radialGradient>
+    <radialGradient id="zGlowW"><stop offset="0" stop-color="#eef6ff" stop-opacity=".9"/><stop offset=".45" stop-color="#dfeaf5" stop-opacity=".3"/><stop offset="1" stop-color="#dfeaf5" stop-opacity="0"/></radialGradient>
+    <radialGradient id="zRed"><stop offset="0" stop-color="#ff2a1a" stop-opacity=".55"/><stop offset=".5" stop-color="#c81a10" stop-opacity=".18"/><stop offset="1" stop-color="#c81a10" stop-opacity="0"/></radialGradient>
+    <pattern id="zWire" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M0,0L40,40M40,0L0,40" stroke="#c9ccd0" stroke-width="2.5"/></pattern>
     <radialGradient id="zSkinF" cx=".45" cy=".4"><stop offset="0" stop-color="#c6d3bd"/><stop offset=".7" stop-color="#9fb197"/><stop offset="1" stop-color="#7c8d75"/></radialGradient>`;
 
   // ---------------- city skyline (window view): day / dusk / night, smoke, a hospital with its lights ----------------
@@ -98,18 +101,69 @@
       <path d="M330,700q90,-110 230,-120" stroke="#fff" stroke-width="16" fill="none" opacity=".12" stroke-linecap="round"/>`);
     if (o.face) put(L.act, zFace(`${id}-face`, 540, 960, 1));
   }
-  // a front-facing infected face (peephole jump scare): milky eyes, dark veins, torn mouth, wet hair
+  // a front-facing infected face (peephole jump scare): sunken sockets, milky bloodshot eyes with pin pupils, black veins,
+  // the jaw hanging open with a torn cheek, broken teeth, blood down the chin, wet hair across the face
   function zFace(id, x, y, s) {
+    const r = mk(97);
+    let veins = "";
+    [[-170, -90, -1], [-60, -100, 1], [60, -100, -1], [170, -90, 1], [-250, -200, 1], [240, -230, -1], [-210, 60, 1], [220, 40, -1], [-90, 120, -1], [90, 120, 1], [0, -260, 1], [-120, -300, -1]].forEach(([x0, y0, d]) => {
+      let px = x0, py = y0, path = `M${px},${py}`;
+      for (let k = 0; k < 4; k++) { px += d * (14 + r() * 26); py += (r() - 0.45) * 70; path += `L${f1(px)},${f1(py)}`; }
+      veins += `<path d="${path}" stroke="#2c3a30" stroke-width="${f1(3 + r() * 4)}" fill="none" stroke-linecap="round" opacity=".8"/>`;
+      veins += `<path d="M${f1(px - d * 20)},${f1(py)}l${f1(d * (10 + r() * 20))},${f1(-20 - r() * 30)}" stroke="#2c3a30" stroke-width="2.5" fill="none" opacity=".7"/>`;
+    });
+    let teeth = "";
+    for (let k = 0; k < 11; k++) { // upper row, a few missing
+      if (k === 3 || k === 8) continue;
+      const tx = -120 + k * 24, h = 18 + r() * 26, w = 18 + r() * 6;
+      teeth += `<path d="M${f1(tx)},${f1(150 - Math.abs(tx) * 0.12)}l${f1(w * 0.5)},${f1(h)}l${f1(w * 0.5)},${f1(-h * 0.8)}z" fill="${r() > 0.5 ? "#e4dcc4" : "#cfc39e"}" stroke="#2e2a26" stroke-width="3"/>`;
+    }
+    for (let k = 0; k < 9; k++) { // lower row
+      if (k === 5) continue;
+      const tx = -96 + k * 24, h = 16 + r() * 22;
+      teeth += `<path d="M${f1(tx)},${f1(310 - Math.abs(tx) * 0.15)}l${f1(10)},${f1(-h)}l${f1(10)},${f1(h * 0.9)}z" fill="#d9cfb2" stroke="#2e2a26" stroke-width="3"/>`;
+    }
+    const eye = (d, ry, px) => `<ellipse cx="${d * 110}" cy="-60" rx="92" ry="70" fill="#161b16" opacity=".55"/><ellipse cx="${d * 110}" cy="-58" rx="74" ry="56" fill="#0f130f" opacity=".7"/>
+      <ellipse cx="${d * 110}" cy="-60" rx="52" ry="${ry}" fill="#e3e9da" ${OUT}/>
+      ${[0, 1, 2, 3, 4].map((k) => `<path d="M${d * 110 + d * (30 + k * 4)},${-80 + k * 10}q${d * -14},${-4 + k * 3} ${d * -26},${2 - k}" stroke="#b02424" stroke-width="2.6" fill="none"/>`).join("")}
+      ${[0, 1, 2].map((k) => `<path d="M${d * 110 - d * (34 + k * 4)},${-72 + k * 14}q${d * 12},2 ${d * 22},-6" stroke="#b02424" stroke-width="2.2" fill="none"/>`).join("")}
+      <circle cx="${d * 110 + px}" cy="-58" r="10" fill="#c9cfbf"/><circle cx="${d * 110 + px}" cy="-58" r="5.5" fill="#5a0a0a"/>
+      <path d="M${d * 110 - 50},-42q50,${ry * 0.55} 100,0" stroke="#8e2a2a" stroke-width="7" fill="none" opacity=".85"/>`;
     return `<g id="${id}" transform="translate(${x},${y}) scale(${s})" opacity="0"><g id="${id}-in">
-      <path d="M-300,-60C-300,-330 -170,-430 0,-430C170,-430 300,-330 300,-60C300,190 180,380 0,400C-180,380 -300,190 -300,-60Z" fill="url(#zSkinF)" ${OUT}/>
-      <path d="M-300,-120C-320,-380 -120,-470 20,-460C180,-450 330,-360 300,-140C260,-260 160,-330 30,-330C-120,-330 -230,-260 -300,-120Z" fill="#26201c" ${OUT}/>
-      ${[-180, -120, 140, 200].map((x2, k) => `<path d="M${x2},-250C${x2 + 10},-140 ${x2 - 20},-40 ${x2},${60 + k * 20}" stroke="#26201c" stroke-width="22" fill="none" stroke-linecap="round"/>`).join("")}
-      ${[-1, 1].map((d) => `<ellipse cx="${d * 110}" cy="-60" rx="70" ry="46" fill="#4a5a46" opacity=".55"/><ellipse cx="${d * 110}" cy="-64" rx="54" ry="36" fill="#e4ebde" ${OUT}/><circle cx="${d * 104}" cy="-60" r="7" fill="#606c5c"/>
-        <path d="M${d * 60},-80l${d * -30},-10M${d * 160},-40l${d * 40},20M${d * 150},-90l${d * 50},-30" stroke="#b03a3a" stroke-width="3" opacity=".7"/>`).join("")}
-      ${[[-240, 40, -180, 140], [230, 20, 190, 160], [-80, 200, -40, 300], [60, -200, 120, -280]].map(([a, b, c, d]) => `<path d="M${a},${b}Q${(a + c) / 2 + 20},${(b + d) / 2} ${c},${d}" stroke="#4c5f52" stroke-width="5" fill="none" opacity=".7"/>`).join("")}
-      <path d="M-120,150Q0,110 120,150Q90,290 0,300Q-90,290 -120,150Z" fill="#2a0808" ${OUT}/><path d="M-100,156l20,26l20,-26l20,26l20,-26l20,26l20,-26l20,26l20,-26" stroke="#e9e2cf" stroke-width="7" fill="none"/>
-      <path d="M-40,170q-6,60 -20,120M30,175q10,50 4,100" stroke="#7a1414" stroke-width="10" fill="none" stroke-linecap="round"/>
-      <path d="M-20,20q20,30 0,60" stroke="#6b7b64" stroke-width="6" fill="none"/></g></g>`;
+      <path d="M-150,300L-180,620H180L150,300Z" fill="#8a9a82" ${OUT}/><path d="M60,360q40,30 30,90q-30,-10 -40,-40z" fill="#5a0c0c" opacity=".9"/>${[0, 1, 2, 3].map((k) => `<ellipse cx="${70 + k * 8}" cy="${380 + k * 18}" rx="6" ry="9" fill="#2a0606"/>`).join("")}
+      <path d="M-300,-60C-300,-330 -170,-430 0,-430C170,-430 300,-330 300,-60C300,120 230,260 150,330C100,380 60,400 0,404C-60,400 -100,380 -150,330C-230,260 -300,120 -300,-60Z" fill="url(#zSkinF)" ${OUT}/>
+      <ellipse cx="-200" cy="110" rx="70" ry="110" fill="#5d6c55" opacity=".45"/><ellipse cx="205" cy="110" rx="62" ry="104" fill="#5d6c55" opacity=".4"/>
+      <ellipse cx="-150" cy="-250" rx="60" ry="40" fill="#6c5a78" opacity=".25"/><ellipse cx="190" cy="200" rx="50" ry="40" fill="#6c5a78" opacity=".25"/>
+      ${veins}
+      ${eye(-1, 38, 6)}${eye(1, 33, -4)}
+      <path d="M-200,-150q70,-10 130,40M200,-160q-70,-6 -130,44" stroke="#1d1a17" stroke-width="20" fill="none" stroke-linecap="round"/>
+      <path d="M-14,30q-14,30 -4,44M18,30q14,30 4,44" stroke="#2b3328" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M-30,70q30,14 60,0" stroke="#4c5a46" stroke-width="6" fill="none"/>
+      <path d="M-150,140Q0,96 150,140Q140,330 0,348Q-140,330 -150,140Z" fill="#1c0404" ${OUT}/>
+      <path d="M-150,140L-222,112Q-232,170 -196,186L-150,214Z" fill="#1c0404" ${OUT}/><path d="M-214,128l10,18l8,-14l8,16l8,-12" stroke="#d9cfb2" stroke-width="6" fill="none"/>
+      <path d="M-140,150Q0,112 140,150" stroke="#6e1212" stroke-width="16" fill="none"/>
+      ${teeth}
+      <path d="M-60,180q-6,60 -2,110M40,176q10,50 2,120" stroke="#d8d0c0" stroke-width="3" fill="none" opacity=".45"/>
+      <path d="M-120,250q-20,90 -16,190M-150,290q-14,60 -8,130M110,280q10,80 4,170M20,346q4,60 -6,130" stroke="#6e0c0c" stroke-width="16" fill="none" stroke-linecap="round" opacity=".92"/>
+      ${[[-60, -330, 14], [140, -300, 10], [-240, 0, 12], [230, -10, 9], [-30, 380, 16], [80, 370, 12]].map(([bx, by, br]) => `<circle cx="${bx}" cy="${by}" r="${br}" fill="#6e0c0c" opacity=".85"/>`).join("")}
+      <path d="M-300,-120C-320,-380 -120,-470 20,-460C180,-450 330,-360 300,-140C260,-260 160,-330 30,-330C-120,-330 -230,-260 -300,-120Z" fill="#1d1916" ${OUT}/>
+      ${[[-250, -260, -262, 160, 18], [-205, -300, -236, 60, 13], [235, -250, 262, 140, 16], [190, -300, 214, 30, 11], [-60, -330, -150, -150, 12]].map(([x0, y0, x1, y1, w]) =>
+        `<path d="M${x0 - w / 2},${y0}C${x0 - 20},${(y0 + y1) / 2} ${x1 + 16},${(y0 + y1) / 2} ${x1},${y1}C${x1 + 10},${(y0 + y1) / 2 + 10} ${x0 + 30},${(y0 + y1) / 2} ${x0 + w / 2},${y0}Z" fill="#1d1916"/>`).join("")}
+    </g></g>`;
+  }
+  // the same infected seen from the front, lunging at the camera: shoulders in striped pyjamas, both clawed hands reaching
+  function zLunge(id, x, y, s) {
+    const hand = (d) => `<g transform="translate(${d * 270},360) scale(${d * 1.5},1.5) rotate(-24)"><path d="M0,40C-60,20 -90,-40 -60,-90C-30,-120 30,-110 50,-70C70,-30 60,20 0,40Z" fill="#a9b8a0" ${OUT}/>
+      ${[[-66, -66, -150, -150], [-36, -98, -80, -226], [2, -104, 20, -232], [38, -86, 104, -196], [56, -30, 140, -40]].map(([x0, y0, x1, y1]) => `<path d="M${x0},${y0}Q${(x0 + x1) / 2 - 10},${(y0 + y1) / 2 - 20} ${x1},${y1}" stroke="#2e2a26" stroke-width="30" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2 - 10},${(y0 + y1) / 2 - 20} ${x1},${y1}" stroke="#a9b8a0" stroke-width="22" fill="none" stroke-linecap="round"/>
+        <path d="M${x1},${y1}l${(x1 - x0) * 0.22},${(y1 - y0) * 0.22 - 6}l${8},${14}z" fill="#141010" stroke="#141010" stroke-width="4" stroke-linejoin="round"/>`).join("")}
+      <path d="M-30,-50q24,-14 50,4M-40,-10q30,-6 56,8" stroke="#435541" stroke-width="5" fill="none"/></g>`;
+    const arm = (d) => `<path d="M${d * 230},380C${d * 280},400 ${d * 300},390 ${d * 280},370" stroke="#2e2a26" stroke-width="150" fill="none" stroke-linecap="round"/><path d="M${d * 230},380C${d * 280},400 ${d * 300},390 ${d * 280},370" stroke="#b9c4d6" stroke-width="136" fill="none" stroke-linecap="round"/>
+      <path d="M${d * 200},300l${d * 60},-30" stroke="#7b8aa6" stroke-width="12"/>`;
+    return `<g id="${id}" transform="translate(${x},${y}) scale(${s})" opacity="0">
+      <path d="M-290,420Q-310,300 -170,290H170Q310,300 290,420L250,1200H-250Z" fill="#b9c4d6" ${OUT}/>${[-180, -100, -20, 60, 140, 220].map((sx) => `<path d="M${sx},300V1200" stroke="#7b8aa6" stroke-width="14"/>`).join("")}
+      <path d="M-60,300Q0,340 60,300" stroke="#97a3b8" stroke-width="14" fill="none"/><ellipse cx="40" cy="560" rx="70" ry="60" fill="#6e0c0c" opacity=".85"/><ellipse cx="-90" cy="680" rx="40" ry="34" fill="#6e0c0c" opacity=".8"/>
+      <path d="M-80,230L-90,330H90L80,230Z" fill="#8a9a82" ${OUT}/>
+      <g transform="translate(0,-40) rotate(-11) scale(.62)">${zFace(`${id}-f`, 0, 0, 1).replace('opacity="0"', "")}</g>
+      ${arm(-1)}${arm(1)}${hand(-1)}${hand(1)}</g>`;
   }
 
   // ---------------- close-up: a forearm under the tap (bite with soap, or an old healed scar) ----------------
@@ -185,20 +239,118 @@
     put(L.set, s);
   }
 
+  // a wall cabinet with a fire extinguisher ("full"), or its glass door swung open and the hook empty ("open")
+  const extBox = (x, y, state) => `<g transform="translate(${x},${y})"><rect x="-56" y="-110" width="112" height="220" rx="8" fill="#b8302a" ${OUT}/><rect x="-44" y="-98" width="88" height="196" fill="#2a1414"/>
+    ${state === "open" ? `<path d="M-44,-98L-120,-80V116L-44,98Z" fill="#cfe6f2" opacity=".35" ${OUT}/>` : `<g transform="translate(0,-10)">${EXT}</g><rect x="-44" y="-98" width="88" height="196" fill="#cfe6f2" opacity=".2"/>`}
+    <path d="M-30,-98l-14,30" stroke="#fff" stroke-width="4" opacity=".4"/></g>`;
+  // a 6 kg extinguisher, ~55 cm: red body, chrome valve and handle at the top, black hose; centred on its own middle
+  const EXT = `<rect x="-26" y="-70" width="52" height="160" rx="18" fill="#c8302a" ${OUT}/><rect x="-26" y="-20" width="52" height="40" fill="#f4ecd8" opacity=".85"/><rect x="14" y="-62" width="7" height="140" rx="3" fill="#fff" opacity=".25"/>
+    <rect x="-12" y="-92" width="24" height="24" rx="4" fill="url(#zChrome)" ${OUT}/><path d="M-10,-92L-34,-104M10,-92L30,-110" stroke="#2e2a26" stroke-width="7" stroke-linecap="round"/><path d="M12,-82q36,20 26,90" stroke="#1b1816" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+  // a flickering fluorescent tube (class zflick, driven by zlife) with its glow in the glow layer
+  const tube = (L, x, y, w = 260) => { put(L.glow, `<ellipse class="zflickg" cx="${x}" cy="${y + 160}" rx="${w * 1.6}" ry="460" fill="url(#zGlowW)" opacity=".35"/>`); return `<rect x="${x - w / 2 - 10}" y="${y - 16}" width="${w + 20}" height="22" rx="6" fill="#3a3f45"/><rect class="zflick" x="${x - w / 2}" y="${y + 4}" width="${w}" height="14" rx="7" fill="#f4fbff"/>`; };
+
   // ---------------- fire stairs: a landing seen from the side, the floor number painted on the wall ----------------
+  // o.up adds the flight going up on the left; o.ext puts an extinguisher cabinet on the wall; o.red a pulsing red emergency light
   function stairwell(L, o = {}) {
-    const id = o.id || "sw", G = 1500, fl = o.floor ?? 23;
+    const id = o.id || "sw", G = 1500, fl = o.floor ?? 23, X0 = o.up ? -100 : -900;
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#0d1110"/>`);
     let s = `<rect x="-900" y="-600" width="2900" height="${G + 600}" fill="#5d6460"/><rect x="-900" y="700" width="2900" height="40" fill="#4e5551"/>`;
     for (let k = 0; k < 12; k++) s += `<path d="M${-900 + k * 260},-600V${G}" stroke="#555c58" stroke-width="3"/>`;
+    s += `<path d="M260,1300q120,-40 260,20q-120,50 -260,-20z" fill="#3b403d" opacity=".5"/><path d="M-200,820q40,120 10,260M900,780q-30,160 10,300" stroke="#454b47" stroke-width="5" fill="none" opacity=".7"/>`;
     s += `<text id="${id}-num" x="520" y="1180" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="420" fill="#e8e2cf" opacity=".9">${fl}</text>`;
     s += `<g transform="translate(150,520)"><rect x="-70" y="-30" width="140" height="60" rx="6" fill="#1fbf6a" ${OUT}/><path d="M-40,0h40M10,-12l14,12l-14,12" stroke="#fff" stroke-width="7" fill="none"/></g>`;
-    s += `<rect x="-900" y="${G}" width="1700" height="40" fill="#8a8f8a"/><rect x="-900" y="${G + 40}" width="1700" height="1200" fill="#3f4542"/>`;
+    s += tube(L, 520, 330);
+    if (o.ext) s += extBox(880, 1110, o.ext);
+    s += `<rect x="${X0}" y="${G}" width="${800 - X0}" height="40" fill="#8a8f8a"/><rect x="${X0}" y="${G + 40}" width="${800 - X0}" height="1200" fill="#3f4542"/>`;
     for (let k = 0; k < 10; k++) s += `<path d="M${800 + k * 90},${G + k * 70}h90v70" fill="none" stroke="#8a8f8a" stroke-width="16"/>`;
     s += `<path d="M800,${G}L1700,${G + 700}V2700H800Z" fill="#3f4542"/>`;
-    s += `<path d="M-900,${G - 190}H800L1700,${G + 510}" stroke="#c9ccd0" stroke-width="12" fill="none"/>${Array.from({ length: 14 }, (_, k) => `<path d="M${-800 + k * 120},${G - 190}V${G}" stroke="#c9ccd0" stroke-width="6"/>`).join("")}`;
+    if (o.up) {
+      for (let k = 0; k < 12; k++) s += `<path d="M${-100 - k * 90},${G - k * 70}v-70h-90" fill="none" stroke="#8a8f8a" stroke-width="16"/>`;
+      s += `<path d="M-100,${G}L-1180,${G - 840}V2700H-100Z" fill="#3f4542"/>`;
+      s += `<path d="M-100,${G - 190}L-1180,${G - 1030}" stroke="#c9ccd0" stroke-width="12" fill="none"/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-160 - k * 120},${G - 190 - (60 + k * 120) * 0.778}V${G - (60 + k * 120) * 0.778}" stroke="#c9ccd0" stroke-width="6"/>`).join("")}`;
+    }
+    s += `<path d="M${X0},${G - 190}H800L1700,${G + 510}" stroke="#c9ccd0" stroke-width="12" fill="none"/>${Array.from({ length: 14 }, (_, k) => -800 + k * 120).filter((x) => x > X0).map((x) => `<path d="M${x},${G - 190}V${G}" stroke="#c9ccd0" stroke-width="6"/>`).join("")}`;
     put(L.set, s);
     put(L.glow, `<circle cx="150" cy="520" r="520" fill="url(#zExit)"/>`);
+    if (o.red) put(L.glow, `<circle class="zred" cx="${o.red}" cy="420" r="700" fill="url(#zRed)" opacity=".5"/>`);
+  }
+  // one long flight across the whole frame (the chase back up): nosing line y = 1500 + (x - 540) * 0.778
+  const FLIGHT = (x) => 1500 + (x - 540) * 0.778;
+  function stairFlight(L, o = {}) {
+    const id = o.id || "sf";
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#0d1110"/>`);
+    let s = `<rect x="-2000" y="-1400" width="5200" height="5200" fill="#5d6460"/>`;
+    for (let k = 0; k < 20; k++) s += `<path d="M${-2000 + k * 260},-1400V3800" stroke="#555c58" stroke-width="3"/>`;
+    (o.nums || [[1500, 21], [-500, 22]]).forEach(([x, n]) => (s += `<text x="${x}" y="${FLIGHT(x) - 260}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="380" fill="#e8e2cf" opacity=".75">${n}</text>`));
+    s += tube(L, 900, FLIGHT(900) - 900) + tube(L, -300, FLIGHT(-300) - 900);
+    let st = "";
+    for (let x = -1800; x < 2800; x += 90) st += `h90v70`;
+    s += `<path d="M-1800,${FLIGHT(-1800)}${st}V4200H-1800Z" fill="#3f4542"/><path d="M-1800,${FLIGHT(-1800)}${st}" fill="none" stroke="#8a8f8a" stroke-width="16"/>`;
+    s += `<path d="M-1800,${FLIGHT(-1800) - 190}L2800,${FLIGHT(2800) - 190}" stroke="#c9ccd0" stroke-width="12"/>${Array.from({ length: 40 }, (_, k) => -1760 + k * 120).map((x) => `<path d="M${x},${FLIGHT(x) - 190}V${FLIGHT(x)}" stroke="#c9ccd0" stroke-width="6"/>`).join("")}`;
+    put(L.set, s);
+    put(L.glow, `<circle class="zred" cx="400" cy="600" r="900" fill="url(#zRed)" opacity=".5"/>`);
+  }
+  // close-up from the corridor side: the steel fire door being shoved shut on an infected arm reaching through the gap;
+  // a second face pressed to the wired glass. #id-door slides (x), #id-zarm flails from the gap, #id-hands push.
+  function doorJam(L, o = {}) {
+    const id = o.id || "dj", E = 760;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#120606"/>`);
+    put(L.far, `<rect x="600" y="-600" width="500" height="3200" fill="#2a0c0c"/><circle class="zred" cx="820" cy="700" r="380" fill="url(#zRed)" opacity=".8"/>`);
+    let s = `<g id="${id}-door"><rect x="-500" y="-200" width="${E + 500}" height="2400" fill="#6b7672" ${OUT}/><rect x="${E - 30}" y="-200" width="30" height="2400" fill="#4f5956"/>
+      <rect x="-420" y="-120" width="${E + 340}" height="2240" fill="none" stroke="#5c6662" stroke-width="10"/>
+      <g transform="translate(330,520)"><defs><clipPath id="${id}-win"><rect x="-150" y="-210" width="300" height="420"/></clipPath></defs><rect x="-150" y="-210" width="300" height="420" fill="#3a1010" ${OUT}/>
+        <g clip-path="url(#${id}-win)"><g id="${id}-face" opacity="0" transform="scale(.42)">${zFace(`${id}-pf`, 0, 40, 1).replace('opacity="0"', "")}</g></g><rect x="-150" y="-210" width="300" height="420" fill="url(#zWire)" opacity=".55"/><rect x="-150" y="-210" width="300" height="420" fill="#cfe6f2" opacity=".14"/><path d="M-120,-180l60,-20" stroke="#fff" stroke-width="8" opacity=".3"/></g>
+      <rect x="-300" y="1120" width="${E - 120 + 300}" height="50" rx="20" fill="url(#zChrome)" ${OUT}/><rect x="${E - 140}" y="1080" width="70" height="130" rx="12" fill="#3a3f45" ${OUT}/>
+      <text x="200" y="1500" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="120" fill="#e8e2cf" opacity=".5">23</text></g>`;
+    s += `<g id="${id}-zarm"><g transform="translate(${E + 20},900)"><g id="${id}-zarm-in">
+      <path d="M40,-40L-300,-20L-310,70L40,60Z" fill="#e6e8e2" ${OUT}/><path d="M-120,-30l-20,40l30,10M-220,-26l14,30" stroke="#8a8f88" stroke-width="4" fill="none"/><ellipse cx="-80" cy="20" rx="40" ry="26" fill="#7a1414" opacity=".8"/>
+      <path d="M-290,-14L-520,-4L-524,64L-296,64Z" fill="#b0b9a2" ${OUT}/><path d="M-330,0q-60,30 -150,10" stroke="#435541" stroke-width="5" fill="none"/>
+      <path d="M-520,-30C-600,-40 -640,10 -620,60C-600,100 -540,96 -516,70Z" fill="#b0b9a2" ${OUT}/>
+      ${[[-560, -26, -650, -110], [-600, -6, -720, -60], [-614, 30, -740, 20], [-600, 62, -710, 110], [-550, 82, -600, 170]].map(([x0, y0, x1, y1]) => `<path d="M${x0},${y0}Q${(x0 + x1) / 2},${(y0 + y1) / 2 - 30} ${x1},${y1}" stroke="#2e2a26" stroke-width="24" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2},${(y0 + y1) / 2 - 30} ${x1},${y1}" stroke="#b0b9a2" stroke-width="16" fill="none" stroke-linecap="round"/><path d="M${x1},${y1}l${(x1 - x0) * 0.25},${(y1 - y0) * 0.25 - 4}l6,12z" fill="#141010" stroke="#141010" stroke-width="3" stroke-linejoin="round"/>`).join("")}
+    </g></g></g>`;
+    s += `<rect x="${E}" y="-600" width="1400" height="3200" fill="#cfc6b6"/><rect x="${E}" y="-600" width="110" height="3200" fill="#8f978f" ${OUT}/><rect x="${E + 24}" y="-600" width="18" height="3200" fill="#6b7370"/>
+      <rect x="${E + 150}" y="1100" width="40" height="80" rx="6" fill="#3a3f45"/>`;
+    s += `<g id="${id}-dust" opacity="0">${Array.from({ length: 16 }, (_, k) => `<circle cx="${E + 20 + (k % 4) * 14}" cy="${200 + k * 110}" r="${8 + (k % 3) * 6}" fill="#d9d3c4" opacity=".6"/>`).join("")}</g>`;
+    put(L.set, s);
+    // บอส's forearms in the foreground, palms on the door (they move with it)
+    put(L.fg, `<g id="${id}-hands">${[[300, 980, 18], [560, 1300, -8]].map(([hx, hy, rot]) => `<g transform="translate(${hx},${hy}) rotate(${rot})"><path d="M-70,0L-340,520L-200,600L40,90Z" fill="#d39a6e" ${OUT}/><path d="M-300,470l110,64" stroke="#e05a3a" stroke-width="40"/>
+      <path d="M-80,-40C-90,-120 -20,-150 40,-140L90,-130C120,-120 120,-90 96,-84L60,-80L100,-60C126,-50 120,-20 96,-20L60,-24L90,0C110,20 90,44 66,36L20,24C0,60 -40,70 -70,40Z" fill="#d39a6e" ${OUT}/>
+      <path d="M40,-112L88,-106M44,-74L96,-42M40,-30L80,8" stroke="#a9744c" stroke-width="5" stroke-linecap="round"/><path d="M-60,20Q-30,40 0,10" stroke="#b27c52" stroke-width="8" fill="none" opacity=".6"/><path d="M-200,520L-30,120" stroke="#b27c52" stroke-width="18" opacity=".35"/></g>`).join("")}</g>`);
+    L.fg.classList.remove("fgblur");
+  }
+  // first-person run down the 23rd-floor corridor: a true perspective box (eye 1.6 m, f = 935 px, vanishing point 540,960),
+  // doors on both walls with their numbers; #id-d2307 bursts open (closed panel hides, open panel shows); #id-z lunges out
+  function corridorRun(L, o = {}) {
+    const id = o.id || "cr", f = 935, vx = 540, vy = 960, W = 1.1, H = 2.6, E = 1.6;
+    const P = (X, Y, Z) => `${f1(vx + (f * X) / Z)},${f1(vy + (f * (E - Y)) / Z)}`;
+    const quad = (a, b, c, d, fill, extra = "") => `<path d="M${a}L${b}L${c}L${d}Z" fill="${fill}" ${extra}/>`;
+    const Z0 = 0.35, Z1 = 30;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#0b0b0a"/>`);
+    let s = quad(P(-W, H, Z0), P(W, H, Z0), P(W, H, Z1), P(-W, H, Z1), "#cfc8b8");
+    s += quad(P(-W, 0, Z0), P(W, 0, Z0), P(W, 0, Z1), P(-W, 0, Z1), "#5b2a2a");
+    s += quad(P(-W, 0, Z0), P(-W, H, Z0), P(-W, H, Z1), P(-W, 0, Z1), "#d6cfbf");
+    s += quad(P(W, 0, Z0), P(W, H, Z0), P(W, H, Z1), P(W, 0, Z1), "#c8c0ae");
+    s += quad(P(-W, 0, Z1), P(-W, H, Z1), P(W, H, Z1), P(W, 0, Z1), "#9e9686");
+    s += `<rect x="${vx - 18}" y="${vy - 44}" width="36" height="12" fill="#1fbf6a"/>`;
+    for (let z = 1.2; z < Z1; z *= 1.33) s += `<path d="M${P(-W * 0.98, 0, z)}L${P(W * 0.98, 0, z)}" stroke="#4a2222" stroke-width="${f1(40 / z)}"/>`;
+    // ceiling lights
+    [2.4, 5, 8.5, 13, 19].forEach((z, k) => (s += quad(P(-0.3, H - 0.01, z), P(0.3, H - 0.01, z), P(0.3, H - 0.01, z + 0.5), P(-0.3, H - 0.01, z + 0.5), "#f4fbff", `class="${k === 1 ? "zflick" : ""}"`)));
+    // doors: [side, z0, number]
+    const doors = o.doors || [[1, 2.2, "2309"], [-1, 2.9, "2310"], [1, 4.6, "2307"], [-1, 5.6, "2308"], [1, 8.0, "2305"], [-1, 9.4, "2306"], [1, 12.5, "2303"], [-1, 14.5, "2304"]];
+    doors.forEach(([sd, z, n]) => {
+      const X = sd * W, z1 = z + 0.95;
+      const frame = quad(P(X, 0, z - 0.06), P(X, 2.15, z - 0.06), P(X, 2.15, z1 + 0.06), P(X, 0, z1 + 0.06), "#e9e4da");
+      const panel = quad(P(X, 0, z), P(X, 2.05, z), P(X, 2.05, z1), P(X, 0, z1), n === "2306" ? "#8a5a3a" : "#7a5a3e", OUT);
+      const plate = `<text x="${f1(vx + (f * X) / (z + 0.47))}" y="${f1(vy + (f * (E - 2.32)) / (z + 0.47))}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${f1(120 / (z + 0.47))}" fill="#2e2a26">${n}</text>`;
+      if (n === "2307") {
+        const hinge = z1, ox = X - sd * 0.85, oz = z1 - 0.3; // open: the panel swung out into the corridor around the far jamb
+        s += frame + quad(P(X, 0, z), P(X, 2.05, z), P(X, 2.05, z1), P(X, 0, z1), "#140606");
+        s += `<g id="${id}-d2307">${panel}</g><g id="${id}-d2307o" opacity="0">${quad(P(X, 0, hinge), P(X, 2.05, hinge), P(ox, 2.05, oz), P(ox, 0, oz), "#7a5a3e", OUT)}</g>${plate}`;
+      } else s += frame + panel + plate;
+    });
+    put(L.set, s);
+    put(L.glow, `<ellipse class="zflickg" cx="${vx}" cy="${vy - 260}" rx="760" ry="560" fill="url(#zGlowW)" opacity=".35"/>`);
+    put(L.act, zLunge(`${id}-z`, 0, 0, 1));
   }
   // looking straight down the stairwell shaft: rails spiral away, something looks up from far below
   function stairShaft(L, o = {}) {
@@ -222,9 +374,17 @@
     q(".smoke").forEach((el, i) => tl.fromTo(el, { x: -10, opacity: 0.4 }, { x: 14, opacity: 0.6, duration: 2.4 + i * 0.4, repeat: Math.ceil(dur / 2.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     q(".beacon").forEach((el) => tl.fromTo(el, { opacity: 0.1 }, { opacity: 0.6, duration: 0.25, repeat: Math.ceil(dur / 0.25), yoyo: true, immediateRender: false }, t0));
     q(".beacon2").forEach((el) => tl.fromTo(el, { opacity: 0.6 }, { opacity: 0.1, duration: 0.25, repeat: Math.ceil(dur / 0.25), yoyo: true, immediateRender: false }, t0));
+    q(".zred").forEach((el) => tl.fromTo(el, { opacity: 0.15 }, { opacity: 0.7, duration: 0.5, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+    const r = mk(Math.round(t0 * 100) + 7); // fluorescent tubes: mostly on, with seeded drop-outs
+    for (let t = 0; t < dur; t += 0.06 + r() * 0.25) {
+      const on = r() > 0.28 ? 1 : 0.15 + r() * 0.3;
+      q(".zflick").forEach((el) => tl.set(el, { opacity: on }, t0 + t));
+      q(".zflickg").forEach((el) => tl.set(el, { opacity: on * 0.35 }, t0 + t));
+    }
     q(".spin").forEach((el) => tl.fromTo(el, { rotation: 0 }, { rotation: 360 * Math.ceil(dur), svgOrigin: "0 0", duration: dur, ease: "none", immediateRender: false }, t0));
   }
 
-  Object.assign(Sets, { condo, peephole, armClose, bathroom, tower, stairwell, stairShaft });
-  window.Zom = { zFace, zlife, city };
+  Object.assign(Sets, { condo, peephole, armClose, bathroom, tower, stairwell, stairShaft, stairFlight, doorJam, corridorRun });
+  if (window.Camp) Camp.hand.extinguisher = `<g transform="translate(0,${118 + 96}) rotate(180)">${EXT}</g>`; // held by the valve, swung like a club
+  window.Zom = { zFace, zLunge, zlife, city, FLIGHT };
 })();

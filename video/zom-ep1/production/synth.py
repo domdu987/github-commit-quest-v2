@@ -520,6 +520,39 @@ def sfx(kind):
         t = t_arr(d)
         n = rng.standard_normal(len(t))
         return (lp_fast(n, 400) * 2.4 * np.exp(-t * 14) + osc(58, d) * np.exp(-t * 9) * 0.7 + (lp_fast(n, 6000) - lp_fast(n, 2000)) * np.exp(-t * 60) * 0.6) * 0.8
+    if kind == "clang":  # a steel extinguisher hitting a skull: a dull thump with an inharmonic metal ring
+        d = 1.4
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        ring = sum(a * np.sin(2 * np.pi * f * t) * np.exp(-t * k) for f, a, k in ((523, 0.5, 4.5), (1247, 0.35, 6), (2161, 0.25, 9), (3390, 0.15, 14)))
+        return (lp_fast(n, 500) * 2.0 * np.exp(-t * 30) + osc(70, d) * np.exp(-t * 16) * 0.9 + ring * 0.8) * 0.8
+    if kind == "shriek":  # the infected screeching: a harsh, gliding, distorted cry
+        d = 0.95
+        t = t_arr(d)
+        f0 = 900 + 500 * np.sin(np.pi * np.clip(t / 0.7, 0, 1)) + 60 * np.sin(2 * np.pi * 23 * t)
+        ph = 2 * np.pi * np.cumsum(f0) / SR
+        v = np.tanh(3 * sum(np.sin(k * ph) / k for k in range(1, 7)))
+        x = (lp_fast(v, 4000) - lp_fast(v, 600)) + (lp_fast(rng.standard_normal(len(t)), 5000) - lp_fast(rng.standard_normal(len(t)), 1500)) * 0.5
+        return x * np.clip(t / 0.03, 0, 1) * np.exp(-np.clip(t - 0.55, 0, None) * 7) * 0.55
+    if kind == "thud":  # a body hitting the concrete
+        d = 0.6
+        t = t_arr(d)
+        return (osc(48 + 40 * np.exp(-t * 20), d) * 1.1 + lp_fast(rng.standard_normal(len(t)), 250) * 0.8) * np.exp(-t * 10) * 0.9
+    if kind == "steps":  # running feet on concrete stairs, seven quick steps
+        out = np.zeros(int(1.3 * SR))
+        for k in range(7):
+            d = 0.09
+            t = t_arr(d)
+            x = (lp_fast(rng.standard_normal(len(t)), 1800) + osc(90, d) * 0.6) * np.exp(-t * 45)
+            add(out, x * (0.7 + 0.3 * (k % 2)), k * 0.17)
+        return out
+    if kind == "latch":  # a door latch catching: click then clunk
+        out = np.zeros(int(0.4 * SR))
+        for off, f, g in ((0.0, 2400, 0.5), (0.06, 180, 0.9)):
+            d = 0.08
+            t = t_arr(d)
+            add(out, (osc(f, d) * 0.6 + lp_fast(rng.standard_normal(len(t)), f * 2) * 0.6) * np.exp(-t * 60) * g, off)
+        return out
     raise ValueError(kind)
 
 
