@@ -39,11 +39,13 @@
 
 ### 2.0 ชื่อช่อง
 
-- **Dead Serious** (ผู้ใช้เลือกเป็นชื่อสุดท้าย หลังดูตัวเลือกภาษาอังกฤษ 2 รอบ)
-  - ความหมาย: "จริงจังสุดๆ" + คำว่า dead = เรื่องสยองเอาตัวรอด แต่ความรู้ในช่องเป็นของจริง ยืนยันแหล่งทุกข้อ
-  - ชื่อบัญชีที่เสนอ: @deadserious.th (ยังไม่ได้เช็กว่าว่างบน TikTok ผู้ใช้ต้องค้นในแอปเอง)
-  - ลำดับการเลือก: Dead Wrong → ถามชื่ออื่น → เลือก Still Breathin → เปลี่ยนเป็น **Dead Serious**
-  - ตัวเลือกที่ไม่ได้ใช้: Dead Wrong, Still Breathing, Scared Smart, Deadline, Fear & Facts, Learn or Die, Do Not, Never Open, Barely Alive, Almost Survived, One Mistake, If One Day
+- **Rod Mai Club** (ผู้ใช้เลือกเป็นชื่อสุดท้าย เพราะต้องการชื่อที่ยังไม่มีใครใช้)
+  - ความหมาย: "รอดไหม" (ตรงกับประโยคปิด "ถ้าวันหนึ่ง… คุณจะรอดไหม?") + Club = คนดูเป็นสมาชิกชมรมคนเอาตัวรอด
+  - ชื่อบัญชี: **@rodmaiclub** ทุกแพลตฟอร์ม เช็กแล้วว่างบน YouTube, TikTok, X (23 ต.ค. 2026) สำรอง: @rodmai.club / @rodmaiclub.th / @rodmai_club (ว่างทั้งหมด) · Instagram และ Facebook เช็กจากที่นี่ไม่ได้ (ต้องล็อกอิน) ผู้ใช้ต้องลองในแอป
+  - ลำดับการเลือก: Dead Wrong → ถามชื่ออื่น → Still Breathin → Dead Serious → ผู้ใช้ขอชื่อที่ยังไม่มีคนใช้ (@deadserious มีเจ้าของแล้วทั้ง 3 แพลตฟอร์ม) → **Rod Mai Club**
+  - ตัวเลือกที่ว่างแต่ไม่ได้ใช้: Unbitten Club, If One Day Tales, Undead Honest, Before Dark Club
+  - ตัวเลือกที่มีคนใช้แล้ว: Dead Serious, Dead Honest, Dead Ready, Dead Sure, Not Bitten Yet, Rod Mai, If One Day, Dead Wisdom
+  - วิธีเช็ก handle: `video/brand/check_handles.sh handle...` (YouTube 404 = ว่าง · TikTok statusCode 10221 = ว่าง · X 404 = ว่าง)
 
 ### 2.1 เรื่องและรูปแบบ
 
