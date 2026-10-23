@@ -455,12 +455,21 @@
         s += `<text x="${f1(cx + (f * -0.9) / Z)}" y="${f1(cy + (f * (-WY + LD * 0.62)) / Z)}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${f1((f * 0.5) / Z)}" fill="${mix("#e8e2cf", Z)}" opacity=".8">${fl}</text>`;
         s += `<circle cx="${f1(cx + (f * 1.2) / Z)}" cy="${f1(cy + (f * -WY) / Z)}" r="${f1((f * 0.9) / Z)}" fill="url(#zExit)" opacity="${f1(Math.max(0.15, 1 - n * 0.12))}"/>`;
       }
-      if (n === 1) { // the infected, on the flight one floor down, face turned up through the well; its hand on the rail
-        const Zh = Z + 0.2, px = cx + (f * 0.05) / Zh, py = cy + (f * 0.9) / Zh;
-        s += `<g id="${id}-up" opacity="0"><circle cx="${f1(px)}" cy="${f1(py)}" r="150" fill="url(#zRed)" opacity=".9"/><g transform="translate(${f1(px)},${f1(py)}) scale(${f1(0.62 / Zh * 1.6)})">${zFace(`${id}-uf`, 0, 0, 1).replace('opacity="0"', "")}</g></g>`;
-        const hx = px - 40, hy = py + 74, hs = 2.2;   // fingers over the edge of the step in front of it, inside the well
-        s += `<g id="${id}-hand" opacity="0" transform="translate(${f1(hx)},${f1(hy)}) scale(${f1(hs)})">${[[-14, -10, -30, 14], [-4, -14, -10, 18], [6, -14, 10, 18], [14, -10, 28, 12]].map(([x0, y0, x1, y1]) =>
-          `<path d="M${x0},${y0}Q${(x0 + x1) / 2 - 6},${(y0 + y1) / 2} ${x1},${y1}" stroke="#2e2a26" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2 - 6},${(y0 + y1) / 2} ${x1},${y1}" stroke="#a9b8a0" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M${x1},${y1}l${(x1 - x0) * 0.2},6" stroke="#141010" stroke-width="5" stroke-linecap="round"/>`).join("")}<ellipse cx="0" cy="-16" rx="22" ry="12" fill="#b6c4ab" stroke="#2e2a26" stroke-width="3"/><path d="M-10,-20q8,-6 20,0" stroke="#7a1414" stroke-width="3" fill="none"/></g>`;
+      if (n === 1) { // the infected (the office worker), one floor down in the well, face turned up, arms reaching up at her
+        const Zh = Z + 0.2, px = cx + (f * 0.05) / Zh, py = cy + (f * 0.9) / Zh, k = (0.62 / Zh) * 1.45;
+        const sk = "#b0b9a2", shirt = "#e6e8e2";
+        const claw = (d) => `<g transform="translate(${d * 470},-330) scale(${d * 1.9},1.9) rotate(-8)"><path d="M0,40C-60,20 -90,-40 -60,-90C-30,-120 30,-110 50,-70C70,-30 60,20 0,40Z" fill="${sk}" ${OUT}/>
+          ${[[-66, -66, -150, -150], [-36, -98, -80, -226], [2, -104, 20, -232], [38, -86, 104, -196], [56, -30, 140, -40]].map(([x0, y0, x1, y1]) => `<path d="M${x0},${y0}Q${(x0 + x1) / 2 - 10},${(y0 + y1) / 2 - 20} ${x1},${y1}" stroke="#2e2a26" stroke-width="30" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2 - 10},${(y0 + y1) / 2 - 20} ${x1},${y1}" stroke="${sk}" stroke-width="22" fill="none" stroke-linecap="round"/><path d="M${x1},${y1}l${(x1 - x0) * 0.22},${(y1 - y0) * 0.22 - 6}l8,14z" fill="#141010" stroke="#141010" stroke-width="4" stroke-linejoin="round"/>`).join("")}</g>`;
+        const arm = (d) => `<path d="M${d * 380},520C${d * 500},300 ${d * 520},0 ${d * 470},-260" stroke="#2e2a26" stroke-width="170" fill="none" stroke-linecap="round"/><path d="M${d * 380},520C${d * 500},300 ${d * 520},0 ${d * 470},-260" stroke="${shirt}" stroke-width="150" fill="none" stroke-linecap="round"/>
+          <path d="M${d * 360},300l${d * 60},-30l${d * -10},50" stroke="#8a8f88" stroke-width="10" fill="none"/>`;
+        s += `<g id="${id}-up" opacity="0"><circle cx="${f1(px)}" cy="${f1(py)}" r="170" fill="url(#zRed)" opacity=".9"/><g transform="translate(${f1(px)},${f1(py)}) scale(${f1(k)})">
+          <path d="M-600,900C-640,620 -520,460 -330,420Q0,380 330,420C520,460 640,620 600,900Z" fill="${shirt}" ${OUT}/>
+          <path d="M0,430L-46,620L0,780L46,620Z" fill="#3a4a7a" ${OUT}/><ellipse cx="-230" cy="600" rx="90" ry="70" fill="#7a1414" opacity=".85"/><ellipse cx="260" cy="700" rx="70" ry="54" fill="#7a1414" opacity=".8"/>
+          <path d="M-430,520l60,40l-20,60M380,480l-50,30" stroke="#8a8f88" stroke-width="8" fill="none"/>
+          ${arm(-1)}${arm(1)}
+          ${zFace(`${id}-uf`, 0, -20, 1).replace('opacity="0"', "").replace(/<path d="M-150,300L-180,620H180L150,300Z"[^>]*\/>/, "")}
+          ${claw(-1)}${claw(1)}</g></g>`;
+        s += `<g id="${id}-hand" opacity="0"></g>`;
       }
     }
     put(L.set, s);
