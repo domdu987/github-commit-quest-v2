@@ -7,7 +7,7 @@
 set -euo pipefail
 R="$(cd "$(dirname "$0")" && pwd)"
 W="${1:?usage: workspace.sh <work dir>}"
-LATEST="$R/koi-ep1"
+LATEST="$R/koi-ep3"
 mkdir -p "$W/hf/lib" "$W/hf/rig/assets" "$W/music"
 cp "$LATEST"/lib/*.js "$LATEST"/lib/voice.py "$W/hf/lib/"
 cp "$LATEST"/composition/{package.json,hyperframes.json,meta.json} "$W/hf/rig/"
@@ -19,7 +19,9 @@ for n in 1 2 3; do
   cp -r "$R/camp-ep$n/production/." "$W/camp$n/"
   cp "$R/camp-ep$n/mix.wav" "$W/camp$n/"
 done
-mkdir -p "$W/koi1"
-cp -r "$R/koi-ep1/production/." "$W/koi1/"
-[ -f "$R/koi-ep1/mix.wav" ] && cp "$R/koi-ep1/mix.wav" "$W/koi1/"
-echo "workspace ready: $W (camp1-3 → hf/camp, hf/camp2, hf/camp3; koi1 → hf/koi1)"
+for n in 1 2 3; do
+  mkdir -p "$W/koi$n"
+  cp -r "$R/koi-ep$n/production/." "$W/koi$n/"
+  [ -f "$R/koi-ep$n/mix.wav" ] && cp "$R/koi-ep$n/mix.wav" "$W/koi$n/"
+done
+echo "workspace ready: $W (camp1-3 → hf/camp, hf/camp2, hf/camp3; koi1-3 → hf/koi1, hf/koi2, hf/koi3)"
