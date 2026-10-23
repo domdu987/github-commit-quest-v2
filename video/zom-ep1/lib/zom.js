@@ -402,20 +402,76 @@
     dust(L, 200, 900, 500, 1500, 24, 17, "#fff6e6");
     put(L.act, zLunge(`${id}-z`, 0, 0, 1));
   }
-  // looking straight down the stairwell shaft: rails spiral away, something looks up from far below
+  // looking straight down the stairwell from the floor-19 landing: a real switchback stair in one-point perspective
+  // (eye 1.6 m above the landing, f = 600 px). Each floor: flight A down the left side (−Y → +Y), a landing at the far end,
+  // flight B back up the right side, the next landing at the near end; a well between the flights shows the floors below.
+  // Drawn deepest first with depth fog. #id-up = the infected one floor down, looking up; #id-hand = its hand on the rail.
   function stairShaft(L, o = {}) {
-    const id = o.id || "ss";
-    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#030404"/>`);
+    const id = o.id || "ss", f = 600, cx = 540, cy = 960, WX = 1.6, WY = 2.6, GAP = 0.42, LD = 1.25, RISE = 3, N = 7, TREADS = 10;
+    const P = (X, Y, Z) => `${f1(cx + (f * X) / Z)},${f1(cy + (f * Y) / Z)}`;
+    const mix = (hex, Z) => {
+      const k = Math.min(0.94, 1 - Math.exp(-(Z - 1.4) / 6.5)), c = parseInt(hex.slice(1), 16);
+      const ch = (sh) => Math.round(((c >> sh) & 255) * (1 - k) + 7 * k);
+      return `rgb(${ch(16)},${ch(8)},${ch(0)})`;
+    };
+    const quad = (pts, fill, extra = "") => `<path d="M${pts.join("L")}Z" fill="${fill}" ${extra}/>`;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3200" fill="#050606"/>`);
     let s = "";
-    for (let k = 0; k < 9; k++) {
-      const w = 980 * Math.pow(0.78, k), h = 1500 * Math.pow(0.78, k), x = 540 - w / 2, y = 960 - h / 2;
-      s += `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(w)}" height="${f1(h)}" fill="none" stroke="${k % 2 ? "#5d6460" : "#7a807c"}" stroke-width="${f1(60 * Math.pow(0.8, k))}"/>`;
-      s += `<rect x="${f1(x + 8)}" y="${f1(y + 8)}" width="${f1(w - 16)}" height="${f1(h - 16)}" fill="none" stroke="#c9ccd0" stroke-width="${f1(8 * Math.pow(0.8, k))}" opacity=".7"/>`;
-      if (k % 2 === 0) s += `<circle cx="${f1(x + 30)}" cy="${f1(y + 30)}" r="${f1(140 * Math.pow(0.78, k))}" fill="url(#zExit)"/>`;
+    // shaft walls, banded per half floor so they darken with depth
+    for (let z = 0.75; z < 1.6 + RISE * N; z += 1.5) {
+      const z2 = z + 1.5;
+      s += quad([P(-WX, -WY, z), P(WX, -WY, z), P(WX, -WY, z2), P(-WX, -WY, z2)], mix("#545b57", z));
+      s += quad([P(-WX, WY, z), P(WX, WY, z), P(WX, WY, z2), P(-WX, WY, z2)], mix("#4e5551", z));
+      s += quad([P(-WX, -WY, z), P(-WX, WY, z), P(-WX, WY, z2), P(-WX, -WY, z2)], mix("#5d6460", z));
+      s += quad([P(WX, -WY, z), P(WX, WY, z), P(WX, WY, z2), P(WX, -WY, z2)], mix("#575e5a", z));
     }
-    s += `<g id="${id}-up" opacity="0" transform="translate(560,960) scale(.16)">${zFace(`${id}-uf`, 0, 0, 1).replace('opacity="0"', "")}</g>`;
-    s += `<g id="${id}-hand" opacity="0"><path d="M610,880q30,-10 50,4M612,892q34,-2 52,12M610,904q30,4 44,20" stroke="#a9b8a0" stroke-width="7" fill="none" stroke-linecap="round"/></g>`;
+    const flight = (x0, x1, yFrom, yTo, zTop) => { // treads deepest first; each tread a horizontal slab, its nosing drawn light
+      let t = "";
+      for (let k = TREADS - 1; k >= 0; k--) {
+        const ya = yFrom + ((yTo - yFrom) * k) / TREADS, yb = yFrom + ((yTo - yFrom) * (k + 1)) / TREADS, z = zTop + ((k + 1) * (RISE / 2)) / TREADS;
+        t += quad([P(x0, ya, z), P(x1, ya, z), P(x1, yb, z), P(x0, yb, z)], mix(k % 2 ? "#8f948f" : "#868b86", z));
+        t += `<path d="M${P(x0, ya, z)}L${P(x1, ya, z)}" stroke="${mix("#c9ccc4", z)}" stroke-width="${f1(Math.max(1, 26 / z))}"/>`;
+        t += quad([P(x0, ya, z - RISE / 2 / TREADS), P(x1, ya, z - RISE / 2 / TREADS), P(x1, ya, z), P(x0, ya, z)], mix("#5f645f", z));
+      }
+      return t;
+    };
+    const rail = (x, yA, zA, yB, zB) => { // sloped handrail 0.9 m above the nosings, with balusters
+      let t = "";
+      for (let k = 0; k <= 6; k++) { const y = yA + ((yB - yA) * k) / 6, z = zA + ((zB - zA) * k) / 6; t += `<path d="M${P(x, y, z - 0.9)}L${P(x, y, z)}" stroke="${mix("#9aa0a2", z)}" stroke-width="${f1(Math.max(1, 20 / z))}"/>`; }
+      return t + `<path d="M${P(x, yA, zA - 0.9)}L${P(x, yB, zB - 0.9)}" stroke="${mix("#d6d9dc", zA)}" stroke-width="${f1(Math.max(1.5, 46 / zA))}" stroke-linecap="round"/>`;
+    };
+    for (let n = N - 1; n >= 0; n--) {
+      const Z = 1.6 + RISE * n, fl = 19 - n;
+      // near landing of this floor (where the flight down starts)
+      s += quad([P(-WX, -WY, Z), P(WX, -WY, Z), P(WX, -WY + LD, Z), P(-WX, -WY + LD, Z)], mix("#7d827e", Z));
+      // flight B (right side) arrives here from the far landing below... drawn as part of the floor above it; this floor's own pieces:
+      s += flight(GAP, WX, WY - LD, -WY + LD, Z + RISE / 2);                         // B: far landing → next floor's near landing
+      s += quad([P(-WX, WY - LD, Z + RISE / 2), P(WX, WY - LD, Z + RISE / 2), P(WX, WY, Z + RISE / 2), P(-WX, WY, Z + RISE / 2)], mix("#7a7f7b", Z + RISE / 2));
+      s += rail(GAP, WY - LD, Z + RISE / 2, -WY + LD, Z + RISE);
+      s += `<path d="M${P(-GAP, WY - LD, Z + RISE / 2 - 0.9)}L${P(GAP, WY - LD, Z + RISE / 2 - 0.9)}" stroke="${mix("#d6d9dc", Z + 1.5)}" stroke-width="${f1(Math.max(1.5, 46 / (Z + 1.5)))}"/>`;
+      s += flight(-WX, -GAP, -WY + LD, WY - LD, Z);                                   // A: this landing → far landing
+      s += rail(-GAP, -WY + LD, Z, WY - LD, Z + RISE / 2);
+      if (n > 0) { // stencilled floor number on the landing, and the green exit sign glow on the near wall
+        s += `<text x="${f1(cx + (f * -0.9) / Z)}" y="${f1(cy + (f * (-WY + LD * 0.62)) / Z)}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${f1((f * 0.5) / Z)}" fill="${mix("#e8e2cf", Z)}" opacity=".8">${fl}</text>`;
+        s += `<circle cx="${f1(cx + (f * 1.2) / Z)}" cy="${f1(cy + (f * -WY) / Z)}" r="${f1((f * 0.9) / Z)}" fill="url(#zExit)" opacity="${f1(Math.max(0.15, 1 - n * 0.12))}"/>`;
+      }
+      if (n === 1) { // the infected, on the flight one floor down, face turned up through the well; its hand on the rail
+        const Zh = Z + 0.2, px = cx + (f * 0.05) / Zh, py = cy + (f * 0.9) / Zh;
+        s += `<g id="${id}-up" opacity="0"><circle cx="${f1(px)}" cy="${f1(py)}" r="150" fill="url(#zRed)" opacity=".9"/><g transform="translate(${f1(px)},${f1(py)}) scale(${f1(0.62 / Zh * 1.6)})">${zFace(`${id}-uf`, 0, 0, 1).replace('opacity="0"', "")}</g></g>`;
+        const hx = px - 40, hy = py + 74, hs = 2.2;   // fingers over the edge of the step in front of it, inside the well
+        s += `<g id="${id}-hand" opacity="0" transform="translate(${f1(hx)},${f1(hy)}) scale(${f1(hs)})">${[[-14, -10, -30, 14], [-4, -14, -10, 18], [6, -14, 10, 18], [14, -10, 28, 12]].map(([x0, y0, x1, y1]) =>
+          `<path d="M${x0},${y0}Q${(x0 + x1) / 2 - 6},${(y0 + y1) / 2} ${x1},${y1}" stroke="#2e2a26" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2 - 6},${(y0 + y1) / 2} ${x1},${y1}" stroke="#a9b8a0" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M${x1},${y1}l${(x1 - x0) * 0.2},6" stroke="#141010" stroke-width="5" stroke-linecap="round"/>`).join("")}<ellipse cx="0" cy="-16" rx="22" ry="12" fill="#b6c4ab" stroke="#2e2a26" stroke-width="3"/><path d="M-10,-20q8,-6 20,0" stroke="#7a1414" stroke-width="3" fill="none"/></g>`;
+      }
+    }
     put(L.set, s);
+    // ข้าว's own hands on the rail in the foreground: this is her looking down
+    const fist = (x, d) => `<g transform="translate(${x},1722) scale(${d},1)">
+        <path d="M-78,40C-92,150 -84,300 -66,420H118C112,300 104,150 92,40Z" fill="#e07a3f" ${OUT}/><path d="M-70,40H96" stroke="#bb5f2a" stroke-width="10"/>
+        <path d="M-74,30C-80,-6 -66,-40 -34,-46L70,-50C96,-50 106,-30 104,0L100,34C70,52 -40,52 -74,30Z" fill="#ecc29c" ${OUT}/>
+        ${[-50, -18, 14, 46].map((fx, k) => `<path d="M${fx - 15},-44C${fx - 17},-70 ${fx + 17},-72 ${fx + 15},-44" fill="#ecc29c" ${OUT}/><path d="M${fx - 7},-58q7,-6 14,0" stroke="#cc9a74" stroke-width="3" fill="none"/>`).join("")}
+        <path d="M100,-6C126,-14 136,8 120,22L98,30" fill="#ecc29c" ${OUT}/><path d="M-40,8q30,10 80,0" stroke="#cc9a74" stroke-width="4" fill="none" opacity=".7"/></g>`;
+    put(L.fg, `<g id="${id}-me"><rect x="-200" y="1690" width="1480" height="40" rx="20" fill="url(#zChrome)" ${OUT}/>${fist(300, -1)}${fist(780, 1)}</g>`);
+    L.fg.classList.remove("fgblur");
   }
 
   // ---------------- cutaway: a noise on floor 19 spreads through the building; the infected on nearby floors turn to it ----------------
