@@ -134,7 +134,7 @@ CUES = [
     *bed("crickets", T("night", 0), T("choice", -0.3), 0.25, 5.0), ("night", frag("night", 0, 1), "swell", 0.4),
     ("scar", frag("scar", 0, 1), "sting", 1.0), ("scar", frag("scar", 0, 1), "glitch", 0.6), *beats("scar", 0.0, D["scar"], 0.5, 0.7),
     *beats("choice", 0.0, D["choice"] - 0.3, 0.38, 1.0), *[("choice", 0.05 + k * 1.0, "tick", 1.0) for k in range(3)], ("choice", 1.0, "glitch", 0.6),
-    ("next", 0.3, "glitch", 0.5), ("next", 0.32, "boom", 0.55), ("next", 0.55, "glitch", 0.4), *beats("next", 0.8, D["next"] - 0.8, 0.7, 0.5),
+    ("next", 0.3, "buzz", 0.5), ("next", 0.42, "slam", 0.6), ("next", 0.42, "glitch", 0.35), ("next", 0.85, "sting", 0.7), ("next", 0.9, "squish", 0.4), *beats("next", 0.9, D["next"] - 0.9, 0.7, 0.5),
     ("choice", D["choice"] - 2.2, "riser", 1.0), ("choice", D["choice"] - 0.62, "sting", 1.0), ("choice", D["choice"] - 0.6, "glitch", 0.8), ("choice", D["choice"] - 0.6, "boom", 0.7),
 ]
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
