@@ -134,6 +134,7 @@ CUES = [
     *bed("crickets", T("night", 0), T("choice", -0.3), 0.25, 5.0), ("night", frag("night", 0, 1), "swell", 0.4),
     ("scar", frag("scar", 0, 1), "sting", 1.0), ("scar", frag("scar", 0, 1), "glitch", 0.6), *beats("scar", 0.0, D["scar"], 0.5, 0.7),
     *beats("choice", 0.0, D["choice"] - 0.3, 0.38, 1.0), *[("choice", 0.05 + k * 1.0, "tick", 1.0) for k in range(3)], ("choice", 1.0, "glitch", 0.6),
+    ("next", 0.3, "glitch", 0.5), ("next", 0.32, "boom", 0.55), ("next", 0.55, "glitch", 0.4), *beats("next", 0.8, D["next"] - 0.8, 0.7, 0.5),
     ("choice", D["choice"] - 2.2, "riser", 1.0), ("choice", D["choice"] - 0.62, "sting", 1.0), ("choice", D["choice"] - 0.6, "glitch", 0.8), ("choice", D["choice"] - 0.6, "boom", 0.7),
 ]
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
@@ -184,9 +185,9 @@ env = box(np.abs(vo), int(0.05 * SR))
 duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
 duck = box(duck, int(0.25 * SR))
 mix = vo + mus * duck + sfx
-cut = int(T("choice", -0.2) * SR)
+cut, card = int(T("choice", -0.2) * SR), int(T("next", 0.3) * SR)
 mix[cut - 240:cut] *= np.linspace(1, 0, 240)
-mix[cut:] = 0
+mix[cut:card] = 0  # a beat of black and silence after the cliffhanger, then only the end card's own sounds
 peak = np.max(np.abs(mix))
 if peak > 0.98:
     mix = np.tanh(mix / peak * 1.2) * 0.95

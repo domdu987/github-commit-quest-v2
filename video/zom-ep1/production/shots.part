@@ -749,5 +749,43 @@
         },
       });
 
+      // ---------- 28. end card, after a beat of black: next episode, its title (the next rule), follow ----------
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .znext { position: absolute; left: 0; right: 0; z-index: 52; text-align: center; font-family: Kanit; opacity: 0; }
+        .znext .pill { display: inline-flex; align-items: center; gap: 12px; padding: 8px 24px 10px; border-radius: 30px; border: 2px solid rgba(244,236,216,.45); color: #f4ecd8; font: 700 30px/1 Kanit; letter-spacing: 2px; }
+        .znext .pill i { width: 14px; height: 14px; border-radius: 50%; background: #d8322a; box-shadow: 0 0 12px #d8322a; }
+        .znext .ep { font: 900 150px/1.1 Kanit; color: #f4ecd8; margin-top: 18px; text-shadow: 0 8px 26px rgba(0,0,0,.8); }
+        .znext .ln { width: 280px; height: 6px; background: #d8322a; margin: 12px auto 26px; border-radius: 3px; box-shadow: 0 0 16px rgba(216,50,42,.7); }
+        .znext .ic svg { width: 120px; height: 120px; }
+        .znext .ttl { font: 900 68px/1.1 Kanit; color: #ff5a4a; margin-top: 6px; text-shadow: 0 0 22px rgba(255,60,50,.45); }
+        .znext .cta { font: 700 34px/1.3 Kanit; color: #d6dcd9; margin-top: 30px; }
+        .znext .brand { font: 900 30px/1 Kanit; color: #7d8789; margin-top: 46px; letter-spacing: 8px; }
+      </style>`);
+      GameUI.C.nextCard = {
+        html: (id, o) => `<div id="${id}" class="znext" style="top:${o.top ?? 560}px"><div class="pill"><i></i>ตอนต่อไป</div><div class="ep">${o.ep}</div><div class="ln"></div>
+          <div class="ic"><svg viewBox="0 0 120 120">${o.icon || ""}</svg></div><div class="ttl">${o.title}</div><div class="cta">${o.cta}</div><div class="brand">${o.brand}</div></div>`,
+        anim(tl, id, t0, o) {
+          tl.set(`#${id}`, { opacity: 1 }, t0);
+          tl.fromTo(`#${id} .pill`, { opacity: 0, y: -16 }, { opacity: 1, y: 0, duration: 0.25, immediateRender: false }, t0);
+          tl.fromTo(`#${id} .ep`, { opacity: 0, scale: 1.2, letterSpacing: "26px" }, { opacity: 1, scale: 1, letterSpacing: "0px", duration: 0.4, ease: "power3.out", immediateRender: false }, t0 + 0.1);
+          tl.fromTo(`#${id} .ln`, { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + 0.35);
+          tl.fromTo(`#${id} .ic`, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.45);
+          tl.fromTo(`#${id} .ttl`, { opacity: 0 }, { opacity: 1, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, t0 + 0.5);
+          tl.set(`#${id} .ttl`, { opacity: 1 }, t0 + 0.8);
+          tl.fromTo(`#${id} .cta`, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, immediateRender: false }, t0 + 0.85);
+          tl.fromTo(`#${id} .brand`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 1.0);
+        },
+      };
+      add("next", {
+        dark: 0, cam: { keys: [{ t: 0, x: 0, y: 0, s: 1, drift: { s: 0 } }] },
+        extra(L) { L.sky.insertAdjacentHTML("beforeend", `<rect x="-900" y="-600" width="2900" height="3200" fill="#07090b"/><circle cx="540" cy="960" r="760" fill="url(#zRed)" opacity=".35"/>`); },
+        ui: [{ type: "nextCard", t: 0.3, ep: "ตอนที่ 2", title: "มืดแล้ว ห้ามออก", icon: IC.dark, cta: "กดติดตาม แล้วรอดไปด้วยกัน", brand: "ชั้น 23", top: 520 }],
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);   // the cliffhanger ends on black; the card comes up out of it
+          Fx.glitch(tl, `#${id}`, t0 + 0.3, 0.15, 10, 91); Fx.glitch(tl, `#${id}`, t0 + 0.55, 0.12, 14, 92);
+          Fx.heart(tl, t0 + 0.8, D("next") - 0.8, 0.7, 0.35);
+        },
+      });
+
       // every shot gets the looping motion of its set (dust, flickering tubes, smoke, beacons); zlife runs once per shot
       shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Zom.zlife(tl, `#${id}`, t0, sh.dur); }; });

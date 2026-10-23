@@ -1,5 +1,5 @@
 {
- "total": 116.745,
+ "total": 119.045,
  "shots": [
   {
    "key": "hook",
@@ -591,6 +591,13 @@
    "key": "choice",
    "start": 113.345,
    "dur": 3.4,
+   "vo": [],
+   "voEnd": 0.0
+  },
+  {
+   "key": "next",
+   "start": 116.745,
+   "dur": 2.3,
    "vo": [],
    "voEnd": 0.0
   }

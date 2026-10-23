@@ -55,6 +55,7 @@ SHOTS = [
     ("night", ["n22"], 0.15, 0.25, 2.6),
     ("scar", ["n23"], 0.15, 0.55, 2.8),
     ("choice", [], 0.0, 0.0, 3.4),
+    ("next", [], 0.0, 0.0, 2.3),  # end card: next episode + follow (after a beat of black)
 ]
 GAP = 0.08
 
