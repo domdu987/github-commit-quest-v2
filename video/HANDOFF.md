@@ -382,10 +382,15 @@ $W/synth.py  $W/music/suno1.mp3
    - เรนเดอร์ 2 ตอนพร้อมกันได้ (เครื่อง 4 core)
 9. **mux และตรวจ**
    ```bash
+   # ไฟล์ลงช่อง (HQ): ก๊อปภาพจาก raw ตรงๆ ไม่บีบซ้ำ (raw = CRF 16 ~6–7 Mbps)
+   ffmpeg -i raw.mp4 -i mix.wav -map 0:v -map 1:a -c:v copy \
+     -c:a aac -b:a 256k -ar 48000 -movflags +faststart -shortest EPx-<ชื่อ>-HQ.mp4
+   # ไฟล์เก็บใน repo (share): บีบเล็กลงให้ไม่เกิน 100 MB ของ GitHub ห้ามใช้ไฟล์นี้ลงช่อง
    ffmpeg -i raw.mp4 -i mix.wav -map 0:v -map 1:a -c:v libx264 -crf 21 -preset medium -pix_fmt yuv420p \
      -c:a aac -b:a 192k -movflags +faststart -shortest EPx-<ชื่อ>-share.mp4
    ffmpeg -i EPx.mp4 -af ebur128 -f null - 2>&1 | grep -A1 Integrated
    ```
+   - **ลงช่องใช้ไฟล์ HQ เสมอ:** share.mp4 ผ่านการบีบ 2 รอบ (~3 Mbps) แล้วแพลตฟอร์มจะบีบซ้ำอีกรอบ ภาพเลยไม่คม · HQ ส่งให้ผู้ใช้ด้วย SendUserFile ไม่ commit (บางไฟล์เกิน 100 MB)
    - ดึง frame strip ~10–16 ภาพ (`-ss t -frames:v 1 -vf scale=216:-1` แล้ว `hstack`) ดูด้วยตา
 10. **ส่ง** SendUserFile แล้ว **เก็บเข้า repo** `video/<เรื่อง>-epN/`:
     - `lib/` (จาก assets_rendered + voice.py + voice_qa.py)
