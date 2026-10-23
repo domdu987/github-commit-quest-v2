@@ -205,6 +205,31 @@
       .chk .tx { font: 900 60px/1.1 Kanit; color: #f4ecd8; }
       .chk .bad .tx { color: #ff8a7a; letter-spacing: 8px; }
       .rec.nv:before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 3px, transparent 3px 6px); }
+
+      /* the guide's rule: a lacquer-and-gold card, one rhyming line per row (กอย / ถอย / คอย) */
+      .krule { position: absolute; left: 60px; width: 960px; z-index: 52; opacity: 0; padding: 22px 34px 30px; border-radius: 28px; box-sizing: border-box;
+        background: linear-gradient(180deg, #1d1611 0%, #120d0a 100%); border: 4px solid #c9a55a; overflow: hidden;
+        box-shadow: 0 0 0 10px rgba(18,13,10,.92), 0 0 0 13px #7a5f2e, 0 26px 60px rgba(0,0,0,.65), inset 0 0 60px rgba(201,165,90,.12); font-family: Kanit; }
+      .krule::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(201,165,90,.05) 0 2px, transparent 2px 46px); pointer-events: none; }
+      .krule .cn { position: absolute; width: 46px; height: 46px; border: 5px solid #e2c27a; }
+      .krule .cn::after { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #e2c27a; }
+      .krule .cn.tl { left: 12px; top: 12px; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; } .krule .cn.tl::after { left: 10px; top: 10px; }
+      .krule .cn.tr { right: 12px; top: 12px; border-left: 0; border-bottom: 0; border-top-right-radius: 14px; } .krule .cn.tr::after { right: 10px; top: 10px; }
+      .krule .cn.bl { left: 12px; bottom: 12px; border-right: 0; border-top: 0; border-bottom-left-radius: 14px; } .krule .cn.bl::after { left: 10px; bottom: 10px; }
+      .krule .cn.br { right: 12px; bottom: 12px; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; } .krule .cn.br::after { right: 10px; bottom: 10px; }
+      .krule .kr-h { text-align: center; margin: 4px 0 14px; }
+      .krule .kr-h span { display: inline-block; padding: 6px 34px 8px; border-radius: 40px; background: linear-gradient(180deg, #b8322a, #8e2018); color: #ffe7b0;
+        font-weight: 900; font-size: 38px; letter-spacing: 1px; border: 3px solid #e2c27a; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+      .krule .kr-r { display: flex; align-items: center; gap: 26px; padding: 12px 10px; opacity: 0; }
+      .krule .kr-r + .kr-r { border-top: 2px dashed rgba(201,165,90,.35); }
+      .krule .kr-i { flex: none; width: 118px; height: 118px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fbf3df, #e6d3a8); border: 5px solid #c9a55a; box-shadow: 0 6px 14px rgba(0,0,0,.5); }
+      .krule .kr-i svg { width: 100%; height: 100%; }
+      .krule .kr-t { color: #f4ecd8; font-weight: 900; font-size: 60px; line-height: 1.15; text-shadow: 0 4px 0 rgba(0,0,0,.55); white-space: nowrap; }
+      .krule .kr-t strong { color: #f2c55c; font-weight: 900; }
+      .krule .kr-t em { font-style: normal; background: #c8392b; color: #fff; padding: 0 14px 4px; border-radius: 14px; margin-right: 8px; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
+      .krule .kr-t u { text-decoration: none; position: relative; }
+      .krule .kr-t u::after { content: ""; position: absolute; left: -4px; right: -4px; bottom: -6px; height: 8px; border-radius: 4px; background: #e2c27a; box-shadow: 0 0 14px #e2c27a; transform: scaleX(var(--k, 0)); transform-origin: 0 50%; }
+      .krule .sheen { position: absolute; top: -40%; left: -40%; width: 26%; height: 180%; background: linear-gradient(90deg, transparent, rgba(255,236,190,.22), transparent); transform: rotate(18deg); pointer-events: none; }
     </style>
   </head>
   <body>
@@ -266,6 +291,44 @@
         },
       };
       // channel signature: a checklist ticked on "ทุกอย่าง… ถูกทาง", then one red cross on "เรื่องเดียว"
+      // the guide's rule card: rows stamp in at o.at[i] (seconds into the shot); the rhyming syllables get a gold underline
+      GameUI.C.koiRule = {
+        html: (id, o) => {
+          const IK = "#2e2a26", rows = [
+            [`<path d="M74,20C46,16 28,38 30,62C32,78 44,82 46,94C48,106 60,112 68,102C74,94 68,86 74,78C84,66 94,58 92,44C90,30 84,22 74,20Z" fill="#e9bc93" stroke="${IK}" stroke-width="4"/>
+              <path d="M76,40C66,34 52,40 54,54C56,62 64,62 64,70" stroke="${IK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+              ${[0, 1, 2].map((i) => `<path class="kw" d="M${22 - i * 9},${44 - i * 6}q-${10 + i * 3},${18 + i * 6} 0,${36 + i * 12}" stroke="#7a3fb0" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+              `ได้ยิน<strong>เสียง<u>กอย</u></strong>`],
+            [`<g class="krun"><circle cx="66" cy="28" r="10" fill="${IK}"/><path d="M62,40L52,66M52,66L70,78L66,98M52,66L36,82L24,80M60,46L78,56L90,50M60,46L44,52L36,64" stroke="${IK}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+              <g class="kno"><circle cx="60" cy="60" r="46" fill="none" stroke="#d8322a" stroke-width="9"/><path d="M28,28L92,92" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/></g>`,
+              `<em>อย่าวิ่ง</em><em>อย่า<u>ถอย</u></em>`],
+            [`<path d="M40,112C44,80 42,40 46,8H64C66,40 66,80 72,112Z" fill="#6a4a2e" stroke="${IK}" stroke-width="4"/><path d="M60,52Q84,46 108,38" stroke="#6a4a2e" stroke-width="10" stroke-linecap="round"/><circle cx="96" cy="24" r="16" fill="#4f8a55" stroke="${IK}" stroke-width="3"/><circle cx="30" cy="20" r="14" fill="#4f8a55" stroke="${IK}" stroke-width="3"/>
+              <g class="kclimb"><circle cx="84" cy="32" r="7" fill="#e8b830" stroke="${IK}" stroke-width="3"/><path d="M84,40v12M84,52l-6,10M84,52l7,9" stroke="${IK}" stroke-width="4" stroke-linecap="round"/></g>
+              <g transform="translate(18,78)"><path d="M0,0h22M0,30h22M3,0q8,15 0,30M19,0q-8,15 0,30" stroke="${IK}" stroke-width="3.5" fill="#f2c55c" stroke-linejoin="round"/><path class="ksand" d="M7,22h8l-4,-6z" fill="#c9a55a"/></g>`,
+              `<strong>ปีนต้นไม้</strong> แล้ว<u>คอย</u>`],
+          ];
+          return `<div id="${id}" class="krule" style="top:${o.top ?? 170}px"><i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i><i class="sheen"></i>
+            <div class="kr-h"><span>${o.label || "กฎของบังหมาด"}</span></div>
+            ${rows.map(([ill, txt], i) => `<div class="kr-r" id="${id}-r${i}"><div class="kr-i"><svg viewBox="0 0 120 120">${ill}</svg></div><div class="kr-t">${txt}</div></div>`).join("")}</div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.7)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .kr-h span`, { scaleX: 0.2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.08);
+          tl.fromTo(`#${id} .sheen`, { x: 0 }, { x: 1500, duration: 0.9, ease: "power1.inOut", immediateRender: false }, t0 + 0.25);
+          o.at.forEach((at, i) => {
+            const r = el.querySelector(`#${id}-r${i}`);
+            tl.fromTo(r, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.28, ease: "power2.out", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector(".kr-i"), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector("u"), { "--k": 0 }, { "--k": 1, duration: 0.35, ease: "power2.out", immediateRender: false }, A(at) + 0.3);
+          });
+          el.querySelectorAll(".kw").forEach((w, i) => tl.fromTo(w, { opacity: 0.1 }, { opacity: 1, duration: 0.28, repeat: 9, yoyo: true, immediateRender: false }, A(o.at[0]) + i * 0.1));
+          tl.fromTo(el.querySelector(".kno"), { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, svgOrigin: "60 60", duration: 0.22, ease: "power3.in", immediateRender: false }, A(o.at[1]) + 0.2);
+          tl.fromTo(el.querySelector(".kclimb"), { y: 46 }, { y: 0, duration: 0.8, ease: "power1.out", immediateRender: false }, A(o.at[2]));
+          tl.fromTo(el.querySelector(".ksand"), { scaleY: 1 }, { scaleY: 0.2, svgOrigin: "11 22", duration: 1.6, ease: "none", immediateRender: false }, A(o.at[2]) + 0.4);
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, y: -30, duration: 0.25 }, A(o.end));
+        },
+      };
       GameUI.C.checklist = {
         html: (id, o) => `<div id="${id}" class="chk"><div class="chk-t">${o.title}</div>${o.items.map(([txt, ok], i) => `<div class="chk-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="box"><b>${ok ? "✓" : "✗"}</b></span><span class="tx">${txt}</span></div>`).join("")}</div>`,
         anim(tl, id, t0, o) {
@@ -378,10 +441,10 @@
       // ---------- 7. the rule, chanted ----------
       add("rule", {
         set: "rainforest", setOpts: { seed: 11, trail: true }, dark: 0.22, blur: { far: 5, mid: 4, set: 3 },
-        cam: { keys: [{ t: 0, ...fr(540, 1012, 2.3, 540, 860), drift: { s: 0.012 } }, { t: F("rule", 0, 1) - 0.05, ...fr(548, 1000, 2.9, 540, 900), drift: { s: 0.01 } }, { t: F("rule", 0, 2) - 0.05, ...fr(560, 1150, 1.7, 540, 900), drift: { s: 0.015 } }] },
+        cam: { keys: [{ t: 0, ...fr(540, 1012, 2.3, 540, 990), drift: { s: 0.012 } }, { t: F("rule", 0, 1) - 0.05, ...fr(548, 1000, 2.9, 540, 1010), drift: { s: 0.01 } }, { t: F("rule", 0, 2) - 0.05, ...fr(560, 1150, 1.7, 540, 1190), drift: { s: 0.015 } }] },
         actors: [{ who: "mad", x: 540, y: 1560, s: 1.0, prop: "stick", track: [{ t: 0, mode: "stick", mouth: "flat", look: -4 }, { t: 0.3, mode: "stick", mouth: "o", look: -4 }, { t: 2.0, mode: "stick", mouth: "flat", look: -4 }, { t: 2.3, mode: "stick", mouth: "o", look: -4 }, { t: 4.4, mode: "stick", mouth: "flat" }, { t: 4.8, mode: "point", blend: 0.4, mouth: "o" }] }],
         captions: caps("rule"),
-        ui: [{ type: "figure", kind: "rules", t: 0.3, end: D("rule") - 0.1, artW: 230, tone: "rule", label: "กฎของบังหมาด", text: "ได้ยินเสียงกอย · อย่าวิ่ง อย่าถอย", text2: "ปีนต้นไม้ แล้วคอย", top: 150 }],
+        ui: [{ type: "koiRule", t: 0.1, end: D("rule") - 0.1, at: [F("rule", 0, 0) + 0.05, F("rule", 0, 1) - 0.05, F("rule", 0, 2) - 0.05], top: 150 }],
         fx(tl, id, t0, L) { Koi.rain(tl, L, id, t0, D("rule"), { far: 80, near: 34 }); Fx.letterbox(tl, t0, t0 + D("rule") - 0.3); },
       });
 
