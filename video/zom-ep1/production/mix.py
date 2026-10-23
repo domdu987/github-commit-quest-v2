@@ -87,7 +87,7 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
 
 CUES = [
     *bed("tap", 0.0, T("hook", -0.1), 0.8, 2.4), *beats("hook", 0.3, D["hook"] - 0.3, 0.6, 0.6), ("hook", frag("hook", 0, 1), "sting", 0.5),
-    ("hook", vo_t("hook", 1) - 0.4, "whoosh", 0.5), ("hook", vo_t("hook", 1), "sting", 0.9), ("hook", vo_t("hook", 1), "boom", 0.6), ("hook", vo_t("hook", 1), "glitch", 0.6), ("hook", -0.25, "whoosh", 0.8),
+    ("hook", vo_t("hook", 1) - 0.4, "whoosh", 0.5), ("hook", vo_t("hook", 1), "sting", 0.9), ("hook", vo_t("hook", 1), "boom", 0.6), ("hook", vo_t("hook", 1), "glitch", 0.6), *[("hook", vo_t("hook", 1) + k * 0.4, "beep", 0.35) for k in range(3)], ("hook", -0.25, "whoosh", 0.8),
     ("rewind", 0.0, "rewind", 1.0), ("rewind", 0.05, "glitch", 0.5), ("rewind", 0.1, "boom", 0.45), ("rewind", 0.55, "pop", 0.5),
     *[("news", frag("news", 0, j) + (0.1 if j == 0 else 0), "notif", 0.7) for j in range(3)], ("news", frag("news", 0, 1), "sting", 0.4),
     ("fake", vo_t("fake") - 0.05, "pop", 0.3),
@@ -99,7 +99,7 @@ CUES = [
     ("jit", 0.0, "rustle", 0.6), ("jit", 0.82, "slam", 1.0), ("jit", frag("jit", 0, 0) + 0.15, "pop", 0.4),
     ("rule", 0.1, "swell", 0.4), *[("rule", t, "pop", 0.5) for t in (vo_t("rule", 1), frag("rule", 1, 1) - 0.05, frag("rule", 1, 2) - 0.05)], ("rule", frag("rule", 1, 2) + 0.15, "knock", 0.5),
     ("water", 0.2, "hum", 0.4), ("water", frag("water", 1, 1), "buzz", 0.5), ("water", frag("water", 1, 1), "boom", 0.5), ("water", frag("water", 1, 1), "sting", 0.6),
-    *[("litres", t, "pop", 0.45) for t in (frag("litres", 0, 0), vo_t("litres", 1))], *[("litres", frag("litres", 0, 2) + i * 0.12, "tick", 0.4) for i in range(4)],
+    *[("litres", t, "marker", 0.7) for t in (frag("litres", 0, 0), frag("litres", 0, 0) + 0.45, frag("litres", 0, 2) + 0.1, vo_t("litres", 1), vo_t("litres", 1) + 0.5, frag("litres", 1, 1), frag("litres", 1, 1) + 0.5)],
     *bed("tap", T("fill", 0), T("stop", frag("stop", 0, 1)), 0.9, 2.4), *[("fill", 0.2 + k * 0.5, "tick", 0.2) for k in range(6)],
     ("stop", frag("stop", 0, 1) - 0.5, "sputter", 1.0), ("stop", frag("stop", 0, 1) + 0.3, "drip", 0.8), ("stop", frag("stop", 0, 2), "sting", 0.7), ("stop", frag("stop", 0, 2), "beep", 0.6),
     ("boss", 0.2, "rustle", 0.5),
@@ -119,7 +119,7 @@ CUES = [
     ("corridor", 0.0, "steps", 0.9), ("corridor", 0.65, "steps", 0.9), ("corridor", 1.3, "steps", 0.9), ("corridor", 0.7, "slam", 1.1), ("corridor", 0.7, "sting", 1.0),
     ("corridor", 0.75, "shriek", 1.1), ("corridor", 1.15, "whoosh", 1.0), ("corridor", 1.16, "glitch", 0.6), *beats("corridor", 0.0, D["corridor"], 0.3, 0.6),
     ("inside", 0.06, "slam", 1.4), ("inside", 0.08, "boom", 0.6), ("inside", 0.1, "latch", 0.8), ("inside", 0.5, "knock", 1.0),
-    *bed("tap", T("wash", 0), T("real", -0.1), 0.6, 2.4), ("wash", frag("wash", 0, 2) - 0.1, "pop", 0.5), *[("wash", frag("wash", 0, 2) + 0.2 + k * 0.1, "tick", 0.3) for k in range(12)], ("wash", frag("wash", 0, 2) + 1.55, "ding", 0.6),
+    *bed("tap", T("wash", 0), T("real", -0.1), 0.6, 2.4), ("wash", frag("wash", 0, 2), "beep", 0.45), ("wash", frag("wash", 0, 2) + 0.5, "beep", 0.6), *[("wash", frag("wash", 0, 2) + 1.5 + k, "tick", 0.35) for k in range(3)],
     ("real", frag("real", 0, 1) - 0.1, "pop", 0.5), ("real", frag("real", 1, 1) - 0.1, "ding", 0.6),
     ("hosp", 0.1, "siren", 0.25), ("hosp", frag("hosp", 0, 2) - 0.05, "notif", 0.7), ("hosp", frag("hosp", 0, 2), "sting", 0.6),
     ("door", 0.1, "knock", 0.5), *beats("door", 0.0, D["door"], 0.5, 0.5),

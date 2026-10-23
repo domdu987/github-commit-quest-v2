@@ -546,6 +546,14 @@ def sfx(kind):
             x = (lp_fast(rng.standard_normal(len(t)), 1800) + osc(90, d) * 0.6) * np.exp(-t * 45)
             add(out, x * (0.7 + 0.3 * (k % 2)), k * 0.17)
         return out
+    if kind == "marker":  # a marker squeaking across a mirror: short chirps of a bright, rough tone
+        d = 0.45
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        f = 2500 + 700 * np.sin(2 * np.pi * 4.5 * t) + 300 * np.sin(2 * np.pi * 13 * t)
+        tone = np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.6 + 0.4 * (lp_fast(n, 60) > 0))
+        chirps = np.clip(np.sin(2 * np.pi * 6.5 * t), 0, None) ** 0.5
+        return (tone * 0.5 + (lp_fast(n, 6000) - lp_fast(n, 2500)) * 0.5) * chirps * np.clip(t / 0.02, 0, 1) * np.clip((d - t) / 0.05, 0, 1) * 0.35
     if kind == "latch":  # a door latch catching: click then clunk
         out = np.zeros(int(0.4 * SR))
         for off, f, g in ((0.0, 2400, 0.5), (0.06, 180, 0.9)):
