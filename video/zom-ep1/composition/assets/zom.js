@@ -205,10 +205,10 @@
       ${o.mark === "scar" ? `<g id="${id}-scar"><path d="M626,1030q74,-40 156,0M632,1092q70,22 140,0" stroke="#f3c9b8" stroke-width="16" fill="none" stroke-linecap="round" opacity=".7"/>${[...Array(7)].map((_, k) => `<ellipse cx="${640 + k * 22}" cy="${1032 + Math.sin(k / 6 * Math.PI) * -10}" rx="6" ry="9" fill="#f0c4b4" stroke="#d49e8c" stroke-width="2"/>`).join("")}${[...Array(6)].map((_, k) => `<ellipse cx="${650 + k * 22}" cy="${1086 - Math.sin(k / 5 * Math.PI) * -8}" rx="6" ry="8" fill="#f0c4b4" stroke="#d49e8c" stroke-width="2"/>`).join("")}</g>`
         : `<g id="${id}-bite"><path d="M624,1040q70,-34 150,0" stroke="#b04040" stroke-width="5" fill="none" opacity=".6"/>${[...Array(7)].map((_, k) => `<ellipse cx="${630 + k * 22}" cy="${1034 + Math.sin(k / 6 * Math.PI) * -10}" rx="7" ry="10" fill="#8e1414"/>`).join("")}${[...Array(6)].map((_, k) => `<ellipse cx="${640 + k * 22}" cy="${1086 - Math.sin(k / 5 * Math.PI) * -8}" rx="7" ry="9" fill="#8e1414"/>`).join("")}
           <path id="${id}-drip" d="M700,1100c-6,30 -2,50 -8,70" stroke="#9e1414" stroke-width="9" fill="none" stroke-linecap="round"/></g>`}
-      ${o.watch ? `<g id="${id}-watch"><rect x="546" y="986" width="58" height="146" rx="14" fill="#20262b" ${OUT}/><rect x="514" y="954" width="122" height="92" rx="20" fill="#2c3338" ${OUT}/>
-        <rect x="526" y="966" width="98" height="68" rx="10" fill="#0c1512"/><text id="${id}-wtx" x="575" y="1014" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="38" fill="#9ff0c0">${o.watch}</text>
-        <circle id="${id}-wdot" cx="614" cy="976" r="4" fill="#ff4a3a" opacity="0"/><path d="M528,972h30" stroke="#fff" stroke-width="4" opacity=".2"/></g>` : ""}
       <g id="${id}-foam" opacity="0">${Array.from({ length: 26 }, () => `<circle cx="${f1(600 + r() * 220)}" cy="${f1(1000 + r() * 110)}" r="${f1(6 + r() * 16)}" fill="#ffffff" stroke="#d8e4ea" stroke-width="2" opacity=".9"/>`).join("")}</g>
+      ${o.watch ? `<g id="${id}-watch"><rect x="546" y="986" width="58" height="146" rx="14" fill="#20262b" ${OUT}/><rect x="514" y="954" width="122" height="92" rx="20" fill="#2c3338" ${OUT}/>
+        <rect x="526" y="966" width="98" height="68" rx="10" fill="#0c1512"/><text id="${id}-wtx" x="575" y="1014" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#9ff0c0">${o.watch}</text>
+        <circle id="${id}-wdot" cx="614" cy="976" r="4" fill="#ff4a3a" opacity="0"/><path d="M528,972h30" stroke="#fff" stroke-width="4" opacity=".2"/></g>` : ""}
       <rect x="860" y="980" width="460" height="170" rx="30" fill="${sleeve}" ${OUT}/><path d="M870,990v150" stroke="${INK}" stroke-width="3" opacity=".4"/>
       <g id="${id}-cuff" transform="translate(400,0)"><rect x="470" y="976" width="420" height="178" rx="30" fill="${sleeve}" ${OUT}/><path d="M480,986v154" stroke="${INK}" stroke-width="3" opacity=".4"/></g></g>`;
     s += arm;
@@ -230,13 +230,13 @@
     s += `<g transform="rotate(-2 540 520)" style="${done ? "" : ""}">`;
     s += `<g id="${id}-mf0">${fig(220, 430, 0)}</g>`;
     s += piece(0, 262, 420, 470, T(262, 420, "1 คน · 1 วัน"));
-    s += piece(1, 620, 420, 300, T(620, 420, "≈ 4 ลิตร", 60));
-    s += `<g id="${id}-mb">${[600, 660, 720, 780].map((x) => bottle(x, 530)).join("")}</g>`;
+    s += piece(1, 545, 420, 300, T(545, 420, "≈ 4 ลิตร", 60));
+    s += `<g id="${id}-mb">${[585, 645, 705, 765].map((x) => bottle(x, 530)).join("")}</g>`;
     s += `<g id="${id}-mf1">${[200, 250, 300].map((x, k) => fig(x, 680, k)).join("")}</g>`;
     s += piece(2, 340, 668, 300, T(340, 668, "× 3 วัน ="));
     s += piece(3, 610, 676, 140, T(610, 676, "36", 92, RED));
-    s += piece(4, 740, 668, 170, T(740, 668, "ลิตร", 60, RED));
-    s += `<ellipse id="${id}-mo" class="mdraw" cx="664" cy="642" rx="80" ry="62" stroke="${RED}" stroke-width="7" fill="none" pathLength="1" transform="rotate(-8 664 642)"/></g>`;
+    s += piece(4, 762, 668, 170, T(762, 668, "ลิตร", 60, RED));
+    s += `<ellipse id="${id}-mo" class="mdraw" cx="660" cy="642" rx="76" ry="60" stroke="${RED}" stroke-width="7" fill="none" pathLength="1" transform="rotate(-8 664 642)"/></g>`;
     if (!done) s = s.replace(/class="mdraw"/g, 'class="mdraw" stroke-dasharray="1" stroke-dashoffset="1"');
     return s;
   }
