@@ -21,7 +21,7 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
     ("hook", ["n01", ("n02", 0.25)], 0.4, 0.45, 5.4),
-    ("rewind", ["n03"], 0.15, 0.2, 1.3),
+    ("rewind", ["n03"], 0.15, 0.2, 2.3),  # the chapter card needs ~2 s to read
     ("news", ["n04"], 0.1, 0.25, 2.8),
     ("fake", ["d01"], 0.1, 0.2, 2.2),
     ("scream", ["n05"], 0.1, 0.25, 3.0),
@@ -41,6 +41,7 @@ SHOTS = [
     ("ambush", [], 0, 0, 1.75),
     ("bite", ["n16"], 0.1, 0.4, 1.6),
     ("swing", [], 0, 0, 2.3),
+    ("noise", [], 0, 0, 1.6),  # cutaway: the noise spreads through the building, the infected turn to it
     ("chase", [], 0, 0, 1.7),
     ("jam", [], 0, 0, 1.45),
     ("corridor", [], 0, 0, 2.2),

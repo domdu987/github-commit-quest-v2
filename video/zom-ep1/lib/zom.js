@@ -21,6 +21,10 @@
     <radialGradient id="zExit"><stop offset="0" stop-color="#4dff9a" stop-opacity=".55"/><stop offset=".5" stop-color="#1fbf6a" stop-opacity=".18"/><stop offset="1" stop-color="#1fbf6a" stop-opacity="0"/></radialGradient>
     <radialGradient id="zPhone"><stop offset="0" stop-color="#cfe6ff" stop-opacity=".7"/><stop offset=".5" stop-color="#9cc4ff" stop-opacity=".2"/><stop offset="1" stop-color="#9cc4ff" stop-opacity="0"/></radialGradient>
     <radialGradient id="zLens" cx=".5" cy=".5" r=".5"><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset=".97" stop-color="#000" stop-opacity=".85"/><stop offset="1" stop-color="#000"/></radialGradient>
+    <linearGradient id="zRay" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd8a0" stop-opacity=".42"/><stop offset="1" stop-color="#ffb070" stop-opacity="0"/></linearGradient>
+    <linearGradient id="zRayN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9c4ff" stop-opacity=".22"/><stop offset="1" stop-color="#a9c4ff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="zHaze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfd8d4" stop-opacity="0"/><stop offset=".6" stop-color="#cfd8d4" stop-opacity=".16"/><stop offset="1" stop-color="#cfd8d4" stop-opacity=".05"/></linearGradient>
+    <linearGradient id="zCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef6ff" stop-opacity=".28"/><stop offset="1" stop-color="#eef6ff" stop-opacity="0"/></linearGradient>
     <radialGradient id="zGlowW"><stop offset="0" stop-color="#eef6ff" stop-opacity=".9"/><stop offset=".45" stop-color="#dfeaf5" stop-opacity=".3"/><stop offset="1" stop-color="#dfeaf5" stop-opacity="0"/></radialGradient>
     <radialGradient id="zRed"><stop offset="0" stop-color="#ff2a1a" stop-opacity=".55"/><stop offset=".5" stop-color="#c81a10" stop-opacity=".18"/><stop offset="1" stop-color="#c81a10" stop-opacity="0"/></radialGradient>
     <pattern id="zWire" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M0,0L40,40M40,0L0,40" stroke="#c9ccd0" stroke-width="2.5"/></pattern>
@@ -46,6 +50,19 @@
     }
     return s;
   }
+
+  // ---------------- atmosphere: light shafts, floating dust (class zdust, drifted by zlife), haze ----------------
+  // shafts fall from a window rectangle [x0..x1, y0..y1] down-left onto the floor at y G
+  const rays = (L, x0, x1, y0, y1, G, night) => put(L.glow, [0, 1, 2, 3].map((k) => {
+    const a = x0 + ((x1 - x0) * k) / 4 + 20, b = a + (x1 - x0) / 6;
+    return `<path d="M${f1(a)},${y0}L${f1(b)},${y0}L${f1(b - 420)},${G}L${f1(a - 560)},${G}Z" fill="url(#${night ? "zRayN" : "zRay"})" opacity="${(0.55 + 0.15 * (k % 2)).toFixed(2)}"/>`;
+  }).join(""));
+  const dust = (L, x0, x1, y0, y1, n = 26, seed = 5, col = "#fff2dc") => {
+    const r = mk(seed);
+    put(L.glow, Array.from({ length: n }, () => `<circle class="zdust" cx="${f1(x0 + r() * (x1 - x0))}" cy="${f1(y0 + r() * (y1 - y0))}" r="${f1(1.6 + r() * 3.2)}" fill="${col}" opacity="${f1(0.25 + r() * 0.45)}"/>`).join(""));
+  };
+  const haze = (L, y, h = 360) => put(L.glow, `<rect x="-1200" y="${y - h}" width="3500" height="${h + 80}" fill="url(#zHaze)"/>`);
+  const cone = (L, x, y, w = 260, len = 900) => put(L.glow, `<path d="M${x - w / 2},${y}L${x + w / 2},${y}L${x + w * 1.6},${y + len}L${x - w * 1.6},${y + len}Z" fill="url(#zCone)" class="zflickg"/>`);
 
   // ---------------- the studio: front door (left), desk, sofa, big window on the city (right) ----------------
   function condo(L, o = {}) {
@@ -74,6 +91,7 @@
     s += `<path d="M640,-600V120" stroke="#3a3f45" stroke-width="4"/><path d="M600,120h80l26,60h-132z" fill="#3a3f45"/>`;
     put(L.set, s);
     if (!night) put(L.glow, `<circle cx="640" cy="200" r="380" fill="url(#lantern)" opacity=".35"/>`);
+    if (o.rays !== false) { rays(L, 600, 1100, 300, 1160, G + 40, night); dust(L, 150, 1050, 350, 1450, 30, o.seed || 7, night ? "#cfdcff" : "#fff2dc"); }
   }
 
   // ---------------- the corridor through the peephole: fisheye lens over a long hall ----------------
@@ -260,6 +278,7 @@
     s += `<text id="${id}-num" x="520" y="1180" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="420" fill="#e8e2cf" opacity=".9">${fl}</text>`;
     s += `<g transform="translate(150,520)"><rect x="-70" y="-30" width="140" height="60" rx="6" fill="#1fbf6a" ${OUT}/><path d="M-40,0h40M10,-12l14,12l-14,12" stroke="#fff" stroke-width="7" fill="none"/></g>`;
     s += tube(L, 520, 330);
+    cone(L, 520, 350, 280, 1150); haze(L, G - 40, 420); dust(L, 260, 820, 420, 1420, 22, 11, "#e8f0ff");
     if (o.ext) s += extBox(880, 1110, o.ext);
     s += `<rect x="${X0}" y="${G}" width="${800 - X0}" height="40" fill="#8a8f8a"/><rect x="${X0}" y="${G + 40}" width="${800 - X0}" height="1200" fill="#3f4542"/>`;
     for (let k = 0; k < 10; k++) s += `<path d="M${800 + k * 90},${G + k * 70}h90v70" fill="none" stroke="#8a8f8a" stroke-width="16"/>`;
@@ -283,6 +302,7 @@
     for (let k = 0; k < 20; k++) s += `<path d="M${-2000 + k * 260},-1400V3800" stroke="#555c58" stroke-width="3"/>`;
     (o.nums || [[1500, 21], [-500, 22]]).forEach(([x, n]) => (s += `<text x="${x}" y="${FLIGHT(x) - 260}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="380" fill="#e8e2cf" opacity=".75">${n}</text>`));
     s += tube(L, 900, FLIGHT(900) - 900) + tube(L, -300, FLIGHT(-300) - 900);
+    cone(L, 900, FLIGHT(900) - 880, 260, 1100); cone(L, -300, FLIGHT(-300) - 880, 260, 1100); dust(L, -700, 1500, 700, 2100, 34, 13, "#e8f0ff");
     let st = "";
     for (let x = -1800; x < 2800; x += 90) st += `h90v70`;
     s += `<path d="M-1800,${FLIGHT(-1800)}${st}V4200H-1800Z" fill="#3f4542"/><path d="M-1800,${FLIGHT(-1800)}${st}" fill="none" stroke="#8a8f8a" stroke-width="16"/>`;
@@ -350,6 +370,8 @@
     });
     put(L.set, s);
     put(L.glow, `<ellipse class="zflickg" cx="${vx}" cy="${vy - 260}" rx="760" ry="560" fill="url(#zGlowW)" opacity=".35"/>`);
+    put(L.glow, `<radialGradient id="${id}-fog"><stop offset="0" stop-color="#d9d3c4" stop-opacity=".75"/><stop offset="1" stop-color="#d9d3c4" stop-opacity="0"/></radialGradient><ellipse cx="${vx}" cy="${vy}" rx="260" ry="300" fill="url(#${id}-fog)"/>`);
+    dust(L, 200, 900, 500, 1500, 24, 17, "#fff6e6");
     put(L.act, zLunge(`${id}-z`, 0, 0, 1));
   }
   // looking straight down the stairwell shaft: rails spiral away, something looks up from far below
@@ -368,9 +390,37 @@
     put(L.set, s);
   }
 
+  // ---------------- cutaway: a noise on floor 19 spreads through the building; the infected on nearby floors turn to it ----------------
+  // #id-ring0..2 expand from the landing; #id-z<k> (dots on other floors) slide to the stairwell; #id-us = ข้าว + บอส
+  const NOISE_FL = [23, 22, 21, 20, 19, 18, 17, 16, 15];
+  function noiseMap(L, o = {}) {
+    const id = o.id || "nz", top = 330, H = 150, X0 = 230, X1 = 850, SX = 740, fy = (f) => top + (23 - f) * H;
+    put(L.sky, `<rect x="-900" y="-400" width="2900" height="2800" fill="url(#diagBg)"/>` + Array.from({ length: 18 }, (_, k) => `<path d="M-900,${k * 130}H2000" stroke="#22363d" stroke-width="2"/>`).join(""));
+    let s = `<rect x="${X0}" y="${top - 20}" width="${X1 - X0}" height="${H * 9 + 20}" fill="#1a2a30" stroke="#cfc4a8" stroke-width="5"/>`;
+    NOISE_FL.forEach((f) => {
+      const y = fy(f) + H;
+      s += `<path d="M${X0},${y}H${X1}" stroke="#3f5650" stroke-width="4"/><text x="${X0 - 24}" y="${y - 50}" text-anchor="end" font-family="Kanit" font-weight="900" font-size="44" fill="${f === 19 ? "#f2c55c" : "#7f9aa0"}">${f}</text>`;
+      for (let d = 0; d < 3; d++) s += `<rect x="${X0 + 40 + d * 150}" y="${y - 110}" width="90" height="100" fill="none" stroke="#33494f" stroke-width="3"/>`;
+    });
+    s += `<rect x="${SX - 60}" y="${top - 20}" width="120" height="${H * 9 + 20}" fill="#22363d" stroke="#5c7a80" stroke-width="3"/>`;
+    for (let k = 0; k < 18; k++) s += `<path d="M${SX - 50 + (k % 2) * 100},${top + k * (H / 2)}L${SX + 50 - (k % 2) * 100},${top + (k + 1) * (H / 2)}" stroke="#5c7a80" stroke-width="5"/>`;
+    const oy = fy(19) + H - 60;
+    s += [0, 1, 2].map((k) => `<circle id="${id}-ring${k}" cx="${SX}" cy="${oy}" r="80" fill="none" stroke="#f2c55c" stroke-width="10" opacity="0"/>`).join("");
+    s += `<g id="${id}-bang" transform="translate(${SX},${oy})"><path d="M0,-46L12,-14L46,-18L20,6L34,38L0,20L-34,38L-20,6L-46,-18L-12,-14Z" fill="#f2c55c" stroke="#2e2a26" stroke-width="4"/></g>`;
+    s += `<g id="${id}-us"><circle cx="${SX - 26}" cy="${oy + 24}" r="13" fill="#e07a3f" stroke="#fff" stroke-width="4"/><circle cx="${SX + 6}" cy="${oy + 24}" r="13" fill="#3a3f45" stroke="#fff" stroke-width="4"/></g>`;
+    (o.dots || [[22, 380], [21, 520], [20, 300], [20, 560], [18, 420], [18, 300], [17, 560], [16, 380]]).forEach(([f, x], k) => {
+      s += `<g id="${id}-z${k}" data-tx="${SX - x}" transform="translate(${x},${fy(f) + H - 40})"><circle r="20" fill="#d8322a" stroke="#2e2a26" stroke-width="4"/><circle class="zeye" cx="-6" cy="-4" r="3.5" fill="#fff"/><circle class="zeye" cx="7" cy="-4" r="3.5" fill="#fff"/></g>`;
+    });
+    put(L.set, s);
+  }
+
   // looping motion for these sets
   function zlife(tl, scope, t0, dur) {
+    const root = document.querySelector(scope);
+    if (!root || root.dataset.zlife) return;
+    root.dataset.zlife = "1";
     const q = (c) => document.querySelectorAll(`${scope} ${c}`);
+    q(".zdust").forEach((el, i) => tl.fromTo(el, { x: -6 - (i % 5) * 3, y: 8 }, { x: 10 + (i % 4) * 4, y: -22 - (i % 3) * 8, duration: 2.6 + (i % 7) * 0.35, repeat: Math.ceil(dur / 2.6) + 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, Math.max(0, t0 - (i % 9) * 0.3)));
     q(".smoke").forEach((el, i) => tl.fromTo(el, { x: -10, opacity: 0.4 }, { x: 14, opacity: 0.6, duration: 2.4 + i * 0.4, repeat: Math.ceil(dur / 2.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     q(".beacon").forEach((el) => tl.fromTo(el, { opacity: 0.1 }, { opacity: 0.6, duration: 0.25, repeat: Math.ceil(dur / 0.25), yoyo: true, immediateRender: false }, t0));
     q(".beacon2").forEach((el) => tl.fromTo(el, { opacity: 0.6 }, { opacity: 0.1, duration: 0.25, repeat: Math.ceil(dur / 0.25), yoyo: true, immediateRender: false }, t0));
@@ -384,7 +434,7 @@
     q(".spin").forEach((el) => tl.fromTo(el, { rotation: 0 }, { rotation: 360 * Math.ceil(dur), svgOrigin: "0 0", duration: dur, ease: "none", immediateRender: false }, t0));
   }
 
-  Object.assign(Sets, { condo, peephole, armClose, bathroom, tower, stairwell, stairShaft, stairFlight, doorJam, corridorRun });
+  Object.assign(Sets, { condo, peephole, armClose, bathroom, tower, stairwell, stairShaft, stairFlight, doorJam, corridorRun, noiseMap });
   if (window.Camp) Camp.hand.extinguisher = `<g transform="translate(0,${118 + 96}) rotate(180)">${EXT}</g>`; // held by the valve, swung like a club
   window.Zom = { zFace, zLunge, zlife, city, FLIGHT };
 })();

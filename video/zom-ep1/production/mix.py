@@ -88,7 +88,7 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
 CUES = [
     *bed("tap", 0.0, T("hook", -0.1), 0.8, 2.4), *beats("hook", 0.3, D["hook"] - 0.3, 0.6, 0.6), ("hook", frag("hook", 0, 1), "sting", 0.5),
     ("hook", vo_t("hook", 1) - 0.4, "whoosh", 0.5), ("hook", vo_t("hook", 1), "sting", 0.9), ("hook", vo_t("hook", 1), "boom", 0.6), ("hook", vo_t("hook", 1), "glitch", 0.6), ("hook", -0.25, "whoosh", 0.8),
-    ("rewind", 0.0, "rewind", 1.0), ("rewind", 0.05, "glitch", 0.5), ("rewind", 1.2, "pop", 0.5),
+    ("rewind", 0.0, "rewind", 1.0), ("rewind", 0.05, "glitch", 0.5), ("rewind", 0.1, "boom", 0.45), ("rewind", 0.55, "pop", 0.5),
     *[("news", frag("news", 0, j) + (0.1 if j == 0 else 0), "notif", 0.7) for j in range(3)], ("news", frag("news", 0, 1), "sting", 0.4),
     ("fake", vo_t("fake") - 0.05, "pop", 0.3),
     ("scream", frag("scream", 0, 1) - 0.15, "scream", 1.0), ("scream", frag("scream", 0, 1), "sting", 0.7), *[("scream", frag("scream", 0, 2) + k * 0.15, "knock", 0.9) for k in range(4)],
@@ -111,6 +111,8 @@ CUES = [
     ("bite", 0.0, "growl", 1.3), ("bite", 0.2, "scream", 0.8), ("bite", 0.25, "boom", 0.8), ("bite", 0.2, "glitch", 0.8), ("bite", 0.25, "squish", 0.8),
     ("swing", 0.0, "steps", 0.7), ("swing", 0.22, "whoosh", 0.9), ("swing", 0.42, "clang", 1.3), ("swing", 0.42, "boom", 0.8), ("swing", 0.42, "glitch", 0.5), ("swing", 0.92, "thud", 1.0),
     ("swing", 1.45, "shriek", 0.8), ("swing", 1.55, "growl", 0.9), ("swing", 1.6, "steps", 0.8), *beats("swing", 1.55, D["swing"] - 1.55, 0.36, 0.6),
+    ("noise", 0.0, "clang", 0.55), ("noise", 0.25, "clang", 0.3), ("noise", 0.5, "clang", 0.15), ("noise", 0.35, "growl", 0.8), ("noise", 0.6, "growl", 0.7), ("noise", 0.75, "shriek", 0.6),
+    ("noise", 0.2, "pop", 0.4), *beats("noise", 0.0, D["noise"], 0.34, 0.6),
     ("chase", 0.0, "steps", 1.0), ("chase", 0.65, "steps", 0.9), ("chase", 0.3, "growl", 0.9), ("chase", 0.9, "shriek", 0.7), ("chase", 0.53, "riser", 0.8), *beats("chase", 0.0, D["chase"], 0.32, 0.6),
     ("jam", 0.0, "growl", 1.1), ("jam", 0.0, "knock", 0.7), ("jam", 0.62, "shriek", 0.8), ("jam", 0.83, "slam", 1.4), ("jam", 0.83, "boom", 0.9), ("jam", 0.9, "latch", 0.9),
     ("jam", 0.95, "thud", 0.7), ("jam", 1.0, "growl", 0.6),
