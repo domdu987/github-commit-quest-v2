@@ -100,13 +100,14 @@ CUES = [
     # into the fog, the village
     *bed("wind", T("walk", 0), T("village", -0.1), 0.8, 2.6), ("walk", 0.3, "crickets", 0.25),
     ("village", 0.3, "creak", 0.6), ("village", vo_t("village", 1), "sting", 0.7), *beats("village", vo_t("village", 1), D["village"] - vo_t("village", 1), 0.5, 0.55),
+    ("under", 0.0, "swell", 0.4), ("under", 0.75, "tick", 0.5), *beats("under", 0.0, 1.8, 0.4, 0.5), ("under", 1.85, "shriek", 0.7), ("under", 1.85, "boom", 0.9), ("under", 1.85, "glitch", 0.7),
     ("stove", 0.15, "creak", 0.8), ("stove", 0.3, "wind", 0.4), ("stove", frag("stove", 0, 2), "swell", 0.5), ("stove", frag("stove", 0, 2), "sting", 0.6),
     *beats("stove", frag("stove", 0, 2), D["stove"] - frag("stove", 0, 2), 0.5, 0.5),
     # the fire, the shutters, the photo
     ("light", 0.3, "snap", 0.6), ("light", 0.45, "whoosh", 0.4), ("light", 1.42, "slam", 1.1),
     *bed("crackle", T("light", 0.4), T("shout", 0), 0.75, 4.0),
     ("photo", vo_end("photo") - 0.05, "shutter", 1.4), ("photo", vo_end("photo") - 0.05, "pop", 0.4),
-    ("pic", 0.1, "beep", 0.5), ("pic", frag("pic", 0, 1), "sting", 0.8), ("pic", frag("pic", 0, 2), "boom", 0.8), ("pic", frag("pic", 0, 2), "glitch", 0.6),
+    ("pic", 0.25, "beep", 0.45), ("pic", 0.4, "beep", 0.45), *[("pic", frag("pic", 0, 1) + 0.35 + k * 0.17, "beep", 0.55) for k in range(9)], ("pic", 0.1, "beep", 0.5), ("pic", frag("pic", 0, 1), "sting", 0.8), ("pic", frag("pic", 0, 2), "boom", 0.8), ("pic", frag("pic", 0, 2), "glitch", 0.6),
     *beats("pic", frag("pic", 0, 1), D["pic"] - frag("pic", 0, 1), 0.45, 0.65),
     # symptoms, sleep, the rule
     ("sick", 0.2, "buzz", 0.5), *[("sick", frag("sick", 0, j) + 0.1, "pop", 0.4) for j in (0, 1, 2)], *beats("sick", 0.3, D["sick"] - 0.3, 0.7, 0.45),
@@ -167,6 +168,7 @@ def dip(t0, t1, lvl, ramp=0.25):
 dip(0.0, T("hook", -0.1), 0.2, 0.05)                     # the cold open: only the fire
 dip(T("window", 0), T("start", -0.05), 0.35)
 dip(T("pic", 0), T("pic", -0.05), 0.3)
+dip(T("under", 0), T("under", -0.05), 0.2)
 dip(T("sleep", vo_t("sleep", 1) - 0.1), T("sleep", -0.05), 0.35)
 dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("inside", 0), T("bundle", -0.05), 0.3)

@@ -27,10 +27,11 @@ SHOTS = [
     ("start", ["d01", ("d02", 0.15)], 0.1, 0.4, 5.0), # from the front: มิ้นท์ turns the key, nothing; เจ: the battery
     ("walk", ["n06"], 0.1, 0.4, 4.6),                 # the three walk into the fog, the dead car behind
     ("village", ["n07", ("d03", 0.15)], 0.1, 0.5, 6.0),  # stilt houses in the fog, the sign บ้านหมอก
+    ("under", [], 0.0, 0.0, 2.6),                     # under the stilt house: eyes in the dark, then right there (jump scare)
     ("stove", ["n08"], 0.1, 0.5, 5.6),                # inside: the stove, a basket of charcoal, blankets, as if laid out for them
     ("light", ["d04"], 0.1, 0.4, 3.0),                # มิ้นท์ lights it, เจ shuts the window
     ("photo", ["d05"], 0.1, 0.4, 3.0),                # เจ raises the camera: flash
-    ("pic", ["n09"], 0.15, 0.6, 3.6),                 # the photo on the camera screen: the room full of people round the stove
+    ("pic", ["n09"], 0.15, 1.7, 5.2),                 # the photo on the camera screen: the room full of people round the stove
     ("sick", ["n10"], 0.1, 0.4, 4.4),                 # หวาน holds her head (symptoms card)
     ("sleep", ["d06", ("d07", 0.25)], 0.1, 0.5, 9.0), # มิ้นท์ lies down; ยายแสง's rule echoes
     ("out", ["n11"], 0.1, 0.4, 3.8),                  # หวาน outside in the fog, bent over; then she straightens up

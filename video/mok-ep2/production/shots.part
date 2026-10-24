@@ -179,6 +179,24 @@
         fx(tl, id, t0) { Fx.heart(tl, t0 + vo("village", 1), D("village") - vo("village", 1), 0.4, 0.5); },
       });
 
+      // ---------- 7b. under the stilt house: the torch sweeps the dark; eyes; then they're right there (jump scare) ----------
+      add("under", {
+        set: "underHouse", setOpts: { id: "uh" }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.0, 540, 980), drift: { x: 10, s: 0.03 } }] },
+        shake: (t) => 3 * Math.sin(t * 6.1) + (t > 1.85 && t < 2.25 ? 16 * Math.sin(t * 70) : 0),
+        fx(tl, id, t0) {
+          tl.fromTo("#uh-pool", { attr: { cx: 120 } }, { attr: { cx: 600 }, duration: 1.0, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.to("#uh-pool", { attr: { cx: 980 }, duration: 0.6, ease: "sine.in" }, t0 + 1.2);
+          tl.fromTo(["#uh-eyes", "#uh-hair"], { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0 + 0.75);
+          tl.to(["#uh-eyes", "#uh-hair"], { opacity: 0, duration: 0.1 }, t0 + 1.45);
+          tl.to("#uh-pool", { attr: { cx: 560 }, duration: 0.2, ease: "power3.out" }, t0 + 1.8);
+          tl.set("#uh-close", { opacity: 1 }, t0 + 1.85);
+          Fx.glitch(tl, `#${id}`, t0 + 1.85, 0.3, 18, 92); Fx.punch(tl, `#${id} .stage`, t0 + 1.85, 1.12, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + 1.85);
+          Fx.heart(tl, t0, 1.8, 0.4, 0.45);
+        },
+      });
+
       // ---------- 8. inside: a stove, charcoal, blankets, all laid out ----------
       add("stove", {
         set: "houseRoom", setOpts: HR("sv", { door: 1 }), dark: 0.5,
@@ -213,11 +231,22 @@
       });
 
       // ---------- 11. the photo: the room is full ----------
+      // face detection on the camera screen (like เสียงกอย's "ตรวจพบใบหน้า 3"): two faces… then the boxes keep coming
+      const FACES = [[430, 1024, 34], [650, 1024, 34], ...[[540, 945, 0.28], [420, 960, 0.3], [660, 960, 0.3], [330, 990, 0.34], [760, 990, 0.34], [230, 1040, 0.42], [850, 1040, 0.42], [180, 1110, 0.5], [900, 1110, 0.5]]
+        .map(([x, y, k]) => [x, y - 252 * k, 50 * k])];
+      const faceBoxes = (id) => FACES.map(([x, y, r], k) => `<rect id="${id}-fb${k}" x="${x - r * 1.25}" y="${y - r * 1.35}" width="${r * 2.5}" height="${r * 2.7}" rx="6" fill="none" stroke="#f2c55c" stroke-width="4" opacity="0"/>`).join("")
+        + FACES.map((_, k) => `<g id="${id}-fl${k}" opacity="0"><rect x="166" y="1158" width="248" height="38" rx="8" fill="${k > 1 ? "#e0362c" : "#f2c55c"}"/><text x="290" y="1185" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="23" fill="${k > 1 ? "#fff" : "#2e2a26"}">ตรวจพบใบหน้า ${k + 1}</text></g>`).join("");
       add("pic", {
         set: "photoLCD", setOpts: { id: "pc", ghosts: 0 }, dark: 0.15,
         cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.02 } }, { t: F("pic", 0, 2) - 0.05, ...fr(540, 1000, 1.45, 540, 900), drift: { s: 0.04 } }] },
         captions: caps("pic"),
+        extra(L) { L.set.insertAdjacentHTML("beforeend", `<g>${faceBoxes("pc")}</g>`); },
         fx(tl, id, t0) {
+          const show = (k, t) => { tl.set(`#pc-fb${k}`, { opacity: 1 }, t); tl.fromTo(`#pc-fb${k}`, { opacity: 1 }, { opacity: 0.35, duration: 0.06, yoyo: true, repeat: 3, immediateRender: false }, t);
+            if (k) tl.set(`#pc-fl${k - 1}`, { opacity: 0 }, t); tl.set(`#pc-fl${k}`, { opacity: 1 }, t); };
+          show(0, t0 + 0.25); show(1, t0 + 0.4);
+          FACES.slice(2).forEach((_, k) => show(k + 2, t0 + F("pic", 0, 1) + 0.35 + k * 0.17));
+          tl.fromTo(`#pc-fl${FACES.length - 1}`, { opacity: 1 }, { opacity: 0.3, duration: 0.18, yoyo: true, repeat: 7, immediateRender: false }, t0 + F("pic", 0, 1) + 0.35 + (FACES.length - 2) * 0.17);
           tl.fromTo("#pc-ghosts", { opacity: 0 }, { opacity: 1, duration: 0.5, immediateRender: false }, t0 + F("pic", 0, 1));
           Fx.glitch(tl, `#${id}`, t0 + F("pic", 0, 2), 0.3, 14, 91); Fx.heart(tl, t0 + F("pic", 0, 1), D("pic") - F("pic", 0, 1), 0.42, 0.55);
           tl.fromTo("#fxred", { opacity: 0.5 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("pic", 0, 2));

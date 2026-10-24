@@ -618,6 +618,64 @@ def sfx(kind):
         d = 0.08
         t = t_arr(d)
         return (osc(2200, d, "square") * 0.4 + rng.standard_normal(len(t)) * 0.3) * np.exp(-t * 90) * 0.35
+    if kind == "gunshot":  # a rifle shot outdoors: a sharp crack, a chesty body, a short rolling tail
+        d = 0.7
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        crack = (n - lp_fast(n, 2500)) * np.exp(-t * 90) * 1.3
+        body = lp_fast(n, 900) * np.exp(-t * 26) * 0.9 + osc(60 + 120 * np.exp(-t * 9), d) * np.exp(-t * 18) * 0.9
+        tail = lp_fast(n, 450) * np.exp(-t * 4.5) * 0.3
+        return (crack + body + tail) * 0.8
+    if kind == "crackby":  # a bullet passing close: a supersonic snap and a short tearing whizz
+        d = 0.35
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        snap_ = (n - lp_fast(n, 3500)) * np.exp(-t * 160) * 1.2
+        whizz = (lp_fast(n, 6000) - lp_fast(n, 1800)) * np.exp(-((t - 0.06) / 0.05) ** 2) * 0.6
+        return snap_ + whizz
+    if kind == "tinnitus":  # ears ringing after a blast: a thin high tone that fades
+        d = 3.4
+        t = t_arr(d)
+        return (osc(6800, d) * 0.8 + osc(7240, d) * 0.3) * np.minimum(1, t / 0.05) * np.exp(-t * 0.8) * 0.08
+    if kind == "flap":  # cloth flapping in the wind
+        d = 1.6
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        band = lp_fast(n, 2600) - lp_fast(n, 260)
+        am = np.clip(np.sin(2 * np.pi * (9 + 3 * np.sin(2 * np.pi * 0.7 * t)) * t), 0, 1) ** 3
+        return band * am * env(len(t), 0.1, 0.3) * 0.35
+    if kind == "chain":  # chain links rattling and knocking on steel
+        d = 0.9
+        out = np.zeros(int(d * SR), np.float32)
+        for k in range(12):
+            f, off, dd = 1800 + rng.random() * 3600, 0.02 + rng.random() * 0.65, 0.05 + rng.random() * 0.08
+            add(out, osc(f, dd) * np.exp(-t_arr(dd) * 50) * (0.2 + 0.2 * rng.random()), off)
+            add(out, lp_fast(rng.standard_normal(int(0.02 * SR)), 1500) * 0.3, off)
+        return out
+    if kind == "debris":  # clods of dirt raining down after a blast
+        d = 1.4
+        out = np.zeros(int(d * SR), np.float32)
+        for k in range(30):
+            off = 0.05 + (rng.random() ** 1.6) * 1.2
+            dd = 0.05
+            add(out, lp_fast(rng.standard_normal(int(dd * SR)), 1200) * np.exp(-t_arr(dd) * 60) * (0.15 + 0.25 * rng.random()), off)
+        return out
+    if kind == "radiosq":  # radio squelch: a click and a burst of band-limited noise
+        d = 0.22
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        return ((lp_fast(n, 3200) - lp_fast(n, 900)) * np.exp(-t * 14) * 0.45 + osc(1400, d, "square") * np.exp(-t * 200) * 0.2)
+    if kind == "pant":  # heavy breathing after a sprint: in and out, twice a second
+        d = 2.2
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        breath = lp_fast(n, 1600) - lp_fast(n, 300)
+        am = np.clip(np.sin(2 * np.pi * 1.9 * t), 0, 1) ** 2 * 0.8 + np.clip(-np.sin(2 * np.pi * 1.9 * t), 0, 1) ** 2 * 0.5
+        return breath * am * env(len(t), 0.05, 0.4) * 0.3
+    if kind == "drum":  # a deep war drum hit
+        d = 0.9
+        t = t_arr(d)
+        return (osc(52 + 30 * np.exp(-t * 14), d) * 1.2 + lp_fast(rng.standard_normal(len(t)), 300) * 0.5 * np.exp(-t * 30)) * np.exp(-t * 5) * 0.9
     raise ValueError(kind)
 
 
