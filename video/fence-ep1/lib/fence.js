@@ -392,10 +392,52 @@
     q("[id$='-shim'] path").forEach((el, i) => tl.fromTo(el, { x: -30 + (i % 3) * 10 }, { x: 30, duration: 0.9 + (i % 4) * 0.2, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     q("[id$='-flagc']").forEach((el) => tl.fromTo(el, { skewY: -3 }, { skewY: 3, svgOrigin: "6 -690", duration: 0.8, repeat: Math.ceil(dur / 0.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     q(".fly").forEach((el, i) => tl.fromTo(el, { x: -8 - (i % 3) * 3, y: 6 }, { x: 10 + (i % 4) * 3, y: -12 - (i % 3) * 5, duration: 0.22 + (i % 5) * 0.05, repeat: Math.ceil(dur / 0.22), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (i % 7) * 0.03));
+    q(".lampf").forEach((el, i) => { for (let t = 0; t < dur; t += 0.13 + (i % 3) * 0.05) { const v = 0.8 + ((Math.sin((t * 7.3 + i) * 13.1) * 43758.5) % 1) * 0.25; tl.set(el, { opacity: Math.abs(v) }, t0 + t); } });
     q(".mote").forEach((el, i) => { tl.fromTo(el, { x: 0, y: 0 }, { x: 40 + (i % 5) * 18, y: -60 - (i % 4) * 20, duration: 2.6 + (i % 5) * 0.5, repeat: Math.ceil(dur / 2.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (i % 7) * 0.4); tl.fromTo(el, { opacity: 0.05 }, { opacity: 0.7, duration: 0.9 + (i % 3) * 0.3, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (i % 5) * 0.3); });
     q(".fring").forEach((el, i) => tl.fromTo(el, { scale: 0.3, opacity: 0.9 }, { scale: 2.2, opacity: 0, svgOrigin: "1500 1250", duration: 1.6, repeat: Math.ceil(dur / 1.6), ease: "power1.out", immediateRender: false }, t0 + i * 0.5));
   }
 
+  // ---------------- depth and light (the v2 look): blurred foreground silhouettes, atmospheric haze between far and set, soft light sources ----------------
+  // depth(L, kind): dark out-of-focus shapes in L.fg (parallax 1.5 + the fg blur) — grass | bars | post | desk | branch | shelf
+  let DEPN = 0;
+  function depth(L, kind, o = {}) {
+    const col = o.col || "#06080a", op = o.op ?? 0.92, r = mk(o.seed || 7 + DEPN++);
+    const D = {
+      grass: () => { let g = ""; for (let k = 0; k < 26; k++) { const x = (k < 13 ? -120 : 760) + r() * 420, h = 160 + r() * 260, w = 18 + r() * 22; g += `<path d="M${f1(x)},2000q${f1(-w)},${f1(-h * 0.5)} ${f1(w * 0.3)},${f1(-h)}q${f1(w)},${f1(h * 0.45)} ${f1(w * 1.6)},${f1(h)}z" fill="${col}"/>`; } return g + `<path d="M-300,1800q500,-60 1000,0t700,0V2200H-300z" fill="${col}"/>`; },
+      bars: () => [-60, 110, 280].map((x, k) => `<rect x="${x}" y="-400" width="${70 + k * 10}" height="2800" rx="20" fill="${col}"/>`).join("") + `<rect x="-200" y="700" width="640" height="60" fill="${col}"/>`,
+      post: () => `<rect x="${o.x ?? -80}" y="-400" width="${o.w ?? 220}" height="2800" fill="${col}"/>`,
+      desk: () => `<path d="M-300,1560L1400,1440V2300H-300z" fill="${col}"/><path d="M-300,1560L1400,1440l0,40L-300,1600z" fill="#2a2420"/>`,
+      branch: () => `<path d="M-200,-200C100,-60 380,40 560,0C400,160 120,220 -200,200z" fill="${col}"/>${[[60, 120], [200, 60], [380, 90], [300, 180]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="90" ry="40" transform="rotate(${-30 + x / 10} ${x} ${y})" fill="${col}"/>`).join("")}`,
+      shelf: () => `<rect x="-300" y="-400" width="420" height="2800" fill="${col}"/><rect x="-300" y="900" width="700" height="50" fill="${col}"/><rect x="-300" y="1500" width="700" height="50" fill="${col}"/>`,
+    };
+    // shapes are drawn in screen coordinates for the shot's first camera key (o.cam = {x, y, s}): map them back through the fg parallax (1.5)
+    const c = o.cam || { x: 0, y: 0, s: 1 }, ls = 1 + (c.s - 1) * 1.5;
+    put(L.fg, `<g opacity="${op}" transform="translate(${f1(540 + c.x * 1.5)},${f1(960 + c.y * 1.5)}) scale(${(1 / ls).toFixed(4)}) translate(-540,-960)">${(D[kind] || D.grass)()}</g>`);
+  }
+  // haze(L, y, h, col, op): a soft band of atmosphere in the mid layer (parallax .6) so the far ground sits behind the set
+  function haze(L, y = 1000, h = 500, col = "#cfd8d4", op = 0.3) {
+    const id = `hz${DEPN++}`;
+    put(L.mid, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="0"/><stop offset=".55" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="${op * 0.3}"/></linearGradient><rect x="-1200" y="${y - h}" width="3500" height="${h + 200}" fill="url(#${id})"/>`);
+  }
+  // light(L, x, y, r, col, op): a soft light source above the darkness (glow layer): core + wide bloom; cls = "lampf" flickers (flife)
+  function light(L, x, y, R = 500, col = "#ffd58a", op = 0.5, cls = "") {
+    const id = `lt${DEPN++}`;
+    put(L.glow, `<radialGradient id="${id}"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset=".45" stop-color="${col}" stop-opacity="${op * 0.35}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>
+      <g class="${cls}"><circle cx="${x}" cy="${y}" r="${R * 1.6}" fill="url(#${id})" opacity=".55"/><circle cx="${x}" cy="${y}" r="${R}" fill="url(#${id})"/></g>`);
+  }
+  // cone(L, x, y, w, h, col, op): light falling from a lamp at (x, y) onto the ground below (glow layer)
+  function cone(L, x, y, w = 600, h = 900, col = "#ffd58a", op = 0.35, cls = "lampf") {
+    const id = `cn${DEPN++}`;
+    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
+      <path class="${cls}" d="M${x - 40},${y}L${x + 40},${y}L${x + w / 2},${y + h}L${x - w / 2},${y + h}Z" fill="url(#${id})"/>`);
+  }
+  // rays(L, x0, x1, y0, y1, n, col): slanted light shafts (glow layer)
+  function rays(L, x0 = -600, x1 = 400, y0 = 300, y1 = 1500, n = 4, col = "#ffd8a0", op = 0.5) {
+    const id = `ry${DEPN++}`;
+    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
+      ${Array.from({ length: n }, (_, k) => { const w = (x1 - x0) / n, x = x0 + k * w; return `<path d="M${x},${y0}h${w * 0.45}L${x + w * 0.45 + (x1 - x0) * 0.6},${y1}h${-w * 0.9}Z" fill="url(#${id})"/>`; }).join("")}`);
+  }
+
   Object.assign(Sets, { schoolYard, classroom, market, canClose, fieldRoad, gateClose, tankClose, radioClose, drawing, mapTop, gateTop, plate });
-  window.Fence = { chalk, pin, flife, paddies, bars, gatePanel };
+  window.Fence = { chalk, pin, flife, paddies, bars, gatePanel, depth, haze, light, cone, rays };
 })();

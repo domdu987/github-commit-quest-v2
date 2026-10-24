@@ -82,10 +82,14 @@
         anim(tl, id, t0, o) {
           const el = document.getElementById(id), num = el.querySelector(".num"), segs = el.querySelectorAll(".seg i"), c = { t: o.t };
           tl.fromTo(`#${id}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(1.6)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .ic svg`, { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.4)", transformOrigin: "50% 50%", immediateRender: false }, t0 + 0.08);
+          tl.fromTo(`#${id} .seg i`, { scaleY: 0 }, { scaleY: 1, duration: 0.2, stagger: 0.03, ease: "power2.out", transformOrigin: "50% 100%", immediateRender: false }, t0 + 0.2);
           const at = (t) => { let i = 0; while (i + 1 < o.keys.length && o.keys[i + 1].t <= t) i++; const a = o.keys[i], b = o.keys[i + 1]; if (!b) return a.v; const k = Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t))); return a.v + (b.v - a.v) * k; };
           const draw = () => { const v = at(c.t); num.textContent = Math.round(v); segs.forEach((s, k) => s.classList.toggle("off", k >= Math.round(v))); };
           tl.to(c, { t: o.end ?? 30, duration: (o.end ?? 30) - o.t, ease: "none", immediateRender: false, onUpdate: draw }, t0);
-          if (o.alarm !== undefined) { tl.set(`#${id}`, { className: `pks${o.right ? " right" : ""} alarm` }, o.t0abs + o.alarm); tl.fromTo(`#${id}`, { x: 0 }, { x: 8, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, o.t0abs + o.alarm); }
+          if (o.alarm !== undefined) { tl.set(`#${id}`, { className: `pks${o.right ? " right" : ""} alarm` }, o.t0abs + o.alarm); tl.fromTo(`#${id}`, { x: 0 }, { x: 8, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, o.t0abs + o.alarm);
+            tl.fromTo(`#${id} .ic svg`, { rotation: -12 }, { rotation: 12, duration: 0.08, repeat: 5, yoyo: true, transformOrigin: "50% 50%", immediateRender: false }, o.t0abs + o.alarm); tl.set(`#${id} .ic svg`, { rotation: 0 }, o.t0abs + o.alarm + 0.5);
+            tl.fromTo(`#${id} .v`, { scale: 1.35 }, { scale: 1, duration: 0.35, ease: "back.out(2)", transformOrigin: "0% 50%", immediateRender: false }, o.t0abs + o.alarm); }
           draw();
           if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, o.t0abs + o.end);
         },
@@ -99,6 +103,7 @@
         anim(tl, id, t0, o) {
           tl.set(`#${id}`, { opacity: 1 }, t0);
           [["p", 0, 0.25], ["b", 0.18, 0.4], ["c", 0.6, 0.3], ["e", 0.85, 0.3]].forEach(([k, at, d]) => tl.fromTo(`#${id}-${k}`, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: d, ease: "power3.out", immediateRender: false }, t0 + at));
+          tl.fromTo(`#${id}-c svg`, { rotation: -15 }, { rotation: 15, duration: 0.12, repeat: 5, yoyo: true, transformOrigin: "50% 50%", immediateRender: false }, t0 + 0.7); tl.set(`#${id}-c svg`, { rotation: 0 }, t0 + 1.45);
           tl.fromTo(`#${id}-b b`, { scale: 1.6, color: "#fff" }, { scale: 1, color: "#f2c55c", duration: 0.45, ease: "back.out(1.4)", transformOrigin: "50% 60%", immediateRender: false }, t0 + 0.3);
           if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, o.t0abs + o.end);
         },

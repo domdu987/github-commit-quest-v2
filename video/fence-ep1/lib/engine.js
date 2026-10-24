@@ -29,6 +29,7 @@
       <div class="capwrap" id="${id}-caps"></div>`;
     root.appendChild(div);
     const L = {}; Object.keys(PARALLAX).forEach((k) => (L[k] = document.getElementById(`${id}-${k}`)));
+    const world = document.getElementById(`${id}-world`);
     // colour grade: a CSS filter on the whole world plus a tinted multiply over it (sh.grade overrides window.GRADE; false = none)
     const gr = sh.grade === undefined ? window.GRADE : sh.grade;
     if (gr) {
@@ -79,11 +80,11 @@
         const a = cam.keys[i], b = cam.keys[i + 1];
         if (b && b.glide && t > b.t - b.glide) {
           const e = ease((t - (b.t - b.glide)) / b.glide), d = a.drift || {}, u = b.t - b.glide - a.t;
-          const ax = a.x + (d.x || 0) * u, ay = a.y + (d.y || 0) * u, as = a.s * (1 + (d.s ?? 0.012) * u);
-          return { x: lerp(ax, b.x, e), y: lerp(ay, b.y, e), s: lerp(as, b.s, e) };
+          const ax = a.x + (d.x || 0) * u, ay = a.y + (d.y || 0) * u, as = a.s * (1 + (d.s ?? 0.012) * u), ar = (a.r || 0) + (d.r || 0) * u;
+          return { x: lerp(ax, b.x, e), y: lerp(ay, b.y, e), s: lerp(as, b.s, e), r: lerp(ar, b.r || 0, e) };
         }
         const u = t - a.t, d = a.drift || {};
-        return { x: a.x + (d.x || 0) * u, y: a.y + (d.y || 0) * u, s: a.s * (1 + (d.s ?? 0.012) * u) };
+        return { x: a.x + (d.x || 0) * u, y: a.y + (d.y || 0) * u, s: a.s * (1 + (d.s ?? 0.012) * u), r: (a.r || 0) + (d.r || 0) * u };
       }
       const k = cam.dur ? Math.max(0, Math.min(1, (t - (cam.at || 0)) / cam.dur)) : k0;
       const e = cam.ease === "linear" ? k : ease(k);
@@ -92,8 +93,9 @@
     // depth of field: blur per layer, e.g. blur: { far: 3, fg: 10 }
     Object.entries(sh.blur || {}).forEach(([layer, px]) => { L[layer].style.filter = px ? `blur(${px}px)` : "none"; });
     const applyCam = (k0) => {
-      const { x, y, s } = camAt(k0 * sh.dur, k0);
+      const { x, y, s, r } = camAt(k0 * sh.dur, k0);
       const shake = sh.shake ? sh.shake(k0 * sh.dur) : 0;
+      world.setAttribute("transform", r ? `rotate(${r.toFixed(2)} 540 960)` : "");
       Object.entries(PARALLAX).forEach(([layer, p]) => {
         const ls = 1 + (s - 1) * p;
         L[layer].setAttribute("transform", `translate(540 960) scale(${ls}) translate(${-540 - x * p + shake} ${-960 - y * p})`);
