@@ -137,3 +137,127 @@
           tl.fromTo(`#${id}-p i`, { opacity: 0.3 }, { opacity: 1, duration: 0.5, repeat: 9, yoyo: true, immediateRender: false }, t0);
         },
       };
+
+      // ======================================================================================================
+      // icons with depth and life: gradient + highlight + shadow, and a looping micro-motion while the card is up
+      // ======================================================================================================
+      const PKG = `<defs>
+        <linearGradient id="pkg-tin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f7f8fa"/><stop offset=".45" stop-color="#c3c9cf"/><stop offset="1" stop-color="#6e767e"/></linearGradient>
+        <linearGradient id="pkg-red" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7a68"/><stop offset=".5" stop-color="#d9342b"/><stop offset="1" stop-color="#8e1d16"/></linearGradient>
+        <linearGradient id="pkg-blue" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7cc3ea"/><stop offset=".5" stop-color="#2f6fb8"/><stop offset="1" stop-color="#1b4475"/></linearGradient>
+        <linearGradient id="pkg-yel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe08a"/><stop offset=".5" stop-color="#e8b830"/><stop offset="1" stop-color="#a37d12"/></linearGradient>
+        <linearGradient id="pkg-sack" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3e4bb"/><stop offset="1" stop-color="#b08f4e"/></linearGradient>
+        <linearGradient id="pkg-wood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5844f"/><stop offset="1" stop-color="#5a3a1e"/></linearGradient>
+        <radialGradient id="pkg-glow"><stop offset="0" stop-color="#ffd27a"/><stop offset="1" stop-color="#ff9a3c" stop-opacity=".2"/></radialGradient>
+        <radialGradient id="pkg-skin" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd9b8"/><stop offset="1" stop-color="#c98a5e"/></radialGradient>
+        <radialGradient id="pkg-sun" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fff5c8"/><stop offset=".6" stop-color="#ffcf5a"/><stop offset="1" stop-color="#f08a2a"/></radialGradient>
+        <linearGradient id="pkg-water" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#aee3fb"/><stop offset=".6" stop-color="#3b93cf"/><stop offset="1" stop-color="#1c4f80"/></linearGradient>
+        <linearGradient id="pkg-glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#dfe8ee"/><stop offset="1" stop-color="#9fb0bb"/></linearGradient>
+        <radialGradient id="pkg-dark" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#5a4a4a"/><stop offset="1" stop-color="#1a1212"/></radialGradient>
+        <linearGradient id="pkg-bin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8c949c"/><stop offset=".5" stop-color="#5b6066"/><stop offset="1" stop-color="#2f3337"/></linearGradient>
+      </defs>`;
+      const SHADOW = (cx, cy, rx) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${rx * 0.22}" fill="#000" opacity=".28"/>`;
+      const CAN3 = (x, y, w, h, band, cls = "a-wob") => `<g class="${cls}" style="transform-origin:${x + w / 2}px ${y + h}px">${SHADOW(x + w / 2, y + h + 2, w * 0.6)}<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${w * 0.1}" fill="url(#pkg-tin)" stroke="${PK_INK}" stroke-width="2"/><rect x="${x}" y="${y + h * 0.36}" width="${w}" height="${h * 0.32}" fill="url(#${band})"/><rect x="${x + w * 0.12}" y="${y + 3}" width="${w * 0.12}" height="${h - 6}" rx="2" fill="#fff" opacity=".45"/><ellipse cx="${x + w / 2}" cy="${y}" rx="${w / 2}" ry="${w * 0.14}" fill="#eef1f3" stroke="${PK_INK}" stroke-width="2"/><ellipse cx="${x + w / 2}" cy="${y}" rx="${w * 0.34}" ry="${w * 0.08}" fill="#fff" opacity=".6"/></g>`;
+      Object.assign(PK_ICON, {
+        can: `${PKG}${CAN3(13, 10, 24, 34, "pkg-red")}`,
+        people: `${PKG}${SHADOW(24, 45, 20)}<g class="a-bob"><circle cx="16" cy="16" r="8" fill="url(#pkg-skin)" stroke="${PK_INK}" stroke-width="1.5"/><path d="M3,42c0,-12 6,-17 13,-17s13,5 13,17z" fill="url(#pkg-blue)" stroke="${PK_INK}" stroke-width="1.5"/></g><g class="a-bob2"><circle cx="33" cy="19" r="7" fill="url(#pkg-skin)" stroke="${PK_INK}" stroke-width="1.5"/><path d="M22,42c0,-10 5,-14 11,-14s11,4 11,14z" fill="url(#pkg-red)" stroke="${PK_INK}" stroke-width="1.5"/></g>`,
+        rice: `${PKG}${SHADOW(24, 44, 18)}<g class="a-pulse" style="transform-origin:24px 42px"><path d="M11,42q-7,-20 7,-27h12q14,7 7,27z" fill="url(#pkg-sack)" stroke="${PK_INK}" stroke-width="2"/><path d="M16,15q8,5 16,0" stroke="#7a5a2e" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M17,13l-3,-6M31,13l3,-6" stroke="#7a5a2e" stroke-width="2.5" stroke-linecap="round"/><path d="M15,30q9,-6 18,0" stroke="#7a5a2e" stroke-width="2" fill="none" opacity=".6"/><text x="24" y="37" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="9" fill="#7a5a2e">ข้าว</text></g>`,
+        radio: `${PKG}${SHADOW(24, 44, 20)}<rect x="5" y="16" width="38" height="25" rx="4" fill="url(#pkg-wood)" stroke="${PK_INK}" stroke-width="2"/><rect x="10" y="21" width="17" height="11" rx="2" fill="#1a1208"/><rect class="a-glow" x="10" y="21" width="17" height="11" rx="2" fill="url(#pkg-glow)"/><rect class="a-jit" x="17" y="22" width="1.6" height="9" fill="#ff3b30"/><circle cx="35" cy="27" r="4.5" fill="#d9c08a" stroke="${PK_INK}" stroke-width="1.5"/><path d="M31,16L42,5" stroke="${PK_INK}" stroke-width="2.5" stroke-linecap="round"/><circle cx="42" cy="5" r="2" fill="#ff3b30" class="a-pulse"/>`,
+        thermo: `${PKG}${SHADOW(24, 45, 10)}<rect x="19" y="5" width="10" height="28" rx="5" fill="url(#pkg-glass)" stroke="${PK_INK}" stroke-width="2"/><rect class="a-merc" x="22" y="12" width="4" height="22" rx="2" fill="#e8302a" style="transform-origin:24px 34px"/><circle cx="24" cy="37" r="7" fill="url(#pkg-red)" stroke="${PK_INK}" stroke-width="2"/><circle cx="21.5" cy="34.5" r="2" fill="#fff" opacity=".6"/><path d="M31,12h4M31,18h3M31,24h4" stroke="${PK_INK}" stroke-width="1.5"/>`,
+        water: `${PKG}${SHADOW(24, 45, 12)}<g class="a-bob"><path d="M24,5c8,12 14,18 14,26a14,14 0 0 1 -28,0c0,-8 6,-14 14,-26z" fill="url(#pkg-water)" stroke="${PK_INK}" stroke-width="2"/><ellipse cx="18" cy="26" rx="3" ry="6" fill="#fff" opacity=".55" transform="rotate(-20 18 26)"/></g>`,
+        sun: `${PKG}<g class="a-spin" style="transform-origin:24px 24px"><path d="M24,3v7M24,38v7M3,24h7M38,24h7M9,9l5,5M34,34l5,5M39,9l-5,5M14,34l-5,5" stroke="#f08a2a" stroke-width="3" stroke-linecap="round"/></g><circle cx="24" cy="24" r="10" fill="url(#pkg-sun)" stroke="${PK_INK}" stroke-width="1.5"/>`,
+      });
+      // a looping micro-motion driver for the pk cards (classes a-*), active from t0 to t1
+      function pkLoops(tl, root, t0, t1) {
+        const D = Math.max(0.5, t1 - t0), rep = (p) => Math.ceil(D / p) + 1, q = (c) => root.querySelectorAll(c);
+        const T = (el, from, to, p, extra = {}) => tl.fromTo(el, from, { ...to, duration: p, repeat: rep(p), yoyo: true, ease: "sine.inOut", immediateRender: false, ...extra }, t0);
+        q(".a-pulse").forEach((el) => T(el, { scale: 1 }, { scale: 1.12, transformOrigin: "50% 50%" }, 0.45));
+        q(".a-bob").forEach((el) => T(el, { y: -2 }, { y: 3 }, 0.6)); q(".a-bob2").forEach((el) => T(el, { y: 3 }, { y: -2 }, 0.6));
+        q(".a-wob").forEach((el) => T(el, { rotation: -6 }, { rotation: 6 }, 0.7));
+        q(".a-jit").forEach((el) => T(el, { x: -1.5 }, { x: 1.5 }, 0.07, { ease: "none" }));
+        q(".a-merc").forEach((el) => T(el, { scaleY: 0.72 }, { scaleY: 1 }, 0.9));
+        q(".a-glow").forEach((el) => T(el, { opacity: 0.35 }, { opacity: 1 }, 0.7));
+        q(".a-bulge").forEach((el) => T(el, { scaleY: 1 }, { scaleY: 1.5, transformOrigin: "50% 100%" }, 0.5));
+        q(".a-spin").forEach((el) => tl.fromTo(el, { rotation: 0 }, { rotation: 360, duration: 6, repeat: rep(6), ease: "none", transformOrigin: "50% 50%", immediateRender: false }, t0));
+        q(".a-drip").forEach((el, i) => tl.fromTo(el, { y: 0, opacity: 1 }, { y: 18, opacity: 0, duration: 0.9, repeat: rep(0.9), ease: "power1.in", immediateRender: false }, t0 + i * 0.3));
+        q(".a-rise").forEach((el, i) => tl.fromTo(el, { y: 0, opacity: 0.9 }, { y: -16, opacity: 0, duration: 0.8, repeat: rep(0.8), ease: "power1.out", immediateRender: false }, t0 + i * 0.25));
+      }
+      // stat chip: bigger icon tile + the loops
+      {
+        const base = GameUI.C.counter.anim;
+        GameUI.C.counter.anim = function (tl, id, t0, o) { base.call(this, tl, id, t0, o); pkLoops(tl, document.getElementById(id), t0, o.t0abs + (o.end ?? o.t + 30)); };
+      }
+      {
+        const base = GameUI.C.board.anim;
+        GameUI.C.board.anim = function (tl, id, t0, o) { base.call(this, tl, id, t0, o); pkLoops(tl, document.getElementById(id), t0 + 0.7, o.t0abs + (o.end ?? o.t + 4)); };
+      }
+      // the signs on a can: three can icons that do the thing (lid doming, a drip, fizz)
+      const SIGN3 = [
+        `${PKG}${SHADOW(60, 104, 34)}<rect x="32" y="44" width="56" height="58" rx="6" fill="url(#pkg-tin)" stroke="${PK_INK}" stroke-width="3"/><rect x="32" y="64" width="56" height="20" fill="url(#pkg-red)"/><rect x="37" y="47" width="7" height="52" rx="2" fill="#fff" opacity=".4"/><path class="a-bulge" d="M32,44q28,-26 56,0z" fill="url(#pkg-glass)" stroke="${PK_INK}" stroke-width="3" style="transform-origin:60px 44px"/>`,
+        `${PKG}${SHADOW(60, 104, 34)}<rect x="32" y="30" width="56" height="60" rx="6" fill="url(#pkg-tin)" stroke="${PK_INK}" stroke-width="3"/><rect x="32" y="50" width="56" height="20" fill="url(#pkg-blue)"/><rect x="37" y="33" width="7" height="54" rx="2" fill="#fff" opacity=".4"/><ellipse cx="60" cy="30" rx="28" ry="7" fill="#eef1f3" stroke="${PK_INK}" stroke-width="3"/><path d="M48,90q12,8 24,0" stroke="#6b4a2e" stroke-width="5" fill="none" opacity=".8"/>${[0, 1, 2].map((k) => `<path class="a-drip" d="M${56 + k * 6},92c5,8 7,13 2,16c-6,-3 -6,-8 -2,-16z" fill="#7a5a3e"/>`).join("")}`,
+        `${PKG}${SHADOW(60, 104, 34)}<rect x="32" y="46" width="56" height="56" rx="6" fill="url(#pkg-tin)" stroke="${PK_INK}" stroke-width="3"/><rect x="32" y="66" width="56" height="20" fill="url(#pkg-yel)"/><rect x="37" y="49" width="7" height="50" rx="2" fill="#fff" opacity=".4"/><path d="M32,46h56" stroke="${PK_INK}" stroke-width="3"/>${[[46, 36, 7], [60, 28, 9], [76, 36, 6], [54, 18, 5], [68, 14, 6]].map(([x, y, r]) => `<circle class="a-rise" cx="${x}" cy="${y}" r="${r}" fill="#fff8e0" stroke="${PK_INK}" stroke-width="2"/>`).join("")}`,
+      ];
+      GameUI.C.signs = {
+        html: (id, o) => `<div id="${id}" class="fsigns" style="top:${o.top ?? 170}px">${o.items.map((t, i) => `<div class="row" id="${id}-r${i}"><div class="ic"><svg viewBox="0 0 120 120" style="overflow:visible">${SIGN3[i]}</svg></div><div class="tx">${t}</div><b class="bad">✗</b></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          o.at.forEach((at, i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, o.t0abs + at);
+            tl.fromTo(`#${id}-r${i} .ic svg`, { scale: 0, rotation: -25 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.2)", transformOrigin: "50% 50%", immediateRender: false }, o.t0abs + at + 0.05);
+            tl.fromTo(`#${id}-r${i} .bad`, { opacity: 0, scale: 3 }, { opacity: 1, scale: 1, duration: 0.18, ease: "power4.in", immediateRender: false }, o.t0abs + at + 0.35);
+            tl.fromTo(`#${id}-r${i}`, { x: 0 }, { x: 8, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, o.t0abs + at + 0.5);
+            pkLoops(tl, document.getElementById(`${id}-r${i}`), o.t0abs + at + 0.5, o.t0abs + (o.end ?? o.at[i] + 4));
+          });
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, o.t0abs + o.end);
+        },
+      };
+      // the tip medallions with depth (animated by GameUI's own loops: a-pulse / a-bob / a-sway)
+      Object.assign(GameUI.ILL, {
+        toxin: `${PKG}${SHADOW(60, 108, 34)}<circle cx="60" cy="58" r="40" fill="url(#pkg-dark)" stroke="${PK_INK}" stroke-width="3"/><ellipse cx="46" cy="40" rx="12" ry="7" fill="#fff" opacity=".18" transform="rotate(-30 46 40)"/>
+          <g class="a-pulse" style="transform-origin:60px 56px"><path d="M38,46l14,14M52,46l-14,14M68,46l14,14M82,46l-14,14" stroke="#ff5a4a" stroke-width="6" stroke-linecap="round"/></g><path d="M48,78q12,-8 24,0" stroke="#f4ecd8" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M52,74v8M60,76v8M68,74v8" stroke="#f4ecd8" stroke-width="3" stroke-linecap="round"/>
+          <g class="a-bob"><circle cx="24" cy="22" r="7" fill="#8ff0a0" opacity=".9"/><circle cx="98" cy="18" r="5" fill="#8ff0a0" opacity=".9"/><circle cx="90" cy="34" r="3.5" fill="#8ff0a0" opacity=".9"/></g>`,
+        trash: `${PKG}${SHADOW(60, 110, 34)}<path d="M30,42h60l-6,64H36z" fill="url(#pkg-bin)" stroke="${PK_INK}" stroke-width="3"/><path d="M36,45h8l-4,58" fill="#fff" opacity=".2"/><path d="M50,54v44M70,54v44" stroke="#1e1d1b" stroke-width="3" opacity=".5"/>
+          <g class="a-bob"><rect x="22" y="30" width="76" height="12" rx="4" fill="url(#pkg-bin)" stroke="${PK_INK}" stroke-width="3"/><path d="M48,30v-8h24v8" fill="none" stroke="${PK_INK}" stroke-width="4"/></g>
+          <g class="a-sway" style="transform-origin:60px 10px">${CAN3(46, -8, 28, 36, "pkg-red", "")}</g>`,
+      });
+      // the sun card: a window of sky in the cream card, the sun sliding down to a red horizon over dark hills
+      GameUI.C.sunHud = {
+        html: (id, o) => `<div id="${id}" class="fsun" style="top:${o.top ?? 140}px"><svg viewBox="0 0 380 150" style="border-radius:14px;overflow:hidden">${PKG}<defs><linearGradient id="${id}-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f3657"/><stop offset=".55" stop-color="#9a5a62"/><stop offset=".86" stop-color="#f29a4a"/><stop offset="1" stop-color="#ffd37a"/></linearGradient></defs>
+          <rect width="380" height="150" fill="url(#${id}-sky)"/><path d="M65,150A125,125 0 0 1 315,150" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-dasharray="4 10"/>
+          <path d="M0,150V128L40,118L90,126L140,110L200,122L250,106L300,118L340,108L380,120V150Z" fill="#1a1412"/><path d="M0,128H380" stroke="#ff5a4a" stroke-width="3" stroke-dasharray="10 8"/>
+          <g id="${id}-sun"><circle class="a-glow" r="36" fill="url(#pkg-glow)" opacity=".8"/><circle r="17" fill="url(#pkg-sun)"/></g>
+          <text x="370" y="118" text-anchor="end" font-family="Kanit" font-weight="700" font-size="22" fill="#ffd6c8">มืด ${o.dark}</text></svg>
+          <div class="row"><div class="tm" id="${id}-tm">${o.t0}</div><div class="lf">ก่อนมืด<b id="${id}-lf">${o.left0}</b></div></div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), sun = document.getElementById(`${id}-sun`), tm = document.getElementById(`${id}-tm`), lf = document.getElementById(`${id}-lf`), c = { k: 0 };
+          const m = (h) => { const [a, b] = h.split(":").map(Number); return a * 60 + b; };
+          const A = m(o.t0), B = m(o.t1), DK = m(o.dark), dur = (o.end ?? D("gate")) - o.t;
+          tl.fromTo(`#${id}`, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(1.6)", immediateRender: false }, t0);
+          const draw = () => {
+            const k = c.k, mins = A + (B - A) * k, u = (o.from ?? 0.3) + ((o.to ?? 0.95) - (o.from ?? 0.3)) * k, a = Math.PI * (1 - u);
+            sun.setAttribute("transform", `translate(${(190 + Math.cos(a) * 125).toFixed(1)},${(150 - Math.sin(a) * 125).toFixed(1)})`);   // the arc fits the 150-high window (the old 180 radius put the sun above the frame)
+            tm.textContent = `${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(Math.floor(mins % 60)).padStart(2, "0")} น.`;
+            const left = DK - mins; lf.textContent = left > 0 ? `${Math.floor(left / 60)}:${String(Math.floor(left % 60)).padStart(2, "0")} ชม.` : "เลยเวลา";
+            el.classList.toggle("late", left <= 0);
+          };
+          tl.to(c, { k: 1, duration: dur, ease: "none", immediateRender: false, onUpdate: draw }, t0);
+          draw();
+          pkLoops(tl, el, t0, o.t0abs + (o.end ?? o.t + dur));
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, o.t0abs + o.end);
+        },
+      };
+      // the source chip's badge breathes
+      {
+        const base = GameUI.C.src.anim;
+        GameUI.C.src.anim = function (tl, id, t0, o) { base.call(this, tl, id, t0, o); tl.fromTo(`#${id} b`, { scale: 1 }, { scale: 1.18, duration: 0.5, repeat: Math.ceil(((o.end ?? o.t + 4) - o.t) / 0.5) + 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); };
+      }
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .pks .ic { width: 80px; height: 80px; border-radius: 20px; background: radial-gradient(circle at 35% 28%, #ffffff, #e6dfcd 72%); box-shadow: inset 0 -3px 0 rgba(0,0,0,.08), 0 4px 10px rgba(0,0,0,.18); }
+        .pks .ic svg { width: 68px; height: 68px; overflow: visible; filter: drop-shadow(0 3px 3px rgba(0,0,0,.35)); }
+        .fsigns .ic { width: 118px; height: 118px; background: radial-gradient(circle at 35% 28%, #ffffff, #e6dfcd 72%); box-shadow: inset 0 -3px 0 rgba(0,0,0,.08), 0 4px 10px rgba(0,0,0,.18); }
+        .fsigns .ic svg { overflow: visible; filter: drop-shadow(0 3px 3px rgba(0,0,0,.35)); }
+        .gui.tip .med { background: radial-gradient(circle at 35% 28%, #ffffff, #e6dfcd 72%); box-shadow: inset 0 -3px 0 rgba(0,0,0,.08), 0 4px 10px rgba(0,0,0,.18); } .gui.tip .med svg { overflow: visible; filter: drop-shadow(0 3px 3px rgba(0,0,0,.35)); }
+        .pkt .chip svg, .pkr .ics svg { overflow: visible; filter: drop-shadow(0 2px 2px rgba(0,0,0,.3)); }
+        .fsun { padding: 12px 14px 10px; } .fsun svg { height: 150px; box-shadow: inset 0 0 0 2px rgba(0,0,0,.25); }
+        .fsun .tm, .fsun .lf { margin-top: 6px; }
+        .zsrc b { transform-origin: 50% 50%; }
+      </style>`);
