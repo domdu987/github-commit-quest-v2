@@ -1,0 +1,16 @@
+
+      // ---------- demo: the EP.1 opener (title in the sky, dive down to the first scene) ----------
+      const OP = { title: "หมอกลง", ep: "EP.1", name: "อย่าเปิดไฟสูง", kick: "ROD MAI CLUB", at: 1.9, glide: 1.9,
+        land: fr(520, 1300, 0.95, 540, 980, { drift: { s: 0.02 } }) };
+      add("open", {
+        set: "mountainRoad", setOpts: { id: "mr" }, dark: 0.22,
+        cam: { keys: Opener.cam(OP) },
+        extra(L, id) { Opener.extra(L, id, OP); },
+        captions: caps("open"),
+        fx(tl, id, t0) {
+          Opener.fx(tl, id, t0, OP);
+          tl.set("#mr-car", { attr: { transform: "translate(420,1300)" } }, t0);
+          tl.to("#mr-car", { attr: { transform: "translate(760,1225)" }, duration: D("open"), ease: "none" }, t0);
+          Fx.heart(tl, t0 + F("open", 1), D("open") - F("open", 1), 0.45, 0.5);
+        },
+      });

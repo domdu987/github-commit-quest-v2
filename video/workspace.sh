@@ -11,6 +11,7 @@ LATEST="$R/mok-ep3"          # newest libraries (rig.js, zom.js, mok.js with the
 TEMPLATE="$R/koi-ep3"        # newest rendered composition: HyperFrames project files and fonts
 mkdir -p "$W/hf/lib" "$W/hf/rig/assets" "$W/music"
 cp "$LATEST"/lib/*.js "$LATEST"/lib/voice.py "$LATEST"/lib/voice_qa.py "$W/hf/lib/"
+cp "$R"/brand/opener/opener.js "$W/hf/lib/"   # EP.1 opener of every new story: title in the sky, dive down to the first scene
 cp "$TEMPLATE"/composition/{package.json,hyperframes.json,meta.json} "$W/hf/rig/"
 cp -r "$TEMPLATE"/composition/assets/fonts "$W/hf/rig/assets/"
 cp "$LATEST"/production/synth.py "$W/"   # includes the car sounds: engine screech blinker ratchet motor stalk
