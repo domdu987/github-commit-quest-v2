@@ -1,0 +1,398 @@
+      // ---------- หมอกลง EP.2: poses, helpers, cards ----------
+      Rig.MODES.wheel = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -60, faF: 110, uaB: 60, faB: -110, torso: 1, head: 2 + Math.sin(u * 1.1) });   // elbows out, both hands in front of the chest on the rim (10 and 2)
+      Rig.MODES.seat = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -14, faF: -50, uaB: -10, faB: -40 });
+      Rig.MODES.lunge2 = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: 26, head: -6, uaF: -100, faF: -30, uaB: -80, faB: -40 });                     // lunging between the front seats
+      Rig.MODES.arms = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -40, faF: -110, uaB: -36, faB: -112, torso: -2 });                                    // arms folded
+      Rig.MODES.tap = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -20 + 6 * Math.abs(Math.sin(u * 7)), faF: -100, uaB: 4, faB: -12, head: 4 });            // tapping her wrist: hurry
+      Rig.MODES.peer = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 6, head: -8, uaF: -6, faF: -30, uaB: -4, faB: -20 });
+      Rig.MODES.laughCam = (u, o) => { const b = Math.abs(Math.sin(u * 9)); return { ...Rig.MODES.idle(u, o), uaF: -40, faF: -100, uaB: -10, faB: -30, torso: -5 - 3 * b, head: -12 - 4 * b, bodyY: -3 * b }; };
+      Rig.MODES.lieStill = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: 6, faF: -8, uaB: 2, faB: -6 });   // asleep on her side, arms down
+      Rig.MODES.retch = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 38 + 3 * Math.sin(u * 5), head: 16, uaF: -30, faF: -10, uaB: -26, faB: -14, thF: 12, shF: 18, thB: -8, shB: 14, bodyY: 18 });   // bent over, hands toward the knees
+      const MI = (x, y, s, track, extra = {}) => ({ who: "mint", x, y, s, track, ...extra });
+      const JA = (x, y, s, track, extra = {}) => ({ who: "jay", x, y, s, track, ...extra });
+      const WA = (x, y, s, track, extra = {}) => ({ who: "wan", x, y, s, track, ...extra });
+      const SA = (x, y, s, track, extra = {}) => ({ who: "saeng", x, y, s, track, ...extra });
+      const TOP = (L, el) => L.act.appendChild(el);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const PLATE = "4กษ 2519";
+      // move an element's transform attribute through keyed values (avoids GSAP x/y resetting an existing translate)
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+
+      // ---- the rule card: road-sign style (yellow diamonds on asphalt), one rhyming line per row ----
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .krule.m { background: linear-gradient(180deg, #2a2d33 0%, #17191d 100%); border-color: #f2c23a; box-shadow: 0 0 0 10px rgba(20,22,26,.94), 0 0 0 13px #f2c23a, 0 26px 60px rgba(0,0,0,.65); }
+        .krule.m::before { background: repeating-linear-gradient(90deg, rgba(242,194,58,.06) 0 40px, transparent 40px 80px); }
+        .krule.m .cn { border-color: #f2c23a; } .krule.m .cn::after { background: #f2c23a; }
+        .krule.m .kr-h span { background: linear-gradient(180deg, #d8402f, #a72a1d); border-color: #f4ecd8; color: #fff; }
+        .krule.m .kr-i { border-radius: 14px; transform: rotate(45deg); background: #f2c23a; border: 6px solid #1b1d20; width: 104px; height: 104px; margin: 7px; }
+        .krule.m .kr-i svg { transform: rotate(-45deg); }
+        .krule.m .kr-t u::after { background: #f2c23a; box-shadow: 0 0 14px #f2c23a; }
+        .rcpt { position: absolute; left: 50%; width: 600px; margin-left: -300px; z-index: 52; opacity: 0; padding: 34px 38px 40px; background: #f6f2e6; color: #2b2925; font-family: Kanit;
+          box-shadow: 0 30px 70px rgba(0,0,0,.7); clip-path: polygon(0 0, 100% 0, 100% 100%, 95% 98%, 90% 100%, 85% 98%, 80% 100%, 75% 98%, 70% 100%, 65% 98%, 60% 100%, 55% 98%, 50% 100%, 45% 98%, 40% 100%, 35% 98%, 30% 100%, 25% 98%, 20% 100%, 15% 98%, 10% 100%, 5% 98%, 0 100%); }
+        .rcpt .h { text-align: center; font-weight: 900; font-size: 46px; } .rcpt .s { text-align: center; font-size: 26px; color: #6b665c; margin-bottom: 16px; }
+        .rcpt .ln { display: flex; justify-content: space-between; font-size: 32px; border-top: 3px dashed #b9b2a2; padding: 10px 0; }
+        .rcpt .hw { margin-top: 18px; font-weight: 900; font-size: 58px; color: #b8261c; transform: rotate(-4deg); text-align: center; line-height: 1.15; }
+        .rcpt .ft { margin-top: 14px; text-align: center; font-size: 28px; color: #2b2925; font-weight: 700; }
+      </style>`);
+      GameUI.C.mokRule = {
+        html: (id, o) => {
+          const IK = "#1b1d20", rows = [
+            [`<g transform="translate(60,64)"><path d="M-34,-10Q-34,-30 -14,-30H8V10H-14Q-34,10 -34,-10Z" fill="${IK}"/><path d="M14,-24L44,-34M14,-10L46,-10M14,4L44,14" stroke="${IK}" stroke-width="6" stroke-linecap="round"/></g>
+              <g class="kno"><circle cx="60" cy="60" r="46" fill="none" stroke="#d8322a" stroke-width="9"/><path d="M28,28L92,92" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/></g>`, `หมอกลง <em>อย่าตาม<u>ไฟ</u></em>`],
+            [`<g class="kwv"><circle cx="54" cy="36" r="10" fill="${IK}"/><path d="M54,46V84M54,84L44,104M54,84L64,104M54,56L36,70M54,56L76,34" stroke="${IK}" stroke-width="7" stroke-linecap="round" fill="none"/></g>
+              <g class="kno2"><circle cx="60" cy="60" r="46" fill="none" stroke="#d8322a" stroke-width="9"/><path d="M28,28L92,92" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/></g>`, `มีคนโบก <em>อย่าจอด<u>ให้</u></em>`],
+            [`<path d="M30,96V60L60,36L90,60V96Z" fill="${IK}"/><rect x="52" y="72" width="16" height="24" fill="#f2c23a"/><g class="kzz"><text x="76" y="40" font-family="Kanit" font-weight="900" font-size="26" fill="${IK}">Z</text><text x="90" y="24" font-family="Kanit" font-weight="900" font-size="18" fill="${IK}">z</text></g>`,
+              `หลงเข้าบ้านหมอก <em>อย่าหลับ<u>ใน</u></em>`],
+          ];
+          return `<div id="${id}" class="krule m" style="top:${o.top ?? 170}px"><i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i><i class="sheen"></i>
+            <div class="kr-h"><span>${o.label || "กฎของยายแสง"}</span></div>
+            ${rows.map(([ill, txt], i) => `<div class="kr-r" id="${id}-r${i}"><div class="kr-i"><svg viewBox="0 0 120 120">${ill}</svg></div><div class="kr-t" style="font-size:${i === 2 ? 52 : 60}px">${txt}</div></div>`).join("")}</div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.7)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .kr-h span`, { scaleX: 0.2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.08);
+          tl.fromTo(`#${id} .sheen`, { x: 0 }, { x: 1500, duration: 0.9, ease: "power1.inOut", immediateRender: false }, t0 + 0.25);
+          o.at.forEach((at, i) => {
+            const r = el.querySelector(`#${id}-r${i}`);
+            tl.fromTo(r, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.28, ease: "power2.out", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector(".kr-i"), { scale: 0 }, { scale: 1, duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector("u"), { "--k": 0 }, { "--k": 1, duration: 0.35, ease: "power2.out", immediateRender: false }, A(at) + 0.3);
+          });
+          tl.fromTo(el.querySelector(".kno"), { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, svgOrigin: "60 60", duration: 0.22, ease: "power3.in", immediateRender: false }, A(o.at[0]) + 0.35);
+          tl.fromTo(el.querySelector(".kno2"), { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, svgOrigin: "60 60", duration: 0.22, ease: "power3.in", immediateRender: false }, A(o.at[1]) + 0.35);
+          tl.fromTo(el.querySelector(".kwv"), { rotation: -8 }, { rotation: 8, svgOrigin: "54 84", duration: 0.3, repeat: 9, yoyo: true, immediateRender: false }, A(o.at[1]));
+          tl.fromTo(el.querySelector(".kzz"), { y: 6, opacity: 0.3 }, { y: -6, opacity: 1, duration: 0.6, repeat: 5, yoyo: true, immediateRender: false }, A(o.at[2]));
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, y: -30, duration: 0.25 }, A(o.end));
+        },
+      };
+      // end card: the petrol-station receipt, the next episode written on it by hand
+      GameUI.C.receipt = {
+        html: (id, o) => `<div id="${id}" class="rcpt" style="top:${o.top ?? 420}px"><div class="h">ปั๊มยายแสง</div><div class="s">ปากทางขึ้นเขา · ${o.time}</div>
+          <div class="ln"><span>เบนซิน</span><span>500.00</span></div><div class="ln"><span>ทะเบียน</span><span>${PLATE}</span></div>
+          <div class="hw" id="${id}-hw">${o.ep}<br>${o.title}</div><div class="ft">${o.cta}</div></div>`,
+        anim(tl, id, t0, o) {
+          tl.fromTo(`#${id}`, { opacity: 0, y: 260, rotation: 8 }, { opacity: 1, y: 0, rotation: -2, duration: 0.5, ease: "power3.out", immediateRender: false }, t0);
+          tl.fromTo(`#${id}-hw`, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)", immediateRender: false }, t0 + 0.5);
+        },
+      };
+      const K = "#2e2a26", SKN = `fill="#e7b48a" stroke="${K}" stroke-width="5"`, NO = `<path d="M18,18L102,102" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/>`;
+      Object.assign(GameUI.ILL, {
+        headache: `<circle cx="60" cy="70" r="34" ${SKN}/><path d="M46,66l9,4M74,66l-9,4M50,86q10,-6 20,0" stroke="${K}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M24,16l12,14l-9,5l12,14M96,16l-12,14l9,5l-12,14" stroke="#d8322a" stroke-width="6" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`,
+        dizzy: `<circle cx="60" cy="70" r="34" ${SKN}/>${[47, 73].map((x) => `<path d="M${x},66m-8,0a8,8 0 1 1 8,8a5,5 0 1 1 -4,-5" stroke="${K}" stroke-width="4" fill="none"/>`).join("")}<path d="M50,88q10,6 20,0" stroke="${K}" stroke-width="5" fill="none"/><ellipse cx="60" cy="26" rx="40" ry="10" fill="none" stroke="#f2c23a" stroke-width="5" stroke-dasharray="10 8"/>`,
+        nausea: `<circle cx="60" cy="64" r="36" fill="#b9d49a" stroke="${K}" stroke-width="5"/><path d="M46,58l9,3M74,58l-9,3" stroke="${K}" stroke-width="5" stroke-linecap="round"/><path d="M40,84q5,-6 10,0t10,0t10,0t10,0" stroke="${K}" stroke-width="5" fill="none"/>`,
+        inroom: `<path d="M18,60L60,24L102,60V102H18Z" fill="#e9e0c8" stroke="${K}" stroke-width="6" stroke-linejoin="round"/><path d="M60,50V88M44,72L60,88L76,72" stroke="#d8322a" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+        outside: `<path d="M14,34h34M22,50h24M78,28h28" stroke="#8ab4d8" stroke-width="6" stroke-linecap="round"/><path d="M60,100V44M42,62L60,44L78,62" stroke="#3fa86a" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+        co: `<circle cx="60" cy="60" r="46" fill="#cfc6ef" stroke="${K}" stroke-width="5"/><text x="60" y="76" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="${K}">CO</text>`,
+        noeye: `<path d="M12,60Q60,10 108,60Q60,110 12,60Z" fill="#fff" stroke="${K}" stroke-width="6"/><circle cx="60" cy="60" r="17" fill="${K}"/>${NO}`,
+        nonose: `<path d="M60,16C56,46 40,70 36,84Q46,96 60,90Q74,96 84,84C80,70 64,46 60,16Z" ${SKN}/><path d="M48,86q4,-6 8,0M64,86q4,-6 8,0" stroke="${K}" stroke-width="4" fill="none"/>${NO}`,
+        build: `<rect x="16" y="26" width="88" height="78" rx="6" fill="#e9e0c8" stroke="${K}" stroke-width="6"/>${[[34, 86], [52, 90], [72, 84], [88, 92], [40, 70], [62, 72], [84, 68], [30, 52], [50, 56], [70, 50], [90, 48], [46, 38], [76, 38]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="6" fill="#8a7ab4"/>`).join("")}`,
+        skull: `<path d="M24,58Q24,18 60,18Q96,18 96,58Q96,74 84,80V98H36V80Q24,74 24,58Z" fill="#f4f0e4" stroke="${K}" stroke-width="5"/><circle cx="45" cy="58" r="11" fill="${K}"/><circle cx="75" cy="58" r="11" fill="${K}"/><path d="M60,70l-6,10h12z" fill="${K}"/><path d="M48,98V88M60,98V88M72,98V88" stroke="${K}" stroke-width="4"/>`,
+        stovex: `<path d="M30,44L40,100H80L90,44Z" fill="#b0563a" stroke="${K}" stroke-width="5"/><path d="M26,40H94" stroke="${K}" stroke-width="8"/><path d="M52,100V82Q60,74 68,82V100" fill="#2a1a12"/><path d="M30,16L90,76M90,16L30,76" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/>`,
+        goout: `<rect x="16" y="18" width="52" height="88" fill="#4a3828" stroke="${K}" stroke-width="5"/><circle cx="58" cy="64" r="4" fill="#f2c23a"/><path d="M56,62H106M90,46L106,62L90,78" stroke="#3fa86a" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+      });
+      const G = 1540, HR = (id, extra = {}) => ({ id, ...extra });
+      const asleep = (mode = "sit") => [{ t: 0, mode, eyes: "closed", mouth: "flat" }];
+      // the bundle: a person wrapped in the brown blanket, lying (dragged) or sitting slumped
+      const BUNDLE_LIE = (id, x, y, s) => `<g id="${id}" transform="translate(${x},${y})"><g transform="scale(${s})"><path d="M-230,0Q-250,-90 -170,-110Q0,-140 180,-104Q250,-90 230,0Z" fill="#5a4a3e" stroke="${K}" stroke-width="4"/>
+          <path d="M-150,-100Q-120,-40 -160,0M60,-120Q90,-50 50,0" stroke="#463a30" stroke-width="8" fill="none"/><ellipse cx="-200" cy="-60" rx="50" ry="44" fill="#4e4036" stroke="${K}" stroke-width="4"/><ellipse cx="-214" cy="-58" rx="22" ry="20" fill="#0b0d10"/></g></g>`;
+
+      // ---------- 1. hook: inside the house, the stove glowing, the three asleep round it; the dead too ----------
+      add("hook", {
+        set: "houseRoom", setOpts: HR("hk", { fire: 1, shut: 1, ghosts: 0 }), dark: 0.55,
+        cam: { keys: [{ t: 0, ...fr(540, 1250, 0.95, 540, 1000), drift: { s: 0.02 } }, { t: F("hook", 1) - 0.05, ...fr(540, 1330, 1.35, 540, 1100), drift: { s: 0.03 } }] },
+        actors: [WA(800, G + 90, 0.9, asleep(), { flip: true }), JA(300, G + 60, 0.9, asleep()), MI(40, G + 210, 0.95, asleep("lieStill"), { flip: true, blinks: [] })],
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          tl.fromTo("#hk-ghosts", { opacity: 0 }, { opacity: 1, duration: 0.12, immediateRender: false }, t0 + F("hook", 1));
+          Fx.glitch(tl, `#${id}`, t0 + F("hook", 1), 0.25, 12, 81); Fx.heart(tl, t0 + F("hook", 1), D("hook") - F("hook", 1), 0.45, 0.55);
+          tl.fromTo("#fxred", { opacity: 0.6 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("hook", 1));
+        },
+      });
+
+      // ---------- 2. chapter card ----------
+      add("chapter", {
+        set: "roadSign", setOpts: { id: "cs", ep: "ตอนที่ 2", title: "อย่าหลับใน" }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(650, 640, 1.0, 540, 760), drift: { s: 0.03 } }] },
+        captions: caps("chapter"),
+        fx(tl, id, t0) {
+          tl.fromTo("#cs-sweep", { x: -900, opacity: 0.2 }, { x: 900, opacity: 1, duration: D("chapter"), ease: "power1.inOut", immediateRender: false }, t0);
+          tl.fromTo("#cs-ep", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 0.5);
+        },
+      });
+
+      // ---------- 3. the window comes down: nobody ----------
+      add("window", {
+        set: "carWindow", setOpts: { id: "cw", face: 0, knock: 0 }, dark: 0.3,
+        cam: { keys: [{ t: 0, x: 0, y: 40, s: 1.05, drift: { s: 0.03 } }] },
+        captions: caps("window"),
+        extra(L) { L.fg.insertAdjacentHTML("beforeend", `<g id="cw-in">${Mok.fogBlobs((() => { let s = 7; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })(), 6, 100, 980, 500, 1250, 0.6)}</g>`); },
+        fx(tl, id, t0) {
+          tl.fromTo("#cw-glass", { y: 0 }, { y: 860, duration: 1.3, ease: "power1.inOut", immediateRender: false }, t0 + 0.1);
+          tl.fromTo("#cw-in", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1.2, transformOrigin: "50% 50%", duration: D("window") - 1.2, ease: "power1.out", immediateRender: false }, t0 + 1.2);
+          Fx.heart(tl, t0 + F("window", 0, 1), D("window") - F("window", 0, 1), 0.4, 0.5);
+        },
+      });
+
+      // ---------- 4. 06:00, still dark ----------
+      add("dawn", {
+        set: "carPOV", setOpts: { id: "dw", clock: "06:00", lines: 0, haz: true }, dark: 0.55,
+        cam: { keys: [{ t: 0, ...fr(160, 1496, 2.0, 540, 900), drift: { s: 0.02 } }, { t: F("dawn", 0, 1) - 0.05, x: 0, y: -60, s: 1.0, drift: { s: 0.015 } }] },
+        extra(L) { L.mid.insertAdjacentHTML("beforeend", `<rect x="-900" y="200" width="2900" height="1400" fill="#07090c" opacity=".82"/>`); },
+        captions: caps("dawn"),
+        fx(tl, id, t0) { tl.fromTo("#dw-hazglow", { opacity: 0.7 }, { opacity: 0.25, duration: D("dawn"), immediateRender: false }, t0); },
+      });
+
+      // ---------- 5. the car won't start ----------
+      add("start", {
+        set: "carInterior", setOpts: { id: "st", haz: true }, dark: 0.45,
+        cam: { keys: [{ t: 0, ...fr(270, 1000, 1.45, 540, 900), drift: { s: 0.02 } }, { t: vo("start", 1) - 0.05, ...fr(800, 1000, 1.45, 540, 900), drift: { s: 0.02 } }] },
+        actors: [WA(540, 1080, 0.85, [{ t: 0, mode: "seat", eyes: "wide", mouth: "flat" }]),
+          MI(270, 1290, 1.15, [{ t: 0, mode: "wheel", eyes: "wide", mouth: "scream" }]), JA(810, 1290, 1.15, [{ t: 0, mode: "seat", eyes: "side", mouth: "flat" }], { flip: true })],
+        bubbles: [bub("start", 0, 60, 300, 260, { end: vo("start", 1) - 0.05 }), bub("start", 1, 380, 300, 560)],
+        sfxText: [{ text: "แกร๊ก… แกร๊ก…", x: 120, y: 1320, t: 0.15, rot: -6, size: 96, color: "#f2d6a0", end: 1.4 }],
+        fx(tl, id, t0, L) {
+          TOP(L, document.getElementById("st-dash"));
+          tl.to("#st-hazglow", { opacity: 0, duration: 0.6 }, t0 + 0.6);
+          [0.2, 0.7].forEach((k) => tl.fromTo(`#${id} .stage`, { x: 0 }, { x: 6, duration: 0.05, repeat: 3, yoyo: true, immediateRender: false }, t0 + k));
+        },
+      });
+
+      // ---------- 6. walking into the fog ----------
+      add("walk", {
+        set: "roadFog", setOpts: { id: "wk", carX: -120, head: false, tail: false }, dark: 0.45,
+        cam: { keys: [{ t: 0, ...fr(300, 1200, 0.95, 540, 1050), drift: { x: 60, s: 0.01 } }] },
+        actors: [JA(160, 1470, 0.78, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: 640, dur: 4.6 } }),
+          MI(40, 1480, 0.78, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat" }], { moveTo: { x: 500, dur: 4.6 } }),
+          WA(-90, 1490, 0.74, [{ t: 0, mode: "walk", eyes: "wide", mouth: "flat", opts: { arm: 4 } }], { moveTo: { x: 360, dur: 4.6 } })],
+        captions: caps("walk"),
+      });
+
+      // ---------- 7. the village nobody lives in ----------
+      add("village", {
+        set: "fogVillage", setOpts: { id: "vg", house: { x: 260, s: 0.7 }, signX: 760 }, dark: 0.4,
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 0.9, 540, 1000), drift: { s: 0.02 } }, { t: vo("village", 1) - 0.05, ...fr(760, 1200, 1.4, 540, 900), drift: { s: 0.03 } }] },
+        actors: [WA(980, 1600, 0.95, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o" }], { flip: true }), JA(1130, 1610, 0.98, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: caps("village", [0]),
+        bubbles: [bub("village", 1, 380, 560, 640)],
+        fx(tl, id, t0) { Fx.heart(tl, t0 + vo("village", 1), D("village") - vo("village", 1), 0.4, 0.5); },
+      });
+
+      // ---------- 8. inside: a stove, charcoal, blankets, all laid out ----------
+      add("stove", {
+        set: "houseRoom", setOpts: HR("sv", { door: 1 }), dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(400, 1200, 0.9, 540, 1000), drift: { s: 0.02 } }, { t: F("stove", 0, 1) - 0.05, ...fr(600, 1420, 1.3, 540, 1050), drift: { s: 0.02 } }, { t: F("stove", 0, 2) - 0.05, ...fr(560, 1450, 1.7, 540, 1000), drift: { s: 0.04 } }] },
+        actors: [MI(110, G + 60, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 1.2, mode: "idle", eyes: "wide", mouth: "o" }], { moveTo: { x: 300, dur: 1.2 } })],
+        captions: caps("stove"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("stove", 0, 2), D("stove") - F("stove", 0, 2), 0.42, 0.5); },
+      });
+
+      // ---------- 9. light it, shut the window ----------
+      add("light", {
+        set: "houseRoom", setOpts: HR("lt", { fire: 0 }), dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 1.0, 540, 1000), drift: { s: 0.02 } }] },
+        actors: [MI(400, G + 70, 0.92, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "flat" }]), JA(660, G + 40, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 1.0, mode: "push", eyes: "normal", mouth: "flat" }])],
+        bubbles: [bub("light", 0, 40, 380, 300)],
+        fx(tl, id, t0) {
+          tl.fromTo("#lt-fire", { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power2.in", immediateRender: false }, t0 + 0.4);
+          tl.to("#lt-open", { opacity: 0, duration: 0.1 }, t0 + 1.4); tl.to("#lt-shut", { opacity: 1, duration: 0.1 }, t0 + 1.4);
+          tl.fromTo(`#${id} .stage`, { x: 0 }, { x: 5, duration: 0.04, repeat: 3, yoyo: true, immediateRender: false }, t0 + 1.45);
+        },
+        sfxText: [{ text: "ปัง!", x: 760, y: 520, t: 1.45, rot: 8, size: 90, color: "#f2d6a0", end: 2.4 }],
+      });
+
+      // ---------- 10. a photo ----------
+      add("photo", {
+        set: "houseRoom", setOpts: HR("ph", { fire: 1, shut: 1 }), dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(600, 1250, 1.0, 540, 1000), drift: { s: 0.02 } }] },
+        actors: [MI(300, G + 90, 0.92, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }]), WA(780, G + 90, 0.88, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }], { flip: true }),
+          JA(1000, G + 40, 0.95, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "smile" }], { flip: true })],
+        bubbles: [bub("photo", 0, 420, 330, 830)],
+        fx(tl, id, t0) { tl.fromTo("#flashw", { opacity: 1 }, { opacity: 0, duration: 0.35, immediateRender: false }, t0 + voEnd("photo") - 0.05); },
+      });
+
+      // ---------- 11. the photo: the room is full ----------
+      add("pic", {
+        set: "photoLCD", setOpts: { id: "pc", ghosts: 0 }, dark: 0.15,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.02 } }, { t: F("pic", 0, 2) - 0.05, ...fr(540, 1000, 1.45, 540, 900), drift: { s: 0.04 } }] },
+        captions: caps("pic"),
+        fx(tl, id, t0) {
+          tl.fromTo("#pc-ghosts", { opacity: 0 }, { opacity: 1, duration: 0.5, immediateRender: false }, t0 + F("pic", 0, 1));
+          Fx.glitch(tl, `#${id}`, t0 + F("pic", 0, 2), 0.3, 14, 91); Fx.heart(tl, t0 + F("pic", 0, 1), D("pic") - F("pic", 0, 1), 0.42, 0.55);
+          tl.fromTo("#fxred", { opacity: 0.5 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("pic", 0, 2));
+        },
+      });
+
+      // ---------- 12. headache, dizzy, sick ----------
+      add("sick", {
+        set: "houseRoom", setOpts: HR("sk", { fire: 1, shut: 1 }), dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(820, 1150, 1.25, 540, 1150), drift: { s: 0.02 } }] },
+        shake: (t) => 6 * Math.sin(t * 2.1) + 3 * Math.sin(t * 5.3),
+        actors: [MI(260, G + 90, 0.92, asleep()), WA(900, G + 40, 0.92, [{ t: 0, mode: "holdHead", eyes: "pain", mouth: "frown" }], { flip: true })],
+        captions: caps("sick"),
+        ui: [{ type: "steps", t: F("sick", 0, 0) + 0.3, label: "อาการ", items: [["headache", "ปวดหัว"], ["dizzy", "เวียนหัว"], ["nausea", "คลื่นไส้"]], gap: (F("sick", 0, 2) - F("sick", 0, 0) - 0.3) / 2, top: 200, end: D("sick") - 0.2 }],
+        fx(tl, id, t0) { Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.3); },
+      });
+
+      // ---------- 13. "so sleepy" — and ยายแสง's rule ----------
+      add("sleep", {
+        set: "houseRoom", setOpts: HR("sl", { fire: 1, shut: 1 }), dark: 0.55,
+        cam: { keys: [{ t: 0, ...fr(330, 1380, 1.35, 540, 1150), drift: { s: 0.02 } }, { t: 2.2, ...fr(320, 1640, 1.3, 540, 1150), drift: { s: 0.02 } }, { t: vo("sleep", 1) - 0.1, ...fr(480, 1400, 1.0, 540, 1300), drift: { s: 0.012 } }] },
+        actors: [MI(300, G + 90, 0.92, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }], { until: 2.2 }), MI(40, G + 210, 0.92, asleep("lieStill"), { flip: true, from: 2.2, blinks: [] }),
+          WA(780, G + 90, 0.88, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }, { t: vo("sleep", 1) + 0.6, mode: "sit", eyes: "wide", mouth: "o" }], { flip: true })],
+        bubbles: [bub("sleep", 0, 40, 420, 300)],
+        ui: [{ type: "mokRule", t: vo("sleep", 1) - 0.1, at: [vo("sleep", 1) - 0.05, vo("sleep", 1), vo("sleep", 1) + 0.05], top: 150, label: "กฎของยายแสง", end: D("sleep") - 0.25 }],
+        captions: caps("sleep", [1], { quote: true }),
+        fx(tl, id, t0) {
+          tl.to([`#${id} .krule .kr-r:nth-of-type(2)`, `#${id} .krule .kr-r:nth-of-type(3)`], { opacity: 0.3, duration: 0.3 }, t0 + vo("sleep", 1) + 0.6);
+          Fx.tunnel(tl, t0 + vo("sleep", 1), t0 + D("sleep"), 0.6); Fx.heart(tl, t0 + vo("sleep", 1), D("sleep") - vo("sleep", 1), 0.45, 0.5);
+        },
+      });
+
+      // ---------- 14. หวาน outside: sick, then better ----------
+      const OUTV = { id: "ot", house: { x: 260, s: 0.85 }, glow: true, sign: false };
+      add("out", {
+        set: "fogVillage", setOpts: OUTV, dark: 0.4,
+        cam: { keys: [{ t: 0, ...fr(720, 1250, 1.2, 540, 1100), drift: { s: 0.02 } }] },
+        actors: [WA(760, 1560, 0.95, [{ t: 0, mode: "retch", eyes: "pain", mouth: "o" }, { t: F("out", 0, 1), mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+        captions: caps("out"),
+      });
+
+      // ---------- 15. worse inside, better outside = carbon monoxide ----------
+      add("know", {
+        set: "fogVillage", setOpts: { ...OUTV, id: "kn" }, dark: 0.4,
+        cam: { keys: [{ t: 0, ...fr(640, 1300, 1.0, 540, 1250), drift: { s: 0.015 } }] },
+        actors: [WA(760, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("know"),
+        ui: [{ type: "steps", t: F("know", 0, 0) - 0.2, label: "อาการแบบนี้", items: [["inroom", "อยู่ในห้อง แย่ลง"], ["outside", "ออกมา ดีขึ้น"], ["co", "พิษ CO"]], gap: (F("know", 0, 3) - F("know", 0, 0)) / 2, top: 200, end: D("know") - 0.2 }],
+      });
+
+      // ---------- 16. the gas you can't see ----------
+      add("gas", {
+        set: "houseRoom", setOpts: HR("ga", { fire: 1, shut: 1, gas: 0 }), dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 0.9, 540, 1250), drift: { s: 0.012 } }] },
+        actors: [JA(800, G + 90, 0.9, asleep(), { flip: true }), MI(40, G + 210, 0.92, asleep("lieStill"), { flip: true, blinks: [] })],
+        captions: caps("gas"),
+        ui: [{ type: "steps", t: F("gas", 0, 0) - 0.2, label: "คาร์บอนมอนอกไซด์", items: [["noeye", "ไม่มีสี"], ["nonose", "ไม่มีกลิ่น"], ["build", "สะสมในห้องปิด"], ["skull", "มากๆ ถึงตาย"]], gap: (F("gas", 0, 3) - F("gas", 0, 0)) / 3, top: 200, end: D("gas") - 0.2 }],
+        fx(tl, id, t0) {
+          tl.fromTo("#ga-gas", { opacity: 0 }, { opacity: 1, duration: F("gas", 0, 3) - F("gas", 0, 1), ease: "power1.in", immediateRender: false }, t0 + F("gas", 0, 1));
+          Fx.heart(tl, t0 + F("gas", 0, 3), D("gas") - F("gas", 0, 3), 0.45, 0.5);
+        },
+      });
+
+      // ---------- 17. "get out!" ----------
+      add("shout", {
+        set: "fogVillage", setOpts: { id: "sh", house: { x: 520, s: 1.1 }, glow: true, sign: false }, dark: 0.4,
+        cam: { keys: [{ t: 0, ...fr(560, 1200, 1.0, 540, 1100), drift: { s: 0.03 } }] },
+        shake: (t) => 3 * Math.sin(t * 13),
+        actors: [WA(640, 1560, 1.0, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }], { flip: true })],
+        bubbles: [{ ...bub("shout", 0, 140, 300, 620), text: "“พี่เจ! ออกมา! พาพี่มิ้นท์ออกมา!”" }],
+      });
+
+      // ---------- 18. stop the stove, get out ----------
+      add("act", {
+        set: "houseRoom", setOpts: HR("ac", { fire: 1, shut: 1, door: 1 }), dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(480, 1250, 0.95, 540, 1150), drift: { x: -40, s: 0.01 } }] },
+        actors: [JA(640, G + 60, 0.92, [{ t: 0, mode: "push", eyes: "wide", mouth: "flat" }, { t: 0.9, mode: "drag", eyes: "wide", mouth: "scream", opts: { period: 0.8 } }], { flip: true, moveTo: { x: 200, dur: 2.4, at: 0.9 } })],
+        extra(L) { L.act.insertAdjacentHTML("beforeend", BUNDLE_LIE("ac-bnd", 920, G + 120, 0.9)); },
+        captions: caps("act"),
+        ui: [{ type: "steps", t: F("act", 0, 0), label: "ถ้าสงสัย", items: [["stovex", "หยุดใช้เตา"], ["goout", "ออกไปข้างนอก"]], gap: F("act", 0, 2) - F("act", 0, 1), top: 200, end: D("act") - 0.15 }],
+        sfxText: [{ text: "ฉ่า!", x: 360, y: 1060, t: 0.3, rot: -8, size: 110, color: "#e9ecef", end: 1.4 }],
+        fx(tl, id, t0) {
+          tl.fromTo("#ac-steam", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0 + 0.3); tl.to("#ac-steam", { opacity: 0, y: -200, duration: 1.4 }, t0 + 0.6);
+          tl.to("#ac-fire", { opacity: 0.12, duration: 0.4 }, t0 + 0.3);
+          tf(tl, "#ac-bnd", t0 + 1.0, 2.4, `translate(460,${G + 120})`, "none");
+        },
+      });
+
+      // ---------- 19. signature ----------
+      add("sig", {
+        set: "fogVillage", setOpts: { id: "sg", house: { x: 540, s: 0.85 }, glow: true, sign: false }, dark: 0.5, blur: { far: 8, set: 8 },
+        cam: { keys: [{ t: 0, ...fr(540, 1250, 1.0, 540, 960), drift: { s: 0.02 } }, { t: SF(2), ...fr(540, 1240, 1.04, 540, 960), drift: { s: 0.045 } }, { t: SF(3), ...fr(540, 1220, 1.12, 540, 960), drift: { s: 0.02 } }] },
+        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
+        captions: caps("sig"),
+        ui: [{ type: "sigCard", t: 0.05, title: "หมอกลง · เช็กลิสต์เอาตัวรอด", items: [["สังเกตอาการ", true], ["หยุดใช้เตา", true], ["ออกไปข้างนอก", true], ["???", false]],
+          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
+        fx(tl, id, t0) {
+          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
+          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
+          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 93);
+          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 94);
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
+          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
+        },
+      });
+
+      // ---------- 20. the villagers round the house ----------
+      add("ring", {
+        set: "fogVillage", setOpts: { id: "rg", house: { x: 540, s: 0.75 }, glow: true, sign: false,
+          vill: [{ x: 250, y: 1430, s: 0.45, op: 0.55, look: 8 }, { x: 830, y: 1430, s: 0.45, op: 0.55, look: -8 }, { x: 120, y: 1465, s: 0.53, op: 0.7, look: 9 }, { x: 960, y: 1465, s: 0.53, op: 0.7, look: -9 },
+            { x: -30, y: 1510, s: 0.63, op: 0.8, look: 10 }, { x: 1110, y: 1510, s: 0.63, op: 0.8, look: -10 }, { x: 380, y: 1560, s: 0.72, op: 0.85, look: 7 }, { x: 700, y: 1560, s: 0.72, op: 0.85, look: -7 }] }, dark: 0.45,
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 0.9, 540, 1000), drift: { s: 0.02 } }, { t: F("ring", 0, 2) - 0.05, ...fr(600, 1150, 1.25, 540, 900), drift: { s: 0.03 } }] },
+        captions: caps("ring"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("ring", 0, 1), D("ring") - F("ring", 0, 1), 0.42, 0.5); },
+      });
+
+      // ---------- 21. through the window: มิ้นท์ still asleep by the stove ----------
+      add("inside", {
+        set: "windowLook", setOpts: { id: "wl", stoveX: 820 }, dark: 0.45,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.05 } }] },
+        actors: [MI(220, 1440, 1.0, asleep("lieStill"), { flip: true, blinks: [] })],
+        captions: caps("inside"),
+        fx(tl, id, t0, L) { TOP(L, document.getElementById("wl-frame")); Fx.glitch(tl, `#${id}`, t0 + F("inside", 0, 1), 0.25, 12, 95); Fx.heart(tl, t0 + F("inside", 0, 1), D("inside") - F("inside", 0, 1), 0.42, 0.55); },
+      });
+
+      // ---------- 22. then who did he drag out? ----------
+      add("who", {
+        set: "fogVillage", setOpts: { id: "wh", house: { x: 980, s: 1.0 }, glow: true, sign: false }, dark: 0.45,
+        cam: { keys: [{ t: 0, ...fr(400, 1300, 1.05, 540, 1100), drift: { s: 0.015 } }, { t: F("who", 0, 2) - 0.05, ...fr(700, 1400, 1.5, 540, 1000), drift: { s: 0.04 } }] },
+        actors: [JA(140, 1640, 1.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }]), WA(330, 1650, 0.98, [{ t: 0, mode: "tremble", eyes: "side", mouth: "o" }, { t: F("who", 0, 2), mode: "tremble", eyes: "wide", mouth: "o" }])],
+        extra(L) { L.act.insertAdjacentHTML("beforeend", Mok.wrapped(700, 1650, 1.1)); },
+        bubbles: [bub("who", 0, 40, 330, 300)],
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("who", 0, 2), D("who") - F("who", 0, 2), 0.42, 0.55); },
+      });
+
+      // ---------- 23. the bundle ----------
+      add("bundle", {
+        set: "bundleClose", setOpts: { id: "bd", hand: 0, eyes: 0 }, dark: 0.35,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.05 } }] },
+        shake: (t) => 1.5 * Math.sin(t * 11),
+        captions: caps("bundle", undefined, { quote: true }),
+        fx(tl, id, t0) {
+          tl.fromTo("#bd-hand", { opacity: 0 }, { opacity: 1, duration: 0.6, immediateRender: false }, t0 + 0.3);
+          tf(tl, "#bd-hood", t0 + vo("bundle"), 1.6, "translate(0,-40) rotate(-6 0 -560)", "power2.out");
+          tl.fromTo("#bd-eyes", { opacity: 0 }, { opacity: 1, duration: 0.1, immediateRender: false }, t0 + F("bundle", 0, 1));
+          Fx.glitch(tl, `#${id}`, t0 + F("bundle", 0, 1), 0.3, 14, 96); Fx.heart(tl, t0 + vo("bundle"), D("bundle") - vo("bundle"), 0.42, 0.6);
+          tl.fromTo("#fxred", { opacity: 0.6 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("bundle", 0, 1));
+        },
+      });
+
+      // ---------- 24. choice: go back in? ----------
+      add("choice", {
+        set: "fogVillage", setOpts: { id: "ch", house: { x: 700, s: 1.35 }, glow: true, sign: false }, dark: 0.45,
+        cam: { keys: [{ t: 0, ...fr(480, 1150, 1.1, 540, 1150), drift: { s: 0.04 } }] },
+        shake: (t) => shakeH(t),
+        ui: [{ type: "choice", t: 0.05, q: "จะกลับเข้าไปพามิ้นท์มั้ย?", a: "กลับเข้าไป", b: "รออยู่ข้างนอก", secs: 3, top: 300,
+          possessed: { at: 1.0, side: "a", glitch: "กลับเข้าไป…", who: "…เจวิ่งเข้าไปแล้ว" } }],
+        fx(tl, id, t0) {
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 97); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 98);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
+
+      // ---------- 25. end card: the petrol receipt ----------
+      add("next", {
+        dark: 0, cam: { keys: [{ t: 0, x: 0, y: 0, s: 1, drift: { s: 0.03 } }] },
+        extra(L) { L.sky.insertAdjacentHTML("beforeend", `<rect x="-900" y="-600" width="2900" height="3200" fill="#15181c"/>${Mok.fogBands((() => { let s = 5; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })(), 0, 1900, 6, 0.4)}`); },
+        ui: [{ type: "receipt", t: 0.3, time: "01:12 น.", ep: "ตอนที่ 3", title: "อย่ากลับเข้าไป", cta: "กดติดตาม · ตอนจบ", top: 420 }],
+        fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0 + 0.3); Fx.heart(tl, t0 + 0.9, D("next") - 0.9, 0.7, 0.35); },
+      });
+
+      // every shot gets the looping motion of its set (fog drift, hazards, fire flicker)
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Mok.life(tl, `#${id}`, t0, sh.dur); }; });

@@ -7,7 +7,7 @@
 set -euo pipefail
 R="$(cd "$(dirname "$0")" && pwd)"
 W="${1:?usage: workspace.sh <work dir>}"
-LATEST="$R/mok-ep1"          # newest libraries (rig.js, zom.js, mok.js for หมอกลง, phrai.js for the paused ผีพรายน้ำ, sig.js, voice.py with "take", voice_qa.py)
+LATEST="$R/mok-ep2"          # newest libraries (rig.js, zom.js, mok.js with the EP.2 village/house sets, hands.js, phrai.js for the paused ผีพรายน้ำ, sig.js, voice.py with "take", voice_qa.py)
 TEMPLATE="$R/koi-ep3"        # newest rendered composition: HyperFrames project files and fonts
 mkdir -p "$W/hf/lib" "$W/hf/rig/assets" "$W/music"
 cp "$LATEST"/lib/*.js "$LATEST"/lib/voice.py "$LATEST"/lib/voice_qa.py "$W/hf/lib/"
@@ -32,10 +32,10 @@ for n in 1 2 3; do
   cp -r "$R/zom-ep$n/production/." "$W/zom$n/"
   [ -f "$R/zom-ep$n/mix.wav" ] && cp "$R/zom-ep$n/mix.wav" "$W/zom$n/"
 done
-for ep in mok-ep1:mok1 phrai-ep1:phrai1; do
+for ep in mok-ep1:mok1 mok-ep2:mok2 phrai-ep1:phrai1; do
   src="$R/${ep%%:*}"; dst="$W/${ep##*:}"
   [ -d "$src/production" ] || continue
   mkdir -p "$dst"; cp -r "$src/production/." "$dst/"
   [ -f "$src/mix.wav" ] && cp "$src/mix.wav" "$dst/"
 done
-echo "workspace ready: $W (camp1-3 → hf/camp, hf/camp2, hf/camp3; koi1-3 → hf/koi1-3; zom1-3 → hf/zom1-3; mok1 → hf/mok1; phrai1 = paused draft)"
+echo "workspace ready: $W (camp1-3 → hf/camp, hf/camp2, hf/camp3; koi1-3 → hf/koi1-3; zom1-3 → hf/zom1-3; mok1, mok2 → hf/mok1, hf/mok2; phrai1 = paused draft)"
