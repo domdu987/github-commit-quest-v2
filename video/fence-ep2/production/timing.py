@@ -41,7 +41,7 @@ SHOTS = [
     ("yard", ["n20", ("n21", 0.1)], 0.1, 0.3, 5.0),                      # the generator in the middle of the yard; sound carries further than light
     ("horde", ["n22", ("d06", 0.2), ("d07", 0.1)], 0.1, 0.25, 6.4),       # they come to the fence; "ลุงไปดับเอง" / "ยี่สิบวิ"
     ("count", ["n23", ("n24", 0.4)], 0.2, 0.3, 13.0),                    # the countdown 20 → 8: the switch, the sickle breaks
-    ("count2", [], 0, 0, 7.0),                                           # 5 → 0: the door
+    ("count2", [], 0, 0, 6.1),                                           # 5 → 0: the door
     ("dark", ["n25"], 0.3, 0.3, 3.4),                                    # the light is gone: twenty minutes
     ("hill", ["n26", ("n27", 0.15)], 0.1, 0.4, 5.6),                     # the hill: three blinks; only น้องปั้น sees
     ("sig", ["s01"], 0.15, 0.5, 4.2),
