@@ -63,6 +63,8 @@ CUES = [
     *[("craft", 5.7 + k * 0.09, "tick", 0.25) for k in range(7)],
     ("craft", 8.0, "rustle", 0.5), ("craft", 8.05, "pop", 0.5), ("craft", 8.5, "slam", 0.6), ("craft", 8.85, "clang", 0.9), ("craft", 8.85, "glitch", 0.3), ("craft", 8.9, "sting", 0.6), *[("craft", 9.1 + k * 0.08, "tick", 0.3) for k in range(5)],
     ("craft", 7.4, "pop", 0.5), ("craft", 7.6, "slam", 0.45),   # ลุงหมาน's skill card
+    ("craft", 1.3, "rustle", 0.6), ("craft", 1.9, "thud", 0.4), ("craft", 2.4, "rustle", 0.5), ("craft", 2.98, "clang", 0.45), ("craft", 3.45, "rustle", 0.5), ("craft", 3.75, "rustle", 0.45), ("craft", 4.05, "rustle", 0.45), ("craft", 4.5, "thud", 0.3),   # the hands: pick up, set the knife, wind the tape
+    ("craft", 8.3, "rustle", 0.5), ("craft", 8.6, "whoosh", 0.5),
     ("craft", -0.3, "whoosh", 0.5),
     # the countdown: the generator, the horde at the fence, a tick every second, the heart speeding up, the card
     *bed("horde", T("count", 0), T("count2", -0.4), 0.55, 4.6), *bed("crickets", T("count", 0), T("count2", -0.4), 0.3, 4.6), *growls("count", 0.4, D["count"], 0.5, 0.8),
