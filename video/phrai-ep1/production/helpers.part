@@ -1,0 +1,9 @@
+      // ---------- มือพราย: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });

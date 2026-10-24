@@ -63,16 +63,18 @@
         `<path d="M${x0},${y0}Q${(x0 + x1) / 2 + 3},${(y0 + y1) / 2} ${x1},${y1}" stroke="${INK}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2 + 3},${(y0 + y1) / 2} ${x1},${y1}" stroke="#c9d6cc" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="${x1}" cy="${y1}" r="4.5" fill="#1d2a24"/>`).join("")}
       <path d="M-14,120q6,-10 0,-24M10,170q-6,-14 2,-30" stroke="#7d9488" stroke-width="3" fill="none"/></g>`;
   }
-  // a drowned face under the surface: pale oval, black eyes, hair fanning out (class phair sways)
+  // the พราย of this story: a drowned woman's head turned up toward the lights — grey-green skin, the wet hair fanned out
+  // like weed (class phair sways) and hanging over the face in strands, one milky eye showing through, the mouth a dark open gap
   function drownedFace(x, y, s, o = {}) {
-    const hair = Array.from({ length: 9 }, (_, i) => { const a = -150 + i * 14; const r = 150 + (i % 3) * 30;
-      return `<path class="phair" data-i="${i}" d="M0,-20Q${f1(Math.cos(a * Math.PI / 180) * r * 0.5)},${f1(Math.sin(a * Math.PI / 180) * r * 0.5 - 40)} ${f1(Math.cos(a * Math.PI / 180) * r)},${f1(Math.sin(a * Math.PI / 180) * r - 30)}" stroke="#0a1412" stroke-width="${16 - (i % 3) * 3}" fill="none" stroke-linecap="round" opacity=".92"/>`; }).join("");
-    return `<g class="pface" opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${s})">${hair}
-      <ellipse cx="0" cy="40" rx="62" ry="80" fill="url(#phPale)" stroke="#1d2a24" stroke-width="4"/>
-      <ellipse cx="-22" cy="30" rx="13" ry="17" fill="#081010"/><ellipse cx="22" cy="30" rx="13" ry="17" fill="#081010"/>
-      <circle cx="-20" cy="27" r="3" fill="#cfe6d8" opacity=".7"/><circle cx="24" cy="27" r="3" fill="#cfe6d8" opacity=".7"/>
-      <path d="M-12,82q12,8 24,0" stroke="#1d2a24" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <path d="M-56,-10Q-40,-50 0,-52Q40,-50 56,-10Q40,-30 0,-32Q-40,-30 -56,-10Z" fill="#0a1412"/></g></g>`;
+    const fan = Array.from({ length: 11 }, (_, i) => { const a = -168 + i * 15.6, rr = 170 + (i % 3) * 40, A = (a * Math.PI) / 180;
+      return `<path class="phair" data-i="${i}" d="M0,-30Q${f1(Math.cos(A) * rr * 0.45)},${f1(Math.sin(A) * rr * 0.45 - 50)} ${f1(Math.cos(A) * rr)},${f1(Math.sin(A) * rr - 40)}" stroke="#070d0c" stroke-width="${18 - (i % 3) * 4}" fill="none" stroke-linecap="round"/>`; }).join("");
+    const veil = [-52, -40, -28, -16, -4, 32, 44, 54].map((dx, i) => `<path d="M${dx * 0.6},-34C${dx},10 ${dx + (i % 2 ? 6 : -6)},60 ${dx + (i % 2 ? -4 : 4)},${118 + (i % 3) * 14}" stroke="#070d0c" stroke-width="${12 - (i % 3) * 2}" fill="none" stroke-linecap="round"/>`).join("");
+    return `<g class="pface" opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${s})">${fan}
+      <ellipse cx="0" cy="40" rx="60" ry="78" fill="#9fb3a8" stroke="#1d2a24" stroke-width="4"/><ellipse cx="10" cy="56" rx="40" ry="50" fill="#b9c9bf" opacity=".5"/>
+      <ellipse cx="18" cy="30" rx="13" ry="9" fill="#e8efe6"/><circle cx="17" cy="31" r="2.6" fill="#0a1210"/><path d="M5,22q13,-7 26,0" stroke="#3a4a42" stroke-width="3" fill="none"/>
+      <ellipse cx="-22" cy="30" rx="11" ry="7" fill="#e8efe6" opacity=".45"/>
+      <ellipse cx="4" cy="86" rx="11" ry="15" fill="#081010"/><path d="M-30,64q8,6 0,14M40,62q-8,8 0,14" stroke="#7d9488" stroke-width="3" fill="none"/>
+      <path d="M-60,4Q-46,-46 0,-50Q46,-46 60,4Q40,-22 0,-24Q-40,-22 -60,4Z" fill="#070d0c"/>${veil}</g></g>`;
   }
   // ferry boat (เรือจ้าง): long low wooden hull seen from the side, bow to the right
   function ferry(x, y, s, o = {}) {
@@ -183,10 +185,10 @@
     let s = "", g = "";
     // krathongs further out on the water
     (o.kt || [[820, FB + 160, 0.4], [300, FB + 110, 0.32], [980, FB + 300, 0.55]]).forEach(([x, y, sc, coins], i) => { s += krathong(x, y, sc, { coins, dx: 26 + i * 10, ph: i + 2 }); g += kglow(x, y, sc); });
-    if (o.boat) s += ferry(o.boat.x, o.boat.y ?? WS + 20, o.boat.s || 0.9, o.boat);
-    // near water (in front of the far river), surface line at WS
+    // near water (in front of the far river), surface line at WS; the ferry sits in it
     s += `<rect x="${E - 40}" y="${WS}" width="${2000 - E}" height="${2600 - WS}" fill="url(#phWaterD)" opacity=".92"/>`;
     for (let k = 0; k < 16; k++) s += `<path class="rip" d="M${f1(E + r() * 1300)},${f1(WS + 10 + r() * 600)}h${f1(40 + r() * 100)}" stroke="#9fb0d8" stroke-width="4" stroke-linecap="round" opacity=".4"/>`;
+    if (o.boat) s += ferry(o.boat.x, o.boat.y ?? WS + 20, o.boat.s || 0.9, o.boat);
     // the deck: planks, front beam, posts down into the water, ladder at the edge
     s += `<rect x="-900" y="${G}" width="${E + 900}" height="46" fill="url(#phPlank)" ${OUT}/>`;
     for (let x = -880; x < E; x += 74) s += `<path d="M${x},${G + 4}v38" stroke="#2a1c12" stroke-width="3"/>`;
@@ -265,6 +267,8 @@
       <rect x="-160" y="${G - 780}" width="40" height="360" fill="#5a3b26" ${OUT}/><rect x="180" y="${G - 780}" width="40" height="360" fill="#5a3b26" ${OUT}/>`;
     s += `<rect x="-900" y="${G}" width="1660" height="40" fill="url(#phPlank)" ${OUT}/><rect x="-900" y="${G + 40}" width="1660" height="900" fill="#1f150e"/>`;
     s += `<path d="M520,${G - 140}H760M520,${G - 140}V${G}" stroke="#3b2a1c" stroke-width="12"/>` + [560, 640, 720].map((x) => `<rect x="${x}" y="${G - 140}" width="12" height="140" fill="#3b2a1c"/>`).join("");
+    // o.near: the river right at the foot of the steps (for shots looking down them)
+    if (o.near) { s += `<rect x="640" y="${G + 230}" width="1600" height="1200" fill="url(#phWaterD)"/>`; for (let k = 0; k < 14; k++) s += `<path class="rip" d="M${f1(700 + r() * 900)},${f1(G + 260 + r() * 700)}h${f1(40 + r() * 120)}" stroke="#9fb0d8" stroke-width="4" stroke-linecap="round" opacity=".45"/>`; }
     s += `<g>${[0, 1, 2, 3, 4].map((k) => `<rect x="${760 + k * 50}" y="${G + 30 + k * 60}" width="120" height="16" rx="4" fill="#4a3424" ${OUT}/>`).join("")}</g>`;
     if (o.tray) s += `<g transform="translate(${o.tray.x},${G - 8})"><ellipse cx="0" cy="0" rx="150" ry="26" fill="#8a6a46" ${OUT}/>${krathong(-70, -26, 0.55, { lit: false })}${krathong(60, -26, 0.55, { lit: false })}</g>`;
     put(L.set, s);
@@ -328,10 +332,11 @@
       <path d="M250,980C230,1120 260,1240 380,1280L860,1300C930,1300 960,1240 920,1190C860,1130 700,1100 560,1020Z" fill="${sk}" ${OUT}/>
       ${[0, 1, 2, 3, 4].map((t) => `<ellipse cx="${940 - t * 3}" cy="${1210 + t * 18}" rx="${22 - t * 2}" ry="14" fill="${sk}" ${OUT}/>`).join("")}
       <path d="M340,840q40,-20 60,10" stroke="#b9805a" stroke-width="5" fill="none"/>`;
-    // the marks: four fingers wrapping the front of the ankle, a thumb behind
-    a += `<g id="${id}-marks" opacity="${o.marks ?? 1}">${[0, 1, 2, 3].map((k) => `<path d="M${220 + k * 6},${700 + k * 62}C${330 + k * 4},${680 + k * 62} ${450 + k * 2},${690 + k * 62} ${545 - k * 4},${730 + k * 62}" stroke="#5f7a6a" stroke-width="${30 - k * 2}" fill="none" stroke-linecap="round" opacity=".78"/>`).join("")}
-      <path d="M520,640C500,720 506,780 528,830" stroke="#5f7a6a" stroke-width="32" fill="none" stroke-linecap="round" opacity=".72"/>
-      ${[0, 1, 2, 3].map((k) => `<ellipse cx="${540 - k * 4}" cy="${732 + k * 62}" rx="10" ry="7" fill="#3a4e44" opacity=".8"/>`).join("")}</g>`;
+    // the marks: four long fingers wrapping the front of the ankle (bruised grey-green, darker at the tips), a thumb from behind
+    const fing = (x0, y0, x1, y1, w) => `<path d="M${x0},${y0}Q${(x0 + x1) / 2},${Math.min(y0, y1) - 26} ${x1},${y1}" stroke="#4f6a5c" stroke-width="${w + 14}" fill="none" stroke-linecap="round" opacity=".28"/>
+      <path d="M${x0},${y0}Q${(x0 + x1) / 2},${Math.min(y0, y1) - 26} ${x1},${y1}" stroke="#3d5548" stroke-width="${w}" fill="none" stroke-linecap="round" opacity=".7"/><ellipse cx="${x1}" cy="${y1}" rx="${w * 0.55}" ry="${w * 0.45}" fill="#26362e" opacity=".85"/>`;
+    a += `<g id="${id}-marks" opacity="${o.marks ?? 1}">${fing(214, 690, 470, 668, 30)}${fing(218, 752, 500, 738, 32)}${fing(224, 814, 506, 806, 31)}${fing(232, 870, 470, 872, 26)}
+      <path d="M548,610C520,690 520,760 540,812" stroke="#3d5548" stroke-width="34" fill="none" stroke-linecap="round" opacity=".6"/><ellipse cx="540" cy="812" rx="16" ry="13" fill="#26362e" opacity=".8"/></g>`;
     a += `<path d="M260,1000c-30,40 -10,90 30,120" stroke="#2f5a3a" stroke-width="7" fill="none" opacity=".8"/>`;
     for (let k = 0; k < 10; k++) a += `<path d="M${f1(240 + r() * 300)},${f1(600 + r() * 600)}c5,9 7,14 2,17c-5,-3 -5,-8 -2,-17z" fill="#cfe2e6" opacity=".8"/>`;
     put(L.set, a);
@@ -378,6 +383,81 @@
     put(L.glow, `<rect x="1129" y="${WL - 180}" width="20" height="24" rx="5" fill="#ffd38a"/><circle cx="1140" cy="${WL - 170}" r="160" fill="url(#phBulb)"/>`);
   }
 
+  // ---------------- 2539-style legend in shadow puppets (two cloth screens, y 0 / 1600, each 900 tall) ----------------
+  // S1: someone sinks under the river (#id-sink) and below, a พราย with hair fanned like weed (#id-phr) · S2: a child kneels at
+  // the edge of a pier reaching for a krathong; from under the water a long arm (#id-arm, pivot at its shoulder) reaches up
+  function phraiLegend(L, o = {}) {
+    const id = o.id || "pl", P = "#170d06", CUT = "#ffd9a0", ROD = "#3a2414", LGY = [0, 1600];
+    put(L.sky, `<rect x="-900" y="-1200" width="2900" height="5200" fill="#1c1009"/>`);
+    const screen = (y0, y1) => `<rect x="-40" y="${y0}" width="1160" height="${y1 - y0}" fill="#e9a457"/>
+      <circle class="lamp" cx="540" cy="${(y0 + y1) / 2}" r="${(y1 - y0) * 0.75}" fill="url(#clothglow)"/>
+      ${Array.from({ length: 30 }, (_, k) => `<path d="M${-40 + k * 40},${y0}V${y1}" stroke="#c98a44" stroke-width="1.5" opacity=".25"/>`).join("")}
+      <path d="M-40,${y0}H1120" stroke="${P}" stroke-width="18"/><path d="M-40,${y1}H1120" stroke="${P}" stroke-width="18"/>
+      <path d="${Array.from({ length: 28 }, (_, k) => `M${-40 + k * 42},${y0 + 8}l21,26l21,-26`).join("")}" fill="${P}"/>
+      <path d="${Array.from({ length: 28 }, (_, k) => `M${-40 + k * 42},${y1 - 8}l21,-26l21,26`).join("")}" fill="${P}"/>`;
+    const rod = (x, y, len = 220) => `<path d="M${x},${y}V${y + len}" stroke="${ROD}" stroke-width="6"/>`;
+    const pup = (x, y, inner, rot = 0, pid = "") => `<g class="pup" data-ox="${x}" data-oy="${y}"${pid ? ` id="${pid}"` : ""}>${rod(x, y)}<g transform="translate(${x},${y}) rotate(${rot})">${inner}</g></g>`;
+    const waves = (y) => `<path d="M-40,${y}${Array.from({ length: 24 }, (_, k) => `q24,-22 48,0`).join("")}V${y + 460}H-40Z" fill="${P}" opacity=".9"/>
+      ${Array.from({ length: 6 }, (_, k) => `<path d="M${40 + k * 180},${y + 60 + (k % 2) * 40}q30,-14 60,0t60,0" stroke="${CUT}" stroke-width="5" fill="none" opacity=".55"/>`).join("")}`;
+    const person = (s) => `<g transform="scale(${s})"><circle cx="0" cy="-200" r="30" fill="${P}"/><path d="M-40,-30L-30,-170H30L40,-30Z" fill="${P}"/><path d="M-14,-30V30M14,-30V30" stroke="${P}" stroke-width="12"/>
+      <path d="M-28,-160L-80,-230M28,-160L80,-230" stroke="${P}" stroke-width="12" stroke-linecap="round"/><ellipse cx="0" cy="-120" rx="8" ry="14" fill="${CUT}"/></g>`;
+    const phrai = (s, armLen = 0) => `<g transform="scale(${s})">${Array.from({ length: 9 }, (_, k) => { const a = (-160 + k * 17.5) * Math.PI / 180;
+        return `<path d="M0,-200Q${f1(Math.cos(a) * 70)},${f1(-200 + Math.sin(a) * 70 - 20)} ${f1(Math.cos(a) * 150)},${f1(-200 + Math.sin(a) * 150 - 30)}" stroke="${P}" stroke-width="10" fill="none" stroke-linecap="round"/>`; }).join("")}
+      <circle cx="0" cy="-200" r="32" fill="${P}"/><ellipse cx="10" cy="-204" rx="6" ry="4" fill="${CUT}"/><path d="M-36,-170C-50,-90 -40,-20 -10,30L10,30C40,-20 50,-90 36,-170Z" fill="${P}"/>
+      <path d="M-30,-150L-90,-80" stroke="${P}" stroke-width="12" stroke-linecap="round"/></g>`;
+    let s = LGY.map((y) => screen(y, y + 900)).join("");
+    // S1
+    s += `<circle cx="820" cy="150" r="56" fill="${CUT}"/>` + waves(380);
+    s += pup(380, 640, person(0.9), 160, `${id}-sink`);
+    for (let k = 0; k < 6; k++) s += `<circle class="bub" data-i="${k}" cx="${360 + (k % 3) * 22}" cy="${560 - k * 34}" r="${6 + (k % 3) * 3}" fill="none" stroke="${CUT}" stroke-width="3"/>`;
+    s += `<g id="${id}-phr" opacity="0">${pup(720, 860, phrai(1.0), 0)}</g><path d="M470,640Q600,700 650,760" stroke="${CUT}" stroke-width="5" stroke-dasharray="14 12" fill="none" opacity=".7"/>`;
+    // S2
+    const Y = LGY[1];
+    s += waves(Y + 420) + `<rect x="-40" y="${Y + 340}" width="560" height="40" fill="${P}"/>${[40, 220, 400].map((x) => `<rect x="${x}" y="${Y + 380}" width="22" height="400" fill="${P}"/>`).join("")}`;
+    s += pup(470, Y + 340, `<g><circle cx="0" cy="-120" r="26" fill="${P}"/><path d="M-30,0L-20,-96H24L34,0Z" fill="${P}" transform="rotate(30 0 0)"/><path d="M20,-80L70,-10" stroke="${P}" stroke-width="11" stroke-linecap="round"/></g>`, 0);
+    s += `<g transform="translate(640,${Y + 410})"><path d="M-50,0Q0,-30 50,0Z" fill="${P}"/><path d="M-20,-14Q0,-60 20,-14Z" fill="${P}"/><path d="M0,-58v-26" stroke="${P}" stroke-width="5"/><circle class="lamp" cx="0" cy="-92" r="10" fill="#fff2c8"/></g>`;
+    s += pup(800, Y + 860, phrai(1.05), 0) + `<g id="${id}-arm" transform="rotate(0 760 ${Y + 650})"><path d="M760,${Y + 650}L640,${Y + 470}" stroke="${P}" stroke-width="13" stroke-linecap="round"/>
+      ${[-16, -4, 8].map((d) => `<path d="M640,${Y + 470}l${d - 10},-34" stroke="${P}" stroke-width="7" stroke-linecap="round"/>`).join("")}</g>`;
+    put(L.set, s);
+  }
+
+  // ---------------- chapter card: one krathong close up, a paper flag "3 ชั่วโมงก่อน", its candle growing back (time rewinding) ----------------
+  function krathongCard(L, o = {}) {
+    const id = o.id || "kc", r = mk(o.seed || 83), X = 540, Y = 1260, K = 2.4;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="url(#phWater)"/>`);
+    let m = "";
+    for (let k = 0; k < 40; k++) m += `<path class="mrefl" d="M${f1(-200 + r() * 1500)},${f1(200 + r() * 1700)}h${f1(30 + r() * 140)}" stroke="#d9d4b8" stroke-width="${f1(3 + r() * 4)}" stroke-linecap="round" opacity="${(0.1 + r() * 0.25).toFixed(2)}"/>`;
+    put(L.mid, m);
+    let s = krathong(X, Y, K, { lit: false, dx: 12 }) + krefl(X, Y, K);
+    // the candle (pivot at its base) and its flame, drawn over the krathong's own candle
+    s += `<g id="${id}-candle" transform="translate(${X},${Y - 58 * K}) scale(1,1)"><rect x="-13" y="-70" width="26" height="70" rx="5" fill="#f4f0e6" stroke="#7a6a52" stroke-width="3"/><path d="M-13,-56h26" stroke="#e0d8c4" stroke-width="4"/>
+      <g id="${id}-flame"><path class="kflame" d="M0,-122C-18,-96 -16,-80 0,-72C16,-80 18,-96 0,-122Z" fill="#ffd36a" stroke="#ff9a3c" stroke-width="3"/></g></g>`;
+    // the flag on a stick
+    s += `<g id="${id}-flag"><path d="M${X - 60},${Y - 40}L${X - 120},${Y - 470}" stroke="#c9a86a" stroke-width="8" stroke-linecap="round"/>
+      <path d="M${X - 118},${Y - 470}L${X + 250},${Y - 450}L${X + 236},${Y - 330}L${X - 104},${Y - 350}Z" fill="#f4ecd8" stroke="${INK}" stroke-width="4"/>
+      <text x="${X + 66}" y="${Y - 375}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#b8261c" transform="rotate(3 ${X + 66} ${Y - 390})">${o.text || "3 ชั่วโมงก่อน"}</text></g>`;
+    put(L.set, s);
+    put(L.glow, `<g class="kglw" id="${id}-glow"><circle cx="${X}" cy="${Y - 58 * K - 96}" r="420" fill="url(#phFlame)"/></g>`);
+  }
+
+  // ---------------- end card: the sign by the pier, wet; a paper note pinned on it names the next episode ----------------
+  function pierSign(L, o = {}) {
+    const id = o.id || "sg", r = mk(o.seed || 89);
+    skyNight(L, { moon: { x: 860, y: 260, r: 50 } }, r);
+    river(L, 1300, r, {});
+    let s = `<rect x="160" y="900" width="34" height="1300" fill="#3b2a1c" ${OUT}/><rect x="886" y="900" width="34" height="1300" fill="#3b2a1c" ${OUT}/>`;
+    s += `<g id="${id}-sign" transform="rotate(-2 540 1000)"><rect x="110" y="560" width="860" height="560" rx="14" fill="#7a5a3c" ${OUT}/>${[640, 720, 800, 880, 960, 1040].map((y) => `<path d="M120,${y}H960" stroke="#5e412c" stroke-width="4"/>`).join("")}
+      <rect x="110" y="560" width="860" height="110" rx="14" fill="#b8261c" ${OUT}/><text x="540" y="642" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="74" fill="#fff4ea">ประกาศ</text>
+      <text x="540" y="770" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="92" fill="#f4ecd8">ห้ามลงเล่นน้ำ</text>
+      <g transform="rotate(4 560 950)"><rect x="300" y="820" width="520" height="250" fill="#f2ecdc" stroke="${INK}" stroke-width="3"/><circle cx="560" cy="836" r="10" fill="#b8261c"/>
+        <text x="560" y="900" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#a8140c">${o.ep || "ตอนที่ 2"}</text>
+        <text x="560" y="980" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="70" fill="#a8140c">${o.title || "อย่าอุ้มพาดบ่า"}</text>
+        <text x="760" y="1046" text-anchor="end" font-family="Kanit" font-weight="700" font-size="30" fill="#5a4a3a">— ตาเหม เรือจ้าง</text></g></g>`;
+    for (let k = 0; k < 7; k++) s += `<g class="drip" data-i="${k}"><path d="M${f1(150 + k * 120 + r() * 40)},1112c-7,12 -7,20 0,22c7,-2 7,-10 0,-22z" fill="#9fc3d8" opacity=".85"/></g>`;
+    put(L.set, s);
+    put(L.glow, `<circle cx="540" cy="760" r="760" fill="url(#phBulb)" opacity=".45"/>`);
+  }
+
   // looping motion: krathongs drift and bob, flames flicker, ripples slide, the moon streak shimmers, hair sways, bubbles rise
   function life(tl, scope, t0, dur) {
     const q = (c) => document.querySelectorAll(`${scope} ${c}`);
@@ -393,6 +473,7 @@
     q(".lamp").forEach((el, i) => tl.fromTo(el, { opacity: 0.85 }, { opacity: 1, duration: 0.13 + (i % 3) * 0.05, repeat: Math.ceil(dur / 0.13), yoyo: true, ease: "none", immediateRender: false }, t0));
     q(".phair").forEach((el, i) => tl.fromTo(el, { rotation: -4 }, { rotation: 5, svgOrigin: "0 -20", duration: 1.6 + (i % 3) * 0.4, repeat: Math.ceil(dur / 1.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.1));
     q(".pface").forEach((el, i) => tl.fromTo(el, { y: 0 }, { y: -26, duration: 2.4 + i * 0.3, repeat: Math.ceil(dur / 2.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+    q(".drip").forEach((el, i) => tl.fromTo(el, { y: 0, opacity: 0.9 }, { y: 140, opacity: 0, duration: 0.9 + (i % 3) * 0.2, repeat: Math.ceil(dur / 0.9), ease: "power2.in", immediateRender: false }, t0 + (i % 5) * 0.17));
     q(".bub").forEach((el, i) => tl.fromTo(el, { y: 0, opacity: 0 }, { y: -260 - (i % 4) * 60, opacity: 0.9, duration: 1.6 + (i % 5) * 0.3, repeat: Math.ceil(dur / 1.6), ease: "power1.in", immediateRender: false }, t0 + (i % 7) * 0.2));
     q(".ray").forEach((el, i) => tl.fromTo(el, { opacity: 0.4 }, { opacity: 0.95, duration: 1.8 + i * 0.3, repeat: Math.ceil(dur / 1.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     q(".wob").forEach((el) => tl.fromTo(el, { skewX: -2, scaleY: 1 }, { skewX: 2, scaleY: 1.03, transformOrigin: "50% 0%", duration: 0.9, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
@@ -439,6 +520,6 @@
   // แพรว / โต้ง soaked: hair flat, clothes darker
   Rig.CAST.tongWet = { ...Rig.CAST.tong, top: "#9a2e27", topS: "#7d241e", sleeve: "#9a2e27", sleeveS: "#7d241e", pants: "#7d6e50", pantsS: "#61553e" };
 
-  Object.assign(Sets, { riverNight, pierDeck, pierPOV, pierSection, porch, bedroom, underRiver, ankleMarks, legendPhrai, reflections });
+  Object.assign(Sets, { riverNight, pierDeck, pierPOV, pierSection, porch, bedroom, underRiver, ankleMarks, legendPhrai, reflections, phraiLegend, krathongCard, pierSign });
   window.Phrai = { krathong, kglow, krefl, paleHand, drownedFace, ferry, gallon, bottle, bamboo, life, CAST_COL };
 })();

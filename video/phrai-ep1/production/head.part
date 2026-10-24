@@ -9,10 +9,17 @@
     <script src="assets/camp.js"></script>
     <script src="assets/koi.js"></script>
     <script src="assets/zom.js"></script>
+    <script src="assets/hands.js"></script>
+    <script src="assets/mok.js"></script>
+    <script src="assets/pov.js"></script>
+    <script src="assets/phrai.js"></script>
     <script src="assets/ui.js"></script>
     <script src="assets/gameui.js"></script>
+    <script src="assets/mokui.js"></script>
+    <script src="assets/phraiui.js"></script>
     <script src="assets/fx.js"></script>
     <script src="assets/engine.js"></script>
+    <script src="assets/opener.js"></script>
     <style>
       @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
       @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
@@ -37,7 +44,9 @@
       .capbox .k { background: #f2c55c; color: #2e2a26; border: 0; border-radius: 10px; padding: 0 .16em; transform: rotate(-1.5deg); }
       .capbox .k.kr, .k.kr { background: #d8443a; color: #fff4ea; }
       .capbox.q { background: rgba(244,236,216,.94); color: #2e2a26; border-color: #2e2a26; }
-      .bubble { z-index: 57; }
+      .bubble { z-index: 57; white-space: normal !important; max-width: 640px; text-align: center; }
+      .sfxw { position: absolute; z-index: 55; font-family: Kanit; font-weight: 900; letter-spacing: -1px; opacity: 0; white-space: nowrap;
+        text-shadow: -4px -4px 0 #2e2a26, 4px -4px 0 #2e2a26, -4px 4px 0 #2e2a26, 4px 4px 0 #2e2a26, 8px 8px 0 #2e2a26; }
       /* phone camera overlay (REC) */
       .rec { position: absolute; inset: 0; z-index: 52; pointer-events: none; font-family: Kanit; color: #f4ecd8; }
       .rec .br { position: absolute; width: 90px; height: 90px; border: 6px solid rgba(244,236,216,.85); }
@@ -160,7 +169,7 @@
       // the guide's rule card: rows stamp in at o.at[i] (seconds into the shot); the rhyming syllables get a gold underline
       GameUI.C.koiRule = {
         html: (id, o) => {
-          const IK = "#2e2a26", rows = [
+          const IK = "#2e2a26", rows = o.rows || [
             [`<path d="M74,20C46,16 28,38 30,62C32,78 44,82 46,94C48,106 60,112 68,102C74,94 68,86 74,78C84,66 94,58 92,44C90,30 84,22 74,20Z" fill="#e9bc93" stroke="${IK}" stroke-width="4"/>
               <path d="M76,40C66,34 52,40 54,54C56,62 64,62 64,70" stroke="${IK}" stroke-width="4" fill="none" stroke-linecap="round"/>
               ${[0, 1, 2].map((i) => `<path class="kw" d="M${22 - i * 9},${44 - i * 6}q-${10 + i * 3},${18 + i * 6} 0,${36 + i * 12}" stroke="#7a3fb0" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,

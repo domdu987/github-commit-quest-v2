@@ -1,0 +1,481 @@
+      // ---------- มือพราย EP.1 อย่าก้มคว้า ----------
+      // many camera angles (user: "แค่ให้ทำหลายๆมุมกล้อง"): wide, side on, low, close, from under the water, from the boat, POV
+      const PRAEW = (x, y, s, track, extra = {}) => ({ who: "praew", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TONG = (x, y, s, track, extra = {}) => ({ who: extra.wet ? "tongWet" : "tong", x, y, s, track, blinks: [1.2, 3.6], ...extra });
+      const YAI = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, blinks: [0.7, 2.6, 4.9], ...extra });
+      const MHEM = (x, y, s, track, extra = {}) => ({ who: "mhem", x, y, s, track, blinks: [1.6, 4.2], ...extra });
+      const KID = (k, x, y, s, track, extra = {}) => ({ who: `kid${k}`, x, y, s, track, blinks: [0.5 + k * 0.4, 2.8], ...extra });
+      Rig.CAST.kid1 = { ...Rig.CAST.tong, top: "#3f7fbf", topS: "#2f6aa0", sleeve: "#3f7fbf", sleeveS: "#2f6aa0", torsoExtra: `<path d="M-50,-420H50" stroke="#f4ecd8" stroke-width="10"/>` };
+      Rig.CAST.kid2 = { ...Rig.CAST.tong, top: "#e8b830", topS: "#c4961c", sleeve: "#e8b830", sleeveS: "#c4961c", torsoExtra: "",
+        hair: `<path d="M-48,-552Q-52,-612 0,-614Q52,-612 48,-552Q40,-584 0,-588Q-40,-584 -48,-552Z" fill="#2a2220" stroke="#2e2a26" stroke-width="3"/><path d="M40,-570q30,10 26,70" stroke="#2a2220" stroke-width="16" fill="none" stroke-linecap="round"/>` };
+      const G = 1480, WS = G + 150, E = 640; // pierDeck / porch: deck top, water surface, edge of the deck
+      // poses: kneeling at the edge reaching down; throwing; coughing; flailing in the water; crouched low holding a pole out
+      Rig.MODES.reachDown = (u, o) => { const w = Math.sin(u * 2 * Math.PI / 1.4); return { ...Rig.MODES.fall(0.6, o), torso: 36, head: 18, uaF: -14 + 6 * w, faF: -8, uaB: 6, faB: -24 }; };
+      Rig.MODES.throwArm = (u, o) => { const k = Math.min(1, Math.max(0, u / 0.35)), e = k * k * (3 - 2 * k); return { ...Rig.MODES.idle(u, o), uaF: 50 - 200 * e, faF: -70 + 60 * e, torso: -12 + 30 * e, head: -6 + 10 * e, uaB: -20, faB: -30 }; };
+      Rig.MODES.coughing = (u, o) => { const j = Math.max(0, Math.sin(u * 9)) * 6; return { ...Rig.MODES.sit(u, o), torso: 14 + j, head: 10 + j * 0.8, uaF: -40, faF: -120, bodyY: 290 + j * 0.6 }; };
+      Rig.MODES.flail = (u, o) => { const a = Math.sin(u * 11), b = Math.cos(u * 9); return { ...Rig.MODES.idle(u, o), uaF: -150 + 30 * a, faF: -30 + 20 * b, uaB: -140 - 30 * b, faB: -20 + 20 * a, head: -18 + 6 * a, torso: -6 }; };
+      Rig.MODES.poleLow = (u, o) => { const p = Math.sin(u * 2 * Math.PI / 0.8); return { ...Rig.MODES.crouch(u, o), torso: 30, head: 0, uaF: -70 + 4 * p, faF: -6, uaB: -64 + 4 * p, faB: -10 }; };
+      // the water in front of anyone in the river goes on top of the actors
+      const TOP = (L, id) => { const w = document.getElementById(`${id}-wfront`); if (w) L.act.appendChild(w); };
+      const splash = (id, x, y, s = 1) => `<g id="${id}" opacity="0"><ellipse cx="${x}" cy="${y}" rx="${130 * s}" ry="${26 * s}" fill="none" stroke="#e8f2ff" stroke-width="10"/>
+          ${Array.from({ length: 12 }, (_, k) => { const a = (-170 + k * 14) * Math.PI / 180, d = (90 + (k % 3) * 50) * s; return `<ellipse cx="${(x + Math.cos(a) * d).toFixed(0)}" cy="${(y + Math.sin(a) * d).toFixed(0)}" rx="${(10 + (k % 3) * 5) * s}" ry="${(16 + (k % 2) * 6) * s}" fill="#dfeaff" opacity=".9"/>`; }).join("")}
+          <path d="M${x - 70 * s},${y}Q${x},${y - 260 * s} ${x + 70 * s},${y}Z" fill="#cfe0ff" opacity=".75"/></g>`;
+      const pop = (tl, sel, t) => { tl.fromTo(sel, { opacity: 1, scale: 0.4, transformOrigin: "50% 100%" }, { scale: 1.25, duration: 0.35, ease: "power2.out", immediateRender: false }, t); tl.to(sel, { opacity: 0, duration: 0.4 }, t + 0.3); };
+      // a crowd on the deck behind (silhouettes, set layer): n figures from x0
+      const crowd = (x0, n, gap = 150) => Array.from({ length: n }, (_, k) => { const x = x0 + k * gap + (k % 2) * 30, h = 330 + (k % 3) * 40;
+        return `<g opacity=".92"><ellipse cx="${x}" cy="${G - h - 30}" rx="30" ry="34" fill="#0a0f1c"/><path d="M${x - 44},${G}L${x - 34},${G - h}Q${x},${G - h - 18} ${x + 34},${G - h}L${x + 44},${G}Z" fill="#0a0f1c"/><path d="M${x + 22},${G - h + 10}q16,14 12,60" stroke="#ffb35c" stroke-width="5" fill="none" opacity=".5"/></g>`; }).join("");
+      const RULE_ROWS = (IK) => [
+        [`<path d="M20,86Q60,66 100,86Q60,102 20,86Z" fill="#5c9a4a" stroke="${IK}" stroke-width="4"/><path d="M44,82Q48,58 60,54Q72,58 76,82Z" fill="#6aa856" stroke="${IK}" stroke-width="3"/><circle cx="60" cy="48" r="6" fill="#ffd36a"/>
+          <g class="kw"><ellipse cx="46" cy="84" rx="8" ry="4" fill="#f2d16a" stroke="${IK}" stroke-width="2"/><ellipse cx="74" cy="85" rx="8" ry="4" fill="#f2d16a" stroke="${IK}" stroke-width="2"/></g>
+          <path d="M80,6q-8,22 -6,36q4,6 10,2l2,-14q6,4 12,0" fill="#e9bc93" stroke="${IK}" stroke-width="3"/>`, `<span style="font-size:52px">ของลอยมา อย่า<u>ก้มคว้า</u></span>`],
+        [`<path d="M64,22C40,18 26,38 28,60C30,76 42,80 44,92C46,104 58,110 66,100C72,92 66,84 72,76C82,64 92,56 90,42C88,28 80,22 64,22Z" fill="#e9bc93" stroke="${IK}" stroke-width="4"/>
+          ${[0, 1, 2].map((i) => `<path class="kw" d="M${104 + i * 6},${40 - i * 6}q${8 + i * 3},${18 + i * 6} 0,${36 + i * 12}" stroke="#2f7fbf" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}
+          <path d="M6,104q12,-8 24,0t24,0t24,0t24,0" stroke="#2f7fbf" stroke-width="6" fill="none"/>`, `<span style="font-size:52px">ได้ยิน<strong>เสียงพราย</strong> อย่า<u>ว่ายตาม</u></span>`],
+        [`<path d="M4,80q14,-10 28,0t28,0t28,0t28,0V116H4Z" fill="#4f8fbf" stroke="${IK}" stroke-width="3"/><g class="kw"><circle cx="24" cy="62" r="11" fill="#e9bc93" stroke="${IK}" stroke-width="3"/>
+          <path d="M34,66L98,68" stroke="${IK}" stroke-width="15" stroke-linecap="round"/><path d="M34,66L98,68" stroke="#d8443a" stroke-width="9" stroke-linecap="round"/><path d="M50,64L58,46M80,66L90,48" stroke="${IK}" stroke-width="6" stroke-linecap="round"/></g>`,
+          `<span style="font-size:52px">โดนดึงลงน้ำ ให้<u>นอนหงาย</u></span>`],
+      ];
+
+      // ---------- 0. story opener: มือพราย EP.1 in the night sky; the dive onto the river of krathongs ----------
+      const OP = { title: "มือพราย", ep: "EP.1", name: "อย่าก้มคว้า", kick: "ROD MAI CLUB", at: 1.9, glide: 1.8,
+        land: fr(560, 1250, 1.15, 540, 900, { drift: { s: 0.05 } }) };
+      add("open", {
+        set: "riverNight", setOpts: { id: "r0", house: { x: -260 }, pier: { y: 1180, crowd: true }, boat: { x: 760, y: 1300, lamp: true } }, dark: 0.12,
+        cam: { keys: Opener.cam(OP) }, shake: Opener.shake(OP),
+        extra(L, id) { Opener.extra(L, id, OP); },
+        captions: caps("open"),
+        fx(tl, id, t0) { Opener.fx(tl, id, t0, OP); },
+      });
+
+      // ---------- 1. POV down from the pier: a child's arm going for the coins — a pale hand coming up to meet it ----------
+      add("hook", {
+        set: "pierPOV", setOpts: { id: "pp1", phand: 0, faces: 0.15 }, dark: 0.15,
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 960), drift: { s: 0.06 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          tl.fromTo("#pp1-hand", { y: -520 }, { y: 0, duration: 1.4, ease: "power2.out", immediateRender: false }, t0);
+          tl.fromTo("#pp1-phand", { opacity: 0, y: 380 }, { opacity: 0.85, y: 0, duration: 1.3, ease: "power2.out", immediateRender: false }, t0 + 0.7);
+          Fx.heart(tl, t0 + 0.4, D("hook") - 0.4, 0.42, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook") - 0.45, 0.3, 18, 501); Fx.punch(tl, `#${id} .stage`, t0 + D("hook") - 0.45, 1.08, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.7 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + D("hook") - 0.4);
+        },
+      });
+
+      // ---------- 2. chapter card: the krathong's candle grows back — three hours earlier ----------
+      add("back", {
+        set: "krathongCard", setOpts: { id: "kc" }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(540, 1060, 1.0, 540, 960), drift: { s: 0.04 } }] },
+        captions: caps("back"),
+        fx(tl, id, t0) {
+          tl.fromTo("#kc-candle", { attr: { transform: "translate(540,1120.8) scale(1,0.35)" } }, { attr: { transform: "translate(540,1120.8) scale(1,1)" }, duration: 1.4, ease: "power2.out", immediateRender: false }, t0 + 0.1);
+          tl.fromTo(`#${id} .stage`, { filter: "blur(8px) hue-rotate(40deg)" }, { filter: "blur(0px) hue-rotate(0deg)", duration: 0.6, immediateRender: false }, t0);
+          Fx.glitch(tl, `#${id}`, t0, 0.3, 14, 502);
+          tl.fromTo("#kc-flag", { rotation: -8, svgOrigin: "420 1220" }, { rotation: 0, svgOrigin: "420 1220", duration: 1.2, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.2);
+        },
+      });
+
+      // ---------- 3. wide at dusk: the river high, krathongs already out, the house on stilts ----------
+      add("dusk", {
+        set: "riverNight", setOpts: { id: "r3", dusk: true, house: { x: -120, s: 1.2 } }, dark: 0.04,
+        cam: { keys: [{ t: 0, ...fr(420, 1050, 0.85, 540, 1000), drift: { x: 60, s: 0.03 } }] },
+        captions: caps("dusk"),
+      });
+
+      // ---------- 4. side on: แพรว and โต้ง run up the porch steps; ยาย at the door ----------
+      add("arrive", {
+        set: "porch", setOpts: { id: "po4" }, dark: 0.06,
+        cam: { keys: [{ t: 0, ...fr(380, 1150, 0.72, 540, 1100), drift: { x: -30, s: 0.02 } }] },
+        actors: [YAI(40, G, 1.15, [{ t: 0, mode: "wave", eyes: "closed", mouth: "smile" }]),
+          PRAEW(980, G + 150, 1.1, [{ t: 0, mode: "run", eyes: "normal", mouth: "smile" }, { t: 1.7, mode: "wave", eyes: "closed", mouth: "o" }], { flip: true, moveTo: { x: 430, y: G, dur: 1.6, ease: "power1.out" } }),
+          TONG(1130, G + 210, 0.85, [{ t: 0, mode: "run", eyes: "normal", mouth: "smile" }, { t: 1.9, mode: "idle", eyes: "closed", mouth: "smile" }], { flip: true, moveTo: { x: 620, y: G, dur: 1.8, ease: "power1.out" } })],
+        captions: caps("arrive", undefined, { quote: true }),
+      });
+
+      // ---------- 5. low angle on โต้ง: his jar for the coins ----------
+      add("coins", {
+        set: "porch", setOpts: { id: "po5" }, dark: 0.06, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(300, 1020, 1.25, 540, 1150), drift: { s: 0.04 } }] },
+        actors: [TONG(280, G, 1.25, [{ t: 0, mode: "raise", eyes: "closed", mouth: "smile" }])],
+        captions: caps("coins", undefined, { quote: true }),
+        extra(L) { put(L.set, `<g transform="translate(470,${G - 4})"><path d="M-50,0V-110Q-50,-130 -30,-136H30Q50,-130 50,-110V0Z" fill="#cfe6f0" fill-opacity=".5" stroke="#2e2a26" stroke-width="4"/>
+            <rect x="-36" y="-150" width="72" height="20" rx="5" fill="#c8392b" stroke="#2e2a26" stroke-width="3"/>${[[-20, -20], [8, -26], [26, -14], [-10, -44], [16, -50], [-26, -64]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="14" ry="7" fill="#f2d16a" stroke="#8a6a14" stroke-width="2"/>`).join("")}</g>`); },
+      });
+
+      // ---------- 6. ยาย close, lantern light: don't go near the water after dark ----------
+      add("warn", {
+        set: "porch", setOpts: { id: "po6", time: "night" }, dark: 0.1, blur: { far: 6, set: 5 },
+        cam: { keys: [{ t: 0, ...fr(300, G + 1300 - 530 * 2.4, 1.0, 540, 980), drift: { s: 0.05 } }] },
+        actors: [YAI(300, G + 1300, 2.4, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("warn"), mode: "point", eyes: "normal", mouth: "o" }, { t: voEnd("warn"), mode: "idle", eyes: "side", mouth: "flat" }])],
+        captions: caps("warn", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("warn", 0, 1), 1.6, 0.6, 0.3); },
+      });
+
+      // ---------- 7. the three rules: ยาย on the porch, the children listening, the river going dark behind ----------
+      const RR = (j) => F("rule", 0, j);
+      add("rule", {
+        set: "porch", setOpts: { id: "po7", time: "night", tray: { x: -380 } }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(160, 1280, 0.78, 540, 1300), drift: { s: 0.012 } }, { t: RR(4) - 0.2, glide: 2.0, ...fr(100, 1250, 0.95, 540, 1300), drift: { s: 0.012 } }] },
+        actors: [YAI(-60, G, 1.15, [{ t: 0, mode: "sit", eyes: "normal", mouth: "o" }]),
+          PRAEW(250, G, 1.1, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }], { flip: true }),
+          TONG(450, G, 0.85, [{ t: 0, mode: "sit", eyes: "side", mouth: "smile" }, { t: RR(4), mode: "sit", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("rule", undefined, { quote: true }),
+        ui: [{ type: "koiRule", t: RR(0) - 0.1, label: "กฎของยายเพิ่ม", rows: RULE_ROWS("#2e2a26"), at: [RR(0), RR(2), RR(4)], top: 170 }],
+      });
+
+      // ---------- 8. the belief, in shadow puppets: the drowned become พราย — and พราย need someone in their place ----------
+      const LP = (i, j = 0) => F("legend", i, j);
+      add("legend", {
+        set: "phraiLegend", setOpts: { id: "pl" }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(540, 450, 1.2, 540, 760), drift: { s: 0.02 } }, { t: LP(1) - 0.1, glide: 0.7, ...fr(540, 2050, 1.2, 540, 760), drift: { s: 0.03 } }] },
+        captions: caps("legend"),
+        fx(tl, id, t0) {
+          Koi.life(tl, `#${id}`, t0, D("legend"));
+          tl.fromTo("#pl-sink", { y: -90 }, { y: 120, duration: 2.6, ease: "sine.in", immediateRender: false }, t0 + 0.3);
+          tl.to("#pl-sink", { opacity: 0.25, duration: 0.6 }, t0 + LP(0, 2));
+          tl.to("#pl-phr", { opacity: 1, duration: 0.7 }, t0 + LP(0, 2) - 0.1);
+          tf(tl, "#pl-arm", t0 + LP(1, 1) - 0.2, 0.5, "rotate(16 760 2250)", "back.out(2)");
+          Fx.glitch(tl, `#${id}`, t0 + LP(1, 1), 0.25, 12, 503);
+          tl.fromTo("#fxred", { opacity: 0.5 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + LP(1, 1));
+        },
+      });
+
+      // ---------- 9. แพรว: a school swimmer, not scared ----------
+      add("brag", {
+        set: "porch", setOpts: { id: "po9", time: "night" }, dark: 0.1, blur: { far: 5, set: 4 },
+        cam: { keys: [{ t: 0, ...fr(300, G + 600 - 470 * 1.9, 1.0, 540, 1000), drift: { s: 0.04 } }] },
+        actors: [PRAEW(300, G + 600, 1.9, [{ t: 0, mode: "raise", eyes: "closed", mouth: "smile" }, { t: 1.6, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        captions: caps("brag", undefined, { quote: true }),
+      });
+
+      // ---------- 10. low, from the water: โต้ง at the top of the steps, looking down at it — something pale below the surface ----------
+      add("cant", {
+        set: "porch", setOpts: { id: "po10", time: "night", near: true }, dark: 0.22,
+        cam: { keys: [{ t: 0, ...fr(860, 1600, 0.95, 540, 1100), drift: { s: 0.04 } }] },
+        actors: [TONG(800, G + 30, 1.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }])],
+        captions: caps("cant"),
+        extra(L) { put(L.set, `<g opacity=".35">${Phrai.drownedFace(1050, G + 560, 0.8)}</g><rect x="640" y="${G + 230}" width="1600" height="1200" fill="#1d2640" opacity=".55"/>`); },
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("cant", 0, 1), D("cant") - F("cant", 0, 1), 0.45, 0.4); },
+      });
+
+      // ---------- 11. 8 p.m.: the pier full of people, krathongs going out on the dark water ----------
+      add("crowd", {
+        set: "pierDeck", setOpts: { id: "pd11", rail: false, kt: [[760, WS + 8, 0.55], [960, WS + 40, 0.5], [1180, WS + 20, 0.45], [880, WS + 120, 0.6]] }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(320, 1250, 0.72, 540, 1150), drift: { x: 50, s: 0.02 } }] },
+        actors: [YAI(150, G, 1.1, [{ t: 0, mode: "idle", eyes: "closed", mouth: "smile" }]), PRAEW(330, G, 1.08, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }]),
+          TONG(500, G, 0.85, [{ t: 0, mode: "reachDown", eyes: "normal", mouth: "smile" }])],
+        captions: caps("crowd"),
+        extra(L) { put(L.set, crowd(-700, 6, 140)); },
+      });
+
+      // ---------- 12. ตาเหม in his ferry by the pier, the lamp on the bow, as every year ----------
+      add("mhem", {
+        set: "pierDeck", setOpts: { id: "pd12", boat: { x: 980, lamp: true } }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(900, 1420, 1.25, 540, 1050), drift: { x: -20, s: 0.03 } }] },
+        actors: [MHEM(880, WS - 20, 0.85, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }])],
+        captions: caps("mhem"),
+      });
+
+      // ---------- 13. kids at the edge fishing coins out of the krathongs with sticks ----------
+      add("kids", {
+        set: "pierDeck", setOpts: { id: "pd13", kt: [[780, WS + 10, 0.55, 4], [1010, WS + 40, 0.5, 3], [1220, WS + 16, 0.45, 2]] }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(680, 1440, 1.0, 540, 1080), drift: { x: 30, s: 0.02 } }] },
+        actors: [KID(1, 420, G, 0.85, [{ t: 0, mode: "reachDown", eyes: "side", mouth: "smile" }]), KID(2, 610, G, 0.8, [{ t: 0, mode: "reachDown", eyes: "side", mouth: "o" }])],
+        captions: caps("kids"),
+        extra(L) { put(L.act, `<g opacity=".95">${Phrai.bamboo(510, G - 140, 790, WS - 10, 8)}${Phrai.bamboo(700, G - 130, 1000, WS + 10, 8)}</g>`); },
+        fx(tl, id, t0, L) { TOP(L, "pd13"); },
+      });
+
+      // ---------- 14. knowledge: don't pick up what floats, don't bend over the water ----------
+      add("know", {
+        set: "pierDeck", setOpts: { id: "pd14", kt: [[760, WS + 8, 0.7, 5]] }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(700, 1560, 1.35, 540, 1250), drift: { s: 0.04 } }] },
+        captions: caps("know"),
+        ui: [steps("know", "เด็กกับแหล่งน้ำ", [["nopick", "อย่าเก็บของลอยน้ำ"], ["nobend", "ริมน้ำ อย่าก้ม"]], F("know", 0, 1) - 0.1, D("know") - 0.15, { gap: F("know", 0, 3) - F("know", 0, 1) }),
+          { type: "src", t: F("know", 0, 3) + 0.3, end: D("know") - 0.05, top: 640, text: "ที่มา: <em>กรมควบคุมโรค</em> · ไม่เก็บของที่ลอยอยู่ในน้ำ ไม่ก้มหน้าลงไปที่แหล่งน้ำ" }],
+      });
+
+      // ---------- 15. the camera sinks through the surface: under the krathongs, the drowned follow the lights ----------
+      add("under", {
+        set: "pierSection", setOpts: { id: "ps15" }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(700, 560, 1.15, 540, 900), drift: { s: 0.02 } }, { t: F("under", 0, 1) - 0.15, glide: 1.0, ...fr(640, 1420, 1.0, 540, 1000), drift: { s: 0.04 } }] },
+        captions: caps("under"),
+        fx(tl, id, t0) {
+          tl.fromTo(`#${id} .stage`, { filter: "blur(0px)" }, { filter: "blur(4px)", duration: 0.2, yoyo: true, repeat: 1, immediateRender: false }, t0 + F("under", 0, 1) + 0.2);
+          Fx.heart(tl, t0 + F("under", 0, 1), D("under") - F("under", 0, 1), 0.45, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("under") - 0.6, 0.2, 10, 504);
+        },
+      });
+
+      // ---------- 16. 9 p.m.: แพรว turning in the crowd — no โต้ง ----------
+      add("gone", {
+        set: "riverNight", setOpts: { id: "r16", pier: { y: 1180, crowd: 12, x0: -900, x1: 700 } }, dark: 0.12, blur: { far: 4, set: 3 },
+        cam: { keys: [{ t: 0, ...fr(420, 1180 - 470 * 1.7, 1.0, 540, 950), drift: { s: 0.05 } }] },
+        shake: (t) => (t > 1.0 && t < 1.4 ? 9 * Math.sin(t * 40) : 0),
+        actors: [PRAEW(420, 1180 + 120, 1.7, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: 1.1, mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("gone"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + 1.0, D("gone") - 1.0, 0.42, 0.45); },
+      });
+
+      // ---------- 17. the far end of the pier: โต้ง alone at the edge; a krathong drifting in to him; the voice from the water ----------
+      add("whisper", {
+        set: "pierDeck", setOpts: { id: "pd17", kt: [[860, WS + 16, 0.65, 5]], lamps: false }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(620, 1400, 1.05, 540, 1050), drift: { s: 0.05 } }] },
+        actors: [TONG(560, G, 0.9, [{ t: 0, mode: "reachDown", eyes: "side", mouth: "flat" }, { t: vo("whisper") + 0.4, mode: "reachDown", eyes: "wide", mouth: "smile" }])],
+        captions: caps("whisper", undefined, { quote: true }),
+        extra(L) { put(L.act, `<g id="wh-face" opacity=".0">${Phrai.drownedFace(820, WS + 330, 0.75)}</g>`); },
+        fx(tl, id, t0, L) {
+          TOP(L, "pd17");
+          tl.to("#wh-face", { opacity: 0.55, duration: 1.2 }, t0 + vo("whisper"));
+          Fx.heart(tl, t0 + vo("whisper"), D("whisper") - vo("whisper"), 0.45, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + F("whisper", 0, 1), 0.2, 10, 505);
+        },
+      });
+
+      // ---------- 18. his eyes: a five-baht coin shining in the krathong ----------
+      add("five", {
+        set: "pierPOV", setOpts: { id: "pp18", phand: 0, faces: 0.3 }, dark: 0.18,
+        cam: { keys: [{ t: 0, ...fr(560, 1180, 1.25, 540, 1000), drift: { s: 0.08 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("five", undefined, { quote: true }),
+        extra(L) { put(L.glow, `<g id="fv-glint"><circle cx="566" cy="1200" r="70" fill="#fff2b0" opacity=".35"/><path d="M566,1160L574,1192L606,1200L574,1208L566,1240L558,1208L526,1200L558,1192Z" fill="#fffbe8"/></g>`); },
+        fx(tl, id, t0) {
+          tl.fromTo("#pp18-hand", { y: -700 }, { y: -260, duration: D("five"), ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#fv-glint", { scale: 0.6, opacity: 0.4, svgOrigin: "566 1200" }, { scale: 1.2, svgOrigin: "566 1200", opacity: 1, duration: 0.5, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, t0);
+        },
+      });
+
+      // ---------- 19. side on: he bends — a pale hand takes his wrist — and he's gone under ----------
+      const GRAB = 0.55, YANK = 0.95;
+      add("bend", {
+        set: "pierDeck", setOpts: { id: "pd19", kt: [[760, WS + 8, 0.6, 5]] }, dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(640, 1480, 1.15, 540, 1050), drift: { s: 0.04 } }] },
+        shake: (t) => (t > YANK && t < YANK + 0.6 ? 18 * Math.sin(t * 61) * (YANK + 0.6 - t) / 0.6 : 0),
+        actors: [TONG(600, G, 0.9, [{ t: 0, mode: "reachDown", eyes: "side", mouth: "flat" }, { t: GRAB + 0.1, mode: "reachDown", eyes: "wide", mouth: "scream" }, { t: YANK, mode: "flail", eyes: "wide", mouth: "scream" }],
+          { moveTo: { x: 760, y: WS + 330, dur: 0.35, at: YANK, ease: "power3.in" } })],
+        captions: caps("bend"),
+        extra(L) { put(L.act, `<g id="bd-hand" opacity="0">${Phrai.paleHand(735, WS + 40, 0.75, -8)}</g>${splash("bd-sp", 760, WS, 1.2)}`); },
+        fx(tl, id, t0, L) {
+          TOP(L, "pd19"); L.act.appendChild(document.getElementById("bd-sp"));
+          tl.fromTo("#bd-hand", { opacity: 0, y: 260 }, { opacity: 1, y: -60, duration: 0.3, ease: "power3.out", immediateRender: false }, t0 + GRAB);
+          tl.to("#bd-hand", { y: 300, duration: 0.35, ease: "power3.in" }, t0 + YANK);
+          pop(tl, "#bd-sp", t0 + YANK + 0.3);
+          Fx.glitch(tl, `#${id}`, t0 + GRAB, 0.25, 20, 506); Fx.punch(tl, `#${id} .stage`, t0 + YANK + 0.3, 1.1, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.6 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + YANK + 0.3);
+        },
+      });
+
+      // ---------- 20. แพรว turns: "โต้ง!" ----------
+      add("scream", {
+        set: "pierDeck", setOpts: { id: "pd20" }, dark: 0.15, blur: { far: 6, set: 6 },
+        cam: { keys: [{ t: 0, ...fr(330, G + 1300 - 530 * 2.3, 1.0, 640, 980), drift: { x: -40, s: 0.08 } }] },
+        shake: (t) => 6 * Math.sin(t * 47),
+        actors: [PRAEW(330, G + 1300, 2.3, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }])],
+        captions: caps("scream", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.08, 0.3); },
+      });
+
+      // ---------- 21. she runs for the edge to dive — ยาย catches her arm: "อย่าลง!" ----------
+      add("stop", {
+        set: "pierDeck", setOpts: { id: "pd21" }, dark: 0.15,
+        cam: { keys: [{ t: 0, ...fr(450, 1240, 0.9, 540, 1100), drift: { s: 0.04 } }] },
+        shake: (t) => (t < 0.5 ? 12 * Math.sin(t * 55) * (0.5 - t) : 0),
+        actors: [PRAEW(330, G, 1.1, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }, { t: 0.4, mode: "lunge", eyes: "wide", mouth: "scream" }], { moveTo: { x: 520, y: G, dur: 0.4, ease: "power2.out" } }),
+          YAI(150, G, 1.12, [{ t: 0, mode: "drag", eyes: "wide", mouth: "scream" }], { moveTo: { x: 330, y: G, dur: 0.45, ease: "power2.out" } })],
+        captions: caps("stop", undefined, { quote: true }),
+      });
+
+      // ---------- 22. under the water: whoever goes in is grabbed and held by the drowning ----------
+      add("hug", {
+        set: "underRiver", setOpts: { id: "ur22" }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 900), drift: { y: 60, s: 0.03 } }] },
+        captions: caps("hug"),
+        extra(L) {
+          const D0 = "#0e1d1b";
+          put(L.act, `<g id="hg"><g transform="translate(540,880)">
+            <circle cx="-10" cy="-210" r="44" fill="${D0}"/><path d="M-60,-170L-50,60H40L50,-170Z" fill="${D0}"/><path d="M-50,-150L-200,-260M50,-150L190,-280" stroke="${D0}" stroke-width="30" stroke-linecap="round"/>
+            <path d="M-30,60L-60,300M30,60L70,290" stroke="${D0}" stroke-width="32" stroke-linecap="round"/>
+            <circle cx="40" cy="-150" r="34" fill="#162826"/><path d="M10,-120L0,40H70L80,-120Z" fill="#162826"/><path d="M14,-110Q-60,-160 -40,-200M70,-110Q90,-190 0,-196" stroke="#162826" stroke-width="22" fill="none" stroke-linecap="round"/>
+            <path d="M20,40L-20,200M60,40L90,190" stroke="#162826" stroke-width="22" stroke-linecap="round"/></g></g>`);
+        },
+        fx(tl, id, t0) { tl.fromTo("#hg", { y: -60 }, { y: 160, duration: D("hug"), ease: "sine.in", immediateRender: false }, t0); Fx.heart(tl, t0 + F("hug", 0, 2), D("hug") - F("hug", 0, 2), 0.45, 0.5); },
+      });
+
+      // ---------- 23. knowledge: help from the bank — shout, throw, reach ----------
+      const HW = (j) => F("how", 0, j);
+      add("how", {
+        set: "pierDeck", setOpts: { id: "pd23", kt: [[1100, WS + 20, 0.5]] }, dark: 0.15,
+        cam: { keys: [{ t: 0, ...fr(640, 1450, 0.95, 540, 1150), drift: { s: 0.03 } }] },
+        actors: [PRAEW(500, G, 1.05, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: HW(2), mode: "whistle", eyes: "wide", mouth: "scream" }]),
+          TONG(850, WS + 330, 0.85, [{ t: 0, mode: "flail", eyes: "wide", mouth: "scream" }])],
+        captions: caps("how"),
+        ui: [steps("how", "ช่วยจากบนฝั่ง", [["shout", "ตะโกน"], ["throw", "โยน"], ["reach", "ยื่น"]], HW(2) - 0.1, D("how") - 0.15, { gap: (HW(4) - HW(2)) / 2 }),
+          { type: "src", t: HW(4) + 0.3, end: D("how") - 0.05, top: 640, text: "ที่มา: <em>กรมควบคุมโรค</em> · ตะโกน โยน ยื่น ช่วยคนตกน้ำจากบนฝั่ง" }],
+        fx(tl, id, t0, L) { TOP(L, "pd23"); },
+      });
+
+      // ---------- 24. low angle: แพรว shouting for help ----------
+      add("shout", {
+        set: "pierDeck", setOpts: { id: "pd24" }, dark: 0.14, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(380, 1150, 1.05, 540, 1250), drift: { s: 0.05 } }] },
+        actors: [PRAEW(380, G, 1.6, [{ t: 0, mode: "whistle", eyes: "wide", mouth: "scream" }])],
+        captions: caps("shout", undefined, { quote: true }),
+        extra(L) { put(L.set, crowd(-500, 5, 170)); },
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + vo("shout"), 1.05, 0.3); },
+      });
+
+      // ---------- 25. the throw: a gallon (a little water in it for weight) straight to โต้ง ----------
+      const T2 = F("throw", 0, 2) - 0.15, T3 = F("throw", 0, 3) - T2;
+      split("throw", T2, {
+        set: "pierDeck", setOpts: { id: "pd25a" }, dark: 0.1, blur: { far: 6, set: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, G - 80, 1.9, 540, 1150), drift: { s: 0.05 } }] },
+        captions: caps("throw").filter((c) => c.t < T2),
+        extra(L) { put(L.act, `${Phrai.gallon(470, G - 60, 1.3, -6)}${Phrai.bottle(640, G - 76, 1.3, 4)}`); },
+        fx(tl, id, t0) { tl.fromTo(`#${id} .stage`, { filter: "brightness(1.4)" }, { filter: "brightness(1)", duration: 0.4, immediateRender: false }, t0); },
+      }, {
+        set: "pierDeck", setOpts: { id: "pd25" }, dark: 0.14,
+        cam: { keys: [{ t: 0, ...fr(700, 1430, 0.95, 540, 1150), drift: { s: 0.03 } }] },
+        actors: [PRAEW(560, G, 1.05, [{ t: 0, mode: "crouch", eyes: "side", mouth: "flat" }, { t: T3 - 0.3, mode: "throwArm", eyes: "wide", mouth: "o" }, { t: T3 + 0.6, mode: "idle", eyes: "wide", mouth: "o" }]),
+          TONG(900, WS + 330, 0.85, [{ t: 0, mode: "flail", eyes: "wide", mouth: "scream" }, { t: T3 + 1.2, mode: "flail", eyes: "closed", mouth: "o" }])],
+        captions: capsFrom("throw", T2),
+        extra(L) { put(L.act, `<g id="tw-gal"><g transform="translate(640,${WS - 10})">${Phrai.gallon(0, 0, 0.55, 0)}</g></g>${splash("tw-sp", 880, WS, 0.8)}`); },
+        fx(tl, id, t0, L) {
+          TOP(L, "pd25"); L.act.appendChild(document.getElementById("tw-sp"));
+          const a = t0 + T3;
+          tl.set("#tw-gal", { x: -40, y: -220 }, a - 0.1);
+          tl.to("#tw-gal", { x: 230, duration: 0.9, ease: "none" }, a);
+          tl.to("#tw-gal", { y: -480, duration: 0.42, ease: "power2.out" }, a);
+          tl.to("#tw-gal", { y: 10, duration: 0.48, ease: "power2.in" }, a + 0.42);
+          tl.to("#tw-gal", { rotation: 360, svgOrigin: "640 1620", duration: 0.9, ease: "none" }, a);
+          pop(tl, "#tw-sp", a + 0.9);
+        },
+      });
+
+      // ---------- 26. reach: ตาเหม's bamboo pole; แพรว crouched low — something pulls from below; she holds ----------
+      const RC = (j) => F("reach", 0, j);
+      add("reach", {
+        set: "pierDeck", setOpts: { id: "pd26", boat: { x: 1180, lamp: true } }, dark: 0.15,
+        cam: { keys: [{ t: 0, ...fr(760, 1440, 0.9, 540, 1150), drift: { s: 0.03 } }, { t: RC(2) - 0.1, glide: 0.4, ...fr(720, 1480, 1.05, 540, 1150), drift: { s: 0.04 } }] },
+        shake: (t) => (t > RC(3) - 0.1 && t < RC(3) + 0.5 ? 14 * Math.sin(t * 57) : 0),
+        actors: [MHEM(1080, WS - 20, 0.85, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }], { flip: true }),
+          PRAEW(500, G, 1.05, [{ t: 0, mode: "poleLow", eyes: "wide", mouth: "flat" }, { t: RC(3) - 0.1, mode: "poleLow", eyes: "pain", mouth: "scream" }], { moveTo: { x: 540, y: G, dur: 0.2, at: RC(3) - 0.1 } }),
+          TONG(880, WS + 330, 0.85, [{ t: 0, mode: "flail", eyes: "wide", mouth: "o" }])],
+        captions: caps("reach"),
+        extra(L) { put(L.act, `<g id="rc-pole">${Phrai.bamboo(600, G - 240, 900, WS - 40, 16)}</g>`); },
+        ui: [steps("reach", "ยื่นของยาว", [["reach", "ยื่นไม้ยาว"], ["crouch", "ย่อตัวต่ำ"]], RC(0) - 0.1, RC(2) + 0.2, { gap: RC(1) - RC(0) }),
+          { type: "src", t: RC(2) + 0.25, end: D("reach") - 0.05, top: 640, text: "ที่มา: <em>กรมควบคุมโรค</em> · ยื่นไม้ยาวให้จับ ย่อตัวลง กันถูกดึงลงน้ำ" }],
+        fx(tl, id, t0, L) {
+          TOP(L, "pd26");
+          tl.to("#rc-pole", { x: 40, y: 30, duration: 0.12, ease: "power3.in" }, t0 + RC(3) - 0.1);
+          tl.to("#rc-pole", { x: -60, y: -20, duration: 0.8, ease: "power2.out" }, t0 + RC(3) + 0.3);
+          Fx.glitch(tl, `#${id}`, t0 + RC(3) - 0.1, 0.25, 14, 507);
+          Fx.heart(tl, t0 + RC(2), D("reach") - RC(2), 0.42, 0.5);
+        },
+      });
+
+      // ---------- 27. โต้ง on the planks, soaked, coughing: someone held my leg ----------
+      add("leg", {
+        set: "pierDeck", setOpts: { id: "pd27" }, dark: 0.15, blur: { far: 5 },
+        cam: { keys: [{ t: 0, ...fr(430, 1290, 1.25, 540, 1100), drift: { s: 0.04 } }] },
+        actors: [PRAEW(170, G, 1.05, [{ t: 0, mode: "crouch", eyes: "side", mouth: "flat" }]),
+          TONG(540, G, 1.0, [{ t: 0, mode: "coughing", eyes: "closed", mouth: "o" }, { t: vo("leg"), mode: "coughing", eyes: "wide", mouth: "o" }], { wet: true, flip: true })],
+        captions: caps("leg", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("leg", 0, 1), D("leg") - F("leg", 0, 1), 0.45, 0.5); },
+      });
+
+      // ---------- 28. channel signature ----------
+      add("sig", {
+        set: "pierDeck", setOpts: { id: "pd28" }, dark: 0.35, blur: { far: 8, set: 8, fg: 10 },
+        cam: { keys: [{ t: 0, ...fr(430, 1290, 1.0, 540, 1100), drift: { s: 0.02 } }, { t: SF(2), ...fr(430, 1290, 1.06, 540, 1100), drift: { s: 0.045 } }, { t: SF(3), ...fr(430, 1290, 1.14, 540, 1100), drift: { s: 0.02 } }] },
+        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
+        actors: [TONG(470, G, 1.0, [{ t: 0, mode: "coughing", eyes: "closed", mouth: "flat" }], { wet: true, flip: true })],
+        captions: caps("sig"),
+        ui: [{ type: "sigCard", t: 0.05, title: "มือพราย · เช็กลิสต์เอาตัวรอด", items: [["ตะโกนเรียกคน", true], ["โยนของลอยน้ำ", true], ["ย่อตัวยื่นไม้", true], ["???", false]],
+          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
+        fx(tl, id, t0) {
+          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
+          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
+          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 73);
+          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 74);
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
+          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
+        },
+      });
+
+      // ---------- 29. his ankle: five finger marks ----------
+      add("marks", {
+        set: "ankleMarks", setOpts: { id: "am29", marks: 0 }, dark: 0.08,
+        cam: { keys: [{ t: 0, ...fr(420, 800, 1.0, 540, 960), drift: { s: 0.06 } }] },
+        captions: caps("marks"),
+        fx(tl, id, t0) {
+          tl.to("#am29-marks", { opacity: 1, duration: 0.5 }, t0 + F("marks", 0, 1));
+          Fx.glitch(tl, `#${id}`, t0 + F("marks", 0, 2), 0.25, 12, 508); Fx.punch(tl, `#${id} .stage`, t0 + F("marks", 0, 2), 1.06, 0.4);
+          Fx.heart(tl, t0 + F("marks", 0, 1), D("marks") - F("marks", 0, 1), 0.42, 0.55);
+        },
+      });
+
+      // ---------- 30. the water: everyone has a reflection — except ตาเหม ----------
+      add("shadow", {
+        set: "reflections", setOpts: { id: "rf30" }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(420, 1060, 0.85, 540, 900), drift: { s: 0.02 } }, { t: F("shadow", 0, 1) - 0.2, glide: 1.0, ...fr(420, 1480, 0.85, 540, 1000), drift: { s: 0.02 } },
+          { t: F("shadow", 0, 2) - 0.1, glide: 0.35, ...fr(860, 1330, 1.45, 540, 1000), drift: { s: 0.05 } }] },
+        actors: [MHEM(860, 1236, 0.8, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }], { flip: true })],
+        captions: caps("shadow"),
+        fx(tl, id, t0) { Fx.glitch(tl, `#${id}`, t0 + F("shadow", 0, 2), 0.3, 14, 509); tl.fromTo("#fxred", { opacity: 0.6 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("shadow", 0, 2)); },
+      });
+
+      // ---------- 31. 2 a.m., inside: wet footprints come up from the river door, one by one, to the net ----------
+      add("night", {
+        set: "bedroom", setOpts: { id: "br31", prints: 7, printsOn: false }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(380, 1450, 0.85, 540, 1100), drift: { s: 0.04 } }] },
+        captions: caps("night"),
+        fx(tl, id, t0) {
+          for (let k = 0; k < 7; k++) tl.to(`#br31-fp${k}`, { opacity: 1, duration: 0.15 }, t0 + F("night", 0, 1) + k * 0.28);
+          Fx.heart(tl, t0 + F("night", 0, 1), D("night") - F("night", 0, 1), 0.45, 0.5);
+        },
+      });
+
+      // ---------- 32. โต้ง going down the steps to the water; a krathong waiting there — and the voice ----------
+      const CALLSET = (sid) => ({ id: sid, time: "night", near: true });
+      const callWater = (L, k) => put(L.set, `${Phrai.krathong(1160, G + 330, 0.7, { coins: 5, dx: 6 })}<g id="${k}-ph" opacity=".0">${Phrai.paleHand(1060, G + 520, 0.8, 18)}</g><g opacity=".4">${Phrai.drownedFace(1240, G + 640, 0.7)}</g>`);
+      add("call", {
+        set: "porch", setOpts: CALLSET("po32"), dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(880, 1560, 0.95, 540, 1100), drift: { s: 0.03 } }] },
+        actors: [TONG(720, G, 0.95, [{ t: 0, mode: "walk", eyes: "closed", mouth: "flat" }], { moveTo: { x: 950, y: G + 230, dur: D("call"), ease: "none" } })],
+        captions: caps("call", undefined, { quote: true }),
+        extra(L) { callWater(L, "c32"); put(L.glow, Phrai.kglow(1160, G + 330, 0.7, 240)); },
+        fx(tl, id, t0) {
+          tl.to("#c32-ph", { opacity: 0.9, duration: 1.0 }, t0 + F("call", 0, 1));
+          Fx.heart(tl, t0, D("call"), 0.45, 0.5);
+        },
+      });
+
+      // ---------- 33. the choice: wake ยาย / follow him yourself ----------
+      add("choice", {
+        set: "porch", setOpts: CALLSET("po33"), dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(950, 1600, 1.1, 540, 1100), drift: { s: 0.03 } }] },
+        actors: [TONG(960, G + 240, 0.95, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }])],
+        extra(L) { callWater(L, "c33"); put(L.glow, Phrai.kglow(1160, G + 330, 0.7, 240)); },
+        ui: [{ type: "choice", t: 0.05, q: "จะทำยังไง?", a: "ปลุกยาย", b: "ตามไปเอง", secs: 3, top: 280,
+          possessed: { at: 1.0, side: "b", glitch: "ตามไปเอง…", who: "…แพรวว่ายน้ำเป็นนี่" } }],
+        fx(tl, id, t0) {
+          tl.set("#c33-ph", { opacity: 0.9 }, t0);
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
+
+      // ---------- 34. end card: the sign by the pier ----------
+      add("next", {
+        set: "pierSign", setOpts: { id: "sg", ep: "ตอนที่ 2", title: "อย่าอุ้มพาดบ่า" }, dark: 0.08,
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 900), drift: { s: 0.03 } }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#sg-sign", { attr: { transform: "rotate(-9 540 1000)" } }, { attr: { transform: "rotate(-2 540 1000)" }, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          Fx.heart(tl, t0 + 0.9, D("next") - 0.9, 0.7, 0.35);
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Phrai.life(tl, `#${id}`, t0, sh.dur); }; });

@@ -1,4 +1,4 @@
-"""Derive shot timing from the recorded voice so picture and sound share one schedule.
+"""มือพราย EP.1. Derive shot timing from the recorded voice so picture and sound share one schedule.
 
 Each shot lists its voice lines in order, as "id", ("id", gap) where gap is the time from the end of
 the previous line (negative = overlap), or ("id", offset, "start") to start offset seconds after the
@@ -20,39 +20,41 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01", ("n02", 0.2)], 0.4, 0.45, 5.0),
-    ("chapter", ["n03"], 0.15, 0.4, 2.4),     # ป้าจิต's notice on the dead lift, smoke drifting over it
-    ("hush", ["d01"], 0.1, 0.3, 1.8),
-    ("peep", ["n04"], 0.1, 0.3, 2.6),
-    ("mimic", ["n05"], 0.1, 0.4, 2.4),
-    ("smoke", ["n06"], 0.1, 0.3, 2.6),
-    ("map", ["n07"], 0.1, 0.35, 2.8),
-    ("alarm", ["n08"], 0.1, 0.4, 4.0),
-    ("boss", ["d02"], 0.1, 0.2, 2.0),
-    ("touch", ["n09"], 0.1, 0.3, 2.8),
-    ("open", ["n10"], 0.1, 0.4, 2.6),
-    ("crawl", ["n11"], 0.1, 0.3, 3.2),
-    # action, no voice: the uncle in the smoke, the sniff, the extinguisher, the dash to stair A
-    ("uncle", [], 0, 0, 1.8),
-    ("sniff", [], 0, 0, 1.5),
-    ("spray", [], 0, 0, 1.6),
-    ("dash", [], 0, 0, 1.2),
-    ("hotdoor", ["n12"], 0.1, 0.3, 3.0),
-    ("second", ["n13"], 0.1, 0.4, 2.6),
-    ("down", ["n14"], 0.1, 0.3, 2.8),
-    ("real", ["n15"], 0.1, 0.4, 3.8),
-    ("pass", ["n16"], 0.1, 0.3, 3.0),
-    ("confess", ["d03"], 0.15, 0.35, 3.4),
-    ("sleeve", ["n17"], 0.1, 0.3, 3.0),
-    ("healed", ["n18"], 0.1, 0.5, 2.6),
-    ("sig", ["s01"], 0.15, 0.5, 4.2),
-    ("street", ["n19"], 0.15, 0.3, 2.6),
-    ("order", ["d04"], 0.1, 0.4, 3.2),
-    ("jit", ["n20"], 0.1, 0.25, 2.4),
-    ("bye", ["d05"], 0.1, 0.4, 2.6),
-    ("box", ["n21"], 0.15, 0.45, 3.6),
-    ("choice", [], 0.0, 0.0, 3.4),
-    ("next", [], 0.0, 0.0, 2.3),  # end card: the last notice
+    ("open", ["n01"], 0.4, 0.5, 4.4),                 # story opener: title in the night sky, the dive onto the river of krathongs
+    ("hook", ["n02"], 0.5, 0.7, 2.6),                 # POV down from the pier: a child's arm reaching for the coins, a pale hand rising
+    ("back", ["n03"], 0.2, 0.5, 2.2),                 # chapter card: a krathong, flag "3 ชั่วโมงก่อน", its candle growing back
+    ("dusk", ["n04"], 0.1, 0.4, 3.2),                 # wide at dusk: high water, the house on stilts, the temple across
+    ("arrive", ["d01"], 0.1, 0.3, 3.0),               # side: แพรว and โต้ง run along the porch, ยาย at the door
+    ("coins", ["d02"], 0.05, 0.3, 3.0),               # low angle on โต้ง with his coin jar
+    ("warn", ["d03"], 0.1, 0.4, 4.6),                 # ยาย close, the lantern on her face
+    ("rule", ["d04"], 0.2, 0.6, 12.2),                # ยาย's three rules (card), the river darkening behind
+    ("legend", ["n05", ("n06", 0.3)], 0.3, 0.6, 7.6), # shadow puppets: the drowned become พราย; พราย need a replacement
+    ("brag", ["d05"], 0.1, 0.3, 3.2),                 # แพรว, goggles round her neck
+    ("cant", ["n07"], 0.1, 0.5, 2.4),                 # over โต้ง's shoulder: he looks down at the black water
+    ("crowd", ["n08"], 0.1, 0.3, 2.8),                # 8 p.m.: the pier full of people, krathongs going out
+    ("mhem", ["n09"], 0.1, 0.4, 4.0),                 # ตาเหม in his ferry, the lamp on the bow
+    ("kids", ["n10"], 0.1, 0.3, 2.8),                 # kids at the edge fishing coins out of the krathongs with sticks
+    ("know", ["n11"], 0.1, 0.6, 4.6),                 # knowledge: don't pick up floating things, don't bend over the water
+    ("under", ["n12"], 0.2, 0.7, 4.4),                # the camera sinks through the surface: the drowned under the krathongs
+    ("gone", ["n13"], 0.1, 0.4, 2.6),                 # 9 p.m.: แพรว turning round in the crowd
+    ("whisper", ["r01"], 0.3, 0.4, 3.9),              # the far end of the pier: โต้ง alone, a krathong drifting to him
+    ("five", ["d06"], 0.1, 0.3, 3.0),                 # โต้ง's POV: a five-baht coin shining in the krathong
+    ("bend", ["n14"], 0.1, 0.9, 2.2),                 # side on: he bends — a pale hand takes his wrist — splash
+    ("scream", ["d07"], 0.1, 0.5, 1.2),               # แพรว turns, runs
+    ("stop", ["d08"], 0.1, 0.5, 1.8),                 # แพรว about to dive; ยาย grabs her arm
+    ("hug", ["n15"], 0.2, 0.5, 3.4),                  # under the water: a drowning child clutching whoever comes in
+    ("how", ["n16"], 0.1, 0.6, 5.4),                  # knowledge: shout, throw, reach
+    ("shout", ["d09"], 0.1, 0.4, 3.2),                # low angle: แพรว shouting, heads turn
+    ("throw", ["n17"], 0.1, 0.5, 6.0),                # the gallon, a little water in it, thrown straight to โต้ง
+    ("reach", ["n18"], 0.1, 0.6, 5.0),                # ตาเหม's bamboo pole; แพรว crouched low, pulling
+    ("leg", ["d10"], 0.2, 0.6, 3.4),                  # โต้ง soaked on the planks, coughing
+    ("sig", ["s01"], 0.15, 0.5, 4.6),                 # channel signature
+    ("marks", ["n19"], 0.1, 0.5, 3.4),                # ankle close-up: five finger marks
+    ("shadow", ["n20"], 0.1, 0.6, 4.4),               # the water: everyone's reflection — except ตาเหม's
+    ("night", ["n21"], 0.2, 0.4, 3.8),                # 2 a.m. inside: wet footprints up from the river steps to the net
+    ("call", ["r02"], 0.3, 0.5, 4.4),                 # โต้ง walking down the steps to the water, a krathong waiting
+    ("choice", [], 0.0, 0.0, 3.4),                    # wake ยาย / follow him yourself
+    ("next", [], 0.0, 0.0, 2.6),                      # end card: the pier sign
 ]
 GAP = 0.08
 
