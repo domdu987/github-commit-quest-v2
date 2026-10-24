@@ -18,7 +18,7 @@
         add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
       };
       const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
-      const PLATE = "4กษ 2519";
+      const PLATE = "xxx xxxx";
       // move an element's transform attribute through keyed values (avoids GSAP x/y resetting an existing translate)
       const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
 
@@ -125,26 +125,36 @@
         },
       });
 
-      // ---------- 3. the window comes down: nobody ----------
+      // ---------- 3. the window comes down: it leans in, then it's gone ----------
       add("window", {
-        set: "carWindow", setOpts: { id: "cw", face: 0, knock: 0 }, dark: 0.3,
+        set: "carWindow", setOpts: { id: "cw", face: 1, knock: 0 }, dark: 0.3,
         cam: { keys: [{ t: 0, x: 0, y: 40, s: 1.05, drift: { s: 0.03 } }] },
         captions: caps("window"),
         extra(L) { L.fg.insertAdjacentHTML("beforeend", `<g id="cw-in">${Mok.fogBlobs((() => { let s = 7; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })(), 6, 100, 980, 500, 1250, 0.6)}</g>`); },
         fx(tl, id, t0) {
           tl.fromTo("#cw-glass", { y: 0 }, { y: 860, duration: 1.3, ease: "power1.inOut", immediateRender: false }, t0 + 0.1);
-          tl.fromTo("#cw-in", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1.2, transformOrigin: "50% 50%", duration: D("window") - 1.2, ease: "power1.out", immediateRender: false }, t0 + 1.2);
-          Fx.heart(tl, t0 + F("window", 0, 1), D("window") - F("window", 0, 1), 0.4, 0.5);
+          tf(tl, "#cw-face", t0 + F("window", 0, 1) - 0.1, 0.9, "translate(-196,-350) scale(1.35)", "power2.in");
+          tl.to("#cw-face", { opacity: 0, duration: 0.35 }, t0 + F("window", 0, 2));
+          Fx.glitch(tl, `#${id}`, t0 + F("window", 0, 1) + 0.5, 0.3, 14, 79); tl.fromTo("#fxred", { opacity: 0.6 }, { opacity: 0, duration: 0.5, immediateRender: false }, t0 + F("window", 0, 1) + 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + F("window", 0, 2), 0.2, 10, 80);
+          tl.fromTo("#cw-in", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1.2, transformOrigin: "50% 50%", duration: D("window") - F("window", 0, 2), ease: "power1.out", immediateRender: false }, t0 + F("window", 0, 2));
+          Fx.heart(tl, t0 + F("window", 0, 1), D("window") - F("window", 0, 1), 0.42, 0.55);
         },
       });
 
-      // ---------- 4. 06:00, still dark ----------
-      add("dawn", {
+      // ---------- 4. 06:00, still dark; the car behind is gone ----------
+      split("dawn", F("dawn", 0, 2) - 0.05, {
         set: "carPOV", setOpts: { id: "dw", clock: "06:00", lines: 0, haz: true }, dark: 0.55,
         cam: { keys: [{ t: 0, ...fr(160, 1496, 2.0, 540, 900), drift: { s: 0.02 } }, { t: F("dawn", 0, 1) - 0.05, x: 0, y: -60, s: 1.0, drift: { s: 0.015 } }] },
         extra(L) { L.mid.insertAdjacentHTML("beforeend", `<rect x="-900" y="200" width="2900" height="1400" fill="#07090c" opacity=".82"/>`); },
         captions: caps("dawn"),
-        fx(tl, id, t0) { tl.fromTo("#dw-hazglow", { opacity: 0.7 }, { opacity: 0.25, duration: D("dawn"), immediateRender: false }, t0); },
+        fx(tl, id, t0) { tl.fromTo("#dw-hazglow", { opacity: 0.7 }, { opacity: 0.4, duration: F("dawn", 0, 2), immediateRender: false }, t0); },
+      }, {
+        set: "rearWindow", setOpts: { id: "rb", haz: true, lights: 0 }, dark: 0.45,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.03 } }] },
+        actors: [WA(560, 1770, 1.15, [{ t: 0, mode: "seat", eyes: "wide", mouth: "o" }])],
+        captions: capsFrom("dawn", F("dawn", 0, 2) - 0.05),
+        fx(tl, id, t0, L) { TOP(L, document.getElementById("rb-seat")); tl.fromTo("#rb-hazglow", { opacity: 0.4 }, { opacity: 0.2, duration: D("dawn") - F("dawn", 0, 2), immediateRender: false }, t0); Fx.heart(tl, t0, D("dawn") - F("dawn", 0, 2) + 0.05, 0.45, 0.5); },
       });
 
       // ---------- 5. the car won't start ----------

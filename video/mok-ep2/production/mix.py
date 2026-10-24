@@ -92,7 +92,9 @@ CUES = [
     ("hook", vo_t("hook", 1), "sting", 1.0), ("hook", vo_t("hook", 1), "boom", 0.7), ("hook", vo_t("hook", 1), "glitch", 0.6), ("hook", -0.25, "whoosh", 0.8),
     ("chapter", 0.05, "whoosh", 0.6), ("chapter", 0.3, "wind", 0.5), ("chapter", 0.55, "sting", 0.5),
     # the window comes down: nobody; then 06:00 and the car won't start
-    ("window", 0.1, "motor", 1.3), ("window", 1.2, "wind", 0.8), ("window", frag("window", 0, 1), "sting", 0.7), *beats("window", frag("window", 0, 1), D["window"] - frag("window", 0, 1), 0.5, 0.55),
+    ("window", 0.1, "motor", 1.3), ("window", frag("window", 0, 1) + 0.5, "sting", 0.9), ("window", frag("window", 0, 1) + 0.5, "glitch", 0.5),
+    ("window", frag("window", 0, 2), "whoosh", 0.6), ("window", frag("window", 0, 2) + 0.1, "wind", 0.8), *beats("window", frag("window", 0, 1), D["window"] - frag("window", 0, 1), 0.5, 0.55),
+    ("dawn", frag("dawn", 0, 2) - 0.05, "swell", 0.5), ("dawn", frag("dawn", 0, 3), "sting", 0.7),
     *bed("blinker", T("dawn", 0), T("start", 0.6), 0.35, 0.8), ("dawn", 0.1, "wind", 0.5), ("dawn", frag("dawn", 0, 1), "swell", 0.4),
     ("start", 0.05, "crank", 1.4), ("start", 0.75, "crank", 1.0), ("start", vo_t("start", 1), "thud", 0.25),
     # into the fog, the village

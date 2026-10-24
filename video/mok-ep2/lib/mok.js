@@ -48,7 +48,7 @@
   // a small white hatchback seen from the side, nose to the right. Light groups by id so a shot can switch them:
   // ${id}-head (headlights), ${id}-tail (tail/brake lights), ${id}-haz (hazards, blink with class haz), ${id}-cab (cabin glow)
   function car(id, x, y, s, o = {}) {
-    const P = o.plate || "4กษ 2519";
+    const P = o.plate || "xxx xxxx";
     return `<g id="${id}" transform="translate(${f1(x)},${f1(y)}) scale(${o.flip ? -s : s},${s})">
       <ellipse cx="0" cy="8" rx="330" ry="22" fill="#05080b" opacity=".55"/>
       <path d="M-320,-40Q-330,-120 -290,-140L-200,-150Q-150,-250 -40,-262H120Q190,-258 250,-170L320,-150Q348,-140 344,-80V-40Q344,-10 316,-10H-300Q-322,-12 -320,-40Z" fill="url(#mkBody)" ${OUT}/>
@@ -258,7 +258,7 @@
   function rearWindow(L, o = {}) {
     const id = o.id || "rw", r = mk(o.seed || 127);
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#3c4148"/>` + fogBands(r, -200, 2400, 7, 0.75));
-    put(L.far, `<g id="${id}-lights"><g transform="translate(540,1000)"><circle cx="-130" cy="0" r="40" fill="#fff6dc"/><circle cx="130" cy="0" r="40" fill="#fff6dc"/><circle cx="-130" cy="0" r="260" fill="url(#mkFogGlow)"/><circle cx="130" cy="0" r="260" fill="url(#mkFogGlow)"/>
+    put(L.far, `<g id="${id}-lights" opacity="${o.lights ?? 1}"><g transform="translate(540,1000)"><circle cx="-130" cy="0" r="40" fill="#fff6dc"/><circle cx="130" cy="0" r="40" fill="#fff6dc"/><circle cx="-130" cy="0" r="260" fill="url(#mkFogGlow)"/><circle cx="130" cy="0" r="260" fill="url(#mkFogGlow)"/>
       <rect x="-70" y="60" width="140" height="44" rx="6" fill="#f4f2ea" opacity="${o.plateOn ? 0.9 : 0}"/></g></g>`);
     put(L.set, `<path d="M-900,-600H2000V2600H-900ZM140,520Q540,440 940,520L1000,1260H80Z" fill="#1b1e23" fill-rule="evenodd"/>
       <path d="M140,600H940M150,700H930M160,800H920" stroke="#5a2a20" stroke-width="5" opacity=".7"/><rect x="-900" y="1260" width="2900" height="1400" fill="#24272c"/>
@@ -270,11 +270,11 @@
 
   // a Thai license plate close-up, white with black letters and the province, on a bumper in fog (#id-plate)
   function plateClose(L, o = {}) {
-    const id = o.id || "pc", r = mk(o.seed || 131), P = o.plate || "4กษ 2519";
+    const id = o.id || "pc", r = mk(o.seed || 131), P = o.plate || "xxx xxxx";
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#30353c"/>`);
     put(L.set, `<rect x="-900" y="600" width="2900" height="900" fill="${o.body || "#c3c9cf"}" ${OUT}/><rect x="-900" y="1500" width="2900" height="300" fill="#15181c"/>
       <g id="${id}-plate"><rect x="160" y="760" width="760" height="380" rx="26" fill="#f4f2ea" ${OUT}/><rect x="180" y="780" width="720" height="340" rx="18" fill="none" stroke="${INK}" stroke-width="6"/>
-      <text x="540" y="960" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="170" fill="#1b1e23">${P}</text><text x="540" y="1078" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="76" fill="#1b1e23">เลย</text></g>
+      <text x="540" y="960" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="170" fill="#1b1e23" textLength="620" lengthAdjust="spacingAndGlyphs">${P}</text><text x="540" y="1078" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="76" fill="#1b1e23">เลย</text></g>
       <rect x="-200" y="640" width="300" height="100" rx="20" fill="#a8261c" ${OUT}/><rect x="980" y="640" width="300" height="100" rx="20" fill="#a8261c" ${OUT}/>`);
     put(L.glow, `<g id="${id}-glow" opacity="${o.lit ?? 1}"><circle cx="-50" cy="690" r="260" fill="url(#mkTail)"/><circle cx="1130" cy="690" r="260" fill="url(#mkTail)"/></g>`);
     put(L.fg, fogBands(r, 200, 1800, 4, 0.45));
@@ -301,6 +301,7 @@
     q(".haz").forEach((el) => { for (let k = 0; k < dur; k += 0.8) { tl.set(el, { opacity: 1 }, t0 + k); tl.set(el, { opacity: 0.08 }, t0 + k + 0.4); } });
     // rotate about the shoulder in the figure's own units (svgOrigin would use the root SVG's space and miss inside the camera layers)
     q(".wave").forEach((el, i) => tl.fromTo(el, { attr: { transform: "rotate(-14 50 -300)" } }, { attr: { transform: "rotate(18 50 -300)" }, duration: 0.55, repeat: Math.ceil(dur / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.1));
+    q(".glint").forEach((el, i) => tl.fromTo(el, { opacity: 0.35 }, { opacity: 0.95, duration: 0.6, repeat: Math.ceil(dur / 0.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.2));
     q(".flick").forEach((el, i) => { for (let k = 0.15 * i; k < dur; k += 0.23) tl.set(el, { opacity: 0.78 + 0.22 * Math.abs(Math.sin(k * 7.3 + i)) }, t0 + k); });
     q(".tube").forEach((el, i) => { for (let k = 0.7 + i * 0.9; k < dur; k += 2.3) { tl.set(el, { opacity: 0.2 }, t0 + k); tl.set(el, { opacity: 1 }, t0 + k + 0.06); tl.set(el, { opacity: 0.4 }, t0 + k + 0.11); tl.set(el, { opacity: 1 }, t0 + k + 0.16); } });
   }
@@ -393,7 +394,7 @@
         <rect x="-340" y="-560" width="680" height="380" fill="#4a3828" ${OUT}/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-340 + k * 76},-560V-180" stroke="#33261b" stroke-width="5"/>`).join("")}
         ${[-320, -110, 110, 320].map((px) => `<rect x="${px - 14}" y="-180" width="28" height="180" fill="#33261b" ${OUT}/>`).join("")}
         <rect x="-360" y="-196" width="720" height="26" fill="#3a2c22" ${OUT}/>
-        <g id="${id}-door"><rect x="-250" y="-500" width="170" height="320" fill="${o.glow ? "#e07a3a" : "#14100d"}" ${OUT}/><rect x="-250" y="-500" width="170" height="320" fill="#1b1410" opacity="${o.doorShut ? 1 : 0}" ${OUT}/></g>
+        <g id="${id}-door"><rect x="-250" y="-500" width="170" height="320" fill="${o.glow ? "#e07a3a" : "#14100d"}" ${OUT}/><rect id="${id}-doorshut" x="-250" y="-500" width="170" height="320" fill="#1b1410" opacity="${o.doorShut ? 1 : 0}" ${OUT}/></g>
         ${Array.from({ length: 5 }, (_, k) => `<rect x="${-270 + k * 6}" y="${-170 + k * 34}" width="${210 - k * 12}" height="18" fill="#3a2c22" ${OUT}/>`).join("")}
         <g id="${id}-win"><rect x="60" y="-480" width="200" height="190" fill="${o.glow ? "#e8893e" : "#14100d"}" ${OUT}/><path d="M160,-480V-290M60,-385H260" stroke="#2a1f17" stroke-width="10"/></g></g>`;
     }
@@ -404,7 +405,7 @@
     put(L.set, s);
     if (o.house && o.glow) {
       const h = o.house, hx = h.x ?? 540, hs = h.s ?? 1;
-      put(L.glow, `<g class="flick"><circle cx="${hx - 165 * hs}" cy="${G - 340 * hs}" r="${260 * hs}" fill="url(#mkHaz)" opacity=".55"/><circle cx="${hx + 160 * hs}" cy="${G - 385 * hs}" r="${240 * hs}" fill="url(#mkHaz)" opacity=".5"/></g>`);
+      put(L.glow, `<g id="${id}-wglow"><g class="flick"><circle cx="${hx - 165 * hs}" cy="${G - 340 * hs}" r="${260 * hs}" fill="url(#mkHaz)" opacity=".55"/><circle cx="${hx + 160 * hs}" cy="${G - 385 * hs}" r="${240 * hs}" fill="url(#mkHaz)" opacity=".5"/></g></g>`);
     }
     put(L.fg, fogBands(r, G - 500, G + 500, 4, o.fogFg ?? 0.6));
   }
@@ -436,8 +437,10 @@
     for (let x = 150; x < 930; x += 40) sc += `<path d="M${x},690V1010" stroke="#2a1f17" stroke-width="3"/>`;
     sc += `<rect x="150" y="1010" width="780" height="200" fill="#4a3628"/>`;
     let gh = "";
-    [[230, 1040, 0.42], [850, 1040, 0.42], [330, 990, 0.34], [760, 990, 0.34], [420, 960, 0.3], [660, 960, 0.3], [540, 945, 0.28], [180, 1110, 0.5], [900, 1110, 0.5]].forEach(([x, y, k]) => (gh += ghostSit(x, y, k)));
+    [[230, 1040, 0.42], [850, 1040, 0.42], [330, 990, 0.34], [760, 990, 0.34], [420, 960, 0.3], [660, 960, 0.3], [540, 945, 0.28], [180, 1110, 0.5], [900, 1110, 0.5]]
+      .filter(([x]) => !(o.mother && x === 330)).forEach(([x, y, k]) => (gh += ghostSit(x, y, k)));
     sc += `<g id="${id}-ghosts" opacity="${o.ghosts ?? 1}">${gh}</g>`;
+    if (o.mother) sc += `<g id="${id}-mother">${womanSit(330, 1000, 0.4)}</g>`;
     const kid = (x, y, top, hair) => `<g transform="translate(${x},${y})"><path d="M-44,0Q-50,-80 -26,-100H26Q50,-80 44,0Z" fill="${top}" ${OUT}/><circle cx="0" cy="-126" r="30" fill="#ecbf98" ${OUT}/>${hair}
         <path d="M-12,-122q4,-4 8,0M6,-122q4,-4 8,0" stroke="${INK}" stroke-width="3" fill="none"/><path d="M-10,-110q10,8 20,0" stroke="${INK}" stroke-width="3" fill="none"/></g>`;
     sc += kid(430, 1150, "#d9a12c", `<path d="M-32,-132Q-30,-168 0,-168Q30,-168 32,-132Z" fill="#1b1d20"/>`) + kid(650, 1150, "#a99ad0", `<path d="M-36,-120Q-38,-172 0,-172Q38,-172 36,-120Q30,-150 0,-152Q-30,-150 -36,-120Z" fill="#a99ad0" ${OUT}/>`);
@@ -467,8 +470,102 @@
     put(L.fg, fogBands(r, 900, 2000, 3, 0.45));
   }
 
+
+  // ================= EP.3 (อย่ากลับเข้าไป): the pickup in the fog, its driver, the morning at the pump =================
+  const RED = "#8a2f2a", SCARF = "#5a6b7a";
+  // the woman in the red cardigan and headscarf, seated (in the photo): the face pale, smiling at the camera
+  const womanSit = (x, y, s) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})">
+      <path d="M-96,0Q-104,-150 -52,-204Q0,-232 52,-204Q104,-150 96,0Z" fill="${RED}"/><path d="M-20,-200L0,-150L20,-200" fill="#efe6d6"/>
+      <ellipse cx="0" cy="-252" rx="40" ry="48" fill="#d9c7b8"/><path d="M-50,-250Q-56,-316 0,-318Q56,-316 50,-250Q40,-290 0,-292Q-40,-290 -50,-250Z" fill="${SCARF}"/>
+      <path d="M-22,-256q8,-6 14,0M8,-256q8,-6 14,0" stroke="#2e2a26" stroke-width="5" fill="none"/><path d="M-16,-226q16,12 32,0" stroke="#2e2a26" stroke-width="5" fill="none"/></g>`;
+
+  // a small Thai pickup seen from the side, nose to the right, the same length as car() so carLights() fits it.
+  // o.dusty (thick dust, rust), o.flat (flat tyres), o.mud (fresh wet mud on the wheels and sills)
+  function pickup(id, x, y, s, o = {}) {
+    const body = o.dusty ? "#9a6a5a" : "#8a3a30", tyreR = o.flat ? 52 : 64, ty = o.flat ? -8 : -20;
+    const mud = o.mud ? `<g id="${id}-mud">${[-200, 210].map((wx) => `<path d="M${wx - 70},${ty - 10}Q${wx - 40},${ty + 40} ${wx},${ty + 46}Q${wx + 50},${ty + 40} ${wx + 72},${ty}" stroke="#3a2416" stroke-width="22" fill="none" stroke-linecap="round"/>
+        <ellipse cx="${wx - 30}" cy="${ty + 30}" rx="18" ry="9" fill="#5a3a22"/><circle cx="${wx + 20}" cy="${ty + 36}" r="5" fill="#c9a77a" opacity=".7"/>`).join("")}
+        <path d="M-320,-30h640" stroke="#3a2416" stroke-width="16" stroke-dasharray="40 20 70 30" opacity=".85"/></g>` : "";
+    return `<g id="${id}" transform="translate(${f1(x)},${f1(y)}) scale(${o.flip ? -s : s},${s})">
+      <ellipse cx="0" cy="8" rx="330" ry="22" fill="#05080b" opacity=".55"/>
+      <path d="M-330,-40V-150H-20V-40Z" fill="${body}" ${OUT}/><path d="M-330,-150H-20" stroke="#5a2420" stroke-width="10"/>
+      <path d="M-20,-40V-150Q-10,-250 60,-262H150Q200,-258 236,-170L322,-150Q348,-140 344,-80V-40Z" fill="${body}" ${OUT}/>
+      <path d="M10,-160Q20,-240 70,-246H140Q176,-240 210,-170L214,-160Z" fill="url(#mkGlass)" ${OUT}/>
+      <path d="M-330,-40H344V-14Q344,-4 330,-4H-316Q-330,-6 -330,-20Z" fill="#3a3a3a" ${OUT}/>
+      ${[-200, 210].map((wx) => `<g><circle cx="${wx}" cy="${ty}" r="${tyreR}" fill="#15181c" ${OUT}/><circle cx="${wx}" cy="${ty}" r="30" fill="${o.dusty ? "#8a6a4a" : "#8a929a"}" ${OUT}/><circle cx="${wx}" cy="${ty}" r="8" fill="${INK}"/></g>`).join("")}
+      <rect x="318" y="-130" width="26" height="30" rx="8" fill="#f4f0d8" ${OUT}/><rect x="-336" y="-128" width="18" height="40" rx="6" fill="#a8261c" ${OUT}/>
+      ${o.dusty ? `<g fill="#c9b89a" opacity=".4"><path d="M-330,-40V-150H-20V-40Z"/><path d="M-20,-40V-150Q-10,-250 60,-262H150Q200,-258 236,-170L322,-150Q348,-140 344,-80V-40Z"/></g>
+        ${[-300, -250, -120, -60, 260].map((vx, k) => `<path d="M${vx},-40q${k % 2 ? 12 : -10},-40 ${k % 2 ? -4 : 6},-${70 + (k % 3) * 20}" stroke="#4a6a3a" stroke-width="8" fill="none" opacity=".8"/><circle cx="${vx + 4}" cy="${-110 - (k % 3) * 20}" r="7" fill="#4a6a3a" opacity=".8"/>`).join("")}` : ""}
+      ${mud}</g>`;
+  }
+
+  // the pickup's driver window at night from outside: the door, the dark cab, the driver in a red cardigan and a headscarf
+  // with the face in shadow, two pale round hands on the wheel (#id-driver); dash glow (#id-dash)
+  function pickupWindow(L, o = {}) {
+    const id = o.id || "pw", r = mk(o.seed || 167);
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#4b5159"/>` + fogBands(r, -200, 2400, 7, 0.7));
+    put(L.far, `<rect x="-900" y="600" width="2900" height="900" fill="#0d0f12"/><g id="${id}-driver"><g transform="translate(600,1330) scale(0.92)">
+        <path d="M-230,0Q-250,-300 -150,-380Q0,-430 150,-380Q250,-300 230,0Z" fill="${RED}"/><path d="M-40,-390L0,-320L40,-390" fill="#efe6d6" opacity=".6"/>
+        <path d="M-120,-430Q-130,-640 0,-650Q130,-640 120,-430Q100,-470 0,-470Q-100,-470 -120,-430Z" fill="${SCARF}"/><ellipse cx="0" cy="-520" rx="88" ry="104" fill="#07090b"/>
+        <path d="M118,-450q40,30 30,90" stroke="${SCARF}" stroke-width="26" fill="none" stroke-linecap="round"/></g></g>
+      <g id="${id}-dash"><rect x="-900" y="1120" width="2900" height="380" fill="#141618"/><rect x="200" y="1120" width="240" height="40" rx="8" fill="#7fd1ff" opacity=".12"/></g>
+      <g><ellipse cx="600" cy="1080" rx="260" ry="60" fill="none" stroke="#2a2d33" stroke-width="30"/>
+        ${[[380, 1080, -1], [820, 1080, 1]].map(([hx, hy, sd]) => `<g transform="translate(${hx},${hy}) rotate(${sd * 20})">${Hands.fist({ r: 44, skin: "#d6dcd8", shade: "#a6b0ac" })}</g>`).join("")}</g>`);
+    put(L.set, `<path d="M-900,-600H2000V2600H-900ZM130,560Q150,460 300,440H920Q990,450 1000,560V1180H130Z" fill="#8a3a30" fill-rule="evenodd" ${OUT}/>
+      <path d="M130,560Q150,460 300,440H920Q990,450 1000,560V1180H130Z" fill="none" stroke="#1b1d20" stroke-width="26"/>
+      <rect x="-900" y="1180" width="2900" height="40" fill="#5a2420"/><rect x="700" y="1300" width="160" height="34" rx="12" fill="#3a2a26" ${OUT}/>
+      <path d="M-900,1600H2000" stroke="#5a2420" stroke-width="8"/><rect x="130" y="560" width="870" height="620" fill="#9fb3c4" opacity=".06"/>`);
+    put(L.fg, fogBands(r, 200, 2000, 3, 0.45));
+  }
+
+  // the pump in the morning: pale sky, thin fog, tubes off; the old pickup behind the pump (o.oldTruck {x})
+  function gasMorning(L, o = {}) {
+    gasStation(L, { ...o, car: o.car ?? false });
+    L.sky.innerHTML = `<rect x="-900" y="-600" width="2900" height="3400" fill="#b9c3cc"/><circle cx="1200" cy="420" r="260" fill="#fff6dc" opacity=".35"/>`;
+    L.glow.innerHTML = "";
+    L.far.querySelectorAll("path").forEach((p) => p.setAttribute("fill", "#7d8a96"));
+    if (o.oldTruck) put(L.set, pickup(`${o.id || "gm"}-old`, o.oldTruck.x, (o.ground ?? 1480) + 40, o.oldTruck.s ?? 0.9, { dusty: true, flat: true, mud: o.oldTruck.mud }));
+  }
+
+  // close-up of the old pickup's front wheel: rust, dust, vines, and fresh wet mud on the tyre (#id-mud glints)
+  function wheelClose(L, o = {}) {
+    const id = o.id || "wc", r = mk(o.seed || 173);
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#a9b3bc"/>`);
+    put(L.far, `<rect x="-900" y="1500" width="2900" height="1200" fill="#9a8a6a"/>${Array.from({ length: 30 }, () => `<circle cx="${f1(-600 + r() * 2200)}" cy="${f1(1520 + r() * 800)}" r="${f1(3 + r() * 8)}" fill="#7a6a4a" opacity=".6"/>`).join("")}`);
+    let s = `<path d="M-900,300H2000V1180Q1500,1180 1200,1000Q900,800 540,800Q180,800 -120,1000Q-420,1180 -900,1180Z" fill="#9a6a5a" ${OUT}/>
+      <path d="M-900,300H2000V1180Q1500,1180 1200,1000Q900,800 540,800Q180,800 -120,1000Q-420,1180 -900,1180Z" fill="#b9a68a" opacity=".45"/>
+      ${Array.from({ length: 9 }, (_, k) => `<path d="M${-200 + k * 160},300q30,200 -20,420" stroke="#4a6a3a" stroke-width="12" fill="none" opacity=".75"/>`).join("")}
+      <g transform="translate(540,1250)"><circle r="430" fill="#15181c" ${OUT}/><circle r="200" fill="#8a6a4a" ${OUT}/><circle r="60" fill="#5a4a3a" ${OUT}/>
+        ${Array.from({ length: 6 }, (_, k) => `<circle cx="${f1(120 * Math.cos(k * Math.PI / 3))}" cy="${f1(120 * Math.sin(k * Math.PI / 3))}" r="16" fill="#3a2a1f"/>`).join("")}
+        ${Array.from({ length: 24 }, (_, k) => `<path d="M${f1(330 * Math.cos(k * Math.PI / 12))},${f1(330 * Math.sin(k * Math.PI / 12))}L${f1(420 * Math.cos(k * Math.PI / 12))},${f1(420 * Math.sin(k * Math.PI / 12))}" stroke="#2a2d33" stroke-width="16"/>`).join("")}
+        <g id="${id}-mud"><path d="M-420,60Q-380,300 -150,400Q100,450 300,330Q400,250 425,120L330,90Q300,250 140,320Q-60,370 -230,280Q-330,200 -340,60Z" fill="#3a2416"/>
+          <path d="M-300,240Q-150,360 60,360" stroke="#6a4a2e" stroke-width="10" fill="none" opacity=".8"/>
+          ${[[-260, 300, 34], [-80, 380, 26], [180, 350, 30], [340, 200, 22]].map(([cx, cy, rr]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rr}" ry="${rr * 0.6}" fill="#4a2e1a"/><ellipse cx="${cx - rr * 0.3}" cy="${cy - rr * 0.25}" rx="${rr * 0.35}" ry="${rr * 0.18}" fill="#e9d8c0" opacity=".75" class="glint"/>`).join("")}
+          ${Array.from({ length: 10 }, () => `<circle cx="${f1(-400 + r() * 800)}" cy="${f1(-200 + r() * 300)}" r="${f1(6 + r() * 12)}" fill="#3a2416"/>`).join("")}</g></g>`;
+    put(L.set, s);
+  }
+
   // ---------------- cast ----------------
   Object.assign(Rig.CAST, {
+    mintFake: { // the thing by the stove in มิ้นท์'s jacket and beanie: the villagers' grey skin
+      skin: "#c9d3cf", skinS: "#9aa6a2", top: "#d9a12c", topS: "#b5841c", sleeve: "#d9a12c", sleeveS: "#b5841c",
+      pants: "#2f3438", pantsS: "#22272a", shoe: "#ece6da", belt: "#b5841c",
+      torsoExtra: `${[-430, -390, -350].map((y) => `<path d="M-56,${y}H56" stroke="#b5841c" stroke-width="5"/>`).join("")}<path d="M0,-484V-306" stroke="#8a6414" stroke-width="5"/>`,
+      hair: `<path d="M-50,-540Q-56,-606 0,-610Q56,-606 50,-540L54,-492Q42,-484 34,-494L32,-556Q0,-566 -32,-556L-34,-494Q-42,-484 -54,-492Z" fill="#231a16" ${OUT}/>
+        <path d="M-50,-566Q-48,-626 0,-628Q48,-626 50,-566Z" fill="#1b1d20" ${OUT}/><path d="M-50,-566H50" stroke="#34383c" stroke-width="10"/>`,
+    },
+    mother: { // ยายแสง's mother, forty years ago: the same red cardigan, a headscarf, black hair
+      skin: "#d6a982", skinS: "#b5876a", top: "#8a2f2a", topS: "#6b2420", sleeve: "#8a2f2a", sleeveS: "#6b2420",
+      pants: "#3a3530", pantsS: "#2a2622", shoe: "#2a2420", belt: "#6b2420",
+      torsoExtra: `<path d="M-24,-484L0,-420L24,-484" fill="#efe6d6" ${OUT}/><path d="M-30,-420V-306M30,-420V-306" stroke="#6b2420" stroke-width="6"/>`,
+      hair: `<path d="M-48,-544Q-52,-610 0,-612Q50,-610 48,-546Q40,-580 0,-584Q-38,-580 -48,-544Z" fill="#231a16" ${OUT}/>
+        <path d="M-56,-560Q-50,-626 0,-628Q50,-626 56,-560Q30,-590 0,-592Q-30,-590 -56,-560Z" fill="#5a6b7a" ${OUT}/><path d="M50,-560q20,20 10,50" stroke="#5a6b7a" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+    },
+    girl: { // ยายแสง as a little girl: a faded blue dress, two short pigtails (scale her ~0.55)
+      skin: "#d6a982", skinS: "#b5876a", top: "#6a8aa8", topS: "#557390", sleeve: "#6a8aa8", sleeveS: "#557390",
+      pants: "#6a8aa8", pantsS: "#557390", shoe: "#3a2f26", belt: "#557390",
+      hair: `<path d="M-48,-546Q-52,-606 0,-610Q50,-606 48,-548Q40,-580 0,-584Q-38,-580 -48,-546Z" fill="#231a16" ${OUT}/><circle cx="-56" cy="-540" r="16" fill="#231a16"/><circle cx="56" cy="-540" r="16" fill="#231a16"/>`,
+    },
     mint: { // มิ้นท์: driver, mustard puffer jacket, black beanie, shoulder-length hair
       skin: "#ecbf98", skinS: "#cc9a74", top: "#d9a12c", topS: "#b5841c", sleeve: "#d9a12c", sleeveS: "#b5841c",
       pants: "#2f3438", pantsS: "#22272a", shoe: "#ece6da", belt: "#b5841c",
@@ -504,6 +601,6 @@
     },
   });
 
-  Object.assign(Sets, { carPOV, roadSign, mountainRoad, gasStation, mirrorClose, roadFog, carInterior, carWindow, rearWindow, plateClose, topRoad, houseRoom, fogVillage, windowLook, photoLCD, bundleClose });
-  window.Mok = { villager, car, carLights, fogBands, fogBlobs, life, ghostSit, stove, wrapped };
+  Object.assign(Sets, { carPOV, roadSign, mountainRoad, gasStation, mirrorClose, roadFog, carInterior, carWindow, rearWindow, plateClose, topRoad, houseRoom, fogVillage, windowLook, photoLCD, bundleClose, pickupWindow, gasMorning, wheelClose });
+  window.Mok = { villager, car, carLights, fogBands, fogBlobs, life, ghostSit, stove, wrapped, pickup, womanSit };
 })();

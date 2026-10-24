@@ -16,7 +16,7 @@
         add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
       };
       const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
-      const PLATE = "4กษ 2519";
+      const PLATE = "xxx xxxx";
       // move an element's transform attribute through keyed values (avoids GSAP x/y resetting an existing translate)
       const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
 
