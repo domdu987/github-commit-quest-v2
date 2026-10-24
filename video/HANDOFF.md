@@ -354,6 +354,9 @@
 - **ไลบรารีใหม่ `mok.js`:** carPOV (มุมคนขับ ไฟต่ำ/ไฟสูง มือ ก้านไฟ ปุ่มไฟฉุกเฉิน) roadSign mountainRoad gasStation mirrorClose roadFog (รถ + ไฟ `carLights`) carInterior (มองผ่านกระจกหน้า 3 คน) carWindow rearWindow plateClose topRoad + `Mok.villager` `Mok.car` `Mok.fogBands` `Mok.life`
   - ตัวละครใน rig: mint jay wan saeng · โหมดใน shots.part: wheel seat lunge2 arms tap peer laughCam
   - เสียงใหม่ใน synth.py: engine screech blinker ratchet motor stalk
+  - **มือ close-up = `hands.js` (มือกลมแบบการ์ตูน)** `Hands.fist({r})` กำปั้นกลม (เส้นนิ้วหันไป -y) · `Hands.poke({r, sleeve, cuff, sleeveLen})` กำปั้น + นิ้วสั้นกลม ปลายนิ้วอยู่ที่ (0,0) แขนไป +x
+    ผู้ใช้เคยให้ทำมือละเอียด (นิ้ว เล็บ แสงเงา) แล้วเปลี่ยนใจ: **"ทำเป็นมือกลมๆไปล่ะกัน"** ให้เข้าชุดกับตัวละคร (มือ rig เป็นวงกลม) และมือถือไฟฉายใน เสียงกอย
+    head.part ต้องโหลด `assets/hands.js` ก่อน mok.js และ make.py ต้องก๊อป "hands.js"
 
 ### 3.7 "ผีพรายน้ำ" / มือพราย (พักไว้)
 
