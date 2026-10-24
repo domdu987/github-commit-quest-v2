@@ -24,6 +24,12 @@
     <linearGradient id="mkDash" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2d33"/><stop offset="1" stop-color="#121418"/></linearGradient>
     <linearGradient id="mkBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9ecef"/><stop offset=".6" stop-color="#c3c9cf"/><stop offset="1" stop-color="#9aa2aa"/></linearGradient>
     <linearGradient id="mkGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a3644"/><stop offset=".5" stop-color="#3f4e5e"/><stop offset="1" stop-color="#1e2732"/></linearGradient>
+    <linearGradient id="mkWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5e4634"/><stop offset="1" stop-color="#3a2a1f"/></linearGradient>
+    <linearGradient id="mkRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a423c"/><stop offset="1" stop-color="#211c19"/></linearGradient>
+    <linearGradient id="mkShaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb35a" stop-opacity=".42"/><stop offset="1" stop-color="#ffb35a" stop-opacity="0"/></linearGradient>
+    <linearGradient id="mkMoonShaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd6ff" stop-opacity=".28"/><stop offset="1" stop-color="#bcd6ff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="mkShaftUp" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffb35a" stop-opacity=".38"/><stop offset="1" stop-color="#ffb35a" stop-opacity="0"/></linearGradient>
+    <radialGradient id="mkMoon"><stop offset="0" stop-color="#dfe8f2" stop-opacity=".55"/><stop offset=".3" stop-color="#b9c6d6" stop-opacity=".25"/><stop offset="1" stop-color="#9aa8b8" stop-opacity="0"/></radialGradient>
     <radialGradient id="mkFire"><stop offset="0" stop-color="#ff9a4a" stop-opacity=".42"/><stop offset=".45" stop-color="#ff8a3a" stop-opacity=".16"/><stop offset="1" stop-color="#ff8a3a" stop-opacity="0"/></radialGradient>
     <radialGradient id="mkMirror" cx=".45" cy=".4"><stop offset="0" stop-color="#4a5a66"/><stop offset=".8" stop-color="#26313a"/><stop offset="1" stop-color="#0e1418"/></radialGradient>`;
 
@@ -33,6 +39,15 @@
     return `<g class="fogb" data-d="${f1(30 + r() * 70)}"><rect x="-1100" y="${f1(y)}" width="3300" height="${f1(h)}" fill="${col}" opacity="${(op * (0.6 + r() * 0.4)).toFixed(2)}"/></g>`;
   }).join("");
   const fogBlobs = (r, n, x0, x1, y0, y1, op = 0.5) => Array.from({ length: n }, () => `<g class="fogb" data-d="${f1(20 + r() * 60)}"><ellipse cx="${f1(x0 + r() * (x1 - x0))}" cy="${f1(y0 + r() * (y1 - y0))}" rx="${f1(220 + r() * 300)}" ry="${f1(70 + r() * 90)}" fill="url(#mkPuff)" opacity="${(op * (0.6 + r() * 0.4)).toFixed(2)}"/></g>`).join("");
+
+  // foreground silhouettes for depth: grass clumps along the bottom, an overhanging branch from a corner (fg layer is blurred)
+  const fgGrass = (r, y, n = 9, col = "#0b0e10") => Array.from({ length: n }, (_, k) => {
+    const x = -300 + k * (1700 / n) + r() * 80;
+    return `<g transform="translate(${f1(x)},${f1(y + r() * 40)}) scale(${(0.8 + r() * 0.7).toFixed(2)})">${Array.from({ length: 7 }, (_, b) => `<path d="M${b * 14 - 42},0Q${b * 14 - 40 + (b - 3) * 10},-${f1(120 + r() * 120)} ${b * 14 - 30 + (b - 3) * 26},-${f1(160 + r() * 140)}" stroke="${col}" stroke-width="${f1(10 + r() * 6)}" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+  }).join("");
+  const fgBranch = (x, y, flip = 1, col = "#0b0e10") => `<g transform="translate(${x},${y}) scale(${flip},1)"><path d="M-200,-40Q120,10 420,140" stroke="${col}" stroke-width="34" fill="none" stroke-linecap="round"/>
+      <path d="M140,40Q220,0 300,10M260,90Q330,80 380,120M60,0Q90,-60 160,-80" stroke="${col}" stroke-width="14" fill="none" stroke-linecap="round"/>
+      ${[[300, 10], [160, -80], [380, 120], [420, 140], [220, 40]].map(([lx, ly]) => `<ellipse cx="${lx}" cy="${ly}" rx="46" ry="18" fill="${col}" transform="rotate(${(lx % 50) - 25} ${lx} ${ly})"/>`).join("")}</g>`;
 
   // the villager in the fog: a pale figure with a blanket round the shoulders; an arm that waves (class wave, pivot at the shoulder)
   function villager(x, y, s, o = {}) {
@@ -77,7 +92,15 @@
     const id = o.id || "cp", r = mk(o.seed || 83);
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#5e646c"/>`);
     let far = `<rect x="-900" y="600" width="2900" height="1400" fill="#4a4f57"/>`;
-    far += `<g id="${id}-lines" opacity="${o.lines ?? 0.8}"><path d="M540,940L520,1420" stroke="#e9e4cf" stroke-width="10" stroke-dasharray="60 70" opacity=".8"/><path d="M160,1420L470,940M900,1420L610,940" stroke="#e9e4cf" stroke-width="8" opacity=".5"/></g>`;
+    const mv = o.moving !== false, flow = (from, to, p, k, n, body) => {   // stopped: the copies sit spread along the road instead
+      const A = from.split(",").map(Number), B = to.split(",").map(Number), f = mv ? 0 : ((k + 0.5) / n) ** 2, P = A.map((v, j) => v + (B[j] - v) * f);
+      return `<g class="flow" data-from="${from}" data-to="${to}" data-p="${p}" data-o="${(k / n).toFixed(3)}"${mv ? "" : ' data-still="1"'} transform="translate(${f1(P[0])},${f1(P[1])}) scale(${P[2].toFixed(3)})">${body}</g>`;
+    };
+    let ln = `<path d="M160,1420L470,940M900,1420L610,940" stroke="#e9e4cf" stroke-width="8" opacity=".5"/>`;
+    for (let k = 0; k < 6; k++) ln += flow("540,945,0.05", "510,1480,1.6", 1.2, k, 6, `<path d="M-7,-60L7,-60L11,60L-11,60Z" fill="#e9e4cf" opacity=".85"/>`);
+    const post = `<rect x="-9" y="-110" width="18" height="110" rx="4" fill="#d9dde2"/><rect x="-9" y="-96" width="18" height="16" fill="#ff9a3a"/>`;
+    for (let k = 0; k < 4; k++) ln += flow("470,948,0.05", "-180,1560,1.7", 1.6, k, 4, post) + flow("610,948,0.05", "1260,1560,1.7", 1.6, k + 0.5, 4, post);
+    far += `<g id="${id}-lines" opacity="${o.lines ?? 0.8}">${ln}</g>`;
     far += fogBands(r, 420, 1100, 6, 0.75) + fogBlobs(r, 8, -300, 1400, 500, 1100, 0.55);
     put(L.far, far);
     // the villager sits in front of the far fog so it reads; a light veil keeps it ghostly
@@ -199,9 +222,11 @@
     const id = o.id || "rfg", r = mk(o.seed || 107), G = o.ground ?? 1400;
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#3e444c"/>`);
     put(L.far, `<rect x="-900" y="${G - 500}" width="2900" height="600" fill="#30353c"/>` + fogBands(r, G - 700, G, 5, 0.85));
-    let s = `<rect x="-900" y="${G - 40}" width="2900" height="260" fill="url(#mkRoad)"/><path d="M-900,${G + 60}H2000" stroke="#e9e4cf" stroke-width="10" stroke-dasharray="90 100" opacity=".55"/>
-      <rect x="-900" y="${G + 220}" width="2900" height="1200" fill="#3a3a30"/>`;
-    for (let x = -880; x < 2000; x += 240) s += `<rect x="${x}" y="${G + 120}" width="16" height="110" fill="#c9cdd2" ${OUT}/>`;
+    const sc = o.scroll ? ` class="scroll" data-v="${o.scroll}"` : "";
+    let s = `<rect x="-900" y="${G - 40}" width="2900" height="260" fill="url(#mkRoad)"/><g${sc} data-w="190"><path d="M-900,${G + 60}H2400" stroke="#e9e4cf" stroke-width="10" stroke-dasharray="90 100" opacity=".55"/></g>
+      <rect x="-900" y="${G + 220}" width="2900" height="1200" fill="#3a3a30"/><g${sc} data-w="240">`;
+    for (let x = -880; x < 2400; x += 240) s += `<rect x="${x}" y="${G + 120}" width="16" height="110" fill="#c9cdd2" ${OUT}/>`;
+    s += `</g>`;
     s += `<path d="M-900,${G + 150}H2000" stroke="#c9cdd2" stroke-width="22"/>`;
     if (o.villager) s += `<g id="${id}-v">${villager(o.villager.x, G + 30, o.villager.s || 0.9, { wave: o.villager.wave !== false })}</g>`;
     if (o.car !== false) s += car(`${id}-car`, o.carX ?? 540, o.carY ?? G + 40, o.carS ?? 1, { plate: o.plate });
@@ -210,7 +235,7 @@
     let g = o.car !== false ? carLights(`${id}-car`, o.carX ?? 540, o.carY ?? G + 40, o.carS ?? 1, o) : "";
     if (o.car2) g += carLights(`${id}-car2`, o.car2.x, o.car2.y ?? G + 40, o.car2.s ?? 1, o.car2);
     put(L.glow, g);
-    put(L.fg, fogBands(r, G - 600, G + 400, 4, 0.75));
+    put(L.fg, fogBands(r, G - 600, G + 400, 4, 0.75) + (o.weeds === false ? "" : `<g${sc} data-w="1700">${fgGrass(r, 1960, 8)}</g>`));
   }
 
   // a steering wheel seen from the front of the car (the rim as an ellipse in front of the driver's chest), its column into the dash,
@@ -301,6 +326,12 @@
     q(".haz").forEach((el) => { for (let k = 0; k < dur; k += 0.8) { tl.set(el, { opacity: 1 }, t0 + k); tl.set(el, { opacity: 0.08 }, t0 + k + 0.4); } });
     // rotate about the shoulder in the figure's own units (svgOrigin would use the root SVG's space and miss inside the camera layers)
     q(".wave").forEach((el, i) => tl.fromTo(el, { attr: { transform: "rotate(-14 50 -300)" } }, { attr: { transform: "rotate(18 50 -300)" }, duration: 0.55, repeat: Math.ceil(dur / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.1));
+    q(".flow").forEach((el) => {
+      if (el.dataset.still) return;
+      const [x0, y0, s0] = el.dataset.from.split(",").map(Number), [x1, y1, s1] = el.dataset.to.split(",").map(Number), p = +el.dataset.p;
+      tl.fromTo(el, { attr: { transform: `translate(${x0},${y0}) scale(${s0})` } }, { attr: { transform: `translate(${x1},${y1}) scale(${s1})` }, duration: p, ease: "power2.in", repeat: Math.ceil(dur / p) + 1, immediateRender: false }, t0 + (+el.dataset.o) * p);
+    });
+    q(".scroll").forEach((el) => { const w = +el.dataset.w, v = +el.dataset.v; tl.fromTo(el, { x: 0 }, { x: -w, duration: w / v, ease: "none", repeat: Math.ceil(dur * v / w) + 1, immediateRender: false }, t0); });
     q(".glint").forEach((el, i) => tl.fromTo(el, { opacity: 0.35 }, { opacity: 0.95, duration: 0.6, repeat: Math.ceil(dur / 0.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.2));
     q(".flick").forEach((el, i) => { for (let k = 0.15 * i; k < dur; k += 0.23) tl.set(el, { opacity: 0.78 + 0.22 * Math.abs(Math.sin(k * 7.3 + i)) }, t0 + k); });
     q(".tube").forEach((el, i) => { for (let k = 0.7 + i * 0.9; k < dur; k += 2.3) { tl.set(el, { opacity: 0.2 }, t0 + k); tl.set(el, { opacity: 1 }, t0 + k + 0.06); tl.set(el, { opacity: 0.4 }, t0 + k + 0.11); tl.set(el, { opacity: 1 }, t0 + k + 0.16); } });
@@ -364,7 +395,10 @@
     st += `<g id="${id}-ghosts" opacity="${o.ghosts ?? 0}">${gh}</g>`;
     st += blankets(o.blankX ?? 210, G + 70) + basket(SX + 200, G + 60) + `<g id="${id}-stove">${stove(id, SX, G + 70)}</g>`;
     put(L.set, st);
-    put(L.glow, `<g id="${id}-fire" opacity="${o.fire ?? 0}"><g class="flick"><circle cx="${SX}" cy="${G - 140}" r="760" fill="url(#mkFire)"/><circle cx="${SX}" cy="${G - 110}" r="200" fill="url(#mkHaz)"/></g>
+    put(L.glow, `<g id="${id}-moon" opacity="${o.shut ? 0.55 : 1}">${o.shut ? [0.25, 0.5, 0.75].map((k) => `<path d="M${WX + 10},${WY + WH * k - 3}H${WX + WW - 10}L${WX + WW - 260},${G + 90}H${WX - 380}Z" fill="url(#mkMoonShaft)" opacity=".5"/>`).join("")
+        : `<path d="M${WX},${WY}H${WX + WW}L${WX + WW - 240},${G + 90}H${WX - 400}Z" fill="url(#mkMoonShaft)"/>`}</g>`);
+    put(L.glow, `<g id="${id}-fire" opacity="${o.fire ?? 0}"><g class="flick"><circle cx="${SX}" cy="${G - 140}" r="760" fill="url(#mkFire)"/>
+        <path d="M${SX - 80},${G - 110}H${SX + 80}L${SX + 260},${G - 1000}H${SX - 260}Z" fill="url(#mkShaftUp)"/><path d="M${SX - 40},${G - 110}H${SX + 40}L${SX + 120},${G - 1000}H${SX - 120}Z" fill="url(#mkShaftUp)" opacity=".7"/><circle cx="${SX}" cy="${G - 110}" r="200" fill="url(#mkHaz)"/></g>
         ${[-50, -20, 12, 44, -34, 0, 30].map((cx, k) => `<ellipse cx="${SX + cx}" cy="${G + 70 + (k < 4 ? -184 : -198)}" rx="18" ry="9" fill="#ff7a2a" opacity=".85"/>`).join("")}</g>
       <g id="${id}-steam" opacity="0">${[-40, 10, 50, -10, 30].map((dx, k) => `<ellipse cx="${SX + dx}" cy="${G - 200 - k * 60}" rx="${70 + k * 20}" ry="${40 + k * 12}" fill="#e9ecef" opacity=".55"/>`).join("")}</g>
       <g id="${id}-gas" opacity="${o.gas ?? 0}"><rect x="-900" y="300" width="2900" height="${G - 300}" fill="#a79cc8" opacity=".3"/>
@@ -374,9 +408,10 @@
   // the abandoned village in the fog: stilt houses fading into the white, a leaning wooden sign "บ้านหมอก" (#id-sign),
   // the near house (o.house) with steps, a door (#id-door, orange inside when o.glow) and a window (#id-win),
   // villagers standing round it (o.vill: [{x, y, s, op}]) and fog in front
+  const K = INK;
   function fogVillage(L, o = {}) {
     const id = o.id || "fv", r = mk(o.seed || 149), G = o.ground ?? 1500;
-    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#4b5159"/>`);
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#4b5159"/><circle cx="${o.moonX ?? 860}" cy="260" r="760" fill="url(#mkMoon)"/>`);
     const hut = (x, y, sc, c) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${sc})"><path d="M-200,-300L0,-470L200,-300Z" fill="${c}"/><rect x="-170" y="-300" width="340" height="200" fill="${c}"/>
         ${[-150, -50, 50, 150].map((px) => `<rect x="${px - 8}" y="-100" width="16" height="100" fill="${c}"/>`).join("")}</g>`;
     let far = "";
@@ -387,16 +422,33 @@
     put(L.mid, mid + fogBands(r, G - 500, G, 3, 0.7));
     let s = `<rect x="-900" y="${G}" width="2900" height="1300" fill="#3a382f"/><path d="M200,2600Q420,${G + 300} 520,${G}H600Q560,${G + 300} 900,2600Z" fill="#4a463a"/>`;
     for (let k = 0; k < 40; k++) s += `<path d="M${f1(-800 + r() * 2700)},${f1(G + 20 + r() * 900)}l-8,-26M${f1(-800 + r() * 2700)},${f1(G + 20 + r() * 900)}l6,-22" stroke="#2c2a22" stroke-width="5"/>`;
+    // the house: a big Thai stilt house seen from the gable end — posts and bracing, a hammock, a water jar and firewood
+    // underneath, plank walls, a deep gable roof with a moonlit edge, a railing, the door at the top of the stairs (#id-door,
+    // #id-doorshut), two windows (#id-win) and a lantern; light from inside spills out as shafts through the fog (#id-wglow)
     if (o.house) {
-      const h = o.house, hx = h.x ?? 540, hs = h.s ?? 1;
+      const h = o.house, hx = h.x ?? 540, hs = h.s ?? 1, lit = !!o.glow, WIN = lit ? "#f0a050" : "#14100d";
+      const plank = (x0, x1, y0, y1, step, c) => Array.from({ length: Math.floor((x1 - x0) / step) }, (_, k) => `<path d="M${x0 + (k + 1) * step},${y0}V${y1}" stroke="${c}" stroke-width="${k % 3 ? 3 : 5}"/>`).join("");
       s += `<g transform="translate(${hx},${G}) scale(${hs})">
-        <path d="M-380,-560L0,-860L380,-560Z" fill="#2a2420" ${OUT}/><path d="M-400,-560H400" stroke="#1b1714" stroke-width="18"/>
-        <rect x="-340" y="-560" width="680" height="380" fill="#4a3828" ${OUT}/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-340 + k * 76},-560V-180" stroke="#33261b" stroke-width="5"/>`).join("")}
-        ${[-320, -110, 110, 320].map((px) => `<rect x="${px - 14}" y="-180" width="28" height="180" fill="#33261b" ${OUT}/>`).join("")}
-        <rect x="-360" y="-196" width="720" height="26" fill="#3a2c22" ${OUT}/>
-        <g id="${id}-door"><rect x="-250" y="-500" width="170" height="320" fill="${o.glow ? "#e07a3a" : "#14100d"}" ${OUT}/><rect id="${id}-doorshut" x="-250" y="-500" width="170" height="320" fill="#1b1410" opacity="${o.doorShut ? 1 : 0}" ${OUT}/></g>
-        ${Array.from({ length: 5 }, (_, k) => `<rect x="${-270 + k * 6}" y="${-170 + k * 34}" width="${210 - k * 12}" height="18" fill="#3a2c22" ${OUT}/>`).join("")}
-        <g id="${id}-win"><rect x="60" y="-480" width="200" height="190" fill="${o.glow ? "#e8893e" : "#14100d"}" ${OUT}/><path d="M160,-480V-290M60,-385H260" stroke="#2a1f17" stroke-width="10"/></g></g>`;
+        <ellipse cx="0" cy="6" rx="560" ry="40" fill="#000" opacity=".35"/>
+        ${[-430, -260, -90, 90, 260, 430].map((px) => `<rect x="${px - 16}" y="-214" width="32" height="214" fill="#2e241c" ${OUT}/>`).join("")}
+        <path d="M-430,-180L-260,-40M-260,-180L-430,-40M260,-180L430,-40M430,-180L260,-40" stroke="#2a2018" stroke-width="12"/>
+        <path d="M-90,-150Q0,-60 90,-150" stroke="#8a3a30" stroke-width="16" fill="none"/><path d="M-90,-150Q0,-60 90,-150" stroke="#2a2018" stroke-width="3" fill="none"/>
+        <g transform="translate(170,0)"><path d="M-48,0Q-62,-58 -38,-88H38Q62,-58 48,0Z" fill="#6b3a26" ${OUT}/><ellipse cx="0" cy="-88" rx="38" ry="9" fill="#2a1610" ${OUT}/><path d="M-30,-50q30,10 60,0" stroke="#8a5a40" stroke-width="5" fill="none"/></g>
+        <g transform="translate(340,0)">${[[-40, -20], [0, -20], [40, -20], [-20, -54], [20, -54], [0, -88]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="20" fill="#5a4030" ${OUT}/><circle cx="${x}" cy="${y}" r="8" fill="#8a6a4a"/>`).join("")}</g>
+        <rect x="-480" y="-232" width="960" height="34" fill="#3a2c22" ${OUT}/>
+        <rect x="-450" y="-580" width="900" height="350" fill="url(#mkWall)" ${OUT}/>${plank(-450, 450, -578, -232, 50, "#33261b")}<path d="M-450,-410H450" stroke="#2a1f17" stroke-width="10"/>
+        <g id="${id}-door"><rect x="-250" y="-520" width="170" height="300" fill="${lit ? "#e8893e" : "#14100d"}" ${OUT}/><rect id="${id}-doorshut" x="-250" y="-520" width="170" height="300" fill="#1b1410" opacity="${o.doorShut ? 1 : 0}" ${OUT}/></g>
+        <path d="M-250,-520L-300,-505V-235L-250,-220Z" fill="#4a3828" ${OUT}/>
+        ${Array.from({ length: 6 }, (_, k) => `<rect x="${-276 - k * 16}" y="${-214 + k * 36}" width="${200}" height="18" fill="#3a2c22" ${OUT}/>`).join("")}<path d="M-270,-300L-380,0" stroke="#2e241c" stroke-width="12"/>
+        <g id="${id}-win"><rect x="60" y="-500" width="200" height="190" fill="${WIN}" ${OUT}/><path d="M160,-500V-310M60,-405H260" stroke="#2a1f17" stroke-width="10"/></g>
+        <path d="M60,-500L20,-515V-295L60,-310ZM260,-500L300,-515V-295L260,-310Z" fill="#4a3828" ${OUT}/>
+        <rect x="330" y="-500" width="90" height="150" fill="${WIN}" ${OUT}/><path d="M375,-500V-350" stroke="#2a1f17" stroke-width="8"/>
+        <path d="M-60,-300H450" stroke="#3a2c22" stroke-width="12"/>${Array.from({ length: 9 }, (_, k) => `<rect x="${-56 + k * 62}" y="-300" width="12" height="80" fill="#3a2c22"/>`).join("")}
+        <path d="M-520,-580L0,-930L520,-580Z" fill="url(#mkWall)" ${OUT}/>${Array.from({ length: 15 }, (_, k) => { const x = -420 + k * 60; return `<path d="M${x},${f1(-580 - 350 * (1 - Math.abs(x) / 520) + 8)}V-584" stroke="#2a1f17" stroke-width="${k % 3 ? 3 : 5}"/>`; }).join("")}
+        <path d="M-520,-580L0,-930L520,-580Z" fill="none" ${OUT}/><path d="M0,-860l30,40l-30,40l-30,-40z" fill="${lit ? "#c8702e" : "#14100d"}" ${OUT}/>
+        <path d="M-590,-556L0,-980L590,-556L560,-534L0,-940L-560,-534Z" fill="url(#mkRoof)" ${OUT}/>
+        <path d="M-590,-556L0,-980" stroke="#b9c9dc" stroke-width="6" opacity=".55"/><path d="M0,-980L590,-556" stroke="#b9c9dc" stroke-width="4" opacity=".25"/>
+        <path d="M-40,-556V-480" stroke="#1b1714" stroke-width="4"/><g transform="translate(-40,-450)"><rect x="-16" y="-30" width="32" height="44" rx="6" fill="${lit ? "#ffd27a" : "#2a2420"}" ${OUT}/><path d="M-20,-30H20M-20,14H20" stroke="${K}" stroke-width="6"/></g></g>`;
     }
     if (o.sign !== false) s += `<g id="${id}-sign" transform="translate(${o.signX ?? 860},${G + 40}) rotate(-6)"><rect x="-12" y="-420" width="24" height="420" fill="#4a3828" ${OUT}/>
         <rect x="-170" y="-470" width="340" height="120" rx="8" fill="#6b5236" ${OUT}/><path d="M-150,-440L-90,-400M120,-460L140,-380" stroke="#4a3828" stroke-width="4"/>
@@ -405,9 +457,12 @@
     put(L.set, s);
     if (o.house && o.glow) {
       const h = o.house, hx = h.x ?? 540, hs = h.s ?? 1;
-      put(L.glow, `<g id="${id}-wglow"><g class="flick"><circle cx="${hx - 165 * hs}" cy="${G - 340 * hs}" r="${260 * hs}" fill="url(#mkHaz)" opacity=".55"/><circle cx="${hx + 160 * hs}" cy="${G - 385 * hs}" r="${240 * hs}" fill="url(#mkHaz)" opacity=".5"/></g></g>`);
+      put(L.glow, `<g id="${id}-wglow"><g transform="translate(${hx},${G}) scale(${hs})"><g class="flick">
+        <path d="M-250,-220H-80L60,40H-470Z" fill="url(#mkShaft)"/><path d="M60,-310H260L420,40H-60Z" fill="url(#mkShaft)" opacity=".7"/><path d="M330,-350H420L520,40H300Z" fill="url(#mkShaft)" opacity=".5"/>
+        <circle cx="-165" cy="-370" r="240" fill="url(#mkHaz)" opacity=".45"/><circle cx="160" cy="-405" r="220" fill="url(#mkHaz)" opacity=".4"/><circle cx="-40" cy="-450" r="90" fill="url(#mkHaz)" opacity=".6"/>
+        <ellipse cx="-200" cy="30" rx="300" ry="40" fill="#ffb35a" opacity=".16"/><ellipse cx="180" cy="30" rx="260" ry="34" fill="#ffb35a" opacity=".12"/></g></g></g>`);
     }
-    put(L.fg, fogBands(r, G - 500, G + 500, 4, o.fogFg ?? 0.6));
+    put(L.fg, fogBands(r, G - 500, G + 500, 4, o.fogFg ?? 0.6) + (o.grass === false ? "" : fgGrass(r, 2010, 8)) + (o.branch ? fgBranch(o.branch.x ?? -260, o.branch.y ?? 90, o.branch.flip ?? 1) : ""));
   }
 
   // from outside, looking in through the window: the room lit by the stove; actors go in the act layer,

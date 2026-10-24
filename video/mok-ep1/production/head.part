@@ -13,6 +13,7 @@
     <script src="assets/mok.js"></script>
     <script src="assets/ui.js"></script>
     <script src="assets/gameui.js"></script>
+    <script src="assets/mokui.js"></script>
     <script src="assets/fx.js"></script>
     <script src="assets/engine.js"></script>
     <style>

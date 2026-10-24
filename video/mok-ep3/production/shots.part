@@ -81,20 +81,7 @@
         },
       };
       const K = "#2e2a26", SKN = `fill="#e7b48a" stroke="${K}" stroke-width="5"`, NO = `<path d="M18,18L102,102" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/>`;
-      Object.assign(GameUI.ILL, {
-        headache: `<circle cx="60" cy="70" r="34" ${SKN}/><path d="M46,66l9,4M74,66l-9,4M50,86q10,-6 20,0" stroke="${K}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M24,16l12,14l-9,5l12,14M96,16l-12,14l9,5l-12,14" stroke="#d8322a" stroke-width="6" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`,
-        dizzy: `<circle cx="60" cy="70" r="34" ${SKN}/>${[47, 73].map((x) => `<path d="M${x},66m-8,0a8,8 0 1 1 8,8a5,5 0 1 1 -4,-5" stroke="${K}" stroke-width="4" fill="none"/>`).join("")}<path d="M50,88q10,6 20,0" stroke="${K}" stroke-width="5" fill="none"/><ellipse cx="60" cy="26" rx="40" ry="10" fill="none" stroke="#f2c23a" stroke-width="5" stroke-dasharray="10 8"/>`,
-        nausea: `<circle cx="60" cy="64" r="36" fill="#b9d49a" stroke="${K}" stroke-width="5"/><path d="M46,58l9,3M74,58l-9,3" stroke="${K}" stroke-width="5" stroke-linecap="round"/><path d="M40,84q5,-6 10,0t10,0t10,0t10,0" stroke="${K}" stroke-width="5" fill="none"/>`,
-        inroom: `<path d="M18,60L60,24L102,60V102H18Z" fill="#e9e0c8" stroke="${K}" stroke-width="6" stroke-linejoin="round"/><path d="M60,50V88M44,72L60,88L76,72" stroke="#d8322a" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
-        outside: `<path d="M14,34h34M22,50h24M78,28h28" stroke="#8ab4d8" stroke-width="6" stroke-linecap="round"/><path d="M60,100V44M42,62L60,44L78,62" stroke="#3fa86a" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
-        co: `<circle cx="60" cy="60" r="46" fill="#cfc6ef" stroke="${K}" stroke-width="5"/><text x="60" y="76" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="${K}">CO</text>`,
-        noeye: `<path d="M12,60Q60,10 108,60Q60,110 12,60Z" fill="#fff" stroke="${K}" stroke-width="6"/><circle cx="60" cy="60" r="17" fill="${K}"/>${NO}`,
-        nonose: `<path d="M60,16C56,46 40,70 36,84Q46,96 60,90Q74,96 84,84C80,70 64,46 60,16Z" ${SKN}/><path d="M48,86q4,-6 8,0M64,86q4,-6 8,0" stroke="${K}" stroke-width="4" fill="none"/>${NO}`,
-        build: `<rect x="16" y="26" width="88" height="78" rx="6" fill="#e9e0c8" stroke="${K}" stroke-width="6"/>${[[34, 86], [52, 90], [72, 84], [88, 92], [40, 70], [62, 72], [84, 68], [30, 52], [50, 56], [70, 50], [90, 48], [46, 38], [76, 38]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="6" fill="#8a7ab4"/>`).join("")}`,
-        skull: `<path d="M24,58Q24,18 60,18Q96,18 96,58Q96,74 84,80V98H36V80Q24,74 24,58Z" fill="#f4f0e4" stroke="${K}" stroke-width="5"/><circle cx="45" cy="58" r="11" fill="${K}"/><circle cx="75" cy="58" r="11" fill="${K}"/><path d="M60,70l-6,10h12z" fill="${K}"/><path d="M48,98V88M60,98V88M72,98V88" stroke="${K}" stroke-width="4"/>`,
-        stovex: `<path d="M30,44L40,100H80L90,44Z" fill="#b0563a" stroke="${K}" stroke-width="5"/><path d="M26,40H94" stroke="${K}" stroke-width="8"/><path d="M52,100V82Q60,74 68,82V100" fill="#2a1a12"/><path d="M30,16L90,76M90,16L30,76" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/>`,
-        goout: `<rect x="16" y="18" width="52" height="88" fill="#4a3828" stroke="${K}" stroke-width="5"/><circle cx="58" cy="64" r="4" fill="#f2c23a"/><path d="M56,62H106M90,46L106,62L90,78" stroke="#3fa86a" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
-      });
+      // card icons: mokui.js
       const G = 1540, HR = (id, extra = {}) => ({ id, ...extra });
       const asleep = (mode = "sit") => [{ t: 0, mode, eyes: "closed", mouth: "flat" }];
       // the bundle: a person wrapped in the brown blanket, lying (dragged) or sitting slumped
@@ -102,20 +89,7 @@
           <path d="M-150,-100Q-120,-40 -160,0M60,-120Q90,-50 50,0" stroke="#463a30" stroke-width="8" fill="none"/><ellipse cx="-200" cy="-60" rx="50" ry="44" fill="#4e4036" stroke="${K}" stroke-width="4"/><ellipse cx="-214" cy="-58" rx="22" ry="20" fill="#0b0d10"/></g></g>`;
 
       Rig.MODES.pant = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 0.8); return { ...Rig.MODES.sit(u, o), torso: 6 + 4 * b, head: 10 + 3 * b, uaF: -10, faF: -60, uaB: 6, faB: -30 }; };   // sitting, gasping
-      Object.assign(GameUI.ILL, {
-        lowbeam: `<path d="M24,40Q24,24 40,24H58V96H40Q24,96 24,80Z" fill="#2e2a26"/><path d="M66,44L100,58M66,60L100,74M66,76L100,90" stroke="#2f7fbf" stroke-width="8" stroke-linecap="round"/>`,
-        slow: `<path d="M20,90A44,44 0 0 1 100,90" stroke="#2e2a26" stroke-width="10" fill="none"/><path d="M60,90L38,58" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/><circle cx="60" cy="90" r="9" fill="#2e2a26"/>`,
-        lines: `<path d="M38,110L54,14M82,110L66,14" stroke="#2e2a26" stroke-width="8"/><path d="M60,104V88M60,72V56M60,40V26" stroke="#f2c23a" stroke-width="9" stroke-linecap="round"/><circle cx="60" cy="16" r="9" fill="none" stroke="#2f7fbf" stroke-width="5"/>`,
-        doctor: `<rect x="18" y="18" width="84" height="84" rx="20" fill="#fff" stroke="${K}" stroke-width="5"/><path d="M60,36V84M36,60H84" stroke="#d8322a" stroke-width="16" stroke-linecap="round"/>`,
-        noback: `<path d="M22,62L60,30L98,62V102H22Z" fill="#e9e0c8" stroke="${K}" stroke-width="6" stroke-linejoin="round"/><rect x="48" y="70" width="24" height="32" fill="#4a3828"/><path d="M8,82H44M32,70L44,82L32,94" stroke="#3a5a8a" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>${NO}`,
-        breath: `<path d="M56,30V60M64,30V60" stroke="${K}" stroke-width="7"/><path d="M54,52Q30,40 22,74Q20,98 50,96Q56,80 54,52Z" fill="#e88a8a" stroke="${K}" stroke-width="5"/><path d="M66,52Q90,40 98,74Q100,98 70,96Q64,80 66,52Z" fill="#e88a8a" stroke="${K}" stroke-width="5"/><path d="M90,22l10,-8M98,32l14,-4" stroke="#d8322a" stroke-width="5" stroke-linecap="round"/>`,
-        confused: `<circle cx="56" cy="70" r="32" ${SKN}/><path d="M44,66h8M62,66h8M48,84q8,-5 16,0" stroke="${K}" stroke-width="5" stroke-linecap="round" fill="none"/><text x="92" y="44" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#d8322a">?</text>`,
-        faint: `<path d="M14,92H106" stroke="${K}" stroke-width="6"/><circle cx="32" cy="74" r="14" ${SKN}/><path d="M46,80H96V90H46Z" fill="#d9a12c" stroke="${K}" stroke-width="4"/><path d="M26,72l6,4M34,72l-6,4" stroke="${K}" stroke-width="3"/><text x="70" y="50" font-family="Kanit" font-weight="900" font-size="30" fill="#2f7fbf">z z</text>`,
-        call1669: `<rect x="34" y="12" width="52" height="96" rx="12" fill="#2e2a26"/><rect x="40" y="24" width="40" height="64" rx="4" fill="#fff"/><text x="60" y="62" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="18" fill="#d8322a">1669</text><circle cx="60" cy="98" r="5" fill="#fff"/>`,
-        nodrive: `<circle cx="60" cy="60" r="36" fill="none" stroke="${K}" stroke-width="10"/><circle cx="60" cy="60" r="10" fill="${K}"/><path d="M26,60H94M60,60V96" stroke="${K}" stroke-width="8"/>${NO}`,
-        otherdrive: `<circle cx="54" cy="66" r="32" fill="none" stroke="${K}" stroke-width="9"/><circle cx="54" cy="66" r="8" fill="${K}"/><path d="M24,66H84M54,66V98" stroke="${K}" stroke-width="7"/><path d="M78,30l10,10l20,-22" stroke="#3fa86a" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
-        ambulance: `<path d="M10,40H74V88H10Z" fill="#fff" stroke="${K}" stroke-width="5"/><path d="M74,52H96L110,70V88H74Z" fill="#fff" stroke="${K}" stroke-width="5"/><path d="M42,50V78M28,64H56" stroke="#d8322a" stroke-width="9"/><circle cx="30" cy="92" r="10" fill="${K}"/><circle cx="92" cy="92" r="10" fill="${K}"/><rect x="34" y="28" width="16" height="12" fill="#2f7fbf"/>`,
-      });
+      // card icons: mokui.js
       const MO = (x, y, s, track, extra = {}) => ({ who: "mother", x, y, s, track, ...extra });
       const GI = (x, y, s, track, extra = {}) => ({ who: "girl", x, y, s, track, ...extra });
       const FK = (x, y, s, track, extra = {}) => ({ who: "mintFake", x, y, s, track, ...extra });
@@ -130,7 +104,7 @@
 
       // ---------- 1. hook: เจ at the door, a voice from inside ----------
       add("hook", {
-        set: "fogVillage", setOpts: { id: "hk", house: { x: 640, s: 1.05 }, glow: true, sign: false }, dark: 0.45,
+        set: "fogVillage", setOpts: { id: "hk", house: { x: 640, s: 1.05 }, glow: true, sign: false, branch: { x: -240, y: 60 } }, dark: 0.45,
         cam: { keys: [{ t: 0, ...fr(560, 1250, 1.0, 540, 1100), drift: { s: 0.02 } }, { t: F("hook", 1) - 0.05, ...fr(470, 1200, 1.45, 540, 1000), drift: { s: 0.04 } }] },
         actors: [JA(660, 1560, 1.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: 2.0, mode: "walk", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: 560, dur: 4.0, at: 2.0 } })],
         captions: caps("hook"),
@@ -329,7 +303,7 @@
         fx(tl, id, t0) { Fx.glitch(tl, `#${id}`, t0, 0.3, 14, 108); Fx.heart(tl, t0, D("mimic") - F("mimic", 0, 2), 0.42, 0.55); },
       });
       add("mother", {
-        set: "fogVillage", setOpts: { id: "mo", house: { x: 700, s: 1.0 }, glow: true, sign: false }, dark: 0.35,
+        set: "fogVillage", setOpts: { id: "mo", house: { x: 700, s: 1.0 }, glow: true, sign: false, grass: false }, dark: 0.35,
         cam: { keys: [{ t: 0, ...fr(420, 1420, 1.0, 540, 1150), drift: { s: 0.015 } }] },
         extra(L) {
           L.act.insertAdjacentHTML("afterbegin", `<rect x="-30" y="1590" width="420" height="40" rx="8" fill="#a88a5a" stroke="${K}" stroke-width="4"/>`);
@@ -349,7 +323,7 @@
       // ---------- 22–24. the old pickup; fresh mud; the woman in red in เจ's photo ----------
       add("truck", {
         set: "gasMorning", setOpts: GM("tk"), dark: 0.1,
-        cam: { keys: [{ t: 0, ...fr(900, 1150, 1.0, 540, 1100), drift: { x: 40, s: 0.01 } }, { t: F("truck", 0, 1) - 0.05, ...fr(1500, 1350, 1.35, 540, 1100), drift: { s: 0.02 } }] },
+        cam: { keys: [{ t: 0, ...fr(900, 1150, 1.0, 540, 1100), drift: { x: 40, s: 0.01 } }, { t: F("truck", 0, 1) - 0.05, glide: 1.1, ...fr(1500, 1350, 1.35, 540, 1100), drift: { s: 0.02 } }] },
         captions: caps("truck"),
       });
       add("mud", {
