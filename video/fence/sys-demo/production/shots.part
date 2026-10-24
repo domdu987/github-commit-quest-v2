@@ -1,0 +1,88 @@
+      // ======================================================================================================
+      // systems demo: the title from the sky → the camp register → the recipe page → the 20-second countdown
+      // ======================================================================================================
+      const CAP = (text, t, end) => ({ text, t, end });
+      const ZF = (L, tl, pre, t0, dur, list) => list.forEach(([w, x, s, ph], k) => behind(L, tl, `${pre}-z${k}`, w, x, 1180, s, true, t0, dur, [{ t: 0, mode: "lunge", eyes: "dead", mouth: "snarl", opts: { period: 1.2 + ph } }]));
+
+      // ---------- 0. title: from the sky, the card, the drop onto the school ----------
+      add("title", {
+        set: "schoolYard", setOpts: { id: "tt", time: "day" }, dark: 0.08, blur: { mid: 5, far: 2 },
+        cam: { keys: [{ t: 0, ...fr(540, -1600, 0.58, 540, 900), r: 5, drift: { s: 0.03, r: -0.4 } }, { t: 2.55, glide: 2.2, ...fr(560, 760, 0.62, 540, 900), r: 0 }] },
+        ui: [{ type: "callback", t: 0.25, end: 2.3, label: "เอาชีวิตรอด 99 วัน · ระบบใหม่ 3 อย่าง", text: "ทักษะ · คราฟ · นับถอยหลัง", top: 640 }],
+        extra(L) { Fence.clouds(L); Fence.light(L, 800, 240, 900, "#ffe6b0", 0.35); Fence.haze(L, 1120, 460, "#dfe8ea", 0.35); },
+        fx(tl, id, t0) { tl.set("#black", { opacity: 1 }, t0); tl.to("#black", { opacity: 0, duration: 0.5, ease: "power1.out" }, t0 + 0.05); Fx.speed(tl, t0 + 1.2, t0 + 2.4); tl.set("#fxspeed", { opacity: 0 }, t0 + 2.45); },
+      });
+
+      // ---------- 1. the register: five of them in the yard, the camera pans along the line as each row is written in ----------
+      {
+        const c0 = fr(260, 1180, 0.78, 540, 1150);
+        add("roster", {
+          set: "schoolYard", setOpts: { id: "ro", time: "day" }, dark: 0.1, blur: { far: 3 },
+          cam: { keys: [{ t: 0, ...c0 }, { t: 7.5, glide: 7.3, ...fr(880, 1180, 0.84, 540, 1150) }] },
+          actors: [MA(-240, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 0.9, mode: "raise", eyes: "normal", mouth: "smile" }, { t: 2.3, mode: "idle", eyes: "normal", mouth: "flat" }]),
+            KO(100, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 2.1, mode: "run", eyes: "wide", mouth: "flat" }, { t: 3.5, mode: "idle", eyes: "normal", mouth: "smile" }]),
+            HO(440, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 3.3, mode: "write", eyes: "normal", mouth: "flat" }, { t: 4.7, mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "ledger" }),
+            PU(760, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: 4.5, mode: "pointUp", eyes: "wide", mouth: "smile" }, { t: 5.9, mode: "idle", eyes: "normal", mouth: "smile" }], { prop: "crayon" }),
+            PI(1060, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 5.7, mode: "point", eyes: "normal", mouth: "smile" }, { t: 7.1, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+          captions: [CAP("แต่ละคน… [มีดีคนละอย่าง]", 0.3, 3.0), CAP("ไม่มีใคร {ทำแทนกันได้}", 5.9, 7.45)],
+          ui: [{ type: "roster", t: 0.3, end: 7.4, top: 150, title: "ทะเบียนค่าย", who: "วันที่ 101 · ครูพิมแบ่งหน้าที่", rows: [
+            { name: "ลุงหมาน", skill: "ช่าง", desc: "ซ่อมได้ทุกเครื่อง · คราฟอาวุธ", icon: "wrench", at: 0.9 },
+            { name: "ก้อง", skill: "นักวิ่ง", desc: "เร็วที่สุด · ออกไปหาของ", icon: "shoe", at: 2.1 },
+            { name: "เจ๊หงส์", skill: "คลัง", desc: "นับทุกอย่าง · รู้ว่าของอยู่ไหน", icon: "ledger", at: 3.3 },
+            { name: "น้องปั้น", skill: "ตาดี", desc: "เห็นก่อนใคร · รูปวาดคือเบาะแส", icon: "eye", at: 4.5 },
+            { name: "ครูพิม", skill: "ผู้นำ", desc: "ตัดสินใจแทนทุกคน", icon: "lead", at: 5.7 }] }],
+          extra(L) { Fence.light(L, 760, 300, 900, "#ffe6b0", 0.3); Fence.haze(L, 1120, 460, "#dfe8ea", 0.3); Fence.depth(L, "grass", { cam: c0 }); },
+        });
+      }
+
+      // ---------- 2. the recipe: night in the classroom, ก้อง at the desk with the parts, ลุงหมาน beside him for the upgrade ----------
+      add("craft", {
+        set: "classroom", setOpts: { id: "cf", night: true, lampX: 760 }, dark: 0.45, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(760, 1250, 0.95, 540, 1250), drift: { s: 0.02 } }, { t: 7.6, ...fr(1000, 1250, 1.15, 540, 1250), drift: { s: 0.02, x: -10 } }] },
+        actors: [KO(520, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }, { t: 4.4, mode: "raise", eyes: "wide", mouth: "smile" }, { t: 6.2, mode: "idle", eyes: "normal", mouth: "smile" }]),
+          MA(1040, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 7.3, mode: "reach", eyes: "normal", mouth: "flat" }, { t: 9.6, mode: "point", eyes: "normal", mouth: "smile" }], { flip: true })],
+        captions: [CAP("อาวุธหมด… {ต้องประกอบเอง}", 0.3, 4.1), CAP("ไม้กวาด + มีด + เทป = [หอกมีด]", 4.5, 7.5), CAP("ลุงหมานเป็นช่าง… {อัปเกรด} ได้อีกขั้น", 7.8, 11.3)],
+        ui: [{ type: "craft", t: 0.4, end: 11.35, top: 150, title: "สูตรประดิษฐ์", who: "สมุดสูตร · ลุงหมาน",
+          parts: [{ icon: "broom", label: "ไม้กวาด", at: 1.2 }, { icon: "knife", label: "มีดครัว", at: 2.3 }, { icon: "tape", label: "เทปพันสาย", at: 3.4 }],
+          build: 4.6, result: { icon: "spear", label: "หอกมีด" }, stats: [{ label: "ระยะ", v: 3 }, { label: "แรง", v: 3 }, { label: "เสียง", v: 1 }],
+          upgrade: { at: 8.0, part: { icon: "pipe", label: "ท่อเหล็กบันไดแท็งก์" }, label: "หอกมีด +1", stats: [{ v: 5 }, { v: 4 }, { v: 1 }] } },
+          { type: "skill", t: 7.3, end: 10.9, x: 600, y: 790, name: "ลุงหมาน", skill: "ช่าง", desc: "อัปเกรดได้คนเดียวในค่าย", icon: "wrench" }],
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 5.15, 1.06, 0.3); Fx.punch(tl, `#${id} .stage`, t0 + 8.85, 1.04, 0.3); },
+      });
+
+      // ---------- 3. the countdown: the horde at the fence, the generator in the yard, ลุงหมาน runs out to kill it (20 → 8) ----------
+      add("count", {
+        set: "schoolYard", setOpts: { id: "cd", time: "night", lampX: -300 }, dark: 0.55, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(760, 1150, 0.8, 540, 1000), drift: { s: 0.02 } }, { t: 4.3, ...fr(800, 1280, 1.25, 540, 1100), drift: { s: 0.03 } }, { t: 6.4, glide: 6.4, ...fr(260, 1200, 0.9, 540, 1050) }] },
+        shake: (t) => (t > 6.4 ? 5 * Math.sin(t * 19) : 2 * Math.sin(t * 11)),
+        actors: [MA(1250, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "frown" }, { t: 2.6, mode: "crouch", eyes: "normal", mouth: "frown" }, { t: 3.2, mode: "grabArm", eyes: "normal", mouth: "frown" }, { t: 5.6, mode: "run", eyes: "wide", mouth: "frown" }], { flip: true })],
+        captions: [CAP("“ยี่สิบวิ ลุง! {แล้วประตูปิด}”", 0.2, 2.9), CAP("ช่าง… [ดับเครื่องได้ใน 3 วิ]", 3.3, 6.1), CAP("มันเดินตามเสียง… {มาแล้ว}", 7.6, 10.6)],
+        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูปิดใน", warn: 5, end: 12.9, top: 150 },
+          { type: "skill", t: 3.0, end: 6.2, x: 80, y: 840, name: "ลุงหมาน", skill: "ช่าง", desc: "รู้ว่าสวิตช์อยู่ไหนโดยไม่ต้องมอง", icon: "wrench" }],
+        extra(L) { L.set.insertAdjacentHTML("beforeend", Sets.props.generator("cd-gen", 760, 1500, 0.75, true)); glow(L, `<circle id="cd-glow" cx="760" cy="1380" r="460" fill="url(#fLamp)" opacity=".85"/>`); },
+        fx(tl, id, t0, L) {
+          ZF(L, tl, "cd", t0, D("count"), [["ha1", 760, 0.8, 0], ["ha2", 900, 0.76, 0.4], ["ha3", 1060, 0.78, 0.2], ["ha1", 1240, 0.74, 0.7], ["ha2", 1400, 0.7, 0.9], ["ha3", 600, 0.72, 0.5]]);
+          route(tl, `${id}-a0`, t0, [{ t: 0, x: 1250, y: 1500 }, { t: 2.6, x: 880, y: 1500 }, { t: 5.6, x: 880, y: 1500 }, { t: 12.9, x: -260, y: 1430 }], 0.9, true);
+          tl.fromTo("#cd-glow", { opacity: 0.85 }, { opacity: 0.55, duration: 0.09, repeat: 47, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);   // the generator's bulb hums
+          tl.to("#cd-glow", { opacity: 0, duration: 0.25 }, t0 + 4.4); tl.to("#cd-gen-shim", { opacity: 0, duration: 0.3 }, t0 + 4.4);   // killed at 4.4
+          Fx.heart(tl, t0 + 0.2, D("count") - 0.2, 0.6, 0.5);
+        },
+      });
+
+      // ---------- 4. the last five seconds: ครูพิม holding the door, ลุงหมาน running in, 0 = slam to black ----------
+      add("count2", {
+        set: "schoolYard", setOpts: { id: "ce", time: "night", lampX: 140 }, dark: 0.6, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(300, 1260, 1.2, 540, 1150), drift: { s: 0.04, x: -8 } }] },
+        shake: (t) => (t < 5.0 ? 7 * Math.sin(t * 21) : 0),
+        actors: [PI(90, 1440, 0.82, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 4.9, mode: "push", eyes: "wide", mouth: "frown" }]),
+          MA(1400, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "frown" }, { t: 4.75, mode: "fall", eyes: "closed", mouth: "frown" }], { flip: true })],
+        captions: [CAP("ห้า… สี่… สาม…", 0.3, 3.0), CAP("{ทัน}… หรือไม่ทัน", 3.2, 4.95)],
+        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูปิดใน", warn: 5, end: 5.6, top: 150 }],
+        fx(tl, id, t0, L) {
+          ZF(L, tl, "ce", t0, D("count2"), [["ha1", 1500, 0.8, 0], ["ha2", 1650, 0.76, 0.4], ["ha3", 1350, 0.78, 0.2], ["ha1", 1800, 0.74, 0.6]]);
+          route(tl, `${id}-a1`, t0, [{ t: 0, x: 1400, y: 1500 }, { t: 4.75, x: 300, y: 1450 }], 0.9, true);
+          Fx.heart(tl, t0, 5.0, 0.36, 0.8);
+          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 5.0);
+          tl.set("#black", { opacity: 1 }, t0 + 5.05);
+        },
+      });

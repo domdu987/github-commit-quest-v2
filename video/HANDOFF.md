@@ -244,6 +244,15 @@
 - ตอนอื่นของเรื่องเดียวกันเปิดแบบเดิม (hook + การ์ดเปิดตอน) ไม่ต้องขึ้นจากท้องฟ้า
 - **ตัวอย่างที่ทำแล้ว (เอาชีวิตรอด 99 วัน EP.1 ช็อต `open` 3.6 วิ):** timing.py `("open", [], 0, 0, 3.6)` ก่อน hook · shots.part: set `schoolYard` day, `cam.keys` [{fr(540,-1900,0.55) r:6} → glide 2.9 วิ ไป {fr(560,760,0.62) r:0}], LOOK `open` = `Fence.clouds(L)` (เมฆในชั้น mid ให้กล้องทะลุลงมา) + แสง/หมอก/หญ้า, fade จากดำ + `Fx.speed` ช่วงดิ่งลง · การ์ด `openTitle{series, days, ep, top, end}` ใน pk.part (ชื่อเรื่อง + กระดาษ 99 วัน + ตรา "EP.1 · ชื่อตอน") · mix.py: bed wind + slam + riser + whoosh ในช็อต open
 
+### 2.3.5 ระบบเกมของเรื่อง: ทักษะ / คราฟ-อัปเกรด / นับถอยหลัง (ผู้ใช้สั่ง 24 ต.ค. 2026 · ใช้ทุกตอนตั้งแต่ EP.2)
+
+ผู้ใช้สั่ง: "คุณมีเวลา 20 วิก่อนประตูจะปิด นับถอยหลังให้กดดัน / อาวุธหมด หาของมาคราฟ ประดิษฐ์หรืออัปเกรดอาวุธ อนิเมชันสวยๆ เท่ๆ / แต่ละคนมีความสามารถต่างกัน / เพิ่ม EP ไหนก็ได้ แต่งใหม่ได้ เอาเนื้อเรื่องให้สมูท" → เนื้อเรื่อง (ทักษะ 7 คน, สูตรคราฟทั้งเรื่อง, กติกานับถอยหลัง, จุดที่ใส่ใน EP.2/3/4) อยู่ใน `video/fence/ARC.md` หัวข้อ "ระบบเกมของเรื่อง" · UI ทั้ง 4 ชิ้นอยู่ใน **`fence-ep1/production/sys.part`** (ต่อท้าย pk.part: `cat head.part pk.part sys.part shots.part foot.part`) บนฐานกระดาษ ใช้ helper ของ pk.part ทั้งหมด (PAP/TAPE/STAMP/STK/write/slam/peel/flipIn/pkOut/PAPERS/flyOff/slapIn) · เดโม 42 วิ: `video/fence/SYS-demo-share.mp4` (ซอร์ส `video/fence/sys-demo/production/`, build ด้วย `HF_PROJ=sysdemo python3 make.py`)
+- `skill{t,end,x,y,name,skill,desc,icon}` การ์ดทักษะข้างตัวละคร (พิกัดจอ): ตบลง + เทปชื่อ + รังสีปากกาแดง + สติกเกอร์ลอก + ตราชื่อทักษะ + คำอธิบายเขียน · ไอคอน `SYS_ICON`: wrench(ช่าง) shoe(นักวิ่ง) ledger(คลัง) lead(ผู้นำ) eye(ตาดี) medic(หมอ) boss(เจ้านาย) broom knife tape spear pipe door
+- `roster{t,end,title,who,rows:[{name,skill,desc,icon,at}],top}` ทะเบียนค่าย หน้าสมุดเส้น แถวละคน โผล่ที่ `at`
+- `craft{t,end,title,who,parts:[{icon,label,at}],build,result:{icon,label},stats:[{label,v,max}],upgrade:{at,part:{icon,label},label,stats:[{v}]},top}` สูตรประดิษฐ์: ช่องวาดด้วยปากกา → ชิ้นส่วนตกลงช่อง+ติ๊กแดงที่ `at` → `build`: ชิ้นส่วนกระโดดรวม หมึกกระจาย แฟลช ผลลัพธ์เด้ง ตรา "สำเร็จ" ขีดสถิติ (จังหวะกระแทก = build+0.55) → `upgrade.at`: ชิ้นพิเศษ + ตรา "+1" ชื่อเปลี่ยน ขีดแดงยืด (จังหวะ = at+0.85)
+- `countdown{t,from,to,label,warn,end,top,tick}` นับถอยหลัง: กระดาษเลขปลิวทุกวินาที (`t + i*tick`) วงแดงวาดปิดตามเวลา ≤warn แผ่นแดง + ตรา "เร็ว!" + `#fxred` กะพริบ + สั่นแรงขึ้น · ถึง 0 แฟลช · ช็อตต้องทำเหตุการณ์จริงเอง (ตัดดำ/ประตูปิด) · ใช้ 2 ช็อตได้ (20→8 แล้วตัดไป 5→0 เหมือนเดโม) · เสียง: mix.py ใส่ `tick` ทุกวินาที + heartbeat ถี่ขึ้น
+- **กับดัก:** stroke-dasharray/dashoffset ที่จะ tween ด้วย `attr` ต้องอยู่เป็น attribute ใน markup ห้ามใส่ใน CSS (CSS ชนะ attribute → เส้นไม่โผล่) · `PAPERS()` pad เลขตามหลักสูงสุดของค่าที่ให้ ตอนหาแผ่นที่จะปลิวต้อง pad แบบเดียวกัน (เดโมเคยค้างที่ "5" เพราะ pad คนละแบบ) · ตรวจสถานะการ์ดที่เวลาใดๆ ด้วย `node video/tools/probe-card.js <file-url>` (Playwright seek แล้วอ่าน DOM)
+
 ### 2.4 กติกาการทำงาน (ทำแบบนี้ทุกครั้ง)
 
 - **ตอบผู้ใช้เป็นภาษาไทย สั้น ตรง**
