@@ -89,18 +89,33 @@
       <path d="M-70,250L80,330L-60,1500H-900V300Q-420,250 -70,250Z" fill="#1b1e23"/><path d="M1150,250L1000,330L1140,1500H2000V300Q1500,250 1150,250Z" fill="#1b1e23"/>
       <rect x="420" y="290" width="240" height="64" rx="16" fill="#202328" ${OUT}/><path d="M540,354v24" stroke="#202328" stroke-width="12"/>`;
     s += `<path d="M-900,1440Q540,1350 2000,1440V2600H-900Z" fill="url(#mkDash)"/><path d="M-900,1440Q540,1350 2000,1440" stroke="#3a3e46" stroke-width="10" fill="none"/>`;
-    s += `<g id="${id}-hazbtn"><rect x="380" y="1452" width="96" height="66" rx="12" fill="#202328" stroke="#3a3e46" stroke-width="6"/><path d="M402,1500l26,-38l26,38z" fill="none" stroke="#d8443a" stroke-width="7"/></g>`;
+    s += `<g id="${id}-hazbtn"><rect x="492" y="1452" width="96" height="66" rx="12" fill="#202328" stroke="#3a3e46" stroke-width="6"/><path d="M514,1500l26,-38l26,38z" fill="none" stroke="#d8443a" stroke-width="7"/></g>`;
     s += `<g><rect x="90" y="1620" width="190" height="70" rx="12" fill="#0b0d10" ${OUT}/><text x="185" y="1670" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#7fd1ff">03:00</text></g>`;
     put(L.set, s);
     // right-hand drive: the wheel sits right of centre, the light stalk sticks out right of the column (#id-stalk), her hand (#id-hand)
     let w = `<g transform="translate(700,1800)"><circle r="330" fill="none" stroke="#0e1013" stroke-width="64"/><circle r="330" fill="none" stroke="#2a2d33" stroke-width="48"/><path d="M-310,40Q0,120 310,40M0,110V330" stroke="#1a1c20" stroke-width="70" fill="none"/><circle r="96" fill="#1a1c20" ${OUT}/><circle r="34" fill="#2a2d33"/></g>`;
+    // her hands on the rim: the left always (10 o'clock), the right too (2 o'clock) unless it's off reaching for the stalk / hazard button
+    const grip = (x, y, side) => {
+      const ang = side < 0 ? -30 : 30;
+      return `<path d="M${x + side * 40},${y + 40}L${side < 0 ? -40 : 1120},2300" stroke="${INK}" stroke-width="128" stroke-linecap="round"/><path d="M${x + side * 40},${y + 40}L${side < 0 ? -40 : 1120},2300" stroke="#d9a12c" stroke-width="118" stroke-linecap="round"/>
+        <g transform="translate(${x},${y}) rotate(${ang})"><path d="M-62,-6Q-60,-46 -14,-50L30,-46Q64,-40 62,-4Q60,30 30,38L-30,40Q-62,34 -62,-6Z" fill="#ecbf98" ${OUT}/>
+        ${[-36, -12, 12, 36].map((fx) => `<path d="M${fx - 10},-44q10,-14 20,0" stroke="${INK}" stroke-width="4" fill="#e3b088"/>`).join("")}
+        <path d="M${side < 0 ? 52 : -52},-10q${side < 0 ? 30 : -30},10 ${side < 0 ? 20 : -20},40" stroke="${INK}" stroke-width="22" stroke-linecap="round" fill="none"/><path d="M${side < 0 ? 52 : -52},-10q${side < 0 ? 30 : -30},10 ${side < 0 ? 20 : -20},40" stroke="#ecbf98" stroke-width="14" stroke-linecap="round" fill="none"/></g>`;
+    };
+    w += `<g id="${id}-gripL">${grip(414, 1635, -1)}</g>`;
+    if (o.grip !== "left") w += `<g id="${id}-gripR">${grip(986, 1635, 1)}</g>`;
     w += `<g id="${id}-stalk"><g transform="translate(780,1560)"><g class="stk"><rect x="0" y="-16" width="180" height="32" rx="16" fill="#1d2025" ${OUT}/><rect x="146" y="-24" width="64" height="48" rx="14" fill="#2b2f35" ${OUT}/><circle cx="178" cy="0" r="9" fill="#7fd1ff" opacity=".7"/></g></g></g>`;
-    w += `<g id="${id}-hand" transform="translate(${o.handX ?? 1240},${o.handY ?? 2050})"><path d="M60,120L200,520H-70L-20,160Z" fill="#d9a12c" ${OUT}/><path d="M-36,160Q-60,60 -40,0L-100,-30Q-150,-20 -138,20L-70,60Q-60,120 -40,170Z" fill="#ecbf98" ${OUT}/>
-      <path d="M60,120C40,40 10,-20 -40,0" fill="#ecbf98" ${OUT}/>
-      ${[0, 1, 2].map((k) => `<path d="M${-110 + k * 8},${-22 + k * 22}q-44,-8 -64,10" stroke="${INK}" stroke-width="24" stroke-linecap="round" fill="none"/><path d="M${-110 + k * 8},${-22 + k * 22}q-44,-8 -64,10" stroke="#ecbf98" stroke-width="16" stroke-linecap="round" fill="none"/>`).join("")}</g>`;
-    put(L.fg, w);
-    L.fg.classList.remove("fgblur");
-    put(L.glow, `<g id="${id}-dashglow"><circle cx="185" cy="1655" r="140" fill="#7fd1ff" opacity=".1"/></g><g id="${id}-hazglow" opacity="${o.haz ? 1 : 0}"><g class="haz"><rect x="-900" y="-600" width="2900" height="3400" fill="#ff9a3a" opacity=".16"/><circle cx="428" cy="1486" r="90" fill="url(#mkHaz)"/></g></g>`);
+    // the reaching hand: index finger out, the tip at the group's origin (shots move it with translate(x,y)); arm comes from the bottom right
+    if (o.grip === "left") w += `<g id="${id}-hand" transform="translate(${o.handX ?? 1300},${o.handY ?? 2300})"><g transform="rotate(${o.handRot ?? 55})">
+      <rect x="196" y="-34" width="760" height="124" rx="40" fill="#d9a12c" ${OUT}/><rect x="196" y="-34" width="44" height="124" rx="14" fill="#b5841c" ${OUT}/>
+      <rect x="150" y="-6" width="70" height="80" rx="26" fill="#ecbf98" ${OUT}/>
+      <path d="M58,-14Q70,-26 120,-24Q170,-20 176,20Q178,66 140,74L84,76Q56,72 56,40Z" fill="#ecbf98" ${OUT}/>
+      ${[22, 42, 60].map((y) => `<rect x="46" y="${y - 10}" width="46" height="22" rx="11" fill="#e3b088" ${OUT}/>`).join("")}
+      <rect x="0" y="-12" width="96" height="26" rx="13" fill="#ecbf98" ${OUT}/><path d="M10,-4q-4,6 0,10" stroke="#c99a74" stroke-width="3" fill="none"/>
+      <path d="M118,-22Q96,-44 70,-40" stroke="${INK}" stroke-width="26" stroke-linecap="round" fill="none"/><path d="M118,-22Q96,-44 70,-40" stroke="#ecbf98" stroke-width="18" stroke-linecap="round" fill="none"/></g></g>`;
+    put(L.act, w);  // same depth as the dashboard so the fingertip lands on the button / stalk at every zoom
+
+    put(L.glow, `<g id="${id}-dashglow"><circle cx="185" cy="1655" r="140" fill="#7fd1ff" opacity=".1"/></g><g id="${id}-hazglow" opacity="${o.haz ? 1 : 0}"><g class="haz"><rect x="-900" y="-600" width="2900" height="3400" fill="#ff9a3a" opacity=".16"/><circle cx="540" cy="1486" r="90" fill="url(#mkHaz)"/></g></g>`);
   }
 
   // a green road sign in the fog lit by passing headlights: "บ้านหมอก 3 กม." and under it the episode plate
@@ -203,6 +218,20 @@
     put(L.fg, fogBands(r, G - 600, G + 400, 4, 0.75));
   }
 
+  // a steering wheel seen from the front of the car (the rim as an ellipse in front of the driver's chest), its column into the dash,
+  // and fingers wrapped over the rim at each grip point so the rig's hands read as holding it
+  function wheelGrip(w, grips, skin) {
+    let g = `<path d="M${w.x - 16},${w.y}L${w.x - 26},${w.y + 200}H${w.x + 26}L${w.x + 16},${w.y}Z" fill="#16181c" ${OUT}/>
+      <ellipse cx="${w.x}" cy="${w.y}" rx="${w.rx}" ry="${w.ry}" fill="none" stroke="#0e1013" stroke-width="30"/><ellipse cx="${w.x}" cy="${w.y}" rx="${w.rx}" ry="${w.ry}" fill="none" stroke="#2f3238" stroke-width="18"/>
+      <path d="M${w.x - w.rx},${w.y}Q${w.x},${w.y + 26} ${w.x + w.rx},${w.y}M${w.x},${w.y + 14}V${w.y + w.ry}" stroke="#1a1c20" stroke-width="16" fill="none"/><ellipse cx="${w.x}" cy="${w.y + 6}" rx="26" ry="20" fill="#1a1c20" ${OUT}/>`;
+    grips.forEach(([x, y]) => {
+      const nx = (x - w.x) / (w.rx * w.rx), ny = (y - w.y) / (w.ry * w.ry), L = Math.hypot(nx, ny), ux = nx / L, uy = ny / L, tx = -uy, ty = ux;
+      g += [-1.5, -0.5, 0.5, 1.5].map((k) => { const cx = x + tx * k * 9, cy = y + ty * k * 9;
+        return `<path d="M${f1(cx - ux * 12)},${f1(cy - uy * 12)}L${f1(cx + ux * 12)},${f1(cy + uy * 12)}" stroke="${INK}" stroke-width="13" stroke-linecap="round"/><path d="M${f1(cx - ux * 12)},${f1(cy - uy * 12)}L${f1(cx + ux * 12)},${f1(cy + uy * 12)}" stroke="${skin}" stroke-width="8" stroke-linecap="round"/>`; }).join("");
+    });
+    return g;
+  }
+
   // through the windscreen from the bonnet: three people inside (rigs go in the act layer at the seat positions),
   // the dashboard edge drawn on top (#id-dash, moved over the actors with TOP), fog behind them through the rear window
   function carInterior(L, o = {}) {
@@ -214,7 +243,7 @@
       <rect x="150" y="560" width="220" height="110" rx="40" fill="#30353c" ${OUT}/><rect x="710" y="560" width="220" height="110" rx="40" fill="#30353c" ${OUT}/>`;
     put(L.set, s);
     put(L.act, `<g id="${id}-dash"><path d="M-900,1230Q540,1150 2000,1230V2600H-900Z" fill="url(#mkDash)"/><path d="M-900,1230Q540,1150 2000,1230" stroke="#3a3e46" stroke-width="10" fill="none"/>
-      <g transform="translate(270,1430)"><circle r="200" fill="none" stroke="#0e1013" stroke-width="44"/><circle r="200" fill="none" stroke="#24272c" stroke-width="30"/></g>
+      ${wheelGrip(o.wheel || { x: 270, y: 1158, rx: 100, ry: 86 }, o.grips || [[340, 1097], [200, 1097]], o.skin || "#ecbf98")}
       <path d="M-900,-600H2000V150Q540,90 -900,150Z" fill="#0e1013"/><path d="M-60,-600L60,1230M1140,-600L1020,1230" stroke="#0e1013" stroke-width="120"/>
       <rect x="-900" y="-600" width="2900" height="3200" fill="#9fb3c4" opacity=".08"/></g>`);
     put(L.glow, `<g id="${id}-hazglow" opacity="${o.haz ? 1 : 0}"><g class="haz"><rect x="-900" y="-600" width="2900" height="3400" fill="#ff9a3a" opacity=".2"/></g></g>`);

@@ -1,5 +1,5 @@
       // ---------- หมอกลง EP.1: poses, helpers, cards ----------
-      Rig.MODES.wheel = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -62 + 2 * Math.sin(u * 1.3), faF: -40, uaB: -58, faB: -44, torso: 4, head: 2 });   // hands on the wheel
+      Rig.MODES.wheel = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -60, faF: 110, uaB: 60, faB: -110, torso: 1, head: 2 + Math.sin(u * 1.1) });   // elbows out, both hands in front of the chest on the rim (10 and 2)
       Rig.MODES.seat = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -14, faF: -50, uaB: -10, faB: -40 });
       Rig.MODES.lunge2 = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: 26, head: -6, uaF: -100, faF: -30, uaB: -80, faB: -40 });                     // lunging between the front seats
       Rig.MODES.arms = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -40, faF: -110, uaB: -36, faB: -112, torso: -2 });                                    // arms folded
@@ -90,13 +90,13 @@
 
       // ---------- 1. hook: driver's POV, the hand goes for the high-beam stalk; someone waving in the fog ----------
       add("hook", {
-        set: "carPOV", setOpts: { id: "hk", fig: 0, figX: 660, figS: 0.5, figY: 1060 }, dark: 0.3,
-        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.02, drift: { s: 0.012 } }, { t: F("hook", 1) - 0.05, ...fr(900, 1560, 1.6, 540, 1000), drift: { s: 0.03 } }] },
+        set: "carPOV", setOpts: { id: "hk", grip: "left", fig: 0, figX: 660, figS: 0.5, figY: 1060 }, dark: 0.3,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.02, drift: { s: 0.012 } }, { t: F("hook", 1) - 0.05, ...fr(880, 1560, 1.6, 540, 1000), drift: { s: 0.03 } }] },
         shake: (t) => 2 * Math.sin(t * 9) + 1.5 * Math.sin(t * 23),
         captions: caps("hook"),
         fx(tl, id, t0) {
-          tf(tl, "#hk-hand", t0 + 0.6, 1.4, "translate(1100,1610)", "power2.out");
-          tf(tl, "#hk-hand", t0 + F("hook", 1) - 0.1, 0.25, "translate(1116,1626)", "power3.out");
+          tf(tl, "#hk-hand", t0 + 0.6, 1.4, "translate(962,1566)", "power2.out");
+          tf(tl, "#hk-hand", t0 + F("hook", 1) - 0.1, 0.25, "translate(966,1572)", "power3.out");
           tl.fromTo("#hk-fig", { opacity: 0 }, { opacity: 0.6, duration: 1.4, immediateRender: false }, t0 + 1.0);
           Fx.heart(tl, t0 + F("hook", 1), D("hook") - F("hook", 1), 0.45, 0.5);
           Fx.glitch(tl, `#${id}`, t0 + F("hook", 1), 0.2, 10, 11);
@@ -182,10 +182,10 @@
 
       // ---------- 10–12. high beams: glare, the face, the swerve ----------
       add("high", {
-        set: "carPOV", setOpts: { id: "hi", handX: 1100, handY: 1610 }, dark: 0.3,
+        set: "carPOV", setOpts: { id: "hi", grip: "left", handX: 962, handY: 1566 }, dark: 0.3,
         cam: { keys: [{ t: 0, ...fr(820, 1560, 1.35, 540, 1000), drift: { s: 0.02 } }] },
         captions: caps("high", undefined, { quote: true }),
-        fx(tl, id, t0) { tf(tl, "#hi-hand", t0 + voEnd("high") - 0.35, 0.18, "translate(1100,1540)", "power3.in"); tf(tl, "#hi-stalk .stk", t0 + voEnd("high") - 0.3, 0.15, "rotate(-14 0 0)", "power2.out"); },
+        fx(tl, id, t0) { tf(tl, "#hi-hand", t0 + voEnd("high") - 0.35, 0.18, "translate(962,1532)", "power3.in"); tf(tl, "#hi-stalk .stk", t0 + voEnd("high") - 0.3, 0.15, "rotate(-14 0 0)", "power2.out"); },
       });
       add("glare", {
         set: "carPOV", setOpts: { id: "gl", high: true, fig: 0, figX: 560, figS: 1.4, wave: false, lines: 0 }, dark: 0.15,
@@ -254,11 +254,11 @@
         extra(L) { L.mid.insertAdjacentHTML("beforeend", `<rect x="-900" y="200" width="2900" height="1400" fill="#d7dbde" opacity=".85"/>`); },
       });
       split("haz", F("haz", 0, 1) - 0.05, {
-        set: "carPOV", setOpts: { id: "hz", lines: 0, handX: 1240, handY: 2050 }, dark: 0.2,
-        cam: { keys: [{ t: 0, ...fr(600, 1460, 1.5, 540, 1100), drift: { s: 0.02 } }] },
+        set: "carPOV", setOpts: { id: "hz", grip: "left", lines: 0, handX: 1300, handY: 2300, handRot: 48 }, dark: 0.2,
+        cam: { keys: [{ t: 0, ...fr(640, 1470, 1.5, 540, 1100), drift: { s: 0.02 } }] },
         extra(L) { L.mid.insertAdjacentHTML("beforeend", `<rect x="-900" y="200" width="2900" height="1400" fill="#d7dbde" opacity=".8"/>`); },
         captions: caps("haz"),
-        fx(tl, id, t0) { tf(tl, "#hz-hand", t0 + 0.1, 0.5, "translate(580,1500)", "power2.out"); tl.fromTo("#hz-hazglow", { opacity: 0 }, { opacity: 1, duration: 0.05, immediateRender: false }, t0 + 0.6); },
+        fx(tl, id, t0) { tf(tl, "#hz-hand", t0 + 0.1, 0.45, "translate(548,1474)", "power2.out"); tf(tl, "#hz-hand", t0 + 0.55, 0.08, "translate(544,1484)", "power2.in"); tl.fromTo("#hz-hazglow", { opacity: 0 }, { opacity: 1, duration: 0.05, immediateRender: false }, t0 + 0.6); },
       }, {
         set: "roadFog", setOpts: { id: "hr", carX: 520, haz: true }, dark: 0.3,
         cam: { keys: [{ t: 0, ...fr(540, 1300, 0.9, 540, 1150), drift: { s: 0.02 } }] },
