@@ -96,7 +96,7 @@ CUES = [
     ("hook", vo_t("hook", 2), "sting", 1.0), ("hook", vo_t("hook", 2), "boom", 0.6), ("hook", vo_t("hook", 2), "glitch", 0.5), ("hook", frag("hook", 2, 1), "slam", 0.5),
     *beats("hook", 0.3, D["hook"] - 0.3, 0.55, 0.6), ("hook", -0.25, "whoosh", 0.8),
     # the board: chalk, then the yard
-    ("chapter", 0.05, "chalk", 0.9), ("chapter", 0.5, "chalk", 0.8), ("chapter", 1.1, "tick", 0.3), ("chapter", 1.2, "tick", 0.3), ("chapter", 1.3, "tick", 0.3), ("chapter", 1.4, "tick", 0.3), ("chapter", 1.5, "tick", 0.3), ("chapter", 1.6, "chalk", 0.7),
+    ("chapter", 0.05, "chalk", 0.9), ("chapter", 0.4, "rustle", 0.5), ("chapter", 0.5, "chalk", 0.8), ("chapter", 1.1, "tick", 0.3), ("chapter", 1.2, "tick", 0.3), ("chapter", 1.3, "tick", 0.3), ("chapter", 1.4, "tick", 0.3), ("chapter", 1.5, "tick", 0.3), ("chapter", 1.6, "chalk", 0.7),
     *bed("wind", T("yard", 0), T("rules", 0), 0.25, 3.2), ("yard", 0.1, "crayon", 0.5), *[("yard", frag("yard", 0, 1) + 0.2 * k, "ding", 0.35) for k in range(5)],
     ("yard", frag("yard", 0, 2), "whoosh", 0.5), *[("yard", frag("yard", 0, 2) + 0.15 + 0.22 * k, "pop", 0.5) for k in range(4)],
     ("rules", 0.1, "chalk", 0.6), ("rules", frag("rules", 0, 1) - 0.05, "chalk", 0.6), ("rules", frag("rules", 0, 2) - 0.05, "chalk", 0.6), *[("rules", frag("rules", 0, k), "ding", 0.4) for k in range(3)],
@@ -119,6 +119,7 @@ CUES = [
     ("bolt", 0.5, "latch", 0.9), ("bolt", 0.55, "creak", 0.6), ("bolt", D["bolt"] - 0.45, "gate", 0.9), *growls("bolt", 0.0, D["bolt"], 0.6, 0.5), *beats("bolt", 0.0, D["bolt"], 0.35, 0.8),
     ("snag", 0.3, "thud", 0.8), ("snag", 0.9, "sting", 0.9), ("snag", 0.9, "rustle", 0.9), ("snag", 0.95, "shriek", 0.9), *growls("snag", 0.0, D["snag"], 0.7, 0.45), *beats("snag", 0.0, D["snag"], 0.33, 0.85),
     ("cut", 0.4, "whoosh", 0.6), ("cut", 0.55, "sickle", 1.2), ("cut", 0.55, "clang", 0.7), ("cut", 0.6, "cans", 1.0), ("cut", 0.7, "shriek", 0.8), *beats("cut", 0.0, D["cut"], 0.33, 0.85),
+    *growls("gateTop", 0.0, D["gateTop"], 0.8, 0.3), ("gateTop", 0.2, "gate", 0.8), ("gateTop", 0.0, "rustle", 0.6), *beats("gateTop", 0.0, D["gateTop"], 0.33, 0.85),
     ("slam", 0.2, "gate", 1.0), ("slam", 0.5, "slam", 1.3), ("slam", 0.5, "boom", 0.6), ("slam", 0.75, "latch", 1.0), *growls("slam", 0.0, D["slam"], 0.7, 0.4), ("slam", 1.2, "shriek", 0.6), *beats("slam", 0.0, D["slam"], 0.4, 0.8),
     # the desk at night: crickets outside, the count, the small hand, the "no"
     *bed("crickets", T("cans", 0), T("real", -0.1), 0.6, 4.6), ("cans", frag("cans", 0, 1) + 0.5, "buzz", 0.5), ("cans", frag("cans", 0, 1) + 0.5, "sting", 0.5), ("cans", frag("cans", 1, 1), "sting", 0.7), ("cans", frag("cans", 1, 1), "creak", 0.5), *beats("cans", vo_t("cans", 1), D["cans"] - vo_t("cans", 1), 0.6, 0.45),
@@ -138,8 +139,9 @@ CUES = [
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     # the radio wakes, the number, the count
     *bed("crickets", T("radio", 0), T("drawing", -0.1), 0.45, 4.6), ("radio", vo_t("radio", 1) - 0.35, "radio", 1.0), *bed("radiobed", T("radio", vo_t("radio", 1) - 0.1), T("radio", vo_end("radio", 1) + 0.4), 0.8, 3.0),
-    ("radio", frag("radio", 1, 1), "sting", 0.8), ("radio", frag("radio", 1, 1), "glitch", 0.4), ("radio", vo_end("radio", 1) + 0.3, "static", 0.5), *beats("radio", vo_t("radio", 1), D["radio"] - vo_t("radio", 1), 0.5, 0.5),
-    ("radio", frag("radio", 2, 2), "sting", 1.0), ("radio", frag("radio", 2, 2), "boom", 0.6), ("radio", frag("radio", 2, 2), "glitch", 0.6), ("radio", frag("radio", 2, 2), "buzz", 0.5),
+    ("radio", frag("radio", 1, 1), "tick", 0.5), ("radio", vo_end("radio", 1) + 0.3, "static", 0.5), *beats("radio", vo_t("radio", 1), D["radio"] - vo_t("radio", 1), 0.5, 0.5),
+    ("radio", frag("radio", 1, 2), "sting", 0.7), ("radio", frag("radio", 2, 2), "sting", 0.6), ("radio", frag("radio", 2, 2), "glitch", 0.4),
+    ("radio", frag("radio", 3, 2), "sting", 1.0), ("radio", frag("radio", 3, 2), "boom", 0.6), ("radio", frag("radio", 3, 2), "glitch", 0.6), ("radio", frag("radio", 3, 2), "buzz", 0.5),
     ("drawing", 0.1, "crayon", 0.6), ("drawing", 0.9, "crayon", 0.5), ("drawing", frag("drawing", 0, 1), "sting", 0.6), ("drawing", frag("drawing", 0, 1) + 0.2, "riser", 0.4), *beats("drawing", frag("drawing", 0, 1), D["drawing"] - frag("drawing", 0, 1), 0.6, 0.4),
     # morning at the tank
     ("tank", 0.2, "drip", 0.5), ("tank", 1.1, "drip", 0.4), ("tank", frag("tank", 0, 1), "drip", 0.8), ("tank", frag("tank", 0, 1), "sting", 0.8), ("tank", frag("tank", 0, 1) + 0.1, "thud", 0.4),
@@ -172,7 +174,8 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 dip(0.0, T("hook", -0.1), 0.2, 0.05)                      # the cold open: the lid, the hand
-dip(T("market", 0), T("clatter", frag("clatter", 0, 1)), 0.3)   # the market is quiet until the can drops
+dip(T("market", 0), T("clatter", frag("clatter", 0, 1)), 0.3)
+dip(T("gateTop", 0), T("gateTop", -0.05), 0.6)   # the market is quiet until the can drops
 dip(T("reach", 0), T("stop", -0.05), 0.3)
 dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("radio", vo_t("radio", 1) - 0.4), T("radio", vo_end("radio", 1) + 0.3), 0.15)  # only the radio speaks

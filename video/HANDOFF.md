@@ -24,8 +24,8 @@
 
 ### 0.2 สถานะตอนปิดแชทที่ 2 (24 ต.ค. 2026)
 
-- **เรื่องที่ 4 ชื่อ "วันที่ 100"** (ผู้ใช้เลือกชื่อนี้ ไม่ใช่ "รั้วสุดท้าย"; โฟลเดอร์/โค้ดยังใช้ `fence`) ผู้ใช้อนุมัติโครงเรื่อง 20 ตอนแล้ว สั่ง "คุณแต่งให้เอาให้ได้… ทำให้ดีกว่าคลิปที่ผมส่งให้ดู" และ "คิดและหาคำที่ทำให้ลุ้นระทึก… มาใส่เองได้" → แต่งเองได้เต็มที่ ไม่ต้องถามทีละจุด
-- **EP.1 "กระป๋องบวม" ทำเสร็จ** (2:11, 34 ช็อต) เรนเดอร์ ตรวจ ส่ง HQ ให้ผู้ใช้แล้ว เก็บที่ `video/fence-ep1/` บททีละช็อต + quote ความรู้อยู่ใน `video/fence/ARC.md` แคปชัน `video/fence/CAPTIONS.md` (หัวข้อ 3.4)
+- **เรื่องที่ 4 ชื่อ "เอาชีวิตรอด 99 วัน"** (ผู้ใช้เปลี่ยนจาก "วันที่ 100" หลังเห็น EP.1 รอบแรก และเลือก "+ นับถอยหลัง": วิทยุประกาศ "เหลืออีก … วัน" ทุกคืน EP.1 = 99; โฟลเดอร์/โค้ดยังใช้ `fence`) ผู้ใช้อนุมัติโครงเรื่อง 20 ตอนแล้ว สั่ง "คุณแต่งให้เอาให้ได้… ทำให้ดีกว่าคลิปที่ผมส่งให้ดู" และ "คิดและหาคำที่ทำให้ลุ้นระทึก… มาใส่เองได้" → แต่งเองได้เต็มที่ ไม่ต้องถามทีละจุด
+- **EP.1 "กระป๋องบวม" ทำเสร็จ** (2:20, 36 ช็อต; มีมุม top-down / POV / เครน ตามที่ผู้ใช้สั่ง "มุมกว้าง มุมสูง มุมคนที่หนึ่ง") เรนเดอร์ ตรวจ ส่ง HQ ให้ผู้ใช้แล้ว เก็บที่ `video/fence-ep1/` บททีละช็อต + quote ความรู้อยู่ใน `video/fence/ARC.md` แคปชัน `video/fence/CAPTIONS.md` (หัวข้อ 3.4)
   - **ยังไม่ได้ฟังเสียงตะโกน 3 บรรทัด** (d05 "เปิดประตู!", d06 "ปิด! ปิดเลย!", d08 "อย่านะ!") Whisper ถอดไม่ออกทุก take ถ้าผู้ใช้ทักว่าฟังไม่ชัด ให้อัดใหม่ด้วย style ไม่ตะโกน (พูดดังชัด) แล้วเรนเดอร์ใหม่
 - **คลิปต้นแบบใหม่ที่ผู้ใช้ส่ง** ("ซอมบี้ระบาด วันที่ 1" ฟาร์มของเอก 1:15) วิเคราะห์แล้วใน ARC.md หัวข้อ "เทียบคลิปต้นแบบ" ใช้แค่หลักการ ปมจบของเขา ("มีใครบางคนอยู่ในรั้วมาก่อนแล้ว") ใกล้ของเรา จึงเปลี่ยน EP.1 เป็นปม "นับผิด" (วิทยุ "หก" + รูปวาด 6 คน + น้ำในแท็งก์ลดเอง)
 - **ต่อไป:** EP.2 "เครื่องปั่นไฟ" และ EP.3 "คนแปลกหน้า" (ความรู้ยืนยันแล้วทั้งสองตอน quote อยู่ใน ARC.md) ทำตามหัวข้อ 4
@@ -38,7 +38,7 @@
 - ทุกตอนเปิดด้วย **"ถ้าวันหนึ่ง… คุณ…"** ลุ้นแบบหนัง สอนความรู้เอาตัวรอดที่ **ถูกต้องจริง** และจบแบบค้าง
 - ผู้ใช้อยากให้ **"ดีกว่าคลิปต้นแบบ"** ที่เขาส่งมา (ซีรีส์ซอมบี้ของช่อง Promptkub 3 คลิป อยู่ใน uploads ของแชทเก่า ไม่มีใน repo)
 - **เรื่องที่ทำเสร็จ:** "ค่ายคืนสุดท้าย" (3 ตอน), "เสียงกอย" (3 ตอน), "ชั้น 23" ซอมบี้ในคอนโดกลางกรุง (3 ตอน)
-- **เรื่องที่ 4 = "วันที่ 100":** ซีรีส์ซอมบี้เอาชีวิตรอดยาว 20 ตอน โครงเรื่องอนุมัติแล้ว EP.1 เสร็จ ทำทีละ 3 ตอน (หัวข้อ 3.4)
+- **เรื่องที่ 4 = "เอาชีวิตรอด 99 วัน":** ซีรีส์ซอมบี้เอาชีวิตรอดยาว 20 ตอน โครงเรื่องอนุมัติแล้ว EP.1 เสร็จ ทำทีละ 3 ตอน (หัวข้อ 3.4)
 - **ช่อง:** Rod Mai Club ลงทุกแพลตฟอร์ม (TikTok, YouTube, Instagram, Facebook, X) ดูหัวข้อ 2.0 และ 3.5
 
 ---
@@ -71,7 +71,7 @@
     - **ต้องเป็นของเรื่องเอง ห้ามหน้าตาเหมือนคลิปต้นฉบับ** (ผู้ใช้สั่ง "ทำใหม่ให้แปลกกว่าคลิปที่ผมส่งไป" หลังเห็นว่าเลียนแบบการ์ดของเขา)
     - ชั้น 23: **ประกาศนิติบุคคลแปะหน้าลิฟต์** (`GameUI.C.notice` + ช็อต `next`): ไฟนีออนกะพริบเปิดให้เห็น, "ประกาศ · นิติบุคคลอาคารชุด / เรื่อง ตอนที่ 2 / มืดแล้ว ห้ามออก / กดติดตาม เพื่อรับประกาศฉบับต่อไป / ลงชื่อ ป้าจิต แม่บ้าน ชั้น 23", ตราประทับ "ด่วนที่สุด", มือเลือดโผล่จากใต้กระดาษ
     - เรื่องใหม่: คิดการ์ดท้ายจากโลกของเรื่องนั้น (ป้าย/เอกสาร/ของในเรื่อง) ไม่ใช่การ์ดตัวหนังสือบนพื้นดำ
-    - วันที่ 100: **หน้าสมุดบัญชีเจ๊หงส์** (`GameUI.C.ledger` ใน head.part): รายการของวันนี้ แถว "คน 5" ขีดฆ่าเป็น "6?" "พรุ่งนี้ต้องหา: <ชื่อตอนถัดไป>" "กดติดตาม · อ่านหน้าถัดไป ตอนที่ N" รอยนิ้วโคลน · การ์ดเปิด = กระดานดำชอล์ก "วันที่ 100" ขีดนับ (`GameUI.C.board`)
+    - เอาชีวิตรอด 99 วัน: **หน้าสมุดบัญชีเจ๊หงส์** (`GameUI.C.ledger` ใน head.part): รายการของวันนี้ แถว "คน 5" ขีดฆ่าเป็น "6?" "พรุ่งนี้ต้องหา: <ชื่อตอนถัดไป>" "กดติดตาม · อ่านหน้าถัดไป ตอนที่ N" รอยนิ้วโคลน · การ์ดเปิด = กระดานดำชอล์ก "เหลืออีก N วัน · ตามที่วิทยุนับ" เลขเก่าถูกลบจางๆ (`GameUI.C.board` {old, day, ep})
     ตอนสุดท้ายของเรื่องไม่มี "ตอนต่อไป" (ใช้แค่ปมค้างแล้วตัดดำ หรือถามผู้ใช้)
 - **ตัวละครคิดใหม่ทุกเรื่อง** ห้ามใช้ชุดเดิมข้ามเรื่อง
 - **เรื่องต้องเป็นของเราเอง** เอาแรงบันดาลใจได้แค่ระดับ premise ห้ามลอกพล็อต ตัวละคร หรือ twist
@@ -121,9 +121,9 @@
 
 - **ผู้บรรยาย:** Gemini TTS เสียง **Puck** อ่านเรียบ ไม่มีอารมณ์ style นี้ (ห้ามเพิ่มคำแปลกๆ เพราะทำให้ Gemini ตอบ 422):
   `อ่านแบบผู้บรรยายสารคดี น้ำเสียงเรียบ เป็นกลาง ไม่ใส่อารมณ์ ไม่ตื่นเต้น ไม่กระซิบ ชัดถ้อยชัดคำ จังหวะสม่ำเสมอ ไม่ลากเสียง พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ`
-  - tempo: "เสียงกอย" 1.18, "ชั้น 23" 1.2, "วันที่ 100" **1.24** (วัดได้ ~11–12 ตัวอักษร/วิ เท่าคลิปต้นแบบใหม่ ใช้ 1.24 กับตอนใหม่)
+  - tempo: "เสียงกอย" 1.18, "ชั้น 23" 1.2, "เอาชีวิตรอด 99 วัน" **1.24** (วัดได้ ~11–12 ตัวอักษร/วิ เท่าคลิปต้นแบบใหม่ ใช้ 1.24 กับตอนใหม่)
 - **ตัวละคร:** ใส่อารมณ์เต็มที่ เลือกเสียง Gemini ให้เข้ากับนิสัย
-  - วันที่ 100: ครูพิม Kore · ก้อง Zubenelgenubi · ลุงหมาน Algenib · เจ๊หงส์ Pulcherrima · น้องปั้น Leda (style เด็ก 7 ขวบ) · เสียงวิทยุ Erinome + `af` · (ภู/คุณวิน ยังไม่เลือก)
+  - เอาชีวิตรอด 99 วัน: ครูพิม Kore · ก้อง Zubenelgenubi · ลุงหมาน Algenib · เจ๊หงส์ Pulcherrima · น้องปั้น Leda (style เด็ก 7 ขวบ) · เสียงวิทยุ Erinome + `af` · (ภู/คุณวิน ยังไม่เลือก)
   - **เสียงตะโกนสั้นๆ ("เปิดประตู!") Whisper ถอดไม่ออกเลย** ไม่ว่า take ไหน อย่าเสียเครดิตอัดซ้ำเกิน 2 รอบ ให้เขียนบรรทัดตะโกนเป็นคำที่ยาวขึ้นหรือใช้ style "พูดดัง ชัด ไม่ตะโกน"
   - **ทุก style ต้องลงท้าย** `พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ`
   - **ห้ามสั่ง "กระซิบ"** กับบรรทัดสำคัญ เพราะฟังไม่ออก (กฎของป้าจิตเคยถอดได้เป็น "โทนกัด ตรงโปรก") ให้ใช้ "พูดเสียงต่ำ ช้า ชัดทุกคำ" แทน
@@ -311,16 +311,16 @@
   - การ์ดท้าย: ประกาศ "ตอนจบ · ชั้น 23" ลงชื่อศูนย์บัญชาการเขตกักกัน QRN-23 ตราประทับ "ปิดอาคาร"
 - บททีละช็อตและข้อความตรงตัวจากแหล่ง (Ready.gov, Stop the Bleed, DHS, USFA) อยู่ใน `video/zom/ARC.md` พร้อมรายการข้อที่ยืนยันไม่ได้และห้ามใช้
 
-### 3.4 "วันที่ 100" (เรื่องที่ 4, ซีรีส์ซอมบี้ 20 ตอน, EP.1 เสร็จ)
+### 3.4 "เอาชีวิตรอด 99 วัน" (เรื่องที่ 4, ซีรีส์ซอมบี้ 20 ตอน, EP.1 เสร็จ)
 
-- **ผู้ใช้สั่ง:** ซีรีส์ซอมบี้ยาว ~20 ตอน แนว The Walking Dead (ใช้แค่หลักการเล่าเรื่อง) ตอนละ 1:30–2:00 · อนุมัติโครงเรื่องแล้ว 24 ต.ค. 2026 ชื่อเรื่อง "วันที่ 100" · "แต่งเองได้เต็มที่ ให้ลุ้น อยากตามต่อ ดีกว่าคลิปต้นแบบทุกด้าน"
+- **ผู้ใช้สั่ง:** ซีรีส์ซอมบี้ยาว ~20 ตอน แนว The Walking Dead (ใช้แค่หลักการเล่าเรื่อง) ตอนละ 1:30–2:00 · อนุมัติโครงเรื่องแล้ว 24 ต.ค. 2026 ชื่อเรื่อง "เอาชีวิตรอด 99 วัน" (เดิม "วันที่ 100") + ปมนับถอยหลังทางวิทยุ · "แต่งเองได้เต็มที่ ให้ลุ้น อยากตามต่อ ดีกว่าคลิปต้นแบบทุกด้าน"
 - **โครงเรื่องเต็ม + ความรู้ที่ยืนยันแล้ว (EP.1–3) + บททีละช็อต EP.1:** `video/fence/ARC.md` · แคปชัน `video/fence/CAPTIONS.md`
   - กฎของค่าย: **ออกไป ต้องกลับก่อนมืด / ช่วยได้… แต่อย่าเชื่อ / แบ่งได้… แต่อย่าบอกทาง** (การ์ด `fRule` ชอล์กบนกระดาน)
   - ปริศนาทั้งเรื่อง: เลขวิทยุทุกคืน = จำนวนคนที่ยังรอด (EP.1 "หก" ทั้งที่มี 5) + รูปวาดน้องปั้นมีเบาะแสทุกตอน + สมุดบัญชีเจ๊หงส์นับทุกอย่าง (ตัวนับที่ลดลง)
-- **EP.1 "กระป๋องบวม" (`video/fence-ep1/`, 2:11, 39 บรรทัดอัด 36 ใช้, 34 ช็อต)**
+- **EP.1 "กระป๋องบวม" (`video/fence-ep1/`, 2:20, 44 บรรทัดอัด 41 ใช้, 36 ช็อต)**
   - ความรู้: กระป๋องบวม/รั่ว/ฟองพุ่ง ทิ้งทั้งใบ ห้ามชิม พิษโบทูลินัมมองไม่เห็น ไม่มีกลิ่น ไม่มีรส (CDC quote ใน ARC.md)
   - ราคาที่จ่าย (แบบ TWD): ก้องกลับช้า เป้ติดซี่กรง ลุงหมานตัดสายเป้ → กระป๋อง 12 เข้ารั้ว 4, 1 บวม → เหลือ 3 ใบ + พวกมันรู้แล้วว่าค่ายอยู่ไหน
-  - ปมค้าง: วิทยุ "คืนที่ร้อย… หก" / รูปวาดมีคนที่ 6 บนแท็งก์ / น้ำในแท็งก์ลด 1 ขีดทั้งที่ไม่มีใครใช้ / ตัวเลือก "ไม่เชื่อ…" "…มันนับถูก"
+  - ปมค้าง: วิทยุ "เหลืออีก… เก้าสิบแปดวัน… หก" (เลขแรกลดทุกคืน คืนนี้มีเลขที่สอง) / รูปวาดมีคนที่ 6 บนแท็งก์ / น้ำในแท็งก์ลด 1 ขีดทั้งที่ไม่มีใครใช้ / ตัวเลือก "ไม่เชื่อ…" "…มันนับถูก"
   - ไฟล์ส่ง: `video/fence-ep1/EP1-krapong-buam-share.mp4` (HQ ส่งในแชทแล้ว ไม่อยู่ใน repo)
 - **ยังไม่ได้ทำ:** EP.2 เครื่องปั่นไฟ (CO: Ready.gov/CDC ยืนยันแล้ว), EP.3 คนแปลกหน้า (แผลติดเชื้อ/บาดทะยัก: NHS/MedlinePlus/CDC ยืนยันแล้ว) · rig ภู (มีแล้วใน CAST `phu`) คุณวิน (`win`) ยังไม่เคยใช้ · ฉาก EP.2: งานวัดร้าง เครื่องปั่นไฟ (มี `Sets.props.generator` ใน sets.js) ห้องเรียนกลางคืนมีพัดลม เนินเขาไฟฉายกะพริบ · ฉาก EP.3: หน้าประตูเช้า ชายบาดเจ็บ ค้นตัว ตรวจรอยกัด
 
@@ -345,7 +345,7 @@
    - ขอแคปชันเรื่องอื่น: ทำตามรูปแบบ `video/koi/CAPTIONS.md` (วันที่ 100 → `video/fence/CAPTIONS.md`)
    - ขอไฟล์ HQ: ต้องมี `raw.mp4` ซึ่งอยู่แค่ใน scratchpad ของแชทที่ทำ **แชทใหม่ไม่มี** → เรนเดอร์ใหม่จาก workspace (หัวข้อ 5.2 ขั้น 8–9) ตอนละ ~45 นาที
    - ถ้าผู้ใช้ติ EP.1 (เสียงตะโกน, ภาพ, บท): แก้ใน `$W/fence1` แล้วเรนเดอร์ใหม่ทั้งตอน
-2. **วันที่ 100 EP.2 "เครื่องปั่นไฟ"** (ความรู้ยืนยันแล้ว ใน ARC.md)
+2. **เอาชีวิตรอด 99 วัน EP.2 "เครื่องปั่นไฟ"** (กระดาน "เหลืออีก 98 วัน", วิทยุ "เก้าสิบเจ็ด… หก"; ทุกตอนต้องมี top-down 1, POV 2, เครน/กว้าง 1, หน้าผีห่าพุ่งใส่กล้อง 1) (ความรู้ยืนยันแล้ว ใน ARC.md)
    1. เขียนบททีละช็อตใน ARC.md ตามสูตร 2.5 + `RETENTION.md` ต่อจากปม EP.1 (วิทยุ/แท็งก์/คนที่ 6) ใส่เหตุการณ์ไม่คาดฝัน + ราคาที่จ่าย + ปมค้างไป EP.3 (ชายบาดเจ็บหน้าประตู = ภู) + รูปวาดน้องปั้น + เลขวิทยุ (ยัง "หก")
    2. ก๊อป `$W/fence1` เป็น `$W/fence2` แก้ `PROJ` ใน make.py เป็น `hf/fence2`, foot.part badge "EP.2", เขียน lines.json ใหม่ (ซิกเนเจอร์ s01 ก๊อป `brand/s01.f89a27a0ca.mp3` เข้า vo/ แล้ว `cp brand/signature.wav vo/s01.wav` หลัง voice.py)
    3. ฉากใหม่ใน `fence.js`: งานวัดร้าง (เวที ซุ้ม ชิงช้าสวรรค์เล็ก เครื่องปั่นไฟ) ห้องเรียนกลางคืนที่เปิดเครื่องปั่นไฟข้างใน (ควัน/ไฟติด) การ์ดโฮมเพจ CO, เนินเขาไฟฉายกะพริบตอบ 3 ครั้ง, ชายนอนหน้าประตูตอนเช้า
@@ -375,7 +375,7 @@ $W/hf/<proj>    ← make.py สร้าง (index.html + assets/)
 $W/synth.py  $W/music/suno1.mp3
 ```
 
-- **ตอนใหม่ของวันที่ 100:** ก๊อป `$W/fence1` เป็นต้นแบบ (head.part มีการ์ดของเรื่องครบ: board fRule sunHud signs ledger counter src callback + helper behind/route/impact) แล้วแก้ `PROJ` ใน `make.py` · เรื่องใหม่อื่น: ก๊อป `$W/zom3`
+- **ตอนใหม่ของเอาชีวิตรอด 99 วัน:** ก๊อป `$W/fence1` เป็นต้นแบบ (head.part มีการ์ดของเรื่องครบ: board fRule sunHud signs ledger counter src callback + helper behind/route/impact) แล้วแก้ `PROJ` ใน `make.py` · เรื่องใหม่อื่น: ก๊อป `$W/zom3`
 - **แชทใหม่ไม่มี `raw.mp4`, `hf/<proj>`, Whisper model และ scratchpad เก่า** ทุกอย่างสร้างใหม่ได้จาก repo (workspace.sh + make.py) ยกเว้นเสียงที่ต้องเรียก fal ถ้าแก้บท
 - **lib ใหม่ของเรื่อง:** เพิ่มชื่อไฟล์ในลิสต์ copy ของ make.py และใส่ `<script>` ใน head.part
 
@@ -480,12 +480,12 @@ add("key", {
   - ค่าย: pin kla joe chai
   - เสียงกอย: fa tae mad nurse faGown
   - ชั้น 23: khao boss jit z1 z2 z3
-  - วันที่ 100: pim kong man hong pun(ใช้ scale ~0.58) phu win + ผีห่า ha1 ชาวนา ha2 นักเรียน ha3 แม่ค้า
+  - เอาชีวิตรอด 99 วัน: pim kong man hong pun(ใช้ scale ~0.58) phu win + ผีห่า ha1 ชาวนา ha2 นักเรียน ha3 แม่ค้า
 - **modes ในไฟล์:** idle walk run crouch sit lie tremble holdHead sitChair raise phoneEar point torch whistle wave phoneLook fall **shamble lunge** (ซอมบี้)
 - **modes ที่ประกาศใน template:**
   - เสียงกอย: shiver huddle climb pointDown phoneSit stickWalk lookUp block shakeBottle clipboard stick
   - ชั้น 23: cover phoneSit stopHand whisper sleep grabbed lookDown guard runReach (ประกาศใน shots.part)
-  - วันที่ 100 (head.part): reach reachUp write still grabCan guard stopHand grabArm pullBolt crouchDraw sitHold sleepSit lookUp pointUp · prop: sickle ledger bag crayon
+  - เอาชีวิตรอด 99 วัน (head.part): reach reachUp write still grabCan guard stopHand grabArm pullBolt crouchDraw sitHold sleepSit lookUp pointUp · prop: sickle ledger bag crayon
   - ใน rig.js: shamble lunge (กระตุกด้วย `twitch`) **zrun** (ซอมบี้วิ่งเร็ว) **swing** (ฟาดสองมือ ผ่านแนวนอนที่ ~0.15 วิ) **push** (ยันประตู) **knocked** (ถูกฟาดกระเด็น 0.4 วิ) **drag** (วิ่งลากมือคนข้างหลัง) fall
 - **นักแสดงซอมบี้:** z1 ลุง 2307 (ชุดนอนลาย), z2 พนักงานออฟฟิศ, z3 รปภ., **z4 วินมอเตอร์ไซค์ (เสื้อกั๊กส้มเบอร์ 17)** ทุกตัวมีกรงเล็บ (`hand: CLAWS(skin)` ติดทั้งสองมือ)
 - **ตาและปาก:** eyes normal wide closed pain glow side **dead** · mouth smile flat o frown scream **snarl**
@@ -532,7 +532,7 @@ add("key", {
   - pressClose (มือกดแผล: `#id-spurt` `#id-pool` `#id-press` `#id-blot` + นาฬิกา `#id-wtx` `#id-wdot`)
   - doorClose (`#id-door`, `#id-knob` ลูกบิดก้าน, `#id-chain`, `#id-dust`, `o.fist` → กำปั้นเคาะ `#id-fist` ชั้น fg)
   - armClose `o.veins` (เส้นดำลาม `.vein` pathLength 1) · corridorRun `o.night` (+ `o.smoke`) · peephole `o.night`
-- **`fence.js` (วันที่ 100):** schoolYard (`time` day/noon/dusk/night/morning, `gate` 0..1 เลื่อนเปิด, `level` น้ำในแท็งก์, `lampX`; ids `-gate -bolt -tank -level -flag -lamp`; **รั้วอยู่ใน L.set** ผีห่านอกรั้วสร้างด้วย `behind(L, tl, aid, who, x, y, s, flip, t0, dur, track)` ลง L.mid), classroom (`night`, `cans` จำนวน, `bulge` index, `lampX/lampY`; ids `-board -desk -cans -bulge -radio -dialw -needle -lamp`; `Fence.chalk(id, lines)` เขียนชอล์ก), market (`-gap -cans -sc0..11 -fall`), canClose (`time`, `bulge`, `kid`, `skin/sleeve`; `-lid -kid -can`), fieldRoad (`time`, `sunX`; `-shim`), gateClose (`bolt`, `arms`; `-bars -bolt -arms` ซี่กรงอยู่ใน L.fg parallax 1.5 ระวังตำแหน่งของที่ใส่ใน fg), tankClose (`level`; `-float -water -mark -finger`), radioClose (`-dialw -needle -glow`), drawing (`-six`), mapTop (`ring`; `-path -ring`) + `Fence.pin(L, id, x, y, label, col)` (ห่อ `<g id><g transform>` ให้ GSAP y ใช้ได้) · `Fence.flife` ขยับ shimmer/ธง/วงเสียง (เรียกท้าย shots.part คู่กับ Zom.zlife)
+- **`fence.js` (เอาชีวิตรอด 99 วัน):** schoolYard (`time` day/noon/dusk/night/morning, `gate` 0..1 เลื่อนเปิด, `level` น้ำในแท็งก์, `lampX`; ids `-gate -bolt -tank -level -flag -lamp`; **รั้วอยู่ใน L.set** ผีห่านอกรั้วสร้างด้วย `behind(L, tl, aid, who, x, y, s, flip, t0, dur, track)` ลง L.mid), classroom (`night`, `cans` จำนวน, `bulge` index, `lampX/lampY`; ids `-board -desk -cans -bulge -radio -dialw -needle -lamp`; `Fence.chalk(id, lines)` เขียนชอล์ก), market (`-gap -cans -sc0..11 -fall`), canClose (`time`, `bulge`, `kid`, `skin/sleeve`; `-lid -kid -can`), fieldRoad (`time`, `sunX`; `-shim`), gateClose (`bolt`, `arms`; `-bars -bolt -arms` ซี่กรงอยู่ใน L.fg parallax 1.5 ระวังตำแหน่งของที่ใส่ใน fg), tankClose (`level`; `-float -water -mark -finger`), radioClose (`-dialw -needle -glow`), drawing (`-six`), mapTop (`ring`; `-path -ring`), gateTop (มุม top-down ของประตู: `gate`; `-gate -z0..4 -in0..2`) + `Fence.pin(L, id, x, y, label, col)` (ห่อ `<g id><g transform>` ให้ GSAP y ใช้ได้) · `Fence.flife` ขยับ shimmer/ธง/วงเสียง (เรียกท้าย shots.part คู่กับ Zom.zlife)
 - **zom.js ที่เพิ่มใน EP.3 (ไฟไหม้):**
   - DEFS `zSmoke` `zFire` `zOlive` · `Zom.smokeLayer(L,y,x0,x1,seed)` ชั้นควัน
   - hallSide (ทางเดินด้านข้าง ประตู 2306, 2307 เปิด, 2305, ประตูบันได A, ตู้ถังดับเพลิง `#id-cab`, `o.ext`, `o.smokeY`)
@@ -566,7 +566,7 @@ add("key", {
   python3 video/tools/pace.py <whisper_dir> name1 file1 name2 file2 ...
   ```
 - `synth.py` ชนิด SFX: heartbeat tick glitch rustle stomp snap pop notif sting boom crickets vibe ring whoosh knock ding buzz swell static riser wind whistle whistlefar crackle trumpet siren hum creak hiss crank shutter rain stream roar drip squelch rewind gong ching beep squish nv scream growl tap sputter slam **clang shriek thud steps latch marker click powerdown shatter**
-    + วันที่ 100: **chalk cans canfall radio radiobed gate cicada page crayon sickle**
+    + เอาชีวิตรอด 99 วัน: **chalk cans canfall radio radiobed gate cicada page crayon sickle**
   - ตัวล่าสุดอยู่ที่ `video/fence-ep1/production/synth.py` (workspace.sh ก๊อปไปเป็น `$W/synth.py`)
 - `mix.py`: `LINE_GAIN`, `bed()`, `beats()`, `dip()`, ducking ด้วย `box()` (ห้าม np.convolve), loudnorm −14
 - `video/brand/`: signature.wav / signature-v1.wav / s01-tang.mp3 / splice_signature.py / signature.json
@@ -593,7 +593,7 @@ add("key", {
 - `mark()` ของ GameUI ใช้ใน template ไม่ได้ → `Ui.mark`
 - **GSAP `x`/`y` (รวม `fromTo({x:0})`) บน `<g>` ที่มี attribute transform จะล้าง translate เดิมทิ้ง** ตัวจะกระโดดไปมุมจอ (เจอใน ชั้น 23 EP.2–3: ซอมบี้ในกระจก, ถูกฟาดกระเด็น, มือคลาน, รถในขบวน)
   → ใช้ `moveTo` ของ engine, `route()`, tween `attr.transform` หรือห่อด้วย `<g id>` ชั้นนอกที่ไม่มี transform แล้วขยับตัวนอก
-- **GSAP x/y บน `<g transform="translate(...)">` ล้าง translate ทิ้ง (เจอซ้ำใน วันที่ 100 EP.1 ถึง 8 จุด: หมุดแผนที่ มือเด็ก มือครูพิม นิ้วเจ๊หงส์ เป้ กระป๋องที่ปัด)** → ทุกอย่างที่มี transform attribute ให้ tween `attr: { transform }` หรือห่อ `<g id>` ชั้นนอก
+- **GSAP x/y บน `<g transform="translate(...)">` ล้าง translate ทิ้ง (เจอซ้ำใน เอาชีวิตรอด 99 วัน EP.1 ถึง 8 จุด: หมุดแผนที่ มือเด็ก มือครูพิม นิ้วเจ๊หงส์ เป้ กระป๋องที่ปัด)** → ทุกอย่างที่มี transform attribute ให้ tween `attr: { transform }` หรือห่อ `<g id>` ชั้นนอก
 - ของใน `L.fg` มี parallax 1.5 และ scale ต่างจาก set: พิกัดบนจอไม่เท่าพิกัดโลก (นิ้วเจ๊หงส์หลุดจอ) คำนวณจาก `translate(540 960) scale(1+(s-1)*1.5) translate(-540 - x*1.5, -960 - y*1.5)` หรือ snapshot เช็ก
 - ของที่ลูกของ `<g transform>` ใช้พิกัด**สัมพัทธ์** (กระป๋องบนชั้นในตลาด) อย่าใส่พิกัดโลก
 - ตะเกียง/ของตกแต่งบังของสำคัญ (ตะเกียงบังกระป๋องบวม) → เช็ก snapshot ทุกช็อตที่มีของสำคัญ
@@ -646,6 +646,6 @@ add("key", {
 | 9 | "ชั้น 23" EP.1 โดนกัด ต้องบอก (2:01) | `video/zom-ep1/EP1-don-kat-tong-bok-share.mp4` |
 | 10 | "ชั้น 23" EP.2 มืดแล้ว ห้ามออก (1:37) | `video/zom-ep2/EP2-mued-laew-ham-ok-share.mp4` |
 | 11 | "ชั้น 23" EP.3 ใครเคาะ… อย่าตอบ (1:39) | `video/zom-ep3/EP3-khrai-khao-ya-top-share.mp4` |
-| 12 | "วันที่ 100" EP.1 กระป๋องบวม (2:11) | `video/fence-ep1/EP1-krapong-buam-share.mp4` |
+| 12 | "เอาชีวิตรอด 99 วัน" EP.1 กระป๋องบวม (2:20) | `video/fence-ep1/EP1-krapong-buam-share.mp4` |
 
 ไฟล์ `*-share.mp4` ใน repo บีบไว้ ~3 Mbps สำหรับเก็บและดูตัวอย่าง **ห้ามเอาไปลงช่อง** ไฟล์ลงช่อง (`*-HQ.mp4`) ต้องทำจาก `raw.mp4` ตามหัวข้อ 5.2 ขั้น 9

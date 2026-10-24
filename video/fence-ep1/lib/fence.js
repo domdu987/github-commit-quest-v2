@@ -326,6 +326,35 @@
     put(L.act, `<g id="${id}" opacity="0"><g transform="translate(${x},${y})"><path d="M0,0C-40,-60 -60,-90 -60,-130a60,60 0 1 1 120,0c0,40 -20,70 -60,130z" fill="${col}" ${OUT}/><circle cy="-130" r="22" fill="#f4ecd8"/><rect x="-170" y="-250" width="340" height="70" rx="14" fill="#1b1d20" opacity=".9"/><text y="-200" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="38" fill="#f4ecd8">${label}</text></g></g>`);
   }
 
+
+  // ---------------- top-down of the gate: the road and the crowd outside (top), the yard inside (bottom); figures are seen from above ----------------
+  // ids: #id-gate (slides along x), #id-z0.. (the crowd, arms toward the bars), #id-in0.. (people inside)
+  function gateTop(L, o = {}) {
+    const id = o.id || "gtop", FY = 960, r = mk(o.seed || 77);
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#2a2420"/>`);
+    let s = `<rect x="-1200" y="-800" width="3500" height="${FY + 800}" fill="#5c4a63"/><rect x="-1200" y="${FY - 480}" width="3500" height="420" fill="#8a6a42"/>`;   // dusk road
+    s += `<path d="M-1200,${FY - 270}H2300" stroke="#a07a4a" stroke-width="14" stroke-dasharray="90 70"/>`;
+    s += `<rect x="-1200" y="${FY}" width="3500" height="2000" fill="url(#fDirt)"/>`;
+    for (let k = 0; k < 30; k++) { const x = -1100 + r() * 3400, y = FY + 60 + r() * 900; s += `<path d="M${f1(x)},${f1(y)}q6,-18 12,0q6,-14 12,0" stroke="#6f8f3e" stroke-width="4" fill="none"/>`; }
+    // the fence from above: a concrete strip with square posts, the gate opening in the middle
+    s += `<rect x="-1200" y="${FY - 30}" width="1644" height="60" fill="#cfc9bb" ${OUT}/><rect x="896" y="${FY - 30}" width="1404" height="60" fill="#cfc9bb" ${OUT}/>`;
+    for (let x = -1100; x < 2300; x += 220) { if (x > 420 && x < 900) continue; s += `<rect x="${x - 6}" y="${FY - 42}" width="52" height="84" fill="#b3ada0" ${OUT}/>`; }
+    s += `<rect x="400" y="${FY - 46}" width="44" height="92" fill="#b3ada0" ${OUT}/><rect x="896" y="${FY - 46}" width="44" height="92" fill="#b3ada0" ${OUT}/>`;
+    s += `<g id="${id}-gate" transform="translate(${444 + (o.gate || 0) * 440},0)"><rect x="0" y="${FY - 16}" width="452" height="32" fill="#3a3f45" ${OUT}/>${Array.from({ length: 14 }, (_, b) => `<rect x="${12 + b * 32}" y="${FY - 22}" width="10" height="44" fill="#5b6066"/>`).join("")}</g>`;
+    s += `<rect x="440" y="${FY + 16}" width="456" height="8" fill="#3a3f45"/>`;
+    put(L.set, s);
+    // the horde from above: shoulders, head, two arms stretched at the bars (ids -z0..; each in a plain outer group so GSAP can move it)
+    const fig = (x, y, top, skin, hair, dead) => `<g transform="translate(${x},${y})"><ellipse rx="78" ry="42" fill="${top}" ${OUT}/><path d="M-60,-20L-150,70M60,-20L150,70" stroke="${INK}" stroke-width="40" stroke-linecap="round"/><path d="M-60,-20L-150,70M60,-20L150,70" stroke="${skin}" stroke-width="30" stroke-linecap="round"/>
+      ${dead ? `<path d="M-150,70l-10,30M-156,66l-30,18M150,70l10,30M156,66l30,18" stroke="#1b1612" stroke-width="10" stroke-linecap="round"/><ellipse cx="20" cy="10" rx="18" ry="12" fill="#7a1414" opacity=".8"/>` : ""}<circle r="38" fill="${hair}" ${OUT}/><circle cx="-10" cy="-14" r="10" fill="${skin}" opacity=".7"/></g>`;
+    const Z = [[560, FY - 150, "#2c3e6b", "#a3ae8e", "#9a948c"], [700, FY - 120, "#e6e8e2", "#b0b9a2", "#1f1a18"], [850, FY - 170, "#4f6a7a", "#98a88f", "#dfe6e2"], [430, FY - 230, "#2c3e6b", "#a3ae8e", "#9a948c"], [1000, FY - 260, "#e6e8e2", "#b0b9a2", "#1f1a18"]];
+    put(L.act, Z.map(([x, y, top, skin, hair], k) => `<g id="${id}-z${k}">${fig(x, y, top, skin, hair, true)}</g>`).join(""));
+    // inside: ครูพิม and ลุงหมาน shoving the panel (arms up at the gate), ก้อง sprawled on the dirt
+    put(L.act, `<g id="${id}-in0">${fig(520, FY + 150, "#9fc5d8", "#ecc29c", "#2b2522", false).replace("L-150,70M60,-20L150,70", "L-110,-110M60,-20L110,-110").replace("L-150,70M60,-20L150,70", "L-110,-110M60,-20L110,-110")}</g>
+      <g id="${id}-in1">${fig(760, FY + 150, "#2c3e6b", "#b9805a", "#d9b86a", false).replace("L-150,70M60,-20L150,70", "L-110,-110M60,-20L110,-110").replace("L-150,70M60,-20L150,70", "L-110,-110M60,-20L110,-110")}</g>
+      <g id="${id}-in2" transform="translate(300,${FY + 330}) rotate(-70)"><ellipse rx="78" ry="42" fill="#b8463a" ${OUT}/><path d="M-60,-20L-150,40M60,-20L150,40" stroke="${INK}" stroke-width="40" stroke-linecap="round"/><path d="M-60,-20L-150,40M60,-20L150,40" stroke="#d6a27c" stroke-width="30" stroke-linecap="round"/><rect x="-40" y="30" width="80" height="150" rx="30" fill="#4a4e3a" ${OUT}/><circle r="38" fill="#231a16" ${OUT}/><path d="M-30,-30h60" stroke="#e07a4f" stroke-width="10"/></g>`);
+    put(L.glow, `<rect x="-1200" y="-800" width="3500" height="${FY}" fill="#ff9a3c" opacity=".1"/>`);
+  }
+
   // looping motion for this story's sets
   function flife(tl, scope, t0, dur) {
     const root = document.querySelector(scope);
@@ -337,6 +366,6 @@
     q(".fring").forEach((el, i) => tl.fromTo(el, { scale: 0.3, opacity: 0.9 }, { scale: 2.2, opacity: 0, svgOrigin: "1500 1250", duration: 1.6, repeat: Math.ceil(dur / 1.6), ease: "power1.out", immediateRender: false }, t0 + i * 0.5));
   }
 
-  Object.assign(Sets, { schoolYard, classroom, market, canClose, fieldRoad, gateClose, tankClose, radioClose, drawing, mapTop });
+  Object.assign(Sets, { schoolYard, classroom, market, canClose, fieldRoad, gateClose, tankClose, radioClose, drawing, mapTop, gateTop });
   window.Fence = { chalk, pin, flife, paddies };
 })();

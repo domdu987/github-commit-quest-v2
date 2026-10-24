@@ -22,7 +22,7 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 SHOTS = [
     ("hook", ["n01", ("n02", 0.05), ("n03", 0.1)], 0.3, 0.35, 6.0),     # POV: the bulging can in our hands at dusk, a small hand reaching for it
     ("chapter", ["n04"], 0.15, 0.4, 2.6),                                # the blackboard: "วันที่ 100" in chalk
-    ("yard", ["n05"], 0.1, 0.22, 4.0),                                    # the school yard, five of them, the head count
+    ("yard", ["n05", ("n05b", 0.05)], 0.1, 0.22, 4.0),                                    # the school yard, five of them, the head count
     ("rules", ["d01"], 0.15, 0.3, 5.0),                                 # ครูพิม at the board, the three rules
     ("noon", ["n07"], 0.1, 0.22, 3.4),                                    # the road at noon: a slow one in the shimmer
     ("dusk", ["n08"], 0.1, 0.22, 2.4),                                    # same road, sun down: it runs
@@ -37,6 +37,7 @@ SHOTS = [
         ("bolt", [], 0, 0, 1.3),                                             # action: ครูพิม pulls the bolt (breaking her own rule)
     ("snag", [], 0, 0, 1.8),                                             # action: the backpack strap through the bars, a hand grabs it
     ("cut", [], 0, 0, 1.4),                                              # action: ลุงหมาน's sickle cuts the strap, the bag goes outside
+    ("gateTop", [], 0, 0, 0.9),                                           # top-down: the crowd at the bars, the gate panel sliding
     ("slam", ["d06"], 0.05, 0.4, 2.2),                                   # "ปิด! ปิดเลย!" the gate slams, arms through the bars
     ("cans", ["n16", ("n17", 0.1)], 0.15, 0.22, 4.4),                     # the desk: four cans, one swollen; the count 12 → 4
     ("reach", ["d07", ("n18", 0.1)], 0.1, 0.25, 3.2),                    # น้องปั้น's hand (we see it first)
@@ -46,7 +47,7 @@ SHOTS = [
     ("real", ["n23"], 0.1, 0.35, 3.4),                                   # in real life: throw the whole can away
     ("three", ["n29"], 0.1, 0.4, 3.6),                                   # three cans left, and they know where we are (the fence at night)
     ("sig", ["s01"], 0.15, 0.5, 4.2),
-    ("radio", ["n24", ("r01", 0.25), ("n25", 0.3)], 0.15, 0.4, 7.0),     # the radio wakes: "หก"
+    ("radio", ["n24", ("r01", 0.25), ("n24b", 0.15), ("n25", 0.15)], 0.15, 0.35, 7.0),     # the radio wakes: "หก"
     ("drawing", ["n26"], 0.15, 0.6, 3.2),                                # น้องปั้น's drawing: count them
     ("tank", ["n27", ("n28", 0.1)], 0.1, 0.4, 4.6),                      # morning: the gauge one notch down
     ("choice", [], 0.0, 0.0, 3.4),

@@ -28,14 +28,14 @@
         set: "classroom", setOpts: { id: "ch" }, dark: 0.2, blur: { far: 2 },
         cam: { keys: [{ t: 0, ...fr(540, 600, 1.1, 540, 760), drift: { s: 0.02 } }] },
         captions: caps("chapter"),
-        ui: [{ type: "board", t: 0.05, day: "100", ep: "ตอนที่ 1 · กระป๋องบวม", top: 470 }],
+        ui: [{ type: "board", t: 0.05, old: "100", day: "99", ep: "ตอนที่ 1 · กระป๋องบวม", top: 440 }],
         fx(tl, id, t0) { Fx.heart(tl, t0 + 0.6, D("chapter") - 0.6, 0.7, 0.3); },
       });
 
       // ---------- 3. the yard: no power, no signal, five of them; the head count ticks up — then the map ----------
       split("yard", F("yard", 0, 2) - 0.05, {
         set: "schoolYard", setOpts: { id: "yd", time: "day" }, dark: 0.08, blur: { far: 3 },
-        cam: { keys: [{ t: 0, ...fr(420, 1050, 0.56, 540, 900), drift: { x: 24, s: 0.012 } }] },
+        cam: { keys: [{ t: 0, ...fr(520, 520, 0.62, 540, 700), drift: { y: 40, s: 0.004 } }, { t: F("yard", 0, 1) - 0.1, glide: 1.1, ...fr(420, 1050, 0.56, 540, 900), drift: { x: 24, s: 0.012 } }] },
         actors: [PI(-300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), KO(560, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "flat" }], { flip: true }),
           MA(1100, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }]), HO(-40, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" }),
           PU(220, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }], { prop: "crayon" })],
@@ -112,16 +112,32 @@
       });
 
       // ---------- 9. the market: the last cans; the vendor stands in the gap — we see her before ก้อง does ----------
-      add("market", {
+      split("market", vo("market", 1) - 0.05, {
         set: "market", setOpts: { id: "mk", time: "day" }, dark: 0.2, blur: { far: 3 },
-        cam: { keys: [{ t: 0, ...fr(300, 1150, 0.9, 540, 1020), drift: { x: 40, s: 0.02 } }, { t: vo("market", 1) - 0.05, ...fr(560, 1200, 1.3, 540, 1000), drift: { s: 0.03 } }] },
+        cam: { keys: [{ t: 0, ...fr(300, 1150, 0.9, 540, 1020), drift: { x: 40, s: 0.02 } }] },
         actors: [HA("ha3", 0, 1500, 0.9, [{ t: 0, mode: "still", eyes: "dead", mouth: "flat" }]),
           KO(560, 1500, 0.9, [{ t: 0, mode: "grabCan", eyes: "normal", mouth: "flat" }], { prop: "bag" })],
-        captions: caps("market"),
-        ui: [{ type: "counter", t: vo("market", 1), end: D("market") - 0.05, label: "กระป๋อง", color: "#8fc3d6", keys: [{ t: vo("market", 1), v: 0 }, { t: D("market") - 0.2, v: 12 }], top: 150 }],
+        captions: capsFrom("market", 0).filter((c) => c.t < vo("market", 1) - 0.1),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("market"), 0.8, 0.3); },
+      }, {   // first person: our hands on the shelf, cans going into the bag one by one; she is a shape at the end of the aisle
+        set: "market", setOpts: { id: "mp", time: "day" }, dark: 0.25, blur: { far: 4, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(430, 1250, 1.7, 540, 1000), drift: { x: 30, s: 0.03 } }] },
+        shake: (t) => 3 * Math.sin(t * 6) + 1.5 * Math.sin(t * 17),
+        actors: [HA("ha3", 0, 1500, 0.9, [{ t: 0, mode: "still", eyes: "dead", mouth: "flat" }])],
+        captions: capsFrom("market", vo("market", 1) - 0.05),
+        ui: [{ type: "counter", t: 0.05, end: D("market") - vo("market", 1), label: "กระป๋อง", color: "#8fc3d6", keys: [{ t: 0.05, v: 0 }, { t: D("market") - vo("market", 1) - 0.2, v: 12 }], top: 150 }],
+        extra(L) {
+          const INK = "#2e2a26";
+          L.fg.insertAdjacentHTML("beforeend", `<g id="mp-hand"><g transform="translate(700,1700) rotate(-30)"><path d="M-40,-80C-120,-60 -150,20 -120,110C-100,180 -40,220 40,210L80,200C100,196 100,170 80,166L40,164C60,140 56,120 36,112L80,100C104,94 102,66 78,62L30,60C56,40 52,18 30,10L74,0C98,-6 96,-34 70,-38L10,-30C40,-60 20,-90 -10,-86Z" fill="#d6a27c" stroke="${INK}" stroke-width="4"/>
+            <path d="M-100,160C-220,260 -300,420 -340,700L-60,760C-20,500 40,360 60,240Z" fill="#b8463a" stroke="${INK}" stroke-width="4"/><g transform="translate(20,20) rotate(20)"><rect x="-26" y="-36" width="52" height="72" rx="6" fill="url(#fCan)" stroke="${INK}" stroke-width="4"/><rect x="-26" y="-14" width="52" height="30" fill="#c8392b" opacity=".85"/></g></g></g>
+            <g transform="translate(140,1760) rotate(20)"><path d="M-60,-60q-30,-80 20,-130h120q60,30 40,120l-40,80q-60,30 -110,0z" fill="#3d4d45" stroke="${INK}" stroke-width="4"/><path d="M-40,-130q60,-50 120,0" stroke="${INK}" stroke-width="10" fill="none"/></g>`);
+          L.fg.classList.remove("fgblur");
+        },
         fx(tl, id, t0) {
-          [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11].forEach((k, i) => tl.set(`#mk-sc${k}`, { opacity: 0 }, t0 + vo("market", 1) + i * 0.2));   // into the bag, one by one
-          Fx.heart(tl, t0, vo("market", 1), 0.8, 0.3);
+          const n = D("market") - vo("market", 1), each = Math.max(0.16, (n - 0.4) / 11);
+          [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11].forEach((k, i) => tl.set(`#mp-sc${k}`, { opacity: 0 }, t0 + 0.1 + i * each));   // into the bag, one by one
+          for (let i = 0; i < 11; i++) { tl.fromTo("#mp-hand", { attr: { transform: "translate(0,0)" } }, { attr: { transform: "translate(-60,-140)" }, duration: each * 0.45, ease: "power2.out", immediateRender: false }, t0 + i * each); tl.to("#mp-hand", { attr: { transform: "translate(0,0)" }, duration: each * 0.5, ease: "power2.in" }, t0 + i * each + each * 0.45); }
+          Fx.heart(tl, t0, n, 0.8, 0.3);
         },
       });
 
@@ -150,13 +166,24 @@
       });
 
       // ---------- 11–13. action: she comes over the stall; ก้อง backs into the shelf (cans everywhere); POV out into the open ----------
-      add("lunge", {
+      split("lunge", 0.8, {
         set: "market", setOpts: { id: "ln", time: "day" }, dark: 0.25, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(360, 1150, 1.05, 540, 1000), drift: { x: 90, s: 0.05 } }] },
         shake: (t) => 6 * Math.sin(t * 45),
         actors: [HA("ha3", 0, 1500, 0.9, [{ t: 0, mode: "lunge", eyes: "dead", mouth: "snarl" }, { t: 0.35, mode: "zrun", eyes: "dead", mouth: "snarl" }], { moveTo: { x: 400, at: 0.35, dur: 1.0, ease: "power1.in" } }),
-          KO(560, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.4, mode: "guard", eyes: "wide", mouth: "scream" }, { t: 0.9, mode: "run", eyes: "wide", mouth: "scream" }], { prop: "bag", moveTo: { x: 760, at: 0.9, dur: 0.6 } })],
-        fx(tl, id, t0) { red(tl, t0 + 0.35, 0.6, 0.5); Fx.glitch(tl, `#${id}`, t0 + 0.35, 0.2, 10, 31); Fx.heart(tl, t0, D("lunge"), 0.35, 0.8); },
+          KO(560, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.4, mode: "guard", eyes: "wide", mouth: "scream" }], { prop: "bag" })],
+        fx(tl, id, t0) { red(tl, t0 + 0.35, 0.6, 0.5); Fx.glitch(tl, `#${id}`, t0 + 0.35, 0.2, 10, 31); Fx.heart(tl, t0, 0.8, 0.35, 0.8); },
+      }, {   // first person: her face and claws filling the frame
+        set: "market", setOpts: { id: "lz", time: "day" }, dark: 0.45, blur: { far: 6, mid: 4, set: 3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.1, 540, 960), drift: { s: 0.1 } }] },
+        shake: (t) => 10 * Math.sin(t * 70),
+        extra(L) { L.act.insertAdjacentHTML("beforeend", Zom.zLunge("lz-z", 540, 1150, 0.55).replace(/#b9c4d6/g, "#4f6a7a").replace(/#7b8aa6/g, "#3c5260").replace(/#97a3b8/g, "#e8d8a8")); },
+        fx(tl, id, t0) {
+          tl.set("#lz-z", { opacity: 1 }, t0);
+          tl.fromTo("#lz-z", { attr: { transform: "translate(540,1250) scale(0.5)" } }, { attr: { transform: "translate(540,1150) scale(1.25)" }, duration: D("lunge") - 0.8, ease: "power3.in", immediateRender: false }, t0);
+          Fx.tunnel(tl, t0, t0 + D("lunge") - 0.8 + 0.2, 0.6); red(tl, t0 + D("lunge") - 0.8 - 0.25, 0.8, 0.4); Fx.heart(tl, t0, D("lunge") - 0.8, 0.3, 0.9);
+          tl.fromTo("#flashw", { opacity: 0.6 }, { opacity: 0, duration: 0.1, immediateRender: false }, t0 + D("lunge") - 0.8 - 0.1);
+        },
       });
       add("shelf", {
         set: "market", setOpts: { id: "sf", time: "day" }, dark: 0.25, blur: { far: 3 },
@@ -238,6 +265,19 @@
           tl.to("#ct-bag", { attr: { transform: "translate(1120,1460)" }, duration: 0.3, ease: "power2.in" }, t0 + 0.6);
           document.querySelectorAll(".ct-can").forEach((c, k) => tl.to(c, { attr: { transform: `translate(${1000 + (k * 61) % 260},${1450 + (k % 3) * 24}) rotate(${(k * 53) % 180})` }, duration: 0.4 + (k % 3) * 0.1, ease: "power2.out" }, t0 + 0.6 + k * 0.03));
           Fx.heart(tl, t0, D("cut"), 0.33, 0.85);
+        },
+      });
+
+      // ---------- 18a. from above: the crowd at the bars, the panel sliding shut over ก้อง's legs ----------
+      add("gateTop", {
+        set: "gateTop", setOpts: { id: "gtp", gate: 0.55 }, dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(670, 980, 0.9, 540, 960), drift: { s: 0.06 } }] },
+        shake: (t) => 6 * Math.sin(t * 50),
+        fx(tl, id, t0) {
+          [0, 1, 2, 3, 4].forEach((k) => tl.fromTo(`#gtp-z${k}`, { x: 0, y: 0 }, { x: (k % 2 ? 14 : -10), y: 26, duration: 0.18 + k * 0.03, repeat: 5, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+          tl.fromTo("#gtp-gate", { attr: { transform: "translate(686,0)" } }, { attr: { transform: "translate(470,0)" }, duration: 0.6, ease: "power2.in", immediateRender: false }, t0 + 0.2);
+          tl.fromTo("#gtp-in2", { attr: { transform: "translate(300,1290) rotate(-70)" } }, { attr: { transform: "translate(230,1330) rotate(-60)" }, duration: 0.6, ease: "power1.out", immediateRender: false }, t0);
+          Fx.heart(tl, t0, D("gateTop"), 0.33, 0.85); Fx.glitch(tl, `#${id}`, t0, 0.1, 8, 45);
         },
       });
 
@@ -351,32 +391,35 @@
         set: "schoolYard", setOpts: { id: "sgn", time: "night", lampX: -300 }, dark: 0.55, blur: { far: 10, set: 8, mid: 8 },
         cam: { keys: Sig.cam(F, fr(560, 1100, 0.9, 540, 960)) }, shake: Sig.shake(F),
         captions: caps("sig"),
-        ui: [Sig.ui(F, "วันที่ 100 · เช็กลิสต์เอาตัวรอด", [["ปิดประตูก่อนมันถึง", true], ["ไม่กินกระป๋องบวม", true], ["นับของทุกอย่าง", true], ["???", false]], D("sig"))],
+        ui: [Sig.ui(F, "เหลือ 99 วัน · เช็กลิสต์เอาตัวรอด", [["ปิดประตูก่อนมันถึง", true], ["ไม่กินกระป๋องบวม", true], ["นับของทุกอย่าง", true], ["???", false]], D("sig"))],
         fx(tl, id, t0) { Sig.fx(tl, id, t0, F, D("sig")); },
       });
 
       // ---------- 26. that night the old radio wakes: "คืนที่ร้อย… หก" — five of them, the radio says six ----------
-      split("radio", vo("radio", 2) - 0.1, {
+      split("radio", vo("radio", 3) - 0.1, {
         set: "radioClose", setOpts: { id: "ra" }, dark: 0.55,
         cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.02 } }, { t: vo("radio", 1) - 0.3, ...fr(400, 900, 1.5, 540, 960), drift: { s: 0.03 } }] },
-        captions: [...caps("radio", [0]), ...caps("radio", [1], { quote: true }).map((c) => ({ ...c, radio: true }))],
+        captions: [...caps("radio", [0]), ...caps("radio", [1], { quote: true }), ...caps("radio", [2])],
         fx(tl, id, t0) {
           const on = t0 + vo("radio", 1) - 0.35;
           tl.fromTo(["#ra-dialw", "#ra-glow"], { opacity: 0 }, { opacity: 1, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, on); tl.set(["#ra-dialw", "#ra-glow"], { opacity: 1 }, on + 0.3);
           tl.fromTo("#ra-needle", { x: 0 }, { x: 180, duration: 0.6, ease: "power1.inOut", immediateRender: false }, on + 0.1);
-          for (let t = on + 0.7; t < t0 + vo("radio", 2); t += 0.11) tl.set("#ra-needle", { x: 180 + ((t * 977) % 9) - 4 }, t);
-          document.querySelectorAll(`#${id} .capbox`).forEach((c, i) => { if (i >= caps("radio", [0]).length) c.classList.add("radio"); });
-          Fx.punch(tl, `#${id} .stage`, t0 + F("radio", 1, 1), 1.08, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("radio", 1, 1), 0.2, 10, 61); red(tl, t0 + F("radio", 1, 1), 0.5, 0.6);
-          Fx.heart(tl, t0 + vo("radio", 1), D("radio") - vo("radio", 1), 0.5, 0.5);
+          for (let t = on + 0.7; t < t0 + vo("radio", 3); t += 0.11) tl.set("#ra-needle", { x: 180 + ((t * 977) % 9) - 4 }, t);
+          const n0 = caps("radio", [0]).length, n1 = caps("radio", [1]).length;
+          document.querySelectorAll(`#${id} .capbox`).forEach((c, i) => { if (i >= n0 && i < n0 + n1) c.classList.add("radio"); });
+          Fx.punch(tl, `#${id} .stage`, t0 + F("radio", 1, 2), 1.08, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("radio", 1, 2), 0.2, 10, 61); red(tl, t0 + F("radio", 1, 2), 0.5, 0.6);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("radio", 2, 2), 1.05, 0.4); red(tl, t0 + F("radio", 2, 2), 0.4, 0.5);
+          Fx.heart(tl, t0 + vo("radio", 1), vo("radio", 3) - vo("radio", 1), 0.5, 0.5);
         },
       }, {
         set: "classroom", setOpts: { id: "rb", night: true, lampX: 400, lampY: 1100 }, dark: 0.6, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(400, 1150, 0.9, 540, 1000), drift: { s: 0.03 } }] },
         actors: [PI(100, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "wide", mouth: "o" }]), HO(340, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "frown" }]), MA(560, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]),
           KO(-140, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "normal", mouth: "flat" }]), PU(760, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }])],
-        captions: capsFrom("radio", vo("radio", 2) - 0.1),
-        ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 2) - 0.1) - 0.05, label: "คนในค่าย", color: "#f2c55c", keys: [{ t: 0, v: 5 }, { t: F("radio", 2, 2) - (vo("radio", 2) - 0.1), v: 5 }, { t: F("radio", 2, 2) - (vo("radio", 2) - 0.1) + 0.05, v: 6 }], alarm: F("radio", 2, 2) - (vo("radio", 2) - 0.1), top: 150 }],
-        fx(tl, id, t0) { const X = t0 + F("radio", 2, 2) - (vo("radio", 2) - 0.1); Fx.punch(tl, `#${id} .stage`, X, 1.08, 0.5); Fx.glitch(tl, `#${id}`, X, 0.3, 14, 62); red(tl, X, 0.7, 0.7); Fx.heart(tl, t0, D("radio") - (vo("radio", 2) - 0.1), 0.45, 0.6); },
+        captions: capsFrom("radio", vo("radio", 3) - 0.1),
+        ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 3) - 0.1) - 0.05, label: "คนในค่าย", color: "#f2c55c", keys: [{ t: 0, v: 5 }, { t: F("radio", 3, 2) - (vo("radio", 3) - 0.1), v: 5 }, { t: F("radio", 3, 2) - (vo("radio", 3) - 0.1) + 0.05, v: 6 }], alarm: F("radio", 3, 2) - (vo("radio", 3) - 0.1), top: 150 },
+          { type: "counter", t: 0.05, end: D("radio") - (vo("radio", 3) - 0.1) - 0.05, label: "วิทยุนับ · เหลือ", color: "#ffb35c", unit: "วัน", keys: [{ t: 0, v: 98 }], top: 150, left: 50 }],
+        fx(tl, id, t0) { const X = t0 + F("radio", 3, 2) - (vo("radio", 3) - 0.1); Fx.punch(tl, `#${id} .stage`, X, 1.08, 0.5); Fx.glitch(tl, `#${id}`, X, 0.3, 14, 62); red(tl, X, 0.7, 0.7); Fx.heart(tl, t0, D("radio") - (vo("radio", 3) - 0.1), 0.45, 0.6); },
       });
 
       // ---------- 27. น้องปั้น's drawing of today — "เห็นอะไรมั้ย?" (count the people; the sixth sits on the tank) ----------
@@ -423,7 +466,7 @@
       add("next", {
         set: "classroom", setOpts: { id: "nx", night: true, lampX: 540, lampY: 900 }, dark: 0.75, blur: { far: 6, set: 6 },
         cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.03 } }] },
-        ui: [{ type: "ledger", t: 0.3, day: "วันที่ 100", rows: [["ข้าวสาร", "3 วัน"], ["กระป๋อง", "3 (ทิ้ง 1)"], ["น้ำในแท็งก์", "7 → 6 ?"], ["คน", "5", "red"]], six: "6?", next: "เครื่องปั่นไฟ", cta: "กดติดตาม · <em>อ่านหน้าถัดไป</em> ตอนที่ 2", top: 330 }],
+        ui: [{ type: "ledger", t: 0.3, day: "เหลือ 98 วัน", rows: [["วิทยุนับถอยหลัง", "99 → 98"], ["ข้าวสาร", "3 วัน"], ["กระป๋อง", "3 (ทิ้ง 1)"], ["น้ำในแท็งก์", "7 → 6 ?"], ["คน", "5", "red"]], six: "6?", next: "เครื่องปั่นไฟ", cta: "กดติดตาม · <em>อ่านหน้าถัดไป</em> ตอนที่ 2", top: 300 }],
         fx(tl, id, t0) {
           tl.set("#black", { opacity: 0 }, t0 + 0.3);
           tl.set(`#${id} .stage`, { opacity: 0.3 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 1 }, t0 + 0.45);
