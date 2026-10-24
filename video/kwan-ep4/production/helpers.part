@@ -1,0 +1,31 @@
+
+      // ---------- ควันหลง EP.1 ประตูร้อน: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      // room 714 framings (world points of the panorama; see kwan.js)
+      const V = {
+        ceil: fr(1450, 230, 1.05, 540, 900),         // lying in bed, looking up
+        door: fr(545, 1060, 1.05, 540, 1000),         // standing, facing the door
+        knob: fr(730, 1110, 1.9, 600, 1000),
+        notice: fr(545, 1025, 2.6, 540, 920),
+        hw: fr(560, 1112, 3.3, 540, 900),             // the handwriting
+        sign: fr(600, 1172, 4.6, 540, 900),           // "— ดาว 714 / 2539"
+        gap: fr(540, 1500, 2.3, 540, 1250),           // crouched at the gap under the door
+        bed: fr(1650, 1230, 1.12, 540, 1000),         // แพร's bed
+        win: fr(2740, 1010, 1.12, 540, 900),
+        floor: fr(1500, 1470, 1.3, 540, 760),         // flat on the floor, looking under แพร's bed
+      };
+      // the phone torch on a shot: o = Pov.torch options; returns { extra, drive } to merge into the spec
+      const torch = (k, o) => { const T = Pov.torch(`t-${k}`, o); return { extra: (L) => put(L.light, T.markup), drive: T.drive }; };
+      const withTorch = (k, o, spec) => {
+        const T = torch(k, o), ex = spec.extra, f = spec.fx;
+        return { ...spec, extra(L, id) { if (ex) ex(L, id); T.extra(L, id); }, fx(tl, id, t0, L) { T.drive(tl, t0, D(k)); if (f) f(tl, id, t0, L); } };
+      };
+      const knock = (tl, t, n = 3, gap = 0.22) => { for (let i = 0; i < n; i++) tl.fromTo("#rm-door", { attr: { transform: "translate(0,0)" } }, { attr: { transform: `translate(${i % 2 ? -5 : 6},0)` }, duration: 0.05, yoyo: true, repeat: 1, immediateRender: false }, t + i * gap); };
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      const RM = (o = {}) => ({ id: "rm", ...o });
