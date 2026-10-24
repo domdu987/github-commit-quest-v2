@@ -83,7 +83,7 @@
           const el = document.getElementById(id), num = el.querySelector(".num"), segs = el.querySelectorAll(".seg i"), c = { t: o.t };
           tl.fromTo(`#${id}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(1.6)", immediateRender: false }, t0);
           tl.fromTo(`#${id} .ic svg`, { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.4)", transformOrigin: "50% 50%", immediateRender: false }, t0 + 0.08);
-          tl.fromTo(`#${id} .seg i`, { scaleY: 0 }, { scaleY: 1, duration: 0.2, stagger: 0.03, ease: "power2.out", transformOrigin: "50% 100%", immediateRender: false }, t0 + 0.2);
+          if (segs.length) tl.fromTo(`#${id} .seg i`, { scaleY: 0 }, { scaleY: 1, duration: 0.2, stagger: 0.03, ease: "power2.out", transformOrigin: "50% 100%", immediateRender: false }, t0 + 0.2);
           const at = (t) => { let i = 0; while (i + 1 < o.keys.length && o.keys[i + 1].t <= t) i++; const a = o.keys[i], b = o.keys[i + 1]; if (!b) return a.v; const k = Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t))); return a.v + (b.v - a.v) * k; };
           const draw = () => { const v = at(c.t); num.textContent = Math.round(v); segs.forEach((s, k) => s.classList.toggle("off", k >= Math.round(v))); };
           tl.to(c, { t: o.end ?? 30, duration: (o.end ?? 30) - o.t, ease: "none", immediateRender: false, onUpdate: draw }, t0);

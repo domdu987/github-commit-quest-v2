@@ -218,6 +218,10 @@
     - `Fence.haze(L, y, h, col, op)` หมอกระยะใน L.mid · `Fence.light(L, x, y, r, col, op, cls)` แหล่งแสงนุ่ม + bloom ใน glow (`cls:"lampf"` = กะพริบแบบตะเกียง) · `Fence.cone(L, x, y, w, h, col, op)` กรวยแสงตะเกียง · `Fence.rays()` ลำแสงเฉียง
     - กล้องเอียงได้: key `r` (องศา) + `drift.r` ต่อวินาที (engine.js หมุน `#sN-world` รอบกลางจอ) ใช้ในช็อตแอ็คชัน run/shelf/snag/cut/lunge/road/choice ±2–3°
     - ไอคอนบนชิปสถิติเด้ง/สั่นตอน alarm, ไอคอนวิทยุบนการ์ดเปิดตอนส่าย (pk.part)
+  - **มือ (ผู้ใช้ทัก 2 ครั้ง "มือทำดีๆ ให้เหมือนจับจริงๆ" แล้วส่งภาพมือของต้นแบบ):** ห้ามใช้มือก้อนนิ้วกาง ใช้ `hf/lib/hand.js` (`Hand.grip/point/open/holdCan`) สไตล์ต้นแบบ = **ไม่มีเส้นขอบดำ** เส้นขอบบางสีผิวเข้ม นิ้วเรียวปลายสอบ แยกนิ้วด้วยเงาด้านมืด เล็บจาง ไล่โทนหลังมือ
+    - `grip(o)` มือกำรอบของทางด้าน +x (origin = ขอบที่นิ้วโอบ) ใช้คู่กับ `scale(-1,1)` = สองมือจับกระป๋อง (`canClose`), หมุน 90° = กำสลักประตู (`bl-hand`) · `point(o)` กำมือชี้นิ้ว (origin = ปลายนิ้ว ชี้ −x) ใช้กับเกจแท็งก์ · `open(o)` มือเด็กแบกางเอื้อมขึ้น (`hk-kid` ขึ้นมาจากล่างกลางจอระหว่างแขนสองข้าง) · `holdCan(o)` มือกำกระป๋องเล็ก (POV ตลาด)
+    - ช็อต `real` ตอนทิ้งกระป๋อง มือ `#rl1-hl/#rl1-hr` แยกออกจากกันก่อนกระป๋องหล่น (ไม่ใช่กำค้างทั้งที่ของหายไป)
+    - ทดสอบมือเดี่ยวๆ ได้ที่ `$W/handtest/index.html` (สร้างใหม่ได้ง่าย: svg + Sets.DEFS + Hand.*) แล้ว screenshot ด้วย `node video/tools/shot.js <url> <out.png> <w> <h> [seek]`
   - **ความสมูท (ผู้ใช้สั่ง "การขยับให้สมูทด้วย"):** การสั่นกล้องใช้ความถี่ ≤ 27 รอบ/วิ (เดิม 60–70 = กระตุกทุก 6 เฟรม) ให้แต่ละรอบกิน ≥ 10 เฟรมที่ 60fps · ตะเกียงกะพริบเป็น tween `sine.inOut` ไม่ใช่ `set` · blend ท่าของ rig 0.3 วิ (rig.js `pose0`) · กล้องตัดภายในช็อต (keys) เป็นการตัดต่อโดยตั้งใจ ถ้าอยากให้เลื่อนให้ใส่ `glide`
   - **เสียง:** ผีห่าใช้เสียง AI (`sfx_ai/` ดูหัวข้อ 6.6) เสียงซ่าวิทยุนุ่มลง (`radio`/`radiobed` ใน synth.py)
 - **ที่เรามีมากกว่าเขา (คง):** แอ็คชัน (ตลาด ประตู) POV มุมสูง หัวใจเต้น ซิกเนเจอร์ ตัวเลือกถูกดึง ปมหักมุม ตัวนับลด ที่มาของข้อมูล
@@ -443,6 +447,8 @@ $W/synth.py  $W/music/suno1.mp3
      --virtual-time-budget=5000 --dump-dom http://localhost:8771/index.html 2>&1 >/dev/null | grep CONSOLE
    ```
    - `npx hyperframes check` มักหมดเวลา ("Check did not finish") ถือว่าไม่ใช่ error จริง
+   - **path ของ headless_shell ข้างบนใช้ไม่ได้แล้ว** (ไบนารีจริงคือ `/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell` และ glob ใน Bash ไม่ขยาย → คำสั่งเงียบเหมือนไม่มี error ทั้งที่ไม่ได้รัน) ให้ใช้ตัวช่วย Playwright แทน:
+     `node video/tools/shot.js http://localhost:8771/index.html out.png 1080 1920 5.0` (พิมพ์ console/pageerror ทั้งหมด + screenshot ที่เวลา 5.0 วิ; เปิด http.server ที่โฟลเดอร์ hf/<proj> ก่อน)
 6. **snapshot ทุกช็อต** (เวลา ~65% ของแต่ละช็อต + ช่วงสำคัญ) แล้วดู contact sheet ด้วยตา แก้จนผ่าน
    ```bash
    npx --yes hyperframes@0.8.185 snapshot --at 3.9,7.1,... --no-end --timeout 120000 --describe false

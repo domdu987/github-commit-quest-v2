@@ -196,14 +196,11 @@
       <path d="M-230,-140l40,80l-40,60Z" fill="#b3ada0"/><path d="M-120,-300v20M60,-300v20" stroke="#8a4a1a" stroke-width="8"/>${[[-200, -200], [180, -60], [-170, 160]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="14" fill="#8a4a1a" opacity=".7"/>`).join("")}
       <ellipse cx="0" cy="260" rx="230" ry="40" fill="#8d9299" ${OUT}/>
       <g id="${id}-lid"><path d="M-230,-300q0,-40 40,-40h380q40,0 40,40q-230,${-150 * b} -460,0z" fill="#dfe3e6" ${OUT}/><path d="M-190,-340q190,${-110 * b} 380,0" stroke="#a9b0b6" stroke-width="3" fill="none"/><path d="M-150,-350q150,${-60 * b} 300,-10" stroke="#fff" stroke-width="5" fill="none" opacity=".5"/><path d="M-60,-370l20,-20M20,-380l24,-22" stroke="#8a4a1a" stroke-width="4"/></g></g>`);
-    // our hands on the can (POV): fingers curled over the label from each side, thumbs up the seam, forearms coming in from the bottom corners
-    const hand = (sx) => `<g transform="translate(${540 + sx * 230},1200) scale(${sx},1)"><path d="M-40,-80C-120,-60 -150,20 -120,110C-100,180 -40,220 40,210L80,200C100,196 100,170 80,166L40,164C60,140 56,120 36,112L80,100C104,94 102,66 78,62L30,60C56,40 52,18 30,10L74,0C98,-6 96,-34 70,-38L10,-30C40,-60 20,-90 -10,-86Z" fill="${o.skin || "#ecc29c"}" ${OUT}/>
-      <path d="M-60,-40q30,-20 60,-10M-80,40q40,-10 80,0M-70,110q40,0 80,8" stroke="${INK}" stroke-width="3" fill="none" opacity=".35"/>
-      <path d="M-100,160C-220,260 -300,420 -340,700L-60,760C-20,500 40,360 60,240Z" fill="${o.sleeve || "#9fc5d8"}" ${OUT}/></g>`;
-    put(L.fg, hand(-1) + hand(1) + `<path d="M-200,1760h1480v400h-1480z" fill="${o.sleeve || "#9fc5d8"}" ${OUT}/>`);
+    // our hands on the can (POV): real grips, fingers wrapping over the label, thumbs hooked at the rim, forearms into the bottom corners (Hand.grip)
+    const HC = { skin: o.skin || "#ecc29c", skinS: o.skinS, sleeve: o.sleeve || "#9fc5d8", sleeveS: o.sleeveS };
+    put(L.fg, `<g id="${id}-hl" transform="translate(310,1200)">${Hand.grip(HC)}</g><g id="${id}-hr" transform="translate(770,1200) scale(-1,1)">${Hand.grip(HC)}</g>`);
     L.fg.classList.remove("fgblur");
-    if (o.kid) put(L.act, `<g id="${id}-kid" transform="translate(-300,1500)"><g transform="scale(0.62)"><path d="M-40,-80C-120,-60 -150,20 -120,110C-100,180 -40,220 40,210L80,200C100,196 100,170 80,166L40,164C60,140 56,120 36,112L80,100C104,94 102,66 78,62L30,60C56,40 52,18 30,10L74,0C98,-6 96,-34 70,-38L10,-30C40,-60 20,-90 -10,-86Z" fill="#efc6a0" ${OUT}/>
-      <path d="M-100,160C-220,260 -300,420 -340,700L-60,760C-20,500 40,360 60,240Z" fill="#f6f6f2" ${OUT}/><path d="M-200,300l80,-40" stroke="#c8392b" stroke-width="10" stroke-linecap="round"/></g></g>`);
+    if (o.kid) put(L.act, `<g id="${id}-kid" transform="translate(-300,1500)"><g transform="scale(0.62)">${Hand.open({ skin: "#efc6a0", sleeve: "#f6f6f2", sleeveS: "#d8d4c8" })}</g></g>`);
   }
 
   // ---------------- the dirt road through the paddies (actors walk on y=G): heat shimmer at noon (#id-shim), the sun low at dusk ----------------
@@ -257,7 +254,7 @@
     // a pencil mark from last night at the old level, now one notch above the float
     s += `<g id="${id}-mark"><path d="M240,${330 + 140 * (10 - (o.level ?? 7) - 1)}h130" stroke="#c8392b" stroke-width="6" stroke-dasharray="14 8"/><text x="470" y="${346 + 140 * (10 - (o.level ?? 7) - 1)}" font-family="Kanit" font-weight="700" font-size="40" fill="#c8392b">เมื่อคืน</text></g>`;
     put(L.set, s);
-    put(L.fg, `<g id="${id}-finger" transform="translate(900,1500)"><path d="M-60,-40C-80,-120 -20,-170 60,-160L220,-140C260,-130 260,-60 220,-40L80,0C20,10 -40,10 -60,-40Z" fill="#e6b48c" ${OUT}/><path d="M-160,-80C-170,-130 -120,-150 -80,-130L-30,-110" fill="#e6b48c" ${OUT}/><rect x="-60" y="0" width="700" height="500" fill="#d96a8a" ${OUT}/></g>`);
+    put(L.fg, `<g id="${id}-finger" transform="translate(900,1500)"><g transform="scale(0.8)">${Hand.point({ skin: "#e6b48c", skinS: "#c48a62", sleeve: "#d96a8a", sleeveS: "#b04f6e" })}</g></g>`);
     L.fg.classList.remove("fgblur");
     put(L.glow, `<path d="M-300,-200L-100,-200L600,1900L300,1900Z" fill="url(#zRay)" opacity=".7"/>`);
   }
