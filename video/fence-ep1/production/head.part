@@ -107,6 +107,7 @@
       .fsigns .bad { position: absolute; right: 26px; font: 900 60px/1 Kanit; color: #ff5a4a; opacity: 0; }
       /* the radio's number: a caption in the style of a tuned-in station */
       .capbox.radio { background: rgba(30,18,6,.9); border-color: #ffb35c; color: #ffd27a; letter-spacing: 6px; text-shadow: 0 0 18px rgba(255,179,92,.7); }
+
     </style>
   </head>
   <body>

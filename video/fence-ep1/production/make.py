@@ -16,6 +16,13 @@ if not os.path.exists(os.path.join(PROJ, "assets", "fonts")):
     shutil.copytree(os.path.join(HERE, "..", "hf", "rig", "assets", "fonts"), os.path.join(PROJ, "assets", "fonts"))
 for f in ("rig.js", "sets.js", "camp.js", "koi.js", "zom.js", "fence.js", "sig.js", "ui.js", "gameui.js", "fx.js", "engine.js"):
     shutil.copy(os.path.join(LIB, f), os.path.join(PROJ, "assets", f))
+ART = os.path.join(HERE, "..", "art")   # AI-painted plates referenced by the template as assets/art/<name>.png
+os.makedirs(os.path.join(PROJ, "assets", "art"), exist_ok=True)
+import re as _re
+for name in sorted(set(_re.findall(r'assets/art/([\w-]+)\.png', open(os.path.join(HERE, "ep.tmpl.html")).read()) + _re.findall(r'(?:set|far|name): "([\w-]+)"', open(os.path.join(HERE, "ep.tmpl.html")).read()))):
+    src = os.path.join(ART, name + ".png")
+    if os.path.exists(src):
+        shutil.copy(src, os.path.join(PROJ, "assets", "art", name + ".png"))
 
 
 def css(lib, name):

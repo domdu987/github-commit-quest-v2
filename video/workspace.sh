@@ -14,6 +14,7 @@ cp "$LATEST"/lib/*.js "$LATEST"/lib/voice.py "$LATEST"/lib/voice_qa.py "$W/hf/li
 cp "$TEMPLATE"/composition/{package.json,hyperframes.json,meta.json} "$W/hf/rig/"
 cp -r "$TEMPLATE"/composition/assets/fonts "$W/hf/rig/assets/"
 cp "$LATEST"/production/synth.py "$W/"
+mkdir -p "$W/sfx_ai" && cp "$LATEST"/production/sfx_ai/*.wav "$W/sfx_ai/"   # AI zombie sounds that synth.py picks up (sfx_ai/ beside synth.py)
 cp "$R"/music/suno1.mp3 "$W/music/"
 for n in 1 2 3; do
   mkdir -p "$W/camp$n"

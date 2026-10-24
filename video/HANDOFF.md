@@ -25,7 +25,10 @@
 ### 0.2 สถานะตอนปิดแชทที่ 2 (24 ต.ค. 2026)
 
 - **เรื่องที่ 4 ชื่อ "เอาชีวิตรอด 99 วัน"** (ผู้ใช้เปลี่ยนจาก "วันที่ 100" หลังเห็น EP.1 รอบแรก และเลือก "+ นับถอยหลัง": วิทยุประกาศ "เหลืออีก … วัน" ทุกคืน EP.1 = 99; โฟลเดอร์/โค้ดยังใช้ `fence`) ผู้ใช้อนุมัติโครงเรื่อง 20 ตอนแล้ว สั่ง "คุณแต่งให้เอาให้ได้… ทำให้ดีกว่าคลิปที่ผมส่งให้ดู" และ "คิดและหาคำที่ทำให้ลุ้นระทึก… มาใส่เองได้" → แต่งเองได้เต็มที่ ไม่ต้องถามทีละจุด
-- **EP.1 "กระป๋องบวม" ทำเสร็จ** (2:20, 8418 เฟรม 60fps, −14.5 LUFS, 36 ช็อต; มุม top-down / POV / เครน; ผีห่าออกแบบใหม่) เรนเดอร์ ตรวจ frame strip ส่ง HQ (`EP1-krapong-buam-HQ.mp4` 133 MB) ให้ผู้ใช้แล้ว **รอผู้ใช้ติ/อนุมัติก่อนทำ EP.2** เก็บที่ `video/fence-ep1/` บททีละช็อต + quote ความรู้อยู่ใน `video/fence/ARC.md` แคปชัน `video/fence/CAPTIONS.md` (หัวข้อ 3.4)
+- **EP.1 "กระป๋องบวม" ทำเสร็จ 2 รอบ** (2:20, 8418 เฟรม 60fps, −14.5 LUFS, 36 ช็อต; มุม top-down / POV / เครน; ผีห่าออกแบบใหม่)
+  - **รอบ 2 (v2 "ลุคใหม่") = เวอร์ชันปัจจุบันใน repo** หลังผู้ใช้ส่งคลิปต้นแบบอีกคลิป (Promptkub "ซอมบี้ระบาด คืนที่ 1" EP.2, 1:08) สั่ง "ทำแบบนี้ แต่เพิ่มนิดหน่อยสิ่งที่ขาดอยู่" และส่ง เสียงกอย EP.2 ที่ลงช่องแล้วบอก "ทำตัวละครแบบนี้" → ผู้ใช้เลือก (AskUserQuestion) **"เวกเตอร์แบนล้วน แบบ Promptkub"** ไม่เอาฉากวาด AI → ทำแล้ว: เกรดสีมืดหม่นทั้งเรื่อง (`window.GRADE` ใน engine.js) + HUD/การ์ดกระดาษครีมแบบ Promptkub ทั้งชุด (`production/pk.part`) + แผนที่ซีเปียมีวงระยะ + หิ่งห้อยกลางคืน + เสียงผีห่าจาก AI (ElevenLabs ผ่าน fal) + เสียงวิทยุซ่านุ่มลง · รายละเอียดหัวข้อ 2.3.2
+  - ส่ง HQ ให้ผู้ใช้แล้วทั้ง 2 รอบ **รอผู้ใช้ติ/อนุมัติก่อนทำ EP.2** เก็บที่ `video/fence-ep1/` บททีละช็อต + quote ความรู้อยู่ใน `video/fence/ARC.md` แคปชัน `video/fence/CAPTIONS.md` (หัวข้อ 3.4)
+  - ภาพวาด AI 17 ฉาก + มือคีย์ 6 ชิ้นที่ทำไว้ก่อนผู้ใช้เปลี่ยนใจ เก็บเป็น jpg/png ที่ `video/fence/art-ai/` (ไม่ได้ใช้ในคลิป) ถ้าผู้ใช้กลับมาอยากใช้ ดูวิธีในหัวข้อ 2.3.2
   - ภาพในรูปวาดน้องปั้นยังเขียน "วันที่ 100 บ้านของปั้น" (= วันที่ 100 หลังห่าลง ไม่ขัดกับ "เหลือ 99 วัน") ถ้าผู้ใช้ทักให้แก้ข้อความใน `fence.js` drawing()
 - **ยังไม่ได้ฟังเสียงตะโกน 3 บรรทัด** (d05 "เปิดประตู!", d06 "ปิด! ปิดเลย!", d08 "อย่านะ!") Whisper ถอดไม่ออกทุก take ถ้าผู้ใช้ทักว่าฟังไม่ชัด ให้อัดใหม่ด้วย style ไม่ตะโกน (พูดดังชัด) แล้วเรนเดอร์ใหม่
 - **คลิปต้นแบบใหม่ที่ผู้ใช้ส่ง** ("ซอมบี้ระบาด วันที่ 1" ฟาร์มของเอก 1:15) วิเคราะห์แล้วใน ARC.md หัวข้อ "เทียบคลิปต้นแบบ" ใช้แค่หลักการ ปมจบของเขา ("มีใครบางคนอยู่ในรั้วมาก่อนแล้ว") ใกล้ของเรา จึงเปลี่ยน EP.1 เป็นปม "นับผิด" (วิทยุ "หก" + รูปวาด 6 คน + น้ำในแท็งก์ลดเอง)
@@ -197,6 +200,24 @@
 - **เรื่องเก่า (ค่ายคืนสุดท้าย, เสียงกอย) ผู้ใช้ให้คงไว้แบบเดิม** ของใหม่ทั้งหมดใช้ตั้งแต่ ชั้น 23 EP.2 และเรื่องที่ 4
 - เสียงพูดของเขายังเร็วกว่า (~9 vs ~7.4 ตัวอักษร/วิ) ดูหัวข้อ 2.2.1
 
+### 2.3.2 ลุค v2 แบบ Promptkub (ใช้ตั้งแต่ "เอาชีวิตรอด 99 วัน" EP.1 v2 เป็นต้นไป ทุกตอนใหม่ของเรื่องนี้)
+
+ผู้ใช้ส่งคลิป Promptkub "ซอมบี้ระบาด คืนที่ 1" (EP.2 ของเขา, 1:08, อยู่ใน uploads ของแชทที่ 2 ชื่อ `SaveClip.App_AQMMtAh4…mp4`; contact sheet ใน scratchpad `ref2/sheet1-3.jpg`) สั่ง "ทำแบบนี้ แต่เพิ่มนิดหน่อยสิ่งที่ขาดอยู่" + ตัวละครให้เป็น rig แบบ "เสียงกอย" เหมือนเดิม
+- **ที่เอามาจากเขา (ทำแล้วใน EP.1 v2):**
+  - **เกรดสี:** `window.GRADE = { filter: "saturate(.6) brightness(.84) contrast(1.1)", tint: "#8a9cb0", tintOp: .22 }` ใน `pk.part` → engine.js ใส่ CSS filter ที่ `#sN-world` และ rect สี tint แบบ multiply ใต้ชั้น dark · ช็อตไหนอยากต่าง ใส่ `grade: {...}` ในช็อต (แผนที่ใช้ sepia: `filter: "saturate(.5) sepia(.3) brightness(.8) contrast(1.1)", tint: "#c9b893", tintOp: .35`) · `grade: false` = ไม่เกรด
+  - **HUD กระดาษครีม** (#f3eee3 ตัวหนังสือ #1e1d1b แดง #d9342b ทอง #c8a24a เขียว #3f9a6e) ทั้งหมดอยู่ใน `fence-ep1/production/pk.part` (JS ที่ inject `<style>` + ประกาศ GameUI ทับของเดิม ต่อท้าย head.part):
+    - `counter` = ชิปสถิติมุมซ้ายบน: ไอคอน (`icon`: people can rice radio thermo water sun) + ป้ายเล็ก + เลขใหญ่ + `max` วาดแถบช่อง + `sub` บรรทัดสูตร + `alarm` เปลี่ยนแดง + `right: true` ชิดขวา
+    - `board` = การ์ดเปิดตอน: pill แดงชื่อซีรีส์ / "เหลือ **99** วัน" / ชิป "ตามที่วิทยุนับ" / "ตอนที่ 1 · กระป๋องบวม" (วางบนช็อตกว้างของโรงเรียน ไม่ใช่กระดานดำแล้ว)
+    - `fRule` = การ์ด "กฎข้อ N" ทีละใบ สลับกันตาม `at[i]` (ใบเก่าเลื่อนขึ้นหาย) + ชอล์กบนกระดานเขียนตามไปด้วย (`Fence.chalk("rl", …)` ใน extra ของช็อต rules)
+    - `nextCard` = "● ตอนต่อไป / ตอนที่ 2 / tagline แดง" วางเหนือสมุดบัญชีในช็อต next
+    - แคปชัน: ตัวขาวบนแผ่นดำโปร่ง (ไม่มีกรอบ) `[คำ]` = เหลือง, `{คำ}` = กล่องแดง · บับเบิล/`src`/`callback`/`sunHud`/`signs`/`tip`/`choice` เปลี่ยนเป็นครีมผ่าน CSS ใน pk.part
+  - **แผนที่** `mapTop` โทนซีเปีย + `rings: true` วงระยะ 400/800 ม./1.2 กม. + หมุดป้ายครีม
+  - **บรรยากาศ:** หิ่งห้อย/ฝุ่นลอย class `mote` ในลานกลางคืน (`schoolYard` night, ขยับใน `Fence.flife`)
+  - **เสียง:** ผีห่าใช้เสียง AI (`sfx_ai/` ดูหัวข้อ 6.6) เสียงซ่าวิทยุนุ่มลง (`radio`/`radiobed` ใน synth.py)
+- **ที่เรามีมากกว่าเขา (คง):** แอ็คชัน (ตลาด ประตู) POV มุมสูง หัวใจเต้น ซิกเนเจอร์ ตัวเลือกถูกดึง ปมหักมุม ตัวนับลด ที่มาของข้อมูล
+- **ที่ยังไม่ได้ทำจากเขา (ทำได้ถ้าผู้ใช้ขอ):** อินโฟกราฟิกเฉพาะเรื่อง (ของเขา: ตาสะท้อนแสง, หลังคา×ฝน=ลิตร, ตารางเสบียง) ของเราใช้ `signs`/`tip`/`counter` แทน
+- **ก่อนหน้านี้ (ไม่ใช้แล้ว):** ผู้ใช้เคยเลือก "ฉากหลัง+โคลสอัพสร้างด้วย AI" → ทำภาพด้วย `fal-ai/flux/dev` (POST https://fal.run/fal-ai/flux/dev, `image_size:{width:1080,height:1920}` ได้ 1072×1920, `seed` ต่อภาพ, สไตล์ "flat vector illustration, muted, cel-shaded") 17 ฉาก + มือแบบ chromakey (พื้นเขียว 0x00FF00 แล้ว `chromakey=0x00FF00:0.28:0.08,despill=type=green`) เก็บที่ `video/fence/art-ai/` · ตัวช่วยยังอยู่ใน `fence.js`: `Sets.plate(L,{set,far,fg,bg})`, `Fence.bars()`, `Fence.gatePanel()`, `drawing(L,{onPlate})`, และ `make.py` ก๊อป `assets/art/<name>.png` ที่ template อ้างถึงจาก `$W/art/` อัตโนมัติ (ตอนนี้ไม่มีไฟล์ใน repo → ต้อง restore จาก art-ai ก่อนถ้าจะใช้)
+
 ### 2.4 กติกาการทำงาน (ทำแบบนี้ทุกครั้ง)
 
 - **ตอบผู้ใช้เป็นภาษาไทย สั้น ตรง**
@@ -323,7 +344,8 @@
   - ความรู้: กระป๋องบวม/รั่ว/ฟองพุ่ง ทิ้งทั้งใบ ห้ามชิม พิษโบทูลินัมมองไม่เห็น ไม่มีกลิ่น ไม่มีรส (CDC quote ใน ARC.md)
   - ราคาที่จ่าย (แบบ TWD): ก้องกลับช้า เป้ติดซี่กรง ลุงหมานตัดสายเป้ → กระป๋อง 12 เข้ารั้ว 4, 1 บวม → เหลือ 3 ใบ + พวกมันรู้แล้วว่าค่ายอยู่ไหน
   - ปมค้าง: วิทยุ "เหลืออีก… เก้าสิบแปดวัน… หก" (เลขแรกลดทุกคืน คืนนี้มีเลขที่สอง) / รูปวาดมีคนที่ 6 บนแท็งก์ / น้ำในแท็งก์ลด 1 ขีดทั้งที่ไม่มีใครใช้ / ตัวเลือก "ไม่เชื่อ…" "…มันนับถูก"
-  - ไฟล์ส่ง: `video/fence-ep1/EP1-krapong-buam-share.mp4` (HQ ส่งในแชทแล้ว ไม่อยู่ใน repo)
+  - ไฟล์ส่ง: `video/fence-ep1/EP1-krapong-buam-share.mp4` = **v2 ลุค Promptkub** (HQ ส่งในแชทแล้ว ไม่อยู่ใน repo) · v1 (สีสด การ์ดกระดานดำ) ไม่ได้เก็บไฟล์ไว้ แต่สร้างใหม่ได้โดยตัด `pk.part` ออกจาก `cat` และใช้ `fRule`/`board` เดิมใน head.part (ดู git log ก่อน commit "ลุคใหม่")
+  - template ประกอบจาก **4 ส่วน**: `cat head.part pk.part shots.part foot.part > ep.tmpl.html`
 - **ยังไม่ได้ทำ:** EP.2 เครื่องปั่นไฟ (CO: Ready.gov/CDC ยืนยันแล้ว), EP.3 คนแปลกหน้า (แผลติดเชื้อ/บาดทะยัก: NHS/MedlinePlus/CDC ยืนยันแล้ว) · rig ภู (มีแล้วใน CAST `phu`) คุณวิน (`win`) ยังไม่เคยใช้ · ฉาก EP.2: งานวัดร้าง เครื่องปั่นไฟ (มี `Sets.props.generator` ใน sets.js) ห้องเรียนกลางคืนมีพัดลม เนินเขาไฟฉายกะพริบ · ฉาก EP.3: หน้าประตูเช้า ชายบาดเจ็บ ค้นตัว ตรวจรอยกัด
 
 ### 3.5 ช่อง Rod Mai Club และการลงคลิป
@@ -570,6 +592,8 @@ add("key", {
 - `synth.py` ชนิด SFX: heartbeat tick glitch rustle stomp snap pop notif sting boom crickets vibe ring whoosh knock ding buzz swell static riser wind whistle whistlefar crackle trumpet siren hum creak hiss crank shutter rain stream roar drip squelch rewind gong ching beep squish nv scream growl tap sputter slam **clang shriek thud steps latch marker click powerdown shatter**
     + เอาชีวิตรอด 99 วัน: **chalk cans canfall radio radiobed gate cicada page crayon sickle**
   - ตัวล่าสุดอยู่ที่ `video/fence-ep1/production/synth.py` (workspace.sh ก๊อปไปเป็น `$W/synth.py`)
+  - **เสียง AI (เอาชีวิตรอด 99 วัน):** `synth.py` โหลดไฟล์จาก `sfx_ai/` ข้างตัวมัน (หรือ `$SFX_AI_DIR`) ชนิด growl (3 ไฟล์ หมุนเวียน) shriek (2) horde (2) zbreath sniff ถ้ามีไฟล์จะใช้แทนเสียงสังเคราะห์ · ไฟล์อยู่ใน `video/fence-ep1/production/sfx_ai/` (workspace.sh ก๊อปไป `$W/sfx_ai/`)
+    - สร้างด้วย ElevenLabs ผ่าน fal: `POST https://fal.run/fal-ai/elevenlabs/sound-effects/v2` body `{text, duration_seconds, prompt_influence}` (v1 ตอบ 400) ได้ mp3 → แปลง wav 48k · prompt เช่น "wet guttural zombie growl, close, no music"
 - `mix.py`: `LINE_GAIN`, `bed()`, `beats()`, `dip()`, ducking ด้วย `box()` (ห้าม np.convolve), loudnorm −14
 - `video/brand/`: signature.wav / signature-v1.wav / s01-tang.mp3 / splice_signature.py / signature.json
 
@@ -630,7 +654,9 @@ add("key", {
   (ช่องบันไดแบบกรอบสี่เหลี่ยมซ้อนกันผู้ใช้ดูไม่ออก ต้องมีขั้นบันได ราว ชานพัก และมุมมองบุคคลที่ 1 เช่นมือจับราว)
 - **ตัวละครต้องมีตัว** หัวลอยๆ มีคอแท่งเดียวผู้ใช้หัวเราะ ("หัวซอมบี้ทำไมเป้นงั้น") ต้องมีไหล่ เสื้อ แขน แม้จะเห็นแค่ครึ่งบน
 - ป้ายที่มีไฟในตัว (ป้ายทางหนีไฟ) วาดใน `L.glow` เหนือความมืด ไม่งั้นโดน `dark` กลบจนอ่านไม่ออก
-- แก้ `head.part` / `shots.part` / `foot.part` แล้วต้อง `cat head.part shots.part foot.part > ep.tmpl.html` ก่อน `make.py` (ลืมแล้วช็อตใหม่ไม่ขึ้น จอดำ)
+- แก้ `head.part` / `shots.part` / `foot.part` แล้วต้อง `cat head.part shots.part foot.part > ep.tmpl.html` ก่อน `make.py` (ลืมแล้วช็อตใหม่ไม่ขึ้น จอดำ) · เอาชีวิตรอด 99 วัน มี `pk.part` คั่นระหว่าง head กับ shots
+- `Write` ไฟล์ที่ยังไม่ได้ `Read` ในแชทนั้นจะถูกปฏิเสธ ("File has not been read yet") → Read ก่อน หรือเขียนด้วย python heredoc
+- เกรดสี (`GRADE` filter บน world + tint multiply) ทำให้เรนเดอร์ช้าลงกว่าเดิม อย่าใส่ `backdrop-filter` หลายชั้นซ้อน
 
 - ตัวละครหลุดขอบ ป้ายตกจอ พื้นไม่พอตอนกล้องเลื่อน UI บังหน้า
 - ทุกครั้งที่เปลี่ยนกล้องให้ snapshot ก่อนเรนเดอร์
@@ -648,6 +674,6 @@ add("key", {
 | 9 | "ชั้น 23" EP.1 โดนกัด ต้องบอก (2:01) | `video/zom-ep1/EP1-don-kat-tong-bok-share.mp4` |
 | 10 | "ชั้น 23" EP.2 มืดแล้ว ห้ามออก (1:37) | `video/zom-ep2/EP2-mued-laew-ham-ok-share.mp4` |
 | 11 | "ชั้น 23" EP.3 ใครเคาะ… อย่าตอบ (1:39) | `video/zom-ep3/EP3-khrai-khao-ya-top-share.mp4` |
-| 12 | "เอาชีวิตรอด 99 วัน" EP.1 กระป๋องบวม (2:20) | `video/fence-ep1/EP1-krapong-buam-share.mp4` |
+| 12 | "เอาชีวิตรอด 99 วัน" EP.1 กระป๋องบวม (2:20, v2 ลุค Promptkub) | `video/fence-ep1/EP1-krapong-buam-share.mp4` |
 
 ไฟล์ `*-share.mp4` ใน repo บีบไว้ ~3 Mbps สำหรับเก็บและดูตัวอย่าง **ห้ามเอาไปลงช่อง** ไฟล์ลงช่อง (`*-HQ.mp4`) ต้องทำจาก `raw.mp4` ตามหัวข้อ 5.2 ขั้น 9

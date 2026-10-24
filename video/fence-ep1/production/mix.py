@@ -107,16 +107,16 @@ CUES = [
     ("ledger", 0.1, "page", 0.5), ("ledger", vo_t("ledger", 1), "marker", 0.3), ("ledger", frag("ledger", 1, 1) + 0.6, "buzz", 0.5), ("ledger", frag("ledger", 1, 1) + 0.6, "sting", 0.5),
     *bed("wind", T("gate", 0), T("gate", -0.1), 0.25, 3.2), ("gate", 0.3, "gate", 0.5), ("gate", 0.4, "steps", 0.3), ("gate", D["gate"] - 0.6, "steps", 0.35), ("gate", 0.35, "tick", 0.4),
     # the market: dust and drips, the vendor breathing, cans into the bag, then the one that falls
-    *bed("wind", T("market", 0), T("clatter", -0.1), 0.18, 3.2), ("market", 0.4, "drip", 0.4), ("market", 2.2, "drip", 0.35), ("market", 0.6, "growl", 0.25), *[("market", vo_t("market", 1) + 0.2 * k, "tick", 0.3) for k in range(11)],
+    *bed("wind", T("market", 0), T("clatter", -0.1), 0.18, 3.2), ("market", 0.4, "drip", 0.4), ("market", 2.2, "drip", 0.35), ("market", 0.6, "zbreath", 0.35), ("market", 2.6, "zbreath", 0.3), *[("market", vo_t("market", 1) + 0.2 * k, "tick", 0.3) for k in range(11)],
     *beats("market", 0.0, vo_t("market", 1), 0.8, 0.3),
-    ("clatter", 0.05, "canfall", 1.2), ("clatter", 0.33, "cans", 0.6), ("clatter", 0.5, "growl", 0.8), ("clatter", frag("clatter", 0, 1), "sting", 0.9), ("clatter", frag("clatter", 0, 1), "glitch", 0.5), ("clatter", frag("clatter", 0, 1), "boom", 0.4), *beats("clatter", 0.4, D["clatter"] - 0.4, 0.45, 0.7),
+    ("clatter", 0.05, "canfall", 1.2), ("clatter", 0.33, "cans", 0.6), ("clatter", 0.5, "sniff", 0.8), ("clatter", 1.1, "growl", 0.8), ("clatter", frag("clatter", 0, 1), "sting", 0.9), ("clatter", frag("clatter", 0, 1), "glitch", 0.5), ("clatter", frag("clatter", 0, 1), "boom", 0.4), *beats("clatter", 0.4, D["clatter"] - 0.4, 0.45, 0.7),
     # action: the lunge, the shelf, the run
     ("lunge", 0.05, "shriek", 1.0), ("lunge", 0.35, "sting", 0.9), ("lunge", 0.35, "glitch", 0.4), ("lunge", 0.5, "steps", 0.8), ("lunge", 0.9, "steps", 0.9), *beats("lunge", 0.0, D["lunge"], 0.35, 0.7),
     ("shelf", 0.32, "clang", 0.9), ("shelf", 0.32, "cans", 1.3), ("shelf", 0.6, "cans", 0.8), ("shelf", 0.5, "shriek", 0.8), ("shelf", 0.95, "steps", 0.9), *beats("shelf", 0.0, D["shelf"], 0.35, 0.8),
     ("run", 0.0, "steps", 1.0), ("run", 0.55, "steps", 1.0), ("run", 1.1, "steps", 0.9), ("run", 0.1, "riser", 0.6), ("run", -0.3, "buzz", 0.4), *beats("run", 0.0, D["run"], 0.3, 0.7),
     ("road", 0.0, "steps", 0.8), ("road", 0.7, "steps", 0.8), ("road", 1.4, "steps", 0.8), ("road", 2.1, "steps", 0.8), ("road", 2.8, "steps", 0.8), *growls("road", 0.3, D["road"], 0.6, 0.6), ("road", frag("road", 1, 1), "shriek", 0.9), ("road", frag("road", 1, 1), "sting", 0.9), ("road", frag("road", 1, 1), "boom", 0.5), *beats("road", 0.0, D["road"], 0.38, 0.75),
     # the gate action
-    ("bolt", 0.5, "latch", 0.9), ("bolt", 0.55, "creak", 0.6), ("bolt", D["bolt"] - 0.45, "gate", 0.9), *growls("bolt", 0.0, D["bolt"], 0.6, 0.5), *beats("bolt", 0.0, D["bolt"], 0.35, 0.8),
+    ("bolt", 0.5, "latch", 0.9), ("bolt", 0.55, "creak", 0.6), ("bolt", D["bolt"] - 0.45, "gate", 0.9), *bed("horde", T("bolt", 0), T("slam", -0.1), 0.6, 4.6), *growls("bolt", 0.0, D["bolt"], 0.5, 0.6), *beats("bolt", 0.0, D["bolt"], 0.35, 0.8),
     ("snag", 0.3, "thud", 0.8), ("snag", 0.9, "sting", 0.9), ("snag", 0.9, "rustle", 0.9), ("snag", 0.95, "shriek", 0.9), *growls("snag", 0.0, D["snag"], 0.7, 0.45), *beats("snag", 0.0, D["snag"], 0.33, 0.85),
     ("cut", 0.4, "whoosh", 0.6), ("cut", 0.55, "sickle", 1.2), ("cut", 0.55, "clang", 0.7), ("cut", 0.6, "cans", 1.0), ("cut", 0.7, "shriek", 0.8), *beats("cut", 0.0, D["cut"], 0.33, 0.85),
     *growls("gateTop", 0.0, D["gateTop"], 0.8, 0.3), ("gateTop", 0.2, "gate", 0.8), ("gateTop", 0.0, "rustle", 0.6), *beats("gateTop", 0.0, D["gateTop"], 0.33, 0.85),
@@ -128,7 +128,7 @@ CUES = [
     ("signs", frag("signs", 0, 0) + 0.45, "buzz", 0.5), ("signs", frag("signs", 0, 0) + 1.25, "buzz", 0.5), ("signs", frag("signs", 0, 1) + 0.45, "buzz", 0.5), ("signs", frag("signs", 0, 2), "sting", 0.6),
     ("toxin", frag("toxin", 0, 1), "pop", 0.5), ("toxin", frag("toxin", 1, 1), "sting", 1.0), ("toxin", frag("toxin", 1, 1), "boom", 0.6), ("toxin", frag("toxin", 1, 1), "glitch", 0.5), *beats("toxin", vo_t("toxin", 1), D["toxin"] - vo_t("toxin", 1), 0.45, 0.6),
     ("real", frag("real", 0, 1), "ding", 0.5), ("real", frag("real", 0, 1) + 0.6, "thud", 0.5), ("real", frag("real", 0, 2) + 0.3, "buzz", 0.4),
-    *bed("crickets", T("three", 0), T("sig", -0.1), 0.5, 4.6), *growls("three", 0.2, D["three"], 0.5, 0.55), ("three", frag("three", 0, 1), "sting", 0.7), ("three", frag("three", 0, 1), "boom", 0.4), *beats("three", frag("three", 0, 1), D["three"] - frag("three", 0, 1), 0.5, 0.6),
+    *bed("crickets", T("three", 0), T("sig", -0.1), 0.5, 4.6), *bed("horde", T("three", 0), T("three", -0.1), 0.7, 4.6), *growls("three", 0.4, D["three"], 0.35, 0.9), ("three", frag("three", 0, 1), "sting", 0.7), ("three", frag("three", 0, 1), "boom", 0.4), *beats("three", frag("three", 0, 1), D["three"] - frag("three", 0, 1), 0.5, 0.6),
     # the signature
     ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
     ("sig", frag("sig", 0, 0) + 0.3, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.62, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.15, "ding", 0.6),

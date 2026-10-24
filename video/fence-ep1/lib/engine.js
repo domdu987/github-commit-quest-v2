@@ -29,6 +29,12 @@
       <div class="capwrap" id="${id}-caps"></div>`;
     root.appendChild(div);
     const L = {}; Object.keys(PARALLAX).forEach((k) => (L[k] = document.getElementById(`${id}-${k}`)));
+    // colour grade: a CSS filter on the whole world plus a tinted multiply over it (sh.grade overrides window.GRADE; false = none)
+    const gr = sh.grade === undefined ? window.GRADE : sh.grade;
+    if (gr) {
+      document.getElementById(`${id}-world`).style.filter = gr.filter || "";
+      if (gr.tint) document.getElementById(`${id}-dark`).insertAdjacentHTML("beforebegin", `<rect id="${id}-tint" width="1080" height="1920" fill="${gr.tint}" opacity="${gr.tintOp ?? 0.25}" style="mix-blend-mode:${gr.blend || "multiply"}"/>`);
+    }
     L.glow = document.getElementById(`${id}-glow`); // light sources above the darkness, moving with the set
     L.light = document.getElementById(`${id}-light`);
     if (sh.set) Sets[sh.set](L, sh.setOpts || {});
