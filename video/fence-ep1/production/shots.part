@@ -117,7 +117,7 @@
           MA(1100, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
         captions: caps("gate", [0]),
         bubbles: [bub("gate", 1, 90, 560, 300)],
-        ui: [{ type: "sunHud", t: 0.3, t0: "16:30", t1: "16:34", dark: "18:40", from: 0.55, to: 0.58, left0: "2:10 ชม.", top: 140 }],
+        ui: [{ type: "sunHud", t: vo("gate", 1) - 0.75, t0: "16:30", t1: "16:34", dark: "18:40", from: 0.55, to: 0.58, left0: "2:10 ชม.", top: 140 }],
       });
 
       // ---------- 9. the market: the last cans; the vendor stands in the gap — we see her before ก้อง does ----------
