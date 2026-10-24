@@ -57,13 +57,16 @@
     const eyes = Object.entries(EYES).map(([k, v]) => `<g class="eye-${k}" display="${k === "normal" ? "inline" : "none"}">${v}</g>`).join("");
     const mouths = Object.entries(MOUTH).map(([k, v]) => `<g class="mouth-${k}" display="${k === "smile" ? "inline" : "none"}">${v}</g>`).join("");
     const html = `<g id="${id}">
-      <ellipse id="${id}-shadow" cx="0" cy="4" rx="90" ry="14" fill="#060c10" opacity=".55"/>
+      <defs><linearGradient id="${id}-tg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${P.top}"/><stop offset=".55" stop-color="${P.top}"/><stop offset="1" stop-color="${P.topS}"/></linearGradient>
+        <radialGradient id="${id}-sg"><stop offset="0" stop-color="#060c10" stop-opacity=".55"/><stop offset="1" stop-color="#060c10" stop-opacity="0"/></radialGradient></defs>
+      <ellipse id="${id}-shadow" cx="0" cy="6" rx="120" ry="22" fill="url(#${id}-sg)"/>
       <g id="${id}-root"><g id="${id}-body">
         <g transform="translate(-20,-300)">${leg("B")}</g>
         <g transform="translate(-46,-455)" opacity=".92">${arm("B", P.hand || "")}</g>
         <g id="${id}-torso">
-          <path d="M-62,-470Q-66,-482 -44,-486H44Q66,-482 62,-470L56,-300H-56Z" fill="${P.top}" ${OUT}/>
-          <path d="M18,-482H40Q58,-478 54,-468L50,-302H24Z" fill="${P.topS}" opacity=".7"/>
+          <path d="M-62,-470Q-66,-482 -44,-486H44Q66,-482 62,-470L56,-300H-56Z" fill="url(#${id}-tg)" ${OUT}/>
+          <path d="M18,-482H40Q58,-478 54,-468L50,-302H24Z" fill="${P.topS}" opacity=".55"/>
+          <path d="M-56,-478Q-60,-400 -52,-310" stroke="#fff" stroke-width="5" fill="none" opacity=".16" stroke-linecap="round"/>
           <rect x="-56" y="-318" width="112" height="30" rx="8" fill="${P.belt}" ${OUT}/>
           <g id="${id}-acc">${P.torsoExtra || ""}</g>
           <rect x="-14" y="-506" width="28" height="30" fill="${P.skinS}" ${OUT}/>
@@ -71,6 +74,8 @@
             <ellipse cx="-44" cy="-540" rx="10" ry="15" fill="${P.skin}" ${OUT}/><ellipse cx="44" cy="-540" rx="10" ry="15" fill="${P.skin}" ${OUT}/>
             <ellipse cx="0" cy="-548" rx="44" ry="52" fill="${P.skin}" ${OUT}/>
             <path d="M18,-596Q46,-570 40,-520Q30,-500 8,-497Q36,-530 18,-596Z" fill="${P.skinS}" opacity=".55"/>
+            <path d="M0,-600Q36,-592 40,-540Q38,-506 10,-498Q44,-540 20,-598Z" fill="#1a1412" opacity=".12"/>
+            <path d="M-38,-566Q-44,-540 -36,-512" stroke="#fff" stroke-width="4" fill="none" opacity=".22" stroke-linecap="round"/>
             <path d="M5,-537q6,8 -1,12" stroke="${P.skinS}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
             <g id="${id}-hair">${P.hair}</g>
             <g id="${id}-eyes">${eyes}</g>${P.face || ""}
@@ -228,7 +233,7 @@
     const pose = MODES[cur.mode]((t - cur.t), cur.opts || {});
     // pose changes always ease in (0.22 s unless the track says otherwise); arms, head and torso overshoot a little
     const prev = i > 0 ? track[i - 1] : null;
-    const blend = cur.blend ?? (prev && prev.mode !== cur.mode ? 0.22 : 0);
+    const blend = cur.blend ?? (prev && prev.mode !== cur.mode ? 0.3 : 0);
     if (prev && blend) {
       const k = Math.min(1, Math.max(0, (t - cur.t) / blend));
       if (k < 1) {

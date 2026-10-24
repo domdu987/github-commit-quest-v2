@@ -106,6 +106,7 @@
     g += `<ellipse cx="500" cy="${FY + 400}" rx="220" ry="40" fill="#8f6f45" opacity=".35"/><ellipse cx="1500" cy="${FY + 600}" rx="300" ry="50" fill="#8f6f45" opacity=".35"/>`;
     put(L.set, g);
     if (night || o.lamp) put(L.glow, `<g id="${id}-lamp"><circle cx="${o.lampX ?? -200}" cy="${FY - 260}" r="420" fill="url(#fLamp)" opacity=".7"/></g>`);
+    if (night) put(L.glow, Array.from({ length: 26 }, (_, k) => `<circle class="mote" cx="${f1(-400 + r() * 1900)}" cy="${f1(700 + r() * 900)}" r="${f1(3 + r() * 4)}" fill="#d8f0a0" opacity="${(0.2 + r() * 0.5).toFixed(2)}"/>`).join(""));
     if (t === "noon") put(L.glow, `<rect x="-1200" y="900" width="3500" height="400" fill="url(#zHaze)" opacity=".8"/>`);
   }
 
@@ -195,14 +196,11 @@
       <path d="M-230,-140l40,80l-40,60Z" fill="#b3ada0"/><path d="M-120,-300v20M60,-300v20" stroke="#8a4a1a" stroke-width="8"/>${[[-200, -200], [180, -60], [-170, 160]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="14" fill="#8a4a1a" opacity=".7"/>`).join("")}
       <ellipse cx="0" cy="260" rx="230" ry="40" fill="#8d9299" ${OUT}/>
       <g id="${id}-lid"><path d="M-230,-300q0,-40 40,-40h380q40,0 40,40q-230,${-150 * b} -460,0z" fill="#dfe3e6" ${OUT}/><path d="M-190,-340q190,${-110 * b} 380,0" stroke="#a9b0b6" stroke-width="3" fill="none"/><path d="M-150,-350q150,${-60 * b} 300,-10" stroke="#fff" stroke-width="5" fill="none" opacity=".5"/><path d="M-60,-370l20,-20M20,-380l24,-22" stroke="#8a4a1a" stroke-width="4"/></g></g>`);
-    // our hands on the can (POV): fingers curled over the label from each side, thumbs up the seam, forearms coming in from the bottom corners
-    const hand = (sx) => `<g transform="translate(${540 + sx * 230},1200) scale(${sx},1)"><path d="M-40,-80C-120,-60 -150,20 -120,110C-100,180 -40,220 40,210L80,200C100,196 100,170 80,166L40,164C60,140 56,120 36,112L80,100C104,94 102,66 78,62L30,60C56,40 52,18 30,10L74,0C98,-6 96,-34 70,-38L10,-30C40,-60 20,-90 -10,-86Z" fill="${o.skin || "#ecc29c"}" ${OUT}/>
-      <path d="M-60,-40q30,-20 60,-10M-80,40q40,-10 80,0M-70,110q40,0 80,8" stroke="${INK}" stroke-width="3" fill="none" opacity=".35"/>
-      <path d="M-100,160C-220,260 -300,420 -340,700L-60,760C-20,500 40,360 60,240Z" fill="${o.sleeve || "#9fc5d8"}" ${OUT}/></g>`;
-    put(L.fg, hand(-1) + hand(1) + `<path d="M-200,1760h1480v400h-1480z" fill="${o.sleeve || "#9fc5d8"}" ${OUT}/>`);
+    // our hands on the can (POV): real grips, fingers wrapping over the label, thumbs hooked at the rim, forearms into the bottom corners (Hand.grip)
+    const HC = { skin: o.skin || "#ecc29c", skinS: o.skinS, sleeve: o.sleeve || "#9fc5d8", sleeveS: o.sleeveS };
+    put(L.fg, `<g id="${id}-hl" transform="translate(310,1200)">${Hand.grip(HC)}</g><g id="${id}-hr" transform="translate(770,1200) scale(-1,1)">${Hand.grip(HC)}</g>`);
     L.fg.classList.remove("fgblur");
-    if (o.kid) put(L.act, `<g id="${id}-kid" transform="translate(-300,1500)"><g transform="scale(0.62)"><path d="M-40,-80C-120,-60 -150,20 -120,110C-100,180 -40,220 40,210L80,200C100,196 100,170 80,166L40,164C60,140 56,120 36,112L80,100C104,94 102,66 78,62L30,60C56,40 52,18 30,10L74,0C98,-6 96,-34 70,-38L10,-30C40,-60 20,-90 -10,-86Z" fill="#efc6a0" ${OUT}/>
-      <path d="M-100,160C-220,260 -300,420 -340,700L-60,760C-20,500 40,360 60,240Z" fill="#f6f6f2" ${OUT}/><path d="M-200,300l80,-40" stroke="#c8392b" stroke-width="10" stroke-linecap="round"/></g></g>`);
+    if (o.kid) put(L.act, `<g id="${id}-kid" transform="translate(-300,1500)"><g transform="scale(0.62)">${Hand.open({ skin: "#efc6a0", sleeve: "#f6f6f2", sleeveS: "#d8d4c8" })}</g></g>`);
   }
 
   // ---------------- the dirt road through the paddies (actors walk on y=G): heat shimmer at noon (#id-shim), the sun low at dusk ----------------
@@ -256,7 +254,7 @@
     // a pencil mark from last night at the old level, now one notch above the float
     s += `<g id="${id}-mark"><path d="M240,${330 + 140 * (10 - (o.level ?? 7) - 1)}h130" stroke="#c8392b" stroke-width="6" stroke-dasharray="14 8"/><text x="470" y="${346 + 140 * (10 - (o.level ?? 7) - 1)}" font-family="Kanit" font-weight="700" font-size="40" fill="#c8392b">เมื่อคืน</text></g>`;
     put(L.set, s);
-    put(L.fg, `<g id="${id}-finger" transform="translate(900,1500)"><path d="M-60,-40C-80,-120 -20,-170 60,-160L220,-140C260,-130 260,-60 220,-40L80,0C20,10 -40,10 -60,-40Z" fill="#e6b48c" ${OUT}/><path d="M-160,-80C-170,-130 -120,-150 -80,-130L-30,-110" fill="#e6b48c" ${OUT}/><rect x="-60" y="0" width="700" height="500" fill="#d96a8a" ${OUT}/></g>`);
+    put(L.fg, `<g id="${id}-finger" transform="translate(900,1500)"><g transform="scale(0.8)">${Hand.point({ skin: "#e6b48c", skinS: "#c48a62", sleeve: "#d96a8a", sleeveS: "#b04f6e" })}</g></g>`);
     L.fg.classList.remove("fgblur");
     put(L.glow, `<path d="M-300,-200L-100,-200L600,1900L300,1900Z" fill="url(#zRay)" opacity=".7"/>`);
   }
@@ -283,8 +281,8 @@
   // ---------------- น้องปั้น's crayon drawing, full frame on a pinned sheet: the school, five figures by the building, a sixth (#id-six) on top of the tank ----------------
   function drawing(L, o = {}) {
     const id = o.id || "dw";
-    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#5a4630"/>`);
-    let s = `<g transform="rotate(-2 540 960)"><rect x="90" y="260" width="900" height="1400" fill="url(#fPaper)" ${OUT}/><circle cx="540" cy="290" r="16" fill="#c8392b" ${OUT}/>`;
+    if (!o.onPlate) put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#5a4630"/>`);
+    let s = o.onPlate ? `<g transform="${o.onPlate}">` : `<g transform="rotate(-2 540 960)"><rect x="90" y="260" width="900" height="1400" fill="url(#fPaper)" ${OUT}/><circle cx="540" cy="290" r="16" fill="#c8392b" ${OUT}/>`;
     const C = (d, col, w = 9) => `<path d="${d}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#fCrayon)"/>`;
     s += C("M200,420q60,-60 120,0M160,480q100,-120 200,0", "#f2c55c", 12) + `<circle cx="260" cy="430" r="60" fill="#f2c55c" opacity=".8" filter="url(#fCrayon)"/>`;
     s += C("M150,1300H930", "#6f8f3e", 14) + C("M150,1300l0,-120M250,1300l0,-120M350,1300l0,-120M450,1300l0,-120M750,1300l0,-120M850,1300l0,-120M930,1300l0,-120M150,1180H930", "#5b6066", 8);
@@ -296,19 +294,20 @@
     s += `<text x="540" y="400" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="60" fill="#2f4a8a" filter="url(#fCrayon)">วันที่ 100 บ้านของปั้น</text>`;
     s += `<text x="300" y="1560" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#c8392b" filter="url(#fCrayon)">ครูพิม ก้อง ลุง เจ๊ ปั้น</text></g>`;
     put(L.set, s);
-    put(L.glow, `<circle cx="540" cy="900" r="900" fill="url(#fLamp)" opacity=".35"/>`);
+    if (!o.onPlate) put(L.glow, `<circle cx="540" cy="900" r="900" fill="url(#fLamp)" opacity=".35"/>`);
   }
 
   // ---------------- top-down map of the compound: fence, gate, classroom, tank, flagpole; the road, paddies and the market 1.2 km away ----------------
   // ids: #id-pin0..4 (pins the shot reveals), #id-path (dotted route to the market), #id-ring (sound ring at the market)
   function mapTop(L, o = {}) {
     const id = o.id || "mp";
-    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#1d2a22"/>`);
-    let s = `<rect x="-1200" y="-800" width="3500" height="3600" fill="url(#fGrid)"/>`;
-    s += `${Array.from({ length: 12 }, (_, k) => `<rect x="${-1100 + (k % 4) * 560}" y="${-600 + Math.floor(k / 4) * 900}" width="520" height="860" fill="#b9d08a" opacity=".55" stroke="#8fae5a" stroke-width="6"/>`).join("")}`;
-    s += `<path d="M-200,-800L-200,2800" stroke="#c8a06a" stroke-width="90"/><path d="M-200,1240H1600" stroke="#c8a06a" stroke-width="70"/><path d="M-200,-800V2800M-200,1240H1600" stroke="#f6e7cf" stroke-width="6" stroke-dasharray="40 40"/>`;
-    s += `<rect x="120" y="420" width="840" height="760" fill="#e6d9b8" stroke="#3a3f45" stroke-width="18"/><rect x="430" y="1172" width="220" height="24" fill="#c8392b"/>`;
-    s += `<rect x="170" y="470" width="520" height="190" rx="10" fill="#c9a06c" ${OUT}/><text x="430" y="585" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="50" fill="${INK}">อาคารเรียน</text>`;
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#2a2d27"/>`);
+    let s = `<rect x="-1200" y="-800" width="3500" height="3600" fill="#d9d3c0"/>`;
+    s += `${Array.from({ length: 12 }, (_, k) => `<rect x="${-1100 + (k % 4) * 560}" y="${-600 + Math.floor(k / 4) * 900}" width="520" height="860" fill="#b7bfa0" opacity=".7" stroke="#9aa48a" stroke-width="5"/>${Array.from({ length: 7 }, (_, j) => `<path d="M${-1100 + (k % 4) * 560 + 20},${-600 + Math.floor(k / 4) * 900 + 60 + j * 110}h480" stroke="#a3ad90" stroke-width="3"/>`).join("")}`).join("")}`;
+    s += `<path d="M-200,-800L-200,2800" stroke="#e9e2cc" stroke-width="90"/><path d="M-200,1240H1600" stroke="#e9e2cc" stroke-width="70"/><path d="M-200,-800V2800M-200,1240H1600" stroke="#bfb79f" stroke-width="4" stroke-dasharray="40 40"/>`;
+    if (o.rings) s += `<g id="${id}-rings">${[[400, "400 ม."], [800, "800 ม."], [1200, "1.2 กม."]].map(([R, t], k) => `<circle cx="540" cy="900" r="${R}" fill="none" stroke="#1e1d1b" stroke-width="${k === 2 ? 5 : 3}" stroke-dasharray="${k === 2 ? "18 14" : "10 12"}" opacity=".55"/><g transform="translate(${540 + R * 0.72},${900 - R * 0.7})"><rect x="-70" y="-26" width="140" height="52" rx="26" fill="#f3eee3" stroke="#1e1d1b" stroke-width="3"/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#1e1d1b">${t}</text></g>`).join("")}</g>`;
+    s += `<rect x="120" y="420" width="840" height="760" fill="#efe9d8" stroke="#3a3f45" stroke-width="14"/><rect x="430" y="1172" width="220" height="24" fill="#d9342b"/>`;
+    s += `<rect x="170" y="470" width="520" height="190" rx="10" fill="#c7b48e" ${OUT}/><text x="430" y="585" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="50" fill="${INK}">อาคารเรียน</text>`;
     s += `<circle cx="860" cy="560" r="80" fill="#9fc5d8" ${OUT}/><text x="860" y="700" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="34" fill="${INK}">แท็งก์น้ำ</text>`;
     s += `<circle cx="540" cy="900" r="18" fill="#9aa0a6" ${OUT}/><text x="540" y="970" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="${INK}">เสาธง</text>`;
     s += `<text x="540" y="1270" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="36" fill="#c8392b">ประตู</text>`;
@@ -323,9 +322,35 @@
   }
   // the compound's pins for the map (added by the shot): label + drop marker at world (x, y)
   function pin(L, id, x, y, label, col = "#c8392b") {
-    put(L.act, `<g id="${id}" opacity="0"><g transform="translate(${x},${y})"><path d="M0,0C-40,-60 -60,-90 -60,-130a60,60 0 1 1 120,0c0,40 -20,70 -60,130z" fill="${col}" ${OUT}/><circle cy="-130" r="22" fill="#f4ecd8"/><rect x="-170" y="-250" width="340" height="70" rx="14" fill="#1b1d20" opacity=".9"/><text y="-200" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="38" fill="#f4ecd8">${label}</text></g></g>`);
+    put(L.act, `<g id="${id}" opacity="0"><g transform="translate(${x},${y})"><path d="M0,0C-40,-60 -60,-90 -60,-130a60,60 0 1 1 120,0c0,40 -20,70 -60,130z" fill="${col}" ${OUT}/><circle cy="-130" r="22" fill="#f4ecd8"/><rect x="-170" y="-250" width="340" height="70" rx="35" fill="#f3eee3" stroke="#1e1d1b" stroke-width="3"/><text y="-200" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="36" fill="#1e1d1b">${label}</text></g></g>`);
   }
 
+
+
+  // ---------------- AI-painted plates (assets/art/<name>.png, 1080×1920 at world 0,0): the scene is a picture; only what must move is drawn on top ----------------
+  // o.set = plate for the set layer (parallax 1), o.far = optional plate for the far layer, o.fg = keyed foreground piece {name, x, y, s, blur}
+  function plate(L, o = {}) {
+    const img = (name, x = 0, y = 0, w = 1080, h = 1920, extra = "") => `<image href="assets/art/${name}.png" x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="none" ${extra}/>`;
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="${o.bg || "#0b0d10"}"/>`);
+    if (o.far) put(L.far, img(o.far, -200, -200, 1480, 2320));
+    if (o.set) put(L.set, img(o.set, o.x ?? 0, o.y ?? 0, o.w ?? 1080, o.h ?? 1920));
+    if (o.fg) { const f = o.fg; put(L.fg, `<g id="${o.id || "pl"}-fg" transform="translate(${f.x},${f.y}) scale(${f.s || 1})">${img(f.name)}</g>`); if (f.blur === false) L.fg.classList.remove("fgblur"); }
+    if (o.fgOff) L.fg.classList.remove("fgblur");
+  }
+  // iron bars drawn over a region so rigs placed behind them read as "outside the fence": x0..x1 at y0..y1, bar pitch p
+  function bars(L, id, x0, x1, y0, y1, p = 30, col = "#1a1d22") {
+    let s = `<g id="${id}">`;
+    for (let x = x0; x < x1; x += p) s += `<rect x="${x}" y="${y0}" width="${Math.round(p * 0.32)}" height="${y1 - y0}" fill="${col}"/>`;
+    s += `<rect x="${x0}" y="${y0 + (y1 - y0) * 0.12}" width="${x1 - x0}" height="${Math.round(p * 0.4)}" fill="${col}"/><rect x="${x0}" y="${y1 - (y1 - y0) * 0.2}" width="${x1 - x0}" height="${Math.round(p * 0.4)}" fill="${col}"/></g>`;
+    put(L.act, s);
+  }
+  // the gate panel for the dusk gate plate: a sliding section of bars with its bolt, x = left edge in world space
+  function gatePanel(L, id, x, y0 = 150, h = 1200, w = 470) {
+    put(L.act, `<g id="${id}" transform="translate(${x},0)"><rect x="0" y="${y0}" width="${w}" height="${h}" fill="none" stroke="#2a2d31" stroke-width="22"/>
+      ${Array.from({ length: Math.floor(w / 34) }, (_, b) => `<rect x="${14 + b * 34}" y="${y0 + 8}" width="12" height="${h - 16}" fill="#2f3337"/><rect x="${14 + b * 34}" y="${y0 + 8}" width="4" height="${h - 16}" fill="#4a4f55" opacity=".7"/>`).join("")}
+      <rect x="0" y="${y0 + h * 0.45}" width="${w}" height="24" fill="#2a2d31"/><rect x="0" y="${y0 + h * 0.82}" width="${w}" height="24" fill="#2a2d31"/>
+      <g id="${id}-bolt"><rect x="-80" y="${y0 + h * 0.47 - 8}" width="150" height="26" rx="10" fill="#8d9299" ${OUT}/><rect x="-92" y="${y0 + h * 0.47 - 22}" width="36" height="54" rx="8" fill="#5b6066" ${OUT}/></g></g>`);
+  }
 
   // ---------------- top-down of the gate: the road and the crowd outside (top), the yard inside (bottom); figures are seen from above ----------------
   // ids: #id-gate (slides along x), #id-z0.. (the crowd, arms toward the bars), #id-in0.. (people inside)
@@ -364,9 +389,52 @@
     q("[id$='-shim'] path").forEach((el, i) => tl.fromTo(el, { x: -30 + (i % 3) * 10 }, { x: 30, duration: 0.9 + (i % 4) * 0.2, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     q("[id$='-flagc']").forEach((el) => tl.fromTo(el, { skewY: -3 }, { skewY: 3, svgOrigin: "6 -690", duration: 0.8, repeat: Math.ceil(dur / 0.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     q(".fly").forEach((el, i) => tl.fromTo(el, { x: -8 - (i % 3) * 3, y: 6 }, { x: 10 + (i % 4) * 3, y: -12 - (i % 3) * 5, duration: 0.22 + (i % 5) * 0.05, repeat: Math.ceil(dur / 0.22), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (i % 7) * 0.03));
+    q(".lampf").forEach((el, i) => { const st = 0.16 + (i % 3) * 0.05; for (let t = 0; t < dur; t += st) { const v = 0.82 + Math.abs((Math.sin((t * 7.3 + i) * 13.1) * 43758.5) % 1) * 0.22; tl.to(el, { opacity: v, duration: st, ease: "sine.inOut" }, t0 + t); } });
+    q(".mote").forEach((el, i) => { tl.fromTo(el, { x: 0, y: 0 }, { x: 40 + (i % 5) * 18, y: -60 - (i % 4) * 20, duration: 2.6 + (i % 5) * 0.5, repeat: Math.ceil(dur / 2.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (i % 7) * 0.4); tl.fromTo(el, { opacity: 0.05 }, { opacity: 0.7, duration: 0.9 + (i % 3) * 0.3, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (i % 5) * 0.3); });
     q(".fring").forEach((el, i) => tl.fromTo(el, { scale: 0.3, opacity: 0.9 }, { scale: 2.2, opacity: 0, svgOrigin: "1500 1250", duration: 1.6, repeat: Math.ceil(dur / 1.6), ease: "power1.out", immediateRender: false }, t0 + i * 0.5));
   }
 
-  Object.assign(Sets, { schoolYard, classroom, market, canClose, fieldRoad, gateClose, tankClose, radioClose, drawing, mapTop, gateTop });
-  window.Fence = { chalk, pin, flife, paddies };
+  // ---------------- depth and light (the v2 look): blurred foreground silhouettes, atmospheric haze between far and set, soft light sources ----------------
+  // depth(L, kind): dark out-of-focus shapes in L.fg (parallax 1.5 + the fg blur) — grass | bars | post | desk | branch | shelf
+  let DEPN = 0;
+  function depth(L, kind, o = {}) {
+    const col = o.col || "#06080a", op = o.op ?? 0.92, r = mk(o.seed || 7 + DEPN++);
+    const D = {
+      grass: () => { let g = ""; for (let k = 0; k < 26; k++) { const x = (k < 13 ? -120 : 760) + r() * 420, h = 160 + r() * 260, w = 18 + r() * 22; g += `<path d="M${f1(x)},2000q${f1(-w)},${f1(-h * 0.5)} ${f1(w * 0.3)},${f1(-h)}q${f1(w)},${f1(h * 0.45)} ${f1(w * 1.6)},${f1(h)}z" fill="${col}"/>`; } return g + `<path d="M-300,1800q500,-60 1000,0t700,0V2200H-300z" fill="${col}"/>`; },
+      bars: () => [-60, 110, 280].map((x, k) => `<rect x="${x}" y="-400" width="${70 + k * 10}" height="2800" rx="20" fill="${col}"/>`).join("") + `<rect x="-200" y="700" width="640" height="60" fill="${col}"/>`,
+      post: () => `<rect x="${o.x ?? -80}" y="-400" width="${o.w ?? 220}" height="2800" fill="${col}"/>`,
+      desk: () => `<path d="M-300,1560L1400,1440V2300H-300z" fill="${col}"/><path d="M-300,1560L1400,1440l0,40L-300,1600z" fill="#2a2420"/>`,
+      branch: () => `<path d="M-200,-200C100,-60 380,40 560,0C400,160 120,220 -200,200z" fill="${col}"/>${[[60, 120], [200, 60], [380, 90], [300, 180]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="90" ry="40" transform="rotate(${-30 + x / 10} ${x} ${y})" fill="${col}"/>`).join("")}`,
+      shelf: () => `<rect x="-300" y="-400" width="420" height="2800" fill="${col}"/><rect x="-300" y="900" width="700" height="50" fill="${col}"/><rect x="-300" y="1500" width="700" height="50" fill="${col}"/>`,
+    };
+    // shapes are drawn in screen coordinates for the shot's first camera key (o.cam = {x, y, s}): map them back through the fg parallax (1.5)
+    const c = o.cam || { x: 0, y: 0, s: 1 }, ls = 1 + (c.s - 1) * 1.5;
+    put(L.fg, `<g opacity="${op}" transform="translate(${f1(540 + c.x * 1.5)},${f1(960 + c.y * 1.5)}) scale(${(1 / ls).toFixed(4)}) translate(-540,-960)">${(D[kind] || D.grass)()}</g>`);
+  }
+  // haze(L, y, h, col, op): a soft band of atmosphere in the mid layer (parallax .6) so the far ground sits behind the set
+  function haze(L, y = 1000, h = 500, col = "#cfd8d4", op = 0.3) {
+    const id = `hz${DEPN++}`;
+    put(L.mid, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="0"/><stop offset=".55" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="${op * 0.3}"/></linearGradient><rect x="-1200" y="${y - h}" width="3500" height="${h + 200}" fill="url(#${id})"/>`);
+  }
+  // light(L, x, y, r, col, op): a soft light source above the darkness (glow layer): core + wide bloom; cls = "lampf" flickers (flife)
+  function light(L, x, y, R = 500, col = "#ffd58a", op = 0.5, cls = "") {
+    const id = `lt${DEPN++}`;
+    put(L.glow, `<radialGradient id="${id}"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset=".45" stop-color="${col}" stop-opacity="${op * 0.35}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>
+      <g class="${cls}"><circle cx="${x}" cy="${y}" r="${R * 1.6}" fill="url(#${id})" opacity=".55"/><circle cx="${x}" cy="${y}" r="${R}" fill="url(#${id})"/></g>`);
+  }
+  // cone(L, x, y, w, h, col, op): light falling from a lamp at (x, y) onto the ground below (glow layer)
+  function cone(L, x, y, w = 600, h = 900, col = "#ffd58a", op = 0.35, cls = "lampf") {
+    const id = `cn${DEPN++}`;
+    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
+      <path class="${cls}" d="M${x - 40},${y}L${x + 40},${y}L${x + w / 2},${y + h}L${x - w / 2},${y + h}Z" fill="url(#${id})"/>`);
+  }
+  // rays(L, x0, x1, y0, y1, n, col): slanted light shafts (glow layer)
+  function rays(L, x0 = -600, x1 = 400, y0 = 300, y1 = 1500, n = 4, col = "#ffd8a0", op = 0.5) {
+    const id = `ry${DEPN++}`;
+    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
+      ${Array.from({ length: n }, (_, k) => { const w = (x1 - x0) / n, x = x0 + k * w; return `<path d="M${x},${y0}h${w * 0.45}L${x + w * 0.45 + (x1 - x0) * 0.6},${y1}h${-w * 0.9}Z" fill="url(#${id})"/>`; }).join("")}`);
+  }
+
+  Object.assign(Sets, { schoolYard, classroom, market, canClose, fieldRoad, gateClose, tankClose, radioClose, drawing, mapTop, gateTop, plate });
+  window.Fence = { chalk, pin, flife, paddies, bars, gatePanel, depth, haze, light, cone, rays };
 })();
