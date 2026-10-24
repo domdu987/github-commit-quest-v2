@@ -191,7 +191,7 @@
         <path d="M150,-240q60,0 60,80v120" stroke="${INK}" stroke-width="12" fill="none"/></g>`;
     // the convex mirror on its pole
     s += `<g id="${id}-mirror"><rect x="1040" y="${G - 900}" width="20" height="900" fill="#d8443a" ${OUT}/><circle cx="1050" cy="${G - 980}" r="130" fill="url(#mkMirror)" stroke="#d8443a" stroke-width="22"/><path d="M970,${G - 1040}q40,-40 100,-30" stroke="#c9d6dc" stroke-width="8" fill="none" opacity=".45"/></g>`;
-    if (o.car !== false) s += car(`${id}-car`, o.carX ?? 560, G + 40, o.carS ?? 0.85, { plate: o.plate, cab: 0.6 });
+    if (o.car !== false) s += car(`${id}-car`, o.carX ?? 560, o.carY ?? G + 40, o.carS ?? 0.85, { plate: o.plate, cab: 0.6 });
     put(L.set, s);
     put(L.glow, `${[60, 360].map((x) => `<rect class="tube" x="${x}" y="${G - 840}" width="200" height="18" rx="9" fill="#e8fbff"/><circle cx="${x + 100}" cy="${G - 830}" r="420" fill="url(#mkTube)"/>`).join("")}
       <circle cx="-560" cy="${G - 400}" r="300" fill="#ffe7a0" opacity=".14"/>`);

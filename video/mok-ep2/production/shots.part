@@ -161,7 +161,7 @@
 
       // ---------- 6. walking into the fog ----------
       add("walk", {
-        set: "roadFog", setOpts: { id: "wk", carX: -120, head: false, tail: false }, dark: 0.45,
+        set: "roadFog", setOpts: { id: "wk", carX: -330, carY: 1435, carS: 1.6, head: false, tail: false }, dark: 0.45,
         cam: { keys: [{ t: 0, ...fr(300, 1200, 0.95, 540, 1050), drift: { x: 60, s: 0.01 } }] },
         actors: [JA(160, 1470, 0.78, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: 640, dur: 4.6 } }),
           MI(40, 1480, 0.78, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat" }], { moveTo: { x: 500, dur: 4.6 } }),

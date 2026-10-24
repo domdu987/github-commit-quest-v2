@@ -536,20 +536,20 @@
       // ---------- 11–15. lights in the fog: the pickup; its driver; "let me drive" / "no"; don't drive yourself (card) ----------
       const RF = 1400;
       add("lights", {
-        set: "roadFog", setOpts: { id: "lg", carX: 980, head: false, tail: false }, dark: 0.45,
+        set: "roadFog", setOpts: { id: "lg", carX: 1060, carS: 1.5, head: false, tail: false }, dark: 0.45,
         cam: { keys: [{ t: 0, ...fr(400, 1250, 0.9, 540, 1100), drift: { s: 0.02 } }] },
-        extra(L) { PICKUP(L, "lg-pk", -700, RF + 40, 1, { head: true, tail: true }); },
+        extra(L) { PICKUP(L, "lg-pk", -1000, RF + 40, 1.5, { head: true, tail: true }); },
         actors: [WA(1180, 1500, 0.8, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o" }], { flip: true })],
         captions: caps("lights"),
-        fx(tl, id, t0) { movePK(tl, "lg-pk", t0, D("lights"), -700, RF + 40, 1, 700, "power1.out"); },
+        fx(tl, id, t0) { movePK(tl, "lg-pk", t0, D("lights"), -1000, RF + 40, 1.5, 1000, "power1.out"); },
       });
       add("drive", {
         set: "roadFog", setOpts: { id: "dv", car: false }, dark: 0.45,
         cam: { keys: [{ t: 0, ...fr(300, 1250, 0.95, 540, 1100), drift: { x: 30, s: 0.01 } }] },
-        extra(L) { PICKUP(L, "dv-pk", 0, RF + 40, 1, { head: true, tail: true }); },
+        extra(L) { PICKUP(L, "dv-pk", 60, RF + 40, 1.5, { head: true, tail: true }); },
         captions: caps("drive"),
         ui: [{ type: "steps", t: F("drive", 0, 0) - 0.2, label: "ขับในหมอก", items: [["lowbeam", "ไฟต่ำ"], ["slow", "ขับช้า"], ["lines", "ตามเส้นถนน"]], gap: (F("drive", 0, 2) - F("drive", 0, 0)) / 2, top: 200, end: D("drive") - 0.2 }],
-        fx(tl, id, t0) { movePK(tl, "dv-pk", t0, D("drive"), 0, RF + 40, 1, 260); },
+        fx(tl, id, t0) { movePK(tl, "dv-pk", t0, D("drive"), 60, RF + 40, 1.5, 260); },
       });
       add("driver", {
         set: "pickupWindow", setOpts: { id: "pw" }, dark: 0.35,
@@ -566,16 +566,16 @@
       add("nodrive", {
         set: "roadFog", setOpts: { id: "nd", car: false }, dark: 0.45,
         cam: { keys: [{ t: 0, ...fr(540, 1250, 0.95, 540, 1150), drift: { s: 0.01 } }] },
-        extra(L) { PICKUP(L, "nd-pk", 300, RF + 40, 1, { head: true, tail: true }); },
+        extra(L) { PICKUP(L, "nd-pk", 300, RF + 40, 1.5, { head: true, tail: true }); },
         captions: caps("nodrive"),
         ui: [{ type: "steps", t: F("nodrive", 0, 0) - 0.2, label: "คนที่สูดแก๊สมา", items: [["nodrive", "ห้ามขับเอง"], ["otherdrive", "ให้คนอื่นขับ"], ["ambulance", "เรียกรถพยาบาล"]], gap: (F("nodrive", 0, 3) - F("nodrive", 0, 1)) / 2, top: 200, end: D("nodrive") - 0.2 }],
-        fx(tl, id, t0) { movePK(tl, "nd-pk", t0 + 1.0, D("nodrive") - 1.0, 300, RF + 40, 1, 1200, "power1.in"); },
+        fx(tl, id, t0) { movePK(tl, "nd-pk", t0 + 1.0, D("nodrive") - 1.0, 300, RF + 40, 1.5, 1300, "power1.in"); },
       });
 
       // ---------- 16. signature ----------
       add("sig", {
         set: "roadFog", setOpts: { id: "sg", car: false }, dark: 0.5, blur: { far: 8, set: 8 },
-        extra(L) { PICKUP(L, "sg-pk", 1300, RF + 40, 1, { head: false, tail: true }); },
+        extra(L) { PICKUP(L, "sg-pk", 1300, RF + 40, 1.5, { head: false, tail: true }); },
         cam: { keys: [{ t: 0, ...fr(560, 1300, 1.0, 540, 960), drift: { s: 0.02 } }, { t: SF(2), ...fr(560, 1290, 1.04, 540, 960), drift: { s: 0.045 } }, { t: SF(3), ...fr(560, 1270, 1.12, 540, 960), drift: { s: 0.02 } }] },
         shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
         captions: caps("sig"),
@@ -593,7 +593,7 @@
       });
 
       // ---------- 17–21. morning at the pump; "I never left"; the fog copies; 2529 ----------
-      const GM = (id, extra = {}) => ({ id, oldTruck: { x: 1500, s: 0.9 }, ...extra });
+      const GM = (id, extra = {}) => ({ id, oldTruck: { x: 1640, s: 1.4 }, ...extra });
       add("morning", {
         set: "gasMorning", setOpts: GM("mn"), dark: 0.08,
         cam: { keys: [{ t: 0, ...fr(420, 1150, 0.95, 540, 1000), drift: { s: 0.02 } }] },
@@ -650,7 +650,7 @@
       // ---------- 22–24. the old pickup; fresh mud; the woman in red in เจ's photo ----------
       add("truck", {
         set: "gasMorning", setOpts: GM("tk"), dark: 0.1,
-        cam: { keys: [{ t: 0, ...fr(900, 1150, 1.0, 540, 1100), drift: { x: 40, s: 0.01 } }, { t: F("truck", 0, 1) - 0.05, glide: 1.1, ...fr(1500, 1350, 1.35, 540, 1100), drift: { s: 0.02 } }] },
+        cam: { keys: [{ t: 0, ...fr(900, 1150, 1.0, 540, 1100), drift: { x: 40, s: 0.01 } }, { t: F("truck", 0, 1) - 0.05, glide: 1.1, ...fr(1620, 1300, 1.0, 540, 1100), drift: { s: 0.02 } }] },
         captions: caps("truck"),
       });
       add("mud", {

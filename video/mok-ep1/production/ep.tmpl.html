@@ -445,7 +445,7 @@
       });
 
       // ---------- 4–7. the petrol station ----------
-      const GS = { id: "gs", carX: 600, carS: 0.85, plate: PLATE };
+      const GS = { id: "gs", carX: 820, carY: 1474, carS: 1.5, plate: PLATE };   // a real-size hatchback: roof about chest-high on the cast
       add("mint", {
         set: "gasStation", setOpts: GS, dark: 0.3,
         cam: { keys: [{ t: 0, ...fr(720, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }] },
@@ -519,7 +519,7 @@
         },
       });
       add("swerve", {
-        set: "roadFog", setOpts: { id: "sw", carX: 200, villager: { x: 900, s: 0.95, wave: false } }, dark: 0.3,
+        set: "roadFog", setOpts: { id: "sw", carX: 200, villager: { x: 900, s: 0.66, wave: false } }, dark: 0.3,
         cam: { keys: [{ t: 0, ...fr(600, 1250, 0.9, 540, 1100), drift: { s: 0.02 } }] },
         shake: (t) => (t > 0.5 && t < 1.2 ? 10 * Math.sin(t * 61) : 0),
         sfxText: [{ text: "เอี๊ยด!", x: 300, y: 420, t: 0.45, rot: -8, size: 120, color: "#f2d6a0" }],
@@ -542,7 +542,7 @@
 
       // ---------- 14–16. someone waving; "stop" / "don't!"; they pass him ----------
       add("wave", {
-        set: "roadFog", setOpts: { id: "wv", carX: -200, villager: { x: 860, s: 0.9 } }, dark: 0.35,
+        set: "roadFog", setOpts: { id: "wv", carX: -200, villager: { x: 860, s: 0.66 } }, dark: 0.35,
         cam: { keys: [{ t: 0, ...fr(700, 1200, 1.1, 540, 1100), drift: { s: 0.03 } }] },
         captions: caps("wave"),
         fx(tl, id, t0) { tf(tl, "#wv-car", t0, D("wave"), "translate(240,1440) scale(1,1)", "power1.out"); },
@@ -557,7 +557,7 @@
         fx(tl, id, t0, L) { TOP(L, document.getElementById("ci-dash")); Fx.glitch(tl, `#${id}`, t0 + vo("stop", 1), 0.15, 8, 41); },
       });
       add("pass", {
-        set: "roadFog", setOpts: { id: "ps", carX: 100, villager: { x: 900, s: 0.9, wave: false } }, dark: 0.35,
+        set: "roadFog", setOpts: { id: "ps", carX: 100, villager: { x: 900, s: 0.66, wave: false } }, dark: 0.35,
         cam: { keys: [{ t: 0, ...fr(800, 1150, 1.3, 540, 1000), drift: { s: 0.03 } }] },
         fx(tl, id, t0) {
           tf(tl, "#ps-car", t0, D("pass"), "translate(1500,1440) scale(1,1)", "power1.in");
