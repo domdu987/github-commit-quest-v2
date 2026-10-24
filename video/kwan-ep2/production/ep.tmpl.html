@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="th" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/rig.js"></script>
+    <script src="assets/sets.js"></script>
+    <script src="assets/camp.js"></script>
+    <script src="assets/koi.js"></script>
+    <script src="assets/zom.js"></script>
+    <script src="assets/hands.js"></script>
+    <script src="assets/mok.js"></script>
+    <script src="assets/pov.js"></script>
+    <script src="assets/kwan.js"></script>
+    <script src="assets/ui.js"></script>
+    <script src="assets/gameui.js"></script>
+    <script src="assets/mokui.js"></script>
+    <script src="assets/kwanui.js"></script>
+    <script src="assets/kwan2.js"></script>
+    <script src="assets/fx.js"></script>
+    <script src="assets/engine.js"></script>
+    <script src="assets/opener.js"></script>
+    <style>
+      @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 900; src: url(assets/fonts/f3.ttf); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05080a; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Kanit, sans-serif; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .stage { position: absolute; inset: 0; }
+      .fgblur { filter: blur(7px); }
+      .badge { z-index: 56; position: absolute; left: 36px; bottom: 150px; font: 700 26px/1 Kanit; color: #f4ecd8; opacity: .75; letter-spacing: 2px;
+        background: rgba(5,8,10,.55); padding: 8px 14px 10px; border-radius: 10px; }
+      #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 64% at 50% 48%, transparent 50%, rgba(3,6,8,.8) 100%); }
+      #grain { z-index: 57; position: absolute; inset: -60px; opacity: .11; mix-blend-mode: overlay; pointer-events: none; }
+      #flashw { z-index: 60; position: absolute; inset: 0; background: #e8f0ff; opacity: 0; pointer-events: none; }
+      #black { z-index: 61; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+      /*__UICSS__*/
+      /*__GAMECSS__*/
+      .capwrap { z-index: 56; top: 1480px; }
+      .capbox { background: rgba(12,18,20,.86); color: #f4ecd8; border: 2px solid rgba(244,236,216,.4); border-radius: 22px;
+        box-shadow: 0 0 0 4px rgba(10,14,16,.45), 0 14px 30px rgba(0,0,0,.55); font: 900 64px/1.22 Kanit; padding: 12px 34px 18px; }
+      .capbox .k { background: #f2c55c; color: #2e2a26; border: 0; border-radius: 10px; padding: 0 .16em; transform: rotate(-1.5deg); }
+      .capbox .k.kr, .k.kr { background: #d8443a; color: #fff4ea; }
+      .capbox.q { background: rgba(244,236,216,.94); color: #2e2a26; border-color: #2e2a26; }
+      .bubble { z-index: 57; white-space: normal !important; max-width: 640px; text-align: center; }
+      .sfxw { position: absolute; z-index: 55; font-family: Kanit; font-weight: 900; letter-spacing: -1px; opacity: 0; white-space: nowrap;
+        text-shadow: -4px -4px 0 #2e2a26, 4px -4px 0 #2e2a26, -4px 4px 0 #2e2a26, 4px 4px 0 #2e2a26, 8px 8px 0 #2e2a26; }
+      /* phone camera overlay (REC) */
+      .rec { position: absolute; inset: 0; z-index: 52; pointer-events: none; font-family: Kanit; color: #f4ecd8; }
+      .rec .br { position: absolute; width: 90px; height: 90px; border: 6px solid rgba(244,236,216,.85); }
+      .rec .tl { left: 40px; top: 120px; border-right: 0; border-bottom: 0; } .rec .tr { right: 40px; top: 120px; border-left: 0; border-bottom: 0; }
+      .rec .bl { left: 40px; bottom: 120px; border-right: 0; border-top: 0; } .rec .brr { right: 40px; bottom: 120px; border-left: 0; border-top: 0; }
+      .rec .top { position: absolute; left: 70px; right: 70px; top: 150px; display: flex; justify-content: space-between; align-items: center; font: 900 40px/1 Kanit; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+      .rec .dot { display: inline-block; width: 26px; height: 26px; border-radius: 50%; background: #e8443a; margin-right: 12px; vertical-align: -2px; box-shadow: 0 0 14px #e8443a; }
+      .rec .tc { font-family: 'Kanit'; letter-spacing: 2px; }
+      .rec .bat { display: inline-block; width: 56px; height: 28px; border: 4px solid #f4ecd8; border-radius: 6px; position: relative; margin-left: 14px; vertical-align: -4px; }
+      .rec .bat:after { content: ""; position: absolute; left: 3px; top: 3px; bottom: 3px; width: 34%; background: #e8705a; }
+      .rec .mode { position: absolute; left: 70px; top: 220px; font: 700 30px/1 Kanit; letter-spacing: 3px; padding: 6px 12px; border-radius: 8px; background: rgba(0,0,0,.4); }
+      .rec .af { position: absolute; width: 170px; height: 190px; border: 5px solid #f2c55c; border-radius: 10px; opacity: 0; box-shadow: 0 0 18px rgba(242,197,92,.6); }
+      .rec .af b { position: absolute; left: -5px; top: -50px; font: 900 28px/1 Kanit; color: #2e2a26; background: #f2c55c; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+      /* channel signature: "ทุกอย่าง… ถูกทาง / พลาดแค่… เรื่องเดียว" checklist */
+      .chk { position: absolute; left: 110px; width: 860px; top: 520px; z-index: 52; padding: 30px 38px 34px; border-radius: 30px; opacity: 0;
+        background: rgba(10,15,17,.9); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 0 0 6px rgba(10,14,16,.4), 0 24px 60px rgba(0,0,0,.6); font-family: Kanit; }
+      .chk .chk-t { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; margin-bottom: 22px; }
+      .chk .chk-r { display: flex; align-items: center; gap: 26px; padding: 14px 0; border-top: 2px solid rgba(244,236,216,.12); opacity: 0; }
+      .chk .box { width: 84px; height: 84px; border-radius: 18px; border: 5px solid rgba(244,236,216,.6); display: flex; align-items: center; justify-content: center; flex: none; }
+      .chk .box b { font: 900 64px/1 Kanit; opacity: 0; }
+      .chk .ok b { color: #7fd1b9; } .chk .bad b { color: #ff5a4a; }
+      .chk .tx { font: 900 60px/1.1 Kanit; color: #f4ecd8; }
+      .chk .bad .tx { color: #ff8a7a; letter-spacing: 8px; }
+      .rec .scrub { position: absolute; left: 70px; right: 70px; bottom: 170px; height: 12px; border-radius: 6px; background: rgba(244,236,216,.3); }
+      .rec .scrub i { display: block; height: 100%; border-radius: 6px; background: #e8443a; }
+      /* body temperature card */
+      .thermo { position: absolute; z-index: 52; display: flex; align-items: center; gap: 22px; padding: 18px 28px 18px 20px; border-radius: 26px; opacity: 0;
+        background: rgba(10,15,17,.88); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 14px 40px rgba(0,0,0,.55); font-family: Kanit; color: #f4ecd8; }
+      .thermo .val { font: 900 92px/1 Kanit; letter-spacing: -2px; } .thermo .val small { font-size: 44px; }
+      .thermo .lbl { font: 700 28px/1.1 Kanit; letter-spacing: 3px; color: #f2c55c; margin-bottom: 6px; }
+      .thermo .note { font: 900 34px/1.1 Kanit; color: #ff8a7a; height: 38px; }
+      .rec.nv:before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 3px, transparent 3px 6px); }
+
+      /* the guide's rule: a lacquer-and-gold card, one rhyming line per row (กอย / ถอย / คอย) */
+      .krule { position: absolute; left: 60px; width: 960px; z-index: 52; opacity: 0; padding: 22px 34px 30px; border-radius: 28px; box-sizing: border-box;
+        background: linear-gradient(180deg, #1d1611 0%, #120d0a 100%); border: 4px solid #c9a55a; overflow: hidden;
+        box-shadow: 0 0 0 10px rgba(18,13,10,.92), 0 0 0 13px #7a5f2e, 0 26px 60px rgba(0,0,0,.65), inset 0 0 60px rgba(201,165,90,.12); font-family: Kanit; }
+      .krule::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(201,165,90,.05) 0 2px, transparent 2px 46px); pointer-events: none; }
+      .krule .cn { position: absolute; width: 46px; height: 46px; border: 5px solid #e2c27a; }
+      .krule .cn::after { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #e2c27a; }
+      .krule .cn.tl { left: 12px; top: 12px; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; } .krule .cn.tl::after { left: 10px; top: 10px; }
+      .krule .cn.tr { right: 12px; top: 12px; border-left: 0; border-bottom: 0; border-top-right-radius: 14px; } .krule .cn.tr::after { right: 10px; top: 10px; }
+      .krule .cn.bl { left: 12px; bottom: 12px; border-right: 0; border-top: 0; border-bottom-left-radius: 14px; } .krule .cn.bl::after { left: 10px; bottom: 10px; }
+      .krule .cn.br { right: 12px; bottom: 12px; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; } .krule .cn.br::after { right: 10px; bottom: 10px; }
+      .krule .kr-h { text-align: center; margin: 4px 0 14px; }
+      .krule .kr-h span { display: inline-block; padding: 6px 34px 8px; border-radius: 40px; background: linear-gradient(180deg, #b8322a, #8e2018); color: #ffe7b0;
+        font-weight: 900; font-size: 38px; letter-spacing: 1px; border: 3px solid #e2c27a; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+      .krule .kr-r { display: flex; align-items: center; gap: 26px; padding: 12px 10px; opacity: 0; }
+      .krule .kr-r + .kr-r { border-top: 2px dashed rgba(201,165,90,.35); }
+      .krule .kr-i { flex: none; width: 118px; height: 118px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fbf3df, #e6d3a8); border: 5px solid #c9a55a; box-shadow: 0 6px 14px rgba(0,0,0,.5); }
+      .krule .kr-i svg { width: 100%; height: 100%; }
+      .krule .kr-t { color: #f4ecd8; font-weight: 900; font-size: 60px; line-height: 1.15; text-shadow: 0 4px 0 rgba(0,0,0,.55); white-space: nowrap; }
+      .krule .kr-t strong { color: #f2c55c; font-weight: 900; }
+      .krule .kr-t em { font-style: normal; background: #c8392b; color: #fff; padding: 0 14px 4px; border-radius: 14px; margin-right: 8px; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
+      .krule .kr-t u { text-decoration: none; position: relative; }
+      .krule .kr-t u::after { content: ""; position: absolute; left: -4px; right: -4px; bottom: -6px; height: 8px; border-radius: 4px; background: #e2c27a; box-shadow: 0 0 14px #e2c27a; transform: scaleX(var(--k, 0)); transform-origin: 0 50%; }
+      .krule .sheen { position: absolute; top: -40%; left: -40%; width: 26%; height: 180%; background: linear-gradient(90deg, transparent, rgba(255,236,190,.22), transparent); transform: rotate(18deg); pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="/*__TOTAL__*/" data-width="1080" data-height="1920">
+      <svg id="grain" width="1200" height="2040"><filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5" /></filter><rect width="1200" height="2040" filter="url(#nz)" /></svg>
+    </div>
+    <script>
+      const SCHED = /*__SCHEDULE__*/;
+      const SH = Object.fromEntries(SCHED.shots.map((s) => [s.key, s]));
+      const vo = (k, i = 0) => SH[k].vo[i].t;                       // voice start, relative to the shot
+      const voEnd = (k, i = 0) => SH[k].vo[i].t + SH[k].vo[i].dur;
+      const F = (k, i = 0, j = 0) => SH[k].vo[i].t + SH[k].vo[i].frags[j]; // start of caption fragment j
+      const D = (k) => SH[k].dur;
+      const fr = (wx, wy, s, sx = 540, sy = 760, extra = {}) => ({ x: wx - 540 - (sx - 540) / s, y: wy - 960 - (sy - 960) / s, s, ...extra });
+      const root = document.getElementById("root");
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // one caption per fragment of the spoken line, on the beat of the voice
+      function caps(k, lines, o = {}) {
+        const out = [];
+        (lines ?? SH[k].vo.map((_, i) => i)).forEach((i) => {
+          const v = SH[k].vo[i], fr = v.cap.split(" / ");
+          fr.forEach((txt, j) => out.push({ text: o.quote ? `“${txt}”` : txt, t: v.t + v.frags[j] - 0.06,
+            end: j + 1 < fr.length ? v.t + v.frags[j + 1] - 0.08 : Math.min(D(k) - 0.06, v.t + v.dur + (o.hold ?? 0.35)) }));
+        });
+        out.sort((a, b) => a.t - b.t);
+        for (let n = 0; n + 1 < out.length; n++) out[n].end = Math.min(out[n].end, out[n + 1].t - 0.03);
+        return out;
+      }
+      const bub = (k, i, x, y, tail, o = {}) => ({ text: `“${SH[k].vo[i].cap.replace(/ \/ /g, " ")}”`, x, y, tail, t: vo(k, i) - 0.05, end: o.end ?? Math.min(D(k) - 0.05, voEnd(k, i) + 0.35) });
+
+      // extra poses
+      Rig.MODES.selfie = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -42 + 2 * Math.sin(u * 1.7), faF: -16, uaB: 8, faB: -16, head: 4 + 2 * Math.sin(u * 2.3), torso: -1 });
+      Rig.MODES.laugh = (u, o) => { const b = Math.abs(Math.sin(u * 9)); return { ...Rig.MODES.idle(u, o), uaF: 14, faF: -110, uaB: -18, faB: -20, torso: -6 - 3 * b, head: -14 - 5 * b, bodyY: -3 * b }; };
+      Rig.MODES.shiver = (u, o) => { const j = Math.sin(u * 47) * 1.6; return { ...Rig.MODES.tremble(u, o), uaF: -110 + j, faF: -120, uaB: 110 - j, faB: 120, torso: 8 + j * 0.5, head: -4 + j }; };
+      Rig.MODES.stick = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -12, faF: -24 });
+      Rig.MODES.crouchTorch = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -70 + 4 * Math.sin(u * 1.3), faF: -10 });
+      const shakeH = (t) => 7 * Math.sin(t * 2.3) + 3 * Math.sin(t * 7.1);
+
+      // phone camera overlay: REC dot, running timecode, battery, optional face box that locks onto something
+      GameUI.C.rec = {
+        html: (id, o) => `<div id="${id}" class="rec${o.nv ? " nv" : ""}"><i class="br tl"></i><i class="br tr"></i><i class="br bl"></i><i class="br brr"></i>
+          <div class="top">${o.play ? `<span>▶ คลิปเมื่อคืน</span>` : `<span><i class="dot"></i>REC</span>`}<span class="tc">00:00:00</span><span>${o.nv ? "IR" : "4K"}<i class="bat"></i></span></div>
+          ${o.mode ? `<div class="mode">${o.mode}</div>` : ""}${o.play ? `<div class="scrub"><i></i></div>` : ""}${o.af ? `<div class="af" style="left:${o.af.x}px;top:${o.af.y}px;${o.af.w ? `width:${o.af.w}px;height:${o.af.h}px` : ""}"><b>${o.af.label}</b></div>` : ""}</div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), tc = el.querySelector(".tc"), c = { t: 0 }, base = o.tc0 || 0;
+          tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0);
+          tl.to(c, { t: o.dur, duration: o.dur, ease: "none", immediateRender: false, onUpdate: () => {
+            const s = base + c.t, f = Math.floor((s % 1) * 30), p2 = (v) => String(Math.floor(v)).padStart(2, "0");
+            tc.textContent = s >= 3600 ? `${Math.floor(s / 3600)}:${p2((s % 3600) / 60)}:${p2(s % 60)}` : `${p2(s / 60)}:${p2(s % 60)}:${p2(f)}`;
+          } }, t0);
+          if (o.play) tl.fromTo(`#${id} .scrub i`, { width: `${o.play[0]}%` }, { width: `${o.play[1]}%`, duration: o.dur, ease: "none", immediateRender: false }, t0);
+          if (!o.play) tl.fromTo(`#${id} .dot`, { opacity: 1 }, { opacity: 0.15, duration: 0.5, repeat: Math.ceil(o.dur / 0.5), yoyo: true, immediateRender: false }, t0);
+          if (o.af) {
+            const a = o.t0abs + o.af.at;
+            tl.fromTo(`#${id} .af`, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.18, ease: "back.out(2)", immediateRender: false }, a);
+            tl.to(`#${id} .af`, { opacity: 0.2, duration: 0.08, repeat: 5, yoyo: true }, a + 0.25);
+          }
+        },
+      };
+      // channel signature: a checklist ticked on "ทุกอย่าง… ถูกทาง", then one red cross on "เรื่องเดียว"
+      // the guide's rule card: rows stamp in at o.at[i] (seconds into the shot); the rhyming syllables get a gold underline
+      GameUI.C.koiRule = {
+        html: (id, o) => {
+          const IK = "#2e2a26", rows = [
+            [`<path d="M74,20C46,16 28,38 30,62C32,78 44,82 46,94C48,106 60,112 68,102C74,94 68,86 74,78C84,66 94,58 92,44C90,30 84,22 74,20Z" fill="#e9bc93" stroke="${IK}" stroke-width="4"/>
+              <path d="M76,40C66,34 52,40 54,54C56,62 64,62 64,70" stroke="${IK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+              ${[0, 1, 2].map((i) => `<path class="kw" d="M${22 - i * 9},${44 - i * 6}q-${10 + i * 3},${18 + i * 6} 0,${36 + i * 12}" stroke="#7a3fb0" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+              `ได้ยิน<strong>เสียง<u>กอย</u></strong>`],
+            [`<g class="krun"><circle cx="66" cy="28" r="10" fill="${IK}"/><path d="M62,40L52,66M52,66L70,78L66,98M52,66L36,82L24,80M60,46L78,56L90,50M60,46L44,52L36,64" stroke="${IK}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+              <g class="kno"><circle cx="60" cy="60" r="46" fill="none" stroke="#d8322a" stroke-width="9"/><path d="M28,28L92,92" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/></g>`,
+              `<em>อย่าวิ่ง</em><em>อย่า<u>ถอย</u></em>`],
+            [`<path d="M40,112C44,80 42,40 46,8H64C66,40 66,80 72,112Z" fill="#6a4a2e" stroke="${IK}" stroke-width="4"/><path d="M60,52Q84,46 108,38" stroke="#6a4a2e" stroke-width="10" stroke-linecap="round"/><circle cx="96" cy="24" r="16" fill="#4f8a55" stroke="${IK}" stroke-width="3"/><circle cx="30" cy="20" r="14" fill="#4f8a55" stroke="${IK}" stroke-width="3"/>
+              <g class="kclimb"><circle cx="84" cy="32" r="7" fill="#e8b830" stroke="${IK}" stroke-width="3"/><path d="M84,40v12M84,52l-6,10M84,52l7,9" stroke="${IK}" stroke-width="4" stroke-linecap="round"/></g>
+              <g transform="translate(18,78)"><path d="M0,0h22M0,30h22M3,0q8,15 0,30M19,0q-8,15 0,30" stroke="${IK}" stroke-width="3.5" fill="#f2c55c" stroke-linejoin="round"/><path class="ksand" d="M7,22h8l-4,-6z" fill="#c9a55a"/></g>`,
+              `<strong>ปีนต้นไม้</strong> แล้ว<u>คอย</u>`],
+          ];
+          return `<div id="${id}" class="krule" style="top:${o.top ?? 170}px"><i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i><i class="sheen"></i>
+            <div class="kr-h"><span>${o.label || "กฎของบังหมาด"}</span></div>
+            ${rows.map(([ill, txt], i) => `<div class="kr-r" id="${id}-r${i}"><div class="kr-i"><svg viewBox="0 0 120 120">${ill}</svg></div><div class="kr-t">${txt}</div></div>`).join("")}</div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.7)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .kr-h span`, { scaleX: 0.2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.08);
+          tl.fromTo(`#${id} .sheen`, { x: 0 }, { x: 1500, duration: 0.9, ease: "power1.inOut", immediateRender: false }, t0 + 0.25);
+          o.at.forEach((at, i) => {
+            const r = el.querySelector(`#${id}-r${i}`);
+            tl.fromTo(r, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.28, ease: "power2.out", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector(".kr-i"), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector("u"), { "--k": 0 }, { "--k": 1, duration: 0.35, ease: "power2.out", immediateRender: false }, A(at) + 0.3);
+          });
+          el.querySelectorAll(".kw").forEach((w, i) => tl.fromTo(w, { opacity: 0.1 }, { opacity: 1, duration: 0.28, repeat: 9, yoyo: true, immediateRender: false }, A(o.at[0]) + i * 0.1));
+          tl.fromTo(el.querySelector(".kno"), { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, svgOrigin: "60 60", duration: 0.22, ease: "power3.in", immediateRender: false }, A(o.at[1]) + 0.2);
+          tl.fromTo(el.querySelector(".kclimb"), { y: 46 }, { y: 0, duration: 0.8, ease: "power1.out", immediateRender: false }, A(o.at[2]));
+          tl.fromTo(el.querySelector(".ksand"), { scaleY: 1 }, { scaleY: 0.2, svgOrigin: "11 22", duration: 1.6, ease: "none", immediateRender: false }, A(o.at[2]) + 0.4);
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, y: -30, duration: 0.25 }, A(o.end));
+        },
+      };
+      GameUI.C.checklist = {
+        html: (id, o) => `<div id="${id}" class="chk"><div class="chk-t">${o.title}</div>${o.items.map(([txt, ok], i) => `<div class="chk-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="box"><b>${ok ? "✓" : "✗"}</b></span><span class="tx">${txt}</span></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t;
+          tl.fromTo(`#${id}`, { opacity: 0, y: 40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.8)", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, A(o.show[i]));
+            tl.fromTo(`#${id}-r${i} .box b`, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(3)", immediateRender: false }, A(o.mark[i]));
+            if (ok) tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)" }, { borderColor: "#7fd1b9", duration: 0.2, immediateRender: false }, A(o.mark[i]));
+            else {
+              tl.fromTo(`#${id}-r${i} .box`, { opacity: 1 }, { opacity: 0.25, duration: 0.18, repeat: 5, yoyo: true, immediateRender: false }, A(o.show[i]));
+              tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)", boxShadow: "0 0 0 0 rgba(255,90,74,.9)" }, { borderColor: "#ff5a4a", boxShadow: "0 0 0 26px rgba(255,90,74,0)", duration: 0.5, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}`, { x: 0 }, { x: 10, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}`, { borderColor: "rgba(255,90,74,.8)", duration: 0.2 }, A(o.mark[i]));
+            }
+          });
+        },
+      };
+
+      // extra illustrations for the knowledge cards
+      Object.assign(GameUI.ILL, {
+        muddy: `<path d="M10,70q25,-14 50,0t50,0V110H10Z" fill="#9c7d55" stroke="#2e2a26" stroke-width="4"/><path class="a-bob" d="M30,40q30,-20 60,0" stroke="#7fb3ab" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M30,84q8,-4 16,0M64,92q8,-4 16,0" stroke="#5a4636" stroke-width="4" fill="none"/>`,
+        rise: `<rect x="20" y="20" width="16" height="90" rx="4" fill="#e9dcc0" stroke="#2e2a26" stroke-width="4"/>${[0, 1, 2, 3].map((k) => `<path d="M36,${34 + k * 20}h10" stroke="#2e2a26" stroke-width="4"/>`).join("")}<path class="a-pulse" d="M60,104V40M44,58l16,-20 16,20" stroke="#e8705a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M10,96q20,-10 40,0t40,0t30,0" stroke="#7fb3ab" stroke-width="7" fill="none"/>`,
+        roar: `<path d="M14,96L46,40L60,62L76,34L106,96Z" fill="#3e5a44" stroke="#2e2a26" stroke-width="4" stroke-linejoin="round"/>${[0, 1, 2].map((k) => `<path class="a-wave" data-i="${k}" d="M${70 + k * 12},${20 + k * 4}q${12 + k * 4},${14} 0,${28 + k * 4}" stroke="#f2c55c" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+        leech: `<path d="M24,86C10,60 30,30 60,26C92,22 104,44 96,62C88,80 66,70 58,82C50,94 34,100 24,86Z" fill="#3b3a22" stroke="#2e2a26" stroke-width="4"/><path d="M40,48q8,8 0,18M56,38q8,10 0,22M72,40q8,10 2,22" stroke="#6d6a3a" stroke-width="3" fill="none"/>`,
+        drop: `<path class="a-bob" d="M60,16C40,46 30,62 30,78a30,30 0 0 0 60,0C90,62 80,46 60,16Z" fill="#c0392b" stroke="#2e2a26" stroke-width="4"/><path d="M46,78a14,14 0 0 0 10,14" stroke="#f4ecd8" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/>`,
+      });
+
+      const shots = [];
+      const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec });
+      const FA_ARM = { sleeve: "#e8b830", skin: "#ebbd95", cuff: "#c4931c" };
+
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .zchk { position: absolute; left: 80px; width: 920px; z-index: 52; opacity: 0; font-family: Kanit; }
+        .zchk .zc-in { position: relative; padding: 26px 36px 30px; border-radius: 28px; overflow: hidden;
+          background: linear-gradient(180deg, rgba(16,20,22,.95), rgba(7,9,11,.97)); border: 4px solid rgba(244,236,216,.3); box-shadow: 0 24px 60px rgba(0,0,0,.7); }
+        .zchk .zc-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 6px); pointer-events: none; }
+        .zchk .zc-bar { position: absolute; left: 0; right: 0; top: 0; height: 110px; background: linear-gradient(180deg, transparent, rgba(255,60,50,.32), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-h { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+        .zchk .zc-dot { width: 20px; height: 20px; border-radius: 50%; background: #ff4a3a; box-shadow: 0 0 14px #ff4a3a; flex: none; }
+        .zchk .zc-h b { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; flex: 1; }
+        .zchk .zc-tally { font: 900 46px/1 Kanit; color: #7fd1b9; min-width: 120px; text-align: right; }
+        .zchk .zc-r { position: relative; display: flex; align-items: center; gap: 26px; padding: 14px 14px; margin: 0 -14px; border-top: 2px solid rgba(244,236,216,.1); opacity: 0; border-radius: 16px; }
+        .zchk .zc-sw { position: absolute; inset: 0; overflow: hidden; border-radius: 16px; pointer-events: none; }
+        .zchk .zc-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(127,209,185,.45), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-box { width: 86px; height: 86px; border-radius: 18px; border: 5px solid rgba(244,236,216,.55); flex: none; position: relative; box-sizing: border-box; }
+        .zchk .zc-box svg { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; overflow: visible; }
+        .zchk .ck { fill: none; stroke: #7fd1b9; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 90; stroke-dashoffset: 90; }
+        .zchk .xx { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; opacity: 0; } .zchk .xx svg { left: 0; top: 0; }
+        .zchk .xx path { stroke: #fff; stroke-width: 12; stroke-linecap: round; }
+        .zchk .zc-t { font: 900 60px/1.1 Kanit; color: #f4ecd8; position: relative; }
+        .zchk .bad .zc-t { color: #ff8a7a; letter-spacing: 8px; }
+        .zchk .zc-box svg.zc-crack { left: 38px; top: 38px; width: 2px; height: 2px; overflow: visible; pointer-events: none; }
+        .zchk .zc-crack path { fill: none; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .zchk .zc-crack .c1 { stroke: rgba(0,0,0,.6); stroke-width: 7; } .zchk .zc-crack .c2 { stroke: rgba(255,240,230,.92); stroke-width: 2.6; }
+      </style>`);
+      GameUI.C.sigCard = {
+        html: (id, o) => {
+          const r = (() => { let q = 23; return () => ((q = (q * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+          let cracks = "";
+          for (let k = 0; k < 7; k++) {
+            let x = 0, y = 0, d = "M0,0", br = "";
+            const ang = -1.7 + k * 0.29;
+            for (let j = 0; j < 8; j++) {
+              const a2 = ang + (r() - 0.5) * 0.8, L = 45 + r() * 75;
+              x += Math.cos(a2) * L; y += Math.sin(a2) * L; d += `L${x.toFixed(0)},${y.toFixed(0)}`;
+              if (j === 2 || j === 5) { const ba = a2 + (r() > 0.5 ? 0.9 : -0.9); br += `M${x.toFixed(0)},${y.toFixed(0)}l${(Math.cos(ba) * 70).toFixed(0)},${(Math.sin(ba) * 70).toFixed(0)}l${(Math.cos(ba + 0.4) * 40).toFixed(0)},${(Math.sin(ba + 0.4) * 40).toFixed(0)}`; }
+            }
+            cracks += `<path class="c1" d="${d}${br}"/><path class="c2" d="${d}${br}"/>`;
+          }
+          return `<div id="${id}" class="zchk" style="top:${o.top ?? 470}px"><div class="zc-in" id="${id}-in"><div class="zc-scan"></div><div class="zc-bar" id="${id}-bar"></div>
+            <div class="zc-h"><span class="zc-dot" id="${id}-dot"></span><b>${o.title}</b><span class="zc-tally" id="${id}-tally">✓ 0</span></div>
+            ${o.items.map(([txt, ok], i) => `<div class="zc-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="zc-sw"><i class="zc-sweep"></i></span><span class="zc-box">${ok
+              ? `<svg viewBox="0 0 86 86"><path class="ck" d="M20,45 L37,61 L67,25"/></svg>`
+              : `<span class="xx"><svg viewBox="0 0 86 86"><path d="M22,22L64,64M64,22L22,64"/></svg></span><svg class="zc-crack" id="${id}-crack">${cracks}</svg>`}</span><span class="zc-t">${txt}</span></div>`).join("")}
+            </div></div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id), inner = document.getElementById(`${id}-in`);
+          const bar = document.getElementById(`${id}-bar`), tally = document.getElementById(`${id}-tally`), dot = document.getElementById(`${id}-dot`);
+          const qtx = el.querySelector(`#${id}-r${o.items.length - 1} .zc-t`), S3 = o.show[o.items.length - 1], X = o.mark[o.items.length - 1];
+          const GL = ["???", "?▓?", "▒?░", "??▓", "░▒▓", "?!?", "▓?▒", "?░?"];
+          const h = (n) => { const v = Math.sin(n * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+          // entrance: flicker on like a failing screen, with a colour split that settles
+          tl.fromTo(`#${id}`, { opacity: 0, scale: 1.08, filter: "drop-shadow(14px 0 0 rgba(255,40,60,.8)) drop-shadow(-14px 0 0 rgba(40,220,255,.8))" },
+            { opacity: 1, scale: 1, filter: "drop-shadow(0px 0 0 rgba(255,40,60,0)) drop-shadow(0px 0 0 rgba(40,220,255,0))", duration: 0.32, ease: "power3.out", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.2, ease: "power3.out", immediateRender: false }, A(o.show[i]));
+            if (ok) {
+              tl.fromTo(`#${id}-r${i} .ck`, { strokeDashoffset: 90 }, { strokeDashoffset: 0, duration: 0.18, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)", boxShadow: "0 0 0 0 rgba(127,209,185,.9)" }, { borderColor: "#7fd1b9", boxShadow: "0 0 0 22px rgba(127,209,185,0)", duration: 0.4, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-sweep`, { opacity: 1, x: -380 }, { opacity: 0, x: 1100, duration: 0.45, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}-r${i}`, { opacity: 0.42, filter: "saturate(.3)", duration: 0.3 }, A(S3) + 0.05);   // the good news fades while ??? takes over
+            } else {
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)" }, { borderColor: "#ff5a4a", duration: 0.12, repeat: 7, yoyo: true, immediateRender: false }, A(S3));
+              tl.fromTo(`#${id}-r${i} .xx`, { opacity: 0, scale: 3.2 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.14, ease: "power4.in", immediateRender: false }, A(X));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { backgroundColor: "rgba(216,50,42,0)", borderColor: "#ff5a4a", boxShadow: "0 0 0 0 rgba(255,90,74,.95)" },
+                { backgroundColor: "rgba(216,50,42,1)", borderColor: "#ff5a4a", boxShadow: "0 0 0 40px rgba(255,90,74,0)", duration: 0.45, immediateRender: false }, A(X) + 0.12);
+              tl.fromTo(`#${id}-r${i}`, { backgroundColor: "rgba(216,50,42,0)" }, { backgroundColor: "rgba(216,50,42,.35)", duration: 0.2, immediateRender: false }, A(X) + 0.12);
+            }
+          });
+          tl.fromTo(`#${id}-crack path`, { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.015, ease: "power3.out", immediateRender: false }, A(X) + 0.12);
+          // per-frame state: tally, scrambling ???, heartbeat border, scan bar, shake, dying-screen flicker
+          const clock = { t: 0 }, Dsh = D("sig");
+          const render = () => {
+            const t = clock.t, sus = Math.min(1, Math.max(0, (t - S3) / (X - S3))), after = t >= X + 0.12;
+            const n = o.mark.filter((m, i) => o.items[i][1] && t >= m).length;
+            tally.textContent = after ? "✗ 1" : `✓ ${n}`; tally.style.color = after ? "#ff5a4a" : "#7fd1b9";
+            qtx.textContent = t >= S3 && t < X + 0.12 ? GL[Math.floor(t * 18) % GL.length] : "???";
+            const beat = Math.pow(Math.max(0, Math.sin((2 * Math.PI * (t - S3)) / 0.38)), 4) * (t >= S3 && !after ? 0.35 + 0.65 * sus : 0);
+            inner.style.borderColor = after ? "#ff4a3a" : `rgba(255,${Math.round(236 - 170 * beat)},${Math.round(216 - 160 * beat)},${(0.3 + 0.7 * beat).toFixed(2)})`;
+            inner.style.boxShadow = after ? "0 0 46px rgba(255,60,50,.55), 0 24px 60px rgba(0,0,0,.7)" : `0 0 ${Math.round(50 * beat)}px rgba(255,60,50,${(0.8 * beat).toFixed(2)}), 0 24px 60px rgba(0,0,0,.7)`;
+            bar.style.opacity = t >= S3 && !after ? (0.4 + 0.5 * sus).toFixed(2) : 0;
+            bar.style.transform = `translateY(${Math.round((((t - S3) * 1.7) % 1) * 560 - 110)}px)`;
+            dot.style.opacity = Math.floor(t * (after ? 8 : 2.5)) % 2 ? 0.25 : 1;
+            const amp = after ? 2 + 20 * Math.exp(-(t - X) * 5) : t >= S3 ? 1 + 6 * sus * sus : 0, k = Math.floor(t * 30);
+            const fl = after && t > X + 0.4 && h(k * 3.1) > 0.82 ? 0.45 : 1;
+            inner.style.transform = `translate(${((h(k) - 0.5) * 2 * amp).toFixed(1)}px,${((h(k + 0.5) - 0.5) * 2 * amp).toFixed(1)}px) rotate(${((h(k + 0.25) - 0.5) * amp * 0.12 + (after ? -1.6 : 0)).toFixed(2)}deg)`;
+            inner.style.opacity = fl;
+          };
+          tl.to(clock, { t: Dsh, duration: Dsh, ease: "none", immediateRender: false, onUpdate: render }, o.t0abs);
+          render();
+        },
+      };
+      const SF = (j) => F("sig", 0, j);
+
+      // ---------- ควันหลง EP.1 ประตูร้อน: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      // room 714 framings (world points of the panorama; see kwan.js)
+      const V = {
+        ceil: fr(1450, 230, 1.05, 540, 900),         // lying in bed, looking up
+        door: fr(545, 1060, 1.05, 540, 1000),         // standing, facing the door
+        knob: fr(730, 1110, 1.9, 600, 1000),
+        notice: fr(545, 1025, 2.6, 540, 920),
+        hw: fr(560, 1112, 3.3, 540, 900),             // the handwriting
+        sign: fr(600, 1172, 4.6, 540, 900),           // "— ดาว 714 / 2539"
+        gap: fr(540, 1500, 2.3, 540, 1250),           // crouched at the gap under the door
+        bed: fr(1650, 1230, 1.12, 540, 1000),         // แพร's bed
+        win: fr(2740, 1010, 1.12, 540, 900),
+        floor: fr(1500, 1470, 1.3, 540, 760),         // flat on the floor, looking under แพร's bed
+      };
+      // the phone torch on a shot: o = Pov.torch options; returns { extra, drive } to merge into the spec
+      const torch = (k, o) => { const T = Pov.torch(`t-${k}`, o); return { extra: (L) => put(L.light, T.markup), drive: T.drive }; };
+      const withTorch = (k, o, spec) => {
+        const T = torch(k, o), ex = spec.extra, f = spec.fx;
+        return { ...spec, extra(L, id) { if (ex) ex(L, id); T.extra(L, id); }, fx(tl, id, t0, L) { T.drive(tl, t0, D(k)); if (f) f(tl, id, t0, L); } };
+      };
+      const knock = (tl, t, n = 3, gap = 0.22) => { for (let i = 0; i < n; i++) tl.fromTo("#rm-door", { attr: { transform: "translate(0,0)" } }, { attr: { transform: `translate(${i % 2 ? -5 : 6},0)` }, duration: 0.05, yoyo: true, repeat: 1, immediateRender: false }, t + i * gap); };
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      const RM = (o = {}) => ({ id: "rm", ...o });
+      // ---------- "คุณ" seen from outside (user: "ไม่ได้หมายถึงให้ทำแต่มุมมองคนที่1 แค่ให้ทำหลายๆมุมกล้อง"): the story now cuts between
+      // your own eyes and other angles — wide, low, from the floor, over your shoulder, from the street. You: a first-year in blue
+      // pyjamas (the same sleeves as the first-person hands), hair in a messy bun, barefoot.
+      Rig.CAST.you = {
+        skin: "#ecc19a", skinS: "#cc9a74", top: "#5d6f8f", topS: "#4a5a78", sleeve: "#5d6f8f", sleeveS: "#4a5a78", forearm: "#5d6f8f", forearmS: "#4a5a78",
+        pants: "#5d6f8f", pantsS: "#4a5a78", shoe: "#ecc19a", belt: "#4a5a78",
+        torsoExtra: `<path d="M-30,-484L0,-452L30,-484" fill="#7f91b2" stroke="#2e2a26" stroke-width="3.5" stroke-linejoin="round"/>${[-430, -395, -360].map((y) => `<circle cx="0" cy="${y}" r="4" fill="#e8e4d8"/>`).join("")}
+          ${[[-34, -440], [26, -420], [-20, -380], [34, -360], [-36, -340]].map(([x, y]) => `<path d="M${x},${y - 7}l2,5l5,1l-4,3l1,5l-4,-3l-4,3l1,-5l-4,-3l5,-1z" fill="#e8e4d8" opacity=".75"/>`).join("")}
+          <path d="M-56,-334H56" stroke="#7f91b2" stroke-width="8"/>`,
+        hair: `<path d="M-48,-540Q-56,-606 0,-610Q54,-606 48,-544Q44,-524 36,-512Q34,-560 28,-574Q-2,-560 -32,-572Q-40,-540 -40,-514Q-50,-522 -48,-540Z" fill="#2a201c" stroke="#2e2a26" stroke-width="3.5"/>
+          <circle cx="8" cy="-622" r="27" fill="#2a201c" stroke="#2e2a26" stroke-width="3.5"/><path d="M-6,-600q-14,-30 6,-44M24,-604q16,-20 2,-40" stroke="#2a201c" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M-44,-548q-12,24 -4,44M42,-552q10,22 4,40" stroke="#2a201c" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M-16,-600q16,-8 34,0" stroke="#e07a8a" stroke-width="7" fill="none" stroke-linecap="round"/>`,
+        face: `<g fill="#e0907a" opacity=".55"><ellipse cx="-26" cy="-526" rx="8" ry="4"/><ellipse cx="32" cy="-526" rx="8" ry="4"/></g>`,
+      };
+      // flat on the floor under the smoke, pulling yourself forward (the whole body tipped over like "lie", arms reaching ahead)
+      Rig.MODES.crawl = (u, o) => { const w = Math.sin(u * 2 * Math.PI / 0.9); return { ...Rig.MODES.lie(u, o), thF: -14 + 12 * w, shF: 30 + 10 * w, thB: 6 - 12 * w, shB: 24 - 10 * w, uaF: -160 + 16 * w, faF: -10, uaB: -150 - 16 * w, faB: -14, head: -30, rootR: -82, rootY: -30 }; };
+      // sitting on the floor at the door, both arms reaching forward (pushing the towel into the gap)
+      Rig.MODES.kneelPush = (u, o) => { const w = Math.sin(u * 2 * Math.PI / 0.6); return { ...Rig.MODES.sit(u, o), torso: 24, head: -10, uaF: -84 + 10 * w, faF: -12, uaB: -76 + 10 * w, faB: -10 }; };
+      // a sleeve over the mouth, coughing
+      Rig.MODES.coughing = (u, o) => { const j = Math.max(0, Math.sin(u * 9)) * 6; return { ...Rig.MODES.whistle(u, o), torso: 8 + j, head: 6 + j * 0.8, bodyY: 6 + j * 0.6 }; };
+      const YOU = (x, y, s, track, extra = {}) => ({ who: "you", x, y, s, track, blinks: [1.1, 3.3, 5.2], ...extra });
+      // your back from just behind your shoulder (screen space, a dark silhouette with a cold rim light)
+      const youBack = (id, x, y, s = 1) => `<g id="${id}" transform="translate(${x},${y}) scale(${s})">
+          <path d="M-330,760C-330,430 -240,280 -120,250L-74,196Q0,176 74,196L120,250C240,280 330,430 330,760Z" fill="#232c3e"/>
+          <path d="M120,250C240,280 330,430 330,760" stroke="#9fb2d6" stroke-width="12" fill="none" opacity=".55"/>
+          <path d="M-120,250C-240,280 -330,430 -330,760" stroke="#7f91b2" stroke-width="10" fill="none" opacity=".45"/>
+          <ellipse cx="0" cy="60" rx="128" ry="150" fill="#1b2230"/><circle cx="14" cy="-112" r="66" fill="#1b2230"/><path d="M128,60C130,-40 70,-88 0,-90" stroke="#9fb2d6" stroke-width="9" fill="none" opacity=".5"/>
+          <path d="M-128,60C-130,-40 -70,-88 0,-90" stroke="#7f91b2" stroke-width="8" fill="none" opacity=".4"/>
+          ${[[-60, -40], [-90, 30], [80, -30]].map(([a, b]) => `<path d="M${a},${b}q-14,40 -4,84" stroke="#12161f" stroke-width="10" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+      // her room seen from the street: your silhouette in the seventh-floor window, waving the phone torch
+      const winWave = (id) => `<g id="${id}"><rect x="326" y="700" width="104" height="84" fill="#2a3040" opacity=".9"/>
+          <g transform="translate(372,786)"><path d="M-22,0C-24,-30 -18,-44 0,-46C18,-44 24,-30 22,0Z" fill="#0c0f16"/><circle cx="0" cy="-56" r="13" fill="#0c0f16"/><circle cx="2" cy="-72" r="7" fill="#0c0f16"/>
+            <g id="${id}-arm" transform="rotate(0 14 -36)"><path d="M14,-36L34,-74" stroke="#0c0f16" stroke-width="8" stroke-linecap="round"/><circle cx="34" cy="-76" r="5" fill="#fffbe8"/>
+              <circle cx="34" cy="-76" r="40" fill="#fff6dc" opacity=".35"/><circle cx="34" cy="-76" r="90" fill="#fff6dc" opacity=".12"/></g></g></g>`;
+
+      // ---------- ควันหลง EP.2 ทางเดินมืด: camera angles mix your own eyes with wide, side and low shots ----------
+      const CZ = Kwan.corridorZ;
+      const mk = (seed) => () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+      const strobe = (tl, sel, t0, dur, p = 0.32) => { for (let t = 0; t < dur; t += p) { tl.set(sel, { opacity: 1 }, t0 + t); tl.set(sel, { opacity: 0.08 }, t0 + t + p / 2); } };
+      const DAO_SIT = (tl, t0) => {
+        tl.set("#rm-daoat", { attr: { transform: "translate(1600,1300)" } }, t0);
+        tl.set("#rm-dao-up", { attr: { transform: "rotate(-4)" } }, t0); tl.set("#rm-dao-head", { attr: { transform: "translate(0,-262) rotate(-14)" } }, t0);
+        tl.set("#rm-dao-arm", { attr: { transform: "translate(56,-200) rotate(-70)" } }, t0); tl.set("#rm-blanket", { opacity: 0 }, t0);
+      };
+
+      // ---------- 0. EP.1's last image: ดาว sitting up on แพร's bed; the picture tears ----------
+      add("recap", withTorch("recap", { keys: [{ t: 0, x: 520, y: 900, r: 380 }], dark: 0.66, flicker: [[0.3, 1.6]] }, {
+        set: "room", setOpts: RM({ smokeY: 880, towel: "gap", dao: true }), dark: 0.4,
+        cam: { keys: [{ t: 0, ...fr(1420, 1040, 1.7, 540, 1000), drift: { s: 0.04 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        fx(tl, id, t0) {
+          DAO_SIT(tl, t0);
+          Fx.heart(tl, t0, D("recap"), 0.38, 0.7);
+          Fx.glitch(tl, `#${id}`, t0 + 0.2, 0.2, 14, 201); Fx.glitch(tl, `#${id}`, t0 + D("recap") - 0.35, 0.35, 22, 202);
+        },
+      }));
+
+      // ---------- 1. the fire-escape plan on the back of the door: you are here, 714; the title ----------
+      add("hook", withTorch("hook", { keys: [{ t: 0, x: 540, y: 980, r: 420 }, { t: 2.4, x: 600, y: 1060, r: 360 }], dark: 0.6, noHand: true }, {
+        set: "escapePlan", setOpts: { id: "ep" }, dark: 0.2,
+        cam: { keys: [{ t: 0, ...fr(540, 970, 0.82, 540, 960), drift: { s: 0.02 } }, { t: 2.3, glide: 1.4, ...fr(675, 1090, 1.45, 540, 960), drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          document.getElementById(id).insertAdjacentHTML("beforeend", `<div class="op" id="${id}-t" style="top:250px"><div class="op-ep"><b>EP.2</b><span>ทางเดินมืด</span></div></div>`);
+          tl.fromTo(`#${id}-t .op-ep`, { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power4.in", immediateRender: false }, t0 + 0.25);
+          tl.to(`#${id}-t .op-ep`, { opacity: 0, y: -30, duration: 0.3 }, t0 + 2.2);
+          tl.fromTo("#ep-here", { scale: 1, svgOrigin: "585 700" }, { scale: 1.35, duration: 0.3, repeat: 15, yoyo: true, immediateRender: false }, t0);
+          tl.fromTo("#ep-route", { opacity: 0.25 }, { opacity: 1, duration: 0.4, repeat: 7, yoyo: true, immediateRender: false }, t0 + 1.2);
+        },
+      }));
+
+      // ---------- 2. wide, from behind ดาว: you at the door, your hand on the knob; she whispers ----------
+      add("knob", {
+        set: "room", setOpts: RM({ smokeY: 860, towel: "gap" }), dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(640, 1200, 0.74, 540, 1060), drift: { s: 0.025 } }] },
+        actors: [YOU(940, 1790, 1.34, [{ t: 0, mode: "point", eyes: "side", mouth: "flat", sweat: true }, { t: vo("knob", 1), mode: "tremble", eyes: "wide", mouth: "o", sweat: true }], { flip: true })],
+        captions: [...caps("knob", [0]), ...caps("knob", [1], { quote: true })],
+        extra(L) { put(L.light, `<g id="kn-daofg" transform="translate(1010,1880) scale(1.75)" style="filter:blur(3px)">${Kwan.daoSit("kn-dao")}</g>`); },
+        fx(tl, id, t0) {
+          tl.set("#kn-dao-up", { attr: { transform: "rotate(-4)" } }, t0);
+          tl.fromTo("#kn-dao-head", { attr: { transform: "translate(0,-262) rotate(-6)" } }, { attr: { transform: "translate(0,-262) rotate(-24)" }, duration: 1.4, ease: "sine.inOut", immediateRender: false }, t0 + vo("knob", 1) - 0.4);
+          tl.fromTo("#kn-dao-arm", { attr: { transform: "translate(56,-200) rotate(-10)" } }, { attr: { transform: "translate(56,-200) rotate(-60)" }, duration: 1.6, ease: "power2.inOut", immediateRender: false }, t0 + vo("knob", 1));
+          Fx.heart(tl, t0 + vo("knob", 1), D("knob") - vo("knob", 1), 0.45, 0.55);
+          Fx.glitch(tl, `#${id}`, t0 + vo("knob", 1) + 0.2, 0.15, 8, 203);
+        },
+      });
+
+      // ---------- 3. low at the gap: water running in under the door; up to your fist on the cooled knob ----------
+      add("cool", withTorch("cool", { keys: [{ t: 0, x: 540, y: 1250, r: 330 }, { t: 1.7, x: 640, y: 1000, r: 320 }], dark: 0.58, noHand: true }, {
+        set: "room", setOpts: RM({ smokeY: 820, towel: "gap" }), dark: 0.32,
+        cam: { keys: [{ t: 0, ...V.gap, drift: { x: 6, s: 0.02 } }, { t: F("cool", 0, 1) + 0.1, glide: 0.8, ...V.knob, drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("cool"),
+        extra(L) {
+          put(L.set, `<g id="cl-water">${[0, 1, 2, 3, 4, 5].map((k) => `<ellipse class="wv" cx="${330 + k * 80}" cy="${1550 + (k % 3) * 22}" rx="${70 + (k % 2) * 30}" ry="9" fill="#bfe0ff" opacity=".45"/>`).join("")}
+            <path d="M300,1520Q540,1560 790,1520L800,1600Q540,1640 290,1600Z" fill="#9ec3ff" opacity=".22"/></g>`);
+          put(L.light, Pov.reach("rh-cool", { x: 1180, y: 2200 }));
+        },
+        fx(tl, id, t0) {
+          document.querySelectorAll(`#${id} .wv`).forEach((w, k) => tl.fromTo(w, { x: -40 }, { x: 60, duration: 0.9 + k * 0.1, repeat: 5, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+          tf(tl, "#rh-cool", t0 + F("cool", 0, 1) + 0.3, 0.8, "translate(760,1170) rotate(0)", "power2.out");
+          for (let i = 0; i < 6; i++) tl.to("#rh-cool", { attr: { transform: `translate(${758 + (i % 2) * 4},1170) rotate(0)` }, duration: 0.15 }, t0 + F("cool", 0, 1) + 1.2 + i * 0.15);
+        },
+      }));
+
+      // ---------- 4. side on: the door eases open on the dark — ready to shut it ----------
+      const SLOW = (k) => F("slow", k > 1 ? 1 : 0, k > 1 ? k - 2 : k);
+      add("slow", {
+        set: "room", setOpts: RM({ smokeY: 820, towel: "gap" }), dark: 0.48,
+        cam: { keys: [{ t: 0, ...fr(700, 1160, 0.86, 540, 1080), drift: { s: 0.02 } }] },
+        actors: [YOU(960, 1780, 1.3, [{ t: 0, mode: "point", eyes: "side", mouth: "flat", sweat: true }, { t: vo("slow", 1), mode: "tremble", eyes: "wide", mouth: "o", sweat: true }], { flip: true })],
+        captions: caps("slow"),
+        ui: [steps("slow", "ถ้าต้องเปิดประตู", [["doorslow", "เปิดช้าๆ"], ["smokegap", "ควันหนา"], ["doorhot", "ไฟ"], ["closedoor", "ปิดทันที"]], vo("slow") + 0.6, D("slow") - 0.15, { gap: (vo("slow", 1) - vo("slow") + 0.6) / 3 })],
+        extra(L) {
+          const door = L.set.querySelector("#rm-door");
+          door.insertAdjacentHTML("beforebegin", `<g><rect x="306" y="596" width="468" height="920" fill="#050606"/>${Pov.smoke(mk(5), { x0: 320, x1: 760, y0: 600, y1: 1500, n: 6, op: 0.8 })}</g>`);
+        },
+        fx(tl, id, t0) {
+          const op = (t, d, k) => tl.to([`#${id} #rm-door`, `#${id} #rm-knob`], { attr: { transform: `translate(290,0) scale(${k},1) translate(-290,0)` }, duration: d, ease: "sine.inOut" }, t0 + t);
+          tl.set([`#${id} #rm-door`, `#${id} #rm-knob`], { attr: { transform: "translate(290,0) scale(1,1) translate(-290,0)" } }, t0);
+          op(0.6, 2.4, 0.78); op(vo("slow", 1) + 0.6, 0.35, 0.94); op(vo("slow", 1) + 1.2, 0.8, 0.84);
+          Fx.heart(tl, t0 + vo("slow", 1), D("slow") - vo("slow", 1), 0.45, 0.4);
+        },
+      });
+
+      // ---------- 5. through the gap: แพร's face in the smoke ----------
+      add("prae", {
+        set: "doorGap", setOpts: { id: "dg" }, dark: 0.18,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.05 } }] },
+        shake: Pov.head({ mode: "panic", flinch: [0.12] }),
+        captions: caps("prae", undefined, { quote: true }),
+        fx(tl, id, t0) {
+          tl.fromTo("#dg-prae", { attr: { transform: "translate(560,1060) scale(1.1)" } }, { attr: { transform: "translate(560,980) scale(1.25)" }, duration: 0.3, ease: "power3.out", immediateRender: false }, t0);
+          for (let i = 0; i < 6; i++) tl.to("#dg-prae", { attr: { transform: `translate(${560 + (i % 2 ? -10 : 10)},${980 - (i % 2) * 8}) scale(1.25)` }, duration: 0.12 }, t0 + 0.4 + i * 0.32);
+        },
+      });
+
+      // ---------- 6. wide down the corridor: you step out into the black ----------
+      add("dark", {
+        set: "corridor", setOpts: { id: "cd1", smoke: 0.45 }, dark: 0.55,
+        cam: { keys: [{ t: 0, x: 0, y: 40, s: 0.92, drift: { s: 0.03 } }] },
+        actors: [YOU(860, 1500, 0.84, [{ t: 0, mode: "torch", eyes: "side", mouth: "o", torch: true, sweat: true }], { flip: true, moveTo: { x: 760, y: 1530, dur: 2.4, ease: "power1.out" } })],
+        captions: caps("dark"),
+        extra(L) { put(L.glow, `<ellipse cx="560" cy="1640" rx="380" ry="90" fill="url(#pvPoolLit)" opacity=".9"/>`); },
+        fx(tl, id, t0) { Fx.heart(tl, t0 + 0.8, D("dark") - 0.8, 0.5, 0.3); },
+      });
+
+      // ---------- 7. side on: you pull 714's door shut behind you; inside, knocking — and her voice ----------
+      add("close", {
+        set: "corridorSide", setOpts: { id: "cs1", smokeY: 700 }, dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(900, 1120, 0.78, 540, 1000), drift: { s: 0.02 } }] },
+        actors: [YOU(1180, 1720, 1.3, [{ t: 0, mode: "point", eyes: "side", mouth: "flat", torch: true, sweat: true }, { t: vo("close", 1) - 0.4, mode: "tremble", eyes: "wide", mouth: "scream", torch: true, sweat: true }], { flip: true, moveTo: { x: 1300, y: 1760, dur: 0.6, at: vo("close", 1) - 0.4 } })],
+        captions: [...caps("close", [0]), ...caps("close", [1], { quote: true })],
+        ui: [steps("close", "ออกจากห้องแล้ว", [["shutbehind", "ปิดประตูตามหลัง"]], F("close", 0, 1) - 0.2, vo("close", 1) - 0.1)],
+        extra(L) { put(L.glow, `<ellipse cx="1150" cy="1720" rx="300" ry="80" fill="url(#pvPoolLit)" opacity=".8"/>`); },
+        fx(tl, id, t0) {
+          tl.fromTo("#cs1-d714", { attr: { transform: "translate(600,0) scale(0.18,1) translate(-600,0)" } }, { attr: { transform: "translate(600,0) scale(1,1) translate(-600,0)" }, duration: 0.9, ease: "power2.in", immediateRender: false }, t0 + F("close", 0, 1) - 0.1);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("close", 0, 1) + 0.8, 1.04, 0.3);
+          const k0 = t0 + vo("close", 1) - 0.5;
+          for (let i = 0; i < 9; i++) tl.fromTo("#cs1-d714", { attr: { transform: "translate(0,0)" } }, { attr: { transform: `translate(${i % 2 ? -6 : 7},0)` }, duration: 0.05, yoyo: true, repeat: 1, immediateRender: false }, k0 + i * 0.2 + (i > 4 ? 0.3 : 0));
+          Fx.heart(tl, k0, D("close") - (k0 - t0), 0.42, 0.55); Fx.glitch(tl, `#${id}`, k0 + 0.4, 0.2, 10, 205);
+        },
+      });
+
+      // ---------- 8. your eyes: the smoke rolls down, the torch beam dies in it ----------
+      add("blind", withTorch("blind", { keys: [{ t: 0, x: 540, y: 1000, r: 380 }, { t: 3, x: 520, y: 1080, r: 300 }, { t: 5.5, x: 540, y: 1100, r: 220 }], dark: 0.66, beam: 0.9, hand: [230, 1700] }, {
+        set: "corridor", setOpts: { id: "cd2", smoke: 0.8 }, dark: 0.4,
+        cam: { keys: [{ t: 0, x: 0, y: 30, s: 1.0, drift: { s: 0.02 } }] },
+        shake: Pov.head({ mode: "walk", modes: [[2.0, "panic"]], cough: [3.6] }),
+        captions: caps("blind"),
+        ui: [{ type: "tip", t: F("blind", 0, 1) - 0.1, ill: "firedark", label: "ไฟไหม้", text: "ไม่สว่างอย่างที่คิด<br>[ควันดำ] = {มืดสนิท}", top: 230, end: D("blind") - 0.1 }],
+        fx(tl, id, t0) {
+          const fog = document.getElementById(`${id}-fog`); fog.setAttribute("fill", "#1a1816");
+          tl.fromTo(fog, { opacity: 0 }, { opacity: 0.82, duration: D("blind") - 0.4, ease: "power1.in", immediateRender: false }, t0 + 0.2);
+          Pov.cough(tl, id, t0 + 3.6);
+        },
+      }));
+
+      // ---------- 9. floor level, side on: you drop and crawl under the smoke toward the exit sign ----------
+      add("low", {
+        set: "corridorSide", setOpts: { id: "cs2", smokeY: 1150 }, dark: 0.52,
+        cam: { keys: [{ t: 0, ...fr(1100, 1420, 0.9, 540, 1220), drift: { x: 230, s: 0.01 } }] },
+        actors: [YOU(820, 1760, 1.2, [{ t: 0, mode: "crouch", eyes: "side", mouth: "flat", sweat: true }, { t: F("low", 0, 1) - 0.3, mode: "crawl", eyes: "side", mouth: "flat", sweat: true }],
+          { flip: true, moveTo: { x: 1700, y: 1780, dur: D("low") - F("low", 0, 1) + 0.3, at: F("low", 0, 1) - 0.3 } })],
+        captions: caps("low"),
+        ui: [steps("low", "ควันไฟ", [["crawl", "ก้มต่ำ คลาน"], ["smokeup", "ใต้ควัน"], ["exit2", "ไปทางออก"]], F("low", 0, 0) - 0.1, D("low") - 0.1, { gap: (F("low", 0, 2) - F("low", 0, 0)) / 2 })],
+      });
+
+      // ---------- 10. close: a hand finds yours in the dark ----------
+      add("hand", withTorch("hand", { keys: [{ t: 0, x: 420, y: 1300, r: 300 }], dark: 0.74, noHand: true }, {
+        set: "handsClose", setOpts: { id: "hc1" }, dark: 0.3,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "crawl", flinch: [0.35] }),
+        captions: caps("hand", undefined, { quote: true }),
+        fx(tl, id, t0) { tl.fromTo("#hc1-other", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.25); Fx.heart(tl, t0 + 0.3, D("hand") - 0.3, 0.45, 0.4); },
+      }));
+
+      // ---------- 11. the fire-alarm station: you pull it — bells, strobes ----------
+      add("alarm", {
+        set: "alarmClose", setOpts: { id: "ac1" }, dark: 0.38,
+        cam: { keys: [{ t: 0, x: 0, y: 40, s: 1.0, drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "breath", flinch: [F("alarm", 0, 1) + 0.1] }),
+        captions: caps("alarm"),
+        ui: [steps("alarm", "ระหว่างทาง", [["pullalarm", "ดึงสัญญาณเตือน"], ["people", "ให้คนอื่นรู้"]], F("alarm", 0, 0) + 0.2, D("alarm") - 0.1, { gap: F("alarm", 0, 2) - F("alarm", 0, 0) - 0.2, top: 140 })],
+        extra(L) { put(L.light, Pov.reach("rh-al", { x: 1200, y: 2300 })); },
+        fx(tl, id, t0) {
+          const pull = t0 + F("alarm", 0, 1);
+          tf(tl, "#rh-al", t0 + 0.3, 0.7, "translate(560,980) rotate(0)", "power2.out");
+          tf(tl, "#rh-al", pull - 0.05, 0.25, "translate(560,1110) rotate(4)", "power3.in");
+          tf(tl, "#ac1-lever", pull - 0.05, 0.25, "translate(0,110)", "power3.in");
+          strobe(tl, `#${id} .strobe`, pull + 0.2, D("alarm") - F("alarm", 0, 1) - 0.2);
+          strobe(tl, "#ac1-strobe", pull + 0.2, D("alarm") - F("alarm", 0, 1) - 0.2);
+          Fx.punch(tl, `#${id} .stage`, pull + 0.2, 1.05, 0.3);
+        },
+      });
+
+      // ---------- 12. jump: every door down the corridor swings open; eyes in every room ----------
+      const DOPEN = 0.3;
+      add("doors", withTorch("doors", { keys: [{ t: 0, x: 540, y: 1040, r: 380 }], dark: 0.28, beam: 0.6, hand: [230, 1700], flicker: [[DOPEN, 0.5]] }, {
+        set: "corridor", setOpts: { id: "cd3", smoke: 0.6, strobe: true }, dark: 0.42,
+        cam: { keys: [{ t: 0, x: 0, y: 30, s: 1.0, drift: { s: 0.02 } }, { t: F("doors", 0, 1), glide: 1.0, x: 0, y: 30, s: 1.18, drift: { s: 0.04 } }] },
+        shake: Pov.head({ mode: "panic", flinch: [DOPEN] }),
+        captions: caps("doors"),
+        fx(tl, id, t0) {
+          strobe(tl, `#${id} .strobe`, t0, D("doors"));
+          tl.set("#cd3-leaves", { opacity: 1 }, t0); tl.set("#cd3-eyes", { opacity: 0 }, t0);
+          tl.to("#cd3-leaves", { opacity: 0, duration: 0.12 }, t0 + DOPEN); tl.to("#cd3-eyes", { opacity: 1, duration: 0.25 }, t0 + DOPEN + 0.1);
+          Fx.punch(tl, `#${id} .stage`, t0 + DOPEN, 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + DOPEN, 0.3, 18, 206);
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.15, immediateRender: false }, t0 + DOPEN);
+          tl.fromTo("#fxred", { opacity: 0.85 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + DOPEN);
+          Fx.heart(tl, t0 + DOPEN + 0.4, D("doors") - DOPEN - 0.4, 0.4, 0.6);
+        },
+      }));
+
+      // ---------- 13. channel signature ----------
+      add("sig", {
+        set: "corridor", setOpts: { id: "cd4", smoke: 0.6, open: true }, dark: 0.55, blur: { far: 8, set: 8, fg: 10 },
+        cam: { keys: [{ t: 0, x: 0, y: 30, s: 1.0, drift: { s: 0.02 } }, { t: SF(2), x: 0, y: 30, s: 1.06, drift: { s: 0.045 } }, { t: SF(3), x: 0, y: 30, s: 1.14, drift: { s: 0.02 } }] },
+        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
+        captions: caps("sig"),
+        ui: [{ type: "sigCard", t: 0.05, title: "ควันหลง · เช็กลิสต์เอาตัวรอด", items: [["เปิดประตูช้าๆ", true], ["ปิดประตูตามหลัง", true], ["คลานใต้ควัน", true], ["???", false]],
+          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
+        fx(tl, id, t0) {
+          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
+          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
+          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 73);
+          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 74);
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
+          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
+        },
+      });
+
+      // ---------- 14. the torch finds the hand you are holding: black, cracked, glowing ----------
+      const COLD = F("cold", 0, 1) - 0.1;
+      add("cold", withTorch("cold", { keys: [{ t: 0, x: 380, y: 1450, r: 260 }, { t: COLD - 0.2, x: 420, y: 1300, r: 280 }, { t: COLD + 0.3, x: 620, y: 900, r: 380 }], dark: 0.74, noHand: true }, {
+        set: "handsClose", setOpts: { id: "hc2" }, dark: 0.3,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.02 } }, { t: COLD, x: 60, y: -60, s: 1.15, drift: { s: 0.04 } }] },
+        shake: Pov.head({ mode: "crawl", flinch: [COLD] }),
+        captions: caps("cold"),
+        fx(tl, id, t0) {
+          tl.set("#hc2-other", { opacity: 1 }, t0); tl.set("#hc2-other", { opacity: 0 }, t0 + COLD); tl.set("#hc2-burnt", { opacity: 1 }, t0 + COLD);
+          Fx.glitch(tl, `#${id}`, t0 + COLD, 0.35, 20, 207); Fx.punch(tl, `#${id} .stage`, t0 + COLD, 1.12, 0.5);
+          tl.fromTo("#flashw", { opacity: 0.45 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + COLD);
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + COLD);
+          Fx.heart(tl, t0 + COLD + 0.3, D("cold") - COLD - 0.3, 0.38, 0.6);
+        },
+      }));
+
+      // ---------- 15. far down the corridor: แพร at the stairwell door, waving her own torch ----------
+      add("far", withTorch("far", { keys: [{ t: 0, x: 540, y: 1040, r: 300 }, { t: 1.2, x: 540, y: 980, r: 200 }], dark: 0.6, beam: 0.7, hand: [230, 1700] }, {
+        set: "corridor", setOpts: { id: "cd5", smoke: 0.55, strobe: true }, dark: 0.45,
+        cam: { keys: [{ t: 0, x: 0, y: 30, s: 1.0, drift: { s: 0.02 } }, { t: 0.6, glide: 1.4, x: 0, y: 40, s: 2.6, drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        actors: [{ who: "prae", x: 540, y: 1000, s: 0.15, track: [{ t: 0, mode: "wave", eyes: "wide", mouth: "scream", torch: true }] }],
+        captions: caps("far", undefined, { quote: true }),
+        fx(tl, id, t0) { strobe(tl, `#${id} .strobe`, t0, D("far")); Fx.heart(tl, t0, D("far"), 0.42, 0.5); },
+      }));
+
+      // ---------- 16. ding: the lift opens, bright and clear; ดาว stands inside ----------
+      const DING = 0.3;
+      add("lift", {
+        set: "liftOpen", setOpts: { id: "lo1", lit: 0 }, dark: 0.35,
+        cam: { keys: [{ t: 0, x: 0, y: 60, s: 0.92, drift: { s: 0.03 } }, { t: vo("lift", 1) - 0.2, glide: 1.2, ...fr(540, 860, 1.7, 540, 900), drift: { s: 0.04 } }] },
+        shake: Pov.head({ mode: "breath", modes: [[vo("lift", 1), "panic"]], flinch: [vo("lift", 1) + 0.2] }),
+        captions: [...caps("lift", [0]), ...caps("lift", [1], { quote: true })],
+        fx(tl, id, t0) {
+          tl.set("#lo1-btn", { attr: { fill: "#ffd27a" } }, t0);
+          tf(tl, "#lo1-dl", t0 + DING, 1.3, "translate(-345,0)", "power2.inOut"); tf(tl, "#lo1-dr", t0 + DING, 1.3, "translate(345,0)", "power2.inOut");
+          tl.fromTo("#lo1-light", { opacity: 0 }, { opacity: 1, duration: 1.0, immediateRender: false }, t0 + DING + 0.1);
+          tl.to(`#${id}-dark`, { opacity: 0.22, duration: 1.0 }, t0 + DING + 0.1);
+          tl.set("#lo1-dao-smile", { opacity: 0 }, t0); tl.set("#lo1-dao-smile", { opacity: 1 }, t0 + vo("lift", 1)); tl.set("#lo1-dao-flat", { opacity: 0 }, t0 + vo("lift", 1));
+          tl.fromTo("#lo1-dao-head", { attr: { transform: "translate(0,-660) rotate(0)" } }, { attr: { transform: "translate(0,-660) rotate(-16)" }, duration: 1.2, ease: "sine.inOut", immediateRender: false }, t0 + vo("lift", 1) - 0.2);
+          tl.fromTo("#lo1-dao-armR", { attr: { transform: "translate(56,-600) rotate(0)" } }, { attr: { transform: "translate(56,-600) rotate(-55)" }, duration: 1.0, ease: "power2.inOut", immediateRender: false }, t0 + vo("lift", 1) + 0.4);
+          Fx.glitch(tl, `#${id}`, t0 + vo("lift", 1), 0.25, 12, 208);
+          Fx.heart(tl, t0 + vo("lift", 1), D("lift") - vo("lift", 1), 0.4, 0.55);
+        },
+      });
+
+      // ---------- 17. the choice: take the lift / take the stairs ----------
+      add("choice", {
+        set: "liftOpen", setOpts: { id: "lo2", lit: 1 }, dark: 0.22,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.75, 540, 900), drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        ui: [{ type: "choice", t: 0.05, q: "จะทำยังไง?", a: "ขึ้นลิฟต์", b: "ไปบันได", secs: 3, top: 280,
+          possessed: { at: 1.0, side: "a", glitch: "ขึ้นลิฟต์…", who: "…เท้าคุณก้าวเข้าไปแล้ว" } }],
+        fx(tl, id, t0) {
+          tl.set("#lo2-dl", { attr: { transform: "translate(-345,0)" } }, t0); tl.set("#lo2-dr", { attr: { transform: "translate(345,0)" } }, t0);
+          tl.set("#lo2-dao-smile", { opacity: 1 }, t0); tl.set("#lo2-dao-flat", { opacity: 0 }, t0);
+          tl.set("#lo2-dao-head", { attr: { transform: "translate(0,-660) rotate(-16)" } }, t0); tl.set("#lo2-dao-armR", { attr: { transform: "translate(56,-600) rotate(-55)" } }, t0);
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
+
+      // ---------- 18. end card: the room key tag ----------
+      add("next", {
+        set: "keyTag", setOpts: { id: "kt", ep: "ตอนที่ 3", title: "ลิฟต์มารับ" }, dark: 0.1,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1, drift: { s: 0.03 } }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#kt-tag", { attr: { transform: "translate(540,900) rotate(-14)" } }, { attr: { transform: "translate(540,900) rotate(-6)" }, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          Fx.heart(tl, t0 + 0.9, D("next") - 0.9, 0.7, 0.35);
+        },
+      });
+
+      // every shot gets the looping motion of its set (smoke drift, embers, fire flicker, LEDs)
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Pov.life(tl, `#${id}`, t0, sh.dur); }; });
+      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">ควันหลง · EP.2</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
+      Fx.setup(root);
+      Engine.build(root, tl, shots);
+
+      root.appendChild(document.getElementById("grain"));
+      const rnd = (() => { let s = 99; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+      for (let i = 0; i * 0.083 < SCHED.total; i++) tl.set("#grain", { x: Math.round(-50 + rnd() * 50), y: Math.round(-50 + rnd() * 50) }, i * 0.083);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
