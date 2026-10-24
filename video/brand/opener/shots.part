@@ -1,16 +1,18 @@
-
-      // ---------- demo: the EP.1 opener (title in the sky, dive down to the first scene) ----------
-      const OP = { title: "หมอกลง", ep: "EP.1", name: "อย่าเปิดไฟสูง", kick: "ROD MAI CLUB", at: 1.9, glide: 1.9,
-        land: fr(520, 1300, 0.95, 540, 980, { drift: { s: 0.02 } }) };
+      // ---------- 0. story opener: หมอกลง EP.1 in the night sky, eyes open in the clouds, the dive onto the mountain road ----------
+      const OP = { title: "หมอกลง", ep: "EP.1", name: "อย่าเปิดไฟสูง", kick: "ROD MAI CLUB", at: 1.9, glide: 1.8,
+        land: fr(560, 1260, 1.0, 540, 980, { drift: { s: 0.025 } }) };
       add("open", {
-        set: "mountainRoad", setOpts: { id: "mr" }, dark: 0.22,
-        cam: { keys: Opener.cam(OP) },
-        extra(L, id) { Opener.extra(L, id, OP); },
+        set: "mountainRoad", setOpts: { id: "op" }, dark: 0.22,
+        cam: { keys: Opener.cam(OP) }, shake: Opener.shake(OP),
+        extra(L, id) {
+          Opener.extra(L, id, OP);
+          L.set.insertAdjacentHTML("beforeend", `<g id="op-vill" opacity="0">${Mok.villager(930, 1196, 0.2, { op: 1 })}</g>`); // waiting at the roadside, waving
+        },
         captions: caps("open"),
         fx(tl, id, t0) {
           Opener.fx(tl, id, t0, OP);
-          tl.set("#mr-car", { attr: { transform: "translate(420,1300)" } }, t0);
-          tl.to("#mr-car", { attr: { transform: "translate(760,1225)" }, duration: D("open"), ease: "none" }, t0);
-          Fx.heart(tl, t0 + F("open", 1), D("open") - F("open", 1), 0.45, 0.5);
+          tl.set("#op-car", { attr: { transform: "translate(470,1290)" } }, t0);
+          tl.to("#op-car", { attr: { transform: "translate(700,1240)" }, duration: D("open"), ease: "none" }, t0);
+          tl.to("#op-vill", { opacity: 0.75, duration: 0.5 }, t0 + OP.at + OP.glide - 0.1);
         },
       });
