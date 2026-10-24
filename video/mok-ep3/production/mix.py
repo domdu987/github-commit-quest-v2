@@ -106,13 +106,6 @@ CUES = [
     *bed("engine", T("drive", 0), T("nodrive", 2.0), 0.55, 3.6), *[("drive", frag("drive", 0, j) - 0.05, "pop", 0.45) for j in (0, 1, 2)], ("drive", frag("drive", 0, 3), "ding", 0.5),
     ("driver", 0.2, "sting", 0.5), *beats("driver", 0.2, D["driver"] - 0.2, 0.55, 0.4),
     *[("nodrive", frag("nodrive", 0, j) - 0.05, "pop", 0.45) for j in (1, 2, 3)], ("nodrive", 1.0, "engine", 0.6), ("nodrive", 2.6, "engine", 0.35),
-    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
-    ("sig", frag("sig", 0, 0) + 0.3, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.62, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.15, "ding", 0.6),
-    ("sig", frag("sig", 0, 2), "glitch", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
-    *[("sig", frag("sig", 0, 2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
-    ("sig", frag("sig", 0, 3) - 1.1, "riser", 0.6),
-    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.8), ("sig", frag("sig", 0, 3), "glitch", 0.7), ("sig", frag("sig", 0, 3) + 0.12, "slam", 0.7),
-    *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     # morning at the pump: "I never left"
     ("morning", 0.1, "whoosh", 0.4), ("morning", 0.2, "wind", 0.3),
     ("never", frag("never", 0, 1), "sting", 0.8), *beats("never", frag("never", 0, 1), D["never"] - frag("never", 0, 1), 0.48, 0.6),
@@ -160,7 +153,6 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 dip(0.0, T("hook", -0.1), 0.25, 0.05)                    # the cold open: wind and the glowing door
 dip(T("call", 0), T("turn", -0.05), 0.3)
-dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("never", frag("never", 0, 1)), T("mimic", -0.05), 0.35)
 dip(T("mother", 0), T("mother", -0.05), 0.5)
 dip(T("mud", 0), T("photo", -0.05), 0.3)

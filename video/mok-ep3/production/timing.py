@@ -35,7 +35,6 @@ SHOTS = [
     ("driver", ["d04"], 0.15, 0.4, 3.4),             # the driver: red cardigan, headscarf, face in shadow
     ("jay", ["d05", ("d06", 0.15)], 0.1, 0.4, 4.6),  # "let me drive" / "no, you breathed it too"
     ("nodrive", ["n11"], 0.1, 0.5, 6.4),             # card: don't drive yourself
-    ("sig", ["s01"], 0.15, 0.5, 4.2),
     ("morning", ["n12"], 0.15, 0.4, 3.4),            # morning at the petrol station
     ("thanks", ["d07"], 0.1, 0.4, 3.0),
     ("never", ["d08"], 0.15, 0.6, 4.0),              # "I never left the pump"

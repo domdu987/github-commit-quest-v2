@@ -245,26 +245,6 @@
         fx(tl, id, t0) { movePK(tl, "nd-pk", t0 + 1.0, D("nodrive") - 1.0, 300, RF + 40, 1.5, 1300, "power1.in"); },
       });
 
-      // ---------- 16. signature ----------
-      add("sig", {
-        set: "roadFog", setOpts: { id: "sg", car: false }, dark: 0.5, blur: { far: 8, set: 8 },
-        extra(L) { PICKUP(L, "sg-pk", 1300, RF + 40, 1.5, { head: false, tail: true }); },
-        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.0, 540, 960), drift: { s: 0.02 } }, { t: SF(2), ...fr(560, 1290, 1.04, 540, 960), drift: { s: 0.045 } }, { t: SF(3), ...fr(560, 1270, 1.12, 540, 960), drift: { s: 0.02 } }] },
-        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
-        captions: caps("sig"),
-        ui: [{ type: "sigCard", t: 0.05, title: "หมอกลง · เช็กลิสต์เอาตัวรอด", items: [["ออกไปข้างนอก", true], ["เรียกรถพยาบาล", true], ["ไม่ขับรถเอง", true], ["???", false]],
-          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
-        fx(tl, id, t0) {
-          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
-          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
-          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 105);
-          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 106);
-          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
-          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
-          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
-        },
-      });
-
       // ---------- 17–21. morning at the pump; "I never left"; the fog copies; 2529 ----------
       const GM = (id, extra = {}) => ({ id, oldTruck: { x: 1640, s: 1.4 }, ...extra });
       add("morning", {
