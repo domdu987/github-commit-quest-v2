@@ -1,0 +1,401 @@
+
+      // ---------- ควันหลง EP.1 ประตูร้อน: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      // room 714 framings (world points of the panorama; see kwan.js)
+      const V = {
+        ceil: fr(1450, 230, 1.05, 540, 900),         // lying in bed, looking up
+        door: fr(545, 1060, 1.05, 540, 1000),         // standing, facing the door
+        knob: fr(730, 1110, 1.9, 600, 1000),
+        notice: fr(545, 1025, 2.6, 540, 920),
+        hw: fr(560, 1112, 3.3, 540, 900),             // the handwriting
+        sign: fr(600, 1172, 4.6, 540, 900),           // "— ดาว 714 / 2539"
+        gap: fr(540, 1500, 2.3, 540, 1250),           // crouched at the gap under the door
+        bed: fr(1650, 1230, 1.12, 540, 1000),         // แพร's bed
+        win: fr(2740, 1010, 1.12, 540, 900),
+        floor: fr(1500, 1470, 1.3, 540, 760),         // flat on the floor, looking under แพร's bed
+      };
+      // the phone torch on a shot: o = Pov.torch options; returns { extra, drive } to merge into the spec
+      const torch = (k, o) => { const T = Pov.torch(`t-${k}`, o); return { extra: (L) => put(L.light, T.markup), drive: T.drive }; };
+      const withTorch = (k, o, spec) => {
+        const T = torch(k, o), ex = spec.extra, f = spec.fx;
+        return { ...spec, extra(L, id) { if (ex) ex(L, id); T.extra(L, id); }, fx(tl, id, t0, L) { T.drive(tl, t0, D(k)); if (f) f(tl, id, t0, L); } };
+      };
+      const knock = (tl, t, n = 3, gap = 0.22) => { for (let i = 0; i < n; i++) tl.fromTo("#rm-door", { attr: { transform: "translate(0,0)" } }, { attr: { transform: `translate(${i % 2 ? -5 : 6},0)` }, duration: 0.05, yoyo: true, repeat: 1, immediateRender: false }, t + i * gap); };
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      const RM = (o = {}) => ({ id: "rm", ...o });
+
+      // ---------- 0. story opener: ควันหลง EP.1 in the night sky; the dive onto the dorm, fire on the seventh floor ----------
+      const OP = { title: "ควันหลง", ep: "EP.1", name: "ประตูร้อน", kick: "ROD MAI CLUB", at: 1.9, glide: 1.8,
+        land: fr(660, 800, 1.18, 540, 880, { drift: { s: 0.05 } }) };
+      add("open", {
+        set: "dormExt", setOpts: { id: "dx" }, dark: 0.15,
+        cam: { keys: Opener.cam(OP) }, shake: Opener.shake(OP),
+        extra(L, id) { Opener.extra(L, id, OP); },
+        captions: caps("open"),
+        fx(tl, id, t0) { Opener.fx(tl, id, t0, OP); },
+      });
+
+      // ---------- 1. you wake: the ceiling, the smoke, the knocking; you sit up and face the door ----------
+      add("wake", {
+        set: "room", setOpts: RM({ smokeY: 160, myBed: true }), dark: 0.42,
+        cam: { keys: [{ t: 0, ...V.ceil, drift: { x: -6, s: 0.006 } }, { t: F("wake", 1) - 0.1, glide: 1.1, ...V.door, drift: { s: 0.015 } }] },
+        shake: Pov.head({ mode: "still", modes: [[1.2, "breath"], [F("wake", 1) - 1.0, "panic"]], flinch: [1.05, F("wake", 1) - 0.2], tilt: -1 }),
+        captions: [...caps("wake", [0]), ...caps("wake", [1], { quote: true })],
+        fx(tl, id, t0) {
+          Pov.lids(tl, id, t0, [[0.25, "open", 1.3], [F("wake", 1) - 1.35, "blink", 0.22]]);
+          knock(tl, t0 + 1.0); knock(tl, t0 + F("wake", 1) - 0.25, 4, 0.18);
+          Fx.heart(tl, t0 + F("wake", 1), D("wake") - F("wake", 1), 0.45, 0.4);
+        },
+      });
+
+      // ---------- 2. your fist stops an inch from the knob ----------
+      add("stop", withTorch("stop", { keys: [{ t: 0, x: 600, y: 1000, r: 330 }], dark: 0.55, noHand: true }, {
+        set: "room", setOpts: RM({ smokeY: 200 }), dark: 0.3,
+        cam: { keys: [{ t: 0, ...V.knob, drift: { s: 0.05 } }] },
+        shake: Pov.head({ mode: "panic", flinch: [0.12] }),
+        captions: caps("stop"),
+        extra(L) { put(L.light, Pov.reach("rh-stop", { x: 1150, y: 2150 })); },
+        fx(tl, id, t0) {
+          tf(tl, "#rh-stop", t0, 0.22, "translate(700,1180) rotate(0)", "power3.out");
+          tf(tl, "#rh-stop", t0 + 0.24, 0.5, "translate(760,1250) rotate(-4)", "power2.out");
+          for (let i = 0; i < 14; i++) tl.to("#rh-stop", { attr: { transform: `translate(${760 + (i % 2) * 4},1250) rotate(-4)` }, duration: 0.05 }, t0 + 0.75 + i * 0.05);
+          Fx.punch(tl, `#${id} .stage`, t0 + 0.1, 1.06, 0.4);
+        },
+      }));
+
+      // ---------- 3. the phone: 02:03, 8%, a message from แพร ----------
+      add("phone", {
+        set: "phoneClose", setOpts: { id: "pl", mode: "lock" }, dark: 0.05,
+        cam: { keys: [{ t: 0, x: 0, y: 40, s: 1.0, drift: { s: 0.02 } }, { t: F("phone", 0, 1) - 0.05, glide: 0.5, ...fr(540, 1300, 1.25, 540, 1000), drift: { s: 0.02 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("phone"),
+        fx(tl, id, t0) {
+          tl.fromTo("#pl-phone", { opacity: 0.2 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+          tl.fromTo(`#${id} .stage`, { filter: "blur(10px)" }, { filter: "blur(0px)", duration: 0.35, immediateRender: false }, t0);
+        },
+      });
+
+      // ---------- 4. two minutes: the countdown starts (KwanUI ring, foot.part), the torch comes on ----------
+      add("timer", withTorch("timer", { keys: [{ t: 0, x: 560, y: 1500, r: 160 }, { t: 1.2, x: 545, y: 980, r: 330 }], dark: 0.72 }, {
+        set: "room", setOpts: RM({ smokeY: 240 }), dark: 0.3,
+        cam: { keys: [{ t: 0, ...V.door, drift: { s: 0.025 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        captions: caps("timer"),
+        fx(tl, id, t0) { tl.fromTo(`#t-timer-beam`, { opacity: 0 }, { opacity: 1, duration: 0.12, immediateRender: false }, t0 + 0.05); },
+      }));
+
+      // ---------- 5. down at the gap: smoke curling in, orange light, two feet moving outside ----------
+      add("gap", withTorch("gap", { keys: [{ t: 0, x: 540, y: 1150, r: 300 }, { t: 2.5, x: 600, y: 1120, r: 280 }], dark: 0.6, beam: 0.5 }, {
+        set: "room", setOpts: RM({ smokeY: 260 }), dark: 0.32,
+        cam: { keys: [{ t: 0, ...V.gap, drift: { x: 6, s: 0.03 } }] },
+        shake: Pov.head({ mode: "breath", tilt: 2 }),
+        captions: caps("gap"),
+        fx(tl, id, t0) {
+          tl.set("#rm-feet", { opacity: 1 }, t0 + F("gap", 0, 1));
+          tl.fromTo("#rm-feet", { x: 0 }, { x: 120, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 3, immediateRender: false }, t0 + F("gap", 0, 1));
+          Fx.heart(tl, t0 + F("gap", 0, 2), D("gap") - F("gap", 0, 2), 0.42, 0.4);
+        },
+      }));
+
+      // ---------- 6. "ทำไมไม่เปิด!": the door shakes under her fists ----------
+      add("bang", withTorch("bang", { keys: [{ t: 0, x: 545, y: 1000, r: 340 }], dark: 0.62, flicker: [[0.2, 0.5]] }, {
+        set: "room", setOpts: RM({ smokeY: 300 }), dark: 0.3,
+        cam: { keys: [{ t: 0, ...V.door, drift: { s: -0.02 } }] },
+        shake: Pov.head({ mode: "panic", flinch: [0.12, 0.9, 1.6] }),
+        captions: caps("bang", undefined, { quote: true }),
+        fx(tl, id, t0) {
+          knock(tl, t0 + 0.1, 5, 0.16); knock(tl, t0 + 0.9, 4, 0.16); knock(tl, t0 + 1.6, 5, 0.14);
+          for (let i = 0; i < 8; i++) tl.to("#rm-knob", { attr: { transform: `rotate(${i % 2 ? -18 : 14} 730 1110)` }, duration: 0.07 }, t0 + 0.15 + i * 0.09);
+          tl.to("#rm-knob", { attr: { transform: "rotate(0 730 1110)" }, duration: 0.1 }, t0 + 0.9);
+          Fx.glitch(tl, `#${id}`, t0 + 0.1, 0.15, 8, 101);
+        },
+      }));
+
+      // ---------- 7. the old fire notice on the back of the door, and someone's red handwriting ----------
+      add("sign", withTorch("sign", { keys: [{ t: 0, x: 545, y: 1100, r: 330 }, { t: 1.4, x: 540, y: 920, r: 380 }], dark: 0.6 }, {
+        set: "room", setOpts: RM({ smokeY: 320 }), dark: 0.28,
+        cam: { keys: [{ t: 0, ...V.door, drift: { s: 0.01 } }, { t: 1.5, glide: 1.4, ...V.notice, drift: { s: 0.02 } }, { t: F("sign", 0, 1) + 0.2, glide: 0.8, ...fr(560, 1110, 2.9, 540, 900), drift: { s: 0.02 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("sign"),
+        fx(tl, id, t0) {
+          [0, 1, 2, 3].forEach((k) => tl.set(`#rm-hwr${k}`, { attr: { width: 320 } }, t0));
+          tl.fromTo("#rm-notice", { opacity: 0.6 }, { opacity: 1, duration: 0.6, immediateRender: false }, t0 + 1.4);
+        },
+      }));
+
+      // ---------- 8. the rule, in her voice: each line darkens and bleeds as it is read ----------
+      const RF = (j) => F("rule", 0, j);
+      add("rule", withTorch("rule", { keys: [{ t: 0, x: 540, y: 900, r: 420 }], dark: 0.55, noHand: true, flicker: [[RF(2) + 0.4, 0.5]] }, {
+        set: "room", setOpts: RM({ smokeY: 340 }), dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 3.3, 540, 900), drift: { s: 0.01 } }, { t: RF(1) - 0.05, glide: 0.6, ...fr(565, 1122, 3.4, 540, 900), drift: { s: 0.012 } },
+          { t: RF(2) - 0.05, glide: 0.6, ...fr(570, 1164, 3.5, 540, 900), drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "breath", flinch: [RF(2) + 0.5] }),
+        captions: caps("rule", undefined, { quote: true }),
+        fx(tl, id, t0) {
+          [0, 1, 2, 3].forEach((k) => tl.set(`#rm-hwr${k}`, { attr: { width: 320 } }, t0));
+          [0, 1, 2].forEach((k) => {
+            tl.fromTo(`#rm-hw${k}`, { attr: { fill: "#7a1a14" } }, { attr: { fill: "#e0281c" }, duration: 0.25, immediateRender: false }, t0 + RF(k));
+            tl.fromTo(`#rm-hw${k}`, { x: 0 }, { x: 1.5, duration: 0.04, yoyo: true, repeat: 9, immediateRender: false }, t0 + RF(k));
+          });
+          Fx.glitch(tl, `#${id}`, t0 + RF(2) + 0.45, 0.25, 10, 103);
+          Fx.heart(tl, t0 + RF(2), D("rule") - RF(2), 0.5, 0.5);
+        },
+      }));
+
+      // ---------- 9. the signature: ดาว 714 · 2539 ----------
+      add("dao", withTorch("dao", { keys: [{ t: 0, x: 560, y: 940, r: 420 }], dark: 0.6, noHand: true, flicker: [[F("dao", 0, 2), 0.6]] }, {
+        set: "room", setOpts: RM({ smokeY: 360 }), dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(570, 1150, 3.6, 540, 900), drift: { s: 0.015 } }, { t: F("dao", 0, 1) - 0.05, glide: 0.7, ...V.sign, drift: { s: 0.04 } }] },
+        shake: Pov.head({ mode: "breath", flinch: [F("dao", 0, 2)] }),
+        captions: caps("dao"),
+        extra(L) { put(L.set, `<g id="dao-hand" opacity="0" transform="translate(600,1120) rotate(-12)">${[0, 1, 2, 3].map((k) => `<ellipse cx="${-18 + k * 12}" cy="${-34 - (k % 3) * 4}" rx="4.5" ry="13" fill="#1a1412" opacity=".7"/>`).join("")}<ellipse rx="20" ry="22" fill="#1a1412" opacity=".7"/></g>`); },
+        fx(tl, id, t0) {
+          [0, 1, 2, 3].forEach((k) => tl.set(`#rm-hwr${k}`, { attr: { width: 320 } }, t0));
+          tl.to("#dao-hand", { opacity: 1, duration: 0.9, ease: "power1.in" }, t0 + F("dao", 0, 2) - 0.2);
+          Fx.glitch(tl, `#${id}`, t0 + F("dao", 0, 2), 0.35, 16, 104);
+          tl.fromTo("#fxred", { opacity: 0.8 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + F("dao", 0, 2));
+          tl.fromTo("#flashw", { opacity: 0.35 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + F("dao", 0, 2));
+        },
+      }));
+
+      // ---------- 10. feel the knob and the door: hot ----------
+      add("touch", withTorch("touch", { keys: [{ t: 0, x: 600, y: 1000, r: 320 }], dark: 0.55, noHand: true }, {
+        set: "room", setOpts: RM({ smokeY: 380 }), dark: 0.28,
+        cam: { keys: [{ t: 0, ...V.knob, drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "panic", flinch: [F("touch", 0, 1) + 0.22] }),
+        captions: caps("touch"),
+        ui: [steps("touch", "ก่อนเปิดประตู", [["knob", "แตะลูกบิด"], ["doorhot", "แตะประตู"]], F("touch", 0, 1) - 0.4, D("touch") - 0.1, { gap: 0.4 })],
+        extra(L) {
+          put(L.light, Pov.reach("rh-touch", { x: 1180, y: 2200 }));
+          put(L.glow, `<circle id="knobhot" cx="730" cy="1110" r="90" fill="url(#kwFireGlow)" opacity="0"/>`);
+          L.set.setAttribute("filter", "url(#pvHaze)"); L.set.classList.add("haze");
+        },
+        fx(tl, id, t0) {
+          const hit = t0 + F("touch", 0, 1) + 0.15;
+          tf(tl, "#rh-touch", t0 + 0.1, 0.8, "translate(760,1170) rotate(0)", "power2.out");
+          tf(tl, "#rh-touch", hit - 0.25, 0.22, "translate(640,1060) rotate(-6)", "power2.in");
+          tf(tl, "#rh-touch", hit + 0.06, 0.18, "translate(1100,1700) rotate(14)", "power3.out");
+          tl.fromTo("#knobhot", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, hit);
+          tl.fromTo("#fxred", { opacity: 0.75 }, { opacity: 0, duration: 0.6, immediateRender: false }, hit);
+          Fx.punch(tl, `#${id} .stage`, hit, 1.07, 0.4);
+        },
+      }));
+
+      // ---------- 11. hot, or smoke round the door: keep it shut, use another way out ----------
+      add("hot", withTorch("hot", { keys: [{ t: 0, x: 545, y: 1100, r: 360 }, { t: 2.2, x: 545, y: 1380, r: 300 }], dark: 0.6, beam: 0.5 }, {
+        set: "room", setOpts: RM({ smokeY: 420 }), dark: 0.3,
+        cam: { keys: [{ t: 0, ...V.door, drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        captions: caps("hot"),
+        ui: [steps("hot", "ประตูร้อน", [["doorhot", "ร้อน"], ["smokegap", "ควันลอด"], ["keepshut", "ห้ามเปิด"], ["exit2", "ใช้ทางอื่น"]], F("hot", 0, 0) - 0.15, D("hot") - 0.15,
+          { gap: (F("hot", 0, 2) - F("hot", 0, 0)) / 3 })],
+        extra(L) { L.set.setAttribute("filter", "url(#pvHaze)"); L.set.classList.add("haze"); },
+      }));
+
+      // ---------- 12. no other way out: whip pan to the window, then the seven-floor drop ----------
+      const NX = F("noexit", 0, 1) - 0.12;
+      split("noexit", NX, withTorch("noexit", { keys: [{ t: 0, x: 545, y: 1000, r: 340 }, { t: 0.5, x: 540, y: 900, r: 420 }], dark: 0.55 }, {
+        set: "room", setOpts: RM({ smokeY: 440 }), dark: 0.3,
+        cam: { keys: [{ t: 0, ...V.door, drift: { s: 0.01 } }, { t: 0.55, glide: 0.45, ...V.win, drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        captions: capsFrom("noexit", 0).filter((c) => c.t < NX),
+        fx(tl, id, t0) { tl.fromTo(`#${id} .stage`, { filter: "blur(0px)" }, { filter: "blur(9px)", duration: 0.2, yoyo: true, repeat: 1, immediateRender: false }, t0 + 0.12); },
+      }), {
+        set: "windowDown", setOpts: { id: "wd" }, dark: 0.2,
+        cam: { keys: [{ t: 0, x: 0, y: 140, s: 1.0, drift: { s: 0.06 } }] },
+        shake: Pov.head({ mode: "panic", tilt: -3 }),
+        captions: capsFrom("noexit", NX),
+        fx(tl, id, t0) { Fx.tunnel(tl, t0, t0 + D("noexit") - NX + 0.2, 0.6); Fx.heart(tl, t0, D("noexit") - NX, 0.4, 0.5); },
+      });
+
+      // ---------- 13. smoke and poison gas kill more people than fire: the ceiling is full ----------
+      add("smoke", withTorch("smoke", { keys: [{ t: 0, x: 600, y: 700, r: 340 }, { t: 2.0, x: 700, y: 560, r: 360 }], dark: 0.55, beam: 0.85 }, {
+        set: "room", setOpts: RM({ smokeY: 640 }), dark: 0.32,
+        cam: { keys: [{ t: 0, ...fr(800, 520, 1.05, 540, 900), drift: { y: 10, s: 0.02 } }] },
+        shake: Pov.head({ mode: "panic", cough: [1.6] }),
+        captions: caps("smoke"),
+        ui: [{ type: "tip", t: F("smoke", 0, 1) - 0.1, ill: "smokeskull", label: "ควันไฟ", text: "ควัน + แก๊สพิษ<br>[ฆ่าคน]มากกว่าไฟ", top: 230, end: D("smoke") - 0.1 }],
+        fx(tl, id, t0) { Pov.cough(tl, id, t0 + 1.6); },
+      }));
+
+      // ---------- 14. get down and crawl: under แพร's bed, a burnt hand hangs over the edge (you don't see it, we do) ----------
+      add("crawl", withTorch("crawl", { keys: [{ t: 0, x: 560, y: 900, r: 320 }, { t: 1.0, x: 520, y: 1250, r: 300 }, { t: 2.2, x: 650, y: 700, r: 280 }, { t: 3.0, x: 640, y: 720, r: 280 }, { t: 3.9, x: 460, y: 1180, r: 300 }], dark: 0.66, beam: 0.6, hand: [200, 1760] }, {
+        set: "room", setOpts: RM({ smokeY: 900, hand: true }), dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(1300, 1050, 1.05, 540, 960), drift: { s: 0.01 } }, { t: F("crawl", 0, 1) + 0.05, glide: 0.75, ...V.floor, drift: { x: 14, s: 0.03 } }] },
+        shake: Pov.head({ mode: "panic", modes: [[F("crawl", 0, 1) + 0.2, "crawl"]] }),
+        captions: caps("crawl"),
+        ui: [steps("crawl", "ควันไฟ", [["smokeup", "ควันขึ้นเพดาน"], ["crawl", "ก้มต่ำ คลาน"]], F("crawl", 0, 0) - 0.1, D("crawl") - 0.1, { gap: F("crawl", 0, 1) - F("crawl", 0, 0) })],
+        fx(tl, id, t0) {
+          for (let i = 0; i < 4; i++) tl.to("#rm-hand", { attr: { transform: `translate(1600,1350) rotate(${i % 2 ? 6 : -5})` }, duration: 0.45, ease: "sine.inOut" }, t0 + 1.8 + i * 0.45);
+        },
+      }));
+
+      // ---------- 15. shut in: a cloth in the gap to keep the smoke out ----------
+      add("seal", withTorch("seal", { keys: [{ t: 0, x: 540, y: 1250, r: 330 }], dark: 0.62, beam: 0.6, noHand: true }, {
+        set: "room", setOpts: RM({ smokeY: 820, towel: "gap" }), dark: 0.32,
+        cam: { keys: [{ t: 0, ...V.gap, drift: { s: 0.02 } }] },
+        shake: Pov.head({ mode: "crawl", modes: [[0.8, "panic"]] }),
+        captions: caps("seal"),
+        ui: [steps("seal", "ออกไม่ได้", [["closedoor", "ปิดประตู"], ["cloth", "อุดร่อง"], ["nosmoke", "กันควัน"]], F("seal", 0, 0) - 0.1, D("seal") - 0.1, { gap: (F("seal", 0, 2) - F("seal", 0, 0)) / 2 })],
+        extra(L) { put(L.light, Pov.reach("rh-seal", { x: 1150, y: 2100, a: 20 })); },
+        fx(tl, id, t0) {
+          const push = t0 + F("seal", 0, 1);
+          tl.fromTo("#rm-gapcloth", { x: 700 }, { x: 0, duration: 0.9, ease: "power2.out", immediateRender: false }, push - 0.3);
+          tf(tl, "#rh-seal", push - 0.35, 0.9, "translate(620,1380) rotate(-10)", "power2.out");
+          tf(tl, "#rh-seal", push + 0.7, 0.25, "translate(520,1400) rotate(-6)", "power1.inOut");
+          tf(tl, "#rh-seal", push + 1.0, 0.25, "translate(700,1390) rotate(-12)", "power1.inOut");
+          tl.to("#rm-feet", { opacity: 0 }, t0);
+          tl.to(`#${id}-glow`, { opacity: 0.45, duration: 0.8 }, push + 0.5);
+        },
+      }));
+
+      // ---------- 16. 199: dial, then the fire service answers ----------
+      const CX = F("call", 1) - 0.3;
+      split("call", CX, {
+        set: "phoneClose", setOpts: { id: "pd", mode: "dial" }, dark: 0.05,
+        cam: { keys: [{ t: 0, x: 0, y: 60, s: 1.0, drift: { s: 0.02 } }] },
+        shake: Pov.head({ mode: "panic", cough: [2.6] }),
+        captions: capsFrom("call", 0).filter((c) => c.t < CX),
+        ui: [steps("call", "แจ้งเหตุ", [["call199", "โทร 199"], ["pin", "บอกว่าอยู่ไหน"]], F("call", 0, 1) - 0.2, CX - 0.05, { gap: 0.5, top: 120 })],
+        fx(tl, id, t0) {
+          ["1", "9", "9"].forEach((d, k) => {
+            const t = t0 + 0.25 + k * 0.32;
+            tl.set(`#pd-d${k}`, { opacity: 1 }, t);
+            tl.fromTo(`#pd-k${d}`, { opacity: 0.14 }, { opacity: 0.7, duration: 0.08, yoyo: true, repeat: 1, immediateRender: false }, t);
+          });
+          Pov.cough(tl, id, t0 + 2.6);
+        },
+      }, {
+        set: "phoneClose", setOpts: { id: "pk", mode: "call" }, dark: 0.05,
+        cam: { keys: [{ t: 0, x: 0, y: 60, s: 1.02, drift: { s: 0.02 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        captions: capsFrom("call", CX, undefined, { quote: false }),
+        fx(tl, id, t0) {
+          const ct = document.getElementById("pk-ct"), c = { s: 0 };
+          tl.to(c, { s: D("call") - CX, duration: D("call") - CX, ease: "none", onUpdate: () => (ct.textContent = c.s < 0.4 ? "กำลังโทร…" : `00:0${Math.min(9, Math.floor(c.s + 1))}`) }, t0);
+        },
+      });
+
+      // ---------- 17. the window: wave the torch; in the glass, the blanket on แพร's bed sits up ----------
+      add("window", withTorch("window", { keys: [0, 1, 2, 3, 4, 5, 6].map((k) => ({ t: k * 0.6, x: k % 2 ? 680 : 420, y: 760 + (k % 2) * 60, r: 300 })), dark: 0.5, beam: 0.55, hand: [300, 1500] }, {
+        set: "room", setOpts: RM({ smokeY: 760, towel: "gap", sirens: true }), dark: 0.3,
+        cam: { keys: [{ t: 0, ...V.win, drift: { s: 0.025 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        captions: caps("window"),
+        ui: [steps("window", "ส่งสัญญาณที่หน้าต่าง", [["torchwave", "ไฟฉาย"], ["lightcloth", "ผ้าสีอ่อน"]], F("window", 0, 0) - 0.1, D("window") - 0.5, { gap: F("window", 0, 1) - F("window", 0, 0) + 0.3 })],
+        fx(tl, id, t0) {
+          tl.to("#rm-rlie", { opacity: 0, duration: 1.4 }, t0 + 2.2);
+          tl.to("#rm-rsit", { opacity: 1, duration: 1.4 }, t0 + 2.2);
+          tl.to("#rm-refl", { opacity: 0.38, duration: 1.0 }, t0 + 2.6);
+          Fx.heart(tl, t0 + 2.6, D("window") - 2.6, 0.42, 0.45);
+        },
+      }));
+
+      // ---------- 18. channel signature ----------
+      add("sig", {
+        set: "room", setOpts: RM({ smokeY: 800, towel: "gap" }), dark: 0.5, blur: { far: 8, set: 8, fg: 10 },
+        cam: { keys: [{ t: 0, ...V.door, drift: { s: 0.02 } }, { t: SF(2), ...fr(545, 1050, 1.08, 540, 1000), drift: { s: 0.045 } }, { t: SF(3), ...fr(545, 1040, 1.16, 540, 1000), drift: { s: 0.02 } }] },
+        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
+        captions: caps("sig"),
+        ui: [{ type: "sigCard", t: 0.05, title: "ควันหลง · เช็กลิสต์เอาตัวรอด", items: [["ไม่เปิดประตูร้อน", true], ["คลานต่ำใต้ควัน", true], ["อุดร่องประตู", true], ["???", false]],
+          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
+        fx(tl, id, t0) {
+          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
+          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
+          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 73);
+          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 74);
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
+          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
+        },
+      });
+
+      // ---------- 19–20. the peephole: it was แพร all along, alive in the smoky corridor ----------
+      add("reveal", {
+        set: "peephole", setOpts: { id: "pp" }, dark: 0.15,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 0.78, drift: { s: 0.02 } }, { t: 0.05, glide: 0.9, x: 0, y: 0, s: 1.0, drift: { s: 0.025 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("reveal"),
+        fx(tl, id, t0) {
+          tl.fromTo("#pp-prae", { attr: { transform: "translate(540,1000) scale(1.05)" } }, { attr: { transform: "translate(540,960) scale(1.15)" }, duration: 1.2, ease: "power2.out", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .stage`, { filter: "blur(8px)" }, { filter: "blur(0px)", duration: 0.6, immediateRender: false }, t0);
+        },
+      });
+      add("prae", {
+        set: "peephole", setOpts: { id: "pq" }, dark: 0.15,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.05, drift: { s: 0.04 } }] },
+        shake: Pov.head({ mode: "panic", flinch: [0.15, 0.7, F("prae", 0, 2)] }),
+        captions: caps("prae", undefined, { quote: true }),
+        fx(tl, id, t0) {
+          for (let i = 0; i < 6; i++) tl.to("#pq-prae", { attr: { transform: `translate(${540 + (i % 2 ? -14 : 14)},${950 - (i % 2) * 12}) scale(${1.15 + (i % 2) * 0.05})` }, duration: 0.12 }, t0 + 0.1 + i * 0.28);
+          tl.to("#pq-prae", { attr: { transform: "translate(540,930) scale(1.32)" }, duration: 0.25, ease: "power3.out" }, t0 + F("prae", 0, 2));
+          Fx.glitch(tl, `#${id}`, t0 + F("prae", 0, 2), 0.25, 12, 120);
+        },
+      });
+
+      // ---------- 21. the torch swings to แพร's bed ----------
+      add("turn", withTorch("turn", { keys: [{ t: 0, x: 545, y: 1000, r: 300 }, { t: 1.2, x: 560, y: 1050, r: 360 }], dark: 0.66, beam: 0.6 }, {
+        set: "room", setOpts: RM({ smokeY: 840, towel: "gap" }), dark: 0.35,
+        cam: { keys: [{ t: 0, ...V.door, drift: { s: 0 } }, { t: 1.0, glide: 0.95, ...V.bed, drift: { s: 0.02 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        fx(tl, id, t0) {
+          tl.fromTo(`#${id} .stage`, { filter: "blur(0px)" }, { filter: "blur(7px)", duration: 0.35, yoyo: true, repeat: 1, immediateRender: false }, t0 + 0.2);
+          Fx.heart(tl, t0, D("turn"), 0.36, 0.55);
+        },
+      }));
+
+      // ---------- 22. the blanket falls: ดาว sits up in แพร's bed ----------
+      add("ghost", withTorch("ghost", { keys: [{ t: 0, x: 560, y: 1050, r: 360 }, { t: 1.4, x: 500, y: 820, r: 380 }, { t: 2.6, x: 540, y: 900, r: 400 }, { t: D("ghost") - 0.7, x: 540, y: 880, r: 460 }], dark: 0.62, beam: 0.6, flicker: [[1.3, 0.6], [4.6, 0.8]] }, {
+        set: "room", setOpts: RM({ smokeY: 860, towel: "gap", dao: true }), dark: 0.35,
+        cam: { keys: [{ t: 0, ...V.bed, drift: { s: 0.02 } }, { t: 2.6, glide: 1.2, ...fr(1600, 1050, 1.5, 540, 980), drift: { s: 0.04 } }, { t: D("ghost") - 0.7, glide: 0.35, ...fr(1610, 1010, 2.4, 540, 900), drift: { s: 0.05 } }] },
+        shake: Pov.head({ mode: "panic", flinch: [0.5, D("ghost") - 0.6] }),
+        captions: caps("ghost", undefined, { quote: true }),
+        fx(tl, id, t0) {
+          tl.set("#rm-daoat", { attr: { transform: "translate(1600,1300)" } }, t0);
+          tl.fromTo("#rm-dao-up", { attr: { transform: "rotate(-88)" } }, { attr: { transform: "rotate(-4)" }, duration: 1.5, ease: "power2.inOut", immediateRender: false }, t0 + 0.3);
+          tl.fromTo("#rm-lap", { opacity: 0 }, { opacity: 1, duration: 0.6, immediateRender: false }, t0 + 0.6);
+          tl.to("#rm-blanket", { opacity: 0, duration: 0.6 }, t0 + 0.6);
+          tl.fromTo("#rm-dao-head", { attr: { transform: "translate(0,-262) rotate(0)" } }, { attr: { transform: "translate(0,-262) rotate(-14)" }, duration: 1.2, ease: "sine.inOut", immediateRender: false }, t0 + 2.0);
+          tl.fromTo("#rm-dao-arm", { attr: { transform: "translate(56,-200) rotate(0)" } }, { attr: { transform: "translate(56,-200) rotate(-70)" }, duration: 1.2, ease: "power2.inOut", immediateRender: false }, t0 + 3.4);
+          Fx.glitch(tl, `#${id}`, t0 + 1.7, 0.2, 10, 130); Fx.glitch(tl, `#${id}`, t0 + D("ghost") - 0.6, 0.35, 20, 131);
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + D("ghost") - 0.6);
+          Fx.heart(tl, t0 + 0.4, D("ghost") - 0.4, 0.4, 0.55);
+        },
+      }));
+
+      // ---------- 23. the choice: open the door / stay in the room with her ----------
+      add("choice", withTorch("choice", { keys: [{ t: 0, x: 540, y: 980, r: 420 }], dark: 0.62, flicker: [[0.4, 3]] }, {
+        set: "room", setOpts: RM({ smokeY: 880, towel: "gap", dao: true }), dark: 0.4,
+        cam: { keys: [{ t: 0, ...fr(1600, 1040, 1.7, 540, 1060), drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        ui: [{ type: "choice", t: 0.05, q: "จะทำยังไง?", a: "เปิดประตู", b: "อยู่กับเธอ", secs: 3, top: 280,
+          possessed: { at: 1.0, side: "a", glitch: "เปิดประตู…", who: "…มือคุณอยู่บนลูกบิดแล้ว" } }],
+        fx(tl, id, t0) {
+          tl.set("#rm-daoat", { attr: { transform: "translate(1600,1300)" } }, t0);
+          tl.set("#rm-dao-up", { attr: { transform: "rotate(-4)" } }, t0); tl.set("#rm-dao-head", { attr: { transform: "translate(0,-262) rotate(-14)" } }, t0);
+          tl.set("#rm-dao-arm", { attr: { transform: "translate(56,-200) rotate(-70)" } }, t0); tl.set("#rm-blanket", { opacity: 0 }, t0);
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      }));
+
+      // ---------- 24. end card: the room key tag ----------
+      add("next", {
+        set: "keyTag", setOpts: { id: "kt", ep: "ตอนที่ 2", title: "ลิฟต์มารับ" }, dark: 0.1,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1, drift: { s: 0.03 } }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#kt-tag", { attr: { transform: "translate(540,900) rotate(-14)" } }, { attr: { transform: "translate(540,900) rotate(-6)" }, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          Fx.heart(tl, t0 + 0.9, D("next") - 0.9, 0.7, 0.35);
+        },
+      });
+
+      // every shot gets the looping motion of its set (smoke drift, embers, fire flicker, the alarm LED, sirens, heat haze)
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Pov.life(tl, `#${id}`, t0, sh.dur); }; });

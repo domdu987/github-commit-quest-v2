@@ -89,14 +89,19 @@ CUES = [
     # story opener (Opener.cues in opener.js, at 1.9 / glide 1.8): drone, glitches, the stamp, eyes, riser, the fall, the face, the hit
     ("open", 0.0, "swell", 0.6), ("open", 0.55, "glitch", 0.35), ("open", 0.82, "boom", 0.45), ("open", 1.15, "sting", 0.5), ("open", 1.18, "glitch", 0.45),
     *beats("open", 1.15, 0.75, 0.5, 0.6), ("open", 1.0, "riser", 0.7), ("open", 1.78, "glitch", 0.5), ("open", 1.9, "whoosh", 0.9), ("open", 2.71, "whoosh", 0.8),
-    ("open", 2.84, "sting", 0.9), ("open", 3.68, "boom", 0.9), ("open", 3.7, "glitch", 0.5), *bed("engine", T("open", 3.7), T("open", -0.05), 0.5, 3.6),
+    ("open", 3.68, "boom", 0.9), ("open", 3.7, "glitch", 0.5), *bed("engine", T("open", 3.7), T("open", -0.05), 0.5, 3.6),
     # cold open: the engine, the fog, a hand going for the high beams — stop
     *bed("engine", T("hook", 0), T("hook", -0.1), 0.8, 3.6), ("hook", 0.2, "wind", 0.4), *beats("hook", 0.4, D["hook"] - 0.4, 0.55, 0.55),
     ("hook", vo_t("hook", 0), "sting", 0.9), ("hook", vo_t("hook", 0), "boom", 0.6), ("hook", vo_t("hook", 0), "glitch", 0.5), ("hook", -0.25, "whoosh", 0.8),
     ("chapter", 0.05, "whoosh", 0.6), ("chapter", 0.3, "engine", 0.5), ("chapter", 0.55, "sting", 0.5),
     ("road", 0.0, "wind", 0.6), ("road", 0.2, "crickets", 0.4),
     # the petrol station: the tubes hum, crickets
-    *bed("hum", T("mint", 0), T("gps", D["gps"] * 0.55), 0.5, 3.6), *bed("crickets", T("mint", 0), T("gps", D["gps"] * 0.55), 0.4, 3.6),
+    *bed("hum", T("mint", 0), T("legend", 0), 0.5, 3.6), *bed("crickets", T("mint", 0), T("legend", 0), 0.4, 3.6),
+    *bed("hum", T("gps", 0), T("gps", D["gps"] * 0.55), 0.5, 3.6), *bed("crickets", T("gps", 0), T("gps", D["gps"] * 0.55), 0.4, 3.6),
+    # the legend, as a shadow-puppet play: a gong, the lamp, the stove, the morning, the road
+    ("legend", 0.05, "gong", 0.6), ("legend", 0.1, "swell", 0.45), ("legend", vo_t("legend", 1) - 0.1, "whoosh", 0.4), ("legend", vo_t("legend", 1) + 0.3, "crackle", 0.9),
+    ("legend", vo_t("legend", 2) - 0.1, "whoosh", 0.4), ("legend", vo_t("legend", 2) + 0.2, "ching", 0.35), *beats("legend", vo_t("legend", 2) + 0.4, 1.8, 0.6, 0.45),
+    ("legend", vo_t("legend", 3) - 0.1, "whoosh", 0.4), ("legend", vo_t("legend", 3) + 2.6, "sting", 0.7), ("legend", vo_t("legend", 3) + 2.6, "glitch", 0.4),
     ("saeng", 0.1, "swell", 0.4),
     ("rule", frag("rule", 0, 0), "ding", 0.45), ("rule", frag("rule", 0, 2), "ding", 0.45), ("rule", frag("rule", 0, 4), "ding", 0.45), ("rule", frag("rule", 0, 5), "sting", 0.6),
     ("gps", D["gps"] * 0.55, "engine", 0.6), ("gps", D["gps"] * 0.55, "whoosh", 0.4),
@@ -104,6 +109,9 @@ CUES = [
     *beats("mirror", frag("mirror", 0, 2), D["mirror"] - frag("mirror", 0, 2), 0.45, 0.7),
     # 3 a.m. on the road
     *bed("engine", T("three", 0), T("stop", -0.05), 0.75, 3.6), ("three", 0.0, "wind", 0.6), ("three", 0.4, "tick", 0.5),
+    # เจ's camera in night mode, then the jump
+    ("ir", 0.0, "nv", 0.5), ("ir", 0.05, "beep", 0.3), ("ir", D["ir"] - 1.3, "beep", 0.6), ("ir", D["ir"] - 1.25, "tick", 0.5),
+    ("ir", D["ir"] - 0.85, "shriek", 0.7), ("ir", D["ir"] - 0.85, "boom", 0.9), ("ir", D["ir"] - 0.85, "glitch", 0.7),
     ("high", vo_end("high") - 0.3, "stalk", 1.0),
     ("glare", 0.0, "whoosh", 0.8), ("glare", 0.05, "buzz", 0.4), ("glare", frag("glare", 0, 2), "sting", 1.1), ("glare", frag("glare", 0, 2), "boom", 0.8), ("glare", frag("glare", 0, 2), "glitch", 0.7),
     *beats("glare", frag("glare", 0, 2), D["glare"] - frag("glare", 0, 2), 0.38, 0.8),
@@ -164,7 +172,8 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(0.0, T("hook", -0.1), 0.2, 0.05)                     # the opener and the cold open: drone, engine and fog
+dip(0.0, T("hook", -0.1), 0.2, 0.05)
+dip(T("ir", 0), T("ir", -0.05), 0.25)                       # the night-camera beat: quiet, then the jump                     # the opener and the cold open: drone, engine and fog
 dip(T("mirror", 0), T("mirror", -0.05), 0.3)
 dip(T("glare", 0), T("swerve", -0.05), 0.3)
 dip(T("white", 0), T("off", -0.05), 0.4)

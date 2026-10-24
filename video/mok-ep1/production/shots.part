@@ -159,6 +159,25 @@
         ui: [{ type: "mokRule", t: 0.05, at: [F("rule", 0, 0) - 0.05, F("rule", 0, 2) - 0.05, F("rule", 0, 4) - 0.05], top: 150 }],
         captions: caps("rule", undefined, { quote: true }),
       });
+      // ---------- 7b. the legend of บ้านหมอก, as a shadow-puppet play (four screens, the camera glides down) ----------
+      const LG = (j) => vo("legend", j);
+      add("legend", {
+        set: "mokLegend", setOpts: { id: "lg" }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(540, 450, 1.2, 540, 760), drift: { s: 0.02 } },
+          { t: LG(1) - 0.1, glide: 0.7, ...fr(540, 2050, 1.2, 540, 760), drift: { s: 0.02 } },
+          { t: LG(2) - 0.1, glide: 0.7, ...fr(540, 3650, 1.2, 540, 760), drift: { s: 0.02 } },
+          { t: LG(3) - 0.1, glide: 0.7, ...fr(540, 5250, 1.2, 540, 760), drift: { s: 0.03 } }] },
+        captions: caps("legend"),
+        fx(tl, id, t0) {
+          Koi.life(tl, `#${id}`, t0, D("legend"));
+          tl.fromTo("#lg-smoke", { y: 40, opacity: 0.3 }, { y: -70, opacity: 1, duration: 3.2, ease: "sine.out", immediateRender: false }, t0 + LG(1) - 0.2);
+          tl.fromTo("#lg-rays", { opacity: 0 }, { opacity: 1, duration: 1.2, immediateRender: false }, t0 + LG(2));
+          tl.fromTo("#lg-fog1", { x: -30 }, { x: 30, duration: LG(1), ease: "sine.inOut", immediateRender: false }, t0);
+          Fx.heart(tl, t0 + LG(2) + 0.4, 1.8, 0.6, 0.35);
+          Fx.glitch(tl, `#${id}`, t0 + LG(3) + 2.6, 0.2, 10, 151);
+        },
+      });
+
       split("gps", D("gps") * 0.55, {
         set: "gasStation", setOpts: GS, dark: 0.3,
         cam: { keys: [{ t: 0, ...fr(340, 1100, 1.5, 540, 1000), drift: { s: 0.02 } }] },
@@ -189,6 +208,26 @@
         shake: (t) => 1.5 * Math.sin(t * 17),
         captions: caps("three"),
         ui: [{ type: "clock", t: 0.15, label: "ตีสาม", from: "00:00", to: "03:00", sweep: 1.2, side: "left", top: 210 }],
+      });
+
+      // ---------- 9b. เจ's camera in night mode: "ไม่เห็นอะไรเลย"… one standing in the fog; a face found; then it's at the glass ----------
+      const NV = "grayscale(1) sepia(1) hue-rotate(58deg) saturate(2.6) brightness(1.9) contrast(1.25)";
+      const IRJ = D("ir") - 0.85;
+      add("ir", {
+        set: "carWindow", setOpts: { id: "ir", knock: 0 }, dark: 0.3,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.02, drift: { s: 0.02 } }] },
+        shake: (t) => 3 * Math.sin(t * 5.3) + 2 * Math.sin(t * 13) + (t > IRJ && t < IRJ + 0.4 ? 18 * Math.sin(t * 70) : 0),
+        captions: caps("ir", undefined, { quote: true }),
+        ui: [{ type: "rec", t: 0, dur: D("ir"), nv: true, tc0: 10920, mode: "โหมดกลางคืน", af: { at: IRJ - 0.45, x: 535, y: 900, label: "ตรวจพบใบหน้า 1" } }],
+        fx(tl, id, t0) {
+          document.getElementById(`${id}-world`).style.filter = NV;
+          tl.set("#ir-face", { attr: { transform: "translate(404,655) scale(0.35)" }, opacity: 0.85 }, t0);
+          tl.set("#ir-face", { attr: { transform: "translate(0,0) scale(1)" }, opacity: 1 }, t0 + IRJ);
+          Fx.glitch(tl, `#${id}`, t0 + IRJ, 0.35, 18, 152);
+          tl.fromTo("#flashw", { opacity: 0.6 }, { opacity: 0, duration: 0.15, immediateRender: false }, t0 + IRJ);
+          Fx.punch(tl, `#${id} .stage`, t0 + IRJ, 1.15, 0.5);
+          Fx.heart(tl, t0 + IRJ - 0.45, 0.45, 0.22, 0.5);
+        },
       });
 
       // ---------- 10–12. high beams: glare, the face, the swerve ----------

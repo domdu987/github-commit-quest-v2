@@ -27,9 +27,11 @@ SHOTS = [
     ("mint", ["d01"], 0.1, 0.3, 2.4),               # the village petrol station, มิ้นท์ impatient by the car
     ("saeng", ["d02"], 0.15, 0.35, 2.4),            # ยายแสง at the pump looks up
     ("rule", ["d03"], 0.1, 0.4, 7.0),               # her rule (card)
+    ("legend", ["lg1", ("lg2", 0.3), ("lg3", 0.35), ("lg4", 0.35)], 0.3, 0.7, 17.5),  # the legend as a shadow-puppet play (four screens)
     ("gps", ["d04"], 0.1, 0.3, 2.6),                # เจ laughs; insert: the license plate as they pull away
     ("mirror", ["n05"], 0.1, 0.5, 4.0),             # the convex mirror: someone in a blanket behind the car
     ("three", ["n06"], 0.15, 0.35, 2.8),            # 3 a.m., the car in thickening fog
+    ("ir", ["dj1"], 0.5, 1.4, 4.4),                 # เจ's camera, night mode: "nothing out there"; one in the fog; a face found; at the glass
     ("high", ["d05"], 0.1, 0.2, 2.2),               # her hand on the stalk
     ("glare", ["n07"], 0.05, 0.4, 3.0),             # white wall of glare; a face right in front
     ("swerve", [], 0, 0, 1.6),                      # action: the swerve

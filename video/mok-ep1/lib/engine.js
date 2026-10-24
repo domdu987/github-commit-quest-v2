@@ -87,12 +87,14 @@
     };
     // depth of field: blur per layer, e.g. blur: { far: 3, fg: 10 }
     Object.entries(sh.blur || {}).forEach(([layer, px]) => { L[layer].style.filter = px ? `blur(${px}px)` : "none"; });
+    // shake(t) returns px of sideways shake, or { x, y, r } for a first-person head (bob up and down, roll in degrees)
     const applyCam = (k0) => {
       const { x, y, s } = camAt(k0 * sh.dur, k0);
-      const shake = sh.shake ? sh.shake(k0 * sh.dur) : 0;
+      const sk = sh.shake ? sh.shake(k0 * sh.dur) : 0, hx = typeof sk === "number" ? sk : sk.x || 0, hy = typeof sk === "number" ? 0 : sk.y || 0;
+      const roll = typeof sk === "number" || !sk.r ? "" : ` rotate(${sk.r.toFixed(3)})`;
       Object.entries(PARALLAX).forEach(([layer, p]) => {
         const ls = 1 + (s - 1) * p;
-        L[layer].setAttribute("transform", `translate(540 960) scale(${ls}) translate(${-540 - x * p + shake} ${-960 - y * p})`);
+        L[layer].setAttribute("transform", `translate(540 960)${roll} scale(${ls}) translate(${-540 - x * p + hx} ${-960 - y * p + hy})`);
       });
       L.glow.setAttribute("transform", L.set.getAttribute("transform"));
     };

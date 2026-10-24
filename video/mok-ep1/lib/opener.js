@@ -2,7 +2,7 @@
 // night sky, then the camera dives down through the clouds and lands on the first scene of the story.
 // The user asked for it scary and suspenseful: the title flickers in like a dying neon sign and glitches, a cloud
 // swallows the moon, pale eyes open one by one in the sea of clouds, a hand rises out of it and waves, then the
-// camera drops faster and faster (shake, speed lines), a face flashes inside the cloud, and the landing hits hard.
+// camera drops faster and faster (shake, speed lines) through the cloud, and the landing hits hard.
 // Usage on the first shot of EP.1 (any outdoor set), with o = { title, ep, name, kick, land, at, glide }:
 //   add("open", { set: "...", setOpts, dark, cam: { keys: Opener.cam(o) }, shake: Opener.shake(o),
 //     extra(L, id) { Opener.extra(L, id, o); }, captions: caps("open"), fx(tl, id, t0) { Opener.fx(tl, id, t0, o); } });
@@ -60,15 +60,6 @@
         `<path d="M${a},${b}Q${(a + c) / 2 - 4},${(b + d) / 2} ${c},${d}" stroke="${INK}" stroke-width="15" stroke-linecap="round" fill="none"/><path d="M${a},${b}Q${(a + c) / 2 - 4},${(b + d) / 2} ${c},${d}" stroke="#c9d1cc" stroke-width="7" stroke-linecap="round" fill="none"/>`).join("")}
       <path d="M-28,-318Q-58,-336 -66,-372" stroke="${INK}" stroke-width="15" stroke-linecap="round" fill="none"/><path d="M-28,-318Q-58,-336 -66,-372" stroke="#c9d1cc" stroke-width="7" stroke-linecap="round" fill="none"/>
       <path d="M-10,-150q8,6 0,14M6,-230q-8,6 0,14" stroke="#8e9893" stroke-width="3" fill="none"/></g>`;
-  // the face that flashes for two frames inside the cloud (screen space, above the whiteout)
-  const FACE = `<g transform="translate(540,900)">
-      <path d="M-300,-420C-360,-100 -330,260 -250,520L250,520C330,260 360,-100 300,-420C200,-560 -200,-560 -300,-420Z" fill="${INK}" opacity=".85"/>
-      <ellipse cx="0" cy="0" rx="230" ry="320" fill="#d6dcd6"/><ellipse cx="0" cy="40" rx="230" ry="280" fill="#c2cac5" opacity=".5"/>
-      <ellipse cx="-88" cy="-40" rx="56" ry="70" fill="${INK}"/><ellipse cx="88" cy="-40" rx="56" ry="70" fill="${INK}"/>
-      <circle cx="-80" cy="-34" r="8" fill="#f3ecd2"/><circle cx="96" cy="-34" r="8" fill="#f3ecd2"/>
-      <path d="M-46,150C-40,110 40,110 46,150C50,230 30,300 0,306C-30,300 -50,230 -46,150Z" fill="${INK}"/>
-      <path d="M-300,-420C-240,-200 -230,0 -250,300M300,-420C240,-200 230,0 250,300M-120,-330C-150,-150 -170,40 -190,200M130,-330C160,-150 175,40 196,210" stroke="${INK}" stroke-width="22" fill="none" opacity=".9"/></g>`;
-
   // the sky stack above the first scene: moon and stars slide up out of frame on the way down; a sea of clouds
   // under the camera at the start (eyes and the hand live in it); big puffs that rush past the lens mid-dive
   function extra(L, id, o) {
@@ -101,8 +92,6 @@
     [[-60, -300, 900], [1150, 60, 980], [420, 420, 1100], [140, 760, 900], [980, 1000, 900]].forEach(([x, dy, w]) =>
       (fg += cloud(r, x + cx0 * PAR.fg, 960 + dy + cm * PAR.fg, w, w * 0.42, body, rim, 0.95)));
     L.fg.insertAdjacentHTML("beforeend", `<g id="${id}-oppuff">${fg}</g>`);
-    // the face, above the engine's whiteout rect
-    document.getElementById(`${id}-fog`).insertAdjacentHTML("afterend", `<g id="${id}-opface" opacity="0">${FACE}</g>`);
   }
 
   // camera: hold high over the landing (a slow creeping push), then a fall that keeps speeding up into the landing
@@ -191,14 +180,11 @@
     // the drop: the title is left behind, speed lines, a heartbeat vignette while the eyes watch
     tl.to(`#${id}-op`, { y: -620, scale: 1.2, opacity: 0, filter: "blur(10px)", duration: glide * 0.55, ease: "power2.in" }, A(at));
     if (window.Fx) { Fx.speed(tl, A(at + 0.25), A(land - 0.1)); Fx.heart(tl, A(1.15), at - 1.15, 0.5, 0.5); }
-    // through the cloud: whiteout, and a face for two frames in the middle of it
+    // through the cloud: whiteout
     const fog = document.getElementById(`${id}-fog`);
     fog.setAttribute("fill", o.cloud ? o.cloud : "#2b3242");
     tl.fromTo(fog, { opacity: 0 }, { opacity: 0.9, duration: glide * 0.2, ease: "power1.in", immediateRender: false }, A(at + glide * 0.38));
     tl.to(fog, { opacity: 0, duration: glide * 0.3, ease: "power1.out" }, A(at + glide * 0.62));
-    const fT = at + glide * 0.52;
-    tl.set(`#${id}-opface`, { opacity: 0.7 }, A(fT)); tl.set(`#${id}-opface`, { opacity: 0 }, A(fT + 0.07));
-    tl.set(`#${id}-opface`, { opacity: 0.4 }, A(fT + 0.14)); tl.set(`#${id}-opface`, { opacity: 0 }, A(fT + 0.18));
     tl.to([`#${id}-opsea`, `#${id}-oppuff`], { opacity: 0, duration: 0.3, ease: "power1.in" }, A(land - 0.35));
     // the landing hits: a red pulse and a glitch
     if (window.Fx) Fx.glitch(tl, `#${id}`, A(land), 0.16, 14, 5);
@@ -210,7 +196,7 @@
     const at = AT(o), gl = GL(o), land = at + gl;
     return [[k, 0.0, "swell", 0.6], [k, 0.55, "glitch", 0.35], [k, 0.82, "boom", 0.45], [k, 1.15, "sting", 0.5], [k, 1.18, "glitch", 0.45],
       [k, at - 0.9, "riser", 0.7], [k, at - 0.12, "glitch", 0.5], [k, at, "whoosh", 0.9], [k, at + gl * 0.45, "whoosh", 0.8],
-      [k, at + gl * 0.52, "sting", 0.9], [k, land - 0.02, "boom", 0.9], [k, land, "glitch", 0.5]];
+      [k, land - 0.02, "boom", 0.9], [k, land, "glitch", 0.5]];
   };
 
   window.Opener = { extra, cam, shake, fx, cues, CSS };

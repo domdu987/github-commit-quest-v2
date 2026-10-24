@@ -49,15 +49,29 @@
       <path d="M140,40Q220,0 300,10M260,90Q330,80 380,120M60,0Q90,-60 160,-80" stroke="${col}" stroke-width="14" fill="none" stroke-linecap="round"/>
       ${[[300, 10], [160, -80], [380, 120], [420, 140], [220, 40]].map(([lx, ly]) => `<ellipse cx="${lx}" cy="${ly}" rx="46" ry="18" fill="${col}" transform="rotate(${(lx % 50) - 25} ${lx} ${ly})"/>`).join("")}</g>`;
 
-  // the villager in the fog: a pale figure with a blanket round the shoulders; an arm that waves (class wave, pivot at the shoulder)
+  // the villager in the fog (designed for this story — user: "ไม่ใช่เอาต้นแบบกองกอยมา คิดใหม่"): they died of the charcoal
+  // smoke in their sleep, so each one is a sleeper still wrapped head to foot in a woven blanket (ผ้าห่มลายขิด), the hood dark
+  // inside but for two eyes that glow like coals in a stove, smoke curling out of the hood, the hem dissolving into fog (no feet:
+  // they hang in it), one long ash-grey hand out of the blanket. The waving arm is class wave (pivot at the shoulder, 50,-300).
+  const VBL = "#4a3c31", VBL2 = "#5c4a3b", VSTR = "#8a6a4a", VHOOD = "#070504", VASH = "#a9aea9";
+  const vEmber = (x, y) => `<g class="ember"><circle cx="${x}" cy="${y}" r="15" fill="#ff7a2a" opacity=".32"/><circle cx="${x + 22}" cy="${y + 3}" r="15" fill="#ff7a2a" opacity=".32"/>
+      <ellipse cx="${x}" cy="${y}" rx="6.5" ry="4.5" fill="#ffb24a"/><ellipse cx="${x + 22}" cy="${y + 3}" rx="6.5" ry="4.5" fill="#ffb24a"/><circle cx="${x}" cy="${y}" r="2.2" fill="#fff2c0"/><circle cx="${x + 22}" cy="${y + 3}" r="2.2" fill="#fff2c0"/></g>`;
+  const ashHand = (x, y, a) => `<g transform="translate(${x},${y}) rotate(${a})"><ellipse rx="16" ry="20" fill="${VASH}"/>${[-10, -3, 4, 11].map((d, k) => `<path d="M${d},-12l${d * 0.25},-${34 + (k % 2) * 8}" stroke="${VASH}" stroke-width="7" stroke-linecap="round"/><circle cx="${d + d * 0.25}" cy="${-46 - (k % 2) * 8}" r="3.6" fill="#2a2420"/>`).join("")}</g>`;
   function villager(x, y, s, o = {}) {
-    const arm = o.wave === false ? `<path d="M-46,-300Q-60,-200 -50,-120" stroke="#1c2228" stroke-width="30" stroke-linecap="round" fill="none"/>`
-      : `<g class="wave" data-ox="${x + 50 * s}" data-oy="${y - 300 * s}"><path d="M50,-300Q90,-380 100,-470" stroke="#1c2228" stroke-width="28" stroke-linecap="round" fill="none"/><g transform="translate(100,-480)"><ellipse rx="22" ry="28" fill="#c9d3cf"/>${[-14, -4, 6, 15].map((fx) => `<path d="M${fx},-18v-30" stroke="#c9d3cf" stroke-width="9" stroke-linecap="round"/>`).join("")}</g></g>`;
+    const lk = o.look || 0;
+    const arm = o.wave === false
+      ? ""
+      : `<g class="wave" data-ox="${x + 50 * s}" data-oy="${y - 300 * s}"><path d="M50,-300C64,-360 80,-410 94,-452" stroke="${VBL2}" stroke-width="26" stroke-linecap="round" fill="none"/><path d="M80,-420C88,-436 92,-444 96,-452" stroke="${VASH}" stroke-width="12" stroke-linecap="round"/>${ashHand(98, -470, 8)}</g>`;
     return `<g class="vlg" opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${s})">
-      <path d="M-70,0L-60,-280Q-62,-330 -20,-344H20Q62,-330 60,-280L70,0Z" fill="#1c2228"/>
-      <path d="M-84,-250Q-90,-340 -30,-352H30Q90,-340 84,-250Q60,-280 0,-284Q-60,-280 -84,-250Z" fill="#5a4a3e"/>${arm}
-      <ellipse cx="0" cy="-392" rx="40" ry="48" fill="#c9d3cf"/><path d="M-42,-400Q-46,-450 0,-452Q46,-450 42,-400Q30,-430 0,-430Q-30,-430 -42,-400Z" fill="#1c2228"/>
-      <ellipse cx="${-14 + (o.look || 0)}" cy="-392" rx="7" ry="9" fill="#0b0f12"/><ellipse cx="${14 + (o.look || 0)}" cy="-392" rx="7" ry="9" fill="#0b0f12"/></g></g>`;
+      <g class="fogb" data-d="14"><ellipse cx="0" cy="-30" rx="110" ry="40" fill="url(#mkPuff)" opacity=".9"/><ellipse cx="-40" cy="-10" rx="90" ry="30" fill="url(#mkPuff)" opacity=".7"/></g>
+      <path d="M-62,-60C-80,-160 -76,-280 -50,-350C-30,-404 10,-424 40,-412C78,-396 84,-330 74,-250C68,-180 66,-110 60,-60C40,-40 30,-70 16,-48C2,-30 -12,-66 -26,-44C-40,-26 -48,-62 -62,-60Z" fill="${VBL}" stroke="#2a221c" stroke-width="3" stroke-linejoin="round"/>
+      ${[-300, -250, -200, -150, -100].map((yy, k) => `<path d="M${-60 + k * 2},${yy}Q${8},${yy + 14} ${70 - k * 2},${yy - 4}" stroke="${k % 2 ? VSTR : "#6e5640"}" stroke-width="${k % 2 ? 5 : 9}" fill="none" opacity=".75"/>`).join("")}
+      ${[-80, -40, 0, 40].map((xx, k) => `<path d="M${xx - 6},${-225 + (k % 2) * 10}l6,-8l6,8l-6,8z" fill="${VSTR}" opacity=".7"/>`).join("")}
+      <path d="M-46,-338C-40,-420 52,-440 66,-370C72,-340 62,-316 54,-300C30,-290 -20,-292 -46,-338Z" fill="${VBL2}" stroke="#2a221c" stroke-width="3"/>
+      <path d="M-26,-340C-20,-392 40,-404 50,-360C54,-338 46,-320 36,-312C14,-306 -12,-310 -26,-340Z" fill="${VHOOD}"/>
+      ${vEmber(2 + lk, -350)}
+      <g class="fogb" data-d="-10">${[0, 1, 2].map((k) => `<path d="M${10 + k * 12},-410C${0 + k * 14},-450 ${30 + k * 10},-470 ${16 + k * 12},-510" stroke="#8a8f94" stroke-width="${7 - k}" fill="none" opacity="${0.5 - k * 0.12}" stroke-linecap="round"/>`).join("")}</g>
+      ${o.wave === false ? ashHand(54, -150, 186) : ""}${arm}</g></g>`;
   }
 
   // a small white hatchback seen from the side, nose to the right. Light groups by id so a shot can switch them:
@@ -272,7 +286,7 @@
   function carWindow(L, o = {}) {
     const id = o.id || "cw", r = mk(o.seed || 113);
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#4b5159"/>` + fogBands(r, -200, 2400, 8, 0.7));
-    put(L.far, `<g id="${id}-face" transform="translate(0,0) scale(1)" opacity="${o.face ?? 1}">${villager(560, 1700, 1.9, { wave: false })}</g><g id="${id}-knock" opacity="${o.knock ?? 0}"><g transform="translate(760,880)"><ellipse rx="56" ry="64" fill="#c9d3cf" ${OUT}/>${[-30, -10, 10, 30].map((fx) => `<ellipse cx="${fx}" cy="-46" rx="13" ry="16" fill="#b8c4bf" ${OUT}/>`).join("")}</g></g>`);
+    put(L.far, `<g id="${id}-face" transform="translate(0,0) scale(1)" opacity="${o.face ?? 1}">${villager(560, 1700, 1.9, { wave: false })}</g><g id="${id}-knock" opacity="${o.knock ?? 0}"><g transform="translate(760,880)"><ellipse rx="52" ry="60" fill="${VASH}" stroke="#4a4f4a" stroke-width="4"/>${[-30, -10, 10, 30].map((fx) => `<path d="M${fx},-40l${fx / 6},-56" stroke="${VASH}" stroke-width="13" stroke-linecap="round"/><circle cx="${fx + fx / 6}" cy="-98" r="5" fill="#2a2420"/>`).join("")}</g></g>`);
     put(L.mid, `<g id="${id}-glass"><rect x="80" y="380" width="920" height="900" rx="40" fill="#9fb3c4" opacity=".22"/><path d="M160,460L420,420M180,560L300,540" stroke="#e9f4f8" stroke-width="10" opacity=".25" stroke-linecap="round"/>
       ${Array.from({ length: 30 }, () => `<circle cx="${f1(120 + r() * 860)}" cy="${f1(420 + r() * 820)}" r="${f1(3 + r() * 6)}" fill="#e9f4f8" opacity=".3"/>`).join("")}</g>`);
     put(L.set, `<path d="M-900,-600H2000V2600H-900ZM80,420Q80,380 120,380H960Q1000,380 1000,420V1280H80Z" fill="#1b1e23" fill-rule="evenodd"/>
@@ -324,6 +338,8 @@
     const q = (c) => document.querySelectorAll(`${scope} ${c}`);
     q(".fogb").forEach((el, i) => tl.fromTo(el, { x: 0 }, { x: (i % 2 ? -1 : 1) * (+(el.dataset.d) || 40) * dur, duration: dur, ease: "none", immediateRender: false }, t0));
     q(".haz").forEach((el) => { for (let k = 0; k < dur; k += 0.8) { tl.set(el, { opacity: 1 }, t0 + k); tl.set(el, { opacity: 0.08 }, t0 + k + 0.4); } });
+    // the villagers' coal eyes breathe like embers
+    q(".ember").forEach((el, i) => tl.fromTo(el, { opacity: 1 }, { opacity: 0.55, duration: 0.5 + (i % 4) * 0.12, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (i % 5) * 0.1));
     // rotate about the shoulder in the figure's own units (svgOrigin would use the root SVG's space and miss inside the camera layers)
     q(".wave").forEach((el, i) => tl.fromTo(el, { attr: { transform: "rotate(-14 50 -300)" } }, { attr: { transform: "rotate(18 50 -300)" }, duration: 0.55, repeat: Math.ceil(dur / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.1));
     q(".flow").forEach((el) => {
@@ -340,11 +356,11 @@
 
   // ================= EP.2 (อย่าหลับใน): the abandoned village, the house with the charcoal stove =================
   const PALE = "#c9d3cf", BLK = "#5a4a3e";
-  // one of the village dead sitting on the floor: blanket mound, pale face, dark eyes (same head as the standing villager)
+  // one of the village dead sitting on the floor: a hooded blanket mound, two coal-glow eyes in the dark of the hood, a thread of smoke
   const ghostSit = (x, y, s, op = 1) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})" opacity="${op}">
-      <path d="M-96,0Q-104,-150 -52,-204Q0,-232 52,-204Q104,-150 96,0Z" fill="${BLK}"/><path d="M-60,-40Q0,-20 60,-40" stroke="#463a30" stroke-width="8" fill="none"/>
-      <ellipse cx="0" cy="-252" rx="40" ry="48" fill="${PALE}"/><path d="M-42,-260Q-46,-310 0,-312Q46,-310 42,-260Q30,-290 0,-290Q-30,-290 -42,-260Z" fill="#1c2228"/>
-      <ellipse cx="-14" cy="-252" rx="7" ry="9" fill="#0b0f12"/><ellipse cx="14" cy="-252" rx="7" ry="9" fill="#0b0f12"/></g>`;
+      <path d="M-96,0Q-104,-150 -52,-204Q0,-232 52,-204Q104,-150 96,0Z" fill="${VBL}"/>${[-150, -100, -50].map((yy, k) => `<path d="M-90,${yy}Q0,${yy + 12} 90,${yy - 4}" stroke="${k % 2 ? VSTR : "#6e5640"}" stroke-width="${k % 2 ? 5 : 8}" fill="none" opacity=".7"/>`).join("")}
+      <path d="M-58,-200C-56,-300 56,-306 58,-210C56,-180 -56,-176 -58,-200Z" fill="${VBL2}"/><path d="M-38,-206C-36,-276 36,-280 38,-214C30,-196 -30,-194 -38,-206Z" fill="${VHOOD}"/>
+      ${vEmber(-11, -238)}<path d="M2,-290C-8,-320 16,-340 4,-372" stroke="#8a8f94" stroke-width="5" fill="none" opacity=".45" stroke-linecap="round"/></g>`;
   // someone sitting slumped, wrapped head to foot in the villagers' brown blanket (face hidden in the hood)
   const wrapped = (x, y, s) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><path d="M-110,0Q-122,-170 -64,-236Q0,-276 64,-236Q122,-170 110,0Z" fill="${BLK}" ${OUT}/>
       <path d="M-64,-236Q0,-300 64,-236Q54,-196 0,-190Q-54,-196 -64,-236Z" fill="#4e4036" ${OUT}/><ellipse cx="0" cy="-222" rx="36" ry="24" fill="#0b0d10"/><path d="M-80,-60Q0,-30 80,-60" stroke="#463a30" stroke-width="8" fill="none"/></g>`;
@@ -502,8 +518,10 @@
     sc += stove(id, 540, 1200, 0.42) + `<circle cx="540" cy="1110" r="320" fill="url(#mkFire)"/><rect x="150" y="690" width="780" height="520" fill="#fff" opacity=".06"/>`;
     put(L.set, `<rect x="40" y="560" width="1000" height="800" rx="60" fill="#1b1d20" ${OUT}/><rect x="70" y="590" width="940" height="740" rx="44" fill="#24272c"/>
       <defs><clipPath id="${id}-clip"><rect x="150" y="690" width="780" height="520" rx="10"/></clipPath></defs>
-      <g clip-path="url(#${id}-clip)">${sc}</g><rect x="150" y="690" width="780" height="520" rx="10" fill="none" stroke="#0b0d10" stroke-width="10"/>
-      <text x="170" y="732" font-family="Kanit" font-weight="700" font-size="28" fill="#f4f2ea">1/1</text><text x="910" y="732" text-anchor="end" font-family="Kanit" font-weight="700" font-size="28" fill="#f4f2ea">ISO 3200</text>
+      <g id="${id}-scene" clip-path="url(#${id}-clip)"${o.nv ? ` style="filter:grayscale(1) sepia(1) hue-rotate(58deg) saturate(2.6) brightness(1.5) contrast(1.25)"` : ""}>${sc}${o.nv ? Array.from({ length: 52 }, (_, k) => `<path d="M150,${700 + k * 10}H930" stroke="#000" stroke-width="2" opacity=".18"/>`).join("") : ""}</g>
+      <rect x="150" y="690" width="780" height="520" rx="10" fill="none" stroke="#0b0d10" stroke-width="10"/>
+      ${o.nv ? `<circle cx="178" cy="722" r="10" fill="#e8443a"/><text x="198" y="732" font-family="Kanit" font-weight="700" font-size="28" fill="#eaffe0">REC · โหมดกลางคืน</text><text x="910" y="732" text-anchor="end" font-family="Kanit" font-weight="700" font-size="28" fill="#eaffe0">IR</text>`
+        : `<text x="170" y="732" font-family="Kanit" font-weight="700" font-size="28" fill="#f4f2ea">1/1</text><text x="910" y="732" text-anchor="end" font-family="Kanit" font-weight="700" font-size="28" fill="#f4f2ea">ISO 3200</text>`}
       <circle cx="540" cy="1272" r="34" fill="#30353c" ${OUT}/>${[380, 700].map((x) => `<rect x="${x - 40}" y="1256" width="80" height="32" rx="10" fill="#30353c" ${OUT}/>`).join("")}`);
     const fistArm = (x, y, side) => `<path d="M${x},${y}L${x + side * 260},2300" stroke="${INK}" stroke-width="150" stroke-linecap="round"/><path d="M${x},${y}L${x + side * 260},2300" stroke="#5f6b4a" stroke-width="140" stroke-linecap="round"/>
         <g transform="translate(${x},${y}) rotate(${side * 30})">${Hands.fist({ r: 90, skin: "#dca57c", shade: "#bb8560" })}</g>`;
@@ -600,6 +618,87 @@
     put(L.set, s);
   }
 
+  // ---------------- the legend of บ้านหมอก, told as a shadow-puppet play (like เสียงกอย's legend; user asked for it) ----------------
+  // four lit screens stacked down the set (the shot's camera glides from one to the next), puppets on rods with lace cut-outs:
+  // S1 y 0–900 the village in the fog · S2 1600–2500 a family round the charcoal stove, shutters closed (smoke curls #id-smoke)
+  // S3 3200–4100 morning: the sun through the shutters, the family lying still, a rooster · S4 4800–5700 the road at night:
+  // a car's lights and the villagers waving (wave class)
+  const LGY = [0, 1600, 3200, 4800];
+  function mokLegend(L, o = {}) {
+    const id = o.id || "lg", P = "#170d06", CUT = "#ffd9a0", ROD = "#3a2414";
+    put(L.sky, `<rect x="-900" y="-1200" width="2900" height="8400" fill="#1c1009"/>`);
+    const screen = (y0, y1) => `<rect x="-40" y="${y0}" width="1160" height="${y1 - y0}" fill="#e9a457"/>
+      <circle class="lamp" cx="540" cy="${(y0 + y1) / 2}" r="${(y1 - y0) * 0.75}" fill="url(#clothglow)"/>
+      ${Array.from({ length: 30 }, (_, k) => `<path d="M${-40 + k * 40},${y0}V${y1}" stroke="#c98a44" stroke-width="1.5" opacity=".25"/>`).join("")}
+      <path d="M-40,${y0}H1120" stroke="${P}" stroke-width="18"/><path d="M-40,${y1}H1120" stroke="${P}" stroke-width="18"/>
+      <path d="${Array.from({ length: 28 }, (_, k) => `M${-40 + k * 42},${y0 + 8}l21,26l21,-26`).join("")}" fill="${P}"/>
+      <path d="${Array.from({ length: 28 }, (_, k) => `M${-40 + k * 42},${y1 - 8}l21,-26l21,26`).join("")}" fill="${P}"/>`;
+    const rod = (x, y, len = 260) => `<path d="M${x},${y}V${y + len}" stroke="${ROD}" stroke-width="6"/>`;
+    const pup = (x, y, inner, rot = 0) => `<g class="pup" data-ox="${x}" data-oy="${y}">${rod(x, y)}<g transform="translate(${x},${y}) rotate(${rot})">${inner}</g></g>`;
+    // a stilt house with lace cut-outs
+    const house = (s) => `<g transform="scale(${s})"><path d="M-170,-250L0,-400L170,-250Z" fill="${P}"/><rect x="-140" y="-250" width="280" height="170" fill="${P}"/>
+      ${[-110, -40, 30, 100].map((x) => `<rect x="${x - 6}" y="-80" width="12" height="80" fill="${P}"/>`).join("")}<rect x="-160" y="-86" width="320" height="12" fill="${P}"/>
+      <rect x="-96" y="-220" width="60" height="70" fill="${CUT}"/><path d="M-96,-185H-36M-66,-220V-150" stroke="${P}" stroke-width="6"/><rect x="30" y="-230" width="70" height="140" fill="${P}" stroke="${CUT}" stroke-width="5"/>
+      <path d="M-120,-280c20,-30 60,-30 80,0M40,-300c20,-30 60,-30 80,0" stroke="${CUT}" stroke-width="5" fill="none"/>${[-80, 0, 80].map((x) => `<ellipse cx="${x}" cy="-330" rx="7" ry="12" fill="${CUT}"/>`).join("")}</g>`;
+    const curl = (x, y, s) => `<path d="M${x},${y}c-${20 * s},-${20 * s} ${10 * s},-${50 * s} ${30 * s},-${30 * s}c${16 * s},${16 * s} -${4 * s},${36 * s} -${20 * s},${24 * s}" stroke="${CUT}" stroke-width="${4 + s}" fill="none" stroke-linecap="round"/>`;
+    const sitter = (s, child) => `<g transform="scale(${s})"><circle cx="0" cy="-${child ? 150 : 190}" r="${child ? 30 : 36}" fill="${P}"/><path d="M-60,0C-66,-80 -40,-${child ? 120 : 150} 0,-${child ? 122 : 156}C40,-${child ? 120 : 150} 66,-80 60,0Z" fill="${P}"/>
+      <path d="M30,-100L90,-80" stroke="${P}" stroke-width="16" stroke-linecap="round"/><ellipse cx="0" cy="-70" rx="${child ? 8 : 10}" ry="${child ? 14 : 18}" fill="${CUT}"/></g>`;
+    const sleeper = (s) => `<g transform="scale(${s})"><circle cx="-150" cy="-34" r="30" fill="${P}"/><path d="M-120,0C-120,-50 -90,-64 -40,-64H130C160,-64 170,-30 170,0Z" fill="${P}"/>
+      ${[-60, 0, 60, 120].map((x) => `<ellipse cx="${x}" cy="-32" rx="8" ry="12" fill="${CUT}"/>`).join("")}<path d="M-176,-34h-20" stroke="${CUT}" stroke-width="4"/></g>`;
+    const stove = (s) => `<g transform="scale(${s})"><path d="M-70,0L-90,-120H90L70,0Z" fill="${P}"/><path d="M-96,-120H96V-140H-96Z" fill="${P}"/><path d="M-30,-20Q0,-70 30,-20Z" fill="${CUT}"/>
+      ${[[-50, -150], [-10, -160], [30, -152], [60, -146]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="16" fill="${P}"/><circle cx="${x}" cy="${y}" r="5" fill="${CUT}"/>`).join("")}</g>`;
+    let s = LGY.map((y) => screen(y, y + 900)).join("");
+    // S1: the village in the fog
+    s += `<circle cx="820" cy="190" r="70" fill="${CUT}"/><circle cx="846" cy="176" r="62" fill="#e9a457"/>`;
+    s += pup(300, 760, house(1.05)) + pup(800, 790, house(0.85));
+    s += `<g id="${id}-fog1">${[[120, 640, 2], [420, 600, 2.4], [700, 650, 2], [960, 610, 2.2], [260, 840, 2.6], [640, 860, 2.6]].map(([x, y, k]) => curl(x, y, k)).join("")}</g>`;
+    // S2: round the stove, shutters closed, the smoke
+    const Y2 = LGY[1];
+    s += `<rect x="380" y="${Y2 + 120}" width="320" height="200" fill="${P}"/>${[440, 500, 560, 620].map((x) => `<path d="M${x},${Y2 + 130}V${Y2 + 310}" stroke="${CUT}" stroke-width="5"/>`).join("")}<path d="M380,${Y2 + 220}H700" stroke="${P}" stroke-width="8"/>`;
+    s += pup(540, Y2 + 820, stove(1.3)) + pup(250, Y2 + 820, sitter(1.25)) + pup(820, Y2 + 820, sitter(1.2)) + pup(380, Y2 + 840, sitter(0.9, true));
+    s += `<g id="${id}-smoke">${[[500, Y2 + 600, 2.2], [560, Y2 + 520, 2.6], [520, Y2 + 430, 3], [580, Y2 + 350, 3.2], [480, Y2 + 290, 3.4]].map(([x, y, k]) => curl(x, y, k)).join("")}</g>`;
+    // S3: morning, nobody wakes
+    const Y3 = LGY[2];
+    s += `<rect x="380" y="${Y3 + 120}" width="320" height="200" fill="${P}"/><circle cx="540" cy="${Y3 + 220}" r="70" fill="${CUT}"/>${[440, 500, 560, 620].map((x) => `<path d="M${x},${Y3 + 130}V${Y3 + 310}" stroke="${P}" stroke-width="10"/>`).join("")}`;
+    s += `<g id="${id}-rays">${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M${430 + k * 44},${Y3 + 330}L${300 + k * 90},${Y3 + 760}" stroke="${CUT}" stroke-width="6" opacity=".7"/>`).join("")}</g>`;
+    s += pup(330, Y3 + 840, sleeper(1.15)) + pup(760, Y3 + 840, sleeper(1.0)) + pup(560, Y3 + 860, sleeper(0.7)) + pup(540, Y3 + 700, stove(0.8));
+    s += pup(880, Y3 + 420, `<g transform="scale(1.1)"><path d="M0,0C-30,-10 -40,-60 -10,-80C0,-110 30,-110 34,-84L54,-90L44,-70C60,-40 40,0 0,0Z" fill="${P}"/><path d="M-6,0V40M14,0V40" stroke="${P}" stroke-width="6"/><circle cx="20" cy="-90" r="5" fill="${CUT}"/><path d="M-10,-80c-20,-20 -10,-40 6,-36" fill="${P}"/></g>`);
+    // S4: the road at night, the villagers waving at a car's lights
+    const Y4 = LGY[3];
+    s += `<path d="M-40,${Y4 + 760}H1120" stroke="${P}" stroke-width="40"/>`;
+    s += pup(170, Y4 + 760, `<path d="M-120,0V-70Q-110,-120 -60,-124L-20,-170H80L120,-124Q150,-120 150,-70V0Z" fill="${P}"/><circle cx="-60" cy="0" r="30" fill="${P}"/><circle cx="90" cy="0" r="30" fill="${P}"/><rect x="-6" y="-160" width="70" height="40" fill="${CUT}"/>
+      <path d="M150,-90L420,-190V10Z" fill="${CUT}" opacity=".55"/>`);
+    // the shrouded villager as a puppet: blanket, hood, fog hem; the coal eyes and the blanket's woven stripes are cut out
+    const shroud = (sc, wave) => `<g transform="scale(${sc})"><path d="M-62,-60C-80,-160 -76,-280 -50,-350C-30,-404 10,-424 40,-412C78,-396 84,-330 74,-250C68,-180 66,-110 60,-60C40,-40 30,-70 16,-48C2,-30 -12,-66 -26,-44C-40,-26 -48,-62 -62,-60Z" fill="${P}"/>
+      ${[-260, -190, -120].map((yy) => `<path d="M-54,${yy}Q8,${yy + 14} 64,${yy - 4}" stroke="${CUT}" stroke-width="4" fill="none" stroke-dasharray="10 8"/>`).join("")}
+      <ellipse cx="2" cy="-350" rx="7" ry="5" fill="#ff9a4a"/><ellipse cx="24" cy="-347" rx="7" ry="5" fill="#ff9a4a"/>
+      ${wave ? `<path d="M50,-300C64,-360 80,-410 94,-452" stroke="${P}" stroke-width="22" stroke-linecap="round" fill="none"/>${[-10, -3, 4, 11].map((d) => `<path d="M${98 + d},-482l${d * 0.25},-34" stroke="${P}" stroke-width="7" stroke-linecap="round"/>`).join("")}` : ""}</g>`;
+    s += pup(760, Y4 + 760, shroud(1.0, true)) + `<g opacity=".85">${pup(940, Y4 + 720, shroud(0.7, false))}${pup(600, Y4 + 710, shroud(0.6, false))}</g>`;
+    s += `<g id="${id}-fog4">${[[300, Y4 + 640, 2.2], [900, Y4 + 560, 2.4], [520, Y4 + 520, 2]].map(([x, y, k]) => curl(x, y, k)).join("")}</g>`;
+    put(L.set, s);
+  }
+
+  // ---------------- under the stilt house: the dark between the posts (EP.2 jump scare, like เสียงกอย's under-the-bed eyes) ----------------
+  // a phone torch pool sweeps the dark (#id-pool, #id-beam); something is in there: #id-eyes and #id-hair (opacity 0), #id-close (the
+  // same eyes much nearer, for the jump)
+  function underHouse(L, o = {}) {
+    const id = o.id || "uh", r = mk(o.seed || 41);
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#5a6068"/>` + fogBands(r, -200, 900, 4, 0.6));
+    put(L.far, fogBands(r, 1300, 2000, 3, 0.55));
+    let s = `<rect x="-900" y="300" width="2900" height="230" fill="#2a2420"/>${Array.from({ length: 22 }, (_, k) => `<path d="M${-900 + k * 140},300V530" stroke="#1c1814" stroke-width="10"/>`).join("")}<path d="M-900,530H2000" stroke="#14110e" stroke-width="20"/>`;
+    s += `<rect x="-900" y="530" width="2900" height="980" fill="#050607"/>`;
+    s += `<path d="M-900,1500C-300,1480 300,1520 900,1490S1700,1510 2000,1500V2600H-900Z" fill="#3a3128"/>${Array.from({ length: 24 }, () => `<ellipse cx="${f1(-800 + r() * 2700)}" cy="${f1(1530 + r() * 900)}" rx="${f1(10 + r() * 30)}" ry="${f1(4 + r() * 8)}" fill="#2a231c"/>`).join("")}`;
+    s += `<g><path d="M200,1500C170,1400 190,1330 260,1320C330,1330 350,1400 320,1500Z" fill="#4a3424" ${OUT}/><ellipse cx="260" cy="1322" rx="44" ry="12" fill="#2a1d14"/></g>`;
+    s += `<g>${[0, 1, 2, 3].map((k) => `<rect x="${780 + (k % 2) * 30}" y="${1420 - k * 26}" width="220" height="24" rx="10" fill="#4a3826" ${OUT}/>`).join("")}</g>`;
+    s += `<g id="${id}-hair" opacity="0">${Array.from({ length: 12 }, (_, k) => `<path d="M${500 + k * 12},560C${492 + k * 14},700 ${506 + k * 10},860 ${496 + k * 13},${1000 + (k % 3) * 40}" stroke="#121516" stroke-width="10" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+    s += `<g id="${id}-eyes" opacity="0"><circle cx="540" cy="900" r="24" fill="#eef4e0" opacity=".25"/><circle cx="604" cy="906" r="24" fill="#eef4e0" opacity=".25"/><circle cx="540" cy="900" r="8" fill="#f6fbea"/><circle cx="604" cy="906" r="8" fill="#f6fbea"/></g>`;
+    s += `<g id="${id}-close" opacity="0"><circle cx="470" cy="960" r="70" fill="#eef4e0" opacity=".22"/><circle cx="660" cy="976" r="70" fill="#eef4e0" opacity=".22"/><circle cx="470" cy="960" r="24" fill="#f6fbea"/><circle cx="660" cy="976" r="24" fill="#f6fbea"/>
+      ${Array.from({ length: 16 }, (_, k) => `<path d="M${300 + k * 32},540C${290 + k * 34},760 ${310 + k * 30},1000 ${296 + k * 33},${1300 + (k % 3) * 60}" stroke="#121516" stroke-width="22" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+    put(L.set, s);
+    put(L.glow, `<g id="${id}-beam"><ellipse id="${id}-pool" cx="0" cy="980" rx="300" ry="250" fill="url(#mkLow)" opacity=".42"/></g>`);
+    put(L.fg, `<rect x="-120" y="200" width="150" height="2400" fill="#14110e"/><rect x="1020" y="200" width="170" height="2400" fill="#14110e"/>` + fgGrass(r, 2050, 8));
+  }
+
   // ---------------- cast ----------------
   Object.assign(Rig.CAST, {
     mintFake: { // the thing by the stove in มิ้นท์'s jacket and beanie: the villagers' grey skin
@@ -656,6 +755,6 @@
     },
   });
 
-  Object.assign(Sets, { carPOV, roadSign, mountainRoad, gasStation, mirrorClose, roadFog, carInterior, carWindow, rearWindow, plateClose, topRoad, houseRoom, fogVillage, windowLook, photoLCD, bundleClose, pickupWindow, gasMorning, wheelClose });
+  Object.assign(Sets, { mokLegend, underHouse, carPOV, roadSign, mountainRoad, gasStation, mirrorClose, roadFog, carInterior, carWindow, rearWindow, plateClose, topRoad, houseRoom, fogVillage, windowLook, photoLCD, bundleClose, pickupWindow, gasMorning, wheelClose });
   window.Mok = { villager, car, carLights, fogBands, fogBlobs, life, ghostSit, stove, wrapped, pickup, womanSit };
 })();
