@@ -25,7 +25,7 @@
     <linearGradient id="fBoard" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5a46"/><stop offset="1" stop-color="#1f3f31"/></linearGradient>
     <linearGradient id="fCan" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8d9299"/><stop offset=".35" stop-color="#e3e6e8"/><stop offset=".7" stop-color="#aeb3b8"/><stop offset="1" stop-color="#6f757b"/></linearGradient>
     <radialGradient id="fSun"><stop offset="0" stop-color="#fff2c0" stop-opacity=".95"/><stop offset=".35" stop-color="#ffd37a" stop-opacity=".5"/><stop offset="1" stop-color="#ffb060" stop-opacity="0"/></radialGradient>
-    <radialGradient id="fLamp"><stop offset="0" stop-color="#ffd58a" stop-opacity=".22"/><stop offset=".4" stop-color="#ffb35c" stop-opacity=".06"/><stop offset="1" stop-color="#ffb35c" stop-opacity="0"/></radialGradient>
+    <radialGradient id="fLamp"><stop offset="0" stop-color="#ffd58a" stop-opacity=".3"/><stop offset=".4" stop-color="#ffb35c" stop-opacity=".07"/><stop offset="1" stop-color="#ffb35c" stop-opacity="0"/></radialGradient>
     <radialGradient id="fDial"><stop offset="0" stop-color="#ffd27a" stop-opacity=".9"/><stop offset=".5" stop-color="#ff9a3c" stop-opacity=".3"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>
     <radialGradient id="fRing"><stop offset=".6" stop-color="#ff5a3a" stop-opacity="0"/><stop offset=".9" stop-color="#ff5a3a" stop-opacity=".5"/><stop offset="1" stop-color="#ff5a3a" stop-opacity="0"/></radialGradient>
     <pattern id="fPaper" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" fill="#f3ecd9"/><path d="M0,59.5H60" stroke="#cdbfa3" stroke-width="1.5"/></pattern>
@@ -426,26 +426,30 @@
     put(L.mid, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="0"/><stop offset=".55" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="${op * 0.3}"/></linearGradient><rect x="-1200" y="${y - h}" width="3500" height="${h + 200}" fill="url(#${id})"/>`);
   }
   // light(L, x, y, r, col, op): a soft light source above the darkness (glow layer): core + wide bloom; cls = "lampf" flickers (flife)
-  // the user (24 ต.ค.) asked for the yellow glows to go: light / cone / rays are kept as no-ops so the LOOK tables still run
+  // light(L, x, y, R, col, op, cls): a light SOURCE the professional way — a tight bright core with a short halo at the lamp itself,
+  // never a frame-wide wash (the user: "แสงบังจนดูไม่รู้เรื่อง"); the floor gets its light from cone() instead
   function light(L, x, y, R = 500, col = "#ffd58a", op = 0.5, cls = "") {
     if (!Fence.GLOW) return;
     const id = `lt${DEPN++}`;
-    put(L.glow, `<radialGradient id="${id}"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset=".45" stop-color="${col}" stop-opacity="${op * 0.35}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>
-      <g class="${cls}"><circle cx="${x}" cy="${y}" r="${R * 1.6}" fill="url(#${id})" opacity=".55"/><circle cx="${x}" cy="${y}" r="${R}" fill="url(#${id})"/></g>`);
+    put(L.glow, `<radialGradient id="${id}"><stop offset="0" stop-color="#fff6e0" stop-opacity="${Math.min(1, op * 1.1)}"/><stop offset=".12" stop-color="${col}" stop-opacity="${op * 0.55}"/><stop offset=".3" stop-color="${col}" stop-opacity="${op * 0.14}"/><stop offset=".6" stop-color="${col}" stop-opacity="${op * 0.03}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>
+      <g class="${cls}"><circle cx="${x}" cy="${y}" r="${R * 0.5}" fill="url(#${id})"/></g>`);
   }
-  // cone(L, x, y, w, h, col, op): light falling from a lamp at (x, y) onto the ground below (glow layer)
+  // cone(L, x, y, w, h, col, op): the light a lamp at (x, y) throws — a faint narrow beam and a soft pool on the floor at y + h (the pool sits
+  // under the actors in the set layer, so people stand IN the light instead of behind a glow)
   function cone(L, x, y, w = 600, h = 900, col = "#ffd58a", op = 0.35, cls = "lampf") {
     if (!Fence.GLOW) return;
     const id = `cn${DEPN++}`;
-    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
-      <path class="${cls}" d="M${x - 40},${y}L${x + 40},${y}L${x + w / 2},${y + h}L${x - w / 2},${y + h}Z" fill="url(#${id})"/>`);
+    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op * 0.32}"/><stop offset=".5" stop-color="${col}" stop-opacity="${op * 0.08}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
+      <path class="${cls}" d="M${x - 26},${y}L${x + 26},${y}L${x + w * 0.42},${y + h}L${x - w * 0.42},${y + h}Z" fill="url(#${id})"/>`);
+    put(L.set, `<radialGradient id="${id}p"><stop offset="0" stop-color="${col}" stop-opacity="${op * 0.5}"/><stop offset=".55" stop-color="${col}" stop-opacity="${op * 0.18}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>
+      <ellipse class="${cls}" cx="${x}" cy="${y + h}" rx="${w * 0.62}" ry="${w * 0.15}" fill="url(#${id}p)"/>`);
   }
   // rays(L, x0, x1, y0, y1, n, col): slanted light shafts (glow layer)
   function rays(L, x0 = -600, x1 = 400, y0 = 300, y1 = 1500, n = 4, col = "#ffd8a0", op = 0.5) {
-    if (!Fence.GLOW) return;
+    if (!Fence.GLOW) return;   // thin, faint shafts: a hint of dust in the air, not a wall of yellow
     const id = `ry${DEPN++}`;
-    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
-      ${Array.from({ length: n }, (_, k) => { const w = (x1 - x0) / n, x = x0 + k * w; return `<path d="M${x},${y0}h${w * 0.45}L${x + w * 0.45 + (x1 - x0) * 0.6},${y1}h${-w * 0.9}Z" fill="url(#${id})"/>`; }).join("")}`);
+    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op * 0.3}"/><stop offset=".7" stop-color="${col}" stop-opacity="${op * 0.06}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
+      ${Array.from({ length: n }, (_, k) => { const w = (x1 - x0) / n, x = x0 + k * w; return `<path d="M${x},${y0}h${w * 0.2}L${x + w * 0.2 + (x1 - x0) * 0.6},${y1}h${-w * 0.42}Z" fill="url(#${id})"/>`; }).join("")}`);
   }
 
   // clouds(L, seed): soft cloud banks high above the set (mid layer, parallax .6) for a camera that starts in the sky and drops through them
@@ -458,7 +462,7 @@
   }
 
   Object.assign(Sets, { schoolYard, classroom, market, canClose, fieldRoad, gateClose, tankClose, radioClose, drawing, mapTop, gateTop, plate });
-  window.Fence = { chalk, pin, flife, paddies, bars, gatePanel, depth, haze, light, cone, rays, clouds, GLOW: false };
+  window.Fence = { chalk, pin, flife, paddies, bars, gatePanel, depth, haze, light, cone, rays, clouds, GLOW: true };
   // ======================================================================================================
   // EP.2 "เครื่องปั่นไฟ": the temple fair at noon, the generator POV, the classroom with the generator / fan / bulb /
   // exhaust, the hill with the answering light, น้องปั้น's second drawing
@@ -521,6 +525,63 @@
     put(L.set, s);
     put(L.glow, `<circle cx="540" cy="900" r="900" fill="url(#fLamp)" opacity=".35"/>`);
   }
+
+  // ================= EP.3 "คนแปลกหน้า" =================
+  // a kitchen knife in local coordinates: handle at the origin, blade along +x (so a Hand.grip at the origin holds it)
+  const KNIFE = (id = "", s = 1) => `<g ${id ? `id="${id}"` : ""} transform="scale(${s})"><rect x="-150" y="-26" width="150" height="52" rx="12" fill="#3a2e22" ${OUT}/><path d="M-120,-26h30M-80,-26h30" stroke="#5a4a38" stroke-width="6"/><path d="M0,-30H330Q420,-30 460,-4L380,30H0Z" fill="#cfd4d8" ${OUT}/><path d="M0,0H370" stroke="#f4f6f8" stroke-width="6"/><path d="M10,-30H330Q400,-30 440,-8" stroke="#8d9299" stroke-width="4" fill="none"/></g>`;
+
+  // ---------------- close-up of ภู's leg on the road: the cargo trouser, the gash with dirt in it (#id-gash, #id-dirt), the flap of cloth (#id-flap),
+  // the pour of water (#id-pour), his own hand with a cloth (#id-hand), the bandage wrap (#id-wrap). o.time morning|day ----------------
+  function woundClose(L, o = {}) {
+    const id = o.id || "wd", t = o.time || "morning";
+    sky(L, t);
+    put(L.far, `<rect x="-1200" y="-800" width="3500" height="3600" fill="url(#fDirt)"/>${Array.from({ length: 40 }, (_, k) => { const r = mk(31 + k)(); return `<ellipse cx="${-1100 + ((k * 587) % 3400)}" cy="${-700 + ((k * 331) % 3300)}" rx="${18 + r * 30}" ry="${8 + r * 12}" fill="#8a6a42" opacity=".35"/>`; }).join("")}`);
+    // the leg lies across the frame, lower-left to upper-right: a wide cargo trouser leg with a side pocket, the boot at the right
+    let s = `<g transform="rotate(-18 540 1000)"><path d="M-400,700H1300V1300H-400Z" fill="#4a5560" ${OUT}/><path d="M-400,700H1300V760H-400Z" fill="#5c6974"/><path d="M-400,1240H1300V1300H-400Z" fill="#38424b"/>
+      <path d="M-400,1000H1300" stroke="#3d4852" stroke-width="6" stroke-dasharray="40 30" opacity=".6"/><rect x="760" y="820" width="190" height="150" rx="10" fill="#5c6974" ${OUT}/><path d="M760,860h190" stroke="#2e2a26" stroke-width="4"/>
+      <g transform="translate(1300,1000)"><path d="M0,-300Q160,-320 200,-140L240,300H0Z" fill="#1e1e1e" ${OUT}/><path d="M20,-240h140" stroke="#5b6066" stroke-width="10"/><path d="M30,-150h140M30,-70h140" stroke="#5b6066" stroke-width="10"/></g>`;
+    // the gash: the cloth torn wide at the shin, the skin, a deep cut with dirt and rust-dark edges
+    s += `<g id="${id}-flap"><path d="M180,780Q400,730 640,790Q560,1020 440,1230Q300,1150 160,1240Q130,1000 180,780Z" fill="#d39a6e" ${OUT}/>
+      <path d="M180,780Q400,730 640,790" stroke="#2e2a26" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="30 14"/><path d="M640,790Q560,1020 440,1230" stroke="#2e2a26" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="30 14"/></g>
+      <g id="${id}-skin"><path d="M200,790Q400,750 620,800Q550,1010 440,1210Q310,1140 180,1220Q150,1000 200,790Z" fill="#d39a6e"/><path d="M220,820q180,-30 360,10" stroke="#e8b48e" stroke-width="14" fill="none" opacity=".6"/></g>
+      <g id="${id}-gash"><path d="M260,860Q400,960 560,1120" stroke="#5a0f0f" stroke-width="54" stroke-linecap="round" fill="none"/><path d="M260,860Q400,960 560,1120" stroke="#8f1b1b" stroke-width="28" stroke-linecap="round" fill="none"/><path d="M290,880Q400,960 540,1100" stroke="#c0392b" stroke-width="8" stroke-linecap="round" fill="none" opacity=".7"/>
+      <path d="M280,910q-30,40 -16,90M520,1080q30,50 10,100M400,980q-40,30 -36,70" stroke="#8f1b1b" stroke-width="9" fill="none" opacity=".8" stroke-linecap="round"/></g>
+      <g id="${id}-dirt">${[[300, 890], [340, 925], [390, 960], [430, 1000], [470, 1040], [510, 1082], [360, 905], [450, 985], [320, 950], [495, 1120]].map(([x, y], k) => `<circle cx="${x}" cy="${y}" r="${7 + (k % 3) * 3}" fill="#3a2a16"/>`).join("")}<path d="M330,870l10,-14M470,1010l14,-10M400,940l-12,-12" stroke="#6b4a2e" stroke-width="6" stroke-linecap="round"/><path d="M300,870q40,-12 80,0M440,1030q30,-14 60,0" stroke="#6b4a2e" stroke-width="4" fill="none" opacity=".8"/></g>
+      <g id="${id}-pour" opacity="0"><path d="M400,420Q400,700 400,920" stroke="#9fd0ea" stroke-width="30" stroke-linecap="round" fill="none" opacity=".8"/><path d="M400,420Q400,700 400,920" stroke="#e8f6ff" stroke-width="10" stroke-linecap="round" fill="none"/>${[[340, 980], [460, 1010], [400, 1060], [520, 1100]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="30" ry="10" fill="#9fd0ea" opacity=".7"/>`).join("")}</g>
+      <g id="${id}-wrap" opacity="0">${[0, 1, 2, 3, 4].map((k) => `<path d="M${120 + k * 95},${740 + k * 8}L${180 + k * 95},${1260 + k * 8}" stroke="#f4ecd8" stroke-width="70" stroke-linecap="butt"/>`).join("")}${[0, 1, 2, 3, 4].map((k) => `<path d="M${150 + k * 95},${740 + k * 8}L${210 + k * 95},${1260 + k * 8}" stroke="#d9d0bc" stroke-width="3"/>`).join("")}<path d="M560,800l40,-30M560,1180l40,30" stroke="#d9d0bc" stroke-width="6"/></g></g>`;
+    put(L.set, s);
+    // his own hand: a grip with a folded rag, coming in from the lower right (a rescue volunteer's hand)
+    put(L.act, `<g id="${id}-hand" transform="translate(760,1300) rotate(-30) scale(0.7)" opacity="${o.hand ? 1 : 0}"><g transform="translate(-120,-40) rotate(20)"><rect x="-90" y="-60" width="180" height="120" rx="10" fill="#f4ecd8" ${OUT}/><path d="M-70,-30h140M-70,0h140M-70,30h140" stroke="#d9d0bc" stroke-width="3"/></g>${Hand.grip({ skin: "#d39a6e", sleeve: "#6b7a5a" })}</g>`);
+    // the jerrycan of water above, tipped (its mouth where the pour starts)
+    put(L.act, `<g id="${id}-can" transform="translate(440,300) rotate(55)" opacity="${o.can ? 1 : 0}"><rect x="-90" y="-130" width="180" height="260" rx="18" fill="#dfe6e2" ${OUT}/><rect x="-30" y="-170" width="60" height="50" rx="8" fill="#5b6066" ${OUT}/><path d="M-60,-60h120" stroke="#9fc5d8" stroke-width="10"/><text y="40" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#2f4a8a" transform="rotate(-55)">น้ำ</text></g>`);
+    if (t === "morning") put(L.glow, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#ffdca8" opacity=".08"/>`);
+  }
+
+  // ---------------- the drawing of day 102: six crayon figures inside the fence, ภู (grey-green) standing at the fence, and a black scribbled figure outside ----------------
+  function drawing3(L, o = {}) {
+    const id = o.id || "dw3";
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#5a4630"/>`);
+    let s = `<g transform="rotate(2 540 960)"><rect x="90" y="260" width="900" height="1400" fill="url(#fPaper)" ${OUT}/><circle cx="540" cy="290" r="16" fill="#c8392b" ${OUT}/>`;
+    const C = (d, col, w = 9) => `<path d="${d}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#fCrayon)"/>`;
+    s += `<rect x="140" y="440" width="800" height="720" fill="#2f4a8a" opacity=".22" filter="url(#fCrayon)"/>`;
+    s += C("M240,520q40,-50 80,0", "#f4ecd8", 10) + `<circle cx="280" cy="520" r="44" fill="#f4ecd8" opacity=".8" filter="url(#fCrayon)"/>`;
+    s += C("M200,1140V860H640V1140M160,860L420,740L680,860M250,940h80v120h-80zM480,940h80v120h-80z", "#c8392b", 10) + `<rect x="200" y="860" width="440" height="280" fill="#f6d6a0" opacity=".6" filter="url(#fCrayon)"/>`;
+    // the fence: a long line with posts, running down the right side of the page
+    s += C("M150,1300H930", "#6f8f3e", 14) + C("M150,1300l0,-120M250,1300l0,-120M350,1300l0,-120M750,1300l0,-120M850,1300l0,-120M930,1300l0,-120M150,1180H930", "#5b6066", 8);
+    s += C("M700,1180V1560M760,1180V1560", "#5b6066", 8) + C("M700,1180h60M700,1320h60M700,1460h60", "#5b6066", 8);   // the gate bars, drawn tall
+    const fig = (x, y, col, h = 1) => `<g transform="translate(${x},${y}) scale(${h})" filter="url(#fCrayon)"><circle cy="-130" r="30" fill="none" stroke="${col}" stroke-width="8"/><path d="M0,-100V0M0,-80l-40,40M0,-80l40,40M0,0l-30,60M0,0l30,60" stroke="${col}" stroke-width="8" fill="none" stroke-linecap="round"/></g>`;
+    s += fig(230, 1440, "#2f4a8a") + fig(320, 1450, "#c8392b") + fig(410, 1440, "#6f8f3e") + fig(500, 1450, "#d96a8a") + fig(580, 1470, "#e8b830", 0.7);
+    // ภู at the gate, inside, arm out through the bars; and the one outside, scribbled black, no face
+    s += `<g id="${id}-phu">${fig(660, 1440, "#4e6a5a")}${C("M660,1360l80,-20", "#4e6a5a", 8)}</g>`;
+    s += `<g id="${id}-dark"><g transform="translate(850,1430)" filter="url(#fCrayon)"><circle cy="-130" r="30" fill="#2e2a26" stroke="#2e2a26" stroke-width="8"/><path d="M0,-100V0M0,-80l-40,40M0,-80l40,40M0,0l-30,60M0,0l30,60" stroke="#2e2a26" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M-50,-170q30,-30 60,10q20,30 -10,60q-40,20 -70,-10q-20,-40 20,-60" stroke="#2e2a26" stroke-width="4" fill="none" opacity=".8"/><path d="M-30,-60q-30,30 -10,70M30,-60q30,30 10,70" stroke="#2e2a26" stroke-width="4" fill="none"/></g></g>`;
+    s += `<text x="540" y="400" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="60" fill="#2f4a8a" filter="url(#fCrayon)">วันที่ 102 พี่ภู</text>`;
+    s += `<text x="330" y="1600" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#c8392b" filter="url(#fCrayon)">ครู ก้อง ลุง เจ๊ ปั้น พี่ภู</text><text id="${id}-who" x="850" y="1600" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#2e2a26" filter="url(#fCrayon)">?</text></g>`;
+    put(L.set, s);
+    put(L.glow, `<circle cx="540" cy="900" r="900" fill="url(#fLamp)" opacity=".35"/>`);
+  }
+  Object.assign(Sets, { woundClose, drawing3 });
+  window.Fence.KNIFE = KNIFE;
   Object.assign(Sets, { fair, genClose, drawing2 });
   window.Fence.FAN = FAN; window.Fence.BULB = BULB;
 
