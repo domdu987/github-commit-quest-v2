@@ -92,6 +92,7 @@ def growls(k, a, b, g=0.7, step=0.7):
 
 CUES = [
     # cold open: the lid creaks, the child's hand, the "no" — heartbeat under it all
+    *bed("wind", T("open", 0), T("open", -0.1), 0.45, 3.2), ("open", 0.9, "slam", 0.45), ("open", 1.3, "riser", 0.7), ("open", -0.25, "whoosh", 0.9),
     ("hook", 0.2, "creak", 0.35), ("hook", frag("hook", 1, 1), "sting", 0.7), ("hook", frag("hook", 1, 1), "creak", 0.5),
     ("hook", vo_t("hook", 2), "sting", 1.0), ("hook", vo_t("hook", 2), "boom", 0.6), ("hook", vo_t("hook", 2), "glitch", 0.5), ("hook", frag("hook", 2, 1), "slam", 0.5),
     *beats("hook", 0.3, D["hook"] - 0.3, 0.55, 0.6), ("hook", -0.25, "whoosh", 0.8),

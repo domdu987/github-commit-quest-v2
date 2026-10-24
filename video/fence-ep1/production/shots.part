@@ -6,6 +6,14 @@
       const CDC = "ที่มา: <em>CDC (สหรัฐฯ)</em> · ";
       const HA = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, blinks: [], track, ...extra });
 
+      // ---------- 0. the opening: from the sky, the series title + EP.1, the camera drops through the clouds onto the school ----------
+      add("open", {
+        set: "schoolYard", setOpts: { id: "op", time: "day" }, dark: 0.06, blur: { mid: 5, far: 2 },
+        cam: { keys: [{ t: 0, ...fr(540, -1900, 0.55, 540, 900), r: 6, drift: { s: 0.03, r: -0.5 } }, { t: 3.55, glide: 2.9, ...fr(560, 760, 0.62, 540, 900), r: 0 }] },
+        ui: [{ type: "openTitle", t: 0.25, end: 2.75, top: 520, series: "เอาชีวิตรอด", days: 99, ep: "EP.1 · กระป๋องบวม" }],
+        fx(tl, id, t0) { tl.set("#black", { opacity: 1 }, t0); tl.to("#black", { opacity: 0, duration: 0.6, ease: "power1.out" }, t0 + 0.05); Fx.speed(tl, t0 + 1.4, t0 + 3.2); tl.set("#fxspeed", { opacity: 0 }, t0 + 3.25); },
+      });
+
       // ---------- 1. hook: the swollen can in our hands at dusk; a small hand comes up for it — "อย่าเปิด… อย่าชิม" ----------
       add("hook", {
         set: "canClose", setOpts: { id: "hk", time: "dusk", kid: true, ...SKIN_PIM }, dark: 0.3,
@@ -485,6 +493,7 @@
       const NIGHTYARD = (L) => { Fence.light(L, 760, 340, 520, "#9fb8d8", 0.28); Fence.haze(L, 1150, 400, "#5a6f90", 0.3); Fence.depth(L, "grass", { col: "#04060a" }); };
       const LAMP = (x, y) => (L) => { Fence.light(L, x, y - 80, 420, "#ffd58a", 0.55, "lampf"); Fence.cone(L, x, y - 40, 700, 800, "#ffd58a", 0.3); Fence.depth(L, "desk", { op: 0.85 }); };
       const LOOK = {
+        open: (L) => { Fence.clouds(L); Fence.light(L, 800, 240, 900, "#ffe6b0", 0.35); Fence.haze(L, 1120, 460, "#dfe8ea", 0.35); Fence.depth(L, "grass"); },
         hook: (L) => { Fence.light(L, 540, 560, 560, "#ffb070", 0.45); Fence.haze(L, 980, 300, "#ffb070", 0.25); },
         chapter: (L) => { Fence.light(L, 800, 240, 700, "#ffe6b0", 0.35); Fence.haze(L, 1120, 460, "#dfe8ea", 0.35); Fence.depth(L, "grass"); Fence.depth(L, "branch", { op: 0.8 }); },
         "yard#0": (L) => { Fence.light(L, 800, 240, 700, "#ffe6b0", 0.3); Fence.haze(L, 1120, 460, "#dfe8ea", 0.35); Fence.depth(L, "grass"); },

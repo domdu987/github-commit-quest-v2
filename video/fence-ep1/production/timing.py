@@ -20,6 +20,7 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
+    ("open", [], 0, 0, 3.6),                                             # from the sky: the series title + EP.1, the camera drops through the clouds to the school
     ("hook", ["n01", ("n02", 0.05), ("n03", 0.1)], 0.3, 0.35, 6.0),     # POV: the bulging can in our hands at dusk, a small hand reaching for it
     ("chapter", ["n04"], 0.15, 0.4, 2.6),                                # the blackboard: "วันที่ 100" in chalk
     ("yard", ["n05", ("n05b", 0.05)], 0.1, 0.22, 4.0),                                    # the school yard, five of them, the head count

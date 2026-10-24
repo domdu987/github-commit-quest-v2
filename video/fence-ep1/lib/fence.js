@@ -435,6 +435,15 @@
       ${Array.from({ length: n }, (_, k) => { const w = (x1 - x0) / n, x = x0 + k * w; return `<path d="M${x},${y0}h${w * 0.45}L${x + w * 0.45 + (x1 - x0) * 0.6},${y1}h${-w * 0.9}Z" fill="url(#${id})"/>`; }).join("")}`);
   }
 
+  // clouds(L, seed): soft cloud banks high above the set (mid layer, parallax .6) for a camera that starts in the sky and drops through them
+  function clouds(L, seed = 5) {
+    const r = mk(seed); let s = "";
+    for (let k = 0; k < 14; k++) { const x = -900 + r() * 2900, y = -1500 + r() * 1300, w = 260 + r() * 420, op = (0.75 + r() * 0.25).toFixed(2);
+      s += `<g opacity="${op}">${[[0, 0, 1], [-0.4, 0.15, 0.7], [0.42, 0.12, 0.75], [0.1, -0.22, 0.6]].map(([dx, dy, k2]) => `<ellipse cx="${f1(x + dx * w)}" cy="${f1(y + dy * w * 0.35)}" rx="${f1(w * 0.55 * k2)}" ry="${f1(w * 0.22 * k2)}" fill="#f1f4f6"/>`).join("")}<ellipse cx="${f1(x)}" cy="${f1(y + w * 0.12)}" rx="${f1(w * 0.6)}" ry="${f1(w * 0.14)}" fill="#c9d3da" opacity=".6"/></g>`; }
+    put(L.mid, s);
+    put(L.far, `<rect x="-1200" y="-2200" width="3500" height="1500" fill="#dfe8ee" opacity=".35"/>`);
+  }
+
   Object.assign(Sets, { schoolYard, classroom, market, canClose, fieldRoad, gateClose, tankClose, radioClose, drawing, mapTop, gateTop, plate });
-  window.Fence = { chalk, pin, flife, paddies, bars, gatePanel, depth, haze, light, cone, rays };
+  window.Fence = { chalk, pin, flife, paddies, bars, gatePanel, depth, haze, light, cone, rays, clouds };
 })();
