@@ -7,7 +7,7 @@
 set -euo pipefail
 R="$(cd "$(dirname "$0")" && pwd)"
 W="${1:?usage: workspace.sh <work dir>}"
-LATEST="$R/zom-ep3"          # newest libraries (rig.js with smooth blends, zom.js with the night and fire sets, sig.js, voice.py with "take", voice_qa.py)
+LATEST="$R/fence-ep1"        # newest libraries (rig.js with the วันที่ 100 cast, fence.js, zom.js with the night and fire sets, sig.js, voice.py with "take", voice_qa.py)
 TEMPLATE="$R/koi-ep3"        # newest rendered composition: HyperFrames project files and fonts
 mkdir -p "$W/hf/lib" "$W/hf/rig/assets" "$W/music"
 cp "$LATEST"/lib/*.js "$LATEST"/lib/voice.py "$LATEST"/lib/voice_qa.py "$W/hf/lib/"
@@ -32,4 +32,10 @@ for n in 1 2 3; do
   cp -r "$R/zom-ep$n/production/." "$W/zom$n/"
   [ -f "$R/zom-ep$n/mix.wav" ] && cp "$R/zom-ep$n/mix.wav" "$W/zom$n/"
 done
-echo "workspace ready: $W (camp1-3 → hf/camp, hf/camp2, hf/camp3; koi1-3 → hf/koi1-3; zom1-3 → hf/zom1-3)"
+for n in 1 2 3; do
+  [ -d "$R/fence-ep$n/production" ] || continue
+  mkdir -p "$W/fence$n"
+  cp -r "$R/fence-ep$n/production/." "$W/fence$n/"
+  [ -f "$R/fence-ep$n/mix.wav" ] && cp "$R/fence-ep$n/mix.wav" "$W/fence$n/"
+done
+echo "workspace ready: $W (camp1-3 → hf/camp, hf/camp2, hf/camp3; koi1-3 → hf/koi1-3; zom1-3 → hf/zom1-3; fence1-3 → hf/fence1-3)"

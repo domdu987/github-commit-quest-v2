@@ -1,4 +1,7 @@
-# รั้วสุดท้าย: ซีรีส์ซอมบี้เอาชีวิตรอด 20 ตอน (โครงเรื่อง ร่างที่ 1)
+# วันที่ 100: ซีรีส์ซอมบี้เอาชีวิตรอด 20 ตอน (โครงเรื่องอนุมัติแล้ว 24 ต.ค. 2026)
+
+**ชื่อเรื่อง: "วันที่ 100"** (ผู้ใช้เลือก 24 ต.ค. 2026 · โฟลเดอร์/โค้ดยังใช้คำว่า `fence` ไว้ตามเดิม: `video/fence/`, `video/fence-epN/`, `fence.js`, `$W/fenceN`)
+**ผู้ใช้สั่ง:** "คุณแต่งให้เอาให้ได้ ความลุ้นระทึก สนุก อินอยากดูตาม หาข้อมูลมา ทำให้ดีกว่าคลิปที่ผมจะส่งให้ดู ทั้งเอฟเฟค ui การเดินเรื่อง วิดีโอ เสียงต่างๆ" → แต่งเองได้เต็มที่ ไม่ต้องรอยืนยันทีละจุด
 
 **ที่มา:** ผู้ใช้ขอซีรีส์ซอมบี้ใหม่ยาว ~20 ตอน "ไปดู The Walking Dead มาแต่งให้คล้าย แนวเอาชีวิตรอด หาของมาประทังชีวิต
 ระแวงคนแปลกหน้า สู้กับคนอีกกลุ่ม เหตุการณ์เหมือนจะสงบแต่มีเรื่องไม่คาดฝัน ทำสำเร็จแต่บางครั้งต้องเสียอะไรไปเพราะตัดสินใจผิด
@@ -57,7 +60,7 @@
 
 | EP | ชื่อตอน | hook "ถ้าวันหนึ่ง… คุณ…" | ความรู้ (แหล่งที่จะยืนยัน) | เรื่อง | ปมค้าง / ราคาที่จ่าย |
 |---|---|---|---|---|---|
-| 1 | กระป๋องบวม | หิวมาก เจอกระป๋องอาหารบวม → **อย่ากิน** | กระป๋องบวมเสี่ยงโบทูลิซึม ทิ้งทั้งกระป๋อง (USDA / CDC) | วันที่ 100 ก้องหาของที่ตลาดร้าง ได้กระป๋องบวมมา น้องปั้นเกือบกิน / ก้องกลับเลยเวลา ฝูงผีห่ามาตอนโพล้เพล้ ครูพิมออกไปรับ ปิดประตูทันฉิวเฉียด | คืนนั้นวิทยุเก่าที่ลุงหมานซ่อมดังขึ้นเอง เสียงผู้หญิงอ่านตัวเลข **"หก" ทั้งที่ค่ายมีกันแค่ห้าคน** และในรั้วมี**รอยเท้าคน** |
+| 1 | กระป๋องบวม | หิวมาก เจอกระป๋องอาหารบวม → **อย่ากิน** | กระป๋องบวมเสี่ยงโบทูลิซึม ทิ้งทั้งกระป๋อง (USDA / CDC) | วันที่ 100 ก้องหาของที่ตลาดร้าง ได้กระป๋องบวมมา น้องปั้นเกือบกิน / ก้องกลับเลยเวลา ฝูงผีห่ามาตอนโพล้เพล้ ครูพิมออกไปรับ ปิดประตูทันฉิวเฉียด | คืนนั้นวิทยุเก่าที่ลุงหมานซ่อมดังขึ้นเอง เสียงผู้หญิงอ่านตัวเลข **"หก" ทั้งที่ค่ายมีกันแค่ห้าคน** / รูปวาดน้องปั้นมี 6 คน / เช้ามาเจ๊หงส์เช็กแท็งก์น้ำ **ลดลง 1 ขีด ทั้งที่ไม่มีใครใช้** (เปลี่ยนจาก "รอยเท้าในรั้ว" เพราะคลิปต้นแบบที่ผู้ใช้ส่งจบด้วย "มีใครบางคนอยู่ในรั้วมาก่อนแล้ว") |
 | 2 | เครื่องปั่นไฟ | ได้เครื่องปั่นไฟมา → **อย่าเปิดในห้อง** | คาร์บอนมอนอกไซด์ ใช้เครื่องปั่นไฟนอกบ้าน ห่างหน้าต่างอย่างน้อย 20 ฟุต (Ready.gov ยืนยันแล้ว) | ลุงหมานหาเครื่องปั่นไฟจากงานวัดร้าง เปิดในห้องเรียนให้พัดลม น้องปั้นหมดสติ / ต้องย้ายไปเปิดข้างนอก เสียงดังเรียกพวกมัน | เสียงเครื่องดังไปถึงเนินเขา มีไฟฉายกะพริบตอบ 3 ครั้ง / เช้ามามีชายบาดเจ็บนอนหน้าประตู |
 | 3 | คนแปลกหน้า | มีคนแปลกหน้าบาดเจ็บหน้าประตู → **อย่าเพิ่งเปิด** | สัญญาณแผลติดเชื้อ (แดง ร้อน บวม หนอง มีไข้) และแผลสกปรกต้องฉีดบาดทะยัก (CDC) | กฎข้อ 2 "ช่วยได้ แต่อย่าเชื่อ" ค้นตัว ตรวจรอยกัด ภูปฐมพยาบาลตัวเองเก่งผิดปกติ / ภูช่วยลุงหมานจากเศษเหล็กบาด ทุกคนเริ่มเชื่อ | ภูรู้ชื่อโรงเรียนทั้งที่ไม่มีใครบอก / รูปวาดน้องปั้น: ภูยืนคุยกับใครบางคนหลังรั้ว |
 | 4 | รั้วล้ม | ได้ยินเสียงเด็กร้องขอให้ช่วยนอกรั้ว → **อย่าเพิ่งออกไป** | ห้ามเลือดด้วยการขันชะเนาะ (Stop the Bleed ยืนยันแล้ว "Apply a tourniquet") | ฝนแรกมา พวกมันตื่น เสียงเครื่องปั่นไฟที่เจ๊หงส์เตือนให้ปิดแต่ครูพิมไม่ปิด ดึงฝูงมา / เสียงเด็กร้องคือกับดักของคน **ฉากแอ็คชั่น:** รั้วพัง หนีจากโรงเรียน | **ราคาที่จ่าย:** ลุงหมานยันประตูให้ทุกคนหนี ไม่ได้ตามมา (วิทยุคืนนั้น "ห้า") / ภูมีวิทยุสื่อสารซ่อนอยู่ในกระเป๋า |
@@ -99,7 +102,7 @@
 | 20 | ใครนับเรา | ได้ยินเสียงประกาศซ้ำๆ ทุกคืน → **อย่าคิดว่าเป็นแค่เทป** | (ทบทวนกฎทั้ง 3 ข้อ) | ห้องควบคุมมีเครื่องเล่นเทปอัตโนมัติ แต่ตัวเลขยังเปลี่ยนตามจำนวนพวกเขา / เฉลยปริศนา: ตัวเลขที่ได้ยินมาทั้งเรื่องคือจำนวนคนในกลุ่ม | **ปมค้างปิดซีซั่น:** บนจอในห้องมีภาพกล้องวงจรปิดของโรงเรียนหนองน้ำใส ตั้งแต่วันที่ 1 / เสียงประกาศพูดคำใหม่ "สอง" ทั้งที่ยังมีกันอยู่สามคน |
 
 **เส้นของตัวเลขวิทยุ (ปริศนาให้คนดูจับ)**
-- EP.1 "หก" ทั้งที่ค่ายมี 5 คน → คนที่ 6 คือภู ซ่อนอยู่ในแท็งก์น้ำของโรงเรียนแล้ว (รอยเท้าในรั้วเป็นของเขา)
+- EP.1 "หก" ทั้งที่ค่ายมี 5 คน → คนที่ 6 คือภู ซ่อนอยู่ในแท็งก์น้ำของโรงเรียนแล้ว (น้ำในแท็งก์ที่ลดลงคือเขาดื่ม)
 - EP.3 ภู "มาถึง" หน้าประตู แต่เลข**ไม่เพิ่ม** = เบาะแสว่าเขาอยู่ในรั้วมาก่อน (คนดูที่จับได้จะรู้ก่อนตัวละคร)
 - EP.4 ลุงหมานไม่ได้ตามมา "ห้า" → EP.8 เจ๊หงส์ถูกจับ "สี่" → EP.12 ได้เจ๊หงส์คืนแต่ภูถูกน้ำพาไป "สี่"
 - EP.16 เจ๊หงส์ตาย "สาม" → EP.18 ก้องแยกไป "สอง" → EP.19 ก้องกลับมา "สาม"
@@ -110,7 +113,76 @@
 ## หมายเหตุการผลิต
 
 - ทำทีละ 3 ตอน (EP.1–3 ก่อน) ส่งให้ผู้ใช้ดูทุกชุด
-- **ตั้งชื่อเรื่องได้อีก:** "รั้วสุดท้าย" (แนะนำ, เรียบ เข้าใจทันที) / "วันที่ 100" / "ห่าลง" ("ผีห่า" อาจอ่านเป็นคำหยาบ ไม่แนะนำเป็นชื่อเรื่อง)
+- **ชื่อเรื่อง "วันที่ 100"** (ผู้ใช้เลือกแล้ว; ตัวเลือกเดิม: รั้วสุดท้าย / ห่าลง)
 - ฉากที่ต้องสร้างใหม่: โรงเรียนประถมชนบท (รั้ว ประตูเหล็ก ห้องเรียน กระดานดำ), ตลาดร้าง, งานวัดร้าง, ถนนสี่เลน, ปั๊มน้ำมัน, นิคมอุตสาหกรรม, ทุ่งนาน้ำท่วม, อ่างเก็บน้ำ/ประตูน้ำ, ป่าเขา, เสาวิทยุ
 - ตัวละครต้องมี rig ใหม่ 7 ตัว + ผีห่าแบบชาวบ้าน (ชุดชาวนา ชุดนักเรียน ชุดตลาด)
-- ลำดับนี้ยังแก้ได้ทั้งหมด รอผู้ใช้ตอบก่อนลงมือ
+- ผู้ใช้อนุมัติแล้ว (24 ต.ค. 2026) ลงมือ EP.1–3 ได้
+
+---
+
+## เทียบคลิปต้นแบบที่ผู้ใช้ส่ง (24 ต.ค. 2026, "ซอมบี้ระบาด วันที่ 1" ฟาร์มของเอก, 1:15, 720×1280 30fps)
+
+ไฟล์อยู่ใน uploads ของแชทนั้น (`SaveClip.App_AQO0cwVZ….mp4`) contact sheet ใน scratchpad `ref1/sheet.jpg` **ใช้แค่หลักการ ห้ามลอกพล็อต ฉาก ตัวละคร twist**
+- **วัดได้:** พูด 69 วิจาก 75 วิ (92%), ~11 ตัวอักษร/วิ (Whisper) → เร็วกว่าตารางใน HANDOFF 2.2.1 อีก ของเราต้องไม่มีช่องว่าง (ผู้บรรยาย tempo 1.2, GAP 0.08, ซ้อนเสียงเล็กน้อยได้)
+- **ของเขาที่ดี (เราต้องมีและทำให้ดีกว่า):** การ์ดเปิดตอน "วันที่ 1 · 06:42 น. · สถานที่", แผนที่ฟาร์มมุมสูงพร้อมไอคอน, แผนที่เรดาร์ "ตัวเมือง" ลูกศรทุกทิศชี้เข้าเมือง (ภาพทำให้เห็นว่าทำไมห้ามเข้าเมือง), HUD นับถอยหลัง "เหลือเวลา 29:47" + นาฬิกาบนผนังเดินตาม, การ์ดทรัพยากร "น้ำสำรอง 180 ลิตร", ลำดับไอคอน ไฟฟ้า→ปั๊ม→น้ำ, ภาพตัดขวางปั๊มใต้ดิน, วงเสียงเครื่องปั่นไฟ "หลายร้อยเมตร", นับสัตว์ (ไก่ 30, ปลา 78+, หมา 1), สมุดเสบียงวันที่ 1 มีแถบและติ๊ก, ล็อกประตูรั้ว, เงาคนในโรงเก็บของกลางคืน, "ตอนที่ 2" การ์ดตัวหนังสือ + โลโก้ช่อง
+- **เขาไม่มี / เราทำดีกว่า:** ฉากแอ็คชั่น ไล่ล่า POV ตัดถี่, ซิกเนเจอร์ลุ้นระทึก, ที่มาของข้อมูลเป็นชิป, ตัวเลือกถูกดึง + ตัดดำ, การ์ดเปิด/ท้ายเป็นของในโลกของเรื่อง (กระดานดำ / สมุดบัญชีเจ๊หงส์), ซอมบี้น่ากลัว (ของเขาเป็นเงา), ดนตรี duck ตามเสียงพูด
+- **ปมจบของเขา = "มีใครบางคนอยู่ในรั้วมาก่อนแล้ว"** ใกล้ปม EP.1 เดิมของเรา ("รอยเท้าในรั้ว") → เปลี่ยน EP.1 เป็น เลขวิทยุ "หก" + รูปวาดน้องปั้น 6 คน + น้ำในแท็งก์ลดลง 1 ขีด (ของเราคือ "นับผิด" ไม่ใช่ "มีคนแอบอยู่")
+
+## ความรู้ที่ยืนยันแล้ว (อ่านหน้าเว็บทางการด้วย agent web-fetch 24 ต.ค. 2026 ข้อความตรงตัว)
+
+### EP.1 กระป๋องบวม = โบทูลิซึม (CDC)
+- [CDC Botulism · Home-Canned Foods](https://www.cdc.gov/botulism/prevention/home-canned-foods.html): "Any of the following signs indicate that home-canned and store-bought food might be contaminated with toxins or harmful germs." · "The container is leaking, bulging, or swollen" · "The container looks damaged, cracked, or abnormal" · "The container spurts liquid or foam when opened" · "The food is discolored, moldy, or smells bad" · "If the container or the food inside have any of these signs of contamination, throw it out!" · "If in doubt, throw it out! Never taste food to see if it's safe."
+- [CDC Botulism · Prevention](https://www.cdc.gov/botulism/prevention/index.html): "Do not eat home-canned or store-bought food if the food or its container has signs of contamination." · "You cannot see, smell, or taste the toxin that causes botulism. But taking even a small taste of food containing the toxin can be deadly."
+- [CDC Botulism · About](https://www.cdc.gov/botulism/about/index.html): "Botulism is a rare but serious illness caused by a toxin that attacks the body's nerves. Botulism causes difficulty breathing, muscle paralysis, and even death." · "All kinds of botulism can be fatal and are medical emergencies."
+- [CDC Botulism · Signs and Symptoms](https://www.cdc.gov/botulism/signs-symptoms/index.html): "Botulism can weaken muscles used in breathing, which can lead to difficulty breathing and even death." อาการ: Difficulty swallowing, Muscle weakness, Double vision, Drooping eyelids, Blurry vision, Slurred speech, Difficulty breathing
+- **ยืนยันไม่ได้ (ห้ามใช้):** "กระป๋องบุบ (dented)", "ซ้อนถุงสองชั้นก่อนทิ้ง", "อาการใน 12–36 ชม.", "ต้มแล้วกินกระป๋องบวมได้" (CDC บอกให้ทิ้งเท่านั้น; การต้ม 10 นาทีใช้กับอาหารกระป๋องทำเองที่ไม่มีสัญญาณปนเปื้อน) · USDA FSIS / foodsafety.gov เข้าไม่ได้ (403)
+
+### EP.2 เครื่องปั่นไฟ = คาร์บอนมอนอกไซด์ (Ready.gov + CDC)
+- [Ready.gov Power Outages](https://www.ready.gov/power-outages): "Use a generator, but ONLY outdoors and away from windows." · "Generators and fuel should always be used outdoors and at least 20 feet away from windows, doors and attached garages." · "Carbon monoxide is a colorless, odorless gas that can kill you, your family and pets." · "Install working carbon monoxide detectors on every level of your home."
+- [CDC Carbon Monoxide · About](https://www.cdc.gov/carbon-monoxide/about/index.html): "Never use a generator inside your home or garage, even if doors and windows are open." · "Only use generators outside, more than 20 feet away from any windows, doors, and vents." · "Carbon monoxide (CO) is an odorless, colorless gas that kills without warning." · "The most common symptoms of CO poisoning are headache, dizziness, weakness, upset stomach, vomiting, chest pain, and confusion." · "If you breathe in a lot of CO, it can make you pass out or kill you."
+- **ยืนยันไม่ได้ (ห้ามใช้):** "มองไม่เห็น (invisible)", "ตายได้ในไม่กี่นาที", "ห้ามใช้ในห้องใต้ดิน", "พาออกไปรับอากาศแล้วโทรเรียก" (ไม่มีบนหน้าที่อ่านได้) · CPSC และหน้า CDC prevention เป็น 404
+
+### EP.3 คนแปลกหน้า = แผลติดเชื้อ + บาดทะยัก (NHS, MedlinePlus, CDC)
+- [NHS Cuts and grazes](https://www.nhs.uk/conditions/cuts-and-grazes/): "Clean the wound by rinsing it with bottled or tap water, or by using sterile wipes." · "Clean the skin around the wound using soap and water." · "Cover the wound with sterile gauze or a clean cloth." · ไปหาหมอด่วนถ้า "a wound has soil, pus or body fluids in it, or it's still dirty after cleaning it" / "you were bitten by a person or a wild or stray animal" / "a cut is swollen, red and getting more painful or pus is coming out of it" / "you've cut yourself and also feel generally unwell or have a high temperature" · "You may also need to have an injection to prevent [tetanus]"
+- [MedlinePlus How wounds heal](https://medlineplus.gov/ency/patientinstructions/000741.htm): "For minor wounds, clean your wound with gentle soap and water. Cover the wound with a sterile bandage or other dressing." · สัญญาณติดเชื้อ "Redness, increased pain, or yellow or green pus, or excessive clear fluid around the injury." · "Fever of 100°F (37.7°C) or higher for more than 4 hours." · "Bleeding at the injury site that will not stop after 10 minutes of direct pressure."
+- [CDC Tetanus · Causes](https://www.cdc.gov/tetanus/causes/index.html): "Spores of Clostridium tetani are common in the environment, including soil, dust, and manure." · "The spores can get into someone's body through broken skin, usually through injuries." · "Wounds contaminated with dirt, feces (poop), or saliva (spit)" · "Puncture wounds (wounds caused by an object, like a nail or needle)"
+- [CDC Tetanus · About](https://www.cdc.gov/tetanus/about/index.html): "The first sign is most commonly spasms of the jaw muscles, or 'lockjaw.'" · "Symptoms typically occur between 3 and 21 days (average 8 days) after someone is exposed to C. tetani." · "Tetanus can lead to death (1 in 10 cases in the United States are fatal)." · "People with a recent wound are at increased risk for tetanus. This is especially true if the wound is deep or contaminated with dirt." · ไม่ได้ฉีดกระตุ้นทุก 10 ปี = เสี่ยงขึ้น
+- **ยืนยันไม่ได้ (ห้ามใช้):** "ยาปฏิชีวนะชนิดทา", "แผลอุ่น/เส้นแดงลาม", "กระตุ้นบาดทะยักถ้าเข็มล่าสุดเกิน 5 ปี", "เฉลี่ย 10 วัน" (CDC = 8 วัน) · Red Cross 403, CDC wound-care 404
+
+## EP.1 "กระป๋องบวม" บททีละช็อต (ทำแล้ว 24 ต.ค. 2026, 2:11, 34 ช็อต · โค้ดใน `video/fence-ep1/production/shots.part`)
+
+**ผู้ใช้สั่งระหว่างทำ:** "ขอบทพูดที่คนดูฟังแล้วอยากดูต่อ มีเหตุการณ์ไม่คาดฝัน… จบแบบหักมุมตามต่อ ep2 ดู the walking dead เอามาปรับแต่งให้เป็นเรื่องตัวเอง" และ "คิดและหาคำที่ทำให้ลุ้นระทึก… มาใส่เองได้" → แต่งเองเต็มที่
+**ราคาที่จ่ายแบบ TWD (ของเราเอง):** กลับช้า → เป้ติดซี่กรง ผีห่าดึง → ลุงหมานต้องตัดสายเป้ทิ้ง → กระป๋อง 12 ใบเข้ารั้วมาแค่ 4 และ 1 ใน 4 บวม → เหลือ 3 ใบกับพวกมันที่รู้แล้วว่าค่ายอยู่ไหน
+
+เสียง: ผู้บรรยาย Puck tempo 1.24 (~11–12 ตัวอักษร/วิ เท่าคลิปต้นแบบ) · ครูพิม Kore 1.0–1.15 · ก้อง Zubenelgenubi · ลุงหมาน Algenib · เจ๊หงส์ Pulcherrima 1.08 · น้องปั้น Leda 1.1 · วิทยุ Erinome + `af` highpass/lowpass/compressor/echo
+Whisper ผ่านทุกบรรทัดยกเว้นเสียงตะโกนสั้น d05 "เปิดประตู!" d06 "ปิด! ปิดเลย!" d08 "อย่านะ!" (อัด 3 take Whisper ถอดไม่ออกทุก take = ข้อจำกัดของ Whisper กับเสียงตะโกน ใช้ take ที่ CER ดีสุด ผู้ใช้ฟังเอง) · บรรทัดที่อัดแล้วแต่ตัดออก: n06 "ครูพิมเขียนกฎไว้บนกระดาน… สามข้อ", n22 "มันทำลายเส้นประสาท…", d04 "แป๊บเดียวครู…" (ลดความยาว)
+
+| # | ช็อต | ฉาก (fence.js) | บท / สิ่งที่เกิด |
+|---|---|---|---|
+| 1 | hook | canClose dusk + มือเด็ก | "ถ้าวันหนึ่ง… คุณไม่ได้กินอะไรมาสองวัน / แล้วเจอกระป๋องอาหาร… ที่ฝาบวม / อย่าเปิด… อย่าชิม แม้แต่คำเดียว" มือเด็กยื่นมาจากซ้าย → ตัดดำ |
+| 2 | chapter | classroom + การ์ด `board` | ชอล์กเขียน "วันที่ 100" ขีดนับ 5 กลุ่ม "ตอนที่ 1 · กระป๋องบวม" / "วันที่ร้อย… หลังห่าลง" |
+| 3 | yard → map (split) | schoolYard day / mapTop | "ไฟฟ้าไม่มี สัญญาณไม่มี… เหลือกันห้าคน / ในโรงเรียนร้าง" ตัวนับ "คนในค่าย" 0→5 · แผนที่มุมสูง หมุด อาคาร/แท็งก์/ประตู/ตลาดร้าง 1.2 กม. + เส้นทาง |
+| 4 | rules | classroom + `fRule` | ครูพิมชี้กระดาน "ออกไป ต้องกลับก่อนมืด / ช่วยได้… แต่อย่าเชื่อ / แบ่งได้… แต่อย่าบอกทาง" ขึ้นทีละข้อ ขีดเส้นใต้แดง |
+| 5 | noon | fieldRoad noon | ha1 เดินช้าในอากาศระยิบ HUD "เที่ยง · 38°C" "พวกมันเดินตามเสียง… กลางวันร้อนจัด มันจะช้า" |
+| 6 | dusk | fieldRoad dusk | "แต่พอแดดร่ม… มันเร็วขึ้น" zrun + speed lines |
+| 7 | ledger | classroom + กระสอบข้าว | "ปัญหาวันนี้… ไม่ใช่พวกมัน" / เจ๊หงส์ "ข้าวสาร… เหลืออีกสามวัน" ตัวนับ 9→3 แดง |
+| 8 | gate | schoolYard gate เปิด + `sunHud` | ก้องเดินออกประตูพร้อมเป้ "ก้องขอออกไปหาของ… ที่ตลาดร้างท้ายอำเภอ" / ครูพิม "กลับก่อนมืดนะ… ก่อนมืด" HUD 16:30 → มืด 18:40 |
+| 9 | market | market | แม่ค้าผีห่ายืนนิ่งในช่องมืดซ้ายจอ (คนดูเห็นก่อน) ก้องกวาดกระป๋องเข้าเป้ทีละใบ (หายจากชั้น) ตัวนับ 0→12 "ตลาดร้าง… ชั้นวางว่างเกือบหมด / เหลือแค่กระป๋อง… ที่ไม่มีใครเอา" |
+| 10 | clatter → map (split) | market / mapTop ring | กระป๋องหล่น วงเสียงแดง มันหัน "เสียงกระป๋อง… / มันได้ยิน" แผนที่วงเสียง + จุดแดงวิ่งเข้าหา + ชิป "กฎของเรื่อง · มันเดินตามเสียง" |
+| 11–13 | lunge, shelf, run | market / fieldRoad POV | ไม่มีเสียงพูด: มันพุ่ง ก้องชนชั้นวาง กระป๋องกระจาย (impact) → POV วิ่งออกถนน HUD พระอาทิตย์แตะเส้น "เลยเวลา" |
+| 14 | road | fieldRoad dusk | ก้องวิ่ง ฝูง 3 ตัวตาม "ก้องกลับมาเลยเวลา… แดดร่มแล้ว / แล้วข้างหลังเขา… ไม่ได้มาตัวเดียว" / ก้อง "เปิดประตู!" |
+| 15–17 | bolt, snag, cut | gateClose / schoolYard (ผีห่าอยู่หลังรั้วด้วย `behind()`) | ครูพิมดึงกลอน (ผิดกฎตัวเอง) → ก้องล้มเข้าประตู เป้ติดซี่กรง ผีห่าดึง → ลุงหมานฟาดเคียวตัดสาย เป้กับกระป๋องกระเด็นออกนอกรั้ว |
+| 18 | slam | schoolYard | ประตูกระแทกปิด แขนทะลุซี่กรง ลุงหมาน "ปิด! ปิดเลย!" |
+| 19 | cans | classroom night cans:4 | "หามาได้สิบสองใบ… เข้ารั้วมาแค่สี่ / มีใบหนึ่ง… ฝาโป่งขึ้นมา" ตัวนับ 12→4 แดง |
+| 20 | reach | classroom night | น้องปั้น "ปั้นหิวแล้ว…" มือเล็กยื่นขึ้นโต๊ะ "มือเล็กๆ… กำลังจะเปิดมัน" |
+| 21 | stop | classroom night | เจ๊หงส์ "อย่านะ!" ปัดกระป๋องตกโต๊ะ (impact) |
+| 22 | signs | canClose night + `signs` | "กระป๋องที่บวม รั่ว หรือเปิดแล้วมีฟองพุ่ง… ข้างในอาจมีพิษ" 3 แถว ✗ + ชิป CDC |
+| 23 | toxin | canClose + tip | "พิษโบทูลินัม… มองไม่เห็น ไม่มีกลิ่น ไม่มีรส / ชิมแค่คำเดียว… ก็ตายได้" ชิป CDC |
+| 24 | real | canClose + tip | "ในชีวิตจริง… กระป๋องบวม ทิ้งทั้งใบ ห้ามชิม" กระป๋องหล่นลงถัง ตัวนับ 4→3 ชิป CDC quote |
+| 25 | three | schoolYard night ผีห่า 5 ตัวหลังรั้ว | "เหลือสามกระป๋อง… กับพวกมันที่รู้แล้ว ว่าเราอยู่ตรงไหน" |
+| 26 | sig | schoolYard night เบลอ + sigCard | [ปิดประตูก่อนมันถึง ✓ · ไม่กินกระป๋องบวม ✓ · นับของทุกอย่าง ✓ · ??? ✗] |
+| 27 | radio → classroom (split) | radioClose / classroom night | "คืนนั้น… วิทยุเก่าที่ลุงหมานซ่อม ดังขึ้นเอง" หน้าปัดเรืองแสง เข็มสั่น / วิทยุ "คืนที่ร้อย… หก" (ซับสีส้มแบบวิทยุ) / "ค่ายนี้มีกันห้าคน… แต่วิทยุบอก หก" ตัวนับคน 5 → 6 แดง |
+| 28 | drawing | drawing | รูปสีเทียน 5 คนหน้าอาคาร + คนที่ 6 ตัวเล็กบนแท็งก์ "น้องปั้นวาดรูปวันนี้ไว้… เห็นอะไรมั้ย?" |
+| 29 | tank | tankClose | นิ้วเจ๊หงส์ชี้ลูกลอย ขีด "เมื่อคืน" ที่ 7 ลูกลอยตกไป 6 "เช้ามา เจ๊หงส์เช็กแท็งก์น้ำ… ลดลงหนึ่งขีด / ทั้งที่เมื่อคืน… ไม่มีใครใช้น้ำ" ชิป "สมุดบัญชีเจ๊หงส์ · น้ำ 7 → 6" |
+| 30 | choice | schoolYard morning กล้องไต่ขึ้นแท็งก์ | "วิทยุบอก หก… จะเชื่อมั้ย?" ไม่เชื่อ / เชื่อ → ถูกดึงไป "ไม่เชื่อ…" "…มันนับถูก" ตัดดำ |
+| 31 | next | classroom night + `ledger` | หน้าสมุดบัญชี: ข้าวสาร 3 วัน · กระป๋อง 3 (ทิ้ง 1) · น้ำในแท็งก์ 7 → 6 ? · คน ~~5~~ 6? · พรุ่งนี้ต้องหา: เครื่องปั่นไฟ · กดติดตาม อ่านหน้าถัดไป ตอนที่ 2 |
