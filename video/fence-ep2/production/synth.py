@@ -702,8 +702,8 @@ def sfx(kind):
         pulse = np.clip(np.sin(ph) * 6, -1, 1) * 0.5 + np.sin(2 * ph) * 0.25 + np.sin(4 * ph) * 0.12
         n = rng.standard_normal(len(t))
         hiss = (lp_fast(n, 2600) - lp_fast(n, 900)) * 0.12 * (0.8 + 0.2 * np.sin(ph))
-        env = np.clip(t / 0.3, 0, 1) * np.clip((d - t) / 0.3, 0, 1)
-        return lp_fast(pulse, 1400) * 0.42 * env + hiss * env
+        envl = np.clip(t / 0.3, 0, 1) * np.clip((d - t) / 0.3, 0, 1)   # (not `env`: that name is the module's envelope function)
+        return lp_fast(pulse, 1400) * 0.42 * envl + hiss * envl
     if kind == "cord":  # the starter cord yanked: a fast ratchet whir rising, a cough from the engine, then it catches
         out = np.zeros(int(1.4 * SR))
         d = 0.45
