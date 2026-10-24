@@ -233,7 +233,7 @@
     const pose = MODES[cur.mode]((t - cur.t), cur.opts || {});
     // pose changes always ease in (0.22 s unless the track says otherwise); arms, head and torso overshoot a little
     const prev = i > 0 ? track[i - 1] : null;
-    const blend = cur.blend ?? (prev && prev.mode !== cur.mode ? 0.22 : 0);
+    const blend = cur.blend ?? (prev && prev.mode !== cur.mode ? 0.3 : 0);
     if (prev && blend) {
       const k = Math.min(1, Math.max(0, (t - cur.t) / blend));
       if (k < 1) {
