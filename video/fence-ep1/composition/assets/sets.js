@@ -239,8 +239,10 @@
   // ---------------- props ----------------
   const props = {
     generator(id, x, y, s = 1, running = true) {
-      return `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><rect x="-150" y="-200" width="300" height="200" rx="18" fill="#c0603e" ${OUT}/>
-        <rect x="-120" y="-170" width="150" height="90" rx="8" fill="#2e2a26"/><circle cx="80" cy="-140" r="22" fill="#e6d9bd" ${OUT}/>
+      return `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><path d="M-180,0V-250q0,-30 30,-30h300q30,0 30,30V0" fill="none" stroke="#3a3f45" stroke-width="16" stroke-linejoin="round"/><path d="M-180,-120h360" stroke="#3a3f45" stroke-width="12"/>
+        <rect x="-150" y="-200" width="300" height="200" rx="18" fill="#c0603e" ${OUT}/><rect x="-150" y="-200" width="300" height="34" rx="10" fill="#8a3f2a" ${OUT}/><rect x="-40" y="-236" width="80" height="40" rx="8" fill="#2e2a26" ${OUT}/><circle cx="0" cy="-216" r="12" fill="#5b6066"/>
+        <rect x="-120" y="-170" width="150" height="90" rx="8" fill="#2e2a26"/><rect x="-108" y="-158" width="60" height="30" rx="4" fill="#1a1512"/><circle cx="80" cy="-140" r="22" fill="#e6d9bd" ${OUT}/><circle cx="80" cy="-140" r="12" fill="#2e2a26"/><path d="M80,-140l8,-10" stroke="#c8392b" stroke-width="3"/>
+        <path d="M150,-170h30v-40q0,-14 14,-14h20" fill="none" stroke="#5b6066" stroke-width="12" stroke-linecap="round"/><rect x="100" y="-60" width="46" height="26" rx="6" fill="#5b6066" ${OUT}/>
         <rect x="60" y="-90" width="70" height="30" rx="6" fill="#e6d9bd" ${OUT}/><path d="M150,-160h40v-60" stroke="#2e2a26" stroke-width="12" fill="none" stroke-linecap="round"/>
         <rect x="-130" y="-8" width="40" height="16" rx="6" fill="#2e2a26"/><rect x="90" y="-8" width="40" height="16" rx="6" fill="#2e2a26"/>
         <g id="${id}-shim" opacity="${running ? 0.35 : 0}">${[0, 1, 2].map((i) => `<path d="M${180 + i * 14},-230q-12,-30 0,-60t0,-60" stroke="#e8efe6" stroke-width="3" fill="none" opacity=".5"/>`).join("")}</g></g>`;

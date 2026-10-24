@@ -25,7 +25,7 @@
     <linearGradient id="fBoard" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f5a46"/><stop offset="1" stop-color="#1f3f31"/></linearGradient>
     <linearGradient id="fCan" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8d9299"/><stop offset=".35" stop-color="#e3e6e8"/><stop offset=".7" stop-color="#aeb3b8"/><stop offset="1" stop-color="#6f757b"/></linearGradient>
     <radialGradient id="fSun"><stop offset="0" stop-color="#fff2c0" stop-opacity=".95"/><stop offset=".35" stop-color="#ffd37a" stop-opacity=".5"/><stop offset="1" stop-color="#ffb060" stop-opacity="0"/></radialGradient>
-    <radialGradient id="fLamp"><stop offset="0" stop-color="#ffd58a" stop-opacity=".85"/><stop offset=".4" stop-color="#ffb35c" stop-opacity=".25"/><stop offset="1" stop-color="#ffb35c" stop-opacity="0"/></radialGradient>
+    <radialGradient id="fLamp"><stop offset="0" stop-color="#ffd58a" stop-opacity=".3"/><stop offset=".4" stop-color="#ffb35c" stop-opacity=".07"/><stop offset="1" stop-color="#ffb35c" stop-opacity="0"/></radialGradient>
     <radialGradient id="fDial"><stop offset="0" stop-color="#ffd27a" stop-opacity=".9"/><stop offset=".5" stop-color="#ff9a3c" stop-opacity=".3"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>
     <radialGradient id="fRing"><stop offset=".6" stop-color="#ff5a3a" stop-opacity="0"/><stop offset=".9" stop-color="#ff5a3a" stop-opacity=".5"/><stop offset="1" stop-color="#ff5a3a" stop-opacity="0"/></radialGradient>
     <pattern id="fPaper" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" fill="#f3ecd9"/><path d="M0,59.5H60" stroke="#cdbfa3" stroke-width="1.5"/></pattern>
@@ -105,6 +105,8 @@
     for (let k = 0; k < 40; k++) { const x = -1100 + r() * 3400, y = FY + 90 + r() * 900; g += `<path d="M${f1(x)},${f1(y)}q6,-26 12,0q6,-22 12,0q6,-18 12,0" stroke="#6f8f3e" stroke-width="4" fill="none"/>`; }
     g += `<ellipse cx="500" cy="${FY + 400}" rx="220" ry="40" fill="#8f6f45" opacity=".35"/><ellipse cx="1500" cy="${FY + 600}" rx="300" ry="50" fill="#8f6f45" opacity=".35"/>`;
     put(L.set, g);
+    if (o.hill) put(L.far, `<g id="${id}-hill"><path d="M1000,780Q1400,520 1800,620T2500,720V1100H1000Z" fill="${night ? "#121816" : "#5f7a4a"}"/><circle id="${id}-blinkg" cx="1640" cy="602" r="44" fill="url(#fLamp)" opacity="0"/><circle id="${id}-blink" cx="1640" cy="602" r="8" fill="#fff8d0" opacity="0"/></g>`);
+    if (o.genX !== undefined) put(L.set, Sets.props.generator(`${id}-gen`, o.genX, FY + 320, 0.75, !!o.genOn));
     if (night || o.lamp) put(L.glow, `<g id="${id}-lamp"><circle cx="${o.lampX ?? -200}" cy="${FY - 260}" r="420" fill="url(#fLamp)" opacity=".7"/></g>`);
     if (night) put(L.glow, Array.from({ length: 26 }, (_, k) => `<circle class="mote" cx="${f1(-400 + r() * 1900)}" cy="${f1(700 + r() * 900)}" r="${f1(3 + r() * 4)}" fill="#d8f0a0" opacity="${(0.2 + r() * 0.5).toFixed(2)}"/>`).join(""));
     if (t === "noon") put(L.glow, `<rect x="-1200" y="900" width="3500" height="400" fill="url(#zHaze)" opacity=".8"/>`);
@@ -144,6 +146,10 @@
       c += `</g>`;
       put(L.set, c);
     }
+    if (o.gen) { const gx = o.genX ?? -300; put(L.set, Sets.props.generator(`${id}-gen`, gx, G, 0.8, !!o.genOn));
+      put(L.act, `<g id="${id}-co" opacity="${o.genOn ? 1 : 0}">${[0, 1, 2, 3].map((k) => `<path class="cowisp" d="M${gx + 152 + k * 10},${G - 236}q-40,-70 10,-140t-10,-150" stroke="#d8dde2" stroke-width="${11 - k * 2}" fill="none" stroke-linecap="round" opacity=".16"/>`).join("")}</g>`); }
+    if (o.fan) put(L.set, Fence.FAN(id, o.fanX ?? 540, o.fanY ?? 110));
+    if (o.bulb) { put(L.set, Fence.BULB(id, o.bulbX ?? 760, 120)); put(L.glow, `<g id="${id}-bulb" opacity="${o.bulbOn ? 1 : 0}"><circle cx="${o.bulbX ?? 760}" cy="180" r="800" fill="url(#fLamp)"/></g>`); }
     if (night) { put(L.glow, `<circle id="${id}-lamp" cx="${o.lampX ?? 760}" cy="${o.lampY ?? 1120}" r="520" fill="url(#fLamp)" opacity=".85"/>`); put(L.set, `<g transform="translate(${o.lampX ?? 760},${G - 320})"><rect x="-24" y="-130" width="48" height="130" rx="8" fill="#3a3330" ${OUT}/><rect x="-14" y="-110" width="28" height="80" fill="#ffd58a"/><path d="M-30,-140h60l-8,-16h-44z" fill="#5b6066" ${OUT}/></g>`); }
     else { put(L.glow, [0, 1, 2, 3].map((k) => `<path d="M${-620 + k * 80},${340}l40,0L${-300 + k * 70},${G + 60}l-70,0Z" fill="url(#zRay)" opacity=".6"/>`).join("")); }
   }
@@ -391,6 +397,8 @@
     q(".fly").forEach((el, i) => tl.fromTo(el, { x: -8 - (i % 3) * 3, y: 6 }, { x: 10 + (i % 4) * 3, y: -12 - (i % 3) * 5, duration: 0.22 + (i % 5) * 0.05, repeat: Math.ceil(dur / 0.22), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (i % 7) * 0.03));
     q(".lampf").forEach((el, i) => { const st = 0.16 + (i % 3) * 0.05; for (let t = 0; t < dur; t += st) { const v = 0.82 + Math.abs((Math.sin((t * 7.3 + i) * 13.1) * 43758.5) % 1) * 0.22; tl.to(el, { opacity: v, duration: st, ease: "sine.inOut" }, t0 + t); } });
     q(".mote").forEach((el, i) => { tl.fromTo(el, { x: 0, y: 0 }, { x: 40 + (i % 5) * 18, y: -60 - (i % 4) * 20, duration: 2.6 + (i % 5) * 0.5, repeat: Math.ceil(dur / 2.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (i % 7) * 0.4); tl.fromTo(el, { opacity: 0.05 }, { opacity: 0.7, duration: 0.9 + (i % 3) * 0.3, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (i % 5) * 0.3); });
+    q(".fanspin").forEach((el) => tl.fromTo(el, { rotation: 0 }, { rotation: 360, duration: 0.9, repeat: Math.ceil(dur / 0.9), ease: "none", transformOrigin: "0px 0px", immediateRender: false }, t0));
+    q(".cowisp").forEach((el, i) => tl.fromTo(el, { y: 20, opacity: 0.16 }, { y: -120, opacity: 0, duration: 2.2 + (i % 3) * 0.4, repeat: Math.ceil(dur / 2.2), ease: "sine.out", immediateRender: false }, t0 + i * 0.5));
     q(".fring").forEach((el, i) => tl.fromTo(el, { scale: 0.3, opacity: 0.9 }, { scale: 2.2, opacity: 0, svgOrigin: "1500 1250", duration: 1.6, repeat: Math.ceil(dur / 1.6), ease: "power1.out", immediateRender: false }, t0 + i * 0.5));
   }
 
@@ -413,26 +421,35 @@
   }
   // haze(L, y, h, col, op): a soft band of atmosphere in the mid layer (parallax .6) so the far ground sits behind the set
   function haze(L, y = 1000, h = 500, col = "#cfd8d4", op = 0.3) {
+    op *= 0.5;
     const id = `hz${DEPN++}`;
     put(L.mid, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="0"/><stop offset=".55" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="${op * 0.3}"/></linearGradient><rect x="-1200" y="${y - h}" width="3500" height="${h + 200}" fill="url(#${id})"/>`);
   }
   // light(L, x, y, r, col, op): a soft light source above the darkness (glow layer): core + wide bloom; cls = "lampf" flickers (flife)
+  // light(L, x, y, R, col, op, cls): a light SOURCE the professional way — a tight bright core with a short halo at the lamp itself,
+  // never a frame-wide wash (the user: "แสงบังจนดูไม่รู้เรื่อง"); the floor gets its light from cone() instead
   function light(L, x, y, R = 500, col = "#ffd58a", op = 0.5, cls = "") {
+    if (!Fence.GLOW) return;
     const id = `lt${DEPN++}`;
-    put(L.glow, `<radialGradient id="${id}"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset=".45" stop-color="${col}" stop-opacity="${op * 0.35}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>
-      <g class="${cls}"><circle cx="${x}" cy="${y}" r="${R * 1.6}" fill="url(#${id})" opacity=".55"/><circle cx="${x}" cy="${y}" r="${R}" fill="url(#${id})"/></g>`);
+    put(L.glow, `<radialGradient id="${id}"><stop offset="0" stop-color="#fff6e0" stop-opacity="${Math.min(1, op * 1.1)}"/><stop offset=".12" stop-color="${col}" stop-opacity="${op * 0.55}"/><stop offset=".3" stop-color="${col}" stop-opacity="${op * 0.14}"/><stop offset=".6" stop-color="${col}" stop-opacity="${op * 0.03}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>
+      <g class="${cls}"><circle cx="${x}" cy="${y}" r="${R * 0.5}" fill="url(#${id})"/></g>`);
   }
-  // cone(L, x, y, w, h, col, op): light falling from a lamp at (x, y) onto the ground below (glow layer)
+  // cone(L, x, y, w, h, col, op): the light a lamp at (x, y) throws — a faint narrow beam and a soft pool on the floor at y + h (the pool sits
+  // under the actors in the set layer, so people stand IN the light instead of behind a glow)
   function cone(L, x, y, w = 600, h = 900, col = "#ffd58a", op = 0.35, cls = "lampf") {
+    if (!Fence.GLOW) return;
     const id = `cn${DEPN++}`;
-    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
-      <path class="${cls}" d="M${x - 40},${y}L${x + 40},${y}L${x + w / 2},${y + h}L${x - w / 2},${y + h}Z" fill="url(#${id})"/>`);
+    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op * 0.32}"/><stop offset=".5" stop-color="${col}" stop-opacity="${op * 0.08}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
+      <path class="${cls}" d="M${x - 26},${y}L${x + 26},${y}L${x + w * 0.42},${y + h}L${x - w * 0.42},${y + h}Z" fill="url(#${id})"/>`);
+    put(L.set, `<radialGradient id="${id}p"><stop offset="0" stop-color="${col}" stop-opacity="${op * 0.5}"/><stop offset=".55" stop-color="${col}" stop-opacity="${op * 0.18}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>
+      <ellipse class="${cls}" cx="${x}" cy="${y + h}" rx="${w * 0.62}" ry="${w * 0.15}" fill="url(#${id}p)"/>`);
   }
   // rays(L, x0, x1, y0, y1, n, col): slanted light shafts (glow layer)
   function rays(L, x0 = -600, x1 = 400, y0 = 300, y1 = 1500, n = 4, col = "#ffd8a0", op = 0.5) {
+    if (!Fence.GLOW) return;   // thin, faint shafts: a hint of dust in the air, not a wall of yellow
     const id = `ry${DEPN++}`;
-    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
-      ${Array.from({ length: n }, (_, k) => { const w = (x1 - x0) / n, x = x0 + k * w; return `<path d="M${x},${y0}h${w * 0.45}L${x + w * 0.45 + (x1 - x0) * 0.6},${y1}h${-w * 0.9}Z" fill="url(#${id})"/>`; }).join("")}`);
+    put(L.glow, `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="${op * 0.3}"/><stop offset=".7" stop-color="${col}" stop-opacity="${op * 0.06}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient>
+      ${Array.from({ length: n }, (_, k) => { const w = (x1 - x0) / n, x = x0 + k * w; return `<path d="M${x},${y0}h${w * 0.2}L${x + w * 0.2 + (x1 - x0) * 0.6},${y1}h${-w * 0.42}Z" fill="url(#${id})"/>`; }).join("")}`);
   }
 
   // clouds(L, seed): soft cloud banks high above the set (mid layer, parallax .6) for a camera that starts in the sky and drops through them
@@ -445,5 +462,70 @@
   }
 
   Object.assign(Sets, { schoolYard, classroom, market, canClose, fieldRoad, gateClose, tankClose, radioClose, drawing, mapTop, gateTop, plate });
-  window.Fence = { chalk, pin, flife, paddies, bars, gatePanel, depth, haze, light, cone, rays, clouds };
+  window.Fence = { chalk, pin, flife, paddies, bars, gatePanel, depth, haze, light, cone, rays, clouds, GLOW: true };
+  // ======================================================================================================
+  // EP.2 "เครื่องปั่นไฟ": the temple fair at noon, the generator POV, the classroom with the generator / fan / bulb /
+  // exhaust, the hill with the answering light, น้องปั้น's second drawing
+  // ======================================================================================================
+  const FAN = (id, x, y) => `<g id="${id}-fan" transform="translate(${x},${y})"><path d="M0,-260V-40" stroke="#5b6066" stroke-width="14"/><g class="fanspin" style="transform-origin:0px 0px">${[0, 1, 2].map((k) => `<path d="M0,0L-30,-26L-230,-18L-220,22L-26,26Z" fill="#dfe3e6" ${OUT} transform="rotate(${k * 120})"/>`).join("")}</g><circle r="34" fill="#9aa0a6" ${OUT}/><circle r="12" fill="#5b6066"/></g>`;
+  const BULB = (id, x, y) => `<g id="${id}-bulbbody" transform="translate(${x},${y})"><path d="M0,-200V-70" stroke="#2a2420" stroke-width="5"/><rect x="-18" y="-70" width="36" height="30" rx="4" fill="#9aa0a6" ${OUT}/><circle r="40" cy="0" fill="#f4ecd8" ${OUT}/><path d="M-10,0q10,-24 20,0" stroke="#9aa0a6" stroke-width="3" fill="none"/></g>`;
+
+  // ---------------- the abandoned temple fair at noon: a small ferris wheel (#id-wheel spins), torn striped tents, a stage with speakers, the generator on a cart (#id-cart) ----------------
+  function fair(L, o = {}) {
+    const id = o.id || "fa", r = mk(o.seed || 83), t = o.time || "noon", G = 1500;
+    sky(L, t); sunMoon(L, t, 300, 420);
+    put(L.far, paddies(r, t, 1040));
+    const R = 330, cx = 1320, cy = 640;
+    let w = `<g transform="translate(${cx},${cy})"><path d="M-220,${R + 340}L0,0L220,${R + 340}Z" fill="none" stroke="#5b6066" stroke-width="18"/><path d="M-300,${R + 340}h600" stroke="#5b6066" stroke-width="22"/></g>`;
+    w += `<g id="${id}-wheel" transform="translate(${cx},${cy})"><circle r="${R}" fill="none" stroke="#c8392b" stroke-width="14"/><circle r="${R - 70}" fill="none" stroke="#c8392b" stroke-width="6" opacity=".7"/>`;
+    for (let k = 0; k < 8; k++) { const a = (k * Math.PI) / 4; w += `<path d="M0,0L${f1(Math.cos(a) * R)},${f1(Math.sin(a) * R)}" stroke="#5b6066" stroke-width="8"/><g transform="translate(${f1(Math.cos(a) * R)},${f1(Math.sin(a) * R)})"><rect x="-44" y="-8" width="88" height="68" rx="12" fill="${["#f2c55c", "#9fc5d8", "#d96a8a", "#6f8f58"][k % 4]}" ${OUT}/></g>`; }
+    w += `<circle r="26" fill="#f4ecd8" ${OUT}/></g>`;
+    put(L.mid, w);
+    let s = `<rect x="-1200" y="${G - 40}" width="3500" height="1400" fill="url(#fDirt)"/>`;
+    const tent = (x, col) => `<g transform="translate(${x},${G})"><path d="M-40,0V-420M300,0V-420" stroke="#8a6a42" stroke-width="12"/><path d="M-130,-420L130,-570L390,-420Z" fill="${col}" ${OUT}/>${[0, 1, 2, 3].map((k) => `<path d="M${-110 + k * 130},-420L${-45 + k * 130},-560" stroke="#f4ecd8" stroke-width="24" opacity=".5"/>`).join("")}<path d="M-130,-420l40,70l30,-70l50,100l40,-100l60,80l30,-80l60,50l-20,-50" fill="none" stroke="${INK}" stroke-width="4"/><path d="M-110,-430q30,70 0,140q40,-40 25,-140z" fill="${col}" opacity=".85" ${OUT}/></g>`;
+    s += tent(-760, "#d96a8a") + tent(-230, "#f2c55c") + tent(1760, "#6f8f58");
+    s += `<g transform="translate(700,${G})"><path d="M-430,-120V-640M430,-120V-640" stroke="#8a6a42" stroke-width="14"/><rect x="-400" y="-120" width="800" height="120" fill="#6b4a2e" ${OUT}/><rect x="-360" y="-470" width="110" height="350" fill="#2a2420" ${OUT}/><circle cx="-305" cy="-390" r="30" fill="#1a1512" stroke="#8d9299" stroke-width="6"/><circle cx="-305" cy="-250" r="46" fill="#1a1512" stroke="#8d9299" stroke-width="6"/>
+      <g transform="rotate(7 0 -560)"><rect x="-400" y="-620" width="800" height="120" fill="#c8392b" opacity=".85" ${OUT}/><text x="0" y="-532" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#f4ecd8">งานวัดประจำปี</text></g></g>`;
+    for (let k = 0; k < 14; k++) { const x = -1100 + r() * 3300, y = G + 60 + r() * 700; s += `<path d="M${f1(x)},${f1(y)}l${f1(20 + r() * 30)},${f1(-6 + r() * 12)}" stroke="#d9d4c8" stroke-width="8" stroke-linecap="round" opacity=".6"/>`; }
+    put(L.set, s);
+    put(L.act, `<g id="${id}-cart" transform="translate(${o.cartX ?? 260},${G})"><rect x="-180" y="-150" width="360" height="30" fill="#5b6066" ${OUT}/><path d="M170,-150L330,-270" stroke="#5b6066" stroke-width="14" stroke-linecap="round"/><circle cx="-110" cy="-50" r="50" fill="#2a2420" stroke="#8d9299" stroke-width="10"/><circle cx="110" cy="-50" r="50" fill="#2a2420" stroke="#8d9299" stroke-width="10"/>${Sets.props.generator(`${id}-gen`, 0, -150, 0.72, false)}</g>`);
+    if (t === "noon") put(L.glow, `<rect x="-1200" y="900" width="3500" height="400" fill="url(#zHaze)" opacity=".8"/>`);
+    put(L.glow, `<g id="${id}-shim">${[0, 1, 2].map((i) => `<path d="M${-400 + i * 700},1380q200,-30 400,0t400,0" stroke="#fff6dc" stroke-width="6" fill="none" opacity=".25"/>`).join("")}</g>`);
+  }
+
+  // ---------------- first person at the generator: the red machine filling the frame, our hand on the starter handle (#id-hand, cord #id-cord), the bulb above (#id-bulb), the fan ----------------
+  function genClose(L, o = {}) {
+    const id = o.id || "gp";
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#0e0f12"/>`);
+    put(L.far, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#2a2620"/><rect x="-1200" y="1150" width="3500" height="40" fill="#5a4630"/><rect x="-1200" y="1190" width="3500" height="1300" fill="#3a2e20"/>`);
+    put(L.mid, `<rect x="-300" y="260" width="1680" height="620" rx="10" fill="#1f3f31" opacity=".85" ${OUT}/><rect x="-1000" y="300" width="300" height="520" fill="#0b1020" ${OUT}/>`);
+    put(L.set, `${BULB(id, 540, 170)}${o.fan ? FAN(id, 540, 60) : ""}${Sets.props.generator(`${id}-gen`, 540, 1560, 1.55, false)}<path id="${id}-cord" d="M664,1343L760,1560" stroke="#1a1512" stroke-width="8" fill="none"/>`);
+    put(L.fg, `<g id="${id}-hand" transform="translate(760,1560)"><g transform="rotate(-70) scale(0.75)">${Hand.grip({ skin: o.skin || "#b9805a", sleeve: o.sleeve || "#2c3e6b" })}</g><rect x="-44" y="-18" width="88" height="36" rx="12" fill="#2a2420" ${OUT}/></g>`);
+    L.fg.classList.remove("fgblur");
+    put(L.glow, `<g id="${id}-bulb" opacity="0"><circle cx="540" cy="200" r="900" fill="url(#fLamp)"/></g><circle id="${id}-pilot" cx="664" cy="1343" r="16" fill="#ff3b30" opacity="0"/>`);
+  }
+
+  // ---------------- น้องปั้น's drawing of day 101: the school at night, the light on the hill, five of them under the fan, a man lying at the gate ----------------
+  function drawing2(L, o = {}) {
+    const id = o.id || "dw";
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#5a4630"/>`);
+    let s = `<g transform="rotate(-2 540 960)"><rect x="90" y="260" width="900" height="1400" fill="url(#fPaper)" ${OUT}/><circle cx="540" cy="290" r="16" fill="#c8392b" ${OUT}/>`;
+    const C = (d, col, w = 9) => `<path d="${d}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#fCrayon)"/>`;
+    s += `<rect x="140" y="440" width="800" height="720" fill="#2f4a8a" opacity=".22" filter="url(#fCrayon)"/>`;   // the night sky, scribbled
+    s += C("M240,520q40,-50 80,0", "#f4ecd8", 10) + `<circle cx="280" cy="520" r="44" fill="#f4ecd8" opacity=".8" filter="url(#fCrayon)"/>`;   // the moon
+    s += C("M620,860Q740,700 880,760T930,860", "#5b6066", 14) + `<g id="${id}-hl"><circle cx="800" cy="720" r="22" fill="#f2c55c" filter="url(#fCrayon)"/>${C("M800,660v-40M760,680l-30,-30M840,680l30,-30M750,730h-50M850,730h50", "#f2c55c", 8)}</g>`;   // the hill and the light
+    s += C("M150,1300H930", "#6f8f3e", 14) + C("M150,1300l0,-120M250,1300l0,-120M350,1300l0,-120M750,1300l0,-120M850,1300l0,-120M930,1300l0,-120M150,1180H930", "#5b6066", 8);
+    s += C("M200,1140V860H640V1140M160,860L420,740L680,860M250,940h80v120h-80zM480,940h80v120h-80z", "#c8392b", 10) + `<rect x="200" y="860" width="440" height="280" fill="#f6d6a0" opacity=".6" filter="url(#fCrayon)"/>`;
+    s += C("M420,780v60M380,820h80", "#2e2a26", 8);   // the fan on the roof line
+    const fig = (x, y, col, h = 1) => `<g transform="translate(${x},${y}) scale(${h})" filter="url(#fCrayon)"><circle cy="-130" r="30" fill="none" stroke="${col}" stroke-width="8"/><path d="M0,-100V0M0,-80l-40,40M0,-80l40,40M0,0l-30,60M0,0l30,60" stroke="${col}" stroke-width="8" fill="none" stroke-linecap="round"/></g>`;
+    s += fig(280, 1420, "#2f4a8a") + fig(380, 1430, "#c8392b") + fig(470, 1420, "#6f8f3e") + fig(560, 1430, "#d96a8a") + fig(640, 1450, "#e8b830", 0.7);
+    s += `<g id="${id}-man" transform="translate(520,1240) rotate(-90)">${fig(0, 0, "#2e2a26", 0.65)}</g>`;   // the man lying across the gate
+    s += `<text x="540" y="400" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="60" fill="#2f4a8a" filter="url(#fCrayon)">วันที่ 101 แสงบนเขา</text>`;
+    s += `<text x="300" y="1560" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#c8392b" filter="url(#fCrayon)">ครูพิม ก้อง ลุง เจ๊ ปั้น</text></g>`;
+    put(L.set, s);
+    put(L.glow, `<circle cx="540" cy="900" r="900" fill="url(#fLamp)" opacity=".35"/>`);
+  }
+  Object.assign(Sets, { fair, genClose, drawing2 });
+  window.Fence.FAN = FAN; window.Fence.BULB = BULB;
+
 })();

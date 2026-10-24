@@ -177,6 +177,7 @@
       // a rig standing behind the set's own drawing (zombies outside the fence): built into the mid layer and driven like an actor
       const behind = (L, tl, aid, who, x, y, s, flip, t0, dur, track) => {
         Rig.build(L.mid, aid, Rig.CAST[who]);
+        document.getElementById(aid).insertAdjacentHTML("afterbegin", `<ellipse cy="6" rx="78" ry="15" fill="#000" opacity=".2"/>`);
         document.getElementById(aid).setAttribute("transform", `translate(${x},${y}) scale(${flip ? -s : s},${s})`);
         Rig.drive(tl, aid, t0, dur, track, []);
       };

@@ -21,7 +21,8 @@
     div.setAttribute("data-track-index", "0");
     div.innerHTML = `<svg class="stage" width="1080" height="1920" viewBox="0 0 1080 1920">
         <g id="${id}-world">${Object.keys(PARALLAX).map((L) => `<g id="${id}-${L}"${L === "fg" ? ' class="fgblur"' : ""}></g>`).join("")}</g>
-        <rect id="${id}-dark" width="1080" height="1920" fill="#05090c" opacity="${sh.dark ?? 0.35}" style="mix-blend-mode:multiply"/>
+        <linearGradient id="${id}-dkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05090c" stop-opacity="1"/><stop offset=".3" stop-color="#05090c" stop-opacity=".72"/><stop offset=".72" stop-color="#05090c" stop-opacity=".66"/><stop offset="1" stop-color="#05090c" stop-opacity=".9"/></linearGradient>
+        <rect id="${id}-dark" width="1080" height="1920" fill="url(#${id}-dkg)" opacity="${Math.min(1, (sh.dark ?? 0.35) * 1.35)}" style="mix-blend-mode:multiply"/>
         <g id="${id}-glow"></g>
         <g id="${id}-light"></g>
         <rect id="${id}-fog" x="-200" y="0" width="1480" height="1920" fill="#c9c3b6" opacity="0"/>
@@ -53,6 +54,7 @@
       } else {
         Rig.build(L.act, aid, Rig.CAST[a.who]);
         const g = document.getElementById(aid);
+        g.insertAdjacentHTML("afterbegin", `<ellipse cy="6" rx="78" ry="15" fill="#000" opacity=".2"/>`);   // a contact shadow grounds the figure
         g.setAttribute("transform", `translate(${a.x},${a.y}) scale(${a.flip ? -a.s : a.s},${a.s})`);
         Rig.drive(tl, aid, sh.start, sh.dur, a.track, a.blinks || [0.9, 2.7, 4.6]);
         if (a.prop && window.Camp) Camp.attach(aid, a.prop);
