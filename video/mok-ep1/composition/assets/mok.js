@@ -90,7 +90,7 @@
       <rect x="420" y="290" width="240" height="64" rx="16" fill="#202328" ${OUT}/><path d="M540,354v24" stroke="#202328" stroke-width="12"/>`;
     s += `<path d="M-900,1440Q540,1350 2000,1440V2600H-900Z" fill="url(#mkDash)"/><path d="M-900,1440Q540,1350 2000,1440" stroke="#3a3e46" stroke-width="10" fill="none"/>`;
     s += `<g id="${id}-hazbtn"><rect x="492" y="1452" width="96" height="66" rx="12" fill="#202328" stroke="#3a3e46" stroke-width="6"/><path d="M514,1500l26,-38l26,38z" fill="none" stroke="#d8443a" stroke-width="7"/></g>`;
-    s += `<g><rect x="60" y="1466" width="160" height="60" rx="12" fill="#0b0d10" ${OUT}/><text x="140" y="1509" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="36" fill="#7fd1ff">03:00</text></g>`;
+    s += `<g><rect x="60" y="1466" width="160" height="60" rx="12" fill="#0b0d10" ${OUT}/><text x="140" y="1509" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="36" fill="#7fd1ff">${o.clock || "03:00"}</text></g>`;
     put(L.set, s);
     // right-hand drive: the wheel sits right of centre, the light stalk sticks out right of the column (#id-stalk), her hand (#id-hand)
     let w = `<g transform="translate(700,1800)"><circle r="330" fill="none" stroke="#0e1013" stroke-width="64"/><circle r="330" fill="none" stroke="#2a2d33" stroke-width="48"/><path d="M-310,40Q0,120 310,40M0,110V330" stroke="#1a1c20" stroke-width="70" fill="none"/><circle r="96" fill="#1a1c20" ${OUT}/><circle r="34" fill="#2a2d33"/></g>`;
@@ -300,7 +300,170 @@
     q(".haz").forEach((el) => { for (let k = 0; k < dur; k += 0.8) { tl.set(el, { opacity: 1 }, t0 + k); tl.set(el, { opacity: 0.08 }, t0 + k + 0.4); } });
     // rotate about the shoulder in the figure's own units (svgOrigin would use the root SVG's space and miss inside the camera layers)
     q(".wave").forEach((el, i) => tl.fromTo(el, { attr: { transform: "rotate(-14 50 -300)" } }, { attr: { transform: "rotate(18 50 -300)" }, duration: 0.55, repeat: Math.ceil(dur / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.1));
+    q(".flick").forEach((el, i) => { for (let k = 0.15 * i; k < dur; k += 0.23) tl.set(el, { opacity: 0.78 + 0.22 * Math.abs(Math.sin(k * 7.3 + i)) }, t0 + k); });
     q(".tube").forEach((el, i) => { for (let k = 0.7 + i * 0.9; k < dur; k += 2.3) { tl.set(el, { opacity: 0.2 }, t0 + k); tl.set(el, { opacity: 1 }, t0 + k + 0.06); tl.set(el, { opacity: 0.4 }, t0 + k + 0.11); tl.set(el, { opacity: 1 }, t0 + k + 0.16); } });
+  }
+
+
+  // ================= EP.2 (อย่าหลับใน): the abandoned village, the house with the charcoal stove =================
+  const PALE = "#c9d3cf", BLK = "#5a4a3e";
+  // one of the village dead sitting on the floor: blanket mound, pale face, dark eyes (same head as the standing villager)
+  const ghostSit = (x, y, s, op = 1) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})" opacity="${op}">
+      <path d="M-96,0Q-104,-150 -52,-204Q0,-232 52,-204Q104,-150 96,0Z" fill="${BLK}"/><path d="M-60,-40Q0,-20 60,-40" stroke="#463a30" stroke-width="8" fill="none"/>
+      <ellipse cx="0" cy="-252" rx="40" ry="48" fill="${PALE}"/><path d="M-42,-260Q-46,-310 0,-312Q46,-310 42,-260Q30,-290 0,-290Q-30,-290 -42,-260Z" fill="#1c2228"/>
+      <ellipse cx="-14" cy="-252" rx="7" ry="9" fill="#0b0f12"/><ellipse cx="14" cy="-252" rx="7" ry="9" fill="#0b0f12"/></g>`;
+  // someone sitting slumped, wrapped head to foot in the villagers' brown blanket (face hidden in the hood)
+  const wrapped = (x, y, s) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><path d="M-110,0Q-122,-170 -64,-236Q0,-276 64,-236Q122,-170 110,0Z" fill="${BLK}" ${OUT}/>
+      <path d="M-64,-236Q0,-300 64,-236Q54,-196 0,-190Q-54,-196 -64,-236Z" fill="#4e4036" ${OUT}/><ellipse cx="0" cy="-222" rx="36" ry="24" fill="#0b0d10"/><path d="M-80,-60Q0,-30 80,-60" stroke="#463a30" stroke-width="8" fill="none"/></g>`;
+  // the clay charcoal stove (อั้งโล่): a tapered bucket with a metal band, an arched air vent at the front, coals on the grate (#id-coals glow)
+  const stove = (id, x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})">
+      <ellipse cx="0" cy="6" rx="110" ry="18" fill="#000" opacity=".4"/>
+      <path d="M-84,-170L-62,0H62L84,-170Z" fill="#b0563a" ${OUT}/><path d="M-84,-170H84" stroke="${INK}" stroke-width="5"/>
+      <path d="M-80,-140L80,-140L78,-122H-78Z" fill="#6b7178" ${OUT}/><path d="M-26,0V-52Q0,-78 26,-52V0Z" fill="#2a1a12" ${OUT}/>
+      <path d="M-90,-176H90V-164H-90Z" fill="#7a3a26" ${OUT}/>
+      <g id="${id}-coals">${[-50, -20, 12, 44, -34, 0, 30].map((cx, k) => `<ellipse cx="${cx}" cy="${k < 4 ? -184 : -198}" rx="22" ry="13" fill="#1b1714" ${OUT}/>`).join("")}</g></g>`;
+  const basket = (x, y) => `<g transform="translate(${x},${y})"><path d="M-80,-110L-64,0H64L80,-110Z" fill="#8a6a40" ${OUT}/>
+      ${[-80, -50, -20].map((yy) => `<path d="M-78,${yy}H78" stroke="#6b5030" stroke-width="5"/>`).join("")}
+      ${[-56, -24, 8, 40, -40, -8, 26].map((cx, k) => `<ellipse cx="${cx}" cy="${k < 4 ? -116 : -136}" rx="22" ry="15" fill="#151210" ${OUT}/>`).join("")}</g>`;
+  const blankets = (x, y) => `<g transform="translate(${x},${y})">${[["#7a4a3a", 0], ["#4a5a6a", -44], ["#8a7a4a", -88]].map(([c, yy]) => `<rect x="-110" y="${yy - 44}" width="220" height="48" rx="16" fill="${c}" ${OUT}/>`).join("")}</g>`;
+
+  // inside a house in บ้านหมอก: plank walls, a window with shutters (#id-open / #id-shut), the door (#id-dooropen),
+  // a calendar from 2529, the stove in the middle (#id-fire glow, class flick), charcoal and blankets, the dead seated round
+  // the stove (#id-ghosts), the gas (#id-gas, a diagram haze that fills from the ceiling) and steam (#id-steam)
+  function houseRoom(L, o = {}) {
+    const id = o.id || "hr", r = mk(o.seed || 139), G = o.ground ?? 1540, SX = o.stoveX ?? 540;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#0d0f12"/>`);
+    let w = `<rect x="-900" y="-600" width="2900" height="${G + 600}" fill="#3a2c22"/>`;
+    for (let x = -880; x < 2000; x += 74) w += `<path d="M${x},-600V${G}" stroke="#271d16" stroke-width="5"/><path d="M${x + 30},${f1(200 + r() * 900)}v${f1(40 + r() * 120)}" stroke="#2f241b" stroke-width="3" opacity=".7"/>`;
+    w += `<rect x="-900" y="300" width="2900" height="40" fill="#2a1f17" ${OUT}/><rect x="-900" y="${G - 30}" width="2900" height="34" fill="#2a1f17"/>`;
+    // window (right): fog outside; open leaves at the sides, or closed leaves over the opening
+    const WX = o.winX ?? 720, WY = 560, WW = 260, WH = 400;
+    w += `<rect x="${WX}" y="${WY}" width="${WW}" height="${WH}" fill="#6c747d"/>` + `<g clip-path="url(#${id}-wclip)">${fogBands(r, WY, WY + WH, 3, 0.8)}</g>
+      <defs><clipPath id="${id}-wclip"><rect x="${WX}" y="${WY}" width="${WW}" height="${WH}"/></clipPath></defs>
+      <rect x="${WX - 14}" y="${WY - 14}" width="${WW + 28}" height="${WH + 28}" fill="none" stroke="#2a1f17" stroke-width="22"/>
+      <g id="${id}-open" opacity="${o.shut ? 0 : 1}"><path d="M${WX - 14},${WY}L${WX - 90},${WY - 30}V${WY + WH + 30}L${WX - 14},${WY + WH}Z" fill="#4a3828" ${OUT}/><path d="M${WX + WW + 14},${WY}L${WX + WW + 90},${WY - 30}V${WY + WH + 30}L${WX + WW + 14},${WY + WH}Z" fill="#4a3828" ${OUT}/></g>
+      <g id="${id}-shut" opacity="${o.shut ? 1 : 0}"><rect x="${WX}" y="${WY}" width="${WW / 2}" height="${WH}" fill="#4a3828" ${OUT}/><rect x="${WX + WW / 2}" y="${WY}" width="${WW / 2}" height="${WH}" fill="#4a3828" ${OUT}/>
+        ${[0.25, 0.5, 0.75].map((k) => `<path d="M${WX + 10},${WY + WH * k}H${WX + WW - 10}" stroke="#33261b" stroke-width="5"/>`).join("")}<rect x="${WX + WW / 2 - 40}" y="${WY + WH / 2 - 8}" width="80" height="16" rx="4" fill="#2a1f17"/></g>`;
+    // door (left)
+    const DX = o.doorX ?? 60;
+    w += `<rect x="${DX}" y="${G - 760}" width="250" height="760" fill="#2a1f17"/><g id="${id}-dooropen" opacity="${o.door ? 1 : 0}"><rect x="${DX + 14}" y="${G - 746}" width="222" height="746" fill="#6c747d"/>${fogBands(r, G - 700, G - 100, 2, 0.6).replace(/x="-1100"/g, `x="${DX + 14}"`).replace(/width="3300"/g, 'width="222"')}</g>
+      <g id="${id}-doorshut" opacity="${o.door ? 0 : 1}"><rect x="${DX + 14}" y="${G - 746}" width="222" height="746" fill="#4a3828" ${OUT}/>${[0.3, 0.6].map((k) => `<path d="M${DX + 24},${f1(G - 746 + 746 * k)}H${DX + 226}" stroke="#33261b" stroke-width="5"/>`).join("")}<circle cx="${DX + 200}" cy="${G - 380}" r="10" fill="#1b1714"/></g>`;
+    // calendar from forty years ago
+    w += `<g transform="translate(${o.calX ?? 470},470) rotate(3)"><rect x="-70" y="0" width="140" height="170" fill="#e9e0c8" ${OUT}/><rect x="-70" y="0" width="140" height="44" fill="#a8261c" ${OUT}/>
+      <text x="0" y="32" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="26" fill="#fff">ธ.ค. 2529</text>
+      ${Array.from({ length: 16 }, (_, k) => `<rect x="${-56 + (k % 4) * 30}" y="${58 + Math.floor(k / 4) * 26}" width="20" height="16" fill="#b9ae94"/>`).join("")}<circle cx="0" cy="-12" r="6" fill="${INK}"/></g>`;
+    put(L.far, w);
+    // the dead seated round the stove (behind the living)
+    let gh = "";
+    (o.ghostPos || [[SX - 330, G + 30, 0.8], [SX + 330, G + 30, 0.8], [SX - 190, G - 10, 0.66], [SX + 190, G - 10, 0.66], [SX - 470, G + 60, 0.9], [SX + 470, G + 60, 0.9], [SX, G - 40, 0.58]])
+      .forEach(([x, y, sc]) => (gh += ghostSit(x, y, sc)));
+    let st = `<rect x="-900" y="${G}" width="2900" height="1300" fill="#4a3628"/>`;
+    for (let y = G + 50; y < 2600; y += 70) st += `<path d="M-900,${y}H2000" stroke="#3a2a1f" stroke-width="5"/>`;
+    st += `<g id="${id}-ghosts" opacity="${o.ghosts ?? 0}">${gh}</g>`;
+    st += blankets(o.blankX ?? 210, G + 70) + basket(SX + 200, G + 60) + `<g id="${id}-stove">${stove(id, SX, G + 70)}</g>`;
+    put(L.set, st);
+    put(L.glow, `<g id="${id}-fire" opacity="${o.fire ?? 0}"><g class="flick"><circle cx="${SX}" cy="${G - 140}" r="620" fill="#ff8a3a" opacity=".2"/><circle cx="${SX}" cy="${G - 110}" r="200" fill="url(#mkHaz)"/></g>
+        ${[-50, -20, 12, 44, -34, 0, 30].map((cx, k) => `<ellipse cx="${SX + cx}" cy="${G + 70 + (k < 4 ? -184 : -198)}" rx="18" ry="9" fill="#ff7a2a" opacity=".85"/>`).join("")}</g>
+      <g id="${id}-steam" opacity="0">${[-40, 10, 50, -10, 30].map((dx, k) => `<ellipse cx="${SX + dx}" cy="${G - 200 - k * 60}" rx="${70 + k * 20}" ry="${40 + k * 12}" fill="#e9ecef" opacity=".55"/>`).join("")}</g>
+      <g id="${id}-gas" opacity="${o.gas ?? 0}"><rect x="-900" y="300" width="2900" height="${G - 300}" fill="#a79cc8" opacity=".3"/>
+        ${Array.from({ length: 80 }, () => `<circle cx="${f1(-200 + r() * 1500)}" cy="${f1(320 + r() * (G - 340))}" r="${f1(5 + r() * 9)}" fill="#d6cff2" opacity=".55"/>`).join("")}</g>`);
+  }
+
+  // the abandoned village in the fog: stilt houses fading into the white, a leaning wooden sign "บ้านหมอก" (#id-sign),
+  // the near house (o.house) with steps, a door (#id-door, orange inside when o.glow) and a window (#id-win),
+  // villagers standing round it (o.vill: [{x, y, s, op}]) and fog in front
+  function fogVillage(L, o = {}) {
+    const id = o.id || "fv", r = mk(o.seed || 149), G = o.ground ?? 1500;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#4b5159"/>`);
+    const hut = (x, y, sc, c) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${sc})"><path d="M-200,-300L0,-470L200,-300Z" fill="${c}"/><rect x="-170" y="-300" width="340" height="200" fill="${c}"/>
+        ${[-150, -50, 50, 150].map((px) => `<rect x="${px - 8}" y="-100" width="16" height="100" fill="${c}"/>`).join("")}</g>`;
+    let far = "";
+    for (let k = 0; k < 6; k++) far += hut(-600 + k * 450 + r() * 120, G - 260, 0.55 + r() * 0.2, "#3a4048");
+    put(L.far, far + fogBands(r, G - 700, G - 100, 5, 0.85));
+    let mid = "";
+    [[-260, 0.8], [1320, 0.85]].forEach(([x, sc]) => (mid += hut(x, G - 60, sc, "#2c3138")));
+    put(L.mid, mid + fogBands(r, G - 500, G, 3, 0.7));
+    let s = `<rect x="-900" y="${G}" width="2900" height="1300" fill="#3a382f"/><path d="M200,2600Q420,${G + 300} 520,${G}H600Q560,${G + 300} 900,2600Z" fill="#4a463a"/>`;
+    for (let k = 0; k < 40; k++) s += `<path d="M${f1(-800 + r() * 2700)},${f1(G + 20 + r() * 900)}l-8,-26M${f1(-800 + r() * 2700)},${f1(G + 20 + r() * 900)}l6,-22" stroke="#2c2a22" stroke-width="5"/>`;
+    if (o.house) {
+      const h = o.house, hx = h.x ?? 540, hs = h.s ?? 1;
+      s += `<g transform="translate(${hx},${G}) scale(${hs})">
+        <path d="M-380,-560L0,-860L380,-560Z" fill="#2a2420" ${OUT}/><path d="M-400,-560H400" stroke="#1b1714" stroke-width="18"/>
+        <rect x="-340" y="-560" width="680" height="380" fill="#4a3828" ${OUT}/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-340 + k * 76},-560V-180" stroke="#33261b" stroke-width="5"/>`).join("")}
+        ${[-320, -110, 110, 320].map((px) => `<rect x="${px - 14}" y="-180" width="28" height="180" fill="#33261b" ${OUT}/>`).join("")}
+        <rect x="-360" y="-196" width="720" height="26" fill="#3a2c22" ${OUT}/>
+        <g id="${id}-door"><rect x="-250" y="-500" width="170" height="320" fill="${o.glow ? "#e07a3a" : "#14100d"}" ${OUT}/><rect x="-250" y="-500" width="170" height="320" fill="#1b1410" opacity="${o.doorShut ? 1 : 0}" ${OUT}/></g>
+        ${Array.from({ length: 5 }, (_, k) => `<rect x="${-270 + k * 6}" y="${-170 + k * 34}" width="${210 - k * 12}" height="18" fill="#3a2c22" ${OUT}/>`).join("")}
+        <g id="${id}-win"><rect x="60" y="-480" width="200" height="190" fill="${o.glow ? "#e8893e" : "#14100d"}" ${OUT}/><path d="M160,-480V-290M60,-385H260" stroke="#2a1f17" stroke-width="10"/></g></g>`;
+    }
+    if (o.sign !== false) s += `<g id="${id}-sign" transform="translate(${o.signX ?? 860},${G + 40}) rotate(-6)"><rect x="-12" y="-420" width="24" height="420" fill="#4a3828" ${OUT}/>
+        <rect x="-170" y="-470" width="340" height="120" rx="8" fill="#6b5236" ${OUT}/><path d="M-150,-440L-90,-400M120,-460L140,-380" stroke="#4a3828" stroke-width="4"/>
+        <text x="0" y="-388" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="62" fill="#e9e0c8" opacity=".85">บ้านหมอก</text></g>`;
+    (o.vill || []).forEach((v) => (s += `<g opacity="${v.op ?? 0.85}">${villager(v.x, v.y ?? G + 20, v.s ?? 0.7, { wave: false })}</g>`));
+    put(L.set, s);
+    if (o.house && o.glow) {
+      const h = o.house, hx = h.x ?? 540, hs = h.s ?? 1;
+      put(L.glow, `<g class="flick"><circle cx="${hx - 165 * hs}" cy="${G - 340 * hs}" r="${260 * hs}" fill="url(#mkHaz)" opacity=".55"/><circle cx="${hx + 160 * hs}" cy="${G - 385 * hs}" r="${240 * hs}" fill="url(#mkHaz)" opacity=".5"/></g>`);
+    }
+    put(L.fg, fogBands(r, G - 500, G + 500, 4, o.fogFg ?? 0.6));
+  }
+
+  // from outside, looking in through the window: the room lit by the stove; actors go in the act layer,
+  // the wall with the window hole (#id-frame) is moved over them with TOP
+  function windowLook(L, o = {}) {
+    const id = o.id || "wl", r = mk(o.seed || 151), G = 1500;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#3a2c22"/>`);
+    let f = "";
+    for (let x = -880; x < 2000; x += 74) f += `<path d="M${x},-600V${G}" stroke="#2a1f17" stroke-width="5"/>`;
+    put(L.far, f + `<rect x="-900" y="${G}" width="2900" height="1200" fill="#4a3628"/>`);
+    put(L.set, stove(id, o.stoveX ?? 700, G + 60, 1.1));
+    put(L.act, `<g id="${id}-frame"><path d="M-900,-600H2000V2600H-900ZM160,560H920V1500H160Z" fill="#4a3828" fill-rule="evenodd"/>
+      ${Array.from({ length: 30 }, (_, k) => `<path d="M${-880 + k * 100},-600V560M${-880 + k * 100},1500V2600" stroke="#33261b" stroke-width="6"/>`).join("")}
+      <rect x="140" y="540" width="800" height="980" fill="none" stroke="#2a1f17" stroke-width="40"/><path d="M540,560V1500M160,1030H920" stroke="#2a1f17" stroke-width="22"/>
+      <path d="M140,540L20,500V1560L140,1520Z" fill="#3a2c22" ${OUT}/><path d="M940,540L1060,500V1560L940,1520Z" fill="#3a2c22" ${OUT}/>
+      <rect x="160" y="560" width="760" height="940" fill="#9fb3c4" opacity=".08"/></g>`);
+    put(L.glow, `<g class="flick"><circle cx="${o.stoveX ?? 700}" cy="${G - 160}" r="520" fill="#ff8a3a" opacity=".22"/><circle cx="${o.stoveX ?? 700}" cy="${G - 140}" r="180" fill="url(#mkHaz)"/></g>`);
+    put(L.fg, fogBands(r, 300, 1900, 4, 0.5));
+  }
+
+  // the back of เจ's camera held in two round fists: the photo on the screen (the three at the stove, and the dead
+  // filling the room behind them, #id-ghosts)
+  function photoLCD(L, o = {}) {
+    const id = o.id || "pl", r = mk(o.seed || 157);
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#1a1410"/><circle cx="540" cy="1500" r="900" fill="#ff8a3a" opacity=".12"/>`);
+    let sc = `<rect x="150" y="690" width="780" height="520" fill="#3a2c22"/>`;
+    for (let x = 150; x < 930; x += 40) sc += `<path d="M${x},690V1010" stroke="#2a1f17" stroke-width="3"/>`;
+    sc += `<rect x="150" y="1010" width="780" height="200" fill="#4a3628"/>`;
+    let gh = "";
+    [[230, 1040, 0.42], [850, 1040, 0.42], [330, 990, 0.34], [760, 990, 0.34], [420, 960, 0.3], [660, 960, 0.3], [540, 945, 0.28], [180, 1110, 0.5], [900, 1110, 0.5]].forEach(([x, y, k]) => (gh += ghostSit(x, y, k)));
+    sc += `<g id="${id}-ghosts" opacity="${o.ghosts ?? 1}">${gh}</g>`;
+    const kid = (x, y, top, hair) => `<g transform="translate(${x},${y})"><path d="M-44,0Q-50,-80 -26,-100H26Q50,-80 44,0Z" fill="${top}" ${OUT}/><circle cx="0" cy="-126" r="30" fill="#ecbf98" ${OUT}/>${hair}
+        <path d="M-12,-122q4,-4 8,0M6,-122q4,-4 8,0" stroke="${INK}" stroke-width="3" fill="none"/><path d="M-10,-110q10,8 20,0" stroke="${INK}" stroke-width="3" fill="none"/></g>`;
+    sc += kid(430, 1150, "#d9a12c", `<path d="M-32,-132Q-30,-168 0,-168Q30,-168 32,-132Z" fill="#1b1d20"/>`) + kid(650, 1150, "#a99ad0", `<path d="M-36,-120Q-38,-172 0,-172Q38,-172 36,-120Q30,-150 0,-152Q-30,-150 -36,-120Z" fill="#a99ad0" ${OUT}/>`);
+    sc += stove(id, 540, 1200, 0.42) + `<circle cx="540" cy="1110" r="200" fill="#ff8a3a" opacity=".3"/><rect x="150" y="690" width="780" height="520" fill="#fff" opacity=".06"/>`;
+    put(L.set, `<rect x="40" y="560" width="1000" height="800" rx="60" fill="#1b1d20" ${OUT}/><rect x="70" y="590" width="940" height="740" rx="44" fill="#24272c"/>
+      <defs><clipPath id="${id}-clip"><rect x="150" y="690" width="780" height="520" rx="10"/></clipPath></defs>
+      <g clip-path="url(#${id}-clip)">${sc}</g><rect x="150" y="690" width="780" height="520" rx="10" fill="none" stroke="#0b0d10" stroke-width="10"/>
+      <text x="170" y="732" font-family="Kanit" font-weight="700" font-size="28" fill="#f4f2ea">1/1</text><text x="910" y="732" text-anchor="end" font-family="Kanit" font-weight="700" font-size="28" fill="#f4f2ea">ISO 3200</text>
+      <circle cx="540" cy="1272" r="34" fill="#30353c" ${OUT}/>${[380, 700].map((x) => `<rect x="${x - 40}" y="1256" width="80" height="32" rx="10" fill="#30353c" ${OUT}/>`).join("")}`);
+    const fistArm = (x, y, side) => `<path d="M${x},${y}L${x + side * 260},2300" stroke="${INK}" stroke-width="150" stroke-linecap="round"/><path d="M${x},${y}L${x + side * 260},2300" stroke="#5f6b4a" stroke-width="140" stroke-linecap="round"/>
+        <g transform="translate(${x},${y}) rotate(${side * 30})">${Hands.fist({ r: 90, skin: "#dca57c", shade: "#bb8560" })}</g>`;
+    put(L.act, fistArm(70, 1250, -1) + fistArm(1010, 1250, 1));
+    put(L.glow, `<rect x="150" y="690" width="780" height="520" fill="#ffe7c0" opacity=".05"/>`);
+  }
+
+  // the bundle they dragged out: a figure wrapped head to foot in the villagers' brown blanket, slumped by the steps;
+  // a pale hand comes out of it (#id-hand) and the hood lifts (#id-hood)
+  function bundleClose(L, o = {}) {
+    const id = o.id || "bc", r = mk(o.seed || 163), G = 1640;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#4b5159"/>` + fogBands(r, -200, 1600, 6, 0.7));
+    put(L.far, `<rect x="-900" y="${G}" width="2900" height="1200" fill="#3a382f"/>${Array.from({ length: 5 }, (_, k) => `<rect x="${-200 + k * 10}" y="${G - 600 + k * 120}" width="${520 - k * 20}" height="40" fill="#3a2c22" ${OUT}/>`).join("")}`);
+    put(L.set, `<g transform="translate(560,${G + 40})"><path d="M-330,0Q-360,-420 -170,-640Q0,-760 170,-640Q360,-420 330,0Z" fill="${BLK}" ${OUT}/>
+        <path d="M-220,-120Q0,-60 220,-120M-260,-300Q-60,-240 120,-330" stroke="#463a30" stroke-width="12" fill="none"/>
+        <g id="${id}-hood"><path d="M-170,-640Q0,-780 170,-640Q140,-520 0,-500Q-140,-520 -170,-640Z" fill="#4e4036" ${OUT}/><ellipse cx="0" cy="-590" rx="96" ry="70" fill="#0b0d10"/>
+          <g id="${id}-eyes" opacity="${o.eyes ?? 0}"><ellipse cx="-30" cy="-590" rx="10" ry="12" fill="${PALE}"/><ellipse cx="30" cy="-590" rx="10" ry="12" fill="${PALE}"/></g></g>
+        <g id="${id}-hand" opacity="${o.hand ?? 0}"><g transform="translate(140,-260) rotate(-20)">${Hands.fist({ r: 60, skin: PALE, shade: "#9aa6a2" })}</g></g></g>`);
+    put(L.fg, fogBands(r, 900, 2000, 3, 0.45));
   }
 
   // ---------------- cast ----------------
@@ -340,6 +503,6 @@
     },
   });
 
-  Object.assign(Sets, { carPOV, roadSign, mountainRoad, gasStation, mirrorClose, roadFog, carInterior, carWindow, rearWindow, plateClose, topRoad });
-  window.Mok = { villager, car, carLights, fogBands, fogBlobs, life };
+  Object.assign(Sets, { carPOV, roadSign, mountainRoad, gasStation, mirrorClose, roadFog, carInterior, carWindow, rearWindow, plateClose, topRoad, houseRoom, fogVillage, windowLook, photoLCD, bundleClose });
+  window.Mok = { villager, car, carLights, fogBands, fogBlobs, life, ghostSit, stove, wrapped };
 })();
