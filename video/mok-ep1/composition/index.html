@@ -13,6 +13,7 @@
     <script src="assets/mok.js"></script>
     <script src="assets/ui.js"></script>
     <script src="assets/gameui.js"></script>
+    <script src="assets/mokui.js"></script>
     <script src="assets/fx.js"></script>
     <script src="assets/engine.js"></script>
     <style>
@@ -486,7 +487,7 @@
         add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
       };
       const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
-      const PLATE = "4กษ 2519";
+      const PLATE = "xxx xxxx";
       // move an element's transform attribute through keyed values (avoids GSAP x/y resetting an existing translate)
       const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
 
@@ -548,15 +549,7 @@
           tl.fromTo(`#${id}-hw`, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)", immediateRender: false }, t0 + 0.5);
         },
       };
-      Object.assign(GameUI.ILL, {
-        lowbeam: `<path d="M24,40Q24,24 40,24H58V96H40Q24,96 24,80Z" fill="#2e2a26"/><path d="M66,44L100,58M66,60L100,74M66,76L100,90" stroke="#2f7fbf" stroke-width="8" stroke-linecap="round"/>`,
-        slow: `<path d="M20,90A44,44 0 0 1 100,90" stroke="#2e2a26" stroke-width="10" fill="none"/><path d="M60,90L38,58" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/><circle cx="60" cy="90" r="9" fill="#2e2a26"/>`,
-        lines: `<path d="M38,110L54,14M82,110L66,14" stroke="#2e2a26" stroke-width="8"/><path d="M60,104V88M60,72V56M60,40V26" stroke="#f2c23a" stroke-width="9" stroke-linecap="round"/><circle cx="60" cy="16" r="9" fill="none" stroke="#2f7fbf" stroke-width="5"/>`,
-        hazard: `<path d="M60,18L104,96H16Z" fill="none" stroke="#d8322a" stroke-width="10" stroke-linejoin="round"/><path d="M60,44L84,86H36Z" fill="none" stroke="#d8322a" stroke-width="7" stroke-linejoin="round"/>`,
-        lightsoff: `<path d="M24,40Q24,24 40,24H58V96H40Q24,96 24,80Z" fill="#2e2a26"/><path d="M66,44L100,58M66,60L100,74" stroke="#8a929a" stroke-width="8" stroke-linecap="round"/><path d="M14,14L106,106" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/>`,
-        handbrake: `<path d="M28,100L84,30" stroke="#2e2a26" stroke-width="18" stroke-linecap="round"/><rect x="74" y="16" width="26" height="26" rx="8" fill="#d8322a" stroke="#2e2a26" stroke-width="4"/><path d="M20,104H70" stroke="#2e2a26" stroke-width="8"/>`,
-        footoff: `<rect x="62" y="64" width="44" height="40" rx="8" fill="#2e2a26"/><path d="M30,60C24,40 30,20 46,16L58,18C64,30 62,46 52,60Z" fill="#e7b48a" stroke="#2e2a26" stroke-width="4"/><path d="M60,56l14,-14M74,42l-4,12M74,42l-12,2" stroke="#2f7fbf" stroke-width="6" stroke-linecap="round"/>`,
-      });
+      // card icons: mokui.js
 
       // ---------- 1. hook: driver's POV, the hand goes for the high-beam stalk; someone waving in the fog ----------
       add("hook", {
@@ -596,7 +589,7 @@
       });
 
       // ---------- 4–7. the petrol station ----------
-      const GS = { id: "gs", carX: 600, carS: 0.85, plate: PLATE };
+      const GS = { id: "gs", carX: 820, carY: 1474, carS: 1.5, plate: PLATE };   // a real-size hatchback: roof about chest-high on the cast
       add("mint", {
         set: "gasStation", setOpts: GS, dark: 0.3,
         cam: { keys: [{ t: 0, ...fr(720, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }] },
@@ -643,7 +636,7 @@
 
       // ---------- 9. 3 a.m. ----------
       add("three", {
-        set: "roadFog", setOpts: { id: "f3", carX: 520 }, dark: 0.35,
+        set: "roadFog", setOpts: { id: "f3", carX: 520, scroll: 900 }, dark: 0.35,
         cam: { keys: [{ t: 0, ...fr(560, 1300, 0.95, 540, 1150), drift: { s: 0.015 } }] },
         shake: (t) => 1.5 * Math.sin(t * 17),
         captions: caps("three"),
@@ -670,7 +663,7 @@
         },
       });
       add("swerve", {
-        set: "roadFog", setOpts: { id: "sw", carX: 200, villager: { x: 900, s: 0.95, wave: false } }, dark: 0.3,
+        set: "roadFog", setOpts: { id: "sw", carX: 200, villager: { x: 900, s: 0.66, wave: false } }, dark: 0.3,
         cam: { keys: [{ t: 0, ...fr(600, 1250, 0.9, 540, 1100), drift: { s: 0.02 } }] },
         shake: (t) => (t > 0.5 && t < 1.2 ? 10 * Math.sin(t * 61) : 0),
         sfxText: [{ text: "เอี๊ยด!", x: 300, y: 420, t: 0.45, rot: -8, size: 120, color: "#f2d6a0" }],
@@ -693,7 +686,7 @@
 
       // ---------- 14–16. someone waving; "stop" / "don't!"; they pass him ----------
       add("wave", {
-        set: "roadFog", setOpts: { id: "wv", carX: -200, villager: { x: 860, s: 0.9 } }, dark: 0.35,
+        set: "roadFog", setOpts: { id: "wv", carX: -200, villager: { x: 860, s: 0.66 } }, dark: 0.35,
         cam: { keys: [{ t: 0, ...fr(700, 1200, 1.1, 540, 1100), drift: { s: 0.03 } }] },
         captions: caps("wave"),
         fx(tl, id, t0) { tf(tl, "#wv-car", t0, D("wave"), "translate(240,1440) scale(1,1)", "power1.out"); },
@@ -708,7 +701,7 @@
         fx(tl, id, t0, L) { TOP(L, document.getElementById("ci-dash")); Fx.glitch(tl, `#${id}`, t0 + vo("stop", 1), 0.15, 8, 41); },
       });
       add("pass", {
-        set: "roadFog", setOpts: { id: "ps", carX: 100, villager: { x: 900, s: 0.9, wave: false } }, dark: 0.35,
+        set: "roadFog", setOpts: { id: "ps", carX: 100, villager: { x: 900, s: 0.66, wave: false } }, dark: 0.35,
         cam: { keys: [{ t: 0, ...fr(800, 1150, 1.3, 540, 1000), drift: { s: 0.03 } }] },
         fx(tl, id, t0) {
           tf(tl, "#ps-car", t0, D("pass"), "translate(1500,1440) scale(1,1)", "power1.in");
