@@ -1,0 +1,447 @@
+
+      // ======================================================================================================
+      // v2 look: muted cinematic grade + a "field notebook / scrapbook" HUD — torn paper, masking tape, red rubber
+      // stamps, die-cut stickers, a polaroid, pen handwriting. Every card has three beats: in (page flip / stamp
+      // slam / sticker peel), live (wobble, ink loops), out (torn away). All motion sits on the shot timeline.
+      // ======================================================================================================
+      window.GRADE = { filter: "saturate(.6) brightness(.84) contrast(1.1)", tint: "#8a9cb0", tintOp: 0.22 };
+      const PK_INK = "#1f1d1a", PK_RED = "#b7281e", PK_PAPER = "#e9e0c9", PK_PENCIL = "#6e675c", PK_GOLD = "#c8a24a", PK_GREEN = "#3f9a6e";
+      const PK_TAPE = "repeating-linear-gradient(90deg, rgba(228,210,160,.86) 0 7px, rgba(214,194,138,.86) 7px 9px)";
+      let PK_SEED = 7, PK_N = 0;
+      const pkR = () => ((PK_SEED = (PK_SEED * 1664525 + 1013904223) % 4294967296) / 4294967296);
+      const uid = () => `pk${(PK_N++).toString(36)}`;
+      // torn paper: a polygon with ragged top and bottom edges (deterministic, seeded)
+      const torn = (n = 24, amp = 7) => { const top = [], bot = []; for (let i = 0; i <= n; i++) { const x = ((i / n) * 100).toFixed(1); top.push(`${x}% ${(pkR() * amp).toFixed(1)}px`); bot.push(`${x}% calc(100% - ${(pkR() * amp).toFixed(1)}px)`); } return `polygon(${top.join(",")},${bot.reverse().join(",")})`; };
+      const PAP = (cls = "") => `<i class="pap ${cls}" style="clip-path:${torn()}"></i>`;
+      const TAPE = (pos, r, txt = "") => `<i class="tape ${pos}${txt ? " wide" : ""}" data-r="${r}" style="transform:rotate(${r}deg)">${txt}</i>`;
+      const SPL = [[-46, -30], [52, -22], [-38, 34], [60, 30], [-10, -48], [14, 50], [70, -4]];
+      const SPLAT = SPL.map((_, i) => `<i class="spl" data-i="${i}"></i>`).join("");
+      const STAMP = (txt, cls = "", r = -4) => `<div class="stw ${cls}" style="transform:rotate(${r}deg)"><div class="stamp">${txt}</div>${SPLAT}</div>`;
+      const STK = (fn, cls = "", vb = "0 0 48 48") => `<span class="stk ${cls}"><svg viewBox="${vb}">${fn(uid())}</svg></span>`;
+      const INKLINE = (col) => `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 26'><path d='M6,2C4,8 5,16 3,24' stroke='${col}' stroke-width='3.2' stroke-linecap='round' fill='none'/></svg>")`;
+      const WAVY = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 10' preserveAspectRatio='none'><path d='M0,6q7,-6 15,0t15,0t15,0t15,0' stroke='%23b7281e' stroke-width='3' fill='none' stroke-linecap='round'/></svg>")`;
+      const HALO = "drop-shadow(0 0 1.3px #fff) drop-shadow(0 0 1.3px #fff) drop-shadow(0 0 1.2px #fff) drop-shadow(0 6px 5px rgba(0,0,0,.42))";
+      const TAPECLIP = "polygon(0 12%, 3% 0, 97% 5%, 100% 14%, 98% 100%, 2% 95%)";
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        /* ---- paper primitives ---- */
+        .pap { position: absolute; inset: 0; z-index: 0; background: ${PK_PAPER}; }
+        .pap::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 18% 8%, rgba(255,255,255,.35), transparent 55%), radial-gradient(ellipse at 90% 100%, rgba(90,70,40,.12), transparent 50%); }
+        .pap.lined, .pap.lst { background-image: repeating-linear-gradient(0deg, transparent 0 44px, rgba(60,80,130,.22) 44px 46px); }
+        .pap.lst { background-image: radial-gradient(circle at 93% 92%, transparent 54px, rgba(110,70,25,.24) 56px, rgba(110,70,25,.1) 66px, transparent 76px), linear-gradient(90deg, transparent 52px, rgba(183,40,30,.5) 52px, rgba(183,40,30,.5) 55px, transparent 55px), repeating-linear-gradient(0deg, transparent 0 44px, rgba(60,80,130,.22) 44px 46px); }
+        .pap.st { background-image: radial-gradient(circle at 90% 88%, transparent 60px, rgba(110,70,25,.22) 62px, rgba(110,70,25,.09) 72px, transparent 82px); }
+        .tape { position: absolute; z-index: 3; width: 112px; height: 32px; background: ${PK_TAPE}; box-shadow: 0 2px 5px rgba(0,0,0,.28); clip-path: ${TAPECLIP}; font-style: normal; }
+        .tape.tl { left: -34px; top: -13px; } .tape.tr { right: -34px; top: -13px; } .tape.bl { left: -34px; bottom: -13px; } .tape.br { right: -34px; bottom: -13px; }
+        .tape.tc { left: 50%; margin-left: -56px; top: -15px; }
+        .tape.wide { width: 240px; height: 46px; margin-left: -120px; font: 700 26px/46px Kanit; color: ${PK_INK}; text-align: center; letter-spacing: 3px; }
+        .stw { position: relative; display: inline-block; } .stw .stamp { display: inline-block; font: 900 28px/1 Kanit; letter-spacing: 3px; color: ${PK_RED}; border: 4px double ${PK_RED}; border-radius: 6px; padding: 7px 14px 9px; opacity: .92; mix-blend-mode: multiply; transform-origin: 50% 50%; }
+        .spl { position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; margin: -4px; border-radius: 50%; background: ${PK_RED}; opacity: 0; } .spl[data-i="1"], .spl[data-i="4"] { width: 6px; height: 6px; } .spl[data-i="3"] { width: 12px; height: 12px; }
+        .stk { position: relative; display: inline-grid; place-items: center; width: 96px; height: 96px; flex: none; transform-origin: 50% 50%; } .stk svg { width: 82px; height: 82px; overflow: visible; filter: ${HALO}; }
+        .stk.sm { width: 64px; height: 64px; } .stk.sm svg { width: 54px; height: 54px; } .stk.big { width: 124px; height: 124px; } .stk.big svg { width: 116px; height: 116px; }
+        .w { display: inline-block; }
+        .tape, .stw .stamp, .stk { opacity: 0; }   /* decorations exist only once their entrance tween reveals them */
+        /* ---- captions: a torn strip of paper, ink text, marker-yellow [words], red stamp {words}; words bounce in one by one ---- */
+        .capwrap { top: 1470px; }
+        .capbox { background: transparent; color: ${PK_INK}; border: 0; border-radius: 0; box-shadow: none; font: 900 54px/1.2 Kanit; padding: 12px 38px 16px; letter-spacing: .3px; filter: drop-shadow(0 12px 14px rgba(0,0,0,.6)); }
+        .capbox .pap { transform: rotate(-.6deg); } .capbox .ct { position: relative; z-index: 1; }
+        .capbox .k, .gui .k { background: linear-gradient(transparent 14%, rgba(240,196,70,.62) 14%, rgba(240,196,70,.62) 86%, transparent 86%); color: ${PK_INK}; border: 0; border-radius: 2px; padding: 0 .1em; transform: skewX(-6deg); box-shadow: none; }
+        .capbox .k.kr, .k.kr, .gui .k.kr { background: none; color: ${PK_RED}; border: 3px solid ${PK_RED}; border-radius: 5px; padding: 0 .12em; transform: rotate(-2deg); box-shadow: none; }
+        .capbox.q .pap { background: #dfe3d6; } .capbox.radio .pap { background: #2a1d10; } .capbox.radio { color: #ffd27a; letter-spacing: 6px; border: 0; }
+        .bubble { background: ${PK_PAPER}; border: 4px solid ${PK_INK}; border-radius: 255px 18px 225px 18px / 18px 225px 18px 255px; color: ${PK_INK}; font: 900 42px/1.2 Kanit; box-shadow: 7px 7px 0 rgba(0,0,0,.4); padding: 14px 28px 18px; }
+        .bubble:after { border: 4px solid ${PK_INK}; border-top: 0; background: ${PK_PAPER}; bottom: -30px; }
+        .badge { font: 700 24px/1 Kanit; opacity: .6; background: none; padding: 0; letter-spacing: 3px; }
+        /* ---- stat chip: a scrap with a taped corner, a sticker, pencil label, ink number, tally marks ---- */
+        .pks { position: absolute; left: 36px; top: 150px; z-index: 52; opacity: 0; padding: 18px 28px 16px 18px; color: ${PK_INK}; font-family: Kanit; filter: drop-shadow(0 16px 20px rgba(0,0,0,.6)); }
+        .pks.right { left: auto; right: 36px; }
+        .pks .in { position: relative; z-index: 1; display: flex; gap: 18px; align-items: center; }
+        .pks .lbl { font: 700 26px/1 Kanit; color: ${PK_PENCIL}; letter-spacing: 1px; margin-bottom: 4px; }
+        .pks .v { position: relative; font: 900 60px/1 Kanit; color: ${PK_INK}; display: inline-block; } .pks .num { display: inline-block; transform-origin: 50% 60%; } .pks .v small { font: 700 26px/1 Kanit; color: ${PK_PENCIL}; margin-left: 8px; }
+        .pks .v .ring { position: absolute; left: -22px; top: -16px; width: calc(100% + 44px); height: calc(100% + 30px); overflow: visible; opacity: 0; }
+        .pks .seg { display: flex; gap: 5px; margin-top: 8px; } .pks .seg i { width: 10px; height: 26px; background: ${INKLINE("%231f1d1a")} no-repeat center / contain; } .pks .seg i.off { opacity: .2; }
+        .pks.alarm .v { color: ${PK_RED}; } .pks.alarm .seg i { background-image: ${INKLINE("%23b7281e")}; }
+        .pks .sub { margin-top: 8px; display: flex; align-items: center; gap: 6px; font: 700 26px/1 Kanit; color: ${PK_RED}; } .pks .sub .arr { width: 40px; height: 30px; overflow: visible; }
+        /* ---- title page (chapter) and the end card header: a notebook page that flips down, tape, stamped number ---- */
+        .pkt, .pkn { position: absolute; left: 50%; width: 760px; margin-left: -380px; top: 150px; z-index: 52; opacity: 0; padding: 32px 40px 34px; text-align: center; color: ${PK_INK}; font-family: Kanit; filter: drop-shadow(0 26px 30px rgba(0,0,0,.62)); }
+        .pkt .in, .pkn .in { position: relative; z-index: 1; }
+        .pkt .ser { font: 700 28px/1 Kanit; color: ${PK_PENCIL}; letter-spacing: 2px; }
+        .pkt .big { display: flex; align-items: center; justify-content: center; gap: 20px; font: 900 92px/1.1 Kanit; margin-top: 12px; }
+        .pkt .stw.day .stamp { font: 900 150px/1 Kanit; padding: 2px 26px 14px; border-width: 7px; letter-spacing: 2px; }
+        .pkt .chip { display: inline-flex; align-items: center; gap: 12px; margin-top: 10px; font: 700 28px/1 Kanit; color: ${PK_PENCIL}; }
+        .pkt .ep { margin-top: 12px; font: 900 36px/1.1 Kanit; color: ${PK_RED}; }
+        .pkn { width: 640px; margin-left: -320px; padding: 44px 36px 30px; } .pkn .big { font: 900 48px/1 Kanit; } .pkn .stw.big .stamp { font: 900 104px/1 Kanit; padding: 4px 24px 14px; border-width: 7px; }
+        .pkn .tag { margin-top: 14px; font: 900 36px/1.2 Kanit; color: ${PK_RED}; }
+        /* ---- rule cards: ruled notebook page with punched holes, red margin, a stamped "กฎข้อ N", pen-written line, stickers ---- */
+        .pkr { position: absolute; left: 50%; width: 760px; margin-left: -380px; top: 200px; z-index: 52; font-family: Kanit; }
+        .pkr .card { position: absolute; left: 0; right: 0; top: 0; padding: 28px 40px 34px 76px; color: ${PK_INK}; opacity: 0; filter: drop-shadow(0 22px 28px rgba(0,0,0,.62)); }
+        .pkr .in { position: relative; z-index: 1; text-align: left; }
+        .pkr .holes { position: absolute; left: 20px; top: 26px; bottom: 26px; width: 24px; display: flex; flex-direction: column; justify-content: space-between; z-index: 2; }
+        .pkr .holes i { display: block; width: 24px; height: 24px; border-radius: 50%; background: #090b0f; box-shadow: inset 0 2px 2px rgba(255,255,255,.3), 0 1px 0 rgba(255,255,255,.35); }
+        .pkr .hd { display: flex; align-items: center; gap: 18px; } .pkr .who { font: 700 26px/1 Kanit; color: ${PK_PENCIL}; letter-spacing: 1px; }
+        .pkr .t { font: 900 58px/1.25 Kanit; margin-top: 16px; padding-right: 150px; }
+        .pkr .t b, .pkr .t u { position: relative; color: ${PK_RED}; text-decoration: none; font-weight: 900; }
+        .pkr .t b::after, .pkr .t u::after { content: ""; position: absolute; left: -2px; right: -2px; bottom: -8px; height: 10px; background: ${WAVY} repeat-x; background-size: 60px 10px; transform: scaleX(var(--k, 0)); transform-origin: 0 50%; }
+        .pkr .ics { position: absolute; right: -22px; top: -36px; display: flex; gap: 2px; } .pkr .ics .stk svg { width: 74px; height: 74px; }
+        /* ---- the rest of the HUD on paper ---- */
+        .zsrc span { position: relative; display: block; max-width: 900px; background: #e2cd6e; border: 0; color: ${PK_INK}; font: 700 27px/1.3 Kanit; padding: 22px 26px 18px; border-radius: 2px; box-shadow: 0 14px 24px rgba(0,0,0,.5); backdrop-filter: none; text-align: left; }
+        .zsrc span::after { content: ""; position: absolute; right: 0; bottom: 0; width: 0; height: 0; border-style: solid; border-width: 0 0 30px 30px; border-color: transparent transparent rgba(0,0,0,.18) transparent; }
+        .zsrc .pin { position: absolute; left: 50%; top: -22px; width: 36px; height: 54px; margin-left: -18px; overflow: visible; filter: drop-shadow(0 4px 4px rgba(0,0,0,.4)); }
+        .zsrc em { font-style: normal; color: ${PK_RED}; font-weight: 900; }
+        .zcall .scrap { position: relative; display: inline-block; padding: 16px 40px 22px; filter: drop-shadow(0 18px 26px rgba(0,0,0,.6)); }
+        .zcall .in { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .zcall small { font: 700 26px/1 Kanit; color: ${PK_PENCIL}; letter-spacing: 2px; }
+        .zcall .stw.big .stamp { font: 900 50px/1 Kanit; padding: 8px 24px 12px; border-width: 6px; letter-spacing: 1px; }
+        .fsun { width: 400px; padding: 14px 14px 12px; background: #efece4; border: 0; border-radius: 3px; box-shadow: 0 22px 34px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.12); backdrop-filter: none; }
+        .fsun .photo { position: relative; } .fsun .photo svg { display: block; width: 100%; height: 196px; box-shadow: inset 0 0 0 2px rgba(0,0,0,.35); }
+        .fsun .photo .dev { position: absolute; inset: 0; background: #d9dcd4; }
+        .fsun .late-st { position: absolute; inset: 0; display: grid; place-items: center; } .fsun .late .stamp { font-size: 44px; border-width: 6px; color: #ff4a3c; mix-blend-mode: normal; background: rgba(255,255,255,.08); }
+        .fsun .sunk { filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff); }
+        .fsun .row { margin-top: 10px; align-items: baseline; } .fsun .tm { font: 900 50px/1 Kanit; color: ${PK_INK}; } .fsun .lf { font: 700 26px/1.1 Kanit; color: ${PK_PENCIL}; } .fsun .lf b { display: block; font: 900 38px/1 Kanit; color: ${PK_INK}; }
+        .fsun.late { border: 0; } .fsun.late .lf { color: ${PK_PENCIL}; } .fsun.late .lf b { color: ${PK_RED}; }
+        .fsigns .row { position: relative; display: flex; align-items: center; margin-bottom: 18px; padding: 12px 30px 12px 24px; opacity: 0; background: none; border: 0; box-shadow: none; border-radius: 0; filter: drop-shadow(0 16px 22px rgba(0,0,0,.6)); }
+        .fsigns .in { position: relative; z-index: 1; display: flex; align-items: center; gap: 22px; width: 100%; }
+        .fsigns .tx { font: 900 50px/1.1 Kanit; color: ${PK_INK}; } .fsigns .tx em { font-style: normal; color: ${PK_RED}; }
+        .fsigns .stw.xx { margin-left: auto; } .fsigns .xx .stamp { font-size: 60px; padding: 0 14px 8px; border-width: 5px; letter-spacing: 0; }
+        .gui.tip, .gui.tip.rule, .gui.tip.danger, .gui.tip.warn { background: ${PK_PAPER}; background-image: repeating-linear-gradient(0deg, transparent 0 44px, rgba(60,80,130,.2) 44px 46px); border: 0; border-radius: 3px; color: ${PK_INK}; box-shadow: 0 22px 36px rgba(0,0,0,.6); padding: 20px 36px 28px 18px; }
+        .gui.tip .chip { background: none; padding: 0; color: ${PK_INK}; letter-spacing: 0; border-radius: 0; font-size: 27px; } .gui.tip .stamp { font-size: 27px; }
+        .gui.tip .txt { color: ${PK_INK}; font: 900 42px/1.25 Kanit; margin-top: 10px; }
+        .gui.tip .med { background: none; border: 0; box-shadow: none; width: 124px; height: 124px; } .gui.tip .med svg { width: 112px; height: 112px; overflow: visible; filter: ${HALO}; }
+        .gui .bar { background: rgba(31,29,26,.12); left: 20px; right: 20px; bottom: 10px; } .gui .bar i { background: ${PK_RED}; }
+        .choice .q { background: ${PK_PAPER}; color: ${PK_INK}; border: 0; border-radius: 3px; box-shadow: 0 14px 28px rgba(0,0,0,.55); font: 700 32px/1 Kanit; transform: rotate(-1deg); }
+        .choice .opt { background: ${PK_PAPER}; color: ${PK_INK}; border: 0; border-radius: 3px; box-shadow: 0 16px 30px rgba(0,0,0,.55); } .choice .opt.A { transform: rotate(-2deg); } .choice .opt.B { transform: rotate(2deg); }
+        .choice .key { background: ${PK_TAPE}; color: ${PK_INK}; box-shadow: 0 2px 4px rgba(0,0,0,.3); border-radius: 2px; }
+        .choice .who { color: #ff8a7a; } .choice .who2 { color: #f2c55c; } .choice .opt .lbg { color: #ffb0a8; }
+        .fledger { filter: drop-shadow(0 30px 40px rgba(0,0,0,.7)); } .fledger .page { box-shadow: none; }
+        .fledger::before { content: ""; position: absolute; left: 50%; top: -14px; width: 190px; height: 40px; margin-left: -95px; background: ${PK_TAPE}; transform: rotate(-3deg); z-index: 3; clip-path: ${TAPECLIP}; box-shadow: 0 2px 5px rgba(0,0,0,.25); }
+        .fledger .page::after { content: ""; position: absolute; right: -50px; top: -40px; width: 230px; height: 210px; border-radius: 50%; background: radial-gradient(ellipse, transparent 55%, rgba(110,70,25,.24) 57%, rgba(110,70,25,.1) 64%, transparent 71%); pointer-events: none; }
+      </style>`);
+
+      // ======================================================================================================
+      // icons with depth (gradients, highlight, drop shadow) — every <svg> gets its own <defs> ids via a prefix
+      // ======================================================================================================
+      const PKG = (p) => `<defs>
+        <linearGradient id="${p}-tin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f7f8fa"/><stop offset=".45" stop-color="#c3c9cf"/><stop offset="1" stop-color="#6e767e"/></linearGradient>
+        <linearGradient id="${p}-red" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7a68"/><stop offset=".5" stop-color="#d9342b"/><stop offset="1" stop-color="#8e1d16"/></linearGradient>
+        <linearGradient id="${p}-blue" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7cc3ea"/><stop offset=".5" stop-color="#2f6fb8"/><stop offset="1" stop-color="#1b4475"/></linearGradient>
+        <linearGradient id="${p}-yel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe08a"/><stop offset=".5" stop-color="#e8b830"/><stop offset="1" stop-color="#a37d12"/></linearGradient>
+        <linearGradient id="${p}-sack" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3e4bb"/><stop offset="1" stop-color="#b08f4e"/></linearGradient>
+        <linearGradient id="${p}-wood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5844f"/><stop offset="1" stop-color="#5a3a1e"/></linearGradient>
+        <radialGradient id="${p}-glow"><stop offset="0" stop-color="#ffd27a"/><stop offset="1" stop-color="#ff9a3c" stop-opacity=".2"/></radialGradient>
+        <radialGradient id="${p}-skin" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd9b8"/><stop offset="1" stop-color="#c98a5e"/></radialGradient>
+        <radialGradient id="${p}-sun" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fff5c8"/><stop offset=".6" stop-color="#ffcf5a"/><stop offset="1" stop-color="#f08a2a"/></radialGradient>
+        <linearGradient id="${p}-water" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#aee3fb"/><stop offset=".6" stop-color="#3b93cf"/><stop offset="1" stop-color="#1c4f80"/></linearGradient>
+        <linearGradient id="${p}-glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#dfe8ee"/><stop offset="1" stop-color="#9fb0bb"/></linearGradient>
+        <radialGradient id="${p}-dark" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#5a4a4a"/><stop offset="1" stop-color="#1a1212"/></radialGradient>
+        <linearGradient id="${p}-bin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8c949c"/><stop offset=".5" stop-color="#5b6066"/><stop offset="1" stop-color="#2f3337"/></linearGradient>
+      </defs>`;
+      const SHADOW = (cx, cy, rx) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${rx * 0.22}" fill="#000" opacity=".28"/>`;
+      const CAN3 = (p, x, y, w, h, band, cls = "a-wob") => `<g class="${cls}" style="transform-origin:${x + w / 2}px ${y + h}px">${SHADOW(x + w / 2, y + h + 2, w * 0.6)}<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${w * 0.1}" fill="url(#${p}-tin)" stroke="${PK_INK}" stroke-width="2"/><rect x="${x}" y="${y + h * 0.36}" width="${w}" height="${h * 0.32}" fill="url(#${p}-${band})"/><rect x="${x + w * 0.12}" y="${y + 3}" width="${w * 0.12}" height="${h - 6}" rx="2" fill="#fff" opacity=".45"/><ellipse cx="${x + w / 2}" cy="${y}" rx="${w / 2}" ry="${w * 0.14}" fill="#eef1f3" stroke="${PK_INK}" stroke-width="2"/><ellipse cx="${x + w / 2}" cy="${y}" rx="${w * 0.34}" ry="${w * 0.08}" fill="#fff" opacity=".6"/></g>`;
+      const PK_ICON = {
+        can: (p) => `${PKG(p)}${CAN3(p, 13, 10, 24, 34, "red")}`,
+        people: (p) => `${PKG(p)}${SHADOW(24, 45, 20)}<g class="a-bob"><circle cx="16" cy="16" r="8" fill="url(#${p}-skin)" stroke="${PK_INK}" stroke-width="1.5"/><path d="M3,42c0,-12 6,-17 13,-17s13,5 13,17z" fill="url(#${p}-blue)" stroke="${PK_INK}" stroke-width="1.5"/></g><g class="a-bob2"><circle cx="33" cy="19" r="7" fill="url(#${p}-skin)" stroke="${PK_INK}" stroke-width="1.5"/><path d="M22,42c0,-10 5,-14 11,-14s11,4 11,14z" fill="url(#${p}-red)" stroke="${PK_INK}" stroke-width="1.5"/></g>`,
+        rice: (p) => `${PKG(p)}${SHADOW(24, 44, 18)}<g class="a-pulse" style="transform-origin:24px 42px"><path d="M11,42q-7,-20 7,-27h12q14,7 7,27z" fill="url(#${p}-sack)" stroke="${PK_INK}" stroke-width="2"/><path d="M16,15q8,5 16,0" stroke="#7a5a2e" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M17,13l-3,-6M31,13l3,-6" stroke="#7a5a2e" stroke-width="2.5" stroke-linecap="round"/><path d="M15,30q9,-6 18,0" stroke="#7a5a2e" stroke-width="2" fill="none" opacity=".6"/><text x="24" y="37" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="9" fill="#7a5a2e">ข้าว</text></g>`,
+        radio: (p) => `${PKG(p)}${SHADOW(24, 44, 20)}<rect x="5" y="16" width="38" height="25" rx="4" fill="url(#${p}-wood)" stroke="${PK_INK}" stroke-width="2"/><rect x="10" y="21" width="17" height="11" rx="2" fill="#1a1208"/><rect class="a-glow" x="10" y="21" width="17" height="11" rx="2" fill="url(#${p}-glow)"/><rect class="a-jit" x="17" y="22" width="1.6" height="9" fill="#ff3b30"/><circle cx="35" cy="27" r="4.5" fill="#d9c08a" stroke="${PK_INK}" stroke-width="1.5"/><path d="M31,16L42,5" stroke="${PK_INK}" stroke-width="2.5" stroke-linecap="round"/><circle cx="42" cy="5" r="2" fill="#ff3b30" class="a-pulse"/>`,
+        thermo: (p) => `${PKG(p)}${SHADOW(24, 45, 10)}<rect x="19" y="5" width="10" height="28" rx="5" fill="url(#${p}-glass)" stroke="${PK_INK}" stroke-width="2"/><rect class="a-merc" x="22" y="12" width="4" height="22" rx="2" fill="#e8302a" style="transform-origin:24px 34px"/><circle cx="24" cy="37" r="7" fill="url(#${p}-red)" stroke="${PK_INK}" stroke-width="2"/><circle cx="21.5" cy="34.5" r="2" fill="#fff" opacity=".6"/><path d="M31,12h4M31,18h3M31,24h4" stroke="${PK_INK}" stroke-width="1.5"/>`,
+        water: (p) => `${PKG(p)}${SHADOW(24, 45, 12)}<g class="a-bob"><path d="M24,5c8,12 14,18 14,26a14,14 0 0 1 -28,0c0,-8 6,-14 14,-26z" fill="url(#${p}-water)" stroke="${PK_INK}" stroke-width="2"/><ellipse cx="18" cy="26" rx="3" ry="6" fill="#fff" opacity=".55" transform="rotate(-20 18 26)"/></g>`,
+        sun: (p) => `${PKG(p)}<g class="a-spin" style="transform-origin:24px 24px"><path d="M24,3v7M24,38v7M3,24h7M38,24h7M9,9l5,5M34,34l5,5M39,9l-5,5M14,34l-5,5" stroke="#f08a2a" stroke-width="3" stroke-linecap="round"/></g><circle cx="24" cy="24" r="10" fill="url(#${p}-sun)" stroke="${PK_INK}" stroke-width="1.5"/>`,
+      };
+      // rule pictograms (viewBox 0 0 34 34), used as small stickers
+      const PK_RULE_ICONS = [
+        [(p) => `<circle cx="17" cy="17" r="7" fill="#f2c55c" stroke="${PK_INK}" stroke-width="2.4"/><path d="M4,28h26" stroke="${PK_INK}" stroke-width="2.4" stroke-linecap="round"/>`, (p) => `<path d="M17,5v6M9,8l3,4M25,8l-3,4" stroke="${PK_INK}" stroke-width="2.4" stroke-linecap="round"/><path d="M8,26l9,-14l9,14z" fill="${PK_INK}"/>`],
+        [(p) => `<path d="M8,20q0,-6 5,-6l4,4l4,-4q5,0 5,6v8H8z" fill="#f3e4bb" stroke="${PK_INK}" stroke-width="2.4" stroke-linejoin="round"/><path d="M13,14V9q0,-4 4,-4t4,4v5" fill="none" stroke="${PK_INK}" stroke-width="2.4"/>`, (p) => `<circle cx="17" cy="17" r="11" fill="#fff" stroke="${PK_RED}" stroke-width="2.6"/><path d="M9,9l16,16" stroke="${PK_RED}" stroke-width="2.6" stroke-linecap="round"/>`],
+        [(p) => `<path d="M6,28V12l11,-6l11,6v16z" fill="#f3e4bb" stroke="${PK_INK}" stroke-width="2.4" stroke-linejoin="round"/><path d="M17,6v22M6,19h22" stroke="${PK_INK}" stroke-width="2"/>`, (p) => `<circle cx="17" cy="17" r="12" fill="#fff" stroke="${PK_RED}" stroke-width="2.6"/><path d="M8,26L26,8M20,8h6v6" fill="none" stroke="${PK_RED}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`],
+      ];
+      // the signs on a can: three can icons that do the thing (lid doming, a drip, fizz) — viewBox 0 0 120 120
+      const SIGN3 = [
+        (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<rect x="32" y="44" width="56" height="58" rx="6" fill="url(#${p}-tin)" stroke="${PK_INK}" stroke-width="3"/><rect x="32" y="64" width="56" height="20" fill="url(#${p}-red)"/><rect x="37" y="47" width="7" height="52" rx="2" fill="#fff" opacity=".4"/><path class="a-bulge" d="M32,44q28,-26 56,0z" fill="url(#${p}-glass)" stroke="${PK_INK}" stroke-width="3" style="transform-origin:60px 44px"/>`,
+        (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<rect x="32" y="30" width="56" height="60" rx="6" fill="url(#${p}-tin)" stroke="${PK_INK}" stroke-width="3"/><rect x="32" y="50" width="56" height="20" fill="url(#${p}-blue)"/><rect x="37" y="33" width="7" height="54" rx="2" fill="#fff" opacity=".4"/><ellipse cx="60" cy="30" rx="28" ry="7" fill="#eef1f3" stroke="${PK_INK}" stroke-width="3"/><path d="M48,90q12,8 24,0" stroke="#6b4a2e" stroke-width="5" fill="none" opacity=".8"/>${[0, 1, 2].map((k) => `<path class="a-drip" d="M${56 + k * 6},92c5,8 7,13 2,16c-6,-3 -6,-8 -2,-16z" fill="#7a5a3e"/>`).join("")}`,
+        (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<rect x="32" y="46" width="56" height="56" rx="6" fill="url(#${p}-tin)" stroke="${PK_INK}" stroke-width="3"/><rect x="32" y="66" width="56" height="20" fill="url(#${p}-yel)"/><rect x="37" y="49" width="7" height="50" rx="2" fill="#fff" opacity=".4"/><path d="M32,46h56" stroke="${PK_INK}" stroke-width="3"/>${[[46, 36, 7], [60, 28, 9], [76, 36, 6], [54, 18, 5], [68, 14, 6]].map(([x, y, r]) => `<circle class="a-rise" cx="${x}" cy="${y}" r="${r}" fill="#fff8e0" stroke="${PK_INK}" stroke-width="2"/>`).join("")}`,
+      ];
+      // the tip medallions (animated by GameUI's own loops: a-pulse / a-bob / a-sway); each used once, so fixed prefixes are safe
+      Object.assign(GameUI.ILL, {
+        toxin: `${PKG("tx")}${SHADOW(60, 108, 34)}<circle cx="60" cy="58" r="40" fill="url(#tx-dark)" stroke="${PK_INK}" stroke-width="3"/><ellipse cx="46" cy="40" rx="12" ry="7" fill="#fff" opacity=".18" transform="rotate(-30 46 40)"/>
+          <g class="a-pulse" style="transform-origin:60px 56px"><path d="M38,46l14,14M52,46l-14,14M68,46l14,14M82,46l-14,14" stroke="#ff5a4a" stroke-width="6" stroke-linecap="round"/></g><path d="M48,78q12,-8 24,0" stroke="#f4ecd8" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M52,74v8M60,76v8M68,74v8" stroke="#f4ecd8" stroke-width="3" stroke-linecap="round"/>
+          <g class="a-bob"><circle cx="24" cy="22" r="7" fill="#8ff0a0" opacity=".9"/><circle cx="98" cy="18" r="5" fill="#8ff0a0" opacity=".9"/><circle cx="90" cy="34" r="3.5" fill="#8ff0a0" opacity=".9"/></g>`,
+        trash: `${PKG("tr")}${SHADOW(60, 110, 34)}<path d="M30,42h60l-6,64H36z" fill="url(#tr-bin)" stroke="${PK_INK}" stroke-width="3"/><path d="M36,45h8l-4,58" fill="#fff" opacity=".2"/><path d="M50,54v44M70,54v44" stroke="#1e1d1b" stroke-width="3" opacity=".5"/>
+          <g class="a-bob"><rect x="22" y="30" width="76" height="12" rx="4" fill="url(#tr-bin)" stroke="${PK_INK}" stroke-width="3"/><path d="M48,30v-8h24v8" fill="none" stroke="${PK_INK}" stroke-width="4"/></g>
+          <g class="a-sway" style="transform-origin:60px 10px">${CAN3("tr", 46, -8, 28, 36, "red", "")}</g>`,
+      });
+
+      // ======================================================================================================
+      // motion vocabulary
+      // ======================================================================================================
+      // wrap every word of an element's text in <span class="w"> (keeps the inner <b>/<u>/<em>/<span class="k"> markup)
+      function wordify(root) {
+        if (!root) return; const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach((n) => { const parts = n.textContent.split(/(\s+)/); if (!parts.some((p) => p.trim())) return; const frag = document.createDocumentFragment();
+          parts.forEach((p) => { if (!p) return; if (/^\s+$/.test(p)) frag.appendChild(document.createTextNode(p)); else { const s = document.createElement("span"); s.className = "w"; s.textContent = p; frag.appendChild(s); } });
+          n.parentNode.replaceChild(frag, n); });
+      }
+      // pen writes the words left→right one after another; hidden from `from` until written. returns the time the last word is done
+      const HID = "inset(-12px 100% -12px -4px)", SHOWN = "inset(-12px -6px -12px -4px)";
+      function write(tl, root, t, o = {}) {
+        if (!root) return t; const ws = root.querySelectorAll(".w"); if (!ws.length) return t; const gap = o.gap ?? 0.1, d = o.d ?? 0.22;
+        tl.set(ws, { clipPath: HID }, o.from ?? t - 0.01);
+        ws.forEach((w, i) => tl.fromTo(w, { clipPath: HID }, { clipPath: SHOWN, duration: d, ease: "power1.inOut", immediateRender: false }, t + i * gap));
+        return t + (ws.length - 1) * gap + d;
+      }
+      // rubber stamp: comes down big and fast, lands (the paper flinches), ink speckles fly out
+      function slam(tl, root, t, o = {}) {
+        root.querySelectorAll(".stw").forEach((st, i) => { const at = t + i * (o.gap ?? 0.15), s = st.querySelector(".stamp");
+          tl.fromTo(s, { scale: 2.6, rotation: -16 }, { scale: 1, rotation: 0, duration: 0.2, ease: "power4.in", immediateRender: false }, at);
+          tl.fromTo(s, { opacity: 0 }, { opacity: 0.92, duration: 0.2, ease: "power1.in", immediateRender: false }, at);
+          tl.to(s, { scale: 0.93, duration: 0.06, ease: "power1.out" }, at + 0.2); tl.to(s, { scale: 1, duration: 0.22, ease: "back.out(3)" }, at + 0.26);
+          st.querySelectorAll(".spl").forEach((sp, k) => tl.fromTo(sp, { x: 0, y: 0, opacity: 0.9, scale: 1 }, { x: SPL[k][0], y: SPL[k][1], opacity: 0, scale: 0.2, duration: 0.42, ease: "power2.out", immediateRender: false }, at + 0.19));
+          if (o.punch) tl.fromTo(o.punch, { scale: 1 }, { scale: 0.975, duration: 0.07, yoyo: true, repeat: 1, immediateRender: false }, at + 0.19); });
+      }
+      // sticker: peels on from its left edge, overshoots, wobbles to rest; `wobble` keeps it alive afterwards
+      function peel(tl, els, t, gap = 0.1) {
+        Array.from(els).forEach((el, i) => { tl.fromTo(el, { opacity: 0, rotationY: -100, scale: 0.6, transformOrigin: "0% 50%", transformPerspective: 500 }, { opacity: 1, rotationY: 0, scale: 1, duration: 0.42, ease: "back.out(1.6)", immediateRender: false }, t + i * gap);
+          tl.fromTo(el, { rotation: -16 }, { rotation: -6, duration: 0.7, ease: "elastic.out(1, 0.35)", immediateRender: false }, t + i * gap + 0.3); });
+        return t + (els.length - 1) * gap + 1.05;
+      }
+      function wobble(tl, els, t0, t1, a = -6, b = -2) { const rep = Math.ceil(Math.max(0.5, t1 - t0) / 1.1) + 1; Array.from(els).forEach((el, i) => tl.fromTo(el, { rotation: a }, { rotation: b, duration: 1.1, repeat: rep, yoyo: true, ease: "sine.inOut", transformOrigin: "50% 50%", immediateRender: false }, t0 + i * 0.2)); }
+      // masking tape pressed on after the paper lands
+      function tapeOn(tl, root, t) { root.querySelectorAll(".tape").forEach((tp, i) => { const r = +tp.dataset.r || 0; tl.fromTo(tp, { opacity: 0, scale: 1.5, y: -18, rotation: r }, { opacity: 1, scale: 1, y: 0, rotation: r, duration: 0.16, ease: "power3.in", immediateRender: false }, t + i * 0.1); }); }
+      // a notebook page turning down from its top edge, then a little flap as it settles
+      function flipIn(tl, sel, t, d = 0.5) {
+        tl.fromTo(sel, { opacity: 0, rotationX: -92, y: -24, transformOrigin: "50% 0%", transformPerspective: 1100 }, { opacity: 1, rotationX: 0, y: 0, duration: d, ease: "power2.out", immediateRender: false }, t);
+        tl.fromTo(sel, { rotationX: 0 }, { rotationX: 7, duration: 0.14, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t + d);
+      }
+      // out: torn off the frame
+      const pkOut = (tl, sel, t, dir = 0) => tl.to(sel, { opacity: 0, y: -34, x: dir * 60, rotation: dir ? dir * 8 : -5, scale: 0.96, duration: 0.28, ease: "power2.in" }, t);
+      // a map pin drops in and squashes on landing (used by shots.part on the map beats)
+      const pinDrop = (tl, sel, t, x, y) => { tl.fromTo(sel, { opacity: 0, y: -420, scaleY: 1.15, scaleX: 0.9, svgOrigin: `${x} ${y}` }, { opacity: 1, y: 0, scaleY: 1, scaleX: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, t);
+        tl.fromTo(sel, { scaleY: 0.76, scaleX: 1.14 }, { scaleY: 1, scaleX: 1, duration: 0.55, ease: "elastic.out(1, 0.35)", immediateRender: false }, t + 0.22); };
+      // looping micro-motion inside the icons (classes a-*), active from t0 to t1
+      function pkLoops(tl, root, t0, t1) {
+        const D = Math.max(0.5, t1 - t0), rep = (p) => Math.ceil(D / p) + 1, q = (c) => root.querySelectorAll(c);
+        const T = (el, from, to, p, extra = {}) => tl.fromTo(el, from, { ...to, duration: p, repeat: rep(p), yoyo: true, ease: "sine.inOut", immediateRender: false, ...extra }, t0);
+        q(".a-pulse").forEach((el) => T(el, { scale: 1 }, { scale: 1.12, transformOrigin: "50% 50%" }, 0.45));
+        q(".a-bob").forEach((el) => T(el, { y: -2 }, { y: 3 }, 0.6)); q(".a-bob2").forEach((el) => T(el, { y: 3 }, { y: -2 }, 0.6));
+        q(".a-wob").forEach((el) => T(el, { rotation: -6 }, { rotation: 6 }, 0.7));
+        q(".a-jit").forEach((el) => T(el, { x: -1.5 }, { x: 1.5 }, 0.07, { ease: "none" }));
+        q(".a-merc").forEach((el) => T(el, { scaleY: 0.72 }, { scaleY: 1 }, 0.9));
+        q(".a-glow").forEach((el) => T(el, { opacity: 0.35 }, { opacity: 1 }, 0.7));
+        q(".a-bulge").forEach((el) => T(el, { scaleY: 1 }, { scaleY: 1.5, transformOrigin: "50% 100%" }, 0.5));
+        q(".a-spin").forEach((el) => tl.fromTo(el, { rotation: 0 }, { rotation: 360, duration: 6, repeat: rep(6), ease: "none", transformOrigin: "50% 50%", immediateRender: false }, t0));
+        q(".a-drip").forEach((el, i) => tl.fromTo(el, { y: 0, opacity: 1 }, { y: 18, opacity: 0, duration: 0.9, repeat: rep(0.9), ease: "power1.in", immediateRender: false }, t0 + i * 0.3));
+        q(".a-rise").forEach((el, i) => tl.fromTo(el, { y: 0, opacity: 0.9 }, { y: -16, opacity: 0, duration: 0.8, repeat: rep(0.8), ease: "power1.out", immediateRender: false }, t0 + i * 0.25));
+      }
+      // paper HUD components skip GameUI's neon panel fx (ring / sheen / sparks); the channel signature keeps its own
+      {
+        const add0 = GameUI.add, KEEP = new Set(["sigCard"]);
+        GameUI.add = function (div, tl, sid, start, u, k) {
+          if (KEEP.has(u.type)) return add0.call(this, div, tl, sid, start, u, k);
+          const id = `${sid}-g${k}`;
+          div.insertAdjacentHTML("beforeend", GameUI.C[u.type].html(id, u));
+          GameUI.C[u.type].anim(tl, id, start + u.t, { ...u, t0abs: start });
+        };
+      }
+
+      // ======================================================================================================
+      // components (same API as shots.part expects)
+      // ======================================================================================================
+      // stat chip: keys [{t, v}] in shot time; `max` draws tally marks; `alarm` circles the number in red pen; `right` docks it right
+      GameUI.C.counter = {
+        html: (id, o) => `<div id="${id}" class="pks${o.right ? " right" : ""}" style="top:${o.top ?? 150}px">${PAP()}${TAPE(o.right ? "tr" : "tl", o.right ? 7 : -8)}
+          <div class="in">${STK(PK_ICON[o.icon || "can"])}
+            <div><div class="lbl">${o.label}</div><div class="v"><span class="num">${o.keys[0].v}</span>${o.unit ? `<small>${o.unit}</small>` : ""}
+              <svg class="ring" viewBox="0 0 120 70" preserveAspectRatio="none"><path d="M62,8C24,4 4,22 8,40c4,20 44,30 76,24c30,-6 36,-24 30,-38C108,12 84,4 54,10" pathLength="1" fill="none" stroke="${PK_RED}" stroke-width="4" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/></svg></div>
+            ${o.max ? `<div class="seg">${Array.from({ length: o.max }, (_, k) => `<i class="${k < o.keys[0].v ? "" : "off"}"></i>`).join("")}</div>` : ""}
+            ${o.sub ? `<div class="sub"><svg class="arr" viewBox="0 0 40 30"><path d="M4,4c2,14 10,22 30,20M26,16l8,8l-10,4" pathLength="1" fill="none" stroke="${PK_RED}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1"/></svg><span class="subt">${o.sub}</span></div>` : ""}</div></div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), num = el.querySelector(".num"), segs = el.querySelectorAll(".seg i"), sub = el.querySelector(".subt"), c = { t: o.t }, A = (t) => o.t0abs + t, dir = o.right ? 1 : -1;
+          wordify(el.querySelector(".lbl")); wordify(sub);
+          // in: the scrap slaps on from its side, tape pressed on, sticker peels, label written, tally strokes drawn
+          tl.fromTo(`#${id}`, { opacity: 0, x: dir * 90, rotation: dir * 6, scale: 1.08 }, { opacity: 1, x: 0, rotation: dir * 1.5, scale: 1, duration: 0.32, ease: "back.out(1.8)", immediateRender: false }, t0);
+          tapeOn(tl, el, t0 + 0.22);
+          const pe = peel(tl, el.querySelectorAll(".stk"), t0 + 0.1);
+          write(tl, el.querySelector(".lbl"), t0 + 0.2, { from: t0, gap: 0.08, d: 0.18 });
+          if (segs.length) tl.fromTo(segs, { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, duration: 0.14, stagger: 0.04, ease: "power2.out", transformOrigin: "50% 0%", immediateRender: false }, t0 + 0.3);
+          if (sub) { tl.set(`#${id} .sub`, { opacity: 0 }, t0); tl.set(`#${id} .sub`, { opacity: 1 }, t0 + 0.6);
+            tl.fromTo(`#${id} .arr path`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, ease: "power1.inOut", immediateRender: false }, t0 + 0.6); write(tl, sub, t0 + 0.8, { from: t0, gap: 0.08, d: 0.18 }); }
+          // the number counts between keys; while it moves the pen scribbles (jitter), when it lands it pops
+          const at = (t) => { let i = 0; while (i + 1 < o.keys.length && o.keys[i + 1].t <= t) i++; const a = o.keys[i], b = o.keys[i + 1]; if (!b) return a.v; const k = Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t))); return a.v + (b.v - a.v) * k; };
+          const draw = () => { const v = at(c.t); num.textContent = Math.round(v); segs.forEach((s, k) => s.classList.toggle("off", k >= Math.round(v))); };
+          tl.to(c, { t: o.end ?? 30, duration: (o.end ?? 30) - o.t, ease: "none", immediateRender: false, onUpdate: draw }, t0);
+          o.keys.forEach((k, i) => { const n = o.keys[i + 1]; if (!n || n.v === k.v) return; const ta = A(k.t), tb = A(n.t), d = Math.max(0.07, tb - ta);
+            tl.fromTo(num, { rotation: -5, scale: 1.1 }, { rotation: 5, scale: 1.12, duration: 0.07, repeat: Math.max(1, Math.round(d / 0.07) - 1), yoyo: true, ease: "none", immediateRender: false }, ta);
+            tl.to(num, { rotation: 0, scale: 1.4, duration: 0.1, ease: "power2.out" }, tb + 0.02); tl.to(num, { scale: 1, duration: 0.35, ease: "back.out(2.5)" }, tb + 0.12);
+            if (segs.length) tl.fromTo(segs, { x: 0 }, { x: 2, duration: 0.05, repeat: Math.ceil(d / 0.05), yoyo: true, immediateRender: false }, ta); });
+          if (o.alarm !== undefined) { const ta = A(o.alarm);
+            tl.set(`#${id}`, { className: `pks${o.right ? " right" : ""} alarm` }, ta);
+            tl.fromTo(`#${id}`, { x: 0 }, { x: 8, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, ta);
+            tl.set(`#${id} .ring`, { opacity: 1 }, ta); tl.fromTo(`#${id} .ring path`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.4, ease: "power1.inOut", immediateRender: false }, ta);
+            tl.fromTo(`#${id} .stk`, { rotation: -6 }, { rotation: 10, duration: 0.08, repeat: 5, yoyo: true, immediateRender: false }, ta); }
+          draw();
+          const end = A(o.end ?? o.t + 30);
+          wobble(tl, el.querySelectorAll(".stk"), pe, end); pkLoops(tl, el, t0 + 0.5, end);
+          if (o.end !== undefined) pkOut(tl, `#${id}`, A(o.end), dir);
+        },
+      };
+      // title page for the chapter beat: a notebook page flips down; the number is a red rubber stamp
+      GameUI.C.board = {
+        html: (id, o) => `<div id="${id}" class="pkt" style="top:${o.top ?? 150}px">${PAP("st")}${TAPE("tc", -3)}
+          <div class="in"><div class="ser" id="${id}-p">${o.series || "สมุดภาคสนาม · เอาชีวิตรอด 99 วัน"}</div>
+          <div class="big" id="${id}-b"><span class="w">${o.label || "เหลือ"}</span>${STAMP(o.day, "day", -6)}<span class="w">${o.unit0 || "วัน"}</span></div>
+          <div class="chip" id="${id}-c">${STK(PK_ICON.radio, "sm")}<span class="ct">${o.unit || "ตามที่วิทยุนับ"}</span></div>
+          <div class="ep" id="${id}-e">${o.ep}</div></div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), A = (t) => o.t0abs + t; wordify(el.querySelector(".ser")); wordify(el.querySelector(".ep")); wordify(el.querySelector(".chip .ct"));
+          flipIn(tl, `#${id}`, t0);
+          tapeOn(tl, el, t0 + 0.42);
+          write(tl, el.querySelector(".ser"), t0 + 0.35, { from: t0, gap: 0.07, d: 0.16 });
+          write(tl, el.querySelector(".big"), t0 + 0.5, { from: t0, gap: 0.14, d: 0.25 });
+          slam(tl, el, t0 + 1.05, { punch: `#${id} .in` });
+          const pe = peel(tl, el.querySelectorAll(".stk"), t0 + 1.3);
+          write(tl, el.querySelector(".chip .ct"), t0 + 1.5, { from: t0, gap: 0.08, d: 0.18 });
+          write(tl, el.querySelector(".ep"), t0 + 1.75, { from: t0, gap: 0.08, d: 0.18 });
+          const end = A(o.end ?? o.t + 4); wobble(tl, el.querySelectorAll(".stk"), pe, end); pkLoops(tl, el, t0 + 1.4, end);
+          if (o.end !== undefined) pkOut(tl, `#${id}`, A(o.end));
+        },
+      };
+      // the rules: one page per rule, each flipping over the last at o.at[i]
+      GameUI.C.fRule = {
+        html: (id, o) => `<div id="${id}" class="pkr" style="top:${o.top ?? 200}px">${o.rows.map((txt, i) => `<div class="card" id="${id}-r${i}">${PAP("lst")}${TAPE("tl", -9)}${TAPE("br", 6)}<span class="holes"><i></i><i></i><i></i></span>
+          <div class="in"><div class="hd">${STAMP(`กฎข้อ ${i + 1}`, "", -5)}<span class="who">ครูพิม · วันที่ 1</span></div>
+          <div class="t">${txt}</div>
+          <div class="ics">${PK_RULE_ICONS[i].map((ic) => STK(ic, "", "0 0 34 34")).join("")}</div></div></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t;
+          o.at.forEach((at, i) => {
+            const r = document.getElementById(`${id}-r${i}`), T = A(at), end = i + 1 < o.at.length ? A(o.at[i + 1]) : A(o.end ?? at + 4); wordify(r.querySelector(".t"));
+            tl.fromTo(r, { opacity: 0, rotationX: -90, y: -30, transformOrigin: "50% 0%", transformPerspective: 1100 }, { opacity: 1, rotationX: 0, y: 0, duration: 0.45, ease: "back.out(1.3)", immediateRender: false }, T);
+            tapeOn(tl, r, T + 0.36);
+            slam(tl, r, T + 0.25, { punch: `#${id}-r${i} .in` });
+            tl.set(`#${id}-r${i} .who`, { opacity: 0 }, T); tl.fromTo(`#${id}-r${i} .who`, { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.2, immediateRender: false }, T + 0.5);
+            const tw = write(tl, r.querySelector(".t"), T + 0.42, { from: T, gap: 0.13, d: 0.26 });
+            r.querySelectorAll(".t u, .t b").forEach((u) => tl.fromTo(u, { "--k": 0 }, { "--k": 1, duration: 0.35, ease: "power2.out", immediateRender: false }, tw - 0.08));
+            const pe = peel(tl, r.querySelectorAll(".stk"), T + 0.55, 0.14);
+            wobble(tl, r.querySelectorAll(".stk"), pe, end); pkLoops(tl, r, T + 0.8, end);
+            if (i) tl.to(`#${id}-r${i - 1}`, { opacity: 0, rotationX: 70, y: 24, duration: 0.28, ease: "power2.in" }, T - 0.12);   // the old page flips away
+          });
+          if (o.end !== undefined) pkOut(tl, `#${id}`, A(o.end));
+        },
+      };
+      // "ตอนต่อไป · ตอนที่ 2" header for the end card: a taped label, a stamped episode number, a red marker tag
+      GameUI.C.nextCard = {
+        html: (id, o) => `<div id="${id}" class="pkn" style="top:${o.top ?? 150}px">${PAP("st")}${TAPE("tc", -2, "ตอนต่อไป")}<div class="in"><div class="big" id="${id}-b">${STAMP(o.big, "big", -4)}</div><div class="tag" id="${id}-t">${o.tag}</div></div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id); wordify(el.querySelector(".tag"));
+          flipIn(tl, `#${id}`, t0, 0.45); tapeOn(tl, el, t0 + 0.4);
+          slam(tl, el, t0 + 0.5, { punch: `#${id} .in` });
+          write(tl, el.querySelector(".tag"), t0 + 0.85, { from: t0, gap: 0.1, d: 0.22 });
+          tl.fromTo(`#${id} .tape`, { scale: 1 }, { scale: 1.04, duration: 0.6, repeat: 9, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.7);
+        },
+      };
+      // the signs on a can: three paper strips, a sticker each, pen-written text, a red ✗ stamped on
+      GameUI.C.signs = {
+        html: (id, o) => `<div id="${id}" class="fsigns" style="top:${o.top ?? 170}px">${o.items.map((t, i) => `<div class="row" id="${id}-r${i}">${PAP()}${TAPE("tl", -8 + i * 3)}<div class="in">${STK(SIGN3[i], "big", "0 0 120 120")}<div class="tx">${t}</div>${STAMP("✗", "xx", 8)}</div></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          o.at.forEach((at, i) => {
+            const r = document.getElementById(`${id}-r${i}`), T = o.t0abs + at, end = o.t0abs + (o.end ?? at + 4); wordify(r.querySelector(".tx"));
+            tl.fromTo(r, { opacity: 0, x: -140, rotation: -5, scale: 1.05 }, { opacity: 1, x: 0, rotation: (i % 2 ? 1 : -1) * 0.8, scale: 1, duration: 0.32, ease: "back.out(1.7)", immediateRender: false }, T);
+            tapeOn(tl, r, T + 0.2);
+            const pe = peel(tl, r.querySelectorAll(".stk"), T + 0.05);
+            write(tl, r.querySelector(".tx"), T + 0.15, { from: T, gap: 0.1, d: 0.2 });
+            slam(tl, r, T + 0.3, { punch: `#${id}-r${i} .in` });
+            tl.fromTo(r, { x: 0 }, { x: 8, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, T + 0.52);
+            wobble(tl, r.querySelectorAll(".stk"), pe, end); pkLoops(tl, r, T + 0.5, end);
+          });
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end);
+        },
+      };
+      // the sun card: a polaroid pinned with tape — the photo develops, the sun slides down to a red horizon, "เลยเวลา" gets stamped when it's late
+      GameUI.C.sunHud = {
+        html: (id, o) => { const p = uid(); return `<div id="${id}" class="fsun" style="top:${o.top ?? 140}px">${TAPE("tc", -4)}<div class="photo"><svg viewBox="0 0 372 200">${PKG(p)}<defs><linearGradient id="${id}-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f3657"/><stop offset=".5" stop-color="#9a5a62"/><stop offset=".82" stop-color="#f29a4a"/><stop offset="1" stop-color="#ffd37a"/></linearGradient></defs>
+          <rect width="372" height="200" fill="url(#${id}-sky)"/><path d="M46,176A140,140 0 0 1 326,176" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="3" stroke-dasharray="3 9"/>
+          <path d="M0,200V170L40,160L90,168L140,152L200,164L250,148L300,160L340,150L372,162V200Z" fill="#1a1412"/><path d="M0,170H372" stroke="#ff5a4a" stroke-width="3" stroke-dasharray="10 8"/>
+          <g id="${id}-sun" class="sunk"><circle class="a-glow" r="34" fill="url(#${p}-glow)" opacity=".75"/><circle r="17" fill="url(#${p}-sun)"/></g>
+          <text x="362" y="192" text-anchor="end" font-family="Kanit" font-weight="700" font-size="24" fill="#ffd6c8">มืด ${o.dark}</text></svg><i class="dev"></i>
+          <div class="late-st">${STAMP("เลยเวลา", "late", -12)}</div></div>
+          <div class="row"><div class="tm" id="${id}-tm">${o.t0}</div><div class="lf">ก่อนมืด<b id="${id}-lf">${o.left0}</b></div></div></div>`; },
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), sun = document.getElementById(`${id}-sun`), tm = document.getElementById(`${id}-tm`), lf = document.getElementById(`${id}-lf`), c = { k: 0 };
+          const m = (h) => { const [a, b] = h.split(":").map(Number); return a * 60 + b; };
+          const A = m(o.t0), B = m(o.t1), DK = m(o.dark), dur = (o.end ?? D("gate")) - o.t, end = o.t0abs + (o.end ?? o.t + dur);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -150, rotation: 9, scale: 1.1, transformOrigin: "50% 0%" }, { opacity: 1, y: 0, rotation: -3, scale: 1, duration: 0.5, ease: "back.out(1.4)", immediateRender: false }, t0);   // the polaroid drops in and lands a little askew
+          tapeOn(tl, el, t0 + 0.4);
+          tl.fromTo(`#${id}`, { rotation: -3 }, { rotation: -1.4, duration: 1.5, repeat: Math.ceil(dur / 1.5) + 1, yoyo: true, ease: "sine.inOut", transformOrigin: "50% 0%", immediateRender: false }, t0 + 0.55);   // hangs from the tape, swaying
+          tl.fromTo(`#${id} .dev`, { opacity: 1 }, { opacity: 0, duration: 0.9, ease: "power1.in", immediateRender: false }, t0 + 0.3);   // the photo develops
+          tl.set(`#${id} .late .stamp`, { opacity: 0 }, t0);
+          const draw = () => {
+            const k = c.k, mins = A + (B - A) * k, u = (o.from ?? 0.3) + ((o.to ?? 0.95) - (o.from ?? 0.3)) * k, a = Math.PI * (1 - u);
+            sun.setAttribute("transform", `translate(${(186 + Math.cos(a) * 140).toFixed(1)},${(176 - Math.sin(a) * 140).toFixed(1)})`);
+            tm.textContent = `${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(Math.floor(mins % 60)).padStart(2, "0")} น.`;
+            const left = DK - mins; lf.textContent = left > 0 ? `${Math.floor(left / 60)}:${String(Math.floor(left % 60)).padStart(2, "0")} ชม.` : "เลยเวลา";
+            el.classList.toggle("late", left <= 0);
+          };
+          tl.to(c, { k: 1, duration: dur, ease: "none", immediateRender: false, onUpdate: draw }, t0);
+          draw();
+          const kl = (DK - A) / (B - A);   // when the clock passes dark, the stamp comes down
+          if (kl >= 0 && kl <= 1) { const tl8 = t0 + kl * dur; slam(tl, el, tl8); tl.fromTo(`#${id}`, { x: 0 }, { x: 8, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, tl8 + 0.2); }
+          tl.fromTo(`#${id} .tm`, { scale: 1 }, { scale: 1.05, duration: 0.5, repeat: Math.ceil(dur / 0.5) + 1, yoyo: true, ease: "sine.inOut", transformOrigin: "0% 50%", immediateRender: false }, t0 + 0.5);   // the clock ticks
+          pkLoops(tl, el, t0, end);
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end, 1);
+        },
+      };
+      // the source chip: a sticky note pinned under the card, swinging down from the top
+      GameUI.C.src = {
+        html: (id, o) => `<div id="${id}" class="zsrc" style="top:${o.top}px"><span><svg class="pin" viewBox="0 0 40 60"><path d="M20,30v26" stroke="${PK_INK}" stroke-width="3" stroke-linecap="round"/><circle cx="20" cy="16" r="13" fill="#c8392b" stroke="${PK_INK}" stroke-width="2"/><circle cx="15" cy="11" r="4" fill="#fff" opacity=".6"/></svg><div class="tx">${o.text}</div></span></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id); wordify(el.querySelector(".tx"));
+          tl.fromTo(`#${id}`, { opacity: 0, rotationX: -85, y: -10, transformOrigin: "50% 0%", transformPerspective: 900 }, { opacity: 1, rotationX: 0, y: 0, duration: 0.42, ease: "back.out(1.5)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .pin`, { scale: 0, y: -40 }, { scale: 1, y: 0, duration: 0.25, ease: "back.out(2)", immediateRender: false }, t0 + 0.3);
+          tl.fromTo(`#${id} span`, { rotation: 2.5 }, { rotation: 0.5, duration: 1.4, repeat: Math.ceil(((o.end ?? o.t + 4) - o.t) / 1.4) + 1, yoyo: true, ease: "sine.inOut", transformOrigin: "50% 0%", immediateRender: false }, t0 + 0.4);
+          write(tl, el.querySelector(".tx"), t0 + 0.25, { from: t0, gap: 0.045, d: 0.14 });
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end);
+        },
+      };
+      // callback: a paper scrap slapped on, then the line rubber-stamped across it
+      GameUI.C.callback = {
+        html: (id, o) => `<div id="${id}" class="zcall" style="top:${o.top ?? 150}px"><div class="scrap">${PAP()}${TAPE("tl", -10)}${TAPE("br", 8)}<div class="in"><small>${o.label}</small>${STAMP(o.text, "big", -3)}</div></div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id);
+          tl.fromTo(`#${id}`, { opacity: 0, scale: 1.6, rotation: 8, y: -30 }, { opacity: 1, scale: 1, rotation: -1.5, y: 0, duration: 0.18, ease: "power3.in", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .scrap`, { scale: 1 }, { scale: 0.97, duration: 0.06, yoyo: true, repeat: 1, immediateRender: false }, t0 + 0.18);
+          tapeOn(tl, el, t0 + 0.2);
+          slam(tl, el, t0 + 0.08);
+          tl.set(`#${id} small`, { opacity: 0 }, t0); tl.fromTo(`#${id} small`, { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: 0.2, immediateRender: false }, t0 + 0.22);
+          tl.fromTo(`#${id} .scrap`, { rotation: 0 }, { rotation: 1.6, duration: 1.3, repeat: Math.ceil(((o.end ?? o.t + 4) - o.t) / 1.3) + 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.6);
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end);
+        },
+      };
+      // GameUI's knowledge card on paper: tapes pressed on, the label becomes a stamp, the line is pen-written, the medallion is a sticker that wobbles
+      {
+        const base = GameUI.C.tip.anim;
+        GameUI.C.tip.anim = function (tl, id, t0, o) {
+          const el = document.getElementById(id), chip = el.querySelector(".chip"), txt = el.querySelector(".txt");
+          chip.innerHTML = STAMP(chip.innerHTML, "", -3); el.insertAdjacentHTML("afterbegin", TAPE("tl", -9) + TAPE("tr", 7)); wordify(txt);
+          base.call(this, tl, id, t0, o);
+          const end = o.t0abs + (o.end ?? o.t + 3.2);
+          tapeOn(tl, el, t0 + 0.3); slam(tl, el, t0 + 0.3, { punch: `#${id} .body` });
+          write(tl, txt, t0 + 0.42, { from: t0, gap: 0.1, d: 0.22 });
+          wobble(tl, [el.querySelector(".med")], t0 + 0.75, end, -4, 3);
+        };
+      }
+      // the choice: on paper; when the voice takes over, the taken side's text turns pale so it stays readable on the dark red
+      {
+        const base = GameUI.C.choice.anim;
+        GameUI.C.choice.anim = function (tl, id, t0, o) {
+          base.call(this, tl, id, t0, o);
+          if (o.possessed) { const side = o.possessed.side === "b" ? "B" : "A"; tl.to(`#${id} .opt.${side} .lbt, #${id} .opt.${side} .key`, { color: "#f6eee0", duration: 0.4 }, o.t0abs + o.possessed.at); }
+        };
+      }
+      // captions and speech bubbles: every word bounces in on its own
+      Ui.caption = (id, text) => { const d = document.createElement("div"); d.innerHTML = Ui.mark(text); wordify(d); return `<div id="${id}" class="capbox">${PAP()}<span class="ct">${d.innerHTML}</span></div>`; };
+      {
+        const build0 = Engine.build;
+        Engine.build = (root, tl, shots) => {
+          build0(root, tl, shots);
+          const pop = (sel, t) => { const ws = document.querySelectorAll(sel); if (ws.length) tl.fromTo(ws, { opacity: 0, y: 24, rotation: -6, scale: 0.7 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.26, stagger: 0.055, ease: "back.out(2.6)", immediateRender: false }, t); };
+          shots.forEach((sh, i) => {
+            (sh.captions || []).forEach((cp, k) => pop(`#s${i}-c${k} .w`, sh.start + cp.t));
+            (sh.bubbles || []).forEach((b, k) => { const el = document.getElementById(`s${i}-b${k}`); if (!el) return; wordify(el); pop(`#s${i}-b${k} .w`, sh.start + b.t + 0.05); });
+          });
+        };
+      }

@@ -48,7 +48,7 @@
         captions: capsFrom("yard", F("yard", 0, 2) - 0.05),
         extra(L) { Fence.pin(L, "mp-p0", 430, 560, "อาคารเรียน", "#2f4a8a"); Fence.pin(L, "mp-p1", 860, 560, "แท็งก์น้ำ", "#2f6fb8"); Fence.pin(L, "mp-p2", 540, 1180, "ประตู", "#c8392b"); Fence.pin(L, "mp-p3", 1500, 1140, "ตลาดร้าง · 1.2 กม.", "#5b6066"); },
         fx(tl, id, t0) {
-          [0, 1, 2, 3].forEach((k) => tl.fromTo(`#mp-p${k}`, { opacity: 0, y: -80 }, { opacity: 1, y: 0, duration: 0.3, ease: "bounce.out", immediateRender: false }, t0 + 0.15 + k * 0.22));
+          [[430, 560], [860, 560], [540, 1180], [1500, 1140]].forEach(([x, y], k) => pinDrop(tl, `#mp-p${k}`, t0 + 0.15 + k * 0.22, x, y));   // pins drop in and squash on landing
           tl.fromTo("#mp-path", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.8, ease: "none", immediateRender: false }, t0 + 0.9);
         },
       });
@@ -162,7 +162,7 @@
         captions: capsFrom("clatter", F("clatter", 0, 1) - 0.05),
         ui: [{ type: "callback", t: 0.05, label: "กฎของเรื่อง", text: "มันเดินตามเสียง", top: 300 }],
         extra(L) { Fence.pin(L, "mc-p0", 1500, 1140, "ก้อง", "#c8392b"); [[1800, 700], [1100, 1700], [1950, 1500]].forEach(([x, y], k) => L.act.insertAdjacentHTML("beforeend", `<g id="mc-z${k}"><g transform="translate(${x},${y})"><circle r="26" fill="#1b1d20" stroke="#ff5a3a" stroke-width="6"/><path d="M-10,-6l20,12M10,-6l-20,12" stroke="#ff5a3a" stroke-width="4"/></g></g>`)); },
-        fx(tl, id, t0) { tl.set("#mc-p0", { opacity: 1 }, t0); [0, 1, 2].forEach((k) => tl.to(`#mc-z${k}`, { x: [-120, 160, -180][k], y: [180, -200, -120][k], duration: 1.2, ease: "power1.in" }, t0 + 0.3)); Fx.heart(tl, t0, D("clatter"), 0.45, 0.6); Fx.glitch(tl, `#${id}`, t0, 0.15, 8, 21); },
+        fx(tl, id, t0) { pinDrop(tl, "#mc-p0", t0 + 0.05, 1500, 1140); [0, 1, 2].forEach((k) => tl.to(`#mc-z${k}`, { x: [-120, 160, -180][k], y: [180, -200, -120][k], duration: 1.2, ease: "power1.in" }, t0 + 0.3)); Fx.heart(tl, t0, D("clatter"), 0.45, 0.6); Fx.glitch(tl, `#${id}`, t0, 0.15, 8, 21); },
       });
 
       // ---------- 11–13. action: she comes over the stall; ก้อง backs into the shelf (cans everywhere); POV out into the open ----------
