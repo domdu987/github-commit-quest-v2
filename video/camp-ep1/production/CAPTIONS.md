@@ -24,8 +24,7 @@
 ```
 📚 แหล่งอ้างอิง
 หลงป่า หยุดอยู่กับที่ (stop, stay calm, stay put): USDA Forest Service "If You Get Lost"
-นกหวีดขอความช่วยเหลือ: __WHISTLE__
-เจอช้างป่าระยะใกล้: __ELEPHANT__
+เป่านกหวีด 3 ครั้ง = ขอความช่วยเหลือ: AdventureSmart (แคนาดา) "Communication & Signalling"
 งูกัด (ห้ามกรีด ห้ามดูด ห้ามรัดแน่น ขยับให้น้อยที่สุด รีบไปโรงพยาบาล): NHS (สหราชอาณาจักร) "Snake bites"
 เบอร์ฉุกเฉิน 1669: กรมควบคุมโรค
 👉 EP.2 ตาสีเขียว
@@ -51,7 +50,6 @@
 **คอมเมนต์ปักหมุด:**
 ```
 📚 แหล่งอ้างอิง
-เจอช้างป่าระยะใกล้: __ELEPHANT__
 งูกัด (ห้ามกรีด ห้ามดูด ห้ามรัดแน่น ขยับให้น้อยที่สุด จำสีและลายงูไว้บอกหมอ ไม่ต้องไปจับ): NHS (สหราชอาณาจักร) "Snake bites"
 👉 EP.3 อย่าขาน (ตอนจบ)
 ```
@@ -95,6 +93,14 @@
 **USDA Forest Service "If You Get Lost"** https://www.fs.usda.gov/visit/know-before-you-go/if-you-get-lost
 - "As soon as you realize you may be lost: stop, stay calm, stay put. Panic is your greatest enemy."
 - "If it’s nightfall, you are injured or you are near exhaustion, stay in place."
+
+**AdventureSmart "Communication & Signalling"** https://www.adventuresmart.ca/communication-signaling/
+- "If you have an emergency signaling whistle, you can blast it 3 times, take a break, blast 3 times again and continue to do this."
+- หน้าแรก https://www.adventuresmart.ca/ : "Use whistle blasts x 3, mirror flashes x 3, horn blasts x 3, signal fires x 3 or rock piles x 3 to signal distress."
+- หมายเหตุ: Mountain Rescue England and Wales ใช้ 6 ครั้งต่อนาที ("Six good long blasts in a minute") คนละแบบกับในคลิป จึงอ้างแหล่งแคนาดาที่ตรงกับคลิป
+
+**ช้างป่า (EP.1–2: "อย่าส่งเสียงไล่ หลบหลังต้นไม้ใหญ่ ค่อยๆ ถอยออก") ยังหาแหล่งทางการยืนยันไม่ได้**
+- dnp.go.th ว่าง / portal.dnp.go.th 503 / WWF Thailand ไม่มีคำแนะนำเรื่องนี้ → ไม่ใส่ในคอมเมนต์ปักหมุดจนกว่าจะยืนยันได้ (WebSearch ใช้ได้อีกหลัง 28 ต.ค. 2026)
 
 **กรมควบคุมโรค (โปสเตอร์ Drowning Victims: Rescue and First Aid)** ดู `video/phrai/ARC.md`
 - "Dial 1669 or call a medical care unit nearby as soon as possible."
