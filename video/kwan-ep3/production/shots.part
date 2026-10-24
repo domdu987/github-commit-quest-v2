@@ -1,0 +1,339 @@
+
+      // ---------- ควันหลง EP.1 ประตูร้อน: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      // room 714 framings (world points of the panorama; see kwan.js)
+      const V = {
+        ceil: fr(1450, 230, 1.05, 540, 900),         // lying in bed, looking up
+        door: fr(545, 1060, 1.05, 540, 1000),         // standing, facing the door
+        knob: fr(730, 1110, 1.9, 600, 1000),
+        notice: fr(545, 1025, 2.6, 540, 920),
+        hw: fr(560, 1112, 3.3, 540, 900),             // the handwriting
+        sign: fr(600, 1172, 4.6, 540, 900),           // "— ดาว 714 / 2539"
+        gap: fr(540, 1500, 2.3, 540, 1250),           // crouched at the gap under the door
+        bed: fr(1650, 1230, 1.12, 540, 1000),         // แพร's bed
+        win: fr(2740, 1010, 1.12, 540, 900),
+        floor: fr(1500, 1470, 1.3, 540, 760),         // flat on the floor, looking under แพร's bed
+      };
+      // the phone torch on a shot: o = Pov.torch options; returns { extra, drive } to merge into the spec
+      const torch = (k, o) => { const T = Pov.torch(`t-${k}`, o); return { extra: (L) => put(L.light, T.markup), drive: T.drive }; };
+      const withTorch = (k, o, spec) => {
+        const T = torch(k, o), ex = spec.extra, f = spec.fx;
+        return { ...spec, extra(L, id) { if (ex) ex(L, id); T.extra(L, id); }, fx(tl, id, t0, L) { T.drive(tl, t0, D(k)); if (f) f(tl, id, t0, L); } };
+      };
+      const knock = (tl, t, n = 3, gap = 0.22) => { for (let i = 0; i < n; i++) tl.fromTo("#rm-door", { attr: { transform: "translate(0,0)" } }, { attr: { transform: `translate(${i % 2 ? -5 : 6},0)` }, duration: 0.05, yoyo: true, repeat: 1, immediateRender: false }, t + i * gap); };
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      const RM = (o = {}) => ({ id: "rm", ...o });
+      // ---------- "คุณ" seen from outside (user: "ไม่ได้หมายถึงให้ทำแต่มุมมองคนที่1 แค่ให้ทำหลายๆมุมกล้อง"): the story now cuts between
+      // your own eyes and other angles — wide, low, from the floor, over your shoulder, from the street. You: a first-year in blue
+      // pyjamas (the same sleeves as the first-person hands), hair in a messy bun, barefoot.
+      Rig.CAST.you = {
+        skin: "#ecc19a", skinS: "#cc9a74", top: "#5d6f8f", topS: "#4a5a78", sleeve: "#5d6f8f", sleeveS: "#4a5a78", forearm: "#5d6f8f", forearmS: "#4a5a78",
+        pants: "#5d6f8f", pantsS: "#4a5a78", shoe: "#ecc19a", belt: "#4a5a78",
+        torsoExtra: `<path d="M-30,-484L0,-452L30,-484" fill="#7f91b2" stroke="#2e2a26" stroke-width="3.5" stroke-linejoin="round"/>${[-430, -395, -360].map((y) => `<circle cx="0" cy="${y}" r="4" fill="#e8e4d8"/>`).join("")}
+          ${[[-34, -440], [26, -420], [-20, -380], [34, -360], [-36, -340]].map(([x, y]) => `<path d="M${x},${y - 7}l2,5l5,1l-4,3l1,5l-4,-3l-4,3l1,-5l-4,-3l5,-1z" fill="#e8e4d8" opacity=".75"/>`).join("")}
+          <path d="M-56,-334H56" stroke="#7f91b2" stroke-width="8"/>`,
+        hair: `<path d="M-48,-540Q-56,-606 0,-610Q54,-606 48,-544Q44,-524 36,-512Q34,-560 28,-574Q-2,-560 -32,-572Q-40,-540 -40,-514Q-50,-522 -48,-540Z" fill="#2a201c" stroke="#2e2a26" stroke-width="3.5"/>
+          <circle cx="8" cy="-622" r="27" fill="#2a201c" stroke="#2e2a26" stroke-width="3.5"/><path d="M-6,-600q-14,-30 6,-44M24,-604q16,-20 2,-40" stroke="#2a201c" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M-44,-548q-12,24 -4,44M42,-552q10,22 4,40" stroke="#2a201c" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M-16,-600q16,-8 34,0" stroke="#e07a8a" stroke-width="7" fill="none" stroke-linecap="round"/>`,
+        face: `<g fill="#e0907a" opacity=".55"><ellipse cx="-26" cy="-526" rx="8" ry="4"/><ellipse cx="32" cy="-526" rx="8" ry="4"/></g>`,
+      };
+      // flat on the floor under the smoke, pulling yourself forward (the whole body tipped over like "lie", arms reaching ahead)
+      Rig.MODES.crawl = (u, o) => { const w = Math.sin(u * 2 * Math.PI / 0.9); return { ...Rig.MODES.lie(u, o), thF: -14 + 12 * w, shF: 30 + 10 * w, thB: 6 - 12 * w, shB: 24 - 10 * w, uaF: -160 + 16 * w, faF: -10, uaB: -150 - 16 * w, faB: -14, head: -30, rootR: -82, rootY: -30 }; };
+      // sitting on the floor at the door, both arms reaching forward (pushing the towel into the gap)
+      Rig.MODES.kneelPush = (u, o) => { const w = Math.sin(u * 2 * Math.PI / 0.6); return { ...Rig.MODES.sit(u, o), torso: 24, head: -10, uaF: -84 + 10 * w, faF: -12, uaB: -76 + 10 * w, faB: -10 }; };
+      // a sleeve over the mouth, coughing
+      Rig.MODES.coughing = (u, o) => { const j = Math.max(0, Math.sin(u * 9)) * 6; return { ...Rig.MODES.whistle(u, o), torso: 8 + j, head: 6 + j * 0.8, bodyY: 6 + j * 0.6 }; };
+      const YOU = (x, y, s, track, extra = {}) => ({ who: "you", x, y, s, track, blinks: [1.1, 3.3, 5.2], ...extra });
+      // your back from just behind your shoulder (screen space, a dark silhouette with a cold rim light)
+      const youBack = (id, x, y, s = 1) => `<g id="${id}" transform="translate(${x},${y}) scale(${s})">
+          <path d="M-330,760C-330,430 -240,280 -120,250L-74,196Q0,176 74,196L120,250C240,280 330,430 330,760Z" fill="#232c3e"/>
+          <path d="M120,250C240,280 330,430 330,760" stroke="#9fb2d6" stroke-width="12" fill="none" opacity=".55"/>
+          <path d="M-120,250C-240,280 -330,430 -330,760" stroke="#7f91b2" stroke-width="10" fill="none" opacity=".45"/>
+          <ellipse cx="0" cy="60" rx="128" ry="150" fill="#1b2230"/><circle cx="14" cy="-112" r="66" fill="#1b2230"/><path d="M128,60C130,-40 70,-88 0,-90" stroke="#9fb2d6" stroke-width="9" fill="none" opacity=".5"/>
+          <path d="M-128,60C-130,-40 -70,-88 0,-90" stroke="#7f91b2" stroke-width="8" fill="none" opacity=".4"/>
+          ${[[-60, -40], [-90, 30], [80, -30]].map(([a, b]) => `<path d="M${a},${b}q-14,40 -4,84" stroke="#12161f" stroke-width="10" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+      // her room seen from the street: your silhouette in the seventh-floor window, waving the phone torch
+      const winWave = (id) => `<g id="${id}"><rect x="326" y="700" width="104" height="84" fill="#2a3040" opacity=".9"/>
+          <g transform="translate(372,786)"><path d="M-22,0C-24,-30 -18,-44 0,-46C18,-44 24,-30 22,0Z" fill="#0c0f16"/><circle cx="0" cy="-56" r="13" fill="#0c0f16"/><circle cx="2" cy="-72" r="7" fill="#0c0f16"/>
+            <g id="${id}-arm" transform="rotate(0 14 -36)"><path d="M14,-36L34,-74" stroke="#0c0f16" stroke-width="8" stroke-linecap="round"/><circle cx="34" cy="-76" r="5" fill="#fffbe8"/>
+              <circle cx="34" cy="-76" r="40" fill="#fff6dc" opacity=".35"/><circle cx="34" cy="-76" r="90" fill="#fff6dc" opacity=".12"/></g></g></g>`;
+
+      // ---------- ควันหลง EP.3 ลิฟต์มารับ ----------
+      const mk = (seed) => () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+      const strobe = (tl, sel, t0, dur, p = 0.32) => { for (let t = 0; t < dur; t += p) { tl.set(sel, { opacity: 1 }, t0 + t); tl.set(sel, { opacity: 0.08 }, t0 + t + p / 2); } };
+      const LIFT_OPEN = (tl, p, t0) => {
+        tl.set(`#${p}-dl`, { attr: { transform: "translate(-345,0)" } }, t0); tl.set(`#${p}-dr`, { attr: { transform: "translate(345,0)" } }, t0);
+        tl.set(`#${p}-dao-smile`, { opacity: 1 }, t0); tl.set(`#${p}-dao-flat`, { opacity: 0 }, t0);
+        tl.set(`#${p}-dao-head`, { attr: { transform: "translate(0,-660) rotate(-16)" } }, t0); tl.set(`#${p}-dao-armR`, { attr: { transform: "translate(56,-600) rotate(-55)" } }, t0);
+      };
+      const PRAE = (x, y, s, track, extra = {}) => ({ who: "prae", x, y, s, track, blinks: [0.8, 2.9], ...extra });
+      const LS = (k) => LY_[k];
+      const LY_ = [0, 900, 1800, 2700];
+
+      // ---------- 0. EP.2's last image: the bright lift, ดาว's hand out to you ----------
+      add("recap", {
+        set: "liftOpen", setOpts: { id: "r0", lit: 1 }, dark: 0.22,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.75, 540, 900), drift: { s: 0.04 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        fx(tl, id, t0) { LIFT_OPEN(tl, "r0", t0); Fx.heart(tl, t0, D("recap"), 0.38, 0.7); Fx.glitch(tl, `#${id}`, t0 + D("recap") - 0.35, 0.35, 22, 301); },
+      });
+
+      // ---------- 1. wide: you step toward the open lift in the black corridor ----------
+      add("hook", {
+        set: "liftOpen", setOpts: { id: "r1", lit: 1 }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 0.7, 540, 1000), drift: { s: 0.035 } }] },
+        actors: [YOU(120, 1780, 1.32, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: 380, y: 1700, dur: D("hook"), ease: "none" } })],
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          LIFT_OPEN(tl, "r1", t0);
+          document.getElementById(id).insertAdjacentHTML("beforeend", `<div class="op" id="${id}-t" style="top:250px"><div class="op-ep"><b>EP.3</b><span>ลิฟต์มารับ</span></div></div>`);
+          tl.fromTo(`#${id}-t .op-ep`, { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.16, ease: "power4.in", immediateRender: false }, t0 + 0.3);
+          tl.to(`#${id}-t .op-ep`, { opacity: 0, y: -30, duration: 0.3 }, t0 + 2.4);
+          Fx.heart(tl, t0 + 1.0, D("hook") - 1.0, 0.5, 0.35);
+        },
+      });
+
+      // ---------- 2. your eyes, down: your bare foot over the threshold — her burnt feet just inside ----------
+      add("foot", {
+        set: "liftFloor", setOpts: { id: "lf" }, dark: 0.15,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.0, drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("foot"),
+        fx(tl, id, t0) { tl.fromTo("#lf-foot", { attr: { transform: "translate(0,260)" } }, { attr: { transform: "translate(0,-40)" }, duration: 1.4, ease: "power2.inOut", immediateRender: false }, t0 + 0.2); Fx.heart(tl, t0 + 1.0, D("foot") - 1.0, 0.42, 0.45); },
+      });
+
+      // ---------- 3. side on: แพร grabs your arm and yanks you back out ----------
+      add("pull", {
+        set: "liftOpen", setOpts: { id: "r3", lit: 1 }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(560, 1180, 0.72, 540, 1030), drift: { s: -0.04 } }] },
+        shake: (t) => (t < 0.5 ? 14 * Math.sin(t * 60) * (0.5 - t) : 0),
+        actors: [YOU(400, 1700, 1.3, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o", sweat: true }], { moveTo: { x: 120, y: 1790, dur: 0.6, at: 0.15, ease: "power3.out" } }),
+          PRAE(-120, 1820, 1.32, [{ t: 0, mode: "drag", eyes: "wide", mouth: "scream" }], { moveTo: { x: -60, y: 1820, dur: 0.6, at: 0.1, ease: "power3.out" } })],
+        captions: caps("pull", undefined, { quote: true }),
+        fx(tl, id, t0) { LIFT_OPEN(tl, "r3", t0); Fx.punch(tl, `#${id} .stage`, t0 + 0.15, 1.06, 0.4); Fx.glitch(tl, `#${id}`, t0 + 0.12, 0.15, 10, 302); },
+      });
+
+      // ---------- 4. the doors close on her smile ----------
+      add("shut", {
+        set: "liftOpen", setOpts: { id: "r4", lit: 1 }, dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.25, 540, 900), drift: { s: 0.05 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        captions: caps("shut"),
+        fx(tl, id, t0) {
+          LIFT_OPEN(tl, "r4", t0);
+          tf(tl, "#r4-dl", t0 + 0.6, 2.2, "translate(0,0)", "power1.inOut"); tf(tl, "#r4-dr", t0 + 0.6, 2.2, "translate(0,0)", "power1.inOut");
+          tl.to("#r4-light", { opacity: 0, duration: 0.4 }, t0 + 2.7);
+          Fx.heart(tl, t0 + 0.6, D("shut") - 0.6, 0.45, 0.5);
+        },
+      });
+
+      // ---------- 5. the floor display: down to 1… then climbing back up ----------
+      add("count", {
+        set: "liftPanel", setOpts: { id: "lp", n: 7 }, dark: 0.15,
+        cam: { keys: [{ t: 0, ...fr(540, 840, 1.15, 540, 900), drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("count"),
+        fx(tl, id, t0) {
+          const seq = [7, 6, 5, 4, 3, 2, 1], up = [2, 3, 4, 5], a = F("count", 0, 1) - 0.9, b = F("count", 0, 2);
+          const show = (n, t) => { for (let m = 1; m <= 7; m++) tl.set(`#lp-n${m}`, { opacity: m === n ? 1 : 0 }, t); };
+          seq.forEach((n, k) => show(n, t0 + 0.2 + k * (a / seq.length)));
+          tl.set("#lp-dn", { opacity: 0 }, t0 + b - 0.1); tl.set("#lp-up", { opacity: 1 }, t0 + b - 0.1);
+          up.forEach((n, k) => show(n, t0 + b + 0.1 + k * 0.6));
+          Fx.heart(tl, t0 + b, D("count") - b, 0.5, 0.5); Fx.glitch(tl, `#${id}`, t0 + b, 0.15, 8, 303);
+        },
+      });
+
+      // ---------- 6. knowledge: the stairs, not the lift (unless the firefighters say so) ----------
+      add("rule", {
+        set: "corridor", setOpts: { id: "cr6", smoke: 0.6 }, dark: 0.42,
+        cam: { keys: [{ t: 0, x: 0, y: 30, s: 1.0, drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("rule"),
+        ui: [steps("rule", "ไฟไหม้", [["stairs", "ใช้บันได"], ["nolift", "อย่าใช้ลิฟต์"], ["firefighter", "เว้นแต่เจ้าหน้าที่สั่ง"]], F("rule", 0, 0) + 0.1, D("rule") - 0.15, { gap: (vo("rule", 1) - F("rule", 0, 0)) / 2 }),
+          { type: "src", t: vo("rule", 1) + 0.2, end: D("rule") - 0.05, top: 640, text: "ที่มา: <em>USFA (FEMA)</em> · ใช้บันไดหนีไฟ อย่าใช้ลิฟต์ เว้นแต่เจ้าหน้าที่ดับเพลิงสั่ง" }],
+      });
+
+      // ---------- 7. แพร shoulders open the stairwell door ----------
+      add("this", {
+        set: "corridorSide", setOpts: { id: "cs7", smokeY: 760 }, dark: 0.45,
+        cam: { keys: [{ t: 0, ...fr(3700, 1150, 0.82, 540, 1030), drift: { s: 0.03 } }] },
+        actors: [PRAE(3560, 1720, 1.3, [{ t: 0, mode: "wave", eyes: "side", mouth: "o", torch: true, sweat: true }]), YOU(3180, 1780, 1.32, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat", sweat: true }], { moveTo: { x: 3380, y: 1760, dur: D("this") } })],
+        captions: caps("this", undefined, { quote: true }),
+        extra(L) { put(L.glow, `<ellipse cx="3700" cy="1720" rx="420" ry="90" fill="url(#pvPoolLit)" opacity=".7"/>`); },
+      });
+
+      // ---------- 8. side on, down the stairs: six, five… a burning ceiling panel falls ----------
+      add("stairs", {
+        set: "stairwell", setOpts: { id: "sw8", smokeY: -200 }, dark: 0.42,
+        cam: { keys: [{ t: 0, ...fr(560, 250, 0.72, 540, 900), drift: { y: 120, s: 0.01 } }, { t: F("stairs", 0, 2) - 0.2, glide: 0.5, ...fr(560, 1100, 0.9, 540, 900), drift: { s: 0.03 } }] },
+        actors: [PRAE(560, 455, 1.0, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat", torch: true }], { moveTo: { x: 1000, y: 1350, dur: D("stairs"), ease: "none" } }),
+          YOU(330, 20, 1.0, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat", sweat: true }], { moveTo: { x: 760, y: 920, dur: D("stairs"), ease: "none" } })],
+        captions: caps("stairs"),
+        fx(tl, id, t0) {
+          const fall = t0 + F("stairs", 0, 2);
+          tl.set("#sw8-tile", { opacity: 1, attr: { transform: "translate(380,300)" } }, fall - 0.4);
+          tf(tl, "#sw8-tile", fall - 0.4, 0.55, "translate(360,1010) rotate(14)", "power2.in");
+          Fx.punch(tl, `#${id} .stage`, fall + 0.15, 1.06, 0.4); tl.fromTo("#flashw", { opacity: 0.35 }, { opacity: 0, duration: 0.2, immediateRender: false }, fall + 0.15);
+        },
+      });
+
+      // ---------- 9. close: แพร's sleeve is on fire ----------
+      add("onfire", {
+        set: "stairwell", setOpts: { id: "sw9", smokeY: 0 }, dark: 0.38,
+        cam: { keys: [{ t: 0, ...fr(980, 1000, 1.6, 540, 1000), drift: { s: 0.06 } }] },
+        shake: (t) => 6 * Math.sin(t * 37),
+        actors: [PRAE(980, 1350, 1.0, [{ t: 0, mode: "point", eyes: "pain", mouth: "scream", sweat: true }])],
+        captions: caps("onfire", undefined, { quote: true }),
+        fx(tl, id, t0) {
+          const arm = document.getElementById(`${id}-a0-faF`);
+          if (arm) arm.insertAdjacentHTML("beforeend", `<g class="flk">${[0, 1, 2, 3].map((k) => `<path d="M${-14 + k * 9},${30 + k * 22}q${-18 + k * 4},-40 ${-4 + k * 3},-80q${18 + k * 2},34 ${10},80z" fill="${k % 2 ? "#ffd24a" : "#ff7a2a"}" opacity=".95"/>`).join("")}</g><circle cx="0" cy="60" r="70" fill="url(#kwFireGlow)"/>`);
+          Fx.glitch(tl, `#${id}`, t0 + 0.05, 0.2, 10, 304); tl.fromTo("#fxred", { opacity: 0.8 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + 0.05);
+        },
+      });
+
+      // ---------- 10. knowledge: stop, drop, cover your face, roll ----------
+      const SDR = [vo("sdr"), vo("sdr") + SH.sdr.vo[0].frags[1], vo("sdr") + SH.sdr.vo[0].frags[2], vo("sdr", 1)];
+      add("sdr", {
+        set: "stairwell", setOpts: { id: "sw10", smokeY: 100 }, dark: 0.4,
+        cam: { keys: [{ t: 0, ...fr(900, 1150, 0.95, 540, 1050), drift: { s: 0.02 } }] },
+        actors: [PRAE(900, 1350, 1.05, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o", sweat: true }, { t: SDR[1] - 0.1, mode: "lie", eyes: "pain", mouth: "flat" }, { t: SDR[2], mode: "lie", eyes: "closed", mouth: "flat" }],
+          { moveTo: { x: 980, y: 1350, dur: 0.01, at: SDR[3] } })],
+        captions: caps("sdr"),
+        ui: [steps("sdr", "เสื้อผ้าติดไฟ", [["stopnow", "หยุด"], ["dropdown", "ล้มตัวลง"], ["coverface", "มือปิดหน้า"], ["rollover", "กลิ้งจนไฟดับ"]], SDR[0] - 0.1, D("sdr") - 0.15, { gap: (SDR[3] - SDR[0]) / 3 }),
+          { type: "src", t: SDR[3] + 0.3, end: D("sdr") - 0.05, top: 640, text: "ที่มา: <em>Ready.gov</em> · หยุด ล้มลง เอามือปิดหน้า แล้วกลิ้งไปมาจนไฟดับ" }],
+        fx(tl, id, t0) {
+          const a0 = `${id}-a0`, g = document.getElementById(a0), flame = `<g id="${id}-fl" class="flk">${[0, 1, 2].map((k) => `<path d="M${-14 + k * 9},${30 + k * 22}q-14,-36 0,-70q16,30 8,70z" fill="${k % 2 ? "#ffd24a" : "#ff7a2a"}"/>`).join("")}</g>`;
+          const arm = document.getElementById(`${a0}-faF`); if (arm) arm.insertAdjacentHTML("beforeend", flame);
+          // the roll: she rocks side to side on the floor until the flame is out
+          for (let i = 0; i < 8; i++) tl.to(`#${a0}`, { attr: { transform: `translate(${900 + (i % 2 ? 120 : -60)},1350) scale(1.05,1.05)` }, duration: 0.42, ease: "sine.inOut" }, t0 + SDR[3] + i * 0.42);
+          tl.to(`#${id}-fl`, { opacity: 0, duration: 1.4 }, t0 + SDR[3] + 0.6);
+        },
+      });
+
+      // ---------- 11. the fire is out; แพร is all right ----------
+      add("out", {
+        set: "stairwell", setOpts: { id: "sw11", smokeY: 100 }, dark: 0.42,
+        cam: { keys: [{ t: 0, ...fr(900, 1150, 1.0, 540, 1050), drift: { s: 0.03 } }] },
+        actors: [PRAE(1000, 1360, 1.05, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat", sweat: true }]), YOU(700, 1360, 1.05, [{ t: 0, mode: "crouch", eyes: "side", mouth: "flat", torch: true }])],
+        captions: caps("out"),
+      });
+
+      // ---------- 12–13. your torch goes up the stairwell well… ดาว hangs upside down — and drops ----------
+      add("up", withTorch("up", { keys: [{ t: 0, x: 540, y: 1300, r: 320 }, { t: 2.0, x: 540, y: 820, r: 300 }], dark: 0.7, beam: 0.8, hand: [240, 1720] }, {
+        set: "stairwellUp", setOpts: { id: "su" }, dark: 0.3,
+        cam: { keys: [{ t: 0, x: 0, y: 200, s: 1.0, drift: { y: -40, s: 0.02 } }] },
+        shake: Pov.head({ mode: "breath" }),
+        captions: caps("up"),
+        fx(tl, id, t0) { tl.set("#su-dao", { opacity: 0 }, t0); tl.to("#su-dao", { opacity: 1, duration: 0.6 }, t0 + D("up") - 0.9); Fx.heart(tl, t0 + 1.5, D("up") - 1.5, 0.42, 0.5); },
+      }));
+      add("drop", withTorch("drop", { keys: [{ t: 0, x: 540, y: 820, r: 320 }], dark: 0.6, beam: 0.8, hand: [240, 1720], flicker: [[0.6, 0.6]] }, {
+        set: "stairwellUp", setOpts: { id: "sd" }, dark: 0.3,
+        cam: { keys: [{ t: 0, x: 0, y: 160, s: 1.0, drift: { s: 0.02 } }] },
+        shake: (t) => (t > 0.9 && t < 1.4 ? 28 * Math.sin(t * 70) : 2 * Math.sin(t * 20)),
+        fx(tl, id, t0) {
+          tl.fromTo("#sd-dao", { attr: { transform: "translate(540,640) scale(-0.5,-0.5)" } }, { attr: { transform: "translate(540,560) scale(-0.55,-0.55)" }, duration: 0.6, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.set("#sd-d-smile", { opacity: 1 }, t0 + 0.4); tl.set("#sd-d-flat", { opacity: 0 }, t0 + 0.4);
+          tf(tl, "#sd-dao", t0 + 0.9, 0.3, "translate(540,1700) scale(-2.6,-2.6)", "power4.in");
+          Fx.glitch(tl, `#${id}`, t0 + 0.95, 0.3, 26, 305);
+          tl.fromTo("#flashw", { opacity: 0.85 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + 1.15);
+          tl.fromTo("#fxred", { opacity: 1 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + 1.15);
+          tl.set("#black", { opacity: 1 }, t0 + 1.25); tl.set("#black", { opacity: 0 }, t0 + D("drop"));
+        },
+      }));
+
+      // ---------- 14. channel signature ----------
+      add("sig", {
+        set: "stairwell", setOpts: { id: "sw14", smokeY: 200 }, dark: 0.55, blur: { far: 8, set: 8, fg: 10 },
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 0.9, 540, 1000), drift: { s: 0.02 } }, { t: SF(2), ...fr(560, 1300, 0.96, 540, 1000), drift: { s: 0.045 } }, { t: SF(3), ...fr(560, 1300, 1.04, 540, 1000), drift: { s: 0.02 } }] },
+        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
+        captions: caps("sig"),
+        ui: [{ type: "sigCard", t: 0.05, title: "ควันหลง · เช็กลิสต์เอาตัวรอด", items: [["ไม่ขึ้นลิฟต์", true], ["ใช้บันไดหนีไฟ", true], ["หยุด ล้ม กลิ้ง", true], ["???", false]],
+          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
+        fx(tl, id, t0) {
+          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
+          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
+          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 73);
+          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 74);
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
+          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
+        },
+      });
+
+      // ---------- 15. the floor signs you passed: six, five, four ----------
+      add("signs", withTorch("signs", { keys: [{ t: 0, x: 300, y: 1000, r: 380 }], dark: 0.6, hand: [240, 1720] }, {
+        set: "landing", setOpts: { id: "ld15", show: 6 }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(400, 980, 1.0, 540, 960), drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "walk" }),
+        captions: caps("signs"),
+        fx(tl, id, t0) {
+          const fr6 = SH.signs.vo[0].frags, base = vo("signs");
+          [[6, base + fr6[1]], [5, base + fr6[1] + 0.9], [4, base + fr6[1] + 1.8]].forEach(([n, t]) => {
+            [4, 5, 6, 7].forEach((m) => tl.set(`#ld15-s${m}`, { opacity: m === n ? 1 : 0 }, t0 + t));
+            tl.fromTo(`#${id} .stage`, { filter: "blur(6px)" }, { filter: "blur(0px)", duration: 0.25, immediateRender: false }, t0 + t);
+          });
+        },
+      }));
+
+      // ---------- 16. the sign in front of you now: seven ----------
+      add("seven", withTorch("seven", { keys: [{ t: 0, x: 300, y: 1000, r: 380 }, { t: F("seven", 0, 2), x: 260, y: 900, r: 460 }], dark: 0.6, hand: [240, 1720], flicker: [[F("seven", 0, 2), 0.5]] }, {
+        set: "landing", setOpts: { id: "ld16", show: 7 }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(400, 980, 1.0, 540, 960), drift: { s: 0.01 } }, { t: F("seven", 0, 2), ...fr(250, 960, 1.45, 540, 900), drift: { s: 0.05 } }] },
+        shake: Pov.head({ mode: "breath", flinch: [F("seven", 0, 2)] }),
+        captions: caps("seven"),
+        fx(tl, id, t0) {
+          [4, 5, 6, 7].forEach((m) => tl.set(`#ld16-s${m}`, { opacity: m === 4 ? 1 : 0 }, t0));
+          [4, 5, 6, 7].forEach((m) => tl.set(`#ld16-s${m}`, { opacity: m === 7 ? 1 : 0 }, t0 + F("seven", 0, 2)));
+          Fx.glitch(tl, `#${id}`, t0 + F("seven", 0, 2), 0.3, 18, 306); Fx.punch(tl, `#${id} .stage`, t0 + F("seven", 0, 2), 1.08, 0.5);
+          tl.fromTo("#fxred", { opacity: 0.8 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("seven", 0, 2));
+          Fx.heart(tl, t0 + F("seven", 0, 2) + 0.3, D("seven") - F("seven", 0, 2) - 0.3, 0.42, 0.55);
+        },
+      }));
+
+      // ---------- 17. the 714 key on its hook by the door; from behind the door, her voice ----------
+      add("key", withTorch("key", { keys: [{ t: 0, x: 760, y: 980, r: 360 }, { t: vo("key", 1) - 0.3, x: 620, y: 860, r: 420 }], dark: 0.55, hand: [240, 1720] }, {
+        set: "landing", setOpts: { id: "ld17", show: 7, key: true, under: 0 }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(900, 960, 1.3, 540, 960), drift: { s: 0.03 } }, { t: vo("key", 1) - 0.3, glide: 0.8, ...fr(640, 900, 1.25, 540, 960), drift: { s: 0.04 } }] },
+        shake: Pov.head({ mode: "breath", modes: [[vo("key", 1), "panic"]] }),
+        captions: [...caps("key", [0]), ...caps("key", [1], { quote: true })],
+        fx(tl, id, t0) {
+          for (let i = 0; i < 6; i++) tl.to("#ld17-key", { attr: { transform: `rotate(${i % 2 ? -10 : 9} 980 850)` }, duration: 0.6, ease: "sine.inOut" }, t0 + i * 0.6);
+          tl.to("#ld17-win", { opacity: 1, duration: 0.4 }, t0 + vo("key", 1) + 0.3);
+          tl.to("#ld17-under", { opacity: 1, duration: 0.6 }, t0 + vo("key", 1));
+          Fx.heart(tl, t0 + vo("key", 1), D("key") - vo("key", 1), 0.42, 0.6); Fx.glitch(tl, `#${id}`, t0 + vo("key", 1) + 0.3, 0.2, 10, 307);
+        },
+      }));
+
+      // ---------- 18. the choice: open the door / keep going down ----------
+      add("choice", withTorch("choice", { keys: [{ t: 0, x: 620, y: 880, r: 420 }], dark: 0.55, flicker: [[0.4, 3]], hand: [240, 1720] }, {
+        set: "landing", setOpts: { id: "ld18", show: 7, key: true, under: 1 }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(640, 900, 1.35, 540, 960), drift: { s: 0.03 } }] },
+        shake: Pov.head({ mode: "panic" }),
+        ui: [{ type: "choice", t: 0.05, q: "จะทำยังไง?", a: "เปิดประตู", b: "เดินลงต่อ", secs: 3, top: 280,
+          possessed: { at: 1.0, side: "a", glitch: "เปิดประตู…", who: "…มือคุณจับประตูแล้ว" } }],
+        fx(tl, id, t0) {
+          tl.set("#ld18-win", { opacity: 1 }, t0);
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      }));
+
+      // ---------- 19. end card: the room key tag ----------
+      add("next", {
+        set: "keyTag", setOpts: { id: "kt", ep: "ตอนที่ 4", title: "ห้ามกลับ" }, dark: 0.1,
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1, drift: { s: 0.03 } }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#kt-tag", { attr: { transform: "translate(540,900) rotate(-14)" } }, { attr: { transform: "translate(540,900) rotate(-6)" }, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          Fx.heart(tl, t0 + 0.9, D("next") - 0.9, 0.7, 0.35);
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Pov.life(tl, `#${id}`, t0, sh.dur); }; });
