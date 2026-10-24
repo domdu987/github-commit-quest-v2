@@ -240,7 +240,7 @@
           tl.fromTo(`#${id} .lbl`, { clipPath: "inset(-10px 100% -10px -10px)" }, { clipPath: "inset(-10px -10px -10px -10px)", duration: 0.35, ease: "power1.inOut", immediateRender: false }, t0 + 0.22);
           if (segs.length) tl.fromTo(`#${id} .seg i`, { scaleY: 0 }, { scaleY: 1, duration: 0.2, stagger: 0.03, ease: "power2.out", transformOrigin: "50% 100%", immediateRender: false }, t0 + 0.3);
           // the needle: parked at the left stop, flicks to each value with overshoot, trembles while on
-          const nd = el.querySelector(".nd"), ang = (v) => -125 + 250 * Math.min(1, Math.max(0, v / (o.max || 1)));
+          const nd = el.querySelector(".nd"), ang = (v) => -125 + 238 * Math.min(1, Math.max(0, v / (o.max || 1)));
           if (nd) { gsap.set(nd, { rotation: -125 });
             if (!(o.keys[1] && o.keys[1].t - o.t < 1.2)) tl.to(nd, { rotation: ang(o.keys[0].v), duration: 0.8, ease: "elastic.out(1,.35)" }, t0 + 0.22);
             tl.fromTo(el.querySelector(".ndj"), { rotation: -1.2 }, { rotation: 1.2, duration: 0.11, repeat: Math.ceil((end - t0) / 0.11) + 1, yoyo: true, ease: "none", immediateRender: false }, t0); }
@@ -443,5 +443,76 @@
           base(root, tl, shots);
           shots.forEach((sh, i) => (sh.captions || []).forEach((cp, k) => { const ws = document.querySelectorAll(`#s${i}-c${k} .w`);
             if (ws.length > 1) tl.fromTo(ws, { opacity: 0, y: 18, scale: 0.7 }, { opacity: 1, y: 0, scale: 1, duration: 0.18, stagger: 0.06, ease: "back.out(2.5)", immediateRender: false }, sh.start + cp.t + 0.02); }));
+        };
+      }
+
+      // ======================================================================================================
+      // story gimmicks in the icons: pasted-paper digits that fly off when the count drops, cans tumbling out of
+      // the chip, a sixth shadow joining the head count, the rice sack deflating
+      // ======================================================================================================
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .pdig { display: inline-flex; gap: .08em; vertical-align: top; position: relative; }
+        .pd { position: relative; width: .72em; height: 1.1em; }
+        .pd .sh { position: absolute; inset: 0; border-radius: .05em; display: grid; place-items: center; color: #1e1d1b; font: 900 1em/1 Kanit; letter-spacing: 0;
+          background: linear-gradient(170deg, #f6efdc, #e6dcc2); box-shadow: 0 .06em .14em rgba(0,0,0,.55), inset 0 0 0 1px rgba(0,0,0,.08); transform-origin: 50% 20%; }
+        .pd .sh.u { transform: rotate(2deg); background: linear-gradient(170deg, #efe6cf, #d9ceb0); }
+        .pd .sh b { font-weight: 900; }
+        .pd .tp { position: absolute; left: 20%; top: -.12em; width: 60%; height: .2em; background: rgba(230,214,160,.75); border-left: 1px dashed rgba(0,0,0,.2); border-right: 1px dashed rgba(0,0,0,.2); transform: rotate(-3deg); box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+        .tc .big { font: 900 118px/1.1 Kanit; display: flex; align-items: center; gap: 22px; justify-content: center; }
+        .tc .big .pdig { font-size: 150px; }
+        .tc .tag6 { position: absolute; right: 34px; top: 50%; margin-top: -40px; font: 900 64px/1 Kanit; color: ${PK_HOT}; border: 5px double ${PK_HOT}; border-radius: 10px; padding: 4px 18px 8px; transform: rotate(-8deg); opacity: 0; letter-spacing: 2px; text-shadow: 0 0 14px rgba(255,90,72,.6); }
+        .mc .fall { position: absolute; left: 28px; top: 26px; width: 56px; height: 56px; z-index: 5; pointer-events: none; opacity: 0; filter: drop-shadow(0 3px 3px rgba(0,0,0,.5)); overflow: visible; }
+        .mc .grain { position: absolute; left: 60px; top: 70px; width: 7px; height: 9px; border-radius: 50%; background: #f1e3b8; z-index: 5; opacity: 0; }
+      </style>`);
+      const PAPER = (seq) => `<span class="pd">${seq.slice().reverse().map((d, i, arr) => `<i class="sh${i < arr.length - 1 ? " u" : ""}" data-v="${d}"><b>${d}</b>${i === arr.length - 1 ? '<i class="tp"></i>' : ""}</i>`).join("")}</span>`;   // sheets stacked: first value on top
+      const PAPERS = (vals) => { const strs = vals.map((v) => String(v)), n = Math.max(...strs.map((s) => s.length)); return `<span class="pdig">${Array.from({ length: n }, (_, i) => PAPER(strs.map((s) => s.padStart(n, "0")[i]))).join("")}</span>`; };
+      // a sheet peels at the tape and flutters away up-right; the sheet beneath jolts
+      function flyOff(tl, sh, t) {
+        tl.fromTo(sh, { rotation: 0 }, { rotation: -9, duration: 0.14, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t);
+        tl.to(sh, { x: 220, y: -300, rotation: 48, opacity: 0, duration: 0.75, ease: "power2.in" }, t + 0.26);
+        tl.fromTo(sh, { scaleX: 1 }, { scaleX: 0.6, duration: 0.18, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t + 0.3);
+        const under = sh.previousElementSibling; if (under) tl.fromTo(under, { rotation: 2, y: 0 }, { rotation: -2, y: 4, duration: 0.3, ease: "elastic.out(1,.4)", immediateRender: false }, t + 0.4);
+      }
+      const slapIn = (tl, sheets, t, gap = 0.14) => Array.from(sheets).forEach((sh, k) => { tl.fromTo(sh, { opacity: 0, scale: 2.1, rotation: -18, y: -40 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.22, ease: "power4.in", immediateRender: false }, t + k * gap);
+        tl.fromTo(sh, { scaleX: 1.12, scaleY: 0.9 }, { scaleX: 1, scaleY: 1, duration: 0.45, ease: "elastic.out(1,.4)", immediateRender: false }, t + k * gap + 0.22); });
+      // ---------- tear-off count plate: "เหลือ [9][9] วัน" — a sheet flies off whenever a digit changes; `tag` stamps a second number in ----------
+      GameUI.C.tearCal = {
+        html: (id, o) => `<div id="${id}" class="mp mb tc" style="top:${o.top ?? 150}px">${PLATE}<div class="big" id="${id}-b"><span>${o.label || "เหลือ"}</span>${PAPERS(o.keys.map((k) => k.v))}<span>${o.unit || "วัน"}</span></div>${o.tag ? `<div class="tag6" id="${id}-t">${o.tag.text}</div>${SPLAT}` : ""}</div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), end = o.t0abs + (o.end ?? o.t + 6), digs = [...el.querySelectorAll(".pd")];
+          plateFx(tl, el, t0, end, { from: "top", out: o.end !== undefined });
+          tl.fromTo(`#${id}-b`, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out", immediateRender: false }, t0 + 0.25);
+          slapIn(tl, el.querySelectorAll(".pd .sh:last-child"), t0 + 0.3);
+          const strs = o.keys.map((k) => String(k.v)), n = Math.max(...strs.map((s) => s.length));
+          o.keys.forEach((k, i) => { if (!i) return; const a = strs[i - 1].padStart(n, "0"), b = strs[i].padStart(n, "0"), T = o.t0abs + k.t;
+            digs.forEach((pd, j) => { if (a[j] === b[j]) return; const top = pd.querySelector(`.sh[data-v="${a[j]}"]:last-child`) || [...pd.querySelectorAll(".sh")].reverse().find((s) => s.dataset.v === a[j]); if (top) flyOff(tl, top, T); }); });
+          if (o.tag) { const T = o.t0abs + o.tag.t; tl.fromTo(`#${id}-t`, { opacity: 0, scale: 2.4, rotation: 10 }, { opacity: 1, scale: 1, rotation: -8, duration: 0.2, ease: "power4.in", immediateRender: false }, T);
+            tl.fromTo(`#${id}-t`, { x: 0 }, { x: 7, duration: 0.04, repeat: 5, yoyo: true, immediateRender: false }, T + 0.2); splat(tl, el, T + 0.18); tl.fromTo(`#${id} .fl`, { opacity: 0.6 }, { opacity: 0, duration: 0.4, immediateRender: false }, T + 0.2); }
+          pkLoops(tl, el, t0 + 0.5, end);
+        },
+      };
+      // ---------- the title plate now pastes its "99" as paper sheets ----------
+      {
+        const base = GameUI.C.board;
+        GameUI.C.board = {
+          html: (id, o) => base.html(id, o).replace(FLIPS(`${id}-fl`, String(o.day), 150), `<span id="${id}-fl">${PAPERS([o.day])}</span>`),
+          anim(tl, id, t0, o) { base.anim.call(this, tl, id, t0, o); const el = document.getElementById(id); slapIn(tl, el.querySelectorAll(".pd .sh:last-child"), t0 + 0.45, 0.16); },
+        };
+      }
+      // ---------- counter gimmicks: cans tumble out, a shadow joins the head count, the sack deflates ----------
+      PK_ICON.people = PK_ICON.people.replace(`<g class="a-bob2">`, `<g class="ghost" opacity="0"><circle cx="25" cy="9" r="8" fill="#1a1212" stroke="#3a2424" stroke-width="1.5"/><path d="M12,42c0,-15 5,-23 13,-23s13,8 13,23z" fill="#1a1212" stroke="#3a2424" stroke-width="1.5"/><circle cx="22" cy="8.5" r="1.9" fill="#ff3b30"/><circle cx="28" cy="8.5" r="1.9" fill="#ff3b30"/><circle cx="22" cy="8.5" r="4" fill="#ff3b30" opacity=".25"/><circle cx="28" cy="8.5" r="4" fill="#ff3b30" opacity=".25"/></g><g class="a-bob2">`);
+      {
+        const base = GameUI.C.counter.anim;
+        GameUI.C.counter.anim = function (tl, id, t0, o) {
+          base.call(this, tl, id, t0, o);
+          const el = document.getElementById(id), icon = o.icon || "can";
+          o.keys.forEach((b, i) => { if (!i) return; const a = o.keys[i - 1]; if (a.v === b.v) return; const tb = o.t0abs + b.t;
+            if (icon === "can" && b.v < a.v) { const n = Math.min(3, Math.round(a.v - b.v)); for (let k = 0; k < n; k++) { el.insertAdjacentHTML("beforeend", `<svg class="fall" viewBox="0 0 48 48">${PK_ICON.can}</svg>`); const f = el.lastElementChild;
+              tl.fromTo(f, { x: 0, y: 0, rotation: 0, opacity: 1 }, { x: 40 + k * 34, y: 320, rotation: 280 + k * 70, opacity: 0, duration: 0.95, ease: "power1.in", immediateRender: false }, tb - 0.1 + k * 0.13);
+              tl.fromTo(f, { scale: 1 }, { scale: 0.7, duration: 0.95, ease: "none", immediateRender: false }, tb - 0.1 + k * 0.13); } }
+            if (icon === "people" && b.v > a.v) { const g = el.querySelector(".ghost"); if (g) { [0, 0.08, 0.16, 0.3].forEach((d, k) => tl.set(g, { opacity: k % 2 ? 0 : 0.85 }, tb + d)); tl.to(g, { opacity: 1, duration: 0.3 }, tb + 0.4); tl.fromTo(g, { x: 0 }, { x: 1.5, duration: 0.06, repeat: 9, yoyo: true, immediateRender: false }, tb); } }
+            if (icon === "rice" && b.v < a.v) { const sack = el.querySelector(".ic svg g"); if (sack) tl.fromTo(sack, { scaleY: 1, scaleX: 1 }, { scaleY: 0.72, scaleX: 1.14, duration: 0.5, ease: "elastic.out(1,.45)", transformOrigin: "50% 100%", immediateRender: false }, tb);
+              for (let k = 0; k < 5; k++) { el.insertAdjacentHTML("beforeend", `<i class="grain"></i>`); const gr = el.lastElementChild; tl.fromTo(gr, { x: 0, y: 0, opacity: 1 }, { x: -20 + k * 11, y: 90 + (k % 2) * 30, opacity: 0, duration: 0.6, ease: "power1.in", immediateRender: false }, tb + k * 0.05); } }
+          });
         };
       }

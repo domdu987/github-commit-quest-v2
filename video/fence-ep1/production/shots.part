@@ -404,6 +404,7 @@
         set: "radioClose", setOpts: { id: "ra" }, dark: 0.55,
         cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.02 } }, { t: vo("radio", 1) - 0.3, ...fr(400, 900, 1.5, 540, 960), drift: { s: 0.03 } }] },
         captions: [...caps("radio", [0]), ...caps("radio", [1], { quote: true }), ...caps("radio", [2])],
+        ui: [{ type: "tearCal", t: vo("radio", 1) - 0.5, end: vo("radio", 3) - 0.25, top: 150, label: "เหลือ", unit: "วัน", keys: [{ t: vo("radio", 1) - 0.5, v: 99 }, { t: F("radio", 1, 1), v: 98 }], tag: { t: F("radio", 1, 2), text: "· หก" } }],   // the pasted "9" flutters off on "เก้าสิบแปด"; "หก" stamps in
         fx(tl, id, t0) {
           const on = t0 + vo("radio", 1) - 0.35;
           tl.fromTo(["#ra-dialw", "#ra-glow"], { opacity: 0 }, { opacity: 1, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, on); tl.set(["#ra-dialw", "#ra-glow"], { opacity: 1 }, on + 0.3);
