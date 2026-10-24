@@ -1,0 +1,479 @@
+      // ======================================================================================================
+      // เอาชีวิตรอด 99 วัน · EP.2 "เครื่องปั่นไฟ"
+      // ======================================================================================================
+      const SKIN_PIM = { skin: "#ecc29c", sleeve: "#9fc5d8" }, SKIN_MAN = { skin: "#b9805a", sleeve: "#2c3e6b" };
+      const CDC = "ที่มา: <em>CDC (สหรัฐฯ)</em> · ", RDY = "ที่มา: <em>Ready.gov (สหรัฐฯ)</em> · ";
+      const HA = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, blinks: [], track, ...extra });
+      const ZF = (L, tl, pre, t0, dur, list, mode = "lunge") => list.forEach(([w, x, s, ph], k) => behind(L, tl, `${pre}-z${k}`, w, x, 1180, s, true, t0, dur, [{ t: 0, mode, eyes: "dead", mouth: "snarl", opts: { period: 1.2 + ph } }]));
+      // story icons for this episode: the jerrycan, the bulb; the knowledge medallions: the gas, the generator outdoors
+      PK_ICON.fuel = (p) => `${PKG(p)}${SHADOW(24, 45, 16)}<g class="a-wob" style="transform-origin:24px 44px"><path d="M10,14h22l6,6v24H10z" fill="url(#${p}-red)" stroke="${PK_INK}" stroke-width="2" stroke-linejoin="round"/><rect x="14" y="6" width="10" height="8" rx="2" fill="#2a2420" stroke="${PK_INK}" stroke-width="1.5"/><path d="M14,22h14v14H14z" fill="none" stroke="#f4ecd8" stroke-width="2.5"/><path d="M18,36l6,-14" stroke="#f4ecd8" stroke-width="2.5" stroke-linecap="round"/></g>`;
+      PK_ICON.bulb = (p) => `${PKG(p)}${SHADOW(24, 45, 12)}<circle class="a-glow" cx="24" cy="20" r="18" fill="url(#${p}-glow)" opacity=".8"/><path d="M14,20a10,10 0 1 1 20,0q0,6 -5,10v4H19v-4q-5,-4 -5,-10z" fill="url(#${p}-yel)" stroke="${PK_INK}" stroke-width="2" stroke-linejoin="round"/><rect x="18" y="34" width="12" height="6" rx="2" fill="#9aa0a6" stroke="${PK_INK}" stroke-width="1.5"/><path d="M21,26q3,-6 6,0" stroke="${PK_INK}" stroke-width="1.5" fill="none"/>`;
+      Object.assign(GameUI.ILL, {
+        co: `${PKG("co")}${SHADOW(60, 108, 34)}<path d="M30,70q-16,-30 12,-40q8,-26 36,-18q24,-8 32,16q20,8 8,34q4,22 -24,22H40q-18,0 -10,-14z" fill="#6b7178" stroke="${PK_INK}" stroke-width="3"/><g class="a-pulse" style="transform-origin:60px 56px"><path d="M40,48l10,10M50,48l-10,10M70,48l10,10M80,48l-10,10" stroke="#ff5a4a" stroke-width="6" stroke-linecap="round"/></g><path d="M46,74q14,8 28,0" stroke="#f4ecd8" stroke-width="4" fill="none" stroke-linecap="round"/><text x="60" y="104" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="#f4ecd8">CO</text>`,
+        outdoor: `${PKG("od")}${SHADOW(60, 110, 40)}<path d="M8,70V40L34,18L60,40V70z" fill="#f3e4bb" stroke="${PK_INK}" stroke-width="3" stroke-linejoin="round"/><rect x="26" y="50" width="16" height="20" fill="#2a2420"/><path d="M62,58h24" stroke="#c8392b" stroke-width="4" stroke-dasharray="4 4"/><g class="a-bob"><rect x="86" y="46" width="28" height="22" rx="4" fill="url(#od-red)" stroke="${PK_INK}" stroke-width="2.5"/><path d="M108,46v-8h6" stroke="${PK_INK}" stroke-width="3" fill="none"/></g><text x="74" y="52" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="16" fill="#c8392b">6 ม.</text>`,
+      });
+      const CART = (id, x, y, s = 0.75) => `<g id="${id}" transform="translate(${x},${y})"><rect x="-180" y="-150" width="360" height="30" fill="#5b6066" stroke="#2e2a26" stroke-width="4"/><path d="M-170,-150L-330,-270" stroke="#5b6066" stroke-width="14" stroke-linecap="round"/><circle cx="-110" cy="-50" r="50" fill="#2a2420" stroke="#8d9299" stroke-width="10"/><circle cx="110" cy="-50" r="50" fill="#2a2420" stroke="#8d9299" stroke-width="10"/>${Sets.props.generator(`${id}-gen`, 0, -150, s, false)}<path d="M120,-290h50v90h-50z" fill="#c8392b" stroke="#2e2a26" stroke-width="4"/></g>`;
+      const HILL = (L, x = 1300, y = 700, night = true) => L.set.insertAdjacentHTML("beforeend", `<g id="hl-hill" transform="translate(${x - 1000},${y - 780})"><path d="M1000,780Q1400,520 1800,620T2500,720V1100H1000Z" fill="${night ? "#3a4e45" : "#5f7a4a"}" stroke="#5a7064" stroke-width="6"/><circle id="hl-blinkg" cx="1640" cy="602" r="110" fill="url(#fLamp)" opacity="0"/><circle id="hl-blink" cx="1640" cy="602" r="16" fill="#fff8d0" opacity="0"/></g>`);
+      // the pull on a starter cord in the first-person sets (genClose): the hand yanks down and right, the cord follows, the pilot light answers
+      const pull = (tl, id, t, ok = true) => {
+        tl.fromTo(`#${id}-hand`, { attr: { transform: "translate(760,1560)" } }, { attr: { transform: "translate(930,1810)" }, duration: 0.22, ease: "power3.in", immediateRender: false }, t);
+        tl.fromTo(`#${id}-cord`, { attr: { d: "M664,1343L760,1560" } }, { attr: { d: "M664,1343L930,1810" }, duration: 0.22, ease: "power3.in", immediateRender: false }, t);
+        tl.to(`#${id}-hand`, { attr: { transform: "translate(760,1560)" }, duration: 0.5, ease: "power2.out" }, t + 0.35); tl.to(`#${id}-cord`, { attr: { d: "M664,1343L760,1560" }, duration: 0.5, ease: "power2.out" }, t + 0.35);
+        if (ok) { tl.fromTo(`#${id}-pilot`, { opacity: 0 }, { opacity: 1, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, t + 0.25); tl.set(`#${id}-pilot`, { opacity: 1 }, t + 0.6); tl.set(`#${id}-gen-shim`, { opacity: 0.4 }, t + 0.4); }
+      };
+      const blink3 = (tl, t, g = "#hl-blinkg", d = "#hl-blink") => [0, 0.5, 1.0].forEach((o) => { tl.fromTo([g, d], { opacity: 0 }, { opacity: 1, duration: 0.05, immediateRender: false }, t + o); tl.to([g, d], { opacity: 0, duration: 0.1 }, t + o + 0.28); });
+
+      // ---------- 1. hook, first person: the starter cord in the dark classroom; the bulb; "อย่าเปิดในห้อง" ----------
+      add("hook", {
+        set: "genClose", setOpts: { id: "hk", fan: true, ...SKIN_MAN }, dark: 0.45, blur: { mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1250, 1.0, 540, 1000), drift: { s: 0.03 } }, { t: vo("hook", 1) - 0.05, ...fr(540, 700, 0.95, 540, 760), drift: { s: 0.03, y: -10 } }, { t: vo("hook", 2) - 0.05, ...fr(600, 1150, 1.25, 540, 1000), drift: { s: 0.04 } }] },
+        shake: (t) => (t > vo("hook", 2) && t < vo("hook", 2) + 0.35 ? 12 * Math.sin(t * 23) * (vo("hook", 2) + 0.35 - t) / 0.35 : 2 * Math.sin(t * 3)),
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          pull(tl, "hk", t0 + 0.4);
+          const on = t0 + F("hook", 1, 1);   // "ในรอบร้อยวัน": the bulb stutters and holds
+          tl.fromTo("#hk-bulb", { opacity: 0 }, { opacity: 1, duration: 0.06, repeat: 5, yoyo: true, immediateRender: false }, on - 0.3); tl.set("#hk-bulb", { opacity: 1 }, on); tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.3, immediateRender: false }, on);
+          Fx.punch(tl, `#${id} .stage`, t0 + vo("hook", 2), 1.08, 0.4); Fx.glitch(tl, `#${id}`, t0 + vo("hook", 2), 0.25, 10, 11); red(tl, t0 + vo("hook", 2));
+          Fx.punch(tl, `#${id} .stage`, t0 + F("hook", 2, 1), 1.05, 0.3); red(tl, t0 + F("hook", 2, 1), 0.5, 0.5);
+          Fx.heart(tl, t0 + 0.3, D("hook") - 0.3, 0.55, 0.5);
+          tl.set("#black", { opacity: 1 }, t0 + D("hook") - 0.12); tl.set("#black", { opacity: 0 }, t0 + D("hook"));
+        },
+      });
+
+      // ---------- 2. chapter: the page, 98 days; the tank still dropping ----------
+      add("chapter", {
+        set: "schoolYard", setOpts: { id: "ch", time: "day", level: 0.62 }, dark: 0.3, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 760, 0.62, 540, 900), drift: { s: 0.012, y: 10 } }] },
+        captions: caps("chapter"),
+        ui: [{ type: "board", t: 0.05, day: "98", ep: "ตอนที่ 2 · เครื่องปั่นไฟ", top: 330 },
+          { type: "counter", t: F("chapter", 0, 1) - 0.1, end: D("chapter") - 0.05, label: "น้ำในแท็งก์", icon: "water", unit: "ขีด", max: 10, keys: [{ t: F("chapter", 0, 1), v: 7 }, { t: F("chapter", 0, 1) + 0.4, v: 6 }], alarm: F("chapter", 0, 1) + 0.4, top: 1080, right: true }],
+        fx(tl, id, t0) { Fx.heart(tl, t0 + 0.6, D("chapter") - 0.6, 0.7, 0.3); },
+      });
+
+      // ---------- 3. the register: five of them lined up in the yard, ครูพิม hands out the jobs ----------
+      {
+        const c0 = fr(260, 1180, 0.78, 540, 1150);
+        add("roster", {
+          set: "schoolYard", setOpts: { id: "ro", time: "day" }, dark: 0.1, blur: { far: 3 },
+          cam: { keys: [{ t: 0, ...c0 }, { t: D("roster") - 0.1, glide: D("roster") - 0.3, ...fr(880, 1180, 0.84, 540, 1150) }] },
+          actors: [MA(-240, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("roster", 1, 0), mode: "raise", eyes: "normal", mouth: "smile" }, { t: F("roster", 1, 1), mode: "idle", eyes: "normal", mouth: "flat" }]),
+            KO(100, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("roster", 1, 1), mode: "run", eyes: "wide", mouth: "flat" }, { t: F("roster", 2, 0), mode: "idle", eyes: "normal", mouth: "smile" }]),
+            HO(440, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("roster", 2, 0), mode: "write", eyes: "normal", mouth: "flat" }, { t: F("roster", 2, 1), mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "ledger" }),
+            PU(760, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: F("roster", 2, 1), mode: "pointUp", eyes: "wide", mouth: "smile" }], { prop: "crayon" }),
+            PI(1060, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }, { t: F("roster", 0, 1), mode: "idle", eyes: "normal", mouth: "flat" }, { t: voEnd("roster", 2), mode: "point", eyes: "normal", mouth: "smile" }], { flip: true })],
+          captions: caps("roster"),
+          ui: [{ type: "roster", t: 0.2, end: D("roster") - 0.1, top: 150, title: "ทะเบียนค่าย", who: "วันที่ 101 · ครูพิมแบ่งหน้าที่", rows: [
+            { name: "ลุงหมาน", skill: "ช่าง", desc: "ซ่อมได้ทุกเครื่อง", icon: "wrench", at: F("roster", 1, 0) },
+            { name: "ก้อง", skill: "นักวิ่ง", desc: "เร็วที่สุด · ออกไปหาของ", icon: "shoe", at: F("roster", 1, 1) },
+            { name: "เจ๊หงส์", skill: "คลัง", desc: "นับทุกอย่าง · รู้ว่าของอยู่ไหน", icon: "ledger", at: F("roster", 2, 0) },
+            { name: "น้องปั้น", skill: "ตาดี", desc: "เห็นก่อนใคร · รูปวาดคือเบาะแส", icon: "eye", at: F("roster", 2, 1) },
+            { name: "ครูพิม", skill: "ผู้นำ", desc: "ตัดสินใจแทนทุกคน", icon: "lead", at: voEnd("roster", 2) + 0.1 }] }],
+        });
+      }
+
+      // ---------- 4. the map: the fairground 2 km up the road; "ไปคนเดียว เร็วกว่า" ----------
+      add("map", {
+        set: "mapTop", setOpts: { id: "mp", rings: true }, dark: 0.08, grade: { filter: "saturate(.5) sepia(.3) brightness(.8) contrast(1.1)", tint: "#c9b893", tintOp: 0.35 },
+        cam: { keys: [{ t: 0, ...fr(540, 900, 0.74, 540, 900), drift: { s: 0.02 } }, { t: F("map", 0, 1) - 0.05, glide: 1.2, ...fr(200, 300, 0.5, 540, 760), drift: { s: 0.01 } }] },
+        captions: caps("map", [0]),
+        bubbles: [bub("map", 1, 80, 1160, 340)],
+        extra(L) { Fence.pin(L, "mp-p0", 430, 560, "อาคารเรียน", "#2f4a8a"); Fence.pin(L, "mp-p1", 540, 1180, "ประตู", "#c8392b"); Fence.pin(L, "mp-p2", -200, -420, "งานวัดร้าง · 2 กม.", "#c8392b");
+          L.set.insertAdjacentHTML("beforeend", `<path id="mp-path2" d="M540,1200V1240H-200V-420" stroke="#c8392b" stroke-width="10" fill="none" stroke-dasharray="26 22" pathLength="1" stroke-dashoffset="1" style="stroke-dasharray:1;stroke-dashoffset:1"/><g transform="translate(-520,-560)"><rect x="-130" y="-70" width="260" height="140" rx="12" fill="#e9e2cc" stroke="#9aa0a6" stroke-width="5"/><circle cy="-10" r="40" fill="none" stroke="#c8392b" stroke-width="8"/><text y="50" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#2e2a26">ชิงช้าสวรรค์</text></g>`); },
+        fx(tl, id, t0) {
+          pinDrop(tl, "#mp-p0", t0 + 0.15, 430, 560); pinDrop(tl, "#mp-p1", t0 + 0.35, 540, 1180); pinDrop(tl, "#mp-p2", t0 + F("map", 0, 1) + 0.3, -200, -420);
+          tl.fromTo("#mp-path2", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.0, ease: "none", immediateRender: false }, t0 + F("map", 0, 1) + 0.4);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("map", 0, 2), 1.04, 0.3);
+        },
+      });
+
+      // ---------- 5. the gate at 13:10: ลุงหมาน walks out alone; "กลับก่อนมืดนะลุง" ----------
+      add("gate", {
+        set: "schoolYard", setOpts: { id: "gt", time: "day", gate: 0.8, sunX: 500 }, dark: 0.12, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(720, 1080, 0.95, 540, 1000), drift: { s: 0.015, x: 10 } }] },
+        actors: [MA(600, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: D("gate") - 0.5, mode: "wave", eyes: "normal", mouth: "flat" }], { prop: "sickle", moveTo: { x: 880, dur: D("gate") - 0.5 } }),
+          PI(400, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "o" }]), KO(220, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        bubbles: [bub("gate", 0, 60, 560, 300)],
+        ui: [{ type: "sunHud", t: 0.2, t0: "13:10", t1: "13:13", dark: "18:40", from: 0.24, to: 0.26, left0: "5:30 ชม.", top: 140 }],
+      });
+
+      // ---------- 6. the fair at noon: the generator on the cart; the one under the wheel turns (we see it first) ----------
+      add("fair", {
+        set: "fair", setOpts: { id: "fa", time: "noon", cartX: 200 }, dark: 0.05, blur: { far: 3, mid: 1 },
+        cam: { keys: [{ t: 0, ...fr(700, 1100, 0.68, 540, 1000), drift: { s: 0.02, x: 20 } }, { t: F("fair", 0, 1) - 0.05, ...fr(1300, 1180, 1.25, 540, 1000), drift: { s: 0.04 } }] },
+        actors: [MA(-30, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { flip: true, moveTo: { x: -330, dur: D("fair"), ease: "none" } }),
+          HA("ha2", 1320, 1500, 0.9, [{ t: 0, mode: "still", eyes: "dead", mouth: "flat" }, { t: F("fair", 0, 1) - 0.1, mode: "still", eyes: "dead", mouth: "snarl", look: -30 }], { flip: true })],
+        captions: caps("fair"),
+        ui: [{ type: "counter", t: 0.3, end: F("fair", 0, 1) - 0.1, label: "เที่ยง · อุณหภูมิ", icon: "thermo", unit: "°C", sub: "ร้อนจัด = มันช้า", keys: [{ t: 0, v: 39 }], top: 150 }],
+        fx(tl, id, t0) {
+          tl.fromTo("#fa-cart", { attr: { transform: "translate(200,1500)" } }, { attr: { transform: "translate(-100,1500)" }, duration: D("fair"), ease: "none", immediateRender: false }, t0);
+          tl.fromTo("#fa-wheel", { rotation: 0 }, { rotation: 14, duration: D("fair"), ease: "none", transformOrigin: "50% 50%", immediateRender: false }, t0);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("fair", 0, 1), 1.06, 0.4); red(tl, t0 + F("fair", 0, 1), 0.5, 0.5); Fx.heart(tl, t0 + F("fair", 0, 1), D("fair") - F("fair", 0, 1), 0.5, 0.6);
+        },
+      });
+
+      // ---------- 7. action: it comes; ลุงหมาน shoves the stall cart into it and runs the generator out ----------
+      add("fairRun", {
+        set: "fair", setOpts: { id: "fr", time: "noon", cartX: -100 }, dark: 0.08, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(700, 1150, 0.95, 540, 1000), r: -2, drift: { s: 0.05, r: 2, x: -60 } }] },
+        shake: (t) => (t > 0.5 && t < 0.9 ? 12 * Math.sin(t * 27) : 5 * Math.sin(t * 17)),
+        actors: [MA(260, 1500, 0.9, [{ t: 0, mode: "push", eyes: "wide", mouth: "scream" }, { t: 0.7, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: -500, at: 0.7, dur: D("fairRun") - 0.7, ease: "power1.in" } }),
+          HA("ha2", 1100, 1500, 0.9, [{ t: 0, mode: "zrun", eyes: "dead", mouth: "snarl" }, { t: 0.55, mode: "knocked", eyes: "dead", mouth: "snarl" }], { flip: true, moveTo: { x: 820, dur: 0.55, ease: "none" } })],
+        extra(L) { L.act.insertAdjacentHTML("beforeend", `<g id="fr-stall" transform="translate(520,1500)"><rect x="-160" y="-220" width="320" height="120" fill="#f4ecd8" stroke="#2e2a26" stroke-width="4"/><path d="M-180,-220h360l-30,-120h-300z" fill="#d96a8a" stroke="#2e2a26" stroke-width="4"/>${[0, 1, 2].map((k) => `<path d="M${-150 + k * 120},-220l15,-120" stroke="#f4ecd8" stroke-width="18" opacity=".6"/>`).join("")}<circle cx="-100" cy="-50" r="50" fill="#2a2420" stroke="#8d9299" stroke-width="10"/><circle cx="100" cy="-50" r="50" fill="#2a2420" stroke="#8d9299" stroke-width="10"/></g>`); },
+        fx(tl, id, t0, L) {
+          tl.fromTo("#fr-stall", { attr: { transform: "translate(520,1500)" } }, { attr: { transform: "translate(860,1500)" }, duration: 0.5, ease: "power2.in", immediateRender: false }, t0 + 0.1);
+          tl.to("#fr-stall", { attr: { transform: "translate(900,1500) rotate(-18)" }, duration: 0.3, ease: "power1.out" }, t0 + 0.6);
+          impact(tl, id, L, t0 + 0.58, 860, 1300, 0.9);
+          tl.fromTo("#fr-cart", { attr: { transform: "translate(-100,1500)" } }, { attr: { transform: "translate(-700,1500)" }, duration: D("fairRun") - 0.7, ease: "power1.in", immediateRender: false }, t0 + 0.7);
+          Fx.speed(tl, t0 + 0.7, t0 + D("fairRun")); Fx.heart(tl, t0, D("fairRun"), 0.35, 0.8);
+        },
+      });
+
+      // ---------- 8. back at 18:05: the generator through the gate, and five litres of fuel — two hours of light ----------
+      add("back", {
+        set: "schoolYard", setOpts: { id: "bk", time: "dusk", gate: 0.8, sunX: 900 }, dark: 0.2, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(760, 1100, 0.9, 540, 1000), drift: { s: 0.015 } }, { t: vo("back", 1) - 0.05, ...fr(620, 1200, 1.3, 540, 1050), drift: { s: 0.02 } }] },
+        actors: [MA(1150, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: vo("back", 1), mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 700, dur: vo("back", 1), ease: "none" } }),
+          PI(380, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]), HO(240, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" })],
+        captions: caps("back"),
+        ui: [{ type: "counter", t: F("back", 0, 1) - 0.1, end: D("back") - 0.05, label: "น้ำมัน", icon: "fuel", unit: "ลิตร", max: 5, sub: "5 ลิตร = ไฟ ~2 ชม.", keys: [{ t: F("back", 0, 1), v: 0 }, { t: F("back", 0, 1) + 0.6, v: 5 }], top: 150 },
+          { type: "sunHud", t: 0.1, end: vo("back", 1) - 0.1, t0: "18:05", t1: "18:06", dark: "18:40", from: 0.9, to: 0.91, left0: "0:35 ชม.", top: 140 }],
+        extra(L) { L.act.insertAdjacentHTML("beforeend", CART("bk-cart", 1330, 1500)); },
+        fx(tl, id, t0) { tl.fromTo("#bk-cart", { attr: { transform: "translate(1330,1500)" } }, { attr: { transform: "translate(880,1500)" }, duration: vo("back", 1), ease: "none", immediateRender: false }, t0); Fx.punch(tl, `#${id} .stage`, t0 + F("back", 1, 1), 1.04, 0.3); },
+      });
+
+      // ---------- 9. the generator set down inside the classroom: "ข้างในปลอดภัยกว่า" — ครูพิม hesitates, says nothing ----------
+      add("inside", {
+        set: "classroom", setOpts: { id: "ins", night: true, gen: true, genX: -300, fan: true, bulb: true, lampX: 760, lampY: 1120 }, dark: 0.5, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(260, 1150, 0.9, 540, 1000), drift: { s: 0.015 } }, { t: vo("inside", 1) - 0.05, ...fr(720, 1150, 1.2, 540, 1000), drift: { s: 0.02 } }] },
+        actors: [MA(-80, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "flat" }, { t: 0.6, mode: "point", eyes: "normal", mouth: "flat" }]),
+          PI(640, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("inside", 1), mode: "holdHead", eyes: "normal", mouth: "frown" }], { flip: true }),
+          HO(1000, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat" }], { flip: true }), PU(360, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }], { prop: "crayon" })],
+        captions: caps("inside", [1]),
+        bubbles: [bub("inside", 0, 90, 520, 280)],
+        fx(tl, id, t0) { Fx.heart(tl, t0 + vo("inside", 1), D("inside") - vo("inside", 1), 0.7, 0.35); },
+      });
+
+      // ---------- 10. first person: the cord again — the bulb comes on, the fan turns; "ไฟติด ครั้งแรกในร้อยวัน" ----------
+      add("start", {
+        set: "genClose", setOpts: { id: "st", fan: true, ...SKIN_MAN }, dark: 0.45, blur: { mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 1.05, 540, 1050), drift: { s: 0.03 } }, { t: F("start", 0, 1) - 0.05, glide: 0.6, ...fr(540, 600, 0.9, 540, 700), drift: { s: 0.02 } }] },
+        captions: caps("start"),
+        fx(tl, id, t0) {
+          pull(tl, "st", t0 + 0.25);
+          const on = t0 + F("start", 0, 0) + 0.45;
+          tl.fromTo("#st-bulb", { opacity: 0 }, { opacity: 1, duration: 0.06, repeat: 5, yoyo: true, immediateRender: false }, on - 0.25); tl.set("#st-bulb", { opacity: 1 }, on); tl.fromTo("#flashw", { opacity: 0.55 }, { opacity: 0, duration: 0.4, immediateRender: false }, on);
+          Fx.punch(tl, `#${id} .stage`, on, 1.05, 0.4);
+        },
+      });
+
+      // ---------- 11. everyone under the fan; the clock of light runs — "เหมือนโลกยังปกติ" ----------
+      add("fan", {
+        set: "classroom", setOpts: { id: "fn", night: true, gen: true, genOn: true, genX: -300, fan: true, bulb: true, bulbOn: true, lampX: 760, lampY: 1120 }, dark: 0.25, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(520, 1100, 0.85, 540, 1000), drift: { s: 0.02, y: -8 } }] },
+        actors: [PI(760, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile" }], { flip: true }), HO(1000, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile" }], { flip: true }),
+          KO(260, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "smile" }]), MA(40, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }]), PU(520, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }], { prop: "crayon" })],
+        captions: caps("fan"),
+        ui: [{ type: "counter", t: 0.2, end: D("fan") - 0.05, label: "ไฟติดมาแล้ว", icon: "bulb", unit: "นาที", keys: [{ t: 0.2, v: 0 }, { t: D("fan") - 0.3, v: 18 }], top: 150 }],
+      });
+
+      // ---------- 12. the exhaust: nothing to see — "ครูขา ปั้นปวดหัว" ----------
+      split("smoke", vo("smoke", 1) - 0.1, {
+        set: "classroom", setOpts: { id: "sm", night: true, gen: true, genOn: true, genX: -300, fan: true, bulb: true, bulbOn: true, lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(-150, 1220, 1.6, 540, 1000), drift: { s: 0.03 } }] },
+        captions: capsFrom("smoke", 0).filter((c) => c.t < vo("smoke", 1) - 0.1),
+        fx(tl, id, t0) { tl.set("#sm-co .cowisp", { opacity: 0.35 }, t0); Fx.heart(tl, t0 + F("smoke", 0, 1), vo("smoke", 1) - F("smoke", 0, 1), 0.6, 0.4); Fx.punch(tl, `#${id} .stage`, t0 + F("smoke", 0, 1), 1.05, 0.3); },
+      }, {
+        set: "classroom", setOpts: { id: "sp", night: true, gen: true, genOn: true, genX: -300, fan: true, bulb: true, bulbOn: true, lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1200, 1.4, 540, 1050), drift: { s: 0.03 } }] },
+        actors: [PU(520, 1500, 0.58, [{ t: 0, mode: "holdHead", eyes: "pain", mouth: "frown" }]), PI(800, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile" }], { flip: true })],
+        bubbles: [bub("smoke", 1, 80, 560, 420)],
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("smoke") - vo("smoke", 1) + 0.1, 0.55, 0.45); },
+      });
+
+      // ---------- 13. heads go down: ครูพิม thinks she's sleepy; เจ๊หงส์ is dizzy — the room tilts ----------
+      add("dizzy", {
+        set: "classroom", setOpts: { id: "dz", night: true, gen: true, genOn: true, genX: -300, fan: true, bulb: true, bulbOn: true, lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(700, 1150, 1.0, 540, 1000), r: 0, drift: { s: 0.03, r: 2.5 } }, { t: F("dizzy", 0, 1) - 0.05, ...fr(1000, 1200, 1.3, 540, 1000), r: 3, drift: { s: 0.05, r: -4 } }] },
+        shake: (t) => 3 * Math.sin(t * 2.2),
+        actors: [PI(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat" }], { flip: true }), PU(520, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }]),
+          HO(1000, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat" }, { t: F("dizzy", 0, 1) - 0.1, mode: "holdHead", eyes: "pain", mouth: "frown" }], { flip: true }), MA(40, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "frown" }])],
+        captions: caps("dizzy"),
+        fx(tl, id, t0) { Fx.tunnel(tl, t0 + F("dizzy", 0, 1), t0 + D("dizzy") + 0.2, 0.5); Fx.heart(tl, t0, D("dizzy"), 0.55, 0.5); },
+      });
+
+      // ---------- 14. the card: carbon monoxide — colourless, odourless, kills without warning (CDC) ----------
+      add("co", {
+        set: "classroom", setOpts: { id: "co", night: true, gen: true, genOn: true, genX: -300, lampX: 760, lampY: 1120 }, dark: 0.55, blur: { far: 4, set: 2 },
+        cam: { keys: [{ t: 0, ...fr(-180, 1230, 1.7, 540, 1000), drift: { s: 0.03 } }] },
+        shake: (t) => (t > F("co", 0, 2) && t < F("co", 0, 2) + 0.35 ? 12 * Math.sin(t * 23) : 0),
+        captions: caps("co"),
+        ui: [{ type: "tip", t: F("co", 0, 0) + 0.2, end: D("co") - 0.05, ill: "co", label: "คาร์บอนมอนอกไซด์", text: "ไม่มีสี · ไม่มีกลิ่น · {ฆ่าโดยไม่เตือน}", tone: "danger", top: 230 },
+          { type: "src", t: F("co", 0, 2), end: D("co") - 0.05, top: 560, text: CDC + "“Carbon monoxide (CO) is an odorless, colorless gas that kills without warning.”" }],
+        fx(tl, id, t0) { tl.set("#co-co .cowisp", { opacity: 0.4 }, t0); Fx.punch(tl, `#${id} .stage`, t0 + F("co", 0, 2), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("co", 0, 2), 0.3, 14, 51); red(tl, t0 + F("co", 0, 2), 0.8, 0.7); Fx.heart(tl, t0, D("co"), 0.45, 0.6); },
+      });
+
+      // ---------- 15. น้องปั้น goes down — "ดับเครื่องเดี๋ยวนี้ เปิดประตูทุกบาน" ----------
+      add("collapse", {
+        set: "classroom", setOpts: { id: "cl", night: true, gen: true, genOn: true, genX: -300, fan: true, bulb: true, bulbOn: true, lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1200, 1.3, 540, 1050), drift: { s: 0.02 } }, { t: vo("collapse", 1) - 0.05, ...fr(640, 1150, 1.05, 540, 1000), r: -2, drift: { s: 0.04, r: 2 } }] },
+        shake: (t) => (t > F("collapse", 0, 1) && t < F("collapse", 0, 1) + 0.4 ? 11 * Math.sin(t * 25) : 0),
+        actors: [PU(520, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }, { t: F("collapse", 0, 1) - 0.1, mode: "fall", eyes: "closed", mouth: "o" }]),
+          PI(800, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat" }, { t: F("collapse", 0, 1), mode: "grabArm", eyes: "wide", mouth: "scream" }], { flip: true }),
+          HO(1000, 1500, 0.9, [{ t: 0, mode: "holdHead", eyes: "pain", mouth: "frown" }], { flip: true })],
+        captions: caps("collapse", [0]),
+        bubbles: [bub("collapse", 1, 60, 520, 300)],
+        fx(tl, id, t0, L) { impact(tl, id, L, t0 + F("collapse", 0, 1), 540, 1240, 0.7); red(tl, t0 + F("collapse", 0, 1), 0.6, 0.6); Fx.punch(tl, `#${id} .stage`, t0 + vo("collapse", 1), 1.06, 0.35); Fx.heart(tl, t0 + F("collapse", 0, 1), D("collapse") - F("collapse", 0, 1), 0.35, 0.85); },
+      });
+
+      // ---------- 16. action: the engine killed, the doors flung open, น้องปั้น dragged out ----------
+      add("drag", {
+        set: "classroom", setOpts: { id: "dg", night: true, gen: true, genOn: true, genX: -300, fan: true, bulb: true, bulbOn: true, lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(600, 1150, 1.0, 540, 1000), r: 2, drift: { s: 0.06, r: -3, x: 80 } }] },
+        shake: (t) => 7 * Math.sin(t * 19),
+        actors: [PI(620, 1500, 0.9, [{ t: 0, mode: "drag", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 1300, dur: D("drag"), ease: "power1.in" } }),
+          PU(520, 1500, 0.58, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }], { moveTo: { x: 1200, dur: D("drag"), ease: "power1.in" } }),
+          MA(-60, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.4, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 900, at: 0.4, dur: D("drag") - 0.4 } }),
+          KO(300, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { moveTo: { x: 1500, dur: 0.9, ease: "power1.in" } })],
+        fx(tl, id, t0) {
+          tl.to("#dg-bulb", { opacity: 0, duration: 0.15 }, t0 + 0.35); tl.set("#dg-gen-shim", { opacity: 0 }, t0 + 0.35); tl.set("#dg-co", { opacity: 0 }, t0 + 0.35);
+          tl.fromTo("#flashw", { opacity: 0.6 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 0.35);
+          Fx.speed(tl, t0 + 0.4, t0 + D("drag")); Fx.heart(tl, t0, D("drag"), 0.33, 0.85);
+        },
+      });
+
+      // ---------- 17. in real life: the generator outside only, 20 feet from windows and doors (Ready.gov) ----------
+      add("real", {
+        set: "schoolYard", setOpts: { id: "rl", time: "night", lampX: -300, genX: 760, genOn: false }, dark: 0.45, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(300, 1150, 0.78, 540, 1000), drift: { s: 0.015 } }] },
+        actors: [PI(-140, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "frown" }]), PU(40, 1500, 0.58, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }]), MA(400, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }])],
+        captions: caps("real"),
+        ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "outdoor", label: "ในชีวิตจริง", text: "เครื่องปั่นไฟ → [นอกบ้านเท่านั้น] {ห่าง 6 ม.}", tone: "rule", top: 230 },
+          { type: "src", t: F("real", 1, 1), end: D("real") - 0.05, top: 560, text: RDY + "“Generators and fuel should always be used outdoors and at least 20 feet away from windows, doors and attached garages.”" }],
+        extra(L) { L.act.insertAdjacentHTML("beforeend", `<g id="rl-dist" opacity="0"><path d="M250,1420H640" stroke="#ffd58a" stroke-width="8" stroke-dasharray="24 16"/><path d="M250,1390v60M640,1390v60" stroke="#ffd58a" stroke-width="8"/><text x="445" y="1380" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffd58a" stroke="#2e2a26" stroke-width="6" paint-order="stroke">6 ม. (20 ฟุต)</text></g>`); },
+        fx(tl, id, t0) { tl.fromTo("#rl-dist", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", svgOrigin: "445 1420", immediateRender: false }, t0 + F("real", 1, 1)); Fx.punch(tl, `#${id} .stage`, t0 + F("real", 1, 1), 1.05, 0.3); },
+      });
+
+      // ---------- 18. she opens her eyes ----------
+      add("wake", {
+        set: "schoolYard", setOpts: { id: "wk", time: "night", lampX: 100 }, dark: 0.5, blur: { far: 4, set: 2 },
+        cam: { keys: [{ t: 0, ...fr(60, 1400, 1.7, 540, 1150), drift: { s: 0.03 } }] },
+        actors: [PU(40, 1500, 0.58, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }, { t: F("wake", 0, 1), mode: "lie", eyes: "normal", mouth: "o" }, { t: F("wake", 0, 1) + 0.6, mode: "sit", eyes: "normal", mouth: "smile" }]), PI(-160, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "frown" }, { t: F("wake", 0, 1) + 0.3, mode: "crouch", eyes: "normal", mouth: "smile" }])],
+        captions: caps("wake"),
+        fx(tl, id, t0) { Fx.heart(tl, t0, F("wake", 0, 1), 0.5, 0.6); tl.fromTo("#flashw", { opacity: 0.25 }, { opacity: 0, duration: 0.5, immediateRender: false }, t0 + F("wake", 0, 1)); },
+      });
+
+      // ---------- 19. the generator in the middle of the yard — the light again; then the map: sound carries further than light ----------
+      split("yard", vo("yard", 1) - 0.05, {
+        set: "schoolYard", setOpts: { id: "yd", time: "night", lampX: -300, genX: 760, genOn: true, hill: true }, dark: 0.45, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 0.72, 540, 950), drift: { s: 0.03 } }] },
+        actors: [MA(600, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "flat" }, { t: 0.8, mode: "idle", eyes: "normal", mouth: "smile" }]), PI(-100, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), KO(100, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        captions: capsFrom("yard", 0).filter((c) => c.t < vo("yard", 1) - 0.1),
+        extra(L) { glow(L, `<circle id="yd-glow" cx="760" cy="1380" r="520" fill="url(#fLamp)" opacity="0"/>`); },
+        fx(tl, id, t0) { const on = t0 + F("yard", 0, 1) + 0.2; tl.fromTo("#yd-glow", { opacity: 0 }, { opacity: 0.9, duration: 0.06, repeat: 5, yoyo: true, immediateRender: false }, on - 0.3); tl.set("#yd-glow", { opacity: 0.9 }, on); tl.fromTo("#flashw", { opacity: 0.4 }, { opacity: 0, duration: 0.3, immediateRender: false }, on); },
+      }, {
+        set: "mapTop", setOpts: { id: "ym", rings: true }, dark: 0.08, grade: { filter: "saturate(.5) sepia(.3) brightness(.8) contrast(1.1)", tint: "#c9b893", tintOp: 0.35 },
+        cam: { keys: [{ t: 0, ...fr(540, 900, 0.62, 540, 960), drift: { s: 0.04 } }] },
+        captions: capsFrom("yard", vo("yard", 1) - 0.05),
+        ui: [{ type: "callback", t: F("yard", 1, 1) - (vo("yard", 1) - 0.05), label: "กฎของเรื่อง", text: "มันเดินตามเสียง", top: 300 }],
+        extra(L) { L.act.insertAdjacentHTML("beforeend", `<circle id="ym-light" cx="540" cy="900" r="10" fill="#ffd58a" opacity=".55" stroke="#f2c55c" stroke-width="6"/>${[0, 1, 2].map((k) => `<circle class="ym-snd" cx="540" cy="900" r="60" fill="none" stroke="#ff5a3a" stroke-width="9" opacity="0"/>`).join("")}<text id="ym-tl" x="540" y="760" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#8a6a1a" opacity="0">แสง 100 ม.</text><text id="ym-ts" x="540" y="-60" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#c8392b" opacity="0">เสียง 1 กม.+</text>`); },
+        fx(tl, id, t0) {
+          tl.to("#ym-light", { attr: { r: 150 }, duration: 0.5, ease: "power2.out" }, t0 + 0.1); tl.to("#ym-tl", { opacity: 1, duration: 0.2 }, t0 + 0.5);
+          const T = t0 + F("yard", 1, 1) - (vo("yard", 1) - 0.05);
+          document.querySelectorAll("#ym .ym-snd, #s" + "x .nothing").forEach(() => {});
+          document.querySelectorAll(".ym-snd").forEach((c, k) => tl.fromTo(c, { opacity: 0.9, scale: 0.3 }, { opacity: 0, scale: 20, svgOrigin: "540 900", duration: 1.6, ease: "power1.out", immediateRender: false }, T + k * 0.35));
+          tl.to("#ym-ts", { opacity: 1, duration: 0.2 }, T + 0.5);
+          Fx.heart(tl, t0, D("yard") - vo("yard", 1), 0.5, 0.6); Fx.glitch(tl, `#${id}`, T, 0.15, 8, 21);
+        },
+      });
+
+      // ---------- 20. they come to the fence; "ลุงไปดับเอง" — "ยี่สิบวิลุง ยี่สิบวิแล้วประตูปิด" ----------
+      add("horde", {
+        set: "schoolYard", setOpts: { id: "hd", time: "night", lampX: -300, genX: 760, genOn: true, hill: true }, dark: 0.5, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(900, 1100, 0.9, 540, 950), drift: { s: 0.03 } }, { t: vo("horde", 1) - 0.05, ...fr(-60, 1200, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: vo("horde", 2) - 0.05, ...fr(-120, 1150, 1.3, 540, 1000), drift: { s: 0.04 } }] },
+        actors: [MA(-20, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "frown" }, { t: vo("horde", 1), mode: "point", eyes: "wide", mouth: "o" }]), PI(-260, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "frown" }, { t: vo("horde", 2), mode: "stopHand", eyes: "wide", mouth: "scream" }]),
+          KO(-440, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "o" }]), HO(-600, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "frown" }]), PU(-520, 1500, 0.58, [{ t: 0, mode: "sit", eyes: "normal", mouth: "frown" }])],
+        captions: caps("horde", [0]),
+        bubbles: [bub("horde", 1, 420, 520, 260), bub("horde", 2, 40, 520, 240)],
+        extra(L) { glow(L, `<circle id="hd-glow" cx="760" cy="1380" r="520" fill="url(#fLamp)" opacity=".9"/>`); },
+        fx(tl, id, t0, L) {
+          ZF(L, tl, "hd", t0, D("horde"), [["ha1", 1400, 0.8, 0], ["ha2", 1560, 0.76, 0.4], ["ha3", 1720, 0.78, 0.2], ["ha1", 1900, 0.74, 0.7], ["ha2", 2050, 0.7, 0.9], ["ha3", 1250, 0.72, 0.5]], "zrun");
+          [0, 1, 2, 3, 4, 5].forEach((k) => route(tl, `hd-z${k}`, t0, [{ t: 0, x: [1400, 1560, 1720, 1900, 2050, 1250][k], y: 1180 }, { t: 1.6 + k * 0.2, x: [760, 900, 1060, 1240, 1400, 600][k], y: 1180 }], [0.8, 0.76, 0.78, 0.74, 0.7, 0.72][k], true));
+          Fx.punch(tl, `#${id} .stage`, t0 + F("horde", 0, 1), 1.06, 0.4); red(tl, t0 + F("horde", 0, 1), 0.5, 0.5); Fx.heart(tl, t0, D("horde"), 0.45, 0.7);
+        },
+      });
+
+      // ---------- 21. twenty seconds: ลุงหมาน runs to the generator, kills it blind, the sickle snaps in the bars, he runs ----------
+      add("count", {
+        set: "schoolYard", setOpts: { id: "cd", time: "night", lampX: -300, genX: 760, genOn: true, hill: true }, dark: 0.55, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(400, 1150, 0.8, 540, 1000), drift: { s: 0.02 } }, { t: 1.6, ...fr(820, 1280, 1.25, 540, 1100), drift: { s: 0.03 } }, { t: 4.2, ...fr(620, 1220, 1.05, 540, 1050), r: -2, drift: { s: 0.03, r: 2 } }, { t: 12.9, glide: 6.5, ...fr(100, 1200, 0.9, 540, 1050) }] },
+        shake: (t) => (t > 4.4 && t < 5.4 ? 9 * Math.sin(t * 25) : 3 * Math.sin(t * 13)),
+        actors: [MA(-20, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "frown" }, { t: 1.6, mode: "crouch", eyes: "normal", mouth: "frown" }, { t: 2.0, mode: "grabArm", eyes: "normal", mouth: "frown" }, { t: 2.9, mode: "run", eyes: "wide", mouth: "frown" }, { t: 4.4, mode: "pullBolt", eyes: "wide", mouth: "scream" }, { t: 5.4, mode: "run", eyes: "wide", mouth: "scream" }], { prop: "sickle" })],
+        captions: caps("count"),
+        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูปิดใน", warn: 5, end: D("count") - 0.1, top: 150 },
+          { type: "skill", t: 1.9, end: 4.3, x: 60, y: 820, name: "ลุงหมาน", skill: "ช่าง", desc: "รู้ว่าสวิตช์อยู่ไหนโดยไม่ต้องมอง", icon: "wrench" }],
+        extra(L) { glow(L, `<circle id="cd-glow" cx="760" cy="1380" r="520" fill="url(#fLamp)" opacity=".9"/>`);
+          L.set.insertAdjacentHTML("beforeend", `<g id="cd-sick" opacity="0" transform="translate(720,980)"><path d="M0,0C70,-20 120,-100 90,-180C120,-110 60,-50 0,-26Z" fill="#8d9299" stroke="#2e2a26" stroke-width="4"/></g><g id="cd-sick2" opacity="0" transform="translate(700,1500)"><rect x="-8" y="-70" width="16" height="70" rx="6" fill="#6b4a2e" stroke="#2e2a26" stroke-width="3"/></g>`); },
+        fx(tl, id, t0, L) {
+          ZF(L, tl, "cd", t0, D("count"), [["ha1", 760, 0.8, 0], ["ha2", 900, 0.76, 0.4], ["ha3", 1060, 0.78, 0.2], ["ha1", 1240, 0.74, 0.7], ["ha2", 1400, 0.7, 0.9], ["ha3", 600, 0.72, 0.5]]);
+          route(tl, `${id}-a0`, t0, [{ t: 0, x: -20, y: 1500 }, { t: 1.6, x: 600, y: 1500 }, { t: 2.9, x: 600, y: 1500 }, { t: 4.4, x: 640, y: 1270 }, { t: 5.4, x: 640, y: 1270 }, { t: D("count"), x: -400, y: 1440 }], 0.9, false);
+          tl.set(`#${id}-a0`, { attr: { transform: "translate(640,1270) scale(-0.9,0.9)" } }, t0 + 5.4);   // turned for the run home (route keeps the flip it is given)
+          tl.fromTo("#cd-glow", { opacity: 0.9 }, { opacity: 0.55, duration: 0.09, repeat: 25, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.to("#cd-glow", { opacity: 0, duration: 0.2 }, t0 + 2.4); tl.to("#cd-gen-shim", { opacity: 0, duration: 0.3 }, t0 + 2.4); tl.fromTo("#flashw", { opacity: 0.3 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0 + 2.4);
+          // the sickle through the bars: a hand gets it, the blade stays in the fence, the handle drops
+          tl.set("#cd-sick", { opacity: 1 }, t0 + 4.5); tl.set("#cd-sick2", { opacity: 1 }, t0 + 5.2); impact(tl, id, L, t0 + 5.2, 720, 1000, 0.7); red(tl, t0 + 5.2, 0.6, 0.5);
+          tl.fromTo("#cd-sick2", { attr: { transform: "translate(720,1100) rotate(0)" } }, { attr: { transform: "translate(760,1250) rotate(70)" }, duration: 0.4, ease: "power2.in", immediateRender: false }, t0 + 5.2);
+          Fx.heart(tl, t0 + 0.2, D("count") - 0.2, 0.6, 0.5);
+        },
+      });
+
+      // ---------- 22. the last five seconds: ครูพิม holding the door, ลุงหมาน running in — 0 = the door ----------
+      add("count2", {
+        set: "schoolYard", setOpts: { id: "ce", time: "night", lampX: 140, hill: true }, dark: 0.6, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(300, 1260, 1.2, 540, 1150), drift: { s: 0.04, x: -8 } }] },
+        shake: (t) => (t < 5.0 ? 7 * Math.sin(t * 21) : 0),
+        actors: [PI(90, 1440, 0.82, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 4.9, mode: "push", eyes: "wide", mouth: "frown" }]),
+          MA(1400, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "frown" }, { t: 4.75, mode: "fall", eyes: "closed", mouth: "frown" }], { flip: true })],
+        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูปิดใน", warn: 5, end: 5.6, top: 150 }],
+        fx(tl, id, t0, L) {
+          ZF(L, tl, "ce", t0, D("count2"), [["ha1", 1500, 0.8, 0], ["ha2", 1650, 0.76, 0.4], ["ha3", 1350, 0.78, 0.2], ["ha1", 1800, 0.74, 0.6]]);
+          route(tl, `${id}-a1`, t0, [{ t: 0, x: 1400, y: 1500 }, { t: 4.75, x: 300, y: 1450 }], 0.9, true);
+          Fx.heart(tl, t0, 5.0, 0.36, 0.8);
+          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 5.0);
+          tl.set("#black", { opacity: 1 }, t0 + 5.05);
+        },
+      });
+
+      // ---------- 23. dark again: twenty minutes of light in a hundred days ----------
+      add("dark", {
+        set: "schoolYard", setOpts: { id: "dk", time: "night", lampX: -300, genX: 760, genOn: false, hill: true }, dark: 0.6, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 0.72, 540, 950), drift: { s: 0.03 } }] },
+        captions: caps("dark"),
+        ui: [{ type: "counter", t: 0.5, end: D("dark") - 0.05, label: "ไฟฟ้าร้อยวันแรก · ได้ใช้", icon: "bulb", unit: "นาที", keys: [{ t: 0.5, v: 0 }, { t: F("dark", 0, 1), v: 20 }], top: 150 }],
+        fx(tl, id, t0, L) { ZF(L, tl, "dk", t0, D("dark"), [["ha1", 760, 0.8, 0], ["ha2", 900, 0.76, 0.4], ["ha3", 1060, 0.78, 0.2], ["ha1", 1240, 0.74, 0.7]]); tl.set("#black", { opacity: 1 }, t0); tl.to("#black", { opacity: 0, duration: 0.5 }, t0 + 0.3); Fx.heart(tl, t0, D("dark"), 0.7, 0.35); },
+      });
+
+      // ---------- 24. the hill: three blinks answer — and only น้องปั้น is looking up ----------
+      split("hill", vo("hill", 1) - 0.05, {
+        set: "schoolYard", setOpts: { id: "hl", time: "night", lampX: -300 }, dark: 0.3, blur: { far: 1, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(900, 900, 0.75, 540, 960), drift: { s: 0.02 } }, { t: F("hill", 0, 1) - 0.1, glide: 1.0, ...fr(1640, 640, 1.5, 540, 900), drift: { s: 0.03 } }] },
+        captions: capsFrom("hill", 0).filter((c) => c.t < vo("hill", 1) - 0.1),
+        extra(L) { HILL(L, 1000, 780, true); },
+        fx(tl, id, t0) { blink3(tl, t0 + F("hill", 0, 1) + 0.2); Fx.heart(tl, t0 + F("hill", 0, 1), vo("hill", 1) - F("hill", 0, 1), 0.5, 0.6); Fx.punch(tl, `#${id} .stage`, t0 + F("hill", 0, 2), 1.05, 0.4); red(tl, t0 + F("hill", 0, 2), 0.4, 0.5); },
+      }, {
+        set: "schoolYard", setOpts: { id: "hp", time: "night", lampX: -300 }, dark: 0.55, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(-200, 1250, 1.3, 540, 1050), drift: { s: 0.04 } }] },
+        actors: [PU(-200, 1500, 0.58, [{ t: 0, mode: "lookUp", eyes: "wide", mouth: "o" }]), PI(-420, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true }), MA(-20, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "closed", mouth: "frown" }])],
+        captions: capsFrom("hill", vo("hill", 1) - 0.05),
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("hill", 1, 1) - (vo("hill", 1) - 0.05), 1.06, 0.4); Fx.glitch(tl, `#${id}`, t0 + F("hill", 1, 1) - (vo("hill", 1) - 0.05), 0.2, 10, 31); Fx.heart(tl, t0, D("hill") - vo("hill", 1), 0.45, 0.6); },
+      });
+
+      // ---------- channel signature ----------
+      add("sig", {
+        set: "schoolYard", setOpts: { id: "sgn", time: "night", lampX: -300 }, dark: 0.55, blur: { far: 10, set: 8, mid: 8 },
+        cam: { keys: Sig.cam(F, fr(560, 1100, 0.9, 540, 960)) }, shake: Sig.shake(F),
+        captions: caps("sig"),
+        ui: [Sig.ui(F, "เหลือ 98 วัน · เช็กลิสต์เอาตัวรอด", [["กลับก่อนมืด", true], ["ย้ายเครื่องออกนอกห้อง", true], ["ดับเครื่องก่อนฝูงถึง", true], ["???", false]], D("sig"))],
+        fx(tl, id, t0) { Sig.fx(tl, id, t0, F, D("sig")); },
+      });
+
+      // ---------- 25. the radio: "เก้าสิบเจ็ดวัน… หก" — ลุงหมาน switches it off; the number keeps counting ----------
+      split("radio", vo("radio", 2) - 0.1, {
+        set: "radioClose", setOpts: { id: "ra" }, dark: 0.55,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.02 } }, { t: vo("radio", 1) - 0.3, ...fr(400, 900, 1.5, 540, 960), drift: { s: 0.03 } }] },
+        captions: [...caps("radio", [0]), ...caps("radio", [1], { quote: true })],
+        ui: [{ type: "tearCal", t: vo("radio", 1) - 0.5, end: vo("radio", 2) - 0.25, top: 150, label: "เหลือ", unit: "วัน", keys: [{ t: vo("radio", 1) - 0.5, v: 98 }, { t: F("radio", 1, 1), v: 97 }], tag: { t: F("radio", 1, 2), text: "· หก" } }],
+        fx(tl, id, t0) {
+          const on = t0 + vo("radio", 1) - 0.35;
+          tl.fromTo(["#ra-dialw", "#ra-glow"], { opacity: 0 }, { opacity: 1, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, on); tl.set(["#ra-dialw", "#ra-glow"], { opacity: 1 }, on + 0.3);
+          tl.fromTo("#ra-needle", { x: 0 }, { x: 180, duration: 0.6, ease: "power1.inOut", immediateRender: false }, on + 0.1);
+          for (let t = on + 0.7; t < t0 + vo("radio", 2); t += 0.11) tl.set("#ra-needle", { x: 180 + ((t * 977) % 9) - 4 }, t);
+          const n0 = caps("radio", [0]).length, n1 = caps("radio", [1]).length;
+          document.querySelectorAll(`#${id} .capbox`).forEach((c, i) => { if (i >= n0 && i < n0 + n1) c.classList.add("radio"); });
+          Fx.punch(tl, `#${id} .stage`, t0 + F("radio", 1, 2), 1.08, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("radio", 1, 2), 0.2, 10, 61); red(tl, t0 + F("radio", 1, 2), 0.5, 0.6);
+          Fx.heart(tl, t0 + vo("radio", 1), vo("radio", 2) - vo("radio", 1), 0.5, 0.5);
+        },
+      }, {
+        set: "classroom", setOpts: { id: "rb", night: true, lampX: 400, lampY: 1100 }, dark: 0.6, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(900, 1000, 1.1, 540, 900), drift: { s: 0.03 } }] },
+        actors: [MA(900, 1500, 0.9, [{ t: 0, mode: "reachUp", eyes: "normal", mouth: "frown" }, { t: 0.6, mode: "idle", eyes: "normal", mouth: "frown" }]), PI(500, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "wide", mouth: "o" }]), PU(1200, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }], { flip: true })],
+        captions: capsFrom("radio", vo("radio", 2) - 0.1, [3]),
+        bubbles: [bub("radio", 2, 60, 560, 320, { end: vo("radio", 3) - vo("radio", 2) })].map((b) => ({ ...b, t: 0.05 })),
+        ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 2) - 0.1) - 0.05, label: "วิทยุนับ · เหลือ", icon: "radio", unit: "วัน", keys: [{ t: 0, v: 97 }], top: 150, right: true }],
+        fx(tl, id, t0) { const X = t0 + F("radio", 3, 1) - (vo("radio", 2) - 0.1); tl.set("#rb-dialw", { opacity: 1 }, t0); tl.to("#rb-dialw", { opacity: 0, duration: 0.1 }, t0 + 0.6); tl.fromTo("#rb-dialw", { opacity: 0 }, { opacity: 1, duration: 0.06, repeat: 7, yoyo: true, immediateRender: false }, X); tl.set("#rb-dialw", { opacity: 1 }, X + 0.5); Fx.punch(tl, `#${id} .stage`, X, 1.08, 0.5); Fx.glitch(tl, `#${id}`, X, 0.3, 14, 62); red(tl, X, 0.7, 0.7); Fx.heart(tl, t0, D("radio") - (vo("radio", 2) - 0.1), 0.45, 0.6); },
+      });
+
+      // ---------- 26. the drawing of day 101: the light on the hill — and a man at the gate, drawn before morning ----------
+      add("drawing", {
+        set: "drawing2", setOpts: { id: "dw" }, dark: 0.2,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.02 } }, { t: F("drawing", 0, 1) - 0.05, glide: 0.5, ...fr(800, 720, 1.5, 540, 760), drift: { s: 0.02 } }, { t: F("drawing", 1, 0) - 0.05, glide: 0.5, ...fr(520, 1240, 1.6, 540, 960), drift: { s: 0.03 } }] },
+        captions: caps("drawing"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("drawing", 0, 1), D("drawing") - F("drawing", 0, 1), 0.6, 0.4); Fx.punch(tl, `#${id} .stage`, t0 + F("drawing", 1, 1), 1.06, 0.4); Fx.glitch(tl, `#${id}`, t0 + F("drawing", 1, 1), 0.2, 10, 71); red(tl, t0 + F("drawing", 1, 1), 0.5, 0.6); },
+      });
+
+      // ---------- 27. morning of day 102: a man lying outside the gate — like in the drawing ----------
+      add("morning", {
+        set: "schoolYard", setOpts: { id: "mo", time: "morning", level: 0.6 }, dark: 0.2, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 0.78, 540, 1000), drift: { s: 0.02 } }, { t: F("morning", 0, 1) - 0.05, glide: 0.9, ...fr(700, 1180, 1.35, 540, 1050), drift: { s: 0.03 } }] },
+        shake: (t) => (t > F("morning", 1, 1) && t < F("morning", 1, 1) + 0.3 ? 10 * Math.sin(t * 23) : 0),
+        actors: [PI(300, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: F("morning", 0, 1), mode: "stopHand", eyes: "wide", mouth: "o" }], { moveTo: { x: 460, dur: F("morning", 0, 1) } }), KO(160, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("morning", 0, 1) + 0.2, mode: "point", eyes: "wide", mouth: "o" }])],
+        captions: caps("morning"),
+        fx(tl, id, t0, L) { behind(L, tl, "mo-phu", "phu", 900, 1158, 0.9, false, t0, D("morning"), [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }]); Fx.punch(tl, `#${id} .stage`, t0 + F("morning", 1, 1), 1.08, 0.4); Fx.glitch(tl, `#${id}`, t0 + F("morning", 1, 1), 0.25, 12, 81); red(tl, t0 + F("morning", 1, 1), 0.7, 0.6); Fx.heart(tl, t0 + F("morning", 0, 1), D("morning") - F("morning", 0, 1), 0.45, 0.6); },
+      });
+
+      // ---------- 28. open the gate for him? (pulled to "ช่วย…") — "…เขารู้ชื่อโรงเรียนนี้" ----------
+      add("choice", {
+        set: "schoolYard", setOpts: { id: "cho", time: "morning", level: 0.6 }, dark: 0.25, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(700, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: 1.0, glide: 1.6, ...fr(720, 1200, 1.6, 540, 1050), r: 2, drift: { s: 0.03, r: 0.8 } }] },
+        shake: (t) => shakeH(t) * 2,
+        actors: [PI(460, 1500, 0.9, [{ t: 0, mode: "stopHand", eyes: "wide", mouth: "o" }]), KO(200, 1500, 0.9, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }])],
+        ui: [{ type: "choice", t: 0.05, q: "เปิดประตูช่วยมั้ย?", a: "ช่วย", b: "ไม่ช่วย", secs: 3, top: 300, possessed: { at: 1.0, side: "a", glitch: "ช่วย…", who: "…เขารู้ชื่อโรงเรียนนี้" } }],
+        fx(tl, id, t0, L) {
+          behind(L, tl, "cho-phu", "phu", 900, 1158, 0.9, false, t0, D("choice"), [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }, { t: 1.8, mode: "lie", eyes: "normal", mouth: "flat" }]);
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
+
+      // ---------- 29. end card: the ledger — tomorrow's job is the stranger ----------
+      add("next", {
+        set: "classroom", setOpts: { id: "nx", night: true, lampX: 540, lampY: 900 }, dark: 0.75, blur: { far: 6, set: 6 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.03 } }] },
+        ui: [{ type: "nextCard", t: 0.3, big: "ตอนที่ 3", tag: "คนแปลกหน้า… ที่รู้ชื่อโรงเรียนเรา", top: 150 }, { type: "ledger", t: 0.6, day: "เหลือ 97 วัน", rows: [["วิทยุนับถอยหลัง", "98 → 97"], ["น้ำมัน", "5 → 3 ลิตร"], ["ไฟติด", "20 นาที"], ["อาวุธ (เคียว)", "1 → 0"], ["คน", "5", "red"]], six: "6?", next: "ยาแก้อักเสบ", cta: "กดติดตาม · <em>อ่านหน้าถัดไป</em> ตอนที่ 3", top: 560 }],
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.set(`#${id} .stage`, { opacity: 0.3 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 1 }, t0 + 0.45);
+          Fx.glitch(tl, `#${id}`, t0 + 1.9, 0.12, 10, 91);
+          Fx.heart(tl, t0 + 1.2, D("next") - 1.2, 0.7, 0.35);
+        },
+      });
+
+      // ---------- the look: depth, haze, light sources per shot ----------
+      const DUSK = (x) => (L) => { Fence.light(L, x, 1000, 760, "#ff9a40", 0.55); Fence.haze(L, 1150, 420, "#ffb070", 0.28); Fence.depth(L, "grass"); };
+      const NIGHTYARD = (L) => { Fence.light(L, 760, 340, 520, "#9fb8d8", 0.28); Fence.haze(L, 1150, 400, "#5a6f90", 0.3); Fence.depth(L, "grass", { col: "#04060a" }); };
+      const LAMP = (x, y) => (L) => { Fence.light(L, x, y - 80, 420, "#ffd58a", 0.55, "lampf"); Fence.cone(L, x, y - 40, 700, 800, "#ffd58a", 0.3); Fence.depth(L, "desk", { op: 0.85 }); };
+      const ROOM = (L) => { Fence.light(L, 760, 300, 700, "#ffd58a", 0.3); Fence.depth(L, "desk", { op: 0.8 }); };
+      const LOOK = {
+        hook: (L) => { Fence.light(L, 540, 1300, 500, "#ff9a40", 0.35); },
+        chapter: (L) => { Fence.light(L, 800, 240, 700, "#ffe6b0", 0.35); Fence.haze(L, 1120, 460, "#dfe8ea", 0.35); Fence.depth(L, "grass"); Fence.depth(L, "branch", { op: 0.8 }); },
+        roster: (L) => { Fence.light(L, 760, 300, 900, "#ffe6b0", 0.3); Fence.haze(L, 1120, 460, "#dfe8ea", 0.3); Fence.depth(L, "grass"); },
+        gate: (L) => { Fence.light(L, 500, 420, 700, "#ffe6b0", 0.4); Fence.haze(L, 1120, 460, "#e8e2d0", 0.35); Fence.depth(L, "grass"); Fence.depth(L, "post", { x: 1000, w: 260, op: 0.8 }); },
+        fair: (L) => { Fence.light(L, 300, 300, 800, "#fff2c0", 0.4); Fence.haze(L, 1130, 460, "#fff6dc", 0.4); Fence.depth(L, "post", { x: -140, w: 200, op: 0.8 }); },
+        fairRun: (L) => { Fence.light(L, 300, 300, 800, "#fff2c0", 0.35); Fence.depth(L, "post", { x: 900, w: 220, op: 0.8 }); },
+        back: DUSK(900),
+        inside: ROOM, fan: ROOM, "smoke#0": (L) => { Fence.light(L, 760, 300, 700, "#ffd58a", 0.25); }, "smoke#1": ROOM, dizzy: ROOM, co: (L) => { Fence.light(L, 760, 300, 700, "#ffd58a", 0.2); }, collapse: ROOM, drag: ROOM,
+        real: (L) => { NIGHTYARD(L); Fence.light(L, -300, 920, 420, "#ffd58a", 0.5, "lampf"); },
+        wake: (L) => { Fence.light(L, 100, 920, 500, "#ffd58a", 0.5, "lampf"); },
+        "yard#0": (L) => { NIGHTYARD(L); }, horde: NIGHTYARD, count: NIGHTYARD, count2: (L) => { NIGHTYARD(L); Fence.light(L, 140, 920, 420, "#ffd58a", 0.5, "lampf"); }, dark: NIGHTYARD,
+        "hill#0": (L) => { Fence.haze(L, 1150, 400, "#5a6f90", 0.25); }, "hill#1": (L) => { NIGHTYARD(L); Fence.light(L, -300, 920, 420, "#ffd58a", 0.5, "lampf"); },
+        sig: NIGHTYARD,
+        "radio#0": (L) => { Fence.depth(L, "post", { x: -200, w: 300, op: 0.85 }); }, "radio#1": LAMP(400, 1100),
+        drawing: (L) => { Fence.light(L, 540, 320, 640, "#ffd58a", 0.4, "lampf"); Fence.cone(L, 540, 260, 1100, 1300, "#ffd58a", 0.22); },
+        morning: (L) => { Fence.light(L, 900, 300, 900, "#ffe0b0", 0.4); Fence.haze(L, 1120, 460, "#e8e2d0", 0.35); Fence.depth(L, "grass"); },
+        choice: (L) => { Fence.light(L, 900, 300, 900, "#ffe0b0", 0.4); Fence.haze(L, 1120, 460, "#e8e2d0", 0.35); Fence.depth(L, "bars", { op: 0.75 }); },
+        next: LAMP(540, 900),
+      };
+      const seen = {}, depth0 = Fence.depth;
+      shots.forEach((sh) => { const n = seen[sh.key] = (seen[sh.key] ?? -1) + 1, look = LOOK[`${sh.key}#${n}`] || (n === 0 ? LOOK[sh.key] : null), e = sh.extra;
+        if (look) sh.extra = (L, id) => { if (e) e(L, id); const k0 = (sh.cam && sh.cam.keys && sh.cam.keys[0]) || { x: 0, y: 0, s: 1 }; Fence.depth = (L2, kind, o = {}) => depth0(L2, kind, { cam: k0, ...o }); look(L, id); Fence.depth = depth0; }; });
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Zom.zlife(tl, `#${id}`, t0, sh.dur); Fence.flife(tl, `#${id}`, t0, sh.dur); }; });

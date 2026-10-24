@@ -694,6 +694,57 @@ def sfx(kind):
         tc = t_arr(0.12)
         add(out, (osc(120, 0.12) * 0.8 + lp_fast(rng.standard_normal(len(tc)), 500) * 0.9) * np.exp(-tc * 45), 0.0)
         return out
+    if kind == "engine":  # a small petrol generator running: a 25 Hz pulse train with its harmonics, a little wobble, exhaust hiss (4.6 s, overlap as a bed)
+        d = 4.6
+        t = t_arr(d)
+        f = 25 + 1.2 * np.sin(2 * np.pi * 0.7 * t) + 0.6 * np.sin(2 * np.pi * 3.1 * t)
+        ph = 2 * np.pi * np.cumsum(f) / SR
+        pulse = np.clip(np.sin(ph) * 6, -1, 1) * 0.5 + np.sin(2 * ph) * 0.25 + np.sin(4 * ph) * 0.12
+        n = rng.standard_normal(len(t))
+        hiss = (lp_fast(n, 2600) - lp_fast(n, 900)) * 0.12 * (0.8 + 0.2 * np.sin(ph))
+        env = np.clip(t / 0.3, 0, 1) * np.clip((d - t) / 0.3, 0, 1)
+        return lp_fast(pulse, 1400) * 0.42 * env + hiss * env
+    if kind == "cord":  # the starter cord yanked: a fast ratchet whir rising, a cough from the engine, then it catches
+        out = np.zeros(int(1.4 * SR))
+        d = 0.45
+        t = t_arr(d)
+        rate = 22 + 90 * (t / d)
+        clicks = (np.sin(2 * np.pi * np.cumsum(rate) / SR) > 0.985).astype(float)
+        add(out, lp_fast(clicks * rng.standard_normal(len(t)), 5000) * 0.9 * np.clip((d - t) / 0.08, 0, 1), 0.0)
+        tc = t_arr(0.5)
+        add(out, lp_fast(osc(28 + 40 * np.exp(-tc * 4), 0.5, "square"), 500) * np.exp(-tc * 2.5) * 0.3, 0.42)
+        tb = t_arr(0.5)
+        add(out, lp_fast(np.clip(np.sin(2 * np.pi * np.cumsum(18 + 14 * (tb / 0.5)) / SR) * 6, -1, 1), 900) * 0.3 * np.clip(tb / 0.1, 0, 1), 0.9)
+        return out / (np.max(np.abs(out)) or 1) * 0.7
+    if kind == "fan":  # a ceiling fan up to speed: a soft broadband whir with a 3-blade flutter (3.0 s)
+        d = 3.0
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        flutter = 0.7 + 0.3 * np.clip(np.sin(2 * np.pi * 3.3 * t), 0, None)
+        return lp_fast(n, 900) * 0.16 * flutter * np.clip(t / 0.4, 0, 1) * np.clip((d - t) / 0.3, 0, 1)
+    if kind == "bulb":  # an old bulb catching: a filament tick, a stutter, then the hum settling in
+        out = np.zeros(int(1.0 * SR))
+        for off in (0.0, 0.09, 0.16):
+            tt = t_arr(0.04)
+            add(out, (osc(3200, 0.04) * 0.4 + lp_fast(rng.standard_normal(len(tt)), 4000) * 0.5) * np.exp(-tt * 90) * 0.6, off)
+        th = t_arr(0.8)
+        add(out, (osc(100, 0.8) * 0.5 + osc(200, 0.8) * 0.25) * np.clip(th / 0.25, 0, 1) * np.clip((0.8 - th) / 0.2, 0, 1) * 0.12, 0.2)
+        return out
+    if kind == "sparks":  # metal on metal: a bright scrape with crackling sparks
+        d = 0.5
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        scrape = (n - lp_fast(n, 4000)) * 0.45 * np.clip((d - t) / 0.2, 0, 1)
+        crack = (rng.random(len(t)) > 0.995).astype(float) * rng.standard_normal(len(t)) * 1.5
+        x = scrape + lp_fast(crack, 9000)
+        return x / (np.max(np.abs(x)) or 1) * 0.7
+    if kind == "cough":  # a child coughing, small and dry: two bursts of band-limited noise
+        out = np.zeros(int(0.7 * SR))
+        for off in (0.0, 0.28):
+            tt = t_arr(0.18)
+            nn = rng.standard_normal(len(tt))
+            add(out, (lp_fast(nn, 1800) - lp_fast(nn, 300)) * np.exp(-tt * 18) * 0.55, off)
+        return out
     raise ValueError(kind)
 
 
