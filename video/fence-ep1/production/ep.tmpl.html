@@ -635,7 +635,7 @@
         [`<path d="M6,28V12l11,-6l11,6v16z" fill="none" stroke="${PK_BONE}" stroke-width="2.4" stroke-linejoin="round"/><path d="M17,6v22M6,19h22" stroke="${PK_BONE}" stroke-width="2"/>`, `<path d="M8,26L26,8M20,8h6v6" fill="none" stroke="${PK_HOT}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="17" r="12" fill="none" stroke="${PK_HOT}" stroke-width="2.6"/>`],
       ];
       GameUI.C.fRule = {
-        html: (id, o) => `<div id="${id}" class="mr" style="top:${o.top ?? 200}px">${o.rows.map((txt, i) => `<div class="mp rc" id="${id}-r${i}">${PLATE}<div class="n"><svg viewBox="0 0 24 24">${PK_ICON.shield}</svg>กฎข้อ ${i + 1}</div>
+        html: (id, o) => `<div id="${id}" class="mr" style="top:${o.top ?? 200}px">${o.rows.map((txt, i) => `<div class="mp rc" id="${id}-r${i}">${PLATE}<div class="n stw2"><span class="stamp">กฎข้อ ${i + 1}</span>${SPLAT2}</div>
           <div class="t">${txt}</div><div class="line"></div><div class="ics">${PK_RULE_ICONS[i].map((ic) => `<span><svg viewBox="0 0 34 34">${ic}</svg></span>`).join("")}</div></div>`).join("")}</div>`,
         anim(tl, id, t0, o) {
           const A = (t) => o.t0abs + t, el = document.getElementById(id);
@@ -643,7 +643,7 @@
             const card = el.querySelector(`#${id}-r${i}`), T = A(at), t1 = i + 1 < o.at.length ? A(o.at[i + 1]) - 0.06 : A(o.end ?? at + 4);
             plateFx(tl, card, T, t1, { from: "top" });
             tl.fromTo(card, { rotation: -2.5 }, { rotation: 0, duration: 0.7, ease: "elastic.out(1,.3)", transformOrigin: "50% 0%", immediateRender: false }, T + 0.27);
-            tl.fromTo(`#${id}-r${i} .n`, { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, T + 0.2);
+            slam2(tl, card, T + 0.2, { punch: card, rot: -3 });
             tl.fromTo(`#${id}-r${i} .t`, { clipPath: "inset(-20px 100% -20px -10px)" }, { clipPath: "inset(-20px -10px -20px -10px)", duration: 0.45, ease: "power1.inOut", immediateRender: false }, T + 0.25);
             tl.fromTo(`#${id}-r${i} .line`, { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: "power2.out", transformOrigin: "0% 50%", immediateRender: false }, T + 0.4);
             tl.fromTo(`#${id}-r${i} .ics span`, { scale: 2.2, opacity: 0, rotation: -30 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.3, stagger: 0.12, ease: "back.out(2.5)", immediateRender: false }, T + 0.5);
@@ -655,7 +655,7 @@
       // ---------- "ตอนต่อไป · ตอนที่ 2" plate for the end card ----------
       GameUI.C.nextCard = {
         html: (id, o) => { const m = /^(.*?)(\d+)\s*$/.exec(o.big) || [null, o.big, ""];
-          return `<div id="${id}" class="mp mn" style="top:${o.top ?? 150}px">${PLATE}<div class="tag stc" id="${id}-p"><i></i>ตอนต่อไป</div><div class="big" id="${id}-b">${m[1]}${m[2] ? FLIPS(`${id}-fl`, m[2], 126) : ""}</div><div class="tg" id="${id}-t">${o.tag}</div></div>`; },
+          return `<div id="${id}" class="mp mn" style="top:${o.top ?? 150}px">${PLATE}<div class="tag stc" id="${id}-p"><i></i>ตอนต่อไป</div><div class="big" id="${id}-b">${STAMP2(o.big, "huge")}</div><div class="tg" id="${id}-t">${o.tag}</div></div>`; },
         anim(tl, id, t0, o) {
           const el = document.getElementById(id), end = o.t0abs + (o.end ?? o.t + 3);
           plateFx(tl, el, t0, end, { from: "top", out: o.end !== undefined });
@@ -663,7 +663,7 @@
           tl.fromTo(`#${id}-p`, { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, t0 + 0.3);
           tl.fromTo(`#${id}-p i`, { opacity: 0.2 }, { opacity: 1, duration: 0.45, repeat: 9, yoyo: true, immediateRender: false }, t0 + 0.5);
           tl.fromTo(`#${id}-b`, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out", immediateRender: false }, t0 + 0.35);
-          FLIPGO(tl, el, t0 + 0.4, 126);
+          slam2(tl, el, t0 + 0.45, { punch: el, rot: -4 });
           tl.fromTo(`#${id}-t`, { clipPath: "inset(-10px 100% -10px -10px)" }, { clipPath: "inset(-10px -10px -10px -10px)", duration: 0.5, ease: "power1.inOut", immediateRender: false }, t0 + 0.8);
         },
       };
@@ -685,18 +685,40 @@
         .spl { position: absolute; left: 0; top: 0; width: 14px; height: 14px; margin: -7px; border-radius: 50%; background: #ff5a48; opacity: 0; box-shadow: 0 0 8px rgba(255,90,72,.9); } .spl[data-i="1"], .spl[data-i="4"] { width: 9px; height: 9px; } .spl[data-i="3"], .spl[data-i="7"] { width: 18px; height: 18px; }
         .mcb .stw { right: 50%; top: 50%; }
       </style>`);
+      const SPLAT2 = SPL.map((_, i) => `<i class="spl" data-i="${i}"></i>`).join("");
+      const STAMP2 = (txt, cls = "") => `<span class="stw2"><span class="stamp ${cls}">${txt}</span>${SPLAT2}</span>`;
+      // rubber stamp: comes down big and fast, lands (the plate flinches), ink speckles fly out
+      function slam2(tl, root, t, o = {}) {
+        root.querySelectorAll(".stw2").forEach((st, i) => { const at = t + i * (o.gap ?? 0.15), st_ = st.querySelector(".stamp");
+          tl.fromTo(st_, { scale: 2.6, rotation: -16 }, { scale: 1, rotation: o.rot ?? -4, duration: 0.2, ease: "power4.in", immediateRender: false }, at);
+          tl.fromTo(st_, { opacity: 0 }, { opacity: 0.95, duration: 0.2, ease: "power1.in", immediateRender: false }, at);
+          tl.to(st_, { scale: 0.93, duration: 0.06, ease: "power1.out" }, at + 0.2); tl.to(st_, { scale: 1, duration: 0.22, ease: "back.out(3)" }, at + 0.26);
+          st.querySelectorAll(".spl").forEach((sp, k) => tl.fromTo(sp, { x: 0, y: 0, opacity: 0.95, scale: 1 }, { x: SPL[k][0] * 1.3, y: SPL[k][1] * 1.3, opacity: 0, scale: 0.3, duration: 0.6, ease: "power3.out", immediateRender: false }, at + 0.19));
+          if (o.punch) tl.fromTo(o.punch, { scale: 1 }, { scale: 0.975, duration: 0.07, yoyo: true, repeat: 1, immediateRender: false }, at + 0.19); });
+      }
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .stw2 { position: relative; display: inline-block; vertical-align: middle; }
+        .stw2 .stamp { display: inline-block; font: 900 28px/1 Kanit; letter-spacing: 3px; color: #ff5a48; border: 4px double #ff5a48; border-radius: 7px; padding: 7px 14px 9px; opacity: 0; transform-origin: 50% 50%;
+          text-shadow: 0 0 10px rgba(255,90,72,.45); box-shadow: 0 0 12px rgba(255,90,72,.25), inset 0 0 12px rgba(255,90,72,.12); background: rgba(255,90,72,.06); }
+        .stw2 .stamp.xx { font-size: 56px; padding: 0 12px 8px; letter-spacing: 0; border-width: 5px; }
+        .stw2 .stamp.big { font-size: 48px; padding: 6px 22px 10px; letter-spacing: 1px; border-width: 5px; }
+        .stw2 .stamp.huge { font-size: 112px; padding: 2px 28px 14px; letter-spacing: 2px; border-width: 7px; border-radius: 12px; }
+        .stw2 > .spl { left: 50%; top: 50%; }
+        .mr .n.stw2, .mt .chip.stw2 { opacity: 1; background: none; box-shadow: none; padding: 0; }
+        .msg .bad.stw2 { position: absolute; right: 26px; top: 50%; width: auto; height: auto; transform: translateY(-50%); margin: 0; opacity: 1; filter: none; }
+        .mcb .in .stw2 { margin-left: 14px; }
+        .mn .big .stw2 .stamp { transform: rotate(-4deg); }
+      </style>`);
       const STAMP = `<svg class="bad" viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="#ff5a48" stroke-width="5" stroke-dasharray="40 6 90 4 60"/><path d="M24,24L56,56M56,24L24,56" stroke="#ff5a48" stroke-width="9" stroke-linecap="round"/></svg>`;
       GameUI.C.signs = {
-        html: (id, o) => `<div id="${id}" class="msg" style="top:${o.top ?? 170}px">${o.items.map((t, i) => `<div class="mp row" id="${id}-r${i}">${PLATE}<div class="ic"><i class="icgl"></i><svg viewBox="0 0 120 120">${SIGN3[i]}</svg></div><div class="tx">${t}</div>${STAMP}${SPLAT}</div>`).join("")}</div>`,
+        html: (id, o) => `<div id="${id}" class="msg" style="top:${o.top ?? 170}px">${o.items.map((t, i) => `<div class="mp row" id="${id}-r${i}">${PLATE}<div class="ic"><i class="icgl"></i><svg viewBox="0 0 120 120">${SIGN3[i]}</svg></div><div class="tx">${t}</div><div class="bad stw2"><span class="stamp xx">✗</span>${SPLAT2}</div></div>`).join("")}</div>`,
         anim(tl, id, t0, o) {
           const el = document.getElementById(id);
           o.at.forEach((at, i) => {
             const row = el.querySelector(`#${id}-r${i}`), T = o.t0abs + at, t1 = o.t0abs + (o.end ?? at + 4);
             plateFx(tl, row, T, t1, { from: "left" });
             tl.fromTo(`#${id}-r${i} .ic svg`, { scale: 0, rotation: -25 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.2)", transformOrigin: "50% 50%", immediateRender: false }, T + 0.15);
-            tl.fromTo(`#${id}-r${i} .bad`, { opacity: 0, scale: 3, rotation: 12 }, { opacity: 1, scale: 1, rotation: -10, duration: 0.2, ease: "power4.in", immediateRender: false }, T + 0.45);
-            tl.fromTo(`#${id}-r${i} .bad`, { x: 0 }, { x: 6, duration: 0.04, repeat: 5, yoyo: true, immediateRender: false }, T + 0.65);
-            splat(tl, row, T + 0.64);
+            slam2(tl, row, T + 0.45, { punch: row, rot: -10 });
             tl.fromTo(`#${id}-r${i} .fl`, { opacity: 0.6 }, { opacity: 0, duration: 0.4, immediateRender: false }, T + 0.65);
             tl.set(`#${id}-r${i} .led`, { className: "led red" }, T + 0.65);
             pkLoops(tl, row, T + 0.5, t1);
@@ -715,12 +737,12 @@
       };
       // ---------- callback plate in a hazard frame ----------
       GameUI.C.callback = {
-        html: (id, o) => `<div id="${id}" class="mcb" style="top:${o.top ?? 150}px"><div class="fr" id="${id}-p"><div class="in pl" id="${id}-i">${PLATE}<small class="stc">${o.label}</small>${o.text}</div>${SPLAT}</div></div>`,
+        html: (id, o) => `<div id="${id}" class="mcb" style="top:${o.top ?? 150}px"><div class="fr" id="${id}-p"><div class="in pl" id="${id}-i">${PLATE}<small class="stc">${o.label}</small>${STAMP2(o.text, "big")}</div></div></div>`,
         anim(tl, id, t0, o) {
           const p = document.getElementById(`${id}-p`), inner = document.getElementById(`${id}-i`), end = o.t0abs + (o.end ?? o.t + 4);
           tl.set(inner, { opacity: 1 }, t0);
           plateFx(tl, p, t0, end, { from: "stamp", out: o.end !== undefined });
-          splat(tl, p, t0 + 0.15);
+          slam2(tl, p, t0 + 0.18, { punch: p, rot: -3 });
           tl.set(`#${id}-i .led`, { className: "led red" }, t0);
           tl.fromTo(`#${id}-i .led`, { opacity: 1 }, { opacity: 0.15, duration: 0.2, repeat: 11, yoyo: true, ease: "none", immediateRender: false }, t0 + 0.2);
           tl.fromTo(`#${id}-i .fl`, { opacity: 0.7 }, { opacity: 0, duration: 0.5, immediateRender: false }, t0 + 0.16);
@@ -738,12 +760,12 @@
       });
       GameUI.C.tip = {
         html: (id, o) => `<div id="${id}" class="mp mt ${o.tone || ""}" style="left:${o.x ?? 36}px;top:${o.top ?? 150}px">${PLATE}<div class="ic"><i class="icgl"></i><svg viewBox="0 0 120 120">${GameUI.ILL[o.ill] || ""}</svg></div>
-          <div class="body"><div class="chip">${o.label || "ความรู้เอาตัวรอด"}</div><div class="txt">${GameUI.mark(o.text)}</div></div><div class="bar"><i></i></div></div>`,
+          <div class="body"><div class="chip stw2"><span class="stamp">${o.label || "ความรู้เอาตัวรอด"}</span>${SPLAT2}</div><div class="txt">${GameUI.mark(o.text)}</div></div><div class="bar"><i></i></div></div>`,
         anim(tl, id, t0, o) {
           const el = document.getElementById(id), end = o.t0abs + (o.end ?? o.t + 3.2);
           plateFx(tl, el, t0, end, { from: "left", out: o.end !== undefined });
           tl.fromTo(`#${id} .ic svg`, { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2.2)", transformOrigin: "50% 50%", immediateRender: false }, t0 + 0.2);
-          tl.fromTo(`#${id} .chip`, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, t0 + 0.25);
+          slam2(tl, el, t0 + 0.25, { punch: el, rot: -3 });
           tl.fromTo(`#${id} .txt`, { clipPath: "inset(-20px 100% -20px -10px)" }, { clipPath: "inset(-20px -20px -20px -10px)", duration: 0.5, ease: "power1.inOut", immediateRender: false }, t0 + 0.3);
           el.querySelectorAll(".k").forEach((k, i) => { tl.fromTo(k, { scale: 0.5 }, { scale: 1.15, duration: 0.18, ease: "back.out(3)", immediateRender: false }, t0 + 0.6 + i * 0.12); tl.to(k, { scale: 1, duration: 0.2 }, t0 + 0.8 + i * 0.12);
             tl.fromTo(k, { boxShadow: "0 0 0 0 rgba(242,197,92,0)" }, { boxShadow: "0 0 18px 3px rgba(242,197,92,.6)", duration: 0.5, repeat: Math.ceil((end - t0) / 0.5), yoyo: true, immediateRender: false }, t0 + 0.8 + i * 0.12); });
