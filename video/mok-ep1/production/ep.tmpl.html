@@ -16,6 +16,7 @@
     <script src="assets/mokui.js"></script>
     <script src="assets/fx.js"></script>
     <script src="assets/engine.js"></script>
+    <script src="assets/opener.js"></script>
     <style>
       @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
       @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
@@ -407,18 +408,37 @@
       };
       // card icons: mokui.js
 
+      // ---------- 0. story opener: หมอกลง EP.1 in the night sky, eyes open in the clouds, the dive onto the mountain road ----------
+      const OP = { title: "หมอกลง", ep: "EP.1", name: "อย่าเปิดไฟสูง", kick: "ROD MAI CLUB", at: 1.9, glide: 1.8,
+        land: fr(560, 1260, 1.0, 540, 980, { drift: { s: 0.025 } }) };
+      add("open", {
+        set: "mountainRoad", setOpts: { id: "op" }, dark: 0.22,
+        cam: { keys: Opener.cam(OP) }, shake: Opener.shake(OP),
+        extra(L, id) {
+          Opener.extra(L, id, OP);
+          L.set.insertAdjacentHTML("beforeend", `<g id="op-vill" opacity="0">${Mok.villager(930, 1196, 0.2, { op: 1 })}</g>`); // waiting at the roadside, waving
+        },
+        captions: caps("open"),
+        fx(tl, id, t0) {
+          Opener.fx(tl, id, t0, OP);
+          tl.set("#op-car", { attr: { transform: "translate(470,1290)" } }, t0);
+          tl.to("#op-car", { attr: { transform: "translate(700,1240)" }, duration: D("open"), ease: "none" }, t0);
+          tl.to("#op-vill", { opacity: 0.75, duration: 0.5 }, t0 + OP.at + OP.glide - 0.1);
+        },
+      });
+
       // ---------- 1. hook: driver's POV, the hand goes for the high-beam stalk; someone waving in the fog ----------
       add("hook", {
         set: "carPOV", setOpts: { id: "hk", grip: "left", fig: 0, figX: 660, figS: 0.5, figY: 1060 }, dark: 0.3,
-        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.02, drift: { s: 0.012 } }, { t: F("hook", 1) - 0.05, ...fr(880, 1560, 1.6, 540, 1000), drift: { s: 0.03 } }] },
+        cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.02, drift: { s: 0.03 } }, { t: F("hook", 0) - 0.05, ...fr(880, 1560, 1.6, 540, 1000), drift: { s: 0.03 } }] },
         shake: (t) => 2 * Math.sin(t * 9) + 1.5 * Math.sin(t * 23),
         captions: caps("hook"),
         fx(tl, id, t0) {
-          tf(tl, "#hk-hand", t0 + 0.6, 1.4, "translate(962,1566)", "power2.out");
-          tf(tl, "#hk-hand", t0 + F("hook", 1) - 0.1, 0.25, "translate(966,1572)", "power3.out");
-          tl.fromTo("#hk-fig", { opacity: 0 }, { opacity: 0.6, duration: 1.4, immediateRender: false }, t0 + 1.0);
-          Fx.heart(tl, t0 + F("hook", 1), D("hook") - F("hook", 1), 0.45, 0.5);
-          Fx.glitch(tl, `#${id}`, t0 + F("hook", 1), 0.2, 10, 11);
+          tf(tl, "#hk-hand", t0 + 0.05, 0.55, "translate(962,1566)", "power2.out");
+          tf(tl, "#hk-hand", t0 + F("hook", 0) - 0.1, 0.25, "translate(966,1572)", "power3.out");
+          tl.fromTo("#hk-fig", { opacity: 0.15 }, { opacity: 0.6, duration: 0.5, immediateRender: false }, t0);
+          Fx.heart(tl, t0 + F("hook", 0), D("hook") - F("hook", 0), 0.45, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + F("hook", 0), 0.2, 10, 11);
         },
       });
 

@@ -7,7 +7,7 @@
 set -euo pipefail
 R="$(cd "$(dirname "$0")" && pwd)"
 W="${1:?usage: workspace.sh <work dir>}"
-LATEST="$R/mok-ep3"          # newest libraries (rig.js, zom.js, mok.js with the village/house/pickup sets, hands.js, phrai.js for the paused ผีพรายน้ำ, sig.js, voice.py with "take", voice_qa.py)
+LATEST="$R/mok-ep1"          # newest libraries (rendered last: engine.js with the "drop" ease, opener.js, mok.js, hands.js, phrai.js, sig.js, voice.py, voice_qa.py)
 TEMPLATE="$R/koi-ep3"        # newest rendered composition: HyperFrames project files and fonts
 mkdir -p "$W/hf/lib" "$W/hf/rig/assets" "$W/music"
 cp "$LATEST"/lib/*.js "$LATEST"/lib/voice.py "$LATEST"/lib/voice_qa.py "$W/hf/lib/"

@@ -20,7 +20,8 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01", ("n02", 0.2)], 0.4, 0.5, 5.4),   # driver's POV in the fog, hand going for the high beams; a villager waving in the fog
+    ("open", ["n01"], 0.4, 0.6, 4.4),                # story opener: title + EP.1 in the night sky, eyes in the clouds, dive onto the mountain road
+    ("hook", ["n02"], 0.7, 0.6, 2.4),                # driver's POV in the fog, hand going for the high beams; a villager waving in the fog
     ("chapter", ["n03"], 0.15, 0.5, 2.6),           # green road sign "บ้านหมอก 3 กม." with the episode plate, headlights sweep across
     ("road", ["n04"], 0.1, 0.35, 3.0),              # wide: the mountain road in Loei, one pair of lights climbing
     ("mint", ["d01"], 0.1, 0.3, 2.4),               # the village petrol station, มิ้นท์ impatient by the car

@@ -86,9 +86,13 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
 
 
 CUES = [
+    # story opener (Opener.cues in opener.js, at 1.9 / glide 1.8): drone, glitches, the stamp, eyes, riser, the fall, the face, the hit
+    ("open", 0.0, "swell", 0.6), ("open", 0.55, "glitch", 0.35), ("open", 0.82, "boom", 0.45), ("open", 1.15, "sting", 0.5), ("open", 1.18, "glitch", 0.45),
+    *beats("open", 1.15, 0.75, 0.5, 0.6), ("open", 1.0, "riser", 0.7), ("open", 1.78, "glitch", 0.5), ("open", 1.9, "whoosh", 0.9), ("open", 2.71, "whoosh", 0.8),
+    ("open", 2.84, "sting", 0.9), ("open", 3.68, "boom", 0.9), ("open", 3.7, "glitch", 0.5), *bed("engine", T("open", 3.7), T("open", -0.05), 0.5, 3.6),
     # cold open: the engine, the fog, a hand going for the high beams — stop
     *bed("engine", T("hook", 0), T("hook", -0.1), 0.8, 3.6), ("hook", 0.2, "wind", 0.4), *beats("hook", 0.4, D["hook"] - 0.4, 0.55, 0.55),
-    ("hook", vo_t("hook", 1), "sting", 0.9), ("hook", vo_t("hook", 1), "boom", 0.6), ("hook", vo_t("hook", 1), "glitch", 0.5), ("hook", -0.25, "whoosh", 0.8),
+    ("hook", vo_t("hook", 0), "sting", 0.9), ("hook", vo_t("hook", 0), "boom", 0.6), ("hook", vo_t("hook", 0), "glitch", 0.5), ("hook", -0.25, "whoosh", 0.8),
     ("chapter", 0.05, "whoosh", 0.6), ("chapter", 0.3, "engine", 0.5), ("chapter", 0.55, "sting", 0.5),
     ("road", 0.0, "wind", 0.6), ("road", 0.2, "crickets", 0.4),
     # the petrol station: the tubes hum, crickets
@@ -160,7 +164,7 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(0.0, T("hook", -0.1), 0.2, 0.05)                     # the cold open: engine and fog
+dip(0.0, T("hook", -0.1), 0.2, 0.05)                     # the opener and the cold open: drone, engine and fog
 dip(T("mirror", 0), T("mirror", -0.05), 0.3)
 dip(T("glare", 0), T("swerve", -0.05), 0.3)
 dip(T("white", 0), T("off", -0.05), 0.4)
