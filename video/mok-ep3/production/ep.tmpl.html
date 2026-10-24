@@ -598,6 +598,27 @@
         captions: caps("never", undefined, { quote: true }),
         fx(tl, id, t0) { Fx.heart(tl, t0 + F("never", 0, 1), D("never") - F("never", 0, 1), 0.45, 0.55); Fx.glitch(tl, `#${id}`, t0 + F("never", 0, 1) + 0.6, 0.2, 8, 107); },
       });
+      // ---------- 18b. เจ plays back last night's clip (night mode): the pickup that saved them… the bed is full; the faces keep counting ----------
+      const NIGHT = "brightness(1.25) saturate(0.85) contrast(1.05)"; // night mode in normal colour (user: no green)
+      const BED = [[110, 0.78], [180, 0.84], [250, 0.74], [320, 0.86], [390, 0.76], [460, 0.82]];
+      add("clip", {
+        set: "roadFog", setOpts: { id: "cp", car: false }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 0.95, 540, 1100), drift: { s: 0.03 } }, { t: 1.4, glide: 0.8, ...fr(300, 1120, 1.45, 540, 1000), drift: { s: 0.04 } }] },
+        extra(L) {
+          L.set.insertAdjacentHTML("beforeend", `<g id="cp-bed">${BED.map(([x, k]) => Mok.villager(x, RF - 20, k, { wave: false })).join("")}</g>`);
+          PICKUP(L, "cp-pk", 560, RF + 40, 1.5, { head: true, tail: true });
+          L.set.insertAdjacentHTML("beforeend", ""
+            + BED.map(([x, k], i) => `<rect id="cp-fb${i}" x="${x + 30 * k - 46 * k}" y="${RF - 20 - 382 * k - 50 * k}" width="${92 * k}" height="${100 * k}" rx="5" fill="none" stroke="#f2c55c" stroke-width="4" opacity="0"/>`).join("")
+            + BED.map((_, i) => `<g id="cp-fl${i}" opacity="0"><rect x="60" y="${RF - 560}" width="250" height="40" rx="8" fill="#e0362c"/><text x="185" y="${RF - 532}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#fff">ตรวจพบใบหน้า ${i + 1}</text></g>`).join(""));
+        },
+        ui: [{ type: "rec", t: 0, dur: D("clip"), play: [12, 70], tc0: 13260, mode: "โหมดกลางคืน" }],
+        fx(tl, id, t0) {
+          document.getElementById(`${id}-world`).style.filter = NIGHT;
+          BED.forEach((_, i) => { const t = t0 + 1.0 + i * 0.28; tl.set(`#cp-fb${i}`, { opacity: 1 }, t); tl.fromTo(`#cp-fb${i}`, { opacity: 1 }, { opacity: 0.3, duration: 0.06, yoyo: true, repeat: 3, immediateRender: false }, t);
+            if (i) tl.set(`#cp-fl${i - 1}`, { opacity: 0 }, t); tl.set(`#cp-fl${i}`, { opacity: 1 }, t); });
+          Fx.glitch(tl, `#${id}`, t0 + D("clip") - 0.5, 0.3, 14, 140); Fx.heart(tl, t0 + 1.0, D("clip") - 1.0, 0.4, 0.55);
+        },
+      });
       split("mimic", F("mimic", 0, 2) - 0.05, {
         set: "gasMorning", setOpts: GM("mm"), dark: 0.12,
         cam: { keys: [{ t: 0, ...fr(30, 1100, 1.6, 540, 1000), drift: { s: 0.02 } }] },

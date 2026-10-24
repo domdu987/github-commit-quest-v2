@@ -109,6 +109,8 @@ CUES = [
     # morning at the pump: "I never left"
     ("morning", 0.1, "whoosh", 0.4), ("morning", 0.2, "wind", 0.3),
     ("never", frag("never", 0, 1), "sting", 0.8), *beats("never", frag("never", 0, 1), D["never"] - frag("never", 0, 1), 0.48, 0.6),
+    ("clip", 0.0, "nv", 0.5), ("clip", 0.05, "rewind", 0.5), *[("clip", 1.0 + k * 0.28, "beep", 0.55) for k in range(6)], *beats("clip", 1.0, 2.4, 0.4, 0.55),
+    ("clip", 2.9, "sting", 0.9), ("clip", 2.9, "glitch", 0.6),
     ("mimic", frag("mimic", 0, 2) - 0.05, "sting", 0.9), ("mimic", frag("mimic", 0, 2) - 0.05, "glitch", 0.6),
     *beats("mimic", frag("mimic", 0, 2), D["mimic"] - frag("mimic", 0, 2), 0.45, 0.6),
     # 2529
@@ -154,6 +156,7 @@ def dip(t0, t1, lvl, ramp=0.25):
 dip(0.0, T("hook", -0.1), 0.25, 0.05)                    # the cold open: wind and the glowing door
 dip(T("call", 0), T("turn", -0.05), 0.3)
 dip(T("never", frag("never", 0, 1)), T("mimic", -0.05), 0.35)
+dip(T("clip", 0), T("clip", -0.05), 0.2)
 dip(T("mother", 0), T("mother", -0.05), 0.5)
 dip(T("mud", 0), T("photo", -0.05), 0.3)
 dip(T("choice", 0), T("choice", -0.3), 0.5)

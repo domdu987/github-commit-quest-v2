@@ -683,16 +683,16 @@
       });
 
       // ---------- 9b. เจ's camera in night mode: "ไม่เห็นอะไรเลย"… one standing in the fog; a face found; then it's at the glass ----------
-      const NV = "grayscale(1) sepia(1) hue-rotate(58deg) saturate(2.6) brightness(1.9) contrast(1.25)";
+      const NIGHT = "brightness(1.3) saturate(0.85) contrast(1.05)"; // the phone's night mode, in normal colour (user: no green)
       const IRJ = D("ir") - 0.85;
       add("ir", {
         set: "carWindow", setOpts: { id: "ir", knock: 0 }, dark: 0.3,
         cam: { keys: [{ t: 0, x: 0, y: 0, s: 1.02, drift: { s: 0.02 } }] },
         shake: (t) => 3 * Math.sin(t * 5.3) + 2 * Math.sin(t * 13) + (t > IRJ && t < IRJ + 0.4 ? 18 * Math.sin(t * 70) : 0),
         captions: caps("ir", undefined, { quote: true }),
-        ui: [{ type: "rec", t: 0, dur: D("ir"), nv: true, tc0: 10920, mode: "โหมดกลางคืน", af: { at: IRJ - 0.45, x: 535, y: 900, label: "ตรวจพบใบหน้า 1" } }],
+        ui: [{ type: "rec", t: 0, dur: D("ir"), tc0: 10920, mode: "โหมดกลางคืน", af: { at: IRJ - 0.45, x: 535, y: 900, label: "ตรวจพบใบหน้า 1" } }],
         fx(tl, id, t0) {
-          document.getElementById(`${id}-world`).style.filter = NV;
+          document.getElementById(`${id}-world`).style.filter = NIGHT;
           tl.set("#ir-face", { attr: { transform: "translate(404,655) scale(0.35)" }, opacity: 0.85 }, t0);
           tl.set("#ir-face", { attr: { transform: "translate(0,0) scale(1)" }, opacity: 1 }, t0 + IRJ);
           Fx.glitch(tl, `#${id}`, t0 + IRJ, 0.35, 18, 152);

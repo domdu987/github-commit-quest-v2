@@ -38,6 +38,7 @@ SHOTS = [
     ("morning", ["n12"], 0.15, 0.4, 3.4),            # morning at the petrol station
     ("thanks", ["d07"], 0.1, 0.4, 3.0),
     ("never", ["d08"], 0.15, 0.6, 4.0),              # "I never left the pump"
+    ("clip", [], 0.0, 0.0, 3.4),                      # เจ's clip from last night (night mode): the pickup's bed full of them, faces counted
     ("mimic", ["d09"], 0.1, 0.5, 5.6),               # the fog copies voices, faces, even the plate
     ("mother", ["d10"], 0.15, 0.6, 8.4),             # flashback, 2529: the mother sets the girl down outside and goes back in
     ("truck", ["n13"], 0.15, 0.4, 6.0),              # behind the pump: an old pickup, flat tyres, thick dust

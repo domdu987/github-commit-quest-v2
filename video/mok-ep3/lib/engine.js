@@ -5,6 +5,8 @@
   const PARALLAX = { sky: 0.05, far: 0.25, mid: 0.6, set: 1, act: 1, fg: 1.5 };
   const lerp = (a, b, k) => a + (b - a) * k;
   const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+  // glide eases by name (key.ease): "drop" falls faster and faster, then brakes hard on the landing
+  const EASES = { drop: (k) => (k < 0.8 ? 0.85 * Math.pow(k / 0.8, 2.2) : 0.85 + 0.15 * (1 - Math.pow(1 - (k - 0.8) / 0.2, 2))) };
 
   function build(root, tl, shots) {
     root.insertAdjacentHTML("afterbegin", `<svg width="0" height="0" style="position:absolute"><defs>${Sets.DEFS}</defs></svg>`);
@@ -64,7 +66,7 @@
 
     // camera: interpolate {x,y,s} and apply per-layer parallax around the frame centre.
     // cam.keys = [{t, x, y, s, drift?, glide?}] gives several framings in one shot: hard cuts at each key
-    // (a slow push-in, or `drift` per second, while held), or an eased move into a key marked glide.
+    // (a slow push-in, or `drift` per second, while held), or an eased move into a key marked glide (ease: "drop" optional).
     const cam = sh.cam || { from: { x: 0, y: 0, s: 1 }, to: { x: 0, y: 0, s: 1 } };
     const camAt = (t, k0) => {
       if (cam.keys) {
@@ -72,7 +74,7 @@
         while (i + 1 < cam.keys.length && cam.keys[i + 1].t <= t) i++;
         const a = cam.keys[i], b = cam.keys[i + 1];
         if (b && b.glide && t > b.t - b.glide) {
-          const e = ease((t - (b.t - b.glide)) / b.glide), d = a.drift || {}, u = b.t - b.glide - a.t;
+          const e = (EASES[b.ease] || ease)((t - (b.t - b.glide)) / b.glide), d = a.drift || {}, u = b.t - b.glide - a.t;
           const ax = a.x + (d.x || 0) * u, ay = a.y + (d.y || 0) * u, as = a.s * (1 + (d.s ?? 0.012) * u);
           return { x: lerp(ax, b.x, e), y: lerp(ay, b.y, e), s: lerp(as, b.s, e) };
         }
@@ -85,12 +87,14 @@
     };
     // depth of field: blur per layer, e.g. blur: { far: 3, fg: 10 }
     Object.entries(sh.blur || {}).forEach(([layer, px]) => { L[layer].style.filter = px ? `blur(${px}px)` : "none"; });
+    // shake(t) returns px of sideways shake, or { x, y, r } for a first-person head (bob up and down, roll in degrees)
     const applyCam = (k0) => {
       const { x, y, s } = camAt(k0 * sh.dur, k0);
-      const shake = sh.shake ? sh.shake(k0 * sh.dur) : 0;
+      const sk = sh.shake ? sh.shake(k0 * sh.dur) : 0, hx = typeof sk === "number" ? sk : sk.x || 0, hy = typeof sk === "number" ? 0 : sk.y || 0;
+      const roll = typeof sk === "number" || !sk.r ? "" : ` rotate(${sk.r.toFixed(3)})`;
       Object.entries(PARALLAX).forEach(([layer, p]) => {
         const ls = 1 + (s - 1) * p;
-        L[layer].setAttribute("transform", `translate(540 960) scale(${ls}) translate(${-540 - x * p + shake} ${-960 - y * p})`);
+        L[layer].setAttribute("transform", `translate(540 960)${roll} scale(${ls}) translate(${-540 - x * p + hx} ${-960 - y * p + hy})`);
       });
       L.glow.setAttribute("transform", L.set.getAttribute("transform"));
     };
