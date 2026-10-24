@@ -79,9 +79,9 @@
     const hx = x + 332 * s, hy = y - 115 * s, tx = x - 318 * s, ty = y - 108 * s;
     const beam = o.high ? `<path d="M${hx},${hy - 10 * s}L${hx + 1400},${hy - 300}L${hx + 1400},${hy + 260}L${hx},${hy + 10 * s}Z" fill="url(#mkLow)" opacity=".9"/><circle cx="${hx + 300}" cy="${hy}" r="${600 * s}" fill="url(#mkFogGlow)"/>`
       : `<path d="M${hx},${hy}L${hx + 900},${hy + 120}L${hx + 900},${hy + 300}L${hx},${hy + 14 * s}Z" fill="url(#mkLow)" opacity=".75"/>`;
-    return `<g id="${id}-head" opacity="${o.head === false ? 0 : 1}">${beam}<circle cx="${hx}" cy="${hy}" r="${90 * s}" fill="url(#mkFogGlow)"/></g>
-      <g id="${id}-tail" opacity="${o.tail === false ? 0 : 1}"><circle cx="${tx}" cy="${ty}" r="${120 * s}" fill="url(#mkTail)"/></g>
-      <g id="${id}-haz" opacity="${o.haz ? 1 : 0}"><g class="haz"><circle cx="${tx}" cy="${ty + 40 * s}" r="${140 * s}" fill="url(#mkHaz)"/><circle cx="${hx}" cy="${hy + 20 * s}" r="${140 * s}" fill="url(#mkHaz)"/></g></g>`;
+    return `<g id="${id}-head" transform="translate(0,0)" opacity="${o.head === false ? 0 : 1}">${beam}<circle cx="${hx}" cy="${hy}" r="${90 * s}" fill="url(#mkFogGlow)"/></g>
+      <g id="${id}-tail" transform="translate(0,0)" opacity="${o.tail === false ? 0 : 1}"><circle cx="${tx}" cy="${ty}" r="${120 * s}" fill="url(#mkTail)"/></g>
+      <g id="${id}-haz" transform="translate(0,0)" opacity="${o.haz ? 1 : 0}"><g class="haz"><circle cx="${tx}" cy="${ty + 40 * s}" r="${140 * s}" fill="url(#mkHaz)"/><circle cx="${hx}" cy="${hy + 20 * s}" r="${140 * s}" fill="url(#mkHaz)"/></g></g>`;
   }
 
   // ---------------- sets ----------------
@@ -128,7 +128,7 @@
     };
     w += `<g id="${id}-gripL">${grip(414, 1635, -1)}</g>`;
     if (o.grip !== "left") w += `<g id="${id}-gripR">${grip(986, 1635, 1)}</g>`;
-    w += `<g id="${id}-stalk"><g transform="translate(780,1560)"><g class="stk"><rect x="0" y="-16" width="180" height="32" rx="16" fill="#1d2025" ${OUT}/><rect x="146" y="-24" width="64" height="48" rx="14" fill="#2b2f35" ${OUT}/><circle cx="178" cy="0" r="9" fill="#7fd1ff" opacity=".7"/></g></g></g>`;
+    w += `<g id="${id}-stalk"><g transform="translate(780,1560)"><g class="stk" transform="rotate(0 0 0)"><rect x="0" y="-16" width="180" height="32" rx="16" fill="#1d2025" ${OUT}/><rect x="146" y="-24" width="64" height="48" rx="14" fill="#2b2f35" ${OUT}/><circle cx="178" cy="0" r="9" fill="#7fd1ff" opacity=".7"/></g></g></g>`;
     // the reaching hand: index finger out, the tip at the group's origin (shots move it with translate(x,y)); arm comes from the bottom right
     if (o.grip === "left") w += `<g id="${id}-hand" transform="translate(${o.handX ?? 1300},${o.handY ?? 2300})"><g transform="rotate(${o.handRot ?? 55})">${Hands.poke({ r: 78, sleeve: SLV, cuff: CUF, sleeveLen: 1100 })}</g></g>`;
     put(L.act, w);  // same depth as the dashboard so the fingertip lands on the button / stalk at every zoom
@@ -272,7 +272,7 @@
   function carWindow(L, o = {}) {
     const id = o.id || "cw", r = mk(o.seed || 113);
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#4b5159"/>` + fogBands(r, -200, 2400, 8, 0.7));
-    put(L.far, `<g id="${id}-face" opacity="${o.face ?? 1}">${villager(560, 1700, 1.9, { wave: false })}</g><g id="${id}-knock" opacity="${o.knock ?? 0}"><g transform="translate(760,880)"><ellipse rx="56" ry="64" fill="#c9d3cf" ${OUT}/>${[-30, -10, 10, 30].map((fx) => `<ellipse cx="${fx}" cy="-46" rx="13" ry="16" fill="#b8c4bf" ${OUT}/>`).join("")}</g></g>`);
+    put(L.far, `<g id="${id}-face" transform="translate(0,0) scale(1)" opacity="${o.face ?? 1}">${villager(560, 1700, 1.9, { wave: false })}</g><g id="${id}-knock" opacity="${o.knock ?? 0}"><g transform="translate(760,880)"><ellipse rx="56" ry="64" fill="#c9d3cf" ${OUT}/>${[-30, -10, 10, 30].map((fx) => `<ellipse cx="${fx}" cy="-46" rx="13" ry="16" fill="#b8c4bf" ${OUT}/>`).join("")}</g></g>`);
     put(L.mid, `<g id="${id}-glass"><rect x="80" y="380" width="920" height="900" rx="40" fill="#9fb3c4" opacity=".22"/><path d="M160,460L420,420M180,560L300,540" stroke="#e9f4f8" stroke-width="10" opacity=".25" stroke-linecap="round"/>
       ${Array.from({ length: 30 }, () => `<circle cx="${f1(120 + r() * 860)}" cy="${f1(420 + r() * 820)}" r="${f1(3 + r() * 6)}" fill="#e9f4f8" opacity=".3"/>`).join("")}</g>`);
     put(L.set, `<path d="M-900,-600H2000V2600H-900ZM80,420Q80,380 120,380H960Q1000,380 1000,420V1280H80Z" fill="#1b1e23" fill-rule="evenodd"/>
@@ -519,7 +519,7 @@
     put(L.far, `<rect x="-900" y="${G}" width="2900" height="1200" fill="#3a382f"/>${Array.from({ length: 5 }, (_, k) => `<rect x="${-200 + k * 10}" y="${G - 600 + k * 120}" width="${520 - k * 20}" height="40" fill="#3a2c22" ${OUT}/>`).join("")}`);
     put(L.set, `<g transform="translate(560,${G + 40})"><path d="M-330,0Q-360,-420 -170,-640Q0,-760 170,-640Q360,-420 330,0Z" fill="${BLK}" ${OUT}/>
         <path d="M-220,-120Q0,-60 220,-120M-260,-300Q-60,-240 120,-330" stroke="#463a30" stroke-width="12" fill="none"/>
-        <g id="${id}-hood"><path d="M-170,-640Q0,-780 170,-640Q140,-520 0,-500Q-140,-520 -170,-640Z" fill="#4e4036" ${OUT}/><ellipse cx="0" cy="-590" rx="96" ry="70" fill="#0b0d10"/>
+        <g id="${id}-hood" transform="translate(0,0) rotate(0 0 -560)"><path d="M-170,-640Q0,-780 170,-640Q140,-520 0,-500Q-140,-520 -170,-640Z" fill="#4e4036" ${OUT}/><ellipse cx="0" cy="-590" rx="96" ry="70" fill="#0b0d10"/>
           <g id="${id}-eyes" opacity="${o.eyes ?? 0}"><ellipse cx="-30" cy="-590" rx="10" ry="12" fill="${PALE}"/><ellipse cx="30" cy="-590" rx="10" ry="12" fill="${PALE}"/></g></g>
         <g id="${id}-hand" opacity="${o.hand ?? 0}"><g transform="translate(150,-470) rotate(-20)">${Hands.fist({ r: 78, skin: PALE, shade: "#9aa6a2" })}</g></g></g>`);
     put(L.fg, fogBands(r, 900, 2000, 3, 0.45));

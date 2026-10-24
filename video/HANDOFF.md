@@ -634,6 +634,7 @@ add("key", {
 - `mark()` ของ GameUI ใช้ใน template ไม่ได้ → `Ui.mark`
 - **GSAP `svgOrigin` ใช้พิกัดของ SVG ราก ไม่ใช่ของ element** ของที่อยู่ในเลเยอร์กล้อง (ซึ่งมี transform) จะหมุน/ซูมผิดที่จนหลุดจอ (เจอใน หมอกลง: ไฟรถในกระจกหลังหายไป)
   → หมุน: tween `attr: { transform: "rotate(a cx cy)" }` · ซูมรอบจุด (cx,cy): `attr: { transform: "translate(cx*(1-s), cy*(1-s)) scale(s)" }`
+- **tween `attr.transform` (helper `tf`) ต้องมีค่าเริ่มต้นแบบเดียวกันอยู่ใน element ก่อน** เช่น `transform="translate(0,0) scale(1)"` ถ้าไม่มี attribute GSAP จะไล่ค่าผิดกลางทาง (หมอกลง EP.2: หน้าผีที่หน้าต่างกระโดดไปเป็นตัวเล็กมุมซ้ายแล้วค่อยกลับ)
 - **GSAP `x`/`y` (รวม `fromTo({x:0})`) บน `<g>` ที่มี attribute transform จะล้าง translate เดิมทิ้ง** ตัวจะกระโดดไปมุมจอ (เจอใน ชั้น 23 EP.2–3: ซอมบี้ในกระจก, ถูกฟาดกระเด็น, มือคลาน, รถในขบวน)
   → ใช้ `moveTo` ของ engine, `route()`, tween `attr.transform` หรือห่อด้วย `<g id>` ชั้นนอกที่ไม่มี transform แล้วขยับตัวนอก
 - **`.sfxw` (คำเอฟเฟกต์ "เอี๊ยด!" "โครม!") ต้องมี CSS `position:absolute` + เงาขอบใน head.part** ไม่งั้นคำไปกองที่มุมซ้ายบนแบบไม่มีขอบ (หมอกลง EP.1 พลาดรอบแรก ต้องเรนเดอร์ใหม่) head.part ของ mok1/mok2 มีแล้ว
