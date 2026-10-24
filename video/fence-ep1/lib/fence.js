@@ -218,7 +218,7 @@
     s += `<path d="M-1200,${G + 300}h1000M1300,${G + 500}h1100" stroke="${t === "night" ? "#2a3024" : "#5d7a35"}" stroke-width="6" opacity=".5"/>`;
     s += `<g transform="translate(-700,1180)"><ellipse rx="140" ry="40" fill="#6f6a4a" opacity=".6"/><path d="M-60,-10q20,-50 60,-50t60,50" fill="#3a3330" ${OUT}/><path d="M-20,-60q-20,-30 -40,-20M20,-60q20,-30 40,-20" stroke="${INK}" stroke-width="6" fill="none"/></g>`;
     put(L.set, s);
-    if (t === "noon") put(L.glow, `<g id="${id}-shim">${Array.from({ length: 14 }, (_, k) => `<path d="M-1200,${1050 + k * 22}q200,8 400,0t400,0t400,0t400,0t400,0t400,0t400,0t400,0" stroke="#fff6dc" stroke-width="3" fill="none" opacity=".35"/>`).join("")}</g><rect x="-1200" y="980" width="3500" height="300" fill="url(#zHaze)" opacity=".9"/>`);
+    if (t === "noon") put(L.glow, `<g id="${id}-shim">${Array.from({ length: 14 }, (_, k) => `<path d="M-1200,${1050 + k * 22}q200,8 400,0t400,0t400,0t400,0t400,0t400,0t400,0t400,0" stroke="#fff6dc" stroke-width="3" fill="none" opacity=".18"/>`).join("")}</g><rect x="-1200" y="980" width="3500" height="300" fill="url(#zHaze)" opacity=".9"/>`);
     if (t === "dusk") put(L.glow, `<rect x="-1200" y="900" width="3500" height="1300" fill="#ff9a3c" opacity=".12"/>`);
   }
 
@@ -363,6 +363,7 @@
     const q = (c) => document.querySelectorAll(`${scope} ${c}`);
     q("[id$='-shim'] path").forEach((el, i) => tl.fromTo(el, { x: -30 + (i % 3) * 10 }, { x: 30, duration: 0.9 + (i % 4) * 0.2, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     q("[id$='-flagc']").forEach((el) => tl.fromTo(el, { skewY: -3 }, { skewY: 3, svgOrigin: "6 -690", duration: 0.8, repeat: Math.ceil(dur / 0.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+    q(".fly").forEach((el, i) => tl.fromTo(el, { x: -8 - (i % 3) * 3, y: 6 }, { x: 10 + (i % 4) * 3, y: -12 - (i % 3) * 5, duration: 0.22 + (i % 5) * 0.05, repeat: Math.ceil(dur / 0.22), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (i % 7) * 0.03));
     q(".fring").forEach((el, i) => tl.fromTo(el, { scale: 0.3, opacity: 0.9 }, { scale: 2.2, opacity: 0, svgOrigin: "1500 1250", duration: 1.6, repeat: Math.ceil(dur / 1.6), ease: "power1.out", immediateRender: false }, t0 + i * 0.5));
   }
 

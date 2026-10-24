@@ -440,6 +440,25 @@
     torsoExtra: `<path d="M-30,-484Q0,-468 30,-484" stroke="#6f97ab" stroke-width="5" fill="none"/>${[[-20, -430], [16, -400], [-14, -360], [20, -340]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="#6f97ab"/>`).join("")}` };
 
 
+  // ---- the plague-dead: shared decay layers ----
+  const HSKIN = (skin) => ({ skin, skinS: "#5f6b58" });
+  // face overlay for the plague-dead: mottling, sunken sockets, the torn cheek, boils, veins, dried blood (drawn over the eyes/mouth layers)
+  const HFACE = (skin) => `<g opacity=".9">
+    <ellipse cx="-14" cy="-546" rx="21" ry="17" fill="#1d2420" opacity=".55"/><ellipse cx="18" cy="-546" rx="21" ry="17" fill="#1d2420" opacity=".55"/>
+    <path d="M-44,-520q10,-14 22,-6M24,-526q12,-8 20,4" stroke="#1d2420" stroke-width="4" fill="none" opacity=".6"/>
+    <ellipse cx="-30" cy="-512" rx="11" ry="7" fill="#56664f" opacity=".7"/><ellipse cx="30" cy="-500" rx="8" ry="5" fill="#56664f" opacity=".6"/><ellipse cx="-6" cy="-586" rx="10" ry="6" fill="#56664f" opacity=".5"/>
+    <path d="M22,-520q22,-10 26,10q-6,14 -22,8z" fill="#2a0808" stroke="#2e2a26" stroke-width="2.5"/><path d="M26,-516l4,8l4,-8l4,8l4,-8l4,8" stroke="#ece4cf" stroke-width="2.4" fill="none" stroke-linejoin="round"/>
+    <path d="M-42,-566q11,10 4,24q-6,11 3,21M38,-578q-9,13 0,23M20,-600q6,10 -2,20M-20,-500q-6,10 -14,14M12,-500q6,12 14,16" stroke="#3a4a3e" stroke-width="2.6" fill="none"/>
+    <path d="M-14,-506v18M-8,-500q-4,14 -2,26" stroke="#7a1010" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".85"/>
+    <path d="M-44,-540l-6,-4M48,-536l6,-6" stroke="#7a1010" stroke-width="2" stroke-linecap="round"/>
+    <g class="fly"><circle cx="-54" cy="-590" r="3.5" fill="#1b1612"/><circle cx="56" cy="-520" r="3" fill="#1b1612"/></g></g>`;
+  // the torso of the plague-dead: shirt torn open on the ribs, boils on the neck, mud at the hem, a sacred thread round the wrist, flies
+  const HTORSO = (skin, top) => `<path d="M-30,-470l10,20l-14,26l18,30l-10,40l16,30l-12,30l8,20H28l6,-30l-14,-26l16,-34l-12,-30l14,-26l-8,-26Z" fill="${skin}" stroke="#2e2a26" stroke-width="3" opacity=".95"/>
+    ${[-440, -416, -392, -368].map((y) => `<path d="M-20,${y}q20,-10 40,0" stroke="#e8e2d4" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}<path d="M0,-450v100" stroke="#e8e2d4" stroke-width="5" opacity=".7"/>
+    <ellipse cx="22" cy="-492" rx="8" ry="6" fill="#4a3a2a" stroke="#2e2a26" stroke-width="2"/><ellipse cx="-22" cy="-488" rx="6" ry="5" fill="#4a3a2a" stroke="#2e2a26" stroke-width="2"/>
+    ${blood([[-30, -330, 10], [26, -310, 8]])}<path d="M-56,-306q30,-14 60,0t52,0" stroke="#5a4a3a" stroke-width="6" fill="none" opacity=".6"/>
+    <g class="fly"><circle cx="-60" cy="-380" r="3.5" fill="#1b1612"/><circle cx="62" cy="-430" r="3" fill="#1b1612"/></g>`;
+  const THREAD = `<g transform="translate(0,118)"><path d="M-17,-6q17,8 34,0M-17,-1q17,8 34,0" stroke="#f4ecd8" stroke-width="3.5" fill="none"/><circle cx="12" cy="4" r="4" fill="#c9a55a" stroke="#2e2a26" stroke-width="1.5"/></g>`;
   // ---- วันที่ 100 (the school camp) ----
   Object.assign(CAST, {
     pim: { // ครูพิม: kindergarten teacher, pale blue blouse, navy skirt-trousers, white sneakers, low bun with a pencil through it, lanyard
@@ -501,19 +520,21 @@
       hair: `<path d="M-48,-556Q-52,-610 0,-612Q50,-610 48,-556Q40,-586 0,-586Q-38,-586 -48,-556Z" fill="#8a8f94" ${OUT}/><path d="M-30,-596q30,-6 60,2" stroke="#c9ccd0" stroke-width="4" fill="none"/>`,
       face: `<path d="M-30,-562q8,-6 16,-2M14,-564q8,-4 16,2" stroke="#5a4636" stroke-width="3" fill="none"/><path d="M-8,-508q12,-6 24,0" stroke="#5a3a26" stroke-width="3" fill="none" opacity=".6"/>`,
     },
-    // the plague-dead ("ผีห่า"), villagers: a farmer, a schoolgirl, a market vendor; all clawed, all a hundred days gone
-    ha1: { ...ZSKIN, skin: "#a3ae8e", hand: CLAWS("#a3ae8e"), top: "#2c3e6b", topS: "#1f2d4e", sleeve: "#2c3e6b", sleeveS: "#1f2d4e", forearm: "#a3ae8e", forearmS: "#7e8a6c", pants: "#5a4a3a", pantsS: "#463a2c", shoe: "#a3ae8e", belt: "#1f2d4e",
-      torsoExtra: `<path d="M-56,-340H56V-300H-56Z" fill="#c8392b" ${OUT}/>${[-44, -24, -4, 16, 36].map((x) => `<path d="M${x},-340V-300" stroke="#f2c55c" stroke-width="6"/>`).join("")}<path d="M-50,-470l30,60l-40,40M44,-440l-20,30" stroke="#1a2440" stroke-width="3" fill="none"/>${blood([[10, -460, 18], [-20, -400, 12], [20, -350, 9]])}`,
-      hair: `<path d="M-46,-560q-6,22 4,36M46,-560q6,22 -4,36" stroke="#9a948c" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M-40,-596Q0,-616 40,-596Q20,-580 0,-586Q-20,-580 -40,-596Z" fill="#9a948c" ${OUT}/>`,
-      face: ZFACE + `<path d="M-34,-534q-8,12 0,22" stroke="#7a1414" stroke-width="4" fill="none"/>` },
-    ha2: { ...ZSKIN, skin: "#b0b9a2", hand: CLAWS("#b0b9a2"), top: "#e6e8e2", topS: "#c3c8c0", sleeve: "#e6e8e2", sleeveS: "#c3c8c0", forearm: "#b0b9a2", forearmS: "#869780", pants: "#2f3f5c", pantsS: "#22304a", shoe: "#1e1e1e", belt: "#22304a",
-      torsoExtra: `<path d="M-26,-484L0,-456L26,-484" stroke="#2f4a8a" stroke-width="6" fill="none"/><path d="M-40,-470L-6,-440L-24,-400" stroke="#8a8f88" stroke-width="3" fill="none"/>${blood([[-20, -430, 16], [26, -380, 11], [-4, -330, 8]])}`,
-      hair: `<path d="M-50,-546Q-56,-610 0,-612Q56,-610 50,-548Q48,-500 34,-490Q36,-560 2,-566Q-32,-560 -34,-490Q-48,-500 -50,-546Z" fill="#1f1a18" ${OUT}/><path d="M-20,-560l14,40M20,-566l-6,36" stroke="#1f1a18" stroke-width="6"/>`,
-      face: ZFACE + blood([[22, -512, 7]]) },
-    ha3: { ...ZSKIN, skin: "#98a88f", hand: CLAWS("#98a88f"), top: "#4f6a7a", topS: "#3c5260", sleeve: "#4f6a7a", sleeveS: "#3c5260", forearm: "#98a88f", forearmS: "#728269", pants: "#2f3438", pantsS: "#22272a", shoe: "#2a2420", belt: "#22272a",
-      torsoExtra: `<path d="M-44,-440H44L50,-300H-50Z" fill="#e8d8a8" ${OUT}/><path d="M-40,-440Q0,-464 40,-440" stroke="#e8d8a8" stroke-width="6" fill="none"/>${blood([[0, -420, 20], [-24, -360, 12], [30, -330, 10]])}<path d="M-30,-330q30,10 60,0" stroke="#7a1414" stroke-width="5" fill="none"/>`,
-      hair: `<path d="M-50,-556Q-50,-618 0,-620Q50,-618 50,-556Q30,-572 0,-574Q-30,-572 -50,-556Z" fill="#dfe6e2" ${OUT}/><path d="M-50,-556q-2,30 10,44M50,-556q2,30 -10,44" stroke="#dfe6e2" stroke-width="6" fill="none"/><path d="M-30,-600h60" stroke="#9aa0a6" stroke-width="2" stroke-dasharray="4 4"/>`,
-      face: ZFACE + blood([[-26, -506, 6], [10, -588, 5]]) },
+    // the plague-dead ("ผีห่า"), villagers a hundred days gone: a farmer, a schoolgirl, a market vendor.
+    // Mottled grey-green skin, sunken sockets, a cheek torn open on the teeth, plague boils on the neck, black veins,
+    // dried blood from nose and mouth, torn clothes over bare ribs, a sacred thread on the wrist, flies (class "fly", moved by Fence.flife).
+    ha1: { ...HSKIN("#a3ae8e"), hand: THREAD + CLAWS("#a3ae8e"), top: "#2c3e6b", topS: "#1f2d4e", sleeve: "#2c3e6b", sleeveS: "#1f2d4e", forearm: "#a3ae8e", forearmS: "#7e8a6c", pants: "#5a4a3a", pantsS: "#463a2c", shoe: "#8a7a62", belt: "#1f2d4e",
+      torsoExtra: HTORSO("#a3ae8e", "#2c3e6b") + `<path d="M-56,-340H56V-300H-56Z" fill="#c8392b" ${OUT}/>${[-44, -24, -4, 16, 36].map((x) => `<path d="M${x},-340V-300" stroke="#f2c55c" stroke-width="6"/>`).join("")}<path d="M-56,-318l-20,40l10,30" stroke="#c8392b" stroke-width="8" fill="none" stroke-linecap="round"/>`,
+      hair: `<path d="M-46,-560q-6,22 4,36M46,-560q6,22 -4,36" stroke="#6a655c" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M-44,-586Q-20,-612 6,-606Q30,-612 44,-588Q30,-596 14,-592Q-6,-598 -24,-590Q-36,-594 -44,-586Z" fill="#6a655c" ${OUT}/><path d="M-36,-590q14,8 22,22M20,-594q10,6 14,20" stroke="#5a554c" stroke-width="5" fill="none" stroke-linecap="round"/>`,
+      face: HFACE("#a3ae8e") },
+    ha2: { ...HSKIN("#b0b9a2"), hand: THREAD + CLAWS("#b0b9a2"), top: "#e6e8e2", topS: "#c3c8c0", sleeve: "#e6e8e2", sleeveS: "#c3c8c0", forearm: "#b0b9a2", forearmS: "#869780", pants: "#2f3f5c", pantsS: "#22304a", shoe: "#1e1e1e", belt: "#22304a",
+      torsoExtra: HTORSO("#b0b9a2", "#e6e8e2") + `<path d="M-26,-484L0,-456L26,-484" stroke="#2f4a8a" stroke-width="6" fill="none"/><path d="M-40,-470L-6,-440L-24,-400" stroke="#8a8f88" stroke-width="3" fill="none"/>`,
+      hair: `<path d="M-50,-546Q-56,-610 0,-612Q56,-610 50,-548Q48,-500 34,-490Q36,-560 2,-566Q-32,-560 -34,-490Q-48,-500 -50,-546Z" fill="#1f1a18" ${OUT}/><path d="M-20,-560l14,40M20,-566l-6,36M-44,-520l-16,60M46,-520l10,70" stroke="#1f1a18" stroke-width="6"/><path d="M-40,-580q10,-10 24,-4" stroke="#6b5a3a" stroke-width="4" fill="none"/>`,
+      face: HFACE("#b0b9a2") },
+    ha3: { ...HSKIN("#98a88f"), hand: THREAD + CLAWS("#98a88f"), top: "#4f6a7a", topS: "#3c5260", sleeve: "#4f6a7a", sleeveS: "#3c5260", forearm: "#98a88f", forearmS: "#728269", pants: "#2f3438", pantsS: "#22272a", shoe: "#2a2420", belt: "#22272a",
+      torsoExtra: HTORSO("#98a88f", "#4f6a7a") + `<path d="M-44,-440H44L50,-300H-50Z" fill="#e8d8a8" ${OUT}/><path d="M-40,-440Q0,-464 40,-440" stroke="#e8d8a8" stroke-width="6" fill="none"/>${blood([[0, -420, 20], [-24, -360, 12], [30, -330, 10]])}<path d="M-30,-330q30,10 60,0M-50,-300l10,-30l12,30" stroke="#7a1414" stroke-width="5" fill="none"/>`,
+      hair: `<path d="M-50,-556Q-50,-618 0,-620Q50,-618 50,-556Q30,-572 0,-574Q-30,-572 -50,-556Z" fill="#dfe6e2" ${OUT}/><path d="M-50,-556q-2,30 10,44M50,-556q2,30 -10,44" stroke="#dfe6e2" stroke-width="6" fill="none"/><path d="M-30,-600h60" stroke="#9aa0a6" stroke-width="2" stroke-dasharray="4 4"/><path d="M-20,-610l-4,-18M16,-612l6,-16" stroke="#9aa0a6" stroke-width="4" stroke-linecap="round"/>`,
+      face: HFACE("#98a88f") },
   });
 
   // ---------- ส้มโอ the cat: sit / alert / sick (lying, slow breathing) / walk ----------
