@@ -168,7 +168,7 @@
       add("loud", {
         set: "schoolYard", setOpts: { id: "ld", time: "dusk", sunX: 900, level: 0.5 }, dark: 0.25, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(500, 1180, 1.15, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [MA(300, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }]), KO(640, 1500, 0.9, [{ t: 0, mode: "raise", eyes: "normal", mouth: "smile" }], { flip: true, prop: "spear1" }), PU(460, 1500, 0.58, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "smile" }])],
+        actors: [MA(300, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }]), KO(640, 1500, 0.9, [{ t: 0, mode: "raise", eyes: "normal", mouth: "smile" }], { flip: true, prop: "spear1f" }), PU(460, 1500, 0.58, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "smile" }])],
         bubbles: [bub("loud", 0, 40, 520, 300)],
         ui: [{ type: "callback", t: F("loud", 0, 1), end: D("loud") - 0.05, label: "กฎของเรื่อง", text: "มันเดินตามเสียง · <em>อาวุธยิ่งแรง ยิ่งดัง</em>", top: 1300 }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("loud", 0, 1), 1.05, 0.35); red(tl, t0 + F("loud", 0, 1), 0.4, 0.5); Fx.heart(tl, t0, D("loud"), 0.65, 0.35); },
@@ -195,7 +195,7 @@
         set: "classroom", setOpts: { id: "cr", night: true, lampX: 400, lampY: 1100 }, dark: 0.6, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(760, 1180, 1.2, 540, 1050), drift: { s: 0.02 } }, { t: vo("cry", 2) - 0.05, ...fr(400, 1150, 1.0, 540, 1050), drift: { s: 0.03 } }] },
         actors: [PU(900, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) - 0.3, mode: "lookUp", eyes: "wide", mouth: "o" }]), PI(1100, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1), mode: "sit", eyes: "wide", mouth: "o" }], { flip: true }),
-          KO(300, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) + 0.3, mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("cry", 2), mode: "guard", eyes: "wide", mouth: "o" }], { prop: "spear1" }), HO(600, 1500, 0.9, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }], { flip: true }), PH(-20, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }])],
+          KO(300, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) + 0.3, mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("cry", 2), mode: "guard", eyes: "wide", mouth: "o" }], { prop: "spear1f" }), HO(600, 1500, 0.9, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }], { flip: true }), PH(-20, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }])],
         captions: caps("cry", [0], { quote: true }),
         bubbles: [bub("cry", 1, 520, 520, 900), bub("cry", 2, 40, 520, 320)],
         fx(tl, id, t0) { document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio")); THUNDER(tl, t0 + 0.3, 0.3); Fx.heart(tl, t0, vo("cry", 3), 0.6, 0.45); Fx.punch(tl, `#${id} .stage`, t0 + vo("cry", 1), 1.04, 0.3); },
@@ -214,7 +214,7 @@
         set: "schoolYard", setOpts: { id: "pe", time: "night", lampX: -300, gate: 0.12 }, dark: 0.55, blur: { far: 2 },
         cam: { keys: [{ t: 0, ...fr(820, 1180, 1.25, 540, 1050), drift: { s: 0.02 } }, { t: vo("peek", 1) - 0.05, ...fr(1000, 1100, 1.0, 540, 1000), drift: { s: 0.04 } }] },
         shake: (t) => (t > vo("peek", 1) ? 4 * Math.sin(t * 19) : 0),
-        actors: [KO(700, 1500, 0.9, [{ t: 0, mode: "push", eyes: "wide", mouth: "o" }, { t: vo("peek", 1), mode: "guard", eyes: "wide", mouth: "scream" }], { prop: "spear1" })],
+        actors: [KO(700, 1500, 0.9, [{ t: 0, mode: "push", eyes: "wide", mouth: "o" }, { t: vo("peek", 1), mode: "guard", eyes: "wide", mouth: "scream" }], { prop: "spear1f" })],
         captions: caps("peek"),
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) {
@@ -239,7 +239,7 @@
         set: "schoolYard", setOpts: { id: "ff", time: "night", lampX: -300, gate: 0.12, breakAt: 1100 }, dark: 0.55, blur: { far: 2 },
         cam: { keys: [{ t: 0, ...fr(1150, 1100, 1.0, 540, 1000), drift: { s: 0.03 } }, { t: F("fenceFall", 1, 0) - 0.05, ...fr(1100, 1150, 0.9, 540, 1050), r: -3, drift: { s: 0.05, r: 4 } }] },
         shake: (t) => (t > F("fenceFall", 1, 0) ? 10 * Math.sin(t * 25) : 4 * Math.sin(t * 13)),
-        actors: [KO(700, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "scream" }, { t: F("fenceFall", 1, 0), mode: "run", eyes: "wide", mouth: "scream" }], { prop: "spear1", flip: true, moveTo: { x: 100, at: F("fenceFall", 1, 0), dur: 1.4 } })],
+        actors: [KO(700, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "scream" }, { t: F("fenceFall", 1, 0), mode: "run", eyes: "wide", mouth: "scream" }], { prop: "spear1f", flip: true, moveTo: { x: 100, at: F("fenceFall", 1, 0), dur: 1.4 } })],
         captions: capsFrom("fenceFall", 0).filter((c) => c.t < D("fenceFall") - 1.1),
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) {
@@ -285,7 +285,7 @@
         set: "schoolYard", setOpts: { id: "cv", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(860, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }, { t: vo("cover", 1) - 0.05, ...fr(100, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }] },
         shake: (t) => 4 * Math.sin(t * 17),
-        actors: [MA(960, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "frown" }, { t: 0.8, mode: "thrust", eyes: "wide", mouth: "scream" }], { flip: false, prop: "spear1" }), KO(820, 1500, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }, { t: 0.8, mode: "limpRun", eyes: "pain", mouth: "frown" }], { flip: true, moveTo: { x: -200, at: 0.8, dur: D("cover") - 0.8, ease: "power1.in" } }),
+        actors: [MA(960, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "frown" }, { t: 0.8, mode: "thrust", eyes: "wide", mouth: "scream" }], { flip: false, prop: "spear1f" }), KO(820, 1500, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }, { t: 0.8, mode: "limpRun", eyes: "pain", mouth: "frown" }], { flip: true, moveTo: { x: -200, at: 0.8, dur: D("cover") - 0.8, ease: "power1.in" } }),
           PH(300, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }], { moveTo: { x: 0, dur: D("cover") } }), PI(-60, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: vo("cover", 1), mode: "stopHand", eyes: "wide", mouth: "scream" }])],
         bubbles: [bub("cover", 0, 420, 520, 860), bub("cover", 1, 40, 760, 160)],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
@@ -297,7 +297,7 @@
         set: "schoolYard", setOpts: { id: "cd", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(1000, 1200, 1.1, 540, 1050), drift: { s: 0.03 } }, { t: 3.0, ...fr(1150, 1250, 1.35, 540, 1100), r: -2, drift: { s: 0.04, r: 3 } }, { t: 8.0, glide: 1.0, ...fr(700, 1150, 0.85, 540, 1050), drift: { s: 0.03 } }, { t: D("count"), glide: 4.0, ...fr(1100, 1250, 1.4, 540, 1100) }] },
         shake: (t) => 5 * Math.sin(t * 21),
-        actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream" }, { t: 6.0, mode: "brace", eyes: "wide", mouth: "frown" }], { prop: "spear1" })],
+        actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream" }, { t: 6.0, mode: "brace", eyes: "wide", mouth: "frown" }], { prop: "spear1f" })],
         captions: caps("count"),
         ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูหลังปิดใน", warn: 5, end: D("count") - 0.1, top: 150 }],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
@@ -322,7 +322,7 @@
         extra(L) { RAIN(L, { n: 60, op: 0.4, splash: false }); },
         fx(tl, id, t0, L) {
           behind(L, tl, "bd-man", "man", 540, 1180, 0.7, false, t0, D("count2"), [{ t: 0, mode: "brace", eyes: "normal", mouth: "frown" }]);
-          Camp.attach && Camp.attach("bd-man", "spear1");
+          Camp.attach && Camp.attach("bd-man", "spear1f");
           ZF(L, tl, "bd", t0, D("count2"), [["ha1", 700, 0.5, 0], ["ha2", 440, 0.48, 0.4], ["ha3", 780, 0.5, 0.2]], "shamble");
           document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio"));
           tl.fromTo("#bd-dl", { attr: { transform: "translate(300,0) scale(0.3,1)" } }, { attr: { transform: "translate(300,0) scale(1,1)" }, duration: 0.5, ease: "power3.in", immediateRender: false }, t0 + 4.55);
@@ -389,7 +389,7 @@
         set: "schoolYard", setOpts: { id: "sgn", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.55, blur: { far: 10, set: 8, mid: 8 },
         cam: { keys: Sig.cam(F, fr(560, 1100, 0.9, 540, 960)) }, shake: Sig.shake(F),
         captions: caps("sig"),
-        ui: [Sig.ui(F, "เหลือ 96 วัน · เช็กลิสต์เอาตัวรอด", [["ประกอบอาวุธก่อนมืด", true], ["ไม่เปิดประตูตามเสียง", false], ["ขันชะเนาะเหนือแผล", true], ["???", false]], D("sig"))],
+        ui: [Sig.ui(F, "เหลือ 96 วัน · เช็กลิสต์เอาตัวรอด", [["ประกอบอาวุธก่อนมืด", true], ["ขันชะเนาะเหนือแผล", true], ["ปิดประตูหลังตรงเวลา", true], ["???", false]], D("sig"))],
         fx(tl, id, t0) { Sig.fx(tl, id, t0, F, D("sig")); },
       });
 
