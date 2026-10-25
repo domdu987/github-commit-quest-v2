@@ -168,7 +168,7 @@
       // ---------- the countdown: o = {t, from, to, label, warn, end, top}; one paper sheet flies off per second, a red ring closes, the last seconds go red ----------
       GameUI.C.countdown = {
         html: (id, o) => { const seq = Array.from({ length: o.from - (o.to ?? 0) + 1 }, (_, i) => o.from - i);
-          return `<div id="${id}" class="pkt cdn" style="top:${o.top ?? 150}px">${PAP("st")}<i class="red"></i>${TAPE("tl", -7)}${TAPE("tr", 5)}<svg class="ring" viewBox="0 0 520 330"><path d="M260,20C400,16 500,80 500,165C500,250 400,312 260,310C120,312 20,250 20,165C20,80 120,16 260,20Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><div class="in">
+          return `<div id="${id}" class="pkt cdn" style="top:${o.top ?? 60}px">${PAP("st")}<i class="red"></i>${TAPE("tl", -7)}${TAPE("tr", 5)}<svg class="ring" viewBox="0 0 520 330"><path d="M260,20C400,16 500,80 500,165C500,250 400,312 260,310C120,312 20,250 20,165C20,80 120,16 260,20Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><div class="in">
             <div class="lb">${o.label || "ประตูปิดใน"}</div><div class="big">${PAPERS(seq)}<span class="w">วิ</span></div></div><div class="warnst">${STAMP(o.warnText || "เร็ว!", "", -12)}</div></div>`; },
         anim(tl, id, t0, o) {
           const el = document.getElementById(id), to = o.to ?? 0, n = o.from - to, end = o.t0abs + (o.end ?? o.t + n + 0.6), warn = o.warn ?? 5, digs = [...el.querySelectorAll(".pd")], tick = o.tick ?? 1;

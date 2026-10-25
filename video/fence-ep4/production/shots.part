@@ -299,7 +299,7 @@
         shake: (t) => 5 * Math.sin(t * 21),
         actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream" }, { t: 6.0, mode: "brace", eyes: "wide", mouth: "frown" }], { prop: "spear1f" })],
         captions: caps("count"),
-        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูหลังปิดใน", warn: 5, end: D("count") - 0.1, top: 150 }],
+        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูหลังปิดใน", warn: 5, end: D("count") - 0.1, top: 60 }],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) {
           ZF(L, tl, "cd", t0, D("count"), [["ha1", 1180, 0.8, 0], ["ha2", 1280, 0.76, 0.4], ["ha3", 1380, 0.78, 0.2], ["ha1", 1230, 0.74, 0.7], ["ha2", 1330, 0.7, 0.9], ["ha3", 1430, 0.72, 0.5]]);
@@ -318,7 +318,7 @@
         shake: (t) => (t < 5.0 ? 6 * Math.sin(t * 21) : 0),
         actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "push", eyes: "normal", mouth: "flat" }]), PI(920, 1560, 0.95, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 4.9, mode: "push", eyes: "wide", mouth: "frown" }], { flip: true })],
         captions: caps("count2", [0], { quote: true }),
-        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูหลังปิดใน", warn: 5, end: 5.6, top: 150 }],
+        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูหลังปิดใน", warn: 5, end: 5.6, top: 60 }],
         extra(L) { RAIN(L, { n: 60, op: 0.4, splash: false }); },
         fx(tl, id, t0, L) {
           behind(L, tl, "bd-man", "man", 540, 1180, 0.7, false, t0, D("count2"), [{ t: 0, mode: "brace", eyes: "normal", mouth: "frown" }]);
