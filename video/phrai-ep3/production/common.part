@@ -1,0 +1,47 @@
+      // ---------- มือพราย EP.3 ให้นอนหงาย (ตอนจบ) ----------
+      // many camera angles (user: "แค่ให้ทำหลายๆมุมกล้อง"): wide, side on, low, close, from under the water, from the boat, POV
+      const PRAEW = (x, y, s, track, extra = {}) => ({ who: "praew", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TONG = (x, y, s, track, extra = {}) => ({ who: extra.wet ? "tongWet" : "tong", x, y, s, track, blinks: [1.2, 3.6], ...extra });
+      const YAI = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, blinks: [0.7, 2.6, 4.9], ...extra });
+      const MHEM = (x, y, s, track, extra = {}) => ({ who: "mhem", x, y, s, track, blinks: [1.6, 4.2], ...extra });
+      const KID = (k, x, y, s, track, extra = {}) => ({ who: `kid${k}`, x, y, s, track, blinks: [0.5 + k * 0.4, 2.8], ...extra });
+      Rig.CAST.kid1 = { ...Rig.CAST.tong, top: "#3f7fbf", topS: "#2f6aa0", sleeve: "#3f7fbf", sleeveS: "#2f6aa0", torsoExtra: `<path d="M-50,-420H50" stroke="#f4ecd8" stroke-width="10"/>` };
+      Rig.CAST.kid2 = { ...Rig.CAST.tong, top: "#e8b830", topS: "#c4961c", sleeve: "#e8b830", sleeveS: "#c4961c", torsoExtra: "",
+        hair: `<path d="M-48,-552Q-52,-612 0,-614Q52,-612 48,-552Q40,-584 0,-588Q-40,-584 -48,-552Z" fill="#2a2220" stroke="#2e2a26" stroke-width="3"/><path d="M40,-570q30,10 26,70" stroke="#2a2220" stroke-width="16" fill="none" stroke-linecap="round"/>` };
+      const G = 1480, WS = G + 150, E = 640; // pierDeck / porch: deck top, water surface, edge of the deck
+      // poses: kneeling at the edge reaching down; throwing; coughing; flailing in the water; crouched low holding a pole out
+      Rig.MODES.reachDown = (u, o) => { const w = Math.sin(u * 2 * Math.PI / 1.4); return { ...Rig.MODES.fall(0.6, o), torso: 36, head: 18, uaF: -14 + 6 * w, faF: -8, uaB: 6, faB: -24 }; };
+      Rig.MODES.throwArm = (u, o) => { const k = Math.min(1, Math.max(0, u / 0.35)), e = k * k * (3 - 2 * k); return { ...Rig.MODES.idle(u, o), uaF: 50 - 200 * e, faF: -70 + 60 * e, torso: -12 + 30 * e, head: -6 + 10 * e, uaB: -20, faB: -30 }; };
+      Rig.MODES.coughing = (u, o) => { const j = Math.max(0, Math.sin(u * 9)) * 6; return { ...Rig.MODES.sit(u, o), torso: 14 + j, head: 10 + j * 0.8, uaF: -40, faF: -120, bodyY: 290 + j * 0.6 }; };
+      Rig.MODES.flail = (u, o) => { const a = Math.sin(u * 11), b = Math.cos(u * 9); return { ...Rig.MODES.idle(u, o), uaF: -150 + 30 * a, faF: -30 + 20 * b, uaB: -140 - 30 * b, faB: -20 + 20 * a, head: -18 + 6 * a, torso: -6 }; };
+      Rig.MODES.poleLow = (u, o) => { const p = Math.sin(u * 2 * Math.PI / 0.8); return { ...Rig.MODES.crouch(u, o), torso: 30, head: 0, uaF: -70 + 4 * p, faF: -6, uaB: -64 + 4 * p, faB: -10 }; };
+      // the water in front of anyone in the river goes on top of the actors
+      const TOP = (L, id) => { const w = document.getElementById(`${id}-wfront`); if (w) L.act.appendChild(w); };
+      const splash = (id, x, y, s = 1) => `<g id="${id}" opacity="0"><ellipse cx="${x}" cy="${y}" rx="${130 * s}" ry="${26 * s}" fill="none" stroke="#e8f2ff" stroke-width="10"/>
+          ${Array.from({ length: 12 }, (_, k) => { const a = (-170 + k * 14) * Math.PI / 180, d = (90 + (k % 3) * 50) * s; return `<ellipse cx="${(x + Math.cos(a) * d).toFixed(0)}" cy="${(y + Math.sin(a) * d).toFixed(0)}" rx="${(10 + (k % 3) * 5) * s}" ry="${(16 + (k % 2) * 6) * s}" fill="#dfeaff" opacity=".9"/>`; }).join("")}
+          <path d="M${x - 70 * s},${y}Q${x},${y - 260 * s} ${x + 70 * s},${y}Z" fill="#cfe0ff" opacity=".75"/></g>`;
+      const pop = (tl, sel, t) => { tl.fromTo(sel, { opacity: 1, scale: 0.4, transformOrigin: "50% 100%" }, { scale: 1.25, duration: 0.35, ease: "power2.out", immediateRender: false }, t); tl.to(sel, { opacity: 0, duration: 0.4 }, t + 0.3); };
+      // a crowd on the deck behind (silhouettes, set layer): n figures from x0
+      const crowd = (x0, n, gap = 150) => Array.from({ length: n }, (_, k) => { const x = x0 + k * gap + (k % 2) * 30, h = 330 + (k % 3) * 40;
+        return `<g opacity=".92"><ellipse cx="${x}" cy="${G - h - 30}" rx="30" ry="34" fill="#0a0f1c"/><path d="M${x - 44},${G}L${x - 34},${G - h}Q${x},${G - h - 18} ${x + 34},${G - h}L${x + 44},${G}Z" fill="#0a0f1c"/><path d="M${x + 22},${G - h + 10}q16,14 12,60" stroke="#ffb35c" stroke-width="5" fill="none" opacity=".5"/></g>`; }).join("");
+      // EP.3 poses: treading water calmly (hands sculling at the sides); arms round the gallon; one hand up for the oar;
+      // ตาเหม holding the oar out low over the water; leaning in from a chair at the bedside
+      Rig.MODES.tread = (u, o) => { const a = Math.sin(u * 2 * Math.PI / 1.1), b = Math.cos(u * 2 * Math.PI / 1.1); return { ...Rig.MODES.idle(u, o), uaF: -40 + 8 * a, faF: -30 + 10 * b, uaB: -36 - 8 * a, faB: -30 - 10 * b, head: -8, torso: -2 }; };
+      Rig.MODES.gasp = (u, o) => { const a = Math.sin(u * 7), b = Math.cos(u * 6); return { ...Rig.MODES.idle(u, o), uaF: -110 + 40 * a, faF: -40 + 30 * b, uaB: -100 - 40 * b, faB: -30 + 20 * a, head: -26 + 8 * a, torso: -8 }; };
+      Rig.MODES.holdGal = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 2.2); return { ...Rig.MODES.idle(u, o), uaF: -84 + 3 * b, faF: -24, uaB: -76 - 3 * b, faB: -34, head: -6 + 2 * b, torso: 6 }; };
+      Rig.MODES.galWave = (u, o) => { const w = Math.sin(u * 2 * Math.PI / 0.5); return { ...Rig.MODES.idle(u, o), uaF: -170 + 14 * w, faF: -10 + 20 * w, uaB: -80, faB: -30, head: -14, torso: 4 }; };
+      Rig.MODES.grabUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150, faF: -16, uaB: -80, faB: -30, head: -20, torso: 2 });
+      Rig.MODES.oarOut = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 2.4); return { ...Rig.MODES.idle(u, o), torso: 22, head: 6, uaF: -66 + 2 * b, faF: -18, uaB: -54 + 2 * b, faB: -30 }; };
+      Rig.MODES.sleep = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: 4, faF: -6, uaB: 8, faB: -4 });
+      Rig.MODES.leanIn = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 3.4); return { ...Rig.MODES.sitChair(u, o), torso: 18 + b, head: 12, uaF: -40, faF: -40, uaB: -30, faB: -50 }; };
+      const RULE_ROWS = (IK) => [
+        [`<path d="M20,86Q60,66 100,86Q60,102 20,86Z" fill="#5c9a4a" stroke="${IK}" stroke-width="4"/><path d="M44,82Q48,58 60,54Q72,58 76,82Z" fill="#6aa856" stroke="${IK}" stroke-width="3"/><circle cx="60" cy="48" r="6" fill="#ffd36a"/>
+          <g class="kw"><ellipse cx="46" cy="84" rx="8" ry="4" fill="#f2d16a" stroke="${IK}" stroke-width="2"/><ellipse cx="74" cy="85" rx="8" ry="4" fill="#f2d16a" stroke="${IK}" stroke-width="2"/></g>
+          <path d="M80,6q-8,22 -6,36q4,6 10,2l2,-14q6,4 12,0" fill="#e9bc93" stroke="${IK}" stroke-width="3"/>`, `<span style="font-size:52px">ของลอยมา อย่า<u>ก้มคว้า</u></span>`],
+        [`<path d="M64,22C40,18 26,38 28,60C30,76 42,80 44,92C46,104 58,110 66,100C72,92 66,84 72,76C82,64 92,56 90,42C88,28 80,22 64,22Z" fill="#e9bc93" stroke="${IK}" stroke-width="4"/>
+          ${[0, 1, 2].map((i) => `<path class="kw" d="M${104 + i * 6},${40 - i * 6}q${8 + i * 3},${18 + i * 6} 0,${36 + i * 12}" stroke="#2f7fbf" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}
+          <path d="M6,104q12,-8 24,0t24,0t24,0t24,0" stroke="#2f7fbf" stroke-width="6" fill="none"/>`, `<span style="font-size:52px">ได้ยิน<strong>เสียงพราย</strong> อย่า<u>ว่ายตาม</u></span>`],
+        [`<path d="M4,80q14,-10 28,0t28,0t28,0t28,0V116H4Z" fill="#4f8fbf" stroke="${IK}" stroke-width="3"/><g class="kw"><circle cx="24" cy="62" r="11" fill="#e9bc93" stroke="${IK}" stroke-width="3"/>
+          <path d="M34,66L98,68" stroke="${IK}" stroke-width="15" stroke-linecap="round"/><path d="M34,66L98,68" stroke="#d8443a" stroke-width="9" stroke-linecap="round"/><path d="M50,64L58,46M80,66L90,48" stroke="${IK}" stroke-width="6" stroke-linecap="round"/></g>`,
+          `<span style="font-size:52px">โดนดึงลงน้ำ ให้<u>นอนหงาย</u></span>`],
+      ];

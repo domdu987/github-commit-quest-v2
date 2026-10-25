@@ -787,7 +787,9 @@ add("key", {
 | 13 | "หมอกลง" EP.2 อย่าหลับใน (2:03) | `video/mok-ep2/EP2-ya-lap-nai-share.mp4` |
 | 14 | "หมอกลง" EP.3 อย่ากลับเข้าไป ตอนจบ (2:14, ไม่มีซิกเนเจอร์) | `video/mok-ep3/EP3-ya-klap-khao-pai-share.mp4` |
 | 15–18 | "ควันหลง" EP.1 ประตูร้อน (1:56) · EP.2 ทางเดินมืด (1:34) · EP.3 ลิฟต์มารับ (1:24) · EP.4 ห้ามกลับ ตอนจบ (1:21) | `video/kwan-ep1..4/EP*-share.mp4` |
-| 19 | "มือพราย" EP.1 อย่าก้มคว้า (2:19) | `video/phrai-ep1/EP1-ya-kom-khwa-share.mp4` |
+| 19 | "มือพราย" EP.1 อย่าก้มคว้า (2:31, พรายตัวดำตาเขียว + ลักษณะพราย) | `video/phrai-ep1/EP1-ya-kom-khwa-share.mp4` |
+| 20 | "มือพราย" EP.2 อย่าอุ้มพาดบ่า (2:07) | `video/phrai-ep2/EP2-ya-um-phat-ba-share.mp4` |
+| 21 | "มือพราย" EP.3 ให้นอนหงาย ตอนจบ (2:15, ไม่มีซิกเนเจอร์) | `video/phrai-ep3/EP3-hai-non-ngai-share.mp4` |
 
 แคปชันของทุกเรื่อง: `camp-ep1/production/CAPTIONS.md`, `koi/`, `zom/`, `mok/`, `kwan/`, `phrai/CAPTIONS.md` · 25 ต.ค. ส่ง HQ + แคปชันของ 5 เรื่องที่จบแล้ว (ค่าย เสียงกอย ชั้น 23 หมอกลง ควันหลง) ให้ผู้ใช้ครบแล้ว
 
