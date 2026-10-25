@@ -61,6 +61,11 @@
 
 ## EP.3 ห้ามขาน (ตอนจบ ไม่มีซิกเนเจอร์ ไม่มีตัวเลือก)
 
+- เปิดจากภาพท้าย EP.2 (ประตู แสงเขียวลอดใต้ประตู) · ฝนจำกฎข้อแรกได้ เงียบ ไม่ตอบ ไม่เปิด · แสงลอยขึ้นไปที่หน้าต่าง หน้าที่มองเข้ามามีมวยผมแบบป้าแช่ม · ไก่ขัน แสงลอยกลับบ้านข้างๆ
+- เช้า น้ำลด ฝนจะดันคัตเอาต์ขึ้นเอง ลุงเปี๊ยกห้าม → ความรู้ CDC/MEA (ข้อ ง.) · ลุงเปี๊ยกตรวจเจอปลั๊กหลังตู้เย็นไหม้ดำ = ที่ไฟรั่วดูดเต้ย · บนคันโยกมีเส้นผมยาวติดอยู่
+- ฝนเอาหม้อแกงไปคืน ป้าแช่มนอนบนเสื่อ ห่มผ้าถึงคอ ข้างหมอนมีผ้าขี้ริ้วเปื้อนเมือกเขียว "เมื่อคืน ป้าหลับสบายเลยลูก" ตาเรืองเขียวแวบหนึ่ง
+- คืนนั้นน้ำขึ้นอีก แสงเขียวลอยข้ามทุ่ง เรียก "ฝน… เต้ย…" · "ถ้าได้ยินใครเรียกชื่อ… จากในความมืด ห้ามขาน" · การ์ดท้าย ป้ายบนเสาไฟ "ตอนจบ"
+
 - ความรู้หลังน้ำลด: ห้ามเปิดไฟเองถ้าปลั๊ก/สายไฟเคยจมน้ำ ให้ช่างตรวจก่อน (ข้อความตรงตัว)
 - เฉลยป้าแช่ม · ฉากจบ
 
@@ -95,5 +100,11 @@
 - PEA (หน้าเดียวกับข้อ ข.): "1. ควรตัดกระแสไฟฟ้าให้เร็วที่สุด" · "2. ผู้ช่วยเหลือต้องใช้สิ่งของที่ไม่เป็นสื่อไฟฟ้า เช่น ผ้าแห้ง ไม้แห้ง จากนั้นให้ฉุดตัวผู้โดนไฟดูดออกมา หรือเขี่ยเอาสายไฟฟ้าออกจากผู้โดนไฟฟ้าดูด" · "3. หากผู้ป่วยหมดสติ หรือหยุดหายใจ ให้การกู้ชีพฉุกเฉิน หรือ CPR"
 - St John Ambulance "Electric Shock First Aid" https://www.sja.org.uk/first-aid-advice/electrocution/ : "Do not touch the casualty if they're still in contact with the electrical source as you are at risk of electrocution." · "You may be able to stand on some dry insulating material (such as a plastic mat or wooden box) and use a broom handle or wooden pole to push the casualty's limb away from the source."
 - กรมสนับสนุนบริการสุขภาพ (กรม สบส.) https://www.hss.moph.go.th/show_topic.php?id=2344 : "สิ่งแรกที่ต้องทำ คือ ตัดไฟฟ้าในจุดที่เกิดเหตุก่อน ห้ามเข้าไปช่วยเหลือโดยพลการเพราะรังแต่จะทำให้ผู้ช่วยเหลือบาดเจ็บตามไปด้วย" · "…ติดต่อสถาบันการแพทย์ฉุกเฉินทางสายด่วน 1669"
+
+**ง. หลังน้ำท่วม (EP.3)** (ผู้ช่วยเปิดหน้าเว็บจริง 25 ต.ค. 2569; ไม่มีหน้าไหนใช้คำว่า "หลังน้ำลด")
+- CDC (หน้าเดียวกับข้อ ก., หัวข้อ Inside the home): "Never turn power on or off yourself or use an electric tool or appliance while standing in water. Do not turn the power back on until electrical equipment has been inspected by a qualified electrician. All electrical equipment and appliances must be completely dry before returning them to service. Have a certified electrician check these items if there is any question."
+  · "If you see frayed wiring or sparks when you restore power, or if there is an odor of something burning but no visible fire, you should immediately shut off the electrical system at the main circuit breaker."
+- MEA "น้ำท่วม! ใช้ไฟฟ้าได้หรือไม่?" (5 ก.ย. 2567) หัวข้อ "กลับมาใช้อย่างปลอดภัย หลังน้ำท่วม": "สำคัญมาก ควรตรวจสอบเครื่องใช้ไฟฟ้าต่าง ๆ โดยช่างผู้ชำนาญก่อนใช้งานอีกครั้งเพื่อความปลอดภัย"
+- หน้า MEA ก.พ. 2569 และ PEA ไม่มีหัวข้อหลังน้ำท่วม (มีแต่ก่อน/ระหว่างน้ำท่วม)
 
 **ยืนยันไม่ได้ (ห้ามใช้ในบท):** ระยะ 35 ฟุตของ ESFI (403) · หน้า Mayo Clinic / NHS / Red Cross / OSHA / สพฉ. เปิดไม่ได้ · คำว่า "ยกปลั๊กให้สูง" ไม่พบบนหน้าทางการ (MEA ใช้ "ย้ายปลั๊กและอุปกรณ์ขึ้นที่สูง")
