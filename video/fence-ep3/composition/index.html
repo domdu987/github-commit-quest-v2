@@ -842,7 +842,7 @@
       };
       // the signs on a can: three paper strips, a sticker each, pen-written text, a red ✗ stamped on
       GameUI.C.signs = {
-        html: (id, o) => `<div id="${id}" class="fsigns" style="top:${o.top ?? 170}px">${o.items.map((t, i) => `<div class="row" id="${id}-r${i}">${PAP()}${TAPE("tl", -8 + i * 3)}<div class="in">${STK(o.icons ? o.icons[i] : SIGN3[i], "big", "0 0 120 120")}<div class="tx">${t}</div>${STAMP(o.ok ? (o.ok[i] ? "✓" : "✗") : "✗", "xx", 8)}</div></div>`).join("")}</div>`,
+        html: (id, o) => `<div id="${id}" class="fsigns" style="top:${o.top ?? 170}px;${o.scale ? `scale:${o.scale};transform-origin:50% 0;` : ""}">${o.items.map((t, i) => `<div class="row" id="${id}-r${i}">${PAP()}${TAPE("tl", -8 + i * 3)}<div class="in">${STK(o.icons ? o.icons[i] : SIGN3[i], "big", "0 0 120 120")}<div class="tx">${t}</div>${STAMP(o.ok ? (o.ok[i] ? "✓" : "✗") : "✗", "xx", 8)}</div></div>`).join("")}</div>`,
         anim(tl, id, t0, o) {
           o.at.forEach((at, i) => {
             const r = document.getElementById(`${id}-r${i}`), T = o.t0abs + at, end = o.t0abs + (o.end ?? at + 4); wordify(r.querySelector(".tx"));
@@ -1118,7 +1118,7 @@
         .pkt.crf .stats { display: flex; justify-content: center; gap: 34px; margin-top: 16px; } .pkt.crf .st { display: flex; align-items: center; gap: 12px; font: 700 27px/1 Kanit; color: ${PK_PENCIL}; }
         .pkt.crf .tally { display: flex; gap: 4px; } .pkt.crf .tally i { width: 10px; height: 30px; background: ${INKLINE("%231f1d1a")} no-repeat center / contain; transform: scaleY(0); transform-origin: 50% 100%; } .pkt.crf .tally i.off { opacity: .18; } .pkt.crf .tally i.x { background-image: ${INKLINE("%23b7281e")}; }
         .pkt.crf .done { position: absolute; right: 34px; top: 22px; } .pkt.crf .done .stamp { font-size: 44px; }
-        .pkt.crf .up { position: absolute; left: 36px; bottom: 90px; display: flex; align-items: center; gap: 10px; font: 900 28px/1.1 Kanit; color: ${PK_INK}; opacity: 0; } .pkt.crf .up .stamp { font-size: 36px; }
+        .pkt.crf .up { position: relative; margin: 12px 0 0 30px; display: flex; align-items: center; gap: 10px; font: 900 28px/1.1 Kanit; color: ${PK_INK}; opacity: 0; } .pkt.crf .up .stamp { font-size: 36px; }
         .pkt.crf .boom { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; z-index: 4; pointer-events: none; } .pkt.crf .boom .spl { width: 16px; height: 16px; margin: -8px; }
         /* countdown */
         .pkt.cdn { width: 720px; margin-left: -360px; padding: 26px 30px 34px; }
@@ -1235,7 +1235,7 @@
       // ---------- the countdown: o = {t, from, to, label, warn, end, top}; one paper sheet flies off per second, a red ring closes, the last seconds go red ----------
       GameUI.C.countdown = {
         html: (id, o) => { const seq = Array.from({ length: o.from - (o.to ?? 0) + 1 }, (_, i) => o.from - i);
-          return `<div id="${id}" class="pkt cdn" style="top:${o.top ?? 150}px">${PAP("st")}<i class="red"></i>${TAPE("tl", -7)}${TAPE("tr", 5)}<svg class="ring" viewBox="0 0 520 330"><path d="M260,20C400,16 500,80 500,165C500,250 400,312 260,310C120,312 20,250 20,165C20,80 120,16 260,20Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><div class="in">
+          return `<div id="${id}" class="pkt cdn" style="top:${o.top ?? 60}px">${PAP("st")}<i class="red"></i>${TAPE("tl", -7)}${TAPE("tr", 5)}<svg class="ring" viewBox="0 0 520 330"><path d="M260,20C400,16 500,80 500,165C500,250 400,312 260,310C120,312 20,250 20,165C20,80 120,16 260,20Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><div class="in">
             <div class="lb">${o.label || "ประตูปิดใน"}</div><div class="big">${PAPERS(seq)}<span class="w">วิ</span></div></div><div class="warnst">${STAMP(o.warnText || "เร็ว!", "", -12)}</div></div>`; },
         anim(tl, id, t0, o) {
           const el = document.getElementById(id), to = o.to ?? 0, n = o.from - to, end = o.t0abs + (o.end ?? o.t + n + 0.6), warn = o.warn ?? 5, digs = [...el.querySelectorAll(".pd")], tick = o.tick ?? 1;
@@ -1244,9 +1244,16 @@
           write(tl, el.querySelector(".lb"), t0 + 0.15, { from: t0, gap: 0.08, d: 0.16 });
           slapIn(tl, el, t0 + 0.2, 0.1);
           tl.fromTo(`#${id} .ring path`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: n * tick, ease: "none", immediateRender: false }, t0 + 0.2);
+          const used = new Set();   // sheets already flown at build time (a digit value can repeat in a stack: 20 → 10 → 0 on the ones digit)
           const w = String(o.from).length, strs = Array.from({ length: n + 1 }, (_, i) => String(o.from - i).padStart(w, "0"));   // same padding PAPERS used
           for (let i = 1; i <= n; i++) { const T = t0 + i * tick, v = o.from - i, a = strs[i - 1], b = strs[i];
-            digs.forEach((pd, j) => { if (a[j] === b[j]) return; const top = [...pd.querySelectorAll(".sh")].reverse().find((s) => s.dataset.v === a[j] && s.style.opacity !== "0"); if (top) { flyOff(tl, top, T - 0.2); tl.set(top, { opacity: 0 }, T + 0.6); } });
+            digs.forEach((pd, j) => { if (a[j] === b[j]) return;
+              // the stack top-first, minus the sheets already gone; the top one flies, and any copies of the same digit right under it
+              // (the tens digit holds one "1" sheet per second from 19 to 10) drop out at the same moment so the next digit shows
+              const live = [...pd.querySelectorAll(".sh")].reverse().filter((s) => !used.has(s)), k0 = live.findIndex((s) => s.dataset.v === a[j]);
+              if (k0 < 0) return; let k = k0; while (k < live.length && live[k].dataset.v === a[j]) { used.add(live[k]); k++; }
+              flyOff(tl, live[k0], T - 0.2); tl.set(live[k0], { opacity: 0 }, T + 0.6);
+              for (let m = k0 + 1; m < k; m++) tl.set(live[m], { opacity: 0 }, T + 0.05); });
             const hot = v <= warn;
             tl.fromTo(`#${id}`, { x: 0 }, { x: hot ? 10 : 4, duration: 0.035, repeat: hot ? 7 : 3, yoyo: true, immediateRender: false }, T);
             tl.fromTo(`#${id} .big`, { scale: 1 }, { scale: hot ? 1.12 : 1.05, duration: 0.08, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, T);
@@ -1261,6 +1268,7 @@
       // ======================================================================================================
       // เอาชีวิตรอด 99 วัน · EP.3 "คนแปลกหน้า"
       // ======================================================================================================
+      const CLIP = (list) => { list.sort((a, b) => a.t - b.t); for (let n = 0; n + 1 < list.length; n++) list[n].end = Math.min(list[n].end, list[n + 1].t - 0.03); return list; };
       const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
       const SKIN_PIM = { skin: "#ecc29c", sleeve: "#9fc5d8" }, SKIN_PHU = { skin: "#d39a6e", sleeve: "#6b7a5a" };
       const CDC = "ที่มา: <em>CDC (สหรัฐฯ)</em> · ", NHS = "ที่มา: <em>NHS (สหราชอาณาจักร)</em> · ", MLP = "ที่มา: <em>MedlinePlus (สหรัฐฯ)</em> · ";
@@ -1281,10 +1289,10 @@
         fever: (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<rect x="48" y="14" width="24" height="70" rx="12" fill="#fff" stroke="${PK_INK}" stroke-width="3"/><circle cx="60" cy="92" r="16" fill="#e0564a" stroke="${PK_INK}" stroke-width="3"/><rect class="a-pulse" x="56" y="40" width="8" height="44" fill="#e0564a"/><path d="M76,30h8M76,44h8M76,58h8" stroke="${PK_INK}" stroke-width="2"/>`,
       };
       Object.assign(GameUI.ILL, {
-        wash: `${PKG("ws")}${SHADOW(60, 108, 34)}<path d="M30,26h40q14,0 14,14v10" stroke="#8d9299" stroke-width="12" fill="none" stroke-linecap="round"/><rect x="18" y="14" width="24" height="18" rx="4" fill="#5b6066" stroke="${PK_INK}" stroke-width="2.5"/><g class="a-bob"><path d="M84,54q14,20 0,34q-14,-14 0,-34z" fill="#6fb3d6" stroke="${PK_INK}" stroke-width="2.5"/></g><path d="M34,100q26,-30 52,0" fill="#d39a6e" stroke="${PK_INK}" stroke-width="3"/><path d="M40,92q20,-8 40,0" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>`,
+        wash: `${PKG("ws")}${SHADOW(60, 108, 34)}<path d="M30,26h40q14,0 14,14v10" stroke="#8d9299" stroke-width="12" fill="none" stroke-linecap="round"/><rect x="18" y="14" width="24" height="18" rx="4" fill="#5b6066" stroke="${PK_INK}" stroke-width="2.5"/><g class="a-bob"><path d="M84,54q14,20 0,34q-14,-14 0,-34z" fill="#6fb3d6" stroke="${PK_INK}" stroke-width="2.5"/></g><path d="M34,100q26,-30 52,0" fill="#d39a6e" stroke="${PK_INK}" stroke-width="3"/><path d="M40,92q20,-8 40,0" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8" fill="none"/>`,
         tetanus: `${PKG("tt")}${SHADOW(60, 108, 34)}<g transform="rotate(-35 60 60)"><rect x="52" y="20" width="16" height="76" fill="#8a6a42" stroke="${PK_INK}" stroke-width="3"/><rect x="44" y="14" width="32" height="10" rx="3" fill="#6b4a2e" stroke="${PK_INK}" stroke-width="2.5"/><path d="M52,96l8,14l8,-14z" fill="#8a6a42" stroke="${PK_INK}" stroke-width="3"/><path d="M54,40q6,6 0,12M66,56q-6,6 0,12M55,70q6,6 0,12" stroke="#c0552c" stroke-width="5" fill="none"/></g><g class="a-pulse" style="transform-origin:60px 60px">${[[22, 34], [96, 30], [100, 84], [20, 88], [86, 104]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="#5a0f0f"/><path d="M${x - 9},${y}h18M${x},${y - 9}v18" stroke="#5a0f0f" stroke-width="2"/>`).join("")}</g>`,
         hospital: `${PKG("hp")}${SHADOW(60, 108, 40)}<rect x="18" y="34" width="84" height="70" rx="6" fill="#f3e4bb" stroke="${PK_INK}" stroke-width="3"/><rect x="48" y="74" width="24" height="30" fill="#2a2420"/><rect x="26" y="44" width="14" height="14" fill="#9fc5d8"/><rect x="80" y="44" width="14" height="14" fill="#9fc5d8"/><g class="a-pulse" style="transform-origin:60px 24px"><circle cx="60" cy="24" r="18" fill="#fff" stroke="${PK_INK}" stroke-width="3"/><path d="M60,14v20M50,24h20" stroke="#c8392b" stroke-width="7" stroke-linecap="round"/></g>`,
-        press: `${PKG("pr")}${SHADOW(60, 108, 34)}<rect x="14" y="60" width="92" height="40" rx="10" fill="#d39a6e" stroke="${PK_INK}" stroke-width="3"/><path d="M48,80h24" stroke="#8f1b1b" stroke-width="7" stroke-linecap="round"/><g class="a-bob"><rect x="40" y="48" width="40" height="30" rx="6" fill="#f4ecd8" stroke="${PK_INK}" stroke-width="2.5"/><path d="M60,12v28M46,22q14,-14 28,0" stroke="#ecc29c" stroke-width="14" stroke-linecap="round"/><path d="M46,22q14,-14 28,0" stroke="${PK_INK}" stroke-width="2.5" fill="none"/></g>`,
+        press: `${PKG("pr")}${SHADOW(60, 108, 34)}<rect x="14" y="60" width="92" height="40" rx="10" fill="#d39a6e" stroke="${PK_INK}" stroke-width="3"/><path d="M48,80h24" stroke="#8f1b1b" stroke-width="7" stroke-linecap="round"/><g class="a-bob"><rect x="40" y="48" width="40" height="30" rx="6" fill="#f4ecd8" stroke="${PK_INK}" stroke-width="2.5"/><path d="M60,12v28M46,22q14,-14 28,0" stroke="#ecc29c" stroke-width="14" stroke-linecap="round" fill="none"/><path d="M46,22q14,-14 28,0" stroke="${PK_INK}" stroke-width="2.5" fill="none"/></g>`,
       });
       // the sickle blade left in the bars last night (EP.2): a rusted hook at the gate, our side
       const BLADE = (id, x, y, s = 1) => `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><path d="M0,0C70,-20 120,-100 90,-180C120,-110 60,-50 0,-26Z" fill="#b8793f" stroke="#2e2a26" stroke-width="4"/><path d="M8,-8C60,-28 100,-90 88,-150" stroke="#dfe6e2" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/><path d="M30,-40C70,-60 95,-110 88,-160" stroke="#9a5a2a" stroke-width="7" fill="none" stroke-linecap="round" opacity=".85"/><path d="M20,-20q12,-6 24,-14" stroke="#6b3a14" stroke-width="5" fill="none" opacity=".8"/></g>`;
@@ -1325,7 +1333,7 @@
         cam: { keys: [{ t: 0, ...fr(700, 1150, 0.92, 540, 1050), drift: { s: 0.015 } }] },
         actors: [PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("rule", 1), mode: "point", eyes: "normal", mouth: "flat" }]), KO(360, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]),
           MA(160, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), HO(-40, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), PU(-200, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
-        captions: [...caps("rule", [0]), ...caps("rule", [1], { quote: true })],
+        captions: CLIP([...caps("rule", [0]), ...caps("rule", [1], { quote: true })]),
         ui: [{ type: "fRule", t: vo("rule", 1) - 0.3, nums: [2], label: "กฎของครูพิม", rows: ["ช่วยได้… <u>แต่อย่าเชื่อ</u>"], at: [vo("rule", 1) - 0.3], end: D("rule") - 0.05, top: 250 }],
         fx(tl, id, t0, L) { behind(L, tl, "ru-phu", "phu", 960, 1180, 0.9, false, t0, D("rule"), [{ t: 0, mode: "lie", eyes: "normal", mouth: "o" }]); Fx.punch(tl, `#${id} .stage`, t0 + F("rule", 1, 1), 1.05, 0.35); red(tl, t0 + F("rule", 1, 1), 0.4, 0.5); Fx.heart(tl, t0, D("rule"), 0.65, 0.35); },
       });
@@ -1358,7 +1366,7 @@
         cam: { keys: [{ t: 0, ...fr(560, 900, 0.95, 540, 900), drift: { s: 0.02 } }, { t: F("search", 1, 2) - 0.05, glide: 0.5, ...fr(560, 1150, 1.2, 540, 1000), drift: { s: 0.03 } }] },
         captions: caps("search", [1]),
         bubbles: [bub("search", 0, 60, 300, 400)],
-        ui: [{ type: "signs", t: F("search", 0, 0) + 0.5, items: ["แขน", "คอ", "หลัง", "ขา <em>มีแผล</em>"], icons: [CHK.arm, CHK.neck, CHK.back, CHK.leg], ok: [1, 1, 1, 0], at: [F("search", 0, 0) + 0.5, F("search", 0, 0) + 1.3, F("search", 0, 1) + 0.3, F("search", 1, 2)], end: D("search") - 0.05, top: 900 }],
+        ui: [{ type: "signs", t: F("search", 0, 0) + 0.5, items: ["แขน", "คอ", "หลัง", "ขา <em>มีแผล</em>"], icons: [CHK.arm, CHK.neck, CHK.back, CHK.leg], ok: [1, 1, 1, 0], at: [F("search", 0, 0) + 0.5, F("search", 0, 0) + 1.3, F("search", 0, 1) + 0.3, F("search", 1, 2)], end: D("search") - 0.05, top: 830, scale: 0.85 }],
         fx(tl, id, t0, L) {
           behind(L, tl, "se-phu", "phu", 560, 1180, 0.95, false, t0, D("search"), [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "flat" }, { t: F("search", 0, 0) + 0.3, mode: "showArms", eyes: "normal", mouth: "flat" }, { t: F("search", 0, 1) + 0.1, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("search", 1, 2) - 0.2, mode: "holdArm", eyes: "normal", mouth: "frown" }]);
           tl.set("#se-phu", { attr: { transform: "translate(560,1180) scale(-0.95,0.95)" } }, t0 + F("search", 0, 1) + 0.15);   // he turns his back
@@ -1397,7 +1405,7 @@
         set: "schoolYard", setOpts: { id: "op", time: "morning", gate: 0 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(900, 1180, 1.25, 540, 1050), drift: { s: 0.02 } }] },
         actors: [PI(620, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
-        bubbles: [bub("open", 0, 360, 560, 560)],
+        bubbles: [bub("open", 0, 360, 560, 480)],
         fx(tl, id, t0, L) { behind(L, tl, "op-phu", "phu", 960, 1180, 0.9, false, t0, voEnd("open", 0) + 0.3, [{ t: 0, mode: "cutCloth", eyes: "normal", mouth: "flat" }, { t: vo("open", 0), mode: "sitHold", eyes: "normal", mouth: "smile" }], { prop: "knife" }); Fx.heart(tl, t0, voEnd("open", 0) + 0.3, 0.6, 0.4); },
       }, {
         set: "schoolYard", setOpts: { id: "og", time: "morning", gate: 0.8 }, dark: 0.15, blur: { far: 3 },
@@ -1414,7 +1422,7 @@
         cam: { keys: [{ t: 0, ...fr(480, 900, 1.05, 540, 960), drift: { s: 0.02 } }, { t: vo("wash", 1) - 0.05, glide: 0.5, ...fr(450, 1000, 1.3, 540, 960), drift: { s: 0.02 } }] },
         captions: caps("wash"),
         ui: [{ type: "tip", t: vo("wash", 1) - 0.1, end: D("wash") - 0.05, ill: "wash", label: "ล้างแผล · NHS", text: "[น้ำสะอาด] → สบู่ → {ผ้าสะอาดปิด}", tone: "rule", top: 230 },
-          { type: "src", t: F("wash", 1, 2), end: D("wash") - 0.05, top: 560, text: NHS + "“Clean the wound by rinsing it with bottled or tap water… Cover the wound with sterile gauze or a clean cloth.”" }],
+          { type: "src", t: vo("wash", 1) + 0.3, end: D("wash") - 0.05, top: 560, text: NHS + "“Clean the wound by rinsing it with bottled or tap water… Cover the wound with sterile gauze or a clean cloth.”" }],
         fx(tl, id, t0) {
           tl.fromTo("#ws-pour", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0 + 0.3); tl.to("#ws-pour", { opacity: 0, duration: 0.3 }, t0 + F("wash", 1, 1));
           tl.to("#ws-dirt", { opacity: 0, duration: 0.8 }, t0 + 0.6);
@@ -1469,7 +1477,7 @@
         shake: (t) => (t < 0.5 ? 12 * Math.sin(t * 25) : 2 * Math.sin(t * 9)),
         actors: [MA(880, 1500, 0.9, [{ t: 0, mode: "knocked", eyes: "wide", mouth: "scream" }, { t: 0.5, mode: "sitHold", eyes: "closed", mouth: "frown" }], { moveTo: { x: 700, dur: 0.4, ease: "power2.out" } })],
         captions: caps("cut", [1]),
-        bubbles: [bub("cut", 0, 60, 560, 300)],
+        bubbles: [bub("cut", 0, 140, 560, 250)],
         extra(L) { put(L.act, BLADE("ct-sick", 1000, 1050, 1.15)); put(L.act, `<g id="ct-blood" opacity="0"><ellipse cx="760" cy="1480" rx="60" ry="14" fill="#7a1414" opacity=".8"/><path d="M700,1300q20,60 10,120M740,1320q10,50 20,110" stroke="#7a1414" stroke-width="7" fill="none" stroke-linecap="round"/></g>`); },
         fx(tl, id, t0, L) {
           behind(L, tl, "ct-z0", "ha2", 1180, 1180, 0.8, true, t0, D("cut"), [{ t: 0, mode: "lunge", eyes: "dead", mouth: "snarl" }, { t: 0.8, mode: "still", eyes: "dead", mouth: "snarl" }]);
@@ -1502,7 +1510,7 @@
         actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }]), PI(140, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
         captions: caps("tetanus"),
         ui: [{ type: "tip", t: F("tetanus", 0, 1) - 0.1, end: D("tetanus") - 0.05, ill: "tetanus", label: "บาดทะยัก", text: "สนิม · ดิน · ฝุ่น → [สปอร์] → {ขากรรไกรแข็ง}", tone: "danger", top: 230 },
-          { type: "src", t: F("tetanus", 1, 2), end: vo("tetanus", 2) - 0.1, top: 600, text: CDC + "“The first sign is most commonly spasms of the jaw muscles, or ‘lockjaw.’”" },
+          { type: "src", t: vo("tetanus", 1) + 0.3, end: vo("tetanus", 2) - 0.1, top: 600, text: CDC + "“The first sign is most commonly spasms of the jaw muscles, or ‘lockjaw.’”" },
           { type: "src", t: vo("tetanus", 2), end: D("tetanus") - 0.05, top: 600, text: CDC + "“Symptoms typically occur between 3 and 21 days… Tetanus can lead to death (1 in 10 cases in the United States are fatal).”" },
           { type: "callback", t: F("tetanus", 2, 1), end: D("tetanus") - 0.05, label: "บาดทะยัก", text: "ตาย <em>1 ใน 10</em>", top: 1300 }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("tetanus", 1, 2), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("tetanus", 1, 2), 0.3, 14, 51); red(tl, t0 + F("tetanus", 1, 2), 0.8, 0.7); Fx.punch(tl, `#${id} .stage`, t0 + F("tetanus", 2, 1), 1.06, 0.4); red(tl, t0 + F("tetanus", 2, 1), 0.5, 0.6); Fx.heart(tl, t0, D("tetanus"), 0.5, 0.55); },
@@ -1513,7 +1521,7 @@
         set: "classroom", setOpts: { id: "nd", time: "day", lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(560, 1180, 1.2, 540, 1050), drift: { s: 0.02 } }, { t: vo("needle", 1) - 0.05, ...fr(720, 1180, 1.45, 540, 1050), drift: { s: 0.03 } }] },
         actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }, { t: vo("needle", 1), mode: "sitChair", eyes: "closed", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }, { t: vo("needle", 0), mode: "crouch", eyes: "normal", mouth: "flat" }])],
-        bubbles: [bub("needle", 0, 40, 520, 360), bub("needle", 1, 420, 520, 620)],
+        bubbles: [bub("needle", 0, 40, 520, 360), bub("needle", 1, 420, 520, 90)],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("needle", 1, 1), 1.07, 0.4); red(tl, t0 + F("needle", 1, 1), 0.6, 0.6); Fx.glitch(tl, `#${id}`, t0 + F("needle", 1, 1), 0.15, 8, 41); Fx.heart(tl, t0, D("needle"), 0.5, 0.5); },
       });
 
@@ -1524,7 +1532,7 @@
         actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat" }], { flip: true }), PH(380, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }]), HO(120, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" })],
         captions: caps("signs"),
         ui: [{ type: "signs", t: F("signs", 0, 1), items: ["<em>แดง</em> ร้อน บวม", "<em>ปวด</em>มากขึ้น", "หนอง<em>เหลือง-เขียว</em>", "ไข้ <em>37.7°C+</em> เกิน 4 ชม."], icons: [CHK.red, CHK.pain, CHK.pus, CHK.fever], at: [F("signs", 0, 1), F("signs", 0, 1) + 0.55, F("signs", 0, 2), F("signs", 1, 0)], end: D("signs") - 0.05, top: 170 },
-          { type: "src", t: F("signs", 1, 2), end: D("signs") - 0.05, top: 1240, text: MLP + "“Redness, increased pain, or yellow or green pus… Fever of 100°F (37.7°C) or higher for more than 4 hours.”" }],
+          { type: "src", t: vo("signs", 1), end: D("signs") - 0.05, top: 1240, text: MLP + "“Redness, increased pain, or yellow or green pus… Fever of 100°F (37.7°C) or higher for more than 4 hours.”" }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("signs", 1, 2), 1.05, 0.35); red(tl, t0 + F("signs", 1, 2), 0.4, 0.5); Fx.heart(tl, t0, D("signs"), 0.6, 0.4); },
       });
 
@@ -1558,8 +1566,8 @@
         shake: (t) => (t > F("name", 4, 1) && t < F("name", 4, 1) + 0.4 ? 10 * Math.sin(t * 23) : 0),
         actors: [PH(420, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "smile" }, { t: vo("name", 3), mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }), PU(200, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }, { t: voEnd("name", 0), mode: "lookUp", eyes: "normal", mouth: "smile" }], { prop: "crayon" }),
           PI(900, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("name", 1), mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("name", 2) - 0.1, mode: "stopHand", eyes: "wide", mouth: "o" }], { flip: true }), MA(1100, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "flat" }], { flip: true })],
-        captions: [...caps("name", [1]), ...caps("name", [4])],
-        bubbles: [bub("name", 0, 60, 520, 440), bub("name", 2, 380, 520, 820), bub("name", 3, 40, 520, 440)],
+        captions: CLIP([...caps("name", [1]), ...caps("name", [4])]),
+        bubbles: [bub("name", 0, 120, 520, 420), bub("name", 2, 380, 520, 340), bub("name", 3, 170, 520, 380)],
         fx(tl, id, t0) {
           Fx.punch(tl, `#${id} .stage`, t0 + F("name", 0, 1), 1.05, 0.35); red(tl, t0 + F("name", 0, 1), 0.5, 0.6); Fx.glitch(tl, `#${id}`, t0 + F("name", 0, 1), 0.15, 8, 61);
           Fx.punch(tl, `#${id} .stage`, t0 + F("name", 1, 1), 1.06, 0.4); red(tl, t0 + F("name", 1, 1), 0.5, 0.6);
@@ -1581,7 +1589,7 @@
       split("radio", vo("radio", 2) - 0.1, {
         set: "radioClose", setOpts: { id: "ra" }, dark: 0.55,
         cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.02 } }, { t: vo("radio", 1) - 0.3, ...fr(400, 900, 1.5, 540, 960), drift: { s: 0.03 } }] },
-        captions: [...caps("radio", [0]), ...caps("radio", [1], { quote: true })],
+        captions: CLIP([...caps("radio", [0]), ...caps("radio", [1], { quote: true })]),
         ui: [{ type: "tearCal", t: vo("radio", 1) - 0.5, end: vo("radio", 2) - 0.25, top: 150, label: "เหลือ", unit: "วัน", keys: [{ t: vo("radio", 1) - 0.5, v: 97 }, { t: F("radio", 1, 1), v: 96 }], tag: { t: F("radio", 1, 2), text: "· หก" } }],
         fx(tl, id, t0) {
           const on = t0 + vo("radio", 1) - 0.35;
@@ -1598,7 +1606,7 @@
         cam: { keys: [{ t: 0, ...fr(700, 1100, 1.0, 540, 950), drift: { s: 0.03 } }, { t: vo("radio", 3) - vo("radio", 2) + 0.05, ...fr(1000, 1150, 1.2, 540, 1000), drift: { s: 0.03 } }] },
         actors: [HO(500, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 0.3, mode: "point", eyes: "wide", mouth: "o" }]), MA(1000, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "frown" }], { flip: true }),
           PH(1260, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }], { flip: true }), PU(760, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }]), PI(260, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "wide", mouth: "o" }])],
-        bubbles: [bub("radio", 2, 60, 520, 400, { end: vo("radio", 3) - vo("radio", 2) }), bub("radio", 3, 420, 520, 900)].map((b, i) => ({ ...b, t: i ? vo("radio", 3) - vo("radio", 2) + 0.05 : 0.05 })),
+        bubbles: [bub("radio", 2, 60, 520, 400, { end: vo("radio", 3) - vo("radio", 2) }), bub("radio", 3, 420, 520, 120)].map((b, i) => ({ ...b, t: i ? vo("radio", 3) - vo("radio", 2) + 0.05 : 0.05 })),
         ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 2) - 0.1) - 0.05, label: "วิทยุนับ · เหลือ", icon: "radio", unit: "วัน", keys: [{ t: 0, v: 96 }], top: 150, right: true }, { type: "counter", t: 0.05, end: D("radio") - (vo("radio", 2) - 0.1) - 0.05, label: "คนในค่าย", icon: "people", unit: "คน", max: 6, keys: [{ t: 0, v: 6 }], alarm: F("radio", 2, 1) - (vo("radio", 2) - 0.1), top: 150 }],
         fx(tl, id, t0) { const X = t0 + F("radio", 2, 1) - (vo("radio", 2) - 0.1); tl.set("#rb-dialw", { opacity: 1 }, t0); tl.to("#rb-dialw", { opacity: 0, duration: 0.1 }, t0 + 0.6); Fx.punch(tl, `#${id} .stage`, X, 1.08, 0.5); Fx.glitch(tl, `#${id}`, X, 0.3, 14, 72); red(tl, X, 0.7, 0.7); Fx.heart(tl, t0, D("radio") - (vo("radio", 2) - 0.1), 0.45, 0.6); },
       });
