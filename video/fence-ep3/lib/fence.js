@@ -68,8 +68,12 @@
     let s = `<rect x="-1200" y="${FY}" width="3500" height="60" fill="url(#fConc)" ${OUT}/>`;
     for (let x = -1100; x < 2300; x += 220) {
       if (x > 420 && x < 900) continue; // the gate opening
+      const brk = o.breakAt === x;   // this section can fall inward (#id-fseg): rotated about its foot on the yard side
+      if (brk) s += `<g id="${id}-fseg" transform="rotate(${o.fallen ? -82 : 0} ${x + 230} ${FY + 4})">`;
       s += `<rect x="${x}" y="${FY - 330}" width="40" height="340" fill="#cfc9bb" ${OUT}/><rect x="${x + 36}" y="${FY - 316}" width="186" height="30" fill="#5b6066" ${OUT}/><rect x="${x + 36}" y="${FY - 120}" width="186" height="26" fill="#5b6066" ${OUT}/>`;
       for (let b = 0; b < 6; b++) s += `<rect x="${x + 50 + b * 30}" y="${FY - 300}" width="12" height="190" fill="#3f454b"/>`;
+      if (brk) s += `<path d="M${x + 60},${FY - 310}l-10,30l14,20M${x + 150},${FY - 120}l12,-24" stroke="#2e2a26" stroke-width="3" fill="none"/></g>`;
+      if (brk && o.fallen) s += `<path d="M${x + 180},${FY + 30}q60,-20 120,10M${x + 200},${FY + 50}q50,-10 90,20" stroke="#5a4630" stroke-width="10" fill="none" stroke-linecap="round"/>`;
     }
     s += `<rect x="400" y="${FY - 400}" width="44" height="410" fill="#cfc9bb" ${OUT}/><rect x="896" y="${FY - 400}" width="44" height="410" fill="#cfc9bb" ${OUT}/><rect x="400" y="${FY - 420}" width="540" height="30" fill="#c8302a" ${OUT}/>`;
     s += `<text x="670" y="${FY - 435}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#f4ecd8" stroke="${INK}" stroke-width="5" paint-order="stroke">โรงเรียนบ้านหนองน้ำใส</text>`;
@@ -398,6 +402,9 @@
     q(".lampf").forEach((el, i) => { const st = 0.16 + (i % 3) * 0.05; for (let t = 0; t < dur; t += st) { const v = 0.82 + Math.abs((Math.sin((t * 7.3 + i) * 13.1) * 43758.5) % 1) * 0.22; tl.to(el, { opacity: v, duration: st, ease: "sine.inOut" }, t0 + t); } });
     q(".mote").forEach((el, i) => { tl.fromTo(el, { x: 0, y: 0 }, { x: 40 + (i % 5) * 18, y: -60 - (i % 4) * 20, duration: 2.6 + (i % 5) * 0.5, repeat: Math.ceil(dur / 2.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (i % 7) * 0.4); tl.fromTo(el, { opacity: 0.05 }, { opacity: 0.7, duration: 0.9 + (i % 3) * 0.3, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (i % 5) * 0.3); });
     q(".fanspin").forEach((el) => tl.fromTo(el, { rotation: 0 }, { rotation: 360, duration: 0.9, repeat: Math.ceil(dur / 0.9), ease: "none", transformOrigin: "0px 0px", immediateRender: false }, t0));
+    q(".raind").forEach((el) => tl.fromTo(el, { y: -160 }, { y: 160, duration: 0.42, repeat: Math.ceil(dur / 0.42), ease: "none", immediateRender: false }, t0));
+    q(".raind2").forEach((el) => tl.fromTo(el, { y: -120 }, { y: 120, duration: 0.6, repeat: Math.ceil(dur / 0.6), ease: "none", immediateRender: false }, t0));
+    q(".rsplash ellipse").forEach((el, i) => tl.fromTo(el, { opacity: 0.7, scale: 0.3 }, { opacity: 0, scale: 1.6, transformOrigin: "50% 50%", duration: 0.5, repeat: Math.ceil(dur / 0.5), ease: "power1.out", immediateRender: false }, t0 + (i % 9) * 0.06));
     q(".cowisp").forEach((el, i) => tl.fromTo(el, { y: 20, opacity: 0.16 }, { y: -120, opacity: 0, duration: 2.2 + (i % 3) * 0.4, repeat: Math.ceil(dur / 2.2), ease: "sine.out", immediateRender: false }, t0 + i * 0.5));
     q(".fring").forEach((el, i) => tl.fromTo(el, { scale: 0.3, opacity: 0.9 }, { scale: 2.2, opacity: 0, svgOrigin: "1500 1250", duration: 1.6, repeat: Math.ceil(dur / 1.6), ease: "power1.out", immediateRender: false }, t0 + i * 0.5));
   }
@@ -580,6 +587,69 @@
     put(L.set, s);
     put(L.glow, `<circle cx="540" cy="900" r="900" fill="url(#fLamp)" opacity=".35"/>`);
   }
+
+  // ================= EP.4 "รั้วล้ม" =================
+  // rain: a sheet of thin streaks in the foreground layer; flife drives .raind groups downward in a loop. o.n streaks, o.op opacity
+  function rain(L, o = {}) {
+    const n = o.n ?? 90, r = mk(o.seed || 17), op = o.op ?? 0.55;
+    put(L.fg, `<g class="raind" opacity="${op}">${Array.from({ length: n }, () => { const x = -1200 + r() * 3500, y = -900 + r() * 2200, l = 60 + r() * 90; return `<path d="M${f1(x)},${f1(y)}l-14,${f1(l)}" stroke="#dfe8f0" stroke-width="${(2 + r() * 2).toFixed(1)}" stroke-linecap="round" opacity="${(0.35 + r() * 0.5).toFixed(2)}"/>`; }).join("")}</g>
+      <g class="raind2" opacity="${op * 0.6}">${Array.from({ length: Math.floor(n * 0.6) }, () => { const x = -1200 + r() * 3500, y = -900 + r() * 2200, l = 40 + r() * 60; return `<path d="M${f1(x)},${f1(y)}l-10,${f1(l)}" stroke="#c9d6e0" stroke-width="1.6" stroke-linecap="round" opacity="${(0.3 + r() * 0.4).toFixed(2)}"/>`; }).join("")}</g>`);
+    L.fg.classList.remove("fgblur");
+    if (o.splash !== false) put(L.set, `<g class="rsplash">${Array.from({ length: 24 }, (_, k) => `<ellipse cx="${-1000 + ((k * 433) % 3200)}" cy="${1480 + ((k * 97) % 400)}" rx="${10 + (k % 3) * 6}" ry="4" fill="none" stroke="#dfe8f0" stroke-width="3" opacity="0"/>`).join("")}</g>`);
+  }
+
+  // ---------------- the back door of the school building, from inside the corridor at night: two wooden panels (#id-dl, #id-dr) that swing shut toward the middle,
+  // the timber bar (#id-bar) that drops into its brackets, and through the opening the yard in the rain ----------------
+  function backDoor(L, o = {}) {
+    const id = o.id || "bd";
+    sky(L, "night");
+    // what is outside the door: the yard at night (dirt, the far fence line), rain
+    put(L.far, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#2c3a4c"/><circle cx="700" cy="300" r="90" fill="#dfe6e2" opacity=".8"/><circle cx="700" cy="300" r="300" fill="#9fb8d8" opacity=".16"/><rect x="-1200" y="1000" width="3500" height="1600" fill="#6b5a3e"/><path d="M-1200,1000H2300" stroke="#5b6066" stroke-width="30"/>`);
+    put(L.mid, `<rect x="-1200" y="1180" width="3500" height="900" fill="#5a4630"/><ellipse cx="560" cy="1500" rx="700" ry="90" fill="#6b5a3e" opacity=".6"/>`);
+    // the corridor wall around the door, the frame, the floor
+    const W = 1080, DX = 300, DW = 480, DT = 420, DB = 1560;
+    let s = `<rect x="-1200" y="-800" width="3500" height="3600" fill="#d9cfb8" ${OUT}/><rect x="-1200" y="${DB}" width="3500" height="1200" fill="#8a6a42" ${OUT}/><path d="M-1200,${DB}H2300" stroke="#5a3d24" stroke-width="8"/>
+      ${Array.from({ length: 12 }, (_, k) => `<path d="M${-1200 + k * 300},${DB}L${-1300 + k * 300},2700" stroke="#5a3d24" stroke-width="4" opacity=".5"/>`).join("")}
+      <rect x="-1200" y="${DT - 60}" width="3500" height="24" fill="#b3ada0"/><path d="M-1200,1300H${DX - 40}M${DX + DW + 40},1300H2300" stroke="#c4b99f" stroke-width="30"/>`;
+    s = s.replace(`<rect x="-1200" y="-800" width="3500" height="3600" fill="#d9cfb8" ${OUT}/>`, `<path d="M-1200,-800H2300V2800H-1200Z M${DX - 40},${DT - 40}V${DB}H${DX + DW + 40}V${DT - 40}Z" fill="#d9cfb8" fill-rule="evenodd" ${OUT}/>`);
+    put(L.set, s);
+    // a hole in the wall: we see the night through it (the far/mid layers show through this rect because L.set is painted over them except here)
+    // the panels: each a frame of planks with a cross brace; they hinge at the outer jambs and are drawn closed at translate(0)
+    const panel = (pid, flip) => `<g id="${pid}" transform="translate(${flip ? DX + DW : DX},0) scale(${flip ? -1 : 1},1)"><g transform="translate(${flip ? -0 : 0},0)"><rect x="0" y="${DT}" width="${DW / 2}" height="${DB - DT}" fill="#6b4a2e" ${OUT}/>
+      ${[0, 1, 2].map((k) => `<rect x="${12 + k * 76}" y="${DT + 12}" width="64" height="${DB - DT - 24}" fill="#7a5a3e" stroke="#4a3220" stroke-width="3"/>`).join("")}
+      <path d="M14,${DT + 40}L${DW / 2 - 14},${DB - 40}" stroke="#4a3220" stroke-width="22"/><rect x="0" y="${(DT + DB) / 2 - 20}" width="${DW / 2}" height="40" fill="#5a3d24" ${OUT}/>
+      <circle cx="${DW / 2 - 40}" cy="${(DT + DB) / 2 + 80}" r="18" fill="#3a3f45" ${OUT}/></g></g>`;
+    put(L.act, `<g id="${id}-doors">${panel(`${id}-dl`, false)}${panel(`${id}-dr`, true)}</g>
+      <g id="${id}-brk"><rect x="${DX - 70}" y="${(DT + DB) / 2 + 20}" width="60" height="110" rx="8" fill="#3a3f45" ${OUT}/><rect x="${DX + DW + 10}" y="${(DT + DB) / 2 + 20}" width="60" height="110" rx="8" fill="#3a3f45" ${OUT}/></g>
+      <g id="${id}-bar" opacity="${o.barred ? 1 : 0}" transform="translate(0,${o.barred ? 0 : -500})"><rect x="${DX - 90}" y="${(DT + DB) / 2 + 36}" width="${DW + 180}" height="76" rx="10" fill="#8a6a42" ${OUT}/><path d="M${DX - 60},${(DT + DB) / 2 + 60}H${DX + DW + 60}" stroke="#5a3d24" stroke-width="6"/></g>`);
+    // the open state: panels swung back (we animate them from open to closed with scaleX about their hinges)
+    if (!o.closed) { const l = document.getElementById(`${id}-dl`), r = document.getElementById(`${id}-dr`); l.setAttribute("transform", `translate(${DX},0) scale(${o.open ?? 0.25},1)`); r.setAttribute("transform", `translate(${DX + DW},0) scale(${-(o.open ?? 0.25)},1)`); }
+    put(L.glow, `<rect x="${DX - 40}" y="${DT - 40}" width="${DW + 80}" height="${DB - DT + 40}" fill="#9fb8d8" opacity=".14"/>`);
+  }
+
+  // ---------------- the drawing of day 103: the broken fence, five inside, ลุง standing beyond the fence; a small box with a face hanging on a post ----------------
+  function drawing4(L, o = {}) {
+    const id = o.id || "dw4";
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#5a4630"/>`);
+    let s = `<g transform="rotate(-1.5 540 960)"><rect x="90" y="260" width="900" height="1400" fill="url(#fPaper)" ${OUT}/><circle cx="540" cy="290" r="16" fill="#c8392b" ${OUT}/>`;
+    const C = (d, col, w = 9) => `<path d="${d}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#fCrayon)"/>`;
+    s += `<rect x="140" y="440" width="800" height="720" fill="#2f4a8a" opacity=".3" filter="url(#fCrayon)"/>`;
+    s += Array.from({ length: 30 }, (_, k) => C(`M${170 + (k * 97) % 760},${470 + (k * 53) % 600}l-8,40`, "#9fc5d8", 5)).join("");   // the rain, scribbled
+    s += C("M200,1140V860H640V1140M160,860L420,740L680,860M250,940h80v120h-80zM480,940h80v120h-80z", "#c8392b", 10) + `<rect x="200" y="860" width="440" height="280" fill="#f6d6a0" opacity=".6" filter="url(#fCrayon)"/>`;
+    s += C("M150,1300H700", "#6f8f3e", 14) + C("M150,1300l0,-120M250,1300l0,-120M350,1300l0,-120M450,1300l0,-120M150,1180H700", "#5b6066", 8);
+    s += C("M700,1300l200,-60M720,1290l180,-120M760,1280l140,-20", "#5b6066", 8);   // the fence down, lying flat to the right
+    const fig = (x, y, col, h = 1) => `<g transform="translate(${x},${y}) scale(${h})" filter="url(#fCrayon)"><circle cy="-130" r="30" fill="none" stroke="${col}" stroke-width="8"/><path d="M0,-100V0M0,-80l-40,40M0,-80l40,40M0,0l-30,60M0,0l30,60" stroke="${col}" stroke-width="8" fill="none" stroke-linecap="round"/></g>`;
+    s += fig(230, 1440, "#2f4a8a") + fig(320, 1450, "#c8392b") + fig(410, 1450, "#d96a8a") + fig(490, 1470, "#e8b830", 0.7) + fig(580, 1440, "#4e6a5a");
+    s += `<g id="${id}-man">${fig(880, 1200, "#6f8f3e")}${C("M840,1080q40,-10 60,-40", "#6f8f3e", 8)}</g>`;   // ลุง beyond the fence, standing, his hat
+    s += C("M860,1070q20,-30 40,0", "#e8b830", 8);
+    s += `<g id="${id}-box"><rect x="640" y="1180" width="60" height="50" fill="#2e2a26" filter="url(#fCrayon)"/><path d="M652,1196h10M678,1196h10M655,1218q15,-12 30,0" stroke="#f4ecd8" stroke-width="4" fill="none"/>${C("M670,1180v-60", "#2e2a26", 5)}</g>`;   // the small box with a face, on a string
+    s += `<text x="540" y="400" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="60" fill="#2f4a8a" filter="url(#fCrayon)">วันที่ 103 ฝนตก</text>`;
+    s += `<text x="420" y="1600" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#c8392b" filter="url(#fCrayon)">ครู ก้อง เจ๊ ปั้น พี่ภู</text><text x="880" y="1600" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#6f8f3e" filter="url(#fCrayon)">ลุง</text></g>`;
+    put(L.set, s);
+    put(L.glow, `<circle cx="540" cy="900" r="900" fill="url(#fLamp)" opacity=".35"/>`);
+  }
+  Object.assign(Sets, { backDoor, drawing4 });
+  window.Fence.rain = rain;
   Object.assign(Sets, { woundClose, drawing3 });
   window.Fence.KNIFE = KNIFE;
   Object.assign(Sets, { fair, genClose, drawing2 });
