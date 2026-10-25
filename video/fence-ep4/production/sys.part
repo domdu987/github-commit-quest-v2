@@ -177,9 +177,16 @@
           write(tl, el.querySelector(".lb"), t0 + 0.15, { from: t0, gap: 0.08, d: 0.16 });
           slapIn(tl, el, t0 + 0.2, 0.1);
           tl.fromTo(`#${id} .ring path`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: n * tick, ease: "none", immediateRender: false }, t0 + 0.2);
+          const used = new Set();   // sheets already flown at build time (a digit value can repeat in a stack: 20 → 10 → 0 on the ones digit)
           const w = String(o.from).length, strs = Array.from({ length: n + 1 }, (_, i) => String(o.from - i).padStart(w, "0"));   // same padding PAPERS used
           for (let i = 1; i <= n; i++) { const T = t0 + i * tick, v = o.from - i, a = strs[i - 1], b = strs[i];
-            digs.forEach((pd, j) => { if (a[j] === b[j]) return; const top = [...pd.querySelectorAll(".sh")].reverse().find((s) => s.dataset.v === a[j] && s.style.opacity !== "0"); if (top) { flyOff(tl, top, T - 0.2); tl.set(top, { opacity: 0 }, T + 0.6); } });
+            digs.forEach((pd, j) => { if (a[j] === b[j]) return;
+              // the stack top-first, minus the sheets already gone; the top one flies, and any copies of the same digit right under it
+              // (the tens digit holds one "1" sheet per second from 19 to 10) drop out at the same moment so the next digit shows
+              const live = [...pd.querySelectorAll(".sh")].reverse().filter((s) => !used.has(s)), k0 = live.findIndex((s) => s.dataset.v === a[j]);
+              if (k0 < 0) return; let k = k0; while (k < live.length && live[k].dataset.v === a[j]) { used.add(live[k]); k++; }
+              flyOff(tl, live[k0], T - 0.2); tl.set(live[k0], { opacity: 0 }, T + 0.6);
+              for (let m = k0 + 1; m < k; m++) tl.set(live[m], { opacity: 0 }, T + 0.05); });
             const hot = v <= warn;
             tl.fromTo(`#${id}`, { x: 0 }, { x: hot ? 10 : 4, duration: 0.035, repeat: hot ? 7 : 3, yoyo: true, immediateRender: false }, T);
             tl.fromTo(`#${id} .big`, { scale: 1 }, { scale: hot ? 1.12 : 1.05, duration: 0.08, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, T);

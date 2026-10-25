@@ -309,7 +309,7 @@
         shake: (t) => (t > 4.4 && t < 5.4 ? 9 * Math.sin(t * 25) : 3 * Math.sin(t * 13)),
         actors: [MA(-20, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "frown" }, { t: 1.6, mode: "crouch", eyes: "normal", mouth: "frown" }, { t: 2.0, mode: "grabArm", eyes: "normal", mouth: "frown" }, { t: 2.9, mode: "run", eyes: "wide", mouth: "frown" }, { t: 4.4, mode: "pullBolt", eyes: "wide", mouth: "scream" }, { t: 5.4, mode: "run", eyes: "wide", mouth: "scream" }], { prop: "sickle" })],
         captions: caps("count"),
-        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูปิดใน", warn: 5, end: D("count") - 0.1, top: 150 },
+        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูปิดใน", warn: 5, end: D("count") - 0.1, top: 60 },
           { type: "skill", t: 1.9, end: 4.3, x: 60, y: 820, name: "ลุงหมาน", skill: "ช่าง", desc: "รู้ว่าสวิตช์อยู่ไหนโดยไม่ต้องมอง", icon: "wrench" }],
         extra(L) { glow(L, `<circle id="cd-glow" cx="760" cy="1380" r="520" fill="url(#fLamp)" opacity=".9"/>`);
           L.set.insertAdjacentHTML("beforeend", `<g id="cd-sick" opacity="0" transform="translate(720,980)"><path d="M0,0C70,-20 120,-100 90,-180C120,-110 60,-50 0,-26Z" fill="#8d9299" stroke="#2e2a26" stroke-width="4"/></g><g id="cd-sick2" opacity="0" transform="translate(700,1500)"><rect x="-8" y="-70" width="16" height="70" rx="6" fill="#6b4a2e" stroke="#2e2a26" stroke-width="3"/></g>`); },
@@ -333,7 +333,7 @@
         shake: (t) => (t < 5.0 ? 7 * Math.sin(t * 21) : 0),
         actors: [PI(90, 1440, 0.82, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 4.9, mode: "push", eyes: "wide", mouth: "frown" }]),
           MA(1400, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "frown" }, { t: 4.75, mode: "fall", eyes: "closed", mouth: "frown" }], { flip: true })],
-        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูปิดใน", warn: 5, end: 5.6, top: 150 }],
+        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูปิดใน", warn: 5, end: 5.6, top: 60 }],
         fx(tl, id, t0, L) {
           ZF(L, tl, "ce", t0, D("count2"), [["ha1", 1500, 0.8, 0], ["ha2", 1650, 0.76, 0.4], ["ha3", 1350, 0.78, 0.2], ["ha1", 1800, 0.74, 0.6]]);
           route(tl, `${id}-a1`, t0, [{ t: 0, x: 1400, y: 1500 }, { t: 4.75, x: 300, y: 1450 }], 0.9, true);
