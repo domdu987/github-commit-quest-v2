@@ -1,0 +1,477 @@
+      // ---------- แสงกระสือ: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      // ---------- แสงกระสือ EP.1 อย่าตามแสง ----------
+      // many camera angles: wide over the flood, low at the water, close, the old comic, inside the house, the switch close up
+      const FON = (x, y, s, track, extra = {}) => ({ who: "fon", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TOEY = (x, y, s, track, extra = {}) => ({ who: "toey", x, y, s, track, blinks: [1.2, 3.6], ...extra });
+      const PIAK = (x, y, s, track, extra = {}) => ({ who: "piak", x, y, s, track, blinks: [0.7, 2.6, 4.9], ...extra });
+      const CHAEM = (x, y, s, track, extra = {}) => ({ who: "chaem", x, y, s, track, blinks: [1.6, 4.2], ...extra });
+      const G = 1480, PW = G + 160, W = 1250; // house / porch floor, the water by the porch steps, the flood over the village
+      const WIRE = { span: 1, wire: 2 }, WE = [956, 1280]; // the broken line and where its end lies in the water
+      Rig.MODES.wipe = (u, o) => { const w = Math.sin(u * 2 * Math.PI / 0.45); return { ...Rig.MODES.idle(u, o), uaF: 4 + 3 * w, faF: -38 + 22 * w, uaB: -4 - 3 * w, faB: -38 - 22 * w, head: 16, torso: 5 }; };
+      Rig.MODES.paddle = (u, o) => { const p = Math.sin(u * 2 * Math.PI / 1.3); return { ...Rig.MODES.sit(u, o), uaF: -60 + 24 * p, faF: -20, uaB: -40 + 24 * p, faB: -30, torso: 8 + 6 * p }; };
+      // the water in front of anyone in it goes on top of the actors
+      const TOP = (L, id) => { const w = document.getElementById(`${id}-wfront`); if (w) L.act.appendChild(w); };
+      const pot = (x, y, s = 1, id = "") => `<g ${id ? `id="${id}"` : ""} transform="translate(${x},${y}) scale(${s})"><path d="M-70,-90H70L60,-10Q58,0 46,0H-46Q-58,0 -60,-10Z" fill="#9aa4a8" stroke="#2e2a26" stroke-width="4"/>
+        <rect x="-80" y="-104" width="160" height="18" rx="6" fill="#b8c0c4" stroke="#2e2a26" stroke-width="4"/><path d="M-80,-70h-18M80,-70h18" stroke="#2e2a26" stroke-width="8" stroke-linecap="round"/>
+        <path d="M-30,-118q-12,-30 4,-60M14,-118q-12,-30 4,-60" stroke="#f4ecd8" stroke-width="6" fill="none" opacity=".45"/></g>`;
+      const IK = "#2e2a26";
+      const RULE_ROWS = [
+        [`<circle cx="40" cy="44" r="28" fill="#7dff6a" opacity=".35"/><circle cx="40" cy="44" r="13" fill="#eaffd8" stroke="${IK}" stroke-width="3"/><path d="M34,58q-4,16 4,30M46,58q6,12 0,24" stroke="#3dbf5a" stroke-width="4" fill="none"/>
+          <g class="kw"><path d="M66,58h38q8,0 8,8v18q0,8 -8,8h-20l-10,10v-10h-8q-8,0 -8,-8v-18q0,-8 8,-8z" fill="#f4ecd8" stroke="${IK}" stroke-width="4"/><path d="M70,62L106,96" stroke="#e0362c" stroke-width="7" stroke-linecap="round"/></g>`,
+          `<span style="font-size:54px">แสงลอยผ่าน <u>อย่าขาน</u></span>`],
+        [`<path d="M4,92q14,-8 28,0t28,0t28,0t28,0V116H4Z" fill="#4f8fbf" stroke="${IK}" stroke-width="3"/><rect x="10" y="56" width="42" height="30" rx="5" fill="#f4f0e6" stroke="${IK}" stroke-width="3"/><path d="M23,64v12M39,64v12" stroke="${IK}" stroke-width="4"/>
+          <rect x="66" y="12" width="40" height="66" rx="6" fill="#efe9dc" stroke="${IK}" stroke-width="4"/><g class="kw"><path d="M86,28V60" stroke="#c9873a" stroke-width="8" stroke-linecap="round"/><path d="M75,54l11,12l11,-12" stroke="#3fb86a" stroke-width="5" fill="none"/></g>`,
+          `<span style="font-size:54px">น้ำถึงปลั๊ก <u>สับสะพาน</u></span>`],
+        [`<circle cx="34" cy="28" r="12" fill="#e9bc93" stroke="${IK}" stroke-width="3"/><path d="M34,40V74M34,50l-16,-12M34,50l16,-14M34,74l-10,22M34,74l10,22" stroke="${IK}" stroke-width="7" stroke-linecap="round"/>
+          <path d="M6,18l8,6l-6,4l8,6M56,14l-6,8l6,2l-6,8" stroke="#f2c94a" stroke-width="4" fill="none"/>
+          <g class="kw"><path d="M62,108L110,42" stroke="#6a4a2e" stroke-width="12" stroke-linecap="round"/><path d="M62,108L110,42" stroke="#c9a86a" stroke-width="6" stroke-linecap="round"/></g>`,
+          `<span style="font-size:48px">โดนดูดอย่าจับ <u>หาไม้แห้ง</u></span>`],
+      ];
+
+      // ---------- 0. story opener (its own): a green light writes the title, stops, turns — a face rushes the lens — the power stutters back on over the flood ----------
+      const OP = { title: "แสงกระสือ", size: 176, ep: "EP.1", name: "อย่าตามแสง", kick: "ROD MAI CLUB", at: 2.2, glide: 1.8, face: 1.45,
+        land: fr(560, 1000, 0.78, 540, 1000, { drift: { x: 40, s: 0.03 } }), start: fr(620, 880, 1.9, 540, 900) };
+      add("open", {
+        set: "floodVillage", setOpts: { id: "f0", lights: [[300, 960, 0.9], [880, 880, 0.7]], seed: 211 }, dark: 0.12,
+        cam: { keys: OpenerLight.cam(OP) }, shake: OpenerLight.shake(OP),
+        extra(L, id) { OpenerLight.extra(L, id, OP); },
+        captions: caps("open"),
+        fx(tl, id, t0) { OpenerLight.fx(tl, id, t0, OP); },
+      });
+
+      // ---------- 1. low at the water: เต้ย wading toward the pole, a green light ahead, the broken line spitting — cut ----------
+      add("hook", {
+        set: "floodVillage", setOpts: { id: "f1", dark: true, fallen: WIRE, lights: [[1060, 900, 0.8]], seed: 212 }, dark: 0.22,
+        cam: { keys: [{ t: 0, ...fr(760, 1150, 1.05, 540, 1050), drift: { x: 30, s: 0.06 } }] },
+        actors: [TOEY(470, W + 170, 0.75, [{ t: 0, mode: "walk", eyes: "glow", mouth: "flat" }], { moveTo: { x: 700, y: W + 170, dur: D("hook"), ease: "none" } })],
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          TOP(L, "f1"); Krasue.arcs(tl, "#f1-arc", "#f1-arcg", t0 + 0.2, D("hook") - 0.2, 11);
+          Fx.heart(tl, t0 + 0.3, D("hook") - 0.3, 0.42, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook") - 0.5, 0.3, 18, 601); Fx.punch(tl, `#${id} .stage`, t0 + D("hook") - 0.5, 1.08, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.8 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + D("hook") - 0.45);
+        },
+      });
+
+      // ---------- 2. chapter card: the meter, its disc and numbers running backwards — six hours earlier ----------
+      add("back", {
+        set: "meterCard", setOpts: { id: "mc", text: "6 ชั่วโมงก่อน" }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 960), drift: { s: 0.04 } }] },
+        captions: caps("back"),
+        fx(tl, id, t0) {
+          tl.fromTo(`#${id} .stage`, { filter: "blur(8px) hue-rotate(60deg)" }, { filter: "blur(0px) hue-rotate(0deg)", duration: 0.6, immediateRender: false }, t0);
+          Fx.glitch(tl, `#${id}`, t0, 0.3, 14, 602);
+          tl.fromTo("#mc-mark", { x: 180 }, { x: -180, duration: 0.35, repeat: Math.ceil(D("back") / 0.35), ease: "none", immediateRender: false }, t0);
+          const d = document.querySelectorAll("#mc-digits .kdg");
+          [1, 0, 9, 8, 7, 6, 5, 4].forEach((v, k) => tl.set(d[4], { textContent: String(v) }, t0 + 0.05 + k * 0.26));
+          [7, 6].forEach((v, k) => tl.set(d[3], { textContent: String(v) }, t0 + 0.3 + k * 1.1));
+          tl.fromTo("#mc-tag", { rotation: -14, svgOrigin: "750 1060" }, { rotation: 0, svgOrigin: "750 1060", duration: 1.2, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.2);
+        },
+      });
+
+      // ---------- 3. wide at dusk: the village on stilts, the water up to the floors, lights coming on ----------
+      add("dusk", {
+        set: "floodVillage", setOpts: { id: "f3", dusk: true, seed: 213 }, dark: 0.04,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 0.7, 540, 1000), drift: { x: 60, s: 0.03 } }] },
+        captions: caps("dusk"),
+      });
+
+      // ---------- 4. ฝน close, going live on her phone ----------
+      add("live", {
+        set: "porchFlood", setOpts: { id: "p4", dusk: true }, dark: 0.04, blur: { far: 6, set: 5 },
+        cam: { keys: [{ t: 0, ...fr(300, G + 1300 - 530 * 2.3, 1.0, 540, 1000), drift: { s: 0.05 } }] },
+        actors: [FON(300, G + 1300, 2.3, [{ t: 0, mode: "selfie", eyes: "closed", mouth: "smile" }, { t: F("live", 0, 1), mode: "selfie", eyes: "wide", mouth: "o" }])],
+        captions: caps("live", undefined, { quote: true }),
+        ui: [{ type: "rec", t: 0, dur: D("live"), tc0: 21, mode: "LIVE · 1,248 คนดู" }],
+      });
+
+      // ---------- 5. low angle on เต้ย: me too! ----------
+      add("toey", {
+        set: "porchFlood", setOpts: { id: "p5", dusk: true }, dark: 0.05, blur: { far: 5 },
+        cam: { keys: [{ t: 0, ...fr(380, G - 380, 1.05, 540, 1150), drift: { s: 0.05 } }] },
+        actors: [TOEY(380, G, 1.5, [{ t: 0, mode: "raise", eyes: "closed", mouth: "smile" }, { t: 1.4, mode: "wave", eyes: "normal", mouth: "smile" }])],
+        captions: caps("toey", undefined, { quote: true }),
+      });
+
+      // ---------- 6. ลุงเปี๊ยก paddles up to the porch, going house to house ----------
+      const boatIn = (L, id, x) => { put(L.set, `<g id="${id}-boat">${Krasue.boat(x, PW + 6, 0.9, { flip: true })}</g>`); };
+      add("boat", {
+        set: "porchFlood", setOpts: { id: "p6", dusk: true }, dark: 0.06,
+        cam: { keys: [{ t: 0, ...fr(640, G - 250, 0.62, 540, 1150), drift: { x: -30, s: 0.02 } }] },
+        actors: [PIAK(1400, PW - 30, 0.9, [{ t: 0, mode: "paddle", eyes: "normal", mouth: "flat" }, { t: 2.6, mode: "sit", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 920, y: PW - 30, dur: 2.6, ease: "power1.out" } }),
+          FON(200, G, 1.1, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "smile" }, { t: 2.2, mode: "wave", eyes: "closed", mouth: "smile" }]),
+          TOEY(380, G, 0.8, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }, { t: 2.4, mode: "wave", eyes: "closed", mouth: "o" }])],
+        captions: caps("boat"),
+        extra(L) { boatIn(L, "b6", 920); put(L.act, `<g id="b6-front">${Krasue.boatFront(920, PW + 6, 0.9, { flip: true })}</g>`); },
+        fx(tl, id, t0, L) {
+          TOP(L, "p6"); L.act.appendChild(document.getElementById("b6-front"));
+          tl.fromTo(["#b6-boat", "#b6-front"], { x: 480 }, { x: 0, duration: 2.6, ease: "power1.out", immediateRender: false }, t0);
+        },
+      });
+
+      // ---------- 7. ลุงเปี๊ยก's rules (card), from his boat by the steps ----------
+      add("rule", {
+        set: "porchFlood", setOpts: { id: "p7", dusk: true }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(560, G, 0.72, 540, 1520), drift: { s: 0.012 } }, { t: F("rule", 0, 2) - 0.2, glide: 2.0, ...fr(640, G, 0.86, 540, 1520), drift: { s: 0.012 } }] },
+        actors: [PIAK(860, PW - 30, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "o" }], { flip: true }),
+          FON(220, G, 1.1, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }]),
+          TOEY(400, G, 0.8, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }, { t: F("rule", 0, 2), mode: "sit", eyes: "wide", mouth: "o" }])],
+        captions: caps("rule", undefined, { quote: true }),
+        ui: [{ type: "koiRule", t: F("rule", 0, 0) - 0.1, label: "กฎของลุงเปี๊ยก", rows: RULE_ROWS, at: [F("rule", 0, 0), F("rule", 0, 1), F("rule", 0, 2)], top: 170 }],
+        extra(L) { boatIn(L, "b7", 860); put(L.act, `<g id="b7-front">${Krasue.boatFront(860, PW + 6, 0.9, { flip: true })}</g>`); },
+        fx(tl, id, t0, L) {
+          TOP(L, "p7"); L.act.appendChild(document.getElementById("b7-front"));
+          const c = document.getElementById(`${id}-g0`); if (c) c.classList.add("elec");
+        },
+      });
+
+      // ---------- 8. the old one-baht comic: its cover ----------
+      add("legend", {
+        set: "comicLegend", setOpts: { id: "cl" }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(540, -790, 1.7, 540, 800), drift: { s: 0.03 } }, { t: F("legend", 0, 1) - 0.1, glide: 0.45, ease: "power3.out", ...fr(540, -500, 1.05, 540, 960), drift: { s: 0.03 } }] },
+        captions: caps("legend"),
+        fx(tl, id, t0) {
+          tl.fromTo(`#${id} .stage`, { filter: "sepia(.6) brightness(.7)" }, { filter: "sepia(0) brightness(1)", duration: 0.8, immediateRender: false }, t0);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("legend", 0, 1), 1.08, 0.4); Fx.glitch(tl, `#${id}`, t0 + F("legend", 0, 1), 0.25, 14, 603);
+          tl.fromTo("#fxred", { opacity: 0.4 }, { opacity: 0, duration: 0.5, immediateRender: false }, t0 + F("legend", 0, 1));
+        },
+      });
+
+      // ---------- 8b. what it is like (the channel's ghost-story rule: just the traits): by day a woman; at night the head pulls free with
+      // its guts glowing green; it floats to the lights and calls names from the dark ----------
+      const TR = (i, j = 0) => F("traits", i, j);
+      add("traits", {
+        set: "comicLegend", setOpts: { id: "ct" }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(540, 500, 1.08, 540, 960), drift: { s: 0.02 } },
+          { t: TR(1) - 0.1, glide: 0.6, ...fr(540, 1500, 1.08, 540, 960), drift: { s: 0.03 } },
+          { t: TR(1, 2) - 0.1, glide: 0.5, ...fr(560, 1640, 1.45, 540, 960), drift: { s: 0.03 } },
+          { t: TR(2) - 0.1, glide: 0.6, ...fr(540, 2500, 1.08, 540, 960), drift: { x: 30, s: 0.02 } },
+          { t: TR(2, 1) - 0.1, glide: 0.6, ...fr(540, 3500, 1.08, 540, 960), drift: { s: 0.04 } }] },
+        captions: caps("traits"),
+        fx(tl, id, t0) {
+          tl.fromTo("#ct-h2", { y: 140 }, { y: -40, duration: 1.4, ease: "power2.out", immediateRender: false }, t0 + TR(1, 1));
+          Fx.glitch(tl, `#${id}`, t0 + TR(1, 1), 0.2, 12, 604);
+          tl.fromTo("#ct-h2", { filter: "drop-shadow(0 0 0px #7dff6a)" }, { filter: "drop-shadow(0 0 26px #7dff6a)", duration: 0.4, repeat: 3, yoyo: true, immediateRender: false }, t0 + TR(1, 2));
+          tl.fromTo("#ct-h3", { x: -160, y: 60 }, { x: 120, y: -40, duration: TR(2, 1) - TR(2) + 0.4, ease: "sine.inOut", immediateRender: false }, t0 + TR(2) - 0.2);
+          tl.fromTo("#ct-h4", { x: -60 }, { x: 0, duration: 1.0, ease: "power2.out", immediateRender: false }, t0 + TR(2, 1));
+          Fx.punch(tl, `#${id} .stage`, t0 + TR(2, 1) + 0.3, 1.05, 0.4);
+          tl.fromTo("#fxred", { opacity: 0.35 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + TR(2, 1) + 0.3);
+        },
+      });
+
+      // ---------- 9. ฝน laughs it off; ลุงเปี๊ยก in his boat behind ----------
+      add("skeptic", {
+        set: "porchFlood", setOpts: { id: "p9", dusk: true }, dark: 0.06, blur: { far: 5 },
+        cam: { keys: [{ t: 0, ...fr(470, G - 380, 1.0, 540, 1000), drift: { x: -20, s: 0.04 } }] },
+        actors: [PIAK(860, PW - 30, 0.9, [{ t: 0, mode: "sit", eyes: "side", mouth: "frown" }], { flip: true }),
+          FON(330, G, 1.3, [{ t: 0, mode: "laugh", eyes: "closed", mouth: "smile" }, { t: F("skeptic", 0, 1) + 0.3, mode: "idle", eyes: "side", mouth: "smile" }])],
+        captions: caps("skeptic", undefined, { quote: true }),
+        extra(L) { boatIn(L, "b9", 860); put(L.act, `<g id="b9-front">${Krasue.boatFront(860, PW + 6, 0.9, { flip: true })}</g>`); },
+        fx(tl, id, t0, L) { TOP(L, "p9"); L.act.appendChild(document.getElementById("b9-front")); },
+      });
+
+      // ---------- 10. ป้าแช่ม from next door with a pot of curry; then close on her ----------
+      add("chaem", {
+        set: "porchFlood", setOpts: { id: "p10", dusk: true }, dark: 0.08, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(250, G - 300, 0.85, 540, 1150), drift: { x: 20, s: 0.02 } }, { t: vo("chaem", 1) - 0.1, glide: 0.5, ...fr(120, G - 560, 1.7, 540, 900), drift: { s: 0.05 } }] },
+        actors: [CHAEM(-320, G, 1.1, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }, { t: 1.6, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("chaem", 1), mode: "point", eyes: "normal", mouth: "o" }, { t: voEnd("chaem", 1), mode: "idle", eyes: "normal", mouth: "smile" }],
+          { moveTo: { x: 100, y: G, dur: 1.6, ease: "power1.out" } }),
+          FON(380, G, 1.1, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }),
+          TOEY(540, G, 0.8, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
+        captions: caps("chaem", [0]).concat(caps("chaem", [1], { quote: true })),
+        extra(L) { put(L.act, `<g id="pt10">${pot(0, G, 1.0)}</g>`); },
+        fx(tl, id, t0) {
+          tl.fromTo("#pt10", { x: -260, y: -230 }, { x: 160, y: -230, duration: 1.6, ease: "power1.out", immediateRender: false }, t0);
+          tl.to("#pt10", { x: 240, y: 0, duration: 0.5, ease: "power2.inOut" }, t0 + 1.7);
+        },
+      });
+
+      // ---------- 11. her hand on ฝน's wrist: ice cold / she stands at the dark end of the porch, eyes catching green ----------
+      const C2 = F("cold", 0, 1) - 0.12;
+      split("cold", C2, {
+        set: "porchFlood", setOpts: { id: "p11a", dusk: true }, dark: 0.15, blur: { far: 10, set: 10 },
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 960), drift: { s: 0.06 } }] },
+        captions: caps("cold").filter((c) => c.t < C2),
+        extra(L) {
+          const sk = "#e2ad85", pale = "#dfe6ea";
+          put(L.act, `<g id="hc"><rect x="-200" y="600" width="1500" height="1400" fill="#3b2a1c" opacity=".55"/>${pot(540, 1560, 2.8)}
+            <path d="M120,2200L300,1420" stroke="${IK}" stroke-width="210" stroke-linecap="round"/><path d="M120,2200L300,1420" stroke="#e8a33a" stroke-width="190" stroke-linecap="round"/>
+            <path d="M960,2200L790,1420" stroke="${IK}" stroke-width="210" stroke-linecap="round"/><path d="M960,2200L790,1420" stroke="#e8a33a" stroke-width="190" stroke-linecap="round"/>
+            <path d="M300,1440L290,1330" stroke="${IK}" stroke-width="130" stroke-linecap="round"/><path d="M300,1440L290,1330" stroke="${sk}" stroke-width="112" stroke-linecap="round"/>
+            <path d="M790,1440L800,1330" stroke="${IK}" stroke-width="130" stroke-linecap="round"/><path d="M790,1440L800,1330" stroke="${sk}" stroke-width="112" stroke-linecap="round"/>
+            <g id="hc-pale"><path d="M1400,700L860,1290" stroke="${IK}" stroke-width="150" stroke-linecap="round"/><path d="M1400,700L860,1290" stroke="#d89aa8" stroke-width="132" stroke-linecap="round"/>
+              <path d="M1080,1060L860,1300" stroke="${IK}" stroke-width="118" stroke-linecap="round"/><path d="M1080,1060L860,1300" stroke="${pale}" stroke-width="100" stroke-linecap="round"/>
+              ${[0, 1, 2, 3].map((k) => `<path d="M${870 - k * 4},${1250 + k * 34}q-90,${10 + k * 4} -120,${70 + k * 6}" stroke="${IK}" stroke-width="40" fill="none" stroke-linecap="round"/><path d="M${870 - k * 4},${1250 + k * 34}q-90,${10 + k * 4} -120,${70 + k * 6}" stroke="${pale}" stroke-width="28" fill="none" stroke-linecap="round"/>`).join("")}</g>
+            <g id="hc-frost" opacity="0">${Array.from({ length: 16 }, (_, k) => `<circle cx="${700 + ((k * 73) % 300)}" cy="${1180 + ((k * 41) % 260)}" r="${4 + (k % 3) * 3}" fill="#e8f6ff" opacity=".8"/>`).join("")}</g></g>`);
+          put(L.glow, `<g id="hc-cold" opacity="0"><ellipse cx="840" cy="1320" rx="380" ry="300" fill="#bfe0ff" opacity=".35"/></g>`);
+        },
+        fx(tl, id, t0) {
+          tl.fromTo("#hc-pale", { x: 240, y: -240 }, { x: 0, y: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, t0 + 0.1);
+          tl.to(["#hc-frost", "#hc-cold"], { opacity: 1, duration: 0.6 }, t0 + 0.6);
+          tl.fromTo("#hc", { x: 0 }, { x: 6, duration: 0.05, repeat: Math.ceil(C2 / 0.05) - 12, yoyo: true, immediateRender: false }, t0 + 0.7);
+          Fx.heart(tl, t0 + 0.5, C2 - 0.5, 0.42, 0.4);
+        },
+      }, {
+        set: "porchFlood", setOpts: { id: "p11", dusk: true }, dark: 0.3, blur: { far: 6 },
+        cam: { keys: [{ t: 0, ...fr(-600, G - 560, 1.3, 540, 900), drift: { s: 0.06 } }] },
+        actors: [CHAEM(-600, G, 1.1, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: 1.4, mode: "idle", eyes: "glow", mouth: "smile" }]),
+          FON(-180, G + 300, 1.9, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: capsFrom("cold", C2),
+        fx(tl, id, t0) {
+          Fx.glitch(tl, `#${id}`, t0 + 1.4, 0.25, 14, 605);
+          tl.fromTo("#fxred", { opacity: 0.35 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + 1.4);
+          Fx.heart(tl, t0 + 1.0, D("cold") - C2 - 1.0, 0.45, 0.5);
+        },
+      });
+
+      // ---------- 12. 9 p.m. inside: the clock, then down to the outlets, the water creeping up ----------
+      add("nine", {
+        set: "houseIn", setOpts: { id: "h12", level: G - 60 }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(680, G - 1240, 2.0, 540, 760), drift: { s: 0.04 } }, { t: F("nine", 0, 1) - 0.1, glide: 1.0, ...fr(240, G - 200, 1.35, 540, 1100), drift: { s: 0.04 } }] },
+        captions: caps("nine"),
+        extra(L) { put(L.set, `<g><circle cx="680" cy="${G - 1240}" r="50" fill="#f4ecd8"/><path d="M680,${G - 1240}v-38M680,${G - 1240}h-30" stroke="${IK}" stroke-width="6" stroke-linecap="round"/><circle cx="680" cy="${G - 1240}" r="6" fill="${IK}"/></g>`); },
+        fx(tl, id, t0) {
+          tl.fromTo("#h12-water", { y: 0 }, { y: -110, duration: D("nine"), ease: "sine.in", immediateRender: false }, t0);
+          Fx.heart(tl, t0 + F("nine", 0, 2), D("nine") - F("nine", 0, 2), 0.45, 0.4);
+        },
+      });
+
+      // ---------- 13–15. what to do (verbatim sources) ----------
+      add("know1", {
+        set: "houseIn", setOpts: { id: "h13", level: G - 170 }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(240, G - 230, 1.6, 540, 1300), drift: { s: 0.03 } }, { t: F("know1", 0, 1) - 0.1, glide: 0.8, ...fr(940, G - 1120, 1.4, 540, 1300), drift: { s: 0.03 } }] },
+        captions: caps("know1"),
+        ui: [steps("know1", "น้ำท่วมบ้าน", [["wetplug", "น้ำใกล้ถึงปลั๊ก"], ["cutmain", "สับคัตเอาต์ทันที"]], F("know1", 0, 0) + 0.2, D("know1") - 0.15, { gap: F("know1", 0, 1) - F("know1", 0, 0) - 0.2 }),
+          { type: "src", t: F("know1", 0, 2) + 0.2, end: D("know1") - 0.05, top: 640, text: "ที่มา: <em>การไฟฟ้านครหลวง (MEA)</em> · น้ำใกล้ถึงปลั๊ก ให้รีบสับคัตเอาต์หรือเบรกเกอร์ ตัดไฟชั้นล่างทันที" }],
+      });
+      add("know2", {
+        set: "houseIn", setOpts: { id: "h14", level: G - 170 }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(820, G - 500, 0.85, 540, 1350), drift: { x: -30, s: 0.02 } }] },
+        actors: [FON(1085, G - 270, 1.4, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: caps("know2"),
+        ui: [steps("know2", "ไฟฟ้ากับน้ำ", [["nowettouch", "ตัวเปียก ห้ามแตะ"], ["drystand", "ยืนบนที่แห้ง"]], F("know2", 0, 0) + 0.2, D("know2") - 0.15, { gap: F("know2", 0, 2) - F("know2", 0, 0) - 0.2 }),
+          { type: "src", t: F("know2", 0, 3) + 0.1, end: D("know2") - 0.05, top: 640, text: "ที่มา: <em>MEA</em> · ห้ามแตะสวิตช์ ปลั๊ก หรือเครื่องใช้ไฟฟ้า ขณะตัวเปียกหรือยืนแช่น้ำ" }],
+        fx(tl, id, t0, L) { const w = document.getElementById("h14-water"); if (w) L.act.appendChild(w); },
+      });
+      add("know3", {
+        set: "houseIn", setOpts: { id: "h15", level: G - 1060, stairs: false }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(940, G - 1080, 1.1, 540, 1250), drift: { s: 0.03 } }] },
+        captions: caps("know3"),
+        ui: [steps("know3", "ถ้าน้ำถึงตู้ไฟ", [["panelwater", "อย่าลุยเข้าไปสับ"], ["callpea", "ตามช่างไฟ"]], F("know3", 0, 1) - 0.1, D("know3") - 0.15, { gap: F("know3", 0, 2) - F("know3", 0, 1) }),
+          { type: "src", t: F("know3", 0, 2) + 0.3, end: D("know3") - 0.05, top: 640, text: "ที่มา: <em>CDC สหรัฐฯ</em> · อย่าลุยน้ำเข้าไปสับสวิตช์หลัก ให้เรียกช่างไฟ" }],
+        fx(tl, id, t0) { Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.4); },
+      });
+
+      // ---------- 16. ฝน dries her hands on the stairs, then the switch close up: the lever down, the house goes dark ----------
+      const K2 = F("cut", 0, 2) - 0.12, LV = 0.5;
+      split("cut", K2, {
+        set: "houseIn", setOpts: { id: "h16", level: G - 170 }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(1060, G - 820, 1.5, 540, 900), drift: { s: 0.04 } }, { t: F("cut", 0, 1) - 0.1, glide: 0.6, ...fr(1000, G - 300, 1.3, 540, 1100), drift: { s: 0.03 } }] },
+        actors: [FON(1085, G - 270, 1.4, [{ t: 0, mode: "wipe", eyes: "closed", mouth: "flat" }, { t: F("cut", 0, 1), mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+        captions: caps("cut").filter((c) => c.t < K2),
+        fx(tl, id, t0, L) { const w = document.getElementById("h16-water"); if (w) L.act.appendChild(w); },
+      }, {
+        set: "switchClose", setOpts: { id: "sc" }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(540, 980, 1.0, 540, 960), drift: { s: 0.05 } }] },
+        shake: (t) => (t > LV && t < LV + 0.4 ? 10 * Math.sin(t * 60) * (LV + 0.4 - t) / 0.4 : 0),
+        captions: capsFrom("cut", K2),
+        fx(tl, id, t0) {
+          tl.fromTo("#sc-hand", { y: 120 }, { y: 0, duration: 0.35, ease: "power2.out", immediateRender: false }, t0);
+          tl.fromTo("#sc-lever", { attr: { transform: "matrix(1 0 0 1 0 0)" } }, { attr: { transform: "matrix(1 0 0 -1 0 2100)" }, duration: 0.45, ease: "power2.in", immediateRender: false }, t0 + LV);
+          tl.to("#sc-hand", { y: 640, duration: 0.45, ease: "power2.in" }, t0 + LV);
+          tl.fromTo("#sc-spark", { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + LV + 0.05);
+          Fx.punch(tl, `#${id} .stage`, t0 + LV + 0.4, 1.06, 0.3);
+          [0, 0.1, 0.18, 0.3].forEach((d, k) => tl.set("#black", { opacity: k % 2 ? 0.2 : 0.85 }, t0 + LV + 0.55 + d));
+          tl.set("#black", { opacity: 0.85 }, t0 + LV + 0.9);
+          tl.set("#black", { opacity: 0 }, t0 + D("cut") - K2);
+        },
+      });
+
+      // ---------- 17. the village dark; one light left, out over the field ----------
+      add("dark", {
+        set: "floodVillage", setOpts: { id: "f17", dark: true, lights: [[900, 980, 0.7]], seed: 214 }, dark: 0.32,
+        cam: { keys: [{ t: 0, ...fr(560, 1050, 0.74, 540, 1000), drift: { s: 0.02 } }, { t: F("dark", 0, 1) - 0.1, glide: 1.6, ...fr(860, 1000, 1.25, 540, 960), drift: { s: 0.04 } }] },
+        captions: caps("dark"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("dark", 0, 1), D("dark") - F("dark", 0, 1), 0.42, 0.45); },
+      });
+
+      // ---------- 18. down the pole: one line snapped, its end lying under the water, spitting ----------
+      add("bomb", {
+        set: "floodVillage", setOpts: { id: "f18", dark: true, fallen: WIRE, seed: 215 }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(736, 600, 1.7, 540, 760), drift: { s: 0.03 } }, { t: F("bomb", 0, 1) - 0.1, glide: 1.1, ...fr(850, 900, 1.4, 540, 900), drift: { s: 0.03 } },
+          { t: F("bomb", 0, 2) - 0.1, glide: 0.8, ...fr(940, 1250, 1.9, 540, 1000), drift: { s: 0.05 } }] },
+        captions: caps("bomb"),
+        fx(tl, id, t0, L) {
+          TOP(L, "f18"); Krasue.arcs(tl, "#f18-arc", "#f18-arcg", t0 + F("bomb", 0, 2), D("bomb") - F("bomb", 0, 2), 18);
+          Fx.heart(tl, t0 + F("bomb", 0, 2), D("bomb") - F("bomb", 0, 2), 0.45, 0.45);
+        },
+      });
+
+      // ---------- 19. the light floats close… it is a head: green eyes, the guts glowing under it ----------
+      const RV = F("call", 0, 1) - 0.25;
+      add("call", {
+        set: "floodVillage", setOpts: { id: "f19", dark: true, lights: [[640, 1020, 0.6]], seed: 216 }, dark: 0.34,
+        cam: { keys: [{ t: 0, ...fr(620, 1000, 1.0, 540, 960), drift: { s: 0.03 } }, { t: RV, glide: 0.3, ...fr(560, 900, 1.25, 540, 900), drift: { s: 0.06 } }] },
+        shake: (t) => (t > RV && t < RV + 0.4 ? 12 * Math.sin(t * 57) * (RV + 0.4 - t) / 0.4 : 0),
+        captions: caps("call", undefined, { quote: true }),
+        extra(L) { put(L.act, Krasue.ghost(560, 840, 1.25, { id: "k19", op: 0 })); put(L.glow, `<g id="k19g" opacity="0">${Krasue.glow(560, 840, 1.25)}</g>`); },
+        fx(tl, id, t0) {
+          tl.fromTo(["#f19-l0", "#f19-lg0"], { scale: 0.6, x: 0, y: 0, svgOrigin: "640 1020" }, { scale: 2.4, x: -60, y: -120, svgOrigin: "640 1020", duration: RV, ease: "power1.in", immediateRender: false }, t0);
+          tl.to(["#f19-l0", "#f19-lg0"], { opacity: 0, duration: 0.15 }, t0 + RV);
+          tl.fromTo(["#k19", "#k19g"], { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0 + RV);
+          Fx.glitch(tl, `#${id}`, t0 + RV, 0.3, 16, 606); Fx.punch(tl, `#${id} .stage`, t0 + RV + 0.05, 1.08, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + RV);
+          Fx.heart(tl, t0, D("call"), 0.42, 0.55);
+        },
+      });
+
+      // ---------- 20. เต้ย in the doorway, green light on his face: "ครับ ป้าแช่ม…" ----------
+      add("answer", {
+        set: "porchFlood", setOpts: { id: "p20", dark: true }, dark: 0.3, blur: { far: 6, set: 5 },
+        cam: { keys: [{ t: 0, ...fr(290, G + 1200 - 530 * 2.2, 1.0, 540, 980), drift: { s: 0.06 } }] },
+        actors: [TOEY(290, G + 1200, 2.2, [{ t: 0, mode: "idle", eyes: "glow", mouth: "flat" }, { t: vo("answer"), mode: "idle", eyes: "glow", mouth: "o" }, { t: voEnd("answer"), mode: "idle", eyes: "glow", mouth: "flat" }])],
+        captions: caps("answer", undefined, { quote: true }),
+        extra(L) { put(L.glow, `<g class="kglow"><ellipse cx="760" cy="${G + 34}" rx="620" ry="520" fill="url(#ksGlow)"/></g>`); },
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("answer"), 0.45, 0.5); },
+      });
+
+      // ---------- 21. he walks down the steps into the flood after the light ----------
+      add("wade", {
+        set: "porchFlood", setOpts: { id: "p21", dark: true }, dark: 0.28,
+        cam: { keys: [{ t: 0, ...fr(560, G - 150, 0.85, 540, 1100), drift: { x: 60, s: 0.03 } }] },
+        actors: [TOEY(300, G, 0.85, [{ t: 0, mode: "walk", eyes: "glow", mouth: "flat" }],
+          { path: [{ t: 0, x: 300, y: G }, { t: 0.9, x: 560, y: G }, { t: 1.2, x: 600, y: G + 40 }, { t: 1.5, x: 670, y: G + 100 }, { t: 1.8, x: 740, y: G + 160 }, { t: 2.1, x: 810, y: G + 220 }, { t: D("wade"), x: 1060, y: G + 300 }] })],
+        captions: caps("wade"),
+        extra(L) { put(L.set, Krasue.orb(1300, 1040, 0.8, "o21")); put(L.glow, Krasue.orbGlow(1300, 1040, 0.8)); },
+        fx(tl, id, t0, L) {
+          TOP(L, "p21");
+          tl.fromTo("#o21", { x: 0 }, { x: 120, duration: D("wade"), ease: "none", immediateRender: false }, t0);
+          Fx.heart(tl, t0, D("wade"), 0.45, 0.45);
+        },
+      });
+
+      // ---------- 22. ฝน at the door, her phone light on: "เต้ย! กลับมา!" ----------
+      add("shout", {
+        set: "porchFlood", setOpts: { id: "p22", dark: true }, dark: 0.22, blur: { far: 6, set: 6 },
+        cam: { keys: [{ t: 0, ...fr(300, G + 1300 - 530 * 2.3, 1.0, 640, 980), drift: { x: -40, s: 0.08 } }] },
+        shake: (t) => 6 * Math.sin(t * 47),
+        actors: [FON(300, G + 1300, 2.3, [{ t: 0, mode: "whistle", eyes: "wide", mouth: "scream" }])],
+        captions: caps("shout", undefined, { quote: true }),
+        extra(L) { put(L.glow, `<ellipse cx="340" cy="${G + 40}" rx="520" ry="560" fill="url(#ksTube)" opacity=".8"/>`); },
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.08, 0.3); },
+      });
+
+      // ---------- 23–24. what to do about a line in the water (verbatim sources) ----------
+      const rings = (id) => `<g id="${id}">${[0, 1, 2].map((k) => `<ellipse class="${id}r" cx="${WE[0]}" cy="${WE[1] + 10}" rx="120" ry="26" fill="none" stroke="#f2c94a" stroke-width="6" opacity="0"/>`).join("")}</g>`;
+      const ringAnim = (tl, id, t0, dur) => document.querySelectorAll(`.${id}r`).forEach((el, k) => tl.fromTo(el, { scale: 0.3, opacity: 0.9, svgOrigin: `${WE[0]} ${WE[1] + 10}` }, { scale: 2.6, opacity: 0, svgOrigin: `${WE[0]} ${WE[1] + 10}`, duration: 1.2, repeat: Math.ceil(dur / 1.2), ease: "power1.out", immediateRender: false }, t0 + k * 0.4));
+      add("know4", {
+        set: "floodVillage", setOpts: { id: "f23", dark: true, fallen: WIRE, seed: 217 }, dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(860, 1150, 1.2, 540, 1050), drift: { s: 0.03 } }] },
+        captions: caps("know4"),
+        ui: [steps("know4", "สายไฟขาดตกน้ำ", [["livewater", "น้ำมีไฟฟ้าได้"], ["assumelive", "ถือว่ามีไฟเสมอ"]], F("know4", 0, 1) - 0.1, D("know4") - 0.15, { gap: F("know4", 0, 2) - F("know4", 0, 1) }),
+          { type: "src", t: F("know4", 0, 3) + 0.1, end: D("know4") - 0.05, top: 640, text: "ที่มา: <em>Ready.gov (FEMA)</em> · สายไฟที่ขาดทำให้น้ำมีไฟฟ้าได้ · <em>BC Hydro</em> · ให้ถือว่าสายที่ขาดมีไฟเสมอ" }],
+        extra(L) { put(L.glow, rings("rg23")); },
+        fx(tl, id, t0, L) { TOP(L, "f23"); Krasue.arcs(tl, "#f23-arc", "#f23-arcg", t0, D("know4"), 23); ringAnim(tl, "rg23", t0 + F("know4", 0, 1), D("know4") - F("know4", 0, 1)); },
+      });
+      const RX = WE[0] - 720; // ten metres back from the line (a pole is about ten metres)
+      add("know5", {
+        set: "floodVillage", setOpts: { id: "f24", dark: true, fallen: WIRE, seed: 218 }, dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(620, 1150, 0.82, 540, 1350), drift: { s: 0.02 } }] },
+        captions: caps("know5"),
+        ui: [steps("know5", "เจอสายไฟขาด", [["nowade", "อย่าลุยเข้าไป"], ["awayline", "ห่าง 10 เมตร+"], ["callpea", "โทร 1129"]], F("know5", 0, 0) + 0.2, D("know5") - 0.15, { gap: (F("know5", 0, 2) - F("know5", 0, 0)) / 2 }),
+          { type: "src", t: F("know5", 0, 2) + 0.4, end: D("know5") - 0.05, top: 640, text: "ที่มา: <em>BC Hydro</em> · อยู่ห่างอย่างน้อย 10 เมตร · <em>การไฟฟ้าส่วนภูมิภาค</em> แจ้งเหตุ 1129" }],
+        extra(L) {
+          put(L.glow, rings("rg24"));
+          put(L.act, `<g id="rl24" opacity="0"><path d="M${RX},1180H${WE[0]}" stroke="#f2c94a" stroke-width="8" stroke-dasharray="26 16"/><path d="M${RX},1150v60M${WE[0]},1150v60" stroke="#f2c94a" stroke-width="8"/>
+            <rect x="${(RX + WE[0]) / 2 - 130}" y="1086" width="260" height="76" rx="14" fill="#1d1d1d" stroke="#f2c94a" stroke-width="5"/><text x="${(RX + WE[0]) / 2}" y="1140" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="50" fill="#f2c94a">10 เมตร</text></g>`);
+        },
+        fx(tl, id, t0, L) {
+          TOP(L, "f24"); Krasue.arcs(tl, "#f24-arc", "#f24-arcg", t0, D("know5"), 24); ringAnim(tl, "rg24", t0, D("know5"));
+          tl.fromTo("#rl24", { opacity: 0, scaleX: 0.2, svgOrigin: `${WE[0]} 1180` }, { opacity: 1, scaleX: 1, svgOrigin: `${WE[0]} 1180`, duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + F("know5", 0, 1));
+        },
+      });
+
+      // ---------- 25. channel signature ----------
+      add("sig", {
+        set: "porchFlood", setOpts: { id: "p25", dark: true }, dark: 0.35, blur: { far: 8, set: 8, fg: 10 },
+        cam: { keys: [{ t: 0, ...fr(300, G - 400, 1.0, 540, 1150), drift: { s: 0.02 } }, { t: SF(2), ...fr(300, G - 400, 1.06, 540, 1150), drift: { s: 0.045 } }, { t: SF(3), ...fr(300, G - 400, 1.14, 540, 1150), drift: { s: 0.02 } }] },
+        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
+        actors: [FON(300, G, 1.3, [{ t: 0, mode: "whistle", eyes: "wide", mouth: "o" }])],
+        captions: caps("sig"),
+        ui: [{ type: "sigCard", t: 0.05, title: "แสงกระสือ · เช็กลิสต์เอาตัวรอด", items: [["เช็ดมือให้แห้ง", true], ["ยืนบนที่แห้ง", true], ["สับคัตเอาต์", true], ["???", false]],
+          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
+        fx(tl, id, t0) {
+          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
+          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
+          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 83);
+          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 84);
+          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
+          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
+        },
+      });
+
+      // ---------- 26. เต้ย standing in the water a few steps from the line ----------
+      add("near", {
+        set: "floodVillage", setOpts: { id: "f26", dark: true, fallen: WIRE, lights: [[1080, 900, 0.8]], seed: 219 }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(820, 1120, 0.95, 540, 1000), drift: { s: 0.02 } }, { t: F("near", 0, 1) - 0.1, glide: 0.9, ...fr(870, 1200, 1.55, 540, 1000), drift: { s: 0.05 } }] },
+        actors: [TOEY(780, W + 170, 0.75, [{ t: 0, mode: "idle", eyes: "glow", mouth: "flat" }])],
+        captions: caps("near"),
+        extra(L) { put(L.act, `<path id="ln26" d="M820,${W + 40}Q${(820 + WE[0]) / 2},${W - 30} ${WE[0] - 20},${W + 30}" stroke="#ff5a4a" stroke-width="7" stroke-dasharray="18 14" fill="none" opacity="0"/>`); },
+        fx(tl, id, t0, L) {
+          TOP(L, "f26"); L.act.appendChild(document.getElementById("ln26"));
+          Krasue.arcs(tl, "#f26-arc", "#f26-arcg", t0, D("near"), 26);
+          tl.fromTo("#ln26", { opacity: 0 }, { opacity: 1, duration: 0.3, repeat: 7, yoyo: true, immediateRender: false }, t0 + F("near", 0, 2));
+          Fx.heart(tl, t0 + F("near", 0, 1), D("near") - F("near", 0, 1), 0.4, 0.55);
+        },
+      });
+
+      // ---------- 27. the กระสือ over the water by the line, drawing him on: "อีกนิดเดียว… ลูก…" ----------
+      add("whisper", {
+        set: "floodVillage", setOpts: { id: "f27", dark: true, fallen: WIRE, seed: 220 }, dark: 0.34,
+        cam: { keys: [{ t: 0, ...fr(1000, 960, 1.3, 540, 900), drift: { s: 0.03 } }, { t: F("whisper", 0, 1) - 0.1, glide: 0.35, ...fr(1000, 880, 1.8, 540, 900), drift: { s: 0.05 } }] },
+        captions: caps("whisper", undefined, { quote: true }),
+        extra(L) { put(L.act, Krasue.ghost(1000, 840, 1.3, { id: "k27" })); put(L.glow, Krasue.glow(1000, 840, 1.3)); },
+        fx(tl, id, t0, L) {
+          TOP(L, "f27"); Krasue.arcs(tl, "#f27-arc", "#f27-arcg", t0, D("whisper"), 27);
+          Fx.glitch(tl, `#${id}`, t0 + F("whisper", 0, 1), 0.3, 14, 607); Fx.punch(tl, `#${id} .stage`, t0 + F("whisper", 0, 1), 1.06, 0.4);
+          Fx.heart(tl, t0, D("whisper"), 0.42, 0.6);
+        },
+      });
+
+      // ---------- 28. the choice: shout at him to stop / wade in after him ----------
+      add("choice", {
+        set: "floodVillage", setOpts: { id: "f28", dark: true, fallen: WIRE, seed: 221 }, dark: 0.34,
+        cam: { keys: [{ t: 0, ...fr(880, 1100, 1.0, 540, 1250), drift: { s: 0.03 } }] },
+        actors: [TOEY(800, W + 170, 0.75, [{ t: 0, mode: "idle", eyes: "glow", mouth: "flat" }])],
+        extra(L) { put(L.act, Krasue.ghost(1080, 880, 0.9)); put(L.glow, Krasue.glow(1080, 880, 0.9)); },
+        ui: [{ type: "choice", t: 0.05, q: "จะทำยังไง?", a: "ตะโกนให้หยุด", b: "ลุยน้ำไปดึง", secs: 3, top: 280,
+          possessed: { at: 1.0, side: "b", glitch: "ลุยน้ำไปดึง…", who: "…น้องคนเดียวนะ" } }],
+        fx(tl, id, t0, L) {
+          TOP(L, "f28"); Krasue.arcs(tl, "#f28-arc", "#f28-arcg", t0, D("choice"), 28);
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 66); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 67);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
+
+      // ---------- 29. end card: the danger sign on the pole, ลุงเปี๊ยก's note ----------
+      add("next", {
+        set: "poleSign", setOpts: { id: "sg", ep: "ตอนที่ 2", title: "อย่าจับตัว" }, dark: 0.08,
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 900), drift: { s: 0.03 } }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#sg-sign", { attr: { transform: "rotate(-9 540 900)" } }, { attr: { transform: "rotate(-2 540 900)" }, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          Fx.heart(tl, t0 + 0.9, D("next") - 0.9, 0.7, 0.35);
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Krasue.life(tl, `#${id}`, t0, sh.dur); }; });
