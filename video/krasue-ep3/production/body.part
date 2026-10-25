@@ -117,24 +117,26 @@
       // ---------- 8. the window close: a face against the glass — with a bun ----------
       const FC = F("face", 0, 1) - 0.2;
       add("face", {
-        set: "houseIn", setOpts: NIGHT("h8"), dark: 0.55,
-        cam: { keys: [{ t: 0, ...fr(1330, G - 940, 1.6, 540, 900), drift: { s: 0.04 } }, { t: FC, glide: 0.3, ...fr(1330, G - 1000, 2.4, 540, 900), drift: { s: 0.06 } }] },
-        shake: (t) => (t > FC && t < FC + 0.4 ? 10 * Math.sin(t * 57) * (FC + 0.4 - t) / 0.4 : 0),
+        set: "houseIn", setOpts: NIGHT("h8"), dark: 0.62,
+        cam: { keys: [{ t: 0, ...fr(1330, G - 940, 1.6, 540, 900), drift: { s: 0.04 } }, { t: FC, glide: 2.2, ...fr(1330, G - 960, 2.1, 540, 900), drift: { s: 0.03 } }] },
+        shake: (t) => (t > D("face") - 0.55 && t < D("face") - 0.3 ? 12 * Math.sin(t * 61) : 0),
         captions: caps("face"),
         extra(L) {
           lightsOff("h8");
           put(L.set, `<defs><clipPath id="h8clip"><rect x="${WX}" y="${G - 1150}" width="360" height="420"/></clipPath></defs>
-            <g clip-path="url(#h8clip)"><rect x="${WX}" y="${G - 1150}" width="360" height="420" fill="#1d3346"/><circle cx="${WX + 180}" cy="${G - 1010}" r="200" fill="#3dbf5a" opacity=".25"/><g id="k8" opacity="0">${Krasue.ghost(WX + 180, G - 1000, 0.95, { bun: true })}</g>
-              <rect x="${WX}" y="${G - 1150}" width="360" height="420" fill="#9fb8c8" opacity=".12"/>${[0, 1, 2].map((k) => `<path d="M${WX + 40 + k * 110},${G - 1140}l-30,140" stroke="#cfe6ee" stroke-width="6" opacity=".25"/>`).join("")}</g>
-            <path d="M${WX + 180},${G - 1150}v420M${WX},${G - 940}h360" stroke="#5a4a3a" stroke-width="10"/><rect x="${WX}" y="${G - 1150}" width="360" height="420" fill="none" stroke="${IK}" stroke-width="4"/>`);
-          put(L.glow, `<g id="k8g" opacity="0">${Krasue.glow(WX + 180, G - 1000, 0.95, 0.7)}</g>`);
+            <g clip-path="url(#h8clip)"><rect x="${WX}" y="${G - 1150}" width="360" height="420" fill="#0e1a24"/>
+              <g id="k8" opacity="0" transform="translate(0,0)">${Krasue.lurk(WX + 180, G - 960, 0.8, { bun: true, heart: 0.7 })}</g>
+              <rect x="${WX}" y="${G - 1150}" width="360" height="420" fill="#9fb8c8" opacity=".08"/>${[0, 1, 2].map((k) => `<path d="M${WX + 40 + k * 110},${G - 1140}l-30,140" stroke="#cfe6ee" stroke-width="5" opacity=".18"/>`).join("")}</g>
+            <path d="M${WX + 180},${G - 1150}v420M${WX},${G - 940}h360" stroke="#3a3028" stroke-width="10"/><rect x="${WX}" y="${G - 1150}" width="360" height="420" fill="none" stroke="${IK}" stroke-width="4"/>`);
         },
         fx(tl, id, t0) {
-          tl.to(["#k8", "#k8g"], { opacity: 1, duration: 0.15 }, t0 + FC);
-          Fx.glitch(tl, `#${id}`, t0 + FC, 0.35, 18, 804); Fx.punch(tl, `#${id} .stage`, t0 + FC + 0.05, 1.08, 0.4);
-          tl.fromTo("#fxred", { opacity: 0.5 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + FC);
-          tl.fromTo("#flashw", { opacity: 0.4 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + FC);
-          Fx.heart(tl, t0 + FC, D("face") - FC, 0.4, 0.6);
+          const hit = t0 + D("face") - 0.55;
+          tl.fromTo("#k8", { opacity: 0 }, { opacity: 1, duration: 1.1, ease: "power1.in", immediateRender: false }, t0 + FC - 0.2);
+          tl.to("#k8", { attr: { transform: `translate(${-(WX + 180) * 1.3},${-(G - 960) * 1.3}) scale(2.3)` }, duration: 0.12, ease: "power4.in" }, hit);
+          Fx.glitch(tl, `#${id}`, hit + 0.08, 0.2, 14, 804);
+          Fx.heart(tl, t0 + FC, D("face") - FC - 0.6, 0.45, 0.6);
+          tl.set("#black", { opacity: 1 }, hit + 0.24);
+          tl.set("#black", { opacity: 0 }, t0 + D("face"));
         },
       });
 
@@ -283,16 +285,12 @@
         captions: caps("glint"),
         fx(tl, id, t0) {
           tl.set("#ct23-shut", { opacity: 0 }, t0); tl.set("#ct23-open", { opacity: 1 }, t0);
-          const g = t0 + F("glint", 0, 1);
-          tl.fromTo("#ct23-eyes", { opacity: 0 }, { opacity: 1, duration: 0.08, immediateRender: false }, g);
-          tl.to("#ct23-eyes", { opacity: 0, duration: 0.3 }, g + 1.3);
-          Fx.glitch(tl, `#${id}`, g, 0.35, 18, 806); Fx.punch(tl, `#${id} .stage`, g, 1.08, 0.4);
-          tl.fromTo("#flashw", { opacity: 0.4 }, { opacity: 0, duration: 0.2, immediateRender: false }, g);
-          Fx.heart(tl, g, D("glint") - F("glint", 0, 1), 0.4, 0.55);
+          const g = t0 + F("glint", 0, 1) + 0.35;
+          tl.set("#ct23-eyes", { opacity: 1 }, g); tl.set("#ct23-eyes", { opacity: 0 }, g + 0.16);
+          Fx.heart(tl, g, D("glint") - F("glint", 0, 1) - 0.35, 0.45, 0.5);
         },
       });
 
-      // ---------- 24. that night: the water up again, a green light floating over the field ----------
       add("night", {
         set: "floodVillage", setOpts: { id: "f24", lights: [[1200, 900, 0.8]], seed: 324 }, dark: 0.16,
         cam: { keys: [{ t: 0, ...fr(560, 1000, 0.72, 540, 1000), drift: { x: 60, s: 0.03 } }] },
@@ -302,11 +300,19 @@
 
       // ---------- 25. the light close: the face, calling "ฝน… เต้ย… มานี่สิลูก…" ----------
       add("call", {
-        set: "floodVillage", setOpts: { id: "f25", dark: true, seed: 325 }, dark: 0.36,
-        cam: { keys: [{ t: 0, ...fr(560, 900, 1.0, 540, 900), drift: { s: 0.03 } }, { t: F("call", 0, 2) - 0.1, glide: 1.8, ...fr(560, 860, 1.6, 540, 900), drift: { s: 0.05 } }] },
+        set: "floodVillage", setOpts: { id: "f25", dark: true, seed: 325 }, dark: 0.55,
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.0, 540, 900), drift: { s: 0.02 } }, { t: 0.4, glide: D("call") - 2.0, ...fr(560, 880, 1.25, 540, 900), drift: { s: 0.02 } }] },
         captions: caps("call", undefined, { quote: true }),
-        extra(L) { put(L.act, Krasue.ghost(560, 840, 1.1, { bun: true })); put(L.glow, Krasue.glow(560, 840, 1.1)); },
-        fx(tl, id, t0) { Fx.heart(tl, t0, D("call"), 0.42, 0.6); Fx.glitch(tl, `#${id}`, t0 + F("call", 0, 2), 0.2, 10, 807); },
+        extra(L) { put(L.act, Krasue.lurk(600, 880, 0.42, { id: "k25", heart: 0.8 })); put(L.light, Krasue.lensFace("k25f")); },
+        fx(tl, id, t0) {
+          const out = t0 + voEnd("call") + 0.1, hit = t0 + D("call") - 0.5;
+          Fx.heart(tl, t0, voEnd("call"), 0.5, 0.55);
+          tl.to("#k25", { opacity: 0, duration: 0.08 }, out);
+          tl.to(`#${id}-dark`, { opacity: 0.9, duration: 0.3 }, out);
+          tl.fromTo("#k25f", { opacity: 0, scale: 1.25, transformOrigin: "50% 47%" }, { opacity: 1, scale: 1, duration: 0.09, ease: "power4.out", immediateRender: false }, hit);
+          Fx.glitch(tl, `#${id}`, hit + 0.05, 0.18, 16, 807);
+          tl.set("#black", { opacity: 1 }, hit + 0.24);
+        },
       });
 
       // ---------- 26. black, one green light far off; the rule ----------
@@ -315,6 +321,7 @@
         cam: { keys: [{ t: 0, ...fr(560, 1000, 1.0, 540, 960), drift: { s: 0.02 } }] },
         captions: caps("last"),
         fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.5);
           tl.to(`#${id}-dark`, { opacity: 0.92, duration: F("last", 0, 2) }, t0);
           tl.to(["#f26-l0", "#f26-lg0"], { opacity: 0, duration: 0.6 }, t0 + D("last") - 1.0);
           Fx.heart(tl, t0, D("last") - 0.6, 0.6, 0.4);

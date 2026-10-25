@@ -110,7 +110,9 @@ CUES = [
     *beats("silent", 0.0, D["silent"], 0.38, 0.6),
     *knocks("why", 0.05, 4, 0.26, 0.9), *beats("why", 0.0, D["why"], 0.38, 0.6),
     ("rise", 0.5, "swell", 0.5), *beats("rise", 0.0, D["rise"], 0.42, 0.5),
-    ("face", FC, "sting", 1.0), ("face", FC, "glitch", 0.7), ("face", FC + 0.05, "shriek", 0.4), ("face", FC, "boom", 0.4), *beats("face", FC, D["face"] - FC, 0.4, 0.6),
+    # koi-style: the face comes in slowly with only a heartbeat; one hit (it presses to the glass), then silence
+    ("face", FC - 0.2, "swell", 0.25), *beats("face", FC, D["face"] - FC - 0.6, 0.45, 0.6),
+    ("face", D["face"] - 0.55, "slam", 0.9), ("face", D["face"] - 0.55, "sting", 1.1), ("face", D["face"] - 0.5, "shriek", 0.45),
     ("dawn", F("dawn", 0, 0) + 0.1, "rooster", 0.8), ("dawn", 0.2, "swell", 0.3),
     ("morning", 0.3, "drip", 0.4), ("morning", 1.6, "drip", 0.3), ("morning", 2.6, "squelch", 0.4),
     ("reach", 0.9, "rustle", 0.3),
@@ -122,9 +124,11 @@ CUES = [
     ("mat", 0.3, "creak", 0.4), ("mat", 1.5, "swell", 0.3),
     ("rag", F("rag", 0, 1), "squelch", 0.5), ("rag", F("rag", 0, 1), "sting", 0.5), *beats("rag", F("rag", 0, 1), D["rag"] - F("rag", 0, 1), 0.42, 0.5),
     ("wake", WK, "sting", 0.4), *beats("wake", 0.0, D["wake"], 0.45, 0.45),
-    ("glint", GL, "sting", 1.0), ("glint", GL, "glitch", 0.7), ("glint", GL, "shriek", 0.4), ("glint", GL, "boom", 0.5), *beats("glint", GL, D["glint"] - GL, 0.4, 0.55),
+    ("glint", GL + 0.35, "sting", 0.45), *beats("glint", GL + 0.35, D["glint"] - GL - 0.35, 0.45, 0.5),
     ("night", 0.2, "hum", 0.4), ("night", 1.0, "swell", 0.3),
-    ("call", 0.2, "swell", 0.5), *beats("call", 0.0, D["call"], 0.42, 0.6), ("call", F("call", 0, 2), "glitch", 0.4),
+    # it calls from far off and holds still; the eyes go out; silence; then at the lens; cut
+    ("call", 0.2, "swell", 0.35), *beats("call", 0.0, vo_end("call"), 0.5, 0.55),
+    ("call", D["call"] - 0.5, "sting", 1.2), ("call", D["call"] - 0.48, "shriek", 0.6), ("call", D["call"] - 0.5, "slam", 0.7),
     ("last", 0.3, "hum", 0.3), *beats("last", 0.0, D["last"] - 0.6, 0.6, 0.4), ("last", D["last"] - 0.25, "boom", 0.6),
     ("end", 0.3, "whoosh", 0.5), ("end", 0.45, "drip", 0.6), ("end", 0.8, "gong", 0.5),
 ]
@@ -154,9 +158,11 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 dip(0.0, T("recap", -0.05), 0.3, 0.05)
 dip(T("hook", 0), T("hook", -0.05), 0.35)
-dip(T("open", 0), T("face", -0.05), 0.3)
+dip(T("open", 0), T("face", FC - 0.3), 0.3)
 dip(T("rag", 0), T("glint", -0.05), 0.35)
-dip(T("call", 0), T("last", -0.05), 0.3)
+dip(T("face", FC - 0.3), T("face", -0.05), 0.15)
+dip(T("call", 0), T("call", vo_end("call")), 0.25)
+dip(T("call", vo_end("call")), T("last", 0.4), 0.0, 0.1)  # dead silence before the hit
 mus = mus * gain
 end = int(T("last", -0.2) * SR)
 mus[end:] = 0  # hard cut to black and silence

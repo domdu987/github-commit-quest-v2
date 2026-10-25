@@ -4,6 +4,8 @@
 //   Krasue.ghost(x, y, s, o)  the กระสือ, one piece: a woman's black head with green eyes and long wet hair, and under the neck her
 //                             heart glowing red (user: "หัวใจสีแดง"), lungs and guts glowing green, hanging and dripping (class kbob bobs it, kdrip drips, khair sways)
 //   Krasue.glow(x, y, s)      its green light for the glow layer (shows through the darkness)
+//   Krasue.lurk(x, y, s, o)   the head as a black shape in the dark, only the green eyes clear (o.bun, o.heart dim red); Krasue.lensFace(id) the
+//                             face at the lens for a split second (screen space) — the koi-style scare: show almost nothing, hold, then one quick hit and cut
 //   Sets.floodVillage  wide: houses on stilts, poles and sagging lines in the water, the transformer lamp; o.lights green orbs
 //                      (#id-l0…), o.fallen = a broken line with its end in the water (#id-arc sparks, #id-wire); #id-wfront over waders
 //   Sets.houseIn       inside a low house at night: the outlets near the floor, a fan, the fridge (o.fridgeX; lower handle #id-fh), the door (o.doorX, #id-door),
@@ -72,6 +74,26 @@
   }
   // the green glow is centred on the guts, under the heart, and the heart keeps its own red glow on top (so it reads red in the dark)
   const glow = (x, y, s, r = 1) => `<g class="kglow"><circle cx="${f1(x)}" cy="${f1(y + 300 * s)}" r="${f1(420 * s * r)}" fill="url(#ksGlow)"/><circle cx="${f1(x)}" cy="${f1(y + 190 * s)}" r="${f1(120 * s)}" fill="url(#ksHeartGlow)"/></g>`;
+  // koi-style scares (user 25 ต.ค.: "ฉากจั้มสแกร์ไม่ค่อยดี ดูกองกอย EP.3 ตอนจบเป็นตัวอย่าง"): show almost nothing. lurk = the head as a
+  // black shape in the dark, hair hanging, only the two green eyes clear (class keye flickers), o.bun, o.heart = a dim red glow
+  // under the neck where the heart is (no lit guts); lensFace = the face right at the lens for a split second (#id, opacity 0)
+  function lurk(x, y, s, o = {}) {
+    const hair = Array.from({ length: 11 }, (_, i) => { const dx = -56 + i * 11.2, len = 200 + (i % 4) * 50, sw = (i % 2 ? 1 : -1) * (8 + (i % 3) * 6);
+      return `<path class="khair" data-i="${i}" d="M${f1(dx * 0.7)},-60C${f1(dx * 1.2)},${f1(len * 0.25)} ${f1(dx * 1.25 + sw)},${f1(len * 0.65)} ${f1(dx * 1.05 + sw * 1.5)},${f1(len)}" stroke="#030404" stroke-width="${13 - (i % 3) * 3}" fill="none" stroke-linecap="round"/>`; }).join("");
+    const eye = (cx) => `<g class="keye"><circle cx="${cx}" cy="-6" r="22" fill="${KEYE[0]}" opacity=".22"/><path d="M${cx - 14},-6Q${cx},-16 ${cx + 14},-6Q${cx},4 ${cx - 14},-6Z" fill="${KEYE[0]}"/><ellipse cx="${cx}" cy="-6" rx="4" ry="3.5" fill="${KEYE[2]}"/></g>`;
+    return `<g ${o.id ? `id="${o.id}"` : ""} opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${s})">
+      ${o.heart ? `<circle cx="0" cy="190" r="${o.heart * 90}" fill="url(#ksHeartGlow)" opacity=".55"/>` : ""}${hair}
+      ${o.bun ? `<circle cx="0" cy="-128" r="30" fill="#030404"/>` : ""}
+      <path d="M-64,-30Q-62,-110 0,-114Q62,-110 64,-30Q66,40 30,66Q0,82 -30,66Q-66,40 -64,-30Z" fill="#030404"/>
+      <path d="M-66,-36Q-60,-118 0,-122Q60,-118 66,-36Q40,-84 0,-86Q-40,-84 -66,-36Z" fill="#020303"/>${eye(-24)}${eye(24)}
+      ${[-46, -30, 30, 46].map((dx, i) => `<path d="M${dx * 0.8},-80C${dx},-30 ${dx + (i % 2 ? 4 : -4)},20 ${dx * 1.1},${80 + (i % 2) * 20}" stroke="#020303" stroke-width="${9 - (i % 2) * 2}" fill="none" stroke-linecap="round"/>`).join("")}</g></g>`;
+  }
+  const lensFace = (id) => `<g id="${id}" opacity="0"><rect x="-100" y="-100" width="1280" height="2120" fill="#020303"/>
+      <g transform="translate(540,900) scale(8.5)">
+        <path d="M-64,-30Q-62,-110 0,-114Q62,-110 64,-30Q66,40 30,66Q0,82 -30,66Q-66,40 -64,-30Z" fill="#070908" stroke="${KRIM}" stroke-width="1.2" opacity=".9"/>
+        ${[-24, 24].map((cx) => `<circle cx="${cx}" cy="-6" r="20" fill="${KEYE[0]}" opacity=".35"/><path d="M${cx - 15},-6Q${cx},-19 ${cx + 15},-6Q${cx},5 ${cx - 15},-6Z" fill="${KEYE[0]}"/><ellipse cx="${cx}" cy="-6" rx="4" ry="4" fill="${KEYE[2]}"/>`).join("")}
+        <path d="M-14,40Q0,32 14,40Q8,52 0,54Q-8,52 -14,40Z" fill="#000"/>
+        ${[-50, -36, -20, 14, 30, 48].map((dx, i) => `<path d="M${dx},-120C${dx + (i % 2 ? 6 : -6)},-40 ${dx + (i % 2 ? -4 : 4)},20 ${dx * 1.2},120" stroke="#010202" stroke-width="${7 - (i % 3)}" fill="none" stroke-linecap="round"/>`).join("")}</g></g>`;
   // a floating green light seen from far away (what the villagers call แสงกระสือ)
   const orb = (x, y, s, id) => `<g class="korb" ${id ? `id="${id}"` : ""}><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(16 * s)}" fill="#d8ffc0"/><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(38 * s)}" fill="#7dff6a" opacity=".45"/>
     <path d="M${f1(x - 5 * s)},${f1(y + 14 * s)}q${f1(-6 * s)},${f1(40 * s)} ${f1(4 * s)},${f1(80 * s)}M${f1(x + 6 * s)},${f1(y + 14 * s)}q${f1(8 * s)},${f1(30 * s)} ${f1(-2 * s)},${f1(60 * s)}" stroke="#7dff6a" stroke-width="${f1(4 * s)}" fill="none" opacity=".7"/></g>`;
@@ -540,5 +562,5 @@
   }
 
   Object.assign(Sets, { floodVillage, houseIn, porchFlood, meterCard, comicLegend, switchClose, poleSign, cprFloor, latchClose, outletClose, chaemTop });
-  window.Krasue = { ghost, glow, orb, orbGlow, boat, boatFront, life, arcs, KBL, KBL2, KRIM, KEYE };
+  window.Krasue = { ghost, lurk, lensFace, glow, orb, orbGlow, boat, boatFront, life, arcs, KBL, KBL2, KRIM, KEYE };
 })();

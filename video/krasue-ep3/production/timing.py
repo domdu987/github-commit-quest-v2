@@ -45,7 +45,7 @@ SHOTS = [
     ("wake", ["n19", ("d04", 0.2)], 0.1, 0.5, 6.4),     # her face: eyes open, a smile
     ("glint", ["n20"], 0.1, 0.8, 3.8),                  # her eyes flash green
     ("night", ["n21"], 0.2, 0.5, 5.4),                  # that night: the water up again, a green light over the field
-    ("call", ["r03"], 0.3, 0.6, 6.6),                   # the light close: the face, calling
+    ("call", ["r03"], 0.3, 1.5, 6.6),                   # the light close: the face, calling
     ("last", ["n22"], 0.3, 1.0, 5.6),                   # black; one green light; the rule
     ("end", [], 0.0, 0.0, 3.0),                         # end card: the sign on the pole — ตอนจบ
 ]

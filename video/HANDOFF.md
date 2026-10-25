@@ -818,7 +818,7 @@ add("key", {
 | 21 | "มือพราย" EP.3 ให้นอนหงาย ตอนจบ (2:15, ไม่มีซิกเนเจอร์) | `video/phrai-ep3/EP3-hai-non-ngai-share.mp4` |
 | 22 | "แสงกระสือ" EP.1 อย่าตามแสง (2:31, เปิดด้วย OpenerLight) | `video/krasue-ep1/EP1-ya-tam-saeng-share.mp4` |
 | 23 | "แสงกระสือ" EP.2 อย่าจับตัว (2:33) | `video/krasue-ep2/EP2-ya-chap-tua-share.mp4` |
-| 24 | "แสงกระสือ" EP.3 ห้ามขาน ตอนจบ (2:12, ไม่มีซิกเนเจอร์) | `video/krasue-ep3/EP3-ham-khan-share.mp4` |
+| 24 | "แสงกระสือ" EP.3 ห้ามขาน ตอนจบ (2:13, ไม่มีซิกเนเจอร์, จั้มสแกร์แบบกองกอย) | `video/krasue-ep3/EP3-ham-khan-share.mp4` |
 
 แคปชันของทุกเรื่อง: `camp-ep1/production/CAPTIONS.md`, `koi/`, `zom/`, `mok/`, `kwan/`, `phrai/`, `krasue/CAPTIONS.md` · 25 ต.ค. ส่ง HQ + แคปชันของ 5 เรื่องที่จบแล้ว (ค่าย เสียงกอย ชั้น 23 หมอกลง ควันหลง) ให้ผู้ใช้ครบแล้ว
 
