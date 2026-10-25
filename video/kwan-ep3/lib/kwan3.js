@@ -55,10 +55,10 @@
     for (let y = -1400; y < 4000; y += 120) s += `<path d="M-800,${y}H1900" stroke="#262c2b" stroke-width="4"/>`;
     LY.forEach((y, k) => {
       const fl = 7 - k;
-      // the landing (left) with its fire door and floor number; the half landing on the right
+      // the landing (left) with its fire door and floor number; the half landing on the right (760…1660, room to lie down and roll)
       s += `<rect x="-300" y="${y}" width="620" height="60" fill="#5a5e5c" ${OUT}/><rect x="-200" y="${y - 760}" width="300" height="760" fill="#3a4a42" ${OUT}/><rect x="-170" y="${y - 700}" width="100" height="140" fill="#7a9a8a" opacity=".45"/>
         <text x="230" y="${y - 420}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="220" fill="#d8d0b8" opacity=".85">${fl}</text>
-        <rect x="760" y="${y + 450}" width="520" height="50" fill="#5a5e5c" ${OUT}/>`;
+        <rect x="760" y="${y + 450}" width="900" height="50" fill="#5a5e5c" ${OUT}/>`;
       // flight down to the right half landing, then back down to the left
       const steps = (x0, y0, x1, y1) => { let p = `M${x0},${y0}`; const n = 9, dx = (x1 - x0) / n, dy = (y1 - y0) / n; for (let j = 0; j < n; j++) p += `h${f1(dx)}v${f1(dy)}`; return `<path d="${p}V${y1 + 80}L${x0},${y0 + 80}Z" fill="#4a4e4c" ${OUT3}/>`; };
       if (k < LY.length - 1) {

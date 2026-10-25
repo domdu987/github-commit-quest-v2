@@ -51,6 +51,14 @@
         g.setAttribute("transform", `translate(${a.x},${a.y}) scale(${a.flip ? -a.s : a.s},${a.s})`);
         Rig.drive(tl, aid, sh.start, sh.dur, a.track, a.blinks || [0.9, 2.7, 4.6]);
         if (a.prop && window.Camp) Camp.attach(aid, a.prop);
+        if (a.path) { // walk a route [{ t, x, y, flip }] (t = seconds into the shot; each leg faces the way its first point says): stairs, turns
+          const P = a.path, c = { t: 0 };
+          const pos = (t) => { let i = 0; while (i < P.length - 1 && t > P[i + 1].t) i++; const p = P[i], q = P[Math.min(i + 1, P.length - 1)];
+            const k = q.t > p.t ? Math.min(1, Math.max(0, (t - p.t) / (q.t - p.t))) : 1; return [lerp(p.x, q.x, k), lerp(p.y, q.y, k), p.flip ?? a.flip]; };
+          const put0 = (t) => { const [x, y, f] = pos(t); g.setAttribute("transform", `translate(${x},${y}) scale(${f ? -a.s : a.s},${a.s})`); };
+          put0(0);
+          tl.to(c, { t: sh.dur, duration: sh.dur, ease: "none", onUpdate: () => put0(c.t) }, sh.start);
+        }
         if (a.moveTo) { // walk across the set: translate the whole character in sync with the shot clock
           const m = { k: 0 };
           tl.to(m, { k: 1, duration: a.moveTo.dur, ease: a.moveTo.ease || "none", onUpdate: () => {

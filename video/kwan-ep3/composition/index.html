@@ -648,14 +648,21 @@
       // ---------- 8. side on, down the stairs: six, five… a burning ceiling panel falls ----------
       add("stairs", {
         set: "stairwell", setOpts: { id: "sw8", smokeY: -200 }, dark: 0.42,
-        cam: { keys: [{ t: 0, ...fr(560, 250, 0.72, 540, 900), drift: { y: 120, s: 0.01 } }, { t: F("stairs", 0, 2) - 0.2, glide: 0.5, ...fr(560, 1100, 0.9, 540, 900), drift: { s: 0.03 } }] },
-        actors: [PRAE(560, 455, 1.0, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat", torch: true }], { moveTo: { x: 1000, y: 1350, dur: D("stairs"), ease: "none" } }),
-          YOU(330, 20, 1.0, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat", sweat: true }], { moveTo: { x: 760, y: 920, dur: D("stairs"), ease: "none" } })],
+        cam: { keys: [{ t: 0, ...fr(560, 250, 0.72, 540, 900), drift: { y: 120, s: 0.01 } }, { t: F("stairs", 0, 2) - 0.2, glide: 0.5, ...fr(720, 1100, 0.9, 540, 900), drift: { s: 0.03 } }] },
+        // feet on the treads (user: "เดินไม่ตรงบันได"): down flight A (right), turn on the half landing, flight B (left), the landing, flight A again
+        actors: [PRAE(560, 245, 1.0, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat", torch: true }, { t: 3.5, mode: "tremble", eyes: "wide", mouth: "o", torch: true }],
+            { path: [{ t: 0, x: 560, y: 245 }, { t: 0.6, x: 760, y: 450 }, { t: 0.8, x: 850, y: 450, flip: true }, { t: 0.95, x: 760, y: 450, flip: true }, { t: 1.95, x: 320, y: 900, flip: true },
+              { t: 2.08, x: 300, y: 900 }, { t: 2.18, x: 320, y: 900 }, { t: 3.05, x: 760, y: 1350 }, { t: 3.35, x: 950, y: 1350 }, { t: 9, x: 950, y: 1350 }] }),
+          YOU(330, 10, 1.0, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat", sweat: true }, { t: 3.45, mode: "tremble", eyes: "wide", mouth: "o", sweat: true }],
+            { path: [{ t: 0, x: 330, y: 10 }, { t: 1.1, x: 760, y: 450 }, { t: 1.3, x: 840, y: 450, flip: true }, { t: 1.45, x: 760, y: 450, flip: true }, { t: 2.65, x: 320, y: 900, flip: true },
+              { t: 2.8, x: 300, y: 900 }, { t: 2.9, x: 320, y: 900 }, { t: 3.45, x: 600, y: 1182 }, { t: 9, x: 600, y: 1182 }] })],
         captions: caps("stairs"),
         fx(tl, id, t0) {
           const fall = t0 + F("stairs", 0, 2);
-          tl.set("#sw8-tile", { opacity: 1, attr: { transform: "translate(380,300)" } }, fall - 0.4);
-          tf(tl, "#sw8-tile", fall - 0.4, 0.55, "translate(360,1010) rotate(14)", "power2.in");
+          // the panel (centre 490,580 in its own space) drops from under the half landing onto แพร's shoulder at x 950, then tumbles to her feet
+          tl.set("#sw8-tile", { opacity: 1, attr: { transform: "translate(460,-100) rotate(0,490,580)" } }, fall - 0.4);
+          tf(tl, "#sw8-tile", fall - 0.4, 0.5, "translate(460,320) rotate(-16,490,580)", "power2.in");
+          tf(tl, "#sw8-tile", fall + 0.1, 0.35, "translate(560,750) rotate(24,490,580)", "power1.in");
           Fx.punch(tl, `#${id} .stage`, fall + 0.15, 1.06, 0.4); tl.fromTo("#flashw", { opacity: 0.35 }, { opacity: 0, duration: 0.2, immediateRender: false }, fall + 0.15);
         },
       });
@@ -678,9 +685,9 @@
       const SDR = [vo("sdr"), vo("sdr") + SH.sdr.vo[0].frags[1], vo("sdr") + SH.sdr.vo[0].frags[2], vo("sdr", 1)];
       add("sdr", {
         set: "stairwell", setOpts: { id: "sw10", smokeY: 100 }, dark: 0.4,
-        cam: { keys: [{ t: 0, ...fr(900, 1150, 0.95, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PRAE(900, 1350, 1.05, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o", sweat: true }, { t: SDR[1] - 0.1, mode: "lie", eyes: "pain", mouth: "flat" }, { t: SDR[2], mode: "lie", eyes: "closed", mouth: "flat" }],
-          { moveTo: { x: 980, y: 1350, dur: 0.01, at: SDR[3] } })],
+        cam: { keys: [{ t: 0, ...fr(1180, 1150, 0.95, 540, 1050), drift: { s: 0.02 } }] },
+        // flipped so she lies along the half landing (head to the right), not out over the flight
+        actors: [PRAE(950, 1350, 1.05, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o", sweat: true }, { t: SDR[1] - 0.1, mode: "lie", eyes: "pain", mouth: "flat" }, { t: SDR[2], mode: "lie", eyes: "closed", mouth: "flat" }], { flip: true })],
         captions: caps("sdr"),
         ui: [steps("sdr", "เสื้อผ้าติดไฟ", [["stopnow", "หยุด"], ["dropdown", "ล้มตัวลง"], ["coverface", "มือปิดหน้า"], ["rollover", "กลิ้งจนไฟดับ"]], SDR[0] - 0.1, D("sdr") - 0.15, { gap: (SDR[3] - SDR[0]) / 3 }),
           { type: "src", t: SDR[3] + 0.3, end: D("sdr") - 0.05, top: 640, text: "ที่มา: <em>Ready.gov</em> · หยุด ล้มลง เอามือปิดหน้า แล้วกลิ้งไปมาจนไฟดับ" }],
@@ -688,7 +695,7 @@
           const a0 = `${id}-a0`, g = document.getElementById(a0), flame = `<g id="${id}-fl" class="flk">${[0, 1, 2].map((k) => `<path d="M${-14 + k * 9},${30 + k * 22}q-14,-36 0,-70q16,30 8,70z" fill="${k % 2 ? "#ffd24a" : "#ff7a2a"}"/>`).join("")}</g>`;
           const arm = document.getElementById(`${a0}-faF`); if (arm) arm.insertAdjacentHTML("beforeend", flame);
           // the roll: she rocks side to side on the floor until the flame is out
-          for (let i = 0; i < 8; i++) tl.to(`#${a0}`, { attr: { transform: `translate(${900 + (i % 2 ? 120 : -60)},1350) scale(1.05,1.05)` }, duration: 0.42, ease: "sine.inOut" }, t0 + SDR[3] + i * 0.42);
+          for (let i = 0; i < 8; i++) tl.to(`#${a0}`, { attr: { transform: `translate(${950 + (i % 2 ? 120 : -60)},1350) scale(-1.05,1.05)` }, duration: 0.42, ease: "sine.inOut" }, t0 + SDR[3] + i * 0.42);
           tl.to(`#${id}-fl`, { opacity: 0, duration: 1.4 }, t0 + SDR[3] + 0.6);
         },
       });
@@ -696,8 +703,8 @@
       // ---------- 11. the fire is out; แพร is all right ----------
       add("out", {
         set: "stairwell", setOpts: { id: "sw11", smokeY: 100 }, dark: 0.42,
-        cam: { keys: [{ t: 0, ...fr(900, 1150, 1.0, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PRAE(1000, 1360, 1.05, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat", sweat: true }]), YOU(700, 1360, 1.05, [{ t: 0, mode: "crouch", eyes: "side", mouth: "flat", torch: true }])],
+        cam: { keys: [{ t: 0, ...fr(1060, 1150, 1.0, 540, 1050), drift: { s: 0.03 } }] },
+        actors: [PRAE(1120, 1350, 1.05, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat", sweat: true }]), YOU(860, 1350, 1.05, [{ t: 0, mode: "crouch", eyes: "side", mouth: "flat", torch: true }])],
         captions: caps("out"),
       });
 
