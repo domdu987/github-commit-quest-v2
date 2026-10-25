@@ -87,12 +87,11 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
 
 
 AT, LAND, FACE = 2.2, 4.0, 1.45  # the opener (OpenerLight: at, at + glide, face) as in the composition
-C2 = frag("cold", 0, 1) - 0.12   # the cold shot cuts from the hands to ป้าแช่ม
 K2 = frag("cut", 0, 2) - 0.12    # the cut shot cuts to the switch close up
 LV = K2 + 0.5                    # the lever comes down
-RV = frag("call", 0, 1) - 0.25   # the light turns into the กระสือ
 SF = lambda j: frag("sig", 0, j)
 F = frag
+KNOW_CUT = vo_t("know", 1) + 0.5  # the diagram's lever
 
 
 def zaps(k, ts, g=0.5):
@@ -100,37 +99,35 @@ def zaps(k, ts, g=0.5):
 
 
 CUES = [
-    # story opener, its own (OpenerLight.cues): the light writing the title, the buzzing letters, the face, the power stuttering back
+    # story opener, its own (OpenerLight.cues)
     ("open", 0.0, "hum", 0.7), ("open", 0.25, "buzz", 0.5), ("open", 0.6, "zap", 0.5), ("open", 0.95, "boom", 0.35), ("open", FACE - 0.1, "zap", 0.7),
     ("open", FACE + 0.28, "sting", 1.0), ("open", FACE + 0.3, "shriek", 0.6), ("open", FACE + 0.3, "glitch", 0.6), *beats("open", 0.3, FACE, 0.55, 0.4),
     ("open", AT - 0.2, "zap", 0.9), ("open", AT, "powerdown", 0.4), ("open", AT + 0.5, "buzz", 0.4), ("open", LAND - 0.02, "boom", 0.8), ("open", LAND, "glitch", 0.4),
-    ("hook", 0.0, "hum", 0.6), *[("hook", t, "plop", 0.35) for t in (0.3, 1.1, 1.9, 2.6)], *zaps("hook", (0.5, 1.4, 2.2), 0.6),
-    *beats("hook", 0.3, D["hook"] - 0.3, 0.42, 0.5), ("hook", D["hook"] - 0.5, "sting", 1.0), ("hook", D["hook"] - 0.5, "glitch", 0.7), ("hook", D["hook"] - 0.45, "boom", 0.6),
-    ("back", 0.0, "rewind", 0.8), ("back", 0.05, "glitch", 0.4), *[("back", 0.05 + k * 0.26, "tick", 0.3) for k in range(8)],
-    ("dusk", 0.2, "swell", 0.3), ("dusk", 1.5, "drip", 0.3),
+    ("hook", 0.0, "hum", 0.6), *[("hook", t, "plop", 0.35) for t in (0.3, 1.1, 1.9)], *zaps("hook", (0.5, 1.4), 0.6),
+    ("hook", D["hook"] - 0.5, "sting", 1.0), ("hook", D["hook"] - 0.45, "boom", 0.6),
+    ("back", 0.0, "rewind", 0.8), *[("back", 0.05 + k * 0.2, "tick", 0.3) for k in range(6)],
+    ("dusk", 0.2, "swell", 0.3),
     ("live", 0.1, "notif", 0.45), ("live", 0.15, "pop", 0.3),
-    ("toey", 0.1, "pop", 0.3),
-    ("boat", 0.4, "plop", 0.35), ("boat", 1.0, "creak", 0.35), ("boat", 1.7, "plop", 0.3), ("boat", 2.6, "thud", 0.25),
-    ("rule", 0.0, "swell", 0.45), ("rule", 0.0, "hum", 0.35), *[("rule", F("rule", 0, j), "sting", 0.35) for j in (0, 1, 2)], *zaps("rule", (F("rule", 0, 2) + 0.4,), 0.4),
-    ("legend", 0.0, "rustle", 0.5), ("legend", F("legend", 0, 1) - 0.05, "sting", 0.8), ("legend", F("legend", 0, 1), "glitch", 0.5), ("legend", F("legend", 0, 1), "boom", 0.4),
-    *[("traits", F("traits", i, j) - 0.12, "rustle", 0.45) for i, j in ((1, 0), (2, 0), (2, 1))], ("traits", F("traits", 1, 1), "squelch", 0.6), ("traits", F("traits", 1, 1), "swell", 0.4),
-    ("traits", F("traits", 1, 1), "glitch", 0.4), ("traits", F("traits", 2, 1) + 0.3, "sting", 0.7),
-    ("skeptic", 0.4, "plop", 0.25),
+    ("toey", 0.1, "plop", 0.4), ("toey", 0.6, "pop", 0.3),
+    ("boat", 0.3, "plop", 0.35), ("boat", 0.9, "creak", 0.35), ("boat", 1.8, "thud", 0.25),
+    ("rule", 0.0, "swell", 0.4), *[("rule", F("rule", 0, j), "ding", 0.45) for j in (0, 1)],
+    ("legend", 0.0, "rustle", 0.5), ("legend", F("legend", 0, 1) - 0.05, "sting", 0.7),
+    *[("traits", F("traits", i, j) - 0.12, "rustle", 0.45) for i, j in ((1, 0), (2, 0))], ("traits", F("traits", 1, 1), "squelch", 0.5),
     ("chaem", 0.1, "steps", 0.35), ("chaem", 0.8, "steps", 0.3), ("chaem", 1.75, "clang", 0.3),
-    ("cold", 0.1, "whoosh", 0.35), ("cold", 0.6, "swell", 0.5), *beats("cold", 0.5, C2 - 0.5, 0.42, 0.4),
-    ("cold", C2 + 1.4, "sting", 0.8), ("cold", C2 + 1.4, "glitch", 0.5), *beats("cold", C2 + 1.0, D["cold"] - C2 - 1.0, 0.45, 0.5),
-    *[("nine", 0.05 + k * 0.5, "tick", 0.35) for k in range(3)], ("nine", 1.4, "drip", 0.35), *beats("nine", F("nine", 0, 2), D["nine"] - F("nine", 0, 2), 0.45, 0.4),
-    ("know1", 0.0, "hum", 0.3), ("know2", 0.0, "hum", 0.3), ("know3", 0.0, "drip", 0.3),
-    ("cut", 0.2, "rustle", 0.3), ("cut", 0.7, "rustle", 0.25), ("cut", K2 + 0.05, "click", 0.4), ("cut", LV + 0.05, "zap", 0.9), ("cut", LV + 0.4, "clang", 0.7),
-    ("cut", LV + 0.45, "thud", 0.6), ("cut", LV + 0.5, "powerdown", 0.9),
-    ("dark", 0.2, "swell", 0.4), *beats("dark", F("dark", 0, 1), D["dark"] - F("dark", 0, 1), 0.42, 0.45),
-    ("bomb", 0.0, "hum", 0.5), *zaps("bomb", (F("bomb", 0, 2), F("bomb", 0, 2) + 0.5, F("bomb", 0, 2) + 1.2), 0.7), *beats("bomb", F("bomb", 0, 2), D["bomb"] - F("bomb", 0, 2), 0.45, 0.45),
-    ("call", 0.3, "swell", 0.5), ("call", RV, "sting", 1.0), ("call", RV, "glitch", 0.6), ("call", RV + 0.05, "shriek", 0.4), *beats("call", 0.0, D["call"], 0.42, 0.55),
-    *beats("answer", 0.0, D["answer"], 0.45, 0.5), ("answer", 0.0, "hum", 0.4),
-    *[("wade", t, "plop", 0.4) for t in (1.3, 1.6, 1.9, 2.3, 2.8, 3.3)], *beats("wade", 0.0, D["wade"], 0.45, 0.45),
-    ("shout", 0.05, "whoosh", 0.45),
-    ("know4", 0.0, "hum", 0.45), *zaps("know4", (0.6, 2.1, 3.6, 5.2), 0.45),
-    ("know5", 0.0, "hum", 0.4), *zaps("know5", (0.8, 3.0, 5.4), 0.35), ("know5", F("know5", 0, 1), "whoosh", 0.3),
+    ("cold", 0.1, "whoosh", 0.3), ("cold", 0.5, "swell", 0.45), *beats("cold", 0.5, D["cold"] - 0.5, 0.45, 0.4),
+    *[("nine", 0.05 + k * 0.4, "tick", 0.35) for k in range(2)], ("nine", vo_t("nine", 1), "plop", 0.35),
+    ("know", 0.2, "drip", 0.3), *zaps("know", (1.2, 1.9), 0.45), ("know", KNOW_CUT, "clang", 0.5), ("know", KNOW_CUT + 0.35, "ding", 0.5), ("know", vo_t("know", 2) + 0.1, "buzz", 0.35),
+    ("cut", 0.2, "rustle", 0.3), ("cut", K2 + 0.05, "click", 0.4), ("cut", LV + 0.05, "zap", 0.8), ("cut", LV + 0.4, "clang", 0.6), ("cut", LV + 0.5, "powerdown", 0.9),
+    ("dark", 0.2, "swell", 0.35),
+    ("cam", 0.05, "beep", 0.25), *beats("cam", 0.3, D["cam"] - 0.3, 0.55, 0.4),
+    ("bomb", 0.0, "hum", 0.45), *zaps("bomb", (F("bomb", 0, 1), F("bomb", 0, 1) + 0.6), 0.6),
+    *[("two", 0.05 + k * 0.45, "tick", 0.3) for k in range(3)],
+    *beats("call", 0.0, D["call"], 0.55, 0.5),
+    ("answer", 0.0, "hum", 0.3),
+    *[("wade", t, "plop", 0.4) for t in (1.0, 1.4, 1.8, 2.3, 2.8)],
+    ("shout", 0.05, "whoosh", 0.4),
+    ("know2", 0.0, "hum", 0.4), *zaps("know2", (0.6, 2.4, 4.2), 0.4),
+    ("know3", 0.0, "hum", 0.35), ("know3", 0.25, "whoosh", 0.3),
     # channel signature
     ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
     ("sig", SF(0) + 0.3, "ding", 0.6), ("sig", SF(0) + 0.62, "ding", 0.6), ("sig", SF(1) + 0.15, "ding", 0.6),
@@ -138,13 +135,12 @@ CUES = [
     *[("sig", SF(2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
     ("sig", SF(3) - 1.1, "riser", 0.6),
     ("sig", SF(3), "sting", 1.1), ("sig", SF(3), "boom", 0.8), ("sig", SF(3), "glitch", 0.7), ("sig", SF(3) + 0.12, "slam", 0.7),
-    *beats("sig", SF(3), D["sig"] - SF(3), 0.5, 0.7),
-    ("near", 0.0, "hum", 0.5), *zaps("near", (0.4, 1.5, 2.6, 3.6), 0.55), ("near", F("near", 0, 2), "sting", 0.7), *beats("near", F("near", 0, 1), D["near"] - F("near", 0, 1), 0.4, 0.55),
-    ("whisper", 0.1, "swell", 0.5), *zaps("whisper", (1.0, 2.4), 0.45), ("whisper", F("whisper", 0, 1), "sting", 0.9), ("whisper", F("whisper", 0, 1), "glitch", 0.6),
-    *beats("whisper", 0.0, D["whisper"], 0.42, 0.6),
-    *beats("choice", 0.0, D["choice"] - 0.3, 0.38, 1.0), *[("choice", 0.05 + k * 1.0, "tick", 1.0) for k in range(3)], ("choice", 1.0, "glitch", 0.6), *zaps("choice", (0.6, 1.8), 0.4),
+    ("clue", 0.2, "creak", 0.4), *beats("clue", vo_t("clue", 1), D["clue"] - vo_t("clue", 1), 0.5, 0.5), ("clue", vo_t("clue", 1), "swell", 0.4),
+    # koi-style: only her eyes in the dark, a slow heartbeat, the whisper; no stings
+    *beats("whisper", 0.0, D["whisper"], 0.55, 0.6), *zaps("whisper", (1.2,), 0.3),
+    *beats("choice", 0.0, D["choice"] - 0.3, 0.38, 1.0), *[("choice", 0.05 + k * 1.0, "tick", 1.0) for k in range(3)],
     ("choice", D["choice"] - 2.2, "riser", 1.0), ("choice", D["choice"] - 0.62, "sting", 1.0), ("choice", D["choice"] - 0.6, "glitch", 0.8), ("choice", D["choice"] - 0.6, "boom", 0.7),
-    ("next", 0.3, "whoosh", 0.5), ("next", 0.45, "drip", 0.6), ("next", 0.6, "zap", 0.35), ("next", 0.8, "sting", 0.7), *beats("next", 0.9, D["next"] - 0.9, 0.7, 0.5),
+    ("next", 0.3, "whoosh", 0.5), ("next", 0.45, "drip", 0.6), ("next", 0.8, "sting", 0.6),
 ]
 
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
@@ -176,9 +172,10 @@ dip(T("hook", 0), T("hook", -0.05), 0.35)
 dip(T("legend", 0), T("traits", -0.2), 0.5)
 dip(T("cold", 0), T("cold", -0.05), 0.4)
 dip(T("cut", LV + 0.4), T("bomb", -0.05), 0.3)  # the power goes: the music thins with it
-dip(T("call", 0), T("answer", -0.05), 0.2)
+dip(T("two", 0), T("answer", -0.05), 0.15)
 dip(T("sig", SF(2)), T("sig", SF(3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
-dip(T("near", 0), T("whisper", -0.05), 0.3)
+dip(T("clue", 0), T("whisper", -0.05), 0.35)
+dip(T("whisper", 0), T("whisper", -0.05), 0.1)
 dip(T("choice", 0), T("choice", -0.3), 0.5)
 mus = mus * gain
 end = int(T("choice", -0.2) * SR)

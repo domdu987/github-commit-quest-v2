@@ -20,37 +20,38 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("open", ["n01"], 0.4, 0.6, 5.0),                 # story opener: a green light writes the title, turns into a face; the power stutters on over the flood
-    ("hook", ["n02"], 0.4, 0.9, 3.2),                 # low at the water: เต้ย wading toward a pole, a broken line spitting in the water — cut
-    ("back", ["n03"], 0.3, 0.7, 2.2),                 # chapter card: the meter, its disc and numbers running backwards — 6 hours earlier
-    ("dusk", ["n04"], 0.1, 0.4, 3.6),                 # wide at dusk: the village on stilts, the water up to the floors
-    ("live", ["d01"], 0.1, 0.3, 4.4),                 # ฝน close, going live on her phone
-    ("toey", ["d02"], 0.05, 0.4, 2.4),                # low angle on เต้ย: me too!
-    ("boat", ["n05"], 0.1, 0.4, 4.2),                 # ลุงเปี๊ยก paddles up to the porch
-    ("rule", ["d03"], 0.2, 0.7, 10.0),                # ลุงเปี๊ยก's rules (card)
-    ("legend", ["n06"], 0.2, 0.4, 3.0),               # the old one-baht comic: its cover
-    ("traits", ["t01", ("t02", 0.15), ("t03", 0.15)], 0.1, 0.5, 10.0),  # the comic's panels: by day / the head pulls free / floats to the lights, calls a name
-    ("skeptic", ["d04"], 0.1, 0.4, 3.8),              # ฝน laughs it off; ลุงเปี๊ยก in his boat behind
-    ("chaem", ["n07", ("d05", 0.2)], 0.1, 0.4, 7.4),  # ป้าแช่ม brings curry; close on her
-    ("cold", ["n08"], 0.1, 0.5, 4.6),                 # her cold hand on ฝน's wrist / she leaves, a green glint
-    ("nine", ["n09"], 0.1, 0.4, 3.8),                 # 9 p.m. inside: the clock, the water creeping to the outlets
-    ("know1", ["n10"], 0.1, 0.6, 5.2),                # knowledge: water near the outlets → cut the main
-    ("know2", ["n11"], 0.1, 0.6, 5.8),                # knowledge: never touch anything electric wet or standing in water
-    ("know3", ["n12"], 0.1, 0.6, 4.8),                # knowledge: if the panel is under water, don't wade to it; call the electrician
-    ("cut", ["n13"], 0.1, 0.8, 5.0),                  # ฝน dries her hands, stands on the stairs, pulls the lever — dark
-    ("dark", ["n14"], 0.2, 0.5, 4.4),                 # the village dark; one green light left over the field
-    ("bomb", ["n15"], 0.1, 0.6, 4.6),                 # down the pole: a line snapped, its end under the water, spitting
-    ("call", ["r01"], 0.3, 0.5, 5.2),                 # the light floats close: a face, green eyes, the guts glowing
-    ("answer", ["d06"], 0.1, 0.4, 2.4),               # เต้ย at the door, green light on his face
-    ("wade", ["n16"], 0.1, 0.4, 3.6),                 # he walks down the steps into the flood after it
-    ("shout", ["d07"], 0.05, 0.4, 2.2),               # ฝน at the door
-    ("know4", ["n17"], 0.1, 0.6, 6.8),                # knowledge: a line in the water can charge it; always assume it is live
-    ("know5", ["n18"], 0.1, 0.7, 7.0),                # knowledge: don't wade in, 10 m away, call 1129
-    ("sig", ["s01"], 0.15, 0.5, 4.6),                 # channel signature
-    ("near", ["n19"], 0.1, 0.5, 4.3),                 # เต้ย standing in the water a few steps from the line
-    ("whisper", ["r02"], 0.3, 0.6, 4.8),              # the กระสือ over the water by the line: closer…
-    ("choice", [], 0.0, 0.0, 3.4),                    # shout at him / wade in after him
-    ("next", [], 0.0, 0.0, 2.6),                      # end card: the sign on the pole
+    ("open", ["a01"], 0.4, 0.4, 4.6),                 # story opener: a green light writes the title; the power stutters on over the flood
+    ("hook", ["a02"], 0.2, 0.6, 2.4),                 # low at the water: เต้ย wading toward a light, a broken line spitting — cut
+    ("back", ["n03"], 0.2, 0.5, 1.6),                 # chapter card: the meter running backwards — 6 hours earlier
+    ("dusk", ["a03"], 0.1, 0.3, 2.4),                 # wide at dusk: the village on stilts
+    ("live", ["d01"], 0.1, 0.2, 4.2),                 # ฝน close, going live
+    ("toey", ["a04"], 0.05, 0.3, 2.8),                # เต้ย on the steps, his flip-flop floating off
+    ("boat", ["a05"], 0.1, 0.3, 2.8),                 # ลุงเปี๊ยก paddles up: "ไอ้หนู!"
+    ("rule", ["a06"], 0.1, 0.5, 6.0),                 # his two rules (card)
+    ("legend", ["n06"], 0.1, 0.2, 2.8),               # the one-baht comic: its cover
+    ("traits", ["t01", ("a07", 0.1), ("a08", 0.1)], 0.1, 0.3, 8.0),  # the panels: by day / the head floats off / it calls names
+    ("skeptic", ["d04"], 0.05, 0.3, 3.6),             # ฝน laughs it off
+    ("chaem", ["n07", ("a09", 0.15)], 0.1, 0.3, 6.6), # ป้าแช่ม brings curry
+    ("cold", ["a10"], 0.1, 0.5, 2.2),                 # her hand on ฝน's wrist: ice cold
+    ("nine", ["a11", ("a12", 0.1)], 0.1, 0.3, 3.2),   # 9 p.m.: เต้ย shouts, the water at the outlets
+    ("know", ["a13", ("a14", 0.1), ("a15", 0.1)], 0.1, 0.4, 7.6),  # the house in cross-section: cut the main; never touch it wet
+    ("cut", ["a22"], 0.1, 0.6, 4.0),                  # ฝน dries her hands, the lever down — dark
+    ("dark", ["a16"], 0.1, 0.3, 3.4),                 # the village dark; one light over the field
+    ("cam", ["a17"], 0.1, 0.4, 3.0),                  # her phone in the dark: "can't see a thing" — but there is something by the light
+    ("sleep", ["a18"], 0.1, 0.3, 2.0),                # everyone asleep
+    ("bomb", ["a19"], 0.1, 0.4, 3.4),                 # down the pole: a line snapped, its end under the water
+    ("two", ["a20"], 0.1, 0.6, 1.4),                  # 2 a.m.
+    ("call", ["r01"], 0.3, 0.3, 4.8),                 # the light at the window, calling เต้ย
+    ("answer", ["d06"], 0.1, 0.3, 2.0),               # เต้ย at the door, green on his face
+    ("wade", ["a21"], 0.1, 0.3, 3.2),                 # he walks down into the flood after it
+    ("shout", ["d07"], 0.05, 0.3, 1.8),               # ฝน at the door
+    ("know2", ["a23", ("a24", 0.1)], 0.1, 0.4, 5.4),  # a line in the water: the water can be live; always assume it is
+    ("know3", ["a25"], 0.1, 0.5, 4.0),                # stay ten metres back, call 1129
+    ("sig", ["s01"], 0.15, 0.4, 4.4),                 # channel signature
+    ("clue", ["a26", ("a27", 0.15)], 0.2, 0.5, 5.4),  # ป้าแช่ม's window left open; the light came out of it
+    ("whisper", ["r02"], 0.2, 0.3, 4.2),              # by the line, in the dark: only her eyes — "อีกนิดเดียว… ลูก…"
+    ("choice", [], 0.0, 0.0, 3.2),                    # shout at him / wade in after him
+    ("next", [], 0.0, 0.0, 2.4),                      # end card: the sign on the pole
 ]
 GAP = 0.08
 
