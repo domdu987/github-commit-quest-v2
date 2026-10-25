@@ -517,7 +517,7 @@
 - **หัวใจกระสือเป็นสีแดง (ผู้ใช้ 25 ต.ค.: "หัวใจสีแดงครับเพื่อน"):** gradient `ksHeart` + วงเรือง `ksHeartGlow` แดง แสงเขียวอยู่ที่ไส้เท่านั้น (`Krasue.glow` = เขียวที่ไส้ + แดงที่หัวใจ) · EP.1 เรนเดอร์ใหม่ด้วยหัวใจแดงแล้ว
 - **EP.2 อย่าจับตัว (`video/krasue-ep2/`, 2:33):** 33 บรรทัด 35 ช็อต · ช่วยคนโดนไฟดูด ตัดไฟก่อน ไม้แห้ง ยืนบนของแห้ง โทร 1669 CPR · ฉากใหม่ `cprFloor` `latchClose` · ไอคอน livewater assumelive notouch drystick call1669 cpr
 - **EP.3 ห้ามขาน ตอนจบ (`video/krasue-ep3/`, 2:12, ไม่มีซิกเนเจอร์ ไม่มีตัวเลือก):** 29 บรรทัด 28 ช็อต · หลังน้ำลด ห้ามเปิดไฟเอง ให้ช่างตรวจก่อน เครื่องใช้ไฟฟ้าต้องแห้งสนิท ประกายไฟ/กลิ่นไหม้ ตัดไฟทันที (CDC + MEA) · เฉลยป้าแช่ม (`Krasue.ghost` `o.bun` มวยผมป้าแช่ม) · ฉากใหม่ `outletClose` `chaemTop` (`o.smile`), `houseIn` เพิ่ม fridgeX doorX windowX day mud · ไอคอน callelec drydevice smelloff · เสียงไก่ขัน `rooster` ใน synth.py · การ์ดท้ายป้ายเสาไฟ "ตอนจบ"
-- **ฉบับสูตรเสียงกอย (25 ต.ค. ผู้ใช้เลือก "ทำแสงกระสือให้เป็นสูตรกองกอย") แทนที่ไฟล์ใน `video/krasue-ep1..3/`** (EP.1 แล้ว · EP.2–3 เก็บเมื่อเรนเดอร์เสร็จ) ของเดิมดูได้ใน git history · บรรทัดใหม่ขึ้นต้น a (EP.1) b (EP.2) c (EP.3) ที่เหลือใช้เสียงเดิม · lib เพิ่ม `Krasue.slipper`, `Sets.floodSection` `shockSection` (o.dry) `afterSection` (o.v 1–3) · ป้ายถูกใน shockSection อยู่ใต้คัตเอาต์ (960,800)
+- **ฉบับสูตรเสียงกอย (25 ต.ค. ผู้ใช้เลือก "ทำแสงกระสือให้เป็นสูตรกองกอย") แทนที่ไฟล์ใน `video/krasue-ep1..3/`** (เก็บครบทั้ง 3 ตอนแล้ว) ของเดิมดูได้ใน git history · บรรทัดใหม่ขึ้นต้น a (EP.1) b (EP.2) c (EP.3) ที่เหลือใช้เสียงเดิม · lib เพิ่ม `Krasue.slipper`, `Sets.floodSection` `shockSection` (o.dry) `afterSection` (o.v 1–3) · ป้ายถูกใน shockSection อยู่ใต้คัตเอาต์ (960,800)
 
 ## 4. Next steps (ทำตามลำดับ)
 

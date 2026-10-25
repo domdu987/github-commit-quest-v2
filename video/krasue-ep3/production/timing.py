@@ -1,4 +1,4 @@
-"""แสงกระสือ EP.3. Derive shot timing from the recorded voice so picture and sound share one schedule.
+"""แสงกระสือ EP.3 (สูตรเสียงกอย re-cut). Derive shot timing from the recorded voice so picture and sound share one schedule.
 
 Each shot lists its voice lines in order, as "id", ("id", gap) where gap is the time from the end of
 the previous line (negative = overlap), or ("id", offset, "start") to start offset seconds after the
@@ -21,32 +21,31 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
     ("recap", [], 0.0, 0.0, 2.0),                       # EP.2's last image: the door, green light seeping under it
-    ("hook", ["n01", ("n02", 0.15)], 0.3, 0.7, 5.4),    # flash-forward: morning, a hand pushing the main switch up — stamped out · EP.3
-    ("latch", ["n03"], 0.1, 0.4, 2.8),                  # close: ฝน's hand on the door bolt, green between the planks
-    ("open", ["r01"], 0.3, 0.5, 4.8),                   # the door from inside, the green under it
-    ("rule1", ["n04", ("d01", 0.2)], 0.1, 0.6, 5.0),    # the rule card, row one: แสงลอยผ่าน อย่าขาน
-    ("silent", ["n05"], 0.1, 0.5, 3.6),                 # ฝน close, her hand over her mouth
-    ("why", ["r02"], 0.3, 0.5, 5.4),                    # the door: knocking, the green brighter
-    ("rise", ["n06"], 0.1, 0.5, 4.4),                   # the light lifts from under the door to the window
-    ("face", ["n07"], 0.2, 0.8, 4.6),                   # the window close: a face against the glass — a bun
-    ("dawn", ["n08"], 0.1, 0.6, 5.0),                   # dawn over the flood, a rooster; the light floats back to the house next door
-    ("morning", ["n09"], 0.1, 0.4, 4.2),                # morning inside: the water gone, mud, the tide line on the walls
-    ("reach", ["n10"], 0.1, 0.3, 3.4),                  # ฝน on the stairs reaching for the lever
-    ("stop", ["d02"], 0.05, 0.4, 3.0),                  # ลุงเปี๊ยก at the door: อย่า!
-    ("know1", ["n11"], 0.1, 0.6, 5.0),                  # knowledge: don't turn the power back on until an electrician checks
-    ("know2", ["n12"], 0.1, 0.6, 5.6),                  # knowledge: anything that was under water must be dry and checked first
-    ("know3", ["n13"], 0.1, 0.6, 5.0),                  # knowledge: sparks or a burning smell — switch off at once
-    ("outlet", ["n14"], 0.1, 0.5, 5.0),                 # the outlet behind the fridge, burnt black; the tester
-    ("here", ["d03"], 0.1, 0.4, 3.6),                   # ลุงเปี๊ยก close: this is where it leaked
-    ("who", ["n15"], 0.1, 0.7, 4.6),                    # the switch close up: a long black hair caught on the lever
-    ("pot", ["n16"], 0.1, 0.4, 3.6),                    # ฝน walking along the porch with the pot
-    ("mat", ["n17"], 0.1, 0.5, 5.0),                    # top-down: ป้าแช่ม asleep on the mat, the blanket to her chin
-    ("rag", ["n18"], 0.1, 0.6, 4.0),                    # by the pillow: a rag smeared green
-    ("wake", ["n19", ("d04", 0.2)], 0.1, 0.5, 6.4),     # her face: eyes open, a smile
+    ("hook", ["n01", ("n02", 0.15)], 0.3, 0.7, 5.4),    # flash-forward: morning, a hand pushing the main switch up — cut
+    ("latch", ["n03"], 0.1, 0.4, 2.6),                  # close: ฝน's hand on the door bolt, green between the planks
+    ("open", ["r01"], 0.3, 0.4, 4.4),                   # the door from inside, the green under it
+    ("toey", ["c01"], 0.1, 0.3, 3.6),                   # เต้ย on the stairs looking up: the voice comes from above
+    ("shush", ["c02"], 0.05, 0.4, 3.4),                 # ฝน, a finger to her lips: the first rule
+    ("why", ["r02"], 0.2, 0.4, 4.8),                    # the door: knocking, the green brighter
+    ("face", ["n07"], 0.2, 0.8, 4.6),                   # the window close: only eyes — a bun; the koi-style hit
+    ("dawn", ["n08"], 0.1, 0.5, 4.6),                   # dawn over the flood; the light floats back to the house next door
+    ("morning", ["c03", ("c04", 0.25)], 0.1, 0.3, 6.8), # morning, mud everywhere: เต้ย teases about the views; ฝน goes to turn the power on
+    ("reach", [], 0.0, 0.0, 1.4),                       # her hand on the lever
+    ("stop", ["d02"], 0.05, 0.4, 2.8),                  # ลุงเปี๊ยก at the door: อย่า!
+    ("know1", ["n11"], 0.1, 0.5, 4.6),                  # diagram: an electrician checks before the power goes back on
+    ("joke", ["c05", ("c06", 0.2)], 0.1, 0.4, 5.0),     # เต้ย: you're an electrician; ลุงเปี๊ยก: that's why — move!
+    ("know2", ["n12"], 0.1, 0.5, 5.4),                  # diagram: appliances that were under water — dry, then checked
+    ("know3", ["n13"], 0.1, 0.5, 5.8),                  # diagram: sparks or a burning smell — the main switch down at once
+    ("outlet", ["d03"], 0.5, 0.4, 4.4),                 # the outlet behind the fridge, burnt black, the tester: ลุงเปี๊ยก: this is where it leaked
+    ("who", ["c07", ("c08", 0.25)], 0.1, 0.6, 7.0),     # ฝน asks who pushed it up; the lever close: green slime on it
+    ("pot", ["n16", ("c09", 0.2)], 0.1, 0.4, 5.6),      # the porch: ฝน with the pot, เต้ย behind her refusing the curry
+    ("mat", ["c10"], 0.1, 0.4, 3.2),                    # top-down: ป้าแช่ม asleep on the mat, the blanket to her chin
+    ("rag", ["n18"], 0.1, 0.5, 4.2),                    # by the pillow: a rag smeared green
+    ("wake", ["d04"], 0.6, 0.4, 4.8),                   # her eyes open, a smile
     ("glint", ["n20"], 0.1, 0.8, 3.8),                  # her eyes flash green
-    ("night", ["n21"], 0.2, 0.5, 5.4),                  # that night: the water up again, a green light over the field
-    ("call", ["r03"], 0.3, 1.5, 6.6),                   # the light close: the face, calling
-    ("last", ["n22"], 0.3, 1.0, 5.6),                   # black; one green light; the rule
+    ("night", ["c11"], 0.2, 0.6, 3.0),                  # that night: the water up again, a green light over the field
+    ("call", ["r03"], 0.3, 1.5, 6.6),                   # the light close: the face, calling — koi-style hit
+    ("last", ["n22"], 0.3, 1.0, 5.4),                   # black; one green light; the rule
     ("end", [], 0.0, 0.0, 3.0),                         # end card: the sign on the pole — ตอนจบ
 ]
 GAP = 0.08

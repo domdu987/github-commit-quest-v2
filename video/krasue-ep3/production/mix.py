@@ -1,4 +1,4 @@
-"""แสงกระสือ EP.3 (the finale): build the episode soundtrack from schedule.json: per-line levelled voice, synthesized SFX for a flooded village
+"""แสงกระสือ EP.3 (สูตรเสียงกอย re-cut) (the finale): build the episode soundtrack from schedule.json: per-line levelled voice, synthesized SFX for a flooded village
 at night with live wires (the mains hum, a broken line arcing in the water, the main switch thrown, the power dying, wading steps, the
 old comic's pages) and the Suno music bed with dips before the scares and sidechain ducking under the voice. Output -14 LUFS, hard cut
 to silence after the choice. No noise beds and no high hiss (user: "เสียงซ่าๆเอาออก")."""
@@ -88,7 +88,12 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
 
 F = frag
 FC = frag("face", 0, 1) - 0.2     # the face at the window
-WK = vo_t("wake", 0) + 0.3        # ป้าแช่ม opens her eyes
+WK = vo_t("wake", 0) - 0.4        # ป้าแช่ม opens her eyes
+GO = frag("morning", 1, 1)        # ฝน heads for the stairs
+SHOO = frag("joke", 1, 1)         # "หลบไป!": เต้ย runs
+WS = vo_t("who", 1) - 0.15        # cut to the lever close up
+SL = frag("who", 1, 1) - 0.2      # the slime drips
+CUT3 = frag("know3", 0, 2) + 0.4  # the diagram's lever goes down
 GL = frag("glint", 0, 1)          # her eyes flash green
 
 
@@ -106,26 +111,31 @@ CUES = [
     ("hook", D["hook"] - 0.5, "sting", 1.0), ("hook", D["hook"] - 0.5, "glitch", 0.7), ("hook", D["hook"] - 0.45, "boom", 0.6),
     ("latch", 0.3, "latch", 0.5), *beats("latch", 0.0, D["latch"], 0.42, 0.5),
     *knocks("open", 0.05, 2, 0.3, 0.6), *beats("open", 0.0, D["open"], 0.42, 0.55),
-    ("rule1", vo_t("rule1", 1) - 0.05, "glitch", 0.5), ("rule1", vo_t("rule1", 1), "sting", 0.6),
-    *beats("silent", 0.0, D["silent"], 0.38, 0.6),
+    ("toey", F("toey", 0, 1) - 0.2, "swell", 0.45), *beats("toey", 0.0, D["toey"], 0.42, 0.55),
+    *beats("shush", 0.0, D["shush"], 0.38, 0.6), ("shush", F("shush", 0, 2), "swell", 0.3),
     *knocks("why", 0.05, 4, 0.26, 0.9), *beats("why", 0.0, D["why"], 0.38, 0.6),
-    ("rise", 0.5, "swell", 0.5), *beats("rise", 0.0, D["rise"], 0.42, 0.5),
     # koi-style: the face comes in slowly with only a heartbeat; one hit (it presses to the glass), then silence
     ("face", FC - 0.2, "swell", 0.25), *beats("face", FC, D["face"] - FC - 0.6, 0.45, 0.6),
     ("face", D["face"] - 0.55, "slam", 0.9), ("face", D["face"] - 0.55, "sting", 1.1), ("face", D["face"] - 0.5, "shriek", 0.45),
     ("dawn", F("dawn", 0, 0) + 0.1, "rooster", 0.8), ("dawn", 0.2, "swell", 0.3),
-    ("morning", 0.3, "drip", 0.4), ("morning", 1.6, "drip", 0.3), ("morning", 2.6, "squelch", 0.4),
-    ("reach", 0.9, "rustle", 0.3),
+    ("morning", 0.15, "notif", 0.45), ("morning", F("morning", 0, 2), "pop", 0.35), ("morning", 1.6, "drip", 0.3),
+    *[("morning", GO + 0.25 * k, "steps", 0.3) for k in range(4)], ("morning", GO + 0.2, "squelch", 0.35),
+    ("reach", 0.3, "rustle", 0.3),
     ("stop", 0.05, "whoosh", 0.5), ("stop", 0.1, "slam", 0.4),
-    ("know3", F("know3", 0, 0) + 0.3, "zap", 0.6), ("know3", F("know3", 0, 2), "clang", 0.6), ("know3", F("know3", 0, 2) + 0.1, "powerdown", 0.5),
-    ("outlet", 0.3, "rustle", 0.3), ("outlet", F("outlet", 0, 2), "sting", 0.5),
-    ("who", F("who", 0, 1), "swell", 0.5), *beats("who", F("who", 0, 1), D["who"] - F("who", 0, 1), 0.42, 0.5), ("who", F("who", 0, 1) + 0.8, "glitch", 0.4),
-    *[("pot", 0.2 + 0.45 * k, "steps", 0.3) for k in range(7)],
+    ("know1", F("know1", 0, 1) + 0.1, "click", 0.4), ("know1", F("know1", 0, 2) + 0.1, "whoosh", 0.3), ("know1", F("know1", 0, 2) + 0.8, "ding", 0.5),
+    ("joke", vo_t("joke", 1), "slam", 0.25), ("joke", SHOO + 0.2, "whoosh", 0.5), *[("joke", SHOO + 0.25 + 0.15 * k, "steps", 0.35) for k in range(4)],
+    ("know2", 0.2, "drip", 0.35), ("know2", 0.9, "drip", 0.3), ("know2", F("know2", 0, 1), "swell", 0.3),
+    ("know2", F("know2", 0, 2), "whoosh", 0.3), ("know2", F("know2", 0, 2) + 0.7, "ding", 0.5),
+    *zaps("know3", (0.5, 0.65, 0.85, 1.05), 0.45), ("know3", F("know3", 0, 1), "swell", 0.3),
+    ("know3", CUT3, "clang", 0.6), ("know3", CUT3 + 0.05, "powerdown", 0.5), ("know3", CUT3 + 0.6, "ding", 0.5),
+    ("outlet", 0.3, "rustle", 0.3), ("outlet", F("outlet", 0, 1), "sting", 0.4),
+    ("who", WS + 0.3, "squelch", 0.5), ("who", SL, "drip", 0.5), ("who", SL, "swell", 0.4), *beats("who", SL, D["who"] - SL, 0.42, 0.5), ("who", SL + 0.6, "glitch", 0.4),
+    *[("pot", 0.2 + 0.45 * k, "steps", 0.3) for k in range(int(D["pot"] / 0.45))],
     ("mat", 0.3, "creak", 0.4), ("mat", 1.5, "swell", 0.3),
     ("rag", F("rag", 0, 1), "squelch", 0.5), ("rag", F("rag", 0, 1), "sting", 0.5), *beats("rag", F("rag", 0, 1), D["rag"] - F("rag", 0, 1), 0.42, 0.5),
     ("wake", WK, "sting", 0.4), *beats("wake", 0.0, D["wake"], 0.45, 0.45),
     ("glint", GL + 0.35, "sting", 0.45), *beats("glint", GL + 0.35, D["glint"] - GL - 0.35, 0.45, 0.5),
-    ("night", 0.2, "hum", 0.4), ("night", 1.0, "swell", 0.3),
+    ("night", 0.2, "hum", 0.4), ("night", 0.8, "swell", 0.3),
     # it calls from far off and holds still; the eyes go out; silence; then at the lens; cut
     ("call", 0.2, "swell", 0.35), *beats("call", 0.0, vo_end("call"), 0.5, 0.55),
     ("call", D["call"] - 0.5, "sting", 1.2), ("call", D["call"] - 0.48, "shriek", 0.6), ("call", D["call"] - 0.5, "slam", 0.7),
