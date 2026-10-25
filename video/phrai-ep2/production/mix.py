@@ -88,7 +88,6 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
 H2 = frag("hook", 1, 0)
 SRT = lambda j: frag("srt", 0, j)
 JOLT = frag("fall", 0, 0) + 0.3
-SF = lambda j: frag("sig", 0, j)
 CPR_A, CPR_B = 0.1, frag("cpr", 0, 1) - 0.1
 
 CUES = [
@@ -113,14 +112,6 @@ CUES = [
     ("recover", 0.3, "rustle", 0.5), ("recover", frag("recover", 0, 1), "rustle", 0.5),
     ("flood", 0.0, "lap", 0.9), ("flood", 0.0, "siren", 0.25), ("flood", 1.6, "siren", 0.2),
     ("ferry", 0.0, "lap", 0.8), ("ferry", 0.3, "creak", 0.5),
-    # channel signature
-    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
-    ("sig", SF(0) + 0.3, "ding", 0.6), ("sig", SF(0) + 0.62, "ding", 0.6), ("sig", SF(1) + 0.15, "ding", 0.6),
-    ("sig", SF(2), "glitch", 0.45), *beats("sig", SF(2), SF(3) - SF(2), 0.38, 0.8),
-    *[("sig", SF(2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
-    ("sig", SF(3) - 1.1, "riser", 0.6),
-    ("sig", SF(3), "sting", 1.1), ("sig", SF(3), "boom", 0.8), ("sig", SF(3), "glitch", 0.7), ("sig", SF(3) + 0.12, "slam", 0.7),
-    *beats("sig", SF(3), D["sig"] - SF(3), 0.5, 0.7),
     ("mid", 0.0, "lap", 0.7), ("mid", frag("mid", 0, 3), "sting", 0.7), ("mid", frag("mid", 0, 3), "glitch", 0.5), *beats("mid", frag("mid", 0, 3), D["mid"] - frag("mid", 0, 3), 0.45, 0.5),
     ("hands", 0.0, "bubbles", 1.0), ("hands", frag("hands", 0, 1), "sting", 1.0), ("hands", frag("hands", 0, 1), "boom", 0.7), ("hands", frag("hands", 0, 1), "glitch", 0.6), ("hands", 2.0, "bubbles", 0.8),
     *beats("hands", frag("hands", 0, 1), D["hands"] - frag("hands", 0, 1), 0.4, 0.6),
@@ -158,7 +149,6 @@ def dip(t0, t1, lvl, ramp=0.25):
 dip(0.0, T("recap", -0.05), 0.3, 0.05)
 dip(T("lure", 0), T("sleep", -0.05), 0.3)
 dip(T("out", frag("out", 0, 1)), T("yai", -0.05), 0.35)
-dip(T("sig", SF(2)), T("sig", SF(3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("mid", frag("mid", 0, 3)), T("look", -0.05), 0.2)
 dip(T("swim", 0), T("choice", -0.3), 0.4)
 mus = mus * gain

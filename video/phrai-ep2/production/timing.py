@@ -41,7 +41,6 @@ SHOTS = [
     ("recover", ["n14"], 0.1, 0.6, 5.6),              # side: on his side, a blanket, nothing to eat or drink
     ("flood", ["n15"], 0.1, 0.5, 3.2),                # the road under water, the ambulance stuck far off
     ("ferry", ["d05"], 0.1, 0.4, 3.8),                # low: ตาเหม in his ferry at the steps, hand out
-    ("sig", ["s01"], 0.15, 0.5, 4.6),                 # channel signature
     ("mid", ["n16"], 0.1, 0.5, 5.0),                  # wide: the ferry gliding mid-river, the oar held up dry
     ("hands", ["n17"], 0.2, 0.6, 4.2),                # under the hull: a dozen pale hands pushing it along
     ("look", ["d06"], 0.1, 0.5, 2.8),                 # ตาเหม close, the lamp under his face

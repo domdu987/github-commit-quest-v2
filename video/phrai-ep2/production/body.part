@@ -267,30 +267,10 @@
         fx(tl, id, t0, L) { TOP(L, "pd20"); front(L, "f20-hull"); },
       });
 
-      // ---------- 21. channel signature, over the ferry pulling away ----------
+      // ---------- the ferry: shared set and crew for the river shots ----------
       const FERRY = (sid, extra = {}) => ({ set: "riverNight", setOpts: { id: sid, kt: RIVER_KT, boat: { x: 560, y: 1330, s: 1.0, lamp: true, oar: false }, ...extra }, dark: 0.15 });
       const crew = (o = {}) => [MHEM(330, 1305, 0.75, [{ t: 0, mode: "sit", eyes: o.eyes || "normal", mouth: "flat" }]),
         PRAEW(640, 1305, 0.78, [{ t: 0, mode: "sit", eyes: o.pe || "side", mouth: "flat" }], { flip: true }), TONG(800, 1310, 0.62, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }], { wet: true, flip: true })];
-      add("sig", {
-        ...FERRY("r21"), dark: 0.35, blur: { far: 8, set: 8, fg: 10 },
-        cam: { keys: [{ t: 0, ...fr(560, 1200, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: SF(2), ...fr(560, 1200, 1.06, 540, 1000), drift: { s: 0.045 } }, { t: SF(3), ...fr(560, 1200, 1.14, 540, 1000), drift: { s: 0.02 } }] },
-        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
-        actors: crew(),
-        captions: caps("sig"),
-        extra(L) { put(L.act, hullFront("s21-hull", 560, 1330, 1.0)); },
-        ui: [{ type: "sigCard", t: 0.05, title: "มือพราย · เช็กลิสต์เอาตัวรอด", items: [["ไม่อุ้มพาดบ่า", true], ["โทร 1669", true], ["กดหน้าอก 30 เป่า 2", true], ["???", false]],
-          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
-        fx(tl, id, t0, L) {
-          front(L, "s21-hull");
-          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
-          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
-          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 73);
-          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 74);
-          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
-          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
-          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
-        },
-      });
 
       // ---------- 22. wide, mid-river: the ferry glides on — ตาเหม's oar held up, dry ----------
       add("mid", {
