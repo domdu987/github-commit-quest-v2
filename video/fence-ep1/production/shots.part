@@ -69,7 +69,7 @@
         actors: [PI(980, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }, { t: F("rules", 0, 1), mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("rules", 0, 2), mode: "point", eyes: "normal", mouth: "flat" }], { flip: true }),
           PU(-180, 1500, 0.58, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile", look: -10 }]), KO(-420, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
         bubbles: [],
-        ui: [{ type: "fRule", t: 0.1, label: "กฎของครูพิม · เขียนไว้วันที่ 1", rows: ["ออกไป ต้องกลับ<b>ก่อนมืด</b>", "ช่วยได้… <u>แต่อย่าเชื่อ</u>", "แบ่งได้… <u>แต่อย่าบอกทาง</u>"], at: [F("rules", 0, 0) - 0.05, F("rules", 0, 1) - 0.05, F("rules", 0, 2) - 0.05], top: 250 }],
+        ui: [{ type: "fRule", t: 0.1, label: "กฎของครูพิม · เขียนไว้วันที่ 1", rows: ["ออกไป ต้องกลับ<b>ก่อนมืด</b>", "ช่วยได้… <u>แต่อย่าเชื่อ</u>", "แบ่งได้… <u>แต่อย่าบอกทาง</u>"], at: [F("rules", 0, 0) - 0.05, F("rules", 0, 1) - 0.05, F("rules", 0, 2) - 0.05], top: 160 }],
         captions: caps("rules", [0], { quote: true }),
         extra(L) { L.set.insertAdjacentHTML("beforeend", `<g transform="translate(-180,1500)"><rect x="-74" y="-262" width="148" height="20" fill="#c9a06c" ${'stroke="#2e2a26" stroke-width="4"'}/><path d="M-60,-242V0M60,-242V0" stroke="#5b6066" stroke-width="10"/></g>`);
           Fence.chalk("rl", [{ x: 200, y: 450, text: "๑. กลับก่อนมืด", size: 64, hide: true }, { x: 200, y: 610, text: "๒. ช่วยได้ อย่าเชื่อ", size: 64, hide: true }, { x: 200, y: 770, text: "๓. แบ่งได้ อย่าบอกทาง", size: 64, hide: true }]); },
