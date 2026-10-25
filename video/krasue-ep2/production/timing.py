@@ -20,41 +20,34 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("recap", [], 0.0, 0.0, 2.0),                       # EP.1's last image: เต้ย in the water by the broken line, the กระสือ beyond
-    ("hook", ["n01", ("n02", 0.15)], 0.3, 0.7, 5.6),    # flash-forward: the kitchen lit, เต้ย stuck to the fridge, a hand reaching — stamped out · EP.2
-    ("step", ["n03"], 0.1, 0.4, 3.0),                   # low at the water: ฝน's feet going in
-    ("stop", ["d01"], 0.05, 0.4, 2.4),                  # ลุงเปี๊ยก in his boat, torch up, shouting
-    ("off", ["n04"], 0.1, 0.6, 5.0),                    # wide: the line spitting… then dead; the lamp by the temple goes out
-    ("pull", ["d02"], 0.1, 0.4, 3.4),                   # he paddles in and hauls เต้ย into the boat
-    ("dazed", ["d03"], 0.2, 0.5, 4.2),                  # เต้ย close in the boat, eyes far away
-    ("one", ["n05"], 0.1, 0.4, 4.0),                    # 1 a.m.: the village lights come back — but one house stays dark
-    ("down", ["n06"], 0.1, 0.4, 3.8),                   # the main switch close up, still down
-    ("phone", ["n07"], 0.1, 0.3, 2.4),                  # upstairs: ฝน's face in the phone light
-    ("replay", ["n08"], 0.1, 0.7, 6.0),                 # the live replay: the light following เต้ย… a face in it
-    ("two", ["n09"], 0.2, 0.4, 3.8),                    # 2 a.m.: downstairs, the lights flicker on by themselves
-    ("lever", ["n10"], 0.1, 0.5, 3.0),                  # the switch close up: the lever going up on its own, green light beside it
-    ("call", ["r01"], 0.3, 0.5, 5.6),                   # the กระสือ by the switch, calling up the stairs
-    ("walk", ["n11"], 0.1, 1.0, 4.6),                   # เต้ย down the stairs, into the water, his hand on the fridge — the shock
-    ("scream", ["d04"], 0.05, 0.4, 2.4),                # ฝน at the top of the stairs
-    ("rush", ["n12"], 0.1, 0.3, 3.0),                   # she runs down, reaching for his hand
-    ("rule", ["d05"], 0.1, 0.5, 2.8),                   # the rule card flashes: ใครโดนดูด อย่าจับ
-    ("know1", ["n13"], 0.1, 0.6, 5.0),                  # knowledge: don't touch someone still in contact
-    ("know2", ["n14"], 0.1, 0.6, 3.4),                  # knowledge: cut the power first
-    ("guard", ["n15"], 0.1, 0.6, 4.0),                  # at the switch: a head floating beside it
-    ("broom", ["n16"], 0.1, 0.8, 6.6),                  # ฝน on the dry step with the broom; the handle knocks the lever down
-    ("know3", ["n17"], 0.1, 0.6, 6.4),                  # knowledge: something that doesn't conduct, standing on something dry
-    ("dark", ["n18"], 0.1, 0.5, 5.0),                   # lights out: the กระสือ shrieks and is gone; เต้ย drops into the water
-    ("drag", ["n19"], 0.1, 0.5, 3.8),                   # she drags him up the stairs; he isn't breathing
-    ("know4", ["n20"], 0.1, 0.6, 5.6),                  # knowledge: 1669, CPR right away (top-down on the boards)
-    ("breathe", ["n21"], 0.1, 0.6, 4.4),                # she keeps pressing… his eyes open
-    ("sig", ["s01"], 0.15, 0.5, 4.6),                   # channel signature
-    ("knock", ["n22"], 0.2, 0.6, 3.6),                  # 3 a.m.: knocking at the door downstairs
-    ("voice", ["r02"], 0.2, 0.4, 4.4),                  # the door from the stairs: ป้าแช่ม's voice
-    ("answer", ["d06"], 0.1, 0.4, 2.2),                 # ฝน answers
-    ("under", ["n23"], 0.1, 0.6, 5.0),                  # under the door: green light seeping in across the water
-    ("inside", ["r03"], 0.2, 0.5, 5.6),                 # the door close up, the green getting brighter
-    ("choice", [], 0.0, 0.0, 3.4),                      # open the door / keep quiet
-    ("next", [], 0.0, 0.0, 2.6),                        # end card: the sign on the pole — ตอนที่ 3 (ตอนจบ)
+    ("recap", [], 0.0, 0.0, 1.8),                       # EP.1's last image: เต้ย in the water by the broken line, her eyes in the dark
+    ("hook", ["n01", ("n02", 0.15)], 0.2, 0.5, 4.6),    # flash-forward: the kitchen, เต้ย stuck to the fridge, a hand reaching — cut
+    ("stop", ["d01"], 0.05, 0.3, 2.0),                  # ลุงเปี๊ยก in his boat, torch up, shouting
+    ("off", ["b03"], 0.1, 0.4, 3.6),                    # he calls; the line spits… then dead
+    ("dazed", ["d03"], 0.1, 0.3, 3.0),                  # เต้ย in the boat, eyes far away
+    ("scold", ["b05"], 0.05, 0.3, 2.2),                 # ฝน hugs him, scolding, crying
+    ("one", ["b06"], 0.1, 0.3, 2.6),                    # 1 a.m.: the village lights come back
+    ("down", ["b07"], 0.1, 0.3, 2.8),                   # the main switch close up, still down
+    ("two", ["b08"], 0.1, 0.4, 3.2),                    # 2 a.m.: downstairs, the lights come on by themselves
+    ("lever", ["n10"], 0.1, 0.4, 2.8),                  # the switch close up: the lever up, green light beside it
+    ("call", ["r01"], 0.3, 0.3, 4.6),                   # green glow by the switch, the voice calling up the stairs
+    ("walk", ["b11"], 0.1, 0.8, 3.8),                   # เต้ย into the water, his hand on the fridge — the shock
+    ("scream", ["d04"], 0.05, 0.3, 2.0),                # ฝน at the top of the stairs
+    ("rush", ["b12"], 0.1, 0.2, 2.4),                   # she runs down, reaching for his hand
+    ("rule", ["d05"], 0.1, 0.4, 2.4),                   # the third rule flashes: ใครโดนดูด อย่าจับ
+    ("know1", ["b13", ("b14", 0.15)], 0.1, 0.5, 5.0),   # diagram: the current through him into whoever touches; cut the power first
+    ("guard", ["b15"], 0.1, 0.5, 3.4),                  # at the switch: a green light, two eyes
+    ("broom", ["b16"], 0.1, 0.6, 4.6),                  # ฝน on the dry step with the broom; the handle knocks the lever down
+    ("know2", ["b17", ("b18", 0.1)], 0.1, 0.5, 4.8),    # diagram: dry wood / cloth, standing on something dry
+    ("dark", ["b19"], 0.1, 0.4, 3.6),                   # lights out; เต้ย drops, not breathing
+    ("know3", ["b20", ("b21", 0.1)], 0.1, 0.5, 5.0),    # 1669, CPR right away (top-down on the boards)
+    ("breathe", ["b22", ("b23", 0.2)], 0.1, 0.5, 8.0),  # she keeps pressing, crying… he breathes
+    ("knock", ["n22"], 0.2, 0.4, 3.0),                  # 3 a.m.: knocking at the door downstairs
+    ("voice", ["r02"], 0.2, 0.3, 4.0),                  # the door from the stairs: ป้าแช่ม's voice
+    ("under", ["b25"], 0.1, 0.5, 3.6),                  # under the door: green light seeping in
+    ("inside", ["r03"], 0.2, 0.4, 4.8),                 # the door close up, the green brighter
+    ("choice", [], 0.0, 0.0, 3.2),                      # open the door / keep quiet
+    ("next", [], 0.0, 0.0, 2.4),                        # end card: the sign on the pole — ตอนที่ 3 (ตอนจบ)
 ]
 GAP = 0.08
 

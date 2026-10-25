@@ -1,4 +1,4 @@
-      // ---------- แสงกระสือ EP.2 อย่าจับตัว ----------
+      // ---------- แสงกระสือ EP.2 อย่าจับตัว (สูตรเสียงกอย: บทสั้น พูดเยอะ ความรู้วาดเป็นภาพ ผีแทบไม่โชว์) ----------
       // many camera angles: low at the water, from the boat, the switch close up, down the stairs, top-down on the boards, the door
       const FON = (x, y, s, track, extra = {}) => ({ who: "fon", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
       const TOEY = (x, y, s, track, extra = {}) => ({ who: "toey", x, y, s, track, blinks: [1.2, 3.6], ...extra });
@@ -38,7 +38,7 @@
         set: "floodVillage", setOpts: { id: "f0", dark: true, fallen: WIRE, seed: 221 }, dark: 0.34,
         cam: { keys: [{ t: 0, ...fr(880, 1100, 1.0, 540, 1250), drift: { s: 0.04 } }] },
         actors: [TOEY(800, W + 170, 0.75, [{ t: 0, mode: "idle", eyes: "glow", mouth: "flat" }])],
-        extra(L) { put(L.act, Krasue.ghost(1080, 880, 0.9)); put(L.glow, Krasue.glow(1080, 880, 0.9)); },
+        extra(L) { put(L.act, Krasue.lurk(1040, 980, 0.42, { heart: 0.8 })); },
         fx(tl, id, t0, L) {
           TOP(L, "f0"); Krasue.arcs(tl, "#f0-arc", "#f0-arcg", t0, D("recap"), 31);
           Fx.glitch(tl, `#${id}`, t0, 0.3, 14, 701); Fx.heart(tl, t0, D("recap"), 0.4, 0.6);
@@ -64,15 +64,6 @@
         },
       });
 
-      // ---------- 2. low at the water: ฝน wading in after him ----------
-      add("step", {
-        set: "floodVillage", setOpts: { id: "f2", dark: true, fallen: WIRE, seed: 222 }, dark: 0.3,
-        cam: { keys: [{ t: 0, ...fr(420, 1180, 1.15, 540, 1000), drift: { x: 40, s: 0.05 } }] },
-        actors: [FON(120, W + 90, 0.95, [{ t: 0, mode: "walk", eyes: "wide", mouth: "o" }], { moveTo: { x: 380, y: W + 130, dur: D("step"), ease: "power1.inOut" } }),
-          TOEY(800, W + 170, 0.75, [{ t: 0, mode: "idle", eyes: "glow", mouth: "flat" }])],
-        captions: caps("step"),
-        fx(tl, id, t0, L) { TOP(L, "f2"); Krasue.arcs(tl, "#f2-arc", "#f2-arcg", t0, D("step"), 32); Fx.heart(tl, t0, D("step"), 0.42, 0.5); },
-      });
 
       // ---------- 3. ลุงเปี๊ยก in his boat, torch up: "หยุด! น้ำมีไฟ!" ----------
       add("stop", {
@@ -88,10 +79,10 @@
       // ---------- 4. wide: he has called the power company; the line spits… and dies; the lamp by the temple goes out ----------
       add("off", {
         set: "floodVillage", setOpts: { id: "f4", fallen: WIRE, houses: [[-150, 1.0, { dark: true }], [980, 0.8, { dark: true }]], seed: 224 }, dark: 0.3,
-        cam: { keys: [{ t: 0, ...fr(600, 1050, 0.74, 540, 1000), drift: { s: 0.02 } }, { t: F("off", 0, 2) - 0.1, glide: 0.8, ...fr(900, 1150, 1.15, 540, 1000), drift: { s: 0.03 } }] },
+        cam: { keys: [{ t: 0, ...fr(600, 1050, 0.74, 540, 1000), drift: { s: 0.02 } }, { t: F("off", 0, 1) - 0.1, glide: 0.8, ...fr(900, 1150, 1.15, 540, 1000), drift: { s: 0.03 } }] },
         actors: [PIAK(180, W - 20, 0.8, [{ t: 0, mode: "phoneEar", eyes: "normal", mouth: "o" }]),
           FON(420, W + 130, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat" }]),
-          TOEY(800, W + 170, 0.75, [{ t: 0, mode: "idle", eyes: "glow", mouth: "flat" }, { t: F("off", 0, 2) + 0.3, mode: "idle", eyes: "closed", mouth: "flat" }])],
+          TOEY(800, W + 170, 0.75, [{ t: 0, mode: "idle", eyes: "glow", mouth: "flat" }, { t: F("off", 0, 1) + 0.3, mode: "idle", eyes: "closed", mouth: "flat" }])],
         captions: caps("off"),
         extra(L) {
           put(L.set, `<g id="b4">${Krasue.boat(180, W + 10, 0.8)}</g>`); put(L.act, `<g id="bf4">${Krasue.boatFront(180, W + 10, 0.8)}</g>`);
@@ -99,23 +90,13 @@
         },
         fx(tl, id, t0, L) {
           TOP(L, "f4"); L.act.appendChild(document.getElementById("bf4"));
-          Krasue.arcs(tl, "#f4-arc", "#f4-arcg", t0, F("off", 0, 2), 34);
-          [0, 0.08, 0.16].forEach((d, k) => tl.set(`#${id} .f4lamp`, { opacity: k % 2 ? 1 : 0 }, t0 + F("off", 0, 2) + d));
-          tl.set(`#${id} .f4lamp`, { opacity: 0 }, t0 + F("off", 0, 2) + 0.24);
-          Fx.glitch(tl, `#${id}`, t0 + F("off", 0, 2), 0.2, 10, 703);
+          Krasue.arcs(tl, "#f4-arc", "#f4-arcg", t0, F("off", 0, 1), 34);
+          [0, 0.08, 0.16].forEach((d, k) => tl.set(`#${id} .f4lamp`, { opacity: k % 2 ? 1 : 0 }, t0 + F("off", 0, 1) + d));
+          tl.set(`#${id} .f4lamp`, { opacity: 0 }, t0 + F("off", 0, 1) + 0.24);
+          Fx.glitch(tl, `#${id}`, t0 + F("off", 0, 1), 0.2, 10, 703);
         },
       });
 
-      // ---------- 5. he paddles in and hauls เต้ย into the boat ----------
-      add("pull", {
-        set: "floodVillage", setOpts: { id: "f5", dark: true, fallen: WIRE, seed: 225 }, dark: 0.3,
-        cam: { keys: [{ t: 0, ...fr(720, 1080, 1.15, 540, 1000), drift: { s: 0.04 } }] },
-        actors: [PIAK(620, W - 20, 0.9, [{ t: 0, mode: "drag", eyes: "normal", mouth: "o" }]),
-          TOEY(800, W + 170, 0.75, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }], { moveTo: { x: 700, y: W - 10, dur: 0.9, at: F("pull", 0, 1), ease: "power2.inOut" } })],
-        captions: caps("pull", undefined, { quote: true }),
-        extra(L) { put(L.set, Krasue.boat(640, W + 10, 0.9, { flip: true })); put(L.act, `<g id="bf5">${Krasue.boatFront(640, W + 10, 0.9, { flip: true })}</g>`); },
-        fx(tl, id, t0, L) { TOP(L, "f5"); L.act.appendChild(document.getElementById("bf5")); },
-      });
 
       // ---------- 6. เต้ย close in the boat, eyes far away: "ป้าแช่ม… เรียกผม…" — far off, a green light ----------
       add("dazed", {
@@ -131,15 +112,26 @@
         },
       });
 
+      // ---------- 6b. ฝน close, scolding and crying: "เต้ย! พี่บอกกี่รอบแล้ว!" ----------
+      add("scold", {
+        set: "floodVillage", setOpts: { id: "f6b", dark: true, seed: 226 }, dark: 0.3, blur: { far: 6, set: 5 },
+        cam: { keys: [{ t: 0, ...fr(520, W + 40 - 530 * 2.0, 1.0, 540, 960), drift: { s: 0.06 } }] },
+        shake: (t) => 3 * Math.sin(t * 11),
+        actors: [FON(520, W + 40, 2.0, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }, { t: voEnd("scold"), mode: "idle", eyes: "closed", mouth: "frown" }])],
+        captions: caps("scold", undefined, { quote: true }),
+        extra(L) { put(L.act, `<g id="bf6b">${Krasue.boatFront(520, W - 440, 2.2)}<rect x="-200" y="${W - 420}" width="1500" height="900" fill="#3b2a1c"/><path d="M-200,${W - 300}H1300" stroke="#2a1c12" stroke-width="10"/></g>`); },
+        fx(tl, id, t0, L) { L.act.appendChild(document.getElementById("bf6b")); },
+      });
+
       // ---------- 7. 1 a.m.: the lights come back across the village — one house stays dark ----------
       add("one", {
         set: "floodVillage", setOpts: { id: "f7", houses: [[-150, 1.0, { dark: true }], [980, 0.8]], seed: 227 }, dark: 0.1,
-        cam: { keys: [{ t: 0, ...fr(420, 1000, 0.72, 540, 1000), drift: { x: 40, s: 0.02 } }, { t: F("one", 0, 2) + 0.4, glide: 1.4, ...fr(-150, 950, 1.0, 540, 1000), drift: { s: 0.03 } }] },
+        cam: { keys: [{ t: 0, ...fr(420, 1000, 0.72, 540, 1000), drift: { x: 40, s: 0.02 } }, { t: F("one", 0, 1) + 0.4, glide: 1.4, ...fr(-150, 950, 1.0, 540, 1000), drift: { s: 0.03 } }] },
         captions: caps("one"),
         fx(tl, id, t0) {
           tl.set([`#${id}-glow`, `#${id} .slt`], { opacity: 0 }, t0);
           tl.set(`#${id}-dark`, { opacity: 0.6 }, t0);
-          [0, 0.1, 0.18, 0.3].forEach((d, k) => { tl.set([`#${id}-glow`, `#${id} .slt`], { opacity: k % 2 ? 0 : 1 }, t0 + F("one", 0, 2) + d); tl.set(`#${id}-dark`, { opacity: k % 2 ? 0.6 : 0.1 }, t0 + F("one", 0, 2) + d); });
+          [0, 0.1, 0.18, 0.3].forEach((d, k) => { tl.set([`#${id}-glow`, `#${id} .slt`], { opacity: k % 2 ? 0 : 1 }, t0 + F("one", 0, 1) + d); tl.set(`#${id}-dark`, { opacity: k % 2 ? 0.6 : 0.1 }, t0 + F("one", 0, 1) + d); });
         },
       });
 
@@ -151,37 +143,6 @@
         fx(tl, id, t0) { tl.set("#sc8-lever", { attr: { transform: "matrix(1 0 0 -1 0 2100)" } }, t0); },
       });
 
-      // ---------- 9. upstairs: ฝน's face in the light of her phone ----------
-      add("phone", {
-        set: "houseIn", setOpts: HOUSE("h9"), dark: 0.6, blur: { far: 8, set: 8 },
-        cam: { keys: [{ t: 0, ...fr(300, G + 1300 - 530 * 2.3, 1.0, 540, 1000), drift: { s: 0.05 } }] },
-        actors: [FON(300, G + 1300, 2.3, [{ t: 0, mode: "phoneLook", eyes: "side", mouth: "flat" }])],
-        captions: caps("phone"),
-        extra(L) { lightsOff("h9"); put(L.glow, `<ellipse cx="380" cy="${G + 160}" rx="420" ry="460" fill="url(#ksTube)" opacity=".9"/>`); },
-      });
-
-      // ---------- 10. the replay: the green light floating after เต้ย all the way… and a face in it ----------
-      const RP = F("replay", 0, 3) - 0.25;
-      add("replay", {
-        set: "floodVillage", setOpts: { id: "f10", dark: true, seed: 228 }, dark: 0.3,
-        cam: { keys: [{ t: 0, ...fr(520, 1080, 0.95, 540, 1050), drift: { x: 60, s: 0.02 } }, { t: RP, glide: 0.35, ...fr(700, 940, 2.0, 540, 900), drift: { s: 0.05 } }] },
-        actors: [TOEY(240, W + 170, 0.75, [{ t: 0, mode: "walk", eyes: "glow", mouth: "flat" }], { moveTo: { x: 640, y: W + 170, dur: RP, ease: "none" } })],
-        captions: caps("replay"),
-        ui: [{ type: "rec", t: 0, dur: D("replay"), play: [18, 74], tc0: 1342, mode: "ไลฟ์เมื่อคืน" }],
-        extra(L) {
-          put(L.act, `<g id="rp-orb">${Krasue.orb(300, 940, 0.9)}</g>`); put(L.glow, `<g id="rp-orbg">${Krasue.orbGlow(300, 940, 0.9)}</g>`);
-          put(L.act, Krasue.ghost(700, 900, 0.55, { id: "rp-k", op: 0, bun: true })); put(L.glow, `<g id="rp-kg" opacity="0">${Krasue.glow(700, 900, 0.55)}</g>`);
-        },
-        fx(tl, id, t0, L) {
-          TOP(L, "f10");
-          tl.fromTo(["#rp-orb", "#rp-orbg"], { x: 0 }, { x: 400, duration: RP, ease: "none", immediateRender: false }, t0);
-          tl.to(["#rp-orb", "#rp-orbg"], { opacity: 0, duration: 0.2 }, t0 + RP + 0.1);
-          tl.fromTo(["#rp-k", "#rp-kg"], { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0 + RP + 0.1);
-          Fx.glitch(tl, `#${id}`, t0 + RP + 0.2, 0.3, 16, 704); Fx.punch(tl, `#${id} .stage`, t0 + RP + 0.25, 1.08, 0.4);
-          tl.fromTo("#fxred", { opacity: 0.4 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + RP + 0.25);
-          Fx.heart(tl, t0 + F("replay", 0, 1), D("replay") - F("replay", 0, 1), 0.42, 0.5);
-        },
-      });
 
       // ---------- 11. 2 a.m.: downstairs, the lights flicker on by themselves ----------
       add("two", {
@@ -189,11 +150,11 @@
         cam: { keys: [{ t: 0, ...fr(700, G - 520, 0.66, 540, 1100), drift: { s: 0.03 } }] },
         captions: caps("two"),
         fx(tl, id, t0) {
-          const tb = tube("h11"), on = t0 + F("two", 0, 2) - 0.1;
+          const tb = tube("h11"), on = t0 + F("two", 0, 1) - 0.1;
           tl.set(tb, { opacity: 0 }, t0);
           [0, 0.07, 0.15, 0.22, 0.36, 0.42].forEach((d, k) => { tl.set(tb, { opacity: k % 2 ? 0 : 1 }, on + d); tl.set(`#${id}-dark`, { opacity: k % 2 ? 0.9 : 0.16 }, on + d); });
           tl.set(tb, { opacity: 1 }, on + 0.5); tl.set(`#${id}-dark`, { opacity: 0.16 }, on + 0.5);
-          Fx.heart(tl, on, D("two") - F("two", 0, 2), 0.45, 0.45);
+          Fx.heart(tl, on, D("two") - F("two", 0, 1), 0.45, 0.45);
         },
       });
 
@@ -214,16 +175,16 @@
 
       // ---------- 13. the กระสือ by the switch, calling up the stairs ----------
       add("call", {
-        set: "houseIn", setOpts: HOUSE("h13"), dark: 0.2,
+        set: "houseIn", setOpts: HOUSE("h13"), dark: 0.5,
         cam: { keys: [{ t: 0, ...fr(1000, G - 900, 0.95, 540, 980), drift: { s: 0.03 } }, { t: F("call", 0, 1) - 0.1, glide: 0.5, ...fr(1080, G - 1130, 1.6, 540, 900), drift: { s: 0.05 } }] },
         captions: caps("call", undefined, { quote: true }),
-        extra(L) { put(L.act, Krasue.ghost(1080, G - 1160, 0.85, { bun: true })); put(L.glow, Krasue.glow(1080, G - 1160, 0.85)); },
-        fx(tl, id, t0) { Fx.heart(tl, t0, D("call"), 0.42, 0.55); Fx.glitch(tl, `#${id}`, t0 + F("call", 0, 1), 0.2, 10, 706); },
+        extra(L) { lightsOff("h13"); put(L.act, Krasue.lurk(1080, G - 1160, 0.5, { bun: true, heart: 0.7 })); put(L.glow, `<circle cx="1080" cy="${G - 1100}" r="260" fill="url(#ksGlow)" opacity=".7"/>`); },
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("call"), 0.5, 0.55); },
       });
 
       // ---------- 14. เต้ย down the stairs, into the water, his hand on the fridge — the current ----------
       const WK = (k) => ({ t: 0.25 * k, x: 1415 - 110 * k, y: G - 630 + 90 * k });
-      const SHOCK = 3.5, zW = zap("zw", HX - 40, HY + 10, HX, HY);
+      const SHOCK = Math.max(2.4, F("walk", 0, 1) + 0.4), zW = zap("zw", HX - 40, HY + 10, HX, HY);
       add("walk", {
         set: "houseIn", setOpts: HOUSE("h14"), dark: 0.16,
         cam: { keys: [{ t: 0, ...fr(900, G - 520, 0.7, 540, 1100), drift: { s: 0.02 } }, { t: 2.0, glide: 1.2, ...fr(200, G - 420, 1.15, 540, 1100), drift: { s: 0.05 } }] },
@@ -276,38 +237,35 @@
         fx(tl, id, t0, L) { TOP(L, "h17"); elec(id); Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.15); Fx.glitch(tl, `#${id}`, t0, 0.2, 10, 708); },
       });
 
-      // ---------- 18–19. what to do (verbatim sources) ----------
-      const zK = zap("zk", HX - 40, HY + 10, HX, HY);
+      // ---------- 18. knowledge, drawn: the current runs through him — and into whoever grabs him; cut the power first (CDC / กรม สบส.) ----------
       add("know1", {
-        set: "houseIn", setOpts: HOUSE("h18"), dark: 0.16,
-        cam: { keys: [{ t: 0, ...fr(160, G - 420, 1.35, 540, 1300), drift: { s: 0.03 } }] },
-        actors: [TOEY(240, G, 1.0, [{ t: 0, mode: "shocked", eyes: "wide", mouth: "scream" }], { flip: true })],
+        set: "shockSection", setOpts: { id: "ss1" }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(610, 1000, 1.12, 540, 1000), drift: { s: 0.02 } }] },
         captions: caps("know1"),
-        ui: [steps("know1", "คนโดนไฟดูด", [["notouch", "อย่าแตะตัวเขา"]], F("know1", 0, 1) - 0.1, D("know1") - 0.15),
-          { type: "src", t: F("know1", 0, 2) + 0.1, end: D("know1") - 0.05, top: 640, text: "ที่มา: <em>CDC สหรัฐฯ</em> · อย่าแตะตัว เขาอาจยังติดอยู่กับไฟ ไฟจะผ่านเข้าตัวคุณ · <em>St John Ambulance</em>" }],
-        extra(L) { put(L.act, zK.act); put(L.glow, zK.glow); },
-        fx(tl, id, t0, L) { TOP(L, "h18"); Krasue.arcs(tl, "#zk", "#zkg", t0, D("know1"), 44); Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.3); },
-      });
-      add("know2", {
-        set: "houseIn", setOpts: HOUSE("h19"), dark: 0.16,
-        cam: { keys: [{ t: 0, ...fr(940, G - 1120, 1.4, 540, 1250), drift: { s: 0.03 } }] },
-        captions: caps("know2"),
-        ui: [steps("know2", "ช่วยคนโดนไฟดูด", [["cutmain", "ตัดไฟก่อน"]], F("know2", 0, 1) - 0.1, D("know2") - 0.15),
-          { type: "src", t: F("know2", 0, 1) + 0.3, end: D("know2") - 0.05, top: 640, text: "ที่มา: <em>กรมสนับสนุนบริการสุขภาพ</em> · สิ่งแรกที่ต้องทำ คือตัดไฟฟ้าในจุดที่เกิดเหตุก่อน" }],
-        fx(tl, id, t0) { Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.3); },
+        ui: [{ type: "src", t: vo("know1", 1), end: D("know1") - 0.05, top: 160, text: "ที่มา: <em>CDC สหรัฐฯ</em> · อย่าแตะตัว เขาอาจยังติดอยู่กับไฟ ไฟจะผ่านเข้าตัวคุณ · <em>กรมสนับสนุนบริการสุขภาพ</em> · สิ่งแรกคือตัดไฟฟ้าก่อน" }],
+        fx(tl, id, t0) {
+          tl.fromTo("#ss1-path", { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -380 }, duration: 1, repeat: Math.ceil(D("know1")), ease: "none", immediateRender: false }, t0);
+          tl.to("#ss1-reach", { opacity: 1, duration: 0.2 }, t0 + 0.4);
+          tl.to("#ss1-path2", { opacity: 1, duration: 0.2 }, t0 + F("know1", 0, 1) - 0.1);
+          tl.fromTo("#ss1-path2", { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -380 }, duration: 1, repeat: 6, ease: "none", immediateRender: false }, t0 + F("know1", 0, 1) - 0.1);
+          tl.fromTo("#ss1-no", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.5)", immediateRender: false }, t0 + F("know1", 0, 1) + 0.2);
+          const cut = t0 + vo("know1", 1) + 0.2;
+          tl.to("#ss1-lever", { attr: { transform: "rotate(180 960 645)" }, duration: 0.3, ease: "power2.in" }, cut);
+          tl.set(["#ss1-path", "#ss1-path2"], { opacity: 0 }, cut + 0.3);
+          tl.to("#ss1-no", { opacity: 0, duration: 0.3 }, cut + 0.35);
+          tl.fromTo("#ss1-ok", { opacity: 0, scale: 0.3, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.5)", immediateRender: false }, cut + 0.35);
+        },
       });
 
       // ---------- 20. at the switch: a head floating beside it ----------
       add("guard", {
-        set: "houseIn", setOpts: HOUSE("h20"), dark: 0.18,
+        set: "houseIn", setOpts: HOUSE("h20"), dark: 0.4,
         cam: { keys: [{ t: 0, ...fr(960, G - 1110, 1.5, 540, 960), drift: { s: 0.03 } }, { t: F("guard", 0, 1) - 0.1, glide: 0.4, ...fr(1020, G - 1120, 1.9, 540, 960), drift: { s: 0.05 } }] },
         captions: caps("guard"),
-        extra(L) { put(L.act, Krasue.ghost(1120, G - 1140, 0.8, { id: "g20", op: 0, bun: true })); put(L.glow, `<g id="g20g" opacity="0">${Krasue.glow(1120, G - 1140, 0.8)}</g>`); },
+        extra(L) { put(L.act, Krasue.lurk(1120, G - 1140, 0.5, { id: "g20", op: 0, bun: true, heart: 0.7 })); put(L.glow, `<g id="g20g" opacity="0"><circle cx="1120" cy="${G - 1080}" r="260" fill="url(#ksGlow)" opacity=".7"/></g>`); },
         fx(tl, id, t0) {
-          tl.fromTo(["#g20", "#g20g"], { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0 + F("guard", 0, 1));
-          Fx.glitch(tl, `#${id}`, t0 + F("guard", 0, 1), 0.3, 16, 709); Fx.punch(tl, `#${id} .stage`, t0 + F("guard", 0, 1), 1.08, 0.4);
-          tl.fromTo("#fxred", { opacity: 0.4 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("guard", 0, 1));
-          Fx.heart(tl, t0 + F("guard", 0, 1), D("guard") - F("guard", 0, 1), 0.4, 0.55);
+          tl.fromTo(["#g20", "#g20g"], { opacity: 0 }, { opacity: 1, duration: 0.9, ease: "power1.in", immediateRender: false }, t0 + F("guard", 0, 1) - 0.3);
+          Fx.heart(tl, t0 + F("guard", 0, 1), D("guard") - F("guard", 0, 1), 0.5, 0.55);
         },
       });
 
@@ -318,7 +276,7 @@
         cam: { keys: [{ t: 0, ...fr(980, G - 650, 1.1, 540, 900), drift: { s: 0.04 } }, { t: F("broom", 0, 1) - 0.1, glide: 0.6, ...fr(980, G - 300, 1.4, 540, 1100), drift: { s: 0.04 } }] },
         actors: [FON(975, G - 270, 1.4, [{ t: 0, mode: "broomUp", eyes: "wide", mouth: "flat" }], { flip: true })],
         captions: caps("broom").filter((c) => c.t < B2),
-        extra(L) { put(L.act, broom("br21", 1010, G - 520, 880, G - 1080)); put(L.act, Krasue.ghost(1120, G - 1140, 0.8, { bun: true })); put(L.glow, Krasue.glow(1120, G - 1140, 0.8)); },
+        extra(L) { put(L.act, broom("br21", 1010, G - 520, 880, G - 1080)); put(L.act, Krasue.lurk(1120, G - 1140, 0.5, { bun: true, heart: 0.7 })); put(L.glow, `<circle cx="1120" cy="${G - 1080}" r="260" fill="url(#ksGlow)" opacity=".7"/>`); },
         fx(tl, id, t0, L) { TOP(L, "h21"); Fx.heart(tl, t0, B2, 0.4, 0.5); },
       }, {
         set: "switchClose", setOpts: { id: "sc21", hand: false }, dark: 0.12,
@@ -338,87 +296,53 @@
         },
       });
 
-      // ---------- 22. knowledge: something that doesn't conduct; stand on something dry ----------
-      add("know3", {
-        set: "houseIn", setOpts: HOUSE("h22"), dark: 0.5,
-        cam: { keys: [{ t: 0, ...fr(980, G - 500, 0.95, 540, 1300), drift: { s: 0.02 } }] },
-        actors: [FON(975, G - 270, 1.4, [{ t: 0, mode: "broomUp", eyes: "wide", mouth: "o" }], { flip: true })],
-        captions: caps("know3"),
-        ui: [steps("know3", "ถ้าตัดไฟไม่ได้", [["drystick", "ไม้แห้ง ผ้าแห้ง"], ["drystand", "ยืนบนของแห้ง"]], F("know3", 0, 1) - 0.1, D("know3") - 0.15, { gap: F("know3", 0, 3) - F("know3", 0, 1) }),
-          { type: "src", t: F("know3", 0, 3) + 0.3, end: D("know3") - 0.05, top: 640, text: "ที่มา: <em>การไฟฟ้าส่วนภูมิภาค</em> · ใช้สิ่งของที่ไม่เป็นสื่อไฟฟ้า เช่น ผ้าแห้ง ไม้แห้ง · <em>St John Ambulance</em> · ยืนบนของแห้งที่ไม่นำไฟ" }],
-        extra(L) { lightsOff("h22"); put(L.act, broom("br22", 1010, G - 520, 880, G - 1080)); put(L.glow, `<ellipse cx="900" cy="${G - 600}" rx="500" ry="600" fill="url(#ksTube)" opacity=".5"/>`); },
-        fx(tl, id, t0, L) { TOP(L, "h22"); },
-      });
-
-      // ---------- 23. lights out: the กระสือ shrieks and is gone; เต้ย drops into the water ----------
-      const FALL = F("dark", 0, 2);
-      add("dark", {
-        set: "houseIn", setOpts: HOUSE("h23"), dark: 0.62,
-        cam: { keys: [{ t: 0, ...fr(900, G - 900, 1.0, 540, 900), drift: { s: 0.03 } }, { t: FALL - 0.2, glide: 0.5, ...fr(260, G - 300, 1.1, 540, 1100), drift: { s: 0.04 } }] },
-        shake: (t) => (t > F("dark", 0, 1) && t < F("dark", 0, 1) + 0.6 ? 12 * Math.sin(t * 57) : 0),
-        actors: [TOEY(240, G, 1.0, [{ t: 0, mode: "point", eyes: "closed", mouth: "o" }, { t: FALL, mode: "fall", eyes: "closed", mouth: "o" }], { flip: true, moveTo: { x: 300, y: G + 260, dur: 0.4, at: FALL, ease: "power2.in" } })],
-        captions: caps("dark"),
-        extra(L) { lightsOff("h23"); put(L.act, Krasue.ghost(1120, G - 1140, 0.8, { id: "g23", bun: true })); put(L.glow, `<g id="g23g">${Krasue.glow(1120, G - 1140, 0.8)}</g>`); },
-        fx(tl, id, t0, L) {
-          TOP(L, "h23");
-          tl.to("#g23", { scale: 1.5, svgOrigin: `1120 ${G - 1140}`, duration: 0.4, ease: "power2.out" }, t0 + F("dark", 0, 1));
-          tl.to(["#g23", "#g23g"], { opacity: 0, duration: 0.25 }, t0 + F("dark", 0, 1) + 0.6);
-          Fx.glitch(tl, `#${id}`, t0 + F("dark", 0, 1), 0.5, 20, 710);
-          tl.fromTo("#fxred", { opacity: 0.5 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + F("dark", 0, 1));
+      // ---------- 22. knowledge, drawn: can't cut it? dry wood or cloth, standing on something dry (PEA / St John) ----------
+      add("know2", {
+        set: "shockSection", setOpts: { id: "ss2", dry: true }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(610, 1000, 1.12, 540, 1000), drift: { s: 0.02 } }] },
+        captions: caps("know2"),
+        ui: [{ type: "src", t: 0.3, end: D("know2") - 0.05, top: 160, text: "ที่มา: <em>การไฟฟ้าส่วนภูมิภาค</em> · ใช้สิ่งของที่ไม่เป็นสื่อไฟฟ้า เช่น ผ้าแห้ง ไม้แห้ง · <em>St John Ambulance</em> · ยืนบนของแห้งที่ไม่นำไฟ" }],
+        fx(tl, id, t0) {
+          tl.fromTo("#ss2-path", { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -380 }, duration: 1, repeat: Math.ceil(D("know2")), ease: "none", immediateRender: false }, t0);
+          tl.fromTo("#ss2-broom", { x: 80, y: 30 }, { x: 0, y: 0, duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + 0.2);
+          tl.fromTo("#ss2-ok2", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + vo("know2", 1));
         },
       });
 
-      // ---------- 24. top-down on the boards upstairs: she has dragged him up; he isn't breathing ----------
-      add("drag", {
-        set: "cprFloor", setOpts: { id: "cf24", hands: 0 }, dark: 0.22,
-        cam: { keys: [{ t: 0, ...fr(540, 1500, 1.0, 540, 960), drift: { s: 0.02 } }, { t: F("drag", 0, 1) - 0.2, glide: 0.8, ...fr(540, 760, 1.6, 540, 900), drift: { s: 0.05 } }] },
-        captions: caps("drag"),
-        fx(tl, id, t0) { Fx.heart(tl, t0 + F("drag", 0, 1), D("drag") - F("drag", 0, 1), 0.45, 0.55); },
+      // ---------- 23. lights out: the กระสือ shrieks and is gone; เต้ย drops into the water ----------
+      const FALL = F("dark", 0, 1);
+      add("dark", {
+        set: "houseIn", setOpts: HOUSE("h23"), dark: 0.62,
+        cam: { keys: [{ t: 0, ...fr(900, G - 900, 1.0, 540, 900), drift: { s: 0.03 } }, { t: FALL - 0.2, glide: 0.5, ...fr(260, G - 300, 1.1, 540, 1100), drift: { s: 0.04 } }] },
+        shake: (t) => (t > FALL && t < FALL + 0.4 ? 10 * Math.sin(t * 57) : 0),
+        actors: [TOEY(240, G, 1.0, [{ t: 0, mode: "point", eyes: "closed", mouth: "o" }, { t: FALL, mode: "fall", eyes: "closed", mouth: "o" }], { flip: true, moveTo: { x: 300, y: G + 260, dur: 0.4, at: FALL, ease: "power2.in" } })],
+        captions: caps("dark"),
+        extra(L) { lightsOff("h23"); },
+        fx(tl, id, t0, L) { TOP(L, "h23"); Fx.heart(tl, t0 + F("dark", 0, 2), D("dark") - F("dark", 0, 2), 0.5, 0.55); },
       });
+
 
       // ---------- 25–26. knowledge: 1669 and CPR right away; she keeps pressing… his eyes open ----------
       const pump = (tl, k, t0, dur) => { for (let t = 0; t < dur; t += 0.5) { tl.to(`#${k}-hands`, { y: 26, duration: 0.12, ease: "power2.in" }, t0 + t); tl.to(`#${k}-hands`, { y: 0, duration: 0.2, ease: "power2.out" }, t0 + t + 0.12);
         tl.to(`#${k}-chest`, { scaleY: 0.96, svgOrigin: "540 1100", duration: 0.12 }, t0 + t); tl.to(`#${k}-chest`, { scaleY: 1, svgOrigin: "540 1100", duration: 0.2 }, t0 + t + 0.12); } };
-      add("know4", {
+      add("know3", {
         set: "cprFloor", setOpts: { id: "cf25", hands: 0 }, dark: 0.22,
         cam: { keys: [{ t: 0, ...fr(480, 1000, 0.85, 540, 1250), drift: { s: 0.02 } }] },
-        captions: caps("know4"),
-        ui: [steps("know4", "ถ้าหมดสติ ไม่หายใจ", [["call1669", "โทร 1669"], ["cpr", "ปั๊มหัวใจทันที"]], F("know4", 0, 0) + 0.2, D("know4") - 0.15, { gap: F("know4", 0, 2) - F("know4", 0, 0) - 0.2 }),
-          { type: "src", t: F("know4", 0, 2) + 0.3, end: D("know4") - 0.05, top: 640, text: "ที่มา: <em>การไฟฟ้าส่วนภูมิภาค</em> · หมดสติหรือหยุดหายใจ ให้ทำ CPR · <em>CDC</em> · เริ่ม CPR ทันที" }],
-        fx(tl, id, t0) { tl.to("#cf25-hands", { opacity: 1, duration: 0.2 }, t0 + F("know4", 0, 2)); pump(tl, "cf25", t0 + F("know4", 0, 2) + 0.2, D("know4") - F("know4", 0, 2) - 0.2); },
+        captions: caps("know3"),
+        ui: [{ type: "src", t: 0.3, end: D("know3") - 0.05, top: 200, text: "ที่มา: <em>กรมสนับสนุนบริการสุขภาพ</em> · สายด่วน 1669 · <em>การไฟฟ้าส่วนภูมิภาค</em> · หมดสติหรือหยุดหายใจ ให้ทำ CPR · <em>CDC</em> · เริ่ม CPR ทันที" }],
+        fx(tl, id, t0) { tl.to("#cf25-hands", { opacity: 1, duration: 0.2 }, t0 + vo("know3", 1)); pump(tl, "cf25", t0 + vo("know3", 1) + 0.2, D("know3") - vo("know3", 1) - 0.2); },
       });
       add("breathe", {
         set: "cprFloor", setOpts: { id: "cf26" }, dark: 0.2,
-        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.05, 540, 1000), drift: { s: 0.03 } }, { t: F("breathe", 0, 2) - 0.2, glide: 0.6, ...fr(540, 720, 1.7, 540, 900), drift: { s: 0.04 } }] },
-        captions: caps("breathe"),
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.05, 540, 1000), drift: { s: 0.03 } }, { t: vo("breathe", 1) - 0.4, glide: 0.6, ...fr(540, 720, 1.7, 540, 900), drift: { s: 0.04 } }] },
+        captions: caps("breathe", undefined, { quote: true }),
         fx(tl, id, t0) {
-          pump(tl, "cf26", t0, F("breathe", 0, 2));
-          const b = t0 + F("breathe", 0, 2) + 0.2;
+          pump(tl, "cf26", t0, vo("breathe", 1) - 0.2);
+          const b = t0 + vo("breathe", 1) - 0.1;
           tl.to("#cf26-shut", { opacity: 0, duration: 0.1 }, b); tl.to("#cf26-open", { opacity: 1, duration: 0.1 }, b);
           tl.to("#cf26-lips", { attr: { fill: "#c97a6a" }, duration: 0.8 }, b);
           tl.fromTo("#cf26-chest", { scaleY: 1 }, { scaleY: 1.04, svgOrigin: "540 1100", duration: 0.6, repeat: 3, yoyo: true, ease: "sine.inOut", immediateRender: false }, b + 0.2);
           Fx.punch(tl, `#${id} .stage`, b, 1.04, 0.3);
-        },
-      });
-
-      // ---------- 27. channel signature ----------
-      add("sig", {
-        set: "houseIn", setOpts: HOUSE("h27"), dark: 0.45, blur: { far: 8, set: 8, fg: 10 },
-        cam: { keys: [{ t: 0, ...fr(300, G + 1300 - 530 * 2.3, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: SF(2), ...fr(300, G + 1300 - 530 * 2.3, 1.06, 540, 1000), drift: { s: 0.045 } }, { t: SF(3), ...fr(300, G + 1300 - 530 * 2.3, 1.14, 540, 1000), drift: { s: 0.02 } }] },
-        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
-        actors: [FON(300, G + 1300, 2.3, [{ t: 0, mode: "idle", eyes: "closed", mouth: "o" }])],
-        captions: caps("sig"),
-        ui: [{ type: "sigCard", t: 0.05, title: "แสงกระสือ · เช็กลิสต์เอาตัวรอด", items: [["ไม่แตะตัวน้อง", true], ["ตัดไฟด้วยไม้แห้ง", true], ["ปั๊มหัวใจทันที", true], ["???", false]],
-          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
-        extra(L) { lightsOff("h27"); put(L.glow, `<ellipse cx="380" cy="${G + 160}" rx="420" ry="460" fill="url(#ksTube)" opacity=".7"/>`); },
-        fx(tl, id, t0) {
-          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
-          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
-          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 93);
-          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 94);
-          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
-          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
-          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
         },
       });
 
@@ -433,18 +357,13 @@
         cam: { keys: [{ t: 0, ...fr(1880, G - 640, 1.05, 540, 960), drift: { s: 0.06 } }] },
         fx(tl, id, t0, L) { TOP(L, "h29"); for (let k = 0; k < 2; k++) tl.fromTo("#h29-door", { x: 0 }, { x: 5, duration: 0.05, yoyo: true, repeat: 1, immediateRender: false }, t0 + 0.05 + k * 0.3); },
       });
-      add("answer", { ...doorShot("answer", "h30", { quote: true, dark: 0.5, more: { blur: { far: 6, set: 6 } } }),
-        cam: { keys: [{ t: 0, ...fr(975, G - 270 - 530 * 1.4, 1.75, 540, 900), drift: { s: 0.05 } }] },
-        actors: [FON(975, G - 270, 1.4, [{ t: 0, mode: "idle", eyes: "closed", mouth: "o" }, { t: voEnd("answer"), mode: "idle", eyes: "normal", mouth: "smile" }])],
-        extra(L) { lightsOff("h30"); put(L.glow, `<ellipse cx="900" cy="${G - 900}" rx="420" ry="460" fill="url(#ksTube)" opacity=".7"/>`); },
-      });
       add("under", { ...doorShot("under", "h31", { under: 0 }),
         cam: { keys: [{ t: 0, ...fr(1890, WL - 120, 1.6, 540, 900), drift: { s: 0.04 } }] },
         fx(tl, id, t0, L) {
           TOP(L, "h31");
-          tl.fromTo("#h31-under", { opacity: 0, scaleX: 0.3, svgOrigin: `${DX + 190} ${WL}` }, { opacity: 1, scaleX: 1, svgOrigin: `${DX + 190} ${WL}`, duration: 1.2, ease: "power2.out", immediateRender: false }, t0 + F("under", 0, 2) - 0.2);
-          Fx.heart(tl, t0 + F("under", 0, 2), D("under") - F("under", 0, 2), 0.42, 0.55);
-          Fx.glitch(tl, `#${id}`, t0 + F("under", 0, 2), 0.2, 10, 711);
+          tl.fromTo("#h31-under", { opacity: 0, scaleX: 0.3, svgOrigin: `${DX + 190} ${WL}` }, { opacity: 1, scaleX: 1, svgOrigin: `${DX + 190} ${WL}`, duration: 1.2, ease: "power2.out", immediateRender: false }, t0 + F("under", 0, 1) - 0.2);
+          Fx.heart(tl, t0 + F("under", 0, 1), D("under") - F("under", 0, 1), 0.42, 0.55);
+          Fx.glitch(tl, `#${id}`, t0 + F("under", 0, 1), 0.2, 10, 711);
         },
       });
       add("inside", { ...doorShot("inside", "h32", { quote: true, under: 1 }),

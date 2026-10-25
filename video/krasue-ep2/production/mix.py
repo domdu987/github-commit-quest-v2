@@ -1,4 +1,4 @@
-"""แสงกระสือ EP.2: build the episode soundtrack from schedule.json: per-line levelled voice, synthesized SFX for a flooded village
+"""แสงกระสือ EP.2 (สูตรเสียงกอย re-cut): build the episode soundtrack from schedule.json: per-line levelled voice, synthesized SFX for a flooded village
 at night with live wires (the mains hum, a broken line arcing in the water, the main switch thrown, the power dying, wading steps, the
 old comic's pages) and the Suno music bed with dips before the scares and sidechain ducking under the voice. Output -14 LUFS, hard cut
 to silence after the choice. No noise beds and no high hiss (user: "เสียงซ่าๆเอาออก")."""
@@ -86,13 +86,14 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
     return out
 
 
-SF = lambda j: frag("sig", 0, j)
 F = frag
-SHOCK = 3.5                       # the walk shot: his hand on the fridge
-B2 = frag("broom", 0, 2) - 0.12   # the broom shot cuts to the switch close up
-HIT = B2 + 0.55                   # the broom handle knocks the lever down
-RP = frag("replay", 0, 3) - 0.25  # the light in the replay turns out to have a face
-FALL = frag("dark", 0, 2)
+SHOCK = max(2.4, frag("walk", 0, 1) + 0.4)  # the walk shot: his hand on the fridge
+B2 = frag("broom", 0, 2) - 0.12             # the broom shot cuts to the switch close up
+HIT = B2 + 0.55                             # the broom handle knocks the lever down
+UP = frag("lever", 0, 1) + 0.2              # the lever starts going up on its own
+CUT1 = vo_t("know1", 1) + 0.2               # the diagram's lever goes down
+FALL = frag("dark", 0, 1)                   # เต้ย drops into the water
+PRESS = vo_t("breathe", 1) - 0.2            # she stops pressing: he breathes
 
 
 def zaps(k, ts, g=0.5):
@@ -107,46 +108,32 @@ CUES = [
     ("recap", 0.0, "hum", 0.6), ("recap", 0.0, "glitch", 0.5), *zaps("recap", (0.3, 1.2), 0.5), *beats("recap", 0.0, D["recap"], 0.4, 0.6),
     *buzzing("hook", 0.3, D["hook"] - 0.6, 0.55), ("hook", 0.3, "buzz", 0.4), *beats("hook", 0.3, D["hook"] - 0.3, 0.4, 0.5),
     ("hook", D["hook"] - 0.5, "sting", 1.0), ("hook", D["hook"] - 0.5, "glitch", 0.7), ("hook", D["hook"] - 0.45, "boom", 0.6),
-    *[("step", t, "plop", 0.35) for t in (0.4, 1.2, 2.0, 2.7)], *zaps("step", (0.8, 2.2), 0.45), *beats("step", 0.0, D["step"], 0.42, 0.5),
-    ("stop", 0.05, "whoosh", 0.5), ("stop", 0.1, "slam", 0.3),
-    ("off", 0.0, "hum", 0.5), *zaps("off", (0.4, 1.3, 2.1), 0.5), ("off", F("off", 0, 2), "powerdown", 0.8), ("off", F("off", 0, 2), "glitch", 0.4),
-    ("pull", 0.3, "plop", 0.4), ("pull", F("pull", 0, 1), "splash", 0.5), ("pull", F("pull", 0, 1) + 0.5, "thud", 0.4),
+    ("stop", 0.05, "whoosh", 0.5), ("stop", 0.1, "slam", 0.3), ("stop", 0.6, "plop", 0.3),
+    ("off", 0.0, "hum", 0.5), ("off", 0.3, "beep", 0.3), *zaps("off", (0.4, 1.3, 2.1), 0.5), ("off", F("off", 0, 1), "powerdown", 0.8), ("off", F("off", 0, 1), "glitch", 0.4),
     ("dazed", 0.3, "drip", 0.4), ("dazed", 1.4, "drip", 0.3), ("dazed", F("dazed", 0, 1), "swell", 0.4), *beats("dazed", F("dazed", 0, 1), D["dazed"] - F("dazed", 0, 1), 0.45, 0.45),
-    ("one", F("one", 0, 2), "hum", 0.5), ("one", F("one", 0, 2), "click", 0.4),
+    ("scold", 0.05, "plop", 0.35), ("scold", 0.9, "creak", 0.25),
+    ("one", F("one", 0, 1), "click", 0.4), ("one", F("one", 0, 1) + 0.05, "hum", 0.5),
     ("down", 0.1, "click", 0.3),
-    ("phone", 0.1, "click", 0.4),
-    ("replay", 0.0, "click", 0.3), ("replay", RP + 0.2, "sting", 1.0), ("replay", RP + 0.2, "glitch", 0.6), ("replay", RP + 0.25, "shriek", 0.35),
-    *beats("replay", F("replay", 0, 1), D["replay"] - F("replay", 0, 1), 0.42, 0.5),
-    ("two", F("two", 0, 2) - 0.1, "zap", 0.5), ("two", F("two", 0, 2), "hum", 0.6), ("two", F("two", 0, 2) + 0.2, "buzz", 0.4), *beats("two", F("two", 0, 2), D["two"] - F("two", 0, 2), 0.45, 0.45),
-    ("lever", F("lever", 0, 1) + 0.2, "creak", 0.4), ("lever", F("lever", 0, 1) + 0.7, "clang", 0.7), ("lever", F("lever", 0, 1) + 0.7, "zap", 0.8), ("lever", F("lever", 0, 1) + 0.75, "hum", 0.6),
-    ("call", 0.0, "hum", 0.4), ("call", 0.2, "swell", 0.5), *beats("call", 0.0, D["call"], 0.42, 0.55), ("call", F("call", 0, 1), "glitch", 0.4),
-    ("walk", 0.0, "hum", 0.4), *[("walk", 0.25 * k, "steps", 0.3) for k in range(7)], *[("walk", t, "plop", 0.35) for t in (1.9, 2.3, 2.7, 3.1)],
+    ("two", F("two", 0, 1) - 0.1, "zap", 0.5), ("two", F("two", 0, 1), "hum", 0.6), ("two", F("two", 0, 1) + 0.2, "buzz", 0.4), *beats("two", F("two", 0, 1), D["two"] - F("two", 0, 1), 0.45, 0.45),
+    ("lever", UP, "creak", 0.4), ("lever", UP + 0.5, "clang", 0.7), ("lever", UP + 0.5, "zap", 0.8), ("lever", UP + 0.55, "hum", 0.6),
+    ("call", 0.0, "hum", 0.4), ("call", 0.2, "swell", 0.5), *beats("call", 0.0, D["call"], 0.5, 0.55),
+    ("walk", 0.0, "hum", 0.4), *[("walk", 0.25 * k, "steps", 0.3) for k in range(7)], *[("walk", t, "plop", 0.35) for t in (1.85, 2.1)],
     ("walk", SHOCK, "sting", 1.0), ("walk", SHOCK, "glitch", 0.7), *buzzing("walk", SHOCK, D["walk"] - SHOCK, 0.8),
     *buzzing("scream", 0.0, D["scream"], 0.5), ("scream", 0.05, "whoosh", 0.4),
     *[("rush", 0.3 * k, "steps", 0.45) for k in range(5)], *buzzing("rush", 0.0, D["rush"], 0.5), *beats("rush", 0.0, D["rush"], 0.36, 0.55),
     ("rule", 0.0, "glitch", 0.5), ("rule", 0.05, "sting", 0.6), *buzzing("rule", 0.2, D["rule"] - 0.2, 0.25, 0.5),
-    *buzzing("know1", 0.0, D["know1"], 0.3, 0.5),
-    ("know2", 0.1, "hum", 0.4),
-    ("guard", 0.0, "hum", 0.5), ("guard", F("guard", 0, 1), "sting", 1.0), ("guard", F("guard", 0, 1), "glitch", 0.6), ("guard", F("guard", 0, 1), "boom", 0.4),
-    *beats("guard", F("guard", 0, 1), D["guard"] - F("guard", 0, 1), 0.4, 0.55),
+    *buzzing("know1", 0.0, CUT1, 0.3, 0.5), ("know1", CUT1 + 0.1, "clang", 0.5), ("know1", CUT1 + 0.15, "powerdown", 0.5), ("know1", CUT1 + 0.4, "ding", 0.5),
+    # koi-style: the eyes by the switch fade in on a held breath, a heartbeat, no sting
+    ("guard", 0.0, "hum", 0.5), ("guard", F("guard", 0, 1) - 0.3, "swell", 0.5), *beats("guard", F("guard", 0, 1), D["guard"] - F("guard", 0, 1), 0.5, 0.55),
     ("broom", 0.2, "rustle", 0.4), ("broom", 0.8, "whoosh", 0.3), *beats("broom", 0.0, B2, 0.4, 0.5),
     ("broom", B2 + 0.1, "whoosh", 0.7), ("broom", HIT, "clang", 0.9), ("broom", HIT + 0.05, "zap", 0.9), ("broom", HIT + 0.4, "thud", 0.6), ("broom", HIT + 0.45, "powerdown", 0.9),
-    ("know3", 0.0, "drip", 0.3),
-    ("dark", F("dark", 0, 1), "shriek", 0.9), ("dark", F("dark", 0, 1), "sting", 0.8), ("dark", F("dark", 0, 1), "glitch", 0.7), ("dark", FALL, "splash", 1.0), ("dark", FALL + 0.1, "thud", 0.4),
-    ("drag", 0.1, "drip", 0.5), ("drag", 0.5, "drip", 0.4), ("drag", 1.0, "drip", 0.4), *beats("drag", F("drag", 0, 1), D["drag"] - F("drag", 0, 1), 0.45, 0.55),
-    ("know4", 0.1, "beep", 0.35), ("know4", 0.5, "ring", 0.3), *[("know4", F("know4", 0, 2) + 0.2 + 0.5 * k, "thud", 0.25) for k in range(int((D["know4"] - F("know4", 0, 2) - 0.2) / 0.5))],
-    *[("breathe", 0.5 * k, "thud", 0.25) for k in range(int(F("breathe", 0, 2) / 0.5))], ("breathe", F("breathe", 0, 2) + 0.2, "swell", 0.5),
-    # channel signature
-    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
-    ("sig", SF(0) + 0.3, "ding", 0.6), ("sig", SF(0) + 0.62, "ding", 0.6), ("sig", SF(1) + 0.15, "ding", 0.6),
-    ("sig", SF(2), "glitch", 0.45), *beats("sig", SF(2), SF(3) - SF(2), 0.38, 0.8),
-    *[("sig", SF(2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
-    ("sig", SF(3) - 1.1, "riser", 0.6),
-    ("sig", SF(3), "sting", 1.1), ("sig", SF(3), "boom", 0.8), ("sig", SF(3), "glitch", 0.7), ("sig", SF(3) + 0.12, "slam", 0.7),
-    *beats("sig", SF(3), D["sig"] - SF(3), 0.5, 0.7),
+    ("know2", 0.1, "hum", 0.35), ("know2", 0.2, "whoosh", 0.35), ("know2", vo_t("know2", 1), "ding", 0.5),
+    ("dark", 0.05, "drip", 0.3), ("dark", FALL, "splash", 1.0), ("dark", FALL + 0.1, "thud", 0.4), *beats("dark", F("dark", 0, 2), D["dark"] - F("dark", 0, 2), 0.5, 0.55),
+    ("know3", 0.3, "beep", 0.35), ("know3", 0.8, "ring", 0.3), *[("know3", vo_t("know3", 1) + 0.2 + 0.5 * k, "thud", 0.25) for k in range(int((D["know3"] - vo_t("know3", 1) - 0.2) / 0.5) + 1)],
+    *[("breathe", 0.5 * k, "thud", 0.25) for k in range(int(PRESS / 0.5) + 1)], ("breathe", PRESS + 0.1, "swell", 0.5),
     *[("knock", F("knock", 0, 1) + k * 0.32, "knock", 0.9) for k in range(3)], *beats("knock", F("knock", 0, 1), D["knock"] - F("knock", 0, 1), 0.45, 0.45),
     *[("voice", 0.05 + k * 0.3, "knock", 0.6) for k in range(2)],
-    ("under", F("under", 0, 2) - 0.2, "swell", 0.6), ("under", F("under", 0, 2), "glitch", 0.4), *beats("under", F("under", 0, 2), D["under"] - F("under", 0, 2), 0.42, 0.55),
+    ("under", F("under", 0, 1) - 0.2, "swell", 0.6), ("under", F("under", 0, 1), "glitch", 0.4), *beats("under", F("under", 0, 1), D["under"] - F("under", 0, 1), 0.42, 0.55),
     ("inside", 0.0, "hum", 0.4), ("inside", D["inside"] - 1.4, "creak", 0.6), *beats("inside", 0.0, D["inside"], 0.4, 0.6),
     *beats("choice", 0.0, D["choice"] - 0.3, 0.38, 1.0), *[("choice", 0.05 + k * 1.0, "tick", 1.0) for k in range(3)], ("choice", 1.0, "glitch", 0.6), *[("choice", 0.4 + k * 0.9, "knock", 0.5) for k in range(2)],
     ("choice", D["choice"] - 2.2, "riser", 1.0), ("choice", D["choice"] - 0.62, "sting", 1.0), ("choice", D["choice"] - 0.6, "glitch", 0.8), ("choice", D["choice"] - 0.6, "boom", 0.7),
@@ -178,11 +165,9 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 dip(0.0, T("recap", -0.05), 0.3, 0.05)
 dip(T("hook", 0), T("hook", -0.05), 0.35)
-dip(T("replay", RP), T("replay", -0.05), 0.3)
 dip(T("walk", SHOCK), T("rule", -0.05), 0.25)
-dip(T("guard", 0), T("dark", -0.05), 0.3)
-dip(T("drag", 0), T("drag", -0.05), 0.35)
-dip(T("sig", SF(2)), T("sig", SF(3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
+dip(T("guard", 0), T("broom", B2), 0.35)  # the eyes by the switch: the music holds its breath
+dip(T("dark", 0), T("dark", -0.05), 0.3)
 dip(T("knock", 0), T("inside", -0.05), 0.3)
 dip(T("choice", 0), T("choice", -0.3), 0.5)
 mus = mus * gain
