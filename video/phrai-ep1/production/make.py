@@ -14,7 +14,7 @@ for f in ("package.json", "hyperframes.json", "meta.json"):
         shutil.copy(os.path.join(HERE, "..", "hf", "rig", f), PROJ)
 if not os.path.exists(os.path.join(PROJ, "assets", "fonts")):
     shutil.copytree(os.path.join(HERE, "..", "hf", "rig", "assets", "fonts"), os.path.join(PROJ, "assets", "fonts"))
-for f in ("rig.js", "sets.js", "camp.js", "koi.js", "zom.js", "hands.js", "mok.js", "pov.js", "phrai.js", "ui.js", "gameui.js", "mokui.js", "phraiui.js", "fx.js", "engine.js", "opener.js"):
+for f in ("rig.js", "sets.js", "camp.js", "koi.js", "zom.js", "hands.js", "mok.js", "pov.js", "phrai.js", "ui.js", "gameui.js", "mokui.js", "phraiui.js", "fx.js", "engine.js", "opener.js", "openers.js"):
     shutil.copy(os.path.join(LIB, f), os.path.join(PROJ, "assets", f))
 
 

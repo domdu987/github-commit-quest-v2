@@ -91,10 +91,9 @@ T3 = frag("throw", 0, 3)
 SF = lambda j: frag("sig", 0, j)
 
 CUES = [
-    # story opener (Opener.cues, at 1.9 / glide 1.8)
-    ("open", 0.0, "swell", 0.6), ("open", 0.55, "glitch", 0.35), ("open", 0.82, "boom", 0.45), ("open", 1.15, "sting", 0.5), ("open", 1.18, "glitch", 0.45),
-    *beats("open", 1.15, 0.75, 0.5, 0.6), ("open", 1.0, "riser", 0.7), ("open", 1.78, "glitch", 0.5), ("open", 1.9, "whoosh", 0.9), ("open", 2.71, "whoosh", 0.8),
-    ("open", 3.68, "boom", 0.9), ("open", 3.7, "glitch", 0.5), ("open", 3.75, "lap", 0.8),
+    # story opener, its own (OpenerWater.cues, at 1.9 / glide 1.8): the title surfacing, the hands, the drag under, the tilt up, the hit
+    ("open", 0.0, "swell", 0.5), ("open", 0.1, "bubbles", 0.8), ("open", 0.95, "boom", 0.35), *[("open", 1.15 + i * 0.12, "plop", 0.55) for i in range(5)], ("open", 1.15, "sting", 0.8),
+    ("open", 1.0, "riser", 0.5), ("open", 1.7, "splash", 0.9), ("open", 1.7, "glitch", 0.5), ("open", 1.9, "whoosh", 0.6), ("open", 3.68, "boom", 0.8), ("open", 3.7, "glitch", 0.4),
     ("hook", 0.0, "lap", 0.7), ("hook", 0.7, "bubbles", 0.6), *beats("hook", 0.4, D["hook"] - 0.4, 0.42, 0.5), ("hook", D["hook"] - 0.45, "sting", 1.0), ("hook", D["hook"] - 0.45, "glitch", 0.7), ("hook", D["hook"] - 0.4, "boom", 0.6),
     ("back", 0.0, "rewind", 0.8), ("back", 0.05, "glitch", 0.4), ("back", 0.5, "ching", 0.4),
     ("dusk", 0.0, "lap", 0.6), ("dusk", 0.3, "swell", 0.3),
@@ -139,7 +138,7 @@ CUES = [
     ("next", 0.3, "whoosh", 0.5), ("next", 0.45, "drip", 0.6), ("next", 0.8, "sting", 0.7), *beats("next", 0.9, D["next"] - 0.9, 0.7, 0.5),
 ]
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
-CUES = [c for c in CUES if c[2] not in ("wind",) and c[3] > 0]
+CUES = [c for c in CUES if c[2] not in ("wind", "lap") and c[3] > 0]  # no noise beds (user: "เสียงซ่าๆเอาออก")
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
         "sfx": [{"t": round(t if k is None else T(k, t), 3), "type": typ, "gain": g} for k, t, typ, g in CUES]}
 json.dump(cues, open(os.path.join(HERE, "sfx_cues.json"), "w"))

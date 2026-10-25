@@ -86,10 +86,9 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
 
 
 CUES = [
-    # story opener (Opener.cues, at 1.9 / glide 1.8): drone, glitches, the EP stamp, the eyes, riser, the fall, the hit
-    ("open", 0.0, "swell", 0.6), ("open", 0.55, "glitch", 0.35), ("open", 0.82, "boom", 0.45), ("open", 1.15, "sting", 0.5), ("open", 1.18, "glitch", 0.45),
-    *beats("open", 1.15, 0.75, 0.5, 0.6), ("open", 1.0, "riser", 0.7), ("open", 1.78, "glitch", 0.5), ("open", 1.9, "whoosh", 0.9), ("open", 2.71, "whoosh", 0.8),
-    ("open", 3.68, "boom", 0.9), ("open", 3.7, "glitch", 0.5), ("open", 3.75, "crackle", 0.8),
+    # story opener, its own (OpenerSmoke.cues, at 1.9 / glide 1.8 / slam 1.25): the fire, the embers, the burnt hand on the lens, the pull back, the hit
+    ("open", 0.0, "swell", 0.6), ("open", 0.1, "crackle", 0.9), ("open", 0.9, "boom", 0.4), ("open", 1.25, "thud", 1.1), ("open", 1.25, "sting", 1.0), ("open", 1.27, "glitch", 0.6),
+    ("open", 1.0, "riser", 0.6), ("open", 1.9, "whoosh", 0.9), ("open", 3.68, "boom", 0.9), ("open", 3.7, "glitch", 0.5),
     # you wake: the smoke alarm, the knocking
     *[("wake", 0.4 + k * 0.5, "beep", 0.22) for k in range(13)], ("wake", 1.0, "knock", 1.1), ("wake", 1.22, "knock", 1.0), ("wake", 1.44, "knock", 1.1),
     *[("wake", vo_t("wake", 1) - 0.25 + k * 0.18, "knock", 1.2) for k in range(4)], *beats("wake", vo_t("wake", 1), D["wake"] - vo_t("wake", 1), 0.45, 0.5),

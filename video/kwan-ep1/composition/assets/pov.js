@@ -31,8 +31,8 @@
     <linearGradient id="pvBeam" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff6dc" stop-opacity=".55"/><stop offset="1" stop-color="#fff6dc" stop-opacity="0"/></linearGradient>`;
 
   // ---------------- head motion ----------------
-  // mode: still | breath | panic | crawl | walk · cough: [t] fits (0.7 s) · flinch: [t] jolts · tilt: steady roll (deg)
-  const MODES = { still: [1.2, 0.8, 0.12, 0.7], breath: [2.5, 2.8, 0.25, 1.05], panic: [4, 5, 0.5, 2.1], crawl: [11, 14, 1.6, 2.2], walk: [7, 10, 0.9, 1.8] };
+  // mode: still | breath | panic | crawl | walk | run (sprinting) | aim (steady) · cough: [t] fits (0.7 s) · flinch: [t] jolts · tilt: steady roll (deg)
+  const MODES = { still: [1.2, 0.8, 0.12, 0.7], breath: [2.5, 2.8, 0.25, 1.05], panic: [4, 5, 0.5, 2.1], crawl: [11, 14, 1.6, 2.2], walk: [7, 10, 0.9, 1.8], run: [14, 22, 1.8, 2.7], aim: [1.6, 1.4, 0.15, 0.9] };
   function head(o = {}) {
     const [ax, ay, ar, f] = MODES[o.mode || "breath"];
     const at = (o.modes || []).slice().sort((a, b) => a[0] - b[0]); // [[t, mode]] switches part-way through the shot

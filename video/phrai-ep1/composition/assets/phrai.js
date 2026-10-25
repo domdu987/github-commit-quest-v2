@@ -26,6 +26,8 @@
     <linearGradient id="phWall" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4a32"/><stop offset=".5" stop-color="#7d5a3c"/><stop offset="1" stop-color="#5e412c"/></linearGradient>
     <linearGradient id="phNet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe6ee" stop-opacity=".42"/><stop offset="1" stop-color="#c9d2dc" stop-opacity=".26"/></linearGradient>
     <linearGradient id="phSkin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c88d63"/><stop offset=".5" stop-color="#e3ad84"/><stop offset="1" stop-color="#b9805a"/></linearGradient>
+    <radialGradient id="phSiren"><stop offset="0" stop-color="#ff3a3a" stop-opacity=".55"/><stop offset="1" stop-color="#ff3a3a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="phSirenB"><stop offset="0" stop-color="#3a7aff" stop-opacity=".55"/><stop offset="1" stop-color="#3a7aff" stop-opacity="0"/></radialGradient>
     <linearGradient id="phPaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#181512"/><stop offset="1" stop-color="#0d0b09"/></linearGradient>`;
 
   // ---------------- small drawings ----------------
@@ -458,6 +460,85 @@
     put(L.glow, `<circle cx="540" cy="760" r="760" fill="url(#phBulb)" opacity=".45"/>`);
   }
 
+  // ---------------- top-down on the planks: the boy who isn't breathing, and the hands that bring him back ----------------
+  // #id-chest (scaleY for compressions), #id-hands (two stacked hands on the chest), #id-airway (a hand on the forehead and two
+  // fingers under the chin), #id-lips (blue; fill to pink when he breathes), #id-water (water coughed up beside his mouth)
+  function cprTop(L, o = {}) {
+    const id = o.id || "cp", r = mk(o.seed || 97), sk = CAST_COL.tong.skin, red = "#9a2e27", X = 540;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="url(#phPlank)"/>`);
+    let m = "";
+    for (let x = -880; x < 2000; x += 150) m += `<path d="M${x},-600V2800" stroke="#241810" stroke-width="8"/>${[0, 1, 2].map((k) => `<circle cx="${x + 20}" cy="${-300 + k * 1100 + (x % 300)}" r="6" fill="#1a120c"/>`).join("")}`;
+    m += `<ellipse cx="${X}" cy="1080" rx="520" ry="760" fill="#0d1a24" opacity=".45"/>`;
+    // the edge of the pier and the black river beyond it (we look straight down)
+    m += `<rect x="960" y="-600" width="1200" height="3400" fill="url(#phWater)"/><rect x="940" y="-600" width="40" height="3400" fill="#2a1c12" ${OUT}/>`;
+    for (let k = 0; k < 12; k++) m += `<path class="mrefl" d="M${f1(1000 + r() * 400)},${f1(r() * 2000)}h${f1(30 + r() * 90)}" stroke="#d9d4b8" stroke-width="4" stroke-linecap="round" opacity=".25"/>`;
+    for (let k = 0; k < 24; k++) m += `<ellipse cx="${f1(140 + r() * 800)}" cy="${f1(300 + r() * 1500)}" rx="${f1(6 + r() * 18)}" ry="${f1(4 + r() * 10)}" fill="#7f9bc0" opacity=".3"/>`;
+    put(L.mid, m);
+    // the rescuer's knees on the planks at the left edge (navy track pants)
+    put(L.set, `<g opacity=".95">${[880, 1180].map((y) => `<path d="M-120,${y}Q60,${y - 40} 150,${y + 30}Q60,${y + 140} -120,${y + 120}Z" fill="#2b3d5e" ${OUT}/>`).join("")}</g>`);
+    let b = `<g id="${id}-body" transform="rotate(-6 ${X} 1100)">
+      <path d="M${X - 90},1380L${X - 110},1840Q${X - 104},1880 ${X - 64},1880L${X - 40},1390Z" fill="#7d6e50" ${OUT}/><path d="M${X + 90},1380L${X + 110},1840Q${X + 104},1880 ${X + 64},1880L${X + 40},1390Z" fill="#7d6e50" ${OUT}/>
+      <ellipse cx="${X - 86}" cy="1900" rx="38" ry="26" fill="${sk}" ${OUT}/><ellipse cx="${X + 86}" cy="1900" rx="38" ry="26" fill="${sk}" ${OUT}/>
+      <path d="M${X - 140},870L${X - 220},1300Q${X - 220},1340 ${X - 190},1344L${X - 150},1340L${X - 120},950Z" fill="${red}" ${OUT}/><path d="M${X + 140},870L${X + 220},1300Q${X + 220},1340 ${X + 190},1344L${X + 150},1340L${X + 120},950Z" fill="${red}" ${OUT}/>
+      <ellipse cx="${X - 200}" cy="1360" rx="30" ry="36" fill="${sk}" ${OUT}/><ellipse cx="${X + 200}" cy="1360" rx="30" ry="36" fill="${sk}" ${OUT}/>
+      <g id="${id}-chest"><path d="M${X - 150},860Q${X},820 ${X + 150},860L${X + 120},1400H${X - 120}Z" fill="${red}" ${OUT}/><path d="M${X},990l14,28l32,4l-24,22l6,32l-28,-16l-28,16l6,-32l-24,-22l32,-4z" fill="#c9a33a" ${OUT}/>
+        <path d="M${X - 40},850Q${X},880 ${X + 40},850" stroke="#7d241e" stroke-width="10" fill="none"/></g>
+      <rect x="${X - 34}" y="790" width="68" height="70" fill="${sk}" ${OUT}/>
+      <g id="${id}-head"><ellipse cx="${X}" cy="690" rx="120" ry="130" fill="${sk}" ${OUT}/><path d="M${X - 122},650Q${X - 120},540 ${X},530Q${X + 120},540 ${X + 122},650Q${X + 90},590 ${X},586Q${X - 90},590 ${X - 122},650Z" fill="#2a2220" ${OUT}/>
+        <path d="M${X - 64},690q22,10 44,0M${X + 20},690q22,10 44,0" stroke="#3a2a22" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <ellipse id="${id}-lips" cx="${X}" cy="760" rx="26" ry="11" fill="#6f8fb0" stroke="#3a2a22" stroke-width="4"/>
+        ${[[-60, 640], [70, 720], [-30, 760], [40, 620]].map(([dx, dy]) => `<path d="M${X + dx},${dy}c5,9 7,14 2,17c-5,-3 -5,-8 -2,-17z" fill="#cfe2e6" opacity=".85"/>`).join("")}</g>
+      <g id="${id}-water" opacity="0"><ellipse cx="${X + 130}" cy="790" rx="90" ry="40" fill="#9fc3d8" opacity=".6"/><path d="M${X + 26},770q50,10 90,20" stroke="#cfe2e6" stroke-width="10" stroke-linecap="round" fill="none"/></g></g>`;
+    // the rescuer's hands: stacked on the middle of the chest (sleeves come from the left, white tee)
+    const hand = (x, y, rot, k) => `<g transform="translate(${x},${y}) rotate(${rot})"><path d="M-260,-28H-60V28H-260Z" fill="#f2f0ea" ${OUT}/><ellipse cx="0" cy="0" rx="70" ry="54" fill="#e8b48a" ${OUT}/>${[-30, -10, 10, 30].map((fy) => `<path d="M40,${fy}h${42 - Math.abs(fy) * 0.3}" stroke="${INK}" stroke-width="22" stroke-linecap="round"/><path d="M40,${fy}h${42 - Math.abs(fy) * 0.3}" stroke="#e8b48a" stroke-width="15" stroke-linecap="round"/>`).join("")}</g>`;
+    b += `<g id="${id}-hands" opacity="${o.hands ?? 0}">${hand(X - 10, 1060, 0, 0)}${hand(X + 4, 1046, -8, 1)}</g>`;
+    b += `<g id="${id}-airway" opacity="${o.airway ?? 0}">${hand(X - 30, 600, -20, 2)}<g transform="translate(${X + 120},800) rotate(160)"><path d="M-260,-24H-60V24H-260Z" fill="#f2f0ea" ${OUT}/><ellipse cx="0" cy="0" rx="56" ry="44" fill="#e8b48a" ${OUT}/>
+      <path d="M40,-12h60M40,12h56" stroke="${INK}" stroke-width="22" stroke-linecap="round"/><path d="M40,-12h60M40,12h56" stroke="#e8b48a" stroke-width="15" stroke-linecap="round"/></g></g>`;
+    put(L.set, b);
+    put(L.glow, `<circle cx="180" cy="260" r="900" fill="url(#phBulb)" opacity=".5"/>`);
+  }
+
+  // ---------------- the village road under water at night: stilt houses, poles, a sign half drowned, an ambulance stuck far off ----------------
+  function floodRoad(L, o = {}) {
+    const id = o.id || "fr", r = mk(o.seed || 101), W = o.water ?? 1250;
+    skyNight(L, { moon: { x: 300, y: 260, r: 52 } }, r);
+    let far = `<path d="M-900,${W - 40}`;
+    for (let x = -900; x <= 2000; x += 60) far += `L${x},${f1(W - 120 - r() * 120)}`;
+    far += `L2000,${W}H-900Z" fill="#070c18"/>`;
+    put(L.far, far);
+    let s = "";
+    [[-260, 1.0], [1180, 0.9]].forEach(([x, k]) => { s += `<g transform="translate(${x},${W}) scale(${k})"><rect x="-200" y="-520" width="400" height="300" fill="#3b2a1c" ${OUT}/><path d="M-240,-520L0,-700L240,-520Z" fill="#2a1d14" ${OUT}/>
+      <rect x="-120" y="-460" width="90" height="110" fill="#ffc06a" opacity=".85" ${OUT}/>${[-170, -60, 60, 170].map((px) => `<rect x="${px - 10}" y="-220" width="20" height="420" fill="#2a1c12"/>`).join("")}</g>`; });
+    for (let k = 0; k < 4; k++) { const x = -400 + k * 520; s += `<path d="M${x},${W + 300}V${W - 700}" stroke="#1a120c" stroke-width="18"/><path d="M${x - 70},${W - 650}h140" stroke="#1a120c" stroke-width="10"/>`; }
+    s += `<path d="M-400,${W - 640}Q-140,${W - 560} 120,${W - 640}T640,${W - 640}T1160,${W - 640}" stroke="#0d1220" stroke-width="5" fill="none"/>`;
+    // the road sign, half under water
+    s += `<g transform="translate(300,${W + 40}) rotate(-6)"><path d="M0,0V-260" stroke="#8a9096" stroke-width="12"/><rect x="-170" y="-380" width="340" height="140" rx="10" fill="#2f6f9f" stroke="#eaf4ff" stroke-width="6"/>
+      <text x="0" y="-322" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#eaf4ff">โรงพยาบาล</text><text x="0" y="-268" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="34" fill="#eaf4ff">4 กม. →</text></g>`;
+    // the water: dark, the moon streak, debris, ripples; the near part (#id-wfront) goes over anyone wading
+    s += `<rect x="-900" y="${W}" width="2900" height="${2600 - W}" fill="url(#phWaterD)" opacity=".95"/>`;
+    for (let k = 0; k < 22; k++) s += `<path class="rip" d="M${f1(-500 + r() * 2000)},${f1(W + 20 + r() * 900)}h${f1(40 + r() * 140)}" stroke="#9fb0d8" stroke-width="4" stroke-linecap="round" opacity=".4"/>`;
+    s += `<path class="mrefl" d="M280,${W + 60}h60M260,${W + 120}h90M290,${W + 190}h50" stroke="#e8e2c0" stroke-width="7" stroke-linecap="round" opacity=".5"/>`;
+    // the ambulance, far down the road, stuck: white van, red cross, the light bar (classes siren / sirenb flash in the shot)
+    s += `<g transform="translate(${o.amb ?? 720},${W + 70}) scale(.7)"><rect x="-120" y="-120" width="240" height="110" rx="12" fill="#e9eef0" stroke="#2e2a26" stroke-width="4"/><rect x="60" y="-150" width="70" height="40" rx="6" fill="#e9eef0" stroke="#2e2a26" stroke-width="4"/>
+      <path d="M-20,-90h20v-20h16v20h20v16h-20v20h-16v-20h-20z" fill="#d8322a"/><rect x="-60" y="-138" width="50" height="16" fill="#ff3a3a" class="siren"/><rect x="-6" y="-138" width="50" height="16" fill="#3a7aff" class="sirenb"/></g>`;
+    s += `<rect x="${(o.amb ?? 720) - 120}" y="${W + 30}" width="240" height="60" fill="#3b4766" opacity=".85"/>`;
+    s += [[-120, W + 220], [820, W + 360], [480, W + 620]].map(([x, y], k) => `<g transform="translate(${x},${y}) rotate(${k * 17 - 10})"><rect x="-50" y="-12" width="100" height="24" rx="6" fill="#5a4330" ${OUT}/></g>`).join("");
+    put(L.set, s);
+    put(L.glow, `<g class="siren"><circle cx="${(o.amb ?? 720) - 20}" cy="${W - 10}" r="260" fill="url(#phSiren)"/></g><g class="sirenb"><circle cx="${(o.amb ?? 720) + 20}" cy="${W - 10}" r="260" fill="url(#phSirenB)"/></g>`);
+  }
+
+  // ---------------- from under the river looking up: the ferry's hull on the bright surface, a dozen pale hands pushing it ----------------
+  function hullHands(L, o = {}) {
+    const id = o.id || "hh", SY = o.surface ?? 420;
+    underRiver(L, { ...o, id, surface: SY });
+    const hull = `<path d="M-330,-40H300Q370,-44 400,-96Q396,-30 330,10Q300,30 250,32H-300Q-350,26 -362,-10Q-366,-34 -330,-40Z" fill="#0b1614"/>`;
+    let s = `<g transform="translate(560,${SY + 20}) scale(1.6,-1.6)">${hull}</g>`;
+    const hx = [-420, -330, -240, -150, -60, 30, 120, 210, 300, 390, 480];
+    s += `<g id="${id}-hands">${hx.map((dx, k) => `<g class="hhand" data-i="${k}">${paleHand(560 + dx, SY + 92 + (k % 3) * 14, 0.62 + (k % 3) * 0.06, (k % 2 ? 1 : -1) * (4 + (k % 4) * 3))}</g>`).join("")}</g>`;
+    s += `<g opacity=".7">${[[-300, 820], [140, 900], [420, 760]].map(([dx, y]) => drownedFace(560 + dx, SY + y, 0.6, { op: 0.6 })).join("")}</g>`;
+    put(L.set, s);
+  }
+
   // looping motion: krathongs drift and bob, flames flicker, ripples slide, the moon streak shimmers, hair sways, bubbles rise
   function life(tl, scope, t0, dur) {
     const q = (c) => document.querySelectorAll(`${scope} ${c}`);
@@ -473,6 +554,9 @@
     q(".lamp").forEach((el, i) => tl.fromTo(el, { opacity: 0.85 }, { opacity: 1, duration: 0.13 + (i % 3) * 0.05, repeat: Math.ceil(dur / 0.13), yoyo: true, ease: "none", immediateRender: false }, t0));
     q(".phair").forEach((el, i) => tl.fromTo(el, { rotation: -4 }, { rotation: 5, svgOrigin: "0 -20", duration: 1.6 + (i % 3) * 0.4, repeat: Math.ceil(dur / 1.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.1));
     q(".pface").forEach((el, i) => tl.fromTo(el, { y: 0 }, { y: -26, duration: 2.4 + i * 0.3, repeat: Math.ceil(dur / 2.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+    q(".hhand").forEach((el, i) => tl.fromTo(el, { y: 0 }, { y: -14, duration: 0.5 + (i % 3) * 0.12, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (i % 4) * 0.1));
+    q(".siren").forEach((el) => { for (let t = 0; t < dur; t += 0.5) { tl.set(el, { opacity: 1 }, t0 + t); tl.set(el, { opacity: 0.15 }, t0 + t + 0.25); } });
+    q(".sirenb").forEach((el) => { for (let t = 0; t < dur; t += 0.5) { tl.set(el, { opacity: 0.15 }, t0 + t); tl.set(el, { opacity: 1 }, t0 + t + 0.25); } });
     q(".drip").forEach((el, i) => tl.fromTo(el, { y: 0, opacity: 0.9 }, { y: 140, opacity: 0, duration: 0.9 + (i % 3) * 0.2, repeat: Math.ceil(dur / 0.9), ease: "power2.in", immediateRender: false }, t0 + (i % 5) * 0.17));
     q(".bub").forEach((el, i) => tl.fromTo(el, { y: 0, opacity: 0 }, { y: -260 - (i % 4) * 60, opacity: 0.9, duration: 1.6 + (i % 5) * 0.3, repeat: Math.ceil(dur / 1.6), ease: "power1.in", immediateRender: false }, t0 + (i % 7) * 0.2));
     q(".ray").forEach((el, i) => tl.fromTo(el, { opacity: 0.4 }, { opacity: 0.95, duration: 1.8 + i * 0.3, repeat: Math.ceil(dur / 1.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
@@ -520,6 +604,6 @@
   // แพรว / โต้ง soaked: hair flat, clothes darker
   Rig.CAST.tongWet = { ...Rig.CAST.tong, top: "#9a2e27", topS: "#7d241e", sleeve: "#9a2e27", sleeveS: "#7d241e", pants: "#7d6e50", pantsS: "#61553e" };
 
-  Object.assign(Sets, { riverNight, pierDeck, pierPOV, pierSection, porch, bedroom, underRiver, ankleMarks, legendPhrai, reflections, phraiLegend, krathongCard, pierSign });
+  Object.assign(Sets, { riverNight, pierDeck, pierPOV, pierSection, porch, bedroom, underRiver, ankleMarks, legendPhrai, reflections, phraiLegend, krathongCard, pierSign, cprTop, floodRoad, hullHands });
   window.Phrai = { krathong, kglow, krefl, paleHand, drownedFace, ferry, gallon, bottle, bamboo, life, CAST_COL };
 })();

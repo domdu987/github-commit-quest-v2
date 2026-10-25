@@ -36,15 +36,15 @@
           `<span style="font-size:52px">โดนดึงลงน้ำ ให้<u>นอนหงาย</u></span>`],
       ];
 
-      // ---------- 0. story opener: มือพราย EP.1 in the night sky; the dive onto the river of krathongs ----------
+      // ---------- 0. story opener (its own: "ฉากเป็นแต่ละเรื่อง ep1 ห้ามเหมือนกัน"): the title surfaces in the black river, pale hands drag it under, tilt up to the krathongs ----------
       const OP = { title: "มือพราย", ep: "EP.1", name: "อย่าก้มคว้า", kick: "ROD MAI CLUB", at: 1.9, glide: 1.8,
-        land: fr(560, 1250, 1.15, 540, 900, { drift: { s: 0.05 } }) };
+        land: fr(560, 1250, 1.15, 540, 900, { drift: { s: 0.05 } }), start: fr(560, 1560, 2.0, 540, 1000) };
       add("open", {
         set: "riverNight", setOpts: { id: "r0", house: { x: -260 }, pier: { y: 1180, crowd: true }, boat: { x: 760, y: 1300, lamp: true } }, dark: 0.12,
-        cam: { keys: Opener.cam(OP) }, shake: Opener.shake(OP),
-        extra(L, id) { Opener.extra(L, id, OP); },
+        cam: { keys: OpenerWater.cam(OP) }, shake: OpenerWater.shake(OP),
+        extra(L, id) { OpenerWater.extra(L, id, OP); },
         captions: caps("open"),
-        fx(tl, id, t0) { Opener.fx(tl, id, t0, OP); },
+        fx(tl, id, t0) { OpenerWater.fx(tl, id, t0, OP); },
       });
 
       // ---------- 1. POV down from the pier: a child's arm going for the coins — a pale hand coming up to meet it ----------

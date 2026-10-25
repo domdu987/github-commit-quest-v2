@@ -49,14 +49,14 @@
       <path d="M140,40Q220,0 300,10M260,90Q330,80 380,120M60,0Q90,-60 160,-80" stroke="${col}" stroke-width="14" fill="none" stroke-linecap="round"/>
       ${[[300, 10], [160, -80], [380, 120], [420, 140], [220, 40]].map(([lx, ly]) => `<ellipse cx="${lx}" cy="${ly}" rx="46" ry="18" fill="${col}" transform="rotate(${(lx % 50) - 25} ${lx} ${ly})"/>`).join("")}</g>`;
 
-  // the villager in the fog (designed for this story — user: "ไม่ใช่เอาต้นแบบกองกอยมา คิดใหม่"): they died of the charcoal
+  // the villager in the fog (designed for this story — user: "ไม่ใช่เอาต้นแบบกองกอยมา คิดใหม่"; then "ตัวสีดำ ตาสีเขียว"): they died of the charcoal
   // smoke in their sleep, so each one is a sleeper still wrapped head to foot in a woven blanket (ผ้าห่มลายขิด), the hood dark
-  // inside but for two eyes that glow like coals in a stove, smoke curling out of the hood, the hem dissolving into fog (no feet:
+  // inside but for two eyes that glow green, the whole figure black, smoke curling out of the hood, the hem dissolving into fog (no feet:
   // they hang in it), one long ash-grey hand out of the blanket. The waving arm is class wave (pivot at the shoulder, 50,-300).
-  const VBL = "#4a3c31", VBL2 = "#5c4a3b", VSTR = "#8a6a4a", VHOOD = "#070504", VASH = "#a9aea9";
-  const vEmber = (x, y) => `<g class="ember"><circle cx="${x}" cy="${y}" r="15" fill="#ff7a2a" opacity=".32"/><circle cx="${x + 22}" cy="${y + 3}" r="15" fill="#ff7a2a" opacity=".32"/>
-      <ellipse cx="${x}" cy="${y}" rx="6.5" ry="4.5" fill="#ffb24a"/><ellipse cx="${x + 22}" cy="${y + 3}" rx="6.5" ry="4.5" fill="#ffb24a"/><circle cx="${x}" cy="${y}" r="2.2" fill="#fff2c0"/><circle cx="${x + 22}" cy="${y + 3}" r="2.2" fill="#fff2c0"/></g>`;
-  const ashHand = (x, y, a) => `<g transform="translate(${x},${y}) rotate(${a})"><ellipse rx="16" ry="20" fill="${VASH}"/>${[-10, -3, 4, 11].map((d, k) => `<path d="M${d},-12l${d * 0.25},-${34 + (k % 2) * 8}" stroke="${VASH}" stroke-width="7" stroke-linecap="round"/><circle cx="${d + d * 0.25}" cy="${-46 - (k % 2) * 8}" r="3.6" fill="#2a2420"/>`).join("")}</g>`;
+  const VBL = "#0a0b0c", VBL2 = "#141618", VSTR = "#262c2e", VHOOD = "#020303", VASH = "#16191b", VRIM = "#33433e", VEYE = ["#7dff6a", "#bfff96", "#f2ffe4"];
+  const vEmber = (x, y) => `<g class="ember"><circle cx="${x}" cy="${y}" r="16" fill="${VEYE[0]}" opacity=".3"/><circle cx="${x + 22}" cy="${y + 3}" r="16" fill="${VEYE[0]}" opacity=".3"/>
+      <ellipse cx="${x}" cy="${y}" rx="6.5" ry="4.5" fill="${VEYE[1]}"/><ellipse cx="${x + 22}" cy="${y + 3}" rx="6.5" ry="4.5" fill="${VEYE[1]}"/><circle cx="${x}" cy="${y}" r="2.2" fill="${VEYE[2]}"/><circle cx="${x + 22}" cy="${y + 3}" r="2.2" fill="${VEYE[2]}"/></g>`;
+  const ashHand = (x, y, a) => `<g transform="translate(${x},${y}) rotate(${a})"><ellipse rx="16" ry="20" fill="${VASH}" stroke="${VRIM}" stroke-width="2"/>${[-10, -3, 4, 11].map((d, k) => `<path d="M${d},-12l${d * 0.25},-${34 + (k % 2) * 8}" stroke="${VASH}" stroke-width="7" stroke-linecap="round"/><circle cx="${d + d * 0.25}" cy="${-46 - (k % 2) * 8}" r="3.6" fill="#2a2420"/>`).join("")}</g>`;
   function villager(x, y, s, o = {}) {
     const lk = o.look || 0;
     const arm = o.wave === false
@@ -64,10 +64,10 @@
       : `<g class="wave" data-ox="${x + 50 * s}" data-oy="${y - 300 * s}"><path d="M50,-300C64,-360 80,-410 94,-452" stroke="${VBL2}" stroke-width="26" stroke-linecap="round" fill="none"/><path d="M80,-420C88,-436 92,-444 96,-452" stroke="${VASH}" stroke-width="12" stroke-linecap="round"/>${ashHand(98, -470, 8)}</g>`;
     return `<g class="vlg" opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${s})">
       <g class="fogb" data-d="14"><ellipse cx="0" cy="-30" rx="110" ry="40" fill="url(#mkPuff)" opacity=".9"/><ellipse cx="-40" cy="-10" rx="90" ry="30" fill="url(#mkPuff)" opacity=".7"/></g>
-      <path d="M-62,-60C-80,-160 -76,-280 -50,-350C-30,-404 10,-424 40,-412C78,-396 84,-330 74,-250C68,-180 66,-110 60,-60C40,-40 30,-70 16,-48C2,-30 -12,-66 -26,-44C-40,-26 -48,-62 -62,-60Z" fill="${VBL}" stroke="#2a221c" stroke-width="3" stroke-linejoin="round"/>
-      ${[-300, -250, -200, -150, -100].map((yy, k) => `<path d="M${-60 + k * 2},${yy}Q${8},${yy + 14} ${70 - k * 2},${yy - 4}" stroke="${k % 2 ? VSTR : "#6e5640"}" stroke-width="${k % 2 ? 5 : 9}" fill="none" opacity=".75"/>`).join("")}
+      <path d="M-62,-60C-80,-160 -76,-280 -50,-350C-30,-404 10,-424 40,-412C78,-396 84,-330 74,-250C68,-180 66,-110 60,-60C40,-40 30,-70 16,-48C2,-30 -12,-66 -26,-44C-40,-26 -48,-62 -62,-60Z" fill="${VBL}" stroke="${VRIM}" stroke-width="3" stroke-linejoin="round"/>
+      ${[-300, -250, -200, -150, -100].map((yy, k) => `<path d="M${-60 + k * 2},${yy}Q${8},${yy + 14} ${70 - k * 2},${yy - 4}" stroke="${k % 2 ? VSTR : "#1c2022"}" stroke-width="${k % 2 ? 5 : 9}" fill="none" opacity=".75"/>`).join("")}
       ${[-80, -40, 0, 40].map((xx, k) => `<path d="M${xx - 6},${-225 + (k % 2) * 10}l6,-8l6,8l-6,8z" fill="${VSTR}" opacity=".7"/>`).join("")}
-      <path d="M-46,-338C-40,-420 52,-440 66,-370C72,-340 62,-316 54,-300C30,-290 -20,-292 -46,-338Z" fill="${VBL2}" stroke="#2a221c" stroke-width="3"/>
+      <path d="M-46,-338C-40,-420 52,-440 66,-370C72,-340 62,-316 54,-300C30,-290 -20,-292 -46,-338Z" fill="${VBL2}" stroke="${VRIM}" stroke-width="3"/>
       <path d="M-26,-340C-20,-392 40,-404 50,-360C54,-338 46,-320 36,-312C14,-306 -12,-310 -26,-340Z" fill="${VHOOD}"/>
       ${vEmber(2 + lk, -350)}
       <g class="fogb" data-d="-10">${[0, 1, 2].map((k) => `<path d="M${10 + k * 12},-410C${0 + k * 14},-450 ${30 + k * 10},-470 ${16 + k * 12},-510" stroke="#8a8f94" stroke-width="${7 - k}" fill="none" opacity="${0.5 - k * 0.12}" stroke-linecap="round"/>`).join("")}</g>
@@ -358,7 +358,7 @@
   const PALE = "#c9d3cf", BLK = "#5a4a3e";
   // one of the village dead sitting on the floor: a hooded blanket mound, two coal-glow eyes in the dark of the hood, a thread of smoke
   const ghostSit = (x, y, s, op = 1) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})" opacity="${op}">
-      <path d="M-96,0Q-104,-150 -52,-204Q0,-232 52,-204Q104,-150 96,0Z" fill="${VBL}"/>${[-150, -100, -50].map((yy, k) => `<path d="M-90,${yy}Q0,${yy + 12} 90,${yy - 4}" stroke="${k % 2 ? VSTR : "#6e5640"}" stroke-width="${k % 2 ? 5 : 8}" fill="none" opacity=".7"/>`).join("")}
+      <path d="M-96,0Q-104,-150 -52,-204Q0,-232 52,-204Q104,-150 96,0Z" fill="${VBL}"/>${[-150, -100, -50].map((yy, k) => `<path d="M-90,${yy}Q0,${yy + 12} 90,${yy - 4}" stroke="${k % 2 ? VSTR : "#1c2022"}" stroke-width="${k % 2 ? 5 : 8}" fill="none" opacity=".7"/>`).join("")}
       <path d="M-58,-200C-56,-300 56,-306 58,-210C56,-180 -56,-176 -58,-200Z" fill="${VBL2}"/><path d="M-38,-206C-36,-276 36,-280 38,-214C30,-196 -30,-194 -38,-206Z" fill="${VHOOD}"/>
       ${vEmber(-11, -238)}<path d="M2,-290C-8,-320 16,-340 4,-372" stroke="#8a8f94" stroke-width="5" fill="none" opacity=".45" stroke-linecap="round"/></g>`;
   // someone sitting slumped, wrapped head to foot in the villagers' brown blanket (face hidden in the hood)
@@ -535,11 +535,11 @@
     const id = o.id || "bc", r = mk(o.seed || 163), G = 1640;
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#4b5159"/>` + fogBands(r, -200, 1600, 6, 0.7));
     put(L.far, `<rect x="-900" y="${G}" width="2900" height="1200" fill="#3a382f"/>${Array.from({ length: 5 }, (_, k) => `<rect x="${-200 + k * 10}" y="${G - 600 + k * 120}" width="${520 - k * 20}" height="40" fill="#3a2c22" ${OUT}/>`).join("")}`);
-    put(L.set, `<g transform="translate(560,${G + 40})"><path d="M-330,0Q-360,-420 -170,-640Q0,-760 170,-640Q360,-420 330,0Z" fill="${BLK}" ${OUT}/>
-        <path d="M-220,-120Q0,-60 220,-120M-260,-300Q-60,-240 120,-330" stroke="#463a30" stroke-width="12" fill="none"/>
-        <g id="${id}-hood" transform="translate(0,0) rotate(0 0 -560)"><path d="M-170,-640Q0,-780 170,-640Q140,-520 0,-500Q-140,-520 -170,-640Z" fill="#4e4036" ${OUT}/><ellipse cx="0" cy="-590" rx="96" ry="70" fill="#0b0d10"/>
-          <g id="${id}-eyes" opacity="${o.eyes ?? 0}"><ellipse cx="-30" cy="-590" rx="10" ry="12" fill="${PALE}"/><ellipse cx="30" cy="-590" rx="10" ry="12" fill="${PALE}"/></g></g>
-        <g id="${id}-hand" opacity="${o.hand ?? 0}"><g transform="translate(150,-470) rotate(-20)">${Hands.fist({ r: 78, skin: PALE, shade: "#9aa6a2" })}</g></g></g>`);
+    put(L.set, `<g transform="translate(560,${G + 40})"><path d="M-330,0Q-360,-420 -170,-640Q0,-760 170,-640Q360,-420 330,0Z" fill="${VBL}" stroke="${VRIM}" stroke-width="4"/>
+        <path d="M-220,-120Q0,-60 220,-120M-260,-300Q-60,-240 120,-330" stroke="#1c2022" stroke-width="12" fill="none"/>
+        <g id="${id}-hood" transform="translate(0,0) rotate(0 0 -560)"><path d="M-170,-640Q0,-780 170,-640Q140,-520 0,-500Q-140,-520 -170,-640Z" fill="${VBL2}" stroke="${VRIM}" stroke-width="4"/><ellipse cx="0" cy="-590" rx="96" ry="70" fill="${VHOOD}"/>
+          <g id="${id}-eyes" opacity="${o.eyes ?? 0}"><circle cx="-30" cy="-590" r="26" fill="${VEYE[0]}" opacity=".3"/><circle cx="30" cy="-590" r="26" fill="${VEYE[0]}" opacity=".3"/><ellipse cx="-30" cy="-590" rx="10" ry="12" fill="${VEYE[1]}"/><ellipse cx="30" cy="-590" rx="10" ry="12" fill="${VEYE[1]}"/></g></g>
+        <g id="${id}-hand" opacity="${o.hand ?? 0}"><g transform="translate(150,-470) rotate(-20)">${Hands.fist({ r: 78, skin: VASH, shade: "#0c0e0f" })}</g></g></g>`);
     put(L.fg, fogBands(r, 900, 2000, 3, 0.45));
   }
 
@@ -691,8 +691,8 @@
     s += `<g><path d="M200,1500C170,1400 190,1330 260,1320C330,1330 350,1400 320,1500Z" fill="#4a3424" ${OUT}/><ellipse cx="260" cy="1322" rx="44" ry="12" fill="#2a1d14"/></g>`;
     s += `<g>${[0, 1, 2, 3].map((k) => `<rect x="${780 + (k % 2) * 30}" y="${1420 - k * 26}" width="220" height="24" rx="10" fill="#4a3826" ${OUT}/>`).join("")}</g>`;
     s += `<g id="${id}-hair" opacity="0">${Array.from({ length: 12 }, (_, k) => `<path d="M${500 + k * 12},560C${492 + k * 14},700 ${506 + k * 10},860 ${496 + k * 13},${1000 + (k % 3) * 40}" stroke="#121516" stroke-width="10" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
-    s += `<g id="${id}-eyes" opacity="0"><circle cx="540" cy="900" r="24" fill="#eef4e0" opacity=".25"/><circle cx="604" cy="906" r="24" fill="#eef4e0" opacity=".25"/><circle cx="540" cy="900" r="8" fill="#f6fbea"/><circle cx="604" cy="906" r="8" fill="#f6fbea"/></g>`;
-    s += `<g id="${id}-close" opacity="0"><circle cx="470" cy="960" r="70" fill="#eef4e0" opacity=".22"/><circle cx="660" cy="976" r="70" fill="#eef4e0" opacity=".22"/><circle cx="470" cy="960" r="24" fill="#f6fbea"/><circle cx="660" cy="976" r="24" fill="#f6fbea"/>
+    s += `<g id="${id}-eyes" opacity="0"><circle cx="540" cy="900" r="24" fill="#7dff6a" opacity=".3"/><circle cx="604" cy="906" r="24" fill="#7dff6a" opacity=".3"/><circle cx="540" cy="900" r="8" fill="#ccffb0"/><circle cx="604" cy="906" r="8" fill="#ccffb0"/></g>`;
+    s += `<g id="${id}-close" opacity="0"><circle cx="470" cy="960" r="70" fill="#7dff6a" opacity=".26"/><circle cx="660" cy="976" r="70" fill="#7dff6a" opacity=".26"/><circle cx="470" cy="960" r="24" fill="#ccffb0"/><circle cx="660" cy="976" r="24" fill="#ccffb0"/>
       ${Array.from({ length: 16 }, (_, k) => `<path d="M${300 + k * 32},540C${290 + k * 34},760 ${310 + k * 30},1000 ${296 + k * 33},${1300 + (k % 3) * 60}" stroke="#121516" stroke-width="22" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
     put(L.set, s);
     put(L.glow, `<g id="${id}-beam"><ellipse id="${id}-pool" cx="0" cy="980" rx="300" ry="250" fill="url(#mkLow)" opacity=".42"/></g>`);

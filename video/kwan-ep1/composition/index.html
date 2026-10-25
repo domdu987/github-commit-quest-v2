@@ -20,6 +20,7 @@
     <script src="assets/fx.js"></script>
     <script src="assets/engine.js"></script>
     <script src="assets/opener.js"></script>
+    <script src="assets/openers.js"></script>
     <style>
       @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
       @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
@@ -507,13 +508,13 @@
 
       // ---------- 0. story opener: ควันหลง EP.1 in the night sky; the dive onto the dorm, fire on the seventh floor ----------
       const OP = { title: "ควันหลง", ep: "EP.1", name: "ประตูร้อน", kick: "ROD MAI CLUB", at: 1.9, glide: 1.8,
-        land: fr(660, 800, 1.18, 540, 880, { drift: { s: 0.05 } }) };
+        land: fr(660, 800, 1.18, 540, 880, { drift: { s: 0.05 } }), start: fr(682, 742, 4.2, 540, 1000) };
       add("open", {
         set: "dormExt", setOpts: { id: "dx" }, dark: 0.15,
-        cam: { keys: Opener.cam(OP) }, shake: Opener.shake(OP),
-        extra(L, id) { Opener.extra(L, id, OP); },
+        cam: { keys: OpenerSmoke.cam(OP) }, shake: OpenerSmoke.shake(OP),
+        extra(L, id) { OpenerSmoke.extra(L, id, OP); },
         captions: caps("open"),
-        fx(tl, id, t0) { Opener.fx(tl, id, t0, OP); },
+        fx(tl, id, t0) { OpenerSmoke.fx(tl, id, t0, OP); },
       });
 
       // ---------- 1. you wake: the ceiling, the smoke, the knocking; you sit up and face the door ----------

@@ -232,7 +232,7 @@ def sfx(kind):
         cut = 300 + 5000 * np.sin(np.pi * t / d)
         out = np.zeros_like(n)
         # crude sweep: blend of two filters by progress
-        lo, hi = lp_fast(n, 600), lp_fast(n, 5000)
+        lo, hi = lp_fast(n, 500), lp_fast(n, 1600)  # no hiss (user: "เสียงซ่าๆเอาออก"): the air stays below ~1.6 kHz
         w = np.sin(np.pi * t / d)
         out = lo * (1 - w) + hi * w
         return out * np.sin(np.pi * t / d) ** 2 * 0.35 + 0 * cut
@@ -264,8 +264,8 @@ def sfx(kind):
         t = t_arr(d)
         f = 200 * (2 ** (3 * t / d))
         n = rng.standard_normal(len(t))
-        x = osc(f, d, "saw") * 0.15 + (n - lp_fast(n, 2000)) * 0.15 * (t / d)
-        return lp_fast(x, 6000) * (t / d) ** 1.5 * 0.7
+        x = osc(f, d, "saw") * 0.15 + lp_fast(n, 900) * 0.1 * (t / d)
+        return lp_fast(x, 3000) * (t / d) ** 1.5 * 0.7
     if kind == "heartbeat":
         out = np.zeros(int(0.7 * SR))
         for off, g in ((0, 1.0), (0.18, 0.7)):
@@ -376,7 +376,7 @@ def sfx(kind):
         t = t_arr(d)
         n = rng.standard_normal(len(t))
         am = 0.5 + 0.5 * np.sin(2 * np.pi * 6 * t + 3 * np.sin(2 * np.pi * 1.3 * t))
-        return (n - lp_fast(n, 1200)) * am * np.sin(np.pi * t / d) * 0.12
+        return (lp_fast(n, 1400) - lp_fast(n, 250)) * am * np.sin(np.pi * t / d) * 0.2
     if kind == "crickets":
         d = 6.0
         t = t_arr(d)
@@ -404,7 +404,7 @@ def sfx(kind):
         d = 0.7
         t = t_arr(d)
         n = rng.standard_normal(len(t))
-        return (lp_fast(n, 4000) - lp_fast(n, 800)) * env(len(t), 0.01, 0.15) * 0.25
+        return (lp_fast(n, 1800) - lp_fast(n, 300)) * env(len(t), 0.01, 0.15) * 0.25
     if kind == "shutter":
         out = np.zeros(int(0.2 * SR))
         for off in (0, 0.07):
@@ -618,6 +618,102 @@ def sfx(kind):
         d = 0.08
         t = t_arr(d)
         return (osc(2200, d, "square") * 0.4 + rng.standard_normal(len(t)) * 0.3) * np.exp(-t * 90) * 0.35
+    if kind == "gunshot":  # a rifle shot outdoors: a sharp crack, a chesty body, a short rolling tail
+        d = 0.7
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        crack = (n - lp_fast(n, 2500)) * np.exp(-t * 90) * 1.3
+        body = lp_fast(n, 900) * np.exp(-t * 26) * 0.9 + osc(60 + 120 * np.exp(-t * 9), d) * np.exp(-t * 18) * 0.9
+        tail = lp_fast(n, 450) * np.exp(-t * 4.5) * 0.3
+        return (crack + body + tail) * 0.8
+    if kind == "crackby":  # a bullet passing close: a supersonic snap and a short tearing whizz
+        d = 0.35
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        snap_ = (n - lp_fast(n, 3500)) * np.exp(-t * 160) * 1.2
+        whizz = (lp_fast(n, 6000) - lp_fast(n, 1800)) * np.exp(-((t - 0.06) / 0.05) ** 2) * 0.6
+        return snap_ + whizz
+    if kind == "tinnitus":  # ears ringing after a blast: a thin high tone that fades
+        d = 3.4
+        t = t_arr(d)
+        return (osc(6800, d) * 0.8 + osc(7240, d) * 0.3) * np.minimum(1, t / 0.05) * np.exp(-t * 0.8) * 0.08
+    if kind == "flap":  # cloth flapping in the wind
+        d = 1.6
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        band = lp_fast(n, 2600) - lp_fast(n, 260)
+        am = np.clip(np.sin(2 * np.pi * (9 + 3 * np.sin(2 * np.pi * 0.7 * t)) * t), 0, 1) ** 3
+        return band * am * env(len(t), 0.1, 0.3) * 0.35
+    if kind == "chain":  # chain links rattling and knocking on steel
+        d = 0.9
+        out = np.zeros(int(d * SR), np.float32)
+        for k in range(12):
+            f, off, dd = 1800 + rng.random() * 3600, 0.02 + rng.random() * 0.65, 0.05 + rng.random() * 0.08
+            add(out, osc(f, dd) * np.exp(-t_arr(dd) * 50) * (0.2 + 0.2 * rng.random()), off)
+            add(out, lp_fast(rng.standard_normal(int(0.02 * SR)), 1500) * 0.3, off)
+        return out
+    if kind == "debris":  # clods of dirt raining down after a blast
+        d = 1.4
+        out = np.zeros(int(d * SR), np.float32)
+        for k in range(30):
+            off = 0.05 + (rng.random() ** 1.6) * 1.2
+            dd = 0.05
+            add(out, lp_fast(rng.standard_normal(int(dd * SR)), 1200) * np.exp(-t_arr(dd) * 60) * (0.15 + 0.25 * rng.random()), off)
+        return out
+    if kind == "radiosq":  # radio squelch: a click and a burst of band-limited noise
+        d = 0.22
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        return ((lp_fast(n, 3200) - lp_fast(n, 900)) * np.exp(-t * 14) * 0.45 + osc(1400, d, "square") * np.exp(-t * 200) * 0.2)
+    if kind == "pant":  # heavy breathing after a sprint: in and out, twice a second
+        d = 2.2
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        breath = lp_fast(n, 1600) - lp_fast(n, 300)
+        am = np.clip(np.sin(2 * np.pi * 1.9 * t), 0, 1) ** 2 * 0.8 + np.clip(-np.sin(2 * np.pi * 1.9 * t), 0, 1) ** 2 * 0.5
+        return breath * am * env(len(t), 0.05, 0.4) * 0.3
+    if kind == "splash":  # someone falling into a river: a deep plunge, a burst of spray, then bubbling settling
+        d = 1.6
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        plunge = (osc(60 + 50 * np.exp(-t * 14), d) * 0.9 + lp_fast(n, 300) * 1.2) * np.exp(-t * 7)
+        spray = (lp_fast(n, 2200) - lp_fast(n, 400)) * np.exp(-t * 5.5) * 0.9
+        bub = np.zeros(len(t))
+        for k in range(14):
+            t0 = 0.25 + rng.random() * 1.1
+            i0 = int(t0 * SR)
+            m = int(0.06 * SR)
+            if i0 + m < len(t):
+                tt = np.arange(m) / SR
+                bub[i0:i0 + m] += np.sin(2 * np.pi * np.cumsum(500 + 1600 * tt / 0.06) / SR) * np.exp(-tt * 60) * 0.25
+        return (plunge + spray + bub) * 0.4
+    if kind == "plop":  # a light thing landing on water
+        d = 0.5
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        return (np.sin(2 * np.pi * np.cumsum(300 + 900 * np.exp(-t * 30)) / SR) * np.exp(-t * 18) * 0.5 + (lp_fast(n, 1800) - lp_fast(n, 400)) * np.exp(-t * 12) * 0.4)
+    if kind == "bubbles":  # underwater: a low hum and bubbles rising
+        d = 3.0
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        out = lp_fast(n, 220) * 0.5 * np.sin(np.pi * t / d) ** 0.5
+        for k in range(26):
+            i0 = int(rng.random() * (d - 0.1) * SR)
+            m = int(0.05 * SR)
+            tt = np.arange(m) / SR
+            out[i0:i0 + m] += np.sin(2 * np.pi * np.cumsum(400 + 1400 * tt / 0.05) / SR) * np.exp(-tt * 70) * 0.18
+        return out * 0.9
+    if kind == "lap":  # river water lapping at the posts of a pier
+        d = 4.0
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        band = lp_fast(n, 900) - lp_fast(n, 150)
+        am = np.clip(np.sin(2 * np.pi * 0.7 * t + np.sin(2 * np.pi * 0.23 * t)), 0, 1) ** 2
+        return band * am * 0.35 * np.sin(np.pi * t / d) ** 0.3
+    if kind == "drum":  # a deep war drum hit
+        d = 0.9
+        t = t_arr(d)
+        return (osc(52 + 30 * np.exp(-t * 14), d) * 1.2 + lp_fast(rng.standard_normal(len(t)), 300) * 0.5 * np.exp(-t * 30)) * np.exp(-t * 5) * 0.9
     raise ValueError(kind)
 
 

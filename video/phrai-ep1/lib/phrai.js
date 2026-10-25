@@ -26,6 +26,8 @@
     <linearGradient id="phWall" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4a32"/><stop offset=".5" stop-color="#7d5a3c"/><stop offset="1" stop-color="#5e412c"/></linearGradient>
     <linearGradient id="phNet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe6ee" stop-opacity=".42"/><stop offset="1" stop-color="#c9d2dc" stop-opacity=".26"/></linearGradient>
     <linearGradient id="phSkin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c88d63"/><stop offset=".5" stop-color="#e3ad84"/><stop offset="1" stop-color="#b9805a"/></linearGradient>
+    <radialGradient id="phSiren"><stop offset="0" stop-color="#ff3a3a" stop-opacity=".55"/><stop offset="1" stop-color="#ff3a3a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="phSirenB"><stop offset="0" stop-color="#3a7aff" stop-opacity=".55"/><stop offset="1" stop-color="#3a7aff" stop-opacity="0"/></radialGradient>
     <linearGradient id="phPaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#181512"/><stop offset="1" stop-color="#0d0b09"/></linearGradient>`;
 
   // ---------------- small drawings ----------------
@@ -467,9 +469,14 @@
     let m = "";
     for (let x = -880; x < 2000; x += 150) m += `<path d="M${x},-600V2800" stroke="#241810" stroke-width="8"/>${[0, 1, 2].map((k) => `<circle cx="${x + 20}" cy="${-300 + k * 1100 + (x % 300)}" r="6" fill="#1a120c"/>`).join("")}`;
     m += `<ellipse cx="${X}" cy="1080" rx="520" ry="760" fill="#0d1a24" opacity=".45"/>`;
+    // the edge of the pier and the black river beyond it (we look straight down)
+    m += `<rect x="960" y="-600" width="1200" height="3400" fill="url(#phWater)"/><rect x="940" y="-600" width="40" height="3400" fill="#2a1c12" ${OUT}/>`;
+    for (let k = 0; k < 12; k++) m += `<path class="mrefl" d="M${f1(1000 + r() * 400)},${f1(r() * 2000)}h${f1(30 + r() * 90)}" stroke="#d9d4b8" stroke-width="4" stroke-linecap="round" opacity=".25"/>`;
     for (let k = 0; k < 24; k++) m += `<ellipse cx="${f1(140 + r() * 800)}" cy="${f1(300 + r() * 1500)}" rx="${f1(6 + r() * 18)}" ry="${f1(4 + r() * 10)}" fill="#7f9bc0" opacity=".3"/>`;
     put(L.mid, m);
-    let b = `<g id="${id}-body">
+    // the rescuer's knees on the planks at the left edge (navy track pants)
+    put(L.set, `<g opacity=".95">${[880, 1180].map((y) => `<path d="M-120,${y}Q60,${y - 40} 150,${y + 30}Q60,${y + 140} -120,${y + 120}Z" fill="#2b3d5e" ${OUT}/>`).join("")}</g>`);
+    let b = `<g id="${id}-body" transform="rotate(-6 ${X} 1100)">
       <path d="M${X - 90},1380L${X - 110},1840Q${X - 104},1880 ${X - 64},1880L${X - 40},1390Z" fill="#7d6e50" ${OUT}/><path d="M${X + 90},1380L${X + 110},1840Q${X + 104},1880 ${X + 64},1880L${X + 40},1390Z" fill="#7d6e50" ${OUT}/>
       <ellipse cx="${X - 86}" cy="1900" rx="38" ry="26" fill="${sk}" ${OUT}/><ellipse cx="${X + 86}" cy="1900" rx="38" ry="26" fill="${sk}" ${OUT}/>
       <path d="M${X - 140},870L${X - 220},1300Q${X - 220},1340 ${X - 190},1344L${X - 150},1340L${X - 120},950Z" fill="${red}" ${OUT}/><path d="M${X + 140},870L${X + 220},1300Q${X + 220},1340 ${X + 190},1344L${X + 150},1340L${X + 120},950Z" fill="${red}" ${OUT}/>
@@ -498,9 +505,6 @@
     let far = `<path d="M-900,${W - 40}`;
     for (let x = -900; x <= 2000; x += 60) far += `L${x},${f1(W - 120 - r() * 120)}`;
     far += `L2000,${W}H-900Z" fill="#070c18"/>`;
-    // the ambulance, far down the road, stuck: white van, red cross, the light bar (classes siren / sirenb flash in the shot)
-    far += `<g transform="translate(${o.amb ?? 720},${W - 10}) scale(.55)"><rect x="-120" y="-120" width="240" height="110" rx="12" fill="#e9eef0" stroke="#2e2a26" stroke-width="4"/><rect x="60" y="-150" width="70" height="40" rx="6" fill="#e9eef0" stroke="#2e2a26" stroke-width="4"/>
-      <path d="M-20,-90h20v-20h16v20h20v16h-20v20h-16v-20h-20z" fill="#d8322a"/><rect x="-60" y="-138" width="50" height="16" fill="#ff3a3a" class="siren"/><rect x="-6" y="-138" width="50" height="16" fill="#3a7aff" class="sirenb"/></g>`;
     put(L.far, far);
     let s = "";
     [[-260, 1.0], [1180, 0.9]].forEach(([x, k]) => { s += `<g transform="translate(${x},${W}) scale(${k})"><rect x="-200" y="-520" width="400" height="300" fill="#3b2a1c" ${OUT}/><path d="M-240,-520L0,-700L240,-520Z" fill="#2a1d14" ${OUT}/>
@@ -514,9 +518,13 @@
     s += `<rect x="-900" y="${W}" width="2900" height="${2600 - W}" fill="url(#phWaterD)" opacity=".95"/>`;
     for (let k = 0; k < 22; k++) s += `<path class="rip" d="M${f1(-500 + r() * 2000)},${f1(W + 20 + r() * 900)}h${f1(40 + r() * 140)}" stroke="#9fb0d8" stroke-width="4" stroke-linecap="round" opacity=".4"/>`;
     s += `<path class="mrefl" d="M280,${W + 60}h60M260,${W + 120}h90M290,${W + 190}h50" stroke="#e8e2c0" stroke-width="7" stroke-linecap="round" opacity=".5"/>`;
+    // the ambulance, far down the road, stuck: white van, red cross, the light bar (classes siren / sirenb flash in the shot)
+    s += `<g transform="translate(${o.amb ?? 720},${W + 70}) scale(.7)"><rect x="-120" y="-120" width="240" height="110" rx="12" fill="#e9eef0" stroke="#2e2a26" stroke-width="4"/><rect x="60" y="-150" width="70" height="40" rx="6" fill="#e9eef0" stroke="#2e2a26" stroke-width="4"/>
+      <path d="M-20,-90h20v-20h16v20h20v16h-20v20h-16v-20h-20z" fill="#d8322a"/><rect x="-60" y="-138" width="50" height="16" fill="#ff3a3a" class="siren"/><rect x="-6" y="-138" width="50" height="16" fill="#3a7aff" class="sirenb"/></g>`;
+    s += `<rect x="${(o.amb ?? 720) - 120}" y="${W + 30}" width="240" height="60" fill="#3b4766" opacity=".85"/>`;
     s += [[-120, W + 220], [820, W + 360], [480, W + 620]].map(([x, y], k) => `<g transform="translate(${x},${y}) rotate(${k * 17 - 10})"><rect x="-50" y="-12" width="100" height="24" rx="6" fill="#5a4330" ${OUT}/></g>`).join("");
     put(L.set, s);
-    put(L.glow, `<g class="siren"><circle cx="${(o.amb ?? 720) - 20}" cy="${W - 80}" r="320" fill="#ff3a3a" opacity=".18"/></g><g class="sirenb"><circle cx="${(o.amb ?? 720) + 20}" cy="${W - 80}" r="320" fill="#3a7aff" opacity=".18"/></g>`);
+    put(L.glow, `<g class="siren"><circle cx="${(o.amb ?? 720) - 20}" cy="${W - 10}" r="260" fill="url(#phSiren)"/></g><g class="sirenb"><circle cx="${(o.amb ?? 720) + 20}" cy="${W - 10}" r="260" fill="url(#phSirenB)"/></g>`);
   }
 
   // ---------------- from under the river looking up: the ferry's hull on the bright surface, a dozen pale hands pushing it ----------------
