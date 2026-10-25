@@ -1133,7 +1133,7 @@
         .pkt.crf .stats { display: flex; justify-content: center; gap: 34px; margin-top: 16px; } .pkt.crf .st { display: flex; align-items: center; gap: 12px; font: 700 27px/1 Kanit; color: ${PK_PENCIL}; }
         .pkt.crf .tally { display: flex; gap: 4px; } .pkt.crf .tally i { width: 10px; height: 30px; background: ${INKLINE("%231f1d1a")} no-repeat center / contain; transform: scaleY(0); transform-origin: 50% 100%; } .pkt.crf .tally i.off { opacity: .18; } .pkt.crf .tally i.x { background-image: ${INKLINE("%23b7281e")}; }
         .pkt.crf .done { position: absolute; right: 34px; top: 22px; } .pkt.crf .done .stamp { font-size: 44px; }
-        .pkt.crf .up { position: absolute; left: 36px; bottom: 90px; display: flex; align-items: center; gap: 10px; font: 900 28px/1.1 Kanit; color: ${PK_INK}; opacity: 0; } .pkt.crf .up .stamp { font-size: 36px; }
+        .pkt.crf .up { position: relative; margin: 12px 0 0 30px; display: flex; align-items: center; gap: 10px; font: 900 28px/1.1 Kanit; color: ${PK_INK}; opacity: 0; } .pkt.crf .up .stamp { font-size: 36px; }
         .pkt.crf .boom { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; z-index: 4; pointer-events: none; } .pkt.crf .boom .spl { width: 16px; height: 16px; margin: -8px; }
         /* countdown */
         .pkt.cdn { width: 720px; margin-left: -360px; padding: 26px 30px 34px; }
@@ -1250,7 +1250,7 @@
       // ---------- the countdown: o = {t, from, to, label, warn, end, top}; one paper sheet flies off per second, a red ring closes, the last seconds go red ----------
       GameUI.C.countdown = {
         html: (id, o) => { const seq = Array.from({ length: o.from - (o.to ?? 0) + 1 }, (_, i) => o.from - i);
-          return `<div id="${id}" class="pkt cdn" style="top:${o.top ?? 150}px">${PAP("st")}<i class="red"></i>${TAPE("tl", -7)}${TAPE("tr", 5)}<svg class="ring" viewBox="0 0 520 330"><path d="M260,20C400,16 500,80 500,165C500,250 400,312 260,310C120,312 20,250 20,165C20,80 120,16 260,20Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><div class="in">
+          return `<div id="${id}" class="pkt cdn" style="top:${o.top ?? 60}px">${PAP("st")}<i class="red"></i>${TAPE("tl", -7)}${TAPE("tr", 5)}<svg class="ring" viewBox="0 0 520 330"><path d="M260,20C400,16 500,80 500,165C500,250 400,312 260,310C120,312 20,250 20,165C20,80 120,16 260,20Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><div class="in">
             <div class="lb">${o.label || "ประตูปิดใน"}</div><div class="big">${PAPERS(seq)}<span class="w">วิ</span></div></div><div class="warnst">${STAMP(o.warnText || "เร็ว!", "", -12)}</div></div>`; },
         anim(tl, id, t0, o) {
           const el = document.getElementById(id), to = o.to ?? 0, n = o.from - to, end = o.t0abs + (o.end ?? o.t + n + 0.6), warn = o.warn ?? 5, digs = [...el.querySelectorAll(".pd")], tick = o.tick ?? 1;
@@ -1259,9 +1259,16 @@
           write(tl, el.querySelector(".lb"), t0 + 0.15, { from: t0, gap: 0.08, d: 0.16 });
           slapIn(tl, el, t0 + 0.2, 0.1);
           tl.fromTo(`#${id} .ring path`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: n * tick, ease: "none", immediateRender: false }, t0 + 0.2);
+          const used = new Set();   // sheets already flown at build time (a digit value can repeat in a stack: 20 → 10 → 0 on the ones digit)
           const w = String(o.from).length, strs = Array.from({ length: n + 1 }, (_, i) => String(o.from - i).padStart(w, "0"));   // same padding PAPERS used
           for (let i = 1; i <= n; i++) { const T = t0 + i * tick, v = o.from - i, a = strs[i - 1], b = strs[i];
-            digs.forEach((pd, j) => { if (a[j] === b[j]) return; const top = [...pd.querySelectorAll(".sh")].reverse().find((s) => s.dataset.v === a[j] && s.style.opacity !== "0"); if (top) { flyOff(tl, top, T - 0.2); tl.set(top, { opacity: 0 }, T + 0.6); } });
+            digs.forEach((pd, j) => { if (a[j] === b[j]) return;
+              // the stack top-first, minus the sheets already gone; the top one flies, and any copies of the same digit right under it
+              // (the tens digit holds one "1" sheet per second from 19 to 10) drop out at the same moment so the next digit shows
+              const live = [...pd.querySelectorAll(".sh")].reverse().filter((s) => !used.has(s)), k0 = live.findIndex((s) => s.dataset.v === a[j]);
+              if (k0 < 0) return; let k = k0; while (k < live.length && live[k].dataset.v === a[j]) { used.add(live[k]); k++; }
+              flyOff(tl, live[k0], T - 0.2); tl.set(live[k0], { opacity: 0 }, T + 0.6);
+              for (let m = k0 + 1; m < k; m++) tl.set(live[m], { opacity: 0 }, T + 0.05); });
             const hot = v <= warn;
             tl.fromTo(`#${id}`, { x: 0 }, { x: hot ? 10 : 4, duration: 0.035, repeat: hot ? 7 : 3, yoyo: true, immediateRender: false }, T);
             tl.fromTo(`#${id} .big`, { scale: 1 }, { scale: hot ? 1.12 : 1.05, duration: 0.08, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, T);
@@ -1344,7 +1351,7 @@
         actors: [PH(760, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: 0.5, mode: "raise", eyes: "normal", mouth: "flat" }], { flip: true, prop: "knife" }), PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: 0.6, mode: "idle", eyes: "wide", mouth: "o" }]),
           KO(300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 0.6, mode: "idle", eyes: "wide", mouth: "smile" }]), HO(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "frown" }])],
         captions: caps("phuKnife", [1]),
-        bubbles: [bub("phuKnife", 0, 520, 520, 760)],
+        bubbles: [bub("phuKnife", 0, 520, 520, 60)],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.55, 1.05, 0.35); Fx.punch(tl, `#${id} .stage`, t0 + F("phuKnife", 1, 1), 1.05, 0.35); red(tl, t0 + F("phuKnife", 1, 1), 0.45, 0.5); Fx.heart(tl, t0 + 0.5, D("phuKnife") - 0.5, 0.55, 0.45); },
       });
 
@@ -1472,7 +1479,7 @@
         actors: [PU(900, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) - 0.3, mode: "lookUp", eyes: "wide", mouth: "o" }]), PI(1100, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1), mode: "sit", eyes: "wide", mouth: "o" }], { flip: true }),
           KO(300, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) + 0.3, mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("cry", 2), mode: "guard", eyes: "wide", mouth: "o" }], { prop: "spear1f" }), HO(600, 1500, 0.9, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }], { flip: true }), PH(-20, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }])],
         captions: caps("cry", [0], { quote: true }),
-        bubbles: [bub("cry", 1, 520, 520, 900), bub("cry", 2, 40, 520, 320)],
+        bubbles: [bub("cry", 1, 520, 520, 200), bub("cry", 2, 40, 520, 320)],
         fx(tl, id, t0) { document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio")); THUNDER(tl, t0 + 0.3, 0.3); Fx.heart(tl, t0, vo("cry", 3), 0.6, 0.45); Fx.punch(tl, `#${id} .stage`, t0 + vo("cry", 1), 1.04, 0.3); },
       }, {
         set: "schoolYard", setOpts: { id: "cy", time: "night", lampX: -300, gate: 0 }, dark: 0.55, blur: { far: 3 },
@@ -1562,7 +1569,7 @@
         shake: (t) => 4 * Math.sin(t * 17),
         actors: [MA(960, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "frown" }, { t: 0.8, mode: "thrust", eyes: "wide", mouth: "scream" }], { flip: false, prop: "spear1f" }), KO(820, 1500, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }, { t: 0.8, mode: "limpRun", eyes: "pain", mouth: "frown" }], { flip: true, moveTo: { x: -200, at: 0.8, dur: D("cover") - 0.8, ease: "power1.in" } }),
           PH(300, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }], { moveTo: { x: 0, dur: D("cover") } }), PI(-60, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: vo("cover", 1), mode: "stopHand", eyes: "wide", mouth: "scream" }])],
-        bubbles: [bub("cover", 0, 420, 520, 860), bub("cover", 1, 40, 760, 160)],
+        bubbles: [bub("cover", 0, 420, 520, 300), bub("cover", 1, 40, 760, 160)],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) { ZF(L, tl, "cv", t0, D("cover"), [["ha1", 1300, 0.8, 0], ["ha2", 1420, 0.76, 0.4], ["ha3", 1540, 0.78, 0.2], ["ha1", 1380, 0.74, 0.7], ["ha2", 1480, 0.7, 0.9]], "zrun"); [0, 1, 2, 3, 4].forEach((k) => route(tl, `cv-z${k}`, t0, [{ t: 0, x: [1300, 1420, 1540, 1380, 1480][k], y: 1180 }, { t: 1.2, x: [1120, 1200, 1280, 1160, 1240][k], y: 1180 }], [0.8, 0.76, 0.78, 0.74, 0.7][k], true)); Fx.punch(tl, `#${id} .stage`, t0 + vo("cover", 1), 1.05, 0.35); red(tl, t0 + F("cover", 1, 1), 0.5, 0.5); Fx.heart(tl, t0, D("cover"), 0.4, 0.7); },
       });
@@ -1574,7 +1581,7 @@
         shake: (t) => 5 * Math.sin(t * 21),
         actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream" }, { t: 6.0, mode: "brace", eyes: "wide", mouth: "frown" }], { prop: "spear1f" })],
         captions: caps("count"),
-        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูหลังปิดใน", warn: 5, end: D("count") - 0.1, top: 150 }],
+        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูหลังปิดใน", warn: 5, end: D("count") - 0.1, top: 60 }],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) {
           ZF(L, tl, "cd", t0, D("count"), [["ha1", 1180, 0.8, 0], ["ha2", 1280, 0.76, 0.4], ["ha3", 1380, 0.78, 0.2], ["ha1", 1230, 0.74, 0.7], ["ha2", 1330, 0.7, 0.9], ["ha3", 1430, 0.72, 0.5]]);
@@ -1593,7 +1600,7 @@
         shake: (t) => (t < 5.0 ? 6 * Math.sin(t * 21) : 0),
         actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "push", eyes: "normal", mouth: "flat" }]), PI(920, 1560, 0.95, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 4.9, mode: "push", eyes: "wide", mouth: "frown" }], { flip: true })],
         captions: caps("count2", [0], { quote: true }),
-        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูหลังปิดใน", warn: 5, end: 5.6, top: 150 }],
+        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูหลังปิดใน", warn: 5, end: 5.6, top: 60 }],
         extra(L) { RAIN(L, { n: 60, op: 0.4, splash: false }); },
         fx(tl, id, t0, L) {
           behind(L, tl, "bd-man", "man", 540, 1180, 0.7, false, t0, D("count2"), [{ t: 0, mode: "brace", eyes: "normal", mouth: "frown" }]);
@@ -1624,7 +1631,7 @@
         captions: CLIP([...caps("tq", [0]), ...caps("tq", [2]), ...caps("tq", [3])]),
         bubbles: [bub("tq", 1, 60, 300, 400)],
         ui: [{ type: "tip", t: vo("tq", 2) - 0.1, end: D("tq") - 0.05, ill: "tq", label: "ขันชะเนาะ · MedlinePlus", text: "เหนือแผล [5–7 ซม.] · เลี่ยงข้อ · {จดเวลา}", tone: "warn", top: 230 },
-          { type: "src", t: F("tq", 3, 1), end: D("tq") - 0.05, top: 600, text: MLP + "“The tourniquet should be applied to the limb 2 to 3 in (5 to 7.7 cm) above the bleeding wound. Avoid the joint… always write down the time when the tourniquet was applied.”" }],
+          { type: "src", t: vo("tq", 3), end: D("tq") - 0.05, top: 600, text: MLP + "“The tourniquet should be applied to the limb 2 to 3 in (5 to 7.7 cm) above the bleeding wound. Avoid the joint… always write down the time when the tourniquet was applied.”" }],
         extra(L) {
           // the trouser leg is ก้อง's (blue denim), the gash near the shin, the blood soaking down; the belt + stick above it
           document.querySelectorAll("#tq-flap path, #tq-skin path").forEach(() => {});
@@ -1655,7 +1662,7 @@
         actors: [PH(300, 1560, 0.95, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }]), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "frown" }], { flip: true })],
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "press", label: "ในชีวิตจริง", text: "กดก่อน → ไม่หยุด = ขันชะเนาะ → {หาหมอ}", tone: "rule", top: 230 },
-          { type: "src", t: F("real", 0, 2), end: D("real") - 0.05, top: 600, text: MLP + "“If continuous pressure has not stopped the bleeding, and bleeding is extremely severe (life threatening), a tourniquet can be used until medical help arrives.”" }],
+          { type: "src", t: F("real", 0, 1) + 0.3, end: D("real") - 0.05, top: 600, text: MLP + "“If continuous pressure has not stopped the bleeding, and bleeding is extremely severe (life threatening), a tourniquet can be used until medical help arrives.”" }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("real", 0, 2), 1.05, 0.3); Fx.heart(tl, t0, D("real"), 0.7, 0.3); },
       });
 

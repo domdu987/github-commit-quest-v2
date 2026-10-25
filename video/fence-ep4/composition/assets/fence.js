@@ -66,7 +66,7 @@
     put(L.far, paddies(r, t, 1040));
     // fence: concrete plinth, square posts, iron bars between; a sliding gate of vertical bars in the middle-right
     let s = `<rect x="-1200" y="${FY}" width="3500" height="60" fill="url(#fConc)" ${OUT}/>`;
-    for (let x = -1100; x < 2300; x += 220) {
+    for (let x = -1320; x < 2300; x += 220) {
       if (x > 420 && x < 900) continue; // the gate opening
       const brk = o.breakAt === x;   // this section can fall inward (#id-fseg): rotated about its foot on the yard side
       if (brk) s += `<g id="${id}-fseg" transform="rotate(${o.fallen ? -82 : 0} ${x + 230} ${FY + 4})">`;
@@ -75,6 +75,9 @@
       if (brk) s += `<path d="M${x + 60},${FY - 310}l-10,30l14,20M${x + 150},${FY - 120}l12,-24" stroke="#2e2a26" stroke-width="3" fill="none"/></g>`;
       if (brk && o.fallen) s += `<path d="M${x + 180},${FY + 30}q60,-20 120,10M${x + 200},${FY + 50}q50,-10 90,20" stroke="#5a4630" stroke-width="10" fill="none" stroke-linecap="round"/>`;
     }
+    // the short run between the gate's right post (x 940) and the next post (x 1100)
+    s += `<rect x="936" y="${FY - 316}" width="168" height="30" fill="#5b6066" ${OUT}/><rect x="936" y="${FY - 120}" width="168" height="26" fill="#5b6066" ${OUT}/>`;
+    for (let b = 0; b < 5; b++) s += `<rect x="${956 + b * 30}" y="${FY - 300}" width="12" height="190" fill="#3f454b"/>`;
     s += `<rect x="400" y="${FY - 400}" width="44" height="410" fill="#cfc9bb" ${OUT}/><rect x="896" y="${FY - 400}" width="44" height="410" fill="#cfc9bb" ${OUT}/><rect x="400" y="${FY - 420}" width="540" height="30" fill="#c8302a" ${OUT}/>`;
     s += `<text x="670" y="${FY - 435}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#f4ecd8" stroke="${INK}" stroke-width="5" paint-order="stroke">โรงเรียนบ้านหนองน้ำใส</text>`;
     // the gate: a frame of iron bars on a rail, slides to the right (+x) to open
@@ -102,7 +105,7 @@
       <path d="M150,-860V-600M150,-860h44" stroke="#8a857a" stroke-width="10"/><rect x="170" y="-470" width="26" height="470" fill="#8a857a"/>${Array.from({ length: 9 }, (_, k) => `<path d="M146,${-500 + k * 56}h74" stroke="#8a857a" stroke-width="8"/>`).join("")}
       <rect x="-230" y="-820" width="26" height="270" rx="12" fill="#dfe9ee" ${OUT}/>${Array.from({ length: 6 }, (_, k) => `<path d="M-236,${-800 + k * 48}h-18" stroke="${INK}" stroke-width="3"/>`).join("")}
       <rect id="${id}-level" x="-226" y="${-820 + 270 * (1 - (o.level ?? 0.72))}" width="18" height="${270 * (o.level ?? 0.72)}" fill="#6fb3d6"/>
-      <path d="M-100,-540V-40h-60" stroke="#8a857a" stroke-width="10"/><rect x="-190" y="-60" width="40" height="30" rx="6" fill="#c9a55a" ${OUT}/><rect x="-250" y="0" width="160" height="14" fill="#8a857a"/><circle cx="-180" cy="-20" r="10" fill="#6fb3d6" opacity=".7"/></g>`;
+      <path d="M-100,-540V-40h-60" stroke="#8a857a" stroke-width="10" fill="none"/><rect x="-190" y="-60" width="40" height="30" rx="6" fill="#c9a55a" ${OUT}/><rect x="-250" y="0" width="160" height="14" fill="#8a857a"/><circle cx="-180" cy="-20" r="10" fill="#6fb3d6" opacity=".7"/></g>`;
     put(L.set, s);
     // the yard: packed dirt with grass, puddles and a drain, closer to us
     let g = `<rect x="-1200" y="${FY + 60}" width="3500" height="1300" fill="url(#fDirt)"/>`;
@@ -209,6 +212,9 @@
     // our hands on the can (POV): real grips, fingers wrapping over the label, thumbs hooked at the rim, forearms into the bottom corners (Hand.grip)
     const HC = { skin: o.skin || "#ecc29c", skinS: o.skinS, sleeve: o.sleeve || "#9fc5d8", sleeveS: o.sleeveS };
     put(L.fg, `<g id="${id}-hl" transform="translate(310,1200)">${Hand.grip(HC)}</g><g id="${id}-hr" transform="translate(770,1200) scale(-1,1)">${Hand.grip(HC)}</g>`);
+    // o.release: a second pair of open hands (palms to us, fingers spread) hidden at the bottom corners, for the moment we let go —
+    // shots fade #id-hl/#id-hr out and #id-hlo/#id-hro in so the hands are never left as fists clenched round nothing
+    if (o.release) put(L.fg, `<g id="${id}-hlo" opacity="0" transform="translate(250,1420) rotate(-16) scale(1.6)">${Hand.open(HC)}</g><g id="${id}-hro" opacity="0" transform="translate(830,1420) rotate(16) scale(-1.6,1.6)">${Hand.open(HC)}</g>`);
     L.fg.classList.remove("fgblur");
     if (o.kid) put(L.act, `<g id="${id}-kid" transform="translate(-300,1500)"><g transform="scale(0.62)">${Hand.open({ skin: "#efc6a0", sleeve: "#f6f6f2", sleeveS: "#d8d4c8" })}</g></g>`);
   }
@@ -237,15 +243,17 @@
     put(L.far, paddies(r, t, 1100));
     put(L.mid, `<path d="M-1200,1180L2300,1180V${G + 900}H-1200Z" fill="url(#fDirt)"/>`);
     // outside: the road up to the gate, dusk haze
-    let s = `<g id="${id}-arms" opacity="${o.arms ? 1 : 0}">${[[260, 1120, -10], [520, 1060, 8], [760, 1140, -4]].map(([x, y, a]) => `<g transform="translate(${x},${y}) rotate(${a})"><path d="M0,0C-10,80 -6,160 0,240" stroke="${INK}" stroke-width="54" stroke-linecap="round"/><path d="M0,0C-10,80 -6,160 0,240" stroke="#9dac92" stroke-width="44" stroke-linecap="round"/><path d="M-30,250l-10,36M-8,256l-2,40M14,254l6,38M30,246l16,30" stroke="#9dac92" stroke-width="14" stroke-linecap="round"/><path d="M-40,286l-6,14M-10,296l0,14M20,292l4,14M46,276l8,12" stroke="#1b1612" stroke-width="7" stroke-linecap="round"/><circle cx="4" cy="60" r="12" fill="#7a1414" opacity=".8"/></g>`).join("")}</g>`;
+    let s = `<g id="${id}-arms" opacity="${o.arms ? 1 : 0}">${[[260, 1120, -10], [520, 1060, 8], [760, 1140, -4]].map(([x, y, a]) => `<g transform="translate(${x},${y}) rotate(${a})"><path d="M0,0C-10,80 -6,160 0,240" stroke="${INK}" stroke-width="54" stroke-linecap="round" fill="none"/><path d="M0,0C-10,80 -6,160 0,240" stroke="#9dac92" stroke-width="44" stroke-linecap="round" fill="none"/><path d="M-30,250l-10,36M-8,256l-2,40M14,254l6,38M30,246l16,30" stroke="#9dac92" stroke-width="14" stroke-linecap="round"/><path d="M-40,286l-6,14M-10,296l0,14M20,292l4,14M46,276l8,12" stroke="#1b1612" stroke-width="7" stroke-linecap="round"/><circle cx="4" cy="60" r="12" fill="#7a1414" opacity=".8"/></g>`).join("")}</g>`;
     put(L.set, s);
     // the gate itself: thick bars, two rails, the bolt on our side
     let g = `<rect x="-1200" y="${G + 40}" width="3500" height="40" fill="#3a3f45"/><g id="${id}-bars">`;
-    for (let b = 0; b < 12; b++) g += `<rect x="${-80 + b * 110}" y="-200" width="34" height="${G + 260}" fill="#3f454b" ${OUT}/>`;
-    g += `<rect x="-200" y="560" width="1480" height="60" fill="#3a3f45" ${OUT}/><rect x="-200" y="1360" width="1480" height="60" fill="#3a3f45" ${OUT}/>`;
-    g += `<rect x="-200" y="-240" width="1480" height="60" fill="#3a3f45" ${OUT}/>`;
+    for (let b = -10; b < 12; b++) g += `<rect x="${-80 + b * 110}" y="-200" width="34" height="${G + 260}" fill="#3f454b" ${OUT}/>`;
+    g += `<rect x="-1300" y="560" width="2580" height="60" fill="#3a3f45" ${OUT}/><rect x="-1300" y="1360" width="2580" height="60" fill="#3a3f45" ${OUT}/>`;
+    g += `<rect x="-1300" y="-240" width="2580" height="60" fill="#3a3f45" ${OUT}/>`;
     g += `<g id="${id}-bolt" transform="translate(${o.bolt ?? 0},0)"><rect x="620" y="1180" width="560" height="60" rx="20" fill="#8d9299" ${OUT}/><rect x="560" y="1150" width="110" height="120" rx="14" fill="#5b6066" ${OUT}/><rect x="1150" y="1160" width="40" height="100" rx="8" fill="#5b6066" ${OUT}/></g>`;
     g += `</g><rect x="1180" y="-240" width="80" height="${G + 320}" fill="#5b6066" ${OUT}/><rect x="1260" y="-300" width="80" height="${G + 400}" fill="#cfc9bb" ${OUT}/><rect x="1160" y="1130" width="200" height="160" rx="10" fill="none" stroke="#5b6066" stroke-width="14"/>`;
+    // beyond the gate pillar the fence goes on: rails and bars up close, another concrete post (so a drifting camera never finds open ground)
+    g += `<rect x="1340" y="560" width="1100" height="60" fill="#3a3f45" ${OUT}/><rect x="1340" y="1360" width="1100" height="60" fill="#3a3f45" ${OUT}/>${Array.from({ length: 10 }, (_, b) => `<rect x="${1390 + b * 110}" y="420" width="34" height="${G - 300}" fill="#3f454b" ${OUT}/>`).join("")}<rect x="1900" y="300" width="110" height="${G - 120}" fill="#cfc9bb" ${OUT}/>`;
     put(L.fg, g);
     L.fg.classList.remove("fgblur");
     if (t === "dusk") put(L.glow, `<rect x="-1200" y="800" width="3500" height="1400" fill="#ff9a3c" opacity=".12"/>`);
@@ -415,10 +423,10 @@
   function depth(L, kind, o = {}) {
     const col = o.col || "#06080a", op = o.op ?? 0.92, r = mk(o.seed || 7 + DEPN++);
     const D = {
-      grass: () => { let g = ""; for (let k = 0; k < 26; k++) { const x = (k < 13 ? -120 : 760) + r() * 420, h = 160 + r() * 260, w = 18 + r() * 22; g += `<path d="M${f1(x)},2000q${f1(-w)},${f1(-h * 0.5)} ${f1(w * 0.3)},${f1(-h)}q${f1(w)},${f1(h * 0.45)} ${f1(w * 1.6)},${f1(h)}z" fill="${col}"/>`; } return g + `<path d="M-300,1800q500,-60 1000,0t700,0V2200H-300z" fill="${col}"/>`; },
-      bars: () => [-60, 110, 280].map((x, k) => `<rect x="${x}" y="-400" width="${70 + k * 10}" height="2800" rx="20" fill="${col}"/>`).join("") + `<rect x="-200" y="700" width="640" height="60" fill="${col}"/>`,
+      grass: () => { let g = ""; for (let k = 0; k < 26; k++) { const x = (k < 13 ? -120 : 760) + r() * 420, h = 160 + r() * 260, w = 18 + r() * 22; g += `<path d="M${f1(x)},2000q${f1(-w)},${f1(-h * 0.5)} ${f1(w * 0.3)},${f1(-h)}q${f1(w)},${f1(h * 0.45)} ${f1(w * 1.6)},${f1(h)}z" fill="${col}"/>`; } return g + `<path d="M-1800,1800q500,-60 1000,0t1000,0t1000,0t1000,0t1000,0V2600H-1800z" fill="${col}"/>`; },   // wide enough that a camera pulling back from the first key never finds its end
+      bars: () => [-60, 110, 280].map((x, k) => `<rect x="${x}" y="-400" width="${70 + k * 10}" height="2800" rx="20" fill="${col}"/>`).join("") + `<rect x="-1200" y="700" width="1570" height="60" fill="${col}"/>`,   // the rail stops flush with the last bar (x 280 + 90); a stub past it read as a floating black block when zoomed
       post: () => `<rect x="${o.x ?? -80}" y="-400" width="${o.w ?? 220}" height="2800" fill="${col}"/>`,
-      desk: () => `<path d="M-300,1560L1400,1440V2300H-300z" fill="${col}"/><path d="M-300,1560L1400,1440l0,40L-300,1600z" fill="#2a2420"/>`,
+      desk: () => `<path d="M-1800,1666L2900,1336V2700H-1800z" fill="${col}"/><path d="M-1800,1666L2900,1336l0,40L-1800,1706z" fill="#2a2420"/>`,
       branch: () => `<path d="M-200,-200C100,-60 380,40 560,0C400,160 120,220 -200,200z" fill="${col}"/>${[[60, 120], [200, 60], [380, 90], [300, 180]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="90" ry="40" transform="rotate(${-30 + x / 10} ${x} ${y})" fill="${col}"/>`).join("")}`,
       shelf: () => `<rect x="-300" y="-400" width="420" height="2800" fill="${col}"/><rect x="-300" y="900" width="700" height="50" fill="${col}"/><rect x="-300" y="1500" width="700" height="50" fill="${col}"/>`,
     };
