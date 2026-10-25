@@ -209,7 +209,7 @@
         shake: (t) => (t > F("co", 0, 2) && t < F("co", 0, 2) + 0.35 ? 12 * Math.sin(t * 23) : 0),
         captions: caps("co"),
         ui: [{ type: "tip", t: F("co", 0, 0) + 0.2, end: D("co") - 0.05, ill: "co", label: "คาร์บอนมอนอกไซด์", text: "ไม่มีสี · ไม่มีกลิ่น · {ฆ่าโดยไม่เตือน}", tone: "danger", top: 230 },
-          { type: "src", t: F("co", 0, 2), end: D("co") - 0.05, top: 560, text: CDC + "“Carbon monoxide (CO) is an odorless, colorless gas that kills without warning.”" }],
+          { type: "src", t: F("co", 0, 1), end: D("co") - 0.05, top: 560, text: CDC + "“Carbon monoxide (CO) is an odorless, colorless gas that kills without warning.”" }],
         fx(tl, id, t0) { tl.set("#co-co .cowisp", { opacity: 0.4 }, t0); Fx.punch(tl, `#${id} .stage`, t0 + F("co", 0, 2), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("co", 0, 2), 0.3, 14, 51); red(tl, t0 + F("co", 0, 2), 0.8, 0.7); Fx.heart(tl, t0, D("co"), 0.45, 0.6); },
       });
 
@@ -249,9 +249,9 @@
         actors: [PI(-140, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "frown" }]), PU(40, 1500, 0.58, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }]), MA(400, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }])],
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "outdoor", label: "ในชีวิตจริง", text: "เครื่องปั่นไฟ → [นอกบ้านเท่านั้น] {ห่าง 6 ม.}", tone: "rule", top: 230 },
-          { type: "src", t: F("real", 1, 1), end: D("real") - 0.05, top: 560, text: RDY + "“Generators and fuel should always be used outdoors and at least 20 feet away from windows, doors and attached garages.”" }],
-        extra(L) { L.act.insertAdjacentHTML("beforeend", `<g id="rl-dist" opacity="0"><path d="M250,1420H640" stroke="#ffd58a" stroke-width="8" stroke-dasharray="24 16"/><path d="M250,1390v60M640,1390v60" stroke="#ffd58a" stroke-width="8"/><text x="445" y="1380" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffd58a" stroke="#2e2a26" stroke-width="6" paint-order="stroke">6 ม. (20 ฟุต)</text></g>`); },
-        fx(tl, id, t0) { tl.fromTo("#rl-dist", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", svgOrigin: "445 1420", immediateRender: false }, t0 + F("real", 1, 1)); Fx.punch(tl, `#${id} .stage`, t0 + F("real", 1, 1), 1.05, 0.3); },
+          { type: "src", t: vo("real", 1), end: D("real") - 0.05, top: 560, text: RDY + "“Generators and fuel should always be used outdoors and at least 20 feet away from windows, doors and attached garages.”" }],
+        extra(L) { L.act.insertAdjacentHTML("beforeend", `<g id="rl-dist" opacity="0"><path d="M250,1650H640" stroke="#ffd58a" stroke-width="8" stroke-dasharray="24 16"/><path d="M250,1620v60M640,1620v60" stroke="#ffd58a" stroke-width="8"/><text x="445" y="1628" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffd58a" stroke="#2e2a26" stroke-width="6" paint-order="stroke">6 ม. (20 ฟุต)</text></g>`); },
+        fx(tl, id, t0) { tl.fromTo("#rl-dist", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", svgOrigin: "445 1650", immediateRender: false }, t0 + F("real", 1, 1)); Fx.punch(tl, `#${id} .stage`, t0 + F("real", 1, 1), 1.05, 0.3); },
       });
 
       // ---------- 18. she opens her eyes ----------

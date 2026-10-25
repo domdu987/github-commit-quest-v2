@@ -177,6 +177,7 @@
       // a rig standing behind the set's own drawing (zombies outside the fence): built into the mid layer and driven like an actor
       const behind = (L, tl, aid, who, x, y, s, flip, t0, dur, track) => {
         Rig.build(L.mid, aid, Rig.CAST[who]);
+        document.getElementById(aid).insertAdjacentHTML("afterbegin", `<ellipse cy="6" rx="78" ry="15" fill="#000" opacity=".2"/>`);
         document.getElementById(aid).setAttribute("transform", `translate(${x},${y}) scale(${flip ? -s : s},${s})`);
         Rig.drive(tl, aid, t0, dur, track, []);
       };
@@ -914,6 +915,7 @@
       // ======================================================================================================
       // วันที่ 100 · EP.1 "กระป๋องบวม"
       // ======================================================================================================
+      const CLIP = (list) => { list.sort((a, b) => a.t - b.t); for (let n = 0; n + 1 < list.length; n++) list[n].end = Math.min(list[n].end, list[n + 1].t - 0.03); return list; };
       const SKIN_PIM = { skin: "#ecc29c", sleeve: "#9fc5d8" }, SKIN_HONG = { skin: "#e6b48c", sleeve: "#d96a8a" };
       const CDC = "ที่มา: <em>CDC (สหรัฐฯ)</em> · ";
       const HA = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, blinks: [], track, ...extra });
@@ -1261,7 +1263,7 @@
         cam: { keys: [{ t: 0, ...fr(540, 1150, 0.9, 540, 1150), drift: { s: 0.02 } }] },
         captions: caps("signs"),
         ui: [{ type: "signs", t: 0.1, items: ["ฝา<em>บวม</em> โป่ง", "<em>รั่ว</em> มีคราบ", "เปิดแล้ว<em>ฟองพุ่ง</em>"], at: [F("signs", 0, 0) + 0.1, F("signs", 0, 0) + 0.9, F("signs", 0, 1) + 0.1], end: D("signs") - 0.05, top: 170 },
-          { type: "src", t: F("signs", 0, 2), end: D("signs") - 0.05, top: 720, text: CDC + "กระป๋องรั่ว บวม โป่ง หรือเปิดแล้วมีของเหลว/ฟองพุ่ง = อาจปนเปื้อน ทิ้งทั้งหมด" }],
+          { type: "src", t: F("signs", 0, 1) + 0.2, end: D("signs") - 0.05, top: 720, text: CDC + "กระป๋องรั่ว บวม โป่ง หรือเปิดแล้วมีของเหลว/ฟองพุ่ง = อาจปนเปื้อน ทิ้งทั้งหมด" }],
         fx(tl, id, t0) { tl.fromTo("#sg-lid", { y: 0 }, { y: -6, duration: 0.5, repeat: Math.ceil(D("signs") / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); Fx.punch(tl, `#${id} .stage`, t0 + F("signs", 0, 2), 1.05, 0.3); },
       });
 
@@ -1272,7 +1274,7 @@
         shake: (t) => (t > F("toxin", 1, 1) && t < F("toxin", 1, 1) + 0.35 ? 12 * Math.sin(t * 23) : 0),
         captions: caps("toxin"),
         ui: [{ type: "tip", t: F("toxin", 0, 1) - 0.1, end: D("toxin") - 0.05, ill: "toxin", label: "พิษโบทูลินัม", text: "มองไม่เห็น · ไม่มีกลิ่น · ไม่มีรส", tone: "danger", top: 230 },
-          { type: "src", t: F("toxin", 1, 1), end: D("toxin") - 0.05, top: 560, text: CDC + "พิษนี้มองไม่เห็น ไม่มีกลิ่น ไม่มีรส ชิมเพียงเล็กน้อยก็ถึงตายได้" }],
+          { type: "src", t: F("toxin", 0, 2), end: D("toxin") - 0.05, top: 560, text: CDC + "พิษนี้มองไม่เห็น ไม่มีกลิ่น ไม่มีรส ชิมเพียงเล็กน้อยก็ถึงตายได้" }],
         fx(tl, id, t0) {
           tl.fromTo("#tx-lid", { y: 0 }, { y: -6, duration: 0.5, repeat: Math.ceil(D("toxin") / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
           Fx.punch(tl, `#${id} .stage`, t0 + F("toxin", 1, 1), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("toxin", 1, 1), 0.3, 14, 51); red(tl, t0 + F("toxin", 1, 1), 0.8, 0.7);
@@ -1282,16 +1284,19 @@
 
       // ---------- 24. in real life: a swollen can goes in the bin whole, untasted — the count 4 → 3 ----------
       add("real", {
-        set: "canClose", setOpts: { id: "rl1", time: "night", bulge: 1, ...SKIN_HONG }, dark: 0.4,
+        set: "canClose", setOpts: { id: "rl1", time: "night", bulge: 1, release: true, ...SKIN_HONG }, dark: 0.4,
         cam: { keys: [{ t: 0, ...fr(540, 1150, 0.95, 540, 1050), drift: { s: 0.02 } }] },
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "trash", label: "ในชีวิตจริง", text: "กระป๋องบวม → [ทิ้งทั้งใบ] {ห้ามชิม}", tone: "rule", top: 230 },
-          { type: "src", t: F("real", 0, 2), end: D("real") - 0.05, top: 560, text: CDC + "“If in doubt, throw it out! Never taste food to see if it's safe.”" },
+          { type: "src", t: F("real", 0, 1) + 0.4, end: D("real") - 0.05, top: 560, text: CDC + "“If in doubt, throw it out! Never taste food to see if it's safe.”" },
           { type: "counter", t: F("real", 0, 1), end: D("real") - 0.05, label: "กระป๋อง", icon: "can", max: 12, keys: [{ t: F("real", 0, 1), v: 4 }, { t: F("real", 0, 2) + 0.3, v: 3 }], alarm: F("real", 0, 2) + 0.3, top: 860 }],
         fx(tl, id, t0) {
           const T = t0 + F("real", 0, 1) + 0.3;   // the hands let go and open apart, the can drops out of frame
-          tl.to("#rl1-hl", { attr: { transform: "translate(130,1300) rotate(-14)" }, duration: 0.55, ease: "power2.out" }, T);
-          tl.to("#rl1-hr", { attr: { transform: "translate(950,1300) rotate(14) scale(-1,1)" }, duration: 0.55, ease: "power2.out" }, T);
+          tl.to("#rl1-hl", { attr: { transform: "translate(190,1260) rotate(-10)" }, duration: 0.3, ease: "power2.out" }, T);
+          tl.to("#rl1-hr", { attr: { transform: "translate(890,1260) rotate(10) scale(-1,1)" }, duration: 0.3, ease: "power2.out" }, T);
+          tl.to(["#rl1-hl", "#rl1-hr"], { opacity: 0, duration: 0.14, ease: "none" }, T + 0.12);   // the fists open: swap to open palms
+          tl.fromTo("#rl1-hlo", { opacity: 0, attr: { transform: "translate(250,1420) rotate(-16) scale(1.6)" } }, { opacity: 1, attr: { transform: "translate(170,1460) rotate(-24) scale(1.6)" }, duration: 0.45, ease: "power2.out" }, T + 0.1);
+          tl.fromTo("#rl1-hro", { opacity: 0, attr: { transform: "translate(830,1420) rotate(16) scale(-1.6,1.6)" } }, { opacity: 1, attr: { transform: "translate(910,1460) rotate(24) scale(-1.6,1.6)" }, duration: 0.45, ease: "power2.out" }, T + 0.1);
           tl.to("#rl1-can", { attr: { transform: "translate(540,2300) scale(0.8)" }, duration: 0.6, ease: "power2.in" }, T + 0.1); Fx.punch(tl, `#${id} .stage`, t0 + F("real", 0, 2), 1.05, 0.3); },
       });
 
@@ -1323,7 +1328,7 @@
       split("radio", vo("radio", 3) - 0.1, {
         set: "radioClose", setOpts: { id: "ra" }, dark: 0.55,
         cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.02 } }, { t: vo("radio", 1) - 0.3, ...fr(400, 900, 1.5, 540, 960), drift: { s: 0.03 } }] },
-        captions: [...caps("radio", [0]), ...caps("radio", [1], { quote: true }), ...caps("radio", [2])],
+        captions: CLIP([...caps("radio", [0]), ...caps("radio", [1], { quote: true }), ...caps("radio", [2])]),
         ui: [{ type: "tearCal", t: vo("radio", 1) - 0.5, end: vo("radio", 3) - 0.25, top: 150, label: "เหลือ", unit: "วัน", keys: [{ t: vo("radio", 1) - 0.5, v: 99 }, { t: F("radio", 1, 1), v: 98 }], tag: { t: F("radio", 1, 2), text: "· หก" } }],   // the pasted "9" flutters off on "เก้าสิบแปด"; "หก" stamps in
         fx(tl, id, t0) {
           const on = t0 + vo("radio", 1) - 0.35;

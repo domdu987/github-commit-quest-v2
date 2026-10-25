@@ -349,7 +349,7 @@
         captions: CLIP([...caps("tq", [0]), ...caps("tq", [2]), ...caps("tq", [3])]),
         bubbles: [bub("tq", 1, 60, 300, 400)],
         ui: [{ type: "tip", t: vo("tq", 2) - 0.1, end: D("tq") - 0.05, ill: "tq", label: "ขันชะเนาะ · MedlinePlus", text: "เหนือแผล [5–7 ซม.] · เลี่ยงข้อ · {จดเวลา}", tone: "warn", top: 230 },
-          { type: "src", t: F("tq", 3, 1), end: D("tq") - 0.05, top: 600, text: MLP + "“The tourniquet should be applied to the limb 2 to 3 in (5 to 7.7 cm) above the bleeding wound. Avoid the joint… always write down the time when the tourniquet was applied.”" }],
+          { type: "src", t: vo("tq", 3), end: D("tq") - 0.05, top: 600, text: MLP + "“The tourniquet should be applied to the limb 2 to 3 in (5 to 7.7 cm) above the bleeding wound. Avoid the joint… always write down the time when the tourniquet was applied.”" }],
         extra(L) {
           // the trouser leg is ก้อง's (blue denim), the gash near the shin, the blood soaking down; the belt + stick above it
           document.querySelectorAll("#tq-flap path, #tq-skin path").forEach(() => {});
@@ -380,7 +380,7 @@
         actors: [PH(300, 1560, 0.95, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }]), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "frown" }], { flip: true })],
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "press", label: "ในชีวิตจริง", text: "กดก่อน → ไม่หยุด = ขันชะเนาะ → {หาหมอ}", tone: "rule", top: 230 },
-          { type: "src", t: F("real", 0, 2), end: D("real") - 0.05, top: 600, text: MLP + "“If continuous pressure has not stopped the bleeding, and bleeding is extremely severe (life threatening), a tourniquet can be used until medical help arrives.”" }],
+          { type: "src", t: F("real", 0, 1) + 0.3, end: D("real") - 0.05, top: 600, text: MLP + "“If continuous pressure has not stopped the bleeding, and bleeding is extremely severe (life threatening), a tourniquet can be used until medical help arrives.”" }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("real", 0, 2), 1.05, 0.3); Fx.heart(tl, t0, D("real"), 0.7, 0.3); },
       });
 

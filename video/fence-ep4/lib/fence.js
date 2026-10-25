@@ -212,6 +212,9 @@
     // our hands on the can (POV): real grips, fingers wrapping over the label, thumbs hooked at the rim, forearms into the bottom corners (Hand.grip)
     const HC = { skin: o.skin || "#ecc29c", skinS: o.skinS, sleeve: o.sleeve || "#9fc5d8", sleeveS: o.sleeveS };
     put(L.fg, `<g id="${id}-hl" transform="translate(310,1200)">${Hand.grip(HC)}</g><g id="${id}-hr" transform="translate(770,1200) scale(-1,1)">${Hand.grip(HC)}</g>`);
+    // o.release: a second pair of open hands (palms to us, fingers spread) hidden at the bottom corners, for the moment we let go —
+    // shots fade #id-hl/#id-hr out and #id-hlo/#id-hro in so the hands are never left as fists clenched round nothing
+    if (o.release) put(L.fg, `<g id="${id}-hlo" opacity="0" transform="translate(250,1420) rotate(-16) scale(1.6)">${Hand.open(HC)}</g><g id="${id}-hro" opacity="0" transform="translate(830,1420) rotate(16) scale(-1.6,1.6)">${Hand.open(HC)}</g>`);
     L.fg.classList.remove("fgblur");
     if (o.kid) put(L.act, `<g id="${id}-kid" transform="translate(-300,1500)"><g transform="scale(0.62)">${Hand.open({ skin: "#efc6a0", sleeve: "#f6f6f2", sleeveS: "#d8d4c8" })}</g></g>`);
   }
