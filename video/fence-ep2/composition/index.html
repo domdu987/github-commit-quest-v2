@@ -1108,7 +1108,7 @@
         .pkt.crf .stats { display: flex; justify-content: center; gap: 34px; margin-top: 16px; } .pkt.crf .st { display: flex; align-items: center; gap: 12px; font: 700 27px/1 Kanit; color: ${PK_PENCIL}; }
         .pkt.crf .tally { display: flex; gap: 4px; } .pkt.crf .tally i { width: 10px; height: 30px; background: ${INKLINE("%231f1d1a")} no-repeat center / contain; transform: scaleY(0); transform-origin: 50% 100%; } .pkt.crf .tally i.off { opacity: .18; } .pkt.crf .tally i.x { background-image: ${INKLINE("%23b7281e")}; }
         .pkt.crf .done { position: absolute; right: 34px; top: 22px; } .pkt.crf .done .stamp { font-size: 44px; }
-        .pkt.crf .up { position: absolute; left: 36px; bottom: 90px; display: flex; align-items: center; gap: 10px; font: 900 28px/1.1 Kanit; color: ${PK_INK}; opacity: 0; } .pkt.crf .up .stamp { font-size: 36px; }
+        .pkt.crf .up { position: relative; margin: 12px 0 0 30px; display: flex; align-items: center; gap: 10px; font: 900 28px/1.1 Kanit; color: ${PK_INK}; opacity: 0; } .pkt.crf .up .stamp { font-size: 36px; }
         .pkt.crf .boom { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; z-index: 4; pointer-events: none; } .pkt.crf .boom .spl { width: 16px; height: 16px; margin: -8px; }
         /* countdown */
         .pkt.cdn { width: 720px; margin-left: -360px; padding: 26px 30px 34px; }
@@ -1225,7 +1225,7 @@
       // ---------- the countdown: o = {t, from, to, label, warn, end, top}; one paper sheet flies off per second, a red ring closes, the last seconds go red ----------
       GameUI.C.countdown = {
         html: (id, o) => { const seq = Array.from({ length: o.from - (o.to ?? 0) + 1 }, (_, i) => o.from - i);
-          return `<div id="${id}" class="pkt cdn" style="top:${o.top ?? 150}px">${PAP("st")}<i class="red"></i>${TAPE("tl", -7)}${TAPE("tr", 5)}<svg class="ring" viewBox="0 0 520 330"><path d="M260,20C400,16 500,80 500,165C500,250 400,312 260,310C120,312 20,250 20,165C20,80 120,16 260,20Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><div class="in">
+          return `<div id="${id}" class="pkt cdn" style="top:${o.top ?? 60}px">${PAP("st")}<i class="red"></i>${TAPE("tl", -7)}${TAPE("tr", 5)}<svg class="ring" viewBox="0 0 520 330"><path d="M260,20C400,16 500,80 500,165C500,250 400,312 260,310C120,312 20,250 20,165C20,80 120,16 260,20Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><div class="in">
             <div class="lb">${o.label || "ประตูปิดใน"}</div><div class="big">${PAPERS(seq)}<span class="w">วิ</span></div></div><div class="warnst">${STAMP(o.warnText || "เร็ว!", "", -12)}</div></div>`; },
         anim(tl, id, t0, o) {
           const el = document.getElementById(id), to = o.to ?? 0, n = o.from - to, end = o.t0abs + (o.end ?? o.t + n + 0.6), warn = o.warn ?? 5, digs = [...el.querySelectorAll(".pd")], tick = o.tick ?? 1;
@@ -1234,9 +1234,16 @@
           write(tl, el.querySelector(".lb"), t0 + 0.15, { from: t0, gap: 0.08, d: 0.16 });
           slapIn(tl, el, t0 + 0.2, 0.1);
           tl.fromTo(`#${id} .ring path`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: n * tick, ease: "none", immediateRender: false }, t0 + 0.2);
+          const used = new Set();   // sheets already flown at build time (a digit value can repeat in a stack: 20 → 10 → 0 on the ones digit)
           const w = String(o.from).length, strs = Array.from({ length: n + 1 }, (_, i) => String(o.from - i).padStart(w, "0"));   // same padding PAPERS used
           for (let i = 1; i <= n; i++) { const T = t0 + i * tick, v = o.from - i, a = strs[i - 1], b = strs[i];
-            digs.forEach((pd, j) => { if (a[j] === b[j]) return; const top = [...pd.querySelectorAll(".sh")].reverse().find((s) => s.dataset.v === a[j] && s.style.opacity !== "0"); if (top) { flyOff(tl, top, T - 0.2); tl.set(top, { opacity: 0 }, T + 0.6); } });
+            digs.forEach((pd, j) => { if (a[j] === b[j]) return;
+              // the stack top-first, minus the sheets already gone; the top one flies, and any copies of the same digit right under it
+              // (the tens digit holds one "1" sheet per second from 19 to 10) drop out at the same moment so the next digit shows
+              const live = [...pd.querySelectorAll(".sh")].reverse().filter((s) => !used.has(s)), k0 = live.findIndex((s) => s.dataset.v === a[j]);
+              if (k0 < 0) return; let k = k0; while (k < live.length && live[k].dataset.v === a[j]) { used.add(live[k]); k++; }
+              flyOff(tl, live[k0], T - 0.2); tl.set(live[k0], { opacity: 0 }, T + 0.6);
+              for (let m = k0 + 1; m < k; m++) tl.set(live[m], { opacity: 0 }, T + 0.05); });
             const hot = v <= warn;
             tl.fromTo(`#${id}`, { x: 0 }, { x: hot ? 10 : 4, duration: 0.035, repeat: hot ? 7 : 3, yoyo: true, immediateRender: false }, T);
             tl.fromTo(`#${id} .big`, { scale: 1 }, { scale: hot ? 1.12 : 1.05, duration: 0.08, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, T);
@@ -1251,6 +1258,7 @@
       // ======================================================================================================
       // เอาชีวิตรอด 99 วัน · EP.2 "เครื่องปั่นไฟ"
       // ======================================================================================================
+      const CLIP = (list) => { list.sort((a, b) => a.t - b.t); for (let n = 0; n + 1 < list.length; n++) list[n].end = Math.min(list[n].end, list[n + 1].t - 0.03); return list; };
       const SKIN_PIM = { skin: "#ecc29c", sleeve: "#9fc5d8" }, SKIN_MAN = { skin: "#b9805a", sleeve: "#2c3e6b" };
       const CDC = "ที่มา: <em>CDC (สหรัฐฯ)</em> · ", RDY = "ที่มา: <em>Ready.gov (สหรัฐฯ)</em> · ";
       const HA = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, blinks: [], track, ...extra });
@@ -1436,7 +1444,7 @@
         set: "classroom", setOpts: { id: "sp", night: true, gen: true, genOn: true, genX: -300, fan: true, bulb: true, bulbOn: true, lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1200, 1.4, 540, 1050), drift: { s: 0.03 } }] },
         actors: [PU(520, 1500, 0.58, [{ t: 0, mode: "holdHead", eyes: "pain", mouth: "frown" }]), PI(800, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile" }], { flip: true })],
-        bubbles: [bub("smoke", 1, 80, 560, 420)],
+        bubbles: [bub("smoke", 1, 80, 560, 340)],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("smoke") - vo("smoke", 1) + 0.1, 0.55, 0.45); },
       });
 
@@ -1458,7 +1466,7 @@
         shake: (t) => (t > F("co", 0, 2) && t < F("co", 0, 2) + 0.35 ? 12 * Math.sin(t * 23) : 0),
         captions: caps("co"),
         ui: [{ type: "tip", t: F("co", 0, 0) + 0.2, end: D("co") - 0.05, ill: "co", label: "คาร์บอนมอนอกไซด์", text: "ไม่มีสี · ไม่มีกลิ่น · {ฆ่าโดยไม่เตือน}", tone: "danger", top: 230 },
-          { type: "src", t: F("co", 0, 2), end: D("co") - 0.05, top: 560, text: CDC + "“Carbon monoxide (CO) is an odorless, colorless gas that kills without warning.”" }],
+          { type: "src", t: F("co", 0, 1), end: D("co") - 0.05, top: 560, text: CDC + "“Carbon monoxide (CO) is an odorless, colorless gas that kills without warning.”" }],
         fx(tl, id, t0) { tl.set("#co-co .cowisp", { opacity: 0.4 }, t0); Fx.punch(tl, `#${id} .stage`, t0 + F("co", 0, 2), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("co", 0, 2), 0.3, 14, 51); red(tl, t0 + F("co", 0, 2), 0.8, 0.7); Fx.heart(tl, t0, D("co"), 0.45, 0.6); },
       });
 
@@ -1498,9 +1506,9 @@
         actors: [PI(-140, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "frown" }]), PU(40, 1500, 0.58, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }]), MA(400, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }])],
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "outdoor", label: "ในชีวิตจริง", text: "เครื่องปั่นไฟ → [นอกบ้านเท่านั้น] {ห่าง 6 ม.}", tone: "rule", top: 230 },
-          { type: "src", t: F("real", 1, 1), end: D("real") - 0.05, top: 560, text: RDY + "“Generators and fuel should always be used outdoors and at least 20 feet away from windows, doors and attached garages.”" }],
-        extra(L) { L.act.insertAdjacentHTML("beforeend", `<g id="rl-dist" opacity="0"><path d="M250,1420H640" stroke="#ffd58a" stroke-width="8" stroke-dasharray="24 16"/><path d="M250,1390v60M640,1390v60" stroke="#ffd58a" stroke-width="8"/><text x="445" y="1380" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffd58a" stroke="#2e2a26" stroke-width="6" paint-order="stroke">6 ม. (20 ฟุต)</text></g>`); },
-        fx(tl, id, t0) { tl.fromTo("#rl-dist", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", svgOrigin: "445 1420", immediateRender: false }, t0 + F("real", 1, 1)); Fx.punch(tl, `#${id} .stage`, t0 + F("real", 1, 1), 1.05, 0.3); },
+          { type: "src", t: vo("real", 1), end: D("real") - 0.05, top: 560, text: RDY + "“Generators and fuel should always be used outdoors and at least 20 feet away from windows, doors and attached garages.”" }],
+        extra(L) { L.act.insertAdjacentHTML("beforeend", `<g id="rl-dist" opacity="0"><path d="M250,1650H640" stroke="#ffd58a" stroke-width="8" stroke-dasharray="24 16"/><path d="M250,1620v60M640,1620v60" stroke="#ffd58a" stroke-width="8"/><text x="445" y="1628" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffd58a" stroke="#2e2a26" stroke-width="6" paint-order="stroke">6 ม. (20 ฟุต)</text></g>`); },
+        fx(tl, id, t0) { tl.fromTo("#rl-dist", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", svgOrigin: "445 1650", immediateRender: false }, t0 + F("real", 1, 1)); Fx.punch(tl, `#${id} .stage`, t0 + F("real", 1, 1), 1.05, 0.3); },
       });
 
       // ---------- 18. she opens her eyes ----------
@@ -1559,7 +1567,7 @@
         shake: (t) => (t > 4.4 && t < 5.4 ? 9 * Math.sin(t * 25) : 3 * Math.sin(t * 13)),
         actors: [MA(-20, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "frown" }, { t: 1.6, mode: "crouch", eyes: "normal", mouth: "frown" }, { t: 2.0, mode: "grabArm", eyes: "normal", mouth: "frown" }, { t: 2.9, mode: "run", eyes: "wide", mouth: "frown" }, { t: 4.4, mode: "pullBolt", eyes: "wide", mouth: "scream" }, { t: 5.4, mode: "run", eyes: "wide", mouth: "scream" }], { prop: "sickle" })],
         captions: caps("count"),
-        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูปิดใน", warn: 5, end: D("count") - 0.1, top: 150 },
+        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูปิดใน", warn: 5, end: D("count") - 0.1, top: 60 },
           { type: "skill", t: 1.9, end: 4.3, x: 60, y: 820, name: "ลุงหมาน", skill: "ช่าง", desc: "รู้ว่าสวิตช์อยู่ไหนโดยไม่ต้องมอง", icon: "wrench" }],
         extra(L) { glow(L, `<circle id="cd-glow" cx="760" cy="1380" r="520" fill="url(#fLamp)" opacity=".9"/>`);
           L.set.insertAdjacentHTML("beforeend", `<g id="cd-sick" opacity="0" transform="translate(720,980)"><path d="M0,0C70,-20 120,-100 90,-180C120,-110 60,-50 0,-26Z" fill="#8d9299" stroke="#2e2a26" stroke-width="4"/></g><g id="cd-sick2" opacity="0" transform="translate(700,1500)"><rect x="-8" y="-70" width="16" height="70" rx="6" fill="#6b4a2e" stroke="#2e2a26" stroke-width="3"/></g>`); },
@@ -1583,7 +1591,7 @@
         shake: (t) => (t < 5.0 ? 7 * Math.sin(t * 21) : 0),
         actors: [PI(90, 1440, 0.82, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 4.9, mode: "push", eyes: "wide", mouth: "frown" }]),
           MA(1400, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "frown" }, { t: 4.75, mode: "fall", eyes: "closed", mouth: "frown" }], { flip: true })],
-        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูปิดใน", warn: 5, end: 5.6, top: 150 }],
+        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูปิดใน", warn: 5, end: 5.6, top: 60 }],
         fx(tl, id, t0, L) {
           ZF(L, tl, "ce", t0, D("count2"), [["ha1", 1500, 0.8, 0], ["ha2", 1650, 0.76, 0.4], ["ha3", 1350, 0.78, 0.2], ["ha1", 1800, 0.74, 0.6]]);
           route(tl, `${id}-a1`, t0, [{ t: 0, x: 1400, y: 1500 }, { t: 4.75, x: 300, y: 1450 }], 0.9, true);
@@ -1630,7 +1638,7 @@
       split("radio", vo("radio", 2) - 0.1, {
         set: "radioClose", setOpts: { id: "ra" }, dark: 0.55,
         cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.02 } }, { t: vo("radio", 1) - 0.3, ...fr(400, 900, 1.5, 540, 960), drift: { s: 0.03 } }] },
-        captions: [...caps("radio", [0]), ...caps("radio", [1], { quote: true })],
+        captions: CLIP([...caps("radio", [0]), ...caps("radio", [1], { quote: true })]),
         ui: [{ type: "tearCal", t: vo("radio", 1) - 0.5, end: vo("radio", 2) - 0.25, top: 150, label: "เหลือ", unit: "วัน", keys: [{ t: vo("radio", 1) - 0.5, v: 98 }, { t: F("radio", 1, 1), v: 97 }], tag: { t: F("radio", 1, 2), text: "· หก" } }],
         fx(tl, id, t0) {
           const on = t0 + vo("radio", 1) - 0.35;
