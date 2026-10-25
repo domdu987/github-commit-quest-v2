@@ -4,9 +4,12 @@
 //                onto the lens; the smoke blows out and the camera pulls back to the dorm on fire
 //   OpenerWater  มือพราย: we start looking down at the black river; the title surfaces through the ripples; pale hands come up
 //                out of the water and drag the letters under; the camera tilts up to the river of krathongs
+//   OpenerLight  แสงกระสือ: pitch dark; a green light drifts in and writes the title as it passes, the letters buzzing like
+//                live wire; the light stops, turns — it is a face with green eyes that rushes the lens — the power flickers
+//                back on and we are over the flooded village (needs krasue.js for the face)
 // Same call shape as Opener: add("open", { set, setOpts, dark, cam: { keys: V.cam(o) }, shake: V.shake(o),
 //   extra(L, id) { V.extra(L, id, o); }, captions: caps("open"), fx(tl, id, t0) { V.fx(tl, id, t0, o); } }) with
-//   o = { title, ep, name, kick, land, at, glide, start } (start = fr(...) of the first framing). mix.py cues: V.cues(k, o).
+//   o = { title, ep, name, kick, land, at, glide, start, size (title px, default 230) } (start = fr(...) of the first framing). mix.py cues: V.cues(k, o).
 (function () {
   const f1 = (v) => Math.round(v * 10) / 10;
   const rng = (s) => () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296);
@@ -28,6 +31,9 @@
     .op2.water .k { color: #a8d8d0; }
     .op2.water .t { color: #dff4ef; text-shadow: 0 0 18px rgba(110,220,205,.7), 0 0 60px rgba(40,120,120,.6), 0 10px 0 rgba(0,0,0,.6); filter: url(#opRipple); }
     .op2.water .ep b { color: #06201e; background: linear-gradient(#bff0e6, #5fb8aa); box-shadow: 0 0 0 5px rgba(0,0,0,.45), 0 0 34px rgba(110,220,205,.6); }
+    .op2.elec .k { color: #bfe8b0; }
+    .op2.elec .t { color: #eaffd8; text-shadow: 0 0 10px #7dff6a, 0 0 34px #3dbf5a, 0 0 80px rgba(60,190,90,.6), 0 10px 0 rgba(0,0,0,.6); }
+    .op2.elec .ep b { color: #0c1a0e; background: linear-gradient(#f4ffd0, #7dff6a); box-shadow: 0 0 0 5px rgba(0,0,0,.45), 0 0 34px rgba(125,255,106,.7); }
     .op2.water .drop { position: absolute; width: 12px; height: 18px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #bfe6e0; opacity: 0; }`;
   if (typeof document !== "undefined" && !document.getElementById("op2-css")) document.head.insertAdjacentHTML("beforeend", `<style id="op2-css">${CSS}</style>`);
   // the ripple filter for the water title (added once the page body exists)
@@ -38,7 +44,7 @@
   function title(id, o, style) {
     const clip = document.getElementById(id);
     clip.insertAdjacentHTML("beforeend", `<div class="op2 ${style}" id="${id}-op2">${o.kick ? `<div class="k">${o.kick}</div>` : ""}
-      <div class="tw"><div class="t">${graphemes(o.title).map((g) => `<i>${g}</i>`).join("")}</div></div>
+      <div class="tw"><div class="t"${o.size ? ` style="font-size:${o.size}px"` : ""}>${graphemes(o.title).map((g) => `<i>${g}</i>`).join("")}</div></div>
       <div class="ep"><b>${o.ep || "EP.1"}</b>${o.name ? `<span>${o.name}</span>` : ""}</div></div>`);
     return clip;
   }
@@ -188,6 +194,67 @@
         [k, at - 0.9, "riser", 0.5], [k, at - 0.2, "splash", 0.9], [k, at - 0.2, "glitch", 0.5], [k, at, "whoosh", 0.6], [k, land - 0.02, "boom", 0.8], [k, land, "glitch", 0.4]]; },
   };
 
+  // ================= แสงกระสือ: a green light writes the title, turns into a face, the power comes back =================
+  const OpenerLight = {
+    cam: camKeys,
+    shake(o) {
+      const at = AT(o), land = at + GL(o), face = o.face ?? 1.45;
+      return (t) => {
+        let a = 0.6;
+        if (t > face && t < face + 0.45) a = 16 * (face + 0.45 - t) / 0.45;
+        if (t >= land) a = 16 * Math.exp(-(t - land) * 7);
+        return a * (Math.sin(t * 41) + 0.6 * Math.sin(t * 67 + 1));
+      };
+    },
+    extra(L, id, o) {
+      const r = rng(o.seed || 811);
+      // near-black wash (the power is out), the drifting light with its trail, little arcs round the title, the face that rushes in
+      let arcs = "";
+      for (let k = 0; k < 10; k++) { const x = 90 + r() * 900, y = 420 + r() * 230; arcs += `<path class="oarc" d="M${f1(x)},${f1(y)}l${f1(14 - r() * 28)},${f1(-18 - r() * 16)}l${f1(14 - r() * 28)},${f1(-14 - r() * 12)}l${f1(14 - r() * 28)},${f1(-16 - r() * 14)}" stroke="#eafcff" stroke-width="4" fill="none" stroke-linecap="round" opacity="0"/>`; }
+      const K = window.Krasue;
+      L.light.insertAdjacentHTML("beforeend", `<rect id="${id}-owash" x="0" y="0" width="1080" height="1920" fill="#020305" opacity=".9"/>
+        <g id="${id}-otrail" opacity="0"><path id="${id}-otp" d="M-60,640C200,560 360,700 560,600S900,520 1140,600" stroke="#7dff6a" stroke-width="10" fill="none" stroke-linecap="round" opacity=".5" stroke-dasharray="1400" stroke-dashoffset="1400"/></g>
+        <g id="${id}-oorb" transform="translate(-80,640)"><circle r="120" fill="#7dff6a" opacity=".16"/><circle r="46" fill="#7dff6a" opacity=".45"/><circle r="18" fill="#eaffd8"/></g>
+        <g id="${id}-oarcs">${arcs}</g>
+        <g id="${id}-oface" opacity="0" transform="translate(540,880) scale(.25)">${K ? K.ghost(0, 0, 1) : ""}<circle cx="0" cy="160" r="520" fill="#7dff6a" opacity=".12"/></g>`);
+    },
+    fx(tl, id, t0, o) {
+      const at = AT(o), land = at + GL(o), face = o.face ?? 1.45, r = rng(o.seed || 977), A = (t) => t0 + t;
+      const clip = title(id, o, "elec"), q = (s) => `#${id}-op2 ${s}`;
+      if (o.kick) tl.fromTo(q(".k"), { opacity: 0 }, { opacity: 0.9, duration: 0.5, immediateRender: false }, A(0.05));
+      // the light drifts across; each letter lights as it passes, then buzzes like a bad wire
+      const orb = { x: -80, y: 640 }, path = (k) => ({ x: -80 + 1200 * k, y: 640 - 60 * Math.sin(k * Math.PI * 2) });
+      tl.to(orb, { duration: face - 0.2, ease: "power1.inOut", onUpdate: function () { const p = path(this.progress()); document.getElementById(`${id}-oorb`).setAttribute("transform", `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})`); } }, A(0.15));
+      tl.set(`#${id}-otrail`, { opacity: 1 }, A(0.15));
+      tl.to(`#${id}-otp`, { attr: { "stroke-dashoffset": 0 }, duration: face - 0.2, ease: "power1.inOut" }, A(0.15));
+      const L = clip.querySelectorAll(`#${id}-op2 .t i`);
+      L.forEach((el, k) => {
+        const t = 0.25 + (k / Math.max(1, L.length - 1)) * (face - 0.45);
+        tl.fromTo(el, { opacity: 0, filter: "brightness(4) blur(5px)" }, { opacity: 1, filter: "brightness(1) blur(0px)", duration: 0.22, ease: "power2.out", immediateRender: false }, A(t));
+        for (let u = t + 0.3; u < at - 0.25; u += 0.07 + r() * 0.16) tl.set(el, { opacity: r() < 0.18 ? 0.25 : 1, filter: `brightness(${(0.8 + r() * 0.8).toFixed(2)})` }, A(u));  // stop before the letters short out
+      });
+      document.querySelectorAll(`#${id}-oarcs .oarc`).forEach((el) => { for (let u = 0.5 + r() * 0.4; u < at; u += 0.25 + r() * 0.5) { tl.set(el, { opacity: 1 }, A(u)); tl.set(el, { opacity: 0 }, A(u + 0.05)); } });
+      tl.fromTo(q(".ep"), { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, duration: 0.14, ease: "power4.in", immediateRender: false }, A(0.95));
+      // the light stops dead in the middle… and turns: a face rushes the lens
+      tl.to(`#${id}-oorb`, { opacity: 0, duration: 0.1 }, A(face));
+      tl.fromTo(`#${id}-oface`, { opacity: 0, attr: { transform: "translate(540,880) scale(.25)" } }, { opacity: 1, attr: { transform: "translate(540,820) scale(1.9)" }, duration: 0.32, ease: "power3.in", immediateRender: false }, A(face));
+      tl.to(`#${id}-oface`, { opacity: 0, duration: 0.12 }, A(face + 0.42));
+      if (window.Fx) { Fx.punch(tl, `#${id} .stage`, A(face + 0.3), 1.12, 0.4); Fx.glitch(tl, `#${id}`, A(face + 0.3), 0.3, 22, 13); Fx.heart(tl, A(0.3), face, 0.55, 0.4); }
+      tl.fromTo("#flashw", { opacity: 0.8 }, { opacity: 0, duration: 0.25, immediateRender: false }, A(face + 0.32));
+      // the letters short out, the power stutters back on: the dark wash flickers away and we glide down to the village
+      L.forEach((el, k) => tl.to(el, { opacity: 0, filter: "brightness(3) blur(6px)", duration: 0.12 }, A(at - 0.2 + k * 0.03)));
+      tl.to([q(".ep"), q(".k")], { opacity: 0, duration: 0.2 }, A(at - 0.1));
+      [0, 0.12, 0.2, 0.34, 0.5].forEach((d, k) => tl.set(`#${id}-owash`, { opacity: k % 2 ? 0.9 : 0.15 }, A(at + d)));
+      tl.to(`#${id}-owash`, { opacity: 0, duration: 0.4 }, A(at + 0.6));
+      tl.set(`#${id}-otrail`, { opacity: 0 }, A(at));
+      if (window.Fx) Fx.glitch(tl, `#${id}`, A(land), 0.16, 12, 5);
+    },
+    cues: (k, o) => { const at = AT(o), land = at + GL(o), face = o.face ?? 1.45;
+      return [[k, 0.0, "hum", 0.7], [k, 0.25, "buzz", 0.5], [k, 0.6, "zap", 0.5], [k, 0.95, "boom", 0.35], [k, face - 0.1, "zap", 0.7], [k, face + 0.28, "sting", 1.0], [k, face + 0.3, "shriek", 0.6], [k, face + 0.3, "glitch", 0.6],
+        [k, at - 0.2, "zap", 0.9], [k, at, "powerdown", 0.4], [k, at + 0.5, "buzz", 0.4], [k, land - 0.02, "boom", 0.8], [k, land, "glitch", 0.4]]; },
+  };
+
   window.OpenerSmoke = OpenerSmoke;
   window.OpenerWater = OpenerWater;
+  window.OpenerLight = OpenerLight;
 })();

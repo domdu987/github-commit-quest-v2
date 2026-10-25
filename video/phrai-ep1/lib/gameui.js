@@ -143,7 +143,7 @@
           <div class="timer"><svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="46" fill="rgba(16,22,26,.9)" stroke="rgba(244,236,216,.25)" stroke-width="9"/>
             <circle class="ring" cx="55" cy="55" r="46" fill="none" stroke="#f2c55c" stroke-width="9" stroke-linecap="round" stroke-dasharray="${RC}" stroke-dashoffset="0" transform="rotate(-90 55 55)"/></svg>
             ${Array.from({ length: (o.secs || 5) + 1 }, (_, n) => `<b class="n n${n}">${n}</b>`).join("")}</div>
-          <div class="opt B"><span>${o.b}</span><span class="key">▶</span></div></div>
+          <div class="opt B"><span class="lbt">${o.b}</span>${o.possessed ? `<span class="lbg">${o.possessed.glitch || o.b}</span>` : ""}<span class="key">▶</span></div></div>
         <div class="who">${(o.possessed && o.possessed.who) || o.who || ""}</div>${o.possessed && o.who ? `<div class="who who2">${o.who}</div>` : ""}</div>`,
     anim(tl, id, t0, o) {
       const secs = o.secs || 5;
@@ -727,7 +727,7 @@
     .qte .mbar { position:relative; width:300px; height:22px; border-radius:11px; background:rgba(16,22,26,.9); border:2px solid rgba(244,236,216,.5); overflow:hidden; }
     .qte .mbar i { position:absolute; left:0; top:0; bottom:0; width:100%; background:linear-gradient(90deg,#7fd1b9,#f2c55c 70%,#e8705a); transform-origin:0 50%; transform:scaleX(.3); }
     .qte .mbar b { position:absolute; left:72%; top:-2px; bottom:-2px; width:5px; background:#e8705a; }
-    .choice .opt { position:relative; } .choice .opt .lbg { position:absolute; left:90px; opacity:0; color:#ff9a9a; }
+    .choice .opt { position:relative; } .choice .opt .lbg { position:absolute; left:90px; opacity:0; color:#ff9a9a; } .choice .opt.B .lbg { left:auto; right:90px; }
     .gui .fm.sm { width:54px; height:54px; display:inline-block; vertical-align:middle; }
     .clockw { ${PANEL} border-radius:30px; display:flex; align-items:center; gap:18px; padding:14px 26px 14px 14px; }
     .clockw .dial { width:190px; height:190px; flex:none; }

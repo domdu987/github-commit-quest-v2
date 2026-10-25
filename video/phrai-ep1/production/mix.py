@@ -88,7 +88,6 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
 GRAB, YANK = 0.55, 0.95  # the bend shot (same as the composition)
 T2 = frag("throw", 0, 2) - 0.15
 T3 = frag("throw", 0, 3)
-SF = lambda j: frag("sig", 0, j)
 
 CUES = [
     # story opener, its own (OpenerWater.cues, at 1.9 / glide 1.8): the title surfacing, the hands, the drag under, the tilt up, the hit
@@ -123,14 +122,6 @@ CUES = [
     ("reach", 0.0, "lap", 0.7), ("reach", 0.4, "creak", 0.5), ("reach", frag("reach", 0, 3) - 0.1, "sting", 0.9), ("reach", frag("reach", 0, 3) - 0.1, "glitch", 0.6), ("reach", frag("reach", 0, 3), "splash", 0.4),
     *beats("reach", frag("reach", 0, 2), D["reach"] - frag("reach", 0, 2), 0.42, 0.5),
     ("leg", 0.1, "drip", 0.5), ("leg", 0.6, "drip", 0.4), ("leg", 1.3, "drip", 0.4), *beats("leg", frag("leg", 0, 1), D["leg"] - frag("leg", 0, 1), 0.45, 0.5),
-    # channel signature
-    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
-    ("sig", SF(0) + 0.3, "ding", 0.6), ("sig", SF(0) + 0.62, "ding", 0.6), ("sig", SF(1) + 0.15, "ding", 0.6),
-    ("sig", SF(2), "glitch", 0.45), *beats("sig", SF(2), SF(3) - SF(2), 0.38, 0.8),
-    *[("sig", SF(2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
-    ("sig", SF(3) - 1.1, "riser", 0.6),
-    ("sig", SF(3), "sting", 1.1), ("sig", SF(3), "boom", 0.8), ("sig", SF(3), "glitch", 0.7), ("sig", SF(3) + 0.12, "slam", 0.7),
-    *beats("sig", SF(3), D["sig"] - SF(3), 0.5, 0.7),
     ("marks", frag("marks", 0, 1), "swell", 0.5), ("marks", frag("marks", 0, 2), "sting", 0.9), ("marks", frag("marks", 0, 2), "glitch", 0.5), *beats("marks", frag("marks", 0, 1), D["marks"] - frag("marks", 0, 1), 0.42, 0.55),
     ("shadow", 0.0, "lap", 0.7), ("shadow", frag("shadow", 0, 2), "sting", 1.0), ("shadow", frag("shadow", 0, 2), "glitch", 0.6), ("shadow", frag("shadow", 0, 2), "boom", 0.5),
     *[("night", frag("night", 0, 1) + k * 0.28, "drip", 0.6) for k in range(7)], *beats("night", frag("night", 0, 1), D["night"] - frag("night", 0, 1), 0.45, 0.5),
@@ -168,7 +159,6 @@ dip(T("hook", 0), T("hook", -0.05), 0.35)
 dip(T("legend", 0), T("traits", -0.2), 0.5)
 dip(T("under", frag("under", 0, 1)), T("under", -0.05), 0.3)
 dip(T("whisper", 0), T("bend", YANK + 0.2), 0.2)
-dip(T("sig", SF(2)), T("sig", SF(3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("marks", 0), T("shadow", -0.05), 0.35)
 dip(T("night", 0), T("call", -0.05), 0.3)
 dip(T("choice", 0), T("choice", -0.3), 0.5)

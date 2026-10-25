@@ -49,7 +49,6 @@ SHOTS = [
     ("throw", ["n17"], 0.1, 0.5, 6.0),                # the gallon, a little water in it, thrown straight to โต้ง
     ("reach", ["n18"], 0.1, 0.6, 5.0),                # ตาเหม's bamboo pole; แพรว crouched low, pulling
     ("leg", ["d10"], 0.2, 0.6, 3.4),                  # โต้ง soaked on the planks, coughing
-    ("sig", ["s01"], 0.15, 0.5, 4.6),                 # channel signature
     ("marks", ["n19"], 0.1, 0.5, 3.4),                # ankle close-up: five finger marks
     ("shadow", ["n20"], 0.1, 0.6, 4.4),               # the water: everyone's reflection — except ตาเหม's
     ("night", ["n21"], 0.2, 0.4, 3.8),                # 2 a.m. inside: wet footprints up from the river steps to the net

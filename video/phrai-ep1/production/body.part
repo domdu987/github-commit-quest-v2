@@ -404,25 +404,6 @@
         fx(tl, id, t0) { Fx.heart(tl, t0 + F("leg", 0, 1), D("leg") - F("leg", 0, 1), 0.45, 0.5); },
       });
 
-      // ---------- 28. channel signature ----------
-      add("sig", {
-        set: "pierDeck", setOpts: { id: "pd28" }, dark: 0.35, blur: { far: 8, set: 8, fg: 10 },
-        cam: { keys: [{ t: 0, ...fr(430, 1290, 1.0, 540, 1100), drift: { s: 0.02 } }, { t: SF(2), ...fr(430, 1290, 1.06, 540, 1100), drift: { s: 0.045 } }, { t: SF(3), ...fr(430, 1290, 1.14, 540, 1100), drift: { s: 0.02 } }] },
-        shake: (t) => (t > SF(3) && t < SF(3) + 0.5 ? 14 * Math.sin(t * 63) * (SF(3) + 0.5 - t) / 0.5 : 0),
-        actors: [TONG(470, G, 1.0, [{ t: 0, mode: "coughing", eyes: "closed", mouth: "flat" }], { wet: true, flip: true })],
-        captions: caps("sig"),
-        ui: [{ type: "sigCard", t: 0.05, title: "มือพราย · เช็กลิสต์เอาตัวรอด", items: [["ตะโกนเรียกคน", true], ["โยนของลอยน้ำ", true], ["ย่อตัวยื่นไม้", true], ["???", false]],
-          show: [SF(0) + 0.05, SF(0) + 0.3, SF(0) + 0.55, SF(2)], mark: [SF(0) + 0.3, SF(0) + 0.62, SF(1) + 0.15, SF(3)], top: 440 }],
-        fx(tl, id, t0) {
-          Fx.desat(tl, `#${id} .stage`, t0, undefined, 0.2);
-          Fx.heart(tl, t0 + SF(2), SF(3) - SF(2), 0.38, 0.45); Fx.tunnel(tl, t0 + SF(2), t0 + SF(3) + 0.35, 0.6);
-          Fx.glitch(tl, `#${id}`, t0 + SF(2), 0.12, 8, 73);
-          Fx.punch(tl, `#${id} .stage`, t0 + SF(3), 1.1, 0.5); Fx.glitch(tl, `#${id}`, t0 + SF(3), 0.35, 16, 74);
-          tl.fromTo("#fxred", { opacity: 0.9 }, { opacity: 0, duration: 0.7, immediateRender: false }, t0 + SF(3));
-          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.12, immediateRender: false }, t0 + SF(3));
-          Fx.heart(tl, t0 + SF(3) + 0.2, D("sig") - SF(3) - 0.2, 0.5, 0.5);
-        },
-      });
 
       // ---------- 29. his ankle: five finger marks ----------
       add("marks", {
