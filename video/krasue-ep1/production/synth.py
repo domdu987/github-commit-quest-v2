@@ -563,6 +563,15 @@ def sfx(kind):
         tone = np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.6 + 0.4 * (lp_fast(n, 60) > 0))
         chirps = np.clip(np.sin(2 * np.pi * 6.5 * t), 0, None) ** 0.5
         return (tone * 0.5 + (lp_fast(n, 6000) - lp_fast(n, 2500)) * 0.5) * chirps * np.clip(t / 0.02, 0, 1) * np.clip((d - t) / 0.05, 0, 1) * 0.35
+    if kind == "rooster":  # a rooster at dawn, far off: four harmonic syllables, the last one long and falling (low-passed, no hiss)
+        parts, out = [(0.13, 520, 600), (0.12, 600, 640), (0.16, 640, 700), (0.7, 720, 560)], []
+        for d, fa, fb in parts:
+            t = t_arr(d)
+            f = np.linspace(fa, fb, len(t)) * (1 + 0.012 * np.sin(2 * np.pi * 7 * t))
+            ph = 2 * np.pi * np.cumsum(f) / SR
+            x = sum(np.sin(k * ph) / k for k in range(1, 7)) * env(len(t), 0.02, min(0.08, d / 2))
+            out += [x, np.zeros(int(0.03 * SR))]
+        return lp_fast(np.concatenate(out), 2600) * 0.25
     if kind == "latch":  # a door latch catching: click then clunk
         out = np.zeros(int(0.4 * SR))
         for off, f, g in ((0.0, 2400, 0.5), (0.06, 180, 0.9)):

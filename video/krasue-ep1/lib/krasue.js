@@ -2,11 +2,11 @@
 // stilt houses with lit windows, concrete power poles standing in the water, a transformer by the temple, green lights over the
 // flood. Same layer contract as sets.js (sky / far / mid / set / act / fg, glow above the darkness); seeded RNG only.
 //   Krasue.ghost(x, y, s, o)  the กระสือ, one piece: a woman's black head with green eyes and long wet hair, and under the neck her
-//                             heart, lungs and guts glowing green, hanging and dripping (class kbob bobs it, kdrip drips, khair sways)
+//                             heart glowing red (user: "หัวใจสีแดง"), lungs and guts glowing green, hanging and dripping (class kbob bobs it, kdrip drips, khair sways)
 //   Krasue.glow(x, y, s)      its green light for the glow layer (shows through the darkness)
 //   Sets.floodVillage  wide: houses on stilts, poles and sagging lines in the water, the transformer lamp; o.lights green orbs
 //                      (#id-l0…), o.fallen = a broken line with its end in the water (#id-arc sparks, #id-wire); #id-wfront over waders
-//   Sets.houseIn       inside a low house at night: the outlets near the floor, a fan, the fridge, the main switch (สะพานไฟ) on
+//   Sets.houseIn       inside a low house at night: the outlets near the floor, a fan, the fridge (o.fridgeX; lower handle #id-fh), the door (o.doorX, #id-door), the main switch (สะพานไฟ) on
 //                      the wall with its lever (#id-lever, pivot at #id-pivot), the water (#id-water) that rises over the floor,
 //                      stairs by the door up to the sleeping floor (step k top at G - 90(k+1), x 700 + 110k)
 //   Sets.porchFlood    the front of the house: steps into the flood, the meter box, a lamp, a pole close by (o.dark: power cut)
@@ -14,6 +14,8 @@
 //   Sets.comicLegend   an old one-baht horror comic, printed black and green on yellowed paper, four panels (y 0/1000/2000/3000)
 //   Sets.switchClose   the main switch close up: porcelain base, copper blades, a hand on the lever (#id-hand, #id-lever)
 //   Sets.poleSign      end card: the warning sign on a power pole with a note pinned to it
+//   Sets.cprFloor      top-down on the upstairs boards: เต้ย on his back (#id-chest, #id-lips, eyes #id-shut / #id-open), ฝน's hands (#id-hands),
+//                      her phone calling 1669
 (function () {
   const INK = "#2e2a26";
   const OUT = `stroke="${INK}" stroke-width="4" stroke-linejoin="round"`;
@@ -30,6 +32,8 @@
     <linearGradient id="ksWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d2a33"/><stop offset=".4" stop-color="#121c22"/><stop offset="1" stop-color="#070c10"/></linearGradient>
     <linearGradient id="ksMud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a5238" stop-opacity=".88"/><stop offset="1" stop-color="#2e2a1c" stop-opacity=".95"/></linearGradient>
     <radialGradient id="ksGut" cx=".45" cy=".4"><stop offset="0" stop-color="#e6ffc8"/><stop offset=".45" stop-color="#7dff6a"/><stop offset="1" stop-color="#2a8a46"/></radialGradient>
+    <radialGradient id="ksHeart" cx=".42" cy=".35"><stop offset="0" stop-color="#ffd0c4"/><stop offset=".4" stop-color="#ff3a2a"/><stop offset="1" stop-color="#9a0c0c"/></radialGradient>
+    <radialGradient id="ksHeartGlow"><stop offset="0" stop-color="#ff3a2a" stop-opacity=".7"/><stop offset=".5" stop-color="#d8201a" stop-opacity=".22"/><stop offset="1" stop-color="#d8201a" stop-opacity="0"/></radialGradient>
     <radialGradient id="ksGlow"><stop offset="0" stop-color="#7dff6a" stop-opacity=".55"/><stop offset=".4" stop-color="#3dbf5a" stop-opacity=".18"/><stop offset="1" stop-color="#3dbf5a" stop-opacity="0"/></radialGradient>
     <radialGradient id="ksArc"><stop offset="0" stop-color="#eafcff" stop-opacity=".95"/><stop offset=".3" stop-color="#8fe6ff" stop-opacity=".45"/><stop offset="1" stop-color="#5ab8ff" stop-opacity="0"/></radialGradient>
     <radialGradient id="ksLamp"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".85"/><stop offset=".4" stop-color="#ffc06a" stop-opacity=".22"/><stop offset="1" stop-color="#ffc06a" stop-opacity="0"/></radialGradient>
@@ -49,7 +53,8 @@
       ${gut("M-6,70C-8,110 -4,150 0,180", 16)}
       <path d="M-14,100C-70,96 -84,170 -60,230C-40,250 -18,226 -14,190Z" fill="url(#ksGut)" stroke="#1d5a32" stroke-width="4"/>
       <path d="M14,100C70,96 84,170 60,230C40,250 18,226 14,190Z" fill="url(#ksGut)" stroke="#1d5a32" stroke-width="4"/>
-      <path d="M-22,196C-40,176 -40,150 -16,150C-6,150 0,160 0,166C0,160 6,150 16,150C40,150 40,176 22,196L0,226Z" fill="#c8ff9a" stroke="#1d5a32" stroke-width="4" class="kheart"/>
+      <circle cx="0" cy="186" r="62" fill="url(#ksHeartGlow)"/>
+      <path d="M-22,196C-40,176 -40,150 -16,150C-6,150 0,160 0,166C0,160 6,150 16,150C40,150 40,176 22,196L0,226Z" fill="url(#ksHeart)" stroke="#5a0d0d" stroke-width="4" class="kheart"/>
       ${gut("M0,226C-60,250 -70,300 -20,316C40,334 60,290 20,276C-20,262 -50,300 -30,350C-14,390 30,380 26,420C22,460 -10,470 -14,520", 18)}
       ${gut("M10,236C50,260 70,320 40,360C20,384 34,420 54,450", 12)}
       ${[[-14, 520], [54, 450], [-60, 232], [60, 232]].map(([dx, dy], k) => `<path class="kdrip" data-i="${k}" d="M${dx},${dy}c-6,12 -6,20 0,22c6,-2 6,-10 0,-22z" fill="#9fff8a"/>`).join("")}</g>`;
@@ -58,9 +63,11 @@
       <path d="M-16,40Q0,30 16,40Q8,54 0,56Q-8,54 -16,40Z" fill="#020303" stroke="${KRIM}" stroke-width="2"/><path d="M-8,46l3,7l3,-7M2,46l3,7l3,-7" stroke="#c8ff9a" stroke-width="2" fill="none"/>
       <path d="M-66,-36Q-60,-118 0,-122Q60,-118 66,-36Q40,-84 0,-86Q-40,-84 -66,-36Z" fill="#050706"/>
       ${[-46, -30, 30, 46].map((dx, i) => `<path d="M${dx * 0.8},-80C${dx},-30 ${dx + (i % 2 ? 4 : -4)},20 ${dx * 1.1},${80 + (i % 2) * 20}" stroke="#050706" stroke-width="${9 - (i % 2) * 2}" fill="none" stroke-linecap="round"/>`).join("")}`;
-    return `<g class="kbob" ${o.id ? `id="${o.id}"` : ""} opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${o.flip ? -s : s},${s})">${hair}${guts}${face}</g></g>`;
+    const bun = o.bun ? `<circle cx="0" cy="-128" r="30" fill="#050706" stroke="${KRIM}" stroke-width="3"/>` : "";  // ป้าแช่ม's bun (EP.2 clue)
+    return `<g class="kbob" ${o.id ? `id="${o.id}"` : ""} opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${o.flip ? -s : s},${s})">${hair}${guts}${bun}${face}</g></g>`;
   }
-  const glow = (x, y, s, r = 1) => `<g class="kglow"><circle cx="${f1(x)}" cy="${f1(y + 160 * s)}" r="${f1(420 * s * r)}" fill="url(#ksGlow)"/></g>`;
+  // the green glow is centred on the guts, under the heart, and the heart keeps its own red glow on top (so it reads red in the dark)
+  const glow = (x, y, s, r = 1) => `<g class="kglow"><circle cx="${f1(x)}" cy="${f1(y + 300 * s)}" r="${f1(420 * s * r)}" fill="url(#ksGlow)"/><circle cx="${f1(x)}" cy="${f1(y + 190 * s)}" r="${f1(120 * s)}" fill="url(#ksHeartGlow)"/></g>`;
   // a floating green light seen from far away (what the villagers call แสงกระสือ)
   const orb = (x, y, s, id) => `<g class="korb" ${id ? `id="${id}"` : ""}><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(16 * s)}" fill="#d8ffc0"/><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(38 * s)}" fill="#7dff6a" opacity=".45"/>
     <path d="M${f1(x - 5 * s)},${f1(y + 14 * s)}q${f1(-6 * s)},${f1(40 * s)} ${f1(4 * s)},${f1(80 * s)}M${f1(x + 6 * s)},${f1(y + 14 * s)}q${f1(8 * s)},${f1(30 * s)} ${f1(-2 * s)},${f1(60 * s)}" stroke="#7dff6a" stroke-width="${f1(4 * s)}" fill="none" opacity=".7"/></g>`;
@@ -128,7 +135,7 @@
     farLine(L, W - 20, r, o);  // o.dark: every light in the village is out
     water(L, W, r, o);
     let s = "", g = "";
-    (o.houses || [[-150, 1.0], [980, 0.8]]).forEach(([x, k], i) => { s += stilt(x, W, k, { both: i % 2 === 0, lit: !o.dark }); if (!o.dark) g += stiltGlow(x, W, k, i % 2 === 0); });
+    (o.houses || [[-150, 1.0], [980, 0.8]]).forEach(([x, k, ho], i) => { const lit = !o.dark && !(ho && ho.dark); s += stilt(x, W, k, { both: i % 2 === 0, lit }); if (lit) g += stiltGlow(x, W, k, i % 2 === 0); });
     const poles = (o.poles || [[260, 760], [700, 700, { transformer: true, lamp: true }], [1180, 640]]).map(([x, h, po]) => pole(x, W, h, po || {}));
     poles.forEach((p) => (s += p.s));
     let w = "";
@@ -164,7 +171,7 @@
     s += `<path d="M-1200,${G - 520}Q-600,${G - 540} 0,${G - 515}T1200,${G - 525}T2300,${G - 520}" stroke="#8a7f62" stroke-width="10" fill="none" opacity=".55"/>`;
     // window on the night (rain streaks), door, Buddha shelf, calendar, clock
     s += `<g><rect x="-640" y="${G - 1150}" width="360" height="420" fill="#0b1220" ${OUT}/>${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M${-620 + k * 60},${G - 1130}l-20,90" stroke="#5a6a8a" stroke-width="3" opacity=".5"/>`).join("")}<path d="M-460,${G - 1150}v420M-640,${G - 940}h360" stroke="#5a4a3a" stroke-width="10"/></g>
-      <rect x="1120" y="${G - 1260}" width="380" height="1260" fill="#5a3f2a" ${OUT}/><circle cx="1150" cy="${G - 620}" r="12" fill="#c9a55a"/>
+      <g id="${id}-door"><rect x="${o.doorX ?? 1120}" y="${G - 1260}" width="380" height="1260" fill="#5a3f2a" ${OUT}/>${[0, 1].map((k) => `<rect x="${(o.doorX ?? 1120) + 50}" y="${G - 1200 + k * 600}" width="280" height="520" rx="8" fill="none" stroke="#3b2a1c" stroke-width="6"/>`).join("")}<circle id="${id}-knob" cx="${(o.doorX ?? 1120) + 30}" cy="${G - 620}" r="14" fill="#c9a55a" ${OUT3}/></g>
       <rect x="-160" y="${G - 1420}" width="300" height="24" fill="#6a4a32" ${OUT3}/><path d="M-30,${G - 1420}v-80h60v80" fill="#c9a55a" ${OUT3}/>
       <rect x="260" y="${G - 1260}" width="170" height="220" fill="#f4ecd8" ${OUT3}/><rect x="260" y="${G - 1260}" width="170" height="50" fill="#c8392b"/>
       <circle cx="680" cy="${G - 1240}" r="56" fill="#f4ecd8" ${OUT}/><path d="M680,${G - 1240}v-36M680,${G - 1240}l26,14" stroke="${INK}" stroke-width="5"/>`;
@@ -179,7 +186,9 @@
     const outlet = (x, y) => `<g><rect x="${x - 50}" y="${y - 34}" width="100" height="68" rx="8" fill="#f4f0e6" ${OUT3}/>${[-20, 20].map((d) => `<g><rect x="${x + d - 10}" y="${y - 12}" width="6" height="14" fill="${INK}"/><rect x="${x + d + 4}" y="${y - 12}" width="6" height="14" fill="${INK}"/></g>`).join("")}</g>`;
     s += outlet(240, G - 230) + outlet(-420, G - 230);
     s += `<path d="M240,${G - 220}C260,${G - 120} 340,${G - 60} 420,${G - 40}" stroke="#2a2a2a" stroke-width="7" fill="none"/><rect x="400" y="${G - 60}" width="160" height="40" rx="8" fill="#f4f0e6" ${OUT3}/><circle id="${id}-led" cx="420" cy="${G - 40}" r="6" fill="#ff4a3a"/>`;
-    s += `<g><rect x="1520" y="${G - 760}" width="300" height="760" rx="16" fill="#d8e4e8" ${OUT}/><path d="M1520,${G - 520}h300" stroke="${INK}" stroke-width="4"/><rect x="1540" y="${G - 700}" width="12" height="90" rx="4" fill="#9aa4a8"/></g>`;
+    const FX = o.fridgeX ?? 1520;
+    s += `<g id="${id}-fridge"><rect x="${FX}" y="${G - 760}" width="300" height="760" rx="16" fill="#d8e4e8" ${OUT}/><path d="M${FX},${G - 520}h300" stroke="${INK}" stroke-width="4"/><rect x="${FX + 268}" y="${G - 700}" width="12" height="90" rx="4" fill="#9aa4a8"/>
+      <rect id="${id}-fh" x="${FX + 266}" y="${G - 480}" width="14" height="100" rx="5" fill="#9aa4a8" ${OUT3}/><path d="M${FX + 220},${G - 300}V${G - 360}h-30" stroke="#6a7478" stroke-width="5" fill="none"/></g>`;
     s += `<g><rect x="-1060" y="${G - 420}" width="380" height="420" fill="#6a4a32" ${OUT}/><rect x="-1040" y="${G - 700}" width="340" height="250" rx="14" fill="#1a1f24" ${OUT}/><rect x="-1020" y="${G - 680}" width="300" height="210" rx="8" fill="#2a3a4a"/></g>`;
     s += `<g transform="translate(560,${G})"><path d="M0,0V-560" stroke="#d8dcd8" stroke-width="16"/><ellipse cx="0" cy="-12" rx="90" ry="16" fill="#d8dcd8" ${OUT3}/><circle cx="0" cy="-620" r="110" fill="none" stroke="#9aa4a8" stroke-width="10"/>
       <g class="kfan">${[0, 120, 240].map((a) => `<path d="M0,-620L${f1(Math.cos(a * Math.PI / 180) * 96)},${f1(-620 + Math.sin(a * Math.PI / 180) * 96)}" stroke="#7fb3c9" stroke-width="40" stroke-linecap="round" opacity=".85"/>`).join("")}</g><circle cx="0" cy="-620" r="22" fill="#d8dcd8" ${OUT3}/></g>`;
@@ -286,7 +295,7 @@
       <circle cx="${X}" cy="${Y + 150}" r="20" fill="${INK}"/>
       <g id="${id}-lever" transform="rotate(0 ${X} ${Y + 150})">${[-80, 80].map((d) => `<rect x="${X + d - 14}" y="${Y - 150}" width="28" height="300" fill="#d8a04a" ${OUT3}/>`).join("")}<rect x="${X - 130}" y="${Y - 200}" width="260" height="60" rx="12" fill="#1d1d1d" ${OUT}/></g>`;
     put(L.set, s);
-    put(L.act, `<g id="${id}-hand" transform="translate(0,0)"><path d="M${X + 260},${Y + 1200}L${X + 60},${Y - 120}" stroke="${INK}" stroke-width="150" stroke-linecap="round"/><path d="M${X + 260},${Y + 1200}L${X + 60},${Y - 120}" stroke="${o.sleeve || "#e8a33a"}" stroke-width="136" stroke-linecap="round"/>
+    if (o.hand !== false) put(L.act, `<g id="${id}-hand" transform="translate(0,0)"><path d="M${X + 260},${Y + 1200}L${X + 60},${Y - 120}" stroke="${INK}" stroke-width="150" stroke-linecap="round"/><path d="M${X + 260},${Y + 1200}L${X + 60},${Y - 120}" stroke="${o.sleeve || "#e8a33a"}" stroke-width="136" stroke-linecap="round"/>
       <path d="M${X + 60},${Y - 60}L${X + 20},${Y - 170}" stroke="${INK}" stroke-width="110" stroke-linecap="round"/><path d="M${X + 60},${Y - 60}L${X + 20},${Y - 170}" stroke="${o.skin || "#e8b48a"}" stroke-width="96" stroke-linecap="round"/>
       ${[-36, -12, 12, 36].map((d) => `<path d="M${X + 20 + d},${Y - 200}q-30,-20 -40,10" stroke="${INK}" stroke-width="34" fill="none" stroke-linecap="round"/><path d="M${X + 20 + d},${Y - 200}q-30,-20 -40,10" stroke="${o.skin || "#e8b48a"}" stroke-width="22" fill="none" stroke-linecap="round"/>`).join("")}</g>`);
     put(L.glow, `<g id="${id}-spark" opacity="0"><circle cx="${X}" cy="${Y - 120}" r="260" fill="url(#ksArc)"/>${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M${X},${Y - 120}l${Math.cos(k) * 120},${Math.sin(k) * 120}" stroke="#eafcff" stroke-width="5"/>`).join("")}</g>`);
@@ -309,6 +318,39 @@
     for (let k = 0; k < 6; k++) s += `<g class="drip" data-i="${k}"><path d="M${f1(240 + k * 110 + r() * 30)},1118c-7,12 -7,20 0,22c7,-2 7,-10 0,-22z" fill="#9fc3d8" opacity=".85"/></g>`;
     put(L.set, s);
     put(L.glow, `<circle cx="540" cy="760" r="760" fill="url(#ksLamp)" opacity=".4"/>`);
+  }
+
+  // ---------------- top-down on the upstairs floor: เต้ย on his back, ฝน's hands on his chest, her phone on the boards calling 1669 ----------------
+  function cprFloor(L, o = {}) {
+    const id = o.id || "cf", r = mk(o.seed || 239), X = 540, sk = "#d9a074", sh = "#3faa6a", shS = "#2f8a54";
+    let m = `<rect x="-900" y="-600" width="2900" height="3400" fill="#5a3f2a"/>`;
+    for (let x = -880; x < 2000; x += 130) m += `<path d="M${x},-600V2800" stroke="#3b2a1c" stroke-width="7"/>${[0, 1, 2].map((k) => `<path d="M${x + 6},${f1(-200 + k * 1000 + r() * 400)}h118" stroke="#3b2a1c" stroke-width="5"/>`).join("")}`;
+    for (let k = 0; k < 18; k++) m += `<ellipse cx="${f1(-200 + r() * 1500)}" cy="${f1(r() * 2200)}" rx="${f1(20 + r() * 60)}" ry="${f1(6 + r() * 14)}" fill="#3b2a1c" opacity=".5"/>`;
+    // water dripping off him onto the boards
+    m += `<ellipse cx="${X}" cy="1250" rx="420" ry="760" fill="#1d2a33" opacity=".35"/>`;
+    put(L.mid, m);
+    // her phone on the floor, on a call to 1669 (the screen lights the boards)
+    put(L.set, `<g transform="translate(180,520) rotate(-18)"><rect x="-70" y="-130" width="140" height="260" rx="20" fill="#1d1f22" ${OUT}/><rect x="-58" y="-112" width="116" height="200" rx="8" fill="#e8f0f2"/>
+      <text x="0" y="-60" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#e0362c">1669</text><text x="0" y="-20" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="22" fill="#2e2a26">กำลังโทร…</text>
+      <circle cx="0" cy="50" r="24" fill="#e0362c"/><path d="M-12,50h24" stroke="#fff" stroke-width="6" stroke-linecap="round"/></g>`);
+    const shoe = (x) => `<ellipse cx="${x}" cy="1900" rx="36" ry="24" fill="${sk}" ${OUT}/>`;
+    let b = `<g id="${id}-body" transform="rotate(-5 ${X} 1100)">
+      <path d="M${X - 80},1380L${X - 100},1840Q${X - 96},1880 ${X - 60},1880L${X - 34},1390Z" fill="${sk}" ${OUT}/><path d="M${X + 80},1380L${X + 100},1840Q${X + 96},1880 ${X + 60},1880L${X + 34},1390Z" fill="${sk}" ${OUT}/>${shoe(X - 80)}${shoe(X + 80)}
+      <path d="M${X - 130},1300L${X - 120},1560H${X + 120}L${X + 130},1300Z" fill="#3f6fb0" ${OUT}/>
+      <path d="M${X - 140},880L${X - 210},1290Q${X - 210},1330 ${X - 180},1334L${X - 146},1330L${X - 118},960Z" fill="${sh}" ${OUT}/><path d="M${X + 140},880L${X + 210},1290Q${X + 210},1330 ${X + 180},1334L${X + 146},1330L${X + 118},960Z" fill="${sh}" ${OUT}/>
+      <ellipse cx="${X - 192}" cy="1352" rx="28" ry="34" fill="${sk}" ${OUT}/><ellipse cx="${X + 192}" cy="1352" rx="28" ry="34" fill="${sk}" ${OUT}/>
+      <g id="${id}-chest"><path d="M${X - 146},870Q${X},830 ${X + 146},870L${X + 124},1320H${X - 124}Z" fill="${sh}" ${OUT}/><path d="M${X - 146},870Q${X},830 ${X + 146},870" stroke="${shS}" stroke-width="10" fill="none"/>
+        <text x="${X}" y="1150" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="150" fill="#f4ecd8">9</text></g>
+      <rect x="${X - 32}" y="800" width="64" height="70" fill="${sk}" ${OUT}/>
+      <g id="${id}-head"><ellipse cx="${X}" cy="700" rx="116" ry="126" fill="${sk}" ${OUT}/><path d="M${X - 118},660Q${X - 116},556 ${X},546Q${X + 116},556 ${X + 118},660Q${X + 86},602 ${X},598Q${X - 86},602 ${X - 118},660Z" fill="#221a16" ${OUT}/>
+        <g id="${id}-shut"><path d="M${X - 62},700q22,10 44,0M${X + 18},700q22,10 44,0" stroke="#3a2a22" stroke-width="7" fill="none" stroke-linecap="round"/></g>
+        <g id="${id}-open" opacity="0"><ellipse cx="${X - 40}" cy="700" rx="16" ry="20" fill="#fff" ${OUT3}/><ellipse cx="${X + 40}" cy="700" rx="16" ry="20" fill="#fff" ${OUT3}/><circle cx="${X - 40}" cy="704" r="9" fill="#2a1d16"/><circle cx="${X + 40}" cy="704" r="9" fill="#2a1d16"/></g>
+        <ellipse id="${id}-lips" cx="${X}" cy="772" rx="24" ry="10" fill="#6f8fb0" stroke="#3a2a22" stroke-width="4"/></g></g>`;
+    // her hands, stacked on the middle of his chest; mustard hoodie sleeves from the left
+    const hand = (x, y, rot) => `<g transform="translate(${x},${y}) rotate(${rot})"><path d="M-300,-34H-56V34H-300Z" fill="#e8a33a" ${OUT}/><ellipse cx="0" cy="0" rx="68" ry="52" fill="#e2ad85" ${OUT}/>${[-30, -10, 10, 30].map((d) => `<path d="M30,${d}h40" stroke="${INK}" stroke-width="20" stroke-linecap="round"/><path d="M30,${d}h40" stroke="#e2ad85" stroke-width="13" stroke-linecap="round"/>`).join("")}</g>`;
+    b += `<g id="${id}-hands" opacity="${o.hands ?? 1}">${hand(X - 10, 1060, 0)}${hand(X + 4, 1046, -8)}</g>`;
+    put(L.act, b);
+    put(L.glow, `<circle cx="180" cy="520" r="520" fill="url(#ksTube)" opacity=".8"/>`);
   }
 
   // looping motion: the ghost bobs and drips, hair sways, orbs float, the fan turns, the tube light buzzes, sparks spit
@@ -409,11 +451,20 @@
       livewater: `${WATER}<path d="M24,10L54,36Q66,52 60,80" stroke="#1d1d1d" stroke-width="6" fill="none"/><g class="a-pulse"><ellipse cx="60" cy="92" rx="26" ry="7" fill="none" stroke="#f2c94a" stroke-width="4"/><ellipse cx="60" cy="96" rx="46" ry="12" fill="none" stroke="#f2c94a" stroke-width="3" opacity=".6"/></g>${BOLT(30, 88, 0.6)}${BOLT(92, 88, 0.6)}`,
       // a fallen line with a warning sign: always treat it as live
       assumelive: `<path d="M14,16L54,44Q70,62 58,98" stroke="#1d1d1d" stroke-width="7" fill="none"/><g class="a-pulse"><path d="M80,30L108,82H52Z" fill="#f2c94a" ${O}/><path d="M80,46v18" stroke="${K}" stroke-width="7" stroke-linecap="round"/><circle cx="80" cy="74" r="4" fill="${K}"/></g>${BOLT(62, 92, 0.7)}`,
+      // a hand reaching for someone being shocked — crossed out
+      notouch: `<circle cx="78" cy="30" r="12" fill="#e2ad85" ${O}/><path d="M78,42V74M78,52l-14,-10M78,52l14,-12M78,74l-8,22M78,74l8,22" stroke="${K}" stroke-width="7" stroke-linecap="round"/>${BOLT(96, 50, 0.7)}
+        <path d="M8,72H46" stroke="#e2ad85" stroke-width="16" stroke-linecap="round"/>${NO}`,
+      // a dry wooden pole, held from a dry step
+      drystick: `<rect x="10" y="88" width="44" height="14" rx="4" fill="#c9a86a" ${O}/><path d="M30,88V60" stroke="#24262a" stroke-width="12" stroke-linecap="round"/><g class="a-bob"><path d="M34,70L106,24" stroke="#6a4a2e" stroke-width="11" stroke-linecap="round"/><path d="M34,70L106,24" stroke="#c9a86a" stroke-width="5" stroke-linecap="round"/></g>`,
+      // phone 1669
+      call1669: `<rect x="34" y="12" width="52" height="96" rx="10" fill="#1d1f22" ${O}/><rect x="40" y="22" width="40" height="66" rx="4" fill="#e8f0f2"/><text x="60" y="64" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="18" fill="#e0362c">1669</text><g class="a-wave" data-i="1"><path d="M96,30q10,10 0,20M104,24q16,16 0,32" stroke="#e0362c" stroke-width="5" fill="none" stroke-linecap="round"/></g>`,
+      // two hands pressing the middle of a chest
+      cpr: `<ellipse cx="60" cy="78" rx="44" ry="30" fill="#3faa6a" ${O}/><g class="a-bob"><ellipse cx="60" cy="58" rx="20" ry="15" fill="#e2ad85" ${O}/><path d="M60,44V14" stroke="#e8a33a" stroke-width="18" stroke-linecap="round"/></g><path d="M90,30v28M84,50l6,10l6,-10" stroke="#e0362c" stroke-width="5" fill="none" stroke-linecap="round"/>`,
       // call the power company / 1669 on the phone
       callpea: `<rect x="34" y="12" width="52" height="96" rx="10" fill="#1d1f22" ${O}/><rect x="40" y="22" width="40" height="66" rx="4" fill="#7fb3c9"/>${BOLT(62, 32, 1.1)}<g class="a-wave" data-i="1"><path d="M96,30q10,10 0,20M104,24q16,16 0,32" stroke="#e0362c" stroke-width="5" fill="none" stroke-linecap="round"/></g>`,
     });
   }
 
-  Object.assign(Sets, { floodVillage, houseIn, porchFlood, meterCard, comicLegend, switchClose, poleSign });
+  Object.assign(Sets, { floodVillage, houseIn, porchFlood, meterCard, comicLegend, switchClose, poleSign, cprFloor });
   window.Krasue = { ghost, glow, orb, orbGlow, boat, boatFront, life, arcs, KBL, KBL2, KRIM, KEYE };
 })();
