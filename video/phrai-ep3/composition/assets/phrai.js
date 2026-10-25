@@ -22,6 +22,8 @@
     <radialGradient id="phFlame"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".95"/><stop offset=".25" stop-color="#ffbe5c" stop-opacity=".55"/><stop offset=".6" stop-color="#ff9a3c" stop-opacity=".16"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>
     <radialGradient id="phBulb"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".9"/><stop offset=".4" stop-color="#ffc06a" stop-opacity=".25"/><stop offset="1" stop-color="#ffc06a" stop-opacity="0"/></radialGradient>
     <radialGradient id="phPale" cx=".4" cy=".35"><stop offset="0" stop-color="#232b28"/><stop offset=".7" stop-color="#141917"/><stop offset="1" stop-color="#0a0c0b"/></radialGradient>
+    <linearGradient id="phBodyFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#161b19"/><stop offset=".45" stop-color="#0a0c0b" stop-opacity=".9"/><stop offset="1" stop-color="#0a0c0b" stop-opacity="0"/></linearGradient>
+    <linearGradient id="phRimFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d6a52"/><stop offset=".55" stop-color="#3d6a52" stop-opacity=".5"/><stop offset="1" stop-color="#3d6a52" stop-opacity="0"/></linearGradient>
     <linearGradient id="phPlank" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4330"/><stop offset="1" stop-color="#3b2b1f"/></linearGradient>
     <linearGradient id="phWall" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4a32"/><stop offset=".5" stop-color="#7d5a3c"/><stop offset="1" stop-color="#5e412c"/></linearGradient>
     <linearGradient id="phNet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe6ee" stop-opacity=".42"/><stop offset="1" stop-color="#c9d2dc" stop-opacity=".26"/></linearGradient>
@@ -60,10 +62,12 @@
   // green eyes (class geye flickers in life()) — same palette as หมอกลง's ghosts
   const GBL = "#0a0c0b", GBL2 = "#161b19", GRIM = "#3d6a52", GVEIN = "#2a4a3a", GEYE = ["#7dff6a", "#bfff96", "#f2ffe4"];
   const GOUT = `stroke="${GRIM}" stroke-width="4" stroke-linejoin="round"`;
-  // the drowned: a black hand + forearm reaching up from (x, y), fingers long, a green rim
-  function paleHand(x, y, s, rot = 0, id = "") {
+  // the drowned: a black hand + arm reaching up from (x, y), fingers long, a green rim. On its own the arm is long and fades into
+  // the dark water (user: "มือกับหัวไม่ติดกันหรอ" — no cut-off stumps); o.len sets a short forearm that ends at an elbow (phraiBody)
+  function paleHand(x, y, s, rot = 0, id = "", o = {}) {
+    const len = o.len ?? 720, fade = !o.len, w = fade ? 34 : 24;
     return `<g ${id ? `id="${id}"` : ""} transform="translate(${f1(x)},${f1(y)}) rotate(${rot}) scale(${s})">
-      <path d="M-22,260C-26,170 -24,90 -20,30L20,30C24,90 26,170 22,260Z" fill="url(#phPale)" ${GOUT}/>
+      <path d="M-${w},${f1(len)}C-${w + 2},${f1(len * 0.55)} -24,90 -20,30L20,30C24,90 ${w + 2},${f1(len * 0.55)} ${w},${f1(len)}Z" fill="${fade ? "url(#phBodyFade)" : "url(#phPale)"}" stroke="${fade ? "url(#phRimFade)" : GRIM}" stroke-width="4" stroke-linejoin="round"/>
       <path d="M-24,40C-30,10 -24,-14 0,-18C24,-14 30,10 24,40Z" fill="${GBL2}" ${GOUT}/>
       ${[[-20, -6, -32, -70], [-8, -14, -12, -92], [6, -14, 8, -96], [18, -8, 26, -80], [24, 16, 44, -10]].map(([x0, y0, x1, y1]) =>
         `<path d="M${x0},${y0}Q${(x0 + x1) / 2 + 3},${(y0 + y1) / 2} ${x1},${y1}" stroke="${GRIM}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2 + 3},${(y0 + y1) / 2} ${x1},${y1}" stroke="${GBL2}" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="${x1}" cy="${y1}" r="4.5" fill="#000"/>`).join("")}
@@ -77,11 +81,25 @@
     const fan = Array.from({ length: 11 }, (_, i) => { const a = -168 + i * 15.6, rr = 170 + (i % 3) * 40, A = (a * Math.PI) / 180;
       return `<path class="phair" data-i="${i}" d="M0,-30Q${f1(Math.cos(A) * rr * 0.45)},${f1(Math.sin(A) * rr * 0.45 - 50)} ${f1(Math.cos(A) * rr)},${f1(Math.sin(A) * rr - 40)}" stroke="#070d0c" stroke-width="${18 - (i % 3) * 4}" fill="none" stroke-linecap="round"/>`; }).join("");
     const veil = [-52, -40, -28, -16, -4, 32, 44, 54].map((dx, i) => `<path d="M${dx * 0.6},-34C${dx},10 ${dx + (i % 2 ? 6 : -6)},60 ${dx + (i % 2 ? -4 : 4)},${118 + (i % 3) * 14}" stroke="#070d0c" stroke-width="${12 - (i % 3) * 2}" fill="none" stroke-linecap="round"/>`).join("");
-    return `<g class="pface" opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${s})">${fan}
+    return `<g class="${o.cls ?? "pface"}" opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${s})">${fan}
       <ellipse cx="0" cy="40" rx="60" ry="78" fill="${GBL}" stroke="${GRIM}" stroke-width="4"/><ellipse cx="10" cy="56" rx="40" ry="50" fill="${GBL2}" opacity=".7"/>
       ${gEye(18, 30, 13, 9)}<path d="M3,20q15,-8 30,0" stroke="${GRIM}" stroke-width="3" fill="none"/>${gEye(-22, 30, 12, 8, 0.85)}
       <ellipse cx="4" cy="86" rx="11" ry="15" fill="#020303" stroke="${GVEIN}" stroke-width="2"/><path d="M-30,64q8,6 0,14M40,62q-8,8 0,14" stroke="${GVEIN}" stroke-width="3" fill="none"/>
       <path d="M-60,4Q-46,-46 0,-50Q46,-46 60,4Q40,-22 0,-24Q-40,-22 -60,4Z" fill="#070d0c"/>${veil}</g></g>`;
+  }
+  // the whole พราย, one figure: her head (drownedFace) on shoulders and a torn black dress that fades into the dark water below,
+  // and arms out of the shoulders down to her hands. (x, y) = the head, as drownedFace. o.arms: [{ p: [x, y], e: [x, y] }] palm and
+  // elbow relative to the head in units of s (default: both arms raised toward the surface); o.arms: [] = no arms. Class pface (bobs).
+  const ARMS_UP = [{ p: [-235, -215], e: [-175, 25] }, { p: [240, -190], e: [178, 40] }];
+  function phraiBody(x, y, s, o = {}) {
+    const sh = [[-80, 168], [80, 168]];
+    const arms = (o.arms ?? ARMS_UP).map(({ p, e }) => {
+      const [sx, sy] = sh[e[0] < 0 ? 0 : 1], len = Math.hypot(e[0] - p[0], e[1] - p[1]), rot = (Math.atan2(-(e[0] - p[0]), e[1] - p[1]) * 180) / Math.PI;
+      return `<path d="M${sx},${sy}L${e[0]},${e[1]}" stroke="${GRIM}" stroke-width="54" stroke-linecap="round"/><path d="M${sx},${sy}L${e[0]},${e[1]}" stroke="${GBL2}" stroke-width="46" stroke-linecap="round"/>
+        <circle cx="${e[0]}" cy="${e[1]}" r="23" fill="${GBL2}"/>${paleHand(p[0], p[1], 1, rot.toFixed(1), "", { len: len + 6 })}`; }).join("");
+    const dress = `<path d="M-100,150Q-60,128 0,132Q60,128 100,150Q150,420 128,760L80,700L40,790L0,710L-44,800L-84,700L-128,770Q-150,420 -100,150Z" fill="url(#phBodyFade)" stroke="url(#phRimFade)" stroke-width="4"/>
+      <path d="M-60,250Q-70,450 -50,640M50,260Q66,460 46,650M0,240V600" stroke="${GVEIN}" stroke-width="4" fill="none" opacity=".6"/><rect x="-26" y="108" width="52" height="50" fill="${GBL}"/>`;
+    return `<g class="pface" opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${s})">${dress}${arms}${drownedFace(0, 0, 1, { cls: "pface-in" })}</g></g>`;
   }
   // ferry boat (เรือจ้าง): long low wooden hull seen from the side, bow to the right
   function ferry(x, y, s, o = {}) {
@@ -223,7 +241,7 @@
     for (let k = 0; k < 30; k++) m += `<path class="mrefl" d="M${f1(-200 + r() * 1500)},${f1(E + 60 + r() * 1500)}h${f1(30 + r() * 140)}" stroke="#d9d4b8" stroke-width="${f1(3 + r() * 4)}" stroke-linecap="round" opacity="${(0.15 + r() * 0.3).toFixed(2)}"/>`;
     put(L.mid, m);
     let s = "";
-    s += `<g id="${id}-faces" opacity="${o.faces ?? 0}">${drownedFace(220, 1500, 0.9, { op: 0.35 })}${drownedFace(900, 1700, 0.8, { op: 0.3 })}</g>`;
+    s += `<g id="${id}-faces" opacity="${o.faces ?? 0}">${phraiBody(220, 1500, 0.9, { op: 0.35, arms: [] })}${phraiBody(900, 1700, 0.8, { op: 0.3, arms: [] })}</g>`;
     s += `<g id="${id}-phand" opacity="${o.phand ?? 0.6}">${paleHand(560, 1700, 1.5, 6)}</g>`;
     s += `<rect x="-900" y="${E - 40}" width="2900" height="${2600 - E}" fill="#0b1426" opacity=".38"/>`;
     s += krathong(540, 1180, 2.2, { coins: 5, dx: 12 });
@@ -255,8 +273,7 @@
     (o.kt || [[700, WL, 0.6], [940, WL, 0.5], [1180, WL, 0.55], [420, WL, 0.45]]).forEach(([x, y, sc], i) => { s += krathong(x, y, sc, { dx: 60 + i * 10, ph: i }); g += kglow(x, y, sc, 190); });
     s += `<path class="rip" d="M-900,${WL}H2000" stroke="#9fb0d8" stroke-width="6" opacity=".7"/>`;
     // the drowned, below, faces turned up to the lights
-    s += `<g id="${id}-pr">${drownedFace(640, WL + 520, 0.9)}${drownedFace(940, WL + 760, 0.75, { op: 0.75 })}${drownedFace(320, WL + 900, 0.8, { op: 0.6 })}
-      ${paleHand(560, WL + 420, 0.9, -12)}${paleHand(1010, WL + 620, 0.8, 10)}</g>`;
+    s += `<g id="${id}-pr">${phraiBody(320, WL + 900, 0.8, { op: 0.6, arms: [{ p: [-60, -260], e: [-170, 20] }] })}${phraiBody(940, WL + 760, 0.75, { op: 0.75, arms: [{ p: [120, -260], e: [180, 30] }] })}${phraiBody(640, WL + 520, 0.9)}</g>`;
     for (let k = 0; k < 18; k++) s += `<g class="bub" data-i="${k}"><circle cx="${f1(300 + r() * 900)}" cy="${f1(WL + 300 + r() * 1100)}" r="${f1(4 + r() * 9)}" fill="none" stroke="#cfe6d8" stroke-width="2.5" opacity=".6"/></g>`;
     put(L.set, s); put(L.glow, g);
   }
@@ -425,6 +442,24 @@
     s += `<g transform="translate(640,${Y + 410})"><path d="M-50,0Q0,-30 50,0Z" fill="${P}"/><path d="M-20,-14Q0,-60 20,-14Z" fill="${P}"/><path d="M0,-58v-26" stroke="${P}" stroke-width="5"/><circle class="lamp" cx="0" cy="-92" r="10" fill="#fff2c8"/></g>`;
     s += pup(800, Y + 860, phrai(1.05), 0) + `<g id="${id}-arm" transform="rotate(0 760 ${Y + 650})"><path d="M760,${Y + 650}L640,${Y + 470}" stroke="${P}" stroke-width="13" stroke-linecap="round"/>
       ${[-16, -4, 8].map((d) => `<path d="M640,${Y + 470}l${d - 10},-34" stroke="${P}" stroke-width="7" stroke-linecap="round"/>`).join("")}</g>`;
+    // S3 (y 3200): the พราย herself, close — a coal-black puppet, eyes cut through and lit green (#id-eyes), hair spread like
+    // river weed; the lure on the left (a krathong, its coins glowing, #id-lure), her call (#id-call), someone wading on the right
+    // (#id-vic) and the long arm that takes his leg (#id-arm3)
+    const Y3 = 3200;
+    s += screen(Y3, Y3 + 900);
+    s += `<g id="${id}-big">${Array.from({ length: 13 }, (_, k) => { const a = (-172 + k * 13.6) * Math.PI / 180;
+        return `<path class="phair" data-i="${k}" d="M540,${Y3 + 330}Q${f1(540 + Math.cos(a) * 130)},${f1(Y3 + 300 + Math.sin(a) * 150)} ${f1(540 + Math.cos(a) * 320)},${f1(Y3 + 290 + Math.sin(a) * 270)}" stroke="${P}" stroke-width="${24 - (k % 3) * 6}" fill="none" stroke-linecap="round"/>`; }).join("")}
+      <ellipse cx="540" cy="${Y3 + 400}" rx="118" ry="148" fill="${P}"/><path d="M400,${Y3 + 500}C420,${Y3 + 560} 660,${Y3 + 560} 680,${Y3 + 500}L720,${Y3 + 660}H360Z" fill="${P}"/>
+      ${[-70, -40, 40, 70].map((dx, k) => `<path d="M${540 + dx},${Y3 + 290}C${540 + dx * 1.1},${Y3 + 380} ${540 + dx * 0.9},${Y3 + 450} ${540 + dx * 1.05},${Y3 + 540 + (k % 2) * 30}" stroke="${P}" stroke-width="12" fill="none"/>`).join("")}
+      <ellipse cx="540" cy="${Y3 + 478}" rx="15" ry="22" fill="${CUT}" opacity=".55"/>
+      <g id="${id}-eyes" opacity="0">${[494, 586].map((x) => `<circle cx="${x}" cy="${Y3 + 392}" r="60" fill="#7dff6a" opacity=".22"/><ellipse cx="${x}" cy="${Y3 + 392}" rx="24" ry="14" fill="#7dff6a"/><ellipse cx="${x}" cy="${Y3 + 392}" rx="10" ry="7" fill="#f2ffe4"/>`).join("")}</g></g>`;
+    s += `<g id="${id}-call" opacity="0">${[0, 1, 2].map((k) => `<path d="M${700 + k * 40},${Y3 + 330 - k * 20}q${30 + k * 10},${50 + k * 14} 0,${100 + k * 40}" stroke="#7dff6a" stroke-width="7" fill="none" stroke-linecap="round" opacity="${0.9 - k * 0.2}"/>`).join("")}</g>`;
+    s += `<g id="${id}-lure">${pup(190, Y3 + 610, `<g><path d="M-62,0Q0,-34 62,0Z" fill="${P}"/><path d="M-26,-14Q0,-66 26,-14Z" fill="${P}"/><path d="M0,-60v-22" stroke="${P}" stroke-width="5"/><circle class="lamp" cx="0" cy="-90" r="10" fill="#fff2c8"/>
+      ${[-36, -14, 10, 32].map((x) => `<circle class="kcoin" cx="${x}" cy="-6" r="8" fill="#ffe08a"/>`).join("")}</g>`, 0)}</g>`;
+    s += pup(880, Y3 + 640, person(0.62), 0, `${id}-vic`);
+    s += waves(Y3 + 600);
+    s += `<g id="${id}-arm3" opacity="0"><path d="M660,${Y3 + 640}Q760,${Y3 + 790} 868,${Y3 + 668}" stroke="#7dff6a" stroke-width="20" fill="none" stroke-linecap="round" opacity=".45"/><path d="M660,${Y3 + 640}Q760,${Y3 + 790} 868,${Y3 + 668}" stroke="${P}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      ${[-14, 0, 14].map((d) => `<path d="M868,${Y3 + 668}l${18 + d * 0.4},${-22 + d}" stroke="${P}" stroke-width="7" stroke-linecap="round"/>`).join("")}</g>`;
     put(L.set, s);
   }
 
@@ -540,7 +575,7 @@
     let s = `<g transform="translate(560,${SY + 20}) scale(1.6,-1.6)">${hull}</g>`;
     const hx = [-420, -330, -240, -150, -60, 30, 120, 210, 300, 390, 480];
     s += `<g id="${id}-hands">${hx.map((dx, k) => `<g class="hhand" data-i="${k}">${paleHand(560 + dx, SY + 92 + (k % 3) * 14, 0.62 + (k % 3) * 0.06, (k % 2 ? 1 : -1) * (4 + (k % 4) * 3))}</g>`).join("")}</g>`;
-    s += `<g opacity=".7">${[[-300, 820], [140, 900], [420, 760]].map(([dx, y]) => drownedFace(560 + dx, SY + y, 0.6, { op: 0.6 })).join("")}</g>`;
+    s += `<g opacity=".7">${[[-300, 820], [140, 900], [420, 760]].map(([dx, y]) => phraiBody(560 + dx, SY + y, 0.6, { op: 0.6 })).join("")}</g>`;
     put(L.set, s);
   }
 
@@ -611,5 +646,5 @@
   Rig.CAST.tongWet = { ...Rig.CAST.tong, top: "#9a2e27", topS: "#7d241e", sleeve: "#9a2e27", sleeveS: "#7d241e", pants: "#7d6e50", pantsS: "#61553e" };
 
   Object.assign(Sets, { riverNight, pierDeck, pierPOV, pierSection, porch, bedroom, underRiver, ankleMarks, legendPhrai, reflections, phraiLegend, krathongCard, pierSign, cprTop, floodRoad, hullHands });
-  window.Phrai = { GBL, GBL2, GRIM, GVEIN, GEYE, gEye, krathong, kglow, krefl, paleHand, drownedFace, ferry, gallon, bottle, bamboo, life, CAST_COL };
+  window.Phrai = { GBL, GBL2, GRIM, GVEIN, GEYE, gEye, phraiBody, krathong, kglow, krefl, paleHand, drownedFace, ferry, gallon, bottle, bamboo, life, CAST_COL };
 })();

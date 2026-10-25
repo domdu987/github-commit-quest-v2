@@ -150,7 +150,7 @@
       <g id="${id}-fing">${[0, 1, 2, 3].map(fing).join("")}
         <path d="M780,980C820,930 790,860 740,840" stroke="${P.GRIM}" stroke-width="50" fill="none" stroke-linecap="round"/><path d="M780,980C820,930 790,860 740,840" stroke="url(#phPale)" stroke-width="40" fill="none" stroke-linecap="round"/><ellipse cx="742" cy="842" rx="12" ry="9" fill="#000"/></g>
       <rect x="560" y="1500" width="300" height="480" fill="url(#phUnder)" opacity=".8"/></g>`;
-    put(L.act, `<g opacity=".55">${P.drownedFace(820, 1560, 1.1)}</g>` + leg + hand);
+    put(L.act, leg + hand); // the arm fades into the deep: no loose head beside it (user: "มือกับหัวไม่ติดกันหรอ")
     put(L.light, `<rect x="-200" y="-200" width="1480" height="2320" fill="#0d2a28" opacity=".22"/>`);
   }
 
