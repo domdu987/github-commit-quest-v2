@@ -187,7 +187,7 @@
         set: "classroom", setOpts: { id: "sp", night: true, gen: true, genOn: true, genX: -300, fan: true, bulb: true, bulbOn: true, lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1200, 1.4, 540, 1050), drift: { s: 0.03 } }] },
         actors: [PU(520, 1500, 0.58, [{ t: 0, mode: "holdHead", eyes: "pain", mouth: "frown" }]), PI(800, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile" }], { flip: true })],
-        bubbles: [bub("smoke", 1, 80, 560, 420)],
+        bubbles: [bub("smoke", 1, 80, 560, 340)],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("smoke") - vo("smoke", 1) + 0.1, 0.55, 0.45); },
       });
 

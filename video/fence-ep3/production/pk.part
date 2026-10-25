@@ -336,7 +336,7 @@
       };
       // the signs on a can: three paper strips, a sticker each, pen-written text, a red ✗ stamped on
       GameUI.C.signs = {
-        html: (id, o) => `<div id="${id}" class="fsigns" style="top:${o.top ?? 170}px">${o.items.map((t, i) => `<div class="row" id="${id}-r${i}">${PAP()}${TAPE("tl", -8 + i * 3)}<div class="in">${STK(o.icons ? o.icons[i] : SIGN3[i], "big", "0 0 120 120")}<div class="tx">${t}</div>${STAMP(o.ok ? (o.ok[i] ? "✓" : "✗") : "✗", "xx", 8)}</div></div>`).join("")}</div>`,
+        html: (id, o) => `<div id="${id}" class="fsigns" style="top:${o.top ?? 170}px;${o.scale ? `scale:${o.scale};transform-origin:50% 0;` : ""}">${o.items.map((t, i) => `<div class="row" id="${id}-r${i}">${PAP()}${TAPE("tl", -8 + i * 3)}<div class="in">${STK(o.icons ? o.icons[i] : SIGN3[i], "big", "0 0 120 120")}<div class="tx">${t}</div>${STAMP(o.ok ? (o.ok[i] ? "✓" : "✗") : "✗", "xx", 8)}</div></div>`).join("")}</div>`,
         anim(tl, id, t0, o) {
           o.at.forEach((at, i) => {
             const r = document.getElementById(`${id}-r${i}`), T = o.t0abs + at, end = o.t0abs + (o.end ?? at + 4); wordify(r.querySelector(".tx"));

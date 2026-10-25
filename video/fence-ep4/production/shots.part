@@ -69,7 +69,7 @@
         actors: [PH(760, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: 0.5, mode: "raise", eyes: "normal", mouth: "flat" }], { flip: true, prop: "knife" }), PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: 0.6, mode: "idle", eyes: "wide", mouth: "o" }]),
           KO(300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 0.6, mode: "idle", eyes: "wide", mouth: "smile" }]), HO(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "frown" }])],
         captions: caps("phuKnife", [1]),
-        bubbles: [bub("phuKnife", 0, 520, 520, 760)],
+        bubbles: [bub("phuKnife", 0, 520, 520, 60)],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.55, 1.05, 0.35); Fx.punch(tl, `#${id} .stage`, t0 + F("phuKnife", 1, 1), 1.05, 0.35); red(tl, t0 + F("phuKnife", 1, 1), 0.45, 0.5); Fx.heart(tl, t0 + 0.5, D("phuKnife") - 0.5, 0.55, 0.45); },
       });
 
@@ -197,7 +197,7 @@
         actors: [PU(900, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) - 0.3, mode: "lookUp", eyes: "wide", mouth: "o" }]), PI(1100, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1), mode: "sit", eyes: "wide", mouth: "o" }], { flip: true }),
           KO(300, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) + 0.3, mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("cry", 2), mode: "guard", eyes: "wide", mouth: "o" }], { prop: "spear1f" }), HO(600, 1500, 0.9, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }], { flip: true }), PH(-20, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }])],
         captions: caps("cry", [0], { quote: true }),
-        bubbles: [bub("cry", 1, 520, 520, 900), bub("cry", 2, 40, 520, 320)],
+        bubbles: [bub("cry", 1, 520, 520, 200), bub("cry", 2, 40, 520, 320)],
         fx(tl, id, t0) { document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio")); THUNDER(tl, t0 + 0.3, 0.3); Fx.heart(tl, t0, vo("cry", 3), 0.6, 0.45); Fx.punch(tl, `#${id} .stage`, t0 + vo("cry", 1), 1.04, 0.3); },
       }, {
         set: "schoolYard", setOpts: { id: "cy", time: "night", lampX: -300, gate: 0 }, dark: 0.55, blur: { far: 3 },
@@ -287,7 +287,7 @@
         shake: (t) => 4 * Math.sin(t * 17),
         actors: [MA(960, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "frown" }, { t: 0.8, mode: "thrust", eyes: "wide", mouth: "scream" }], { flip: false, prop: "spear1f" }), KO(820, 1500, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }, { t: 0.8, mode: "limpRun", eyes: "pain", mouth: "frown" }], { flip: true, moveTo: { x: -200, at: 0.8, dur: D("cover") - 0.8, ease: "power1.in" } }),
           PH(300, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }], { moveTo: { x: 0, dur: D("cover") } }), PI(-60, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: vo("cover", 1), mode: "stopHand", eyes: "wide", mouth: "scream" }])],
-        bubbles: [bub("cover", 0, 420, 520, 860), bub("cover", 1, 40, 760, 160)],
+        bubbles: [bub("cover", 0, 420, 520, 300), bub("cover", 1, 40, 760, 160)],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) { ZF(L, tl, "cv", t0, D("cover"), [["ha1", 1300, 0.8, 0], ["ha2", 1420, 0.76, 0.4], ["ha3", 1540, 0.78, 0.2], ["ha1", 1380, 0.74, 0.7], ["ha2", 1480, 0.7, 0.9]], "zrun"); [0, 1, 2, 3, 4].forEach((k) => route(tl, `cv-z${k}`, t0, [{ t: 0, x: [1300, 1420, 1540, 1380, 1480][k], y: 1180 }, { t: 1.2, x: [1120, 1200, 1280, 1160, 1240][k], y: 1180 }], [0.8, 0.76, 0.78, 0.74, 0.7][k], true)); Fx.punch(tl, `#${id} .stage`, t0 + vo("cover", 1), 1.05, 0.35); red(tl, t0 + F("cover", 1, 1), 0.5, 0.5); Fx.heart(tl, t0, D("cover"), 0.4, 0.7); },
       });

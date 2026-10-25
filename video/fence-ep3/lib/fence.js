@@ -424,7 +424,7 @@
     const col = o.col || "#06080a", op = o.op ?? 0.92, r = mk(o.seed || 7 + DEPN++);
     const D = {
       grass: () => { let g = ""; for (let k = 0; k < 26; k++) { const x = (k < 13 ? -120 : 760) + r() * 420, h = 160 + r() * 260, w = 18 + r() * 22; g += `<path d="M${f1(x)},2000q${f1(-w)},${f1(-h * 0.5)} ${f1(w * 0.3)},${f1(-h)}q${f1(w)},${f1(h * 0.45)} ${f1(w * 1.6)},${f1(h)}z" fill="${col}"/>`; } return g + `<path d="M-1800,1800q500,-60 1000,0t1000,0t1000,0t1000,0t1000,0V2600H-1800z" fill="${col}"/>`; },   // wide enough that a camera pulling back from the first key never finds its end
-      bars: () => [-60, 110, 280].map((x, k) => `<rect x="${x}" y="-400" width="${70 + k * 10}" height="2800" rx="20" fill="${col}"/>`).join("") + `<rect x="-1200" y="700" width="1640" height="60" fill="${col}"/>`,
+      bars: () => [-60, 110, 280].map((x, k) => `<rect x="${x}" y="-400" width="${70 + k * 10}" height="2800" rx="20" fill="${col}"/>`).join("") + `<rect x="-1200" y="700" width="1570" height="60" fill="${col}"/>`,   // the rail stops flush with the last bar (x 280 + 90); a stub past it read as a floating black block when zoomed
       post: () => `<rect x="${o.x ?? -80}" y="-400" width="${o.w ?? 220}" height="2800" fill="${col}"/>`,
       desk: () => `<path d="M-1800,1666L2900,1336V2700H-1800z" fill="${col}"/><path d="M-1800,1666L2900,1336l0,40L-1800,1706z" fill="#2a2420"/>`,
       branch: () => `<path d="M-200,-200C100,-60 380,40 560,0C400,160 120,220 -200,200z" fill="${col}"/>${[[60, 120], [200, 60], [380, 90], [300, 180]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="90" ry="40" transform="rotate(${-30 + x / 10} ${x} ${y})" fill="${col}"/>`).join("")}`,

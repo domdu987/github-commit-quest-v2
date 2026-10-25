@@ -51,7 +51,7 @@
         .pkt.crf .stats { display: flex; justify-content: center; gap: 34px; margin-top: 16px; } .pkt.crf .st { display: flex; align-items: center; gap: 12px; font: 700 27px/1 Kanit; color: ${PK_PENCIL}; }
         .pkt.crf .tally { display: flex; gap: 4px; } .pkt.crf .tally i { width: 10px; height: 30px; background: ${INKLINE("%231f1d1a")} no-repeat center / contain; transform: scaleY(0); transform-origin: 50% 100%; } .pkt.crf .tally i.off { opacity: .18; } .pkt.crf .tally i.x { background-image: ${INKLINE("%23b7281e")}; }
         .pkt.crf .done { position: absolute; right: 34px; top: 22px; } .pkt.crf .done .stamp { font-size: 44px; }
-        .pkt.crf .up { position: absolute; left: 36px; bottom: 90px; display: flex; align-items: center; gap: 10px; font: 900 28px/1.1 Kanit; color: ${PK_INK}; opacity: 0; } .pkt.crf .up .stamp { font-size: 36px; }
+        .pkt.crf .up { position: relative; margin: 12px 0 0 30px; display: flex; align-items: center; gap: 10px; font: 900 28px/1.1 Kanit; color: ${PK_INK}; opacity: 0; } .pkt.crf .up .stamp { font-size: 36px; }
         .pkt.crf .boom { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; z-index: 4; pointer-events: none; } .pkt.crf .boom .spl { width: 16px; height: 16px; margin: -8px; }
         /* countdown */
         .pkt.cdn { width: 720px; margin-left: -360px; padding: 26px 30px 34px; }
