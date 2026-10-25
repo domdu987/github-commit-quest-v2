@@ -89,7 +89,6 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
 AT, LAND, FACE = 2.2, 4.0, 1.45  # the opener (OpenerLight: at, at + glide, face) as in the composition
 K2 = frag("cut", 0, 2) - 0.12    # the cut shot cuts to the switch close up
 LV = K2 + 0.5                    # the lever comes down
-SF = lambda j: frag("sig", 0, j)
 F = frag
 KNOW_CUT = vo_t("know", 1) + 0.5  # the diagram's lever
 
@@ -128,13 +127,6 @@ CUES = [
     ("shout", 0.05, "whoosh", 0.4),
     ("know2", 0.0, "hum", 0.4), *zaps("know2", (0.6, 2.4, 4.2), 0.4),
     ("know3", 0.0, "hum", 0.35), ("know3", 0.25, "whoosh", 0.3),
-    # channel signature
-    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
-    ("sig", SF(0) + 0.3, "ding", 0.6), ("sig", SF(0) + 0.62, "ding", 0.6), ("sig", SF(1) + 0.15, "ding", 0.6),
-    ("sig", SF(2), "glitch", 0.45), *beats("sig", SF(2), SF(3) - SF(2), 0.38, 0.8),
-    *[("sig", SF(2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
-    ("sig", SF(3) - 1.1, "riser", 0.6),
-    ("sig", SF(3), "sting", 1.1), ("sig", SF(3), "boom", 0.8), ("sig", SF(3), "glitch", 0.7), ("sig", SF(3) + 0.12, "slam", 0.7),
     ("clue", 0.2, "creak", 0.4), *beats("clue", vo_t("clue", 1), D["clue"] - vo_t("clue", 1), 0.5, 0.5), ("clue", vo_t("clue", 1), "swell", 0.4),
     # koi-style: only her eyes in the dark, a slow heartbeat, the whisper; no stings
     *beats("whisper", 0.0, D["whisper"], 0.55, 0.6), *zaps("whisper", (1.2,), 0.3),
@@ -173,7 +165,6 @@ dip(T("legend", 0), T("traits", -0.2), 0.5)
 dip(T("cold", 0), T("cold", -0.05), 0.4)
 dip(T("cut", LV + 0.4), T("bomb", -0.05), 0.3)  # the power goes: the music thins with it
 dip(T("two", 0), T("answer", -0.05), 0.15)
-dip(T("sig", SF(2)), T("sig", SF(3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"
 dip(T("clue", 0), T("whisper", -0.05), 0.35)
 dip(T("whisper", 0), T("whisper", -0.05), 0.1)
 dip(T("choice", 0), T("choice", -0.3), 0.5)

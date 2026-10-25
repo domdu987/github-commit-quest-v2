@@ -47,7 +47,6 @@ SHOTS = [
     ("shout", ["d07"], 0.05, 0.3, 1.8),               # ฝน at the door
     ("know2", ["a23", ("a24", 0.1)], 0.1, 0.4, 5.4),  # a line in the water: the water can be live; always assume it is
     ("know3", ["a25"], 0.1, 0.5, 4.0),                # stay ten metres back, call 1129
-    ("sig", ["s01"], 0.15, 0.4, 4.4),                 # channel signature
     ("clue", ["a26", ("a27", 0.15)], 0.2, 0.5, 5.4),  # ป้าแช่ม's window left open; the light came out of it
     ("whisper", ["r02"], 0.2, 0.3, 4.2),              # by the line, in the dark: only her eyes — "อีกนิดเดียว… ลูก…"
     ("choice", [], 0.0, 0.0, 3.2),                    # shout at him / wade in after him
