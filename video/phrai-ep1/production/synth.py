@@ -285,6 +285,15 @@ def sfx(kind):
             seg = osc(200 + 400 * ((k * 37) % 7), 0.04, "square") * 0.15
             add(out, seg, k * 0.045)
         return out
+    if kind == "zap":  # an electric arc: a fat 100 Hz buzz in stutters + low crackle (no high hiss: band kept under ~2 kHz)
+        d = 0.7
+        n = int(d * SR)
+        t = t_arr(d)
+        gate = (rng.random(int(d * 60)) < 0.6).repeat(int(SR / 60) + 1)[:n]
+        x = (osc(100, d, "square") * 0.5 + osc(200, d, "saw") * 0.3) * gate
+        pops = rng.random(n) < 120 / SR
+        x = x + np.convolve(pops * rng.standard_normal(n), np.exp(-np.arange(120) / 14))[:n] * 0.8
+        return lp_fast(x, 2000) * np.exp(-t * 2.2) * env(n, 0.003, 0.08) * 0.5
     if kind == "buzz":
         d = 0.9
         t = t_arr(d)
@@ -318,7 +327,7 @@ def sfx(kind):
         d = 6.0
         t = t_arr(d)
         n = rng.standard_normal(len(t))
-        lo, hi = lp_fast(n, 300), lp_fast(n, 1200)
+        lo, hi = lp_fast(n, 250), lp_fast(n, 650)  # no hiss
         w = 0.5 + 0.5 * np.sin(2 * np.pi * 0.23 * t + 1.0)
         return (lo * (1 - w) + hi * w) * np.sin(np.pi * t / d) * 0.5
     if kind == "thunder":
@@ -346,7 +355,7 @@ def sfx(kind):
         d = 0.8
         t = t_arr(d)
         n = rng.standard_normal(len(t))
-        return (n - lp_fast(n, 2500)) * np.exp(-t * 2.5) * env(len(t), 0.02, 0.2) * 0.35
+        return (lp_fast(n, 1700) - lp_fast(n, 500)) * np.exp(-t * 2.5) * env(len(t), 0.02, 0.2) * 0.5  # no hiss: a breathy low hiss
     if kind == "whistle":  # pea whistle: bright tone with a fast trill
         d = 0.42
         t = t_arr(d)
@@ -425,16 +434,16 @@ def sfx(kind):
         d = 6.0
         n = int(d * SR)
         t = t_arr(d)
-        bed = lp_fast(rng.standard_normal(n), 5200) - lp_fast(rng.standard_normal(n), 400) * 0.3
+        bed = lp_fast(rng.standard_normal(n), 1100) - lp_fast(rng.standard_normal(n), 300) * 0.3  # no hiss: a soft low patter (user: "เสียงซ่าๆเอาออก")
         drops = (rng.random(n) < 90 / SR) * rng.standard_normal(n)
-        drops = np.convolve(drops, np.exp(-np.arange(160) / 18) * np.sin(np.arange(160) * 0.9))[:n]
+        drops = np.convolve(drops, np.exp(-np.arange(160) / 18) * np.sin(np.arange(160) * 0.22))[:n]
         return (bed * 0.18 + drops * 0.35) * np.sin(np.pi * t / d) ** 0.25
     if kind == "stream":  # brook: band-limited noise with a bubbling wobble and small plinks
         d = 6.0
         n = int(d * SR)
         t = t_arr(d)
         x = rng.standard_normal(n)
-        band = lp_fast(x, 2400) - lp_fast(x, 300)
+        band = lp_fast(x, 900) - lp_fast(x, 200)  # no hiss
         am = 0.55 + 0.45 * np.sin(2 * np.pi * (3.1 + 1.3 * np.sin(2 * np.pi * 0.4 * t)) * t)
         plink = (rng.random(n) < 14 / SR) * 1.0
         plink = np.convolve(plink, np.exp(-np.arange(900) / 120) * np.sin(2 * np.pi * 900 * np.arange(900) / SR))[:n]

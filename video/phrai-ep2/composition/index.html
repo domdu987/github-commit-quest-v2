@@ -529,7 +529,7 @@
       const puff = (tl, sid, t) => tl.fromTo(`#${sid}-puff`, { opacity: 0.9, scale: 0.6, svgOrigin: "540 700" }, { opacity: 0, scale: 1.4, svgOrigin: "540 700", duration: 0.7, immediateRender: false }, t);
       const puffSvg = (sid) => `<g id="${sid}-puff" opacity="0"><circle cx="540" cy="700" r="90" fill="#dff0ff" opacity=".5"/><circle cx="560" cy="640" r="50" fill="#dff0ff" opacity=".5"/></g>`;
       const CALLSET = (sid) => ({ id: sid, time: "night", near: true });
-      const callWater = (L, k) => put(L.set, `${Phrai.krathong(1160, G + 330, 0.7, { coins: 5, dx: 6 })}<g id="${k}-ph" opacity=".9">${Phrai.paleHand(1060, G + 520, 0.8, 18)}</g><g opacity=".4">${Phrai.drownedFace(1240, G + 640, 0.7)}</g>`);
+      const callWater = (L, k) => put(L.set, `${Phrai.krathong(1160, G + 330, 0.7, { coins: 5, dx: 6 })}<g id="${k}-ph" opacity=".9">${Phrai.phraiBody(1240, G + 640, 0.7, { arms: [{ p: [-257, -171], e: [-200, 40] }] })}</g>`);
       const RIVER_KT = [[120, 1240, 0.45], [980, 1300, 0.5], [-60, 1420, 0.6], [1180, 1500, 0.7]];
 
       // ---------- 0. EP.1's last image: โต้ง at the foot of the river steps, the krathong waiting ----------
@@ -864,7 +864,7 @@
         set: "pierDeck", setOpts: { id: sid, edge: -400, kt: [[1180, WS + 10, 0.5]], lamps: false }, dark: 0.3,
         cam: { keys: [{ t: 0, ...fr(560, 1560, 1.2, 540, 1000), drift: { s: 0.04 } }] },
         actors: [PRAEW(560, WS + 360, 1.0, [{ t: 0, mode: "flail", eyes: "wide", mouth: "o" }])],
-        extra(L) { put(L.act, `<g id="${sid}-ph" opacity=".0">${Phrai.drownedFace(760, WS + 330, 0.8)}</g>`); },
+        extra(L) { put(L.act, `<g id="${sid}-ph" opacity=".0">${Phrai.phraiBody(760, WS + 330, 0.8, { arms: [{ p: [-230, -150], e: [-185, 50] }] })}</g>`); },
         ...extra,
       });
       add("swim", SWIM("pd26", {
