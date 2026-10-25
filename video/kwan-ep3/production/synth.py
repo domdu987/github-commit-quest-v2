@@ -232,7 +232,7 @@ def sfx(kind):
         cut = 300 + 5000 * np.sin(np.pi * t / d)
         out = np.zeros_like(n)
         # crude sweep: blend of two filters by progress
-        lo, hi = lp_fast(n, 600), lp_fast(n, 5000)
+        lo, hi = lp_fast(n, 500), lp_fast(n, 1600)  # no hiss (user: "เสียงซ่าๆเอาออก"): the air stays below ~1.6 kHz
         w = np.sin(np.pi * t / d)
         out = lo * (1 - w) + hi * w
         return out * np.sin(np.pi * t / d) ** 2 * 0.35 + 0 * cut
@@ -264,8 +264,8 @@ def sfx(kind):
         t = t_arr(d)
         f = 200 * (2 ** (3 * t / d))
         n = rng.standard_normal(len(t))
-        x = osc(f, d, "saw") * 0.15 + (n - lp_fast(n, 2000)) * 0.15 * (t / d)
-        return lp_fast(x, 6000) * (t / d) ** 1.5 * 0.7
+        x = osc(f, d, "saw") * 0.15 + lp_fast(n, 900) * 0.1 * (t / d)
+        return lp_fast(x, 3000) * (t / d) ** 1.5 * 0.7
     if kind == "heartbeat":
         out = np.zeros(int(0.7 * SR))
         for off, g in ((0, 1.0), (0.18, 0.7)):
@@ -376,7 +376,7 @@ def sfx(kind):
         t = t_arr(d)
         n = rng.standard_normal(len(t))
         am = 0.5 + 0.5 * np.sin(2 * np.pi * 6 * t + 3 * np.sin(2 * np.pi * 1.3 * t))
-        return (n - lp_fast(n, 1200)) * am * np.sin(np.pi * t / d) * 0.12
+        return (lp_fast(n, 1400) - lp_fast(n, 250)) * am * np.sin(np.pi * t / d) * 0.2
     if kind == "crickets":
         d = 6.0
         t = t_arr(d)
@@ -404,7 +404,7 @@ def sfx(kind):
         d = 0.7
         t = t_arr(d)
         n = rng.standard_normal(len(t))
-        return (lp_fast(n, 4000) - lp_fast(n, 800)) * env(len(t), 0.01, 0.15) * 0.25
+        return (lp_fast(n, 1800) - lp_fast(n, 300)) * env(len(t), 0.01, 0.15) * 0.25
     if kind == "shutter":
         out = np.zeros(int(0.2 * SR))
         for off in (0, 0.07):
@@ -672,6 +672,44 @@ def sfx(kind):
         breath = lp_fast(n, 1600) - lp_fast(n, 300)
         am = np.clip(np.sin(2 * np.pi * 1.9 * t), 0, 1) ** 2 * 0.8 + np.clip(-np.sin(2 * np.pi * 1.9 * t), 0, 1) ** 2 * 0.5
         return breath * am * env(len(t), 0.05, 0.4) * 0.3
+    if kind == "splash":  # someone falling into a river: a deep plunge, a burst of spray, then bubbling settling
+        d = 1.6
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        plunge = (osc(60 + 50 * np.exp(-t * 14), d) * 0.9 + lp_fast(n, 300) * 1.2) * np.exp(-t * 7)
+        spray = (lp_fast(n, 2200) - lp_fast(n, 400)) * np.exp(-t * 5.5) * 0.9
+        bub = np.zeros(len(t))
+        for k in range(14):
+            t0 = 0.25 + rng.random() * 1.1
+            i0 = int(t0 * SR)
+            m = int(0.06 * SR)
+            if i0 + m < len(t):
+                tt = np.arange(m) / SR
+                bub[i0:i0 + m] += np.sin(2 * np.pi * np.cumsum(500 + 1600 * tt / 0.06) / SR) * np.exp(-tt * 60) * 0.25
+        return (plunge + spray + bub) * 0.4
+    if kind == "plop":  # a light thing landing on water
+        d = 0.5
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        return (np.sin(2 * np.pi * np.cumsum(300 + 900 * np.exp(-t * 30)) / SR) * np.exp(-t * 18) * 0.5 + (lp_fast(n, 1800) - lp_fast(n, 400)) * np.exp(-t * 12) * 0.4)
+    if kind == "bubbles":  # underwater: a low hum and bubbles rising
+        d = 3.0
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        out = lp_fast(n, 220) * 0.5 * np.sin(np.pi * t / d) ** 0.5
+        for k in range(26):
+            i0 = int(rng.random() * (d - 0.1) * SR)
+            m = int(0.05 * SR)
+            tt = np.arange(m) / SR
+            out[i0:i0 + m] += np.sin(2 * np.pi * np.cumsum(400 + 1400 * tt / 0.05) / SR) * np.exp(-tt * 70) * 0.18
+        return out * 0.9
+    if kind == "lap":  # river water lapping at the posts of a pier
+        d = 4.0
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        band = lp_fast(n, 900) - lp_fast(n, 150)
+        am = np.clip(np.sin(2 * np.pi * 0.7 * t + np.sin(2 * np.pi * 0.23 * t)), 0, 1) ** 2
+        return band * am * 0.35 * np.sin(np.pi * t / d) ** 0.3
     if kind == "drum":  # a deep war drum hit
         d = 0.9
         t = t_arr(d)
