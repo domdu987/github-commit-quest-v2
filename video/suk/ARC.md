@@ -76,13 +76,18 @@
 
 **CDC "Sequence for Putting On / How to Safely Remove PPE"** (poster CS250672-E) https://www.cdc.gov/hai/pdfs/ppe/ppe-sequence.pdf
 - Example 1 ลำดับถอด: "1. GLOVES" → "2. GOGGLES OR FACE SHIELD" → "3. GOWN" → "4. MASK OR RESPIRATOR" → "5. WASH HANDS OR USE AN ALCOHOL-BASED HAND SANITIZER IMMEDIATELY AFTER REMOVING ALL PPE"
+- (ตรวจตัวอักษรจาก PDF 25 ต.ค. 2026, รหัสโปสเตอร์ CS250672-E) "1. GLOVES": "Outside of gloves are contaminated!" / "Using a gloved hand, grasp the palm area of the other gloved hand and peel off first glove" / "Hold removed glove in gloved hand" / "Slide fingers of ungloved hand under remaining glove at wrist and peel off second glove over first glove" / "Discard gloves in a waste container"
+- "2. GOGGLES OR FACE SHIELD": "Outside of goggles or face shield are contaminated!" / "Remove goggles or face shield from the back by lifting head band or ear pieces"
+- "3. GOWN": "Gown front and sleeves are contaminated!" / "Pull gown away from neck and shoulders, touching inside of gown only" / "Turn gown inside out" / "Fold or roll into a bundle and discard in a waste container"
+- "4. MASK OR RESPIRATOR": "Front of mask/respirator is contaminated — DO NOT TOUCH!" / "Grasp bottom ties or elastics of the mask/respirator, then the ones at the top, and remove without touching the front"
+- หน้าใส่ชุด หัวข้อ USE SAFE WORK PRACTICES TO PROTECT YOURSELF: "Keep hands away from face"
 - "Outside of gloves are contaminated!"
 - "Front of mask/respirator is contaminated — DO NOT TOUCH!"
 - "If your hands get contaminated during glove removal, immediately wash your hands or use an alcohol-based hand sanitizer"
 - "Keep hands away from face"
 
 **CDC "About Handwashing"** https://www.cdc.gov/clean-hands/about/index.html (February 16, 2024)
-- "Scrub your hands for at least 20 seconds."
+- "Scrub your hands for at least 20 seconds. Need a timer? Hum the “Happy Birthday” song from beginning to end twice." (ตรวจ 25 ต.ค. 2026)
 
 (ไม่ได้ยืนยันนิยามไข้ของ CDC ได้ หน้าเดิม 404 ตัวเลขอุณหภูมิในเรื่องเป็นของในโลกนิยาย ไม่สอนเป็นความรู้)
 
@@ -226,3 +231,43 @@
 
 **สิ่งที่ EP.4 ต้องรับต่อ:** เปิดด้วยภาพสุดท้าย (เนิน 317 ในกล้อง NV ตีสี่ ตาข้างขวาร้อนเป็นสีส้มขาว) · นาฬิกาหมวก 04:02 รุ่งสาง 05:00
 · หลังมือซ้ายมีรอยข่วนสามเส้น (ล้างแล้ว) · จ่าเดชขารัดสาย T 20:42 · เบียร์ล้มอยู่ในบังเกอร์ · นิลมีวิทยุจับช่อง 47.60
+
+## EP.4 บทที่ใช้จริง → `lines.json` ใน production ของ `video/suk-ep4/` (ตอนจบ ไม่มีซิกเนเจอร์ ไม่มีตัวเลือก)
+
+**บท EP.4 "ถอดทีละชิ้น" (ผ่าน Whisper QA, 2:21):**
+
+- `n01` ผู้บรรยาย: ถ้าวันหนึ่ง… คุณต้องถอดชุดที่เปื้อนเชื้อ ออกจากตัว
+- `n02` ผู้บรรยาย: ถอดผิดลำดับแค่ชิ้นเดียว… เชื้อก็ติดมือคุณ
+- `n03` ผู้บรรยาย: ตอนตีสี่ คุณเลือกลงเนินฝั่งข้าศึก
+- `e01` นิล: ใส่นี่ก่อน ถุงมือ แว่น เสื้อคลุม หน้ากาก
+- `n04` ผู้บรรยาย: นิลไม่ใช่ทหารธรรมดา… เขาเป็นหน่วยแพทย์ ของฝ่ายแนวเขา
+- `n05` ผู้บรรยาย: คุณกับนิล หามจ่าเดชลงเนิน ในความมืด
+- `d01` จ่าเดช: ไม่ต้องห่วงผม ทิ้งผมไว้ตรงนี้ แล้วไปกันเลย
+- `n06` ผู้บรรยาย: คราวนี้… ไม่มีใครถูกทิ้งไว้ข้างหลัง
+- `n07` ผู้บรรยาย: แต่บนเนินข้างหลัง… ร่างไข้ เริ่มไล่ตามลงมา
+- `e02` นิล: อย่าหันกลับไป! วิ่ง!
+- `n08` ผู้บรรยาย: แสงสีแดงที่ตีนเนิน คือเต็นท์กักโรค ของฝ่ายแนวเขา
+- `x01` หมอฝ่ายแนวเขา (Kore ใส่ชุดป้องกัน): หยุดตรงเส้นนั้น! ถอดชุดก่อนเข้ามา!
+- `n09` ผู้บรรยาย: ชุดป้องกัน ต้องถอดตามลำดับ
+- `n10` ผู้บรรยาย: ข้อหนึ่ง ถอดถุงมือก่อน ด้านนอกของถุงมือ คือส่วนที่เปื้อน
+- `n11` ผู้บรรยาย: จับฝ่ามืออีกข้าง ลอกออก แล้วสอดนิ้วใต้ถุงมือที่เหลือ ลอกทับกันออกมา
+- `n12` ผู้บรรยาย: ข้อสอง ถอดแว่นตา ด้านนอกเปื้อน ให้ถอดจากด้านหลัง ยกที่สายรัดหัว
+- `n13` ผู้บรรยาย: ข้อสาม ถอดเสื้อคลุม ด้านหน้าและแขนเสื้อเปื้อน ดึงออกจากคอกับไหล่ จับแค่ด้านใน แล้วม้วนกลับด้าน
+- `n14` ผู้บรรยาย: ข้อสี่ ถอดหน้ากาก ด้านหน้าห้ามจับเด็ดขาด จับสายล่างก่อน แล้วค่อยสายบน
+- `n15` ผู้บรรยาย: ข้อห้า ล้างมือทันที ถูสบู่อย่างน้อยยี่สิบวินาที
+- `n16` ผู้บรรยาย: ระหว่างนั้น อย่าเอามือแตะหน้า
+- `x02` หมอ: ใครจดเวลาบนสายรัดนี่ไว้ ทำดีมาก
+- `n17` ผู้บรรยาย: หมอวัดไข้คุณ สามสิบเจ็ดจุดหนึ่ง… ยังปกติ
+- `n18` ผู้บรรยาย: ห้านาฬิกา ฟ้าสาง เครื่องบินของฝ่ายเรา บินผ่านหัวไป
+- `n19` ผู้บรรยาย: เนินสามหนึ่งเจ็ด… หายไปทั้งลูก
+- `h01` ฐานพยัคฆ์ (วิทยุ): ยึดเนินสามหนึ่งเจ็ดสำเร็จ ฝ่ายเรา ชนะสงคราม
+- `n20` ผู้บรรยาย: แต่คนที่ช่วยชีวิตคุณไว้… คือข้าศึก
+- `e03` นิล: ของเพื่อนคุณ… เก็บไว้นะ (อาร์มหมีของเบียร์)
+- `n21` ผู้บรรยาย: ส่วนข้าศึกตัวจริง… คือไข้
+- `n22` ผู้บรรยาย: แต่เช้าวันนั้น บนเนินอีกลูกทางทิศเหนือ
+- `n23` ผู้บรรยาย: ธงขาวผืนใหม่… เพิ่งถูกชักขึ้น
+
+- เปิดด้วยภาพสุดท้ายของ EP.3 (เนินใน NV 04:02 ตาข้างขวาร้อน) + ตัวเลือก "ลงเนินฝั่งข้าศึก" ถูกเลือก · ฉากย้อนอนาคต: มือในถุงมือสีฟ้าลอกถุงมือใต้ไฟแดง
+- `hf/lib/suk4.js`: ฉาก `slopeDown` (หามเปลลงเนิน) `tent` (เต็นท์กักโรค ไฟแดง ธงขาววงกลมแดงกากบาท เส้นเหลืองดำ ถังขยะติดเชื้อ ที่ล้างมือ, `o.dawn`, `o.booms`) · `Suk.medic` หมอชุดเหลือง แว่น หน้ากาก ถุงมือฟ้า · มุมมองคนที่หนึ่ง `doffGloves goggleView gownView maskView handWash faceTouch` · `thermo kit armband bearPatch planes` · ไอคอน glovesoff gogglesoff gownoff maskoff wash20 noface
+- ความรู้ CDC ทีละข้อ 1–5 + อย่าแตะหน้า + ตัวนับ 20 วินาที
+- ปิดเรื่อง: เนิน 317 ถูกทิ้งระเบิดตอนรุ่งสาง วิทยุประกาศชนะ · คนช่วยชีวิตคือข้าศึก ข้าศึกตัวจริงคือไข้ · ค้างสุดท้าย: กล้องเล็งเห็นเนินทางทิศเหนือ ธงขาวที่มีวงกลมแดงกากบาท (เขตติดเชื้อ) เพิ่งถูกชักขึ้น · การ์ดท้ายป้ายห้อยคอ "ตอนจบ · ขอบคุณที่ดูจนจบ"
