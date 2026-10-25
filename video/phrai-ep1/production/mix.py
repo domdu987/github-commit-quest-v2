@@ -103,6 +103,8 @@ CUES = [
     ("rule", 0.0, "swell", 0.45), *[("rule", frag("rule", 0, j), "sting", 0.35) for j in (0, 2, 4)], ("rule", 3.0, "lap", 0.5), ("rule", 7.0, "lap", 0.5),
     ("legend", 0.05, "gong", 0.7), ("legend", 0.3, "bubbles", 0.5), ("legend", frag("legend", 0, 2) - 0.1, "whoosh", 0.4), ("legend", frag("legend", 1) - 0.1, "whoosh", 0.4),
     ("legend", frag("legend", 1, 1) - 0.1, "sting", 0.7), ("legend", frag("legend", 1, 1), "glitch", 0.5), ("legend", D["legend"] - 1.0, "gong", 0.45),
+    ("traits", 0.35, "glitch", 0.5), ("traits", 0.35, "swell", 0.5), ("traits", frag("traits", 1, 1), "whoosh", 0.3),
+    ("traits", frag("traits", 2, 1), "sting", 0.8), ("traits", frag("traits", 2, 1), "splash", 0.4), ("traits", frag("traits", 2, 1) + 0.1, "bubbles", 0.6),
     ("cant", 0.0, "lap", 0.8), *beats("cant", frag("cant", 0, 1), D["cant"] - frag("cant", 0, 1), 0.45, 0.4), ("cant", frag("cant", 0, 1), "swell", 0.4),
     ("crowd", 0.0, "lap", 0.6), ("crowd", 0.0, "rustle", 0.3),
     ("mhem", 0.0, "lap", 0.7), ("mhem", 1.4, "creak", 0.35),
@@ -163,7 +165,7 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 dip(0.0, T("open", -0.05), 0.25, 0.05)
 dip(T("hook", 0), T("hook", -0.05), 0.35)
-dip(T("legend", 0), T("legend", -0.2), 0.5)
+dip(T("legend", 0), T("traits", -0.2), 0.5)
 dip(T("under", frag("under", 0, 1)), T("under", -0.05), 0.3)
 dip(T("whisper", 0), T("bend", YANK + 0.2), 0.2)
 dip(T("sig", SF(2)), T("sig", SF(3) + 0.05), 0.05, 0.12)  # silence before "ข้อเดียว"

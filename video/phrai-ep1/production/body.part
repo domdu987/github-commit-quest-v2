@@ -140,6 +140,27 @@
         },
       });
 
+      // ---------- 8b. what it is like (as the กองกอย story did — user: "แค่บอกลักษณะ เหมือนเรื่องกองกอย"): black, green eyes,
+      // hair like weed; lures with floating things and calls names; pulls you down by the leg ----------
+      const TR = (i, j = 0) => F("traits", i, j);
+      add("traits", {
+        set: "phraiLegend", setOpts: { id: "plt" }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(540, 3600, 1.25, 540, 900), drift: { s: 0.03 } }, { t: TR(1) - 0.1, glide: 0.6, ...fr(500, 3620, 1.1, 540, 900), drift: { s: 0.02 } }, { t: TR(2) - 0.1, glide: 0.5, ...fr(640, 3650, 1.05, 540, 900), drift: { s: 0.03 } }] },
+        captions: caps("traits"),
+        fx(tl, id, t0) {
+          Koi.life(tl, `#${id}`, t0, D("traits"));
+          tl.fromTo("#plt-eyes", { opacity: 0 }, { opacity: 1, duration: 0.12, immediateRender: false }, t0 + 0.35);
+          tl.to("#plt-eyes", { opacity: 0.55, duration: 0.5, repeat: Math.ceil(D("traits") / 0.5), yoyo: true, ease: "sine.inOut" }, t0 + 0.6);
+          Fx.glitch(tl, `#${id}`, t0 + 0.35, 0.2, 10, 511);
+          tl.fromTo(`#${id} .kcoin`, { opacity: 0.4 }, { opacity: 1, duration: 0.3, repeat: Math.ceil(D("traits") / 0.3), yoyo: true, immediateRender: false }, t0 + TR(1));
+          tl.fromTo("#plt-call", { opacity: 0, x: -20 }, { opacity: 1, x: 10, duration: 0.5, repeat: 3, yoyo: true, immediateRender: false }, t0 + TR(1, 1));
+          tl.to("#plt-arm3", { opacity: 1, duration: 0.15 }, t0 + TR(2, 1) - 0.1);
+          tl.fromTo("#plt-vic", { y: 0 }, { y: 260, duration: 0.6, ease: "power3.in", immediateRender: false }, t0 + TR(2, 1));
+          Fx.punch(tl, `#${id} .stage`, t0 + TR(2, 1), 1.06, 0.4); Fx.glitch(tl, `#${id}`, t0 + TR(2, 1), 0.25, 14, 512);
+          tl.fromTo("#fxred", { opacity: 0.45 }, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + TR(2, 1));
+        },
+      });
+
       // ---------- 9. แพรว: a school swimmer, not scared ----------
       add("brag", {
         set: "porch", setOpts: { id: "po9", time: "night" }, dark: 0.1, blur: { far: 5, set: 4 },

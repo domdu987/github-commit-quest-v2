@@ -29,6 +29,7 @@ SHOTS = [
     ("warn", ["d03"], 0.1, 0.4, 4.6),                 # ยาย close, the lantern on her face
     ("rule", ["d04"], 0.2, 0.6, 12.2),                # ยาย's three rules (card), the river darkening behind
     ("legend", ["n05", ("n06", 0.3)], 0.3, 0.6, 7.6), # shadow puppets: the drowned become พราย; พราย need a replacement
+    ("traits", ["t01", ("t02", 0.15), ("t03", 0.15)], 0.1, 0.6, 9.0),  # the พราย close in shadow puppet: black, green eyes; the lure, the call; pulled under
     ("brag", ["d05"], 0.1, 0.3, 3.2),                 # แพรว, goggles round her neck
     ("cant", ["n07"], 0.1, 0.5, 2.4),                 # over โต้ง's shoulder: he looks down at the black water
     ("crowd", ["n08"], 0.1, 0.3, 2.8),                # 8 p.m.: the pier full of people, krathongs going out

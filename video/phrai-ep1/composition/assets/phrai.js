@@ -21,7 +21,7 @@
     <radialGradient id="phHalo"><stop offset="0" stop-color="#f6efcf" stop-opacity=".5"/><stop offset=".35" stop-color="#9fb0d8" stop-opacity=".18"/><stop offset="1" stop-color="#9fb0d8" stop-opacity="0"/></radialGradient>
     <radialGradient id="phFlame"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".95"/><stop offset=".25" stop-color="#ffbe5c" stop-opacity=".55"/><stop offset=".6" stop-color="#ff9a3c" stop-opacity=".16"/><stop offset="1" stop-color="#ff9a3c" stop-opacity="0"/></radialGradient>
     <radialGradient id="phBulb"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".9"/><stop offset=".4" stop-color="#ffc06a" stop-opacity=".25"/><stop offset="1" stop-color="#ffc06a" stop-opacity="0"/></radialGradient>
-    <radialGradient id="phPale" cx=".4" cy=".35"><stop offset="0" stop-color="#e3ece4"/><stop offset=".7" stop-color="#b9c8bf"/><stop offset="1" stop-color="#8fa39a"/></radialGradient>
+    <radialGradient id="phPale" cx=".4" cy=".35"><stop offset="0" stop-color="#232b28"/><stop offset=".7" stop-color="#141917"/><stop offset="1" stop-color="#0a0c0b"/></radialGradient>
     <linearGradient id="phPlank" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4330"/><stop offset="1" stop-color="#3b2b1f"/></linearGradient>
     <linearGradient id="phWall" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4a32"/><stop offset=".5" stop-color="#7d5a3c"/><stop offset="1" stop-color="#5e412c"/></linearGradient>
     <linearGradient id="phNet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe6ee" stop-opacity=".42"/><stop offset="1" stop-color="#c9d2dc" stop-opacity=".26"/></linearGradient>
@@ -56,26 +56,31 @@
   const kglow = (x, y, s, r = 150) => `<g class="kglw"><circle cx="${f1(x)}" cy="${f1(y - 95 * s)}" r="${f1(r * s)}" fill="url(#phFlame)"/></g>`;
   const krefl = (x, y, s) => `<g class="krefl">${[0, 1, 2, 3, 4].map((k) => `<path d="M${f1(x - (24 - k * 4) * s)},${f1(y + (34 + k * 22) * s)}h${f1((48 - k * 8) * s)}" stroke="#ffb35c" stroke-width="${f1(6 * s)}" stroke-linecap="round" opacity="${(0.55 - k * 0.1).toFixed(2)}"/>`).join("")}</g>`;
 
-  // the drowned: a pale hand + forearm reaching up from (x, y), fingers long, nails dark
+  // the พราย's colours (user: "ตัวดำๆตาเขียวๆแบบกองกอย"): a coal-black body, a cold green rim so it still reads on dark water,
+  // green eyes (class geye flickers in life()) — same palette as หมอกลง's ghosts
+  const GBL = "#0a0c0b", GBL2 = "#161b19", GRIM = "#3d6a52", GVEIN = "#2a4a3a", GEYE = ["#7dff6a", "#bfff96", "#f2ffe4"];
+  const GOUT = `stroke="${GRIM}" stroke-width="4" stroke-linejoin="round"`;
+  // the drowned: a black hand + forearm reaching up from (x, y), fingers long, a green rim
   function paleHand(x, y, s, rot = 0, id = "") {
     return `<g ${id ? `id="${id}"` : ""} transform="translate(${f1(x)},${f1(y)}) rotate(${rot}) scale(${s})">
-      <path d="M-22,260C-26,170 -24,90 -20,30L20,30C24,90 26,170 22,260Z" fill="url(#phPale)" ${OUT}/>
-      <path d="M-24,40C-30,10 -24,-14 0,-18C24,-14 30,10 24,40Z" fill="#c9d6cc" ${OUT}/>
+      <path d="M-22,260C-26,170 -24,90 -20,30L20,30C24,90 26,170 22,260Z" fill="url(#phPale)" ${GOUT}/>
+      <path d="M-24,40C-30,10 -24,-14 0,-18C24,-14 30,10 24,40Z" fill="${GBL2}" ${GOUT}/>
       ${[[-20, -6, -32, -70], [-8, -14, -12, -92], [6, -14, 8, -96], [18, -8, 26, -80], [24, 16, 44, -10]].map(([x0, y0, x1, y1]) =>
-        `<path d="M${x0},${y0}Q${(x0 + x1) / 2 + 3},${(y0 + y1) / 2} ${x1},${y1}" stroke="${INK}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2 + 3},${(y0 + y1) / 2} ${x1},${y1}" stroke="#c9d6cc" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="${x1}" cy="${y1}" r="4.5" fill="#1d2a24"/>`).join("")}
-      <path d="M-14,120q6,-10 0,-24M10,170q-6,-14 2,-30" stroke="#7d9488" stroke-width="3" fill="none"/></g>`;
+        `<path d="M${x0},${y0}Q${(x0 + x1) / 2 + 3},${(y0 + y1) / 2} ${x1},${y1}" stroke="${GRIM}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2 + 3},${(y0 + y1) / 2} ${x1},${y1}" stroke="${GBL2}" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="${x1}" cy="${y1}" r="4.5" fill="#000"/>`).join("")}
+      <path d="M-14,120q6,-10 0,-24M10,170q-6,-14 2,-30" stroke="${GVEIN}" stroke-width="3" fill="none"/></g>`;
   }
-  // the พราย of this story: a drowned woman's head turned up toward the lights — grey-green skin, the wet hair fanned out
-  // like weed (class phair sways) and hanging over the face in strands, one milky eye showing through, the mouth a dark open gap
+  // a green eye: soft glow, the iris, a hot centre
+  const gEye = (cx, cy, rx, ry, op = 1) => `<g class="geye" opacity="${op}"><circle cx="${cx}" cy="${cy}" r="${rx * 2.4}" fill="${GEYE[0]}" opacity=".32"/><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${GEYE[0]}"/><ellipse cx="${cx}" cy="${cy}" rx="${rx * 0.5}" ry="${ry * 0.55}" fill="${GEYE[2]}"/></g>`;
+  // the พราย of this story: a drowned woman's head turned up toward the lights — a coal-black face, the wet hair fanned out
+  // like weed (class phair sways) and hanging over the face in strands, one green eye burning through, the mouth a dark open gap
   function drownedFace(x, y, s, o = {}) {
     const fan = Array.from({ length: 11 }, (_, i) => { const a = -168 + i * 15.6, rr = 170 + (i % 3) * 40, A = (a * Math.PI) / 180;
       return `<path class="phair" data-i="${i}" d="M0,-30Q${f1(Math.cos(A) * rr * 0.45)},${f1(Math.sin(A) * rr * 0.45 - 50)} ${f1(Math.cos(A) * rr)},${f1(Math.sin(A) * rr - 40)}" stroke="#070d0c" stroke-width="${18 - (i % 3) * 4}" fill="none" stroke-linecap="round"/>`; }).join("");
     const veil = [-52, -40, -28, -16, -4, 32, 44, 54].map((dx, i) => `<path d="M${dx * 0.6},-34C${dx},10 ${dx + (i % 2 ? 6 : -6)},60 ${dx + (i % 2 ? -4 : 4)},${118 + (i % 3) * 14}" stroke="#070d0c" stroke-width="${12 - (i % 3) * 2}" fill="none" stroke-linecap="round"/>`).join("");
     return `<g class="pface" opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${s})">${fan}
-      <ellipse cx="0" cy="40" rx="60" ry="78" fill="#9fb3a8" stroke="#1d2a24" stroke-width="4"/><ellipse cx="10" cy="56" rx="40" ry="50" fill="#b9c9bf" opacity=".5"/>
-      <ellipse cx="18" cy="30" rx="13" ry="9" fill="#e8efe6"/><circle cx="17" cy="31" r="2.6" fill="#0a1210"/><path d="M5,22q13,-7 26,0" stroke="#3a4a42" stroke-width="3" fill="none"/>
-      <ellipse cx="-22" cy="30" rx="11" ry="7" fill="#e8efe6" opacity=".45"/>
-      <ellipse cx="4" cy="86" rx="11" ry="15" fill="#081010"/><path d="M-30,64q8,6 0,14M40,62q-8,8 0,14" stroke="#7d9488" stroke-width="3" fill="none"/>
+      <ellipse cx="0" cy="40" rx="60" ry="78" fill="${GBL}" stroke="${GRIM}" stroke-width="4"/><ellipse cx="10" cy="56" rx="40" ry="50" fill="${GBL2}" opacity=".7"/>
+      ${gEye(18, 30, 13, 9)}<path d="M3,20q15,-8 30,0" stroke="${GRIM}" stroke-width="3" fill="none"/>${gEye(-22, 30, 12, 8, 0.85)}
+      <ellipse cx="4" cy="86" rx="11" ry="15" fill="#020303" stroke="${GVEIN}" stroke-width="2"/><path d="M-30,64q8,6 0,14M40,62q-8,8 0,14" stroke="${GVEIN}" stroke-width="3" fill="none"/>
       <path d="M-60,4Q-46,-46 0,-50Q46,-46 60,4Q40,-22 0,-24Q-40,-22 -60,4Z" fill="#070d0c"/>${veil}</g></g>`;
   }
   // ferry boat (เรือจ้าง): long low wooden hull seen from the side, bow to the right
@@ -420,6 +425,24 @@
     s += `<g transform="translate(640,${Y + 410})"><path d="M-50,0Q0,-30 50,0Z" fill="${P}"/><path d="M-20,-14Q0,-60 20,-14Z" fill="${P}"/><path d="M0,-58v-26" stroke="${P}" stroke-width="5"/><circle class="lamp" cx="0" cy="-92" r="10" fill="#fff2c8"/></g>`;
     s += pup(800, Y + 860, phrai(1.05), 0) + `<g id="${id}-arm" transform="rotate(0 760 ${Y + 650})"><path d="M760,${Y + 650}L640,${Y + 470}" stroke="${P}" stroke-width="13" stroke-linecap="round"/>
       ${[-16, -4, 8].map((d) => `<path d="M640,${Y + 470}l${d - 10},-34" stroke="${P}" stroke-width="7" stroke-linecap="round"/>`).join("")}</g>`;
+    // S3 (y 3200): the พราย herself, close — a coal-black puppet, eyes cut through and lit green (#id-eyes), hair spread like
+    // river weed; the lure on the left (a krathong, its coins glowing, #id-lure), her call (#id-call), someone wading on the right
+    // (#id-vic) and the long arm that takes his leg (#id-arm3)
+    const Y3 = 3200;
+    s += screen(Y3, Y3 + 900);
+    s += `<g id="${id}-big">${Array.from({ length: 13 }, (_, k) => { const a = (-172 + k * 13.6) * Math.PI / 180;
+        return `<path class="phair" data-i="${k}" d="M540,${Y3 + 330}Q${f1(540 + Math.cos(a) * 130)},${f1(Y3 + 300 + Math.sin(a) * 150)} ${f1(540 + Math.cos(a) * 320)},${f1(Y3 + 290 + Math.sin(a) * 270)}" stroke="${P}" stroke-width="${24 - (k % 3) * 6}" fill="none" stroke-linecap="round"/>`; }).join("")}
+      <ellipse cx="540" cy="${Y3 + 400}" rx="118" ry="148" fill="${P}"/><path d="M400,${Y3 + 500}C420,${Y3 + 560} 660,${Y3 + 560} 680,${Y3 + 500}L720,${Y3 + 660}H360Z" fill="${P}"/>
+      ${[-70, -40, 40, 70].map((dx, k) => `<path d="M${540 + dx},${Y3 + 290}C${540 + dx * 1.1},${Y3 + 380} ${540 + dx * 0.9},${Y3 + 450} ${540 + dx * 1.05},${Y3 + 540 + (k % 2) * 30}" stroke="${P}" stroke-width="12" fill="none"/>`).join("")}
+      <ellipse cx="540" cy="${Y3 + 478}" rx="15" ry="22" fill="${CUT}" opacity=".55"/>
+      <g id="${id}-eyes" opacity="0">${[494, 586].map((x) => `<circle cx="${x}" cy="${Y3 + 392}" r="60" fill="#7dff6a" opacity=".22"/><ellipse cx="${x}" cy="${Y3 + 392}" rx="24" ry="14" fill="#7dff6a"/><ellipse cx="${x}" cy="${Y3 + 392}" rx="10" ry="7" fill="#f2ffe4"/>`).join("")}</g></g>`;
+    s += `<g id="${id}-call" opacity="0">${[0, 1, 2].map((k) => `<path d="M${700 + k * 40},${Y3 + 330 - k * 20}q${30 + k * 10},${50 + k * 14} 0,${100 + k * 40}" stroke="#7dff6a" stroke-width="7" fill="none" stroke-linecap="round" opacity="${0.9 - k * 0.2}"/>`).join("")}</g>`;
+    s += `<g id="${id}-lure">${pup(190, Y3 + 610, `<g><path d="M-62,0Q0,-34 62,0Z" fill="${P}"/><path d="M-26,-14Q0,-66 26,-14Z" fill="${P}"/><path d="M0,-60v-22" stroke="${P}" stroke-width="5"/><circle class="lamp" cx="0" cy="-90" r="10" fill="#fff2c8"/>
+      ${[-36, -14, 10, 32].map((x) => `<circle class="kcoin" cx="${x}" cy="-6" r="8" fill="#ffe08a"/>`).join("")}</g>`, 0)}</g>`;
+    s += pup(880, Y3 + 640, person(0.62), 0, `${id}-vic`);
+    s += waves(Y3 + 600);
+    s += `<g id="${id}-arm3" opacity="0"><path d="M660,${Y3 + 640}Q760,${Y3 + 790} 868,${Y3 + 668}" stroke="#7dff6a" stroke-width="20" fill="none" stroke-linecap="round" opacity=".45"/><path d="M660,${Y3 + 640}Q760,${Y3 + 790} 868,${Y3 + 668}" stroke="${P}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      ${[-14, 0, 14].map((d) => `<path d="M868,${Y3 + 668}l${18 + d * 0.4},${-22 + d}" stroke="${P}" stroke-width="7" stroke-linecap="round"/>`).join("")}</g>`;
     put(L.set, s);
   }
 
@@ -554,6 +577,7 @@
     q(".lamp").forEach((el, i) => tl.fromTo(el, { opacity: 0.85 }, { opacity: 1, duration: 0.13 + (i % 3) * 0.05, repeat: Math.ceil(dur / 0.13), yoyo: true, ease: "none", immediateRender: false }, t0));
     q(".phair").forEach((el, i) => tl.fromTo(el, { rotation: -4 }, { rotation: 5, svgOrigin: "0 -20", duration: 1.6 + (i % 3) * 0.4, repeat: Math.ceil(dur / 1.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.1));
     q(".pface").forEach((el, i) => tl.fromTo(el, { y: 0 }, { y: -26, duration: 2.4 + i * 0.3, repeat: Math.ceil(dur / 2.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+    q(".geye").forEach((el, i) => tl.fromTo(el, { opacity: +(el.getAttribute("opacity") || 1) }, { opacity: 0.45 * +(el.getAttribute("opacity") || 1), duration: 0.45 + (i % 4) * 0.12, repeat: Math.ceil(dur / 0.45), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (i % 5) * 0.1));
     q(".hhand").forEach((el, i) => tl.fromTo(el, { y: 0 }, { y: -14, duration: 0.5 + (i % 3) * 0.12, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (i % 4) * 0.1));
     q(".siren").forEach((el) => { for (let t = 0; t < dur; t += 0.5) { tl.set(el, { opacity: 1 }, t0 + t); tl.set(el, { opacity: 0.15 }, t0 + t + 0.25); } });
     q(".sirenb").forEach((el) => { for (let t = 0; t < dur; t += 0.5) { tl.set(el, { opacity: 0.15 }, t0 + t); tl.set(el, { opacity: 1 }, t0 + t + 0.25); } });
@@ -605,5 +629,5 @@
   Rig.CAST.tongWet = { ...Rig.CAST.tong, top: "#9a2e27", topS: "#7d241e", sleeve: "#9a2e27", sleeveS: "#7d241e", pants: "#7d6e50", pantsS: "#61553e" };
 
   Object.assign(Sets, { riverNight, pierDeck, pierPOV, pierSection, porch, bedroom, underRiver, ankleMarks, legendPhrai, reflections, phraiLegend, krathongCard, pierSign, cprTop, floodRoad, hullHands });
-  window.Phrai = { krathong, kglow, krefl, paleHand, drownedFace, ferry, gallon, bottle, bamboo, life, CAST_COL };
+  window.Phrai = { GBL, GBL2, GRIM, GVEIN, GEYE, gEye, krathong, kglow, krefl, paleHand, drownedFace, ferry, gallon, bottle, bamboo, life, CAST_COL };
 })();
