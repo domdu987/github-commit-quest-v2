@@ -185,7 +185,7 @@
               // (the tens digit holds one "1" sheet per second from 19 to 10) drop out at the same moment so the next digit shows
               const live = [...pd.querySelectorAll(".sh")].reverse().filter((s) => !used.has(s)), k0 = live.findIndex((s) => s.dataset.v === a[j]);
               if (k0 < 0) return; let k = k0; while (k < live.length && live[k].dataset.v === a[j]) { used.add(live[k]); k++; }
-              flyOff(tl, live[k0], T - 0.2); tl.set(live[k0], { opacity: 0 }, T + 0.6);
+              const kf = Math.min(1, tick); flyOff(tl, live[k0], T - (kf < 1 ? 0.75 * kf : 0.2), kf); tl.set(live[k0], { opacity: 0 }, T + 0.6 * kf);
               for (let m = k0 + 1; m < k; m++) tl.set(live[m], { opacity: 0 }, T + 0.05); });
             const hot = v <= warn;
             tl.fromTo(`#${id}`, { x: 0 }, { x: hot ? 10 : 4, duration: 0.035, repeat: hot ? 7 : 3, yoyo: true, immediateRender: false }, T);

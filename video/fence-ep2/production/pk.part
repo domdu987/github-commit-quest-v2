@@ -475,11 +475,11 @@
       const PAPER = (seq) => `<span class="pd">${seq.slice().reverse().map((d, i, arr) => `<i class="sh${i < arr.length - 1 ? " u" : ""}" data-v="${d}"><b>${d}</b>${i === arr.length - 1 ? '<i class="tp"></i>' : ""}</i>`).join("")}</span>`;   // sheets stacked: first value on top
       const PAPERS = (vals) => { const strs = vals.map((v) => String(v)), n = Math.max(...strs.map((s) => s.length)); return `<span class="pdig">${Array.from({ length: n }, (_, i) => PAPER(strs.map((s) => s.padStart(n, "0")[i]))).join("")}</span>`; };
       // a sheet peels at the tape and flutters away up-right; the sheet beneath jolts
-      function flyOff(tl, sh, t) {
-        tl.fromTo(sh, { rotation: 0 }, { rotation: -9, duration: 0.14, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t);
-        tl.to(sh, { x: 220, y: -300, rotation: 48, opacity: 0, duration: 0.75, ease: "power2.in" }, t + 0.26);
-        tl.fromTo(sh, { scaleX: 1 }, { scaleX: 0.6, duration: 0.18, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t + 0.3);
-        const under = sh.previousElementSibling; if (under) tl.fromTo(under, { rotation: 2, y: 0 }, { rotation: -2, y: 4, duration: 0.3, ease: "elastic.out(1,.4)", immediateRender: false }, t + 0.4);
+      function flyOff(tl, sh, t, k = 1) {   // k < 1: the same flight, faster (a fast countdown)
+        tl.fromTo(sh, { rotation: 0 }, { rotation: -9, duration: 0.14 * k, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t);
+        tl.to(sh, { x: 220, y: -300, rotation: 48, opacity: 0, duration: 0.75 * k, ease: "power2.in" }, t + 0.26 * k);
+        tl.fromTo(sh, { scaleX: 1 }, { scaleX: 0.6, duration: 0.18 * k, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t + 0.3 * k);
+        const under = sh.previousElementSibling; if (under) tl.fromTo(under, { rotation: 2, y: 0 }, { rotation: -2, y: 4, duration: 0.3 * k, ease: "elastic.out(1,.4)", immediateRender: false }, t + 0.4 * k);
       }
       // the scraps slap on one by one (every sheet of a stack appears; the top one lands last with a squash)
       const slapIn = (tl, el, t, gap = 0.14) => el.querySelectorAll(".pd").forEach((pd, k) => { const shs = pd.querySelectorAll(".sh"), at = t + k * gap;

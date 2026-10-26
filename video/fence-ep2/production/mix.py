@@ -119,17 +119,17 @@ CUES = [
     *bed("crickets", T("real", 0), T("wake", -0.1), 0.5, 4.6), ("real", frag("real", 0, 1), "page", 0.6), ("real", frag("real", 0, 1) + 0.3, "slam", 0.5), ("real", frag("real", 1, 1), "ding", 0.5), ("real", frag("real", 1, 1), "pop", 0.5),
     ("wake", frag("wake", 0, 1), "ding", 0.4), ("wake", frag("wake", 0, 1) + 0.1, "cough", 0.5), *beats("wake", 0.0, frag("wake", 0, 1), 0.5, 0.5),
     # the yard: the engine out in the open, the bulb; the map of sound
-    *bed("crickets", T("yard", 0), T("count2", 5.0), 0.4, 4.6), ("yard", 0.3, "cord", 0.8), *bed("engine", T("yard", 0.9), T("count", 2.4), 0.55, 4.3), ("yard", frag("yard", 0, 1) + 0.2, "bulb", 0.8),
+    *bed("crickets", T("yard", 0), T("count2", 2.5), 0.4, 4.6), ("yard", 0.3, "cord", 0.8), *bed("engine", T("yard", 0.9), T("count", 2.4), 0.55, 4.3), ("yard", frag("yard", 0, 1) + 0.2, "bulb", 0.8),
     ("yard", vo_t("yard", 1), "whoosh", 0.5), *[("yard", frag("yard", 1, 1) + k * 0.35, "buzz", 0.5) for k in range(3)], ("yard", frag("yard", 1, 1), "sting", 0.7), ("yard", frag("yard", 1, 1), "glitch", 0.3),
     # they come; "ยี่สิบวิ"
-    *bed("horde", T("horde", 0.3), T("count2", 5.0), 0.6, 4.6), *growls("horde", 0.3, D["horde"], 0.6, 0.7), ("horde", frag("horde", 0, 1), "sting", 0.9), ("horde", frag("horde", 0, 1), "boom", 0.5), ("horde", vo_t("horde", 2), "slam", 0.4), *beats("horde", 0.0, D["horde"], 0.45, 0.7),
+    *bed("horde", T("horde", 0.3), T("count2", 2.5), 0.6, 4.6), *growls("horde", 0.3, D["horde"], 0.6, 0.7), ("horde", frag("horde", 0, 1), "sting", 0.9), ("horde", frag("horde", 0, 1), "boom", 0.5), ("horde", vo_t("horde", 2), "slam", 0.4), *beats("horde", 0.0, D["horde"], 0.45, 0.7),
     # the countdown: a tick every second, the switch, the sickle, the run, the door
-    ("count", 0.2, "page", 0.7), ("count", 0.45, "slam", 0.5), *[("count", 1.2 + k, "tick", 0.75) for k in range(12)], *beats("count", 0.2, D["count"] - 0.2, 0.6, 0.6), *growls("count", 0.5, D["count"], 0.5, 0.9),
+    ("count", 0.2, "page", 0.7), ("count", 0.45, "slam", 0.5), *[("count", 0.2 + 0.53 * (k + 1), "tick", 0.75) for k in range(14)], *beats("count", 0.2, D["count"] - 0.2, 0.6, 0.6), *growls("count", 0.5, D["count"], 0.5, 0.9),
     ("count", 0.2, "steps", 0.6), ("count", 0.8, "steps", 0.6), ("count", 1.9, "pop", 0.5), ("count", 2.1, "slam", 0.45), ("count", 2.4, "latch", 0.9), ("count", 2.4, "powerdown", 0.8),
     ("count", 3.0, "steps", 0.6), ("count", 3.6, "steps", 0.6), ("count", 4.5, "rustle", 0.8), ("count", 4.6, "shriek", 0.9), ("count", 5.2, "sparks", 1.0), ("count", 5.2, "clang", 0.8), ("count", 5.25, "sting", 0.8), ("count", 5.6, "thud", 0.5),
-    *[("count", 6.0 + k * 0.6, "steps", 0.6) for k in range(11)], ("count", -0.3, "riser", 0.8),
-    *growls("count2", 0.0, D["count2"] - 1.5, 0.7, 0.5), *[("count2", 1.0 + k, "tick", 1.0) for k in range(5)], *beats("count2", 0.0, 5.0, 0.36, 0.9), *[("count2", 1.0 + k, "sting", 0.35) for k in range(4)],
-    *[("count2", 0.3 + k * 0.6, "steps", 0.8) for k in range(7)], ("count2", 4.3, "shriek", 0.8), ("count2", 5.0, "slam", 1.3), ("count2", 5.0, "boom", 0.9), ("count2", 5.05, "gate", 0.8), ("count2", 5.25, "latch", 1.0), ("count2", 5.5, "thud", 0.6),
+    *[("count", 6.0 + k * 0.33, "steps", 0.6) for k in range(6)], ("count", -0.3, "riser", 0.8),
+    *growls("count2", 0.0, D["count2"] - 1.5, 0.7, 0.5), *[("count2", 0.5 * (k + 1), "tick", 1.0) for k in range(5)], *beats("count2", 0.0, 2.5, 0.3, 0.9), *[("count2", 0.5 * (k + 1), "sting", 0.35) for k in range(4)],
+    *[("count2", 0.15 + k * 0.3, "steps", 0.8) for k in range(7)], ("count2", 2.15, "shriek", 0.8), ("count2", 2.5, "slam", 1.3), ("count2", 2.5, "boom", 0.9), ("count2", 2.55, "gate", 0.8), ("count2", 2.75, "latch", 1.0), ("count2", 3.0, "thud", 0.6),
     # dark: twenty minutes; the hill
     *bed("crickets", T("dark", 0), T("sig", -0.1), 0.45, 4.6), *bed("horde", T("dark", 0), T("dark", -0.1), 0.35, 4.6), ("dark", 0.5, "page", 0.5), *[("dark", 0.6 + k * 0.1, "tick", 0.3) for k in range(10)], ("dark", frag("dark", 0, 1), "buzz", 0.5),
     ("hill", frag("hill", 0, 1), "riser", 0.5), *[("hill", frag("hill", 0, 1) + 0.2 + o, "beep", 0.35) for o in (0, 0.45, 0.9)], ("hill", frag("hill", 0, 2), "sting", 0.8), ("hill", frag("hill", 1, 1), "sting", 0.7), ("hill", frag("hill", 1, 1), "glitch", 0.4), *beats("hill", frag("hill", 0, 1), D["hill"] - frag("hill", 0, 1), 0.5, 0.55),
@@ -178,13 +178,13 @@ dip(0.0, T("hook", -0.1), 0.2, 0.05)
 dip(T("start", 0), T("fan", -0.05), 0.5)
 dip(T("smoke", 0), T("co", frag("co", 0, 2)), 0.35)
 dip(T("real", 0), T("wake", -0.05), 0.4)
-dip(T("count", 0), T("count2", 5.0), 0.5)
+dip(T("count", 0), T("count2", 2.5), 0.5)
 dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)
 dip(T("radio", vo_t("radio", 1) - 0.4), T("radio", vo_end("radio", 1) + 0.3), 0.15)
 dip(T("drawing", frag("drawing", 1, 0)), T("drawing", -0.05), 0.35)
 dip(T("choice", 0), T("choice", -0.3), 0.5)
 boost = np.ones(N, np.float32)  # the action plays with the music up
-for a0, a1 in ((T("fairRun", 0), T("fairRun", -0.05)), (T("drag", 0), T("drag", -0.05)), (T("horde", 0), T("count2", 5.0))):
+for a0, a1 in ((T("fairRun", 0), T("fairRun", -0.05)), (T("drag", 0), T("drag", -0.05)), (T("horde", 0), T("count2", 2.5))):
     boost += 0.4 * (np.clip((t - a0) / 0.3, 0, 1) * np.clip((a1 - t) / 0.2, 0, 1)).astype(np.float32)
 mus = mus * gain * boost
 end = int(T("choice", -0.2) * SR)

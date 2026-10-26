@@ -295,17 +295,17 @@
       // ---------- 15. twenty seconds: he holds the breach with the spear; last time he made it on two — this time it rains ----------
       add("count", {
         set: "schoolYard", setOpts: { id: "cd", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.55, blur: { far: 3 },
-        cam: { keys: [{ t: 0, ...fr(1000, 1200, 1.1, 540, 1050), drift: { s: 0.03 } }, { t: 3.0, ...fr(1150, 1250, 1.35, 540, 1100), r: -2, drift: { s: 0.04, r: 3 } }, { t: 8.0, glide: 1.0, ...fr(700, 1150, 0.85, 540, 1050), drift: { s: 0.03 } }, { t: D("count"), glide: 4.0, ...fr(1100, 1250, 1.4, 540, 1100) }] },
+        cam: { keys: [{ t: 0, ...fr(1000, 1200, 1.1, 540, 1050), drift: { s: 0.03 } }, { t: 3.0, ...fr(1150, 1250, 1.35, 540, 1100), r: -2, drift: { s: 0.04, r: 3 } }, { t: 5.2, glide: 0.8, ...fr(700, 1150, 0.85, 540, 1050), drift: { s: 0.03 } }, { t: D("count"), glide: 2.4, ...fr(1100, 1250, 1.4, 540, 1100) }] },
         shake: (t) => 5 * Math.sin(t * 21),
-        actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream" }, { t: 6.0, mode: "brace", eyes: "wide", mouth: "frown" }], { prop: "spear1f" })],
+        actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream" }, { t: 5.0, mode: "brace", eyes: "wide", mouth: "frown" }], { prop: "spear1f" })],
         captions: caps("count"),
-        ui: [{ type: "countdown", t: 0.2, from: 20, to: 8, label: "ประตูหลังปิดใน", warn: 5, end: D("count") - 0.1, top: 60 }],
+        ui: [{ type: "countdown", t: 0.2, from: 20, to: 6, tick: 0.55, label: "ประตูหลังปิดใน", warn: 5, end: D("count") - 0.1, top: 60 }],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) {
           ZF(L, tl, "cd", t0, D("count"), [["ha1", 1180, 0.8, 0], ["ha2", 1280, 0.76, 0.4], ["ha3", 1380, 0.78, 0.2], ["ha1", 1230, 0.74, 0.7], ["ha2", 1330, 0.7, 0.9], ["ha3", 1430, 0.72, 0.5]]);
-          route(tl, `${id}-a0`, t0, [{ t: 0, x: 1000, y: 1500 }, { t: 3.0, x: 1060, y: 1500 }, { t: 6.0, x: 1100, y: 1480 }, { t: D("count"), x: 1100, y: 1480 }], 0.9, false);
+          route(tl, `${id}-a0`, t0, [{ t: 0, x: 1000, y: 1500 }, { t: 3.0, x: 1060, y: 1500 }, { t: 5.0, x: 1100, y: 1480 }, { t: D("count"), x: 1100, y: 1480 }], 0.9, false);
           [1.0, 2.2, 3.4, 4.6].forEach((t) => { impact(tl, id, L, t0 + t, 1180, 1250, 0.6); red(tl, t0 + t, 0.3, 0.3); });
-          THUNDER(tl, t0 + 5.2, 0.5); THUNDER(tl, t0 + 10.5, 0.6);
+          THUNDER(tl, t0 + 5.2, 0.5); THUNDER(tl, t0 + 7.4, 0.6);
           Fx.punch(tl, `#${id} .stage`, t0 + F("count", 1, 2), 1.06, 0.4); red(tl, t0 + F("count", 1, 2), 0.6, 0.6); Fx.glitch(tl, `#${id}`, t0 + F("count", 1, 2), 0.2, 10, 51);
           Fx.heart(tl, t0 + 0.2, D("count") - 0.2, 0.55, 0.55);
         },
@@ -314,22 +314,22 @@
       // ---------- 16. the last five: the back door from inside; through the gap he is far away, braced; "ปิดซะ ครู"; 0 = the bar ----------
       add("count2", {
         set: "backDoor", setOpts: { id: "bd", open: 0.3 }, dark: 0.5, blur: { far: 3, mid: 2 },
-        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 1000), drift: { s: 0.03 } }, { t: 4.6, glide: 1.2, ...fr(540, 1000, 1.1, 540, 1000), drift: { s: 0.04 } }] },
-        shake: (t) => (t < 5.0 ? 6 * Math.sin(t * 21) : 0),
-        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "push", eyes: "normal", mouth: "flat" }]), PI(920, 1560, 0.95, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 4.9, mode: "push", eyes: "wide", mouth: "frown" }], { flip: true })],
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 1000), drift: { s: 0.03 } }, { t: 2.0, glide: 0.6, ...fr(540, 1000, 1.1, 540, 1000), drift: { s: 0.04 } }] },
+        shake: (t) => (t < 2.5 ? 6 * Math.sin(t * 21) : 0),
+        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "push", eyes: "normal", mouth: "flat" }]), PI(920, 1560, 0.95, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 2.4, mode: "push", eyes: "wide", mouth: "frown" }], { flip: true })],
         captions: caps("count2", [0], { quote: true }),
-        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, label: "ประตูหลังปิดใน", warn: 5, end: 5.6, top: 60 }],
+        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, tick: 0.5, label: "ประตูหลังปิดใน", warn: 5, end: 3.1, top: 60 }],
         extra(L) { RAIN(L, { n: 60, op: 0.4, splash: false }); },
         fx(tl, id, t0, L) {
           behind(L, tl, "bd-man", "man", 540, 1180, 0.7, false, t0, D("count2"), [{ t: 0, mode: "brace", eyes: "normal", mouth: "frown" }]);
           Camp.attach && Camp.attach("bd-man", "spear1f");
           ZF(L, tl, "bd", t0, D("count2"), [["ha1", 700, 0.5, 0], ["ha2", 440, 0.48, 0.4], ["ha3", 780, 0.5, 0.2]], "shamble");
           document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio"));
-          tl.fromTo("#bd-dl", { attr: { transform: "translate(300,0) scale(0.3,1)" } }, { attr: { transform: "translate(300,0) scale(1,1)" }, duration: 0.5, ease: "power3.in", immediateRender: false }, t0 + 4.55);
-          tl.fromTo("#bd-dr", { attr: { transform: "translate(780,0) scale(-0.3,1)" } }, { attr: { transform: "translate(780,0) scale(-1,1)" }, duration: 0.5, ease: "power3.in", immediateRender: false }, t0 + 4.55);
-          tl.set("#bd-bar", { opacity: 1 }, t0 + 4.95); tl.fromTo("#bd-bar", { attr: { transform: "translate(0,-500)" } }, { attr: { transform: "translate(0,0)" }, duration: 0.22, ease: "power3.in", immediateRender: false }, t0 + 4.95);
-          Fx.heart(tl, t0, 5.0, 0.36, 0.8);
-          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 5.05); tl.set("#black", { opacity: 1 }, t0 + 5.15);
+          tl.fromTo("#bd-dl", { attr: { transform: "translate(300,0) scale(0.3,1)" } }, { attr: { transform: "translate(300,0) scale(1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 2.05);
+          tl.fromTo("#bd-dr", { attr: { transform: "translate(780,0) scale(-0.3,1)" } }, { attr: { transform: "translate(780,0) scale(-1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 2.05);
+          tl.set("#bd-bar", { opacity: 1 }, t0 + 2.45); tl.fromTo("#bd-bar", { attr: { transform: "translate(0,-500)" } }, { attr: { transform: "translate(0,0)" }, duration: 0.2, ease: "power3.in", immediateRender: false }, t0 + 2.45);
+          Fx.heart(tl, t0, 2.5, 0.3, 0.85);
+          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 2.55); tl.set("#black", { opacity: 1 }, t0 + 2.65);
         },
       });
 

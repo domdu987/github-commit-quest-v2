@@ -34,8 +34,8 @@ SHOTS = [
     ("fenceFall", ["n17", ("n18", 0.15)], 0.2, 0.9, 7.0),                # twenty of them on the wet ground; the section goes down; the lunge
     ("flee", ["d09", ("n19", 0.2)], 0.05, 0.3, 4.4),                     # run for the back door; ก้อง goes down on the rebar
     ("cover", ["d10", ("d11", 0.2)], 0.1, 0.3, 5.0),                     # "ลุงกันให้" — "ยี่สิบวินาทีนะลุง"
-    ("count", ["n20", ("n21", 0.3)], 0.2, 0.3, 13.0),                    # 20 → 8: he holds the breach with the spear; he is not running
-    ("count2", ["d12"], 0.0, 0.0, 6.1),                                  # 5 → 0: "ปิดซะ ครู" — the bar drops
+    ("count", ["n20", ("n21", 0.3)], 0.2, 0.3, 8.3),                     # 20 → 6 (0.55 s a number): he holds the breach with the spear; he is not running
+    ("count2", ["d12"], 0.0, 0.0, 3.6),                                  # 5 → 0 (0.5 s a number): "ปิดซะ ครู" — the bar drops
     ("after", ["n22"], 0.6, 0.6, 4.0),                                  # black; the corridor; five of them
     ("tq", ["n23", ("d13", 0.2), ("n24", 0.25), ("n25", 0.15)], 0.1, 0.4, 12.0),   # the tourniquet
     ("real", ["n26"], 0.1, 0.4, 5.0),                                   # in real life
