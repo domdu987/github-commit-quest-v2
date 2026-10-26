@@ -1,0 +1,510 @@
+      // ======================================================================================================
+      // เอาชีวิตรอด 99 วัน · EP.5 "ปั๊มร้าง"
+      // ======================================================================================================
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const NIOSH = "ที่มา: <em>CDC NIOSH (สหรัฐฯ)</em> · ";
+      const HUE = { kong: Rig.CAST.kong, phu: Rig.CAST.phu, pim: Rig.CAST.pim };
+      const ZF = (L, tl, pre, t0, dur, list, mode = "shamble", y = 1180) => list.forEach(([w, x, s, ph], k) => behind(L, tl, `${pre}-z${k}`, w, x, y, s, true, t0, dur, [{ t: 0, mode, eyes: "dead", mouth: "snarl", opts: { period: 1.9 + ph } }]));
+      const CLIP = (list) => { list.sort((a, b) => a.t - b.t); for (let n = 0; n + 1 < list.length; n++) list[n].end = Math.min(list[n].end, list[n + 1].t - 0.03); return list; };
+      // a shot cut into three framings: [0, a1), [a1, a2), [a2, end)
+      const split3 = (k, a1, a2, A, B, C) => {
+        add(k, A); shots[shots.length - 1].dur = a1;
+        add(k, B); let sh = shots[shots.length - 1]; sh.start = SH[k].start + a1; sh.dur = a2 - a1;
+        add(k, C); sh = shots[shots.length - 1]; sh.start = SH[k].start + a2; sh.dur = D(k) - a2;
+      };
+      // captions / bubbles of lines inside a window [a, b) of a shot, re-timed to that window
+      const capsAt = (k, a, b, lines, o) => caps(k, lines, o).filter((c) => c.end > a + 0.05 && c.t < b - 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - a), end: Math.min(b - a - 0.03, c.end - a) }));
+      const bubAt = (bb, a, b) => ({ ...bb, t: Math.max(0.02, bb.t - a), end: Math.min(b - a - 0.05, bb.end - a) });
+      // a rig built inside any group (so it moves and scales with it: ปั้น in the back of the pickup)
+      const rigIn = (tl, parent, aid, who, x, y, s, t0, dur, track, flip = false) => {
+        Rig.build(parent, aid, Rig.CAST[who]);
+        document.getElementById(aid).setAttribute("transform", `translate(${x},${y}) scale(${flip ? -s : s},${s})`);
+        Rig.drive(tl, aid, t0, dur, track, [1.1, 3.3]);
+      };
+      // a held water bottle in the first person: our hand (Hand.grip, the fingers closing over the bottle's left edge) round a bottle
+      const HELDBOTTLE = (id, skin, sleeve, level) => `<g id="${id}">${Road.BOTTLE(`${id}-b`, level)}<g transform="translate(-40,10) scale(0.55)">${Hand.grip({ skin, sleeve })}</g></g>`;
+
+      // ---------- icons for this episode ----------
+      PK_ICON.fuel = (p) => `${PKG(p)}${SHADOW(24, 45, 16)}<g class="a-wob" style="transform-origin:24px 40px"><path d="M10,14h20l8,8v20H10z" fill="url(#${p}-red)" stroke="${PK_INK}" stroke-width="2.2" stroke-linejoin="round"/><path d="M14,8h10v7H14z" fill="#3a3f45" stroke="${PK_INK}" stroke-width="1.6"/><path d="M15,26h17M15,34h17" stroke="#fff" stroke-width="2" opacity=".6"/></g>`;
+      SYS_ICON.shirt = (p) => `${PKG(p)}${SHADOW(24, 45, 16)}<g class="a-wob" style="transform-origin:24px 40px"><path d="M15,8L5,15l5,8l4,-3v20h20V20l4,3l5,-8L33,8q-4,6 -9,6t-9,-6z" fill="url(#${p}-red)" stroke="${PK_INK}" stroke-width="2.2" stroke-linejoin="round"/><path d="M18,24h12" stroke="#fff" stroke-width="2" opacity=".6"/></g>`;
+      SYS_ICON.bottle = (p) => `${PKG(p)}${SHADOW(24, 45, 12)}<g class="a-bob"><rect x="15" y="12" width="18" height="32" rx="6" fill="url(#${p}-glass)" stroke="${PK_INK}" stroke-width="2"/><rect x="17" y="24" width="14" height="18" rx="4" fill="url(#${p}-water)"/><rect x="19" y="5" width="10" height="8" rx="2" fill="url(#${p}-blue)" stroke="${PK_INK}" stroke-width="1.6"/></g>`;
+      SYS_ICON.card = (p) => `${PKG(p)}${SHADOW(24, 45, 16)}<g class="a-wob" style="transform-origin:24px 40px"><path d="M7,12L39,8L41,38L9,42Z" fill="url(#${p}-sack)" stroke="${PK_INK}" stroke-width="2.2" stroke-linejoin="round"/><path d="M11,22l26,-3M12,32l26,-3" stroke="#a5804f" stroke-width="2"/></g>`;
+      SYS_ICON.cool = (p) => `${PKG(p)}${SHADOW(24, 45, 18)}<g class="a-bob"><path d="M6,18q18,-8 36,0l2,14q-20,8 -40,0z" fill="url(#${p}-water)" stroke="${PK_INK}" stroke-width="2.2" stroke-linejoin="round"/><path d="M10,24q14,-5 28,0" stroke="#fff" stroke-width="2" opacity=".7" fill="none"/></g><g class="a-pulse" style="transform-origin:24px 40px"><circle cx="14" cy="40" r="2.6" fill="#3b93cf"/><circle cx="24" cy="43" r="2.6" fill="#3b93cf"/><circle cx="34" cy="40" r="2.6" fill="#3b93cf"/></g>`;
+      Object.assign(GameUI.ILL, {
+        drink: `${PKG("dk")}${SHADOW(60, 108, 34)}<g class="a-bob"><rect x="18" y="30" width="36" height="74" rx="10" fill="url(#dk-glass)" stroke="${PK_INK}" stroke-width="3"/><rect x="21" y="58" width="30" height="42" rx="7" fill="url(#dk-water)" opacity=".9"/><rect x="26" y="17" width="20" height="15" rx="3" fill="url(#dk-blue)" stroke="${PK_INK}" stroke-width="2.5"/></g><circle cx="86" cy="52" r="27" fill="#fff" stroke="${PK_INK}" stroke-width="3"/><path d="M86,52V33M86,52l12,8" stroke="${PK_INK}" stroke-width="4" stroke-linecap="round" fill="none"/><path class="a-pulse" style="transform-origin:86px 52px" d="M86,25A27,27 0 0 1 109,40" stroke="#e0564a" stroke-width="7" fill="none" stroke-linecap="round"/>`,
+        heat: `${PKG("he")}${SHADOW(60, 108, 34)}<circle class="a-spin" style="transform-origin:90px 28px" cx="90" cy="28" r="17" fill="url(#he-sun)" stroke="${PK_INK}" stroke-width="2.5"/><circle cx="50" cy="64" r="30" fill="#e0564a" stroke="${PK_INK}" stroke-width="3"/><path d="M36,58l9,5M55,58l9,5M42,78q8,-6 16,0" stroke="${PK_INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/><g class="a-bob"><path d="M30,28q-5,-10 4,-15M50,22q-5,-10 4,-15" stroke="#ff9a3c" stroke-width="4" fill="none" stroke-linecap="round"/></g><rect x="88" y="54" width="12" height="40" rx="6" fill="#fff" stroke="${PK_INK}" stroke-width="2.5"/><circle cx="94" cy="98" r="9" fill="#e0564a" stroke="${PK_INK}" stroke-width="2.5"/><rect class="a-pulse" x="91" y="60" width="6" height="34" fill="#e0564a"/>`,
+        cool: `${PKG("co5")}${SHADOW(60, 108, 34)}<circle cx="60" cy="68" r="30" fill="url(#co5-skin)" stroke="${PK_INK}" stroke-width="3"/><path d="M46,66q4,4 8,0M66,66q4,4 8,0M52,82q8,4 16,0" stroke="${PK_INK}" stroke-width="3" fill="none" stroke-linecap="round"/><g class="a-bob"><path d="M24,44q36,-22 72,0l2,12q-38,-16 -76,0z" fill="url(#co5-water)" stroke="${PK_INK}" stroke-width="3" stroke-linejoin="round"/><circle cx="36" cy="60" r="3" fill="#3b93cf"/><circle cx="84" cy="60" r="3" fill="#3b93cf"/></g><g class="a-wob" style="transform-origin:104px 90px"><path d="M96,70l20,-4l2,40l-20,4z" fill="url(#co5-sack)" stroke="${PK_INK}" stroke-width="2.5"/></g>`,
+        nomouth: `${PKG("nm")}${SHADOW(60, 108, 34)}<path d="M14,96q46,-30 92,0" fill="#6b7a5a" stroke="${PK_INK}" stroke-width="3"/><circle cx="54" cy="58" r="28" fill="url(#nm-skin)" stroke="${PK_INK}" stroke-width="3"/><path d="M40,54q5,3 10,0M58,54q5,3 10,0" stroke="${PK_INK}" stroke-width="3" fill="none" stroke-linecap="round"/><g class="a-wob" style="transform-origin:92px 40px"><rect x="80" y="16" width="20" height="40" rx="6" fill="url(#nm-glass)" stroke="${PK_INK}" stroke-width="2.5" transform="rotate(30 90 36)"/></g><g class="a-pulse" style="transform-origin:76px 74px"><circle cx="76" cy="74" r="18" fill="none" stroke="#d9342b" stroke-width="6"/><path d="M63,87L89,61" stroke="#d9342b" stroke-width="6" stroke-linecap="round"/></g>`,
+        amb: `${PKG("am")}${SHADOW(60, 108, 44)}<g class="a-bob"><path d="M10,40h64v52H10z" fill="#fff" stroke="${PK_INK}" stroke-width="3"/><path d="M74,52h20l16,18v22H74z" fill="#fff" stroke="${PK_INK}" stroke-width="3" stroke-linejoin="round"/><path d="M80,58h12l10,12H80z" fill="url(#am-glass)" stroke="${PK_INK}" stroke-width="2"/><path d="M36,52h12v10h10v12H48v10H36V74H26V62h10z" fill="url(#am-red)" stroke="${PK_INK}" stroke-width="2"/><circle cx="30" cy="94" r="10" fill="#2e2a26"/><circle cx="90" cy="94" r="10" fill="#2e2a26"/><rect class="a-pulse" x="40" y="30" width="20" height="10" rx="3" fill="#2f6fb8" style="transform-origin:50px 35px"/></g>`,
+        slow: `${PKG("sl")}${SHADOW(60, 108, 34)}<circle class="a-spin" style="transform-origin:88px 30px" cx="88" cy="30" r="18" fill="url(#sl-sun)" stroke="${PK_INK}" stroke-width="2.5"/><g class="a-wob" style="transform-origin:50px 104px"><circle cx="50" cy="42" r="16" fill="#a3ae8e" stroke="${PK_INK}" stroke-width="3"/><path d="M50,58v30M50,66l-18,14M50,66l22,8M50,88l-12,16M50,88l10,16" stroke="#a3ae8e" stroke-width="9" stroke-linecap="round" fill="none"/></g><path d="M78,74h22M82,86h16M86,98h10" stroke="#9aa0a6" stroke-width="4" stroke-linecap="round"/>`,
+      });
+      const CHK5 = {
+        hot: (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<rect x="48" y="12" width="24" height="72" rx="12" fill="#fff" stroke="${PK_INK}" stroke-width="3"/><circle cx="60" cy="92" r="16" fill="#e0564a" stroke="${PK_INK}" stroke-width="3"/><rect class="a-pulse" x="56" y="22" width="8" height="62" fill="#e0564a"/><path d="M76,24h8M76,38h8M76,52h8" stroke="${PK_INK}" stroke-width="2"/>`,
+        dry: (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<rect x="20" y="36" width="80" height="56" rx="12" fill="#e08a6a" stroke="${PK_INK}" stroke-width="3"/><path d="M34,52l8,6l-6,8M64,48l6,8l-8,6M84,62l-8,6" stroke="#b5583a" stroke-width="3" fill="none"/><circle class="a-spin" style="transform-origin:94px 26px" cx="94" cy="26" r="14" fill="url(#${p}-sun)" stroke="${PK_INK}" stroke-width="2"/>`,
+        confused: (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<circle cx="60" cy="62" r="30" fill="url(#${p}-skin)" stroke="${PK_INK}" stroke-width="3"/><g class="a-spin" style="transform-origin:46px 58px"><path d="M46,58m-7,0a7,7 0 1 1 7,7a4,4 0 1 1 -3,-5" stroke="${PK_INK}" stroke-width="2.6" fill="none"/></g><g class="a-spin" style="transform-origin:72px 58px"><path d="M72,58m-7,0a7,7 0 1 1 7,7a4,4 0 1 1 -3,-5" stroke="${PK_INK}" stroke-width="2.6" fill="none"/></g><path d="M50,80q10,-6 20,2" stroke="${PK_INK}" stroke-width="3" fill="none"/><text x="92" y="34" font-family="Kanit" font-weight="900" font-size="30" fill="#d9342b">?</text>`,
+        faint: (p) => `${PKG(p)}${SHADOW(60, 104, 44)}<circle cx="28" cy="80" r="14" fill="url(#${p}-skin)" stroke="${PK_INK}" stroke-width="3"/><path d="M42,82h56" stroke="#b8463a" stroke-width="16" stroke-linecap="round"/><path d="M22,78l6,2M30,78l6,2" stroke="${PK_INK}" stroke-width="2.4"/><g class="a-bob"><text x="54" y="52" font-family="Kanit" font-weight="900" font-size="22" fill="#2f6fb8">z</text><text x="70" y="40" font-family="Kanit" font-weight="900" font-size="28" fill="#2f6fb8">z</text></g>`,
+      };
+      // the slow roll of the heat over a shot: the shimmer bands drift and breathe
+      const HEAT = (tl, id, t0, dur) => { document.querySelectorAll(`#${id} .rshim`).forEach((g, k) => { tl.fromTo(g, { x: 0 }, { x: k % 2 ? 70 : -70, duration: dur, ease: "none", immediateRender: false }, t0); tl.fromTo(g, { opacity: 0.7 }, { opacity: 1, duration: 0.6, repeat: Math.ceil(dur / 0.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); }); };
+      const SPIN = (tl, sel, t0, dur, turns) => document.querySelectorAll(sel).forEach((g) => tl.fromTo(g, { rotation: 0 }, { rotation: 360 * turns, transformOrigin: "50% 50%", duration: dur, ease: "none", immediateRender: false }, t0));
+
+      // ---------- 1. hook, first person on the white-hot highway: our hand, the last bottle; "อย่ารอให้หิวน้ำ" ----------
+      add("hook", {
+        set: "highwayPov", setOpts: { id: "hk", time: "noon" }, dark: 0.08, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1040, 0.95, 540, 900), drift: { s: 0.012 } }, { t: vo("hook", 2) - 0.05, ...fr(540, 1020, 1.25, 540, 900), drift: { s: 0.02 } }] },
+        shake: (t) => 5 * Math.sin(t * 5.4) + 2 * Math.sin(t * 11.7),
+        captions: caps("hook"),
+        extra(L) {
+          put(L.fg, `<g id="hk-hold" opacity="0" transform="translate(860,2700) rotate(-10) scale(1.9)">${HELDBOTTLE("hk-hb", HUE.kong.skin, HUE.kong.sleeve, 0.22)}</g>`);
+          put(L.glow, `<circle id="hk-glare" cx="700" cy="330" r="700" fill="url(#rGlare)" opacity=".7"/>`);
+        },
+        fx(tl, id, t0, L) {
+          ZF(L, tl, "hk", t0, D("hook"), [["ha1", 610, 0.1, 0], ["ha3", 470, 0.09, 0.4]], "shamble", 1022);
+          tl.set("#hk-hold", { opacity: 1 }, t0 + vo("hook", 1) - 0.2); tl.fromTo("#hk-hold", { attr: { transform: "translate(860,2700) rotate(-10) scale(1.9)" } }, { attr: { transform: "translate(800,1560) rotate(-6) scale(1.9)" }, duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + vo("hook", 1) - 0.2);
+          tl.fromTo("#hk-hold", { attr: { transform: "translate(800,1560) rotate(-6) scale(1.9)" } }, { attr: { transform: "translate(806,1552) rotate(4) scale(1.9)" }, duration: 0.16, repeat: 7, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + vo("hook", 1) + 0.6);   // a shake: the water sloshes at the bottom
+          tl.to("#hk-hold", { attr: { transform: "translate(860,2700) rotate(-10) scale(1.9)" }, duration: 0.4, ease: "power2.in" }, t0 + vo("hook", 2) - 0.3); tl.set("#hk-hold", { opacity: 0 }, t0 + vo("hook", 2) + 0.12);
+          tl.fromTo("#hk-glare", { opacity: 0.55 }, { opacity: 0.85, duration: 0.7, repeat: Math.ceil(D("hook") / 0.7), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Fx.punch(tl, `#${id} .stage`, t0 + vo("hook", 2), 1.08, 0.4); Fx.glitch(tl, `#${id}`, t0 + vo("hook", 2), 0.22, 10, 11); red(tl, t0 + vo("hook", 2));
+          Fx.heart(tl, t0 + vo("hook", 1), D("hook") - vo("hook", 1), 0.55, 0.5); HEAT(tl, id, t0, D("hook"));
+          tl.set("#black", { opacity: 1 }, t0 + D("hook") - 0.12); tl.set("#black", { opacity: 0 }, t0 + D("hook"));
+        },
+      });
+
+      // ---------- 2. chapter: the board, 95 days; the school is not safe any more ----------
+      add("chapter", {
+        set: "schoolYard", setOpts: { id: "ch", time: "day", level: 0.4, breakAt: 1100, fallen: true }, dark: 0.25, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(700, 760, 0.62, 540, 900), drift: { s: 0.012, y: 10 } }] },
+        captions: caps("chapter"),
+        ui: [{ type: "board", t: 0.05, day: "95", ep: "ตอนที่ 5 · ปั๊มร้าง", top: 330 }],
+        fx(tl, id, t0) { Fx.heart(tl, t0 + 0.6, D("chapter") - 0.6, 0.7, 0.3); Fx.punch(tl, `#${id} .stage`, t0 + F("chapter", 0, 1) + 0.3, 1.05, 0.3); red(tl, t0 + F("chapter", 0, 1) + 0.3, 0.4, 0.5); },
+      });
+
+      // ---------- 3. the pickup: three litres, six bottles, five people ----------
+      add("pack", {
+        set: "schoolYard", setOpts: { id: "pa", time: "morning", level: 0.4, breakAt: 1100, fallen: true }, dark: 0.15, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(380, 1240, 0.9, 540, 1080), drift: { s: 0.015 } }, { t: vo("pack", 1) - 0.05, glide: 0.5, ...fr(620, 1240, 1.0, 540, 1080), drift: { s: 0.02 } }] },
+        actors: [HO(-160, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" }),
+          KO(560, 1500, 0.9, [{ t: 0, mode: "carry", eyes: "normal", mouth: "flat" }], { prop: "packs", moveTo: { x: 420, dur: 2.2, ease: "power1.out" } }),
+          PH(1000, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true, prop: "bottle" }),
+          PI(800, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("pack", 1), mode: "point", eyes: "normal", mouth: "flat" }], { flip: true }),
+          PU(190, 1334, 0.5, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        bubbles: [bub("pack", 0, 40, 520, 230), bub("pack", 1, 470, 520, 240)],
+        ui: [{ type: "counter", t: F("pack", 0, 1) - 0.1, end: D("pack") - 0.05, label: "น้ำมัน", icon: "fuel", unit: "ลิตร", max: 5, keys: [{ t: F("pack", 0, 1), v: 3 }], top: 150 },
+          { type: "counter", t: F("pack", 0, 2) - 0.1, end: D("pack") - 0.05, label: "น้ำดื่ม", icon: "water", unit: "ขวด", max: 6, sub: "5 คน", keys: [{ t: F("pack", 0, 2), v: 6 }], top: 150, right: true }],
+        extra(L) { put(L.set, `<g transform="translate(300,1520) scale(0.85)">${Road.TRUCK("pa-truck")}</g>`); },
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("pack"), 0.7, 0.3); Fx.punch(tl, `#${id} .stage`, t0 + F("pack", 0, 1), 1.04, 0.3); },
+      });
+
+      // ---------- 4. seen from the fallen fence: ปั้น waves from the back of the pickup; "ลุงหมานค่ะ" — the gap is empty, his hat on the post ----------
+      split("wave", vo("wave", 2) - 0.1, {
+        set: "fieldRoad", setOpts: { id: "wv", time: "noon", sunX: 760 }, dark: 0.12, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1180, 0.95, 540, 1000), drift: { s: 0.01 } }] },
+        captions: CLIP([...caps("wave", [0]), ...caps("wave", [1], { quote: true })].filter((c) => c.t < vo("wave", 2) - 0.15)),
+        extra(L) { put(L.act, `<g id="wv-tr" transform="translate(540,1900) scale(1.1)">${Road.TRUCKR("wv-truck")}</g>`); },
+        fx(tl, id, t0, L) {
+          rigIn(tl, document.getElementById("wv-truck"), "wv-pun", "pun", 60, -330, 0.75, t0, D("wave"), [{ t: 0, mode: "wave", eyes: "normal", mouth: "smile", opts: { period: 1.1 } }]);
+          tl.fromTo("#wv-tr", { attr: { transform: "translate(540,1900) scale(1.1)" } }, { attr: { transform: "translate(548,1160) scale(0.2)" }, duration: vo("wave", 2) - 0.1, ease: "power1.in", immediateRender: false }, t0);
+          tl.fromTo("#wv-truck", { y: 0 }, { y: -6, duration: 0.18, repeat: Math.ceil(D("wave") / 0.18), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Fx.heart(tl, t0, vo("wave", 2), 0.65, 0.35); HEAT(tl, id, t0, vo("wave", 2));
+        },
+      }, {
+        set: "schoolYard", setOpts: { id: "wg", time: "noon", level: 0.4, breakAt: 1100, fallen: true }, dark: 0.2, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(1260, 920, 1.5, 540, 1000), drift: { s: 0.03 } }] },
+        captions: capsFrom("wave", vo("wave", 2) - 0.1, [2], { quote: true }),
+        extra(L) { put(L.set, Road.HAT("wg-hat", 1342, 846, 0.9, -12)); },
+        fx(tl, id, t0, L) {
+          behind(L, tl, "wg-man", "man", 1215, 1180, 0.9, false, t0, 1, [{ t: 0, mode: "still", eyes: "dead", mouth: "flat" }]);
+          tl.set("#wg-man", { opacity: 0 }, t0); tl.set("#wg-man", { opacity: 0.85 }, t0 + 0.32); tl.set("#wg-man", { opacity: 0 }, t0 + 0.42);   // two frames of him, then the empty gap
+          tl.fromTo("#wg-hat", { attr: { transform: "translate(1342,846) rotate(-12) scale(0.9)" } }, { attr: { transform: "translate(1342,846) rotate(-4) scale(0.9)" }, duration: 0.9, repeat: 3, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Fx.glitch(tl, `#${id}`, t0 + 0.3, 0.15, 10, 21); red(tl, t0 + 0.35, 0.5, 0.6); Fx.heart(tl, t0, D("wave") - vo("wave", 2), 0.45, 0.6);
+        },
+      });
+
+      // ---------- 5. the four-lane highway from above, then from the side: at noon they are slow ----------
+      split("highway", vo("highway", 1) - 0.1, {
+        set: "highwayTop", setOpts: { id: "ht" }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(300, 1500, 0.62, 540, 960), drift: { s: 0.01, y: -30 } }] },
+        captions: caps("highway", [0]),
+        fx(tl, id, t0) {
+          const k = vo("highway", 1) - 0.1;
+          tl.fromTo("#ht-truck", { attr: { transform: "translate(40,2500)" } }, { attr: { transform: "translate(-40,500)" }, duration: k, ease: "none", immediateRender: false }, t0);
+          tl.fromTo("#ht-truckr", { rotation: 0 }, { rotation: -6, duration: k / 3, repeat: 2, yoyo: true, ease: "sine.inOut", svgOrigin: "0 0", immediateRender: false }, t0);
+          [0, 1, 2, 3, 4].forEach((z) => tl.fromTo(`#ht-z${z}`, { x: 0, y: 0 }, { x: (z % 2 ? 30 : -24), y: 40, duration: k, ease: "none", immediateRender: false }, t0));
+          Fx.heart(tl, t0, k, 0.7, 0.3);
+        },
+      }, {
+        set: "highway", setOpts: { id: "hs", time: "noon", billboardX: 1600 }, dark: 0.08, blur: { far: 3, mid: 1 },
+        cam: { keys: [{ t: 0, ...fr(500, 1250, 0.85, 540, 1080), drift: { s: 0.012, x: 20 } }] },
+        actors: [{ who: "ha1", x: 120, y: 1500, s: 0.9, track: [{ t: 0, mode: "shamble", eyes: "dead", mouth: "snarl", opts: { period: 2.6 } }], moveTo: { x: 170, dur: 4 } },
+          { who: "ha2", x: 820, y: 1520, s: 0.92, flip: true, track: [{ t: 0, mode: "shamble", eyes: "dead", mouth: "snarl", opts: { period: 2.9 } }], moveTo: { x: 780, dur: 4 } }],
+        captions: capsFrom("highway", vo("highway", 1) - 0.1, [1]),
+        ui: [{ type: "tip", t: F("highway", 1, 1) - (vo("highway", 1) - 0.1) - 0.1, end: D("highway") - (vo("highway", 1) - 0.1) - 0.05, ill: "slow", label: "กฎของโลกนี้", text: "แดดเที่ยง → พวกมัน{ช้าลง}", tone: "rule", top: 230 }],
+        extra(L) { put(L.set, `<g id="hs-tr" transform="translate(-700,1640) scale(0.9)">${Road.TRUCK("hs-truck")}</g>`); },
+        fx(tl, id, t0) {
+          const d = D("highway") - (vo("highway", 1) - 0.1);
+          tl.fromTo("#hs-tr", { attr: { transform: "translate(-700,1640) scale(0.9)" } }, { attr: { transform: "translate(1500,1640) scale(0.9)" }, duration: d, ease: "none", immediateRender: false }, t0);
+          SPIN(tl, "#hs-truck-w0 .spin, #hs-truck-w1 .spin", t0, d, 5);
+          HEAT(tl, id, t0, d); Fx.heart(tl, t0, d, 0.6, 0.4);
+        },
+      });
+
+      // ---------- 6. the needle at E; the engine coughs and dies on the bridge; "ปั๊มข้างหน้า อีกสี่กิโล" ----------
+      split("empty", vo("empty", 1) - 0.1, {
+        set: "cab", setOpts: { id: "cb", time: "noon", bridge: true, fuel: -40 }, dark: 0.1, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 0.95, 540, 1000), drift: { s: 0.012 } }, { t: F("empty", 0, 1) - 0.05, glide: 0.4, ...fr(330, 1330, 1.45, 540, 1100) }] },
+        shake: (t) => 3 * Math.sin(t * 13) + (t > F("empty", 0, 1) ? 9 * Math.sin(t * 31) * Math.max(0, 1 - (t - F("empty", 0, 1)) / 0.9) : 0),
+        captions: caps("empty", [0]),
+        fx(tl, id, t0) {
+          const E = t0 + F("empty", 0, 1);
+          tl.fromTo("#cb-needle", { attr: { transform: "translate(0,30) rotate(-40)" } }, { attr: { transform: "translate(0,30) rotate(-64)" }, duration: E - t0, ease: "power1.in", immediateRender: false }, t0);
+          for (let t = 0.2; t < vo("empty", 1); t += 0.4) { tl.set("#cb-warn", { opacity: 1 }, t0 + t); tl.set("#cb-warn", { opacity: 0.15 }, t0 + t + 0.2); }
+          tl.fromTo("#cb-speed", { attr: { transform: "rotate(-40)" } }, { attr: { transform: "rotate(-118)" }, duration: 1.2, ease: "power2.in", immediateRender: false }, E);
+          tl.fromTo("#cb-wheel", { attr: { transform: "translate(520,1560) rotate(0)" } }, { attr: { transform: "translate(520,1560) rotate(8)" }, duration: 0.2, repeat: 3, yoyo: true, immediateRender: false }, E);
+          Fx.punch(tl, `#${id} .stage`, E, 1.06, 0.4); red(tl, E, 0.5, 0.6); Fx.heart(tl, t0, vo("empty", 1), 0.6, 0.45); HEAT(tl, id, t0, vo("empty", 1));
+        },
+      }, {
+        set: "highway", setOpts: { id: "es", time: "noon", bridge: true, sign: "4", signX: 760, billboard: false, cars: [[-620, 1420, 0.7, "#e8e2d4", { smash: true }]] }, dark: 0.08, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 0.72, 540, 1000), drift: { s: 0.012 } }] },
+        actors: [HO(160, 1560, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "o", sweat: true }], {}), PI(-60, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown", sweat: true }]),
+          KO(380, 1560, 0.9, [{ t: 0, mode: "carry", eyes: "normal", mouth: "flat", sweat: true }], { prop: "packs" })],
+        bubbles: [bubAt(bub("empty", 1, 40, 520, 240), vo("empty", 1) - 0.1, D("empty"))],
+        extra(L) { put(L.set, `<g transform="translate(860,1540) scale(0.85)">${Road.TRUCK("es-truck")}</g>`); },
+        fx(tl, id, t0) { tl.set("#es-truck-puff", { opacity: 1 }, t0); tl.fromTo("#es-truck-puff", { y: 0, opacity: 0.9 }, { y: -80, opacity: 0, duration: 1.4, immediateRender: false }, t0); HEAT(tl, id, t0, D("empty") - vo("empty", 1) + 0.1); },
+      });
+
+      // ---------- 7. the walk: 39 degrees; ก้อง carries the most and won't drink — he gives his bottle to ปั้น ----------
+      add("walk", {
+        set: "highway", setOpts: { id: "wk", time: "noon", cars: [[-900, 1420, 0.7, "#c8c2b4", { flat: true }], [1700, 1420, 0.72, "#3f5a8a", { door: true }]] }, dark: 0.08, blur: { far: 3, mid: 1 },
+        cam: { keys: [{ t: 0, ...fr(380, 1240, 0.78, 540, 1060), drift: { s: 0.01, x: 42 } }, { t: vo("walk", 2) - 0.05, glide: 0.5, ...fr(720, 1260, 1.05, 540, 1060), drift: { s: 0.015, x: 42 } }] },
+        actors: [PH(900, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat", sweat: true, opts: { period: 1.3 } }], { moveTo: { x: 1280, dur: D("walk") } }),
+          PI(640, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "frown", sweat: true, opts: { period: 1.3 } }], { moveTo: { x: 1020, dur: D("walk") } }),
+          HO(380, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "closed", mouth: "frown", sweat: true, opts: { period: 1.35 } }], { moveTo: { x: 760, dur: D("walk") } }),
+          KO(-160, 1520, 0.9, [{ t: 0, mode: "carry", eyes: "normal", mouth: "frown", sweat: true }, { t: vo("walk", 2) - 0.2, mode: "give", eyes: "normal", mouth: "smile", sweat: true }], { prop: "bottle", moveTo: { x: 330, dur: vo("walk", 2) - 0.2 } }),
+          PU(170, 1530, 0.55, [{ t: 0, mode: "walk", eyes: "normal", mouth: "frown", sweat: true, opts: { period: 0.9 } }], { moveTo: { x: 500, dur: vo("walk", 2) - 0.2 }, until: vo("walk", 2) - 0.2 }),
+          PU(500, 1530, 0.55, [{ t: 0, mode: "reach", eyes: "normal", mouth: "o", sweat: true }], { flip: true, from: vo("walk", 2) - 0.2 })],
+        captions: caps("walk", [0, 1]),
+        bubbles: [bub("walk", 2, 60, 520, 260)],
+        ui: [{ type: "counter", t: F("walk", 0, 1) - 0.1, end: D("walk") - 0.05, label: "เที่ยงตรง · อุณหภูมิ", icon: "thermo", unit: "°C", max: 12, keys: [{ t: F("walk", 0, 1) - 0.1, v: 36 }, { t: F("walk", 0, 1) + 0.8, v: 39 }], alarm: F("walk", 0, 1) + 0.8, top: 150 }],
+        fx(tl, id, t0) { HEAT(tl, id, t0, D("walk")); Fx.heart(tl, t0, D("walk"), 0.65, 0.35); Fx.punch(tl, `#${id} .stage`, t0 + F("walk", 1, 2), 1.04, 0.3); red(tl, t0 + F("walk", 1, 2), 0.35, 0.5); },
+      });
+
+      // ---------- 8. the rule (NIOSH): thirst is already heat exhaustion; a cup every 15–20 minutes ----------
+      add("rule", {
+        set: "highway", setOpts: { id: "rl", time: "noon", cars: [[1500, 1420, 0.72, "#3f5a8a", { door: true }]] }, dark: 0.1, blur: { far: 4, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.25, 540, 1150), drift: { s: 0.015, x: 30 } }] },
+        actors: [PU(560, 1520, 0.55, [{ t: 0, mode: "sipUp", eyes: "closed", mouth: "flat", sweat: true }], { prop: "bottle" }), KO(760, 1520, 0.9, [{ t: 0, mode: "carry", eyes: "normal", mouth: "flat", sweat: true }], { prop: "packs", flip: true })],
+        captions: caps("rule"),
+        ui: [{ type: "tip", t: vo("rule", 0) - 0.1, end: D("rule") - 0.05, ill: "drink", label: "ดื่มน้ำ · NIOSH", text: "1 แก้ว ทุก [15–20 นาที] · {หิวน้ำ = เพลียแดดแล้ว}", tone: "rule", top: 230 },
+          { type: "src", t: vo("rule", 0) + 0.2, end: vo("rule", 1) - 0.1, top: 600, text: NIOSH + "“Symptoms of heat exhaustion include: Headache · Nausea · Dizziness · Weakness · Irritability · Thirst · Heavy sweating”" },
+          { type: "src", t: vo("rule", 1), end: D("rule") - 0.05, top: 600, text: NIOSH + "“For moderate activities in the heat that last less than 2 hours, drink 1 cup (8 oz.) of water every 15–20 minutes.”" }],
+        fx(tl, id, t0) { HEAT(tl, id, t0, D("rule")); Fx.heart(tl, t0, D("rule"), 0.7, 0.3); Fx.punch(tl, `#${id} .stage`, t0 + F("rule", 0, 1), 1.05, 0.35); },
+      });
+
+      // ---------- 9. "ทำไมถนนมันเอียง" — he sways and goes down on the asphalt ----------
+      add("confuse", {
+        set: "highway", setOpts: { id: "cf", time: "noon", cars: [[-500, 1420, 0.7, "#e8e2d4", { smash: true }]] }, dark: 0.12, blur: { far: 4, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 1.1, 540, 1100), r: -3, drift: { s: 0.02, r: -2 } }, { t: F("confuse", 1, 1) - 0.05, ...fr(560, 1420, 1.3, 540, 1250), r: 6, drift: { s: 0.02 } }] },
+        shake: (t) => 4 * Math.sin(t * 3.1) + 3 * Math.sin(t * 7.7) + (t > F("confuse", 1, 1) && t < F("confuse", 1, 1) + 0.35 ? 12 * Math.sin(t * 25) : 0),
+        actors: [KO(560, 1520, 0.9, [{ t: 0, mode: "dizzy", eyes: "pain", mouth: "o", sweat: true }, { t: F("confuse", 1, 1) - 0.1, mode: "fall", eyes: "closed", mouth: "o" }, { t: F("confuse", 1, 1) + 0.6, mode: "lie", eyes: "closed", mouth: "o" }], { prop: "packs" }),
+          PI(260, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat", sweat: true }, { t: F("confuse", 1, 1), mode: "stopHand", eyes: "wide", mouth: "scream" }])],
+        captions: caps("confuse", [1]),
+        bubbles: [bub("confuse", 0, 300, 520, 200)],
+        fx(tl, id, t0, L) {
+          const X = t0 + F("confuse", 1, 1);
+          tl.fromTo(`#${id} .stage`, { filter: "blur(0px)" }, { filter: "blur(3px)", duration: 0.5, repeat: 3, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.4);
+          tl.set(`#${id} .stage`, { filter: "none" }, X - 0.15);
+          impact(tl, id, L, X + 0.45, 560, 1300, 0.8); red(tl, X + 0.45, 0.6, 0.6); Fx.glitch(tl, `#${id}`, X + 0.45, 0.2, 10, 21);
+          HEAT(tl, id, t0, D("confuse")); Fx.heart(tl, t0, D("confuse"), 0.5, 0.6);
+        },
+      });
+
+      // ---------- 10. the signs (NIOSH): hot, dry, confused, out — heat stroke; 41 degrees in 10–15 minutes ----------
+      add("signs", {
+        set: "highway", setOpts: { id: "sg", time: "noon", cars: [[-500, 1420, 0.7, "#e8e2d4", { smash: true }]] }, dark: 0.12, blur: { far: 4, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(560, 1420, 1.2, 540, 1500), drift: { s: 0.015 } }, { t: vo("signs", 1) - 0.05, glide: 0.5, ...fr(600, 1300, 0.85, 540, 1300), drift: { s: 0.015 } }] },
+        actors: [KO(940, 1540, 0.9, [{ t: 0, mode: "lie", eyes: "closed", mouth: "o", sweat: true }]), PH(300, 1540, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat", sweat: true }]),
+          PI(1100, 1540, 0.9, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o", sweat: true }], { flip: true }), PU(1260, 1540, 0.55, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("signs", [1, 2]),
+        ui: [{ type: "signs", t: vo("signs", 0) + 0.1, items: ["<em>ตัวร้อนจัด</em>", "ผิว<em>ร้อน แห้ง</em> หรือเหงื่อท่วม", "<em>สับสน</em> พูดไม่ชัด", "<em>หมดสติ</em>"], icons: [CHK5.hot, CHK5.dry, CHK5.confused, CHK5.faint], ok: [1, 1, 1, 1], at: [vo("signs", 0) + 0.1, F("signs", 0, 1), F("signs", 0, 2), F("signs", 0, 2) + 0.6], end: vo("signs", 1) - 0.1, top: 170 },
+          { type: "skill", t: vo("signs", 0) + 0.3, end: vo("signs", 1) - 0.1, x: 560, y: 900, name: "ภู", skill: "หมอ", desc: "รู้อาการ · ปฐมพยาบาลได้", icon: "medic" },
+          { type: "tip", t: vo("signs", 1) - 0.05, end: D("signs") - 0.05, ill: "heat", label: "ลมแดด · NIOSH", text: "ร้ายแรงที่สุด · ตัวร้อน [41°C] ใน {10–15 นาที}", tone: "danger", top: 230 },
+          { type: "src", t: vo("signs", 1) + 0.3, end: vo("signs", 2) - 0.1, top: 600, text: NIOSH + "“Heat stroke is the most serious heat-related illness.”" },
+          { type: "src", t: vo("signs", 2), end: D("signs") - 0.05, top: 600, text: NIOSH + "“When heat stroke occurs, the body temperature can rise to 106°F or higher within 10 to 15 minutes.”" }],
+        bubbles: [bub("signs", 0, 80, 1180, 260)],
+        fx(tl, id, t0, L) {
+          ZF(L, tl, "sg", t0, D("signs"), [["ha1", 1500, 0.55, 0], ["ha3", 1700, 0.52, 0.3]], "shamble", 1150);
+          route(tl, "sg-z0", t0, [{ t: 0, x: 1500, y: 1150 }, { t: D("signs"), x: 1400, y: 1150 }], 0.55, true); route(tl, "sg-z1", t0, [{ t: 0, x: 1700, y: 1150 }, { t: D("signs"), x: 1620, y: 1150 }], 0.52, true);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("signs", 1, 1), 1.06, 0.4); red(tl, t0 + F("signs", 1, 1), 0.6, 0.6); Fx.glitch(tl, `#${id}`, t0 + F("signs", 2, 1), 0.2, 10, 31);
+          HEAT(tl, id, t0, D("signs")); Fx.heart(tl, t0, D("signs"), 0.45, 0.65);
+        },
+      });
+
+      // ---------- 11. into the shade under the overpass; off with the outer shirt ----------
+      add("shade", {
+        set: "underpass", setOpts: { id: "sd" }, dark: 0.1, blur: { far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 0.95, 540, 1150), drift: { s: 0.015 } }] },
+        actors: [KO(1560, 1560, 0.9, [{ t: 0, mode: "lie", eyes: "closed", mouth: "o", sweat: true }], { moveTo: { x: 980, dur: 2.2, ease: "power1.inOut" } }),
+          PH(900, 1560, 0.9, [{ t: 0, mode: "drag", eyes: "normal", mouth: "flat", sweat: true }, { t: 2.3, mode: "kneelAid", eyes: "normal", mouth: "flat" }], { moveTo: { x: 320, dur: 2.2, ease: "power1.inOut" } }),
+          PI(1700, 1560, 0.9, [{ t: 0, mode: "walk", eyes: "wide", mouth: "o", sweat: true }, { t: 2.3, mode: "crouch", eyes: "normal", mouth: "flat" }], { flip: true, moveTo: { x: 1160, dur: 2.2, ease: "power1.inOut" } })],
+        bubbles: [bub("shade", 0, 40, 520, 260)],
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("shade"), 0.55, 0.5); },
+      });
+
+      // ---------- 12. ปั้น runs with the bottle; "อย่า… เขาไม่รู้สึกตัว" — nothing by mouth ----------
+      add("nodrink", {
+        set: "underpass", setOpts: { id: "nd" }, dark: 0.12, blur: { far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.0, 540, 1150), drift: { s: 0.015 } }, { t: vo("nodrink", 2) - 0.05, glide: 0.4, ...fr(480, 1420, 1.3, 540, 1250), drift: { s: 0.02 } }] },
+        actors: [KO(980, 1560, 0.9, [{ t: 0, mode: "lie", eyes: "closed", mouth: "o", sweat: true }]),
+          PH(320, 1560, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }, { t: vo("nodrink", 1) - 0.1, mode: "stopHand", eyes: "normal", mouth: "flat" }]),
+          PU(1250, 1560, 0.55, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: vo("nodrink", 1), mode: "give", eyes: "wide", mouth: "o" }], { flip: true, prop: "bottle", moveTo: { x: 760, dur: vo("nodrink", 1), ease: "power1.out" } })],
+        captions: caps("nodrink", [2]),
+        bubbles: [bub("nodrink", 0, 520, 520, 300), bub("nodrink", 1, 60, 520, 260)],
+        ui: [{ type: "tip", t: vo("nodrink", 2) - 0.1, end: D("nodrink") - 0.05, ill: "nomouth", label: "หมดสติ · MedlinePlus", text: "หมดสติ → {ห้ามป้อนอะไรเข้าปาก} แม้แต่น้ำ", tone: "danger", top: 230 }],
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + vo("nodrink", 1), 1.05, 0.35); Fx.punch(tl, `#${id} .stage`, t0 + F("nodrink", 2, 1), 1.06, 0.4); red(tl, t0 + F("nodrink", 2, 1), 0.5, 0.6); Fx.heart(tl, t0, D("nodrink"), 0.55, 0.5); },
+      });
+
+      // ---------- 13. "น้ำเหลือสองขวด" — "ใช้ไปเลย"; then first person: the cooling cloths and the fan (craft: ผ้าเย็น) ----------
+      split("craft", vo("craft", 2) - 0.1, {
+        set: "underpass", setOpts: { id: "cr" }, dark: 0.12, blur: { far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(400, 1300, 1.05, 540, 1150), drift: { s: 0.015 } }] },
+        actors: [HO(120, 1560, 0.9, [{ t: 0, mode: "give", eyes: "wide", mouth: "o" }], { prop: "bottleE" }), PI(400, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("craft", 1), mode: "point", eyes: "normal", mouth: "flat" }], { flip: true }),
+          KO(1180, 1580, 0.9, [{ t: 0, mode: "lie", eyes: "closed", mouth: "o", sweat: true }])],
+        bubbles: [bub("craft", 0, 40, 520, 190), bubAt(bub("craft", 1, 260, 520, 220), 0, vo("craft", 2) - 0.1)],
+        ui: [{ type: "counter", t: 0.1, end: vo("craft", 2) - 0.15, label: "น้ำดื่ม", icon: "water", unit: "ขวด", max: 6, keys: [{ t: 0.1, v: 2 }], alarm: 0.3, top: 150, right: true },
+          { type: "skill", t: vo("craft", 1) + 0.1, end: vo("craft", 2) - 0.15, x: 40, y: 860, name: "ครูพิม", skill: "ผู้นำ", desc: "ตัดสินใจแทนทุกคน", icon: "lead" }],
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + vo("craft", 1), 1.05, 0.35); Fx.heart(tl, t0, vo("craft", 2), 0.6, 0.45); },
+      }, {
+        set: "aidClose", setOpts: { id: "ac" }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 960), drift: { s: 0.012 } }] },
+        captions: capsFrom("craft", vo("craft", 2) - 0.1, [2, 3, 4]),
+        ui: [{ type: "craft", t: 0.2, end: D("craft") - (vo("craft", 2) - 0.1) - 0.1, top: 150, title: "สูตรประดิษฐ์", who: "สมุดสูตร · วันที่ 104",
+          parts: [{ icon: "shirt", label: "เสื้อก้อง", at: F("craft", 2, 0) - (vo("craft", 2) - 0.1) + 0.1 }, { icon: "bottle", label: "น้ำ 2 ขวด", at: F("craft", 2, 1) - (vo("craft", 2) - 0.1) }, { icon: "card", label: "ลังกระดาษ", at: vo("craft", 3) - (vo("craft", 2) - 0.1) }],
+          build: vo("craft", 4) - (vo("craft", 2) - 0.1), result: { icon: "cool", label: "ผ้าเย็น + พัด" }, stats: [{ label: "เย็น", v: 4 }, { label: "ใช้น้ำ", v: 2 }, { label: "เสียง", v: 0 }] },
+          { type: "callback", t: vo("craft", 4) - (vo("craft", 2) - 0.1) + 0.4, end: D("craft") - (vo("craft", 2) - 0.1) - 0.1, label: "ประดิษฐ์สำเร็จ", text: "ผ้าเย็น · <em>ไม่ใช่อาวุธ</em>", top: 1180 }],
+        extra(L) { },
+        fx(tl, id, t0, L) {
+          const o = vo("craft", 2) - 0.1, A = (k, i = 0, j = 0) => t0 + F("craft", i || k, j) - o;
+          rigIn(tl, L.act, "ac-ko", "kong", 540, 1700, 1.55, t0, D("craft") - o, [{ t: 0, mode: "supine", eyes: "closed", mouth: "o", sweat: true }]);
+          ["ac-cl0", "ac-cl1", "ac-cl2", "ac-cl3"].forEach((c) => L.act.appendChild(document.getElementById(c)));   // the cloths lie on top of him
+          const P = t0 + F("craft", 2, 0) - o;
+          tl.set("#ac-pour", { opacity: 1 }, P - 0.2); tl.fromTo("#ac-pour", { attr: { transform: "translate(1000,300) rotate(-60)" } }, { attr: { transform: "translate(760,560) rotate(-120)" }, duration: 0.4, ease: "power2.out", immediateRender: false }, P - 0.2);
+          tl.fromTo("#ac-stream", { opacity: 0 }, { opacity: 0.9, duration: 0.1, immediateRender: false }, P + 0.2); tl.to("#ac-stream", { opacity: 0, duration: 0.2 }, P + 1.6);
+          tl.to("#ac-pour", { attr: { transform: "translate(1200,-200) rotate(-60)" }, duration: 0.4, ease: "power2.in" }, P + 1.6);
+          const at = [F("craft", 2, 1) - o, F("craft", 2, 1) - o + 0.45, F("craft", 2, 1) - o + 0.9, F("craft", 2, 1) - o + 1.3];   // head, neck, armpits
+          at.forEach((a, k) => tl.fromTo(`#ac-cl${k}`, { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.25, ease: "back.out(2)", immediateRender: false }, t0 + a));
+          const Fn = t0 + vo("craft", 3) - o;
+          tl.set("#ac-fan", { opacity: 1 }, Fn - 0.1);
+          tl.fromTo("#ac-fan", { attr: { transform: "translate(900,900) rotate(0)" } }, { attr: { transform: "translate(880,890) rotate(-24)" }, duration: 0.16, repeat: Math.ceil((D("craft") - vo("craft", 3)) / 0.16), yoyo: true, ease: "sine.inOut", immediateRender: false }, Fn);
+          Fx.heart(tl, t0, D("craft") - o, 0.6, 0.4); Fx.punch(tl, `#${id} .stage`, t0 + vo("craft", 4) - o, 1.05, 0.35);
+        },
+      });
+
+      // ---------- 14. not only us under the bridge: one crawls out from under the car — the lunge (first person) — ครูพิม and ก้อง's spear ----------
+      split3("lunge", vo("lunge", 0) + 2.2, vo("lunge", 1) - 0.1, {
+        set: "underpass", setOpts: { id: "lg" }, dark: 0.18, blur: { far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(700, 1350, 1.0, 540, 1150), drift: { s: 0.02 } }, { t: F("lunge", 0, 1) - 0.05, glide: 0.5, ...fr(1150, 1400, 1.5, 540, 1150), drift: { s: 0.04 } }] },
+        actors: [KO(980, 1560, 0.9, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }], { prop: "spear1" }), PI(420, 1560, 0.9, [{ t: 0, mode: "fan", eyes: "normal", mouth: "flat" }], { prop: "card" })],
+        captions: capsAt("lunge", 0, vo("lunge", 0) + 2.2, [0]),
+        fx(tl, id, t0, L) {
+          behind(L, tl, "lg-z", "ha2", 1150, 1600, 0.85, true, t0, vo("lunge", 0) + 2.2, [{ t: 0, mode: "shamble", eyes: "dead", mouth: "snarl", opts: { period: 1.4 } }]);
+          tl.fromTo("#lg-z", { attr: { transform: "translate(1150,1720) scale(-0.85,0.85)" } }, { attr: { transform: "translate(1120,1450) scale(-0.85,0.85)" }, duration: 1.3, ease: "power2.out", immediateRender: false }, t0 + F("lunge", 0, 1) - 0.2);
+          Fx.heart(tl, t0, vo("lunge", 0) + 2.2, 0.4, 0.75); red(tl, t0 + F("lunge", 0, 1) + 0.4, 0.4, 0.5);
+        },
+      }, {   // first person: it comes out of the dark under the car, into the lens
+        set: "underpass", setOpts: { id: "lz" }, dark: 0.2, blur: { far: 6, mid: 4 },
+        cam: { keys: [{ t: 0, ...fr(1100, 1350, 1.2, 540, 960), drift: { s: 0.1 } }] },
+        shake: (t) => 10 * Math.sin(t * 27),
+        extra(L) { put(L.act, Zom.zLunge("lz-z", 1100, 1300, 0.55)); },
+        fx(tl, id, t0) {
+          const d = vo("lunge", 1) - 0.1 - (vo("lunge", 0) + 2.2);
+          tl.set("#lz-z", { opacity: 1 }, t0);
+          tl.fromTo("#lz-z", { attr: { transform: "translate(1100,1420) scale(0.5)" } }, { attr: { transform: "translate(1100,1300) scale(1.3)" }, duration: d * 0.9, ease: "power3.in", immediateRender: false }, t0);
+          Fx.tunnel(tl, t0, t0 + d, 0.6); red(tl, t0 + d * 0.7, 0.8, 0.4); Fx.heart(tl, t0, d, 0.3, 0.9);
+          tl.fromTo("#flashw", { opacity: 0.7 }, { opacity: 0, duration: 0.1, immediateRender: false }, t0 + d - 0.05);
+        },
+      }, {
+        set: "underpass", setOpts: { id: "lk" }, dark: 0.15, blur: { far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(760, 1350, 1.05, 540, 1150), drift: { s: 0.02 } }] },
+        shake: (t) => (t < 0.35 ? 12 * Math.sin(t * 25) * (0.35 - t) / 0.35 : 0),
+        actors: [PI(560, 1560, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream", opts: { period: 0.6 } }, { t: 1.4, mode: "brace", eyes: "wide", mouth: "o" }], { prop: "spear1f" }),
+          { who: "ha2", x: 980, y: 1560, s: 0.9, flip: true, track: [{ t: 0, mode: "lunge", eyes: "dead", mouth: "snarl" }, { t: 0.32, mode: "knocked", eyes: "dead", mouth: "snarl" }] }],
+        captions: capsFrom("lunge", vo("lunge", 1) - 0.1, [1]),
+        fx(tl, id, t0, L) {
+          impact(tl, id, L, t0 + 0.3, 860, 1240, 1.0); red(tl, t0 + 0.3, 0.7, 0.6); Fx.glitch(tl, `#${id}`, t0 + 0.3, 0.2, 12, 41);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("lunge", 1, 1) - (vo("lunge", 1) - 0.1), 1.05, 0.35); Fx.heart(tl, t0, D("lunge") - vo("lunge", 1), 0.5, 0.6);
+        },
+      });
+
+      // ---------- 15. twenty minutes: ก้อง's eyes open; "รู้สึกตัวแล้ว… ค่อยๆ จิบ" ----------
+      add("wake", {
+        set: "aidClose", setOpts: { id: "wa" }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.5, 540, 760), drift: { s: 0.02 } }] },
+        captions: caps("wake", [0]),
+        bubbles: [bub("wake", 1, 420, 1180, 260)],
+        fx(tl, id, t0, L) {
+          rigIn(tl, L.act, "wa-ko", "kong", 540, 1700, 1.55, t0, D("wake"), [{ t: 0, mode: "supine", eyes: "closed", mouth: "flat" }, { t: F("wake", 0, 1), mode: "supine", eyes: "normal", mouth: "o" }]);
+          ["wa-cl0", "wa-cl1", "wa-cl2", "wa-cl3"].forEach((c, k) => { L.act.appendChild(document.getElementById(c)); tl.set(`#${c}`, { opacity: k ? 1 : 0 }, t0); });
+          const S = t0 + vo("wake", 1) + 0.3;
+          tl.set("#wa-pour", { opacity: 1 }, S - 0.4);
+          tl.fromTo("#wa-pour", { attr: { transform: "translate(1100,760) rotate(-60)" } }, { attr: { transform: "translate(650,860) rotate(-112)" }, duration: 0.6, ease: "power2.out", immediateRender: false }, S - 0.4);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("wake", 0, 1), 1.06, 0.4); Fx.heart(tl, t0, D("wake"), 0.75, 0.25);
+        },
+      });
+
+      // ---------- 16. in real life (NIOSH): an ambulance at once; stay with them, shade, cool them fast ----------
+      add("real", {
+        set: "underpass", setOpts: { id: "rr", car: false }, dark: 0.1, blur: { far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1350, 1.0, 540, 1200), drift: { s: 0.012 } }] },
+        actors: [KO(520, 1560, 0.9, [{ t: 0, mode: "sipUp", eyes: "normal", mouth: "flat" }], { prop: "bottle" }), PH(260, 1560, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }]),
+          PI(780, 1560, 0.9, [{ t: 0, mode: "fan", eyes: "normal", mouth: "flat" }], { prop: "card", flip: true }), HO(1000, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true }), PU(120, 1560, 0.55, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }])],
+        captions: caps("real"),
+        ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "amb", label: "ในชีวิตจริง", text: "ลมแดด → [เรียกรถพยาบาล] · {ทำให้ตัวเย็น}", tone: "rule", top: 230 },
+          { type: "src", t: F("real", 0, 1) + 0.3, end: D("real") - 0.05, top: 600, text: NIOSH + "“Call 911 for emergency medical care. Stay with the worker until emergency medical services arrive. Move the worker to a shaded, cool area and remove outer clothing. Cool the worker quickly…”" }],
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("real", 0, 1), 1.05, 0.3); Fx.heart(tl, t0, D("real"), 0.7, 0.3); },
+      });
+
+      // ---------- 17. dusk: the petrol station; the fridge still full of water; the door chained from inside ----------
+      add("station", {
+        set: "station", setOpts: { id: "sn", time: "dusk", sunX: 1500 }, dark: 0.18, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(400, 1000, 0.6, 540, 900), drift: { s: 0.012 } }, { t: vo("station", 1) - 0.05, glide: 0.7, ...fr(-330, 1000, 1.05, 540, 960), drift: { s: 0.015 } }, { t: vo("station", 2) - 0.05, glide: 0.5, ...fr(490, 1010, 1.9, 540, 960), drift: { s: 0.02 } }] },
+        actors: [PI(-900, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 4.0, mode: "idle", eyes: "normal", mouth: "flat" }], { moveTo: { x: -200, dur: 4.0, ease: "power1.out" } }),
+          PH(-1100, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 4.0, mode: "idle", eyes: "normal", mouth: "flat" }], { moveTo: { x: -420, dur: 4.0, ease: "power1.out" } }),
+          KO(-1260, 1520, 0.9, [{ t: 0, mode: "limp", eyes: "normal", mouth: "frown" }, { t: 4.0, mode: "idle", eyes: "normal", mouth: "frown" }], { prop: "spear1", moveTo: { x: -600, dur: 4.0, ease: "power1.out" } })],
+        captions: caps("station"),
+        fx(tl, id, t0) {
+          tl.fromTo("#sn-fridge", { opacity: 0.6 }, { opacity: 1, duration: 0.5, repeat: Math.ceil(D("station") / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + vo("station", 1));
+          tl.fromTo("#sn-chain", { x: 0 }, { x: 6, duration: 0.05, repeat: 9, yoyo: true, immediateRender: false }, t0 + F("station", 2, 1));
+          Fx.punch(tl, `#${id} .stage`, t0 + F("station", 2, 1), 1.06, 0.4); red(tl, t0 + F("station", 2, 1), 0.5, 0.6); Fx.heart(tl, t0, D("station"), 0.6, 0.45);
+        },
+      });
+
+      // ---------- 18. "มีคนอยู่บนหลังคา" — ปั้น sees the glint on the canopy ----------
+      add("roof", {
+        set: "station", setOpts: { id: "rf", time: "dusk", sunX: 1500 }, dark: 0.2, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(300, 1200, 0.85, 540, 1150), drift: { s: 0.02 } }, { t: F("roof", 0, 1) - 0.05, glide: 0.5, ...fr(500, 850, 1.1, 540, 700), drift: { s: 0.02 } }] },
+        actors: [PU(200, 1520, 0.55, [{ t: 0, mode: "pointUp", eyes: "wide", mouth: "o" }]), PI(-60, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("roof", 0, 1), mode: "lookUp", eyes: "wide", mouth: "o" }]),
+          { who: "guard", x: 760, y: 762, s: 0.72, flip: true, track: [{ t: 0, mode: "crouch", eyes: "normal", mouth: "flat" }] }],
+        bubbles: [bub("roof", 0, 60, 1180, 300)],
+        ui: [{ type: "skill", t: 0.2, end: D("roof") - 0.05, x: 560, y: 1240, name: "น้องปั้น", skill: "ตาดี", desc: "เห็นก่อนคนอื่น", icon: "eye" }],
+        fx(tl, id, t0, L) {
+          put(L.act, `<g>${[[620, 762], [740, 762], [860, 762]].map(([x, y]) => `<rect x="${x}" y="${y - 70}" width="130" height="74" rx="20" fill="#a5895a" stroke="#2e2a26" stroke-width="4"/>`).join("")}</g><g id="rf-glint" opacity="0"><path d="M700,620l10,-40l10,40l40,10l-40,10l-10,40l-10,-40l-40,-10z" fill="#fff6d8"/></g>`);
+          tl.fromTo("#rf-glint", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1.2, transformOrigin: "50% 50%", duration: 0.2, yoyo: true, repeat: 3, immediateRender: false }, t0 + 0.4);
+          Fx.punch(tl, `#${id} .stage`, t0 + F("roof", 0, 1), 1.06, 0.4); red(tl, t0 + F("roof", 0, 1), 0.5, 0.5); Fx.heart(tl, t0, D("roof"), 0.45, 0.65);
+        },
+      });
+
+      // ---------- 19. the rifle on the canopy: "ก้าวอีกก้าว ยิง" — hands up — "ขอแค่น้ำ" — "ที่นี่ไม่มีอะไรฟรี" ----------
+      const GUARDUP = (id, cam) => ({
+        set: "station", setOpts: { id, time: "dusk", sunX: 1500 }, dark: 0.22, blur: { far: 3 },
+        cam, shake: (t) => 2 * Math.sin(t * 9),
+        actors: [{ who: "guard", x: 760, y: 762, s: 0.8, flip: true, track: [{ t: 0, mode: "aim", eyes: "normal", mouth: "frown" }], prop: "rifle" }],
+      });
+      split3("gun", vo("gun", 1) - 0.1, vo("gun", 2) - 0.1, {
+        ...GUARDUP("gu", { keys: [{ t: 0, ...fr(700, 560, 1.3, 540, 1000), drift: { s: 0.03 } }] }),
+        bubbles: [bub("gun", 0, 40, 1180, 380)],
+        fx(tl, id, t0, L) { put(L.act, `<g>${[[620, 762], [860, 762]].map(([x, y]) => `<rect x="${x}" y="${y - 70}" width="130" height="74" rx="20" fill="#a5895a" stroke="#2e2a26" stroke-width="4"/>`).join("")}</g>`); Fx.punch(tl, `#${id} .stage`, t0 + F("gun", 0, 1), 1.08, 0.4); red(tl, t0 + F("gun", 0, 1), 0.7, 0.6); Fx.glitch(tl, `#${id}`, t0 + F("gun", 0, 1), 0.2, 10, 21); Fx.heart(tl, t0, vo("gun", 1), 0.35, 0.85); },
+      }, {
+        set: "station", setOpts: { id: "gh", time: "dusk", sunX: 1500 }, dark: 0.2, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(160, 1250, 0.95, 540, 1150), drift: { s: 0.02 } }] },
+        actors: [PI(160, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }]), PH(-120, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "normal", mouth: "flat" }]), HO(420, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }], { flip: true }),
+          KO(-340, 1520, 0.9, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }], { prop: "spear1" }), PU(600, 1520, 0.55, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }], { flip: true })],
+        bubbles: [bubAt(bub("gun", 1, 100, 520, 300), vo("gun", 1) - 0.1, vo("gun", 2) - 0.1)],
+        fx(tl, id, t0) { Fx.heart(tl, t0, vo("gun", 2) - vo("gun", 1), 0.4, 0.8); },
+      }, {
+        ...GUARDUP("gv", { keys: [{ t: 0, ...fr(700, 600, 1.6, 540, 1000), drift: { s: 0.04 } }] }),
+        bubbles: [bubAt(bub("gun", 2, 40, 1180, 380), vo("gun", 2) - 0.1, D("gun"))],
+        fx(tl, id, t0, L) { put(L.act, `<g>${[[620, 762], [860, 762]].map(([x, y]) => `<rect x="${x}" y="${y - 70}" width="130" height="74" rx="20" fill="#a5895a" stroke="#2e2a26" stroke-width="4"/>`).join("")}</g>`); Fx.punch(tl, `#${id} .stage`, t0 + F("gun", 2, 1) - (vo("gun", 2) - 0.1), 1.06, 0.4); red(tl, t0 + F("gun", 2, 1) - (vo("gun", 2) - 0.1), 0.5, 0.6); Fx.heart(tl, t0, D("gun") - vo("gun", 2), 0.4, 0.75); },
+      });
+
+      // ---------- 20. sig ----------
+      add("sig", {
+        set: "station", setOpts: { id: "sgn", time: "dusk", sunX: 1500 }, dark: 0.45, blur: { far: 10, set: 8, mid: 8 },
+        cam: { keys: Sig.cam(F, fr(400, 1100, 0.8, 540, 960)) }, shake: Sig.shake(F),
+        captions: caps("sig"),
+        ui: [Sig.ui(F, "เหลือ 95 วัน · เช็กลิสต์เอาตัวรอด", [["พาเข้าร่ม ถอดเสื้อนอก", true], ["ผ้าเย็น หัว คอ รักแร้", true], ["หมดสติ ไม่ป้อนน้ำ", true], ["???", false]], D("sig"))],
+        fx(tl, id, t0) { Sig.fx(tl, id, t0, F, D("sig")); },
+      });
+
+      // ---------- 21. night under the canopy: the radio — "เก้าสิบสี่… ห้า"; the guard has heard it too ----------
+      split("radio", vo("radio", 1) - 0.1, {
+        set: "radioClose", setOpts: { id: "ra2" }, dark: 0.55,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.02 } }, { t: vo("radio", 0) - 0.3, ...fr(400, 900, 1.5, 540, 960), drift: { s: 0.03 } }] },
+        captions: caps("radio", [0], { quote: true }),
+        ui: [{ type: "tearCal", t: vo("radio", 0) - 0.4, end: vo("radio", 1) - 0.2, top: 150, label: "เหลือ", unit: "วัน", keys: [{ t: vo("radio", 0) - 0.4, v: 95 }, { t: F("radio", 0, 1), v: 94 }], tag: { t: F("radio", 0, 2), text: "· ห้า" } }],
+        fx(tl, id, t0) {
+          const on = t0 + vo("radio", 0) - 0.4;
+          tl.fromTo(["#ra2-dialw", "#ra2-glow"], { opacity: 0 }, { opacity: 1, duration: 0.05, repeat: 5, yoyo: true, immediateRender: false }, on); tl.set(["#ra2-dialw", "#ra2-glow"], { opacity: 1 }, on + 0.3);
+          tl.fromTo("#ra2-needle", { x: 0 }, { x: 180, duration: 0.6, ease: "power1.inOut", immediateRender: false }, on + 0.1);
+          for (let t = on + 0.7; t < t0 + vo("radio", 1); t += 0.11) tl.set("#ra2-needle", { x: 180 + ((t * 977) % 9) - 4 }, t);
+          document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio"));
+          Fx.punch(tl, `#${id} .stage`, t0 + F("radio", 0, 2), 1.08, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("radio", 0, 2), 0.2, 10, 71); red(tl, t0 + F("radio", 0, 2), 0.6, 0.7);
+          Fx.heart(tl, t0 + vo("radio", 0), vo("radio", 1) - vo("radio", 0), 0.5, 0.5);
+        },
+      }, {
+        set: "station", setOpts: { id: "rn", time: "night", lampX: 300 }, dark: 0.5, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(380, 1250, 0.9, 540, 1150), drift: { s: 0.015 } }, { t: vo("radio", 2) - (vo("radio", 1) - 0.1) - 0.05, glide: 0.6, ...fr(700, 800, 1.2, 540, 900), drift: { s: 0.02 } }] },
+        actors: [HO(120, 1520, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "frown" }], { prop: "ledger" }), KO(380, 1520, 0.9, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "flat" }], { prop: "spear1" }),
+          PI(620, 1520, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }], { flip: true }), PH(860, 1520, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }], { flip: true }), PU(-80, 1520, 0.55, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }]),
+          { who: "guard", x: 820, y: 762, s: 0.75, flip: true, track: [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }], prop: "rifle" }],
+        captions: capsFrom("radio", vo("radio", 1) - 0.1, [1]),
+        bubbles: [bubAt(bub("radio", 2, 300, 1180, 380), vo("radio", 1) - 0.1, D("radio"))],
+        ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 1) - 0.1) - 0.05, label: "คนในค่าย", icon: "people", unit: "คน", max: 6, keys: [{ t: 0, v: 5 }], top: 150 }],
+        fx(tl, id, t0) { const X = t0 + F("radio", 1, 1) - (vo("radio", 1) - 0.1); Fx.punch(tl, `#${id} .stage`, X, 1.04, 0.3); Fx.punch(tl, `#${id} .stage`, t0 + F("radio", 2, 1) - (vo("radio", 1) - 0.1), 1.06, 0.4); red(tl, t0 + F("radio", 2, 1) - (vo("radio", 1) - 0.1), 0.5, 0.6); Fx.heart(tl, t0, D("radio") - (vo("radio", 1) - 0.1), 0.55, 0.5); },
+      });
+
+      // ---------- 22. the torch on ภู's face: "ภู… คุณวินคิดว่าแกตายไปแล้ว" ----------
+      add("name", {
+        set: "station", setOpts: { id: "nm", time: "night", lampX: 300 }, dark: 0.55, blur: { far: 5 },
+        cam: { keys: [{ t: 0, ...fr(640, 1250, 1.05, 540, 1150), drift: { s: 0.02 } }, { t: vo("name", 1) - 0.05, glide: 0.5, ...fr(520, 1040, 1.8, 540, 960), drift: { s: 0.03 } }] },
+        actors: [PH(520, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("name", 0, 1), mode: "idle", eyes: "wide", mouth: "flat" }]), PI(260, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]),
+          { who: "guard", x: 900, y: 1520, s: 0.9, flip: true, track: [{ t: 0, mode: "torch", eyes: "normal", mouth: "frown", torch: true }] }],
+        captions: caps("name", [1]),
+        bubbles: [bub("name", 0, 420, 520, 380)],
+        extra(L) { Fence.light(L, 560, 1040, 320, "#fff6d8", 0.55); },
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("name", 0, 1), 1.06, 0.4); Fx.punch(tl, `#${id} .stage`, t0 + F("name", 1, 1), 1.08, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("name", 1, 1), 0.25, 12, 31); red(tl, t0 + F("name", 1, 1), 0.7, 0.7); Fx.heart(tl, t0, D("name"), 0.4, 0.8); },
+      });
+
+      // ---------- 23. ปั้น's drawing: the lit factory behind a tall fence, ภู shaking hands with a man in a tie ----------
+      add("drawing", {
+        set: "drawing5", setOpts: { id: "dw" }, dark: 0.2,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.02 } }, { t: vo("drawing", 1) - 0.05, glide: 0.6, ...fr(540, 1330, 1.6, 540, 1000), drift: { s: 0.03 } }] },
+        captions: caps("drawing"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("drawing", 0, 1), D("drawing") - F("drawing", 0, 1), 0.55, 0.5); Fx.punch(tl, `#${id} .stage`, t0 + F("drawing", 1, 1), 1.06, 0.4); Fx.glitch(tl, `#${id}`, t0 + F("drawing", 1, 1), 0.2, 10, 91); red(tl, t0 + F("drawing", 1, 1), 0.5, 0.6); },
+      });
+
+      // ---------- 24. the guard knows ภู — trust him? (pulled to "เชื่อ…") — "…ภูเคยเป็นคนของเขา" ----------
+      add("choice", {
+        set: "station", setOpts: { id: "cho", time: "night", lampX: 300 }, dark: 0.55, blur: { far: 4 },
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: 1.0, glide: 1.6, ...fr(520, 1100, 1.6, 540, 1000), r: 2, drift: { s: 0.03, r: 0.8 } }] },
+        shake: (t) => shakeH(t) * 2,
+        actors: [PH(520, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        ui: [{ type: "choice", t: 0.05, q: "คนเฝ้าปั๊มรู้จักภู… เชื่อภูมั้ย?", a: "เชื่อ", b: "ไม่เชื่อ", secs: 3, top: 300, possessed: { at: 1.0, side: "a", glitch: "เชื่อ…", who: "…ภูเคยเป็นคนของเขา" } }],
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75); Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65); tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2); },
+      });
+
+      // ---------- 25. end card: the ledger — day 94; tomorrow the estate ----------
+      add("next", {
+        set: "station", setOpts: { id: "nx", time: "night", lampX: 540 }, dark: 0.75, blur: { far: 6, set: 6 },
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 960), drift: { s: 0.03 } }] },
+        ui: [{ type: "nextCard", t: 0.3, big: "ตอนที่ 6", tag: "นิคม… ที่ที่มีไฟฟ้า แต่ทุกคนต้องมีประโยชน์", top: 150 }, { type: "ledger", t: 0.6, day: "เหลือ 94 วัน", rows: [["วิทยุนับถอยหลัง", "95 → 94"], ["คน", "5 = 5"], ["น้ำดื่ม", "6 → 2 ขวด", "warn"], ["น้ำมัน", "3 → 0 ลิตร", "warn"], ["ก้อง", "ลมแดด · รอด"]], six: "", next: "นิคม · คุณวินคือใคร", cta: "กดติดตาม · <em>อ่านหน้าถัดไป</em> ตอนที่ 6", top: 560 }],
+        fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 0.3 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 1 }, t0 + 0.45); Fx.glitch(tl, `#${id}`, t0 + 1.9, 0.12, 10, 91); Fx.heart(tl, t0 + 1.2, D("next") - 1.2, 0.7, 0.35); },
+      });
+
+      // ---------- the look: depth, haze, light sources per shot ----------
+      const NOON = (L) => { Fence.light(L, 760, 260, 1000, "#fff2c8", 0.35); Fence.haze(L, 1100, 420, "#fff2dc", 0.35); };
+      const SHADE = (L) => { Fence.light(L, 1400, 1100, 900, "#fff2c8", 0.3); Fence.depth(L, "post", { x: -500, w: 260, op: 0.85 }); };
+      const DUSKS = (L) => { Fence.light(L, 1500, 1000, 900, "#ff9a40", 0.5); Fence.haze(L, 1180, 400, "#ffb070", 0.28); };
+      const NIGHTS = (L) => { Fence.light(L, 300, 1100, 520, "#ffd58a", 0.5, "lampf"); Fence.haze(L, 1180, 400, "#5a6f90", 0.3); };
+      const DAY = (L) => { Fence.light(L, 760, 300, 900, "#ffe6b0", 0.3); Fence.haze(L, 1120, 460, "#dfe8ea", 0.3); Fence.depth(L, "grass"); };
+      const LOOK = {
+        hook: NOON, chapter: (L) => { DAY(L); Fence.depth(L, "branch", { op: 0.8 }); }, pack: DAY,
+        "wave#0": (L) => { NOON(L); Fence.depth(L, "bars", { op: 0.8 }); }, "wave#1": DAY,
+        "highway#0": () => {}, "highway#1": NOON, "empty#0": () => {}, "empty#1": NOON, walk: NOON, rule: NOON, confuse: NOON, signs: NOON,
+        shade: SHADE, nodrink: SHADE, "craft#0": SHADE, "craft#1": () => {}, "lunge#0": SHADE, "lunge#1": SHADE, "lunge#2": SHADE, wake: () => {}, real: SHADE,
+        station: DUSKS, roof: DUSKS, "gun#0": DUSKS, "gun#1": DUSKS, "gun#2": DUSKS, sig: DUSKS, "radio#0": (L) => { Fence.depth(L, "post", { x: -200, w: 300, op: 0.85 }); }, "radio#1": NIGHTS,
+        name: NIGHTS, drawing: (L) => { Fence.light(L, 540, 320, 640, "#ffd58a", 0.4, "lampf"); Fence.cone(L, 540, 260, 1100, 1300, "#ffd58a", 0.22); }, choice: NIGHTS, next: NIGHTS,
+      };
+      const seen = {}, depth0 = Fence.depth;
+      shots.forEach((sh) => { const n = seen[sh.key] = (seen[sh.key] ?? -1) + 1, look = LOOK[`${sh.key}#${n}`] || (n === 0 ? LOOK[sh.key] : null), e = sh.extra;
+        if (look) sh.extra = (L, id) => { if (e) e(L, id); const k0 = (sh.cam && sh.cam.keys && sh.cam.keys[0]) || { x: 0, y: 0, s: 1 }; Fence.depth = (L2, kind, o = {}) => depth0(L2, kind, { cam: k0, ...o }); look(L, id); Fence.depth = depth0; }; });
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Zom.zlife(tl, `#${id}`, t0, sh.dur); Fence.flife(tl, `#${id}`, t0, sh.dur); }; });
