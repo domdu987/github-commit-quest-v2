@@ -22,7 +22,7 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 SHOTS = [
     ("hook", ["n01", ("n02", 0.05), ("n03", 0.1)], 0.3, 0.35, 6.0),     # POV: the starter cord, the red generator in the dark classroom, the fan; the first light
     ("chapter", ["n04"], 0.15, 0.4, 2.8),                               # the page: 98 days
-    ("roster", ["n05", ("n05b", 0.05), ("n05c", 0.05)], 0.1, 0.3, 7.0),   # the camp register: everyone's job
+    ("roster", ["n05", ("n05b", 0.05), ("n05c", 0.05)], 0.1, 1.6, 7.0),   # the camp register: everyone's job (held 1.3 s so ครูพิม's row reads)
     ("map", ["n06", ("d01", 0.15)], 0.1, 0.25, 5.0),                     # the map: the fairground 2 km out; "ไปคนเดียว เร็วกว่า"
     ("gate", ["d02"], 0.15, 0.3, 3.0),                                   # "กลับก่อนมืดนะลุง" the sun HUD at 13:10
     ("fair", ["n07"], 0.15, 0.3, 4.4),                                   # the fairground at noon: the one under the wheel turns (we see it first)
