@@ -3,6 +3,7 @@
 // Same layer contract as sets.js (sky / far / mid / set / act / fg, glow above the darkness); seeded RNG only.
 //   Rig.CAST: phum (ภูมิ 18, vlogger) · toey (ใบเตย 8, his sister; draw at ~0.72) · oat (โอ๊ต 18) · jaew (น้าแจ๋ว 45) · kaew (ลุงแก้ว 65)
 //   Am.ghost(x, y, s, o)   the ผีอำ: a coal-black, gaunt old man in a shawl, all one shape, long thin arms, green eyes (o.sit: squatting)
+//   Am.pill(x, y, text, o) a koi-style label tag (o.to pointer, o.s scale, o.col) — put pointer pills in L.glow (world space, they move with the camera)
 //   Am.eyes(x, y, s, id)   the eyes alone · Am.stove(x, y, s, o) the หมูกระทะ bucket stove (o.lit coals, o.pan, o.smoke) · Am.tent(...)
 //   Sets.doiCamp     the campsite: ridges in mist, pines, dome tents (o.tents [[x, s, {lit, col, id, shadow}]]), plot posts, o.time dusk | night, o.rain
 //   Sets.tentIn      inside a dome tent: fabric walls, sleeping mats, o.lamp (lantern on), o.stove x (lit stove), #id-zip door, o.time night | dark
@@ -10,6 +11,10 @@
 //   Sets.stoveClose  close on the stove: the dome pan, pork, the broth moat, coals below; #id-chop chopsticks
 //   Sets.coalDark    black, a few coals glowing on a grate, smoke (#id-smoke) — the opener
 //   Sets.coSection   koi-style diagrams on night-blue slate: o.v 1 coal → CO · 2 can't see, can't smell · 3 a closed tent fills · 4 a flap open is not enough
+//                    5 the symptoms (#id-s0..s3, #id-flu) · 6 children first (#id-kbar #id-abar, attr height) · 7 everyone out (#id-ppl, #id-arrow) · 8 emergency 1669 (#id-phone)
+//                    9 asleep or drunk (#id-bar #id-x0 #id-zz) · 10 less oxygen (#id-o0..o5 #id-lid) · 11 alcohol (#id-heat #id-mer #id-x0) · 12 ผีอำ vs won't wake (#id-emg)
+//   Sets.kaewMemory  ลุงแก้ว's memory as a sepia shadow play (y 0 / 2000) · Sets.bedroom ใบเตย's room at night (o.coal, o.ghost, o.hall)
+//   Sets.nightCam    the vlog camera's IR view inside the tent: #id-flap, #id-push (arm + stove), #id-eyes, REC overlay (o.ts)
 //   Sets.shadowLegend the legend as a shadow play on tent fabric, three full-screen panels (y 0/2000/4000)
 //   Sets.campSign    end card: the campsite sign with a note pinned to it
 (function () {
@@ -31,6 +36,8 @@
     <radialGradient id="amTent"><stop offset="0" stop-color="#ffb04a" stop-opacity=".75"/><stop offset=".5" stop-color="#ff8a2a" stop-opacity=".22"/><stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/></radialGradient>
     <radialGradient id="amGlow"><stop offset="0" stop-color="#7dff6a" stop-opacity=".5"/><stop offset=".4" stop-color="#3dbf5a" stop-opacity=".16"/><stop offset="1" stop-color="#3dbf5a" stop-opacity="0"/></radialGradient>
     <linearGradient id="amFabric" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e88a3a"/><stop offset="1" stop-color="#b85a22"/></linearGradient>
+    <radialGradient id="amHaze"><stop offset="0" stop-color="#9a9aa8" stop-opacity=".55"/><stop offset=".6" stop-color="#8a8a98" stop-opacity=".22"/><stop offset="1" stop-color="#8a8a98" stop-opacity="0"/></radialGradient>
+    <linearGradient id="amHazeLin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8a8b8" stop-opacity=".62"/><stop offset="1" stop-color="#8a8a9a" stop-opacity=".42"/></linearGradient>
     <linearGradient id="amFabricD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a3a26"/><stop offset="1" stop-color="#2e1e14"/></linearGradient>`;
 
   // ---------------- cast ----------------
@@ -76,6 +83,45 @@
       face: `<path d="M-30,-562q8,-3 14,0M14,-562q8,-3 14,0" stroke="#5a3a26" stroke-width="2.5" fill="none"/><g fill="#8a8a8a" opacity=".5">${Array.from({ length: 14 }, (_, k) => `<circle cx="${-26 + (k % 7) * 9}" cy="${-506 + Math.floor(k / 7) * 8}" r="1.6"/>`).join("")}</g>`,
     },
   });
+
+  // carrying something in both hands in front at belly height (o.walk: legs walking); hands meet around x 120–220, y −350
+  Rig.MODES.carry = (u, o = {}) => {
+    const g = o.walk ? Rig.MODES.walk(u, { period: 1.05, stride: 12, knee: 34, bob: 5, arm: 0, lean: 0 }) : Rig.MODES.idle(u, {});
+    return { ...g, uaF: o.uaF ?? -28, faF: o.faF ?? -62, uaB: o.uaB ?? -24, faB: o.faB ?? -66, torso: (g.torso || 0) - 2, head: (g.head || 0) + 3 };
+  };
+  // holding someone's ankles behind you while walking forward (the second carrier of a two-person carry)
+  Rig.MODES.carryBack = (u, o = {}) => {
+    const g = Rig.MODES.walk(u, { period: 1.05, stride: 12, knee: 34, bob: 5, arm: 0, lean: 0 });
+    return { ...g, uaF: o.uaF ?? 32, faF: o.faF ?? 6, uaB: o.uaB ?? 30, faB: o.faB ?? 8, torso: (g.torso || 0) + 4 };
+  };
+
+  // lying still on the side with the arms along the body (asleep or unconscious): the rig's "lie" without the raised arm
+  Rig.MODES.limp = (u, o = {}) => ({ ...Rig.MODES.lie(u, o), uaF: 6, faF: -4, uaB: 10, faB: -2 });
+  // cold: arms crossed over the chest, hands on the opposite shoulders, shivering
+  Rig.MODES.hugCold = (u, o = {}) => ({ ...Rig.MODES.tremble(u, o), uaF: 12, faF: 130, uaB: -12, faB: -130 });
+  // the phone pressed to the ear (the hand prop is turned so the phone lies along the cheek: rotate(-140) at these angles)
+  Rig.MODES.phoneEarClose = (u, o = {}) => ({ ...Rig.MODES.phoneEar(u, o), uaF: -78, faF: -142 });
+
+  // kneeling at someone's head, both hands down on their shoulder and chest, shaking them (o.still: no shake).
+  // Place the kneeler at (lying.x − 660·s, lying.y + 45·s) of a `limp` body: knees clear of the head, hands touching.
+  Rig.MODES.kneelShake = (u, o = {}) => {
+    const w = o.still ? 0 : 4 * Math.sin(u * 15);
+    return { ...Rig.MODES.idle(u, {}), thF: -20, shF: 95, thB: 20, shB: 100, torso: o.torso ?? 40, head: 14, uaF: (o.uaF ?? -50) + w, faF: o.faF ?? 10, uaB: (o.uaB ?? -42) + w, faB: o.faB ?? 6, bodyY: 120 };
+  };
+
+  // a small label pill (koi-style tag), hidden until faded in (o.show keeps it visible); o.col accent; o.to: [dx, dy] pointer
+  function pill(x, y, text, o = {}) {
+    const w = Math.max(120, [...text].filter((c) => !/[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]/.test(c)).length * 25 + 56), col = o.col || "#ffe08a";
+    return `<g ${o.id ? `id="${o.id}"` : ""} class="apill" transform="translate(${f1(x)},${f1(y)}) scale(${o.s ?? 1})" opacity="${o.show ? 1 : 0}">${o.to ? `<path d="M0,0L${o.to[0]},${o.to[1]}" stroke="${col}" stroke-width="5"/><circle cx="${o.to[0]}" cy="${o.to[1]}" r="9" fill="${col}"/>` : ""}
+      <rect x="${-w / 2}" y="-32" width="${w}" height="62" rx="31" fill="#10141c" opacity=".9" stroke="${col}" stroke-width="4"/><text y="11" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="${o.size || 34}" fill="${col}">${text}</text></g>`;
+  }
+  // soft grey blobs of gas (no filter: radial gradients); class ahz drifts slowly
+  function hazeBlobs(x0, y0, w, h, n, seed = 7) {
+    const r = mk(seed);
+    return Array.from({ length: n }, () => `<circle class="ahz" cx="${f1(x0 + r() * w)}" cy="${f1(y0 + r() * h)}" r="${f1(120 + r() * 160)}" fill="url(#amHaze)"/>`).join("");
+  }
+  // heat leaving a body: wavy lines that rise and fade (class aheat)
+  const heat = (x, y, s, id) => `<g ${id ? `id="${id}"` : ""} transform="translate(${f1(x)},${f1(y)}) scale(${s})">${[-90, -30, 30, 90].map((dx, k) => `<path class="aheat" d="M${dx},0q-22,-40 0,-80q22,-40 0,-80" stroke="#ff9a5a" stroke-width="9" fill="none" stroke-linecap="round" opacity="${0.75 - k * 0.08}"/>`).join("")}</g>`;
 
   // ---------------- the ผีอำ ----------------
   const eyes = (x, y, s, id = "") => `<g ${id ? `id="${id}"` : ""} class="aeye" transform="translate(${f1(x)},${f1(y)}) scale(${s})">${[-22, 22].map((cx) => `<circle cx="${cx}" cy="0" r="22" fill="${AEYE[0]}" opacity=".3"/>
@@ -217,7 +263,56 @@
     put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#2a160c"/>`);
     put(L.set, `<rect x="-1200" y="${G}" width="3500" height="1200" fill="#5a3a24"/><path d="M-700,${G}Q540,${G - 2400} 1780,${G}" fill="url(#amFabric)" opacity=".5"/>${stove(540, G + 40, 3.2, { id: `${id}-stove` })}`);
     put(L.glow, `<circle cx="540" cy="${G - 300}" r="700" fill="url(#amCoal)" opacity=".35" class="aglow"/>`);
-    put(L.act, `<g id="${id}-chop"><path d="M1300,${G - 1200}L560,${G - 700}M1330,${G - 1170}L590,${G - 680}" stroke="#d8b878" stroke-width="16" stroke-linecap="round"/><path d="M548,${G - 712}q20,-14 40,0" stroke="#c8706a" stroke-width="22" fill="none" stroke-linecap="round"/></g>`);
+    if (o.chop !== false) put(L.act, `<g id="${id}-chop"><path d="M1300,${G - 1200}L560,${G - 700}M1330,${G - 1170}L590,${G - 680}" stroke="#d8b878" stroke-width="16" stroke-linecap="round"/><path d="M548,${G - 712}q20,-14 40,0" stroke="#c8706a" stroke-width="22" fill="none" stroke-linecap="round"/></g>`);
+    if (o.co) put(L.act, `<g id="${id}-co" opacity="0">${hazeBlobs(160, G - 1500, 760, 1100, 22, 31)}${hazeBlobs(260, G - 1100, 560, 700, 12, 33)}${Array.from({ length: 6 }, (_, k) => `<path class="ahzup" d="M${360 + k * 70},${G - 240}q-40,-120 10,-240q40,-110 -10,-230" stroke="#9a9aaa" stroke-width="${26 - k * 2}" fill="none" stroke-linecap="round" opacity=".45"/>`).join("")}</g>`);
+  }
+
+  // ---------------- their tent, cut away: you see inside and outside at once ----------------
+  // the front of the dome is cut off: the inside wall, the mats, the lantern; outside the night (o.rain) and pines; the door on the right
+  // (o.flap: open, a dark gap). Put the actors inside (floor G−40). Gas: Am.tentHaze(id, o) in fx → #id-lvl (attr y/height grows down), #id-wisp
+  const DOME = (G) => `M60,${G}Q70,${G - 900} 540,${G - 980}Q1010,${G - 900} 1020,${G}Z`;
+  function tentCut(L, o = {}) {
+    const id = o.id || "tc", G = o.ground ?? 1500, r = mk(o.seed || 141);
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="url(#${o.rain ? "amRain" : "amNight"})"/>${o.rain ? "" : Array.from({ length: 50 }, () => `<circle cx="${f1(-600 + r() * 2300)}" cy="${f1(-500 + r() * 1100)}" r="${f1(1 + r() * 2)}" fill="#e8ecff" opacity="${(0.3 + r() * 0.5).toFixed(2)}"/>`).join("")}`);
+    let m = ""; for (let k = 0; k < 10; k++) m += pine(-900 + k * 330 + r() * 80, G - 60, 1.0 + r() * 0.5, "#0a101c");
+    put(L.mid, m);
+    let s = `<rect x="-1200" y="${G}" width="3500" height="1400" fill="#1e2a1e"/>
+      <path d="${DOME(G)}" fill="url(#amFabricD)"/><path d="${DOME(G)}" fill="#c86a2a" opacity=".55"/>
+      ${[200, 380, 540, 700, 880].map((x) => `<path d="M${x},${G}Q${540 + (x - 540) * 0.5},${G - 700} 540,${G - 980}" stroke="#7a3a16" stroke-width="6" fill="none" opacity=".7"/>`).join("")}
+      <rect x="80" y="${G - 46}" width="920" height="46" fill="#4a3220"/>${[[180, "#3a6aa8"], [380, "#a83a5a"], [600, "#4a8a5a"], [800, "#6a5a9a"]].map(([x, c]) => `<rect x="${x - 95}" y="${G - 40}" width="190" height="34" rx="14" fill="${c}" ${OUT3}/>`).join("")}`;
+    if (o.flap) s += `<path d="M880,${G}Q890,${G - 380} 960,${G - 520}Q1010,${G - 380} 1012,${G}Z" fill="#0c1424"/><path d="M960,${G - 520}Q1060,${G - 380} 1090,${G - 120}L1040,${G - 60}Q1010,${G - 300} 960,${G - 520}Z" fill="#b85a22" ${OUT3}/>`;
+    else s += `<path d="M960,${G - 520}V${G}" stroke="#3a2a20" stroke-width="5" stroke-dasharray="8 5"/>`;
+    s += `<path d="${DOME(G)}" fill="none" stroke="#e8823a" stroke-width="22" stroke-linejoin="round"/>`;
+    if (o.sign !== false) s += `<g transform="translate(1110,${G})"><rect x="-8" y="-150" width="16" height="150" fill="#6a4a30" ${OUT3}/><rect x="-44" y="-210" width="88" height="70" rx="6" fill="#e8d8b0" ${OUT3}/><text x="0" y="-158" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="50" fill="#c8342a">9</text></g>`;
+    put(L.set, s);
+    let g = `<circle cx="540" cy="${G - 760}" r="430" fill="url(#amLamp)" opacity="${o.lamp === false ? 0 : 0.55}"/>`;
+    if (o.lamp !== false) put(L.set, lantern(540, G - 820, 1.2, { id: `${id}-lamp` }));
+    if (o.stove != null) { put(L.act, stove(o.stove, G - 10, o.stoveS ?? 0.75, { id: `${id}-stove`, smoke: false })); g += `<circle cx="${o.stove}" cy="${G - 110}" r="320" fill="url(#amCoal)" opacity=".55" class="aglow"/>`; }
+    put(L.glow, g);
+    if (o.rain) put(L.fg, `<g class="arain" opacity=".5">${Array.from({ length: 70 }, () => `<path d="M${f1(-300 + r() * 1700)},${f1(-900 + r() * 2900)}l-14,60" stroke="#a8c0d8" stroke-width="3"/>`).join("")}</g>`);
+  }
+  function tentHaze(id, o = {}) {
+    const G = o.ground ?? 1500, lvl = o.level ?? 0;
+    return `<defs><clipPath id="${id}-dome"><path d="${DOME(G)}"/></clipPath><clipPath id="${id}-lvlc"><rect id="${id}-lvl" x="0" y="${G - 980}" width="1080" height="${lvl}"/></clipPath></defs>
+      <g clip-path="url(#${id}-dome)" opacity="${o.op ?? 1}"><g clip-path="url(#${id}-lvlc)"><rect x="40" y="${G - 990}" width="1000" height="1000" fill="url(#amHazeLin)"/>${hazeBlobs(80, G - 960, 920, 900, 16, 77)}</g></g>
+      ${o.flap ? `<g id="${id}-wisp" opacity="0">${[0, 1, 2].map((k) => `<path class="ahzup" d="M${1000 + k * 30},${G - 300 - k * 40}q60,-40 30,-110q-30,-70 40,-120" stroke="#9a9aaa" stroke-width="${22 - k * 5}" fill="none" stroke-linecap="round" opacity=".5"/>`).join("")}</g>` : ""}`;
+  }
+
+  // ---------------- a head in cross-section: the brain short of oxygen ----------------
+  // #id-o0..o5 oxygen bubbles in the vessels (fade them out), #id-lid the eyelid closing; o.skin
+  function headCut(L, o = {}) {
+    const id = o.id || "hc", sk = o.skin || "#e2b28c";
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#141018"/><circle cx="540" cy="900" r="900" fill="#2a2030" opacity=".8"/>`);
+    let s = `<g transform="translate(560,980)">
+      <path d="M-470,620Q-560,80 -380,-300Q-160,-620 200,-560Q470,-500 520,-200Q540,-60 600,20Q640,80 590,110L560,130Q600,200 540,250Q560,300 520,330Q470,420 360,420L300,620Z" fill="${sk}" ${OUT}/>
+      <path d="M-470,620Q-560,80 -380,-300Q-160,-620 200,-560Q380,-520 440,-420Q200,-480 0,-420Q-260,-320 -330,0Q-360,300 -300,620Z" fill="#4a2e22" ${OUT}/>
+      <path d="M-250,-120Q-220,-420 60,-430Q330,-420 360,-170Q380,40 160,90Q-60,130 -200,40Q-270,-20 -250,-120Z" fill="#f0b8c0" ${OUT}/>
+      ${["M-200,-160q60,-60 120,0t120,0t120,-10", "M-210,-40q70,-50 140,0t140,0t120,-6", "M-120,-300q60,-50 120,0t110,0"].map((d) => `<path d="${d}" stroke="#d88a98" stroke-width="10" fill="none" stroke-linecap="round"/>`).join("")}
+      <path d="M40,90Q60,260 20,420" stroke="#c84a4a" stroke-width="26" fill="none" stroke-linecap="round"/><path d="M40,90Q120,-20 260,-60M40,90Q-60,0 -160,-20" stroke="#c84a4a" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <ellipse cx="430" cy="-150" rx="46" ry="30" fill="#fff" ${OUT3}/><circle cx="446" cy="-150" r="15" fill="${INK}"/><path id="${id}-lid" d="M384,-176Q430,-200 476,-176V-150H384Z" fill="${sk}" opacity="0" ${OUT3}/>
+      ${[[60, 300], [30, 200], [120, -10], [220, -50], [-60, -10], [-140, -20]].map(([x, y], k) => `<g id="${id}-o${k}"><circle cx="${x}" cy="${y}" r="34" fill="#7ac8ff" ${OUT3}/><text x="${x}" y="${y + 11}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#fff">O₂</text></g>`).join("")}
+    </g>`;
+    put(L.set, s);
   }
 
   // ---------------- the opener: coals in the dark ----------------
@@ -267,7 +362,127 @@
         ${T(540, 420, "ก็ไม่พอ", "#ff8a7a", 80, `${id}-no`)}`;
       else a += T(540, 420, "สะสมเร็วมาก", "#ff8a7a", 72, `${id}-no`);
     }
+    else if (v === 5) {
+      // the symptoms around a head: headache, dizzy, sick, weak — and a thermometer with a question mark: "just a cold?"
+      a += `<g transform="translate(540,${F - 560})"><circle r="150" fill="#e2b08a" ${OUT}/><path d="M-50,-20q12,-10 24,0M26,-20q12,-10 24,0" stroke="${INK}" stroke-width="7" fill="none"/><path d="M-30,60q30,-24 60,0" stroke="${INK}" stroke-width="7" fill="none"/></g>
+        <g id="${id}-s0" opacity="0">${["M380,520l30,-60l20,40l30,-70", "M640,450l30,60l20,-40l30,70"].map((d) => `<path d="${d}" stroke="#ffd04a" stroke-width="12" fill="none" stroke-linejoin="round"/>`).join("")}${T(540, 360, "ปวดหัว", "#ffd04a", 44)}</g>
+        <g id="${id}-s1" opacity="0"><path d="M240,${F - 560}m0,0a30,30 0 1,1 0,1M240,${F - 560}m-60,0a60,60 0 1,1 0,1" stroke="#9ad8ff" stroke-width="8" fill="none"/>${T(220, F - 440, "เวียนหัว", "#9ad8ff", 40)}</g>
+        <g id="${id}-s2" opacity="0"><path d="M800,${F - 560}q30,-40 60,0t60,0" stroke="#9ae68a" stroke-width="10" fill="none"/><path d="M800,${F - 520}q30,-40 60,0t60,0" stroke="#9ae68a" stroke-width="10" fill="none"/>${T(860, F - 440, "คลื่นไส้", "#9ae68a", 40)}</g>
+        <g id="${id}-s3" opacity="0"><rect x="440" y="${F - 300}" width="200" height="90" rx="12" fill="none" stroke="#ff8a7a" stroke-width="10"/><rect x="640" y="${F - 270}" width="18" height="30" fill="#ff8a7a"/><rect x="456" y="${F - 284}" width="40" height="58" fill="#ff8a7a"/>${T(540, F - 160, "อ่อนแรง", "#ff8a7a", 40)}</g>
+        <g id="${id}-flu" opacity="0" transform="translate(880,${F - 180})"><rect x="-16" y="-160" width="32" height="170" rx="16" fill="#f4ecd8" ${OUT3}/><circle cy="20" r="30" fill="#e0362c" ${OUT3}/><rect x="-6" y="-80" width="12" height="100" fill="#e0362c"/>${T(70, -90, "?", "#ffe08a", 120)}</g>`;
+    } else if (v === 6) {
+      // children get it sooner: a child and an adult side by side, each with a level that fills — the child's fills first
+      const fig = (x, sc, c) => `<g transform="translate(${x},${F}) scale(${sc})"><circle cx="0" cy="-330" r="56" fill="${c}" ${OUT}/><path d="M-60,-260H60L70,-110H-70Z" fill="${c}" ${OUT}/><path d="M-50,-110L-56,0M50,-110L56,0" stroke="${c}" stroke-width="36" stroke-linecap="round"/></g>`;
+      const bar = (x, i) => `<rect x="${x - 34}" y="${F - 760}" width="68" height="420" rx="16" fill="none" stroke="#f4ecd8" stroke-width="8"/><rect id="${i}" x="${x - 26}" y="${F - 348}" width="52" height="0" rx="10" fill="#e85a4a"/>`;
+      a += fig(330, 0.8, "#f08ab0") + fig(750, 1.3, "#7a9ac8") + bar(170, `${id}-kbar`) + bar(930, `${id}-abar`) + T(330, F + 80, "เด็ก", "#f08ab0", 48) + T(750, F + 80, "ผู้ใหญ่", "#9ab8e8", 48)
+        + `<g id="${id}-lab" opacity="0">${T(330, F - 560, "มีอาการก่อน!", "#ffe08a", 48)}<path d="M330,${F - 540}v80" stroke="#ffe08a" stroke-width="8"/></g>`;
+    } else if (v === 7) {
+      // everyone out: the tent, an arrow out into the open air under the stars; the people move out (#id-ppl, translate it by x)
+      a += `<path d="M60,${F}Q70,${F - 520} 380,${F - 590}Q690,${F - 520} 700,${F}Z" fill="#2a3446" stroke="#e8823a" stroke-width="10"/>${stove(300, F - 6, 0.6, { smoke: false })}
+        ${Array.from({ length: 12 }, (_, k) => `<circle cx="${760 + (k % 4) * 90}" cy="${F - 900 + Math.floor(k / 4) * 90}" r="5" fill="#fff8d8"/>`).join("")}${pine(1000, F, 0.8, "#3a4a3a")}
+        <g id="${id}-arrow" opacity="0"><path d="M520,${F - 220}Q720,${F - 330} 880,${F - 220}" stroke="#9ae68a" stroke-width="16" fill="none" stroke-linecap="round"/><path d="M870,${F - 270}l50,60l-74,10z" fill="#9ae68a"/></g>
+        <g id="${id}-ppl">${[440, 530, 620].map((x, k) => `<g transform="translate(${x},${F})"><circle cx="0" cy="-${130 - k * 10}" r="${30 - k * 3}" fill="#e2b08a" ${OUT3}/><rect x="-${26 - k * 3}" y="-${96 - k * 10}" width="${52 - k * 6}" height="${96 - k * 10}" rx="12" fill="${["#3e6a4e", "#f08ab0", "#f08a2a"][k]}" ${OUT3}/></g>`).join("")}</g>
+        ${T(540, 420, "ออกไปรับอากาศข้างนอก", "#9ae68a", 60, `${id}-lab`)}`;
+    } else if (v === 8) {
+      // an emergency: someone who won't wake, and the phone — 1669
+      a += `<g transform="translate(360,${F - 40})"><rect x="-220" y="-40" width="440" height="60" rx="26" fill="#6a5a9a" ${OUT3}/><circle cx="-210" cy="-50" r="50" fill="#e2b28c" ${OUT}/><path d="M-226,-56q8,5 16,0M-196,-56q8,5 16,0" stroke="${INK}" stroke-width="5" fill="none"/></g>
+        ${T(360, F - 220, "หมดสติ", "#ff8a7a", 52)}
+        <g id="${id}-phone" opacity="0" transform="translate(800,${F - 380})"><rect x="-110" y="-200" width="220" height="400" rx="30" fill="#2a2a30" ${OUT}/><rect x="-92" y="-170" width="184" height="320" rx="10" fill="#e8f4f0"/>
+          <text y="0" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="74" fill="#c8342a">1669</text><circle cy="100" r="34" fill="#3aa85a"/><path d="M-14,90q14,24 30,22" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/></g>
+        ${T(540, 420, "เหตุฉุกเฉิน", "#ff8a7a", 80, `${id}-lab`)}`;
+    } else if (v === 9) {
+      // asleep or drunk: a sleeper (zzz) by a bottle; the gas level climbs (#id-bar) while the warning bell stays silent (#id-x0 over it)
+      a += `<g transform="translate(400,${F - 40})"><rect x="-260" y="-44" width="520" height="64" rx="28" fill="#3a6aa8" ${OUT3}/><circle cx="-250" cy="-56" r="54" fill="#e2b28c" ${OUT}/><path d="M-268,-62q8,6 16,0M-236,-62q8,6 16,0" stroke="${INK}" stroke-width="5" fill="none"/></g>
+        <g id="${id}-zz">${T(250, F - 220, "z", "#c8d8ff", 50)}${T(290, F - 280, "z", "#c8d8ff", 64)}${T(340, F - 350, "Z", "#c8d8ff", 80)}</g>${bottle(720, F - 10, 1.2)}
+        <rect x="880" y="${F - 820}" width="90" height="560" rx="20" fill="none" stroke="#f4ecd8" stroke-width="8"/><rect id="${id}-bar" x="890" y="${F - 270}" width="70" height="0" rx="14" fill="#e85a4a"/>${T(925, F - 200, "CO", "#ff8a7a", 44)}
+        <g transform="translate(560,${F - 640})"><path d="M-70,40Q-70,-80 0,-90Q70,-80 70,40L90,60H-90Z" fill="#ffd04a" ${OUT}/><circle cy="80" r="18" fill="#ffd04a" ${OUT3}/></g>${X(560, F - 620, `${id}-x0`, 130)}
+        ${T(540, 420, "ไม่มีอาการเตือน", "#ff8a7a", 72, `${id}-lab`)}`;
+    } else if (v === 10) {
+      // less oxygen to the brain: a head in profile, oxygen bubbles going out one by one (#id-o0..o5), the eyelid closing (#id-lid)
+      a += `<g transform="translate(540,${F - 560})"><path d="M-180,160Q-220,-40 -120,-160Q0,-240 130,-160Q210,-90 190,10Q230,40 200,70L180,90Q190,140 150,160Z" fill="#e2b08a" ${OUT}/>
+          <path d="M-110,-100Q-40,-170 60,-130Q120,-90 100,-30Q60,30 -20,10Q-110,-10 -110,-100Z" fill="#f2c0c8" ${OUT3}/><path d="M-80,-80q30,-30 60,0t60,0" stroke="#d898a0" stroke-width="6" fill="none"/>
+          <ellipse cx="140" cy="-30" rx="26" ry="16" fill="#fff" ${OUT3}/><circle cx="146" cy="-30" r="8" fill="${INK}"/><path id="${id}-lid" d="M112,-44Q140,-60 168,-44V-30H112Z" fill="#c4906a" opacity="0"/></g>
+        ${Array.from({ length: 6 }, (_, k) => `<g id="${id}-o${k}"><circle cx="${330 + (k % 3) * 100}" cy="${F - 620 - Math.floor(k / 3) * 80}" r="30" fill="#7ac8ff" opacity=".85" ${OUT3}/><text x="${330 + (k % 3) * 100}" y="${F - 610 - Math.floor(k / 3) * 80}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="26" fill="#fff">O₂</text></g>`).join("")}
+        ${T(540, F + 80, "สมองขาดออกซิเจน", "#7ac8ff", 48)}${T(540, 420, "ง่วง… หลับไม่รู้ตัว", "#c8d8ff", 64, `${id}-lab`)}`;
+    } else if (v === 11) {
+      // alcohol doesn't warm you: a body with heat leaving it (#id-heat), the thermometer dropping (#id-mer, attr y/height), the bottle crossed out
+      a += `<g transform="translate(420,${F})"><circle cx="0" cy="-520" r="70" fill="#e2b28c" ${OUT}/><path d="M-90,-430H90L110,-180H-110Z" fill="#7a4a9a" ${OUT}/><path d="M-70,-180L-80,0M70,-180L80,0" stroke="#3a3a44" stroke-width="50" stroke-linecap="round"/></g>
+        <g id="${id}-heat">${[-160, -60, 40, 140].map((dx, k) => `<path d="M${420 + dx},${F - 640}q-20,-50 0,-100q20,-50 0,-100" stroke="#ff8a5a" stroke-width="10" fill="none" stroke-linecap="round" opacity="${0.8 - k * 0.1}"/>`).join("")}</g>
+        <g transform="translate(860,${F - 120})"><rect x="-26" y="-600" width="52" height="600" rx="26" fill="#f4ecd8" ${OUT}/><circle cy="30" r="50" fill="#e0362c" ${OUT}/><rect id="${id}-mer" x="-12" y="-480" width="24" height="500" fill="#e0362c"/></g>
+        ${bottle(160, F - 10, 1.3)}${X(160, F - 110, `${id}-x0`, 110)}${T(160, F + 80, "เหล้า", "#f4ecd8", 44)}
+        ${T(540, 420, "เสียความร้อนเร็วขึ้น", "#ff8a7a", 64, `${id}-lab`)}`;
+    } else if (v === 12) {
+      // ผีอำ, medically: awake but can't move for a moment (left) — and someone who won't wake: an emergency (right, #id-emg)
+      a += `<path d="M540,${F - 900}V${F + 60}" stroke="#3a4a60" stroke-width="6" stroke-dasharray="16 12"/>
+        <g transform="translate(280,${F - 60})"><rect x="-200" y="-40" width="400" height="60" rx="26" fill="#3a6aa8" ${OUT3}/><circle cx="-190" cy="-52" r="48" fill="#e2b28c" ${OUT}/><circle cx="-204" cy="-58" r="9" fill="#fff" ${OUT3}/><circle cx="-176" cy="-58" r="9" fill="#fff" ${OUT3}/><circle cx="-202" cy="-58" r="4" fill="${INK}"/><circle cx="-174" cy="-58" r="4" fill="${INK}"/>
+          ${[-60, 40, 140].map((x) => `<path d="M${x},-80v80" stroke="#c8d8ff" stroke-width="10" stroke-linecap="round"/>`).join("")}</g>
+        ${T(280, F - 260, "รู้สึกตัว", "#9ae68a", 44)}${T(280, F - 200, "ขยับไม่ได้ชั่วขณะ", "#c8d8ff", 38)}${T(280, F + 90, "ผีอำ", "#f4ecd8", 48)}
+        <g id="${id}-emg" opacity="0"><g transform="translate(800,${F - 60})"><rect x="-200" y="-40" width="400" height="60" rx="26" fill="#6a5a9a" ${OUT3}/><circle cx="-190" cy="-52" r="48" fill="#e2b28c" ${OUT}/><path d="M-210,-58q8,6 16,0M-184,-58q8,6 16,0" stroke="${INK}" stroke-width="5" fill="none"/></g>
+          ${T(800, F - 260, "ปลุกไม่ตื่น", "#ff8a7a", 44)}${T(800, F + 90, "เหตุฉุกเฉิน · 1669", "#ff8a7a", 44)}</g>`;
+    }
     put(L.set, s + a);
+  }
+
+  // ---------------- ลุงแก้ว's memory: a shadow play, sepia; two full-screen panels (y 0 / 2000) ----------------
+  function kaewMemory(L, o = {}) {
+    const P = "#24140a", H = 1920;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="4600" fill="#140c06"/>`);
+    const screen = (y0) => `<rect x="-60" y="${y0}" width="1200" height="${H}" fill="#c8945a"/><circle cx="540" cy="${y0 + 960}" r="760" fill="#f0d0a0" opacity=".4"/>${Array.from({ length: 6 }, (_, k) => `<path d="M${-60 + k * 240},${y0}V${y0 + H}" stroke="#9a6a3a" stroke-width="6" opacity=".45"/>`).join("")}`;
+    let s = "";
+    // 1: a father carries the glowing stove into the tent where his small son sleeps
+    s += screen(0) + `<rect x="-60" y="1300" width="1200" height="40" fill="${P}"/><path d="M60,1300Q70,700 540,620Q1010,700 1020,1300Z" fill="${P}" opacity=".35"/>
+      <g transform="translate(260,1290)" fill="${P}"><rect x="-120" y="-30" width="240" height="34" rx="16"/><circle cx="-120" cy="-34" r="30"/></g>
+      <g transform="translate(700,1300)" fill="${P}"><circle cx="0" cy="-470" r="50"/><path d="M-60,-410H60L50,-160H-50Z"/><path d="M-40,-160L-60,0M40,-160L70,0" stroke="${P}" stroke-width="34" stroke-linecap="round"/>
+        <path d="M-50,-380Q-120,-300 -150,-250M50,-380Q-20,-300 -110,-250" stroke="${P}" stroke-width="22" fill="none" stroke-linecap="round"/></g>
+      <g transform="translate(570,1185)"><path d="M-56,-110Q0,-175 56,-110" stroke="${P}" stroke-width="12" fill="none"/><path d="M-70,-110L-56,0H56L70,-110Z" fill="${P}"/><circle cx="0" cy="-40" r="26" fill="#ffb04a"/><circle cx="0" cy="-60" r="110" fill="#ff9a3a" opacity=".3"/></g>`;
+    // 2: the boy sits up being sick; his father lies still; the stove still glowing
+    s += screen(2000) + `<rect x="-60" y="3300" width="1200" height="40" fill="${P}"/><path d="M60,3300Q70,2700 540,2620Q1010,2700 1020,3300Z" fill="${P}" opacity=".35"/>
+      <g transform="translate(300,3300)" fill="${P}"><circle cx="0" cy="-260" r="36"/><path d="M-40,-220H40L50,-60H-40Z"/><path d="M-40,-60H120V-20H-40Z"/><path d="M30,-250q50,20 70,60" stroke="${P}" stroke-width="14" fill="none"/></g>
+      <g transform="translate(700,3290)" fill="${P}"><rect x="-200" y="-40" width="400" height="44" rx="20"/><circle cx="-200" cy="-50" r="44"/></g>
+      <g transform="translate(980,3300)"><path d="M-70,-110L-56,0H56L70,-110Z" fill="${P}"/><circle cx="0" cy="-40" r="26" fill="#ffb04a"/><circle cx="0" cy="-60" r="110" fill="#ff9a3a" opacity=".3"/></g>`;
+    put(L.set, s);
+  }
+
+  // ---------------- ใบเตย's bedroom at home, at night ----------------
+  // a bed under the window (city lights), two blankets; the foot of the bed on the right: o.coal (a glowing coal on the floor, #id-coal),
+  // o.ghost (a squatting shape at the foot of the bed, #id-ghost, eyes #id-ghost-eyes); the door ajar on the left with hall light (o.hall)
+  function bedroom(L, o = {}) {
+    const id = o.id || "br", G = o.ground ?? 1480, r = mk(o.seed || 91);
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#0c0e18"/>`);
+    let s = `<rect x="-1200" y="-800" width="3500" height="${G + 800}" fill="#2a2e44"/><rect x="-1200" y="${G}" width="3500" height="1200" fill="#3a2e2a"/>${Array.from({ length: 12 }, (_, k) => `<path d="M-1200,${G + 40 + k * 90}H2300" stroke="#2e2420" stroke-width="4"/>`).join("")}
+      <g><rect x="220" y="${G - 1180}" width="560" height="520" fill="#141a30" ${OUT}/>${Array.from({ length: 26 }, () => `<rect x="${f1(240 + r() * 520)}" y="${f1(G - 860 + r() * 180)}" width="${f1(8 + r() * 14)}" height="${f1(8 + r() * 20)}" fill="#ffd88a" opacity="${(0.3 + r() * 0.5).toFixed(2)}"/>`).join("")}
+        <path d="M500,${G - 1180}V${G - 660}M220,${G - 920}H780" stroke="#3a3e54" stroke-width="12"/><circle cx="660" cy="${G - 1080}" r="40" fill="#e8e2c0" opacity=".85"/></g>
+      <g><rect x="-160" y="${G - 1300}" width="260" height="1300" fill="#1e2234" ${OUT}/>${o.hall ? `<path d="M100,${G - 1300}L-40,${G - 1260}V${G - 40}L100,${G}Z" fill="#ffd88a" opacity=".35"/>` : ""}</g>
+      <g transform="translate(560,${G})"><rect x="-420" y="-300" width="40" height="300" fill="#6a4a30" ${OUT3}/><rect x="380" y="-200" width="40" height="200" fill="#6a4a30" ${OUT3}/>
+        <rect x="-420" y="-230" width="840" height="110" rx="14" fill="#f4f0e8" ${OUT}/><rect x="-380" y="-280" width="190" height="70" rx="30" fill="#f8f4ec" ${OUT3}/>
+        <path d="M-200,-250Q100,-300 400,-240L410,-140H-200Z" fill="#e88ab0" ${OUT}/><path d="M-160,-262Q120,-320 380,-266L400,-200H-170Z" fill="#7ac0e8" ${OUT}/></g>`;
+    put(L.set, s);
+    let g = "";
+    if (o.coal) { put(L.act, `<g id="${id}-coal" transform="translate(1060,${G - 6})"><ellipse rx="44" ry="22" fill="#ff7a2a" ${OUT3}/><ellipse cx="-10" cy="-4" rx="20" ry="9" fill="#ffd27a"/></g>`); g += `<circle cx="1060" cy="${G - 40}" r="320" fill="url(#amCoal)" opacity=".7" class="aglow"/>`; }
+    if (o.ghost) put(L.act, `<g id="${id}-ghost" opacity="${o.ghostOp ?? 1}">${ghost(1060, G - 180, 1.0, { sit: true, id: `${id}-g` })}</g>`);
+    if (g) put(L.glow, g);
+  }
+
+  // ---------------- night vision: the vlog camera left running in the corner of the tent ----------------
+  // green-on-black, the sleepers as lumps, the door on the right; #id-flap (the door opening), #id-push (wrapper: arm + stove; slide it in
+  // by x from +360), #id-eyes in the gap, a REC overlay with the time in the light layer
+  function nightCam(L, o = {}) {
+    const id = o.id || "nc", G = 1480, g1 = "#0a1a0e", g2 = "#173a20", g3 = "#2e6a3a", hi = "#b8ffc0";
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="${g1}"/>`);
+    let s = `<path d="M-500,${G}Q-440,${G - 1400} 540,${G - 1520}Q1520,${G - 1400} 1580,${G}Z" fill="${g2}"/>${[-200, 200, 540, 880, 1280].map((x) => `<path d="M${x},${G}Q${540 + (x - 540) * 0.4},${G - 1200} 540,${G - 1520}" stroke="${g1}" stroke-width="8" fill="none"/>`).join("")}
+      <rect x="-1200" y="${G}" width="3500" height="1200" fill="#0e2414"/>
+      ${[[-60, 1.0], [300, 0.8], [620, 1.0]].map(([x, sc]) => `<g transform="translate(${x},${G - 10}) scale(${sc})"><path d="M-170,0Q-160,-90 -40,-100Q120,-110 170,-40Q180,0 160,10H-170Z" fill="${g3}"/><circle cx="-150" cy="-70" r="44" fill="${g3}"/></g>`).join("")}
+      <path d="M880,${G}Q890,${G - 560} 980,${G - 760}Q1080,${G - 560} 1090,${G}Z" fill="${g2}" stroke="${g3}" stroke-width="6"/><path d="M985,${G - 760}V${G}" stroke="${g3}" stroke-width="5" stroke-dasharray="6 4"/>`;
+    s += `<path id="${id}-flap" opacity="0" d="M985,${G - 700}Q960,${G - 400} 930,${G}H1060Q1030,${G - 400} 985,${G - 700}Z" fill="#000"/>`;
+    put(L.set, s);
+    // the arm reaching in through the gap with the stove — in IR the coals are white
+    put(L.act, `<g id="${id}-push"><g transform="translate(860,${G - 30}) scale(0.9)"><path d="M-100,-170L-80,0H80L100,-170Z" fill="${g3}" stroke="${hi}" stroke-width="3"/><path d="M-40,-60H40V-10H-40Z" fill="#f4fff4"/><circle cx="0" cy="-35" r="90" fill="${hi}" opacity=".25"/>
+      <ellipse cx="0" cy="-176" rx="122" ry="26" fill="${g3}" stroke="${hi}" stroke-width="3"/></g>
+      <path d="M1400,${G - 520}Q1150,${G - 420} 980,${G - 190}" stroke="#000" stroke-width="40" fill="none" stroke-linecap="round"/>${[-24, -8, 8, 24].map((d) => `<path d="M980,${G - 190}l${-40 + d * 0.5},${d * 1.4}l-24,${d * 0.6}" stroke="#000" stroke-width="12" fill="none" stroke-linecap="round"/>`).join("")}</g>`);
+    put(L.glow, `<g id="${id}-eyes" opacity="0">${eyes(985, G - 560, 1.3)}</g>`);
+    put(L.light, `<g opacity=".9"><rect x="0" y="0" width="1080" height="1920" fill="none" stroke="#000" stroke-width="90" opacity=".5"/>${Array.from({ length: 64 }, (_, k) => `<path d="M0,${k * 30}H1080" stroke="#000" stroke-width="3" opacity=".18"/>`).join("")}
+      <circle cx="110" cy="290" r="16" fill="#e0362c"/><text x="140" y="302" font-family="Kanit" font-weight="700" font-size="36" fill="#d8ffd8">REC</text><text x="970" y="302" text-anchor="end" font-family="Kanit" font-weight="700" font-size="36" fill="#d8ffd8">${o.ts || "01:47:12"}</text>
+      <text x="110" y="1700" font-family="Kanit" font-weight="700" font-size="30" fill="#d8ffd8">IR · NIGHT</text><rect x="880" y="1676" width="90" height="34" rx="6" fill="none" stroke="#d8ffd8" stroke-width="4"/><rect x="886" y="1682" width="30" height="22" fill="#e0362c"/></g>`);
   }
 
   // ---------------- the legend: a shadow play on tent fabric, lit by a torch ----------------
@@ -315,9 +530,17 @@
     q(".acoal").forEach((el) => tl.fromTo(el, { opacity: 0.75 }, { opacity: 1, duration: 0.22, repeat: Math.ceil(dur / 0.22), yoyo: true, ease: "none", immediateRender: false }, t0));
     q(".aglow").forEach((el) => tl.fromTo(el, { opacity: 0.55 }, { opacity: 0.8, duration: 0.5, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     q(".arain").forEach((el) => tl.fromTo(el, { y: -120 }, { y: 0, duration: 0.3, repeat: Math.ceil(dur / 0.3), ease: "none", immediateRender: false }, t0));
+    q(".ahz").forEach((el, i) => tl.fromTo(el, { x: -20 }, { x: 20, duration: 2.4 + (i % 3) * 0.6, repeat: Math.ceil(dur / 2.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.13));
+    q(".ahzup").forEach((el, i) => tl.fromTo(el, { y: 40, opacity: 0.15 }, { y: -60, opacity: 0.5, duration: 1.6, repeat: Math.ceil(dur / 1.6), ease: "sine.inOut", immediateRender: false }, t0 + i * 0.25));
+    q(".aheat").forEach((el, i) => tl.fromTo(el, { y: 0, opacity: 0.8 }, { y: -70, opacity: 0, duration: 1.2, repeat: Math.ceil(dur / 1.2), ease: "power1.out", immediateRender: false }, t0 + i * 0.3));
     q(".amist").forEach((el) => tl.fromTo(el, { x: 0 }, { x: 80, duration: dur, ease: "none", immediateRender: false }, t0));
   }
 
-  Object.assign(Sets, { doiCamp, tentIn, chestPOV, stoveClose, coalDark, coSection, shadowLegend, campSign });
-  window.Am = { ghost, eyes, stove, tent, lantern, bottle, pine, life, ABL, AEYE };
+  // the cast carrying the stove in both hands (mode "carry"): the stove sits on the torso layer between the back and front hands
+  const carryStove = (P, lit) => ({ ...P, torsoExtra: (P.torsoExtra || "") + `<g transform="translate(171,-311) scale(.46)">${stove(0, 0, 1, { lit, smoke: false })}</g>` });
+  Rig.CAST.phumStove = carryStove(Rig.CAST.phum, true);
+  Rig.CAST.oatStove = carryStove(Rig.CAST.oat, true);
+
+  Object.assign(Sets, { doiCamp, tentIn, chestPOV, stoveClose, coalDark, coSection, shadowLegend, campSign, nightCam, kaewMemory, bedroom, tentCut, headCut });
+  window.Am = { ghost, eyes, stove, tent, lantern, bottle, pine, life, pill, hazeBlobs, heat, tentHaze, ABL, AEYE };
 })();
