@@ -1668,6 +1668,9 @@
         },
       });
 
+      // no source cards and no source names on screen (user, 26 Oct 2026: "เอา ที่มา ออกให้หมด"); the sources live in the pinned comment (CAPTIONS.md)
+      shots.forEach((sh) => { if (sh.ui) sh.ui = sh.ui.filter((u) => u.type !== "src").map((u) => (u.label ? { ...u, label: u.label.replace(/ · (NIOSH|MedlinePlus|NHS|CDC|Ready\.gov)$/, "") } : u)); });
+
       // ---------- the look: depth, haze, light sources per shot ----------
       const MORN = (L) => { Fence.light(L, 900, 300, 900, "#ffe0b0", 0.4); Fence.haze(L, 1120, 460, "#e8e2d0", 0.35); Fence.depth(L, "grass"); };
       const DAY = (L) => { Fence.light(L, 760, 300, 900, "#ffe6b0", 0.3); Fence.haze(L, 1120, 460, "#dfe8ea", 0.3); Fence.depth(L, "grass"); };

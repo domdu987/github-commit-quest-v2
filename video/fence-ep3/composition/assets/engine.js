@@ -128,9 +128,9 @@
     (sh.ui || []).forEach((u, k) => GameUI.add(div, tl, id, sh.start, u, k));
     // speech bubbles
     (sh.bubbles || []).forEach((b, k) => {
-      div.insertAdjacentHTML("beforeend", `<div id="${id}-b${k}" class="bubble" style="left:${b.x}px; top:${b.y}px; --tail:${b.tail || 40}px">${Ui.mark(b.text)}</div>`);
+      div.insertAdjacentHTML("beforeend", `<div id="${id}-b${k}" class="bubble${b.up ? " up" : ""}" style="left:${b.x}px; top:${b.y}px; --tail:${b.tail || 40}px">${Ui.mark(b.text)}</div>`);
       const el = `#${id}-b${k}`;
-      tl.fromTo(el, { opacity: 0, scale: 0.6, transformOrigin: "20% 100%" }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)", immediateRender: false }, sh.start + b.t);
+      tl.fromTo(el, { opacity: 0, scale: 0.6, transformOrigin: b.up ? "20% 0%" : "20% 100%" }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)", immediateRender: false }, sh.start + b.t);
       tl.to(el, { opacity: 0, duration: 0.15 }, sh.start + (b.end ?? sh.dur - 0.15));
     });
     // comic SFX words
