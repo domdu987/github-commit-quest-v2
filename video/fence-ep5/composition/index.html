@@ -1023,11 +1023,11 @@
       const PAPER = (seq) => `<span class="pd">${seq.slice().reverse().map((d, i, arr) => `<i class="sh${i < arr.length - 1 ? " u" : ""}" data-v="${d}"><b>${d}</b>${i === arr.length - 1 ? '<i class="tp"></i>' : ""}</i>`).join("")}</span>`;   // sheets stacked: first value on top
       const PAPERS = (vals) => { const strs = vals.map((v) => String(v)), n = Math.max(...strs.map((s) => s.length)); return `<span class="pdig">${Array.from({ length: n }, (_, i) => PAPER(strs.map((s) => s.padStart(n, "0")[i]))).join("")}</span>`; };
       // a sheet peels at the tape and flutters away up-right; the sheet beneath jolts
-      function flyOff(tl, sh, t) {
-        tl.fromTo(sh, { rotation: 0 }, { rotation: -9, duration: 0.14, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t);
-        tl.to(sh, { x: 220, y: -300, rotation: 48, opacity: 0, duration: 0.75, ease: "power2.in" }, t + 0.26);
-        tl.fromTo(sh, { scaleX: 1 }, { scaleX: 0.6, duration: 0.18, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t + 0.3);
-        const under = sh.previousElementSibling; if (under) tl.fromTo(under, { rotation: 2, y: 0 }, { rotation: -2, y: 4, duration: 0.3, ease: "elastic.out(1,.4)", immediateRender: false }, t + 0.4);
+      function flyOff(tl, sh, t, k = 1) {   // k < 1: the same flight, faster (a fast countdown)
+        tl.fromTo(sh, { rotation: 0 }, { rotation: -9, duration: 0.14 * k, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t);
+        tl.to(sh, { x: 220, y: -300, rotation: 48, opacity: 0, duration: 0.75 * k, ease: "power2.in" }, t + 0.26 * k);
+        tl.fromTo(sh, { scaleX: 1 }, { scaleX: 0.6, duration: 0.18 * k, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t + 0.3 * k);
+        const under = sh.previousElementSibling; if (under) tl.fromTo(under, { rotation: 2, y: 0 }, { rotation: -2, y: 4, duration: 0.3 * k, ease: "elastic.out(1,.4)", immediateRender: false }, t + 0.4 * k);
       }
       // the scraps slap on one by one (every sheet of a stack appears; the top one lands last with a squash)
       const slapIn = (tl, el, t, gap = 0.14) => el.querySelectorAll(".pd").forEach((pd, k) => { const shs = pd.querySelectorAll(".sh"), at = t + k * gap;
@@ -1294,7 +1294,7 @@
               // (the tens digit holds one "1" sheet per second from 19 to 10) drop out at the same moment so the next digit shows
               const live = [...pd.querySelectorAll(".sh")].reverse().filter((s) => !used.has(s)), k0 = live.findIndex((s) => s.dataset.v === a[j]);
               if (k0 < 0) return; let k = k0; while (k < live.length && live[k].dataset.v === a[j]) { used.add(live[k]); k++; }
-              flyOff(tl, live[k0], T - 0.2); tl.set(live[k0], { opacity: 0 }, T + 0.6);
+              const kf = Math.min(1, tick); flyOff(tl, live[k0], T - (kf < 1 ? 0.75 * kf : 0.2), kf); tl.set(live[k0], { opacity: 0 }, T + 0.6 * kf);
               for (let m = k0 + 1; m < k; m++) tl.set(live[m], { opacity: 0 }, T + 0.05); });
             const hot = v <= warn;
             tl.fromTo(`#${id}`, { x: 0 }, { x: hot ? 10 : 4, duration: 0.035, repeat: hot ? 7 : 3, yoyo: true, immediateRender: false }, T);
@@ -1801,6 +1801,9 @@
         ui: [{ type: "nextCard", t: 0.3, big: "ตอนที่ 6", tag: "นิคม… ที่ที่มีไฟฟ้า แต่ทุกคนต้องมีประโยชน์", top: 150 }, { type: "ledger", t: 0.6, day: "เหลือ 94 วัน", rows: [["วิทยุนับถอยหลัง", "95 → 94"], ["คน", "5 = 5"], ["น้ำดื่ม", "6 → 2 ขวด", "warn"], ["น้ำมัน", "3 → 0 ลิตร", "warn"], ["ก้อง", "ลมแดด · รอด"]], six: "", next: "นิคม · คุณวินคือใคร", cta: "กดติดตาม · <em>อ่านหน้าถัดไป</em> ตอนที่ 6", top: 560 }],
         fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 0.3 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 1 }, t0 + 0.45); Fx.glitch(tl, `#${id}`, t0 + 1.9, 0.12, 10, 91); Fx.heart(tl, t0 + 1.2, D("next") - 1.2, 0.7, 0.35); },
       });
+
+      // no source cards and no source names on screen (user, 26 Oct 2026: "เอา ที่มา ออกให้หมด"); the sources live in the pinned comment (CAPTIONS.md)
+      shots.forEach((sh) => { if (sh.ui) sh.ui = sh.ui.filter((u) => u.type !== "src").map((u) => (u.label ? { ...u, label: u.label.replace(/ · (NIOSH|MedlinePlus|NHS|CDC|Ready\.gov)$/, "") } : u)); });
 
       // ---------- the look: depth, haze, light sources per shot ----------
       const NOON = (L) => { Fence.light(L, 760, 260, 1000, "#fff2c8", 0.35); Fence.haze(L, 1100, 420, "#fff2dc", 0.35); };
