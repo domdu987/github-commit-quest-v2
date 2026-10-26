@@ -42,6 +42,7 @@
       .capbox .k.kr, .k.kr { background: #d8443a; color: #fff4ea; }
       .capbox.q { background: rgba(244,236,216,.94); color: #2e2a26; border-color: #2e2a26; }
       .bubble { z-index: 57; white-space: normal !important; max-width: 640px; text-align: center; }
+      .bubble.up:after { bottom: auto; top: -30px; border-top: 5px solid #2e2a26; border-bottom: 0; clip-path: polygon(30% 0, 100% 100%, 0 100%); }
       /* shared HUD pieces (counter, source chip, callback, countdown) */
       .zcount { position: absolute; right: 50px; z-index: 52; padding: 16px 26px; border-radius: 24px; background: rgba(16,20,24,.92); border: 4px solid #8fc3d6; font-family: Kanit; text-align: right; opacity: 0; }
       .zcount .lbl { color: #8fc3d6; font-weight: 900; font-size: 30px; } .zcount .v { color: #f4ecd8; font-weight: 900; font-size: 84px; line-height: 1; } .zcount .v small { font-size: 36px; color: #9aa6ad; }
@@ -140,7 +141,7 @@
         for (let n = 0; n + 1 < out.length; n++) out[n].end = Math.min(out[n].end, out[n + 1].t - 0.03);
         return out;
       }
-      const bub = (k, i, x, y, tail, o = {}) => ({ text: `“${SH[k].vo[i].cap.replace(/ \/ /g, " ")}”`, x, y, tail, t: vo(k, i) - 0.05, end: o.end ?? Math.min(D(k) - 0.05, voEnd(k, i) + 0.35) });
+      const bub = (k, i, x, y, tail, o = {}) => ({ text: `“${SH[k].vo[i].cap.replace(/ \/ /g, o.br ? "<br>" : " ")}”`, x, y, tail, up: !!o.up, t: vo(k, i) - 0.05, end: o.end ?? Math.min(D(k) - 0.05, voEnd(k, i) + 0.35) });
       const shakeH = (t) => 7 * Math.sin(t * 2.3) + 3 * Math.sin(t * 7.1);
 
       // ---------- poses for this story ----------
@@ -194,6 +195,11 @@
       Rig.MODES.aim = (u, o) => { const j = Math.sin(u * 23) * 0.8; return { ...Rig.MODES.idle(u, o), uaF: -84 + j, faF: -8, uaB: -70 - j, faB: -46, torso: -6, head: 6, thF: -8, thB: 10, shF: 6 }; };   // rifle at the shoulder, both arms forward
       Rig.MODES.handsUp = (u, o) => { const j = Math.sin(u * 18) * 1.5; return { ...Rig.MODES.idle(u, o), uaF: -165 + j, faF: -10, uaB: -160 - j, faB: -14, torso: -2, head: -4 }; };
       Rig.MODES.give = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -74, faF: -6, uaB: 4, faB: -10, torso: 6, head: 10 });   // holding something out to someone
+      Rig.MODES.stab = (u, o) => { const k = Rig.smooth(Math.min(1, u / 0.22)), k2 = Rig.smooth(Math.min(1, Math.max(0, (u - 0.32) / 0.3))); const j = Math.sin(u * 31) * 1.2; return { ...Rig.MODES.idle(u, o), uaF: Rig.lerp(-60, -86, k) + 26 * k2 + j, faF: Rig.lerp(-30, -4, k), uaB: -46, faB: -58, torso: Rig.lerp(6, 18, k), head: 6, thF: Rig.lerp(10, 30, k), shF: 26, thB: -24, shB: 6, bodyY: Rig.lerp(4, 14, k) }; };   // braced, the spear driven level into the one that lunges
+      Rig.MODES.giveLow = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -40, faF: -16, uaB: 4, faB: -10, torso: 16, head: 18 });   // bending to hand something to a child
+      Rig.MODES.kneelGive = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -40, faF: -7, uaB: -30, faB: -40, torso: 16, head: 10 });   // kneeling, holding something out
+      Rig.MODES.sitReach = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -110 + Math.sin(u * 2.1), faF: -9, uaB: -14, faB: -30, torso: 6, head: 8 });   // sitting up, a hand out for it
+      Rig.MODES.reachUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -135 + Math.sin(u * 3) * 2, faF: -10, head: -14, torso: -2 });   // a child reaching up for it
       Rig.MODES.supine = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.4); return { ...Rig.MODES.idle(u, o), uaF: 14, faF: -6, uaB: -14, faB: -6, thF: 3, thB: -3, shF: 0, shB: 0, torso: 0.6 * b, head: 0, bodyY: -1.5 * b }; };   // on the back, filmed from straight above: the front view itself, fast shallow breaths (the ground is the backdrop)
       Rig.MODES.sipUp = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -70, faF: -110, uaB: -10, faB: -30, torso: 10, head: -8 });   // propped up, a bottle at the lips
       // the guard on the station roof: khaki security shirt, black cap, cargo trousers, a scarf against the sun
