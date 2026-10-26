@@ -33,7 +33,7 @@ SHOTS = [
     ("trap", ["n16"], 0.1, 0.4, 3.4),                                   # the card: a child's cry is a human trap
     ("fenceFall", ["n17", ("n18", 0.15)], 0.2, 0.9, 7.0),                # twenty of them on the wet ground; the section goes down; the lunge
     ("flee", ["d09", ("n19", 0.2)], 0.05, 0.3, 4.4),                     # run for the back door; ก้อง goes down on the rebar
-    ("cover", ["d10", ("d11", 0.2)], 0.1, 0.3, 5.0),                     # "ลุงกันให้" — "ยี่สิบวินาทีนะลุง"
+    ("cover", ["d10"], 0.1, 0.3, 3.6),                                  # "ลุงกันให้"
     ("count", ["n20", ("n21", 0.3)], 0.2, 0.3, 8.3),                     # 20 → 6 (0.55 s a number): he holds the breach with the spear; he is not running
     ("count2", ["d12"], 0.0, 0.0, 3.6),                                  # 5 → 0 (0.5 s a number): "ปิดซะ ครู" — the bar drops
     ("after", ["n22"], 0.6, 0.6, 4.0),                                  # black; the corridor; five of them

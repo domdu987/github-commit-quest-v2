@@ -492,6 +492,9 @@
         },
       });
 
+      // no source cards and no source names on screen (user, 26 Oct 2026: "เอา ที่มา ออกให้หมด"); the sources live in the pinned comment (CAPTIONS.md)
+      shots.forEach((sh) => { if (sh.ui) sh.ui = sh.ui.filter((u) => u.type !== "src").map((u) => (u.label ? { ...u, label: u.label.replace(/ · (NIOSH|MedlinePlus|NHS|CDC|Ready\.gov)$/, "") } : u)); });
+
       // ---------- the look: depth (blurred foreground), haze between far and set, light sources — per shot (key, or key#n for split parts) ----------
       const DUSK = (x) => (L) => { Fence.light(L, x, 1000, 760, "#ff9a40", 0.55); Fence.haze(L, 1150, 420, "#ffb070", 0.28); Fence.depth(L, "grass"); };
       const NIGHTYARD = (L) => { Fence.light(L, 760, 340, 520, "#9fb8d8", 0.28); Fence.haze(L, 1150, 400, "#5a6f90", 0.3); Fence.depth(L, "grass", { col: "#04060a" }); };

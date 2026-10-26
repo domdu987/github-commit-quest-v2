@@ -122,7 +122,7 @@ CUES = [
     *bed("crickets", T("yard", 0), T("count2", 2.5), 0.4, 4.6), ("yard", 0.3, "cord", 0.8), *bed("engine", T("yard", 0.9), T("count", 2.4), 0.55, 4.3), ("yard", frag("yard", 0, 1) + 0.2, "bulb", 0.8),
     ("yard", vo_t("yard", 1), "whoosh", 0.5), *[("yard", frag("yard", 1, 1) + k * 0.35, "buzz", 0.5) for k in range(3)], ("yard", frag("yard", 1, 1), "sting", 0.7), ("yard", frag("yard", 1, 1), "glitch", 0.3),
     # they come; "ยี่สิบวิ"
-    *bed("horde", T("horde", 0.3), T("count2", 2.5), 0.6, 4.6), *growls("horde", 0.3, D["horde"], 0.6, 0.7), ("horde", frag("horde", 0, 1), "sting", 0.9), ("horde", frag("horde", 0, 1), "boom", 0.5), ("horde", vo_t("horde", 2), "slam", 0.4), *beats("horde", 0.0, D["horde"], 0.45, 0.7),
+    *bed("horde", T("horde", 0.3), T("count2", 2.5), 0.6, 4.6), *growls("horde", 0.3, D["horde"], 0.6, 0.7), ("horde", frag("horde", 0, 1), "sting", 0.9), ("horde", frag("horde", 0, 1), "boom", 0.5), ("horde", vo_t("horde", 1) + 1.6, "slam", 0.4), *beats("horde", 0.0, D["horde"], 0.45, 0.7),
     # the countdown: a tick every second, the switch, the sickle, the run, the door
     ("count", 0.2, "page", 0.7), ("count", 0.45, "slam", 0.5), *[("count", 0.2 + 0.53 * (k + 1), "tick", 0.75) for k in range(14)], *beats("count", 0.2, D["count"] - 0.2, 0.6, 0.6), *growls("count", 0.5, D["count"], 0.5, 0.9),
     ("count", 0.2, "steps", 0.6), ("count", 0.8, "steps", 0.6), ("count", 1.9, "pop", 0.5), ("count", 2.1, "slam", 0.45), ("count", 2.4, "latch", 0.9), ("count", 2.4, "powerdown", 0.8),

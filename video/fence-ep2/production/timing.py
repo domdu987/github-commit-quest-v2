@@ -39,7 +39,7 @@ SHOTS = [
     ("real", ["n17", ("n18", 0.1)], 0.1, 0.35, 5.0),                     # in real life: outside only, 20 ft
     ("wake", ["n19"], 0.2, 0.5, 2.8),                                    # she opens her eyes
     ("yard", ["n20", ("n21", 0.1)], 0.1, 0.3, 5.0),                      # the generator in the middle of the yard; sound carries further than light
-    ("horde", ["n22", ("d06", 0.2), ("d07", 0.1)], 0.1, 0.25, 6.4),       # they come to the fence; "ลุงไปดับเอง" / "ยี่สิบวิ"
+    ("horde", ["n22", ("d06", 0.2)], 0.1, 0.25, 5.6),                    # they come to the fence; "ลุงไปดับเอง"
     ("count", ["n23", ("n24", 0.4)], 0.2, 0.3, 8.0),                     # the countdown 20 → 6 (0.53 s a number): the switch, the sickle breaks
     ("count2", [], 0, 0, 3.6),                                           # 5 → 0 (0.5 s a number): the door
     ("dark", ["n25"], 0.3, 0.3, 3.4),                                    # the light is gone: twenty minutes

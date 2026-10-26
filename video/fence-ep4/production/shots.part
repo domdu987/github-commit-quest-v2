@@ -283,13 +283,13 @@
       // ---------- 14. "ไปก่อน ลุงกันให้" — "ยี่สิบวินาทีนะลุง ครบแล้วปิดประตู" ----------
       add("cover", {
         set: "schoolYard", setOpts: { id: "cv", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.55, blur: { far: 3 },
-        cam: { keys: [{ t: 0, ...fr(860, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }, { t: vo("cover", 1) - 0.05, ...fr(100, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }] },
+        cam: { keys: [{ t: 0, ...fr(860, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }, { t: voEnd("cover", 0) - 0.1, ...fr(100, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }] },
         shake: (t) => 4 * Math.sin(t * 17),
         actors: [MA(960, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "frown" }, { t: 0.8, mode: "thrust", eyes: "wide", mouth: "scream" }], { flip: false, prop: "spear1f" }), KO(820, 1500, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }, { t: 0.8, mode: "limpRun", eyes: "pain", mouth: "frown" }], { flip: true, moveTo: { x: -200, at: 0.8, dur: D("cover") - 0.8, ease: "power1.in" } }),
-          PH(300, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }], { moveTo: { x: 0, dur: D("cover") } }), PI(-60, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: vo("cover", 1), mode: "stopHand", eyes: "wide", mouth: "scream" }])],
-        bubbles: [bub("cover", 0, 420, 520, 300), bub("cover", 1, 40, 760, 160)],
+          PH(300, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }], { moveTo: { x: 0, dur: D("cover") } }), PI(-60, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: voEnd("cover", 0), mode: "stopHand", eyes: "wide", mouth: "o" }])],
+        bubbles: [bub("cover", 0, 420, 520, 300)],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
-        fx(tl, id, t0, L) { ZF(L, tl, "cv", t0, D("cover"), [["ha1", 1300, 0.8, 0], ["ha2", 1420, 0.76, 0.4], ["ha3", 1540, 0.78, 0.2], ["ha1", 1380, 0.74, 0.7], ["ha2", 1480, 0.7, 0.9]], "zrun"); [0, 1, 2, 3, 4].forEach((k) => route(tl, `cv-z${k}`, t0, [{ t: 0, x: [1300, 1420, 1540, 1380, 1480][k], y: 1180 }, { t: 1.2, x: [1120, 1200, 1280, 1160, 1240][k], y: 1180 }], [0.8, 0.76, 0.78, 0.74, 0.7][k], true)); Fx.punch(tl, `#${id} .stage`, t0 + vo("cover", 1), 1.05, 0.35); red(tl, t0 + F("cover", 1, 1), 0.5, 0.5); Fx.heart(tl, t0, D("cover"), 0.4, 0.7); },
+        fx(tl, id, t0, L) { ZF(L, tl, "cv", t0, D("cover"), [["ha1", 1300, 0.8, 0], ["ha2", 1420, 0.76, 0.4], ["ha3", 1540, 0.78, 0.2], ["ha1", 1380, 0.74, 0.7], ["ha2", 1480, 0.7, 0.9]], "zrun"); [0, 1, 2, 3, 4].forEach((k) => route(tl, `cv-z${k}`, t0, [{ t: 0, x: [1300, 1420, 1540, 1380, 1480][k], y: 1180 }, { t: 1.2, x: [1120, 1200, 1280, 1160, 1240][k], y: 1180 }], [0.8, 0.76, 0.78, 0.74, 0.7][k], true)); Fx.punch(tl, `#${id} .stage`, t0 + voEnd("cover", 0) - 0.1, 1.05, 0.35); red(tl, t0 + voEnd("cover", 0) + 0.2, 0.5, 0.5); Fx.heart(tl, t0, D("cover"), 0.4, 0.7); },
       });
 
       // ---------- 15. twenty seconds: he holds the breach with the spear; last time he made it on two — this time it rains ----------
@@ -473,6 +473,9 @@
         ui: [{ type: "nextCard", t: 0.3, big: "ตอนที่ 5", tag: "ถนน… ออกจากโรงเรียน ก่อนมันกลับมา", top: 150 }, { type: "ledger", t: 0.6, day: "เหลือ 95 วัน", rows: [["วิทยุนับถอยหลัง", "96 → 95"], ["คน", "6 → 5", "red"], ["อาวุธ", "หอกมีด +1 (ก้อง)"], ["รั้ว", "ล้ม 1 ช่อง", "red"], ["วิทยุ", "2 เครื่อง?"]], six: "5 = 5", next: "รถ · น้ำมัน 3 ลิตร · ถนนสี่เลน", cta: "กดติดตาม · <em>อ่านหน้าถัดไป</em> ตอนที่ 5", top: 560 }],
         fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 0.3 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 1 }, t0 + 0.45); Fx.glitch(tl, `#${id}`, t0 + 1.9, 0.12, 10, 91); Fx.heart(tl, t0 + 1.2, D("next") - 1.2, 0.7, 0.35); },
       });
+
+      // no source cards and no source names on screen (user, 26 Oct 2026: "เอา ที่มา ออกให้หมด"); the sources live in the pinned comment (CAPTIONS.md)
+      shots.forEach((sh) => { if (sh.ui) sh.ui = sh.ui.filter((u) => u.type !== "src").map((u) => (u.label ? { ...u, label: u.label.replace(/ · (NIOSH|MedlinePlus|NHS|CDC|Ready\.gov)$/, "") } : u)); });
 
       // ---------- the look: depth, haze, light sources per shot ----------
       const DAY = (L) => { Fence.light(L, 760, 300, 900, "#ffe6b0", 0.3); Fence.haze(L, 1120, 460, "#dfe8ea", 0.3); Fence.depth(L, "grass"); };
