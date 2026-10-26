@@ -230,7 +230,7 @@
           { type: "tip", t: vo("signs", 1) - 0.05, end: D("signs") - 0.05, ill: "heat", label: "ลมแดด · NIOSH", text: "ร้ายแรงที่สุด · ตัวร้อน [41°C] ใน {10–15 นาที}", tone: "danger", top: 230 },
           { type: "src", t: vo("signs", 1) + 0.3, end: vo("signs", 2) - 0.1, top: 600, text: NIOSH + "“Heat stroke is the most serious heat-related illness.”" },
           { type: "src", t: vo("signs", 2), end: D("signs") - 0.05, top: 600, text: NIOSH + "“When heat stroke occurs, the body temperature can rise to 106°F or higher within 10 to 15 minutes.”" }],
-        bubbles: [bub("signs", 0, 80, 1180, 260)],
+        bubbles: [bub("signs", 0, 60, 960, 120)],
         fx(tl, id, t0, L) {
           ZF(L, tl, "sg", t0, D("signs"), [["ha1", 1500, 0.55, 0], ["ha3", 1700, 0.52, 0.3]], "shamble", 1150);
           route(tl, "sg-z0", t0, [{ t: 0, x: 1500, y: 1150 }, { t: D("signs"), x: 1400, y: 1150 }], 0.55, true); route(tl, "sg-z1", t0, [{ t: 0, x: 1700, y: 1150 }, { t: D("signs"), x: 1620, y: 1150 }], 0.52, true);
@@ -258,7 +258,7 @@
           PH(320, 1560, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }, { t: vo("nodrink", 1) - 0.1, mode: "stopHand", eyes: "normal", mouth: "flat" }]),
           PU(1250, 1560, 0.55, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: vo("nodrink", 1), mode: "give", eyes: "wide", mouth: "o" }], { flip: true, prop: "bottle", moveTo: { x: 760, dur: vo("nodrink", 1), ease: "power1.out" } })],
         captions: caps("nodrink", [2]),
-        bubbles: [bub("nodrink", 0, 520, 520, 300), bub("nodrink", 1, 60, 520, 260)],
+        bubbles: [bub("nodrink", 0, 520, 520, 210), bub("nodrink", 1, 60, 520, 260)],
         ui: [{ type: "tip", t: vo("nodrink", 2) - 0.1, end: D("nodrink") - 0.05, ill: "nomouth", label: "หมดสติ · MedlinePlus", text: "หมดสติ → {ห้ามป้อนอะไรเข้าปาก} แม้แต่น้ำ", tone: "danger", top: 230 }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + vo("nodrink", 1), 1.05, 0.35); Fx.punch(tl, `#${id} .stage`, t0 + F("nodrink", 2, 1), 1.06, 0.4); red(tl, t0 + F("nodrink", 2, 1), 0.5, 0.6); Fx.heart(tl, t0, D("nodrink"), 0.55, 0.5); },
       });
@@ -326,7 +326,7 @@
         set: "underpass", setOpts: { id: "lk" }, dark: 0.15, blur: { far: 4, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(760, 1350, 1.05, 540, 1150), drift: { s: 0.02 } }] },
         shake: (t) => (t < 0.35 ? 12 * Math.sin(t * 25) * (0.35 - t) / 0.35 : 0),
-        actors: [PI(560, 1560, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream", opts: { period: 0.6 } }, { t: 1.4, mode: "brace", eyes: "wide", mouth: "o" }], { prop: "spear1f" }),
+        actors: [PI(560, 1560, 0.9, [{ t: 0, mode: "brace", eyes: "wide", mouth: "scream" }], { prop: "spear1f" }),
           { who: "ha2", x: 980, y: 1560, s: 0.9, flip: true, track: [{ t: 0, mode: "lunge", eyes: "dead", mouth: "snarl" }, { t: 0.32, mode: "knocked", eyes: "dead", mouth: "snarl" }] }],
         captions: capsFrom("lunge", vo("lunge", 1) - 0.1, [1]),
         fx(tl, id, t0, L) {
@@ -366,7 +366,7 @@
       // ---------- 17. dusk: the petrol station; the fridge still full of water; the door chained from inside ----------
       add("station", {
         set: "station", setOpts: { id: "sn", time: "dusk", sunX: 1500 }, dark: 0.18, blur: { far: 3 },
-        cam: { keys: [{ t: 0, ...fr(400, 1000, 0.6, 540, 900), drift: { s: 0.012 } }, { t: vo("station", 1) - 0.05, glide: 0.7, ...fr(-330, 1000, 1.05, 540, 960), drift: { s: 0.015 } }, { t: vo("station", 2) - 0.05, glide: 0.5, ...fr(490, 1010, 1.9, 540, 960), drift: { s: 0.02 } }] },
+        cam: { keys: [{ t: 0, ...fr(300, 1130, 0.72, 540, 1150), drift: { s: 0.012 } }, { t: vo("station", 1) - 0.05, glide: 0.7, ...fr(-330, 1000, 1.05, 540, 960), drift: { s: 0.015 } }, { t: vo("station", 2) - 0.05, glide: 0.5, ...fr(490, 1010, 1.9, 540, 960), drift: { s: 0.02 } }] },
         actors: [PI(-900, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 4.0, mode: "idle", eyes: "normal", mouth: "flat" }], { moveTo: { x: -200, dur: 4.0, ease: "power1.out" } }),
           PH(-1100, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 4.0, mode: "idle", eyes: "normal", mouth: "flat" }], { moveTo: { x: -420, dur: 4.0, ease: "power1.out" } }),
           KO(-1260, 1520, 0.9, [{ t: 0, mode: "limp", eyes: "normal", mouth: "frown" }, { t: 4.0, mode: "idle", eyes: "normal", mouth: "frown" }], { prop: "spear1", moveTo: { x: -600, dur: 4.0, ease: "power1.out" } })],
@@ -408,11 +408,11 @@
         cam: { keys: [{ t: 0, ...fr(160, 1250, 0.95, 540, 1150), drift: { s: 0.02 } }] },
         actors: [PI(160, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }]), PH(-120, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "normal", mouth: "flat" }]), HO(420, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }], { flip: true }),
           KO(-340, 1520, 0.9, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }], { prop: "spear1" }), PU(600, 1520, 0.55, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }], { flip: true })],
-        bubbles: [bubAt(bub("gun", 1, 100, 520, 300), vo("gun", 1) - 0.1, vo("gun", 2) - 0.1)],
+        bubbles: [bubAt(bub("gun", 1, 120, 520, 400), vo("gun", 1) - 0.1, vo("gun", 2) - 0.1)],
         fx(tl, id, t0) { Fx.heart(tl, t0, vo("gun", 2) - vo("gun", 1), 0.4, 0.8); },
       }, {
         ...GUARDUP("gv", { keys: [{ t: 0, ...fr(700, 600, 1.6, 540, 1000), drift: { s: 0.04 } }] }),
-        bubbles: [bubAt(bub("gun", 2, 40, 1180, 380), vo("gun", 2) - 0.1, D("gun"))],
+        bubbles: [bubAt(bub("gun", 2, 300, 1180, 300), vo("gun", 2) - 0.1, D("gun"))],
         fx(tl, id, t0, L) { put(L.act, `<g>${[[620, 762], [860, 762]].map(([x, y]) => `<rect x="${x}" y="${y - 70}" width="130" height="74" rx="20" fill="#a5895a" stroke="#2e2a26" stroke-width="4"/>`).join("")}</g>`); Fx.punch(tl, `#${id} .stage`, t0 + F("gun", 2, 1) - (vo("gun", 2) - 0.1), 1.06, 0.4); red(tl, t0 + F("gun", 2, 1) - (vo("gun", 2) - 0.1), 0.5, 0.6); Fx.heart(tl, t0, D("gun") - vo("gun", 2), 0.4, 0.75); },
       });
 
@@ -456,10 +456,10 @@
       add("name", {
         set: "station", setOpts: { id: "nm", time: "night", lampX: 300 }, dark: 0.55, blur: { far: 5 },
         cam: { keys: [{ t: 0, ...fr(640, 1250, 1.05, 540, 1150), drift: { s: 0.02 } }, { t: vo("name", 1) - 0.05, glide: 0.5, ...fr(520, 1040, 1.8, 540, 960), drift: { s: 0.03 } }] },
-        actors: [PH(520, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("name", 0, 1), mode: "idle", eyes: "wide", mouth: "flat" }]), PI(260, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]),
+        actors: [PI(180, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), PH(560, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("name", 0, 1), mode: "idle", eyes: "wide", mouth: "flat" }]),
           { who: "guard", x: 900, y: 1520, s: 0.9, flip: true, track: [{ t: 0, mode: "torch", eyes: "normal", mouth: "frown", torch: true }] }],
         captions: caps("name", [1]),
-        bubbles: [bub("name", 0, 420, 520, 380)],
+        bubbles: [bub("name", 0, 400, 520, 420)],
         extra(L) { Fence.light(L, 560, 1040, 320, "#fff6d8", 0.55); },
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("name", 0, 1), 1.06, 0.4); Fx.punch(tl, `#${id} .stage`, t0 + F("name", 1, 1), 1.08, 0.5); Fx.glitch(tl, `#${id}`, t0 + F("name", 1, 1), 0.25, 12, 31); red(tl, t0 + F("name", 1, 1), 0.7, 0.7); Fx.heart(tl, t0, D("name"), 0.4, 0.8); },
       });
