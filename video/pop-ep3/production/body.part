@@ -1,0 +1,263 @@
+      // ---------- เห็ดปอบ EP.3 อย่าอวดว่าหาย (ตอนจบ · สูตรเสียงกอย · ไม่มีซิกเนเจอร์ ไม่มีตัวเลือก) ----------
+      // many camera angles: the ward by day and by night, the slate timeline, close faces, the feet on the floor, the village at the end
+      const MINT = (x, y, s, track, extra = {}) => ({ who: "mint", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TON = (x, y, s, track, extra = {}) => ({ who: "ton", x, y, s, track, blinks: [1.2, 3.6], ...extra });
+      const YAI = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, blinks: [0.7, 2.6, 4.9], ...extra });
+      const THONG = (x, y, s, track, extra = {}) => ({ who: "thong", x, y, s, track, blinks: [1.6, 4.2], ...extra });
+      const DOC = (x, y, s, track, extra = {}) => ({ who: "doc", x, y, s, track, blinks: [0.6, 2.4], ...extra });
+      const GH = 1480, GV = 1300;
+      const CU = (x, y, s, sy = 1000) => fr(x, y - 530 * s, 1.0, 540, sy);
+      const IK = "#2e2a26";
+      const DIA = fr(560, 1000, 1.0, 540, 1000);
+      const OB = `stroke="${IK}" stroke-width="5" stroke-linejoin="round"`;
+      Rig.CAST.thongBag = { ...Rig.CAST.thong, hand: `<g transform="translate(0,118)"><path d="M-16,30Q-14,-6 0,-4Q14,-6 16,30" stroke="#e8ecf0" stroke-width="6" fill="none"/>
+        <path d="M-48,28h96l-12,104h-72z" fill="#e8ecf0" opacity=".92" ${OB}/>${[-24, 0, 24].map((dx, k) => `<circle cx="${dx}" cy="${70 + (k % 2) * 14}" r="21" fill="#e8a83a" stroke="${IK}" stroke-width="3"/>`).join("")}</g>` };
+      const yaiBack = (x, y, s, id) => `<g transform="translate(${x},${y}) scale(${s})"><g id="${id}">
+        <ellipse cx="0" cy="6" rx="120" ry="16" fill="#000" opacity=".25"/>
+        <path d="M-46,-290L-42,-196H42L46,-290Z" fill="#52244c" ${OB}/>
+        <rect x="-34" y="-200" width="22" height="48" fill="#a87c58" ${OB}/><rect x="12" y="-200" width="22" height="48" fill="#a87c58" ${OB}/>
+        <ellipse cx="-23" cy="-148" rx="17" ry="13" fill="#5a3e2a" ${OB}/><ellipse cx="23" cy="-148" rx="17" ry="13" fill="#5a3e2a" ${OB}/>
+        <path d="M-58,-290L-72,0M58,-290L72,0" stroke="#4a3020" stroke-width="13" stroke-linecap="round"/><path d="M-66,-110H66" stroke="#4a3020" stroke-width="9"/>
+        <rect x="-78" y="-312" width="156" height="24" rx="6" fill="#6e4a2c" ${OB}/>
+        <path d="M-64,-350L-88,-306L-84,-262Q0,-250 84,-262L88,-306L64,-350Z" fill="#6a2f62" ${OB}/>${[-50, -16, 18, 52].map((dx) => `<path d="M${dx},-340l${dx * 0.3},76" stroke="#52244c" stroke-width="6"/>`).join("")}
+        <rect x="-62" y="-362" width="124" height="22" fill="#d8a83a" ${OB}/>
+        <path d="M-56,-500Q-68,-430 -64,-358H64Q68,-430 56,-500Q0,-514 -56,-500Z" fill="#efe6d6" ${OB}/><path d="M24,-506Q58,-498 60,-430L62,-360H34Z" fill="#d2c6b0" opacity=".6"/>
+        <path d="M-48,-496L52,-364" stroke="#d8a83a" stroke-width="18"/><path d="M-48,-496L52,-364" stroke="#a8342a" stroke-width="4" stroke-dasharray="10 10"/>
+        ${[-1, 1].map((k) => `<path d="M${k * 56},-490Q${k * 82},-440 ${k * 76},-384" stroke="${IK}" stroke-width="32" fill="none" stroke-linecap="round"/><path d="M${k * 56},-490Q${k * 82},-440 ${k * 76},-384" stroke="#efe6d6" stroke-width="22" fill="none" stroke-linecap="round"/>`).join("")}
+        <g id="${id}-head"><rect x="-14" y="-532" width="28" height="38" fill="#a87c58" ${OB}/>
+          <ellipse cx="-44" cy="-566" rx="10" ry="15" fill="#c99a74" ${OB}/><ellipse cx="44" cy="-566" rx="10" ry="15" fill="#c99a74" ${OB}/>
+          <ellipse cx="0" cy="-576" rx="44" ry="52" fill="#b8b4ac" ${OB}/><path d="M-30,-612Q-20,-572 -26,-532M0,-624V-530M30,-612Q20,-572 26,-532" stroke="#a09c94" stroke-width="3" fill="none"/>
+          <circle cx="0" cy="-616" r="26" fill="#aaa69e" ${OB}/><path d="M-32,-626L32,-606" stroke="#d8a83a" stroke-width="5" stroke-linecap="round"/></g>
+      </g></g>`;
+      const ROWS = [
+        [`<g transform="translate(60,64) scale(.26)">${Pop.mush(0, 160, 1, {})}</g><g class="kw"><circle cx="60" cy="60" r="50" fill="none" stroke="#e0362c" stroke-width="8"/><path d="M26,26L94,94" stroke="#e0362c" stroke-width="8" stroke-linecap="round"/></g>`,
+          `<span style="font-size:46px">เห็ดไม่รู้จัก <u>อย่าหักใส่ข้อง</u></span>`],
+        [`<rect x="22" y="30" width="76" height="62" fill="#e8e4d8" stroke="${IK}" stroke-width="4"/><path d="M60,40v40M40,60h40" stroke="#c8342a" stroke-width="10"/>`,
+          `<span style="font-size:46px">กินแล้วเมา <u>เอาเห็ดไปหาหมอ</u></span>`],
+        [`<path d="M20,90Q40,20 60,60T100,30" stroke="#ff8a7a" stroke-width="8" fill="none"/><g class="kw"><path d="M20,100L100,100" stroke="#c87ae8" stroke-width="8"/></g>`,
+          `<span style="font-size:46px">ท้องหายปวด <u>อย่าอวดว่าหาย</u></span>`],
+      ];
+
+      // ---------- 0. EP.2's last image: the ward window, the handprint ----------
+      add("recap", {
+        set: "ward", setOpts: { id: "w0", time: "night", print: true }, dark: 0.45,
+        cam: { keys: [{ t: 0, ...fr(760, GH - 1100, 2.2, 540, 900), drift: { s: 0.03 } }] },
+        fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0); Fx.glitch(tl, `#${id}`, t0, 0.3, 14, 1101); Fx.heart(tl, t0, D("recap"), 0.42, 0.6); },
+      });
+
+      // ---------- 1. flash-forward: the empty bed, the drip swinging — cut ----------
+      add("hook", {
+        set: "ward", setOpts: { id: "w1", time: "night" }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(300, GH - 560, 1.1, 540, 1100), drift: { s: 0.06 } }] },
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          Fx.heart(tl, t0 + 0.3, D("hook") - 0.3, 0.42, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook") - 0.5, 0.3, 18, 1102); Fx.punch(tl, `#${id} .stage`, t0 + D("hook") - 0.5, 1.08, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.7 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + D("hook") - 0.45);
+        },
+      });
+
+      // ---------- 2. ยายคำ at the bedside: "กลับบ้านเถอะลูก… หายแล้ว" ----------
+      add("home", {
+        set: "ward", setOpts: { id: "w2", time: "dawn" }, dark: 0.12, blur: { set: 8 },
+        cam: { keys: [{ t: 0, ...CU(540, GH + 1100, 2.0), drift: { s: 0.03 } }, { t: 0.3, glide: D("home") - 0.4, ...fr(540, GH + 1100 - 530 * 2.0, 1.1, 540, 1000), drift: { s: 0.02 } }] },
+        actors: [YAI(540, GH + 1100, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }])],
+        captions: caps("home", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("home"), 0.5, 0.45); },
+      });
+
+      // ---------- 3. มิ้นท์: "หมอยังไม่ให้กลับ!" ----------
+      add("no", {
+        set: "ward", setOpts: { id: "w3", time: "dawn" }, dark: 0.08, blur: { set: 8 },
+        cam: { keys: [{ t: 0, ...CU(540, GH + 1250, 2.2), drift: { s: 0.06 } }] },
+        actors: [MINT(540, GH + 1250, 2.2, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }])],
+        captions: caps("no", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.05, 0.3); },
+      });
+
+      // ---------- 4. the doctor: "ดีขึ้น… ไม่ได้แปลว่าหาย" ----------
+      add("doc", {
+        set: "ward", setOpts: { id: "w4", time: "dawn" }, dark: 0.06, blur: { set: 8 },
+        cam: { keys: [{ t: 0, ...CU(560, GH + 1100, 2.0), drift: { s: 0.05 } }] },
+        actors: [DOC(560, GH + 1100, 2.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        captions: caps("doc", undefined, { quote: true }),
+      });
+
+      // ---------- 5–6. knowledge, drawn: the three stages — sick, seems better, the liver worse (สคร.7 / DDC handbook / DDC) ----------
+      add("know1", {
+        set: "mushSection", setOpts: { id: "ms5", v: 8 }, dark: 0,
+        cam: { keys: [{ t: 0, ...DIA, drift: { s: 0.02 } }] },
+        captions: caps("know1"),
+        ui: [{ type: "src", t: 0.3, end: D("know1") - 0.05, top: 160, text: "ที่มา: <em>สำนักงานป้องกันควบคุมโรคที่ 7</em> · อาการคลื่นไส้ อาเจียน มักจะดีขึ้นเพียงชั่วคราว แล้วกลับมาแย่ลง · <em>คู่มือเห็ดพิษ</em> · ระยะที่ 2 (18-36 ชม.) อาการในระยะที่ 1 ดีขึ้น แต่ค่าเอนไซม์ตับเริ่มผิดปกติ" }],
+        fx(tl, id, t0) {
+          tl.to("#ms5-sick", { attr: { "stroke-dashoffset": 0 }, duration: D("know1") - 0.6, ease: "none" }, t0 + 0.2);
+          tl.fromTo("#ms5-l1", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + F("know1", 0, 1));
+          tl.to("#ms5-liver", { attr: { "stroke-dashoffset": 0 }, duration: 1.6, ease: "power1.in" }, t0 + vo("know1", 1) - 0.2);
+          tl.fromTo("#ms5-l2", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + vo("know1", 1) + 0.6);
+        },
+      });
+      add("know2", {
+        set: "mushSection", setOpts: { id: "ms6", v: 8 }, dark: 0,
+        cam: { keys: [{ t: 0, ...DIA, drift: { s: 0.02 } }, { t: 0.2, glide: 1.0, ...fr(760, 700, 1.3, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("know2"),
+        ui: [{ type: "src", t: 0.3, end: D("know2") - 0.05, top: 160, text: "ที่มา: <em>กรมควบคุมโรค</em> · ควรรีบไปพบแพทย์แม้อาการจะดีขึ้นในช่วงแรกก็ตาม เพราะหากไม่ได้รับการรักษาอย่างทันท่วงที พิษอาจทำลายตับและทำให้เสียชีวิตได้แม้กินเพียงดอกเดียว" }],
+        fx(tl, id, t0) { tl.set(["#ms6-sick", "#ms6-liver"], { attr: { "stroke-dashoffset": 0 } }, t0); tl.set(["#ms6-l1", "#ms6-l2"], { opacity: 1 }, t0); },
+      });
+
+      // ---------- 7. ต้น in bed: "ผมกินไปสองถ้วยเลยนะ…" ----------
+      add("two", {
+        set: "ward", setOpts: { id: "w7", time: "dawn" }, dark: 0.08,
+        cam: { keys: [{ t: 0, ...fr(320, GH - 640, 1.3, 540, 1050), drift: { s: 0.05 } }] },
+        actors: [TON(200, GH - 340, 1.05, [{ t: 0, mode: "sit", eyes: "wide", mouth: "o" }])],
+        captions: caps("two", undefined, { quote: true }),
+      });
+
+      // ---------- 8. มิ้นท์: "แล้วใครบอกให้ขออีกถ้วยล่ะ!" ----------
+      add("scold", {
+        set: "ward", setOpts: { id: "w8", time: "dawn" }, dark: 0.08,
+        cam: { keys: [{ t: 0, ...fr(480, GH - 640, 1.25, 540, 1100), drift: { s: 0.04 } }] },
+        actors: [TON(200, GH - 340, 1.05, [{ t: 0, mode: "sit", eyes: "closed", mouth: "frown" }]), MINT(660, GH, 1.15, [{ t: 0, mode: "point", eyes: "normal", mouth: "scream" }], { flip: true })],
+        captions: caps("scold", undefined, { quote: true }),
+      });
+
+      // ---------- 9. the second night: the monitor, the doctor checking ----------
+      add("night2", {
+        set: "ward", setOpts: { id: "w9", time: "night" }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(360, GH - 620, 0.85, 540, 1050), drift: { s: 0.03 } }] },
+        actors: [TON(560, GH - 360, 1.0, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }]), DOC(820, GH, 1.05, [{ t: 0, mode: "raise", eyes: "normal", mouth: "flat" }], { flip: true })],
+        captions: caps("night2"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("night2", 0, 1), D("night2") - F("night2", 0, 1), 0.5, 0.45); },
+      });
+
+      // ---------- 10. the doctor, relieved: "ดีที่มาทัน… หมอดูแลได้" ----------
+      add("relief", {
+        set: "ward", setOpts: { id: "w10", time: "dawn" }, dark: 0.06, blur: { set: 8 },
+        cam: { keys: [{ t: 0, ...CU(560, GH + 1100, 2.0), drift: { s: 0.04 } }] },
+        actors: [DOC(560, GH + 1100, 2.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        captions: caps("relief", undefined, { quote: true }),
+      });
+
+      // ---------- 11. knowledge: the whole rule, the last line lit (DDC) ----------
+      add("know3", {
+        set: "ward", setOpts: { id: "w11", time: "dawn" }, dark: 0.35, blur: { set: 8 },
+        cam: { keys: [{ t: 0, ...fr(400, GH - 600, 0.9, 540, 1100), drift: { s: 0.02 } }] },
+        actors: [TON(560, GH - 360, 1.0, [{ t: 0, mode: "lie", eyes: "closed", mouth: "smile" }])],
+        captions: caps("know3"),
+        ui: [{ type: "koiRule", t: 0.05, label: "กฎของยายคำ", rows: ROWS, at: [0.2, 0.5, F("know3", 0, 1)], top: 300 }],
+      });
+
+      // ---------- 12. ลุงทองดี in the doorway with a bag of fruit: "ลุงขอโทษ… ที่ทำให้กลัว" ----------
+      add("sorry", {
+        set: "ward", setOpts: { id: "w12", time: "dawn" }, dark: 0.08,
+        cam: { keys: [{ t: 0, ...fr(830, GH - 620, 1.45, 540, 1060), drift: { s: 0.04 } }] },
+        actors: [{ ...THONG(860, GH, 1.15, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: F("sorry", 0, 1), mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }), who: "thongBag" }],
+        captions: caps("sorry", undefined, { quote: true }),
+        fx(tl, id) { const hb = document.getElementById(`${id}-a0-handB`); if (hb) hb.innerHTML = ""; }, // one bag, in the front hand
+      });
+
+      // ---------- 13. มิ้นท์: "หนูต่างหาก ที่ต้องขอโทษ" ----------
+      add("me", {
+        set: "ward", setOpts: { id: "w13", time: "dawn" }, dark: 0.06, blur: { set: 8 },
+        cam: { keys: [{ t: 0, ...CU(520, GH + 1250, 2.2), drift: { s: 0.04 } }] },
+        actors: [MINT(520, GH + 1250, 2.2, [{ t: 0, mode: "idle", eyes: "side", mouth: "frown" }])],
+        captions: caps("me", undefined, { quote: true }),
+      });
+
+      // ---------- 14. ลุงทองดี close: "แต่รอยเท้านั่น… นิ้วยาวกว่าลุงเยอะ" ----------
+      add("feet", {
+        set: "ward", setOpts: { id: "w14", time: "dawn" }, dark: 0.12, blur: { set: 8 },
+        cam: { keys: [{ t: 0, ...CU(540, GH + 1100, 2.1), drift: { s: 0.03 } }, { t: F("feet", 0, 1) - 0.1, glide: 1.2, ...fr(540, GH + 1100 - 530 * 2.1, 1.12, 540, 960), drift: { s: 0.02 } }] },
+        actors: [THONG(540, GH + 1100, 2.1, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        captions: caps("feet", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("feet", 0, 1), D("feet") - F("feet", 0, 1), 0.5, 0.45); },
+      });
+
+      // ---------- 15. the doctor with the chart; ยาย behind her, turning away ----------
+      add("odd", {
+        set: "ward", setOpts: { id: "w15", time: "dawn" }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(560, GH - 640, 1.2, 540, 1100), drift: { s: 0.03 } }, { t: F("odd", 0, 2) - 0.2, glide: 1.2, ...fr(880, GH - 700, 1.6, 540, 1100), drift: { s: 0.03 } }] },
+        actors: [DOC(520, GH, 1.2, [{ t: 0, mode: "raise", eyes: "side", mouth: "o" }]), YAI(900, GH, 1.05, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: F("odd", 0, 2), mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: caps("odd", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("odd", 0, 2), D("odd") - F("odd", 0, 2), 0.48, 0.5); },
+      });
+
+      // ---------- 16. that night: มิ้นท์ wakes in the chair ----------
+      add("wake", {
+        set: "ward", setOpts: { id: "w16", time: "night" }, dark: 0.45, blur: { set: 8 },
+        cam: { keys: [{ t: 0, ...CU(540, GH + 1700, 3.0), drift: { s: 0.04 } }] },
+        actors: [MINT(540, GH + 1700, 3.0, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }, { t: F("wake", 0, 1), mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("wake"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("wake", 0, 1), D("wake") - F("wake", 0, 1), 0.45, 0.55); },
+      });
+
+      // ---------- 17. wide: ยาย at ต้น's bedside, her back to us ----------
+      add("sit", {
+        set: "ward", setOpts: { id: "w17", time: "night" }, dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(420, GH - 600, 0.9, 540, 1050), drift: { s: 0.03 } }, { t: F("sit", 0, 1) - 0.1, glide: 1.6, ...fr(560, GH - 520, 1.35, 540, 1050), drift: { s: 0.03 } }] },
+        actors: [TON(500, GH - 360, 1.0, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }])],
+        captions: caps("sit"),
+        fx(tl, id, t0, L) {
+          put(L.act, yaiBack(600, GH + 80, 1.1, "yb17"));
+          tl.fromTo("#yb17-head", { rotation: 0 }, { rotation: -7, transformOrigin: "50% 100%", duration: 2.4, ease: "sine.inOut", immediateRender: false }, t0 + 0.8);
+          Fx.heart(tl, t0, D("sit"), 0.5, 0.6);
+        },
+      });
+
+      // ---------- 18. close on the floor: her feet — muddy, the toes too long ----------
+      add("toes", {
+        set: "feetClose", setOpts: { id: "fc18" }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 960), drift: { s: 0.02 } }, { t: F("toes", 0, 1) - 0.1, glide: 1.4, ...fr(540, 1300, 1.3, 540, 960), drift: { s: 0.03 } }] },
+        captions: caps("toes"),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("toes"), 0.48, 0.6); },
+      });
+
+      // ---------- 19. "ลูกเอ๊ย… ยายหิวข้าวจังเลย": she turns — green eyes; hold; the hit (koi-style) ----------
+      const HB = F("hungry", 0, 1) - 0.05, HC = D("hungry") - 0.9, HD = D("hungry") - 0.5;
+      add("hungry", {
+        set: "ward", setOpts: { id: "w19", time: "night" }, dark: 0.6, blur: { set: 8 },
+        cam: { keys: [{ t: 0, ...CU(540, GH + 1100, 2.0), drift: { s: 0.02 } }] },
+        actors: [YAI(540, GH + 1100, 2.0, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }, { t: HB, mode: "idle", eyes: "glow", mouth: "o" }])],
+        captions: caps("hungry", undefined, { quote: true }),
+        extra(L) { put(L.light, `<g id="w19-face" opacity="0">${Pop.lurk(540, 1240, 4.6)}</g>`); },
+        fx(tl, id, t0) {
+          Fx.heart(tl, t0, HC, 0.6, 0.65);
+          tl.to(`#${id}-dark`, { opacity: 0.85, duration: 0.3 }, t0 + HC);
+          tl.fromTo("#w19-face", { opacity: 0, scale: 1.25, transformOrigin: "50% 55%" }, { opacity: 1, scale: 1, duration: 0.09, ease: "power4.out", immediateRender: false }, t0 + HD);
+          Fx.glitch(tl, `#${id}`, t0 + HD + 0.05, 0.18, 16, 1119);
+          tl.set("#black", { opacity: 1 }, t0 + HD + 0.22);
+        },
+      });
+
+      // ---------- 20. the village at night, one window lit — "ปอบ… ไม่ได้อยู่ในป่า / มันอยู่ในบ้าน" ----------
+      add("last", {
+        set: "isanVillage", setOpts: { id: "v20", time: "night", houses: [[-120, 0.9, { lit: true }], [900, 0.7, {}]] }, dark: 0.45,
+        cam: { keys: [{ t: 0, ...fr(400, 1000, 0.62, 540, 1000), drift: { s: 0.03 } }, { t: vo("last", 1) - 0.3, glide: 2.0, ...fr(-260, GV - 620, 1.5, 540, 1000), drift: { s: 0.02 } }] },
+        captions: caps("last"),
+        extra(L) { put(L.glow, Pop.eyes(-264, GV - 562, 0.5, "v20-eyes")); },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 1 }, t0); tl.to("#black", { opacity: 0, duration: 0.8 }, t0 + 0.3);
+          tl.set("#v20-eyes", { opacity: 0 }, t0); tl.to("#v20-eyes", { opacity: 1, duration: 0.4 }, t0 + vo("last", 1) + 0.6);
+          Fx.heart(tl, t0 + vo("last", 1), D("last") - vo("last", 1), 0.6, 0.45);
+        },
+      });
+
+      // ---------- 21. the rule, in ยาย's voice, over the dark ----------
+      add("rule", {
+        set: "isanVillage", setOpts: { id: "v21", time: "night", houses: [[-120, 0.9, {}], [900, 0.7, {}]] }, dark: 0.7,
+        cam: { keys: [{ t: 0, ...fr(400, 1000, 0.62, 540, 1000), drift: { s: 0.02 } }] },
+        captions: caps("rule", undefined, { quote: true }),
+        ui: [{ type: "koiRule", t: 0.05, label: "กฎของยายคำ", rows: ROWS, at: [0.15, 0.35, vo("rule") + 0.2], top: 300 }],
+        fx(tl, id, t0) { tl.set("#black", { opacity: 1 }, t0 + D("rule") - 0.2); },
+      });
+
+      // ---------- 22. end card: the community-forest sign — the end ----------
+      add("end", {
+        set: "forestSign", setOpts: { id: "sg", ep: "ตอนจบ", title: "เห็ดปอบ" }, dark: 0.06,
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.0, 540, 900), drift: { s: 0.03 } }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#sg-sign", { attr: { transform: "rotate(-9 540 900)" } }, { attr: { transform: "rotate(-2 540 900)" }, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Pop.life(tl, `#${id}`, t0, sh.dur); }; });
