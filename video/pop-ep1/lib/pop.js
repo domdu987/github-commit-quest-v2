@@ -66,8 +66,33 @@
       skin: "#a87048", skinS: "#875634", top: "#7a6a50", topS: "#5f523c", sleeve: "#7a6a50", sleeveS: "#5f523c", forearm: "#7a6a50", forearmS: "#5f523c",
       pants: "#2a2a2c", pantsS: "#1c1c1e", shoe: "#a87048", belt: "#c8342a",
       torsoExtra: `<path d="M-46,-312h92" stroke="#e8e0d0" stroke-width="10" stroke-dasharray="12 12"/>`,
-      hair: `<path d="M-90,-584Q0,-608 90,-584Q60,-596 44,-612Q30,-660 0,-662Q-30,-660 -44,-612Q-60,-596 -90,-584Z" fill="#c8a868" ${OUT}/><path d="M-44,-612Q0,-600 44,-612" stroke="#8a6a38" stroke-width="5" fill="none"/>`,
+      // the woven hat sits down on the head: a low crown just wider than the skull, the brim at the brows, a shadow on the forehead
+      hair: `<path d="M-40,-566Q0,-552 40,-566V-580H-40Z" fill="#000" opacity=".16"/>
+        <path d="M-52,-578Q-56,-634 0,-637Q56,-634 52,-578Z" fill="#c8a868" ${OUT}/>
+        <path d="M-30,-626Q-26,-600 -28,-582M0,-636V-582M30,-626Q26,-600 28,-582" stroke="#a8884a" stroke-width="3" fill="none" opacity=".7"/>
+        <path d="M-53,-592Q0,-582 53,-592" stroke="#8a6a38" stroke-width="7" fill="none"/>
+        <path d="M-104,-572Q-60,-594 0,-593Q60,-594 104,-572Q60,-562 0,-563Q-60,-562 -104,-572Z" fill="#d4b676" ${OUT}/>`,
       face: `<g fill="#6a4228" opacity=".55"><ellipse cx="-20" cy="-540" rx="14" ry="10"/><ellipse cx="22" cy="-540" rx="14" ry="10"/></g><path d="M-6,-520v12" stroke="#875634" stroke-width="3"/>`,
+    },
+    boon: { // ป้าบุญ: 50, the neighbour who knows everything — orange blouse, a loincloth on the head, chequered sarong
+      skin: "#b88058", skinS: "#98643e", top: "#e88a3a", topS: "#c46e28", sleeve: "#e88a3a", sleeveS: "#c46e28", forearm: "#b88058", forearmS: "#98643e",
+      pants: "#3a5a8a", pantsS: "#2c466c", shoe: "#b88058", belt: "#3a5a8a",
+      hair: `<path d="M-50,-560Q-50,-616 0,-618Q50,-616 50,-560Z" fill="#2a2420" ${OUT}/><path d="M-54,-580Q0,-640 54,-580Q30,-570 0,-572Q-30,-570 -54,-580Z" fill="#c8342a" ${OUT3}/>`,
+      face: `<g fill="#98643e" opacity=".4"><ellipse cx="-24" cy="-526" rx="8" ry="4"/><ellipse cx="30" cy="-526" rx="8" ry="4"/></g>`,
+    },
+    khem: { // ลุงเข็ม: 60, a neighbour with a torch — white singlet, fisherman trousers, a towel round the neck
+      skin: "#a87048", skinS: "#875634", top: "#efe9dc", topS: "#d0c8b8", sleeve: "#a87048", sleeveS: "#875634", forearm: "#a87048", forearmS: "#875634",
+      pants: "#4a6a4a", pantsS: "#3a523a", shoe: "#a87048", belt: "#4a6a4a",
+      torsoExtra: `<path d="M-40,-470Q0,-430 40,-470V-420" stroke="#8ab4d8" stroke-width="12" fill="none"/>`,
+      hair: `<path d="M-48,-556Q-50,-612 0,-614Q50,-612 48,-556Q40,-586 0,-588Q-40,-586 -48,-556Z" fill="#8a8680" ${OUT}/>`,
+      face: `<path d="M-30,-562q8,-3 14,0M14,-562q8,-3 14,0" stroke="#6a4228" stroke-width="2.5" fill="none"/>`,
+    },
+    doc: { // หมอเวรดึก: white coat over green scrubs, stethoscope, hair tied back, glasses
+      skin: "#e2b28c", skinS: "#c29470", top: "#f6f6f2", topS: "#d8d8d2", sleeve: "#f6f6f2", sleeveS: "#d8d8d2", forearm: "#f6f6f2", forearmS: "#d8d8d2",
+      pants: "#4a9a8a", pantsS: "#3a7a6c", shoe: "#f4f4f0", belt: "#4a9a8a",
+      torsoExtra: `<path d="M-14,-470V-330M14,-470V-330" stroke="#4a9a8a" stroke-width="18"/><path d="M-30,-460Q-40,-380 0,-370Q40,-380 30,-460" stroke="#3a3a3a" stroke-width="5" fill="none"/><circle cx="0" cy="-368" r="9" fill="#9aa4a8"/>`,
+      hair: `<path d="M-50,-556Q-54,-614 0,-616Q54,-614 50,-556Q44,-584 0,-588Q-44,-584 -50,-556Z" fill="#1e1814" ${OUT}/><circle cx="52" cy="-590" r="16" fill="#1e1814"/>`,
+      face: `<g fill="none" stroke="#2a2a2a" stroke-width="4"><rect x="-38" y="-560" width="30" height="22" rx="6"/><rect x="8" y="-560" width="30" height="22" rx="6"/><path d="M-8,-550h16"/></g>`,
     },
   });
 
@@ -273,6 +298,63 @@
     put(L.set, s);
   }
 
+  // ---------------- an old pickup on the dirt road at night, headlights on (side view); o.lit cab light ----------------
+  const pickup = (x, y, s, o = {}) => `<g ${o.id ? `id="${o.id}"` : ""} transform="translate(${f1(x)},${f1(y)}) scale(${o.flip ? -s : s},${s})">
+    <path d="M-420,-120V-250H-120L-60,-380H140L220,-250H360Q400,-250 400,-200V-120Z" fill="#5a7a8a" ${OUT}/><path d="M-50,-360H120L180,-260H-90Z" fill="${o.lit ? "#ffe2a0" : "#2a3a44"}" ${OUT3}/>
+    <rect x="-420" y="-260" width="290" height="20" fill="#4a6a7a" ${OUT3}/><path d="M360,-230h40v40h-40z" fill="#fff6c8"/>
+    ${[-260, 230].map((cx) => `<g><circle cx="${cx}" cy="-120" r="70" fill="#1c1c1e" ${OUT}/><circle cx="${cx}" cy="-120" r="30" fill="#9aa4a8"/></g>`).join("")}</g>`;
+  function nightRoad(L, o = {}) {
+    const id = o.id || "nr", r = mk(o.seed || 371), G = o.ground ?? 1400;
+    sky(L, { time: "night", moonX: o.moonX ?? 300 }, r);
+    hills(L, G - 200, { time: "night" });
+    put(L.mid, `<g id="${id}-scroll"><rect x="-1200" y="${G - 220}" width="4500" height="300" fill="#0c1418"/>${Array.from({ length: 60 }, () => `<path d="M${f1(-1100 + r() * 4300)},${f1(G - 200 + r() * 160)}v-14" stroke="#1e3024" stroke-width="4"/>`).join("")}</g>`);
+    put(L.set, `<rect x="-1200" y="${G - 40}" width="4500" height="1400" fill="#2a1c12"/><path d="M-1200,${G + 40}H3300" stroke="#3a2818" stroke-width="10"/><g id="${id}-posts">${Array.from({ length: 11 }, (_, k) => `<rect x="${-1000 + k * 420}" y="${G - 700}" width="22" height="660" fill="#141210"/>`).join("")}</g>`);
+    put(L.act, pickup(o.x ?? 540, G + 60, o.s ?? 1.1, { id: `${id}-truck`, lit: true, flip: o.flip }));
+    put(L.glow, `<g id="${id}-beam"><path d="M${(o.x ?? 540) + 440 * (o.s ?? 1.1)},${G - 140}L2400,${G - 420}L2400,${G + 260}Z" fill="#fff2c8" opacity=".22"/></g>`);
+  }
+  // ---------------- a district hospital at night: the emergency entrance, its sign and light ----------------
+  function erFront(L, o = {}) {
+    const id = o.id || "er", r = mk(o.seed || 381), G = o.ground ?? 1400;
+    sky(L, { time: o.time || "night", moon: false }, r);
+    let s = `<rect x="-600" y="${G - 900}" width="2200" height="900" fill="#e8e4d8" ${OUT}/><rect x="-600" y="${G - 960}" width="2200" height="70" fill="#4a7a6a" ${OUT3}/>
+      ${Array.from({ length: 8 }, (_, k) => `<rect x="${-500 + k * 260}" y="${G - 820}" width="150" height="180" fill="#ffe8b0" ${OUT3}/>`).join("")}
+      <rect x="260" y="${G - 520}" width="560" height="520" fill="#9ac8c0" ${OUT}/><path d="M540,${G - 520}V${G}" stroke="${INK}" stroke-width="5"/>
+      <rect x="200" y="${G - 640}" width="680" height="100" rx="12" fill="#c8342a" ${OUT}/><text x="540" y="${G - 572}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="56" fill="#fff">ห้องฉุกเฉิน</text>
+      <rect x="-1200" y="${G}" width="3500" height="1200" fill="#4a4a48"/><path d="M-1200,${G + 200}H2300" stroke="#f2c84a" stroke-width="10" stroke-dasharray="60 40"/>`;
+    put(L.set, s);
+    if (o.truck !== false) put(L.act, pickup(o.truckX ?? -200, G + 260, 1.0, { id: `${id}-truck`, lit: true }));
+    put(L.glow, `<circle cx="540" cy="${G - 590}" r="420" fill="url(#ppLamp)" opacity=".7"/><circle cx="540" cy="${G - 200}" r="520" fill="url(#ppLamp)" opacity=".45"/>`);
+  }
+  // ---------------- the ward: a bed, a drip stand, the window (o.time night | dawn), a curtain ----------------
+  function ward(L, o = {}) {
+    const id = o.id || "wd", G = o.ground ?? 1480, dawn = o.time === "dawn";
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#cfe0dc"/>`);
+    let s = `<rect x="-1200" y="-800" width="3500" height="${G + 800}" fill="#dfe8e4"/><rect x="-1200" y="${G - 220}" width="3500" height="220" fill="#b8ccc6"/>
+      <g id="${id}-window"><rect x="560" y="${G - 1220}" width="520" height="560" fill="${dawn ? "#c8b8d8" : "#0e1424"}" ${OUT}/>${dawn ? `<rect x="560" y="${G - 860}" width="520" height="200" fill="#f2c08a" opacity=".8"/>` : ""}
+        <path d="M820,${G - 1220}V${G - 660}M560,${G - 940}H1080" stroke="#9aa4a8" stroke-width="12"/></g>
+      <path d="M-200,${G - 1400}V${G - 260}" stroke="#9aa4a8" stroke-width="6"/>${Array.from({ length: 10 }, (_, k) => `<path d="M${-200 + k * 2},${G - 1400}q40,${300 + k * 80} -10,${1100}" stroke="#a8c8d8" stroke-width="40" fill="none" opacity=".5"/>`).join("")}
+      <rect x="-1200" y="${G}" width="3500" height="1200" fill="#9aa8a4"/>${Array.from({ length: 10 }, (_, k) => `<path d="M-1200,${G + 40 + k * 90}H2300" stroke="#8a9894" stroke-width="3"/>`).join("")}
+      <g><rect x="-120" y="${G - 360}" width="760" height="70" rx="12" fill="#f4f4f0" ${OUT}/><rect x="-120" y="${G - 300}" width="760" height="40" fill="#9aa4a8" ${OUT3}/>
+        ${[-100, 600].map((x) => `<path d="M${x},${G - 260}V${G}" stroke="#7a8488" stroke-width="12"/>`).join("")}<rect x="-140" y="${G - 520}" width="30" height="230" fill="#9aa4a8" ${OUT3}/></g>
+      <g><path d="M720,${G}V${G - 1000}M680,${G - 1000}h80" stroke="#7a8488" stroke-width="10"/><rect x="660" y="${G - 1000}" width="70" height="120" rx="14" fill="#e8f4f8" ${OUT3}/><path d="M695,${G - 880}Q680,${G - 600} 520,${G - 400}" stroke="#bcd8e0" stroke-width="5" fill="none"/></g>`;
+    put(L.set, s);
+    if (o.print) put(L.set, `<g id="${id}-print" opacity="${o.printOp ?? 1}" transform="translate(720,${G - 1060})"><path d="M0,0q-30,40 -10,90q30,30 80,10q30,-30 10,-90z" fill="#3a3020" opacity=".35"/>
+      ${[[-30, -10, -60, -120], [0, -20, -10, -150], [30, -20, 40, -150], [56, -6, 90, -110], [-40, 50, -110, 20]].map(([x0, y0, x1, y1]) => `<path d="M${x0},${y0}L${x1},${y1}" stroke="#3a3020" stroke-width="16" stroke-linecap="round" opacity=".35"/>`).join("")}</g>`);
+    if (o.eyes) put(L.glow, eyes(950, G - 1080, 0.8, `${id}-eyes`));
+  }
+
+  // ---------------- close on the floor: ยาย's feet under the sarong hem — muddy, the toes too long ----------------
+  function feetClose(L, o = {}) {
+    const id = o.id || "fc", G = o.ground ?? 1300;
+    put(L.sky, `<rect x="-1200" y="-800" width="3500" height="3600" fill="#1a1c1c"/>`);
+    put(L.set, `<rect x="-1200" y="${G - 40}" width="3500" height="1400" fill="#7a8884"/>${Array.from({ length: 10 }, (_, k) => `<path d="M-1200,${G + k * 120}H2300" stroke="#6a7874" stroke-width="4"/>`).join("")}
+      <path d="M-1200,${G - 900}H2300V${G - 40}H-1200Z" fill="#2a2c2c"/>`);
+    const foot = (x, fl) => `<g transform="translate(${x},${G}) scale(${fl ? -1 : 1},1)"><path d="M-60,-260Q-70,-120 -80,-40Q-90,10 -20,20H60Q80,10 60,-30Q40,-120 40,-260Z" fill="#c99a74" ${OUT}/>
+      ${[0, 1, 2, 3, 4].map((k) => `<path d="M${-60 + k * 26},10q${4 + k},${60 + k * 10} ${-6 + k * 2},${110 + k * 16}" stroke="${INK}" stroke-width="26" fill="none" stroke-linecap="round"/><path d="M${-60 + k * 26},10q${4 + k},${60 + k * 10} ${-6 + k * 2},${110 + k * 16}" stroke="#c99a74" stroke-width="18" fill="none" stroke-linecap="round"/>`).join("")}
+      <path d="M-80,-40Q-10,-10 60,-30L60,20H-20Q-90,10 -80,-40Z" fill="#5a3a20" opacity=".6"/>${[0, 1, 2].map((k) => `<ellipse cx="${-50 + k * 40}" cy="${60 + k * 30}" rx="12" ry="8" fill="#5a3a20" opacity=".7"/>`).join("")}</g>`;
+    put(L.act, foot(400, false) + foot(680, true) + `<path d="M150,${G - 900}H930L960,${G - 230}Q540,${G - 180} 120,${G - 230}Z" fill="#6a2f62" ${OUT}/>${Array.from({ length: 6 }, (_, k) => `<path d="M${180 + k * 130},${G - 880}l-20,640" stroke="#52244c" stroke-width="10"/>`).join("")}`);
+  }
+
   // ---------------- close on the forest floor ----------------
   function mushClose(L, o = {}) {
     const id = o.id || "mc", r = mk(o.seed || 351), G = o.ground ?? 1300;
@@ -310,6 +392,39 @@
       a += `<g id="${id}-t0">${pot(220, F, 1.0, { curry: "#e8e0cc" })}${Array.from({ length: 14 }, (_, k) => `<ellipse cx="${160 + (k % 7) * 20}" cy="${F - 150 - Math.floor(k / 7) * 10}" rx="7" ry="4" fill="#fffef4"/>`).join("")}${T(220, F + 70, "ต้มกับข้าวสาร", "#f4ecd8", 36)}${X(220, F - 220, `${id}-x0`)}</g>
         <g id="${id}-t1"><path d="M480,${F - 60}L640,${F - 420}" stroke="#d8dce0" stroke-width="22" stroke-linecap="round"/><ellipse cx="660" cy="${F - 470}" rx="44" ry="64" fill="#e8ecf0" ${OUT} transform="rotate(24 660 ${F - 470})"/>${T(560, F + 70, "ช้อนเงิน", "#f4ecd8", 36)}${X(580, F - 260, `${id}-x1`)}</g>
         <g id="${id}-t2"><ellipse cx="880" cy="${F - 90}" rx="80" ry="90" fill="#b84a6a" ${OUT}/><path d="M880,${F - 180}q-10,-60 10,-90" stroke="#6a9a4a" stroke-width="10" fill="none"/>${T(880, F + 70, "หอมแดง", "#f4ecd8", 36)}${X(880, F - 120, `${id}-x2`)}</g>`;
+    } else if (v === 4) {
+      // don't make them vomit: a finger down the throat, salt water, a raw egg — each crossed out; the lungs: choking
+      a += `<g id="${id}-t0"><circle cx="220" cy="${F - 420}" r="90" fill="#e9bc93" ${OUT}/><path d="M220,${F - 380}q-30,30 0,50" stroke="${INK}" stroke-width="5" fill="none"/><path d="M300,${F - 300}L240,${F - 380}" stroke="#e9bc93" stroke-width="36" stroke-linecap="round"/><path d="M300,${F - 300}L240,${F - 380}" stroke="${INK}" stroke-width="4" fill="none"/>${T(220, F + 70, "ล้วงคอ", "#f4ecd8", 36)}${X(220, F - 380, `${id}-x0`, 120)}</g>
+        <g id="${id}-t1"><path d="M480,${F - 300}h140l-14,300h-112z" fill="#cfe6ee" opacity=".7" ${OUT}/><path d="M486,${F - 200}h128" stroke="#9ac8d8" stroke-width="6"/>${Array.from({ length: 8 }, (_, k) => `<circle cx="${500 + (k % 4) * 30}" cy="${F - 120 - Math.floor(k / 4) * 30}" r="5" fill="#fff"/>`).join("")}${T(550, F + 70, "น้ำเกลือ", "#f4ecd8", 36)}${X(550, F - 160, `${id}-x1`, 110)}</g>
+        <g id="${id}-t2"><ellipse cx="860" cy="${F - 80}" rx="80" ry="64" fill="#f4f0e4" ${OUT}/><ellipse cx="860" cy="${F - 86}" rx="34" ry="28" fill="#f2c84a"/>${T(860, F + 70, "ไข่ขาวดิบ", "#f4ecd8", 36)}${X(860, F - 90, `${id}-x2`, 100)}</g>
+        <g id="${id}-lung" opacity="0" transform="translate(800,${F - 760})"><path d="M-20,-80V0M20,-80V0" stroke="#f4ecd8" stroke-width="14"/><path d="M-20,-10Q-140,-20 -130,100Q-120,180 -30,150Q-10,80 -20,-10Z" fill="#e88a8a" ${OUT}/><path d="M20,-10Q140,-20 130,100Q120,180 30,150Q10,80 20,-10Z" fill="#e88a8a" ${OUT}/>${T(0, 230, "สำลัก", "#ff8a7a", 40)}</g>`;
+    } else if (v === 5) {
+      // to the hospital now, with the leftover mushrooms and a photo
+      a += `<g id="${id}-h" transform="translate(760,${F})"><rect x="-200" y="-420" width="400" height="420" fill="#e8e4d8" ${OUT}/><rect x="-60" y="-180" width="120" height="180" fill="#9ac8c0" ${OUT3}/><rect x="-40" y="-380" width="80" height="80" fill="#c8342a"/><path d="M0,-370v60M-30,-340h60" stroke="#fff" stroke-width="16"/>${T(0, 70, "โรงพยาบาล", "#f4ecd8", 36)}</g>
+        <g id="${id}-bag" transform="translate(260,${F})"><path d="M-110,-240h220l-20,240h-180z" fill="#e8ecf0" opacity=".85" ${OUT}/>${mush(-20, -20, 0.55, {})}${T(0, 70, "เห็ดที่เหลือ", "#f4ecd8", 36)}</g>
+        <g id="${id}-ph" opacity="0" transform="translate(300,${F - 640})"><rect x="-90" y="-150" width="180" height="300" rx="24" fill="#1d1f22" ${OUT}/><rect x="-74" y="-126" width="148" height="240" rx="8" fill="#e8e0cc"/>${mush(0, 90, 0.5, {})}${T(0, 220, "รูปถ่าย", "#f4ecd8", 32)}</g>
+        <path id="${id}-arrow" d="M400,${F - 220}H520" stroke="#9ae68a" stroke-width="16" stroke-linecap="round" opacity="0"/><path id="${id}-arrowh" d="M510,${F - 250}l40,30l-40,30" stroke="#9ae68a" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>`;
+    } else if (v === 6) {
+      // everyone who ate from the pot goes to be checked, symptoms or not
+      const fig = (x, c, sick) => `<g transform="translate(${x},${F})"><circle cx="0" cy="-260" r="46" fill="#e9bc93" ${OUT3}/><path d="M-60,-200h120l20,200h-160z" fill="${c}" ${OUT3}/>${sick ? `<path d="M-16,-250l8,-8M8,-250l8,8" stroke="${INK}" stroke-width="5"/>` : `<circle cx="-14" cy="-262" r="5" fill="${INK}"/><circle cx="14" cy="-262" r="5" fill="${INK}"/>`}</g>`;
+      a += `<g>${pot(540, F - 640, 0.9, {})}</g><g id="${id}-who">${fig(260, "#d8443a", true)}${fig(540, "#efe6d6", false)}${fig(820, "#c8b4e6", false)}</g>
+        ${[260, 540].map((x, i) => `<path d="M540,${F - 600}L${x},${F - 330}" stroke="#f4ecd8" stroke-width="6" stroke-dasharray="14 12"/>`).join("")}
+        <g id="${id}-ok" opacity="0">${[260, 540].map((x) => `<g transform="translate(${x},${F - 400})"><circle r="40" fill="#3fb86a" ${OUT3}/><path d="M-18,0l12,14l24,-28" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round"/></g>`).join("")}</g>
+        ${T(820, F + 70, "ไม่ได้กิน", "#c8c0b0", 32)}${T(400, F + 70, "กินด้วยกัน = ไปตรวจด้วย", "#9ae68a", 38)}`;
+    } else if (v === 8) {
+      // the three stages of amatoxin poisoning (DDC handbook, table 2): sick → seems better → the liver gets worse
+      const X0 = 120, X1 = 980, Y0 = F - 180, Y1 = F - 760;
+      a += `<g><path d="M${X0},${Y1 - 40}V${Y0}H${X1 + 20}" stroke="#f4ecd8" stroke-width="6" fill="none"/>
+        ${[[X0 + 140, "4–24 ชม."], [X0 + 430, "18–36 ชม."], [X0 + 720, "2–4 วัน"]].map(([x, t]) => `${T(x, Y0 + 60, t, "#c8c0b0", 30)}<path d="M${x},${Y0}v14" stroke="#f4ecd8" stroke-width="5"/>`).join("")}
+        <path id="${id}-sick" d="M${X0},${Y0 - 20}C${X0 + 80},${Y0 - 40} ${X0 + 120},${Y1 + 60} ${X0 + 180},${Y1 + 70}C${X0 + 260},${Y1 + 80} ${X0 + 320},${Y0 - 100} ${X0 + 430},${Y0 - 120}C${X0 + 540},${Y0 - 130} ${X0 + 620},${Y1 + 40} ${X1},${Y1}" stroke="#ff8a7a" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="1600" stroke-dashoffset="1600"/>
+        <path id="${id}-liver" d="M${X0},${Y0 - 10}C${X0 + 300},${Y0 - 20} ${X0 + 450},${Y0 - 140} ${X0 + 600},${Y0 - 320}S${X1 - 60},${Y1 - 20} ${X1},${Y1 - 30}" stroke="#c87ae8" stroke-width="10" fill="none" stroke-dasharray="1400" stroke-dashoffset="1400"/>
+        ${T(X0 + 180, Y1 + 10, "อาเจียน", "#ff8a7a", 34)}${T(X0 + 430, Y0 - 160, "ดูเหมือนดีขึ้น", "#9ae68a", 34, `${id}-l1`)}${T(X1 - 120, Y1 - 70, "ตับแย่ลง", "#c87ae8", 36, `${id}-l2`)}
+        <g transform="translate(${X1 - 90},${Y1 + 120})"><path d="M-70,0Q-80,-60 -20,-70Q40,-80 70,-40Q80,10 30,30Q-40,50 -70,0Z" fill="#a83a4a" ${OUT3}/></g>
+        <g><circle cx="${X0 + 60}" cy="${Y1 - 10}" r="12" fill="#ff8a7a"/>${T(X0 + 140, Y1, "อาการ", "#ff8a7a", 30)}<circle cx="${X0 + 60}" cy="${Y1 + 40}" r="12" fill="#c87ae8"/>${T(X0 + 150, Y1 + 50, "ค่าตับ", "#c87ae8", 30)}</g></g>`;
+    } else if (v === 7) {
+      // tell the doctor everything: what, when, how many — a clipboard filling in
+      a += `<g transform="translate(540,${F - 560})"><rect x="-300" y="-420" width="600" height="800" rx="20" fill="#c8a066" ${OUT}/><rect x="-260" y="-370" width="520" height="720" fill="#fbfaf4" ${OUT3}/><rect x="-90" y="-450" width="180" height="70" rx="14" fill="#9aa4a8" ${OUT3}/>
+        ${[["กินอะไร", "เห็ดระโงก (มีรูป)"], ["กินกี่โมง", "หนึ่งทุ่ม"], ["อาการเริ่ม", "ตีสอง"], ["กินกี่คน", "2 คน"]].map(([q, aa], k) => `<g id="${id}-r${k}" opacity="0"><text x="-220" y="${-250 + k * 160}" font-family="Kanit" font-weight="700" font-size="40" fill="#5a4a3a">${q}</text><text x="-220" y="${-190 + k * 160}" font-family="Kanit" font-weight="800" font-size="46" fill="#c8342a">${aa}</text></g>`).join("")}</g>`;
     } else {
       // boiling: the pot on the fire a long time, the poison still there
       a += `<g>${stove(540, F, 1.4)}${pot(540, F - 274, 1.3, {})}</g>
@@ -381,6 +496,6 @@
     q(".pbob").forEach((el) => tl.fromTo(el, { y: 0 }, { y: -8, duration: 0.9, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
   }
 
-  Object.assign(Sets, { isanVillage, dryForest, underHouse, bedNet, floorGap, mushClose, mushSection, clockCard, popLegend, forestSign });
-  window.Pop = { ghost, lurk, eyes, mush, basket, pot, bowl, stove, kratip, lamp, stiltHouse, life, PBL, PEYE };
+  Object.assign(Sets, { isanVillage, dryForest, underHouse, bedNet, floorGap, nightRoad, erFront, ward, feetClose, mushClose, mushSection, clockCard, popLegend, forestSign });
+  window.Pop = { ghost, lurk, eyes, mush, pickup, basket, pot, bowl, stove, kratip, lamp, stiltHouse, life, PBL, PEYE };
 })();
