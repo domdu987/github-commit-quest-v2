@@ -1,0 +1,354 @@
+      // ---------- เห็ดปอบ EP.1 อย่าหักใส่ข้อง (สูตรเสียงกอย: บทสั้น ตัวละครพูดเยอะ มีมุก ความรู้วาดเป็นภาพ ผีแทบไม่โชว์ ปมท้ายเป็นรอยเท้า) ----------
+      // many camera angles: wide over the paddies, close faces, the shadow-puppet screen, the forest floor close up, the slate diagrams,
+      // the kitchen under the house, upstairs under the net, top-down through the floorboards
+      const MINT = (x, y, s, track, extra = {}) => ({ who: "mint", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TON = (x, y, s, track, extra = {}) => ({ who: "ton", x, y, s, track, blinks: [1.2, 3.6], ...extra });
+      const YAI = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, blinks: [0.7, 2.6, 4.9], ...extra });
+      const THONG = (x, y, s, track, extra = {}) => ({ who: "thong", x, y, s, track, blinks: [1.6, 4.2], ...extra });
+      const GV = 1300, GF = 1400, GH = 1480, SX = 260; // ground: village, forest, house / kitchen; the stove under the house
+      const CU = (x, y, s, sy = 1000) => fr(x, y - 530 * s, 1.0, 540, sy); // a close-up framing on a character of scale s standing at (x, y)
+      const IK = "#2e2a26";
+      const ROW1 = [`<g transform="translate(60,64) scale(.26)">${Pop.mush(0, 160, 1, {})}</g><g class="kw"><circle cx="60" cy="60" r="50" fill="none" stroke="#e0362c" stroke-width="8"/><path d="M26,26L94,94" stroke="#e0362c" stroke-width="8" stroke-linecap="round"/></g>`,
+        `<span style="font-size:54px">เห็ดไม่รู้จัก <u>อย่าหักใส่ข้อง</u></span>`];
+      const arm = (id, x0, y0, x1, y1) => `<g id="${id}"><path d="M${x0},${y0}Q${(x0 + x1) / 2 + 80},${(y0 + y1) / 2} ${x1},${y1}" stroke="${Pop.PBL}" stroke-width="60" fill="none" stroke-linecap="round"/>
+        ${[-30, -10, 10, 30].map((d) => `<path d="M${x1},${y1}l${d * 1.6},${50 + Math.abs(d)}l${d * 0.6},36" stroke="${Pop.PBL}" stroke-width="14" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+
+      // ---------- 0. story opener (its own): steam off the pot writes the title; a black hand lifts the lid; green eyes open in the steam ----------
+      add("open", {
+        set: "underHouse", setOpts: { id: "u0", basket: false }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(SX, GH - 420, 1.5, 540, 1150), drift: { s: 0.06 } }] },
+        extra(L) {
+          put(L.light, `<g id="o-title" opacity="0"><text x="540" y="560" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="210" fill="#f4ecd8" stroke="#2a1a10" stroke-width="10" paint-order="stroke">เห็ดปอบ</text>
+            <text x="540" y="380" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="34" letter-spacing="8" fill="#e8d8b8">ROD MAI CLUB</text>
+            <text x="540" y="660" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="52" fill="#ffe08a" stroke="#2a1a10" stroke-width="8" paint-order="stroke">EP.1 อย่าหักใส่ข้อง</text></g>`);
+          put(L.act, arm("o-arm", 1400, GH - 1300, SX + 120, GH - 380));
+          put(L.glow, Pop.eyes(SX + 10, GH - 760, 2.2, "o-eyes"));
+        },
+        fx(tl, id, t0) {
+          tl.fromTo("#o-title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.0, ease: "power2.out", immediateRender: false }, t0 + 0.3);
+          tl.to("#o-title", { opacity: 0, y: -30, duration: 0.5 }, t0 + 2.4);
+          tl.fromTo("#o-arm", { x: 900, y: -500 }, { x: 0, y: 0, duration: 1.2, ease: "power2.out", immediateRender: false }, t0 + 1.8);
+          tl.set("#o-eyes", { opacity: 0 }, t0);
+          tl.to("#o-eyes", { opacity: 1, duration: 0.5 }, t0 + 3.0);
+          Fx.heart(tl, t0 + 1.8, 2.0, 0.45, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("open") - 0.45, 0.3, 16, 901);
+          tl.set("#black", { opacity: 1 }, t0 + D("open") - 0.2);
+        },
+      });
+
+      // ---------- 1. flash-forward: a hand reaching for a white mushroom by the termite mound — cut ----------
+      add("hook", {
+        set: "mushClose", setOpts: { id: "mc1", dusk: true }, dark: 0.18,
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 1.0, 540, 980), drift: { s: 0.08 } }] },
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0);
+          tl.fromTo("#mc1-hand", { x: 420, y: -160 }, { x: 0, y: 0, duration: D("hook") - 0.5, ease: "power1.inOut", immediateRender: false }, t0);
+          Fx.heart(tl, t0 + 0.4, D("hook") - 0.4, 0.42, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook") - 0.5, 0.3, 18, 902); Fx.punch(tl, `#${id} .stage`, t0 + D("hook") - 0.5, 1.08, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.7 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + D("hook") - 0.45);
+        },
+      });
+
+      // ---------- 2. the kitchen clock running backwards: ten hours earlier ----------
+      add("clock", {
+        set: "clockCard", setOpts: { id: "ck2" }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 900), drift: { s: 0.05 } }] },
+        captions: caps("clock"),
+        fx(tl, id, t0) {
+          tl.fromTo("#ck2-mm", { attr: { transform: "rotate(0)" } }, { attr: { transform: "rotate(-3600)" }, duration: D("clock") - 0.3, ease: "power2.inOut", immediateRender: false }, t0);
+          tl.fromTo("#ck2-hh", { attr: { transform: "rotate(60)" } }, { attr: { transform: "rotate(-240)" }, duration: D("clock") - 0.3, ease: "power2.inOut", immediateRender: false }, t0);
+        },
+      });
+
+      // ---------- 3. wide: บ้านโคกเห็ด at the first rains; มิ้นท์ walks up the road with her suitcase ----------
+      add("arrive", {
+        set: "isanVillage", setOpts: { id: "v3", rain: true }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(420, 1000, 0.62, 540, 1000), drift: { x: 30, s: 0.03 } }] },
+        actors: [MINT(620, GV + 120, 0.6, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { flip: true, moveTo: { x: 470, y: GV + 20, dur: D("arrive"), ease: "none" } }),
+          YAI(-80, GV, 0.55, [{ t: 0, mode: "wave", eyes: "normal", mouth: "smile" }])],
+        captions: caps("arrive"),
+      });
+
+      // ---------- 4. มิ้นท์ close, phone held up in the rain: no signal ----------
+      add("net", {
+        set: "isanVillage", setOpts: { id: "v4", rain: true }, dark: 0.05, blur: { far: 8, mid: 8, set: 7 },
+        cam: { keys: [{ t: 0, ...CU(540, GV + 1250, 2.2), drift: { s: 0.06 } }] },
+        actors: [MINT(540, GV + 1250, 2.2, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }, { t: voEnd("net"), mode: "raise", eyes: "normal", mouth: "frown" }])],
+        captions: caps("net", undefined, { quote: true }),
+      });
+
+      // ---------- 5. ต้น close: "ไม่มีเน็ต แต่มีเห็ด! ผมเซียนเห็ดนะพี่" ----------
+      add("expert", {
+        set: "isanVillage", setOpts: { id: "v5" }, dark: 0.04, blur: { far: 8, mid: 8, set: 7 },
+        cam: { keys: [{ t: 0, ...CU(560, GV + 1100, 2.0), drift: { x: -20, s: 0.06 } }] },
+        actors: [TON(560, GV + 1100, 2.0, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }, { t: F("expert", 0, 2), mode: "laugh", eyes: "closed", mouth: "o" }])],
+        captions: caps("expert", undefined, { quote: true }),
+      });
+
+      // ---------- 6. ยายคำ at the foot of the stairs; her rule stamps in ----------
+      add("rule", {
+        set: "isanVillage", setOpts: { id: "v6" }, dark: 0.05, blur: { far: 6, mid: 6 },
+        cam: { keys: [{ t: 0, ...fr(-80, GV - 620, 1.25, 540, 1250), drift: { s: 0.04 } }] },
+        actors: [YAI(-60, GV, 1.3, [{ t: 0, mode: "point", eyes: "normal", mouth: "frown" }]), TON(260, GV, 1.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: caps("rule", undefined, { quote: true }),
+        ui: [{ type: "koiRule", t: 0.05, label: "กฎของยายคำ", rows: [ROW1], at: [vo("rule") + 0.2], top: 300 }],
+      });
+
+      // ---------- 7. ลุงทองดี behind his fence at the forest edge, barefoot, staring ----------
+      add("thong", {
+        set: "isanVillage", setOpts: { id: "v7", houses: [[1200, 0.8, {}]], tree: false, road: false, fence: [520] }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(980, GV - 520, 0.95, 540, 1100), drift: { s: 0.03 } }, { t: F("thong", 0, 1) - 0.1, glide: 1.4, ...fr(1000, GV - 600, 1.5, 540, 1050), drift: { s: 0.04 } }] },
+        actors: [THONG(1000, GV, 1.1, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        captions: caps("thong"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("thong", 0, 1), D("thong") - F("thong", 0, 1), 0.48, 0.45); },
+      });
+
+      // ---------- 8. ต้น whispering to มิ้นท์ ----------
+      add("rumor", {
+        set: "isanVillage", setOpts: { id: "v8" }, dark: 0.06, blur: { far: 6, mid: 6, set: 5 },
+        cam: { keys: [{ t: 0, ...fr(560, GV - 560, 1.3, 540, 1120), drift: { s: 0.05 } }] },
+        actors: [TON(430, GV, 1.25, [{ t: 0, mode: "whistle", eyes: "wide", mouth: "o" }]), MINT(700, GV, 1.4, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "flat" }, { t: F("rumor", 0, 1), mode: "phoneLook", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("rumor", undefined, { quote: true }),
+      });
+
+      // ---------- 9. the legend: an Isan shadow-puppet screen, panel by panel (dictionary definition) ----------
+      add("legend", {
+        set: "popLegend", setOpts: {}, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(560, 450, 1.5, 540, 900), drift: { s: 0.02 } }, { t: F("legend", 0, 1) - 0.15, glide: 0.5, ...fr(560, 1450, 1.5, 540, 900), drift: { s: 0.02 } },
+          { t: vo("legend", 1) - 0.15, glide: 0.5, ...fr(560, 2450, 1.5, 540, 900), drift: { s: 0.03 } }, { t: vo("legend", 2) - 0.15, glide: 0.5, ...fr(560, 3450, 1.5, 540, 900), drift: { s: 0.03 } }] },
+        captions: caps("legend"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + vo("legend", 2), D("legend") - vo("legend", 2), 0.5, 0.45); },
+      });
+
+      // ---------- 10. มิ้นท์ rolls her eyes ----------
+      add("scoff", {
+        set: "isanVillage", setOpts: { id: "v10" }, dark: 0.05, blur: { far: 8, mid: 8, set: 7 },
+        cam: { keys: [{ t: 0, ...CU(520, GV + 1250, 2.2), drift: { s: 0.05 } }] },
+        actors: [MINT(520, GV + 1250, 2.2, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }])],
+        captions: caps("scoff", undefined, { quote: true }),
+      });
+
+      // ---------- 11. wide: ป่าโคก behind the village; the two of them walk in ----------
+      add("forest", {
+        set: "dryForest", setOpts: { id: "f11", mound: 120 }, dark: 0.04,
+        cam: { keys: [{ t: 0, ...fr(560, GF - 560, 0.62, 540, 1150), drift: { x: -40, s: 0.03 } }] },
+        actors: [TON(900, GF, 0.7, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 560, y: GF, dur: D("forest"), ease: "none" } }),
+          MINT(1120, GF, 0.78, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { flip: true, moveTo: { x: 800, y: GF, dur: D("forest"), ease: "none" } })],
+        captions: caps("forest"),
+      });
+
+      // ---------- 12. ต้น points: white mushrooms by the mound ----------
+      add("found", {
+        set: "dryForest", setOpts: { id: "f12", mound: 300, mush: [[470, 0.62, {}], [560, 0.5, { tilt: 6 }], [380, 0.46, { egg: true }]] }, dark: 0.04,
+        cam: { keys: [{ t: 0, ...fr(580, GF - 380, 1.2, 540, 900), drift: { s: 0.05 } }] },
+        shake: (t) => (t < 0.3 ? 6 * Math.sin(t * 50) : 0),
+        actors: [TON(760, GF, 1.2, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }, { t: F("found", 0, 1), mode: "point", eyes: "normal", mouth: "smile" }], { flip: true })],
+        captions: caps("found", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.06, 0.3); },
+      });
+
+      // ---------- 13. มิ้นท์ stops him for a photo — the flash ----------
+      add("selfie", {
+        set: "dryForest", setOpts: { id: "f13", mound: 200 }, dark: 0.04, blur: { far: 8, mid: 8, set: 6 },
+        cam: { keys: [{ t: 0, ...CU(540, GF + 1150, 2.1), drift: { s: 0.05 } }] },
+        actors: [MINT(540, GF + 1150, 2.1, [{ t: 0, mode: "raise", eyes: "wide", mouth: "o" }, { t: F("selfie", 0, 1), mode: "selfie", eyes: "normal", mouth: "smile" }])],
+        captions: caps("selfie", undefined, { quote: true }),
+        fx(tl, id, t0) { tl.fromTo("#flashw", { opacity: 0.85 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0 + voEnd("selfie") + 0.1); },
+      });
+
+      // ---------- 14. close: his hand pulls one up — the cup at its foot ----------
+      add("pick", {
+        set: "mushClose", setOpts: { id: "mc14" }, dark: 0.04,
+        cam: { keys: [{ t: 0, ...fr(480, 1150, 1.15, 540, 980), drift: { s: 0.06 } }] },
+        fx(tl, id, t0) {
+          tl.fromTo("#mc14-hand", { x: 260, y: -60 }, { x: -60, y: 20, duration: 0.7, ease: "power2.out", immediateRender: false }, t0);
+          tl.to(["#mc14-hand", "#mc14-m0"], { y: "-=140", duration: 0.6, ease: "power2.in" }, t0 + 0.8);
+        },
+      });
+
+      // ---------- 15. knowledge, drawn: the two white mushrooms side by side; the eye crossed out (DDC handbook / DDC) ----------
+      add("know1", {
+        set: "mushSection", setOpts: { id: "ms15", v: 1, la: "ระโงกขาว · กินได้", lb: "ระโงกหิน · พิษถึงตาย" }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 1000), drift: { s: 0.02 } }] },
+        captions: caps("know1"),
+        ui: [{ type: "src", t: F("know1", 0, 1), end: D("know1") - 0.05, top: 160, text: "ที่มา: <em>กรมควบคุมโรค (คู่มือเห็ดพิษ)</em> · ส่วนใหญ่ผู้ป่วยคิดว่าเห็ดระโงกหินคือเห็ดระโงกขาว · <em>กรมควบคุมโรค</em> · ไม่มีลักษณะภายนอกใดที่แน่นอนตายตัว เช่น สี กลิ่น หรือรูปร่าง ที่สามารถใช้แยกเห็ดพิษออกจากเห็ดกินได้อย่างแม่นยำ" }],
+        fx(tl, id, t0) {
+          tl.fromTo(["#ms15-a", "#ms15-b"], { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.25, ease: "back.out(1.6)", immediateRender: false }, t0 + 0.1);
+          tl.fromTo("#ms15-q", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.5)", immediateRender: false }, t0 + F("know1", 0, 1));
+          tl.to("#ms15-q", { opacity: 0, duration: 0.2 }, t0 + vo("know1", 1) - 0.1);
+          tl.fromTo("#ms15-eye", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.5)", immediateRender: false }, t0 + F("know1", 1, 1));
+        },
+      });
+
+      // ---------- 16. dusk: ลุงทองดี crouched by the mound, alone ----------
+      add("dusk", {
+        set: "dryForest", setOpts: { id: "f16", time: "dusk", mist: true, mound: 980, mush: [[470, 0.5, {}]] }, dark: 0.22,
+        cam: { keys: [{ t: 0, ...fr(600, GF - 520, 0.8, 540, 1100), drift: { s: 0.03 } }, { t: F("dusk", 0, 1) - 0.1, glide: 1.6, ...fr(600, GF - 420, 1.15, 540, 1100), drift: { s: 0.03 } }] },
+        actors: [THONG(600, GF, 0.95, [{ t: 0, mode: "crouch", eyes: "side", mouth: "flat" }])],
+        captions: caps("dusk"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("dusk", 0, 1), D("dusk") - F("dusk", 0, 1), 0.48, 0.45); },
+      });
+
+      // ---------- 17. ลุงทองดี close, turning, pointing at the basket: "ดอกนั้น… อย่ากิน" ----------
+      add("warn", {
+        set: "dryForest", setOpts: { id: "f17", time: "dusk", mist: true, mound: false }, dark: 0.3, blur: { far: 8, mid: 8, set: 6 },
+        cam: { keys: [{ t: 0, ...CU(540, GF + 1100, 2.1, 980), drift: { s: 0.02 } }, { t: 0.3, glide: D("warn") - 0.4, ...fr(560, GF + 1100 - 530 * 2.1, 1.12, 540, 960), drift: { s: 0.02 } }] },
+        actors: [THONG(540, GF + 1100, 2.1, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: vo("warn") - 0.1, mode: "point", eyes: "normal", mouth: "flat" }])],
+        captions: caps("warn", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("warn"), 0.5, 0.55); },
+      });
+
+      // ---------- 18. the two of them run ----------
+      add("run", {
+        set: "dryForest", setOpts: { id: "f18", time: "dusk", mound: 1100 }, dark: 0.2,
+        cam: { keys: [{ t: 0, ...fr(560, GF - 480, 0.85, 540, 1100), drift: { x: -80, s: 0.02 } }] },
+        shake: (t) => 6 * Math.sin(t * 31),
+        actors: [MINT(820, GF, 0.95, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: -200, y: GF, dur: D("run"), ease: "none" } }),
+          TON(1000, GF, 0.8, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 0, y: GF, dur: D("run"), ease: "none" } })],
+        captions: caps("run", undefined, { quote: true }),
+      });
+
+      // ---------- 19. night: the kitchen under the house, ยาย at the pot ----------
+      add("cook", {
+        set: "underHouse", setOpts: { id: "u19" }, dark: 0.2,
+        cam: { keys: [{ t: 0, ...fr(260, GH - 520, 0.78, 540, 1100), drift: { s: 0.03 } }] },
+        actors: [YAI(470, GH, 1.0, [{ t: 0, mode: "stick", eyes: "normal", mouth: "smile" }], { flip: true })],
+        captions: caps("cook"),
+      });
+
+      // ---------- 20. ยายคำ close: "ต้มกับข้าวสารแล้ว ข้าวไม่ดำ กินได้" ----------
+      add("rice", {
+        set: "underHouse", setOpts: { id: "u20" }, dark: 0.2, blur: { far: 8, mid: 8, set: 6 },
+        cam: { keys: [{ t: 0, ...CU(560, GH + 1100, 2.0), drift: { s: 0.05 } }] },
+        actors: [YAI(560, GH + 1100, 2.0, [{ t: 0, mode: "raise", eyes: "normal", mouth: "smile" }])],
+        captions: caps("rice", undefined, { quote: true }),
+      });
+
+      // ---------- 21. knowledge, drawn: the folk tests, crossed out (DDC) ----------
+      add("know3", {
+        set: "mushSection", setOpts: { id: "ms21", v: 2 }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 1000), drift: { s: 0.02 } }] },
+        captions: caps("know3"),
+        ui: [{ type: "src", t: 0.3, end: D("know3") - 0.05, top: 160, text: "ที่มา: <em>กรมควบคุมโรค</em> · การจุ่มช้อนเงินลงไปในหม้อต้มเห็ด การนำไปต้มกับข้าวสาร … ไม่สามารถใช้ได้จริง · <em>คู่มือเห็ดพิษ</em> · ต้มเห็ดระโงกหินร่วมกับข้าวสารและหอมแดง พบว่า… ไม่มีการเปลี่ยนสี" }],
+        fx(tl, id, t0) {
+          const pop = (sel, at) => tl.fromTo(sel, { opacity: 0, scale: 0.3, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)", immediateRender: false }, at);
+          tl.fromTo(["#ms21-t0", "#ms21-t1", "#ms21-t2"], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.2, immediateRender: false }, t0);
+          pop("#ms21-x0", t0 + F("know3", 0, 0) + 0.5); pop("#ms21-x1", t0 + F("know3", 0, 1) + 0.3); pop("#ms21-x2", t0 + vo("know3", 1));
+        },
+      });
+
+      // ---------- 22. knowledge, drawn: boiling does not help (สคร.7) ----------
+      add("know4", {
+        set: "mushSection", setOpts: { id: "ms22", v: 3 }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 1000), drift: { s: 0.02 } }] },
+        captions: caps("know4"),
+        ui: [{ type: "src", t: 0.3, end: D("know4") - 0.05, top: 160, text: "ที่มา: <em>สำนักงานป้องกันควบคุมโรคที่ 7 ขอนแก่น</em> · โดยเฉพาะเห็ดระโงกพิษที่มีสารที่ทนต่อความร้อน แม้จะนำมาทำให้สุกแล้วก็ไม่สามารถทำลายพิษได้" }],
+        fx(tl, id, t0) {
+          tl.fromTo("#ms22-clock", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + F("know4", 0, 1) - 0.2);
+          tl.fromTo("#ms22-hand", { attr: { transform: "rotate(0)" } }, { attr: { transform: "rotate(1080)" }, duration: 1.6, ease: "none", immediateRender: false }, t0 + F("know4", 0, 1) - 0.2);
+          tl.fromTo("#ms22-tox", { y: 0 }, { y: -18, duration: 0.4, repeat: Math.ceil(D("know4") / 0.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#ms22-x0", { opacity: 0, scale: 0.3, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.5)", immediateRender: false }, t0 + F("know4", 0, 2));
+        },
+      });
+
+      // ---------- 23. ต้น on his second bowl; มิ้นท์ with a cup of noodles ----------
+      add("eat", {
+        set: "underHouse", setOpts: { id: "u23", basket: false }, dark: 0.18,
+        cam: { keys: [{ t: 0, ...fr(-260, GH - 560, 1.2, 540, 1100), drift: { s: 0.03 } }, { t: vo("eat", 1) - 0.2, glide: 0.5, ...fr(-100, GH - 560, 1.35, 540, 1100), drift: { s: 0.03 } }] },
+        actors: [TON(-380, GH - 300, 1.0, [{ t: 0, mode: "sit", eyes: "closed", mouth: "o" }, { t: vo("eat"), mode: "sit", eyes: "closed", mouth: "smile" }]),
+          MINT(-60, GH - 300, 1.05, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }, { t: vo("eat", 1), mode: "sit", eyes: "normal", mouth: "frown" }], { flip: true })],
+        captions: caps("eat", undefined, { quote: true }),
+        extra(L) { put(L.act, `<g transform="translate(0,${GH - 470})"><path d="M-40,0h80l-8,90h-64z" fill="#e8d8b8" stroke="${IK}" stroke-width="4"/><path d="M-30,0q30,-50 60,0" stroke="#f4ecd8" stroke-width="6" fill="none" opacity=".6"/><text x="0" y="56" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="26" fill="#c8342a">มาม่า</text></g>`); },
+      });
+
+      // ---------- 24. the village at night, everyone asleep; the poison takes hours (DDC) ----------
+      add("fine", {
+        set: "isanVillage", setOpts: { id: "v24", time: "night", houses: [[-120, 0.9, {}], [900, 0.7, {}]] }, dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(400, 1000, 0.62, 540, 1000), drift: { s: 0.03 } }, { t: vo("fine", 1) - 0.2, glide: 1.6, ...fr(-120, GV - 600, 1.1, 540, 1000), drift: { s: 0.02 } }] },
+        captions: caps("fine"),
+        ui: [{ type: "src", t: vo("fine", 1), end: D("fine") - 0.05, top: 160, text: "ที่มา: <em>กรมควบคุมโรค</em> · หลังกินเห็ดระโงกพิษมักไม่เกิดอาการทันทีแต่จะมีอาการหลัง 4 - 6 ชั่วโมงไปแล้ว" }],
+      });
+
+      // ---------- 25. 2 a.m. on the kitchen clock ----------
+      add("two", {
+        set: "clockCard", setOpts: { id: "ck25" }, dark: 0.55,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.15, 540, 900), drift: { s: 0.04 } }] },
+        captions: caps("two"),
+        fx(tl, id, t0) { tl.set("#ck25-hh", { attr: { transform: "rotate(60)" } }, t0); tl.set("#ck25-mm", { attr: { transform: "rotate(0)" } }, t0); Fx.heart(tl, t0, D("two"), 0.5, 0.5); },
+      });
+
+      // ---------- 26. upstairs, under the mosquito net: มิ้นท์ wakes to chewing below ----------
+      add("sound", {
+        set: "bedNet", setOpts: { id: "b26" }, dark: 0.45,
+        cam: { keys: [{ t: 0, ...CU(540, GH + 1250, 2.2), drift: { s: 0.05 } }] },
+        actors: [MINT(540, GH + 1250, 2.2, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }, { t: 0.5, mode: "idle", eyes: "wide", mouth: "o" }, { t: voEnd("sound") + 0.1, mode: "idle", eyes: "side", mouth: "flat" }])],
+        captions: caps("sound", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + 0.4, D("sound") - 0.4, 0.42, 0.55); },
+      });
+
+      // ---------- 27. top-down through the floor gaps: by the pot, a shape — only its eyes (koi-style: hold, then one hit, cut) ----------
+      const PB = 1.2, PC = 3.0, PD = 3.4;
+      add("peek", {
+        set: "floorGap", setOpts: { id: "fg27" }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(628, 960, 1.0, 540, 960), drift: { s: 0.02 } }, { t: PB, glide: 1.6, ...fr(628, 900, 1.4, 540, 900), drift: { s: 0.01 } }] },
+        extra(L) { put(L.light, `<g id="pk-face" opacity="0">${Pop.lurk(540, 1240, 4.6)}</g>`); },
+        fx(tl, id, t0) {
+          tl.set("#fg27-eyes", { opacity: 0 }, t0);
+          tl.to("#fg27-eyes", { opacity: 1, duration: 0.5, ease: "power1.in" }, t0 + PB);
+          tl.to("#fg27-eyes", { x: "+=8", duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, t0 + PB + 0.8);
+          Fx.heart(tl, t0 + 0.3, PC - 0.3, 0.6, 0.65);
+          tl.to("#fg27-eyes", { opacity: 0, duration: 0.08 }, t0 + PC);
+          tl.fromTo("#pk-face", { opacity: 0, scale: 1.25, transformOrigin: "50% 55%" }, { opacity: 1, scale: 1, duration: 0.09, ease: "power4.out", immediateRender: false }, t0 + PD);
+          Fx.glitch(tl, `#${id}`, t0 + PD + 0.05, 0.18, 16, 927);
+          tl.set("#black", { opacity: 1 }, t0 + PD + 0.22);
+        },
+      });
+
+      // ---------- 28. torchlight: bare footprints, toes too long, from the pot toward ลุงทองดี's house ----------
+      add("clue", {
+        set: "underHouse", setOpts: { id: "u28", prints: true, beam: [-200, GH - 700, SX + 500, GH], basket: false }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(SX + 300, GH - 80, 1.1, 540, 1000), drift: { s: 0.03 } }, { t: vo("clue", 1) - 0.2, glide: 2.2, ...fr(SX + 1250, GH, 1.1, 540, 1000), drift: { s: 0.03 } }] },
+        captions: caps("clue"),
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0);
+          tl.fromTo("#u28-beam", { x: 0 }, { x: 900, duration: D("clue") - 0.6, ease: "power1.inOut", immediateRender: false }, t0 + 0.3);
+          Fx.heart(tl, t0, D("clue"), 0.45, 0.55);
+        },
+      });
+
+      // ---------- 29. ต้น curled up under the net, holding his stomach ----------
+      add("pain", {
+        set: "bedNet", setOpts: { id: "b29" }, dark: 0.4,
+        cam: { keys: [{ t: 0, ...fr(380, GH - 150, 1.25, 540, 1050), drift: { s: 0.05 } }] },
+        actors: [TON(640, GH - 20, 1.1, [{ t: 0, mode: "lie", eyes: "closed", mouth: "frown" }])],
+        captions: caps("pain", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("pain"), 0.4, 0.6); },
+      });
+
+      // ---------- 30. the choice: hospital now / wait for morning ----------
+      add("choice", {
+        set: "bedNet", setOpts: { id: "b30" }, dark: 0.5,
+        cam: { keys: [{ t: 0, ...fr(380, GH - 150, 1.4, 540, 1150), drift: { s: 0.03 } }] },
+        actors: [TON(640, GH - 20, 1.1, [{ t: 0, mode: "lie", eyes: "closed", mouth: "frown" }])],
+        ui: [{ type: "choice", t: 0.05, q: "จะทำยังไง?", a: "พาไปโรงพยาบาล", b: "รอเช้าค่อยไป", secs: 3, top: 280,
+          possessed: { at: 1.0, side: "b", glitch: "รอเช้า…", who: "…นอนเถอะ เดี๋ยวก็หาย" } }],
+        fx(tl, id, t0) {
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 930); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 931);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
+
+      // ---------- 31. end card: the community-forest sign — the next part ----------
+      add("next", {
+        set: "forestSign", setOpts: { id: "sg", ep: "ตอนที่ 2", title: "เอาเห็ดไปหาหมอ" }, dark: 0.06,
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.0, 540, 900), drift: { s: 0.03 } }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#sg-sign", { attr: { transform: "rotate(-9 540 900)" } }, { attr: { transform: "rotate(-2 540 900)" }, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          Fx.heart(tl, t0 + 0.9, D("next") - 0.9, 0.7, 0.35);
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Pop.life(tl, `#${id}`, t0, sh.dur); }; });
