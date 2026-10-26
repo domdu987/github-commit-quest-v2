@@ -164,6 +164,7 @@
       Camp.hand.crayon = `<g transform="translate(0,118)"><rect x="-6" y="-6" width="12" height="50" rx="3" fill="#c8392b" stroke="#2e2a26" stroke-width="2.5" transform="rotate(-30)"/></g>`;
       // ---------- poses for EP.3 ----------
       Rig.MODES.showArms = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -84 + Math.sin(u * 2) * 1.5, faF: -6, uaB: -84, faB: -6, torso: -2, head: 4 });               // both arms held out, palms up: "look, nothing"
+      Rig.MODES.lieReach = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: -104 + 5 * Math.sin(u * 6), faF: -14 + 6 * Math.sin(u * 6 + 1) });   // lying on his back, one hand up at the gate: help
       Rig.MODES.kneelAid = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -52, faF: -34 + 4 * Math.sin(u * 6), uaB: -40, faB: -46, torso: 26, head: 18 });            // kneeling over someone, hands working
       Rig.MODES.press = (u, o) => { const j = Math.sin(u * 14) * 1.5; return { ...Rig.MODES.crouch(u, o), uaF: -34 + j, faF: -12, uaB: -34 - j, faB: -12, torso: 30, head: 14 }; };   // both arms straight down, pressing
       Rig.MODES.cutCloth = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -56, faF: -40 + 10 * Math.sin(u * 11), uaB: -30, faB: -70, torso: 22, head: 26 });              // sitting, sawing at a trouser leg

@@ -203,6 +203,27 @@
       Rig.MODES.supine = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.4); return { ...Rig.MODES.idle(u, o), uaF: 14, faF: -6, uaB: -14, faB: -6, thF: 3, thB: -3, shF: 0, shB: 0, torso: 0.6 * b, head: 0, bodyY: -1.5 * b }; };   // on the back, filmed from straight above: the front view itself, fast shallow breaths (the ground is the backdrop)
       Rig.MODES.sipUp = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -70, faF: -110, uaB: -10, faB: -30, torso: 10, head: -8 });   // propped up, a bottle at the lips
       // the guard on the station roof: khaki security shirt, black cap, cargo trousers, a scarf against the sun
+      Rig.MODES.carryStand = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 10, head: 6, uaF: -40, faF: -70, uaB: -30, faB: -80, bodyY: 4 + 1.5 * Math.sin(u * 2.4) });   // standing under the load, hands on the straps (carry without the walk)
+      Rig.MODES.lieFlat = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: 4, faF: -4, uaB: 8, faB: -2, thF: -3, thB: -1, shF: 4, shB: 2 });   // out cold on his back: arms along the body, legs straight
+      // ก้อง once he goes down: the backpack off (signs, shade), then the outer PE shirt off too (from nodrink on: it is the cooling cloth) — a white vest
+      Rig.CAST.kongNP = { ...Rig.CAST.kong, torsoExtra: `<path d="M-50,-484H50" stroke="#f4ecd8" stroke-width="6"/><text x="0" y="-400" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#f4ecd8" opacity=".85">17</text>` };
+      Rig.CAST.kongShade = { ...Rig.CAST.kong, top: "#ece6d8", topS: "#cfc8b8", sleeve: "#d6a27c", sleeveS: "#b5825e", torsoExtra: `<path d="M-30,-486Q0,-456 30,-486" stroke="#b5825e" stroke-width="5" fill="none"/>` };
+      // ก้อง on his back seen from straight above — the side-view rig cannot do this symmetric view: arms by his sides, legs straight, no bag
+      // ids: -chest (breathing), -ec / -eo (eyes closed / open), -mo / -mf (mouth open / flat)
+      const SUPINE = (id, x, y, s = 1) => { const C = Rig.CAST.kongShade, K = "#2e2a26", O = `stroke="${K}" stroke-width="5" stroke-linejoin="round"`;
+        const limb = (x0, y0, x1, y1, w, col) => `<path d="M${x0},${y0}L${x1},${y1}" stroke="${K}" stroke-width="${w + 10}" stroke-linecap="round"/><path d="M${x0},${y0}L${x1},${y1}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
+        let g = `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="40" rx="190" ry="560" fill="#000" opacity=".14"/>`;
+        g += limb(-46, 140, -60, 545, 74, C.pants) + limb(46, 140, 60, 545, 74, C.pants) + `<ellipse cx="-64" cy="582" rx="40" ry="54" fill="${C.shoe}" ${O}/><ellipse cx="64" cy="582" rx="40" ry="54" fill="${C.shoe}" ${O}/>`;
+        g += `<path d="M-96,110H96L100,170H-100Z" fill="${C.pants}" ${O}/><path d="M-98,128H98" stroke="${C.belt}" stroke-width="10"/>`;
+        g += limb(-118, -182, -142, 36, 46, C.skin) + limb(-142, 36, -150, 226, 40, C.skin) + limb(118, -182, 142, 36, 46, C.skin) + limb(142, 36, 150, 226, 40, C.skin);
+        g += `<circle cx="-152" cy="252" r="28" fill="${C.skin}" ${O}/><circle cx="152" cy="252" r="28" fill="${C.skin}" ${O}/>`;
+        g += `<g id="${id}-chest"><path d="M-112,-200Q-120,-40 -98,120H98Q120,-40 112,-200Q60,-222 0,-222Q-60,-222 -112,-200Z" fill="${C.top}" ${O}/><path d="M-40,-220Q0,-176 40,-220" stroke="${C.skinS}" stroke-width="6" fill="none"/><path d="M-70,-150Q-40,-60 -60,40M70,-150Q40,-60 60,40" stroke="${C.topS}" stroke-width="5" fill="none" opacity=".7"/></g>`;
+        g += `<rect x="-26" y="-262" width="52" height="56" rx="12" fill="${C.skin}" ${O}/><circle cx="0" cy="-318" r="74" fill="${C.skin}" ${O}/>`;
+        g += `<path d="M-74,-330Q-80,-402 0,-404Q80,-402 74,-330Q60,-372 0,-374Q-60,-372 -74,-330Z" fill="#231a16" ${O}/><path d="M-78,-346Q0,-378 78,-346L76,-326Q0,-356 -76,-326Z" fill="#e07a4f" ${O}/><path d="M70,-340q34,8 34,40q-20,-20 -36,-26" fill="#e07a4f" ${O}/>`;
+        g += `<rect x="20" y="-312" width="28" height="12" rx="4" fill="#ead7b6" stroke="${K}" stroke-width="2.5" transform="rotate(-14 34 -306)"/>`;
+        g += `<g id="${id}-ec"><path d="M-40,-312q14,8 28,0M12,-312q14,8 28,0" stroke="${K}" stroke-width="5" fill="none" stroke-linecap="round"/></g><g id="${id}-eo" opacity="0"><circle cx="-26" cy="-314" r="9" fill="${K}"/><circle cx="26" cy="-314" r="9" fill="${K}"/></g>`;
+        g += `<g id="${id}-mo"><ellipse cx="0" cy="-272" rx="11" ry="14" fill="#5a2a22" ${O}/></g><g id="${id}-mf" opacity="0"><path d="M-16,-272h32" stroke="${K}" stroke-width="5" stroke-linecap="round"/></g>`;
+        return g + `</g>`; };
       Rig.CAST.guard = { skin: "#c48a5e", skinS: "#a36e46", top: "#b9a77a", topS: "#97875e", sleeve: "#b9a77a", sleeveS: "#97875e", forearm: "#c48a5e", forearmS: "#a36e46",
         pants: "#3f4a3a", pantsS: "#2f382b", shoe: "#1e1e1e", belt: "#2e2a26",
         torsoExtra: `<path d="M-56,-420H56" stroke="#2e2a26" stroke-width="4"/><rect x="14" y="-472" width="30" height="20" rx="3" fill="#2e2a26"/><path d="M-40,-486Q0,-456 40,-486Q30,-460 0,-450Q-30,-460 -40,-486Z" fill="#c8392b" stroke="#2e2a26" stroke-width="3"/>`,
@@ -216,6 +237,8 @@
       const PH = (x, y, s, track, extra = {}) => ({ who: "phu", x, y, s, track, ...extra });
       const PI = (x, y, s, track, extra = {}) => ({ who: "pim", x, y, s, track, ...extra });
       const KO = (x, y, s, track, extra = {}) => ({ who: "kong", x, y, s, track, ...extra });
+      const KN = (x, y, s, track, extra = {}) => ({ who: "kongNP", x, y, s, track, ...extra });      // ก้อง, the backpack off
+      const KS = (x, y, s, track, extra = {}) => ({ who: "kongShade", x, y, s, track, ...extra });   // ก้อง in his vest (the PE shirt became the cooling cloth)
       const MA = (x, y, s, track, extra = {}) => ({ who: "man", x, y, s, track, ...extra });
       const HO = (x, y, s, track, extra = {}) => ({ who: "hong", x, y, s, track, ...extra });
       const PU = (x, y, s, track, extra = {}) => ({ who: "pun", x, y, s, track, ...extra });

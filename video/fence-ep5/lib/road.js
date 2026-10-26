@@ -36,6 +36,7 @@
     let s = `<g id="${id}">`;
     s += `<ellipse cx="0" cy="0" rx="420" ry="26" fill="#000" opacity=".22"/>`;
     // bed + cage (rear, -x)
+    s += `<g id="${id}-bed"></g>`;   // riders in the bed go here (behind the side panel)
     s += `<path d="M-400,-80V-210H40V-80Z" fill="${c}" ${OUT}/><path d="M-400,-150H40" stroke="${cS}" stroke-width="5"/><path d="M-386,-200h30v100h-30z" fill="#c8392b" opacity=".85"/>`;
     s += `<g id="${id}-cage"><path d="M-396,-210V-360H30V-210" fill="none" stroke="#3f454b" stroke-width="10" stroke-linejoin="round"/>${[-330, -250, -170, -90, -10].map((x) => `<path d="M${x},-212V-360" stroke="#3f454b" stroke-width="6"/>`).join("")}<path d="M-396,-290H30" stroke="#3f454b" stroke-width="6"/></g>`;
     // cab (front, +x)
@@ -54,6 +55,7 @@
     let s = `<g id="${id}"><ellipse cx="0" cy="0" rx="230" ry="22" fill="#000" opacity=".25"/>`;
     s += `<rect x="-230" y="-110" width="70" height="110" rx="18" fill="#1f1d1a" ${OUT}/><rect x="160" y="-110" width="70" height="110" rx="18" fill="#1f1d1a" ${OUT}/>`;
     s += `<path d="M-210,-300Q-210,-470 -120,-470H120Q210,-470 210,-300Z" fill="${c}" ${OUT}/><path d="M-150,-440H150L180,-330H-180Z" fill="url(#rGlass)" ${OUT}/>`;
+    s += `<g id="${id}-bed"></g>`;   // riders in the bed go here (behind the tailgate)
     s += `<rect x="-230" y="-300" width="460" height="200" rx="10" fill="${c}" ${OUT}/><rect x="-200" y="-270" width="400" height="120" rx="8" fill="#6f8f9c" opacity=".35"/>`;
     s += `<rect x="-226" y="-292" width="30" height="70" rx="6" fill="#c8392b" ${OUT}/><rect x="196" y="-292" width="30" height="70" rx="6" fill="#c8392b" ${OUT}/><rect x="-70" y="-150" width="140" height="34" rx="4" fill="#f4ecd8" ${OUT}/><text x="0" y="-124" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="${INK}">บพ 4521</text>`;
     s += `<path d="M-226,-300V-470M226,-300V-470M-226,-470H226M-226,-385H226" fill="none" stroke="#3f454b" stroke-width="10"/>${[-150, -75, 0, 75, 150].map((x) => `<path d="M${x},-300V-470" stroke="#3f454b" stroke-width="6"/>`).join("")}`;
@@ -108,7 +110,7 @@
     let s = `<rect x="-1400" y="1230" width="4000" height="1500" fill="url(#rAsph)"/><path d="M-1400,1250H2600" stroke="#e8b830" stroke-width="8"/><path d="M-1400,1660H2600" stroke="#f4ecd8" stroke-width="10" stroke-dasharray="120 90"/><path d="M-1400,2060H2600" stroke="#f4ecd8" stroke-width="10"/>`;
     for (let k = 0; k < 18; k++) { const x = -1300 + r() * 3800, y = 1300 + r() * 900; s += `<path d="M${f1(x)},${f1(y)}l${f1(30 + r() * 40)},${f1(6 - r() * 12)}l${f1(20 + r() * 30)},${f1(10 - r() * 20)}" stroke="#4a4d50" stroke-width="3" fill="none"/>`; }
     s += `<path d="M-900,1560q400,-14 900,0" stroke="#3a3c3f" stroke-width="22" fill="none" opacity=".35"/><path d="M200,1780q500,10 1100,-6" stroke="#3a3c3f" stroke-width="22" fill="none" opacity=".3"/>`;
-    s += (o.cars || [[-560, 1420, 0.7, "#e8e2d4", { smash: true }], [1380, 1430, 0.72, "#3f5a8a", { door: true, flat: true }]]).map(([x, y, sc, col, oo]) => CAR(x, y, sc, col, oo || {})).join("");
+    s += (o.cars || [[-700, 1420, 1.42, "#e8e2d4", { smash: true }], [1600, 1430, 1.45, "#3f5a8a", { door: true, flat: true }]]).map(([x, y, sc, col, oo]) => CAR(x, y, sc, col, oo || {})).join("");
     if (o.bridge) s += `<g>${Array.from({ length: 40 }, (_, k) => `<rect x="${-1400 + k * 100}" y="1990" width="40" height="120" fill="#cfc9bb" ${OUT}/>`).join("")}<rect x="-1400" y="1960" width="4000" height="40" fill="#e8e2d4" ${OUT}/></g>`;
     put(L.set, s);
     if (o.truck) put(L.set, `<g transform="translate(${o.truck.x},${o.truck.y ?? 1520}) scale(${o.truck.flip ? -(o.truck.s ?? 0.9) : (o.truck.s ?? 0.9)},${o.truck.s ?? 0.9})">${TRUCK(`${id}-truck`, o.truck)}</g>`);
@@ -150,9 +152,9 @@
     s += `<path d="M-20,-800V2800M600,-800V2800" stroke="#f4ecd8" stroke-width="10" stroke-dasharray="110 90"/><path d="M-290,-800V2800M870,-800V2800" stroke="#f4ecd8" stroke-width="8"/><path d="M250,-800V2800M330,-800V2800" stroke="#e8b830" stroke-width="7"/>`;
     s += `<rect x="-1200" y="${o.bridgeY ?? 200}" width="3500" height="230" fill="#b3ada0" ${OUT}/><rect x="-1200" y="${(o.bridgeY ?? 200) + 230}" width="3500" height="120" fill="#000" opacity=".25"/>`;
     put(L.set, s);
-    put(L.set, (o.cars || [[-160, 900, 12, "#e8e2d4"], [100, 1480, -8, "#3f5a8a"], [-120, 2100, 30, "#8a3a2e"], [460, 700, 180, "#c8c2b4"], [740, 1300, 170, "#e8b830"], [480, 1900, 200, "#2f6fb8"]]).map(([x, y, a, col]) => CARTOP(x, y, a, col)).join(""));
-    const fig = (x, y, top, skin, hair) => `<g transform="translate(${x},${y})"><ellipse rx="56" ry="30" fill="${top}" ${OUT}/><path d="M-44,-10L-90,60M44,-10L90,60" stroke="${INK}" stroke-width="28" stroke-linecap="round"/><path d="M-44,-10L-90,60M44,-10L90,60" stroke="${skin}" stroke-width="20" stroke-linecap="round"/><circle r="27" fill="${hair}" ${OUT}/></g>`;
-    put(L.act, (o.dead || [[-60, 1200, "#2c3e6b"], [160, 1700, "#e6e8e2"], [-200, 1650, "#4f6a7a"], [60, 2300, "#2c3e6b"], [620, 1000, "#e6e8e2"]]).map(([x, y, top], k) => `<g id="${id}-z${k}">${fig(x, y, top, "#a3ae8e", "#3a3330")}</g>`).join(""));
+    put(L.set, (o.cars || [[-250, 1500, 8, "#e8e2d4"], [460, 640, 186, "#c8c2b4"], [730, 1000, 172, "#e8b830"], [480, 1380, 196, "#2f6fb8"], [760, 1760, 168, "#8a3a2e"], [470, 2160, 182, "#3f5a8a"], [740, 2520, 190, "#e8e2d4"]]).map(([x, y, a, col]) => CARTOP(x, y, a, col)).join(""));
+    const fig = (x, y, top, skin, hair) => `<g transform="translate(${x},${y}) scale(0.42)"><ellipse rx="56" ry="30" fill="${top}" ${OUT}/><path d="M-44,-10L-90,60M44,-10L90,60" stroke="${INK}" stroke-width="28" stroke-linecap="round"/><path d="M-44,-10L-90,60M44,-10L90,60" stroke="${skin}" stroke-width="20" stroke-linecap="round"/><circle r="27" fill="${hair}" ${OUT}/></g>`;
+    put(L.act, (o.dead || [[-262, 1180, "#2c3e6b"], [610, 1190, "#e6e8e2"], [620, 1580, "#4f6a7a"], [600, 1990, "#2c3e6b"], [-270, 2050, "#e6e8e2"], [880, 1400, "#4f6a7a"]]).map(([x, y, top], k) => `<g id="${id}-z${k}">${fig(x, y, top, "#a3ae8e", "#3a3330")}</g>`).join(""));
     // the pickup from above: cab ahead (up), cage over the bed, ปั้น a dot of red in the back
     put(L.act, `<g id="${id}-truck" transform="translate(${o.truckX ?? 20},${o.truckY ?? 2400})"><g id="${id}-truckr"><rect x="-110" y="-260" width="220" height="520" rx="40" fill="#7fa0ae" ${OUT}/><rect x="-92" y="-230" width="184" height="80" rx="16" fill="url(#rGlass)" ${OUT}/><rect x="-96" y="-140" width="192" height="90" rx="12" fill="#6f8f9c" ${OUT}/>
       <rect x="-100" y="-30" width="200" height="270" fill="#5f7f8c" ${OUT}/>${[0, 1, 2, 3].map((k) => `<path d="M-100,${10 + k * 60}H100" stroke="#3f454b" stroke-width="6"/>`).join("")}<circle cx="-40" cy="120" r="24" fill="#8e2a2a" ${OUT}/><circle cx="40" cy="60" r="26" fill="#b8463a" ${OUT}/><circle cx="20" cy="180" r="26" fill="#d96a8a" ${OUT}/></g></g>`);
@@ -164,7 +166,7 @@
   // the warning lamp (#id-warn), the steering wheel with ครูพิม's two hands (#id-wheel rotates a little), the rear-view mirror
   function cab(L, o = {}) {
     const id = o.id || "cb";
-    highwayPov(L, { ...o, id: `${id}-v`, vy: 900, vx: 600, sunY: 260 });
+    highwayPov(L, { ...o, id: `${id}-v`, vy: 900, vx: 600, sunY: 260, cars: o.cars || [[0.12, -2.3, "#e8e2d4"], [0.35, -1.7, "#3f5a8a"], [0.6, 2.3, "#8a3a2e"], [0.85, -1.5, "#c8c2b4"]] });
     // the cab frame and dashboard in the fg layer (sharp, near)
     let f = `<path d="M-1300,-900H2400V2900H-1300ZM-60,150Q540,90 1160,150L1240,1180H-140Z" fill="#2a2c2e" fill-rule="evenodd"/>`;
     f += `<path d="M-60,150Q540,90 1160,150" stroke="#3f454b" stroke-width="24" fill="none"/><path d="M-60,150L-140,1180M1160,150L1240,1180" stroke="#3f454b" stroke-width="40" fill="none"/>`;
@@ -200,7 +202,7 @@
     for (let k = 0; k < 14; k++) { const x = -1200 + r() * 3400, y = 1330 + r() * 700; s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(20 + r() * 40)}" ry="${f1(5 + r() * 8)}" fill="#2a2c2e" opacity=".6"/>`; }
     s += `<path d="M700,1320q60,-20 120,6l40,-10" stroke="#8a857a" stroke-width="5" fill="none"/><rect x="980" y="1330" width="70" height="40" rx="6" fill="#b3ada0" ${OUT}/>`;
     put(L.set, s);
-    if (o.car !== false) put(L.set, `<g id="${id}-car">${CAR(o.carX ?? 1150, 1440, 0.78, "#8a3a2e", { smash: true, flat: true, flip: true })}<ellipse id="${id}-under" cx="${o.carX ?? 1150}" cy="1430" rx="260" ry="26" fill="#0d0e0f" opacity=".75"/></g>`);
+    if (o.car !== false) put(L.set, `<g id="${id}-car">${CAR(o.carX ?? 1250, 1440, 1.45, "#8a3a2e", { smash: true, flat: true, flip: true })}<ellipse id="${id}-under" cx="${o.carX ?? 1250}" cy="1430" rx="470" ry="34" fill="#0d0e0f" opacity=".75"/></g>`);
     // light: the bright opening beyond the shade, a hard edge on the ground where the sun starts
     put(L.glow, `<rect x="-1400" y="1240" width="4000" height="50" fill="#fff6d8" opacity=".25"/><rect x="-1400" y="-900" width="4000" height="1300" fill="#000" opacity=".3"/><rect x="-1400" y="1290" width="4000" height="1500" fill="#000" opacity=".18"/>`);
     put(L.fg, `<rect x="-1400" y="2050" width="4000" height="900" fill="#fff2c8" opacity=".12"/>`);
