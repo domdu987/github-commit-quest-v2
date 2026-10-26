@@ -1,0 +1,348 @@
+      // ---------- แสงกระสือ: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      // ---------- เต็นท์ผีอำ EP.1 อย่าเอาเตาเข้าเต็นท์ (สูตรเสียงกอย: บทสั้น ตัวละครพูดเยอะ มีมุก ความรู้วาดเป็นภาพ ผีแทบไม่โชว์ ไม่มีซิกเนเจอร์) ----------
+      // many camera angles: wide over the ridge at dusk, the vlog phone's view, close faces, the shadow play on tent fabric, the night-blue
+      // diagrams, inside the tent by lantern and by coal light, close on the pan, lying on your back looking down at your own chest
+      const PHUM = (x, y, s, track, extra = {}) => ({ who: "phum", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TOEY = (x, y, s, track, extra = {}) => ({ who: "toey", x, y, s, track, blinks: [1.1, 3.4], ...extra });
+      const OAT = (x, y, s, track, extra = {}) => ({ who: "oat", x, y, s, track, blinks: [0.7, 2.9, 4.8], ...extra });
+      const JAEW = (x, y, s, track, extra = {}) => ({ who: "jaew", x, y, s, track, blinks: [1.3, 3.8], ...extra });
+      const KAEW = (x, y, s, track, extra = {}) => ({ who: "kaew", x, y, s, track, blinks: [1.6, 4.4], ...extra });
+      const GC = 1400, GT = 1480; // ground: campsite, inside the tent
+      const CU = (x, y, s, sy = 1000) => fr(x, y - 530 * s, 1.0, 540, sy); // close-up on a standing character of scale s at (x, y)
+      const CUS = (x, y, s, sy = 1000) => fr(x, y - 258 * s, 1.0, 540, sy); // close-up on a character sitting on the floor (rig "sit")
+      const IK = "#2e2a26";
+      const OB = `stroke="${IK}" stroke-width="4" stroke-linejoin="round"`;
+      // props in the front hand (the back hand's copy is cleared in fx)
+      Rig.CAST.jaewBottle = { ...Rig.CAST.jaew, hand: `<g transform="translate(0,96) rotate(180)">${Am.bottle(0, 0, 0.8)}</g>` };
+      Rig.CAST.jaewGlass = { ...Rig.CAST.jaew, hand: `<g transform="translate(0,118)"><path d="M-20,8h40l-7,46h-26z" fill="#e8f2f0" opacity=".9" ${OB}/><path d="M-16,20h32" stroke="#f4f0d8" stroke-width="8"/></g>` };
+      const oneHand = (id, k = 0) => { const hb = document.getElementById(`${id}-a${k}-handB`); if (hb) hb.innerHTML = ""; };
+      const ROW1 = [`<path d="M14,100Q16,30 60,22Q104,30 106,100Z" fill="none" stroke="#e8823a" stroke-width="7"/><g transform="translate(60,96) scale(.3)">${Am.stove(0, 0, 1, { smoke: false })}</g><g class="kw"><circle cx="60" cy="60" r="52" fill="none" stroke="#e0362c" stroke-width="8"/><path d="M24,24L96,96" stroke="#e0362c" stroke-width="8" stroke-linecap="round"/></g>`,
+        `<span style="font-size:52px">หนาวแค่ไหน <u>ถ่านไฟอย่าเข้าเต็นท์</u></span>`];
+      const post9 = (x, G, s = 1) => `<g transform="translate(${x},${G}) scale(${s})"><rect x="-10" y="-200" width="20" height="200" fill="#6a4a30" ${OB}/><rect x="-60" y="-280" width="120" height="96" rx="8" fill="#e8d8b0" ${OB}/><text x="0" y="-206" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="72" fill="#c8342a">9</text></g>`;
+      const rec = (t) => `<g opacity=".92"><path d="M60,140h80M60,140v80M1020,140h-80M1020,140v80M60,1780h80M60,1780v-80M1020,1780h-80M1020,1780v-80" stroke="#f4f4f0" stroke-width="6"/>
+        <circle cx="110" cy="290" r="16" fill="#e0362c"/><text x="140" y="302" font-family="Kanit" font-weight="700" font-size="36" fill="#f4f4f0">REC</text><text x="970" y="302" text-anchor="end" font-family="Kanit" font-weight="700" font-size="36" fill="#f4f4f0">${t}</text></g>`;
+
+      // ---------- 0. story opener (its own): coals in the dark, smoke writes the title, green eyes open in the smoke ----------
+      add("open", {
+        set: "coalDark", setOpts: { id: "c0" }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 1150), drift: { s: 0.04 } }, { t: 1.0, glide: 3.0, ...fr(540, 1150, 1.18, 540, 1150), drift: { s: 0.03 } }] },
+        extra(L) {
+          put(L.light, `<g id="o-title" opacity="0"><text x="540" y="560" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="190" fill="#f4ecd8" stroke="#2a1a10" stroke-width="10" paint-order="stroke">เต็นท์ผีอำ</text>
+            <text x="540" y="380" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="34" letter-spacing="8" fill="#e8d8b8">ROD MAI CLUB</text>
+            <text x="540" y="660" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="52" fill="#ffe08a" stroke="#2a1a10" stroke-width="8" paint-order="stroke">EP.1 อย่าเอาเตาเข้าเต็นท์</text></g>`);
+          put(L.glow, Am.eyes(540, 860, 2.0, "o-eyes"));
+        },
+        fx(tl, id, t0) {
+          tl.fromTo("#o-title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.0, ease: "power2.out", immediateRender: false }, t0 + 0.3);
+          tl.to("#o-title", { opacity: 0, y: -30, duration: 0.5 }, t0 + 2.6);
+          tl.set("#o-eyes", { opacity: 0 }, t0);
+          tl.to("#o-eyes", { opacity: 1, duration: 0.5 }, t0 + 3.0);
+          Fx.heart(tl, t0 + 2.0, 2.0, 0.45, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("open") - 0.45, 0.3, 16, 1101);
+          tl.set("#black", { opacity: 1 }, t0 + D("open") - 0.2);
+        },
+      });
+
+      // ---------- 1. flash-forward: a tent glowing orange in the rain at plot nine; a shadow rises on its wall — cut ----------
+      add("hook", {
+        set: "doiCamp", setOpts: { id: "d1", time: "night", rain: true, tents: [[540, 1.3, { lit: true, shadow: true, id: "d1-t", num: 9 }], [-260, 0.7, {}]] }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(540, GC - 300, 0.75, 540, 1100), drift: { s: 0.04 } }, { t: F("hook", 1, 0) - 0.2, glide: 1.6, ...fr(600, GC - 230, 1.35, 540, 1100), drift: { s: 0.03 } }] },
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0);
+          tl.set("#d1-t-shadow", { opacity: 0 }, t0);
+          tl.to("#d1-t-shadow", { opacity: 0.85, duration: 0.6, ease: "power1.in" }, t0 + F("hook", 1, 0) + 0.2);
+          Fx.heart(tl, t0 + F("hook", 1, 0), D("hook") - F("hook", 1, 0), 0.5, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook") - 0.35, 0.25, 14, 1102);
+          tl.set("#black", { opacity: 1 }, t0 + D("hook") - 0.1);
+        },
+      });
+
+      // ---------- 2. six in the evening: the campsite on the ridge at dusk, the sign; they walk in ----------
+      add("arrive", {
+        set: "doiCamp", setOpts: { id: "d2", time: "dusk", sign: 760, tents: [[-300, 0.75, { col: "#3a8aa8", colS: "#2a6a88" }], [1500, 0.8, { col: "#e8c83a", colS: "#b89a22" }]] }, dark: 0.05,
+        cam: { keys: [{ t: 0, ...fr(540, 700, 0.7, 540, 960), drift: { s: 0.02 } }, { t: 0.3, glide: 2.6, ...fr(520, GC - 380, 0.95, 540, 1050), drift: { s: 0.03 } }] },
+        actors: [
+          PHUM(0, GC, 0.95, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { path: [{ t: 0, x: 60, y: GC }, { t: 4, x: 420, y: GC }] }),
+          TOEY(0, GC, 0.7, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { path: [{ t: 0, x: -80, y: GC }, { t: 4, x: 280, y: GC }] }),
+          OAT(0, GC, 0.95, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { path: [{ t: 0, x: -240, y: GC }, { t: 4, x: 120, y: GC }] }),
+          JAEW(0, GC, 0.95, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { path: [{ t: 0, x: -400, y: GC }, { t: 4, x: -40, y: GC }] }),
+        ],
+        captions: caps("arrive"),
+        fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0); },
+      });
+
+      // ---------- 3. the vlog: ภูมิ through his phone, waving at his viewers; ใบเตย behind him ----------
+      add("vlog", {
+        set: "doiCamp", setOpts: { id: "d3", time: "dusk", tents: [[900, 0.8, { col: "#3a8aa8", colS: "#2a6a88" }]] }, dark: 0.04, blur: { far: 8, mid: 8, set: 5 },
+        cam: { keys: [{ t: 0, ...CU(520, GC + 1150, 2.3), drift: { s: 0.08 } }] },
+        actors: [TOEY(860, GC + 200, 1.2, [{ t: 0, mode: "tremble", eyes: "side", mouth: "frown" }]), PHUM(520, GC + 1150, 2.3, [{ t: 0, mode: "wave", eyes: "normal", mouth: "smile" }])],
+        captions: caps("vlog", undefined, { quote: true }),
+        extra(L) { put(L.light, rec("18:02")); },
+      });
+
+      // ---------- 4. โอ๊ต and the หมูกระทะ stove on the camp table ----------
+      add("pork", {
+        set: "doiCamp", setOpts: { id: "d4", time: "dusk", table: 720 }, dark: 0.05, blur: { far: 6, mid: 6 },
+        cam: { keys: [{ t: 0, ...fr(560, GC - 420, 1.35, 540, 1050), drift: { s: 0.05 } }] },
+        actors: [OAT(400, GC, 1.15, [{ t: 0, mode: "point", eyes: "wide", mouth: "smile" }, { t: F("pork", 0, 1), mode: "point", eyes: "normal", mouth: "scream" }])],
+        extra(L) { put(L.act, Am.stove(720, GC - 150, 0.9, { id: "d4-stove", lit: false, smoke: false })); },
+        captions: caps("pork", undefined, { quote: true }),
+      });
+
+      // ---------- 5. น้าแจ๋ว holds up the bottle ----------
+      add("booze", {
+        set: "doiCamp", setOpts: { id: "d5", time: "dusk" }, dark: 0.06, blur: { far: 6, mid: 6, set: 4 },
+        cam: { keys: [{ t: 0, ...CU(540, GC + 900, 2.0, 1050), drift: { s: 0.05 } }] },
+        actors: [{ ...JAEW(540, GC + 900, 2.0, [{ t: 0, mode: "raise", eyes: "normal", mouth: "smile" }]), who: "jaewBottle" }],
+        captions: caps("booze", undefined, { quote: true }),
+        fx(tl, id) { oneHand(id); },
+      });
+
+      // ---------- 6. ใบเตย shivering, her breath steaming ----------
+      add("cold", {
+        set: "doiCamp", setOpts: { id: "d6", time: "dusk" }, dark: 0.08, blur: { far: 8, mid: 8, set: 6 },
+        cam: { keys: [{ t: 0, ...CU(540, GC + 1300, 2.6, 1000), drift: { s: 0.05 } }] },
+        actors: [TOEY(540, GC + 1300, 2.6, [{ t: 0, mode: "tremble", eyes: "side", mouth: "frown" }])],
+        extra(L) { put(L.light, `<g id="d6-breath" opacity="0">${[0, 1, 2].map((k) => `<ellipse cx="${660 + k * 50}" cy="${1000 - k * 30}" rx="${40 + k * 20}" ry="${24 + k * 10}" fill="#f4f4f0" opacity="${0.35 - k * 0.1}"/>`).join("")}</g>`); },
+        captions: caps("cold", undefined, { quote: true }),
+        fx(tl, id, t0) { [0.3, 1.5].forEach((d) => tl.fromTo("#d6-breath", { opacity: 0 }, { opacity: 1, duration: 0.3, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t0 + d)); },
+      });
+
+      // ---------- 7. ลุงแก้ว at the plot-nine post; the four of them listening ----------
+      add("plot", {
+        set: "doiCamp", setOpts: { id: "d7", time: "dusk" }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(520, GC - 380, 0.95, 540, 1080), drift: { s: 0.03 } }, { t: F("plot", 0, 1) - 0.15, glide: 1.0, ...fr(380, GC - 470, 1.3, 540, 1080), drift: { s: 0.03 } }] },
+        actors: [
+          KAEW(300, GC, 1.05, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("plot", 0, 1) - 0.1, mode: "point", eyes: "normal", mouth: "frown" }], { flip: true }),
+          PHUM(720, GC, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }), OAT(880, GC, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }),
+          TOEY(600, GC, 0.72, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }),
+        ],
+        extra(L) { put(L.set, post9(110, GC, 1.1)); },
+        captions: caps("plot", undefined, { quote: true }),
+      });
+
+      // ---------- 8. โอ๊ต: why ----------
+      add("why", {
+        set: "doiCamp", setOpts: { id: "d8", time: "dusk" }, dark: 0.1, blur: { far: 8, mid: 8, set: 6 },
+        cam: { keys: [{ t: 0, ...CU(560, GC + 900, 2.0, 1000), drift: { s: 0.05 } }] },
+        actors: [OAT(560, GC + 900, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "o" }])],
+        captions: caps("why", undefined, { quote: true }),
+      });
+
+      // ---------- 9. ลุงแก้ว close, lit from below by his torch: เดี๋ยวผีอำ ----------
+      add("am", {
+        set: "doiCamp", setOpts: { id: "d9", time: "dusk" }, dark: 0.55, blur: { far: 10, mid: 10, set: 8 },
+        cam: { keys: [{ t: 0, ...CU(540, GC + 1000, 2.2, 1000), drift: { s: 0.02 } }, { t: vo("am") - 0.1, glide: 1.6, ...fr(540, GC + 1000 - 530 * 2.2, 1.18, 540, 980), drift: { s: 0.01 } }] },
+        actors: [KAEW(540, GC + 1000, 2.2, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        extra(L) { put(L.glow, `<ellipse cx="540" cy="1420" rx="260" ry="320" fill="url(#amLamp)" opacity=".38"/>`); },
+        captions: caps("am", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + vo("am"), D("am") - vo("am"), 0.55, 0.55); },
+      });
+
+      // ---------- 10–11. the legend as a shadow play on tent fabric ----------
+      add("legend1", {
+        set: "shadowLegend", setOpts: {}, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.12, 540, 960), drift: { s: 0.02 } }, { t: 0.2, glide: D("legend1"), ...fr(540, 960, 1.02, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("legend1"),
+      });
+      add("legend2", {
+        set: "shadowLegend", setOpts: {}, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(540, 2960, 1.02, 540, 960), drift: { s: 0.02 } }, { t: F("legend2", 0, 1) - 0.2, glide: 1.2, ...fr(400, 3060, 1.6, 540, 1000), drift: { s: 0.02 } }] },
+        captions: caps("legend2"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("legend2", 0, 1), D("legend2") - F("legend2", 0, 1), 0.5, 0.5); },
+      });
+
+      // ---------- 12. โอ๊ต laughs it off; ลุงแก้ว doesn't ----------
+      add("joke", {
+        set: "doiCamp", setOpts: { id: "d12", time: "dusk" }, dark: 0.12, blur: { far: 6, mid: 6 },
+        cam: { keys: [{ t: 0, ...fr(560, GC - 520, 1.45, 540, 1050), drift: { s: 0.04 } }] },
+        actors: [OAT(700, GC, 1.2, [{ t: 0, mode: "idle", eyes: "closed", mouth: "scream" }], { flip: true }), KAEW(400, GC, 1.2, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }])],
+        captions: caps("joke", undefined, { quote: true }),
+      });
+
+      // ---------- 13. the rule, line one, in ลุงแก้ว's voice ----------
+      add("rule", {
+        set: "doiCamp", setOpts: { id: "d13", time: "dusk", tents: [[880, 0.9, { num: 9 }]] }, dark: 0.12, blur: { far: 6, mid: 6 },
+        cam: { keys: [{ t: 0, ...fr(420, GC - 620, 1.25, 540, 1250), drift: { s: 0.04 } }] },
+        actors: [KAEW(380, GC, 1.3, [{ t: 0, mode: "point", eyes: "normal", mouth: "frown" }])],
+        captions: caps("rule", undefined, { quote: true }),
+        ui: [{ type: "koiRule", t: 0.05, label: "กฎของลุงแก้ว", rows: [ROW1], at: [vo("rule") + 0.2], top: 300 }],
+      });
+
+      // ---------- 14. nine o'clock: the rain comes, the wind shakes the tent ----------
+      add("rain", {
+        set: "doiCamp", setOpts: { id: "d14", time: "night", rain: true }, dark: 0.35,
+        cam: { keys: [{ t: 0, ...fr(540, GC - 260, 0.9, 540, 1080), drift: { s: 0.06 } }] },
+        extra(L) { put(L.set, `<g id="d14-shake">${Am.tent(540, GC, 1.2, { lit: true, num: 9 })}</g>`); put(L.glow, `<ellipse cx="540" cy="${GC - 170}" rx="500" ry="360" fill="url(#amTent)"/>`); },
+        captions: caps("rain"),
+        fx(tl, id, t0) { tl.fromTo("#d14-shake", { x: -5 }, { x: 5, duration: 0.11, repeat: Math.ceil(D("rain") / 0.11), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); },
+      });
+
+      // ---------- 15. inside: โอ๊ต brings the stove in out of the rain ----------
+      add("bring", {
+        set: "tentIn", setOpts: { id: "t15", stove: 900, stoveS: 0.85 }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(800, GT - 340, 1.15, 540, 1150), drift: { s: 0.04 } }] },
+        actors: [PHUM(120, GT - 10, 0.95, [{ t: 0, mode: "sit", eyes: "wide", mouth: "o" }]), TOEY(330, GT - 10, 0.7, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }]),
+          JAEW(560, GT - 10, 0.95, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }]), OAT(1150, GT, 1.0, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "scream" }], { flip: true })],
+        captions: caps("bring", undefined, { quote: true }),
+      });
+
+      // ---------- 16–19. what the coals are doing, drawn on night-blue slate ----------
+      add("know1", {
+        set: "coSection", setOpts: { id: "c16", v: 1 }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(540, 920, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("know1"),
+        ui: [{ type: "src", t: 0.3, end: D("know1") - 0.05, top: 160, text: "ที่มา: <em>CDC</em> · การเผาถ่านทุกแบบ ไม่ว่าแดง เทา ดำ หรือขาว ปล่อยก๊าซคาร์บอนมอนอกไซด์ · <em>กรมควบคุมโรค (WPSAR 2026)</em> · ในไทยเคยมีเหตุใช้เตาถ่านทำหมูกระทะในเต็นท์แคมปิ้ง" }],
+        fx(tl, id, t0) {
+          for (let k = 0; k < 6; k++) tl.fromTo(`#c16-m${k}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.4 + k * 0.32);
+          tl.to("#c16-lab", { opacity: 1, duration: 0.3 }, t0 + F("know1", 0, 1));
+        },
+      });
+      add("know2", {
+        set: "coSection", setOpts: { id: "c17", v: 2 }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("know2"),
+        ui: [{ type: "src", t: 0.3, end: D("know2") - 0.05, top: 160, text: "ที่มา: <em>NSW Health (ฉบับภาษาไทย)</em> · ยากที่จะรู้ว่ามีก๊าซคาร์บอนมอนอกไซด์ในสถานที่นั้น เพราะไม่สามารถมองเห็น ได้กลิ่นหรือได้ยินมันได้" }],
+        fx(tl, id, t0) { tl.to("#c17-x0", { opacity: 1, duration: 0.2 }, t0 + vo("know2") + 0.3); tl.to("#c17-x1", { opacity: 1, duration: 0.2 }, t0 + F("know2", 0, 1) + 0.2); },
+      });
+      add("know3", {
+        set: "coSection", setOpts: { id: "c18", v: 3 }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("know3"),
+        ui: [{ type: "src", t: 0.3, end: D("know3") - 0.05, top: 160, text: "ที่มา: <em>NSW Health (ฉบับภาษาไทย)</em> · ถ้าใช้อุปกรณ์เหล่านี้ภายในบ้าน ก๊าซคาร์บอนมอนอกไซด์สามารถสะสมขึ้นได้อย่างรวดเร็วจนถึงระดับที่เป็นอันตราย" }],
+        fx(tl, id, t0) {
+          tl.fromTo("#c18-level", { attr: { y: 1300, height: 0 } }, { attr: { y: 640, height: 660 }, duration: D("know3") - 0.6, ease: "power1.in", immediateRender: false }, t0 + 0.3);
+          for (let k = 0; k < 10; k++) tl.fromTo(`#c18-m${k}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0 + 0.4 + k * 0.22);
+          tl.to("#c18-no", { opacity: 1, duration: 0.25 }, t0 + F("know3", 0, 1));
+        },
+      });
+      add("know4", {
+        set: "coSection", setOpts: { id: "c19", v: 4 }, dark: 0,
+        cam: { keys: [{ t: 0, ...fr(560, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("know4"),
+        ui: [{ type: "src", t: 0.3, end: D("know4") - 0.05, top: 160, text: "ที่มา: <em>CDC (MMWR)</em> · การเปิดประตู ช่อง หรือหน้าต่างเต็นท์ ไม่เพียงพอที่จะป้องกันการสะสมของคาร์บอนมอนอกไซด์จากอุปกรณ์เหล่านี้" }],
+        fx(tl, id, t0) {
+          tl.to("#c19-arrow", { opacity: 1, duration: 0.3 }, t0 + 0.3);
+          tl.fromTo("#c19-level", { attr: { y: 1300, height: 0 } }, { attr: { y: 700, height: 600 }, duration: D("know4") - 0.6, ease: "power1.in", immediateRender: false }, t0 + 0.3);
+          for (let k = 0; k < 10; k++) tl.fromTo(`#c19-m${k}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0 + 0.4 + k * 0.22);
+          tl.to("#c19-no", { opacity: 1, duration: 0.2 }, t0 + F("know4", 0, 1));
+        },
+      });
+
+      // ---------- 20. ภูมิ: the stove goes outside after ----------
+      add("order", {
+        set: "tentIn", setOpts: { id: "t20", stove: 1000, stoveS: 0.85 }, dark: 0.12, blur: { set: 6 },
+        cam: { keys: [{ t: 0, ...CUS(460, GT + 700, 2.4, 1000), drift: { s: 0.05 } }] },
+        actors: [PHUM(460, GT + 700, 2.4, [{ t: 0, mode: "sit", eyes: "normal", mouth: "frown" }])],
+        captions: caps("order", undefined, { quote: true }),
+      });
+
+      // ---------- 21. close on the pan: one more piece ----------
+      add("more", {
+        set: "stoveClose", setOpts: { id: "s21" }, dark: 0.08,
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.0, 540, 960), drift: { s: 0.04 } }] },
+        captions: caps("more", undefined, { quote: true }),
+        fx(tl, id, t0) { tl.fromTo("#s21-chop", { x: 120, y: -120 }, { x: 0, y: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, t0 + 0.1); tl.to("#s21-chop", { y: -30, duration: 0.25, yoyo: true, repeat: 3 }, t0 + 0.8); },
+      });
+
+      // ---------- 22. น้าแจ๋ว: cheers ----------
+      add("cheers", {
+        set: "tentIn", setOpts: { id: "t22", stove: 140, stoveS: 0.85, bottle: 860 }, dark: 0.12, blur: { set: 6 },
+        cam: { keys: [{ t: 0, ...CU(600, GT + 900, 2.0, 1080), drift: { s: 0.05 } }] },
+        actors: [{ ...JAEW(600, GT + 900, 2.0, [{ t: 0, mode: "raise", eyes: "closed", mouth: "smile" }]), who: "jaewGlass" }],
+        captions: caps("cheers", undefined, { quote: true }),
+        fx(tl, id) { oneHand(id); },
+      });
+
+      // ---------- 23. outside in the rain: ภูมิ sets the stove down away from the tent and zips the door ----------
+      add("out", {
+        set: "doiCamp", setOpts: { id: "d23", time: "night", rain: true, tents: [[300, 1.15, { lit: true, door: "open", id: "d23-t" }]], stoveOut: 900 }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(640, GC - 300, 1.05, 540, 1080), drift: { s: 0.04 } }] },
+        actors: [PHUM(0, GC, 1.0, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 1.6, mode: "crouch", eyes: "normal", mouth: "flat" }, { t: F("out", 0, 1) - 0.2, mode: "walk", eyes: "normal", mouth: "flat" }],
+          { path: [{ t: 0, x: 520, y: GC }, { t: 1.6, x: 780, y: GC }, { t: F("out", 0, 1) - 0.2, x: 780, y: GC, flip: true }, { t: D("out"), x: 520, y: GC, flip: true }] })],
+        captions: caps("out"),
+      });
+
+      // ---------- 24. two a.m.: ภูมิ wakes, hot, in the dark ----------
+      add("two", {
+        set: "tentIn", setOpts: { id: "t24", time: "dark", lamp: false }, dark: 0.35, blur: { set: 6 },
+        cam: { keys: [{ t: 0, ...fr(300, GT - 120, 2.0, 540, 1000), drift: { s: 0.04 } }] },
+        actors: [PHUM(780, GT - 10, 1.0, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }, { t: F("two", 0, 1), mode: "lie", eyes: "wide", mouth: "o", sweat: true }])],
+        extra(L) { put(L.glow, `<ellipse cx="540" cy="${GT - 60}" rx="700" ry="400" fill="url(#amCoal)" opacity=".35" class="aglow"/>`); },
+        captions: caps("two"),
+      });
+
+      // ---------- 25. the stove is back: glowing at his feet ----------
+      add("back", {
+        set: "tentIn", setOpts: { id: "t25", time: "dark", lamp: false, stove: 960, stoveS: 0.8 }, dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(420, GT - 140, 1.6, 540, 1000), drift: { s: 0.03 } }, { t: F("back", 0, 1) - 0.25, glide: 1.0, ...fr(820, GT - 170, 1.45, 540, 1000), drift: { s: 0.02 } }] },
+        actors: [PHUM(780, GT - 10, 1.0, [{ t: 0, mode: "lie", eyes: "wide", mouth: "o", sweat: true }])],
+        captions: caps("back"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("back", 0, 1), D("back") - F("back", 0, 1), 0.5, 0.55); },
+      });
+
+      // ---------- 26. POV, on his back: he can't move; something heavy squats on his chest ----------
+      add("chest", {
+        set: "chestPOV", setOpts: { id: "p26", ghostOp: 0.85 }, dark: 0.45, blur: { set: 4 },
+        cam: { keys: [{ t: 0, ...fr(540, 1160, 1.0, 540, 960), drift: { s: 0.03 } }, { t: F("chest", 0, 1), glide: 2.4, ...fr(540, 1100, 1.15, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("chest"),
+        fx(tl, id, t0) {
+          tl.set("#p26-g-eyes", { opacity: 0 }, t0);
+          tl.fromTo("#p26-ghost", { opacity: 0 }, { opacity: 0.85, duration: 1.2, ease: "power1.in", immediateRender: false }, t0 + F("chest", 0, 1));
+          Fx.heart(tl, t0, D("chest"), 0.55, 0.6); Fx.tunnel(tl, t0, t0 + D("chest"), 0.55);
+        },
+      });
+
+      // ---------- 27. "หนาวไหมลูก…": the eyes open; hold; the hit (koi-style) ----------
+      const GB = vo("ghost") + 0.2, GHT = D("ghost") - 0.9, GD = D("ghost") - 0.45;
+      add("ghost", {
+        set: "chestPOV", setOpts: { id: "p27", ghostOp: 1 }, dark: 0.7,
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.15, 540, 960), drift: { s: 0.02 } }, { t: GB, glide: 2.2, ...fr(540, 900, 1.5, 540, 900), drift: { s: 0.01 } }] },
+        captions: caps("ghost", undefined, { quote: true }),
+        extra(L) { put(L.light, `<g id="p27-face" opacity="0">${Pop.lurk(540, 1240, 4.6)}</g>`); },
+        fx(tl, id, t0) {
+          tl.set("#p27-g-eyes", { opacity: 0 }, t0);
+          tl.to("#p27-g-eyes", { opacity: 1, duration: 0.5, ease: "power1.in" }, t0 + GB);
+          Fx.heart(tl, t0, GHT, 0.6, 0.65); Fx.tunnel(tl, t0, t0 + GHT, 0.65);
+          tl.to(`#${id}-dark`, { opacity: 0.88, duration: 0.3 }, t0 + GHT);
+          tl.fromTo("#p27-face", { opacity: 0, scale: 1.25, transformOrigin: "50% 55%" }, { opacity: 1, scale: 1, duration: 0.09, ease: "power4.out", immediateRender: false }, t0 + GD);
+          Fx.glitch(tl, `#${id}`, t0 + GD + 0.05, 0.18, 16, 1127);
+          tl.set("#black", { opacity: 1 }, t0 + GD + 0.22);
+        },
+      });
+
+      // ---------- 28. the choice: fight up and wake everyone / shut your eyes and wait for it to go ----------
+      add("choice", {
+        set: "chestPOV", setOpts: { id: "p28", ghost: false }, dark: 0.6,
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 1050), drift: { s: 0.03 } }] },
+        ui: [{ type: "choice", t: 0.05, q: "จะทำยังไง?", a: "ฝืนลุก ปลุกทุกคน", b: "หลับตา รอให้ผีไป", secs: 3, top: 280,
+          possessed: { at: 1.0, side: "b", glitch: "หลับตา…", who: "…นอนเถอะลูก อุ่นดีออก" } }],
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0);
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 1128); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 1129);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
+
+      // ---------- 29. end card: the campsite sign — part two ----------
+      add("next", {
+        set: "campSign", setOpts: { id: "sg", ep: "ตอนที่ 2", title: "ปวดหัวพร้อมกัน" }, dark: 0.06,
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.0, 540, 900), drift: { s: 0.03 } }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#sg-sign", { attr: { transform: "rotate(-9 540 900)" } }, { attr: { transform: "rotate(-2 540 900)" }, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          Fx.heart(tl, t0 + 0.9, D("next") - 0.9, 0.7, 0.35);
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Am.life(tl, `#${id}`, t0, sh.dur); }; });
