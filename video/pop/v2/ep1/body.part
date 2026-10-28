@@ -403,10 +403,10 @@
       }, {
         set: "kok2", setOpts: { id: "c28b", mound: false, house: [940, 0.6], fence: [560, 10, GF + 100], trunks: [[-200, 120], [1300, 110]], fgTrunk: false }, dark: 0, blur: { far: 3, mid: 2, fg: 10 }, light: SUN,
         grade: { top: "#ffe8b8", bottom: "#4a3a5a", op: 0.3 },
-        cam: { keys: [{ t: 0, ...fr(420, 1300, 1.0, 540, 1200) }, { t: D("clue") - vo("clue", 1) + 0.1, glide: D("clue") - vo("clue", 1) - 0.3, ...fr(760, 1050, 0.95, 540, 1000) }] },
-        actors: [MINT(140, GF + 600, 1.1, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), TON(300, GF + 640, 0.9, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }])],
+        cam: { keys: [{ t: 0, ...fr(480, 1420, 1.0, 540, 1250) }, { t: D("clue") - vo("clue", 1) + 0.1, glide: D("clue") - vo("clue", 1) - 0.3, ...fr(640, 1120, 0.96, 540, 1020) }] },
+        actors: [MINT(250, GF + 600, 1.05, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: false }), TON(120, GF + 650, 0.88, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }])],
         captions: capsFrom("clue", vo("clue", 1) - 0.1),
-        extra(L) { put(L.set, [[300, 1880, 170], [420, 1740, 160], [500, 1620, 172], [600, 1520, 160], [660, 1440, 170], [740, 1380, 162], [790, 1330, 168]].map(([x, y, rot], i) => Pop2.foot(x, y, rot - 120, 0.78 - i * 0.07, i % 2 === 0)).join("")); },
+        extra(L) { put(L.set, Pop2.trail(380, 2120, 830, 1450, 7, 0.95, 0.26, { toe: 1.9 })); },
         fx(tl, id, t0) { Fx.heart(tl, t0, D("clue") - vo("clue", 1), 0.45, 0.55); },
       });
 

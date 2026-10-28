@@ -113,7 +113,11 @@
     const fin = (x0, y0, x1, y1, w, nail) => `<path d="M${x0},${y0}L${x1},${y1}" stroke="${LN2}" stroke-width="${w + 8}" stroke-linecap="round"/><path d="M${x0},${y0}L${x1},${y1}" stroke="${sk}" stroke-width="${w}" stroke-linecap="round"/>` +
       (nail ? `<ellipse cx="${x1 + (x1 < x0 ? 10 : -10)}" cy="${y1}" rx="12" ry="${w * 0.32}" fill="#f6dcc8"/>` : "");
     const palm = `<path d="M${-W / 2 - 50},${H / 2 - 190}C${-W / 2 - 100},${H / 2 + 40} ${-W / 2 - 40},${H / 2 + 300} ${-W / 2 + 30},${H / 2 + 520}H${W / 2 + 40}C${W / 2 + 100},${H / 2 + 300} ${W / 2 + 90},${H / 2 + 20} ${W / 2 + 46},${H / 2 - 230}Z" fill="${sk}" stroke="${LN2}" stroke-width="4"/>
-      <path d="M${-W / 2 + 40},${H / 2 + 140}Q0,${H / 2 + 180} ${W / 2 - 20},${H / 2 + 120}" stroke="${skS}" stroke-width="6" fill="none" opacity=".6"/>`;
+      <path d="M${-W / 2 - 50},${H / 2 - 190}C${-W / 2 - 100},${H / 2 + 40} ${-W / 2 - 40},${H / 2 + 300} ${-W / 2 + 30},${H / 2 + 520}H${W / 2 + 40}C${W / 2 + 100},${H / 2 + 300} ${W / 2 + 90},${H / 2 + 20} ${W / 2 + 46},${H / 2 - 230}Z" fill="url(#r2Cyl)"/>
+      <path d="M${-W / 2 - 40},${H / 2 - 120}C${-W / 2 + 60},${H / 2 - 40} ${-W / 2 + 80},${H / 2 + 160} ${-W / 2 + 10},${H / 2 + 330}" stroke="${skS}" stroke-width="7" fill="none" opacity=".55" stroke-linecap="round"/>
+      <path d="M${-W / 2 - 40},${H / 2 - 150}C${-W / 2 + 20},${H / 2 - 60} ${-W / 2 + 30},${H / 2 + 80} ${-W / 2 - 20},${H / 2 + 200}" stroke="#fff" stroke-width="10" fill="none" opacity=".18" stroke-linecap="round"/>
+      <path d="M${-W / 2 + 120},${H / 2 + 10}Q0,${H / 2 + 60} ${W / 2 - 40},${H / 2 - 10}" stroke="${skS}" stroke-width="5" fill="none" opacity=".45"/>
+      <rect x="${-W / 2 - 20}" y="${H / 2 - 24}" width="${W + 40}" height="60" fill="#1c1030" opacity=".18"/>`;
     const grip = fin(W / 2 + 70, H / 2 - 430, W / 2 - 24, H / 2 - 410, 50, true) + fin(W / 2 + 76, H / 2 - 340, W / 2 - 30, H / 2 - 322, 54, true) + fin(W / 2 + 70, H / 2 - 252, W / 2 - 26, H / 2 - 236, 52, true) +
       fin(-W / 2 - 80, H / 2 - 210, -W / 2 + 44, H / 2 - 290, 62, true);
     put(layer, `<g id="${id}" opacity="0"><g transform="translate(${X},${Y}) rotate(${o.rot ?? -4})"><g id="${id}-ph">${palm}

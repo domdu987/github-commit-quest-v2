@@ -188,6 +188,26 @@
       ${[[-24, -104, -30, -150, 24], [-2, -112, -2, -164, 20], [16, -108, 20, -156, 18], [30, -96, 38, -138, 16], [40, -76, 52, -112, 14]].map(([x0, y0, x1, y1, w]) => `<path d="M${x0},${y0}L${x1},${y1}" stroke="#4a2a16" stroke-width="${w}" stroke-linecap="round" opacity=".88"/><circle cx="${x1}" cy="${y1 - 6}" r="${w * 0.22}" fill="#2a1608"/>`).join("")}
       <path d="M-40,70Q-50,0 -36,-70" stroke="#c8946a" stroke-width="4" fill="none" opacity=".5"/></g></g>`;
   }
+  // a print pressed into wet ground seen at an angle: squashed by perspective, a dark hollow, mud pushed up into a lit rim
+  const SOLE = "M-34,60Q-46,0 -30,-60Q-14,-100 16,-96Q40,-80 36,-20Q34,40 18,80Q0,110 -20,96Q-34,86 -34,60Z";
+  const TOES = [[-24, -104, -30, -150, 24], [-2, -112, -2, -164, 20], [16, -108, 20, -156, 18], [30, -96, 38, -138, 16], [40, -76, 52, -112, 14]];
+  const printShape = (c, k = 1) => `<path d="${SOLE}" fill="${c}"/>` + TOES.map(([x0, y0, x1, y1, w]) => `<path d="M${x0},${y0}L${f1(x0 + (x1 - x0) * k)},${f1(y0 + (y1 - y0) * k)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`).join("");
+  function mudPrint(x, y, theta, s, left, squash = 0.45, o = {}) {
+    const m = left ? -1 : 1;
+    return `<g transform="translate(${f1(x)},${f1(y)}) scale(1,${squash}) rotate(${f1(theta)}) scale(${f1(s * m)},${f1(s)})">
+      <g transform="translate(-6,-8)" opacity="${o.rim ?? 0.6}">${printShape(o.rimC || "#e2b282", o.toe)}</g>
+      <g opacity="${o.op ?? 0.82}">${printShape(o.c || "#4a2610", o.toe)}</g>
+      <g transform="translate(5,7) scale(.86)" opacity=".45">${printShape("#2a1206", o.toe)}</g></g>`;
+  }
+  // a line of prints walking away from (x0, y0) to (x1, y1): steps shrink with distance, feet alternate either side of the line
+  function trail(x0, y0, x1, y1, n, s0, s1, o = {}) {
+    const sq = o.squash ?? 0.45, ease = (u) => 1 - Math.pow(1 - u, 1.5), dx = x1 - x0, dy = y1 - y0, len = Math.hypot(dx, dy);
+    const theta = (Math.atan2(dx, -dy / sq) * 180) / Math.PI, px = -dy / len, py = dx / len;
+    let g = "";
+    for (let i = 0; i < n; i++) { const u = ease(i / (n - 1)), s = s0 + (s1 - s0) * u, side = i % 2 ? 1 : -1, off = side * 34 * s;
+      g += `<g ${o.id ? `id="${o.id}-${i}"` : ""}>${mudPrint(x0 + dx * u + px * off, y0 + dy * u + py * off * sq, theta + side * 4, s, side < 0, sq, o)}</g>`; }
+    return g;
+  }
   function printsTop(L, o = {}) {
     const id = o.id || "pr", r = mk(o.seed || 91);
     put(L.sky, `<rect x="-1300" y="-900" width="3700" height="3900" fill="#5a3a24"/>`);
@@ -252,5 +272,5 @@
   }
 
   Object.assign(Sets, { clock2, legend2, potTop, testsTop, potX, printsTop, sign2 });
-  Object.assign(Pop2, { pobFace, foot, PROP, fence });
+  Object.assign(Pop2, { pobFace, foot, PROP, fence, mudPrint, trail });
 })();
