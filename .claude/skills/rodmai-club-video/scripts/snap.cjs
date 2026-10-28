@@ -30,5 +30,7 @@ const fs = require('fs');
     await p.waitForTimeout(400);
     await p.screenshot({ path: `${out}/t${(+t).toFixed(2)}.png` });
   }
+  // the first real frame can still come out half-painted (black blocks): shoot it again now that the page is warm
+  if (ts.length > 1) { await seek(ts[0]); await p.waitForTimeout(800); await p.screenshot({ path: `${out}/t${(+ts[0]).toFixed(2)}.png` }); }
   await b.close();
 })();
