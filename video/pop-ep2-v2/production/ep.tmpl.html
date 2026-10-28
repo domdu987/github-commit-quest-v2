@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="th" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/rig.js"></script>
+    <script src="assets/sets.js"></script>
+    <script src="assets/camp.js"></script>
+    <script src="assets/koi.js"></script>
+    <script src="assets/zom.js"></script>
+    <script src="assets/hands.js"></script>
+    <script src="assets/mok.js"></script>
+    <script src="assets/pov.js"></script>
+    <script src="assets/phrai.js"></script>
+    <script src="assets/ui.js"></script>
+    <script src="assets/gameui.js"></script>
+    <script src="assets/mokui.js"></script>
+    <script src="assets/phraiui.js"></script>
+    <script src="assets/pop.js"></script>
+    <script src="assets/grain.js"></script>
+    <script src="assets/pop2.js"></script>
+    <script src="assets/pop2kok.js"></script>
+    <script src="assets/pop2kitchen.js"></script>
+    <script src="assets/pop2room.js"></script>
+    <script src="assets/pop2ui.js"></script>
+    <script src="assets/pop2more.js"></script>
+    <script src="assets/pop2hosp.js"></script>
+    <script src="assets/rig2.js"></script>
+    <script src="assets/popcast.js"></script>
+    <script src="assets/fx.js"></script>
+    <script src="assets/engine.js"></script>
+    <script src="assets/opener.js"></script>
+    <script src="assets/openers.js"></script>
+    <style>
+      @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 900; src: url(assets/fonts/f3.ttf); }
+      @font-face { font-family: 'Mali'; font-weight: 600; src: url(assets/fonts/mali6.ttf); }
+      @font-face { font-family: 'Mali'; font-weight: 700; src: url(assets/fonts/mali7.ttf); }
+      @font-face { font-family: 'Sriracha'; font-weight: 400; src: url(assets/fonts/sriracha.ttf); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05080a; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Kanit, sans-serif; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .stage { position: absolute; inset: 0; }
+      .fgblur { filter: blur(7px); }
+      .badge { z-index: 56; position: absolute; left: 36px; bottom: 150px; font: 700 26px/1 Kanit; color: #f4ecd8; opacity: .75; letter-spacing: 2px;
+        background: rgba(5,8,10,.55); padding: 8px 14px 10px; border-radius: 10px; }
+      #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 64% at 50% 48%, transparent 50%, rgba(3,6,8,.8) 100%); }
+      #grain { z-index: 57; position: absolute; inset: -60px; opacity: .11; mix-blend-mode: overlay; pointer-events: none; }
+      #flashw { z-index: 60; position: absolute; inset: 0; background: #e8f0ff; opacity: 0; pointer-events: none; }
+      #black { z-index: 61; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+      /*__UICSS__*/
+      /*__GAMECSS__*/
+      .capwrap { z-index: 56; top: 1480px; }
+      .capbox { background: rgba(12,18,20,.86); color: #f4ecd8; border: 2px solid rgba(244,236,216,.4); border-radius: 22px;
+        box-shadow: 0 0 0 4px rgba(10,14,16,.45), 0 14px 30px rgba(0,0,0,.55); font: 900 64px/1.22 Kanit; padding: 12px 34px 18px; }
+      .capbox .k { background: #f2c55c; color: #2e2a26; border: 0; border-radius: 10px; padding: 0 .16em; transform: rotate(-1.5deg); }
+      .capbox .k.kr, .k.kr { background: #d8443a; color: #fff4ea; }
+      .capbox.q { background: rgba(244,236,216,.94); color: #2e2a26; border-color: #2e2a26; }
+      .bubble { z-index: 57; white-space: normal !important; max-width: 640px; text-align: center; }
+      .sfxw { position: absolute; z-index: 55; font-family: Kanit; font-weight: 900; letter-spacing: -1px; opacity: 0; white-space: nowrap;
+        text-shadow: -4px -4px 0 #2e2a26, 4px -4px 0 #2e2a26, -4px 4px 0 #2e2a26, 4px 4px 0 #2e2a26, 8px 8px 0 #2e2a26; }
+      /* phone camera overlay (REC) */
+      .rec { position: absolute; inset: 0; z-index: 52; pointer-events: none; font-family: Kanit; color: #f4ecd8; }
+      .rec .br { position: absolute; width: 90px; height: 90px; border: 6px solid rgba(244,236,216,.85); }
+      .rec .tl { left: 40px; top: 120px; border-right: 0; border-bottom: 0; } .rec .tr { right: 40px; top: 120px; border-left: 0; border-bottom: 0; }
+      .rec .bl { left: 40px; bottom: 120px; border-right: 0; border-top: 0; } .rec .brr { right: 40px; bottom: 120px; border-left: 0; border-top: 0; }
+      .rec .top { position: absolute; left: 70px; right: 70px; top: 150px; display: flex; justify-content: space-between; align-items: center; font: 900 40px/1 Kanit; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+      .rec .dot { display: inline-block; width: 26px; height: 26px; border-radius: 50%; background: #e8443a; margin-right: 12px; vertical-align: -2px; box-shadow: 0 0 14px #e8443a; }
+      .rec .tc { font-family: 'Kanit'; letter-spacing: 2px; }
+      .rec .bat { display: inline-block; width: 56px; height: 28px; border: 4px solid #f4ecd8; border-radius: 6px; position: relative; margin-left: 14px; vertical-align: -4px; }
+      .rec .bat:after { content: ""; position: absolute; left: 3px; top: 3px; bottom: 3px; width: 34%; background: #e8705a; }
+      .rec .mode { position: absolute; left: 70px; top: 220px; font: 700 30px/1 Kanit; letter-spacing: 3px; padding: 6px 12px; border-radius: 8px; background: rgba(0,0,0,.4); }
+      .rec .af { position: absolute; width: 170px; height: 190px; border: 5px solid #f2c55c; border-radius: 10px; opacity: 0; box-shadow: 0 0 18px rgba(242,197,92,.6); }
+      .rec .af b { position: absolute; left: -5px; top: -50px; font: 900 28px/1 Kanit; color: #2e2a26; background: #f2c55c; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+      /* channel signature: "ทุกอย่าง… ถูกทาง / พลาดแค่… เรื่องเดียว" checklist */
+      .chk { position: absolute; left: 110px; width: 860px; top: 520px; z-index: 52; padding: 30px 38px 34px; border-radius: 30px; opacity: 0;
+        background: rgba(10,15,17,.9); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 0 0 6px rgba(10,14,16,.4), 0 24px 60px rgba(0,0,0,.6); font-family: Kanit; }
+      .chk .chk-t { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; margin-bottom: 22px; }
+      .chk .chk-r { display: flex; align-items: center; gap: 26px; padding: 14px 0; border-top: 2px solid rgba(244,236,216,.12); opacity: 0; }
+      .chk .box { width: 84px; height: 84px; border-radius: 18px; border: 5px solid rgba(244,236,216,.6); display: flex; align-items: center; justify-content: center; flex: none; }
+      .chk .box b { font: 900 64px/1 Kanit; opacity: 0; }
+      .chk .ok b { color: #7fd1b9; } .chk .bad b { color: #ff5a4a; }
+      .chk .tx { font: 900 60px/1.1 Kanit; color: #f4ecd8; }
+      .chk .bad .tx { color: #ff8a7a; letter-spacing: 8px; }
+      .rec .scrub { position: absolute; left: 70px; right: 70px; bottom: 170px; height: 12px; border-radius: 6px; background: rgba(244,236,216,.3); }
+      .rec .scrub i { display: block; height: 100%; border-radius: 6px; background: #e8443a; }
+      /* body temperature card */
+      .thermo { position: absolute; z-index: 52; display: flex; align-items: center; gap: 22px; padding: 18px 28px 18px 20px; border-radius: 26px; opacity: 0;
+        background: rgba(10,15,17,.88); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 14px 40px rgba(0,0,0,.55); font-family: Kanit; color: #f4ecd8; }
+      .thermo .val { font: 900 92px/1 Kanit; letter-spacing: -2px; } .thermo .val small { font-size: 44px; }
+      .thermo .lbl { font: 700 28px/1.1 Kanit; letter-spacing: 3px; color: #f2c55c; margin-bottom: 6px; }
+      .thermo .note { font: 900 34px/1.1 Kanit; color: #ff8a7a; height: 38px; }
+      .rec.nv:before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 3px, transparent 3px 6px); }
+
+      /* the guide's rule: a lacquer-and-gold card, one rhyming line per row (กอย / ถอย / คอย) */
+      .krule { position: absolute; left: 60px; width: 960px; z-index: 52; opacity: 0; padding: 22px 34px 30px; border-radius: 28px; box-sizing: border-box;
+        background: linear-gradient(180deg, #1d1611 0%, #120d0a 100%); border: 4px solid #c9a55a; overflow: hidden;
+        box-shadow: 0 0 0 10px rgba(18,13,10,.92), 0 0 0 13px #7a5f2e, 0 26px 60px rgba(0,0,0,.65), inset 0 0 60px rgba(201,165,90,.12); font-family: Kanit; }
+      .krule::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(201,165,90,.05) 0 2px, transparent 2px 46px); pointer-events: none; }
+      .krule .cn { position: absolute; width: 46px; height: 46px; border: 5px solid #e2c27a; }
+      .krule .cn::after { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #e2c27a; }
+      .krule .cn.tl { left: 12px; top: 12px; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; } .krule .cn.tl::after { left: 10px; top: 10px; }
+      .krule .cn.tr { right: 12px; top: 12px; border-left: 0; border-bottom: 0; border-top-right-radius: 14px; } .krule .cn.tr::after { right: 10px; top: 10px; }
+      .krule .cn.bl { left: 12px; bottom: 12px; border-right: 0; border-top: 0; border-bottom-left-radius: 14px; } .krule .cn.bl::after { left: 10px; bottom: 10px; }
+      .krule .cn.br { right: 12px; bottom: 12px; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; } .krule .cn.br::after { right: 10px; bottom: 10px; }
+      .krule .kr-h { text-align: center; margin: 4px 0 14px; }
+      .krule .kr-h span { display: inline-block; padding: 6px 34px 8px; border-radius: 40px; background: linear-gradient(180deg, #b8322a, #8e2018); color: #ffe7b0;
+        font-weight: 900; font-size: 38px; letter-spacing: 1px; border: 3px solid #e2c27a; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+      .krule .kr-r { display: flex; align-items: center; gap: 26px; padding: 12px 10px; opacity: 0; }
+      .krule .kr-r + .kr-r { border-top: 2px dashed rgba(201,165,90,.35); }
+      .krule .kr-i { flex: none; width: 118px; height: 118px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fbf3df, #e6d3a8); border: 5px solid #c9a55a; box-shadow: 0 6px 14px rgba(0,0,0,.5); }
+      .krule .kr-i svg { width: 100%; height: 100%; }
+      .krule .kr-t { color: #f4ecd8; font-weight: 900; font-size: 60px; line-height: 1.15; text-shadow: 0 4px 0 rgba(0,0,0,.55); white-space: nowrap; }
+      .krule .kr-t strong { color: #f2c55c; font-weight: 900; }
+      .krule .kr-t em { font-style: normal; background: #c8392b; color: #fff; padding: 0 14px 4px; border-radius: 14px; margin-right: 8px; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
+      .krule .kr-t u { text-decoration: none; position: relative; }
+      .krule .kr-t u::after { content: ""; position: absolute; left: -4px; right: -4px; bottom: -6px; height: 8px; border-radius: 4px; background: #e2c27a; box-shadow: 0 0 14px #e2c27a; transform: scaleX(var(--k, 0)); transform-origin: 0 50%; }
+      .krule .sheen { position: absolute; top: -40%; left: -40%; width: 26%; height: 180%; background: linear-gradient(90deg, transparent, rgba(255,236,190,.22), transparent); transform: rotate(18deg); pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="/*__TOTAL__*/" data-width="1080" data-height="1920">
+      <svg id="grain" width="1200" height="2040"><filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5" /></filter><rect width="1200" height="2040" filter="url(#nz)" /></svg>
+    </div>
+    <script>
+      const SCHED = /*__SCHEDULE__*/;
+      const SH = Object.fromEntries(SCHED.shots.map((s) => [s.key, s]));
+      const vo = (k, i = 0) => SH[k].vo[i].t;                       // voice start, relative to the shot
+      const voEnd = (k, i = 0) => SH[k].vo[i].t + SH[k].vo[i].dur;
+      const F = (k, i = 0, j = 0) => SH[k].vo[i].t + SH[k].vo[i].frags[j]; // start of caption fragment j
+      const D = (k) => SH[k].dur;
+      const fr = (wx, wy, s, sx = 540, sy = 760, extra = {}) => ({ x: wx - 540 - (sx - 540) / s, y: wy - 960 - (sy - 960) / s, s, ...extra });
+      const root = document.getElementById("root");
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // one caption per fragment of the spoken line, on the beat of the voice
+      function caps(k, lines, o = {}) {
+        const out = [];
+        (lines ?? SH[k].vo.map((_, i) => i)).forEach((i) => {
+          const v = SH[k].vo[i], fr = v.cap.split(" / ");
+          fr.forEach((txt, j) => out.push({ text: o.quote ? `“${txt}”` : txt, t: v.t + v.frags[j] - 0.06,
+            end: j + 1 < fr.length ? v.t + v.frags[j + 1] - 0.08 : Math.min(D(k) - 0.06, v.t + v.dur + (o.hold ?? 0.35)) }));
+        });
+        out.sort((a, b) => a.t - b.t);
+        for (let n = 0; n + 1 < out.length; n++) out[n].end = Math.min(out[n].end, out[n + 1].t - 0.03);
+        return out;
+      }
+      const bub = (k, i, x, y, tail, o = {}) => ({ text: `“${SH[k].vo[i].cap.replace(/ \/ /g, " ")}”`, x, y, tail, t: vo(k, i) - 0.05, end: o.end ?? Math.min(D(k) - 0.05, voEnd(k, i) + 0.35) });
+
+      // extra poses
+      Rig.MODES.selfie = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -42 + 2 * Math.sin(u * 1.7), faF: -16, uaB: 8, faB: -16, head: 4 + 2 * Math.sin(u * 2.3), torso: -1 });
+      Rig.MODES.laugh = (u, o) => { const b = Math.abs(Math.sin(u * 9)); return { ...Rig.MODES.idle(u, o), uaF: 14, faF: -110, uaB: -18, faB: -20, torso: -6 - 3 * b, head: -14 - 5 * b, bodyY: -3 * b }; };
+      Rig.MODES.shiver = (u, o) => { const j = Math.sin(u * 47) * 1.6; return { ...Rig.MODES.tremble(u, o), uaF: -110 + j, faF: -120, uaB: 110 - j, faB: 120, torso: 8 + j * 0.5, head: -4 + j }; };
+      Rig.MODES.stick = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -12, faF: -24 });
+      Rig.MODES.crouchTorch = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -70 + 4 * Math.sin(u * 1.3), faF: -10 });
+      const shakeH = (t) => 7 * Math.sin(t * 2.3) + 3 * Math.sin(t * 7.1);
+
+      // phone camera overlay: REC dot, running timecode, battery, optional face box that locks onto something
+      GameUI.C.rec = {
+        html: (id, o) => `<div id="${id}" class="rec${o.nv ? " nv" : ""}"><i class="br tl"></i><i class="br tr"></i><i class="br bl"></i><i class="br brr"></i>
+          <div class="top">${o.play ? `<span>▶ คลิปเมื่อคืน</span>` : `<span><i class="dot"></i>REC</span>`}<span class="tc">00:00:00</span><span>${o.nv ? "IR" : "4K"}<i class="bat"></i></span></div>
+          ${o.mode ? `<div class="mode">${o.mode}</div>` : ""}${o.play ? `<div class="scrub"><i></i></div>` : ""}${o.af ? `<div class="af" style="left:${o.af.x}px;top:${o.af.y}px;${o.af.w ? `width:${o.af.w}px;height:${o.af.h}px` : ""}"><b>${o.af.label}</b></div>` : ""}</div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), tc = el.querySelector(".tc"), c = { t: 0 }, base = o.tc0 || 0;
+          tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0);
+          tl.to(c, { t: o.dur, duration: o.dur, ease: "none", immediateRender: false, onUpdate: () => {
+            const s = base + c.t, f = Math.floor((s % 1) * 30), p2 = (v) => String(Math.floor(v)).padStart(2, "0");
+            tc.textContent = s >= 3600 ? `${Math.floor(s / 3600)}:${p2((s % 3600) / 60)}:${p2(s % 60)}` : `${p2(s / 60)}:${p2(s % 60)}:${p2(f)}`;
+          } }, t0);
+          if (o.play) tl.fromTo(`#${id} .scrub i`, { width: `${o.play[0]}%` }, { width: `${o.play[1]}%`, duration: o.dur, ease: "none", immediateRender: false }, t0);
+          if (!o.play) tl.fromTo(`#${id} .dot`, { opacity: 1 }, { opacity: 0.15, duration: 0.5, repeat: Math.ceil(o.dur / 0.5), yoyo: true, immediateRender: false }, t0);
+          if (o.af) {
+            const a = o.t0abs + o.af.at;
+            tl.fromTo(`#${id} .af`, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.18, ease: "back.out(2)", immediateRender: false }, a);
+            tl.to(`#${id} .af`, { opacity: 0.2, duration: 0.08, repeat: 5, yoyo: true }, a + 0.25);
+          }
+        },
+      };
+      // channel signature: a checklist ticked on "ทุกอย่าง… ถูกทาง", then one red cross on "เรื่องเดียว"
+      // the guide's rule card: rows stamp in at o.at[i] (seconds into the shot); the rhyming syllables get a gold underline
+      GameUI.C.koiRule = {
+        html: (id, o) => {
+          const IK = "#2e2a26", rows = o.rows || [
+            [`<path d="M74,20C46,16 28,38 30,62C32,78 44,82 46,94C48,106 60,112 68,102C74,94 68,86 74,78C84,66 94,58 92,44C90,30 84,22 74,20Z" fill="#e9bc93" stroke="${IK}" stroke-width="4"/>
+              <path d="M76,40C66,34 52,40 54,54C56,62 64,62 64,70" stroke="${IK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+              ${[0, 1, 2].map((i) => `<path class="kw" d="M${22 - i * 9},${44 - i * 6}q-${10 + i * 3},${18 + i * 6} 0,${36 + i * 12}" stroke="#7a3fb0" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+              `ได้ยิน<strong>เสียง<u>กอย</u></strong>`],
+            [`<g class="krun"><circle cx="66" cy="28" r="10" fill="${IK}"/><path d="M62,40L52,66M52,66L70,78L66,98M52,66L36,82L24,80M60,46L78,56L90,50M60,46L44,52L36,64" stroke="${IK}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+              <g class="kno"><circle cx="60" cy="60" r="46" fill="none" stroke="#d8322a" stroke-width="9"/><path d="M28,28L92,92" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/></g>`,
+              `<em>อย่าวิ่ง</em><em>อย่า<u>ถอย</u></em>`],
+            [`<path d="M40,112C44,80 42,40 46,8H64C66,40 66,80 72,112Z" fill="#6a4a2e" stroke="${IK}" stroke-width="4"/><path d="M60,52Q84,46 108,38" stroke="#6a4a2e" stroke-width="10" stroke-linecap="round"/><circle cx="96" cy="24" r="16" fill="#4f8a55" stroke="${IK}" stroke-width="3"/><circle cx="30" cy="20" r="14" fill="#4f8a55" stroke="${IK}" stroke-width="3"/>
+              <g class="kclimb"><circle cx="84" cy="32" r="7" fill="#e8b830" stroke="${IK}" stroke-width="3"/><path d="M84,40v12M84,52l-6,10M84,52l7,9" stroke="${IK}" stroke-width="4" stroke-linecap="round"/></g>
+              <g transform="translate(18,78)"><path d="M0,0h22M0,30h22M3,0q8,15 0,30M19,0q-8,15 0,30" stroke="${IK}" stroke-width="3.5" fill="#f2c55c" stroke-linejoin="round"/><path class="ksand" d="M7,22h8l-4,-6z" fill="#c9a55a"/></g>`,
+              `<strong>ปีนต้นไม้</strong> แล้ว<u>คอย</u>`],
+          ];
+          return `<div id="${id}" class="krule" style="top:${o.top ?? 170}px"><i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i><i class="sheen"></i>
+            <div class="kr-h"><span>${o.label || "กฎของบังหมาด"}</span></div>
+            ${rows.map(([ill, txt], i) => `<div class="kr-r" id="${id}-r${i}"><div class="kr-i"><svg viewBox="0 0 120 120">${ill}</svg></div><div class="kr-t">${txt}</div></div>`).join("")}</div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.7)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .kr-h span`, { scaleX: 0.2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.08);
+          tl.fromTo(`#${id} .sheen`, { x: 0 }, { x: 1500, duration: 0.9, ease: "power1.inOut", immediateRender: false }, t0 + 0.25);
+          o.at.forEach((at, i) => {
+            const r = el.querySelector(`#${id}-r${i}`);
+            tl.fromTo(r, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.28, ease: "power2.out", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector(".kr-i"), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector("u"), { "--k": 0 }, { "--k": 1, duration: 0.35, ease: "power2.out", immediateRender: false }, A(at) + 0.3);
+          });
+          el.querySelectorAll(".kw").forEach((w, i) => tl.fromTo(w, { opacity: 0.1 }, { opacity: 1, duration: 0.28, repeat: 9, yoyo: true, immediateRender: false }, A(o.at[0]) + i * 0.1));
+          tl.fromTo(el.querySelector(".kno"), { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, svgOrigin: "60 60", duration: 0.22, ease: "power3.in", immediateRender: false }, A(o.at[1]) + 0.2);
+          tl.fromTo(el.querySelector(".kclimb"), { y: 46 }, { y: 0, duration: 0.8, ease: "power1.out", immediateRender: false }, A(o.at[2]));
+          tl.fromTo(el.querySelector(".ksand"), { scaleY: 1 }, { scaleY: 0.2, svgOrigin: "11 22", duration: 1.6, ease: "none", immediateRender: false }, A(o.at[2]) + 0.4);
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, y: -30, duration: 0.25 }, A(o.end));
+        },
+      };
+      GameUI.C.checklist = {
+        html: (id, o) => `<div id="${id}" class="chk"><div class="chk-t">${o.title}</div>${o.items.map(([txt, ok], i) => `<div class="chk-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="box"><b>${ok ? "✓" : "✗"}</b></span><span class="tx">${txt}</span></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t;
+          tl.fromTo(`#${id}`, { opacity: 0, y: 40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.8)", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, A(o.show[i]));
+            tl.fromTo(`#${id}-r${i} .box b`, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(3)", immediateRender: false }, A(o.mark[i]));
+            if (ok) tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)" }, { borderColor: "#7fd1b9", duration: 0.2, immediateRender: false }, A(o.mark[i]));
+            else {
+              tl.fromTo(`#${id}-r${i} .box`, { opacity: 1 }, { opacity: 0.25, duration: 0.18, repeat: 5, yoyo: true, immediateRender: false }, A(o.show[i]));
+              tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)", boxShadow: "0 0 0 0 rgba(255,90,74,.9)" }, { borderColor: "#ff5a4a", boxShadow: "0 0 0 26px rgba(255,90,74,0)", duration: 0.5, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}`, { x: 0 }, { x: 10, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}`, { borderColor: "rgba(255,90,74,.8)", duration: 0.2 }, A(o.mark[i]));
+            }
+          });
+        },
+      };
+
+      // extra illustrations for the knowledge cards
+      Object.assign(GameUI.ILL, {
+        muddy: `<path d="M10,70q25,-14 50,0t50,0V110H10Z" fill="#9c7d55" stroke="#2e2a26" stroke-width="4"/><path class="a-bob" d="M30,40q30,-20 60,0" stroke="#7fb3ab" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M30,84q8,-4 16,0M64,92q8,-4 16,0" stroke="#5a4636" stroke-width="4" fill="none"/>`,
+        rise: `<rect x="20" y="20" width="16" height="90" rx="4" fill="#e9dcc0" stroke="#2e2a26" stroke-width="4"/>${[0, 1, 2, 3].map((k) => `<path d="M36,${34 + k * 20}h10" stroke="#2e2a26" stroke-width="4"/>`).join("")}<path class="a-pulse" d="M60,104V40M44,58l16,-20 16,20" stroke="#e8705a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M10,96q20,-10 40,0t40,0t30,0" stroke="#7fb3ab" stroke-width="7" fill="none"/>`,
+        roar: `<path d="M14,96L46,40L60,62L76,34L106,96Z" fill="#3e5a44" stroke="#2e2a26" stroke-width="4" stroke-linejoin="round"/>${[0, 1, 2].map((k) => `<path class="a-wave" data-i="${k}" d="M${70 + k * 12},${20 + k * 4}q${12 + k * 4},${14} 0,${28 + k * 4}" stroke="#f2c55c" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+        leech: `<path d="M24,86C10,60 30,30 60,26C92,22 104,44 96,62C88,80 66,70 58,82C50,94 34,100 24,86Z" fill="#3b3a22" stroke="#2e2a26" stroke-width="4"/><path d="M40,48q8,8 0,18M56,38q8,10 0,22M72,40q8,10 2,22" stroke="#6d6a3a" stroke-width="3" fill="none"/>`,
+        drop: `<path class="a-bob" d="M60,16C40,46 30,62 30,78a30,30 0 0 0 60,0C90,62 80,46 60,16Z" fill="#c0392b" stroke="#2e2a26" stroke-width="4"/><path d="M46,78a14,14 0 0 0 10,14" stroke="#f4ecd8" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/>`,
+      });
+
+      const shots = [];
+      const add = (k, spec) => { if (SH[k]) shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec }); };
+      const FA_ARM = { sleeve: "#e8b830", skin: "#ebbd95", cuff: "#c4931c" };
+
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .zchk { position: absolute; left: 80px; width: 920px; z-index: 52; opacity: 0; font-family: Kanit; }
+        .zchk .zc-in { position: relative; padding: 26px 36px 30px; border-radius: 28px; overflow: hidden;
+          background: linear-gradient(180deg, rgba(16,20,22,.95), rgba(7,9,11,.97)); border: 4px solid rgba(244,236,216,.3); box-shadow: 0 24px 60px rgba(0,0,0,.7); }
+        .zchk .zc-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 6px); pointer-events: none; }
+        .zchk .zc-bar { position: absolute; left: 0; right: 0; top: 0; height: 110px; background: linear-gradient(180deg, transparent, rgba(255,60,50,.32), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-h { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+        .zchk .zc-dot { width: 20px; height: 20px; border-radius: 50%; background: #ff4a3a; box-shadow: 0 0 14px #ff4a3a; flex: none; }
+        .zchk .zc-h b { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; flex: 1; }
+        .zchk .zc-tally { font: 900 46px/1 Kanit; color: #7fd1b9; min-width: 120px; text-align: right; }
+        .zchk .zc-r { position: relative; display: flex; align-items: center; gap: 26px; padding: 14px 14px; margin: 0 -14px; border-top: 2px solid rgba(244,236,216,.1); opacity: 0; border-radius: 16px; }
+        .zchk .zc-sw { position: absolute; inset: 0; overflow: hidden; border-radius: 16px; pointer-events: none; }
+        .zchk .zc-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(127,209,185,.45), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-box { width: 86px; height: 86px; border-radius: 18px; border: 5px solid rgba(244,236,216,.55); flex: none; position: relative; box-sizing: border-box; }
+        .zchk .zc-box svg { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; overflow: visible; }
+        .zchk .ck { fill: none; stroke: #7fd1b9; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 90; stroke-dashoffset: 90; }
+        .zchk .xx { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; opacity: 0; } .zchk .xx svg { left: 0; top: 0; }
+        .zchk .xx path { stroke: #fff; stroke-width: 12; stroke-linecap: round; }
+        .zchk .zc-t { font: 900 60px/1.1 Kanit; color: #f4ecd8; position: relative; }
+        .zchk .bad .zc-t { color: #ff8a7a; letter-spacing: 8px; }
+        .zchk .zc-box svg.zc-crack { left: 38px; top: 38px; width: 2px; height: 2px; overflow: visible; pointer-events: none; }
+        .zchk .zc-crack path { fill: none; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .zchk .zc-crack .c1 { stroke: rgba(0,0,0,.6); stroke-width: 7; } .zchk .zc-crack .c2 { stroke: rgba(255,240,230,.92); stroke-width: 2.6; }
+      </style>`);
+      GameUI.C.sigCard = {
+        html: (id, o) => {
+          const r = (() => { let q = 23; return () => ((q = (q * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+          let cracks = "";
+          for (let k = 0; k < 7; k++) {
+            let x = 0, y = 0, d = "M0,0", br = "";
+            const ang = -1.7 + k * 0.29;
+            for (let j = 0; j < 8; j++) {
+              const a2 = ang + (r() - 0.5) * 0.8, L = 45 + r() * 75;
+              x += Math.cos(a2) * L; y += Math.sin(a2) * L; d += `L${x.toFixed(0)},${y.toFixed(0)}`;
+              if (j === 2 || j === 5) { const ba = a2 + (r() > 0.5 ? 0.9 : -0.9); br += `M${x.toFixed(0)},${y.toFixed(0)}l${(Math.cos(ba) * 70).toFixed(0)},${(Math.sin(ba) * 70).toFixed(0)}l${(Math.cos(ba + 0.4) * 40).toFixed(0)},${(Math.sin(ba + 0.4) * 40).toFixed(0)}`; }
+            }
+            cracks += `<path class="c1" d="${d}${br}"/><path class="c2" d="${d}${br}"/>`;
+          }
+          return `<div id="${id}" class="zchk" style="top:${o.top ?? 470}px"><div class="zc-in" id="${id}-in"><div class="zc-scan"></div><div class="zc-bar" id="${id}-bar"></div>
+            <div class="zc-h"><span class="zc-dot" id="${id}-dot"></span><b>${o.title}</b><span class="zc-tally" id="${id}-tally">✓ 0</span></div>
+            ${o.items.map(([txt, ok], i) => `<div class="zc-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="zc-sw"><i class="zc-sweep"></i></span><span class="zc-box">${ok
+              ? `<svg viewBox="0 0 86 86"><path class="ck" d="M20,45 L37,61 L67,25"/></svg>`
+              : `<span class="xx"><svg viewBox="0 0 86 86"><path d="M22,22L64,64M64,22L22,64"/></svg></span><svg class="zc-crack" id="${id}-crack">${cracks}</svg>`}</span><span class="zc-t">${txt}</span></div>`).join("")}
+            </div></div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id), inner = document.getElementById(`${id}-in`);
+          const bar = document.getElementById(`${id}-bar`), tally = document.getElementById(`${id}-tally`), dot = document.getElementById(`${id}-dot`);
+          const qtx = el.querySelector(`#${id}-r${o.items.length - 1} .zc-t`), S3 = o.show[o.items.length - 1], X = o.mark[o.items.length - 1];
+          const GL = ["???", "?▓?", "▒?░", "??▓", "░▒▓", "?!?", "▓?▒", "?░?"];
+          const h = (n) => { const v = Math.sin(n * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+          // entrance: flicker on like a failing screen, with a colour split that settles
+          tl.fromTo(`#${id}`, { opacity: 0, scale: 1.08, filter: "drop-shadow(14px 0 0 rgba(255,40,60,.8)) drop-shadow(-14px 0 0 rgba(40,220,255,.8))" },
+            { opacity: 1, scale: 1, filter: "drop-shadow(0px 0 0 rgba(255,40,60,0)) drop-shadow(0px 0 0 rgba(40,220,255,0))", duration: 0.32, ease: "power3.out", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.2, ease: "power3.out", immediateRender: false }, A(o.show[i]));
+            if (ok) {
+              tl.fromTo(`#${id}-r${i} .ck`, { strokeDashoffset: 90 }, { strokeDashoffset: 0, duration: 0.18, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)", boxShadow: "0 0 0 0 rgba(127,209,185,.9)" }, { borderColor: "#7fd1b9", boxShadow: "0 0 0 22px rgba(127,209,185,0)", duration: 0.4, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-sweep`, { opacity: 1, x: -380 }, { opacity: 0, x: 1100, duration: 0.45, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}-r${i}`, { opacity: 0.42, filter: "saturate(.3)", duration: 0.3 }, A(S3) + 0.05);   // the good news fades while ??? takes over
+            } else {
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)" }, { borderColor: "#ff5a4a", duration: 0.12, repeat: 7, yoyo: true, immediateRender: false }, A(S3));
+              tl.fromTo(`#${id}-r${i} .xx`, { opacity: 0, scale: 3.2 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.14, ease: "power4.in", immediateRender: false }, A(X));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { backgroundColor: "rgba(216,50,42,0)", borderColor: "#ff5a4a", boxShadow: "0 0 0 0 rgba(255,90,74,.95)" },
+                { backgroundColor: "rgba(216,50,42,1)", borderColor: "#ff5a4a", boxShadow: "0 0 0 40px rgba(255,90,74,0)", duration: 0.45, immediateRender: false }, A(X) + 0.12);
+              tl.fromTo(`#${id}-r${i}`, { backgroundColor: "rgba(216,50,42,0)" }, { backgroundColor: "rgba(216,50,42,.35)", duration: 0.2, immediateRender: false }, A(X) + 0.12);
+            }
+          });
+          tl.fromTo(`#${id}-crack path`, { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.015, ease: "power3.out", immediateRender: false }, A(X) + 0.12);
+          // per-frame state: tally, scrambling ???, heartbeat border, scan bar, shake, dying-screen flicker
+          const clock = { t: 0 }, Dsh = D("sig");
+          const render = () => {
+            const t = clock.t, sus = Math.min(1, Math.max(0, (t - S3) / (X - S3))), after = t >= X + 0.12;
+            const n = o.mark.filter((m, i) => o.items[i][1] && t >= m).length;
+            tally.textContent = after ? "✗ 1" : `✓ ${n}`; tally.style.color = after ? "#ff5a4a" : "#7fd1b9";
+            qtx.textContent = t >= S3 && t < X + 0.12 ? GL[Math.floor(t * 18) % GL.length] : "???";
+            const beat = Math.pow(Math.max(0, Math.sin((2 * Math.PI * (t - S3)) / 0.38)), 4) * (t >= S3 && !after ? 0.35 + 0.65 * sus : 0);
+            inner.style.borderColor = after ? "#ff4a3a" : `rgba(255,${Math.round(236 - 170 * beat)},${Math.round(216 - 160 * beat)},${(0.3 + 0.7 * beat).toFixed(2)})`;
+            inner.style.boxShadow = after ? "0 0 46px rgba(255,60,50,.55), 0 24px 60px rgba(0,0,0,.7)" : `0 0 ${Math.round(50 * beat)}px rgba(255,60,50,${(0.8 * beat).toFixed(2)}), 0 24px 60px rgba(0,0,0,.7)`;
+            bar.style.opacity = t >= S3 && !after ? (0.4 + 0.5 * sus).toFixed(2) : 0;
+            bar.style.transform = `translateY(${Math.round((((t - S3) * 1.7) % 1) * 560 - 110)}px)`;
+            dot.style.opacity = Math.floor(t * (after ? 8 : 2.5)) % 2 ? 0.25 : 1;
+            const amp = after ? 2 + 20 * Math.exp(-(t - X) * 5) : t >= S3 ? 1 + 6 * sus * sus : 0, k = Math.floor(t * 30);
+            const fl = after && t > X + 0.4 && h(k * 3.1) > 0.82 ? 0.45 : 1;
+            inner.style.transform = `translate(${((h(k) - 0.5) * 2 * amp).toFixed(1)}px,${((h(k + 0.5) - 0.5) * 2 * amp).toFixed(1)}px) rotate(${((h(k + 0.25) - 0.5) * amp * 0.12 + (after ? -1.6 : 0)).toFixed(2)}deg)`;
+            inner.style.opacity = fl;
+          };
+          tl.to(clock, { t: Dsh, duration: Dsh, ease: "none", immediateRender: false, onUpdate: render }, o.t0abs);
+          render();
+        },
+      };
+      const SF = (j) => F("sig", 0, j);
+      // ---------- แสงกระสือ: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      // ---------- เห็ดปอบ EP.2 เอาเห็ดไปหาหมอ — v2: the same illustrated cast and painted sets as EP.1 v2 ----------
+      // camera grammar: under the net, torches under the house, knowledge laid out on the bench, the night road in headlights,
+      // the cab in dashboard light, the emergency entrance, the ward from night to dawn, the window close up
+      const MINT = (x, y, s, track, extra = {}) => ({ who: "mint", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TON = (x, y, s, track, extra = {}) => ({ who: "ton", x, y, s, track, blinks: [1.2, 3.6], ...extra });
+      const YAI = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, blinks: [0.7, 2.6, 4.9], ...extra });
+      const THONG = (x, y, s, track, extra = {}) => ({ who: "thong", x, y, s, track, blinks: [1.6, 4.2], ...extra });
+      const BOON = (x, y, s, track, extra = {}) => ({ who: "boon", x, y, s, track, blinks: [0.8, 2.9], ...extra });
+      const KHEM = (x, y, s, track, extra = {}) => ({ who: "khem", x, y, s, track, blinks: [1.1, 3.3], ...extra });
+      const DOC = (x, y, s, track, extra = {}) => ({ who: "doc", x, y, s, track, blinks: [0.6, 2.4], ...extra });
+      const GK = 1500, GB = 1500, GR = 1400, GW = 1500, GV = 1320;
+      const CU = (x, y, s, sy = 1000) => fr(x, y - 560 * s, 1.0, 540, sy);
+      Object.assign(Rig.CAST, {
+        mintPhone: { ...Rig.CAST.mint, hand: Pop2.PROP.phone() }, mintBag: { ...Rig.CAST.mint, hand: Pop2.PROP.bag() }, khemSalt: { ...Rig.CAST.khem, hand: Pop2.PROP.saltGlass() },
+        docBag: { ...Rig.CAST.doc, hand: Pop2.PROP.bag() },
+      });
+      Rig.MODES.reach = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -52, faF: -26, uaB: -30, faB: -30, torso: 8, head: 12 });
+      const chair = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-70,0V-150M70,0V-150M-70,-150H80V-170H-70ZM60,-170V-380" stroke="#5a6a72" stroke-width="12" fill="none"/><rect x="-80" y="-172" width="160" height="22" rx="6" fill="#7a8a92"/><rect x="50" y="-380" width="24" height="200" rx="8" fill="#6a7a82"/></g>`;
+      const oneHand = (id, i) => { const h = document.getElementById(`${id}-a${i}-handB`); if (h) h.innerHTML = ""; };
+      const MOON = { from: "right", rim: "#a8c4ff", rimOp: 0.8, shade: "#000010", shadeOp: 0.5, cast: false, vol: false };
+      const LAMP = { from: "left", rim: "#ffc070", rimOp: 0.85, shade: "#100818", shadeOp: 0.55, cast: { len: 2, op: 0.45 }, vol: false };
+      const TUBE = { from: "left", rim: "#e8fff4", rimOp: 0.6, shade: "#102028", shadeOp: 0.4, cast: { len: 1.2, op: 0.3 }, vol: false };
+      const DASH = { from: "right", rim: "#7ae8ff", rimOp: 0.8, shade: "#000", shadeOp: 0.5, cast: false, vol: false };
+      const GNIGHT = { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 }, GLATE = { top: "#0a1430", bottom: "#3a1a10", op: 0.35 }, GFIRE = { top: "#2a3a6a", bottom: "#ff9a4a", op: 0.25 };
+      const GROAD = { top: "#0a1430", bottom: "#2a1a3a", op: 0.3 }, GWARD = { top: "#2a4a5a", bottom: "#1a2a3a", op: 0.25 }, GDAWN = { top: "#ffb080", bottom: "#3a3a6a", op: 0.3 };
+      const torchBeams = (L, pts) => put(L.glow, pts.map(([x, y, a]) => `<g transform="translate(${x},${y}) rotate(${a})"><path d="M0,0L-140,900L140,900Z" fill="url(#beamg)" opacity=".55" style="mix-blend-mode:screen"/><circle r="26" fill="#fff6c8"/></g>`).join(""));
+      const drive = (tl, id, t0, dur, k = 1) => { tl.fromTo(`#${id}-posts`, { x: 0 }, { x: -1400 * k, duration: dur, ease: "none", immediateRender: false }, t0); tl.fromTo(`#${id}-scroll`, { x: 0 }, { x: -500 * k, duration: dur, ease: "none", immediateRender: false }, t0); };
+
+      // ---------- 0. where EP.1 left off: ต้น curled up under the net ----------
+      add("recap", {
+        set: "bedroom2", setOpts: { id: "b0" }, dark: 0.3, blur: { sky: 6, mid: 6, set: 6, fg: 10 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(560, GB - 160, 1.35, 540, 1150) }, { t: D("recap"), ...fr(560, GB - 160, 1.42, 540, 1150) }] },
+        actors: [TON(820, GB + 80, 1.05, [{ t: 0, mode: "lie", eyes: "closed", mouth: "frown" }])],
+        fx(tl, id, t0) { Fx.glitch(tl, `#${id}`, t0, 0.3, 14, 1001); Fx.heart(tl, t0, D("recap"), 0.4, 0.6); },
+      });
+
+      // ---------- 1. flash-forward: the pickup tearing down the dark road, headlights raking the paddies ----------
+      add("hook", {
+        set: "nightRoad2", setOpts: { id: "r1", x: 120 }, dark: 0.08, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(420, 1260, 1.05, 540, 1150) }, { t: D("hook"), ...fr(520, 1240, 1.15, 540, 1150) }] },
+        shake: (t) => 4 * Math.sin(t * 37),
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          drive(tl, "r1", t0, D("hook"));
+          tl.to(`#${id}-dark`, { opacity: 0.35, duration: 0.5 }, t0 + vo("hook", 1) - 0.15);
+          Fx.heart(tl, t0 + 0.4, D("hook") - 0.4, 0.4, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook") - 0.5, 0.3, 18, 1002); Fx.punch(tl, `#${id} .stage`, t0 + D("hook") - 0.5, 1.08, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.7 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + D("hook") - 0.45);
+        },
+      });
+
+      // ---------- 2. ยายคำ at the net, soft and wrong: "รอเช้าก่อนลูก… หมอธรรมจะมา" ----------
+      add("wait", {
+        set: "bedroom2", setOpts: { id: "b2" }, dark: 0.25, blur: { sky: 6, mid: 4, fg: 10 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...CU(540, GB + 1200, 2.0, 1000) }, { t: D("wait"), ...fr(540, GB + 1200 - 560 * 2.0, 1.12, 540, 1000) }] },
+        actors: [YAI(540, GB + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }, { t: F("wait", 0, 1), mode: "idle", eyes: "normal", mouth: "smile" }])],
+        captions: caps("wait", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("wait"), 0.5, 0.45); },
+      });
+
+      // ---------- 3. มิ้นท์ close, flat refusal: the hospital, now ----------
+      add("no", {
+        set: "bedroom2", setOpts: { id: "b3", phone: true }, dark: 0.2, blur: { sky: 6, mid: 4, fg: 10 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...CU(540, GB + 1300, 2.1, 1000) }] },
+        shake: (t) => (t < 0.4 ? 8 * Math.sin(t * 50) * (0.4 - t) : 0),
+        actors: [MINT(540, GB + 1300, 2.1, [{ t: 0, mode: "point", eyes: "angry", mouth: "scream" }])],
+        captions: caps("no", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.06, 0.3); },
+      });
+
+      // ---------- 4. under the house by lamplight: ต้น over a basin, มิ้นท์ holding him up ----------
+      add("vomit", {
+        set: "kitchen2", setOpts: { id: "k4", stove: 980, lid: "on" }, dark: 0.12, blur: { sky: 4, far: 4, mid: 2, fg: 10 }, light: LAMP, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(520, GK - 300, 1.3, 540, 1050) }, { t: D("vomit"), ...fr(520, GK - 300, 1.38, 540, 1050) }] },
+        actors: [TON(470, GK + 40, 1.0, [{ t: 0, mode: "crouch", eyes: "pain", mouth: "o" }]), MINT(680, GK, 1.05, [{ t: 0, mode: "reach", eyes: "worry", mouth: "o" }], { flip: true })],
+        extra(L) { put(L.act, `<g transform="translate(470,${GK + 30}) scale(1.1)">${Pop2.BASIN}</g>`); },
+        captions: caps("vomit"),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("vomit"), 0.45, 0.5); },
+      });
+
+      // ---------- 5. torches swing in under the house: ป้าบุญ points — "ปอบเข้าแน่ๆ!" ----------
+      add("crowd", {
+        set: "kitchen2", setOpts: { id: "k5", stove: 1100, time: "late" }, dark: 0.2, blur: { sky: 4, far: 4, mid: 2, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, GK - 380, 1.0, 540, 1050) }, { t: D("crowd"), ...fr(600, GK - 400, 1.08, 540, 1050) }] },
+        actors: [BOON(380, GK + 60, 1.05, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }]), KHEM(640, GK + 30, 1.0, [{ t: 0, mode: "torch", eyes: "wide", mouth: "o", torch: true }], { flip: true }),
+          TON(860, GK + 80, 0.82, [{ t: 0, mode: "crouch", eyes: "pain", mouth: "frown" }], { flip: true })],
+        captions: caps("crowd", undefined, { quote: true }),
+        extra(L) { torchBeams(L, [[120, 700, -30], [1000, 640, 28]]); },
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("crowd", 0, 1), 1.05, 0.3); },
+      });
+
+      // ---------- 6. ลุงเข็ม close, a glass of salt water shoved at camera ----------
+      add("salt", {
+        set: "kitchen2", setOpts: { id: "k6", stove: 1100, time: "late" }, dark: 0.18, blur: { sky: 6, far: 6, mid: 5, set: 5, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(520, GK + 1150, 2.0, 1000) }, { t: D("salt"), ...fr(520, GK + 1150 - 560 * 2.0, 1.08, 540, 1000) }] },
+        actors: [{ ...KHEM(520, GK + 1150, 2.0, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }]), who: "khemSalt" }],
+        captions: caps("salt", undefined, { quote: true }),
+        fx(tl, id) { oneHand(id, 0); },
+      });
+
+      // ---------- 7. knowledge on the bench: no fingers down the throat, no salt water — choking; the poison already makes you vomit ----------
+      add("know1", {
+        set: "benchTop", setOpts: { id: "t7", items: [[270, 520, "ห้ามล้วงคอ", "throat"], [810, 520, "ห้ามกินน้ำเกลือ", "saltglass"], [270, 1000, "อาจสำลัก", "lungs"], [810, 1000, "อาเจียนมากอยู่แล้ว", "vomit"]] }, dark: 0, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 900) }, { t: vo("know1", 1) - 0.2, glide: 0.6, ...fr(540, 1000, 1.0, 540, 900) }] },
+        captions: caps("know1"),
+        fx(tl, id, t0, L) {
+          const pop = (sel, at) => tl.fromTo(sel, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, at);
+          const stamp = (i, at, ox, oy) => tl.fromTo(`#t7-x${i}`, { opacity: 0, scale: 1.5, svgOrigin: `${ox} ${oy}` }, { opacity: 1, scale: 1, duration: 0.2, ease: "power3.out", immediateRender: false }, at);
+          pop("#t7-t0", t0 + F("know1", 0, 1) - 0.2); stamp(0, t0 + F("know1", 0, 1) + 0.4, 270, 510);
+          pop("#t7-t1", t0 + F("know1", 0, 2) - 0.2); stamp(1, t0 + F("know1", 0, 2) + 0.4, 810, 510);
+          pop("#t7-t2", t0 + vo("know1", 1)); pop("#t7-t3", t0 + F("know1", 1, 2) - 0.1);
+          PopUI.source(tl, L.light, t0 + 0.4, D("know1") - 0.4, { text: "ที่มา: กรมควบคุมโรค (12 มิ.ย. 2568 · 3 เม.ย. 2568) · คู่มือเห็ดพิษ (2566)", y: 1810 });
+        },
+      });
+
+      // ---------- 8. มิ้นท์ bags what's left of the mushrooms ----------
+      add("grab", {
+        set: "kitchen2", setOpts: { id: "k8", stove: 300, time: "late", lid: "off" }, dark: 0.15, blur: { sky: 6, far: 6, mid: 4, set: 4, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(620, GK + 1200, 2.0, 1000) }] },
+        actors: [{ ...MINT(620, GK + 1200, 2.0, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }]), who: "mintBag" }],
+        captions: caps("grab", undefined, { quote: true }),
+        fx(tl, id) { oneHand(id, 0); },
+      });
+
+      // ---------- 9. knowledge: straight to hospital — with the leftover mushrooms, or a photo ----------
+      add("know2", {
+        set: "benchTop", setOpts: { id: "t9", items: [[540, 470, "ไปโรงพยาบาลทันที", "hospital"], [270, 980, "เห็ดที่เหลือ", "bag"], [810, 980, "หรือรูปถ่าย", "photo"]], ok: [0, 1, 2] }, dark: 0, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 900) }, { t: D("know2"), ...fr(540, 900, 1.04, 540, 900) }] },
+        captions: caps("know2"),
+        fx(tl, id, t0, L) {
+          const pop = (i, at) => { tl.fromTo(`#t9-t${i}`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, at); tl.fromTo(`#t9-x${i}`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, at + 0.4); };
+          pop(0, t0 + 0.2); pop(1, t0 + F("know2", 0, 1)); pop(2, t0 + F("know2", 0, 1) + 0.9);
+          PopUI.source(tl, L.light, t0 + 0.4, D("know2") - 0.4, { text: "ที่มา: กรมควบคุมโรค (12 มิ.ย. 2568)", y: 1810 });
+        },
+      });
+
+      // ---------- 10. her phone over the pot — focus, flash: "รูปนี้… ไม่ลงไอจีนะ" ----------
+      add("photo", {
+        set: "potTop", setOpts: { id: "p10", ladle: false }, dark: 0, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(540, 980, 1.05, 540, 960) }] },
+        captions: caps("photo", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          PopUI.phone(tl, L.light, t0, D("photo"), { mode: "camera", y: 1000, rot: 0, out: false });
+          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0 + F("photo", 0, 1) - 0.2);
+        },
+      });
+
+      // ---------- 11. ยายคำ, too calm: "ยายไม่เป็นไรหรอก" ----------
+      add("fine", {
+        set: "kitchen2", setOpts: { id: "k11", stove: 900, time: "late" }, dark: 0.18, blur: { sky: 6, far: 6, mid: 5, set: 5, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(520, GK + 1200, 2.0, 1000) }, { t: D("fine"), ...fr(520, GK + 1200 - 560 * 2.0, 1.1, 540, 1000) }] },
+        actors: [YAI(520, GK + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }])],
+        captions: caps("fine", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("fine"), 0.5, 0.45); },
+      });
+
+      // ---------- 12. two-shot: มิ้นท์ takes ยาย by the hand ----------
+      add("both", {
+        set: "kitchen2", setOpts: { id: "k12", stove: 1000, time: "late" }, dark: 0.15, blur: { sky: 4, far: 4, mid: 3, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(540, GK - 420, 1.25, 540, 1050) }] },
+        actors: [MINT(660, GK + 40, 1.1, [{ t: 0, mode: "point", eyes: "angry", mouth: "scream" }], { flip: true }), YAI(400, GK + 40, 1.05, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("both", undefined, { quote: true }),
+      });
+
+      // ---------- 13. knowledge: everyone who ate from the pot goes to be checked ----------
+      add("know3", {
+        set: "benchTop", setOpts: { id: "t13", items: [[270, 520, "ต้น · กินสองถ้วย", "bowl"], [810, 520, "ยาย · กินด้วย", "bowl"], [540, 1000, "ต้องไปตรวจด้วย", "hospital"]], ok: [2] }, dark: 0, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 900) }] },
+        captions: caps("know3"),
+        fx(tl, id, t0, L) {
+          [0, 1].forEach((i) => tl.fromTo(`#t13-t${i}`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0 + 0.1 + i * 0.25));
+          tl.fromTo("#t13-t2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0 + F("know3", 0, 1) - 0.1);
+          tl.fromTo("#t13-x2", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0 + F("know3", 0, 1) + 0.4);
+          PopUI.source(tl, L.light, t0 + 0.4, D("know3") - 0.4, { text: "ที่มา: คู่มือเห็ดพิษ กรมควบคุมโรค (2566)", y: 1810 });
+        },
+      });
+
+      // ---------- 14. 3 a.m., the village road empty both ways; her phone light the only light ----------
+      add("nocar", {
+        set: "village2", setOpts: { id: "v14", time: "night", fence: [-700] }, dark: 0.15, blur: { far: 2, fg: 8 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 0.92, 540, 1000) }, { t: D("nocar"), ...fr(560, 1150, 0.86, 540, 1000) }] },
+        actors: [{ ...MINT(600, GV + 420, 0.75, [{ t: 0, mode: "phoneLook", eyes: "worry", mouth: "frown" }]), who: "mintPhone" }],
+        captions: caps("nocar"),
+        fx(tl, id, t0, L) { oneHand(id, 0); Pop2.particles(tl, L.glow, { type: "firefly", n: 12, box: [0, 900, 1400, 800], t0, dur: D("nocar"), seed: 9 }); },
+      });
+
+      // ---------- 15. headlights swing in: ลุงทองดี's pickup — "ขึ้นรถเร็ว!" ----------
+      add("truck", {
+        set: "nightRoad2", setOpts: { id: "r15", x: 900, flip: true }, dark: 0.08, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(640, 1180, 0.95, 540, 1050) }] },
+        actors: [THONG(400, GR + 90, 1.05, [{ t: 0, mode: "wave", eyes: "wide", mouth: "scream" }])],
+        captions: caps("truck", undefined, { quote: true }),
+        fx(tl, id, t0) {
+          tl.fromTo("#r15-truck", { x: 700 }, { x: 0, duration: 0.8, ease: "power3.out", immediateRender: false }, t0);
+          tl.fromTo("#r15-lights", { x: 700 }, { x: 0, duration: 0.8, ease: "power3.out", immediateRender: false }, t0);
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0); Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.06, 0.3);
+        },
+      });
+
+      // ---------- 16. in the truck bed, wind in her hair: "ผีปอบ… ขับรถกระบะได้ด้วยเหรอ" ----------
+      add("joke", {
+        set: "nightRoad2", setOpts: { id: "r16", x: 1150, s: 2.4, bedFront: true }, dark: 0.12, blur: { far: 4, mid: 4 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(600, 1000, 1.0, 540, 1180) }] },
+        shake: (t) => 3 * Math.sin(t * 23),
+        actors: [YAI(280, 1230, 1.1, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }]), TON(520, 1120, 1.0, [{ t: 0, mode: "lie", eyes: "closed", mouth: "frown" }]), MINT(800, 1190, 1.3, [{ t: 0, mode: "sit", eyes: "side", mouth: "o" }], { flip: true })],
+        captions: caps("joke", undefined, { quote: true }),
+        fx(tl, id, t0) { drive(tl, "r16", t0, D("joke"), 1.4); },
+      });
+
+      // ---------- 17. the road; then ลุงทองดี in the dashboard light: his wife ate the same white mushroom ----------
+      const RS = vo("road", 1) - 0.25;
+      split("road", RS, {
+        set: "nightRoad2", setOpts: { id: "r17", x: 360 }, dark: 0.08, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(300, 1150, 0.78, 540, 1050) }, { t: RS, ...fr(560, 1150, 0.82, 540, 1050) }] },
+        shake: (t) => 3 * Math.sin(t * 29),
+        captions: caps("road", [0], { quote: true }),
+        fx(tl, id, t0) { drive(tl, "r17", t0, RS); },
+      }, {
+        set: "cab2", setOpts: { id: "cb17" }, dark: 0.1, light: DASH, grade: { top: "#0a1430", bottom: "#0a2a3a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("road") - RS, ...fr(420, 1000, 1.12, 540, 960) }] },
+        shake: (t) => 2 * Math.sin(t * 29),
+        actors: [THONG(300, 2200, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: 1.4, mode: "idle", eyes: "closed", mouth: "flat" }], { flip: true })],
+        captions: capsFrom("road", RS, [1], { quote: true }),
+        fx(tl, id, t0) { tl.fromTo("#cb17-road", { y: 0 }, { y: 30, duration: 0.4, repeat: Math.ceil((D("road") - RS) / 0.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); Fx.heart(tl, t0 + 1.8, D("road") - RS - 1.8, 0.5, 0.45); },
+      });
+
+      // ---------- 18. the district hospital's emergency entrance, 3:30 a.m.; they come in from the truck ----------
+      add("er", {
+        set: "erFront2", setOpts: { id: "e18" }, dark: 0.05, blur: { far: 2 }, light: TUBE, grade: { top: "#0a1430", bottom: "#2a3a4a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(600, 1100, 0.78, 540, 1000) }, { t: D("er"), ...fr(620, 1150, 0.86, 540, 1000) }] },
+        actors: [MINT(-60, GW + 120, 0.72, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 520, y: GW + 60, dur: D("er"), ease: "none" } }),
+          YAI(-220, GW + 140, 0.66, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: 260, y: GW + 80, dur: D("er"), ease: "none" } })],
+        captions: caps("er"),
+      });
+
+      // ---------- 19. the doctor, close: what did he eat, and when ----------
+      add("ask", {
+        set: "ward2", setOpts: { id: "w19" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...CU(560, GW + 1200, 2.0, 1000) }, { t: D("ask"), ...fr(560, GW + 1200 - 560 * 2.0, 1.06, 540, 1000) }] },
+        actors: [DOC(560, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "o" }])],
+        captions: caps("ask", undefined, { quote: true }),
+      });
+
+      // ---------- 20. her phone held up to the doctor: the photo of the pot ----------
+      add("answer", {
+        set: "ward2", setOpts: { id: "w20" }, dark: 0.04, blur: { sky: 8, far: 8, set: 8 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...CU(380, GW + 1300, 2.0, 1080) }] },
+        actors: [MINT(380, GW + 1300, 2.0, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }])],
+        captions: caps("answer", undefined, { quote: true }),
+        fx(tl, id, t0, L) { PopUI.phone(tl, L.light, t0 + F("answer", 0, 1) - 0.25, D("answer") - F("answer", 0, 1) + 0.25, { mode: "nosignal", x: 760, y: 1250, rot: 6, out: false, photo: true }); },
+      });
+
+      // ---------- 21. knowledge: the history form filled in — what, when, how many ----------
+      add("know4", {
+        set: "ward2", setOpts: { id: "w21" }, dark: 0.04, blur: { sky: 8, far: 8, set: 10 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.2, 540, 960) }] },
+        captions: caps("know4"),
+        fx(tl, id, t0, L) {
+          PopUI.form(tl, L.light, t0 + 0.05, D("know4"), { y: 760, out: false, rows: [["กินอะไร", "แกงเห็ดขาว (มีตัวอย่าง)", F("know4", 0, 1)], ["กินเมื่อไหร่", "หนึ่งทุ่ม เมื่อคืน", F("know4", 0, 2)], ["กินกี่คน", "2 คน (ต้น, ยาย)", F("know4", 0, 2) + 0.5], ["มีอาการ", "ปวดท้อง อาเจียน", F("know4", 0, 2) + 0.9]] });
+          PopUI.source(tl, L.light, t0 + 0.4, D("know4") - 0.4, { text: "ที่มา: สคร.7 ขอนแก่น (9 มิ.ย. 2566) · ศูนย์พิษวิทยารามาธิบดี โทร 1367", y: 1810 });
+        },
+      });
+
+      // ---------- 22. the doctor with the bag of mushrooms: "ระโงกหิน… ต้องนอนโรงพยาบาล" ----------
+      add("diag", {
+        set: "ward2", setOpts: { id: "w22" }, dark: 0.05, blur: { sky: 6, far: 6, set: 6 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(560, GW - 620, 1.3, 540, 1100) }, { t: D("diag"), ...fr(560, GW - 660, 1.42, 540, 1100) }] },
+        actors: [{ ...DOC(560, GW + 60, 1.3, [{ t: 0, mode: "raise", eyes: "normal", mouth: "frown" }]), who: "docBag" }],
+        captions: caps("diag", undefined, { quote: true }),
+        fx(tl, id, t0) { oneHand(id, 0); Fx.heart(tl, t0 + F("diag", 0, 1), D("diag") - F("diag", 0, 1), 0.48, 0.45); },
+      });
+
+      // ---------- 23. the ward before dawn, the clock at five ----------
+      add("dawn", {
+        set: "ward2", setOpts: { id: "w23", time: "dawn", clock: [260, 520, 150, 0] }, dark: 0.12, blur: { sky: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(480, 1000, 0.82, 540, 960) }, { t: D("dawn"), ...fr(480, 1000, 0.88, 540, 960) }] },
+        actors: [TON(560, 1220, 0.75, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }]), MINT(900, GW + 40, 0.7, [{ t: 0, mode: "sitChair", eyes: "closed", mouth: "flat" }], { flip: true })],
+        extra(L) { put(L.set, chair(900, GW + 40, 0.7)); },
+        captions: caps("dawn"),
+      });
+
+      // ---------- 24. ต้น sits up in bed: the pain's gone ----------
+      add("better", {
+        set: "ward2", setOpts: { id: "w24", time: "dawn" }, dark: 0.08, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.15, 540, 1000) }, { t: D("better"), ...fr(560, 1000, 1.22, 540, 1000) }] },
+        actors: [TON(380, 1210, 0.82, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }]), MINT(820, GW + 60, 0.9, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: caps("better", undefined, { quote: true }),
+      });
+
+      // ---------- 25. the window close up: a handprint with long fingers, eyes outside — one hit, cut ----------
+      const WB = F("print", 1, 1) + 0.3, WC = D("print") - 1.0, WD = D("print") - 0.6;
+      add("print", {
+        set: "ward2", setOpts: { id: "w25", time: "night", print: true, eyes: true }, dark: 0.32, blur: { sky: 4 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(800, 560, 1.3, 540, 820) }, { t: F("print", 0, 1) - 0.1, glide: 1.4, ...fr(820, 580, 1.9, 540, 860) }] },
+        captions: caps("print"),
+        extra(L) { put(L.light, `<g id="w25-face" opacity="0">${Pop2.pobFace(540, 1000, 1.25, { id: "w25-f" })}</g>`); },
+        fx(tl, id, t0) {
+          tl.set("#w25-eyes", { opacity: 0 }, t0);
+          tl.to("#w25-eyes", { opacity: 1, duration: 0.5, ease: "power1.in" }, t0 + WB);
+          Fx.heart(tl, t0 + F("print", 0, 1), WC - F("print", 0, 1), 0.55, 0.6);
+          tl.to("#w25-eyes", { opacity: 0, duration: 0.08 }, t0 + WC);
+          tl.fromTo("#w25-face", { opacity: 0, scale: 1.25, svgOrigin: "540 1000" }, { opacity: 1, scale: 1, duration: 0.09, ease: "power4.out", immediateRender: false }, t0 + WD);
+          Fx.glitch(tl, `#${id}`, t0 + WD + 0.05, 0.18, 16, 1025);
+          tl.set("#black", { opacity: 1 }, t0 + WD + 0.22);
+        },
+      });
+
+      // ---------- 26. the choice: take him home / let the doctors keep watching — "home" gets taken over ----------
+      add("choice", {
+        set: "ward2", setOpts: { id: "w26", time: "dawn" }, dark: 0.3, blur: { sky: 6, far: 6, set: 6, act: 4 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(480, 1100, 1.2, 540, 1150) }] },
+        actors: [TON(380, 1210, 0.82, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0);
+          PopUI.choice(tl, L.light, t0 + 0.05, D("choice") - 0.05, { q: "จะทำยังไง?", a: "ให้หมอดูต่อ", b: "พากลับบ้าน", secs: 3, y: 780, iconB: "home",
+            possessed: { at: 1.0, side: "b", glitch: "กลับบ้าน…", who: "…กลับบ้านเถอะลูก" } });
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 1030); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 1031);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
+
+      // ---------- 27. end card: the community-forest sign — the last part ----------
+      add("next", {
+        set: "sign2", setOpts: { id: "sg", ep: "ตอนจบ", title: "อย่าอวดว่าหาย" }, dark: 0, blur: { far: 6, mid: 5, fg: 10 }, grade: { top: "#ffd9a0", bottom: "#5a4a7a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.0, 540, 900) }, { t: D("next"), ...fr(540, 880, 1.05, 540, 900) }] },
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#sg-sign", { rotation: -9, svgOrigin: "540 500" }, { rotation: 0, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          tl.fromTo("#sg-note", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.6);
+          Pop2.particles(tl, L.light, { type: "dust", n: 24, box: [0, 200, 1080, 1400], t0, dur: D("next"), seed: 8 });
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Pop.life(tl, `#${id}`, t0, sh.dur); }; });
+      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">เห็ดปอบ · EP.2</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
+      Fx.setup(root);
+      Engine.build(root, tl, shots);
+
+      root.appendChild(document.getElementById("grain"));
+      const rnd = (() => { let s = 99; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+      for (let i = 0; i * 0.083 < SCHED.total; i++) tl.set("#grain", { x: Math.round(-50 + rnd() * 50), y: Math.round(-50 + rnd() * 50) }, i * 0.083);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
