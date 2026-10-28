@@ -3,7 +3,7 @@
 ใช้แคปชันเดียวกันได้ทั้ง TikTok, Instagram, Facebook · YouTube Shorts ใช้ "ชื่อคลิป" เป็นหัวข้อ แล้ววางแคปชันในคำอธิบาย
 คอมเมนต์ปักหมุด = แหล่งอ้างอิง · แคปชันไม่เฉลยหักมุมท้ายตอน (เลขวิทยุ / น้ำในแท็งก์)
 
-ไฟล์ที่ลง: ไฟล์ HQ ที่ส่งในแชท (`EP1-krapong-buam-HQ.mp4`, `EP2-krueang-pan-fai-HQ.mp4`, `EP3-khon-plaek-na-HQ.mp4`, `EP4-rua-lom-HQ.mp4`, `EP5-pam-rang-HQ.mp4`) ไม่ใช่ `*-share.mp4` ใน repo
+ไฟล์ที่ลง: ไฟล์ HQ แบบมีฮุกเปิดที่ส่งในแชท (`EP1-krapong-buam-HQ-hook.mp4`, `EP2-krueang-pan-fai-HQ-hook.mp4`, `EP3-khon-plaek-na-HQ-hook.mp4`, `EP4-rua-lom-HQ-hook.mp4`, `EP5-pam-rang-HQ-hook.mp4`) ไม่ใช่ `*-share.mp4` ใน repo · ตั้งภาพปก (cover) ตอนอัปโหลดด้วยไฟล์ `video/fence/hook/cover-epN.jpg` (ส่งในแชทด้วย)
 
 ## EP.1 กระป๋องบวม
 
