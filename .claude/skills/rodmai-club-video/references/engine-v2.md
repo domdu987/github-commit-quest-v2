@@ -112,6 +112,14 @@ C.name = { v2: { skin, iris, lash, blush, lip, bags, w (กว้าง), limb (
 - `pop2hosp.js`: `nightRoad2` (กระบะไทยสัดส่วนจริง `o.s ≈ 2.25·c`, `bedFront`/`doorFront`), `cab2` (คนขับผ่านกระจกหน้า), `erFront2`, `ward2`, `benchTop`, `Pop2.truck`
 - `pop2end.js`: `board2` (กระดานกราฟอาการ), `Pop2.yaiBack`, `feet2`
 - `pop2ui.js`: `PopUI` (หัวข้อ 6)
+- `maps.js` + `mapsdata.js` (`video/lib-shared/`, setup ใส่ให้ทุกตอนอัตโนมัติ): แผนที่เดินทาง (กติกา S12 ทุกการเดินทางต้องมีแผนที่)
+  - `Sets.mapTH(L, { id, x, y, s, route: [[lon, lat]…], from, to, vehicle: "bus"|"van"|"moto"|"ambulance", region: [lon, lat, r, "อีสาน"], toIcon })` ประเทศไทยจริง (Natural Earth 1:50m) พร้อมประเทศรอบข้าง
+  - `Maps.route(tl, id, t0, { go: [เริ่ม, ถึง] })` หมุดต้นทางตก → เส้นทางวาดตามพร้อมพาหนะวิ่งบนหัวเส้น → ภูมิภาคเรืองแสง → หมุดปลายทางตกพร้อมวงคลื่น
+  - กล้องซูมเข้าหมุดปลายทางตอนจบด้วย `cam.keys` (`glide`) แล้วตัดเข้าฉากที่ไปถึง · `Maps.P(lon, lat)` คืนพิกัดในแผนที่
+  - แผนที่ระดับหมู่บ้าน (บ้าน → ศาลา AED) ให้ทำเป็น set ของเรื่องเองโดยใช้ `Maps.smooth` กับ `Maps.VEH`
+- ตัวอย่างกราฟิกระดับมืออาชีพ (กติกา V8): `video/mm/lib/mmui.js` ของผีแม่ม่าย
+  - ฟลิปชาร์ต อสม. ที่หัวใจบีบ/เต้นระริกได้ จอ ECG กวาดตามจังหวะ ป้ายตรายาง และการ์ดกฎห้อยสายคล้องคอพร้อมไอคอนที่ขยับ
+  - ใช้เป็นแม่แบบ: เส้นหมึก 4–5 สีแบน + เงา 1 ชั้น + ไฮไลต์ 1 ชั้น · เข้าด้วย back/elastic/bounce ไล่ทีละชิ้น · มีการเคลื่อนไหวรองหลังเข้า · ตัดภาพในวงกลมไอคอนด้วย clipPath
 
 **lib ของเรื่องใหม่** (`hf/lib/<story>.js`) ใช้แบบเดียวกับ pop2*.js:
 ```js
@@ -146,6 +154,8 @@ C.name = { v2: { skin, iris, lash, blush, lip, bags, w (กว้าง), limb (
 ## 7. กับดักที่เจอแล้ว
 
 **GSAP บน SVG**
+- gradient แบบ objectBoundingBox บนเส้นตรงแนวตั้ง/แนวนอน (กล่องกว้างหรือสูง 0) จะไม่ระบายอะไรเลย → ใช้สีทึบหรือ `gradientUnits="userSpaceOnUse"` (ท่อเลือดของหัวใจเคยเป็นสีดำเพราะเหตุนี้)
+- ของที่ต้องซ่อนจนถึงจังหวะเข้า (หมุด ป้าย พาหนะ) ต้อง `tl.set(..., { opacity: 0 }, t0)` ตอนต้นช็อต ไม่งั้นจะโผล่ค้างก่อนเวลา เพราะ `immediateRender: false`
 - ห้าม tween `x/y/rotation/scale` บน `<g>` ที่มี attribute `transform` เพราะ GSAP จะล้าง translate เดิม แล้วของจะกระโดดไปมุมจอ
   - ให้ใส่ id บน `<g>` ห่อชั้นนอกที่ไม่มี transform แล้ว tween ตัวนั้น หรือ tween `attr: { transform }`
 - **`svgOrigin` ใช้พิกัดเดียวกับที่รูปทรงข้างใน element วาดไว้** (พิกัดของ parent เมื่อ element ไม่มี transform) ไม่ใช่พิกัดจอ (ทดสอบแล้ว 28 ต.ค. 2026)
