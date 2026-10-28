@@ -7,7 +7,8 @@
 //   Mm.sign(x, y, s, o)   the wooden board with the red brush letters; o.text
 //   Mm.ghost(x, y, s, o)  ผีแม่ม่าย: coal-black, long hair over the face, thin, a torn sarong, long fingers, green eyes;
 //                         o.pose "stand" | "sit" (at the foot of a mat) | "peek" (head and a hand round a door frame); origin at the feet;
-//                         ids from o.id: #id (outer, no transform), #id-eyes
+//                         ids from o.id: #id (outer, no transform), #id-eyes · o.eyes false leaves the eyes out
+//   Mm.ghostEyes(x, y, s, o)  just the eyes, where Mm.ghost puts them (o.pose, o.id) — draw them in L.glow so the darkness can't dim them
 (function () {
   const { mk, f1, put, blob, cloud2, crown, palm, tuft, house2, puddle } = Pop2;
   const INK = "#2e2a26";
@@ -21,6 +22,7 @@
     <linearGradient id="mmBoard" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8a878"/><stop offset="1" stop-color="#9a7a4e"/></linearGradient>
     <linearGradient id="mmRoad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a3a24"/><stop offset="1" stop-color="#9a5634"/></linearGradient>
     <linearGradient id="mmRoadN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e120c"/><stop offset="1" stop-color="#3a2216"/></linearGradient>
+    <linearGradient id="mmShirtShade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a0402" stop-opacity=".5"/><stop offset=".55" stop-color="#2a0402" stop-opacity="0"/><stop offset="1" stop-color="#ffd8c8" stop-opacity=".22"/></linearGradient>
     <radialGradient id="mmTube"><stop offset="0" stop-color="#e8fff4" stop-opacity=".75"/><stop offset=".25" stop-color="#b8f0e0" stop-opacity=".3"/><stop offset="1" stop-color="#b8f0e0" stop-opacity="0"/></radialGradient>
     <radialGradient id="mmGhostRim" cx=".5" cy=".3" r=".7"><stop offset=".7" stop-color="#0a0c0b" stop-opacity="0"/><stop offset="1" stop-color="#3a5a7a" stop-opacity=".5"/></radialGradient>`;
 
@@ -32,7 +34,9 @@
       <path d="M-58,16Q0,34 58,16L112,40L94,96L66,84L68,250Q0,262 -66,250L-64,84L-94,96L-112,40Z" fill="${fill}" ${OUT3}/>
       <path d="M-24,18Q0,40 24,18" stroke="${dk}" stroke-width="5" fill="none"/>
       <path d="M-30,90Q-20,170 -36,240M22,96Q34,170 20,244M-64,84Q-60,120 -58,150" stroke="${dk}" stroke-width="4" fill="none" opacity=".55"/>
-      <path d="M-46,40Q-40,80 -48,120" stroke="#ff9a8a" stroke-width="6" fill="none" opacity="${o.night ? 0.15 : 0.35}" stroke-linecap="round"/>`;
+      <path d="M-46,40Q-40,80 -48,120" stroke="#ff9a8a" stroke-width="6" fill="none" opacity="${o.night ? 0.15 : 0.35}" stroke-linecap="round"/>
+      ${o.shade ? `<path d="M-58,16Q0,34 58,16L112,40L94,96L66,84L68,250Q0,262 -66,250L-64,84L-94,96L-112,40Z" fill="url(#mmShirtShade)"/><path d="M58,16L112,40L94,96M66,84L68,250" stroke="#ffe4d8" stroke-width="4" fill="none" opacity=".55" stroke-linecap="round"/>
+        <path d="M-20,120Q-10,170 -24,230M40,110Q52,170 40,236" stroke="#5a0806" stroke-width="5" fill="none" opacity=".35"/>` : ""}`;
     return `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><g ${o.id ? `id="${o.id}"` : ""}>${tee}</g></g>`;
   };
   // a pole stuck in the ground with the crossbar, the shirt hanging from it; origin at the foot of the pole
@@ -53,18 +57,28 @@
     const fingers = (fx, fy, dir) => [-14, -5, 4, 13].map((d, i) => `<path d="M${fx + d},${fy}q${dir * (6 + i * 3)},${40 + i * 6} ${dir * (4 + i * 4)},${84 + i * 8}" stroke="${BL}" stroke-width="7" fill="none" stroke-linecap="round"/>`).join("");
     let g = "";
     if (pose === "sit") {
-      // kneeling, sitting back on its heels at the foot of a mat, hair hanging forward over the face
-      g += `<path d="M-120,0Q-130,-120 -60,-180Q0,-210 60,-180Q130,-120 120,0Z" fill="${BL}"/>`;
-      g += `<path d="M-60,-180Q-70,-300 -40,-360Q0,-380 40,-360Q70,-300 60,-180Z" fill="${BL}"/>`;
-      g += hair(0, -400, 330);
-      g += `<path d="M-50,-330Q-90,-240 -70,-120" stroke="${BL}" stroke-width="22" fill="none" stroke-linecap="round"/><path d="M50,-330Q90,-240 74,-120" stroke="${BL}" stroke-width="22" fill="none" stroke-linecap="round"/>`;
-      g += fingers(-70, -122, -1) + fingers(74, -122, 1);
-      g += Pop2.eyePair(0, -384, 0.62, `${id}-eyes`);
+      // sitting พับเพียบ at the foot of a mattress: legs folded to its left, the torn sarong spread on the floor, a thin torso leaning in,
+      // the head tilted, hair falling forward in strands that part only at the eyes; the near hand flat on the floor, its long fingers
+      // reaching towards the sleeper's feet (screen left)
+      const rr = mk(o.seed || 29);
+      g += `<path d="M-130,0Q-140,-80 -70,-130Q0,-170 70,-150Q150,-120 168,-40L178,0Z" fill="${BL}"/>`;
+      for (let k = 0; k < 9; k++) { const hx = -130 + k * 34; g += `<path d="M${hx},-4l${10 + rr() * 8},${14 + rr() * 16}l${8 + rr() * 6},${-18 - rr() * 6}Z" fill="${BL}"/>`; }
+      g += `<path d="M-52,-140Q-66,-250 -46,-330Q8,-352 66,-330Q74,-250 56,-140Z" fill="${BL}"/>`;
+      g += `<path d="M-46,-326Q-80,-250 -104,-170Q-118,-100 -132,-30" stroke="${BL}" stroke-width="20" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+      g += [-30, -14, 2, 18].map((d, i) => `<path d="M-132,-30q${-30 - i * 6},${10 + d * 0.3} ${-70 - i * 10},${22 + d * 0.8}" stroke="${BL}" stroke-width="7" fill="none" stroke-linecap="round"/>`).join("");
+      g += `<path d="M62,-322Q96,-240 70,-160Q50,-130 20,-128" stroke="${BL}" stroke-width="18" fill="none" stroke-linecap="round"/>`;
+      g += `<ellipse cx="18" cy="-384" rx="48" ry="54" fill="${BL}" transform="rotate(14 18 -384)"/>`;
+      // the hair: a dark mass behind, then strands down over the face and shoulders, a gap at the eyes
+      g += `<path d="M-40,-420C-90,-380 -96,-200 -80,-60L-40,-90C-40,-200 -30,-330 -10,-400ZM70,-420C120,-380 130,-220 110,-80L80,-110C80,-220 76,-330 50,-400Z" fill="${BL}"/>`;
+      for (let k = 0; k < 15; k++) { const u = k / 14, sx = -34 + u * 100, len = 170 + rr() * 150 + Math.abs(u - 0.5) * 80, w = 4 + rr() * 6, gap = Math.abs(sx - 18) < 30 ? 1 : 0;
+        g += `<path d="M${f1(sx)},${-430 + Math.abs(u - 0.5) * 30}C${f1(sx + (rr() - 0.5) * 20)},${f1(-380 + gap * 40)} ${f1(sx + (u - 0.5) * 50 + (rr() - 0.5) * 24)},${f1(-300)} ${f1(sx + (u - 0.5) * 70 + (rr() - 0.5) * 30)},${f1(-430 + len)}" stroke="${BL}" stroke-width="${f1(w)}" fill="none" stroke-linecap="round"/>`; }
+      g += `<path d="M-36,-436Q18,-470 74,-430" stroke="${BL2}" stroke-width="6" fill="none"/>`;
+      if (o.eyes !== false) g += Pop2.eyePair(18, -386, 0.62, `${id}-eyes`);
     } else if (pose === "peek") {
       // only the head and one hand round a door frame (frame edge at x 0)
       g += hair(-20, -560, 300) + `<path d="M0,-470Q-20,-430 0,-390" stroke="${BL}" stroke-width="18" fill="none"/>`;
       g += `<path d="M10,-440q-30,-6 -44,4" stroke="${BL}" stroke-width="14" stroke-linecap="round"/>` + fingers(-36, -438, -1).replace(/q/g, "q").slice(0);
-      g += Pop2.eyePair(-24, -548, 0.62, `${id}-eyes`);
+      if (o.eyes !== false) g += Pop2.eyePair(-24, -548, 0.62, `${id}-eyes`);
     } else {
       // standing: too thin, too tall, the sarong torn into strips at the hem, arms hanging past the knees
       g += `<path d="M-64,0L-52,-120Q-60,-260 -40,-330L40,-330Q60,-260 52,-120L64,0L40,-18L22,6L4,-22L-16,4L-36,-20Z" fill="${BL}"/>`;
@@ -73,11 +87,14 @@
       g += fingers(-78, -150, -1) + fingers(80, -150, 1);
       g += hair(0, -600, 330);
       g += `<path d="M-60,-120Q0,-100 60,-120" stroke="${BL2}" stroke-width="4" fill="none"/>`;
-      g += Pop2.eyePair(0, -590, 0.62, `${id}-eyes`);
+      if (o.eyes !== false) g += Pop2.eyePair(0, -590, 0.62, `${id}-eyes`);
     }
-    if (o.rim !== false) g += `<g opacity=".55">${pose === "stand" ? `<path d="M40,-540Q52,-460 42,-330Q60,-260 52,-120" stroke="${RIM}" stroke-width="3" fill="none"/>` : `<path d="M60,-180Q130,-120 120,0" stroke="${RIM}" stroke-width="3" fill="none"/>`}</g>`;
+    if (o.rim !== false) g += `<g opacity=".55">${pose === "stand" ? `<path d="M40,-540Q52,-460 42,-330Q60,-260 52,-120" stroke="${RIM}" stroke-width="3" fill="none"/>` : `<path d="M66,-330Q74,-250 56,-140Q150,-120 168,-40" stroke="${RIM}" stroke-width="3" fill="none"/><path d="M60,-424Q74,-400 66,-360" stroke="${RIM}" stroke-width="3" fill="none"/>`}</g>`;
     return `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><g id="${id}">${g}</g></g>`;
   };
+
+  // the eyes alone, placed where Mm.ghost(x, y, s, { pose }) has them: for L.glow, above the darkness
+  Mm.ghostEyes = (x, y, s, o = {}) => { const [ex, ey] = { stand: [0, -590], sit: [18, -386], peek: [-24, -548] }[o.pose || "stand"]; return Pop2.eyePair(x + ex * s, y + ey * s, 0.62 * s, o.id); };
 
   // ---------------- the loudspeaker tower (หอกระจายข่าว) ----------------
   const horns = (x, G, s, id) => `<g transform="translate(${f1(x)},${f1(G)}) scale(${s})">
@@ -134,9 +151,9 @@
       `<path d="M${x0},${f1(y0 - 110 * sc)}L${f1(x0 + n * dx)},${f1(y0 + n * dy - 110 * sc)}M${x0},${f1(y0 - 50 * sc)}L${f1(x0 + n * dx)},${f1(y0 + n * dy - 50 * sc)}" stroke="${night ? "#1a1410" : "#6a5034"}" stroke-width="${f1(7 * sc)}"/>`;
     s += fence(tx - 230, G - 40, 7, -40, 36, 0.8) + fence(tx + 210, G - 40, 7, 40, 36, 0.8);
     // the shirts of the near houses and the sign on the left gate
-    s += Mm.shirtPole(NL[0] + 520 * NL[2], NL[1] + 10, 0.92, { night, id: `${id}-sh0` });
-    s += Mm.shirtPole(NR[0] - 560 * NR[2], NR[1] + 10, 0.92, { night, id: `${id}-sh1` });
-    s += Mm.sign(NL[0] + 640 * NL[2], NL[1] - 150, 0.62, { id: `${id}-sign`, rot: -4 });
+    s += Mm.shirtPole(NL[0] + 520 * NL[2], NL[1] + 10, 0.64, { night, id: `${id}-sh0` });
+    s += Mm.shirtPole(NR[0] - 560 * NR[2], NR[1] + 10, 0.64, { night, id: `${id}-sh1` });
+    s += Mm.sign(NL[0] + 660 * NL[2], NL[1] - 120, 0.74, { id: `${id}-sign`, rot: -4 });
     // the tower and the lamp post on the right verge
     s += horns(o.horns ?? 900, G - 30, 0.62, `${id}-horns`);
     const LX = o.lampX ?? 240;

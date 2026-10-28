@@ -14,13 +14,17 @@
   const ln = (w = 2.6) => `stroke="${LINE}" stroke-width="${w}" stroke-linejoin="round"`;
 
   // ---------------- hair ----------------
-  // an undercut: shaved sides with stubble dots, a swept top that falls to one side
-  const undercut = (h) => `
-    <path d="M-48,-548C-52,-596 -22,-618 2,-618C28,-617 52,-600 49,-548Q46,-566 41,-572L-42,-572Q-46,-562 -48,-548Z" fill="${dk(h.c, -0.25)}" opacity=".55" ${ln(2)}/>
-    <g fill="${h.c}" opacity=".45">${[[-40, -566], [-34, -580], [-42, -556], [40, -566], [36, -580], [44, -556], [-30, -592], [32, -594]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.7"/>`).join("")}</g>
-    <path d="M-40,-584C-44,-640 18,-652 46,-618Q58,-604 52,-580Q40,-600 24,-596Q8,-612 -10,-598Q-26,-604 -40,-584Z" fill="${h.c}" ${ln()}/>
-    <path d="M-30,-606Q2,-640 40,-616M-14,-600Q14,-628 46,-604" stroke="${h.s}" stroke-width="2.4" fill="none" opacity=".7" stroke-linecap="round"/>
-    <path d="M-24,-622Q4,-640 30,-630" stroke="${h.sh}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".5"/>`;
+  // an undercut, front view: the top grows from a hairline just above the brows and sweeps up and over; only the temples are
+  // clippered, in an opaque stubble tone between skin and hair, so the hair always sits on the head (no skin band under it)
+  const undercut = (h, skin) => {
+    const stub = Rig2.mix(skin, h.c, 0.42);
+    return `
+    <path d="M-47,-590C-49,-578 -48,-566 -45,-556L-40,-558Q-40,-574 -37,-593Z" fill="${stub}"/><path d="M52,-592C51,-578 50,-566 48,-556L43,-558Q42,-574 40,-591Z" fill="${stub}"/>
+    <g fill="${h.c}" opacity=".55">${[[-44, -584], [-42, -572], [-44, -563], [46, -584], [45, -572], [46, -563]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.4"/>`).join("")}</g>
+    <path d="M-47,-590C-54,-630 -22,-656 8,-656C42,-656 64,-632 52,-592Q47,-584 41,-588Q30,-600 16,-596Q2,-606 -12,-597Q-28,-602 -47,-590Z" fill="${h.c}" ${ln()}/>
+    <path d="M-32,-608Q0,-644 44,-618M-16,-602Q14,-632 48,-604M-40,-598Q-30,-626 -6,-640" stroke="${h.s}" stroke-width="2.4" fill="none" opacity=".7" stroke-linecap="round"/>
+    <path d="M-22,-630Q6,-650 34,-638" stroke="${h.sh}" stroke-width="6" fill="none" stroke-linecap="round" opacity=".5"/>`;
+  };
   // bangs over the forehead, hair tucked behind the ears (the ponytail itself is in back)
   const bangs = (h) => `
     <path d="M-50,-548C-56,-606 -18,-628 4,-628C34,-627 60,-604 52,-548Q48,-566 40,-570Q30,-560 20,-574Q10,-562 -2,-576Q-14,-562 -26,-574Q-36,-560 -44,-566Q-48,-558 -50,-548Z" fill="${h.c}" ${ln()}/>
@@ -61,12 +65,11 @@
   // ---------------- cast ----------------
   C.keng = { v2: {
     skin: "#b47448", iris: "#2a1a12", blush: 0.2, w: 1.06,
-    hair: { c: "#17110e", s: "#000", sh: "#5a4a40", front: (x) => undercut(x.hair) },
+    hair: { c: "#17110e", s: "#000", sh: "#5a4a40", front: (x) => undercut(x.hair, x.skin) },
     top: { kind: "tank", c: "#eef0f0", sleeve: "none" },
     print: `<path d="M-22,-404h44v20h-44z" fill="none" stroke="#c8a040" stroke-width="2.4" opacity=".6"/><path d="M-16,-394h32" stroke="#c8a040" stroke-width="3" opacity=".6"/>`,
     bottom: { kind: "shorts", c: "#2e3e5e" }, feet: { kind: "sandal", c: "#3a2a20" },
     extra: chain(),
-    face: `<path d="M-30,-596l14,-4M18,-600l14,4" stroke="#17110e" stroke-width="5" stroke-linecap="round"/>`,
   } };
   C.kengDay = { v2: { ...C.keng.v2, extra: chain() + pakaoma() } };
   C.fon = { v2: {

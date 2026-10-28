@@ -1,0 +1,69 @@
+      // ---------- ผีแม่ม่าย EP.1 — style frames ----------
+      const MOON = { from: "right", rim: "#a8c4ff", rimOp: 0.8, shade: "#000010", shadeOp: 0.5, cast: false, vol: false };
+      const DUSK = { from: "left", rim: "#ffb070", rimOp: 0.8, shade: "#1a0a20", shadeOp: 0.5, cast: { len: 3.5, op: 0.5 }, vol: false };
+      const SUN = { from: "left", rim: "#fff2c8", rimOp: 0.7, shade: "#2a1a10", shadeOp: 0.35, cast: { len: 1.6, op: 0.35 }, vol: false };
+      const TUBE = { from: "right", rim: "#e8fff4", rimOp: 0.6, shade: "#102028", shadeOp: 0.4, cast: { len: 1.2, op: 0.3 }, vol: false };
+      const GNIGHT = { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 }, GDUSK = { top: "#ffa070", bottom: "#2a1a40", op: 0.32 }, GDAY = { top: "#fff0c8", bottom: "#c8e0f0", op: 0.12 }, GLATE = { top: "#0a1430", bottom: "#1a2a3a", op: 0.35 };
+      const oneHand = (id, i) => { const h = document.getElementById(`${id}-a${i}-handB`); if (h) h.innerHTML = ""; };
+      Object.assign(Rig.CAST, { kengBag: { ...Rig.CAST.kengDay, hand: Mm.PROP.bag() }, samMic: { ...Rig.CAST.samarn, hand: Mm.PROP.mic() }, piakNail: { ...Rig.CAST.piak, hand: Mm.PROP.polish() } });
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.8, 2.9], ...extra });
+      Rig.MODES.sleep = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: 4, faF: 4, uaB: -4, faB: -4, thF: -2, thB: 2, shF: 3, shB: 2 });
+      Rig.MODES.nail = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: 14, faF: 112, uaB: -18, faB: -104, head: 10 });
+      Rig.MODES.floorSit = (u, o) => ({ ...Rig.MODES.sit(u, o), thF: -60, shF: 110, thB: 60, shB: -110, bodyY: 240, torso: 3 });
+      Rig.MODES.hang = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150, faF: -20, uaB: 6, faB: -10, head: -8 });
+
+      add("open", {
+        set: "shirtOpen", setOpts: { id: "op" }, dark: 0.04, blur: { far: 3, mid: 2, fg: 8 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 900) }] },
+        fx(tl, id, t0, L) { Pop2.particles(tl, L.glow, { type: "firefly", n: 10, box: [0, 700, 1080, 900], t0, dur: D("open"), seed: 3 }); },
+      });
+      add("streetN", {
+        set: "redStreet", setOpts: { id: "sn", time: "night" }, dark: 0.12, blur: { far: 2, mid: 1, fg: 8 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 0.62, 540, 1150) }] },
+        extra(L) { put(L.set, Mm.ghost(700, 1395, 0.36, { id: "g0", eyes: false })); put(L.glow, Mm.ghostEyes(700, 1395, 0.36, { id: "g0e" })); },
+      });
+      const VIL = Maps.P(103.55, 16.25);
+      add("map", {
+        set: "mapTH", setOpts: { id: "mp", x: 90, y: 300, s: 1, region: [103.3, 15.9, 240, "อีสาน"], route: [[100.52, 13.75], [101.2, 14.4], [102.1, 14.97], [102.9, 15.7], [103.55, 16.25]],
+          from: "กรุงเทพฯ", to: "บ้านโนนคำ", vehicle: "bus", toIcon: Mm.shirt(0, -12, 0.09, {}), labDx: [-40, 20] },
+        dark: 0, light: false, grade: { top: "#fff8e8", bottom: "#d8f0f0", op: 0.15 },
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.15, 540, 900) }] },
+        fx(tl, id, t0) { Maps.route(tl, "mp", t0 - 1.2, { go: [0.2, 2.2] }); },
+      });
+      add("gate", {
+        set: "gate2", setOpts: { id: "gt" }, dark: 0.03, blur: { far: 2, mid: 1, fg: 8 }, light: DUSK, grade: GDUSK,
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 0.78, 540, 1120) }] },
+        actors: [A("kengBag", 860, 1900, 0.9, [{ t: 0, mode: "idle", eyes: "side", mouth: "o" }], { flip: true })],
+        fx(tl, id) { oneHand(id, 0); },
+      });
+      add("horns", {
+        set: "tower2", setOpts: { id: "tw", rings: true }, dark: 0.02, blur: { mid: 1 }, light: DUSK, grade: GDUSK,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        actors: [A("samMic", 380, 2030, 1.3, [{ t: 0, mode: "whistle", eyes: "normal", mouth: "o" }])],
+        fx(tl, id) { oneHand(id, 0); },
+      });
+      add("legend", {
+        set: "legend3", setOpts: { id: "lg" }, dark: 0, light: false, grade: { top: "#3a1a0a", bottom: "#0a0604", op: 0.2 },
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 900) }] },
+      });
+      add("nails", {
+        set: "yard2", setOpts: { id: "yd", time: "day" }, dark: 0, blur: { far: 2, fg: 8 }, light: SUN, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 0.8, 540, 1150) }] },
+        actors: [A("piakNail", 470, 1500, 0.9, [{ t: 0, mode: "nail", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id) { oneHand(id, 0); },
+      });
+      add("photo", {
+        set: "house3", setOpts: { id: "hs", time: "dusk" }, dark: 0.05, blur: { sky: 2, mid: 0 }, light: TUBE, grade: GDUSK,
+        cam: { keys: [{ t: 0, ...fr(520, 1100, 0.86, 540, 1050) }] },
+        actors: [A("chan", 260, 1430, 0.84, [{ t: 0, mode: "hang", eyes: "side", mouth: "frown" }], { flip: true }), A("keng", 470, 1610, 0.82, [{ t: 0, mode: "floorSit", eyes: "side", mouth: "flat" }], { flip: true }), A("fon", 820, 1620, 0.74, [{ t: 0, mode: "floorSit", eyes: "worry", mouth: "flat" }], { flip: true })],
+      });
+      add("know1", {
+        set: "flip3", setOpts: { id: "fc" }, dark: 0, blur: { sky: 6, far: 6 }, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) { tl.set(["#fc-B-z0", "#fc-B-z2", "#fc-B-z4", "#fc-B-x", "#fc-stamp"], { opacity: 1 }, t0); MmUI.source(tl, L.light, t0, 2, { text: "ที่มา: แพทย์ผู้วิจัยใหลตาย · ผู้จัดการออนไลน์ (8 มี.ค. 2561)" }); },
+      });
+      add("foot", {
+        set: "sleep2", setOpts: { id: "sl", ghost: true }, dark: 0.22, blur: { sky: 2 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(720, 1300, 0.95, 540, 1000) }] },
+        actors: [A("keng", 790, 1672, 0.86, [{ t: 0, mode: "sleep", eyes: "closed", mouth: "flat" }])],
+      });
