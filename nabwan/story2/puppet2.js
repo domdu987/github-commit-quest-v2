@@ -65,10 +65,10 @@ class Puppet {
     this.stubB = o.top === 'tank' || longS ? null : ln(this.gArmB, o.sleeveC ? shade(o.sleeveC, -20) : o.shirtDark, 30);
     this.hB = svg('circle', { r: 12.5, fill: o.skinShade, stroke: ink, 'stroke-width': 4.5 }, this.gArmB);
     // legs + shoes
-    this.legB = limb(this.gLegB, o.pantsDark, o.pantsDark, 29);
+    this.legB = limb(this.gLegB, o.pantsDark, o.shorts ? o.skinShade : o.pantsDark, 29);   // shorts: bare shins
     this.sB = svg('path', { fill: o.shoeStyle === 'sandal' ? o.skinShade : o.shoeDark, stroke: ink, 'stroke-width': 4.5, 'stroke-linejoin': 'round' }, this.gLegB);
     this.soleB = svg('path', { fill: 'none', stroke: o.flat ? o.shoe : o.sole, 'stroke-width': 5, 'stroke-linecap': 'round' }, this.gLegB);
-    this.legF = limb(this.gLegF, o.pants, o.pants, 29);
+    this.legF = limb(this.gLegF, o.pants, o.shorts ? o.skin : o.pants, 29);
     this.sF = svg('path', { fill: o.shoeStyle === 'sandal' ? o.skin : o.shoe, stroke: ink, 'stroke-width': 4.5, 'stroke-linejoin': 'round' }, this.gLegF);
     this.soleF = svg('path', { fill: 'none', stroke: o.flat ? o.shoe : o.sole, 'stroke-width': 5, 'stroke-linecap': 'round' }, this.gLegF);
     this.strapF = o.shoeStyle === 'sandal' ? ln(this.gLegF, o.sole, 6) : null;

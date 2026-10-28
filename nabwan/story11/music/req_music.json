@@ -1,0 +1,127 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "rainy afternoon",
+   "soft felt piano",
+   "warm strings and gentle acoustic guitar",
+   "tender and nostalgic",
+   "high quality studio recording",
+   "D major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer",
+   "rain sound effects"
+  ],
+  "sections": [
+   {
+    "section_name": "A question under the umbrella",
+    "duration_ms": 5710,
+    "lines": [],
+    "positive_local_styles": [
+     "solo felt piano",
+     "quiet and wistful",
+     "sparse, like raindrops"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Twelve years of school rain",
+    "duration_ms": 9390,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and fond",
+     "gentle acoustic guitar and piano",
+     "light pizzicato",
+     "sweet childhood memory"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "dramatic"
+    ]
+   },
+   {
+    "section_name": "The umbrella is too heavy",
+    "duration_ms": 5620,
+    "lines": [],
+    "positive_local_styles": [
+     "playful and tender",
+     "light plucked strings",
+     "a small smile"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "sad"
+    ]
+   },
+   {
+    "section_name": "Now dad is 67",
+    "duration_ms": 12470,
+    "lines": [],
+    "positive_local_styles": [
+     "slower",
+     "quiet piano",
+     "soft strings slowly swelling",
+     "a quiet realization"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud",
+     "happy"
+    ]
+   },
+   {
+    "section_name": "Title",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "warm emotional peak",
+     "held chord",
+     "strings and piano together"
+    ],
+    "negative_local_styles": [
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Twelve years, never told",
+    "duration_ms": 11380,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and sincere",
+     "piano and strings",
+     "full but gentle",
+     "moved, hopeful"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "harsh"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle resolution",
+     "final chord ringing and sustained to the very end",
+     "no fade out before the end"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "abrupt ending"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

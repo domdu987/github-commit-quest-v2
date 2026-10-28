@@ -17,6 +17,11 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
 - **Every room gets its own palette** (navy bedroom, olive living room, rose room, cream-and-mint provincial
   house, teak veranda…). Never reuse a character design or a house from an earlier clip (e.g. a new mom per story).
 - Dark rugs or floors under the caption band (y ≈ 1600–1700); light cream or yellow rugs make white captions unreadable.
+- Weather and streets: `story11/rain11.js` has the following:
+  - rain streaks per layer, splashes, puddles, drips and lens drops;
+  - an umbrella that opens and tilts, and a rain-shadow mask that keeps whoever is under it dry;
+  - a wet-shirt patch, and mirrored reflections on wet ground.
+  For a long street the camera can track, draw the vignette in screen space (`S.fx`) instead of the mid layer.
 
 ## Depth and light (`pro/pro.js`, load it before the sets)
 - Shots use 3 layers: `['far', 0.35, 1.5], ['mid', 1, 0], ['fore', 1.8, 12–14]`; put bokeh and blurred
@@ -47,6 +52,10 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
   - The visible world x must stay within 0…1080, otherwise the vignette edge shows as a vertical seam.
   - The camera y offset must stay ≥ 0, otherwise a dark band shows at the top.
   - Faces must never be cut by the frame edge or covered by UI cards (cards sit in y ≈ 100–800, faces below).
+- Chibi heads sit right above the hands, so a hands-only insert always cuts faces.
+  - Frame hand actions (a hand-off, a push) as a close two-shot, z ≈ 2.2, with both faces whole.
+  - Frame a back or shoulder insert so the other character is out of frame, or shows only the back of the head.
+  - Keep raised props off faces: an umbrella goes up between the heads and opens above them, then comes down.
 - Phones are always seen **from the back** (`phoneProp`: case, camera, sliver of screen light).
 
 ## Graphics
@@ -69,12 +78,16 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
   - ducking with a 0.4 s hold; SFX for every on-screen action (steps, taps, plops, lighter, buzz);
   - master with `volume=1.5dB,alimiter=limit=0.75:attack=4:release=80:level=false` to about −14 LUFS.
   - **Transcribe the final mix**; where a word gets masked (e.g. "จากไป" → "จะไป"), add a music `ramp` down under that line.
+  - Before adding a ramp, transcribe the voice stem alone (`audio.py` writes `<out>.stems.npy`).
+    - If the stem also misreads, the music is not the cause, so regenerate the take.
+    - If new takes misread the same way, Whisper is confusing the tone (หนัก → นัก). Flag the word to the user for a listen.
 
 ## QA (non-negotiable before delivery)
 1. Stills of every shot before the full render (`node render.js stills dir t…`, grid with `scripts/grid.sh`), fix framing first.
 2. Full render (`PAGE=../storyN/index.html node render.js video out.mp4 30 [t0 tEnd]` — the 3rd number is the END
    time). About 1 fps, so run at most 2 renders at once on 4 cores.
-3. Contact sheets every 0.6 s (`fps=1/0.6,scale=432:768,drawtext,tile=4x2`) and read **all** of them. Check:
+3. Contact sheets every 0.6 s (`fps=1/0.6,scale=432:768,drawtext,tile=4x2`) and read **all** of them; their time
+   labels can run about 0.3 s ahead, so pin exact times with stills. Check:
    - cut faces;
    - UI over faces;
    - edge seams or bands;
