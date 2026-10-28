@@ -1,14 +1,15 @@
 // "เห็ดปอบ" v2 — EP.2/EP.3 sets: the night road and ลุงทองดี's pickup, the cab in dashboard light, the district hospital's
 // emergency entrance, the ward (night / dawn / day), and knowledge laid out on a surface.
 //   Sets.nightRoad2(L, o)  dark paddies under the moon, a dirt road, roadside posts #id-posts (scroll x), the pickup #id-truck at o.x
-//                          (o.flip faces left; headlights in the glow layer; o.bed true leaves room for actors in the bed)
-//   Sets.cab2(L, o)        inside the cab at night: windshield with the headlights on the road ahead (#id-road scrolls), dashboard glow
+//                          (o.s scale ≈ 2.25 × the characters' scale, o.flip faces left, o.driver "sil"|false, headlights in the glow
+//                          layer, o.bedFront / o.doorFront redraw the bed wall / cab door over actors in #id-truckF)
+//   Sets.cab2(L, o)        the driver through the windshield at night: wheel, hands, dashboard glow, rear window with the passengers
 //   Sets.erFront2(L, o)    the emergency entrance: canopy, the red sign, glass doors lit, a wheelchair, moths round the lamp
 //   Sets.ward2(L, o)       o.time night | dawn | day · o.bed x · o.window x · o.print (a long-fingered handprint on the glass #id-print)
 //                          o.eyes (green eyes outside #id-eyes) · the monitor's trace #id-ecg · the curtain #id-curtain
 //   Sets.benchTop(L, o)    items on the bamboo bench seen from above: o.items [[x, y, label, icon], …] → #id-t0.., stamps #id-x0..,
 //                          o.verdict text #id-verdict (o.verdictY), o.ok [i…] items that get a green tick instead of a red ring
-//   Pop2.truck(o)          the pickup, side view, origin between the wheels on the ground
+//   Pop2.truck(o)          the pickup, side view facing right, wheels on y 0; o.part door|bed for overlays (see below)
 //   Pop2.PROP.{basin, saltGlass, bag, torchBeam}
 (function () {
   const { mk, f1, put, blob } = Pop2;
@@ -22,7 +23,11 @@
     <linearGradient id="nrBeamL" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#fff4d0" stop-opacity=".75"/><stop offset="1" stop-color="#fff4d0" stop-opacity="0"/></linearGradient>
     <linearGradient id="nrBeamUp" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff4d0" stop-opacity=".6"/><stop offset="1" stop-color="#fff4d0" stop-opacity="0"/></linearGradient>
     <radialGradient id="nrTail"><stop offset="0" stop-color="#ff4030" stop-opacity=".8"/><stop offset="1" stop-color="#ff4030" stop-opacity="0"/></radialGradient>
-    <linearGradient id="trBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8dadc"/><stop offset=".5" stop-color="#a8acb0"/><stop offset="1" stop-color="#6a6e72"/></linearGradient>
+    <linearGradient id="trBody" gradientUnits="userSpaceOnUse" x1="0" y1="-310" x2="0" y2="0"><stop offset="0" stop-color="#e2e4e6"/><stop offset=".35" stop-color="#c4c8cc"/><stop offset=".55" stop-color="#9a9ea2"/><stop offset="1" stop-color="#5e6266"/></linearGradient>
+    <radialGradient id="trRim" cx=".4" cy=".35"><stop offset="0" stop-color="#e8eaec"/><stop offset="1" stop-color="#8a8e92"/></radialGradient>
+    <linearGradient id="trGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a3a4e"/><stop offset=".5" stop-color="#121a24"/><stop offset="1" stop-color="#0a0e14"/></linearGradient>
+    <linearGradient id="trBodyFront" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22252a"/><stop offset=".12" stop-color="#4a4e56"/><stop offset=".5" stop-color="#2a2d32"/><stop offset=".88" stop-color="#4a4e56"/><stop offset="1" stop-color="#1e2024"/></linearGradient>
+    <linearGradient id="trBonnet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a5e66"/><stop offset=".25" stop-color="#3a3e44"/><stop offset="1" stop-color="#121418"/></linearGradient>
     <radialGradient id="cbDash"><stop offset="0" stop-color="#7ae8ff" stop-opacity=".55"/><stop offset="1" stop-color="#7ae8ff" stop-opacity="0"/></radialGradient>
     <linearGradient id="erWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8dcd4"/><stop offset="1" stop-color="#a8aca4"/></linearGradient>
     <radialGradient id="erLamp"><stop offset="0" stop-color="#f0fff8" stop-opacity=".8"/><stop offset=".3" stop-color="#c8f0e8" stop-opacity=".25"/><stop offset="1" stop-color="#c8f0e8" stop-opacity="0"/></radialGradient>
@@ -35,20 +40,43 @@
     <linearGradient id="wdCurtain" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7aa8c8"/><stop offset=".5" stop-color="#9ac4e0"/><stop offset="1" stop-color="#6a98b8"/></linearGradient>
     <radialGradient id="wdTube"><stop offset="0" stop-color="#f4fffa" stop-opacity=".6"/><stop offset="1" stop-color="#f4fffa" stop-opacity="0"/></radialGradient>`;
 
-  // ---------------- the pickup ----------------
+  // ---------------- the pickup: a Thai single-cab seen from its right (driver's) side, facing right, wheels on y 0 ----------------
+  //   1 unit ≈ 6 mm at s 1 (5.3 m long, 1.85 m to the roof); a 1.65 m rig character at scale c stands beside a truck at s ≈ 2.25·c.
+  //   o.driver "sil" draws a hatted silhouette behind the side glass; o.part "door" | "bed" returns only that near panel, to be
+  //   drawn again over actors so a driver sits behind the door and passengers sit inside the bed.
+  const TR = { xF: 290, xR: -228, sill: -80, belt: -206 };
   function truck(o = {}) {
-    const c = o.color || "url(#trBody)";
-    let g = `<ellipse cx="0" cy="8" rx="460" ry="30" fill="#000" opacity=".55"/>`;
-    // bed and tailgate (left), cab (right), bonnet; wheels
-    g += `<path d="M-430,-60V-200H-40V-60Z" fill="${c}" stroke="${LN}" stroke-width="4"/><path d="M-430,-200H-40V-186H-430Z" fill="#e8eaec"/><path d="M-410,-180V-80M-300,-180V-80M-190,-180V-80" stroke="#7a7e82" stroke-width="3" opacity=".6"/>`;
-    g += `<path d="M-40,-60V-210L10,-330H190L250,-210H400Q430,-206 432,-170V-60Z" fill="${c}" stroke="${LN}" stroke-width="4"/>`;
-    g += `<path d="M20,-215L54,-310H120V-215Z" fill="#1a2430" stroke="${LN}" stroke-width="3"/><path d="M136,-215V-310H182L232,-215Z" fill="#1a2430" stroke="${LN}" stroke-width="3"/>`;
-    if (o.driver) g += `<g transform="translate(170,-232)"><ellipse cx="0" cy="-30" rx="26" ry="30" fill="#0e0c0a"/><path d="M-50,-50Q0,-80 50,-50Z" fill="#0e0c0a"/><path d="M-30,0Q0,-10 30,0V20H-30Z" fill="#0e0c0a"/></g>`;
-    g += `<path d="M30,-205L58,-290" stroke="#fff" stroke-width="6" opacity=".25"/><path d="M128,-215V-60" stroke="${LN}" stroke-width="3"/><path d="M104,-160h20" stroke="${LN}" stroke-width="4"/>`;
-    g += `<rect x="402" y="-170" width="30" height="40" rx="6" fill="#fff6c8" stroke="${LN}" stroke-width="3"/><rect x="-436" y="-170" width="16" height="40" rx="4" fill="#e8302a" stroke="${LN}" stroke-width="3"/>`;
-    g += `<path d="M-440,-60H440V-40H-440Z" fill="#3a3c40" stroke="${LN}" stroke-width="3"/>`;
-    [-280, 280].forEach((wx) => { g += `<path d="M${wx - 110},-60A110,110 0 0 1 ${wx + 110},-60" fill="#1a1c1e"/><circle cx="${wx}" cy="-30" r="80" fill="#1a1a1c" stroke="${LN}" stroke-width="4"/><circle cx="${wx}" cy="-30" r="40" fill="#8a8c90"/><circle cx="${wx}" cy="-30" r="12" fill="#4a4c50"/>`; });
-    g += `<path d="M-430,-150H430" stroke="#fff" stroke-width="4" opacity=".2"/><path d="M-60,-120H430" stroke="#7a2a22" stroke-width="10" opacity=".5"/>`;
+    const c = o.color || "url(#trBody)", { xF, xR, sill, belt } = TR;
+    const wheel = (x) => `<path d="M${x + 78},${sill}A80,80 0 0 0 ${x - 78},${sill}Z" fill="#08080a"/><circle cx="${x}" cy="-64" r="64" fill="#161618" stroke="${LN}" stroke-width="4"/>
+      <circle cx="${x}" cy="-64" r="52" fill="none" stroke="#242428" stroke-width="5"/><circle cx="${x}" cy="-64" r="36" fill="url(#trRim)" stroke="#3a3c40" stroke-width="2"/>
+      ${[0, 72, 144, 216, 288].map((a) => `<path d="M${x},-72V-94" stroke="#5a5c60" stroke-width="8" stroke-linecap="round" transform="rotate(${a} ${x} -64)"/>`).join("")}<circle cx="${x}" cy="-64" r="11" fill="#3a3c40"/>
+      <path d="M${x + 88},${sill}A88,88 0 0 0 ${x - 88},${sill}" stroke="#2a2c30" stroke-width="12" fill="none"/>`;
+    const mud = (x0, x1) => `<g fill="#4a3a2c" opacity=".55">${Array.from({ length: 7 }, (_, k) => `<ellipse cx="${f1(x0 + ((x1 - x0) * (k + 0.5)) / 7)}" cy="${sill - 6 - (k % 3) * 7}" rx="${9 + (k % 2) * 6}" ry="4"/>`).join("")}</g>`;
+    const bed = `<path d="M-444,${sill}V-204H-30V${sill}H${xR + 78}A80,80 0 0 0 ${xR - 78},${sill}Z" fill="${c}" stroke="${LN}" stroke-width="4"/>
+      <path d="M-444,-204H-30V-192H-444Z" fill="#eef0f2" opacity=".8"/><path d="M-432,-192V-90" stroke="${LN}" stroke-width="2.5" opacity=".45"/>
+      <path d="M-444,-152H-30" stroke="#fff" stroke-width="3" opacity=".2"/><path d="M-444,-147H-30" stroke="#4a4e52" stroke-width="2" opacity=".45"/>
+      <rect x="-448" y="-190" width="16" height="58" rx="4" fill="#d8281e" stroke="${LN}" stroke-width="3"/><rect x="-448" y="-132" width="16" height="16" rx="3" fill="#ece4d4" stroke="${LN}" stroke-width="2"/>
+      <path d="M-454,-102H-398V${sill + 4}H-454Z" fill="#34363a" stroke="${LN}" stroke-width="3"/>${mud(-430, xR - 90)}${mud(xR + 90, -40)}${wheel(xR)}`;
+    const doorLines = `<path d="M-6,${belt + 4}V-88M252,${belt + 2}Q246,-150 224,-104" stroke="${LN}" stroke-width="3" fill="none" opacity=".7"/>
+      <rect x="14" y="-190" width="32" height="9" rx="4" fill="#4a4e52" stroke="${LN}" stroke-width="2"/>
+      <path d="M-20,-152H254" stroke="#fff" stroke-width="3" opacity=".2"/><path d="M-20,-147H254" stroke="#4a4e52" stroke-width="2" opacity=".45"/>
+      <path d="M-20,-98H${xF - 80}V${sill}H-20Z" fill="#2c2e32" opacity=".55"/>${mud(-10, xF - 90)}`;
+    if (o.part === "bed") return bed;
+    if (o.part === "door") return `<path d="M-20,${sill}V${belt}H254L262,-150L${xF - 78},${sill}Z" fill="${c}"/>${doorLines}
+      <path d="M-20,${belt}H250" stroke="#1e2024" stroke-width="7"/><path d="M-20,${belt}V${sill}H${xF - 78}" stroke="${LN}" stroke-width="4" fill="none"/>`;
+    let g = `<ellipse cx="0" cy="6" rx="470" ry="26" fill="#000" opacity=".55"/><path d="M-436,-86H444V-6H-436Z" fill="#060608" opacity=".92"/>
+      <circle cx="${xR + 22}" cy="-60" r="58" fill="#0c0c0e"/><circle cx="${xF + 22}" cy="-60" r="58" fill="#0c0c0e"/>` + bed;
+    g += `<path d="M-20,${sill}V-286Q-20,-302 -4,-303L138,-308Q152,-308 160,-300L270,-210L420,-196Q448,-192 448,-162V-104L442,${sill}H${xF + 78}A80,80 0 0 0 ${xF - 78},${sill}Z" fill="${c}" stroke="${LN}" stroke-width="4"/>`;
+    g += `<path d="M2,${belt}V-284Q2,-292 10,-292L136,-297Q145,-297 151,-290L244,${belt}Z" fill="url(#trGlass)" stroke="${LN}" stroke-width="3"/>`;
+    if (o.driver === "sil" || o.driver === true) g += `<g fill="#07090c"><path d="M44,${belt}Q48,-226 80,-228Q112,-226 116,${belt}Z"/><ellipse cx="80" cy="-240" rx="26" ry="30"/>
+      <path d="M58,-258Q60,-286 80,-288Q100,-286 102,-258Z"/><path d="M30,-258Q80,-274 130,-258Q80,-248 30,-258Z"/></g><path d="M104,-262Q108,-240 98,-216" stroke="#7ae8ff" stroke-width="3" fill="none" opacity=".35"/>`;
+    g += `<path d="M24,-212L62,-288M44,-212L74,-270" stroke="#fff" stroke-width="7" opacity=".1"/><path d="M-20,${belt}H250" stroke="#1e2024" stroke-width="7"/>`;
+    g += doorLines;
+    g += `<path d="M0,-301L136,-306" stroke="#fff" stroke-width="5" opacity=".35"/><path d="M262,-214L298,-332" stroke="#1e2024" stroke-width="2.5"/>`;
+    g += `<path d="M246,-206l10,-6h28q9,0 9,9v20q0,9 -9,9h-26q-8,0 -10,-8z" fill="#1e2024" stroke="${LN}" stroke-width="3"/>`;
+    g += `<path d="M410,-194L446,-189Q451,-172 445,-161L408,-167Z" fill="#fff6c8" stroke="${LN}" stroke-width="3"/><rect x="434" y="-158" width="13" height="12" rx="2" fill="#f0a030" stroke="${LN}" stroke-width="2"/>
+      <path d="M446,-146V-114" stroke="${LN}" stroke-width="5"/><path d="M368,-114H452V-90Q452,${sill} 442,${sill}H368Z" fill="#34363a" stroke="${LN}" stroke-width="3"/>`;
+    g += wheel(xF);
     return g;
   }
 
@@ -71,44 +99,78 @@
     let s = `<rect x="-2000" y="${G - 100}" width="6000" height="900" fill="#0e120e"/><path d="M-2000,${G - 40}H4000V${G + 120}H-2000Z" fill="url(#nrRoad)"/>`;
     for (let k = 0; k < 40; k++) s += `<ellipse cx="${f1(-1800 + r() * 5600)}" cy="${f1(G - 20 + r() * 120)}" rx="${f1(10 + r() * 30)}" ry="${f1(3 + r() * 6)}" fill="#4a3a30" opacity=".6"/>`;
     s += `<g id="${id}-posts">${Array.from({ length: 18 }, (_, k) => `<rect x="${-1800 + k * 360}" y="${G - 210}" width="16" height="170" fill="#2a2420"/><path d="M${-1800 + k * 360},${G - 190}H${-1440 + k * 360}" stroke="#3a3430" stroke-width="2"/>`).join("")}</g>`;
-    if (o.truck !== false) s += `<g id="${id}-truck"><g transform="translate(${X},${G + 70}) scale(${o.flip ? -1 : 1},1) scale(${o.s ?? 1})">${truck({ driver: o.driver !== false })}</g></g>`;
+    const sc = o.s ?? 1, dd = o.flip ? -1 : 1, GT = G + 110, TT = `translate(${X},${GT}) scale(${dd * sc},${sc})`;
+    if (o.truck !== false) s += `<g id="${id}-truck"><g transform="${TT}">${truck({ driver: o.driver ?? "sil" })}</g></g>`;
     s += `<rect x="-2000" y="${G + 120}" width="6000" height="900" fill="#080a08"/>`;
     for (let k = 0; k < 60; k++) s += Pop2.tuft(-1800 + r() * 5600, G + 140 + r() * 400, 1 + r(), "#0a120a", "#16221a", r);
     put(L.set, s);
-    // the bed's near wall drawn again over the actors, so passengers sit inside it
-    if (o.truck !== false && o.bedFront) put(L.glow, `<g transform="translate(${X},${G + 70}) scale(${o.flip ? -1 : 1},1) scale(${o.s ?? 1})"><path d="M-430,-60V-200H-40V-60Z" fill="#9a9ea2" stroke="${LN}" stroke-width="4"/><path d="M-430,-200H-40V-186H-430Z" fill="#e8eaec"/>
-      <path d="M-410,-180V-80M-300,-180V-80M-190,-180V-80" stroke="#7a7e82" stroke-width="3" opacity=".6"/><path d="M-430,-150H-40" stroke="#fff" stroke-width="4" opacity=".2"/><path d="M-440,-60H-40V-40H-440Z" fill="#3a3c40"/>
-      <path d="M-390,-60A110,110 0 0 1 -170,-60" fill="#1a1c1e"/><circle cx="-280" cy="-30" r="80" fill="#1a1a1c" stroke="${LN}" stroke-width="4"/><circle cx="-280" cy="-30" r="40" fill="#8a8c90"/><circle cx="-280" cy="-30" r="12" fill="#4a4c50"/>
-      <rect x="-436" y="-170" width="16" height="40" rx="4" fill="#e8302a" stroke="${LN}" stroke-width="3"/></g>`);
+    // the bed's near wall / the cab door drawn again over the actors, so passengers sit inside the bed and the driver behind the door
+    if (o.truck !== false && (o.bedFront || o.doorFront)) put(L.glow, `<g id="${id}-truckF"><g transform="${TT}">${o.bedFront ? truck({ part: "bed" }) : ""}${o.doorFront ? truck({ part: "door" }) : ""}</g></g>`);
     // headlights and tail-lights, world-anchored
     if (o.truck !== false) {
-      const d = o.flip ? -1 : 1, hx = X + d * 432 * (o.s ?? 1), hy = G + 70 - 150 * (o.s ?? 1);
-      const sc = o.s ?? 1;
+      const d = dd, hx = X + d * 448 * sc, hy = GT - 178 * sc;
       put(L.glow, `<g id="${id}-lights" style="mix-blend-mode:screen"><path d="M${hx},${hy - 24}L${hx + d * 1700},${hy - 300}L${hx + d * 1700},${hy + 320}L${hx},${hy + 24}Z" fill="url(#${d > 0 ? "nrBeam" : "nrBeamL"})"/>
         <path d="M${hx},${hy - 12}L${hx + d * 1200},${hy - 120}L${hx + d * 1200},${hy + 160}L${hx},${hy + 12}Z" fill="url(#${d > 0 ? "nrBeam" : "nrBeamL"})"/>
         <ellipse cx="${hx + d * 700}" cy="${G + 60}" rx="700" ry="60" fill="#fff4d0" opacity=".25"/>
-        <circle cx="${hx}" cy="${hy}" r="140" fill="url(#erLamp)"/><circle cx="${X - d * 432 * sc}" cy="${hy}" r="120" fill="url(#nrTail)"/></g>
-        <g id="${id}-dust" opacity=".5">${Array.from({ length: 10 }, (_, k) => `<circle cx="${f1(X - d * (460 + k * 60) * sc)}" cy="${f1(G + 40 - k * 6 - (k % 3) * 10)}" r="${f1((30 + k * 8) * sc)}" fill="#6a5a50" opacity="${f1(0.4 - k * 0.03)}"/>`).join("")}</g>`);
+        <circle cx="${hx}" cy="${hy}" r="140" fill="url(#erLamp)"/><circle cx="${X - d * 446 * sc}" cy="${GT - 160 * sc}" r="${f1(60 + 50 * sc)}" fill="url(#nrTail)"/></g>
+        <g id="${id}-dust" opacity=".5">${Array.from({ length: 10 }, (_, k) => `<circle cx="${f1(X - d * (480 + k * 60) * sc)}" cy="${f1(GT - 20 * sc - k * 6 - (k % 3) * 10)}" r="${f1((30 + k * 8) * sc)}" fill="#6a5a50" opacity="${f1(0.4 - k * 0.03)}"/>`).join("")}</g>`);
     }
   }
 
-  // ---------------- inside the cab ----------------
+  // ---------------- inside the cab, seen through the windshield from the bonnet ----------------
+  //   right-hand drive, so the driver is on the left of the frame; behind him the rear window shows the passengers in the bed.
+  //   The steering wheel, his forearms and hands, the dashboard and the truck's body are in the fg layer (in front of the rig);
+  //   the rig's own arms hang down behind the dashboard.
+  //   ids: #id-refl (windshield reflections, slide in x), #id-garland (marigold garland on the mirror, swing about 560 584),
+  //        #id-bed (the passengers through the rear window, bob in y)
+  //   o.wheelX (driver / wheel centre, default 340), o.skin, o.sleeve (his hands and sleeves)
   function cab2(L, o = {}) {
-    const id = o.id || "cb", r = mk(o.seed || 35);
-    put(L.sky, `<rect x="-1300" y="-900" width="3700" height="3900" fill="#03050a"/>`);
-    // through the windshield: the road in the headlights
-    let far = `<g id="${id}-road"><rect x="-1300" y="780" width="3700" height="900" fill="#0a0e0a"/><path d="M500,780L580,780L1300,1300L-220,1300Z" fill="#4a3e32"/><path d="M540,790V1300" stroke="#c8b890" stroke-width="6" stroke-dasharray="30 40" opacity=".5"/>`;
-    for (let k = 0; k < 14; k++) far += `<path d="${blob(-200 + k * 120 + r() * 40, 760 - r() * 30, 40 + r() * 30, r, 8)}" fill="#05080a"/>`;
-    far += `</g><path d="M480,780L600,780L1400,1300L-320,1300Z" fill="url(#nrBeamUp)" opacity=".8" style="mix-blend-mode:screen"/>`;
-    put(L.far, far);
-    // the cab: windshield frame, roof, dashboard with gauges, the wheel
-    let s = `<path d="M-1300,-900H2400V600H-1300Z M120,620L960,620L1040,1080L40,1080Z" fill="#14161a" fill-rule="evenodd"/>`;
-    s += `<path d="M120,620L960,620L1040,1080L40,1080Z" fill="none" stroke="#2a2c30" stroke-width="30"/><path d="M160,640L360,640L240,1060" fill="#fff" opacity=".05"/>`;
-    s += `<path d="M-1300,1060H2400V2900H-1300Z" fill="#1c1e22"/><path d="M-1300,1060Q540,1010 2400,1060V1180Q540,1130 -1300,1180Z" fill="#26282c"/>`;
-    s += `<g transform="translate(760,1140)"><rect x="-150" y="-60" width="300" height="110" rx="20" fill="#0a0c0e"/>${[-80, 0, 80].map((gx) => `<circle cx="${gx}" cy="0" r="36" fill="#0e1a1e" stroke="#4adfff" stroke-width="3"/><path d="M${gx},0l${gx === 0 ? 20 : -14},-24" stroke="#ff8a3a" stroke-width="4"/>`).join("")}</g>`;
-    put(L.set, s);
-    put(L.glow, `<circle cx="760" cy="1140" r="520" fill="url(#cbDash)" style="mix-blend-mode:screen"/>
-      <g transform="translate(${o.wheelX ?? 300},1560)"><circle r="300" fill="none" stroke="#08080a" stroke-width="50"/><path d="M-300,0H300M0,0V300" stroke="#08080a" stroke-width="46"/><circle r="60" fill="#121416"/><path d="M-200,-220Q0,-310 200,-220" stroke="#7ae8ff" stroke-width="4" fill="none" opacity=".35"/></g>`);
+    const id = o.id || "cb", r = mk(o.seed || 35), WX = o.wheelX ?? 340, sk = o.skin || "#a87048", sl = o.sleeve || "#7c6c52";
+    const WS = "M160,470L920,470L1046,1392L34,1392Z";
+    put(L.sky, `<rect x="-1300" y="-900" width="3700" height="3900" fill="url(#nrSky)"/><circle cx="700" cy="560" r="230" fill="url(#kiMoon)"/><circle cx="700" cy="560" r="22" fill="#f4f6ff"/>
+      ${Array.from({ length: 30 }, () => `<circle cx="${f1(200 + r() * 700)}" cy="${f1(500 + r() * 300)}" r="${f1(1 + r() * 1.5)}" fill="#e8ecff" opacity="${f1(0.3 + r() * 0.5)}"/>`).join("")}`);
+    // through the rear window: the dark road behind, the bed, and the two passengers in moonlight (Yai's bun, Mint's hair in the wind)
+    const rim = `stroke="#9ab4e0" stroke-width="3" stroke-opacity=".55"`;
+    put(L.far, `<g id="${id}-bed"><path d="M240,800H860V1000H240Z" fill="#0a0e14"/><path d="M300,860L780,860L860,960L220,960Z" fill="#3a3e44"/><path d="M300,860L780,860" stroke="#c8ccd0" stroke-width="5" opacity=".5"/>
+      <circle cx="540" cy="808" r="40" fill="url(#nrTail)" opacity=".5"/>
+      ${[[610, 1, "#7a6a9a", "#1a1418"], [730, 0.92, "#a8a49c", "#c8c4bc"]].map(([x, k, shirt, hair], n) => `<g transform="translate(${x},866) scale(${k})"><path d="M-40,10Q-44,-34 -26,-48Q0,-58 26,-48Q44,-34 40,10Z" fill="${shirt}" opacity=".85"/>
+        <circle cy="-74" r="24" fill="#a88068"/><circle cx="-8" cy="-76" r="2.6" fill="#1a1210"/><circle cx="8" cy="-76" r="2.6" fill="#1a1210"/>
+        ${n === 0 ? `<path d="M-26,-70Q-30,-104 0,-102Q30,-104 26,-70L30,-40Q22,-62 20,-84Q0,-94 -20,-84Q-22,-62 -30,-40Z" fill="${hair}"/><path d="M24,-90Q50,-96 70,-84Q50,-80 30,-74Z" fill="${hair}"/>`
+          : `<path d="M-24,-80Q0,-104 24,-80Q14,-92 0,-92Q-14,-92 -24,-80Z" fill="${hair}"/><circle cy="-102" r="10" fill="${hair}"/>`}
+        <path d="M-26,-90Q0,-108 26,-90" stroke="#9ab4e0" stroke-width="3" fill="none" opacity=".5"/></g>`).join("")}</g>`);
+    // the cab: back wall with the rear window, headliner, seat backs and headrests
+    put(L.set, `<path d="M-1300,-900H2400V2900H-1300Z M300,640H780Q800,640 800,660V880Q800,900 780,900H300Q280,900 280,880V660Q280,640 300,640Z" fill="#101216" fill-rule="evenodd"/>
+      <path d="M300,640H780Q800,640 800,660V880Q800,900 780,900H300Q280,900 280,880V660Q280,640 300,640Z" fill="none" stroke="#24272c" stroke-width="16"/>
+      <path d="M100,470H980V560Q540,590 100,560Z" fill="#2a2c30"/><path d="M120,556Q540,586 960,556" stroke="#3a3c42" stroke-width="4" fill="none"/>
+      <g fill="#1a1c22" stroke="#26282e" stroke-width="4"><rect x="${WX - 190}" y="930" width="380" height="600" rx="40"/><rect x="${WX - 80}" y="822" width="160" height="120" rx="34"/>
+        <rect x="${WX + 410}" y="930" width="360" height="600" rx="40"/><rect x="${WX + 510}" y="822" width="160" height="120" rx="34"/></g>
+      <path d="M${WX + 430},980V1500M${WX + 750},980V1500" stroke="#24262c" stroke-width="5"/>`);
+    // in front of him: the wheel, his forearms and hands on it, the dashboard, the windshield frame, the bonnet, the mirror and garland
+    const ang = 48, R = 236, CY = 1478, gx = R * Math.sin((ang * Math.PI) / 180), gy = CY - R * Math.cos((ang * Math.PI) / 180);
+    const skS = Rig2.shade(sk, 0.25), slS = Rig2.shade(sl, 0.3);
+    // forearms rise from behind the dashboard (the elbows are below it) to the fists on the rim
+    const arm = (sx, hx) => `<path d="M${sx},1520Q${(sx + hx) / 2 - (hx < WX ? 30 : -30)},1420 ${hx},${f1(gy + 10)}" stroke="${slS}" stroke-width="76" fill="none" stroke-linecap="round"/><path d="M${sx},1520Q${(sx + hx) / 2 - (hx < WX ? 30 : -30)},1420 ${hx},${f1(gy + 10)}" stroke="${sl}" stroke-width="62" fill="none" stroke-linecap="round"/>
+      <path d="M${sx + (hx < WX ? 14 : -14)},1500Q${(sx + hx) / 2},1430 ${hx + (hx < WX ? 10 : -10)},${f1(gy + 30)}" stroke="#fff" stroke-width="8" fill="none" opacity=".12"/>`;
+    const fist = (hx, flip) => `<g transform="translate(${f1(hx)},${f1(gy)}) scale(${flip ? -1 : 1},1)"><path d="M-34,-6Q-38,-34 -10,-38L22,-36Q40,-30 38,-8L36,22Q30,38 8,38H-20Q-38,32 -36,12Z" fill="${sk}" stroke="${LN}" stroke-width="4"/>
+      <path d="M-30,6H30M-28,20H28" stroke="${skS}" stroke-width="4" stroke-linecap="round"/><path d="M-12,-36Q6,-50 26,-40" stroke="${skS}" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M-34,-6Q-38,-34 -10,-38L22,-36Q40,-30 38,-8L36,22Q30,38 8,38H-20Q-38,32 -36,12Z" fill="url(#r2Cyl)" opacity=".6"/></g>`;
+    let fg = `<circle cx="${WX}" cy="${CY}" r="${R}" fill="none" stroke="#0c0c0e" stroke-width="40"/><circle cx="${WX}" cy="${CY}" r="${R + 18}" fill="none" stroke="#7ae8ff" stroke-width="3" opacity=".25"/>`;
+    fg += arm(WX - 190, WX - gx) + arm(WX + 190, WX + gx) + fist(WX - gx, false) + fist(WX + gx, true);
+    fg += `<path d="M20,1392Q540,1360 1060,1392V1460H20Z" fill="#141518"/><path d="M${WX - 170},1392Q${WX},1320 ${WX + 170},1392Z" fill="#0e0f12"/><path d="M${WX - 150},1388Q${WX},1330 ${WX + 150},1388" stroke="#7ae8ff" stroke-width="4" fill="none" opacity=".5"/>`;
+    const OUT = "M60,380Q540,350 1020,380L1150,1392V2900H-70V1392Z";
+    fg += `<path d="M-1300,-900H2400V2900H-1300Z ${OUT}" fill="url(#nrSky)" fill-rule="evenodd"/>${Array.from({ length: 24 }, () => `<circle cx="${f1(-200 + r() * 1500)}" cy="${f1(-300 + r() * 640)}" r="${f1(1 + r() * 1.5)}" fill="#e8ecff" opacity="${f1(0.3 + r() * 0.5)}"/>`).join("")}
+      <path d="${OUT} ${WS}" fill="url(#trBodyFront)" fill-rule="evenodd"/><path d="${WS}" fill="none" stroke="#14161a" stroke-width="22"/><path d="M70,384Q540,354 1010,384" stroke="#c8d0dc" stroke-width="5" fill="none" opacity=".35"/>
+      <path d="M-1300,1392H2400V2900H-1300Z" fill="url(#trBonnet)"/><path d="M0,1440Q540,1404 1080,1440" stroke="#fff" stroke-width="5" opacity=".18" fill="none"/>
+      <path d="M200,1384L520,1340M600,1384L900,1342" stroke="#0c0c0e" stroke-width="10" stroke-linecap="round"/>
+      <path d="M150,470L-120,1392M930,470L1200,1392" stroke="#c8ccd0" stroke-width="4" opacity=".25"/>
+      <g transform="translate(950,1300)"><circle r="44" fill="#f4f0e4" stroke="#2a6ad8" stroke-width="6"/><circle r="30" fill="none" stroke="#e8302a" stroke-width="4"/><path d="M-14,-6H14M-12,6H12" stroke="#2a2a2a" stroke-width="4"/></g>
+      <path d="M560,470V528" stroke="#1a1c20" stroke-width="12"/><rect x="470" y="524" width="180" height="56" rx="16" fill="#1a1c20" stroke="#2a2c30" stroke-width="4"/><path d="M482,536H638" stroke="#7a8a9a" stroke-width="5" opacity=".5"/>
+      <g id="${id}-garland"><path d="M548,580V640M572,580V640" stroke="#e8e0d0" stroke-width="2"/>
+        ${Array.from({ length: 14 }, (_, k) => { const a = (k / 14) * 2 * Math.PI; return `<circle cx="${f1(560 + 34 * Math.sin(a))}" cy="${f1(676 + 30 * Math.cos(a))}" r="11" fill="${k % 2 ? "#f0a020" : "#f8c030"}" stroke="#a8601a" stroke-width="2"/>`; }).join("")}
+        <path d="M552,708L540,770M568,708L582,766" stroke="#e8302a" stroke-width="7" stroke-linecap="round"/><circle cx="560" cy="712" r="12" fill="#f4f0e8" stroke="#a8601a" stroke-width="2"/></g>`;
+    put(L.glow, fg);
+    put(L.glow, `<clipPath id="${id}-ws"><path d="${WS}"/></clipPath><circle cx="${WX}" cy="1380" r="420" fill="url(#cbDash)" opacity=".55" style="mix-blend-mode:screen"/>
+      <g clip-path="url(#${id}-ws)"><g id="${id}-refl" opacity=".9">${[0, 1, 2].map((k) => `<path d="M${-200 + k * 520},1400L${100 + k * 520},440L${170 + k * 520},440L${-130 + k * 520},1400Z" fill="#dfe8ff" opacity="${[0.07, 0.05, 0.06][k]}"/>`).join("")}</g></g>`);
   }
 
   // ---------------- the emergency entrance ----------------
