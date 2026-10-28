@@ -269,6 +269,13 @@
   - **สีหน้าใหม่**: `eyes: "worry" | "angry" | "sad" | "squint"` (คิ้ว + เปลือกตาสีผิว) · `mouth: "frown"` กับตาปกติ = คิ้วกังวลอัตโนมัติ (`brows: false` ปิด)
   - **ท่าวนซ้ำไม่พร้อมกัน** (หายใจ/โยก/ซอมบี้กระตุก เริ่มคนละจังหวะต่อตัว) · **ก้าวพอดีกับระยะเดินจริง**: ตัวที่มี `moveTo` + walk/run ถูกปรับ stride/period/bob/knee ให้เท้าเท่ากับพื้นที่เคลื่อน (เดิมขาก้าวเร็ว 4 เท่าของที่ตัวเคลื่อน = ไถลบนพื้น) ปิด `a.autoStride=false` · ชายเสื้อ (`hem`) สะบัดตามจังหวะเดิน/วิ่ง
   - แก้ใบหน้า: เส้นลิปสติกแดงของเจ๊หงส์ (ดูเป็นปากที่สองตอน close-up) เอาออก, ดินสอที่มวยผมครูพิมไม่พาดหน้าผากแล้ว
+- **การแสดงทุกช็อต (acting pass, ผู้ใช้สั่ง 28 ต.ค. "ไล่ทุกช็อต ใส่สีหน้าและท่าทางให้ตรงกับอารมณ์ของบท และเพิ่มภาพใกล้หน้าตอนตกใจหรือตอนตัดสินใจ" — ต้องทำก่อนเรนเดอร์ชุดสุดท้าย)**:
+  - ไล่บททีละช็อต EP.1–5 ด้วย `actdump.js` (ตารางบทพูด + track ของทุกตัว) แล้วแก้ track ใน `shots.part` ด้วย `actedit.py` (`edit(s, key, [(old, new)], nth)` เปลี่ยนเฉพาะในบล็อกของช็อตนั้น old ต้องเจอครั้งเดียว · `add_react(s, key, react)` เติม `react:` ก่อน captions/ui/bubbles/fx/extra) · สำรองไว้ `shots.part.bak13`
+  - **ท่าการแสดงใหม่ใน `rig.js` MODES**: `gasp` (มือขึ้นปิดปาก ตัวผงะ), `handChest` (มือทาบอก โล่งใจ/เจ็บใจ), `armsCrossed` (กอดอก ไม่ไว้ใจ/ตัดสินใจ), `shrug` (ยักไหล่ แบมือ), `slump` (ไหล่ตก ก้มหน้า), `fist` (กำหมัดยกขึ้น ฮึด/ดีใจ), `plead` (สองมือประสานขอร้อง), `nod` (พยักหน้า), `cower` (ย่อตัวหลบ มือบังหัว — ต่อจาก crouch), `think` (มือจับคาง) · มุมแขนแก้ด้วย IK: ไหล่หน้า (46,−455) ไหล่หลัง (−46,−455) ต้นแขน 122 ปลายแขน 104 ทิศของมุม θ = (−sinθ, cosθ) — อย่ากะมุมด้วยตา (รอบแรกมือ gasp ไปอยู่ที่หู ศอก handChest กางเป็นปีกไก่)
+  - สีหน้าแก้ใหม่: `squint` = คิ้วกดตรง (`BROWS.set`) + เปลือกบนบาง + เปลือกล่าง (รุ่นแรกดูง่วง) · พูดด้วยปาก frown/grit → ใช้ปากพูดมุมปากตก `talkS1..3` (รุ่นแรกพูดตอนกังวลแล้วดูยิ้ม)
+  - **ภาพใกล้หน้าตอนตกใจ/ตัดสินใจ**: ช็อตใส่ `react: [{ t, who (หรือ a: index), dur?, s?, sx?, sy?, fast? }]` → engine ซูมเข้าหน้าตัวนั้นที่เวลา t (`fast: true` = พุ่งเข้า 0.12 วิ สำหรับตกใจ, ปกติ 0.4 วิ สำหรับตัดสินใจ) หัวอยู่ y ≈ 900 · ความสูงหัวคำนวณจากท่าจริง (`headY` ใช้ bodyY ของ mode ตอนนั้น → ย่อ/นั่ง/นอนก็ไม่หลุดเฟรม) · จุดที่ใส่: EP.1 กระป๋องหล่น(ก้อง) ปั้นห้าม วิทยุ(พิม) · EP.2 inside collapse wake hill radio morning · EP.3 plea trust name×2 choice · EP.4 phuKnife cry×2 peek count count2 after radio walkie choice · EP.5 confuse name×2 choice
+  - เสียงคนไม่อยู่ในฉาก (EP.4 เสียงล่อ `l01` เสียง Leda) ห้ามขยับปากปั้น → `OFFSCREEN = {"l01"}` ใน make.py · `split3()` ต้องเลื่อนเวลา vo ของแต่ละท่อนด้วย (ไม่งั้นปากขยับผิดท่อน)
+  - ตรวจ: `acttimes.js` (ทุกจังหวะท่าใหม่ + react เป็นเวลาจริง) → `snapact.sh N` ถ่ายทุกจังหวะ ทำ contact sheet มีป้ายชื่อ · `probecu.js` ดูรายการ close-up ทั้งหมด (`react: true` = ภาพใกล้ตอนตกใจ)
 - **ค่าเรนเดอร์**: ฉากแต่งแล้ว + rig v2 เรนเดอร์ ~2.4 เฟรม/วิ บน 4 คอร์ (ตอนยาว 2:24 ≈ 60 นาที) ถ้ารัน snapshot ไปพร้อมกันจะช้าลงเหลือ ~1.3 — รอให้เรนเดอร์จบก่อนค่อยถ่าย snapshot ชุดใหญ่
 
 ### 2.3.4 การเปิดเรื่องใหม่ (ผู้ใช้สั่ง 24 ต.ค. 2026 "ต่อจากนี้ไปเริ่มเรื่องใหม่")
@@ -640,7 +647,8 @@ add("key", {
   - เอาชีวิตรอด 99 วัน (head.part): reach reachUp write still grabCan guard stopHand grabArm pullBolt crouchDraw sitHold sleepSit lookUp pointUp · prop: sickle ledger bag crayon
   - ใน rig.js: shamble lunge (กระตุกด้วย `twitch`) **zrun** (ซอมบี้วิ่งเร็ว) **swing** (ฟาดสองมือ ผ่านแนวนอนที่ ~0.15 วิ) **push** (ยันประตู) **knocked** (ถูกฟาดกระเด็น 0.4 วิ) **drag** (วิ่งลากมือคนข้างหลัง) fall
 - **นักแสดงซอมบี้:** z1 ลุง 2307 (ชุดนอนลาย), z2 พนักงานออฟฟิศ, z3 รปภ., **z4 วินมอเตอร์ไซค์ (เสื้อกั๊กส้มเบอร์ 17)** ทุกตัวมีกรงเล็บ (`hand: CLAWS(skin)` ติดทั้งสองมือ)
-- **ตาและปาก:** eyes normal wide closed pain glow side **dead** · mouth smile flat o frown scream **snarl**
+- **ตาและปาก:** eyes normal wide closed pain glow side **dead** · mouth smile flat o frown scream **snarl** · (28 ต.ค.) eyes **worry angry sad squint** · mouth **talk0..3 talkS1..3 grit smileOpen**
+- **ท่าการแสดง (28 ต.ค.):** gasp handChest armsCrossed shrug slump fist plead nod cower think — ดู 2.3.3.1
 - **prop:** phone mic whistle camera stick bottle clip **extinguisher** (ถังดับเพลิง ~55 ซม. ถือที่วาล์ว เหวี่ยงแบบกระบอง มาจาก zom.js) (เพิ่ม `Camp.hand.x` ใน template ได้)
 - **ของใหม่ (ทำให้ท่าลื่น):**
   - เปลี่ยน mode → blend 0.22 วิอัตโนมัติ (แขน/หัว overshoot นิดๆ)
@@ -778,6 +786,9 @@ add("key", {
 - งาน background มีเพดาน 2 ชม. เรนเดอร์หลายตอนต่อคิวกันในคำสั่งเดียวจะโดนตัดกลางทาง → สั่งทีละตอน (หรือ 2 ตอนพร้อมกันคนละคำสั่ง)
 - Monitor ที่ grep "error" จะจับข้อความ lint ของเรนเดอร์ → กรอง `lint|Continuing render` ออก
 - `npx hyperframes check` หมดเวลาบ่อย ใช้ headless_shell ดู console แทน
+- ฆ่าสคริปต์คิว (`chain.sh`) ที่เป็นพ่อของเรนเดอร์ = เรนเดอร์ตัวลูกถูกยกเลิกด้วย (`render_cancelled_parent_exited`) ถึงจะเหลืออีกนิดเดียว → ถ้าจะยกเลิกคิวให้รอตอนที่กำลังเรนเดอร์จบก่อน หรือยอมเรนเดอร์ตอนนั้นใหม่ และลบบรรทัด "EPn rendered" ปลอมออกจาก `renderone.log`
+- `actedit.py` หาบล็อกช็อตด้วย regex ที่ต้องขึ้นต้นบรรทัด (`\n[ \t]*(?:add|split3?)\("key"`) ไม่งั้นไปเจอ `classList.add("radio")` แทนช็อต radio
+- ffmpeg ในลูป `while read` กิน stdin ของลูป → ใส่ `-nostdin` · เรียงไฟล์เฟรมตามเวลาในชื่อ ไม่ใช่ตามตัวอักษร (frame-100 มาก่อน frame-11)
 
 ### การจัดเฟรม
 
