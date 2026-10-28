@@ -17,6 +17,8 @@
     <linearGradient id="rShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1c1f"/><stop offset="1" stop-color="#2e3134"/></linearGradient>
     <linearGradient id="rGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9fc0cc"/><stop offset=".55" stop-color="#6f8f9c"/><stop offset="1" stop-color="#4a6470"/></linearGradient>
     <linearGradient id="rFridge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8f6ff"/><stop offset="1" stop-color="#9fd0ea"/></linearGradient>
+    <pattern id="rAgg" width="120" height="70" patternUnits="userSpaceOnUse"><circle cx="8" cy="10" r="1.6" fill="#fff" opacity=".22"/><circle cx="34" cy="26" r="1.2" fill="#000" opacity=".3"/><circle cx="58" cy="8" r="2" fill="#000" opacity=".2"/><circle cx="76" cy="44" r="1.4" fill="#fff" opacity=".2"/><circle cx="96" cy="18" r="1.1" fill="#fff" opacity=".26"/><circle cx="112" cy="58" r="1.8" fill="#000" opacity=".24"/><circle cx="20" cy="52" r="1.3" fill="#000" opacity=".26"/><circle cx="46" cy="62" r="1.5" fill="#fff" opacity=".16"/><circle cx="66" cy="30" r="1" fill="#fff" opacity=".24"/><circle cx="104" cy="36" r="1.2" fill="#000" opacity=".22"/><circle cx="88" cy="64" r="1" fill="#000" opacity=".3"/><circle cx="4" cy="34" r="1" fill="#fff" opacity=".2"/><path d="M24,40l6,2M80,12l5,-2" stroke="#000" stroke-opacity=".2" stroke-width="1.5"/></pattern>
+    <linearGradient id="rShaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c8" stop-opacity=".16"/><stop offset=".7" stop-color="#fff2c8" stop-opacity=".07"/><stop offset="1" stop-color="#fff2c8" stop-opacity="0"/></linearGradient>
     <radialGradient id="rGlare"><stop offset="0" stop-color="#fffbe6" stop-opacity=".95"/><stop offset=".25" stop-color="#fff0b8" stop-opacity=".45"/><stop offset="1" stop-color="#ffd37a" stop-opacity="0"/></radialGradient>`;
 
   const SKYG = { noon: "fNoon", day: "fDay", dusk: "fDusk", night: "fNight", morning: "fMorn" };
@@ -73,6 +75,9 @@
     g += `<path d="M-320,-70H320" stroke="#3a3f45" stroke-width="14"/><rect x="290" y="-150" width="26" height="24" rx="5" fill="#f4ecd8" ${OUT}/><rect x="-318" y="-150" width="18" height="26" rx="4" fill="#c8392b" ${OUT}/>`;
     g += [-200, 210].map((wx, k) => `<g transform="translate(${wx},${k === 0 && o.flat ? -40 : -52})"><ellipse rx="54" ry="${k === 0 && o.flat ? 40 : 54}" fill="#1f1d1a" ${OUT}/><circle r="22" fill="#8d9299" ${OUT}/></g>`).join("");
     g += `<ellipse cx="-60" cy="-120" rx="40" ry="16" fill="#8a4a1a" opacity=".4"/><path d="M-300,-176q200,-20 560,-8" stroke="#fff" stroke-width="4" opacity=".3" fill="none"/>`;
+    if (o.plain !== true && window.Dress) g += `<path d="M-318,-120H318V-74H-318Z" fill="#000" opacity=".12"/><path d="M-318,-150H318" stroke="#000" stroke-opacity=".14" stroke-width="3"/>${van ? `<path d="M130,-296V-74M-100,-296V-74" stroke="#000" stroke-opacity=".3" stroke-width="3"/>` : `<path d="M20,-262V-76M-176,-200L-170,-80" stroke="#000" stroke-opacity=".3" stroke-width="3"/>`}<rect x="-10" y="-176" width="34" height="9" rx="4" fill="#3a3f45" opacity=".7"/><rect x="${van ? 150 : 150}" y="-176" width="34" height="9" rx="4" fill="#3a3f45" opacity=".7"/>
+      <path d="M${van ? 236 : 170},-208l22,-6v18h-22z" fill="${col}" stroke="${INK}" stroke-width="3"/>${[-200, 210].map((wx) => `<path d="M${wx - 72},-74A72,60 0 0 1 ${wx + 72},-74" fill="#1a1918" opacity=".55"/>`).join("")}<path d="M-318,-90H318" stroke="#b39d7a" stroke-width="16" opacity=".22"/>
+      <path d="${van ? "M-280,-286L-200,-206" : "M-150,-250L-110,-206"}M${van ? "-200,-286L-150,-236" : "40,-256L80,-210"}" stroke="#fff" stroke-width="7" opacity=".28"/>${[-200, 210].map((wx, k) => `<g transform="translate(${wx},${k === 0 && o.flat ? -40 : -52})"><circle r="15" fill="none" stroke="#5b6066" stroke-width="3"/>${[0, 72, 144, 216, 288].map((a) => `<circle cx="${f1(Math.cos(a * Math.PI / 180) * 10)}" cy="${f1(Math.sin(a * Math.PI / 180) * 10)}" r="2" fill="#3a3f45"/>`).join("")}</g>`).join("")}`;
     return g + `</g>`;
   }
   // a car from above (for the top-down shot): body, windscreen, roof; a = rotation in degrees
@@ -105,11 +110,13 @@
     if (o.sign) m += `<g id="${id}-sign" transform="translate(${o.signX ?? 300},1230)"><path d="M-360,0V-560M360,0V-560M-360,-540H360" stroke="#8d9299" stroke-width="16" fill="none"/><rect x="-300" y="-700" width="600" height="190" rx="14" fill="#1f6b46" ${OUT}/><rect x="-286" y="-686" width="572" height="162" rx="10" fill="none" stroke="#f4ecd8" stroke-width="5"/>
       <text x="-30" y="-618" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#f4ecd8">ปั๊มน้ำมัน</text><text x="-30" y="-550" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="46" fill="#f4ecd8">${o.sign} กม.</text>
       <g transform="translate(200,-606)"><rect x="-34" y="-50" width="60" height="100" rx="8" fill="#f4ecd8"/><rect x="-24" y="-38" width="40" height="30" fill="#1f6b46"/><path d="M26,-20q26,0 26,30v30" stroke="#f4ecd8" stroke-width="10" fill="none"/></g></g>`;
+    if (dressed(o)) m += highwayMid(r, o);
     put(L.mid, m);
     // set: the near carriageway we walk on (actors at y 1500), lane marks, cracks, our side's cars
     let s = `<rect x="-1400" y="1230" width="4000" height="1500" fill="url(#rAsph)"/><path d="M-1400,1250H2600" stroke="#e8b830" stroke-width="8"/><path d="M-1400,1660H2600" stroke="#f4ecd8" stroke-width="10" stroke-dasharray="120 90"/><path d="M-1400,2060H2600" stroke="#f4ecd8" stroke-width="10"/>`;
     for (let k = 0; k < 18; k++) { const x = -1300 + r() * 3800, y = 1300 + r() * 900; s += `<path d="M${f1(x)},${f1(y)}l${f1(30 + r() * 40)},${f1(6 - r() * 12)}l${f1(20 + r() * 30)},${f1(10 - r() * 20)}" stroke="#4a4d50" stroke-width="3" fill="none"/>`; }
     s += `<path d="M-900,1560q400,-14 900,0" stroke="#3a3c3f" stroke-width="22" fill="none" opacity=".35"/><path d="M200,1780q500,10 1100,-6" stroke="#3a3c3f" stroke-width="22" fill="none" opacity=".3"/>`;
+    if (dressed(o)) s += highwayFloor(mk((o.seed || 91) + 401), o);
     s += (o.cars || [[-700, 1420, 1.42, "#e8e2d4", { smash: true }], [1600, 1430, 1.45, "#3f5a8a", { door: true, flat: true }]]).map(([x, y, sc, col, oo]) => CAR(x, y, sc, col, oo || {})).join("");
     if (o.bridge) s += `<g>${Array.from({ length: 40 }, (_, k) => `<rect x="${-1400 + k * 100}" y="1990" width="40" height="120" fill="#cfc9bb" ${OUT}/>`).join("")}<rect x="-1400" y="1960" width="4000" height="40" fill="#e8e2d4" ${OUT}/></g>`;
     put(L.set, s);
@@ -131,6 +138,12 @@
     // the median barrier running away on the left, the far carriageway beyond it
     s += `<path d="M${VX - 20},${VY}L${VX - 1900},2700L${VX - 2600},2700L${VX - 30},${VY}Z" fill="#cfc9bb" ${OUT}/><path d="M${VX - 30},${VY}L${VX - 2600},2700V${VY}Z" fill="url(#rAsphD)" opacity=".35"/>`;
     if (o.bridge) s += `<path d="M${VX + 10},${VY - 4}L${VX + 2000},2300M${VX + 10},${VY - 24}L${VX + 2000},2050" stroke="#e8e2d4" stroke-width="18" fill="none"/>${Array.from({ length: 16 }, (_, k) => { const [x, y, kk] = P(k / 16, 2.3); return `<rect x="${f1(x)}" y="${f1(y - 320 * kk)}" width="${f1(40 * kk)}" height="${f1(320 * kk)}" fill="#cfc9bb" stroke="${INK}" stroke-width="2"/>`; }).join("")}`;
+    if (dressed(o)) { const D = Dress, q = mk((o.seed || 17) + 441);
+      s += `<path d="M${VX - 6},${VY}L${VX + 6},${VY}L${VX + 2600},2700L${VX - 2600},2700Z" fill="url(#rAgg)" opacity=".8"/>`;
+      for (let k = 0; k < 6; k++) { const lane = -1.6 + q() * 3.6, d0 = 0.05 + q() * 0.5, [x0, y0] = P(d0, lane), [x1, y1] = P(d0 + 0.2, lane + (q() - 0.5) * 0.4); s += `<path d="M${f1(x0)},${f1(y0)}Q${f1((x0 + x1) / 2 + (q() - 0.5) * 60)},${f1((y0 + y1) / 2)} ${f1(x1)},${f1(y1)}" stroke="#1f2022" stroke-width="${f1(10 * P(d0, 0)[2] + 2)}" fill="none" opacity=".45"/>`; }
+      s += [[0.02, 0.6], [0.08, -0.7], [0.15, 0.2]].map(([d, lane]) => { const [x, y, k] = P(d, lane); return `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(220 * k)}" ry="${f1(40 * k)}" fill="#1a1b1c" opacity=".22"/>`; }).join("");
+      if (!o.bridge) s += Array.from({ length: 12 }, (_, k) => { const [x, y, kk] = P(k / 12, 2.6); return `<rect x="${f1(x)}" y="${f1(y - 150 * kk)}" width="${f1(22 * kk + 2)}" height="${f1(150 * kk)}" fill="#f4ecd8" stroke="${INK}" stroke-width="2"/><rect x="${f1(x)}" y="${f1(y - 120 * kk)}" width="${f1(22 * kk + 2)}" height="${f1(20 * kk)}" fill="#c8392b"/>`; }).join("");
+      s += litter([[VX - 360, 2050, "paper", 1.5, -10], [VX + 420, 1880, "bottle", 1.3, 20]]); }
     put(L.set, s);
     // cars at depth, smaller and paler with distance; an overpass across the horizon
     let c = "";
@@ -202,6 +215,7 @@
     for (let k = 0; k < 14; k++) { const x = -1200 + r() * 3400, y = 1330 + r() * 700; s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(20 + r() * 40)}" ry="${f1(5 + r() * 8)}" fill="#2a2c2e" opacity=".6"/>`; }
     s += `<path d="M700,1320q60,-20 120,6l40,-10" stroke="#8a857a" stroke-width="5" fill="none"/><rect x="980" y="1330" width="70" height="40" rx="6" fill="#b3ada0" ${OUT}/>`;
     put(L.set, s);
+    if (dressed(o)) underpassDress(L, id, o, mk((o.seed || 47) + 409));
     if (o.car !== false) put(L.set, `<g id="${id}-car">${CAR(o.carX ?? 1250, 1440, 1.45, "#8a3a2e", { smash: true, flat: true, flip: true })}<ellipse id="${id}-under" cx="${o.carX ?? 1250}" cy="1430" rx="470" ry="34" fill="#0d0e0f" opacity=".75"/></g>`);
     // light: the bright opening beyond the shade, a hard edge on the ground where the sun starts
     put(L.glow, `<rect x="-1400" y="1240" width="4000" height="50" fill="#fff6d8" opacity=".25"/><rect x="-1400" y="-900" width="4000" height="1300" fill="#000" opacity=".3"/><rect x="-1400" y="1290" width="4000" height="1500" fill="#000" opacity=".18"/>`);
@@ -217,7 +231,8 @@
     let s = `<rect x="-1200" y="-800" width="3500" height="3600" fill="#46494c"/>`;
     for (let k = 0; k < 40; k++) { const x = -900 + r() * 2900, y = -500 + r() * 2900; s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(2 + r() * 5)}" fill="#3a3d40"/>`; }
     s += `<path d="M-1200,${o.edge ?? 1800}L2300,${(o.edge ?? 1800) - 300}V2800H-1200Z" fill="#fff2c8" opacity=".22"/>`;   // where the sun starts
-    s += `<path d="M330,700L760,690L790,1780L300,1790Z" fill="#c9a06c" opacity=".95" ${OUT}/><path d="M330,1000L770,990M320,1400L780,1390" stroke="#a5804f" stroke-width="6" fill="none"/>`;   // a flattened cardboard box under him
+    if (dressed(o)) { const D = Dress; s += agg(-1200, -800, 3500, 3600, 0.9) + [[200, 400, 160], [980, 1300, 120], [80, 1500, 90], [900, 500, 70]].map(([x, y, w]) => `<ellipse cx="${x}" cy="${y}" rx="${w}" ry="${w * 0.4}" fill="#26282a" opacity=".3"/>`).join("") + tarLine(r, -200, 200, 900, 0.6) + tarLine(r, 800, 1900, 700, -0.3) + D.pebbles(-900, 2000, -500, 2400, 50, 291, 9) + D.leaves(-900, 2000, -500, 2400, 20, 293) + litter([[160, 1700, "bottle", 1.2, -30], [930, 1600, "cup", 1.2, 40]]); }
+    s += `<path d="M330,700L760,690L790,1780L300,1790Z" fill="#c9a06c" opacity=".95" ${OUT}/>${dressed(o) ? `${Array.from({ length: 22 }, (_, k) => `<path d="M${336 + k * 20},700L${306 + k * 21.5},1788" stroke="#b8905c" stroke-width="3" opacity=".7"/>`).join("")}<text x="540" y="1560" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#8a6a42" opacity=".5" transform="rotate(-1 540 1560)">น้ำดื่ม</text><rect x="320" y="1180" width="460" height="36" fill="#d9c9a0" opacity=".6"/><path d="M300,1790L790,1780L792,1800L302,1810Z" fill="#000" opacity=".2"/>` : ""}<path d="M330,1000L770,990M320,1400L780,1390" stroke="#a5804f" stroke-width="6" fill="none"/>`;   // a flattened cardboard box under him
     put(L.set, s);
     const CLOTH = (k, x, y, a, w = 190) => `<g id="${id}-cl${k}" opacity="0" transform="translate(${x},${y}) rotate(${a})"><path d="M${-w / 2},-34Q0,-50 ${w / 2},-34L${w / 2 + 10},34Q0,50 ${-w / 2 - 10},34Z" fill="#c9d8e0" ${OUT}/><path d="M${-w / 2 + 20},-10q${w / 2},14 ${w - 40},0M${-w / 2 + 20},14q${w / 2},10 ${w - 40},0" stroke="#9fb6c2" stroke-width="4" fill="none"/>${[0, 1, 2].map((j) => `<circle cx="${-w / 3 + j * w / 3}" cy="40" r="5" fill="#6fb3d6" opacity=".8"/>`).join("")}</g>`;
     put(L.act, (o.cloths || [[540, 806, -6, 150], [540, 968, 0, 110], [452, 1012, 32, 84], [628, 1012, -32, 84]]).map(([x, y, a, w], k) => CLOTH(k, x, y, a, w)).join(""));
@@ -232,6 +247,9 @@
   function station(L, o = {}) {
     const id = o.id || "st", t = o.time || "dusk", r = mk(o.seed || 71), night = t === "night";
     sky(L, t); sun(L, t, o.sunX ?? 900, 300);
+    if (dressed(o)) { const q = mk((o.seed || 71) + 431);   // dusk: long streaks of cloud lit from below, a few birds; night: stars
+      put(L.sky, t === "dusk" ? Array.from({ length: 9 }, () => { const x = -900 + q() * 2700, y = -300 + q() * 1100, w = 300 + q() * 700; return `<g opacity="${f1(0.45 + q() * 0.4)}"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(w)}" ry="${f1(18 + q() * 22)}" fill="#7a3a5a"/><ellipse cx="${f1(x + w * 0.1)}" cy="${f1(y + 10)}" rx="${f1(w * 0.8)}" ry="${f1(8 + q() * 8)}" fill="#ffb07a" opacity=".7"/></g>`; }).join("") + Array.from({ length: 5 }, () => { const x = 100 + q() * 900, y = 200 + q() * 400, w = 14 + q() * 10; return `<path d="M${f1(x - w)},${f1(y)}q${f1(w / 2)},${f1(-w / 2)} ${f1(w)},0q${f1(w / 2)},${f1(-w / 2)} ${f1(w)},0" stroke="#2a1a24" stroke-width="3" fill="none"/>`; }).join("")
+        : night ? Array.from({ length: 70 }, () => `<circle cx="${f1(-1100 + q() * 3300)}" cy="${f1(-700 + q() * 1600)}" r="${f1(1 + q() * 2.2)}" fill="#e9eef5" opacity="${f1(0.35 + q() * 0.6)}"/>`).join("") : ""); }
     put(L.far, Fence.paddies(r, t, 1040));
     // the minimart behind (mid): concrete box, a glass front with shelves and glowing fridges, the chained door, a painted warning
     let m = `<g transform="translate(-200,1240)"><rect x="-500" y="-560" width="1500" height="560" fill="#d9d4c8" ${OUT}/><rect x="-500" y="-600" width="1500" height="60" fill="#c8392b" ${OUT}/><path d="M-500,-580H1000" stroke="#f4ecd8" stroke-width="8"/>
@@ -241,13 +259,15 @@
       <text x="690" y="-300" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="56" fill="#c8392b" transform="rotate(-6 690 -300)" opacity=".95">ห้ามเข้า</text></g>`;
     m += `<g transform="translate(1600,1240)"><path d="M0,0V-820" stroke="#8d9299" stroke-width="30"/><rect x="-160" y="-1080" width="320" height="300" rx="18" fill="#e8e2d4" ${OUT}/><rect x="-140" y="-1060" width="280" height="110" rx="10" fill="#c8392b"/><text x="0" y="-985" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#f4ecd8">ปั๊ม</text>${[0, 1].map((k) => `<rect x="-130" y="${-930 + k * 66}" width="260" height="52" rx="6" fill="#1f1d1a"/><text x="110" y="${-893 + k * 66}" text-anchor="end" font-family="Kanit" font-weight="900" font-size="38" fill="#3a3f45">--.--</text>`).join("")}</g>`;
     put(L.mid, m);
+    const fore = dressed(o) ? stationDress(L, id, o, mk((o.seed || 71) + 419), night) : "";
     // the canopy (set): a deep slab on four square pillars; its top at y = 760 is where the guard stands
-    let s = `<rect x="-1400" y="1240" width="4000" height="1500" fill="url(#fConc)"/>${Array.from({ length: 10 }, (_, k) => `<path d="M${-1400 + k * 420},1240L${-1700 + k * 560},2700" stroke="#a9a397" stroke-width="4"/>`).join("")}`;
+    let s = `<rect x="-1400" y="1240" width="4000" height="1500" fill="url(#fConc)"/>${Array.from({ length: 10 }, (_, k) => `<path d="M${-1400 + k * 420},1240L${-1700 + k * 560},2700" stroke="#a9a397" stroke-width="4"/>`).join("")}${fore}`;
     s += `<g id="${id}-roof"><rect x="-700" y="760" width="2100" height="150" fill="#f4ecd8" ${OUT}/><rect x="-700" y="830" width="2100" height="50" fill="#c8392b"/><path d="M-700,910H1400" stroke="${INK}" stroke-width="5"/><rect x="-700" y="910" width="2100" height="40" fill="#3a3d40" opacity=".5"/>
       ${[[-200, 760], [-80, 760], [1100, 760]].map(([x, y]) => `<rect x="${x}" y="${y - 60}" width="110" height="64" rx="18" fill="#a5895a" ${OUT}/>`).join("")}<path d="M1300,760V1240M1340,760V1240${Array.from({ length: 10 }, (_, k) => `M1300,${800 + k * 46}h40`).join("")}" stroke="#8d9299" stroke-width="8" fill="none"/></g>`;
     s += [-520, 120, 760, 1240].map((x) => `<rect x="${x - 40}" y="950" width="80" height="300" fill="#cfc9bb" ${OUT}/>`).join("");
     const PUMP = (x) => `<g transform="translate(${x},1300)"><rect x="-220" y="-30" width="440" height="40" fill="#b3ada0" ${OUT}/><rect x="-90" y="-330" width="180" height="300" rx="14" fill="#e8e2d4" ${OUT}/><rect x="-70" y="-300" width="140" height="70" fill="#1f1d1a"/><rect x="-90" y="-200" width="180" height="40" fill="#c8392b"/><path d="M90,-180q60,0 60,90v70" stroke="#1f1d1a" stroke-width="12" fill="none"/><rect x="130" y="-30" width="40" height="30" rx="6" fill="#3a3f45"/></g>`;
     s += PUMP(-180) + PUMP(980);
+    if (dressed(o)) s += stationTop(id, o, mk((o.seed || 71) + 421), night);
     put(L.set, s);
     if (night) { put(L.glow, `<g id="${id}-lamp"><circle cx="${o.lampX ?? 420}" cy="1150" r="520" fill="url(#fLamp)" opacity=".9"/></g>`); put(L.set, `<g transform="translate(${o.lampX ?? 420},1240)"><rect x="-26" y="-80" width="52" height="80" rx="10" fill="#c9a55a" ${OUT}/><rect x="-16" y="-70" width="32" height="54" fill="#ffd58a"/></g>`); }
     else put(L.glow, `<rect x="-1400" y="700" width="4000" height="1400" fill="#ff9a3c" opacity=".14"/>`);
@@ -272,6 +292,127 @@
     s += `<text x="540" y="1600" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#6f8f3e" filter="url(#fCrayon)">พี่ภู กับ คุณ...</text></g>`;
     put(L.set, s);
     put(L.glow, `<circle cx="540" cy="900" r="900" fill="url(#fLamp)" opacity=".35"/>`);
+  }
+
+
+  // ---------------- set dressing for the road sets (EP.5): asphalt grain, sealed cracks, skid marks, road studs, litter from
+  // the evacuation, a grimy median barrier with weeds; under the overpass: stained concrete, posters, graffiti, a drain pipe,
+  // someone's cardboard bed, a light shaft through the deck joint; at the station: oil stains, hazard kerbs, pump nozzles and
+  // hoses, dead canopy lights, an ice chest, crates, a fire extinguisher, long dusk shadows. o.dress === false skips all of it.
+  const dressed = (o) => o.dress !== false && !!window.Dress;
+  const agg = (x, y, w, h, op = 1) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#rAgg)" opacity="${op}"/>`;
+  const tarLine = (r, x, y, len, ang) => { let d = `M${f1(x)},${f1(y)}`, cx = x, cy = y; for (let k = 0; k < 6; k++) { cx += Math.cos(ang) * len / 6 + (r() - 0.5) * 30; cy += Math.sin(ang) * len / 6 + (r() - 0.5) * 12; d += `L${f1(cx)},${f1(cy)}`; }
+    return `<path d="${d}" stroke="#1f2022" stroke-width="7" fill="none" stroke-linejoin="round" opacity=".5"/><path d="${d}" stroke="#a9adb1" stroke-width="2" fill="none" opacity=".22" transform="translate(0,-3)"/>`; };
+  const LIT = {
+    bottle: `<ellipse cx="4" cy="4" rx="42" ry="8" fill="#0b0d08" opacity=".22"/><rect x="-40" y="-14" width="74" height="26" rx="12" fill="#dfeff5" fill-opacity=".7" stroke="${INK}" stroke-width="2"/><rect x="34" y="-8" width="14" height="14" rx="3" fill="#2f6fb8" stroke="${INK}" stroke-width="2"/><path d="M-30,-8h50" stroke="#fff" stroke-width="3" opacity=".7"/>`,
+    sandal: `<ellipse cx="4" cy="3" rx="40" ry="8" fill="#0b0d08" opacity=".2"/><path d="M-40,0q0,-16 34,-16h20q24,0 26,12q0,8 -26,8z" fill="#c8392b" stroke="${INK}" stroke-width="2"/><path d="M-6,-14q8,10 22,10" stroke="#e8e4da" stroke-width="4" fill="none"/>`,
+    bag: `<ellipse cx="4" cy="4" rx="46" ry="9" fill="#0b0d08" opacity=".18"/><path d="M-40,0q-6,-30 20,-34q10,-12 22,0q30,4 22,34q-30,8 -64,0z" fill="#f4f4ee" fill-opacity=".75" stroke="${INK}" stroke-width="2"/><path d="M-20,-20q10,8 24,2" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>`,
+    paper: `<path d="M-30,-6l50,-10l12,22l-50,8z" fill="#f2ede0" stroke="${INK}" stroke-width="1.5"/><path d="M-20,-4l34,-6M-16,4l30,-6" stroke="#8a857a" stroke-width="2"/>`,
+    cup: `<ellipse cx="6" cy="4" rx="34" ry="7" fill="#0b0d08" opacity=".2"/><path d="M-26,-10l52,-6l-4,22l-44,4z" fill="#f4f4ee" stroke="${INK}" stroke-width="2"/><ellipse cx="-26" cy="0" rx="5" ry="10" fill="#e8e4da" stroke="${INK}" stroke-width="2"/>`,
+    helmet: `<ellipse cx="6" cy="4" rx="56" ry="10" fill="#0b0d08" opacity=".25"/><path d="M-50,0q0,-56 50,-56q50,0 50,56z" fill="#e8b830" stroke="${INK}" stroke-width="3"/><path d="M-30,-8q30,-20 70,-8" stroke="#1f1d1a" stroke-width="10" fill="none"/><path d="M-30,-40q14,-12 30,-12" stroke="#fff" stroke-width="5" opacity=".5" fill="none"/>`,
+    tyre: `<path d="M-60,0q20,-16 60,-10t60,6" stroke="#0b0d08" stroke-opacity=".2" stroke-width="20" fill="none" transform="translate(4,5)"/><path d="M-60,0q20,-16 60,-10t60,6" stroke="#1f1d1a" stroke-width="14" fill="none" stroke-linecap="round"/><path d="M-50,-4q20,-12 50,-8" stroke="#55504a" stroke-width="3" fill="none" stroke-dasharray="6 6"/>`,
+    case: `<ellipse cx="20" cy="6" rx="150" ry="16" fill="#0b0d08" opacity=".26"/><path d="M-110,-40L-100,-118L110,-112L110,-40Z" fill="#3f5a7a" stroke="${INK}" stroke-width="3"/><rect x="-110" y="-44" width="220" height="44" rx="8" fill="#2f4a6a" stroke="${INK}" stroke-width="3"/>
+      <path d="M-96,-40q30,-22 64,-6q24,12 52,-2l52,-6l14,16h-182z" fill="#d96a8a" stroke="${INK}" stroke-width="2"/><path d="M-20,-46q20,-14 50,-6" stroke="#e8dcc6" stroke-width="10" fill="none"/><path d="M96,-6q50,-10 104,4l-8,14q-48,4 -96,-4z" fill="#e8dcc6" stroke="${INK}" stroke-width="2"/><rect x="-14" y="-52" width="28" height="10" rx="4" fill="#1f1d1a"/>`,
+    poster: `<rect x="-60" y="-80" width="120" height="160" fill="#f2ede0" stroke="${INK}" stroke-width="2"/><rect x="-50" y="-70" width="100" height="40" fill="#c8392b" opacity=".8"/><path d="M-44,-14h88M-44,4h70M-44,22h80M-44,40h50" stroke="#5b6066" stroke-width="5"/><path d="M40,80l20,-30v30z" fill="#d9d4c8" stroke="${INK}" stroke-width="1.5"/>`,
+  };
+  const litter = (list) => list.map(([x, y, k, s = 1, a = 0]) => Dress.at(x, y, s, LIT[k], a)).join("");
+
+  // the near carriageway (set layer, under the cars) and the median + far carriageway (mid layer)
+  function highwayFloor(r, o) {
+    const D = Dress;
+    let s = agg(-1400, 1240, 4000, 1500, 0.9);
+    s += [[1330, 1470], [1740, 1890]].map(([a, b]) => `<rect x="-1400" y="${a}" width="4000" height="46" fill="#000" opacity=".07"/><rect x="-1400" y="${b}" width="4000" height="46" fill="#000" opacity=".07"/><rect x="-1400" y="${a + 46}" width="4000" height="8" fill="#fff" opacity=".05"/><rect x="-1400" y="${b + 46}" width="4000" height="8" fill="#fff" opacity=".05"/>`).join("");
+    for (let k = 0; k < 7; k++) s += tarLine(r, -1300 + r() * 3600, 1290 + r() * 720, 260 + r() * 320, (r() - 0.5) * 0.5);
+    for (let k = 0; k < 4; k++) s += tarLine(r, -1200 + r() * 3400, 1280 + r() * 300, 220 + r() * 160, 1.2 + r() * 0.5);
+    s += [[-320, 1700, 260, 120], [880, 1320, 200, 90], [1700, 1880, 300, 110], [-1100, 1360, 180, 80]].map(([x, y, w, h]) => `<path d="M${x},${y + 6}L${x + w * 0.4},${y}L${x + w},${y + 8}L${x + w - 6},${y + h}L${x + w * 0.5},${y + h - 6}L${x + 4},${y + h}Z" fill="#505356" opacity=".4" stroke="#2a2c2e" stroke-opacity=".3" stroke-width="3"/>`).join("");
+    for (let k = 0; k < 7; k++) { const x = -1200 + r() * 3400, y = 1300 + r() * 760, w = 40 + r() * 70; s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(w)}" ry="${f1(w * 0.22)}" fill="#1a1b1c" opacity=".26"/><ellipse cx="${f1(x - w * 0.2)}" cy="${f1(y - 2)}" rx="${f1(w * 0.4)}" ry="${f1(w * 0.07)}" fill="#7a6a9a" opacity=".12"/>`; }
+    s += [0, 64].map((dy) => `<path d="M-1200,${1860 + dy}C-600,${1846 + dy} -100,${1790 + dy} 420,${1720 + dy * 0.6}" stroke="#1a1b1c" stroke-width="16" opacity=".3" fill="none" stroke-linecap="round"/>`).join("");
+    for (let x = -1400 + 165; x < 2600; x += 210) s += `<rect x="${x - 9}" y="1653" width="18" height="14" rx="3" fill="#e8e4da" stroke="${INK}" stroke-width="1.5"/><rect x="${x - 7}" y="1655" width="14" height="5" fill="#ffb84a"/>`;
+    for (let x = -1300; x < 2600; x += 300) s += `<rect x="${x - 8}" y="1243" width="16" height="12" rx="3" fill="#e8b830" stroke="${INK}" stroke-width="1.5"/>`;
+    for (let k = 0; k < 26; k++) { const x = -1350 + r() * 3900, y = r() < 0.5 ? 1660 : 2060; s += `<ellipse cx="${f1(x)}" cy="${f1(y + (r() - 0.5) * 6)}" rx="${f1(8 + r() * 22)}" ry="${f1(3 + r() * 3)}" fill="#606366" opacity=".55"/>`; }
+    s += `<path d="M-1400,1256${Array.from({ length: 20 }, (_, k) => `Q${-1300 + k * 200},${1270 + (k % 3) * 6} ${-1200 + k * 200},1258`).join("")}V1252H-1400Z" fill="#b8a47a" opacity=".45"/>`;
+    s += D.pebbles(-1400, 2600, 1262, 1300, 40, 211, 5);
+    if (!o.bridge) {
+      s += `<rect x="-1400" y="2072" width="4000" height="110" fill="#8f8a7e"/>${agg(-1400, 2072, 4000, 110, 0.7)}<rect x="-1400" y="2176" width="4000" height="700" fill="#7f8a52"/><path d="M-1400,2178${Array.from({ length: 30 }, (_, k) => `q${66},${(k % 2 ? 1 : -1) * 10} 134,0`).join("")}" stroke="#6a7444" stroke-width="10" fill="none"/>`;
+      s += D.pebbles(-1400, 2600, 2080, 2170, 60, 213, 7) + D.tufts(-1400, 2600, 2180, 2600, 70, 215, 46, true) + D.weeds(-1400, 2600, 2182, 217, 54);
+    }
+    s += litter([[-160, 1440, "case", 1], [-260, 1600, "paper", 1, -10], [320, 1960, "bottle", 1, 14], [1060, 1580, "sandal", 1, 22], [620, 1370, "cup", 1], [-880, 1990, "bag", 1], [1440, 2020, "tyre", 1.2], [180, 1780, "paper", 1, 30], [1900, 1700, "bottle", 1, -40], [-560, 1820, "helmet", 0.9, -8]]);
+    return s;
+  }
+  function highwayMid(r, o) {
+    const D = Dress;
+    let m = agg(-1400, 1040, 4000, 120, 0.7);
+    m += `<rect x="-1400" y="1160" width="4000" height="70" fill="url(#dConc)" opacity=".85"/><rect x="-1400" y="1160" width="4000" height="70" fill="url(#dGrime)"/><path d="M-1400,1163H2600" stroke="#fff" stroke-opacity=".4" stroke-width="3"/>`;
+    for (let x = -1300; x < 2600; x += 360) m += `<rect x="${x}" y="1184" width="16" height="11" rx="2" fill="#ff9a3c" stroke="${INK}" stroke-width="1.5"/>`;
+    for (let k = 0; k < 16; k++) m += D.streak(-1400 + r() * 4000, 1172, 20 + r() * 30, 56, 0.7);
+    m += D.weeds(-1400, 2600, 1232, 219, 30);
+    if (o.billboard !== false) { const bx = o.billboardX ?? 1500; m += `<g transform="translate(${bx},1160)"><rect x="-160" y="-520" width="420" height="230" fill="url(#dGrime)"/>${D.streak(-130, -292, 40, 140, 0.8)}${D.streak(150, -292, 30, 120, 0.7)}${D.rust(-160, -520, 70, 120, 0.7)}<path d="M260,-520l-40,0l40,46z" fill="#cfc9bb" stroke="${INK}" stroke-width="2"/></g>`; }
+    return m;
+  }
+
+  // under the overpass: concrete wear on deck and pillars, posters, graffiti, a drain pipe and its puddle, a cardboard bed
+  function underpassDress(L, id, o, r) {
+    const D = Dress, P = o.pillars || [40, 1180];
+    let s = `<rect x="-1400" y="-900" width="4000" height="1270" fill="url(#dConc)" opacity=".45"/>${Array.from({ length: 12 }, (_, k) => `<rect x="${-1400 + k * 360 + 54}" y="-900" width="6" height="1200" fill="#fff" opacity=".06"/>`).join("")}`;
+    s += `<rect x="-1400" y="300" width="4000" height="70" fill="url(#dGrime)"/>${Array.from({ length: 10 }, () => D.streak(-1400 + r() * 4000, 300, 30 + r() * 50, 70, 0.8)).join("")}`;
+    s += Array.from({ length: 7 }, () => { const x = -1100 + r() * 3200; return `<path d="M${f1(x)},370q-16,0 -18,16q18,12 36,0q-2,-16 -18,-16z" fill="#8a6a42" stroke="${INK}" stroke-width="2"/>`; }).join("");
+    s += P.map((x, j) => `<rect x="${x - 110}" y="370" width="220" height="1160" fill="url(#dConc)"/>${D.streak(x - 100, 370, 80, 420, 0.9)}${D.streak(x + 20, 370, 60, 300, 0.7)}<rect x="${x - 110}" y="1380" width="220" height="150" fill="url(#dGrime)"/>
+      <path d="M${x - 110},372V1528M${x + 110},372V1528" stroke="#fff6d8" stroke-opacity=".28" stroke-width="5"/><path d="M${x + 108},${900 + j * 80}l-20,24l6,30l-16,20" stroke="#3a2a20" stroke-width="3" fill="none"/><path d="M${x + 96},${940 + j * 80}h14M${x + 94},${960 + j * 80}h16" stroke="#8a4a22" stroke-width="3"/>
+      <text x="${x}" y="560" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#e8e2d4" opacity=".6">P${12 + j}</text>
+      ${D.at(x - 30, 820, 0.9, LIT.poster, -3)}${j === 0 ? D.at(x + 46, 880, 0.75, LIT.poster.replace("#c8392b", "#2f6fb8"), 5) : ""}
+      <path d="M${x - 90},${1180 - j * 40}q30,-40 60,-6q20,24 50,-20q16,-24 36,4" stroke="${j ? "#c8392b" : "#2f6fb8"}" stroke-width="12" fill="none" stroke-linecap="round" opacity=".7"/><path d="M${x - 70},${1230 - j * 40}l40,-20l30,24l40,-30" stroke="#f4ecd8" stroke-width="6" fill="none" opacity=".55"/>`).join("");
+    // the drain pipe down the left pillar, its stain and puddle
+    const px = P[0] + 80;
+    s += `<rect x="${px}" y="370" width="24" height="1150" fill="#7d858c" stroke="${INK}" stroke-width="3"/><rect x="${px + 4}" y="370" width="6" height="1150" fill="#fff" opacity=".25"/>${[600, 900, 1200].map((y) => `<rect x="${px - 6}" y="${y}" width="36" height="12" fill="#5b6066" stroke="${INK}" stroke-width="2"/>`).join("")}<path d="M${px - 4},1520h32l10,14h-52z" fill="#5b6066" stroke="${INK}" stroke-width="2"/>`;
+    s += agg(-1400, 1280, 4000, 1500, 0.55) + `<rect x="-1400" y="1280" width="4000" height="80" fill="url(#dAO)"/>` + D.puddle(px + 70, 1560, 130, 22, true);
+    s += D.tracks(-1300, 2400, -300, 1700, 400, 1300, 100, 0.14);
+    // someone sheltered here: cardboard bed with a pillow and blanket by the right pillar, bottles, a plastic stool, rubble
+    s += D.at(P[1] - 380, 1360, 1, `<ellipse cx="10" cy="10" rx="230" ry="20" fill="#0b0d08" opacity=".3"/><path d="M-210,0L190,-14L210,20L-190,30Z" fill="#c9a06c" stroke="${INK}" stroke-width="3"/><path d="M-60,-6l10,30M70,-10l6,28" stroke="#a5804f" stroke-width="4"/><path d="M110,-30q40,-18 80,0q10,20 -10,24h-64q-16,-6 -6,-24z" fill="#e8dcc6" stroke="${INK}" stroke-width="2"/><path d="M-180,-6q100,-40 200,-20q40,10 60,24l-260,20z" fill="#4f6a8a" stroke="${INK}" stroke-width="2"/><path d="M-150,-10q80,-24 170,-10" stroke="#fff" stroke-width="4" opacity=".25" fill="none"/>`);
+    s += D.bottles(P[1] - 120, 1346, 0.8, 3) + D.at(-700, 1350, 1, `<ellipse cx="6" cy="4" rx="70" ry="10" fill="#0b0d08" opacity=".26"/><path d="M-50,0L-40,-70H40L50,0" fill="none" stroke="#2f6fb8" stroke-width="10"/><ellipse cx="0" cy="-72" rx="50" ry="12" fill="#2f6fb8" stroke="${INK}" stroke-width="3"/>`);
+    s += D.at(-260, 1330, 1, `<ellipse cx="0" cy="6" rx="150" ry="16" fill="#0b0d08" opacity=".25"/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-120 + k * 28},0l${10 + (k % 3) * 6},-${20 + (k * 7) % 26}l${18 + (k % 2) * 8},${12 + (k % 4) * 4}z" fill="${["#8d8a84", "#a9a397", "#76736d"][k % 3]}" stroke="${INK}" stroke-width="1.5"/>`).join("")}`);
+    s += litter([[-500, 1500, "bag", 1.1], [300, 1720, "cup", 1.1, 20], [860, 1880, "paper", 1.2, -12], [-900, 1800, "bottle", 1.2, 30], [1500, 1700, "sandal", 1.1, -20]]) + D.leaves(-1300, 2400, 1300, 1900, 40, 223);
+    put(L.set, s);
+    // a shaft of sun through the joint between the two decks, lighting a band of floor; dust in it
+    put(L.glow, `<path d="M570,370L630,370L860,1640L640,1640Z" fill="url(#rShaft)"/>${[[240, 50, 0.1], [180, 36, 0.12], [110, 22, 0.14]].map(([rx, ry, op]) => `<ellipse cx="750" cy="1640" rx="${rx}" ry="${ry}" fill="#fff2c8" opacity="${op}"/>`).join("")}${Array.from({ length: 10 }, () => `<circle class="mote" cx="${f1(600 + r() * 260)}" cy="${f1(200 + r() * 1300)}" r="${f1(2 + r() * 3)}" fill="#fff6dc" opacity=".55"/>`).join("")}`);
+  }
+
+  // the petrol station: forecourt wear, kerbs, pump detail, canopy lights, minimart clutter, long dusk shadows
+  function stationDress(L, id, o, r, night) {
+    const D = Dress;
+    let m = `<g transform="translate(-200,1240)"><rect x="-500" y="-560" width="1500" height="560" fill="url(#dConc)" opacity=".7"/><rect x="-500" y="-160" width="1500" height="160" fill="url(#dGrime)"/>${D.streak(-480, -540, 60, 200, 0.8)}${D.streak(860, -540, 80, 260, 0.8)}${D.streak(420, -540, 40, 120, 0.6)}
+      <path d="M-440,-480L-200,-60M-300,-480L-60,-60M200,-480L420,-90" stroke="#fff" stroke-opacity=".14" stroke-width="40"/><rect x="60" y="-300" width="120" height="150" fill="#f2ede0" stroke="${INK}" stroke-width="2" transform="rotate(-2 120 -225)"/><text x="120" y="-250" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#c8392b">ลดราคา</text><path d="M80,-210h80M80,-190h60" stroke="#5b6066" stroke-width="5"/>
+      <rect x="840" y="-500" width="120" height="80" fill="#cfc9bb" stroke="${INK}" stroke-width="3"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M${852 + k * 22},-490v60" stroke="#8d9299" stroke-width="4"/>`).join("")}${D.rust(840, -420, 50, 70, 0.8)}
+      <g transform="translate(-380,0)"><ellipse cx="10" cy="4" rx="120" ry="14" fill="#0b0d08" opacity=".3"/><rect x="-100" y="-130" width="200" height="130" rx="10" fill="#2f6fb8" stroke="${INK}" stroke-width="3"/><rect x="-100" y="-150" width="200" height="28" rx="8" fill="#e8e4da" stroke="${INK}" stroke-width="3"/><text x="0" y="-60" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#f4ecd8">น้ำแข็ง</text><rect x="-100" y="-130" width="200" height="130" fill="url(#dGrime)"/></g>
+      ${D.crate(-150, 0, 1, 110, 70, "#c8392b")}${D.crate(-150, -70, 1, 100, 60, "#e8b830")}${D.crate(-40, 0, 1, 110, 70, "#2f6f6a")}
+      <g transform="translate(470,0)"><ellipse cx="4" cy="4" rx="34" ry="7" fill="#0b0d08" opacity=".3"/><rect x="-20" y="-90" width="40" height="90" rx="14" fill="#c8392b" stroke="${INK}" stroke-width="3"/><path d="M-10,-90v-14h20v14M10,-100q26,0 26,30" stroke="#1f1d1a" stroke-width="6" fill="none"/><rect x="-20" y="-60" width="40" height="22" fill="#f4ecd8" opacity=".85"/></g>
+      <g transform="translate(1060,-20)"><rect x="-10" y="-380" width="160" height="70" rx="6" fill="#1f6b46" stroke="${INK}" stroke-width="3"/><text x="70" y="-332" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="38" fill="#f4ecd8">ห้องน้ำ →</text><path d="M60,-310V0" stroke="#8d9299" stroke-width="10"/></g></g>`;
+    put(L.mid, m);
+    // forecourt (set layer, before the canopy)
+    let f = `<rect x="-1400" y="1240" width="4000" height="1500" fill="url(#dConc)"/><rect x="-1400" y="1240" width="4000" height="1500" fill="url(#rAgg)" opacity=".5"/><rect x="-1400" y="1240" width="4000" height="70" fill="url(#dAO)"/>${[1420, 1640, 1900, 2200].map((y) => `<path d="M-1400,${y}H2600" stroke="#8f897c" stroke-width="5"/><path d="M-1400,${y + 4}H2600" stroke="#fff" stroke-opacity=".25" stroke-width="2"/>`).join("")}`;
+    for (let k = 0; k < 10; k++) { const x = -1200 + r() * 3300, y = 1300 + r() * 900; f += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(120 + r() * 200)}" ry="${f1(30 + r() * 40)}" fill="#7a6a58" opacity=".1"/>`; }
+    for (let k = 0; k < 8; k++) { const x = -1100 + r() * 3200, y = 1330 + r() * 600, w = 50 + r() * 90; f += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(w)}" ry="${f1(w * 0.24)}" fill="#2a2420" opacity=".22"/>`; }
+    f += [-180, 980].map((x) => `<ellipse cx="${x + 60}" cy="1340" rx="200" ry="34" fill="#1a1612" opacity=".3"/><ellipse cx="${x - 40}" cy="1360" rx="90" ry="16" fill="#3a2a5a" opacity=".12"/>`).join("");
+    f += D.tracks(-1300, 2500, -300, 1700, 300, 1320, 110, 0.12) + D.tracks(2400, 2500, 1500, 1700, 900, 1320, 110, 0.1);
+    for (let k = 0; k < 8; k++) f += D.crack(-1200 + r() * 3300, 1300 + r() * 800, 60 + r() * 80, r() * 80 - 40, 0.55);
+    f += D.weeds(-1300, -760, 1252, 227, 34) + D.weeds(1500, 2400, 1252, 229, 40) + D.tufts(-1300, 2400, 1400, 2100, 20, 231, 32, true);
+    f += `<g opacity=".55"><path d="M-760,1780l80,-60l80,60M-700,1720v120" stroke="#f4ecd8" stroke-width="16" fill="none" stroke-linecap="round"/><text x="-560" y="1830" font-family="Kanit" font-weight="900" font-size="60" fill="#f4ecd8" transform="rotate(-4 -560 1830)">เข้า</text></g><rect x="1460" y="1980" width="200" height="40" rx="6" fill="#3a3d40" stroke="${INK}" stroke-width="3" opacity=".7"/>${[0, 1, 2, 3, 4, 5, 6].map((k) => `<path d="M${1476 + k * 26},1986v28" stroke="#1a1b1c" stroke-width="6"/>`).join("")}`;
+    if (!night) f += [-520, 120, 760, 1240].map((x) => `<path d="M${x - 40},1250L${x + 40},1250L${x + 150},1900L${x - 10},1900Z" fill="#1a1612" opacity=".16"/>`).join("") + [-180, 980].map((x) => `<path d="M${x - 90},1300L${x + 90},1300L${x + 200},1700L${x + 20},1700Z" fill="#1a1612" opacity=".14"/>`).join("");
+    f += litter([[-900, 1620, "bottle", 1.1, 20], [300, 1760, "paper", 1.2, -14], [1500, 1600, "cup", 1.1], [-300, 1950, "bag", 1.2]]) + D.leaves(-1300, 2400, 1300, 2000, 30, 233);
+    return f;
+  }
+  // detail drawn over the canopy and pumps (set layer, after them)
+  function stationTop(id, o, r, night) {
+    const D = Dress;
+    let s = `<rect x="-700" y="760" width="2100" height="150" fill="url(#dGrime)"/>${Array.from({ length: 8 }, () => D.streak(-680 + r() * 2000, 880, 30 + r() * 40, 70, 0.8)).join("")}${D.rust(-700, 760, 90, 120, 0.6)}${D.rust(1300, 790, 80, 110, 0.6)}`;
+    s += `<rect x="-700" y="910" width="2100" height="40" fill="#cfc9bb"/><rect x="-700" y="910" width="2100" height="40" fill="url(#dConc)"/>${[-560, -260, 40, 340, 640, 940, 1240].map((x, k) => k === 3 ? `<g transform="rotate(14 ${x} 920)"><rect x="${x}" y="918" width="140" height="16" rx="4" fill="#e8e4da" stroke="${INK}" stroke-width="2"/></g><path d="M${x + 4},920l-6,40" stroke="#3a3330" stroke-width="2"/>` : `<rect x="${x}" y="918" width="140" height="16" rx="4" fill="${night ? "#8d9299" : "#e8e4da"}" stroke="${INK}" stroke-width="2"/>`).join("")}<rect x="-700" y="942" width="2100" height="10" fill="#000" opacity=".25"/>`;
+    s += [-520, 120, 760, 1240].map((x) => `<rect x="${x - 40}" y="950" width="80" height="300" fill="url(#dConc)"/><rect x="${x - 40}" y="950" width="18" height="300" fill="#fff" opacity=".14"/><rect x="${x + 22}" y="950" width="18" height="300" fill="#000" opacity=".12"/><rect x="${x - 40}" y="1200" width="80" height="50" fill="url(#dGrime)"/><rect x="${x - 26}" y="1040" width="52" height="40" rx="4" fill="#f4ecd8" stroke="${INK}" stroke-width="1.5"/><circle cx="${x}" cy="1060" r="14" fill="none" stroke="#c8392b" stroke-width="4"/><path d="M${x - 10},1070l20,-20" stroke="#c8392b" stroke-width="4"/>`).join("");
+    const pump = (x, g) => `<g transform="translate(${x},1300)"><path d="M-220,-30h440v40h-440z" fill="url(#dGrime)"/>${Array.from({ length: 11 }, (_, k) => `<path d="M${-220 + k * 40},10l20,-40h20l-20,40z" fill="${k % 2 ? "#1f1d1a" : "#e8b830"}" opacity=".85"/>`).join("")}<path d="M-220,-30h440" stroke="${INK}" stroke-width="3"/>
+      <rect x="-70" y="-300" width="140" height="70" fill="#1f1d1a"/><text x="60" y="-252" text-anchor="end" font-family="Kanit" font-weight="900" font-size="34" fill="#3a3f45">00.00</text><rect x="-90" y="-200" width="180" height="40" fill="url(#dGrime)"/>${g.map((t, k) => `<rect x="${-80 + k * 56}" y="-150" width="50" height="34" rx="4" fill="${["#e8b830", "#c8392b", "#1f6b46"][k]}" stroke="${INK}" stroke-width="2"/><text x="${-55 + k * 56}" y="-125" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${t.length > 2 ? 16 : 22}" fill="#f4ecd8">${t}</text>`).join("")}
+      <rect x="-90" y="-330" width="180" height="300" rx="14" fill="url(#dGrime)"/><path d="M-90,-326V-34" stroke="#fff" stroke-opacity=".3" stroke-width="6"/><g transform="translate(-112,-150)"><rect x="-14" y="-40" width="24" height="60" rx="6" fill="#1f1d1a" stroke="${INK}" stroke-width="2"/><path d="M-4,-36l-20,-10v-14l30,4z" fill="#3a3f45" stroke="${INK}" stroke-width="2"/><path d="M-2,20q-30,60 10,120q30,30 70,10" stroke="#1f1d1a" stroke-width="10" fill="none"/></g>
+      ${D.bucket(150, -30, 0.7, "#2f6fb8")}<path d="M150,-120l30,-70" stroke="#8a6a42" stroke-width="5"/><path d="M168,-190h30" stroke="#1f1d1a" stroke-width="10"/></g>`;
+    s += pump(-180, ["91", "95", "ดีเซล"]) + pump(980, ["91", "95", "ดีเซล"]);
+    s += D.drum(1480, 1250, 0.8, "#c8392b") + D.tires(-760, 1250, 0.8, 3) + D.sandbags(330, 1252, 0.7, 4, 2, 241);
+    return s;
   }
 
   Object.assign(Sets, { highway, highwayPov, highwayTop, cab, underpass, aidClose, station, drawing5 });

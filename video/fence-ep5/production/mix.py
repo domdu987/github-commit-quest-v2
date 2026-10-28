@@ -133,12 +133,15 @@ CUES = [
     # the rifle; hands up; nothing is free
     ("gun", 0.1, "click", 0.9), ("gun", 0.3, "latch", 0.8), ("gun", frag("gun", 0, 1), "sting", 1.0), ("gun", frag("gun", 0, 1), "boom", 0.6), ("gun", frag("gun", 0, 1), "glitch", 0.5), ("gun", vo_t("gun", 1) - 0.1, "rustle", 0.5), ("gun", vo_t("gun", 2) - 0.1, "click", 0.5), ("gun", frag("gun", 2, 1), "sting", 0.8), ("gun", frag("gun", 2, 1), "slam", 0.4), *beats("gun", 0.0, D["gun"], 0.4, 0.75),
     # the signature
-    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
-    ("sig", frag("sig", 0, 0) + 0.3, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.62, "buzz", 0.6), ("sig", frag("sig", 0, 1) + 0.15, "ding", 0.6),
-    ("sig", frag("sig", 0, 2), "glitch", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
+    # the sheet slaps on and is taped; a red pen ticks each line (with a soft ding); a marker circles the ???
+    ("sig", 0.05, "page", 0.8), ("sig", 0.36, "thud", 0.25),
+    *[x for o in (frag("sig", 0, 0) + 0.3, frag("sig", 0, 0) + 0.62, frag("sig", 0, 1) + 0.15) for x in (("sig", o, "pen", 0.9), ("sig", o + 0.05, "ding", 0.3))],
+    ("sig", frag("sig", 0, 2) + 0.45, "marker", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
     *[("sig", frag("sig", 0, 2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
     ("sig", frag("sig", 0, 3) - 1.1, "riser", 0.6),
-    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.8), ("sig", frag("sig", 0, 3), "glitch", 0.7), ("sig", frag("sig", 0, 3) + 0.12, "slam", 0.7),
+    # "ข้อเดียว": two red slashes, the page tears across, the strip drops, a stamp hits what is left
+    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "pen", 1.0), ("sig", frag("sig", 0, 3) + 0.1, "pen", 1.0),
+    ("sig", frag("sig", 0, 3) + 0.24, "rip", 1.1), ("sig", frag("sig", 0, 3) + 0.86, "thud", 0.8), ("sig", frag("sig", 0, 3) + 0.86, "slam", 0.35),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     # the radio: 94… five; the guard hears it too; the torch; the name
     *bed("crickets", T("radio", 0), T("choice", -0.3), 0.25, 4.0), ("radio", vo_t("radio", 0) - 0.4, "radio", 1.0), *bed("radiobed", T("radio", vo_t("radio", 0) - 0.1), T("radio", vo_end("radio", 0) + 0.3), 0.5, 3.0),

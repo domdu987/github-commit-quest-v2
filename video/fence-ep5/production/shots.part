@@ -9,8 +9,8 @@
       // a shot cut into three framings: [0, a1), [a1, a2), [a2, end)
       const split3 = (k, a1, a2, A, B, C) => {
         add(k, A); shots[shots.length - 1].dur = a1;
-        add(k, B); let sh = shots[shots.length - 1]; sh.start = SH[k].start + a1; sh.dur = a2 - a1;
-        add(k, C); sh = shots[shots.length - 1]; sh.start = SH[k].start + a2; sh.dur = D(k) - a2;
+        add(k, B); let sh = shots[shots.length - 1]; sh.start = SH[k].start + a1; sh.dur = a2 - a1; sh.vo = (SH[k].vo || []).map((v) => ({ ...v, t: v.t - a1 }));
+        add(k, C); sh = shots[shots.length - 1]; sh.start = SH[k].start + a2; sh.dur = D(k) - a2; sh.vo = (SH[k].vo || []).map((v) => ({ ...v, t: v.t - a2 }));
       };
       // captions / bubbles of lines inside a window [a, b) of a shot, re-timed to that window
       const capsAt = (k, a, b, lines, o) => caps(k, lines, o).filter((c) => c.end > a + 0.05 && c.t < b - 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - a), end: Math.min(b - a - 0.03, c.end - a) }));
@@ -85,10 +85,10 @@
       add("pack", {
         set: "schoolYard", setOpts: { id: "pa", time: "morning", level: 0.4, breakAt: 1100, fallen: true }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(380, 1240, 0.9, 540, 1080), drift: { s: 0.015 } }, { t: vo("pack", 1) - 0.05, glide: 0.5, ...fr(620, 1240, 1.0, 540, 1080), drift: { s: 0.02 } }] },
-        actors: [HO(-160, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" }),
-          KO(760, 1500, 0.9, [{ t: 0, mode: "carry", eyes: "normal", mouth: "flat" }, { t: 2.2, mode: "carryStand", eyes: "normal", mouth: "flat" }], { flip: true, prop: "packs", moveTo: { x: 470, dur: 2.2, ease: "power1.out" } }),
-          PH(1120, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true, prop: "bottle" }),
-          PI(900, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("pack", 1), mode: "point", eyes: "normal", mouth: "flat" }], { flip: true })],
+        actors: [HO(-160, 1500, 0.9, [{ t: 0, mode: "write", eyes: "worry", mouth: "flat" }], { prop: "ledger" }),
+          KO(760, 1500, 0.9, [{ t: 0, mode: "carry", eyes: "squint", mouth: "grit" }, { t: 2.2, mode: "carryStand", eyes: "normal", mouth: "flat" }], { flip: true, prop: "packs", moveTo: { x: 470, dur: 2.2, ease: "power1.out" } }),
+          PH(1120, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }], { flip: true, prop: "bottle" }),
+          PI(900, 1500, 0.9, [{ t: 0, mode: "think", eyes: "worry", mouth: "flat" }, { t: vo("pack", 1), mode: "point", eyes: "squint", mouth: "flat" }], { flip: true })],
         bubbles: [bub("pack", 0, 40, 520, 230), bub("pack", 1, 470, 520, 300)],
         ui: [{ type: "counter", t: F("pack", 0, 1) - 0.1, end: D("pack") - 0.05, label: "น้ำมัน", icon: "fuel", unit: "ลิตร", max: 5, keys: [{ t: F("pack", 0, 1), v: 3 }], top: 150 },
           { type: "counter", t: F("pack", 0, 2) - 0.1, end: D("pack") - 0.05, label: "น้ำดื่ม", icon: "water", unit: "ขวด", max: 6, sub: "5 คน", keys: [{ t: F("pack", 0, 2), v: 6 }], top: 150, right: true }],
@@ -166,8 +166,8 @@
       }, {
         set: "highway", setOpts: { id: "es", time: "noon", bridge: true, sign: "4", signX: 760, billboard: false, cars: [[-900, 1420, 1.42, "#e8e2d4", { smash: true }]] }, dark: 0.08, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1150, 0.72, 540, 1000), drift: { s: 0.012 } }] },
-        actors: [HO(160, 1560, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "o", sweat: true }], {}), PI(-60, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown", sweat: true }]),
-          KO(380, 1560, 0.9, [{ t: 0, mode: "carryStand", eyes: "normal", mouth: "flat", sweat: true }], { prop: "packs" })],
+        actors: [HO(160, 1560, 0.9, [{ t: 0, mode: "point", eyes: "squint", mouth: "flat", sweat: true }], {}), PI(-60, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown", sweat: true }]),
+          KO(380, 1560, 0.9, [{ t: 0, mode: "carryStand", eyes: "squint", mouth: "grit", sweat: true }], { prop: "packs" })],
         bubbles: [bubAt(bub("empty", 1, 40, 520, 240), vo("empty", 1) - 0.1, D("empty"))],
         extra(L) { put(L.set, `<g transform="translate(1000,1500) scale(1.55)">${Road.TRUCK("es-truck")}</g>`); },
         fx(tl, id, t0) { tl.set("#es-truck-puff", { opacity: 1 }, t0); tl.fromTo("#es-truck-puff", { y: 0, opacity: 0.9 }, { y: -80, opacity: 0, duration: 1.4, immediateRender: false }, t0); HEAT(tl, id, t0, D("empty") - vo("empty", 1) + 0.1); },
@@ -177,11 +177,11 @@
       add("walk", {
         set: "highway", setOpts: { id: "wk", time: "noon", cars: [[-1100, 1420, 1.42, "#c8c2b4", { flat: true }], [1900, 1420, 1.45, "#3f5a8a", { door: true }]] }, dark: 0.08, blur: { far: 3, mid: 1 },
         cam: { keys: [{ t: 0, ...fr(380, 1240, 0.78, 540, 1060), drift: { s: 0.01, x: 42 } }, { t: vo("walk", 2) - 0.05, glide: 0.5, ...fr(560, 1260, 1.05, 540, 1060), drift: { s: 0.015, x: 42 } }] },
-        actors: [PH(900, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat", sweat: true, opts: { period: 1.3 } }], { moveTo: { x: 1280, dur: D("walk") } }),
-          PI(640, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "frown", sweat: true, opts: { period: 1.3 } }], { moveTo: { x: 1020, dur: D("walk") } }),
+        actors: [PH(900, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat", sweat: true, opts: { period: 1.3 } }], { moveTo: { x: 1280, dur: D("walk") } }),
+          PI(640, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "frown", sweat: true, opts: { period: 1.3 } }], { moveTo: { x: 1020, dur: D("walk") } }),
           HO(380, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "closed", mouth: "frown", sweat: true, opts: { period: 1.35 } }], { moveTo: { x: 760, dur: D("walk") } }),
-          KO(-160, 1520, 0.9, [{ t: 0, mode: "carry", eyes: "normal", mouth: "frown", sweat: true }, { t: vo("walk", 2) - 0.2, mode: "giveLow", eyes: "normal", mouth: "smile", sweat: true }], { prop: "bottle", moveTo: { x: 330, dur: vo("walk", 2) - 0.2 } }),
-          PU(170, 1530, 0.55, [{ t: 0, mode: "walk", eyes: "normal", mouth: "frown", sweat: true, opts: { period: 0.9 } }], { moveTo: { x: 540, dur: vo("walk", 2) - 0.2 }, until: vo("walk", 2) - 0.2 }),
+          KO(-160, 1520, 0.9, [{ t: 0, mode: "carry", eyes: "squint", mouth: "grit", sweat: true }, { t: vo("walk", 2) - 0.2, mode: "giveLow", eyes: "normal", mouth: "smile", sweat: true }], { prop: "bottle", moveTo: { x: 330, dur: vo("walk", 2) - 0.2 } }),
+          PU(170, 1530, 0.55, [{ t: 0, mode: "walk", eyes: "sad", mouth: "frown", sweat: true, opts: { period: 0.9 } }], { moveTo: { x: 540, dur: vo("walk", 2) - 0.2 }, until: vo("walk", 2) - 0.2 }),
           PU(540, 1530, 0.55, [{ t: 0, mode: "reachUp", eyes: "normal", mouth: "o", sweat: true }], { flip: true, from: vo("walk", 2) - 0.2 })],
         captions: caps("walk", [0, 1]),
         bubbles: [bub("walk", 2, 60, 700, 260)],
@@ -193,7 +193,7 @@
       add("rule", {
         set: "highway", setOpts: { id: "rl", time: "noon", cars: [[1700, 1420, 1.45, "#3f5a8a", { door: true }]] }, dark: 0.1, blur: { far: 4, mid: 2 },
         cam: { keys: [{ t: 0, ...fr(560, 1300, 1.25, 540, 1150), drift: { s: 0.015, x: 30 } }] },
-        actors: [PU(560, 1520, 0.55, [{ t: 0, mode: "sipUp", eyes: "closed", mouth: "flat", sweat: true }], { prop: "bottle" }), KO(760, 1520, 0.9, [{ t: 0, mode: "carryStand", eyes: "normal", mouth: "flat", sweat: true }], { prop: "packs", flip: true })],
+        actors: [PU(560, 1520, 0.55, [{ t: 0, mode: "sipUp", eyes: "closed", mouth: "flat", sweat: true }], { prop: "bottle" }), KO(760, 1520, 0.9, [{ t: 0, mode: "carryStand", eyes: "sad", mouth: "flat", sweat: true }], { prop: "packs", flip: true })],
         captions: caps("rule"),
         ui: [{ type: "tip", t: vo("rule", 0) - 0.1, end: D("rule") - 0.05, ill: "drink", label: "ดื่มน้ำ · NIOSH", text: "1 แก้ว ทุก [15–20 นาที] · {หิวน้ำ = เพลียแดดแล้ว}", tone: "rule", top: 230 },
           { type: "src", t: vo("rule", 0) + 0.2, end: vo("rule", 1) - 0.1, top: 600, text: NIOSH + "“Symptoms of heat exhaustion include: Headache · Nausea · Dizziness · Weakness · Irritability · Thirst · Heavy sweating”" },
@@ -207,7 +207,8 @@
         cam: { keys: [{ t: 0, ...fr(820, 1250, 1.1, 540, 1100), r: -3, drift: { s: 0.02, r: -2 } }, { t: F("confuse", 1, 1) - 0.05, ...fr(740, 1420, 1.1, 540, 1250), r: 6, drift: { s: 0.02 } }] },
         shake: (t) => 4 * Math.sin(t * 3.1) + 3 * Math.sin(t * 7.7) + (t > F("confuse", 1, 1) && t < F("confuse", 1, 1) + 0.35 ? 12 * Math.sin(t * 25) : 0),
         actors: [KO(880, 1520, 0.9, [{ t: 0, mode: "dizzy", eyes: "pain", mouth: "o", sweat: true }, { t: F("confuse", 1, 1) - 0.1, mode: "fall", eyes: "closed", mouth: "o" }, { t: F("confuse", 1, 1) + 0.6, mode: "lieFlat", eyes: "closed", mouth: "o" }], { prop: "packs", moveTo: { x: 980, dur: F("confuse", 1, 1) - 0.1 } }),
-          PI(1100, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "o", sweat: true }, { t: F("confuse", 1, 1), mode: "stopHand", eyes: "wide", mouth: "scream" }], { flip: true })],
+          PI(1100, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown", sweat: true }, { t: F("confuse", 1, 1), mode: "gasp", eyes: "wide", mouth: "scream" }], { flip: true })],
+        react: [{ a: 1, t: F("confuse", 1, 1) + 0.05, dur: 1.3, fast: true }],
         captions: caps("confuse", [1]),
         bubbles: [bub("confuse", 0, 260, 700, 340)],
         fx(tl, id, t0, L) {
@@ -223,8 +224,8 @@
       add("signs", {
         set: "highway", setOpts: { id: "sg", time: "noon", cars: [[-560, 1420, 1.42, "#e8e2d4", { smash: true }]] }, dark: 0.12, blur: { far: 4, mid: 2 },
         cam: { keys: [{ t: 0, ...fr(560, 1420, 1.2, 540, 1500), drift: { s: 0.015 } }, { t: vo("signs", 1) - 0.05, glide: 0.5, ...fr(600, 1300, 0.85, 540, 1300), drift: { s: 0.015 } }] },
-        actors: [KN(940, 1540, 0.9, [{ t: 0, mode: "lieFlat", eyes: "closed", mouth: "o", sweat: true }]), PH(300, 1540, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat", sweat: true }]),
-          PI(1100, 1540, 0.9, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o", sweat: true }], { flip: true }), PU(1260, 1540, 0.55, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        actors: [KN(940, 1540, 0.9, [{ t: 0, mode: "lieFlat", eyes: "closed", mouth: "o", sweat: true }]), PH(300, 1540, 0.9, [{ t: 0, mode: "kneelAid", eyes: "squint", mouth: "flat", sweat: true }]),
+          PI(1100, 1540, 0.9, [{ t: 0, mode: "crouch", eyes: "worry", mouth: "frown", sweat: true }], { flip: true }), PU(1260, 1540, 0.55, [{ t: 0, mode: "gasp", eyes: "wide", mouth: "o" }], { flip: true })],
         captions: caps("signs", [1, 2]),
         ui: [{ type: "signs", t: vo("signs", 0) + 0.1, items: ["<em>ตัวร้อนจัด</em>", "ผิว<em>ร้อน แห้ง</em> หรือเหงื่อท่วม", "<em>สับสน</em> พูดไม่ชัด", "<em>หมดสติ</em>"], icons: [CHK5.hot, CHK5.dry, CHK5.confused, CHK5.faint], ok: [1, 1, 1, 1], at: [vo("signs", 0) + 0.1, F("signs", 0, 1), F("signs", 0, 2), F("signs", 0, 2) + 0.6], end: vo("signs", 1) - 0.1, top: 170 },
           { type: "skill", t: vo("signs", 0) + 0.3, end: vo("signs", 1) - 0.1, x: 600, y: 1150, name: "ภู", skill: "หมอ", desc: "รู้อาการ · ปฐมพยาบาลได้", icon: "medic" },
@@ -245,8 +246,8 @@
         set: "underpass", setOpts: { id: "sd" }, dark: 0.1, blur: { far: 4, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1300, 0.95, 540, 1150), drift: { s: 0.015 } }] },
         actors: [KN(1560, 1560, 0.9, [{ t: 0, mode: "lieFlat", eyes: "closed", mouth: "o", sweat: true }], { moveTo: { x: 980, dur: 2.2, ease: "power1.inOut" } }),
-          PH(900, 1560, 0.9, [{ t: 0, mode: "drag", eyes: "normal", mouth: "flat", sweat: true }, { t: 2.3, mode: "kneelAid", eyes: "normal", mouth: "flat" }], { moveTo: { x: 320, dur: 2.2, ease: "power1.inOut" } }),
-          PI(1700, 1560, 0.9, [{ t: 0, mode: "walk", eyes: "wide", mouth: "o", sweat: true }, { t: 2.3, mode: "crouch", eyes: "normal", mouth: "flat" }], { flip: true, moveTo: { x: 1160, dur: 2.2, ease: "power1.inOut" } })],
+          PH(900, 1560, 0.9, [{ t: 0, mode: "drag", eyes: "squint", mouth: "grit", sweat: true }, { t: 2.3, mode: "kneelAid", eyes: "squint", mouth: "flat" }], { moveTo: { x: 320, dur: 2.2, ease: "power1.inOut" } }),
+          PI(1700, 1560, 0.9, [{ t: 0, mode: "walk", eyes: "worry", mouth: "frown", sweat: true }, { t: 2.3, mode: "crouch", eyes: "worry", mouth: "frown" }], { flip: true, moveTo: { x: 1160, dur: 2.2, ease: "power1.inOut" } })],
         bubbles: [bub("shade", 0, 40, 520, 260)],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("shade"), 0.55, 0.5); },
       });
@@ -255,9 +256,9 @@
       add("nodrink", {
         set: "underpass", setOpts: { id: "nd" }, dark: 0.12, blur: { far: 4, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1300, 1.0, 540, 1150), drift: { s: 0.015 } }, { t: vo("nodrink", 2) - 0.05, glide: 0.4, ...fr(480, 1420, 1.3, 540, 1250), drift: { s: 0.02 } }] },
-        actors: [PU(1250, 1490, 0.52, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: vo("nodrink", 1), mode: "give", eyes: "wide", mouth: "o" }], { flip: true, prop: "bottle", moveTo: { x: 660, dur: vo("nodrink", 1), ease: "power1.out" } }),
+        actors: [PU(1250, 1490, 0.52, [{ t: 0, mode: "run", eyes: "worry", mouth: "frown" }, { t: vo("nodrink", 1), mode: "give", eyes: "worry", mouth: "frown" }], { flip: true, prop: "bottle", moveTo: { x: 660, dur: vo("nodrink", 1), ease: "power1.out" } }),
           KS(980, 1560, 0.9, [{ t: 0, mode: "lieFlat", eyes: "closed", mouth: "o", sweat: true }]),
-          PH(320, 1560, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }, { t: vo("nodrink", 1) - 0.1, mode: "stopHand", eyes: "normal", mouth: "flat" }])],
+          PH(320, 1560, 0.9, [{ t: 0, mode: "kneelAid", eyes: "squint", mouth: "flat" }, { t: vo("nodrink", 1) - 0.1, mode: "stopHand", eyes: "squint", mouth: "flat" }])],
         captions: caps("nodrink", [2]),
         bubbles: [bub("nodrink", 0, 520, 520, 210), bub("nodrink", 1, 60, 520, 260)],
         ui: [{ type: "tip", t: vo("nodrink", 2) - 0.1, end: D("nodrink") - 0.05, ill: "nomouth", label: "หมดสติ · MedlinePlus", text: "หมดสติ → {ห้ามป้อนอะไรเข้าปาก} แม้แต่น้ำ", tone: "danger", top: 230 }],
@@ -268,7 +269,7 @@
       split("craft", vo("craft", 2) - 0.1, {
         set: "underpass", setOpts: { id: "cr" }, dark: 0.12, blur: { far: 4, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(400, 1300, 1.05, 540, 1150), drift: { s: 0.015 } }] },
-        actors: [HO(120, 1560, 0.9, [{ t: 0, mode: "give", eyes: "wide", mouth: "o" }], { prop: "bottleE" }), PI(400, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("craft", 1), mode: "point", eyes: "normal", mouth: "flat" }], { flip: true }),
+        actors: [HO(120, 1560, 0.9, [{ t: 0, mode: "give", eyes: "worry", mouth: "frown" }], { prop: "bottleE" }), PI(400, 1560, 0.9, [{ t: 0, mode: "think", eyes: "worry", mouth: "frown" }, { t: vo("craft", 1), mode: "point", eyes: "squint", mouth: "flat" }], { flip: true }),
           KS(1180, 1580, 0.9, [{ t: 0, mode: "lieFlat", eyes: "closed", mouth: "o", sweat: true }])],
         bubbles: [bub("craft", 0, 40, 520, 190), bubAt(bub("craft", 1, 260, 520, 220), 0, vo("craft", 2) - 0.1)],
         ui: [{ type: "counter", t: 0.1, end: vo("craft", 2) - 0.15, label: "น้ำดื่ม", icon: "water", unit: "ขวด", max: 6, keys: [{ t: 0.1, v: 2 }], alarm: 0.3, top: 150, right: true },
@@ -304,7 +305,7 @@
       split3("lunge", vo("lunge", 0) + 2.2, vo("lunge", 1) - 0.1, {
         set: "underpass", setOpts: { id: "lg" }, dark: 0.18, blur: { far: 4, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(700, 1350, 1.0, 540, 1150), drift: { s: 0.02 } }, { t: F("lunge", 0, 1) - 0.05, glide: 0.5, ...fr(1150, 1400, 1.5, 540, 1150), drift: { s: 0.04 } }] },
-        actors: [KS(980, 1560, 0.9, [{ t: 0, mode: "lieFlat", eyes: "closed", mouth: "flat" }], { prop: "spear1" }), PI(420, 1560, 0.9, [{ t: 0, mode: "fan", eyes: "normal", mouth: "flat" }], { prop: "card" })],
+        actors: [KS(980, 1560, 0.9, [{ t: 0, mode: "lieFlat", eyes: "closed", mouth: "flat" }], { prop: "spear1" }), PI(420, 1560, 0.9, [{ t: 0, mode: "fan", eyes: "worry", mouth: "flat" }], { prop: "card" })],
         captions: capsAt("lunge", 0, vo("lunge", 0) + 2.2, [0]),
         fx(tl, id, t0, L) {
           behind(L, tl, "lg-z", "ha2", 1150, 1600, 0.85, true, t0, vo("lunge", 0) + 2.2, [{ t: 0, mode: "shamble", eyes: "dead", mouth: "snarl", opts: { period: 1.4 } }]);
@@ -327,7 +328,7 @@
         set: "underpass", setOpts: { id: "lk" }, dark: 0.15, blur: { far: 4, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(760, 1350, 1.05, 540, 1150), drift: { s: 0.02 } }] },
         shake: (t) => (t < 0.35 ? 12 * Math.sin(t * 25) * (0.35 - t) / 0.35 : 0),
-        actors: [PI(560, 1560, 0.9, [{ t: 0, mode: "stab", eyes: "wide", mouth: "scream" }], { prop: "spear1f" }),
+        actors: [PI(560, 1560, 0.9, [{ t: 0, mode: "stab", eyes: "angry", mouth: "scream" }], { prop: "spear1f" }),
           { who: "ha2", x: 980, y: 1560, s: 0.9, flip: true, track: [{ t: 0, mode: "lunge", eyes: "dead", mouth: "snarl" }, { t: 0.32, mode: "knocked", eyes: "dead", mouth: "snarl" }] }],
         captions: capsFrom("lunge", vo("lunge", 1) - 0.1, [1]),
         fx(tl, id, t0, L) {
@@ -351,8 +352,8 @@
       }, {   // propped up against ภู, the bottle in his own hand
         set: "underpass", setOpts: { id: "wb", car: false }, dark: 0.1, blur: { far: 4, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(520, 1380, 1.3, 540, 1200), drift: { s: 0.015 } }] },
-        actors: [PH(270, 1560, 0.9, [{ t: 0, mode: "kneelGive", eyes: "normal", mouth: "smile" }], { prop: "bottle" }), KS(600, 1560, 0.9, [{ t: 0, mode: "sitReach", eyes: "normal", mouth: "flat" }], { flip: true }),
-          PI(870, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
+        actors: [PH(270, 1560, 0.9, [{ t: 0, mode: "kneelGive", eyes: "normal", mouth: "smile" }], { prop: "bottle" }), KS(600, 1560, 0.9, [{ t: 0, mode: "sitReach", eyes: "sad", mouth: "flat" }], { flip: true }),
+          PI(870, 1560, 0.9, [{ t: 0, mode: "handChest", eyes: "worry", mouth: "smileOpen" }], { flip: true })],
         bubbles: [bubAt(bub("wake", 1, 60, 760, 200), vo("wake", 1) - 0.1, D("wake"))],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("wake") - vo("wake", 1), 0.75, 0.25); },
       });
@@ -361,8 +362,8 @@
       add("real", {
         set: "underpass", setOpts: { id: "rr", car: false }, dark: 0.1, blur: { far: 4, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1350, 1.0, 540, 1200), drift: { s: 0.012 } }] },
-        actors: [KS(520, 1560, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]), PH(290, 1560, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]),
-          PI(780, 1560, 0.9, [{ t: 0, mode: "fan", eyes: "normal", mouth: "flat" }], { prop: "card", flip: true }), HO(1000, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true }), PU(120, 1560, 0.55, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }])],
+        actors: [KS(520, 1560, 0.9, [{ t: 0, mode: "sit", eyes: "sad", mouth: "flat" }]), PH(290, 1560, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]),
+          PI(780, 1560, 0.9, [{ t: 0, mode: "fan", eyes: "worry", mouth: "flat" }], { prop: "card", flip: true }), HO(1000, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true }), PU(120, 1560, 0.55, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }])],
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "amb", label: "ในชีวิตจริง", text: "ลมแดด → [เรียกรถพยาบาล] · {ทำให้ตัวเย็น}", tone: "rule", top: 230 },
           { type: "src", t: F("real", 0, 1) + 0.3, end: D("real") - 0.05, top: 600, text: NIOSH + "“Call 911 for emergency medical care. Stay with the worker until emergency medical services arrive. Move the worker to a shaded, cool area and remove outer clothing. Cool the worker quickly…”" }],
@@ -373,9 +374,9 @@
       add("station", {
         set: "station", setOpts: { id: "sn", time: "dusk", sunX: 1500 }, dark: 0.18, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(300, 1130, 0.72, 540, 1150), drift: { s: 0.012 } }, { t: vo("station", 1) - 0.05, glide: 0.7, ...fr(-330, 1000, 1.05, 540, 960), drift: { s: 0.015 } }, { t: vo("station", 2) - 0.05, glide: 0.5, ...fr(490, 1010, 1.9, 540, 960), drift: { s: 0.02 } }] },
-        actors: [PI(-900, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 4.0, mode: "idle", eyes: "normal", mouth: "flat" }], { moveTo: { x: -200, dur: 4.0, ease: "power1.out" } }),
-          PH(-1100, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 4.0, mode: "idle", eyes: "normal", mouth: "flat" }], { moveTo: { x: -420, dur: 4.0, ease: "power1.out" } }),
-          KS(-1260, 1520, 0.9, [{ t: 0, mode: "limp", eyes: "normal", mouth: "frown" }, { t: 4.0, mode: "idle", eyes: "normal", mouth: "frown" }], { prop: "spear1", moveTo: { x: -600, dur: 4.0, ease: "power1.out" } })],
+        actors: [PI(-900, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }, { t: 4.0, mode: "idle", eyes: "squint", mouth: "flat" }], { moveTo: { x: -200, dur: 4.0, ease: "power1.out" } }),
+          PH(-1100, 1520, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }, { t: 4.0, mode: "idle", eyes: "squint", mouth: "flat" }], { moveTo: { x: -420, dur: 4.0, ease: "power1.out" } }),
+          KS(-1260, 1520, 0.9, [{ t: 0, mode: "limp", eyes: "pain", mouth: "frown" }, { t: 4.0, mode: "idle", eyes: "sad", mouth: "frown" }], { prop: "spear1", moveTo: { x: -600, dur: 4.0, ease: "power1.out" } })],
         captions: caps("station"),
         fx(tl, id, t0) {
           tl.fromTo("#sn-fridge", { opacity: 0.6 }, { opacity: 1, duration: 0.5, repeat: Math.ceil(D("station") / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + vo("station", 1));
@@ -403,7 +404,7 @@
       const GUARDUP = (id, cam) => ({
         set: "station", setOpts: { id, time: "dusk", sunX: 1500 }, dark: 0.22, blur: { far: 3 },
         cam, shake: (t) => 2 * Math.sin(t * 9),
-        actors: [{ who: "guard", x: 760, y: 762, s: 0.8, flip: true, track: [{ t: 0, mode: "aim", eyes: "normal", mouth: "frown" }], prop: "rifle" }],
+        actors: [{ who: "guard", x: 760, y: 762, s: 0.8, flip: true, track: [{ t: 0, mode: "aim", eyes: "angry", mouth: "frown" }], prop: "rifle" }],
       });
       split3("gun", vo("gun", 1) - 0.1, vo("gun", 2) - 0.1, {
         ...GUARDUP("gu", { keys: [{ t: 0, ...fr(700, 560, 1.3, 540, 1000), drift: { s: 0.03 } }] }),
@@ -412,8 +413,8 @@
       }, {
         set: "station", setOpts: { id: "gh", time: "dusk", sunX: 1500 }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(160, 1250, 0.95, 540, 1150), drift: { s: 0.02 } }] },
-        actors: [PI(160, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }]), PH(-120, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "normal", mouth: "flat" }]), HO(420, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }], { flip: true }),
-          KS(-340, 1520, 0.9, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }], { prop: "spear1" }), PU(600, 1520, 0.55, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }], { flip: true })],
+        actors: [PI(160, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "worry", mouth: "frown" }]), PH(-120, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "squint", mouth: "flat" }]), HO(420, 1520, 0.9, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }], { flip: true }),
+          KS(-340, 1520, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }], { prop: "spear1" }), PU(600, 1520, 0.55, [{ t: 0, mode: "handsUp", eyes: "wide", mouth: "o" }], { flip: true })],
         bubbles: [bubAt(bub("gun", 1, 120, 520, 400), vo("gun", 1) - 0.1, vo("gun", 2) - 0.1)],
         fx(tl, id, t0) { Fx.heart(tl, t0, vo("gun", 2) - vo("gun", 1), 0.4, 0.8); },
       }, {
@@ -449,9 +450,9 @@
       }, {
         set: "station", setOpts: { id: "rn", time: "night", lampX: 300 }, dark: 0.5, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(380, 1250, 0.9, 540, 1150), drift: { s: 0.015 } }, { t: vo("radio", 2) - (vo("radio", 1) - 0.1) - 0.05, glide: 0.6, ...fr(700, 800, 1.2, 540, 900), drift: { s: 0.02 } }] },
-        actors: [HO(120, 1520, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "frown" }], { prop: "ledger" }), KS(380, 1520, 0.9, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "flat" }], { prop: "spear1" }),
-          PI(620, 1520, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }], { flip: true }), PH(860, 1520, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }], { flip: true }), PU(-80, 1520, 0.55, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }]),
-          { who: "guard", x: 820, y: 762, s: 0.75, flip: true, track: [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }], prop: "rifle" }],
+        actors: [HO(120, 1520, 0.9, [{ t: 0, mode: "sit", eyes: "worry", mouth: "frown" }], { prop: "ledger" }), KS(380, 1520, 0.9, [{ t: 0, mode: "sitLeg", eyes: "sad", mouth: "flat" }], { prop: "spear1" }),
+          PI(620, 1520, 0.9, [{ t: 0, mode: "sit", eyes: "worry", mouth: "flat" }], { flip: true }), PH(860, 1520, 0.9, [{ t: 0, mode: "sit", eyes: "squint", mouth: "flat" }], { flip: true }), PU(-80, 1520, 0.55, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }]),
+          { who: "guard", x: 820, y: 762, s: 0.75, flip: true, track: [{ t: 0, mode: "listen", eyes: "worry", mouth: "frown" }], prop: "rifle" }],
         captions: capsFrom("radio", vo("radio", 1) - 0.1, [1]),
         bubbles: [bubAt(bub("radio", 2, 420, 900, 250, { up: true, br: true }), vo("radio", 1) - 0.1, D("radio"))],
         ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 1) - 0.1) - 0.05, label: "คนในค่าย", icon: "people", unit: "คน", max: 6, keys: [{ t: 0, v: 5 }], top: 150 }],
@@ -462,8 +463,9 @@
       add("name", {
         set: "station", setOpts: { id: "nm", time: "night", lampX: 300 }, dark: 0.55, blur: { far: 5 },
         cam: { keys: [{ t: 0, ...fr(640, 1250, 1.05, 540, 1150), drift: { s: 0.02 } }, { t: vo("name", 1) - 0.05, glide: 0.5, ...fr(520, 1040, 1.8, 540, 960), drift: { s: 0.03 } }] },
-        actors: [PI(180, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), PH(560, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("name", 0, 1), mode: "idle", eyes: "wide", mouth: "flat" }]),
-          { who: "guard", x: 900, y: 1520, s: 0.9, flip: true, track: [{ t: 0, mode: "torch", eyes: "normal", mouth: "frown", torch: true }] }],
+        actors: [PI(180, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }, { t: vo("name", 1), mode: "armsCrossed", eyes: "squint", mouth: "frown" }]), PH(560, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }, { t: F("name", 0, 1), mode: "idle", eyes: "wide", mouth: "o" }]),
+          { who: "guard", x: 900, y: 1520, s: 0.9, flip: true, track: [{ t: 0, mode: "torch", eyes: "squint", mouth: "frown", torch: true }] }],
+        react: [{ a: 1, t: F("name", 0, 1), dur: 1.6, fast: true }, { a: 0, t: vo("name", 1) + 0.1, dur: 2.2 }],
         captions: caps("name", [1]),
         bubbles: [bub("name", 0, 400, 520, 420, { br: true })],
         extra(L) { Fence.light(L, 560, 1040, 320, "#fff6d8", 0.55); },
@@ -483,7 +485,8 @@
         set: "station", setOpts: { id: "cho", time: "night", lampX: 300 }, dark: 0.55, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(560, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: 1.0, glide: 1.6, ...fr(520, 1100, 1.6, 540, 1000), r: 2, drift: { s: 0.03, r: 0.8 } }] },
         shake: (t) => shakeH(t) * 2,
-        actors: [PH(520, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        actors: [PH(520, 1520, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }])],
+        react: [{ a: 0, t: 0.6, dur: 2.2 }],
         ui: [{ type: "choice", t: 0.05, q: "คนเฝ้าปั๊มรู้จักภู… เชื่อภูมั้ย?", a: "เชื่อ", b: "ไม่เชื่อ", secs: 3, top: 300, possessed: { at: 1.0, side: "a", glitch: "เชื่อ…", who: "…ภูเคยเป็นคนของเขา" } }],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75); Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65); tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2); },
       });
