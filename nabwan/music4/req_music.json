@@ -1,0 +1,108 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "cinematic emotional instrumental score",
+   "heartwarming Thai commercial film music",
+   "felt piano",
+   "warm string ensemble",
+   "intimate and tender",
+   "slow tempo around 72 bpm",
+   "D major",
+   "high quality studio recording"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "drums",
+   "percussion",
+   "electronic beats",
+   "synth bass",
+   "upbeat pop",
+   "distorted guitar"
+  ],
+  "sections": [
+   {
+    "section_name": "Night city, far from home",
+    "duration_ms": 14600,
+    "lines": [],
+    "positive_local_styles": [
+     "solo felt piano",
+     "sparse gentle melody",
+     "soft and lonely",
+     "quiet night",
+     "lots of space between notes",
+     "pianissimo"
+    ],
+    "negative_local_styles": [
+     "strings",
+     "loud",
+     "busy arrangement"
+    ]
+   },
+   {
+    "section_name": "Mother counting the days",
+    "duration_ms": 13400,
+    "lines": [],
+    "positive_local_styles": [
+     "felt piano continues",
+     "solo cello melody enters",
+     "tender and melancholic",
+     "slowly building",
+     "mezzo piano"
+    ],
+    "negative_local_styles": [
+     "fast",
+     "loud",
+     "brass"
+    ]
+   },
+   {
+    "section_name": "Swell turning to hope",
+    "duration_ms": 6700,
+    "lines": [],
+    "positive_local_styles": [
+     "string swell crescendo",
+     "suspended chord resolving to a hopeful major chord",
+     "flowing piano arpeggios",
+     "light harp"
+    ],
+    "negative_local_styles": [
+     "sad",
+     "dark"
+    ]
+   },
+   {
+    "section_name": "Reunion with mother",
+    "duration_ms": 7900,
+    "lines": [],
+    "positive_local_styles": [
+     "emotional climax",
+     "full warm strings",
+     "soaring violin melody",
+     "piano chords",
+     "uplifting and heartfelt",
+     "gentle forte"
+    ],
+    "negative_local_styles": [
+     "epic trailer",
+     "brass fanfare"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3400,
+    "lines": [],
+    "positive_local_styles": [
+     "solo piano",
+     "gentle final chord",
+     "soft decay to silence"
+    ],
+    "negative_local_styles": [
+     "strings",
+     "loud"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

@@ -1,0 +1,126 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "warm acoustic guitar",
+   "soft felt piano",
+   "light glockenspiel",
+   "nostalgic and warm",
+   "high quality studio recording",
+   "G major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer"
+  ],
+  "sections": [
+   {
+    "section_name": "A question about an old friend",
+    "duration_ms": 5260,
+    "lines": [],
+    "positive_local_styles": [
+     "soft curious felt piano",
+     "quiet and reflective",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "School days and midnight birthday wishes",
+    "duration_ms": 8810,
+    "lines": [],
+    "positive_local_styles": [
+     "nostalgic warm acoustic guitar",
+     "glockenspiel sparkles",
+     "gentle and fond",
+     "light ticking pulse"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "dramatic"
+    ]
+   },
+   {
+    "section_name": "The message never answered",
+    "duration_ms": 8230,
+    "lines": [],
+    "positive_local_styles": [
+     "quiet wistful piano",
+     "soft pad",
+     "a little guilty",
+     "slower"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud",
+     "happy"
+    ]
+   },
+   {
+    "section_name": "Realizing and tomorrow",
+    "duration_ms": 8670,
+    "lines": [],
+    "positive_local_styles": [
+     "soft build with strings",
+     "reflective then hopeful",
+     "gentle lift at the end"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "epic brass"
+    ]
+   },
+   {
+    "section_name": "Midnight, sent first",
+    "duration_ms": 6450,
+    "lines": [],
+    "positive_local_styles": [
+     "warm sustained chord then playful ticking countdown",
+     "joyful bright burst with glockenspiel and claps",
+     "happy surprise"
+    ],
+    "negative_local_styles": [
+     "sad",
+     "heavy"
+    ]
+   },
+   {
+    "section_name": "Friends at the grill",
+    "duration_ms": 3890,
+    "lines": [],
+    "positive_local_styles": [
+     "warm happy acoustic groove",
+     "friendship and laughter",
+     "soft"
+    ],
+    "negative_local_styles": [
+     "epic",
+     "loud drums"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "solo acoustic guitar",
+     "final warm chord",
+     "soft decay"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "strings"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

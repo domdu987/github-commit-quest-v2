@@ -1,0 +1,103 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "cute romantic comedy instrumental",
+   "heartwarming Thai commercial film music",
+   "ukulele",
+   "light pizzicato strings",
+   "glockenspiel",
+   "warm piano",
+   "high quality studio recording",
+   "G major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "electronic dance beats",
+   "rock guitar",
+   "sad",
+   "dark"
+  ],
+  "sections": [
+   {
+    "section_name": "Typing and deleting at night",
+    "duration_ms": 13300,
+    "lines": [],
+    "positive_local_styles": [
+     "playful plucky pizzicato and ukulele",
+     "quirky tiptoe rhythm",
+     "curious and shy",
+     "light finger-snap pulse"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "dramatic"
+    ]
+   },
+   {
+    "section_name": "Shy worries",
+    "duration_ms": 11600,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle fingerpicked guitar",
+     "soft piano",
+     "tender and a little bashful",
+     "slower"
+    ],
+    "negative_local_styles": [
+     "playful",
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Oops, sent! Then her reply",
+    "duration_ms": 14950,
+    "lines": [],
+    "positive_local_styles": [
+     "a sudden comedic pause then soft suspense for a few seconds",
+     "then a warm blooming melody with glockenspiel and strings",
+     "joyful sweet surprise",
+     "growing happiness"
+    ],
+    "negative_local_styles": [
+     "epic",
+     "loud drums"
+    ]
+   },
+   {
+    "section_name": "Say hi first",
+    "duration_ms": 13650,
+    "lines": [],
+    "positive_local_styles": [
+     "warm romantic piano chords",
+     "light strings",
+     "glockenspiel sparkles",
+     "uplifting and smiling",
+     "gentle groove"
+    ],
+    "negative_local_styles": [
+     "epic trailer",
+     "brass",
+     "heavy drums"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3200,
+    "lines": [],
+    "positive_local_styles": [
+     "solo ukulele and glockenspiel",
+     "gentle final chord",
+     "soft decay"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "strings"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="fonts/local.css">
+<style>html,body{margin:0;background:#dbcdb9}#frame{width:1080px;height:1920px;position:relative;background:#dbcdb9}</style></head>
+<body><div id="frame"><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920"><defs id="d"></defs>
+<rect x="0" y="1300" width="1080" height="620" fill="#9a7a5e"/></svg></div>
+<script src="engine.js"></script><script src="puppet.js"></script>
+<script>
+const s = document.getElementById('s'), d = document.getElementById('d');
+const GIRL = { R: 44, skin: '#d8ab86', skinShade: '#c3936d', hair: '#2a2220', hairStyle: 'ponytail', shirt: '#7fa3cf', shirtLight: '#94b5dc', shirtDark: '#6e90bb', sleeve: 'long', shirtLen: 'top', pants: '#2c3555', pantsDark: '#232a45' };
+const MOM = { R: 44, skin: '#c8956e', skinShade: '#b3805b', hair: '#3a3234', gray: '#b5aeae', hairStyle: 'bun', shirt: '#a84d63', shirtLight: '#bb5d73', shirtDark: '#8f4054', sleeve: 'short', shirtLen: 'top', sarong: '#5b3f7a', sarongDark: '#463063', pants: '#5b3f7a', pantsDark: '#4a3266', shoe: '#7b5236', shoeDark: '#5f3e28', earring: null, glasses: true, lashes: false };
+const DAD = { R: 44, skin: '#b9845e', skinShade: '#a47250', hair: '#4a4446', gray: '#c9c4c4', hairStyle: 'short', shirt: '#e9e4da', shirtLight: '#f4f0e8', shirtDark: '#d2cbbd', sleeve: 'short', shirtLen: 'long', pants: '#6b5a44', pantsDark: '#5a4a37', shoe: '#5a4636', shoeDark: '#3f3127', earring: null, lashes: false };
+const a = new Puppet(s, GIRL, d); a.pose({ x: 170, y: 1000, torso: 0, head: 0, t: 0, smile: 0.6 });
+const b = new Puppet(s, GIRL, d); b.pose({ x: 440, y: 1000, torso: 4, head: 10, aF: [70, -40], aB: [75, -35], lF: [-2, 90], lB: [0, 90], t: 0.1, smile: 0.7 });
+const c = new Puppet(s, MOM, d); c.pose({ x: 700, y: 1000, f: -1, torso: 3, head: -6, t: 0, smile: 0.4 });
+const e = new Puppet(s, DAD, d); e.pose({ x: 930, y: 1000, f: -1, torso: 0, head: 0, t: 0, smile: 0.6, grin: 1 });
+const g2 = new Puppet(s, GIRL, d); g2.pose({ x: 300, y: 1650, s: 1.3, torso: 2, head: 0, aF: [100, 80], aB: [80, 100], lF: [70, 110], lB: [110, 95], t: 0, smile: 0.6 });
+</script></body></html>

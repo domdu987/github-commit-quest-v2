@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#cdbfa8}#frame{position:relative;width:1080px;height:1920px;overflow:hidden;background:linear-gradient(#e9dcc6,#cdbfa8)}</style></head>
+<body><div id="frame"><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920"><defs id="d"></defs></svg><div id="subs"></div></div>
+<script src="../demo/engine.js"></script><script src="../story2/puppet2.js"></script><script src="../demo/sets.js"></script><script src="../demo/fx.js"></script><script src="chars3.js"></script>
+<script>
+const s = document.getElementById('s'), defs = document.getElementById('d');
+svg('rect', { x: 0, y: 760, width: 1080, height: 6, fill: '#a8987e' }, s);
+const mk = (o, pose, par = s) => { const q = new Puppet(par, o, defs); q.pose(pose); return q; };
+mk(MOM, { x: 180, y: 760 - LEG * 1.1, s: 1.1, torso: 6, head: 6, aF: [80, 50], aB: [100, 96], lF: [86, 92], lB: [96, 90], smile: 0.8, t: 0.5 });
+mk(DAUGHTER, { x: 520, y: 760 - LEG * 1.1, s: 1.1, torso: 2, head: 2, aF: [80, 60], aB: [100, 96], lF: [84, 94], lB: [96, 90], smile: 0.7, t: 0.5 });
+mk(DAUGHTER_HOME, { x: 860, y: 760 - LEG * 1.1, s: 1.1, f: -1, torso: 2, head: -4, aF: [96, 80], aB: [96, 84], lF: [88, 92], lB: [94, 90], smile: 0.2, t: 0.5 });
+// Mom seated, phone held close in both hands
+svg('rect', { x: 60, y: 1280, width: 420, height: 34, rx: 10, fill: '#c9a46a' }, s);
+const p1 = { x: 230, y: 1278, s: 1.2, torso: 10, head: 14, lF: [-2, 90], lB: [0, 91], smile: 0.9, t: 0.5 };
+const a = mk(MOM, p1); const tx = p1.x + 1.2 * 70, ty = p1.y - 1.2 * 150; p1.aF = a.reach(p1, tx, ty); p1.aB = a.reach(p1, tx - 6, ty + 6); a.pose(p1);
+// Mom lying sick
+const lie = svg('g', { transform: 'translate(840,1300) rotate(-90)' }, s);
+svg('rect', { x: 600, y: 1300, width: 460, height: 40, rx: 16, fill: '#e9e2f2' }, s);
+const p2 = { x: 0, y: 0, s: 1.1, torso: 0, head: -6, lF: [90, 90], lB: [90, 90], aF: [80, 70], aB: [96, 90], eyes: 0, smile: 0.3 };
+mk(MOM, p2, lie);
+svg('path', { d: 'M640,1250 Q700,1180 900,1196 L1060,1200 L1060,1310 L640,1310 Z', fill: '#7fb3d9', stroke: INK, 'stroke-width': 5 }, s);
+faceFront3(s, 200, 1700, 90, 'mom'); faceFront3(s, 480, 1700, 90, 'daughter');
+const av = document.createElement('div'); av.style.cssText = 'position:absolute;left:640px;top:1610px'; av.innerHTML = portrait3('mom', 96, '#fde2e8') + portrait3('daughter', 96, '#dbe7f3'); document.getElementById('frame').appendChild(av);
+window.render = () => {}; window.DURATION = 1; window.ready = Promise.resolve(true);
+</script></body></html>

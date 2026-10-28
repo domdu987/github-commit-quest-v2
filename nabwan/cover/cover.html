@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../demo/fonts/local.css">
+<style>
+html, body { margin: 0; background: #000; }
+#frame { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: 'Kanit', sans-serif; background: #15122b; }
+#bg { position: absolute; left: 0; width: 1080px; height: 1920px; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 160px); mask-image: linear-gradient(180deg, transparent 0, #000 160px); }
+#shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14,10,30,.9) 0%, rgba(14,10,30,.7) 22%, rgba(14,10,30,.25) 40%, rgba(14,10,30,0) 50%, rgba(14,10,30,0) 78%, rgba(14,10,30,.55) 100%); }
+.blk { position: absolute; left: 0; right: 0; text-align: center; }
+#hook { display: inline-block; padding: 14px 34px 18px; border-radius: 999px; background: rgba(255,250,242,.96); color: #2a2430; font: 600 42px/1.2 Kanit; box-shadow: 0 14px 30px rgba(0,0,0,.4); }
+#hook b { color: #e0574b; }
+#num { color: #fff; font: 700 230px/1 Kanit; letter-spacing: -0.01em; text-shadow: 0 10px 40px rgba(0,0,0,.55), 0 0 2px rgba(0,0,0,.4); }
+#num small { font: 700 120px/1 Kanit; margin-left: .18em; }
+#sub { color: #ffd166; font: 700 112px/1.1 Kanit; text-shadow: 0 8px 30px rgba(0,0,0,.6), 0 0 3px rgba(0,0,0,.5); }
+#rule { position: absolute; left: 430px; width: 220px; height: 9px; border-radius: 5px; background: #ffd166; box-shadow: 0 0 18px rgba(255,209,102,.85); }
+.brand { position: absolute; left: 0; right: 0; margin: 0 auto; width: max-content; display: flex; align-items: center; gap: 18px; padding: 14px 30px 14px 16px; border-radius: 30px; background: rgba(20,14,34,.6); border: 2px solid rgba(255,255,255,.28); backdrop-filter: blur(6px); }
+.brand b { display: block; font: 700 54px/1 Kanit; color: #fff; } .brand small { display: block; font: 500 26px/1.2 Kanit; color: #ffd6e4; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div id="frame">
+  <img id="bg">
+  <div id="shade"></div>
+  <div class="blk" id="hookw"><span id="hook"></span></div>
+  <div class="blk" id="num"></div>
+  <div class="blk" id="sub"></div>
+  <div id="rule"></div>
+  <div class="brand" id="brand"><svg width="84" height="84" viewBox="0 0 100 100"><rect x="10" y="16" width="80" height="76" rx="16" fill="#fff" stroke="#33252a" stroke-width="5"/><path d="M10,32 Q10,16 26,16 L74,16 Q90,16 90,32 L90,38 L10,38 Z" fill="#f04f7f" stroke="#33252a" stroke-width="5" stroke-linejoin="round"/><rect x="28" y="6" width="9" height="20" rx="4.5" fill="#33252a"/><rect x="63" y="6" width="9" height="20" rx="4.5" fill="#33252a"/><path d="M50,82 C30,70 32,52 50,61 C68,52 70,70 50,82 Z" fill="#f04f7f" stroke="#33252a" stroke-width="4"/><path d="M78,92 L90,80 L90,92 Z" fill="#e9e3ea" stroke="#33252a" stroke-width="4" stroke-linejoin="round"/></svg><div><b>นับวัน</b><small>@nabwan.th</small></div></div>
+</div>
+<script>
+// one config per clip; the title sits inside the centre 3:4 area (y 240–1680) that the profile grid shows
+const C = {
+  s7: { bg: 'story7_40.45.png', bgTop: 250, top: 250, hook: 'เพื่อนจำวันเกิดเราได้ทุกปี <b>แต่เราล่ะ?</b>', num: '11<small>ปี</small>', sub: 'ที่เพื่อนไม่เคยลืม', brand: 1540 },
+  s5: { bg: 'story5_10.00.png', bgTop: 60, top: 300, hook: 'หางานไม่ได้ แต่บอกแม่ว่า <b>สบายดี</b>', num: '127<small>ใบสมัคร</small>', sub: 'ที่แม่รู้มาตลอด', brand: 1700 },
+  s6: { bg: 'story6_6.20.png', bgTop: 40, top: 300, hook: 'ทุกคืน มีใครบางคน <b>รอเราอยู่หน้าประตู</b>', num: '4,380<small>วัน</small>', sub: 'ที่รอ', brand: 1560 },
+  s8: { bg: 'story8_48.20.png', bgTop: 120, bgScale: 1.25, bgOrigin: '50% 62%', top: 250, hook: 'เขาไม่เคยพูดว่ารัก <b>แต่จำได้ว่าเราไม่กินผักชี</b>', num: '312<small>ชาม</small>', sub: 'ที่ไม่มีผักชี', brand: 1720 },
+  s9: { bg: 'story9_5.50.png', bgTop: -60, bgScale: 1.12, bgOrigin: '50% 72%', top: 250, hook: 'ของชิ้นเดียวในตะกร้าแม่ <b>ค้างมาทั้งปี</b>', num: '39<small>บาท</small>', sub: 'ที่แม่ไม่กล้ากด', brand: 1720 },
+  s10: { bg: 'story10_26.60.png', bgTop: 300, top: 250, hook: 'ทุกปีพับกระทง 2 ใบ <b>ปีนี้ก็ยัง 2 ใบ</b>', num: '52<small>ปี</small>', sub: 'กับกระทงสองใบ', brand: 1760 },
+  s2: { bg: 'story2_17.00.png', bgTop: 60, bgScale: 1.22, bgOrigin: '22% 92%', brandX: 700, top: 340, hook: 'เรากดซื้อใน 5 นาที <b>พ่อต้องทำงาน 75 วัน</b>', num: '75<small>วัน</small>', sub: 'ของพ่อ', brand: 1690 },
+  s3: { bg: 'story3_8.00.png', bgTop: 60, top: 280, hook: 'แม่ส่งมาทุกเช้า 3 ปี <b>เราไม่เคยตอบ</b>', num: '1,095<small>ข้อความ</small>', numSize: 190, sub: 'ของแม่', brand: 1700 },
+  s4: { bg: 'story4_18.00.png', bgTop: 60, top: 280, hook: 'พิมพ์ว่า "กินข้าวยัง" แล้วลบ <b>ทั้งคืน</b>', num: '47<small>ครั้ง</small>', sub: 'ที่ลบข้อความ', brand: 1700 },
+};
+const c = C[location.search.slice(1)];
+const $ = id => document.getElementById(id);
+$('bg').src = c.bg; $('bg').style.top = c.bgTop + 'px';
+$('hook').innerHTML = c.hook; $('num').innerHTML = c.num; $('sub').textContent = c.sub;
+$('hookw').style.top = c.top + 'px';
+$('num').style.top = (c.top + 96) + 'px';
+if (c.numSize) { $('num').style.fontSize = c.numSize + 'px'; $('num').querySelector('small').style.fontSize = Math.round(c.numSize * 0.52) + 'px'; $('num').style.top = (c.top + 96 + (230 - c.numSize) * 0.6) + 'px'; }
+$('sub').style.top = (c.top + 336) + 'px';
+$('rule').style.top = (c.top + 476) + 'px';
+$('brand').style.top = c.brand + 'px';
+if (c.bgScale) { $('bg').style.transformOrigin = c.bgOrigin; $('bg').style.transform = `scale(${c.bgScale})`; }
+if (c.brandX) { $('brand').style.left = c.brandX + 'px'; $('brand').style.right = 'auto'; $('brand').style.margin = '0'; }
+window.ready = Promise.all([document.fonts.ready, new Promise(r => { $('bg').complete ? r() : $('bg').onload = r; })]);
+</script>
+</body>
+</html>

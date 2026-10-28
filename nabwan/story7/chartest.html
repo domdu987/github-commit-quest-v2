@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../demo/fonts/local.css"></head><body style="margin:0;background:#f1e8da">
+<div id="frame" style="width:1080px;height:1920px;position:relative"><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920"></svg><div id="av" style="position:absolute;left:40px;top:1300px;display:flex;gap:30px"></div></div>
+<script src="../demo/engine.js"></script><script src="../story2/puppet2.js"></script><script src="../demo/sets.js"></script><script src="chars7.js"></script>
+<script>
+const s = document.getElementById('s'); const defs = svg('defs', {}, s);
+[[ME, 180, 1, 0.7, 0], [BANK, 440, -1, 0.9, 1], [ME_SCHOOL, 700, 1, 0.8, 0], [BANK_SCHOOL, 940, -1, 0.9, 1]].forEach(([o, x, f, sm, gr]) => { const p = new Puppet(s, o, defs); p.pose({ x, y: 1000, s: 1.3, f, t: 1, smile: sm, grin: gr }); });
+document.getElementById('av').innerHTML = meAv(200) + bankAv(200) + meAv(200, { school: true, happy: true }) + bankAv(200, { school: true, grin: true });
+window.render = () => {}; window.DURATION = 0.1; window.ready = document.fonts.ready.then(() => true);
+</script></body></html>

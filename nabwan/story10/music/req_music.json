@@ -1,0 +1,125 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "Loy Krathong night",
+   "gentle Thai ranat and khim textures with soft piano",
+   "warm strings",
+   "tender and nostalgic",
+   "high quality studio recording",
+   "C major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer"
+  ],
+  "sections": [
+   {
+    "section_name": "A question by the water",
+    "duration_ms": 6110,
+    "lines": [],
+    "positive_local_styles": [
+     "soft khim and felt piano",
+     "quiet and wistful",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Fifty-two years of two krathongs",
+    "duration_ms": 8230,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and fond",
+     "gentle acoustic guitar and khim",
+     "sweet old memory"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "dramatic"
+    ]
+   },
+   {
+    "section_name": "This year, folding alone",
+    "duration_ms": 9960,
+    "lines": [],
+    "positive_local_styles": [
+     "quiet piano",
+     "soft strings",
+     "lonely but tender",
+     "slower"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud",
+     "happy"
+    ]
+   },
+   {
+    "section_name": "At the river, hers goes first",
+    "duration_ms": 11010,
+    "lines": [],
+    "positive_local_styles": [
+     "tender strings swell slowly",
+     "piano arpeggios",
+     "emotional, like candlelight on water"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "harsh"
+    ]
+   },
+   {
+    "section_name": "Title",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "warm emotional peak",
+     "held chord",
+     "strings and piano together"
+    ],
+    "negative_local_styles": [
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Love keeps going",
+    "duration_ms": 6430,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and sincere",
+     "piano, khim and strings",
+     "full but gentle",
+     "hopeful"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "harsh"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle resolution",
+     "final chord ringing and sustained to the very end",
+     "no fade out before the end"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "abrupt ending"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

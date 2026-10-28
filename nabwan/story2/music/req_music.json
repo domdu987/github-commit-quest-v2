@@ -1,0 +1,114 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "cinematic emotional instrumental score",
+   "heartwarming Thai commercial film music",
+   "piano",
+   "warm strings",
+   "intimate",
+   "high quality studio recording",
+   "C major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "electronic dance beats",
+   "rock guitar",
+   "upbeat pop chorus"
+  ],
+  "sections": [
+   {
+    "section_name": "Midnight online shopping",
+    "duration_ms": 7600,
+    "lines": [],
+    "positive_local_styles": [
+     "light playful pizzicato strings",
+     "soft modern lo-fi piano",
+     "curious and casual",
+     "gentle tick-tock pulse"
+    ],
+    "negative_local_styles": [
+     "sad",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Father's sweat under the sun",
+    "duration_ms": 14700,
+    "lines": [],
+    "positive_local_styles": [
+     "tender fingerpicked acoustic guitar",
+     "warm piano",
+     "soft sustained strings",
+     "steady unhurried pulse like hard work",
+     "bittersweet"
+    ],
+    "negative_local_styles": [
+     "playful",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "The old cracked phone",
+    "duration_ms": 6100,
+    "lines": [],
+    "positive_local_styles": [
+     "sparse solo piano",
+     "melancholic",
+     "quiet and fragile"
+    ],
+    "negative_local_styles": [
+     "strings swell",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Never called",
+    "duration_ms": 9600,
+    "lines": [],
+    "positive_local_styles": [
+     "solo cello melody",
+     "heartbreaking and reflective",
+     "thinning to a single soft held note at the end"
+    ],
+    "negative_local_styles": [
+     "hopeful",
+     "fast"
+    ]
+   },
+   {
+    "section_name": "The call home",
+    "duration_ms": 18000,
+    "lines": [],
+    "positive_local_styles": [
+     "string swell opening into hope",
+     "warm piano chords",
+     "soaring violin melody",
+     "emotional uplifting climax near the end",
+     "heartfelt"
+    ],
+    "negative_local_styles": [
+     "epic trailer",
+     "brass fanfare",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3200,
+    "lines": [],
+    "positive_local_styles": [
+     "solo piano",
+     "gentle final chord",
+     "soft decay"
+    ],
+    "negative_local_styles": [
+     "strings",
+     "loud"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

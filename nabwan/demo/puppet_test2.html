@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="fonts/local.css"><style>body{margin:0;background:#cfe6f6}</style></head><body>
+<svg id="s" width="1080" height="700" viewBox="0 0 1080 700"><defs id="d"></defs></svg>
+<script src="engine.js"></script><script src="puppet.js"></script><script src="sets.js"></script>
+<script>
+const s = document.getElementById('s'), d = document.getElementById('d');
+const DAD = { R: 44, skin: '#b67d55', skinShade: '#a06a45', hair: '#4a4646', gray: '#c9c4c2', hairStyle: 'short', shirt: '#6f8fb0', shirtLight: '#86a3c0', shirtDark: '#5b7896', sleeve: 'long', shirtLen: 'top', pants: '#7a6a55', pantsDark: '#665846', shoe: '#3a3330', shoeDark: '#2a2522', lashes: false, earring: null, mustache: true, aged: true, hat: 'hardhat', towel: '#c23b3b', seed: 4 };
+const SON = { R: 44, skin: '#d9a982', skinShade: '#c18f69', hair: '#1f1b1c', hairStyle: 'short', shirt: '#2f8f8a', shirtLight: '#3fa7a0', shirtDark: '#277a76', sleeve: 'short', shirtLen: 'top', pants: '#2c3555', pantsDark: '#232a45', lashes: false, earring: null, seed: 3 };
+const a = new Puppet(s, DAD, d); a.pose({ x: 250, y: 360, s: 0.9, torso: 14, head: 4, aF: [-40, -150], aB: [70, 40], lF: [80, 90], lB: [100, 92] });
+const bag = svg('g', {}, a.shoulderG); svg('rect', { x: -60, y: -46, width: 92, height: 44, rx: 12, fill: '#d8d1c2', stroke: '#fff', 'stroke-width': 3 }, bag);
+const b = new Puppet(s, Object.assign({}, DAD, { hat: null, towel: null, shirt: '#ece6da', shirtLight: '#f5f0e6', shirtDark: '#d6cfbf', sleeve: 'short', sarong: '#3f5aa0' }), d); b.pose({ x: 560, y: 360, s: 0.9, f: -1, head: -6, smile: 0.8 });
+const c = new Puppet(s, SON, d); c.pose({ x: 850, y: 360, s: 0.9, smile: 0.7 });
+</script></body></html>

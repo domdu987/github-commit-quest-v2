@@ -1,0 +1,88 @@
+# "75 วันของพ่อ" v3: "ถ้า..." hook (take H) + plain brisk Puck narration at 1.2x. Each take is kept whole; the story2 scene
+# keys (A0..D7) keep their meaning and are anchored to Whisper word timestamps. Writes story2/vo.js + segments.json.
+import json
+W = json.load(open('story2/vo3/words.json'))
+BND = json.load(open('story2/vo3/bounds.json'))   # measured onset/tail; A's onset is moved past a stray "เฮ้ย"
+
+def anchors(k, specs):
+    toks = W[k]; txt = ''; idx = []
+    for i, (w, a, b) in enumerate(toks):
+        for _ in w: idx.append(i)
+        txt += w
+    out = {}
+    for name, sub, after in specs:
+        start = txt.find(sub, out[after][1] if after else 0)
+        assert start >= 0, (k, name, sub, txt)
+        while txt[start] == ' ': start += 1
+        i = idx[start]; t = toks[i][1]
+        # Whisper often stamps a word's first letter at the end of the previous pause: snap to the next letter
+        if i + 1 < len(toks) and toks[i + 1][1] - t > 0.25: t = toks[i + 1][1] - 0.15
+        out[name] = (t, start)
+    return {n: v[0] for n, v in out.items()}, toks[-1][2]
+
+spec = {
+ 'H': [('H0', 'ถ้าคุณ', None), ('H1', 'คุณกด', 'H0'), ('H2', '5', 'H1'), ('H3', 'ถ้าพ่อ', 'H2'), ('H4', 'เขาต้อง', 'H3'), ('H5', 'กี่วัน', 'H4')],
+ 'A': [('A0', 'มือ', None), ('A1', 'ราคา', 'A0'), ('A1n', '30,', 'A1'), ('A2', 'กดสั่ง', 'A1n'), ('A3', 'ใช้', 'A2'), ('A3n', '5', 'A3'),
+       ('A4', 'แต่สำ', 'A3n'), ('A5', 'เงินก้อน', 'A4'), ('A6', 'คือ', 'A5'), ('A7', '75', 'A6')],
+ 'B': [('B0', 'พ่อเป็น', None), ('B1', 'ค่าแรง', 'B0'), ('B1n', '400', 'B1'), ('B2', 'แบก', 'B1n'), ('B3', 'จนหลัง', 'B2'), ('B4', 'ส่วน', 'B3'),
+       ('B5', 'ยังเป็น', 'B4'), ('B6', 'เครื่องเก่า', 'B5'), ('B7', 'จอแตก', 'B6')],
+ 'C': [('C1', 'แต่มือ', None), ('C1n', 'สามหมื่น', 'C1'), ('C2', 'ที่ลูก', 'C1n'), ('C3', 'กับไม่', 'C2'), ('C4', 'สักวัน', 'C3')],
+ 'D': [('D0', 'วันนี้', None), ('D1', 'ลอง', 'D0'), ('D2', 'ให้พ่อ', 'D1'), ('D3', 'ที่รอ', 'D2'), ('D4', 'เพราะ', 'D3'), ('D5', 'ไม่ใช่', 'D4'),
+       ('D6', 'แค่', 'D5'), ('D7', 'พ่อเหนื่อย', 'D6')],
+}
+P, segs, t = {}, [], 0.3
+TITLE = 2.3; END = 3.2
+for k in 'HABCD':
+    an, last = anchors(k, spec[k])
+    first = BND[k][0]; last = max(last, BND[k][1] - 0.04)
+    an = {n: max(v, first) for n, v in an.items()}
+    if k == 'D': t = P['title'] + TITLE
+    off = t - first
+    for n, v in an.items(): P[n] = round(v + off, 3)
+    P[k + 'end'] = round(last + off, 3)
+    segs.append({'file': f'story2/vo3/{k}44.wav', 'src': [round(max(0, first - 0.05), 3), round(last + 0.12, 3)], 'on': round(t - 0.05, 3), 'name': k})
+    t = last + off + (0.6 if k == 'H' else 0.45)
+    if k == 'C': P['title'] = round(last + off + 0.45, 3)
+P['C0'] = round(P['C1'] - 0.3, 3)   # the old take opened on a sigh here
+P['end'] = round(max(P['Dend'] + 0.6, P['D7'] + 1.6), 3)
+P['DUR'] = round(P['end'] + END, 2)
+for n in sorted(P, key=P.get): print(f'{n:5s} {P[n]:6.2f}')
+
+def part(t_, s, a, b): return {'t': t_, 's': s, 'at': P[a], 'd': round(P[b] - P[a], 3)}
+cues = [
+ [part('ถ้าคุณอยากได้อะไร', 'w', 'H0', 'H1')],
+ [part('คุณกดซื้อได้ใน', 'w', 'H1', 'H2'), part(' 5 นาที', 'r', 'H2', 'H3')],
+ [part('ถ้าพ่ออยากได้อะไร', 'w', 'H3', 'H4')],
+ [part('เขาต้องทำงาน', 'w', 'H4', 'H5'), part('กี่วัน', 'r', 'H5', 'Hend')],
+ [part('มือถือเครื่องใหม่', 'w', 'A0', 'A1')],
+ [part('ราคา', 'w', 'A1', 'A1n'), part(' 30,000 บาท', 'r', 'A1n', 'A2')],
+ [part('กดสั่งตอนเที่ยงคืน', 'w', 'A2', 'A3')],
+ [part('ใช้เวลาแค่', 'w', 'A3', 'A3n'), part(' 5 นาที', 'r', 'A3n', 'A4')],
+ [part('แต่สำหรับพ่อ', 'y', 'A4', 'A5')],
+ [part('เงินก้อนนี้', 'w', 'A5', 'A6'), part(' คือเหงื่อ', 'w', 'A6', 'A7')],
+ [part('75 วัน', 'r', 'A7', 'Aend')],
+ [part('พ่อเป็นช่างปูน', 'w', 'B0', 'B1')],
+ [part('ค่าแรงวันละ', 'w', 'B1', 'B1n'), part(' 400 บาท', 'r', 'B1n', 'B2')],
+ [part('แบกปูนกลางแดด', 'w', 'B2', 'B3')],
+ [part('จนหลังแทบขาด', 'y', 'B3', 'B4')],
+ [part('ส่วนมือถือของพ่อ', 'w', 'B4', 'B5')],
+ [part('ยังเป็นปุ่มกดเครื่องเก่า', 'w', 'B5', 'B7')],
+ [part('จอแตกเกือบหมด', 'w', 'B7', 'Bend')],
+ [part('แต่มือถือ', 'w', 'C1', 'C1n'), part(' 30,000', 'r', 'C1n', 'C2')],
+ [part('ที่ลูกถือทุกวัน', 'w', 'C2', 'C3')],
+ [part('กลับไม่เคยโทรหาพ่อเลย', 'w', 'C3', 'C4'), part('สักวัน', 'r', 'C4', 'Cend')],
+ [part('วันนี้', 'y', 'D0', 'D1'), part(' ลองโทรหาพ่อสักครั้ง', 'y', 'D1', 'D2')],
+ [part('ให้พ่อได้ยินเสียง', 'w', 'D2', 'D3'), part(' ที่รอฟัง', 'w', 'D3', 'D4')],
+ [part('เพราะของที่พ่ออยากได้', 'w', 'D4', 'D5')],
+ [part('ไม่ใช่เงินทอง', 'w', 'D5', 'D6')],
+ [part('แค่คำถามง่ายๆ ว่า', 'w', 'D6', 'D7')],
+ [part('พ่อเหนื่อยไหม', 'r', 'D7', 'Dend')],
+]
+CUES = []
+for j, parts in enumerate(cues):
+    a = parts[0]['at']; last_end = max(p['at'] + p['d'] for p in parts)
+    nxt = cues[j + 1][0]['at'] if j + 1 < len(cues) else 99
+    CUES.append({'a': round(a, 3), 'b': round(min(nxt - 0.04, last_end + 0.5), 3), 'parts': parts})
+CUES[-1]['b'] = round(P['end'] - 0.05, 3)
+open('story2/vo.js', 'w').write('// generated by story2/place3.py\nconst VO = ' + json.dumps({'P': P, 'CUES': CUES}, ensure_ascii=False) + ';\n')
+json.dump(segs, open('story2/segments.json', 'w'), ensure_ascii=False, indent=1)

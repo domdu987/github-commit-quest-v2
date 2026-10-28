@@ -1,0 +1,104 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "cinematic emotional instrumental score",
+   "heartwarming Thai commercial film music",
+   "piano",
+   "warm strings",
+   "intimate",
+   "high quality studio recording",
+   "F major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "electronic dance beats",
+   "rock guitar",
+   "upbeat pop chorus"
+  ],
+  "sections": [
+   {
+    "section_name": "Mother's morning ritual",
+    "duration_ms": 17000,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle sunrise feeling",
+     "soft celesta and music box melody",
+     "warm piano",
+     "light pizzicato",
+     "tender and sweet",
+     "slow build"
+    ],
+    "negative_local_styles": [
+     "sad",
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Read and swiped away",
+    "duration_ms": 13000,
+    "lines": [],
+    "positive_local_styles": [
+     "sparse piano",
+     "slightly melancholic",
+     "soft sustained strings",
+     "becoming tender and regretful in the second half"
+    ],
+    "negative_local_styles": [
+     "playful",
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "The silent morning",
+    "duration_ms": 13500,
+    "lines": [],
+    "positive_local_styles": [
+     "suspenseful soft ticking pulse",
+     "suspended unresolved piano chords",
+     "quiet anxiety",
+     "fading to a fragile solo piano for a gentle sad ending"
+    ],
+    "negative_local_styles": [
+     "action",
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Answer her today",
+    "duration_ms": 13000,
+    "lines": [],
+    "positive_local_styles": [
+     "string swell opening into hope",
+     "warm piano chords",
+     "soaring violin melody",
+     "emotional heartfelt climax near the end"
+    ],
+    "negative_local_styles": [
+     "epic trailer",
+     "brass fanfare",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "solo piano",
+     "gentle final chord",
+     "soft decay"
+    ],
+    "negative_local_styles": [
+     "strings",
+     "loud"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

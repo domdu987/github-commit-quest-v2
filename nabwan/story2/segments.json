@@ -1,0 +1,47 @@
+[
+ {
+  "file": "story2/vo3/H44.wav",
+  "src": [
+   0.18,
+   5.53
+  ],
+  "on": 0.25,
+  "name": "H"
+ },
+ {
+  "file": "story2/vo3/A44.wav",
+  "src": [
+   0.45,
+   8.5
+  ],
+  "on": 6.03,
+  "name": "A"
+ },
+ {
+  "file": "story2/vo3/B44.wav",
+  "src": [
+   0.15,
+   7.54
+  ],
+  "on": 14.36,
+  "name": "B"
+ },
+ {
+  "file": "story2/vo3/C44.wav",
+  "src": [
+   0.24,
+   4.52
+  ],
+  "on": 22.03,
+  "name": "C"
+ },
+ {
+  "file": "story2/vo3/D44.wav",
+  "src": [
+   0.24,
+   9.23
+  ],
+  "on": 28.89,
+  "name": "D"
+ }
+]

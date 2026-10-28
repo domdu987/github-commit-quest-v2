@@ -1,0 +1,56 @@
+[
+ {
+  "file": "story8/vo/H44.wav",
+  "src": [
+   0.2,
+   5.55
+  ],
+  "on": 0.25,
+  "name": "H"
+ },
+ {
+  "file": "story8/vo/A44.wav",
+  "src": [
+   0.17,
+   7.26
+  ],
+  "on": 6.03,
+  "name": "A"
+ },
+ {
+  "file": "story8/vo/B44.wav",
+  "src": [
+   0.21,
+   8.92
+  ],
+  "on": 13.4,
+  "name": "B"
+ },
+ {
+  "file": "story8/vo/C44.wav",
+  "src": [
+   0.17,
+   10.14
+  ],
+  "on": 22.39,
+  "name": "C"
+ },
+ {
+  "file": "story8/vo/E44.wav",
+  "src": [
+   0.49,
+   6.79
+  ],
+  "on": 32.54,
+  "name": "E"
+ },
+ {
+  "file": "story8/vo/D44.wav",
+  "src": [
+   0.19,
+   6.99
+  ],
+  "on": 41.42,
+  "name": "D"
+ }
+]

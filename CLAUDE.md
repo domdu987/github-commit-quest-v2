@@ -1,0 +1,97 @@
+# นับวัน (@nabwan.th) — reel production playbook
+
+Thai story reels for IG/FB about everyday life and love. The user's standard is **professional, with depth**:
+icons, motion, effects, storytelling, camera angles, sets, graphics, animation and shadows all at the level of the
+"52 ปีกับกระทงสองใบ" / "39 บาทที่แม่ไม่กล้ากด" / "312 ชาม" set (Oct 2026). Never ship below it. The source code
+lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music stay out of git).
+
+## Format (fixed)
+- 1080×1920, ≤ 60 s, 30 fps. Narration: Gemini 3.1 Flash TTS voice **Puck**, conversational, sped up **1.2×**.
+- Every clip opens with the hook "ถ้า… คุณ…, ถ้า… เขา…". Kinetic captions at top 1640. Title card mid-clip, end card
+  with avatars + number title + one-line lesson + CTA chip + นับวัน brand.
+- Look: the chibi "story2" rig (`story2/puppet2.js`), warm palettes, INK outlines. No cold teal/grey rooms.
+
+## Look and sets
+- Rooms must be **full** like the first clips (47 ครั้ง / 1,095): windows with moon or garden, fairy lights,
+  shelves, posters, plants, rugs, a pet or a story prop. Use `story8/props8.js` helpers. Never an empty wall.
+- **Every room gets its own palette** (navy bedroom, olive living room, rose room, cream-and-mint provincial
+  house, teak veranda…). Never reuse a character design or a house from an earlier clip (e.g. a new mom per story).
+- Dark rugs or floors under the caption band (y ≈ 1600–1700); light cream or yellow rugs make white captions unreadable.
+
+## Depth and light (`pro/pro.js`, load it before the sets)
+- Shots use 3 layers: `['far', 0.35, 1.5], ['mid', 1, 0], ['fore', 1.8, 12–14]`; put bokeh and blurred
+  foreground in `fore`. Foreground props must be recognisable or not there at all; unreadable blurred blocks look like dirt.
+- `lightCast(S, set, pups)` on every lit set. It adds the rim light and core shade from `charLight`, plus a wall cast
+  shadow per puppet. Each set returns `shadowL` (a group placed before the furniture) and
+  `light: {ux, uy, lx}` pointing at its real key light.
+  - Lamp key light: shadow op 0.2–0.24.
+  - Overhead tube or bulb: soft, op ≈ 0.13, blur ≈ 11 (otherwise the shadow reads as a dark blob in close-ups).
+  - Window/sun light: shadows fall *away* from the light (positive k with lx on the light's side).
+- Every room: `wallAO` at the floor line, `lightPool` / `lampCone` at the lamps, `lightShaft` with dust for window
+  light, `ktReflection` for lights on water. Keep `.layer { will-change: auto }` (pro.js sets it) or the lit
+  characters render soft.
+
+## Camera and storytelling
+- Every scene is a **shot list** (`shotCam` + `applyCam`) cut on narration beats, usually 2–5 shots:
+  wide z≈1.1–1.2 → medium 1.3–1.6 → close-up 1.9–2.3 → **insert** 3–5.5 on the story object (coriander in the
+  bowl, wired slippers at the door, candles being lit, feet in new slippers). Use `frameAt(worldX, worldY, z, screenX,
+  screenY)` with head positions from `HW()`; handheld stays on; depth of field follows zoom.
+- Each narration beat needs an on-screen *action* or insert, not only a card:
+  - contrast cuts (her cart fills / mom hesitates);
+  - entrances (walk cycle into sit);
+  - reactions in close-up;
+  - time-lapse (clock chip + faster motion);
+  - a sepia flashback that dissolves to the present;
+  - endings with a wide shot or crane-up, hearts, light leak.
+- Keep the camera **inside the set**:
+  - The visible world x must stay within 0…1080, otherwise the vignette edge shows as a vertical seam.
+  - The camera y offset must stay ≥ 0, otherwise a dark band shows at the top.
+  - Faces must never be cut by the frame edge or covered by UI cards (cards sit in y ≈ 100–800, faces below).
+- Phones are always seen **from the back** (`phoneProp`: case, camera, sliver of screen light).
+
+## Graphics
+- Cards get the layered pro shadow, a top gloss and a shine sweep; they enter with `enter3d` / springs.
+- Prefer **animated metaphors** over static numbers:
+  - a balance scale that tips;
+  - a Buddhist-era (พ.ศ.) year odometer;
+  - a red marker circling a date;
+  - items flying into a cart;
+  - a LINE banner that buzzes with a ripple;
+  - a time-lapse clock;
+  - a glowing "?".
+
+## Audio
+- TTS through fal.run `fal-ai/gemini-3.1-flash-tts`, with retries.
+  - The content filter blocks some lines about death or loss; reword them (e.g. "ปีนี้ยายไม่อยู่แล้ว" passes).
+  - Transcribe every take with Whisper large-v3, run plain (no prompt); regenerate if a word reads wrong.
+- Music: fal `elevenlabs/music` composition plan with every section ≥ 3000 ms; use `extend.py` if it is short.
+- Mix with the per-story `audio.py` numpy mixer:
+  - ducking with a 0.4 s hold; SFX for every on-screen action (steps, taps, plops, lighter, buzz);
+  - master with `volume=1.5dB,alimiter=limit=0.75:attack=4:release=80:level=false` to about −14 LUFS.
+  - **Transcribe the final mix**; where a word gets masked (e.g. "จากไป" → "จะไป"), add a music `ramp` down under that line.
+
+## QA (non-negotiable before delivery)
+1. Stills of every shot before the full render (`node render.js stills dir t…`, grid with `scripts/grid.sh`), fix framing first.
+2. Full render (`PAGE=../storyN/index.html node render.js video out.mp4 30 [t0 tEnd]` — the 3rd number is the END
+   time). About 1 fps, so run at most 2 renders at once on 4 cores.
+3. Contact sheets every 0.6 s (`fps=1/0.6,scale=432:768,drawtext,tile=4x2`) and read **all** of them. Check:
+   - cut faces;
+   - UI over faces;
+   - edge seams or bands;
+   - shadow blobs or wrong shadow direction;
+   - unreadable captions;
+   - hands through tables;
+   - phones facing the viewer;
+   - unclear props.
+4. Fix by re-rendering only the affected segment and splicing by frame index (ffmpeg trim + concat), then re-check
+   those frames.
+
+## Delivery
+- Full-quality copy: `deliver/<Thai title>.mp4`.
+- Phone copy: `deliver/phone/<ascii-name>.mp4` with
+  `-profile:v high -level:v 4.0 -crf 24 -maxrate 2500k -bufsize 5000k -preset slow -c:a aac -b:a 160k -movflags +faststart`.
+- Cover `deliver/covers/cover-<name>.jpg` via `cover/grab.js` (HIDE selectors) + `cover/cover.html` + `cover/shoot.js`.
+  The title sits in the 3:4 safe area; the subject goes below it and is not covered by the brand badge.
+- Append the post caption (hook, story, lesson, 📌 CTA, hashtags) to `deliver/แคปชั่น-ทุกคลิป.txt` and give it in chat.
+- Report API cost (≈ $1 per story for voice + music).
+- No model identifiers in any file or commit.

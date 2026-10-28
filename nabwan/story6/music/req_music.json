@@ -1,0 +1,128 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "warm felt piano",
+   "soft acoustic guitar",
+   "gentle strings",
+   "intimate and tender",
+   "high quality studio recording",
+   "F major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer"
+  ],
+  "sections": [
+   {
+    "section_name": "A question late at night",
+    "duration_ms": 6830,
+    "lines": [],
+    "positive_local_styles": [
+     "soft curious felt piano",
+     "quiet and reflective",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Waiting by the door",
+    "duration_ms": 8290,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle warm acoustic guitar and piano",
+     "soft ticking clock pulse",
+     "patient and a little lonely",
+     "sweet melody"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "dramatic"
+    ]
+   },
+   {
+    "section_name": "Only a pat on the head",
+    "duration_ms": 7280,
+    "lines": [],
+    "positive_local_styles": [
+     "lonely soft piano",
+     "slow",
+     "warm pad underneath",
+     "wistful"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "The vet and counting the days",
+    "duration_ms": 15530,
+    "lines": [],
+    "positive_local_styles": [
+     "sad tender strings slowly grow",
+     "emotional piano melody",
+     "builds to a gentle heartfelt peak near the end",
+     "then holds a long warm chord"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "epic brass",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Home at six",
+    "duration_ms": 4320,
+    "lines": [],
+    "positive_local_styles": [
+     "bright joyful and playful",
+     "ukulele and glockenspiel",
+     "light claps",
+     "happy reunion"
+    ],
+    "negative_local_styles": [
+     "sad",
+     "heavy"
+    ]
+   },
+   {
+    "section_name": "Hug him",
+    "duration_ms": 5550,
+    "lines": [],
+    "positive_local_styles": [
+     "warm hopeful piano and strings",
+     "heartfelt and sincere",
+     "soft"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "epic"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "solo piano",
+     "final warm chord",
+     "soft decay"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "strings"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

@@ -1,0 +1,135 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "warm felt piano",
+   "soft strings",
+   "light lo-fi texture",
+   "intimate and hopeful",
+   "high quality studio recording",
+   "D major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer"
+  ],
+  "sections": [
+   {
+    "section_name": "Rejections at night",
+    "duration_ms": 6320,
+    "lines": [],
+    "positive_local_styles": [
+     "sparse melancholic felt piano",
+     "soft vinyl crackle",
+     "slow and a little tired",
+     "quiet"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud",
+     "happy"
+    ]
+   },
+   {
+    "section_name": "City grind",
+    "duration_ms": 7700,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle ticking pulse",
+     "muted plucked guitar ostinato",
+     "soft brushed rhythm",
+     "city commute bustle feel",
+     "tired but trying"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "dramatic",
+     "epic"
+    ]
+   },
+   {
+    "section_name": "Down to the last baht",
+    "duration_ms": 5210,
+    "lines": [],
+    "positive_local_styles": [
+     "very sparse",
+     "low warm pad",
+     "single hesitant piano notes",
+     "quiet suspense",
+     "holding breath"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "melody",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "A message from mom",
+    "duration_ms": 12410,
+    "lines": [],
+    "positive_local_styles": [
+     "tender warm piano melody enters",
+     "soft strings slowly swell",
+     "emotional and comforting",
+     "grows to a warm gentle peak at the end"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud",
+     "epic brass"
+    ]
+   },
+   {
+    "section_name": "Good news",
+    "duration_ms": 4250,
+    "lines": [],
+    "positive_local_styles": [
+     "bright uplifting",
+     "glockenspiel sparkles",
+     "light claps and soft kick",
+     "joyful relief"
+    ],
+    "negative_local_styles": [
+     "sad",
+     "heavy"
+    ]
+   },
+   {
+    "section_name": "Calling home",
+    "duration_ms": 7290,
+    "lines": [],
+    "positive_local_styles": [
+     "warm hopeful piano and strings",
+     "gentle groove",
+     "smiling and sincere",
+     "soft and light"
+    ],
+    "negative_local_styles": [
+     "epic",
+     "loud drums"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "solo piano",
+     "final warm chord",
+     "soft decay"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "strings"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

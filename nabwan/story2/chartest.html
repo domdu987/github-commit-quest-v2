@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#cdbfa8}#frame{position:relative;width:1080px;height:1920px;overflow:hidden;background:linear-gradient(#e9dcc6,#cdbfa8)}</style></head>
+<body><div id="frame"><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920"><defs id="d"></defs></svg><div id="subs"></div></div>
+<script src="../demo/engine.js"></script><script src="puppet2.js"></script><script src="../demo/sets.js"></script><script src="../demo/fx.js"></script><script src="chars.js"></script>
+<script>
+const s = document.getElementById('s'), defs = document.getElementById('d');
+svg('rect', { x: 0, y: 760, width: 1080, height: 6, fill: '#a8987e' }, s);
+svg('rect', { x: 0, y: 1500, width: 1080, height: 6, fill: '#a8987e' }, s);
+const mk = (o, pose) => { const q = new Puppet(s, o, defs); q.pose(pose); return q; };
+mk(SON, { x: 190, y: 760 - LEG * 1.1, s: 1.1, torso: 3, head: 4, aF: [80, 60], aB: [100, 96], lF: [84, 94], lB: [96, 90], smile: 0.8, t: 0.5 });
+mk(DAD_WORK, { x: 530, y: 760 - LEG * 1.1, s: 1.1, torso: 6, head: 6, aF: [70, 40], aB: [100, 96], lF: [86, 92], lB: [96, 90], smile: 0.5, t: 0.5 });
+mk(DAD_HOME, { x: 860, y: 760 - LEG * 1.1, s: 1.1, f: -1, torso: 4, head: 0, aF: [96, 80], aB: [96, 84], lF: [88, 92], lB: [94, 90], smile: 0.9, grin: 1, t: 0.5 });
+// seated, phone to ear
+svg('rect', { x: 60, y: 1280, width: 420, height: 34, rx: 10, fill: '#7e9bb5' }, s);
+const p1 = { x: 230, y: 1278, s: 1.2, torso: 4, head: 2, lF: [-2, 90], lB: [0, 91], aB: [80, -40], smile: 0.8, armF: 0.75, t: 0.5 };
+const a = mk(SON, p1); const [ex, ey] = [p1.x + 1.2 * EAR_L[0], p1.y + 1.2 * EAR_L[1]]; p1.aF = a.reach(p1, ex + 4, ey + 14, true); p1.propRot = -20; a.pose(p1);
+svg('rect', { x: 600, y: 1280, width: 420, height: 34, rx: 10, fill: '#c9a46a' }, s);
+const p2 = { x: 840, y: 1278, s: 1.2, f: -1, torso: 6, head: 4, lF: [-2, 90], lB: [0, 91], aB: [96, 70], smile: 1, eyes: 0, armF: 0.75, t: 0.5 };
+const b = mk(DAD_HOME, p2); const [fx, fy] = [p2.x - 1.2 * EAR_L[0], p2.y + 1.2 * EAR_L[1]]; p2.aF = b.reach(p2, fx - 4, fy + 14, true); p2.propRot = -20; b.pose(p2);
+faceFront2(s, 200, 1700, 90, 'son'); faceFront2(s, 480, 1700, 90, 'dad');
+const av = document.createElement('div'); av.style.cssText = 'position:absolute;left:640px;top:1610px'; av.innerHTML = dadAvatar() + portraitSVG('son', 96, '#cfe9e6'); document.getElementById('frame').appendChild(av);
+window.render = () => {}; window.DURATION = 1; window.ready = Promise.resolve(true);
+</script></body></html>

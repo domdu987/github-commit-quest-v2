@@ -1,0 +1,47 @@
+[
+ {
+  "file": "story4/vo3/H44.wav",
+  "src": [
+   0.21,
+   6.69
+  ],
+  "on": 0.25,
+  "name": "H"
+ },
+ {
+  "file": "story4/vo3/A44.wav",
+  "src": [
+   0.17,
+   7.98
+  ],
+  "on": 7.16,
+  "name": "A"
+ },
+ {
+  "file": "story4/vo3/B44.wav",
+  "src": [
+   0.22,
+   6.99
+  ],
+  "on": 15.25,
+  "name": "B"
+ },
+ {
+  "file": "story4/vo3/C44.wav",
+  "src": [
+   0.15,
+   11.45
+  ],
+  "on": 22.3,
+  "name": "C"
+ },
+ {
+  "file": "story4/vo3/D44.wav",
+  "src": [
+   0.2,
+   6.0
+  ],
+  "on": 35.93,
+  "name": "D"
+ }
+]

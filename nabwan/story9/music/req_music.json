@@ -1,0 +1,125 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "warm and tender",
+   "soft felt piano",
+   "warm acoustic guitar",
+   "light glockenspiel",
+   "gentle strings",
+   "high quality studio recording",
+   "D major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer"
+  ],
+  "sections": [
+   {
+    "section_name": "A question about a shopping cart",
+    "duration_ms": 6590,
+    "lines": [],
+    "positive_local_styles": [
+     "soft curious felt piano",
+     "quiet and tender",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Midnight sale, carefree",
+    "duration_ms": 9720,
+    "lines": [],
+    "positive_local_styles": [
+     "light playful pizzicato and ukulele",
+     "bouncy and bright",
+     "glockenspiel"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "dramatic"
+    ]
+   },
+   {
+    "section_name": "Mom's cart, one item",
+    "duration_ms": 8230,
+    "lines": [],
+    "positive_local_styles": [
+     "music drops to a soft piano",
+     "surprised and quiet",
+     "slower"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud",
+     "happy"
+    ]
+   },
+   {
+    "section_name": "Too shy to order, tied with wire",
+    "duration_ms": 10700,
+    "lines": [],
+    "positive_local_styles": [
+     "tender acoustic guitar and piano",
+     "emotional and growing",
+     "soft strings swell"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Title",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "warm emotional peak",
+     "held chord",
+     "strings and piano together"
+    ],
+    "negative_local_styles": [
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Two pairs, shipping paid",
+    "duration_ms": 7380,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and sincere",
+     "acoustic guitar, piano and strings",
+     "full but gentle",
+     "smiling"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "harsh"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3300,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle resolution",
+     "final chord ringing and sustained to the very end",
+     "no fade out before the end"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "abrupt ending"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

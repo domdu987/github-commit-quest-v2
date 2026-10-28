@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#cdbfa8}#frame{position:relative;width:1080px;height:1920px;overflow:hidden;background:linear-gradient(#e9dcc6,#cdbfa8)}</style></head>
+<body><div id="frame"><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920"><defs id="d"></defs></svg><div id="subs"></div></div>
+<script src="../demo/engine.js"></script><script src="../story2/puppet2.js"></script><script src="../demo/sets.js"></script><script src="../demo/fx.js"></script><script src="chars4.js"></script>
+<script>
+const s = document.getElementById('s'), defs = document.getElementById('d');
+svg('rect', { x: 0, y: 760, width: 1080, height: 6, fill: '#a8987e' }, s);
+const mk = (o, pose, par = s) => { const q = new Puppet(par, o, defs); q.pose(pose); return q; };
+mk(GUY, { x: 260, y: 760 - LEG * 1.15, s: 1.15, torso: 3, head: 4, aF: [80, 60], aB: [100, 96], lF: [84, 94], lB: [96, 90], smile: 0.7, t: 0.5 });
+mk(GIRL, { x: 760, y: 760 - LEG * 1.15, s: 1.15, f: -1, torso: 2, head: 2, aF: [80, 60], aB: [100, 96], lF: [84, 94], lB: [96, 90], smile: 0.9, t: 0.5 });
+// guy on a beanbag, knees up, phone in both hands
+svg('ellipse', { cx: 250, cy: 1330, rx: 170, ry: 90, fill: '#e0574b', stroke: INK, 'stroke-width': 5 }, s);
+svg('rect', { x: 0, y: 1390, width: 1080, height: 6, fill: '#a8987e' }, s);
+const p1 = { x: 250, y: 1290, s: 1.2, torso: 2, head: 14, lF: [-38, 62], lB: [-32, 66], smile: 0.6, t: 0.5 };
+const a = mk(GUY, p1); const [tx, ty] = [p1.x + 1.2 * 80, p1.y - 1.2 * 80]; p1.aB = a.reach(p1, tx - 6, ty + 8); p1.aF = a.reach(p1, tx + 6, ty - 2); a.pose(p1);
+// girl on the bed edge hugging her teddy
+svg('rect', { x: 560, y: 1250, width: 480, height: 60, rx: 18, fill: '#ffffff', stroke: INK, 'stroke-width': 5 }, s);
+const p2 = { x: 760, y: 1250, s: 1.2, f: -1, torso: 6, head: -6, lF: [-10, 80], lB: [-4, 86], smile: 1, grin: 1, t: 0.5 };
+const b = mk(GIRL, p2); p2.aB = b.reach(p2, 700, 1150); p2.aF = b.reach(p2, 650, 1120); b.pose(p2);
+teddy(s, 680, 1200, 0.9);
+faceFront4(s, 200, 1700, 90, 'guy'); faceFront4(s, 480, 1700, 90, 'girl');
+const av = document.createElement('div'); av.style.cssText = 'position:absolute;left:640px;top:1610px'; av.innerHTML = portrait4('guy', 96, '#dbe7f3') + portrait4('girl', 96, '#fde2e8'); document.getElementById('frame').appendChild(av);
+window.render = () => {}; window.DURATION = 1; window.ready = Promise.resolve(true);
+</script></body></html>

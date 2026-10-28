@@ -1,0 +1,83 @@
+# "127 ใบสมัคร": opens with the "ถ้า..." hook (take H), then Puck narration at 1.2x, plain brisk delivery. Each take is kept whole; scene keys are anchored to
+# Whisper word timestamps (first word clamped to the measured speech onset). Writes story5/vo.js + segments.json.
+import json
+W = json.load(open('story5/vo/words.json'))
+BND = json.load(open('story5/vo/bounds.json'))
+
+def anchors(k, specs):
+    toks = W[k]; txt = ''; idx = []
+    for i, (w, a, b) in enumerate(toks):
+        for _ in w: idx.append(i)
+        txt += w
+    out = {}
+    for name, sub, after in specs:
+        start = txt.find(sub, out[after][1] if after else 0)
+        assert start >= 0, (k, name, sub, txt)
+        while txt[start] == ' ': start += 1
+        out[name] = (toks[idx[start]][1], start)
+    return {n: v[0] for n, v in out.items()}, toks[0][1], toks[-1][2]
+
+spec = {
+ 'H': [('H0', 'ถ้าหา', None), ('H1', 'แล้วคุณ', 'H0'), ('H2', 'บอกแม่', 'H1'), ('H3', 'สบาย', 'H2'), ('H4', 'ถ้าวัน', 'H3'), ('H5', 'แม่รู้', 'H4'), ('H6', 'เขาจะ', 'H5')],
+ 'A': [('A0', 'จบมา', None), ('A1', 'ส', 'A0'), ('A2', '127', 'A1'), ('A3', 'ได', 'A2'), ('A4', 'ขอบ', 'A3'), ('A5', 'แต', 'A4')],
+ 'B': [('B0', 'ห้อง', None), ('B1', 'ข้าว', 'B0'), ('B2', 'เบีย', 'B1'), ('B3', 'สัมภ', 'B2'), ('B4', 'แต่พอ', 'B3'), ('B5', 'ก็ตอบ', 'B4'),
+       ('B6', 'สบาย', 'B5'), ('B7', 'งานใกล้', 'B6')],
+ 'C': [('Cst', 'คืน', None), ('C0', '210', 'Cst'), ('C1', 'เขาเปิด', 'C0'), ('C2', 'นิ้ว', 'C1'), ('C3', 'ยืนยัน', 'C2'), ('C4', 'แล้วข้อ', 'C3'),
+       ('C5', 'แม่ส่ง', 'C4'), ('C6', '2,000', 'C5'), ('C7', 'บอกว่า', 'C6'), ('C8', 'แม่รู้', 'C7'), ('C9', 'ไม่ต้องรีบ', 'C8'), ('C10', 'กินข้าว', 'C9')],
+ 'D': [('D0', 'สาม', None), ('D1', 'ใบที่', 'D0'), ('D2', '128', 'D1'), ('Dx', 'ตอบกลับ', 'D2'), ('D3', 'เริ่มงาน', 'Dx'), ('D4', 'ใคร', 'D3'),
+       ('D5', 'ไม่ต้องฝืน', 'D4'), ('D6', 'เขาไม่ได้', 'D5'), ('D7', 'แค่อยาก', 'D6'), ('D8', 'เราไหว', 'D7')],
+}
+P, segs, t = {}, [], 0.3
+TITLE = 2.3; END = 3.0
+for k in 'HABCD':
+    an, first, last = anchors(k, spec[k])
+    first = BND[k][0]; last = max(last, BND[k][1] - 0.04)
+    an = {n: max(v, first) for n, v in an.items()}
+    if k == 'D': t = P['title'] + TITLE
+    off = t - first
+    for n, v in an.items(): P[n] = round(v + off, 3)
+    P[k + 'end'] = round(last + off, 3)
+    segs.append({'file': f'story5/vo/{k}44.wav', 'src': [round(max(0, first - 0.05), 3), round(last + 0.12, 3)], 'on': round(t - 0.05, 3), 'name': k})
+    t = last + off + (0.6 if k == 'H' else 0.45)
+    if k == 'C': P['title'] = round(last + off + 0.45, 3)
+P['end'] = round(max(P['Dend'] + 0.6, P['D8'] + 1.6), 3)
+P['DUR'] = round(P['end'] + END, 2)
+for n in sorted(P, key=P.get): print(f'{n:5s} {P[n]:6.2f}')
+
+def part(t_, s, a, b): return {'t': t_, 's': s, 'at': P[a], 'd': round(P[b] - P[a], 3)}
+cues = [
+ [part('ถ้าหางานไม่ได้', 'w', 'H0', 'H1')],
+ [part('แล้วคุณบอกแม่ว่า', 'w', 'H1', 'H3'), part(' "สบายดี"', 'y', 'H3', 'H4')],
+ [part('ถ้าวันหนึ่งแม่รู้ความจริง', 'w', 'H4', 'H6')],
+ [part('เขาจะทำยังไง', 'r', 'H6', 'Hend')],
+ [part('จบมา 8 เดือน', 'w', 'A0', 'A1')],
+ [part('ส่งใบสมัครไป', 'w', 'A1', 'A2'), part(' 127 ที่', 'r', 'A2', 'A3')],
+ [part('ได้คำตอบเดียวกันหมด', 'w', 'A3', 'A4')],
+ [part('"ขอบคุณที่สนใจ', 'y', 'A4', 'A5'), part(' แต่เสียใจด้วย"', 'y', 'A5', 'Aend')],
+ [part('ห้องเช่า 3,500', 'w', 'B0', 'B1'), part(' ข้าวมื้อละ 50', 'w', 'B1', 'B2')],
+ [part('เบียดรถไฟฟ้า', 'w', 'B2', 'B3'), part('ไปสัมภาษณ์ทุกเช้า', 'w', 'B3', 'B4')],
+ [part('แต่พอแม่โทรมา', 'w', 'B4', 'B5'), part(' ก็ตอบว่า', 'w', 'B5', 'B6')],
+ [part('"สบายดีครับ', 'y', 'B6', 'B7'), part(' งานใกล้ได้แล้ว"', 'y', 'B7', 'Bend')],
+ [part('คืนที่เงินเหลือ', 'w', 'Cst', 'C0'), part(' 210 บาท', 'r', 'C0', 'C1')],
+ [part('เขาเปิดหน้าจองตั๋วกลับบ้าน', 'w', 'C1', 'C2')],
+ [part('นิ้วค้างอยู่ที่ปุ่มยืนยัน', 'w', 'C2', 'C4')],
+ [part('แล้วข้อความจากแม่ก็เด้งขึ้นมา', 'w', 'C4', 'C5')],
+ [part('แม่ส่งเงินมาให้', 'w', 'C5', 'C6'), part(' 2,000', 'r', 'C6', 'C7')],
+ [part('บอกว่า', 'w', 'C7', 'C8'), part(' "แม่รู้นะว่ายังไม่ได้งาน"', 'y', 'C8', 'C9')],
+ [part('"ไม่ต้องรีบ', 'y', 'C9', 'C10'), part(' กินข้าวให้อิ่มก่อน"', 'y', 'C10', 'Cend')],
+ [part('สามอาทิตย์ต่อมา', 'w', 'D0', 'D1')],
+ [part('ใบที่', 'w', 'D1', 'D2'), part(' 128', 'r', 'D2', 'Dx'), part(' ตอบกลับว่า', 'w', 'Dx', 'D3')],
+ [part('"เริ่มงานวันจันทร์"', 'y', 'D3', 'D4')],
+ [part('ใครยังหางานอยู่', 'w', 'D4', 'D5')],
+ [part('ไม่ต้องฝืนบอกที่บ้านว่าสบายดี', 'w', 'D5', 'D6')],
+ [part('เขาไม่ได้รอฟังว่าเราเก่ง', 'w', 'D6', 'D7')],
+ [part('แค่อยากรู้ว่า', 'w', 'D7', 'D8'), part('เราไหวไหม', 'r', 'D8', 'Dend')],
+]
+CUES = []
+for j, parts in enumerate(cues):
+    a = parts[0]['at']; last_end = max(p['at'] + p['d'] for p in parts)
+    nxt = cues[j + 1][0]['at'] if j + 1 < len(cues) else 99
+    CUES.append({'a': round(a, 3), 'b': round(min(nxt - 0.04, last_end + 0.5), 3), 'parts': parts})
+CUES[-1]['b'] = round(P['end'] - 0.05, 3)
+open('story5/vo.js', 'w').write('// generated by story5/place5.py\nconst VO = ' + json.dumps({'P': P, 'CUES': CUES}, ensure_ascii=False) + ';\n')
+json.dump(segs, open('story5/segments.json', 'w'), ensure_ascii=False, indent=1)

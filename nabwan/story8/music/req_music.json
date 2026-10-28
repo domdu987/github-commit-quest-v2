@@ -1,0 +1,139 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "romantic and warm",
+   "warm acoustic guitar",
+   "soft felt piano",
+   "light glockenspiel",
+   "gentle strings",
+   "high quality studio recording",
+   "F major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer"
+  ],
+  "sections": [
+   {
+    "section_name": "A question about love without words",
+    "duration_ms": 5780,
+    "lines": [],
+    "positive_local_styles": [
+     "soft curious felt piano",
+     "quiet and tender",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Three years and he never says it",
+    "duration_ms": 7370,
+    "lines": [],
+    "positive_local_styles": [
+     "light playful pizzicato and ukulele",
+     "warm and a little teasing"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "dramatic"
+    ]
+   },
+   {
+    "section_name": "Late night, a little hurt",
+    "duration_ms": 8990,
+    "lines": [],
+    "positive_local_styles": [
+     "quiet wistful piano",
+     "soft pad",
+     "a little lonely",
+     "slower"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud",
+     "happy"
+    ]
+   },
+   {
+    "section_name": "The noodle shop, one leaf at a time",
+    "duration_ms": 10430,
+    "lines": [],
+    "positive_local_styles": [
+     "tender acoustic guitar",
+     "glockenspiel sparkles",
+     "gentle realization slowly building"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Three hundred bowls",
+    "duration_ms": 5800,
+    "lines": [],
+    "positive_local_styles": [
+     "soft strings swell in",
+     "emotional and growing",
+     "piano arpeggios"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "harsh"
+    ]
+   },
+   {
+    "section_name": "Title",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "warm emotional peak",
+     "held chord",
+     "strings and piano together"
+    ],
+    "negative_local_styles": [
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Some say love with words",
+    "duration_ms": 7940,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and sincere",
+     "acoustic guitar, piano and strings",
+     "full but gentle",
+     "smiling"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "harsh"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3300,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle resolution",
+     "final chord ringing and sustained to the very end",
+     "no fade out before the end"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "abrupt ending"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

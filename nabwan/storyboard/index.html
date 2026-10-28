@@ -1,0 +1,942 @@
+<title>สตอรี่บอร์ด ชายผู้เดินทางไกล</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Kanit:wght@500;600;700&display=swap">
+<style>
+/* Layout: edit-bay storyboard. Header + act timeline, then one row per shot: phone frames on the left, shot sheet on the right. */
+:root{
+  --bg:#f3f2f7; --surface:#ffffff; --surface-2:#ebeaf3; --ink:#1a1e35; --muted:#5b5f78; --line:#d8d7e4;
+  --gold:#8f6612; --pink:#b8406a; --blue:#41598f; --red:#b8362e; --green:#2f7340; --violet:#4b3f86;
+  /* the video's own colors, sampled from frames; used for specimens, same in both themes */
+  --v-navy:#141a33; --v-navy-2:#212538; --v-cream:#e6e0d4; --v-cream-2:#cfc8be; --v-gold:#ae7f25; --v-pink:#dc6c89;
+  --v-grey:#9b9589; --v-blue:#52689c; --v-red:#cf483d; --v-green:#4f9359; --v-yellow:#e2b657; --v-purple:#493e81;
+  --v-white:#ffffff; --v-ink:#23242f; --v-dim:#a3a8c6; --v-lime:#c5ee45;
+  --f-display:"Kanit","IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Thai","Noto Sans Thai",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1328; --surface:#171c36; --surface-2:#1f2545; --ink:#ebe6dc; --muted:#a4a7c0; --line:#2b3156;
+  --gold:#dcab4b; --pink:#e57b9d; --blue:#8ea2dc; --red:#ec6a5c; --green:#72b982; --violet:#a395e6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1328; --surface:#171c36; --surface-2:#1f2545; --ink:#ebe6dc; --muted:#a4a7c0; --line:#2b3156;
+  --gold:#dcab4b; --pink:#e57b9d; --blue:#8ea2dc; --red:#ec6a5c; --green:#72b982; --violet:#a395e6; color-scheme:dark}
+
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.7 var(--f-body);margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:36px 72px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.4rem,7vw,4rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(1.45rem,3.4vw,2rem)}
+h3{font-size:1.18rem}
+p{margin:0}
+a{color:var(--blue)}
+a:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
+.eyebrow{font:500 .78rem/1.4 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.mono,.tc{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.prose{max-width:66ch}
+
+/* header */
+.top{display:grid;gap:14px;padding-bottom:28px}
+.lead{font-size:1.12rem;max-width:62ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 .76rem/1 var(--f-mono);padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);white-space:nowrap}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.92rem;padding-top:6px}
+nav.toc a{text-decoration:none;color:var(--muted)}
+nav.toc a:hover{color:var(--ink);text-decoration:underline}
+
+section{padding-block:44px;border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:8px;margin-bottom:24px}
+
+/* overview */
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px 28px}
+.key{border-top:3px solid var(--c,var(--ink));padding-top:12px;display:grid;gap:6px;min-width:0}
+.key b{font-family:var(--f-display);font-weight:600;font-size:1.05rem}
+
+/* act timeline */
+.actbar{display:flex;height:46px;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.actbar span{flex:var(--d) 1 0;display:grid;place-items:center;min-width:0;background:var(--c);color:var(--bg);font:600 .82rem/1 var(--f-mono);border-right:1px solid var(--bg)}
+.actbar span:last-child{border-right:0}
+.axis{display:flex;justify-content:space-between;font:500 .72rem/1 var(--f-mono);color:var(--muted);margin-top:6px}
+.acts{display:grid;gap:0;margin-top:22px}
+.act-row{display:grid;grid-template-columns:2.2em 7.6em minmax(0,1fr);gap:4px 14px;padding-block:12px;border-top:1px solid var(--line)}
+.act-row .n{width:26px;height:26px;border-radius:50%;background:var(--c);color:var(--bg);display:grid;place-items:center;font:600 .78rem/1 var(--f-mono)}
+.act-row .what{display:grid;gap:2px;min-width:0}
+.act-row .what b{font-family:var(--f-display);font-weight:600}
+@media (max-width:560px){.act-row{grid-template-columns:2.2em minmax(0,1fr)}.act-row .t{grid-column:2}.act-row .what{grid-column:2}}
+
+/* script panel (specimen of the video's captions) */
+.screen{background:var(--v-navy);color:var(--v-white);border-radius:14px;padding:18px clamp(14px,3vw,28px)}
+.script{display:grid;gap:2px}
+.line{display:grid;grid-template-columns:5.2em minmax(0,1fr) auto;gap:12px;align-items:center;padding-block:5px;border-bottom:1px solid rgba(255,255,255,.07)}
+.line:last-child{border-bottom:0}
+.line .tc{color:var(--v-dim);font-size:.8rem}
+.line .ref{font:500 .72rem/1 var(--f-mono);color:var(--v-dim)}
+.line.gap .cap{color:var(--v-dim);font-weight:500;font-style:italic;text-shadow:none}
+.cap{font:600 1.04rem/1.35 var(--f-display);color:var(--v-white);text-shadow:0 1px 3px rgba(0,0,0,.65)}
+.cap.y{color:var(--v-yellow)}
+.box{background:var(--v-red);color:var(--v-white);padding:1px 8px 2px;border-radius:5px;text-shadow:none;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.legend-caps{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px;font-size:.88rem;color:var(--v-dim)}
+.legend-caps .cap{font-size:.95rem}
+
+/* inline caption chips inside shot sheets */
+.c{display:inline-block;font:600 .95rem/1.35 var(--f-display);padding:2px 9px;border-radius:6px;background:var(--v-navy);color:var(--v-white);margin:2px 0}
+.c.y{color:var(--v-yellow)}
+.c.r{background:var(--v-red);color:var(--v-white)}
+.c .box{padding:0 6px}
+.arrow{color:var(--muted);padding:0 4px}
+
+/* shots */
+.shots{display:grid}
+.shot{display:grid;grid-template-columns:268px minmax(0,1fr);gap:22px 28px;padding-block:26px;border-top:1px solid var(--line)}
+.frames{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
+.frames figure{margin:0;width:130px}
+.frames img{display:block;width:100%;height:auto;aspect-ratio:9/16;border-radius:10px;border:1px solid var(--line);background:var(--v-navy)}
+.frames figcaption{font:500 .72rem/1.3 var(--f-mono);color:var(--muted);margin-top:5px;text-align:center}
+.shot-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:4px}
+.num{font:600 1.7rem/1 var(--f-display);color:var(--muted);font-variant-numeric:tabular-nums}
+.span{font:500 .82rem/1 var(--f-mono);font-variant-numeric:tabular-nums}
+.len{font:500 .76rem/1 var(--f-mono);color:var(--muted)}
+.act{display:inline-flex;align-items:center;gap:6px;font-size:.84rem;color:var(--muted)}
+.act::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.sheet dl{display:grid;gap:9px;margin:14px 0 0}
+.sheet dl>div{display:grid;grid-template-columns:6.6em minmax(0,1fr);gap:14px}
+.sheet dt{font:500 .76rem/1.9 var(--f-mono);color:var(--muted);letter-spacing:.02em}
+.sheet dd{margin:0;min-width:0}
+@media (max-width:760px){
+  .shot{grid-template-columns:minmax(0,1fr)}
+  .frames figure{width:calc((100% - 16px)/3);max-width:150px}
+}
+@media (max-width:520px){.sheet dl>div{grid-template-columns:minmax(0,1fr);gap:0}}
+
+/* style section */
+.sub-h{font-family:var(--f-display);font-weight:600;font-size:1.1rem;margin:30px 0 12px}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.sw{display:grid;gap:4px;min-width:0;font-size:.85rem}
+.sw i{display:block;height:54px;border-radius:9px;background:var(--s);border:1px solid var(--line)}
+.sw b{font-weight:600}
+.sw code{font:500 .74rem/1.2 var(--f-mono);color:var(--muted)}
+.specimens{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.spec{background:var(--v-navy);border-radius:14px;padding:18px;display:grid;gap:12px;align-content:start;min-width:0}
+.spec-label{font:500 .72rem/1.3 var(--f-mono);color:var(--v-dim);letter-spacing:.04em}
+/* mock: counter card */
+.vcard{background:var(--v-cream);color:var(--v-ink);border-radius:10px;border-left:5px solid var(--v-gold);padding:10px 14px 12px;box-shadow:0 6px 18px rgba(0,0,0,.35);max-width:240px}
+.vcard .lbl{font:500 .8rem/1.3 var(--f-display);color:#4d4a55;border-bottom:1px solid var(--v-cream-2);padding-bottom:5px}
+.vcard .big{font:700 2.7rem/1 var(--f-display);color:var(--v-gold);display:flex;align-items:baseline;gap:6px;padding-top:6px}
+.vcard .big small{font:600 1rem/1 var(--f-display);color:var(--v-ink)}
+.vcard.alarm{background:var(--v-red);border-left-color:var(--v-red);color:var(--v-white)}
+.vcard.fight{display:flex;align-items:center;gap:12px;max-width:220px}
+.vcard.fight svg{flex:0 0 auto}
+.vcard.fight .t{font:500 .8rem/1.2 var(--f-display)}
+.vcard.fight .t strong{font:700 1.4rem/1 var(--f-display);margin-right:6px}
+.vcard.alarm .bang{font:700 1.6rem/1 var(--f-display);margin-left:auto}
+.pillrow{display:flex;flex-wrap:wrap;gap:8px}
+.vpill{font:500 .8rem/1 var(--f-display);color:var(--v-white);background:#1d2238;border:1px solid #3a4060;border-radius:999px;padding:7px 12px}
+.vtag{font:600 .8rem/1 var(--f-display);border-radius:999px;padding:6px 12px}
+.vtag.g{background:var(--v-green);color:var(--v-white)}
+.vtag.y{background:var(--v-yellow);color:var(--v-ink);border:1.5px solid var(--v-ink)}
+.vtag.r{background:var(--v-red);color:var(--v-white)}
+.clock{display:flex;align-items:center;gap:10px;background:var(--v-cream);border-left:5px solid var(--v-gold);border-radius:10px;padding:8px 12px;max-width:220px;color:var(--v-ink)}
+.clock .moon{width:30px;height:30px;border-radius:50%;background:#2a3157;display:grid;place-items:center}
+.clock .tt{font:700 1.5rem/1 var(--f-display)}
+.clock .tl{font:500 .7rem/1.2 var(--f-display);color:#4d4a55}
+.slider{height:4px;border-radius:4px;background:linear-gradient(90deg,#2a3157,#d9a37a);margin-top:5px;position:relative}
+.slider::after{content:"";position:absolute;left:18%;top:-4px;width:11px;height:11px;border-radius:50%;background:var(--v-white);border:1px solid #555}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px 32px;padding-left:1.1em;margin:0}
+.rules li{padding-left:2px}
+
+/* cast */
+.cast{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px 30px}
+.who{display:grid;gap:6px;border-top:3px solid var(--c);padding-top:12px;min-width:0}
+.who b{font-family:var(--f-display);font-weight:600;font-size:1.08rem}
+.places{columns:2 300px;column-gap:32px;padding-left:1.1em;margin:0}
+.places li{break-inside:avoid;margin-bottom:8px}
+
+/* sound */
+.chart-wrap{overflow-x:auto}
+.chart{width:100%;min-width:520px;height:auto;display:block}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .lbl{fill:var(--muted);font:500 11px var(--f-mono)}
+.chart .music{fill:var(--violet);fill-opacity:.35;stroke:var(--violet);stroke-width:1.2}
+.chart .voice{fill:none;stroke:var(--gold);stroke-width:1.8}
+.chart .band{fill:var(--red);fill-opacity:.08}
+.chart .band2{fill:var(--green);fill-opacity:.09}
+.chart .note{fill:var(--ink);font:600 12px var(--f-body)}
+.chart-legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.85rem;color:var(--muted);margin-top:8px}
+.chart-legend i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px 36px}
+.facts{display:grid;gap:8px;margin:0;padding-left:1.1em}
+.table-wrap{overflow-x:auto;margin-top:6px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
+th,td{text-align:left;vertical-align:top;padding:9px 12px 9px 0;border-bottom:1px solid var(--line)}
+th{font:500 .74rem/1.4 var(--f-mono);color:var(--muted);letter-spacing:.03em}
+.lv{font:500 .72rem/1 var(--f-mono);padding:3px 8px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+
+/* techniques, research, remake */
+.tech{counter-reset:t;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px 34px;padding:0;margin:0;list-style:none}
+.tech li{display:grid;gap:4px;min-width:0}
+.tech li b{font-family:var(--f-display);font-weight:600}
+.refs{display:grid;gap:14px;padding:0;margin:0;list-style:none}
+.refs li{display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr);gap:4px 20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.refs li b{font-weight:600}
+@media (max-width:620px){.refs li{grid-template-columns:minmax(0,1fr)}}
+.check{columns:2 320px;column-gap:36px;padding-left:1.2em;margin:0}
+.check li{break-inside:avoid;margin-bottom:10px}
+footer{border-top:1px solid var(--line);padding-top:22px;font-size:.84rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">แตกช็อตวิดีโอ · Promptkub · Reels 9:16</p>
+  <h1>ชายผู้เดินทางไกล</h1>
+  <p class="lead">แอนิเมชัน 2D motion graphic ยาว 70 วินาที เล่าเรื่องคู่รักทางไกลกรุงเทพฯ–เชียงใหม่ 700 กม. สลับกับการ์ดงานวิจัย แล้วหักมุมว่าปัญหาจริงไม่ใช่ระยะทาง แต่คือการที่ทั้งคู่ไม่เคยทะเลาะกันเลย</p>
+  <div class="chips">
+    <span class="chip">9:16 · 720×1280 · 30 fps</span>
+    <span class="chip">1:10</span>
+    <span class="chip">25 ช็อต (23 เล่าเรื่อง + การ์ดจบ + โลโก้)</span>
+    <span class="chip">ช็อตเฉลี่ย 2.7 วิ</span>
+    <span class="chip">พากย์ไทย เสียงผู้หญิง</span>
+    <span class="chip">ซับฝังในภาพ 40 ชุด</span>
+    <span class="chip">BGM ~85 BPM</span>
+  </div>
+  <nav class="toc" aria-label="สารบัญ">
+    <a href="#overview">ภาพรวม</a><a href="#structure">โครงเรื่อง</a><a href="#script">บทพากย์</a><a href="#shots">สตอรี่บอร์ด</a><a href="#style">ภาษาภาพ</a><a href="#cast">ตัวละครและฉาก</a><a href="#sound">เสียง</a><a href="#techniques">เทคนิคเล่าเรื่อง</a><a href="#research">งานวิจัยในคลิป</a><a href="#remake">ถ้าจะทำใหม่</a>
+  </nav>
+</header>
+
+<section id="overview">
+  <div class="sec-head"><p class="eyebrow">ภาพรวม</p><h2>สามอย่างที่ทำให้คลิปนี้เวิร์ก</h2></div>
+  <div class="keys">
+    <div class="key" style="--c:var(--gold)"><b>ทุกช็อตมีตัวเลขหนึ่งตัวเป็นพระเอก</b><p>700 กม. · 20:30 · 10 ชม. · 22 วัน · 52 วัน · 48 ชม. · 78 เที่ยว · 0 ครั้ง · 1 ใน 3 · 0.5 ม. ตัวเลขวิ่งขึ้นลงบนการ์ดครีมขอบทอง และเรื่องเดินไปตามตัวเลขเหล่านี้</p></div>
+    <div class="key" style="--c:var(--red)"><b>วางปมไว้ตั้งแต่ต้น แล้วพลิกตอนท้าย</b><p>การ์ด "ทะเลาะกัน 0 ครั้ง" โผล่มาเหมือนเป็นเรื่องดี ค้างอยู่ 3 ช็อต แล้วกลายเป็นสีแดงตอน 0:47 ส่วนแอร์ 24° กับ 27° ที่อยู่ในฉากหลังกลายเป็นศึกรีโมตคืนที่ 7</p></div>
+    <div class="key" style="--c:var(--blue)"><b>ภาพตัดตามเสียงพากย์ทุกประโยค</b><p>ทุกคัตลงก่อนเสียงพากย์ประโยคใหม่ 1–2 เฟรม ซับเปลี่ยนพร้อมเสียง ช็อตการ์ดข้อมูลใช้กล้องนิ่ง ส่วนช็อตที่มีตัวละครค่อยๆ push-in</p></div>
+  </div>
+</section>
+
+<section id="structure">
+  <div class="sec-head"><p class="eyebrow">โครงเรื่อง</p><h2>10 ช่วง ใน 70 วินาที</h2><p class="muted prose">ความกว้างของแต่ละช่องเท่ากับความยาวจริง ช่วงชีวิตทางไกลยาวที่สุด ส่วนหักมุมยาวเป็นอันดับสอง</p></div>
+  <div class="actbar" role="img" aria-label="แถบเวลาแบ่ง 10 ช่วงของเรื่อง">
+    <span style="--d:5.1;--c:var(--red)">1</span><span style="--d:4.4;--c:var(--green)">2</span><span style="--d:2.7;--c:var(--pink)">3</span><span style="--d:19.5;--c:var(--blue)">4</span><span style="--d:6.4;--c:var(--violet)">5</span><span style="--d:6.9;--c:var(--green)">6</span><span style="--d:11.8;--c:var(--red)">7</span><span style="--d:5.9;--c:var(--gold)">8</span><span style="--d:4;--c:var(--gold)">9</span><span style="--d:3.3;--c:var(--muted)">10</span>
+  </div>
+  <div class="axis"><span>0:00</span><span>0:10</span><span>0:20</span><span>0:30</span><span>0:40</span><span>0:50</span><span>1:00</span><span>1:10</span></div>
+  <div class="acts">
+    <div class="act-row" style="--c:var(--red)"><span class="n">1</span><span class="t tc">0:00–0:05</span><div class="what"><b>Hook</b><span>ประโยคเงื่อนไข + ตัวเลข + คำสั่งที่ขัดความเชื่อ "ถ้าคุณรักคนที่อยู่ไกล 700 กิโล อย่าเพิ่งโทษระยะทาง"</span></div></div>
+    <div class="act-row" style="--c:var(--green)"><span class="n">2</span><span class="t tc">0:05–0:09</span><div class="what"><b>หลักฐาน</b><span>งานวิจัยบอกว่าคู่ทางไกลรักกันไม่น้อยกว่าคู่ที่อยู่ใกล้ ให้ความหวังก่อน</span></div></div>
+    <div class="act-row" style="--c:var(--pink)"><span class="n">3</span><span class="t tc">0:09–0:12</span><div class="what"><b>ปมเปิด</b><span>"แต่ระยะทางซ่อนเรื่องหนึ่งไว้" พร้อมไอคอน ? ค้างคำถามไว้จนถึงนาทีที่ 47</span></div></div>
+    <div class="act-row" style="--c:var(--blue)"><span class="n">4</span><span class="t tc">0:12–0:31</span><div class="what"><b>ชีวิตทางไกล</b><span>ทุกศุกร์เว้นศุกร์ → 22 วันบนรถ → 52 วันกับเธอ → วิดีโอคอลจนหลับ → คุยน้อยแต่ลึก → มองอีกฝ่ายดีกว่าความจริง (สลับฉากชีวิตกับการ์ดข้อมูล)</span></div></div>
+    <div class="act-row" style="--c:var(--violet)"><span class="n">5</span><span class="t tc">0:31–0:38</span><div class="what"><b>ต้นเหตุ</b><span>สองวันที่ได้เจอไม่มีใครอยากเสียไปกับการทะเลาะ ปลูกการ์ด "ทะเลาะกัน 0 ครั้ง" แล้วสะสม 78 เที่ยวใน 3 ปี</span></div></div>
+    <div class="act-row" style="--c:var(--green)"><span class="n">6</span><span class="t tc">0:38–0:45</span><div class="what"><b>ระยะทางเป็นศูนย์</b><span>ย้ายไปเชียงใหม่ แผนที่ 700 → 0 เช็กลิสต์ติ๊กเขียว 3 ข้อ ให้คนดูคิดว่าจบสวย แล้วข้อ 4 เป็น "!"</span></div></div>
+    <div class="act-row" style="--c:var(--red)"><span class="n">7</span><span class="t tc">0:45–0:57</span><div class="what"><b>หักมุม</b><span>"3 ปีคุณสองคนไม่เคยทะเลาะ" การ์ดพลิกเป็นแดง งานวิจัย 1 ใน 3 เลิกภายใน 3 เดือน แล้วคืนที่ 7 แค่รีโมตแอร์ก็กลายเป็นเรื่องใหญ่</span></div></div>
+    <div class="act-row" style="--c:var(--gold)"><span class="n">8</span><span class="t tc">0:57–1:03</span><div class="what"><b>ไคลแม็กซ์และคลี่คลาย</b><span>"700 กิโลคุณมาถึงแล้ว ที่ไกลที่สุดคือครึ่งเมตรนี้" แล้วภาพเล่าต่อเองโดยไม่มีพากย์: หันกลับมา แอร์ 26° จับมือ</span></div></div>
+    <div class="act-row" style="--c:var(--gold)"><span class="n">9</span><span class="t tc">1:03–1:07</span><div class="what"><b>ข้อคิดและ CTA</b><span>การ์ดจบ ชื่อเรื่อง บทเรียน 3 บรรทัด และ "ส่งให้คนที่อยู่ไกลคุณดู"</span></div></div>
+    <div class="act-row" style="--c:var(--muted)"><span class="n">10</span><span class="t tc">1:07–1:10</span><div class="what"><b>โลโก้</b><span>Promptkub · ตัวอย่างงาน AI · @promptkub</span></div></div>
+  </div>
+</section>
+
+<section id="script">
+  <div class="sec-head"><p class="eyebrow">บทพากย์เต็ม</p><h2>40 ชุดซับ ตรงกับเสียงพากย์ทุกคำ</h2><p class="muted prose">ถอดจากเสียงด้วย Whisper แล้วเทียบกับซับในภาพ เวลาคือจังหวะที่ซับชุดนั้นขึ้นจอ ซับแสดงสีตามจริงในคลิป</p></div>
+  <div class="screen">
+    <div class="script">
+      <div class="line"><span class="tc">00:00.3</span><span class="cap">ถ้าคุณรักคนที่อยู่</span><span class="ref">01</span></div>
+      <div class="line"><span class="tc">00:01.5</span><span class="cap">ไกล 700 กิโล</span><span class="ref">01</span></div>
+      <div class="line"><span class="tc">00:03.5</span><span class="cap">อย่าเพิ่ง <span class="box">โทษระยะทาง</span></span><span class="ref">02</span></div>
+      <div class="line"><span class="tc">00:05.1</span><span class="cap">งานวิจัยพบ คู่ทางไกล</span><span class="ref">03</span></div>
+      <div class="line"><span class="tc">00:07.3</span><span class="cap y">รักกันไม่น้อยกว่า</span><span class="ref">04</span></div>
+      <div class="line"><span class="tc">00:08.4</span><span class="cap">คู่ที่อยู่ใกล้</span><span class="ref">04</span></div>
+      <div class="line"><span class="tc">00:09.5</span><span class="cap">แต่ระยะทาง</span><span class="ref">05</span></div>
+      <div class="line"><span class="tc">00:10.7</span><span class="cap"><span class="box">ซ่อนเรื่องหนึ่งไว้</span></span><span class="ref">05</span></div>
+      <div class="line"><span class="tc">00:12.3</span><span class="cap y">ทุกศุกร์เว้นศุกร์</span><span class="ref">06</span></div>
+      <div class="line"><span class="tc">00:13.5</span><span class="cap">คุณนั่งรถทัวร์ข้ามคืน</span><span class="ref">07</span></div>
+      <div class="line"><span class="tc">00:15.1</span><span class="cap">10 ชั่วโมง</span><span class="ref">07</span></div>
+      <div class="line"><span class="tc">00:16.1</span><span class="cap y">ปีหนึ่ง อยู่บนรถ 22 วัน</span><span class="ref">08</span></div>
+      <div class="line"><span class="tc">00:18.8</span><span class="cap y">อยู่กับเธอ 52 วัน</span><span class="ref">09</span></div>
+      <div class="line"><span class="tc">00:20.9</span><span class="cap">คืนที่ไม่ได้เจอ</span><span class="ref">10</span></div>
+      <div class="line"><span class="tc">00:22.1</span><span class="cap y">วิดีโอคอลจนหลับคาสาย</span><span class="ref">11</span></div>
+      <div class="line"><span class="tc">00:24.5</span><span class="cap">คู่ทางไกล</span><span class="ref">12</span></div>
+      <div class="line"><span class="tc">00:25.8</span><span class="cap y">คุยน้อยครั้งกว่า</span><span class="ref">12</span></div>
+      <div class="line"><span class="tc">00:27.2</span><span class="cap y">แต่เล่าเรื่องในใจมากกว่า</span><span class="ref">12</span></div>
+      <div class="line"><span class="tc">00:29.2</span><span class="cap">และมองอีกฝ่าย</span><span class="ref">13</span></div>
+      <div class="line"><span class="tc">00:30.4</span><span class="cap"><span class="box">ดีกว่าความจริง</span></span><span class="ref">13</span></div>
+      <div class="line"><span class="tc">00:31.7</span><span class="cap y">สองวันที่ได้เจอ</span><span class="ref">14</span></div>
+      <div class="line"><span class="tc">00:33.3</span><span class="cap">ไม่มีใครอยากเสียไป</span><span class="ref">14</span></div>
+      <div class="line"><span class="tc">00:34.5</span><span class="cap">กับการทะเลาะ</span><span class="ref">14</span></div>
+      <div class="line"><span class="tc">00:35.7</span><span class="cap y">3 ปี 78 เที่ยว</span><span class="ref">15</span></div>
+      <div class="line"><span class="tc">00:38.2</span><span class="cap">คุณย้ายไปอยู่เชียงใหม่</span><span class="ref">16</span></div>
+      <div class="line"><span class="tc">00:39.7</span><span class="cap">ระยะทาง</span><span class="ref">17</span></div>
+      <div class="line"><span class="tc">00:40.8</span><span class="cap y">เหลือศูนย์</span><span class="ref">17</span></div>
+      <div class="line"><span class="tc">00:42.0</span><span class="cap">ทุกอย่างถูกหมด</span><span class="ref">18</span></div>
+      <div class="line"><span class="tc">00:43.6</span><span class="cap"><span class="box">ยกเว้นเรื่องเดียว</span></span><span class="ref">18</span></div>
+      <div class="line"><span class="tc">00:45.1</span><span class="cap">3 ปี คุณสองคน</span><span class="ref">19</span></div>
+      <div class="line"><span class="tc">00:46.9</span><span class="cap"><span class="box">ไม่เคยทะเลาะ</span></span><span class="ref">19</span></div>
+      <div class="line"><span class="tc">00:47.9</span><span class="cap">คู่ทางไกล</span><span class="ref">20</span></div>
+      <div class="line"><span class="tc">00:49.0</span><span class="cap">ที่ย้ายมาอยู่ใกล้กัน</span><span class="ref">20</span></div>
+      <div class="line"><span class="tc">00:50.4</span><span class="cap"><span class="box">1 ใน 3 เลิกภายใน 3 เดือน</span></span><span class="ref">20</span></div>
+      <div class="line"><span class="tc">00:53.3</span><span class="cap y">คืนที่ 7</span><span class="ref">21</span></div>
+      <div class="line"><span class="tc">00:54.2</span><span class="cap">แค่รีโมตแอร์</span><span class="ref">21</span></div>
+      <div class="line"><span class="tc">00:55.4</span><span class="cap"><span class="box">ก็กลายเป็นเรื่องใหญ่</span></span><span class="ref">22</span></div>
+      <div class="line"><span class="tc">00:56.9</span><span class="cap">700 กิโล คุณมาถึงแล้ว</span><span class="ref">23</span></div>
+      <div class="line"><span class="tc">00:59.5</span><span class="cap y">ที่ไกลที่สุด</span><span class="ref">23</span></div>
+      <div class="line"><span class="tc">01:00.7</span><span class="cap"><span class="box">คือครึ่งเมตรนี้</span></span><span class="ref">23</span></div>
+      <div class="line gap"><span class="tc">01:01.8</span><span class="cap">พากย์จบ ที่เหลือเป็นภาพ ดนตรี และเสียงแมว</span><span class="ref">23–25</span></div>
+    </div>
+    <div class="legend-caps">
+      <span><span class="cap">ขาว</span> เล่าเรื่อง · 20 ชุด</span>
+      <span><span class="cap y">เหลือง</span> ตัวเลขและความรู้สึก · 12 ชุด</span>
+      <span><span class="cap"><span class="box">กล่องแดง</span></span> punchline / หักมุม · 8 ชุด</span>
+    </div>
+  </div>
+</section>
+
+<section id="shots">
+  <div class="sec-head"><p class="eyebrow">สตอรี่บอร์ด</p><h2>ทีละช็อต</h2><p class="muted prose">เปอร์เซ็นต์ push-in วัดจากการจับคู่จุดในภาพระหว่างเฟรมแรกกับเฟรมสุดท้ายของช็อต เป็นค่าประมาณ ซับที่ยกมาแสดงด้วยสีจริง</p></div>
+  <div class="shots">
+
+  <article class="shot" id="s01">
+    <div class="frames">
+      <figure><img src="thumbs/th_000.6.jpg" width="270" height="480" alt="สถานีขนส่งกลางคืน ชายสะพายเป้ยืนดูมือถือหน้ารถทัวร์สีม่วง"><figcaption>00:00.6</figcaption></figure>
+      <figure><img src="thumbs/th_002.6.jpg" width="270" height="480" alt="การ์ดระยะทาง 700 กม. เด้งขึ้นมุมขวาบน"><figcaption>00:02.6</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">01</span><span class="span">00:00.0 – 00:03.4</span><span class="len">3.4 วิ</span><span class="act" style="--c:var(--red)">Hook</span></div>
+      <h3>ชานชาลา 34 คืนวันศุกร์</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Wide เห็นตัวละครเต็มตัว ระดับสายตา มองด้านข้าง ตัวละครยืนที่เส้น 1/3 ซ้าย · slow push-in ~9% เข้าหาตัวละคร</dd></div>
+        <div><dt>ภาพ</dt><dd>สถานีขนส่งกลางคืน รถทัวร์สองชั้นสีม่วงคาดลายทองกับชมพู ป้ายหน้ารถ "กรุงเทพฯ - เชียงใหม่" ด้านหลังเป็นรถช่อง 32–33 สีจางๆ พระเอกเสื้อเชิ้ตฟ้า สะพายเป้ดำ ยืนก้มดูมือถือ มีผู้โดยสารเงาดำยืนที่ประตูรถ</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ดนาฬิกา "ศุกร์ 20:30" (ไอคอนพระจันทร์ + สไลเดอร์กลางวัน/กลางคืน) มุมซ้ายบน · จอ LED "20:30 เชียงใหม่ / กำลังขึ้นรถ" · ป้ายฟ้า "ชานชาลา 34" · 00:01.5 การ์ด "ระยะทาง" เด้งทับมุมขวาบน ตัวเลขทองวิ่ง 0 → 700 กม. ในราว 1 วิ</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">ถ้าคุณรักคนที่อยู่</span><span class="arrow">→</span><span class="c">ไกล 700 กิโล</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน เข้าแผนที่</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s02">
+    <div class="frames">
+      <figure><img src="thumbs/th_004.6.jpg" width="270" height="480" alt="แผนที่ประเทศไทย เส้นทางกรุงเทพฯ ถึงเชียงใหม่เป็นสีแดง"><figcaption>00:04.6</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">02</span><span class="span">00:03.4 – 00:05.1</span><span class="len">1.7 วิ</span><span class="act" style="--c:var(--red)">Hook</span></div>
+      <h3>เส้นทาง 700 กม.</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กราฟิกแผนที่มุมบน (top-down) · push-in ~8%</dd></div>
+        <div><dt>ภาพ</dt><dd>แผนที่ประเทศไทยสีกรมท่าขอบเรือง หมุดกรุงเทพฯ สีฟ้า หมุดเชียงใหม่สีชมพูมีแสงฟุ้ง ไอคอนรถบัสสีขาววิ่งจากกรุงเทพฯ ขึ้นเหนือ ลากเส้นเหลืองทึบตามหลัง ด้านหน้าเป็นเส้นประ</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด "ระยะทาง 700 กม." ค้างตำแหน่งเดิมจากช็อตก่อน ทำให้ UI ต่อเนื่องข้ามคัต · ราว 00:04.0 เส้นทางทั้งเส้นและเลข 700 เปลี่ยนเป็นแดง หมุดเชียงใหม่กะพริบเรือง</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">อย่าเพิ่ง <span class="box">โทษระยะทาง</span></span> <span class="muted">ซับเดียวที่ผสมขาวกับกล่องแดง</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s03">
+    <div class="frames">
+      <figure><img src="thumbs/th_006.5.jpg" width="270" height="480" alt="จอแยกบนล่าง ชายกับหญิงนั่งโซฟาคนละห้อง มีหัวใจและป้าย 700 กม. ตรงกลาง"><figcaption>00:06.5</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">03</span><span class="span">00:05.1 – 00:07.2</span><span class="len">2.1 วิ</span><span class="act" style="--c:var(--green)">หลักฐาน</span></div>
+      <h3>จอแยกสองเมือง</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Split screen บน/ล่าง แต่ละช่องเป็น wide ด้านข้าง · push-in ~5% ทั้งจอ</dd></div>
+        <div><dt>ภาพ</dt><dd>บน: พระเอกนั่งโซฟาฟ้าในห้องเขา พิมพ์มือถือ · ล่าง: นางเอกนั่งโซฟาในห้องเธอ พิมพ์มือถือ แมวส้มนั่งข้างๆ</dd></div>
+        <div><dt>Icon / UI</dt><dd>เส้นประสีขาวแบ่งจอ + วงกลมดำมีหัวใจชมพู + ป้าย "700 กม." · 00:05.5 ป้ายแคปซูลดำ "งานวิจัย 1,142 คน" เด้งที่ขอบบน</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">งานวิจัยพบ คู่ทางไกล</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชนไปห้องที่ทั้งคู่นั่งด้วยกัน แล้วการ์ดกราฟเด้งขึ้นพร้อมเบลอฉากหลังภายในราว 0.15 วิ</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s04">
+    <div class="frames">
+      <figure><img src="thumbs/th_009.0.jpg" width="270" height="480" alt="การ์ดกราฟแท่งคู่ทางไกลกับคู่อยู่ใกล้ พร้อมป้ายไม่ต่างกัน"><figcaption>00:09.0</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">04</span><span class="span">00:07.2 – 00:09.5</span><span class="len">2.2 วิ</span><span class="act" style="--c:var(--green)">หลักฐาน</span></div>
+      <h3>กราฟ: ไม่ต่างกัน</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กล้องนิ่ง · ฉากหลังเบลอแบบชัดตื้น (ห้องนั่งเล่น ทั้งคู่นั่งหันหน้าเข้าหากัน) ให้การ์ดเป็นจุดเดียวที่ชัด</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ดกราฟแท่งแนวนอน "คู่ทางไกล vs คู่ที่อยู่ใกล้" legend เทา = อยู่ใกล้ ชมพู = ทางไกล · 3 หมวด: ความใกล้ชิด / ความพอใจในความสัมพันธ์ / ความผูกพัน · แท่งยืดออกทีละคู่ ยาวพอๆ กัน · อ้างอิงมุมล่าง "Dargie et al. 2015 · 1,142 คน" · 00:08.5 ป้ายเขียว "ไม่ต่างกัน" เด้ง</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c y">รักกันไม่น้อยกว่า</span><span class="arrow">→</span><span class="c">คู่ที่อยู่ใกล้</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s05">
+    <div class="frames">
+      <figure><img src="thumbs/th_011.0.jpg" width="270" height="480" alt="รถทัวร์วิ่งบนทางยกระดับกลางคืน มีไอคอนเครื่องหมายคำถามลอยเหนือหลังคา"><figcaption>00:11.0</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">05</span><span class="span">00:09.5 – 00:12.2</span><span class="len">2.7 วิ</span><span class="act" style="--c:var(--pink)">ปมเปิด</span></div>
+      <h3>รถทัวร์กลางคืนกับเครื่องหมายคำถาม</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Tracking ด้านข้าง วิ่งตามรถ รถนิ่งในเฟรมขณะที่เสาไฟเลื่อนผ่าน (parallax) · push-in เล็กน้อย</dd></div>
+        <div><dt>ภาพ</dt><dd>รถทัวร์ม่วงวิ่งบนทางยกระดับ เสาไฟแสงส้มฟุ้ง ราวกั้นสีขาว แสงไฟสะท้อนน้ำด้านล่าง ฟ้ามีดาว</dd></div>
+        <div><dt>Icon / UI</dt><dd>00:10.5 ไอคอน "?" สีแดงในวงกลมขาว มีวงแหวนเทากระเพื่อม ลอยเหนือหลังคารถ</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">แต่ระยะทาง</span><span class="arrow">→</span><span class="c r">ซ่อนเรื่องหนึ่งไว้</span></dd></div>
+        <div><dt>เสียง</dt><dd>มีเสียงติ๊งเบาๆ ตอนเครื่องหมายคำถามเด้ง</dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s06">
+    <div class="frames">
+      <figure><img src="thumbs/th_013.2.jpg" width="270" height="480" alt="การ์ดปฏิทินตุลาคม วงกลมรอบวันศุกร์ที่ 2 16 และ 30"><figcaption>00:13.2</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">06</span><span class="span">00:12.2 – 00:13.4</span><span class="len">1.2 วิ</span><span class="act" style="--c:var(--blue)">ชีวิตทางไกล</span></div>
+      <h3>ปฏิทินทุกศุกร์เว้นศุกร์</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กล้องนิ่ง การ์ดกินครึ่งบนของจอ ฉากหลังรถบัสเบลอ · ช็อตสั้นที่สุดของเรื่อง</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ดปฏิทิน "ตารางเดินทาง · ตุลาคม" หัวคอลัมน์ จ อ พ พฤ ศ ส อา โดย "ศ" เป็นสีแดง · วงกลมชมพูวาดล้อมวันที่ 2 → 16 → 30 ทีละวง มีแท็บม่วงเล็กติดบนแต่ละวง</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c y">ทุกศุกร์เว้นศุกร์</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s07">
+    <div class="frames">
+      <figure><img src="thumbs/th_013.8.jpg" width="270" height="480" alt="รถทัวร์กลางคืน การ์ดนาฬิกา 20:30"><figcaption>00:13.8</figcaption></figure>
+      <figure><img src="thumbs/th_015.8.jpg" width="270" height="480" alt="รถทัวร์ใกล้ขึ้น การ์ดนาฬิกา 06:30 และป้ายข้ามคืน 10 ชม."><figcaption>00:15.8</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">07</span><span class="span">00:13.4 – 00:16.0</span><span class="len">2.6 วิ</span><span class="act" style="--c:var(--blue)">ชีวิตทางไกล</span></div>
+      <h3>ข้ามคืน 10 ชั่วโมง</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>ด้านข้างรถบัส · push-in ~20% แรงที่สุดในเรื่อง เข้าหาหน้าต่างที่เห็นเงาพระเอกนั่งอยู่</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ดนาฬิกา "สองทุ่มครึ่ง 20:30" ไอคอนพระจันทร์ → ราว 00:15.2 เลขหมุนเป็น "หกโมงครึ่ง 06:30" ไอคอนเปลี่ยนเป็นพระอาทิตย์ หัวสไลเดอร์วิ่งไปขวาสุด · ป้าย "ข้ามคืน 10 ชม." เด้งข้างการ์ด</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">คุณนั่งรถทัวร์ข้ามคืน</span><span class="arrow">→</span><span class="c">10 ชั่วโมง</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s08">
+    <div class="frames">
+      <figure><img src="thumbs/th_018.4.jpg" width="270" height="480" alt="การ์ดตาราง 365 ช่อง ช่องน้ำเงิน 22 ช่อง ฉากหลังชายนั่งเบาะรถ"><figcaption>00:18.4</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">08</span><span class="span">00:16.0 – 00:18.7</span><span class="len">2.7 วิ</span><span class="act" style="--c:var(--blue)">ชีวิตทางไกล</span></div>
+      <h3>1 ปี = 365 วัน</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กล้องนิ่ง · ฉากหลังในรถ พระเอกนั่งเบาะรถทัวร์สีน้ำเงิน ม่านชมพู (เบลอ)</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด waffle chart 365 ช่อง ช่องน้ำเงินติดทีละช่องเรียงเป็นแนวเฉียง (เดือนละ 2 ครั้ง) · ตัวนับ "บนรถ 0 → 22 วัน" สีน้ำเงิน · "กับเธอ 0 วัน" สีชมพูค้างที่ 0 เพื่อส่งต่อช็อตถัดไป</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c y">ปีหนึ่ง อยู่บนรถ 22 วัน</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s09">
+    <div class="frames">
+      <figure><img src="thumbs/th_020.2.jpg" width="270" height="480" alt="ห้องนั่งเล่นกลางวัน ชายสะพายเป้ หญิงยืน แมวขู่ ฟ่อ การ์ด 52 วัน"><figcaption>00:20.2</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">09</span><span class="span">00:18.7 – 00:20.8</span><span class="len">2.1 วิ</span><span class="act" style="--c:var(--blue)">ชีวิตทางไกล</span></div>
+      <h3>แมวขู่ "ฟ่อ!"</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Wide ห้องเธอตอนกลางวัน · push-in ~6%</dd></div>
+        <div><dt>ภาพ</dt><dd>พระเอกสะพายเป้เดินเข้าจากซ้าย นางเอกยืนรอทางขวา แมวส้มเดินตัดกลางแล้วหันไปขู่พระเอก แมวจำเขาไม่ได้ เป็นมุกเบาๆ ที่บอกว่าเขามาน้อยแค่ไหน</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด "1 ปี ได้อยู่กับเธอ 0 → 52 วัน" · ฟองคำพูด "ฟ่อ!" จากแมว · แอร์บนผนังขึ้น 27° (ปมที่จะใช้ตอนท้าย)</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c y">อยู่กับเธอ 52 วัน</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s10">
+    <div class="frames">
+      <figure><img src="thumbs/th_021.5.jpg" width="270" height="480" alt="ห้องกลางคืนโทนม่วง ชายนั่งโซฟาคนเดียว การ์ดนาฬิกา 23:40"><figcaption>00:21.5</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">10</span><span class="span">00:20.8 – 00:22.1</span><span class="len">1.2 วิ</span><span class="act" style="--c:var(--blue)">ชีวิตทางไกล</span></div>
+      <h3>คืนที่ไม่ได้เจอ</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Wide ห้องเขาตอนกลางคืน โทนม่วง · push-in ~5%</dd></div>
+        <div><dt>ภาพ</dt><dd>พระเอกนั่งคนเดียวบนโซฟา ก้มดูมือถือ โคมไฟตั้งพื้นแสงส้ม หน้าต่างเห็นไฟเมือง</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ดนาฬิกา "ห้าทุ่ม 40 นาที 23:40" ไอคอนพระจันทร์ · แอร์ห้องเขาขึ้น 24°</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">คืนที่ไม่ได้เจอ</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชนเข้า POV จอมือถือ</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s11">
+    <div class="frames">
+      <figure><img src="thumbs/th_023.8.jpg" width="270" height="480" alt="หน้าจอวิดีโอคอล หญิงหลับตา มีไอคอน Z z"><figcaption>00:23.8</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">11</span><span class="span">00:22.1 – 00:24.4</span><span class="len">2.4 วิ</span><span class="act" style="--c:var(--blue)">ชีวิตทางไกล</span></div>
+      <h3>วิดีโอคอลจนหลับ</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>POV / insert จอมือถือเต็มเฟรม หน้าเธอ close-up · push-in ~6%</dd></div>
+        <div><dt>Icon / UI</dt><dd>หน้าจอคอล "เธอ ♥" ตัวจับเวลาวิ่งเร็ว 01:58:10 → 03:12:45 · ภาพตัวเอง (PiP) มุมขวาบน · ปุ่มวางสายแดง · เธอค่อยๆ หลับตา · ไอคอน "Z z" ลอยขึ้น</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c y">วิดีโอคอลจนหลับคาสาย</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s12">
+    <div class="frames">
+      <figure><img src="thumbs/th_028.6.jpg" width="270" height="480" alt="การ์ดกราฟคุยกันกี่ครั้ง คุยนานแค่ไหน เล่าเรื่องในใจ พร้อมป้ายมากกว่า"><figcaption>00:28.6</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">12</span><span class="span">00:24.4 – 00:29.1</span><span class="len">4.7 วิ</span><span class="act" style="--c:var(--blue)">ชีวิตทางไกล · ข้อมูล</span></div>
+      <h3>คุยน้อยครั้ง แต่ลึกกว่า</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กล้องนิ่ง · ฉากหลังห้องเขาตอนกลางคืน (เบลอ)</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ดกราฟ "คู่ทางไกล vs คู่ที่อยู่ใกล้" 3 หมวด: คุยกันกี่ครั้งต่อวัน (เทาชนะ) · คุยนานแค่ไหนต่อครั้ง (ชมพูชนะ) · เล่าเรื่องในใจ (ชมพูชนะ) · แท่งที่ชนะมีป้ายเหลือง "มากกว่า" เด้งตามจังหวะพากย์ · อ้างอิง "Jiang &amp; Hancock 2013 · Journal of Communication"</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">คู่ทางไกล</span><span class="arrow">→</span><span class="c y">คุยน้อยครั้งกว่า</span><span class="arrow">→</span><span class="c y">แต่เล่าเรื่องในใจมากกว่า</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s13">
+    <div class="frames">
+      <figure><img src="thumbs/th_031.0.jpg" width="270" height="480" alt="การ์ดเปรียบเทียบภาพในใจที่มีประกาย กับของจริงตอนตีสองที่หน้าโทรม"><figcaption>00:31.0</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">13</span><span class="span">00:29.1 – 00:31.7</span><span class="len">2.5 วิ</span><span class="act" style="--c:var(--blue)">ชีวิตทางไกล · ข้อมูล</span></div>
+      <h3>ภาพในใจ vs ของจริง</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กล้องนิ่ง · ฉากหลังนางเอกนั่งโซฟาตอนกลางคืน (เบลอ)</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ดเปรียบเทียบ 2 ช่อง · "ภาพในใจ" ป้ายชมพู: พระเอกยิ้มหล่อ มีประกายดาวเหลืองรอบตัว พื้นชมพูอ่อน · 00:30.4 ช่อง "ของจริง" ป้ายดำเด้งตาม: นาฬิกา 02:14 พระเอกหน้าโทรมนั่งโต๊ะรก มีกระดาษและแก้ว · อ้างอิง "Jiang &amp; Hancock 2013 · Stafford &amp; Reske 1990"</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">และมองอีกฝ่าย</span><span class="arrow">→</span><span class="c r">ดีกว่าความจริง</span></dd></div>
+        <div><dt>เสียง</dt><dd>เสียงกรุ๊งกริ๊งแบบประกายดาว (sparkle chime) ตอนการ์ดภาพในใจขึ้น</dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s14">
+    <div class="frames">
+      <figure><img src="thumbs/th_032.4.jpg" width="270" height="480" alt="ห้องกลางวัน คู่รักนั่งโซฟา การ์ดเวลาที่ได้อยู่ด้วยกันนับถอยหลัง"><figcaption>00:32.4</figcaption></figure>
+      <figure><img src="thumbs/th_034.0.jpg" width="270" height="480" alt="เมฆฝนสายฟ้าเหนือหัวคู่รักที่ยังยิ้มอยู่"><figcaption>00:34.0</figcaption></figure>
+      <figure><img src="thumbs/th_035.2.jpg" width="270" height="480" alt="การ์ดทะเลาะกัน 0 ครั้ง มุมซ้ายบน"><figcaption>00:35.2</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">14</span><span class="span">00:31.7 – 00:35.6</span><span class="len">3.9 วิ</span><span class="act" style="--c:var(--violet)">ต้นเหตุ</span></div>
+      <h3>สองวันที่ไม่อยากเสียไป</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Wide ห้องเธอกลางวัน · push-in ~5%</dd></div>
+        <div><dt>ภาพ</dt><dd>ทั้งคู่นั่งหันหน้าเข้าหากันบนโซฟา ยิ้มให้กัน แมวนั่งบนพรมกลม มีกระดาษยับตกบนพื้น · ราว 00:33.5 เมฆฝนสีเทามีสายฟ้าซิกแซกสีเหลืองโผล่เหนือหัวทีละก้อน ทั้งคู่ยังยิ้มอยู่ แปลว่ามีเรื่องขัดใจแต่เก็บไว้</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด "เวลาที่ได้อยู่ด้วยกัน" นับถอยหลัง 48 → 42 ชม. (เวลากำลังหมด) · 00:34.5 การ์ด "ทะเลาะกัน 0 ครั้ง" พร้อมไอคอนรูปปัง (burst) โผล่มุมซ้ายบน การ์ดนี้จะค้างอยู่อีก 3 ช็อต</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c y">สองวันที่ได้เจอ</span><span class="arrow">→</span><span class="c">ไม่มีใครอยากเสียไป</span><span class="arrow">→</span><span class="c">กับการทะเลาะ</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s15">
+    <div class="frames">
+      <figure><img src="thumbs/th_037.9.jpg" width="270" height="480" alt="กองตั๋วรถทัวร์ใต้สปอตไลต์ การ์ด 78 เที่ยว"><figcaption>00:37.9</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">15</span><span class="span">00:35.6 – 00:38.1</span><span class="len">2.5 วิ</span><span class="act" style="--c:var(--violet)">ต้นเหตุ</span></div>
+      <h3>กองตั๋ว 78 เที่ยว</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กล้องนิ่ง ฉากนามธรรม ห้องมืดโทนน้ำตาล สปอตไลต์วงกลมส่องพื้น</dd></div>
+        <div><dt>ภาพ</dt><dd>ตั๋วรถทัวร์ขอบม่วงหล่นลงมาซ้อนเป็นกองสูงขึ้นเรื่อยๆ ใบสุดท้ายตกลงบนยอดแบบเอียง เขียนว่า "กรุงเทพฯ - เชียงใหม่ 20:30 · VIP 24"</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด "3 ปี · เดินทาง" นับ 1 → 78 เที่ยว · การ์ด "ทะเลาะกัน 0 ครั้ง" ยังค้างอยู่ใต้การ์ด</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c y">3 ปี 78 เที่ยว</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s16">
+    <div class="frames">
+      <figure><img src="thumbs/th_039.0.jpg" width="270" height="480" alt="ชายแบกกล่องย้ายบ้าน หญิงยืนรับ แมวนั่งในกล่อง"><figcaption>00:39.0</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">16</span><span class="span">00:38.1 – 00:39.6</span><span class="len">1.6 วิ</span><span class="act" style="--c:var(--green)">ระยะทางเป็นศูนย์</span></div>
+      <h3>ย้ายบ้าน</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Wide ห้องเธอกลางวัน · push-in ~5%</dd></div>
+        <div><dt>ภาพ</dt><dd>พระเอกแบกกล่องลังเดินเข้ามา นางเอกยืนยิ้มรับ กล่องลังวางกองข้างโซฟา แมวนั่งอยู่ในกล่อง</dd></div>
+        <div><dt>Icon / UI</dt><dd>ป้ายแคปซูลดำ "ที่อยู่ใหม่: เชียงใหม่" ขอบบน</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">คุณย้ายไปอยู่เชียงใหม่</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s17">
+    <div class="frames">
+      <figure><img src="thumbs/th_040.3.jpg" width="270" height="480" alt="แผนที่ ระยะทางนับถอยหลัง จุดฟ้าวิ่งขึ้นเหนือ"><figcaption>00:40.3</figcaption></figure>
+      <figure><img src="thumbs/th_041.6.jpg" width="270" height="480" alt="แผนที่ ระยะทาง 0 กม. หัวใจชมพูที่เชียงใหม่"><figcaption>00:41.6</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">17</span><span class="span">00:39.6 – 00:42.0</span><span class="len">2.4 วิ</span><span class="act" style="--c:var(--green)">ระยะทางเป็นศูนย์</span></div>
+      <h3>700 → 0 กม.</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กราฟิกแผนที่มุมบน กล้องนิ่ง · ใช้แผนที่เดียวกับช็อต 2 เป็น callback</dd></div>
+        <div><dt>ภาพ</dt><dd>จุดฟ้า (กรุงเทพฯ) วิ่งขึ้นตามเส้นทาง เส้นเหลืองหดตามหลังเหลือแค่เส้นประจางๆ จนจุดฟ้าไปรวมกับจุดชมพูที่เชียงใหม่ แล้วกลายเป็นหัวใจชมพูเรืองแสง (ราว 00:41.0)</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด "ระยะทาง" นับถอยหลัง 700 → 311 → 54 → 0 กม. · การ์ด "ทะเลาะกัน 0 ครั้ง" มุมซ้ายล่าง</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">ระยะทาง</span><span class="arrow">→</span><span class="c y">เหลือศูนย์</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s18">
+    <div class="frames">
+      <figure><img src="thumbs/th_044.4.jpg" width="270" height="480" alt="การ์ดเช็กลิสต์ 3 ปีที่ผ่านมา ติ๊กเขียว 3 ข้อ ข้อสุดท้ายเป็นเครื่องหมายตกใจสีแดง"><figcaption>00:44.4</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">18</span><span class="span">00:42.0 – 00:45.0</span><span class="len">3.0 วิ</span><span class="act" style="--c:var(--green)">ระยะทางเป็นศูนย์</span></div>
+      <h3>เช็กลิสต์ 3 ปี</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กล้องนิ่ง · ห้องนั่งเล่นบ้านใหม่ตอนกลางคืน โทนม่วง แอร์ 24°</dd></div>
+        <div><dt>ภาพ</dt><dd>ทั้งคู่นั่งหันหน้าเข้าหากันบนโซฟา</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด "3 ปีที่ผ่านมา" 4 ข้อ เริ่มเป็นไอคอน "?" แล้วกลายเป็นติ๊กเขียวทีละข้อ: เดินทาง 78 เที่ยว · คุยกันทุกคืน · ย้ายมาอยู่ด้วยกัน · ข้อสุดท้าย "เรื่องสุดท้าย" กลายเป็น "!" สีแดง (ราว 00:43.5)</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">ทุกอย่างถูกหมด</span><span class="arrow">→</span><span class="c r">ยกเว้นเรื่องเดียว</span></dd></div>
+        <div><dt>เสียง</dt><dd>ดนตรีเบาลงช่วง "ทุกอย่างถูกหมด" แล้วดังขึ้นทันทีตอน "!" ขึ้น</dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s19">
+    <div class="frames">
+      <figure><img src="thumbs/th_047.5.jpg" width="270" height="480" alt="ผนังรูปโพลารอยด์คู่รัก 9 ใบ การ์ดทะเลาะกัน 0 ครั้งกลายเป็นสีแดง"><figcaption>00:47.5</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">19</span><span class="span">00:45.0 – 00:47.8</span><span class="len">2.8 วิ</span><span class="act" style="--c:var(--red)">หักมุม</span></div>
+      <h3>ผนังรูป 3 ปี</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Detail shot ผนังรูปโพลารอยด์ 9 ใบ · push-in ~10%</dd></div>
+        <div><dt>ภาพ</dt><dd>รูปคู่แก้มชนแก้ม หลับตายิ้ม พื้นพาสเทลชมพู ฟ้า เหลือง เขียว มีหัวใจเล็กที่มุมรูป หน้าต่างเห็นพระจันทร์ทางซ้าย</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด "ทะเลาะกัน 0 ครั้ง" อยู่เหนือรูป → 00:47.0 พลิกเป็นพื้นแดงพร้อม "!" จากเรื่องดีกลายเป็นสัญญาณเตือน</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">3 ปี คุณสองคน</span><span class="arrow">→</span><span class="c r">ไม่เคยทะเลาะ</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s20">
+    <div class="frames">
+      <figure><img src="thumbs/th_052.6.jpg" width="270" height="480" alt="การ์ดไอคอนคู่รัก 3 คู่ คู่ที่ 3 แยกกันพร้อมป้ายเลิก และป้าย 1 ใน 3"><figcaption>00:52.6</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">20</span><span class="span">00:47.8 – 00:53.2</span><span class="len">5.4 วิ</span><span class="act" style="--c:var(--red)">หักมุม · ข้อมูล</span></div>
+      <h3>1 ใน 3 เลิก</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กล้องนิ่ง · ฉากหลังคู่รักบนโซฟากลางคืน (เบลอ)</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด "คู่ทางไกล ที่ย้ายมาอยู่ใกล้กัน" ขอบซ้ายสีแดง ไอคอนคน 3 คู่ (น้ำเงินกับชมพู มีหัวใจ) · แถบเวลาเติมสีแดงจาก เดือน 1 → เดือน 3 · ราว 00:51.3 คู่ที่ 3 แยกห่างกัน หัวใจหาย แทนด้วยป้ายแดง "เลิก" · ป้ายแดง "1 ใน 3" เด้งใต้การ์ด · อ้างอิง "นักศึกษา 335 คน · ย้ายมาอยู่ใกล้ 180 คน (Stafford 2006)"</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">คู่ทางไกล</span><span class="arrow">→</span><span class="c">ที่ย้ายมาอยู่ใกล้กัน</span><span class="arrow">→</span><span class="c r">1 ใน 3 เลิกภายใน 3 เดือน</span></dd></div>
+        <div><dt>เสียง</dt><dd>ดนตรีถูกดึงลงจนเกือบเงียบตั้งแต่ราว 00:48.5 เหลือเสียงพากย์นำ</dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s21">
+    <div class="frames">
+      <figure><img src="thumbs/th_054.6.jpg" width="270" height="480" alt="ห้องกลางคืน หญิงถือรีโมตแอร์ ป้ายคืนที่ 7 22:15 แมวนั่งบนพรม"><figcaption>00:54.6</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">21</span><span class="span">00:53.2 – 00:55.4</span><span class="len">2.2 วิ</span><span class="act" style="--c:var(--red)">หักมุม</span></div>
+      <h3>คืนที่ 7</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Wide ห้องนั่งเล่นกลางคืน · push-in ~10%</dd></div>
+        <div><dt>ภาพ</dt><dd>ทั้งคู่นั่งบนโซฟา นางเอกถือรีโมตแอร์กดปรับ แอร์บนผนังเปลี่ยน 24° → 27° · แมวนั่งหันหน้าเข้ากล้องบนพรม</dd></div>
+        <div><dt>Icon / UI</dt><dd>ป้ายแคปซูลดำ "คืนที่ 7 · 22:15"</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c y">คืนที่ 7</span><span class="arrow">→</span><span class="c">แค่รีโมตแอร์</span></dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชนเข้า insert</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s22">
+    <div class="frames">
+      <figure><img src="thumbs/th_056.2.jpg" width="270" height="480" alt="close-up มือสองข้างยื้อรีโมตแอร์ จอรีโมต 24 องศา เมฆฝนสายฟ้าซ้ายขวา"><figcaption>00:56.2</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">22</span><span class="span">00:55.4 – 00:56.8</span><span class="len">1.4 วิ</span><span class="act" style="--c:var(--red)">หักมุม</span></div>
+      <h3>ชักเย่อรีโมต</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Insert close-up รีโมตกลางเฟรมแนวตั้ง · ฉากหลังม่วงไล่แสงเป็นวงกลม</dd></div>
+        <div><dt>ภาพ</dt><dd>มือเธอ (แขนเสื้อชมพู) ยื่นมาจากขวาบน มือเขา (แขนเสื้อฟ้า) จากซ้ายล่าง ดึงรีโมตไปมา จอรีโมต "COOL" สลับ 24° ↔ 27°</dd></div>
+        <div><dt>Icon / UI</dt><dd>เมฆฝนสายฟ้าเหลือง 2 ก้อนโผล่ซ้ายและขวา</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c r">ก็กลายเป็นเรื่องใหญ่</span></dd></div>
+        <div><dt>เสียง</dt><dd>เสียงเสียดสีแบบยื้อแย่ง</dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชน</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s23">
+    <div class="frames">
+      <figure><img src="thumbs/th_058.5.jpg" width="270" height="480" alt="คู่รักนั่งคนละปลายโซฟาหันหน้าหนีกัน การ์ดเดินทางมาแล้ว 700 กม."><figcaption>00:58.5</figcaption></figure>
+      <figure><img src="thumbs/th_060.8.jpg" width="270" height="480" alt="ตลับเมตรวัดระยะ 0.5 เมตรระหว่างสองคน"><figcaption>01:00.8</figcaption></figure>
+      <figure><img src="thumbs/th_062.4.jpg" width="270" height="480" alt="คู่รักนั่งชิดจับมือ รีโมตตรงกลาง หัวใจชมพูเหนือหัว"><figcaption>01:02.4</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">23</span><span class="span">00:56.8 – 01:02.7</span><span class="len">5.9 วิ</span><span class="act" style="--c:var(--gold)">ไคลแม็กซ์และคลี่คลาย</span></div>
+      <h3>ครึ่งเมตรที่ไกลที่สุด</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>Wide ห้องนั่งเล่นกลางคืน ช็อตยาวที่สุดของเรื่อง · slow push-in ~15% ตลอดช็อต</dd></div>
+        <div><dt>ภาพ</dt><dd>ทั้งคู่นั่งคนละปลายโซฟา หันหน้าหนีกัน แมวหลบอยู่ปลายโซฟา แอร์ 27° · 00:59.5 ตลับเมตรยืดสายวัดระหว่างสองคน · ราว 01:01.5 สายวัดหดกลับ ทั้งคู่หันกลับมาแล้วขยับเข้าหากัน · 01:02.1 รีโมตลอยอยู่ตรงกลาง แอร์เปลี่ยนเป็น 26° อยู่กลางๆ ระหว่าง 24° ของเขากับ 27° ของเธอ คือยอมกันคนละนิด · ทั้งคู่จับมือ หัวใจชมพูเด้งเหนือหัว (01:02.4) แมวอ้าปากร้อง</dd></div>
+        <div><dt>Icon / UI</dt><dd>การ์ด "เดินทางมาแล้ว 700 กม." (00:56.9–00:59.4) · ตลับเมตรกับป้าย "0.5 ม." · หัวใจ</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd><span class="c">700 กิโล คุณมาถึงแล้ว</span><span class="arrow">→</span><span class="c y">ที่ไกลที่สุด</span><span class="arrow">→</span><span class="c r">คือครึ่งเมตรนี้</span> <span class="muted">พากย์จบ 01:01.8 จากนั้นภาพเล่าต่อเอง</span></dd></div>
+        <div><dt>เสียง</dt><dd>ดนตรีค่อยๆ กลับมาตั้งแต่ราว 01:00.5 แล้วขึ้นเต็มที่ 01:02.0 · แมวร้อง "เมี้ยว" ราว 01:02.0–01:03.0</dd></div>
+        <div><dt>ตัดต่อ</dt><dd>เบลอและหรี่มืดลง เข้าการ์ดจบ</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s24">
+    <div class="frames">
+      <figure><img src="thumbs/th_065.0.jpg" width="270" height="480" alt="การ์ดจบ ชื่อเรื่องชายผู้เดินทางไกล พร้อมข้อคิด 3 บรรทัด"><figcaption>01:05.0</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">24</span><span class="span">01:02.7 – 01:06.7</span><span class="len">4.0 วิ</span><span class="act" style="--c:var(--gold)">ข้อคิดและ CTA</span></div>
+      <h3>การ์ดจบ</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>ฉากเดิมเบลอและมืดลงเป็นพื้นหลัง</dd></div>
+        <div><dt>Icon / UI</dt><dd>ป้ายเล็ก "● จบ" (จุดแดง) · ชื่อเรื่อง "ชายผู้ / เดินทางไกล" ตัวใหญ่สีขาว 2 บรรทัด · เส้นแดงสั้นคั่น · ข้อคิด 3 บรรทัดสีเหลือง "ระยะทางไม่ได้ทำให้รักน้อยลง / หัดทะเลาะให้เป็น ตั้งแต่ยังอยู่ไกล / คู่ที่อยู่ได้นาน ไม่ใช่คู่ที่ไม่ทะเลาะ" · CTA สีขาวตัวเล็ก "ส่งให้คนที่อยู่ไกลคุณดู" · ทยอย fade-in จากบนลงล่าง</dd></div>
+        <div><dt>พากย์ / ซับ</dt><dd>ไม่มีพากย์ ดนตรีดังกว่าช่วงอื่นของเรื่อง</dd></div>
+        <div><dt>ตัดต่อ</dt><dd>ตัดชนเข้าจอดำ</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  <article class="shot" id="s25">
+    <div class="frames">
+      <figure><img src="thumbs/th_069.0.jpg" width="270" height="480" alt="โลโก้ Promptkub บนพื้นดำ"><figcaption>01:09.0</figcaption></figure>
+    </div>
+    <div class="sheet">
+      <div class="shot-head"><span class="num">25</span><span class="span">01:06.7 – 01:10.0</span><span class="len">3.3 วิ</span><span class="act" style="--c:var(--muted)">โลโก้</span></div>
+      <h3>Promptkub outro</h3>
+      <dl>
+        <div><dt>กล้อง</dt><dd>กราฟิกนิ่ง พื้นดำอมกรมท่า มีแสงเรืองตรงกลาง</dd></div>
+        <div><dt>Icon / UI</dt><dd>ฟองแชทเส้นขอบสีเขียวมะนาวขยายเข้า (01:07.0) → ดาวประกาย ✦ โผล่ข้างใน → ตัวหนังสือ "Prompt" สีขาว + "kub" สีเขียวมะนาว และ "AI ACADEMY" → เส้นเขียวสั้น → "ตัวอย่างงาน AI โดย Prompt KUB" → ป้ายขอบเขียว "@promptkub"</dd></div>
+        <div><dt>เสียง</dt><dd>ดนตรีจบแบบ fade out ราว 01:09.5</dd></div>
+      </dl>
+    </div>
+  </article>
+
+  </div>
+</section>
+
+<section id="style">
+  <div class="sec-head"><p class="eyebrow">ภาษาภาพ</p><h2>สี ตัวอักษร การ์ด และกฎของกล้อง</h2><p class="muted prose">สีเก็บจากเฟรมจริง (ไฟล์ถูกบีบอัด ค่าอาจคลาดเล็กน้อย) ตัวอย่างการ์ดด้านล่างวาดใหม่ด้วย CSS ให้เห็นโครงสร้าง</p></div>
+
+  <h3 class="sub-h">พาเลตสี</h3>
+  <div class="swatches">
+    <div class="sw" style="--s:#141a33"><i></i><b>กรมท่ากลางคืน</b><code>#141A33</code><span class="muted">ฟ้ากลางคืน แผนที่ พื้นหลังหลัก</span></div>
+    <div class="sw" style="--s:#493e81"><i></i><b>ม่วงรถทัวร์</b><code>#493E81</code><span class="muted">ตัวรถ ตั๋ว คาดลายทองและชมพู</span></div>
+    <div class="sw" style="--s:#e6e0d4"><i></i><b>ครีมการ์ด</b><code>#E6E0D4</code><span class="muted">พื้นการ์ดข้อมูลทุกใบ</span></div>
+    <div class="sw" style="--s:#ae7f25"><i></i><b>ทองตัวเลข</b><code>#AE7F25</code><span class="muted">ตัวเลขใหญ่ แถบซ้ายการ์ดตัวนับ</span></div>
+    <div class="sw" style="--s:#dc6c89"><i></i><b>ชมพู</b><code>#DC6C89</code><span class="muted">ทางไกล เธอ หัวใจ</span></div>
+    <div class="sw" style="--s:#9b9589"><i></i><b>เทา</b><code>#9B9589</code><span class="muted">คู่ที่อยู่ใกล้ในกราฟ</span></div>
+    <div class="sw" style="--s:#52689c"><i></i><b>น้ำเงิน</b><code>#52689C</code><span class="muted">เขา วันบนรถ ไอคอนคน</span></div>
+    <div class="sw" style="--s:#cf483d"><i></i><b>แดงเตือน</b><code>#CF483D</code><span class="muted">กล่องซับ punchline สถานะผิดปกติ</span></div>
+    <div class="sw" style="--s:#4f9359"><i></i><b>เขียว</b><code>#4F9359</code><span class="muted">ไม่ต่างกัน ติ๊กถูก</span></div>
+    <div class="sw" style="--s:#e2b657"><i></i><b>เหลืองซับ</b><code>#E2B657</code><span class="muted">ซับเน้น ข้อคิดท้ายเรื่อง</span></div>
+    <div class="sw" style="--s:#d8cdbd"><i></i><b>ครีมห้องกลางวัน</b><code>#D8CDBD</code><span class="muted">ผนังห้องเธอ</span></div>
+    <div class="sw" style="--s:#4f4658"><i></i><b>ม่วงห้องกลางคืน</b><code>#4F4658</code><span class="muted">ห้องเขา บ้านหลังย้าย</span></div>
+    <div class="sw" style="--s:#5e7384"><i></i><b>ฟ้าโซฟา</b><code>#5E7384</code><span class="muted">โซฟาตัวเดียวกันทุกฉาก</span></div>
+    <div class="sw" style="--s:#c5ee45"><i></i><b>เขียวมะนาว</b><code>#C5EE45</code><span class="muted">โลโก้ Promptkub เท่านั้น</span></div>
+  </div>
+
+  <h3 class="sub-h">คอมโพเนนต์บนจอ</h3>
+  <div class="specimens">
+    <div class="spec">
+      <span class="spec-label">การ์ดตัวนับ · ใช้ 6 ครั้ง (ระยะทาง, วัน, ชม., เที่ยว)</span>
+      <div class="vcard"><div class="lbl">ระยะทาง</div><div class="big">700<small>กม.</small></div></div>
+      <span class="spec-label">ตัวเลขวิ่งขึ้นหรือลงราว 1 วิ เปลี่ยนเป็นแดงเมื่อกลายเป็นปัญหา</span>
+    </div>
+    <div class="spec">
+      <span class="spec-label">การ์ดนาฬิกา · 3 ครั้ง</span>
+      <div class="clock"><span class="moon"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M11.5 11.8A5.5 5.5 0 0 1 6.2 2.3a5.6 5.6 0 1 0 7.3 7.4 5.4 5.4 0 0 1-2 2.1z" fill="#f2d48a"/></svg></span><div><div class="tl">สองทุ่มครึ่ง</div><div class="tt">20:30</div><div class="slider"></div></div></div>
+      <span class="spec-label">บอกเวลาแบบคนไทยพูด + ตัวเลข ไอคอนเปลี่ยนพระจันทร์/พระอาทิตย์</span>
+    </div>
+    <div class="spec">
+      <span class="spec-label">การ์ดสถานะ · ค้างข้ามช็อต แล้วพลิกเป็นแดง</span>
+      <div class="vcard fight"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M4 26 9 15 3 9l9 1 4-7 3 8 8-2-5 7 6 6-9-1-3 6-3-6z" fill="none" stroke="#23242f" stroke-width="1.8" stroke-linejoin="round"/></svg><div class="t">ทะเลาะกัน<br><strong>0</strong>ครั้ง</div></div>
+      <div class="vcard fight alarm"><div class="t">ทะเลาะกัน<br><strong>0</strong>ครั้ง</div><span class="bang">!</span></div>
+    </div>
+    <div class="spec">
+      <span class="spec-label">ป้ายแคปซูล · ข้อมูลเสริมสั้นๆ</span>
+      <div class="pillrow"><span class="vpill">งานวิจัย 1,142 คน</span><span class="vpill">ข้ามคืน 10 ชม.</span><span class="vpill">ที่อยู่ใหม่: เชียงใหม่</span><span class="vpill">คืนที่ 7 · 22:15</span><span class="vpill">0.5 ม.</span></div>
+      <span class="spec-label">ป้ายผลลัพธ์บนกราฟ</span>
+      <div class="pillrow"><span class="vtag g">ไม่ต่างกัน</span><span class="vtag y">มากกว่า</span><span class="vtag r">เลิก</span><span class="vtag r">1 ใน 3</span></div>
+    </div>
+  </div>
+
+  <h3 class="sub-h">ซับไตเติล</h3>
+  <ul class="rules">
+    <li>วางกึ่งกลางแนวนอน ที่ราว 64% ของความสูงเฟรม (y ≈ 820 จาก 1280) สูงกว่าโซนปุ่มและแคปชันของ Reels/TikTok</li>
+    <li>บรรทัดเดียวเสมอ ชุดละ 2–6 คำ เปลี่ยนตามวรรคของเสียงพากย์ ชุดละ 1–2.5 วิ</li>
+    <li>ฟอนต์ไทยไม่มีหัว น้ำหนักหนา ใกล้เคียง Kanit หรือ Prompt มีเงาดำนุ่มรองใต้ตัวอักษร</li>
+    <li>สี = ระดับอารมณ์: ขาวเล่าเรื่อง เหลืองเน้นตัวเลขหรือความรู้สึก กล่องแดงตัวขาวสำหรับ punchline</li>
+  </ul>
+
+  <h3 class="sub-h">การเคลื่อนไหว</h3>
+  <ul class="rules">
+    <li>การ์ด ป้าย และไอคอนทุกตัวเข้าแบบเด้ง: ขยายจากเล็กกว่าเดิมเล็กน้อย เกินนิดหนึ่ง แล้วลงตัว พร้อม fade ราว 0.2 วิ</li>
+    <li>ตัวเลขวิ่ง count-up/down ราว 0.8–1.2 วิ นาฬิกาใช้เลขหมุน</li>
+    <li>ข้อมูลออกทีละชิ้น: แท่งกราฟยืดทีละคู่ waffle ติดทีละช่อง เช็กลิสต์ติ๊กทีละข้อ ตามจังหวะพากย์</li>
+    <li>วาดเส้น (draw-on): วงกลมบนปฏิทิน เส้นทางบนแผนที่</li>
+    <li>เปลี่ยนสถานะด้วยสี: เลข 700 ทองเป็นแดง การ์ดทะเลาะครีมเป็นแดงพร้อม "!"</li>
+    <li>ไอคอนลอยมีชีวิต: วงแหวนกระเพื่อมรอบ ? · Z z ลอยขึ้น · หัวใจเด้ง · เมฆฝนโผล่ทีละก้อน</li>
+    <li>ตัวละครแบบหุ่น cut-out: เดินเข้าเฟรม หันตัว เลื่อนเข้าหากัน หลับตา ไม่มีการเคลื่อนไหวซับซ้อน</li>
+    <li>การ์ดข้อมูลเข้าแบบ ตัดภาพ → การ์ดเด้ง → ฉากหลังเบลอ ภายในราว 0.15 วิ</li>
+  </ul>
+
+  <h3 class="sub-h">กฎของกล้อง</h3>
+  <ul class="rules">
+    <li>ช็อตที่มีตัวละคร: slow push-in ตลอดช็อต 5–10% ช็อตสำคัญใช้ 15–20% (ช็อต 7 และ 23)</li>
+    <li>ช็อตการ์ดข้อมูล: กล้องนิ่ง ฉากหลังเบลอ ไม่ให้อะไรแย่งสายตาตอนอ่านตัวเลข</li>
+    <li>มุมหลักคือระดับสายตา มองด้านข้างแบบเวทีละคร ตัวละครเคลื่อนซ้าย-ขวา ไม่มีมุมก้มหรือเงยแรงๆ</li>
+    <li>ช็อตพิเศษไว้เปลี่ยนจังหวะ: แผนที่มุมบน (เปิดและปิดเรื่องระยะทาง) จอแยก POV มือถือ insert รีโมต detail ผนังรูป still life กองตั๋ว tracking ข้างรถ</li>
+    <li>ตัดชนทั้งเรื่อง ไม่มี whip pan หรือ zoom transition ยกเว้นตอนเข้าการ์ดจบใช้เบลอและหรี่มืด</li>
+    <li>คัตลงก่อนเสียงพากย์ประโยคใหม่ 1–2 เฟรม (0.03–0.07 วิ) ทุกครั้ง ซับเปลี่ยนพร้อมเสียง</li>
+  </ul>
+</section>
+
+<section id="cast">
+  <div class="sec-head"><p class="eyebrow">ตัวละครและฉาก</p><h2>3 ตัวละคร 7 ฉาก</h2><p class="muted prose">ภาพแบบ 2D flat vector สไตล์หุ่น cut-out หัวกลม ลำตัวเรียว แขนขาเป็นเส้นยาว ไม่มีเส้นขอบ แรเงาด้วยการไล่สีนุ่มๆ คล้ายงาน explainer</p></div>
+  <div class="cast">
+    <div class="who" style="--c:var(--blue)"><b>"คุณ" ผู้เดินทาง</b><span>ชายผมดำสั้นตั้ง ผิวแทน เสื้อเชิ้ตแขนยาวสีฟ้าอ่อน กางเกงกรมท่า รองเท้าผ้าใบขาว สะพายเป้ดำตอนเดินทาง อยู่กรุงเทพฯ ชอบแอร์ 24°</span><span class="muted">ท่าที่ใช้: ยืนดูมือถือ · เดินสะพายเป้ · แบกกล่อง · นั่งโซฟาหันซ้ายและขวา · นั่งเบาะรถ · นั่งโต๊ะหน้าโทรม · ยิ้มมีประกาย · หันหน้าหนี · จับมือ</span></div>
+    <div class="who" style="--c:var(--pink)"><b>"เธอ"</b><span>ผมดำยาวมัดหางม้า เสื้อแขนสั้นสีชมพูอมส้ม กางเกงกรมท่า อยู่เชียงใหม่ ชอบแอร์ 27°</span><span class="muted">ท่าที่ใช้: นั่งพิมพ์มือถือ · ยืนรอ · หน้า close-up ในวิดีโอคอลตั้งแต่ตื่นจนหลับ · นั่งถือรีโมต · หันหน้าหนี · จับมือ</span></div>
+    <div class="who" style="--c:var(--gold)"><b>แมวส้มของเธอ</b><span>แมวส้มลายสลิด ทำหน้าที่เป็นพยานของความสัมพันธ์ และเป็นตัวสร้างมุกเบาๆ</span><span class="muted">ท่าที่ใช้: นั่งข้างเธอ · เดินแล้วขู่ "ฟ่อ!" · นั่งในกล่องย้ายบ้าน · นั่งดูตอนทะเลาะ · ร้องเมี้ยวตอนคืนดี</span></div>
+  </div>
+  <h3 class="sub-h">ฉาก</h3>
+  <ol class="places">
+    <li><b>สถานีขนส่งกลางคืน</b> ชานชาลา 32–34 จอ LED ป้ายชานชาลา รถทัวร์ 2 ชั้นสีม่วง</li>
+    <li><b>ทางยกระดับกลางคืน</b> เสาไฟแสงส้มฟุ้ง ราวกั้นขาว แสงสะท้อนน้ำ ฟ้ามีดาว ใช้ 3 ช็อต</li>
+    <li><b>ในรถทัวร์</b> เบาะน้ำเงิน ม่านชมพู ใช้เป็นฉากหลังเบลอ</li>
+    <li><b>ห้องเขา กรุงเทพฯ กลางคืน</b> โทนม่วง หน้าต่างเห็นไฟเมือง โคมไฟตั้งพื้น โซฟาฟ้า แอร์ 24°</li>
+    <li><b>ห้องเธอ เชียงใหม่ กลางวัน</b> ผนังครีม หน้าต่างวิวภูเขาเขียว ม่านชมพูอมส้ม พรมกลม โซฟาฟ้า แอร์ 27° ผนังรูปโพลารอยด์ 9 ใบ</li>
+    <li><b>บ้านเดียวกันหลังย้าย กลางคืน</b> ห้องเดิมแต่โทนม่วง พระจันทร์เต็มดวง ไฟเมืองไกลๆ</li>
+    <li><b>ฉากกราฟิก</b> แผนที่ไทยกรมท่า · ห้องมืดสปอตไลต์ (กองตั๋ว) · พื้นม่วงไล่วง (รีโมต) · พื้นดำ (โลโก้)</li>
+  </ol>
+</section>
+
+<section id="sound">
+  <div class="sec-head"><p class="eyebrow">เสียง</p><h2>พากย์ ดนตรี และเอฟเฟกต์</h2><p class="muted prose">แยกเสียงพากย์ออกจากดนตรีด้วย Demucs แล้ววัดระดับเสียงทุกครึ่งวินาที กราฟนี้แสดงว่าดนตรีถูกดึงลงช่วงหักมุม แล้วขึ้นเต็มตอนคืนดี</p></div>
+  <div class="chart-wrap">
+    <svg class="chart" viewBox="0 0 760 206" role="img" aria-label="ระดับเสียงดนตรีและเสียงพากย์ตลอดคลิป ดนตรีเบาลงมากช่วง 48 ถึง 61 วินาที และดังขึ้นช่วง 62 ถึง 69 วินาที">
+      <g transform="translate(40,10)">
+        <rect class="band" x="485" y="0" width="120" height="160"/>
+        <rect class="band2" x="620" y="0" width="70" height="160"/>
+        <line class="grid" x1="0" x2="700" y1="33.1" y2="33.1"/>
+        <line class="grid" x1="0" x2="700" y1="88.3" y2="88.3"/>
+        <line class="grid" x1="0" x2="700" y1="143.4" y2="143.4"/>
+        <line class="grid" x1="0" x2="700" y1="160" y2="160"/>
+        <path class="music" d="M2.5,160 L2.5,63.7 L7.5,69.3 L12.5,75.7 L17.5,69.2 L22.5,62.8 L27.5,59.1 L32.5,67.2 L37.5,65.5 L42.5,64.4 L47.5,55.1 L52.5,56.0 L57.5,55.4 L62.5,67.7 L67.5,69.1 L72.5,76.9 L77.5,69.3 L82.5,69.3 L87.5,68.3 L92.5,73.1 L97.5,73.6 L102.5,69.0 L107.5,64.8 L112.5,63.6 L117.5,62.8 L122.5,64.9 L127.5,63.8 L132.5,66.8 L137.5,61.6 L142.5,65.5 L147.5,68.9 L152.5,68.9 L157.5,69.4 L162.5,64.1 L167.5,64.6 L172.5,64.7 L177.5,70.1 L182.5,69.8 L187.5,71.1 L192.5,64.8 L197.5,66.8 L202.5,65.7 L207.5,72.0 L212.5,71.4 L217.5,70.1 L222.5,67.6 L227.5,66.2 L232.5,67.1 L237.5,63.1 L242.5,63.0 L247.5,61.1 L252.5,61.0 L257.5,65.2 L262.5,70.7 L267.5,72.7 L272.5,74.5 L277.5,69.5 L282.5,68.7 L287.5,65.2 L292.5,71.3 L297.5,70.3 L302.5,69.1 L307.5,61.8 L312.5,61.0 L317.5,66.3 L322.5,69.8 L327.5,70.0 L332.5,66.7 L337.5,63.5 L342.5,66.2 L347.5,67.1 L352.5,64.0 L357.5,66.6 L362.5,62.0 L367.5,64.6 L372.5,64.8 L377.5,67.9 L382.5,68.6 L387.5,67.1 L392.5,66.7 L397.5,66.9 L402.5,69.4 L407.5,74.9 L412.5,82.1 L417.5,90.1 L422.5,95.1 L427.5,97.7 L432.5,80.4 L437.5,66.6 L442.5,51.8 L447.5,53.1 L452.5,53.9 L457.5,66.9 L462.5,73.9 L467.5,74.1 L472.5,61.4 L477.5,59.6 L482.5,84.7 L487.5,105.7 L492.5,123.5 L497.5,108.1 L502.5,103.1 L507.5,96.4 L512.5,91.4 L517.5,90.9 L522.5,93.1 L527.5,99.4 L532.5,99.5 L537.5,93.1 L542.5,96.0 L547.5,95.9 L552.5,98.8 L557.5,102.5 L562.5,111.3 L567.5,113.0 L572.5,111.4 L577.5,101.1 L582.5,101.9 L587.5,96.1 L592.5,94.5 L597.5,89.8 L602.5,84.9 L607.5,80.6 L612.5,73.4 L617.5,62.5 L622.5,49.7 L627.5,39.8 L632.5,39.4 L637.5,39.4 L642.5,41.0 L647.5,41.7 L652.5,42.0 L657.5,41.2 L662.5,39.4 L667.5,41.0 L672.5,42.4 L677.5,44.8 L682.5,46.8 L687.5,56.1 L692.5,80.1 L697.5,94.9 L697.5,160 Z"/>
+        <path class="voice" d="M2.5,27.6 L7.5,23.4 L12.5,21.2 L17.5,24.4 L22.5,24.5 L27.5,25.9 L32.5,23.5 L37.5,25.0 L42.5,25.5 L47.5,25.4 L52.5,26.3 L57.5,21.8 L62.5,22.2 L67.5,26.9 L72.5,25.5 L77.5,25.4 L82.5,19.1 L87.5,23.5 L92.5,24.0 L97.5,28.4 L102.5,25.7 L107.5,23.3 L112.5,27.7 L117.5,29.3 L122.5,29.2 L127.5,21.2 L132.5,17.7 L137.5,19.9 L142.5,18.4 L147.5,18.8 L152.5,18.4 L157.5,15.3 L162.5,16.6 L167.5,18.1 L172.5,19.5 L177.5,20.8 L182.5,21.1 L187.5,28.1 L192.5,26.8 L197.5,27.0 L202.5,27.7 L207.5,24.9 L212.5,24.0 L217.5,18.2 L222.5,22.8 L227.5,23.1 L232.5,28.0 L237.5,40.0 L242.5,38.5 L247.5,38.2 L252.5,26.1 L257.5,27.8 L262.5,26.9 L267.5,26.9 L272.5,24.3 L277.5,24.0 L282.5,26.8 L287.5,25.9 L292.5,27.9 L297.5,26.9 L302.5,31.5 L307.5,31.9 L312.5,31.4 L317.5,27.5 L322.5,23.4 L327.5,17.5 L332.5,21.8 L337.5,24.2 L342.5,31.6 L347.5,32.5 L352.5,33.2 L357.5,29.0 L362.5,29.0 L367.5,27.9 L372.5,28.4 L377.5,24.6 L382.5,23.4 L387.5,26.1 L392.5,27.8 L397.5,31.0 L402.5,28.9 L407.5,27.7 L412.5,52.0 L417.5,53.1 L422.5,56.1 L427.5,33.1 L432.5,32.2 L437.5,28.1 L442.5,30.0 L447.5,34.0 L452.5,37.1 L457.5,28.9 L462.5,22.1 L467.5,23.4 L472.5,29.6 L477.5,31.4 L482.5,29.1 L487.5,22.9 L492.5,25.0 L497.5,23.8 L502.5,23.9 L507.5,29.3 L512.5,27.2 L517.5,29.9 L522.5,27.0 L527.5,32.3 L532.5,33.4 L537.5,26.7 L542.5,22.0 L547.5,26.2 L552.5,29.8 L557.5,28.3 L562.5,24.6 L567.5,23.9 L572.5,25.4 L577.5,21.7 L582.5,23.0 L587.5,31.4 L592.5,31.0 L597.5,32.0 L602.5,28.0 L607.5,27.4 L612.5,28.9 L617.5,49.4 L622.5,68.4 L627.5,103.9 L632.5,126.3 L637.5,154.4 L642.5,159.8 L647.5,159.9 L652.5,160.0 L657.5,160.0 L662.5,160.0 L667.5,160.0 L672.5,160.0 L677.5,160.0 L682.5,160.0 L687.5,160.0 L692.5,160.0 L697.5,160.0"/>
+        <text class="note" x="490" y="16">ดนตรีถูกดึงลง</text>
+        <text class="note" x="624" y="16">ดนตรีเต็ม</text>
+        <text class="lbl" x="-6" y="37" text-anchor="end">-20</text>
+        <text class="lbl" x="-6" y="92" text-anchor="end">-40</text>
+        <text class="lbl" x="-6" y="147" text-anchor="end">-60</text>
+        <text class="lbl" x="0" y="178" text-anchor="middle">0:00</text>
+        <text class="lbl" x="100" y="178" text-anchor="middle">0:10</text>
+        <text class="lbl" x="200" y="178" text-anchor="middle">0:20</text>
+        <text class="lbl" x="300" y="178" text-anchor="middle">0:30</text>
+        <text class="lbl" x="400" y="178" text-anchor="middle">0:40</text>
+        <text class="lbl" x="500" y="178" text-anchor="middle">0:50</text>
+        <text class="lbl" x="600" y="178" text-anchor="middle">1:00</text>
+        <text class="lbl" x="700" y="178" text-anchor="middle">1:10</text>
+        <text class="lbl" x="-6" y="194" text-anchor="end">dB</text>
+      </g>
+    </svg>
+  </div>
+  <div class="chart-legend"><span><i style="background:var(--violet);opacity:.6"></i>ดนตรี</span><span><i style="background:var(--gold)"></i>เสียงพากย์</span></div>
+
+  <div class="two" style="margin-top:28px">
+    <div>
+      <h3 class="sub-h" style="margin-top:0">เสียงพากย์</h3>
+      <ul class="facts">
+        <li>เสียงผู้หญิง ภาษาไทย ระดับเสียงเฉลี่ยราว 190 Hz น้ำเสียงนุ่ม เล่าแบบสารคดีสั้น พูดกับ "คุณ" ตลอดเรื่อง</li>
+        <li>ราว 200 พยางค์ใน 62 วินาที (ประมาณ 3.2 พยางค์ต่อวินาที) ช้าและชัด เว้นวรรคระหว่างประโยค 0.2–0.5 วิ</li>
+        <li>เสียงพากย์อยู่เหนือดนตรีราว 13–17 dB ตลอดช่วงเล่าเรื่อง</li>
+        <li>พากย์จบที่ 01:01.8 แล้วปล่อยให้ภาพกับดนตรีเล่าช่วงคืนดี</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="sub-h" style="margin-top:0">ดนตรีประกอบ</h3>
+      <ul class="facts">
+        <li>เพลงบรรเลงล้วน ไม่มีเสียงร้อง แทบไม่มีกลอง โทนอุ่นและนุ่ม เครื่องดนตรีที่ตรวจเจอเป็นแนวกีตาร์ เปียโน และเครื่องสาย อารมณ์ tender</li>
+        <li>จังหวะราว 85 BPM คงที่ คีย์เมเจอร์ (G หรือ D major)</li>
+        <li>0:00–0:48 ดนตรีคลออยู่ใต้เสียงพากย์ · 0:48.5–1:00.5 ดึงลงจนเกือบเงียบ ให้ช่วงหักมุมตึง · 1:02–1:09 ขึ้นเต็มที่ตอนคืนดีและการ์ดจบ · fade out 1:09.5</li>
+        <li>ความดังรวมทั้งคลิป -17.5 LUFS</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub-h">เอฟเฟกต์เสียงที่ตรวจเจอ</h3>
+  <p class="muted prose">ตรวจด้วยโมเดลจำแนกเสียงอัตโนมัติ เอฟเฟกต์มีไม่มาก ใช้เฉพาะจุดสำคัญ ไม่เจอเสียงขู่ของแมวตอน "ฟ่อ!" ชัดเจน ช็อตนั้นน่าจะใช้แค่ฟองคำพูด</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>เวลา</th><th>เสียง</th><th>บนจอ</th><th>ความชัด</th></tr></thead>
+      <tbody>
+        <tr><td class="tc">00:10.5</td><td>ติ๊งเบาๆ</td><td>ไอคอน ? เด้ง</td><td><span class="lv">ปานกลาง</span></td></tr>
+        <tr><td class="tc">00:29.1–00:29.8</td><td>กรุ๊งกริ๊งแบบประกาย</td><td>การ์ด "ภาพในใจ" มีดาวระยิบ</td><td><span class="lv">ชัด</span></td></tr>
+        <tr><td class="tc">00:43.5</td><td>ดนตรีกระโดดขึ้นพร้อมเสียงกระแทกต่ำ</td><td>"!" ในเช็กลิสต์</td><td><span class="lv">ปานกลาง</span></td></tr>
+        <tr><td class="tc">00:47.0</td><td>เสียงกระแทกสั้น</td><td>การ์ดทะเลาะพลิกเป็นแดง</td><td><span class="lv">ปานกลาง</span></td></tr>
+        <tr><td class="tc">00:51.5</td><td>เสียงเบาๆ</td><td>คู่ที่ 3 แยกกัน ป้าย "เลิก"</td><td><span class="lv">ต่ำ</span></td></tr>
+        <tr><td class="tc">00:55.4–00:56.8</td><td>เสียงเสียดสีแบบยื้อแย่ง</td><td>ชักเย่อรีโมต</td><td><span class="lv">ปานกลาง</span></td></tr>
+        <tr><td class="tc">01:02.0–01:03.0</td><td>แมวร้อง "เมี้ยว"</td><td>แมวอ้าปาก ตอนทั้งคู่จับมือ</td><td><span class="lv">ชัด</span></td></tr>
+        <tr><td class="tc">01:06.8–01:07.6</td><td>เสียงเด้งของโลโก้</td><td>ฟองแชทกับดาวประกาย</td><td><span class="lv">ต่ำ</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="techniques">
+  <div class="sec-head"><p class="eyebrow">เทคนิคเล่าเรื่อง</p><h2>สิ่งที่ควรเก็บไว้ถ้าจะทำแบบเดียวกัน</h2></div>
+  <ul class="tech">
+    <li><b>พูดกับ "คุณ" ตลอดเรื่อง</b><span>คนดูสวมบทพระเอกเอง ไม่ต้องรู้จักตัวละครก่อน</span></li>
+    <li><b>Hook ใน 4 วินาที</b><span>เงื่อนไขที่คนดูเช็กตัวเองได้ + ตัวเลข + คำสั่งที่ขัดความเชื่อ "อย่าเพิ่งโทษระยะทาง"</span></li>
+    <li><b>ให้ตัวเลขเดินเรื่อง</b><span>ทุกช็อตมีตัวเลขหนึ่งตัวบนการ์ด ทำให้เรื่องรักจับต้องได้และมีจังหวะ</span></li>
+    <li><b>สลับฉากชีวิตกับการ์ดงานวิจัย</b><span>ทุก 2–3 ช็อต ฉากทำให้รู้สึก การ์ดทำให้เชื่อ</span></li>
+    <li><b>ปมเปิดสองชั้น</b><span>"ซ่อนเรื่องหนึ่งไว้" (0:10) → "ยกเว้นเรื่องเดียว" (0:43) → เฉลย "ไม่เคยทะเลาะ" (0:47) คนดูต้องอยู่ถึงวินาทีที่ 47</span></li>
+    <li><b>วางปมแล้วจ่ายปม</b><span>การ์ด "ทะเลาะกัน 0 ครั้ง" ค้างข้ามช็อตแล้วพลิกเป็นแดง · แอร์ 24°/27° ในฉากหลังกลายเป็นศึกรีโมตและจบที่ 26° · แมวขู่ตอนต้น ร้องตอนคืนดี</span></li>
+    <li><b>Callback ตัวเลขเปิดเรื่อง</b><span>700 กม. ตอนต้น กลับมาเป็น "700 กิโลคุณมาถึงแล้ว" แล้วพลิกเป็น "ที่ไกลที่สุดคือครึ่งเมตรนี้"</span></li>
+    <li><b>หลอกให้คิดว่าจบสวย</b><span>แผนที่ 700 → 0 หัวใจ และติ๊กเขียว 3 ข้อ ก่อนข้อ 4 จะเป็น "!"</span></li>
+    <li><b>สีและแสงมีความหมายคงที่</b><span>ฟ้าคือเขา ชมพูคือเธอ แดงคือปัญหา กลางคืนกรมท่าคือคิดถึง กลางวันครีมคือได้เจอ กลางคืนม่วงคืออยู่ด้วยกันแต่มีปัญหา</span></li>
+    <li><b>เงียบให้ภาพเล่า</b><span>พากย์จบก่อนภาพเกือบ 1 วินาที ฉากหันกลับ 26° และจับมือ เล่าโดยไม่มีคำพูด</span></li>
+    <li><b>ปิดด้วยบทเรียนสามบรรทัดและ CTA แบบเจาะจงคน</b><span>"ส่งให้คนที่อยู่ไกลคุณดู" ชวนแชร์ให้คนคนหนึ่ง แทนการขอยอดไลก์</span></li>
+  </ul>
+</section>
+
+<section id="research">
+  <div class="sec-head"><p class="eyebrow">งานวิจัยในคลิป</p><h2>สิ่งที่คลิปอ้าง</h2><p class="muted prose">ตามที่เขียนบนการ์ดในคลิป ถ้าจะทำใหม่ควรเช็กตัวเลขและชื่อผู้วิจัยกับต้นฉบับอีกครั้ง เพราะบนการ์ดเขียนแบบย่อ</p></div>
+  <ul class="refs">
+    <li><b>Dargie et al. 2015 · 1,142 คน</b><span>คู่ทางไกลกับคู่ที่อยู่ใกล้ มีความใกล้ชิด ความพอใจในความสัมพันธ์ และความผูกพันไม่ต่างกัน <span class="tc muted">(ช็อต 4)</span></span></li>
+    <li><b>Jiang &amp; Hancock 2013 · Journal of Communication</b><span>คู่ทางไกลคุยกันน้อยครั้งกว่า แต่คุยนานกว่าต่อครั้ง และเล่าเรื่องในใจมากกว่า <span class="tc muted">(ช็อต 12)</span></span></li>
+    <li><b>Jiang &amp; Hancock 2013 · Stafford &amp; Reske 1990</b><span>คู่ทางไกลมองอีกฝ่ายดีกว่าความจริง <span class="tc muted">(ช็อต 13)</span></span></li>
+    <li><b>Stafford 2006 · นักศึกษา 335 คน, ย้ายมาอยู่ใกล้ 180 คน</b><span>คู่ทางไกลที่ย้ายมาอยู่ใกล้กัน 1 ใน 3 เลิกภายใน 3 เดือน <span class="tc muted">(ช็อต 20)</span></span></li>
+  </ul>
+</section>
+
+<section id="remake">
+  <div class="sec-head"><p class="eyebrow">ถ้าจะทำใหม่</p><h2>สิ่งที่ต้องเตรียม</h2></div>
+  <ul class="check">
+    <li><b>ตัวละคร 3 ตัว</b> พร้อมชุดท่าทางตามรายการในหัวข้อตัวละคร</li>
+    <li><b>ฉาก 7 แบบ</b> ห้องเธอใช้ซ้ำได้ทั้งกลางวันและกลางคืน แค่เปลี่ยนโทนแสง</li>
+    <li><b>คอมโพเนนต์ UI ราว 12 แบบ</b> การ์ดตัวนับ · การ์ดนาฬิกา · กราฟแท่ง · waffle 365 ช่อง · ปฏิทิน · การ์ดเปรียบเทียบ · เช็กลิสต์ · การ์ดไอคอนคนพร้อมแถบเวลา · การ์ดสถานะทะเลาะ · ป้ายแคปซูล · ป้ายผลลัพธ์ · ไอคอนลอย (?, เมฆสายฟ้า, Z z, หัวใจ, ประกาย, ตลับเมตร, ฟองคำพูด)</li>
+    <li><b>บทพากย์ 40 ชุด</b> ตามหัวข้อบทพากย์ เสียงผู้หญิงไทย นุ่ม ราว 3.2 พยางค์ต่อวินาที</li>
+    <li><b>ดนตรี</b> บรรเลงอบอุ่น ราว 85 BPM ไม่มีกลอง พร้อมจุดดึงเพลงลงช่วงหักมุมและจุดขึ้นเต็มตอนจบ</li>
+    <li><b>เอฟเฟกต์เสียง 6–8 จุด</b> ตามตารางในหัวข้อเสียง</li>
+    <li><b>กฎตัดต่อ</b> คัตก่อนเสียงพากย์ 1–2 เฟรม · ช็อตเฉลี่ย 2.7 วิ · ซับ 3 ระดับที่ 64% ความสูง · push-in เฉพาะช็อตที่มีตัวละคร</li>
+    <li><b>การ์ดจบและโลโก้</b> ชื่อเรื่อง ข้อคิด 3 บรรทัด CTA และ outro ของแบรนด์ตัวเอง</li>
+  </ul>
+</section>
+
+<footer>
+  <p>วิเคราะห์จากไฟล์วิดีโอที่แนบมา (70.0 วินาที) · แตกเฟรม 2 fps และ 15 fps รอบทุกคัต · ตรวจคัตอัตโนมัติ 24 จุด · วัดการเคลื่อนกล้องจากการจับคู่จุดในภาพ · ถอดเสียงด้วย Whisper large-v3 แล้วเทียบกับซับในภาพ · แยกเสียงด้วย Demucs · จำแนกเสียงด้วยโมเดล AST · ตัวเลข push-in และรายการเอฟเฟกต์เสียงเป็นค่าประมาณ</p>
+</footer>
+
+</div>
