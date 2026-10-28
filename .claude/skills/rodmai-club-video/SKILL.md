@@ -122,6 +122,10 @@ description: >-
   - แคปชัน
   - คอมเมนต์ปักหมุด
 - **D4** เก็บเข้า repo `video/<เรื่อง>-epN/` ด้วย `scripts/store.sh` แล้ว commit + push
+- **D5** ทุกตอนมี **ปกคลิป** `video/<เรื่อง>-epN/cover.jpg` ส่งพร้อมไฟล์ HQ (ผู้ใช้: "ทำปกคลิปมาด้วยเพื่อน" 28 ต.ค. 2026)
+  - ทำด้วย `scripts/cover.cjs` จากเฟรมจริงของตอน (ซ่อนซับและการ์ด) + โลโก้เรื่องสีประจำเรื่อง + ป้าย EP/ตอนจบ + hook (สถานการณ์ + คำสั่งในกล่องแดง)
+  - เลือกเฟรมที่น่ากลัวที่สุดแต่ไม่เฉลยตอนจบ ตัวผีหรือของสำคัญอยู่กลางจอ ไม่โดนตัวหนังสือบัง · ทุกอย่างอยู่ใน y 250–1650 (TikTok ครอปปกในหน้าโปรไฟล์เป็น 3:4)
+  - ค่าของทุกปกเก็บใน `video/brand/covers.json` (เฟรม ซูม ความสว่าง ข้อความ) แก้แล้วสั่งใหม่เฉพาะตอนได้
 
 ## 2. ขั้นตอนทำงาน (มีจุดให้ผู้ใช้อนุมัติ)
 
@@ -176,6 +180,7 @@ description: >-
 | `render.sh <hf proj> <ep dir> <name>` | เรนเดอร์ 60fps + mux HQ/share (สั่งด้วย `run_in_background` + `timeout: 7200000`) |
 | `qa_video.sh <mp4> [mix.wav]` | ตรวจสตรีม ความยาว ความดัง และทำแถบภาพ `<mp4>.qa.jpg` |
 | `store.sh <ep dir> <hf proj> <repo dir> <name>` | เก็บตอนเข้า `video/<repo dir>/` (share, mix, production, composition, lib) |
+| `cover.cjs <base url> <covers.json> [id…]` | ปกคลิป 1080×1920 จาก composition ที่เก็บแล้ว (เสิร์ฟ `video/` ก่อน: `python3 -m http.server 8890`) ค่าอยู่ใน `video/brand/covers.json` |
 
 ## 5. กติกาการทำงานกับผู้ใช้
 
