@@ -236,15 +236,20 @@
         },
       });
 
-      // ---------- 20. the village at night; the camera drifts to ยาย's window — green eyes in it ----------
+      // ---------- 20. the village at night; the camera drifts to ยาย's window — the lamp flickers out, pitch dark, only green eyes ----------
       add("last", {
         set: "village2", setOpts: { id: "v20", time: "night", fence: [-700] }, dark: 0.15, blur: { far: 2, fg: 8 }, light: MOON, grade: GNIGHT,
         cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 960) }, { t: vo("last", 1) - 0.3, glide: 2.2, ...fr(-226, 700, 2.2, 540, 900) }] },
         captions: caps("last"),
-        extra(L) { put(L.glow, `<g id="v20-sil" opacity="0"><path d="M-262,758Q-262,700 -226,690Q-190,700 -190,758Z M-226,700m-22,0a22,26 0 1,0 44,0a22,26 0 1,0 -44,0" fill="#0a0806"/><path d="M-250,690q-6,40 -10,70M-202,690q6,40 10,70" stroke="#0a0806" stroke-width="6" fill="none"/></g>` + Pop2.eyePair(-226, 696, 0.4, "v20-eyes")); },
+        // black panes over both windows (house2 at x -60, scale 0.95, ground 1320) for when the lamp goes out; the eyes in the left one
+        extra(L) { put(L.glow, `<g id="v20-panes" opacity="0">${[-230, 80].map((wx) => `<rect x="${-60 + wx * 0.95}" y="${1320 - 720 * 0.95}" width="${110 * 0.95}" height="${140 * 0.95}" fill="#040302"/>`).join("")}</g>` + Pop2.eyePair(-226, 700, 0.55, "v20-eyes")); },
         fx(tl, id, t0, L) {
           tl.set("#black", { opacity: 1 }, t0); tl.to("#black", { opacity: 0, duration: 0.8 }, t0 + 0.3);
-          tl.set(["#v20-eyes", "#v20-sil"], { opacity: 0 }, t0); tl.to("#v20-sil", { opacity: 1, duration: 0.6 }, t0 + vo("last", 1)); tl.to("#v20-eyes", { opacity: 1, duration: 0.4 }, t0 + vo("last", 1) + 0.6);
+          const T = t0 + vo("last", 1) - 0.3;
+          tl.set("#v20-eyes", { opacity: 0 }, t0); tl.set("#v20-lamps", { opacity: 1 }, t0); tl.set("#v20-panes", { opacity: 0 }, t0);
+          [[0, 0.15], [0.08, 0.9], [0.16, 0.1], [0.3, 0.7], [0.36, 0]].forEach(([dt, k]) => { tl.set("#v20-lamps", { opacity: k }, T + dt); tl.set("#v20-panes", { opacity: 1 - k }, T + dt); });
+          tl.to("#v20-eyes", { opacity: 1, duration: 0.3 }, T + 0.8);
+          tl.to("#v20-eyes", { scaleY: 0.08, svgOrigin: "-226 700", duration: 0.07, yoyo: true, repeat: 1, ease: "power2.in" }, T + 2.5);
           Pop2.particles(tl, L.glow, { type: "firefly", n: 14, box: [-600, 900, 1800, 800], t0, dur: D("last"), seed: 13 });
           Fx.heart(tl, t0 + vo("last", 1), D("last") - vo("last", 1), 0.6, 0.45);
         },
