@@ -1,0 +1,5 @@
+#!/bin/bash
+# mkhook.sh IN.mp4 OUT.mp4 T0 DUR OVERLAY.png SFX.wav : prepend a cold-open (IN[T0, T0+DUR] + headline overlay, fading to black into the original's black open) and re-encode the whole episode
+in=$1; out=$2; t0=$3; dur=$4; ov=$5; sfx=$6
+fo=$(python3 -c "print(round($dur - 0.18, 3))")
+nice -n 15 ffmpeg -nostdin -loglevel error -y -i "$in" -ss $t0 -t $dur -i "$in" -i "$ov" -i "$sfx" -filter_complex "[1:v]setpts=PTS-STARTPTS[hv];[hv][2:v]overlay=0:0,fade=t=out:st=$fo:d=0.18:color=black,format=yuv420p[hookv];[1:a]asetpts=PTS-STARTPTS,aresample=48000[ha];[3:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.9[gs];[ha][gs]amix=inputs=2:duration=first:normalize=0[hooka];[0:v]setpts=PTS-STARTPTS,format=yuv420p[mv];[0:a]asetpts=PTS-STARTPTS[ma];[hookv][hooka][mv][ma]concat=n=2:v=1:a=1[v][a]" -map "[v]" -map "[a]" -c:v libx264 -preset medium -crf 16 -r 60 -colorspace bt709 -color_primaries bt709 -color_trc bt709 -c:a aac -b:a 256k -movflags +faststart "$out" && ffprobe -v error -show_entries stream=nb_frames:format=duration -of compact "$out"
