@@ -1,0 +1,92 @@
+      const MINT = (x, y, s, track, extra = {}) => ({ who: "mint", x, y, s, track, ...extra });
+      const TON = (x, y, s, track, extra = {}) => ({ who: "ton", x, y, s, track, ...extra });
+      const YAI = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, ...extra });
+      const G = 1320;
+      const SUN = { from: "left", rim: "#fff0c8", shade: "#2a2440", shadeOp: 0.45, cast: { len: 2.4, op: 0.45 }, vol: false };
+      add("c1", { set: "village2", setOpts: { id: "v1", fence: [-700] }, dark: 0.0, blur: { far: 2, fg: 8 }, light: SUN,
+        grade: { top: "#ffd9a0", bottom: "#5a4a7a", op: 0.35 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.95, 540, 960) }] },
+        actors: [MINT(560, G + 380, 0.95, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }]), TON(780, G + 420, 0.72, [{ t: 0, mode: "wave", eyes: "normal", mouth: "smile" }], { flip: true })],
+        fx(tl, id, t0, L) { Pop2.particles(tl, L.light, { type: "dust", n: 26, box: [0, 200, 1080, 1400], t0, dur: 4, seed: 3 }); } });
+      add("c2", { set: "village2", setOpts: { id: "v2", fence: [-700] }, dark: 0.0, blur: { far: 6, mid: 5, set: 3, fg: 10 }, light: SUN,
+        grade: { top: "#ffd9a0", bottom: "#5a4a7a", op: 0.35 },
+        cam: { keys: [{ t: 0, ...fr(560, G + 1400 - 530 * 2.5, 1.0, 540, 1000) }] },
+        actors: [MINT(560, G + 1400, 2.5, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])] });
+      add("c3", { set: "village2", setOpts: { id: "v3", time: "dusk", fence: [-700] }, dark: 0.05, blur: { far: 2, fg: 8 }, light: { from: "left", vol: false, rim: "#ffc89a", shade: "#2a1a3a", cast: { len: 3, op: 0.5 } },
+        grade: { top: "#ffb080", bottom: "#3a2a5a", op: 0.4 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.95, 540, 960) }] },
+        actors: [YAI(380, G + 360, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])] });
+      add("c4", { set: "village2", setOpts: { id: "v4", time: "night", fence: [-700] }, dark: 0.15, blur: { far: 2, fg: 8 }, light: { from: "right", vol: false, rim: "#9ab4ff", shade: "#000814", cast: false },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.95, 540, 960) }] },
+        fx(tl, id, t0, L) { Pop2.particles(tl, L.glow, { type: "firefly", n: 14, box: [0, 900, 1080, 800], t0, dur: 4, seed: 5 }); } });
+      add("c5", { set: "village2", setOpts: { id: "v5", fence: [-700] }, dark: 0.0, blur: { far: 3, mid: 2, fg: 8 }, light: SUN,
+        grade: { top: "#ffd9a0", bottom: "#5a4a7a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, G + 300, 1.0, 540, 1300) }] },
+        actors: ["mint", "ton", "yai", "thong", "boon", "khem", "doc"].map((w, i) => ({ who: w, x: 90 + i * 150, y: G + 420 + (i % 2) * 30, s: 0.5, track: [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }] })) });
+      add("c6", { set: "village2", setOpts: { id: "v6", fence: [-700] }, dark: 0.0, blur: { far: 8, mid: 7, set: 5, fg: 12 }, light: SUN,
+        grade: { top: "#ffd9a0", bottom: "#5a4a7a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(560, G + 1600 - 540 * 4, 1.0, 540, 760) }] },
+        actors: [MINT(560, G + 1600, 4, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: 2, mode: "idle", eyes: "wide", mouth: "o" }])] });
+      add("c7", { set: "village2", setOpts: { id: "v7", fence: [-700], road: false, house: false, tree: false, banana: false }, dark: 0.0, blur: { far: 3, mid: 2, fg: 8 }, light: SUN,
+        cam: { keys: [{ t: 0, ...fr(540, G + 200, 1.0, 540, 1100) }] },
+        actors: [["walk", "mint"], ["run", "ton"], ["sit", "mint"], ["crouch", "yai"], ["point", "mint"], ["raise", "thong"], ["holdHead", "mint"], ["sitChair", "yai"], ["wave", "ton"], ["phoneLook", "mint"], ["tremble", "mint"], ["lie", "mint"]].map(([m, w], i) => ({ who: w, x: 110 + (i % 4) * 280, y: G - 260 + Math.floor(i / 4) * 420, s: 0.55, track: [{ t: 0, mode: m, eyes: i % 3 ? "wide" : "normal", mouth: i % 2 ? "o" : "smile" }] })) });
+      const KSUN = { from: "left", rim: "#fff0c8", shade: "#2a2040", shadeOp: 0.45, cast: { len: 3, op: 0.4 }, vol: false };
+      add("k1", { set: "kok2", setOpts: { id: "ka", mound: [640, 1.7] }, dark: 0, blur: { far: 3, mid: 2, fg: 10 }, light: KSUN,
+        grade: { top: "#ffe0a8", bottom: "#4a3a6a", op: 0.32 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.95, 540, 960) }] },
+        actors: [MINT(260, G + 300, 0.8, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "flat" }]), TON(500, G + 120, 0.62, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "smile" }])],
+        fx(tl, id, t0, L) { Pop2.particles(tl, L.light, { type: "dust", n: 30, box: [0, 200, 1080, 1400], t0, dur: 4, seed: 4 }); } });
+      add("k2", { set: "kok2", setOpts: { id: "kb", mound: [560, 1.6], mush: 5, fgTrunk: "right" }, dark: 0, blur: { far: 8, mid: 6, fg: 14 }, light: KSUN,
+        grade: { top: "#ffe0a8", bottom: "#4a3a6a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(470, G + 0, 1.5, 540, 1180) }] },
+        fx(tl, id, t0, L) { Pop2.particles(tl, L.light, { type: "dust", n: 24, box: [0, 200, 1080, 1400], t0, dur: 4, seed: 6 }); } });
+      add("k3", { set: "kok2", setOpts: { id: "kc", time: "dusk", mound: [760, 1.6], mush: 3 }, blur: { far: 3, fg: 10 }, light: { from: "left", vol: false, rim: "#ffb070", shade: "#1a0a20", cast: { len: 3.5, op: 0.5 } },
+        grade: { top: "#ffa070", bottom: "#2a1a40", op: 0.4 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.95, 540, 960) }] },
+        actors: [{ who: "thong", x: 560, y: G + 130, s: 0.7, track: [{ t: 0, mode: "crouch", eyes: "side", mouth: "flat" }] }] });
+      add("k4", { set: "kok2", setOpts: { id: "kd", time: "night", mound: [600, 1.6], mush: 3 }, dark: 0.1, blur: { far: 3, fg: 10 }, light: { from: "right", vol: false, rim: "#9ab4ff", shade: "#000814", cast: false },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.95, 540, 960) }] },
+        fx(tl, id, t0, L) { Pop2.particles(tl, L.glow, { type: "firefly", n: 16, box: [0, 700, 1080, 900], t0, dur: 4, seed: 8 }); } });
+      add("m1", { set: "mushHero", setOpts: { id: "mh1" }, dark: 0, blur: { sky: 4, far: 9, mid: 4, fg: 16 }, grade: { top: "#ffe8b8", bottom: "#4a3a6a", op: 0.18 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960) }, { t: 4, ...fr(560, 1000, 1.08, 540, 960) }] },
+        fx(tl, id, t0, L) { Pop2.particles(tl, L.light, { type: "dust", n: 40, box: [0, 100, 1080, 1500], t0, dur: 4, seed: 12 }); } });
+      add("m2", { set: "mushHero", setOpts: { id: "mh2", v: "pair" }, dark: 0, blur: { sky: 4, far: 9, mid: 4, fg: 16 }, grade: { top: "#ffe0a8", bottom: "#4a3a6a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1, 540, 960) }] } });
+      add("m3", { set: "mushHero", setOpts: { id: "mh3", hand: true }, dark: 0, blur: { sky: 4, far: 9, mid: 4, fg: 16 }, grade: { top: "#ffe0a8", bottom: "#4a3a6a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(600, 1100, 1.2, 540, 960) }] },
+        fx(tl, id, t0) { tl.fromTo("#mh3-hand", { x: 0 }, { x: -760, duration: 1.6, ease: "power2.out", immediateRender: false }, t0 + 0.6); } });
+      const FIRE = { from: "right", vol: false, rim: "#ffb060", rimOp: 0.9, shade: "#100818", shadeOp: 0.55, cast: { len: 2.2, op: 0.5 } };
+      add("q1", { set: "kitchen2", setOpts: { id: "qa", stove: 620 }, dark: 0.12, blur: { sky: 3, far: 3, mid: 1, fg: 10 }, light: FIRE,
+        grade: { top: "#2a3a6a", bottom: "#ff9a4a", op: 0.25 },
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 0.9, 540, 960) }] },
+        actors: [YAI(380, 1560, 0.95, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id, t0, L) { Pop2.flicker(tl, "qa", t0, 4); Pop2.particles(tl, L.glow, { type: "wisp", n: 7, box: [520, 760, 200, 520], t0, dur: 4, seed: 3 }); Pop2.particles(tl, L.glow, { type: "ember", n: 14, box: [540, 900, 160, 500], t0, dur: 4, seed: 4 }); } });
+      add("q2", { set: "kitchen2", setOpts: { id: "qb", stove: 540, lid: "off" }, dark: 0.1, blur: { sky: 8, far: 8, mid: 6, fg: 14 }, light: FIRE,
+        grade: { top: "#2a3a6a", bottom: "#ff9a4a", op: 0.25 },
+        cam: { keys: [{ t: 0, ...fr(540, 1330, 2.2, 540, 1000) }] },
+        fx(tl, id, t0, L) { Pop2.flicker(tl, "qb", t0, 4); Pop2.particles(tl, L.glow, { type: "wisp", n: 9, box: [400, 700, 280, 600], t0, dur: 4, seed: 5 }); } });
+      add("q3", { set: "kitchen2", setOpts: { id: "qc", time: "late", stove: 620 }, dark: 0.35, blur: { sky: 3, far: 3, fg: 10 }, light: { from: "right", vol: false, rim: "#ff8a40", shade: "#000", cast: false },
+        grade: { top: "#0a1430", bottom: "#3a1a10", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 0.9, 540, 960) }] },
+        fx(tl, id, t0, L) { Pop2.flicker(tl, "qc", t0, 4); } });
+      const MOON = { from: "right", vol: false, rim: "#a8c4ff", rimOp: 0.8, shade: "#000010", shadeOp: 0.5, cast: false };
+      add("r1", { set: "bedroom2", setOpts: { id: "ra", phone: true }, dark: 0.2, blur: { sky: 4, mid: 1, fg: 10 }, light: MOON,
+        grade: { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 0.85, 540, 1100) }] },
+        actors: [MINT(560, 1560, 0.9, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }])] });
+      add("r2", { set: "bedroom2", setOpts: { id: "rb", phone: true }, dark: 0.2, blur: { sky: 6, mid: 3, fg: 10 }, light: MOON,
+        grade: { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1560 - 400 * 2.2, 1.0, 540, 900) }] },
+        actors: [MINT(560, 1560, 2.2, [{ t: 0, mode: "sit", eyes: "wide", mouth: "o" }])] });
+      add("g1", { set: "gap2", setOpts: { id: "ga" }, dark: 0.1, blur: { mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(560, 960, 1.0, 540, 960) }, { t: 4, ...fr(560, 900, 1.3, 540, 900) }] } });
+      add("g2", { set: "kitchen2", setOpts: { id: "qd", time: "late", stove: 620, lid: "off" }, dark: 0.3, blur: { sky: 3, far: 3, fg: 10 },
+        grade: { top: "#0a1430", bottom: "#3a1a10", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 1.2, 540, 1000) }] },
+        extra(L) { Pop2.put(L.set, Pop2.ghost2(380, 1580, 0.9, { id: "qd-pob", pose: "eat" })); },
+        fx(tl, id, t0) { Pop2.flicker(tl, "qd", t0, 4); } });
+      add("u1", { set: "village2", setOpts: { id: "vu", fence: [-700] }, dark: 0, blur: { sky: 6, far: 8, mid: 8, set: 6, fg: 12 }, light: SUN,
+        grade: { top: "#ffd9a0", bottom: "#5a4a7a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.1, 540, 960) }] },
+        actors: [YAI(300, G + 640, 1.25, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id, t0, L) { PopUI.rule(tl, L.light, t0 + 0.2, 3.8, { active: 0, y: 640, out: false }); PopUI.source(tl, L.light, t0 + 0.6, 3.4, { text: "ที่มา: กรมควบคุมโรค · ไม่รู้จัก ไม่แน่ใจ ไม่เก็บ ไม่กิน (30 พ.ค. 2569)" }); } });
