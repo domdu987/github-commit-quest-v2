@@ -124,7 +124,7 @@ CUES = [
     # they come; "ยี่สิบวิ"
     *bed("horde", T("horde", 0.3), T("count2", 2.5), 0.6, 4.6), *growls("horde", 0.3, D["horde"], 0.6, 0.7), ("horde", frag("horde", 0, 1), "sting", 0.9), ("horde", frag("horde", 0, 1), "boom", 0.5), ("horde", vo_t("horde", 1) + 1.6, "slam", 0.4), *beats("horde", 0.0, D["horde"], 0.45, 0.7),
     # the countdown: a tick every second, the switch, the sickle, the run, the door
-    ("count", 0.2, "page", 0.7), ("count", 0.45, "slam", 0.5), *[("count", 0.2 + 0.53 * (k + 1), "tick", 0.75) for k in range(14)], *beats("count", 0.2, D["count"] - 0.2, 0.6, 0.6), *growls("count", 0.5, D["count"], 0.5, 0.9),
+    *beats("count", 0.2, D["count"] - 0.2, 0.6, 0.6), *growls("count", 0.5, D["count"], 0.5, 0.9),
     ("count", 0.2, "steps", 0.6), ("count", 0.8, "steps", 0.6), ("count", 1.9, "pop", 0.5), ("count", 2.1, "slam", 0.45), ("count", 2.4, "latch", 0.9), ("count", 2.4, "powerdown", 0.8),
     ("count", 3.0, "steps", 0.6), ("count", 3.6, "steps", 0.6), ("count", 4.5, "rustle", 0.8), ("count", 4.6, "shriek", 0.9), ("count", 5.2, "sparks", 1.0), ("count", 5.2, "clang", 0.8), ("count", 5.25, "sting", 0.8), ("count", 5.6, "thud", 0.5),
     *[("count", 6.0 + k * 0.33, "steps", 0.6) for k in range(6)], ("count", -0.3, "riser", 0.8),
@@ -134,12 +134,15 @@ CUES = [
     *bed("crickets", T("dark", 0), T("sig", -0.1), 0.45, 4.6), *bed("horde", T("dark", 0), T("dark", -0.1), 0.35, 4.6), ("dark", 0.5, "page", 0.5), *[("dark", 0.6 + k * 0.1, "tick", 0.3) for k in range(10)], ("dark", frag("dark", 0, 1), "buzz", 0.5),
     ("hill", frag("hill", 0, 1), "riser", 0.5), *[("hill", frag("hill", 0, 1) + 0.2 + o, "beep", 0.35) for o in (0, 0.45, 0.9)], ("hill", frag("hill", 0, 2), "sting", 0.8), ("hill", frag("hill", 1, 1), "sting", 0.7), ("hill", frag("hill", 1, 1), "glitch", 0.4), *beats("hill", frag("hill", 0, 1), D["hill"] - frag("hill", 0, 1), 0.5, 0.55),
     # the signature
-    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
-    ("sig", frag("sig", 0, 0) + 0.3, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.62, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.15, "ding", 0.6),
-    ("sig", frag("sig", 0, 2), "glitch", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
+    # the sheet slaps on and is taped; a red pen ticks each line (with a soft ding); a marker circles the ???
+    ("sig", 0.05, "page", 0.8), ("sig", 0.36, "thud", 0.25),
+    *[x for o in (frag("sig", 0, 0) + 0.3, frag("sig", 0, 0) + 0.62, frag("sig", 0, 1) + 0.15) for x in (("sig", o, "pen", 0.9), ("sig", o + 0.05, "ding", 0.3))],
+    ("sig", frag("sig", 0, 2) + 0.45, "marker", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
     *[("sig", frag("sig", 0, 2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
     ("sig", frag("sig", 0, 3) - 1.1, "riser", 0.6),
-    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.8), ("sig", frag("sig", 0, 3), "glitch", 0.7), ("sig", frag("sig", 0, 3) + 0.12, "slam", 0.7),
+    # "ข้อเดียว": two red slashes, the page tears across, the strip drops, a stamp hits what is left
+    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "pen", 1.0), ("sig", frag("sig", 0, 3) + 0.1, "pen", 1.0),
+    ("sig", frag("sig", 0, 3) + 0.24, "rip", 1.1), ("sig", frag("sig", 0, 3) + 0.86, "thud", 0.8), ("sig", frag("sig", 0, 3) + 0.86, "slam", 0.35),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     # the radio: 97… six; switched off, still counting
     *bed("crickets", T("radio", 0), T("drawing", -0.1), 0.45, 4.6), ("radio", vo_t("radio", 1) - 0.35, "radio", 1.0), *bed("radiobed", T("radio", vo_t("radio", 1) - 0.1), T("radio", vo_end("radio", 1) + 0.3), 0.5, 3.0),
