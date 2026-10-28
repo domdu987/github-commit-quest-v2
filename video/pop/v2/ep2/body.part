@@ -14,6 +14,9 @@
         mintPhone: { ...Rig.CAST.mint, hand: Pop2.PROP.phone() }, mintBag: { ...Rig.CAST.mint, hand: Pop2.PROP.bag() }, khemSalt: { ...Rig.CAST.khem, hand: Pop2.PROP.saltGlass() },
         docBag: { ...Rig.CAST.doc, hand: Pop2.PROP.bag() },
       });
+      Rig.MODES.seatWave = (u, o) => ({ ...Rig.MODES.sit(u, o), ...Rig.MODES.wave(u, o), uaF: -122, thF: -88, shF: 10, thB: -86, shB: 14, bodyY: 290, torso: -4 });
+      Rig.MODES.sitWind = (u, o) => ({ ...Rig.MODES.sit(u, o), hair: 9 * Math.sin(u * 11) + 4 * Math.sin(u * 23), head: -4 });
+      Rig.MODES.drive = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -14, faF: 0, uaB: 14, faB: 0 });
       Rig.MODES.reach = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -52, faF: -26, uaB: -30, faB: -30, torso: 8, head: 12 });
       const chair = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-70,0V-150M70,0V-150M-70,-150H80V-170H-70ZM60,-170V-380" stroke="#5a6a72" stroke-width="12" fill="none"/><rect x="-80" y="-172" width="160" height="22" rx="6" fill="#7a8a92"/><rect x="50" y="-380" width="24" height="200" rx="8" fill="#6a7a82"/></g>`;
       const oneHand = (id, i) => { const h = document.getElementById(`${id}-a${i}-handB`); if (h) h.innerHTML = ""; };
@@ -184,25 +187,24 @@
         fx(tl, id, t0, L) { oneHand(id, 0); Pop2.particles(tl, L.glow, { type: "firefly", n: 12, box: [0, 900, 1400, 800], t0, dur: D("nocar"), seed: 9 }); },
       });
 
-      // ---------- 15. headlights swing in: ลุงทองดี's pickup — "ขึ้นรถเร็ว!" ----------
+      // ---------- 15. headlights swing in and stop: ลุงทองดี leans out of the driver's window — "ขึ้นรถเร็ว!" (right-hand drive: the near side) ----------
       add("truck", {
-        set: "nightRoad2", setOpts: { id: "r15", x: 900, flip: true }, dark: 0.08, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
-        cam: { keys: [{ t: 0, ...fr(640, 1180, 0.95, 540, 1050) }] },
-        actors: [THONG(400, GR + 90, 1.05, [{ t: 0, mode: "wave", eyes: "wide", mouth: "scream" }])],
+        set: "nightRoad2", setOpts: { id: "r15", x: 150, s: 2.36, driver: false, doorFront: true, moonX: 980 }, dark: 0.06, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(620, 1140, 0.95, 540, 1050) }, { t: D("truck"), ...fr(600, 1120, 1.0, 540, 1050) }] },
+        actors: [THONG(150 + 90 * 2.36, 1160, 1.05, [{ t: 0, mode: "seatWave", eyes: "wide", mouth: "scream" }])],
         captions: caps("truck", undefined, { quote: true }),
         fx(tl, id, t0) {
-          tl.fromTo("#r15-truck", { x: 700 }, { x: 0, duration: 0.8, ease: "power3.out", immediateRender: false }, t0);
-          tl.fromTo("#r15-lights", { x: 700 }, { x: 0, duration: 0.8, ease: "power3.out", immediateRender: false }, t0);
+          tl.fromTo("#r15-dust", { x: -300, opacity: 0.9 }, { x: 160, opacity: 0.25, duration: 1.4, ease: "power2.out", immediateRender: false }, t0);
           tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0); Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.06, 0.3);
         },
       });
 
       // ---------- 16. in the truck bed, wind in her hair: "ผีปอบ… ขับรถกระบะได้ด้วยเหรอ" ----------
       add("joke", {
-        set: "nightRoad2", setOpts: { id: "r16", x: 1150, s: 2.4, bedFront: true }, dark: 0.12, blur: { far: 4, mid: 4 }, light: MOON, grade: GROAD,
-        cam: { keys: [{ t: 0, ...fr(600, 1000, 1.0, 540, 1180) }] },
+        set: "nightRoad2", setOpts: { id: "r16", x: 1050, s: 2.7, bedFront: true }, dark: 0.1, blur: { far: 4, mid: 4 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 1.05, 540, 1100) }] },
         shake: (t) => 3 * Math.sin(t * 23),
-        actors: [YAI(280, 1230, 1.1, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }]), TON(520, 1120, 1.0, [{ t: 0, mode: "lie", eyes: "closed", mouth: "frown" }]), MINT(800, 1190, 1.3, [{ t: 0, mode: "sit", eyes: "side", mouth: "o" }], { flip: true })],
+        actors: [YAI(1050 - 300 * 2.7, 1080, 1.05, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }]), MINT(1050 - 120 * 2.7, 1080, 1.2, [{ t: 0, mode: "sitWind", eyes: "side", mouth: "o" }], { flip: true })],
         captions: caps("joke", undefined, { quote: true }),
         fx(tl, id, t0) { drive(tl, "r16", t0, D("joke"), 1.4); },
       });
@@ -210,18 +212,25 @@
       // ---------- 17. the road; then ลุงทองดี in the dashboard light: his wife ate the same white mushroom ----------
       const RS = vo("road", 1) - 0.25;
       split("road", RS, {
-        set: "nightRoad2", setOpts: { id: "r17", x: 360 }, dark: 0.08, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
-        cam: { keys: [{ t: 0, ...fr(300, 1150, 0.78, 540, 1050) }, { t: RS, ...fr(560, 1150, 0.82, 540, 1050) }] },
+        set: "nightRoad2", setOpts: { id: "r17", x: 380, s: 1.25, bedFront: true }, dark: 0.08, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(320, 1180, 0.8, 540, 1050) }, { t: RS, ...fr(540, 1180, 0.86, 540, 1050) }] },
         shake: (t) => 3 * Math.sin(t * 29),
+        actors: [YAI(380 - 330 * 1.25, 1335, 0.52, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }]), MINT(380 - 140 * 1.25, 1335, 0.56, [{ t: 0, mode: "sitWind", eyes: "side", mouth: "flat" }], { flip: true })],
         captions: caps("road", [0], { quote: true }),
         fx(tl, id, t0) { drive(tl, "r17", t0, RS); },
       }, {
-        set: "cab2", setOpts: { id: "cb17" }, dark: 0.1, light: DASH, grade: { top: "#0a1430", bottom: "#0a2a3a", op: 0.3 },
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("road") - RS, ...fr(420, 1000, 1.12, 540, 960) }] },
+        set: "cab2", setOpts: { id: "cb17", wheelX: 340, skin: "#a87048", sleeve: "#7c6c52" }, dark: 0.1, blur: { fg: 0 }, light: DASH, grade: { top: "#0a1430", bottom: "#0a2a3a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("road") - RS, ...fr(450, 1000, 1.1, 540, 960) }] },
         shake: (t) => 2 * Math.sin(t * 29),
-        actors: [THONG(300, 2200, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: 1.4, mode: "idle", eyes: "closed", mouth: "flat" }], { flip: true })],
+        actors: [THONG(340, 2187, 2.3, [{ t: 0, mode: "drive", eyes: "side", mouth: "flat" }, { t: 1.4, mode: "drive", eyes: "closed", mouth: "flat" }])],
         captions: capsFrom("road", RS, [1], { quote: true }),
-        fx(tl, id, t0) { tl.fromTo("#cb17-road", { y: 0 }, { y: 30, duration: 0.4, repeat: Math.ceil((D("road") - RS) / 0.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); Fx.heart(tl, t0 + 1.8, D("road") - RS - 1.8, 0.5, 0.45); },
+        fx(tl, id, t0) {
+          const d = D("road") - RS;
+          tl.fromTo("#cb17-bed", { y: 0 }, { y: 6, duration: 0.3, repeat: Math.ceil(d / 0.3), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#cb17-refl", { x: -520 }, { x: 640, duration: d, ease: "none", immediateRender: false }, t0);
+          tl.fromTo("#cb17-garland", { rotation: -7, svgOrigin: "560 584" }, { rotation: 7, duration: 0.45, repeat: Math.ceil(d / 0.45), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Fx.heart(tl, t0 + 1.8, d - 1.8, 0.5, 0.45);
+        },
       });
 
       // ---------- 18. the district hospital's emergency entrance, 3:30 a.m.; they come in from the truck ----------
@@ -231,6 +240,8 @@
         actors: [MINT(-60, GW + 120, 0.72, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 520, y: GW + 60, dur: D("er"), ease: "none" } }),
           YAI(-220, GW + 140, 0.66, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: 260, y: GW + 80, dur: D("er"), ease: "none" } })],
         captions: caps("er"),
+        // they made it to the doctor: Yai Kham's rule 2 lights up (rule 1 ticked)
+        fx(tl, id, t0, L) { PopUI.rule(tl, L.light, t0 + 0.05, D("er") - 0.05, { active: 1, done: [0], y: 560, s: 0.86, out: false }); },
       });
 
       // ---------- 19. the doctor, close: what did he eat, and when ----------
