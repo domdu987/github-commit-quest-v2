@@ -235,7 +235,7 @@
     if (o.fence) s += `<g>${Array.from({ length: 18 }, (_, k) => `<rect x="${o.fence[0] + k * 66}" y="${G - 230 + (k % 3) * 9}" width="18" height="${240 - (k % 3) * 9}" rx="6" fill="${night ? "#1a1410" : "#b89a62"}" stroke="${INK}" stroke-width="2"/><path d="M${o.fence[0] + k * 66 + 4},${G - 190}v30" stroke="#8a7044" stroke-width="3"/>`).join("")}
       <path d="M${o.fence[0] - 20},${G - 180}H${o.fence[0] + 1200}M${o.fence[0] - 20},${G - 80}H${o.fence[0] + 1200}" stroke="${night ? "#1a1410" : "#8a6e44"}" stroke-width="10"/></g>`;
     put(L.set, s);
-    if (night) put(L.glow, `<circle cx="${hx - 175 * hs}" cy="${G - 650 * hs}" r="${240 * hs}" fill="url(#p2Lamp)" class="pglow"/><circle cx="${hx + 135 * hs}" cy="${G - 650 * hs}" r="${240 * hs}" fill="url(#p2Lamp)" class="pglow"/>`);
+    if (night) put(L.glow, `<g id="${id}-lamps"><circle cx="${hx - 175 * hs}" cy="${G - 650 * hs}" r="${240 * hs}" fill="url(#p2Lamp)" class="pglow"/><circle cx="${hx + 135 * hs}" cy="${G - 650 * hs}" r="${240 * hs}" fill="url(#p2Lamp)" class="pglow"/></g>`);
     // foreground: grass and a banana leaf edge framing the bottom corners (blur them with blur.fg)
     if (o.fg !== false) {
       const FC = night ? ["#050a04", "#0a1408"] : dusk ? ["#2a3a1a", "#3e5226"] : ["#3e5a24", "#5a7e30"];
