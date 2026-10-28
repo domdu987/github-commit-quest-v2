@@ -1,0 +1,260 @@
+      // ---------- ผีแม่ม่าย EP.3 ตรวจใจก่อนสาย (ตอนจบ) ----------
+      // camera grammar: dawn on the ward, the widow at the foot of the bed, her eyes on us → the confession (close two-shots) → the gene
+      // (family tree, the shadow screen) → the tests (the strip, the couch) → the device from above → the warning → a month on at the sala
+      // (wide class, rule 3, the jokes, the red shirt under the AED) → that night at Boss's → black, a heartbeat → the end card
+      const MOON = { from: "right", rim: "#a8c4ff", rimOp: 0.8, shade: "#000010", shadeOp: 0.5, cast: false, vol: false };
+      const SUN = { from: "left", rim: "#fff2c8", rimOp: 0.7, shade: "#2a1a10", shadeOp: 0.35, cast: { len: 1.6, op: 0.35 }, vol: false };
+      const TUBEW = { from: "right", rim: "#e8fff4", rimOp: 0.5, shade: "#102028", shadeOp: 0.4, cast: false, vol: false };
+      const GLATE = { top: "#0a1430", bottom: "#1a2a3a", op: 0.35 }, GDAY = { top: "#fff0c8", bottom: "#c8e0f0", op: 0.12 }, GNIGHT = { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 };
+      const GDAWN = { top: "#3a4a7a", bottom: "#c88a6a", op: 0.28 }, GWARD = { top: "#e8f4f0", bottom: "#c8dce8", op: 0.12 }, GLEG = { top: "#3a1a0a", bottom: "#0a0604", op: 0.2 };
+      const oneHand = (id, i) => { const h = document.getElementById(`${id}-a${i}-handB`); if (h) h.innerHTML = ""; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const PER = 60 / 110, push = (u) => { const ph = (u % PER) / PER; return ph < 0.42 ? Math.sin((ph / 0.42) * Math.PI / 2) : Math.cos(((ph - 0.42) / 0.58) * Math.PI / 2); };
+      Rig.MODES.sleep = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: 4, faF: 4, uaB: -4, faB: -4, thF: -2, thB: 2, shF: 3, shB: 2 });
+      Rig.MODES.lieBed = (u, o) => ({ ...Rig.MODES.lie(u, o), torso: 0.4 * Math.sin(u * 1.6), uaF: 4, faF: -10, uaB: -4, faB: -8, head: o.head ?? 8 });
+      Rig.MODES.sitBed = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: o.touch ? -40 : -20, faF: o.touch ? -128 : -40, uaB: 10, faB: -20, head: o.head ?? 0, torso: -2 });
+      Rig.MODES.cry = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -40 + 4 * Math.sin(u * 7), faF: -120, uaB: -10, faB: -30, torso: 4 + 2 * Math.sin(u * 7), head: 8 + 2 * Math.sin(u * 7) });
+      Rig.MODES.hold = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -52, faF: -40, uaB: -6, faB: -12, head: 4, torso: 2 });
+      Rig.MODES.kneel = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 14, faF: -40, uaB: -14, faB: 40, torso: 0, head: 6 });
+      Rig.MODES.cpr = (u, o) => { const k = push(u + (o.ph ?? 0)); return { ...Rig.MODES.crouch(u, o), uaF: o.ua ?? -30, faF: -4, uaB: (o.ua ?? -30) + 4, faB: -6, torso: 10 + 5 * k, head: 18 + 3 * k, bodyY: (o.by ?? 190) + 12 * k }; };
+      Rig.MODES.hangUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150 + 4 * Math.sin(u * 3), faF: -20, uaB: 6, faB: -10, head: -14, torso: -3 });
+      Object.assign(Rig.CAST, { docLight: { ...Rig.CAST.docm } });
+      const SRC = (L, tl, t0, dur, text) => MmUI.source(tl, L.light, t0, dur, { text });
+      const WARD = (id, o = {}) => ({ set: "ward2", setOpts: { id, time: o.time || "day", bed: 560, window: 820, ...(o.opts || {}) }, dark: o.dark ?? 0.04, blur: o.blur || { sky: 3, mid: 2 }, light: TUBEW, grade: o.grade || GWARD });
+      const KBED = (tr, x = 720) => A("keng", x, 1262, 0.8, tr);
+
+      // ---------- 1. dawn on the ward: Keng asleep; at the foot of the bed, the widow ----------
+      add("hook", {
+        ...WARD("dw", { time: "dawn", dark: 0.3, grade: GDAWN }),
+        cam: { keys: [{ t: 0, ...fr(740, 1260, 1.25, 540, 1050) }, { t: D("hook"), glide: D("hook"), ...fr(800, 1280, 1.4, 540, 1050) }] },
+        actors: [KBED([{ t: 0, mode: "lieBed", eyes: "closed", mouth: "flat" }])],
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0);
+          put(L.glow, Mm.ghost(1060, 1530, 0.78, { id: "dw-g", pose: "sit", eyes: false }) + `<g id="dw-ge" opacity="0">${Mm.ghostEyes(1060, 1530, 0.78, { pose: "sit", id: "dw-gee" })}</g>`);
+          tl.to("#dw-ge", { opacity: 1, duration: 0.6, ease: "power1.in" }, t0 + 0.9);
+          tl.set("#dw-ge", { opacity: 0 }, t0 + 2.1); tl.set("#dw-ge", { opacity: 1 }, t0 + 2.22);
+          Fx.heart(tl, t0 + 0.9, D("hook") - 0.9, 0.6, 0.4);
+        },
+      });
+      // ---------- 2. her eyes come round to us ----------
+      add("hook2", {
+        ...WARD("d2", { time: "dawn", dark: 0.42, grade: GDAWN }),
+        cam: { keys: [{ t: 0, ...fr(1074, 1150, 2.4, 540, 900) }, { t: D("hook2"), glide: D("hook2"), ease: "power2.in", ...fr(1074, 1150, 3.6, 540, 900) }] },
+        captions: caps("hook2"),
+        fx(tl, id, t0, L) {
+          put(L.glow, Mm.ghost(1060, 1530, 0.78, { id: "d2-g", pose: "sit", eyes: false }) + `<g id="d2-ge">${Mm.ghostEyes(1060, 1530, 0.78, { pose: "sit", id: "d2-gee" })}</g>`);
+          tl.fromTo("#d2-ge", { x: -10 }, { x: 0, duration: 0.5, ease: "power2.inOut", immediateRender: false }, t0 + 0.4);
+          tl.fromTo("#d2-ge", { scale: 1, svgOrigin: "1074 1230" }, { scale: 1.25, svgOrigin: "1074 1230", duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + 0.9);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook2") - 0.35, 0.3, 14, 3102);
+          tl.fromTo("#flashw", { opacity: 0.4 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + D("hook2") - 0.25);
+        },
+      });
+      // ---------- 3. the confession ----------
+      add("plea", {
+        ...WARD("w1"),
+        cam: { keys: [{ t: 0, ...fr(230, 1150, 1.7, 540, 1000) }] },
+        actors: [A("chan", 130, 1600, 0.8, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat", look: -8 }]), A("fon", 330, 1610, 0.78, [{ t: 0, mode: "hold", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("plea", 0, "o")] })],
+        captions: caps("plea", undefined, { quote: true }),
+      });
+      add("confess", {
+        ...WARD("w2", { blur: { sky: 5, mid: 4, set: 3 } }),
+        cam: { keys: [{ t: 0, ...fr(130, 1110, 2.3, 540, 1000) }, { t: D("confess"), glide: D("confess"), ...fr(130, 1110, 2.45, 540, 1000) }] },
+        actors: [A("chan", 130, 1600, 0.8, [{ t: 0, mode: "cry", eyes: "worry", mouth: "frown" }], { talk: [TALK("confess", 0, "frown")] })],
+        captions: caps("confess", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.light, `<g id="cf-ph" opacity="0"><rect width="1080" height="1920" fill="#0a0806"/><g transform="translate(540,880) scale(2.1)">${Mm.portrait()}</g></g>`);
+          tl.set("#cf-ph", { opacity: 1 }, t0 + F("confess", 0, 1) - 0.05); tl.set("#cf-ph", { opacity: 0 }, t0 + F("confess", 0, 1) + 0.55);
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + F("confess", 0, 1) - 0.08);
+        },
+      });
+      add("fear", {
+        ...WARD("w3"),
+        cam: { keys: [{ t: 0, ...fr(470, 1170, 1.3, 540, 1000) }] },
+        actors: [KBED([{ t: 0, mode: "sitBed", eyes: "worry", mouth: "flat", look: -8 }], 760), A("chan", 130, 1600, 0.8, [{ t: 0, mode: "cry", eyes: "worry", mouth: "frown" }], { talk: [TALK("fear", 0, "frown")] })],
+        captions: caps("fear", undefined, { quote: true }),
+      });
+      add("doc", {
+        ...WARD("w4", { blur: { sky: 5, mid: 4, set: 3 } }),
+        cam: { keys: [{ t: 0, ...fr(900, 1000, 2.0, 540, 960) }] },
+        actors: [A("docm", 900, 1560, 0.86, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TALK("doc", 0, "smile")] })],
+        captions: caps("doc", undefined, { quote: true }),
+      });
+      // ---------- 4. the gene: the family tree ----------
+      add("tree", {
+        ...WARD("w5", { dark: 0.45, blur: { sky: 10, mid: 10, set: 10, act: 8 } }),
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 1.0, 540, 1000) }] },
+        captions: caps("tree"),
+        fx(tl, id, t0, L) {
+          MmUI.famTree(tl, L.light, t0 + 0.05, D("tree") - 0.05, { at: { genes: vo("tree", 0) + 0.6, count: vo("tree", 1) + 0.2, rings: vo("tree", 1) + 1.6 } });
+          SRC(L, tl, t0 + 0.4, D("tree") - 0.5, "ที่มา: PPTV สุขภาพ (4 ส.ค. 2569)");
+        },
+      });
+      // ---------- 5. the shadow screen: the widow over the houses — the helix lights in one of them ----------
+      add("house", {
+        set: "legend3", setOpts: { id: "lh", shirt: false }, dark: 0, light: false, grade: GLEG,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 900) }, { t: D("house"), glide: D("house"), ...fr(560, 900, 1.08, 540, 900) }] },
+        captions: caps("house"),
+        fx(tl, id, t0, L) {
+          tl.set("#lh-man", { opacity: 0 }, t0);
+          const hs = [[300, 1040, 1], [540, 1060, 1.2], [790, 1040, 1]].map(([x, y, s], k) => `<g transform="translate(${x},${y}) scale(${s})"><g id="lh-h${k}"><path d="M-110,0V-150L0,-230L110,-150V0Z" fill="#120a06"/><rect x="-26" y="-90" width="52" height="90" fill="#2a1a10"/><path d="M-120,-150L0,-240L120,-150" stroke="#120a06" stroke-width="16" fill="none"/></g></g>`).join("");
+          put(L.act, hs);
+          put(L.glow, `<g id="lh-dna" opacity="0"><circle cx="540" cy="990" r="110" fill="url(#mu3Helix)"/><g transform="translate(540,990) scale(2.4)"><path d="M-10,-22C10,-14 10,-6 -10,2S10,18 -10,24M10,-22C-10,-14 -10,-6 10,2S-10,18 10,24" stroke="#ff5a4a" stroke-width="5" fill="none" stroke-linecap="round"/>${[-16, -6, 4, 14].map((yy) => `<path d="M-7,${yy}H7" stroke="#ffd0c8" stroke-width="3"/>`).join("")}</g></g>`);
+          tl.fromTo("#lh-widow", { x: -260, y: -260 }, { x: 0, y: -280, duration: 1.4, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.to("#lh-widow", { x: 0, y: -240, duration: 0.6, ease: "power2.inOut" }, t0 + 1.4);
+          tl.to("#lh-dna", { opacity: 1, duration: 0.4 }, t0 + F("house", 0, 1) - 0.1);
+          tl.fromTo("#lh-dna", { scale: 0.4, svgOrigin: "540 990" }, { scale: 1, svgOrigin: "540 990", duration: 0.5, ease: "back.out(2.4)", immediateRender: false }, t0 + F("house", 0, 1) - 0.1);
+          tl.to("#lh-widow", { opacity: 0, duration: 0.5 }, t0 + F("house", 0, 1) + 0.3);
+          for (let t = 0, k = 0; t < D("house"); t += 0.16, k++) tl.set("#lh-lamp", { opacity: [1, 0.9, 0.97, 0.84, 1, 0.92][k % 6] }, t0 + t);
+          SRC(L, tl, t0 + 0.3, D("house") - 0.4, "ที่มา: PPTV สุขภาพ (4 ส.ค. 2569)");
+        },
+      });
+      // ---------- 6. the tests ----------
+      add("screen", {
+        ...WARD("w6", { dark: 0.45, blur: { sky: 10, mid: 10, set: 10, act: 8 } }),
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 1.0, 540, 1000) }] },
+        captions: caps("screen"),
+        fx(tl, id, t0, L) {
+          MmUI.ecgPrint(tl, L.light, t0 + 0.05, D("screen") - 0.05, { y: 470, ages: [vo("screen", 1) + 0.6, vo("screen", 1) + 0.85, vo("screen", 1) + 1.1] });
+          SRC(L, tl, t0 + 0.4, D("screen") - 0.5, "ที่มา: PPTV สุขภาพ (4–5 ส.ค. 2569)");
+        },
+      });
+      add("boss", {
+        ...WARD("w7"),
+        cam: { keys: [{ t: 0, ...fr(470, 1150, 1.6, 540, 1000) }, { t: vo("boss", 1) - 0.1, glide: 0.5, ...fr(330, 1160, 1.6, 540, 1000) }] },
+        actors: [A("boss", 700, 1250, 0.66, [{ t: 0, mode: "lieBed", opts: { head: 0 }, eyes: "closed", mouth: "laugh" }], { talk: [TALK("boss", 0, "laugh")] }),
+          A("fon", 170, 1600, 0.8, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { talk: [TALK("boss", 1, "smile")] })],
+        captions: caps("boss", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.glow, Mm.electrodes(470, 1180, 0.7, "w7-el"));
+          put(L.set, `<g transform="translate(980,1500)"><rect x="-80" y="-420" width="160" height="300" rx="16" fill="#e8ecf0" stroke="#5a6672" stroke-width="5"/><rect x="-60" y="-400" width="120" height="80" rx="8" fill="#0e1418"/><path d="M-56,-360h20l6,-16l6,26l6,-20l6,10h30" stroke="#7aff9a" stroke-width="3" fill="none"/><path d="M-60,-120V0M60,-120V0" stroke="#8a8e92" stroke-width="10"/><circle cx="-60" cy="0" r="14" fill="#3a3e42"/><circle cx="60" cy="0" r="14" fill="#3a3e42"/></g>`);
+          put(L.glow, `<g transform="translate(240,1060)"><g id="w7-st">${[[0, 0], [24, 8], [-20, 12]].map(([dx, dy]) => `<circle cx="${dx}" cy="${dy}" r="8" fill="#fbfbf8" stroke="#8a96a2" stroke-width="2.5"/>`).join("")}</g></g>`);
+          tl.set("#w7-st", { opacity: 0 }, t0); tl.set("#w7-st", { opacity: 1 }, t0 + vo("boss", 1));
+        },
+      });
+      add("result", {
+        ...WARD("w8", { blur: { sky: 4, mid: 3 } }),
+        cam: { keys: [{ t: 0, ...fr(760, 1000, 1.7, 540, 1000) }] },
+        actors: [A("docm", 900, 1560, 0.86, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }], { flip: true, talk: [TALK("result", 0, "flat")] })],
+        captions: caps("result", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.glow, `<g transform="translate(600,880)"><rect x="-150" y="-110" width="300" height="220" rx="12" fill="#f4fbff" stroke="#6a7a86" stroke-width="6"/><rect x="-134" y="-94" width="268" height="188" fill="#fff6f4"/><rect x="-134" y="-94" width="268" height="188" fill="url(#mu3Grid)"/>
+            <path d="M-130,0h30l6,-12l6,16l8,-60l8,70l10,-14h20q20,0 26,-30q6,30 30,30h34l6,-12l6,16l8,-60l8,70l10,-14h20" stroke="#1a1412" stroke-width="3.5" fill="none" stroke-linejoin="round"/>
+            <g id="w8-ring" opacity="0"><ellipse cx="-10" cy="-14" rx="44" ry="56" fill="none" stroke="#e2382e" stroke-width="7"/></g></g>`);
+          tl.fromTo("#w8-ring", { opacity: 0, scale: 1.6, svgOrigin: "-10 -14" }, { opacity: 1, scale: 1, svgOrigin: "-10 -14", duration: 0.4, ease: "back.out(2.6)", immediateRender: false }, t0 + F("result", 0, 1) - 0.1);
+        },
+      });
+      // ---------- 7. the defibrillator under the skin ----------
+      add("icd", {
+        set: "icdTop", setOpts: { id: "ic" }, dark: 0.02, light: false, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(580, 760, 1.05, 540, 880) }, { t: D("icd"), glide: D("icd"), ...fr(590, 780, 1.12, 540, 880) }] },
+        captions: caps("icd"),
+        fx(tl, id, t0, L) {
+          MmUI.icdAnim(tl, "ic", t0, { dev: vo("icd", 0) + 0.4, fire: D("icd") - 1.2, end: D("icd") });
+          SRC(L, tl, t0 + 0.3, D("icd") - 0.4, "ที่มา: PPTV สุขภาพ (4 ส.ค. 2569)");
+        },
+      });
+      add("robot", {
+        ...WARD("w9"),
+        cam: { keys: [{ t: 0, ...fr(640, 1120, 1.5, 540, 1000) }, { t: vo("robot", 1) - 0.1, glide: 0.5, ...fr(520, 1150, 1.3, 540, 1000) }] },
+        actors: [KBED([{ t: 0, mode: "sitBed", opts: { touch: true }, eyes: "normal", mouth: "smile" }], 760), A("chan", 260, 1600, 0.8, [{ t: 0, mode: "cry", eyes: "worry", mouth: "frown" }, { t: vo("robot", 1), mode: "idle", eyes: "closed", mouth: "laugh" }], { flip: true, talk: [TALK("robot", 1, "laugh")] })],
+        captions: caps("robot", undefined, { quote: true }),
+      });
+      add("pills", {
+        ...WARD("wa", { dark: 0.4, blur: { sky: 10, mid: 10, set: 10, act: 8 } }),
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 1.0, 540, 1000) }] },
+        actors: [A("docm", 900, 1560, 0.86, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+        captions: caps("pills", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          MmUI.pills(tl, L.light, t0 + 0.05, D("pills") - 0.05, { at: [vo("pills", 0) + 0.05, vo("pills", 0) + 0.6, vo("pills", 1) + 0.3], y: 520 });
+          SRC(L, tl, t0 + 0.4, D("pills") - 0.5, "ที่มา: PPTV สุขภาพ (4 ส.ค. 2569)");
+        },
+      });
+      // ---------- 8. a month on: the whole village learns CPR at the sala ----------
+      const MAN = (L, x, s = 1) => put(L.act, Mm.manikin(x, 1500, s * 0.62));
+      add("sala", {
+        set: "sala2", setOpts: { id: "s1", chairs: [] }, dark: 0, blur: { far: 3 }, light: SUN, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(480, 1170, 0.72, 540, 1050) }, { t: D("sala"), glide: D("sala"), ...fr(520, 1180, 0.8, 540, 1050) }] },
+        actors: [A("samarn", -260, 1520, 0.84, [{ t: 0, mode: "cpr", opts: { by: 150, ph: 0.2 }, eyes: "normal", mouth: "o" }]), A("piak", 60, 1520, 0.84, [{ t: 0, mode: "cpr", opts: { by: 150, ph: 0.1 }, eyes: "normal", mouth: "o" }]),
+          A("chan", 380, 1520, 0.82, [{ t: 0, mode: "cpr", opts: { by: 150 }, eyes: "normal", mouth: "o" }]), A("bua", 760, 1500, 0.92, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }], { flip: true }),
+          A("fon", 640, 1530, 0.8, [{ t: 0, mode: "cpr", opts: { by: 150, ph: 0.3 }, eyes: "normal", mouth: "smile" }])],
+        captions: caps("sala"),
+        fx(tl, id, t0, L) { [-140, 180, 500, 760].forEach((x) => MAN(L, x)); },
+      });
+      add("rule", {
+        set: "sala2", setOpts: { id: "s2", chairs: [] }, dark: 0, blur: { sky: 6, far: 6, set: 2 }, light: SUN, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(760, 1070, 1.8, 540, 1260) }] },
+        actors: [A("bua", 760, 1500, 0.92, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true, talk: [TALK("rule", 0, "flat")] })],
+        captions: caps("rule", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect id="s2-dim" width="1080" height="1920" fill="#000" opacity="0"/>`);
+          tl.to("#s2-dim", { opacity: 0.35, duration: 0.3 }, t0 + 0.6);
+          MmUI.rule(tl, L.light, t0 + 0.6, D("rule") - 0.6, { active: 2, done: [0, 1], y: 420 });
+        },
+      });
+      add("teach", {
+        set: "sala2", setOpts: { id: "s3", chairs: [] }, dark: 0, blur: { far: 4, set: 2 }, light: SUN, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(600, 1300, 1.6, 540, 1100) }] },
+        actors: [A("fon", 640, 1530, 0.8, [{ t: 0, mode: "cpr", opts: { by: 150 }, eyes: "normal", mouth: "o" }], { talk: [TALK("teach", 0, "scream")] })],
+        captions: caps("teach", undefined, { quote: true }),
+        fx(tl, id, t0, L) { MAN(L, 760); },
+      });
+      add("piak", {
+        set: "sala2", setOpts: { id: "s4", chairs: [] }, dark: 0, blur: { far: 4, set: 2 }, light: SUN, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(110, 1280, 1.7, 540, 1100) }] },
+        actors: [A("piak", 60, 1520, 0.84, [{ t: 0, mode: "cpr", opts: { by: 150 }, eyes: "normal", mouth: "smile" }], { talk: [TALK("piak", 0, "smile")] })],
+        captions: caps("piak", undefined, { quote: true }),
+        fx(tl, id, t0, L) { MAN(L, 180); put(L.act, `<g transform="translate(-60,1500) scale(1.3)">${Mm.PROP.polish()}</g>`); },
+      });
+      add("shirt", {
+        set: "sala2", setOpts: { id: "s5", chairs: [] }, dark: 0, blur: { far: 4 }, light: SUN, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(120, 1000, 1.45, 540, 1000) }] },
+        actors: [A("samarn", 230, 1500, 0.9, [{ t: 0, mode: "hangUp", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TALK("shirt", 0, "smile")] })],
+        captions: caps("shirt", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.act, `<g transform="translate(40,${1500 - 470})"><path d="M0,-24q12,-10 0,-24" stroke="#5a5a60" stroke-width="4" fill="none"/>${Mm.shirt(0, 0, 0.42, { id: "s5-rs" })}</g>`);
+          tl.fromTo("#s5-rs", { rotation: -10, svgOrigin: "0 0" }, { rotation: 6, duration: 0.9, repeat: 2, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.2);
+          SRC(L, tl, t0 + 0.3, D("shirt") - 0.4, "แขวนเสื้อแดงได้ตามความเชื่อ: ผู้จัดการออนไลน์ (16 ธ.ค. 2562)");
+        },
+      });
+      // ---------- 9. that night, Boss's house; the widow at his feet; she does not move ----------
+      add("night", {
+        set: "sleep2", setOpts: { id: "bn", clock: false }, dark: 0.3, blur: { sky: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(200, 900, 1.4, 540, 900) }, { t: D("night"), glide: D("night"), ease: "power1.inOut", ...fr(620, 1560, 1.15, 540, 1050) }] },
+        actors: [A("boss", 760, 1680, 0.66, [{ t: 0, mode: "sleep", eyes: "closed", mouth: "flat" }])],
+        captions: caps("night"),
+      });
+      add("wait", {
+        set: "sleep2", setOpts: { id: "bw", clock: false, ghost: true, netOpen: true }, dark: 0.34, blur: { sky: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(860, 1560, 1.15, 540, 1050) }, { t: D("wait"), glide: D("wait"), ...fr(1000, 1330, 1.8, 540, 1000) }] },
+        actors: [A("boss", 760, 1680, 0.66, [{ t: 0, mode: "sleep", eyes: "closed", mouth: "flat" }])],
+        captions: caps("wait"),
+        fx(tl, id, t0) {
+          tl.set("#bw-ghost-eyes", { opacity: 0 }, t0);
+          tl.to("#bw-ghost-eyes", { opacity: 1, duration: 0.6, ease: "power1.in" }, t0 + 0.5);
+          tl.set("#bw-ghost-eyes", { opacity: 0 }, t0 + D("wait") - 1.2); tl.set("#bw-ghost-eyes", { opacity: 1 }, t0 + D("wait") - 1.08);
+          Fx.heart(tl, t0 + 0.5, D("wait") - 0.5, 0.75, 0.4);
+        },
+      });
+      // ---------- 10. black; a heartbeat line: you don't have to wait ----------
+      add("you", {
+        set: "sleep2", setOpts: { id: "yu", clock: false }, dark: 0.9, light: false, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        captions: caps("you"),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect width="1080" height="1920" fill="#050406"/><g transform="translate(0,860)"><path id="yu-ecg" d="M0,0H300L330,-30L350,40L380,-180L410,120L440,0H560L590,-30L610,40L640,-180L670,120L700,0H1080" stroke="#ff4a3a" stroke-width="9" fill="none" stroke-linejoin="round" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+            <path d="M0,0H300L330,-30L350,40L380,-180L410,120L440,0H560L590,-30L610,40L640,-180L670,120L700,0H1080" stroke="#ff4a3a" stroke-width="30" fill="none" opacity=".18" stroke-linejoin="round"/></g>`);
+          tl.fromTo("#yu-ecg", { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 1.6, ease: "none", immediateRender: false }, t0 + 0.2);
+        },
+      });
+      // ---------- 11. end card ----------
+      add("end", {
+        set: "tag2", setOpts: { id: "tz", ep: "จบ", title: "ผีแม่ม่าย" }, dark: 0, blur: { mid: 3 }, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 760, 1.0, 540, 800) }, { t: D("end"), glide: D("end"), ...fr(560, 780, 1.05, 540, 800) }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0);
+          tl.fromTo("#tz-tag", { rotation: -24, svgOrigin: "0 0" }, { rotation: 0, svgOrigin: "0 0", duration: 1.8, ease: "elastic.out(1, 0.35)", immediateRender: false }, t0 + 0.2);
+          tl.fromTo("#tz-sh", { rotation: -3, svgOrigin: "0 0" }, { rotation: 3, duration: 1.2, repeat: 2, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+        },
+      });
