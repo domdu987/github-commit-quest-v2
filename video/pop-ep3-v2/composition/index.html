@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="th" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/rig.js"></script>
+    <script src="assets/sets.js"></script>
+    <script src="assets/camp.js"></script>
+    <script src="assets/koi.js"></script>
+    <script src="assets/zom.js"></script>
+    <script src="assets/hands.js"></script>
+    <script src="assets/mok.js"></script>
+    <script src="assets/pov.js"></script>
+    <script src="assets/phrai.js"></script>
+    <script src="assets/ui.js"></script>
+    <script src="assets/gameui.js"></script>
+    <script src="assets/mokui.js"></script>
+    <script src="assets/phraiui.js"></script>
+    <script src="assets/pop.js"></script>
+    <script src="assets/grain.js"></script>
+    <script src="assets/pop2.js"></script>
+    <script src="assets/pop2kok.js"></script>
+    <script src="assets/pop2kitchen.js"></script>
+    <script src="assets/pop2room.js"></script>
+    <script src="assets/pop2ui.js"></script>
+    <script src="assets/pop2more.js"></script>
+    <script src="assets/pop2hosp.js"></script>
+    <script src="assets/pop2end.js"></script>
+    <script src="assets/rig2.js"></script>
+    <script src="assets/popcast.js"></script>
+    <script src="assets/fx.js"></script>
+    <script src="assets/engine.js"></script>
+    <script src="assets/opener.js"></script>
+    <script src="assets/openers.js"></script>
+    <style>
+      @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 900; src: url(assets/fonts/f3.ttf); }
+      @font-face { font-family: 'Mali'; font-weight: 600; src: url(assets/fonts/mali6.ttf); }
+      @font-face { font-family: 'Mali'; font-weight: 700; src: url(assets/fonts/mali7.ttf); }
+      @font-face { font-family: 'Sriracha'; font-weight: 400; src: url(assets/fonts/sriracha.ttf); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05080a; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Kanit, sans-serif; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .stage { position: absolute; inset: 0; }
+      .fgblur { filter: blur(7px); }
+      .badge { z-index: 56; position: absolute; left: 36px; bottom: 150px; font: 700 26px/1 Kanit; color: #f4ecd8; opacity: .75; letter-spacing: 2px;
+        background: rgba(5,8,10,.55); padding: 8px 14px 10px; border-radius: 10px; }
+      #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 64% at 50% 48%, transparent 50%, rgba(3,6,8,.8) 100%); }
+      #grain { z-index: 57; position: absolute; inset: -60px; opacity: .11; mix-blend-mode: overlay; pointer-events: none; }
+      #flashw { z-index: 60; position: absolute; inset: 0; background: #e8f0ff; opacity: 0; pointer-events: none; }
+      #black { z-index: 61; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+      
+    .uicard { position:absolute; display:flex; gap:14px; align-items:center; max-width:640px; background:rgba(244,236,216,.95);
+      border:4px solid #2e2a26; border-radius:16px; box-shadow:5px 5px 0 rgba(46,42,38,.7); padding:12px 20px 14px 14px; opacity:0; }
+    .uicard .lbl { font:700 22px/1.1 Kanit; color:#7a6c5d; letter-spacing:2px; }
+    .uicard .txt { font:900 38px/1.15 Kanit; color:#2e2a26; white-space:nowrap; }
+    .uicard .val { margin-left:6px; font:900 46px/1 Kanit; color:#b0553a; }
+    .uicard .k, .capbox .k { display:inline-block; padding:0 .14em; margin:0 .04em; background:#e07a4f; border:3px solid #2e2a26; border-radius:7px; transform:rotate(-2deg); }
+    .capwrap { position:absolute; left:0; right:0; top:1630px; display:flex; justify-content:center; pointer-events:none; }
+    .capbox { position:absolute; background:#f4ecd8; color:#2e2a26; border:5px solid #2e2a26; border-radius:6px; box-shadow:8px 8px 0 rgba(46,42,38,.85);
+      padding:14px 30px 18px; font:900 58px/1.25 Kanit; white-space:nowrap; opacity:0; }
+    .bubble { position:absolute; background:#f4ecd8; border:5px solid #2e2a26; border-radius:26px; padding:16px 26px 20px; font:900 46px/1.2 Kanit; color:#2e2a26;
+      box-shadow:6px 6px 0 rgba(46,42,38,.8); white-space:nowrap; opacity:0; }
+    .bubble:after { content:""; position:absolute; bottom:-30px; left:var(--tail, 40px); width:40px; height:32px; background:#f4ecd8; border:5px solid #2e2a26; border-top:0;
+      clip-path:polygon(0 0,100% 0,30% 100%); }
+      
+    .gui { position:absolute; z-index:58; opacity:0; color:#f4ecd8; font-family:Kanit; }
+    .gui .k { display:inline-block; padding:0 .16em; margin:0 .05em; background:#f2c55c; color:#2e2a26; border-radius:8px; transform:rotate(-2deg); }
+    .gui .chip { display:inline-block; font:700 22px/1 Kanit; letter-spacing:2px; color:#10171a; background:#7fd1b9; padding:6px 12px 7px; border-radius:20px; }
+    .gui .fm { width:76px; height:76px; border-radius:50%; overflow:hidden; background:radial-gradient(circle at 40% 35%, #3b4a50, #1a2226); border:3px solid #f4ecd8; flex:none; }
+    .gui .fm .face { width:100%; height:100%; }
+    .tip { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; display:flex; gap:20px; align-items:center; padding:16px 30px 22px 16px; max-width:1010px; }
+    .tip.warn .chip { background:#f0a070; } .tip.danger .chip { background:#e8705a; } .tip.rule .chip { background:#f2c55c; }
+    .tip .med, .steps .ic { width:124px; height:124px; flex:none; border-radius:50%; background:radial-gradient(circle at 38% 32%, #fffaf0, #e6d6b4 75%); border:4px solid #2e2a26; box-shadow:0 0 0 4px #f4ecd8, 0 6px 14px rgba(0,0,0,.4); display:grid; place-items:center; }
+    .tip .med svg { width:104px; height:104px; overflow:visible; }
+    .tip .txt { font:900 40px/1.22 Kanit; margin-top:8px; white-space:nowrap; }
+    .gui .bar { position:absolute; left:26px; right:26px; bottom:9px; height:5px; border-radius:3px; background:rgba(244,236,216,.15); overflow:hidden; }
+    .gui .bar i { position:absolute; inset:0; background:#7fd1b9; }
+    .steps { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; padding:16px 22px 26px; text-align:center; }
+    .steps .row { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:12px; }
+    .steps .st { display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .steps .ic { width:132px; height:132px; } .steps .ic svg { width:108px; height:108px; overflow:visible; }
+    .steps .st b { font:900 38px/1 Kanit; } .steps .st:first-child b { color:#f2c55c; }
+    .steps .arr { font:900 56px/1 Kanit; color:rgba(244,236,216,.45); margin-top:-40px; }
+    .choice { text-align:center; }
+    .choice .q { display:inline-block; font:700 34px/1 Kanit; letter-spacing:1px; padding:10px 24px 12px; border-radius:24px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); }
+    .choice .opts { display:flex; align-items:center; justify-content:center; gap:22px; margin-top:16px; }
+    .choice .opt { display:flex; align-items:center; gap:14px; font:900 44px/1 Kanit; padding:18px 26px 22px; border-radius:22px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); white-space:nowrap; }
+    .choice .key { display:grid; place-items:center; width:50px; height:50px; border-radius:12px; background:#f4ecd8; color:#2e2a26; font-size:26px; box-shadow:0 4px 0 #9c8e76; }
+    .choice .timer { position:relative; width:120px; height:120px; flex:none; } .choice .timer svg { width:120px; height:120px; }
+    .choice .n { position:absolute; inset:0; display:grid; place-items:center; font:900 54px/1 Kanit; opacity:0; }
+    .choice .who2 { position:absolute; left:0; right:0; color:#7fd1b9; } .choice .who { margin-top:14px; font:700 30px/1 Kanit; color:#f2c55c; opacity:0; text-shadow:0 2px 8px #000; }
+    .qte { text-align:center; }
+    .qte .lbl { display:inline-block; font:900 44px/1 Kanit; letter-spacing:2px; padding:12px 30px 16px; border-radius:26px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); }
+    .qte .btnwrap { position:relative; width:220px; height:220px; margin:10px auto 0; }
+    .qte .btnwrap svg { position:absolute; inset:0; width:220px; height:220px; overflow:visible; }
+    .qte .key { position:absolute; inset:0; display:grid; place-items:center; font:900 38px/1 Kanit; }
+    .qte .ok { position:absolute; inset:0; display:grid; place-items:center; font:900 96px/1 Kanit; color:#7fd1b9; opacity:0; }
+    .qte .ecg { display:block; width:520px; height:56px; margin:4px auto 0; }
+    .qte .res { font:900 40px/1 Kanit; color:#7fd1b9; opacity:0; text-shadow:0 2px 8px #000; }
+    .rel { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:26px; display:flex; align-items:center; gap:16px; padding:14px 22px 16px 14px; }
+    .rel .faces { display:flex; align-items:center; gap:2px; } .rel .link { width:44px; height:24px; }
+    .rel .chip { background:#f2c55c; } .rel .txt { font:900 32px/1.2 Kanit; margin-top:6px; white-space:nowrap; } .rel .up { color:#7fd1b9; display:inline-block; }
+    .rel .hearts { display:flex; gap:6px; margin-top:6px; } .rel .hearts svg { width:30px; height:27px; overflow:visible; }
+    .intro { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:60px 26px 26px 60px; display:flex; align-items:center; gap:18px; padding:10px 30px 12px 10px; }
+    .intro .fm.big { width:104px; height:104px; } .intro .name { font:900 52px/1 Kanit; }
+    .intro .trait { display:inline-block; margin-top:6px; font:700 26px/1 Kanit; color:#2e2a26; padding:5px 12px 7px; border-radius:14px; }
+    .intro .brush { display:block; width:220px; height:14px; margin-top:4px; }
+    .status { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:44px 22px 22px 44px; display:flex; align-items:center; gap:14px; padding:8px 26px 10px 8px; }
+    .status .nm { font:900 34px/1 Kanit; } .status .st { display:flex; align-items:center; gap:8px; margin-top:6px; font:700 28px/1 Kanit; color:#e8705a; }
+    .status.unknown .st { color:#b9a8e8; } .status.safe .st { color:#7fd1b9; } .status .st svg { width:28px; height:26px; overflow:visible; }
+    .polaroid { background:#f7f1e2; padding:16px 16px 18px; border-radius:6px; box-shadow:0 18px 40px rgba(0,0,0,.6); }
+    .polaroid svg { display:block; } .polaroid .pc { font:900 34px/1 Kanit; color:#2e2a26; text-align:center; margin-top:12px; }
+    .polaroid .tag { position:absolute; left:-30px; top:-24px; font:700 24px/1 Kanit; color:#10171a; background:#b9a8e8; padding:6px 14px 8px; border-radius:16px; transform:rotate(-4deg); white-space:nowrap; }
+    .phone { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:34px; padding:18px 26px 24px; }
+    .phone .hdr { display:flex; align-items:center; gap:14px; } .phone .nm { font:900 36px/1 Kanit; }
+    .phone .sig { display:flex; align-items:flex-end; gap:4px; margin-top:6px; } .phone .sig i { display:block; width:8px; background:#7fd1b9; border-radius:2px; }
+    .phone .sig i:nth-child(1) { height:8px; } .phone .sig i:nth-child(2) { height:14px; } .phone .sig i:nth-child(3) { height:20px; } .phone .sig i:nth-child(4) { height:26px; }
+    .phone .sig span { margin-left:10px; font:700 22px/1 Kanit; color:#7fd1b9; }
+    .phone .typing { display:flex; gap:8px; margin:18px 0 0 6px; padding:16px 22px; background:#e9e1cf; border-radius:22px 22px 22px 6px; width:max-content; }
+    .phone .typing i { display:block; width:14px; height:14px; border-radius:50%; background:#7a6c5d; }
+    .phone .msg { margin-top:16px; background:#f4ecd8; color:#2e2a26; font:900 38px/1.25 Kanit; padding:16px 22px 14px; border-radius:24px 24px 24px 6px; opacity:0; }
+    .phone .msg .k { background:#e8705a; color:#fff; }
+    .phone .time { font:700 22px/1 Kanit; color:#7a6c5d; margin-top:10px; } .phone .time b { font-weight:900; }
+    .hud { display:flex; flex-direction:column; align-items:flex-end; gap:10px; opacity:1; }
+    .hud .c { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:22px; display:flex; align-items:center; gap:10px; padding:8px 18px 10px 10px; font:700 26px/1 Kanit; opacity:0; }
+    .hud .c b { font:900 34px/1 Kanit; } .hud .ci { width:46px; height:46px; } .hud .bat { width:64px; height:32px; } .hud .bars { width:48px; height:36px; }
+    .hud .lb { color:rgba(244,236,216,.7); font-size:22px; } .hud .sig.none span { color:#e8705a; }
+    .chapter { text-align:center; text-shadow:0 3px 14px rgba(0,0,0,.8); }
+    .chapter .sm { font:700 30px/1 Kanit; letter-spacing:10px; color:#f2c55c; } .chapter .big { font:900 92px/1.1 Kanit; margin-top:6px; }
+    .chapter svg { width:800px; height:20px; margin-top:6px; }
+    .qte .meter { display:flex; align-items:center; gap:12px; justify-content:center; margin-top:6px; font:700 26px/1 Kanit; }
+    .qte .mbar { position:relative; width:300px; height:22px; border-radius:11px; background:rgba(16,22,26,.9); border:2px solid rgba(244,236,216,.5); overflow:hidden; }
+    .qte .mbar i { position:absolute; left:0; top:0; bottom:0; width:100%; background:linear-gradient(90deg,#7fd1b9,#f2c55c 70%,#e8705a); transform-origin:0 50%; transform:scaleX(.3); }
+    .qte .mbar b { position:absolute; left:72%; top:-2px; bottom:-2px; width:5px; background:#e8705a; }
+    .choice .opt { position:relative; } .choice .opt .lbg { position:absolute; left:90px; opacity:0; color:#ff9a9a; } .choice .opt.B .lbg { left:auto; right:90px; }
+    .gui .fm.sm { width:54px; height:54px; display:inline-block; vertical-align:middle; }
+    .clockw { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; align-items:center; gap:18px; padding:14px 26px 14px 14px; }
+    .clockw .dial { width:190px; height:190px; flex:none; }
+    .clockw .dig { font:900 74px/1 Kanit; margin-top:6px; letter-spacing:2px; transform-origin:0 50%; }
+    .clockw .sub { display:flex; align-items:center; gap:10px; margin-top:8px; font:900 30px/1.1 Kanit; color:#f2c55c; opacity:0; }
+    .clockw .dots { display:inline-flex; gap:5px; } .clockw .dots i { width:9px; height:9px; border-radius:50%; background:#f2c55c; display:block; }
+    .fig { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; align-items:center; gap:20px; padding:14px 28px 16px 14px; }
+    .fig .art { flex:none; background:radial-gradient(circle at 40% 35%, #fffaf0, #e6d6b4 80%); border:4px solid #2e2a26; border-radius:24px; padding:8px; box-shadow:0 0 0 4px #f4ecd8; }
+    .fig .art svg { display:block; width:100%; height:auto; overflow:visible; }
+    .fig.dark .art { background:#0d1418; }
+    .fig .txt { font:900 40px/1.2 Kanit; margin-top:8px; white-space:nowrap; } .fig .txt2 { opacity:.15; }
+    .fig.warn .chip { background:#f0a070; } .fig.danger .chip { background:#e8705a; } .fig.rule .chip { background:#f2c55c; }
+    .radar { display:flex; align-items:center; gap:14px; } .radar svg { width:200px; height:200px; }
+    .radar .rl { display:flex; flex-direction:column; gap:8px; font:900 40px/1.1 Kanit; text-shadow:0 2px 10px #000; } .radar .chip { background:#e8705a; width:max-content; }
+    .memo { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:40px; display:flex; align-items:center; gap:12px; padding:8px 26px 8px 8px; font:900 32px/1 Kanit; overflow:hidden; }
+    .memo .shine { position:absolute; top:0; bottom:0; left:0; width:30%; background:linear-gradient(90deg,transparent,rgba(242,197,92,.45),transparent); }
+    .pov { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; }
+    .pov .lb { font:700 24px/1 Kanit; color:rgba(244,236,216,.7); } .pov .rec { width:16px; height:16px; border-radius:50%; background:#e8705a; display:block; }
+    .pov .bpm { display:flex; align-items:center; gap:6px; margin-left:10px; color:#e8705a; } .pov .bpm svg { width:30px; height:27px; overflow:visible; }
+    .mm { display:flex; flex-direction:column; align-items:center; gap:8px; } .mm svg { width:230px; height:230px; filter:drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
+
+    .gui { --tone: #7fd1b9; --glow: .3; }
+    .tip, .fig, .clockw, .steps, .rel, .intro, .status, .phone, .memo, .pov { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(127,209,185,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.warn, .fig.warn { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(240,160,112,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.danger, .fig.danger, .status.danger { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(232,112,90,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.rule, .fig.rule { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(242,197,92,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .fx-ring { position: absolute; inset: -4px; border-radius: inherit; padding: 4px; pointer-events: none; --a: 0deg;
+      background: conic-gradient(from var(--a), transparent 0deg 210deg, var(--tone) 290deg, #fffbe8 312deg, var(--tone) 330deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+    .fx-shw { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+    .fx-sheen { position: absolute; top: -10%; bottom: -10%; left: 0; width: 30%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.2), transparent); transform: translateX(-160%); }
+    .fx-flash { position: absolute; inset: 0; border-radius: inherit; background: var(--tone); opacity: 0; pointer-events: none; }
+    .fx-shock { position: absolute; inset: -6px; border-radius: 50%; border: 4px solid var(--tone); opacity: 0; pointer-events: none; }
+    .fig .fx-shock, .clockw .fx-shock { border-radius: 26px; }
+    .fx-spk { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: #fff3c8; box-shadow: 0 0 10px var(--tone); opacity: 0; pointer-events: none; }
+    .tip .txt, .fig .txt { font-size: 44px; } .gui .chip { font-size: 24px; }
+    .pov { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 22px 14px; }
+    .pov .top { display: flex; align-items: center; gap: 10px; font: 900 32px/1 Kanit; }
+    .pov .row { display: flex; align-items: center; gap: 14px; }
+    .pov .bpmh { width: 74px; height: 70px; display: grid; place-items: center; } .pov .bpmh .hb { width: 70px; height: 64px; overflow: visible; filter: drop-shadow(0 0 12px rgba(232,112,90,.8)); }
+    .pov .bpmh .fx-shock { border-color: #e8705a; }
+    .pov .ecg2 { width: 170px; height: 54px; }
+    .pov .bnum { display: flex; align-items: baseline; gap: 6px; } .pov .bnum b { font: 900 60px/1 Kanit; } .pov .bnum span { font: 700 22px/1 Kanit; color: rgba(244,236,216,.7); }
+
+    .call { opacity:0; } .call .dev { position:relative; margin:0 auto; width:420px; height:760px; border-radius:56px; background:#1a1d20; border:6px solid #2e2a26; box-shadow:0 30px 60px rgba(0,0,0,.6), 0 0 40px rgba(127,209,185,.25); padding:22px; }
+    .call .scr { width:100%; height:100%; border-radius:40px; background:linear-gradient(180deg,#24343c,#0f171b); display:flex; flex-direction:column; align-items:center; padding-top:60px; }
+    .call .lbl { font:700 28px/1 Kanit; color:rgba(244,236,216,.75); } .call .av { position:relative; width:180px; height:180px; margin-top:40px; }
+    .call .av .fm { position:absolute; inset:0; width:180px; height:180px; border-width:5px; } .call .rg { position:absolute; inset:0; border-radius:50%; border:4px solid #7fd1b9; }
+    .call .nm { font:900 76px/1 Kanit; margin-top:36px; } .call .sub { font:700 26px/1 Kanit; color:rgba(244,236,216,.6); margin-top:12px; }
+    .call .bt { margin-top:auto; margin-bottom:70px; display:flex; gap:120px; } .call .bt span { width:110px; height:110px; border-radius:50%; display:grid; place-items:center; font:900 54px/1 Kanit; color:#fff; }
+    .call .no { background:#e8705a; } .call .yes { background:#4fb37a; } .call .hand { position:absolute; left:0; right:0; bottom:-170px; width:520px; height:520px; }
+
+    .stealth { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; display:flex; align-items:center; gap:18px; padding:14px 26px 16px 16px; }
+    .stealth .seye { width:130px; height:88px; flex:none; } .stealth .rows { display:flex; flex-direction:column; gap:8px; }
+    .stealth .row { display:flex; align-items:center; gap:12px; font:700 26px/1 Kanit; } .stealth .row span { width:130px; }
+    .stealth .sbar { position:relative; width:260px; height:20px; border-radius:10px; background:rgba(244,236,216,.15); overflow:hidden; border:2px solid rgba(244,236,216,.4); }
+    .stealth .sbar i { position:absolute; inset:0; transform-origin:0 50%; transform:scaleX(0); }
+    .stealth .det i { background:linear-gradient(90deg,#f2c55c,#e8705a); } .stealth .noi i { background:linear-gradient(90deg,#7fd1b9,#f2c55c 60%,#e8705a); }
+    .stealth .pct { font:900 30px/1 Kanit; color:#e8705a; width:70px; }
+    .stealth .found { position:absolute; right:-30px; top:-30px; font:900 54px/1 Kanit; color:#fff; background:#d8463a; padding:8px 22px 12px; border-radius:14px; border:4px solid #2e2a26; opacity:0; box-shadow:0 0 30px rgba(232,80,80,.8); }
+    .mm .ml { display:flex; flex-direction:column; align-items:center; gap:6px; font:900 32px/1 Kanit; text-shadow:0 2px 10px #000; }
+      .capwrap { z-index: 56; top: 1480px; }
+      .capbox { background: rgba(12,18,20,.86); color: #f4ecd8; border: 2px solid rgba(244,236,216,.4); border-radius: 22px;
+        box-shadow: 0 0 0 4px rgba(10,14,16,.45), 0 14px 30px rgba(0,0,0,.55); font: 900 64px/1.22 Kanit; padding: 12px 34px 18px; }
+      .capbox .k { background: #f2c55c; color: #2e2a26; border: 0; border-radius: 10px; padding: 0 .16em; transform: rotate(-1.5deg); }
+      .capbox .k.kr, .k.kr { background: #d8443a; color: #fff4ea; }
+      .capbox.q { background: rgba(244,236,216,.94); color: #2e2a26; border-color: #2e2a26; }
+      .bubble { z-index: 57; white-space: normal !important; max-width: 640px; text-align: center; }
+      .sfxw { position: absolute; z-index: 55; font-family: Kanit; font-weight: 900; letter-spacing: -1px; opacity: 0; white-space: nowrap;
+        text-shadow: -4px -4px 0 #2e2a26, 4px -4px 0 #2e2a26, -4px 4px 0 #2e2a26, 4px 4px 0 #2e2a26, 8px 8px 0 #2e2a26; }
+      /* phone camera overlay (REC) */
+      .rec { position: absolute; inset: 0; z-index: 52; pointer-events: none; font-family: Kanit; color: #f4ecd8; }
+      .rec .br { position: absolute; width: 90px; height: 90px; border: 6px solid rgba(244,236,216,.85); }
+      .rec .tl { left: 40px; top: 120px; border-right: 0; border-bottom: 0; } .rec .tr { right: 40px; top: 120px; border-left: 0; border-bottom: 0; }
+      .rec .bl { left: 40px; bottom: 120px; border-right: 0; border-top: 0; } .rec .brr { right: 40px; bottom: 120px; border-left: 0; border-top: 0; }
+      .rec .top { position: absolute; left: 70px; right: 70px; top: 150px; display: flex; justify-content: space-between; align-items: center; font: 900 40px/1 Kanit; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+      .rec .dot { display: inline-block; width: 26px; height: 26px; border-radius: 50%; background: #e8443a; margin-right: 12px; vertical-align: -2px; box-shadow: 0 0 14px #e8443a; }
+      .rec .tc { font-family: 'Kanit'; letter-spacing: 2px; }
+      .rec .bat { display: inline-block; width: 56px; height: 28px; border: 4px solid #f4ecd8; border-radius: 6px; position: relative; margin-left: 14px; vertical-align: -4px; }
+      .rec .bat:after { content: ""; position: absolute; left: 3px; top: 3px; bottom: 3px; width: 34%; background: #e8705a; }
+      .rec .mode { position: absolute; left: 70px; top: 220px; font: 700 30px/1 Kanit; letter-spacing: 3px; padding: 6px 12px; border-radius: 8px; background: rgba(0,0,0,.4); }
+      .rec .af { position: absolute; width: 170px; height: 190px; border: 5px solid #f2c55c; border-radius: 10px; opacity: 0; box-shadow: 0 0 18px rgba(242,197,92,.6); }
+      .rec .af b { position: absolute; left: -5px; top: -50px; font: 900 28px/1 Kanit; color: #2e2a26; background: #f2c55c; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+      /* channel signature: "ทุกอย่าง… ถูกทาง / พลาดแค่… เรื่องเดียว" checklist */
+      .chk { position: absolute; left: 110px; width: 860px; top: 520px; z-index: 52; padding: 30px 38px 34px; border-radius: 30px; opacity: 0;
+        background: rgba(10,15,17,.9); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 0 0 6px rgba(10,14,16,.4), 0 24px 60px rgba(0,0,0,.6); font-family: Kanit; }
+      .chk .chk-t { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; margin-bottom: 22px; }
+      .chk .chk-r { display: flex; align-items: center; gap: 26px; padding: 14px 0; border-top: 2px solid rgba(244,236,216,.12); opacity: 0; }
+      .chk .box { width: 84px; height: 84px; border-radius: 18px; border: 5px solid rgba(244,236,216,.6); display: flex; align-items: center; justify-content: center; flex: none; }
+      .chk .box b { font: 900 64px/1 Kanit; opacity: 0; }
+      .chk .ok b { color: #7fd1b9; } .chk .bad b { color: #ff5a4a; }
+      .chk .tx { font: 900 60px/1.1 Kanit; color: #f4ecd8; }
+      .chk .bad .tx { color: #ff8a7a; letter-spacing: 8px; }
+      .rec .scrub { position: absolute; left: 70px; right: 70px; bottom: 170px; height: 12px; border-radius: 6px; background: rgba(244,236,216,.3); }
+      .rec .scrub i { display: block; height: 100%; border-radius: 6px; background: #e8443a; }
+      /* body temperature card */
+      .thermo { position: absolute; z-index: 52; display: flex; align-items: center; gap: 22px; padding: 18px 28px 18px 20px; border-radius: 26px; opacity: 0;
+        background: rgba(10,15,17,.88); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 14px 40px rgba(0,0,0,.55); font-family: Kanit; color: #f4ecd8; }
+      .thermo .val { font: 900 92px/1 Kanit; letter-spacing: -2px; } .thermo .val small { font-size: 44px; }
+      .thermo .lbl { font: 700 28px/1.1 Kanit; letter-spacing: 3px; color: #f2c55c; margin-bottom: 6px; }
+      .thermo .note { font: 900 34px/1.1 Kanit; color: #ff8a7a; height: 38px; }
+      .rec.nv:before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 3px, transparent 3px 6px); }
+
+      /* the guide's rule: a lacquer-and-gold card, one rhyming line per row (กอย / ถอย / คอย) */
+      .krule { position: absolute; left: 60px; width: 960px; z-index: 52; opacity: 0; padding: 22px 34px 30px; border-radius: 28px; box-sizing: border-box;
+        background: linear-gradient(180deg, #1d1611 0%, #120d0a 100%); border: 4px solid #c9a55a; overflow: hidden;
+        box-shadow: 0 0 0 10px rgba(18,13,10,.92), 0 0 0 13px #7a5f2e, 0 26px 60px rgba(0,0,0,.65), inset 0 0 60px rgba(201,165,90,.12); font-family: Kanit; }
+      .krule::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(201,165,90,.05) 0 2px, transparent 2px 46px); pointer-events: none; }
+      .krule .cn { position: absolute; width: 46px; height: 46px; border: 5px solid #e2c27a; }
+      .krule .cn::after { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #e2c27a; }
+      .krule .cn.tl { left: 12px; top: 12px; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; } .krule .cn.tl::after { left: 10px; top: 10px; }
+      .krule .cn.tr { right: 12px; top: 12px; border-left: 0; border-bottom: 0; border-top-right-radius: 14px; } .krule .cn.tr::after { right: 10px; top: 10px; }
+      .krule .cn.bl { left: 12px; bottom: 12px; border-right: 0; border-top: 0; border-bottom-left-radius: 14px; } .krule .cn.bl::after { left: 10px; bottom: 10px; }
+      .krule .cn.br { right: 12px; bottom: 12px; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; } .krule .cn.br::after { right: 10px; bottom: 10px; }
+      .krule .kr-h { text-align: center; margin: 4px 0 14px; }
+      .krule .kr-h span { display: inline-block; padding: 6px 34px 8px; border-radius: 40px; background: linear-gradient(180deg, #b8322a, #8e2018); color: #ffe7b0;
+        font-weight: 900; font-size: 38px; letter-spacing: 1px; border: 3px solid #e2c27a; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+      .krule .kr-r { display: flex; align-items: center; gap: 26px; padding: 12px 10px; opacity: 0; }
+      .krule .kr-r + .kr-r { border-top: 2px dashed rgba(201,165,90,.35); }
+      .krule .kr-i { flex: none; width: 118px; height: 118px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fbf3df, #e6d3a8); border: 5px solid #c9a55a; box-shadow: 0 6px 14px rgba(0,0,0,.5); }
+      .krule .kr-i svg { width: 100%; height: 100%; }
+      .krule .kr-t { color: #f4ecd8; font-weight: 900; font-size: 60px; line-height: 1.15; text-shadow: 0 4px 0 rgba(0,0,0,.55); white-space: nowrap; }
+      .krule .kr-t strong { color: #f2c55c; font-weight: 900; }
+      .krule .kr-t em { font-style: normal; background: #c8392b; color: #fff; padding: 0 14px 4px; border-radius: 14px; margin-right: 8px; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
+      .krule .kr-t u { text-decoration: none; position: relative; }
+      .krule .kr-t u::after { content: ""; position: absolute; left: -4px; right: -4px; bottom: -6px; height: 8px; border-radius: 4px; background: #e2c27a; box-shadow: 0 0 14px #e2c27a; transform: scaleX(var(--k, 0)); transform-origin: 0 50%; }
+      .krule .sheen { position: absolute; top: -40%; left: -40%; width: 26%; height: 180%; background: linear-gradient(90deg, transparent, rgba(255,236,190,.22), transparent); transform: rotate(18deg); pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="99.247" data-width="1080" data-height="1920">
+      <svg id="grain" width="1200" height="2040"><filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5" /></filter><rect width="1200" height="2040" filter="url(#nz)" /></svg>
+    </div>
+    <script>
+      const SCHED = {"total": 99.247, "shots": [{"key": "recap", "start": 0.0, "dur": 2.4, "vo": [], "voEnd": 0.0}, {"key": "hook", "start": 2.4, "dur": 5.146, "vo": [{"id": "n01", "t": 0.2, "dur": 2.818, "cap": "ถ้าวันหนึ่ง… / อาการ[ดีขึ้น] / หลังกินเห็ดพิษ", "frags": [0.0, 0.95, 1.97]}, {"id": "n02", "t": 3.168, "dur": 1.078, "cap": "{อย่าเพิ่งกลับบ้าน}", "frags": [0.0]}], "voEnd": 4.246}, {"key": "home", "start": 7.546, "dur": 4.375, "vo": [{"id": "y01", "t": 0.1, "dur": 3.875, "cap": "กลับบ้านเถอะลูก… / [หายแล้ว]", "frags": [0.0, 2.19]}], "voEnd": 3.975}, {"key": "no", "start": 11.921, "dur": 2.2, "vo": [{"id": "m01", "t": 0.05, "dur": 1.08, "cap": "หมอ[ยังไม่ให้กลับ]!", "frags": [0.0]}], "voEnd": 1.13}, {"key": "doc", "start": 14.121, "dur": 3.0, "vo": [{"id": "d01", "t": 0.1, "dur": 2.44, "cap": "ดีขึ้น… / {ไม่ได้แปลว่าหาย}", "frags": [0.0, 1.17]}], "voEnd": 2.54}, {"key": "know1", "start": 17.121, "dur": 7.0, "vo": [{"id": "n03", "t": 0.1, "dur": 2.904, "cap": "พิษเห็ดระโงก / อาการ[ดีขึ้นแค่ชั่วคราว]", "frags": [0.0, 1.23]}, {"id": "n04", "t": 3.154, "dur": 1.166, "cap": "แล้ว{กลับมาแย่ลง}", "frags": [0.0]}], "voEnd": 4.32}, {"key": "know2", "start": 24.121, "dur": 5.0, "vo": [{"id": "n05", "t": 0.1, "dur": 2.673, "cap": "พิษอาจ[ทำลายตับ] / แม้กินแค่[ดอกเดียว]", "frags": [0.0, 1.55]}], "voEnd": 2.773}, {"key": "two", "start": 29.121, "dur": 2.61, "vo": [{"id": "t01", "t": 0.1, "dur": 2.21, "cap": "ผมกินไป[สองถ้วย]เลยนะ…", "frags": [0.0]}], "voEnd": 2.31}, {"key": "scold", "start": 31.731, "dur": 2.8, "vo": [{"id": "m02", "t": 0.05, "dur": 1.835, "cap": "แล้วใครบอกให้[ขออีกถ้วย]ล่ะ!", "frags": [0.0]}], "voEnd": 1.885}, {"key": "night2", "start": 34.531, "dur": 4.4, "vo": [{"id": "n06", "t": 0.1, "dur": 3.383, "cap": "คืนที่สอง… / ค่าตับของต้น[เริ่มผิดปกติ]", "frags": [0.0, 1.11]}], "voEnd": 3.483}, {"key": "relief", "start": 38.931, "dur": 3.087, "vo": [{"id": "d02", "t": 0.1, "dur": 2.587, "cap": "ดีที่[มาทัน]… / หมอดูแลได้", "frags": [0.0, 1.59]}], "voEnd": 2.687}, {"key": "know3", "start": 42.018, "dur": 5.0, "vo": [{"id": "n07", "t": 0.1, "dur": 2.554, "cap": "แม้อาการดีขึ้น / ก็ต้อง[ให้หมอดูต่อ]", "frags": [0.0, 1.38]}], "voEnd": 2.654}, {"key": "sorry", "start": 47.018, "dur": 3.596, "vo": [{"id": "th01", "t": 0.1, "dur": 3.096, "cap": "ลุงขอโทษ… / ที่[ทำให้กลัว]", "frags": [0.0, 1.71]}], "voEnd": 3.196}, {"key": "me", "start": 50.614, "dur": 2.8, "vo": [{"id": "m03", "t": 0.05, "dur": 2.014, "cap": "หนูต่างหาก / ที่[ต้องขอโทษ]", "frags": [0.0, 0.94]}], "voEnd": 2.064}, {"key": "feet", "start": 53.414, "dur": 4.625, "vo": [{"id": "th02", "t": 0.1, "dur": 4.025, "cap": "แต่รอยเท้านั่น… / [นิ้วยาวกว่าลุง]เยอะ", "frags": [0.0, 1.95]}], "voEnd": 4.125}, {"key": "odd", "start": 58.039, "dur": 5.8, "vo": [{"id": "d03", "t": 0.1, "dur": 4.254, "cap": "แปลกนะ… / คุณยายกินถ้วยเดียวกัน / แต่[ไม่มีพิษเลย]", "frags": [0.0, 1.02, 3.08]}], "voEnd": 4.354}, {"key": "wake", "start": 63.839, "dur": 3.4, "vo": [{"id": "n08", "t": 0.4, "dur": 2.396, "cap": "คืนนั้น… / มิ้นท์[ตื่นขึ้นมา]", "frags": [0.0, 1.02]}], "voEnd": 2.796}, {"key": "sit", "start": 67.239, "dur": 4.6, "vo": [{"id": "n09", "t": 0.3, "dur": 3.031, "cap": "ยายนั่งข้างเตียงต้น / [หันหลังให้]", "frags": [0.0, 2.16]}], "voEnd": 3.331}, {"key": "toes", "start": 71.839, "dur": 5.0, "vo": [{"id": "n10", "t": 0.3, "dur": 3.176, "cap": "เท้ายาย[เปื้อนดิน] / {นิ้วยาวผิดคน}", "frags": [0.0, 1.56]}], "voEnd": 3.476}, {"key": "hungry", "start": 76.839, "dur": 6.6, "vo": [{"id": "y02", "t": 0.4, "dur": 3.786, "cap": "ลูกเอ๊ย… / ยาย[หิวข้าว]จังเลย", "frags": [0.0, 1.68]}], "voEnd": 4.186}, {"key": "last", "start": 83.439, "dur": 6.4, "vo": [{"id": "n11", "t": 0.8, "dur": 1.932, "cap": "ปอบ… / [ไม่ได้อยู่ในป่า]", "frags": [0.0, 0.67]}, {"id": "n12", "t": 3.032, "dur": 1.951, "cap": "มันอยู่[ในบ้าน]", "frags": [0.0]}], "voEnd": 4.983}, {"key": "rule", "start": 89.839, "dur": 5.908, "vo": [{"id": "y03", "t": 0.4, "dur": 4.108, "cap": "ท้องหายปวด… / [อย่าอวดว่าหาย]", "frags": [0.0, 2.08]}], "voEnd": 4.508}, {"key": "end", "start": 95.747, "dur": 3.5, "vo": [], "voEnd": 0.0}]};
+      const SH = Object.fromEntries(SCHED.shots.map((s) => [s.key, s]));
+      const vo = (k, i = 0) => SH[k].vo[i].t;                       // voice start, relative to the shot
+      const voEnd = (k, i = 0) => SH[k].vo[i].t + SH[k].vo[i].dur;
+      const F = (k, i = 0, j = 0) => SH[k].vo[i].t + SH[k].vo[i].frags[j]; // start of caption fragment j
+      const D = (k) => SH[k].dur;
+      const fr = (wx, wy, s, sx = 540, sy = 760, extra = {}) => ({ x: wx - 540 - (sx - 540) / s, y: wy - 960 - (sy - 960) / s, s, ...extra });
+      const root = document.getElementById("root");
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // one caption per fragment of the spoken line, on the beat of the voice
+      function caps(k, lines, o = {}) {
+        const out = [];
+        (lines ?? SH[k].vo.map((_, i) => i)).forEach((i) => {
+          const v = SH[k].vo[i], fr = v.cap.split(" / ");
+          fr.forEach((txt, j) => out.push({ text: o.quote ? `“${txt}”` : txt, t: v.t + v.frags[j] - 0.06,
+            end: j + 1 < fr.length ? v.t + v.frags[j + 1] - 0.08 : Math.min(D(k) - 0.06, v.t + v.dur + (o.hold ?? 0.35)) }));
+        });
+        out.sort((a, b) => a.t - b.t);
+        for (let n = 0; n + 1 < out.length; n++) out[n].end = Math.min(out[n].end, out[n + 1].t - 0.03);
+        return out;
+      }
+      const bub = (k, i, x, y, tail, o = {}) => ({ text: `“${SH[k].vo[i].cap.replace(/ \/ /g, " ")}”`, x, y, tail, t: vo(k, i) - 0.05, end: o.end ?? Math.min(D(k) - 0.05, voEnd(k, i) + 0.35) });
+
+      // extra poses
+      Rig.MODES.selfie = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -42 + 2 * Math.sin(u * 1.7), faF: -16, uaB: 8, faB: -16, head: 4 + 2 * Math.sin(u * 2.3), torso: -1 });
+      Rig.MODES.laugh = (u, o) => { const b = Math.abs(Math.sin(u * 9)); return { ...Rig.MODES.idle(u, o), uaF: 14, faF: -110, uaB: -18, faB: -20, torso: -6 - 3 * b, head: -14 - 5 * b, bodyY: -3 * b }; };
+      Rig.MODES.shiver = (u, o) => { const j = Math.sin(u * 47) * 1.6; return { ...Rig.MODES.tremble(u, o), uaF: -110 + j, faF: -120, uaB: 110 - j, faB: 120, torso: 8 + j * 0.5, head: -4 + j }; };
+      Rig.MODES.stick = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -12, faF: -24 });
+      Rig.MODES.crouchTorch = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -70 + 4 * Math.sin(u * 1.3), faF: -10 });
+      const shakeH = (t) => 7 * Math.sin(t * 2.3) + 3 * Math.sin(t * 7.1);
+
+      // phone camera overlay: REC dot, running timecode, battery, optional face box that locks onto something
+      GameUI.C.rec = {
+        html: (id, o) => `<div id="${id}" class="rec${o.nv ? " nv" : ""}"><i class="br tl"></i><i class="br tr"></i><i class="br bl"></i><i class="br brr"></i>
+          <div class="top">${o.play ? `<span>▶ คลิปเมื่อคืน</span>` : `<span><i class="dot"></i>REC</span>`}<span class="tc">00:00:00</span><span>${o.nv ? "IR" : "4K"}<i class="bat"></i></span></div>
+          ${o.mode ? `<div class="mode">${o.mode}</div>` : ""}${o.play ? `<div class="scrub"><i></i></div>` : ""}${o.af ? `<div class="af" style="left:${o.af.x}px;top:${o.af.y}px;${o.af.w ? `width:${o.af.w}px;height:${o.af.h}px` : ""}"><b>${o.af.label}</b></div>` : ""}</div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), tc = el.querySelector(".tc"), c = { t: 0 }, base = o.tc0 || 0;
+          tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0);
+          tl.to(c, { t: o.dur, duration: o.dur, ease: "none", immediateRender: false, onUpdate: () => {
+            const s = base + c.t, f = Math.floor((s % 1) * 30), p2 = (v) => String(Math.floor(v)).padStart(2, "0");
+            tc.textContent = s >= 3600 ? `${Math.floor(s / 3600)}:${p2((s % 3600) / 60)}:${p2(s % 60)}` : `${p2(s / 60)}:${p2(s % 60)}:${p2(f)}`;
+          } }, t0);
+          if (o.play) tl.fromTo(`#${id} .scrub i`, { width: `${o.play[0]}%` }, { width: `${o.play[1]}%`, duration: o.dur, ease: "none", immediateRender: false }, t0);
+          if (!o.play) tl.fromTo(`#${id} .dot`, { opacity: 1 }, { opacity: 0.15, duration: 0.5, repeat: Math.ceil(o.dur / 0.5), yoyo: true, immediateRender: false }, t0);
+          if (o.af) {
+            const a = o.t0abs + o.af.at;
+            tl.fromTo(`#${id} .af`, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.18, ease: "back.out(2)", immediateRender: false }, a);
+            tl.to(`#${id} .af`, { opacity: 0.2, duration: 0.08, repeat: 5, yoyo: true }, a + 0.25);
+          }
+        },
+      };
+      // channel signature: a checklist ticked on "ทุกอย่าง… ถูกทาง", then one red cross on "เรื่องเดียว"
+      // the guide's rule card: rows stamp in at o.at[i] (seconds into the shot); the rhyming syllables get a gold underline
+      GameUI.C.koiRule = {
+        html: (id, o) => {
+          const IK = "#2e2a26", rows = o.rows || [
+            [`<path d="M74,20C46,16 28,38 30,62C32,78 44,82 46,94C48,106 60,112 68,102C74,94 68,86 74,78C84,66 94,58 92,44C90,30 84,22 74,20Z" fill="#e9bc93" stroke="${IK}" stroke-width="4"/>
+              <path d="M76,40C66,34 52,40 54,54C56,62 64,62 64,70" stroke="${IK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+              ${[0, 1, 2].map((i) => `<path class="kw" d="M${22 - i * 9},${44 - i * 6}q-${10 + i * 3},${18 + i * 6} 0,${36 + i * 12}" stroke="#7a3fb0" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+              `ได้ยิน<strong>เสียง<u>กอย</u></strong>`],
+            [`<g class="krun"><circle cx="66" cy="28" r="10" fill="${IK}"/><path d="M62,40L52,66M52,66L70,78L66,98M52,66L36,82L24,80M60,46L78,56L90,50M60,46L44,52L36,64" stroke="${IK}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+              <g class="kno"><circle cx="60" cy="60" r="46" fill="none" stroke="#d8322a" stroke-width="9"/><path d="M28,28L92,92" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/></g>`,
+              `<em>อย่าวิ่ง</em><em>อย่า<u>ถอย</u></em>`],
+            [`<path d="M40,112C44,80 42,40 46,8H64C66,40 66,80 72,112Z" fill="#6a4a2e" stroke="${IK}" stroke-width="4"/><path d="M60,52Q84,46 108,38" stroke="#6a4a2e" stroke-width="10" stroke-linecap="round"/><circle cx="96" cy="24" r="16" fill="#4f8a55" stroke="${IK}" stroke-width="3"/><circle cx="30" cy="20" r="14" fill="#4f8a55" stroke="${IK}" stroke-width="3"/>
+              <g class="kclimb"><circle cx="84" cy="32" r="7" fill="#e8b830" stroke="${IK}" stroke-width="3"/><path d="M84,40v12M84,52l-6,10M84,52l7,9" stroke="${IK}" stroke-width="4" stroke-linecap="round"/></g>
+              <g transform="translate(18,78)"><path d="M0,0h22M0,30h22M3,0q8,15 0,30M19,0q-8,15 0,30" stroke="${IK}" stroke-width="3.5" fill="#f2c55c" stroke-linejoin="round"/><path class="ksand" d="M7,22h8l-4,-6z" fill="#c9a55a"/></g>`,
+              `<strong>ปีนต้นไม้</strong> แล้ว<u>คอย</u>`],
+          ];
+          return `<div id="${id}" class="krule" style="top:${o.top ?? 170}px"><i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i><i class="sheen"></i>
+            <div class="kr-h"><span>${o.label || "กฎของบังหมาด"}</span></div>
+            ${rows.map(([ill, txt], i) => `<div class="kr-r" id="${id}-r${i}"><div class="kr-i"><svg viewBox="0 0 120 120">${ill}</svg></div><div class="kr-t">${txt}</div></div>`).join("")}</div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.7)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .kr-h span`, { scaleX: 0.2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.08);
+          tl.fromTo(`#${id} .sheen`, { x: 0 }, { x: 1500, duration: 0.9, ease: "power1.inOut", immediateRender: false }, t0 + 0.25);
+          o.at.forEach((at, i) => {
+            const r = el.querySelector(`#${id}-r${i}`);
+            tl.fromTo(r, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.28, ease: "power2.out", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector(".kr-i"), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector("u"), { "--k": 0 }, { "--k": 1, duration: 0.35, ease: "power2.out", immediateRender: false }, A(at) + 0.3);
+          });
+          el.querySelectorAll(".kw").forEach((w, i) => tl.fromTo(w, { opacity: 0.1 }, { opacity: 1, duration: 0.28, repeat: 9, yoyo: true, immediateRender: false }, A(o.at[0]) + i * 0.1));
+          tl.fromTo(el.querySelector(".kno"), { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, svgOrigin: "60 60", duration: 0.22, ease: "power3.in", immediateRender: false }, A(o.at[1]) + 0.2);
+          tl.fromTo(el.querySelector(".kclimb"), { y: 46 }, { y: 0, duration: 0.8, ease: "power1.out", immediateRender: false }, A(o.at[2]));
+          tl.fromTo(el.querySelector(".ksand"), { scaleY: 1 }, { scaleY: 0.2, svgOrigin: "11 22", duration: 1.6, ease: "none", immediateRender: false }, A(o.at[2]) + 0.4);
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, y: -30, duration: 0.25 }, A(o.end));
+        },
+      };
+      GameUI.C.checklist = {
+        html: (id, o) => `<div id="${id}" class="chk"><div class="chk-t">${o.title}</div>${o.items.map(([txt, ok], i) => `<div class="chk-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="box"><b>${ok ? "✓" : "✗"}</b></span><span class="tx">${txt}</span></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t;
+          tl.fromTo(`#${id}`, { opacity: 0, y: 40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.8)", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, A(o.show[i]));
+            tl.fromTo(`#${id}-r${i} .box b`, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(3)", immediateRender: false }, A(o.mark[i]));
+            if (ok) tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)" }, { borderColor: "#7fd1b9", duration: 0.2, immediateRender: false }, A(o.mark[i]));
+            else {
+              tl.fromTo(`#${id}-r${i} .box`, { opacity: 1 }, { opacity: 0.25, duration: 0.18, repeat: 5, yoyo: true, immediateRender: false }, A(o.show[i]));
+              tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)", boxShadow: "0 0 0 0 rgba(255,90,74,.9)" }, { borderColor: "#ff5a4a", boxShadow: "0 0 0 26px rgba(255,90,74,0)", duration: 0.5, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}`, { x: 0 }, { x: 10, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}`, { borderColor: "rgba(255,90,74,.8)", duration: 0.2 }, A(o.mark[i]));
+            }
+          });
+        },
+      };
+
+      // extra illustrations for the knowledge cards
+      Object.assign(GameUI.ILL, {
+        muddy: `<path d="M10,70q25,-14 50,0t50,0V110H10Z" fill="#9c7d55" stroke="#2e2a26" stroke-width="4"/><path class="a-bob" d="M30,40q30,-20 60,0" stroke="#7fb3ab" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M30,84q8,-4 16,0M64,92q8,-4 16,0" stroke="#5a4636" stroke-width="4" fill="none"/>`,
+        rise: `<rect x="20" y="20" width="16" height="90" rx="4" fill="#e9dcc0" stroke="#2e2a26" stroke-width="4"/>${[0, 1, 2, 3].map((k) => `<path d="M36,${34 + k * 20}h10" stroke="#2e2a26" stroke-width="4"/>`).join("")}<path class="a-pulse" d="M60,104V40M44,58l16,-20 16,20" stroke="#e8705a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M10,96q20,-10 40,0t40,0t30,0" stroke="#7fb3ab" stroke-width="7" fill="none"/>`,
+        roar: `<path d="M14,96L46,40L60,62L76,34L106,96Z" fill="#3e5a44" stroke="#2e2a26" stroke-width="4" stroke-linejoin="round"/>${[0, 1, 2].map((k) => `<path class="a-wave" data-i="${k}" d="M${70 + k * 12},${20 + k * 4}q${12 + k * 4},${14} 0,${28 + k * 4}" stroke="#f2c55c" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+        leech: `<path d="M24,86C10,60 30,30 60,26C92,22 104,44 96,62C88,80 66,70 58,82C50,94 34,100 24,86Z" fill="#3b3a22" stroke="#2e2a26" stroke-width="4"/><path d="M40,48q8,8 0,18M56,38q8,10 0,22M72,40q8,10 2,22" stroke="#6d6a3a" stroke-width="3" fill="none"/>`,
+        drop: `<path class="a-bob" d="M60,16C40,46 30,62 30,78a30,30 0 0 0 60,0C90,62 80,46 60,16Z" fill="#c0392b" stroke="#2e2a26" stroke-width="4"/><path d="M46,78a14,14 0 0 0 10,14" stroke="#f4ecd8" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/>`,
+      });
+
+      const shots = [];
+      const add = (k, spec) => { if (SH[k]) shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec }); };
+      const FA_ARM = { sleeve: "#e8b830", skin: "#ebbd95", cuff: "#c4931c" };
+
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .zchk { position: absolute; left: 80px; width: 920px; z-index: 52; opacity: 0; font-family: Kanit; }
+        .zchk .zc-in { position: relative; padding: 26px 36px 30px; border-radius: 28px; overflow: hidden;
+          background: linear-gradient(180deg, rgba(16,20,22,.95), rgba(7,9,11,.97)); border: 4px solid rgba(244,236,216,.3); box-shadow: 0 24px 60px rgba(0,0,0,.7); }
+        .zchk .zc-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 6px); pointer-events: none; }
+        .zchk .zc-bar { position: absolute; left: 0; right: 0; top: 0; height: 110px; background: linear-gradient(180deg, transparent, rgba(255,60,50,.32), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-h { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+        .zchk .zc-dot { width: 20px; height: 20px; border-radius: 50%; background: #ff4a3a; box-shadow: 0 0 14px #ff4a3a; flex: none; }
+        .zchk .zc-h b { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; flex: 1; }
+        .zchk .zc-tally { font: 900 46px/1 Kanit; color: #7fd1b9; min-width: 120px; text-align: right; }
+        .zchk .zc-r { position: relative; display: flex; align-items: center; gap: 26px; padding: 14px 14px; margin: 0 -14px; border-top: 2px solid rgba(244,236,216,.1); opacity: 0; border-radius: 16px; }
+        .zchk .zc-sw { position: absolute; inset: 0; overflow: hidden; border-radius: 16px; pointer-events: none; }
+        .zchk .zc-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(127,209,185,.45), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-box { width: 86px; height: 86px; border-radius: 18px; border: 5px solid rgba(244,236,216,.55); flex: none; position: relative; box-sizing: border-box; }
+        .zchk .zc-box svg { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; overflow: visible; }
+        .zchk .ck { fill: none; stroke: #7fd1b9; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 90; stroke-dashoffset: 90; }
+        .zchk .xx { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; opacity: 0; } .zchk .xx svg { left: 0; top: 0; }
+        .zchk .xx path { stroke: #fff; stroke-width: 12; stroke-linecap: round; }
+        .zchk .zc-t { font: 900 60px/1.1 Kanit; color: #f4ecd8; position: relative; }
+        .zchk .bad .zc-t { color: #ff8a7a; letter-spacing: 8px; }
+        .zchk .zc-box svg.zc-crack { left: 38px; top: 38px; width: 2px; height: 2px; overflow: visible; pointer-events: none; }
+        .zchk .zc-crack path { fill: none; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .zchk .zc-crack .c1 { stroke: rgba(0,0,0,.6); stroke-width: 7; } .zchk .zc-crack .c2 { stroke: rgba(255,240,230,.92); stroke-width: 2.6; }
+      </style>`);
+      GameUI.C.sigCard = {
+        html: (id, o) => {
+          const r = (() => { let q = 23; return () => ((q = (q * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+          let cracks = "";
+          for (let k = 0; k < 7; k++) {
+            let x = 0, y = 0, d = "M0,0", br = "";
+            const ang = -1.7 + k * 0.29;
+            for (let j = 0; j < 8; j++) {
+              const a2 = ang + (r() - 0.5) * 0.8, L = 45 + r() * 75;
+              x += Math.cos(a2) * L; y += Math.sin(a2) * L; d += `L${x.toFixed(0)},${y.toFixed(0)}`;
+              if (j === 2 || j === 5) { const ba = a2 + (r() > 0.5 ? 0.9 : -0.9); br += `M${x.toFixed(0)},${y.toFixed(0)}l${(Math.cos(ba) * 70).toFixed(0)},${(Math.sin(ba) * 70).toFixed(0)}l${(Math.cos(ba + 0.4) * 40).toFixed(0)},${(Math.sin(ba + 0.4) * 40).toFixed(0)}`; }
+            }
+            cracks += `<path class="c1" d="${d}${br}"/><path class="c2" d="${d}${br}"/>`;
+          }
+          return `<div id="${id}" class="zchk" style="top:${o.top ?? 470}px"><div class="zc-in" id="${id}-in"><div class="zc-scan"></div><div class="zc-bar" id="${id}-bar"></div>
+            <div class="zc-h"><span class="zc-dot" id="${id}-dot"></span><b>${o.title}</b><span class="zc-tally" id="${id}-tally">✓ 0</span></div>
+            ${o.items.map(([txt, ok], i) => `<div class="zc-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="zc-sw"><i class="zc-sweep"></i></span><span class="zc-box">${ok
+              ? `<svg viewBox="0 0 86 86"><path class="ck" d="M20,45 L37,61 L67,25"/></svg>`
+              : `<span class="xx"><svg viewBox="0 0 86 86"><path d="M22,22L64,64M64,22L22,64"/></svg></span><svg class="zc-crack" id="${id}-crack">${cracks}</svg>`}</span><span class="zc-t">${txt}</span></div>`).join("")}
+            </div></div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id), inner = document.getElementById(`${id}-in`);
+          const bar = document.getElementById(`${id}-bar`), tally = document.getElementById(`${id}-tally`), dot = document.getElementById(`${id}-dot`);
+          const qtx = el.querySelector(`#${id}-r${o.items.length - 1} .zc-t`), S3 = o.show[o.items.length - 1], X = o.mark[o.items.length - 1];
+          const GL = ["???", "?▓?", "▒?░", "??▓", "░▒▓", "?!?", "▓?▒", "?░?"];
+          const h = (n) => { const v = Math.sin(n * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+          // entrance: flicker on like a failing screen, with a colour split that settles
+          tl.fromTo(`#${id}`, { opacity: 0, scale: 1.08, filter: "drop-shadow(14px 0 0 rgba(255,40,60,.8)) drop-shadow(-14px 0 0 rgba(40,220,255,.8))" },
+            { opacity: 1, scale: 1, filter: "drop-shadow(0px 0 0 rgba(255,40,60,0)) drop-shadow(0px 0 0 rgba(40,220,255,0))", duration: 0.32, ease: "power3.out", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.2, ease: "power3.out", immediateRender: false }, A(o.show[i]));
+            if (ok) {
+              tl.fromTo(`#${id}-r${i} .ck`, { strokeDashoffset: 90 }, { strokeDashoffset: 0, duration: 0.18, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)", boxShadow: "0 0 0 0 rgba(127,209,185,.9)" }, { borderColor: "#7fd1b9", boxShadow: "0 0 0 22px rgba(127,209,185,0)", duration: 0.4, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-sweep`, { opacity: 1, x: -380 }, { opacity: 0, x: 1100, duration: 0.45, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}-r${i}`, { opacity: 0.42, filter: "saturate(.3)", duration: 0.3 }, A(S3) + 0.05);   // the good news fades while ??? takes over
+            } else {
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)" }, { borderColor: "#ff5a4a", duration: 0.12, repeat: 7, yoyo: true, immediateRender: false }, A(S3));
+              tl.fromTo(`#${id}-r${i} .xx`, { opacity: 0, scale: 3.2 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.14, ease: "power4.in", immediateRender: false }, A(X));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { backgroundColor: "rgba(216,50,42,0)", borderColor: "#ff5a4a", boxShadow: "0 0 0 0 rgba(255,90,74,.95)" },
+                { backgroundColor: "rgba(216,50,42,1)", borderColor: "#ff5a4a", boxShadow: "0 0 0 40px rgba(255,90,74,0)", duration: 0.45, immediateRender: false }, A(X) + 0.12);
+              tl.fromTo(`#${id}-r${i}`, { backgroundColor: "rgba(216,50,42,0)" }, { backgroundColor: "rgba(216,50,42,.35)", duration: 0.2, immediateRender: false }, A(X) + 0.12);
+            }
+          });
+          tl.fromTo(`#${id}-crack path`, { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.015, ease: "power3.out", immediateRender: false }, A(X) + 0.12);
+          // per-frame state: tally, scrambling ???, heartbeat border, scan bar, shake, dying-screen flicker
+          const clock = { t: 0 }, Dsh = D("sig");
+          const render = () => {
+            const t = clock.t, sus = Math.min(1, Math.max(0, (t - S3) / (X - S3))), after = t >= X + 0.12;
+            const n = o.mark.filter((m, i) => o.items[i][1] && t >= m).length;
+            tally.textContent = after ? "✗ 1" : `✓ ${n}`; tally.style.color = after ? "#ff5a4a" : "#7fd1b9";
+            qtx.textContent = t >= S3 && t < X + 0.12 ? GL[Math.floor(t * 18) % GL.length] : "???";
+            const beat = Math.pow(Math.max(0, Math.sin((2 * Math.PI * (t - S3)) / 0.38)), 4) * (t >= S3 && !after ? 0.35 + 0.65 * sus : 0);
+            inner.style.borderColor = after ? "#ff4a3a" : `rgba(255,${Math.round(236 - 170 * beat)},${Math.round(216 - 160 * beat)},${(0.3 + 0.7 * beat).toFixed(2)})`;
+            inner.style.boxShadow = after ? "0 0 46px rgba(255,60,50,.55), 0 24px 60px rgba(0,0,0,.7)" : `0 0 ${Math.round(50 * beat)}px rgba(255,60,50,${(0.8 * beat).toFixed(2)}), 0 24px 60px rgba(0,0,0,.7)`;
+            bar.style.opacity = t >= S3 && !after ? (0.4 + 0.5 * sus).toFixed(2) : 0;
+            bar.style.transform = `translateY(${Math.round((((t - S3) * 1.7) % 1) * 560 - 110)}px)`;
+            dot.style.opacity = Math.floor(t * (after ? 8 : 2.5)) % 2 ? 0.25 : 1;
+            const amp = after ? 2 + 20 * Math.exp(-(t - X) * 5) : t >= S3 ? 1 + 6 * sus * sus : 0, k = Math.floor(t * 30);
+            const fl = after && t > X + 0.4 && h(k * 3.1) > 0.82 ? 0.45 : 1;
+            inner.style.transform = `translate(${((h(k) - 0.5) * 2 * amp).toFixed(1)}px,${((h(k + 0.5) - 0.5) * 2 * amp).toFixed(1)}px) rotate(${((h(k + 0.25) - 0.5) * amp * 0.12 + (after ? -1.6 : 0)).toFixed(2)}deg)`;
+            inner.style.opacity = fl;
+          };
+          tl.to(clock, { t: Dsh, duration: Dsh, ease: "none", immediateRender: false, onUpdate: render }, o.t0abs);
+          render();
+        },
+      };
+      const SF = (j) => F("sig", 0, j);
+      // ---------- แสงกระสือ: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      // ---------- เห็ดปอบ EP.3 อย่าอวดว่าหาย (ตอนจบ) — v2: the same illustrated cast and painted sets; no choice at the end ----------
+      // camera grammar: the window, the empty bed with the drip swinging, faces close, the doctor's whiteboard, the bedside from behind,
+      // her feet on the floor, the village window at the end
+      const MINT = (x, y, s, track, extra = {}) => ({ who: "mint", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TON = (x, y, s, track, extra = {}) => ({ who: "ton", x, y, s, track, blinks: [1.2, 3.6], ...extra });
+      const YAI = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, blinks: [0.7, 2.6, 4.9], ...extra });
+      const THONG = (x, y, s, track, extra = {}) => ({ who: "thong", x, y, s, track, blinks: [1.6, 4.2], ...extra });
+      const DOC = (x, y, s, track, extra = {}) => ({ who: "doc", x, y, s, track, blinks: [0.6, 2.4], ...extra });
+      const GW = 1500, GV = 1320;
+      const CU = (x, y, s, sy = 1000) => fr(x, y - 560 * s, 1.0, 540, sy);
+      const oranges = `<g transform="translate(0,118)"><path d="M-16,30Q-14,-6 0,-4Q14,-6 16,30" stroke="#e8ecf0" stroke-width="6" fill="none"/><path d="M-48,28h96l-12,104h-72z" fill="#e8ecf0" opacity=".9" stroke="#3a2622" stroke-width="3"/>${[-24, 0, 24].map((dx, k) => `<circle cx="${dx}" cy="${70 + (k % 2) * 14}" r="21" fill="#e8a83a" stroke="#3a2622" stroke-width="2.4"/><path d="M${dx - 6},${62 + (k % 2) * 14}q6,-4 10,0" stroke="#fff" stroke-width="3" fill="none" opacity=".5"/>`).join("")}</g>`;
+      Object.assign(Rig.CAST, { thongBag: { ...Rig.CAST.thong, hand: oranges } });
+      const oneHand = (id, i) => { const h = document.getElementById(`${id}-a${i}-handB`); if (h) h.innerHTML = ""; };
+      const chair = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-70,0V-150M70,0V-150M-70,-150H80V-170H-70ZM60,-170V-380" stroke="#5a6a72" stroke-width="12" fill="none"/><rect x="-80" y="-172" width="160" height="22" rx="6" fill="#7a8a92"/><rect x="50" y="-380" width="24" height="200" rx="8" fill="#6a7a82"/></g>`;
+      const MOON = { from: "right", rim: "#a8c4ff", rimOp: 0.8, shade: "#000010", shadeOp: 0.5, cast: false, vol: false };
+      const TUBE = { from: "left", rim: "#e8fff4", rimOp: 0.6, shade: "#102028", shadeOp: 0.4, cast: { len: 1.2, op: 0.3 }, vol: false };
+      const GWARD = { top: "#2a4a5a", bottom: "#1a2a3a", op: 0.25 }, GDAWN = { top: "#ffb080", bottom: "#3a3a6a", op: 0.3 }, GLATE = { top: "#0a1430", bottom: "#1a2a3a", op: 0.35 }, GNIGHT = { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 };
+
+      // ---------- 0. where EP.2 left off: the handprint on the window ----------
+      add("recap", {
+        set: "ward2", setOpts: { id: "w0", time: "night", print: true }, dark: 0.3, blur: { sky: 4 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(820, 580, 1.9, 540, 860) }, { t: D("recap"), ...fr(820, 580, 2.0, 540, 860) }] },
+        fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0); Fx.glitch(tl, `#${id}`, t0, 0.3, 14, 1101); Fx.heart(tl, t0, D("recap"), 0.42, 0.6); },
+      });
+
+      // ---------- 1. flash-forward: the bed empty, the sheet thrown back, the drip still swinging ----------
+      add("hook", {
+        set: "ward2", setOpts: { id: "w1", time: "night" }, dark: 0.22, blur: { sky: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(480, 1080, 0.95, 540, 1050) }, { t: D("hook"), ...fr(400, 1060, 1.12, 540, 1050) }] },
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          tl.fromTo("#w1-iv", { rotation: 4, svgOrigin: "230 600" }, { rotation: -4, duration: 0.9, repeat: Math.ceil(D("hook") / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#w1-curtain", { x: 0 }, { x: 24, duration: 1.4, repeat: 3, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Fx.heart(tl, t0 + 0.3, D("hook") - 0.3, 0.42, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook") - 0.5, 0.3, 18, 1102); Fx.punch(tl, `#${id} .stage`, t0 + D("hook") - 0.5, 1.08, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.7 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + D("hook") - 0.45);
+        },
+      });
+
+      // ---------- 2. ยายคำ at the bedside, gentle and wrong: "กลับบ้านเถอะลูก… หายแล้ว" ----------
+      add("home", {
+        set: "ward2", setOpts: { id: "w2", time: "dawn" }, dark: 0.06, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1200, 2.0, 1000) }, { t: D("home"), ...fr(540, GW + 1200 - 560 * 2.0, 1.12, 540, 1000) }] },
+        actors: [YAI(540, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }])],
+        captions: caps("home", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("home"), 0.5, 0.45); },
+      });
+
+      // ---------- 3. มิ้นท์: "หมอยังไม่ให้กลับ!" ----------
+      add("no", {
+        set: "ward2", setOpts: { id: "w3", time: "dawn" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1300, 2.1, 1000) }] },
+        actors: [MINT(540, GW + 1300, 2.1, [{ t: 0, mode: "point", eyes: "angry", mouth: "scream" }])],
+        captions: caps("no", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.05, 0.3); },
+      });
+
+      // ---------- 4. the doctor, firm: "ดีขึ้น… ไม่ได้แปลว่าหาย" ----------
+      add("doc", {
+        set: "ward2", setOpts: { id: "w4", time: "dawn" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(560, GW + 1200, 2.0, 1000) }, { t: D("doc"), ...fr(560, GW + 1200 - 560 * 2.0, 1.08, 540, 1000) }] },
+        actors: [DOC(560, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        captions: caps("doc", undefined, { quote: true }),
+      });
+
+      // ---------- 5. knowledge on her whiteboard: the symptoms ease for a while, then come back worse ----------
+      add("know1", {
+        set: "board2", setOpts: { id: "bd5" }, dark: 0, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(540, 880, 0.98, 540, 880) }, { t: D("know1"), ...fr(540, 880, 1.04, 540, 880) }] },
+        captions: caps("know1"),
+        fx(tl, id, t0, L) {
+          tl.to("#bd5-sick", { strokeDashoffset: 0, duration: vo("know1", 1) + 0.6, ease: "none" }, t0 + 0.2);
+          tl.fromTo("#bd5-l1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, immediateRender: false }, t0 + F("know1", 0, 1) + 0.9);
+          tl.to("#bd5-liver", { opacity: 0.9, duration: 0.6 }, t0 + vo("know1", 1) - 0.2);
+          tl.fromTo("#bd5-l2", { opacity: 0, scale: 1.3, svgOrigin: "255 -130" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + vo("know1", 1) + 0.6);
+          PopUI.source(tl, L.light, t0 + 0.4, D("know1") - 0.4, { text: "ที่มา: สคร.7 ขอนแก่น (8 พ.ค. 2568) · คู่มือเห็ดพิษ กรมควบคุมโรค (2566)", y: 1810 });
+        },
+      });
+
+      // ---------- 6. the board again, closer: the liver — even from a single mushroom ----------
+      add("know2", {
+        set: "board2", setOpts: { id: "bd6" }, dark: 0, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.0, 540, 880) }, { t: 0.2, glide: 1.0, ...fr(600, 720, 1.22, 540, 880) }] },
+        captions: caps("know2"),
+        fx(tl, id, t0, L) {
+          tl.set("#bd6-sick", { strokeDashoffset: 0 }, t0); tl.set(["#bd6-l1", "#bd6-l2"], { opacity: 1 }, t0); tl.set("#bd6-liver", { opacity: 0.9 }, t0);
+          tl.fromTo("#bd6-l2", { scale: 1, svgOrigin: "255 -130" }, { scale: 1.12, duration: 0.25, yoyo: true, repeat: 3, immediateRender: false }, t0 + 0.4);
+          tl.fromTo("#bd6-l3", { opacity: 0, scale: 1.4, svgOrigin: "-90 -190" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + F("know2", 0, 1));
+          PopUI.source(tl, L.light, t0 + 0.4, D("know2") - 0.4, { text: "ที่มา: กรมควบคุมโรค (3 เม.ย. 2568)", y: 1810 });
+        },
+      });
+
+      // ---------- 7. ต้น sitting up in bed, sheepish: "ผมกินไปสองถ้วยเลยนะ…" ----------
+      add("two", {
+        set: "ward2", setOpts: { id: "w7", time: "dawn" }, dark: 0.04, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(420, 1000, 1.45, 540, 1050) }, { t: D("two"), ...fr(420, 1000, 1.55, 540, 1050) }] },
+        actors: [TON(380, 1210, 0.82, [{ t: 0, mode: "sit", eyes: "wide", mouth: "o" }])],
+        captions: caps("two", undefined, { quote: true }),
+      });
+
+      // ---------- 8. มิ้นท์ wheels on him: "แล้วใครบอกให้ขออีกถ้วยล่ะ!" ----------
+      add("scold", {
+        set: "ward2", setOpts: { id: "w8", time: "dawn" }, dark: 0.04, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.15, 540, 1000) }] },
+        shake: (t) => (t < 0.3 ? 6 * Math.sin(t * 50) : 0),
+        actors: [TON(380, 1210, 0.82, [{ t: 0, mode: "sit", eyes: "closed", mouth: "frown" }]), MINT(820, GW + 60, 0.95, [{ t: 0, mode: "point", eyes: "angry", mouth: "scream" }], { flip: true })],
+        captions: caps("scold", undefined, { quote: true }),
+      });
+
+      // ---------- 9. the second night: the monitor's glow, the doctor reading the chart — the liver numbers climbing ----------
+      add("night2", {
+        set: "ward2", setOpts: { id: "w9", time: "night" }, dark: 0.18, blur: { sky: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 0.92, 540, 1050) }, { t: F("night2", 0, 1) - 0.1, glide: 1.2, ...fr(640, 1080, 1.12, 540, 1050) }] },
+        actors: [TON(560, 1220, 0.75, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }]), DOC(900, GW + 40, 0.82, [{ t: 0, mode: "raise", eyes: "worry", mouth: "flat" }], { flip: true })],
+        captions: caps("night2"),
+        extra(L) { put(L.light, `<g id="w9-lab" opacity="0"><g transform="translate(540,520)"><rect x="-300" y="-110" width="600" height="220" rx="24" fill="#0c1014" opacity=".86"/><circle cx="-200" cy="0" r="70" fill="#fbe0e0" stroke="#3a2a22" stroke-width="4"/>${PopUI.ICON.liver(-200, 0, 1.1)}
+          <text x="-100" y="-14" font-family="Mali" font-weight="700" font-size="40" fill="#f4ecd8">ค่าตับ</text><text x="-100" y="50" font-family="Mali" font-weight="700" font-size="40" fill="#ff6a5a">เริ่มผิดปกติ</text><path d="M200,50V-60M170,-30L200,-64L230,-30" stroke="#ff6a5a" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>`); },
+        fx(tl, id, t0, L) {
+          tl.fromTo("#w9-lab", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0 + F("night2", 0, 1) + 0.2);
+          Fx.heart(tl, t0 + F("night2", 0, 1), D("night2") - F("night2", 0, 1), 0.5, 0.45);
+          PopUI.source(tl, L.light, t0 + F("night2", 0, 1) + 0.4, D("night2") - F("night2", 0, 1) - 0.4, { text: "ที่มา: คู่มือเห็ดพิษ กรมควบคุมโรค (2566) · ระยะที่ 2 (18-36 ชม.)", y: 1380 });
+        },
+      });
+
+      // ---------- 10. the doctor, relieved: "ดีที่มาทัน… หมอดูแลได้" ----------
+      add("relief", {
+        set: "ward2", setOpts: { id: "w10", time: "dawn" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(560, GW + 1200, 2.0, 1000) }, { t: D("relief"), ...fr(560, GW + 1200 - 560 * 2.0, 1.06, 540, 1000) }] },
+        actors: [DOC(560, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        captions: caps("relief", undefined, { quote: true }),
+      });
+
+      // ---------- 11. the rules, the last line marked: even feeling better, let the doctor keep watching ----------
+      add("know3", {
+        set: "ward2", setOpts: { id: "w11", time: "dawn" }, dark: 0.1, blur: { sky: 6, far: 6, set: 8, act: 6 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 0.95, 540, 1050) }] },
+        actors: [TON(560, 1220, 0.75, [{ t: 0, mode: "lie", eyes: "closed", mouth: "smile" }])],
+        captions: caps("know3"),
+        fx(tl, id, t0, L) {
+          PopUI.rule(tl, L.light, t0 + 0.05, D("know3") - 0.05, { active: 2, done: [0, 1], y: 680, out: false });
+          PopUI.source(tl, L.light, t0 + F("know3", 0, 1), D("know3") - F("know3", 0, 1), { text: "ที่มา: กรมควบคุมโรค (3 เม.ย. 2568) · ควรรีบไปพบแพทย์แม้อาการจะดีขึ้นในช่วงแรก", y: 1100 });
+        },
+      });
+
+      // ---------- 12. ลุงทองดี in the doorway with a bag of oranges: "ลุงขอโทษ… ที่ทำให้กลัว" ----------
+      add("sorry", {
+        set: "ward2", setOpts: { id: "w12", time: "dawn" }, dark: 0.04, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(800, GW - 640, 1.35, 540, 1060) }, { t: D("sorry"), ...fr(800, GW - 660, 1.45, 540, 1060) }] },
+        actors: [{ ...THONG(840, GW + 60, 1.1, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: F("sorry", 0, 1), mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }), who: "thongBag" }],
+        captions: caps("sorry", undefined, { quote: true }),
+        fx(tl, id) { oneHand(id, 0); },
+      });
+
+      // ---------- 13. มิ้นท์ close, ashamed: "หนูต่างหาก ที่ต้องขอโทษ" ----------
+      add("me", {
+        set: "ward2", setOpts: { id: "w13", time: "dawn" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(520, GW + 1300, 2.1, 1000) }, { t: D("me"), ...fr(520, GW + 1300 - 560 * 2.1, 1.06, 540, 1000) }] },
+        actors: [MINT(520, GW + 1300, 2.1, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])],
+        captions: caps("me", undefined, { quote: true }),
+      });
+
+      // ---------- 14. ลุงทองดี close, the camera creeping in: "แต่รอยเท้านั่น… นิ้วยาวกว่าลุงเยอะ" ----------
+      add("feet", {
+        set: "ward2", setOpts: { id: "w14", time: "dawn" }, dark: 0.08, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1200, 2.1, 1000) }, { t: F("feet", 0, 1) - 0.1, glide: 1.2, ...fr(540, GW + 1200 - 560 * 2.1, 1.14, 540, 960) }] },
+        actors: [THONG(540, GW + 1200, 2.1, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        captions: caps("feet", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("feet", 0, 1), D("feet") - F("feet", 0, 1), 0.5, 0.45); },
+      });
+
+      // ---------- 15. the doctor with the chart; behind her, ยาย turns away ----------
+      add("odd", {
+        set: "ward2", setOpts: { id: "w15", time: "dawn" }, dark: 0.05, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(560, GW - 640, 1.2, 540, 1100) }, { t: F("odd", 0, 2) - 0.2, glide: 1.2, ...fr(880, GW - 700, 1.6, 540, 1100) }] },
+        actors: [DOC(520, GW + 60, 1.2, [{ t: 0, mode: "raise", eyes: "side", mouth: "o" }]), YAI(900, GW + 40, 1.05, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: F("odd", 0, 2), mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: caps("odd", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("odd", 0, 2), D("odd") - F("odd", 0, 2), 0.48, 0.5); },
+      });
+
+      // ---------- 16. that night: มิ้นท์ wakes in the chair ----------
+      add("wake", {
+        set: "ward2", setOpts: { id: "w16", time: "night" }, dark: 0.25, blur: { sky: 6, far: 6, set: 8 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1500, 2.6, 1000) }, { t: D("wake"), ...fr(540, GW + 1500 - 560 * 2.6, 1.06, 540, 1000) }] },
+        actors: [MINT(540, GW + 1500, 2.6, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }, { t: F("wake", 0, 1), mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("wake"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("wake", 0, 1), D("wake") - F("wake", 0, 1), 0.45, 0.55); },
+      });
+
+      // ---------- 17. wide: ยาย at ต้น's bedside, her back to us; her head tilts ----------
+      add("sit", {
+        set: "ward2", setOpts: { id: "w17", time: "night" }, dark: 0.25, blur: { sky: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 0.92, 540, 1050) }, { t: F("sit", 0, 1) - 0.1, glide: 1.6, ...fr(640, 1100, 1.35, 540, 1050) }] },
+        actors: [TON(500, 1220, 0.75, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }])],
+        captions: caps("sit"),
+        extra(L) { put(L.glow, Pop2.yaiBack(720, GW + 60, 0.95, "yb17")); },
+        fx(tl, id, t0) {
+          tl.fromTo("#yb17-head", { rotation: 0, svgOrigin: "0 -480" }, { rotation: -9, duration: 2.4, ease: "sine.inOut", immediateRender: false }, t0 + 0.8);
+          Fx.heart(tl, t0, D("sit"), 0.5, 0.6);
+        },
+      });
+
+      // ---------- 18. down on the floor: her feet, muddy to the ankle — the toes far too long ----------
+      add("toes", {
+        set: "feet2", setOpts: { id: "f18" }, dark: 0.1, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(540, 1200, 0.95, 540, 1000) }, { t: F("toes", 0, 1) - 0.1, glide: 1.4, ...fr(540, 1440, 1.18, 540, 1000) }] },
+        captions: caps("toes"),
+        fx(tl, id, t0) {
+          tl.fromTo(["#f18-toesR", "#f18-toesL"], { rotation: 0, svgOrigin: "200 80" }, { rotation: 6, duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0 + F("toes", 0, 1) + 0.2);
+          Fx.heart(tl, t0, D("toes"), 0.48, 0.6);
+        },
+      });
+
+      // ---------- 19. "ลูกเอ๊ย… ยายหิวข้าวจังเลย": she turns — green eyes; hold; the hit ----------
+      const HB = F("hungry", 0, 1) - 0.05, HC = D("hungry") - 0.9, HD = D("hungry") - 0.5;
+      add("hungry", {
+        set: "ward2", setOpts: { id: "w19", time: "night" }, dark: 0.35, blur: { sky: 6, far: 6, set: 8 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1200, 2.0, 1000) }, { t: HC, ...fr(540, GW + 1200 - 560 * 2.0, 1.2, 540, 980) }] },
+        actors: [YAI(540, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }, { t: HB, mode: "idle", eyes: "glow", mouth: "o" }])],
+        captions: caps("hungry", undefined, { quote: true }),
+        extra(L) { put(L.light, `<g id="w19-face" opacity="0">${Pop2.pobFace(540, 1000, 1.25, { id: "w19-f" })}</g>`); },
+        fx(tl, id, t0) {
+          Fx.heart(tl, t0, HC, 0.6, 0.65);
+          tl.to(`#${id}-dark`, { opacity: 0.8, duration: 0.3 }, t0 + HC);
+          tl.fromTo("#w19-face", { opacity: 0, scale: 1.25, svgOrigin: "540 1000" }, { opacity: 1, scale: 1, duration: 0.09, ease: "power4.out", immediateRender: false }, t0 + HD);
+          Fx.glitch(tl, `#${id}`, t0 + HD + 0.05, 0.18, 16, 1119);
+          tl.set("#black", { opacity: 1 }, t0 + HD + 0.22);
+        },
+      });
+
+      // ---------- 20. the village at night; the camera drifts to ยาย's window — green eyes in it ----------
+      add("last", {
+        set: "village2", setOpts: { id: "v20", time: "night", fence: [-700] }, dark: 0.15, blur: { far: 2, fg: 8 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 960) }, { t: vo("last", 1) - 0.3, glide: 2.2, ...fr(-226, 700, 2.2, 540, 900) }] },
+        captions: caps("last"),
+        extra(L) { put(L.glow, `<g id="v20-sil" opacity="0"><path d="M-262,758Q-262,700 -226,690Q-190,700 -190,758Z M-226,700m-22,0a22,26 0 1,0 44,0a22,26 0 1,0 -44,0" fill="#0a0806"/><path d="M-250,690q-6,40 -10,70M-202,690q6,40 10,70" stroke="#0a0806" stroke-width="6" fill="none"/></g>` + Pop2.eyePair(-226, 696, 0.4, "v20-eyes")); },
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 1 }, t0); tl.to("#black", { opacity: 0, duration: 0.8 }, t0 + 0.3);
+          tl.set(["#v20-eyes", "#v20-sil"], { opacity: 0 }, t0); tl.to("#v20-sil", { opacity: 1, duration: 0.6 }, t0 + vo("last", 1)); tl.to("#v20-eyes", { opacity: 1, duration: 0.4 }, t0 + vo("last", 1) + 0.6);
+          Pop2.particles(tl, L.glow, { type: "firefly", n: 14, box: [-600, 900, 1800, 800], t0, dur: D("last"), seed: 13 });
+          Fx.heart(tl, t0 + vo("last", 1), D("last") - vo("last", 1), 0.6, 0.45);
+        },
+      });
+
+      // ---------- 21. her rules, all three lines, in her own voice, over the dark village ----------
+      add("rule", {
+        set: "village2", setOpts: { id: "v21", time: "night", fence: [-700] }, dark: 0.45, blur: { sky: 6, far: 8, mid: 8, set: 8, fg: 10 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 960) }] },
+        captions: caps("rule", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          PopUI.rule(tl, L.light, t0 + 0.1, D("rule") - 0.1, { active: 2, done: [0, 1], y: 760, out: false });
+          tl.set("#black", { opacity: 1 }, t0 + D("rule") - 0.2);
+        },
+      });
+
+      // ---------- 22. end card: the community-forest sign — the end ----------
+      add("end", {
+        set: "sign2", setOpts: { id: "sg", ep: "ตอนจบ", title: "เห็ดปอบ" }, dark: 0, blur: { far: 6, mid: 5, fg: 10 }, grade: { top: "#ffd9a0", bottom: "#5a4a7a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.0, 540, 900) }, { t: D("end"), ...fr(540, 880, 1.05, 540, 900) }] },
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#sg-sign", { rotation: -9, svgOrigin: "540 500" }, { rotation: 0, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          tl.fromTo("#sg-note", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.6);
+          Pop2.particles(tl, L.light, { type: "dust", n: 24, box: [0, 200, 1080, 1400], t0, dur: D("end"), seed: 8 });
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Pop.life(tl, `#${id}`, t0, sh.dur); }; });
+      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">เห็ดปอบ · EP.3</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
+      Fx.setup(root);
+      Engine.build(root, tl, shots);
+
+      root.appendChild(document.getElementById("grain"));
+      const rnd = (() => { let s = 99; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+      for (let i = 0; i * 0.083 < SCHED.total; i++) tl.set("#grain", { x: Math.round(-50 + rnd() * 50), y: Math.round(-50 + rnd() * 50) }, i * 0.083);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
