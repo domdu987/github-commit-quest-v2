@@ -1,0 +1,34 @@
+      // ---------- ผีแม่ม่าย — motion-graphics preview: the travel map, the อสม. flipchart, Bua's rule card ----------
+      const TUBE = { from: "right", rim: "#e8fff4", rimOp: 0.6, shade: "#102028", shadeOp: 0.4, cast: { len: 1.2, op: 0.3 }, vol: false };
+      const GDAY = { top: "#fff0c8", bottom: "#c8e0f0", op: 0.12 }, GDUSK = { top: "#ffa070", bottom: "#2a1a40", op: 0.32 };
+      const VIL = Maps.P(103.55, 16.25);
+      add("map", {
+        set: "mapTH", setOpts: { id: "mp", x: 90, y: 300, s: 1, region: [103.3, 15.9, 240, "อีสาน"], route: [[100.52, 13.75], [101.2, 14.4], [102.1, 14.97], [102.9, 15.7], [103.55, 16.25]],
+          from: "กรุงเทพฯ", to: "บ้านโนนคำ", vehicle: "bus", toIcon: Mm.shirt(0, -12, 0.09, {}), labDx: [-40, 20] },
+        dark: 0, light: false, grade: { top: "#fff8e8", bottom: "#d8f0f0", op: 0.15 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: 6.2, glide: 1.6, ease: "drop", ...fr(90 + VIL[0], 300 + VIL[1], 2.6, 540, 860) }] },
+        fx(tl, id, t0) { Maps.route(tl, "mp", t0, { go: [0.9, 4.2] }); },
+      });
+      add("know1", {
+        set: "flip3", setOpts: { id: "fc" }, dark: 0, blur: { sky: 6, far: 6 }, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("know1"), glide: D("know1"), ...fr(540, 960, 1.04, 540, 960) }] },
+        fx(tl, id, t0, L) {
+          MmUI.flipAnim(tl, "fc", t0, { b: 3.4 });
+          MmUI.source(tl, L.light, t0 + 0.6, D("know1") - 0.7, { text: "ที่มา: แพทย์ผู้วิจัยใหลตาย · ผู้จัดการออนไลน์ (8 มี.ค. 2561)" });
+        },
+      });
+      add("rule1", {
+        set: "house3", setOpts: { id: "r1h", time: "dusk" }, dark: 0.35, blur: { sky: 8, mid: 8, set: 8 }, light: TUBE, grade: GDUSK,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) { MmUI.rule(tl, L.light, t0 + 0.05, D("rule1") - 0.05, { active: 0, done: [], y: 560 }); },
+      });
+      add("rule2", {
+        set: "house3", setOpts: { id: "r2h", time: "night" }, dark: 0.35, blur: { sky: 8, mid: 8, set: 8 }, light: TUBE, grade: GDUSK,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) { MmUI.rule(tl, L.light, t0 + 0.05, D("rule2") - 0.05, { active: 1, done: [0], y: 560 }); },
+      });
+      add("icons", {
+        set: "flip3", setOpts: { id: "ic" }, dark: 0.5, blur: { sky: 10, far: 10, set: 10 }, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) { [0, 1, 2].forEach((k) => { put(L.light, MmUI.icon(k, 540, 380 + k * 560, 3.4, `ix${k}`, "active")); MmUI.iconAnim(tl, k, `ix${k}`, t0, 3); }); },
+      });
