@@ -533,6 +533,26 @@ def sfx(kind):
         buzz = osc(4200 + 120 * np.sin(2 * np.pi * 0.35 * t), d, "square") * (np.sin(2 * np.pi * 110 * t) > 0)
         swell = 0.55 + 0.45 * np.sin(2 * np.pi * 0.22 * t) ** 2
         return lp_fast(buzz, 6500) * swell * np.sin(np.pi * t / d) ** 0.3 * 0.02
+    if kind == "rip":  # a sheet of paper torn in one pull: fibres popping faster and faster, then the free flap
+        d = 0.62
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        body = (lp_fast(n, 7000) - lp_fast(n, 900)) * np.clip(t / 0.05, 0, 1) * np.clip((0.5 - t) / 0.08, 0, 1)
+        rate = 40 + 260 * (t / 0.5) ** 1.6                      # crackles per second, accelerating
+        ph = np.cumsum(rate) / SR
+        crack = (np.diff(np.floor(ph), prepend=0) > 0).astype(float) * (0.4 + 0.6 * rng.random(len(t)))
+        crack = lp_fast(crack, 6000) * 3
+        out = body * (0.45 + 0.4 * np.abs(lp_fast(rng.standard_normal(len(t)), 30))) + crack
+        tf = t_arr(0.12)
+        add(out, (lp_fast(rng.standard_normal(len(tf)), 2500) - lp_fast(rng.standard_normal(len(tf)), 400)) * np.exp(-tf * 30) * 0.6, 0.48)
+        return out * 0.42
+    if kind == "pen":  # a ballpoint tick on paper: a short scratch down, a flick up
+        d = 0.2
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        band = lp_fast(n, 6500) - lp_fast(n, 1800)
+        shape = np.where(t < 0.08, np.sin(np.pi * t / 0.08), 0) * 0.8 + np.where(t > 0.1, np.sin(np.pi * np.clip((t - 0.1) / 0.09, 0, 1)), 0) * 0.55
+        return band * shape * 0.5
     if kind == "page":  # a notebook page turning: a soft brushed sweep with a flap at the end
         d = 0.5
         t = t_arr(d)
@@ -738,6 +758,13 @@ def sfx(kind):
         crack = (rng.random(len(t)) > 0.995).astype(float) * rng.standard_normal(len(t)) * 1.5
         x = scrape + lp_fast(crack, 9000)
         return x / (np.max(np.abs(x)) or 1) * 0.7
+    if kind == "saw":  # a knife sawing through cloth: one stroke of scraped noise, bright at the start, with a fibre-tearing crackle
+        d = 0.26
+        t = t_arr(d)
+        n = rng.standard_normal(len(t))
+        body = (n - lp_fast(n, 900)) * (0.4 + 0.6 * np.sin(np.pi * t / d) ** 0.5)
+        crack = (rng.random(len(t)) > 0.995).astype(float) * rng.standard_normal(len(t)) * 2.0
+        return (body * 0.16 + lp_fast(crack, 6000) * 0.25) * np.clip((d - t) / 0.03, 0, 1)
     if kind == "cough":  # a child coughing, small and dry: two bursts of band-limited noise
         out = np.zeros(int(0.7 * SR))
         for off in (0.0, 0.28):

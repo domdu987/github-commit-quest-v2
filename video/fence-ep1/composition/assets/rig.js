@@ -9,13 +9,43 @@
     return `<rect x="${-wid / 2}" y="-4" width="${wid}" height="${len + 8}" rx="${wid / 2}" fill="${col}" ${OUT}/>` +
       `<rect x="${wid * 0.12}" y="2" width="${wid * 0.32}" height="${len - 4}" rx="${wid * 0.16}" fill="${shade}" opacity=".55"/>`;
   }
+  // v2 body parts (user, 28 Oct: "ตัวละคร ทำให้ดีกว่านี้"): limbs taper from joint to joint with rounded caps that hide the seams,
+  // a shaded far side and a lit near edge (light from the upper left), cloth creases at the joints; real hands and soled shoes.
+  // Joint positions and lengths are unchanged, so every pose, prop and hand attachment still lines up.
+  const f2 = (v) => (Math.round(v * 10) / 10).toString();
+  function taper(len, w0, w1, col, shade, o = {}) {
+    const a = w0 / 2, b = w1 / 2, bu = o.bulge || 0, m = len * (o.at ?? 0.38);
+    const d = `M${f2(-a)},0C${f2(-a - bu)},${f2(m * 0.6)} ${f2(-b - bu * 0.6)},${f2(m + (len - m) * 0.5)} ${f2(-b)},${len}A${f2(b)},${f2(b)} 0 0 0 ${f2(b)},${len}C${f2(b + bu * 0.6)},${f2(m + (len - m) * 0.5)} ${f2(a + bu)},${f2(m * 0.6)} ${f2(a)},0A${f2(a)},${f2(a * 0.9)} 0 0 0 ${f2(-a)},0Z`;
+    const sh = `M${f2(a * 0.25)},${f2(-a * 0.5)}C${f2(a * 0.9)},${f2(m * 0.5)} ${f2(b * 0.9)},${f2(len * 0.7)} ${f2(b * 0.55)},${f2(len + b * 0.5)}A${f2(b)},${f2(b)} 0 0 0 ${f2(b)},${len}C${f2(b + bu * 0.6)},${f2(m + (len - m) * 0.5)} ${f2(a + bu)},${f2(m * 0.6)} ${f2(a)},0A${f2(a)},${f2(a * 0.9)} 0 0 0 ${f2(a * 0.25)},${f2(-a * 0.5)}Z`;
+    let s = `<path d="${d}" fill="${col}" ${OUT}/><path d="${sh}" fill="${shade}" opacity=".62"/><path d="M${f2(-a * 0.62)},${f2(a * 0.2)}C${f2(-a * 0.7 - bu * 0.6)},${f2(m * 0.7)} ${f2(-b * 0.7)},${f2(len * 0.7)} ${f2(-b * 0.6)},${f2(len - b * 0.3)}" stroke="#fff" stroke-opacity=".2" stroke-width="${f2(Math.max(2.5, w1 * 0.14))}" fill="none" stroke-linecap="round"/>`;
+    if (o.crease) s += `<path d="M${f2(-b * 0.6)},${f2(len - b * 1.2)}q${f2(b * 0.5)},${f2(-b * 0.35)} ${f2(b * 1.1)},${f2(-b * 0.1)}M${f2(-b * 0.3)},${f2(len - b * 0.5)}q${f2(b * 0.4)},${f2(-b * 0.3)} ${f2(b * 0.9)},${f2(-b * 0.1)}" stroke="${shade}" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".9"/>`;
+    if (o.hem) s += `<path d="M${f2(-b - 2)},${f2(len - o.hem)}Q0,${f2(len - o.hem + 5)} ${f2(b + 2)},${f2(len - o.hem)}" stroke="${shade}" stroke-width="3" fill="none"/>`;
+    return s;
+  }
+  // a hand at the end of the forearm (wrist at y 104): palm and fingers curled a little, a thumb on the inner side
+  function hand2(skin, skinS, inner) {
+    const t = inner < 0 ? -1 : 1;
+    return `<g transform="translate(0,104)"><path d="M-13,0C-17,12 -16,27 -9,34C-3,40 8,39 12,30C16,21 15,8 12,0Z" fill="${skin}" ${OUT}/>
+      <path d="M${8 * t},4C${20 * t},6 ${22 * t},16 ${16 * t},24C${12 * t},26 ${9 * t},22 ${10 * t},16" fill="${skin}" ${OUT}/>
+      <path d="M4,4C12,12 12,26 6,34C10,34 13,28 13,20C14,12 12,5 10,2Z" fill="${skinS}" opacity=".7"/><path d="M-7,24v8M-1,26v9M5,25v7" stroke="${skinS}" stroke-width="2" stroke-linecap="round"/><path d="M-10,6c-2,8 -2,14 0,20" stroke="#fff" stroke-opacity=".25" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>`;
+  }
+  // a shoe with a sole, a toe cap that catches the light and laces (pointing +x like the old one)
+  function shoe2(col) {
+    const dark = /^#[0-9a-f]{6}$/i.test(col) ? (parseInt(col.slice(1, 3), 16) + parseInt(col.slice(3, 5), 16) + parseInt(col.slice(5, 7), 16)) < 330 : true;
+    const sole = dark ? "#8f8a80" : "#bdb6a8";
+    return `<path d="M-19,120C-20,132 -21,138 -21,142H38C40,134 33,126 20,124C12,123 6,118 4,114H-16Z" fill="${col}" ${OUT}/><path d="M-22,141H39Q41,148 36,151H-20Q-23,148 -22,141Z" fill="${sole}" ${OUT}/>
+      <path d="M-2,120l8,6M4,117l8,6" stroke="${dark ? "#6b6560" : "#fff"}" stroke-width="2.2" stroke-linecap="round"/><path d="M18,129q10,2 14,8" stroke="#fff" stroke-opacity=".3" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-16,124q-1,8 -2,14" stroke="#fff" stroke-opacity=".18" stroke-width="3" fill="none"/>`;
+  }
 
   const EYES = {
-    normal: `<ellipse cx="-14" cy="-546" rx="4.5" ry="6" fill="#2e2a26"/><ellipse cx="18" cy="-546" rx="4.5" ry="6" fill="#2e2a26"/>
-             <path d="M-24,-562q10,-5 18,-1M10,-563q10,-4 18,1" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
-    wide: `<circle cx="-14" cy="-546" r="8" fill="#f4ecd8" ${OUT}/><circle cx="18" cy="-546" r="8" fill="#f4ecd8" ${OUT}/>
-           <circle cx="-14" cy="-546" r="2.6" fill="#2e2a26"/><circle cx="18" cy="-546" r="2.6" fill="#2e2a26"/>
-           <path d="M-25,-566q10,-8 19,-3M9,-569q10,-5 19,3" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    normal: `<ellipse cx="-14" cy="-545" rx="7.6" ry="7" fill="#fbf7ee"/><ellipse cx="18" cy="-545" rx="7.6" ry="7" fill="#fbf7ee"/>
+             <circle cx="-13" cy="-545" r="5.2" fill="#3b2619"/><circle cx="19" cy="-545" r="5.2" fill="#3b2619"/><circle cx="-13" cy="-545" r="2.6" fill="#0d0907"/><circle cx="19" cy="-545" r="2.6" fill="#0d0907"/>
+             <circle cx="-15" cy="-547.6" r="1.8" fill="#fff"/><circle cx="17" cy="-547.6" r="1.8" fill="#fff"/>
+             <path d="M-22.5,-548q8,-6 17,-1M9.5,-549q9,-5 17,1" stroke="#2e2a26" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+             <path d="M-24,-563q10,-6 19,-2M10,-565q10,-4 19,2" stroke="#2e2a26" stroke-width="4.4" fill="none" stroke-linecap="round"/>`,
+    wide: `<circle cx="-14" cy="-546" r="9" fill="#fbf7ee" ${OUT}/><circle cx="18" cy="-546" r="9" fill="#fbf7ee" ${OUT}/>
+           <circle cx="-14" cy="-546" r="3.4" fill="#1d130c"/><circle cx="18" cy="-546" r="3.4" fill="#1d130c"/><circle cx="-15.5" cy="-547.8" r="1.3" fill="#fff"/><circle cx="16.5" cy="-547.8" r="1.3" fill="#fff"/>
+           <path d="M-25,-568q10,-8 19,-3M9,-571q10,-5 19,3" stroke="#2e2a26" stroke-width="4.4" fill="none" stroke-linecap="round"/>`,
     closed: `<path d="M-21,-545q7,5 14,0M11,-545q7,5 14,0" stroke="#2e2a26" stroke-width="3.5" fill="none" stroke-linecap="round"/>
              <path d="M-24,-560q10,-3 18,0M10,-560q10,-3 18,0" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
     pain: `<path d="M-21,-545l12,-3M11,-548l12,3" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>
@@ -23,7 +53,8 @@
     glow: `<circle cx="-14" cy="-546" r="20" fill="#d8ff9a" opacity=".3"/><circle cx="18" cy="-546" r="20" fill="#d8ff9a" opacity=".3"/>
            <circle cx="-14" cy="-546" r="9" fill="#e9ffc0"/><circle cx="18" cy="-546" r="9" fill="#e9ffc0"/>
            <path d="M-25,-560q10,4 19,1M9,-559q10,3 19,-2" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
-    side: `<ellipse cx="-10" cy="-546" rx="4.5" ry="6" fill="#2e2a26"/><ellipse cx="22" cy="-546" rx="4.5" ry="6" fill="#2e2a26"/>
+    side: `<ellipse cx="-10" cy="-545" rx="7" ry="6.6" fill="#fbf7ee"/><ellipse cx="22" cy="-545" rx="7" ry="6.6" fill="#fbf7ee"/><circle cx="-7" cy="-545" r="4.6" fill="#3b2619"/><circle cx="25" cy="-545" r="4.6" fill="#3b2619"/>
+           <circle cx="-8" cy="-547" r="1.6" fill="#fff"/><circle cx="24" cy="-547" r="1.6" fill="#fff"/><path d="M-18,-548q8,-6 16,-1M14,-549q8,-5 16,1" stroke="#2e2a26" stroke-width="3.4" fill="none" stroke-linecap="round"/>
            <path d="M-22,-562q10,-5 18,-1M12,-563q10,-4 18,1" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
   };
   // the infected: milky eyes with pin pupils, and a torn-open snarl
@@ -46,12 +77,12 @@
   };
 
   function build(parent, id, P) {
-    const leg = (side) => `<g id="${id}-th${side}"><g>${limb(150, 38, P.pants, P.pantsS)}</g>
-        <g transform="translate(0,150)"><g id="${id}-sh${side}">${limb(138, 34, P.pants, P.pantsS)}
-          <path d="M-20,128h34q22,0 22,16v6h-56z" fill="${P.shoe}" ${OUT}/></g></g></g>`;
-    const arm = (side, extra = "") => `<g id="${id}-ua${side}">${limb(122, 30, P.sleeve, P.sleeveS)}
-        <g transform="translate(0,122)"><g id="${id}-fa${side}">${limb(108, 26, P.forearm || P.sleeve, P.forearmS || P.sleeveS)}
-          <circle cx="0" cy="118" r="15" fill="${P.skin}" ${OUT}/><g id="${id}-hand${side}">${extra}</g></g></g></g>`;
+    const leg = (side) => `<g id="${id}-th${side}"><g>${taper(150, 44, 34, P.pants, P.pantsS, { bulge: 2, crease: true })}</g>
+        <g transform="translate(0,150)"><g id="${id}-sh${side}">${taper(132, 34, 30, P.pants, P.pantsS, { bulge: 2.5, at: 0.3, hem: 6 })}
+          ${shoe2(P.shoe)}</g></g></g>`;
+    const arm = (side, extra = "") => `<g id="${id}-ua${side}">${taper(122, 38, 29, P.sleeve, P.sleeveS, { bulge: 2.5, crease: !P.forearm })}${P.forearm ? `<path d="M-16,96Q0,104 16,96" stroke="${P.sleeveS}" stroke-width="3" fill="none"/>` : ""}
+        <g transform="translate(0,122)"><g id="${id}-fa${side}">${taper(104, 28, 21, P.forearm || P.sleeve, P.forearmS || P.sleeveS, { bulge: 2.5, at: 0.3, hem: P.forearm ? 0 : 4 })}
+          ${hand2(P.skin, P.skinS, side === "F" ? -1 : 1)}<g id="${id}-hand${side}">${extra}</g></g></g></g>`;
     const torch = `<g id="${id}-torch" display="none" transform="translate(0,118)"><rect x="-9" y="-6" width="18" height="44" rx="4" fill="#3d3833" ${OUT}/>
           <path id="${id}-beam" d="M-8,38L-230,900H230L8,38Z" fill="url(#beamg)"/></g>`;
     const eyes = Object.entries(EYES).map(([k, v]) => `<g class="eye-${k}" display="${k === "normal" ? "inline" : "none"}">${v}</g>`).join("");
@@ -61,29 +92,35 @@
         <radialGradient id="${id}-sg"><stop offset="0" stop-color="#060c10" stop-opacity=".55"/><stop offset="1" stop-color="#060c10" stop-opacity="0"/></radialGradient></defs>
       <ellipse id="${id}-shadow" cx="0" cy="6" rx="120" ry="22" fill="url(#${id}-sg)"/>
       <g id="${id}-root"><g id="${id}-body">
-        <g transform="translate(-20,-300)">${leg("B")}</g>
-        <g transform="translate(-46,-455)" opacity=".92">${arm("B", P.hand || "")}</g>
+        <g transform="translate(-20,-300)" style="filter:brightness(.84)">${leg("B")}</g>
+        <g transform="translate(-46,-455)" style="filter:brightness(.84)">${arm("B", P.hand || "")}</g>
         <g id="${id}-torso">
-          <path d="M-62,-470Q-66,-482 -44,-486H44Q66,-482 62,-470L56,-300H-56Z" fill="url(#${id}-tg)" ${OUT}/>
+          <path d="M-64,-466Q-66,-486 -40,-488H40Q66,-486 64,-466L58,-392Q54,-350 56,-300H-56Q-54,-350 -58,-392Z" fill="url(#${id}-tg)" ${OUT}/>
+          <path d="M-60,-470q12,-10 26,-14M60,-470q-12,-10 -26,-14" stroke="${P.topS}" stroke-width="3" fill="none" opacity=".8"/>
+          <path d="M-40,-332q14,-8 30,-4M14,-334q14,-6 28,2M-48,-410q8,10 6,24" stroke="${P.topS}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/>
           <path d="M18,-482H40Q58,-478 54,-468L50,-302H24Z" fill="${P.topS}" opacity=".55"/>
           <path d="M-56,-478Q-60,-400 -52,-310" stroke="#fff" stroke-width="5" fill="none" opacity=".16" stroke-linecap="round"/>
-          <rect x="-56" y="-318" width="112" height="30" rx="8" fill="${P.belt}" ${OUT}/>
+          ${P.untuck ? "" : `<rect x="-56" y="-318" width="112" height="30" rx="8" fill="${P.belt}" ${OUT}/>`}
           <g id="${id}-acc">${P.torsoExtra || ""}</g>
-          <rect x="-14" y="-506" width="28" height="30" fill="${P.skinS}" ${OUT}/>
-          <g id="${id}-head">
+          <path d="M-15,-508H15V-482Q0,-474 -15,-482Z" fill="${P.skinS}" ${OUT}/><path d="M-15,-506Q0,-496 15,-506V-498Q0,-490 -15,-498Z" fill="#1a1412" opacity=".22"/>
+          <g id="${id}-head"><g transform="translate(0,-498) scale(1.12) translate(0,498)">
             <ellipse cx="-44" cy="-540" rx="10" ry="15" fill="${P.skin}" ${OUT}/><ellipse cx="44" cy="-540" rx="10" ry="15" fill="${P.skin}" ${OUT}/>
-            <ellipse cx="0" cy="-548" rx="44" ry="52" fill="${P.skin}" ${OUT}/>
+            <path d="M-46,-546q4,-6 4,4M46,-546q-4,-6 -4,4" stroke="${P.skinS}" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M-44,-558C-46,-600 -20,-601 0,-601C20,-601 46,-600 44,-558C44,-526 30,-498 0,-496C-30,-498 -44,-526 -44,-558Z" fill="${P.skin}" ${OUT}/>
             <path d="M18,-596Q46,-570 40,-520Q30,-500 8,-497Q36,-530 18,-596Z" fill="${P.skinS}" opacity=".55"/>
             <path d="M0,-600Q36,-592 40,-540Q38,-506 10,-498Q44,-540 20,-598Z" fill="#1a1412" opacity=".12"/>
             <path d="M-38,-566Q-44,-540 -36,-512" stroke="#fff" stroke-width="4" fill="none" opacity=".22" stroke-linecap="round"/>
-            <path d="M5,-537q6,8 -1,12" stroke="${P.skinS}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-            <g id="${id}-hair">${P.hair}</g>
+            <path d="M5,-537q7,8 -1,13" stroke="${P.skinS}" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M-2,-526q4,2 8,0" stroke="${P.skinS}" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>
+            <ellipse cx="-27" cy="-526" rx="8" ry="4" fill="#e0806a" opacity=".22"/><ellipse cx="31" cy="-526" rx="8" ry="4" fill="#e0806a" opacity=".2"/>
+            <g id="${id}-hair">${P.hair}${P.noSheen ? "" : `<path d="M-30,-588q14,-12 34,-13" stroke="#fff" stroke-opacity=".2" stroke-width="6" fill="none" stroke-linecap="round"/>`}</g>
             <g id="${id}-eyes">${eyes}</g>${P.face || ""}
             <g id="${id}-mouth">${mouths}</g>
             <g id="${id}-sweat" display="none"><path d="M40,-582c6,10 8,16 2,19c-6,-3 -6,-9 -2,-19z" fill="#cfe2e6" ${OUT}/></g>
-          </g>
+          </g></g>
         </g>
         <g transform="translate(20,-300)">${leg("F")}</g>
+        ${P.untuck ? `<g id="${id}-hem"><path d="M-57,-312L-62,-262Q-30,-252 0,-256Q32,-252 62,-262L57,-312Z" fill="url(#${id}-tg)" ${OUT}/><path d="M20,-312L58,-312L62,-262Q44,-256 24,-256Z" fill="${P.topS}" opacity=".55"/>
+          <path d="M-40,-268q8,-14 6,-34M10,-262q4,-12 2,-30M-60,-266Q0,-250 60,-266" stroke="${P.topS}" stroke-width="3" fill="none" stroke-linecap="round"/>${P.hemExtra || ""}</g>` : ""}
         <g transform="translate(46,-455)">${arm("F", torch + (P.hand || ""))}</g>
       </g></g></g>`;
     const g = document.createElementNS(NS, "g");
@@ -106,7 +143,7 @@
   const MODES = {
     idle(u, o) {
       const b = Math.sin(u * 2 * Math.PI / 3.2);
-      return { ...zero(), uaF: 4 + b, uaB: -4 - b, faF: -8, faB: -8, torso: 0.6 * b, head: 0.8 * Math.sin(u * 1.3), bodyY: -2 * (b + 1) };
+      return { ...zero(), uaF: 7 + b, uaB: -7 - b, faF: -16, faB: -13, thF: 3.5, shF: -1, thB: -3, shB: 2, torso: 1.2 + 0.6 * b, head: -1 + 0.8 * Math.sin(u * 1.3), bodyY: -2 * (b + 1) };
     },
     walk(u, o) { return gait(u, o.period || 0.96, o.stride || 16, o.knee || 42, o.bob || 9, o.arm || 18, o.lean || 1.5); },
     run(u, o) { return gait(u, o.period || 0.56, o.stride || 30, o.knee || 80, o.bob || 16, o.arm || 40, o.lean || 9, true); },
@@ -271,7 +308,8 @@
     const R = (sel, deg, ox = 0, oy = 0) => document.getElementById(`${id}-${sel}`).setAttribute("transform", `rotate(${deg.toFixed(3)} ${ox} ${oy})`);
     R("thF", p.thF); R("thB", p.thB); R("shF", p.shF); R("shB", p.shB);
     R("uaF", p.uaF); R("faF", p.faF); R("uaB", p.uaB); R("faB", p.faB);
-    R("torso", p.torso, 0, -300); R("head", p.head, 0, -500); R("hair", p.hair, 0, -560); R("acc", p.acc, -40, -480);
+    R("torso", p.torso, 0, -300); R("head", p.head, 0, -500);
+    const hem = document.getElementById(`${id}-hem`); if (hem) hem.setAttribute("transform", `rotate(${p.torso.toFixed(3)} 0 -300)`); R("hair", p.hair, 0, -560); R("acc", p.acc, -40, -480);
     document.getElementById(`${id}-body`).setAttribute("transform", `translate(0 ${p.bodyY.toFixed(2)})`);
     document.getElementById(`${id}-root`).setAttribute("transform", `translate(${p.rootX} ${p.rootY}) rotate(${p.rootR})`);
     const blinking = (blinkTimes || []).some((b) => t >= b && t < b + 0.12);
@@ -476,6 +514,7 @@
       face: `<g fill="#e09a86" opacity=".5"><ellipse cx="-24" cy="-526" rx="7" ry="3.5"/><ellipse cx="30" cy="-526" rx="7" ry="3.5"/></g>`,
     },
     kong: { // ก้อง: seventeen, faded red school PE shirt, cargo trousers, worn trainers, bandana over messy hair, a backpack
+      untuck: true,
       skin: "#d6a27c", skinS: "#b5825e", top: "#b8463a", topS: "#8f3329", sleeve: "#b8463a", sleeveS: "#8f3329", forearm: "#d6a27c", forearmS: "#b5825e",
       pants: "#4a4e3a", pantsS: "#383b2c", shoe: "#2a2420", belt: "#2e2a26",
       torsoExtra: `<rect x="-94" y="-476" width="44" height="170" rx="14" fill="#3d4d45" ${OUT}/><path d="M-40,-484Q-44,-400 -36,-320M36,-484Q40,-400 32,-320" stroke="#3d4d45" stroke-width="12" fill="none"/>
@@ -485,6 +524,7 @@
       face: `<path d="M-10,-506q12,6 24,0" stroke="#5a3a26" stroke-width="3" fill="none" opacity=".5"/><rect x="18" y="-536" width="20" height="8" rx="3" fill="#ead7b6" stroke="#2e2a26" stroke-width="2" transform="rotate(-16 28 -532)"/>`,
     },
     man: { // ลุงหมาน: sixty-one, indigo farmer's shirt, checked pha-khao-ma at the waist, straw hat, grey stubble, boots
+      untuck: true,
       skin: "#b9805a", skinS: "#98653f", top: "#2c3e6b", topS: "#1f2d4e", sleeve: "#2c3e6b", sleeveS: "#1f2d4e",
       pants: "#5a4a3a", pantsS: "#463a2c", shoe: "#3a2f26", belt: "#1f2d4e",
       torsoExtra: `<path d="M-56,-340H56V-300H-56Z" fill="#c8392b" ${OUT}/>${[-44, -24, -4, 16, 36].map((x) => `<path d="M${x},-340V-300" stroke="#f2c55c" stroke-width="6"/>`).join("")}<path d="M40,-320L70,-250L54,-246" stroke="#c8392b" stroke-width="10" fill="none"/>
@@ -512,6 +552,7 @@
       face: `<g fill="#e88a86" opacity=".6"><ellipse cx="-26" cy="-524" rx="9" ry="5"/><ellipse cx="32" cy="-524" rx="9" ry="5"/></g>`,
     },
     phu: { // ภู: twenty-eight, ex-rescue volunteer: grey-green shirt with a reflective strip, dark cargo trousers, boots, cropped hair, a scar on the brow
+      untuck: true,
       skin: "#d39a6e", skinS: "#b27c52", top: "#6b7a5a", topS: "#525f45", sleeve: "#6b7a5a", sleeveS: "#525f45", forearm: "#d39a6e", forearmS: "#b27c52",
       pants: "#2f3438", pantsS: "#22272a", shoe: "#1e1e1e", belt: "#22272a",
       torsoExtra: `<path d="M-54,-420H54" stroke="#c9d8d0" stroke-width="10"/><path d="M-54,-420H54" stroke="#9fb3a8" stroke-width="3" stroke-dasharray="8 6"/><rect x="18" y="-470" width="28" height="22" rx="4" fill="#f2c55c" ${OUT}/>`,

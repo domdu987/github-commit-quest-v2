@@ -21,7 +21,8 @@
     div.setAttribute("data-track-index", "0");
     div.innerHTML = `<svg class="stage" width="1080" height="1920" viewBox="0 0 1080 1920">
         <g id="${id}-world">${Object.keys(PARALLAX).map((L) => `<g id="${id}-${L}"${L === "fg" ? ' class="fgblur"' : ""}></g>`).join("")}</g>
-        <rect id="${id}-dark" width="1080" height="1920" fill="#05090c" opacity="${sh.dark ?? 0.35}" style="mix-blend-mode:multiply"/>
+        <linearGradient id="${id}-dkg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05090c" stop-opacity=".85"/><stop offset=".3" stop-color="#05090c" stop-opacity=".55"/><stop offset=".72" stop-color="#05090c" stop-opacity=".5"/><stop offset="1" stop-color="#05090c" stop-opacity=".75"/></linearGradient>
+        <rect id="${id}-dark" width="1080" height="1920" fill="url(#${id}-dkg)" opacity="${Math.min(1, (sh.dark ?? 0.35) * 0.9)}" style="mix-blend-mode:multiply"/>
         <g id="${id}-glow"></g>
         <g id="${id}-light"></g>
         <rect id="${id}-fog" x="-200" y="0" width="1480" height="1920" fill="#c9c3b6" opacity="0"/>
@@ -31,7 +32,17 @@
     const L = {}; Object.keys(PARALLAX).forEach((k) => (L[k] = document.getElementById(`${id}-${k}`)));
     const world = document.getElementById(`${id}-world`);
     // colour grade: a CSS filter on the whole world plus a tinted multiply over it (sh.grade overrides window.GRADE; false = none)
-    const gr = sh.grade === undefined ? window.GRADE : sh.grade;
+    // the colour script (user 28 Oct: "สี … ดีแล้วรึยัง"): each time of day has its own look instead of one grey-blue wash —
+    // warm afternoon, pale hot noon, soft morning, orange-magenta dusk, moonlit blue night that still reads in the midtones
+    const so = sh.setOpts || {}, tod = so.time || (so.night ? "night" : (sh.dark ?? 0.35) >= 0.45 ? "night" : "day");
+    const TOD = {
+      day: { filter: "saturate(.92) brightness(.99) contrast(1.06)", tint: "#ffcf8a", tintOp: 0.2, blend: "soft-light" },
+      morning: { filter: "saturate(.9) brightness(1.01) contrast(1.04)", tint: "#ffd9b0", tintOp: 0.22, blend: "soft-light" },
+      noon: { filter: "saturate(.86) brightness(1.03) contrast(1.03)", tint: "#fff0c0", tintOp: 0.24, blend: "soft-light" },
+      dusk: { filter: "saturate(1.02) brightness(.96) contrast(1.08)", tint: "#ff7a3a", tintOp: 0.24, blend: "soft-light" },
+      night: { filter: "saturate(.78) brightness(.95) contrast(1.06)", tint: "#3a5a8c", tintOp: 0.3, blend: "multiply" },
+    };
+    const gr = sh.grade === undefined ? (window.GRADE_BY_TIME === false ? window.GRADE : TOD[tod] || TOD.day) : sh.grade;
     if (gr) {
       document.getElementById(`${id}-world`).style.filter = gr.filter || "";
       if (gr.tint) document.getElementById(`${id}-dark`).insertAdjacentHTML("beforebegin", `<rect id="${id}-tint" width="1080" height="1920" fill="${gr.tint}" opacity="${gr.tintOp ?? 0.25}" style="mix-blend-mode:${gr.blend || "multiply"}"/>`);
@@ -41,7 +52,28 @@
     if (sh.set) Sets[sh.set](L, sh.setOpts || {});
     if (sh.extra) sh.extra(L, id);
 
-    // actors
+    // actors. Depth (user, 28 Oct: "เงา ทำให้มีมิติ"): each figure throws a cast shadow across the ground (a flattened, sheared
+    // <use> of the live rig, so it follows every pose) and is edged with light on the side facing the key light (a pale copy
+    // nudged up-left behind it: warm by day, moonlight-blue in the dark). Both are plain <use> clones with CSS colour filters —
+    // SVG blur/composite filters on the rigs tripled the render time. sh.cast / a.cast = false or {kx, ky, op}; sh.rim / a.rim = false or {f, op, dx, dy}.
+    // The key light is the strongest light the shot placed (Fence.light records them in L._lights); a high one acts like the sun
+    // (parallel shadows), a low one like a lamp (shadows fan out from it, longer the closer it sits to the floor). No light = late sun, upper left.
+    const casts = (sh.actors || []).length ? (L.act.insertAdjacentHTML("afterbegin", `<g id="${id}-casts" style="filter:blur(2.5px)"></g>`), document.getElementById(`${id}-casts`)) : null;
+    const key = (L._lights || []).slice().sort((p, q) => q.op * q.R - p.op * p.R)[0] || null;
+    const hue = (c) => { const v = parseInt((c || "#ffe6b0").slice(1), 16), r = v >> 16, b = v & 255; return b > r ? "cool" : r - b > 90 ? "warm" : "sun"; };
+    const RIMF = { cool: "brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(185deg)", warm: "brightness(0) invert(1) sepia(1) saturate(3.2) hue-rotate(-12deg)", sun: "brightness(0) invert(1) sepia(.7)" };
+    const tone = key ? hue(key.col) : (sh.dark ?? 0.35) >= 0.4 ? "cool" : "sun";
+    // the rim is drawn INSIDE the silhouette on the lit side (a rim-coloured copy in front, masked to the figure minus the figure
+    // nudged away from the light) — only where a lamp or the moon makes it read; by day the rigs' own shading carries the form
+    const rim = sh.rim === false || (tone === "sun" && !sh.rim) ? null : { f: RIMF[tone], op: tone === "warm" ? 0.55 : 0.45, w: 4, ...(sh.rim || {}) };
+    const lightFor = (a) => {
+      if (!key) return { kx: 0.42, ky: 0.13, rx: -4, ry: -3 };
+      const h = Math.max(160, a.y - key.y), dx = a.x - key.x;
+      if (key.y < 600) { const kx = Math.max(-0.7, Math.min(0.7, dx / 900)); return { kx: Math.abs(kx) < 0.12 ? 0.12 * Math.sign(kx || 1) : kx, ky: 0.15, rx: -4 * Math.sign(dx || 1), ry: -3 }; }   // sky light
+      const kx = Math.max(-1.3, Math.min(1.3, (dx / h) * 0.9));
+      return { kx, ky: 0.1, rx: -5 * Math.sign(dx || 1), ry: key.y < a.y - 300 ? -3 : 0 };   // a lamp in the scene
+    };
+    const castT = (c, gy) => `matrix(1 0 ${-c.kx} ${-c.ky} ${(c.kx * gy).toFixed(1)} ${((1 + c.ky) * gy).toFixed(1)})`;
     (sh.actors || []).forEach((a, k) => {
       const aid = `${id}-a${k}`;
       if (a.who === "cat") {
@@ -53,7 +85,12 @@
       } else {
         Rig.build(L.act, aid, Rig.CAST[a.who]);
         const g = document.getElementById(aid);
+        g.insertAdjacentHTML("afterbegin", `<ellipse cy="6" rx="78" ry="15" fill="#000" opacity=".2"/>`);   // a contact shadow grounds the figure
         g.setAttribute("transform", `translate(${a.x},${a.y}) scale(${a.flip ? -a.s : a.s},${a.s})`);
+        const lf = lightFor(a), cast = sh.cast === false || a.cast === false ? null : { kx: lf.kx, ky: lf.ky, op: key && key.y >= 600 ? 0.36 : 0.32, ...(sh.cast || {}), ...(a.cast || {}) };
+        if (cast) casts.insertAdjacentHTML("beforeend", `<use id="${aid}-cast" href="#${aid}" transform="${castT(cast, a.y)}" opacity="${cast.op}" style="filter:brightness(0)"/>`);
+        if (rim && a.rim !== false) { const k = rim.w / 4, mx = -(rim.dx ?? lf.rx) * k, my = -(rim.dy ?? lf.ry) * k;
+          g.insertAdjacentHTML("afterend", `<mask id="${aid}-rm" maskUnits="userSpaceOnUse" x="-4000" y="-4000" width="9000" height="9000"><use href="#${aid}" style="filter:brightness(0) invert(1)"/><use href="#${aid}" transform="translate(${mx.toFixed(1)},${my.toFixed(1)})" style="filter:brightness(0)"/></mask><use id="${aid}-rim" href="#${aid}" mask="url(#${aid}-rm)" opacity="${rim.op}" style="filter:${rim.f}"/>`); }
         Rig.drive(tl, aid, sh.start, sh.dur, a.track, a.blinks || [0.9, 2.7, 4.6]);
         if (a.prop && window.Camp) Camp.attach(aid, a.prop);
         if (a.moveTo) { // walk across the set: translate the whole character in sync with the shot clock
@@ -61,6 +98,7 @@
           tl.to(m, { k: 1, duration: a.moveTo.dur, ease: a.moveTo.ease || "none", onUpdate: () => {
             const x = lerp(a.x, a.moveTo.x, m.k), y = lerp(a.y, a.moveTo.y ?? a.y, m.k);
             g.setAttribute("transform", `translate(${x},${y}) scale(${a.flip ? -a.s : a.s},${a.s})`);
+            if (cast && a.moveTo.y !== undefined) document.getElementById(`${aid}-cast`).setAttribute("transform", castT(cast, y));
           } }, sh.start + (a.moveTo.at || 0));
         }
       }
@@ -95,12 +133,17 @@
     const applyCam = (k0) => {
       const { x, y, s, r } = camAt(k0 * sh.dur, k0);
       const shake = sh.shake ? sh.shake(k0 * sh.dur) : 0;
-      world.setAttribute("transform", r ? `rotate(${r.toFixed(2)} 540 960)` : "");
+      // handheld: a slow, small two-frequency float so no frame sits dead still (sh.handheld scales it; 0 = locked off)
+      const hh = sh.handheld ?? 1, t = sh.start + k0 * sh.dur;
+      const hx = hh * (2.6 * Math.sin(t * 1.31 + i) + 1.1 * Math.sin(t * 3.07 + 2 * i)), hy = hh * (2.0 * Math.sin(t * 1.07 + 3 * i) + 0.9 * Math.sin(t * 2.71 + i));
+      const hr = (r || 0) + hh * 0.07 * Math.sin(t * 0.83 + i);
+      const wt = `translate(${hx.toFixed(2)} ${hy.toFixed(2)}) rotate(${hr.toFixed(3)} 540 960)`;
+      world.setAttribute("transform", wt);
       Object.entries(PARALLAX).forEach(([layer, p]) => {
         const ls = 1 + (s - 1) * p;
         L[layer].setAttribute("transform", `translate(540 960) scale(${ls}) translate(${-540 - x * p + shake} ${-960 - y * p})`);
       });
-      L.glow.setAttribute("transform", L.set.getAttribute("transform"));
+      L.glow.setAttribute("transform", `${wt} ${L.set.getAttribute("transform")}`);
     };
     const c = { k: 0 };
     tl.to(c, { k: 1, duration: sh.dur, ease: "none", onUpdate: () => applyCam(c.k) }, sh.start);
@@ -126,9 +169,9 @@
     (sh.ui || []).forEach((u, k) => GameUI.add(div, tl, id, sh.start, u, k));
     // speech bubbles
     (sh.bubbles || []).forEach((b, k) => {
-      div.insertAdjacentHTML("beforeend", `<div id="${id}-b${k}" class="bubble" style="left:${b.x}px; top:${b.y}px; --tail:${b.tail || 40}px">${Ui.mark(b.text)}</div>`);
+      div.insertAdjacentHTML("beforeend", `<div id="${id}-b${k}" class="bubble${b.up ? " up" : ""}" style="left:${b.x}px; top:${b.y}px; --tail:${b.tail || 40}px">${Ui.mark(b.text)}</div>`);
       const el = `#${id}-b${k}`;
-      tl.fromTo(el, { opacity: 0, scale: 0.6, transformOrigin: "20% 100%" }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)", immediateRender: false }, sh.start + b.t);
+      tl.fromTo(el, { opacity: 0, scale: 0.6, transformOrigin: b.up ? "20% 0%" : "20% 100%" }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)", immediateRender: false }, sh.start + b.t);
       tl.to(el, { opacity: 0, duration: 0.15 }, sh.start + (b.end ?? sh.dur - 0.15));
     });
     // comic SFX words

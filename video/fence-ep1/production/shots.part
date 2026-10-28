@@ -52,12 +52,12 @@
         ui: [{ type: "counter", t: F("yard", 0, 1) - 0.1, end: F("yard", 0, 2) - 0.1, label: "คนในค่าย", icon: "people", max: 6, keys: [{ t: F("yard", 0, 1), v: 0 }, { t: F("yard", 0, 1) + 1.0, v: 5 }], top: 150 }],
         fx(tl, id, t0, L) { Fx.letterbox(tl, t0, t0 + F("yard", 0, 2) - 0.1); },
       }, {
-        set: "mapTop", setOpts: { id: "mp", rings: true }, dark: 0.08, grade: { filter: "saturate(.5) sepia(.3) brightness(.8) contrast(1.1)", tint: "#c9b893", tintOp: 0.35 },
-        cam: { keys: [{ t: 0, ...fr(540, 900, 0.74, 540, 900), drift: { s: 0.03 } }] },
+        set: "mapTop", setOpts: { id: "mp", rings: true }, dark: 0.04, grade: { filter: "saturate(.86) contrast(1.06) brightness(.93)", tint: "#e8c08a", tintOp: 0.16 },
+        cam: { keys: [{ t: 0, ...fr(540, 880, 0.76, 540, 900), drift: { s: 0.02 } }, { t: 0.95, glide: 1.3, ...fr(980, 1000, 0.6, 540, 900), drift: { x: 30, s: 0.02 } }] },   // follow the route out to the market
         captions: capsFrom("yard", F("yard", 0, 2) - 0.05),
-        extra(L) { Fence.pin(L, "mp-p0", 430, 560, "อาคารเรียน", "#2f4a8a"); Fence.pin(L, "mp-p1", 860, 560, "แท็งก์น้ำ", "#2f6fb8"); Fence.pin(L, "mp-p2", 540, 1180, "ประตู", "#c8392b"); Fence.pin(L, "mp-p3", 1500, 1140, "ตลาดร้าง · 1.2 กม.", "#5b6066"); },
+        extra(L) { Fence.pin(L, "mp-p0", 430, 560, "อาคารเรียน", "#2f4a8a"); Fence.pin(L, "mp-p1", 860, 482, "แท็งก์น้ำ", "#2f6fb8"); Fence.pin(L, "mp-p2", 540, 1180, "ประตู", "#c8392b"); Fence.pin(L, "mp-p3", 1500, 1140, "ตลาดร้าง · 1.2 กม.", "#5b6066"); },
         fx(tl, id, t0) {
-          [[430, 560], [860, 560], [540, 1180], [1500, 1140]].forEach(([x, y], k) => pinDrop(tl, `#mp-p${k}`, t0 + 0.15 + k * 0.22, x, y));   // pins drop in and squash on landing
+          [[430, 560], [860, 482], [540, 1180], [1500, 1140]].forEach(([x, y], k) => pinDrop(tl, `#mp-p${k}`, t0 + 0.15 + k * 0.22, x, y));   // pins drop in and squash on landing
           tl.fromTo("#mp-path", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.8, ease: "none", immediateRender: false }, t0 + 0.9);
         },
       });
@@ -166,12 +166,13 @@
           document.querySelectorAll("#cl-ring .rr").forEach((c, k) => tl.fromTo(c, { opacity: 0.9, scale: 0.4 }, { opacity: 0, scale: 6, svgOrigin: "540 1420", duration: 0.9, ease: "power1.out", immediateRender: false }, t0 + 0.33 + k * 0.18));
         },
       }, {
-        set: "mapTop", setOpts: { id: "mc", ring: true, rings: true }, dark: 0.08, grade: { filter: "saturate(.5) sepia(.3) brightness(.8) contrast(1.1)", tint: "#c9b893", tintOp: 0.35 },
+        set: "mapTop", setOpts: { id: "mc", ring: true, rings: true }, dark: 0.04, grade: { filter: "saturate(.86) contrast(1.06) brightness(.93)", tint: "#e8c08a", tintOp: 0.16 },
         cam: { keys: [{ t: 0, ...fr(1300, 1150, 0.9, 540, 960), drift: { s: 0.04 } }] },
         captions: capsFrom("clatter", F("clatter", 0, 1) - 0.05),
         ui: [{ type: "callback", t: 0.05, label: "กฎของเรื่อง", text: "มันเดินตามเสียง", top: 300 }],
-        extra(L) { Fence.pin(L, "mc-p0", 1500, 1140, "ก้อง", "#c8392b"); [[1800, 700], [1100, 1700], [1950, 1500]].forEach(([x, y], k) => L.act.insertAdjacentHTML("beforeend", `<g id="mc-z${k}"><g transform="translate(${x},${y})"><circle r="26" fill="#1b1d20" stroke="#ff5a3a" stroke-width="6"/><path d="M-10,-6l20,12M10,-6l-20,12" stroke="#ff5a3a" stroke-width="4"/></g></g>`)); },
-        fx(tl, id, t0) { pinDrop(tl, "#mc-p0", t0 + 0.05, 1500, 1140); [0, 1, 2].forEach((k) => tl.to(`#mc-z${k}`, { x: [-120, 160, -180][k], y: [180, -200, -120][k], duration: 1.2, ease: "power1.in" }, t0 + 0.3)); Fx.heart(tl, t0, D("clatter"), 0.45, 0.6); Fx.glitch(tl, `#${id}`, t0, 0.15, 8, 21); },
+        extra(L) { Fence.pin(L, "mc-p0", 1500, 1140, "ก้อง", "#c8392b"); [[1800, 700], [1100, 1700], [1950, 1500]].forEach(([x, y], k) => L.act.insertAdjacentHTML("beforeend", `<g id="mc-z${k}"><g transform="translate(${x},${y})"><circle class="mc-halo" r="64" fill="#ff3a2a" opacity=".22"/><ellipse cx="10" cy="12" rx="34" ry="14" fill="#0d1208" opacity=".4"/><circle r="32" fill="#1b1d20" stroke="#ff5a3a" stroke-width="7"/><path d="M-12,-8l24,16M12,-8l-24,16" stroke="#ff5a3a" stroke-width="5" stroke-linecap="round"/></g></g>`)); },
+        fx(tl, id, t0) { pinDrop(tl, "#mc-p0", t0 + 0.05, 1500, 1140); [0, 1, 2].forEach((k) => tl.to(`#mc-z${k}`, { x: [-120, 160, -180][k], y: [180, -200, -120][k], duration: 1.2, ease: "power1.in" }, t0 + 0.3));
+          document.querySelectorAll("#mc-z0 .mc-halo, #mc-z1 .mc-halo, #mc-z2 .mc-halo").forEach((c, k) => tl.fromTo(c, { scale: 0.5, opacity: 0.45 }, { scale: 1.3, opacity: 0, transformOrigin: "50% 50%", duration: 0.6, repeat: 3, ease: "power1.out", immediateRender: false }, t0 + k * 0.15)); Fx.heart(tl, t0, D("clatter"), 0.45, 0.6); Fx.glitch(tl, `#${id}`, t0, 0.15, 8, 21); },
       });
 
       // ---------- 11–13. action: she comes over the stall; ก้อง backs into the shelf (cans everywhere); POV out into the open ----------
