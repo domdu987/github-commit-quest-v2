@@ -155,7 +155,7 @@
       Rig.MODES.grabArm = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -78, faF: -8, uaB: -40, faB: -60, torso: 8, head: 4 });
       Rig.MODES.pullBolt = (u, o) => { const k = Rig.smooth(u / 0.5); return { ...Rig.MODES.idle(u, o), uaF: Rig.lerp(-60, -20, k), faF: Rig.lerp(-30, -60, k), torso: 10, head: 6, thF: 10, shF: 10, thB: -10 }; };
       Rig.MODES.crouchDraw = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -30, faF: -40 + 6 * Math.sin(u * 7), uaB: -10, faB: -50, torso: 30, head: 20 });
-      Rig.MODES.sitHold = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -40, faF: -110, uaB: -16, faB: -100, torso: 12 + Math.sin(u * 4) * 1.5, head: 14 });   // on the floor, winded, holding his arm
+      Rig.MODES.sitHold = (u, o) => ({ ...Rig.MODES.sit(u, o), ...Rig.reach("B", [-14, 103], [71, 80]), ...Rig.reach("F", [16, 110], [-43.8, 92.1]), bFront: 1, torso: 8 + Math.sin(u * 4) * 1.5, head: 14 });   // on the floor, winded, holding his arm across the body
       Rig.MODES.sleepSit = (u, o) => ({ ...Rig.MODES.sit(u, o), torso: 6, head: 26 + Math.sin(u * 1.1), uaF: -10, faF: -40, uaB: 4, faB: -30 });
       Rig.MODES.lookUp = (u, o) => ({ ...Rig.MODES.idle(u, o), head: -22, torso: -4 });
       Rig.MODES.pointUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150, faF: -10, head: -16, torso: -4 });
@@ -171,7 +171,7 @@
       const TOP = (L, el) => L.act.appendChild(el);
       const split = (k, at, A, B) => {
         add(k, A); shots[shots.length - 1].dur = at;
-        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at; sh.vo = (SH[k].vo || []).map((v) => ({ ...v, t: v.t - at }));
       };
       const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
       const glow = (L, html) => L.glow.insertAdjacentHTML("beforeend", html);
@@ -350,7 +350,7 @@
       });
 
       const shots = [];
-      const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec });
+      const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, vo: SH[k].vo, ...spec });
 
       // ======================================================================================================
       // v2 look: muted cinematic grade + a "field notebook / scrapbook" HUD — torn paper, masking tape, red rubber
@@ -960,8 +960,8 @@
       split("yard", F("yard", 0, 2) - 0.05, {
         set: "schoolYard", setOpts: { id: "yd", time: "day" }, dark: 0.08, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(520, 520, 0.62, 540, 700), drift: { y: 40, s: 0.004 } }, { t: F("yard", 0, 1) - 0.1, glide: 1.1, ...fr(420, 1050, 0.56, 540, 900), drift: { x: 24, s: 0.012 } }] },
-        actors: [PI(-300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), KO(560, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "flat" }], { flip: true }),
-          MA(1100, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }]), HO(-40, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" }),
+        actors: [PI(-300, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "worry", mouth: "flat" }]), KO(560, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "squint", mouth: "flat" }], { flip: true }),
+          MA(1100, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "squint", mouth: "flat" }]), HO(-40, 1500, 0.9, [{ t: 0, mode: "write", eyes: "squint", mouth: "flat" }], { prop: "ledger" }),
           PU(220, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }], { prop: "crayon" })],
         captions: capsFrom("yard", 0).filter((c) => c.t < F("yard", 0, 2) - 0.1),
         ui: [{ type: "counter", t: F("yard", 0, 1) - 0.1, end: F("yard", 0, 2) - 0.1, label: "คนในค่าย", icon: "people", max: 6, keys: [{ t: F("yard", 0, 1), v: 0 }, { t: F("yard", 0, 1) + 1.0, v: 5 }], top: 150 }],
@@ -981,8 +981,9 @@
       add("rules", {
         set: "classroom", setOpts: { id: "rl" }, dark: 0.12, blur: { far: 2 },
         cam: { keys: [{ t: 0, ...fr(560, 1000, 0.92, 540, 1120), drift: { s: 0.015 } }] },
-        actors: [PI(980, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }, { t: F("rules", 0, 1), mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("rules", 0, 2), mode: "point", eyes: "normal", mouth: "flat" }], { flip: true }),
-          PU(-180, 1500, 0.58, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile", look: -10 }]), KO(-420, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        actors: [PI(980, 1500, 0.9, [{ t: 0, mode: "point", eyes: "squint", mouth: "flat" }, { t: F("rules", 0, 1), mode: "handChest", eyes: "worry", mouth: "flat" }, { t: F("rules", 0, 2), mode: "point", eyes: "squint", mouth: "flat" }], { flip: true }),
+          PU(-180, 1500, 0.58, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat", look: -10 }, { t: F("rules", 0, 1) + 0.3, mode: "sitChair", eyes: "worry", mouth: "flat", look: -10 }]),
+          KO(-420, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "flat" }, { t: F("rules", 0, 2) + 0.4, mode: "nod", eyes: "normal", mouth: "flat" }])],
         bubbles: [],
         ui: [{ type: "fRule", t: 0.1, label: "กฎของครูพิม · เขียนไว้วันที่ 1", rows: ["ออกไป ต้องกลับ<b>ก่อนมืด</b>", "ช่วยได้… <u>แต่อย่าเชื่อ</u>", "แบ่งได้… <u>แต่อย่าบอกทาง</u>"], at: [F("rules", 0, 0) - 0.05, F("rules", 0, 1) - 0.05, F("rules", 0, 2) - 0.05], top: 160 }],
         captions: caps("rules", [0], { quote: true }),
@@ -1015,8 +1016,8 @@
       add("ledger", {
         set: "classroom", setOpts: { id: "lg" }, dark: 0.12, blur: { far: 2 },
         cam: { keys: [{ t: 0, ...fr(760, 1150, 1.15, 540, 1000), drift: { s: 0.02 } }, { t: vo("ledger", 1) - 0.05, ...fr(700, 1150, 1.3, 540, 1000), drift: { s: 0.02 } }] },
-        actors: [HO(620, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }, { t: vo("ledger", 1) - 0.1, mode: "idle", eyes: "wide", mouth: "frown" }], { prop: "ledger" }),
-          PI(960, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+        actors: [HO(620, 1500, 0.9, [{ t: 0, mode: "write", eyes: "squint", mouth: "flat" }, { t: vo("ledger", 1) - 0.1, mode: "slump", eyes: "worry", mouth: "frown" }], { prop: "ledger" }),
+          PI(960, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("ledger", 1, 1) + 0.2, mode: "think", eyes: "worry", mouth: "frown" }], { flip: true })],
         captions: caps("ledger", [0]),
         bubbles: [bub("ledger", 1, 150, 520, 340)],
         ui: [{ type: "counter", t: F("ledger", 1, 1) - 0.1, end: D("ledger") - 0.05, label: "ข้าวสาร เหลือ", icon: "rice", unit: "วัน", max: 10, keys: [{ t: F("ledger", 1, 1), v: 9 }, { t: F("ledger", 1, 1) + 0.6, v: 3 }], alarm: F("ledger", 1, 1) + 0.6, top: 150 }],
@@ -1028,9 +1029,9 @@
       add("gate", {
         set: "schoolYard", setOpts: { id: "gt", time: "day", gate: 0.8, sunX: 300 }, dark: 0.12, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(720, 1080, 0.95, 540, 1000), drift: { s: 0.015, x: 10 } }, { t: vo("gate", 1) - 0.05, ...fr(600, 1100, 1.15, 540, 1040), drift: { s: 0.02 } }] },
-        actors: [KO(600, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: D("gate") - 0.6, mode: "wave", eyes: "normal", mouth: "smile" }], { prop: "bag", moveTo: { x: 860, dur: D("gate") - 0.6 } }),
-          PI(420, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("gate", 1) - 0.1, mode: "point", eyes: "normal", mouth: "o" }]),
-          MA(1100, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+        actors: [KO(600, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }, { t: D("gate") - 0.6, mode: "wave", eyes: "normal", mouth: "smileOpen" }], { prop: "bag", moveTo: { x: 860, dur: D("gate") - 0.6 } }),
+          PI(420, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "worry", mouth: "flat" }, { t: vo("gate", 1) - 0.1, mode: "point", eyes: "worry", mouth: "frown" }]),
+          MA(1100, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "flat" }], { flip: true })],
         captions: caps("gate", [0]),
         bubbles: [bub("gate", 1, 90, 560, 300)],
         ui: [{ type: "sunHud", t: vo("gate", 1) - 0.75, t0: "16:30", t1: "16:34", dark: "18:40", from: 0.55, to: 0.58, left0: "2:10 ชม.", top: 140 }],
@@ -1041,7 +1042,7 @@
         set: "market", setOpts: { id: "mk", time: "day" }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(300, 1150, 0.9, 540, 1020), drift: { x: 40, s: 0.02 } }] },
         actors: [HA("ha3", 0, 1500, 0.9, [{ t: 0, mode: "still", eyes: "dead", mouth: "flat" }]),
-          KO(560, 1500, 0.9, [{ t: 0, mode: "grabCan", eyes: "normal", mouth: "flat" }], { prop: "bag" })],
+          KO(560, 1500, 0.9, [{ t: 0, mode: "grabCan", eyes: "squint", mouth: "flat" }], { prop: "bag" })],
         captions: capsFrom("market", 0).filter((c) => c.t < vo("market", 1) - 0.1),
         fx(tl, id, t0) { Fx.heart(tl, t0, D("market"), 0.8, 0.3); },
       }, {   // first person: our hands on the shelf, cans going into the bag one by one; she is a shape at the end of the aisle
@@ -1070,7 +1071,8 @@
         set: "market", setOpts: { id: "cl", time: "day" }, dark: 0.22, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(520, 1250, 1.35, 540, 1000), drift: { s: 0.02 } }] },
         actors: [HA("ha3", 0, 1500, 0.9, [{ t: 0, mode: "still", eyes: "dead", mouth: "flat" }, { t: 0.5, mode: "still", eyes: "dead", mouth: "snarl", look: 30 }]),
-          KO(560, 1500, 0.9, [{ t: 0, mode: "grabCan", eyes: "normal", mouth: "flat" }, { t: 0.45, mode: "crouch", eyes: "wide", mouth: "o" }], { prop: "bag" })],
+          KO(560, 1500, 0.9, [{ t: 0, mode: "grabCan", eyes: "squint", mouth: "flat" }, { t: 0.45, mode: "crouch", eyes: "wide", mouth: "o" }], { prop: "bag" })],
+        react: [{ a: 1, t: 0.45, dur: 0.85, fast: true }],
         captions: capsFrom("clatter", 0).filter((c) => c.t < F("clatter", 0, 1) - 0.1),
         fx(tl, id, t0, L) {
           tl.set(`#cl-sc8`, { opacity: 0 }, t0);
@@ -1164,7 +1166,7 @@
         cam: { keys: [{ t: 0, ...fr(760, 1150, 1.35, 540, 1000), r: 2, drift: { s: 0.04, r: -1 } }] },
         shake: (t) => 7 * Math.sin(t * 19),
         actors: [KO(640, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }, { t: 0.4, mode: "fall", eyes: "pain", mouth: "scream" }], { flip: true, moveTo: { x: 520, dur: 0.4 } }),
-          PI(300, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "o" }])],
+          PI(300, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "squint", mouth: "grit" }])],
         extra(L, id) {
           L.set.insertAdjacentHTML("beforeend", `<g id="sn-bag" transform="translate(800,1500)"><path d="M-54,0q-12,-50 0,-90h108q12,40 0,90z" fill="#3d4d45" stroke="#2e2a26" stroke-width="4"/><path d="M-36,-90q36,-40 72,0" stroke="#2e2a26" stroke-width="9" fill="none"/><path id="sn-strap" d="M-30,-90L-120,-240L-80,-260" stroke="#3d4d45" stroke-width="12" fill="none" stroke-linecap="round"/></g>`);
         },
@@ -1180,8 +1182,8 @@
         set: "schoolYard", setOpts: { id: "ct", time: "dusk", gate: 0.55, sunX: 200 }, dark: 0.3, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(760, 1150, 1.3, 540, 1000), r: -2.5, drift: { s: 0.03, r: 1.2 } }] },
         shake: (t) => (t > 0.5 && t < 0.8 ? 11 * Math.sin(t * 27) : 5 * Math.sin(t * 17)),
-        actors: [MA(560, 1500, 0.9, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }, { t: 0.4, mode: "swing", eyes: "wide", mouth: "scream" }], { prop: "sickle" }),
-          KO(360, 1500, 0.9, [{ t: 0, mode: "fall", eyes: "pain", mouth: "o" }], { flip: true }), PI(200, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "o" }])],
+        actors: [MA(560, 1500, 0.9, [{ t: 0, mode: "raise", eyes: "angry", mouth: "grit" }, { t: 0.4, mode: "swing", eyes: "angry", mouth: "scream" }], { prop: "sickle" }),
+          KO(360, 1500, 0.9, [{ t: 0, mode: "fall", eyes: "pain", mouth: "o" }], { flip: true }), PI(200, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "squint", mouth: "grit" }])],
         extra(L) { L.set.insertAdjacentHTML("beforeend", `<g id="ct-bag" transform="translate(800,1500)"><path d="M-54,0q-12,-50 0,-90h108q12,40 0,90z" fill="#3d4d45" stroke="#2e2a26" stroke-width="4"/><path d="M-36,-90q36,-40 72,0" stroke="#2e2a26" stroke-width="9" fill="none"/></g>${[0, 1, 2, 3, 4, 5, 6, 7].map((k) => `<g class="ct-can" transform="translate(800,1430)"><rect x="-14" y="-20" width="28" height="40" rx="4" fill="url(#fCan)" stroke="#2e2a26" stroke-width="3"/><rect x="-14" y="-8" width="28" height="16" fill="${["#c8392b", "#2f6fb8", "#e8b830", "#4f8a55"][k % 4]}"/></g>`).join("")}`); },
         fx(tl, id, t0, L) {
           behind(L, tl, "ct-z1", "ha1", 940, 1180, 0.8, true, t0, D("cut"), [{ t: 0, mode: "lunge", eyes: "dead", mouth: "snarl" }, { t: 0.7, mode: "knocked", eyes: "dead", mouth: "snarl" }]);
@@ -1211,7 +1213,7 @@
         set: "schoolYard", setOpts: { id: "sl", time: "dusk", gate: 0.55, sunX: 200 }, dark: 0.32, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(700, 1150, 1.15, 540, 1000), drift: { s: 0.03 } }] },
         shake: (t) => (t > 0.45 && t < 0.75 ? 12 * Math.sin(t * 27) : 4 * Math.sin(t * 17)),
-        actors: [MA(540, 1500, 0.9, [{ t: 0, mode: "push", eyes: "wide", mouth: "scream" }], { flip: false }), PI(420, 1500, 0.9, [{ t: 0, mode: "push", eyes: "wide", mouth: "o" }]),
+        actors: [MA(540, 1500, 0.9, [{ t: 0, mode: "push", eyes: "angry", mouth: "scream" }], { flip: false }), PI(420, 1500, 0.9, [{ t: 0, mode: "push", eyes: "squint", mouth: "grit" }]),
           KO(160, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "pain", mouth: "o" }])],
         bubbles: [bub("slam", 0, 60, 560, 280)],
         fx(tl, id, t0, L) {
@@ -1230,7 +1232,7 @@
       add("cans", {
         set: "classroom", setOpts: { id: "cn", night: true, cans: 4, bulge: 2, lampX: 1010 }, dark: 0.5, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(760, 1200, 1.3, 540, 1000), drift: { s: 0.02 } }, { t: vo("cans", 1) - 0.05, ...fr(690, 1180, 2.1, 540, 1000), drift: { s: 0.03 } }] },
-        actors: [KO(200, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "pain", mouth: "frown" }]), PI(1080, 1500, 0.9, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), MA(1260, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [KO(200, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "sad", mouth: "frown" }, { t: vo("cans", 1) + 0.1, mode: "sitHold", eyes: "wide", mouth: "o" }]), PI(1080, 1500, 0.9, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), MA(1260, 1500, 0.9, [{ t: 0, mode: "point", eyes: "squint", mouth: "frown" }], { flip: true })],
         captions: caps("cans"),
         ui: [{ type: "counter", t: 0.15, end: D("cans") - 0.05, label: "กระป๋อง", icon: "can", max: 12, keys: [{ t: 0.15, v: 12 }, { t: F("cans", 0, 1), v: 12 }, { t: F("cans", 0, 1) + 0.5, v: 4 }], alarm: F("cans", 0, 1) + 0.5, top: 150 }],
         fx(tl, id, t0) { tl.fromTo("#cn-bulge", { attr: { transform: "translate(684,1180)" } }, { attr: { transform: "translate(684,1176)" }, duration: 0.5, repeat: Math.ceil(D("cans") / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); Fx.punch(tl, `#${id} .stage`, t0 + F("cans", 1, 1), 1.06, 0.35); red(tl, t0 + F("cans", 1, 1), 0.5, 0.5); Fx.heart(tl, t0 + vo("cans", 1), D("cans") - vo("cans", 1), 0.6, 0.45); },
@@ -1240,7 +1242,7 @@
       add("reach", {
         set: "classroom", setOpts: { id: "rc", night: true, cans: 4, bulge: 2, lampX: 1010 }, dark: 0.5, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(690, 1180, 1.9, 540, 1000), drift: { s: 0.03 } }] },
-        actors: [PU(660, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: 0.3, mode: "reachUp", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [PU(660, 1500, 0.58, [{ t: 0, mode: "slump", eyes: "sad", mouth: "frown" }, { t: 0.3, mode: "reachUp", eyes: "sad", mouth: "frown" }], { flip: true })],
         captions: caps("reach", [1]),
         bubbles: [bub("reach", 0, 120, 1000, 240)],
         fx(tl, id, t0) { Fx.heart(tl, t0 + vo("reach", 1), D("reach") - vo("reach", 1), 0.4, 0.7); Fx.tunnel(tl, t0 + vo("reach", 1), t0 + D("reach") + 0.2, 0.5); },
@@ -1251,7 +1253,8 @@
         set: "classroom", setOpts: { id: "st", night: true, cans: 4, bulge: 2, lampX: 1010 }, dark: 0.5, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(700, 1180, 1.5, 540, 1000), drift: { s: 0.03 } }] },
         shake: (t) => (t < 0.35 ? 11 * Math.sin(t * 27) * (0.35 - t) / 0.35 : 0),
-        actors: [HO(1000, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "scream" }], { flip: true }), PU(660, 1500, 0.58, [{ t: 0, mode: "reachUp", eyes: "wide", mouth: "o" }, { t: 0.2, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        actors: [HO(1000, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "scream" }], { flip: true }), PU(660, 1500, 0.58, [{ t: 0, mode: "reachUp", eyes: "wide", mouth: "o" }, { t: 0.2, mode: "gasp", eyes: "wide", mouth: "o" }], { flip: true })],
+        react: [{ a: 1, t: 0.95, dur: 0.6, fast: true }],
         bubbles: [bub("stop", 0, 700, 560, 170)],
         fx(tl, id, t0, L) {
           tl.fromTo("#st-bulge", { attr: { transform: "translate(684,1180) rotate(0)" } }, { attr: { transform: "translate(440,1500) rotate(-140)" }, duration: 0.45, ease: "power2.in", immediateRender: false }, t0 + 0.08);
@@ -1307,8 +1310,8 @@
       add("three", {
         set: "schoolYard", setOpts: { id: "th", time: "night", lampX: -300 }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1100, 0.72, 540, 950), drift: { s: 0.03 } }, { t: F("three", 0, 1) - 0.05, ...fr(900, 1100, 0.95, 540, 950), drift: { x: 30, s: 0.03 } }] },
-        actors: [PI(-200, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), HO(-360, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), MA(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]),
-          KO(-520, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "normal", mouth: "frown" }]), PU(-300, 1500, 0.58, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }])],
+        actors: [PI(-200, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "worry", mouth: "flat" }]), HO(-360, 1500, 0.9, [{ t: 0, mode: "write", eyes: "worry", mouth: "flat" }], { prop: "ledger" }), MA(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat", gaze: [3, 0] }]),
+          KO(-520, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "sad", mouth: "frown" }]), PU(-300, 1500, 0.58, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }])],
         captions: caps("three"),
         ui: [{ type: "counter", t: 0.1, end: F("three", 0, 1), label: "กระป๋อง", icon: "can", max: 12, keys: [{ t: 0, v: 3 }], top: 150 }],
         fx(tl, id, t0, L) {
@@ -1347,8 +1350,11 @@
       }, {
         set: "classroom", setOpts: { id: "rb", night: true, lampX: 400, lampY: 1100 }, dark: 0.6, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(400, 1150, 0.9, 540, 1000), drift: { s: 0.03 } }] },
-        actors: [PI(100, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "wide", mouth: "o" }]), HO(340, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "frown" }]), MA(560, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]),
-          KO(-140, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "normal", mouth: "flat" }]), PU(760, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }])],
+        actors: [PI(100, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "worry", mouth: "flat" }, { t: F("radio", 3, 2) - (vo("radio", 3) - 0.1), mode: "gasp", eyes: "wide", mouth: "o" }]),
+          HO(340, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "worry", mouth: "frown" }, { t: F("radio", 3, 2) - (vo("radio", 3) - 0.1) + 0.35, mode: "sit", eyes: "wide", mouth: "o" }]),
+          MA(560, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }, { t: F("radio", 3, 2) - (vo("radio", 3) - 0.1) + 0.5, mode: "sit", eyes: "squint", mouth: "flat" }]),
+          KO(-140, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "normal", mouth: "flat" }, { t: F("radio", 3, 2) - (vo("radio", 3) - 0.1) + 0.25, mode: "sitHold", eyes: "wide", mouth: "o" }]), PU(760, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }])],
+        react: [{ a: 0, t: F("radio", 3, 2) - (vo("radio", 3) - 0.1) - 0.05, dur: 1.6, fast: true }],
         captions: capsFrom("radio", vo("radio", 3) - 0.1),
         ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 3) - 0.1) - 0.05, label: "คนในค่าย", icon: "people", max: 6, keys: [{ t: 0, v: 5 }, { t: F("radio", 3, 2) - (vo("radio", 3) - 0.1), v: 5 }, { t: F("radio", 3, 2) - (vo("radio", 3) - 0.1) + 0.05, v: 6 }], alarm: F("radio", 3, 2) - (vo("radio", 3) - 0.1), top: 150 },
           { type: "counter", t: 0.05, end: D("radio") - (vo("radio", 3) - 0.1) - 0.05, label: "วิทยุนับ · เหลือ", icon: "radio", unit: "วัน", keys: [{ t: 0, v: 98 }], top: 150, right: true }],
@@ -1386,7 +1392,7 @@
         set: "schoolYard", setOpts: { id: "cho", time: "morning", level: 0.62 }, dark: 0.25, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(700, 1100, 0.8, 540, 1000), drift: { s: 0.02 } }, { t: 1.0, glide: 1.6, ...fr(1260, 420, 1.5, 540, 760), r: 3, drift: { s: 0.03, r: 0.8 } }] },
         shake: (t) => shakeH(t) * 2,
-        actors: [HO(1060, 1500, 0.9, [{ t: 0, mode: "pointUp", eyes: "wide", mouth: "o" }]), PI(880, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "wide", mouth: "flat" }])],
+        actors: [HO(1060, 1500, 0.9, [{ t: 0, mode: "pointUp", eyes: "wide", mouth: "o" }]), PI(880, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "wide", mouth: "flat" }, { t: 0.9, mode: "lookUp", eyes: "worry", mouth: "frown" }])],
         ui: [{ type: "choice", t: 0.05, q: "วิทยุบอก หก… จะเชื่อมั้ย?", a: "ไม่เชื่อ", b: "เชื่อ", secs: 3, top: 300, possessed: { at: 1.0, side: "a", glitch: "ไม่เชื่อ…", who: "…มันนับถูก" } }],
         fx(tl, id, t0) {
           Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);

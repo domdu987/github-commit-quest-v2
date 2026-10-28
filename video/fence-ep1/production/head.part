@@ -155,7 +155,7 @@
       Rig.MODES.grabArm = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -78, faF: -8, uaB: -40, faB: -60, torso: 8, head: 4 });
       Rig.MODES.pullBolt = (u, o) => { const k = Rig.smooth(u / 0.5); return { ...Rig.MODES.idle(u, o), uaF: Rig.lerp(-60, -20, k), faF: Rig.lerp(-30, -60, k), torso: 10, head: 6, thF: 10, shF: 10, thB: -10 }; };
       Rig.MODES.crouchDraw = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -30, faF: -40 + 6 * Math.sin(u * 7), uaB: -10, faB: -50, torso: 30, head: 20 });
-      Rig.MODES.sitHold = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -40, faF: -110, uaB: -16, faB: -100, torso: 12 + Math.sin(u * 4) * 1.5, head: 14 });   // on the floor, winded, holding his arm
+      Rig.MODES.sitHold = (u, o) => ({ ...Rig.MODES.sit(u, o), ...Rig.reach("B", [-14, 103], [71, 80]), ...Rig.reach("F", [16, 110], [-43.8, 92.1]), bFront: 1, torso: 8 + Math.sin(u * 4) * 1.5, head: 14 });   // on the floor, winded, holding his arm across the body
       Rig.MODES.sleepSit = (u, o) => ({ ...Rig.MODES.sit(u, o), torso: 6, head: 26 + Math.sin(u * 1.1), uaF: -10, faF: -40, uaB: 4, faB: -30 });
       Rig.MODES.lookUp = (u, o) => ({ ...Rig.MODES.idle(u, o), head: -22, torso: -4 });
       Rig.MODES.pointUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150, faF: -10, head: -16, torso: -4 });
@@ -171,7 +171,7 @@
       const TOP = (L, el) => L.act.appendChild(el);
       const split = (k, at, A, B) => {
         add(k, A); shots[shots.length - 1].dur = at;
-        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at; sh.vo = (SH[k].vo || []).map((v) => ({ ...v, t: v.t - at }));
       };
       const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
       const glow = (L, html) => L.glow.insertAdjacentHTML("beforeend", html);
@@ -350,4 +350,4 @@
       });
 
       const shots = [];
-      const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec });
+      const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, vo: SH[k].vo, ...spec });

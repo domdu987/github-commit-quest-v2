@@ -8,6 +8,7 @@
 
   function build(root, tl, shots) {
     root.insertAdjacentHTML("afterbegin", `<svg width="0" height="0" style="position:absolute"><defs>${Sets.DEFS}</defs></svg>`);
+    window.__SHOTS = shots;   // for probes (acting tables)
     shots.forEach((sh, i) => buildShot(root, tl, sh, i));
   }
 
@@ -73,6 +74,12 @@
       const kx = Math.max(-1.3, Math.min(1.3, (dx / h) * 0.9));
       return { kx, ky: 0.1, rx: -5 * Math.sign(dx || 1), ry: key.y < a.y - 300 ? -3 : 0 };   // a lamp in the scene
     };
+    // shot grammar (user 28 Oct, character pass): while a character speaks, the camera eases in to a medium close-up on them
+    // (head placed at sh.cu.sy ≈ 860 on screen, zoom so the head is ~225 px tall) and eases back out after the line.
+    // sh.cu / a.cu = false turns it off; {s, sx, sy} overrides the framing
+    const cus = [];
+    // where a character's head is at shot time t: sitting / crouching poses drop the body (their bodyY), so the close-up aims lower
+    const headY = (a, t, y) => { let m = (a.track || [])[0]; for (const e of a.track || []) if (e.t <= t) m = e; const f = m && Rig.MODES[m.mode]; const by = f ? (f(0.5, m.opts || {}).bodyY || 0) : 0; return y - (560 - by) * a.s; };
     const castT = (c, gy) => `matrix(1 0 ${-c.kx} ${-c.ky} ${(c.kx * gy).toFixed(1)} ${((1 + c.ky) * gy).toFixed(1)})`;
     (sh.actors || []).forEach((a, k) => {
       const aid = `${id}-a${k}`;
@@ -91,7 +98,43 @@
         if (cast) casts.insertAdjacentHTML("beforeend", `<use id="${aid}-cast" href="#${aid}" transform="${castT(cast, a.y)}" opacity="${cast.op}" style="filter:brightness(0)"/>`);
         if (rim && a.rim !== false) { const k = rim.w / 4, mx = -(rim.dx ?? lf.rx) * k, my = -(rim.dy ?? lf.ry) * k;
           g.insertAdjacentHTML("afterend", `<mask id="${aid}-rm" maskUnits="userSpaceOnUse" x="-4000" y="-4000" width="9000" height="9000"><use href="#${aid}" style="filter:brightness(0) invert(1)"/><use href="#${aid}" transform="translate(${mx.toFixed(1)},${my.toFixed(1)})" style="filter:brightness(0)"/></mask><use id="${aid}-rim" href="#${aid}" mask="url(#${aid}-rm)" opacity="${rim.op}" style="filter:${rim.f}"/>`); }
-        Rig.drive(tl, aid, sh.start, sh.dur, a.track, a.blinks || [0.9, 2.7, 4.6]);
+        // lines this character speaks in the shot move its mouth (make.py merges lipsync.json + the voice→character map into sh.vo);
+        // only the first actor of a kind talks, a.talk = false silences one
+        const first = (sh.actors || []).findIndex((b) => b.who === a.who) === k;
+        const talk = a.talk === false || !first ? [] : (sh.vo || []).filter((v) => v.lip && v.who === a.who).map((v) => ({ t: v.t, lv: v.lip, fps: 30 }));
+        // a walker carried by moveTo takes steps that match the ground it covers (no more legs cycling while the body drifts):
+        // the stride shrinks for a slow walk, the cadence quickens for a fast one; bob and knee lift scale with the stride
+        let track = a.track;
+        if (a.moveTo && a.autoStride !== false) {
+          const v = Math.hypot(a.moveTo.x - a.x, (a.moveTo.y ?? a.y) - a.y) / Math.max(0.1, a.moveTo.dur) / a.s;
+          track = a.track.map((e) => {
+            if ((e.mode !== "walk" && e.mode !== "run") || (e.opts && e.opts.stride)) return e;
+            const run = e.mode === "run", def = run ? 30 : 16, per0 = (e.opts && e.opts.period) || (run ? 0.56 : 0.96);
+            const st = Math.asin(Math.min(1, (v * per0) / (4 * 288))) * 180 / Math.PI, stride = Math.max(run ? 20 : 6, Math.min(def, st));   // a sprint keeps a sprinter's stride even when the shot moves it only a little
+            const period = st > def ? Math.max(run ? 0.38 : 0.62, (4 * 288 * Math.sin((def * Math.PI) / 180)) / v) : per0, k2 = Math.max(0.45, stride / def);
+            return { ...e, opts: { ...(e.opts || {}), stride, period, bob: (run ? 16 : 9) * k2, knee: (run ? 80 : 42) * Math.max(0.6, k2) } };
+          });
+        }
+        // the others in the shot look at whoever is speaking
+        const listen = (sh.vo || []).filter((v) => v.lip && v.who !== a.who).map((v) => {
+          const sp = (sh.actors || []).find((b) => b.who === v.who);
+          if (!sp) return null;
+          const dir = Math.sign(sp.x - a.x) * (a.flip ? -1 : 1);
+          return dir ? { t0: v.t - 0.1, t1: v.t + v.lip.length / 30 + 0.3, gx: 2.6 * dir } : null;
+        }).filter(Boolean);
+        Rig.drive(tl, aid, sh.start, sh.dur, track, a.blinks || Rig.blinkSeq(`${sh.key || id}-${a.who}-${k}`, sh.dur), talk, listen);
+        // a speaker on the move (running, walking, dragged along) stays in the wide shot so the danger stays in frame — unless a.cu asks
+        const MOVING = new Set(["run", "walk", "drag", "zrun", "shamble", "swing", "knocked", "fall"]);
+        const modeAt = (tt) => { let m = a.track[0]; for (const e of a.track) if (e.t <= tt) m = e; return m && m.mode; };
+        const movingAt = (tt) => MOVING.has(modeAt(tt)) || (a.moveTo && tt >= (a.moveTo.at || 0) && tt <= (a.moveTo.at || 0) + a.moveTo.dur);
+        if (sh.cu !== false && a.cu !== false) talk.forEach((v) => {
+          const t0 = v.t - 0.15, t1 = v.t + v.lv.length / 30 + 0.2;
+          if (!a.cu && movingAt((t0 + t1) / 2)) return;
+          let ax = a.x, ay = a.y;
+          if (a.moveTo) { const m = Math.max(0, Math.min(1, ((t0 + t1) / 2 - (a.moveTo.at || 0)) / a.moveTo.dur)); ax = lerp(a.x, a.moveTo.x, m); ay = lerp(a.y, a.moveTo.y ?? a.y, m); }
+          (window.__CU || (window.__CU = [])).push({ shot: sh.key, start: sh.start, who: a.who, t0: +t0.toFixed(2), t1: +t1.toFixed(2) });   // for probes
+          cus.push({ t0, t1, wx: ax, wy: headY(a, (t0 + t1) / 2, ay), s: Math.max(1.35, Math.min(2.5, 225 / (125 * a.s))), ...(typeof sh.cu === "object" ? sh.cu : {}), ...(typeof a.cu === "object" ? a.cu : {}) });
+        });
         if (a.prop && window.Camp) Camp.attach(aid, a.prop);
         if (a.moveTo) { // walk across the set: translate the whole character in sync with the shot clock
           const m = { k: 0 };
@@ -128,10 +171,30 @@
       const e = cam.ease === "linear" ? k : ease(k);
       return { x: lerp(cam.from.x, cam.to.x, e), y: lerp(cam.from.y, cam.to.y, e), s: lerp(cam.from.s, cam.to.s, e) };
     };
+    // reaction close-ups (user 28 Oct: "เพิ่มภาพใกล้หน้าตอนตกใจหรือตอนตัดสินใจ"): sh.react = [{ a: actor index | who, t, dur = 1.4, s, sx, sy, fast }]
+    // a quick push-in on a face for a startle or a decision; `fast` snaps in over 0.12 s (a shock) instead of easing over 0.4 s
+    (sh.react || []).forEach((r) => {
+      const k = r.a ?? (sh.actors || []).findIndex((b) => b.who === r.who), a = (sh.actors || [])[k];
+      if (!a) return;
+      let ax = a.x, ay = a.y;
+      if (a.moveTo) { const m = Math.max(0, Math.min(1, (r.t - (a.moveTo.at || 0)) / a.moveTo.dur)); ax = lerp(a.x, a.moveTo.x, m); ay = lerp(a.y, a.moveTo.y ?? a.y, m); }
+      cus.push({ t0: r.t, t1: r.t + (r.dur ?? 1.4), wx: ax, wy: headY(a, r.t + 0.3, ay), s: r.s ?? Math.max(1.45, Math.min(2.7, 250 / (125 * a.s))), sx: r.sx, sy: r.sy ?? 900, inT: r.fast ? 0.12 : 0.4 });
+      (window.__CU || (window.__CU = [])).push({ shot: sh.key, start: sh.start, who: a.who, react: true, t0: +r.t.toFixed(2), t1: +(r.t + (r.dur ?? 1.4)).toFixed(2) });
+    });
+    const camCU = (t, k0) => {
+      let c = camAt(t, k0);
+      for (const u of cus) {
+        if (t <= u.t0 || t >= u.t1 + 0.45) continue;
+        const inT = u.inT || 0.4, w = t < u.t0 + inT ? ease((t - u.t0) / inT) : t > u.t1 ? 1 - ease((t - u.t1) / 0.45) : 1;
+        const s = Math.max(u.s, c.s * 1.12), sx = u.sx ?? 540, sy = u.sy ?? 860;
+        c = { x: lerp(c.x, u.wx - 540 - (sx - 540) / s, w), y: lerp(c.y, u.wy - 960 - (sy - 960) / s, w), s: lerp(c.s, s, w), r: lerp(c.r || 0, 0, w) };
+      }
+      return c;
+    };
     // depth of field: blur per layer, e.g. blur: { far: 3, fg: 10 }
     Object.entries(sh.blur || {}).forEach(([layer, px]) => { L[layer].style.filter = px ? `blur(${px}px)` : "none"; });
     const applyCam = (k0) => {
-      const { x, y, s, r } = camAt(k0 * sh.dur, k0);
+      const { x, y, s, r } = camCU(k0 * sh.dur, k0);
       const shake = sh.shake ? sh.shake(k0 * sh.dur) : 0;
       // handheld: a slow, small two-frequency float so no frame sits dead still (sh.handheld scales it; 0 = locked off)
       const hh = sh.handheld ?? 1, t = sh.start + k0 * sh.dur;
