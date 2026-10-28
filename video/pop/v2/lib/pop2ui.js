@@ -1,6 +1,6 @@
 // "เห็ดปอบ" v2 — on-screen graphics in the story's own hand: Yai Kham's rules on a taped notebook page with drawn icons,
 // the source chip, and the drawn icons themselves. Everything is SVG in screen space (put it in L.light).
-//   PopUI.rule(tl, layer, t0, dur, o)   o.active 0..2 (the line this episode teaches), o.y (card centre), o.done [i…] (lines ticked)
+//   PopUI.rule(tl, layer, t0, dur, o)   o.active 0..2 (the line this episode teaches), o.y (card centre), o.done [i…] (lines ticked), o.s (scale);
 //   PopUI.source(tl, layer, t0, dur, o) o.text, o.y
 //   PopUI.ICON.{mushQ, hospital, belly, skull, check, cross, clock, spoon, rice, shallot, fire}(x, y, s)  drawn icons, 100-unit box
 (function () {
@@ -46,7 +46,7 @@
   const BADGE = ["#e4f2d4", "#dcecf8", "#fbe0e0"];
   function rule(tl, layer, t0, dur, o = {}) {
     const id = `ui${++seq}`, A = o.active ?? 0, W = 900, H = 700, cx = 540, cy = o.y ?? 900;
-    let g = `<g id="${id}" opacity="0"><g transform="translate(${cx},${cy}) rotate(-1.6)"><g id="${id}-card"><g filter="url(#uiShadow)">`;
+    let g = `<g id="${id}" opacity="0"><g transform="translate(${cx},${cy}) rotate(-1.6) scale(${o.s ?? 1})"><g id="${id}-card"><g filter="url(#uiShadow)">`;
     // the page: ruled lines, a red margin, a torn top edge, tape on the corners
     const torn = Array.from({ length: 31 }, (_, k) => `${f1(-W / 2 + k * (W / 30))},${f1(-H / 2 + (k % 2 ? 7 : -3) + Math.sin(k * 2.1) * 4)}`).join(" L");
     g += `<path d="M${torn} L${W / 2},${H / 2} L${-W / 2},${H / 2} Z" fill="url(#uiPaper)"/>`;
@@ -165,11 +165,12 @@
     put(layer, `<g id="${id}" opacity="0"><g transform="translate(540,${y})"><rect x="-470" y="-150" width="940" height="300" rx="34" fill="#0c1014" opacity=".82"/><rect x="-470" y="-150" width="940" height="300" rx="34" fill="none" stroke="#f4ecd8" stroke-opacity=".25" stroke-width="2"/>
       <g transform="translate(-350,-20)"><circle r="70" fill="#fdf2d8" stroke="${INK}" stroke-width="4"/>${ICON.mush(0, 4, 0.9)}</g><text x="-350" y="110" text-anchor="middle" font-family="Mali" font-weight="700" font-size="34" fill="#f4ecd8">กินตอนค่ำ</text>
       <path d="M-260,-20H250" stroke="#4a4e56" stroke-width="16" stroke-linecap="round"/><path id="${id}-bar" d="M-260,-20H250" stroke="#ffd84a" stroke-width="16" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
-      <g transform="translate(0,-20)"><g id="${id}-clk">${ICON.clock(0, 0, 0.9)}</g></g><text x="0" y="80" text-anchor="middle" font-family="Mali" font-weight="700" font-size="44" fill="#ffd84a">4 – 6 ชั่วโมง</text>
+      <g transform="translate(0,-20) scale(0.9)"><circle r="40" fill="#fffaf0" stroke="${INK}" stroke-width="5"/>${[0, 90, 180, 270].map((a) => `<path d="M0,-34v6" stroke="${INK}" stroke-width="4" transform="rotate(${a})"/>`).join("")}<g id="${id}-hh"><path d="M0,0V-17" stroke="${INK}" stroke-width="7" stroke-linecap="round"/></g><g id="${id}-mh"><path d="M0,4V-28" stroke="#c8302a" stroke-width="4" stroke-linecap="round"/></g><circle r="5" fill="${INK}"/></g><text x="0" y="80" text-anchor="middle" font-family="Mali" font-weight="700" font-size="44" fill="#ffd84a">4 – 6 ชั่วโมง</text>
       <g transform="translate(350,-20)"><g id="${id}-belly"><circle r="70" fill="#fbe0e0" stroke="${INK}" stroke-width="4"/>${ICON.belly(0, 4, 0.9)}</g></g><text x="350" y="110" text-anchor="middle" font-family="Mali" font-weight="700" font-size="34" fill="#f4ecd8">อาการมาทีหลัง</text></g></g>`);
     tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0);
     tl.to(`#${id}-bar`, { strokeDashoffset: 0, duration: Math.min(1.8, dur * 0.5), ease: "power1.inOut" }, t0 + 0.4);
-    tl.fromTo(`#${id}-clk`, { rotation: 0, svgOrigin: "0 0" }, { rotation: 360, duration: Math.min(1.8, dur * 0.5), ease: "power1.inOut", immediateRender: false }, t0 + 0.4);
+    tl.fromTo(`#${id}-mh`, { rotation: 0, svgOrigin: "0 0" }, { rotation: 1800, duration: Math.min(1.8, dur * 0.5), ease: "power1.inOut", immediateRender: false }, t0 + 0.4);
+    tl.fromTo(`#${id}-hh`, { rotation: 0, svgOrigin: "0 0" }, { rotation: 150, duration: Math.min(1.8, dur * 0.5), ease: "power1.inOut", immediateRender: false }, t0 + 0.4);
     tl.fromTo(`#${id}-belly`, { scale: 1, svgOrigin: "0 0" }, { scale: 1.18, duration: 0.18, yoyo: true, repeat: 3, immediateRender: false }, t0 + 0.4 + Math.min(1.8, dur * 0.5));
     tl.to(`#${id}`, { opacity: 0, duration: 0.25 }, t0 + dur - 0.25);
     return id;
