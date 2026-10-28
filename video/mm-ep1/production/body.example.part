@@ -1,0 +1,272 @@
+      // ---------- เห็ดปอบ EP.3 อย่าอวดว่าหาย (ตอนจบ) — v2: the same illustrated cast and painted sets; no choice at the end ----------
+      // camera grammar: the window, the empty bed with the drip swinging, faces close, the doctor's whiteboard, the bedside from behind,
+      // her feet on the floor, the village window at the end
+      const MINT = (x, y, s, track, extra = {}) => ({ who: "mint", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TON = (x, y, s, track, extra = {}) => ({ who: "ton", x, y, s, track, blinks: [1.2, 3.6], ...extra });
+      const YAI = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, blinks: [0.7, 2.6, 4.9], ...extra });
+      const THONG = (x, y, s, track, extra = {}) => ({ who: "thong", x, y, s, track, blinks: [1.6, 4.2], ...extra });
+      const DOC = (x, y, s, track, extra = {}) => ({ who: "doc", x, y, s, track, blinks: [0.6, 2.4], ...extra });
+      const GW = 1500, GV = 1320;
+      const CU = (x, y, s, sy = 1000) => fr(x, y - 560 * s, 1.0, 540, sy);
+      const oranges = `<g transform="translate(0,118)"><path d="M-16,30Q-14,-6 0,-4Q14,-6 16,30" stroke="#e8ecf0" stroke-width="6" fill="none"/><path d="M-48,28h96l-12,104h-72z" fill="#e8ecf0" opacity=".9" stroke="#3a2622" stroke-width="3"/>${[-24, 0, 24].map((dx, k) => `<circle cx="${dx}" cy="${70 + (k % 2) * 14}" r="21" fill="#e8a83a" stroke="#3a2622" stroke-width="2.4"/><path d="M${dx - 6},${62 + (k % 2) * 14}q6,-4 10,0" stroke="#fff" stroke-width="3" fill="none" opacity=".5"/>`).join("")}</g>`;
+      Object.assign(Rig.CAST, { thongBag: { ...Rig.CAST.thong, hand: oranges } });
+      const oneHand = (id, i) => { const h = document.getElementById(`${id}-a${i}-handB`); if (h) h.innerHTML = ""; };
+      const chair = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-70,0V-150M70,0V-150M-70,-150H80V-170H-70ZM60,-170V-380" stroke="#5a6a72" stroke-width="12" fill="none"/><rect x="-80" y="-172" width="160" height="22" rx="6" fill="#7a8a92"/><rect x="50" y="-380" width="24" height="200" rx="8" fill="#6a7a82"/></g>`;
+      const MOON = { from: "right", rim: "#a8c4ff", rimOp: 0.8, shade: "#000010", shadeOp: 0.5, cast: false, vol: false };
+      const TUBE = { from: "left", rim: "#e8fff4", rimOp: 0.6, shade: "#102028", shadeOp: 0.4, cast: { len: 1.2, op: 0.3 }, vol: false };
+      const GWARD = { top: "#2a4a5a", bottom: "#1a2a3a", op: 0.25 }, GDAWN = { top: "#ffb080", bottom: "#3a3a6a", op: 0.3 }, GLATE = { top: "#0a1430", bottom: "#1a2a3a", op: 0.35 }, GNIGHT = { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 };
+
+      // ---------- 0. where EP.2 left off: the handprint on the window ----------
+      add("recap", {
+        set: "ward2", setOpts: { id: "w0", time: "night", print: true }, dark: 0.3, blur: { sky: 4 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(820, 580, 1.9, 540, 860) }, { t: D("recap"), ...fr(820, 580, 2.0, 540, 860) }] },
+        fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0); Fx.glitch(tl, `#${id}`, t0, 0.3, 14, 1101); Fx.heart(tl, t0, D("recap"), 0.42, 0.6); },
+      });
+
+      // ---------- 1. flash-forward: the bed empty, the sheet thrown back, the drip still swinging ----------
+      add("hook", {
+        set: "ward2", setOpts: { id: "w1", time: "night" }, dark: 0.22, blur: { sky: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(480, 1080, 0.95, 540, 1050) }, { t: D("hook"), ...fr(400, 1060, 1.12, 540, 1050) }] },
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          tl.fromTo("#w1-iv", { rotation: 4, svgOrigin: "230 600" }, { rotation: -4, duration: 0.9, repeat: Math.ceil(D("hook") / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#w1-curtain", { x: 0 }, { x: 24, duration: 1.4, repeat: 3, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Fx.heart(tl, t0 + 0.3, D("hook") - 0.3, 0.42, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook") - 0.5, 0.3, 18, 1102); Fx.punch(tl, `#${id} .stage`, t0 + D("hook") - 0.5, 1.08, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.7 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + D("hook") - 0.45);
+        },
+      });
+
+      // ---------- 2. ยายคำ at the bedside, gentle and wrong: "กลับบ้านเถอะลูก… หายแล้ว" ----------
+      add("home", {
+        set: "ward2", setOpts: { id: "w2", time: "dawn" }, dark: 0.06, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1200, 2.0, 1000) }, { t: D("home"), ...fr(540, GW + 1200 - 560 * 2.0, 1.12, 540, 1000) }] },
+        actors: [YAI(540, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }])],
+        captions: caps("home", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("home"), 0.5, 0.45); },
+      });
+
+      // ---------- 3. มิ้นท์: "หมอยังไม่ให้กลับ!" ----------
+      add("no", {
+        set: "ward2", setOpts: { id: "w3", time: "dawn" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1300, 2.1, 1000) }] },
+        actors: [MINT(540, GW + 1300, 2.1, [{ t: 0, mode: "point", eyes: "angry", mouth: "scream" }])],
+        captions: caps("no", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.05, 0.3); },
+      });
+
+      // ---------- 4. the doctor, firm: "ดีขึ้น… ไม่ได้แปลว่าหาย" ----------
+      add("doc", {
+        set: "ward2", setOpts: { id: "w4", time: "dawn" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(560, GW + 1200, 2.0, 1000) }, { t: D("doc"), ...fr(560, GW + 1200 - 560 * 2.0, 1.08, 540, 1000) }] },
+        actors: [DOC(560, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        captions: caps("doc", undefined, { quote: true }),
+      });
+
+      // ---------- 5. knowledge on her whiteboard: the symptoms ease for a while, then come back worse ----------
+      add("know1", {
+        set: "board2", setOpts: { id: "bd5" }, dark: 0, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(540, 880, 0.98, 540, 880) }, { t: D("know1"), ...fr(540, 880, 1.04, 540, 880) }] },
+        captions: caps("know1"),
+        fx(tl, id, t0, L) {
+          tl.to("#bd5-sick", { strokeDashoffset: 0, duration: vo("know1", 1) + 0.6, ease: "none" }, t0 + 0.2);
+          tl.fromTo("#bd5-l1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, immediateRender: false }, t0 + F("know1", 0, 1) + 0.9);
+          tl.to("#bd5-liver", { opacity: 0.9, duration: 0.6 }, t0 + vo("know1", 1) - 0.2);
+          tl.fromTo("#bd5-l2", { opacity: 0, scale: 1.3, svgOrigin: "255 -130" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + vo("know1", 1) + 0.6);
+          PopUI.source(tl, L.light, t0 + 0.4, D("know1") - 0.4, { text: "ที่มา: สคร.7 ขอนแก่น (8 พ.ค. 2568) · คู่มือเห็ดพิษ กรมควบคุมโรค (2566)", y: 1810 });
+        },
+      });
+
+      // ---------- 6. the board again, closer: the liver — even from a single mushroom ----------
+      add("know2", {
+        set: "board2", setOpts: { id: "bd6" }, dark: 0, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.0, 540, 880) }, { t: 0.2, glide: 1.0, ...fr(600, 720, 1.22, 540, 880) }] },
+        captions: caps("know2"),
+        fx(tl, id, t0, L) {
+          tl.set("#bd6-sick", { strokeDashoffset: 0 }, t0); tl.set(["#bd6-l1", "#bd6-l2"], { opacity: 1 }, t0); tl.set("#bd6-liver", { opacity: 0.9 }, t0);
+          tl.fromTo("#bd6-l2", { scale: 1, svgOrigin: "255 -130" }, { scale: 1.12, duration: 0.25, yoyo: true, repeat: 3, immediateRender: false }, t0 + 0.4);
+          tl.fromTo("#bd6-l3", { opacity: 0, scale: 1.4, svgOrigin: "-90 -190" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + F("know2", 0, 1));
+          PopUI.source(tl, L.light, t0 + 0.4, D("know2") - 0.4, { text: "ที่มา: กรมควบคุมโรค (3 เม.ย. 2568)", y: 1810 });
+        },
+      });
+
+      // ---------- 7. ต้น sitting up in bed, sheepish: "ผมกินไปสองถ้วยเลยนะ…" ----------
+      add("two", {
+        set: "ward2", setOpts: { id: "w7", time: "dawn" }, dark: 0.04, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(420, 1000, 1.45, 540, 1050) }, { t: D("two"), ...fr(420, 1000, 1.55, 540, 1050) }] },
+        actors: [TON(380, 1210, 0.82, [{ t: 0, mode: "sit", eyes: "wide", mouth: "o" }])],
+        captions: caps("two", undefined, { quote: true }),
+      });
+
+      // ---------- 8. มิ้นท์ wheels on him: "แล้วใครบอกให้ขออีกถ้วยล่ะ!" ----------
+      add("scold", {
+        set: "ward2", setOpts: { id: "w8", time: "dawn" }, dark: 0.04, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.15, 540, 1000) }] },
+        shake: (t) => (t < 0.3 ? 6 * Math.sin(t * 50) : 0),
+        actors: [TON(380, 1210, 0.82, [{ t: 0, mode: "sit", eyes: "closed", mouth: "frown" }]), MINT(820, GW + 60, 0.95, [{ t: 0, mode: "point", eyes: "angry", mouth: "scream" }], { flip: true })],
+        captions: caps("scold", undefined, { quote: true }),
+      });
+
+      // ---------- 9. the second night: the monitor's glow, the doctor reading the chart — the liver numbers climbing ----------
+      add("night2", {
+        set: "ward2", setOpts: { id: "w9", time: "night" }, dark: 0.18, blur: { sky: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 0.92, 540, 1050) }, { t: F("night2", 0, 1) - 0.1, glide: 1.2, ...fr(640, 1080, 1.12, 540, 1050) }] },
+        actors: [TON(560, 1220, 0.75, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }]), DOC(900, GW + 40, 0.82, [{ t: 0, mode: "raise", eyes: "worry", mouth: "flat" }], { flip: true })],
+        captions: caps("night2"),
+        extra(L) { put(L.light, `<g id="w9-lab" opacity="0"><g transform="translate(540,520)"><rect x="-300" y="-110" width="600" height="220" rx="24" fill="#0c1014" opacity=".86"/><circle cx="-200" cy="0" r="70" fill="#fbe0e0" stroke="#3a2a22" stroke-width="4"/>${PopUI.ICON.liver(-200, 0, 1.1)}
+          <text x="-100" y="-14" font-family="Mali" font-weight="700" font-size="40" fill="#f4ecd8">ค่าตับ</text><text x="-100" y="50" font-family="Mali" font-weight="700" font-size="40" fill="#ff6a5a">เริ่มผิดปกติ</text><path d="M200,50V-60M170,-30L200,-64L230,-30" stroke="#ff6a5a" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>`); },
+        fx(tl, id, t0, L) {
+          tl.fromTo("#w9-lab", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0 + F("night2", 0, 1) + 0.2);
+          Fx.heart(tl, t0 + F("night2", 0, 1), D("night2") - F("night2", 0, 1), 0.5, 0.45);
+          PopUI.source(tl, L.light, t0 + F("night2", 0, 1) + 0.4, D("night2") - F("night2", 0, 1) - 0.4, { text: "ที่มา: คู่มือเห็ดพิษ กรมควบคุมโรค (2566) · ระยะที่ 2 (18-36 ชม.)", y: 1380 });
+        },
+      });
+
+      // ---------- 10. the doctor, relieved: "ดีที่มาทัน… หมอดูแลได้" ----------
+      add("relief", {
+        set: "ward2", setOpts: { id: "w10", time: "dawn" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(560, GW + 1200, 2.0, 1000) }, { t: D("relief"), ...fr(560, GW + 1200 - 560 * 2.0, 1.06, 540, 1000) }] },
+        actors: [DOC(560, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        captions: caps("relief", undefined, { quote: true }),
+      });
+
+      // ---------- 11. the rules, the last line marked: even feeling better, let the doctor keep watching ----------
+      add("know3", {
+        set: "ward2", setOpts: { id: "w11", time: "dawn" }, dark: 0.1, blur: { sky: 6, far: 6, set: 8, act: 6 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 0.95, 540, 1050) }] },
+        actors: [TON(560, 1220, 0.75, [{ t: 0, mode: "lie", eyes: "closed", mouth: "smile" }])],
+        captions: caps("know3"),
+        fx(tl, id, t0, L) {
+          PopUI.rule(tl, L.light, t0 + 0.05, D("know3") - 0.05, { active: 2, done: [0, 1], y: 680, out: false });
+          PopUI.source(tl, L.light, t0 + F("know3", 0, 1), D("know3") - F("know3", 0, 1), { text: "ที่มา: กรมควบคุมโรค (3 เม.ย. 2568) · ควรรีบไปพบแพทย์แม้อาการจะดีขึ้นในช่วงแรก", y: 1100 });
+        },
+      });
+
+      // ---------- 12. ลุงทองดี in the doorway with a bag of oranges: "ลุงขอโทษ… ที่ทำให้กลัว" ----------
+      add("sorry", {
+        set: "ward2", setOpts: { id: "w12", time: "dawn" }, dark: 0.04, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(800, GW - 640, 1.35, 540, 1060) }, { t: D("sorry"), ...fr(800, GW - 660, 1.45, 540, 1060) }] },
+        actors: [{ ...THONG(840, GW + 60, 1.1, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: F("sorry", 0, 1), mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }), who: "thongBag" }],
+        captions: caps("sorry", undefined, { quote: true }),
+        fx(tl, id) { oneHand(id, 0); },
+      });
+
+      // ---------- 13. มิ้นท์ close, ashamed: "หนูต่างหาก ที่ต้องขอโทษ" ----------
+      add("me", {
+        set: "ward2", setOpts: { id: "w13", time: "dawn" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(520, GW + 1300, 2.1, 1000) }, { t: D("me"), ...fr(520, GW + 1300 - 560 * 2.1, 1.06, 540, 1000) }] },
+        actors: [MINT(520, GW + 1300, 2.1, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])],
+        captions: caps("me", undefined, { quote: true }),
+      });
+
+      // ---------- 14. ลุงทองดี close, the camera creeping in: "แต่รอยเท้านั่น… นิ้วยาวกว่าลุงเยอะ" ----------
+      add("feet", {
+        set: "ward2", setOpts: { id: "w14", time: "dawn" }, dark: 0.08, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1200, 2.1, 1000) }, { t: F("feet", 0, 1) - 0.1, glide: 1.2, ...fr(540, GW + 1200 - 560 * 2.1, 1.14, 540, 960) }] },
+        actors: [THONG(540, GW + 1200, 2.1, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        captions: caps("feet", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("feet", 0, 1), D("feet") - F("feet", 0, 1), 0.5, 0.45); },
+      });
+
+      // ---------- 15. the doctor with the chart; behind her, ยาย turns away ----------
+      add("odd", {
+        set: "ward2", setOpts: { id: "w15", time: "dawn" }, dark: 0.05, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(560, GW - 640, 1.2, 540, 1100) }, { t: F("odd", 0, 2) - 0.2, glide: 1.2, ...fr(880, GW - 700, 1.6, 540, 1100) }] },
+        actors: [DOC(520, GW + 60, 1.2, [{ t: 0, mode: "raise", eyes: "side", mouth: "o" }]), YAI(900, GW + 40, 1.05, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: F("odd", 0, 2), mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: caps("odd", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("odd", 0, 2), D("odd") - F("odd", 0, 2), 0.48, 0.5); },
+      });
+
+      // ---------- 16. that night: มิ้นท์ wakes in the chair ----------
+      add("wake", {
+        set: "ward2", setOpts: { id: "w16", time: "night" }, dark: 0.25, blur: { sky: 6, far: 6, set: 8 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1500, 2.6, 1000) }, { t: D("wake"), ...fr(540, GW + 1500 - 560 * 2.6, 1.06, 540, 1000) }] },
+        actors: [MINT(540, GW + 1500, 2.6, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }, { t: F("wake", 0, 1), mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("wake"),
+        fx(tl, id, t0) { Fx.heart(tl, t0 + F("wake", 0, 1), D("wake") - F("wake", 0, 1), 0.45, 0.55); },
+      });
+
+      // ---------- 17. wide: ยาย at ต้น's bedside, her back to us; her head tilts ----------
+      add("sit", {
+        set: "ward2", setOpts: { id: "w17", time: "night" }, dark: 0.25, blur: { sky: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 0.92, 540, 1050) }, { t: F("sit", 0, 1) - 0.1, glide: 1.6, ...fr(640, 1100, 1.35, 540, 1050) }] },
+        actors: [TON(500, 1220, 0.75, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }])],
+        captions: caps("sit"),
+        extra(L) { put(L.glow, Pop2.yaiBack(720, GW + 60, 0.95, "yb17")); },
+        fx(tl, id, t0) {
+          tl.fromTo("#yb17-head", { rotation: 0, svgOrigin: "0 -480" }, { rotation: -9, duration: 2.4, ease: "sine.inOut", immediateRender: false }, t0 + 0.8);
+          Fx.heart(tl, t0, D("sit"), 0.5, 0.6);
+        },
+      });
+
+      // ---------- 18. down on the floor: her feet, muddy to the ankle — the toes far too long ----------
+      add("toes", {
+        set: "feet2", setOpts: { id: "f18" }, dark: 0.1, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(540, 1200, 0.95, 540, 1000) }, { t: F("toes", 0, 1) - 0.1, glide: 1.4, ...fr(540, 1440, 1.18, 540, 1000) }] },
+        captions: caps("toes"),
+        fx(tl, id, t0) {
+          tl.fromTo(["#f18-toesR", "#f18-toesL"], { rotation: 0, svgOrigin: "200 80" }, { rotation: 6, duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0 + F("toes", 0, 1) + 0.2);
+          Fx.heart(tl, t0, D("toes"), 0.48, 0.6);
+        },
+      });
+
+      // ---------- 19. "ลูกเอ๊ย… ยายหิวข้าวจังเลย": she turns — green eyes; hold; the hit ----------
+      const HB = F("hungry", 0, 1) - 0.05, HC = D("hungry") - 0.9, HD = D("hungry") - 0.5;
+      add("hungry", {
+        set: "ward2", setOpts: { id: "w19", time: "night" }, dark: 0.35, blur: { sky: 6, far: 6, set: 8 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(540, GW + 1200, 2.0, 1000) }, { t: HC, ...fr(540, GW + 1200 - 560 * 2.0, 1.2, 540, 980) }] },
+        actors: [YAI(540, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }, { t: HB, mode: "idle", eyes: "glow", mouth: "o" }])],
+        captions: caps("hungry", undefined, { quote: true }),
+        extra(L) { put(L.light, `<g id="w19-face" opacity="0">${Pop2.pobFace(540, 1000, 1.25, { id: "w19-f" })}</g>`); },
+        fx(tl, id, t0) {
+          Fx.heart(tl, t0, HC, 0.6, 0.65);
+          tl.to(`#${id}-dark`, { opacity: 0.8, duration: 0.3 }, t0 + HC);
+          tl.fromTo("#w19-face", { opacity: 0, scale: 1.25, svgOrigin: "540 1000" }, { opacity: 1, scale: 1, duration: 0.09, ease: "power4.out", immediateRender: false }, t0 + HD);
+          Fx.glitch(tl, `#${id}`, t0 + HD + 0.05, 0.18, 16, 1119);
+          tl.set("#black", { opacity: 1 }, t0 + HD + 0.22);
+        },
+      });
+
+      // ---------- 20. the village at night; the camera drifts to ยาย's window — the lamp flickers out, pitch dark, only green eyes ----------
+      add("last", {
+        set: "village2", setOpts: { id: "v20", time: "night", fence: [-700] }, dark: 0.15, blur: { far: 2, fg: 8 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 960) }, { t: vo("last", 1) - 0.3, glide: 2.2, ...fr(-226, 700, 2.2, 540, 900) }] },
+        captions: caps("last"),
+        // black panes over both windows (house2 at x -60, scale 0.95, ground 1320) for when the lamp goes out; the eyes in the left one
+        extra(L) { put(L.glow, `<g id="v20-panes" opacity="0">${[-230, 80].map((wx) => `<rect x="${-60 + wx * 0.95}" y="${1320 - 720 * 0.95}" width="${110 * 0.95}" height="${140 * 0.95}" fill="#040302"/>`).join("")}</g>` + Pop2.eyePair(-226, 700, 0.55, "v20-eyes")); },
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 1 }, t0); tl.to("#black", { opacity: 0, duration: 0.8 }, t0 + 0.3);
+          const T = t0 + vo("last", 1) - 0.3;
+          tl.set("#v20-eyes", { opacity: 0 }, t0); tl.set("#v20-lamps", { opacity: 1 }, t0); tl.set("#v20-panes", { opacity: 0 }, t0);
+          [[0, 0.15], [0.08, 0.9], [0.16, 0.1], [0.3, 0.7], [0.36, 0]].forEach(([dt, k]) => { tl.set("#v20-lamps", { opacity: k }, T + dt); tl.set("#v20-panes", { opacity: 1 - k }, T + dt); });
+          tl.to("#v20-eyes", { opacity: 1, duration: 0.3 }, T + 0.8);
+          tl.to("#v20-eyes", { scaleY: 0.08, svgOrigin: "-226 700", duration: 0.07, yoyo: true, repeat: 1, ease: "power2.in" }, T + 2.5);
+          Pop2.particles(tl, L.glow, { type: "firefly", n: 14, box: [-600, 900, 1800, 800], t0, dur: D("last"), seed: 13 });
+          Fx.heart(tl, t0 + vo("last", 1), D("last") - vo("last", 1), 0.6, 0.45);
+        },
+      });
+
+      // ---------- 21. her rules, all three lines, in her own voice, over the dark village ----------
+      add("rule", {
+        set: "village2", setOpts: { id: "v21", time: "night", fence: [-700] }, dark: 0.45, blur: { sky: 6, far: 8, mid: 8, set: 8, fg: 10 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 960) }] },
+        captions: caps("rule", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          PopUI.rule(tl, L.light, t0 + 0.1, D("rule") - 0.1, { active: 2, done: [0, 1], y: 760, out: false });
+          tl.set("#black", { opacity: 1 }, t0 + D("rule") - 0.2);
+        },
+      });
+
+      // ---------- 22. end card: the community-forest sign — the end ----------
+      add("end", {
+        set: "sign2", setOpts: { id: "sg", ep: "ตอนจบ", title: "เห็ดปอบ" }, dark: 0, blur: { far: 6, mid: 5, fg: 10 }, grade: { top: "#ffd9a0", bottom: "#5a4a7a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.0, 540, 900) }, { t: D("end"), ...fr(540, 880, 1.05, 540, 900) }] },
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#sg-sign", { rotation: -9, svgOrigin: "540 500" }, { rotation: 0, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          tl.fromTo("#sg-note", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.6);
+          Pop2.particles(tl, L.light, { type: "dust", n: 24, box: [0, 200, 1080, 1400], t0, dur: D("end"), seed: 8 });
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Pop.life(tl, `#${id}`, t0, sh.dur); }; });
