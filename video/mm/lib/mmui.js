@@ -79,19 +79,9 @@
   const bolt = (pts) => { const d = `M${pts.map(([x, y]) => `${x},${y}`).join("L")}`; return `<path d="${d}" stroke="#ffe066" stroke-width="22" fill="none" stroke-linejoin="round" stroke-linecap="round" opacity=".35"/><path d="${d}" stroke="${C.yellow}" stroke-width="11" fill="none" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" stroke="#fffdf0" stroke-width="4.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`; };
   const BOLTS = [[[-140, -20], [-104, 4], [-122, 26], [-80, 52], [-96, 72]], [[-50, -54], [-24, -26], [-44, -8], [-6, 18], [-26, 40]], [[30, -50], [64, -20], [40, -4], [80, 26], [62, 44]], [[-110, 100], [-70, 86], [-80, 116], [-34, 116]], [[40, 76], [80, 60], [72, 96], [118, 84]], [[-20, 130], [8, 108], [4, 146], [36, 140]]];
 
-  // ---------------- the flipchart ----------------
-  function flip3(L, o = {}) {
-    const id = o.id || "fc", r = mk(o.seed || 81);
-    // the sala behind, out of focus: roof, posts, people on plastic chairs
-    put(L.sky, `<rect x="-1300" y="-900" width="3700" height="3900" fill="#eadfc4"/><rect x="-1300" y="1000" width="3700" height="2000" fill="#cbb48c"/>`);
-    let f = `<path d="M-1300,-900H2400V100H-1300Z" fill="#8a5a3a"/><path d="M-1300,100H2400" stroke="#5a3420" stroke-width="30"/>`;
-    for (let k = 0; k < 8; k++) f += `<rect x="${-900 + k * 420}" y="100" width="60" height="1400" fill="url(#p2Wood)"/>`;
-    f += `<rect x="-1300" y="380" width="3700" height="560" fill="#bfe0f4" opacity=".55"/>`;
-    for (let k = 0; k < 10; k++) { const x = -800 + k * 300 + r() * 80, y = 1420 + (k % 2) * 80; f += `<g transform="translate(${f1(x)},${y})"><rect x="-70" y="-10" width="140" height="120" rx="12" fill="${["#d83a3a", "#3a6ad8", "#e8b030"][k % 3]}" opacity=".85"/><ellipse cx="0" cy="-130" rx="56" ry="64" fill="#4a3a30"/><path d="M-90,-10Q-90,-80 0,-80Q90,-80 90,-10Z" fill="${["#f4f0e6", "#5a8a6a", "#c88a5a"][k % 3]}"/></g>`; }
-    put(L.far, f);
-    // the page: 940 wide, 1150 tall, top-left at (70, 240), the spiral binding along the top, easel legs behind
-    const PX = o.x ?? 70, PY = o.y ?? 240, W = 940;
-    let s = `<path d="M${PX + 120},${PY + 1100}L${PX + 40},${PY + 1800}M${PX + W - 120},${PY + 1100}L${PX + W - 40},${PY + 1800}" stroke="#7a5a3a" stroke-width="24" stroke-linecap="round"/>`;
+  // ---------------- the flipchart's first page (940 × 1150, top-left at 0,0): ใหลตาย, the two hearts, the stamp ----------------
+  function page(id) {
+    const W = 940;
     let p = `<rect x="10" y="16" width="${W}" height="1150" rx="14" fill="#000" opacity=".22"/><rect x="0" y="0" width="${W}" height="1150" rx="14" fill="url(#muPage)" ${O(3)}/>`;
     // header band: the อสม. badge, the title, the subtitle (S5: ไฟฟ้าลัดวงจรในหัวใจ)
     p += `<path d="M0,14Q0,0 14,0H${W - 14}Q${W},0 ${W},14V150H0Z" fill="url(#muHead)"/><circle cx="84" cy="76" r="50" fill="#fff" ${O(3)}/><path d="M74,46h20v20h20v20h-20v20h-20v-20h-20v-20h20z" fill="${C.green}" transform="translate(0,-6) scale(1) translate(0,0)"/>
@@ -122,7 +112,48 @@
     // the stamp (S5: ทำให้หัวใจเปรียบเสมือนหยุดเต้น)
     p += `<g transform="translate(470,1118) rotate(-5) scale(.92)"><g id="${id}-stamp" opacity="0"><rect x="-230" y="-44" width="460" height="88" rx="14" fill="#fff" fill-opacity=".85" stroke="${C.red}" stroke-width="7"/><rect x="-218" y="-32" width="436" height="64" rx="9" fill="none" stroke="${C.red}" stroke-width="3"/>
       <text x="0" y="16" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="${C.red}" letter-spacing="1">เหมือนหัวใจหยุดเต้น</text></g></g>`;
-    s += `<g transform="translate(${PX},${PY})"><g id="${id}-page">${p}${Array.from({ length: 18 }, (_, k) => `<path d="M${36 + k * 51},-16q-12,20 0,36" stroke="#5a5e64" stroke-width="6" fill="none"/>`).join("")}<rect x="0" y="-30" width="${W}" height="20" rx="6" fill="#3a3e44"/></g></g>`;
+    return p;
+  }
+  // ---------------- the second page: ใครเสี่ยง (S3: ผู้ชายวัย 25–45 ปี · ญาติใกล้ชิดสายตรงเคยตายขณะนอนหลับ) ----------------
+  function page2(id) {
+    const W = 940;
+    let p = `<rect x="10" y="16" width="${W}" height="1150" rx="14" fill="#000" opacity=".22"/><rect x="0" y="0" width="${W}" height="1150" rx="14" fill="url(#muPage)" ${O(3)}/>`;
+    p += `<path d="M0,14Q0,0 14,0H${W - 14}Q${W},0 ${W},14V150H0Z" fill="url(#muHead)"/><text x="60" y="100" font-family="Kanit" font-weight="900" font-size="80" fill="#fff">ใครเสี่ยง?</text>
+      <text x="${W - 50}" y="96" text-anchor="end" font-family="Kanit" font-weight="600" font-size="34" fill="#e8ffe8">โรคใหลตาย</text>`;
+    const row = (y, fill, stroke) => `<rect x="26" y="${y}" width="${W - 52}" height="470" rx="26" fill="${fill}" stroke="${stroke}" stroke-width="4"/>`;
+    // row A: men aged 25–45 — a man's bust in a badge, the age line with the band filling in
+    const man = `<circle r="96" fill="#dbe8fb" ${O(5)}/><defs><clipPath id="${id}-mc"><circle r="92"/></clipPath></defs><g clip-path="url(#${id}-mc)"><path d="M-80,110Q-80,40 -40,30H40Q80,40 80,110Z" fill="#eef0f0" ${O(4)}/><path d="M-36,32L-30,110M36,32L30,110" stroke="#c8ccd0" stroke-width="6"/>
+      <path d="M-14,20V4H14V20" fill="${C.skin}" ${O(4)}/><circle cx="0" cy="-30" r="38" fill="${C.skin}" ${O(4)}/><path d="M-38,-40C-40,-80 30,-86 40,-48Q20,-60 0,-58Q-20,-60 -38,-40Z" fill="#1e1612" ${O(3)}/><path d="M-14,-30h6M10,-30h6" stroke="${INK}" stroke-width="5" stroke-linecap="round"/><path d="M-8,-10q8,4 16,0" stroke="${INK}" stroke-width="3" fill="none"/></g>`;
+    p += `<g id="${id}-r2A">${row(170, "#f4f7fd", "#9ab8e8")}<g transform="translate(180,380)"><g id="${id}-man">${man}</g></g>
+      <g id="${id}-t2A"><text x="330" y="330" font-family="Kanit" font-weight="900" font-size="64" fill="${INK}">ผู้ชาย</text><text x="330" y="404" font-family="Kanit" font-weight="800" font-size="56" fill="${C.red}">อายุ 25–45 ปี</text></g>
+      <g transform="translate(90,540)"><path d="M0,0H760" stroke="#c8ccd4" stroke-width="18" stroke-linecap="round"/>${[0, 10, 20, 30, 40, 50, 60, 70, 80].map((a) => `<path d="M${a * 9.5},-16V16" stroke="#a8acb4" stroke-width="3"/><text x="${a * 9.5}" y="52" text-anchor="middle" font-family="Kanit" font-weight="600" font-size="24" fill="#8a8f98">${a}</text>`).join("")}
+        <g transform="translate(237.5,0)"><rect id="${id}-band" x="0" y="-14" width="190" height="28" rx="14" fill="${C.red}"/></g></g></g>`;
+    // row B: relatives who died in their sleep — father's ribboned portrait on top of a small family tree, the son ringed
+    const head = (x, y, c, s) => `<g transform="translate(${x},${y}) scale(${s})"><circle cx="0" cy="-14" r="22" fill="${C.skin}" ${O(4)}/><path d="M-34,34Q-34,8 0,8Q34,8 34,34Z" fill="${c}" ${O(4)}/></g>`;
+    p += `<g id="${id}-r2B">${row(660, "#fff3f1", "#f2a49c")}
+      <g transform="translate(190,790) scale(.34)">${Mm.portrait()}</g>
+      <path id="${id}-tree" d="M190,860V920M110,920H270M110,920V960M270,920V960" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="0"/>
+      ${head(110, 1020, "#e2a92e", 1.1)}${head(270, 1020, "#eef0f0", 1.2)}<g transform="translate(270,1020)"><g id="${id}-ring"><circle r="64" fill="none" stroke="${C.red}" stroke-width="7" stroke-dasharray="14 9"/></g></g>
+      <g id="${id}-t2B"><text x="390" y="830" font-family="Kanit" font-weight="900" font-size="54" fill="${INK}">ญาติสายตรง</text><text x="390" y="900" font-family="Kanit" font-weight="800" font-size="48" fill="${C.red}">เคยตายตอนหลับ</text>
+        <text x="390" y="964" font-family="Kanit" font-weight="700" font-size="40" fill="#5a3a36">ก็เสี่ยง</text></g></g>`;
+    return p;
+  }
+
+  // ---------------- the flipchart ----------------
+  function flip3(L, o = {}) {
+    const id = o.id || "fc", r = mk(o.seed || 81);
+    // the sala behind, out of focus: roof, posts, people on plastic chairs
+    put(L.sky, `<rect x="-1300" y="-900" width="3700" height="3900" fill="#eadfc4"/><rect x="-1300" y="1000" width="3700" height="2000" fill="#cbb48c"/>`);
+    let f = `<path d="M-1300,-900H2400V100H-1300Z" fill="#8a5a3a"/><path d="M-1300,100H2400" stroke="#5a3420" stroke-width="30"/>`;
+    for (let k = 0; k < 8; k++) f += `<rect x="${-900 + k * 420}" y="100" width="60" height="1400" fill="url(#p2Wood)"/>`;
+    f += `<rect x="-1300" y="380" width="3700" height="560" fill="#bfe0f4" opacity=".55"/>`;
+    for (let k = 0; k < 10; k++) { const x = -800 + k * 300 + r() * 80, y = 1420 + (k % 2) * 80; f += `<g transform="translate(${f1(x)},${y})"><rect x="-70" y="-10" width="140" height="120" rx="12" fill="${["#d83a3a", "#3a6ad8", "#e8b030"][k % 3]}" opacity=".85"/><ellipse cx="0" cy="-130" rx="56" ry="64" fill="#4a3a30"/><path d="M-90,-10Q-90,-80 0,-80Q90,-80 90,-10Z" fill="${["#f4f0e6", "#5a8a6a", "#c88a5a"][k % 3]}"/></g>`; }
+    put(L.far, f);
+    // the page: 940 wide, 1150 tall, top-left at (70, 240), the spiral binding along the top, easel legs behind
+    const PX = o.x ?? 70, PY = o.y ?? 240, W = 940;
+    let s = `<path d="M${PX + 120},${PY + 1100}L${PX + 40},${PY + 1800}M${PX + W - 120},${PY + 1100}L${PX + W - 40},${PY + 1800}" stroke="#7a5a3a" stroke-width="24" stroke-linecap="round"/>`;
+    const p = page(id);
+    s += `<g transform="translate(${PX},${PY})"><g id="${id}-page">${o.page2 ? page2(`${id}2`) : ""}<g id="${id}-p1">${p}</g>${Array.from({ length: 18 }, (_, k) => `<path d="M${36 + k * 51},-16q-12,20 0,36" stroke="#5a5e64" stroke-width="6" fill="none"/>`).join("")}<rect x="0" y="-30" width="${W}" height="20" rx="6" fill="#3a3e44"/></g></g>`;
     put(L.set, s);
     put(L.glow, `<circle cx="260" cy="160" r="1200" fill="url(#kiLampGlow)" opacity=".16" style="mix-blend-mode:screen"/>`);
   }
@@ -146,6 +177,10 @@
     // row A: pill, text, then three beats in step with the trace
     tl.fromTo(`#${id}-pA`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0 + 0.25);
     [0, 1].forEach((k) => tl.fromTo(`#${id}-tA${k}`, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, t0 + 0.45 + k * 0.15));
+    [0, 1, 2].forEach((k) => tl.set(`#${id}-tB${k}`, { opacity: 0 }, t0));
+    tl.set(`#${id}-pB`, { scale: 0, svgOrigin: "0 0" }, t0);
+    tl.set(`#${id}-hl`, { scaleX: 0, svgOrigin: "0 0" }, t0);
+    tl.set([`#${id}-A-sw`, `#${id}-B-sw`], { attr: { width: 0 } }, t0);
     const sweepA = 2.6, sA = t0 + 0.5;
     tl.fromTo(`#${id}-A-sw`, { attr: { width: 0 } }, { attr: { width: 410 }, duration: sweepA, ease: "none", immediateRender: false }, sA);
     ride(tl, `${id}-A`, sA, sweepA, 410);
@@ -162,8 +197,10 @@
     // row B: the short circuit
     const tB = t0 + b;
     tl.fromTo(`#${id}-pB`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, tB);
-    [0, 1, 2].forEach((k) => tl.fromTo(`#${id}-tB${k}`, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, tB + 0.25 + k * 0.45));
-    tl.fromTo(`#${id}-hl`, { scaleX: 0, svgOrigin: "0 0" }, { scaleX: 1, duration: 0.45, ease: "power2.inOut", immediateRender: false }, tB + 1.3);
+    // the three lines of row B land on the words that say them (o.tBs, seconds after t0), the highlight on the last
+    const tBs = (o.tBs || [b + 0.25, b + 0.7, b + 1.15]).map((v) => t0 + v);
+    [0, 1, 2].forEach((k) => tl.fromTo(`#${id}-tB${k}`, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, tBs[k]));
+    tl.fromTo(`#${id}-hl`, { scaleX: 0, svgOrigin: "0 0" }, { scaleX: 1, duration: 0.45, ease: "power2.inOut", immediateRender: false }, tBs[2] + 0.15);
     const sweepB = 2.6, sB = tB + 0.3, endB = sB + sweepB + (o.hold ?? 1.2);
     tl.fromTo(`#${id}-B-sw`, { attr: { width: 0 } }, { attr: { width: 410 }, duration: sweepB, ease: "none", immediateRender: false }, sB);
     ride(tl, `${id}-B`, sB, sweepB, 410);
@@ -269,6 +306,84 @@
     tl.to(`#${id}`, { opacity: 0, duration: 0.3 }, t0 + dur - 0.3);
   }
 
-  window.MmUI = { flipAnim, rule, icon, iconAnim, source, RULES };
+  // ---------------- page 2: the turn and its cards ----------------
+  //   o.b = when row B (the relatives) comes in, seconds after t0
+  function page2Anim(tl, id, t0, o = {}) {
+    const q = `${id}2`, b = o.b ?? 2.6;
+    tl.set([`#${q}-man`, `#${q}-ring`], { scale: 0, svgOrigin: "0 0" }, t0);
+    tl.set([`#${q}-t2A`, `#${q}-r2B`], { opacity: 0 }, t0);
+    tl.set(`#${q}-band`, { scaleX: 0, svgOrigin: "0 0" }, t0);
+    tl.set(`#${q}-tree`, { attr: { "stroke-dashoffset": 1 } }, t0);
+    // page 1 turns up over the spiral: squashes towards the binding, darkening as it goes
+    tl.fromTo(`#${id}-p1`, { scaleY: 1, svgOrigin: "470 -20" }, { scaleY: 0, svgOrigin: "470 -20", duration: 0.45, ease: "power2.in", immediateRender: false }, t0 + 0.05);
+    tl.fromTo(`#${id}-p1`, { filter: "brightness(1)" }, { filter: "brightness(.55)", duration: 0.45, ease: "power2.in", immediateRender: false }, t0 + 0.05);
+    tl.set(`#${id}-p1`, { opacity: 0 }, t0 + 0.5);
+    tl.to(`#${q}-man`, { scale: 1, svgOrigin: "0 0", duration: 0.55, ease: "back.out(2.6)" }, t0 + 0.5);
+    tl.fromTo(`#${q}-t2A`, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, t0 + 0.65);
+    tl.to(`#${q}-band`, { scaleX: 1, svgOrigin: "0 0", duration: 0.8, ease: "power2.inOut" }, t0 + 0.95);
+    // row B: the portrait, the tree drawing down to the children, the son ringed and pulsing
+    tl.to(`#${q}-r2B`, { opacity: 1, duration: 0.35 }, t0 + b);
+    tl.fromTo(`#${q}-tree`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.6, ease: "power1.inOut", immediateRender: false }, t0 + b + 0.2);
+    tl.to(`#${q}-ring`, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(3)" }, t0 + b + 0.8);
+    for (let t = t0 + b + 1.3; t < t0 + (o.end ?? b + 4); t += 0.7) { tl.to(`#${q}-ring`, { scale: 1.12, svgOrigin: "0 0", duration: 0.25, ease: "power2.out" }, t); tl.to(`#${q}-ring`, { scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "power2.inOut" }, t + 0.25); }
+  }
+
+  // ---------------- know3: the two signs and the minutes, over the dark room ----------------
+  //   o.a, o.b, o.c = when each badge / the stopwatch comes in (seconds after t0)
+  const ICON_JERK = `<path d="M-52,30H52" stroke="#c8c0d8" stroke-width="5" stroke-linecap="round"/><rect x="-50" y="2" width="34" height="24" rx="11" fill="#f2f0fa" ${O(4)}/><path d="M-20,4Q-12,-12 6,-12H40Q50,-12 50,0V26H-20Z" fill="#5a86c8" ${O(4)}/>
+    <circle cx="-30" cy="-2" r="15" fill="${C.skin}" ${O(4)}/><path d="M-45,-6Q-42,-20 -26,-18Q-17,-16 -16,-8Q-30,-14 -45,-6Z" fill="#2a1e18"/><path d="M-37,1h8" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>
+    ${[[-50, -30], [-10, -34], [30, -28], [58, -8]].map(([x, y]) => `<path d="M${x},${y}l6,-8l5,8l6,-8" stroke="${C.red}" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`).join("")}`;
+  const ICON_BREATH = `<path d="M-8,-44V-14M-8,-14Q-30,-24 -42,-4Q-52,26 -34,40Q-16,48 -10,30Z" fill="#f4a0a0" ${O(4)}/><path d="M8,-44V-14M8,-14Q30,-24 42,-4Q52,26 34,40Q16,48 10,30Z" fill="#f4a0a0" ${O(4)}/><path d="M-8,-44H8" ${O(4)}/>
+    <path d="M-30,6q6,-6 12,0M18,6q6,-6 12,0" stroke="#c86a6a" stroke-width="3" fill="none"/><path d="M-56,-52q10,-8 20,0t20,0" stroke="#8ab4e8" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M-60,-62l24,22M-36,-62l-24,22" stroke="${C.red}" stroke-width="5" stroke-linecap="round"/>`;
+  function signs(tl, layer, t0, dur, o = {}) {
+    const id = `msg${seq++}`, a = o.a ?? 0.2, b = o.b ?? 1.2, c = o.c ?? 2.4;
+    const badge = (x, y, art, label, k) => `<g transform="translate(${x},${y})"><g id="${id}-b${k}" opacity="0"><circle r="96" fill="#fff8f2" ${O(5)}/><defs><clipPath id="${id}-c${k}"><circle r="92"/></clipPath></defs><g clip-path="url(#${id}-c${k})"><g transform="scale(1.45)">${art}</g></g>
+      <text y="150" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="44" fill="#fff" stroke="#140c0a" stroke-width="8" paint-order="stroke">${label}</text></g></g>`;
+    let g = badge(290, 430, ICON_JERK, "ชักเกร็งตอนหลับ", 0) + badge(790, 430, ICON_BREATH, "หายใจไม่สะดวก", 1);
+    // the stopwatch: crown, face, the sweeping hand, the red pill
+    g += `<g transform="translate(540,900)"><g id="${id}-sw" opacity="0"><rect x="-22" y="-176" width="44" height="34" rx="8" fill="#c8ccd0" ${O(4)}/><path d="M86,-118l26,-26" stroke="${INK}" stroke-width="16" stroke-linecap="round"/><circle r="150" fill="#2a2e34" ${O(5)}/><circle r="128" fill="#fffaf2"/>
+      ${Array.from({ length: 60 }, (_, k) => `<path d="M0,-120V${k % 5 ? -112 : -100}" stroke="${INK}" stroke-width="${k % 5 ? 2 : 5}" transform="rotate(${k * 6})"/>`).join("")}
+      <path id="${id}-arc" d="M0,-90A90,90 0 1 1 -0.1,-90" stroke="${C.red}" stroke-width="22" fill="none" opacity=".3" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+      <g id="${id}-hand"><path d="M0,16V-112" stroke="${C.red}" stroke-width="6" stroke-linecap="round"/></g><circle r="11" fill="${C.red}" ${O(3)}/>
+      <g transform="translate(0,220)"><rect x="-180" y="-44" width="360" height="88" rx="44" fill="${C.red}" ${O(5)}/><text x="0" y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">ไม่กี่นาที</text></g></g></g>`;
+    put(layer, `<g id="${id}">${g}</g>`);
+    [0, 1].forEach((k) => tl.fromTo(`#${id}-b${k}`, { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(2.6)", immediateRender: false }, t0 + [a, b][k]));
+    for (let t = t0 + a + 0.6; t < t0 + dur - 0.3; t += 0.12) tl.set(`#${id}-b0`, { x: Math.round((t - t0) / 0.12) % 2 ? 2 : -2 }, t);
+    tl.fromTo(`#${id}-sw`, { opacity: 0, scale: 0.4, svgOrigin: "0 0" }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2.2)", immediateRender: false }, t0 + c);
+    tl.fromTo(`#${id}-hand`, { rotation: 0, svgOrigin: "0 0" }, { rotation: 720, svgOrigin: "0 0", duration: dur - c, ease: "none", immediateRender: false }, t0 + c);
+    tl.fromTo(`#${id}-arc`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: dur - c, ease: "none", immediateRender: false }, t0 + c);
+    tl.to(`#${id}`, { opacity: 0, duration: 0.3 }, t0 + dur - 0.3);
+  }
+
+  // ---------------- the choice at the end, possessed: black fingers drag the pick to the ghost doctor ----------------
+  //   o.q question, o.a (the card the ghost wants, left), o.b (the right answer), o.at when the fingers take hold (s after t0)
+  function choice(tl, layer, t0, dur, o = {}) {
+    const id = `mch${seq++}`, at = o.at ?? 1.5;
+    const candle = `<path d="M-14,40V-10H14V40Z" fill="#f4f0e6" ${O(4)}/><path d="M0,-12C-12,-26 -6,-40 0,-52C6,-40 12,-26 0,-12Z" fill="#ffb03a" ${O(3)}/><path d="M0,-18C-5,-26 -3,-34 0,-40C3,-34 5,-26 0,-18Z" fill="#fff4b0"/>
+      <path d="M30,40L44,-30" stroke="#8a4a2a" stroke-width="5"/><path d="M44,-30q-10,-14 0,-26t0,-24" stroke="#c8ccd8" stroke-width="3" fill="none" opacity=".8"/><path d="M-48,26q24,-30 48,0t48,0" stroke="#f4f0e6" stroke-width="4" fill="none" stroke-dasharray="6 6"/>`;
+    const card = (x, label, fill, art, k) => `<g transform="translate(${x},1000)"><g id="${id}-c${k}"><rect x="-200" y="-250" width="400" height="500" rx="40" fill="${fill}" ${O(5)}/><circle cy="-60" r="120" fill="#fff" opacity=".14"/>
+      <g transform="translate(0,-60) scale(1.7)">${art}</g><text id="${id}-l${k}" y="170" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#fff">${label}</text></g></g>`;
+    let g = `<rect id="${id}-dim" width="1080" height="1920" fill="#000" opacity="0"/>`;
+    g += `<g transform="translate(540,560)"><g id="${id}-q" opacity="0"><rect x="-300" y="-50" width="600" height="100" rx="50" fill="#1a1e24" ${O(4)}/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">${o.q || "จะทำอะไรก่อน?"}</text></g></g>`;
+    g += card(290, o.a || "ไปตามหมอผี", "#4a2e6a", candle, 0) + card(790, o.b || "ปั๊มหัวใจ", "#1e7a48", `<g transform="scale(.9)">${ICONS[1](`${id}-ic`)}</g>`, 1);
+    g += `<g id="${id}-sel" transform="translate(540,1000)"><rect x="-214" y="-264" width="428" height="528" rx="48" fill="none" stroke="#ffd23a" stroke-width="12"/></g>`;
+    g += `<g id="${id}-hand" transform="translate(540,2100)">${[-36, -12, 12, 36].map((d, k) => `<path d="M${d},0Q${d * 1.2},-160 ${d * 1.6 + (k % 2 ? 8 : -8)},-300q4,-40 ${k < 2 ? -14 : 14},-50" stroke="#050607" stroke-width="16" fill="none" stroke-linecap="round"/>`).join("")}<path d="M-60,0Q0,-90 60,0V200H-60Z" fill="#050607"/></g>`;
+    put(layer, `<g id="${id}">${g}</g>`);
+    tl.fromTo(`#${id}-dim`, { opacity: 0 }, { opacity: 0.55, duration: 0.3, immediateRender: false }, t0);
+    tl.fromTo(`#${id}-q`, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, t0 + 0.1);
+    [0, 1].forEach((k) => tl.fromTo(`#${id}-c${k}`, { opacity: 0, scale: 0.6, svgOrigin: "0 0" }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.25 + k * 0.12));
+    tl.set(`#${id}-sel`, { opacity: 0 }, t0);
+    tl.set(`#${id}-sel`, { opacity: 1 }, t0 + 0.7);
+    // the pick leans to the right answer… then the fingers come up, grab it and drag it to the left card
+    tl.to(`#${id}-sel`, { attr: { transform: "translate(790,1000)" }, duration: 0.5, ease: "power2.out" }, t0 + 0.75);
+    tl.to(`#${id}-hand`, { attr: { transform: "translate(790,1500)" }, duration: 0.25, ease: "power3.out" }, t0 + at - 0.25);
+    tl.to(`#${id}-sel`, { attr: { transform: "translate(290,1000)" }, duration: 0.35, ease: "power3.in" }, t0 + at + 0.05);
+    tl.to(`#${id}-hand`, { attr: { transform: "translate(290,1500)" }, duration: 0.35, ease: "power3.in" }, t0 + at + 0.05);
+    for (let t = t0 + at; t < t0 + dur - 0.2; t += 0.08) tl.set(`#${id}-c1`, { opacity: Math.round((t - t0) / 0.08) % 3 ? 0.35 : 0.85 }, t);
+    for (let t = t0 + at + 0.4; t < t0 + dur - 0.2; t += 0.06) tl.set(`#${id}-l0`, { x: Math.round((t - t0) / 0.06) % 2 ? 6 : -6 }, t);
+    tl.set(`#${id}`, { opacity: 0 }, t0 + dur);
+  }
+
+  window.MmUI = { flipAnim, page, page2Anim, rule, icon, iconAnim, source, signs, choice, RULES };
   Object.assign(Sets, { flip3 });
 })();

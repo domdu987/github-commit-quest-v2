@@ -21,7 +21,9 @@
 //   Sets.sleep2(L, o)     3 a.m. in the sleeping room: plank wall with moonlight slits (#id-moon), shuttered window (#id-win),
 //                         the doorway with the red shirt on its hanger (#id-dsh sways), floor mattresses under mosquito nets: Keng's
 //                         (x o.bed, front panel in L.glow #id-net), Fon's (#id-net2); o.ghost seats the widow at the foot of Keng's
-//                         mattress (#id-ghost, eyes #id-ghost-eyes) · o.lamp true = the night bulb is on (#id-bulb)
+//                         mattress (#id-ghost, eyes #id-ghost-eyes) · o.lamp true = the night bulb is on (#id-bulb glow, #id-bulbC the bulb)
+//                         o.clock (default on): wall clock, hands #id-hh #id-mm (rotate attr, 3:00 = 90 / 0) · o.bed3 mom's mattress x
+//                         o.netOpen: Keng's front panel pushed up out of the way · o.fingers: black fingers round the door frame #id-fing
 //   Mm.songthaew(o)       the village songthaew: Pop2.truck with a roofed bed, benches, posts and a rear step (same units, faces right)
 //   Mm.scarecrow(x, G, s, o)  straw man dressed as a woman (red shirt, sarong, string wig, painted lips) · origin at its foot
 //   Mm.moto(x, G, s)      an underbone motorbike side-on, facing right, wheels on y 0 (1 unit ≈ 2.7 mm at s 1: 1.9 m long)
@@ -66,6 +68,27 @@
     bag: () => `<g transform="translate(0,116)"><path d="M-14,0Q0,-16 14,0" stroke="#1e2a3a" stroke-width="7" fill="none"/><path d="M-70,8Q-74,60 -64,96H64Q74,60 70,8Q0,-4 -70,8Z" fill="#2e4a6e" stroke="${INK}" stroke-width="3"/>
       <path d="M-70,30H70" stroke="#c8a040" stroke-width="6"/><path d="M-50,8V96M50,8V96" stroke="#1e3450" stroke-width="3" opacity=".6"/><ellipse cx="-70" cy="52" rx="10" ry="30" fill="#24405e" stroke="${INK}" stroke-width="2.4"/></g>`,
     hanger: () => `<g transform="translate(0,96)"><path d="M0,0q10,-12 2,-20t-8,4" stroke="#8a8a90" stroke-width="3" fill="none"/>${Mm.shirt(0, 6, 0.5, {})}</g>`,
+  };
+
+  // ---------------- father's portrait: black-and-white, a young man smiling, a black ribbon over the frame (240×300, centred) ----------------
+  Mm.portrait = () => `<rect x="-120" y="-150" width="240" height="300" fill="#000" opacity=".35" transform="translate(8,10)"/><rect x="-120" y="-150" width="240" height="300" fill="#c8a050" ${OUT}/><rect x="-100" y="-130" width="200" height="260" fill="#c8c4bc"/>
+      <path d="M-100,130V40Q-90,-10 -40,-14Q0,-6 40,-14Q90,-10 100,40V130Z" fill="#4a4a4a"/><path d="M-20,-14L0,30L20,-14" fill="#e8e8e4"/>
+      <path d="M-42,-60C-44,-110 -18,-122 2,-122C24,-122 44,-110 42,-60C40,-34 30,-20 2,-16C-26,-20 -40,-34 -42,-60Z" fill="#8a8680"/>
+      <path d="M-44,-80C-50,-130 -10,-136 4,-136C30,-136 50,-120 44,-80Q30,-100 2,-100Q-26,-100 -44,-80Z" fill="#2a2a2a"/>
+      <path d="M-24,-70q8,-6 14,0M10,-70q8,-6 14,0" stroke="#2a2a2a" stroke-width="4" fill="none"/><path d="M-14,-40Q2,-28 18,-40" stroke="#2a2a2a" stroke-width="4" fill="none"/>
+      <path d="M-120,-150L-60,-150L-120,-90Z M120,-150L60,-150L120,-90Z" fill="#0a0a0a"/><path d="M-30,-160Q0,-140 30,-160L20,-176Q0,-166 -20,-176Z" fill="#0a0a0a"/><circle cx="0" cy="-160" r="12" fill="#0a0a0a"/>
+      <path d="M-8,-160L-30,-110M8,-160L30,-110" stroke="#0a0a0a" stroke-width="12"/>`;
+
+  // ---------------- the widow's face, close: a black head behind a curtain of hair that parts at the eyes ----------------
+  Mm.widowFace = (x, y, s, o = {}) => {
+    const r = mk(o.seed || 66), id = o.id || "wf", BL = "#050607";
+    let g = `<ellipse cx="0" cy="40" rx="360" ry="440" fill="${BL}"/>`;
+    for (let k = 0; k < 34; k++) { const u = k / 33, sx = -420 + u * 840, w = 10 + r() * 22, gap = Math.abs(sx) < 150 ? 1 : 0;
+      g += `<path d="M${f1(sx * 0.6)},-420C${f1(sx * 0.8 + (r() - 0.5) * 40)},${f1(-200 + gap * 120)} ${f1(sx + (r() - 0.5) * 60)},${f1(200)} ${f1(sx * 1.05 + (r() - 0.5) * 80)},${f1(620 + r() * 200)}" stroke="${BL}" stroke-width="${f1(w)}" fill="none" stroke-linecap="round"/>`; }
+    g += `<path d="M-140,-30Q0,-60 140,-30Q120,40 0,50Q-120,40 -140,-30Z" fill="#000"/><path d="M-60,210Q0,250 60,210Q40,300 0,310Q-40,300 -60,210Z" fill="#000" opacity=".9"/>`;
+    g += `<path d="M300,-200Q360,40 300,300" stroke="#3a5a7a" stroke-width="5" fill="none" opacity=".5"/>`;
+    g += Pop2.eyePair(0, 0, 3.4, `${id}-eyes`);
+    return `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><g id="${id}">${g}</g></g>`;
   };
 
   // ---------------- the songthaew ----------------
@@ -140,7 +163,9 @@
     put(L.far, f);
     let m = Mm.shirtPole(-80, G - 300, 0.55, { night: true, id: `${id}-far0` }) + Mm.shirtPole(1240, G - 320, 0.5, { night: true, id: `${id}-far1` });
     m += `<rect x="-1300" y="${G - 420}" width="3700" height="300" fill="url(#p2Haze)" opacity=".35"/>`;
+    if (o.widow !== false) m += `<g id="${id}-wd">${Mm.ghost(o.widowX ?? 860, G - 330, 0.3, { id: `${id}-wdg`, eyes: false })}</g>`;
     put(L.mid, m);
+    if (o.widow !== false) put(L.glow, `<g id="${id}-wde">${Mm.ghostEyes(o.widowX ?? 860, G - 330, 0.3, { id: `${id}-wdge` })}</g>`);
     // the pole, the plank, the shirt
     let s = `<rect x="-1300" y="${G - 140}" width="3700" height="1200" fill="url(#p2GrassNight)"/><rect x="-1300" y="${G - 140}" width="3700" height="1200" fill="#05070a" opacity=".45"/>`;
     for (let k = 0; k < 40; k++) { const gx = -600 + r() * 2300, gy = G - 120 + r() * 300; s += tuft(gx, gy, 0.8 + (gy - G) / 300, "#0a120c", "#142018", r); }
@@ -360,13 +385,7 @@
       ${[-80, 0, 80].map((bx, k) => `<g transform="translate(${bx},0) scale(${k === 1 ? 1.15 : 0.9})"><path d="M-30,0Q-34,-40 -16,-56Q0,-62 16,-56Q34,-40 30,0Z" fill="#e8c050" ${OUT3}/><circle cx="0" cy="-70" r="16" fill="#e8c050" ${OUT3}/><path d="M0,-86l-6,-14h12z" fill="#e8c050"/></g>`).join("")}
       <path d="M-150,-10q-10,-50 10,-70M150,-10q10,-50 -10,-70" stroke="#3a8a3a" stroke-width="6" fill="none"/><circle cx="-146" cy="-84" r="12" fill="#f4e8a8"/><circle cx="146" cy="-84" r="12" fill="#f4e8a8"/></g>`;
     // father's portrait: black-and-white, a young man smiling, the black ribbon draped over the frame's top corners
-    w += `<g id="${id}-photo" transform="translate(${PH},${o.photoY ?? 560})"><rect x="-120" y="-150" width="240" height="300" fill="#000" opacity=".35" transform="translate(8,10)"/><rect x="-120" y="-150" width="240" height="300" fill="#c8a050" ${OUT}/><rect x="-100" y="-130" width="200" height="260" fill="#c8c4bc"/>
-      <path d="M-100,130V40Q-90,-10 -40,-14Q0,-6 40,-14Q90,-10 100,40V130Z" fill="#4a4a4a"/><path d="M-20,-14L0,30L20,-14" fill="#e8e8e4"/>
-      <path d="M-42,-60C-44,-110 -18,-122 2,-122C24,-122 44,-110 42,-60C40,-34 30,-20 2,-16C-26,-20 -40,-34 -42,-60Z" fill="#8a8680"/>
-      <path d="M-44,-80C-50,-130 -10,-136 4,-136C30,-136 50,-120 44,-80Q30,-100 2,-100Q-26,-100 -44,-80Z" fill="#2a2a2a"/>
-      <path d="M-24,-70q8,-6 14,0M10,-70q8,-6 14,0" stroke="#2a2a2a" stroke-width="4" fill="none"/><path d="M-14,-40Q2,-28 18,-40" stroke="#2a2a2a" stroke-width="4" fill="none"/>
-      <path d="M-120,-150L-60,-150L-120,-90Z M120,-150L60,-150L120,-90Z" fill="#0a0a0a"/><path d="M-30,-160Q0,-140 30,-160L20,-176Q0,-166 -20,-176Z" fill="#0a0a0a"/><circle cx="0" cy="-160" r="12" fill="#0a0a0a"/>
-      <path d="M-8,-160L-30,-110M8,-160L30,-110" stroke="#0a0a0a" stroke-width="12"/></g>`;
+    w += `<g id="${id}-photo" transform="translate(${PH},${o.photoY ?? 560})">${Mm.portrait()}</g>`;
     // the calendar, the wall clock, the fluorescent tube, the fan
     // a woven fan on a nail, the ผ้าขาวม้า on a cord under the window, a mirror
     w += `<g transform="translate(560,760) rotate(-8)"><path d="M0,0V-30" stroke="#5a4a3a" stroke-width="3"/><path d="M0,0L-60,90Q0,120 60,90Z" fill="#d8b878" ${OUT3}/><path d="M0,0L-30,100M0,0V108M0,0L30,100" stroke="#a8884e" stroke-width="3"/><path d="M0,0V60" stroke="#8a5a2a" stroke-width="8"/></g>`;
@@ -375,7 +394,7 @@
     w += `<g transform="translate(${o.clock ?? 640},330)"><circle r="70" fill="#5a3a24" ${OUT3}/><circle r="58" fill="#f4eedc"/>${Array.from({ length: 12 }, (_, k) => `<path d="M0,-52V-44" stroke="#3a2a22" stroke-width="4" transform="rotate(${k * 30})"/>`).join("")}
       <g id="${id}-hh" transform="rotate(${o.hh ?? 195})"><path d="M-4,8V-30" stroke="#2a1e1a" stroke-width="7" stroke-linecap="round"/></g><g id="${id}-mm" transform="rotate(${o.mm ?? 180})"><path d="M-3,10V-46" stroke="#2a1e1a" stroke-width="4" stroke-linecap="round"/></g><circle r="5" fill="#c8a040"/></g>`;
     w += `<g transform="translate(${o.tube ?? 560},170)"><rect x="-190" y="-12" width="380" height="24" rx="12" fill="#e8f4ee" ${OUT3}/><rect x="-200" y="-18" width="22" height="36" rx="4" fill="#d8d8d0" ${OUT3}/><rect x="178" y="-18" width="22" height="36" rx="4" fill="#d8d8d0" ${OUT3}/></g>`;
-    put(L.mid, w);
+    put(L.set, w);
     // the floor: planks in perspective, the woven mat, the khantoke tray with supper
     let s = `<rect x="-1300" y="${G}" width="3700" height="1400" fill="url(#${night ? "mmFloorN" : "mmFloor"})"/>`;
     for (let k = 0; k < 12; k++) { const y = G + Math.pow(k / 11, 1.5) * 900; s += `<path d="M-1300,${f1(y)}H2400" stroke="#2a1a10" stroke-width="${f1(2 + k * 0.5)}" opacity=".6"/>`; }
@@ -472,15 +491,21 @@
     w += `<g id="${id}-winR"><path d="M${WX + 10},430H${WX + 130}V760H${WX + 10}Z" fill="#241c18" stroke="#120c0a" stroke-width="3"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M${WX + 20},${462 + k * 64}H${WX + 120}" stroke="#3a2e26" stroke-width="5"/>`).join("")}</g>`;
     w += `<rect x="${DX - 150}" y="${G - 700}" width="300" height="700" fill="#050407"/><path d="M${DX - 160},${G}V${G - 710}H${DX + 160}V${G}" stroke="#2a1e18" stroke-width="20" fill="none"/>`;
     w += `<g transform="translate(${DX + 40},${G - 700})"><path d="M0,0q12,-10 0,-24" stroke="#5a5a60" stroke-width="4" fill="none"/>${Mm.shirt(0, 2, 0.5, { id: `${id}-dsh`, night: true })}</g>`;
-    if (lamp) w += `<g transform="translate(560,120)"><path d="M0,-200V0" stroke="#2a2a2a" stroke-width="3"/><circle cx="0" cy="18" r="20" fill="#ffe8b0"/></g>`;
-    put(L.mid, w);
+    if (lamp) w += `<g transform="translate(560,120)"><path d="M0,-200V0" stroke="#2a2a2a" stroke-width="3"/><circle cx="0" cy="18" r="22" fill="#3a3630"/><circle id="${id}-bulbC" cx="0" cy="18" r="20" fill="#ffe8b0"/></g>`;
+    if (o.clock !== false) { const CX = o.clockX ?? 420, CY = o.clockY ?? 300;
+      w += `<g transform="translate(${CX},${CY})"><circle r="74" fill="#2a2018" stroke="#120c08" stroke-width="4"/><circle r="62" fill="#c8ccd8"/>${Array.from({ length: 12 }, (_, k) => `<path d="M0,-56V-${k % 3 ? 50 : 44}" stroke="#2a2a30" stroke-width="${k % 3 ? 3 : 5}" transform="rotate(${k * 30})"/>`).join("")}
+        <g id="${id}-hh" transform="rotate(${o.hh ?? 90})"><path d="M-4,8V-32" stroke="#1a1a20" stroke-width="7" stroke-linecap="round"/></g><g id="${id}-mm" transform="rotate(${o.mm ?? 0})"><path d="M-3,10V-50" stroke="#1a1a20" stroke-width="4" stroke-linecap="round"/></g><circle r="5" fill="#8a6a2a"/></g>`; }
+    // long black fingers curled round the door frame (the widow is already inside)
+    if (o.fingers) w += `<g id="${id}-fing"><g transform="translate(${DX + 150},${G - 430})">${[0, 1, 2, 3].map((k) => `<path d="M-10,${k * 22}q34,-6 40,${14 + k * 2}q2,16 -10,20" stroke="#060708" stroke-width="9" fill="none" stroke-linecap="round"/>`).join("")}</g></g>`;
+    put(L.set, w);
     // the floor, the moon through the crack, Fon's mattress at the back, Keng's at the front, the mosquito coil
     let s = `<rect x="-1300" y="${G}" width="3700" height="1600" fill="url(#mmFloorN)"/>`;
     for (let k = 0; k < 13; k++) { const y = G + Math.pow(k / 12, 1.6) * 1100; s += `<path d="M-1300,${f1(y)}H2400" stroke="#06040a" stroke-width="${f1(2 + k * 0.6)}" opacity=".85"/><path d="M-1300,${f1(y + 3 + k * 0.4)}H2400" stroke="#4a3a44" stroke-width="1.4" opacity=".35"/>`; }
     const MX = o.moonX ?? BX + 470, MY = KY - 40;
     s += `<g id="${id}-moonF"><path d="M${WX - 4},440L${WX + 10},440L${MX + 150},${MY + 40}L${MX - 230},${MY + 40}Z" fill="#a8c4ff" opacity=".07"/>
       <ellipse cx="${MX - 40}" cy="${MY + 10}" rx="240" ry="90" fill="#a8c4ff" opacity=".16"/>${[-120, -40, 40].map((dx) => `<path d="M${MX + dx - 70},${MY - 50}L${MX + dx + 10},${MY - 50}L${MX + dx - 30},${MY + 60}L${MX + dx - 110},${MY + 60}Z" fill="#c8dcff" opacity=".12"/>`).join("")}</g>`;
-    const FX = o.bed2 ?? 120, FY = G + 150;
+    const FX = o.bed2 ?? 120, FY = G + 150, MOX = o.bed3 ?? -520;
+    s += mattress(MOX, G + 110, 440, 100) + netBox(MOX, G - 300, 420, 340, 100, `${id}-net3`).back;
     s += mattress(FX, FY, 480, 110);
     const nF = netBox(FX, G - 280, 460, 360, 110, `${id}-net2`), nK = netBox(BX, G - 210, KW + 40, 520, KD + 40, `${id}-net`);
     s += nF.back;
@@ -490,13 +515,72 @@
     put(L.set, `<g transform="translate(${BX - KW / 2 - 80},${KY + 60})"><ellipse cx="0" cy="6" rx="46" ry="14" fill="#5a5e62"/><path d="M-30,0a30,10 0 1 0 60,0a22,7 0 1 0 -44,0a14,5 0 1 0 28,0" stroke="#3a5a2a" stroke-width="5" fill="none"/></g>`);
     // the widow at the foot of Keng's mattress, outside his net; her eyes go in the glow
     const GX = o.ghostX ?? BX + KW / 2 + 190, GY = o.ghostY ?? KY + 70, GS = o.ghostS ?? 0.9;
-    let gl = nF.front + nK.front;
+    let gl = netBox(MOX, G - 300, 420, 340, 100, `${id}-net3`).front + nF.front + (o.netOpen ? `<g id="${id}-net"><path d="M${BX - KW / 2 - 60},${G - 170}Q${BX},${G - 120} ${BX + KW / 2 + 60},${G - 170}" stroke="#e8eef8" stroke-width="26" opacity=".2" fill="none" stroke-linecap="round"/></g>` : nK.front);
     gl += `<g id="${id}-smoke"><circle cx="${BX - KW / 2 - 50}" cy="${KY + 60}" r="4" fill="#ff6a2a"/><path d="M${BX - KW / 2 - 50},${KY + 56}c-10,-40 14,-70 0,-110s14,-70 -6,-120" stroke="#c8ccd8" stroke-width="3" fill="none" opacity=".35"/></g>`;
     gl += `<g id="${id}-moon"><path d="M${WX - 4},440L${WX + 10},440L${MX + 150},${MY + 40}L${MX - 230},${MY + 40}Z" fill="url(#mmSlit)" opacity=".8" filter="url(#mmSoft)" style="mix-blend-mode:screen"/></g>`;
+    // lights out: #id-shade (black, opacity 0) swallows the room, everything but the widow drawn after it
+    gl += `<rect id="${id}-shade" x="-1300" y="-900" width="3700" height="3900" fill="#010102" opacity="0"/>`;
     if (o.ghost) gl += Mm.ghost(GX, GY, GS, { id: `${id}-ghost`, pose: "sit", rim: true, eyes: false }) + Mm.ghostEyes(GX, GY, GS, { pose: "sit", id: `${id}-ghost-eyes` });
     if (lamp) gl += `<g id="${id}-bulb"><circle cx="560" cy="138" r="560" fill="url(#mmBulb)" style="mix-blend-mode:screen"/></g>`;
     put(L.glow, gl);
   }
 
-  Object.assign(Sets, { shirtOpen, gate2, tower2, legend3, yard2, house3, flip2, sleep2 });
+  // ---------------- the village sala in the afternoon: the อสม. class ----------------
+  //   Sets.sala2(L, o)  open pavilion, tiled floor, posts, the roof's underside, a banner, plastic chairs, the easel with the
+  //                     flipchart (page 1 shrunk, from MmUI.page), the AED cabinet on the front-left post (#id-aed, x o.aed)
+  //                     Floor line G (default 1500); for a sitter of scale c on a chair set its feet at the chair's G + 20.
+  function sala2(L, o = {}) {
+    const id = o.id || "sa", r = mk(o.seed || 222), G = o.ground ?? 1500;
+    let sk = `<rect x="-1300" y="-900" width="3700" height="3800" fill="url(#p2SkyDay)"/>` + cloud2(900, 360, 900, 240, r, "p2CloudDay", "#fbf6e8", "#8696a2");
+    put(L.sky, sk);
+    const FT = ["#3a5a3a", "#4a6a42", "#5a7a4a"];
+    let f = "";
+    for (let k = 0; k < 22; k++) f += crown(-1100 + k * 160 + r() * 60, G - 360 - r() * 80, 100 + r() * 40, r, [FT[0], FT[1], FT[2], FT[2]], 6);
+    f += `<g transform="translate(860,${G - 330}) scale(.5)" fill="#8a6a5a"><path d="M-170,0V-90H170V0Z"/><path d="M-210,-90L-120,-170L120,-170L210,-90Z"/><path d="M-150,-170L-60,-250L60,-250L150,-170Z"/><path d="M0,-250V-380" stroke="#8a6a5a" stroke-width="10"/></g>`;
+    f += `<rect x="-1300" y="${G - 420}" width="3700" height="300" fill="url(#p2Haze)" opacity=".6"/>`;
+    put(L.far, f);
+    let s2 = `<rect x="-1300" y="${G - 140}" width="3700" height="1600" fill="url(#p2GrassDay)"/>`;
+    // the floor: a raised slab with tiles in perspective
+    s2 += `<path d="M-1300,${G - 100}H2400V${G + 900}H-1300Z" fill="#d8ccb4"/><path d="M-1300,${G - 100}H2400" stroke="#9a8a70" stroke-width="10"/>`;
+    for (let k = 0; k < 12; k++) { const y = G - 100 + Math.pow(k / 11, 1.5) * 900; s2 += `<path d="M-1300,${f1(y)}H2400" stroke="#b8aa90" stroke-width="2"/>`; }
+    for (let k = 0; k < 30; k++) { const x0 = -1300 + k * 140; s2 += `<path d="M${x0},${G - 100}L${f1(540 + (x0 - 540) * 1.9)},${G + 900}" stroke="#b8aa90" stroke-width="2"/>`; }
+    // back posts, the roof underside with rafters, the banner
+    [[-120, 0.8], [360, 0.8], [800, 0.8]].forEach(([px, ps]) => { s2 += `<rect x="${px - 20 * ps}" y="-200" width="${40 * ps}" height="${G - 60 + 200}" fill="#e8e0d0" stroke="#9a8a70" stroke-width="3"/>`; });
+    s2 += `<path d="M-1300,-300H2400V140H-1300Z" fill="#7a5a44"/><path d="M-1300,140H2400" stroke="#4a3424" stroke-width="22"/>${Array.from({ length: 30 }, (_, k) => `<path d="M${-1300 + k * 130},-300L${-1300 + k * 130 + 40},140" stroke="#5a4030" stroke-width="8"/>`).join("")}`;
+    s2 += `<g transform="translate(340,260)"><path d="M-380,-10Q0,20 380,-10V80Q0,110 -380,80Z" fill="#2fa864" stroke="#1e7a48" stroke-width="4"/><text x="0" y="56" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="42" fill="#fff">อบรมช่วยชีวิต · อสม.บ้านโนนคำ</text><path d="M-380,-10L-420,-120M380,-10L420,-120" stroke="#5a4a3a" stroke-width="3"/></g>`;
+    // the easel with the flipchart, page 1 shrunk
+    const EX = o.easel ?? 760, EY = o.easelY ?? 620, ES = o.easelS ?? 0.42;
+    s2 += `<g transform="translate(${EX},${EY}) scale(${ES})"><path d="M120,1100L40,${(G - EY) / ES + 40}M820,1100L900,${(G - EY) / ES + 40}M470,1100V${(G - EY) / ES + 20}" stroke="#7a5a3a" stroke-width="26" stroke-linecap="round"/>
+      <rect x="10" y="16" width="940" height="1150" rx="14" fill="#000" opacity=".2"/>${window.MmUI ? MmUI.page(`${id}-pg`) : ""}<rect x="0" y="-30" width="940" height="20" rx="6" fill="#3a3e44"/></g>`;
+    // the AED cabinet on the front-left post (EP.2 needs it; nobody looks at it yet)
+    const AX = o.aed ?? 40;
+    s2 += `<rect x="${AX - 34}" y="-200" width="68" height="${G + 300}" fill="#efe8da" stroke="#9a8a70" stroke-width="4"/>`;
+    s2 += `<g id="${id}-aed" transform="translate(${AX},${G - 640})"><rect x="-74" y="-90" width="148" height="180" rx="12" fill="#f8f8f4" stroke="#2a3a2a" stroke-width="5"/><rect x="-58" y="-74" width="116" height="110" rx="6" fill="#d8ecf0" stroke="#2a3a2a" stroke-width="3"/>
+      <path d="M0,-6C-16,-20 -32,-36 -28,-52C-24,-64 -8,-66 0,-52C8,-66 24,-64 28,-52C32,-36 16,-20 0,-6Z" fill="#2fa864" stroke="#1e5a3a" stroke-width="3"/><path d="M2,-58l-8,16h8l-6,14l14,-20h-8l6,-10z" fill="#fff"/>
+      <text x="0" y="74" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#2fa864">AED</text></g>`;
+    // plastic chairs in two rows
+    const chair = (x, y, sc, c) => `<g transform="translate(${x},${y}) scale(${sc})"><path d="M-60,0V-120M60,0V-120" stroke="${c}" stroke-width="12"/><path d="M-70,-130H70V-112H-70Z" fill="${c}"/><path d="M-60,-130V-280Q0,-300 60,-280V-130" fill="${c}" opacity=".95"/></g>`;
+    (o.chairs || [[-60, G + 60, 0.9, "#d83a3a"], [210, G + 60, 0.9, "#3a6ad8"], [480, G + 60, 0.9, "#d83a3a"], [-200, G + 320, 1.1, "#3a6ad8"], [120, G + 320, 1.1, "#e8b030"]]).forEach(([x, y, sc, c]) => { s2 += chair(x, y, sc, c); });
+    put(L.set, s2);
+    put(L.glow, `<circle cx="-200" cy="${G - 900}" r="1100" fill="url(#kiLampGlow)" opacity=".18" style="mix-blend-mode:screen"/>`);
+  }
+
+  // ---------------- end card: the red shirt on its hanger in the dark doorway, a paper tag tied to the hook ----------------
+  //   Sets.tag2(L, o)   o.ep "ตอนที่ 2", o.title "ปั๊มให้ฟื้น"; ids #id-sh (sways), #id-tag (swings from the hook)
+  function tag2(L, o = {}) {
+    const id = o.id || "tg", r = mk(o.seed || 12);
+    put(L.sky, `<rect x="-1300" y="-900" width="3700" height="3900" fill="#06050a"/>`);
+    let w = "";
+    for (let k = 0; k < 40; k++) { const px = -1300 + k * 62; w += `<rect x="${px}" y="-900" width="60" height="3900" fill="${["#1a1420", "#1e1824", "#16121c"][k % 3]}"/><path d="M${px + 60},-900V3000" stroke="#9ab4ff" stroke-width="2" opacity="${f1(0.05 + r() * 0.12)}"/>`; }
+    w += `<rect x="160" y="-900" width="760" height="3900" fill="#030305"/><path d="M150,-900V3000M930,-900V3000" stroke="#2a1e18" stroke-width="40"/>`;
+    put(L.mid, w);
+    let s = `<path d="M540,330L540,300" stroke="#5a5a60" stroke-width="10"/><circle cx="540" cy="292" r="10" fill="#3a3a40"/>`;
+    s += `<g transform="translate(540,330)"><g id="${id}-sh"><path d="M0,0q24,-20 0,-44" stroke="#9a9aa0" stroke-width="8" fill="none"/>${Mm.shirt(0, 6, 2.2, { shade: true }).replace(/^<g transform="[^"]*">/, '<g transform="translate(0,6) scale(2.2)">')}</g></g>`;
+    s += `<g transform="translate(560,300)"><g id="${id}-tag"><path d="M0,0L60,250" stroke="#d8c8a8" stroke-width="4"/><g transform="translate(60,250) rotate(8)"><rect x="-150" y="0" width="300" height="190" rx="10" fill="#f4ead2" stroke="#5a4a3a" stroke-width="4"/><circle cx="0" cy="22" r="10" fill="#06050a" stroke="#5a4a3a" stroke-width="3"/>
+      <text x="0" y="98" text-anchor="middle" font-family="Mali" font-weight="700" font-size="50" fill="#2a2420">${o.ep || "ตอนที่ 2"}</text><text x="0" y="160" text-anchor="middle" font-family="Mali" font-weight="700" font-size="48" fill="#c41e16">${o.title || "ปั๊มให้ฟื้น"}</text></g></g></g>`;
+    put(L.set, s);
+    put(L.glow, `<path d="M1300,-200L1700,0L760,1400L380,1300Z" fill="url(#mmBeam)" opacity=".6" filter="url(#mmSoft)" style="mix-blend-mode:screen"/>`);
+  }
+
+  Object.assign(Sets, { sala2, tag2, shirtOpen, gate2, tower2, legend3, yard2, house3, flip2, sleep2 });
 })();

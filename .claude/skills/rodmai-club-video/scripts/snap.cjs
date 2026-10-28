@@ -24,6 +24,7 @@ const fs = require('fs');
     });
   }, t);
   await seek(0.2); await p.waitForTimeout(1200); // warm-up frame, not saved
+  await seek(ts[0]); await p.waitForTimeout(1500); // heavy first shots (blur filters, big paths) can still paint black on the first real frame
   for (const t of ts) {
     await seek(t);
     await p.waitForTimeout(400);
