@@ -65,7 +65,7 @@
         g += limb(["10,-330", "180,-180", "130,-226"], 18) + fingers(130, -226, -150, 46);
       } else { g += limb(["50,-340", "200,-200", "240,-30"], 20) + fingers(240, -30, 70, 60) + limb(["10,-330", "120,-160", "150,-16"], 18) + fingers(150, -16, 80, 56); }
     }
-    return `<g ${id ? `id="${id}"` : ""} transform="translate(${f1(x)},${f1(y)}) scale(${o.flip ? -s : s},${s})" opacity="${o.op ?? 1}">${g}</g>`;
+    return `<g ${id ? `id="${id}"` : ""} opacity="${o.op ?? 1}"><g transform="translate(${f1(x)},${f1(y)}) scale(${o.flip ? -s : s},${s})">${g}</g></g>`;
   }
 
   // ---------------- the room upstairs ----------------

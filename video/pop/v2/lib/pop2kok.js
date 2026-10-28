@@ -88,7 +88,7 @@
     [[-60, -70, 13, 8], [40, -150, 9, 6], [-40, -250, 8, 6], [100, -60, 12, 8], [-130, -100, 9, 6], [70, -230, 6, 5]].forEach(([hx, hy, rx, ry]) => { g += `<ellipse cx="${hx}" cy="${hy}" rx="${rx}" ry="${ry}" fill="#2a1408"/><path d="M${hx - rx},${hy}q${rx},${-ry * 1.4} ${rx * 2},0" stroke="#f0b47a" stroke-width="2" fill="none" opacity=".5"/>`; });
     g += `<path d="M-170,-40Q-120,-140 -70,-260M-120,-24Q-90,-150 -54,-300" stroke="#fff0d0" stroke-width="6" fill="none" opacity=".16" stroke-linecap="round"/>`;
     for (let k = 0; k < 10; k++) g += tuft(-230 + k * 50 + rr() * 20, 6 + rr() * 10, 0.7 + rr() * 0.5, P.grass[0], P.grass[1], rr);
-    return `<g ${o.id ? `id="${o.id}"` : ""} transform="translate(${f1(x)},${f1(G)}) scale(${s})">${g}</g>`;
+    return `<g ${o.id ? `id="${o.id}"` : ""}><g transform="translate(${f1(x)},${f1(G)}) scale(${s})">${g}</g></g>`;
   }
 
   // a white amanita. Open: a warm-white dome with the gills seen from below, a drooping skirt ring, a tapered stem with
@@ -105,7 +105,7 @@
       g += `<path d="${d}" fill="url(#mCap)" stroke="${LN}" stroke-width="2.4"/><path d="${d}" fill="url(#mSide)"/>
         <path d="M-44,-40Q-20,-30 6,-46Q24,-38 46,-50M-36,-84Q0,-74 36,-90" stroke="#cdbfa8" stroke-width="2" fill="none"/><path d="M-30,-104q16,-12 34,-10" stroke="#fff" stroke-width="6" fill="none" opacity=".8" stroke-linecap="round"/>
         <path d="M-52,0Q-34,-26 0,-18Q34,-28 52,0Z" fill="#9a6a44" opacity=".55"/>` + soil(44);
-      return `<g ${o.id ? `id="${o.id}"` : ""} transform="translate(${f1(x)},${f1(y)}) scale(${s}) rotate(${o.tilt || 0})">${g}</g>`;
+      return `<g ${o.id ? `id="${o.id}"` : ""}><g transform="translate(${f1(x)},${f1(y)}) scale(${s}) rotate(${o.tilt || 0})">${g}</g></g>`;
     }
     const H = v === "button" ? 190 : 250, cw = v === "button" ? 78 : 126, ch = v === "button" ? 124 : 96;
     // stem
@@ -135,7 +135,7 @@
     g += `<path d="M-${f1(cw * 0.7)},-${f1(H + ch * 0.5)}Q-${f1(cw * 0.42)},-${f1(H + ch * 0.95)} ${f1(cw * 0.12)},-${f1(H + ch * 0.96)}" stroke="#fff" stroke-width="9" fill="none" opacity=".85" stroke-linecap="round"/>
       <path d="M-${f1(cw * 0.96)},-${f1(H + 6)}Q-${f1(cw * 0.94)},-${f1(H + ch * 0.55)} -${f1(cw * 0.6)},-${f1(H + ch * 0.85)}" stroke="#fffbe8" stroke-width="3" fill="none" opacity=".9"/>`;
     if (o.dirt !== false) g += `<path d="M-${f1(cw * 0.2)},-${f1(H + ch * 0.72)}l3,2M${f1(cw * 0.36)},-${f1(H + ch * 0.52)}l3,1M${f1(cw * 0.1)},-${f1(H + ch * 0.84)}l2,2" stroke="#a88c6c" stroke-width="3" stroke-linecap="round" opacity=".7"/>`;
-    return `<g ${o.id ? `id="${o.id}"` : ""} transform="translate(${f1(x)},${f1(y)}) scale(${s}) rotate(${o.tilt || 0})">${g}</g>`;
+    return `<g ${o.id ? `id="${o.id}"` : ""}><g transform="translate(${f1(x)},${f1(y)}) scale(${s}) rotate(${o.tilt || 0})">${g}</g></g>`;
   }
 
   function litter(x, y, s, c, r) {

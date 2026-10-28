@@ -17,6 +17,10 @@
 - `lib/pop2ui.js` การ์ดกฎของยายคำ (กระดาษสมุด ลายมือ ไอคอนวาดมือ ไฮไลต์ปากกาเน้น) กับชิปที่มา
 - `fonts/` Mali กับ Sriracha (ฟอนต์ลายมือไทย) ให้ใส่ใน `hf/rig/assets/fonts/`
 - `work/` ช็อตทดสอบใน workspace `pp0`
+- `lib/pop2more.js` นาฬิกา clock2, หนังประโมทัย legend2, หม้อมุมบน potTop, ของทดสอบพื้นบ้านบนแคร่ testsTop, หม้อผ่าครึ่ง potX, รอยเท้า printsTop, ป้ายป่าชุมชน sign2, หน้าปอบ pobFace, ของถือ PROP (phone/ladle/noodles/suitcase/bowl), รั้วหน้าตัวละคร (`fenceFront`)
+- `lib/pop2ui.js` เพิ่มมือถือในมือ (nosignal/camera), ป้ายกระดาษปักดิน tag, คำเสียง sfx, เส้นเวลา 4–6 ชม. timeline, การ์ดตัวเลือก choice
+- `ep1/` EP.1 v2 ทั้ง 32 ช็อต (workspace `pop1v2`: ใช้ vo/ mix.wav mix.py timing.py sfx_cues.json จาก `pop-ep1/production`)
+- `storyboard_ep1_{1,2,3}.jpg` ภาพนิ่ง 44 เฟรมของ EP.1 ที่ส่งให้ผู้ใช้อนุมัติก่อนเรนเดอร์
 - `styleframes_v1.jpg` ภาพตัวอย่าง 9 ฉากที่ส่งให้ผู้ใช้ดู
 
 หมายเหตุสำคัญ: ค่าเริ่มต้น `dark` ของ engine คือ 0.35 ซึ่งทำให้ภาพกลางวันหม่นเทา ช็อตกลางวันต้องตั้ง `dark: 0`
