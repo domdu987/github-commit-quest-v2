@@ -1,0 +1,129 @@
+# เสียง เรนเดอร์ และการส่งมอบ
+
+## สารบัญ
+1. เสียงพูด (Gemini TTS ผ่าน fal.ai)
+2. ตรวจเสียงด้วย Whisper
+3. จังหวะช็อต `timing.py`
+4. มิกซ์ `mix.py` + SFX `synth.py`
+5. เรนเดอร์และตรวจ
+6. ส่งให้ผู้ใช้
+7. เก็บเข้า repo
+
+---
+
+## 1. เสียงพูด
+
+```bash
+cd $W/<ep> && python3 ../hf/lib/voice.py lines.json vo        # cache: vo/<id>.<hash>.mp3 (hash ของ voice|style|text|take)
+```
+
+- **ผู้บรรยาย:** `Puck` tempo 1.2 style นี้เท่านั้น
+  ```
+  อ่านแบบผู้บรรยายสารคดี น้ำเสียงเรียบ เป็นกลาง ไม่ใส่อารมณ์ ไม่ตื่นเต้น ไม่กระซิบ ชัดถ้อยชัดคำ จังหวะสม่ำเสมอ ไม่ลากเสียง พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ
+  ```
+- **ตัวละคร:** tempo ~1.12 style ต้องมีครบ 4 ส่วน:
+  1. อายุ เพศ ที่มา
+  2. ลักษณะเสียง
+  3. อารมณ์ของบรรทัดนั้น
+  4. ปิดด้วย `ชัดทุกคำ ไม่กระซิบ … พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ`
+
+  ตัวอย่าง (ยายคำ, Gacrux):
+  ```
+  หญิงชราอายุเจ็ดสิบ ชาวอีสาน เสียงแหบเล็กน้อย พูดช้า ชัดทุกคำ ไม่กระซิบ เสียงนุ่ม เหมือนใจดี แต่เย็นชา ชวนขนลุก พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ
+  ```
+- **เสียงที่ใช้แล้ว**
+  - วัยรุ่นหญิง Leda / Laomedeia
+  - เด็กชาย Sadachbia
+  - หญิงชรา Gacrux
+  - ชายแก่ Schedar / Algenib
+  - หมอหญิง Despina / Vindemiatrix
+  - ชายหนุ่ม Achird / Fenrir
+  - หญิงวัยกลางคน Kore / Callirrhoe
+  - ผีหรือเสียงลึก Enceladus
+  - เรื่องใหม่เลือกเสียงให้เข้ากับตัวละครใหม่ และเสนอผู้ใช้ก่อน
+- **ข้อห้าม**
+  - ห้ามใช้คำว่า "กระซิบ" ใน style (ฟังไม่ออก)
+  - style "ช้า เว้นจังหวะ" ทำให้ QA ติด LONG แล้วอัดใหม่จนเพี้ยน
+- **ปัญหาที่เจอบ่อย**
+  - **422:** voice.py ลองแทน "…" เป็นจุลภาคเองแล้ว ถ้ายังไม่ผ่านให้เปลี่ยนถ้อยคำ (เลี่ยงขึ้นต้น "แต่…/และ…")
+  - **429:** รอแล้วลองใหม่
+  - **403 TOP_UP:** เครดิตหมด ให้บอกผู้ใช้
+- **เร่ง/ลด tempo ไม่ต้องใช้เครดิต** เพราะ cache key ไม่รวม tempo
+  - `take` = อัดใหม่อีกแบบ
+  - `af` = filter เสียงเพิ่ม เช่น `aecho` ให้ผี
+
+## 2. ตรวจเสียงด้วย Whisper
+
+```bash
+WHISPER_DIR=<scratchpad>/whisper python3 ../hf/lib/voice_qa.py lines.json vo --fix 2   # ครั้งแรกโหลด large-v3-turbo ~1.6 GB
+```
+- อ่าน `vo/qa.json`: BAD = CER > 0.25 หรือยาวผิดปกติ
+- Whisper เดาคำตามบริบท คำสำคัญ (ชื่อกฎ คำที่ตัวสะกดกำกวม) ต้องฟังเอง
+- บรรทัดสำคัญอย่าเชื่อ `--fix` อย่างเดียว ให้เทียบหลาย take × หลาย tempo แล้วเลือกเอง
+
+## 3. จังหวะช็อต `timing.py`
+
+```python
+SHOTS = [  # (key, [voice ids], pre-roll, post-roll, minimum length)
+    ("hook", ["n01", ("n02", 0.15)], 0.2, 0.9, 4.8),   # ("id", gap) = เว้นก่อนเสียงนี้
+    ("swing", [], 0, 0, 2.0),                          # ช็อตแอ็คชั่นไม่มีเสียงพูด
+]
+GAP = 0.08
+```
+- `python3 timing.py` → `schedule.json` (เวลาช็อต เสียง และ `frags` ของแต่ละท่อนซับ)
+- รวมทั้งตอน 1:40–2:00
+
+## 4. มิกซ์ `mix.py` + SFX `synth.py`
+
+- `CUES = [(shot, เวลาในช็อต (ลบ = นับจากท้าย), "ชนิด", gain), …]`
+  - ใช้ helper `beats()` (หัวใจตาม `Fx.heart`), `monitor()`, `chew()`
+  - `dip(t0, t1, ระดับ)` = เงียบดนตรีช่วงหลอน · `boost` = ดนตรีขึ้นช่วงแอ็คชั่น
+- **ระดับ:** VO −18 dB RMS (`LINE_GAIN` ปรับรายบรรทัด) · ดนตรี −30 · SFX −27
+  - duck ใต้เสียงพูดด้วย `box()` (ห้าม np.convolve)
+  - `loudnorm=I=-14:TP=-1.5`
+- **ห้ามมี noise bed:** ลมซ่า ฝนซ่า และ static ยาวๆ ห้ามใส่ (มีตัวกรองใน mix.py แล้ว)
+  - ฝนหรือลมให้เป็นจังหวะสั้นตามภาพเท่านั้น
+- **ตัดดำ = ตัดเสียง:** หลังปมค้าง เงียบสนิท ~0.3 วิ แล้วเหลือแค่เสียงของการ์ดท้าย
+- **SFX ทั้งหมดสังเคราะห์ด้วย `synth.py`** ไม่ใช้ไฟล์เสียงจากที่อื่น ชนิดที่มี:
+  - heartbeat tick glitch rustle stomp snap pop notif sting boom crickets vibe ring whoosh knock ding buzz swell
+  - riser whistle crackle siren hum creak crank shutter stream roar drip squelch rewind gong ching beep squish
+  - scream growl tap sputter slam clang shriek thud steps latch marker click powerdown shatter
+  - เสียงรถ: engine screech blinker ratchet motor
+  - (static wind rain hiss มีในไฟล์ แต่ห้ามใช้ทำ noise bed)
+- **ดนตรี:** `music/suno1.mp3` (Suno ที่ผู้ใช้ให้มา) · ถ้าผู้ใช้ส่งเพลงใหม่มา ให้ใช้ตามสั่ง
+
+## 5. เรนเดอร์และตรวจ
+
+```bash
+python3 mix.py                                                     # → mix.wav
+# Bash tool: run_in_background: true, timeout: 7200000
+bash $K/render.sh $W/hf/<ep> $W/<ep> EP1-<ชื่อตอนแบบโรมัน>          # → raw.mp4, *-HQ.mp4, *-share.mp4
+bash $K/qa_video.sh $W/<ep>/EP1-…-HQ.mp4 $W/<ep>/mix.wav            # ตัวเลข + แถบภาพ *.qa.jpg (เปิดดูจริง)
+```
+- ผ่านเมื่อ:
+  - 1080×1920 · 60/1
+  - ความยาวภาพ = เสียง = mix (±0.05 วิ)
+  - integrated ≈ −14 LUFS · พีก ≤ −1 dB
+  - แถบภาพไม่มีเฟรมดำ/ผิดฉาก
+- เวลาเรนเดอร์: เห็ดปอบ EP.1 2:02 ใช้ ~1 ชม. 50 นาที · EP.2 1:41 ใช้ ~30 นาที (ขึ้นกับความซับซ้อนของฉาก)
+- ชื่อไฟล์: `EP<N>-<ชื่อตอนเขียนเสียงอ่านแบบโรมัน>` เช่น `EP1-ya-hak-sai-khong`
+
+## 6. ส่งให้ผู้ใช้
+
+- `SendUserFile` ไฟล์ `*-HQ.mp4` (`display: "render"`, caption สั้นๆ ว่าเป็นตอนไหน ความยาว)
+- ข้อความในแชท (ไทย สั้น):
+  1. สิ่งที่ตรวจแล้ว (ความยาว ความดัง ภาพ)
+  2. **ชื่อคลิป (YouTube)** · **แคปชัน** · **คอมเมนต์ปักหมุด** (ในกรอบโค้ด คัดลอกง่าย)
+  3. เก็บไว้ที่ไหนใน repo
+  4. คำถามถัดไปข้อเดียว
+- ถ้ามีงานที่รออนุมัติ ให้บอกในบรรทัดสุดท้าย
+
+## 7. เก็บเข้า repo
+
+```bash
+bash $K/store.sh $W/<ep> $W/hf/<ep> <เรื่อง>-ep<N> EP<N>-<ชื่อ>
+git add video/<เรื่อง>-ep<N> && git commit -m "<เรื่อง> EP.N: …" && git push -u origin <branch>
+```
+- commit message ภาษาอังกฤษหรือไทยก็ได้ ห้ามมีชื่อ/รหัสโมเดล และลงท้ายด้วย attribution ที่ระบบให้
+- อัปเดต `video/<เรื่อง>/CAPTIONS.md` และ ARC.md ถ้ามีการเปลี่ยน
+- ไฟล์ HQ ไม่ commit (บางไฟล์เกิน 100 MB)
