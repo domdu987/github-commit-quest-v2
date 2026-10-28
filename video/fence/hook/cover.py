@@ -1,10 +1,11 @@
-# cover.py BG.png OUT.jpg EPLABEL LINE1 LINE2 [y] : TikTok cover — darkened frame, series paper headline in the centre band (profile grid crops to the middle 3:4), EP stamp
+# cover.py BG.png OUT.jpg EPLABEL LINE1 LINE2 [y] [scale] : TikTok cover — darkened frame, series paper headline in the centre band (profile grid crops to the middle 3:4), EP stamp
 import sys
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter
 W = "/tmp/claude-0/-home-user-github-commit-quest-v2/49762ff1-991c-52d3-b168-9c16af55ac24/scratchpad/work"
 bg, out, ep, l1, l2 = sys.argv[1:6]; y = int(sys.argv[6]) if len(sys.argv) > 6 else 520
+sc = sys.argv[7] if len(sys.argv) > 7 else "1.05"   # headline scale: long second lines need less than 1.05 to fit the width
 import subprocess
-subprocess.run(["python3", f"{W}/hook/headline.py", "/tmp/claude-0/-home-user-github-commit-quest-v2/49762ff1-991c-52d3-b168-9c16af55ac24/scratchpad/work/hook/_hl.png", l1, l2, str(y), "1.05"], check=True, capture_output=True)
+subprocess.run(["python3", f"{W}/hook/headline.py", "/tmp/claude-0/-home-user-github-commit-quest-v2/49762ff1-991c-52d3-b168-9c16af55ac24/scratchpad/work/hook/_hl.png", l1, l2, str(y), sc], check=True, capture_output=True)
 im = Image.open(bg).convert("RGBA").resize((1080, 1920))
 im = ImageEnhance.Contrast(ImageEnhance.Brightness(im).enhance(0.92)).enhance(1.08)
 # vignette
