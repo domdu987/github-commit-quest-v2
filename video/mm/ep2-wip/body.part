@@ -1,0 +1,448 @@
+      // ---------- ผีแม่ม่าย EP.2 ปั๊มให้ฟื้น ----------
+      // camera grammar: 3 a.m. continues (close, shaky) → the door / the ghost doctor → Fon decides → Bua's rule (memory) → the check
+      // and the call (inserts) → the neighbour → the village map → the floor, the hands from above, the pumping wide → the widow's arm →
+      // the AED (close inserts, everyone's hands up) → the shock → the map to the hospital → the ward → the question → the eyes → choice
+      const MOON = { from: "right", rim: "#a8c4ff", rimOp: 0.8, shade: "#000010", shadeOp: 0.5, cast: false, vol: false };
+      const SUN = { from: "left", rim: "#fff2c8", rimOp: 0.7, shade: "#2a1a10", shadeOp: 0.35, cast: { len: 1.6, op: 0.35 }, vol: false };
+      const BULB = { from: "left", rim: "#ffd8a0", rimOp: 0.55, shade: "#0a0614", shadeOp: 0.55, cast: false, vol: false };
+      const TUBEW = { from: "right", rim: "#e8fff4", rimOp: 0.5, shade: "#102028", shadeOp: 0.4, cast: false, vol: false };
+      const GLATE = { top: "#0a1430", bottom: "#1a2a3a", op: 0.35 }, GDAY = { top: "#fff0c8", bottom: "#c8e0f0", op: 0.12 }, GNIGHT = { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 };
+      const GMEM = { top: "#e8c890", bottom: "#5a3a1a", op: 0.42 }, GWARD = { top: "#0e2a2a", bottom: "#1a2a3a", op: 0.28 }, GMAP = { top: "#fff8e8", bottom: "#d8f0f0", op: 0.12 };
+      const oneHand = (id, i) => { const h = document.getElementById(`${id}-a${i}-handB`); if (h) h.innerHTML = ""; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const sm = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+      const tw = (u, k) => Math.sin(u * 47 + k) * 0.6 + Math.sin(u * 31 + k * 2.3) * 0.4;
+      const PER = 60 / 110, push = (u) => { const ph = (u % PER) / PER; return ph < 0.42 ? Math.sin((ph / 0.42) * Math.PI / 2) : Math.cos(((ph - 0.42) / 0.58) * Math.PI / 2); };
+      Rig.MODES.sleep = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: 4, faF: 4, uaB: -4, faB: -4, thF: -2, thB: 2, shF: 3, shB: 2 });
+      Rig.MODES.supine = (u, o) => ({ ...Rig.MODES.lie(u, o), torso: 0, uaF: 2, faF: -2, uaB: -2, faB: -2, thF: -2, thB: 2, shF: 4, shB: 2, head: 4 });
+      Rig.MODES.pulled = (u, o) => { const k = sm(u / 1.1); return { ...Rig.MODES.supine(u, o), rootX: -30 * k, rootY: -40 + (o.dy ?? 195) * k }; };
+      Rig.MODES.pressed = (u, o) => ({ ...Rig.MODES.supine(u, o), rootY: -40 + (o.dy ?? 0) + 5 * push(u + (o.ph ?? 0)) });
+      Rig.MODES.tugged = (u, o) => ({ ...Rig.MODES.supine(u, o), rootY: -40 + (o.dy ?? 0), rootX: 90 * sm(u / 0.45) + 4 * Math.sin(u * 40) * (u < 0.8 ? 1 : 0) });
+      Rig.MODES.tugBack = (u, o) => ({ ...Rig.MODES.supine(u, o), rootY: -40 + (o.dy ?? 0), rootX: 90 * (1 - sm(u / 0.35)) });
+      Rig.MODES.jolt = (u, o) => ({ ...Rig.MODES.supine(u, o), rootY: -40 + (o.dy ?? 0) - 34 * Math.exp(-u * 9) * Math.abs(Math.sin(u * 30)), uaF: -20 * Math.exp(-u * 8), uaB: 20 * Math.exp(-u * 8) });
+      Rig.MODES.kneel = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 14, faF: -40, uaB: -14, faB: 40, torso: 0, head: 6 });
+      Rig.MODES.kneelShake = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 16 + 8 * Math.sin(u * 34), faF: -46, uaB: -16 - 8 * Math.sin(u * 34 + 1), faB: 46, torso: 3 * Math.sin(u * 34), head: 6 + 3 * Math.sin(u * 34) });
+      Rig.MODES.cpr = (u, o) => { const k = push(u + (o.ph ?? 0)); return { ...Rig.MODES.crouch(u, o), uaF: o.ua ?? -30, faF: -4, uaB: (o.ua ?? -30) + 4, faB: -6, torso: 10 + 5 * k, head: 18 + 3 * k, bodyY: (o.by ?? 190) + 12 * k }; };
+      Rig.MODES.haul = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -72, faF: -8, uaB: -66, faB: -12, torso: -8 + 2 * Math.sin(u * 20), head: -6, bodyY: (o.by ?? 150) + 6 * Math.sin(u * 20) });
+      Rig.MODES.kneelUp = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -166, faF: -8, uaB: 166, faB: 8, torso: -2, head: -4, bodyY: o.by ?? 150 });
+      Rig.MODES.handsUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -168 + 3 * Math.sin(u * 9), faF: -6, uaB: 168 - 3 * Math.sin(u * 9), faB: 6, head: -4 });
+      Rig.MODES.kneelPhone = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -30, faF: -150, uaB: 4, faB: -12, torso: 4, head: 6, bodyY: o.by ?? 150 });
+      Rig.MODES.sitPoint = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -96 + Math.sin(u * 3), faF: -8, head: 4 });
+      Rig.MODES.cry = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -40 + 4 * Math.sin(u * 7), faF: -120, uaB: -10, faB: -30, torso: 4 + 2 * Math.sin(u * 7), head: 8 + 2 * Math.sin(u * 7) });
+      Rig.MODES.lieBed = (u, o) => ({ ...Rig.MODES.lie(u, o), torso: 0.4 * Math.sin(u * 1.6), uaF: 4, faF: -10, uaB: -4, faB: -8, head: o.head ?? 8 });
+      Object.assign(Rig.CAST, { piakNail: { ...Rig.CAST.piak, hand: Mm.PROP.polish() }, piakAed: { ...Rig.CAST.piak, hand: `<g transform="translate(0,104)"><rect x="-46" y="0" width="92" height="66" rx="12" fill="#2fa864" stroke="#26201c" stroke-width="4"/><path d="M-20,0V-14H20V0" stroke="#26201c" stroke-width="7" fill="none"/><path d="M0,44C-10,36 -18,28 -16,22C-14,16 -6,16 0,22C6,16 14,16 16,22C18,28 10,36 0,44Z" fill="#fff"/></g>` } });
+      const SRC = (L, tl, t0, dur, text) => MmUI.source(tl, L.light, t0, dur, { text });
+      const ETA = (L, tl, t0, dur, from, to, o = {}) => MmUI.eta(tl, L.light, t0, dur, { from, to, ...o });
+      // Keng where the story puts him: on his mattress, then on the planks in front of it
+      const KENGBED = (tr) => A("keng", 790, 1672, 0.86, tr);
+      const KFLOOR = (tr) => A("keng", 840, 1868, 0.86, tr);
+      const FONCPR = (o = {}) => A("fon", o.x ?? 360, o.y ?? 1830, 0.8, [{ t: 0, mode: "cpr", opts: { by: o.by ?? 190, ua: o.ua ?? -30, ph: o.ph ?? 0 }, eyes: o.eyes || "wide", mouth: o.mouth || "frown" }], o.extra || {});
+
+      // ---------- 1. 3 a.m. again: she shakes him; his arm drops; at the foot of the mattress, two green points ----------
+      add("hook", {
+        set: "sleep2", setOpts: { id: "hk", netOpen: true, clock: false, ghost: true }, dark: 0.34, blur: { sky: 4, mid: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(760, 1560, 1.08, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(780, 1560, 1.24, 540, 1000) }] },
+        shake: (t) => 4 * Math.sin(t * 29),
+        actors: [A("fon", 420, 1720, 0.8, [{ t: 0, mode: "kneelShake", eyes: "wide", mouth: "scream" }]), KENGBED([{ t: 0, mode: "supine", eyes: "closed", mouth: "flat" }])],
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0);
+          Fx.glitch(tl, `#${id}`, t0, 0.25, 18, 2101);
+          tl.set("#hk-ghost", { opacity: 0 }, t0);
+          tl.fromTo("#hk-ghost-eyes", { opacity: 0 }, { opacity: 1, duration: 0.5, immediateRender: false }, t0 + 1.2);
+          tl.set("#hk-ghost-eyes", { opacity: 0 }, t0 + 2.2); tl.set("#hk-ghost-eyes", { opacity: 1 }, t0 + 2.32);
+          Fx.heart(tl, t0, D("hook"), 0.45, 0.45);
+        },
+      });
+      // ---------- 2. mom at the door with the torch: the ghost doctor ----------
+      add("hook2", {
+        set: "sleep2", setOpts: { id: "h2", clock: false }, dark: 0.3, blur: { sky: 4, mid: 2 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(110, 980, 1.5, 540, 980) }, { t: D("hook2"), glide: D("hook2"), ...fr(110, 980, 1.62, 540, 980) }] },
+        actors: [A("chan", 150, 1186, 0.9, [{ t: 0, mode: "torch", eyes: "wide", mouth: "o", torch: true }], { flip: true })],
+        captions: caps("hook2"),
+        fx(tl, id, t0, L) { tl.set(["#h2-net2", "#h2-net3"], { opacity: 0 }, t0); put(L.glow, `<path d="M40,700L-900,520L-900,1100Z" fill="#fff6d8" opacity=".14" style="mix-blend-mode:screen"/>`); },
+      });
+      add("mom", {
+        set: "sleep2", setOpts: { id: "mo", clock: false }, dark: 0.26, blur: { sky: 6, mid: 4, set: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(170, 640, 2.4, 540, 980) }, { t: D("mom"), glide: D("mom"), ...fr(170, 640, 2.55, 540, 980) }] },
+        actors: [A("chan", 150, 1186, 0.9, [{ t: 0, mode: "torch", eyes: "worry", mouth: "scream", torch: true }], { talk: [TALK("mom", 0, "scream")] })],
+        captions: caps("mom", undefined, { quote: true }),
+        fx(tl, id, t0) { tl.set(["#mo-net2", "#mo-net3"], { opacity: 0 }, t0); },
+      });
+      add("fon", {
+        set: "sleep2", setOpts: { id: "fn", netOpen: true, clock: false }, dark: 0.26, blur: { sky: 6, mid: 4 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(400, 1290, 2.3, 540, 980) }] },
+        actors: [A("fon", 420, 1720, 0.8, [{ t: 0, mode: "kneel", eyes: "normal", mouth: "frown" }], { flip: true, talk: [TALK("fon", 0, "scream")] }), KENGBED([{ t: 0, mode: "supine", eyes: "closed", mouth: "flat" }])],
+        captions: caps("fon", undefined, { quote: true }),
+        fx(tl, id, t0) { tl.set(["#fn-net2", "#fn-net3"], { opacity: 0 }, t0); tl.fromTo(`#${id} .stage`, { x: 0 }, { keyframes: [{ x: -7, duration: 0.04 }, { x: 6, duration: 0.04 }, { x: 0, duration: 0.05 }], immediateRender: false }, t0 + F("fon", 0, 1)); },
+      });
+      // ---------- 3. memory: Bua at the sala, then rule 2 over the dark room ----------
+      add("rule", {
+        set: "sala2", setOpts: { id: "ru", chairs: [] }, dark: 0, blur: { sky: 6, far: 6, set: 2 }, light: SUN, grade: GMEM,
+        cam: { keys: [{ t: 0, ...fr(640, 1070, 1.8, 540, 1260) }, { t: D("rule"), glide: D("rule"), ...fr(640, 1070, 1.9, 540, 1260) }] },
+        actors: [A("bua", 640, 1530, 0.92, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }], { talk: [TALK("rule", 0, "flat")] })],
+        captions: caps("rule", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect id="ru-vig" width="1080" height="1920" fill="url(#mu2Vig)"/><rect id="ru-dim" width="1080" height="1920" fill="#000" opacity="0"/>`);
+          tl.fromTo("#flashw", { opacity: 0.55 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0);
+          tl.to("#ru-dim", { opacity: 0.4, duration: 0.3 }, t0 + 0.6);
+          MmUI.rule(tl, L.light, t0 + 0.6, D("rule") - 0.6, { active: 1, done: [0], y: 420 });
+        },
+      });
+      // ---------- 4. the check, from above: no breath, no rise ----------
+      add("check", {
+        set: "chestTop", setOpts: { id: "ck", fon: true }, dark: 0.1, light: false, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 520, 1.25, 540, 860) }, { t: D("check"), glide: D("check"), ...fr(560, 540, 1.35, 540, 860) }] },
+        captions: caps("check"),
+        fx(tl, id, t0) {
+          tl.set(["#ck-arms", "#ck-xr", "#ck-low"], { opacity: 0 }, t0);
+          MmUI.breathAnim(tl, "ck", t0, { x0: vo("check", 0) + 0.6, x1: F("check", 0, 1) + 0.1 });
+        },
+      });
+      // ---------- 5. the call ----------
+      add("call", {
+        set: "sleep2", setOpts: { id: "cl2", netOpen: true, clock: false }, dark: 0.3, blur: { sky: 4, mid: 3 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(430, 1390, 1.9, 540, 1000) }] },
+        actors: [A("fon", 420, 1720, 0.8, [{ t: 0, mode: "kneelPhone", eyes: "wide", mouth: "o" }], { talk: [TALK("call", 0, "scream")] }), KENGBED([{ t: 0, mode: "supine", eyes: "closed", mouth: "flat" }])],
+        captions: caps("call", undefined, { quote: true }),
+        fx(tl, id, t0, L) { tl.set(["#cl2-net2", "#cl2-net3"], { opacity: 0 }, t0); put(L.glow, `<circle cx="480" cy="1290" r="300" fill="url(#mu2Phone)" style="mix-blend-mode:screen"/>`); },
+      });
+      add("know1", {
+        set: "sleep2", setOpts: { id: "k1", netOpen: true, clock: false }, dark: 0.5, blur: { sky: 10, mid: 10, set: 10, act: 8 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1500, 1.2, 540, 1000) }] },
+        actors: [A("fon", 420, 1720, 0.8, [{ t: 0, mode: "kneelPhone", eyes: "wide", mouth: "o" }]), KENGBED([{ t: 0, mode: "supine", eyes: "closed", mouth: "flat" }])],
+        captions: caps("know1"),
+        fx(tl, id, t0, L) {
+          const v = vo("know1", 0);
+          MmUI.phone(tl, L.light, t0 + 0.05, D("know1") - 0.05, { connect: 0.5, timer0: 4, rows: [v + 1.3, F("know1", 0, 1) + 0.25, F("know1", 0, 1) + 1.0, F("know1", 0, 2) + 0.15] });
+          SRC(L, tl, t0 + 0.4, D("know1") - 0.5, "ที่มา: ศิริราช การช่วยชีวิตขั้นพื้นฐาน (4 มิ.ย. 2561)");
+        },
+      });
+      add("eta", {
+        set: "sleep2", setOpts: { id: "k2", netOpen: true, clock: false }, dark: 0.5, blur: { sky: 10, mid: 10, set: 10, act: 8 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1500, 1.2, 540, 1000) }] },
+        actors: [A("fon", 420, 1720, 0.8, [{ t: 0, mode: "kneelPhone", eyes: "wide", mouth: "o" }]), KENGBED([{ t: 0, mode: "supine", eyes: "closed", mouth: "flat" }])],
+        captions: caps("eta", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          MmUI.phone(tl, L.light, t0, D("eta") + 0.05, { connect: 0, timer0: 10, rows: [-1, -1, -1, -1], cardAt: -1, out: false });
+          ETA(L, tl, t0 + F("eta", 0, 1) - 0.1, D("eta") - F("eta", 0, 1) + 0.1, 720, 716, { big: true, fly: 1.4 });
+        },
+      });
+      // ---------- 6. the neighbour ----------
+      add("window", {
+        set: "sleep2", setOpts: { id: "wi", clock: false }, dark: 0.22, blur: { sky: 2 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(1010, 760, 1.7, 540, 940) }, { t: D("window"), glide: D("window"), ...fr(1020, 760, 1.8, 540, 940) }] },
+        actors: [A("fon", 1000, 1186, 0.86, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }], { talk: [TALK("window", 0, "scream")] })],
+        captions: caps("window", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          tl.set("#wi-winL", { scaleX: 0.12, svgOrigin: "950 430" }, t0); tl.set("#wi-winR", { scaleX: 0.12, svgOrigin: "1210 430" }, t0);
+          put(L.sky, `<g transform="translate(1180,700) scale(.5)"><path d="M-200,0V-260L0,-380L200,-260V0Z" fill="#0a0c14"/><rect x="-60" y="-200" width="80" height="70" fill="#ffd27a" opacity=".85"/><path d="M-220,0V120M220,0V120M0,0V120" stroke="#0a0c14" stroke-width="24"/></g>`);
+          ETA(L, tl, t0, D("window"), 712, 704);
+        },
+      });
+      add("piak", {
+        set: "yard2", setOpts: { id: "pk", time: "dusk", crow: 700 }, dark: 0.5, blur: { far: 3, fg: 8 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(590, 1190, 1.3, 540, 1000) }] },
+        actors: [A("piakNail", 470, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "closed", mouth: "o" }, { t: 0.35, mode: "sitPoint", eyes: "normal", mouth: "o" }], { talk: [TALK("piak", 0)] })],
+        captions: caps("piak", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          oneHand(id, 0);
+          put(L.glow, `<circle cx="470" cy="900" r="520" fill="url(#mmBulb)" style="mix-blend-mode:screen"/>`);
+          ETA(L, tl, t0, D("piak"), 703, 696);
+        },
+      });
+      add("fon2", {
+        set: "sleep2", setOpts: { id: "f2", clock: false }, dark: 0.22, blur: { sky: 3, mid: 2 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(1050, 690, 2.5, 540, 900) }] },
+        actors: [A("fon", 1000, 1186, 0.86, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }], { talk: [TALK("fon2", 0, "scream")] })],
+        captions: caps("fon2", undefined, { quote: true }),
+        fx(tl, id, t0, L) { tl.set("#f2-winL", { scaleX: 0.12, svgOrigin: "950 430" }, t0); tl.set("#f2-winR", { scaleX: 0.12, svgOrigin: "1210 430" }, t0); },
+      });
+      // ---------- 7. the village map: Piak's motorbike to the sala's AED and back ----------
+      const V = Maps.VIL;
+      add("map", {
+        set: "mapVillage", setOpts: { id: "mv", name: "บ้านโนนคำ", vehicle: "moto", carS: 1.1, from: "ลุงเปี๊ยก", to: "บ้านเก่ง", fromIcon: Maps.ICON.moto, toIcon: Maps.ICON.house, labDx: [80, -60],
+          route: [V.piak, [338, 872], [430, 864], [432, 700], [440, 560], [520, 530], [440, 526], [300, 532], [122, 548], [112, 720], [100, 860], [180, 872], V.keng],
+          stops: [{ at: V.sala, label: "ตู้ AED", dx: 70 }] },
+        dark: 0, light: false, grade: GMAP,
+        cam: { keys: [{ t: 0, ...fr(90 + 420, 300 + 640, 1.2, 540, 900) }, { t: D("map"), glide: D("map"), ...fr(90 + 420, 300 + 660, 1.3, 540, 900) }] },
+        captions: caps("map"),
+        fx(tl, id, t0, L) { Maps.route(tl, "mv", t0, { go: [0.35, 3.9] }); ETA(L, tl, t0, D("map"), 690, 600); },
+      });
+      // ---------- 8. off the mattress, onto the planks ----------
+      add("floor", {
+        set: "sleep2", setOpts: { id: "fl", netOpen: true, clock: false, lamp: true }, dark: 0.16, blur: { sky: 3 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1720, 1.3, 540, 1250) }, { t: D("floor"), glide: D("floor"), ...fr(560, 1760, 1.36, 540, 1250) }] },
+        actors: [A("chan", 120, 1700, 0.76, [{ t: 0, mode: "haul", eyes: "worry", mouth: "frown" }]), A("fon", 250, 1760, 0.8, [{ t: 0, mode: "haul", opts: { by: 170 }, eyes: "wide", mouth: "frown" }]),
+          KENGBED([{ t: 0, mode: "pulled", opts: { dy: 228 }, eyes: "closed", mouth: "flat" }])],
+        captions: caps("floor"),
+        fx(tl, id, t0, L) {
+          tl.set(["#fl-net2", "#fl-net3"], { opacity: 0 }, t0);
+          MmUI.versus(tl, L.light, t0, D("floor"), { a: "ที่นอนนุ่ม", b: "พื้นแข็ง", at: [vo("floor", 0) + 0.2, F("floor", 0, 1)], y: 470 });
+          ETA(L, tl, t0, D("floor"), 596, 584);
+        },
+      });
+      // ---------- 9. the hands, from above ----------
+      add("hands", {
+        set: "chestTop", setOpts: { id: "hd" }, dark: 0.05, light: false, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 760, 1.22, 540, 860) }, { t: D("hands"), glide: D("hands"), ...fr(560, 780, 1.3, 540, 860) }] },
+        captions: caps("hands"),
+        fx(tl, id, t0, L) {
+          MmUI.handsAnim(tl, "hd", t0, { h1: vo("hands", 0) + 0.15, h2: F("hands", 0, 2) - 0.05, lab: F("hands", 0, 1), end: D("hands") });
+          SRC(L, tl, t0 + 0.3, D("hands") - 0.4, "ที่มา: ศิริราช การช่วยชีวิตขั้นพื้นฐาน (4 มิ.ย. 2561)");
+          ETA(L, tl, t0, D("hands"), 580, 566);
+        },
+      });
+      // ---------- 10. pumping: the meter ----------
+      add("pump", {
+        set: "sleep2", setOpts: { id: "pu", netOpen: true, clock: false, lamp: true }, dark: 0.14, blur: { sky: 3, mid: 2 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1660, 1.55, 540, 1150) }, { t: D("pump"), glide: D("pump"), ...fr(560, 1660, 1.65, 540, 1150) }] },
+        actors: [FONCPR({ mouth: "o", extra: { talk: [[0.2, D("pump"), "o"]] } }), KFLOOR([{ t: 0, mode: "pressed", eyes: "closed", mouth: "flat" }])],
+        captions: caps("pump"),
+        fx(tl, id, t0, L) {
+          MmUI.cpr(tl, L.light, t0 + 0.2, D("pump") - 0.2, { x: 890, y: 760 });
+          SRC(L, tl, t0 + 0.3, D("pump") - 0.4, "ที่มา: ศิริราช (2561) · รามาธิบดี (2561)");
+          ETA(L, tl, t0, D("pump"), 562, 536);
+        },
+      });
+      add("mouth", {
+        set: "sleep2", setOpts: { id: "mu", netOpen: true, clock: false, lamp: true }, dark: 0.14, blur: { sky: 3, mid: 3 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(400, 1620, 1.6, 540, 1120) }] },
+        actors: [A("chan", 120, 1800, 0.78, [{ t: 0, mode: "kneel", eyes: "worry", mouth: "o" }], { talk: [TALK("mouth", 0)] }), FONCPR({ eyes: "normal", extra: { talk: [TALK("mouth", 1, "scream")] } }),
+          KFLOOR([{ t: 0, mode: "pressed", eyes: "closed", mouth: "flat" }])],
+        captions: caps("mouth", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          SRC(L, tl, t0 + vo("mouth", 1), D("mouth") - vo("mouth", 1) - 0.1, "ที่มา: รามาธิบดี (8 มิ.ย. 2561)");
+          ETA(L, tl, t0, D("mouth"), 532, 524);
+        },
+      });
+      // ---------- 11. the bulb stutters; out of the dark past his feet, the widow's arm takes his ankle and pulls ----------
+      add("tug", {
+        set: "sleep2", setOpts: { id: "tg", netOpen: true, clock: false, lamp: true }, dark: 0.2, blur: { sky: 3 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(820, 1760, 1.3, 540, 1100) }, { t: D("tug"), glide: D("tug"), ...fr(880, 1780, 1.55, 540, 1100) }] },
+        actors: [FONCPR({ extra: {} }), KFLOOR([{ t: 0, mode: "pressed", eyes: "closed", mouth: "flat" }, { t: 1.15, mode: "tugged", eyes: "closed", mouth: "flat" }])],
+        fx(tl, id, t0, L) {
+          [[0.1, 0.3], [0.2, 1], [0.34, 0.15], [0.46, 0.8], [0.6, 0.2], [0.74, 0.65]].forEach(([dt, v]) => { tl.set("#tg-bulb", { opacity: v }, t0 + dt); tl.set("#tg-bulbC", { attr: { fill: v > 0.5 ? "#ffe8b0" : "#3a3630" } }, t0 + dt); });
+          tl.to("#tg-shade", { opacity: 0.32, duration: 0.3 }, t0 + 0.6);
+          put(L.glow, `<ellipse cx="880" cy="1890" rx="380" ry="110" fill="url(#mmBulb)" opacity=".9" style="mix-blend-mode:screen"/><g id="tg-eyes" opacity="0">${Pop2.eyePair(1200, 1640, 0.5, "tg-e")}</g>`);
+          tl.to("#tg-eyes", { opacity: 1, duration: 0.4 }, t0 + 0.7);
+          put(L.glow, Mm.ghostArm(960, 1838, 0.86, { id: "tg-arm" }));
+          tl.fromTo("#tg-arm", { x: 760, opacity: 1 }, { x: 0, duration: 0.55, ease: "power2.out", immediateRender: false }, t0 + 0.55);
+          tl.set("#tg-arm-open", { opacity: 0 }, t0 + 1.05); tl.set("#tg-arm-shut", { opacity: 1 }, t0 + 1.05);
+          tl.to("#tg-arm", { x: 78, duration: 0.45, ease: "power2.inOut" }, t0 + 1.15);
+          Fx.heart(tl, t0 + 0.6, D("tug") - 0.6, 0.42, 0.55);
+          Fx.glitch(tl, `#${id}`, t0 + 1.05, 0.2, 14, 2111);
+        },
+      });
+      add("nogive", {
+        set: "sleep2", setOpts: { id: "ng", netOpen: true, clock: false, lamp: true }, dark: 0.2, blur: { sky: 4, mid: 3 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(620, 1700, 1.45, 540, 1100) }] },
+        shake: (t) => (t < 0.6 ? 5 * Math.sin(t * 37) : 0),
+        actors: [A("fon", 380, 1820, 0.8, [{ t: 0, mode: "haul", eyes: "wide", mouth: "scream" }], { talk: [TALK("nogive", 0, "scream")] }), KFLOOR([{ t: 0, mode: "tugBack", eyes: "closed", mouth: "flat" }])],
+        captions: caps("nogive", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          tl.set("#ng-shade", { opacity: 0.3 }, t0);
+          put(L.glow, `<ellipse cx="800" cy="1890" rx="420" ry="120" fill="url(#mmBulb)" opacity=".9" style="mix-blend-mode:screen"/>`);
+          put(L.glow, Mm.ghostArm(1038, 1838, 0.86, { id: "ng-arm" }));
+          tl.set("#ng-arm-open", { opacity: 0 }, t0); tl.set("#ng-arm-shut", { opacity: 1 }, t0);
+          tl.set("#ng-arm-open", { opacity: 1 }, t0 + 0.3); tl.set("#ng-arm-shut", { opacity: 0 }, t0 + 0.3);
+          tl.to("#ng-arm", { x: 700, duration: 0.6, ease: "power3.in" }, t0 + 0.35);
+          tl.to("#ng-shade", { opacity: 0.1, duration: 0.4 }, t0 + 0.8);
+        },
+      });
+      add("keep", {
+        set: "sleep2", setOpts: { id: "kp", netOpen: true, clock: false, lamp: true }, dark: 0.16, blur: { sky: 3, mid: 2 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(580, 1640, 1.25, 540, 1120) }, { t: D("keep"), glide: D("keep"), ...fr(580, 1640, 1.35, 540, 1120) }] },
+        actors: [FONCPR({ eyes: "wide" }), KFLOOR([{ t: 0, mode: "pressed", eyes: "closed", mouth: "flat" }])],
+        captions: caps("keep"),
+        fx(tl, id, t0, L) {
+          for (let t = 0.2; t < D("keep"); t += 0.9) { tl.set("#kp-bulb", { opacity: 0.55 }, t0 + t); tl.set("#kp-bulb", { opacity: 1 }, t0 + t + 0.08); }
+          SRC(L, tl, t0 + 0.3, D("keep") - 0.4, "ที่มา: ศิริราช การช่วยชีวิตขั้นพื้นฐาน (4 มิ.ย. 2561)");
+          ETA(L, tl, t0, D("keep"), 470, 430);
+        },
+      });
+      // ---------- 12. the AED arrives ----------
+      add("aed", {
+        set: "sleep2", setOpts: { id: "ae", netOpen: true, clock: false, lamp: true }, dark: 0.12, blur: { sky: 3 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(440, 1520, 1.0, 540, 1120) }, { t: D("aed"), glide: D("aed"), ...fr(470, 1560, 1.1, 540, 1120) }] },
+        actors: [A("piakAed", -300, 1880, 0.86, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.85, mode: "kneel", eyes: "wide", mouth: "o" }], { moveTo: { x: 150, dur: 0.85, ease: "power2.out" }, talk: [TALK("aed", 0)] }),
+          FONCPR({ x: 400, eyes: "normal", extra: { talk: [TALK("aed", 1, "scream")] } }), KFLOOR([{ t: 0, mode: "pressed", eyes: "closed", mouth: "flat" }])],
+        captions: caps("aed", undefined, { quote: true }),
+        fx(tl, id, t0, L) { tl.fromTo(`#${id} .stage`, { x: 0 }, { keyframes: [{ x: -6, duration: 0.04 }, { x: 5, duration: 0.04 }, { x: 0, duration: 0.05 }], immediateRender: false }, t0 + 0.1); ETA(L, tl, t0, D("aed"), 420, 404); },
+      });
+      // ---------- 13. the AED, close: lid, power, it talks ----------
+      add("on", {
+        set: "aedClose", setOpts: { id: "ad" }, dark: 0.05, light: false, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.0, 540, 900) }, { t: D("on"), glide: D("on"), ...fr(560, 920, 1.08, 540, 900) }] },
+        captions: caps("on", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          MmUI.aedOn(tl, "ad", t0);
+          MmUI.aedTalk(tl, "ad", t0 + vo("on", 0), voEnd("on", 0) - vo("on", 0));
+          MmUI.aedPads(tl, "ad", t0 + 1.1, D("on") - 1.1);
+          put(L.glow, `<rect x="-200" y="-200" width="1480" height="2320" fill="url(#mu2Pool)" style="mix-blend-mode:screen"/><rect x="-200" y="-200" width="1480" height="2320" fill="url(#mu2Vig)"/>`);
+          ETA(L, tl, t0, D("on"), 400, 388);
+        },
+      });
+      // ---------- 14. the pads, from above ----------
+      add("pads", {
+        set: "chestTop", setOpts: { id: "pd", bare: true, pads: true }, dark: 0.05, light: false, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 780, 1.0, 540, 880) }, { t: D("pads"), glide: D("pads"), ...fr(560, 790, 1.06, 540, 880) }] },
+        captions: caps("pads"),
+        fx(tl, id, t0, L) {
+          tl.set(["#pd-arms", "#pd-xr", "#pd-low"], { opacity: 0 }, t0);
+          MmUI.padsAnim(tl, "pd", t0, { p0: vo("pads", 0) + 0.2, p1: F("pads", 0, 1) + 0.1 });
+          SRC(L, tl, t0 + 0.3, D("pads") - 0.4, "ที่มา: ศิริราช การช่วยชีวิตขั้นพื้นฐาน (4 มิ.ย. 2561)");
+          ETA(L, tl, t0, D("pads"), 380, 366);
+        },
+      });
+      // ---------- 15. analysing: hands off — everyone's hands go up ----------
+      split("analyze", vo("analyze", 1) - 0.15, {
+        set: "aedClose", setOpts: { id: "an" }, dark: 0.05, light: false, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(700, 800, 1.5, 540, 900) }, { t: 3.2, glide: 3.2, ...fr(700, 800, 1.6, 540, 900) }] },
+        captions: caps("analyze", [0], { quote: true }),
+        fx(tl, id, t0, L) {
+          tl.set("#an-lid", { scaleY: 1 }, t0); tl.set("#an-pwr", { scale: 1 }, t0);
+          MmUI.aedAnalyze(tl, "an", t0, vo("analyze", 1) - 0.15);
+          MmUI.aedTalk(tl, "an", t0 + vo("analyze", 0), voEnd("analyze", 0) - vo("analyze", 0));
+          put(L.glow, `<rect x="-200" y="-200" width="1480" height="2320" fill="url(#mu2Vig)"/>`);
+        },
+      }, {
+        set: "sleep2", setOpts: { id: "hu", netOpen: true, clock: false, lamp: true }, dark: 0.12, blur: { sky: 3 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(430, 1500, 1.05, 540, 1120) }] },
+        actors: [A("chan", 120, 1800, 0.78, [{ t: 0, mode: "kneelUp", eyes: "wide", mouth: "o" }]), A("piak", 250, 1760, 0.84, [{ t: 0, mode: "kneelUp", eyes: "wide", mouth: "o" }], { talk: [[0.12, 1.4, "o"]] }),
+          A("fon", 420, 1830, 0.8, [{ t: 0, mode: "kneelUp", opts: { by: 190 }, eyes: "wide", mouth: "frown" }]), KFLOOR([{ t: 0, mode: "supine", opts: {}, eyes: "closed", mouth: "flat" }])],
+        captions: capsFrom("analyze", vo("analyze", 1) - 0.15, [1], { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.act, Mm.aedKit(690, 1880, 0.8, { id: "hu-kit", cable: [520, 1790] }));
+          put(L.glow, `<circle cx="700" cy="1850" r="160" fill="#7aff9a" opacity=".2" style="mix-blend-mode:screen"/>`);
+        },
+      });
+      // ---------- 16. the shock: the button, the jolt, the widow comes apart ----------
+      const SHOT_AT = voEnd("shock", 0) + 0.15;
+      split("shock", SHOT_AT + 0.12, {
+        set: "aedClose", setOpts: { id: "sh" }, dark: 0.05, light: false, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 1.35, 540, 900) }, { t: SHOT_AT, glide: SHOT_AT, ...fr(560, 1120, 1.7, 540, 900) }] },
+        captions: caps("shock", [0], { quote: true }),
+        fx(tl, id, t0, L) {
+          tl.set("#sh-lid", { scaleY: 1 }, t0);
+          MmUI.aedShock(tl, "sh", t0, SHOT_AT);
+          MmUI.aedTalk(tl, "sh", t0 + vo("shock", 0), voEnd("shock", 0) - vo("shock", 0));
+          put(L.glow, `<g id="sh-finger" opacity="0"><path d="M560,1700L560,1240" stroke="#c88e62" stroke-width="90" stroke-linecap="round"/><path d="M560,1700L560,1240" stroke="#e6b48a" stroke-width="74" stroke-linecap="round"/><path d="M500,1760L520,1500" stroke="#e2a92e" stroke-width="150" stroke-linecap="round"/></g>`);
+          tl.fromTo("#sh-finger", { opacity: 1, y: 300 }, { y: 0, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + SHOT_AT - 0.35);
+          tl.fromTo("#flashw", { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + SHOT_AT);
+        },
+      }, {
+        set: "sleep2", setOpts: { id: "sj", netOpen: true, clock: false, lamp: true, ghost: true, ghostX: 1000, ghostY: 1790 }, dark: 0.2, blur: { sky: 3 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(800, 1680, 1.1, 540, 1100) }, { t: D("shock") - SHOT_AT - 0.12, glide: D("shock") - SHOT_AT - 0.12, ...fr(820, 1680, 1.2, 540, 1100) }] },
+        shake: (t) => (t < 0.5 ? 9 * Math.exp(-t * 6) * Math.sin(t * 50) : 0),
+        actors: [A("fon", 300, 1800, 0.8, [{ t: 0, mode: "kneelUp", opts: { by: 190 }, eyes: "wide", mouth: "o" }]), KFLOOR([{ t: 0, mode: "jolt", eyes: "closed", mouth: "flat" }])],
+        fx(tl, id, t0, L) {
+          put(L.act, Mm.aedKit(640, 1890, 0.8, { id: "sj-kit", cable: [520, 1790] }));
+          tl.fromTo("#flashw", { opacity: 0.85 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0);
+          // the widow, lit by the flash, rears and shrieks, then comes apart into black flakes that blow off into the dark
+          tl.set("#sj-shade", { opacity: 0 }, t0);
+          tl.fromTo("#sj-ghost", { scale: 1, svgOrigin: "0 0" }, { scale: 1.12, svgOrigin: "0 0", duration: 0.25, ease: "back.out(3)", immediateRender: false }, t0 + 0.05);
+          const r = Pop2.mk(77); let fl = "";
+          for (let k = 0; k < 46; k++) fl += `<path id="sj-fl${k}" d="M0,0l${4 + r() * 8},${-2 - r() * 4}l${2 + r() * 4},${6 + r() * 6}z" fill="#050607" transform="translate(${(1000 + (r() - 0.5) * 220).toFixed(1)},${(1790 - r() * 420).toFixed(1)})" opacity="0"/>`;
+          put(L.glow, `<g>${fl}</g>`);
+          for (let k = 0; k < 46; k++) { const d = 0.5 + (k % 7) * 0.06; tl.fromTo(`#sj-fl${k}`, { opacity: 1, x: 0, y: 0 }, { opacity: 0, x: 220 + (k % 5) * 70, y: -160 - (k % 9) * 40, rotation: 200, duration: 0.9, ease: "power2.out", immediateRender: false }, t0 + d); }
+          tl.to(["#sj-ghost", "#sj-ghost-eyes"], { opacity: 0, duration: 0.45, ease: "power2.in" }, t0 + 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + 0.05, 0.3, 20, 2116);
+        },
+      });
+      add("resume", {
+        set: "sleep2", setOpts: { id: "rs", netOpen: true, clock: false, lamp: true }, dark: 0.14, blur: { sky: 3, mid: 2 }, light: BULB, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1660, 1.4, 540, 1150) }, { t: D("resume"), glide: D("resume"), ...fr(560, 1660, 1.5, 540, 1150) }] },
+        actors: [FONCPR({ eyes: "normal" }), KFLOOR([{ t: 0, mode: "pressed", eyes: "closed", mouth: "flat" }])],
+        captions: caps("resume"),
+        fx(tl, id, t0, L) {
+          put(L.act, Mm.aedKit(690, 1890, 0.8, { id: "rs-kit", cable: [520, 1790] }));
+          SRC(L, tl, t0 + 0.3, D("resume") - 0.4, "ที่มา: ศิริราช การช่วยชีวิตขั้นพื้นฐาน (4 มิ.ย. 2561)");
+          ETA(L, tl, t0, D("resume"), 60, 0, { ease: "power1.in" });
+          put(L.glow, `<g id="rs-siren" opacity="0"><circle cx="1100" cy="560" r="700" fill="#ff3a3a" opacity=".22" style="mix-blend-mode:screen"/></g><g id="rs-siren2" opacity="0"><circle cx="1100" cy="560" r="700" fill="#3a6aff" opacity=".22" style="mix-blend-mode:screen"/></g>`);
+          for (let t = D("resume") - 1.0; t < D("resume"); t += 0.25) { tl.set("#rs-siren", { opacity: 1 }, t0 + t); tl.set("#rs-siren", { opacity: 0 }, t0 + t + 0.12); tl.set("#rs-siren2", { opacity: 1 }, t0 + t + 0.12); tl.set("#rs-siren2", { opacity: 0 }, t0 + t + 0.24); }
+        },
+      });
+      // ---------- 17. the map: the ambulance to the provincial hospital ----------
+      add("route", {
+        set: "mapVillage", setOpts: { id: "mr", name: "บ้านโนนคำ", vehicle: "ambulance", carS: 1.15, from: "บ้านเก่ง", to: "รพ.จังหวัด", fromIcon: Maps.ICON.house, toIcon: Maps.ICON.hospital, labDx: [-40, 0], labDy: [0, -20],
+          route: [V.keng, [200, 872], [418, 870], [312, 1000], [300, 1128], [340, 1160], [700, 1162], [1100, 1163], [1240, 1150], V.hospital] },
+        dark: 0, light: false, grade: GMAP,
+        cam: { keys: [{ t: 0, ...fr(90 + 380, 300 + 960, 1.0, 540, 900) }, { t: 0.5, glide: 2.6, ...fr(90 + 1080, 300 + 1060, 1.0, 540, 900) }] },
+        fx(tl, id, t0) { Maps.route(tl, "mr", t0, { go: [0.3, 2.8], ease: "power1.inOut" }); },
+      });
+      add("arrive", {
+        set: "erFront2", setOpts: { id: "ef" }, dark: 0.1, blur: { far: 3 }, light: TUBEW, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(650, 1150, 0.9, 540, 1000) }, { t: D("arrive"), glide: D("arrive"), ...fr(650, 1150, 0.96, 540, 1000) }] },
+        fx(tl, id, t0, L) {
+          put(L.act, `<g id="ef-amb">${Sets.props.rescueTruck("ef-van", 0, 0, 0.9)}</g>`);
+          tl.set("#ef-amb", { x: 1500, y: 1560 }, t0);
+          tl.to("#ef-amb", { x: 700, duration: 1.4, ease: "power2.out" }, t0);
+          for (let t = 0; t < D("arrive"); t += 0.3) { tl.set("#ef-amb .lbglow", { opacity: 0.85 }, t0 + t); tl.set("#ef-amb .lbglow", { opacity: 0.2 }, t0 + t + 0.15); }
+        },
+      });
+      // ---------- 18. the ward ----------
+      add("er", {
+        set: "ward2", setOpts: { id: "w1", time: "night", bed: 560, window: 820 }, dark: 0.08, blur: { sky: 2 }, light: TUBEW, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(540, 1230, 1.15, 540, 1100) }] },
+        actors: [A("docm", 900, 1560, 0.86, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true, talk: [TALK("er", 0, "flat")] }),
+          A("chan", 140, 1600, 0.8, [{ t: 0, mode: "cry", eyes: "worry", mouth: "frown" }]), A("fon", 300, 1640, 0.78, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }]),
+          A("keng", 720, 1262, 0.8, [{ t: 0, mode: "lieBed", eyes: "closed", mouth: "flat" }])],
+        captions: caps("er", undefined, { quote: true }),
+      });
+      add("wake", {
+        set: "ward2", setOpts: { id: "w2", time: "night", bed: 560, window: 820 }, dark: 0.06, blur: { sky: 3, mid: 2 }, light: TUBEW, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(420, 1120, 1.75, 540, 1000) }, { t: vo("wake", 1) - 0.1, glide: 0.6, ...fr(300, 1200, 1.6, 540, 1000) }] },
+        actors: [A("keng", 720, 1262, 0.8, [{ t: 0, mode: "lieBed", opts: { head: 0 }, eyes: "closed", mouth: "flat" }, { t: 0.15, mode: "lieBed", opts: { head: -6 }, eyes: "normal", mouth: "frown" }], { talk: [TALK("wake", 0, "frown")] }),
+          A("fon", 120, 1600, 0.8, [{ t: 0, mode: "cry", eyes: "worry", mouth: "frown" }, { t: vo("wake", 1), mode: "idle", eyes: "normal", mouth: "laugh" }], { talk: [TALK("wake", 1, "laugh")] })],
+        captions: caps("wake", undefined, { quote: true }),
+        fx(tl, id, t0) { for (let t = 0.2; t < D("wake"); t += 0.9) tl.fromTo("#w2-ecg", { opacity: 0.4 }, { opacity: 1, duration: 0.15, yoyo: true, repeat: 1, immediateRender: false }, t0 + t); },
+      });
+      split("ask", voEnd("ask", 0) + 0.05, {
+        set: "ward2", setOpts: { id: "w3", time: "night", bed: 560, window: 820 }, dark: 0.06, blur: { sky: 4, mid: 3, set: 2 }, light: TUBEW, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(900, 960, 2.0, 540, 960) }] },
+        actors: [A("docm", 900, 1560, 0.86, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true, talk: [TALK("ask", 0, "flat")] })],
+        captions: caps("ask", undefined, { quote: true }),
+      }, {
+        set: "ward2", setOpts: { id: "w4", time: "night", bed: 560, window: 820 }, dark: 0.06, blur: { sky: 4, mid: 3, set: 3 }, light: TUBEW, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(170, 1170, 2.1, 540, 1000) }] },
+        actors: [A("chan", 140, 1600, 0.8, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat", look: -8 }])],
+      });
+      // ---------- 19. mom doesn't answer; behind her, in the black window, the eyes ----------
+      add("silent", {
+        set: "ward2", setOpts: { id: "w5", time: "night", bed: 560, window: 820, eyes: true }, dark: 0.1, blur: { sky: 1, mid: 2 }, light: TUBEW, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(230, 1000, 1.7, 540, 1000) }, { t: F("silent", 0, 1) - 0.15, glide: 0.9, ease: "power2.inOut", ...fr(800, 640, 1.55, 540, 900) }] },
+        actors: [A("chan", 140, 1600, 0.8, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat", look: -10 }])],
+        captions: caps("silent"),
+        fx(tl, id, t0) {
+          tl.set("#w5-eyes", { opacity: 0 }, t0);
+          tl.to("#w5-eyes", { opacity: 1, duration: 0.6, ease: "power1.in" }, t0 + F("silent", 0, 1));
+          tl.set("#w5-eyes", { opacity: 0 }, t0 + D("silent") - 0.5); tl.set("#w5-eyes", { opacity: 1 }, t0 + D("silent") - 0.38);
+          Fx.heart(tl, t0 + F("silent", 0, 1), D("silent") - F("silent", 0, 1), 0.6, 0.5);
+        },
+      });
+      // ---------- 20. the choice — dragged to "ปิดไว้" ----------
+      add("choice", {
+        set: "ward2", setOpts: { id: "w6", time: "night", bed: 560, window: 820, eyes: true }, dark: 0.3, blur: { sky: 8, mid: 8, set: 8, act: 6 }, light: TUBEW, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(420, 900, 1.2, 540, 960) }] },
+        actors: [A("chan", 140, 1600, 0.8, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat", look: -10 }])],
+        fx(tl, id, t0, L) {
+          const LOCK = `<rect x="-36" y="-8" width="72" height="60" rx="12" fill="#f2c55c" stroke="#26201c" stroke-width="4"/><path d="M-22,-8V-28A22,22 0 0 1 22,-28V-8" stroke="#26201c" stroke-width="10" fill="none"/><circle cy="16" r="9" fill="#26201c"/><path d="M0,20v16" stroke="#26201c" stroke-width="7" stroke-linecap="round"/>`;
+          const TELL = `<path d="M-54,-44H54Q66,-44 66,-32V18Q66,30 54,30H-4L-30,52V30H-54Q-66,30 -66,18V-32Q-66,-44 -54,-44Z" fill="#fff" stroke="#26201c" stroke-width="4" stroke-linejoin="round"/><path d="M-44,-8H-20L-12,-26L-2,12L8,-16L14,-8H44" stroke="#e2382e" stroke-width="7" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`;
+          MmUI.choice(tl, L.light, t0 + 0.05, D("choice") - 0.05, { q: "แม่จะทำยังไง?", a: "ปิดไว้", b: "บอกหมอ", ia: LOCK, ib: TELL, at: 1.6 });
+          Fx.heart(tl, t0, D("choice"), 0.42, 0.7);
+          Fx.glitch(tl, `#${id}`, t0 + 1.6, 0.3, 14, 2125); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.5, 0.35, 20, 2126);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.15);
+        },
+      });
+      // ---------- 21. end card ----------
+      add("next", {
+        set: "tag2", setOpts: { id: "tx", ep: "ตอนจบ", title: "ตรวจใจก่อนสาย" }, dark: 0, blur: { mid: 3 }, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 760, 1.0, 540, 800) }, { t: D("next"), glide: D("next"), ...fr(560, 780, 1.05, 540, 800) }] },
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#tx-tag", { rotation: -24, svgOrigin: "0 0" }, { rotation: 0, svgOrigin: "0 0", duration: 1.8, ease: "elastic.out(1, 0.35)", immediateRender: false }, t0 + 0.3);
+          tl.fromTo("#tx-sh", { rotation: -3, svgOrigin: "0 0" }, { rotation: 3, duration: 1.2, repeat: 2, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+        },
+      });

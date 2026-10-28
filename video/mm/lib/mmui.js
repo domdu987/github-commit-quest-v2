@@ -356,7 +356,8 @@
   }
 
   // ---------------- the choice at the end, possessed: black fingers drag the pick to the ghost doctor ----------------
-  //   o.q question, o.a (the card the ghost wants, left), o.b (the right answer), o.at when the fingers take hold (s after t0)
+  //   o.q question, o.a (the card the ghost wants, left), o.b (the right answer), o.at when the fingers take hold (s after t0);
+  //   o.ia / o.ib the cards' art (SVG, ~100 units; default the ghost doctor's candle and the CPR icon), o.fa / o.fb their colours
   function choice(tl, layer, t0, dur, o = {}) {
     const id = `mch${seq++}`, at = o.at ?? 1.5;
     const candle = `<path d="M-14,40V-10H14V40Z" fill="#f4f0e6" ${O(4)}/><path d="M0,-12C-12,-26 -6,-40 0,-52C6,-40 12,-26 0,-12Z" fill="#ffb03a" ${O(3)}/><path d="M0,-18C-5,-26 -3,-34 0,-40C3,-34 5,-26 0,-18Z" fill="#fff4b0"/>
@@ -365,7 +366,7 @@
       <g transform="translate(0,-60) scale(1.7)">${art}</g><text id="${id}-l${k}" y="170" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#fff">${label}</text></g></g>`;
     let g = `<rect id="${id}-dim" width="1080" height="1920" fill="#000" opacity="0"/>`;
     g += `<g transform="translate(540,560)"><g id="${id}-q" opacity="0"><rect x="-300" y="-50" width="600" height="100" rx="50" fill="#1a1e24" ${O(4)}/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">${o.q || "จะทำอะไรก่อน?"}</text></g></g>`;
-    g += card(290, o.a || "ไปตามหมอผี", "#4a2e6a", candle, 0) + card(790, o.b || "ปั๊มหัวใจ", "#1e7a48", `<g transform="scale(.9)">${ICONS[1](`${id}-ic`)}</g>`, 1);
+    g += card(290, o.a || "ไปตามหมอผี", o.fa || "#4a2e6a", o.ia || candle, 0) + card(790, o.b || "ปั๊มหัวใจ", o.fb || "#1e7a48", o.ib || `<g transform="scale(.9)">${ICONS[1](`${id}-ic`)}</g>`, 1);
     g += `<g id="${id}-sel" transform="translate(540,1000)"><rect x="-214" y="-264" width="428" height="528" rx="48" fill="none" stroke="#ffd23a" stroke-width="12"/></g>`;
     g += `<g id="${id}-hand" transform="translate(540,2100)">${[-36, -12, 12, 36].map((d, k) => `<path d="M${d},0Q${d * 1.2},-160 ${d * 1.6 + (k % 2 ? 8 : -8)},-300q4,-40 ${k < 2 ? -14 : 14},-50" stroke="#050607" stroke-width="16" fill="none" stroke-linecap="round"/>`).join("")}<path d="M-60,0Q0,-90 60,0V200H-60Z" fill="#050607"/></g>`;
     put(layer, `<g id="${id}">${g}</g>`);
