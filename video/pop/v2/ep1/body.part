@@ -367,7 +367,7 @@
         actors: [MINT(560, GB + 60, 2.0, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: 0.4, mode: "sit", eyes: "wide", mouth: "o" }, { t: voEnd("sound") + 0.1, mode: "sit", eyes: "side", mouth: "flat" }])],
         captions: caps("sound", undefined, { quote: true }),
         fx(tl, id, t0, L) {
-          PopUI.sfx(tl, L.light, t0 + 0.25, 1.2, "กร้วม…", 260, 1760, { size: 84, rot: -8 }); PopUI.sfx(tl, L.light, t0 + 1.2, 1.3, "กร้วม…", 800, 1850, { size: 100, rot: 6 });
+          PopUI.sfx(tl, L.light, t0 + 0.25, 1.2, "กร้วม…", 330, 1680, { size: 84, rot: -8 }); PopUI.sfx(tl, L.light, t0 + 1.2, 1.3, "กร้วม…", 800, 1850, { size: 100, rot: 6 });
           Fx.heart(tl, t0 + 0.4, D("sound") - 0.4, 0.42, 0.55);
         },
       });

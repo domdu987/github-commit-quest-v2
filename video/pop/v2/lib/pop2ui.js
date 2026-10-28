@@ -95,7 +95,13 @@
   function phone(tl, layer, t0, dur, o = {}) {
     const id = `ui${++seq}`, X = o.x ?? 540, Y = o.y ?? 1080, W = 560, H = 1060, sk = o.skin || "#efc6a0", skS = Rig2.shade(sk, 0.22);
     let scr = "";
-    if (o.mode === "camera") {
+    if (o.photo) {
+      scr = `<rect x="${-W / 2 + 22}" y="${-H / 2 + 22}" width="${W - 44}" height="${H - 44}" rx="30" fill="#0e1014"/>
+        <rect x="${-W / 2 + 40}" y="${-H / 2 + 200}" width="${W - 80}" height="${W - 80}" fill="#3a2a1a"/><circle cx="0" cy="${-H / 2 + 200 + (W - 80) / 2}" r="${(W - 80) * 0.46}" fill="#b8bcc0"/><circle cx="0" cy="${-H / 2 + 200 + (W - 80) / 2}" r="${(W - 80) * 0.4}" fill="#c8902e"/>
+        ${[[-60, -40], [40, -70], [80, 30], [-30, 60], [10, 0], [-90, 20]].map(([mx, my]) => `<g transform="translate(${mx},${-H / 2 + 200 + (W - 80) / 2 + my}) rotate(${mx})"><path d="M-30,0C-28,-20 -14,-26 0,-26C14,-26 28,-20 30,0Q0,5 -30,0Z" fill="#f6efe0" stroke="#8a7458" stroke-width="2"/></g>`).join("")}
+        <text x="${-W / 2 + 50}" y="${-H / 2 + 150}" font-family="Kanit" font-weight="700" font-size="30" fill="#f4ecd8">รูปภาพ · 02:58 น.</text>
+        <path d="M${-W / 2 + 60},${H / 2 - 120}h80M${-W / 2 + 200},${H / 2 - 120}h80" stroke="#6a6e78" stroke-width="10" stroke-linecap="round"/>`;
+    } else if (o.mode === "camera") {
       scr = `<rect x="${-W / 2 + 22}" y="${-H / 2 + 60}" width="${W - 44}" height="${H - 160}" rx="20" fill="#000" opacity=".08"/>
         ${[1, 2].map((k) => `<path d="M${-W / 2 + 22 + k * (W - 44) / 3},${-H / 2 + 60}v${H - 160}M${-W / 2 + 22},${-H / 2 + 60 + k * (H - 160) / 3}h${W - 44}" stroke="#fff" stroke-width="2" opacity=".5"/>`).join("")}
         <g id="${id}-focus"><path d="M-80,-60v-30h30M50,-90h30v30M80,40v30h-30M-50,70h-30v-30" stroke="#ffd84a" stroke-width="5" fill="none"/></g>
@@ -179,7 +185,7 @@
     const moon = `<g transform="translate(0,-50)"><path d="M18,-50A54,54 0 1 0 50,30A44,44 0 1 1 18,-50Z" fill="#f2dfb4" stroke="${INK}" stroke-width="4"/><text x="34" y="-30" font-family="Kanit" font-weight="900" font-size="30" fill="#f2dfb4">z</text></g>`;
     put(layer, `<g id="${id}" opacity="0"><g transform="translate(540,${y})">
       <g transform="translate(0,-280)"><rect x="-230" y="-48" width="460" height="92" rx="46" fill="#0c1014" opacity=".86"/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#f4ecd8">${o.q || ""}</text></g>
-      ${card("A", o.a, ICON.hospital(0, -50, 1.25), -250)}${card("B", o.b, moon, 250)}
+      ${card("A", o.a, ICON.hospital(0, -50, 1.25), -250)}${card("B", o.b, o.iconB === "home" ? `<g transform="translate(0,-50) scale(1.3)"><path d="M-40,40V-6L0,-40L40,-6V40Z" fill="#c8a066" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/><path d="M-50,-2L0,-46L50,-2" stroke="#8a3a2a" stroke-width="10" fill="none" stroke-linecap="round"/><rect x="-12" y="10" width="24" height="30" fill="#5a3a22"/></g>` : moon, 250)}
       <g transform="translate(0,230)"><circle r="56" fill="#0c1014" stroke="#f4ecd8" stroke-opacity=".25" stroke-width="10"/><circle id="${id}-ring" r="56" fill="none" stroke="#f2c55c" stroke-width="10" stroke-linecap="round" stroke-dasharray="${RC.toFixed(1)}" stroke-dashoffset="0" transform="rotate(-90)"/>
         ${Array.from({ length: secs + 1 }, (_, n) => `<text id="${id}-n${n}" y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#f4ecd8" opacity="0">${n}</text>`).join("")}</g>
       ${o.possessed ? `<text id="${id}-who" y="400" text-anchor="middle" font-family="Sriracha" font-size="54" fill="#ff6a6a" stroke="#14100c" stroke-width="10" paint-order="stroke" opacity="0">${o.possessed.who}</text>` : ""}</g></g>`);
@@ -199,5 +205,21 @@
     return id;
   }
 
-  window.PopUI = { rule, source, phone, tag, sfx, timeline, choice, ICON, RULES };
+  // ---------------- the doctor's history form on a clipboard; o.rows [[label, answer, at]] write in at their times ----------------
+  function form(tl, layer, t0, dur, o = {}) {
+    const id = `ui${++seq}`, y = o.y ?? 760, rows = o.rows || [];
+    let g = `<g id="${id}" opacity="0"><g transform="translate(540,${y}) rotate(-2)"><g filter="url(#uiShadow)"><rect x="-380" y="-470" width="760" height="940" rx="26" fill="#8a5a32"/><rect x="-340" y="-420" width="680" height="860" fill="url(#uiPaper)"/></g>
+      <rect x="-110" y="-500" width="220" height="70" rx="14" fill="#b8bcc0" stroke="${INK}" stroke-width="4"/><text y="-330" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="46" fill="#2a4a7a">ประวัติการกินเห็ด</text><path d="M-280,-300H280" stroke="#2a4a7a" stroke-width="4"/>`;
+    rows.forEach(([label, ans], i) => { const ry = -200 + i * 150;
+      g += `<text x="-280" y="${ry}" font-family="Kanit" font-weight="400" font-size="36" fill="#5a5a5a">${label}</text><path d="M-280,${ry + 70}H280" stroke="#9ab8d8" stroke-width="3"/>
+        <g id="${id}-a${i}" opacity="0"><text x="-270" y="${ry + 60}" font-family="Mali" font-weight="700" font-size="50" fill="#1a3a8a">${ans}</text></g>`; });
+    g += `</g></g>`;
+    put(layer, g);
+    tl.fromTo(`#${id}`, { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.4)", immediateRender: false }, t0);
+    rows.forEach((r, i) => tl.fromTo(`#${id}-a${i}`, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3, immediateRender: false }, t0 + (r[2] ?? 0.5 + i * 0.6)));
+    if (o.out !== false) tl.to(`#${id}`, { opacity: 0, duration: 0.25 }, t0 + dur - 0.25);
+    return id;
+  }
+
+  window.PopUI = { rule, source, phone, tag, sfx, timeline, choice, form, ICON, RULES };
 })();

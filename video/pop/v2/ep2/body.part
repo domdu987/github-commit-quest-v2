@@ -1,0 +1,335 @@
+      // ---------- เห็ดปอบ EP.2 เอาเห็ดไปหาหมอ — v2: the same illustrated cast and painted sets as EP.1 v2 ----------
+      // camera grammar: under the net, torches under the house, knowledge laid out on the bench, the night road in headlights,
+      // the cab in dashboard light, the emergency entrance, the ward from night to dawn, the window close up
+      const MINT = (x, y, s, track, extra = {}) => ({ who: "mint", x, y, s, track, blinks: [0.9, 3.1, 5.4], ...extra });
+      const TON = (x, y, s, track, extra = {}) => ({ who: "ton", x, y, s, track, blinks: [1.2, 3.6], ...extra });
+      const YAI = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, blinks: [0.7, 2.6, 4.9], ...extra });
+      const THONG = (x, y, s, track, extra = {}) => ({ who: "thong", x, y, s, track, blinks: [1.6, 4.2], ...extra });
+      const BOON = (x, y, s, track, extra = {}) => ({ who: "boon", x, y, s, track, blinks: [0.8, 2.9], ...extra });
+      const KHEM = (x, y, s, track, extra = {}) => ({ who: "khem", x, y, s, track, blinks: [1.1, 3.3], ...extra });
+      const DOC = (x, y, s, track, extra = {}) => ({ who: "doc", x, y, s, track, blinks: [0.6, 2.4], ...extra });
+      const GK = 1500, GB = 1500, GR = 1400, GW = 1500, GV = 1320;
+      const CU = (x, y, s, sy = 1000) => fr(x, y - 560 * s, 1.0, 540, sy);
+      Object.assign(Rig.CAST, {
+        mintPhone: { ...Rig.CAST.mint, hand: Pop2.PROP.phone() }, mintBag: { ...Rig.CAST.mint, hand: Pop2.PROP.bag() }, khemSalt: { ...Rig.CAST.khem, hand: Pop2.PROP.saltGlass() },
+        docBag: { ...Rig.CAST.doc, hand: Pop2.PROP.bag() },
+      });
+      Rig.MODES.reach = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -52, faF: -26, uaB: -30, faB: -30, torso: 8, head: 12 });
+      const chair = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-70,0V-150M70,0V-150M-70,-150H80V-170H-70ZM60,-170V-380" stroke="#5a6a72" stroke-width="12" fill="none"/><rect x="-80" y="-172" width="160" height="22" rx="6" fill="#7a8a92"/><rect x="50" y="-380" width="24" height="200" rx="8" fill="#6a7a82"/></g>`;
+      const oneHand = (id, i) => { const h = document.getElementById(`${id}-a${i}-handB`); if (h) h.innerHTML = ""; };
+      const MOON = { from: "right", rim: "#a8c4ff", rimOp: 0.8, shade: "#000010", shadeOp: 0.5, cast: false, vol: false };
+      const LAMP = { from: "left", rim: "#ffc070", rimOp: 0.85, shade: "#100818", shadeOp: 0.55, cast: { len: 2, op: 0.45 }, vol: false };
+      const TUBE = { from: "left", rim: "#e8fff4", rimOp: 0.6, shade: "#102028", shadeOp: 0.4, cast: { len: 1.2, op: 0.3 }, vol: false };
+      const DASH = { from: "right", rim: "#7ae8ff", rimOp: 0.8, shade: "#000", shadeOp: 0.5, cast: false, vol: false };
+      const GNIGHT = { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 }, GLATE = { top: "#0a1430", bottom: "#3a1a10", op: 0.35 }, GFIRE = { top: "#2a3a6a", bottom: "#ff9a4a", op: 0.25 };
+      const GROAD = { top: "#0a1430", bottom: "#2a1a3a", op: 0.3 }, GWARD = { top: "#2a4a5a", bottom: "#1a2a3a", op: 0.25 }, GDAWN = { top: "#ffb080", bottom: "#3a3a6a", op: 0.3 };
+      const torchBeams = (L, pts) => put(L.glow, pts.map(([x, y, a]) => `<g transform="translate(${x},${y}) rotate(${a})"><path d="M0,0L-140,900L140,900Z" fill="url(#beamg)" opacity=".55" style="mix-blend-mode:screen"/><circle r="26" fill="#fff6c8"/></g>`).join(""));
+      const drive = (tl, id, t0, dur, k = 1) => { tl.fromTo(`#${id}-posts`, { x: 0 }, { x: -1400 * k, duration: dur, ease: "none", immediateRender: false }, t0); tl.fromTo(`#${id}-scroll`, { x: 0 }, { x: -500 * k, duration: dur, ease: "none", immediateRender: false }, t0); };
+
+      // ---------- 0. where EP.1 left off: ต้น curled up under the net ----------
+      add("recap", {
+        set: "bedroom2", setOpts: { id: "b0" }, dark: 0.3, blur: { sky: 6, mid: 6, set: 6, fg: 10 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(560, GB - 160, 1.35, 540, 1150) }, { t: D("recap"), ...fr(560, GB - 160, 1.42, 540, 1150) }] },
+        actors: [TON(820, GB + 80, 1.05, [{ t: 0, mode: "lie", eyes: "closed", mouth: "frown" }])],
+        fx(tl, id, t0) { Fx.glitch(tl, `#${id}`, t0, 0.3, 14, 1001); Fx.heart(tl, t0, D("recap"), 0.4, 0.6); },
+      });
+
+      // ---------- 1. flash-forward: the pickup tearing down the dark road, headlights raking the paddies ----------
+      add("hook", {
+        set: "nightRoad2", setOpts: { id: "r1", x: 120 }, dark: 0.08, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(420, 1260, 1.05, 540, 1150) }, { t: D("hook"), ...fr(520, 1240, 1.15, 540, 1150) }] },
+        shake: (t) => 4 * Math.sin(t * 37),
+        captions: caps("hook"),
+        fx(tl, id, t0) {
+          drive(tl, "r1", t0, D("hook"));
+          tl.to(`#${id}-dark`, { opacity: 0.35, duration: 0.5 }, t0 + vo("hook", 1) - 0.15);
+          Fx.heart(tl, t0 + 0.4, D("hook") - 0.4, 0.4, 0.5);
+          Fx.glitch(tl, `#${id}`, t0 + D("hook") - 0.5, 0.3, 18, 1002); Fx.punch(tl, `#${id} .stage`, t0 + D("hook") - 0.5, 1.08, 0.4);
+          tl.fromTo("#flashw", { opacity: 0.7 }, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + D("hook") - 0.45);
+        },
+      });
+
+      // ---------- 2. ยายคำ at the net, soft and wrong: "รอเช้าก่อนลูก… หมอธรรมจะมา" ----------
+      add("wait", {
+        set: "bedroom2", setOpts: { id: "b2" }, dark: 0.25, blur: { sky: 6, mid: 4, fg: 10 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...CU(540, GB + 1200, 2.0, 1000) }, { t: D("wait"), ...fr(540, GB + 1200 - 560 * 2.0, 1.12, 540, 1000) }] },
+        actors: [YAI(540, GB + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }, { t: F("wait", 0, 1), mode: "idle", eyes: "normal", mouth: "smile" }])],
+        captions: caps("wait", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("wait"), 0.5, 0.45); },
+      });
+
+      // ---------- 3. มิ้นท์ close, flat refusal: the hospital, now ----------
+      add("no", {
+        set: "bedroom2", setOpts: { id: "b3", phone: true }, dark: 0.2, blur: { sky: 6, mid: 4, fg: 10 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...CU(540, GB + 1300, 2.1, 1000) }] },
+        shake: (t) => (t < 0.4 ? 8 * Math.sin(t * 50) * (0.4 - t) : 0),
+        actors: [MINT(540, GB + 1300, 2.1, [{ t: 0, mode: "point", eyes: "angry", mouth: "scream" }])],
+        captions: caps("no", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.06, 0.3); },
+      });
+
+      // ---------- 4. under the house by lamplight: ต้น over a basin, มิ้นท์ holding him up ----------
+      add("vomit", {
+        set: "kitchen2", setOpts: { id: "k4", stove: 980, lid: "on" }, dark: 0.12, blur: { sky: 4, far: 4, mid: 2, fg: 10 }, light: LAMP, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(520, GK - 300, 1.3, 540, 1050) }, { t: D("vomit"), ...fr(520, GK - 300, 1.38, 540, 1050) }] },
+        actors: [TON(470, GK + 40, 1.0, [{ t: 0, mode: "crouch", eyes: "pain", mouth: "o" }]), MINT(680, GK, 1.05, [{ t: 0, mode: "reach", eyes: "worry", mouth: "o" }], { flip: true })],
+        extra(L) { put(L.act, `<g transform="translate(470,${GK + 30}) scale(1.1)">${Pop2.BASIN}</g>`); },
+        captions: caps("vomit"),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("vomit"), 0.45, 0.5); },
+      });
+
+      // ---------- 5. torches swing in under the house: ป้าบุญ points — "ปอบเข้าแน่ๆ!" ----------
+      add("crowd", {
+        set: "kitchen2", setOpts: { id: "k5", stove: 1100, time: "late" }, dark: 0.2, blur: { sky: 4, far: 4, mid: 2, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, GK - 380, 1.0, 540, 1050) }, { t: D("crowd"), ...fr(600, GK - 400, 1.08, 540, 1050) }] },
+        actors: [BOON(380, GK + 60, 1.05, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }]), KHEM(640, GK + 30, 1.0, [{ t: 0, mode: "torch", eyes: "wide", mouth: "o", torch: true }], { flip: true }),
+          TON(860, GK + 80, 0.82, [{ t: 0, mode: "crouch", eyes: "pain", mouth: "frown" }], { flip: true })],
+        captions: caps("crowd", undefined, { quote: true }),
+        extra(L) { torchBeams(L, [[120, 700, -30], [1000, 640, 28]]); },
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("crowd", 0, 1), 1.05, 0.3); },
+      });
+
+      // ---------- 6. ลุงเข็ม close, a glass of salt water shoved at camera ----------
+      add("salt", {
+        set: "kitchen2", setOpts: { id: "k6", stove: 1100, time: "late" }, dark: 0.18, blur: { sky: 6, far: 6, mid: 5, set: 5, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(520, GK + 1150, 2.0, 1000) }, { t: D("salt"), ...fr(520, GK + 1150 - 560 * 2.0, 1.08, 540, 1000) }] },
+        actors: [{ ...KHEM(520, GK + 1150, 2.0, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }]), who: "khemSalt" }],
+        captions: caps("salt", undefined, { quote: true }),
+        fx(tl, id) { oneHand(id, 0); },
+      });
+
+      // ---------- 7. knowledge on the bench: no fingers down the throat, no salt water — choking; the poison already makes you vomit ----------
+      add("know1", {
+        set: "benchTop", setOpts: { id: "t7", items: [[270, 520, "ห้ามล้วงคอ", "throat"], [810, 520, "ห้ามกินน้ำเกลือ", "saltglass"], [270, 1000, "อาจสำลัก", "lungs"], [810, 1000, "อาเจียนมากอยู่แล้ว", "vomit"]] }, dark: 0, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 900) }, { t: vo("know1", 1) - 0.2, glide: 0.6, ...fr(540, 1000, 1.0, 540, 900) }] },
+        captions: caps("know1"),
+        fx(tl, id, t0, L) {
+          const pop = (sel, at) => tl.fromTo(sel, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, at);
+          const stamp = (i, at, ox, oy) => tl.fromTo(`#t7-x${i}`, { opacity: 0, scale: 1.5, svgOrigin: `${ox} ${oy}` }, { opacity: 1, scale: 1, duration: 0.2, ease: "power3.out", immediateRender: false }, at);
+          pop("#t7-t0", t0 + F("know1", 0, 1) - 0.2); stamp(0, t0 + F("know1", 0, 1) + 0.4, 270, 510);
+          pop("#t7-t1", t0 + F("know1", 0, 2) - 0.2); stamp(1, t0 + F("know1", 0, 2) + 0.4, 810, 510);
+          pop("#t7-t2", t0 + vo("know1", 1)); pop("#t7-t3", t0 + F("know1", 1, 2) - 0.1);
+          PopUI.source(tl, L.light, t0 + 0.4, D("know1") - 0.4, { text: "ที่มา: กรมควบคุมโรค (12 มิ.ย. 2568 · 3 เม.ย. 2568) · คู่มือเห็ดพิษ (2566)", y: 1810 });
+        },
+      });
+
+      // ---------- 8. มิ้นท์ bags what's left of the mushrooms ----------
+      add("grab", {
+        set: "kitchen2", setOpts: { id: "k8", stove: 300, time: "late", lid: "off" }, dark: 0.15, blur: { sky: 6, far: 6, mid: 4, set: 4, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(620, GK + 1200, 2.0, 1000) }] },
+        actors: [{ ...MINT(620, GK + 1200, 2.0, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }]), who: "mintBag" }],
+        captions: caps("grab", undefined, { quote: true }),
+        fx(tl, id) { oneHand(id, 0); },
+      });
+
+      // ---------- 9. knowledge: straight to hospital — with the leftover mushrooms, or a photo ----------
+      add("know2", {
+        set: "benchTop", setOpts: { id: "t9", items: [[540, 470, "ไปโรงพยาบาลทันที", "hospital"], [270, 980, "เห็ดที่เหลือ", "bag"], [810, 980, "หรือรูปถ่าย", "photo"]], ok: [0, 1, 2] }, dark: 0, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 900) }, { t: D("know2"), ...fr(540, 900, 1.04, 540, 900) }] },
+        captions: caps("know2"),
+        fx(tl, id, t0, L) {
+          const pop = (i, at) => { tl.fromTo(`#t9-t${i}`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, at); tl.fromTo(`#t9-x${i}`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, at + 0.4); };
+          pop(0, t0 + 0.2); pop(1, t0 + F("know2", 0, 1)); pop(2, t0 + F("know2", 0, 1) + 0.9);
+          PopUI.source(tl, L.light, t0 + 0.4, D("know2") - 0.4, { text: "ที่มา: กรมควบคุมโรค (12 มิ.ย. 2568)", y: 1810 });
+        },
+      });
+
+      // ---------- 10. her phone over the pot — focus, flash: "รูปนี้… ไม่ลงไอจีนะ" ----------
+      add("photo", {
+        set: "potTop", setOpts: { id: "p10", ladle: false }, dark: 0, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(540, 980, 1.05, 540, 960) }] },
+        captions: caps("photo", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          PopUI.phone(tl, L.light, t0, D("photo"), { mode: "camera", y: 1000, rot: 0, out: false });
+          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0 + F("photo", 0, 1) - 0.2);
+        },
+      });
+
+      // ---------- 11. ยายคำ, too calm: "ยายไม่เป็นไรหรอก" ----------
+      add("fine", {
+        set: "kitchen2", setOpts: { id: "k11", stove: 900, time: "late" }, dark: 0.18, blur: { sky: 6, far: 6, mid: 5, set: 5, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...CU(520, GK + 1200, 2.0, 1000) }, { t: D("fine"), ...fr(520, GK + 1200 - 560 * 2.0, 1.1, 540, 1000) }] },
+        actors: [YAI(520, GK + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }])],
+        captions: caps("fine", undefined, { quote: true }),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("fine"), 0.5, 0.45); },
+      });
+
+      // ---------- 12. two-shot: มิ้นท์ takes ยาย by the hand ----------
+      add("both", {
+        set: "kitchen2", setOpts: { id: "k12", stove: 1000, time: "late" }, dark: 0.15, blur: { sky: 4, far: 4, mid: 3, fg: 10 }, light: LAMP, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(540, GK - 420, 1.25, 540, 1050) }] },
+        actors: [MINT(660, GK + 40, 1.1, [{ t: 0, mode: "point", eyes: "angry", mouth: "scream" }], { flip: true }), YAI(400, GK + 40, 1.05, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("both", undefined, { quote: true }),
+      });
+
+      // ---------- 13. knowledge: everyone who ate from the pot goes to be checked ----------
+      add("know3", {
+        set: "benchTop", setOpts: { id: "t13", items: [[270, 520, "ต้น · กินสองถ้วย", "bowl"], [810, 520, "ยาย · กินด้วย", "bowl"], [540, 1000, "ต้องไปตรวจด้วย", "hospital"]], ok: [2] }, dark: 0, grade: GFIRE,
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 900) }] },
+        captions: caps("know3"),
+        fx(tl, id, t0, L) {
+          [0, 1].forEach((i) => tl.fromTo(`#t13-t${i}`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0 + 0.1 + i * 0.25));
+          tl.fromTo("#t13-t2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0 + F("know3", 0, 1) - 0.1);
+          tl.fromTo("#t13-x2", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0 + F("know3", 0, 1) + 0.4);
+          PopUI.source(tl, L.light, t0 + 0.4, D("know3") - 0.4, { text: "ที่มา: คู่มือเห็ดพิษ กรมควบคุมโรค (2566)", y: 1810 });
+        },
+      });
+
+      // ---------- 14. 3 a.m., the village road empty both ways; her phone light the only light ----------
+      add("nocar", {
+        set: "village2", setOpts: { id: "v14", time: "night", fence: [-700] }, dark: 0.15, blur: { far: 2, fg: 8 }, light: MOON, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 0.92, 540, 1000) }, { t: D("nocar"), ...fr(560, 1150, 0.86, 540, 1000) }] },
+        actors: [{ ...MINT(600, GV + 420, 0.75, [{ t: 0, mode: "phoneLook", eyes: "worry", mouth: "frown" }]), who: "mintPhone" }],
+        captions: caps("nocar"),
+        fx(tl, id, t0, L) { oneHand(id, 0); Pop2.particles(tl, L.glow, { type: "firefly", n: 12, box: [0, 900, 1400, 800], t0, dur: D("nocar"), seed: 9 }); },
+      });
+
+      // ---------- 15. headlights swing in: ลุงทองดี's pickup — "ขึ้นรถเร็ว!" ----------
+      add("truck", {
+        set: "nightRoad2", setOpts: { id: "r15", x: 900, flip: true }, dark: 0.08, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(640, 1180, 0.95, 540, 1050) }] },
+        actors: [THONG(400, GR + 90, 1.05, [{ t: 0, mode: "wave", eyes: "wide", mouth: "scream" }])],
+        captions: caps("truck", undefined, { quote: true }),
+        fx(tl, id, t0) {
+          tl.fromTo("#r15-truck", { x: 700 }, { x: 0, duration: 0.8, ease: "power3.out", immediateRender: false }, t0);
+          tl.fromTo("#r15-lights", { x: 700 }, { x: 0, duration: 0.8, ease: "power3.out", immediateRender: false }, t0);
+          tl.fromTo("#flashw", { opacity: 0.5 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0); Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.06, 0.3);
+        },
+      });
+
+      // ---------- 16. in the truck bed, wind in her hair: "ผีปอบ… ขับรถกระบะได้ด้วยเหรอ" ----------
+      add("joke", {
+        set: "nightRoad2", setOpts: { id: "r16", x: 1150, s: 2.4, bedFront: true }, dark: 0.12, blur: { far: 4, mid: 4 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(600, 1000, 1.0, 540, 1180) }] },
+        shake: (t) => 3 * Math.sin(t * 23),
+        actors: [YAI(280, 1230, 1.1, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }]), TON(520, 1120, 1.0, [{ t: 0, mode: "lie", eyes: "closed", mouth: "frown" }]), MINT(800, 1190, 1.3, [{ t: 0, mode: "sit", eyes: "side", mouth: "o" }], { flip: true })],
+        captions: caps("joke", undefined, { quote: true }),
+        fx(tl, id, t0) { drive(tl, "r16", t0, D("joke"), 1.4); },
+      });
+
+      // ---------- 17. the road; then ลุงทองดี in the dashboard light: his wife ate the same white mushroom ----------
+      const RS = vo("road", 1) - 0.25;
+      split("road", RS, {
+        set: "nightRoad2", setOpts: { id: "r17", x: 360 }, dark: 0.08, blur: { far: 2, fg: 8 }, light: MOON, grade: GROAD,
+        cam: { keys: [{ t: 0, ...fr(300, 1150, 0.78, 540, 1050) }, { t: RS, ...fr(560, 1150, 0.82, 540, 1050) }] },
+        shake: (t) => 3 * Math.sin(t * 29),
+        captions: caps("road", [0], { quote: true }),
+        fx(tl, id, t0) { drive(tl, "r17", t0, RS); },
+      }, {
+        set: "cab2", setOpts: { id: "cb17" }, dark: 0.1, light: DASH, grade: { top: "#0a1430", bottom: "#0a2a3a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("road") - RS, ...fr(420, 1000, 1.12, 540, 960) }] },
+        shake: (t) => 2 * Math.sin(t * 29),
+        actors: [THONG(300, 2200, 2.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: 1.4, mode: "idle", eyes: "closed", mouth: "flat" }], { flip: true })],
+        captions: capsFrom("road", RS, [1], { quote: true }),
+        fx(tl, id, t0) { tl.fromTo("#cb17-road", { y: 0 }, { y: 30, duration: 0.4, repeat: Math.ceil((D("road") - RS) / 0.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); Fx.heart(tl, t0 + 1.8, D("road") - RS - 1.8, 0.5, 0.45); },
+      });
+
+      // ---------- 18. the district hospital's emergency entrance, 3:30 a.m.; they come in from the truck ----------
+      add("er", {
+        set: "erFront2", setOpts: { id: "e18" }, dark: 0.05, blur: { far: 2 }, light: TUBE, grade: { top: "#0a1430", bottom: "#2a3a4a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(600, 1100, 0.78, 540, 1000) }, { t: D("er"), ...fr(620, 1150, 0.86, 540, 1000) }] },
+        actors: [MINT(-60, GW + 120, 0.72, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 520, y: GW + 60, dur: D("er"), ease: "none" } }),
+          YAI(-220, GW + 140, 0.66, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: 260, y: GW + 80, dur: D("er"), ease: "none" } })],
+        captions: caps("er"),
+      });
+
+      // ---------- 19. the doctor, close: what did he eat, and when ----------
+      add("ask", {
+        set: "ward2", setOpts: { id: "w19" }, dark: 0.04, blur: { sky: 6, far: 6, set: 8 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...CU(560, GW + 1200, 2.0, 1000) }, { t: D("ask"), ...fr(560, GW + 1200 - 560 * 2.0, 1.06, 540, 1000) }] },
+        actors: [DOC(560, GW + 1200, 2.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "o" }])],
+        captions: caps("ask", undefined, { quote: true }),
+      });
+
+      // ---------- 20. her phone held up to the doctor: the photo of the pot ----------
+      add("answer", {
+        set: "ward2", setOpts: { id: "w20" }, dark: 0.04, blur: { sky: 8, far: 8, set: 8 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...CU(380, GW + 1300, 2.0, 1080) }] },
+        actors: [MINT(380, GW + 1300, 2.0, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }])],
+        captions: caps("answer", undefined, { quote: true }),
+        fx(tl, id, t0, L) { PopUI.phone(tl, L.light, t0 + F("answer", 0, 1) - 0.25, D("answer") - F("answer", 0, 1) + 0.25, { mode: "nosignal", x: 760, y: 1250, rot: 6, out: false, photo: true }); },
+      });
+
+      // ---------- 21. knowledge: the history form filled in — what, when, how many ----------
+      add("know4", {
+        set: "ward2", setOpts: { id: "w21" }, dark: 0.04, blur: { sky: 8, far: 8, set: 10 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.2, 540, 960) }] },
+        captions: caps("know4"),
+        fx(tl, id, t0, L) {
+          PopUI.form(tl, L.light, t0 + 0.05, D("know4"), { y: 760, out: false, rows: [["กินอะไร", "แกงเห็ดขาว (มีตัวอย่าง)", F("know4", 0, 1)], ["กินเมื่อไหร่", "หนึ่งทุ่ม เมื่อคืน", F("know4", 0, 2)], ["กินกี่คน", "2 คน (ต้น, ยาย)", F("know4", 0, 2) + 0.5], ["มีอาการ", "ปวดท้อง อาเจียน", F("know4", 0, 2) + 0.9]] });
+          PopUI.source(tl, L.light, t0 + 0.4, D("know4") - 0.4, { text: "ที่มา: สคร.7 ขอนแก่น (9 มิ.ย. 2566) · ศูนย์พิษวิทยารามาธิบดี โทร 1367", y: 1810 });
+        },
+      });
+
+      // ---------- 22. the doctor with the bag of mushrooms: "ระโงกหิน… ต้องนอนโรงพยาบาล" ----------
+      add("diag", {
+        set: "ward2", setOpts: { id: "w22" }, dark: 0.05, blur: { sky: 6, far: 6, set: 6 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(560, GW - 620, 1.3, 540, 1100) }, { t: D("diag"), ...fr(560, GW - 660, 1.42, 540, 1100) }] },
+        actors: [{ ...DOC(560, GW + 60, 1.3, [{ t: 0, mode: "raise", eyes: "normal", mouth: "frown" }]), who: "docBag" }],
+        captions: caps("diag", undefined, { quote: true }),
+        fx(tl, id, t0) { oneHand(id, 0); Fx.heart(tl, t0 + F("diag", 0, 1), D("diag") - F("diag", 0, 1), 0.48, 0.45); },
+      });
+
+      // ---------- 23. the ward before dawn, the clock at five ----------
+      add("dawn", {
+        set: "ward2", setOpts: { id: "w23", time: "dawn", clock: [260, 520, 150, 0] }, dark: 0.12, blur: { sky: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(480, 1000, 0.82, 540, 960) }, { t: D("dawn"), ...fr(480, 1000, 0.88, 540, 960) }] },
+        actors: [TON(560, 1220, 0.75, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }]), MINT(900, GW + 40, 0.7, [{ t: 0, mode: "sitChair", eyes: "closed", mouth: "flat" }], { flip: true })],
+        extra(L) { put(L.set, chair(900, GW + 40, 0.7)); },
+        captions: caps("dawn"),
+      });
+
+      // ---------- 24. ต้น sits up in bed: the pain's gone ----------
+      add("better", {
+        set: "ward2", setOpts: { id: "w24", time: "dawn" }, dark: 0.08, blur: { sky: 4, far: 3 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.15, 540, 1000) }, { t: D("better"), ...fr(560, 1000, 1.22, 540, 1000) }] },
+        actors: [TON(380, 1210, 0.82, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }]), MINT(820, GW + 60, 0.9, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: caps("better", undefined, { quote: true }),
+      });
+
+      // ---------- 25. the window close up: a handprint with long fingers, eyes outside — one hit, cut ----------
+      const WB = F("print", 1, 1) + 0.3, WC = D("print") - 1.0, WD = D("print") - 0.6;
+      add("print", {
+        set: "ward2", setOpts: { id: "w25", time: "night", print: true, eyes: true }, dark: 0.32, blur: { sky: 4 }, light: MOON, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(800, 560, 1.3, 540, 820) }, { t: F("print", 0, 1) - 0.1, glide: 1.4, ...fr(820, 580, 1.9, 540, 860) }] },
+        captions: caps("print"),
+        extra(L) { put(L.light, `<g id="w25-face" opacity="0">${Pop2.pobFace(540, 1000, 1.25, { id: "w25-f" })}</g>`); },
+        fx(tl, id, t0) {
+          tl.set("#w25-eyes", { opacity: 0 }, t0);
+          tl.to("#w25-eyes", { opacity: 1, duration: 0.5, ease: "power1.in" }, t0 + WB);
+          Fx.heart(tl, t0 + F("print", 0, 1), WC - F("print", 0, 1), 0.55, 0.6);
+          tl.to("#w25-eyes", { opacity: 0, duration: 0.08 }, t0 + WC);
+          tl.fromTo("#w25-face", { opacity: 0, scale: 1.25, svgOrigin: "540 1000" }, { opacity: 1, scale: 1, duration: 0.09, ease: "power4.out", immediateRender: false }, t0 + WD);
+          Fx.glitch(tl, `#${id}`, t0 + WD + 0.05, 0.18, 16, 1025);
+          tl.set("#black", { opacity: 1 }, t0 + WD + 0.22);
+        },
+      });
+
+      // ---------- 26. the choice: take him home / let the doctors keep watching — "home" gets taken over ----------
+      add("choice", {
+        set: "ward2", setOpts: { id: "w26", time: "dawn" }, dark: 0.3, blur: { sky: 6, far: 6, set: 6, act: 4 }, light: TUBE, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(480, 1100, 1.2, 540, 1150) }] },
+        actors: [TON(380, 1210, 0.82, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0);
+          PopUI.choice(tl, L.light, t0 + 0.05, D("choice") - 0.05, { q: "จะทำยังไง?", a: "ให้หมอดูต่อ", b: "พากลับบ้าน", secs: 3, y: 780, iconB: "home",
+            possessed: { at: 1.0, side: "b", glitch: "กลับบ้าน…", who: "…กลับบ้านเถอะลูก" } });
+          Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75);
+          Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 1030); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 1031);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2);
+        },
+      });
+
+      // ---------- 27. end card: the community-forest sign — the last part ----------
+      add("next", {
+        set: "sign2", setOpts: { id: "sg", ep: "ตอนจบ", title: "อย่าอวดว่าหาย" }, dark: 0, blur: { far: 6, mid: 5, fg: 10 }, grade: { top: "#ffd9a0", bottom: "#5a4a7a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 880, 1.0, 540, 900) }, { t: D("next"), ...fr(540, 880, 1.05, 540, 900) }] },
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3);
+          tl.fromTo("#sg-sign", { rotation: -9, svgOrigin: "540 500" }, { rotation: 0, duration: 1.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+          tl.fromTo("#sg-note", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.6);
+          Pop2.particles(tl, L.light, { type: "dust", n: 24, box: [0, 200, 1080, 1400], t0, dur: D("next"), seed: 8 });
+        },
+      });
+
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Pop.life(tl, `#${id}`, t0, sh.dur); }; });
