@@ -743,6 +743,12 @@
   const wDist = (u) => lerp(WAV.D0, WAV.D1, u), wHeight = (u) => lerp(5, 9, sm(0, 0.45, u));
   const wCol = (f) => { let i = 0; while (i < WCOL.length - 2 && f > WCOL[i + 1][0]) i++; return mix(WCOL[i][1], WCOL[i + 1][1], clamp((f - WCOL[i][0]) / (WCOL[i + 1][0] - WCOL[i][0]), 0, 1)); };
   const pk = (v, p) => Math.pow(Math.abs(Math.sin(v)), p);
+  // smooth value noise 0…1 and a few octaves of it, for torn edges that never repeat
+  const hsh = (i) => { const v = Math.sin(i * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+  const vn = (x) => { const i = Math.floor(x), f = x - i; return lerp(hsh(i), hsh(i + 1), f * f * (3 - 2 * f)); };
+  const fbm = (x) => 0.5 * vn(x) + 0.28 * vn(x * 2.13 + 17.3) + 0.14 * vn(x * 4.37 + 41.9) + 0.08 * vn(x * 8.71 + 73.1);
+  // the sum of sharp torn points (each {X, h, w}, flickering) under a sample at X: the raw stuff of a ripped foam edge
+  const tearAt = (list, X, t) => { let v = 0; for (const q of list) { const dx = Math.abs(X - q.X); if (dx < q.w) v += q.h * (0.55 + 0.45 * Math.sin(t * q.f + q.ph)) * Math.pow(1 - dx / q.w, 1.4); } return v; };
   // a torn, pointed fragment (a sheet of foam, a gout of mud): radii j round an ellipse w long and h thick, turned by a radians
   const shardD = (cx, cy, w, h, a, j) => {
     const n = j.length, ca = Math.cos(a), sa = Math.sin(a);
@@ -763,11 +769,11 @@
   const DEBRIS = [
     // the green longtail that lay stranded on the seabed: thrown up the face bow first, stern and engine under
     { svg: () => Tide.longtail({ hull: "#2e8a5a", band: "#f2c02a", no: "พง 0418", seed: 5 }), sil: `<path d="${LT_HULL}"/><path d="M-580,-280H-440V-150H-580ZM-545,-205L-875,22L-858,44L-532,-186Z"/>`,
-      k: 0.88, X: -2.5, h: 0.4, a: -17, va: 0, wob: 4, ca: -10, off: 0.25, R: 5.2, fw: 0.34 },
-    { svg: () => plankSVG(330, 26, "#9a7046", false), sil: `<rect x="-170" y="-16" width="340" height="32"/>`, k: 1, X: 3.1, h: 0.6, a: 30, va: 52, wob: 0, ca: 8, off: 0.05, R: 1.9, fw: 0.22 },
-    { svg: () => plankSVG(180, 22, "#b08a5a", true), sil: `<rect x="-95" y="-14" width="190" height="28"/>`, k: 1, X: -5.4, h: 0.24, a: -40, va: -80, wob: 0, ca: -6, off: 0, R: 1.1, fw: 0.18 },
-    { svg: () => umbSVG, sil: `<path d="${UMB}"/><rect x="-8" y="-90" width="10" height="245"/>`, k: 1, X: 4.4, h: 0.3, a: 150, va: 0, wob: 22, ca: 4, off: 0.15, R: 1.45, fw: 0.22 },
-    { svg: () => coolerSVG, sil: `<rect x="-36" y="-34" width="72" height="56"/>`, k: 1, X: 0.7, h: 0.11, a: 0, va: 0, wob: 16, ca: -4, off: 0.08, R: 0.55, fw: 0.14 },
+      k: 0.62, X: -3.0, h: 0.56, a: -22, va: 0, wob: 3, ca: -4, off: -0.8, R: 3.8, fw: 0.3 },
+    { svg: () => plankSVG(330, 26, "#9a7046", false), sil: `<rect x="-170" y="-16" width="340" height="32"/>`, k: 1, X: 0.6, h: 0.5, a: 30, va: 52, wob: 0, ca: 8, off: 0.05, R: 1.9, fw: 0.22 },
+    { svg: () => plankSVG(180, 22, "#b08a5a", true), sil: `<rect x="-95" y="-14" width="190" height="28"/>`, k: 1, X: 3.6, h: 0.42, a: -40, va: -80, wob: 0, ca: -6, off: 0, R: 1.1, fw: 0.18 },
+    { svg: () => umbSVG, sil: `<path d="${UMB}"/><rect x="-8" y="-90" width="10" height="245"/>`, k: 1, X: 4.8, h: 0.24, a: 150, va: 0, wob: 22, ca: 4, off: 0.15, R: 1.45, fw: 0.22 },
+    { svg: () => coolerSVG, sil: `<rect x="-36" y="-34" width="72" height="56"/>`, k: 1, X: 2.0, h: 0.2, a: 0, va: 0, wob: 16, ca: -4, off: 0.08, R: 0.55, fw: 0.14 },
   ];
 
   // ---------- what stands on the beach in its path: a massage hut, a coconut-drink stall (100 = 1 m, origin the sand) ----------
@@ -794,7 +800,7 @@
     return g;
   };
   // [screen x, distance m, kind, palm height m, lean]: back to front; each is swallowed when the wall reaches its distance
-  const OVER = [[600, 41, "palm", 8, 0.04], [250, 36, "palm", 7, -0.08], [860, 31.5, "stall"], [760, 27.3, "palm", 6, 0.07], [330, 26.6, "hut"], [118, 25.8, "palm", 6.5, -0.05], [1000, 24.8, "palm", 5.5, 0.12]];
+  const OVER = [[600, 41, "palm", 8, 0.04], [250, 36, "palm", 7, -0.08], [990, 31.5, "stall"], [760, 27.3, "palm", 6, 0.07], [330, 26.6, "hut"], [118, 25.8, "palm", 6.5, -0.05], [1065, 24.8, "palm", 5.5, 0.12]];
 
   // ---------- a figure sprinting left, looking back (100 units = 1.65 m, feet at 0,0): four frames of the stride #id-rn0 … rn3 ----------
   const RUN = [
@@ -850,8 +856,8 @@
     }
     s += fp;
     // left behind on the sand: flip-flops, a child's bucket and spade, a towel, a straw hat
-    const flat = (x, d, svg, rot = 0) => { const k = FX / d / 100; return `<g transform="translate(${f1(x)},${f1(yAt(d))}) scale(${k.toFixed(4)},${(k * Math.min(1, 1.7 * hc / d)).toFixed(4)}) rotate(${rot})">${svg}</g>`; };
-    const ff = (c) => `<path d="M-15,-2Q-15,-9 -7,-10Q7,-10 14,-6Q17,0 13,5Q4,9 -6,7Q-15,5 -15,-2Z" fill="${c}" ${OUT2}/><path d="M-6,-1L7,-7M-6,-1L7,5" stroke="${INK}" stroke-width="2"/>`;
+    const flat = (x, d, svg, rot = 0) => { const k = FX / d / 100; return `<g transform="translate(${f1(x)},${f1(yAt(d))}) scale(${k.toFixed(4)},${(k * Math.min(1, Math.max(0.32, 2.4 * hc / d))).toFixed(4)}) rotate(${rot})">${svg}</g>`; };
+    const ff = (c) => `<path d="M-14,-1Q-15,-7 -9,-8L9,-9Q15,-9 15,-3Q15,3 9,4L-9,5Q-15,5 -14,-1Z" fill="${c}" ${OUT2}/><path d="M-12,-1Q-13,-5 -9,-6L8,-7Q12,-7 12,-3" stroke="#fff" stroke-width="1.6" fill="none" opacity=".45"/><path d="M5,-2L-3,-8M5,-2L-3,4" stroke="#2a62b0" stroke-width="2.6" stroke-linecap="round"/>`;
     s += flat(170, 12.5, `<rect x="-80" y="-40" width="160" height="80" rx="4" fill="#f2efe6" ${OUT2}/><path d="M-80,-24H80M-80,-8H80M-80,8H80M-80,24H80" stroke="#d8583a" stroke-width="7"/><rect x="-80" y="-40" width="160" height="80" rx="4" fill="none" ${OUT2}/>`, -10);
     s += flat(330, 6.6, ff("#f2c02a"), 22) + flat(372, 6.4, ff("#f2c02a"), -34);
     s += flat(905, 7.8, `<ellipse rx="22" ry="20" fill="#e2c27a" ${OUT2}/><ellipse cy="-2" rx="11" ry="10" fill="#d4b066" ${OUT2}/><path d="M-11,-1Q0,4 11,-1" stroke="#b8402e" stroke-width="3" fill="none"/>`, 10);
@@ -863,24 +869,30 @@
     const st = {
       bands: A(26, () => ({ X: -11 + r() * 22, lx: 2 + r() * 5, h0: r(), v: 0.05 + r() * 0.07, w: 0.03 + r() * 0.07, lt: r() < 0.5, ph: r() * 6 })),
       diag: A(30, () => ({ X: -11 + r() * 22, lx: 0.7 + r() * 2.2, h0: r(), v: 0.07 + r() * 0.08, dh: (0.04 + r() * 0.1) * (r() < 0.7 ? 1 : -1), w: 0.025 + r() * 0.05, lt: r() < 0.6 })),
-      shard: A(90, () => ({ X: -11 + r() * 22, h0: r(), v: 0.04 + r() * 0.08, sz: 0.2 + r() * 0.9, asp: 0.2 + r() * 0.35, a: (r() - 0.5) * 0.9, va: (r() - 0.5) * 0.8, tone: r() < 0.45 ? 0 : r() < 0.84 ? 1 : 2, j: jag8(r) })),
+      shard: A(90, () => ({ X: -11 + r() * 22, h0: r(), v: 0.04 + r() * 0.08, sz: 0.3 + r() * 1.1, asp: 0.1 + r() * 0.16, a: (r() - 0.5) * 0.5, va: (r() - 0.5) * 0.3, tone: r() < 0.45 ? 0 : r() < 0.84 ? 1 : 2, j: jag8(r) })),
       boil: A(10, () => ({ X: -10 + r() * 20, h0: r(), v: 0.03 + r() * 0.04, sz: 1.2 + r() * 1.6, asp: 0.45 + r() * 0.3, a: (r() - 0.5) * 0.6, j: A(10, () => 0.7 + r() * 0.3) })),
-      drop: A(170, () => ({ X: -11 + r() * 22, ph: r(), life: 0.7 + r() * 0.6, vf: 2 + r() * 5, vu: 1 + r() * 4.5, vx: (r() - 0.5) * 2.4, sz: 0.025 + r() * 0.05 })),
-      mist: A(70, () => ({ X: -11 + r() * 22, ph: r(), life: 1 + r() * 0.8, vf: 0.5 + r() * 1.5, vu: 1.5 + r() * 2.5, vx: (r() - 0.5) * 1.6, sz: 0.012 + r() * 0.02 })),
-      sheet: A(30, () => ({ X: -10 + r() * 20, ph: r(), life: 0.4 + r() * 0.35, vf: 4 + r() * 6, vu: 0.6 + r() * 2.2, vx: (r() - 0.5) * 3, h0: 0.3 + r() * 1.1, sz: 0.3 + r() * 0.6, j: jag8(r), lt: r() < 0.65 })),
+      // torn points along the crest's top, foam tongues hanging off its underside, torn points along the skirt
+      tear: A(170, () => ({ X: -12 + r() * 24, h: 0.008 + Math.pow(r(), 2.4) * 0.065, w: 0.04 + r() * 0.15, f: 1.5 + r() * 3, ph: r() * 6.28 })),
+      drip: A(120, () => ({ X: -12 + r() * 24, h: 0.015 + Math.pow(r(), 1.8) * 0.13, w: 0.05 + r() * 0.24, f: 0.6 + r() * 1.2, ph: r() * 6.28 })),
+      stear: A(110, () => ({ X: -12 + r() * 24, h: 0.008 + Math.pow(r(), 2.2) * 0.034, w: 0.12 + r() * 0.28, f: 2 + r() * 3, ph: r() * 6.28 })),
+      // lace: torn white streaks peeling off the crest and sliding down across the face
+      lace: A(34, () => ({ X: -11 + r() * 22, ph: r(), v: 0.18 + r() * 0.2, len: 0.3 + r() * 0.7, asp: 0.13 + r() * 0.1, a: 0.15 + r() * 0.35, j: jag8(r) })),
+      drop: A(260, () => ({ X: -11 + r() * 22, ph: r(), life: 0.45 + r() * 0.5, vf: 0.8 + r() * 2.7, vu: 0.5 + r() * 2.6, vx: (r() - 0.5) * 2, sz: 0.009 + r() * 0.022 })),
+      mist: A(90, () => ({ X: -11 + r() * 22, ph: r(), life: 0.8 + r() * 0.7, vf: 0.3 + r() * 0.9, vu: 1 + r() * 1.6, vx: (r() - 0.5) * 1.4, sz: 0.005 + r() * 0.009 })),
+      sheet: A(26, () => ({ X: -10 + r() * 20, ph: r(), life: 0.35 + r() * 0.3, vf: 3 + r() * 4, vu: 0.6 + r() * 1.8, vx: (r() - 0.5) * 2.4, h0: 0.3 + r() * 0.9, sz: 0.2 + r() * 0.4, j: jag8(r), lt: r() < 0.65 })),
     };
     let w = `<g id="${id}-wave"><defs>
       <linearGradient id="${id}-wallG" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000">${WCOL.map(([q, c]) => `<stop offset="${q}" stop-color="${c}"/>`).join("")}</linearGradient>
       <linearGradient id="${id}-lipG" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000"><stop offset="0" stop-color="#c2b07a" stop-opacity=".45"/><stop offset="1" stop-color="#c2b07a" stop-opacity="0"/></linearGradient>
-      <clipPath id="${id}-bodyC"><path id="${id}-bodyCP" d=""/></clipPath>${DEBRIS.map((q, k) => `<clipPath id="${id}-dc${k}">${q.sil}</clipPath>`).join("")}</defs>`;
+      <clipPath id="${id}-bodyC"><path id="${id}-bodyCP" d=""/></clipPath>${DEBRIS.map((q, k) => `<clipPath id="${id}-dc${k}">${q.sil.replace(/<(path|rect) /g, '<$1 transform="scale(1.06)" ')}</clipPath><linearGradient id="${id}-lg${k}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000">${WCOL.map(([o2, c]) => `<stop offset="${o2}" stop-color="${c}"/>`).join("")}</linearGradient>`).join("")}</defs>`;
     w += `<path id="${id}-wall" d="" fill="url(#${id}-wallG)"/><g clip-path="url(#${id}-bodyC)"><path id="${id}-boil" d="" fill="#857a4e" opacity=".2"/>`;
     w += st.bands.map((b, k) => `<path id="${id}-bd${k}" d="" stroke="${b.lt ? "#a89c72" : "#14221f"}" fill="none" stroke-linecap="round"/>`).join("");
     w += st.diag.map((b, k) => `<path id="${id}-dg${k}" d="" stroke="${b.lt ? "#b0a47a" : "#162420"}" fill="none" stroke-linecap="round"/>`).join("");
-    w += `<path id="${id}-sh0" d="" fill="#13211f" opacity=".3"/><path id="${id}-sh1" d="" fill="#8e8358" opacity=".26"/><path id="${id}-sh2" d="" fill="#c8ccbe" opacity=".3"/><path id="${id}-lip" d="" fill="url(#${id}-lipG)"/>`;
-    w += DEBRIS.map((q, k) => `<g id="${id}-deb${k}">${q.svg()}<path id="${id}-lap${k}" d="" clip-path="url(#${id}-dc${k})" opacity=".9"/></g><path id="${id}-lapf${k}" d="" fill="#e2e7e1"/>`).join("") + `</g>`;
-    w += `<path id="${id}-cr0" d="" fill="#9ea9a5"/><path id="${id}-cr1" d="" fill="#d6dcd6"/><path id="${id}-cr2" d="" fill="#f5f7f2"/>`;
+    w += `<path id="${id}-sh0" d="" fill="#13211f" opacity=".24"/><path id="${id}-sh1" d="" fill="#8e8358" opacity=".22"/><path id="${id}-sh2" d="" fill="#c8ccbe" opacity=".2"/><path id="${id}-lip" d="" fill="url(#${id}-lipG)"/><path id="${id}-lace" d="" fill="#eef1ec" opacity=".42"/>`;
+    w += DEBRIS.map((q, k) => `<g id="${id}-deb${k}">${q.svg()}<path id="${id}-lap${k}" d="" clip-path="url(#${id}-dc${k})" fill="url(#${id}-lg${k})" opacity=".97"/></g><path id="${id}-lapf${k}" d="" fill="#e2e7e1"/>`).join("") + `</g>`;
+    w += `<path id="${id}-veil" d="" fill="#e4e9e6" opacity=".16"/><path id="${id}-cr0" d="" fill="#aab4af"/><path id="${id}-cr1" d="" fill="#d6dcd6"/><path id="${id}-cr2" d="" fill="#f5f7f2"/>`;
     w += `<path id="${id}-sheet" d="" fill="#5c5a44" opacity=".92"/><path id="${id}-sheetF" d="" fill="#e8ebe4" opacity=".9"/>`;
-    w += `<path id="${id}-sk0" d="" fill="#8a9692"/><path id="${id}-sk1" d="" fill="#d2d8d2"/><path id="${id}-sk2" d="" fill="#f3f5f0"/><path id="${id}-ts0" d="" fill="#a6b0ac" opacity=".85"/><path id="${id}-ts1" d="" fill="#f0f2ec" opacity=".9"/>`;
+    w += `<path id="${id}-sk0" d="" fill="#b4bdb8" opacity=".6"/><path id="${id}-sk1" d="" fill="#d2d8d2"/><path id="${id}-sk2" d="" fill="#f3f5f0"/><path id="${id}-ts0" d="" fill="#a6b0ac" opacity=".85"/><path id="${id}-ts1" d="" fill="#f0f2ec" opacity=".9"/>`;
     w += `<path id="${id}-sp0" d="" fill="#eef2ee" opacity=".22"/><path id="${id}-sp1" d="" fill="#eef2ee" opacity=".45"/><path id="${id}-sp2" d="" fill="#f4f6f2" opacity=".75"/></g>`;
     put(L.set, w);
     // in front of it: palms and shacks it is about to swallow, foam climbing them as it arrives; then the runner
@@ -888,7 +900,7 @@
     const ov = OVER.map(([x, d, kind, m, lean], i) => {
       const px = FX / d, G = yAt(d), palm = kind === "palm";
       const body = palm ? coco(0, 0, +(px * m / 900).toFixed(4), lean, (o.seed || 17) + 40 + i, { id: `${id}-ovp${i}`, pal: leafW, fl: 0.72 }) : `<g transform="scale(${(px / 100).toFixed(4)})">${kind === "hut" ? hutSVG() : stallSVG()}</g>`;
-      return { x, d, palm, G, h: palm ? m * 0.62 : kind === "hut" ? 3.6 : 2.9, w: palm ? 2.6 : kind === "hut" ? 5.2 : 3.8, fmax: palm ? 0.75 : 0.85, svg: `<g id="${id}-ov${i}"><g id="${id}-ovr${i}" transform="translate(${x},${f1(G)})">${body}</g></g><path id="${id}-ovg${i}" d="" fill="#9aa5a1"/><path id="${id}-ovw${i}" d="" fill="#eef1ec"/><path id="${id}-ovs${i}" d="" fill="#f0f3ee" opacity=".85"/>` };
+      return { x, d, palm, G, h: palm ? 1.5 : kind === "hut" ? 2.1 : 1.7, w: palm ? 3.4 : kind === "hut" ? 5.6 : 4.2, fmax: 1, svg: `<g id="${id}-ov${i}"><g id="${id}-ovr${i}" transform="translate(${x},${f1(G)})">${body}</g></g><path id="${id}-ovg${i}" d="" fill="${mix(wCol(0.55), "#b8c0b6", 0.25)}"/><path id="${id}-ovm${i}" d="" fill="#c3cac3"/><path id="${id}-ovw${i}" d="" fill="#eef1ec"/><path id="${id}-ovs${i}" d="" fill="#f0f3ee" opacity=".85"/>` };
     });
     put(L.set, ov.map((q) => q.svg).join(""));
     if (o.runner !== false) put(L.set, `<g id="${id}-rn">${CS(0, 0, 26, 6, 0.4)}${runnerSVG(id, ["#d8402e", "#2a3a62", "#c4885c", "#1e1a18"])}</g>`);
@@ -926,7 +938,7 @@
     S.diag.forEach((b, k) => {
       const p = (b.h0 + t * b.v) % 1, ha = 0.08 + 0.72 * p, hb = clamp(ha + b.dh, 0.04, 0.88), Xb = b.X + b.lx, mx = (b.X + Xb) / 2, mh = (ha + hb) / 2 + 0.015;
       const e = el(`${id}-dg${k}`); e.setAttribute("d", `M${f1(xs(b.X))},${f1(hY(b.X, ha))}Q${f1(xs(mx))},${f1(hY(mx, mh))} ${f1(xs(Xb))},${f1(hY(Xb, hb))}`);
-      e.setAttribute("stroke-width", f1(Math.max(0.6, b.w * px))); e.setAttribute("opacity", f1(Math.sin(Math.PI * p) * (b.lt ? 0.26 : 0.3)));
+      e.setAttribute("stroke-width", f1(Math.max(0.6, b.w * px))); e.setAttribute("opacity", f1(Math.sin(Math.PI * p) * (b.lt ? 0.24 : 0.1)));
     });
     const sh = ["", "", ""];
     S.shard.forEach((b) => { const p = (b.h0 + t * b.v) % 1, sz = b.sz * px * Math.sin(Math.PI * p); if (sz > 0.8) sh[b.tone] += shardD(xs(b.X + Math.sin(t * 0.7 + b.a * 9) * 0.2), hY(b.X, 0.03 + 0.78 * p), sz, sz * b.asp, b.a + b.va * t, b.j); });
@@ -939,39 +951,48 @@
       for (let i = 0; i <= 16; i++) { const s = (i / 16) * 2 - 1, j = (0.05 * Math.sin(s * 7 + t * 4 + k) + 0.06 * pk(s * 11 + t * 2.6 + k, 6)) * R; line.push([cx + s * R * ca - nx * j, cy + s * R * sa - ny * j]); }
       const far = 2.2 * R, poly = line.concat([[line[16][0] + nx * far, line[16][1] + ny * far], [line[0][0] + nx * far, line[0][1] + ny * far]]);
       const ic = Math.cos(-ar), is = Math.sin(-ar), loc = poly.map(([wx, wy]) => { const dx = (wx - x) / sc, dy = (wy - y) / sc; return [dx * ic - dy * is, dx * is + dy * ic]; });
-      const lap = el(`${id}-lap${k}`); lap.setAttribute("d", `M${loc.map(P2).join("L")}Z`); lap.setAttribute("fill", wCol(clamp((y - (base - Hp * 0.97)) / (Hp * 0.97), 0, 1)));
+      set(`lap${k}`, "d", `M${loc.map(P2).join("L")}Z`);
+      const lg = el(`${id}-lg${k}`); lg.setAttribute("y1", f1(base - Hp * 0.97)); lg.setAttribute("y2", f1(base)); lg.setAttribute("gradientTransform", `scale(${(1 / sc).toFixed(5)}) rotate(${f1(-a)}) translate(${f1(-x)},${f1(-y)})`);
       const fw = q.fw * px, up = [], dn = [];
       line.forEach(([lx, ly], i) => { const s = i / 16, env = Math.sin(Math.PI * s), spk = fw * env * (0.45 + 0.9 * pk(s * 9 + t * 3.1 + k, 4)); up.push([lx - nx * spk, ly - ny * spk]); dn.push([lx + nx * fw * env * 0.55, ly + ny * fw * env * 0.55]); });
       set(`lapf${k}`, "d", `M${up.map(P2).join("L")}L${dn.reverse().map(P2).join("L")}Z`);
     });
-    // the crest: a torn white band, spikes thrown up off the top, tongues dragged down and sideways across the face, in three tones
-    const crestLayer = (m, b, g, ph) => {
+    // the crest: a ragged white band — torn points thrown up off its top, foam tongues hanging off its underside and dragged sideways —
+    // in three tones, each with its own tear so they never stack into a contour
+    const tA = [], tB = [], dA = [], dB = [];
+    cols.forEach((c) => { tA.push(tearAt(S.tear, c.X, t)); tB.push(tearAt(S.tear, c.X + 0.31, t)); dA.push(tearAt(S.drip, c.X, t)); dB.push(tearAt(S.drip, c.X - 0.53, t)); });
+    const crestLayer = (m, b, g, tp, dp, o) => {
       const top = [], bot = [];
-      cols.forEach((c) => { const dy = Hp * (bandH(c.X + ph * 0.5) * b + tongue(c.X + ph) * g); top.push([c.x, c.top - Hp * spike(c.X + ph * 0.37) * m]); bot.push([c.x + dy * 0.32, c.top + dy]); });
+      cols.forEach((c, i) => { const dy = Hp * ((0.035 + 0.05 * fbm(c.X * 1.2 + t * 0.3 + o)) * b + dp[i] * g); top.push([c.x, c.top - Hp * (0.012 * fbm(c.X * 3.1 + t + o) + tp[i] * m)]); bot.push([c.x + dy * 0.35, c.top + dy]); });
       return `M${top.map(P2).join("L")}L${bot.reverse().map(P2).join("L")}Z`;
     };
-    set("cr0", "d", crestLayer(0.6, 1, 1, 0)); set("cr1", "d", crestLayer(0.85, 0.72, 0.6, 1.3)); set("cr2", "d", crestLayer(1, 0.4, 0.3, 2.1));
+    set("cr0", "d", crestLayer(0.55, 1, 1, tB, dA, 0)); set("cr1", "d", crestLayer(0.8, 0.7, 0.55, tA, dB, 5)); set("cr2", "d", crestLayer(1, 0.38, 0.22, tA, dA, 11));
+    set("veil", "d", `M${cols.map((c, i) => `${c.x},${f1(c.top - Hp * (0.03 + 0.07 * fbm(c.X * 0.9 - t * 0.6 + 3) + tA[i] * 0.9))}`).join("L")}L${X1},${f1(cols[cols.length - 1].top + Hp * 0.02)}L${X0},${f1(cols[0].top + Hp * 0.02)}Z`);
+    let la = "";
+    S.lace.forEach((q) => { const p = (q.ph + t * q.v) % 1, X = q.X + p * 0.8, len = q.len * px * Math.sin(Math.PI * p); if (len > 1) la += shardD(xs(X), hY(X, 0.86 - 0.24 * p), len, len * q.asp, q.a, q.j); });
+    set("lace", "d", la);
     // the sheet of water racing ahead over the sand, frothing at its edge
     const dS = Math.max(WAV.D1 - 2, dW - 3.2), yS = HZ + hc * FX / dS, run = [];
     cols.forEach((c, i) => { if (i % 3 === 0) run.push([c.x, yS + (yS - base) * (0.25 * Math.sin(c.X * 1.1 + t * 2.3) + 0.15 * Math.sin(c.X * 2.9 - t * 3.1))]); });
     set("sheet", "d", `M${X0},${f1(base)}L${run.map(P2).join("L")}L${X1},${f1(base)}Z`);
     const froth = run.map(([x, y]) => [x, y - 2 - (yS - base) * 0.4 * pk(x * 0.05 + t * 3, 4)]);
     set("sheetF", "d", `M${run.map(([x, y]) => `${x},${f1(y + 2)}`).join("L")}L${froth.reverse().map(P2).join("L")}Z`);
-    // the skirt: where the wall comes down on the sand it boils up white
-    const skirt = (h0, amp, m, ph, drop) => {
+    // the skirt: where the wall comes down on the sand it boils up white, torn sheets standing up out of it
+    const sT = cols.map((c) => tearAt(S.stear, c.X, t)), sT2 = cols.map((c) => tearAt(S.stear, c.X + 0.41, t));
+    const skirt = (h0, amp, m, tp, o, drop) => {
       const top = [], bot = [];
-      cols.forEach((c) => { const X = c.X, v = Hp * (h0 + amp * Math.sin(X * 0.8 + ph + t * 0.9) + m * (0.07 * pk(X * 3.3 + t * 2.1 + ph, 6) + 0.05 * pk(X * 6.1 - t * 2.7 + ph * 2, 8) + 0.03 * pk(X * 11.3 + t * 3.3 + ph, 10))); top.push([c.x, base - v]); bot.push([c.x, base + hc * px * drop / dW * (0.6 + 0.4 * Math.sin(X * 1.7 + ph + t * 1.5))]); });
+      cols.forEach((c, i) => { top.push([c.x, base - Hp * (h0 + amp * fbm(c.X * 1.3 + t * 0.7 + o) + tp[i] * m)]); bot.push([c.x, base + hc * px * drop / dW * (0.5 + fbm(c.X * 2.1 + o - t))]); });
       return `M${top.map(P2).join("L")}L${bot.reverse().map(P2).join("L")}Z`;
     };
-    set("sk0", "d", skirt(0.15, 0.04, 1, 0, 2)); set("sk1", "d", skirt(0.1, 0.035, 0.8, 1.7, 1.5)); set("sk2", "d", skirt(0.055, 0.025, 0.6, 3.1, 0.8));
+    set("sk0", "d", skirt(0.08, 0.07, 0.9, sT, 3, 2)); set("sk1", "d", skirt(0.045, 0.06, 0.8, sT2, 7, 1.4)); set("sk2", "d", skirt(0.02, 0.05, 0.5, sT, 11, 0.7));
     // spray and torn sheets of water flung forward (true 3-D flight, projected): off the crest, off the skirt
       const sp = ["", "", ""], ts = ["", ""];
     const emit = (q, small) => {
       const tau = ((q.ph + t / q.life) % 1) * q.life, X = q.X + q.vx * tau, h = (crest(q.X) + spike(q.X) * 0.6) * Hm + q.vu * tau - 4.9 * tau * tau, d = dW - q.vf * tau;
       if (d < 1) return;
       const pxd = FX / d, x = CX + X * pxd, y = HZ + (hc - h) * pxd, kk = tau / q.life, op = Math.pow(1 - kk, 0.8) * sm(0, 0.08, kk);
-      const vx = q.vx * pxd + X * FX * q.vf / (d * d), vy = -(q.vu - 9.8 * tau) * pxd + (hc - h) * FX * q.vf / (d * d), rr = Math.max(0.6, q.sz * pxd);
-      sp[op > 0.6 ? 2 : op > 0.3 ? 1 : 0] += dropD(x, y, rr * (small ? 1.4 : 2.2), rr, Math.atan2(vy, vx));
+      const vx = q.vx * pxd + X * FX * q.vf / (d * d), vy = -(q.vu - 9.8 * tau) * pxd + (hc - h) * FX * q.vf / (d * d), rr = Math.max(0.5, q.sz * pxd);
+      sp[op > 0.6 ? 2 : op > 0.3 ? 1 : 0] += dropD(x, y, rr * (small ? 1.2 : 1.6 + Math.min(2.4, Math.hypot(vx, vy) / 900)), rr, Math.atan2(vy, vx));
     };
     S.drop.forEach((q) => emit(q, false)); S.mist.forEach((q) => emit(q, true));
     sp.forEach((d, k) => set(`sp${k}`, "d", d));
@@ -987,25 +1008,28 @@
     S.ov.forEach((q, i) => {
       const gap = dW - q.d, vis = sm(0, 0.5, gap), pxd = FX / q.d;
       el(`${id}-ov${i}`).setAttribute("opacity", f1(vis));
-      ["ovg", "ovw", "ovs"].forEach((k) => set(`${k}${i}`, "opacity", f1(vis * (k === "ovs" ? 0.85 : 1))));
-      const f = sm(2.6, 0.2, gap) * q.fmax, blast = sm(9, 0.5, gap), shud = f * 3 * Math.sin(t * 13 + i);
+      ["ovg", "ovm", "ovw", "ovs"].forEach((k) => set(`${k}${i}`, "opacity", f1(vis * (k === "ovs" ? 0.85 : 1))));
+      const f = sm(2.8, 0.1, gap) * q.fmax, blast = sm(9, 0.5, gap), shud = f * 3 * Math.sin(t * 13 + i);
       set(`ovr${i}`, "transform", `translate(${q.x},${f1(q.G)}) rotate(${f1(shud + (q.palm ? blast * 3 * Math.sin(t * 1.7 + i) : 0))})`);
       if (q.palm) { const p = el(`${id}-ovp${i}`), [ox, oy] = p.getAttribute("data-o").split(" "); p.setAttribute("transform", `rotate(${f1((2 + 9 * blast) * Math.sin(t * 2.6 + i * 1.3))} ${ox} ${oy})`); }
-      if (vis <= 0 || f < 0.01) { ["ovg", "ovw", "ovs"].forEach((k) => set(`${k}${i}`, "d", "")); return; }
-      const hw = (q.w / 2) * pxd * (0.75 + 0.5 * f), Hc = f * q.h * pxd;
-      const mound = (lift, ph) => {
-        const top = [];
-        for (let j = 0; j <= 20; j++) { const s = j / 20, env = Math.pow(Math.sin(Math.PI * s), 0.6), spk = Hc * (0.2 * pk(s * 9 + t * 3 + ph + i, 6) + 0.14 * pk(s * 17 - t * 4 + ph, 8)); top.push([q.x - hw + 2 * hw * s, q.G - (Hc * lift + spk) * env]); }
-        return `M${top.map(P2).join("L")}L${f1(q.x + hw)},${f1(q.G + 3)}L${f1(q.x - hw)},${f1(q.G + 3)}Z`;
-      };
-      set(`ovg${i}`, "d", mound(1, 0)); set(`ovw${i}`, "d", mound(0.78, 1.7));
+      if (vis <= 0 || f < 0.01) { ["ovg", "ovm", "ovw", "ovs"].forEach((k) => set(`${k}${i}`, "d", "")); return; }
+      // the water surging round it (the face's colour) with a torn white froth riding on top, spray thrown up where it hits
+      const hw = (q.w / 2) * pxd * (0.8 + 0.5 * f), Hc = f * q.h * pxd, wt = [], mt = [], mb = [], ft = [], fb = [];
+      for (let j = 0; j <= 26; j++) {
+        const s = j / 26, x = q.x - hw + 2 * hw * s, env = Math.pow(Math.sin(Math.PI * s), 0.35), X = s * 7 + i * 3.1, yw = q.G - Hc * env * (0.7 + 0.4 * fbm(X + t * 1.5)), tear = Math.pow(fbm(X * 2.3 - t * 2.2 + 9), 3);
+        wt.push([x, yw]); mt.push([x, yw - Hc * env * (0.07 + 0.55 * tear)]); mb.push([x + Hc * 0.1 * env, yw + Hc * env * (0.32 + 0.25 * fbm(X * 1.3 + t * 0.8 + 2))]);
+        ft.push([x, yw - Hc * env * (0.03 + 0.42 * tear)]); fb.push([x + Hc * 0.14 * env, yw + Hc * env * (0.1 + 0.2 * fbm(X * 1.7 + t + 4))]);
+      }
+      set(`ovg${i}`, "d", `M${wt.map(P2).join("L")}L${f1(q.x + hw)},${f1(q.G + 3)}L${f1(q.x - hw)},${f1(q.G + 3)}Z`);
+      set(`ovm${i}`, "d", `M${mt.map(P2).join("L")}L${mb.reverse().map(P2).join("L")}Z`);
+      set(`ovw${i}`, "d", `M${ft.map(P2).join("L")}L${fb.reverse().map(P2).join("L")}Z`);
       let spl = "";
-      for (let j = 0; j < 7; j++) { const ph = (t * 1.6 + j * 0.37 + i * 0.21) % 1, sx = q.x + (j / 6 - 0.5) * hw * 1.4, sy = q.G - Hc * (0.9 + 0.7 * ph), L2 = Hc * 0.28 * (1 - ph) + 2; spl += shardD(sx + (j / 6 - 0.5) * hw * 0.5 * ph, sy, L2, L2 * 0.22, -Math.PI / 2 + (j / 6 - 0.5) * 0.9, [1, 0.5, 0.7, 0.45, 1, 0.5, 0.7, 0.45]); }
+      for (let j = 0; j < 5; j++) { const ph = (t * 1.7 + j * 0.37 + i * 0.21) % 1, side = (j / 4 - 0.5) * 0.6, L2 = Hc * 0.5 * Math.sin(Math.PI * ph) + 1; spl += shardD(q.x + side * hw * (0.5 + 0.6 * ph), q.G - Hc * (0.8 + 0.8 * ph), L2, L2 * 0.16, -Math.PI / 2 + side * 1.1, [1, 0.5, 0.7, 0.45, 1, 0.5, 0.7, 0.45]); }
       set(`ovs${i}`, "d", spl);
     });
     // the runner: well ahead of the wall, angling left up the beach
     if (S.run) {
-      const dR = 0.6 * dW + 1.2, Xr = 3.1 - 22.5 * (u - 0.765), pxr = FX / dR, fr = Math.floor(((t * 7) % 4 + 4) % 4);
+      const dR = 0.72 * dW + 0.8, Xr = 4.52 - 30.3 * (u - 0.765), pxr = FX / dR, fr = Math.floor(((t * 7) % 4 + 4) % 4);
       set("rn", "transform", `translate(${f1(CX + Xr * pxr)},${f1(HZ + hc * pxr)}) scale(${(pxr * 1.65 / 100).toFixed(4)})`);
       for (let i = 0; i < 4; i++) set(`rn${i}`, "opacity", i === fr ? 1 : 0);
     }
