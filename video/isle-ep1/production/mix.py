@@ -118,7 +118,7 @@ CUES = [
     *[x for o in (2.4, 2.7, 3.2) for x in (("survive", o, "page", 0.4), ("survive", o + 0.25, "pen", 0.5), ("survive", o + 0.3, "ding", 0.3))], ("survive", vo_t("survive", 0) + 1.0, "page", 0.5), ("survive", frag("survive", 0, 1), "sting", 0.5),
     # the pool: it swims to him, the hands go in, the grunt as it blows up; the photo; the argument
     *bed("waves", T("fish", 0), T("fish", -0.1), 0.24, 4.6), ("fish", 1.6, "splash", 0.7), ("fish", 2.0, "squelch", 0.3), ("fish", vo_t("fish", 1) + 0.05, "squeak", 0.8), ("fish", vo_t("fish", 1) + 0.1, "pop", 0.5), ("fish", vo_t("fish", 1) + 0.15, "sting", 0.5),
-    ("fish", FSH + vo_t("fish", 2) - FSH + 0.9, "shutter", 0.9), ("fish", FS3 + 0.1, "whoosh", 0.3), ("fish", vo_t("fish", 4), "sting", 0.4), *beats("fish", vo_t("fish", 3), D["fish"] - vo_t("fish", 3), 0.7, 0.4),
+    ("fish", FSH + vo_t("fish", 2) - FSH + 0.9, "shutter", 0.45), ("fish", FS3 + 0.1, "whoosh", 0.3), ("fish", vo_t("fish", 4), "sting", 0.4), *beats("fish", vo_t("fish", 3), D["fish"] - vo_t("fish", 3), 0.7, 0.4),
     # the grill: fat on the fire, the sign, the bite
     *bed("sizzle", T("grill", 0), T("grill", -0.1), 0.35, 2.6), *bed("waves", T("grill", 0), T("sig", -0.1), 0.14, 4.6), *bed("crickets", T("grill", 0), T("night", -0.1), 0.1, 4.0),
     ("grill", frag("grill", 0, 1), "page", 0.5), ("grill", frag("grill", 0, 1) + 0.3, "marker", 0.6), ("grill", frag("grill", 0, 1) + 0.35, "sting", 0.7), ("grill", frag("grill", 0, 1) + 0.35, "boom", 0.3),
