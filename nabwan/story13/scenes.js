@@ -128,7 +128,7 @@ function posePax(pax, lt, o = {}) {
   partyHat13(lady, '#ff9fc0');
   const mae = new Puppet(set.stand, MAE13, D), dress = dressMae(mae);
   const drv = new Puppet(set.people, DRIVER13, D);
-  const wheel = svg('g', {}, set.arms); svg('ellipse', { cx: -30, cy: 1080, rx: 16, ry: 60, fill: 'none', stroke: '#2a2228', 'stroke-width': 12, transform: 'rotate(-18 -30 1080)' }, wheel);
+  const wheel = svg('g', {}, set.arms); svg('ellipse', { cx: -60, cy: 1080, rx: 16, ry: 60, fill: 'none', stroke: '#2a2228', 'stroke-width': 12, transform: 'rotate(-18 -60 1080)' }, wheel);
   const bot = bottle13(mae.prop, 0.9); bot.setAttribute('transform', 'translate(0,-8) scale(0.9)');
   const carry = basket13(mae);
   lightCast13(S, set, [set.people, set.stand], [mae], { light: { rim: '#ffcf8a', rimOp: 0.7 }, shadow: { op: 0.12, k: 0.2, blur: 11 } });
@@ -142,7 +142,7 @@ function posePax(pax, lt, o = {}) {
     set.update(lt); set.clock('23:52');
     posePax(pax, lt);
     const pl = chairP(lady, ROW13(1), 1.2, -1, { t: lt, smile: 0.5 }); lady.pose(pl);
-    const pd = chairP(drv, 70, 1.2, -1, { t: lt, smile: 0.5, head: 4 }); const [wx, wy] = [-20, 1050]; pd.aF = drv.reach(pd, wx, wy); pd.aB = drv.reach(pd, wx + 10, wy + 30); drv.pose(pd);
+    const pd = chairP(drv, 40, 1.2, -1, { t: lt, smile: 0.5, head: 4 }); const [wx, wy] = [-50, 1050]; pd.aF = drv.reach(pd, wx, wy); pd.aB = drv.reach(pd, wx + 10, wy + 30); drv.pose(pd);
     let p;
     if (lt < L(P.H3) - 0.05) {   // handing the uncle his water
       p = standP(mae, 895, set.ground, 1.2, -1, { t: lt, smile: 0.95, head: 10, torso: 8 });
@@ -230,7 +230,7 @@ function posePax(pax, lt, o = {}) {
   const ban = lineBanner13(S.ui, 150, 'สวัสดีปีใหม่ลูก แม่แจกน้ำอยู่นะ ');
   const shots = [
     { t: 0, cam: fA(525, 1110, 1.3, 540, 1010), to: fA(527, 1110, 1.33, 540, 1010) },
-    { t: L(P.B1) - 0.1, cam: fA(578, 1250, 3.3, 540, 1040), to: fA(578, 1250, 3.5, 540, 1040) },
+    { t: L(P.B1) - 0.1, cam: fA(604, 1250, 3.3, 540, 1040), to: fA(604, 1250, 3.45, 540, 1040) },
     { t: L(P.B2) - 0.1, cam: fA(525, 1080, 1.3, 540, 1040), to: fA(527, 1080, 1.34, 540, 1040) },
     { t: L(P.B3) + 0.05, cam: fA(360, 1112, 2.4, 640, 1010), to: fA(360, 1112, 2.4, 640, 1010) },
   ];
@@ -243,7 +243,7 @@ function posePax(pax, lt, o = {}) {
     if (cheer) { const c = Math.abs(Math.sin(lt * 9)), [cx, cy] = torsoW(yai, py, 72, -RIG.T + 66); py.aF = yai.reach(py, cx + 8 * c, cy); py.aB = yai.reach(py, cx - 16 * c, cy + 6); }   // clapping, below her face
     yai.pose(py); sk(py);
     const pk = sitP(kid, 360, set.ground, 1.2, 1, { t: lt + 1, torso: 8, head: cheer ? -12 : 4, smile: cheer ? 1 : 0.7, grin: cheer ? 1 : 0 });
-    if (cheer) { pk.aF = [-6, -40]; pk.aB = [200, 226]; ph.g.setAttribute('display', 'none'); }
+    if (cheer) { pk.aF = [-6, -40]; pk.aB = [-30, -64]; ph.g.setAttribute('display', 'none'); }
     else if (lt > L(P.B3) + 0.05) { holdPhone13(kid, pk); pk.head = 14; pk.smile = lerp(0.85, 0.4, prog(lt, L(P.B5), L(P.B5) + 0.6)); ph.g.setAttribute('display', 'inline'); }
     else ph.g.setAttribute('display', 'none');
     kid.pose(pk);
@@ -316,9 +316,9 @@ function posePax(pax, lt, o = {}) {
   const drop = svg('g', {}, set.top); bottle13(drop, 0.9);
   lightCast13(S, set, [set.people, set.stand], [mae], { light: { rim: '#ffcf8a', rimOp: 0.7 }, shadow: { op: 0.12, k: 0.2, blur: 11 } });
   const tTwo = L(P.C4) - 0.1, tOff = L(P.C4) + 0.25, tFreeze = L(P.C5) - 0.1;
-  const XW = lt => lerp(1240, 640, ease.outCubic(prog(lt, 0, tTwo)));
+  const XW = lt => lerp(1180, 640, ease.outCubic(prog(lt, 0, tTwo)));
   const shots = [
-    { t: 0, cam: () => frameAt(XW(0) - 60, 960, 1.6, 540, 1000), to: () => frameAt(XW(tTwo) - 40, 960, 1.65, 540, 1000) },
+    { t: 0, cam: fA(925, 960, 1.5, 540, 1000), to: fA(910, 960, 1.54, 540, 1000) },
     { t: tTwo, cam: fA(552, 940, 2.1, 540, 1000), to: fA(552, 940, 2.18, 540, 1000) },
     { t: tFreeze, cam: fA(552, 910, 2.2, 540, 1000), to: fA(552, 910, 2.2, 540, 1000) },
   ];
@@ -328,7 +328,7 @@ function posePax(pax, lt, o = {}) {
     applyCam(S, cam);
     set.update(lt); set.clock('23:58');
     posePax(pax, lt);
-    const pd = chairP(drv, 70, 1.2, -1, { t: lt, smile: 0.5, head: 4 }); pd.aF = drv.reach(pd, -20, 1050); pd.aB = drv.reach(pd, -10, 1080); drv.pose(pd);
+    const pd = chairP(drv, 40, 1.2, -1, { t: lt, smile: 0.5, head: 4 }); pd.aF = drv.reach(pd, -50, 1050); pd.aB = drv.reach(pd, -40, 1080); drv.pose(pd);
     // the daughter, disguised in row 1, turns to the aisle and takes the cap and mask off
     const turned = lt > tTwo;
     const pl = chairP(luk, ROW13(1), 1.2, turned ? 1 : -1, { t: lt, smile: turned ? 1 : 0.7, grin: lt > tOff + 0.2 ? 1 : 0, head: turned ? -4 : 2, torso: turned ? 6 : -4 });
@@ -420,20 +420,20 @@ function posePax(pax, lt, o = {}) {
   lightCast13(S, set, [set.people, set.stand], [mae, lukS], { light: { rim: '#ffcf8a', rimOp: 0.75 }, shadow: { op: 0.12, k: 0.2, blur: 11 } });
   const tGrab = L(P.D1) - 0.1, tUp = L(P.D2) - 0.1, tPA = L(P.M0) - 0.1, tLuk = L(P.M2) - 0.1, tTwo = L(P.M3) - 0.1, tCheer = L(P.Mend) + 0.2, tClose = L(P.F0) - 0.1;
   const shots = [
-    { t: 0, cam: fA(520, 930, 1.18, 540, 1000), to: fA(515, 930, 1.24, 540, 1000) },
+    { t: 0, cam: fA(600, 930, 1.18, 540, 1000), to: fA(596, 930, 1.22, 540, 1000) },
     { t: tGrab, cam: fA(380, 930, 2.1, 540, 1000), to: fA(380, 930, 2.16, 540, 1000) },
     { t: tUp, cam: fA(385, 915, 2.0, 540, 1000), to: fA(390, 915, 2.08, 540, 1000) },
-    { t: tPA, cam: fA(585, 940, 1.42, 540, 1000), to: fA(590, 940, 1.5, 540, 1000) },
+    { t: tPA, cam: fA(572, 940, 1.42, 540, 1000), to: fA(575, 940, 1.48, 540, 1000) },
     { t: tLuk, cam: fA(466, 944, 2.3, 600, 1010), to: fA(466, 944, 2.42, 600, 1010) },
-    { t: tTwo, cam: fA(390, 925, 1.85, 540, 1000), to: fA(390, 925, 1.93, 540, 1000) },
-    { t: tCheer, cam: fA(640, 940, 1.22, 540, 1000), to: fA(630, 940, 1.28, 540, 1000) },
+    { t: tTwo, cam: fA(412, 925, 1.85, 540, 1000), to: fA(412, 925, 1.92, 540, 1000) },
+    { t: tCheer, cam: fA(620, 900, 1.22, 540, 1050), to: fA(612, 900, 1.27, 540, 1050) },
     { t: tClose, cam: fA(395, 900, 2.0, 540, 1000), to: fA(395, 900, 2.1, 540, 1000) },
   ];
   S.update = lt => {
     applyCam(S, shotCamF(lt, shots, B - A, { handheld: 0.5, bump: 0.9, minY: -400 }));
     set.update(lt, { tvFlash: lt > tMid && Math.sin(lt * 10) > 0 }); set.clock(lt < tMid ? '23:59' : '00:00');
     posePax(pax, lt, { look: lt > tMid && lt < tGrab + 0.5, smile: lt > tMid ? 0.9 : 0.6, clap: tCheer });
-    const pd = chairP(drv, 70, 1.2, -1, { t: lt, smile: lt > tMid ? 0.9 : 0.5, head: 4 }); pd.aF = drv.reach(pd, -20, 1050); pd.aB = drv.reach(pd, -10, 1080); drv.pose(pd);
+    const pd = chairP(drv, 40, 1.2, -1, { t: lt, smile: lt > tMid ? 0.9 : 0.5, head: 4 }); pd.aF = drv.reach(pd, -50, 1050); pd.aB = drv.reach(pd, -40, 1080); drv.pose(pd);
     // the daughter: in row 1 looking up at แม่; stands for the hug at the cheer
     const standing = lt > tCheer;
     luk.g.setAttribute('display', standing ? 'none' : 'inline'); lukS.g.setAttribute('display', standing ? 'inline' : 'none');
@@ -450,8 +450,8 @@ function posePax(pax, lt, o = {}) {
       if (lt > tGrab + 0.45) { const u = ease.inOutCubic(prog(lt, tGrab + 0.45, tUp)); p.aF = mae.reach(p, lerp(cx, 300, u), lerp(cy, 1050, u)); }
     } else {
       p = standP(mae, 300, set.ground, 1.2, 1, { t: lt, smile: 0.9, head: lt > tLuk ? 10 : -2, torso: 0, grin: 0 });
-      const [mx, my] = torsoW(mae, p, 66, -RIG.T + 6);   // at the collar, below the chin: never over the face
-      p.aF = mae.reach(p, mx, my); p.propRot = -34;
+      const [mx, my] = torsoW(mae, p, 56, -RIG.T + 26);   // at the chest, head below the chin: never over a face
+      p.aF = mae.reach(p, mx, my); p.propRot = -16;
       if (lt > tTwo && lt < tCheer) { const [gx, gy] = torsoW(mae, p, 104, -44); p.aB = mae.reach(p, gx, gy); }   // "my daughter" — an open hand toward her, low
     }
     if (standing) {   // arm round her shoulders; the daughter leans in
@@ -525,6 +525,7 @@ function posePax(pax, lt, o = {}) {
   const set = highway13(S, { busX: 140, busS: 0.8, bursts: burstPlan(0, B - A + 0.5, 16, [-200, -500, 1200, 900], 1481, undefined, { rMin: 120, rMax: 220, n: 30 }) });
   const back = behindSvg(S);
   const hearts = heartsRise(back, 540, 900, L(P.E2) + 0.1, 7, 1482, 0.3);
+  const band = html('div', '', S.fx); band.style.cssText = 'position:absolute;left:0;right:0;top:1460px;height:460px;background:linear-gradient(180deg, rgba(16,8,22,0), rgba(16,8,22,.6) 45%, rgba(16,8,22,.8))';
   const leak = lightLeak(S.fx);
   const shots = [
     { t: 0, cam: fA(600, 1220, 1.18, 540, 1100), to: fA(620, 1210, 1.24, 540, 1100) },

@@ -465,8 +465,8 @@ put(amb, 'bus_pass', T('s6') + 0.2, 0.26)
 for k, tf in enumerate([0.15, 0.55, 1.4, 2.0]):
     put(sfx, 'fw_far', tf, 0.10 + 0.03 * (k % 2), start=0.2 + 0.5 * k, dur=1.6)
 put(sfx, 'bottle', T('s0b') + 0.5, 0.22); put(sfx, 'snackbox', T('s0b') + 0.9, 0.12)
-for k in range(4): put(sfx, 'fw_far', P['H3'] - 0.2 + k * 0.7, 0.07, muff=1600, start=1.0 + k * 0.6, dur=1.4)
-place(sfx, sparkle(0.035, 1760, 7), P['H5'] + 0.15)
+for k in range(3): put(sfx, 'fw_far', P['H3'] - 0.2 + k * 0.6, 0.06, muff=1600, start=1.0 + k * 0.6, dur=1.2)   # clear of "สังเกต"
+place(sfx, sparkle(0.03, 1760, 7), P['Hend'] + 0.05)
 
 # ---------------- S1: the terminal, fifteen New Year's Eves ----------------
 place(sfx, whoosh(0.5, 0.04, 300, 2200), T('s1') - 0.25)
@@ -487,10 +487,10 @@ place(sfx, sparkle(0.02, 2093, 4), P['B5'] + 0.6)
 
 # ---------------- S3a: the secret seat ----------------
 place(sfx, fade(bell(784, 1.6, 0.02), 0.3, 1.0), T('s3a'))
-place(sfx, whoosh(0.5, 0.045, 400, 3000), P['C1'] - 0.05); put(sfx, 'ticket', P['C1'] + 0.05, 0.2)
+place(sfx, whoosh(0.5, 0.035, 400, 3000), P['C1'] - 0.35); put(sfx, 'ticket', P['C1'] - 0.3, 0.1)
 t = P['C1'] + 0.35
-while t < P['C1'] + 0.75: place(sfx, fade(noise_burst(0.06, 0.012, 2500, 9000, 0.9), 0.01, 0.03), t); t += 0.07   # red marker
-place(sfx, thump(90, 0.12, 0.08), P['C1'] + 0.75); place(sfx, noise_burst(0.06, 0.03, 1000, 5000), P['C1'] + 0.75)   # stamp
+while t < P['C1'] + 0.75: place(sfx, fade(noise_burst(0.06, 0.005, 2500, 9000, 0.9), 0.01, 0.03), t); t += 0.07   # red marker
+place(sfx, thump(90, 0.12, 0.04), P['C1'] + 0.75); place(sfx, noise_burst(0.06, 0.01, 1000, 5000), P['C1'] + 0.75)   # stamp
 walk_steps(P['C2'] - 0.05, T('s3b') - 0.1, 0.42, 0.02, pan=0.4)
 
 # ---------------- S3b: the aisle, the reveal, the freeze ----------------
@@ -512,11 +512,11 @@ place(sfx, bell(1319, 1.4, 0.045), T('s4') + 1.0)
 # ---------------- S5: midnight on the bus ----------------
 tMid = P['D0'] + 0.25
 for k in range(3): place(sfx, tick(0.03, 2400), tMid - 0.2 - (2 - k) * 0.3)
-put(sfx, 'fw_near', tMid, 0.32, muff=1700)
-for k in range(9): put(sfx, 'fw_far', tMid + 1.2 + k * 1.3, 0.12, muff=1800, start=(k * 0.9) % 4, dur=1.8)
-put(sfx, 'cheer', tMid + 0.1, 0.09, dur=2.0)
-put(sfx, 'mic_on', P['D1'] + 0.2, 0.25)
-put(sfx, 'pa_chime', P['Dend'] + 0.02, 0.22)
+put(sfx, 'fw_near', tMid, 0.24, muff=1500, dur=2.2)
+for k in range(9): put(sfx, 'fw_far', tMid + 1.2 + k * 1.3, 0.07, muff=1500, start=(k * 0.9) % 4, dur=1.8)
+put(sfx, 'cheer', tMid + 0.1, 0.05, dur=1.0)
+put(sfx, 'mic_on', P['Dend'] + 0.03, 0.2)                                      # after "ไมค์ ... เหมือนทุกปี"
+put(sfx, 'pa_chime', P['Dend'] + 0.12, 0.18)
 tCheer = P['Mend'] + 0.15
 put(sfx, 'cheer', tCheer, 0.42); put(sfx, 'clap', tCheer + 0.4, 0.3)
 for k in range(5): pop_party(tCheer + 0.05 + k * 0.13, 0.05)
@@ -542,12 +542,12 @@ put(sfx, 'fw_far', E + 0.2, 0.08, dur=2.6)
 # ---------------- voices ----------------
 def pa(v):
     """the bus PA: band-limited, a touch of drive, a short metallic cabin echo"""
-    x = band(v, 320, 3800)
-    x = np.tanh(x * 2.4) / 2.4
-    ir = np.zeros(int(0.32 * SR)); ir[0] = 1.0
-    for d, g in [(0.023, 0.32), (0.041, 0.24), (0.067, 0.18), (0.11, 0.12), (0.17, 0.08), (0.24, 0.05)]: ir[int(d * SR)] += g
+    x = band(v, 170, 6500)
+    x = np.tanh(x * 1.3) / 1.3
+    ir = np.zeros(int(0.3 * SR)); ir[0] = 1.0
+    for d, g in [(0.029, 0.16), (0.053, 0.11), (0.09, 0.07), (0.15, 0.04)]: ir[int(d * SR)] += g
     y = np.convolve(x, ir)[:len(x)]
-    return band(y, 300, 4200)
+    return band(y, 160, 7000)   # gentle: Whisper must still read every word
 
 
 voice = np.zeros((N, 2))
@@ -592,6 +592,7 @@ def ramp(a, b, val, edge=0.5):
 
 
 target = target + ramp(P['title'] - 0.2, P['D0'] + 0.1, -17.0, 0.4) + ramp(P['Mend'] + 0.2, P['F0'] - 0.1, -18.0, 0.35) + ramp(P['end'] - 0.2, DUR + 1, -17.0, 0.5)
+target = target + ramp(P['H5'] - 0.15, P['Hend'] + 0.1, -29.0, 0.2) + ramp(P['C1'] - 0.15, P['C2'] + 0.4, -29.0, 0.2) + ramp(P['M0'] - 0.15, P['Mend'] + 0.1, -28.0, 0.3) + ramp(P['D1'] - 0.15, P['D2'] + 0.3, -29.0, 0.2)   # words Whisper lost under the music
 gain_db = np.clip(0.6 * (target - lvl), -14, 9)
 gain_db = movavg(gain_db, int(0.3 * SR))
 music *= (10 ** (gain_db / 20))[:, None]

@@ -112,6 +112,10 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
   - Before adding a ramp, transcribe the voice stem alone (`audio.py` writes `<out>.stems.npy`).
     - If the stem also misreads, the music is not the cause, so regenerate the take.
     - If new takes misread the same way, Whisper is confusing the tone (หนัก → นัก). Flag the word to the user for a listen.
+  - Sound effects mask words as easily as music: keep every recorded SFX (ticket, mic click, fireworks, cheer) off the
+    words in the narration; move it to the gap or lower it. Then add a music `ramp` under lines Whisper lost.
+  - A filtered character voice (PA, phone) must stay readable: a heavy band-limit or drive turned "ผู้โดยสาร" into
+    "ผู้ได้สาร". Transcribe the stem after filtering.
 
 ## QA (non-negotiable before delivery)
 1. Stills of every shot before the full render (`node render.js stills dir t…`, grid with `scripts/grid.sh`), fix framing first.
