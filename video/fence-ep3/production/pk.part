@@ -211,7 +211,8 @@
       const pkOut = (tl, sel, t, dir = 0) => tl.to(sel, { opacity: 0, y: -34, x: dir * 60, rotation: dir ? dir * 8 : -5, scale: 0.96, duration: 0.28, ease: "power2.in" }, t);
       // a map pin drops in and squashes on landing (used by shots.part on the map beats)
       const pinDrop = (tl, sel, t, x, y) => { tl.fromTo(sel, { opacity: 0, y: -420, scaleY: 1.15, scaleX: 0.9, svgOrigin: `${x} ${y}` }, { opacity: 1, y: 0, scaleY: 1, scaleX: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, t);
-        tl.fromTo(sel, { scaleY: 0.76, scaleX: 1.14 }, { scaleY: 1, scaleX: 1, duration: 0.55, ease: "elastic.out(1, 0.35)", immediateRender: false }, t + 0.22); };
+        tl.fromTo(sel, { scaleY: 0.76, scaleX: 1.14 }, { scaleY: 1, scaleX: 1, duration: 0.55, ease: "elastic.out(1, 0.35)", immediateRender: false }, t + 0.22);
+        if (document.querySelector(`${sel}-sh`)) tl.fromTo(`${sel}-sh`, { opacity: 0, scale: 2.4, svgOrigin: `${x} ${y}` }, { opacity: 1, scale: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, t); };   // its shadow gathers under it as it lands
       // looping micro-motion inside the icons (classes a-*), active from t0 to t1
       function pkLoops(tl, root, t0, t1) {
         const D = Math.max(0.5, t1 - t0), rep = (p) => Math.ceil(D / p) + 1, q = (c) => root.querySelectorAll(c);

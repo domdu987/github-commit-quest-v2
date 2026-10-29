@@ -61,8 +61,8 @@
       add("rule", {
         set: "schoolYard", setOpts: { id: "ru", time: "morning", gate: 0 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(700, 1150, 0.92, 540, 1050), drift: { s: 0.015 } }] },
-        actors: [PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("rule", 1), mode: "point", eyes: "normal", mouth: "flat" }]), KO(360, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]),
-          MA(160, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), HO(-40, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), PU(-200, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [PI(560, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "worry", mouth: "frown" }, { t: vo("rule", 1), mode: "point", eyes: "squint", mouth: "flat" }]), KO(360, 1500, 0.9, [{ t: 0, mode: "plead", eyes: "worry", mouth: "frown" }]),
+          MA(160, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "flat" }]), HO(-40, 1500, 0.9, [{ t: 0, mode: "write", eyes: "worry", mouth: "flat" }], { prop: "ledger" }), PU(-200, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
         captions: CLIP([...caps("rule", [0]), ...caps("rule", [1], { quote: true })]),
         ui: [{ type: "fRule", t: vo("rule", 1) - 0.3, nums: [2], label: "กฎของครูพิม", rows: ["ช่วยได้… <u>แต่อย่าเชื่อ</u>"], at: [vo("rule", 1) - 0.3], end: D("rule") - 0.05, top: 250 }],
         fx(tl, id, t0, L) { behind(L, tl, "ru-phu", "phu", 960, 1180, 0.9, false, t0, D("rule"), [{ t: 0, mode: "lie", eyes: "normal", mouth: "o" }]); Fx.punch(tl, `#${id} .stage`, t0 + F("rule", 1, 1), 1.05, 0.35); red(tl, t0 + F("rule", 1, 1), 0.4, 0.5); Fx.heart(tl, t0, D("rule"), 0.65, 0.35); },
@@ -72,9 +72,9 @@
       add("gate", {
         set: "schoolYard", setOpts: { id: "gt", time: "morning", gate: 0 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(640, 560, 0.5, 540, 760), drift: { s: 0.01 } }, { t: D("gate") - 0.2, glide: D("gate") - 0.4, ...fr(700, 1200, 1.05, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [KO(260, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.9, mode: "reach", eyes: "wide", mouth: "o" }, { t: vo("gate", 1) + 0.3, mode: "idle", eyes: "normal", mouth: "frown" }], { moveTo: { x: 760, dur: 0.9, ease: "power1.out" } }),
-          PI(540, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "frown" }, { t: vo("gate", 1) - 0.1, mode: "stopHand", eyes: "wide", mouth: "o" }], { moveTo: { x: 600, dur: vo("gate", 1) } }),
-          MA(160, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), HO(-20, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(-180, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [KO(260, 1500, 0.9, [{ t: 0, mode: "run", eyes: "worry", mouth: "frown" }, { t: 0.9, mode: "plead", eyes: "worry", mouth: "frown" }, { t: vo("gate", 1) + 0.3, mode: "slump", eyes: "sad", mouth: "frown" }], { moveTo: { x: 760, dur: 0.9, ease: "power1.out" } }),
+          PI(540, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "frown" }, { t: vo("gate", 1) - 0.1, mode: "stopHand", eyes: "squint", mouth: "flat" }], { moveTo: { x: 600, dur: vo("gate", 1) } }),
+          MA(160, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "flat" }]), HO(-20, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(-180, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
         bubbles: [bub("gate", 0, 420, 560, 320), bub("gate", 1, 60, 560, 280)],
         fx(tl, id, t0, L) { behind(L, tl, "gt-phu", "phu", 960, 1180, 0.9, false, t0, D("gate"), [{ t: 0, mode: "lie", eyes: "normal", mouth: "o" }]); Fx.heart(tl, t0, D("gate"), 0.5, 0.5); Fx.punch(tl, `#${id} .stage`, t0 + vo("gate", 1), 1.04, 0.3); },
       });
@@ -83,7 +83,8 @@
       add("plea", {
         set: "schoolYard", setOpts: { id: "pl", time: "morning", gate: 0 }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(900, 1150, 1.3, 540, 1050), drift: { s: 0.02 } }, { t: vo("plea", 1) - 0.05, ...fr(760, 1150, 1.0, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PI(600, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), KO(400, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [PI(600, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "frown" }, { t: vo("plea", 1), mode: "think", eyes: "worry", mouth: "frown" }]), KO(400, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])],
+        react: [{ a: 0, t: vo("plea", 1) + 0.05, dur: 2.0 }],
         captions: caps("plea", [1]),
         bubbles: [bub("plea", 0, 380, 520, 560)],
         ui: [{ type: "callback", t: F("plea", 1, 1), end: D("plea") - 0.05, label: "กฎของเรื่อง", text: "มันเดินตามเสียง… <em>คนก็เหมือนกัน</em>", top: 1300 }],
@@ -134,7 +135,7 @@
       split("open", voEnd("open", 0) + 0.3, {
         set: "schoolYard", setOpts: { id: "op", time: "morning", gate: 0 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(900, 1180, 1.25, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PI(620, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [PI(620, 1500, 0.9, [{ t: 0, mode: "think", eyes: "squint", mouth: "frown" }])],
         bubbles: [bub("open", 0, 360, 560, 480)],
         fx(tl, id, t0, L) { behind(L, tl, "op-phu", "phu", 960, 1180, 0.9, false, t0, voEnd("open", 0) + 0.3, [{ t: 0, mode: "cutCloth", eyes: "normal", mouth: "flat" }, { t: vo("open", 0), mode: "sitHold", eyes: "normal", mouth: "smile" }], { prop: "knife" }); Fx.heart(tl, t0, voEnd("open", 0) + 0.3, 0.6, 0.4); },
       }, {
@@ -142,7 +143,7 @@
         cam: { keys: [{ t: 0, ...fr(760, 1150, 0.95, 540, 1050), drift: { s: 0.02 } }] },
         shake: (t) => (t < 0.4 ? 5 * Math.sin(t * 40) : 0),
         actors: [PI(620, 1500, 0.9, [{ t: 0, mode: "push", eyes: "normal", mouth: "flat" }, { t: 0.4, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true }), KO(380, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]),
-          PH(1250, 1500, 0.9, [{ t: 0, mode: "limp", eyes: "normal", mouth: "flat" }, { t: D("open") - voEnd("open", 0) - 0.5, mode: "holdArm", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 860, dur: D("open") - voEnd("open", 0) - 0.5, ease: "none" } })],
+          PH(1250, 1500, 0.9, [{ t: 0, mode: "limp", eyes: "pain", mouth: "grit" }, { t: D("open") - voEnd("open", 0) - 0.5, mode: "holdArm", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 860, dur: D("open") - voEnd("open", 0) - 0.5, ease: "none" } })],
         fx(tl, id, t0) { tl.fromTo("#flashw", { opacity: 0.25 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0); Fx.heart(tl, t0, D("open") - voEnd("open", 0) - 0.3, 0.55, 0.45); },
       });
 
@@ -168,7 +169,7 @@
       add("ledger", {
         set: "schoolYard", setOpts: { id: "lg", time: "day", level: 0.5 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(300, 1180, 1.1, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [HO(200, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "frown" }, { t: vo("ledger", 0), mode: "point", eyes: "normal", mouth: "frown" }], { prop: "ledger" }), PH(560, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "normal", mouth: "flat" }], { flip: true }), PU(400, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }], { prop: "crayon" })],
+        actors: [HO(200, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "frown" }, { t: vo("ledger", 0), mode: "point", eyes: "squint", mouth: "frown" }], { prop: "ledger" }), PH(560, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "sad", mouth: "flat" }], { flip: true }), PU(400, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }], { prop: "crayon" })],
         bubbles: [bub("ledger", 0, 40, 520, 240)],
         ui: [{ type: "counter", t: 0.2, end: D("ledger") - 0.05, label: "น้ำในแท็งก์", icon: "water", unit: "ขีด", max: 10, keys: [{ t: 0.2, v: 5 }, { t: vo("ledger", 0) + 0.3, v: 4 }], alarm: vo("ledger", 0) + 0.3, top: 150, right: true }],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("ledger"), 0.7, 0.3); },
@@ -178,7 +179,7 @@
       split("blade", D("blade") - 1.0, {
         set: "schoolYard", setOpts: { id: "bl", time: "day", gate: 0, sunX: 900 }, dark: 0.15, blur: { far: 2 },
         cam: { keys: [{ t: 0, ...fr(900, 1100, 1.2, 540, 1000), drift: { s: 0.02 } }, { t: F("blade", 0, 2) - 0.05, glide: 0.5, ...fr(980, 1000, 1.7, 540, 960), drift: { s: 0.03 } }] },
-        actors: [MA(760, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 1.0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: F("blade", 0, 2), mode: "pullBolt", eyes: "normal", mouth: "frown" }], { moveTo: { x: 880, dur: 1.0 } })],
+        actors: [MA(760, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 1.0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: F("blade", 0, 2), mode: "pullBolt", eyes: "squint", mouth: "grit" }], { moveTo: { x: 880, dur: 1.0 } })],
         captions: capsFrom("blade", 0).filter((c) => c.t < D("blade") - 1.1),
         ui: [{ type: "callback", t: F("blade", 0, 2), end: D("blade") - 1.05, label: "ภัยที่มองไม่เห็น", text: "<em>สนิม</em> + ดิน + เลือดเก่า", top: 300 }],
         extra(L) { put(L.act, BLADE("bl-sick", 1000, 1050, 1.15)); },
@@ -205,7 +206,7 @@
         set: "schoolYard", setOpts: { id: "ct", time: "day", gate: 0, sunX: 900 }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(860, 1150, 1.15, 540, 1050), r: -2, drift: { s: 0.04, r: 3 } }, { t: vo("cut", 1) - 0.05, ...fr(760, 1200, 1.35, 540, 1050), drift: { s: 0.03 } }] },
         shake: (t) => (t < 0.5 ? 12 * Math.sin(t * 25) : 2 * Math.sin(t * 9)),
-        actors: [MA(880, 1500, 0.9, [{ t: 0, mode: "knocked", eyes: "wide", mouth: "scream" }, { t: 0.5, mode: "sitHold", eyes: "closed", mouth: "frown" }], { moveTo: { x: 700, dur: 0.4, ease: "power2.out" } })],
+        actors: [MA(880, 1500, 0.9, [{ t: 0, mode: "knocked", eyes: "pain", mouth: "scream" }, { t: 0.5, mode: "sitHold", eyes: "pain", mouth: "frown" }], { moveTo: { x: 700, dur: 0.4, ease: "power2.out" } })],
         captions: caps("cut", [1]),
         bubbles: [bub("cut", 0, 140, 560, 250)],
         extra(L) { put(L.act, BLADE("ct-sick", 1000, 1050, 1.15)); put(L.act, `<g id="ct-blood" opacity="0"><ellipse cx="760" cy="1480" rx="60" ry="14" fill="#7a1414" opacity=".8"/><path d="M700,1300q20,60 10,120M740,1320q10,50 20,110" stroke="#7a1414" stroke-width="7" fill="none" stroke-linecap="round"/></g>`); },
@@ -221,9 +222,9 @@
       add("press", {
         set: "schoolYard", setOpts: { id: "pr", time: "day", gate: 0, sunX: 900 }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(640, 1200, 1.1, 540, 1050), drift: { s: 0.02 } }, { t: vo("press", 1) - 0.05, ...fr(600, 1200, 1.3, 540, 1100), drift: { s: 0.03 } }] },
-        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "closed", mouth: "frown" }, { t: 1.2, mode: "sitHold", eyes: "normal", mouth: "frown" }]),
-          PH(100, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "flat" }, { t: 0.6, mode: "press", eyes: "normal", mouth: "flat" }], { moveTo: { x: 520, dur: 0.6, ease: "power1.out" } }),
-          PI(300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 0.8, mode: "crouch", eyes: "wide", mouth: "o" }]), KO(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "closed", mouth: "frown" }, { t: 1.2, mode: "sitHold", eyes: "pain", mouth: "frown" }]),
+          PH(100, 1500, 0.9, [{ t: 0, mode: "run", eyes: "squint", mouth: "flat" }, { t: 0.6, mode: "press", eyes: "squint", mouth: "flat" }], { moveTo: { x: 520, dur: 0.6, ease: "power1.out" } }),
+          PI(300, 1500, 0.9, [{ t: 0, mode: "gasp", eyes: "wide", mouth: "o" }, { t: 0.8, mode: "crouch", eyes: "worry", mouth: "frown" }]), KO(-60, 1500, 0.9, [{ t: 0, mode: "gasp", eyes: "wide", mouth: "o" }])],
         captions: caps("press", [1]),
         bubbles: [bub("press", 0, 60, 520, 500)],
         ui: [{ type: "skill", t: 0.9, end: vo("press", 1) + 0.4, x: 60, y: 820, name: "ภู", skill: "หมอ", desc: "ห้ามเลือด · ล้างแผล · รู้ก่อนใครว่าอันตราย", icon: "medic" },
@@ -237,7 +238,7 @@
         set: "classroom", setOpts: { id: "tt", time: "day", lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(560, 1180, 1.1, 540, 1050), drift: { s: 0.02 } }, { t: vo("tetanus", 2) - 0.05, ...fr(640, 1200, 1.3, 540, 1100), drift: { s: 0.03 } }] },
         shake: (t) => (t > F("tetanus", 1, 2) && t < F("tetanus", 1, 2) + 0.35 ? 12 * Math.sin(t * 23) : 0),
-        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }]), PI(140, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "squint", mouth: "flat" }]), PI(140, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "worry", mouth: "frown" }])],
         captions: caps("tetanus"),
         ui: [{ type: "tip", t: F("tetanus", 0, 1) - 0.1, end: D("tetanus") - 0.05, ill: "tetanus", label: "บาดทะยัก", text: "สนิม · ดิน · ฝุ่น → [สปอร์] → {ขากรรไกรแข็ง}", tone: "danger", top: 230 },
           { type: "src", t: vo("tetanus", 1) + 0.3, end: vo("tetanus", 2) - 0.1, top: 600, text: CDC + "“The first sign is most commonly spasms of the jaw muscles, or ‘lockjaw.’”" },
@@ -250,7 +251,7 @@
       add("needle", {
         set: "classroom", setOpts: { id: "nd", time: "day", lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(560, 1180, 1.2, 540, 1050), drift: { s: 0.02 } }, { t: vo("needle", 1) - 0.05, ...fr(720, 1180, 1.45, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }, { t: vo("needle", 1), mode: "sitChair", eyes: "closed", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }, { t: vo("needle", 0), mode: "crouch", eyes: "normal", mouth: "flat" }])],
+        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }, { t: vo("needle", 1), mode: "sitChair", eyes: "sad", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }, { t: vo("needle", 0), mode: "crouch", eyes: "squint", mouth: "flat" }])],
         bubbles: [bub("needle", 0, 40, 520, 360), bub("needle", 1, 420, 520, 90)],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("needle", 1, 1), 1.07, 0.4); red(tl, t0 + F("needle", 1, 1), 0.6, 0.6); Fx.glitch(tl, `#${id}`, t0 + F("needle", 1, 1), 0.15, 8, 41); Fx.heart(tl, t0, D("needle"), 0.5, 0.5); },
       });
@@ -259,7 +260,7 @@
       add("signs", {
         set: "classroom", setOpts: { id: "sg", time: "day", lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(600, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }] },
-        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat" }], { flip: true }), PH(380, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }]), HO(120, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" })],
+        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "worry", mouth: "flat" }], { flip: true }), PH(380, 1500, 0.9, [{ t: 0, mode: "point", eyes: "squint", mouth: "flat" }]), HO(120, 1500, 0.9, [{ t: 0, mode: "write", eyes: "squint", mouth: "flat" }], { prop: "ledger" })],
         captions: caps("signs"),
         ui: [{ type: "signs", t: F("signs", 0, 1), items: ["<em>แดง</em> ร้อน บวม", "<em>ปวด</em>มากขึ้น", "หนอง<em>เหลือง-เขียว</em>", "ไข้ <em>37.7°C+</em> เกิน 4 ชม."], icons: [CHK.red, CHK.pain, CHK.pus, CHK.fever], at: [F("signs", 0, 1), F("signs", 0, 1) + 0.55, F("signs", 0, 2), F("signs", 1, 0)], end: D("signs") - 0.05, top: 170 },
           { type: "src", t: vo("signs", 1), end: D("signs") - 0.05, top: 1240, text: MLP + "“Redness, increased pain, or yellow or green pus… Fever of 100°F (37.7°C) or higher for more than 4 hours.”" }],
@@ -270,7 +271,7 @@
       add("real", {
         set: "schoolYard", setOpts: { id: "rl", time: "day", level: 0.5 }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1150, 0.85, 540, 1050), drift: { s: 0.015 } }] },
-        actors: [MA(500, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "flat" }]), PH(760, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }), PI(260, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [MA(500, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "sad", mouth: "flat" }]), PH(760, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "normal", mouth: "flat" }], { flip: true }), PI(260, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "hospital", label: "ในชีวิตจริง", text: "สกปรก · ถูกกัด · มีหนอง → {ไปโรงพยาบาล}", tone: "rule", top: 230 },
           { type: "src", t: F("real", 0, 2), end: D("real") - 0.05, top: 600, text: NHS + "“Get medical help as soon as possible if… a wound has soil, pus or body fluids in it… You may also need to have an injection to prevent tetanus.”" }],
@@ -281,9 +282,10 @@
       add("trust", {
         set: "schoolYard", setOpts: { id: "tr", time: "dusk", sunX: 900, level: 0.5 }, dark: 0.25, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(400, 1150, 0.82, 540, 1050), drift: { s: 0.015 } }, { t: F("trust", 0, 2) - 0.05, glide: 0.6, ...fr(1000, 1200, 1.25, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(360, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]), KO(120, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }]), MA(580, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "smile" }], { flip: true }),
-          HO(-80, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "smile" }], { prop: "ledger" }), PU(240, 1500, 0.58, [{ t: 0, mode: "pointUp", eyes: "normal", mouth: "smile" }]),
-          PI(1080, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: F("trust", 0, 2), mode: "holdHead", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [PH(360, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smileOpen" }]), KO(120, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "smileOpen" }]), MA(580, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "smile" }], { flip: true }),
+          HO(-80, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "smile" }], { prop: "ledger" }), PU(240, 1500, 0.58, [{ t: 0, mode: "pointUp", eyes: "normal", mouth: "smileOpen" }]),
+          PI(1080, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "frown" }, { t: F("trust", 0, 2), mode: "think", eyes: "squint", mouth: "frown" }], { flip: true })],
+        react: [{ a: 5, t: F("trust", 0, 2) - 0.1, dur: 1.8 }],
         captions: caps("trust"),
         ui: [{ type: "roster", t: 0.3, end: F("trust", 0, 2) + 0.4, top: 150, title: "ทะเบียนค่าย", who: "วันที่ 102 · เพิ่มชื่อ", rows: [{ name: "ภู", skill: "หมอ", desc: "ห้ามเลือด · ล้างแผล · อดีตกู้ภัย", icon: "medic", at: F("trust", 0, 1) }] }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("trust", 0, 2), 1.05, 0.35); red(tl, t0 + F("trust", 0, 2), 0.35, 0.5); Fx.heart(tl, t0 + F("trust", 0, 2), D("trust") - F("trust", 0, 2), 0.5, 0.5); },
@@ -294,8 +296,9 @@
         set: "schoolYard", setOpts: { id: "nm", time: "dusk", sunX: 900, level: 0.5 }, dark: 0.35, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(360, 1250, 1.3, 540, 1100), drift: { s: 0.02 } }, { t: vo("name", 1) - 0.05, ...fr(300, 1180, 1.05, 540, 1050), drift: { s: 0.02 } }, { t: vo("name", 2) - 0.05, ...fr(700, 1150, 1.1, 540, 1050), drift: { s: 0.02 } }, { t: vo("name", 3) - 0.05, ...fr(380, 1120, 1.5, 540, 1000), drift: { s: 0.03 } }, { t: vo("name", 4) - 0.05, ...fr(380, 1120, 1.7, 540, 1000), drift: { s: 0.05 } }] },
         shake: (t) => (t > F("name", 4, 1) && t < F("name", 4, 1) + 0.4 ? 10 * Math.sin(t * 23) : 0),
-        actors: [PH(420, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "smile" }, { t: vo("name", 3), mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }), PU(200, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }, { t: voEnd("name", 0), mode: "lookUp", eyes: "normal", mouth: "smile" }], { prop: "crayon" }),
-          PI(900, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("name", 1), mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("name", 2) - 0.1, mode: "stopHand", eyes: "wide", mouth: "o" }], { flip: true }), MA(1100, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "flat" }], { flip: true })],
+        actors: [PH(420, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "smile" }, { t: vo("name", 3), mode: "shrug", eyes: "normal", mouth: "smile" }], { flip: true }), PU(200, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }, { t: voEnd("name", 0), mode: "lookUp", eyes: "normal", mouth: "smile" }], { prop: "crayon" }),
+          PI(900, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("name", 1), mode: "gasp", eyes: "wide", mouth: "o" }, { t: vo("name", 2) - 0.1, mode: "stopHand", eyes: "angry", mouth: "frown" }, { t: vo("name", 4), mode: "armsCrossed", eyes: "squint", mouth: "frown" }], { flip: true }), MA(1100, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "worry", mouth: "flat" }], { flip: true })],
+        react: [{ a: 2, t: vo("name", 1), dur: 1.5, fast: true }, { a: 2, t: vo("name", 4) - 0.05, dur: D("name") - vo("name", 4) - 0.1 }],
         captions: CLIP([...caps("name", [1]), ...caps("name", [4])]),
         bubbles: [bub("name", 0, 120, 520, 420), bub("name", 2, 380, 520, 340), bub("name", 3, 170, 520, 380)],
         fx(tl, id, t0) {
@@ -334,8 +337,8 @@
       }, {
         set: "classroom", setOpts: { id: "rb", night: true, lampX: 400, lampY: 1100 }, dark: 0.6, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(700, 1100, 1.0, 540, 950), drift: { s: 0.03 } }, { t: vo("radio", 3) - vo("radio", 2) + 0.05, ...fr(1000, 1150, 1.2, 540, 1000), drift: { s: 0.03 } }] },
-        actors: [HO(500, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 0.3, mode: "point", eyes: "wide", mouth: "o" }]), MA(1000, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "frown" }], { flip: true }),
-          PH(1260, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }], { flip: true }), PU(760, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }]), PI(260, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "wide", mouth: "o" }])],
+        actors: [HO(500, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 0.3, mode: "point", eyes: "worry", mouth: "frown" }]), MA(1000, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "squint", mouth: "flat" }], { flip: true }),
+          PH(1260, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "squint", mouth: "smile" }], { flip: true }), PU(760, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }]), PI(260, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "worry", mouth: "frown" }])],
         bubbles: [bub("radio", 2, 60, 520, 400, { end: vo("radio", 3) - vo("radio", 2) }), bub("radio", 3, 420, 520, 120)].map((b, i) => ({ ...b, t: i ? vo("radio", 3) - vo("radio", 2) + 0.05 : 0.05 })),
         ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 2) - 0.1) - 0.05, label: "วิทยุนับ · เหลือ", icon: "radio", unit: "วัน", keys: [{ t: 0, v: 96 }], top: 150, right: true }, { type: "counter", t: 0.05, end: D("radio") - (vo("radio", 2) - 0.1) - 0.05, label: "คนในค่าย", icon: "people", unit: "คน", max: 6, keys: [{ t: 0, v: 6 }], alarm: F("radio", 2, 1) - (vo("radio", 2) - 0.1), top: 150 }],
         fx(tl, id, t0) { const X = t0 + F("radio", 2, 1) - (vo("radio", 2) - 0.1); tl.set("#rb-dialw", { opacity: 1 }, t0); tl.to("#rb-dialw", { opacity: 0, duration: 0.1 }, t0 + 0.6); Fx.punch(tl, `#${id} .stage`, X, 1.08, 0.5); Fx.glitch(tl, `#${id}`, X, 0.3, 14, 72); red(tl, X, 0.7, 0.7); Fx.heart(tl, t0, D("radio") - (vo("radio", 2) - 0.1), 0.45, 0.6); },
@@ -353,7 +356,7 @@
       add("night", {
         set: "schoolYard", setOpts: { id: "ni", time: "night", lampX: -300, gate: 0 }, dark: 0.55, blur: { far: 3, mid: 1 },
         cam: { keys: [{ t: 0, ...fr(560, 1100, 0.72, 540, 950), drift: { s: 0.02 } }, { t: D("night") - 0.1, glide: D("night") - 0.6, ...fr(900, 1200, 1.3, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(840, 1500, 0.9, [{ t: 0, mode: "talkOut", eyes: "normal", mouth: "flat" }])],
+        actors: [PH(840, 1500, 0.9, [{ t: 0, mode: "talkOut", eyes: "squint", mouth: "flat" }])],
         captions: caps("night"),
         fx(tl, id, t0, L) { behind(L, tl, "ni-dark", "ha2", 1260, 1180, 0.82, true, t0, D("night"), [{ t: 0, mode: "still", eyes: "dead", mouth: "flat", opts: { period: 14 } }]); tl.set("#ni-dark", { opacity: 0.35 }, t0); Fx.punch(tl, `#${id} .stage`, t0 + F("night", 0, 2), 1.05, 0.4); red(tl, t0 + F("night", 0, 2), 0.4, 0.6); Fx.heart(tl, t0, D("night"), 0.5, 0.5); },
       });
@@ -374,7 +377,8 @@
         set: "schoolYard", setOpts: { id: "cho", time: "night", lampX: -300, gate: 0 }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(760, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: 1.0, glide: 1.6, ...fr(860, 1200, 1.6, 540, 1050), r: 2, drift: { s: 0.03, r: 0.8 } }] },
         shake: (t) => shakeH(t) * 2,
-        actors: [PH(840, 1500, 0.9, [{ t: 0, mode: "talkOut", eyes: "normal", mouth: "flat" }, { t: 1.8, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: false })],
+        actors: [PH(840, 1500, 0.9, [{ t: 0, mode: "talkOut", eyes: "squint", mouth: "flat" }, { t: 1.8, mode: "idle", eyes: "squint", mouth: "smile" }], { flip: false })],
+        react: [{ a: 0, t: 1.8, dur: 1.4 }],
         ui: [{ type: "choice", t: 0.05, q: "ไว้ใจภูมั้ย?", a: "ไว้ใจ", b: "ไม่ไว้ใจ", secs: 3, top: 300, possessed: { at: 1.0, side: "a", glitch: "ไว้ใจ…", who: "…เขารู้ชื่อปั้น" } }],
         fx(tl, id, t0, L) {
           behind(L, tl, "cho-dark", "ha2", 1260, 1180, 0.82, true, t0, D("choice"), [{ t: 0, mode: "still", eyes: "dead", mouth: "flat", opts: { period: 14 } }]); tl.set("#cho-dark", { opacity: 0.35 }, t0);

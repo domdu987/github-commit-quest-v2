@@ -125,12 +125,15 @@ CUES = [
     *bed("crickets", T("trust", 0), T("sig", -0.1), 0.4, 4.6), ("trust", 0.3, "page", 0.8), ("trust", 0.7, "slam", 0.5), ("trust", frag("trust", 0, 1), "pop", 0.5), ("trust", frag("trust", 0, 1) + 0.15, "marker", 0.4), ("trust", frag("trust", 0, 1) + 0.35, "slam", 0.45), ("trust", frag("trust", 0, 2), "sting", 0.6), ("trust", frag("trust", 0, 2), "whoosh", 0.4), *beats("trust", frag("trust", 0, 2), D["trust"] - frag("trust", 0, 2), 0.5, 0.5),
     ("name", 0.2, "crayon", 0.4), ("name", 0.9, "crayon", 0.4), ("name", frag("name", 0, 1), "sting", 0.8), ("name", frag("name", 0, 1), "glitch", 0.4), ("name", frag("name", 1, 1), "sting", 0.7), ("name", frag("name", 1, 1), "slam", 0.5), ("name", vo_t("name", 2), "riser", 0.4), ("name", frag("name", 4, 1), "sting", 1.1), ("name", frag("name", 4, 1), "boom", 0.7), ("name", frag("name", 4, 1), "glitch", 0.7), ("name", frag("name", 4, 1) + 0.1, "slam", 0.6), *beats("name", vo_t("name", 1), D["name"] - vo_t("name", 1), 0.42, 0.7),
     # the signature
-    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
-    ("sig", frag("sig", 0, 0) + 0.3, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.62, "ding", 0.6), ("sig", frag("sig", 0, 1) + 0.15, "ding", 0.6),
-    ("sig", frag("sig", 0, 2), "glitch", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
+    # the sheet slaps on and is taped; a red pen ticks each line (with a soft ding); a marker circles the ???
+    ("sig", 0.05, "page", 0.8), ("sig", 0.36, "thud", 0.25),
+    *[x for o in (frag("sig", 0, 0) + 0.3, frag("sig", 0, 0) + 0.62, frag("sig", 0, 1) + 0.15) for x in (("sig", o, "pen", 0.9), ("sig", o + 0.05, "ding", 0.3))],
+    ("sig", frag("sig", 0, 2) + 0.45, "marker", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
     *[("sig", frag("sig", 0, 2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
     ("sig", frag("sig", 0, 3) - 1.1, "riser", 0.6),
-    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.8), ("sig", frag("sig", 0, 3), "glitch", 0.7), ("sig", frag("sig", 0, 3) + 0.12, "slam", 0.7),
+    # "ข้อเดียว": two red slashes, the page tears across, the strip drops, a stamp hits what is left
+    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "pen", 1.0), ("sig", frag("sig", 0, 3) + 0.1, "pen", 1.0),
+    ("sig", frag("sig", 0, 3) + 0.24, "rip", 1.1), ("sig", frag("sig", 0, 3) + 0.86, "thud", 0.8), ("sig", frag("sig", 0, 3) + 0.86, "slam", 0.35),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     # the radio: 96… six; "เราหกคนพอดี"
     *bed("crickets", T("radio", 0), T("drawing", -0.1), 0.45, 4.6), ("radio", vo_t("radio", 1) - 0.35, "radio", 1.0), *bed("radiobed", T("radio", vo_t("radio", 1) - 0.1), T("radio", vo_end("radio", 1) + 0.3), 0.5, 3.0),

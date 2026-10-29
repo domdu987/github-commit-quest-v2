@@ -7,6 +7,7 @@
     <script src="assets/rig.js"></script>
     <script src="assets/hand.js"></script>
     <script src="assets/sets.js"></script>
+    <script src="assets/dress.js"></script>
     <script src="assets/camp.js"></script>
     <script src="assets/koi.js"></script>
     <script src="assets/zom.js"></script>
@@ -28,7 +29,7 @@
       .fgblur { filter: blur(7px); }
       .badge { z-index: 56; position: absolute; left: 36px; bottom: 150px; font: 700 26px/1 Kanit; color: #f4ecd8; opacity: .75; letter-spacing: 2px;
         background: rgba(5,8,10,.55); padding: 8px 14px 10px; border-radius: 10px; }
-      #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 64% at 50% 48%, transparent 50%, rgba(3,6,8,.8) 100%); }
+      #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 84% 70% at 50% 46%, transparent 58%, rgba(3,6,8,.58) 100%); }
       #grain { z-index: 57; position: absolute; inset: -60px; opacity: .11; mix-blend-mode: overlay; pointer-events: none; }
       #flashw { z-index: 60; position: absolute; inset: 0; background: #e8f0ff; opacity: 0; pointer-events: none; }
       #black { z-index: 61; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
@@ -260,7 +261,7 @@
       <svg id="grain" width="1200" height="2040"><filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5" /></filter><rect width="1200" height="2040" filter="url(#nz)" /></svg>
     </div>
     <script>
-      const SCHED = {"total": 180.027, "shots": [{"key": "hook", "start": 0.0, "dur": 10.022, "vo": [{"id": "n01", "t": 0.3, "dur": 3.567, "cap": "ถ้าวันหนึ่ง… / มี[คนแปลกหน้า] / นอนบาดเจ็บอยู่หน้าประตู", "frags": [0.0, 0.95, 2.1]}, {"id": "n02", "t": 3.917, "dur": 3.387, "cap": "เขาร้องขอให้ช่วย… / ขา[เจ็บหนัก] เดินไม่ไหว", "frags": [0.0, 1.57]}, {"id": "n03", "t": 7.404, "dur": 2.268, "cap": "{อย่าเพิ่งเปิดประตู}… / ค้นตัวเขาก่อน", "frags": [0.0, 1.38]}], "voEnd": 9.672}, {"key": "chapter", "start": 10.022, "dur": 5.849, "vo": [{"id": "n04", "t": 0.15, "dur": 5.299, "cap": "เหลืออีก[เก้าสิบเจ็ดวัน]… / วิทยุบอกหก… / เช้านี้ หน้าประตู{มีคนที่หก}", "frags": [0.0, 1.74, 2.96]}], "voEnd": 5.449}, {"key": "rule", "start": 15.871, "dur": 5.946, "vo": [{"id": "n05", "t": 0.1, "dur": 2.861, "cap": "กฎข้อสองของครูพิม… / เขียนไว้ตั้งแต่วันแรก", "frags": [0.0, 1.73]}, {"id": "d01", "t": 3.161, "dur": 2.385, "cap": "ช่วยได้… / {แต่อย่าเชื่อ}", "frags": [0.0, 1.35]}], "voEnd": 5.546}, {"key": "gate", "start": 21.817, "dur": 4.465, "vo": [{"id": "d02", "t": 0.1, "dur": 1.729, "cap": "เปิดเลยครู… / เขาเจ็บหนักนะ", "frags": [0.0, 1.13]}, {"id": "d03", "t": 1.979, "dur": 2.186, "cap": "ยังก่อน… / ก้อง ถอยออกมา", "frags": [0.0, 0.91]}], "voEnd": 4.165}, {"key": "plea", "start": 26.282, "dur": 7.688, "vo": [{"id": "d04", "t": 0.1, "dur": 4.598, "cap": "ผมเห็นไฟ… เมื่อคืน… / เดินมาทั้งคืน", "frags": [0.0, 3.13]}, {"id": "n06", "t": 4.898, "dur": 2.49, "cap": "เสียงเครื่องปั่นไฟ… / ไม่ได้เรียก{แค่พวกมัน}", "frags": [0.0, 1.38]}], "voEnd": 7.388}, {"key": "search", "start": 33.97, "dur": 9.693, "vo": [{"id": "d05", "t": 0.1, "dur": 5.084, "cap": "ถอดเสื้อ… ให้ดูแขน ดูคอ… / แล้วหันหลัง", "frags": [0.0, 2.87]}, {"id": "n07", "t": 5.334, "dur": 4.059, "cap": "รอยกัด… รอยเล็บ… / ต้องดูให้ครบทั้งตัว / {ก่อนเปิดประตู}", "frags": [0.0, 1.66, 3.13]}], "voEnd": 9.393}, {"key": "wound", "start": 43.663, "dur": 7.097, "vo": [{"id": "n08", "t": 0.1, "dur": 3.592, "cap": "มีแค่[แผลที่ขา]… / โดนเหล็กบาด / {ยังมีดินติดอยู่}", "frags": [0.0, 1.48, 2.55]}, {"id": "d06", "t": 3.892, "dur": 2.905, "cap": "ขอมีดหน่อยครับ… / ผมต้องตัดขากางเกง", "frags": [0.0, 1.32]}], "voEnd": 6.797}, {"key": "knife", "start": 50.76, "dur": 5.403, "vo": [{"id": "n09", "t": 0.15, "dur": 2.717, "cap": "มีดครัว… / [อาวุธชิ้นสุดท้าย]ของค่าย", "frags": [0.0, 1.06]}, {"id": "n10", "t": 2.967, "dur": 2.036, "cap": "ถูกยื่นออกไป… / {นอกรั้ว}", "frags": [0.0, 1.33]}], "voEnd": 5.003}, {"key": "open", "start": 56.163, "dur": 3.4, "vo": [{"id": "d07", "t": 0.2, "dur": 2.286, "cap": "เรียบร้อย… / เปิดได้แล้วครับ", "frags": [0.0, 1.59]}], "voEnd": 2.486}, {"key": "wash", "start": 59.563, "dur": 7.324, "vo": [{"id": "n11", "t": 0.1, "dur": 2.855, "cap": "เขาล้างแผลเอง… / เร็วเหมือนทำมา{เป็นร้อยครั้ง}", "frags": [0.0, 1.29]}, {"id": "n12", "t": 3.105, "dur": 3.819, "cap": "ล้างด้วย[น้ำสะอาด]… / สบู่รอบแผล… / ปิดด้วย[ผ้าสะอาด]", "frags": [0.0, 1.4, 2.81]}], "voEnd": 6.924}, {"key": "ledger", "start": 66.887, "dur": 3.107, "vo": [{"id": "d08", "t": 0.1, "dur": 2.607, "cap": "น้ำลดอีกขีด… / หมดไปกับขาเขา", "frags": [0.0, 1.31]}], "voEnd": 2.707}, {"key": "blade", "start": 69.994, "dur": 5.274, "vo": [{"id": "n13", "t": 0.2, "dur": 4.174, "cap": "บ่ายนั้น… / ใบเคียว[ยังคาอยู่]ที่ซี่กรง… / {ขึ้นสนิม}แล้ว", "frags": [0.0, 0.95, 3.25]}], "voEnd": 4.374}, {"key": "cut", "start": 75.268, "dur": 5.221, "vo": [{"id": "d09", "t": 0.15, "dur": 2.268, "cap": "โอ๊ย… / มันบาด", "frags": [0.0, 1.37]}, {"id": "n14", "t": 2.568, "dur": 2.353, "cap": "ลึกถึงเนื้อ… / ห้ามยังไงก็{ไม่หยุด}", "frags": [0.0, 1.28]}], "voEnd": 4.921}, {"key": "press", "start": 80.489, "dur": 7.039, "vo": [{"id": "d10", "t": 0.1, "dur": 2.614, "cap": "กดไว้… อย่าปล่อย… / สิบนาที", "frags": [0.0, 1.87]}, {"id": "n15", "t": 2.914, "dur": 3.825, "cap": "กดแผลตรงๆ [สิบนาที]… / ถ้ายังไม่หยุด / ต้องถึงมือหมอ", "frags": [0.0, 2.0, 2.94]}], "voEnd": 6.739}, {"key": "tetanus", "start": 87.528, "dur": 11.232, "vo": [{"id": "n16", "t": 0.1, "dur": 3.644, "cap": "เหล็กขึ้นสนิม… ดิน… ฝุ่น… / มี[สปอร์บาดทะยัก]", "frags": [0.0, 2.0]}, {"id": "n17", "t": 3.844, "dur": 3.538, "cap": "มันเข้าทาง[แผลลึก]… / อาการแรกคือ / {ขากรรไกรแข็ง}", "frags": [0.0, 1.41, 2.53]}, {"id": "n18", "t": 7.532, "dur": 3.3, "cap": "สามถึง[ยี่สิบเอ็ดวัน]… / ตาย{หนึ่งในสิบ}", "frags": [0.0, 2.1]}], "voEnd": 10.832}, {"key": "needle", "start": 98.76, "dur": 6.494, "vo": [{"id": "d11", "t": 0.1, "dur": 3.552, "cap": "ลุงฉีดกันบาดทะยัก… / ครั้งสุดท้ายเมื่อไหร่", "frags": [0.0, 2.42]}, {"id": "d12", "t": 3.852, "dur": 2.242, "cap": "จำไม่ได้… / {นานแล้ว}", "frags": [0.0, 1.4]}], "voEnd": 6.094}, {"key": "signs", "start": 105.254, "dur": 10.479, "vo": [{"id": "n19", "t": 0.1, "dur": 5.897, "cap": "จากนี้ต้องดูแผลทุกเช้า… / แดง… ปวดมากขึ้น… / หนอง[เหลืองเขียว]", "frags": [0.0, 2.94, 4.12]}, {"id": "n20", "t": 6.097, "dur": 3.982, "cap": "ไข้เกิน[สามสิบเจ็ดจุดเจ็ด] / นานกว่าสี่ชั่วโมง… / คือ{ติดเชื้อ}", "frags": [0.0, 1.72, 3.19]}], "voEnd": 10.079}, {"key": "real", "start": 115.733, "dur": 7.035, "vo": [{"id": "n21", "t": 0.1, "dur": 6.535, "cap": "ในชีวิตจริง… / แผลสกปรก ถูกกัด หรือมีหนอง… / {ไปโรงพยาบาล} / อาจต้องฉีด[กันบาดทะยัก]", "frags": [0.0, 1.18, 3.04, 4.15]}], "voEnd": 6.635}, {"key": "trust", "start": 122.768, "dur": 4.2, "vo": [{"id": "n22", "t": 0.15, "dur": 3.262, "cap": "เย็นนั้น… / ทุกคน[เริ่มเชื่อ]เขา… / {ยกเว้นคนเดียว}", "frags": [0.0, 0.96, 2.42]}], "voEnd": 3.412}, {"key": "name", "start": 126.968, "dur": 12.578, "vo": [{"id": "d13", "t": 0.15, "dur": 2.023, "cap": "ขอบคุณนะ… / {น้องปั้น}", "frags": [0.0, 1.38]}, {"id": "n23", "t": 2.473, "dur": 2.294, "cap": "ไม่มีใคร[บอกชื่อปั้น]… / กับเขา", "frags": [0.0, 1.66]}, {"id": "d14", "t": 4.967, "dur": 2.62, "cap": "ใครบอกชื่อปั้น… / คุณรู้ได้ยังไง", "frags": [0.0, 1.58]}, {"id": "d15", "t": 7.787, "dur": 2.372, "cap": "เมื่อกี้… / ครูเรียกเอง", "frags": [0.0, 1.21]}, {"id": "n24", "t": 10.459, "dur": 1.619, "cap": "ครูพิม… / {ไม่ได้เรียก}", "frags": [0.0, 0.96]}], "voEnd": 12.078}, {"key": "sig", "start": 139.546, "dur": 5.512, "vo": [{"id": "s01", "t": 0.15, "dur": 4.862, "cap": "ถูกหมด / ทุกข้อ… / ผิดแค่… / {ข้อเดียว}", "frags": [0.0, 1.27, 2.34, 3.82]}], "voEnd": 5.012}, {"key": "radio", "start": 145.058, "dur": 12.003, "vo": [{"id": "n25", "t": 0.15, "dur": 2.059, "cap": "คืนนั้น… / วิทยุดังอีกครั้ง", "frags": [0.0, 0.84]}, {"id": "r01", "t": 2.459, "dur": 4.658, "cap": "เหลืออีก… / เก้าสิบหกวัน… / {หก}", "frags": [0.0, 1.57, 3.87]}, {"id": "d16", "t": 7.317, "dur": 1.89, "cap": "หก… / ตอนนี้เรา{หกคนพอดี}", "frags": [0.0, 0.59]}, {"id": "d17", "t": 9.357, "dur": 2.296, "cap": "บังเอิญ… / นอนได้แล้ว", "frags": [0.0, 1.29]}], "voEnd": 11.653}, {"key": "drawing", "start": 157.061, "dur": 8.286, "vo": [{"id": "n26", "t": 0.15, "dur": 3.315, "cap": "ปั้นวาดก่อนนอน… / คืนนี้มี[หกคน]ในรูป", "frags": [0.0, 1.36]}, {"id": "n27", "t": 3.565, "dur": 4.221, "cap": "ภูยืนอยู่ที่รั้ว… / คุยกับใครบางคน… / {ข้างนอก}", "frags": [0.0, 2.05, 3.64]}], "voEnd": 7.786}, {"key": "night", "start": 165.347, "dur": 5.28, "vo": [{"id": "n28", "t": 0.3, "dur": 4.48, "cap": "ตีสอง… ภู[ไม่ได้นอน]… / เขายืนที่รั้ว / พูดกับ{ความมืด}", "frags": [0.0, 2.23, 3.56]}], "voEnd": 4.78}, {"key": "knife2", "start": 170.627, "dur": 3.6, "vo": [{"id": "n29", "t": 0.4, "dur": 2.362, "cap": "มีดที่ทิ้งไว้บนถนน… / {ไม่อยู่แล้ว}", "frags": [0.0, 1.67]}], "voEnd": 2.762}, {"key": "choice", "start": 174.227, "dur": 3.4, "vo": [], "voEnd": 0.0}, {"key": "next", "start": 177.627, "dur": 2.4, "vo": [], "voEnd": 0.0}]};
+      const SCHED = {"total": 180.027, "shots": [{"key": "hook", "start": 0.0, "dur": 10.022, "vo": [{"id": "n01", "t": 0.3, "dur": 3.567, "cap": "ถ้าวันหนึ่ง… / มี[คนแปลกหน้า] / นอนบาดเจ็บอยู่หน้าประตู", "frags": [0.0, 0.95, 2.1]}, {"id": "n02", "t": 3.917, "dur": 3.387, "cap": "เขาร้องขอให้ช่วย… / ขา[เจ็บหนัก] เดินไม่ไหว", "frags": [0.0, 1.57]}, {"id": "n03", "t": 7.404, "dur": 2.268, "cap": "{อย่าเพิ่งเปิดประตู}… / ค้นตัวเขาก่อน", "frags": [0.0, 1.38]}], "voEnd": 9.672}, {"key": "chapter", "start": 10.022, "dur": 5.849, "vo": [{"id": "n04", "t": 0.15, "dur": 5.299, "cap": "เหลืออีก[เก้าสิบเจ็ดวัน]… / วิทยุบอกหก… / เช้านี้ หน้าประตู{มีคนที่หก}", "frags": [0.0, 1.74, 2.96]}], "voEnd": 5.449}, {"key": "rule", "start": 15.871, "dur": 5.946, "vo": [{"id": "n05", "t": 0.1, "dur": 2.861, "cap": "กฎข้อสองของครูพิม… / เขียนไว้ตั้งแต่วันแรก", "frags": [0.0, 1.73]}, {"id": "d01", "t": 3.161, "dur": 2.385, "cap": "ช่วยได้… / {แต่อย่าเชื่อ}", "frags": [0.0, 1.35], "lip": "010123333332123333333333320000000000000001232112332110000012333333321000", "who": "pim"}], "voEnd": 5.546}, {"key": "gate", "start": 21.817, "dur": 4.465, "vo": [{"id": "d02", "t": 0.1, "dur": 1.729, "cap": "เปิดเลยครู… / เขาเจ็บหนักนะ", "frags": [0.0, 1.13], "lip": "0333223333210023333333320023212320023321012333332100", "who": "kong"}, {"id": "d03", "t": 1.979, "dur": 2.186, "cap": "ยังก่อน… / ก้อง ถอยออกมา", "frags": [0.0, 0.91], "lip": "023222321122212222210000000123333233210000012332232112332222221000", "who": "pim"}], "voEnd": 4.165}, {"key": "plea", "start": 26.282, "dur": 7.688, "vo": [{"id": "d04", "t": 0.1, "dur": 4.598, "cap": "ผมเห็นไฟ… เมื่อคืน… / เดินมาทั้งคืน", "frags": [0.0, 3.13], "lip": "002333333332210012322221000012333333333100000000000000023321001211122333333333210000000000000001222333333333333211223333211122223333333210", "who": "phu"}, {"id": "n06", "t": 4.898, "dur": 2.49, "cap": "เสียงเครื่องปั่นไฟ… / ไม่ได้เรียก{แค่พวกมัน}", "frags": [0.0, 1.38]}], "voEnd": 7.388}, {"key": "search", "start": 33.97, "dur": 9.693, "vo": [{"id": "d05", "t": 0.1, "dur": 5.084, "cap": "ถอดเสื้อ… ให้ดูแขน ดูคอ… / แล้วหันหลัง", "frags": [0.0, 2.87], "lip": "023332100111233333333333210000000000000000123332333200012222111111112232000000000000000233320010123333333222221000000000000001233321012222333321000122100", "who": "pim"}, {"id": "n07", "t": 5.334, "dur": 4.059, "cap": "รอยกัด… รอยเล็บ… / ต้องดูให้ครบทั้งตัว / {ก่อนเปิดประตู}", "frags": [0.0, 1.66, 3.13]}], "voEnd": 9.393}, {"key": "wound", "start": 43.663, "dur": 7.097, "vo": [{"id": "n08", "t": 0.1, "dur": 3.592, "cap": "มีแค่[แผลที่ขา]… / โดนเหล็กบาด / {ยังมีดินติดอยู่}", "frags": [0.0, 1.48, 2.55]}, {"id": "d06", "t": 3.892, "dur": 2.905, "cap": "ขอมีดหน่อยครับ… / ผมต้องตัดขากางเกง", "frags": [0.0, 1.32], "lip": "0123333223333211333211122000000000000000011222101233210012100001222211233212333333210000", "who": "phu"}], "voEnd": 6.797}, {"key": "knife", "start": 50.76, "dur": 5.403, "vo": [{"id": "n09", "t": 0.15, "dur": 2.717, "cap": "มีดครัว… / [อาวุธชิ้นสุดท้าย]ของค่าย", "frags": [0.0, 1.06]}, {"id": "n10", "t": 2.967, "dur": 2.036, "cap": "ถูกยื่นออกไป… / {นอกรั้ว}", "frags": [0.0, 1.33]}], "voEnd": 5.003}, {"key": "open", "start": 56.163, "dur": 3.4, "vo": [{"id": "d07", "t": 0.2, "dur": 2.286, "cap": "เรียบร้อย… / เปิดได้แล้วครับ", "frags": [0.0, 1.59], "lip": "021100000000001233332123333333322110000000000001233332233333322222210", "who": "phu"}], "voEnd": 2.486}, {"key": "wash", "start": 59.563, "dur": 7.324, "vo": [{"id": "n11", "t": 0.1, "dur": 2.855, "cap": "เขาล้างแผลเอง… / เร็วเหมือนทำมา{เป็นร้อยครั้ง}", "frags": [0.0, 1.29]}, {"id": "n12", "t": 3.105, "dur": 3.819, "cap": "ล้างด้วย[น้ำสะอาด]… / สบู่รอบแผล… / ปิดด้วย[ผ้าสะอาด]", "frags": [0.0, 1.4, 2.81]}], "voEnd": 6.924}, {"key": "ledger", "start": 66.887, "dur": 3.107, "vo": [{"id": "d08", "t": 0.1, "dur": 2.607, "cap": "น้ำลดอีกขีด… / หมดไปกับขาเขา", "frags": [0.0, 1.31], "lip": "0332233222233310011000012322210000000000123331001211210000123333210001233332100", "who": "hong"}], "voEnd": 2.707}, {"key": "blade", "start": 69.994, "dur": 5.274, "vo": [{"id": "n13", "t": 0.2, "dur": 4.174, "cap": "บ่ายนั้น… / ใบเคียว[ยังคาอยู่]ที่ซี่กรง… / {ขึ้นสนิม}แล้ว", "frags": [0.0, 0.95, 3.25]}], "voEnd": 4.374}, {"key": "cut", "start": 75.268, "dur": 5.221, "vo": [{"id": "d09", "t": 0.15, "dur": 2.268, "cap": "โอ๊ย… / มันบาด", "frags": [0.0, 1.37], "lip": "032222222222110012222221110000000000000000012332110013332222333332000", "who": "man"}, {"id": "n14", "t": 2.568, "dur": 2.353, "cap": "ลึกถึงเนื้อ… / ห้ามยังไงก็{ไม่หยุด}", "frags": [0.0, 1.28]}], "voEnd": 4.921}, {"key": "press", "start": 80.489, "dur": 7.039, "vo": [{"id": "d10", "t": 0.1, "dur": 2.614, "cap": "กดไว้… อย่าปล่อย… / สิบนาที", "frags": [0.0, 1.87], "lip": "0331001333321000000000000000123321233332100000000000000002233210123321122322100", "who": "phu"}, {"id": "n15", "t": 2.914, "dur": 3.825, "cap": "กดแผลตรงๆ [สิบนาที]… / ถ้ายังไม่หยุด / ต้องถึงมือหมอ", "frags": [0.0, 2.0, 2.94]}], "voEnd": 6.739}, {"key": "tetanus", "start": 87.528, "dur": 11.232, "vo": [{"id": "n16", "t": 0.1, "dur": 3.644, "cap": "เหล็กขึ้นสนิม… ดิน… ฝุ่น… / มี[สปอร์บาดทะยัก]", "frags": [0.0, 2.0]}, {"id": "n17", "t": 3.844, "dur": 3.538, "cap": "มันเข้าทาง[แผลลึก]… / อาการแรกคือ / {ขากรรไกรแข็ง}", "frags": [0.0, 1.41, 2.53]}, {"id": "n18", "t": 7.532, "dur": 3.3, "cap": "สามถึง[ยี่สิบเอ็ดวัน]… / ตาย{หนึ่งในสิบ}", "frags": [0.0, 2.1]}], "voEnd": 10.832}, {"key": "needle", "start": 98.76, "dur": 6.494, "vo": [{"id": "d11", "t": 0.1, "dur": 3.552, "cap": "ลุงฉีดกันบาดทะยัก… / ครั้งสุดท้ายเมื่อไหร่", "frags": [0.0, 2.42], "lip": "03333332100000000000000000111122100012333333322100112233331000000000000000112332112200122333333333211000000", "who": "phu"}, {"id": "d12", "t": 3.852, "dur": 2.242, "cap": "จำไม่ได้… / {นานแล้ว}", "frags": [0.0, 1.4], "lip": "03321111112232210123322100000000000000000001233332333211223333321000", "who": "man"}], "voEnd": 6.094}, {"key": "signs", "start": 105.254, "dur": 10.479, "vo": [{"id": "n19", "t": 0.1, "dur": 5.897, "cap": "จากนี้ต้องดูแผลทุกเช้า… / แดง… ปวดมากขึ้น… / หนอง[เหลืองเขียว]", "frags": [0.0, 2.94, 4.12]}, {"id": "n20", "t": 6.097, "dur": 3.982, "cap": "ไข้เกิน[สามสิบเจ็ดจุดเจ็ด] / นานกว่าสี่ชั่วโมง… / คือ{ติดเชื้อ}", "frags": [0.0, 1.72, 3.19]}], "voEnd": 10.079}, {"key": "real", "start": 115.733, "dur": 7.035, "vo": [{"id": "n21", "t": 0.1, "dur": 6.535, "cap": "ในชีวิตจริง… / แผลสกปรก ถูกกัด หรือมีหนอง… / {ไปโรงพยาบาล} / อาจต้องฉีด[กันบาดทะยัก]", "frags": [0.0, 1.18, 3.04, 4.15]}], "voEnd": 6.635}, {"key": "trust", "start": 122.768, "dur": 4.2, "vo": [{"id": "n22", "t": 0.15, "dur": 3.262, "cap": "เย็นนั้น… / ทุกคน[เริ่มเชื่อ]เขา… / {ยกเว้นคนเดียว}", "frags": [0.0, 0.96, 2.42]}], "voEnd": 3.412}, {"key": "name", "start": 126.968, "dur": 12.578, "vo": [{"id": "d13", "t": 0.15, "dur": 2.023, "cap": "ขอบคุณนะ… / {น้องปั้น}", "frags": [0.0, 1.38], "lip": "0221100001123333332333332100000000000000000122222211233333200", "who": "phu"}, {"id": "n23", "t": 2.473, "dur": 2.294, "cap": "ไม่มีใคร[บอกชื่อปั้น]… / กับเขา", "frags": [0.0, 1.66]}, {"id": "d14", "t": 4.967, "dur": 2.62, "cap": "ใครบอกชื่อปั้น… / คุณรู้ได้ยังไง", "frags": [0.0, 1.58], "lip": "0123333222332210011221012322222210000000000000000123322233332233332222221100000", "who": "pim"}, {"id": "d15", "t": 7.787, "dur": 2.372, "cap": "เมื่อกี้… / ครูเรียกเอง", "frags": [0.0, 1.21], "lip": "033320001233333332221000000000000000000013333322212333332000122221100000", "who": "phu"}, {"id": "n24", "t": 10.459, "dur": 1.619, "cap": "ครูพิม… / {ไม่ได้เรียก}", "frags": [0.0, 0.96]}], "voEnd": 12.078}, {"key": "sig", "start": 139.546, "dur": 5.512, "vo": [{"id": "s01", "t": 0.15, "dur": 4.862, "cap": "ถูกหมด / ทุกข้อ… / ผิดแค่… / {ข้อเดียว}", "frags": [0.0, 1.27, 2.34, 3.82]}], "voEnd": 5.012}, {"key": "radio", "start": 145.058, "dur": 12.003, "vo": [{"id": "n25", "t": 0.15, "dur": 2.059, "cap": "คืนนั้น… / วิทยุดังอีกครั้ง", "frags": [0.0, 0.84]}, {"id": "r01", "t": 2.459, "dur": 4.658, "cap": "เหลืออีก… / เก้าสิบหกวัน… / {หก}", "frags": [0.0, 1.57, 3.87]}, {"id": "d16", "t": 7.317, "dur": 1.89, "cap": "หก… / ตอนนี้เรา{หกคนพอดี}", "frags": [0.0, 0.59], "lip": "033210000000000000123222222233100221000012321122222111000", "who": "hong"}, {"id": "d17", "t": 9.357, "dur": 2.296, "cap": "บังเอิญ… / นอนได้แล้ว", "frags": [0.0, 1.29], "lip": "001222232100012333333321000000000000000001223333322233333333233333200", "who": "man"}], "voEnd": 11.653}, {"key": "drawing", "start": 157.061, "dur": 8.286, "vo": [{"id": "n26", "t": 0.15, "dur": 3.315, "cap": "ปั้นวาดก่อนนอน… / คืนนี้มี[หกคน]ในรูป", "frags": [0.0, 1.36]}, {"id": "n27", "t": 3.565, "dur": 4.221, "cap": "ภูยืนอยู่ที่รั้ว… / คุยกับใครบางคน… / {ข้างนอก}", "frags": [0.0, 2.05, 3.64]}], "voEnd": 7.786}, {"key": "night", "start": 165.347, "dur": 5.28, "vo": [{"id": "n28", "t": 0.3, "dur": 4.48, "cap": "ตีสอง… ภู[ไม่ได้นอน]… / เขายืนที่รั้ว / พูดกับ{ความมืด}", "frags": [0.0, 2.23, 3.56]}], "voEnd": 4.78}, {"key": "knife2", "start": 170.627, "dur": 3.6, "vo": [{"id": "n29", "t": 0.4, "dur": 2.362, "cap": "มีดที่ทิ้งไว้บนถนน… / {ไม่อยู่แล้ว}", "frags": [0.0, 1.67]}], "voEnd": 2.762}, {"key": "choice", "start": 174.227, "dur": 3.4, "vo": [], "voEnd": 0.0}, {"key": "next", "start": 177.627, "dur": 2.4, "vo": [], "voEnd": 0.0}]};
       const SH = Object.fromEntries(SCHED.shots.map((s) => [s.key, s]));
       const vo = (k, i = 0) => SH[k].vo[i].t;                       // voice start, relative to the shot
       const voEnd = (k, i = 0) => SH[k].vo[i].t + SH[k].vo[i].dur;
@@ -298,7 +299,7 @@
       Rig.MODES.grabArm = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -78, faF: -8, uaB: -40, faB: -60, torso: 8, head: 4 });
       Rig.MODES.pullBolt = (u, o) => { const k = Rig.smooth(u / 0.5); return { ...Rig.MODES.idle(u, o), uaF: Rig.lerp(-60, -20, k), faF: Rig.lerp(-30, -60, k), torso: 10, head: 6, thF: 10, shF: 10, thB: -10 }; };
       Rig.MODES.crouchDraw = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -30, faF: -40 + 6 * Math.sin(u * 7), uaB: -10, faB: -50, torso: 30, head: 20 });
-      Rig.MODES.sitHold = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -40, faF: -110, uaB: -16, faB: -100, torso: 12 + Math.sin(u * 4) * 1.5, head: 14 });   // on the floor, winded, holding his arm
+      Rig.MODES.sitHold = (u, o) => ({ ...Rig.MODES.sit(u, o), ...Rig.reach("B", [-14, 103], [71, 80]), ...Rig.reach("F", [16, 110], [-43.8, 92.1]), bFront: 1, torso: 8 + Math.sin(u * 4) * 1.5, head: 14 });   // on the floor, winded, holding his arm across the body
       Rig.MODES.sleepSit = (u, o) => ({ ...Rig.MODES.sit(u, o), torso: 6, head: 26 + Math.sin(u * 1.1), uaF: -10, faF: -40, uaB: 4, faB: -30 });
       Rig.MODES.lookUp = (u, o) => ({ ...Rig.MODES.idle(u, o), head: -22, torso: -4 });
       Rig.MODES.pointUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150, faF: -10, head: -16, torso: -4 });
@@ -308,10 +309,11 @@
       Camp.hand.crayon = `<g transform="translate(0,118)"><rect x="-6" y="-6" width="12" height="50" rx="3" fill="#c8392b" stroke="#2e2a26" stroke-width="2.5" transform="rotate(-30)"/></g>`;
       // ---------- poses for EP.3 ----------
       Rig.MODES.showArms = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -84 + Math.sin(u * 2) * 1.5, faF: -6, uaB: -84, faB: -6, torso: -2, head: 4 });               // both arms held out, palms up: "look, nothing"
+      Rig.MODES.lieReach = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: -104 + 5 * Math.sin(u * 6), faF: -14 + 6 * Math.sin(u * 6 + 1) });   // lying on his back, one hand up at the gate: help
       Rig.MODES.kneelAid = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -52, faF: -34 + 4 * Math.sin(u * 6), uaB: -40, faB: -46, torso: 26, head: 18 });            // kneeling over someone, hands working
       Rig.MODES.press = (u, o) => { const j = Math.sin(u * 14) * 1.5; return { ...Rig.MODES.crouch(u, o), uaF: -34 + j, faF: -12, uaB: -34 - j, faB: -12, torso: 30, head: 14 }; };   // both arms straight down, pressing
       Rig.MODES.cutCloth = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -56, faF: -40 + 10 * Math.sin(u * 11), uaB: -30, faB: -70, torso: 22, head: 26 });              // sitting, sawing at a trouser leg
-      Rig.MODES.holdArm = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -40, faF: -100, uaB: -30, faB: -70, torso: 10 + Math.sin(u * 3), head: 12 });                  // standing, the hurt arm held against the chest
+      Rig.MODES.holdArm = (u, o) => ({ ...Rig.MODES.idle(u, o), ...Rig.reach("B", [-14, 103], [71, 80]), ...Rig.reach("F", [16, 110], [-43.8, 92.1]), bFront: 1, torso: 6 + Math.sin(u * 3), head: 12 });   // standing, the hurt forearm held across the body by the other hand
       Rig.MODES.limp = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 1.6 }); return { ...w, thF: w.thF * 0.6, thB: w.thB * 0.6, torso: 10, head: 8, bodyY: 6 + 4 * Math.abs(Math.sin(u * 3.9)) }; };   // a hurt leg
       Rig.MODES.talkOut = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -70 + 3 * Math.sin(u * 1.7), faF: -20, head: -4 + 2 * Math.sin(u * 0.9), torso: 2 });        // at the fence, an arm through the bars, talking
       Camp.hand.knife = `<g transform="translate(0,118) rotate(70) scale(0.42)">${Fence.KNIFE("", 1)}</g>`;
@@ -324,7 +326,7 @@
       const TOP = (L, el) => L.act.appendChild(el);
       const split = (k, at, A, B) => {
         add(k, A); shots[shots.length - 1].dur = at;
-        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at; sh.vo = (SH[k].vo || []).map((v) => ({ ...v, t: v.t - at }));
       };
       const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
       const glow = (L, html) => L.glow.insertAdjacentHTML("beforeend", html);
@@ -477,16 +479,19 @@
       };
       // ---------- เจ๊หงส์'s ledger page: the end card (rows appear line by line; "คน 5" gets struck through and "6?" scrawled beside it) ----------
       GameUI.C.ledger = {
+        // the red "6 = 6" goes on ONE row: o.sixRow, else the people row ("คน") when it is red, else the first red row
+        // (it used to go on every red row: EP.3 showed it on the weapons row too, EP.4 on the fence row)
+        sixAt: (o) => o.sixRow ?? ((k) => (k >= 0 && o.rows[k][2] === "red" ? k : o.rows.findIndex((r) => r[2] === "red")))(o.rows.findIndex((r) => r[0] === "คน")),
         html: (id, o) => `<div id="${id}" class="fledger" style="top:${o.top ?? 380}px"><div class="page"><div class="rings">${"<i></i>".repeat(14)}</div>
           <div class="hd"><span>สมุดบัญชี · เจ๊หงส์</span><small>${o.day}</small></div>
-          ${o.rows.map(([a, b, cls], i) => `<div class="r ${cls || ""}" id="${id}-r${i}"><span>${a}</span><span class="bar"></span><b class="${cls === "red" ? "strike" : ""}">${b}</b>${cls === "red" ? `<span class="six">${o.six}</span>` : ""}</div>`).join("")}
+          ${o.rows.map(([a, b, cls], i) => `<div class="r ${cls || ""}" id="${id}-r${i}"><span>${a}</span><span class="bar"></span><b class="${cls === "red" ? "strike" : ""}">${b}</b>${cls === "red" && i === GameUI.C.ledger.sixAt(o) ? `<span class="six">${o.six}</span>` : ""}</div>`).join("")}
           <div class="next" id="${id}-n">พรุ่งนี้ต้องหา:<b>${o.next}</b></div>
           <div class="cta" id="${id}-c">${o.cta}</div><i class="thumb" id="${id}-th"></i></div></div>`,
         anim(tl, id, t0, o) {
           tl.fromTo(`#${id}`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out", immediateRender: false }, t0);
           o.rows.forEach((r, i) => {
             tl.fromTo(`#${id}-r${i}`, { opacity: 0, clipPath: "inset(-10px 100% -10px -10px)" }, { opacity: 1, clipPath: "inset(-10px -10px -10px -10px)", duration: 0.3, ease: "power1.inOut", immediateRender: false }, t0 + 0.2 + i * 0.14);
-            if (r[2] === "red") { tl.fromTo(`#${id}-r${i} .strike`, { "--k": 0 }, { "--k": 1, duration: 0.25, ease: "power2.in", immediateRender: false }, t0 + 0.2 + i * 0.14 + 0.3); tl.fromTo(`#${id}-r${i} .six`, { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power4.in", immediateRender: false }, t0 + 0.2 + i * 0.14 + 0.5); }
+            if (r[2] === "red") { tl.fromTo(`#${id}-r${i} .strike`, { "--k": 0 }, { "--k": 1, duration: 0.25, ease: "power2.in", immediateRender: false }, t0 + 0.2 + i * 0.14 + 0.3); if (i === GameUI.C.ledger.sixAt(o)) tl.fromTo(`#${id}-r${i} .six`, { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power4.in", immediateRender: false }, t0 + 0.2 + i * 0.14 + 0.5); }
           });
           const n = t0 + 0.2 + o.rows.length * 0.14 + 0.35;
           tl.fromTo(`#${id}-n`, { opacity: 0, clipPath: "inset(-10px 100% -10px -10px)" }, { opacity: 1, clipPath: "inset(-10px -10px -10px -10px)", duration: 0.5, ease: "power1.inOut", immediateRender: false }, n);
@@ -503,7 +508,7 @@
       });
 
       const shots = [];
-      const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec });
+      const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, vo: SH[k].vo, ...spec });
 
       // ======================================================================================================
       // v2 look: muted cinematic grade + a "field notebook / scrapbook" HUD — torn paper, masking tape, red rubber
@@ -717,7 +722,8 @@
       const pkOut = (tl, sel, t, dir = 0) => tl.to(sel, { opacity: 0, y: -34, x: dir * 60, rotation: dir ? dir * 8 : -5, scale: 0.96, duration: 0.28, ease: "power2.in" }, t);
       // a map pin drops in and squashes on landing (used by shots.part on the map beats)
       const pinDrop = (tl, sel, t, x, y) => { tl.fromTo(sel, { opacity: 0, y: -420, scaleY: 1.15, scaleX: 0.9, svgOrigin: `${x} ${y}` }, { opacity: 1, y: 0, scaleY: 1, scaleX: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, t);
-        tl.fromTo(sel, { scaleY: 0.76, scaleX: 1.14 }, { scaleY: 1, scaleX: 1, duration: 0.55, ease: "elastic.out(1, 0.35)", immediateRender: false }, t + 0.22); };
+        tl.fromTo(sel, { scaleY: 0.76, scaleX: 1.14 }, { scaleY: 1, scaleX: 1, duration: 0.55, ease: "elastic.out(1, 0.35)", immediateRender: false }, t + 0.22);
+        if (document.querySelector(`${sel}-sh`)) tl.fromTo(`${sel}-sh`, { opacity: 0, scale: 2.4, svgOrigin: `${x} ${y}` }, { opacity: 1, scale: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, t); };   // its shadow gathers under it as it lands
       // looping micro-motion inside the icons (classes a-*), active from t0 to t1
       function pkLoops(tl, root, t0, t1) {
         const D = Math.max(0.5, t1 - t0), rep = (p) => Math.ceil(D / p) + 1, q = (c) => root.querySelectorAll(c);
@@ -1302,14 +1308,11 @@
       // ---------- 1. hook, first person through the bars: a man on the road, his hand on a bar; "อย่าเพิ่งเปิดประตู" ----------
       add("hook", {
         set: "gateClose", setOpts: { id: "hk", time: "morning", bolt: 0 }, dark: 0.22, blur: { far: 4, mid: 1 },
-        cam: { keys: [{ t: 0, ...fr(540, 1050, 0.82, 540, 1000), drift: { s: 0.02 } }, { t: vo("hook", 1) - 0.05, glide: 0.6, ...fr(520, 1120, 1.15, 540, 1000), drift: { s: 0.03 } }, { t: vo("hook", 2) - 0.05, ...fr(600, 1180, 1.35, 540, 1050), drift: { s: 0.04 } }] },
+        cam: { keys: [{ t: 0, ...fr(540, 1050, 0.82, 540, 1000), drift: { s: 0.02 } }, { t: vo("hook", 1) - 0.05, glide: 0.6, ...fr(520, 1120, 1.15, 540, 1000), drift: { s: 0.03 } }, { t: vo("hook", 2) - 0.05, ...fr(440, 1170, 1.3, 540, 1050), drift: { s: 0.04 } }] },
         shake: (t) => (t > vo("hook", 2) && t < vo("hook", 2) + 0.35 ? 12 * Math.sin(t * 23) * (vo("hook", 2) + 0.35 - t) / 0.35 : 1.5 * Math.sin(t * 2.6)),
         captions: caps("hook"),
-        extra(L) { put(L.set, PHU_HAND("hk-hand", 257, 1330, 0.72, 0)); },
         fx(tl, id, t0, L) {
-          behind(L, tl, "hk-phu", "phu", 760, 1180, 0.95, false, t0, D("hook"), [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }, { t: vo("hook", 1) - 0.2, mode: "lie", eyes: "normal", mouth: "o" }]);
-          tl.fromTo("#hk-hand", { attr: { transform: "translate(257,1600) rotate(0) scale(0.72)" } }, { attr: { transform: "translate(257,1330) rotate(0) scale(0.72)" }, duration: 0.7, ease: "power2.out", immediateRender: false }, t0 + vo("hook", 1) - 0.3);
-          tl.fromTo("#hk-hand", { attr: { transform: "translate(257,1330) rotate(0) scale(0.72)" } }, { attr: { transform: "translate(259,1324) rotate(2) scale(0.72)" }, duration: 0.12, repeat: 9, yoyo: true, immediateRender: false }, t0 + vo("hook", 1) + 0.5);
+          behind(L, tl, "hk-phu", "phu", 760, 1180, 0.95, false, t0, D("hook"), [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }, { t: vo("hook", 1) - 0.2, mode: "lieReach", eyes: "normal", mouth: "o" }]);
           Fx.punch(tl, `#${id} .stage`, t0 + vo("hook", 2), 1.08, 0.4); Fx.glitch(tl, `#${id}`, t0 + vo("hook", 2), 0.25, 10, 11); red(tl, t0 + vo("hook", 2));
           Fx.punch(tl, `#${id} .stage`, t0 + F("hook", 2, 1), 1.05, 0.3); red(tl, t0 + F("hook", 2, 1), 0.5, 0.5);
           Fx.heart(tl, t0 + 0.3, D("hook") - 0.3, 0.55, 0.5);
@@ -1331,8 +1334,8 @@
       add("rule", {
         set: "schoolYard", setOpts: { id: "ru", time: "morning", gate: 0 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(700, 1150, 0.92, 540, 1050), drift: { s: 0.015 } }] },
-        actors: [PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("rule", 1), mode: "point", eyes: "normal", mouth: "flat" }]), KO(360, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]),
-          MA(160, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), HO(-40, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), PU(-200, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [PI(560, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "worry", mouth: "frown" }, { t: vo("rule", 1), mode: "point", eyes: "squint", mouth: "flat" }]), KO(360, 1500, 0.9, [{ t: 0, mode: "plead", eyes: "worry", mouth: "frown" }]),
+          MA(160, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "flat" }]), HO(-40, 1500, 0.9, [{ t: 0, mode: "write", eyes: "worry", mouth: "flat" }], { prop: "ledger" }), PU(-200, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
         captions: CLIP([...caps("rule", [0]), ...caps("rule", [1], { quote: true })]),
         ui: [{ type: "fRule", t: vo("rule", 1) - 0.3, nums: [2], label: "กฎของครูพิม", rows: ["ช่วยได้… <u>แต่อย่าเชื่อ</u>"], at: [vo("rule", 1) - 0.3], end: D("rule") - 0.05, top: 250 }],
         fx(tl, id, t0, L) { behind(L, tl, "ru-phu", "phu", 960, 1180, 0.9, false, t0, D("rule"), [{ t: 0, mode: "lie", eyes: "normal", mouth: "o" }]); Fx.punch(tl, `#${id} .stage`, t0 + F("rule", 1, 1), 1.05, 0.35); red(tl, t0 + F("rule", 1, 1), 0.4, 0.5); Fx.heart(tl, t0, D("rule"), 0.65, 0.35); },
@@ -1342,9 +1345,9 @@
       add("gate", {
         set: "schoolYard", setOpts: { id: "gt", time: "morning", gate: 0 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(640, 560, 0.5, 540, 760), drift: { s: 0.01 } }, { t: D("gate") - 0.2, glide: D("gate") - 0.4, ...fr(700, 1200, 1.05, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [KO(260, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.9, mode: "reach", eyes: "wide", mouth: "o" }, { t: vo("gate", 1) + 0.3, mode: "idle", eyes: "normal", mouth: "frown" }], { moveTo: { x: 760, dur: 0.9, ease: "power1.out" } }),
-          PI(540, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "frown" }, { t: vo("gate", 1) - 0.1, mode: "stopHand", eyes: "wide", mouth: "o" }], { moveTo: { x: 600, dur: vo("gate", 1) } }),
-          MA(160, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), HO(-20, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(-180, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [KO(260, 1500, 0.9, [{ t: 0, mode: "run", eyes: "worry", mouth: "frown" }, { t: 0.9, mode: "plead", eyes: "worry", mouth: "frown" }, { t: vo("gate", 1) + 0.3, mode: "slump", eyes: "sad", mouth: "frown" }], { moveTo: { x: 760, dur: 0.9, ease: "power1.out" } }),
+          PI(540, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "frown" }, { t: vo("gate", 1) - 0.1, mode: "stopHand", eyes: "squint", mouth: "flat" }], { moveTo: { x: 600, dur: vo("gate", 1) } }),
+          MA(160, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "flat" }]), HO(-20, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(-180, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
         bubbles: [bub("gate", 0, 420, 560, 320), bub("gate", 1, 60, 560, 280)],
         fx(tl, id, t0, L) { behind(L, tl, "gt-phu", "phu", 960, 1180, 0.9, false, t0, D("gate"), [{ t: 0, mode: "lie", eyes: "normal", mouth: "o" }]); Fx.heart(tl, t0, D("gate"), 0.5, 0.5); Fx.punch(tl, `#${id} .stage`, t0 + vo("gate", 1), 1.04, 0.3); },
       });
@@ -1353,7 +1356,8 @@
       add("plea", {
         set: "schoolYard", setOpts: { id: "pl", time: "morning", gate: 0 }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(900, 1150, 1.3, 540, 1050), drift: { s: 0.02 } }, { t: vo("plea", 1) - 0.05, ...fr(760, 1150, 1.0, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PI(600, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), KO(400, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [PI(600, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "frown" }, { t: vo("plea", 1), mode: "think", eyes: "worry", mouth: "frown" }]), KO(400, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])],
+        react: [{ a: 0, t: vo("plea", 1) + 0.05, dur: 2.0 }],
         captions: caps("plea", [1]),
         bubbles: [bub("plea", 0, 380, 520, 560)],
         ui: [{ type: "callback", t: F("plea", 1, 1), end: D("plea") - 0.05, label: "กฎของเรื่อง", text: "มันเดินตามเสียง… <em>คนก็เหมือนกัน</em>", top: 1300 }],
@@ -1404,7 +1408,7 @@
       split("open", voEnd("open", 0) + 0.3, {
         set: "schoolYard", setOpts: { id: "op", time: "morning", gate: 0 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(900, 1180, 1.25, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PI(620, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [PI(620, 1500, 0.9, [{ t: 0, mode: "think", eyes: "squint", mouth: "frown" }])],
         bubbles: [bub("open", 0, 360, 560, 480)],
         fx(tl, id, t0, L) { behind(L, tl, "op-phu", "phu", 960, 1180, 0.9, false, t0, voEnd("open", 0) + 0.3, [{ t: 0, mode: "cutCloth", eyes: "normal", mouth: "flat" }, { t: vo("open", 0), mode: "sitHold", eyes: "normal", mouth: "smile" }], { prop: "knife" }); Fx.heart(tl, t0, voEnd("open", 0) + 0.3, 0.6, 0.4); },
       }, {
@@ -1412,7 +1416,7 @@
         cam: { keys: [{ t: 0, ...fr(760, 1150, 0.95, 540, 1050), drift: { s: 0.02 } }] },
         shake: (t) => (t < 0.4 ? 5 * Math.sin(t * 40) : 0),
         actors: [PI(620, 1500, 0.9, [{ t: 0, mode: "push", eyes: "normal", mouth: "flat" }, { t: 0.4, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true }), KO(380, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]),
-          PH(1250, 1500, 0.9, [{ t: 0, mode: "limp", eyes: "normal", mouth: "flat" }, { t: D("open") - voEnd("open", 0) - 0.5, mode: "holdArm", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 860, dur: D("open") - voEnd("open", 0) - 0.5, ease: "none" } })],
+          PH(1250, 1500, 0.9, [{ t: 0, mode: "limp", eyes: "pain", mouth: "grit" }, { t: D("open") - voEnd("open", 0) - 0.5, mode: "holdArm", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 860, dur: D("open") - voEnd("open", 0) - 0.5, ease: "none" } })],
         fx(tl, id, t0) { tl.fromTo("#flashw", { opacity: 0.25 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0); Fx.heart(tl, t0, D("open") - voEnd("open", 0) - 0.3, 0.55, 0.45); },
       });
 
@@ -1438,7 +1442,7 @@
       add("ledger", {
         set: "schoolYard", setOpts: { id: "lg", time: "day", level: 0.5 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(300, 1180, 1.1, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [HO(200, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "frown" }, { t: vo("ledger", 0), mode: "point", eyes: "normal", mouth: "frown" }], { prop: "ledger" }), PH(560, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "normal", mouth: "flat" }], { flip: true }), PU(400, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }], { prop: "crayon" })],
+        actors: [HO(200, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "frown" }, { t: vo("ledger", 0), mode: "point", eyes: "squint", mouth: "frown" }], { prop: "ledger" }), PH(560, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "sad", mouth: "flat" }], { flip: true }), PU(400, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }], { prop: "crayon" })],
         bubbles: [bub("ledger", 0, 40, 520, 240)],
         ui: [{ type: "counter", t: 0.2, end: D("ledger") - 0.05, label: "น้ำในแท็งก์", icon: "water", unit: "ขีด", max: 10, keys: [{ t: 0.2, v: 5 }, { t: vo("ledger", 0) + 0.3, v: 4 }], alarm: vo("ledger", 0) + 0.3, top: 150, right: true }],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("ledger"), 0.7, 0.3); },
@@ -1448,7 +1452,7 @@
       split("blade", D("blade") - 1.0, {
         set: "schoolYard", setOpts: { id: "bl", time: "day", gate: 0, sunX: 900 }, dark: 0.15, blur: { far: 2 },
         cam: { keys: [{ t: 0, ...fr(900, 1100, 1.2, 540, 1000), drift: { s: 0.02 } }, { t: F("blade", 0, 2) - 0.05, glide: 0.5, ...fr(980, 1000, 1.7, 540, 960), drift: { s: 0.03 } }] },
-        actors: [MA(760, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 1.0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: F("blade", 0, 2), mode: "pullBolt", eyes: "normal", mouth: "frown" }], { moveTo: { x: 880, dur: 1.0 } })],
+        actors: [MA(760, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 1.0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: F("blade", 0, 2), mode: "pullBolt", eyes: "squint", mouth: "grit" }], { moveTo: { x: 880, dur: 1.0 } })],
         captions: capsFrom("blade", 0).filter((c) => c.t < D("blade") - 1.1),
         ui: [{ type: "callback", t: F("blade", 0, 2), end: D("blade") - 1.05, label: "ภัยที่มองไม่เห็น", text: "<em>สนิม</em> + ดิน + เลือดเก่า", top: 300 }],
         extra(L) { put(L.act, BLADE("bl-sick", 1000, 1050, 1.15)); },
@@ -1475,7 +1479,7 @@
         set: "schoolYard", setOpts: { id: "ct", time: "day", gate: 0, sunX: 900 }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(860, 1150, 1.15, 540, 1050), r: -2, drift: { s: 0.04, r: 3 } }, { t: vo("cut", 1) - 0.05, ...fr(760, 1200, 1.35, 540, 1050), drift: { s: 0.03 } }] },
         shake: (t) => (t < 0.5 ? 12 * Math.sin(t * 25) : 2 * Math.sin(t * 9)),
-        actors: [MA(880, 1500, 0.9, [{ t: 0, mode: "knocked", eyes: "wide", mouth: "scream" }, { t: 0.5, mode: "sitHold", eyes: "closed", mouth: "frown" }], { moveTo: { x: 700, dur: 0.4, ease: "power2.out" } })],
+        actors: [MA(880, 1500, 0.9, [{ t: 0, mode: "knocked", eyes: "pain", mouth: "scream" }, { t: 0.5, mode: "sitHold", eyes: "pain", mouth: "frown" }], { moveTo: { x: 700, dur: 0.4, ease: "power2.out" } })],
         captions: caps("cut", [1]),
         bubbles: [bub("cut", 0, 140, 560, 250)],
         extra(L) { put(L.act, BLADE("ct-sick", 1000, 1050, 1.15)); put(L.act, `<g id="ct-blood" opacity="0"><ellipse cx="760" cy="1480" rx="60" ry="14" fill="#7a1414" opacity=".8"/><path d="M700,1300q20,60 10,120M740,1320q10,50 20,110" stroke="#7a1414" stroke-width="7" fill="none" stroke-linecap="round"/></g>`); },
@@ -1491,9 +1495,9 @@
       add("press", {
         set: "schoolYard", setOpts: { id: "pr", time: "day", gate: 0, sunX: 900 }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(640, 1200, 1.1, 540, 1050), drift: { s: 0.02 } }, { t: vo("press", 1) - 0.05, ...fr(600, 1200, 1.3, 540, 1100), drift: { s: 0.03 } }] },
-        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "closed", mouth: "frown" }, { t: 1.2, mode: "sitHold", eyes: "normal", mouth: "frown" }]),
-          PH(100, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "flat" }, { t: 0.6, mode: "press", eyes: "normal", mouth: "flat" }], { moveTo: { x: 520, dur: 0.6, ease: "power1.out" } }),
-          PI(300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 0.8, mode: "crouch", eyes: "wide", mouth: "o" }]), KO(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitHold", eyes: "closed", mouth: "frown" }, { t: 1.2, mode: "sitHold", eyes: "pain", mouth: "frown" }]),
+          PH(100, 1500, 0.9, [{ t: 0, mode: "run", eyes: "squint", mouth: "flat" }, { t: 0.6, mode: "press", eyes: "squint", mouth: "flat" }], { moveTo: { x: 520, dur: 0.6, ease: "power1.out" } }),
+          PI(300, 1500, 0.9, [{ t: 0, mode: "gasp", eyes: "wide", mouth: "o" }, { t: 0.8, mode: "crouch", eyes: "worry", mouth: "frown" }]), KO(-60, 1500, 0.9, [{ t: 0, mode: "gasp", eyes: "wide", mouth: "o" }])],
         captions: caps("press", [1]),
         bubbles: [bub("press", 0, 60, 520, 500)],
         ui: [{ type: "skill", t: 0.9, end: vo("press", 1) + 0.4, x: 60, y: 820, name: "ภู", skill: "หมอ", desc: "ห้ามเลือด · ล้างแผล · รู้ก่อนใครว่าอันตราย", icon: "medic" },
@@ -1507,7 +1511,7 @@
         set: "classroom", setOpts: { id: "tt", time: "day", lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(560, 1180, 1.1, 540, 1050), drift: { s: 0.02 } }, { t: vo("tetanus", 2) - 0.05, ...fr(640, 1200, 1.3, 540, 1100), drift: { s: 0.03 } }] },
         shake: (t) => (t > F("tetanus", 1, 2) && t < F("tetanus", 1, 2) + 0.35 ? 12 * Math.sin(t * 23) : 0),
-        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }]), PI(140, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "squint", mouth: "flat" }]), PI(140, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "worry", mouth: "frown" }])],
         captions: caps("tetanus"),
         ui: [{ type: "tip", t: F("tetanus", 0, 1) - 0.1, end: D("tetanus") - 0.05, ill: "tetanus", label: "บาดทะยัก", text: "สนิม · ดิน · ฝุ่น → [สปอร์] → {ขากรรไกรแข็ง}", tone: "danger", top: 230 },
           { type: "src", t: vo("tetanus", 1) + 0.3, end: vo("tetanus", 2) - 0.1, top: 600, text: CDC + "“The first sign is most commonly spasms of the jaw muscles, or ‘lockjaw.’”" },
@@ -1520,7 +1524,7 @@
       add("needle", {
         set: "classroom", setOpts: { id: "nd", time: "day", lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(560, 1180, 1.2, 540, 1050), drift: { s: 0.02 } }, { t: vo("needle", 1) - 0.05, ...fr(720, 1180, 1.45, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }, { t: vo("needle", 1), mode: "sitChair", eyes: "closed", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }, { t: vo("needle", 0), mode: "crouch", eyes: "normal", mouth: "flat" }])],
+        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "frown" }, { t: vo("needle", 1), mode: "sitChair", eyes: "sad", mouth: "frown" }], { flip: true }), PH(420, 1500, 0.9, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }, { t: vo("needle", 0), mode: "crouch", eyes: "squint", mouth: "flat" }])],
         bubbles: [bub("needle", 0, 40, 520, 360), bub("needle", 1, 420, 520, 90)],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("needle", 1, 1), 1.07, 0.4); red(tl, t0 + F("needle", 1, 1), 0.6, 0.6); Fx.glitch(tl, `#${id}`, t0 + F("needle", 1, 1), 0.15, 8, 41); Fx.heart(tl, t0, D("needle"), 0.5, 0.5); },
       });
@@ -1529,7 +1533,7 @@
       add("signs", {
         set: "classroom", setOpts: { id: "sg", time: "day", lampX: 760, lampY: 1120 }, dark: 0.3, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(600, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }] },
-        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat" }], { flip: true }), PH(380, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }]), HO(120, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }], { prop: "ledger" })],
+        actors: [MA(700, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "worry", mouth: "flat" }], { flip: true }), PH(380, 1500, 0.9, [{ t: 0, mode: "point", eyes: "squint", mouth: "flat" }]), HO(120, 1500, 0.9, [{ t: 0, mode: "write", eyes: "squint", mouth: "flat" }], { prop: "ledger" })],
         captions: caps("signs"),
         ui: [{ type: "signs", t: F("signs", 0, 1), items: ["<em>แดง</em> ร้อน บวม", "<em>ปวด</em>มากขึ้น", "หนอง<em>เหลือง-เขียว</em>", "ไข้ <em>37.7°C+</em> เกิน 4 ชม."], icons: [CHK.red, CHK.pain, CHK.pus, CHK.fever], at: [F("signs", 0, 1), F("signs", 0, 1) + 0.55, F("signs", 0, 2), F("signs", 1, 0)], end: D("signs") - 0.05, top: 170 },
           { type: "src", t: vo("signs", 1), end: D("signs") - 0.05, top: 1240, text: MLP + "“Redness, increased pain, or yellow or green pus… Fever of 100°F (37.7°C) or higher for more than 4 hours.”" }],
@@ -1540,7 +1544,7 @@
       add("real", {
         set: "schoolYard", setOpts: { id: "rl", time: "day", level: 0.5 }, dark: 0.2, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1150, 0.85, 540, 1050), drift: { s: 0.015 } }] },
-        actors: [MA(500, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "flat" }]), PH(760, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }), PI(260, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [MA(500, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "sad", mouth: "flat" }]), PH(760, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "normal", mouth: "flat" }], { flip: true }), PI(260, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "hospital", label: "ในชีวิตจริง", text: "สกปรก · ถูกกัด · มีหนอง → {ไปโรงพยาบาล}", tone: "rule", top: 230 },
           { type: "src", t: F("real", 0, 2), end: D("real") - 0.05, top: 600, text: NHS + "“Get medical help as soon as possible if… a wound has soil, pus or body fluids in it… You may also need to have an injection to prevent tetanus.”" }],
@@ -1551,9 +1555,10 @@
       add("trust", {
         set: "schoolYard", setOpts: { id: "tr", time: "dusk", sunX: 900, level: 0.5 }, dark: 0.25, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(400, 1150, 0.82, 540, 1050), drift: { s: 0.015 } }, { t: F("trust", 0, 2) - 0.05, glide: 0.6, ...fr(1000, 1200, 1.25, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(360, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]), KO(120, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }]), MA(580, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "smile" }], { flip: true }),
-          HO(-80, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "smile" }], { prop: "ledger" }), PU(240, 1500, 0.58, [{ t: 0, mode: "pointUp", eyes: "normal", mouth: "smile" }]),
-          PI(1080, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: F("trust", 0, 2), mode: "holdHead", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [PH(360, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smileOpen" }]), KO(120, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "smileOpen" }]), MA(580, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "smile" }], { flip: true }),
+          HO(-80, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "smile" }], { prop: "ledger" }), PU(240, 1500, 0.58, [{ t: 0, mode: "pointUp", eyes: "normal", mouth: "smileOpen" }]),
+          PI(1080, 1500, 0.9, [{ t: 0, mode: "armsCrossed", eyes: "squint", mouth: "frown" }, { t: F("trust", 0, 2), mode: "think", eyes: "squint", mouth: "frown" }], { flip: true })],
+        react: [{ a: 5, t: F("trust", 0, 2) - 0.1, dur: 1.8 }],
         captions: caps("trust"),
         ui: [{ type: "roster", t: 0.3, end: F("trust", 0, 2) + 0.4, top: 150, title: "ทะเบียนค่าย", who: "วันที่ 102 · เพิ่มชื่อ", rows: [{ name: "ภู", skill: "หมอ", desc: "ห้ามเลือด · ล้างแผล · อดีตกู้ภัย", icon: "medic", at: F("trust", 0, 1) }] }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("trust", 0, 2), 1.05, 0.35); red(tl, t0 + F("trust", 0, 2), 0.35, 0.5); Fx.heart(tl, t0 + F("trust", 0, 2), D("trust") - F("trust", 0, 2), 0.5, 0.5); },
@@ -1564,8 +1569,9 @@
         set: "schoolYard", setOpts: { id: "nm", time: "dusk", sunX: 900, level: 0.5 }, dark: 0.35, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(360, 1250, 1.3, 540, 1100), drift: { s: 0.02 } }, { t: vo("name", 1) - 0.05, ...fr(300, 1180, 1.05, 540, 1050), drift: { s: 0.02 } }, { t: vo("name", 2) - 0.05, ...fr(700, 1150, 1.1, 540, 1050), drift: { s: 0.02 } }, { t: vo("name", 3) - 0.05, ...fr(380, 1120, 1.5, 540, 1000), drift: { s: 0.03 } }, { t: vo("name", 4) - 0.05, ...fr(380, 1120, 1.7, 540, 1000), drift: { s: 0.05 } }] },
         shake: (t) => (t > F("name", 4, 1) && t < F("name", 4, 1) + 0.4 ? 10 * Math.sin(t * 23) : 0),
-        actors: [PH(420, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "smile" }, { t: vo("name", 3), mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }), PU(200, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }, { t: voEnd("name", 0), mode: "lookUp", eyes: "normal", mouth: "smile" }], { prop: "crayon" }),
-          PI(900, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("name", 1), mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("name", 2) - 0.1, mode: "stopHand", eyes: "wide", mouth: "o" }], { flip: true }), MA(1100, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "flat" }], { flip: true })],
+        actors: [PH(420, 1500, 0.9, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "smile" }, { t: vo("name", 3), mode: "shrug", eyes: "normal", mouth: "smile" }], { flip: true }), PU(200, 1500, 0.58, [{ t: 0, mode: "crouchDraw", eyes: "normal", mouth: "smile" }, { t: voEnd("name", 0), mode: "lookUp", eyes: "normal", mouth: "smile" }], { prop: "crayon" }),
+          PI(900, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: vo("name", 1), mode: "gasp", eyes: "wide", mouth: "o" }, { t: vo("name", 2) - 0.1, mode: "stopHand", eyes: "angry", mouth: "frown" }, { t: vo("name", 4), mode: "armsCrossed", eyes: "squint", mouth: "frown" }], { flip: true }), MA(1100, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "worry", mouth: "flat" }], { flip: true })],
+        react: [{ a: 2, t: vo("name", 1), dur: 1.5, fast: true }, { a: 2, t: vo("name", 4) - 0.05, dur: D("name") - vo("name", 4) - 0.1 }],
         captions: CLIP([...caps("name", [1]), ...caps("name", [4])]),
         bubbles: [bub("name", 0, 120, 520, 420), bub("name", 2, 380, 520, 340), bub("name", 3, 170, 520, 380)],
         fx(tl, id, t0) {
@@ -1604,8 +1610,8 @@
       }, {
         set: "classroom", setOpts: { id: "rb", night: true, lampX: 400, lampY: 1100 }, dark: 0.6, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(700, 1100, 1.0, 540, 950), drift: { s: 0.03 } }, { t: vo("radio", 3) - vo("radio", 2) + 0.05, ...fr(1000, 1150, 1.2, 540, 1000), drift: { s: 0.03 } }] },
-        actors: [HO(500, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 0.3, mode: "point", eyes: "wide", mouth: "o" }]), MA(1000, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "frown" }], { flip: true }),
-          PH(1260, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }], { flip: true }), PU(760, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }]), PI(260, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "wide", mouth: "o" }])],
+        actors: [HO(500, 1500, 0.9, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 0.3, mode: "point", eyes: "worry", mouth: "frown" }]), MA(1000, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "squint", mouth: "flat" }], { flip: true }),
+          PH(1260, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "squint", mouth: "smile" }], { flip: true }), PU(760, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }]), PI(260, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "worry", mouth: "frown" }])],
         bubbles: [bub("radio", 2, 60, 520, 400, { end: vo("radio", 3) - vo("radio", 2) }), bub("radio", 3, 420, 520, 120)].map((b, i) => ({ ...b, t: i ? vo("radio", 3) - vo("radio", 2) + 0.05 : 0.05 })),
         ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 2) - 0.1) - 0.05, label: "วิทยุนับ · เหลือ", icon: "radio", unit: "วัน", keys: [{ t: 0, v: 96 }], top: 150, right: true }, { type: "counter", t: 0.05, end: D("radio") - (vo("radio", 2) - 0.1) - 0.05, label: "คนในค่าย", icon: "people", unit: "คน", max: 6, keys: [{ t: 0, v: 6 }], alarm: F("radio", 2, 1) - (vo("radio", 2) - 0.1), top: 150 }],
         fx(tl, id, t0) { const X = t0 + F("radio", 2, 1) - (vo("radio", 2) - 0.1); tl.set("#rb-dialw", { opacity: 1 }, t0); tl.to("#rb-dialw", { opacity: 0, duration: 0.1 }, t0 + 0.6); Fx.punch(tl, `#${id} .stage`, X, 1.08, 0.5); Fx.glitch(tl, `#${id}`, X, 0.3, 14, 72); red(tl, X, 0.7, 0.7); Fx.heart(tl, t0, D("radio") - (vo("radio", 2) - 0.1), 0.45, 0.6); },
@@ -1623,7 +1629,7 @@
       add("night", {
         set: "schoolYard", setOpts: { id: "ni", time: "night", lampX: -300, gate: 0 }, dark: 0.55, blur: { far: 3, mid: 1 },
         cam: { keys: [{ t: 0, ...fr(560, 1100, 0.72, 540, 950), drift: { s: 0.02 } }, { t: D("night") - 0.1, glide: D("night") - 0.6, ...fr(900, 1200, 1.3, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(840, 1500, 0.9, [{ t: 0, mode: "talkOut", eyes: "normal", mouth: "flat" }])],
+        actors: [PH(840, 1500, 0.9, [{ t: 0, mode: "talkOut", eyes: "squint", mouth: "flat" }])],
         captions: caps("night"),
         fx(tl, id, t0, L) { behind(L, tl, "ni-dark", "ha2", 1260, 1180, 0.82, true, t0, D("night"), [{ t: 0, mode: "still", eyes: "dead", mouth: "flat", opts: { period: 14 } }]); tl.set("#ni-dark", { opacity: 0.35 }, t0); Fx.punch(tl, `#${id} .stage`, t0 + F("night", 0, 2), 1.05, 0.4); red(tl, t0 + F("night", 0, 2), 0.4, 0.6); Fx.heart(tl, t0, D("night"), 0.5, 0.5); },
       });
@@ -1644,7 +1650,8 @@
         set: "schoolYard", setOpts: { id: "cho", time: "night", lampX: -300, gate: 0 }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(760, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: 1.0, glide: 1.6, ...fr(860, 1200, 1.6, 540, 1050), r: 2, drift: { s: 0.03, r: 0.8 } }] },
         shake: (t) => shakeH(t) * 2,
-        actors: [PH(840, 1500, 0.9, [{ t: 0, mode: "talkOut", eyes: "normal", mouth: "flat" }, { t: 1.8, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: false })],
+        actors: [PH(840, 1500, 0.9, [{ t: 0, mode: "talkOut", eyes: "squint", mouth: "flat" }, { t: 1.8, mode: "idle", eyes: "squint", mouth: "smile" }], { flip: false })],
+        react: [{ a: 0, t: 1.8, dur: 1.4 }],
         ui: [{ type: "choice", t: 0.05, q: "ไว้ใจภูมั้ย?", a: "ไว้ใจ", b: "ไม่ไว้ใจ", secs: 3, top: 300, possessed: { at: 1.0, side: "a", glitch: "ไว้ใจ…", who: "…เขารู้ชื่อปั้น" } }],
         fx(tl, id, t0, L) {
           behind(L, tl, "cho-dark", "ha2", 1260, 1180, 0.82, true, t0, D("choice"), [{ t: 0, mode: "still", eyes: "dead", mouth: "flat", opts: { period: 14 } }]); tl.set("#cho-dark", { opacity: 0.35 }, t0);
