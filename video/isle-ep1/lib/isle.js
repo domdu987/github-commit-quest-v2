@@ -70,7 +70,7 @@
     for (let k = 0; k < (o.n || 9); k++) { const x = -900 + r() * 2900, y = (o.y0 ?? -500) + r() * (o.h || 900), w = 280 + r() * 460, op = storm ? 0.9 : 0.6 + r() * 0.35;
       s += `<g class="cld" opacity="${f1(op)}" data-sp="${f1(0.4 + r() * 0.8)}">${[[0, 0, 1], [-0.42, 0.14, 0.72], [0.4, 0.12, 0.78], [0.08, -0.2, 0.62], [-0.15, -0.12, 0.5]].map(([dx, dy, k2]) => `<ellipse cx="${f1(x + dx * w)}" cy="${f1(y + dy * w * 0.36)}" rx="${f1(w * 0.52 * k2)}" ry="${f1(w * 0.2 * k2)}" fill="${base}"/>`).join("")}<ellipse cx="${f1(x + 0.1 * w)}" cy="${f1(y + 0.1 * w * 0.3)}" rx="${f1(w * 0.44)}" ry="${f1(w * 0.09)}" fill="${lit}" opacity=".55"/></g>`; }
     if (storm) { // the wall of the squall: a dark bank low on the right with rain hanging under it
-      s += `<g class="cld" data-sp=".3"><path d="M700,260Q1000,120 1400,200T2200,260L2300,620H700Z" fill="#241c34" opacity=".92"/><path d="M820,300Q1100,210 1500,250T2200,300" stroke="#5a4668" stroke-width="40" fill="none" opacity=".5" stroke-linecap="round"/>
+      s += `<g class="cld" data-sp=".3"><path d="M620,300Q760,180 900,230Q1000,110 1200,170Q1360,100 1500,190Q1700,120 1900,200Q2100,160 2240,260Q2320,420 2260,640Q1800,700 1300,690Q900,700 640,640Q560,480 620,300Z" fill="#241c34" opacity=".9" filter="url(#iSoft)"/><path d="M700,330Q900,200 1150,250Q1400,150 1650,230Q1900,170 2140,300Q2240,440 2200,600Q1700,650 1200,640Q850,640 700,580Q640,460 700,330Z" fill="#2c2340" opacity=".85"/><path d="M820,300Q1100,210 1500,250T2200,300" stroke="#5a4668" stroke-width="40" fill="none" opacity=".4" stroke-linecap="round" filter="url(#iSoft6)"/>
         ${Array.from({ length: 26 }, (_, k) => `<path d="M${900 + k * 50},${600 + (k % 3) * 20}l-30,${260 + (k % 4) * 40}" stroke="#4a4a6a" stroke-width="6" opacity=".35"/>`).join("")}</g>`; }
     put(L.far, s);
   }
@@ -198,6 +198,8 @@
   // a coconut (husked, green) with the top cut open and a straw of palm stem; origin = bottom centre
   const COCONUT = (x, y, s = 1, open = true) => `<g transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="6" rx="60" ry="12" fill="#000" opacity=".2"/><path d="M-54,-10Q-62,-80 -20,-120Q0,-134 22,-120Q64,-80 54,-10Q40,10 0,10Q-40,10 -54,-10Z" fill="#7aa84a" ${OUT}/><path d="M-30,-100q10,-20 30,-22" stroke="#fff" stroke-opacity=".25" stroke-width="6" fill="none" stroke-linecap="round"/>${open ? `<ellipse cx="4" cy="-118" rx="22" ry="8" fill="#f4ecd8" ${O(2.5)}/><ellipse cx="4" cy="-118" rx="9" ry="3.5" fill="#2a1a10"/><path d="M8,-120L30,-200" stroke="#9a7a3a" stroke-width="6" stroke-linecap="round"/>` : `<circle cx="0" cy="-124" r="6" fill="#4a6a2a"/>`}</g>`;
   // a grilled fish on a stick: the puffer skinned, charred, on a split stick; origin = the stick's held end
+  // the purple blanket from the boat, draped over the boy's head on the sand (still#2 draws it up, rule#1 pulls it away)
+  const CLOTH = (x, y, s = 1, rot = 0) => `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s})"><path d="M-150,40Q-170,-30 -100,-70Q-30,-105 60,-85Q150,-60 160,20Q165,75 100,85Q0,95 -100,85Q-150,75 -150,40Z" fill="#8a6a9a" stroke="#2e2a26" stroke-width="4"/><path d="M-120,-10q70,30 140,0M-100,36q60,26 120,0" stroke="#6a4a7a" stroke-width="5" fill="none"/></g>`;
   const STICKFISH = (x, y, s = 1, rot = -60) => `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s})"><rect x="-5" y="-250" width="10" height="250" rx="4" fill="#8a6a44" ${O(2.5)}/><path d="M-30,-250Q-44,-320 -10,-380Q30,-400 48,-350Q60,-300 30,-250Z" fill="#c9924c" ${O(3)}/><path d="M-24,-300q20,-30 46,-24M-16,-340q16,-18 40,-12" stroke="#5a3a1a" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M-20,-370q10,-10 26,-6" stroke="#2a1a10" stroke-width="8" fill="none" stroke-linecap="round" opacity=".8"/><circle cx="4" cy="-262" r="4" fill="#2a1a10"/></g>`;
   // the phone with no bars: a dark screen, "ไม่มีสัญญาณ", a crossed signal icon; origin = centre
   const PHONE = (id, x, y, s = 1, rot = 0) => `<g id="${id}" transform="translate(${x},${y}) rotate(${rot}) scale(${s})"><rect x="-70" y="-140" width="140" height="280" rx="18" fill="#1a1a1e" ${OUT}/><rect x="-62" y="-128" width="124" height="256" rx="12" fill="#0c0f16"/>
@@ -348,6 +350,14 @@
       ${Array.from({ length: 14 }, (_, k) => `<path d="M${-60 + k * 90},-80q${(k % 2 ? 30 : -20)},80 ${(k % 2 ? 10 : -30)},140" stroke="#050408" stroke-width="${7 + (k % 3) * 2}" fill="none" stroke-linecap="round" opacity=".9"/>`).join("")}
       ${Array.from({ length: 14 }, (_, k) => `<path d="M${-40 + k * 90},2000q${(k % 2 ? 30 : -20)},-80 ${(k % 2 ? 10 : -30)},-140" stroke="#050408" stroke-width="${7 + (k % 3) * 2}" fill="none" stroke-linecap="round" opacity=".9"/>`).join("")}</g>
       <g id="${id}-blur" opacity="0"><rect x="-1400" y="-900" width="4000" height="3800" fill="#9fb8d8" opacity=".18"/></g>`);
+    // the blanket she pulls over his face, seen from under it: the shot tweens #id-clothg's y from 0 to 2100 so the hem slides down over
+    // the whole view; once it has settled a little firelight (#id-leak) and the weave show through
+    put(L.fg, `<g id="${id}-cloth" opacity="0"><g id="${id}-clothg"><rect x="-1400" y="-2800" width="4000" height="2800" fill="#2a2236"/>
+      ${Array.from({ length: 9 }, (_, k) => `<path d="M${-1300 + k * 440},-2800q${(k % 2 ? 90 : -70)},900 ${(k % 2 ? -40 : 60)},2790" stroke="#3b3050" stroke-width="${26 + (k % 3) * 10}" fill="none" opacity=".7"/>`).join("")}
+      <path d="M-1400,0q200,-70 400,0t400,0t400,0t400,0t400,0t400,0t400,0t400,0V-120H-1400Z" fill="#2a2236"/>
+      <path d="M-1400,-40q200,-70 400,0t400,0t400,0t400,0t400,0t400,0t400,0t400,0" stroke="#4a3d60" stroke-width="10" fill="none" opacity=".8"/>
+      <g id="${id}-leak" opacity=".12"><circle cx="1500" cy="-900" r="900" fill="url(#iLampG)"/></g>
+      ${Array.from({ length: 70 }, (_, k) => `<path d="M-1400,${-2780 + k * 40}H2600" stroke="#000" stroke-width="2" opacity=".12"/>`).join("")}</g></g>`);
   }
 
   // ======================================================================================================
@@ -459,6 +469,6 @@
     puffball: `<g transform="translate(10,130) scale(.5)">${PUFFER("", { puff: 1, seed: 29 })}</g>`,
   });
 
-  window.Isle = { PALM, BOULDER, SHRINE, LAMP, FIRE, LONGTAIL, PUFFER, COCONUT, STICKFISH, PHONE, ISLAND, sea, sand, wash, stars, moon, clouds, life, puff, TONGHAND };
+  window.Isle = { PALM, BOULDER, SHRINE, LAMP, FIRE, LONGTAIL, PUFFER, COCONUT, STICKFISH, CLOTH, CLOTH, CLOTH, PHONE, ISLAND, sea, sand, wash, stars, moon, clouds, life, puff, TONGHAND };
   Object.assign(Sets, { porch, boatIn, seaWide, beach, pool, lieDown, shrineClose });
 })();

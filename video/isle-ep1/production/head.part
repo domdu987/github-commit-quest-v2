@@ -299,7 +299,7 @@
       Rig.MODES.eatStick = (u, o) => { const k = pulse(u, 1.3); return { ...Rig.MODES.sit(u, o), ...Rig.reach("F", [-6, 40 + 10 * k], [-34, -48 + 16 * k]), uaB: -20, faB: -40, torso: 10 + 4 * k, head: 10 - 4 * k }; };   // the stick at his mouth, bite, chew
       Rig.MODES.numbLip = (u, o) => ({ ...Rig.MODES.sit(u, o), ...Rig.reach("F", [-10, 50], [-40, -54]), uaB: -20, faB: -40, torso: 8, head: 10 });   // fingers at his lip
       Rig.MODES.dropStick = (u, o) => { const k = Math.min(1, u / 0.45); return { ...Rig.MODES.sit(u, o), uaF: -40 + 60 * k, faF: -60 + 50 * k, uaB: -20, faB: -40, torso: 10 + 8 * k, head: 10 + 10 * k }; };   // the arm goes slack, the stick falls
-      Rig.MODES.slumpSide = (u, o) => { const k = Math.min(1, u / 0.6); return { ...Rig.MODES.sit(u, o), uaF: 20, faF: -10, uaB: 10, faB: -8, torso: 18 + 40 * k, head: 20 + 20 * k, rootR: (o.rootR || 0) + 70 * k, bodyY: 10 * k }; };   // tips over onto the sand
+      Rig.MODES.slumpSide = (u, o) => { const k = Math.min(1, u / 0.6); return { ...Rig.MODES.sit(u, o), uaF: 20, faF: -10, uaB: 10, faB: -8, torso: 18 + 40 * k, head: 20 + 20 * k, rootR: (o.rootR || 0) - 70 * k, bodyY: 10 * k }; };   // tips over backward onto the sand (head to the left, like lieStill)
       Rig.MODES.lieStill = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: 6, faF: -4, uaB: 8, faB: -2, thF: -2, thB: 0, shF: 2, shB: 2, head: -2 });   // flat on his back, eyes open, nothing moves
       Rig.MODES.kneelOver = (u, o) => { const j = o.shake ? Math.sin(u * 26) * 3 : 0; return { ...Rig.MODES.crouch(u, o), ...Rig.reach("F", [44, 44], [100 + j, 86]), ...Rig.reach("B", [36, 48], [92 - j, 90]), torso: 34 + j * 0.3, head: 20 }; };   // kneeling over him, hands on his shoulders (shake = shaking him)
       Rig.MODES.earChest = (u, o) => ({ ...Rig.MODES.crouch(u, o), ...Rig.reach("F", [40, 60], [100, 100]), ...Rig.reach("B", [30, 60], [90, 104]), torso: 48, head: 30, bodyY: 8 });   // bent right down, an ear to his chest
@@ -317,6 +317,7 @@
       Rig.MODES.fireBlow = (u, o) => { const k = pulse(u, 1.4); return { ...Rig.MODES.crouch(u, o), ...Rig.reach("F", [40, 40], [100, 100]), uaB: -20, faB: -50, torso: 40 + 8 * k, head: 22 - 6 * k }; };   // crouched, blowing into the kindling
       Rig.MODES.drinkCoco = (u, o) => ({ ...Rig.MODES.idle(u, o), ...Rig.reach("F", [0, 50], [-16, -36]), uaB: -10, faB: -30, torso: -4, head: -14 });   // the coconut tipped up at his mouth
       Rig.MODES.waveBoth = (u, o) => { const w = Math.sin(u * 7); return { ...Rig.MODES.idle(u, o), uaF: -160 + 14 * w, faF: -16, uaB: -156 - 14 * w, faB: -20, torso: -4, head: -10 }; };   // both arms up, waving at the boat
+      Rig.MODES.sitWeak = (u, o) => Rig.MODES.sitUpWeak(u + 1.2, o);   // already sat up (the later dawn framings start here, so he does not rise twice)
       Rig.MODES.sitUpWeak = (u, o) => { const k = Math.min(1, u / 1.2); return { ...Rig.MODES.lie(u, o), uaF: -40 * k, faF: -60 * k, uaB: 6, faB: -4, torso: 10 * k, head: -2 + 14 * k, rootR: -88 + 30 * k }; };   // the first stir at dawn: a hand lifts, the head turns
       Rig.MODES.sitTired = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -20, faF: -50, uaB: -16, faB: -46, torso: 18, head: 22 + 2 * Math.sin(u * 0.8) });   // on the thwart, hands in the lap, head down, listening
       // props for EP.6

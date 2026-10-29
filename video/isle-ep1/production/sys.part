@@ -280,3 +280,4 @@
       { const base = GameUI.C.signs.html;
         GameUI.C.signs.html = (id, o) => { let h = base(id, o); if (o.q) o.q.forEach((q, i) => { if (!q) return; const re = new RegExp(`(id="${id}-r${i}"[\\s\\S]*?<div class="stw )xx("[^>]*>\\s*<div class="stamp">)[✓✗](</div>)`); h = h.replace(re, `$1xx q$2?$3`); }); return h; }; }
       document.head.insertAdjacentHTML("beforeend", `<style>.capbox.inner { color: #cfe6ff; font-style: italic; letter-spacing: 1px; text-shadow: 0 0 22px rgba(140,190,255,.75); } .capbox.inner .pap { background: #1a2436; opacity: .92; }</style>`);
+      document.head.insertAdjacentHTML("beforeend", `<style>.capbox.mem { color: #f6dfb4; font-style: italic; letter-spacing: 1px; text-shadow: 0 0 18px rgba(255,200,120,.55), 0 2px 6px #000; }</style>`);   // ยาย's words heard again in memory

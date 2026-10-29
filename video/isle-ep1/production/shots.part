@@ -1,5 +1,5 @@
       // ======================================================================================================
-      // ติดเกาะร้าง · EP.1 "ผีอำ"
+      // ติดเกาะร้าง · EP.1 "ปลาลูกโป่ง" (ร่าง 2: ของจริงล้วน ไม่มีตำนาน)
       // ======================================================================================================
       const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
       const CLIP = (list) => { list.sort((a, b) => a.t - b.t); for (let n = 0; n + 1 < list.length; n++) list[n].end = Math.min(list[n].end, list[n + 1].t - 0.03); return list; };
@@ -73,20 +73,22 @@
           tl.fromTo(`#${id} .stage`, { opacity: 0.2 }, { opacity: 1, duration: 0.22, immediateRender: false }, t0);
           tl.fromTo("#hk2-blur", { opacity: 0 }, { opacity: 1, duration: 0.5, yoyo: true, repeat: 3, immediateRender: false }, t0 + 0.4);
           Fx.punch(tl, `#${id} .stage`, X, 1.08, 0.5); Fx.glitch(tl, `#${id}`, X, 0.2, 12, 17); red(tl, X, 0.6, 0.6);
+          // the blanket comes down over the eyes on "ตายทั้งเป็น" — the hook ends under it
+          const C = X + 0.3; tl.set("#hk2-cloth", { opacity: 1 }, C); tl.fromTo("#hk2-clothg", { y: 0 }, { y: 2100, duration: 0.8, ease: "power2.in", immediateRender: false }, C);
           Fx.heart(tl, t0, D("hook") - a, 0.5, 0.75);
         },
       });
 
-      // ---------- 2. ยาย's porch at the water: the rule, the legend of the island, the clue in it ----------
+      // ---------- 2. ยาย's porch at the water: the rule; โต้ง's joke is the belief the episode overturns; the last line of the rule ----------
       add("yai", {
         set: "porch", setOpts: { id: "pc" }, dark: 0.1, blur: { far: 3, mid: 2 },
         cam: { keys: [{ t: 0, ...fr(600, 1250, 1.0, 540, 960), drift: { s: 0.012 } }] },
-        actors: [YA(330, 1720, 0.84, [{ t: 0, mode: "peel", eyes: "normal", mouth: "smile" }, { t: vo("yai", 0) - 0.3, mode: "sitTalk", eyes: "normal", mouth: "flat" }, { t: vo("yai", 1), mode: "sitTalk", eyes: "squint", mouth: "flat", look: 6 }, { t: F("yai", 1, 3), mode: "sitTalk", eyes: "worry", mouth: "flat" }], { prop: "cleaver" }),
-          TG(650, 1700, 0.68, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: F("yai", 1, 2), mode: "listen", eyes: "wide", mouth: "o" }, { t: vo("yai", 2), mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }),
-          PW(880, 1710, 0.82, [{ t: 0, mode: "holdPhone", eyes: "squint", mouth: "flat" }, { t: F("yai", 1, 1), mode: "holdPhone", eyes: "normal", mouth: "flat", look: -10 }], { flip: true, prop: "phone" })],
-        captions: caps("yai", [0, 1, 2], { quote: true }),
+        actors: [YA(330, 1720, 0.84, [{ t: 0, mode: "peel", eyes: "normal", mouth: "smile" }, { t: vo("yai", 0) - 0.3, mode: "sitTalk", eyes: "normal", mouth: "flat" }, { t: vo("yai", 1), mode: "sitTalk", eyes: "squint", mouth: "flat", look: 6 }, { t: F("yai", 1, 2), mode: "sitTalk", eyes: "worry", mouth: "flat" }, { t: vo("yai", 2) + 0.3, mode: "sitTalk", eyes: "squint", mouth: "flat", look: 8 }, { t: vo("yai", 3) - 0.15, mode: "sitTalk", eyes: "worry", mouth: "flat" }], { prop: "cleaver" }),
+          TG(650, 1700, 0.68, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: F("yai", 1, 2), mode: "listen", eyes: "wide", mouth: "o" }, { t: vo("yai", 2) - 0.2, mode: "idle", eyes: "squint", mouth: "smile", opts: { head: -6 } }, { t: vo("yai", 3), mode: "listen", eyes: "normal", mouth: "flat" }], { flip: true }),
+          PW(880, 1710, 0.82, [{ t: 0, mode: "holdPhone", eyes: "squint", mouth: "flat" }, { t: F("yai", 1, 1), mode: "holdPhone", eyes: "normal", mouth: "flat", look: -10 }, { t: vo("yai", 2) + 0.4, mode: "holdPhone", eyes: "squint", mouth: "smile", look: 8 }], { flip: true, prop: "phone" })],
+        captions: caps("yai", [0, 1, 2, 3], { quote: true }),
         react: [{ a: 1, t: F("yai", 1, 2) + 0.1, dur: 1.1 }],
-        ui: [{ type: "signs", t: vo("yai", 0), items: ["ปลาพอง… <em>อย่าลอง</em>", "ตาเปิด แต่ไม่ขยับ… <em>อย่าทิ้ง</em>", "อยู่กับเขา… <em>จนกว่าตะวันจะขึ้น</em>"], icons: [ICN.fish, ICN.lung, PK_ICON.sun], ok: [1, 1, 1], at: [vo("yai", 0) + 0.2, F("yai", 1, 2) + 0.1, vo("yai", 2) + 0.1], end: D("yai") - 0.05, top: 150 }],
+        ui: [{ type: "signs", t: vo("yai", 0), items: ["ปลาพอง… <em>อย่าลอง</em>", "ตาเปิด แต่ไม่ขยับ… <em>อย่าทิ้ง</em>", "อยู่กับเขา… <em>จนกว่าตะวันจะขึ้น</em>"], icons: [ICN.fish, ICN.lung, PK_ICON.sun], ok: [1, 1, 1], at: [vo("yai", 0) + 0.2, F("yai", 1, 2) + 0.1, vo("yai", 3) + 0.1], end: D("yai") - 0.05, top: 150 }],
         fx(tl, id, t0, L) {
           put(L.set, STOOL(330, 1720)); put(L.set, Isle.COCONUT(250, 1560, 0.9, false));
           document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("q"));
@@ -102,7 +104,7 @@
         fx(tl, id, t0, L) {
           tl.fromTo("#sw-boat", { x: 0, y: 0 }, { x: 640, duration: 2.6, ease: "none", immediateRender: false }, t0);
           tl.fromTo("#sw-boat", { y: 0 }, { y: -14, duration: 0.9, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0);
-          put(L.glow, `<g id="sw-sign" opacity="0"><rect x="300" y="1560" width="480" height="70" rx="10" fill="#f4ecd8" stroke="#2e2a26" stroke-width="4"/><text x="540" y="1610" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#c8392b">เกาะผีอำ</text></g>`);
+          put(L.glow, `<g id="sw-sign" opacity="0"><rect x="300" y="1560" width="480" height="70" rx="10" fill="#f4ecd8" stroke="#2e2a26" stroke-width="4"/><text x="540" y="1610" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#c8392b">ห่างฝั่ง 3 กม.</text></g>`);
           tl.fromTo("#sw-sign", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, immediateRender: false }, t0 + 0.9);
         },
       }, {
@@ -223,60 +225,101 @@
         },
       });
 
-      // ---------- 9. ผีอำ: he tips over, eyes open, nothing moves; inside his head; the name of it; her tears land on his face ----------
-      split("phiam", vo("phiam", 1) - 0.25, {
+      // ---------- 9. still: he tips over, eyes open, nothing moves; inside his head; she listens, hears nothing, says it, and draws the blanket over his face ----------
+      const ST2 = vo("still", 1) - 0.25, ST3 = vo("still", 4) - 0.45, CLX = 215, CLY = 1660;   // CLX/CLY: where his head lies (feet at 520, the lying rig points left ~300 px at s 0.68)
+      split3("still", ST2, ST3, {
         set: "beach", setOpts: { id: "pa", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.55, blur: { far: 7, mid: 5 }, cu: false,
-        cam: { keys: [{ t: 0, ...fr(560, 1500, 1.35, 540, 1000), drift: { s: 0.03 } }] },
+        cam: { keys: [{ t: 0, ...fr(470, 1500, 1.35, 540, 1000), drift: { s: 0.03 } }] },
         shake: (t) => 3.5 * Math.sin(t * 9.3) + 2 * Math.sin(t * 17),
         actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "slumpSide", eyes: "wide", mouth: "o" }, { t: 0.65, mode: "lieStill", eyes: "wide", mouth: "o", blend: 0.3 }], { ...NOBLINK, cu: false }),
-          PW(760, 1700, 0.82, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }, { t: 0.4, mode: "kneelOver", eyes: "wide", mouth: "scream", opts: { shake: true } }], { flip: true, moveTo: { x: 660, dur: 0.4, ease: "power1.out" }, cu: false })],
-        bubbles: [bub("phiam", 0, 660, 520, 660)],
-        fx(tl, id, t0, L) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.08, 0.4); Fx.heart(tl, t0, D("phiam"), 0.48, 0.8); },
+          PW(760, 1700, 0.82, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }, { t: 0.4, mode: "kneelOver", eyes: "wide", mouth: "scream", opts: { shake: true } }], { flip: true, moveTo: { x: 330, dur: 0.55, ease: "power1.out" }, cu: false })],
+        bubbles: [bub("still", 0, 520, 520, 420)],
+        fx(tl, id, t0, L) { Fx.punch(tl, `#${id} .stage`, t0 + 0.05, 1.08, 0.4); Fx.heart(tl, t0, ST2, 0.48, 0.8); },
       }, {
         set: "lieDown", setOpts: { id: "pa2", moonX: 880, moonY: 1120 }, dark: 0.42, cu: false,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }, { t: VA("phiam", vo("phiam", 1) - 0.25, 3) - 0.3, glide: 1.0, ...fr(540, 880, 1.15, 540, 960), drift: { s: 0.03 } }] },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }, { t: VA("still", vo("still", 1) - 0.25, 3) - 0.3, glide: 1.0, ...fr(540, 880, 1.15, 540, 960), drift: { s: 0.03 } }] },
         shake: (t) => 1.2 * Math.sin(t * 2.1),
-        actors: [OVER([{ t: 0, mode: "overMeShake", eyes: "wide", mouth: "o" }, { t: 1.0, mode: "overMe", eyes: "worry", mouth: "flat", opts: { head: 12 } }, { t: VA("phiam", vo("phiam", 1) - 0.25, 3) - 0.4, mode: "overMe", eyes: "sad", mouth: "frown", opts: { head: 14 } }])],
-        captions: capsAt("phiam", vo("phiam", 1) - 0.25, D("phiam"), [1, 2]),
-        bubbles: [bubAt(bub("phiam", 3, 540, 1180, 540, { up: true }), vo("phiam", 1) - 0.25, D("phiam"))],
+        actors: [OVER([{ t: 0, mode: "overMeShake", eyes: "wide", mouth: "o" }, { t: 1.0, mode: "overMe", eyes: "worry", mouth: "flat", opts: { head: 12 } }, { t: VA("still", vo("still", 1) - 0.25, 3) - 0.4, mode: "overMe", eyes: "sad", mouth: "frown", opts: { head: 14 } }])],
+        captions: capsAt("still", ST2, ST3, [1, 2]),
+        bubbles: [bubAt(bub("still", 3, 540, 1180, 540, { up: true }), ST2, ST3)],
         fx(tl, id, t0, L) {
-          const a = vo("phiam", 1) - 0.25, nI = capsAt("phiam", a, D("phiam"), [1]).length;
+          const a = ST2, nI = capsAt("still", a, ST3, [1]).length;
           document.querySelectorAll(`#${id} .capbox`).forEach((c, i) => { if (i < nI) c.classList.add("inner"); });
           tl.fromTo("#pa2-blur", { opacity: 0 }, { opacity: 1, duration: 0.6, yoyo: true, repeat: 5, immediateRender: false }, t0 + 0.2);
           // tears: from her eyes (upside-down above us) down onto the lens
-          [[500, 700, 0.2], [585, 700, 1.1], [512, 700, 2.0]].forEach(([x, y, d]) => { const T = t0 + VA("phiam", a, 3) + d; put(L.act, `<g class="tear" opacity="0"><path d="M0,0q-9,-16 0,-30q9,14 0,30z" fill="#dff4ff" stroke="#2e2a26" stroke-width="2"/></g>`); const el = L.act.lastElementChild;
+          [[500, 700, 0.2], [585, 700, 1.1], [512, 700, 2.0]].forEach(([x, y, d]) => { const T = t0 + VA("still", a, 3) + d; put(L.act, `<g class="tear" opacity="0"><path d="M0,0q-9,-16 0,-30q9,14 0,30z" fill="#dff4ff" stroke="#2e2a26" stroke-width="2"/></g>`); const el = L.act.lastElementChild;
             tl.set(el, { opacity: 1, x, y, scale: 0.6 }, T); tl.to(el, { y: y + 560, scale: 2.6, duration: 0.55, ease: "power1.in", immediateRender: false }, T); tl.set(el, { opacity: 0 }, T + 0.55);
             tl.fromTo("#pa2-blur", { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, T + 0.5); tl.to("#pa2-blur", { opacity: 0, duration: 1.0, immediateRender: false }, T + 0.7); });
-          const X = t0 + FA("phiam", a, 2, 3); Fx.punch(tl, `#${id} .stage`, X, 1.06, 0.5); red(tl, X, 0.45, 0.7);
-          Fx.heart(tl, t0, D("phiam") - a, 0.5, 0.8);
-        },
-      });
-
-      // ---------- 10. the lamp: a light comes along the beach before she sees it; ตาเมฆ: not dead, no antidote, breathe for him ----------
-      split("lamp", vo("lamp", 1) - 0.4, {
-        set: "beach", setOpts: { id: "lp", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.58, blur: { far: 7, mid: 5 }, cu: false,
-        cam: { keys: [{ t: 0, ...fr(760, 1380, 0.95, 540, 940), drift: { s: 0.012 } }, { t: vo("lamp", 0) - 0.15, ...fr(660, 1440, 2.1, 540, 920), drift: { s: 0.03 } }] },
-        actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "lieStill", eyes: "wide", mouth: "o" }], { ...NOBLINK, cu: false }),
-          PW(660, 1700, 0.82, [{ t: 0, mode: "kneelCry", eyes: "closed", mouth: "frown" }, { t: vo("lamp", 0) - 0.25, mode: "kneelOver", eyes: "wide", mouth: "scream" }], { flip: true, cu: false }),
-          MK(1640, 1670, 0.88, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat", opts: { period: 1.6 } }, { t: 2.3, mode: "lampStand", eyes: "normal", mouth: "flat" }], { flip: true, prop: "lamp", ...NOBLINK, cu: false, moveTo: { x: 1060, dur: 2.3, ease: "none" } })],
-        bubbles: [bub("lamp", 0, 660, 520, 660)],
-        fx(tl, id, t0, L) {
-          put(L.glow, `<g id="lp-lg"><circle cx="1600" cy="1500" r="320" fill="url(#iLampG)"/></g>`); tl.fromTo("#lp-lg", { x: 0 }, { x: -580, duration: 2.3, ease: "none", immediateRender: false }, t0);
-          Fx.flicker(tl, "#lp-lg", t0, D("lamp"), 31);
-          const X = t0 + vo("lamp", 0); Fx.punch(tl, `#${id} .stage`, X, 1.07, 0.4); Fx.glitch(tl, `#${id}`, X, 0.15, 8, 41);
-          Fx.heart(tl, t0, D("lamp"), 0.5, 0.7);
+          const X = t0 + FA("still", a, 2, 3); Fx.punch(tl, `#${id} .stage`, X, 1.06, 0.5); red(tl, X, 0.45, 0.7);
+          Fx.heart(tl, t0, ST3 - a, 0.5, 0.8);
         },
       }, {
-        set: "beach", setOpts: { id: "lp2", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.6, blur: { far: 8, mid: 6 },
-        cam: { keys: [{ t: 0, ...fr(820, 1420, 1.9, 540, 900), drift: { s: 0.02 } }, { t: VA("lamp", vo("lamp", 1) - 0.4, 3) - 0.2, glide: 0.6, ...fr(640, 1480, 1.7, 540, 960), drift: { s: 0.025 } }] },
+        set: "beach", setOpts: { id: "st3", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.55, blur: { far: 7, mid: 5 }, cu: false,
+        cam: { keys: [{ t: 0, ...fr(300, 1640, 2.1, 540, 1000), drift: { s: 0.02 } }, { t: VA("still", ST3, 4) + 1.1, glide: 0.8, ...fr(380, 1600, 1.6, 540, 960), drift: { s: 0.02 } }] },
         actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "lieStill", eyes: "wide", mouth: "o" }], { ...NOBLINK, cu: false }),
-          PW(660, 1700, 0.82, [{ t: 0, mode: "kneelOver", eyes: "wide", mouth: "o" }, { t: VA("lamp", vo("lamp", 1) - 0.4, 1) + 1.0, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: VA("lamp", vo("lamp", 1) - 0.4, 3), mode: "breathe", eyes: "worry", mouth: "o", opts: { period: 1.6, n: 1, t0: 1.2 } }], { flip: true, cu: false }),
-          MK(900, 1680, 0.88, [{ t: 0, mode: "crouchLamp", eyes: "normal", mouth: "flat" }, { t: VA("lamp", vo("lamp", 1) - 0.4, 3) - 0.1, mode: "crouchLamp", eyes: "normal", mouth: "flat", look: -6 }], { flip: true, prop: "lamp", ...NOBLINK })],
-        bubbles: [bubAt(bub("lamp", 1, 640, 480, 800, { br: true, end: vo("lamp", 2) - 0.05 }), vo("lamp", 1) - 0.4, D("lamp")), bubAt(bub("lamp", 2, 640, 480, 800, { br: true, end: vo("lamp", 3) - 0.05 }), vo("lamp", 1) - 0.4, D("lamp")), bubAt(bub("lamp", 3, 640, 480, 800, { br: true, fix: ["หายใจเมื่อไหร่", "หายใจ<br>เมื่อไหร่"] }), vo("lamp", 1) - 0.4, D("lamp"))],
-        fx(tl, id, t0, L) { const a = vo("lamp", 1) - 0.4; put(L.glow, `<circle cx="880" cy="1520" r="360" fill="url(#iLampG)" class="lampf"/>`); Fx.flicker(tl, `#${id} .lampf`, t0, D("lamp") - a, 33); Fx.heart(tl, t0, D("lamp") - a, 0.6, 0.5); },
+          PW(330, 1700, 0.82, [{ t: 0, mode: "earChest", eyes: "closed", mouth: "flat" }, { t: VA("still", ST3, 4) - 0.35, mode: "kneelOver", eyes: "sad", mouth: "frown" }, { t: VA("still", ST3, 4) + 1.15, mode: "kneelWatch", eyes: "closed", mouth: "frown" }, { t: VA("still", ST3, 4) + 2.0, mode: "kneelCry", eyes: "closed", mouth: "frown" }], { flip: true, cu: false })],
+        bubbles: [bubAt(bub("still", 4, 560, 560, 420), ST3, D("still"))],
+        fx(tl, id, t0, L) {
+          // the blanket drawn up from his chest over his face once she has said it
+          put(L.act, `<g id="st3-cl" opacity="0">${Isle.CLOTH(0, 0, 0.85)}</g>`);
+          const C = t0 + VA("still", ST3, 4) + 1.15;
+          tl.set("#st3-cl", { opacity: 1, x: CLX, y: CLY + 150, scaleY: 0.55 }, C); tl.to("#st3-cl", { y: CLY, scaleY: 1, duration: 0.7, ease: "power1.inOut", immediateRender: false }, C);
+          Fx.heart(tl, t0, D("still") - ST3, 0.5, 0.75);
+        },
       });
 
-      // ---------- 11. the safety card: heat does nothing, gutting does nothing; numb lips → 1669; not breathing → 2 breaths, 30 compressions ----------
+      // ---------- 10. the cloth: from inside his head, the blanket comes down over the eyes he cannot close ----------
+      add("cloth", {
+        set: "lieDown", setOpts: { id: "cl", moonX: 880, moonY: 1120 }, dark: 0.42, cu: false,
+        cam: { keys: [{ t: 0, ...fr(540, 920, 1.08, 540, 960), drift: { s: 0.02 } }] },
+        actors: [OVER([{ t: 0, mode: "overMe", eyes: "sad", mouth: "frown", opts: { head: 14 } }])],
+        captions: caps("cloth"),
+        fx(tl, id, t0, L) {
+          document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("inner"));
+          tl.set("#cl-cloth", { opacity: 1 }, t0); tl.fromTo("#cl-clothg", { y: 0 }, { y: 2100, duration: 1.1, ease: "power2.in", immediateRender: false }, t0 + 0.1);
+          tl.fromTo("#cl-leak", { opacity: 0.1 }, { opacity: 0.28, duration: 1.1, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0 + 1.3);
+          Fx.heart(tl, t0, D("cloth"), 0.45, 0.85);
+        },
+      });
+
+      // ---------- 11. the rule: beside the covered boy her grandmother's words come back; she uncovers him — his eyes are on her, a tear; a breath, then none; no antidote: breathe for him ----------
+      const RU2 = vo("rule", 1) - 0.5, RU3 = vo("rule", 2) - 0.3, EYEX = CLX + 20, EYEY = CLY - 8;
+      split3("rule", RU2, RU3, {
+        set: "beach", setOpts: { id: "ru", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.6, blur: { far: 7, mid: 5 }, cu: false,
+        cam: { keys: [{ t: 0, ...fr(460, 1440, 1.1, 540, 960), drift: { s: 0.012 } }, { t: RU2 - 0.3, glide: RU2 - 0.6, ...fr(400, 1540, 1.55, 540, 940), drift: { s: 0.02 } }] },
+        actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "lieStill", eyes: "wide", mouth: "o" }], { ...NOBLINK, cu: false }),
+          PW(400, 1700, 0.82, [{ t: 0, mode: "hugKnees", eyes: "closed", mouth: "frown" }, { t: vo("rule", 0) + 0.4, mode: "hugKnees", eyes: "sad", mouth: "frown", look: -12 }, { t: vo("rule", 0) + 2.6, mode: "kneelSlump", eyes: "wide", mouth: "o" }], { flip: true, cu: false })],
+        captions: capsAt("rule", 0, RU2, [0], { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.act, `<g id="ru-cl">${Isle.CLOTH(CLX, CLY, 0.85)}</g>`);
+          document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("mem"));
+          Fx.heart(tl, t0, RU2, 0.55, 0.6);
+        },
+      }, {
+        set: "beach", setOpts: { id: "ru2", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.5, blur: { far: 7, mid: 5 }, cu: false,
+        cam: { keys: [{ t: 0, ...fr(290, 1640, 2.3, 540, 980), drift: { s: 0.02 } }] },
+        actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "lieStill", eyes: "wide", mouth: "o" }], { ...NOBLINK, cu: false }),
+          PW(330, 1700, 0.82, [{ t: 0, mode: "kneelWatch", eyes: "wide", mouth: "o" }, { t: 0.8, mode: "kneelOver", eyes: "sad", mouth: "o" }], { flip: true, cu: false })],
+        bubbles: [bubAt(bub("rule", 1, 560, 560, 420), RU2, RU3)],
+        fx(tl, id, t0, L) {
+          // the blanket pulled back; a tear from the eye that cannot blink
+          put(L.act, `<g id="ru2-cl">${Isle.CLOTH(0, 0, 0.85)}</g>`);
+          tl.set("#ru2-cl", { x: CLX, y: CLY }, t0); tl.to("#ru2-cl", { x: CLX + 170, y: CLY + 150, rotation: 25, opacity: 0, duration: 0.6, ease: "power1.in", immediateRender: false }, t0 + 0.15);
+          put(L.act, `<g class="tear2" opacity="0"><path d="M0,0q-5,-9 0,-17q5,8 0,17z" fill="#dff4ff" stroke="#2e2a26" stroke-width="2"/></g>`); const el = L.act.lastElementChild;
+          tl.set(el, { opacity: 1, x: EYEX, y: EYEY }, t0 + 1.0); tl.to(el, { x: EYEX - 24, y: EYEY + 26, duration: 1.4, ease: "power1.in", immediateRender: false }, t0 + 1.0);
+          Fx.heart(tl, t0, RU3 - RU2, 0.5, 0.7);
+        },
+      }, {
+        set: "beach", setOpts: { id: "ru3", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.5, blur: { far: 7, mid: 5 }, cu: false,
+        cam: { keys: [{ t: 0, ...fr(360, 1580, 1.7, 540, 960), drift: { s: 0.02 } }] },
+        actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "lieStill", eyes: "wide", mouth: "o" }], { ...NOBLINK, cu: false }),
+          PW(330, 1700, 0.82, [{ t: 0, mode: "earChest", eyes: "closed", mouth: "flat" }, { t: FA("rule", RU3, 2, 1) + 0.1, mode: "kneelOver", eyes: "wide", mouth: "o" }, { t: FA("rule", RU3, 2, 2) + 0.2, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.6, n: 3, t0: 0 } }], { flip: true, cu: false })],
+        captions: capsAt("rule", RU3, D("rule"), [2]),
+        ui: [{ type: "counter", t: 0.1, end: FA("rule", RU3, 2, 1) + 0.4, label: "ลมหายใจ", icon: "lung", unit: "ครั้ง/นาที", keys: [{ t: 0.2, v: 6 }, { t: 0.9, v: 3 }, { t: FA("rule", RU3, 2, 0) - 0.3, v: 0 }], alarm: FA("rule", RU3, 2, 0) - 0.3, right: true, top: 150 }],
+        fx(tl, id, t0, L) { red(tl, t0 + FA("rule", RU3, 2, 0) - 0.3, 0.4, 0.8); Fx.heart(tl, t0, D("rule") - RU3, 0.5, 0.75); },
+      });
+
+      // ---------- 12. the safety card: heat does nothing, gutting does nothing; numb lips → 1669; not breathing → 2 breaths, 30 compressions ----------
       add("card", {
         set: "beach", setOpts: { id: "cd", time: "night", fire: true, fireX: 560, fireY: 1600, washY: 1840 }, dark: 0.66, blur: { far: 10, mid: 8, set: 8 }, cu: false,
         cam: { keys: [{ t: 0, ...fr(600, 1300, 0.9, 540, 960), drift: { s: 0.01 } }] },
@@ -288,18 +331,16 @@
       // ---------- 12. the night: her hand on his chest counting; the breaths she gives when the count hits nothing; the moon crosses ----------
       add("night", {
         set: "beach", setOpts: { id: "nt", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840, moonX: 1000, moonY: 260 }, dark: 0.58, blur: { far: 7, mid: 5 }, cu: false,
-        cam: { keys: [{ t: 0, ...fr(640, 1480, 1.3, 540, 980), drift: { s: 0.012 } }, { t: 2.0, glide: 1.2, ...fr(600, 1520, 1.9, 540, 1000), drift: { s: 0.02 } }, { t: 6.3, ...fr(700, 1380, 1.0, 540, 940), drift: { s: 0.015 } }] },
+        cam: { keys: [{ t: 0, ...fr(420, 1480, 1.3, 540, 980), drift: { s: 0.012 } }, { t: 2.0, glide: 1.2, ...fr(380, 1560, 1.9, 540, 1000), drift: { s: 0.02 } }, { t: 5.8, ...fr(520, 1380, 1.0, 540, 940), drift: { s: 0.015 } }] },
         actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "lieStill", eyes: "wide", mouth: "o" }], { ...NOBLINK, cu: false }),
-          PW(660, 1700, 0.82, [{ t: 0, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: 2.2, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.5, n: 2, t0: 0 } }, { t: 4.2, mode: "compress", eyes: "worry", mouth: "grit", opts: { period: 0.5, n: 6, t0: 0 } }, { t: 6.4, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: 7.4, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.5, n: 1, t0: 0 } }], { flip: true, cu: false }),
-          MK(1040, 1670, 0.88, [{ t: 0, mode: "lampStand", eyes: "normal", mouth: "flat" }], { flip: true, prop: "lamp", ...NOBLINK, cu: false })],
+          PW(330, 1700, 0.82, [{ t: 0, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: 2.1, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.5, n: 2, t0: 0 } }, { t: 3.9, mode: "compress", eyes: "worry", mouth: "grit", opts: { period: 0.5, n: 6, t0: 0 } }, { t: 5.8, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: 6.7, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.5, n: 1, t0: 0 } }], { flip: true, cu: false })],
         captions: caps("night"),
-        ui: [{ type: "counter", t: 0.1, end: D("night") - 0.05, label: "ลมหายใจ", icon: "lung", unit: "ครั้ง/นาที", keys: [{ t: 0.2, v: 14 }, { t: 1.4, v: 9 }, { t: 2.1, v: 0 }, { t: 3.6, v: 0 }, { t: 4.0, v: 6 }, { t: 6.4, v: 6 }, { t: 7.2, v: 0 }, { t: 8.4, v: 5 }], alarm: 2.1, right: true, top: 150 }],
+        ui: [{ type: "counter", t: 0.1, end: D("night") - 0.05, label: "ลมหายใจ", icon: "lung", unit: "ครั้ง/นาที", keys: [{ t: 0.2, v: 14 }, { t: 1.3, v: 9 }, { t: 2.0, v: 0 }, { t: 3.3, v: 0 }, { t: 3.7, v: 6 }, { t: 5.8, v: 6 }, { t: 6.5, v: 0 }, { t: 7.6, v: 5 }], alarm: 2.0, right: true, top: 150 }],
         fx(tl, id, t0, L) {
           document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("inner"));
           tl.fromTo("#nt-moon", { x: 0 }, { x: -560, duration: D("night"), ease: "none", immediateRender: false }, t0);
           tl.fromTo("#nt-fire-fl", { scale: 1 }, { scale: 0.35, duration: D("night"), ease: "none", transformOrigin: "50% 100%", immediateRender: false }, t0);
-          put(L.glow, `<circle cx="1020" cy="1520" r="340" fill="url(#iLampG)" class="lampf"/>`); Fx.flicker(tl, `#${id} .lampf`, t0, D("night"), 35);
-          red(tl, t0 + 2.1, 0.4, 0.8); red(tl, t0 + 7.2, 0.35, 0.8);
+          red(tl, t0 + 2.0, 0.4, 0.8); red(tl, t0 + 6.5, 0.35, 0.8);
           Fx.heart(tl, t0, D("night"), 0.52, 0.7);
         },
       });
@@ -312,39 +353,41 @@
         ui: [Sig.ui(F, "เอาตัวรอดแบบโต้ง · เช็กลิสต์", [["ก่อไฟ", true], ["หาน้ำ", true], ["ทำที่นอน", true], ["ปลาพอง… อย่าลอง", false]], D("sig"))],
       });
 
-      // ---------- 14. dawn: a finger moves; the boat; "ตาเฒ่าที่ไหน"; the lamp on the shrine ----------
-      split3("dawn", vo("dawn", 1) - 0.4, vo("dawn", 2) - 0.25, {
+      // ---------- 14. dawn: a finger moves; the longtail; ลุงนวล sees what she is doing; "ลุงบอกว่ากินได้"; the stick by the dead fire ----------
+      const DW2 = vo("dawn", 1) - 0.4, DW3 = vo("dawn", 2) - 0.3;
+      split3("dawn", DW2, DW3, {
         set: "beach", setOpts: { id: "dw", time: "dawn", fire: "out", fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.3, blur: { far: 5, mid: 3 }, cu: false,
-        cam: { keys: [{ t: 0, ...fr(560, 1540, 1.8, 540, 1020), drift: { s: 0.03 } }] },
+        cam: { keys: [{ t: 0, ...fr(360, 1560, 1.8, 540, 1020), drift: { s: 0.03 } }] },
         actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "lieStill", eyes: "wide", mouth: "o" }, { t: 0.5, mode: "sitUpWeak", eyes: "closed", mouth: "flat", blend: 0.4 }, { t: 1.4, mode: "sitUpWeak", eyes: "normal", mouth: "flat" }], { blinks: [1.0, 1.3, 1.9], cu: false }),
-          PW(660, 1700, 0.82, [{ t: 0, mode: "kneelSlump", eyes: "closed", mouth: "frown" }, { t: 0.9, mode: "kneelOver", eyes: "wide", mouth: "o" }, { t: 1.6, mode: "kneelOver", eyes: "normal", mouth: "smileOpen" }], { flip: true, cu: false })],
-        bubbles: [bub("dawn", 0, 520, 560, 520)],
+          PW(330, 1700, 0.82, [{ t: 0, mode: "kneelSlump", eyes: "closed", mouth: "frown" }, { t: 0.9, mode: "kneelOver", eyes: "wide", mouth: "o" }, { t: 1.6, mode: "kneelOver", eyes: "normal", mouth: "smileOpen" }], { flip: true, cu: false })],
+        bubbles: [bub("dawn", 0, 400, 560, 300)],
         react: [{ a: 1, t: 0.95, dur: 1.0, fast: true }],
         fx(tl, id, t0, L) { tl.fromTo(`#${id} .stage`, { opacity: 0.3 }, { opacity: 1, duration: 0.5, immediateRender: false }, t0); Fx.heart(tl, t0, 1.0, 0.5, 0.6); },
       }, {
         set: "beach", setOpts: { id: "dw2", time: "dawn", fire: "out", fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.26, blur: { far: 3, mid: 2 },
-        cam: { keys: [{ t: 0, ...fr(760, 1300, 0.9, 540, 940), drift: { s: 0.012 } }, { t: VA("dawn", vo("dawn", 1) - 0.4, 1) - 0.1, ...fr(800, 1460, 1.25, 540, 960), drift: { s: 0.02 } }] },
-        actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "sitUpWeak", eyes: "normal", mouth: "flat" }], { cu: false }),
-          PW(680, 1700, 0.82, [{ t: 0, mode: "kneelOver", eyes: "normal", mouth: "smile" }, { t: 1.2, mode: "lookOt", eyes: "wide", mouth: "o" }], { flip: true, cu: false }),
-          NU(1500, 1690, 0.88, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 1.5, mode: "shrug", eyes: "normal", mouth: "o" }, { t: VA("dawn", vo("dawn", 1) - 0.4, 1) - 0.2, mode: "lookOt", eyes: "worry", mouth: "flat" }], { flip: true, moveTo: { x: 980, dur: 1.5, ease: "power1.out" } })],
-        bubbles: [bubAt(bub("dawn", 1, 640, 500, 840, { br: true }), vo("dawn", 1) - 0.4, vo("dawn", 2) - 0.25)],
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 0.9, 540, 940), drift: { s: 0.012 } }, { t: VA("dawn", DW2, 1) - 0.1, ...fr(600, 1460, 1.25, 540, 960), drift: { s: 0.02 } }] },
+        actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "sitWeak", eyes: "normal", mouth: "flat" }], { cu: false }),
+          PW(330, 1700, 0.82, [{ t: 0, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.6, n: 1, t0: 0.1 } }, { t: 1.5, mode: "kneelOver", eyes: "normal", mouth: "flat" }], { flip: true, cu: false }),
+          NU(1500, 1690, 0.88, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 1.5, mode: "lampStand", eyes: "wide", mouth: "o" }, { t: VA("dawn", DW2, 1) - 0.2, mode: "lampStand", eyes: "worry", mouth: "flat" }], { flip: true, moveTo: { x: 720, dur: 1.5, ease: "power1.out" } })],
+        bubbles: [bubAt(bub("dawn", 1, 640, 500, 840, { br: true }), DW2, DW3)],
         fx(tl, id, t0, L) {
-          // the longtail nosing in, the wet footprints that lead from the boy to the water
+          // the longtail nosing in while she is still breathing for him
           put(L.mid, `<g id="dw2-bt">${Isle.LONGTAIL("dw2-lt", 1900, 1330, 0.5, { canopy: false })}</g>`); tl.fromTo("#dw2-bt", { x: 0 }, { x: -520, duration: 1.6, ease: "power1.out", immediateRender: false }, t0);
-          const pr = [[760, 1760], [820, 1800], [900, 1830], [980, 1870], [1070, 1900], [1160, 1930]].map(([x, y], k) => `<g class="fp" opacity="0"><ellipse cx="${x}" cy="${y}" rx="16" ry="30" fill="#2a3a4a" opacity=".55" transform="rotate(${28 + (k % 2) * 8} ${x} ${y})"/>${[0, 1, 2, 3].map((d) => `<circle cx="${x - 10 + d * 7}" cy="${y - 34}" r="4" fill="#2a3a4a" opacity=".55"/>`).join("")}</g>`).join("");
-          put(L.set, pr); document.querySelectorAll(`#${id} .fp`).forEach((el, k) => tl.to(el, { opacity: 1, duration: 0.2, immediateRender: false }, t0 + 1.9 + k * 0.12));
-          Fx.heart(tl, t0 + 1.0, 3.5, 0.7, 0.4);
+          Fx.heart(tl, t0 + 1.0, DW3 - DW2 - 1.0, 0.7, 0.4);
         },
       }, {
-        set: "shrineClose", setOpts: { id: "sc" }, dark: 0.2, blur: { far: 5, mid: 3 }, cu: false,
-        cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 960), drift: { s: 0.02 } }, { t: 0.3, glide: D("dawn") - vo("dawn", 2) - 0.2, ...fr(612, 1080, 1.9, 540, 900), drift: { s: 0.02 } }] },
-        captions: capsAt("dawn", vo("dawn", 2) - 0.25, D("dawn"), [2]),
-        fx(tl, id, t0, L) { const X = t0 + FA("dawn", vo("dawn", 2) - 0.25, 2, 2); Fx.punch(tl, `#${id} .stage`, X, 1.05, 0.5); Fx.glitch(tl, `#${id}`, X + 0.1, 0.18, 8, 53); Fx.heart(tl, t0, D("dawn") - (vo("dawn", 2) - 0.25), 0.55, 0.6); },
+        set: "beach", setOpts: { id: "dw3", time: "dawn", fire: "out", fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.26, blur: { far: 3, mid: 2 }, cu: false,
+        cam: { keys: [{ t: 0, ...fr(440, 1520, 1.5, 540, 960), drift: { s: 0.015 } }, { t: VA("dawn", DW3, 2) + 1.6, glide: 0.9, ...fr(560, 1600, 2.0, 540, 1000), drift: { s: 0.02 } }] },
+        actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "sitWeak", eyes: "normal", mouth: "flat" }], { cu: false }),
+          PW(330, 1700, 0.82, [{ t: 0, mode: "kneelOver", eyes: "normal", mouth: "flat", look: -14 }], { flip: true, cu: false }),
+          NU(720, 1690, 0.88, [{ t: 0, mode: "lampStand", eyes: "worry", mouth: "flat" }, { t: VA("dawn", DW3, 2) + 0.9, mode: "lampStand", eyes: "sad", mouth: "flat", opts: { head: 18 } }], { flip: true, cu: false })],
+        bubbles: [bubAt(bub("dawn", 2, 480, 520, 360), DW3, D("dawn"))],
+        fx(tl, id, t0, L) { put(L.set, Isle.STICKFISH(680, 1600, 0.5, 70)); Fx.heart(tl, t0, D("dawn") - DW3, 0.6, 0.5); },
       });
 
       // ---------- 15. the boat home: wrapped in a blanket, he says the one thing; she looks at her hands, then back at the island ----------
       add("line", {
-        set: "boatIn", setOpts: { id: "bh", time: "dawn", island: true, islandX: 200, islandS: 0.55, lamp: true }, dark: 0.3, blur: { far: 3 },
+        set: "boatIn", setOpts: { id: "bh", time: "dawn", island: true, islandX: 200, islandS: 0.55, lamp: false }, dark: 0.3, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1500, 1.25, 540, 960), drift: { s: 0.015 } }, { t: F("line", 0, 2) - 0.2, glide: 0.8, ...fr(420, 1520, 1.9, 540, 940), drift: { s: 0.02 } }, { t: F("line", 0, 3) + 0.1, ...fr(820, 1540, 2.0, 540, 940), drift: { s: 0.03 } }, { t: D("line") - 1.25, ...fr(200, 900, 2.6, 540, 900), drift: { s: 0.03 } }] },
         shake: (t) => 3 * Math.sin(t * 1.6),
         actors: [NU(640, 1440, 0.76, [{ t: 0, mode: "steer", eyes: "normal", mouth: "flat" }], { cu: false }),
@@ -364,7 +407,7 @@
       add("choice", {
         set: "beach", setOpts: { id: "ch", time: "night", fire: "out", fireX: 560, fireY: 1600, washY: 1840 }, dark: 0.75, blur: { far: 10, set: 8, mid: 8 }, cu: false,
         cam: { keys: [{ t: 0, ...fr(560, 1300, 0.85, 540, 960), drift: { s: 0.01 } }] },
-        ui: [{ type: "choice", t: 0.05, q: "ตาเฒ่าบอกให้หายใจแทนน้อง… คุณจะเชื่อ ‘ผี’ มั้ย?", a: "เชื่อ", b: "วิ่งหนี", secs: 3, top: 300 }],
+        ui: [{ type: "choice", t: 0.05, q: "น้องหยุดหายใจ ไม่มีเรือ ไม่มีสัญญาณ… จะอยู่หายใจแทนเขาทั้งคืน หรือทิ้งเขาไว้ไปจุดไฟขอความช่วยเหลือ?", a: "อยู่หายใจแทนเขา", b: "ไปจุดไฟ", secs: 3, top: 300 }],
         fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0 + 0.05); tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.05); Fx.heart(tl, t0, D("choice"), 0.6, 0.5); },
       });
 
@@ -379,8 +422,8 @@
         "hook#0": (L) => { Fence.light(L, 300, 500, 800, "#ffd0a0", 0.3); }, "hook#1": POVL, yai: SUNM, "boat#0": SUNM, "boat#1": SUNM,
         "stranded#0": DUSKL, "stranded#1": DUSKL, "survive#0": (L) => { DUSKL(L); FIREL(L); }, "survive#1": (L) => { DUSKL(L); FIREL(L); }, "survive#2": (L) => { DUSKL(L); FIREL(L); },
         "fish#0": (L) => { Fence.light(L, 300, 500, 800, "#ffd0a0", 0.3); }, "fish#1": (L) => { DUSKL(L); FIREL(L); }, "fish#2": (L) => { DUSKL(L); FIREL(L); },
-        grill: FIREL, wait: FIREL, "phiam#0": FIREL, "phiam#1": POVL, "lamp#0": FIRELAMP, "lamp#1": (L) => { Fence.light(L, 880, 1480, 520, "#ffd890", 0.5, "lampf"); Fence.light(L, 560, 1500, 400, "#ffb35c", 0.3, "lampf"); },
-        card: FIREL, night: FIRELAMP, sig: FIREL, "dawn#0": DAWNL, "dawn#1": DAWNL, "dawn#2": (L) => { Fence.light(L, 760, 1120, 1000, "#ffc080", 0.45); Fence.light(L, 612, 1100, 300, "#ffd890", 0.4, "lampf"); },
+        grill: FIREL, wait: FIREL, "still#0": FIREL, "still#1": POVL, "still#2": FIREL, cloth: POVL, "rule#0": FIREL, "rule#1": FIREL, "rule#2": FIREL,
+        card: FIREL, night: FIREL, sig: FIREL, "dawn#0": DAWNL, "dawn#1": DAWNL, "dawn#2": DAWNL,
         line: DAWNL, choice: (L) => { Fence.light(L, 760, 300, 500, "#cfe0f0", 0.2); },
       };
       const seen = {}, depth0 = Fence.depth;

@@ -1,4 +1,4 @@
-"""Build the episode soundtrack from schedule.json (ติดเกาะร้าง EP.1 "ผีอำ"): per-line levelled voice, synthesized SFX (the sea on every
+"""Build the episode soundtrack from schedule.json (ติดเกาะร้าง EP.1 "ปลาลูกโป่ง"): per-line levelled voice, synthesized SFX (the sea on every
 shore, gulls, the longtail, the squall, the lighter and the fire, the pool and the fish's grunt, fat on the grill, the clock, the
 lamp's wire, the breaths she gives, the compressions, the first breath at dawn) and the Suno music bed with dips and ducking.
 Every noise sound comes from the de-hissed synth.py (fband on every bed). Output -14 LUFS, hard cut to silence at the cliffhanger."""
@@ -67,12 +67,12 @@ D = {k: SH[k]["dur"] for k in SH}
 HK2 = vo_t("hook", 1) - 0.08                       # the cut to the sand
 BT2 = 2.6                                          # the cut into the boat
 FSH = vo_t("fish", 2) - 0.15; FS3 = vo_t("fish", 3) - 0.15
-PA2 = vo_t("phiam", 1) - 0.25
-LP2 = vo_t("lamp", 1) - 0.4
-DW2 = vo_t("dawn", 1) - 0.4; DW3 = vo_t("dawn", 2) - 0.25
+ST2 = vo_t("still", 1) - 0.25; ST3 = vo_t("still", 4) - 0.45
+RU2 = vo_t("rule", 1) - 0.5; RU3 = vo_t("rule", 2) - 0.3
+DW2 = vo_t("dawn", 1) - 0.4; DW3 = vo_t("dawn", 2) - 0.3
 
 # ---- voice: every line levelled on its own; the inner voice and the weak lines sit a touch lower, the shouts a touch lower too ----
-LINE_GAIN = {"i01": -2, "i02": -2, "t10": 1, "t11": 1, "t12": 0, "p07": -1.5, "p09": -1.5, "m01": -1, "m02": -1, "m03": -1, "s01": 0}
+LINE_GAIN = {"i01": -2, "i02": -2, "i03": -2, "t10": 1, "t11": 1, "t12": 0, "p07": -1.5, "p11": -1, "y05": -3, "y06": -3, "p10": 0.5, "s01": 0}
 vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
@@ -101,8 +101,8 @@ CUES = [
     # ยาย's porch: the sea, gulls, the cleaver on the coconut, the rule card
     *bed("waves", T("yai", 0), T("yai", -0.1), 0.22, 4.6), ("yai", 0.6, "gull", 0.3), ("yai", 5.2, "gull", 0.25), ("yai", 10.5, "gull", 0.2),
     *[("yai", 0.2 + k * 1.1, "thud", 0.3) for k in range(3)],
-    *[x for o in (vo_t("yai", 0) + 0.2, frag("yai", 1, 2) + 0.1, vo_t("yai", 2) + 0.1) for x in (("yai", o, "page", 0.45), ("yai", o + 0.3, "pen", 0.5), ("yai", o + 0.35, "ding", 0.25))],
-    ("yai", frag("yai", 1, 1), "sting", 0.5), ("yai", frag("yai", 1, 4), "sting", 0.7), ("yai", frag("yai", 1, 4), "boom", 0.35), ("yai", frag("yai", 2, 1), "sting", 0.5),
+    *[x for o in (vo_t("yai", 0) + 0.2, frag("yai", 1, 2) + 0.1, vo_t("yai", 3) + 0.1) for x in (("yai", o, "page", 0.45), ("yai", o + 0.3, "pen", 0.5), ("yai", o + 0.35, "ding", 0.25))],
+    ("yai", frag("yai", 1, 1), "sting", 0.5), ("yai", frag("yai", 1, 2), "sting", 0.7), ("yai", frag("yai", 1, 2), "boom", 0.35), ("yai", frag("yai", 2, 1), "squeak", 0.3), ("yai", frag("yai", 3, 1), "sting", 0.5),
     *beats("yai", vo_t("yai", 1), D["yai"] - vo_t("yai", 1), 0.8, 0.3),
     # the boat: the longtail across the bay, the sign, then inside: the engine behind ลุงนวล, the slap of water
     *bed("longtail", T("boat", 0), T("boat", -0.1), 0.5, 4.2), *bed("waves", T("boat", 0), T("boat", -0.1), 0.16, 4.6), ("boat", 0.9, "page", 0.5), ("boat", 1.0, "slam", 0.35),
@@ -128,21 +128,25 @@ CUES = [
     ("wait", vo_t("wait", 1) - 0.2, "sting", 0.35), ("wait", vo_t("wait", 3) + 0.6, "thud", 0.6), ("wait", vo_t("wait", 3) + 0.62, "rustle", 0.3),
     ("wait", vo_t("wait", 4), "riser", 0.5), ("wait", frag("wait", 4, 4), "sting", 0.9), ("wait", frag("wait", 4, 4), "boom", 0.5),
     *beats("wait", 0.0, vo_t("wait", 1), 0.9, 0.3), *beats("wait", vo_t("wait", 1), D["wait"] - vo_t("wait", 1), 0.55, 0.7),
-    # ผีอำ: he goes down; the cut inside his head — the world muffled; her tears
-    ("phiam", 0.1, "thud", 0.8), ("phiam", 0.12, "rustle", 0.5), ("phiam", 0.1, "boom", 0.4), ("phiam", PA2, "whoosh", 0.4), ("phiam", PA2 + 0.05, "boom", 0.5),
-    ("phiam", frag("phiam", 2, 3), "sting", 1.0), ("phiam", frag("phiam", 2, 3), "boom", 0.6), ("phiam", frag("phiam", 2, 3), "glitch", 0.4),
-    *[("phiam", vo_t("phiam", 3) + o + 0.5, "drip", 0.6) for o in (0.2, 1.1, 2.0)], *beats("phiam", 0.0, D["phiam"], 0.5, 0.85),
-    # the lamp: the creak of its wire out of the dark, steps on sand; her scream; ตาเมฆ
-    *[("lamp", 0.2 + k * 0.5, "lamp", 0.5) for k in range(4)], *[("lamp", 0.35 + k * 0.52, "steps", 0.22) for k in range(4)],
-    ("lamp", vo_t("lamp", 0) - 0.1, "sting", 0.9), ("lamp", vo_t("lamp", 0) - 0.1, "boom", 0.6), ("lamp", vo_t("lamp", 0) - 0.1, "glitch", 0.4),
-    ("lamp", LP2, "whoosh", 0.3), ("lamp", frag("lamp", 1, 1), "sting", 0.6), ("lamp", frag("lamp", 2, 2), "sting", 0.7), ("lamp", frag("lamp", 3, 1), "sting", 0.7), ("lamp", frag("lamp", 3, 1), "boom", 0.35),
-    ("lamp", vo_t("lamp", 3) + 1.3, "breath", 0.7), *beats("lamp", 0.0, D["lamp"], 0.6, 0.55),
+    # still: he goes down; the cut inside his head — the world muffled; her tears; she says it; the blanket drawn over his face
+    ("still", 0.1, "thud", 0.8), ("still", 0.12, "rustle", 0.5), ("still", 0.1, "boom", 0.4), ("still", ST2, "whoosh", 0.4), ("still", ST2 + 0.05, "boom", 0.5),
+    ("still", frag("still", 2, 3), "sting", 1.0), ("still", frag("still", 2, 3), "boom", 0.6), ("still", frag("still", 2, 3), "glitch", 0.4),
+    *[("still", vo_t("still", 3) + o + 0.5, "drip", 0.6) for o in (0.2, 1.1, 2.0)],
+    ("still", ST3, "whoosh", 0.3), ("still", frag("still", 4, 1), "sting", 0.8), ("still", frag("still", 4, 1), "boom", 0.5), ("still", vo_end("still", 4) + 1.15, "rustle", 0.8),
+    *beats("still", 0.0, D["still"], 0.5, 0.85),
+    # the cloth: from inside — the rustle over the ears, the heart louder, the world gone
+    ("cloth", 0.1, "rustle", 0.9), ("cloth", 0.95, "boom", 0.5), ("cloth", 1.0, "sting", 0.5), *beats("cloth", 0.0, D["cloth"], 0.45, 1.0),
+    # the rule: her grandmother's words; the blanket pulled back; the tear; the breath that stops; the first breaths she gives
+    ("rule", vo_t("rule", 0) - 0.15, "whoosh", 0.35), ("rule", vo_t("rule", 0) - 0.1, "sting", 0.5), ("rule", frag("rule", 0, 2), "sting", 0.6),
+    ("rule", RU2 + 0.15, "rustle", 0.7), ("rule", RU2 + 1.0, "drip", 0.5), ("rule", vo_t("rule", 1) - 0.1, "sting", 0.5),
+    ("rule", RU3 + 0.3, "breath", 0.6), ("rule", frag("rule", 2, 0) - 0.3, "sting", 0.9), ("rule", frag("rule", 2, 0) - 0.3, "boom", 0.5), ("rule", frag("rule", 2, 0) - 0.3, "glitch", 0.3),
+    ("rule", frag("rule", 2, 2) + 0.3, "breath", 0.9), ("rule", frag("rule", 2, 2) + 1.9, "breath", 0.9), *beats("rule", 0.0, D["rule"], 0.55, 0.65),
     # the safety card
     *[x for o in (0.1, vo_t("card", 0) + 0.1, frag("card", 0, 1), frag("card", 0, 3)) for x in (("card", o, "page", 0.4), ("card", o + 0.3, "pen", 0.5), ("card", o + 0.35, "ding", 0.25))], ("card", frag("card", 0, 2), "ring", 0.35),
-    # the night: her count, the breaths she gives, the compressions, the dying fire, the lamp; the moon
+    # the night: her count, the breaths she gives, the compressions, the dying fire; the moon
     *bed("waves", T("night", 0), T("night", -0.1), 0.2, 4.6),
-    ("night", 2.1, "sting", 0.7), ("night", 2.1, "boom", 0.4), ("night", 2.3, "breath", 0.9), ("night", 3.8, "breath", 0.9), *[("night", 4.3 + k * 0.5, "thud", 0.5) for k in range(6)],
-    ("night", 7.2, "sting", 0.6), ("night", 7.5, "breath", 0.9), ("night", 8.5, "gasp", 0.5), *beats("night", 0.0, D["night"], 0.52, 0.7),
+    ("night", 2.0, "sting", 0.7), ("night", 2.0, "boom", 0.4), ("night", 2.2, "breath", 0.9), ("night", 3.6, "breath", 0.9), *[("night", 4.0 + k * 0.5, "thud", 0.5) for k in range(5)],
+    ("night", 6.5, "sting", 0.6), ("night", 6.8, "breath", 0.9), ("night", 7.7, "gasp", 0.5), *beats("night", 0.0, D["night"], 0.52, 0.7),
     # the signature
     ("sig", 0.05, "page", 0.8), ("sig", 0.36, "thud", 0.25),
     *[x for o in (frag("sig", 0, 0) + 0.3, frag("sig", 0, 0) + 0.62, frag("sig", 0, 1) + 0.15) for x in (("sig", o, "pen", 0.9), ("sig", o + 0.05, "ding", 0.3))],
@@ -152,11 +156,11 @@ CUES = [
     ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "pen", 1.0), ("sig", frag("sig", 0, 3) + 0.1, "pen", 1.0),
     ("sig", frag("sig", 0, 3) + 0.24, "rip", 1.1), ("sig", frag("sig", 0, 3) + 0.86, "thud", 0.8), ("sig", frag("sig", 0, 3) + 0.86, "slam", 0.35),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
-    # dawn: gulls, the first breath, the longtail coming in, feet on sand; the empty beach; the lamp smoking on the shrine
+    # dawn: gulls, the first breath, the longtail coming in, feet on sand; what he sees; her answer; the stick by the fire
     *bed("waves", T("dawn", 0), T("dawn", -0.1), 0.26, 4.6), ("dawn", 0.3, "gull", 0.35), ("dawn", 2.2, "gull", 0.3), ("dawn", 0.9, "gasp", 0.7), ("dawn", 1.3, "cough", 0.4), ("dawn", vo_t("dawn", 0) - 0.1, "sting", 0.4),
-    *bed("longtail", T("dawn", DW2 - 0.6), T("dawn", DW3), 0.35, 4.2), *[("dawn", DW2 + 0.2 + k * 0.3, "steps", 0.4) for k in range(5)],
-    ("dawn", frag("dawn", 1, 1), "sting", 0.8), ("dawn", frag("dawn", 1, 1), "boom", 0.4), ("dawn", DW2 + 1.9, "wash", 0.5),
-    ("dawn", DW3, "whoosh", 0.35), ("dawn", frag("dawn", 2, 2), "sting", 0.9), ("dawn", frag("dawn", 2, 2), "boom", 0.5), ("dawn", frag("dawn", 2, 2) + 0.1, "glitch", 0.3),
+    *bed("longtail", T("dawn", DW2 - 0.6), T("dawn", DW3 + 0.5), 0.35, 4.2), *[("dawn", DW2 + 0.2 + k * 0.3, "steps", 0.4) for k in range(5)],
+    ("dawn", DW2 + 1.4, "breath", 0.6), ("dawn", frag("dawn", 1, 1), "sting", 0.7), ("dawn", frag("dawn", 1, 1), "boom", 0.4), ("dawn", DW2 + 1.9, "wash", 0.5),
+    ("dawn", DW3, "whoosh", 0.35), ("dawn", frag("dawn", 2, 1), "sting", 0.9), ("dawn", frag("dawn", 2, 1), "boom", 0.5), ("dawn", vo_end("dawn", 2) + 1.7, "whoosh", 0.3),
     *beats("dawn", DW2, D["dawn"] - DW2, 0.55, 0.55),
     # the boat home: the engine, the sea; the one thing he says; black
     *bed("longtail", T("line", 0), T("line", -0.05), 0.4, 4.2), *bed("waves", T("line", 0), T("line", -0.05), 0.14, 4.6),
@@ -189,11 +193,11 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 dip(0.0, T("hook", -0.1), 0.3, 0.05)
-dip(T("yai", frag("yai", 1, 1)), T("yai", frag("yai", 1, 4) + 0.6), 0.4)
+dip(T("yai", frag("yai", 1, 1)), T("yai", frag("yai", 1, 2) + 0.6), 0.4)
 dip(T("wait", vo_t("wait", 3) - 0.2), T("wait", -0.05), 0.25)
-dip(T("phiam", 0), T("phiam", -0.05), 0.12)                          # the world drops away while he cannot move
-dip(T("lamp", 0), T("lamp", vo_t("lamp", 0) + 0.4), 0.2)
-dip(T("lamp", vo_t("lamp", 1) - 0.2), T("lamp", -0.05), 0.3)
+dip(T("still", 0), T("still", -0.05), 0.12)                          # the world drops away while he cannot move
+dip(T("cloth", 0), T("cloth", -0.05), 0.08)
+dip(T("rule", 0), T("rule", RU2), 0.3)
 dip(T("night", 1.8), T("night", -0.05), 0.2)
 dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)
 dip(T("dawn", 0), T("dawn", 1.8), 0.3)
