@@ -107,11 +107,11 @@ CUES = [
     ("craft", frag("craft", 3, 0) - 0.5, "riser", 0.7), ("craft", frag("craft", 3, 0) - 0.3, "sparks", 0.9), ("craft", frag("craft", 3, 0), "clang", 1.0), ("craft", frag("craft", 3, 0), "sparks", 1.0), ("craft", frag("craft", 3, 0), "sting", 0.9), ("craft", frag("craft", 3, 0), "glitch", 0.4), ("craft", frag("craft", 3, 0) + 0.3, "ding", 0.5), ("craft", frag("craft", 3, 0) + 0.1, "slam", 0.6),
     ("loud", frag("loud", 0, 1), "clang", 0.5), ("loud", frag("loud", 0, 1), "page", 0.5), ("loud", frag("loud", 0, 1) + 0.3, "slam", 0.4), ("loud", frag("loud", 0, 1), "sting", 0.5),
     # the rain comes; they run in it
-    *bed("rain", T("rain", 0.4), T("count2", 2.5), 0.5, 4.0), ("rain", frag("rain", 0, 1), "thunder", 0.8), ("rain", frag("rain", 1, 0) - 0.1, "page", 0.6), ("rain", frag("rain", 1, 0) + 0.2, "slam", 0.5), ("rain", frag("rain", 1, 1), "thunder", 0.9), ("rain", frag("rain", 1, 1), "sting", 0.8), ("rain", frag("rain", 1, 1) + 0.1, "growl", 0.5), *beats("rain", vo_t("rain", 1), D["rain"] - vo_t("rain", 1), 0.5, 0.5),
+    *bed("rain", T("rain", 0.4), T("count2", 3.8), 0.5, 4.0), ("rain", frag("rain", 0, 1), "thunder", 0.8), ("rain", frag("rain", 1, 0) - 0.1, "page", 0.6), ("rain", frag("rain", 1, 0) + 0.2, "slam", 0.5), ("rain", frag("rain", 1, 1), "thunder", 0.9), ("rain", frag("rain", 1, 1), "sting", 0.8), ("rain", frag("rain", 1, 1) + 0.1, "growl", 0.5), *beats("rain", vo_t("rain", 1), D["rain"] - vo_t("rain", 1), 0.5, 0.5),
     # the crying in the night; the gate; the trap card
     ("cry", 0.3, "thunder", 0.5), ("cry", vo_t("cry", 0) - 0.2, "static", 0.3), ("cry", vo_t("cry", 1), "rustle", 0.4), ("cry", vo_t("cry", 2) + 0.2, "clang", 0.4), ("cry", vo_t("cry", 3) - 0.1, "gate", 0.3), ("cry", frag("cry", 4, 1), "sting", 0.7), ("cry", frag("cry", 4, 1), "slam", 0.5), ("cry", frag("cry", 5, 1), "sting", 0.5), ("cry", frag("cry", 5, 1), "glitch", 0.3), *beats("cry", 0.0, D["cry"], 0.55, 0.5),
     ("peek", 0.2, "gate", 0.7), ("peek", 0.5, "creak", 0.5), ("peek", frag("peek", 0, 1), "static", 0.4), ("peek", frag("peek", 0, 1) + 0.1, "click", 0.6), ("peek", frag("peek", 1, 0) + 0.1, "thunder", 1.0), ("peek", frag("peek", 1, 0), "riser", 0.8), *growls("peek", vo_t("peek", 1), D["peek"], 0.7, 0.4), ("peek", frag("peek", 1, 1), "shriek", 1.0), ("peek", frag("peek", 1, 1), "sting", 0.9), ("peek", frag("peek", 1, 1), "boom", 0.6), *beats("peek", frag("peek", 0, 1), D["peek"] - frag("peek", 0, 1), 0.4, 0.7),
-    *bed("horde", T("trap", 0), T("count2", 2.5), 0.55, 4.6), ("trap", 0.2, "page", 0.7), ("trap", 0.5, "slam", 0.5), ("trap", frag("trap", 0, 1), "sting", 0.9), ("trap", frag("trap", 0, 1), "glitch", 0.5), ("trap", frag("trap", 0, 1), "boom", 0.5), *[("trap", 0.2 + k * 0.9, "beep", 0.25) for k in range(3)], *beats("trap", 0.0, D["trap"], 0.45, 0.6),
+    *bed("horde", T("trap", 0), T("count2", 3.8), 0.55, 4.6), ("trap", 0.2, "page", 0.7), ("trap", 0.5, "slam", 0.5), ("trap", frag("trap", 0, 1), "sting", 0.9), ("trap", frag("trap", 0, 1), "glitch", 0.5), ("trap", frag("trap", 0, 1), "boom", 0.5), *[("trap", 0.2 + k * 0.9, "beep", 0.25) for k in range(3)], *beats("trap", 0.0, D["trap"], 0.45, 0.6),
     # the fence goes over; the lunge; the run; the rebar
     *growls("fenceFall", 0.0, D["fenceFall"], 0.7, 0.5), *[("fenceFall", frag("fenceFall", 1, 0) - 1.6 + k * 0.16, "clang", 0.45) for k in range(9)], ("fenceFall", frag("fenceFall", 1, 0), "creak", 1.0), ("fenceFall", frag("fenceFall", 1, 0) + 0.2, "riser", 0.8),
     ("fenceFall", frag("fenceFall", 1, 0) + 0.55, "boom", 1.0), ("fenceFall", frag("fenceFall", 1, 0) + 0.55, "clang", 1.0), ("fenceFall", frag("fenceFall", 1, 0) + 0.55, "thud", 0.9), ("fenceFall", frag("fenceFall", 1, 0) + 0.6, "thunder", 0.8), ("fenceFall", frag("fenceFall", 1, 0) + 0.6, "sting", 1.0), ("fenceFall", frag("fenceFall", 1, 0) + 0.6, "glitch", 0.6),
@@ -119,21 +119,30 @@ CUES = [
     ("flee", 0.05, "slam", 0.4), *[("flee", 0.1 + k * 0.28, "steps", 0.8) for k in range(14)], *growls("flee", 0.0, D["flee"], 0.6, 0.6), ("flee", vo_t("flee", 1), "thud", 1.0), ("flee", vo_t("flee", 1), "sparks", 0.6), ("flee", vo_t("flee", 1), "sting", 0.9), ("flee", vo_t("flee", 1), "boom", 0.5), ("flee", vo_t("flee", 1) + 0.1, "scream", 0.5), ("flee", 0.0, "riser", 0.6), *beats("flee", 0.0, D["flee"], 0.33, 0.85),
     ("cover", 0.8, "clang", 0.7), ("cover", 1.5, "clang", 0.6), ("cover", 2.3, "squelch", 0.5), *growls("cover", 0.0, D["cover"], 0.6, 0.6), *[("cover", 1.0 + k * 0.5, "steps", 0.6) for k in range(5)], ("cover", 2.35, "slam", 0.4), ("cover", 2.65, "sting", 0.6), *beats("cover", 0.0, D["cover"], 0.4, 0.7),
     # the countdown: a tick a second; the thrusts; the thunder; the door and the bar
-    ("count", 0.2, "page", 0.7), ("count", 0.45, "slam", 0.5), *[("count", 0.2 + 0.55 * (k + 1), "tick", 0.75) for k in range(14)], *beats("count", 0.2, D["count"] - 0.2, 0.55, 0.6), *growls("count", 0.3, D["count"], 0.55, 0.7),
+    *beats("count", 0.2, D["count"] - 0.2, 0.55, 0.6), *growls("count", 0.3, D["count"], 0.55, 0.7),
     *[c for t in (1.0, 2.2, 3.4, 4.6) for c in (("count", t, "clang", 0.8), ("count", t, "squelch", 0.4), ("count", t + 0.05, "shriek", 0.4))], ("count", 5.2, "thunder", 0.7), ("count", 7.4, "thunder", 0.8), ("count", 5.0, "creak", 0.7), ("count", frag("count", 1, 2), "sting", 0.9), ("count", frag("count", 1, 2), "glitch", 0.5), ("count", frag("count", 1, 2), "boom", 0.5), ("count", -0.3, "riser", 0.8),
-    *growls("count2", 0.0, D["count2"] - 1.5, 0.6, 0.5), *[("count2", 0.5 * (k + 1), "tick", 1.0) for k in range(5)], *beats("count2", 0.0, 2.5, 0.3, 0.9), *[("count2", 0.5 * (k + 1), "sting", 0.35) for k in range(4)], ("count2", vo_t("count2", 0), "static", 0.3),
-    ("count2", 2.05, "creak", 0.9), ("count2", 2.5, "slam", 1.3), ("count2", 2.5, "boom", 0.9), ("count2", 2.5, "thud", 0.8), ("count2", 2.65, "latch", 1.0), ("count2", 2.7, "clang", 0.6),
+    *growls("count2", 0.0, 3.8, 0.6, 0.5), *[("count2", 0.5 * (k + 1), "tick", 1.0) for k in range(7)], *beats("count2", 0.0, 3.8, 0.3, 0.9), *[("count2", 0.5 * (k + 1), "sting", 0.35) for k in range(5)], ("count2", vo_t("count2", 0), "static", 0.3),
+    # through the gap he goes down under them: the hit, the horde on him (kept low and muffled — it is behind a door)
+    ("count2", 1.45, "thud", 0.7), ("count2", 1.45, "shriek", 0.5), ("count2", 1.5, "boom", 0.4), ("count2", 1.6, "squelch", 0.25), ("count2", 2.1, "squelch", 0.22), ("count2", 2.32, "thud", 0.5), ("count2", 2.6, "squelch", 0.24), ("count2", 3.1, "squelch", 0.2), *growls("count2", 1.4, 3.7, 0.9, 0.45),   # he goes over onto his back at 2.3 (user 29 Oct: the pile seen through the door)
+    ("count2", 3.35, "creak", 0.9), ("count2", 3.8, "slam", 1.3), ("count2", 3.8, "boom", 0.9), ("count2", 3.8, "thud", 0.8), ("count2", 3.95, "latch", 1.0), ("count2", 4.0, "clang", 0.6),
+    # outside after the door: rain, the lightning, the horde over him (growls, wet sounds kept low), the heartbeat slows and stops when his hand drops
+    *bed("rain", T("fallen", 0), T("fallen", -0.05), 0.6, 4.0), ("fallen", 0.12, "thunder", 1.0), ("fallen", 0.12, "boom", 0.6), ("fallen", 1.72, "thunder", 0.7),
+    *growls("fallen", 0.1, D["fallen"] - 0.3, 0.75, 0.32), ("fallen", 0.5, "squelch", 0.3), ("fallen", 1.25, "squelch", 0.25), ("fallen", 2.1, "squelch", 0.2),
+    *beats("fallen", 0.1, 1.7, 0.8, 0.75), ("fallen", 1.75, "sting", 0.7),
     # black: the knocks, then nothing; the tourniquet
     ("after", 0.15, "thud", 0.9), ("after", 0.4, "thud", 0.8), ("after", 0.9, "thud", 0.7), ("after", 1.3, "growl", 0.4), *bed("rain", T("after", 0), T("real", -0.1), 0.25, 4.0), ("after", frag("after", 0, 1), "sting", 0.7), ("after", frag("after", 0, 1), "slam", 0.4), *beats("after", 0.0, D["after"], 0.6, 0.4),
     ("tq", 0.3, "drip", 0.4), ("tq", 1.2, "drip", 0.4), ("tq", frag("tq", 0, 2), "sting", 0.6), ("tq", vo_t("tq", 1) + 0.2, "rustle", 0.6), ("tq", vo_t("tq", 1) + 0.6, "snap", 0.5), *[("tq", vo_t("tq", 1) + 0.8 + k * 0.28, "creak", 0.35) for k in range(6)], ("tq", vo_t("tq", 2) - 0.1, "page", 0.6), ("tq", vo_t("tq", 2) + 0.2, "slam", 0.45), ("tq", frag("tq", 2, 1), "pop", 0.4), ("tq", frag("tq", 2, 2) + 0.1, "marker", 0.6), ("tq", frag("tq", 2, 2) + 0.1, "ding", 0.4), ("tq", frag("tq", 3, 1), "ding", 0.4), *beats("tq", 0.0, D["tq"], 0.55, 0.45),
     ("real", frag("real", 0, 1), "page", 0.6), ("real", frag("real", 0, 1) + 0.3, "slam", 0.5), ("real", frag("real", 0, 2), "ding", 0.5), ("real", frag("real", 0, 2), "pop", 0.5),
     # the signature
-    ("sig", 0.05, "glitch", 0.35), ("sig", 0.05, "beep", 0.35),
-    ("sig", frag("sig", 0, 0) + 0.3, "ding", 0.6), ("sig", frag("sig", 0, 0) + 0.62, "buzz", 0.6), ("sig", frag("sig", 0, 1) + 0.15, "ding", 0.6),
-    ("sig", frag("sig", 0, 2), "glitch", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
+    # the sheet slaps on and is taped; a red pen ticks each line (with a soft ding); a marker circles the ???
+    ("sig", 0.05, "page", 0.8), ("sig", 0.36, "thud", 0.25),
+    *[x for o in (frag("sig", 0, 0) + 0.3, frag("sig", 0, 0) + 0.62, frag("sig", 0, 1) + 0.15) for x in (("sig", o, "pen", 0.9), ("sig", o + 0.05, "ding", 0.3))],
+    ("sig", frag("sig", 0, 2) + 0.45, "marker", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
     *[("sig", frag("sig", 0, 2) + o, "tick", 0.55 + 0.1 * k) for k, o in enumerate((0.1, 0.42, 0.68, 0.88, 1.02, 1.12))],
     ("sig", frag("sig", 0, 3) - 1.1, "riser", 0.6),
-    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.8), ("sig", frag("sig", 0, 3), "glitch", 0.7), ("sig", frag("sig", 0, 3) + 0.12, "slam", 0.7),
+    # "ข้อเดียว": two red slashes, the page tears across, the strip drops, a stamp hits what is left
+    ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "pen", 1.0), ("sig", frag("sig", 0, 3) + 0.1, "pen", 1.0),
+    ("sig", frag("sig", 0, 3) + 0.24, "rip", 1.1), ("sig", frag("sig", 0, 3) + 0.86, "thud", 0.8), ("sig", frag("sig", 0, 3) + 0.86, "slam", 0.35),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
     # the radio: 95… five; the ledger
     *bed("rain", T("radio", 0), T("ledger", -0.1), 0.2, 4.0), ("radio", vo_t("radio", 0) - 0.4, "radio", 1.0), *bed("radiobed", T("radio", vo_t("radio", 0) - 0.1), T("radio", vo_end("radio", 0) + 0.3), 0.5, 3.0),
@@ -174,7 +183,8 @@ dip(T("craft", frag("craft", 1, 0) - 0.5), T("craft", frag("craft", 1, 0) + 0.6)
 dip(T("craft", frag("craft", 3, 0) - 0.5), T("craft", frag("craft", 3, 0) + 0.6), 0.3, 0.1)
 dip(T("cry", 0), T("cry", vo_t("cry", 1)), 0.25)
 dip(T("peek", 0), T("peek", vo_t("peek", 1)), 0.3)
-dip(T("count", 0), T("count2", 2.5), 0.5)
+dip(T("count", 0), T("count2", 3.8), 0.5)
+dip(T("fallen", 0), T("fallen", -0.05), 0.08)
 dip(T("after", 0), T("after", -0.05), 0.15)
 dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)
 dip(T("radio", vo_t("radio", 0) - 0.4), T("radio", vo_end("radio", 0) + 0.3), 0.15)

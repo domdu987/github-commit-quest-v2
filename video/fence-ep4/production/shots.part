@@ -53,9 +53,9 @@
       add("ask", {
         set: "schoolYard", setOpts: { id: "ak", time: "day", level: 0.5 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(300, 1150, 0.95, 540, 1050), drift: { s: 0.015 } }, { t: vo("ask", 1) - 0.05, ...fr(-20, 1180, 1.15, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [KO(300, 1500, 0.9, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }, { t: vo("ask", 1), mode: "idle", eyes: "normal", mouth: "frown" }]), PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true }),
-          HO(-60, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }, { t: vo("ask", 1) - 0.1, mode: "point", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), PH(760, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }], { flip: true }),
-          MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "frown" }]), PU(140, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [KO(300, 1500, 0.9, [{ t: 0, mode: "plead", eyes: "worry", mouth: "frown" }, { t: vo("ask", 1), mode: "armsCrossed", eyes: "worry", mouth: "frown" }]), PI(560, 1500, 0.9, [{ t: 0, mode: "think", eyes: "worry", mouth: "frown" }], { flip: true }),
+          HO(-60, 1500, 0.9, [{ t: 0, mode: "write", eyes: "squint", mouth: "flat" }, { t: vo("ask", 1) - 0.1, mode: "shrug", eyes: "worry", mouth: "frown" }], { prop: "ledger" }), PH(760, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "squint", mouth: "flat" }], { flip: true }),
+          MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "sad", mouth: "frown" }]), PU(140, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
         captions: caps("ask", [2]),
         bubbles: [bub("ask", 0, 380, 520, 420), bub("ask", 1, 40, 520, 160)],
         ui: [{ type: "skill", t: vo("ask", 1) + 0.2, end: D("ask") - 0.1, x: 560, y: 820, name: "เจ๊หงส์", skill: "คลัง", desc: "รู้ว่าของอยู่ไหน มีเท่าไหร่ ไม่ต้องเดินดู", icon: "ledger" }],
@@ -66,8 +66,9 @@
       add("phuKnife", {
         set: "schoolYard", setOpts: { id: "pk", time: "day", level: 0.5 }, dark: 0.18, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(760, 1200, 1.3, 540, 1050), drift: { s: 0.02 } }, { t: vo("phuKnife", 1) - 0.05, glide: 0.5, ...fr(560, 1150, 0.95, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PH(760, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: 0.5, mode: "raise", eyes: "normal", mouth: "flat" }], { flip: true, prop: "knife" }), PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: 0.6, mode: "idle", eyes: "wide", mouth: "o" }]),
-          KO(300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 0.6, mode: "idle", eyes: "wide", mouth: "smile" }]), HO(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "frown" }])],
+        actors: [PH(760, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: 0.5, mode: "raise", eyes: "normal", mouth: "smile" }], { flip: true, prop: "knife" }), PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }, { t: 0.6, mode: "gasp", eyes: "wide", mouth: "o" }, { t: 2.2, mode: "armsCrossed", eyes: "squint", mouth: "frown" }]),
+          KO(300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 0.6, mode: "fist", eyes: "wide", mouth: "smileOpen" }]), HO(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { prop: "ledger" }), MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "squint", mouth: "frown" }])],
+        react: [{ a: 1, t: 0.6, dur: 1.4, fast: true }],
         captions: caps("phuKnife", [1]),
         bubbles: [bub("phuKnife", 0, 520, 520, 60)],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.55, 1.05, 0.35); Fx.punch(tl, `#${id} .stage`, t0 + F("phuKnife", 1, 1), 1.05, 0.35); red(tl, t0 + F("phuKnife", 1, 1), 0.45, 0.5); Fx.heart(tl, t0 + 0.5, D("phuKnife") - 0.5, 0.55, 0.45); },
@@ -78,7 +79,7 @@
         set: "schoolYard", setOpts: { id: "rn", time: "day", level: 0.5 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(400, 1150, 0.9, 540, 1050), r: -2, drift: { s: 0.04, r: 2, x: 60 } }] },
         shake: (t) => 3 * Math.sin(t * 15),
-        actors: [KO(-400, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "smile" }], { prop: "broom", moveTo: { x: 1500, dur: D("run"), ease: "none" } }), HO(900, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }], { flip: true, prop: "ledger" })],
+        actors: [KO(-400, 1500, 0.9, [{ t: 0, mode: "run", eyes: "squint", mouth: "smileOpen" }], { prop: "broom", moveTo: { x: 1500, dur: D("run"), ease: "none" } }), HO(900, 1500, 0.9, [{ t: 0, mode: "point", eyes: "squint", mouth: "flat" }], { flip: true, prop: "ledger" })],
         captions: caps("run"),
         ui: [{ type: "skill", t: 0.3, end: D("run") - 0.1, x: 60, y: 820, name: "ก้อง", skill: "นักวิ่ง", desc: "เร็วที่สุด · เก็บของครบก่อนใคร", icon: "shoe" }],
         fx(tl, id, t0) { Fx.speed(tl, t0 + 0.2, t0 + D("run") - 0.2); Fx.heart(tl, t0, D("run"), 0.5, 0.5); },
@@ -168,7 +169,7 @@
       add("loud", {
         set: "schoolYard", setOpts: { id: "ld", time: "dusk", sunX: 900, level: 0.5 }, dark: 0.25, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(500, 1180, 1.15, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [MA(300, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }]), KO(640, 1500, 0.9, [{ t: 0, mode: "raise", eyes: "normal", mouth: "smile" }], { flip: true, prop: "spear1f" }), PU(460, 1500, 0.58, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "smile" }])],
+        actors: [MA(300, 1500, 0.9, [{ t: 0, mode: "point", eyes: "worry", mouth: "frown" }]), KO(640, 1500, 0.9, [{ t: 0, mode: "raise", eyes: "normal", mouth: "smileOpen" }], { flip: true, prop: "spear1f" }), PU(460, 1500, 0.58, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "smile" }])],
         bubbles: [bub("loud", 0, 40, 520, 300)],
         ui: [{ type: "callback", t: F("loud", 0, 1), end: D("loud") - 0.05, label: "กฎของเรื่อง", text: "มันเดินตามเสียง · <em>อาวุธยิ่งแรง ยิ่งดัง</em>", top: 1300 }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("loud", 0, 1), 1.05, 0.35); red(tl, t0 + F("loud", 0, 1), 0.4, 0.5); Fx.heart(tl, t0, D("loud"), 0.65, 0.35); },
@@ -178,7 +179,7 @@
       add("rain", {
         set: "schoolYard", setOpts: { id: "ra", time: "dusk", sunX: 900, level: 0.5 }, dark: 0.4, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 900, 0.7, 540, 960), drift: { s: 0.015 } }, { t: vo("rain", 1) - 0.05, ...fr(1300, 1150, 1.1, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PI(400, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "o" }]), PH(640, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "flat" }], { flip: true }), PU(520, 1500, 0.58, [{ t: 0, mode: "reachUp", eyes: "normal", mouth: "smile" }])],
+        actors: [PI(400, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "o" }, { t: vo("rain", 1), mode: "lookUp", eyes: "worry", mouth: "frown" }]), PH(640, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "squint", mouth: "flat" }], { flip: true }), PU(520, 1500, 0.58, [{ t: 0, mode: "reachUp", eyes: "normal", mouth: "smileOpen" }])],
         captions: caps("rain"),
         ui: [{ type: "tip", t: F("rain", 1, 0) - 0.1, end: D("rain") - 0.05, ill: "rainfast", label: "กฎของโลกนี้", text: "ฝนตก → พวกมัน{เร็วขึ้น}", tone: "danger", top: 230 }],
         extra(L) { RAIN(L, { n: 120, op: 0.55 }); },
@@ -194,15 +195,17 @@
       split("cry", vo("cry", 3) - 0.1, {
         set: "classroom", setOpts: { id: "cr", night: true, lampX: 400, lampY: 1100 }, dark: 0.6, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(760, 1180, 1.2, 540, 1050), drift: { s: 0.02 } }, { t: vo("cry", 2) - 0.05, ...fr(400, 1150, 1.0, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PU(900, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) - 0.3, mode: "lookUp", eyes: "wide", mouth: "o" }]), PI(1100, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1), mode: "sit", eyes: "wide", mouth: "o" }], { flip: true }),
-          KO(300, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) + 0.3, mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("cry", 2), mode: "guard", eyes: "wide", mouth: "o" }], { prop: "spear1f" }), HO(600, 1500, 0.9, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }], { flip: true }), PH(-20, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }])],
+        actors: [PU(900, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) - 0.3, mode: "lookUp", eyes: "wide", mouth: "o" }]), PI(1100, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1), mode: "sit", eyes: "worry", mouth: "frown" }], { flip: true }),
+          KO(300, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) + 0.3, mode: "idle", eyes: "worry", mouth: "frown" }, { t: vo("cry", 2), mode: "fist", eyes: "squint", mouth: "flat" }], { prop: "spear1f" }), HO(600, 1500, 0.9, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }], { flip: true }), PH(-20, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "squint", mouth: "flat" }])],
+        react: [{ a: 4, t: 3.0, dur: 2.6 }],
         captions: caps("cry", [0], { quote: true }),
         bubbles: [bub("cry", 1, 520, 520, 200), bub("cry", 2, 40, 520, 320)],
         fx(tl, id, t0) { document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio")); THUNDER(tl, t0 + 0.3, 0.3); Fx.heart(tl, t0, vo("cry", 3), 0.6, 0.45); Fx.punch(tl, `#${id} .stage`, t0 + vo("cry", 1), 1.04, 0.3); },
       }, {
         set: "schoolYard", setOpts: { id: "cy", time: "night", lampX: -300, gate: 0 }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(460, 1180, 1.1, 540, 1050), drift: { s: 0.02 } }, { t: vo("cry", 4) - vo("cry", 3) + 0.05, ...fr(160, 1180, 1.3, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [KO(600, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "wide", mouth: "o" }], { prop: "spear1", moveTo: { x: 760, dur: D("cry") - vo("cry", 3) + 0.1, ease: "none" } }), PI(380, 1500, 0.9, [{ t: 0, mode: "stopHand", eyes: "wide", mouth: "o" }]), PH(120, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }, { t: vo("cry", 4) - vo("cry", 3) + 0.1, mode: "stopHand", eyes: "normal", mouth: "flat" }])],
+        actors: [KO(600, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }], { prop: "spear1", moveTo: { x: 760, dur: D("cry") - vo("cry", 3) + 0.1, ease: "none" } }), PI(380, 1500, 0.9, [{ t: 0, mode: "stopHand", eyes: "worry", mouth: "frown" }]), PH(120, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "squint", mouth: "flat" }, { t: vo("cry", 4) - vo("cry", 3) + 0.1, mode: "stopHand", eyes: "squint", mouth: "flat" }])],
+        react: [{ a: 2, t: vo("cry", 5) - (vo("cry", 3) - 0.1), dur: 2.6 }],
         captions: capsFrom("cry", vo("cry", 3) - 0.1, [5]),
         bubbles: [bub("cry", 3, 40, 520, 380), bub("cry", 4, 40, 520, 120)].map((b, i) => ({ ...b, t: i ? vo("cry", 4) - vo("cry", 3) + 0.05 : 0.05, end: b.end - (vo("cry", 3) - 0.1) })),
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); put(L.mid, `<g id="cy-lurelt" opacity="0"><circle cx="1500" cy="1060" r="5" fill="#ff5a4a"/><circle cx="1500" cy="1060" r="22" fill="#ff5a4a" opacity=".25"/></g>`); },
@@ -214,7 +217,8 @@
         set: "schoolYard", setOpts: { id: "pe", time: "night", lampX: -300, gate: 0.12 }, dark: 0.55, blur: { far: 2 },
         cam: { keys: [{ t: 0, ...fr(820, 1180, 1.25, 540, 1050), drift: { s: 0.02 } }, { t: vo("peek", 1) - 0.05, ...fr(1000, 1100, 1.0, 540, 1000), drift: { s: 0.04 } }] },
         shake: (t) => (t > vo("peek", 1) ? 4 * Math.sin(t * 19) : 0),
-        actors: [KO(700, 1500, 0.9, [{ t: 0, mode: "push", eyes: "wide", mouth: "o" }, { t: vo("peek", 1), mode: "guard", eyes: "wide", mouth: "scream" }], { prop: "spear1f" })],
+        actors: [KO(700, 1500, 0.9, [{ t: 0, mode: "push", eyes: "squint", mouth: "grit" }, { t: vo("peek", 1), mode: "guard", eyes: "wide", mouth: "scream" }], { prop: "spear1f" })],
+        react: [{ a: 0, t: vo("peek", 1), dur: 1.2, fast: true }],
         captions: caps("peek"),
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) {
@@ -285,8 +289,8 @@
         set: "schoolYard", setOpts: { id: "cv", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(860, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }, { t: voEnd("cover", 0) - 0.1, ...fr(100, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }] },
         shake: (t) => 4 * Math.sin(t * 17),
-        actors: [MA(960, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "frown" }, { t: 0.8, mode: "thrust", eyes: "wide", mouth: "scream" }], { flip: false, prop: "spear1f" }), KO(820, 1500, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }, { t: 0.8, mode: "limpRun", eyes: "pain", mouth: "frown" }], { flip: true, moveTo: { x: -200, at: 0.8, dur: D("cover") - 0.8, ease: "power1.in" } }),
-          PH(300, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }], { moveTo: { x: 0, dur: D("cover") } }), PI(-60, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: voEnd("cover", 0), mode: "stopHand", eyes: "wide", mouth: "o" }])],
+        actors: [MA(960, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "squint", mouth: "grit" }, { t: 0.8, mode: "thrust", eyes: "angry", mouth: "scream" }], { flip: false, prop: "spear1f" }), KO(820, 1500, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }, { t: 0.8, mode: "limpRun", eyes: "pain", mouth: "frown" }], { flip: true, moveTo: { x: -200, at: 0.8, dur: D("cover") - 0.8, ease: "power1.in" } }),
+          PH(300, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "squint", mouth: "flat" }], { moveTo: { x: 0, dur: D("cover") } }), PI(-60, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "worry", mouth: "frown" }, { t: voEnd("cover", 0), mode: "plead", eyes: "worry", mouth: "o" }])],
         bubbles: [bub("cover", 0, 420, 520, 300)],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) { ZF(L, tl, "cv", t0, D("cover"), [["ha1", 1300, 0.8, 0], ["ha2", 1420, 0.76, 0.4], ["ha3", 1540, 0.78, 0.2], ["ha1", 1380, 0.74, 0.7], ["ha2", 1480, 0.7, 0.9]], "zrun"); [0, 1, 2, 3, 4].forEach((k) => route(tl, `cv-z${k}`, t0, [{ t: 0, x: [1300, 1420, 1540, 1380, 1480][k], y: 1180 }, { t: 1.2, x: [1120, 1200, 1280, 1160, 1240][k], y: 1180 }], [0.8, 0.76, 0.78, 0.74, 0.7][k], true)); Fx.punch(tl, `#${id} .stage`, t0 + voEnd("cover", 0) - 0.1, 1.05, 0.35); red(tl, t0 + voEnd("cover", 0) + 0.2, 0.5, 0.5); Fx.heart(tl, t0, D("cover"), 0.4, 0.7); },
@@ -297,9 +301,10 @@
         set: "schoolYard", setOpts: { id: "cd", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(1000, 1200, 1.1, 540, 1050), drift: { s: 0.03 } }, { t: 3.0, ...fr(1150, 1250, 1.35, 540, 1100), r: -2, drift: { s: 0.04, r: 3 } }, { t: 5.2, glide: 0.8, ...fr(700, 1150, 0.85, 540, 1050), drift: { s: 0.03 } }, { t: D("count"), glide: 2.4, ...fr(1100, 1250, 1.4, 540, 1100) }] },
         shake: (t) => 5 * Math.sin(t * 21),
-        actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream" }, { t: 5.0, mode: "brace", eyes: "wide", mouth: "frown" }], { prop: "spear1f" })],
+        actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "angry", mouth: "scream" }, { t: 5.0, mode: "brace", eyes: "squint", mouth: "grit" }], { prop: "spear1f" })],
+        react: [{ a: 0, t: 5.0, dur: 2.6 }],
         captions: caps("count"),
-        ui: [{ type: "countdown", t: 0.2, from: 20, to: 6, tick: 0.55, label: "ประตูหลังปิดใน", warn: 5, end: D("count") - 0.1, top: 60 }],
+        ui: [],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) {
           ZF(L, tl, "cd", t0, D("count"), [["ha1", 1180, 0.8, 0], ["ha2", 1280, 0.76, 0.4], ["ha3", 1380, 0.78, 0.2], ["ha1", 1230, 0.74, 0.7], ["ha2", 1330, 0.7, 0.9], ["ha3", 1430, 0.72, 0.5]]);
@@ -311,25 +316,72 @@
         },
       });
 
-      // ---------- 16. the last five: the back door from inside; through the gap he is far away, braced; "ปิดซะ ครู"; 0 = the bar ----------
+      // ---------- 16. the last five: the back door from inside; through the gap he is out in the yard, braced; "ปิดประตูซะ… ครูพิม"; the bar ----------
       add("count2", {
-        set: "backDoor", setOpts: { id: "bd", open: 0.3 }, dark: 0.5, blur: { far: 3, mid: 2 },
-        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 1000), drift: { s: 0.03 } }, { t: 2.0, glide: 0.6, ...fr(540, 1000, 1.1, 540, 1000), drift: { s: 0.04 } }] },
-        shake: (t) => (t < 2.5 ? 6 * Math.sin(t * 21) : 0),
-        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "push", eyes: "normal", mouth: "flat" }]), PI(920, 1560, 0.95, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 2.4, mode: "push", eyes: "wide", mouth: "frown" }], { flip: true })],
+        set: "backDoor", setOpts: { id: "bd", open: 0.18 }, dark: 0.5, blur: { far: 3, mid: 1 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 1000), drift: { s: 0.03 } }, { t: 2.0, glide: 0.6, ...fr(540, 1000, 1.1, 540, 1000), drift: { s: 0.04 } }, { t: 3.3, glide: 1.0, ...fr(540, 1290, 1.5, 540, 1000), drift: { s: 0.02 } }] },
+        shake: (t) => (t < 3.8 ? 6 * Math.sin(t * 21) : 0),
+        actors: [PH(10, 1560, 0.95, [{ t: 0, mode: "push", eyes: "squint", mouth: "flat" }]), PI(1070, 1560, 0.95, [{ t: 0, mode: "guard", eyes: "worry", mouth: "frown" }, { t: 3.2, mode: "push", eyes: "sad", mouth: "grit" }], { flip: true })],   // hands on the leaves, not in the gap: their arms crossed the man lying in the yard
         captions: caps("count2", [0], { quote: true }),
-        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, tick: 0.5, label: "ประตูหลังปิดใน", warn: 5, end: 3.1, top: 60 }],
+        ui: [],
         extra(L) { RAIN(L, { n: 60, op: 0.4, splash: false }); },
         fx(tl, id, t0, L) {
-          behind(L, tl, "bd-man", "man", 540, 1180, 0.7, false, t0, D("count2"), [{ t: 0, mode: "brace", eyes: "normal", mouth: "frown" }]);
+          // user 28 Oct: "ให้ภาพจากนอกประตูสิว่ากำลังโดนรุมกิน" + 29 Oct: "เอาภาพ 1 ไปอยู่ในประตูภาพ 2 ด้วย" (the fallen picture inside the door):
+          // through the gap he braces and shouts (mid-yard, low in the doorway where nothing in the corridor covers him), three of them reach him from behind; on "ครูพิม" he goes down on his knees, then flat on his back
+          // with them kneeling over him — the fallen shot two thirds the size, framed by the door — one more comes in out of the dark; the doors close on his raised hand
+          const D2 = D("count2"), SN = { eyes: "dead", mouth: "snarl" };
+          const Z = (aid, who, flip, keys, track) => { behind(L, tl, aid, who, keys[0].x, keys[0].y, keys[0].s, flip, t0, D2, track); routeS(tl, aid, t0, keys, flip); };
+          // under them all: the lamp light out through the gap (narrows with the doors) and the stain under him (grows once he is down)
+          L.mid.insertAdjacentHTML("beforeend", `<defs><linearGradient id="bd-spg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".36"/><stop offset=".55" stop-color="#ffd9a0" stop-opacity=".16"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></linearGradient></defs>
+            <path id="bd-spill" d="M343,1560L737,1560L706,1205L384,1205Z" fill="url(#bd-spg)"/><ellipse id="bd-blood" cx="480" cy="1338" rx="110" ry="13" fill="#3a0c0a" opacity="0"/>`);
+          tl.to("#bd-blood", { opacity: 0.62, attr: { rx: 175, ry: 22 }, duration: 1.3, ease: "power1.out", immediateRender: false }, t0 + 2.35);
+          tl.fromTo("#bd-spill", { attr: { transform: "translate(540,0) scale(1,1) translate(-540,0)" } }, { attr: { transform: "translate(540,0) scale(0.02,1) translate(-540,0)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 3.35);
+          Z("bdh-z2", "ha3", false, [{ t: 0, x: 548, y: 1186, s: 0.31 }, { t: D2, x: 596, y: 1188, s: 0.31 }], [{ t: 0, mode: "shamble", ...SN, opts: { period: 1.6 } }]);   // furthest back, walking in
+          Z("bdh-z0", "ha2", false, [{ t: 0, x: 352, y: 1190, s: 0.35 }, { t: D2, x: 420, y: 1192, s: 0.35 }], [{ t: 0, mode: "shamble", ...SN, opts: { period: 1.5 } }]);   // far back, left
+          Z("bdh-z1", "ha1", true, [{ t: 0, x: 790, y: 1215, s: 0.41 }, { t: 1.8, x: 790, y: 1215, s: 0.41 }, { t: D2, x: 682, y: 1215, s: 0.41 }], [{ t: 0, mode: "shamble", ...SN, opts: { period: 1.4 } }]);   // the one coming in, as in the fallen shot
+          Z("bdf-z1", "ha2", false, [{ t: 0, x: 600, y: 1268, s: 0.5 }, { t: 1.3, x: 652, y: 1300, s: 0.56 }, { t: 1.95, x: 652, y: 1300, s: 0.56 }, { t: 2.45, x: 529, y: 1294, s: 0.56 }, { t: D2, x: 529, y: 1294, s: 0.56 }], [{ t: 0, mode: "shamble", ...SN }, { t: 1.4, mode: "feed", ...SN, opts: { ph: 0.4 } }]);
+          Z("bdf-z0", "ha1", false, [{ t: 0, x: 372, y: 1316, s: 0.573 }, { t: 1.3, x: 588, y: 1316, s: 0.573 }, { t: 1.95, x: 588, y: 1316, s: 0.573 }, { t: 2.45, x: 419, y: 1301, s: 0.573 }, { t: D2, x: 419, y: 1301, s: 0.573 }], [{ t: 0, mode: "lunge", ...SN }, { t: 1.5, mode: "feed", ...SN, opts: { ph: 1.7 } }]);
+          Z("bdf-z2", "ha3", true, [{ t: 0, x: 780, y: 1320, s: 0.573 }, { t: 1.25, x: 712, y: 1316, s: 0.573 }, { t: 1.95, x: 712, y: 1316, s: 0.573 }, { t: 2.45, x: 639, y: 1302, s: 0.573 }, { t: D2, x: 639, y: 1302, s: 0.573 }], [{ t: 0, mode: "lunge", ...SN }, { t: 1.45, mode: "feed", ...SN, opts: { ph: 2.9 } }]);
+          // him last, in front of them: brace → his knees on "ครูพิม" → his back; his feet slide out as he goes over so the whole of him lies inside the gap (head at the left jamb)
+          Z("bd-man", "man", false, [{ t: 0, x: 660, y: 1330, s: 0.6 }, { t: 1.95, x: 660, y: 1330, s: 0.6 }, { t: 2.4, x: 715, y: 1330, s: 0.6 }, { t: D2, x: 715, y: 1330, s: 0.6 }],
+            [{ t: 0, mode: "brace", eyes: "angry", mouth: "scream" }, { t: 1.45, mode: "fall", eyes: "pain", mouth: "scream", blend: 0.55 }, { t: 1.95, mode: "lieReach", eyes: "pain", mouth: "scream", blend: 0.45 }]);   // one fall entry (a second restarts the stumble)
           Camp.attach && Camp.attach("bd-man", "spear1f");
-          ZF(L, tl, "bd", t0, D("count2"), [["ha1", 700, 0.5, 0], ["ha2", 440, 0.48, 0.4], ["ha3", 780, 0.5, 0.2]], "shamble");
+          const hf = document.getElementById("bd-man-handF"); if (hf && hf.lastElementChild) tl.to(hf.lastElementChild, { opacity: 0, duration: 0.15, immediateRender: false }, t0 + 1.9);   // the spear goes down into the pile
           document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio"));
-          tl.fromTo("#bd-dl", { attr: { transform: "translate(300,0) scale(0.3,1)" } }, { attr: { transform: "translate(300,0) scale(1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 2.05);
-          tl.fromTo("#bd-dr", { attr: { transform: "translate(780,0) scale(-0.3,1)" } }, { attr: { transform: "translate(780,0) scale(-1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 2.05);
-          tl.set("#bd-bar", { opacity: 1 }, t0 + 2.45); tl.fromTo("#bd-bar", { attr: { transform: "translate(0,-500)" } }, { attr: { transform: "translate(0,0)" }, duration: 0.2, ease: "power3.in", immediateRender: false }, t0 + 2.45);
-          Fx.heart(tl, t0, 2.5, 0.3, 0.85);
-          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 2.55); tl.set("#black", { opacity: 1 }, t0 + 2.65);
+          tl.fromTo("#bd-dl", { attr: { transform: "translate(300,0) scale(0.18,1)" } }, { attr: { transform: "translate(300,0) scale(1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 3.35);
+          tl.fromTo("#bd-dr", { attr: { transform: "translate(780,0) scale(-0.18,1)" } }, { attr: { transform: "translate(780,0) scale(-1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 3.35);
+          tl.set("#bd-bar", { opacity: 1 }, t0 + 3.75); tl.fromTo("#bd-bar", { attr: { transform: "translate(0,-500)" } }, { attr: { transform: "translate(0,0)" }, duration: 0.2, ease: "power3.in", immediateRender: false }, t0 + 3.75);
+          Fx.heart(tl, t0, 3.8, 0.3, 0.85);
+          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 3.85); tl.set("#black", { opacity: 1 }, t0 + 3.95);
+        },
+      });
+
+      // ---------- 16b. (user 28 Oct: "ทำให้เห็นลุงหมานนอนอยู่กับพื้น ฝูงซอมบี้รุมลุงหมานอยู่") outside, the rain: he is down at the breach,
+      //              the spear broken, his hat in the mud, the horde crouched over him; a hand comes up out of the pile, the lightning, the hand drops, the heartbeat stops ----------
+      add("fallen", {
+        set: "schoolYard", setOpts: { id: "fl", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.62, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(975, 1420, 1.62, 540, 1140), drift: { s: 0.02 } }, { t: D("fallen"), glide: 3.2, ...fr(965, 1430, 1.8, 540, 1150) }] },
+        shake: (t) => (t < 0.4 ? 7 * Math.sin(t * 27) * (0.4 - t) / 0.4 : 1.2 * Math.sin(t * 9)),
+        actors: [   // the rig only faces the camera, so the feeders kneel BEHIND him and lean in over the body; he is drawn last, his face and his hand in front
+          { who: "ha1", x: 1330, y: 1420, s: 0.6, flip: true, track: [{ t: 0, mode: "shamble", eyes: "dead", mouth: "snarl", opts: { period: 1.4 } }], moveTo: { x: 1210, dur: 3.2 }, cast: false, cu: false },
+          { who: "ha2", x: 820, y: 1488, s: 0.86, track: [{ t: 0, mode: "feed", eyes: "dead", mouth: "snarl", opts: { ph: 1.7 } }], cast: false, cu: false },
+          { who: "ha1", x: 985, y: 1478, s: 0.84, track: [{ t: 0, mode: "feed", eyes: "dead", mouth: "snarl", opts: { ph: 0.4 } }], cast: false, cu: false },
+          { who: "ha3", x: 1150, y: 1490, s: 0.86, flip: true, track: [{ t: 0, mode: "feed", eyes: "dead", mouth: "snarl", opts: { ph: 2.9 } }], cast: false, cu: false },
+          MA(1265, 1532, 0.9, [{ t: 0, mode: "lieReach", eyes: "pain", mouth: "grit" }, { t: 1.7, mode: "lieFlat", eyes: "closed", mouth: "flat", blend: 0.5 }], { cu: false, cast: false }),
+        ],
+        extra(L) {
+          RAIN(L, { n: 130, op: 0.55 });
+          // the spear in two in the mud
+          put(L.set, `<g opacity=".95"><path d="M1235,1612L1468,1566" stroke="#2a221c" stroke-width="15" stroke-linecap="round"/><path d="M1235,1612L1468,1566" stroke="#9c7b52" stroke-width="10" stroke-linecap="round"/><path d="M1300,1599l22,-4" stroke="#2b2b2b" stroke-width="12"/>
+            <path d="M606,1626L700,1606" stroke="#2a221c" stroke-width="14" stroke-linecap="round"/><path d="M606,1626L700,1606" stroke="#9c7b52" stroke-width="9" stroke-linecap="round"/><path d="M700,1606L752,1594L736,1612Z" fill="#cfd6d2" stroke="#2a221c" stroke-width="3" stroke-linejoin="round"/></g>
+`);
+        },
+        fx(tl, id, t0, L) {
+          tl.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0);
+          THUNDER(tl, t0 + 0.12, 0.75); red(tl, t0 + 0.12, 0.5, 0.9);
+          THUNDER(tl, t0 + 1.72, 0.55);
+          Fx.heart(tl, t0 + 0.1, 1.7, 0.8, 0.6);
+          tl.to("#black", { opacity: 1, duration: 0.4, ease: "power1.in" }, t0 + D("fallen") - 0.45);
         },
       });
 
@@ -337,7 +389,8 @@
       add("after", {
         set: "backDoor", setOpts: { id: "af", closed: true, barred: true }, dark: 0.7, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }], { prop: "spear1" }), HO(-80, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(1120, 1560, 0.6, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "sad", mouth: "frown" }], { prop: "spear1" }), HO(-80, 1560, 0.95, [{ t: 0, mode: "handChest", eyes: "sad", mouth: "frown" }]), PU(1120, 1560, 0.6, [{ t: 0, mode: "slump", eyes: "sad", mouth: "frown" }], { flip: true })],
+        react: [{ a: 1, t: 1.4, dur: 2.4 }],
         captions: caps("after"),
         fx(tl, id, t0) { tl.set("#black", { opacity: 1 }, t0); tl.to("#black", { opacity: 0, duration: 0.6 }, t0 + 0.5); [0.15, 0.4, 0.9].forEach((t) => tl.fromTo(`#${id} .stage`, { x: 0 }, { x: 10, duration: 0.05, repeat: 3, yoyo: true, immediateRender: false }, t0 + t)); Fx.punch(tl, `#${id} .stage`, t0 + F("after", 0, 1), 1.05, 0.4); red(tl, t0 + F("after", 0, 1), 0.4, 0.6); Fx.heart(tl, t0, D("after"), 0.6, 0.4); },
       });
@@ -377,7 +430,7 @@
       add("real", {
         set: "backDoor", setOpts: { id: "rl", closed: true, barred: true }, dark: 0.65, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PH(300, 1560, 0.95, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }]), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [PH(300, 1560, 0.95, [{ t: 0, mode: "kneelAid", eyes: "squint", mouth: "flat" }]), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "frown" }], { flip: true })],
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "press", label: "ในชีวิตจริง", text: "กดก่อน → ไม่หยุด = ขันชะเนาะ → {หาหมอ}", tone: "rule", top: 230 },
           { type: "src", t: F("real", 0, 1) + 0.3, end: D("real") - 0.05, top: 600, text: MLP + "“If continuous pressure has not stopped the bleeding, and bleeding is extremely severe (life threatening), a tourniquet can be used until medical help arrives.”" }],
@@ -411,7 +464,8 @@
       }, {
         set: "backDoor", setOpts: { id: "rb", closed: true, barred: true }, dark: 0.7, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }], { prop: "spear1" }), HO(-80, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(1120, 1560, 0.6, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "sad", mouth: "frown" }], { prop: "spear1" }), HO(-80, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(1120, 1560, 0.6, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true })],
+        react: [{ a: 0, t: F("radio", 1, 1) - (vo("radio", 1) - 0.1) + 0.1, dur: 1.8 }],
         captions: capsFrom("radio", vo("radio", 1) - 0.1, [1]),
         ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 1) - 0.1) - 0.05, label: "คนในค่าย", icon: "people", unit: "คน", max: 6, keys: [{ t: 0, v: 6 }, { t: F("radio", 1, 1) - (vo("radio", 1) - 0.1), v: 5 }], alarm: F("radio", 1, 1) - (vo("radio", 1) - 0.1), top: 150 }],
         fx(tl, id, t0) { const X = t0 + F("radio", 1, 1) - (vo("radio", 1) - 0.1); Fx.punch(tl, `#${id} .stage`, X, 1.06, 0.4); red(tl, X, 0.5, 0.6); Fx.heart(tl, t0, D("radio") - (vo("radio", 1) - 0.1), 0.6, 0.4); },
@@ -421,7 +475,7 @@
       add("ledger", {
         set: "backDoor", setOpts: { id: "lg", closed: true, barred: true }, dark: 0.65, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(300, 1200, 1.2, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [HO(-40, 1560, 0.95, [{ t: 0, mode: "write", eyes: "normal", mouth: "frown" }], { prop: "ledger" }), KO(460, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }, { t: 1.0, mode: "sitHold", eyes: "normal", mouth: "flat" }], { prop: "spear1" })],
+        actors: [HO(-40, 1560, 0.95, [{ t: 0, mode: "write", eyes: "sad", mouth: "frown" }], { prop: "ledger" }), KO(460, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "sad", mouth: "frown" }, { t: 1.0, mode: "sitHold", eyes: "sad", mouth: "flat" }], { prop: "spear1" })],
         bubbles: [bub("ledger", 0, 40, 520, 160)],
         ui: [{ type: "counter", t: 0.2, end: D("ledger") - 0.05, label: "อาวุธของค่าย", icon: "spear", unit: "ชิ้น", max: 3, sub: "หอกมีด +1 · ของก้อง", keys: [{ t: 0.2, v: 1 }], top: 150, right: true }],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("ledger"), 0.7, 0.3); },
@@ -431,7 +485,7 @@
       add("dawn", {
         set: "schoolYard", setOpts: { id: "dn", time: "morning", level: 0.5, breakAt: 1100, fallen: true }, dark: 0.3, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(800, 1100, 0.8, 540, 1000), drift: { s: 0.015 } }, { t: vo("dawn", 1) - 0.05, glide: 0.8, ...fr(1160, 1200, 1.45, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(700, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: vo("dawn", 1), mode: "reach", eyes: "normal", mouth: "flat" }, { t: vo("dawn", 1) + 1.2, mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "bag", moveTo: { x: 1040, dur: vo("dawn", 1), ease: "none" } })],
+        actors: [PH(700, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }, { t: vo("dawn", 1), mode: "reach", eyes: "squint", mouth: "flat" }, { t: vo("dawn", 1) + 1.2, mode: "idle", eyes: "squint", mouth: "flat" }], { prop: "bag", moveTo: { x: 1040, dur: vo("dawn", 1), ease: "none" } })],
         captions: caps("dawn"),
         extra(L) { put(L.set, LUREBOX("dn-box", 1120, 1100, 1.0)); },
         fx(tl, id, t0) { const T = t0 + vo("dawn", 1) + 0.6; tl.to("#dn-box", { attr: { transform: "translate(1120,1100) scale(1.0)" }, duration: 0.01 }, T - 0.02); tl.to("#dn-box", { attr: { transform: "translate(1080,1380) scale(0.6)" }, duration: 0.5, ease: "power2.in" }, T); tl.set("#dn-box", { opacity: 0 }, T + 0.5); Fx.punch(tl, `#${id} .stage`, t0 + F("dawn", 1, 1), 1.05, 0.35); red(tl, t0 + F("dawn", 1, 1), 0.4, 0.5); Fx.heart(tl, t0 + vo("dawn", 1), D("dawn") - vo("dawn", 1), 0.5, 0.5); },
@@ -441,7 +495,8 @@
       add("walkie", {
         set: "schoolYard", setOpts: { id: "wk", time: "morning", level: 0.5, breakAt: 1100, fallen: true }, dark: 0.35, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(1040, 1320, 1.7, 540, 1150), drift: { s: 0.03 } }, { t: vo("walkie", 1) - 0.05, glide: 0.5, ...fr(1040, 1180, 1.4, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(1040, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("walkie", 1), mode: "lookUp", eyes: "normal", mouth: "flat" }], { prop: "bag" })],
+        actors: [PH(1040, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }, { t: vo("walkie", 1), mode: "lookUp", eyes: "squint", mouth: "smile" }], { prop: "bag" })],
+        react: [{ a: 0, t: vo("walkie", 1), dur: 2.2 }],
         captions: CLIP([...caps("walkie", [0], { quote: true }), ...caps("walkie", [1])]),
         ui: [{ type: "counter", t: F("walkie", 1, 1), end: D("walkie") - 0.05, label: "วิทยุในค่าย", icon: "radio", unit: "เครื่อง", max: 2, keys: [{ t: F("walkie", 1, 1), v: 2 }], alarm: F("walkie", 1, 1), top: 150, right: true }],
         extra(L) { put(L.act, `<g id="wk-led" opacity="0"><circle cx="1010" cy="1400" r="6" fill="#4cff7a"/><circle cx="1010" cy="1400" r="26" fill="#4cff7a" opacity=".25"/></g>`); },
@@ -461,7 +516,8 @@
         set: "schoolYard", setOpts: { id: "cho", time: "morning", level: 0.5, breakAt: 1100, fallen: true }, dark: 0.35, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(1000, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: 1.0, glide: 1.6, ...fr(1040, 1200, 1.6, 540, 1050), r: 2, drift: { s: 0.03, r: 0.8 } }] },
         shake: (t) => shakeH(t) * 2,
-        actors: [PH(1040, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "bag", flip: true })],
+        actors: [PH(1040, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "smile" }], { prop: "bag", flip: true })],
+        react: [{ a: 0, t: 0.6, dur: 2.2 }],
         ui: [{ type: "choice", t: 0.05, q: "เสียงเด็กร้อง… ใครเปิด?", a: "ภู", b: "คนข้างนอก", secs: 3, top: 300, possessed: { at: 1.0, side: "a", glitch: "ภู…", who: "…เขาเก็บกล่องเสียงไว้" } }],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75); Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65); tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2); },
       });

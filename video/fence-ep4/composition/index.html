@@ -7,6 +7,7 @@
     <script src="assets/rig.js"></script>
     <script src="assets/hand.js"></script>
     <script src="assets/sets.js"></script>
+    <script src="assets/dress.js"></script>
     <script src="assets/camp.js"></script>
     <script src="assets/koi.js"></script>
     <script src="assets/zom.js"></script>
@@ -28,7 +29,7 @@
       .fgblur { filter: blur(7px); }
       .badge { z-index: 56; position: absolute; left: 36px; bottom: 150px; font: 700 26px/1 Kanit; color: #f4ecd8; opacity: .75; letter-spacing: 2px;
         background: rgba(5,8,10,.55); padding: 8px 14px 10px; border-radius: 10px; }
-      #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 64% at 50% 48%, transparent 50%, rgba(3,6,8,.8) 100%); }
+      #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 84% 70% at 50% 46%, transparent 58%, rgba(3,6,8,.58) 100%); }
       #grain { z-index: 57; position: absolute; inset: -60px; opacity: .11; mix-blend-mode: overlay; pointer-events: none; }
       #flashw { z-index: 60; position: absolute; inset: 0; background: #e8f0ff; opacity: 0; pointer-events: none; }
       #black { z-index: 61; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
@@ -256,11 +257,11 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="187.21" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="191.21" data-width="1080" data-height="1920">
       <svg id="grain" width="1200" height="2040"><filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5" /></filter><rect width="1200" height="2040" filter="url(#nz)" /></svg>
     </div>
     <script>
-      const SCHED = {"total": 187.21, "shots": [{"key": "hook", "start": 0.0, "dur": 15.158, "vo": [{"id": "n01", "t": 0.3, "dur": 4.832, "cap": "ถ้าวันหนึ่ง… / กลางดึกคืน[ฝนแรก] / คุณได้ยิน[เด็กร้องไห้] นอกรั้ว", "frags": [0.0, 1.11, 2.7]}, {"id": "l01", "t": 5.232, "dur": 7.205, "cap": "ช่วยด้วย… / หนูอยู่ตรงนี้… / ช่วยด้วย", "frags": [0.0, 2.46, 5.35]}, {"id": "n02", "t": 12.737, "dur": 2.071, "cap": "{อย่าเพิ่งออกไป}… / ฟังอีกรอบ", "frags": [0.0, 1.35]}], "voEnd": 14.808}, {"key": "chapter", "start": 15.158, "dur": 4.489, "vo": [{"id": "n03", "t": 0.15, "dur": 3.939, "cap": "เหลืออีก[เก้าสิบหกวัน]… / ค่าย{ไม่มีอาวุธ} / แม้แต่ชิ้นเดียว", "frags": [0.0, 1.71, 3.0]}], "voEnd": 4.089}, {"key": "ask", "start": 19.647, "dur": 10.758, "vo": [{"id": "d01", "t": 0.1, "dur": 2.184, "cap": "แล้วถ้ามันมาอีกล่ะครู… / เราจะสู้ด้วยอะไร", "frags": [0.0, 1.32]}, {"id": "d02", "t": 2.484, "dur": 3.621, "cap": "ไม้กวาดสี่ด้าม… / เทปพันสายหนึ่งม้วน… / {ไม่มีมีด}", "frags": [0.0, 1.41, 3.04]}, {"id": "n04", "t": 6.255, "dur": 4.203, "cap": "เจ๊หงส์เป็นคลัง… / รู้ว่าโรงเรียนมีอะไรบ้าง / ไม่ต้องเดิน", "frags": [0.0, 1.76, 3.48]}], "voEnd": 10.458}, {"key": "phuKnife", "start": 30.405, "dur": 5.066, "vo": [{"id": "d03", "t": 0.2, "dur": 0.842, "cap": "ผมมีมีด", "frags": [0.0]}, {"id": "n05", "t": 1.342, "dur": 3.324, "cap": "มีดของ[คนแปลกหน้า]… / กลายเป็นของมีคม{ชิ้นเดียว}ในค่าย", "frags": [0.0, 1.46]}], "voEnd": 4.666}, {"key": "run", "start": 35.471, "dur": 3.697, "vo": [{"id": "n06", "t": 0.1, "dur": 3.197, "cap": "ก้องเป็นนักวิ่ง… / สามนาที / ได้ของครบ", "frags": [0.0, 1.53, 2.49]}], "voEnd": 3.297}, {"key": "craft", "start": 39.168, "dur": 14.0, "vo": [{"id": "n07", "t": 0.3, "dur": 2.73, "cap": "ไม้กวาด… / มีด… / เทปพันสาย", "frags": [0.0, 0.95, 1.77]}, {"id": "n08", "t": 3.28, "dur": 2.692, "cap": "[หอกมีด]… / อาวุธชิ้นแรก{ที่เราทำเอง}", "frags": [0.0, 0.93]}, {"id": "n09", "t": 6.372, "dur": 4.338, "cap": "ลุงหมานเป็นช่าง… / ถอดท่อเหล็กจากบันไดแท็งก์ / มาเสริมด้าม", "frags": [0.0, 1.76, 3.51]}, {"id": "n10", "t": 11.01, "dur": 1.534, "cap": "หอกมีด… / {บวกหนึ่ง}", "frags": [0.0, 0.93]}], "voEnd": 12.544}, {"key": "loud", "start": 53.168, "dur": 3.476, "vo": [{"id": "d04", "t": 0.15, "dur": 2.826, "cap": "ด้ามไม่หักแล้ว… / แต่{มันดัง}", "frags": [0.0, 1.92]}], "voEnd": 2.976}, {"key": "rain", "start": 56.644, "dur": 5.07, "vo": [{"id": "n11", "t": 0.2, "dur": 2.498, "cap": "เย็นนั้น… / [ฝนแรก]ในรอบร้อยวัน", "frags": [0.0, 0.97]}, {"id": "n12", "t": 2.898, "dur": 1.772, "cap": "ฝนตก… / พวกมัน{เร็วขึ้น}", "frags": [0.0, 0.82]}], "voEnd": 4.67}, {"key": "cry", "start": 61.714, "dur": 21.692, "vo": [{"id": "l01", "t": 0.3, "dur": 7.205, "cap": "ช่วยด้วย… / หนูอยู่ตรงนี้… / ช่วยด้วย", "frags": [0.0, 2.46, 5.35]}, {"id": "d05", "t": 7.605, "dur": 3.709, "cap": "ครูขา… / มีเสียงเด็กร้อง", "frags": [0.0, 1.56]}, {"id": "d06", "t": 11.414, "dur": 2.002, "cap": "มีเด็กอยู่ข้างนอกครู… / ผมไปเอง", "frags": [0.0, 1.31]}, {"id": "d07", "t": 13.566, "dur": 2.36, "cap": "ฟังก่อน… / มันร้อง{เหมือนเดิมทุกครั้ง}", "frags": [0.0, 0.97]}, {"id": "d08", "t": 16.126, "dur": 2.204, "cap": "อย่าออกไป… / {นั่นไม่ใช่เด็ก}", "frags": [0.0, 1.34]}, {"id": "n13", "t": 18.58, "dur": 2.812, "cap": "ภูพูด… / เหมือน[เคยได้ยิน]เสียงนี้มาก่อน", "frags": [0.0, 1.02]}], "voEnd": 21.392}, {"key": "peek", "start": 83.406, "dur": 5.859, "vo": [{"id": "n14", "t": 0.2, "dur": 3.017, "cap": "ก้องเปิดประตูแค่ครึ่งศอก… / เสียงเด็ก{เงียบไป}", "frags": [0.0, 1.83]}, {"id": "n15", "t": 3.417, "dur": 2.142, "cap": "ในม่านฝน… / พวกมัน{วิ่งมา}", "frags": [0.0, 1.21]}], "voEnd": 5.559}, {"key": "trap", "start": 89.265, "dur": 3.4, "vo": [{"id": "n16", "t": 0.1, "dur": 2.579, "cap": "เสียงเด็กร้องไห้… / คือ{กับดักของคน}", "frags": [0.0, 1.46]}], "voEnd": 2.679}, {"key": "fenceFall", "start": 92.665, "dur": 7.0, "vo": [{"id": "n17", "t": 0.2, "dur": 4.254, "cap": "รั้วที่ยืนมาร้อยวัน… / ดินเปียก / มันดันพร้อมกัน[ยี่สิบตัว]", "frags": [0.0, 1.83, 2.63]}, {"id": "n18", "t": 4.604, "dur": 1.322, "cap": "{ล้ม}ในสิบวินาที", "frags": [0.0]}], "voEnd": 5.926}, {"key": "flee", "start": 99.665, "dur": 5.232, "vo": [{"id": "d09", "t": 0.05, "dur": 1.972, "cap": "วิ่ง… / เข้าตึก ประตูหลัง", "frags": [0.0, 0.63]}, {"id": "n19", "t": 2.222, "dur": 2.71, "cap": "ก้องล้ม… / เหล็กรั้ว[บาดขา]", "frags": [0.0, 1.49]}], "voEnd": 4.932}, {"key": "cover", "start": 104.897, "dur": 3.6, "vo": [{"id": "d10", "t": 0.1, "dur": 2.337, "cap": "ไปก่อน… / ลุงกันให้", "frags": [0.0, 1.25]}], "voEnd": 2.437}, {"key": "count", "start": 108.497, "dur": 8.3, "vo": [{"id": "n20", "t": 0.2, "dur": 3.556, "cap": "คราวที่แล้วลุง[ทันที่สอง]… / คราวนี้{ฝนตก}", "frags": [0.0, 2.32]}, {"id": "n21", "t": 4.056, "dur": 3.672, "cap": "ลุงหมาน[ไม่ได้วิ่งมา]… / เขาเอาหอกยันช่องรั้วไว้ / {จากข้างนอก}", "frags": [0.0, 1.63, 3.24]}], "voEnd": 7.728}, {"key": "count2", "start": 116.797, "dur": 3.6, "vo": [{"id": "d12", "t": 0.0, "dur": 2.107, "cap": "ปิดประตูซะ… / ครูพิม", "frags": [0.0, 1.41]}], "voEnd": 2.107}, {"key": "after", "start": 120.397, "dur": 4.427, "vo": [{"id": "n22", "t": 0.6, "dur": 3.227, "cap": "ประตูหลังปิด[ตรงเวลา]… / ข้างในมี{ห้าคน}", "frags": [0.0, 1.87]}], "voEnd": 3.827}, {"key": "tq", "start": 124.824, "dur": 14.425, "vo": [{"id": "n23", "t": 0.1, "dur": 3.233, "cap": "ขาก้อง… / ชุ่มกางเกง / กดเท่าไหร่ก็{ไม่หยุด}", "frags": [0.0, 0.89, 2.15]}, {"id": "d13", "t": 3.533, "dur": 3.223, "cap": "เข็มขัด… รัดเหนือแผล… / บิดจนหยุด", "frags": [0.0, 2.44]}, {"id": "n24", "t": 7.006, "dur": 3.758, "cap": "[ขันชะเนาะ]… / รัดเหนือแผล[สองถึงสามนิ้ว] / ไม่ทับข้อ", "frags": [0.0, 0.93, 2.98]}, {"id": "n25", "t": 10.914, "dur": 3.111, "cap": "บิดจน{เลือดหยุด}… / [จดเวลาไว้]… / บอกหมอ", "frags": [0.0, 1.43, 2.47]}], "voEnd": 14.025}, {"key": "real", "start": 139.249, "dur": 5.611, "vo": [{"id": "n26", "t": 0.1, "dur": 5.111, "cap": "ในชีวิตจริง… / ขันชะเนาะใช้เมื่อ[กดแล้วไม่หยุด] / ต้องถึงมือหมอ{ให้เร็วที่สุด}", "frags": [0.0, 1.15, 3.47]}], "voEnd": 5.211}, {"key": "sig", "start": 144.86, "dur": 5.512, "vo": [{"id": "s01", "t": 0.15, "dur": 4.862, "cap": "ถูกหมด / ทุกข้อ… / ผิดแค่… / {ข้อเดียว}", "frags": [0.0, 1.03, 2.07, 3.24]}], "voEnd": 5.012}, {"key": "radio", "start": 150.372, "dur": 8.606, "vo": [{"id": "r01", "t": 0.5, "dur": 4.448, "cap": "เหลืออีก… / เก้าสิบห้าวัน… / {ห้า}", "frags": [0.0, 1.43, 3.42]}, {"id": "n27", "t": 5.248, "dur": 2.958, "cap": "ไม่มีใครพูด… / เลขที่สอง{ลดลงหนึ่ง}", "frags": [0.0, 1.23]}], "voEnd": 8.206}, {"key": "ledger", "start": 158.978, "dur": 3.237, "vo": [{"id": "d14", "t": 0.1, "dur": 2.737, "cap": "หอกมีดบวกหนึ่ง… / ตอนนี้เป็นของก้อง", "frags": [0.0, 1.51]}], "voEnd": 2.837}, {"key": "dawn", "start": 162.215, "dur": 6.849, "vo": [{"id": "n28", "t": 0.2, "dur": 2.89, "cap": "เช้ามืด… / ภูเดินไปที่รั้วที่ล้ม / {คนเดียว}", "frags": [0.0, 0.91, 2.312]}, {"id": "n29", "t": 3.24, "dur": 3.209, "cap": "เขาเก็บ[กล่องเล็กๆ] ที่ผูกไว้กับรั้ว… / ใส่กระเป๋า", "frags": [0.0, 2.47]}], "voEnd": 6.449}, {"key": "walkie", "start": 169.064, "dur": 7.746, "vo": [{"id": "w01", "t": 0.3, "dur": 4.201, "cap": "หนองน้ำใส… / ได้ยินมั้ย… / รายงานด้วย", "frags": [0.0, 1.65, 2.8]}, {"id": "n30", "t": 4.801, "dur": 2.445, "cap": "ในกระเป๋าภู… / มี{วิทยุอีกเครื่อง}", "frags": [0.0, 1.21]}], "voEnd": 7.246}, {"key": "drawing", "start": 176.81, "dur": 4.6, "vo": [{"id": "n31", "t": 0.2, "dur": 3.702, "cap": "ปั้นวาดก่อนนอน… / ลุงยืนอยู่นอกรั้ว… / {ยังยืนอยู่}", "frags": [0.0, 1.46, 3.02]}], "voEnd": 3.902}, {"key": "choice", "start": 181.41, "dur": 3.4, "vo": [], "voEnd": 0.0}, {"key": "next", "start": 184.81, "dur": 2.4, "vo": [], "voEnd": 0.0}]};
+      const SCHED = {"total": 191.21, "shots": [{"key": "hook", "start": 0.0, "dur": 15.158, "vo": [{"id": "n01", "t": 0.3, "dur": 4.832, "cap": "ถ้าวันหนึ่ง… / กลางดึกคืน[ฝนแรก] / คุณได้ยิน[เด็กร้องไห้] นอกรั้ว", "frags": [0.0, 1.11, 2.7]}, {"id": "l01", "t": 5.232, "dur": 7.205, "cap": "ช่วยด้วย… / หนูอยู่ตรงนี้… / ช่วยด้วย", "frags": [0.0, 2.46, 5.35]}, {"id": "n02", "t": 12.737, "dur": 2.071, "cap": "{อย่าเพิ่งออกไป}… / ฟังอีกรอบ", "frags": [0.0, 1.35]}], "voEnd": 14.808}, {"key": "chapter", "start": 15.158, "dur": 4.489, "vo": [{"id": "n03", "t": 0.15, "dur": 3.939, "cap": "เหลืออีก[เก้าสิบหกวัน]… / ค่าย{ไม่มีอาวุธ} / แม้แต่ชิ้นเดียว", "frags": [0.0, 1.71, 3.0]}], "voEnd": 4.089}, {"key": "ask", "start": 19.647, "dur": 10.758, "vo": [{"id": "d01", "t": 0.1, "dur": 2.184, "cap": "แล้วถ้ามันมาอีกล่ะครู… / เราจะสู้ด้วยอะไร", "frags": [0.0, 1.32], "lip": "021232232333332211011001233331000000000012211211233333333222322000", "who": "kong"}, {"id": "d02", "t": 2.484, "dur": 3.621, "cap": "ไม้กวาดสี่ด้าม… / เทปพันสายหนึ่งม้วน… / {ไม่มีมีด}", "frags": [0.0, 1.41, 3.04], "lip": "0321012332100001211123332221100000000000000023320002221002222233322223333332100000000000000123333333333322210", "who": "hong"}, {"id": "n04", "t": 6.255, "dur": 4.203, "cap": "เจ๊หงส์เป็นคลัง… / รู้ว่าโรงเรียนมีอะไรบ้าง / ไม่ต้องเดิน", "frags": [0.0, 1.76, 3.48]}], "voEnd": 10.458}, {"key": "phuKnife", "start": 30.405, "dur": 5.066, "vo": [{"id": "d03", "t": 0.2, "dur": 0.842, "cap": "ผมมีมีด", "frags": [0.0], "lip": "02321122212222212332100000", "who": "phu"}, {"id": "n05", "t": 1.342, "dur": 3.324, "cap": "มีดของ[คนแปลกหน้า]… / กลายเป็นของมีคม{ชิ้นเดียว}ในค่าย", "frags": [0.0, 1.46]}], "voEnd": 4.666}, {"key": "run", "start": 35.471, "dur": 3.697, "vo": [{"id": "n06", "t": 0.1, "dur": 3.197, "cap": "ก้องเป็นนักวิ่ง… / สามนาที / ได้ของครบ", "frags": [0.0, 1.53, 2.49]}], "voEnd": 3.297}, {"key": "craft", "start": 39.168, "dur": 14.0, "vo": [{"id": "n07", "t": 0.3, "dur": 2.73, "cap": "ไม้กวาด… / มีด… / เทปพันสาย", "frags": [0.0, 0.95, 1.77]}, {"id": "n08", "t": 3.28, "dur": 2.692, "cap": "[หอกมีด]… / อาวุธชิ้นแรก{ที่เราทำเอง}", "frags": [0.0, 0.93]}, {"id": "n09", "t": 6.372, "dur": 4.338, "cap": "ลุงหมานเป็นช่าง… / ถอดท่อเหล็กจากบันไดแท็งก์ / มาเสริมด้าม", "frags": [0.0, 1.76, 3.51]}, {"id": "n10", "t": 11.01, "dur": 1.534, "cap": "หอกมีด… / {บวกหนึ่ง}", "frags": [0.0, 0.93]}], "voEnd": 12.544}, {"key": "loud", "start": 53.168, "dur": 3.476, "vo": [{"id": "d04", "t": 0.15, "dur": 2.826, "cap": "ด้ามไม่หักแล้ว… / แต่{มันดัง}", "frags": [0.0, 1.92], "lip": "0113333322110122333200000122100001222333320000000000000001233222222332101233322110000", "who": "man"}], "voEnd": 2.976}, {"key": "rain", "start": 56.644, "dur": 5.07, "vo": [{"id": "n11", "t": 0.2, "dur": 2.498, "cap": "เย็นนั้น… / [ฝนแรก]ในรอบร้อยวัน", "frags": [0.0, 0.97]}, {"id": "n12", "t": 2.898, "dur": 1.772, "cap": "ฝนตก… / พวกมัน{เร็วขึ้น}", "frags": [0.0, 0.82]}], "voEnd": 4.67}, {"key": "cry", "start": 61.714, "dur": 21.692, "vo": [{"id": "l01", "t": 0.3, "dur": 7.205, "cap": "ช่วยด้วย… / หนูอยู่ตรงนี้… / ช่วยด้วย", "frags": [0.0, 2.46, 5.35]}, {"id": "d05", "t": 7.605, "dur": 3.709, "cap": "ครูขา… / มีเสียงเด็กร้อง", "frags": [0.0, 1.56], "lip": "0013333222210011222222112221122100000000000000012333333333333210001233323333321232200000122332222222222110000000", "who": "pun"}, {"id": "d06", "t": 11.414, "dur": 2.002, "cap": "มีเด็กอยู่ข้างนอกครู… / ผมไปเอง", "frags": [0.0, 1.31], "lip": "0111111210011111112333200123333310000000022111223212332221000", "who": "kong"}, {"id": "d07", "t": 13.566, "dur": 2.36, "cap": "ฟังก่อน… / มันร้อง{เหมือนเดิมทุกครั้ง}", "frags": [0.0, 0.97], "lip": "02333322333322232100000000000123333333333333333333322221011232233332100", "who": "pim"}, {"id": "d08", "t": 16.126, "dur": 2.204, "cap": "อย่าออกไป… / {นั่นไม่ใช่เด็ก}", "frags": [0.0, 1.34], "lip": "0123332221123310002332210000000000000000012332100112210002221022100", "who": "phu"}, {"id": "n13", "t": 18.58, "dur": 2.812, "cap": "ภูพูด… / เหมือน[เคยได้ยิน]เสียงนี้มาก่อน", "frags": [0.0, 1.02]}], "voEnd": 21.392}, {"key": "peek", "start": 83.406, "dur": 5.859, "vo": [{"id": "n14", "t": 0.2, "dur": 3.017, "cap": "ก้องเปิดประตูแค่ครึ่งศอก… / เสียงเด็ก{เงียบไป}", "frags": [0.0, 1.83]}, {"id": "n15", "t": 3.417, "dur": 2.142, "cap": "ในม่านฝน… / พวกมัน{วิ่งมา}", "frags": [0.0, 1.21]}], "voEnd": 5.559}, {"key": "trap", "start": 89.265, "dur": 3.4, "vo": [{"id": "n16", "t": 0.1, "dur": 2.579, "cap": "เสียงเด็กร้องไห้… / คือ{กับดักของคน}", "frags": [0.0, 1.46]}], "voEnd": 2.679}, {"key": "fenceFall", "start": 92.665, "dur": 7.0, "vo": [{"id": "n17", "t": 0.2, "dur": 4.254, "cap": "รั้วที่ยืนมาร้อยวัน… / ดินเปียก / มันดันพร้อมกัน[ยี่สิบตัว]", "frags": [0.0, 1.83, 2.63]}, {"id": "n18", "t": 4.604, "dur": 1.322, "cap": "{ล้ม}ในสิบวินาที", "frags": [0.0]}], "voEnd": 5.926}, {"key": "flee", "start": 99.665, "dur": 5.232, "vo": [{"id": "d09", "t": 0.05, "dur": 1.972, "cap": "วิ่ง… / เข้าตึก ประตูหลัง", "frags": [0.0, 0.63], "lip": "033221221000000000000123212332100000000002211233332200121000", "who": "pim"}, {"id": "n19", "t": 2.222, "dur": 2.71, "cap": "ก้องล้ม… / เหล็กรั้ว[บาดขา]", "frags": [0.0, 1.49]}], "voEnd": 4.932}, {"key": "cover", "start": 104.897, "dur": 3.6, "vo": [{"id": "d10", "t": 0.1, "dur": 2.337, "cap": "ไปก่อน… / ลุงกันให้", "frags": [0.0, 1.25], "lip": "00012332000123222333332100000000000000012333333320002321122100123321000", "who": "man"}], "voEnd": 2.437}, {"key": "count", "start": 108.497, "dur": 8.3, "vo": [{"id": "n20", "t": 0.2, "dur": 3.556, "cap": "คราวที่แล้วลุง[ทันที่สอง]… / คราวนี้{ฝนตก}", "frags": [0.0, 2.32]}, {"id": "n21", "t": 4.056, "dur": 3.672, "cap": "ลุงหมาน[ไม่ได้วิ่งมา]… / เขาเอาหอกยันช่องรั้วไว้ / {จากข้างนอก}", "frags": [0.0, 1.63, 3.24]}], "voEnd": 7.728}, {"key": "count2", "start": 116.797, "dur": 4.4, "vo": [{"id": "d12", "t": 0.0, "dur": 2.107, "cap": "ปิดประตูซะ… / ครูพิม", "frags": [0.0, 1.41], "lip": "0210000012200002333333322333210000000000000001233321001232211000", "who": "man"}], "voEnd": 2.107}, {"key": "fallen", "start": 121.197, "dur": 3.2, "vo": [], "voEnd": 0.0}, {"key": "after", "start": 124.397, "dur": 4.427, "vo": [{"id": "n22", "t": 0.6, "dur": 3.227, "cap": "ประตูหลังปิด[ตรงเวลา]… / ข้างในมี{ห้าคน}", "frags": [0.0, 1.87]}], "voEnd": 3.827}, {"key": "tq", "start": 128.824, "dur": 14.425, "vo": [{"id": "n23", "t": 0.1, "dur": 3.233, "cap": "ขาก้อง… / ชุ่มกางเกง / กดเท่าไหร่ก็{ไม่หยุด}", "frags": [0.0, 0.89, 2.15]}, {"id": "d13", "t": 3.533, "dur": 3.223, "cap": "เข็มขัด… รัดเหนือแผล… / บิดจนหยุด", "frags": [0.0, 2.44], "lip": "0232211112222000000000000000023333200012222221001222100011000000000000000012332100000023222112210", "who": "phu"}, {"id": "n24", "t": 7.006, "dur": 3.758, "cap": "[ขันชะเนาะ]… / รัดเหนือแผล[สองถึงสามนิ้ว] / ไม่ทับข้อ", "frags": [0.0, 0.93, 2.98]}, {"id": "n25", "t": 10.914, "dur": 3.111, "cap": "บิดจน{เลือดหยุด}… / [จดเวลาไว้]… / บอกหมอ", "frags": [0.0, 1.43, 2.47]}], "voEnd": 14.025}, {"key": "real", "start": 143.249, "dur": 5.611, "vo": [{"id": "n26", "t": 0.1, "dur": 5.111, "cap": "ในชีวิตจริง… / ขันชะเนาะใช้เมื่อ[กดแล้วไม่หยุด] / ต้องถึงมือหมอ{ให้เร็วที่สุด}", "frags": [0.0, 1.15, 3.47]}], "voEnd": 5.211}, {"key": "sig", "start": 148.86, "dur": 5.512, "vo": [{"id": "s01", "t": 0.15, "dur": 4.862, "cap": "ถูกหมด / ทุกข้อ… / ผิดแค่… / {ข้อเดียว}", "frags": [0.0, 1.03, 2.07, 3.24]}], "voEnd": 5.012}, {"key": "radio", "start": 154.372, "dur": 8.606, "vo": [{"id": "r01", "t": 0.5, "dur": 4.448, "cap": "เหลืออีก… / เก้าสิบห้าวัน… / {ห้า}", "frags": [0.0, 1.43, 3.42]}, {"id": "n27", "t": 5.248, "dur": 2.958, "cap": "ไม่มีใครพูด… / เลขที่สอง{ลดลงหนึ่ง}", "frags": [0.0, 1.23]}], "voEnd": 8.206}, {"key": "ledger", "start": 162.978, "dur": 3.237, "vo": [{"id": "d14", "t": 0.1, "dur": 2.737, "cap": "หอกมีดบวกหนึ่ง… / ตอนนี้เป็นของก้อง", "frags": [0.0, 1.51], "lip": "02333331001223332101233332001223322210000000002333222222222210012100001233322110000", "who": "hong"}], "voEnd": 2.837}, {"key": "dawn", "start": 166.215, "dur": 6.849, "vo": [{"id": "n28", "t": 0.2, "dur": 2.89, "cap": "เช้ามืด… / ภูเดินไปที่รั้วที่ล้ม / {คนเดียว}", "frags": [0.0, 0.91, 2.312]}, {"id": "n29", "t": 3.24, "dur": 3.209, "cap": "เขาเก็บ[กล่องเล็กๆ] ที่ผูกไว้กับรั้ว… / ใส่กระเป๋า", "frags": [0.0, 2.47]}], "voEnd": 6.449}, {"key": "walkie", "start": 173.064, "dur": 7.746, "vo": [{"id": "w01", "t": 0.3, "dur": 4.201, "cap": "หนองน้ำใส… / ได้ยินมั้ย… / รายงานด้วย", "frags": [0.0, 1.65, 2.8]}, {"id": "n30", "t": 4.801, "dur": 2.445, "cap": "ในกระเป๋าภู… / มี{วิทยุอีกเครื่อง}", "frags": [0.0, 1.21]}], "voEnd": 7.246}, {"key": "drawing", "start": 180.81, "dur": 4.6, "vo": [{"id": "n31", "t": 0.2, "dur": 3.702, "cap": "ปั้นวาดก่อนนอน… / ลุงยืนอยู่นอกรั้ว… / {ยังยืนอยู่}", "frags": [0.0, 1.46, 3.02]}], "voEnd": 3.902}, {"key": "choice", "start": 185.41, "dur": 3.4, "vo": [], "voEnd": 0.0}, {"key": "next", "start": 188.81, "dur": 2.4, "vo": [], "voEnd": 0.0}]};
       const SH = Object.fromEntries(SCHED.shots.map((s) => [s.key, s]));
       const vo = (k, i = 0) => SH[k].vo[i].t;                       // voice start, relative to the shot
       const voEnd = (k, i = 0) => SH[k].vo[i].t + SH[k].vo[i].dur;
@@ -298,7 +299,7 @@
       Rig.MODES.grabArm = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -78, faF: -8, uaB: -40, faB: -60, torso: 8, head: 4 });
       Rig.MODES.pullBolt = (u, o) => { const k = Rig.smooth(u / 0.5); return { ...Rig.MODES.idle(u, o), uaF: Rig.lerp(-60, -20, k), faF: Rig.lerp(-30, -60, k), torso: 10, head: 6, thF: 10, shF: 10, thB: -10 }; };
       Rig.MODES.crouchDraw = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -30, faF: -40 + 6 * Math.sin(u * 7), uaB: -10, faB: -50, torso: 30, head: 20 });
-      Rig.MODES.sitHold = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -40, faF: -110, uaB: -16, faB: -100, torso: 12 + Math.sin(u * 4) * 1.5, head: 14 });   // on the floor, winded, holding his arm
+      Rig.MODES.sitHold = (u, o) => ({ ...Rig.MODES.sit(u, o), ...Rig.reach("B", [-14, 103], [71, 80]), ...Rig.reach("F", [16, 110], [-43.8, 92.1]), bFront: 1, torso: 8 + Math.sin(u * 4) * 1.5, head: 14 });   // on the floor, winded, holding his arm across the body
       Rig.MODES.sleepSit = (u, o) => ({ ...Rig.MODES.sit(u, o), torso: 6, head: 26 + Math.sin(u * 1.1), uaF: -10, faF: -40, uaB: 4, faB: -30 });
       Rig.MODES.lookUp = (u, o) => ({ ...Rig.MODES.idle(u, o), head: -22, torso: -4 });
       Rig.MODES.pointUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150, faF: -10, head: -16, torso: -4 });
@@ -311,12 +312,16 @@
       Rig.MODES.kneelAid = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -52, faF: -34 + 4 * Math.sin(u * 6), uaB: -40, faB: -46, torso: 26, head: 18 });            // kneeling over someone, hands working
       Rig.MODES.press = (u, o) => { const j = Math.sin(u * 14) * 1.5; return { ...Rig.MODES.crouch(u, o), uaF: -34 + j, faF: -12, uaB: -34 - j, faB: -12, torso: 30, head: 14 }; };   // both arms straight down, pressing
       Rig.MODES.cutCloth = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -56, faF: -40 + 10 * Math.sin(u * 11), uaB: -30, faB: -70, torso: 22, head: 26 });              // sitting, sawing at a trouser leg
-      Rig.MODES.holdArm = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -40, faF: -100, uaB: -30, faB: -70, torso: 10 + Math.sin(u * 3), head: 12 });                  // standing, the hurt arm held against the chest
+      Rig.MODES.holdArm = (u, o) => ({ ...Rig.MODES.idle(u, o), ...Rig.reach("B", [-14, 103], [71, 80]), ...Rig.reach("F", [16, 110], [-43.8, 92.1]), bFront: 1, torso: 6 + Math.sin(u * 3), head: 12 });   // standing, the hurt forearm held across the body by the other hand
       Rig.MODES.limp = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 1.6 }); return { ...w, thF: w.thF * 0.6, thB: w.thB * 0.6, torso: 10, head: 8, bodyY: 6 + 4 * Math.abs(Math.sin(u * 3.9)) }; };   // a hurt leg
       Rig.MODES.talkOut = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -70 + 3 * Math.sin(u * 1.7), faF: -20, head: -4 + 2 * Math.sin(u * 0.9), torso: 2 });        // at the fence, an arm through the bars, talking
       Camp.hand.knife = `<g transform="translate(0,118) rotate(70) scale(0.42)">${Fence.KNIFE("", 1)}</g>`;
       // ---------- poses for EP.4 ----------
       Rig.MODES.thrust = (u, o) => { const k = Math.abs(Math.sin(u * 2 * Math.PI / (o.period || 0.7))); return { ...Rig.MODES.idle(u, o), uaF: -70 - 40 * k, faF: -20 + 10 * k, uaB: -40, faB: -60, torso: 8 + 10 * k, head: 2, thF: 12, shF: 10, thB: -10, bodyY: 4 }; };   // spear thrusts at something ahead
+      Rig.MODES.lieFlat = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: 4, faF: -4, uaB: 8, faB: -2, thF: -3, thB: -1, shF: 4, shB: 2 });   // on his back, arms along the body, legs straight
+      Rig.MODES.lieReach = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: -104 + 5 * Math.sin(u * 6), faF: -14 + 6 * Math.sin(u * 6 + 1) });   // on his back, one hand up out of the pile
+      Rig.MODES.feed = (u, o) => { const p = o.ph || 0, j = Math.sin(u * 9 + p), k = Math.sin(u * 5.3 + 1 + p);   // the infected crouched over a body: hunched in, head down, arms tearing (nothing shown)
+        return { ...Rig.MODES.crouch(u, o), torso: 30 + 6 * j, head: 32 + 10 * k, uaF: -46 + 14 * j, faF: -34 - 18 * Math.max(0, k), uaB: -30 - 10 * k, faB: -44, bodyY: 112 + 5 * j }; };
       Rig.MODES.brace = (u, o) => { const j = Math.sin(u * 30) * 1.5; return { ...Rig.MODES.idle(u, o), uaF: -100 + j, faF: -40, uaB: -90 - j, faB: -50, torso: 24, head: 14, thF: 24, shF: 20, thB: -16, bodyY: 10 }; };   // leaning his whole weight on the spear jammed across the gate
       Rig.MODES.limpRun = (u, o) => { const w = Rig.MODES.run(u, { ...o, period: 0.7 }); return { ...w, thF: w.thF * 0.7, torso: 14, head: 6, bodyY: 10 + 6 * Math.abs(Math.sin(u * 9)) }; };
       Rig.MODES.sitLeg = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -30, faF: -80, uaB: -20, faB: -70, torso: 16 + Math.sin(u * 5) * 2, head: 20, thF: -10 });   // sitting against the wall, the bad leg out
@@ -339,7 +344,7 @@
       const TOP = (L, el) => L.act.appendChild(el);
       const split = (k, at, A, B) => {
         add(k, A); shots[shots.length - 1].dur = at;
-        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at; sh.vo = (SH[k].vo || []).map((v) => ({ ...v, t: v.t - at }));
       };
       const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
       const glow = (L, html) => L.glow.insertAdjacentHTML("beforeend", html);
@@ -356,6 +361,14 @@
         const at = (t) => { let i = 0; while (i + 1 < keys.length && keys[i + 1].t <= t) i++; const a = keys[i], b = keys[i + 1]; if (!b) return [a.x, a.y];
           const k = Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t))); return [a.x + (b.x - a.x) * k, a.y + (b.y - a.y) * k - (b.hop || 0) * 4 * k * (1 - k)]; };
         const put = () => { const [x, y] = at(c.t); g.setAttribute("transform", `translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${flip ? -s : s},${s})`); };
+        tl.to(c, { t: last, duration: last - keys[0].t, ease: "none", immediateRender: false, onUpdate: put }, t0 + keys[0].t);
+      };
+      // route() with the scale keyed too ({t, x, y, s}) and each leg eased: a body dragged across the ground, the pile moving with it
+      const routeS = (tl, aid, t0, keys, flip) => {
+        const g = document.getElementById(aid), c = { t: keys[0].t }, last = keys[keys.length - 1].t;
+        const at = (t) => { let i = 0; while (i + 1 < keys.length && keys[i + 1].t <= t) i++; const a = keys[i], b = keys[i + 1]; if (!b) return [a.x, a.y, a.s];
+          const k = Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t))), e = k * k * (3 - 2 * k); return [a.x + (b.x - a.x) * e, a.y + (b.y - a.y) * e, a.s + (b.s - a.s) * e]; };
+        const put = () => { const [x, y, s] = at(c.t); g.setAttribute("transform", `translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${(flip ? -s : s).toFixed(4)},${s.toFixed(4)})`); };
         tl.to(c, { t: last, duration: last - keys[0].t, ease: "none", immediateRender: false, onUpdate: put }, t0 + keys[0].t);
       };
       // a hit: star burst at screen (x, y), white flash, one inverted frame, zoom punch
@@ -492,16 +505,19 @@
       };
       // ---------- เจ๊หงส์'s ledger page: the end card (rows appear line by line; "คน 5" gets struck through and "6?" scrawled beside it) ----------
       GameUI.C.ledger = {
+        // the red "6 = 6" goes on ONE row: o.sixRow, else the people row ("คน") when it is red, else the first red row
+        // (it used to go on every red row: EP.3 showed it on the weapons row too, EP.4 on the fence row)
+        sixAt: (o) => o.sixRow ?? ((k) => (k >= 0 && o.rows[k][2] === "red" ? k : o.rows.findIndex((r) => r[2] === "red")))(o.rows.findIndex((r) => r[0] === "คน")),
         html: (id, o) => `<div id="${id}" class="fledger" style="top:${o.top ?? 380}px"><div class="page"><div class="rings">${"<i></i>".repeat(14)}</div>
           <div class="hd"><span>สมุดบัญชี · เจ๊หงส์</span><small>${o.day}</small></div>
-          ${o.rows.map(([a, b, cls], i) => `<div class="r ${cls || ""}" id="${id}-r${i}"><span>${a}</span><span class="bar"></span><b class="${cls === "red" ? "strike" : ""}">${b}</b>${cls === "red" ? `<span class="six">${o.six}</span>` : ""}</div>`).join("")}
+          ${o.rows.map(([a, b, cls], i) => `<div class="r ${cls || ""}" id="${id}-r${i}"><span>${a}</span><span class="bar"></span><b class="${cls === "red" ? "strike" : ""}">${b}</b>${cls === "red" && i === GameUI.C.ledger.sixAt(o) ? `<span class="six">${o.six}</span>` : ""}</div>`).join("")}
           <div class="next" id="${id}-n">พรุ่งนี้ต้องหา:<b>${o.next}</b></div>
           <div class="cta" id="${id}-c">${o.cta}</div><i class="thumb" id="${id}-th"></i></div></div>`,
         anim(tl, id, t0, o) {
           tl.fromTo(`#${id}`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out", immediateRender: false }, t0);
           o.rows.forEach((r, i) => {
             tl.fromTo(`#${id}-r${i}`, { opacity: 0, clipPath: "inset(-10px 100% -10px -10px)" }, { opacity: 1, clipPath: "inset(-10px -10px -10px -10px)", duration: 0.3, ease: "power1.inOut", immediateRender: false }, t0 + 0.2 + i * 0.14);
-            if (r[2] === "red") { tl.fromTo(`#${id}-r${i} .strike`, { "--k": 0 }, { "--k": 1, duration: 0.25, ease: "power2.in", immediateRender: false }, t0 + 0.2 + i * 0.14 + 0.3); tl.fromTo(`#${id}-r${i} .six`, { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power4.in", immediateRender: false }, t0 + 0.2 + i * 0.14 + 0.5); }
+            if (r[2] === "red") { tl.fromTo(`#${id}-r${i} .strike`, { "--k": 0 }, { "--k": 1, duration: 0.25, ease: "power2.in", immediateRender: false }, t0 + 0.2 + i * 0.14 + 0.3); if (i === GameUI.C.ledger.sixAt(o)) tl.fromTo(`#${id}-r${i} .six`, { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power4.in", immediateRender: false }, t0 + 0.2 + i * 0.14 + 0.5); }
           });
           const n = t0 + 0.2 + o.rows.length * 0.14 + 0.35;
           tl.fromTo(`#${id}-n`, { opacity: 0, clipPath: "inset(-10px 100% -10px -10px)" }, { opacity: 1, clipPath: "inset(-10px -10px -10px -10px)", duration: 0.5, ease: "power1.inOut", immediateRender: false }, n);
@@ -518,7 +534,7 @@
       });
 
       const shots = [];
-      const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec });
+      const add = (k, spec) => shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, vo: SH[k].vo, ...spec });
 
       // ======================================================================================================
       // v2 look: muted cinematic grade + a "field notebook / scrapbook" HUD — torn paper, masking tape, red rubber
@@ -732,7 +748,8 @@
       const pkOut = (tl, sel, t, dir = 0) => tl.to(sel, { opacity: 0, y: -34, x: dir * 60, rotation: dir ? dir * 8 : -5, scale: 0.96, duration: 0.28, ease: "power2.in" }, t);
       // a map pin drops in and squashes on landing (used by shots.part on the map beats)
       const pinDrop = (tl, sel, t, x, y) => { tl.fromTo(sel, { opacity: 0, y: -420, scaleY: 1.15, scaleX: 0.9, svgOrigin: `${x} ${y}` }, { opacity: 1, y: 0, scaleY: 1, scaleX: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, t);
-        tl.fromTo(sel, { scaleY: 0.76, scaleX: 1.14 }, { scaleY: 1, scaleX: 1, duration: 0.55, ease: "elastic.out(1, 0.35)", immediateRender: false }, t + 0.22); };
+        tl.fromTo(sel, { scaleY: 0.76, scaleX: 1.14 }, { scaleY: 1, scaleX: 1, duration: 0.55, ease: "elastic.out(1, 0.35)", immediateRender: false }, t + 0.22);
+        if (document.querySelector(`${sel}-sh`)) tl.fromTo(`${sel}-sh`, { opacity: 0, scale: 2.4, svgOrigin: `${x} ${y}` }, { opacity: 1, scale: 1, duration: 0.22, ease: "power3.in", immediateRender: false }, t); };   // its shadow gathers under it as it lands
       // looping micro-motion inside the icons (classes a-*), active from t0 to t1
       function pkLoops(tl, root, t0, t1) {
         const D = Math.max(0.5, t1 - t0), rep = (p) => Math.ceil(D / p) + 1, q = (c) => root.querySelectorAll(c);
@@ -1335,9 +1352,9 @@
       add("ask", {
         set: "schoolYard", setOpts: { id: "ak", time: "day", level: 0.5 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(300, 1150, 0.95, 540, 1050), drift: { s: 0.015 } }, { t: vo("ask", 1) - 0.05, ...fr(-20, 1180, 1.15, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [KO(300, 1500, 0.9, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }, { t: vo("ask", 1), mode: "idle", eyes: "normal", mouth: "frown" }]), PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true }),
-          HO(-60, 1500, 0.9, [{ t: 0, mode: "write", eyes: "normal", mouth: "flat" }, { t: vo("ask", 1) - 0.1, mode: "point", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), PH(760, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }], { flip: true }),
-          MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "frown" }]), PU(140, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
+        actors: [KO(300, 1500, 0.9, [{ t: 0, mode: "plead", eyes: "worry", mouth: "frown" }, { t: vo("ask", 1), mode: "armsCrossed", eyes: "worry", mouth: "frown" }]), PI(560, 1500, 0.9, [{ t: 0, mode: "think", eyes: "worry", mouth: "frown" }], { flip: true }),
+          HO(-60, 1500, 0.9, [{ t: 0, mode: "write", eyes: "squint", mouth: "flat" }, { t: vo("ask", 1) - 0.1, mode: "shrug", eyes: "worry", mouth: "frown" }], { prop: "ledger" }), PH(760, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "squint", mouth: "flat" }], { flip: true }),
+          MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "sad", mouth: "frown" }]), PU(140, 1500, 0.58, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }])],
         captions: caps("ask", [2]),
         bubbles: [bub("ask", 0, 380, 520, 420), bub("ask", 1, 40, 520, 160)],
         ui: [{ type: "skill", t: vo("ask", 1) + 0.2, end: D("ask") - 0.1, x: 560, y: 820, name: "เจ๊หงส์", skill: "คลัง", desc: "รู้ว่าของอยู่ไหน มีเท่าไหร่ ไม่ต้องเดินดู", icon: "ledger" }],
@@ -1348,8 +1365,9 @@
       add("phuKnife", {
         set: "schoolYard", setOpts: { id: "pk", time: "day", level: 0.5 }, dark: 0.18, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(760, 1200, 1.3, 540, 1050), drift: { s: 0.02 } }, { t: vo("phuKnife", 1) - 0.05, glide: 0.5, ...fr(560, 1150, 0.95, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PH(760, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: 0.5, mode: "raise", eyes: "normal", mouth: "flat" }], { flip: true, prop: "knife" }), PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }, { t: 0.6, mode: "idle", eyes: "wide", mouth: "o" }]),
-          KO(300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 0.6, mode: "idle", eyes: "wide", mouth: "smile" }]), HO(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "ledger" }), MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "normal", mouth: "frown" }])],
+        actors: [PH(760, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }, { t: 0.5, mode: "raise", eyes: "normal", mouth: "smile" }], { flip: true, prop: "knife" }), PI(560, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }, { t: 0.6, mode: "gasp", eyes: "wide", mouth: "o" }, { t: 2.2, mode: "armsCrossed", eyes: "squint", mouth: "frown" }]),
+          KO(300, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 0.6, mode: "fist", eyes: "wide", mouth: "smileOpen" }]), HO(-60, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { prop: "ledger" }), MA(-280, 1500, 0.9, [{ t: 0, mode: "holdArm", eyes: "squint", mouth: "frown" }])],
+        react: [{ a: 1, t: 0.6, dur: 1.4, fast: true }],
         captions: caps("phuKnife", [1]),
         bubbles: [bub("phuKnife", 0, 520, 520, 60)],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + 0.55, 1.05, 0.35); Fx.punch(tl, `#${id} .stage`, t0 + F("phuKnife", 1, 1), 1.05, 0.35); red(tl, t0 + F("phuKnife", 1, 1), 0.45, 0.5); Fx.heart(tl, t0 + 0.5, D("phuKnife") - 0.5, 0.55, 0.45); },
@@ -1360,7 +1378,7 @@
         set: "schoolYard", setOpts: { id: "rn", time: "day", level: 0.5 }, dark: 0.15, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(400, 1150, 0.9, 540, 1050), r: -2, drift: { s: 0.04, r: 2, x: 60 } }] },
         shake: (t) => 3 * Math.sin(t * 15),
-        actors: [KO(-400, 1500, 0.9, [{ t: 0, mode: "run", eyes: "wide", mouth: "smile" }], { prop: "broom", moveTo: { x: 1500, dur: D("run"), ease: "none" } }), HO(900, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }], { flip: true, prop: "ledger" })],
+        actors: [KO(-400, 1500, 0.9, [{ t: 0, mode: "run", eyes: "squint", mouth: "smileOpen" }], { prop: "broom", moveTo: { x: 1500, dur: D("run"), ease: "none" } }), HO(900, 1500, 0.9, [{ t: 0, mode: "point", eyes: "squint", mouth: "flat" }], { flip: true, prop: "ledger" })],
         captions: caps("run"),
         ui: [{ type: "skill", t: 0.3, end: D("run") - 0.1, x: 60, y: 820, name: "ก้อง", skill: "นักวิ่ง", desc: "เร็วที่สุด · เก็บของครบก่อนใคร", icon: "shoe" }],
         fx(tl, id, t0) { Fx.speed(tl, t0 + 0.2, t0 + D("run") - 0.2); Fx.heart(tl, t0, D("run"), 0.5, 0.5); },
@@ -1450,7 +1468,7 @@
       add("loud", {
         set: "schoolYard", setOpts: { id: "ld", time: "dusk", sunX: 900, level: 0.5 }, dark: 0.25, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(500, 1180, 1.15, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [MA(300, 1500, 0.9, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }]), KO(640, 1500, 0.9, [{ t: 0, mode: "raise", eyes: "normal", mouth: "smile" }], { flip: true, prop: "spear1f" }), PU(460, 1500, 0.58, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "smile" }])],
+        actors: [MA(300, 1500, 0.9, [{ t: 0, mode: "point", eyes: "worry", mouth: "frown" }]), KO(640, 1500, 0.9, [{ t: 0, mode: "raise", eyes: "normal", mouth: "smileOpen" }], { flip: true, prop: "spear1f" }), PU(460, 1500, 0.58, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "smile" }])],
         bubbles: [bub("loud", 0, 40, 520, 300)],
         ui: [{ type: "callback", t: F("loud", 0, 1), end: D("loud") - 0.05, label: "กฎของเรื่อง", text: "มันเดินตามเสียง · <em>อาวุธยิ่งแรง ยิ่งดัง</em>", top: 1300 }],
         fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("loud", 0, 1), 1.05, 0.35); red(tl, t0 + F("loud", 0, 1), 0.4, 0.5); Fx.heart(tl, t0, D("loud"), 0.65, 0.35); },
@@ -1460,7 +1478,7 @@
       add("rain", {
         set: "schoolYard", setOpts: { id: "ra", time: "dusk", sunX: 900, level: 0.5 }, dark: 0.4, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 900, 0.7, 540, 960), drift: { s: 0.015 } }, { t: vo("rain", 1) - 0.05, ...fr(1300, 1150, 1.1, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PI(400, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "o" }]), PH(640, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "flat" }], { flip: true }), PU(520, 1500, 0.58, [{ t: 0, mode: "reachUp", eyes: "normal", mouth: "smile" }])],
+        actors: [PI(400, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "normal", mouth: "o" }, { t: vo("rain", 1), mode: "lookUp", eyes: "worry", mouth: "frown" }]), PH(640, 1500, 0.9, [{ t: 0, mode: "lookUp", eyes: "squint", mouth: "flat" }], { flip: true }), PU(520, 1500, 0.58, [{ t: 0, mode: "reachUp", eyes: "normal", mouth: "smileOpen" }])],
         captions: caps("rain"),
         ui: [{ type: "tip", t: F("rain", 1, 0) - 0.1, end: D("rain") - 0.05, ill: "rainfast", label: "กฎของโลกนี้", text: "ฝนตก → พวกมัน{เร็วขึ้น}", tone: "danger", top: 230 }],
         extra(L) { RAIN(L, { n: 120, op: 0.55 }); },
@@ -1476,15 +1494,17 @@
       split("cry", vo("cry", 3) - 0.1, {
         set: "classroom", setOpts: { id: "cr", night: true, lampX: 400, lampY: 1100 }, dark: 0.6, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(760, 1180, 1.2, 540, 1050), drift: { s: 0.02 } }, { t: vo("cry", 2) - 0.05, ...fr(400, 1150, 1.0, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PU(900, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) - 0.3, mode: "lookUp", eyes: "wide", mouth: "o" }]), PI(1100, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1), mode: "sit", eyes: "wide", mouth: "o" }], { flip: true }),
-          KO(300, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) + 0.3, mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("cry", 2), mode: "guard", eyes: "wide", mouth: "o" }], { prop: "spear1f" }), HO(600, 1500, 0.9, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }], { flip: true }), PH(-20, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }])],
+        actors: [PU(900, 1500, 0.58, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) - 0.3, mode: "lookUp", eyes: "wide", mouth: "o" }]), PI(1100, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1), mode: "sit", eyes: "worry", mouth: "frown" }], { flip: true }),
+          KO(300, 1500, 0.9, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: vo("cry", 1) + 0.3, mode: "idle", eyes: "worry", mouth: "frown" }, { t: vo("cry", 2), mode: "fist", eyes: "squint", mouth: "flat" }], { prop: "spear1f" }), HO(600, 1500, 0.9, [{ t: 0, mode: "sleepSit", eyes: "closed", mouth: "flat" }], { flip: true }), PH(-20, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "squint", mouth: "flat" }])],
+        react: [{ a: 4, t: 3.0, dur: 2.6 }],
         captions: caps("cry", [0], { quote: true }),
         bubbles: [bub("cry", 1, 520, 520, 200), bub("cry", 2, 40, 520, 320)],
         fx(tl, id, t0) { document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio")); THUNDER(tl, t0 + 0.3, 0.3); Fx.heart(tl, t0, vo("cry", 3), 0.6, 0.45); Fx.punch(tl, `#${id} .stage`, t0 + vo("cry", 1), 1.04, 0.3); },
       }, {
         set: "schoolYard", setOpts: { id: "cy", time: "night", lampX: -300, gate: 0 }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(460, 1180, 1.1, 540, 1050), drift: { s: 0.02 } }, { t: vo("cry", 4) - vo("cry", 3) + 0.05, ...fr(160, 1180, 1.3, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [KO(600, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "wide", mouth: "o" }], { prop: "spear1", moveTo: { x: 760, dur: D("cry") - vo("cry", 3) + 0.1, ease: "none" } }), PI(380, 1500, 0.9, [{ t: 0, mode: "stopHand", eyes: "wide", mouth: "o" }]), PH(120, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "normal", mouth: "flat" }, { t: vo("cry", 4) - vo("cry", 3) + 0.1, mode: "stopHand", eyes: "normal", mouth: "flat" }])],
+        actors: [KO(600, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }], { prop: "spear1", moveTo: { x: 760, dur: D("cry") - vo("cry", 3) + 0.1, ease: "none" } }), PI(380, 1500, 0.9, [{ t: 0, mode: "stopHand", eyes: "worry", mouth: "frown" }]), PH(120, 1500, 0.9, [{ t: 0, mode: "listen", eyes: "squint", mouth: "flat" }, { t: vo("cry", 4) - vo("cry", 3) + 0.1, mode: "stopHand", eyes: "squint", mouth: "flat" }])],
+        react: [{ a: 2, t: vo("cry", 5) - (vo("cry", 3) - 0.1), dur: 2.6 }],
         captions: capsFrom("cry", vo("cry", 3) - 0.1, [5]),
         bubbles: [bub("cry", 3, 40, 520, 380), bub("cry", 4, 40, 520, 120)].map((b, i) => ({ ...b, t: i ? vo("cry", 4) - vo("cry", 3) + 0.05 : 0.05, end: b.end - (vo("cry", 3) - 0.1) })),
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); put(L.mid, `<g id="cy-lurelt" opacity="0"><circle cx="1500" cy="1060" r="5" fill="#ff5a4a"/><circle cx="1500" cy="1060" r="22" fill="#ff5a4a" opacity=".25"/></g>`); },
@@ -1496,7 +1516,8 @@
         set: "schoolYard", setOpts: { id: "pe", time: "night", lampX: -300, gate: 0.12 }, dark: 0.55, blur: { far: 2 },
         cam: { keys: [{ t: 0, ...fr(820, 1180, 1.25, 540, 1050), drift: { s: 0.02 } }, { t: vo("peek", 1) - 0.05, ...fr(1000, 1100, 1.0, 540, 1000), drift: { s: 0.04 } }] },
         shake: (t) => (t > vo("peek", 1) ? 4 * Math.sin(t * 19) : 0),
-        actors: [KO(700, 1500, 0.9, [{ t: 0, mode: "push", eyes: "wide", mouth: "o" }, { t: vo("peek", 1), mode: "guard", eyes: "wide", mouth: "scream" }], { prop: "spear1f" })],
+        actors: [KO(700, 1500, 0.9, [{ t: 0, mode: "push", eyes: "squint", mouth: "grit" }, { t: vo("peek", 1), mode: "guard", eyes: "wide", mouth: "scream" }], { prop: "spear1f" })],
+        react: [{ a: 0, t: vo("peek", 1), dur: 1.2, fast: true }],
         captions: caps("peek"),
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) {
@@ -1567,8 +1588,8 @@
         set: "schoolYard", setOpts: { id: "cv", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(860, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }, { t: voEnd("cover", 0) - 0.1, ...fr(100, 1200, 1.2, 540, 1050), drift: { s: 0.03 } }] },
         shake: (t) => 4 * Math.sin(t * 17),
-        actors: [MA(960, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "wide", mouth: "frown" }, { t: 0.8, mode: "thrust", eyes: "wide", mouth: "scream" }], { flip: false, prop: "spear1f" }), KO(820, 1500, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }, { t: 0.8, mode: "limpRun", eyes: "pain", mouth: "frown" }], { flip: true, moveTo: { x: -200, at: 0.8, dur: D("cover") - 0.8, ease: "power1.in" } }),
-          PH(300, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "normal", mouth: "flat" }], { moveTo: { x: 0, dur: D("cover") } }), PI(-60, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: voEnd("cover", 0), mode: "stopHand", eyes: "wide", mouth: "o" }])],
+        actors: [MA(960, 1500, 0.9, [{ t: 0, mode: "grabArm", eyes: "squint", mouth: "grit" }, { t: 0.8, mode: "thrust", eyes: "angry", mouth: "scream" }], { flip: false, prop: "spear1f" }), KO(820, 1500, 0.9, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }, { t: 0.8, mode: "limpRun", eyes: "pain", mouth: "frown" }], { flip: true, moveTo: { x: -200, at: 0.8, dur: D("cover") - 0.8, ease: "power1.in" } }),
+          PH(300, 1500, 0.9, [{ t: 0, mode: "reach", eyes: "squint", mouth: "flat" }], { moveTo: { x: 0, dur: D("cover") } }), PI(-60, 1500, 0.9, [{ t: 0, mode: "guard", eyes: "worry", mouth: "frown" }, { t: voEnd("cover", 0), mode: "plead", eyes: "worry", mouth: "o" }])],
         bubbles: [bub("cover", 0, 420, 520, 300)],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) { ZF(L, tl, "cv", t0, D("cover"), [["ha1", 1300, 0.8, 0], ["ha2", 1420, 0.76, 0.4], ["ha3", 1540, 0.78, 0.2], ["ha1", 1380, 0.74, 0.7], ["ha2", 1480, 0.7, 0.9]], "zrun"); [0, 1, 2, 3, 4].forEach((k) => route(tl, `cv-z${k}`, t0, [{ t: 0, x: [1300, 1420, 1540, 1380, 1480][k], y: 1180 }, { t: 1.2, x: [1120, 1200, 1280, 1160, 1240][k], y: 1180 }], [0.8, 0.76, 0.78, 0.74, 0.7][k], true)); Fx.punch(tl, `#${id} .stage`, t0 + voEnd("cover", 0) - 0.1, 1.05, 0.35); red(tl, t0 + voEnd("cover", 0) + 0.2, 0.5, 0.5); Fx.heart(tl, t0, D("cover"), 0.4, 0.7); },
@@ -1579,9 +1600,10 @@
         set: "schoolYard", setOpts: { id: "cd", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.55, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(1000, 1200, 1.1, 540, 1050), drift: { s: 0.03 } }, { t: 3.0, ...fr(1150, 1250, 1.35, 540, 1100), r: -2, drift: { s: 0.04, r: 3 } }, { t: 5.2, glide: 0.8, ...fr(700, 1150, 0.85, 540, 1050), drift: { s: 0.03 } }, { t: D("count"), glide: 2.4, ...fr(1100, 1250, 1.4, 540, 1100) }] },
         shake: (t) => 5 * Math.sin(t * 21),
-        actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "wide", mouth: "scream" }, { t: 5.0, mode: "brace", eyes: "wide", mouth: "frown" }], { prop: "spear1f" })],
+        actors: [MA(1000, 1500, 0.9, [{ t: 0, mode: "thrust", eyes: "angry", mouth: "scream" }, { t: 5.0, mode: "brace", eyes: "squint", mouth: "grit" }], { prop: "spear1f" })],
+        react: [{ a: 0, t: 5.0, dur: 2.6 }],
         captions: caps("count"),
-        ui: [{ type: "countdown", t: 0.2, from: 20, to: 6, tick: 0.55, label: "ประตูหลังปิดใน", warn: 5, end: D("count") - 0.1, top: 60 }],
+        ui: [],
         extra(L) { RAIN(L, { n: 120, op: 0.5 }); },
         fx(tl, id, t0, L) {
           ZF(L, tl, "cd", t0, D("count"), [["ha1", 1180, 0.8, 0], ["ha2", 1280, 0.76, 0.4], ["ha3", 1380, 0.78, 0.2], ["ha1", 1230, 0.74, 0.7], ["ha2", 1330, 0.7, 0.9], ["ha3", 1430, 0.72, 0.5]]);
@@ -1593,25 +1615,72 @@
         },
       });
 
-      // ---------- 16. the last five: the back door from inside; through the gap he is far away, braced; "ปิดซะ ครู"; 0 = the bar ----------
+      // ---------- 16. the last five: the back door from inside; through the gap he is out in the yard, braced; "ปิดประตูซะ… ครูพิม"; the bar ----------
       add("count2", {
-        set: "backDoor", setOpts: { id: "bd", open: 0.3 }, dark: 0.5, blur: { far: 3, mid: 2 },
-        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 1000), drift: { s: 0.03 } }, { t: 2.0, glide: 0.6, ...fr(540, 1000, 1.1, 540, 1000), drift: { s: 0.04 } }] },
-        shake: (t) => (t < 2.5 ? 6 * Math.sin(t * 21) : 0),
-        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "push", eyes: "normal", mouth: "flat" }]), PI(920, 1560, 0.95, [{ t: 0, mode: "guard", eyes: "wide", mouth: "frown" }, { t: 2.4, mode: "push", eyes: "wide", mouth: "frown" }], { flip: true })],
+        set: "backDoor", setOpts: { id: "bd", open: 0.18 }, dark: 0.5, blur: { far: 3, mid: 1 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 1000), drift: { s: 0.03 } }, { t: 2.0, glide: 0.6, ...fr(540, 1000, 1.1, 540, 1000), drift: { s: 0.04 } }, { t: 3.3, glide: 1.0, ...fr(540, 1290, 1.5, 540, 1000), drift: { s: 0.02 } }] },
+        shake: (t) => (t < 3.8 ? 6 * Math.sin(t * 21) : 0),
+        actors: [PH(10, 1560, 0.95, [{ t: 0, mode: "push", eyes: "squint", mouth: "flat" }]), PI(1070, 1560, 0.95, [{ t: 0, mode: "guard", eyes: "worry", mouth: "frown" }, { t: 3.2, mode: "push", eyes: "sad", mouth: "grit" }], { flip: true })],   // hands on the leaves, not in the gap: their arms crossed the man lying in the yard
         captions: caps("count2", [0], { quote: true }),
-        ui: [{ type: "countdown", t: 0.0, from: 5, to: 0, tick: 0.5, label: "ประตูหลังปิดใน", warn: 5, end: 3.1, top: 60 }],
+        ui: [],
         extra(L) { RAIN(L, { n: 60, op: 0.4, splash: false }); },
         fx(tl, id, t0, L) {
-          behind(L, tl, "bd-man", "man", 540, 1180, 0.7, false, t0, D("count2"), [{ t: 0, mode: "brace", eyes: "normal", mouth: "frown" }]);
+          // user 28 Oct: "ให้ภาพจากนอกประตูสิว่ากำลังโดนรุมกิน" + 29 Oct: "เอาภาพ 1 ไปอยู่ในประตูภาพ 2 ด้วย" (the fallen picture inside the door):
+          // through the gap he braces and shouts (mid-yard, low in the doorway where nothing in the corridor covers him), three of them reach him from behind; on "ครูพิม" he goes down on his knees, then flat on his back
+          // with them kneeling over him — the fallen shot two thirds the size, framed by the door — one more comes in out of the dark; the doors close on his raised hand
+          const D2 = D("count2"), SN = { eyes: "dead", mouth: "snarl" };
+          const Z = (aid, who, flip, keys, track) => { behind(L, tl, aid, who, keys[0].x, keys[0].y, keys[0].s, flip, t0, D2, track); routeS(tl, aid, t0, keys, flip); };
+          // under them all: the lamp light out through the gap (narrows with the doors) and the stain under him (grows once he is down)
+          L.mid.insertAdjacentHTML("beforeend", `<defs><linearGradient id="bd-spg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".36"/><stop offset=".55" stop-color="#ffd9a0" stop-opacity=".16"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></linearGradient></defs>
+            <path id="bd-spill" d="M343,1560L737,1560L706,1205L384,1205Z" fill="url(#bd-spg)"/><ellipse id="bd-blood" cx="480" cy="1338" rx="110" ry="13" fill="#3a0c0a" opacity="0"/>`);
+          tl.to("#bd-blood", { opacity: 0.62, attr: { rx: 175, ry: 22 }, duration: 1.3, ease: "power1.out", immediateRender: false }, t0 + 2.35);
+          tl.fromTo("#bd-spill", { attr: { transform: "translate(540,0) scale(1,1) translate(-540,0)" } }, { attr: { transform: "translate(540,0) scale(0.02,1) translate(-540,0)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 3.35);
+          Z("bdh-z2", "ha3", false, [{ t: 0, x: 548, y: 1186, s: 0.31 }, { t: D2, x: 596, y: 1188, s: 0.31 }], [{ t: 0, mode: "shamble", ...SN, opts: { period: 1.6 } }]);   // furthest back, walking in
+          Z("bdh-z0", "ha2", false, [{ t: 0, x: 352, y: 1190, s: 0.35 }, { t: D2, x: 420, y: 1192, s: 0.35 }], [{ t: 0, mode: "shamble", ...SN, opts: { period: 1.5 } }]);   // far back, left
+          Z("bdh-z1", "ha1", true, [{ t: 0, x: 790, y: 1215, s: 0.41 }, { t: 1.8, x: 790, y: 1215, s: 0.41 }, { t: D2, x: 682, y: 1215, s: 0.41 }], [{ t: 0, mode: "shamble", ...SN, opts: { period: 1.4 } }]);   // the one coming in, as in the fallen shot
+          Z("bdf-z1", "ha2", false, [{ t: 0, x: 600, y: 1268, s: 0.5 }, { t: 1.3, x: 652, y: 1300, s: 0.56 }, { t: 1.95, x: 652, y: 1300, s: 0.56 }, { t: 2.45, x: 529, y: 1294, s: 0.56 }, { t: D2, x: 529, y: 1294, s: 0.56 }], [{ t: 0, mode: "shamble", ...SN }, { t: 1.4, mode: "feed", ...SN, opts: { ph: 0.4 } }]);
+          Z("bdf-z0", "ha1", false, [{ t: 0, x: 372, y: 1316, s: 0.573 }, { t: 1.3, x: 588, y: 1316, s: 0.573 }, { t: 1.95, x: 588, y: 1316, s: 0.573 }, { t: 2.45, x: 419, y: 1301, s: 0.573 }, { t: D2, x: 419, y: 1301, s: 0.573 }], [{ t: 0, mode: "lunge", ...SN }, { t: 1.5, mode: "feed", ...SN, opts: { ph: 1.7 } }]);
+          Z("bdf-z2", "ha3", true, [{ t: 0, x: 780, y: 1320, s: 0.573 }, { t: 1.25, x: 712, y: 1316, s: 0.573 }, { t: 1.95, x: 712, y: 1316, s: 0.573 }, { t: 2.45, x: 639, y: 1302, s: 0.573 }, { t: D2, x: 639, y: 1302, s: 0.573 }], [{ t: 0, mode: "lunge", ...SN }, { t: 1.45, mode: "feed", ...SN, opts: { ph: 2.9 } }]);
+          // him last, in front of them: brace → his knees on "ครูพิม" → his back; his feet slide out as he goes over so the whole of him lies inside the gap (head at the left jamb)
+          Z("bd-man", "man", false, [{ t: 0, x: 660, y: 1330, s: 0.6 }, { t: 1.95, x: 660, y: 1330, s: 0.6 }, { t: 2.4, x: 715, y: 1330, s: 0.6 }, { t: D2, x: 715, y: 1330, s: 0.6 }],
+            [{ t: 0, mode: "brace", eyes: "angry", mouth: "scream" }, { t: 1.45, mode: "fall", eyes: "pain", mouth: "scream", blend: 0.55 }, { t: 1.95, mode: "lieReach", eyes: "pain", mouth: "scream", blend: 0.45 }]);   // one fall entry (a second restarts the stumble)
           Camp.attach && Camp.attach("bd-man", "spear1f");
-          ZF(L, tl, "bd", t0, D("count2"), [["ha1", 700, 0.5, 0], ["ha2", 440, 0.48, 0.4], ["ha3", 780, 0.5, 0.2]], "shamble");
+          const hf = document.getElementById("bd-man-handF"); if (hf && hf.lastElementChild) tl.to(hf.lastElementChild, { opacity: 0, duration: 0.15, immediateRender: false }, t0 + 1.9);   // the spear goes down into the pile
           document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio"));
-          tl.fromTo("#bd-dl", { attr: { transform: "translate(300,0) scale(0.3,1)" } }, { attr: { transform: "translate(300,0) scale(1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 2.05);
-          tl.fromTo("#bd-dr", { attr: { transform: "translate(780,0) scale(-0.3,1)" } }, { attr: { transform: "translate(780,0) scale(-1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 2.05);
-          tl.set("#bd-bar", { opacity: 1 }, t0 + 2.45); tl.fromTo("#bd-bar", { attr: { transform: "translate(0,-500)" } }, { attr: { transform: "translate(0,0)" }, duration: 0.2, ease: "power3.in", immediateRender: false }, t0 + 2.45);
-          Fx.heart(tl, t0, 2.5, 0.3, 0.85);
-          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 2.55); tl.set("#black", { opacity: 1 }, t0 + 2.65);
+          tl.fromTo("#bd-dl", { attr: { transform: "translate(300,0) scale(0.18,1)" } }, { attr: { transform: "translate(300,0) scale(1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 3.35);
+          tl.fromTo("#bd-dr", { attr: { transform: "translate(780,0) scale(-0.18,1)" } }, { attr: { transform: "translate(780,0) scale(-1,1)" }, duration: 0.4, ease: "power3.in", immediateRender: false }, t0 + 3.35);
+          tl.set("#bd-bar", { opacity: 1 }, t0 + 3.75); tl.fromTo("#bd-bar", { attr: { transform: "translate(0,-500)" } }, { attr: { transform: "translate(0,0)" }, duration: 0.2, ease: "power3.in", immediateRender: false }, t0 + 3.75);
+          Fx.heart(tl, t0, 3.8, 0.3, 0.85);
+          tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 3.85); tl.set("#black", { opacity: 1 }, t0 + 3.95);
+        },
+      });
+
+      // ---------- 16b. (user 28 Oct: "ทำให้เห็นลุงหมานนอนอยู่กับพื้น ฝูงซอมบี้รุมลุงหมานอยู่") outside, the rain: he is down at the breach,
+      //              the spear broken, his hat in the mud, the horde crouched over him; a hand comes up out of the pile, the lightning, the hand drops, the heartbeat stops ----------
+      add("fallen", {
+        set: "schoolYard", setOpts: { id: "fl", time: "night", lampX: -300, breakAt: 1100, fallen: true }, dark: 0.62, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(975, 1420, 1.62, 540, 1140), drift: { s: 0.02 } }, { t: D("fallen"), glide: 3.2, ...fr(965, 1430, 1.8, 540, 1150) }] },
+        shake: (t) => (t < 0.4 ? 7 * Math.sin(t * 27) * (0.4 - t) / 0.4 : 1.2 * Math.sin(t * 9)),
+        actors: [   // the rig only faces the camera, so the feeders kneel BEHIND him and lean in over the body; he is drawn last, his face and his hand in front
+          { who: "ha1", x: 1330, y: 1420, s: 0.6, flip: true, track: [{ t: 0, mode: "shamble", eyes: "dead", mouth: "snarl", opts: { period: 1.4 } }], moveTo: { x: 1210, dur: 3.2 }, cast: false, cu: false },
+          { who: "ha2", x: 820, y: 1488, s: 0.86, track: [{ t: 0, mode: "feed", eyes: "dead", mouth: "snarl", opts: { ph: 1.7 } }], cast: false, cu: false },
+          { who: "ha1", x: 985, y: 1478, s: 0.84, track: [{ t: 0, mode: "feed", eyes: "dead", mouth: "snarl", opts: { ph: 0.4 } }], cast: false, cu: false },
+          { who: "ha3", x: 1150, y: 1490, s: 0.86, flip: true, track: [{ t: 0, mode: "feed", eyes: "dead", mouth: "snarl", opts: { ph: 2.9 } }], cast: false, cu: false },
+          MA(1265, 1532, 0.9, [{ t: 0, mode: "lieReach", eyes: "pain", mouth: "grit" }, { t: 1.7, mode: "lieFlat", eyes: "closed", mouth: "flat", blend: 0.5 }], { cu: false, cast: false }),
+        ],
+        extra(L) {
+          RAIN(L, { n: 130, op: 0.55 });
+          // the spear in two in the mud
+          put(L.set, `<g opacity=".95"><path d="M1235,1612L1468,1566" stroke="#2a221c" stroke-width="15" stroke-linecap="round"/><path d="M1235,1612L1468,1566" stroke="#9c7b52" stroke-width="10" stroke-linecap="round"/><path d="M1300,1599l22,-4" stroke="#2b2b2b" stroke-width="12"/>
+            <path d="M606,1626L700,1606" stroke="#2a221c" stroke-width="14" stroke-linecap="round"/><path d="M606,1626L700,1606" stroke="#9c7b52" stroke-width="9" stroke-linecap="round"/><path d="M700,1606L752,1594L736,1612Z" fill="#cfd6d2" stroke="#2a221c" stroke-width="3" stroke-linejoin="round"/></g>
+`);
+        },
+        fx(tl, id, t0, L) {
+          tl.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0);
+          THUNDER(tl, t0 + 0.12, 0.75); red(tl, t0 + 0.12, 0.5, 0.9);
+          THUNDER(tl, t0 + 1.72, 0.55);
+          Fx.heart(tl, t0 + 0.1, 1.7, 0.8, 0.6);
+          tl.to("#black", { opacity: 1, duration: 0.4, ease: "power1.in" }, t0 + D("fallen") - 0.45);
         },
       });
 
@@ -1619,7 +1688,8 @@
       add("after", {
         set: "backDoor", setOpts: { id: "af", closed: true, barred: true }, dark: 0.7, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }], { prop: "spear1" }), HO(-80, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(1120, 1560, 0.6, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "sad", mouth: "frown" }], { prop: "spear1" }), HO(-80, 1560, 0.95, [{ t: 0, mode: "handChest", eyes: "sad", mouth: "frown" }]), PU(1120, 1560, 0.6, [{ t: 0, mode: "slump", eyes: "sad", mouth: "frown" }], { flip: true })],
+        react: [{ a: 1, t: 1.4, dur: 2.4 }],
         captions: caps("after"),
         fx(tl, id, t0) { tl.set("#black", { opacity: 1 }, t0); tl.to("#black", { opacity: 0, duration: 0.6 }, t0 + 0.5); [0.15, 0.4, 0.9].forEach((t) => tl.fromTo(`#${id} .stage`, { x: 0 }, { x: 10, duration: 0.05, repeat: 3, yoyo: true, immediateRender: false }, t0 + t)); Fx.punch(tl, `#${id} .stage`, t0 + F("after", 0, 1), 1.05, 0.4); red(tl, t0 + F("after", 0, 1), 0.4, 0.6); Fx.heart(tl, t0, D("after"), 0.6, 0.4); },
       });
@@ -1659,7 +1729,7 @@
       add("real", {
         set: "backDoor", setOpts: { id: "rl", closed: true, barred: true }, dark: 0.65, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [PH(300, 1560, 0.95, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }]), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [PH(300, 1560, 0.95, [{ t: 0, mode: "kneelAid", eyes: "squint", mouth: "flat" }]), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "pain", mouth: "frown" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "frown" }], { flip: true })],
         captions: caps("real"),
         ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: D("real") - 0.05, ill: "press", label: "ในชีวิตจริง", text: "กดก่อน → ไม่หยุด = ขันชะเนาะ → {หาหมอ}", tone: "rule", top: 230 },
           { type: "src", t: F("real", 0, 1) + 0.3, end: D("real") - 0.05, top: 600, text: MLP + "“If continuous pressure has not stopped the bleeding, and bleeding is extremely severe (life threatening), a tourniquet can be used until medical help arrives.”" }],
@@ -1693,7 +1763,8 @@
       }, {
         set: "backDoor", setOpts: { id: "rb", closed: true, barred: true }, dark: 0.7, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }], { prop: "spear1" }), HO(-80, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(1120, 1560, 0.6, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true })],
+        actors: [PH(160, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }]), PI(900, 1560, 0.95, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "frown" }], { flip: true }), KO(560, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "sad", mouth: "frown" }], { prop: "spear1" }), HO(-80, 1560, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }]), PU(1120, 1560, 0.6, [{ t: 0, mode: "idle", eyes: "normal", mouth: "frown" }], { flip: true })],
+        react: [{ a: 0, t: F("radio", 1, 1) - (vo("radio", 1) - 0.1) + 0.1, dur: 1.8 }],
         captions: capsFrom("radio", vo("radio", 1) - 0.1, [1]),
         ui: [{ type: "counter", t: 0.05, end: D("radio") - (vo("radio", 1) - 0.1) - 0.05, label: "คนในค่าย", icon: "people", unit: "คน", max: 6, keys: [{ t: 0, v: 6 }, { t: F("radio", 1, 1) - (vo("radio", 1) - 0.1), v: 5 }], alarm: F("radio", 1, 1) - (vo("radio", 1) - 0.1), top: 150 }],
         fx(tl, id, t0) { const X = t0 + F("radio", 1, 1) - (vo("radio", 1) - 0.1); Fx.punch(tl, `#${id} .stage`, X, 1.06, 0.4); red(tl, X, 0.5, 0.6); Fx.heart(tl, t0, D("radio") - (vo("radio", 1) - 0.1), 0.6, 0.4); },
@@ -1703,7 +1774,7 @@
       add("ledger", {
         set: "backDoor", setOpts: { id: "lg", closed: true, barred: true }, dark: 0.65, blur: { far: 4 },
         cam: { keys: [{ t: 0, ...fr(300, 1200, 1.2, 540, 1050), drift: { s: 0.02 } }] },
-        actors: [HO(-40, 1560, 0.95, [{ t: 0, mode: "write", eyes: "normal", mouth: "frown" }], { prop: "ledger" }), KO(460, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "normal", mouth: "frown" }, { t: 1.0, mode: "sitHold", eyes: "normal", mouth: "flat" }], { prop: "spear1" })],
+        actors: [HO(-40, 1560, 0.95, [{ t: 0, mode: "write", eyes: "sad", mouth: "frown" }], { prop: "ledger" }), KO(460, 1560, 0.95, [{ t: 0, mode: "sitLeg", eyes: "sad", mouth: "frown" }, { t: 1.0, mode: "sitHold", eyes: "sad", mouth: "flat" }], { prop: "spear1" })],
         bubbles: [bub("ledger", 0, 40, 520, 160)],
         ui: [{ type: "counter", t: 0.2, end: D("ledger") - 0.05, label: "อาวุธของค่าย", icon: "spear", unit: "ชิ้น", max: 3, sub: "หอกมีด +1 · ของก้อง", keys: [{ t: 0.2, v: 1 }], top: 150, right: true }],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("ledger"), 0.7, 0.3); },
@@ -1713,7 +1784,7 @@
       add("dawn", {
         set: "schoolYard", setOpts: { id: "dn", time: "morning", level: 0.5, breakAt: 1100, fallen: true }, dark: 0.3, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(800, 1100, 0.8, 540, 1000), drift: { s: 0.015 } }, { t: vo("dawn", 1) - 0.05, glide: 0.8, ...fr(1160, 1200, 1.45, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(700, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: vo("dawn", 1), mode: "reach", eyes: "normal", mouth: "flat" }, { t: vo("dawn", 1) + 1.2, mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "bag", moveTo: { x: 1040, dur: vo("dawn", 1), ease: "none" } })],
+        actors: [PH(700, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }, { t: vo("dawn", 1), mode: "reach", eyes: "squint", mouth: "flat" }, { t: vo("dawn", 1) + 1.2, mode: "idle", eyes: "squint", mouth: "flat" }], { prop: "bag", moveTo: { x: 1040, dur: vo("dawn", 1), ease: "none" } })],
         captions: caps("dawn"),
         extra(L) { put(L.set, LUREBOX("dn-box", 1120, 1100, 1.0)); },
         fx(tl, id, t0) { const T = t0 + vo("dawn", 1) + 0.6; tl.to("#dn-box", { attr: { transform: "translate(1120,1100) scale(1.0)" }, duration: 0.01 }, T - 0.02); tl.to("#dn-box", { attr: { transform: "translate(1080,1380) scale(0.6)" }, duration: 0.5, ease: "power2.in" }, T); tl.set("#dn-box", { opacity: 0 }, T + 0.5); Fx.punch(tl, `#${id} .stage`, t0 + F("dawn", 1, 1), 1.05, 0.35); red(tl, t0 + F("dawn", 1, 1), 0.4, 0.5); Fx.heart(tl, t0 + vo("dawn", 1), D("dawn") - vo("dawn", 1), 0.5, 0.5); },
@@ -1723,7 +1794,8 @@
       add("walkie", {
         set: "schoolYard", setOpts: { id: "wk", time: "morning", level: 0.5, breakAt: 1100, fallen: true }, dark: 0.35, blur: { far: 4, set: 2 },
         cam: { keys: [{ t: 0, ...fr(1040, 1320, 1.7, 540, 1150), drift: { s: 0.03 } }, { t: vo("walkie", 1) - 0.05, glide: 0.5, ...fr(1040, 1180, 1.4, 540, 1050), drift: { s: 0.03 } }] },
-        actors: [PH(1040, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("walkie", 1), mode: "lookUp", eyes: "normal", mouth: "flat" }], { prop: "bag" })],
+        actors: [PH(1040, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }, { t: vo("walkie", 1), mode: "lookUp", eyes: "squint", mouth: "smile" }], { prop: "bag" })],
+        react: [{ a: 0, t: vo("walkie", 1), dur: 2.2 }],
         captions: CLIP([...caps("walkie", [0], { quote: true }), ...caps("walkie", [1])]),
         ui: [{ type: "counter", t: F("walkie", 1, 1), end: D("walkie") - 0.05, label: "วิทยุในค่าย", icon: "radio", unit: "เครื่อง", max: 2, keys: [{ t: F("walkie", 1, 1), v: 2 }], alarm: F("walkie", 1, 1), top: 150, right: true }],
         extra(L) { put(L.act, `<g id="wk-led" opacity="0"><circle cx="1010" cy="1400" r="6" fill="#4cff7a"/><circle cx="1010" cy="1400" r="26" fill="#4cff7a" opacity=".25"/></g>`); },
@@ -1743,7 +1815,8 @@
         set: "schoolYard", setOpts: { id: "cho", time: "morning", level: 0.5, breakAt: 1100, fallen: true }, dark: 0.35, blur: { far: 3 },
         cam: { keys: [{ t: 0, ...fr(1000, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: 1.0, glide: 1.6, ...fr(1040, 1200, 1.6, 540, 1050), r: 2, drift: { s: 0.03, r: 0.8 } }] },
         shake: (t) => shakeH(t) * 2,
-        actors: [PH(1040, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { prop: "bag", flip: true })],
+        actors: [PH(1040, 1500, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "smile" }], { prop: "bag", flip: true })],
+        react: [{ a: 0, t: 0.6, dur: 2.2 }],
         ui: [{ type: "choice", t: 0.05, q: "เสียงเด็กร้อง… ใครเปิด?", a: "ภู", b: "คนข้างนอก", secs: 3, top: 300, possessed: { at: 1.0, side: "a", glitch: "ภู…", who: "…เขาเก็บกล่องเสียงไว้" } }],
         fx(tl, id, t0) { Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75); Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 64); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 65); tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2); },
       });

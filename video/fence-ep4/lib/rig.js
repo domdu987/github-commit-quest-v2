@@ -9,13 +9,48 @@
     return `<rect x="${-wid / 2}" y="-4" width="${wid}" height="${len + 8}" rx="${wid / 2}" fill="${col}" ${OUT}/>` +
       `<rect x="${wid * 0.12}" y="2" width="${wid * 0.32}" height="${len - 4}" rx="${wid * 0.16}" fill="${shade}" opacity=".55"/>`;
   }
+  // v2 body parts (user, 28 Oct: "ตัวละคร ทำให้ดีกว่านี้"): limbs taper from joint to joint with rounded caps that hide the seams,
+  // a shaded far side and a lit near edge (light from the upper left), cloth creases at the joints; real hands and soled shoes.
+  // Joint positions and lengths are unchanged, so every pose, prop and hand attachment still lines up.
+  const f2 = (v) => (Math.round(v * 10) / 10).toString();
+  function taper(len, w0, w1, col, shade, o = {}) {
+    const a = w0 / 2, b = w1 / 2, bu = o.bulge || 0, m = len * (o.at ?? 0.38);
+    const d = `M${f2(-a)},0C${f2(-a - bu)},${f2(m * 0.6)} ${f2(-b - bu * 0.6)},${f2(m + (len - m) * 0.5)} ${f2(-b)},${len}A${f2(b)},${f2(b)} 0 0 0 ${f2(b)},${len}C${f2(b + bu * 0.6)},${f2(m + (len - m) * 0.5)} ${f2(a + bu)},${f2(m * 0.6)} ${f2(a)},0A${f2(a)},${f2(a * 0.9)} 0 0 0 ${f2(-a)},0Z`;
+    const sh = `M${f2(a * 0.25)},${f2(-a * 0.5)}C${f2(a * 0.9)},${f2(m * 0.5)} ${f2(b * 0.9)},${f2(len * 0.7)} ${f2(b * 0.55)},${f2(len + b * 0.5)}A${f2(b)},${f2(b)} 0 0 0 ${f2(b)},${len}C${f2(b + bu * 0.6)},${f2(m + (len - m) * 0.5)} ${f2(a + bu)},${f2(m * 0.6)} ${f2(a)},0A${f2(a)},${f2(a * 0.9)} 0 0 0 ${f2(a * 0.25)},${f2(-a * 0.5)}Z`;
+    let s = `<path d="${d}" fill="${col}" ${OUT}/><path d="${sh}" fill="${shade}" opacity=".62"/><path d="M${f2(-a * 0.62)},${f2(a * 0.2)}C${f2(-a * 0.7 - bu * 0.6)},${f2(m * 0.7)} ${f2(-b * 0.7)},${f2(len * 0.7)} ${f2(-b * 0.6)},${f2(len - b * 0.3)}" stroke="#fff" stroke-opacity=".2" stroke-width="${f2(Math.max(2.5, w1 * 0.14))}" fill="none" stroke-linecap="round"/>`;
+    if (o.crease) s += `<path d="M${f2(-b * 0.6)},${f2(len - b * 1.2)}q${f2(b * 0.5)},${f2(-b * 0.35)} ${f2(b * 1.1)},${f2(-b * 0.1)}M${f2(-b * 0.3)},${f2(len - b * 0.5)}q${f2(b * 0.4)},${f2(-b * 0.3)} ${f2(b * 0.9)},${f2(-b * 0.1)}" stroke="${shade}" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".9"/>`;
+    if (o.hem) s += `<path d="M${f2(-b - 2)},${f2(len - o.hem)}Q0,${f2(len - o.hem + 5)} ${f2(b + 2)},${f2(len - o.hem)}" stroke="${shade}" stroke-width="3" fill="none"/>`;
+    return s;
+  }
+  // a hand at the end of the forearm (wrist at y 104): palm and fingers curled a little, a thumb on the inner side
+  function hand2(skin, skinS, inner) {
+    const t = inner < 0 ? -1 : 1;
+    return `<g transform="translate(0,104)"><path d="M-13,0C-17,12 -16,27 -9,34C-3,40 8,39 12,30C16,21 15,8 12,0Z" fill="${skin}" ${OUT}/>
+      <path d="M${8 * t},4C${20 * t},6 ${22 * t},16 ${16 * t},24C${12 * t},26 ${9 * t},22 ${10 * t},16" fill="${skin}" ${OUT}/>
+      <path d="M4,4C12,12 12,26 6,34C10,34 13,28 13,20C14,12 12,5 10,2Z" fill="${skinS}" opacity=".7"/><path d="M-7,24v8M-1,26v9M5,25v7" stroke="${skinS}" stroke-width="2" stroke-linecap="round"/><path d="M-10,6c-2,8 -2,14 0,20" stroke="#fff" stroke-opacity=".25" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>`;
+  }
+  // a shoe with a sole, a toe cap that catches the light and laces (pointing +x like the old one)
+  function shoe2(col) {
+    const dark = /^#[0-9a-f]{6}$/i.test(col) ? (parseInt(col.slice(1, 3), 16) + parseInt(col.slice(3, 5), 16) + parseInt(col.slice(5, 7), 16)) < 330 : true;
+    const sole = dark ? "#8f8a80" : "#bdb6a8";
+    return `<path d="M-19,120C-20,132 -21,138 -21,142H38C40,134 33,126 20,124C12,123 6,118 4,114H-16Z" fill="${col}" ${OUT}/><path d="M-22,141H39Q41,148 36,151H-20Q-23,148 -22,141Z" fill="${sole}" ${OUT}/>
+      <path d="M-2,120l8,6M4,117l8,6" stroke="${dark ? "#6b6560" : "#fff"}" stroke-width="2.2" stroke-linecap="round"/><path d="M18,129q10,2 14,8" stroke="#fff" stroke-opacity=".3" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-16,124q-1,8 -2,14" stroke="#fff" stroke-opacity=".18" stroke-width="3" fill="none"/>`;
+  }
 
+  // Eyes (user 28 Oct: "ตัวละคร ทำให้ดีกว่านี้"): the irises sit in a .pup group so they can dart (saccades) and look where the
+  // track says (gaze); brows carry the expression — worry (inner ends up), angry (inner ends down), sad (heavy lids + worried brows),
+  // squint (narrowed, set jaw). Skin-coloured lids are added per character in build() (they need the skin tone).
+  const WHITES = `<ellipse cx="-14" cy="-545" rx="7.6" ry="7" fill="#fbf7ee"/><ellipse cx="18" cy="-545" rx="7.6" ry="7" fill="#fbf7ee"/>`;
+  const PUPS = `<g class="pup"><circle cx="-13" cy="-545" r="5.2" fill="#3b2619"/><circle cx="19" cy="-545" r="5.2" fill="#3b2619"/><circle cx="-13" cy="-545" r="2.6" fill="#0d0907"/><circle cx="19" cy="-545" r="2.6" fill="#0d0907"/>
+             <circle cx="-15" cy="-547.6" r="1.8" fill="#fff"/><circle cx="17" cy="-547.6" r="1.8" fill="#fff"/></g>`;
+  const LIDLINE = `<path d="M-22.5,-548q8,-6 17,-1M9.5,-549q9,-5 17,1" stroke="#2e2a26" stroke-width="3.6" fill="none" stroke-linecap="round"/>`;
+  const BROW = (d, w = 4.4) => `<path d="${d}" stroke="#2e2a26" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
+  const BROWS = { normal: "M-24,-563q10,-6 19,-2M10,-565q10,-4 19,2", worry: "M-25,-558q9,-4 19,-11M9,-569q10,7 20,11", angry: "M-25,-569q11,2 20,11M9,-558q9,-9 21,-11", flat: "M-25,-561q10,-2 20,0M9,-561q10,-2 20,0", set: "M-25,-565q10,-1 20,6M9,-559q10,-7 20,-6" };
   const EYES = {
-    normal: `<ellipse cx="-14" cy="-546" rx="4.5" ry="6" fill="#2e2a26"/><ellipse cx="18" cy="-546" rx="4.5" ry="6" fill="#2e2a26"/>
-             <path d="M-24,-562q10,-5 18,-1M10,-563q10,-4 18,1" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
-    wide: `<circle cx="-14" cy="-546" r="8" fill="#f4ecd8" ${OUT}/><circle cx="18" cy="-546" r="8" fill="#f4ecd8" ${OUT}/>
-           <circle cx="-14" cy="-546" r="2.6" fill="#2e2a26"/><circle cx="18" cy="-546" r="2.6" fill="#2e2a26"/>
-           <path d="M-25,-566q10,-8 19,-3M9,-569q10,-5 19,3" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    normal: WHITES + PUPS + LIDLINE + BROW(BROWS.normal),
+    wide: `<circle cx="-14" cy="-546" r="9" fill="#fbf7ee" ${OUT}/><circle cx="18" cy="-546" r="9" fill="#fbf7ee" ${OUT}/>
+           <g class="pup"><circle cx="-14" cy="-546" r="3.4" fill="#1d130c"/><circle cx="18" cy="-546" r="3.4" fill="#1d130c"/><circle cx="-15.5" cy="-547.8" r="1.3" fill="#fff"/><circle cx="16.5" cy="-547.8" r="1.3" fill="#fff"/></g>
+           <path d="M-25,-568q10,-8 19,-3M9,-571q10,-5 19,3" stroke="#2e2a26" stroke-width="4.4" fill="none" stroke-linecap="round"/>`,
     closed: `<path d="M-21,-545q7,5 14,0M11,-545q7,5 14,0" stroke="#2e2a26" stroke-width="3.5" fill="none" stroke-linecap="round"/>
              <path d="M-24,-560q10,-3 18,0M10,-560q10,-3 18,0" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
     pain: `<path d="M-21,-545l12,-3M11,-548l12,3" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>
@@ -23,8 +58,13 @@
     glow: `<circle cx="-14" cy="-546" r="20" fill="#d8ff9a" opacity=".3"/><circle cx="18" cy="-546" r="20" fill="#d8ff9a" opacity=".3"/>
            <circle cx="-14" cy="-546" r="9" fill="#e9ffc0"/><circle cx="18" cy="-546" r="9" fill="#e9ffc0"/>
            <path d="M-25,-560q10,4 19,1M9,-559q10,3 19,-2" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
-    side: `<ellipse cx="-10" cy="-546" rx="4.5" ry="6" fill="#2e2a26"/><ellipse cx="22" cy="-546" rx="4.5" ry="6" fill="#2e2a26"/>
+    side: `<ellipse cx="-10" cy="-545" rx="7" ry="6.6" fill="#fbf7ee"/><ellipse cx="22" cy="-545" rx="7" ry="6.6" fill="#fbf7ee"/><g class="pup"><circle cx="-7" cy="-545" r="4.6" fill="#3b2619"/><circle cx="25" cy="-545" r="4.6" fill="#3b2619"/>
+           <circle cx="-8" cy="-547" r="1.6" fill="#fff"/><circle cx="24" cy="-547" r="1.6" fill="#fff"/></g><path d="M-18,-548q8,-6 16,-1M14,-549q8,-5 16,1" stroke="#2e2a26" stroke-width="3.4" fill="none" stroke-linecap="round"/>
            <path d="M-22,-562q10,-5 18,-1M12,-563q10,-4 18,1" stroke="#2e2a26" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+    worry: WHITES + PUPS + LIDLINE + BROW(BROWS.worry),
+    angry: WHITES + PUPS + `<path d="M-22.5,-550l17,2M9.5,-548l17,-2" stroke="#2e2a26" stroke-width="3.8" fill="none" stroke-linecap="round"/>` + BROW(BROWS.angry, 4.8),
+    sad: WHITES + PUPS + BROW(BROWS.worry, 4),
+    squint: WHITES + PUPS + BROW(BROWS.set, 4.8),
   };
   // the infected: milky eyes with pin pupils, and a torn-open snarl
   EYES.dead = `<ellipse cx="-14" cy="-545" rx="16" ry="14" fill="#1b211b" opacity=".8"/><ellipse cx="18" cy="-545" rx="16" ry="14" fill="#1b211b" opacity=".8"/>
@@ -38,7 +78,19 @@
     flat: `<path d="M-5,-519h12" stroke="#2e2a26" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
     o: `<ellipse cx="2" cy="-518" rx="5" ry="7" fill="#2e2a26"/>`,
     frown: `<path d="M-5,-516q7,-5 14,0" stroke="#2e2a26" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
-    scream: `<path d="M-7,-524q9,-3 18,0q-1,16 -9,16q-8,0 -9,-16z" fill="#2e2a26"/>`,
+    scream: `<ellipse cx="1.5" cy="-516.5" rx="8.2" ry="11" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.8"/><ellipse cx="1.5" cy="-509.6" rx="4.8" ry="2.8" fill="#c4574f"/><path d="M-4,-525.6q5.5,-1.8 11,0" stroke="#f4ecd8" stroke-width="2.6" stroke-linecap="round" fill="none"/>`,   // a tall open O (the old D shape read as laughing next to wide eyes)
+    talk0: `<path d="M-5,-519.5q6.5,1.6 13,0" stroke="#2e2a26" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
+    talk1: `<path d="M-5.5,-521.5q7,-2 14,0q-1.2,6.5 -7,6.5q-5.8,0 -7,-6.5z" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.6" stroke-linejoin="round"/>`,
+    talk2: `<path d="M-7,-523q8.5,-3 17,0q-1,11.5 -8.5,11.5q-7.5,0 -8.5,-11.5z" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.6" stroke-linejoin="round"/><ellipse cx="1.5" cy="-514.6" rx="4.2" ry="2.4" fill="#c4574f"/><path d="M-5.4,-522h13.8" stroke="#f4ecd8" stroke-width="2.4"/>`,
+    talk3: `<path d="M-8,-525q9.5,-4 19,0q-1,16 -9.5,16q-8.5,0 -9.5,-16z" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.6" stroke-linejoin="round"/><ellipse cx="1.5" cy="-512.6" rx="5" ry="3" fill="#c4574f"/><path d="M-6,-523h15" stroke="#f4ecd8" stroke-width="3.2"/>`,
+    talkS1: `<path d="M-5.5,-519q7,-5 14,0q-1.2,4.5 -7,4.5q-5.8,0 -7,-4.5z" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.6" stroke-linejoin="round"/>`,
+    talkS2: `<path d="M-7,-518q8.5,-8 17,0q-1,7.5 -8.5,7.5q-7.5,0 -8.5,-7.5z" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.6" stroke-linejoin="round"/><ellipse cx="1.5" cy="-512.8" rx="3.6" ry="1.8" fill="#c4574f"/>`,
+    talkS3: `<path d="M-8,-518q9.5,-11 19,0q-1,10 -9.5,10q-8.5,0 -9.5,-10z" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.6" stroke-linejoin="round"/><ellipse cx="1.5" cy="-511.5" rx="4.4" ry="2.4" fill="#c4574f"/><path d="M-4.5,-523.5q6,-3.5 12,0" stroke="#f4ecd8" stroke-width="2.2" fill="none"/>`,
+    talkO1: `<ellipse cx="1.5" cy="-518.6" rx="4.6" ry="4.6" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.5"/>`,
+    talkO2: `<ellipse cx="1.5" cy="-518" rx="6.2" ry="7.6" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.6"/><ellipse cx="1.5" cy="-513.1" rx="3.4" ry="1.9" fill="#c4574f"/>`,
+    talkO3: `<ellipse cx="1.5" cy="-517" rx="7.6" ry="10" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.6"/><ellipse cx="1.5" cy="-510.4" rx="4.4" ry="2.6" fill="#c4574f"/><path d="M-3.4,-525.6q4.9,-1.6 9.8,0" stroke="#f4ecd8" stroke-width="2.4" stroke-linecap="round" fill="none"/>`,
+    grit: `<rect x="-8" y="-525" width="19" height="9.5" rx="3.5" fill="#f4ecd8" stroke="#2e2a26" stroke-width="2.6"/><path d="M-8,-520.2h19M-3,-525v9.5M1.5,-525v9.5M6,-525v9.5" stroke="#9a948a" stroke-width="1.4"/>`,
+    smileOpen: `<path d="M-7,-522q8.5,2 17,0q-1.5,9 -8.5,9q-7,0 -8.5,-9z" fill="#3a1a14" stroke="#2e2a26" stroke-width="2.6" stroke-linejoin="round"/><path d="M-5.6,-521.4h14" stroke="#f4ecd8" stroke-width="2.6"/>`,
     snarl: `<path d="M-17,-529q19,-9 38,0l-4,22q-15,11 -30,0z" fill="#220505" stroke="#2e2a26" stroke-width="3"/>
       <path d="M-14,-528l3,7l3,-7l3,7l3,-7l3,7l3,-7l3,7l3,-7l3,7" stroke="#ece4cf" stroke-width="2.6" fill="none" stroke-linejoin="round"/>
       <path d="M-9,-509l3,-6l3,6l3,-6l3,6l3,-6l3,6" stroke="#ece4cf" stroke-width="2.3" fill="none" stroke-linejoin="round"/>
@@ -46,45 +98,55 @@
   };
 
   function build(parent, id, P) {
-    const leg = (side) => `<g id="${id}-th${side}"><g>${limb(150, 38, P.pants, P.pantsS)}</g>
-        <g transform="translate(0,150)"><g id="${id}-sh${side}">${limb(138, 34, P.pants, P.pantsS)}
-          <path d="M-20,128h34q22,0 22,16v6h-56z" fill="${P.shoe}" ${OUT}/></g></g></g>`;
-    const arm = (side, extra = "") => `<g id="${id}-ua${side}">${limb(122, 30, P.sleeve, P.sleeveS)}
-        <g transform="translate(0,122)"><g id="${id}-fa${side}">${limb(108, 26, P.forearm || P.sleeve, P.forearmS || P.sleeveS)}
-          <circle cx="0" cy="118" r="15" fill="${P.skin}" ${OUT}/><g id="${id}-hand${side}">${extra}</g></g></g></g>`;
+    const leg = (side) => `<g id="${id}-th${side}"><g>${taper(150, 44, 34, P.pants, P.pantsS, { bulge: 2, crease: true })}</g>
+        <g transform="translate(0,150)"><g id="${id}-sh${side}">${taper(132, 34, 30, P.pants, P.pantsS, { bulge: 2.5, at: 0.3, hem: 6 })}
+          ${shoe2(P.shoe)}</g></g></g>`;
+    const arm = (side, extra = "") => `<g id="${id}-ua${side}">${taper(122, 38, 29, P.sleeve, P.sleeveS, { bulge: 2.5, crease: !P.forearm })}${P.forearm ? `<path d="M-16,96Q0,104 16,96" stroke="${P.sleeveS}" stroke-width="3" fill="none"/>` : ""}
+        <g transform="translate(0,122)"><g id="${id}-fa${side}">${taper(104, 28, 21, P.forearm || P.sleeve, P.forearmS || P.sleeveS, { bulge: 2.5, at: 0.3, hem: P.forearm ? 0 : 4 })}
+          <g id="${id}-hw${side}">${hand2(P.skin, P.skinS, side === "F" ? -1 : 1)}${side === "F" ? `<g id="${id}-finger" display="none" transform="translate(0,104)"><path d="M-3,26C-4,40 -3,56 -1,66C1,70 7,70 8,65C9,55 8,40 7,26Z" fill="${P.skin}" ${OUT}/><path d="M5,30C6,42 6,54 5,62" stroke="${P.skinS}" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>` : ""}<g id="${id}-hand${side}">${extra}</g></g></g></g></g>`;
     const torch = `<g id="${id}-torch" display="none" transform="translate(0,118)"><rect x="-9" y="-6" width="18" height="44" rx="4" fill="#3d3833" ${OUT}/>
           <path id="${id}-beam" d="M-8,38L-230,900H230L8,38Z" fill="url(#beamg)"/></g>`;
-    const eyes = Object.entries(EYES).map(([k, v]) => `<g class="eye-${k}" display="${k === "normal" ? "inline" : "none"}">${v}</g>`).join("");
+    const LID = (drop) => [-14, 18].map((cx) => `<path d="M${cx - 9},${-545 - 8}H${cx + 9}V${-545 - 7 + drop}Q${cx},${-545 - 5 + drop} ${cx - 9},${-545 - 7 + drop}Z" fill="${P.skin}"/><path d="M${cx - 8.5},${-545 - 7 + drop}Q${cx},${-545 - 5 + drop} ${cx + 8.5},${-545 - 7 + drop}" stroke="#2e2a26" stroke-width="3.4" fill="none" stroke-linecap="round"/>`).join("");
+    const LOW = [-14, 18].map((cx) => `<path d="M${cx - 9},-536H${cx + 9}V-540Q${cx},-543.5 ${cx - 9},-540Z" fill="${P.skin}"/><path d="M${cx - 8},-540Q${cx},-543.2 ${cx + 8},-540" stroke="#2e2a26" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".75"/>`).join("");
+    const EX = { ...EYES, sad: EYES.sad + LID(6.5), squint: EYES.squint + LID(2.5) + LOW };
+    const eyes = Object.entries(EX).map(([k, v]) => `<g class="eye-${k}" display="${k === "normal" ? "inline" : "none"}">${v}</g>`).join("");
     const mouths = Object.entries(MOUTH).map(([k, v]) => `<g class="mouth-${k}" display="${k === "smile" ? "inline" : "none"}">${v}</g>`).join("");
     const html = `<g id="${id}">
       <defs><linearGradient id="${id}-tg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${P.top}"/><stop offset=".55" stop-color="${P.top}"/><stop offset="1" stop-color="${P.topS}"/></linearGradient>
         <radialGradient id="${id}-sg"><stop offset="0" stop-color="#060c10" stop-opacity=".55"/><stop offset="1" stop-color="#060c10" stop-opacity="0"/></radialGradient></defs>
       <ellipse id="${id}-shadow" cx="0" cy="6" rx="120" ry="22" fill="url(#${id}-sg)"/>
       <g id="${id}-root"><g id="${id}-body">
-        <g transform="translate(-20,-300)">${leg("B")}</g>
-        <g transform="translate(-46,-455)" opacity=".92">${arm("B", P.hand || "")}</g>
+        <g transform="translate(-20,-300)" style="filter:brightness(.84)">${leg("B")}</g>
+        <g id="${id}-armB" transform="translate(-46,-455)" style="filter:brightness(.84)">${arm("B", P.hand || "")}</g>
         <g id="${id}-torso">
-          <path d="M-62,-470Q-66,-482 -44,-486H44Q66,-482 62,-470L56,-300H-56Z" fill="url(#${id}-tg)" ${OUT}/>
+          <path d="M-64,-466Q-66,-486 -40,-488H40Q66,-486 64,-466L58,-392Q54,-350 56,-300H-56Q-54,-350 -58,-392Z" fill="url(#${id}-tg)" ${OUT}/>
+          <path d="M-60,-470q12,-10 26,-14M60,-470q-12,-10 -26,-14" stroke="${P.topS}" stroke-width="3" fill="none" opacity=".8"/>
+          <path d="M-40,-332q14,-8 30,-4M14,-334q14,-6 28,2M-48,-410q8,10 6,24" stroke="${P.topS}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/>
           <path d="M18,-482H40Q58,-478 54,-468L50,-302H24Z" fill="${P.topS}" opacity=".55"/>
           <path d="M-56,-478Q-60,-400 -52,-310" stroke="#fff" stroke-width="5" fill="none" opacity=".16" stroke-linecap="round"/>
-          <rect x="-56" y="-318" width="112" height="30" rx="8" fill="${P.belt}" ${OUT}/>
+          ${P.untuck ? "" : `<rect x="-56" y="-318" width="112" height="30" rx="8" fill="${P.belt}" ${OUT}/>`}
           <g id="${id}-acc">${P.torsoExtra || ""}</g>
-          <rect x="-14" y="-506" width="28" height="30" fill="${P.skinS}" ${OUT}/>
-          <g id="${id}-head">
+          <path d="M-15,-508H15V-482Q0,-474 -15,-482Z" fill="${P.skinS}" ${OUT}/><path d="M-15,-506Q0,-496 15,-506V-498Q0,-490 -15,-498Z" fill="#1a1412" opacity=".22"/>
+          <g id="${id}-head"><g transform="translate(0,-498) scale(1.12) translate(0,498)">
             <ellipse cx="-44" cy="-540" rx="10" ry="15" fill="${P.skin}" ${OUT}/><ellipse cx="44" cy="-540" rx="10" ry="15" fill="${P.skin}" ${OUT}/>
-            <ellipse cx="0" cy="-548" rx="44" ry="52" fill="${P.skin}" ${OUT}/>
+            <path d="M-46,-546q4,-6 4,4M46,-546q-4,-6 -4,4" stroke="${P.skinS}" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M-44,-558C-46,-600 -20,-601 0,-601C20,-601 46,-600 44,-558C44,-526 30,-498 0,-496C-30,-498 -44,-526 -44,-558Z" fill="${P.skin}" ${OUT}/>
             <path d="M18,-596Q46,-570 40,-520Q30,-500 8,-497Q36,-530 18,-596Z" fill="${P.skinS}" opacity=".55"/>
             <path d="M0,-600Q36,-592 40,-540Q38,-506 10,-498Q44,-540 20,-598Z" fill="#1a1412" opacity=".12"/>
             <path d="M-38,-566Q-44,-540 -36,-512" stroke="#fff" stroke-width="4" fill="none" opacity=".22" stroke-linecap="round"/>
-            <path d="M5,-537q6,8 -1,12" stroke="${P.skinS}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-            <g id="${id}-hair">${P.hair}</g>
+            <path d="M5,-537q7,8 -1,13" stroke="${P.skinS}" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M-2,-526q4,2 8,0" stroke="${P.skinS}" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>
+            <ellipse cx="-27" cy="-526" rx="8" ry="4" fill="#e0806a" opacity=".22"/><ellipse cx="31" cy="-526" rx="8" ry="4" fill="#e0806a" opacity=".2"/>
+            <g id="${id}-hair">${P.hair}${P.noSheen ? "" : `<path d="M-30,-588q14,-12 34,-13" stroke="#fff" stroke-opacity=".2" stroke-width="6" fill="none" stroke-linecap="round"/>`}</g>
             <g id="${id}-eyes">${eyes}</g>${P.face || ""}
             <g id="${id}-mouth">${mouths}</g>
             <g id="${id}-sweat" display="none"><path d="M40,-582c6,10 8,16 2,19c-6,-3 -6,-9 -2,-19z" fill="#cfe2e6" ${OUT}/></g>
-          </g>
+          </g></g>
         </g>
         <g transform="translate(20,-300)">${leg("F")}</g>
-        <g transform="translate(46,-455)">${arm("F", torch + (P.hand || ""))}</g>
+        ${P.untuck ? `<g id="${id}-hem"><path d="M-57,-312L-62,-262Q-30,-252 0,-256Q32,-252 62,-262L57,-312Z" fill="url(#${id}-tg)" ${OUT}/><path d="M20,-312L58,-312L62,-262Q44,-256 24,-256Z" fill="${P.topS}" opacity=".55"/>
+          <path d="M-40,-268q8,-14 6,-34M10,-262q4,-12 2,-30M-60,-266Q0,-250 60,-266" stroke="${P.topS}" stroke-width="3" fill="none" stroke-linecap="round"/>${P.hemExtra || ""}</g>` : ""}
+        <g id="${id}-armC" transform="translate(-46,-455)" display="none" style="filter:brightness(.93)">${arm("C", P.hand || "")}</g>
+        <g id="${id}-armF" transform="translate(46,-455)">${arm("F", torch + (P.hand || ""))}</g>
       </g></g></g>`;
     const g = document.createElementNS(NS, "g");
     g.innerHTML = html;
@@ -95,18 +157,27 @@
   // ---------- pose math ----------
   const smooth = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
   const lerp = (a, b, k) => a + (b - a) * k;
-  const JOINTS = ["thF", "thB", "shF", "shB", "uaF", "faF", "uaB", "faB", "torso", "head", "hair", "acc", "bodyY", "rootX", "rootY", "rootR"];
+  const JOINTS = ["thF", "thB", "shF", "shB", "uaF", "faF", "uaB", "faB", "torso", "head", "hair", "acc", "hem", "bodyY", "rootX", "rootY", "rootR", "kuF", "kfF", "kuB", "kfB", "bFront"];
   const zero = () => Object.fromEntries(JOINTS.map((j) => [j, 0]));
 
   // deterministic jerks for the infected: at random moments (rate per second) the value snaps to ±amp and holds
   const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
   const twitch = (u, rate = 5, amp = 18) => { const k = Math.floor(u * rate); return hash(k) > 0.68 ? (hash(k + 0.37) - 0.5) * 2 * amp : 0; };
 
+  // an arm placed by where its elbow and wrist should be, relative to its shoulder (rig px, character facing the camera):
+  // angles from the directions, and a segment drawn shorter than its length (122 upper, 104 forearm) is pointing at the camera
+  const ang = (dx, dy) => (Math.atan2(-dx, dy) * 180) / Math.PI;
+  function reach(side, e, w) {
+    const ua = ang(e[0], e[1]); let fa = ang(w[0] - e[0], w[1] - e[1]) - ua;
+    fa = ((fa + 540) % 360) - 180;
+    return { [`ua${side}`]: ua, [`fa${side}`]: fa, [`ku${side}`]: Math.max(0, 1 - Math.hypot(e[0], e[1]) / 122), [`kf${side}`]: Math.max(0, 1 - Math.hypot(w[0] - e[0], w[1] - e[1]) / 104) };
+  }
+
   // each mode returns joint angles (degrees) for local time u since the segment started
   const MODES = {
     idle(u, o) {
       const b = Math.sin(u * 2 * Math.PI / 3.2);
-      return { ...zero(), uaF: 4 + b, uaB: -4 - b, faF: -8, faB: -8, torso: 0.6 * b, head: 0.8 * Math.sin(u * 1.3), bodyY: -2 * (b + 1) };
+      return { ...zero(), uaF: 7 + b, uaB: -7 - b, faF: -16, faB: -13, thF: 3.5, shF: -1, thB: -3, shB: 2, torso: 1.2 + 0.6 * b, head: -1 + 0.8 * Math.sin(u * 1.3), bodyY: -2 * (b + 1) };
     },
     walk(u, o) { return gait(u, o.period || 0.96, o.stride || 16, o.knee || 42, o.bob || 9, o.arm || 18, o.lean || 1.5); },
     run(u, o) { return gait(u, o.period || 0.56, o.stride || 30, o.knee || 80, o.bob || 16, o.arm || 40, o.lean || 9, true); },
@@ -190,6 +261,48 @@
       const g = gait(u, o.period || 0.5, 30, 80, 16, 30, 12, true);
       return { ...g, uaB: 40 + 6 * Math.sin(u * 9), faB: -10 };
     },
+    // ---- acting poses (user 28 Oct: "ใส่สีหน้าและท่าทางให้ตรงกับอารมณ์ของบท") — all breathe like idle ----
+    // poses that touch the body are placed by elbow and wrist points (relative to the shoulder) — see reach()
+    gasp(u, o) { // shock: a hand flies to the mouth, the other to the chest, shoulders up
+      const b = MODES.idle(u, o), j = Math.sin(u * 31) * 0.6;
+      return { ...b, ...reach("F", [-18.6, 58.5], [-39.4 + j, -43.4]), ...reach("B", [-16, 105], [15.1, 64.3]), bFront: 1, torso: b.torso - 1.5, head: b.head - 5, bodyY: b.bodyY - 5 };
+    },
+    handChest(u, o) { // sincere, relieved or hurt: a hand flat on the chest, head a little bowed
+      const b = MODES.idle(u, o);
+      return { ...b, ...reach("F", [12, 110], [-27.3, 38.8]), head: b.head + 6, torso: b.torso + 1 };
+    },
+    armsCrossed(u, o) { // unconvinced, stern: both forearms folded across the chest
+      const b = MODES.idle(u, o);
+      return { ...b, ...reach("F", [14, 103], [-81, 69]), ...reach("B", [-14, 103], [78.3, 86.2]), bFront: 1, torso: b.torso - 1, head: b.head - 3 };
+    },
+    shrug(u, o) { // "I don't know": elbows in, forearms out to the sides, shoulders up, head tilted
+      const b = MODES.idle(u, o), k = 0.5 + 0.5 * Math.sin(u * 2.1);
+      return { ...b, ...reach("F", [8, 104], [70 + 3 * k, 88 - 6 * k]), ...reach("B", [-8, 104], [-70 - 3 * k, 88 - 6 * k]), head: 8, bodyY: b.bodyY - 3 - 4 * k };
+    },
+    slump(u, o) { // defeated, tired or sad: shoulders down, head hanging
+      const b = MODES.idle(u, o);
+      return { ...b, uaF: 3, faF: -5, uaB: -3, faB: -5, torso: 8 + 0.6 * Math.sin(u * 1.6), head: 17, bodyY: 5 };
+    },
+    fist(u, o) { // resolve: a clenched hand brought up to the chest
+      const b = MODES.idle(u, o);
+      return { ...b, uaF: -52, faF: -122, torso: -2.5, head: -4, bodyY: b.bodyY - 2 };
+    },
+    plead(u, o) { // asking, begging: hands pressed together in front of the chest, leaning in, head tilted
+      const b = MODES.idle(u, o), j = Math.sin(u * 2.4) * 2;
+      return { ...b, ...reach("F", [-6, 105], [-33.1, 39.6 + j]), ...reach("B", [4, 105], [35.8, 43 + j]), bFront: 1, torso: b.torso + 3, head: 8 };
+    },
+    nod(u, o) { // two nods, then still
+      const b = MODES.idle(u, o), k = u < 1.3 ? Math.max(0, Math.sin((u * 2 * Math.PI) / 0.62)) : 0;
+      return { ...b, head: b.head + 9 * k, torso: b.torso + 1.5 * k };
+    },
+    cower(u, o) { // fear: crouching back, arms up over the head
+      const j = Math.sin(u * 27) * 1.2;
+      return { ...MODES.crouch(u, o), uaF: -150 + j, faF: -98, uaB: -126 - j, faB: -91, torso: 24, head: 22 };
+    },
+    think(u, o) { // weighing it up: knuckles under the chin, the other forearm across the waist holding the elbow
+      const b = MODES.idle(u, o);
+      return { ...b, ...reach("F", [-23.3, 93.8], [-35.8, -9.2]), ...reach("B", [-18, 103], [59.6, 95.2]), bFront: 1, head: b.head + 5, torso: b.torso + 0.5 };
+    },
     fall(u, o) { // stumble down onto the knees over ~0.6 s, then stay
       const k = smooth(u / 0.6);
       return { ...zero(), thF: lerp(0, -20, k), shF: lerp(0, 95, k), thB: lerp(0, 20, k), shB: lerp(0, 100, k), torso: lerp(0, 28, k), head: lerp(0, 12, k), uaF: lerp(0, -40, k), faF: lerp(0, -30, k), uaB: lerp(0, -30, k), faB: lerp(0, -40, k), bodyY: lerp(0, 120, k) };
@@ -211,7 +324,7 @@
       faF: -(10 + fa * Math.max(0, -Math.sin(th - 0.5))) * ramp - (running ? 40 : 0),
       faB: -(10 + fa * Math.max(0, Math.sin(th - 0.5))) * ramp - (running ? 40 : 0),
       torso: 1.6 * ramp * s * 0.6 + lean * ramp, head: 1.4 * Math.sin(2 * th + 0.8) * ramp - (running ? lean * 0.6 : 0),
-      hair: 2.4 * Math.sin(2 * th - 0.9) * ramp, acc: 3 * Math.sin(th - 1.0) * ramp,
+      hair: 2.4 * Math.sin(2 * th - 0.9) * ramp, acc: 3 * Math.sin(th - 1.0) * ramp, hem: (running ? 3.2 : 1.4) * Math.sin(2 * th - 1.6) * ramp,
       bodyY: -bob * ramp * (Math.cos(2 * th) + 1) / 2,
     };
   }
@@ -225,19 +338,22 @@
   // a quick jolt when a character's eyes snap wide (startle), decaying over 0.4 s
   const startle = (u) => (u >= 0 && u < 0.4 ? Math.sin((Math.PI * u) / 0.4) * Math.exp(-3 * u) : 0);
 
-  function pose0(track, t) {
+  // looping poses start at a different point of their cycle for each character, so a group doesn't breathe and sway in unison
+  const PERIODIC = new Set(["idle", "sit", "lie", "tremble", "holdHead", "sitChair", "raise", "phoneEar", "point", "torch", "whistle", "wave", "phoneLook", "crouch", "push", "lunge", "shamble",
+    "gasp", "handChest", "armsCrossed", "shrug", "slump", "fist", "plead", "cower", "think"]);
+  function pose0(track, t, ph = 0) {
     // track: [{t, mode, opts, blend, look, eyes, mouth, startle}] sorted by t
     let i = 0;
     while (i + 1 < track.length && track[i + 1].t <= t) i++;
     const cur = track[i];
-    const pose = MODES[cur.mode]((t - cur.t), cur.opts || {});
+    const pose = MODES[cur.mode]((t - cur.t) + (PERIODIC.has(cur.mode) ? ph : 0), cur.opts || {});
     // pose changes always ease in (0.22 s unless the track says otherwise); arms, head and torso overshoot a little
     const prev = i > 0 ? track[i - 1] : null;
     const blend = cur.blend ?? (prev && prev.mode !== cur.mode ? 0.3 : 0);
     if (prev && blend) {
       const k = Math.min(1, Math.max(0, (t - cur.t) / blend));
       if (k < 1) {
-        const pp = MODES[prev.mode]((t - prev.t), prev.opts || {});
+        const pp = MODES[prev.mode]((t - prev.t) + (PERIODIC.has(prev.mode) ? ph : 0), prev.opts || {});
         const ks = smooth(k), kb = backOut(k);
         for (const j of JOINTS) pose[j] = lerp(pp[j], pose[j], UPPER.has(j) ? kb : ks);
       }
@@ -250,18 +366,21 @@
     return { pose, cur };
   }
 
-  function evaluate(track, t) {
-    const { pose, cur } = pose0(track, t);
+  function evaluate(track, t, ph = 0) {
+    const { pose, cur } = pose0(track, t, ph);
     // living micro-motion: the head never sits perfectly still
     pose.head += 0.9 * Math.sin(t * 1.3 + 0.7) + 0.5 * Math.sin(t * 2.9 + 1.9);
     // follow-through: hair and loose accessories trail the head and torso by ~0.1 s
     if (t > 0.1) {
-      const { pose: back } = pose0(track, t - 0.1);
+      const { pose: back } = pose0(track, t - 0.1, ph);
       const dh = (pose.head + pose.torso) - (back.head + back.torso);
       pose.hair += -0.9 * dh; pose.acc += -0.5 * (pose.torso - back.torso);
     }
     pose._eyes = cur.eyes || "normal";
     pose._mouth = cur.mouth || "smile";
+    if (pose._eyes === "normal" && pose._mouth === "frown" && cur.brows !== false) pose._eyes = "worry";   // a frown reads as worry, not a blank stare
+    pose._gaze = cur.gaze || null;
+    pose._mode = cur.mode;
     pose._sweat = !!cur.sweat;
     pose._torch = !!(cur.torch);
     return pose;
@@ -270,23 +389,88 @@
   function apply(id, p, t, blinkTimes) {
     const R = (sel, deg, ox = 0, oy = 0) => document.getElementById(`${id}-${sel}`).setAttribute("transform", `rotate(${deg.toFixed(3)} ${ox} ${oy})`);
     R("thF", p.thF); R("thB", p.thB); R("shF", p.shF); R("shB", p.shB);
-    R("uaF", p.uaF); R("faF", p.faF); R("uaB", p.uaB); R("faB", p.faB);
-    R("torso", p.torso, 0, -300); R("head", p.head, 0, -500); R("hair", p.hair, 0, -560); R("acc", p.acc, -40, -480);
+    // arms: upper arm and forearm can be foreshortened (k = fraction of the length pointing at the camera); the hand never squashes
+    const arm = (side, ua, fa, fu, ff) => {
+      const a = 1 - Math.max(0, Math.min(0.8, fu || 0)), b = 1 - Math.max(0, Math.min(0.8, ff || 0));
+      document.getElementById(`${id}-ua${side}`).setAttribute("transform", `rotate(${ua.toFixed(3)})${a !== 1 ? ` scale(1 ${a.toFixed(4)})` : ""}`);
+      document.getElementById(`${id}-fa${side}`).setAttribute("transform", `${a !== 1 ? `scale(1 ${(1 / a).toFixed(4)}) ` : ""}rotate(${fa.toFixed(3)})${b !== 1 ? ` scale(1 ${b.toFixed(4)})` : ""}`);
+      document.getElementById(`${id}-hw${side}`).setAttribute("transform", b !== 1 ? `translate(0 104) scale(1 ${(1 / b).toFixed(4)}) translate(0 -104)` : "");
+    };
+    arm("F", p.uaF, p.faF, p.kuF, p.kfF); arm("B", p.uaB, p.faB, p.kuB, p.kfB);
+    // the shoulders ride on the torso (position only: arm angles stay absolute, as every pose was authored)
+    const th = (p.torso * Math.PI) / 180, tc = Math.cos(th), ts = Math.sin(th);
+    const shoulder = (x) => `translate(${(x * tc + 155 * ts).toFixed(2)} ${(-300 + x * ts - 155 * tc).toFixed(2)})`;
+    document.getElementById(`${id}-armF`).setAttribute("transform", shoulder(46));
+    document.getElementById(`${id}-armB`).setAttribute("transform", shoulder(-46));
+    const front = (p.bFront || 0) >= 0.5, armC = document.getElementById(`${id}-armC`);
+    armC.setAttribute("display", front ? "inline" : "none"); document.getElementById(`${id}-armB`).setAttribute("display", front ? "none" : "inline");
+    if (front) { armC.setAttribute("transform", shoulder(-46)); arm("C", p.uaB, p.faB, p.kuB, p.kfB); }
+    R("torso", p.torso, 0, -300); R("head", p.head, 0, -500);
+    const hem = document.getElementById(`${id}-hem`); if (hem) hem.setAttribute("transform", `rotate(${(p.torso + (p.hem || 0)).toFixed(3)} 0 -300)`); R("hair", p.hair, 0, -560); R("acc", p.acc, -40, -480);
     document.getElementById(`${id}-body`).setAttribute("transform", `translate(0 ${p.bodyY.toFixed(2)})`);
     document.getElementById(`${id}-root`).setAttribute("transform", `translate(${p.rootX} ${p.rootY}) rotate(${p.rootR})`);
-    const blinking = (blinkTimes || []).some((b) => t >= b && t < b + 0.12);
-    const eyes = blinking && p._eyes === "normal" ? "closed" : p._eyes;
+    const blinking = (blinkTimes || []).some((b) => t >= b && t < b + 0.11);
+    const eyes = blinking && BLINKS.has(p._eyes) ? "closed" : p._eyes;
     document.querySelectorAll(`#${id}-eyes > g`).forEach((g) => g.setAttribute("display", g.classList.contains(`eye-${eyes}`) ? "inline" : "none"));
-    document.querySelectorAll(`#${id}-mouth > g`).forEach((g) => g.setAttribute("display", g.classList.contains(`mouth-${p._mouth}`) ? "inline" : "none"));
+    const [gx, gy] = gazeAt(id, t, p._gaze);
+    document.querySelectorAll(`#${id}-eyes .pup`).forEach((g) => g.setAttribute("transform", `translate(${gx.toFixed(2)} ${gy.toFixed(2)})`));
+    const mouth = p._talk === undefined ? p._mouth : talkMouth(p._mouth, p._talk, p._eyes);
+    document.querySelectorAll(`#${id}-mouth > g`).forEach((g) => g.setAttribute("display", g.classList.contains(`mouth-${mouth}`) ? "inline" : "none"));
     document.getElementById(`${id}-sweat`).setAttribute("display", p._sweat ? "inline" : "none");
+    const fg = document.getElementById(`${id}-finger`); if (fg) fg.setAttribute("display", p._mode === "point" ? "inline" : "none");
     document.getElementById(`${id}-torch`).setAttribute("display", p._torch ? "inline" : "none");
   }
 
+  // ---------- life: blinks, darting eyes, talking ----------
+  const BLINKS = new Set(["normal", "worry", "angry", "sad", "squint", "side"]);
+  const strHash = (str) => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
+  // blinks every 2.2–4.6 s, each character on its own rhythm (they used to blink in unison), now and then a double blink
+  function blinkSeq(key, dur) {
+    const h0 = strHash(key), out = [];
+    for (let t = 0.3 + 1.6 * h0, k = 0; t < dur; k++) { out.push(t); if (hash(h0 * 97 + k) < 0.14) out.push(t + 0.22); t += 2.2 + 2.4 * hash(h0 * 131 + k * 1.7); }
+    return out;
+  }
+  // saccades: the irises hold a point for 0.6–2 s, then flick (70 ms) to a new one near the gaze direction
+  function gazeAt(id, t, gaze) {
+    const h0 = strHash(id), gx0 = gaze ? gaze[0] : 0, gy0 = gaze ? gaze[1] || 0 : 0;
+    const pt = (k) => [gx0 + (hash(h0 * 53 + k * 3.3) - 0.5) * 4.2, gy0 + (hash(h0 * 71 + k * 5.7) - 0.5) * 2.0];
+    let k = 0, s0 = 0;
+    while (true) { const len = 0.6 + 1.4 * hash(h0 * 37 + k * 2.1); if (s0 + len > t) break; s0 += len; k++; if (k > 400) break; }
+    const a = k ? pt(k - 1) : pt(0), b = pt(k), e = smooth((t - s0) / 0.07);
+    return [lerp(a[0], b[0], e), lerp(a[1], b[1], e)];
+  }
+  // a talking mouth from the line's loudness (0 closed .. 3 wide); shouted lines (scream) open wider, closed frames keep the face's own mouth
+  // the talking set follows the face: round for alarm (wide eyes), corners down for worry/sadness/anger/suspicion, the open D only for a neutral or happy face
+  function talkMouth(base, lv, eyes) {
+    if (base === "snarl") return base;
+    if (base === "scream") return ["talkO1", "talkO2", "talkO3", "scream"][lv];   // shouting in alarm: round mouths, never the laughing D shape
+    if (lv === 0) return base === "o" || base === "talk0" ? "talk0" : base;
+    const happy = base === "smile" || base === "smileOpen";
+    if (base === "o" || (!happy && eyes === "wide")) return "talkO" + lv;
+    if (base === "frown" || base === "grit" || (!happy && ["worry", "sad", "angry", "squint"].includes(eyes))) return "talkS" + lv;
+    return "talk" + lv;
+  }
+  function talkLevel(talk, t) {
+    for (const s of talk || []) { const i = Math.floor((t - s.t) * (s.fps || 30)); if (i >= 0 && i < s.lv.length) { const v = +s.lv[i]; return v >= 2 && i % 4 >= 2 ? v - 1 : v; } }   // sustained vowels still flap
+    return undefined;
+  }
+
   // Drive a character on a GSAP timeline from t0 for dur seconds using a track (times relative to t0).
-  function drive(tl, id, t0, dur, track, blinkTimes) {
-    const clock = { t: 0 };
-    tl.to(clock, { t: dur, duration: dur, ease: "none", onUpdate: () => apply(id, evaluate(track, clock.t), clock.t, blinkTimes) }, t0);
-    apply(id, evaluate(track, 0), 0, blinkTimes);
+  // talk = [{t, lv, fps}]: lines this character speaks in the shot (lv = loudness digits from lipsync.py)
+  // listen = [{t0, t1, gx}]: while someone else in the shot speaks, this character's eyes go to them
+  function drive(tl, id, t0, dur, track, blinkTimes, talk, listen) {
+    const clock = { t: 0 }, ph = strHash(id) * 3.1;
+    const modeAt = (t) => { let m = track[0]; for (const e of track) if (e.t <= t) m = e; return m ? m.mode : ""; };
+    const pose = (t) => {
+      const p = evaluate(track, t, ph), lv = talkLevel(talk, t);
+      if (lv !== undefined) {
+        p._talk = lv; p.head += 1.4 * lv - 1.2 * Math.sin(t * 9); p.torso += 0.25 * lv;
+        if (modeAt(t) === "idle") { p.uaF -= 5 * lv + 3 * Math.sin(t * 5.3); p.faF -= 12 * lv; }   // beat gestures: the hand lifts on the stressed syllables
+      } else if (!p._gaze) { const l = (listen || []).find((s) => t >= s.t0 && t <= s.t1); if (l) p._gaze = [l.gx, 0]; }
+      return p;
+    };
+    tl.to(clock, { t: dur, duration: dur, ease: "none", onUpdate: () => apply(id, pose(clock.t), clock.t, blinkTimes) }, t0);
+    apply(id, pose(0), 0, blinkTimes);
   }
 
   const CAST = {
@@ -472,10 +656,11 @@
       torsoExtra: `<path d="M-26,-484L0,-430L26,-484" stroke="#2f4a8a" stroke-width="5" fill="none"/><rect x="-16" y="-436" width="32" height="40" rx="4" fill="#f4ecd8" ${OUT}/><path d="M-8,-424h16M-8,-414h16" stroke="#9aa0a6" stroke-width="3"/>
         <path d="M-56,-470Q-30,-440 -44,-320" stroke="#7aa6bb" stroke-width="4" fill="none" opacity=".7"/>`,
       hair: `<circle cx="-36" cy="-586" r="24" fill="#2b2522" ${OUT}/><path d="M-48,-546Q-54,-608 0,-612Q52,-608 48,-548Q42,-582 8,-586Q-30,-584 -48,-546Z" fill="#2b2522" ${OUT}/>
-        <path d="M-70,-600L-10,-574" stroke="#f2c55c" stroke-width="7" stroke-linecap="round"/><path d="M-76,-602l6,-6" stroke="#2e2a26" stroke-width="5" stroke-linecap="round"/>`,
+        <path d="M-74,-606L-26,-580" stroke="#f2c55c" stroke-width="7" stroke-linecap="round"/><path d="M-80,-608l6,-6" stroke="#2e2a26" stroke-width="5" stroke-linecap="round"/>`,
       face: `<g fill="#e09a86" opacity=".5"><ellipse cx="-24" cy="-526" rx="7" ry="3.5"/><ellipse cx="30" cy="-526" rx="7" ry="3.5"/></g>`,
     },
     kong: { // ก้อง: seventeen, faded red school PE shirt, cargo trousers, worn trainers, bandana over messy hair, a backpack
+      untuck: true,
       skin: "#d6a27c", skinS: "#b5825e", top: "#b8463a", topS: "#8f3329", sleeve: "#b8463a", sleeveS: "#8f3329", forearm: "#d6a27c", forearmS: "#b5825e",
       pants: "#4a4e3a", pantsS: "#383b2c", shoe: "#2a2420", belt: "#2e2a26",
       torsoExtra: `<rect x="-94" y="-476" width="44" height="170" rx="14" fill="#3d4d45" ${OUT}/><path d="M-40,-484Q-44,-400 -36,-320M36,-484Q40,-400 32,-320" stroke="#3d4d45" stroke-width="12" fill="none"/>
@@ -485,6 +670,7 @@
       face: `<path d="M-10,-506q12,6 24,0" stroke="#5a3a26" stroke-width="3" fill="none" opacity=".5"/><rect x="18" y="-536" width="20" height="8" rx="3" fill="#ead7b6" stroke="#2e2a26" stroke-width="2" transform="rotate(-16 28 -532)"/>`,
     },
     man: { // ลุงหมาน: sixty-one, indigo farmer's shirt, checked pha-khao-ma at the waist, straw hat, grey stubble, boots
+      untuck: true,
       skin: "#b9805a", skinS: "#98653f", top: "#2c3e6b", topS: "#1f2d4e", sleeve: "#2c3e6b", sleeveS: "#1f2d4e",
       pants: "#5a4a3a", pantsS: "#463a2c", shoe: "#3a2f26", belt: "#1f2d4e",
       torsoExtra: `<path d="M-56,-340H56V-300H-56Z" fill="#c8392b" ${OUT}/>${[-44, -24, -4, 16, 36].map((x) => `<path d="M${x},-340V-300" stroke="#f2c55c" stroke-width="6"/>`).join("")}<path d="M40,-320L70,-250L54,-246" stroke="#c8392b" stroke-width="10" fill="none"/>
@@ -500,7 +686,7 @@
         ${[[-30, -470], [20, -460], [-10, -450]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="#f4ecd8" opacity=".8"/>`).join("")}`,
       hair: `<path d="M-52,-540Q-62,-614 0,-616Q62,-614 52,-540Q50,-520 40,-520Q44,-572 2,-580Q-40,-572 -40,-520Q-50,-520 -52,-540Z" fill="#3a2a22" ${OUT}/>
         ${[-40, -10, 20, 44].map((x, k) => `<circle cx="${x}" cy="${-600 + (k % 2) * 10}" r="16" fill="#3a2a22" stroke="#2e2a26" stroke-width="3"/>`).join("")}<rect x="18" y="-596" width="30" height="10" rx="4" fill="#f2c55c" ${OUT}/>`,
-      face: `<g fill="none" stroke="#2e2a26" stroke-width="3"><circle cx="-14" cy="-546" r="14"/><circle cx="18" cy="-546" r="14"/><path d="M0,-546h4"/></g><path d="M-6,-506q10,5 20,0" stroke="#c8392b" stroke-width="3" fill="none"/>`,
+      face: `<g fill="none" stroke="#2e2a26" stroke-width="3"><circle cx="-14" cy="-546" r="14"/><circle cx="18" cy="-546" r="14"/><path d="M0,-546h4"/></g>`,
     },
     pun: { // น้องปั้น: seven, white school shirt, red pinafore skirt, pigtails with red ribbons, rosy cheeks (place at scale ~0.6)
       skin: "#efc6a0", skinS: "#cf9d79", top: "#f6f6f2", topS: "#d9dbd6", sleeve: "#f6f6f2", sleeveS: "#d9dbd6", forearm: "#efc6a0", forearmS: "#cf9d79",
@@ -512,6 +698,7 @@
       face: `<g fill="#e88a86" opacity=".6"><ellipse cx="-26" cy="-524" rx="9" ry="5"/><ellipse cx="32" cy="-524" rx="9" ry="5"/></g>`,
     },
     phu: { // ภู: twenty-eight, ex-rescue volunteer: grey-green shirt with a reflective strip, dark cargo trousers, boots, cropped hair, a scar on the brow
+      untuck: true,
       skin: "#d39a6e", skinS: "#b27c52", top: "#6b7a5a", topS: "#525f45", sleeve: "#6b7a5a", sleeveS: "#525f45", forearm: "#d39a6e", forearmS: "#b27c52",
       pants: "#2f3438", pantsS: "#22272a", shoe: "#1e1e1e", belt: "#22272a",
       torsoExtra: `<path d="M-54,-420H54" stroke="#c9d8d0" stroke-width="10"/><path d="M-54,-420H54" stroke="#9fb3a8" stroke-width="3" stroke-dasharray="8 6"/><rect x="18" y="-470" width="28" height="22" rx="4" fill="#f2c55c" ${OUT}/>`,
@@ -580,5 +767,5 @@
     go();
   }
 
-  window.Rig = { build, drive, evaluate, apply, footSpeed, MODES, CAST, smooth, lerp, buildCat, driveCat };
+  window.Rig = { build, drive, evaluate, apply, footSpeed, MODES, CAST, smooth, lerp, buildCat, driveCat, blinkSeq, strHash, reach };
 })();

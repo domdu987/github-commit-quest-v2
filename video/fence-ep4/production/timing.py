@@ -35,7 +35,8 @@ SHOTS = [
     ("flee", ["d09", ("n19", 0.2)], 0.05, 0.3, 4.4),                     # run for the back door; ก้อง goes down on the rebar
     ("cover", ["d10"], 0.1, 0.3, 3.6),                                  # "ลุงกันให้"
     ("count", ["n20", ("n21", 0.3)], 0.2, 0.3, 8.3),                     # 20 → 6 (0.55 s a number): he holds the breach with the spear; he is not running
-    ("count2", ["d12"], 0.0, 0.0, 3.6),                                  # 5 → 0 (0.5 s a number): "ปิดซะ ครู" — the bar drops
+    ("count2", ["d12"], 0.0, 0.0, 4.4),                                  # "ปิดประตูซะ… ครูพิม": through the gap he goes down and they are on him (user 29 Oct) — the bar drops at 3.75
+    ("fallen", [], 0.0, 0.0, 3.2),                                     # user 28 Oct: show ลุงหมาน on the ground, the horde on him (no line: rain, thunder, the heartbeat stops)
     ("after", ["n22"], 0.6, 0.6, 4.0),                                  # black; the corridor; five of them
     ("tq", ["n23", ("d13", 0.2), ("n24", 0.25), ("n25", 0.15)], 0.1, 0.4, 12.0),   # the tourniquet
     ("real", ["n26"], 0.1, 0.4, 5.0),                                   # in real life
