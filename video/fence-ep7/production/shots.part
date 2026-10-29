@@ -133,7 +133,7 @@
         set: "canteen", setOpts: { id: "ck" }, dark: 0.35, blur: { far: 6, mid: 5 },
         cam: { keys: [{ t: 0, ...fr(160, 1355, 2.8, 540, 1000), drift: { s: 0.02 } }, { t: vo("choke", 1) - 0.1, glide: 1.2, ...fr(150, 1350, 3.4, 540, 980), drift: { s: 0.03 } }] },
         shake: (t) => 2.2 * Math.sin(t * 6.1),
-        actors: [PU(150, 1555, 0.55, [{ t: 0, mode: "chokeSit", eyes: "wide", mouth: "o" }], { flip: true, prop: "spoon", cu: false }),
+        actors: [PU(150, 1555, 0.55, [{ t: 0, mode: "chokeSit", eyes: "wide", mouth: "o" }], { flip: true, cu: false }),
           PI(360, 1580, 0.9, [{ t: 0, mode: "sitTable", eyes: "worry", mouth: "flat", look: -8 }, { t: F("choke", 0, 1), mode: "gasp", eyes: "wide", mouth: "o" }], { flip: true, cu: false })],
         captions: caps("choke"),
         react: [{ a: 1, t: F("choke", 0, 1) + 0.05, dur: 0.9, fast: true }],
@@ -193,8 +193,8 @@
         fx(tl, id, t0, L) {
           // ภู's forearms round her waist and his fist (thumb side in, the other hand over it) between her navel and ribs — over her, in front
           const A = T0 - (PT - 0.2), P = POP - (PT - 0.2);
-          put(L.act, `<g id="ph2-hands" transform="translate(538,1612)"><path d="M-58,-4q26,6 46,2M60,-2q-24,8 -44,4" stroke="#2e2a26" stroke-width="30" stroke-linecap="round" fill="none"/><path d="M-58,-4q26,6 46,2M60,-2q-24,8 -44,4" stroke="#7d9a7a" stroke-width="23" stroke-linecap="round" fill="none"/>
-            <g transform="translate(0,-2) scale(0.16) rotate(-90)">${Hand.grip({ skin: "#c99a74", sleeve: "#7d9a7a" })}</g></g>`);
+          put(L.act, `<g transform="translate(538,1612)"><g id="ph2-hands"><path d="M-58,-4q26,6 46,2M60,-2q-24,8 -44,4" stroke="#2e2a26" stroke-width="30" stroke-linecap="round" fill="none"/><path d="M-58,-4q26,6 46,2M60,-2q-24,8 -44,4" stroke="#7d9a7a" stroke-width="23" stroke-linecap="round" fill="none"/>
+            <g transform="translate(0,-2) scale(0.16) rotate(-90)">${Hand.grip({ skin: "#c99a74", sleeve: "#7d9a7a" })}</g></g></g>`);
           for (let i = 0; i < 3; i++) { const T = t0 + A + i * TH; tl.fromTo("#ph2-hands", { x: 0, y: 0 }, { x: 0, y: -18, duration: 0.09, yoyo: true, repeat: 1, ease: "power2.out", immediateRender: false }, T); }
           tl.to("#ph2-hands", { opacity: 0, duration: 0.2 }, t0 + P + 0.5);
           // the lump flies out on the third thrust, the frame freezes on it for a beat
