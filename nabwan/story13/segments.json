@@ -1,0 +1,74 @@
+[
+ {
+  "file": "story13/vo/H44.wav",
+  "src": [
+   0.2,
+   7.66
+  ],
+  "on": 0.25,
+  "name": "H"
+ },
+ {
+  "file": "story13/vo/A44.wav",
+  "src": [
+   0.17,
+   5.62
+  ],
+  "on": 8.14,
+  "name": "A"
+ },
+ {
+  "file": "story13/vo/B44.wav",
+  "src": [
+   0.19,
+   6.58
+  ],
+  "on": 13.92,
+  "name": "B"
+ },
+ {
+  "file": "story13/vo/C44.wav",
+  "src": [
+   0.22,
+   6.6
+  ],
+  "on": 20.74,
+  "name": "C"
+ },
+ {
+  "file": "story13/vo/D44.wav",
+  "src": [
+   0.16,
+   3.08
+  ],
+  "on": 29.85,
+  "name": "D"
+ },
+ {
+  "file": "story13/vo/M44.wav",
+  "src": [
+   0.22,
+   7.77
+  ],
+  "on": 33.05,
+  "name": "M"
+ },
+ {
+  "file": "story13/vo/F44.wav",
+  "src": [
+   0.24,
+   4.62
+  ],
+  "on": 42.33,
+  "name": "F"
+ },
+ {
+  "file": "story13/vo/E44.wav",
+  "src": [
+   0.14,
+   4.22
+  ],
+  "on": 47.54,
+  "name": "E"
+ }
+]

@@ -14,6 +14,7 @@ request bodies (`req_*.json`) and placement scripts (`placeN.py`) are here, so t
 | `story8/props8.js` | room props (night window, fairy lights, plants, shelves, posters, cork board, clock, cat, fan, lucky cat…) |
 | `story11/rain11.js` | rain kit: streaks, splashes, puddles, drips, lens drops, umbrella, rain-shadow mask, wet patch, wet-ground reflections |
 | `story12/sets12.js`, `story12/chars12.js` | Lanna porch with mountain fog, northern village post office, Bangkok studio with drawer; knitted scarves (worn stack, folded, on needles), tears per eye |
+| `story13/sets13.js`, `story13/audio.py` | night bus cabin (cut-away, outside rushing past, lamp light sweeps, fireworks with set flash), the bus on the highway, the terminal, an Isan home; recorded SFX library (`sfx/req_*.json`) with `put` / `loop_bed` / `muffle`, a PA filter for in-world speech |
 | `storyN/` | one reel: `charsN.js`, `setsN.js`, `iconsN.js`, `scenes.js`, `vo.js`, `index.html`, `audio.py` |
 | `cover/` | cover frame grabber + cover template + shooter |
 | `brand/brand.js` | end-card brand chip |
@@ -22,7 +23,7 @@ request bodies (`req_*.json`) and placement scripts (`placeN.py`) are here, so t
 
 Stories: 2 = 75 วันของพ่อ · 3 = 1,095 ข้อความของแม่ · 4 = 47 ครั้งที่ลบข้อความ · 5 = 127 ใบสมัคร ·
 6 = 4,380 วันที่รอ · 7 = 11 ปีที่เพื่อนไม่เคยลืม · 8 = 312 ชามที่ไม่มีผักชี · 9 = 39 บาทที่แม่ไม่กล้ากด ·
-10 = 52 ปีกับกระทงสองใบ · 11 = 12 ฤดูฝน ที่ไหล่ของพ่อเปียก · 12 = 9 ผ้าพันคอที่ไม่เคยได้ใช้.
+10 = 52 ปีกับกระทงสองใบ · 11 = 12 ฤดูฝน ที่ไหล่ของพ่อเปียก · 12 = 9 ผ้าพันคอที่ไม่เคยได้ใช้ · 13 = 15 ปีใหม่ ที่แม่อยู่บนรถทัวร์.
 
 Render: `cd demo && PAGE=../storyN/index.html node render.js video ../storyN/out/video.mp4 30 [t0 tEnd]`
 (`tEnd` is an end time). Stills: `node render.js stills <dir> t1 t2 …`. Mix: `python storyN/audio.py storyN/segments.json storyN/music/<file> storyN/out/mix`.

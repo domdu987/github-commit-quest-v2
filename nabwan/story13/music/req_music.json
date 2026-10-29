@@ -1,0 +1,123 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "northeastern Thai Isan colour",
+   "soft khaen (Isan bamboo mouth organ) pads and gentle phin (Isan lute) plucks with felt piano",
+   "warm strings",
+   "tender, nostalgic, New Year night on the road",
+   "high quality studio recording",
+   "D major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer",
+   "Christmas bells",
+   "jingle bells"
+  ],
+  "sections": [
+   {
+    "section_name": "Night highway question",
+    "duration_ms": 8200,
+    "lines": [],
+    "positive_local_styles": [
+     "solo felt piano with a distant soft khaen drone",
+     "quiet, wistful, moving",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Fifteen New Years on the road, and home without her",
+    "duration_ms": 12500,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and fond",
+     "gentle phin melody over piano",
+     "light strings enter",
+     "a little bittersweet"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "A secret seat on her bus",
+    "duration_ms": 6900,
+    "lines": [],
+    "positive_local_styles": [
+     "playful and sneaky",
+     "light pizzicato strings and plucked phin",
+     "a soft held note at the end, surprise"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Title swell",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "a warm swell with strings and khaen",
+     "hopeful"
+    ],
+    "negative_local_styles": [
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Midnight on the bus",
+    "duration_ms": 10000,
+    "lines": [],
+    "positive_local_styles": [
+     "anticipation building softly",
+     "ticking pizzicato, then at four seconds a warm bloom with strings and glockenspiel sparkle like distant fireworks",
+     "tender and proud"
+    ],
+    "negative_local_styles": [
+     "loud drums",
+     "EDM"
+    ]
+   },
+   {
+    "section_name": "The first countdown together",
+    "duration_ms": 6400,
+    "lines": [],
+    "positive_local_styles": [
+     "emotional peak but gentle",
+     "full warm strings with phin melody",
+     "teary and happy"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "epic"
+    ]
+   },
+   {
+    "section_name": "Some people take others home",
+    "duration_ms": 8500,
+    "lines": [],
+    "positive_local_styles": [
+     "resolving, calm and warm",
+     "piano and soft khaen, fading out",
+     "gentle ending"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   }
+  ]
+ }
+}

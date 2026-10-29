@@ -68,6 +68,20 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
 - Tears on the 3/4 face: one stream per eye from its outer corner, drifting outward (`tears(…, {drift: ±1})` in
   `story12/icons12.js`). Streams that split both ways run across the nose and read as a runny nose.
 - Phones are always seen **from the back** (`phoneProp`: case, camera, sliver of screen light).
+- A hand mic stays at the collar, below the chin (`torsoW(pup, p, 66, -RIG.T + 6)`, `propRot ≈ -34`); an open-hand
+  "this is my daughter" gesture stays low (`torsoW(pup, p, 104, -44)`), never at the other person's face.
+- Seated characters with big forward heads clap with their hands at the chest (`torsoW(pup, p, 72, -RIG.T + 66)`);
+  raised arms on a seated chibi cross the chin.
+- Match cut across years (child → adult): the same head screen position and size (adult zoom = child zoom × child
+  scale) and a 0.45 s dissolve (`S.fadeIn`).
+- `shotCamF` clamps the camera y to ≥ 2 unless you pass `minY`. Sets that extend above y = 0 (a bus ceiling, a terminal
+  roof, the sky) need a negative `minY`, or every close-up is pushed down by hundreds of pixels.
+- Moving vehicles (`story13/sets13.js`): the outside rushes past in the far layer (`nightOutside13`: lamps, trees, warm
+  traffic bokeh), a street-lamp `lightSweep13` crosses the cabin and the cast, the camera gets a small `bump`.
+  Fireworks (`fireworks13` + `burstPlan`) flash the whole set.
+  - Feed fireworks the shot clock: `set.update(lt)`, never `lt + offset`, or every burst is already over.
+  - Put window bursts at window height.
+- CSS `zoom` on a card also scales its `left` / `top`.
 
 ## Graphics
 - Cards get the layered pro shadow, a top gloss and a shine sweep; they enter with `enter3d` / springs.
@@ -85,6 +99,12 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
   - The content filter blocks some lines about death or loss; reword them (e.g. "ปีนี้ยายไม่อยู่แล้ว" passes).
   - Transcribe every take with Whisper large-v3, run plain (no prompt); regenerate if a word reads wrong.
 - Music: fal `elevenlabs/music` composition plan with every section ≥ 3000 ms; use `extend.py` if it is short.
+- Sound effects: generate real ones with fal `fal-ai/elevenlabs/sound-effects/v2` (`{text, duration_seconds,
+  prompt_influence}`; about 23 per story) into `storyN/sfx/`.
+  - In `audio.py` (`story13`), use `put` / `loop_bed` and `muffle` (low-pass) for anything heard through a bus window or a wall.
+  - Synthesise only small accents (ticks, sparkles).
+- A character's own line (the mom's PA announcement) can use a second Gemini voice (female: Gacrux, at 1.1×) with the
+  bus-PA filter `pa()` (band-limit, drive, short cabin echo) and caption style `p`. Whisper-check it like the narration.
 - Mix with the per-story `audio.py` numpy mixer:
   - ducking with a 0.4 s hold; SFX for every on-screen action (steps, taps, plops, lighter, buzz);
   - master with `volume=1.5dB,alimiter=limit=0.75:attack=4:release=80:level=false` to about −14 LUFS.
@@ -96,7 +116,8 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
 ## QA (non-negotiable before delivery)
 1. Stills of every shot before the full render (`node render.js stills dir t…`, grid with `scripts/grid.sh`), fix framing first.
 2. Full render (`PAGE=../storyN/index.html node render.js video out.mp4 30 [t0 tEnd]` — the 3rd number is the END
-   time). About 1 fps, so run at most 2 renders at once on 4 cores.
+   time). About 1 fps, so run at most 2 renders at once on 4 cores. Never run Whisper during a render: the CPU contention
+   makes a frame screenshot time out (`render.js` now allows 180 s).
 3. Contact sheets every 0.6 s (`fps=1/0.6,scale=432:768,drawtext,tile=4x2`) and read **all** of them; their time
    labels can run about 0.3 s ahead, so pin exact times with stills. Check:
    - cut faces;

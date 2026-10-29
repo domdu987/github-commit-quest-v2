@@ -32,7 +32,7 @@ const path = require('path');
     const t0 = Date.now();
     for (let i = i0; i < n; i++) {
       await page.evaluate(t => window.render(t), i / fps);
-      const buf = await frameEl.screenshot({ type: 'jpeg', quality: 95 });
+      const buf = await frameEl.screenshot({ type: 'jpeg', quality: 95, timeout: 180000 });
       if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
       if (i % 60 === 0) console.log(`frame ${i}/${n} ${((Date.now() - t0) / 1000).toFixed(1)}s`);
     }
