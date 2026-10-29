@@ -1,0 +1,498 @@
+      // ---------- ตึกโยก EP.1 หมอบ ป้อง เกาะ ----------
+      // camera grammar: the swaying tower (title) → first person in the 27th-floor corridor (hook) → tape rewind, the app in your hand →
+      // the lobby wide (the guard's joke) → the lift (first person) → มิว at 2714's door over your shoulder → the glass of water insert →
+      // outside, the tower sways → the choice; the lift path plays out and rewinds → wide in the room: under the table, side on, with
+      // call-outs → the window bursts (low, from under the table) → แม่'s plan from above → the corridor where you would have run →
+      // the note on the fridge (rule card) → the stillness, the seismogram, the real quake on the map → แม่ doesn't answer →
+      // the dark corridor → the candle and the hissing canister → your call → black → the whistle end card
+      const DAY = { from: "right", rim: "#fff6dc", rimOp: 0.75, shade: "#2a2440", shadeOp: 0.32, cast: { len: 1.2, op: 0.28 }, vol: false };
+      const INDOOR = { from: "left", rim: "#fff2d8", rimOp: 0.7, shade: "#2a2440", shadeOp: 0.34, cast: { len: 1.1, op: 0.3 }, vol: false };
+      const DIM = { from: "right", rim: "#cfe2ff", rimOp: 0.6, shade: "#10101c", shadeOp: 0.45, cast: false, vol: false };
+      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.12 }, GROOM = { top: "#fff1d8", bottom: "#e8dcc8", op: 0.1 }, GDARK = { top: "#0a1020", bottom: "#1a1a2a", op: 0.35 };
+      const GRED = { top: "#3a0a08", bottom: "#100404", op: 0.3 };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      Rig.MODES.kneel = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 14, faF: -40, uaB: -14, faB: 40, torso: 0, head: 6 });
+      Rig.MODES.kneelShake = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 16 + 8 * Math.sin(u * 34), faF: -46, uaB: -16 - 8 * Math.sin(u * 34 + 1), faB: 46, torso: 3 * Math.sin(u * 34), head: 6 + 3 * Math.sin(u * 34) });
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const SRC = (L, tl, t0, dur, text) => PopUI.source(tl, L.light, t0, dur, { text, y: 1790 });
+      // the quake: a sway plus a fast tremor, for shot.shake (x, y px and a roll in degrees)
+      const QUAKE = (a = 1, from = 0, to = 99) => (t) => { const k = t < from || t > to ? 0 : a * Math.min(1, (t - from) / 0.4); return { x: k * (14 * Math.sin(t * 7.3) + 6 * Math.sin(t * 23)), y: k * (6 * Math.sin(t * 11) + 3 * Math.sin(t * 29)), r: k * (2.4 * Math.sin(t * 2.6) + 0.6 * Math.sin(t * 9)) }; };
+      // the ETA counts 02:00 → 00:00 from the app (back) to 13:20 (the ripple) in time-lapse
+      const ETA0 = SH.back.start + 0.6, ETA1 = SH.ripple.start + vo("ripple", 0);
+      const etaAt = (T) => Math.max(0, 120 * (ETA1 - T) / (ETA1 - ETA0));
+      const ETA = (k) => ({ eta: [etaAt(SH[k].start), etaAt(SH[k].start + D(k))] });
+      const HUD = (k, L, tl, t0, o = {}) => QkUI.eta(tl, L.light, t0, D(k), { ...ETA(k), pop: o.pop ?? false, ...o });
+      // the room seen from the door, inside it, and under the table
+      const WINLIGHT = { from: "right", rim: "#fff4dc", rimOp: 0.75, shade: "#2a2440", shadeOp: 0.3, cast: { len: 1.1, op: 0.26 }, vol: false };
+      const ROOM = (id, o = {}) => ({ set: "qkRoom", setOpts: { id, ...(o.opts || {}) }, dark: o.dark ?? 0, blur: o.blur || { sky: 2, far: 3, mid: 2 }, light: o.light || WINLIGHT, grade: o.grade || GROOM });
+      const TABLE_TOP = 1358, FLOOR = 1640;
+      const lampSwing = (tl, id, t0, dur, amp = 9) => tl.fromTo(`#${id}-lamp`, { rotation: -amp, svgOrigin: Qk.lampPivot }, { rotation: amp, svgOrigin: Qk.lampPivot, duration: 0.55, repeat: Math.ceil(dur / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+      const aqSlosh = (tl, id, t0, dur) => tl.fromTo(`#${id}-aqw`, { x: -30, y: 6 }, { x: 30, y: -6, duration: 0.45, repeat: Math.ceil(dur / 0.45), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+      const swayTower = (tl, id, t0, dur, amp = 1.2, per = 0.8) => {
+        tl.fromTo(`#${id}-tw`, { rotation: -amp, svgOrigin: "540 1720" }, { rotation: amp, svgOrigin: "540 1720", duration: per, repeat: Math.ceil(dur / per), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-wat`, { x: 60, y: -10 }, { x: -60, y: 10, duration: per, repeat: Math.ceil(dur / per), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+        for (let k = 0; k * per < dur; k++) {
+          const side = k % 2 ? "L" : "R", t = t0 + k * per + per * 0.55;
+          tl.fromTo(`#${id}-spill${side}`, { opacity: 0, scaleY: 0.1, svgOrigin: side === "L" ? "476 -1372" : "790 -1372" }, { opacity: 0.95, scaleY: 1, svgOrigin: side === "L" ? "476 -1372" : "790 -1372", duration: per * 0.7, ease: "power2.in", immediateRender: false }, t);
+          tl.to(`#${id}-spill${side}`, { opacity: 0, duration: 0.3 }, t + per * 0.7);
+        }
+      };
+
+      // ---------- 1. title: the tower sways, the rooftop pool slops over ----------
+      add("open", {
+        set: "qkTower", setOpts: { id: "tw0" }, dark: 0, blur: { sky: 1, far: 2, mid: 1 }, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(560, -1150, 0.62, 540, 1180) }, { t: D("open"), glide: D("open") - 0.9, ...fr(560, -820, 1.25, 540, 1240) }] },
+        shake: QUAKE(0.35),
+        captions: caps("open"),
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0);
+          swayTower(tl, "tw0", t0, D("open"), 1.1); Qk.reactTower(tl, "tw0", t0, D("open"), 0.6);
+          tl.fromTo("#tw0-birds", { x: 0, y: 0, opacity: 1 }, { x: 420, y: -520, opacity: 0, duration: 1.6, ease: "power1.out", immediateRender: false }, t0 + 0.5);
+          tl.fromTo("#tw0-f27", { opacity: 0 }, { opacity: 1, duration: 0.25, repeat: 5, yoyo: true, immediateRender: false }, t0 + F("open", 0, 1));
+          QkUI.title(tl, L.light, t0 + 0.05, D("open") - 0.1, { ep: "EP.1 · หมอบ ป้อง เกาะ" });
+        },
+      });
+      // ---------- 2. hook: first person in the corridor of floor 27, it tilts; the lift at the end ----------
+      add("hook", {
+        set: "qkCorridor", setOpts: { id: "cr1", open: true }, dark: 0.04, blur: {}, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.05) }, { t: D("hook"), glide: D("hook"), ...fr(540, 930, 1.25) }] },
+        shake: QUAKE(1.3),
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          tl.fromTo("#cr1-sign", { rotation: -16, svgOrigin: Qk.corrSignOrigin }, { rotation: 16, svgOrigin: Qk.corrSignOrigin, duration: 0.42, repeat: 6, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          [0.5, 0.62, 1.4, 1.48, 2.1].forEach((t, k) => tl.set("#cr1-lamps", { opacity: k % 2 ? 1 : 0.25 }, t0 + t));
+          Qk.reactCorridor(tl, "cr1", t0, D("hook"), 1.2, { sign: false, layer: L.set, n: 18, seed: 11 });
+          put(L.light, `<g id="hk-bag" transform="translate(830,1700) scale(0.62)">${Qk.povBag({ rot: -8 })}</g>`);
+          tl.fromTo("#hk-bag", { attr: { transform: "translate(830,1700) scale(0.62)" } }, { attr: { transform: "translate(850,1730) scale(0.62)" }, duration: 0.18, repeat: 13, yoyo: true, immediateRender: false }, t0);
+        },
+      });
+      // ---------- 3. two minutes earlier: the tape rewinds; the app in your hand at the condo's door ----------
+      add("back", {
+        set: "qkTower", setOpts: { id: "tw1" }, dark: 0, blur: { sky: 3, far: 4, mid: 4, set: 5 }, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(560, 1500, 1.6, 540, 900) }, { t: D("back"), glide: D("back"), ...fr(560, 1480, 1.7, 540, 900) }] },
+        captions: caps("back"),
+        fx(tl, id, t0, L) {
+          QkUI.rewind(tl, L.light, t0, 0.9, { from: "13:20", to: "13:18" });
+          QkUI.app(tl, L.light, t0 + 0.55, D("back") - 0.55, { clock: "13:18", s: 0.84, y: 930, eta: [etaAt(SH.back.start + 0.55), etaAt(SH.back.start + D("back"))] });
+        },
+      });
+      // ---------- 4. the lobby: ลุงสมศักดิ์ and the moody lift ----------
+      add("lobby", {
+        set: "qkLobby", setOpts: { id: "lb" }, dark: 0, blur: {}, light: DAY, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(420, 1180, 0.66, 540, 1000) }, { t: D("lobby"), glide: D("lobby") - 0.6, ...fr(980, 1150, 0.7, 540, 1000) }] },
+        actors: [
+          A("somsak", 260, 1480, 0.98, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("lobby") - 0.1, mode: "point", mouth: "smile" }], { talk: [TALK("lobby", 0, "o")] }),
+          A("riderBag", -700, 1560, 1.02, [{ t: 0, mode: "walk" }, { t: 2.3, mode: "idle" }], { moveTo: { x: 780, dur: 2.3 } }),
+        ],
+        captions: caps("lobby", undefined, { quote: true }),
+        fx(tl, id, t0, L) { HUD("lobby", L, tl, t0, { pop: true }); },
+      });
+      // ---------- 5. in the lift, first person: you press 27 ----------
+      add("lift", {
+        set: "qkLift", setOpts: { id: "lf" }, dark: 0, blur: {}, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.0) }, { t: D("lift"), glide: D("lift"), ...fr(560, 880, 1.06) }] },
+        fx(tl, id, t0, L) {
+          const [bx, by] = Qk.liftBtn27;
+          tl.fromTo("#lf-hand", { attr: { transform: `translate(${bx + 300},${by + 820})` } }, { attr: { transform: `translate(${bx},${by})` }, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + 0.1);
+          tl.to("#lf-hand", { attr: { transform: `translate(${bx + 300},${by + 820})` }, duration: 0.4, ease: "power2.in" }, t0 + 0.75);
+          tl.fromTo("#lf-lit27", { opacity: 0 }, { opacity: 1, duration: 0.1, immediateRender: false }, t0 + 0.42);
+          const n = document.getElementById("lf-num"), c = { v: 1 };
+          tl.fromTo(c, { v: 1 }, { v: 27, duration: 1.7, ease: "power1.inOut", immediateRender: false, onUpdate: () => { n.textContent = String(Math.round(c.v)); } }, t0 + 0.55);
+          HUD("lift", L, tl, t0);
+        },
+      });
+      // ---------- 6. 2714: มิว opens the door with a blast of her whistle ----------
+      const DOOR = (k) => ({ ...ROOM("rd", { opts: { frame: "door" } }), cam: { keys: [{ t: 0, ...fr(1050, 1300, 1.22, 540, 1040) }, { t: D(k), glide: D(k), ...fr(1050, 1310, 1.3, 540, 1040) }] } });
+      add("door", {
+        ...DOOR("door"),
+        actors: [A("mew", 1050, 1700, 0.82, [{ t: 0, mode: "blow", eyes: "closed", mouth: "o" }, { t: 0.55, mode: "raise", eyes: "wide", mouth: "laugh" }], { talk: [TALK("door", 0, "o")] })],
+        captions: caps("door", undefined, { quote: true }),
+        sfxText: [{ text: "ปรี๊ดดด!", x: 600, y: 520, t: 0.15, end: 0.7, size: 120, color: "#ffb03a", rot: -8 }],
+        fx(tl, id, t0, L) { put(L.light, `<g transform="translate(860,1640) scale(0.66)">${Qk.povBag({ rot: -14 })}</g>`); HUD("door", L, tl, t0); },
+      });
+      add("bag", {
+        ...ROOM("rd2", { opts: { frame: "door" } }),
+        cam: { keys: [{ t: 0, ...fr(1050, 1330, 1.45, 540, 980) }, { t: D("bag"), glide: D("bag"), ...fr(1040, 1320, 1.55, 540, 980) }] },
+        actors: [A("mew", 1050, 1700, 0.82, [{ t: 0, mode: "phoneLook", eyes: "side", mouth: "flat" }, { t: F("bag", 0, 1), mode: "point", eyes: "angry", mouth: "frown" }], { flip: true, talk: [TALK("bag", 0, "o")] })],
+        captions: caps("bag", undefined, { quote: true }),
+        fx(tl, id, t0, L) { put(L.light, `<g transform="translate(560,1560) scale(0.8)">${Qk.povBag({ rot: 6 })}</g>`); HUD("bag", L, tl, t0); },
+      });
+      // ---------- 7. the whistle (and, by the door, the red emergency bag with its torch) ----------
+      split("whistle", F("whistle", 0, 1) - 0.08, {
+        ...ROOM("rd4", { opts: { frame: "door" }, blur: { sky: 8, far: 8, mid: 8, set: 8 } }),
+        cam: { keys: [{ t: 0, ...fr(1050, 1300, 1.3, 540, 1040) }] },
+        captions: caps("whistle", undefined, { quote: true }).filter((c) => c.t < F("whistle", 0, 1) - 0.1),
+        fx(tl, id, t0, L) {
+          // the insert: มิว's small hand holding up แม่'s orange whistle in a warm glow (3D-shaded, the cord running up out of frame)
+          const f1 = Pop2.f1, WB = "M-110,-60H70Q150,-60 150,30Q150,120 50,120Q-30,120 -40,50H-110Z";
+          const rays = Array.from({ length: 14 }, (_, k) => { const a = (k / 14) * Math.PI * 2; return `M560,820L${f1(560 + Math.cos(a - 0.09) * 1500)},${f1(820 + Math.sin(a - 0.09) * 1500)}L${f1(560 + Math.cos(a + 0.09) * 1500)},${f1(820 + Math.sin(a + 0.09) * 1500)}Z`; }).join("");
+          const sp = (x, y, r) => `<path d="M${x},${y - r}Q${x + r * 0.18},${y - r * 0.18} ${x + r},${y}Q${x + r * 0.18},${y + r * 0.18} ${x},${y + r}Q${x - r * 0.18},${y + r * 0.18} ${x - r},${y}Q${x - r * 0.18},${y - r * 0.18} ${x},${y - r}Z" fill="#fffbe8"/>`;
+          put(L.light, `<defs><radialGradient id="wiBg" cx=".52" cy=".42" r=".75"><stop offset="0" stop-color="#ffe27a"/><stop offset=".55" stop-color="#f6b432"/><stop offset="1" stop-color="#d8781a"/></radialGradient>
+              <linearGradient id="wiSkin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f6cfab"/><stop offset=".55" stop-color="#e8b088"/><stop offset="1" stop-color="#c88a62"/></linearGradient>
+              <linearGradient id="wiFing" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8d4b2"/><stop offset="1" stop-color="#dca07a"/></linearGradient>
+              <linearGradient id="wiCord" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8501a"/><stop offset=".4" stop-color="#ff9a52"/><stop offset="1" stop-color="#b8461a"/></linearGradient></defs>
+            <rect width="1080" height="1920" fill="url(#wiBg)"/><g id="wi-rays" opacity=".16"><path d="${rays}" fill="#fff6c8"/></g>
+            ${[[160, 380, 70], [930, 520, 46], [880, 1260, 90], [140, 1180, 54], [760, 220, 34]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff4c8" opacity=".25"/>`).join("")}
+            <ellipse cx="575" cy="860" rx="330" ry="300" fill="#fff6d0" opacity=".35"/>
+            <g id="wi-m"><g id="wi-w">
+              <path d="M556,-40C548,260 430,560 272,730" stroke="#7a2e0a" stroke-width="22" fill="none" stroke-linecap="round"/><path d="M556,-40C548,260 430,560 272,730" stroke="url(#wiCord)" stroke-width="15" fill="none" stroke-linecap="round"/>
+              <path d="${Array.from({ length: 52 }, (_, k) => { const u = k / 52, x = (1 - u) ** 3 * 556 + 3 * (1 - u) ** 2 * u * 548 + 3 * (1 - u) * u * u * 430 + u ** 3 * 272, y = (1 - u) ** 3 * -40 + 3 * (1 - u) ** 2 * u * 260 + 3 * (1 - u) * u * u * 560 + u ** 3 * 730; return `M${f1(x - 6)},${f1(y)}l11,7`; }).join("")}" stroke="#a8420e" stroke-width="3" opacity=".6"/>
+              <path d="M420,1920L438,1310Q446,1250 470,1230H690Q722,1250 726,1320L748,1920Z" fill="url(#wiSkin)" stroke="#2e2a26" stroke-width="7" stroke-linejoin="round"/>
+              <path d="M398,1080Q384,1250 452,1320H704Q770,1250 748,1060Q740,980 690,968H446Q404,980 398,1080Z" fill="url(#wiSkin)" stroke="#2e2a26" stroke-width="7" stroke-linejoin="round"/>
+              <path d="M470,1290Q560,1316 660,1290" stroke="#c88a62" stroke-width="6" fill="none" opacity=".6"/>
+              <g transform="translate(600,800) rotate(-12) scale(1.85)">
+                <ellipse cx="10" cy="128" rx="120" ry="16" fill="#7a3a10" opacity=".16"/>
+                <path d="${WB}" fill="#8a3a0c" transform="translate(7,11)" stroke="#2e2a26" stroke-width="5" stroke-linejoin="round"/><path d="${WB}" fill="url(#quOr)" stroke="#2e2a26" stroke-width="5" stroke-linejoin="round"/>
+                <rect x="-196" y="-60" width="96" height="72" rx="14" fill="#a8480e" transform="translate(6,10)"/><rect x="-196" y="-60" width="96" height="72" rx="14" fill="url(#quOrM)" stroke="#2e2a26" stroke-width="5"/>
+                <ellipse cx="-196" cy="-24" rx="9" ry="24" fill="#5a2406" stroke="#2e2a26" stroke-width="3"/>
+                <circle cx="50" cy="30" r="36" fill="url(#quHole)" stroke="#2e2a26" stroke-width="4"/><path d="M26,14A30,30 0 0 1 60,2" stroke="#ffd2a8" stroke-width="4" fill="none" opacity=".55"/>
+                <path d="M-96,-42H66Q120,-40 132,-6" stroke="#ffe8d0" stroke-width="10" fill="none" opacity=".75" stroke-linecap="round"/>
+                <circle cx="-172" cy="-66" r="20" fill="none" stroke="#3a3e42" stroke-width="9"/><circle cx="-172" cy="-66" r="20" fill="none" stroke="url(#quRing)" stroke-width="5"/>
+                <g transform="translate(-30,-14) rotate(-8)"><path d="M0,10C-14,0 -16,-12 -8,-16C-2,-19 0,-14 0,-11C0,-14 2,-19 8,-16C16,-12 14,0 0,10Z" fill="#f2547a" stroke="#fff" stroke-width="3"/></g></g>
+              ${[0, 1, 2, 3].map((k) => { const x = 452 + k * 72, y = 930 + Math.abs(k - 1.4) * 16, r = (k - 1.5) * 4; return `<g transform="rotate(${r} ${x + 34} ${y + 90})"><rect x="${x}" y="${y}" width="68" height="190" rx="34" fill="url(#wiFing)" stroke="#2e2a26" stroke-width="6"/><path d="M${x + 6},${y + 40}q28,-18 56,0" stroke="#000" stroke-width="10" fill="none" opacity=".08"/><ellipse cx="${x + 34}" cy="${y + 30}" rx="20" ry="16" fill="#fbe2d2" stroke="#c88a72" stroke-width="3"/><path d="M${x + 24},${y + 24}q8,-6 18,-2" stroke="#fff" stroke-width="4" fill="none" opacity=".8"/><path d="M${x + 18},${y + 110}h32M${x + 22},${y + 122}h24" stroke="#b8805e" stroke-width="4" stroke-linecap="round" opacity=".7"/></g>`; }).join("")}
+              <path d="M410,1000Q352,940 368,870Q380,830 420,846Q448,860 452,920L458,1010Z" fill="url(#wiSkin)" stroke="#2e2a26" stroke-width="6" stroke-linejoin="round"/><ellipse cx="392" cy="868" rx="18" ry="14" fill="#fbe2d2" stroke="#c88a72" stroke-width="3" transform="rotate(-30 392 868)"/>
+            </g></g>
+            <g id="wi-sp">${sp(330, 600, 34)}${sp(840, 660, 26)}${sp(780, 1000, 20)}${sp(300, 860, 18)}${sp(700, 470, 22)}</g>`);
+          tl.fromTo("#wi-m", { y: 90 }, { y: 0, duration: 0.9, ease: "back.out(1.6)", immediateRender: false }, t0);
+          tl.fromTo("#wi-w", { rotation: -5, svgOrigin: "580 1300" }, { rotation: 2.5, svgOrigin: "580 1300", duration: 1.4, ease: "power2.out", immediateRender: false }, t0);
+          tl.fromTo("#wi-rays", { rotation: 0, svgOrigin: "560 820" }, { rotation: 12, svgOrigin: "560 820", duration: 3, ease: "none", immediateRender: false }, t0);
+          document.querySelectorAll("#wi-sp path").forEach((e, k) => { const b = e.getBBox(), o = `${f1(b.x + b.width / 2)} ${f1(b.y + b.height / 2)}`; tl.fromTo(e, { scale: 0.2, opacity: 0.2, svgOrigin: o }, { scale: 1.1, opacity: 1, svgOrigin: o, duration: 0.35, repeat: 5, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.2 + k * 0.17); });
+          HUD("whistle", L, tl, t0);
+        },
+      }, {
+        ...ROOM("rd3", { opts: { frame: "door" } }),
+        cam: { keys: [{ t: 0, ...fr(1150, 1180, 1.75, 540, 900) }, { t: D("whistle") - F("whistle", 0, 1), glide: D("whistle") - F("whistle", 0, 1), ...fr(1170, 1170, 1.9, 540, 900) }] },
+        actors: [A("mew", 1050, 1700, 0.82, [{ t: 0, mode: "point", eyes: "wide", mouth: "smile" }, { t: 0.9, mode: "whistle", eyes: "closed", mouth: "o" }], { talk: [[0, voEnd("whistle", 0) - F("whistle", 0, 1) + 0.08, "o"]] })],
+        captions: capsFrom("whistle", F("whistle", 0, 1) - 0.08, undefined, { quote: true }),
+        fx(tl, id, t0, L) { HUD("whistle", L, tl, t0 - (F("whistle", 0, 1) - 0.08)); },
+      });
+      // ---------- 8. 13:20: rings in the glass of water; then the room, the lamp starts to swing ----------
+      split("ripple", 1.5, {
+        set: "qkCup", setOpts: { id: "cu" }, dark: 0, blur: { far: 6, sky: 6 }, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(560, 1400, 1.0, 540, 1100) }, { t: 1.5, glide: 1.5, ...fr(640, 1480, 1.3, 540, 1100) }] },
+        shake: QUAKE(0.12, 0.6),
+        captions: caps("ripple"),
+        fx(tl, id, t0, L) {
+          tl.set("#cu-t19", { opacity: 1 }, t0); tl.set("#cu-t19", { opacity: 0 }, t0 + vo("ripple") - 0.05); tl.set("#cu-t20", { opacity: 1 }, t0 + vo("ripple") - 0.05);
+          document.querySelectorAll("#cu-rings .qkRing").forEach((r, k) => tl.fromTo(r, { scale: 0.3, opacity: 0.9, svgOrigin: "0 150" }, { scale: 1.1, opacity: 0, svgOrigin: "0 150", duration: 0.5, repeat: 4, ease: "power1.out", immediateRender: false }, t0 + 0.3 + k * 0.17));
+          HUD("ripple", L, tl, t0, { out: 1.45 });
+        },
+      }, {
+        ...ROOM("rq"),
+        cam: { keys: [{ t: 0, ...fr(1050, 1080, 0.62, 540, 960) }] },
+        shake: QUAKE(0.6),
+        actors: [A("mew", 1050, 1740, 0.82, [{ t: 0, mode: "stagger", eyes: "wide", mouth: "o" }])],
+        fx(tl, id, t0, L) { lampSwing(tl, "rq", t0, D("ripple") - 1.5, 6); aqSlosh(tl, "rq", t0, D("ripple") - 1.5); Qk.react(tl, "rq", t0, D("ripple") - 1.5, 0.6); },
+      });
+      // ---------- 9. outside: the tower sways, the pool spills, the birds go ----------
+      add("tower", {
+        set: "qkTower", setOpts: { id: "tw2" }, dark: 0, blur: { sky: 1, far: 2 }, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(560, 120, 0.52, 540, 960) }, { t: D("tower"), glide: D("tower"), ...fr(560, 60, 0.56, 540, 960) }] },
+        shake: QUAKE(0.6),
+        fx(tl, id, t0, L) {
+          swayTower(tl, "tw2", t0, D("tower"), 2.2, 0.6); Qk.reactTower(tl, "tw2", t0, D("tower"), 1.3);
+          tl.fromTo("#tw2-birds", { x: 0, y: 0, opacity: 1 }, { x: -380, y: -460, opacity: 0, duration: 1.3, ease: "power1.out", immediateRender: false }, t0 + 0.2);
+        },
+      });
+      // ---------- 10. มิว pulls you toward the lift ----------
+      add("panic", {
+        set: "qkCorridor", setOpts: { id: "cr2", open: true }, dark: 0.04, blur: {}, light: INDOOR, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0) }, { t: D("panic"), glide: D("panic"), ...fr(520, 940, 1.08) }] },
+        shake: QUAKE(1.1),
+        actors: [A("mew", 640, 1960, 1.45, [{ t: 0, mode: "pullHand", eyes: "wide", mouth: "scream" }], { flip: true, talk: [TALK("panic", 0, "scream")] })],
+        captions: caps("panic", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          tl.fromTo("#cr2-sign", { rotation: -14, svgOrigin: Qk.corrSignOrigin }, { rotation: 14, svgOrigin: Qk.corrSignOrigin, duration: 0.42, repeat: 6, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Qk.reactCorridor(tl, "cr2", t0, D("panic"), 1, { sign: false, layer: L.set, n: 16, seed: 12 });
+          put(L.light, `<g id="pn-arm" transform="translate(420,1780)">${Qk.povGrip({ rot: 28 })}</g>`);
+          tl.fromTo("#pn-arm", { attr: { transform: "translate(470,1830)" } }, { attr: { transform: "translate(380,1740)" }, duration: 0.3, repeat: 7, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+        },
+      });
+      // ---------- 11. the choice ----------
+      add("choice1", {
+        set: "qkCorridor", setOpts: { id: "cr3", open: true }, dark: 0.2, blur: { set: 4 }, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.08) }] },
+        shake: QUAKE(0.4),
+        fx(tl, id, t0, L) {
+          Qk.reactCorridor(tl, "cr3", t0, D("choice1"), 0.6, { layer: L.set, n: 8, seed: 13 });
+          QkUI.choice(tl, L.light, t0, D("choice1"), { q: "คุณจะทำยังไง?", a: { text: "วิ่งไปลิฟต์", icon: "lift" }, b: { text: "หมอบใต้โต๊ะ", icon: "table" }, secs: 3, pick: "a", pickAt: 2.7, hover: [[0.5, 0], [1.2, 1], [1.9, 0]] });
+        },
+      });
+      // ---------- 12. the wrong way: the lift goes down… and the power dies ----------
+      add("wrong", {
+        set: "qkLift", setOpts: { id: "lw" }, dark: 0, blur: {}, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.04) }] },
+        shake: QUAKE(0.8),
+        fx(tl, id, t0, L) {
+          const n = document.getElementById("lw-num"), c = { v: 27 };
+          tl.set("#lw-arrow", { rotation: 180, svgOrigin: "472 280" }, t0);
+          tl.fromTo(c, { v: 27 }, { v: 25, duration: D("wrong"), ease: "none", immediateRender: false, onUpdate: () => { n.textContent = String(Math.round(c.v)); } }, t0);
+          [0.9, 0.98, 1.5, 1.56].forEach((t, k) => tl.set("#lw-lite", { opacity: k % 2 ? 1 : 0.2 }, t0 + t));
+          Qk.swing(tl, "#lw-cert", Qk.liftCertOrigin, t0, D("wrong"), 5, 0.28);
+          Qk.debris(tl, L.set, { t0, dur: D("wrong"), n: 10, seed: 4, pts: (r) => ({ x: 650 + r() * 170, y0: 230, y1: 1730 + r() * 260, s: 4 + r() * 5 }) });
+        },
+      });
+      add("stuck", {
+        set: "qkLift", setOpts: { id: "ls" }, dark: 0, blur: {}, light: false, grade: GRED,
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.04) }, { t: D("stuck"), glide: D("stuck"), ...fr(560, 860, 1.14) }] },
+        shake: (t) => (t < 0.35 ? { x: 30 * Math.sin(t * 60), y: 40 * Math.sin(t * 47) * (1 - t / 0.35), r: 1.5 * Math.sin(t * 30) } : { x: 0, y: 0, r: 0 }),
+        captions: caps("stuck"),
+        fx(tl, id, t0, L) {
+          tl.set("#ls-num", { attr: { "font-size": 74 } }, t0);
+          document.getElementById("ls-num").textContent = "25";
+          tl.set("#ls-lite", { opacity: 0 }, t0 + 0.05); tl.set("#ls-num", { opacity: 0 }, t0 + 0.08); tl.set("#ls-arrow", { opacity: 0 }, t0 + 0.08);
+          Qk.swing(tl, "#ls-cert", Qk.liftCertOrigin, t0, D("stuck"), 6, 0.34);
+          tl.fromTo("#ls-dk", { opacity: 0 }, { opacity: 0.86, duration: 0.08, immediateRender: false }, t0 + 0.05);
+          tl.fromTo("#ls-emg", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.9);
+          tl.fromTo("#ls-emg", { opacity: 1 }, { opacity: 0.55, duration: 0.6, repeat: 4, yoyo: true, immediateRender: false }, t0 + 1.2);
+          SRC(L, tl, t0 + vo("stuck"), D("stuck") - vo("stuck"), "ที่มา: ปภ. ผ่าน Thai PBS (21 พ.ย. 62)");
+        },
+      });
+      // ---------- 13. rewind to the choice: ✗ the lift, ✓ under the table ----------
+      add("rewind", {
+        set: "qkCorridor", setOpts: { id: "cr4", open: true }, dark: 0.2, blur: { set: 4 }, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.08) }] },
+        fx(tl, id, t0, L) {
+          QkUI.choice(tl, L.light, t0 + 0.55, D("rewind") - 0.55, { q: "คุณจะทำยังไง?", a: { text: "วิ่งไปลิฟต์", icon: "lift" }, b: { text: "หมอบใต้โต๊ะ", icon: "table" }, secs: 3, pick: "a", pickAt: 0.05, hover: [], mark: { at: 0.15, wrong: "a" } });
+          QkUI.rewind(tl, L.light, t0, 0.7, {});
+        },
+      });
+      // ---------- 14. you pull มิว under the table (wide, then you're both down) ----------
+      const DUCKS = (L, o = {}) => put(L.act, Qk.duck("rider", o.rx ?? 1000, FLOOR - 8, 1.0, { id: o.rid || "dR", arms: o.rarms || "cover", reach: 100 }) + Qk.duck("mew", o.mx ?? 1250, FLOOR - 8, 0.8, { id: o.mid || "dM", arms: o.marms || "cover", reach: 130 }));
+      const TFRONT = (L, id) => put(L.glow, `<g id="${id}">${Qk.tableFront(1050, FLOOR)}</g>`);
+      add("drop", {
+        ...ROOM("rk"),
+        cam: { keys: [{ t: 0, ...fr(1050, 1300, 0.78, 540, 1080) }, { t: D("drop"), glide: D("drop"), ...fr(1080, 1440, 1.0, 540, 1080) }] },
+        shake: QUAKE(0.8),
+        actors: [
+          A("rider", 820, 1760, 1.0, [{ t: 0, mode: "stagger", eyes: "normal" }], { moveTo: { x: 980, y: 1700, dur: 0.6 }, until: 0.75 }),
+          A("mew", 1320, 1780, 0.82, [{ t: 0, mode: "stagger", eyes: "wide", mouth: "scream" }], { moveTo: { x: 1220, y: 1700, dur: 0.6 }, until: 0.75 }),
+        ],
+        captions: caps("drop"),
+        fx(tl, id, t0, L) {
+          lampSwing(tl, "rk", t0, D("drop"), 12); aqSlosh(tl, "rk", t0, D("drop")); Qk.react(tl, "rk", t0, D("drop"), 0.9);
+          DUCKS(L, { rid: "dkR", mid: "dkM" }); TFRONT(L, "rk-tf");
+          tl.set(["#dkR", "#dkM"], { opacity: 0 }, t0); tl.set(["#dkR", "#dkM"], { opacity: 1 }, t0 + 0.75);
+          tl.fromTo(["#dkR", "#dkM"], { y: -90 }, { y: 0, duration: 0.25, ease: "power3.in", immediateRender: false }, t0 + 0.75);
+          [["#dkR-b", 0], ["#dkM-b", 0.05]].forEach(([s, d]) => tl.fromTo(s, { x: -2 }, { x: 2, duration: 0.06, repeat: Math.ceil(D("drop") / 0.06), yoyo: true, immediateRender: false }, t0 + 1 + d));
+          SRC(L, tl, t0 + vo("drop"), D("drop") - vo("drop"), "ที่มา: ปภ. ผ่าน Thai PBS (21 พ.ย. 62) · Thai PBS (28 มี.ค. 68)");
+        },
+      });
+      // ---------- 15. under the table, side on: หมอบ ป้อง เกาะ called out; the lamp falls onto the tabletop ----------
+      add("cover", {
+        ...ROOM("rc"),
+        cam: { keys: [{ t: 0, ...fr(1085, 1500, 1.2, 540, 1040) }, { t: D("cover"), glide: D("cover"), ...fr(1085, 1505, 1.24, 540, 1040) }] },
+        shake: QUAKE(0.7),
+        fx(tl, id, t0, L) {
+          aqSlosh(tl, "rc", t0, D("cover")); Qk.react(tl, "rc", t0, D("cover"), 0.9);
+          DUCKS(L, { rid: "cvR", mid: "cvM", rarms: "hold" }); TFRONT(L, "rc-tf");
+          [["#cvR-b", 0], ["#cvM-b", 0.03]].forEach(([s, d]) => tl.fromTo(s, { x: -2 }, { x: 2, duration: 0.06, repeat: Math.ceil(D("cover") / 0.06), yoyo: true, immediateRender: false }, t0 + d));
+          // the lamp breaks loose and lands on the tabletop
+          tl.fromTo("#rc-lamp", { rotation: -10, svgOrigin: Qk.lampPivot }, { rotation: 10, svgOrigin: Qk.lampPivot, duration: 0.4, repeat: 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.to("#rc-lamp", { y: 330, rotation: -6, svgOrigin: Qk.lampPivot, duration: 0.35, ease: "power2.in" }, t0 + 0.8);
+          tl.to("#rc-lampGlow", { opacity: 0, duration: 0.05 }, t0 + 0.8); tl.to("#rc-lampCord", { opacity: 0, duration: 0.05 }, t0 + 0.82);
+          // screen positions of the body parts at this framing: world → screen
+          const k = 1.2, S = (wx, wy) => [540 + (wx - 1085) * k, 1040 + (wy - 1500) * k];
+          const [hx, hy] = S(1000 - 205, FLOOR - 8 - 190), [kx, ky] = S(1000 - 30, FLOOR - 10), [gx, gy] = S(1000 - 260, FLOOR - 8 - 106);
+          QkUI.labels(tl, L.light, t0, { items: [
+            { x: kx, y: ky, lx: 640, ly: 1330, text: "หมอบ", icon: "duck", at: F("cover", 0, 0) - 0.1, dur: 3 },
+            { x: hx, y: hy, lx: 150, ly: 560, text: "ป้อง", icon: "cover", at: F("cover", 0, 0) + 0.45, dur: 3 },
+            { x: gx, y: gy, lx: 120, ly: 1330, text: "เกาะ", icon: "hold", at: F("cover", 0, 1), dur: 2 },
+          ] });
+        },
+      });
+      // ---------- 16. the table walks; you go with it ----------
+      add("slide", {
+        ...ROOM("rs", { opts: { lampDown: true } }),
+        cam: { keys: [{ t: 0, ...fr(1080, 1450, 1.15, 540, 1040) }, { t: D("slide"), glide: D("slide"), ...fr(1000, 1450, 1.15, 540, 1040) }] },
+        shake: QUAKE(1.0),
+        captions: caps("slide", [0], { quote: true }).concat(caps("slide", [1])),
+        fx(tl, id, t0, L) {
+          aqSlosh(tl, "rs", t0, D("slide")); Qk.react(tl, "rs", t0, D("slide"), 1.0);
+          DUCKS(L, { rid: "slR", mid: "slM", rarms: "hold" }); TFRONT(L, "rs-tf");
+          // the table jolts left in steps; the two of you shuffle after it, a beat behind
+          const steps = [[0.4, -40], [1.3, -95], [2.3, -150], [3.2, -190]];
+          steps.forEach(([t, x], i) => {
+            tl.to(["#rs-tbl", "#rs-tf", "#slR"], { x, duration: 0.18, ease: "power2.out" }, t0 + t);
+            tl.to("#slM", { x: x + 6, duration: 0.2, ease: "power2.out" }, t0 + t + 0.08);
+          });
+          [["#slR-b", 0], ["#slM-b", 0.03]].forEach(([s, d]) => tl.fromTo(s, { x: -2 }, { x: 2, duration: 0.06, repeat: Math.ceil(D("slide") / 0.06), yoyo: true, immediateRender: false }, t0 + d));
+          SRC(L, tl, t0 + vo("slide", 1), D("slide") - vo("slide", 1), "ที่มา: ปภ. ผ่าน Thai PBS (21 พ.ย. 62)");
+        },
+      });
+      // ---------- 17. the window wall bursts (low, from under the table); the power cuts ----------
+      add("glass", {
+        ...ROOM("rg", { opts: { under: { x: 1050, top: 520, half: 450, G: 2100 } } }),
+        cam: { keys: [{ t: 0, ...fr(1050, 900, 1.0, 540, 700) }] },
+        shake: (t) => { const q = QUAKE(1.1)(t); return t > 0.9 && t < 1.15 ? { x: q.x * 3, y: q.y * 3, r: q.r } : q; },
+        fx(tl, id, t0, L) {
+          tl.fromTo("#rg-crack", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.in", immediateRender: false }, t0 + 0.2);
+          tl.set([0, 1, 2, 3].map((k) => `#rg-pane${k}`), { opacity: 0 }, t0 + 0.95);
+          tl.set("#rg-crack", { opacity: 0 }, t0 + 0.95);
+          tl.set("#rg-shards", { opacity: 1 }, t0 + 0.95);
+          document.querySelectorAll("#rg-shards .qkShard").forEach((s, k) => {
+            const y0 = +s.dataset.y, fall = 1380 + (k % 7) * 18 - y0;
+            tl.fromTo(s, { y: 0, x: 0, rotation: 0, svgOrigin: `${s.dataset.x} ${s.dataset.y}` }, { y: fall, x: (k % 5 - 2) * 26, rotation: (k % 2 ? 1 : -1) * (90 + k * 7), svgOrigin: `${s.dataset.x} ${s.dataset.y}`, duration: 0.45 + (k % 4) * 0.07, ease: "power2.in", immediateRender: false }, t0 + 0.95);
+          });
+          tl.fromTo("#flashw", { opacity: 0 }, { opacity: 0.55, duration: 0.05, yoyo: true, repeat: 1, immediateRender: false }, t0 + 0.95);
+        },
+      });
+      // ---------- 18. แม่'s plan of the room: what can hurt you, and where you are safe ----------
+      add("danger", {
+        set: "qkPlan3d", setOpts: { id: "pl" }, dark: 0, blur: {}, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960, { drift: { s: 0 } }) }] },
+        shake: QUAKE(0.15),
+        captions: caps("danger"),
+        fx(tl, id, t0, L) {
+          // แม่'s plan pops up off the paper: the danger zones rise as red blocks, the space under the table glows green
+          const z1 = F("danger", 0, 1);
+          Qk.plan3d(tl, L, id, t0, { dur: D("danger"), zAt: [F("danger", 0, 0), z1, z1 + 0.25, z1 + 0.5], safeAt: 0.2, youAt: 0.35, okAt: D("danger") - 1.0 });
+          SRC(L, tl, t0 + vo("danger"), D("danger") - vo("danger"), "ที่มา: ปภ. · กรมอุตุนิยมวิทยา");
+        },
+      });
+      // ---------- 19. มิว tries to crawl out; your hand holds her arm ----------
+      add("run", {
+        ...ROOM("rr", { opts: { under: { x: 1050, top: 1315, half: 380, G: 2060 } } }),
+        cam: { keys: [{ t: 0, ...fr(1050, 1355, 1.25, 540, 470) }] },
+        shake: QUAKE(0.9),
+        actors: [A("mew", 1120, 2050, 1.3, [{ t: 0, mode: "kneelShake", eyes: "wide", mouth: "scream" }], { flip: true, talk: [TALK("run", 0, "scream")] })],
+        captions: caps("run", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.light, `<g id="rr-arm" transform="translate(300,1500)">${Qk.povGrip({ rot: 62 })}</g>`);
+          tl.fromTo("#rr-arm", { attr: { transform: "translate(80,1900)" } }, { attr: { transform: "translate(470,1250)" }, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.6);
+          tl.fromTo("#rr-arm", { attr: { transform: "translate(470,1250)" } }, { attr: { transform: "translate(440,1280)" }, duration: 0.12, repeat: 10, yoyo: true, immediateRender: false }, t0 + 0.95);
+        },
+      });
+      // ---------- 20. where you would have run: the corridor ceiling comes down ----------
+      add("fall", {
+        set: "qkCorridor", setOpts: { id: "cf", open: false, panels: true }, dark: 0.06, blur: {}, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0) }] },
+        shake: QUAKE(0.7),
+        captions: caps("fall"),
+        fx(tl, id, t0, L) {
+          Qk.reactCorridor(tl, "cf", t0, D("fall"), 1.2, { layer: L.set, n: 24, seed: 14 });
+          // a ghost of you running for the lift
+          put(L.act, `<g id="cf-ghost" opacity="0"></g>`);
+          Rig.build(document.getElementById("cf-ghost"), "cfg", Rig.CAST.rider);
+          document.getElementById("cfg").setAttribute("transform", "translate(560,1460) scale(0.62)");
+          Rig.drive(tl, "cfg", t0, D("fall"), [{ t: 0, mode: "run" }], []);
+          tl.fromTo("#cf-ghost", { opacity: 0 }, { opacity: 0.55, duration: 0.2, immediateRender: false }, t0 + 0.2);
+          tl.fromTo("#cfg", { attr: { transform: "translate(560,1500) scale(0.66)" } }, { attr: { transform: "translate(545,1180) scale(0.36)" }, duration: 1.4, ease: "none", immediateRender: false }, t0 + 0.2);
+          [[0, 0.9], [1, 1.3], [2, 1.7]].forEach(([k, t]) => {
+            tl.to(`#cf-p${k}`, { y: 260 - k * 40, rotation: k % 2 ? 14 : -12, svgOrigin: "540 400", duration: 0.32, ease: "power2.in" }, t0 + t);
+          });
+          put(L.light, `<g id="cf-x" opacity="0" transform="translate(560,1100)"><circle r="120" fill="#d8312a" stroke="#fff" stroke-width="10"/><path d="M-50,-50L50,50M50,-50L-50,50" stroke="#fff" stroke-width="26" stroke-linecap="round"/></g>`);
+          tl.fromTo("#cf-x", { opacity: 0, scale: 2.4, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.25, ease: "back.out(3)", immediateRender: false }, t0 + 1.45);
+          tl.to("#cf-ghost", { opacity: 0, duration: 0.15 }, t0 + 1.5);
+          SRC(L, tl, t0 + vo("fall"), D("fall") - vo("fall"), "ที่มา: Thai PBS (28 มี.ค. 68)");
+        },
+      });
+      // ---------- 21. the rule: มิว reads แม่'s note on the fridge ----------
+      split("rule", 1.7, {
+        ...ROOM("ru", { opts: { under: { x: 1050, top: 1315, half: 380, G: 2060 } } }),
+        cam: { keys: [{ t: 0, ...fr(1050, 1355, 1.25, 540, 470) }] },
+        shake: QUAKE(0.5),
+        actors: [A("mew", 980, 2050, 1.3, [{ t: 0, mode: "kneel", eyes: "wide", mouth: "o" }], { talk: [TALK("rule", 0, "o")] })],
+        captions: capsFrom("rule", 0, undefined, { quote: true }).filter((c) => c.t < 1.7).map((c) => ({ ...c, end: Math.min(c.end, 1.68) })),
+      }, {
+        set: "qkFridge", setOpts: { id: "fd" }, dark: 0, blur: { set: 6, sky: 4 }, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0) }] },
+        shake: QUAKE(0.25),
+        captions: capsFrom("rule", 1.7, undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          const t1 = t0, r = SH.rule.vo[0];
+          QkUI.note(tl, L.light, t1, D("rule") - 1.7, { active: 1, done: [], at: [r.t + r.frags[1] - 1.7, D("rule") - 1.7 - 1.2, D("rule") - 1.7 - 0.9].map((x) => Math.max(0.3, x)) });
+          tl.to("#fd-draw", { y: 900, rotation: 30, svgOrigin: "250 1400", duration: 0.6, ease: "power2.in" }, t0 + 0.4);
+        },
+      });
+      // ---------- 22. it stops; dust; the alarm ----------
+      add("stop", {
+        ...ROOM("ra", { opts: { after: true, dark: true } }),
+        cam: { keys: [{ t: 0, ...fr(1050, 1240, 0.72, 540, 1040) }, { t: D("stop"), glide: D("stop"), ...fr(1080, 1330, 0.86, 540, 1040) }] },
+        shake: (t) => (t < 0.5 ? QUAKE(1 - t * 2)(t) : 0),
+        captions: caps("stop", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          DUCKS(L, { rid: "stR", mid: "stM" }); TFRONT(L, "ra-tf");
+          tl.to("#stM-head", { rotation: 20, svgOrigin: "0 0", duration: 0.5, ease: "power2.out" }, t0 + 0.7);
+          Pop2.particles(tl, L.glow, { type: "dust", n: 60, box: [200, 300, 1800, 1300], seed: 5, t0, dur: D("stop") });
+          put(L.glow, `<g id="ra-strobe" opacity="0"><circle cx="1960" cy="330" r="22" fill="#ff4a3a"/><circle cx="1960" cy="330" r="160" fill="url(#qkEmg)"/></g>`);
+          tl.fromTo("#ra-strobe", { opacity: 0 }, { opacity: 1, duration: 0.18, repeat: 9, yoyo: true, immediateRender: false }, t0 + 1.2);
+        },
+      });
+      // ---------- 23. aftershocks: the seismogram ----------
+      add("after", {
+        ...ROOM("rf", { opts: { after: true, dark: true }, blur: { sky: 4, far: 6, mid: 6, set: 7, act: 7 } }),
+        cam: { keys: [{ t: 0, ...fr(1050, 1200, 0.8, 540, 960) }] },
+        captions: caps("after"),
+        fx(tl, id, t0, L) {
+          QkUI.seismo(tl, L.light, t0 + 0.05, D("after"), { y: 840, draw: D("after") - 0.9 });
+          SRC(L, tl, t0 + vo("after"), D("after") - vo("after"), "ที่มา: Thai PBS (28 มี.ค. 68)");
+        },
+      });
+      // ---------- 24. it has happened for real: Myanmar → Bangkok on a 3D relief map (the map's own camera flies; the shot camera holds) ----------
+      add("real", {
+        set: "qkMap3d", setOpts: { id: "mq" }, dark: 0, blur: {}, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960, { drift: { s: 0 } }) }] },
+        captions: caps("real"),
+        fx(tl, id, t0, L) {
+          QkUI.quakeMap3d(tl, L, id, t0, { dur: D("real"), chipAt: 0.3, labelAt: vo("real", 1) + 0.2, bkkAt: vo("real", 1) + 1.4, count: [vo("real", 2), D("real") - 0.4] });
+          SRC(L, tl, t0 + vo("real", 1), vo("real", 2) - vo("real", 1), "ที่มา: กรมอุตุนิยมวิทยา (28 มี.ค. 68)");
+          SRC(L, tl, t0 + vo("real", 2), D("real") - vo("real", 2), "ที่มา: Thai PBS (28 มี.ค. 68)");
+        },
+      });
+      // ---------- 25. มิว calls แม่: no answer ----------
+      add("mom", {
+        ...ROOM("rm2", { opts: { after: true, dark: true } }),
+        cam: { keys: [{ t: 0, ...fr(700, 1300, 1.6, 400, 900) }, { t: D("mom"), glide: D("mom"), ...fr(700, 1300, 1.7, 400, 900) }] },
+        actors: [A("mewPhone", 700, 1720, 0.84, [{ t: 0, mode: "phoneEar", eyes: "worry", mouth: "frown" }], { talk: [TALK("mom", 0, "o")] })],
+        captions: caps("mom", undefined, { quote: true }),
+        fx(tl, id, t0, L) { QkUI.call(tl, L.light, t0 + 0.1, D("mom") - 0.1, { x: 790, y: 1240, failAt: D("mom") - 0.9 }); },
+      });
+      // ---------- 26. the corridor beyond the door: pitch black ----------
+      add("dark", {
+        set: "qkCorridor", setOpts: { id: "cd", dark: true }, dark: 0.82, blur: {}, light: false, grade: GDARK,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0) }, { t: D("dark"), glide: D("dark"), ...fr(540, 940, 1.12) }] },
+        fx(tl, id, t0, L) {
+          put(L.light, `<g id="cd-em" opacity="0"><circle cx="540" cy="210" r="260" fill="url(#qkEmg)"/></g>`);
+          [[0.2, 0.9], [0.5, 0.2], [0.62, 0.8], [1.1, 0.1], [1.2, 0.6], [1.45, 0]].forEach(([t, o]) => tl.set("#cd-em", { opacity: o }, t0 + t));
+        },
+      });
+      // ---------- 27. the candle; behind her, the canister hisses ----------
+      split("candle", vo("candle", 1) - 0.1, {
+        ...ROOM("rn", { opts: { after: true, dark: true }, dark: 0.42 }),
+        cam: { keys: [{ t: 0, ...fr(-120, 1330, 1.5, 560, 1000) }, { t: vo("candle", 1) - 0.1, glide: 1.4, ...fr(-140, 1320, 1.65, 560, 1000) }] },
+        actors: [A("mewCandle", -60, 1640, 0.76, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "flat" }, { t: 1.2, mode: "idle", eyes: "side", mouth: "smile" }], { talk: [TALK("candle", 0, "o")] })],
+        captions: caps("candle", [0], { quote: true }),
+        fx(tl, id, t0) { tl.fromTo("#rn-drawer", { x: 0 }, { x: -40, y: 20, duration: 0.3, immediateRender: false }, t0 + 0.2); },
+      }, {
+        ...ROOM("rn2", { opts: { after: true, dark: true }, blur: { sky: 2, far: 3, mid: 2 }, dark: 0.42 }),
+        cam: { keys: [{ t: 0, ...fr(-760, 1380, 1.7, 540, 980) }, { t: D("candle") - vo("candle", 1) + 0.1, glide: D("candle") - vo("candle", 1), ...fr(-720, 1420, 2.2, 540, 980) }] },
+        sfxText: [{ text: "ฟี่…", x: 640, y: 560, t: 0.3, end: 2.4, size: 110, color: "#cfe8d0", rot: 6 }],
+        actors: [A("mewCandle", -60, 1640, 0.76, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }])],
+        captions: capsFrom("candle", vo("candle", 1) - 0.1, [1]),
+        fx(tl, id, t0) {
+          tl.set("#rn2-gas", { opacity: 1 }, t0);
+          document.querySelectorAll("#rn2-gas .qkGas").forEach((g, k) => tl.fromTo(g, { y: 20, opacity: 0.7 }, { y: -90, opacity: 0, duration: 0.9, repeat: 4, ease: "sine.out", immediateRender: false }, t0 + k * 0.16));
+        },
+      });
+      // ---------- 28. your call: the candle or the torch ----------
+      add("choice2", {
+        ...ROOM("rx", { opts: { after: true, dark: true }, blur: { sky: 4, far: 5, mid: 5, set: 4 }, dark: 0.42 }),
+        cam: { keys: [{ t: 0, ...fr(-60, 1300, 1.6, 540, 1100) }] },
+        actors: [A("mewCandle", -60, 1640, 0.76, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id, t0, L) {
+          QkUI.choice(tl, L.light, t0, D("choice2") - 0.35, { q: "มิวควรทำยังไง?", a: { text: "จุดเทียน", icon: "candle" }, b: { text: "ใช้ไฟฉาย", icon: "torch" }, secs: 3, pick: "a", pickAt: 2.85, hover: [[0.5, 1], [1.3, 0], [2.0, 1], [2.5, 0]] });
+          put(L.light, `<g id="rx-spark" opacity="0"><circle cx="540" cy="1000" r="240" fill="url(#quBurst)"/><circle cx="540" cy="1000" r="40" fill="#fff6d0"/></g>`);
+          tl.fromTo("#rx-spark", { opacity: 0, scale: 0.3, svgOrigin: "540 1000" }, { opacity: 1, scale: 1.4, svgOrigin: "540 1000", duration: 0.12, immediateRender: false }, t0 + D("choice2") - 0.4);
+          tl.set("#black", { opacity: 1 }, t0 + D("choice2") - 0.24);
+        },
+      });
+      // ---------- 29. end card: the orange whistle ----------
+      add("end", {
+        set: "qkFridge", setOpts: { id: "fe" }, dark: 0.6, blur: {}, light: false, grade: GDARK,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0) }] },
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0);
+          QkUI.endCard(tl, L.light, t0, D("end"), { l1: "ตอนที่ 2", l2: "ลงบันได" });
+        },
+      });
