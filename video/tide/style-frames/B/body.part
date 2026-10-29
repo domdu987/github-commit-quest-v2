@@ -1,0 +1,12 @@
+      // ---------- ทะเลลด — style frames, fork B: the Andaman map and the cross-section ----------
+      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 };
+      add("tbmap", {
+        set: "tideMap3d", setOpts: { id: "tm" }, dark: 0, blur: {}, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960, { drift: { s: 0 } }) }] },
+        fx(tl, id, t0, L) { TideMap.play(tl, L, id, t0, { dur: D("tbmap"), quakeAt: 0.4, ringsAt: 0.8, coastAt: 6.2, pinAt: 5.6 }); },
+      });
+      add("tbsec", {
+        set: "tideSection", setOpts: { id: "ts" }, dark: 0, blur: {}, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960, { drift: { s: 0 } }) }] },
+        fx(tl, id, t0, L) { TideMap.section(tl, "ts", t0, D("tbsec")); },
+      });

@@ -1,0 +1,138 @@
+      // ---------- ทะเลลด — fork C style frames: the cast, ยาย's board, จูน's live, the choice, ละบูน, the end card ----------
+      const SUN = { from: "right", rim: "#fff6dc", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.3, op: 0.28 }, vol: false };
+      const GBEACH = { top: "#fff3d6", bottom: "#c8eef0", op: 0.12 };
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.8, 2.9], ...extra });
+      const mkr = (seed) => () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+      Sets.DEFS += `<linearGradient id="bSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a9ae0"/><stop offset=".55" stop-color="#8ad2f2"/><stop offset="1" stop-color="#e6f6f2"/></linearGradient>
+        <radialGradient id="bSun"><stop offset="0" stop-color="#fffbe8"/><stop offset=".25" stop-color="#fff2c0" stop-opacity=".7"/><stop offset="1" stop-color="#fff2c0" stop-opacity="0"/></radialGradient>
+        <linearGradient id="bSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16709c"/><stop offset=".4" stop-color="#1ea2bc"/><stop offset="1" stop-color="#62dcd2"/></linearGradient>
+        <linearGradient id="bSand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4dfae"/><stop offset="1" stop-color="#e2c08a"/></linearGradient>
+        <linearGradient id="bWet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b89e72"/><stop offset=".5" stop-color="#cdb486"/><stop offset="1" stop-color="#e6cc98"/></linearGradient>
+        <linearGradient id="bKarst" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a9a8c"/><stop offset="1" stop-color="#a8c8c2"/></linearGradient>
+        <radialGradient id="bCloud" cx=".5" cy=".6" r=".6"><stop offset="0" stop-color="#ffffff"/><stop offset=".8" stop-color="#f2f8fc"/><stop offset="1" stop-color="#dceaf4"/></radialGradient>`;
+      // a quick bright Andaman beach for the style frames (fork A builds the real one): o.receded pulls the sea out, fish left on the sand
+      function beach(L, o = {}) {
+        const r = mkr(o.seed || 5), H = o.horizon ?? 980, SH0 = o.receded ? 1150 : (o.shore ?? 1380);
+        let sky = `<rect x="-1300" y="-900" width="3700" height="${H + 940}" fill="url(#bSky)"/><circle cx="840" cy="290" r="300" fill="url(#bSun)"/><circle cx="840" cy="290" r="70" fill="#fffdf2" opacity=".9"/>`;
+        for (let k = 0; k < 5; k++) { const x = -200 + k * 330 + r() * 80, y = 360 + r() * 300, s = 0.7 + r() * 0.6;
+          sky += `<g transform="translate(${x.toFixed(0)},${y.toFixed(0)}) scale(${s.toFixed(2)})"><ellipse cx="0" cy="30" rx="150" ry="34" fill="#c8dcea" opacity=".6"/><ellipse cx="-60" cy="0" rx="80" ry="54" fill="url(#bCloud)"/><ellipse cx="30" cy="-20" rx="90" ry="70" fill="url(#bCloud)"/><ellipse cx="110" cy="10" rx="70" ry="46" fill="url(#bCloud)"/></g>`; }
+        put(L.sky, sky);
+        // limestone karst islands on the horizon (Phang Nga style), with green caps and streaked faces
+        let far = "";
+        [[-180, 1, 0.9], [120, 0.7, 0.75], [700, 1.2, 0.85], [1020, 0.8, 0.7]].forEach(([x, s, op]) => {
+          far += `<g transform="translate(${x},${H}) scale(${s})" opacity="${op}"><path d="M0,0L10,-150Q20,-230 80,-238Q140,-236 150,-170Q170,-120 190,-90Q220,-70 240,0Z" fill="url(#bKarst)" stroke="#4a7a6a" stroke-width="3"/>
+            <path d="M14,-150Q30,-226 82,-230Q136,-228 146,-176Q120,-196 90,-196Q50,-190 14,-150Z" fill="#5a9a5a" opacity=".85"/><path d="M40,-120L36,-10M80,-180L76,-20M120,-150L124,-10M180,-80L184,-6" stroke="#5a8a7a" stroke-width="5" opacity=".5"/></g>`; });
+        put(L.far, far + `<rect x="-1300" y="${H}" width="3700" height="12" fill="#bfe6f0" opacity=".7"/>`);
+        // the sea: deep at the horizon, turquoise at the shore, glitter under the sun, a longtail boat
+        let mid = `<rect x="-1300" y="${H}" width="3700" height="${SH0 - H + 60}" fill="url(#bSea)"/>`;
+        for (let k = 0; k < 40; k++) mid += `<rect x="${(760 + (r() - 0.5) * 300).toFixed(0)}" y="${(H + 10 + r() * (SH0 - H - 40)).toFixed(0)}" width="${(20 + r() * 70).toFixed(0)}" height="4" rx="2" fill="#fff" opacity="${(0.35 + r() * 0.5).toFixed(2)}"/>`;
+        for (let k = 0; k < 8; k++) { const y = H + 40 + k * ((SH0 - H) / 8); mid += `<path d="M${-200 + (k % 3) * 120},${y.toFixed(0)}q60,-12 120,0t120,0t120,0" stroke="#bff0f4" stroke-width="3" fill="none" opacity=".45"/>`; }
+        mid += `<g transform="translate(-60,${H + 120}) scale(.7)"><path d="M-150,0Q-170,-30 -190,-40L-120,14H130Q160,6 176,-18L140,0Z" fill="#2a5aa8" stroke="#2e2a26" stroke-width="4"/><path d="M-120,14H130L120,30H-110Z" fill="#f2e2c0" stroke="#2e2a26" stroke-width="3"/>
+          <path d="M-190,-40l-8,-30" stroke="#2e2a26" stroke-width="5"/>${["#e2392c", "#ffd23a", "#2fa864"].map((c, k) => `<path d="M-196,${-66 + k * 8}q-16,6 -26,20" stroke="${c}" stroke-width="5" fill="none"/>`).join("")}
+          <path d="M60,0V-40H110V0" fill="#f2e2c0" stroke="#2e2a26" stroke-width="3"/><path d="M150,-6l40,-20" stroke="#2e2a26" stroke-width="5"/></g>`;
+        put(L.mid, mid);
+        // the shore: the wet band with its reflection and foam, then the dry sand with shells and footprints, a palm on the right
+        let set = `<rect x="-1300" y="${SH0}" width="3700" height="1600" fill="url(#bSand)"/>
+          <path d="M-1300,${SH0}H2400V${SH0 + (o.receded ? 300 : 90)}Q1200,${SH0 + (o.receded ? 330 : 110)} 0,${SH0 + (o.receded ? 310 : 96)}T-1300,${SH0 + (o.receded ? 300 : 90)}Z" fill="url(#bWet)"/>
+          <path d="M-1300,${SH0 + 4}Q-1000,${SH0 - 10} -700,${SH0 + 4}T-100,${SH0 + 4}T500,${SH0 + 2}T1100,${SH0 + 6}T1700,${SH0 + 2}T2400,${SH0 + 4}" stroke="#fffbf2" stroke-width="10" fill="none" opacity=".9"/>
+          <path d="M-1300,${SH0 + 22}Q-900,${SH0 + 12} -500,${SH0 + 22}T300,${SH0 + 20}T1100,${SH0 + 24}T2400,${SH0 + 20}" stroke="#fffbf2" stroke-width="4" fill="none" opacity=".5"/>`;
+        for (let k = 0; k < 60; k++) set += `<circle cx="${(-300 + r() * 1700).toFixed(0)}" cy="${(SH0 + 120 + r() * 900).toFixed(0)}" r="${(1.5 + r() * 2.5).toFixed(1)}" fill="#b89a68" opacity=".45"/>`;
+        [[180, 1760], [760, 1830], [520, 1600]].forEach(([x, y], k) => set += `<g transform="translate(${x},${y}) rotate(${k * 40})"><path d="M0,-12Q-14,-4 -9,10Q0,16 9,10Q14,-4 0,-12Z" fill="#f6e4d4" stroke="#2e2a26" stroke-width="2"/><path d="M0,-12V14M-5,-6Q-7,6 -4,12M5,-6Q7,6 4,12" stroke="#c8a088" stroke-width="1.4" fill="none"/></g>`);
+        if (o.receded) {
+          // the stranded: fish on the wet sand, a tilted boat, rocks and weed that were under water a minute ago
+          [[160, 1300, 1], [420, 1360, -1], [700, 1290, 1], [860, 1390, -1], [300, 1420, 1]].forEach(([x, y, d], k) => set += `<g transform="translate(${x},${y}) scale(${d * 1.2},1.2)"><ellipse cx="0" cy="10" rx="34" ry="6" fill="#8a7050" opacity=".35"/><path d="M-30,0Q0,-16 30,0Q0,16 -30,0Z" fill="${["#9ac0d8", "#c8b45a", "#d8a0a0"][k % 3]}" stroke="#2e2a26" stroke-width="2.6"/><path d="M30,0l16,-12v24z" fill="${["#9ac0d8", "#c8b45a", "#d8a0a0"][k % 3]}" stroke="#2e2a26" stroke-width="2.6"/><circle cx="-16" cy="-2" r="3" fill="#2e2a26"/><path d="M-20,-6Q0,-12 18,-4" stroke="#fff" stroke-width="2.4" fill="none" opacity=".6"/></g>`);
+          set += `<g transform="translate(620,1240) rotate(8)"><path d="M-130,0Q-150,-26 -170,-34L-104,12H114Q140,6 154,-16L124,0Z" fill="#c8402e" stroke="#2e2a26" stroke-width="4"/><path d="M-104,12H114L104,26H-96Z" fill="#f2e2c0" stroke="#2e2a26" stroke-width="3"/></g>`;
+          [[60, 1210], [960, 1250], [480, 1230]].forEach(([x, y]) => set += `<path d="M${x - 40},${y}Q${x - 30},${y - 30} ${x},${y - 34}Q${x + 34},${y - 30} ${x + 44},${y}Z" fill="#6a6a62" stroke="#2e2a26" stroke-width="3"/><path d="M${x - 30},${y - 4}q10,-14 20,-2" stroke="#3a8a4a" stroke-width="5" fill="none"/>`);
+        }
+        set += `<g transform="translate(1060,${SH0 + 380})"><path d="M0,0Q-30,-300 -150,-560" stroke="#2e2a26" stroke-width="40" fill="none" stroke-linecap="round"/><path d="M0,0Q-30,-300 -150,-560" stroke="#a8784a" stroke-width="32" fill="none" stroke-linecap="round"/>
+          ${Array.from({ length: 12 }, (_, k) => `<path d="M${-6 - k * 12},${-40 - k * 44}q-14,-6 -22,0" stroke="#7a5432" stroke-width="4" fill="none"/>`).join("")}
+          <g transform="translate(-150,-560)">${[-175, -140, -105, -60, -20, 20, 55].map((a) => { const c = Math.cos(a * Math.PI / 180), s = Math.sin(a * Math.PI / 180), L2 = 270, ex = L2 * c, ey = L2 * s + 60, mx = 0.5 * L2 * c, my = 0.5 * L2 * s - 40;
+              let leaves = ""; for (let j = 1; j < 9; j++) { const q = j / 9, px = 2 * (1 - q) * q * mx + q * q * ex, py = 2 * (1 - q) * q * my + q * q * ey, n = 46 * (1 - q * 0.6);
+                leaves += `<path d="M${px.toFixed(0)},${py.toFixed(0)}l${(n * Math.cos((a + 70) * Math.PI / 180)).toFixed(0)},${(n * Math.sin((a + 70) * Math.PI / 180) + 18).toFixed(0)}M${px.toFixed(0)},${py.toFixed(0)}l${(n * Math.cos((a - 70) * Math.PI / 180)).toFixed(0)},${(n * Math.sin((a - 70) * Math.PI / 180) + 18).toFixed(0)}" stroke="#3a8a3e" stroke-width="13" stroke-linecap="round"/>`; }
+              return `<path d="M0,0Q${mx.toFixed(0)},${my.toFixed(0)} ${ex.toFixed(0)},${ey.toFixed(0)}" stroke="#2e2a26" stroke-width="12" fill="none"/>${leaves}<path d="M0,0Q${mx.toFixed(0)},${my.toFixed(0)} ${ex.toFixed(0)},${ey.toFixed(0)}" stroke="#7ac85a" stroke-width="5" fill="none"/>`; }).join("")}
+            <circle cx="-20" cy="20" r="16" fill="#6a4a22" stroke="#2e2a26" stroke-width="3"/><circle cx="8" cy="26" r="15" fill="#7a5a2a" stroke="#2e2a26" stroke-width="3"/></g></g>`;
+        put(L.set, set);
+        put(L.fg, `<g transform="translate(-60,-40)">${[[20, 160], [60, 110], [110, 60]].map(([a, b]) => `<path d="M0,0Q${a},${b} ${a + 200},${b + 160}" stroke="#2e6a3a" stroke-width="40" fill="none" stroke-linecap="round" opacity=".85"/>`).join("")}</g>`);
+      }
+      // a name tag under a character (screen space)
+      const tagHtml = (x, y, name, sub, c) => `<g transform="translate(${x},${y})"><rect x="-96" y="-24" width="192" height="58" rx="29" fill="#0a1a24" opacity=".35" transform="translate(4,6)"/>
+        <rect x="-96" y="-24" width="192" height="58" rx="29" fill="#fffaf0" stroke="#2a2420" stroke-width="3"/><circle cx="-66" cy="5" r="15" fill="${c}" stroke="#2a2420" stroke-width="2.4"/>
+        <text x="-42" y="16" font-family="Kanit" font-weight="800" font-size="32" fill="#1e2a3a">${name}</text>${sub ? `<text x="62" y="16" text-anchor="middle" font-family="Kanit" font-weight="500" font-size="24" fill="#5a6470">${sub}</text>` : ""}</g>`;
+
+      add("tC1", {
+        extra(L) { beach(L, { shore: 1380 }); },
+        dark: 0, light: SUN, grade: GBEACH, blur: { sky: 3, far: 2, mid: 1, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(490, 1420, 1.25, 540, 1170), drift: { s: 0.004 } }] },
+        actors: [
+          A("yaiTidePhoto", 175, 1622, 0.95, [{ t: 0, mode: "holdPhoto", eyes: "worry", mouth: "smile" }]),
+          A("juneStick", 355, 1668, 0.93, [{ t: 0, mode: "film", eyes: "normal", mouth: "smile" }]),
+          A("tangRing", 590, 1700, 0.74, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "laugh" }]),
+          A("taJunConch", 775, 1632, 0.98, [{ t: 0, mode: "pointUp", eyes: "wide", mouth: "scream" }], { flip: true }),
+        ],
+        fx(tl, id, t0, L) {
+          const sx = (x) => 540 + (x - 490) * 1.25, sy = (y) => 1170 + (y - 1420) * 1.25;
+          const who = [[175, 1622, 70, "ยาย", "65", "#24607e"], [355, 1668, 70, "จูน", "16", "#b8a4ea"], [590, 1700, 50, "ตังค์", "10", "#f6c832"], [775, 1632, 70, "ตาจุ่น", "68", "#e8863c"]];
+          put(L.light, who.map(([x, y, dy, n, a, c], k) => `<g transform="translate(${sx(x)},${sy(y) + dy})"><g id="${id}-tg${k}">${tagHtml(0, 0, n, a, c)}</g></g>`).join(""));
+          // each of them hops into the line-up (wrapped, so the rig keeps its own transform), lands with a squash, then the tag pops
+          who.forEach(([x, y], k) => {
+            const a = document.getElementById(`${id}-a${k}`); if (!a) return;
+            const w = document.createElementNS("http://www.w3.org/2000/svg", "g"); a.parentNode.insertBefore(w, a); w.appendChild(a);
+            const t = t0 + 0.08 + k * 0.13, tg = document.getElementById(`${id}-tg${k}`);
+            tl.set([w, tg], { opacity: 0 }, t0);
+            tl.fromTo(w, { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(2.4)", immediateRender: false }, t);
+            tl.fromTo(w, { scaleX: 1.07, scaleY: 0.9, svgOrigin: `${x} ${y}` }, { scaleX: 1, scaleY: 1, svgOrigin: `${x} ${y}`, duration: 0.6, ease: "elastic.out(1.1,0.35)", immediateRender: false }, t + 0.32);
+            tl.fromTo(tg, { scale: 0.3, opacity: 0, rotation: k % 2 ? 8 : -8, svgOrigin: "0 0" }, { scale: 1, opacity: 1, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t + 0.42);
+          });
+        },
+      });
+      add("tC2", {
+        extra(L) { beach(L, { shore: 1380 }); },
+        dark: 0.12, light: false, grade: GBEACH, blur: { sky: 8, far: 8, mid: 8, set: 8, fg: 12 },
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 1.05, 540, 1000) }] },
+        fx(tl, id, t0, L) { TideUI.rule(tl, L.light, t0 + 0.1, D("tC2") - 0.1, { active: 0, done: [], y: 520 }); },
+      });
+      add("tC2b", {
+        extra(L) { beach(L, { shore: 1380, seed: 9 }); },
+        dark: 0.12, light: false, grade: GBEACH, blur: { sky: 8, far: 8, mid: 8, set: 8, fg: 12 },
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 1.05, 540, 1000) }] },
+        fx(tl, id, t0, L) {
+          TideUI.rule(tl, L.light, t0 + 0.1, D("tC2b") - 0.1, { active: 1, done: [0], y: 520 });
+          TideUI.source(tl, L.light, t0 + 1.2, D("tC2b") - 1.2, { text: "ที่มา: กรมป้องกันและบรรเทาสาธารณภัย" });
+        },
+      });
+      add("tC3a", {
+        extra(L) { beach(L, { receded: true }); },
+        dark: 0, light: SUN, grade: GBEACH, blur: { sky: 2, far: 1, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(540, 1260, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        shake: (t) => ({ x: 4 * Math.sin(t * 3.1) + 2 * Math.sin(t * 7.7), y: 3 * Math.sin(t * 2.3), r: 0.4 * Math.sin(t * 1.7) }),
+        actors: [A("tangBucket", 600, 1330, 0.42, [{ t: 0, mode: "run", eyes: "wide", mouth: "laugh" }], { flip: true })],
+        fx(tl, id, t0, L) {
+          TideUI.live(tl, L.light, t0, D("tC3a"), { name: "จูน ทะเลใส", title: "ทะเลหายไปไหน!?", viewers: [86, 3420],
+            comments: [[0.3, "ฟ้าใส99", "ทะเลไปไหนอะ"], [0.9, "ยายพร❤️", "จูน! กลับขึ้นมาเดี๋ยวนี้"], [1.5, "boyza", "ปลาเต็มหาด 55555"], [2.1, "นนท์", "ไวรัลแน่นอน"], [2.7, "ปลาทู", "ระวังนะ"]] });
+        },
+      });
+      add("tC3b", {
+        extra(L) { beach(L, { receded: true, seed: 8 }); },
+        dark: 0.2, light: false, grade: GBEACH, blur: { sky: 6, far: 6, mid: 6, set: 6, fg: 10 },
+        cam: { keys: [{ t: 0, ...fr(540, 1260, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) {
+          const runToSea = `<circle r="70" fill="#e8823a" stroke="#2a2420" stroke-width="5"/><path d="M-70,10Q-40,-30 0,-20Q40,-10 70,10V40Q0,80 -70,40Z" fill="#1e8ab0" opacity=".9"/><path d="M-60,4Q-30,-24 0,-14" stroke="#fff" stroke-width="5" fill="none"/>
+            <g transform="translate(-10,-6)"><circle cx="0" cy="-40" r="11" fill="#241a14"/><path d="M0,-28L-6,0L10,18M-6,0L-24,14M0,-22L20,-10M0,-22L-18,-30" stroke="#241a14" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+          TideUI.choice(tl, L.light, t0, D("tC3b"), { q: "จะทำยังไง?", a: { text: "วิ่งไปดึงน้อง", icon: runToSea }, b: { text: "วิ่งขึ้นเขา", icon: "recede" }, secs: 3, pull: "a", at: 1.9 });
+        },
+      });
+      add("tC4", {
+        set: "tideLegend", setOpts: { id: "lg", title: "ละบูน · คลื่นยักษ์เจ็ดชั้น" }, dark: 0, light: false, blur: { sky: 0, far: 0 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.004 } }] },
+        fx(tl, id, t0) { TideUI.legendAnim(tl, "lg", t0, D("tC4"), { recede: [0.3, 1.8], point: [1.0, 1.7], run: [2.0, 5.6], wave: 3.4 }); },
+      });
+      add("tC5", {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        fx(tl, id, t0, L) { TideUI.endCard(tl, L.light, t0, D("tC5"), { l1: "ตอนที่ 2", l2: "คลื่นแรกไป" }); },
+      });
+      add("tC5b", {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        fx(tl, id, t0, L) { TideUI.endCard(tl, L.light, t0, D("tC5b"), { final: true }); },
+      });

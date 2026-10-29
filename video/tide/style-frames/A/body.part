@@ -1,0 +1,29 @@
+      // ---------- ทะเลลด — style frames A: the opener, the village, the sea drawing back, the wave, the hill ----------
+      const SUNR = { from: "right", rim: "#fff4d8", rimOp: 0.7, shade: "#2a2a40", shadeOp: 0.3, cast: { len: 1.2, op: 0.28 }, vol: false };
+      const GMORN = { top: "#fff2d6", bottom: "#d6eef4", op: 0.14 }, GEERIE = { top: "#f2e2b4", bottom: "#7e9294", op: 0.24 }, GSTORM = { top: "#5a6670", bottom: "#141a20", op: 0.3 }, GSQUALL = { top: "#b4bec4", bottom: "#3a4248", op: 0.22 };
+      add("tA1", {
+        set: "tideSand", setOpts: { id: "ts1", title: "ทะเลลด", sub: "EP.1" }, dark: 0, blur: { fg: 0 }, light: false, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.08, 540, 960) }, { t: D("tA1"), glide: D("tA1"), ...fr(540, 990, 1.0, 540, 960) }] },
+        fx(tl, id, t0) { Tide.sandTitle(tl, "ts1", t0, D("tA1"), { from: 0.05, to: 0.95 }); },
+      });
+      add("tA2", {
+        set: "tideBeach", setOpts: { id: "tb2", view: "land", time: "morning" }, dark: 0, blur: { sky: 1, far: 1.5, fg: 4 }, light: SUNR, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }, { t: D("tA2"), glide: D("tA2"), ...fr(560, 990, 1.06, 540, 960) }] },
+        fx(tl, id, t0) { Tide.land(tl, "tb2", t0, D("tA2")); },
+      });
+      add("tA3", {
+        set: "tideBeach", setOpts: { id: "tb3", view: "sea", time: "eerie", sea: 0.5, boats: 2, people: 12, hc: 5, hz: 520, shore: 11, frame: "eave" }, dark: 0, blur: { sky: 1, fg: 2 }, light: false, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("tA3"), glide: D("tA3"), ...fr(540, 930, 1.05, 540, 960) }] },
+        fx(tl, id, t0) { Tide.sea(tl, "tb3", t0, D("tA3"), { to: 0.86, at: 0.1, len: D("tA3") - 0.3, birds: "flee" }); },
+      });
+      add("tA4", {
+        set: "tideWave", setOpts: { id: "tw4", time: "squall", u: 0.765 }, dark: 0, blur: { sky: 1, fg: 0 }, light: false, grade: GSQUALL,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("tA4"), glide: D("tA4"), ...fr(540, 980, 1.06, 540, 960) }] },
+        shake: (t) => 2.5 * Math.sin(t * 19) * Math.min(1, t / 2),
+        fx(tl, id, t0) { Tide.waveIn(tl, "tw4", t0, D("tA4"), { from: 0.765, to: 1.0 }); },
+      });
+      add("tA5", {
+        set: "tideHill", setOpts: { id: "th5", time: "morning", sea: 0.55 }, dark: 0, blur: { sky: 1, far: 1, fg: 4 }, light: SUNR, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(540, 980, 1.0, 540, 960) }, { t: D("tA5"), glide: D("tA5"), ...fr(540, 960, 1.05, 540, 960) }] },
+        fx(tl, id, t0) { Tide.land(tl, "th5", t0, D("tA5"), { siren: true }); },
+      });
