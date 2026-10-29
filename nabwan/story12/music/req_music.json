@@ -1,0 +1,140 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "northern Thai Lanna folk colour",
+   "gentle sueng (northern Thai plucked lute) and salo (fiddle) with soft felt piano",
+   "warm strings",
+   "tender, nostalgic, cosy winter morning",
+   "high quality studio recording",
+   "G major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer",
+   "Christmas bells"
+  ],
+  "sections": [
+   {
+    "section_name": "Misty morning question",
+    "duration_ms": 6060,
+    "lines": [],
+    "positive_local_styles": [
+     "solo sueng and felt piano",
+     "quiet and wistful",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Nine winters of scarves",
+    "duration_ms": 4930,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and fond",
+     "gentle plucked sueng melody",
+     "light pizzicato"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "dramatic"
+    ]
+   },
+   {
+    "section_name": "Bangkok is never cold",
+    "duration_ms": 6530,
+    "lines": [],
+    "positive_local_styles": [
+     "light and a little playful",
+     "acoustic guitar and piano",
+     "then softer, a little guilty"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "sad"
+    ]
+   },
+   {
+    "section_name": "The late box and the note",
+    "duration_ms": 9000,
+    "lines": [],
+    "positive_local_styles": [
+     "slower",
+     "quiet piano",
+     "soft salo and strings slowly swelling",
+     "a quiet realization"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud",
+     "happy"
+    ]
+   },
+   {
+    "section_name": "Title",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "warm emotional peak",
+     "held chord",
+     "strings, piano and sueng together"
+    ],
+    "negative_local_styles": [
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Going north, knitting together",
+    "duration_ms": 5480,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and hopeful",
+     "folk strings and piano",
+     "tender joy"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "harsh"
+    ]
+   },
+   {
+    "section_name": "The tenth scarf",
+    "duration_ms": 7100,
+    "lines": [],
+    "positive_local_styles": [
+     "emotional and sincere",
+     "full but gentle",
+     "piano, salo and strings",
+     "moved"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "harsh"
+    ]
+   },
+   {
+    "section_name": "Outro",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle resolution",
+     "final chord ringing and sustained to the very end",
+     "no fade out before the end"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "abrupt ending"
+    ]
+   }
+  ]
+ },
+ "respect_sections_durations": true
+}

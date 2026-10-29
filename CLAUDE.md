@@ -7,7 +7,8 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
 
 ## Format (fixed)
 - 1080×1920, ≤ 60 s, 30 fps. Narration: Gemini 3.1 Flash TTS voice **Puck**, conversational, sped up **1.2×**.
-- Every clip opens with the hook "ถ้า… คุณ…, ถ้า… เขา…". Kinetic captions at top 1640. Title card mid-clip, end card
+- Every clip opens with the hook "ถ้า… คุณ…, ถ้า… เขา…". Kinetic captions at top 1640 (each part of a cue needs its
+  own word anchor in `placeN.py`; two parts on one anchor reveal at the same time). Title card mid-clip, end card
   with avatars + number title + one-line lesson + CTA chip + นับวัน brand.
 - Look: the chibi "story2" rig (`story2/puppet2.js`), warm palettes, INK outlines. No cold teal/grey rooms.
 
@@ -17,6 +18,7 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
 - **Every room gets its own palette** (navy bedroom, olive living room, rose room, cream-and-mint provincial
   house, teak veranda…). Never reuse a character design or a house from an earlier clip (e.g. a new mom per story).
 - Dark rugs or floors under the caption band (y ≈ 1600–1700); light cream or yellow rugs make white captions unreadable.
+  Light set pieces there too (an open cardboard flap, paper): lay a dark gradient band over y ≈ 1440–1920.
 - Weather and streets: `story11/rain11.js` has the following:
   - rain streaks per layer, splashes, puddles, drips and lens drops;
   - an umbrella that opens and tilts, and a rain-shadow mask that keeps whoever is under it dry;
@@ -56,13 +58,22 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
   - Frame hand actions (a hand-off, a push) as a close two-shot, z ≈ 2.2, with both faces whole.
   - Frame a back or shoulder insert so the other character is out of frame, or shows only the back of the head.
   - Keep raised props off faces: an umbrella goes up between the heads and opens above them, then comes down.
+  - Raised arms ("ta-da"): spread them out and up (`aF ≈ [-24, -48]`, `aB ≈ [214, 236]`); an arm raised forward
+    goes over the head and across the face.
+  - A standing chibi can't reach a seated one's neck (arm ≈ 178 px at s 1.2): the IK tops out at face height. Sit or
+    kneel beside them to wrap a scarf or touch a shoulder, and keep the heads ≥ 2 head radii (≈ 150 px) apart so one
+    face never covers the other.
+  - In a close-up next to a character who stands nearby, look for a sliver of the other head at the frame edge (a cut
+    face); move the framing or the character.
+- Tears on the 3/4 face: one stream per eye from its outer corner, drifting outward (`tears(…, {drift: ±1})` in
+  `story12/icons12.js`). Streams that split both ways run across the nose and read as a runny nose.
 - Phones are always seen **from the back** (`phoneProp`: case, camera, sliver of screen light).
 
 ## Graphics
 - Cards get the layered pro shadow, a top gloss and a shine sweep; they enter with `enter3d` / springs.
 - Prefer **animated metaphors** over static numbers:
   - a balance scale that tips;
-  - a Buddhist-era (พ.ศ.) year odometer;
+  - a Buddhist-era (พ.ศ.) year odometer (hide the leading-zero column once the value drops under 10: "9", not "09");
   - a red marker circling a date;
   - items flying into a cart;
   - a LINE banner that buzzes with a ripple;
