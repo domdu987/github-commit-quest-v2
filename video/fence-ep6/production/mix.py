@@ -89,15 +89,23 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
     return out
 
 
+def gasbed(a, b, g, step=2.0, d=3.0):  # overlapping "gas" breaths (3 s each) between absolute times a and b, all faded by b + 0.6
+    out, t = [], a - 0.6
+    while t + d <= b + 0.6:
+        out.append((None, t, "gas", g))
+        t += step
+    return out
+
+
 def growls(k, a, b, g=0.7, step=0.7):
     return [(k, a + i * step, "growl", g * (0.7 + 0.3 * (i % 2))) for i in range(int((b - a) / step))]
 
 
 CUES = [
-    # cold open: the filthy washroom — drips, the tube light's hum, the bottles; the pour; "อย่าผสม" — the cloud
+    # cold open: the filthy washroom — drips, the tube light's hum, the bottles; the pour (as long as the drawn streams: P + 0.4 → "อย่าผสม"); "อย่าผสม" — the cloud
     *bed("hum", T("hook", 0), T("hook", -0.1), 0.25, 3.0), *[("hook", 0.4 + k * 0.9, "drip", 0.35) for k in range(11)], ("hook", 0.25, "rustle", 0.45), ("hook", 0.4, "rustle", 0.4),
-    ("hook", frag("hook", 1, 1) - 0.1, "whoosh", 0.4), ("hook", frag("hook", 1, 1) + 0.25, "stream", 0.8), ("hook", frag("hook", 1, 1) + 0.33, "stream", 0.6),
-    ("hook", vo_t("hook", 2), "sting", 1.0), ("hook", vo_t("hook", 2), "boom", 0.6), ("hook", vo_t("hook", 2), "glitch", 0.5), ("hook", vo_t("hook", 2) - 0.05, "hiss", 0.9), ("hook", frag("hook", 2, 1), "slam", 0.4),
+    ("hook", frag("hook", 1, 1) - 0.1, "whoosh", 0.4), *[("hook", frag("hook", 1, 1) + o, f"pour@{vo_t('hook', 2) - 0.05 - frag('hook', 1, 1) - o:.2f}", g) for o, g in ((0.25, 0.5), (0.33, 0.37))],
+    ("hook", vo_t("hook", 2), "sting", 1.0), ("hook", vo_t("hook", 2), "boom", 0.6), ("hook", vo_t("hook", 2), "glitch", 0.5), ("hook", vo_t("hook", 2) - 0.05, "gasburst", 1.35), ("hook", frag("hook", 2, 1), "slam", 0.4),
     *beats("hook", vo_t("hook", 1), D["hook"] - vo_t("hook", 1), 0.5, 0.55), ("hook", -0.25, "whoosh", 0.8),
     # the board at dawn
     ("chapter", 0.05, "page", 0.9), ("chapter", 0.4, "chalk", 0.5), ("chapter", 0.5, "slam", 0.5), *[("chapter", 0.9 + k * 0.16, "pop", 0.4) for k in range(2)], ("chapter", frag("chapter", 0, 2) + 0.2, "sting", 0.6),
@@ -131,12 +139,12 @@ CUES = [
     ("calm", frag("calm", 1, 1) - 0.1, "pop", 0.5), ("calm", frag("calm", 1, 1) + 0.2, "buzz", 0.45), ("calm", frag("calm", 1, 1), "sting", 0.7),
     # the washroom: the brush, the drips; เจ๊หงส์ comes in
     *bed("hum", T("yai", 0), T("out", vo_t("out", 1) - 0.2), 0.22, 3.0), *[("yai", 0.3 + k * 0.85, "drip", 0.3) for k in range(10)], *[("yai", 0.1 + k * 0.55, "squish", 0.3) for k in range(16)], *[("yai", 0.1 + k * 0.4, "steps", 0.3) for k in range(4)],
-    # the mix: the pour, the card (two ✗), the hiss starts
-    ("mix", 0.35, "stream", 0.8), ("mix", 1.2, "stream", 0.5), ("mix", vo_t("mix", 1) - 0.1, "stream", 0.7), ("mix", vo_t("mix", 1) + 1.0, "stream", 0.5), *[("mix", 0.5 + k * 0.4, "drip", 0.35) for k in range(9)],
+    # the mix: the pour (one flow, as long as the drawn stream: 0.4 → vo 2 − 0.35), the card (two ✗), the gas starts
+    ("mix", 0.4, f"pour@{vo_t('mix', 2) - 0.75:.2f}", 0.55), *[("mix", 0.5 + k * 0.4, "drip", 0.35) for k in range(9)],
     ("mix", vo_t("mix", 1), "page", 0.6), ("mix", vo_t("mix", 1) + 0.35, "pen", 0.7), ("mix", vo_t("mix", 2) + 0.4, "page", 0.4), ("mix", vo_t("mix", 2) + 0.75, "pen", 0.7),
-    ("mix", vo_t("mix", 2) - 0.3, "hiss", 0.6), ("mix", frag("mix", 2, 1), "sting", 0.8), ("mix", frag("mix", 2, 1), "boom", 0.4), *beats("mix", vo_t("mix", 1), D["mix"] - vo_t("mix", 1), 0.55, 0.5),
-    # it sinks: the hiss spreads along the floor
-    *bed("hiss", T("sink", 0), T("out", vo_t("out", 1) - 0.1), 0.35, 2.4), ("sink", 0.2, "riser", 0.4), ("sink", frag("sink", 0, 1), "page", 0.5), ("sink", frag("sink", 1, 1), "sting", 0.8), ("sink", frag("sink", 1, 1), "boom", 0.4), *beats("sink", 0.0, D["sink"], 0.5, 0.55),
+    ("mix", vo_t("mix", 2) - 0.3, "gasburst", 0.9), ("mix", frag("mix", 2, 1), "sting", 0.8), ("mix", frag("mix", 2, 1), "boom", 0.4), *beats("mix", vo_t("mix", 1), D["mix"] - vo_t("mix", 1), 0.55, 0.5),
+    # it sinks: the gas spreads along the floor (soft low breaths — the old high-passed "hiss" bed read as static, "เสียงซ่า")
+    *gasbed(T("sink", 0), T("out", vo_t("out", 1) - 0.1), 0.45), ("sink", 0.2, "riser", 0.4), ("sink", frag("sink", 0, 1), "page", 0.5), ("sink", frag("sink", 1, 1), "sting", 0.8), ("sink", frag("sink", 1, 1), "boom", 0.4), *beats("sink", 0.0, D["sink"], 0.5, 0.55),
     # the signs: coughing, the checklist, "ถึงตายได้"
     *[("signs", 0.2 + k * 0.62, "cough", 0.55 - 0.1 * (k % 2)) for k in range(12)], *[x for o in (vo_t("signs", 0), frag("signs", 0, 1), frag("signs", 0, 2), frag("signs", 1, 1)) for x in (("signs", o, "pop", 0.45), ("signs", o + 0.35, "marker", 0.35))],
     ("signs", frag("signs", 0, 1) - 0.05, "whoosh", 0.3), ("signs", frag("signs", 0, 2) - 0.05, "whoosh", 0.3),
@@ -215,8 +223,9 @@ end = int(T("choice", -0.2) * SR)
 mus[end:] = 0  # hard cut to black and silence
 
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
+SFX_REF_DB = -25.352   # rms_db of the v2 SFX stem (sfx_sfx.v2.wav)
 mus = level(mus, -30)
-sfx = level(sfx, -27)
+sfx = sfx * 10 ** ((-27 - SFX_REF_DB) / 20)   # the gain level(sfx, -27) gave the stem before the de-hiss: quieter beds must not push every other effect up
 env = box(np.abs(vo), int(0.05 * SR))
 duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
 duck = box(duck, int(0.25 * SR))

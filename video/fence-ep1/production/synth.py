@@ -64,6 +64,20 @@ def lp_fast(x, cutoff):
     return np.convolve(x, kern)[: len(x)]
 
 
+def fband(x, lo=None, hi=None, order=4):
+    """Steep zero-phase band limit (Butterworth magnitude via FFT). lp_fast is one-pole (6 dB/oct): what it leaves above the
+    cutoff of a noise source is a broadband hiss that sits over the voice on phone speakers ("เสียงซ่า", EP.6) — noise beds end here."""
+    pad = int(0.05 * SR)
+    y = np.concatenate([np.zeros(pad), np.asarray(x, float), np.zeros(pad)])
+    f = np.fft.rfftfreq(len(y), 1 / SR)
+    h = np.ones_like(f)
+    if hi:
+        h /= np.sqrt(1 + (f / hi) ** (2 * order))
+    if lo:
+        h /= np.sqrt(1 + (lo / np.maximum(f, 1e-6)) ** (2 * order))
+    return np.fft.irfft(np.fft.rfft(y) * h, len(y))[pad: pad + len(x)]
+
+
 def note(m):
     return 440.0 * 2 ** ((m - 69) / 12)
 
@@ -248,6 +262,7 @@ def ai_sfx(kind):
 
 
 def sfx(kind):
+    kind, _, arg = kind.partition("@")   # "pour@1.7": a parameter after @ (a length in s)
     if kind in AI_KINDS and _os.path.exists(_os.path.join(AI_DIR, AI_KINDS[kind][0] + ".wav")):
         return ai_sfx(kind)
     if kind == "whoosh":
@@ -345,7 +360,7 @@ def sfx(kind):
         n = rng.standard_normal(len(t))
         lo, hi = lp_fast(n, 300), lp_fast(n, 1200)
         w = 0.5 + 0.5 * np.sin(2 * np.pi * 0.23 * t + 1.0)
-        return (lo * (1 - w) + hi * w) * np.sin(np.pi * t / d) * 0.5
+        return fband((lo * (1 - w) + hi * w) * np.sin(np.pi * t / d) * 0.5, hi=1500)
     if kind == "thunder":
         d = 3.0
         t = t_arr(d)
@@ -356,7 +371,7 @@ def sfx(kind):
         d = 4.0
         t = t_arr(d)
         x = osc(48, d, "saw") * 0.6 + osc(96, d) * 0.3 + rng.standard_normal(len(t)) * 0.05
-        return lp_fast(x, 500) * env(len(t), 0.5, 0.8) * 0.12
+        return fband(lp_fast(x, 500), hi=900) * env(len(t), 0.5, 0.8) * 0.12
     if kind == "siren":
         d = 3.0
         t = t_arr(d)
@@ -429,7 +444,7 @@ def sfx(kind):
         d = 0.7
         t = t_arr(d)
         n = rng.standard_normal(len(t))
-        return (lp_fast(n, 4000) - lp_fast(n, 800)) * env(len(t), 0.01, 0.15) * 0.25
+        return fband(lp_fast(n, 4000) - lp_fast(n, 800), hi=3500) * env(len(t), 0.01, 0.15) * 0.25
     if kind == "shutter":
         out = np.zeros(int(0.2 * SR))
         for off in (0, 0.07):
@@ -509,13 +524,13 @@ def sfx(kind):
         whistle = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 2.0) * 0.35
         crackle = np.convolve((rng.random(len(t)) < 9 / SR) * rng.standard_normal(len(t)), np.exp(-np.arange(140) / 30))[: len(t)] * 0.35
         air = (lp_fast(n, 1400) - lp_fast(n, 300)) * 0.08 * np.clip(t / 0.8, 0, 1)
-        return (hum + whistle + crackle + air) * env(len(t), 0.05, 0.3) * 0.3
+        return fband(hum + whistle + crackle + air, hi=3500) * env(len(t), 0.05, 0.3) * 0.3
     if kind == "radiobed":  # the station's carrier under the voice: a low warm hum with a slow wow and a faint, soft air; sits far below the words (4 s)
         d = 4.0
         t = t_arr(d)
         n = rng.standard_normal(len(t))
         hum = (np.sin(2 * np.pi * 50 * t) * 0.5 + np.sin(2 * np.pi * 100 * t) * 0.2) * (0.8 + 0.2 * np.sin(2 * np.pi * 0.5 * t))
-        air = (lp_fast(n, 1200) - lp_fast(n, 350)) * 0.12
+        air = fband(lp_fast(n, 1200) - lp_fast(n, 350), hi=1500) * 0.12
         return (hum + air) * np.sin(np.pi * t / d) ** 0.3 * 0.04
     if kind == "gate":  # an iron gate sliding on its rail: a low rumble with a chattering wheel, ending in a clang (1.0 s)
         d = 1.0
@@ -608,7 +623,7 @@ def sfx(kind):
     if kind == "squish":  # wet leech
         d = 0.5
         t = t_arr(d)
-        x = lp_fast(rng.standard_normal(len(t)), 700)
+        x = fband(lp_fast(rng.standard_normal(len(t)), 700), hi=1800)
         return x * (0.5 + 0.5 * np.sin(2 * np.pi * 7 * t)) * np.sin(np.pi * t / d) * 0.45
     if kind == "nv":  # night-vision electronics whine
         d = 3.0
@@ -673,7 +688,7 @@ def sfx(kind):
         for k in range(7):
             d = 0.09
             t = t_arr(d)
-            x = (lp_fast(rng.standard_normal(len(t)), 1800) + osc(90, d) * 0.6) * np.exp(-t * 45)
+            x = (fband(lp_fast(rng.standard_normal(len(t)), 1800), hi=2500) + osc(90, d) * 0.6) * np.exp(-t * 45)
             add(out, x * (0.7 + 0.3 * (k % 2)), k * 0.17)
         return out
     if kind == "marker":  # a marker squeaking across a mirror: short chirps of a bright, rough tone
@@ -741,7 +756,7 @@ def sfx(kind):
         t = t_arr(d)
         n = rng.standard_normal(len(t))
         flutter = 0.7 + 0.3 * np.clip(np.sin(2 * np.pi * 3.3 * t), 0, None)
-        return lp_fast(n, 900) * 0.16 * flutter * np.clip(t / 0.4, 0, 1) * np.clip((d - t) / 0.3, 0, 1)
+        return fband(lp_fast(n, 900), hi=1200) * 0.16 * flutter * np.clip(t / 0.4, 0, 1) * np.clip((d - t) / 0.3, 0, 1)
     if kind == "bulb":  # an old bulb catching: a filament tick, a stutter, then the hum settling in
         out = np.zeros(int(1.0 * SR))
         for off in (0.0, 0.09, 0.16):
@@ -770,8 +785,37 @@ def sfx(kind):
         for off in (0.0, 0.28):
             tt = t_arr(0.18)
             nn = rng.standard_normal(len(tt))
-            add(out, (lp_fast(nn, 1800) - lp_fast(nn, 300)) * np.exp(-tt * 18) * 0.55, off)
+            add(out, fband(lp_fast(nn, 1800) - lp_fast(nn, 300), hi=2800) * np.exp(-tt * 18) * 0.55, off)
         return out
+    if kind == "pour":  # liquid poured into liquid: a turbulent burble + rising bubble bloops, nothing above ~2.8 kHz; "pour@1.7" = 1.7 s of flow, then it stops dead and a few bubbles trail (EP.6; "stream" is a brook and reads as hiss)
+        d = float(arg or 1.5)
+        n = int((d + 0.35) * SR)
+        t = np.arange(n) / SR
+        wob = lp_fast(rng.standard_normal(n), 12)
+        wob = 0.55 + 0.45 * np.clip(wob / (2.2 * np.std(wob) + 1e-9), -1, 1)
+        body = fband(rng.standard_normal(n), lo=260, hi=1500, order=3) * wob * np.clip(t / 0.06, 0, 1) * np.clip((d - t) / 0.07, 0, 1)
+        bub, k = np.zeros(n), 0.0
+        while k < d + 0.25:
+            db_ = rng.uniform(0.03, 0.07)
+            tb = np.arange(int(db_ * SR)) / SR
+            ph = 2 * np.pi * np.cumsum(rng.uniform(380, 1100) * (1 + 0.45 * tb / db_)) / SR
+            add(bub, np.sin(ph) * np.exp(-tb / (0.35 * db_)) * rng.uniform(0.3, 1.0) * (0.5 if k > d else 1.0), k)
+            k += rng.exponential(1 / 26 if k < d else 1 / 9)
+        ns = int(0.16 * SR)
+        out = body * 0.5 + bub * 0.22
+        add(out, fband(rng.standard_normal(ns), lo=300, hi=2600) * np.exp(-np.arange(ns) / SR * 22) * 0.45, 0.0)
+        return fband(out, lo=120, hi=2800)
+    if kind == "gas":  # a heavy gas creeping along the floor: a low, soft breath that swells and ebbs, nothing above ~1.3 kHz (3.0 s; EP.6 — the hiss bed read as static)
+        d = 3.0
+        t = t_arr(d)
+        sw = 0.75 + 0.25 * np.sin(2 * np.pi * rng.uniform(0.35, 0.6) * t + rng.uniform(0, 6.3))
+        return fband(rng.standard_normal(len(t)), lo=140, hi=1300) * sw * np.sin(np.pi * t / d) ** 1.5 * 0.5
+    if kind == "gasburst":  # the cloud boiling up: a soft low whump that blooms and fades (1.6 s)
+        d = 1.6
+        t = t_arr(d)
+        bloom = np.clip(t / 0.22, 0, 1) ** 1.5 * np.exp(-np.maximum(t - 0.22, 0) * 2.4)
+        thump = osc(52 + 30 * np.exp(-t * 9), d) * np.exp(-t * 7) * 0.6
+        return (fband(rng.standard_normal(len(t)), lo=120, hi=1600) * bloom * 0.6 + thump) * 0.8
     raise ValueError(kind)
 
 
