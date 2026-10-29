@@ -298,5 +298,28 @@
    "y": 1920
   },
   "bright": 1.15
+ },
+ {
+  "id": "quake-ep1",
+  "page": "quake-ep1/composition/index.html",
+  "out": "video/quake-ep1/cover.jpg",
+  "t": 57.0,
+  "series": "ตึกโยก",
+  "ep": 1,
+  "epTitle": "หมอบ ป้อง เกาะ",
+  "finale": false,
+  "setup": "ตึกที่คุณยืนอยู่/[เริ่มโยก]…",
+  "cmd": "อย่าวิ่งหนีออกไป!",
+  "glow": "#ff6a3a",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.1,
+   "x": 540,
+   "y": 420
+  },
+  "shift": {
+   "x": 0,
+   "y": -150
+  }
  }
 ]
