@@ -3,7 +3,8 @@
 // usage: node cover.cjs <base url> <covers.json> [only-id …]
 //   base url  e.g. http://localhost:8890  (each entry's "page" is relative to it, e.g. "koi-ep1/composition/index.html")
 //   covers.json: [{ id, page, out, t, zoom: { s, x, y }, hideLight, series, ep, epTitle, finale, setup, cmd, glow, logoInk }]
-//     t         the frame (seconds) · zoom: scale s around screen point (x, y) to frame the subject
+//     t         the frame (seconds) · zoom: scale s around screen point (x, y) to frame the subject · shift { x, y }: move the frame
+//               (px, after the zoom) so the subject sits in the clear band between the title (≈ y 640) and the hook (≈ y 1150)
 //     setup     the situation, "/" breaks the line, [word] = yellow box · cmd: the counter-instinct order (red box, "/" breaks)
 //     glow      the series colour (title glow and rim) · finale: true → "ตอนจบ" pill · bright: lift a dark frame (1.2–1.4)
 // Everything the viewer needs sits inside y 250–1650: TikTok's profile grid crops covers to 3:4 around the centre.
@@ -69,8 +70,9 @@ const mark = (s) => s.split('/').map((ln) => ln.trim().replace(/\[([^\]]+)\]/g, 
     await seek(c.t); await p.waitForTimeout(500);
     await p.evaluate(({ c, css, setup, cmd }) => {
       const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
-      if (c.zoom) document.querySelectorAll('.clip').forEach((el) => {
-        el.style.transformOrigin = `${c.zoom.x}px ${c.zoom.y}px`; el.style.transform = `scale(${c.zoom.s})`;
+      if (c.zoom || c.shift) document.querySelectorAll('.clip').forEach((el) => {
+        const z = c.zoom || { s: 1, x: 540, y: 960 }, sh = c.shift || { x: 0, y: 0 };
+        el.style.transformOrigin = `${z.x}px ${z.y}px`; el.style.transform = `translate(${sh.x || 0}px, ${sh.y || 0}px) scale(${z.s})`;
       });
       if (c.bright) document.querySelectorAll('.clip').forEach((el) => { el.style.filter = `brightness(${c.bright})`; });
       const root = document.getElementById('root');
