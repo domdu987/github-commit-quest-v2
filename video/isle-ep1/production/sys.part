@@ -1,0 +1,282 @@
+
+      // ======================================================================================================
+      // sys.part — the story's game systems on the paper HUD (shared by every episode from EP.2 on):
+      //   skill     a character's ability card that pops beside them when they do the thing only they can do
+      //   roster    the camp register: one row per person, written in as ครูพิม hands out the jobs
+      //   craft     the recipe page: parts found one by one, assembled with a slam, stats drawn, then upgraded
+      //   countdown the pressure clock: paper digits fly off every second, a red ring closes, the last seconds go red
+      // ======================================================================================================
+      const SYS_ICON = {
+        wrench: (p) => `${PKG(p)}${SHADOW(24, 45, 15)}<g class="a-wob" style="transform-origin:24px 24px"><g transform="rotate(45 24 24)"><rect x="20" y="18" width="8" height="26" rx="3" fill="url(#${p}-tin)" stroke="${PK_INK}" stroke-width="2"/><path d="M14,14a10,10 0 1 1 20,0v4h-6v-5a4,4 0 0 0 -8,0v5h-6z" fill="url(#${p}-tin)" stroke="${PK_INK}" stroke-width="2" stroke-linejoin="round"/></g></g>`,
+        shoe: (p) => `${PKG(p)}${SHADOW(24, 45, 18)}<g class="a-bob"><path d="M6,36q-2,-8 6,-10l6,-12q6,-4 10,2l4,6q10,2 14,8v8H6z" fill="url(#${p}-red)" stroke="${PK_INK}" stroke-width="2" stroke-linejoin="round"/><path d="M6,38h40v4H6z" fill="#f4ecd8" stroke="${PK_INK}" stroke-width="2"/><path d="M20,18l6,4M18,24l6,4" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><path d="M30,6l4,-4M34,10l6,-2M26,4l0,-4" stroke="${PK_INK}" stroke-width="2" stroke-linecap="round" opacity=".6"/></g>`,
+        ledger: (p) => `${PKG(p)}${SHADOW(24, 45, 14)}<rect x="10" y="6" width="28" height="36" rx="3" fill="url(#${p}-blue)" stroke="${PK_INK}" stroke-width="2"/><rect x="14" y="10" width="20" height="28" fill="#f7f1e2"/><path d="M17,16h14M17,21h14M17,26h10M17,31h12" stroke="#2f4a8a" stroke-width="1.6"/><g class="a-wob" style="transform-origin:38px 40px"><path d="M30,44l12,-18" stroke="${PK_INK}" stroke-width="4" stroke-linecap="round"/><path d="M30,44l12,-18" stroke="#c8392b" stroke-width="2" stroke-linecap="round"/></g>`,
+        lead: (p) => `${PKG(p)}${SHADOW(24, 45, 16)}<g class="a-wob" style="transform-origin:14px 30px"><path d="M8,24l22,-14v30L8,30z" fill="url(#${p}-red)" stroke="${PK_INK}" stroke-width="2" stroke-linejoin="round"/><rect x="4" y="22" width="8" height="10" rx="2" fill="url(#${p}-tin)" stroke="${PK_INK}" stroke-width="2"/><path d="M34,14q6,10 0,20M39,10q10,14 0,28" fill="none" stroke="${PK_INK}" stroke-width="2.4" stroke-linecap="round" class="a-pulse"/></g>`,
+        eye: (p) => `${PKG(p)}${SHADOW(24, 45, 16)}<path d="M4,24q20,-20 40,0q-20,20 -40,0z" fill="#fff" stroke="${PK_INK}" stroke-width="2.4"/><g class="a-jit"><circle cx="24" cy="24" r="8" fill="url(#${p}-blue)" stroke="${PK_INK}" stroke-width="2"/><circle cx="24" cy="24" r="3.5" fill="${PK_INK}"/><circle cx="21" cy="21" r="1.6" fill="#fff"/></g><path d="M10,10l4,4M38,10l-4,4M24,6v5" stroke="${PK_INK}" stroke-width="2" stroke-linecap="round" opacity=".5"/>`,
+        medic: (p) => `${PKG(p)}${SHADOW(24, 45, 16)}<circle cx="24" cy="24" r="17" fill="#fff" stroke="${PK_INK}" stroke-width="2.4"/><path class="a-pulse" style="transform-origin:24px 24px" d="M19,12h10v7h7v10h-7v7h-10v-7h-7v-10h7z" fill="url(#${p}-red)" stroke="${PK_INK}" stroke-width="2"/>`,
+        boss: (p) => `${PKG(p)}${SHADOW(24, 45, 16)}<path d="M8,36l2,-22l9,9l5,-14l5,14l9,-9l2,22z" fill="url(#${p}-yel)" stroke="${PK_INK}" stroke-width="2.2" stroke-linejoin="round"/><rect x="8" y="36" width="32" height="6" fill="url(#${p}-yel)" stroke="${PK_INK}" stroke-width="2"/><circle cx="24" cy="30" r="3" fill="#c8392b"/>`,
+        broom: (p) => `${PKG(p)}${SHADOW(24, 45, 12)}<g class="a-wob" style="transform-origin:24px 40px"><path d="M30,4l-10,22" stroke="url(#${p}-wood)" stroke-width="5" stroke-linecap="round"/><path d="M30,4l-10,22" stroke="${PK_INK}" stroke-width="1.2" fill="none" opacity=".5"/><path d="M22,24l-4,-2l-10,18q8,6 20,2z" fill="url(#${p}-sack)" stroke="${PK_INK}" stroke-width="2" stroke-linejoin="round"/><path d="M12,36l3,-6M17,39l3,-7M22,40l3,-7" stroke="#7a5a2e" stroke-width="1.5"/><path d="M16,24l8,4" stroke="#c8392b" stroke-width="3"/></g>`,
+        knife: (p) => `${PKG(p)}${SHADOW(24, 45, 14)}<g class="a-wob" style="transform-origin:14px 34px"><path d="M8,40l8,-8l24,-24q4,2 2,8l-20,20l-6,2z" fill="url(#${p}-tin)" stroke="${PK_INK}" stroke-width="2" stroke-linejoin="round"/><path d="M4,44l8,-8l4,4l-8,8z" fill="url(#${p}-wood)" stroke="${PK_INK}" stroke-width="2"/><path d="M18,30l20,-20" stroke="#fff" stroke-width="1.5" opacity=".7"/></g>`,
+        tape: (p) => `${PKG(p)}${SHADOW(24, 45, 16)}<g class="a-spin" style="transform-origin:24px 24px"><circle cx="24" cy="24" r="17" fill="#1f1d1a" stroke="${PK_INK}" stroke-width="2"/><circle cx="24" cy="24" r="17" fill="none" stroke="#3a3632" stroke-width="6" stroke-dasharray="4 6"/><circle cx="24" cy="24" r="7" fill="#e8dcc6" stroke="${PK_INK}" stroke-width="2"/><path d="M41,24q6,4 2,12" stroke="#1f1d1a" stroke-width="5" fill="none"/></g>`,
+        spear: (p) => `${PKG(p)}${SHADOW(24, 45, 12)}<g class="a-wob" style="transform-origin:24px 40px"><path d="M12,44L34,14" stroke="url(#${p}-wood)" stroke-width="5" stroke-linecap="round"/><path d="M12,44L34,14" stroke="${PK_INK}" stroke-width="1.2" opacity=".5"/><path d="M30,16l2,-10l10,-2l-6,10z" fill="url(#${p}-tin)" stroke="${PK_INK}" stroke-width="2" stroke-linejoin="round"/><path d="M28,22l6,4M26,25l6,4" stroke="#1f1d1a" stroke-width="3"/></g>`,
+        pipe: (p) => `${PKG(p)}${SHADOW(24, 45, 14)}<g class="a-wob" style="transform-origin:24px 24px"><path d="M8,38L38,8" stroke="url(#${p}-tin)" stroke-width="9" stroke-linecap="round"/><path d="M8,38L38,8" stroke="${PK_INK}" stroke-width="1.5" opacity=".6" fill="none"/><path d="M10,36L36,10" stroke="#fff" stroke-width="2" opacity=".5"/><circle cx="9" cy="37" r="4.5" fill="#6e767e" stroke="${PK_INK}" stroke-width="1.5"/></g>`,
+        door: (p) => `${PKG(p)}${SHADOW(24, 45, 14)}<rect x="12" y="6" width="24" height="36" rx="2" fill="url(#${p}-wood)" stroke="${PK_INK}" stroke-width="2"/><circle cx="31" cy="25" r="2.5" fill="#f2c55c" stroke="${PK_INK}" stroke-width="1.5"/><path d="M4,24h6M38,24h6" stroke="${PK_INK}" stroke-width="2.4" stroke-linecap="round" class="a-jit"/>`,
+      };
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        /* skill card */
+        .sk { position: absolute; z-index: 53; opacity: 0; width: 430px; padding: 34px 22px 16px; color: ${PK_INK}; font-family: Kanit; filter: drop-shadow(0 18px 22px rgba(0,0,0,.6)); transform-origin: 50% 0%; }
+        .sk .in { position: relative; z-index: 1; display: flex; gap: 12px; align-items: center; }
+        .sk .tx { display: flex; flex-direction: column; gap: 6px; } .sk .stw .stamp { font-size: 38px; padding: 4px 14px 8px; border-width: 5px; }
+        .sk .ds { font: 700 25px/1.2 Kanit; color: ${PK_PENCIL}; }
+        .sk .burst { position: absolute; left: 50%; top: 50%; width: 560px; height: 560px; margin: -280px 0 0 -280px; z-index: 0; pointer-events: none; overflow: visible; opacity: 0; }
+        .sk .burst path { stroke: ${PK_RED}; stroke-width: 7; stroke-linecap: round; fill: none; }
+        .sk .tape.wide { font-size: 28px; }
+        /* roster page */
+        .pkt.ros { width: 900px; margin-left: -450px; padding: 30px 40px 26px 90px; text-align: left; } .pkt.ros .hd { display: flex; align-items: center; gap: 18px; margin-bottom: 10px; } .pkt.ros .hd .stamp { font-size: 34px; }
+        .pkt.ros .who { font: 700 26px/1 Kanit; color: ${PK_PENCIL}; }
+        .pkt.ros .row { display: flex; align-items: center; gap: 16px; height: 92px; opacity: 0; border-bottom: 2px solid rgba(60,80,130,.22); }
+        .pkt.ros .nm { font: 900 40px/1 Kanit; width: 200px; } .pkt.ros .sk2 .stamp { font-size: 30px; padding: 4px 12px 7px; border-width: 4px; } .pkt.ros .ds { font: 700 24px/1.15 Kanit; color: ${PK_PENCIL}; flex: 1; }
+        .pkt.ros .holes { position: absolute; left: 22px; top: 26px; bottom: 26px; width: 24px; display: flex; flex-direction: column; justify-content: space-between; z-index: 2; }
+        .pkt.ros .holes i { display: block; width: 24px; height: 24px; border-radius: 50%; background: #090b0f; box-shadow: inset 0 2px 2px rgba(255,255,255,.3), 0 1px 0 rgba(255,255,255,.35); }
+        /* craft page */
+        .pkt.crf { width: 960px; margin-left: -480px; padding: 28px 30px 30px; } .pkt.crf .hd { display: flex; align-items: center; justify-content: center; gap: 18px; } .pkt.crf .hd .stamp { font-size: 36px; } .pkt.crf .who { font: 700 26px/1 Kanit; color: ${PK_PENCIL}; }
+        .pkt.crf .slots { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 16px; }
+        .pkt.crf .slot { position: relative; width: 150px; height: 190px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 14px; }
+        .pkt.crf .slot.res { width: 210px; height: 230px; }
+        .pkt.crf .slot .box { position: absolute; inset: 0; } .pkt.crf .slot .box svg { width: 100%; height: 100%; overflow: visible; } .pkt.crf .slot .box path { fill: none; stroke: ${PK_INK}; stroke-width: 3.5; stroke-linejoin: round; opacity: .75; }   /* dash offsets live on the path attributes (a CSS value would beat the tweened attribute) */
+        .pkt.crf .slot.res .box path { stroke: ${PK_RED}; stroke-width: 5; }
+        .pkt.crf .slot .lb { position: relative; z-index: 1; font: 900 26px/1.1 Kanit; text-align: center; margin-top: 4px; } .pkt.crf .slot.res .lb { font-size: 32px; color: ${PK_RED}; }
+        .pkt.crf .slot .lb2 { position: absolute; left: 0; right: 0; bottom: 14px; font: 900 32px/1.1 Kanit; color: ${PK_RED}; text-align: center; opacity: 0; }
+        .pkt.crf .slot .chk { position: absolute; right: -10px; top: -14px; width: 56px; height: 56px; overflow: visible; z-index: 3; } .pkt.crf .slot .chk path { fill: none; stroke: ${PK_RED}; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+        .pkt.crf .op { font: 900 64px/1 Kanit; color: ${PK_PENCIL}; opacity: 0; width: 44px; text-align: center; }
+        .pkt.crf .stats { display: flex; justify-content: center; gap: 34px; margin-top: 16px; } .pkt.crf .st { display: flex; align-items: center; gap: 12px; font: 700 27px/1 Kanit; color: ${PK_PENCIL}; }
+        .pkt.crf .tally { display: flex; gap: 4px; } .pkt.crf .tally i { width: 10px; height: 30px; background: ${INKLINE("%231f1d1a")} no-repeat center / contain; transform: scaleY(0); transform-origin: 50% 100%; } .pkt.crf .tally i.off { opacity: .18; } .pkt.crf .tally i.x { background-image: ${INKLINE("%23b7281e")}; }
+        .pkt.crf .done { position: absolute; right: 34px; top: 22px; } .pkt.crf .done .stamp { font-size: 44px; }
+        .pkt.crf .up { position: relative; margin: 12px 0 0 30px; display: flex; align-items: center; gap: 10px; font: 900 28px/1.1 Kanit; color: ${PK_INK}; opacity: 0; } .pkt.crf .up .stamp { font-size: 36px; }
+        .pkt.crf .boom { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; z-index: 4; pointer-events: none; } .pkt.crf .boom .spl { width: 16px; height: 16px; margin: -8px; }
+        /* countdown */
+        .pkt.cdn { width: 720px; margin-left: -360px; padding: 26px 30px 34px; }
+        .pkt.cdn .lb { font: 900 40px/1 Kanit; color: ${PK_INK}; letter-spacing: 1px; }
+        .pkt.cdn .big { display: flex; align-items: center; justify-content: center; gap: 18px; font: 900 80px/1.1 Kanit; margin-top: 12px; position: relative; z-index: 2; } .pkt.cdn .big .pdig { font-size: 200px; }
+        .pkt.cdn .ring { position: absolute; left: 50%; top: 50%; width: 520px; height: 330px; margin: -150px 0 0 -260px; overflow: visible; z-index: 1; pointer-events: none; } .pkt.cdn .ring path { fill: none; stroke: ${PK_RED}; stroke-width: 9; stroke-linecap: round; opacity: .85; }
+        .pkt.cdn .pd .sh.u { box-shadow: 0 .02em .05em rgba(0,0,0,.35); }
+        .pkt.cdn .warnst { position: absolute; right: 26px; top: 18px; } .pkt.cdn .warnst .stamp { font-size: 46px; }
+        .pkt.cdn .red { position: absolute; inset: 0; background: ${PK_RED}; opacity: 0; mix-blend-mode: multiply; z-index: 0; pointer-events: none; }
+      </style>`);
+      // a hand-drawn rectangle (slightly wobbly) for the recipe slots, viewBox 0 0 100 100
+      const SKETCH_BOX = `<svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M4,6Q50,2 96,5Q98,50 95,96Q50,98 5,95Q2,50 4,6Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>`;
+      const RAYS = Array.from({ length: 12 }, (_, k) => { const a = (k * Math.PI) / 6, r0 = 150 + (k % 3) * 20, r1 = r0 + 60 + (k % 2) * 30; return `<path d="M${(280 + Math.cos(a) * r0).toFixed(1)},${(280 + Math.sin(a) * r0).toFixed(1)}L${(280 + Math.cos(a) * r1).toFixed(1)},${(280 + Math.sin(a) * r1).toFixed(1)}" pathLength="1"/>`; }).join("");
+
+      // ---------- skill card: beside the character at screen (x, y). o = {t, end, name, skill, desc, icon, x, y} ----------
+      GameUI.C.skill = {
+        html: (id, o) => `<div id="${id}" class="sk" style="left:${o.x}px;top:${o.y}px">${PAP()}${TAPE("tc", -3, o.name)}<svg class="burst" viewBox="0 0 560 560">${RAYS}</svg>
+          <div class="in">${STK(SYS_ICON[o.icon] || SYS_ICON.wrench, "big")}<div class="tx">${STAMP(o.skill, "", -4)}<div class="ds">${o.desc || ""}</div></div></div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), end = o.t0abs + (o.end ?? o.t + 3); wordify(el.querySelector(".ds"));
+          tl.fromTo(`#${id}`, { opacity: 0, scale: 1.7, rotation: 9, y: -50 }, { opacity: 1, scale: 1, rotation: -2, y: 0, duration: 0.22, ease: "power3.in", immediateRender: false }, t0);
+          tl.fromTo(`#${id}`, { scaleX: 1.1, scaleY: 0.9 }, { scaleX: 1, scaleY: 1, duration: 0.5, ease: "elastic.out(1,.4)", immediateRender: false }, t0 + 0.22);
+          tapeOn(tl, el, t0 + 0.24);
+          // the burst: pen rays flick out from behind the card as it lands
+          tl.set(`#${id} .burst`, { opacity: 1 }, t0 + 0.2);
+          el.querySelectorAll(".burst path").forEach((p, k) => { tl.fromTo(p, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.16, ease: "power2.out", immediateRender: false }, t0 + 0.2 + (k % 4) * 0.03); tl.to(p, { opacity: 0, duration: 0.25 }, t0 + 0.5 + (k % 4) * 0.03); });
+          const pe = peel(tl, el.querySelectorAll(".stk"), t0 + 0.3);
+          slam(tl, el, t0 + 0.42, { punch: `#${id} .in` });
+          write(tl, el.querySelector(".ds"), t0 + 0.6, { from: t0, gap: 0.08, d: 0.18 });
+          wobble(tl, el.querySelectorAll(".stk"), pe, end, -8, 4); pkLoops(tl, el, t0 + 0.5, end);
+          tl.fromTo(`#${id}`, { rotation: -2 }, { rotation: 1, duration: 1.2, repeat: Math.ceil((end - t0) / 1.2) + 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.8);
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end, 1);
+        },
+      };
+      // ---------- the camp register: o = {t, end, title, who, rows: [{name, skill, desc, icon, at}], top} ----------
+      GameUI.C.roster = {
+        html: (id, o) => `<div id="${id}" class="pkt ros" style="top:${o.top ?? 150}px">${PAP("lst")}${TAPE("tl", -8)}${TAPE("tr", 6)}<span class="holes"><i></i><i></i><i></i></span><div class="in">
+          <div class="hd">${STAMP(o.title || "ทะเบียนค่าย", "", -4)}<span class="who">${o.who || ""}</span></div>
+          ${o.rows.map((r, i) => `<div class="row" id="${id}-r${i}">${STK(SYS_ICON[r.icon] || SYS_ICON.wrench, "sm")}<div class="nm">${r.name}</div><div class="sk2">${STAMP(r.skill, "", -3)}</div><div class="ds">${r.desc || ""}</div></div>`).join("")}</div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), end = o.t0abs + (o.end ?? o.t + 6);
+          flipIn(tl, `#${id}`, t0, 0.5); tapeOn(tl, el, t0 + 0.42);
+          slam(tl, el.querySelector(".hd"), t0 + 0.35, { punch: `#${id} .in` });
+          tl.set(`#${id} .who`, { opacity: 0 }, t0); tl.fromTo(`#${id} .who`, { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.2, immediateRender: false }, t0 + 0.6);
+          o.rows.forEach((r, i) => { const row = document.getElementById(`${id}-r${i}`), T = o.t0abs + (r.at ?? o.t + 0.6 + i * 0.5); wordify(row.querySelector(".nm")); wordify(row.querySelector(".ds"));
+            tl.fromTo(row, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, T);
+            const pe = peel(tl, row.querySelectorAll(".stk"), T + 0.05);
+            write(tl, row.querySelector(".nm"), T + 0.12, { from: T, gap: 0.1, d: 0.2 });
+            slam(tl, row, T + 0.35, { punch: row });
+            write(tl, row.querySelector(".ds"), T + 0.55, { from: T, gap: 0.07, d: 0.16 });
+            wobble(tl, row.querySelectorAll(".stk"), pe, end); pkLoops(tl, row, T + 0.6, end); });
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end);
+        },
+      };
+      // ---------- the recipe page: o = {t, end, title, who, parts: [{icon, label, at}], build, result: {icon, label}, stats: [{label, v, max}], upgrade: {at, part: {icon, label}, label, stats: [{v}]}, top} ----------
+      GameUI.C.craft = {
+        html: (id, o) => `<div id="${id}" class="pkt crf" style="top:${o.top ?? 150}px">${PAP("st")}${TAPE("tl", -7)}${TAPE("tr", 5)}<div class="in">
+          <div class="hd">${STAMP(o.title || "สูตรประดิษฐ์", "", -4)}<span class="who">${o.who || ""}</span></div>
+          <div class="slots">${o.parts.map((p, i) => `${i ? `<i class="op">+</i>` : ""}<div class="slot" id="${id}-p${i}"><div class="box">${SKETCH_BOX}</div>${STK(SYS_ICON[p.icon] || SYS_ICON.tape)}<div class="lb">${p.label}</div><svg class="chk" viewBox="0 0 40 40"><path d="M6,22l10,10l18,-24" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg></div>`).join("")}
+            <i class="op">=</i><div class="slot res" id="${id}-res"><div class="box">${SKETCH_BOX}</div>${STK(SYS_ICON[o.result.icon] || SYS_ICON.spear, "big")}<div class="lb" id="${id}-rl">${o.result.label}</div>${o.upgrade ? `<div class="lb2" id="${id}-rl2">${o.upgrade.label}</div>` : ""}<div class="boom">${SPLAT}</div></div></div>
+          <div class="stats" id="${id}-st">${(o.stats || []).map((s, k) => `<div class="st"><span>${s.label}</span><span class="tally">${Array.from({ length: s.max ?? 5 }, (_, j) => `<i class="${j < s.v ? "" : "off"}${o.upgrade && o.upgrade.stats && j >= s.v && j < o.upgrade.stats[k].v ? " x" : ""}"></i>`).join("")}</span></div>`).join("")}</div>
+          <div class="done">${STAMP("สำเร็จ", "", -8)}</div>
+          ${o.upgrade ? `<div class="up" id="${id}-up">${STK(SYS_ICON[o.upgrade.part.icon] || SYS_ICON.pipe, "sm")}<span class="w">+ ${o.upgrade.part.label}</span>${STAMP("+1", "", 6)}</div>` : ""}</div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), end = o.t0abs + (o.end ?? o.t + 10), A = (t) => o.t0abs + t, res = document.getElementById(`${id}-res`), rstk = res.querySelector(".stk");
+          flipIn(tl, `#${id}`, t0, 0.5); tapeOn(tl, el, t0 + 0.42);
+          slam(tl, el.querySelector(".hd"), t0 + 0.3, { punch: `#${id} .in` });
+          tl.set(`#${id} .who`, { opacity: 0 }, t0); tl.fromTo(`#${id} .who`, { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.2, immediateRender: false }, t0 + 0.55);
+          // the empty slots are sketched in with the pen, the + and = signs pop
+          el.querySelectorAll(".slot .box path").forEach((p, k) => tl.fromTo(p, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, ease: "power1.inOut", immediateRender: false }, t0 + 0.4 + k * 0.12));
+          el.querySelectorAll(".op").forEach((op, k) => tl.fromTo(op, { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)", immediateRender: false }, t0 + 0.6 + k * 0.12));
+          // every part found: the sticker drops into its slot and bounces, the label is written, a red tick is drawn
+          const stks = [];
+          o.parts.forEach((p, i) => { const slot = document.getElementById(`${id}-p${i}`), stk = slot.querySelector(".stk"), T = A(p.at); stks.push(stk); wordify(slot.querySelector(".lb"));
+            tl.fromTo(stk, { opacity: 0, y: -140, scale: 1.7, rotation: -20 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.28, ease: "power3.in", immediateRender: false }, T);
+            tl.fromTo(stk, { scaleX: 1.2, scaleY: 0.8 }, { scaleX: 1, scaleY: 1, duration: 0.5, ease: "elastic.out(1,.4)", immediateRender: false }, T + 0.28);
+            tl.fromTo(slot, { y: 0 }, { y: 6, duration: 0.06, yoyo: true, repeat: 1, immediateRender: false }, T + 0.28);
+            write(tl, slot.querySelector(".lb"), T + 0.3, { from: t0, gap: 0.1, d: 0.2 });
+            tl.fromTo(slot.querySelector(".chk path"), { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.22, ease: "power2.out", immediateRender: false }, T + 0.45); });
+          // assembly: the parts leap into the result slot, ink bursts, the result pops, "สำเร็จ" is stamped, the stats are drawn
+          const B = A(o.build), rx = res.offsetLeft + res.offsetWidth / 2, ry = res.offsetTop + 70;
+          tl.set(rstk, { opacity: 0 }, t0);
+          stks.forEach((stk, i) => { const slot = stk.parentElement, dx = rx - (slot.offsetLeft + slot.offsetWidth / 2), dy = ry - (slot.offsetTop + 60);
+            tl.to(stk, { y: -40, scale: 1.25, duration: 0.18, ease: "power2.out" }, B + i * 0.05);
+            tl.to(stk, { x: dx, y: dy, rotation: 540, scale: 0.35, opacity: 0, duration: 0.32, ease: "power3.in" }, B + 0.18 + i * 0.05); });
+          const hit = B + 0.55;
+          res.querySelectorAll(".boom .spl").forEach((sp, k) => tl.fromTo(sp, { x: 0, y: 0, opacity: 0.95, scale: 1.6 }, { x: SPL[k][0] * 2.2, y: SPL[k][1] * 2.2, opacity: 0, scale: 0.3, duration: 0.6, ease: "power3.out", immediateRender: false }, hit));
+          tl.fromTo("#flashw", { opacity: 0.8 }, { opacity: 0, duration: 0.25, immediateRender: false }, hit);
+          tl.fromTo(`#${id}`, { scale: 1 }, { scale: 1.04, duration: 0.08, yoyo: true, repeat: 1, immediateRender: false }, hit);
+          tl.fromTo(`#${id}`, { x: 0 }, { x: 9, duration: 0.04, repeat: 7, yoyo: true, immediateRender: false }, hit);
+          tl.fromTo(rstk, { opacity: 0, scale: 0.2, rotation: -40 }, { opacity: 1, scale: 1.25, rotation: 6, duration: 0.22, ease: "power3.out", immediateRender: false }, hit + 0.02);
+          tl.to(rstk, { scale: 1, rotation: -6, duration: 0.6, ease: "elastic.out(1,.35)" }, hit + 0.24);
+          wordify(document.getElementById(`${id}-rl`)); write(tl, document.getElementById(`${id}-rl`), hit + 0.15, { from: t0, gap: 0.1, d: 0.2 });
+          slam(tl, el.querySelector(".done"), hit + 0.4, { punch: `#${id} .in` });
+          el.querySelectorAll(".stats .tally i:not(.x)").forEach((i, k) => tl.to(i, { scaleY: 1, duration: 0.14, ease: "power2.out" }, hit + 0.55 + k * 0.045));
+          wobble(tl, [rstk], hit + 0.9, end, -6, 4);
+          // the upgrade: the special part slides in, the result flashes, the name changes, the red strokes extend the stats, "+1" is stamped
+          if (o.upgrade) { const U = A(o.upgrade.at), up = document.getElementById(`${id}-up`);
+            tl.fromTo(up, { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, U);
+            const pe = peel(tl, up.querySelectorAll(".stk"), U + 0.05); write(tl, up, U + 0.2, { from: t0, gap: 0.1, d: 0.2 });
+            slam(tl, up, U + 0.5, { punch: up });
+            const H = U + 0.85;
+            tl.fromTo(rstk, { filter: "brightness(1)" }, { filter: "brightness(2.2) saturate(1.4)", duration: 0.12, yoyo: true, repeat: 3, immediateRender: false }, H);
+            tl.fromTo(rstk, { scale: 1 }, { scale: 1.3, duration: 0.14, yoyo: true, repeat: 1, ease: "power2.out", immediateRender: false }, H);
+            res.querySelectorAll(".boom .spl").forEach((sp, k) => tl.fromTo(sp, { x: 0, y: 0, opacity: 0.9, scale: 1.2 }, { x: SPL[k][0] * 1.8, y: SPL[k][1] * 1.8, opacity: 0, scale: 0.3, duration: 0.5, ease: "power3.out", immediateRender: false }, H));
+            tl.to(`#${id}-rl`, { opacity: 0, duration: 0.1 }, H); tl.fromTo(`#${id}-rl2`, { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)", immediateRender: false }, H + 0.1);
+            el.querySelectorAll(".stats .tally i.x").forEach((i, k) => tl.to(i, { scaleY: 1, duration: 0.14, ease: "power2.out" }, H + 0.25 + k * 0.08));
+            tl.fromTo(`#${id} .stats`, { x: 0 }, { x: 5, duration: 0.04, repeat: 5, yoyo: true, immediateRender: false }, H + 0.25);
+            wobble(tl, up.querySelectorAll(".stk"), pe, end); }
+          pkLoops(tl, el, t0 + 0.5, end);
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end);
+        },
+      };
+      // ---------- the countdown: o = {t, from, to, label, warn, end, top}; one paper sheet flies off per second, a red ring closes, the last seconds go red ----------
+      GameUI.C.countdown = {
+        html: (id, o) => { const seq = Array.from({ length: o.from - (o.to ?? 0) + 1 }, (_, i) => o.from - i);
+          return `<div id="${id}" class="pkt cdn" style="top:${o.top ?? 60}px">${PAP("st")}<i class="red"></i>${TAPE("tl", -7)}${TAPE("tr", 5)}<svg class="ring" viewBox="0 0 520 330"><path d="M260,20C400,16 500,80 500,165C500,250 400,312 260,310C120,312 20,250 20,165C20,80 120,16 260,20Z" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg><div class="in">
+            <div class="lb">${o.label || "ประตูปิดใน"}</div><div class="big">${PAPERS(seq)}<span class="w">วิ</span></div></div><div class="warnst">${STAMP(o.warnText || "เร็ว!", "", -12)}</div></div>`; },
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), to = o.to ?? 0, n = o.from - to, end = o.t0abs + (o.end ?? o.t + n + 0.6), warn = o.warn ?? 5, digs = [...el.querySelectorAll(".pd")], tick = o.tick ?? 1;
+          wordify(el.querySelector(".lb"));
+          flipIn(tl, `#${id}`, t0, 0.3); tapeOn(tl, el, t0 + 0.25);
+          write(tl, el.querySelector(".lb"), t0 + 0.15, { from: t0, gap: 0.08, d: 0.16 });
+          slapIn(tl, el, t0 + 0.2, 0.1);
+          tl.fromTo(`#${id} .ring path`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: n * tick, ease: "none", immediateRender: false }, t0 + 0.2);
+          const used = new Set();   // sheets already flown at build time (a digit value can repeat in a stack: 20 → 10 → 0 on the ones digit)
+          const w = String(o.from).length, strs = Array.from({ length: n + 1 }, (_, i) => String(o.from - i).padStart(w, "0"));   // same padding PAPERS used
+          for (let i = 1; i <= n; i++) { const T = t0 + i * tick, v = o.from - i, a = strs[i - 1], b = strs[i];
+            digs.forEach((pd, j) => { if (a[j] === b[j]) return;
+              // the stack top-first, minus the sheets already gone; the top one flies, and any copies of the same digit right under it
+              // (the tens digit holds one "1" sheet per second from 19 to 10) drop out at the same moment so the next digit shows
+              const live = [...pd.querySelectorAll(".sh")].reverse().filter((s) => !used.has(s)), k0 = live.findIndex((s) => s.dataset.v === a[j]);
+              if (k0 < 0) return; let k = k0; while (k < live.length && live[k].dataset.v === a[j]) { used.add(live[k]); k++; }
+              const kf = Math.min(1, tick); flyOff(tl, live[k0], T - (kf < 1 ? 0.75 * kf : 0.2), kf); tl.set(live[k0], { opacity: 0 }, T + 0.6 * kf);
+              for (let m = k0 + 1; m < k; m++) tl.set(live[m], { opacity: 0 }, T + 0.05); });
+            const hot = v <= warn;
+            tl.fromTo(`#${id}`, { x: 0 }, { x: hot ? 10 : 4, duration: 0.035, repeat: hot ? 7 : 3, yoyo: true, immediateRender: false }, T);
+            tl.fromTo(`#${id} .big`, { scale: 1 }, { scale: hot ? 1.12 : 1.05, duration: 0.08, yoyo: true, repeat: 1, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, T);
+            if (hot) { tl.fromTo(`#${id} .red`, { opacity: 0.55 }, { opacity: 0.18, duration: tick * 0.9, ease: "power2.out", immediateRender: false }, T); tl.fromTo("#fxred", { opacity: 0.5 }, { opacity: 0, duration: 0.5, ease: "power1.out", immediateRender: false }, T); }
+            if (v === warn) { slam(tl, el.querySelector(".warnst"), T, { punch: `#${id} .in` }); tl.set(`#${id} .ring path`, { stroke: "#ff3b30" }, T); }
+            if (v === 0) { tl.fromTo(`#${id}`, { scale: 1 }, { scale: 1.08, duration: 0.07, yoyo: true, repeat: 1, immediateRender: false }, T); tl.fromTo("#flashw", { opacity: 0.7 }, { opacity: 0, duration: 0.3, immediateRender: false }, T); } }
+          if (o.from <= warn) { tl.set(`#${id} .red`, { opacity: 0.3 }, t0); slam(tl, el.querySelector(".warnst"), t0 + 0.3, { punch: `#${id} .in` }); tl.set(`#${id} .ring path`, { stroke: "#ff3b30" }, t0); }
+          pkLoops(tl, el, t0 + 0.3, end);
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end);
+        },
+      };
+      // ======================================================================================================
+      // EP.7 cards: the estate's score board (คะแนนประโยชน์) and the tally strip that counts back blows / abdominal thrusts
+      // ======================================================================================================
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .pkt.scr .row { height: 84px; } .pkt.scr .nm { width: 230px; } .pkt.scr .bar { flex: 1; height: 28px; border: 4px solid ${PK_INK}; border-radius: 8px; background: rgba(60,80,130,.08); position: relative; overflow: hidden; }
+        .pkt.scr .bar i { position: absolute; left: 0; top: 0; bottom: 0; background: #4f8a5a; transform-origin: 0% 50%; } .pkt.scr .pt { font: 900 44px/1 Kanit; width: 70px; text-align: right; }
+        .pkt.scr .row.bad .nm, .pkt.scr .row.bad .pt { color: ${PK_RED}; } .pkt.scr .row.bad .bar { border-color: ${PK_RED}; }
+        .pkt.scr .ring { position: absolute; left: 70px; right: 20px; height: 96px; opacity: 0; pointer-events: none; } .pkt.scr .ring path { stroke: ${PK_RED}; stroke-width: 6; fill: none; }
+        .pkt.scr .ft { margin-top: 14px; opacity: 0; } .pkt.scr .ft .stamp { font-size: 32px; }
+        .tly { position: absolute; z-index: 54; opacity: 0; width: 760px; left: 160px; padding: 26px 30px 22px; color: ${PK_INK}; font-family: Kanit; filter: drop-shadow(0 16px 20px rgba(0,0,0,.6)); }
+        .tly .in { position: relative; z-index: 1; display: flex; align-items: center; gap: 16px; } .tly .lb { font: 900 44px/1 Kanit; width: 190px; }
+        .tly .bx { width: 74px; height: 74px; border: 5px solid ${PK_INK}; border-radius: 10px; position: relative; font: 900 46px/64px Kanit; text-align: center; color: rgba(46,42,38,.25); }
+        .tly .bx b { position: absolute; inset: 0; color: ${PK_INK}; opacity: 0; } .tly .bx .hit { position: absolute; inset: -10px; border: 6px solid ${PK_RED}; border-radius: 50%; opacity: 0; }
+        .tly .res { position: absolute; right: 18px; top: -40px; z-index: 3; opacity: 0; } .tly .res .stamp { font-size: 40px; } .tly.ok .res .stamp { color: #2f8a5a; border-color: #2f8a5a; }
+      </style>`);
+      // o = {t, end, title, who, rows: [{name, pts, v (0..1), bad, at}], ring (row index), ringAt, foot, footAt, top}
+      GameUI.C.score = {
+        html: (id, o) => `<div id="${id}" class="pkt ros scr" style="top:${o.top ?? 150}px">${PAP("lst")}${TAPE("tl", -8)}${TAPE("tr", 6)}<span class="holes"><i></i><i></i><i></i></span><div class="in">
+          <div class="hd">${STAMP(o.title, "", -4)}<span class="who">${o.who || ""}</span></div>
+          ${o.rows.map((r, i) => `<div class="row${r.bad ? " bad" : ""}" id="${id}-r${i}"><div class="nm">${r.name}</div><div class="bar"><i style="width:${Math.max(0.02, r.v) * 100}%"></i></div><div class="pt">${r.pts}</div></div>`).join("")}
+          <svg class="ring" viewBox="0 0 800 96" preserveAspectRatio="none"><path d="M30,50Q40,6 400,8Q770,10 774,48Q770,90 400,90Q20,92 34,40" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg>
+          <div class="ft">${STAMP(o.foot || "", "", 3)}</div></div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), end = o.t0abs + (o.end ?? o.t + 6);
+          flipIn(tl, `#${id}`, t0, 0.5); tapeOn(tl, el, t0 + 0.42); slam(tl, el.querySelector(".hd"), t0 + 0.35, { punch: `#${id} .in` });
+          tl.set(`#${id} .who`, { opacity: 0 }, t0); tl.fromTo(`#${id} .who`, { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.2, immediateRender: false }, t0 + 0.6);
+          o.rows.forEach((r, i) => { const row = document.getElementById(`${id}-r${i}`), T = o.t0abs + (r.at ?? o.t + 0.55 + i * 0.32);
+            tl.fromTo(row, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, T);
+            tl.fromTo(row.querySelector(".bar i"), { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power2.out", immediateRender: false }, T + 0.1);
+            if (r.bad) { tl.fromTo(row, { x: 0 }, { x: 7, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, T + 0.5); slam(tl, row, T + 0.4, { punch: row }); } });
+          if (o.ring !== undefined) { const ring = el.querySelector(".ring"), row = document.getElementById(`${id}-r${o.ring}`), T = o.t0abs + o.ringAt;
+            ring.style.top = `${row.offsetTop - 6}px`; tl.set(ring, { opacity: 1 }, T); tl.fromTo(ring.querySelector("path"), { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.45, ease: "power1.inOut", immediateRender: false }, T); }
+          if (o.foot) { const ft = el.querySelector(".ft"), T = o.t0abs + o.footAt; tl.set(ft, { opacity: 1 }, T); slam(tl, ft, T, { punch: `#${id} .in` }); }
+          pkLoops(tl, el, t0 + 0.6, end);
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end);
+        },
+      };
+      // o = {t, end, label, n, hits: [t…] (shot time, one per box that fills), res: {at, text, ok}, top}
+      GameUI.C.tally = {
+        html: (id, o) => `<div id="${id}" class="tly${o.res && o.res.ok ? " ok" : ""}" style="top:${o.top ?? 300}px">${PAP()}${TAPE("tl", -6)}<div class="in"><div class="lb">${o.label}</div>
+          ${Array.from({ length: o.n || 5 }, (_, i) => `<div class="bx">${i + 1}<b>✓</b><i class="hit"></i></div>`).join("")}</div>${o.res ? `<div class="res">${STAMP(o.res.text, "", o.res.ok ? -6 : 5)}</div>` : ""}</div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), end = o.t0abs + (o.end ?? o.t + 4);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -30, rotation: -3 }, { opacity: 1, y: 0, rotation: -1, duration: 0.25, ease: "back.out(2)", immediateRender: false }, t0); tapeOn(tl, el, t0 + 0.2);
+          el.querySelectorAll(".bx").forEach((bx, i) => { const h = o.hits[i]; if (h === undefined) return; const T = o.t0abs + h;
+            tl.set(bx.querySelector("b"), { opacity: 1 }, T); tl.fromTo(bx, { scale: 1.35 }, { scale: 1, duration: 0.18, ease: "back.out(3)", immediateRender: false }, T);
+            tl.fromTo(bx.querySelector(".hit"), { opacity: 1, scale: 0.6 }, { opacity: 0, scale: 1.4, duration: 0.3, immediateRender: false }, T); });
+          if (o.res) { const T = o.t0abs + o.res.at, rs = el.querySelector(".res"); tl.set(rs, { opacity: 1 }, T); slam(tl, rs, T, { punch: `#${id} .in` }); }
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end);
+        },
+      };
+      // ======================================================================================================
+      // ติดเกาะร้าง EP.1 cards: the cold-open headline on paper (frame one), the lung icon for the breath counter, the clock icon,
+      // and the "?" stamp on a signs row whose answer is still open (the food line of โต้ง's checklist)
+      // ======================================================================================================
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .hkp { position: absolute; z-index: 56; opacity: 0; left: 50%; transform: translateX(-50%); width: 900px; padding: 34px 40px 30px 54px; color: ${PK_INK}; font-family: Kanit; filter: drop-shadow(0 18px 24px rgba(0,0,0,.65)); }
+        .hkp .in { position: relative; z-index: 1; } .hkp .l1 { font: 900 64px/1.15 Kanit; } .hkp .l2 { font: 900 84px/1.1 Kanit; color: ${PK_RED}; margin-top: 6px; position: relative; display: inline-block; }
+        .hkp .l2 svg { position: absolute; left: -6px; right: -6px; bottom: -14px; height: 18px; width: calc(100% + 12px); } .hkp .l2 svg path { stroke: ${PK_RED}; stroke-width: 5; fill: none; }
+        .hkp .mg { position: absolute; left: 40px; top: 10px; bottom: 10px; width: 3px; background: rgba(220,120,110,.5); }
+        .fsigns .row .stw.q .stamp { color: #6a4a9a; border-color: #6a4a9a; }
+      </style>`);
+      Object.assign(PK_ICON, {
+        lung: (p) => `${PKG(p)}${SHADOW(24, 45, 14)}<path d="M24,8v16" stroke="${PK_INK}" stroke-width="4" stroke-linecap="round"/><path d="M22,22q-16,0 -16,18q0,6 6,6h8q2,0 2,-2z" fill="#e88a86" stroke="${PK_INK}" stroke-width="2.5"/><path d="M26,22q16,0 16,18q0,6 -6,6h-8q-2,0 -2,-2z" fill="#e88a86" stroke="${PK_INK}" stroke-width="2.5"/><g class="a-pulse" style="transform-origin:24px 30px"><path d="M14,36q4,-8 8,0M26,36q4,-8 8,0" stroke="#c8392b" stroke-width="2" fill="none"/></g>`,
+        clock: (p) => `${PKG(p)}${SHADOW(24, 45, 14)}<circle cx="24" cy="26" r="16" fill="#f4f2ea" stroke="${PK_INK}" stroke-width="2.5"/><g class="a-spin" style="transform-origin:24px 26px"><path d="M24,26V15" stroke="${PK_INK}" stroke-width="3" stroke-linecap="round"/></g><path d="M24,26l8,4" stroke="#c8392b" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="26" r="2" fill="${PK_INK}"/>`,
+        fish: (p) => `${PKG(p)}${SHADOW(24, 45, 14)}<path d="M8,26q10,-14 24,-12q8,2 10,10q-2,8 -10,10q-14,2 -24,-8z" fill="#b9b073" stroke="${PK_INK}" stroke-width="2.5"/><path d="M40,20l6,-6v20l-6,-6" fill="#d9d0a0" stroke="${PK_INK}" stroke-width="2"/><circle cx="15" cy="23" r="3" fill="#fbf7ee" stroke="${PK_INK}" stroke-width="1.5"/><circle cx="14.5" cy="23" r="1.3" fill="#1d130c"/><circle cx="26" cy="20" r="2" fill="#5e5a2e"/><circle cx="32" cy="27" r="2" fill="#5e5a2e"/>`,
+      });
+      // o = {t, end, l1, l2, top}: the hook headline, on screen from its first frame (no slide-in: the first frame must already read)
+      GameUI.C.hookPaper = {
+        html: (id, o) => `<div id="${id}" class="hkp" style="top:${o.top ?? 210}px">${PAP()}${TAPE("tl", -7)}${TAPE("tr", 6)}<i class="mg"></i><div class="in"><div class="l1">${o.l1}</div><div class="l2">${o.l2}<svg viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M2,6q25,-6 50,0t46,-2" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" vector-effect="non-scaling-stroke"/></svg></div></div></div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id);
+          tl.set(`#${id}`, { opacity: 1, rotation: -1.5 }, t0); el.querySelectorAll(".tape").forEach((tp) => (tp.style.opacity = 1));
+          tl.fromTo(el.querySelector(".l2 path"), { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.45, ease: "power1.inOut", immediateRender: false }, t0 + 0.5);
+          tl.fromTo(`#${id} .in`, { scale: 1.04 }, { scale: 1, duration: 0.35, ease: "power2.out", immediateRender: false }, t0);
+          if (o.end !== undefined) pkOut(tl, `#${id}`, o.t0abs + o.end);
+        },
+      };
+      // the signs card: a row listed in o.q gets a purple "?" instead of a cross while its answer is still open
+      { const base = GameUI.C.signs.html;
+        GameUI.C.signs.html = (id, o) => { let h = base(id, o); if (o.q) o.q.forEach((q, i) => { if (!q) return; const re = new RegExp(`(id="${id}-r${i}"[\\s\\S]*?<div class="stw )xx("[^>]*>\\s*<div class="stamp">)[✓✗](</div>)`); h = h.replace(re, `$1xx q$2?$3`); }); return h; }; }
+      document.head.insertAdjacentHTML("beforeend", `<style>.capbox.inner { color: #cfe6ff; font-style: italic; letter-spacing: 1px; text-shadow: 0 0 22px rgba(140,190,255,.75); } .capbox.inner .pap { background: #1a2436; opacity: .92; }</style>`);
