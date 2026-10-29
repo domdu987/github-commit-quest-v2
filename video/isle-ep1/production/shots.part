@@ -272,7 +272,7 @@
         actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "lieStill", eyes: "wide", mouth: "o" }], { ...NOBLINK, cu: false }),
           PW(660, 1700, 0.82, [{ t: 0, mode: "kneelOver", eyes: "wide", mouth: "o" }, { t: VA("lamp", vo("lamp", 1) - 0.4, 1) + 1.0, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: VA("lamp", vo("lamp", 1) - 0.4, 3), mode: "breathe", eyes: "worry", mouth: "o", opts: { period: 1.6, n: 1, t0: 1.2 } }], { flip: true, cu: false }),
           MK(900, 1680, 0.88, [{ t: 0, mode: "crouchLamp", eyes: "normal", mouth: "flat" }, { t: VA("lamp", vo("lamp", 1) - 0.4, 3) - 0.1, mode: "crouchLamp", eyes: "normal", mouth: "flat", look: -6 }], { flip: true, prop: "lamp", ...NOBLINK })],
-        bubbles: [bubAt(bub("lamp", 1, 640, 480, 800, { br: true, end: vo("lamp", 2) - 0.05 }), vo("lamp", 1) - 0.4, D("lamp")), bubAt(bub("lamp", 2, 640, 480, 800, { br: true, end: vo("lamp", 3) - 0.05 }), vo("lamp", 1) - 0.4, D("lamp")), bubAt(bub("lamp", 3, 640, 480, 800, { br: true }), vo("lamp", 1) - 0.4, D("lamp"))],
+        bubbles: [bubAt(bub("lamp", 1, 640, 480, 800, { br: true, end: vo("lamp", 2) - 0.05 }), vo("lamp", 1) - 0.4, D("lamp")), bubAt(bub("lamp", 2, 640, 480, 800, { br: true, end: vo("lamp", 3) - 0.05 }), vo("lamp", 1) - 0.4, D("lamp")), bubAt(bub("lamp", 3, 640, 480, 800, { br: true, fix: ["หายใจเมื่อไหร่", "หายใจ<br>เมื่อไหร่"] }), vo("lamp", 1) - 0.4, D("lamp"))],
         fx(tl, id, t0, L) { const a = vo("lamp", 1) - 0.4; put(L.glow, `<circle cx="880" cy="1520" r="360" fill="url(#iLampG)" class="lampf"/>`); Fx.flicker(tl, `#${id} .lampf`, t0, D("lamp") - a, 33); Fx.heart(tl, t0, D("lamp") - a, 0.6, 0.5); },
       });
 

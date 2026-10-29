@@ -145,7 +145,8 @@
         for (let n = 0; n + 1 < out.length; n++) out[n].end = Math.min(out[n].end, out[n + 1].t - 0.03);
         return out;
       }
-      const bub = (k, i, x, y, tail, o = {}) => ({ text: `“${SH[k].vo[i].cap.replace(/ \/ /g, o.br ? "<br>" : " ")}”`, x, y, tail, up: !!o.up, t: vo(k, i) - 0.05, end: o.end ?? Math.min(D(k) - 0.05, voEnd(k, i) + 0.35) });
+      // bub: a speech bubble for voice line i of shot k; o.fix = [from, to] forces a line break where the browser would split a Thai word
+      const bub = (k, i, x, y, tail, o = {}) => ({ text: `“${(o.fix ? SH[k].vo[i].cap.replace(o.fix[0], o.fix[1]) : SH[k].vo[i].cap).replace(/ \/ /g, o.br ? "<br>" : " ")}”`, x, y, tail, up: !!o.up, t: vo(k, i) - 0.05, end: o.end ?? Math.min(D(k) - 0.05, voEnd(k, i) + 0.35) });
       const shakeH = (t) => 7 * Math.sin(t * 2.3) + 3 * Math.sin(t * 7.1);
 
       // ---------- poses for this story ----------
