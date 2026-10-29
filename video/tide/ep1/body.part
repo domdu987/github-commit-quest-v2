@@ -1,0 +1,328 @@
+      // ---------- ทะเลลด EP.1 ทะเลถอย อย่าคอยดู ----------
+      // camera grammar: straight down on the wet sand as the sea pulls off the title (opener) → a fish and a child's hand (hook) →
+      // ยาย's shop clock spins back → the map, Bangkok to the Andaman coast → the village from the shallows (arrival, จูน live) →
+      // ตังค์ runs along the water → inside the shop (the account, the photo insert) → 08:00 the tower test, only ตาจุ่น listens →
+      // from the shop's eave the kids whisper about him → ยาย's board → the shadow screen (ละบูน) → the 3D map: the quake far out →
+      // a glass barely trembles → the sea draws back → the live on the seabed → wide eerie → the cross-section → ตาจุ่น's conch →
+      // the run up the steps → from the hill: the first wave is only a surge → the sea goes out again, farther → ยาย is missing →
+      // her slipper on the shop steps → the bay emptied, a white line → the choice → black → the evacuation-sign end card
+      const SUN = { from: "right", rim: "#fff6dc", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.3, op: 0.28 }, vol: false };
+      const SHOPL = { from: "right", rim: "#fff2d8", rimOp: 0.7, shade: "#2a2440", shadeOp: 0.3, cast: { len: 1.0, op: 0.26 }, vol: false };
+      const EERIE = { from: "right", rim: "#f4ecd0", rimOp: 0.6, shade: "#2a2a38", shadeOp: 0.34, cast: { len: 1.4, op: 0.24 }, vol: false };
+      const GMORN = { top: "#fff2d6", bottom: "#d6eef4", op: 0.14 }, GEERIE = { top: "#f2e2b4", bottom: "#7e9294", op: 0.24 };
+      const GSHOP = { top: "#fff1d8", bottom: "#e8dcc8", op: 0.1 }, GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const SRC = (L, tl, t0, dur, text) => TideUI.source(tl, L.light, t0, dur, { text });
+      // pieces still being built in the shared lib (fork D): stand-ins so the episode builds today
+      if (!Sets.tideShop) Sets.tideShop = (L, o) => Sets.tideBeach(L, { id: o.id, view: "sea", time: "morning", frame: "eave", hc: 5, hz: 520, shore: 11 });
+      ["clockBack", "wipe", "cupShake", "surge", "hillSea", "reach"].forEach((f) => { if (!Tide[f]) Tide[f] = () => {}; });
+      // a small screen-space chip (time, place) in the beach-world look
+      const chip = (L, tl, t0, dur, text, o = {}) => {
+        const x = o.x ?? 540, y = o.y ?? 190, w = 24 * text.length + 70, id = `chip${Math.round(t0 * 100)}`;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}"><rect x="${-w / 2 + 5}" y="-30" width="${w}" height="66" rx="33" fill="#0a1a24" opacity=".3"/>
+          <rect x="${-w / 2}" y="-36" width="${w}" height="66" rx="33" fill="#fffaf0" stroke="#2a2420" stroke-width="4"/>
+          <circle cx="${-w / 2 + 36}" cy="-3" r="17" fill="#e8823a" stroke="#2a2420" stroke-width="3"/><path d="M${-w / 2 + 36},-13v10l7,5" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <text x="${-w / 2 + 64}" y="9" font-family="Kanit" font-weight="800" font-size="32" fill="#1e2a3a">${text}</text></g></g>`);
+        const g = document.getElementById(id);
+        tl.set(g, { opacity: 0 }, 0);
+        tl.fromTo(g, { opacity: 0, scale: 0.4, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0);
+        tl.to(g, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + dur - 0.25);
+      };
+      // a name tag that pops near someone (screen space)
+      const tag = (L, tl, t0, dur, x, y, text, c = "#e8823a") => {
+        const id = `tag${Math.round(t0 * 100)}`, w = 26 * text.length + 64;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}"><rect x="${-w / 2 + 4}" y="-26" width="${w}" height="58" rx="29" fill="#0a1a24" opacity=".3"/>
+          <rect x="${-w / 2}" y="-32" width="${w}" height="58" rx="29" fill="#fffaf0" stroke="#2a2420" stroke-width="3"/><circle cx="${-w / 2 + 30}" cy="-3" r="14" fill="${c}" stroke="#2a2420" stroke-width="2.4"/>
+          <text x="${-w / 2 + 54}" y="8" font-family="Kanit" font-weight="800" font-size="30" fill="#1e2a3a">${text}</text></g></g>`);
+        const g = document.getElementById(id);
+        tl.set(g, { opacity: 0 }, 0);
+        tl.fromTo(g, { opacity: 0, scale: 0.3, rotation: -8, svgOrigin: "0 0" }, { opacity: 1, scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0);
+        tl.to(g, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2);
+      };
+
+      // the time-left chip (UNESCO: "only seconds or, at best few minutes"): a bar that drains while it's on screen
+      const timeLeft = (L, tl, t0, dur) => {
+        const id = `tl${Math.round(t0 * 100)}`;
+        put(L.light, `<g transform="translate(540,250)"><g id="${id}"><rect x="-305" y="-52" width="620" height="112" rx="28" fill="#0a1a24" opacity=".3"/>
+          <rect x="-310" y="-58" width="620" height="112" rx="28" fill="#fffaf0" stroke="#2a2420" stroke-width="4"/>
+          <text x="0" y="-12" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#1e2a3a">อาจเหลือเวลาแค่ <tspan fill="#d8312a">ไม่กี่นาที</tspan></text>
+          <rect x="-270" y="12" width="540" height="22" rx="11" fill="#e8e0d0" stroke="#2a2420" stroke-width="3"/><rect id="${id}-bar" x="-270" y="12" width="540" height="22" rx="11" fill="#e8823a"/></g></g>`);
+        const g = document.getElementById(id);
+        tl.set(g, { opacity: 0 }, 0);
+        tl.fromTo(g, { opacity: 0, scale: 0.5, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-bar`, { attr: { width: 540 } }, { attr: { width: 60 }, duration: dur - 0.3, ease: "none", immediateRender: false }, t0 + 0.3);
+        tl.fromTo(`#${id}-bar`, { attr: { fill: "#e8823a" } }, { attr: { fill: "#d8312a" }, duration: dur - 0.3, ease: "none", immediateRender: false }, t0 + 0.3);
+        tl.to(g, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + dur - 0.25);
+      };
+
+      // ---------- 1. opener: the sea pulls back off the title pressed into wet sand ----------
+      add("open", {
+        set: "tideSand", setOpts: { id: "sd0", title: "ทะเลลด", sub: "EP.1" }, dark: 0, blur: { fg: 0 }, light: false, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.1, 540, 960) }, { t: D("open"), glide: D("open"), ...fr(540, 990, 1.0, 540, 960) }] },
+        captions: caps("open"),
+        fx(tl, id, t0) { Tide.sandTitle(tl, "sd0", t0, D("open"), { from: 0.05, to: 0.95 }); },
+      });
+      // ---------- 2. hook: a fish flops on the sand, a child's hand reaches for it ----------
+      add("hook", {
+        set: "tideSand", setOpts: { id: "sd1", title: "\u00a0", sub: "\u00a0", hand: true, seed: 4 }, dark: 0, blur: { fg: 0 }, light: false, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(330, 1240, 1.9, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(330, 1250, 2.15, 540, 1000) }] },
+        captions: caps("hook"),
+        fx(tl, id, t0) { Tide.sandTitle(tl, "sd1", t0, D("hook"), { from: 0.98, to: 1 }); Tide.reach(tl, "sd1", t0 + 0.2, D("hook") - 0.2); },
+      });
+      // ---------- 3. ยาย's shop clock spins back two hours ----------
+      add("clock", {
+        set: "tideShop", setOpts: { id: "sh0", view: "room" }, dark: 0, blur: { sky: 2, far: 2 }, light: SHOPL, grade: GSHOP,
+        cam: { keys: [{ t: 0, ...fr(540, 760, 1.6, 540, 900) }, { t: D("clock"), glide: D("clock"), ...fr(540, 760, 1.75, 540, 900) }] },
+        captions: caps("clock"),
+        fx(tl, id, t0) { Tide.clockBack(tl, "sh0", t0 + 0.1, D("clock") - 0.3, { hours: 2 }); },
+      });
+      // ---------- 4. the map: Bangkok → the Andaman coast ----------
+      const MP = { x: 90, y: 300, s: 1 }, PB = Maps.P(100.52, 13.75), PK = Maps.P(98.28, 8.65);
+      const mw = (p) => [MP.x + p[0] * MP.s, MP.y + p[1] * MP.s], WB = mw(PB), WK = mw(PK);
+      add("map", {
+        set: "mapTH", setOpts: { id: "mp", ...MP, region: [98.4, 8.9, 170, "อันดามัน"], route: [[100.52, 13.75], [99.95, 13.1], [99.8, 12.0], [99.18, 10.5], [98.63, 9.96], [98.35, 8.87], [98.28, 8.65]],
+          from: "กรุงเทพฯ", to: "บ้านแหลมหอย", vehicle: "van", toIcon: TideCast.duckRing(0, -14, 0.11, {}), labDx: [40, -30] },
+        dark: 0, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr((WB[0] + WK[0]) / 2, (WB[1] + WK[1]) / 2, Math.min(1.3, 1150 / Math.abs(WK[1] - WB[1])), 540, 900) },
+          { t: D("map") - 0.2, glide: 1.4, ease: "drop", ...fr(WK[0], WK[1], 2.7, 540, 880) }] },
+        captions: caps("map"),
+        fx(tl, id, t0) { Maps.route(tl, "mp", t0, { go: [0.5, D("map") - 1.6] }); },
+      });
+      // ---------- 5. arrival: the village from the shallows; จูน goes live ----------
+      add("arrive", {
+        set: "tideBeach", setOpts: { id: "lv1", view: "land", time: "morning" }, dark: 0, blur: { sky: 1, far: 1.5, mid: 1, fg: 4 }, light: SUN, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(540, 1500, 1.12, 540, 1120) }, { t: D("arrive"), glide: D("arrive"), ...fr(520, 1520, 1.2, 540, 1120) }] },
+        actors: [
+          A("juneStick", 380, 1880, 0.86, [{ t: 0, mode: "film", eyes: "normal", mouth: "smile" }], { talk: [TALK("arrive", 0, "o")] }),
+          A("tangRing", 700, 1900, 0.66, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "laugh" }], { flip: true }),
+        ],
+        captions: caps("arrive", undefined, { quote: true }),
+        fx(tl, id, t0) { Tide.land(tl, "lv1", t0, D("arrive")); },
+      });
+      // ---------- 6. ตังค์ in his duck ring runs along the water's edge ----------
+      add("tang", {
+        set: "tideBeach", setOpts: { id: "sv1", view: "sea", time: "morning", sea: 0, boats: 2, fish: 0 }, dark: 0, blur: { sky: 1, far: 1 }, light: SUN, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 1.0, 540, 960) }, { t: D("tang"), glide: D("tang"), ...fr(600, 1300, 1.06, 540, 960) }] },
+        actors: [A("tangRing", 180, 1560, 0.6, [{ t: 0, mode: "run", eyes: "wide", mouth: "laugh" }], { moveTo: { x: 820, y: 1560, dur: D("tang"), ease: "none" }, talk: [TALK("tang", 0, "laugh")] })],
+        captions: caps("tang", undefined, { quote: true }),
+        fx(tl, id, t0) { Tide.sea(tl, "sv1", t0, D("tang"), { to: 0, at: 99 }); },
+      });
+      // ---------- 7. in the shop: จูน sets up "ยายพร❤️"; ยาย squints at the phone ----------
+      add("acct", {
+        set: "tideShop", setOpts: { id: "sh1", view: "room" }, dark: 0, blur: { sky: 2, far: 2 }, light: SHOPL, grade: GSHOP,
+        cam: { keys: [{ t: 0, ...fr(560, 1400, 1.25, 540, 1100) }, { t: D("acct"), glide: D("acct"), ...fr(560, 1400, 1.32, 540, 1100) }] },
+        actors: [
+          A("yaiTide", 700, 1720, 0.86, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("acct", 1, "o")] }),
+          A("junePhone", 420, 1740, 0.88, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "smile" }], { talk: [TALK("acct", 0, "o")] }),
+        ],
+        captions: caps("acct", undefined, { quote: true }),
+        fx(tl, id, t0, L) { tag(L, tl, t0 + vo("acct", 0) + 1.0, D("acct") - vo("acct", 0) - 1.0, 700, 560, "ยายพร❤️", "#e84a7a"); },
+      });
+      // ---------- 8. insert: ยาย wipes the old photo; the clipping beside it ----------
+      add("photo", {
+        set: "tideShop", setOpts: { id: "sh2", view: "wall" }, dark: 0, blur: {}, light: false, grade: GSHOP,
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 900) }, { t: D("photo"), glide: D("photo"), ...fr(540, 900, 1.08, 540, 900) }] },
+        captions: caps("photo", undefined, { quote: true }),
+        fx(tl, id, t0) { Tide.wipe(tl, "sh2", t0 + 0.1, D("photo") - 0.2); },
+      });
+      // ---------- 9. 08:00 Wednesday: the tower's test tone; only ตาจุ่น stops to listen ----------
+      add("test", {
+        set: "tideBeach", setOpts: { id: "lv2", view: "land", time: "morning" }, dark: 0, blur: { sky: 1, far: 1.5, mid: 1, fg: 4 }, light: SUN, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(860, 1150, 1.25, 540, 900) }, { t: D("test"), glide: D("test"), ...fr(700, 1380, 1.25, 540, 1050) }] },
+        actors: [
+          A("taJunConch", 600, 1880, 0.84, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 1.4, mode: "shadeEyes", eyes: "worry", mouth: "flat" }], { flip: true }),
+          A("junePhone", 420, 1960, 0.66, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "smile" }]),
+        ],
+        captions: caps("test"),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "lv2", t0, D("test"), { siren: true });
+          chip(L, tl, t0 + 0.2, D("test") - 0.2, "08:00 · วันพุธ");
+          PopUI.sfx(tl, L.light, t0 + 0.4, 1.6, "ปู๊ด… ทดสอบ…", 760, 520, { rot: -4 });
+          SRC(L, tl, t0 + 0.6, D("test") - 0.6, "ที่มา: ปภ. ผ่าน Thai PBS (18 ธ.ค. 67)");
+        },
+      });
+      // ---------- 10. from under ยาย's eave: ตังค์ whispers; ตาจุ่น turns and looks back ----------
+      add("rumor", {
+        set: "tideBeach", setOpts: { id: "sv2", view: "sea", time: "morning", sea: 0, boats: 2, fish: 0, hc: 5, hz: 520, shore: 24, frame: "eave" }, dark: 0, blur: { sky: 1, far: 1, fg: 2 }, light: SUN, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.12, 540, 1040) }, { t: D("rumor"), glide: D("rumor"), ...fr(600, 1320, 1.22, 540, 1040) }] },
+        actors: [
+          A("taJun", 760, 1270, 0.4, [{ t: 0, mode: "shadeEyes", eyes: "normal", mouth: "flat" }, { t: D("rumor") - 1.4, mode: "idle", eyes: "wide", mouth: "flat" }], { flip: false }),
+          A("tang", 300, 2080, 1.05, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true, talk: [TALK("rumor", 0, "o")] }),
+        ],
+        captions: caps("rumor", undefined, { quote: true }),
+        fx(tl, id, t0) { Tide.sea(tl, "sv2", t0, D("rumor"), { to: 0, at: 99 }); },
+      });
+      // ---------- 11. ยาย's board: rule 1; จูน rolls her eyes ----------
+      add("rule", {
+        set: "tideBeach", setOpts: { id: "lv3", view: "land", time: "morning" }, dark: 0.1, blur: { sky: 6, far: 6, mid: 6, set: 6, fg: 10 }, light: SUN, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(700, 1520, 1.4, 540, 1100) }] },
+        actors: [A("yaiTide", 880, 2060, 0.92, [{ t: 0, mode: "wagFinger", eyes: "normal", mouth: "flat" }], { flip: true, talk: [TALK("rule", 0, "o")] })],
+        captions: caps("rule", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          TideUI.rule(tl, L.light, t0 + 0.1, D("rule") - 0.1, { active: 0, done: [], y: 300 });
+          SRC(L, tl, t0 + 0.8, D("rule") - 0.8, "ที่มา: กรมป้องกันและบรรเทาสาธารณภัย");
+        },
+      });
+      // ---------- 12. the shadow screen: ละบูน, the seven-layer wave; elders lead the children uphill ----------
+      add("legend", {
+        set: "tideLegend", setOpts: { id: "lg", title: "ละบูน · คลื่นยักษ์เจ็ดชั้น" }, dark: 0, light: false, blur: { sky: 0, far: 0 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.004 } }] },
+        captions: caps("legend"),
+        fx(tl, id, t0, L) {
+          TideUI.legendAnim(tl, "lg", t0, D("legend"), { recede: [0.4, 2.4], point: [2.6, 3.6], run: [3.8, 7.6], wave: 6.4 });
+          SRC(L, tl, t0 + 0.6, D("legend") - 0.6, "ที่มา: ศูนย์มานุษยวิทยาสิรินธร · UNESCO");
+        },
+      });
+      // ---------- 13. the 3D map: a quake under the sea, the rings spread toward the coast ----------
+      add("quake", {
+        set: "tideMap3d", setOpts: { id: "tm" }, dark: 0, blur: {}, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960, { drift: { s: 0 } }) }] },
+        captions: caps("quake"),
+        fx(tl, id, t0, L) { TideMap.play(tl, L, id, t0, { dur: D("quake"), quakeAt: 0.3, ringsAt: 0.6, coastAt: D("quake") - 0.5, pinAt: D("quake") - 1.2 }); },
+      });
+      // ---------- 14. a glass of water on ยาย's table barely trembles ----------
+      add("cup", {
+        set: "tideShop", setOpts: { id: "sh3", view: "table" }, dark: 0, blur: { sky: 4, far: 4 }, light: false, grade: GSHOP,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }, { t: D("cup"), glide: D("cup"), ...fr(540, 1000, 1.08, 540, 960) }] },
+        captions: caps("cup"),
+        fx(tl, id, t0, L) { Tide.cupShake(tl, "sh3", t0, D("cup"), { amp: 0.3 }); SRC(L, tl, t0 + 0.4, D("cup") - 0.4, "ที่มา: NOAA · USGS"); },
+      });
+      // ---------- 15. the sea draws back; boats tilt onto the mud ----------
+      add("recede", {
+        set: "tideBeach", setOpts: { id: "sv3", view: "sea", time: "morning", sea: 0, boats: 2, fish: 14 }, dark: 0, blur: { sky: 1, far: 1 }, light: false, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 960) }, { t: D("recede"), glide: D("recede"), ...fr(540, 1060, 1.08, 540, 960) }] },
+        captions: caps("recede"),
+        fx(tl, id, t0) { Tide.recede(tl, "sv3", t0, D("recede"), 0.55); },
+      });
+      // ---------- 16. ตังค์ runs out with his bucket; จูน's live from the beach ----------
+      add("fish", {
+        set: "tideBeach", setOpts: { id: "sv4", view: "sea", time: "morning", sea: 0.55, boats: 2, fish: 14, people: 6 }, dark: 0, blur: { sky: 1, far: 1 }, light: SUN, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 1.05, 540, 960) }] },
+        shake: (t) => ({ x: 4 * Math.sin(t * 3.1) + 2 * Math.sin(t * 7.7), y: 3 * Math.sin(t * 2.3), r: 0.4 * Math.sin(t * 1.7) }),
+        actors: [A("tangBucket", 560, 1420, 0.5, [{ t: 0, mode: "run", eyes: "wide", mouth: "laugh" }], { flip: true, moveTo: { x: 640, y: 1330, dur: D("fish"), ease: "none" }, talk: [TALK("fish", 0, "laugh")] })],
+        captions: caps("fish", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          Tide.sea(tl, "sv4", t0, D("fish"), { to: 0.62, at: 0, len: D("fish"), walkAt: 0 });
+          TideUI.live(tl, L.light, t0, D("fish"), { name: "จูน ทะเลใส", title: "ทะเลหายไปไหน!?", viewers: [120, 4870],
+            comments: [[0.3, "ฟ้าใส99", "ทะเลไปไหนอะ"], [1.0, "boyza", "ปลาเต็มหาด 55555"], [1.8, "ยายพร❤️", "จูน! กลับขึ้นมาเดี๋ยวนี้"], [2.6, "นนท์", "ไวรัลแน่นอน"], [3.3, "ปลาทู", "ระวังนะ"]] });
+        },
+      });
+      // ---------- 17. wide, from under the eave: people walk out onto the seabed ----------
+      add("walk", {
+        set: "tideBeach", setOpts: { id: "sv5", view: "sea", time: "eerie", sea: 0.62, boats: 2, people: 12, hc: 5, hz: 520, shore: 11, frame: "eave" }, dark: 0, blur: { sky: 1, fg: 2 }, light: false, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("walk"), glide: D("walk"), ...fr(540, 930, 1.05, 540, 960) }] },
+        captions: caps("walk"),
+        fx(tl, id, t0, L) { Tide.sea(tl, "sv5", t0, D("walk"), { to: 0.86, at: 0, len: D("walk"), walkAt: 0, birds: "flee" }); SRC(L, tl, t0 + 0.4, D("walk") - 0.4, "ที่มา: NOAA · UNESCO"); },
+      });
+      // ---------- 18. the cross-section: the trough reaches the shore first, the water draws back ----------
+      add("know1", {
+        set: "tideSection", setOpts: { id: "sc1" }, dark: 0, blur: {}, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960, { drift: { s: 0 } }) }] },
+        captions: caps("know1"),
+        fx(tl, id, t0, L) { TideMap.section(tl, "sc1", t0, D("know1"), { k0: 0.7, k1: 0.93, ease: "power1.inOut" }); SRC(L, tl, t0 + 0.4, D("know1") - 0.4, "ที่มา: กรมอุตุนิยมวิทยา"); },
+      });
+      // ---------- 19. the cross-section: as fast as a jet out at sea; at the shore still faster than you can run ----------
+      add("know2", {
+        set: "tideSection", setOpts: { id: "sc2" }, dark: 0, blur: {}, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960, { drift: { s: 0 } }) }] },
+        captions: caps("know2"),
+        fx(tl, id, t0, L) { TideMap.section(tl, "sc2", t0, D("know2"), { k0: 0.16, k1: 0.98 }); SRC(L, tl, t0 + 0.4, D("know2") - 0.4, "ที่มา: กรมอุตุนิยมวิทยา · NOAA"); },
+      });
+      // ---------- 20. back on the beach: see the sea drop fast, go up now; ตาจุ่น lifts the conch ----------
+      add("know3", {
+        set: "tideBeach", setOpts: { id: "sv6", view: "sea", time: "eerie", sea: 0.86, boats: 2, people: 10 }, dark: 0, blur: { sky: 1, far: 1 }, light: EERIE, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 1.0, 540, 960) }, { t: D("know3"), glide: D("know3"), ...fr(620, 1420, 1.25, 540, 1040) }] },
+        actors: [A("taJunConch", 760, 1780, 0.84, [{ t: 0, mode: "shadeEyes", eyes: "worry", mouth: "flat" }, { t: D("know3") - 1.2, mode: "pointUp", eyes: "wide", mouth: "flat" }], { flip: true })],
+        captions: caps("know3"),
+        fx(tl, id, t0, L) {
+          Tide.sea(tl, "sv6", t0, D("know3"), { to: 0.9, at: 0, len: D("know3") });
+          timeLeft(L, tl, t0 + 0.3, D("know3") - 0.3);
+          SRC(L, tl, t0 + 0.3, D("know3") - 0.3, "ที่มา: ปภ. · NOAA · UNESCO");
+        },
+      });
+      // ---------- 21. ตาจุ่น blows the conch and shouts; a tourist laughs ----------
+      add("conch", {
+        set: "tideBeach", setOpts: { id: "sv7", view: "sea", time: "eerie", sea: 0.9, boats: 2, people: 10 }, dark: 0, blur: { sky: 1, far: 1, mid: 1 }, light: EERIE, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(560, 1500, 1.35, 540, 1100) }, { t: D("conch"), glide: D("conch"), ...fr(560, 1500, 1.45, 540, 1100) }] },
+        actors: [A("taJunBlow", 560, 1900, 0.95, [{ t: 0, mode: "blowConch", eyes: "closed", mouth: "o" }, { t: vo("conch", 0), mode: "pointUp", eyes: "wide", mouth: "scream" }], { flip: true, talk: [TALK("conch", 0, "scream")] })],
+        captions: caps("conch", undefined, { quote: true }),
+        fx(tl, id, t0, L) { Tide.sea(tl, "sv7", t0, D("conch"), { to: 0.92, at: 0, len: D("conch") }); PopUI.sfx(tl, L.light, t0 + 0.2, 1.2, "ปู้ววว!", 300, 700, { rot: -6 }); },
+      });
+      // ---------- 22. จูน grabs ตังค์; the duck ring drops; they run for the steps ----------
+      add("run", {
+        set: "tideBeach", setOpts: { id: "lv4", view: "land", time: "eerie" }, dark: 0, blur: { sky: 1, far: 1.5, mid: 1, fg: 4 }, light: EERIE, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(420, 1560, 1.2, 540, 1120) }, { t: D("run"), glide: D("run"), ...fr(300, 1500, 1.3, 540, 1100) }] },
+        shake: (t) => ({ x: 5 * Math.sin(t * 9), y: 4 * Math.sin(t * 13), r: 0.5 * Math.sin(t * 5) }),
+        actors: [
+          A("june", 620, 1890, 0.84, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 140, y: 1840, dur: D("run"), ease: "power1.in" }, talk: [TALK("run", 0, "scream")] }),
+          A("tang", 760, 1920, 0.64, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: 300, y: 1870, dur: D("run"), ease: "power1.in" }, talk: [TALK("run", 1, "scream")] }),
+        ],
+        captions: caps("run", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "lv4", t0, D("run"), { siren: false });
+          put(L.set, `<g transform="translate(820,1900)"><g id="lv4-duck">${TideCast.duckRing(0, 0, 0.5, {})}</g></g>`);
+          tl.fromTo("#lv4-duck", { x: -40, y: -60, rotation: -20, svgOrigin: "0 0" }, { x: 30, y: 0, rotation: 14, svgOrigin: "0 0", duration: 0.6, ease: "bounce.out", immediateRender: false }, t0 + vo("run", 1));
+        },
+      });
+      // ---------- 23. the evacuation steps up the hill ----------
+      add("hill", {
+        set: "tideHill", setOpts: { id: "th1", time: "morning", sea: 0.9 }, dark: 0, blur: { sky: 1, far: 1, fg: 4 }, light: SUN, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 1120, 1.15, 540, 960) }, { t: D("hill"), glide: D("hill"), ...fr(540, 1060, 1.22, 540, 960) }] },
+        actors: [
+          A("june", 470, 1830, 0.7, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 560, y: 1560, dur: D("hill"), ease: "none" } }),
+          A("tang", 600, 1880, 0.55, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 660, y: 1640, dur: D("hill"), ease: "none" } }),
+        ],
+        fx(tl, id, t0) { Tide.land(tl, "th1", t0, D("hill"), { siren: true }); },
+      });
+      // ---------- 24. from the hill: the first wave is only a fast-rising surge round the shop; people laugh and walk back down ----------
+      add("wave1", {
+        set: "tideHill", setOpts: { id: "th2", time: "morning", sea: 0.9 }, dark: 0, blur: { sky: 1, far: 1, fg: 4 }, light: SUN, grade: GMORN,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }, { t: D("wave1"), glide: D("wave1"), ...fr(540, 1040, 1.12, 540, 960) }] },
+        captions: caps("wave1", undefined, { quote: true }),
+        fx(tl, id, t0) { Tide.land(tl, "th2", t0, D("wave1"), { siren: true }); Tide.surge(tl, "th2", t0 + 0.2, D("wave1") - 0.4, { to: 1 }); },
+      });
+      // ---------- 25. ตังค์ stares: the sea draws back again, farther than before ----------
+      add("again", {
+        set: "tideHill", setOpts: { id: "th3", time: "eerie", sea: 0.6 }, dark: 0, blur: { sky: 1, far: 1, fg: 4 }, light: EERIE, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 1200, 1.2, 540, 1000) }, { t: D("again"), glide: D("again"), ...fr(540, 1160, 1.3, 540, 1000) }] },
+        actors: [A("tang", 360, 1900, 0.8, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { talk: [TALK("again", 0, "o")] })],
+        captions: caps("again", undefined, { quote: true }),
+        fx(tl, id, t0) { Tide.land(tl, "th3", t0, D("again"), { siren: true }); Tide.hillSea(tl, "th3", t0, D("again"), { from: 0.6, to: 1 }); },
+      });
+      // ---------- 26. จูน looks round: ยาย is not on the hill ----------
+      add("yai", {
+        set: "tideHill", setOpts: { id: "th4", time: "eerie", sea: 1 }, dark: 0.05, blur: { sky: 3, far: 3, mid: 3, set: 2, fg: 4 }, light: EERIE, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 1500, 1.5, 540, 1100) }] },
+        actors: [A("june", 540, 2000, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 1.0, mode: "idle", eyes: "worry", mouth: "scream" }], { flip: true, talk: [TALK("yai", 0, "o")] })],
+        captions: caps("yai", undefined, { quote: true }),
+        fx(tl, id, t0) { Tide.land(tl, "th4", t0, D("yai"), { siren: true }); },
+      });
+      // ---------- 27. below: the shop door open, one of ยาย's slippers on the steps ----------
+      add("clue", {
+        set: "tideShop", setOpts: { id: "sh4", view: "door" }, dark: 0.1, blur: { sky: 2, far: 2 }, light: false, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }, { t: D("clue"), glide: D("clue"), ...fr(540, 1080, 1.15, 540, 960) }] },
+      });
+      // ---------- 28. wide: the bay drawn back, a white line on the horizon ----------
+      add("close", {
+        set: "tideHill", setOpts: { id: "th5", time: "eerie", sea: 1 }, dark: 0.05, blur: { sky: 1, far: 1, fg: 4 }, light: false, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 960) }, { t: D("close"), glide: D("close"), ...fr(540, 760, 1.15, 540, 900) }] },
+        captions: caps("close"),
+        fx(tl, id, t0) { Tide.land(tl, "th5", t0, D("close"), { siren: true }); Tide.hillSea(tl, "th5", t0, D("close"), { from: 1, to: 1 }); },
+      });
+      // ---------- 29. the choice, pulled toward going down for ยาย → black ----------
+      add("choice", {
+        set: "tideHill", setOpts: { id: "th6", time: "eerie", sea: 1 }, dark: 0.25, blur: { sky: 6, far: 6, mid: 6, set: 6, fg: 10 }, light: false, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) {
+          const down = `<circle r="70" fill="#e8823a" stroke="#2a2420" stroke-width="5"/><path d="M-30,-30L30,30M30,30V0M30,30H0" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+          TideUI.choice(tl, L.light, t0, D("choice"), { q: "จะทำยังไง?", a: { text: "วิ่งลงไปตามยาย", icon: down }, b: { text: "ตะโกนเรียกจากบนเขา", icon: "recede" }, secs: 3, pull: "a", at: D("choice") - 1.3 });
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.12);
+        },
+      });
+      // ---------- 30. the end card: the evacuation sign with "ตอนที่ 2 · คลื่นแรกไป" ----------
+      add("end", {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        fx(tl, id, t0, L) { tl.set("#black", { opacity: 0 }, t0); TideUI.endCard(tl, L.light, t0, D("end"), { l1: "ตอนที่ 2", l2: "คลื่นแรกไป" }); },
+      });

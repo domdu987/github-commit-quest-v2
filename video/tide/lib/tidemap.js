@@ -22,7 +22,7 @@
 //                                  from above), deep plain → continental slope → shelf → beach → a village with palms and huts → a
 //                                  hill with the blue evacuation-route sign; a longtail boat moored near the shore; the 2.5D speed
 //                                  coins live in L.light (#<id>-coins). Sky, sun, clouds and karst silhouettes go in L.sky / L.far.
-//   TideMap.section(tl, id, t0, dur, o) the mechanism, all within dur (k = 0..1): the seafloor jolts at the fault (k .10, a star, a
+//   TideMap.section(tl, id, t0, dur, o) the mechanism, all within dur (k = 0..1; o.k0 / o.k1 play only part of it, o.ease): the seafloor jolts at the fault (k .10, a star, a
 //                                  shake, rings on the strip), the wave pair leaves (trough in front, crest behind) and races over
 //                                  the deep plain (jet coin, k .16 → crest at x 2150), slows on the shelf (car coin, → k .90), the
 //                                  trough reaches the shore and the sea draws back (exposed mud, flopping fish, the boat tilts on
@@ -971,9 +971,9 @@
   function section(tl, id, t0, dur, o = {}) {
     const inst = SEC[id]; if (!inst) return;
     inst.labels = o.labels || {};
-    const px = { k: 0 };
-    tl.fromTo(px, { k: 0 }, { k: 1, duration: dur, ease: "none", immediateRender: false, onUpdate: () => sectionFrame(inst, px.k) }, t0);
-    sectionFrame(inst, 0);
+    const k0 = o.k0 ?? 0, k1 = o.k1 ?? 1, px = { k: k0 };
+    tl.fromTo(px, { k: k0 }, { k: k1, duration: dur, ease: o.ease || "none", immediateRender: false, onUpdate: () => sectionFrame(inst, px.k) }, t0);
+    sectionFrame(inst, k0);
   }
 
   Object.assign(Sets, { tideMap3d, tideSection });
