@@ -57,10 +57,10 @@
         ui: [{ type: "counter", t: vo("hook", 1) - 0.2, end: D("hook") - 0.05, label: "ตบหลังไปแล้ว", icon: "people", unit: "ครั้ง", keys: [{ t: vo("hook", 1), v: 1 }, { t: vo("hook", 2), v: 11 }], alarm: vo("hook", 2), right: true, top: 150 }],
         fx(tl, id, t0, L) {
           tableBefore(id, L, Estate.TABLEF(-300, 900, 1500, { seed: 43 }), 99);
-          // our hand, open, swinging in onto her back from the right of frame (she faces left)
-          put(L.act, `<g id="hk-hand" transform="translate(395,1360) rotate(-58) scale(0.3)">${Hand.open({ skin: "#d9a57a", sleeve: "#5f7386" })}</g>`);
+          // our hand, open, swinging in onto her back from the right of frame (she faces left); drawn behind her, so the palm lands on her back, not on her
+          tableBefore(id, L, `<g id="hk-hand" transform="translate(404,1412) rotate(-50) scale(0.23)">${Hand.open({ skin: "#d9a57a", sleeve: "#5f7386" })}</g>`, 0);
           const S = vo("hook", 1) - 0.1, X = t0 + vo("hook", 2), per = 0.3, n = Math.floor((vo("hook", 2) - S) / per);
-          const h = { k: 0 }, hand = () => { const g = document.getElementById("hk-hand"); if (!g) return; const f = h.k % 1, k = f < 0.3 ? f / 0.3 : 1 - (f - 0.3) / 0.7; g.setAttribute("transform", `translate(${(395 - 46 * k).toFixed(1)},${(1356 + 8 * k).toFixed(1)}) rotate(${(-56 + 12 * k).toFixed(1)}) scale(0.3)`); };
+          const h = { k: 0 }, hand = () => { const g = document.getElementById("hk-hand"); if (!g) return; const f = h.k % 1, k = f < 0.3 ? f / 0.3 : 1 - (f - 0.3) / 0.7; g.setAttribute("transform", `translate(${(404 - 44 * k).toFixed(1)},${(1410 + 6 * k).toFixed(1)}) rotate(${(-48 + 12 * k).toFixed(1)}) scale(0.23)`); };
           tl.set("#hk-hand", { opacity: 0 }, t0); tl.set("#hk-hand", { opacity: 1 }, t0 + S);
           tl.to(h, { k: n, duration: n * per, ease: "none", immediateRender: false, onUpdate: hand }, t0 + S);
           const pj = jig(id, 0); for (let i = 0; i < n; i++) tl.fromTo(pj, { x: 0 }, { x: -4, duration: 0.06, yoyo: true, repeat: 1, immediateRender: false }, t0 + S + i * per + 0.09);
@@ -354,7 +354,7 @@
       add("next", {
         set: "dormNight", setOpts: { id: "nx", radioOn: true }, dark: 0.75, blur: { far: 6, set: 6 },
         cam: { keys: [{ t: 0, ...fr(560, 1100, 1.0, 540, 960), drift: { s: 0.03 } }] },
-        ui: [{ type: "nextCard", t: 0.3, big: "ตอนที่ 8", tag: "ยาตู้เย็น… ไฟดับแล้ว ยายังใช้ได้มั้ย", top: 150 }, { type: "ledger", t: 0.6, day: "เหลือ 92 วัน", rows: [["วิทยุนับถอยหลัง", "93 → 92"], ["คน", "5 = 5"], ["ปั้น", "ภาระ", "warn"], ["ภู", "ผ้าแดง · คนของนิคม", "warn"], ["ยาเจ๊หงส์", "ตู้เย็นนิคม", "warn"]], six: "", next: "ยา · ทางออก", top: 640 }],
+        ui: [{ type: "nextCard", t: 0.3, big: "ตอนที่ 8", tag: "ยาตู้เย็น… ไฟดับแล้ว ยายังใช้ได้มั้ย", top: 150 }, { type: "ledger", t: 0.6, day: "เหลือ 92 วัน", rows: [["วิทยุนับถอยหลัง", "93 → 92"], ["คน", "5 = 5"], ["ปั้น", "ภาระ", "warn"], ["ภู", "ผ้าแดง · คนของนิคม", "warn"], ["ยาเจ๊หงส์", "ตู้เย็นนิคม", "warn"]], six: "", next: "ยา · ทางออก", cta: "กดติดตาม · <em>อ่านหน้าถัดไป</em> ตอนที่ 8", top: 640 }],
         fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 0.3 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 1 }, t0 + 0.45); Fx.glitch(tl, `#${id}`, t0 + 1.9, 0.12, 10, 91); Fx.heart(tl, t0 + 1.2, D("next") - 1.2, 0.7, 0.35); },
       });
 
