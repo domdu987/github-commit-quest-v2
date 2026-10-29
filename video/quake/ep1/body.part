@@ -23,9 +23,10 @@
       const ETA = (k) => ({ eta: [etaAt(SH[k].start), etaAt(SH[k].start + D(k))] });
       const HUD = (k, L, tl, t0, o = {}) => QkUI.eta(tl, L.light, t0, D(k), { ...ETA(k), pop: o.pop ?? false, ...o });
       // the room seen from the door, inside it, and under the table
-      const ROOM = (id, o = {}) => ({ set: "qkRoom", setOpts: { id, ...(o.opts || {}) }, dark: o.dark ?? 0, blur: o.blur || { sky: 2, far: 3, mid: 2 }, light: o.light || INDOOR, grade: o.grade || GROOM });
+      const WINLIGHT = { from: "right", rim: "#fff4dc", rimOp: 0.75, shade: "#2a2440", shadeOp: 0.3, cast: { len: 1.1, op: 0.26 }, vol: false };
+      const ROOM = (id, o = {}) => ({ set: "qkRoom", setOpts: { id, ...(o.opts || {}) }, dark: o.dark ?? 0, blur: o.blur || { sky: 2, far: 3, mid: 2 }, light: o.light || WINLIGHT, grade: o.grade || GROOM });
       const TABLE_TOP = 1358, FLOOR = 1640;
-      const lampSwing = (tl, id, t0, dur, amp = 9) => tl.fromTo(`#${id}-lamp`, { rotation: -amp, svgOrigin: "1050 300" }, { rotation: amp, svgOrigin: "1050 300", duration: 0.55, repeat: Math.ceil(dur / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+      const lampSwing = (tl, id, t0, dur, amp = 9) => tl.fromTo(`#${id}-lamp`, { rotation: -amp, svgOrigin: Qk.lampPivot }, { rotation: amp, svgOrigin: Qk.lampPivot, duration: 0.55, repeat: Math.ceil(dur / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
       const aqSlosh = (tl, id, t0, dur) => tl.fromTo(`#${id}-aqw`, { x: -30, y: 6 }, { x: 30, y: -6, duration: 0.45, repeat: Math.ceil(dur / 0.45), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
       const swayTower = (tl, id, t0, dur, amp = 1.2, per = 0.8) => {
         tl.fromTo(`#${id}-tw`, { rotation: -amp, svgOrigin: "540 1720" }, { rotation: amp, svgOrigin: "540 1720", duration: per, repeat: Math.ceil(dur / per), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
@@ -45,7 +46,7 @@
         captions: caps("open"),
         fx(tl, id, t0, L) {
           tl.set("#black", { opacity: 0 }, t0);
-          swayTower(tl, "tw0", t0, D("open"), 1.1);
+          swayTower(tl, "tw0", t0, D("open"), 1.1); Qk.reactTower(tl, "tw0", t0, D("open"), 0.6);
           tl.fromTo("#tw0-birds", { x: 0, y: 0, opacity: 1 }, { x: 420, y: -520, opacity: 0, duration: 1.6, ease: "power1.out", immediateRender: false }, t0 + 0.5);
           tl.fromTo("#tw0-f27", { opacity: 0 }, { opacity: 1, duration: 0.25, repeat: 5, yoyo: true, immediateRender: false }, t0 + F("open", 0, 1));
           QkUI.title(tl, L.light, t0 + 0.05, D("open") - 0.1, { ep: "EP.1 · หมอบ ป้อง เกาะ" });
@@ -60,6 +61,7 @@
         fx(tl, id, t0, L) {
           tl.fromTo("#cr1-sign", { rotation: -16, svgOrigin: Qk.corrSignOrigin }, { rotation: 16, svgOrigin: Qk.corrSignOrigin, duration: 0.42, repeat: 6, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
           [0.5, 0.62, 1.4, 1.48, 2.1].forEach((t, k) => tl.set("#cr1-lamps", { opacity: k % 2 ? 1 : 0.25 }, t0 + t));
+          Qk.reactCorridor(tl, "cr1", t0, D("hook"), 1.2, { sign: false, layer: L.set, n: 18, seed: 11 });
           put(L.light, `<g id="hk-bag" transform="translate(830,1700) scale(0.62)">${Qk.povBag({ rot: -8 })}</g>`);
           tl.fromTo("#hk-bag", { attr: { transform: "translate(830,1700) scale(0.62)" } }, { attr: { transform: "translate(850,1730) scale(0.62)" }, duration: 0.18, repeat: 13, yoyo: true, immediateRender: false }, t0);
         },
@@ -121,14 +123,40 @@
         cam: { keys: [{ t: 0, ...fr(1050, 1300, 1.3, 540, 1040) }] },
         captions: caps("whistle", undefined, { quote: true }).filter((c) => c.t < F("whistle", 0, 1) - 0.1),
         fx(tl, id, t0, L) {
-          put(L.light, `<rect width="1080" height="1920" fill="#f2c230"/><path d="M-40,300Q300,420 260,1100M760,200Q700,900 1120,1300M120,1500Q500,1400 900,1700" stroke="#d8a418" stroke-width="40" fill="none" opacity=".5"/>
-            <g id="wi-w"><path d="M520,-40Q530,300 548,690M610,-40Q600,300 588,690" stroke="#e8682a" stroke-width="16" fill="none"/>
-              <path d="M418,1060Q392,1290 440,1460L700,1460Q752,1290 716,1060Z" fill="#e8b88e" stroke="#2e2a26" stroke-width="7" stroke-linejoin="round"/>
-              <g transform="translate(570,820) rotate(-10) scale(7)"><path d="M-14,-6H10Q20,-6 20,6Q20,18 6,18Q-6,18 -8,8H-14Z" fill="#f47b20" stroke="#2e2a26" stroke-width="1.2"/><rect x="-24" y="-6" width="12" height="9" rx="2" fill="#f47b20" stroke="#2e2a26" stroke-width="1"/>
-                <circle cx="6" cy="6" r="4" fill="#b8500e"/><path d="M-10,-2H8" stroke="#ffd0a8" stroke-width="2" opacity=".7"/><circle cx="-24" cy="-6" r="3" fill="none" stroke="#9aa0a4" stroke-width="1.2"/></g>
-              ${[0, 1, 2, 3].map((k) => `<rect x="${434 + k * 70}" y="${900 + Math.abs(k - 1.5) * 18}" width="64" height="190" rx="32" fill="#e8b88e" stroke="#2e2a26" stroke-width="6" transform="rotate(${(k - 1.5) * 5} ${466 + k * 70} 1000)"/><path d="M${448 + k * 70},${1010 + Math.abs(k - 1.5) * 18}h36" stroke="#b8865e" stroke-width="5" stroke-linecap="round"/>`).join("")}
-              <ellipse cx="400" cy="980" rx="40" ry="96" fill="#e8b88e" stroke="#2e2a26" stroke-width="6" transform="rotate(-34 400 980)"/><path d="M380,930q16,-10 30,0" stroke="#b8865e" stroke-width="5" fill="none"/></g>`);
-          tl.fromTo("#wi-w", { y: 60, rotation: -4, svgOrigin: "560 900" }, { y: 0, rotation: 3, svgOrigin: "560 900", duration: 1.2, ease: "power2.out", immediateRender: false }, t0);
+          // the insert: มิว's small hand holding up แม่'s orange whistle in a warm glow (3D-shaded, the cord running up out of frame)
+          const f1 = Pop2.f1, WB = "M-110,-60H70Q150,-60 150,30Q150,120 50,120Q-30,120 -40,50H-110Z";
+          const rays = Array.from({ length: 14 }, (_, k) => { const a = (k / 14) * Math.PI * 2; return `M560,820L${f1(560 + Math.cos(a - 0.09) * 1500)},${f1(820 + Math.sin(a - 0.09) * 1500)}L${f1(560 + Math.cos(a + 0.09) * 1500)},${f1(820 + Math.sin(a + 0.09) * 1500)}Z`; }).join("");
+          const sp = (x, y, r) => `<path d="M${x},${y - r}Q${x + r * 0.18},${y - r * 0.18} ${x + r},${y}Q${x + r * 0.18},${y + r * 0.18} ${x},${y + r}Q${x - r * 0.18},${y + r * 0.18} ${x - r},${y}Q${x - r * 0.18},${y - r * 0.18} ${x},${y - r}Z" fill="#fffbe8"/>`;
+          put(L.light, `<defs><radialGradient id="wiBg" cx=".52" cy=".42" r=".75"><stop offset="0" stop-color="#ffe27a"/><stop offset=".55" stop-color="#f6b432"/><stop offset="1" stop-color="#d8781a"/></radialGradient>
+              <linearGradient id="wiSkin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f6cfab"/><stop offset=".55" stop-color="#e8b088"/><stop offset="1" stop-color="#c88a62"/></linearGradient>
+              <linearGradient id="wiFing" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f8d4b2"/><stop offset="1" stop-color="#dca07a"/></linearGradient>
+              <linearGradient id="wiCord" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8501a"/><stop offset=".4" stop-color="#ff9a52"/><stop offset="1" stop-color="#b8461a"/></linearGradient></defs>
+            <rect width="1080" height="1920" fill="url(#wiBg)"/><g id="wi-rays" opacity=".16"><path d="${rays}" fill="#fff6c8"/></g>
+            ${[[160, 380, 70], [930, 520, 46], [880, 1260, 90], [140, 1180, 54], [760, 220, 34]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff4c8" opacity=".25"/>`).join("")}
+            <ellipse cx="575" cy="860" rx="330" ry="300" fill="#fff6d0" opacity=".35"/>
+            <g id="wi-m"><g id="wi-w">
+              <path d="M556,-40C548,260 430,560 272,730" stroke="#7a2e0a" stroke-width="22" fill="none" stroke-linecap="round"/><path d="M556,-40C548,260 430,560 272,730" stroke="url(#wiCord)" stroke-width="15" fill="none" stroke-linecap="round"/>
+              <path d="${Array.from({ length: 52 }, (_, k) => { const u = k / 52, x = (1 - u) ** 3 * 556 + 3 * (1 - u) ** 2 * u * 548 + 3 * (1 - u) * u * u * 430 + u ** 3 * 272, y = (1 - u) ** 3 * -40 + 3 * (1 - u) ** 2 * u * 260 + 3 * (1 - u) * u * u * 560 + u ** 3 * 730; return `M${f1(x - 6)},${f1(y)}l11,7`; }).join("")}" stroke="#a8420e" stroke-width="3" opacity=".6"/>
+              <path d="M420,1920L438,1310Q446,1250 470,1230H690Q722,1250 726,1320L748,1920Z" fill="url(#wiSkin)" stroke="#2e2a26" stroke-width="7" stroke-linejoin="round"/>
+              <path d="M398,1080Q384,1250 452,1320H704Q770,1250 748,1060Q740,980 690,968H446Q404,980 398,1080Z" fill="url(#wiSkin)" stroke="#2e2a26" stroke-width="7" stroke-linejoin="round"/>
+              <path d="M470,1290Q560,1316 660,1290" stroke="#c88a62" stroke-width="6" fill="none" opacity=".6"/>
+              <g transform="translate(600,800) rotate(-12) scale(1.85)">
+                <ellipse cx="10" cy="128" rx="120" ry="16" fill="#7a3a10" opacity=".16"/>
+                <path d="${WB}" fill="#8a3a0c" transform="translate(7,11)" stroke="#2e2a26" stroke-width="5" stroke-linejoin="round"/><path d="${WB}" fill="url(#quOr)" stroke="#2e2a26" stroke-width="5" stroke-linejoin="round"/>
+                <rect x="-196" y="-60" width="96" height="72" rx="14" fill="#a8480e" transform="translate(6,10)"/><rect x="-196" y="-60" width="96" height="72" rx="14" fill="url(#quOrM)" stroke="#2e2a26" stroke-width="5"/>
+                <ellipse cx="-196" cy="-24" rx="9" ry="24" fill="#5a2406" stroke="#2e2a26" stroke-width="3"/>
+                <circle cx="50" cy="30" r="36" fill="url(#quHole)" stroke="#2e2a26" stroke-width="4"/><path d="M26,14A30,30 0 0 1 60,2" stroke="#ffd2a8" stroke-width="4" fill="none" opacity=".55"/>
+                <path d="M-96,-42H66Q120,-40 132,-6" stroke="#ffe8d0" stroke-width="10" fill="none" opacity=".75" stroke-linecap="round"/>
+                <circle cx="-172" cy="-66" r="20" fill="none" stroke="#3a3e42" stroke-width="9"/><circle cx="-172" cy="-66" r="20" fill="none" stroke="url(#quRing)" stroke-width="5"/>
+                <g transform="translate(-30,-14) rotate(-8)"><path d="M0,10C-14,0 -16,-12 -8,-16C-2,-19 0,-14 0,-11C0,-14 2,-19 8,-16C16,-12 14,0 0,10Z" fill="#f2547a" stroke="#fff" stroke-width="3"/></g></g>
+              ${[0, 1, 2, 3].map((k) => { const x = 452 + k * 72, y = 930 + Math.abs(k - 1.4) * 16, r = (k - 1.5) * 4; return `<g transform="rotate(${r} ${x + 34} ${y + 90})"><rect x="${x}" y="${y}" width="68" height="190" rx="34" fill="url(#wiFing)" stroke="#2e2a26" stroke-width="6"/><path d="M${x + 6},${y + 40}q28,-18 56,0" stroke="#000" stroke-width="10" fill="none" opacity=".08"/><ellipse cx="${x + 34}" cy="${y + 30}" rx="20" ry="16" fill="#fbe2d2" stroke="#c88a72" stroke-width="3"/><path d="M${x + 24},${y + 24}q8,-6 18,-2" stroke="#fff" stroke-width="4" fill="none" opacity=".8"/><path d="M${x + 18},${y + 110}h32M${x + 22},${y + 122}h24" stroke="#b8805e" stroke-width="4" stroke-linecap="round" opacity=".7"/></g>`; }).join("")}
+              <path d="M410,1000Q352,940 368,870Q380,830 420,846Q448,860 452,920L458,1010Z" fill="url(#wiSkin)" stroke="#2e2a26" stroke-width="6" stroke-linejoin="round"/><ellipse cx="392" cy="868" rx="18" ry="14" fill="#fbe2d2" stroke="#c88a72" stroke-width="3" transform="rotate(-30 392 868)"/>
+            </g></g>
+            <g id="wi-sp">${sp(330, 600, 34)}${sp(840, 660, 26)}${sp(780, 1000, 20)}${sp(300, 860, 18)}${sp(700, 470, 22)}</g>`);
+          tl.fromTo("#wi-m", { y: 90 }, { y: 0, duration: 0.9, ease: "back.out(1.6)", immediateRender: false }, t0);
+          tl.fromTo("#wi-w", { rotation: -5, svgOrigin: "580 1300" }, { rotation: 2.5, svgOrigin: "580 1300", duration: 1.4, ease: "power2.out", immediateRender: false }, t0);
+          tl.fromTo("#wi-rays", { rotation: 0, svgOrigin: "560 820" }, { rotation: 12, svgOrigin: "560 820", duration: 3, ease: "none", immediateRender: false }, t0);
+          document.querySelectorAll("#wi-sp path").forEach((e, k) => { const b = e.getBBox(), o = `${f1(b.x + b.width / 2)} ${f1(b.y + b.height / 2)}`; tl.fromTo(e, { scale: 0.2, opacity: 0.2, svgOrigin: o }, { scale: 1.1, opacity: 1, svgOrigin: o, duration: 0.35, repeat: 5, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.2 + k * 0.17); });
           HUD("whistle", L, tl, t0);
         },
       }, {
@@ -154,15 +182,15 @@
         cam: { keys: [{ t: 0, ...fr(1050, 1080, 0.62, 540, 960) }] },
         shake: QUAKE(0.6),
         actors: [A("mew", 1050, 1740, 0.82, [{ t: 0, mode: "stagger", eyes: "wide", mouth: "o" }])],
-        fx(tl, id, t0, L) { lampSwing(tl, "rq", t0, D("ripple") - 1.5, 6); aqSlosh(tl, "rq", t0, D("ripple") - 1.5); },
+        fx(tl, id, t0, L) { lampSwing(tl, "rq", t0, D("ripple") - 1.5, 6); aqSlosh(tl, "rq", t0, D("ripple") - 1.5); Qk.react(tl, "rq", t0, D("ripple") - 1.5, 0.6); },
       });
       // ---------- 9. outside: the tower sways, the pool spills, the birds go ----------
       add("tower", {
         set: "qkTower", setOpts: { id: "tw2" }, dark: 0, blur: { sky: 1, far: 2 }, light: false, grade: GDAY,
         cam: { keys: [{ t: 0, ...fr(560, 120, 0.52, 540, 960) }, { t: D("tower"), glide: D("tower"), ...fr(560, 60, 0.56, 540, 960) }] },
         shake: QUAKE(0.6),
-        fx(tl, id, t0) {
-          swayTower(tl, "tw2", t0, D("tower"), 2.2, 0.6);
+        fx(tl, id, t0, L) {
+          swayTower(tl, "tw2", t0, D("tower"), 2.2, 0.6); Qk.reactTower(tl, "tw2", t0, D("tower"), 1.3);
           tl.fromTo("#tw2-birds", { x: 0, y: 0, opacity: 1 }, { x: -380, y: -460, opacity: 0, duration: 1.3, ease: "power1.out", immediateRender: false }, t0 + 0.2);
         },
       });
@@ -175,6 +203,7 @@
         captions: caps("panic", undefined, { quote: true }),
         fx(tl, id, t0, L) {
           tl.fromTo("#cr2-sign", { rotation: -14, svgOrigin: Qk.corrSignOrigin }, { rotation: 14, svgOrigin: Qk.corrSignOrigin, duration: 0.42, repeat: 6, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Qk.reactCorridor(tl, "cr2", t0, D("panic"), 1, { sign: false, layer: L.set, n: 16, seed: 12 });
           put(L.light, `<g id="pn-arm" transform="translate(420,1780)">${Qk.povGrip({ rot: 28 })}</g>`);
           tl.fromTo("#pn-arm", { attr: { transform: "translate(470,1830)" } }, { attr: { transform: "translate(380,1740)" }, duration: 0.3, repeat: 7, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
         },
@@ -185,6 +214,7 @@
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.08) }] },
         shake: QUAKE(0.4),
         fx(tl, id, t0, L) {
+          Qk.reactCorridor(tl, "cr3", t0, D("choice1"), 0.6, { layer: L.set, n: 8, seed: 13 });
           QkUI.choice(tl, L.light, t0, D("choice1"), { q: "คุณจะทำยังไง?", a: { text: "วิ่งไปลิฟต์", icon: "lift" }, b: { text: "หมอบใต้โต๊ะ", icon: "table" }, secs: 3, pick: "a", pickAt: 2.7, hover: [[0.5, 0], [1.2, 1], [1.9, 0]] });
         },
       });
@@ -193,11 +223,13 @@
         set: "qkLift", setOpts: { id: "lw" }, dark: 0, blur: {}, light: false, grade: GROOM,
         cam: { keys: [{ t: 0, ...fr(560, 900, 1.04) }] },
         shake: QUAKE(0.8),
-        fx(tl, id, t0) {
+        fx(tl, id, t0, L) {
           const n = document.getElementById("lw-num"), c = { v: 27 };
           tl.set("#lw-arrow", { rotation: 180, svgOrigin: "472 280" }, t0);
           tl.fromTo(c, { v: 27 }, { v: 25, duration: D("wrong"), ease: "none", immediateRender: false, onUpdate: () => { n.textContent = String(Math.round(c.v)); } }, t0);
           [0.9, 0.98, 1.5, 1.56].forEach((t, k) => tl.set("#lw-lite", { opacity: k % 2 ? 1 : 0.2 }, t0 + t));
+          Qk.swing(tl, "#lw-cert", Qk.liftCertOrigin, t0, D("wrong"), 5, 0.28);
+          Qk.debris(tl, L.set, { t0, dur: D("wrong"), n: 10, seed: 4, pts: (r) => ({ x: 650 + r() * 170, y0: 230, y1: 1730 + r() * 260, s: 4 + r() * 5 }) });
         },
       });
       add("stuck", {
@@ -209,6 +241,7 @@
           tl.set("#ls-num", { attr: { "font-size": 74 } }, t0);
           document.getElementById("ls-num").textContent = "25";
           tl.set("#ls-lite", { opacity: 0 }, t0 + 0.05); tl.set("#ls-num", { opacity: 0 }, t0 + 0.08); tl.set("#ls-arrow", { opacity: 0 }, t0 + 0.08);
+          Qk.swing(tl, "#ls-cert", Qk.liftCertOrigin, t0, D("stuck"), 6, 0.34);
           tl.fromTo("#ls-dk", { opacity: 0 }, { opacity: 0.86, duration: 0.08, immediateRender: false }, t0 + 0.05);
           tl.fromTo("#ls-emg", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.9);
           tl.fromTo("#ls-emg", { opacity: 1 }, { opacity: 0.55, duration: 0.6, repeat: 4, yoyo: true, immediateRender: false }, t0 + 1.2);
@@ -237,7 +270,7 @@
         ],
         captions: caps("drop"),
         fx(tl, id, t0, L) {
-          lampSwing(tl, "rk", t0, D("drop"), 12); aqSlosh(tl, "rk", t0, D("drop"));
+          lampSwing(tl, "rk", t0, D("drop"), 12); aqSlosh(tl, "rk", t0, D("drop")); Qk.react(tl, "rk", t0, D("drop"), 0.9);
           DUCKS(L, { rid: "dkR", mid: "dkM" }); TFRONT(L, "rk-tf");
           tl.set(["#dkR", "#dkM"], { opacity: 0 }, t0); tl.set(["#dkR", "#dkM"], { opacity: 1 }, t0 + 0.75);
           tl.fromTo(["#dkR", "#dkM"], { y: -90 }, { y: 0, duration: 0.25, ease: "power3.in", immediateRender: false }, t0 + 0.75);
@@ -251,13 +284,13 @@
         cam: { keys: [{ t: 0, ...fr(1085, 1500, 1.2, 540, 1040) }, { t: D("cover"), glide: D("cover"), ...fr(1085, 1505, 1.24, 540, 1040) }] },
         shake: QUAKE(0.7),
         fx(tl, id, t0, L) {
-          aqSlosh(tl, "rc", t0, D("cover"));
+          aqSlosh(tl, "rc", t0, D("cover")); Qk.react(tl, "rc", t0, D("cover"), 0.9);
           DUCKS(L, { rid: "cvR", mid: "cvM", rarms: "hold" }); TFRONT(L, "rc-tf");
           [["#cvR-b", 0], ["#cvM-b", 0.03]].forEach(([s, d]) => tl.fromTo(s, { x: -2 }, { x: 2, duration: 0.06, repeat: Math.ceil(D("cover") / 0.06), yoyo: true, immediateRender: false }, t0 + d));
           // the lamp breaks loose and lands on the tabletop
-          tl.fromTo("#rc-lamp", { rotation: -10, svgOrigin: "1050 300" }, { rotation: 10, svgOrigin: "1050 300", duration: 0.4, repeat: 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
-          tl.to("#rc-lamp", { y: 330, rotation: -16, svgOrigin: "1050 300", duration: 0.35, ease: "power2.in" }, t0 + 0.8);
-          tl.to("#rc-lampGlow", { opacity: 0, duration: 0.05 }, t0 + 0.8);
+          tl.fromTo("#rc-lamp", { rotation: -10, svgOrigin: Qk.lampPivot }, { rotation: 10, svgOrigin: Qk.lampPivot, duration: 0.4, repeat: 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.to("#rc-lamp", { y: 330, rotation: -6, svgOrigin: Qk.lampPivot, duration: 0.35, ease: "power2.in" }, t0 + 0.8);
+          tl.to("#rc-lampGlow", { opacity: 0, duration: 0.05 }, t0 + 0.8); tl.to("#rc-lampCord", { opacity: 0, duration: 0.05 }, t0 + 0.82);
           // screen positions of the body parts at this framing: world → screen
           const k = 1.2, S = (wx, wy) => [540 + (wx - 1085) * k, 1040 + (wy - 1500) * k];
           const [hx, hy] = S(1000 - 205, FLOOR - 8 - 190), [kx, ky] = S(1000 - 30, FLOOR - 10), [gx, gy] = S(1000 - 260, FLOOR - 8 - 106);
@@ -275,7 +308,7 @@
         shake: QUAKE(1.0),
         captions: caps("slide", [0], { quote: true }).concat(caps("slide", [1])),
         fx(tl, id, t0, L) {
-          aqSlosh(tl, "rs", t0, D("slide"));
+          aqSlosh(tl, "rs", t0, D("slide")); Qk.react(tl, "rs", t0, D("slide"), 1.0);
           DUCKS(L, { rid: "slR", mid: "slM", rarms: "hold" }); TFRONT(L, "rs-tf");
           // the table jolts left in steps; the two of you shuffle after it, a beat behind
           const steps = [[0.4, -40], [1.3, -95], [2.3, -150], [3.2, -190]];
@@ -306,16 +339,14 @@
       });
       // ---------- 18. แม่'s plan of the room: what can hurt you, and where you are safe ----------
       add("danger", {
-        set: "qkPlan", setOpts: { id: "pl" }, dark: 0, blur: {}, light: false, grade: GROOM,
-        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.9, 540, 820) }, { t: D("danger"), glide: D("danger"), ...fr(540, 1000, 0.94, 540, 820) }] },
+        set: "qkPlan3d", setOpts: { id: "pl" }, dark: 0, blur: {}, light: false, grade: GROOM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960, { drift: { s: 0 } }) }] },
         shake: QUAKE(0.15),
         captions: caps("danger"),
         fx(tl, id, t0, L) {
-          const z = (k, t) => { tl.fromTo(`#pl-z${k}`, { opacity: 0, scale: 0.7, svgOrigin: "540 900" }, { opacity: 1, scale: 1, svgOrigin: "540 900", duration: 0.3, ease: "back.out(2)", immediateRender: false }, t); tl.fromTo(`#pl-l${k}`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2.4)", immediateRender: false }, t + 0.1); tl.fromTo(`#pl-z${k}`, { opacity: 1 }, { opacity: 0.55, duration: 0.4, repeat: 5, yoyo: true, immediateRender: false }, t + 0.4); };
-          z(0, t0 + F("danger", 0, 0)); z(1, t0 + F("danger", 0, 1)); z(2, t0 + F("danger", 0, 1) + 0.25); z(3, t0 + F("danger", 0, 1) + 0.5);
-          tl.fromTo("#pl-safe", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.2);
-          tl.fromTo(["#pl-you", "#pl-mew"], { opacity: 0, scale: 0, svgOrigin: "540 880" }, { opacity: 1, scale: 1, svgOrigin: "540 880", duration: 0.35, stagger: 0.12, ease: "back.out(3)", immediateRender: false }, t0 + 0.35);
-          tl.fromTo("#pl-ok", { opacity: 0, scale: 2, svgOrigin: "700 1040" }, { opacity: 1, scale: 1, svgOrigin: "700 1040", duration: 0.3, ease: "back.out(3)", immediateRender: false }, t0 + D("danger") - 1.0);
+          // แม่'s plan pops up off the paper: the danger zones rise as red blocks, the space under the table glows green
+          const z1 = F("danger", 0, 1);
+          Qk.plan3d(tl, L, id, t0, { dur: D("danger"), zAt: [F("danger", 0, 0), z1, z1 + 0.25, z1 + 0.5], safeAt: 0.2, youAt: 0.35, okAt: D("danger") - 1.0 });
           SRC(L, tl, t0 + vo("danger"), D("danger") - vo("danger"), "ที่มา: ปภ. · กรมอุตุนิยมวิทยา");
         },
       });
@@ -339,6 +370,7 @@
         shake: QUAKE(0.7),
         captions: caps("fall"),
         fx(tl, id, t0, L) {
+          Qk.reactCorridor(tl, "cf", t0, D("fall"), 1.2, { layer: L.set, n: 24, seed: 14 });
           // a ghost of you running for the lift
           put(L.act, `<g id="cf-ghost" opacity="0"></g>`);
           Rig.build(document.getElementById("cf-ghost"), "cfg", Rig.CAST.rider);
@@ -397,13 +429,13 @@
           SRC(L, tl, t0 + vo("after"), D("after") - vo("after"), "ที่มา: Thai PBS (28 มี.ค. 68)");
         },
       });
-      // ---------- 24. it has happened for real: Myanmar → Bangkok ----------
+      // ---------- 24. it has happened for real: Myanmar → Bangkok on a 3D relief map (the map's own camera flies; the shot camera holds) ----------
       add("real", {
-        set: "mapTH", setOpts: { id: "mq", x: 90, y: 300, s: 1, route: [[96, 22], [100.5, 13.75]], from: "", to: "" }, dark: 0, blur: {}, light: false, grade: GDAY,
-        cam: { keys: [{ t: 0, ...fr(330, 600, 1.0, 540, 900) }, { t: vo("real", 2) - 0.2, glide: 1.2, ...fr(380, 900, 1.6, 540, 1000) }] },
+        set: "qkMap3d", setOpts: { id: "mq" }, dark: 0, blur: {}, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960, { drift: { s: 0 } }) }] },
         captions: caps("real"),
         fx(tl, id, t0, L) {
-          QkUI.quakeMap(tl, L, id, t0, { map: "mq", x: 90, y: 300, s: 1, chipAt: 0.3, labelAt: vo("real", 1) + 0.2, bkkAt: vo("real", 1) + 1.4, count: [vo("real", 2), D("real") - 0.4] });
+          QkUI.quakeMap3d(tl, L, id, t0, { dur: D("real"), chipAt: 0.3, labelAt: vo("real", 1) + 0.2, bkkAt: vo("real", 1) + 1.4, count: [vo("real", 2), D("real") - 0.4] });
           SRC(L, tl, t0 + vo("real", 1), vo("real", 2) - vo("real", 1), "ที่มา: กรมอุตุนิยมวิทยา (28 มี.ค. 68)");
           SRC(L, tl, t0 + vo("real", 2), D("real") - vo("real", 2), "ที่มา: Thai PBS (28 มี.ค. 68)");
         },
@@ -427,16 +459,16 @@
       });
       // ---------- 27. the candle; behind her, the canister hisses ----------
       split("candle", vo("candle", 1) - 0.1, {
-        ...ROOM("rn", { opts: { after: true, dark: true } }),
-        cam: { keys: [{ t: 0, ...fr(-80, 1180, 1.25, 600, 1000) }, { t: vo("candle", 1) - 0.1, glide: 1.4, ...fr(-120, 1160, 1.4, 600, 1000) }] },
-        actors: [A("mewCandle", -60, 1480, 0.82, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "flat" }, { t: 1.2, mode: "idle", eyes: "side", mouth: "smile" }], { talk: [TALK("candle", 0, "o")] })],
+        ...ROOM("rn", { opts: { after: true, dark: true }, dark: 0.42 }),
+        cam: { keys: [{ t: 0, ...fr(-120, 1330, 1.5, 560, 1000) }, { t: vo("candle", 1) - 0.1, glide: 1.4, ...fr(-140, 1320, 1.65, 560, 1000) }] },
+        actors: [A("mewCandle", -60, 1640, 0.76, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "flat" }, { t: 1.2, mode: "idle", eyes: "side", mouth: "smile" }], { talk: [TALK("candle", 0, "o")] })],
         captions: caps("candle", [0], { quote: true }),
         fx(tl, id, t0) { tl.fromTo("#rn-drawer", { x: 0 }, { x: -40, y: 20, duration: 0.3, immediateRender: false }, t0 + 0.2); },
       }, {
-        ...ROOM("rn2", { opts: { after: true, dark: true }, blur: { sky: 2, far: 3, mid: 2 } }),
-        cam: { keys: [{ t: 0, ...fr(-660, 1400, 1.7, 540, 980) }, { t: D("candle") - vo("candle", 1) + 0.1, glide: D("candle") - vo("candle", 1), ...fr(-680, 1420, 2.2, 540, 980) }] },
+        ...ROOM("rn2", { opts: { after: true, dark: true }, blur: { sky: 2, far: 3, mid: 2 }, dark: 0.42 }),
+        cam: { keys: [{ t: 0, ...fr(-760, 1380, 1.7, 540, 980) }, { t: D("candle") - vo("candle", 1) + 0.1, glide: D("candle") - vo("candle", 1), ...fr(-720, 1420, 2.2, 540, 980) }] },
         sfxText: [{ text: "ฟี่…", x: 640, y: 560, t: 0.3, end: 2.4, size: 110, color: "#cfe8d0", rot: 6 }],
-        actors: [A("mewCandle", -60, 1480, 0.82, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }])],
+        actors: [A("mewCandle", -60, 1640, 0.76, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }])],
         captions: capsFrom("candle", vo("candle", 1) - 0.1, [1]),
         fx(tl, id, t0) {
           tl.set("#rn2-gas", { opacity: 1 }, t0);
@@ -445,9 +477,9 @@
       });
       // ---------- 28. your call: the candle or the torch ----------
       add("choice2", {
-        ...ROOM("rx", { opts: { after: true, dark: true }, blur: { sky: 4, far: 5, mid: 5, set: 4 } }),
-        cam: { keys: [{ t: 0, ...fr(-60, 1150, 1.6, 540, 1100) }] },
-        actors: [A("mewCandle", -60, 1480, 0.82, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        ...ROOM("rx", { opts: { after: true, dark: true }, blur: { sky: 4, far: 5, mid: 5, set: 4 }, dark: 0.42 }),
+        cam: { keys: [{ t: 0, ...fr(-60, 1300, 1.6, 540, 1100) }] },
+        actors: [A("mewCandle", -60, 1640, 0.76, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
         fx(tl, id, t0, L) {
           QkUI.choice(tl, L.light, t0, D("choice2") - 0.35, { q: "มิวควรทำยังไง?", a: { text: "จุดเทียน", icon: "candle" }, b: { text: "ใช้ไฟฉาย", icon: "torch" }, secs: 3, pick: "a", pickAt: 2.85, hover: [[0.5, 1], [1.3, 0], [2.0, 1], [2.5, 0]] });
           put(L.light, `<g id="rx-spark" opacity="0"><circle cx="540" cy="1000" r="240" fill="url(#quBurst)"/><circle cx="540" cy="1000" r="40" fill="#fff6d0"/></g>`);
