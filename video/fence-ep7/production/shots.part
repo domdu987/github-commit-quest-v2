@@ -1,0 +1,379 @@
+      // ======================================================================================================
+      // เอาชีวิตรอด 99 วัน · EP.7 "คนไร้ประโยชน์"
+      // ======================================================================================================
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const CLIP = (list) => { list.sort((a, b) => a.t - b.t); for (let n = 0; n + 1 < list.length; n++) list[n].end = Math.min(list[n].end, list[n + 1].t - 0.03); return list; };
+      // a shot cut into three framings: [0, a1), [a1, a2), [a2, end)
+      const split3 = (k, a1, a2, A, B, C) => {
+        add(k, A); shots[shots.length - 1].dur = a1;
+        add(k, B); let sh = shots[shots.length - 1]; sh.start = SH[k].start + a1; sh.dur = a2 - a1; sh.vo = (SH[k].vo || []).map((v) => ({ ...v, t: v.t - a1 }));
+        add(k, C); sh = shots[shots.length - 1]; sh.start = SH[k].start + a2; sh.dur = D(k) - a2; sh.vo = (SH[k].vo || []).map((v) => ({ ...v, t: v.t - a2 }));
+      };
+      const capsAt = (k, a, b, lines, o) => caps(k, lines, o).filter((c) => c.end > a + 0.05 && c.t < b - 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - a), end: Math.min(b - a - 0.03, c.end - a) }));
+      const bubAt = (bb, a, b) => ({ ...bb, t: Math.max(0.02, bb.t - a), end: Math.min(b - a - 0.05, bb.end - a) });
+      const FA = (k, a, i = 0, j = 0) => F(k, i, j) - a;
+      const VA = (k, a, i = 0) => vo(k, i) - a;
+      const W1 = (x, y, s, track, extra = {}) => ({ who: "wk1", x, y, s, track, ...extra });
+      const W2 = (x, y, s, track, extra = {}) => ({ who: "wk2", x, y, s, track, ...extra });
+      const E1 = (x, y, s, track, extra = {}) => ({ who: "eg1", x, y, s, track, ...extra });
+      const E2 = (x, y, s, track, extra = {}) => ({ who: "eg2", x, y, s, track, ...extra });
+      const PR = (x, y, s, track, extra = {}) => ({ who: "phuR", x, y, s, track, ...extra });   // ภู with the red scarf
+      const COUGHFX = (tl, x, y, t0, d, L, n = 4) => { for (let k = 0; k < n; k++) { const t = t0 + k * (d / n); put(L.glow, `<g class="cpuff" opacity="0" transform="translate(${x},${y})"><circle r="16" fill="#f4f2ea" opacity=".7"/><circle cx="18" cy="-6" r="11" fill="#f4f2ea" opacity=".6"/></g>`); const el = L.glow.lastElementChild; tl.set(el, { opacity: 1 }, t); tl.fromTo(el, { x: 0, y: 0, scale: 0.5 }, { x: 60, y: -30, scale: 1.4, opacity: 0, duration: 0.5, ease: "power1.out", immediateRender: false }, t); } };
+      // shake an actor through a wrapper group: GSAP x/y on the actor <g> itself replaces its transform attribute (the figure jumps to 0,0)
+      const jig = (id, k) => { const a = document.getElementById(`${id}-a${k}`), w = document.createElementNS("http://www.w3.org/2000/svg", "g"); a.parentNode.insertBefore(w, a); w.appendChild(a); return w; };
+      // the canteen table over seated rigs, inserted before actor k so the ones from k on stand in front of it
+      const tableBefore = (id, L, html, k) => { const a = document.getElementById(`${id}-a${k}`); if (a) a.insertAdjacentHTML("beforebegin", html); else put(L.act, html); };
+      // the fridge with the red-cross sticker (the estate keeps เจ๊หงส์'s medicine cold — EP.8)
+      const FRIDGE = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><rect x="-90" y="-330" width="180" height="330" rx="14" fill="#e8ece6" stroke="#2e2a26" stroke-width="4"/><path d="M-90,-210H90" stroke="#9aa0a6" stroke-width="4"/><path d="M66,-300v60M66,-180v80" stroke="#8d969d" stroke-width="8" stroke-linecap="round"/>
+        <rect x="-50" y="-150" width="70" height="70" rx="6" fill="#f4f2ea" stroke="#2e2a26" stroke-width="3"/><path d="M-27,-140h24v18h18v24h-18v18h-24v-18h-18v-24h18z" fill="#d23b2e" transform="translate(4,6) scale(.7) translate(-15,-30)"/><rect x="-60" y="-286" width="90" height="34" rx="4" fill="#f4f2ea" stroke="#2e2a26" stroke-width="2.5"/><text x="-15" y="-261" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#2f6fb8">ยา</text>
+        <ellipse cx="0" cy="6" rx="110" ry="14" fill="#000" opacity=".2"/></g>`;
+      // the bit of chicken that comes out: a small brown lump with a crumb, motion lines added by the shot
+      const CHUNK = (id) => `<g id="${id}" opacity="0"><ellipse rx="16" ry="12" fill="#b8763a" stroke="#2e2a26" stroke-width="3"/><path d="M-8,-4q6,-6 12,-2" stroke="#e8b070" stroke-width="3" fill="none"/></g>`;
+
+      // ---------- icons for this episode's cards ----------
+      const I3 = `stroke="${PK_INK}" stroke-width="3"`;
+      Object.assign(GameUI.ILL, {
+        amb: `${PKG("am7")}${SHADOW(60, 108, 44)}<g class="a-bob"><path d="M10,40h64v52H10z" fill="#fff" stroke="${PK_INK}" stroke-width="3"/><path d="M74,52h20l16,18v22H74z" fill="#fff" stroke="${PK_INK}" stroke-width="3" stroke-linejoin="round"/><path d="M80,58h12l10,12H80z" fill="url(#am7-glass)" stroke="${PK_INK}" stroke-width="2"/><path d="M36,52h12v10h10v12H48v10H36V74H26V62h10z" fill="url(#am7-red)" stroke="${PK_INK}" stroke-width="2"/><circle cx="30" cy="94" r="10" fill="#2e2a26"/><circle cx="90" cy="94" r="10" fill="#2e2a26"/><rect class="a-pulse" x="40" y="30" width="20" height="10" rx="3" fill="#2f6fb8" style="transform-origin:50px 35px"/></g>`,
+        baby: `${PKG("bb7")}${SHADOW(60, 108, 44)}<g class="a-bob"><ellipse cx="60" cy="80" rx="34" ry="22" fill="#f4f2ea" ${I3}/><circle cx="60" cy="46" r="22" fill="#f2c9a4" ${I3}/><path d="M50,44q3,3 6,0M64,44q3,3 6,0" stroke="${PK_INK}" stroke-width="2.5" fill="none"/><path d="M52,36q8,-10 16,0" stroke="${PK_INK}" stroke-width="2.5" fill="none"/></g>
+          <g class="a-pulse" style="transform-origin:60px 80px"><path d="M40,64L80,100M80,64L40,100" stroke="#d9342b" stroke-width="9" stroke-linecap="round"/></g>`,
+      });
+      const STEP7 = {   // the steps card (NHS / St John Ambulance / British Red Cross / AHA 2025)
+        cough: (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<circle cx="50" cy="62" r="28" fill="url(#${p}-skin)" stroke="${PK_INK}" stroke-width="3"/><path d="M38,56l7,3M56,56l7,3" stroke="${PK_INK}" stroke-width="3"/><ellipse cx="60" cy="74" rx="8" ry="7" fill="#5a2a22"/><g class="a-rise"><path d="M82,56q10,8 0,16M92,50q14,12 0,28" stroke="#2f8a5a" stroke-width="5" fill="none" stroke-linecap="round"/></g>`,
+        blow: (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<path d="M24,100q-4,-44 30,-56q30,-8 44,10l-6,46z" fill="#f4f2ea" stroke="${PK_INK}" stroke-width="3"/><circle cx="84" cy="40" r="16" fill="url(#${p}-skin)" stroke="${PK_INK}" stroke-width="3"/>
+          <g class="a-jit"><path d="M30,26l22,18" stroke="url(#${p}-skin)" stroke-width="16" stroke-linecap="round"/><path d="M30,26l22,18" stroke="${PK_INK}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/></g><g class="a-pulse" style="transform-origin:56px 52px"><path d="M60,40l8,-6M64,52h10M58,62l8,6" stroke="#d9342b" stroke-width="4" stroke-linecap="round"/></g>`,
+        thrust: (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<path d="M30,104V54q0,-20 30,-20q30,0 30,20v50z" fill="#f4f2ea" stroke="${PK_INK}" stroke-width="3"/><circle cx="60" cy="78" r="3" fill="${PK_INK}"/><path d="M36,60q24,6 48,0" stroke="#c9b48a" stroke-width="3" fill="none"/>
+          <g class="a-bob"><rect x="46" y="62" width="28" height="22" rx="8" fill="url(#${p}-skin)" stroke="${PK_INK}" stroke-width="3"/></g><g class="a-pulse" style="transform-origin:60px 40px"><path d="M96,84l-10,-10M96,84l-6,2M60,30v-16M52,20l8,-8l8,8" stroke="#d9342b" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`,
+        cycle: (p) => `${PKG(p)}${SHADOW(60, 104, 34)}<g class="a-spin" style="transform-origin:60px 62px"><path d="M30,56a32,32 0 0 1 56,-14M90,68a32,32 0 0 1 -56,14" stroke="#2f6fb8" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M80,30l8,14l-15,2M40,94l-8,-14l15,-2" stroke="#2f6fb8" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+          <text x="60" y="70" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="26" fill="${PK_INK}">5·5</text>`,
+      };
+
+      // ---------- 1. hook: at the canteen table, ปั้น's hands at her throat, our hand slapping her back, the count climbing ----------
+      add("hook", {
+        set: "canteen", setOpts: { id: "hk" }, dark: 0.3, blur: { far: 5, mid: 4 },
+        cam: { keys: [{ t: 0, ...fr(320, 1365, 3.0, 540, 900), drift: { s: 0.02 } }, { t: vo("hook", 2) - 0.05, glide: 0.25, ...fr(320, 1360, 3.5, 540, 880), drift: { s: 0.03 } }] },
+        shake: (t) => 3 * Math.sin(t * 4.3) + 1.5 * Math.sin(t * 9.1),
+        actors: [PU(300, 1540, 0.55, [{ t: 0, mode: "chokeSit", eyes: "wide", mouth: "o" }], { flip: true, cu: false })],
+        captions: caps("hook"),
+        ui: [{ type: "counter", t: vo("hook", 1) - 0.2, end: D("hook") - 0.05, label: "ตบหลังไปแล้ว", icon: "people", unit: "ครั้ง", keys: [{ t: vo("hook", 1), v: 1 }, { t: vo("hook", 2), v: 11 }], alarm: vo("hook", 2), right: true, top: 150 }],
+        fx(tl, id, t0, L) {
+          tableBefore(id, L, Estate.TABLEF(-300, 900, 1500, { seed: 43 }), 99);
+          // our hand, open, swinging in onto her back from the right of frame (she faces left)
+          put(L.act, `<g id="hk-hand" transform="translate(395,1360) rotate(-58) scale(0.3)">${Hand.open({ skin: "#d9a57a", sleeve: "#5f7386" })}</g>`);
+          const S = vo("hook", 1) - 0.1, X = t0 + vo("hook", 2), per = 0.3, n = Math.floor((vo("hook", 2) - S) / per);
+          const h = { k: 0 }, hand = () => { const g = document.getElementById("hk-hand"); if (!g) return; const f = h.k % 1, k = f < 0.3 ? f / 0.3 : 1 - (f - 0.3) / 0.7; g.setAttribute("transform", `translate(${(395 - 46 * k).toFixed(1)},${(1356 + 8 * k).toFixed(1)}) rotate(${(-56 + 12 * k).toFixed(1)}) scale(0.3)`); };
+          tl.set("#hk-hand", { opacity: 0 }, t0); tl.set("#hk-hand", { opacity: 1 }, t0 + S);
+          tl.to(h, { k: n, duration: n * per, ease: "none", immediateRender: false, onUpdate: hand }, t0 + S);
+          const pj = jig(id, 0); for (let i = 0; i < n; i++) tl.fromTo(pj, { x: 0 }, { x: -4, duration: 0.06, yoyo: true, repeat: 1, immediateRender: false }, t0 + S + i * per + 0.09);
+          tl.to("#hk-hand", { opacity: 0, duration: 0.15 }, X + 0.15);
+          Fx.punch(tl, `#${id} .stage`, X, 1.08, 0.4); Fx.glitch(tl, `#${id}`, X, 0.22, 10, 71); red(tl, X, 0.7, 0.6);
+          Fx.heart(tl, t0, D("hook"), 0.45, 0.6);
+        },
+      });
+
+      // ---------- 2. chapter: the yard at dawn — "เหลือ 93 วัน"; ยายจันทร์'s brush and bucket still by the washroom door ----------
+      add("chapter", {
+        set: "estateYard", setOpts: { id: "ch", time: "morning" }, dark: 0.12, blur: { far: 3, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(-860, 1180, 1.25, 540, 1150), drift: { s: 0.012 } }, { t: 1.2, glide: D("chapter") - 1.2, ...fr(-960, 1160, 1.55, 540, 1150), drift: { s: 0.016 } }] },
+        captions: caps("chapter"),
+        ui: [{ type: "board", t: 0.05, day: "93", ep: "ตอนที่ 7 · คนไร้ประโยชน์", top: 300 }],
+        fx(tl, id, t0, L) {
+          put(L.act, `<g transform="translate(-930,1250) rotate(-62)"><rect x="-8" y="-170" width="16" height="170" rx="5" fill="#8a6a44" stroke="#2e2a26" stroke-width="3"/><rect x="-46" y="-196" width="92" height="34" rx="8" fill="#5b6066" stroke="#2e2a26" stroke-width="3"/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-40 + k * 10},-196v-22" stroke="#c9b48a" stroke-width="4"/>`).join("")}</g>`);
+          Fx.heart(tl, t0 + 1.2, D("chapter") - 1.2, 0.8, 0.3);
+        },
+      });
+
+      // ---------- 3. the score board: คุณวิน to the morning line-up — "ใครทำได้น้อยที่สุด… สิ้นสัปดาห์นี้ ต้องไป"; ปั้น at the bottom ----------
+      split("board", vo("board", 1) - 0.25, {
+        set: "estateYard", setOpts: { id: "bd", time: "morning" }, dark: 0.12, blur: { far: 3, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(300, 1300, 0.85, 540, 1150), drift: { s: 0.012 } }, { t: vo("board", 0) - 0.1, glide: 0.5, ...fr(200, 1250, 1.15, 540, 1080), drift: { s: 0.015 } }] },
+        actors: [WI(200, 1560, 0.9, [{ t: 0, mode: "present", eyes: "squint", mouth: "smile" }, { t: vo("board", 0) + 0.3, mode: "stare", eyes: "squint", mouth: "flat" }], { cu: false }),
+          PI(560, 1700, 0.95, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true }),
+          PU(700, 1700, 0.58, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true }),
+          HO(840, 1700, 0.95, [{ t: 0, mode: "armsCrossed", eyes: "worry", mouth: "frown" }], { flip: true }),
+          KO(1000, 1700, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+        captions: capsAt("board", 0, vo("board", 1) - 0.25, [0]),
+        bubbles: [bub("board", 0, 600, 560, 520, { br: true, end: voEnd("board", 0) + 0.02 })],
+        fx(tl, id, t0, L) {
+          [["wk1", -120, 0.6], ["wk2", 40, 0.58], ["wk3", 1200, 0.6], ["wk1", 1340, 0.6], ["eg2", -260, 0.62]].forEach(([w, x, s], k) =>
+            behind(L, tl, `bd-b${k}`, w, x, 1500, s, x > 500, t0, D("board"), [{ t: 0, mode: "stare", eyes: "normal", mouth: "flat" }]));
+          Fx.heart(tl, t0 + vo("board", 0), D("board"), 0.6, 0.4);
+        },
+      }, {
+        set: "estateYard", setOpts: { id: "bd2", time: "morning" }, dark: 0.45, blur: { far: 8, mid: 8, set: 6 },
+        cam: { keys: [{ t: 0, ...fr(640, 1400, 1.3, 540, 1300), drift: { s: 0.02 } }] },
+        actors: [PU(700, 1700, 0.58, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }, { t: FA("board", vo("board", 1) - 0.25, 1, 1), mode: "slump", eyes: "sad", mouth: "frown" }], { flip: true, cu: false })],
+        captions: capsAt("board", vo("board", 1) - 0.25, D("board"), [1]),
+        ui: [{ type: "score", t: 0.05, end: D("board") - (vo("board", 1) - 0.25) - 0.05, title: "คะแนนประโยชน์", who: "สัปดาห์นี้ · นิคม", top: 160,
+          rows: [{ name: "ภู · หมอ", pts: 12, v: 1 }, { name: "ก้อง · หาของ", pts: 9, v: 0.75 }, { name: "เจ๊หงส์ · โกดัง", pts: 8, v: 0.66 }, { name: "ครูพิม · ครัว", pts: 7, v: 0.58 }, { name: "ปั้น · รอดู", pts: 0, v: 0, bad: true }],
+          ring: 4, ringAt: FA("board", vo("board", 1) - 0.25, 1, 1) - 0.05, foot: "สิ้นสัปดาห์ · คนท้ายสุด ต้องไป", footAt: FA("board", vo("board", 1) - 0.25, 1, 1) + 0.5 }],
+        fx(tl, id, t0) { const X = t0 + FA("board", vo("board", 1) - 0.25, 1, 1); Fx.punch(tl, `#${id} .stage`, X, 1.06, 0.35); red(tl, X, 0.4, 0.5); Fx.heart(tl, t0, D("board"), 0.5, 0.55); },
+      });
+
+      // ---------- 4. dinner: ปั้น shovels her rice in to go and wash up; "กินช้าๆ ลูก" ----------
+      add("dinner", {
+        set: "canteen", setOpts: { id: "dn" }, dark: 0.3, blur: { far: 3, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(440, 1240, 0.82, 540, 960), drift: { s: 0.012 } }, { t: vo("dinner", 0) - 0.15, glide: 0.4, ...fr(160, 1350, 2.4, 540, 1020), drift: { s: 0.02 } }, { t: vo("dinner", 1) - 0.15, glide: 0.4, ...fr(250, 1330, 1.75, 540, 1020), drift: { s: 0.02 } }] },
+        actors: [WI(-120, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "smile" }], { prop: "cup" }),
+          PU(150, 1555, 0.55, [{ t: 0, mode: "sitEatFast", eyes: "normal", mouth: "smile" }], { flip: true, prop: "spoon", cu: false }),
+          PI(360, 1580, 0.9, [{ t: 0, mode: "sitTable", eyes: "normal", mouth: "flat" }, { t: vo("dinner", 1) - 0.2, mode: "sitTable", eyes: "worry", mouth: "flat", look: -8 }], { flip: true, cu: false }),
+          HO(580, 1580, 0.9, [{ t: 0, mode: "sitEat", eyes: "normal", mouth: "flat" }], { flip: true, prop: "spoon" }),
+          KO(800, 1580, 0.9, [{ t: 0, mode: "sitEat", eyes: "closed", mouth: "smile" }], { flip: true, prop: "spoon" }),
+          PH(1020, 1580, 0.9, [{ t: 0, mode: "sitTable", eyes: "normal", mouth: "flat" }], { flip: true })],
+        bubbles: [bub("dinner", 0, 540, 560, 540, { br: true, end: voEnd("dinner", 0) + 0.02 }), bub("dinner", 1, 700, 520, 760, { br: true, end: D("dinner") - 0.05 })],
+        fx(tl, id, t0, L) {
+          put(L.far, FRIDGE(980, 1300, 0.9));
+          [["wk1", -60, 0.55], ["wk2", 220, 0.52], ["wk3", 520, 0.56], ["wk2", 820, 0.52], ["eg2", 1120, 0.56]].forEach(([w, x, s], k) =>
+            behind(L, tl, `dn-b${k}`, w, x, 1400, s, k % 2 === 1, t0, D("dinner"), [{ t: 0, mode: k % 3 === 2 ? "sitTable" : "sitEat", eyes: "normal", mouth: "flat", opts: { period: 1.6 + k * 0.2 } }]));
+          tableBefore(id, L, Estate.TABLEF(-60, 1300, 1460, { seed: 41 }), 99);
+        },
+      });
+
+      // ---------- 5. she chokes: silent, both hands at her throat; can't cough, can't speak, can't breathe ----------
+      add("choke", {
+        set: "canteen", setOpts: { id: "ck" }, dark: 0.35, blur: { far: 6, mid: 5 },
+        cam: { keys: [{ t: 0, ...fr(160, 1355, 2.8, 540, 1000), drift: { s: 0.02 } }, { t: vo("choke", 1) - 0.1, glide: 1.2, ...fr(150, 1350, 3.4, 540, 980), drift: { s: 0.03 } }] },
+        shake: (t) => 2.2 * Math.sin(t * 6.1),
+        actors: [PU(150, 1555, 0.55, [{ t: 0, mode: "chokeSit", eyes: "wide", mouth: "o" }], { flip: true, prop: "spoon", cu: false }),
+          PI(360, 1580, 0.9, [{ t: 0, mode: "sitTable", eyes: "worry", mouth: "flat", look: -8 }, { t: F("choke", 0, 1), mode: "gasp", eyes: "wide", mouth: "o" }], { flip: true, cu: false })],
+        captions: caps("choke"),
+        react: [{ a: 1, t: F("choke", 0, 1) + 0.05, dur: 0.9, fast: true }],
+        ui: [{ type: "signs", t: vo("choke", 1), items: ["<em>ไอไม่ออก</em>", "<em>พูดไม่ได้</em>", "<em>หายใจไม่ได้</em>"], icons: [STEP7.cough, STEP7.cough, STEP7.cough], ok: [0, 0, 0], at: [vo("choke", 1), F("choke", 1, 1), F("choke", 1, 2)], end: D("choke") - 0.05, top: 170 }],
+        fx(tl, id, t0, L) {
+          tableBefore(id, L, Estate.TABLEF(-60, 1300, 1460, { seed: 41 }), 99);
+          const X = t0 + F("choke", 1, 2); Fx.punch(tl, `#${id} .stage`, X, 1.06, 0.4); red(tl, X, 0.5, 0.6);
+          Fx.heart(tl, t0, D("choke"), 0.42, 0.85); Fx.tunnel(tl, t0 + 0.3, t0 + D("choke"), 0.55);
+        },
+      });
+
+      // ---------- 6. panic: เจ๊หงส์ slaps and slaps, ก้อง holds out a cup, the count climbs; คุณวิน stands and watches ----------
+      add("panic", {
+        set: "canteen", setOpts: { id: "pn" }, dark: 0.3, blur: { far: 4, mid: 4 },
+        cam: { keys: [{ t: 0, ...fr(170, 1330, 1.7, 540, 1080), drift: { s: 0.02 } }] },
+        shake: (t) => 3 * Math.sin(t * 7.3),
+        actors: [WI(-200, 1560, 0.9, [{ t: 0, mode: "stare", eyes: "squint", mouth: "flat" }], { cu: false }),
+          HO(255, 1560, 0.9, [{ t: 0, mode: "slapBack", eyes: "worry", mouth: "o", opts: { period: 0.3 } }], { flip: true, cu: false }),
+          KO(560, 1560, 0.9, [{ t: 0, mode: "cupOut", eyes: "wide", mouth: "o" }], { flip: true, prop: "cup", cu: false }),
+          PU(150, 1555, 0.55, [{ t: 0, mode: "chokeSit", eyes: "wide", mouth: "o" }], { flip: true, cu: false })],
+        bubbles: [bub("panic", 0, 560, 520, 470, { end: voEnd("panic", 0) + 0.2 })],
+        react: [{ a: 0, t: D("panic") - 1.0, dur: 0.95, fast: true }],
+        ui: [{ type: "counter", t: 0.1, end: D("panic") - 0.05, label: "ตบหลังไปแล้ว", icon: "people", unit: "ครั้ง", keys: [{ t: 0.2, v: 12 }, { t: D("panic") - 0.2, v: 23 }], alarm: 0.6, right: true, top: 150 }],
+        fx(tl, id, t0, L) {
+          tableBefore(id, L, Estate.TABLEF(-400, 1300, 1460, { seed: 41 }), 99);
+          const pj = jig(id, 3); for (let t = 0.12; t < D("panic"); t += 0.3) tl.fromTo(pj, { x: 0 }, { x: -5, duration: 0.06, yoyo: true, repeat: 1, immediateRender: false }, t0 + t);
+          Fx.heart(tl, t0, D("panic"), 0.36, 0.95);
+        },
+      });
+
+      // ---------- 7. ภู: "หลบ…" — kneeling behind her: lean forward, five back blows; not out — five abdominal thrusts, out on the third ----------
+      const PB = vo("phu", 0) + 0.15, PT = vo("phu", 1), BL = 0.36, TH = 0.42;          // the back blows start with "ก้มตัวลง"; the thrusts start after "กดท้องห้าครั้ง"
+      const B0 = F("phu", 0, 2) + 0.35, T0 = voEnd("phu", 1) + 0.05, POP = T0 + 2 * TH + 0.12;   // first blow, first thrust, the lump comes out on the third
+      split("phu", PT - 0.2, {
+        set: "canteen", setOpts: { id: "ph" }, dark: 0.28, blur: { far: 4, mid: 4 },
+        cam: { keys: [{ t: 0, ...fr(380, 1500, 1.15, 540, 1150), drift: { s: 0.02 } }, { t: B0 - 0.2, glide: 0.4, ...fr(360, 1520, 1.5, 540, 1150), drift: { s: 0.025 } }] },
+        shake: (t) => 1.6 * Math.sin(t * 5.1),
+        actors: [PH(600, 1780, 0.92, [{ t: 0, mode: "walk", eyes: "set", mouth: "flat" }, { t: 0.55, mode: "kneelBlow", eyes: "set", mouth: "flat", opts: { period: BL, n: 5, t0: B0 - 0.55 } }], { flip: true, moveTo: { x: 516, y: 1780, dur: 0.5 }, cu: false }),
+          PU(330, 1780, 0.6, [{ t: 0, mode: "chokeStand", eyes: "wide", mouth: "o", opts: { lean: 40 } }], { flip: true, cu: false }),
+          HO(760, 1640, 0.9, [{ t: 0, mode: "gasp", eyes: "wide", mouth: "o" }], { flip: true, cu: false })],
+        captions: capsAt("phu", 0, PT - 0.2, [0]),
+        ui: [{ type: "skill", t: 0.15, end: B0 - 0.1, x: 560, y: 1150, name: "ภู", skill: "หมอ", desc: "ตบหลังห้า · กดท้องห้า", icon: "medic" },
+          { type: "tally", t: B0 - 0.3, end: PT - 0.25, label: "ตบหลัง", n: 5, hits: [0, 1, 2, 3, 4].map((i) => B0 + i * BL + 0.1), res: { at: B0 + 5 * BL + 0.05, text: "ยังไม่หลุด", ok: false }, top: 260 }],
+        fx(tl, id, t0, L) {
+          put(L.set, Estate.TABLEF(-500, 1500, 1440, { seed: 47 }));
+          const pj = jig(id, 1); for (let i = 0; i < 5; i++) { const T = t0 + B0 + i * BL + 0.1; tl.fromTo(pj, { x: 0, y: 0 }, { x: -9, y: 3, duration: 0.07, yoyo: true, repeat: 1, immediateRender: false }, T); }
+          Fx.heart(tl, t0, PT, 0.4, 0.8);
+        },
+      }, {
+        set: "canteen", setOpts: { id: "ph2" }, dark: 0.32, blur: { far: 6, mid: 6 },
+        cam: { keys: [{ t: 0, ...fr(560, 1420, 1.75, 540, 1060), drift: { s: 0.02 } }, { t: POP - (PT - 0.2) - 0.1, glide: 0.25, ...fr(560, 1380, 2.1, 540, 1000), drift: { s: 0.03 } }] },
+        shake: (t) => 1.6 * Math.sin(t * 5.1),
+        actors: [PH(610, 1820, 0.95, [{ t: 0, mode: "kneelHold", eyes: "set", mouth: "flat", opts: { period: TH, n: 3, t0: T0 - (PT - 0.2) } }], { cu: false }),
+          PU(540, 1800, 0.62, [{ t: 0, mode: "jolt", eyes: "wide", mouth: "o", opts: { period: TH, n: 3, t0: T0 - (PT - 0.2) } }, { t: POP - (PT - 0.2) + 0.05, mode: "cough", eyes: "closed", mouth: "o", opts: { period: 0.4 } }], { cu: false })],
+        captions: capsAt("phu", PT - 0.2, D("phu"), [1]),
+        ui: [{ type: "tally", t: 0.1, end: D("phu") - (PT - 0.2) - 0.05, label: "กดท้อง", n: 5, hits: [0, 1, 2].map((i) => T0 - (PT - 0.2) + i * TH + 0.1), res: { at: POP - (PT - 0.2), text: "หลุด!", ok: true }, top: 260 }],
+        fx(tl, id, t0, L) {
+          // ภู's forearms round her waist and his fist (thumb side in, the other hand over it) between her navel and ribs — over her, in front
+          const A = T0 - (PT - 0.2), P = POP - (PT - 0.2);
+          put(L.act, `<g id="ph2-hands" transform="translate(538,1612)"><path d="M-58,-4q26,6 46,2M60,-2q-24,8 -44,4" stroke="#2e2a26" stroke-width="30" stroke-linecap="round" fill="none"/><path d="M-58,-4q26,6 46,2M60,-2q-24,8 -44,4" stroke="#7d9a7a" stroke-width="23" stroke-linecap="round" fill="none"/>
+            <g transform="translate(0,-2) scale(0.16) rotate(-90)">${Hand.grip({ skin: "#c99a74", sleeve: "#7d9a7a" })}</g></g>`);
+          for (let i = 0; i < 3; i++) { const T = t0 + A + i * TH; tl.fromTo("#ph2-hands", { x: 0, y: 0 }, { x: 0, y: -18, duration: 0.09, yoyo: true, repeat: 1, ease: "power2.out", immediateRender: false }, T); }
+          tl.to("#ph2-hands", { opacity: 0, duration: 0.2 }, t0 + P + 0.5);
+          // the lump flies out on the third thrust, the frame freezes on it for a beat
+          put(L.act, CHUNK("ph2-chunk"));
+          tl.set("#ph2-chunk", { opacity: 1 }, t0 + P);
+          tl.fromTo("#ph2-chunk", { x: 560, y: 1460, scale: 0.6, rotation: 0 }, { x: 330, y: 1300, scale: 1.4, rotation: -200, duration: 0.55, ease: "power2.out", immediateRender: false }, t0 + P);
+          tl.to("#ph2-chunk", { y: 1560, duration: 0.35, ease: "power2.in" }, t0 + P + 0.55);
+          impact(tl, id, L, t0 + P, 560, 760, 0.8); Fx.punch(tl, `#${id} .stage`, t0 + P, 1.1, 0.45);
+          Fx.heart(tl, t0, P, 0.38, 0.85);
+        },
+      });
+
+      // ---------- 8. she breathes; ครูพิม holds her — "หนูขอโทษ… หนูจะไม่เป็นภาระ" ----------
+      add("breathe", {
+        set: "canteen", setOpts: { id: "br" }, dark: 0.3, blur: { far: 6, mid: 6 },
+        cam: { keys: [{ t: 0, ...fr(480, 1480, 1.6, 540, 1080), drift: { s: 0.02 } }, { t: vo("breathe", 0) - 0.1, glide: 1.6, ...fr(470, 1440, 1.95, 540, 1020), drift: { s: 0.025 } }] },
+        actors: [PI(600, 1800, 0.95, [{ t: 0, mode: "kneelAid", eyes: "worry", mouth: "o" }, { t: vo("breathe", 0) - 0.4, mode: "hugKneel", eyes: "sad", mouth: "flat" }], { flip: true, cu: false }),
+          PU(470, 1800, 0.62, [{ t: 0, mode: "cough", eyes: "closed", mouth: "o", opts: { period: 0.5 } }, { t: vo("breathe", 0) - 0.3, mode: "slump", eyes: "sad", mouth: "frown" }], { flip: true, cu: false })],
+        bubbles: [bub("breathe", 0, 330, 900, 420, { br: true, end: D("breathe") - 0.05 })],
+        react: [{ a: 0, t: F("breathe", 0, 1), dur: D("breathe") - F("breathe", 0, 1) - 0.05, fast: true }],
+        fx(tl, id, t0, L) {
+          const P0 = Rig.CAST.pim;
+          put(L.act, `<g id="br-arms" transform="translate(466,1600)"><path d="M70,-30q-50,10 -92,-2M70,6q-50,8 -90,0" stroke="#2e2a26" stroke-width="30" stroke-linecap="round" fill="none"/><path d="M70,-30q-50,10 -92,-2M70,6q-50,8 -90,0" stroke="${P0.sleeve}" stroke-width="23" stroke-linecap="round" fill="none"/>
+            <circle cx="-26" cy="-32" r="12" fill="${P0.skin}" stroke="#2e2a26" stroke-width="3"/><circle cx="-24" cy="4" r="12" fill="${P0.skin}" stroke="#2e2a26" stroke-width="3"/></g>`);
+          tl.set("#br-arms", { opacity: 0 }, t0); tl.to("#br-arms", { opacity: 1, duration: 0.2 }, t0 + vo("breathe", 0) - 0.4);
+          COUGHFX(tl, 420, 1360, t0 + 0.1, 0.9, L, 3); Fx.heart(tl, t0, D("breathe"), 0.7, 0.3); },
+      });
+
+      // ---------- 9. the steps card (NHS / SJA / BRC / AHA 2025) ----------
+      add("card", {
+        set: "canteen", setOpts: { id: "cd" }, dark: 0.55, blur: { far: 8, mid: 8, set: 6 },
+        cam: { keys: [{ t: 0, ...fr(520, 1450, 1.4, 540, 1350), drift: { s: 0.015 } }] },
+        actors: [PH(600, 1820, 0.95, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }], { flip: true, cu: false }), PU(470, 1800, 0.62, [{ t: 0, mode: "handChest", eyes: "sad", mouth: "flat" }], { flip: true, cu: false })],
+        captions: caps("card"),
+        ui: [{ type: "signs", t: vo("card", 0), items: ["ยังไอได้ → <em>ให้ไอต่อ</em> อยู่ข้างๆ", "ไอไม่ออก → <em>ตบหลัง 5</em> สันมือ ระหว่างสะบัก", "<em>กดท้อง 5</em> กำปั้นเหนือสะดือ ดึงเข้า-ขึ้น", "<em>สลับกัน</em> จนกว่าจะหลุด"],
+          icons: [STEP7.cough, STEP7.blow, STEP7.thrust, STEP7.cycle], ok: [1, 1, 1, 1], at: [vo("card", 0), F("card", 0, 1), F("card", 0, 2), F("card", 0, 3)], end: D("card") - 0.05, top: 150 }],
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("card", 0, 3), 1.05, 0.3); Fx.heart(tl, t0, D("card"), 0.7, 0.3); },
+      });
+
+      // ---------- 10. in real life (NHS: not out → 999; even if out → medical help · AHA: no abdominal thrusts for infants) ----------
+      add("real", {
+        set: "canteen", setOpts: { id: "rl" }, dark: 0.5, blur: { far: 8, mid: 8, set: 6 },
+        cam: { keys: [{ t: 0, ...fr(520, 1450, 1.3, 540, 1350), drift: { s: 0.012 } }] },
+        actors: [PH(600, 1820, 0.95, [{ t: 0, mode: "kneelAid", eyes: "normal", mouth: "flat" }], { flip: true, cu: false }), PU(470, 1800, 0.62, [{ t: 0, mode: "slump", eyes: "sad", mouth: "flat" }], { flip: true, cu: false })],
+        captions: caps("real"),
+        ui: [{ type: "tip", t: F("real", 0, 1) - 0.1, end: F("real", 0, 2) - 0.1, ill: "amb", label: "ในชีวิตจริง", text: "ไม่หลุด → {เรียกรถพยาบาล}<br>หลุดแล้ว ก็ต้องให้หมอตรวจ", tone: "rule", top: 230 },
+          { type: "tip", t: F("real", 0, 2), end: D("real") - 0.05, ill: "baby", label: "ในชีวิตจริง", text: "ทารกไม่ถึง 1 ขวบ → {ไม่ใช้วิธีกดท้อง}", tone: "danger", top: 230 }],
+        fx(tl, id, t0) { Fx.punch(tl, `#${id} .stage`, t0 + F("real", 0, 1), 1.05, 0.3); Fx.punch(tl, `#${id} .stage`, t0 + F("real", 0, 3), 1.05, 0.3); Fx.heart(tl, t0, D("real"), 0.7, 0.3); },
+      });
+
+      // ---------- 11. คุณวิน: "มือยังไวเหมือนเดิมนะ… ภู" — he has seen it before; the notebook: ปั้น → ภาระ ----------
+      split("win", vo("win", 2) - 0.2, {
+        set: "canteen", setOpts: { id: "wn" }, dark: 0.3, blur: { far: 4, mid: 4 },
+        cam: { keys: [{ t: 0, ...fr(420, 1350, 1.05, 540, 1080), drift: { s: 0.015 } }, { t: vo("win", 1) - 0.1, glide: 0.4, ...fr(560, 1330, 1.35, 540, 1080), drift: { s: 0.02 } }] },
+        actors: [WI(150, 1700, 0.95, [{ t: 0, mode: "walk", eyes: "squint", mouth: "smile" }, { t: 0.9, mode: "present", eyes: "squint", mouth: "smile" }], { moveTo: { x: 300, y: 1700, dur: 0.8 } }),
+          PH(560, 1700, 0.95, [{ t: 0, mode: "stare", eyes: "normal", mouth: "flat" }], { flip: true, cu: false }),
+          PI(780, 1720, 0.95, [{ t: 0, mode: "hugKneel", eyes: "worry", mouth: "flat" }, { t: vo("win", 1) - 0.1, mode: "hugKneel", eyes: "wide", mouth: "o" }], { flip: true, cu: false }),
+          PU(680, 1720, 0.62, [{ t: 0, mode: "slump", eyes: "sad", mouth: "flat" }], { flip: true, cu: false })],
+        captions: capsAt("win", 0, vo("win", 2) - 0.2, [1]),
+        bubbles: [bub("win", 0, 300, 860, 240, { end: voEnd("win", 0) + 0.02 })],
+        react: [{ a: 2, t: vo("win", 1) - 0.05, dur: vo("win", 2) - vo("win", 1) - 0.2, fast: true }],
+        fx(tl, id, t0) { const X = t0 + F("win", 1, 1); Fx.punch(tl, `#${id} .stage`, X, 1.05, 0.3); Fx.heart(tl, t0, D("win"), 0.6, 0.45); },
+      }, {
+        set: "notebook7", setOpts: { id: "wb", burden: false }, dark: 0.12,
+        cam: { keys: [{ t: 0, ...fr(420, 1060, 1.35, 540, 900), drift: { s: 0.02 } }] },
+        captions: capsAt("win", vo("win", 2) - 0.2, D("win"), [2]),
+        fx(tl, id, t0, L) {
+          const W0 = Rig.CAST.win, a = FA("win", vo("win", 2) - 0.2, 2, 1) - 0.15;
+          put(L.act, `<g id="wb7-hand" transform="translate(300,1180) rotate(-20) scale(0.55)">${Hand.grip({ skin: W0.skin, sleeve: "#f2f0ea", sleeveS: "#d9d6cc" })}<rect x="10" y="-150" width="14" height="190" rx="5" fill="#c8392b" stroke="#2e2a26" stroke-width="3" transform="rotate(-25)"/></g>`);
+          tl.fromTo("#wb-ring", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + a - 0.3);
+          tl.fromTo("#wb-punr", { attr: { width: 0 } }, { attr: { width: 320 }, duration: 0.8, ease: "power1.inOut", immediateRender: false }, t0 + a);
+          const wh = { k: 0 };
+          tl.to(wh, { k: 1, duration: 0.85, ease: "none", immediateRender: false, onUpdate: () => { const g = document.getElementById("wb7-hand"); if (g) g.setAttribute("transform", `translate(${(300 + 170 * wh.k).toFixed(1)},${(1180 - 6 * Math.abs(Math.sin(wh.k * 30))).toFixed(1)}) rotate(-20) scale(0.55)`); } }, t0 + a);
+          Fx.punch(tl, `#${id} .stage`, t0 + a + 0.6, 1.05, 0.35); red(tl, t0 + a + 0.6, 0.35, 0.5); Fx.heart(tl, t0, D("win"), 0.55, 0.5);
+        },
+      });
+
+      // ---------- 12. sig ----------
+      add("sig", {
+        set: "canteen", setOpts: { id: "sgn" }, dark: 0.5, blur: { far: 10, set: 8, mid: 8 },
+        cam: { keys: Sig.cam(F, fr(500, 1100, 0.8, 540, 960)) }, shake: Sig.shake(F),
+        captions: caps("sig"),
+        ui: [Sig.ui(F, "เหลือ 93 วัน · เช็กลิสต์เอาตัวรอด", [["ยังไอได้ → ให้ไอต่อ", true], ["ไอไม่ออก → ตบหลัง 5", true], ["กดท้อง 5 สลับจนหลุด", true], ["???", false]], D("sig"))],
+      });
+
+      // ---------- 13. midnight: ครูพิม at the dorm window; through the bars, ภู under the lamp knots a red scarf and walks to the office ----------
+      split("scarf", vo("scarf", 0) + 0.2, {
+        set: "dormNight", setOpts: { id: "sc", radioOn: false }, dark: 0.55, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 1.1, 540, 1000), drift: { s: 0.02 } }] },
+        actors: [PI(520, 1540, 0.9, [{ t: 0, mode: "watchWin", eyes: "worry", mouth: "flat" }], { cu: false })],
+        captions: capsAt("scarf", 0, vo("scarf", 0) + 0.2, [0]),
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("scarf"), 0.7, 0.4); },
+      }, {
+        set: "estateYard", setOpts: { id: "sy", time: "night" }, dark: 0.12, blur: { far: 3, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(980, 1330, 1.45, 540, 1050), drift: { s: 0.015 } }, { t: FA("scarf", vo("scarf", 0) + 0.2, 1, 1) - 0.1, glide: 0.4, ...fr(990, 1250, 2.0, 540, 1000), drift: { s: 0.02 } }] },
+        actors: [PR(1000, 1560, 0.7, [{ t: 0, mode: "tieScarf", eyes: "set", mouth: "flat" }, { t: D("scarf") - (vo("scarf", 0) + 0.2) - 1.0, mode: "walk", eyes: "set", mouth: "flat" }], { flip: true, cu: false, moveTo: { x: 700, y: 1500, dur: 1.0, at: D("scarf") - (vo("scarf", 0) + 0.2) - 1.0 } })],
+        captions: capsAt("scarf", vo("scarf", 0) + 0.2, D("scarf"), [0, 1]),
+        fx(tl, id, t0, L) {
+          document.getElementById(id).insertAdjacentHTML("beforeend", `<svg style="position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:30;pointer-events:none" viewBox="0 0 1080 1920">${Estate7.BARS()}</svg>`);
+          const X = t0 + FA("scarf", vo("scarf", 0) + 0.2, 1, 1); Fx.punch(tl, `#${id} .stage`, X, 1.05, 0.35); red(tl, X, 0.35, 0.5);
+          Fx.heart(tl, t0, D("scarf"), 0.6, 0.5);
+        },
+      });
+
+      // ---------- 14. the office window from the walkway: the radio "92… five"; "ผ้าผืนนี้ ฉันเก็บไว้ให้นายตลอด" ----------
+      const OF = (oid) => ({ set: "officeNight", setOpts: { id: oid }, dark: 0.15 });
+      const OFFIN = (tl, id, oid, L) => {   // คุณวิน and ภู are inside the room: into the window's clip, the desk drawn over คุณวิน
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.setAttribute("clip-path", `url(#${oid}-clip)`);
+        L.act.insertBefore(g, document.getElementById(`${id}-a2`)); g.appendChild(document.getElementById(`${id}-a0`)); g.appendChild(document.getElementById(`${id}-a1`)); put(g, Estate7.DESK(oid));
+      };
+      const OFACT = (eyesPim) => [WI(450, 1235, 0.62, [{ t: 0, mode: "writeSit", eyes: "normal", mouth: "flat" }], { cu: false, cast: false, rim: false }),
+        PR(770, 1185, 0.6, [{ t: 0, mode: "stare", eyes: "normal", mouth: "flat" }], { flip: true, cu: false, cast: false, rim: false }),
+        PI(300, 1960, 1.15, [{ t: 0, mode: "lookUp", eyes: eyesPim, mouth: "flat" }], { cu: false })];
+      split("office", vo("office", 1) - 0.25, {
+        ...OF("of"),
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 1.0, 540, 1000), drift: { s: 0.015 } }, { t: 1.2, glide: vo("office", 1) - 1.6, ...fr(600, 980, 1.35, 540, 900), drift: { s: 0.02 } }] },
+        actors: OFACT("worry"),
+        captions: capsAt("office", 0, vo("office", 1) - 0.25, [0]),
+        fx(tl, id, t0, L) {
+          OFFIN(tl, id, "of", L);
+          tl.fromTo("#of-dialw", { opacity: 0.4 }, { opacity: 1, duration: 0.25, repeat: Math.ceil(voEnd("office", 0) / 0.5), yoyo: true, immediateRender: false }, t0 + vo("office", 0));
+          document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("radio"));
+          Fx.heart(tl, t0, D("office"), 0.6, 0.45);
+        },
+      }, {
+        ...OF("of2"),
+        cam: { keys: [{ t: 0, ...fr(600, 980, 1.35, 540, 900), drift: { s: 0.02 } }, { t: FA("office", vo("office", 1) - 0.25, 1, 1) + 0.05, glide: 0.35, ...fr(260, 1500, 1.6, 540, 1150), drift: { s: 0.025 } }] },
+        actors: [...OFACT("wide").slice(0, 2), PI(300, 1960, 1.15, [{ t: 0, mode: "lookUp", eyes: "worry", mouth: "flat" }, { t: FA("office", vo("office", 1) - 0.25, 1, 1), mode: "gasp", eyes: "wide", mouth: "o" }], { cu: false })],
+        captions: capsAt("office", vo("office", 1) - 0.25, D("office"), [1]),
+        fx(tl, id, t0, L) {
+          OFFIN(tl, id, "of2", L);
+          const X = t0 + FA("office", vo("office", 1) - 0.25, 1, 1); Fx.punch(tl, `#${id} .stage`, X, 1.06, 0.4); red(tl, X, 0.4, 0.5);
+          Fx.heart(tl, t0, D("office"), 0.5, 0.6);
+        },
+      });
+
+      // ---------- 15. ปั้น's drawing: เจ๊หงส์ behind bars, the fridge with the red cross ----------
+      add("drawing", {
+        set: "drawing7", setOpts: { id: "dw7" }, dark: 0.1,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 0.92, 540, 960), drift: { s: 0.01 } }, { t: 0.2, glide: D("drawing") - 0.2, ...fr(560, 1000, 1.08, 540, 960), drift: { s: 0.015 } }] },
+        captions: caps("drawing"),
+        fx(tl, id, t0) { const X = t0 + F("drawing", 0, 1); Fx.punch(tl, `#${id} .stage`, X, 1.05, 0.35); Fx.glitch(tl, `#${id}`, X + 0.2, 0.2, 8, 73); Fx.heart(tl, t0, D("drawing"), 0.55, 0.5); },
+      });
+
+      // ---------- 16. choice: run tonight or wait — pulled to "wait": เจ๊หงส์'s medicine is in the estate's fridge ----------
+      add("choice", {
+        set: "dormNight", setOpts: { id: "cho", radioOn: false }, dark: 0.6, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 1.0, 540, 1000), drift: { s: 0.02 } }, { t: 1.0, glide: 1.6, ...fr(520, 1100, 1.6, 540, 1000), r: 2, drift: { s: 0.03, r: 0.8 } }] },
+        shake: (t) => shakeH(t) * 2,
+        actors: [PI(520, 1540, 0.9, [{ t: 0, mode: "watchWin", eyes: "worry", mouth: "frown" }])],
+        react: [{ a: 0, t: 0.6, dur: 2.2 }],
+        ui: [{ type: "choice", t: 0.05, q: "ครูพิมรู้แล้วว่าภูเป็นใคร… หนีคืนนี้มั้ย?", a: "รอก่อน", b: "หนีคืนนี้", secs: 3, top: 300, possessed: { at: 1.0, side: "a", glitch: "รอก่อน…", who: "…ยาของเจ๊หงส์ อยู่ในตู้เย็นนิคม" } }],
+        fx(tl, id, t0) { Fx.heart(tl, t0, D("choice"), 0.38, 0.85); Fx.tunnel(tl, t0, t0 + D("choice") + 0.5, 0.75); Fx.glitch(tl, `#${id}`, t0 + 1.0, 0.3, 12, 74); Fx.glitch(tl, `#${id}`, t0 + D("choice") - 0.6, 0.4, 18, 75); tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.2); },
+      });
+
+      // ---------- 17. end card: the ledger — day 92; tomorrow: the medicine, a way out ----------
+      add("next", {
+        set: "dormNight", setOpts: { id: "nx", radioOn: true }, dark: 0.75, blur: { far: 6, set: 6 },
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 1.0, 540, 960), drift: { s: 0.03 } }] },
+        ui: [{ type: "nextCard", t: 0.3, big: "ตอนที่ 8", tag: "ยาตู้เย็น… ไฟดับแล้ว ยายังใช้ได้มั้ย", top: 150 }, { type: "ledger", t: 0.6, day: "เหลือ 92 วัน", rows: [["วิทยุนับถอยหลัง", "93 → 92"], ["คน", "5 = 5"], ["ปั้น", "ภาระ", "warn"], ["ภู", "ผ้าแดง · คนของนิคม", "warn"], ["ยาเจ๊หงส์", "ตู้เย็นนิคม", "warn"]], six: "", next: "ยา · ทางออก", top: 640 }],
+        fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 0.3 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 1 }, t0 + 0.45); Fx.glitch(tl, `#${id}`, t0 + 1.9, 0.12, 10, 91); Fx.heart(tl, t0 + 1.2, D("next") - 1.2, 0.7, 0.35); },
+      });
+
+      // no source cards and no source names on screen (user, 26 Oct 2026: "เอา ที่มา ออกให้หมด"); the sources live in the pinned comment (CAPTIONS.md)
+      shots.forEach((sh) => { if (sh.ui) sh.ui = sh.ui.filter((u) => u.type !== "src"); });
+
+      // ---------- the look: depth, haze, light sources per shot ----------
+      const MORN = (L) => { Fence.light(L, 1300, 380, 1000, "#ffe2b0", 0.32); Fence.haze(L, 1120, 420, "#ffe6c8", 0.32); };
+      const CANT = (L) => { Fence.light(L, 300, -100, 700, "#eaf6ff", 0.3); Fence.light(L, 1300, -100, 700, "#eaf6ff", 0.25); };
+      const DORM = (L) => { Fence.light(L, 780, 660, 560, "#cfe0f0", 0.28); Fence.light(L, 960, 1240, 300, "#ffb35c", 0.25, "lampf"); };
+      const NIGHTY = (L) => { Fence.light(L, 1060, 520, 600, "#fff2c8", 0.4); };
+      const OFFICE = (L) => { Fence.light(L, 300, 920, 520, "#ffd58a", 0.35, "lampf"); };
+      const LOOK = {
+        hook: CANT, chapter: (L) => { MORN(L); Fence.depth(L, "grass", { op: 0.9 }); }, "board#0": MORN, "board#1": MORN,
+        dinner: CANT, choke: CANT, panic: CANT, "phu#0": CANT, "phu#1": CANT, breathe: CANT, card: CANT, real: CANT, "win#0": CANT, "win#1": () => {}, sig: CANT,
+        "scarf#0": DORM, "scarf#1": NIGHTY, "office#0": OFFICE, "office#1": OFFICE,
+        drawing: (L) => { Fence.light(L, 540, 320, 640, "#ffd58a", 0.4, "lampf"); Fence.cone(L, 540, 260, 1100, 1300, "#ffd58a", 0.22); }, choice: DORM, next: DORM,
+      };
+      const seen = {}, depth0 = Fence.depth;
+      shots.forEach((sh) => { const n = seen[sh.key] = (seen[sh.key] ?? -1) + 1, look = LOOK[`${sh.key}#${n}`] || (n === 0 ? LOOK[sh.key] : null), e = sh.extra;
+        if (look) sh.extra = (L, id) => { if (e) e(L, id); const k0 = (sh.cam && sh.cam.keys && sh.cam.keys[0]) || { x: 0, y: 0, s: 1 }; Fence.depth = (L2, kind, o = {}) => depth0(L2, kind, { cam: k0, ...o }); look(L, id); Fence.depth = depth0; }; });
+      shots.forEach((sh) => { const f = sh.fx; sh.fx = (tl, id, t0, L) => { if (f) f(tl, id, t0, L); Zom.zlife(tl, `#${id}`, t0, sh.dur); Fence.flife(tl, `#${id}`, t0, sh.dur); }; });

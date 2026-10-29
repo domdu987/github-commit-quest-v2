@@ -816,6 +816,18 @@ def sfx(kind):
         bloom = np.clip(t / 0.22, 0, 1) ** 1.5 * np.exp(-np.maximum(t - 0.22, 0) * 2.4)
         thump = osc(52 + 30 * np.exp(-t * 9), d) * np.exp(-t * 7) * 0.6
         return (fband(rng.standard_normal(len(t)), lo=120, hi=1600) * bloom * 0.6 + thump) * 0.8
+    if kind == "slap":  # an open hand on a back through a shirt: a dull smack (band-limited, no hiss) on a low thump (0.18 s; EP.7)
+        d = 0.18
+        t = t_arr(d)
+        smack = fband(rng.standard_normal(len(t)), lo=280, hi=2600) * np.exp(-t * 46)
+        thump = osc(115 + 40 * np.exp(-t * 30), d) * np.exp(-t * 28)
+        return (smack * 0.75 + thump * 0.55) * 0.9
+    if kind == "blow":  # the heel of a hand between the shoulder blades, firm and deliberate: a deeper thump with a short body (0.24 s; EP.7)
+        d = 0.24
+        t = t_arr(d)
+        body = fband(rng.standard_normal(len(t)), lo=160, hi=1800) * np.exp(-t * 34)
+        thump = osc(82 + 36 * np.exp(-t * 26), d) * np.exp(-t * 18)
+        return (body * 0.6 + thump * 0.8) * 0.9
     raise ValueError(kind)
 
 
