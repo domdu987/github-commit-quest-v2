@@ -35,7 +35,8 @@ SHOTS = [
     ("day1", ["n10", ("p03", 0.25)], 0.3, 0.4, 5.4),   # "วันที่ 1": the two on the empty beach, the foam box: "น้ำส้มสายชู? จิ้มขนมเหรอ"
     ("heat", ["n11"], 0.3, 0.5, 3.0),            # insert: the bottle is empty; the sun; "บ่ายสอง"
     ("fork1", ["n12", ("n13", 0.9)], 0.2, 0.5, 6.2),   # the fork card: A ดื่ม (ผสมน้ำจืด) / B ไม่ดื่ม — countdown — "คนส่วนใหญ่ เลือกดื่ม"
-    ("drink", ["f03", ("p04", 0.15)], 0.2, 0.5, 4.8),  # the wrong path: ฟ้า mixes the last drops in and drinks; ภูมิ "พี่…"
+    ("give", ["f06"], 0.3, 0.5, 3.0),             # the wrong path, played like a film: ฟ้า hands the last fresh water to her brother
+    ("drink", ["f03", ("p04", 0.15)], 0.2, 0.5, 5.2),  # "พี่ดื่มน้ำทะเลก็ได้ ในคลิปบอกว่าผสมน้ำจืดนิดเดียว" — she tips a few drops in and drinks; ภูมิ "พี่…"
     ("know1", ["n14", ("n15", 0.15)], 0.3, 0.4, 6.0),  # the body diorama: the kidneys can only make urine less salty than the sea; more water out than in
     ("know2", ["n16", ("n17", 0.2)], 0.2, 0.5, 5.6),   # mixing in fresh water only spends it on the salt; the gauge drops; "ยิ่งดื่ม ยิ่งกระหาย"
     ("worse", ["f04"], 0.3, 0.6, 3.4),           # ฟ้า dizzy under the palm, lips cracked, the symptom slats; she folds
