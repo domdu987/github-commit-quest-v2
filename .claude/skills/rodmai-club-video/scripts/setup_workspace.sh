@@ -23,6 +23,7 @@ W="${1:?usage: setup_workspace.sh <work dir> [episode | name=repo dir ...]}"; sh
 mkdir -p "$W/hf/lib" "$W/hf/rig/assets" "$W/music"
 cp "$V"/quake-ep1/lib/*.js "$V"/quake-ep1/lib/voice.py "$V"/quake-ep1/lib/voice_qa.py "$W/hf/lib/"
 cp "$V"/tide/lib/*.js "$W/hf/lib/"
+cp "$V"/island/lib/*.js "$W/hf/lib/" 2>/dev/null || true
 cp "$V"/lib-shared/*.js "$W/hf/lib/"
 cp "$V"/quake-ep1/composition/{package.json,hyperframes.json,meta.json} "$W/hf/rig/"
 rm -rf "$W/hf/rig/assets/fonts" && cp -r "$V"/quake-ep1/composition/assets/fonts "$W/hf/rig/assets/"
