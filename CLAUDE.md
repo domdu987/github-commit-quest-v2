@@ -90,6 +90,15 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
   framing. A sepia past (`SEPIA` grade, "20 ปีก่อน" chip) can dissolve into the present on a matched close-up. A faint
   sepia "ghost" of the younger self over the present child plays the memory. A split screen ends the story: two Shots
   with `clip-path` halves, then the left wipes away while the right camera opens to the wide shot.
+- Story objects on a table (`story15`: the cookie tin of envelopes) get a **macro insert world**: a separate Shot
+  with the object drawn large (`tinMacro15`), the character's patterned sleeve and mitten hand entering from a frame
+  edge. It has no heads, so no faces get cut. Put the table's other props (cups, oranges) at the frame edges for scale,
+  and lay the dark caption band if the tabletop is light.
+- A standing character handing something to a seated one stands ≥ 250 px away and bows ≤ 14°, so the heads stay about
+  190 px apart. A lid lifted toward a seated face crosses it: lift it off and set it aside (hidden).
+- A crane-up ending (camera rises and widens into the lanterns; the set extends above y = 0, so pass a negative
+  `minY`) ends with the heads at screen y ≈ 1100, above the captions, never at the bottom edge.
+- Props that belong to one era go with it: a stool behind a standing child reads as the child standing on it.
 
 ## Graphics
 - Cards get the layered pro shadow, a top gloss and a shine sweep; they enter with `enter3d` / springs.
@@ -106,6 +115,10 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
 - TTS through fal.run `fal-ai/gemini-3.1-flash-tts`, with retries.
   - The content filter blocks some lines about death or loss; reword them (e.g. "ปีนี้ยายไม่อยู่แล้ว" passes).
   - Transcribe every take with Whisper large-v3, run plain (no prompt); regenerate if a word reads wrong.
+  - Whisper mishears Teochew loanwords and some tones on every take (อั่งเปา → อ่างเป่า, ลื้อ → หรือ, ซอง → สอง).
+    Cross-check those words with ElevenLabs Scribe on fal (`fal-ai/elevenlabs/speech-to-text`, the take as a data
+    URI). Test the take **in context** (the narrator's previous line first): a line heard alone or repeated reads
+    differently. If Scribe also misreads it, regenerate with a style note that names the word and its tone.
 - Music: fal `elevenlabs/music` composition plan with every section ≥ 3000 ms; use `extend.py` if it is short.
 - Sound effects: generate real ones with fal `fal-ai/elevenlabs/sound-effects/v2` (`{text, duration_seconds,
   prompt_influence}`; about 23 per story) into `storyN/sfx/`.

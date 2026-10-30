@@ -1,0 +1,24 @@
+shophouse_amb|an old Chinese-Thai shophouse on Chinese New Year morning, a quiet street outside, distant chatter, birds, no music|10
+firecrackers_far|a long string of firecrackers popping far away down a street, distant|4
+lion_drum_far|Chinese lion dance drum and cymbals far away down the street, distant and soft|6
+envelope|a paper envelope being handed over, crisp paper rustle|1
+tin_open|an old metal cookie tin lid being pried open, tin pop|1.5
+tin_close|an old metal cookie tin lid being pressed shut|1
+envelope_in_tin|a paper envelope dropped into a metal tin|1
+kid_giggle|a small child giggling with joy|1.5
+kid_jump|a small child jumping up and down on a tiled floor, happy|1.5
+folding_door|an old wooden folding shop door sliding open, wooden creak and rattle|2
+steps_young|footsteps of a young man in sneakers on an old tiled floor|3
+steps_slippers|an old woman's slow shuffling footsteps in cloth slippers on a tiled floor|3
+notify|a short soft smartphone message notification chime|1
+phone_buzz|a smartphone vibrating on a bed sheet|1.5
+room_night|a small Bangkok apartment at night, air conditioner hum, distant city traffic, no music|10
+box_down|a cardboard box of office things set down on a floor|1.5
+oranges_bag|a plastic bag of oranges set down on a marble table|1.5
+tea_pour|Chinese tea poured from a small clay teapot into a tiny cup|2
+calendar_tear|a paper calendar page being torn off|1
+wind_chime|a small metal wind chime softly ringing in a breeze|3
+envelopes_fan|a stack of paper envelopes being spread out on a table|1.5
+cat_meow|a sleepy cat meowing softly once|1
+hug|clothing rustle of a warm hug|1
+stool|a wooden stool scraping on a tiled floor|1

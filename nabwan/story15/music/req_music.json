@@ -1,0 +1,137 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "Chinese New Year family warmth",
+   "soft guzheng, gentle erhu, felt piano and warm strings",
+   "tender, nostalgic, kind",
+   "high quality studio recording",
+   "D major pentatonic"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer",
+   "loud gongs",
+   "firecracker noise"
+  ],
+  "sections": [
+   {
+    "section_name": "A question about red envelopes",
+    "duration_ms": 6000,
+    "lines": [],
+    "positive_local_styles": [
+     "solo guzheng plucks with soft felt piano",
+     "curious and gentle",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Childhood memory",
+    "duration_ms": 3900,
+    "lines": [],
+    "positive_local_styles": [
+     "music box and guzheng, playful and nostalgic",
+     "light and sweet"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "The first salary",
+    "duration_ms": 6000,
+    "lines": [],
+    "positive_local_styles": [
+     "warm lift",
+     "a soft erhu melody enters over piano",
+     "proud and gentle"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Eight years of New Years",
+    "duration_ms": 7000,
+    "lines": [],
+    "positive_local_styles": [
+     "light festive pizzicato strings and soft hand percussion",
+     "years passing",
+     "builds to a small warm peak at the end"
+    ],
+    "negative_local_styles": [
+     "drums kit",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Losing the job",
+    "duration_ms": 8300,
+    "lines": [],
+    "positive_local_styles": [
+     "the music drops",
+     "sparse low piano and a lonely erhu",
+     "quiet and heavy"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Coming home with empty hands",
+    "duration_ms": 8800,
+    "lines": [],
+    "positive_local_styles": [
+     "slow tender build",
+     "guzheng arpeggios and soft strings swelling",
+     "a revelation"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "The grandmother's words",
+    "duration_ms": 8100,
+    "lines": [],
+    "positive_local_styles": [
+     "emotional peak",
+     "full warm strings with the erhu melody",
+     "tears of joy",
+     "gentle, not bombastic"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "brass"
+    ]
+   },
+   {
+    "section_name": "Come home this New Year",
+    "duration_ms": 6760,
+    "lines": [],
+    "positive_local_styles": [
+     "warm hopeful resolve",
+     "guzheng and piano",
+     "bright soft ending that fades out"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   }
+  ]
+ }
+}

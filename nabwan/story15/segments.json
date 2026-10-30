@@ -1,0 +1,92 @@
+[
+ {
+  "file": "story15/vo/H44.wav",
+  "src": [
+   0.17,
+   5.56
+  ],
+  "on": 0.25,
+  "name": "H"
+ },
+ {
+  "file": "story15/vo/A44.wav",
+  "src": [
+   0.17,
+   3.92
+  ],
+  "on": 6.02,
+  "name": "A"
+ },
+ {
+  "file": "story15/vo/B44.wav",
+  "src": [
+   0.18,
+   6.05
+  ],
+  "on": 10.0,
+  "name": "B"
+ },
+ {
+  "file": "story15/vo/C44.wav",
+  "src": [
+   0.15,
+   4.17
+  ],
+  "on": 16.1,
+  "name": "C"
+ },
+ {
+  "file": "story15/vo/D44.wav",
+  "src": [
+   0.13,
+   2.84
+  ],
+  "on": 22.8,
+  "name": "D"
+ },
+ {
+  "file": "story15/vo/E44.wav",
+  "src": [
+   0.19,
+   5.63
+  ],
+  "on": 25.69,
+  "name": "E"
+ },
+ {
+  "file": "story15/vo/G44.wav",
+  "src": [
+   0.18,
+   8.55
+  ],
+  "on": 31.36,
+  "name": "G"
+ },
+ {
+  "file": "story15/vo/T44.wav",
+  "src": [
+   0.23,
+   4.95
+  ],
+  "on": 40.26,
+  "name": "T"
+ },
+ {
+  "file": "story15/vo/F44.wav",
+  "src": [
+   0.17,
+   3.74
+  ],
+  "on": 45.56,
+  "name": "F"
+ },
+ {
+  "file": "story15/vo/L44.wav",
+  "src": [
+   0.09,
+   2.82
+  ],
+  "on": 49.41,
+  "name": "L"
+ }
+]
