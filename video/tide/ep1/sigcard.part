@@ -1,0 +1,93 @@
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .zchk { position: absolute; left: 80px; width: 920px; z-index: 52; opacity: 0; font-family: Kanit; }
+        .zchk .zc-in { position: relative; padding: 26px 36px 30px; border-radius: 28px; overflow: hidden;
+          background: linear-gradient(180deg, rgba(16,20,22,.95), rgba(7,9,11,.97)); border: 4px solid rgba(244,236,216,.3); box-shadow: 0 24px 60px rgba(0,0,0,.7); }
+        .zchk .zc-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 6px); pointer-events: none; }
+        .zchk .zc-bar { position: absolute; left: 0; right: 0; top: 0; height: 110px; background: linear-gradient(180deg, transparent, rgba(255,60,50,.32), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-h { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+        .zchk .zc-dot { width: 20px; height: 20px; border-radius: 50%; background: #ff4a3a; box-shadow: 0 0 14px #ff4a3a; flex: none; }
+        .zchk .zc-h b { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; flex: 1; }
+        .zchk .zc-tally { font: 900 46px/1 Kanit; color: #7fd1b9; min-width: 120px; text-align: right; }
+        .zchk .zc-r { position: relative; display: flex; align-items: center; gap: 26px; padding: 14px 14px; margin: 0 -14px; border-top: 2px solid rgba(244,236,216,.1); opacity: 0; border-radius: 16px; }
+        .zchk .zc-sw { position: absolute; inset: 0; overflow: hidden; border-radius: 16px; pointer-events: none; }
+        .zchk .zc-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(127,209,185,.45), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-box { width: 86px; height: 86px; border-radius: 18px; border: 5px solid rgba(244,236,216,.55); flex: none; position: relative; box-sizing: border-box; }
+        .zchk .zc-box svg { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; overflow: visible; }
+        .zchk .ck { fill: none; stroke: #7fd1b9; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 90; stroke-dashoffset: 90; }
+        .zchk .xx { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; opacity: 0; } .zchk .xx svg { left: 0; top: 0; }
+        .zchk .xx path { stroke: #fff; stroke-width: 12; stroke-linecap: round; }
+        .zchk .zc-t { font: 900 60px/1.1 Kanit; color: #f4ecd8; position: relative; }
+        .zchk .bad .zc-t { color: #ff8a7a; letter-spacing: 8px; }
+        .zchk .zc-box svg.zc-crack { left: 38px; top: 38px; width: 2px; height: 2px; overflow: visible; pointer-events: none; }
+        .zchk .zc-crack path { fill: none; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .zchk .zc-crack .c1 { stroke: rgba(0,0,0,.6); stroke-width: 7; } .zchk .zc-crack .c2 { stroke: rgba(255,240,230,.92); stroke-width: 2.6; }
+      </style>`);
+      GameUI.C.sigCard = {
+        html: (id, o) => {
+          const r = (() => { let q = 23; return () => ((q = (q * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+          let cracks = "";
+          for (let k = 0; k < 7; k++) {
+            let x = 0, y = 0, d = "M0,0", br = "";
+            const ang = -1.7 + k * 0.29;
+            for (let j = 0; j < 8; j++) {
+              const a2 = ang + (r() - 0.5) * 0.8, L = 45 + r() * 75;
+              x += Math.cos(a2) * L; y += Math.sin(a2) * L; d += `L${x.toFixed(0)},${y.toFixed(0)}`;
+              if (j === 2 || j === 5) { const ba = a2 + (r() > 0.5 ? 0.9 : -0.9); br += `M${x.toFixed(0)},${y.toFixed(0)}l${(Math.cos(ba) * 70).toFixed(0)},${(Math.sin(ba) * 70).toFixed(0)}l${(Math.cos(ba + 0.4) * 40).toFixed(0)},${(Math.sin(ba + 0.4) * 40).toFixed(0)}`; }
+            }
+            cracks += `<path class="c1" d="${d}${br}"/><path class="c2" d="${d}${br}"/>`;
+          }
+          return `<div id="${id}" class="zchk" style="top:${o.top ?? 470}px"><div class="zc-in" id="${id}-in"><div class="zc-scan"></div><div class="zc-bar" id="${id}-bar"></div>
+            <div class="zc-h"><span class="zc-dot" id="${id}-dot"></span><b>${o.title}</b><span class="zc-tally" id="${id}-tally">✓ 0</span></div>
+            ${o.items.map(([txt, ok], i) => `<div class="zc-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="zc-sw"><i class="zc-sweep"></i></span><span class="zc-box">${ok
+              ? `<svg viewBox="0 0 86 86"><path class="ck" d="M20,45 L37,61 L67,25"/></svg>`
+              : `<span class="xx"><svg viewBox="0 0 86 86"><path d="M22,22L64,64M64,22L22,64"/></svg></span><svg class="zc-crack" id="${id}-crack">${cracks}</svg>`}</span><span class="zc-t">${txt}</span></div>`).join("")}
+            </div></div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id), inner = document.getElementById(`${id}-in`);
+          const bar = document.getElementById(`${id}-bar`), tally = document.getElementById(`${id}-tally`), dot = document.getElementById(`${id}-dot`);
+          const qtx = el.querySelector(`#${id}-r${o.items.length - 1} .zc-t`), S3 = o.show[o.items.length - 1], X = o.mark[o.items.length - 1];
+          const GL = ["???", "?▓?", "▒?░", "??▓", "░▒▓", "?!?", "▓?▒", "?░?"];
+          const h = (n) => { const v = Math.sin(n * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+          // entrance: flicker on like a failing screen, with a colour split that settles
+          tl.fromTo(`#${id}`, { opacity: 0, scale: 1.08, filter: "drop-shadow(14px 0 0 rgba(255,40,60,.8)) drop-shadow(-14px 0 0 rgba(40,220,255,.8))" },
+            { opacity: 1, scale: 1, filter: "drop-shadow(0px 0 0 rgba(255,40,60,0)) drop-shadow(0px 0 0 rgba(40,220,255,0))", duration: 0.32, ease: "power3.out", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.2, ease: "power3.out", immediateRender: false }, A(o.show[i]));
+            if (ok) {
+              tl.fromTo(`#${id}-r${i} .ck`, { strokeDashoffset: 90 }, { strokeDashoffset: 0, duration: 0.18, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)", boxShadow: "0 0 0 0 rgba(127,209,185,.9)" }, { borderColor: "#7fd1b9", boxShadow: "0 0 0 22px rgba(127,209,185,0)", duration: 0.4, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-sweep`, { opacity: 1, x: -380 }, { opacity: 0, x: 1100, duration: 0.45, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}-r${i}`, { opacity: 0.42, filter: "saturate(.3)", duration: 0.3 }, A(S3) + 0.05);   // the good news fades while ??? takes over
+            } else {
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)" }, { borderColor: "#ff5a4a", duration: 0.12, repeat: 7, yoyo: true, immediateRender: false }, A(S3));
+              tl.fromTo(`#${id}-r${i} .xx`, { opacity: 0, scale: 3.2 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.14, ease: "power4.in", immediateRender: false }, A(X));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { backgroundColor: "rgba(216,50,42,0)", borderColor: "#ff5a4a", boxShadow: "0 0 0 0 rgba(255,90,74,.95)" },
+                { backgroundColor: "rgba(216,50,42,1)", borderColor: "#ff5a4a", boxShadow: "0 0 0 40px rgba(255,90,74,0)", duration: 0.45, immediateRender: false }, A(X) + 0.12);
+              tl.fromTo(`#${id}-r${i}`, { backgroundColor: "rgba(216,50,42,0)" }, { backgroundColor: "rgba(216,50,42,.35)", duration: 0.2, immediateRender: false }, A(X) + 0.12);
+            }
+          });
+          tl.fromTo(`#${id}-crack path`, { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.015, ease: "power3.out", immediateRender: false }, A(X) + 0.12);
+          // per-frame state: tally, scrambling ???, heartbeat border, scan bar, shake, dying-screen flicker
+          const clock = { t: 0 }, Dsh = D("sig");
+          const render = () => {
+            const t = clock.t, sus = Math.min(1, Math.max(0, (t - S3) / (X - S3))), after = t >= X + 0.12;
+            const n = o.mark.filter((m, i) => o.items[i][1] && t >= m).length;
+            tally.textContent = after ? "✗ 1" : `✓ ${n}`; tally.style.color = after ? "#ff5a4a" : "#7fd1b9";
+            qtx.textContent = t >= S3 && t < X + 0.12 ? GL[Math.floor(t * 18) % GL.length] : "???";
+            const beat = Math.pow(Math.max(0, Math.sin((2 * Math.PI * (t - S3)) / 0.38)), 4) * (t >= S3 && !after ? 0.35 + 0.65 * sus : 0);
+            inner.style.borderColor = after ? "#ff4a3a" : `rgba(255,${Math.round(236 - 170 * beat)},${Math.round(216 - 160 * beat)},${(0.3 + 0.7 * beat).toFixed(2)})`;
+            inner.style.boxShadow = after ? "0 0 46px rgba(255,60,50,.55), 0 24px 60px rgba(0,0,0,.7)" : `0 0 ${Math.round(50 * beat)}px rgba(255,60,50,${(0.8 * beat).toFixed(2)}), 0 24px 60px rgba(0,0,0,.7)`;
+            bar.style.opacity = t >= S3 && !after ? (0.4 + 0.5 * sus).toFixed(2) : 0;
+            bar.style.transform = `translateY(${Math.round((((t - S3) * 1.7) % 1) * 560 - 110)}px)`;
+            dot.style.opacity = Math.floor(t * (after ? 8 : 2.5)) % 2 ? 0.25 : 1;
+            const amp = after ? 2 + 20 * Math.exp(-(t - X) * 5) : t >= S3 ? 1 + 6 * sus * sus : 0, k = Math.floor(t * 30);
+            const fl = after && t > X + 0.4 && h(k * 3.1) > 0.82 ? 0.45 : 1;
+            inner.style.transform = `translate(${((h(k) - 0.5) * 2 * amp).toFixed(1)}px,${((h(k + 0.5) - 0.5) * 2 * amp).toFixed(1)}px) rotate(${((h(k + 0.25) - 0.5) * amp * 0.12 + (after ? -1.6 : 0)).toFixed(2)}deg)`;
+            inner.style.opacity = fl;
+          };
+          tl.to(clock, { t: Dsh, duration: Dsh, ease: "none", immediateRender: false, onUpdate: render }, o.t0abs);
+          render();
+        },
+      };
+      const SF = (j) => F("sig", 0, j);
