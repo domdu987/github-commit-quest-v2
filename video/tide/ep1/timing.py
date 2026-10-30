@@ -20,7 +20,7 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("open", ["n01"], 0.4, 0.3, 4.6),            # opener: the sea pulls back off "ทะเลลด EP.1" pressed into wet sand; fish flop
+    ("open", ["n01"], 0.15, 0.12, 2.6),          # opener (hook rule: the command lands by ~3 s): the sea pulls back off "ทะเลลด EP.1" pressed into wet sand; fish flop
     ("hook", ["n02"], 0.1, 0.6, 2.2),            # close: a flopping fish on the sand, a child's hand reaching for it
     ("clock", ["n03"], 0.3, 0.4, 2.4),           # ร้านยาย's wall clock spins back two hours
     ("map", ["n04"], 0.3, 1.0, 4.4),             # map: Bangkok → Phang Nga, the car on the route, zoom to บ้านแหลมหอย
