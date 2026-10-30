@@ -82,6 +82,14 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
   - Feed fireworks the shot clock: `set.update(lt)`, never `lt + offset`, or every burst is already over.
   - Put window bursts at window height.
 - CSS `zoom` on a card also scales its `left` / `top`.
+- Steam, smoke or breath from a prop between two seated characters rises in the gap between their faces, never from
+  the side nearest a head (`steam14` in `story14`).
+- Walk-ins start with the walker's head inside the frame (a door at the frame edge cuts the face on the first frames).
+  Crowds that rush out must be gone before the next, closer cut.
+- Bookend structure (`story14`): the hook shows the final moment without context, and the ending returns to the same
+  framing. A sepia past (`SEPIA` grade, "20 ปีก่อน" chip) can dissolve into the present on a matched close-up. A faint
+  sepia "ghost" of the younger self over the present child plays the memory. A split screen ends the story: two Shots
+  with `clip-path` halves, then the left wipes away while the right camera opens to the wide shot.
 
 ## Graphics
 - Cards get the layered pro shadow, a top gloss and a shine sweep; they enter with `enter3d` / springs.

@@ -86,7 +86,7 @@ function presentMoment(S, A, B, o = {}) {
   const m = presentMoment(S, A, B), { set, girl, gsk, gsh, man, pair, bot, onDesk, b1, b2, mine, st, L } = m;
   const q = glowQ(S.ui, 800, 380);
   const tPut = L(P.H2) + 0.2, tSit = L(P.H3) + 0.3;
-  const XW = lt => lerp(210, 850, ease.inOutSine(prog(lt, 0.2, tPut - 0.15)));
+  const XW = lt => lerp(285, 850, ease.inOutSine(prog(lt, 0.2, tPut - 0.15)));
   const shots = [
     { t: 0, cam: fA(650, 1000, 1.14, 540, 1000), to: fA(660, 1000, 1.18, 540, 1000) },
     { t: L(P.H2) - 0.05, cam: fA(955, 985, 2.0, 540, 1000), to: fA(955, 985, 2.08, 540, 1000) },
@@ -106,7 +106,7 @@ function presentMoment(S, A, B, o = {}) {
     pair.g.setAttribute('display', lt < tPut ? 'inline' : 'none');
     onDesk.setAttribute('display', lt >= tPut ? 'inline' : 'none'); b1.setAttribute('transform', `translate(${BOYX - 150},${set.deskTop})`); b2.setAttribute('transform', `translate(${BOYX - 112},${set.deskTop})`);
     mine.setAttribute('display', lt >= tSit ? 'inline' : 'none'); mine.setAttribute('transform', `translate(${KRUX + 60},${set.deskTop + 2})`);
-    st(BOYX - 140, set.deskTop - 60, lt, lt >= tPut ? 1 : 0);
+    st(BOYX - 94, set.deskTop - 44, lt, lt >= tPut ? 1 : 0);
     q.update(lt, L(P.H4) + 0.1); q.el.style.display = lt > L(P.H4) ? 'block' : 'none';
     setGrade(S, (1 - prog(lt, 0, 0.4)) * 8);
   };
@@ -173,7 +173,7 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
   const L = t => t - A;
   const r = pastRoom(S), { set, boy, bsh, kru, ksk, bot, pair, onDesk, b1, b2, mine, st } = r;
   const tPut = L(P.T0) - 0.05, tSit = L(P.T1) - 0.1;
-  const XW = lt => lerp(200, 850, ease.inOutSine(prog(lt, 0.15, L(P.B2) + 0.2)));
+  const XW = lt => lerp(285, 850, ease.inOutSine(prog(lt, 0.15, L(P.B2) + 0.2)));
   const shots = [
     { t: 0, cam: fA(660, 1000, 1.15, 540, 1000), to: fA(690, 1000, 1.2, 540, 1000) },
     { t: L(P.B2) - 0.05, cam: fA(860, 1000, 2.0, 520, 1000), to: fA(865, 1000, 2.08, 520, 1000) },
@@ -194,7 +194,7 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
     pair.g.setAttribute('display', lt < tPut ? 'inline' : 'none');
     onDesk.setAttribute('display', lt >= tPut ? 'inline' : 'none'); b1.setAttribute('transform', `translate(${BOYX - 150},${set.deskTop})`); b2.setAttribute('transform', `translate(${BOYX - 112},${set.deskTop})`);
     mine.setAttribute('display', lt >= tSit ? 'inline' : 'none'); mine.setAttribute('transform', `translate(${KRUX + 60},${set.deskTop + 2})`);
-    st(BOYX - 140, set.deskTop - 60, lt, lt >= tPut ? 1 : 0);
+    st(BOYX - 94, set.deskTop - 44, lt, lt >= tPut ? 1 : 0);
   };
   SHOTS.push(S);
 })();
@@ -219,7 +219,7 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
     { t: tBack, cam: fA(955, 980, 2.0, 540, 1000), to: fA(955, 980, 2.1, 540, 1000) },
   ];
   S.update = lt => {
-    applyCam(S, shotCamF(lt, shots, B - A, { handheld: 0.45, minY: -300 }));
+    applyCam(S, shotCamF(lt, shots, B - A, { handheld: 0.45, minY: -900 }));
     const k = prog(lt, 0.2, tBack), day = (lt * 4) % 1;   // four lunches a second
     set.update(lt + (lt < tBack ? lt * 3 : 0));
     const yr = k < 0.34 ? 0 : k < 0.67 ? 1 : 2, w = (k * 3) % 1;
@@ -235,7 +235,7 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
     onDesk.setAttribute('display', full ? 'inline' : 'none'); mine.setAttribute('display', full ? 'inline' : 'none');
     b1.setAttribute('transform', `translate(${BOYX - 150},${set.deskTop}) scale(${grown ? 1 : (1 - day * 0.4).toFixed(3)},1)`); b2.setAttribute('transform', `translate(${BOYX - 112},${set.deskTop})`);
     mine.setAttribute('transform', `translate(${KRUX + 60},${set.deskTop + 2})`);
-    st(BOYX - 140, set.deskTop - 60, lt, full ? 1 : 0);
+    st(BOYX - 94, set.deskTop - 44, lt, full ? 1 : 0);
     tally.update(lt, 0.05, tBack - 0.3); tally.el.style.display = lt < tBoard ? 'block' : 'none';
   };
   SHOTS.push(S);
@@ -293,7 +293,7 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
   const tBell = L(P.D1) - 0.05, tSee = L(P.D2) - 0.1, tGirl = L(P.D3) - 0.1;
   const shots = [
     { t: 0, cam: fA(110, 930, 1.75, 540, 1040), to: fA(118, 930, 1.82, 540, 1040) },
-    { t: tBell, cam: fA(650, 1000, 1.14, 540, 1000), to: fA(660, 1000, 1.18, 540, 1000) },
+    { t: tBell, cam: fA(640, 1000, 1.14, 540, 1000), to: fA(642, 1000, 1.16, 540, 1000) },
     { t: tSee, cam: fA(260, 900, 2.0, 380, 1000), to: fA(262, 900, 2.06, 380, 1000) },
     { t: tGirl, cam: fA(1040, 1015, 2.4, 560, 1080), to: fA(1040, 1015, 2.52, 560, 1080) },   // = the boy's close-up in S1
   ];
@@ -302,14 +302,14 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
     set.update(lt); set.board({ cls: 'ป.4/1', extra: 'สุขสันต์วันครู' });
     // the teacher: writing the date at the board, then turning to the back of the room
     let p;
-    if (lt < tSee) { p = standP(man, 170, set.ground, 1.2, 1, { t: lt, smile: 0.9, head: -6, torso: 2 }); p.aF = man.reach(p, 60, 1096); }   // at his desk by the พานพุ่ม, a hand on the flowers
-    else p = standP(man, 260, set.ground, 1.2, 1, { t: lt, smile: lerp(0.8, 0.45, prog(lt, tSee, tSee + 0.6)), head: 6, torso: 0 });
+    if (lt < tBell) { p = standP(man, 170, set.ground, 1.2, 1, { t: lt, smile: 0.9, head: -6, torso: 2 }); p.aF = man.reach(p, 60, 1096); }   // at his desk by the พานพุ่ม, a hand on the flowers
+    else p = standP(man, lt < tSee ? 245 : 260, set.ground, 1.2, 1, { t: lt, smile: lerp(0.8, 0.45, prog(lt, tSee, tSee + 0.6)), head: 6, torso: 0 });
     man.pose(p);
     // the class runs out at the bell
     kids.forEach((k, i) => {
-      const t0 = tBell + 0.15 + i * 0.22, x = lerp(560 + i * 130, 120, prog(lt, t0, t0 + 1.4));
-      k.g.setAttribute('display', lt > t0 - 0.05 && lt < t0 + 1.4 ? 'inline' : 'none');
-      if (lt > t0 - 0.05) k.pose(walkP(k, x, set.ground, 1.2, -1, lt * 8 + i, { amp: 20, t: lt, smile: 0.9, grin: 1 }));
+      const t0 = tBell + 0.1 + i * 0.1, x = lerp(600 + i * 110, 120, prog(lt, t0, t0 + 0.8));   // running out to lunch, gone before the next cut
+      k.g.setAttribute('display', lt > t0 - 0.05 && lt < t0 + 0.8 ? 'inline' : 'none');
+      if (lt > t0 - 0.05) k.pose(walkP(k, x, set.ground, 1.2, -1, lt * 12 + i, { amp: 26, t: lt, smile: 0.9, grin: 1 }));
     });
     const pg = chairP(girl, BOYX, set.seat, 1.2, -1, { t: lt, smile: 0.25, head: lt > tGirl ? -12 : 6, torso: 2 });
     handsOnDesk(girl, pg, set.deskTop, lt, 0);
@@ -338,7 +338,7 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
   const m = presentMoment(S, A, B), { set, girl, gsk, gsh, man, pair, bot, onDesk, b1, b2, mine, st, L } = m;
   const hearts = heartsRise(set.top, 1000, 900, L(P.Gend) + 0.1, 5, 1461, 0.3);
   const tPut = L(P.E1) - 0.05, tSit = L(P.G1) - 0.1;
-  const XW = lt => lerp(200, 850, ease.inOutSine(prog(lt, 0.15, tPut - 0.15)));
+  const XW = lt => lerp(285, 850, ease.inOutSine(prog(lt, 0.15, tPut - 0.15)));
   const shots = [
     { t: 0, cam: fA(660, 1000, 1.15, 540, 1000), to: fA(690, 1000, 1.2, 540, 1000) },
     { t: tPut - 0.1, cam: fA(955, 985, 2.0, 540, 1000), to: fA(955, 985, 2.1, 540, 1000) },
@@ -358,7 +358,7 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
     pair.g.setAttribute('display', lt < tPut ? 'inline' : 'none');
     onDesk.setAttribute('display', lt >= tPut ? 'inline' : 'none'); b1.setAttribute('transform', `translate(${BOYX - 150},${set.deskTop})`); b2.setAttribute('transform', `translate(${BOYX - 112},${set.deskTop})`);
     mine.setAttribute('display', lt >= tSit ? 'inline' : 'none'); mine.setAttribute('transform', `translate(${KRUX + 60},${set.deskTop + 2})`);
-    st(BOYX - 140, set.deskTop - 60, lt, lt >= tPut ? 1 : 0);
+    st(BOYX - 94, set.deskTop - 44, lt, lt >= tPut ? 1 : 0);
     hearts(lt);
   };
   SHOTS.push(S);
@@ -383,7 +383,7 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
     const pb = chairP(boy, BOYX, setL.seat, 1.2, -1, { t: lt, smile: 1, grin: Math.sin(lt * 3) > 0.3 ? 1 : 0, head: -2 }); handsOnDesk(boy, pb, setL.deskTop, lt, 1); boy.pose(pb); bsh(pb);
     const pk = chairP(kru, KRUX, setL.seat, 1.2, 1, { t: lt, smile: 1, head: 6 }); handsOnDesk(kru, pk, setL.deskTop - 6, lt, 1); kru.pose(pk); ksk(pk);
     r.b1.setAttribute('transform', `translate(${BOYX - 150},${setL.deskTop})`); r.b2.setAttribute('transform', `translate(${BOYX - 112},${setL.deskTop})`); r.mine.setAttribute('transform', `translate(${KRUX + 60},${setL.deskTop + 2})`);
-    r.st(BOYX - 140, setL.deskTop - 60, lt, 1);
+    r.st(BOYX - 94, setL.deskTop - 44, lt, 1);
   };
   // right: today
   const SR = new Shot(A, B, LAYERS()); SR.grade = 'saturate(1.06) contrast(1.04)';
@@ -406,7 +406,7 @@ const BOYX_O = grow => Object.assign({}, BOY14, { s: 0.8 + 0.08 * grow });
     bot.setAttribute('transform', `translate(${(BOYX - 100).toFixed(0)},${setR.deskTop - 34}) scale(0.8)`);
     m.onDesk.setAttribute('display', 'inline'); m.b1.setAttribute('transform', `translate(${BOYX - 150},${setR.deskTop})`); m.b2.setAttribute('transform', `translate(${BOYX - 112},${setR.deskTop})`);
     m.mine.setAttribute('display', 'inline'); m.mine.setAttribute('transform', `translate(${KRUX + 60},${setR.deskTop + 2})`);
-    m.st(BOYX - 140, setR.deskTop - 60, lt, 1);
+    m.st(BOYX - 94, setR.deskTop - 44, lt, 1);
     leak(lt, 0.15 + 0.4 * prog(lt, tMerge, B - A)); hearts(lt);
   };
   SHOTS.push(SL, SR);
