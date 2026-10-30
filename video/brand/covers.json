@@ -321,5 +321,28 @@
    "x": 0,
    "y": -150
   }
+ },
+ {
+  "id": "tide-ep1",
+  "page": "tide-ep1/composition/index.html",
+  "out": "video/tide-ep1/cover.jpg",
+  "t": 64.2,
+  "series": "ทะเลลด",
+  "ep": 1,
+  "epTitle": "ทะเลถอย อย่าคอยดู",
+  "finale": false,
+  "setup": "ทะเลลดลงไปไกล/[ปลาดิ้นเต็มหาด]…",
+  "cmd": "อย่าลงไปเก็บ!",
+  "glow": "#2fb8d8",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.12,
+   "x": 540,
+   "y": 760
+  },
+  "shift": {
+   "x": 0,
+   "y": 40
+  }
  }
 ]
