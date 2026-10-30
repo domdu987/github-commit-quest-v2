@@ -1,0 +1,311 @@
+      // ---------- ทะเลลด EP.3 หนีไม่ทัน ขึ้นชั้นสูง (ตอนจบ) ----------
+      // camera grammar: back to the second wave from ยาย's side — the beach road jammed with pickups (hook, the command on the cars) →
+      // ยาย turns from the road to the hotel, climbs its outside stair saying her own rule 3 → the board: where to go when the hill is too
+      // far → hours later from the hill, the warning called off → จูน's phone zooms on the hotel roof: ยาย waving (the payoff) → the
+      // reunion on the wet sand, the joke → ตาจุ่น comes, จูน asks → inserts: the old photo, the clipping → the twist: the girl he carried
+      // was their mother → ยาย and ตาจุ่น → the rule board's back: "จุ่น" → the Moken screen → the next Wednesday, the whole village stops
+      // for the test → ตังค์'s duck ring → ตาจุ่น's last line by the sea → ตอนจบ
+      const EERIE = { from: "right", rim: "#f4ecd0", rimOp: 0.6, shade: "#2a2a38", shadeOp: 0.34, cast: { len: 1.4, op: 0.24 }, vol: false };
+      const STORM = { from: "right", rim: "#dfe6e8", rimOp: 0.5, shade: "#1e2430", shadeOp: 0.4, cast: false, vol: false };
+      const SUN = { from: "right", rim: "#fff6dc", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.3, op: 0.28 }, vol: false };
+      const GEERIE = { top: "#f2e2b4", bottom: "#7e9294", op: 0.24 }, GSTORM = { top: "#c8ccc4", bottom: "#4e5a5e", op: 0.3 };
+      const GMORN = { top: "#fff2d6", bottom: "#d6eef4", op: 0.14 }, GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 };
+      const GPAST = { top: "#ffe6c0", bottom: "#c8a880", op: 0.3 }, GDUSK = { top: "#ffd8a8", bottom: "#a8b8c0", op: 0.22 };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const SRC = (L, tl, t0, dur, text) => TideUI.source(tl, L.light, t0, dur, { text });
+      const QUO = { quote: true };
+      // a small screen-space chip (time, status) in the beach-world look (EP.1's)
+      const chip = (L, tl, t0, dur, text, o = {}) => {
+        const x = o.x ?? 540, y = o.y ?? 190, w = 24 * text.length + 70, id = `chip${Math.round(t0 * 100)}`;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}"><rect x="${-w / 2 + 5}" y="-30" width="${w}" height="66" rx="33" fill="#0a1a24" opacity=".3"/>
+          <rect x="${-w / 2}" y="-36" width="${w}" height="66" rx="33" fill="#fffaf0" stroke="#2a2420" stroke-width="4"/>
+          <circle cx="${-w / 2 + 36}" cy="-3" r="17" fill="${o.col || "#e8823a"}" stroke="#2a2420" stroke-width="3"/><path d="M${-w / 2 + 36},-13v10l7,5" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <text x="${-w / 2 + 64}" y="9" font-family="Kanit" font-weight="800" font-size="32" fill="#1e2a3a">${text}</text></g></g>`);
+        const g = document.getElementById(id);
+        tl.set(g, { opacity: 0 }, 0);
+        tl.fromTo(g, { opacity: 0, scale: 0.4, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0);
+        tl.to(g, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + dur - 0.25);
+      };
+      // small figures with a two-frame cycle (EP.2's helper); a figure with x0 = x1 and no step stands still
+      const walkers = (L, tl, t0, dur, id, list, layer = "act") => list.forEach((p, k) => {
+        const pal = p.pal || [["#e85a4a", "#2a3a5a", "#c88a5a", 0], ["#3a8ac8", "#e8dcc8", "#a8784a", "#f0d050"], ["#f0c040", "#4a4a4a", "#d8a070", 0], ["#58b088", "#2a3a5a", "#b88058", 0], ["#f4f0e8", "#3a5a8a", "#e0b088", "#e8e0c8"]][k % 5];
+        const n = `${id}-wk${k}`;
+        put(L[layer], `<g transform="translate(${p.x0},${p.y0})"><g id="${n}"><g id="${n}-s" transform="scale(${p.flip ? -p.s0 : p.s0},${p.s0})">${Tide.fig(`${n}-f`, pal)}</g></g></g>`);
+        if (p.at) { tl.set(`#${n}`, { opacity: 0 }, 0); tl.fromTo(`#${n}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + p.at); }
+        if (p.x1 !== undefined) tl.fromTo(`#${n}`, { x: 0, y: 0 }, { x: p.x1 - p.x0, y: p.y1 - p.y0, duration: dur - (p.at || 0), ease: "none", immediateRender: false }, t0 + (p.at || 0));
+        if (p.step) for (let t = p.at || 0, i = 0; t < dur; t += p.step, i++) { tl.set(`#${n}-f-a`, { opacity: i % 2 ? 0 : 1 }, t0 + t); tl.set(`#${n}-f-b`, { opacity: i % 2 ? 1 : 0 }, t0 + t); }
+      });
+      const HILL = (id, o = {}) => ({ set: "tideHill", setOpts: { id, time: "eerie", sea: 0.4, line: 0, wet: true, shop: "gone", flood: 0.3, mark: 3, ...o }, dark: 0, light: EERIE, grade: GEERIE });
+      const LAND = (id, o = {}) => ({ set: "tideBeach", setOpts: { id, view: "land", time: "eerie", ...o }, dark: 0.05, light: EERIE, grade: GEERIE });
+      const AFTER = { shop: "gone", mark: 3, flood: 0 };
+      // the beach road in front of the shop and the hotel (land view): asphalt, a broken centre line, the cars bumper to bumper with their
+      // hazards blinking (o.wreck: after the waves, two of them left tipped and muddy)
+      const RY = 1640;
+      const road = (L, tl, t0, dur, id, o = {}) => {
+        put(L.set, `<path d="M-900,${RY - 76}H2000V${RY + 34}H-900Z" fill="#6c6862"/><path d="M-900,${RY - 76}H2000" stroke="#3a3632" stroke-width="5"/><path d="M-900,${RY + 34}H2000" stroke="#8a8478" stroke-width="6"/>
+          ${Array.from({ length: 16 }, (_, k) => `<path d="M${-860 + k * 200},${RY - 24}h110" stroke="#f0e8d0" stroke-width="7" opacity=".75"/>`).join("")}
+          ${o.wreck ? `<path d="M-900,${RY - 76}H2000V${RY + 34}H-900Z" fill="#5a4a36" opacity=".45"/>` : ""}`);
+        const cars = o.wreck ? [[-40, "pickup", -9, { mud: true, flat: true, dusty: true }], [900, "car", 7, {}]] : [[-80, "pickup"], [190, "car"], [460, "pickup"], [730, "car"], [1000, "pickup"], [1270, "car"]];
+        cars.forEach(([x, kind, rot = 0, extra = {}], k) => {
+          const cid = `${id}-car${k}`;
+          put(L.act, `<g id="${cid}"><g transform="rotate(${rot} ${x} ${RY})">${Mok[kind](`${cid}-b`, x, RY, 0.36, { flip: true, ...extra })}</g>
+            ${o.wreck ? "" : `<g id="${cid}-hz">${[-112, 116].map((dx) => `<circle cx="${x + dx}" cy="${RY - 40}" r="10" fill="#ffb020" stroke="#2e2a26" stroke-width="2"/><circle cx="${x + dx}" cy="${RY - 40}" r="22" fill="#ffb020" opacity=".25"/>`).join("")}</g>`}</g>`);
+          if (!o.wreck) for (let t = 0, i = 0; t < dur; t += 0.42, i++) tl.set(`#${cid}-hz`, { opacity: i % 2 ? 0 : 1 }, t0 + t + k * 0.05);
+        });
+      };
+      // ยาย in the foreground of the land view, the hotel to look up to
+      const YAI = { x: 820, y: 1720, s: 0.62 }, HOTEL = { x: 300, y: 1060 };
+      const YAIPAL = ["#f4f0e8", "#2a5a8a", "#e0b088", "#b8b8b8"];
+      // จูน's phone zoom from the hill (EP.2's): from fr(600, 1150, 1.4, 540, 1000) the hotel's roof stands at ~(489, 975) on screen
+      const CAMP = fr(600, 1150, 1.4, 540, 1000);
+      const HI = TideCast.headPoint("idle");   // the middle of the face in the idle pose (actor units; mirror x when flipped)
+      const ZOOM0 = "translate(540 700) scale(1) translate(-540 -700)", ZOOMR = "translate(540 640) scale(3.2) translate(-489 -975)";
+
+      // ---------- 1. hook: the second wave, ยาย's side: people run past her shop to the pickups on the beach road ----------
+      add("hook", {
+        ...LAND("lv0"), blur: { sky: 1, far: 1.5, mid: 1, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(640, 1430, 1.2, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(620, 1460, 1.32, 540, 1020) }] },
+        shake: (t) => ({ x: 1.2 * Math.sin(t * 23), y: 0, r: 0 }),
+        actors: [A("yaiTideHug", YAI.x, YAI.y, YAI.s, [{ t: 0, mode: "hugPhoto", eyes: "worry", mouth: "frown" }], { flip: true })],
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "lv0", t0, D("hook"), { siren: true });
+          road(L, tl, t0, D("hook"), "lv0");
+          walkers(L, tl, t0, D("hook"), "lv0", [
+            { x0: 1180, y0: 1700, x1: 760, y1: 1640, s0: 0.75, s1: 0.72, step: 0.12, flip: true }, { x0: 1260, y0: 1720, x1: 520, y1: 1640, s0: 0.78, s1: 0.72, step: 0.12, flip: true, at: 0.3 },
+            { x0: 60, y0: 1690, x1: 420, y1: 1640, s0: 0.74, s1: 0.72, step: 0.13 }, { x0: -40, y0: 1700, x1: 250, y1: 1644, s0: 0.76, s1: 0.72, step: 0.12, at: 0.5 },
+          ]);
+        },
+      });
+      // ---------- 2. the command on the jam: bumper to bumper, hazards blinking, a horn ----------
+      add("cars", {
+        ...LAND("lv1"), blur: { sky: 2, far: 2, mid: 2, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(560, 1560, 2.1, 540, 980) }, { t: D("cars"), glide: D("cars"), ...fr(540, 1565, 2.25, 540, 980) }] },
+        shake: (t) => ({ x: 1.5 * Math.sin(t * 29), y: 0, r: 0 }),
+        captions: caps("cars"),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "lv1", t0, D("cars"), { siren: true }); road(L, tl, t0, D("cars"), "lv1");
+          PopUI.sfx(tl, L.light, t0 + 0.15, 1.2, "ปี๊นนน!", 760, 560, { rot: -6 });
+        },
+      });
+      // ---------- 3. a man in a pickup on the horn; the cars bump; 2547 ----------
+      add("jam", {
+        ...LAND("lv2"), blur: { sky: 2, far: 2, mid: 1.5, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(760, 1590, 1.7, 540, 1060) }, { t: D("jam"), glide: D("jam"), ...fr(700, 1590, 1.8, 540, 1060) }] },
+        shake: (t) => ({ x: 1.5 * Math.sin(t * 29), y: 0, r: 0 }),
+        captions: [...caps("jam", [0], QUO), ...caps("jam", [1])],
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "lv2", t0, D("jam"), { siren: true }); road(L, tl, t0, D("jam"), "lv2");
+          PopUI.sfx(tl, L.light, t0 + 0.2, 1.0, "ปี๊น! ปี๊น!", 820, 600, { rot: 5 });
+          const tb = t0 + vo("jam", 1) - 0.25;   // the car behind lurches into the one in front
+          tl.fromTo("#lv2-car3", { x: 0 }, { x: -26, duration: 0.12, ease: "power2.in", immediateRender: false }, tb);
+          tl.to("#lv2-car3", { x: -18, duration: 0.3, ease: "power2.out" }, tb + 0.12);
+          tl.fromTo("#lv2-car2", { x: 0, rotation: 0, svgOrigin: "460 1640" }, { x: -10, rotation: -1.5, svgOrigin: "460 1640", duration: 0.12, yoyo: true, repeat: 1, immediateRender: false }, tb + 0.1);
+          PopUI.sfx(tl, L.light, tb + 0.08, 0.9, "ปั้ง!", 600, 760, { rot: -8 });
+          SRC(L, tl, t0 + vo("jam", 1), D("jam") - vo("jam", 1), "ที่มา: Thai PBS (26 ธ.ค. 67) · NOAA");
+        },
+      });
+      // ---------- 4. ยาย turns from the road to the hotel beside her shop ----------
+      add("yai", {
+        ...LAND("lv3"), blur: { sky: 1, far: 1 },
+        cam: { keys: [{ t: 0, ...fr(YAI.x, YAI.y - 300, 1.3, 540, 1150) }, { t: D("yai"), glide: D("yai") - 0.6, ease: "power2.inOut", ...fr(HOTEL.x, HOTEL.y, 1.15, 540, 760) }] },
+        actors: [A("yaiTideHug", YAI.x, YAI.y, YAI.s, [{ t: 0, mode: "hugPhoto", eyes: "worry", mouth: "frown" }, { t: 0.6, mode: "hugPhoto", opts: { up: 1 }, eyes: "upSide", mouth: "o" }], { flip: true, talk: [TALK("yai", 0, "o")] })],
+        captions: caps("yai", undefined, QUO),
+        fx(tl, id, t0, L) { Tide.land(tl, "lv3", t0, D("yai"), { siren: true }); road(L, tl, t0, D("yai"), "lv3"); },
+      });
+      // ---------- 5. she climbs the hotel's outside stair, saying her own rule 3; the board ----------
+      add("stair", {
+        ...LAND("lv4"), blur: { sky: 1, far: 1 },
+        cam: { keys: [{ t: 0, ...fr(518, 1400, 2.5, 540, 1300) }, { t: D("stair"), glide: D("stair"), ...fr(518, 1300, 2.5, 540, 1300) }] },
+        shake: (t) => ({ x: 1.2 * Math.sin(t * 23), y: 0, r: 0 }),
+        actors: [A("yaiTideHug", 520, 1488, 0.075, [{ t: 0, mode: "run", eyes: "worry", mouth: "o" }], { talk: [TALK("stair", 0, "o")], moveTo: { x: 520, y: 1236, dur: D("stair"), ease: "none" } })],
+        captions: caps("stair", undefined, QUO),
+        fx(tl, id, t0, L) { Tide.land(tl, "lv4", t0, D("stair"), { siren: true }); TideUI.rule(tl, L.light, t0 + 0.35, D("stair") - 0.35, { active: 2, done: [0, 1], y: 260 }); },
+      });
+      // ---------- 6. the board: where to go when the hill is too far ----------
+      add("know", {
+        ...LAND("lv5"), blur: { sky: 8, far: 8, mid: 8, set: 8, fg: 12 }, dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(400, 1200, 1.1, 540, 960) }] },
+        captions: caps("know"),
+        fx(tl, id, t0, L) {
+          TideUI.rule(tl, L.light, t0, D("know"), { title: "ขึ้นที่สูงไม่ทัน", seq: true, y: 230,
+            rules: [["floor", "ตึกแข็งแรง <u>เกิน 4 ชั้น</u>"], ["recede", "ที่สูงเหนือทะเล <u>15 ม.</u>"], ["far", "ที่ราบ ห่างฝั่ง <u>3 กม.</u>"], ["foot", "หนีด้วย<u>เท้า</u> ไม่ใช่<u>รถ</u>"]],
+            at: [F("know", 0, 1) - 0.1, vo("know", 1), vo("know", 2), vo("know", 3)] });
+          SRC(L, tl, t0 + 0.4, D("know") - 0.4, "ที่มา: กรมป้องกันและบรรเทาสาธารณภัย · NOAA");
+        },
+      });
+      // ---------- 7. the present, hours later: the hill, the water drained off the village, the stain on the hotel ----------
+      add("hours", {
+        ...HILL("th0", { time: "morning" }), light: SUN, grade: GDUSK, blur: { sky: 1, far: 1, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }, { t: D("hours"), glide: D("hours"), ...fr(560, 1080, 1.18, 540, 960) }] },
+        captions: caps("hours"),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "th0", t0, D("hours"), { siren: false });
+          chip(L, tl, t0 + 0.6, D("hours") - 0.6, "ยกเลิกการเตือนภัยแล้ว", { col: "#2e9a5a" });
+          walkers(L, tl, t0, D("hours"), "th0", [
+            { x0: 548, y0: 1230, x1: 552, y1: 1262, s0: 0.85, s1: 0.9, step: 0.3 }, { x0: 566, y0: 1250, x1: 568, y1: 1280, s0: 0.9, s1: 0.95, step: 0.3, at: 0.4 },
+          ]);
+          SRC(L, tl, t0 + vo("hours", 1), D("hours") - vo("hours", 1), "ที่มา: NOAA (U.S. National Weather Service)");
+        },
+      });
+      // ---------- 8. จูน's phone zooms in on the hotel roof: ยาย waving the wet photo ----------
+      add("roof", {
+        ...HILL("th1", { time: "morning" }), light: SUN, grade: GDUSK, blur: { sky: 1, far: 1, fg: 4 },
+        cam: { keys: [{ t: 0, ...CAMP, drift: { s: 0 } }] },
+        shake: (t) => ({ x: 2 * Math.sin(t * 2.9) + 1.2 * Math.sin(t * 7.3), y: 1.5 * Math.sin(t * 2.1), r: 0.2 * Math.sin(t * 1.6) }),
+        captions: [...caps("roof", [0], QUO), ...caps("roof", [1], QUO)],
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "th1", t0, D("roof"), { siren: false });
+          // ยาย on the roof slab (mid layer, so she sits on the hotel at any camera)
+          const O = `stroke="#2a2420" stroke-width="2" stroke-linejoin="round"`;
+          put(L.mid, `<g transform="translate(536,1074) scale(.34)"><g id="th1-yai">
+            <path d="M-4,-6V2M4,-6V2" stroke="#e0b088" stroke-width="4.5" stroke-linecap="round"/><path d="M-8,-34H8L10,-5H-10Z" fill="#2a5a8a" ${O}/><path d="M-8,-24H9M-9,-14H10" stroke="#e8c050" stroke-width="2"/>
+            <path d="M-9,-61H9L8,-32H-8Z" fill="#f4f0e8" ${O}/><circle cx="-3" cy="-52" r="1.8" fill="#e8823a"/><circle cx="4" cy="-44" r="1.8" fill="#e8823a"/><circle cx="-4" cy="-38" r="1.6" fill="#d8453a"/>
+            <circle cx="0" cy="-69" r="8.5" fill="#e0b088" ${O}/><path d="M-8.5,-71Q0,-82 8.5,-71Q4,-76 0,-76Q-4,-76 -8.5,-71Z" fill="#c4c4c4" ${O}/><circle cx="0" cy="-80" r="4.5" fill="#c4c4c4" ${O}/>
+            <rect x="-15" y="-50" width="11" height="13" rx="1" fill="#8a5a2a" ${O}/><rect x="-13" y="-48" width="7" height="9" fill="#d8c8a0"/>
+            <g id="th1-arm"><path d="M7,-57L17,-76" stroke="#e0b088" stroke-width="4.5" stroke-linecap="round"/><circle cx="17.5" cy="-77" r="2.8" fill="#e0b088"/></g></g></g>`);
+          tl.fromTo("#th1-arm", { rotation: -28, svgOrigin: "7 -57" }, { rotation: 22, svgOrigin: "7 -57", duration: 0.28, repeat: Math.ceil(D("roof") / 0.28), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.set(`#${id}-world`, { attr: { transform: ZOOM0 } }, t0);
+          tl.to(`#${id}-world`, { attr: { transform: ZOOMR }, duration: 1.3, ease: "power2.inOut", immediateRender: false }, t0 + 0.15);
+        },
+      });
+      // ---------- 9. on the wet sand by the hotel: the kids run to ยาย; the joke ----------
+      add("hug", {
+        ...LAND("lv6", { time: "morning", ...AFTER }), light: SUN, grade: GDUSK, blur: { sky: 1, far: 1, mid: 1 },
+        cam: { keys: [{ t: 0, ...fr(440, 1460, 1.45, 540, 1080) }, { t: D("hug"), glide: D("hug"), ...fr(440, 1460, 1.55, 540, 1080) }] },
+        actors: [
+          A("yaiTideHug", 430, 1730, 0.6, [{ t: 0, mode: "hugPhoto", eyes: "normal", mouth: "smile" }], { talk: [TALK("hug", 1, "o")] }),
+          A("june", -120, 1760, 0.62, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.9, mode: "idle", eyes: "normal", mouth: "smile" }], { moveTo: { x: 200, y: 1745, s: 0.62, dur: 0.9, ease: "power1.out" } }),
+          A("tang", 1150, 1800, 0.5, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 1.0, mode: "idle", eyes: "normal", mouth: "o" }], { flip: true, talk: [TALK("hug", 0, "o")], moveTo: { x: 660, y: 1770, s: 0.5, dur: 1.0, ease: "power1.out" } }),
+        ],
+        captions: [...caps("hug", [0], QUO), ...caps("hug", [1], QUO)],
+        fx(tl, id, t0, L) { Tide.land(tl, "lv6", t0, D("hug")); road(L, tl, t0, D("hug"), "lv6", { wreck: true }); },
+      });
+      // ---------- 10. ตาจุ่น comes; ยาย looks away; จูน asks ----------
+      add("ask", {
+        ...LAND("lv7", { time: "morning", ...AFTER }), light: SUN, grade: GDUSK, blur: { sky: 2, far: 2, mid: 1.5 },
+        cam: { keys: [{ t: 0, ...fr(420, 1440, 1.6, 540, 1080) }, { t: D("ask"), glide: D("ask"), ...fr(420, 1440, 1.7, 540, 1080) }] },
+        actors: [
+          A("yaiTideHug", 120, 1740, 0.6, [{ t: 0, mode: "hugPhoto", eyes: "sideAngry", mouth: "frown" }]),
+          A("june", 380, 1750, 0.62, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true, talk: [TALK("ask", 0, "o")] }),
+          A("taJun", 900, 1745, 0.66, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 1.0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true, moveTo: { x: 680, y: 1745, s: 0.66, dur: 1.0, ease: "power1.out" } }),
+        ],
+        captions: caps("ask", undefined, QUO),
+        fx(tl, id, t0, L) { Tide.land(tl, "lv7", t0, D("ask")); road(L, tl, t0, D("ask"), "lv7", { wreck: true }); },
+      });
+      // ---------- 11. insert: the old photo of the two young fishermen (EP.1's wall), told in ตาจุ่น's voice ----------
+      add("photo", {
+        set: "tideShop", setOpts: { id: "sh0", view: "wall" }, dark: 0.08, blur: {}, light: false, grade: GPAST,
+        cam: { keys: [{ t: 0, ...fr(476, 828, 1.55, 540, 860) }, { t: D("photo"), glide: D("photo"), ...fr(476, 828, 1.72, 540, 860) }] },
+        captions: caps("photo", undefined, QUO),
+      });
+      // ---------- 12. insert: the clipping: a fisherman carrying a young woman out of the water ----------
+      add("clip", {
+        set: "tideShop", setOpts: { id: "sh1", view: "wall" }, dark: 0.08, blur: {}, light: false, grade: GPAST,
+        cam: { keys: [{ t: 0, ...fr(815, 1235, 2.0, 540, 900) }, { t: D("clip"), glide: D("clip"), ...fr(790, 1225, 2.35, 540, 900) }] },
+        captions: caps("clip", undefined, QUO),
+      });
+      // ---------- 13. close on จูน: the young woman was their mother ----------
+      add("mom", {
+        ...LAND("lv8", { time: "morning", ...AFTER }), light: SUN, grade: GDUSK, blur: { sky: 6, far: 6, mid: 6, set: 4, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(380 - HI[0] * 0.62, 1750 + HI[1] * 0.62, 4.0, 540, 800) }, { t: D("mom"), glide: D("mom"), ...fr(380 - HI[0] * 0.62, 1750 + HI[1] * 0.62, 4.3, 540, 800) }] },
+        actors: [A("june", 380, 1750, 0.62, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true, talk: [TALK("mom", 0, "o")] })],
+        captions: caps("mom", undefined, QUO),
+        fx(tl, id, t0) { Tide.land(tl, "lv8", t0, D("mom")); },
+      });
+      // ---------- 14. ยาย and ตาจุ่น ----------
+      add("why", {
+        ...LAND("lv9", { time: "morning", ...AFTER }), light: SUN, grade: GDUSK, blur: { sky: 2, far: 2, mid: 1.5 },
+        cam: { keys: [{ t: 0, ...fr(540, 1450, 1.6, 540, 1080) }, { t: vo("why", 1) - 0.1, ...fr(640, 1400, 2.0, 540, 1000) }, { t: D("why"), glide: D("why") - vo("why", 1), ...fr(640, 1400, 2.1, 540, 1000) }] },
+        actors: [
+          A("yaiTideHug", 400, 1740, 0.6, [{ t: 0, mode: "hugPhoto", eyes: "worry", mouth: "frown" }], { talk: [TALK("why", 0, "o")] }),
+          A("taJun", 690, 1745, 0.66, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true, talk: [TALK("why", 1, "o")] }),
+        ],
+        captions: [...caps("why", [0], QUO), ...caps("why", [1], QUO)],
+        fx(tl, id, t0, L) { Tide.land(tl, "lv9", t0, D("why")); road(L, tl, t0, D("why"), "lv9", { wreck: true }); },
+      });
+      // ---------- 15. the two of them by the calm sea: talking for the first time in 22 years ----------
+      add("hands", {
+        set: "tideBeach", setOpts: { id: "sv0", view: "sea", time: "morning" }, dark: 0, light: SUN, grade: GDUSK, blur: { sky: 1, far: 1 },
+        cam: { keys: [{ t: 0, ...fr(590, 1520, 1.9, 540, 1120) }, { t: D("hands"), glide: D("hands"), ...fr(590, 1520, 2.05, 540, 1120) }] },
+        actors: [
+          A("yaiTideHug", 420, 1760, 0.5, [{ t: 0, mode: "hugPhoto", eyes: "normal", mouth: "flat" }], { moveTo: { x: 500, y: 1760, s: 0.5, dur: D("hands") * 0.6, ease: "power1.inOut" } }),
+          A("taJun", 680, 1765, 0.54, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }),
+        ],
+        captions: caps("hands"),
+      });
+      // ---------- 16. ยาย's rule board washed up; on its back, carved: จุ่น ----------
+      add("board", {
+        ...LAND("lva", { time: "morning", ...AFTER }), light: SUN, grade: GDUSK, blur: { sky: 8, far: 8, mid: 8, set: 6, fg: 10 }, dark: 0.15,
+        cam: { keys: [{ t: 0, ...fr(540, 1500, 1.3, 540, 1000), drift: { s: 0 } }] },
+        captions: caps("board", undefined, QUO),
+        fx(tl, id, t0, L) {
+          // the back of the board, lifted into frame: bare driftwood, the rope holes, the name carved deep with a knife
+          const plank = `M110,640Q300,622 540,630T972,640L986,700Q990,900 976,1100L968,1180Q760,1196 540,1188T120,1182L104,1100Q92,900 98,720Z`;
+          put(L.light, `<g id="bb"><path d="${plank}" fill="url(#tuWoodSide)" stroke="#2a2420" stroke-width="5" transform="translate(0,18)"/><path d="${plank}" fill="url(#tuWood)" stroke="#2a2420" stroke-width="5"/>
+            ${[190, 890].map((x) => `<circle cx="${x}" cy="680" r="14" fill="#5a3a22" stroke="#2a2420" stroke-width="2"/><circle cx="${x}" cy="680" r="7" fill="#2a1a10"/>`).join("")}
+            ${Array.from({ length: 9 }, (_, k) => `<path d="M130,${700 + k * 52}Q540,${690 + k * 52 + (k % 3) * 8} 960,${704 + k * 52}" stroke="#7a5230" stroke-width="3" fill="none" opacity=".35"/>`).join("")}
+            <g id="bb-name"><text x="540" y="990" text-anchor="middle" font-family="Sriracha" font-size="250" fill="#f4e2c0" opacity=".8" transform="translate(4,6)">จุ่น</text>
+              <text x="540" y="990" text-anchor="middle" font-family="Sriracha" font-size="250" fill="#4a2e18">จุ่น</text></g>
+            <path d="M380,1060Q540,1040 700,1060" stroke="#4a2e18" stroke-width="10" fill="none" stroke-linecap="round"/><text x="540" y="1130" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="44" fill="#4a2e18" opacity=".85">๒๕๔๘</text></g>`);
+          tl.fromTo("#bb", { y: 900, rotation: 6, svgOrigin: "540 900" }, { y: 0, rotation: -1.5, svgOrigin: "540 900", duration: 0.8, ease: "power3.out", immediateRender: false }, t0);
+          tl.fromTo("#bb-name", { opacity: 0.25 }, { opacity: 1, duration: 0.6, immediateRender: false }, t0 + vo("board", 0) + 0.3);
+          tl.fromTo("#bb-name", { scale: 1, svgOrigin: "540 900" }, { scale: 1.06, svgOrigin: "540 900", duration: 0.25, yoyo: true, repeat: 1, immediateRender: false }, t0 + F("board", 0, 1));
+        },
+      });
+      // ---------- 17. the Moken: they listened to the sea ----------
+      add("moken", {
+        set: "tideLegend", setOpts: { id: "lg", title: "ละบูน · คลื่นยักษ์เจ็ดชั้น" }, dark: 0, light: false, blur: { sky: 0, far: 0 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("moken"), glide: D("moken"), ...fr(540, 960, 1.08, 540, 960) }] },
+        captions: caps("moken"),
+        fx(tl, id, t0, L) {
+          TideUI.legendAnim(tl, "lg", t0, D("moken"), { recede: [0.3, 1.8], point: [1.9, 2.7], run: [2.8, 5.4], wave: 4.8 });
+          SRC(L, tl, t0 + 0.4, D("moken") - 0.4, "ที่มา: ศูนย์มานุษยวิทยาสิรินธร · UNESCO");
+        },
+      });
+      // ---------- 18. the next Wednesday, 08:00: the tower's test; the whole village stops to listen ----------
+      add("wed", {
+        ...LAND("lvb", { time: "morning", ...AFTER }), light: SUN, grade: GMORN, blur: { sky: 1, far: 1.5, mid: 1, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(760, 1200, 1.15, 540, 900) }, { t: D("wed"), glide: D("wed"), ...fr(760, 1180, 1.25, 540, 900) }] },
+        actors: [
+          A("taJun", 560, 1800, 0.66, [{ t: 0, mode: "shadeEyes", eyes: "normal", mouth: "flat" }], { flip: true }),
+          A("tangRing", 380, 1840, 0.52, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]),
+          A("june", 930, 1820, 0.6, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }),
+        ],
+        captions: caps("wed"),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "lvb", t0, D("wed"), { siren: true });
+          chip(L, tl, t0 + 0.2, D("wed") - 0.2, "08:00 · วันพุธ");
+          PopUI.sfx(tl, L.light, t0 + 0.5, 1.8, "ปู๊ด… ทดสอบ…", 680, 520, { rot: -4 });
+          walkers(L, tl, t0, D("wed"), "lvb", [
+            { x0: 120, y0: 1600, s0: 0.75 }, { x0: 240, y0: 1612, s0: 0.75, flip: true }, { x0: 700, y0: 1606, s0: 0.75 }, { x0: 1000, y0: 1616, s0: 0.75, flip: true },
+            { x0: 1120, y0: 1600, s0: 0.72 }, { x0: 860, y0: 1598, s0: 0.7 },
+          ]);
+        },
+      });
+      // ---------- 19. ตังค์ gives his duck ring to ตาจุ่น ----------
+      add("duck", {
+        ...LAND("lvc", { time: "morning", ...AFTER }), light: SUN, grade: GMORN, blur: { sky: 2, far: 2, mid: 1.5 },
+        cam: { keys: [{ t: 0, ...fr(560, 1450, 1.6, 540, 1080) }, { t: D("duck"), glide: D("duck"), ...fr(560, 1450, 1.7, 540, 1080) }] },
+        actors: [
+          A("tangRing", 420, 1790, 0.52, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { talk: [TALK("duck", 0, "o")] }),
+          A("taJun", 710, 1780, 0.66, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }),
+        ],
+        captions: caps("duck", undefined, QUO),
+        fx(tl, id, t0) { Tide.land(tl, "lvc", t0, D("duck")); },
+      });
+      // ---------- 20. ตาจุ่น by the calm sea, the duck ring at his feet: the last line ----------
+      add("final", {
+        set: "tideBeach", setOpts: { id: "sv1", view: "sea", time: "morning" }, dark: 0, light: SUN, grade: GDUSK, blur: { sky: 1, far: 1 },
+        cam: { keys: [{ t: 0, ...fr(650, 1500, 2.5, 540, 1000) }, { t: D("final"), glide: D("final"), ease: "power2.inOut", ...fr(600, 1250, 1.35, 540, 960) }] },
+        actors: [A("taJun", 640, 1790, 0.62, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TALK("final", 0, "o")] })],
+        captions: caps("final", undefined, QUO),
+        fx(tl, id, t0, L) { put(L.act, TideCast.duckRing(800, 1800, 0.42)); },
+      });
+      // ---------- 21. the end card: ตอนจบ ----------
+      add("end", {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        fx(tl, id, t0, L) { TideUI.endCard(tl, L.light, t0, D("end"), { final: true }); },
+      });

@@ -367,5 +367,28 @@
    "x": 0,
    "y": 0
   }
+ },
+ {
+  "id": "tide-ep3",
+  "page": "tide-ep3/composition/index.html",
+  "out": "video/tide-ep3/cover.jpg",
+  "t": 3.3,
+  "series": "ทะเลลด",
+  "ep": 3,
+  "epTitle": "หนีไม่ทัน ขึ้นชั้นสูง",
+  "finale": true,
+  "setup": "ขึ้นที่สูงไม่ทัน/[คนแห่ไปขึ้นรถ]…",
+  "cmd": "อย่าวิ่งไปที่รถ!",
+  "glow": "#2fb8d8",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.0,
+   "x": 540,
+   "y": 900
+  },
+  "shift": {
+   "x": 0,
+   "y": 0
+  }
  }
 ]
