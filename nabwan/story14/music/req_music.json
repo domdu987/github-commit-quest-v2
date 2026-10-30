@@ -1,0 +1,134 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "childhood school memories",
+   "soft felt piano, celesta and music box, warm strings",
+   "a very soft Thai ranat ek (wooden xylophone) melody in the warm parts",
+   "tender, nostalgic, kind",
+   "high quality studio recording",
+   "F major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer",
+   "Christmas bells"
+  ],
+  "sections": [
+   {
+    "section_name": "A question about a kind teacher",
+    "duration_ms": 6740,
+    "lines": [],
+    "positive_local_styles": [
+     "solo felt piano, curious and gentle",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "The boy alone at the back of the room",
+    "duration_ms": 5260,
+    "lines": [],
+    "positive_local_styles": [
+     "quiet and a little lonely",
+     "piano with a soft cello line",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "The teacher walks in with two bags of rice",
+    "duration_ms": 7010,
+    "lines": [],
+    "positive_local_styles": [
+     "warm and gentle lift",
+     "celesta and soft ranat ek melody over piano",
+     "a small smile"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Every day for three years",
+    "duration_ms": 6700,
+    "lines": [],
+    "positive_local_styles": [
+     "growing warmth and gratitude",
+     "strings swell gently, music box motif",
+     "nostalgic"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "epic"
+    ]
+   },
+   {
+    "section_name": "Title swell",
+    "duration_ms": 3000,
+    "lines": [],
+    "positive_local_styles": [
+     "a warm swell with strings and celesta",
+     "hopeful"
+    ],
+    "negative_local_styles": [
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Now I am the teacher",
+    "duration_ms": 5090,
+    "lines": [],
+    "positive_local_styles": [
+     "present day, calm and reflective",
+     "piano with soft strings",
+     "then quieter, noticing a lonely child"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Two bags of rice, the same words",
+    "duration_ms": 5810,
+    "lines": [],
+    "positive_local_styles": [
+     "tender build",
+     "music box motif returns from the earlier section",
+     "a held soft note at the end"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Kindness is passed on",
+    "duration_ms": 7650,
+    "lines": [],
+    "positive_local_styles": [
+     "emotional but gentle resolution",
+     "full warm strings with ranat ek and piano",
+     "fading out softly"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "epic"
+    ]
+   }
+  ]
+ }
+}
