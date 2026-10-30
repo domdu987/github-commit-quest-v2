@@ -667,9 +667,11 @@
       add("hill", {
         set: "tideHill", setOpts: { id: "th1", time: "morning", sea: 0.9 }, dark: 0, blur: { sky: 1, far: 1, fg: 4 }, light: SUN, grade: GEERIE,
         cam: { keys: [{ t: 0, ...fr(540, 1120, 1.15, 540, 960) }, { t: D("hill"), glide: D("hill"), ...fr(540, 1060, 1.22, 540, 960) }] },
+        // they climb toward the camera (the camera stands near the top of the steps): from the village end, growing with the
+        // perspective of the treads (a tread's width doubles from y 1560 to y 1840, so the scale grows ~1.6×)
         actors: [
-          A("june", 470, 1830, 0.7, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 560, y: 1560, dur: D("hill"), ease: "none" } }),
-          A("tang", 600, 1880, 0.55, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 660, y: 1640, dur: D("hill"), ease: "none" } }),
+          A("june", 530, 1560, 0.44, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 450, y: 1850, s: 0.74, dur: D("hill"), ease: "none" } }),
+          A("tang", 600, 1600, 0.36, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 585, y: 1900, s: 0.6, dur: D("hill"), ease: "none" } }),
         ],
         fx(tl, id, t0) { Tide.land(tl, "th1", t0, D("hill"), { siren: true }); },
       });
@@ -696,7 +698,7 @@
       });
       // ---------- 25. ตังค์ stares: the sea draws back again, farther than before ----------
       add("again", {
-        set: "tideHill", setOpts: { id: "th3", time: "eerie", sea: 0.35 }, dark: 0, blur: { sky: 1, far: 1, fg: 4 }, light: EERIE, grade: GEERIE,
+        set: "tideHill", setOpts: { id: "th3", time: "eerie", sea: 0.35, wet: true }, dark: 0, blur: { sky: 1, far: 1, fg: 4 }, light: EERIE, grade: GEERIE,
         cam: { keys: [{ t: 0, ...fr(540, 1200, 1.2, 540, 1000) }, { t: D("again"), glide: D("again"), ...fr(540, 1160, 1.3, 540, 1000) }] },
         actors: [A("tang", 360, 1900, 0.8, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { talk: [TALK("again", 0, "o")] })],
         captions: caps("again", undefined, { quote: true }),
@@ -704,7 +706,7 @@
       });
       // ---------- 26. จูน looks round: ยาย is not on the hill ----------
       add("yai", {
-        set: "tideHill", setOpts: { id: "th4", time: "eerie", sea: 1.6, line: 0.4 }, dark: 0.05, blur: { sky: 3, far: 3, mid: 3, set: 2, fg: 4 }, light: EERIE, grade: GEERIE,
+        set: "tideHill", setOpts: { id: "th4", time: "eerie", sea: 1.6, line: 0.4, wet: true }, dark: 0.05, blur: { sky: 3, far: 3, mid: 3, set: 2, fg: 4 }, light: EERIE, grade: GEERIE,
         cam: { keys: [{ t: 0, ...fr(540, 1500, 1.5, 540, 1100) }] },
         actors: [A("june", 540, 2000, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 1.0, mode: "idle", eyes: "worry", mouth: "scream" }], { flip: true, talk: [TALK("yai", 0, "o")] })],
         captions: caps("yai", undefined, { quote: true }),
@@ -718,14 +720,14 @@
       });
       // ---------- 28. wide: the bay drawn back, a white line on the horizon ----------
       add("close", {
-        set: "tideHill", setOpts: { id: "th5", time: "eerie", sea: 1.6, line: 0.4 }, dark: 0.05, blur: { sky: 1, far: 1, fg: 4 }, light: false, grade: GEERIE,
+        set: "tideHill", setOpts: { id: "th5", time: "eerie", sea: 1.6, line: 0.4, wet: true }, dark: 0.05, blur: { sky: 1, far: 1, fg: 4 }, light: false, grade: GEERIE,
         cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 960) }, { t: D("close"), glide: D("close"), ...fr(540, 760, 1.15, 540, 900) }] },
         captions: caps("close"),
         fx(tl, id, t0) { Tide.land(tl, "th5", t0, D("close"), { siren: true }); Tide.hillSea(tl, "th5", t0, D("close"), { from: 1.6, to: 1.7, line: [0.4, 1], lineAt: 0 }); },
       });
       // ---------- 29. the choice, pulled toward going down for ยาย → black ----------
       add("choice", {
-        set: "tideHill", setOpts: { id: "th6", time: "eerie", sea: 1.7, line: 1 }, dark: 0.25, blur: { sky: 6, far: 6, mid: 6, set: 6, fg: 10 }, light: false, grade: GEERIE,
+        set: "tideHill", setOpts: { id: "th6", time: "eerie", sea: 1.7, line: 1, wet: true }, dark: 0.25, blur: { sky: 6, far: 6, mid: 6, set: 6, fg: 10 }, light: false, grade: GEERIE,
         cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }] },
         fx(tl, id, t0, L) {
           const down = `<circle r="70" fill="#e8823a" stroke="#2a2420" stroke-width="5"/><path d="M-30,-30L30,30M30,30V0M30,30H0" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;

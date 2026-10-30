@@ -39,7 +39,8 @@
 //   Sets.tideHill(L, o)    on the evacuation steps high on the hill, looking down at the village and the bay: concrete steps with a
 //                          steel handrail, the blue sign "เส้นทางหนีคลื่นยักษ์" (#id-sign), the warning tower (#id-tower, #id-beacon),
 //                          the hotel's roof beside ยาย's shop, roofs, palms, the karsts; o.sea the bay's level: 0 the sea at the beach
-//                          … 1 drawn back (the first time) … 1.7 the second time, far out toward the karsts; o.line 0…1 the white line
+//                          … 1 drawn back (the first time) … 1.7 the second time, far out toward the karsts; o.line 0…1 the white line;
+//                          o.wet true once the first wave has been (every shot after Tide.surge: the village ground stays wet)
 //                          on the horizon · run it with Tide.land (the flag, o.siren the beacon) and, for the water, one of:
 //     Tide.hillSea(tl, id, t0, dur, o)  the bay draws back (or in) from o.from (the set's level) to o.to between o.at and o.at + o.len
 //                          seconds into the call (o.ease); the bare seabed (#id-bed, its edge #id-bedE) is redrawn, the two longtails
@@ -1220,7 +1221,7 @@
     ST[id] = { kind: "hill", P, HZ, flag: { px: 488, py: BY, s: 0.36 }, lvl: sea, line: o.line || 0, HB, SD, FS, FP, FC, DB, WC, FM, gTop, eOff: (x) => qAt(x, -3000, 0, 540, -30, 4000, 10) };
     landDraw(id, 0);
     hillSeaDraw(id, 0, sea, o.line || 0, 0);
-    floodDraw(id, 0, 0, 0, 0, 1);
+    floodDraw(id, 0, 0, o.wet ? 1 : 0, 0, 1);  // o.wet: the ground the first wave reached stays dark and wet, with its line of litter
   }
   // redraw the bay: level u (0 … HILL.LMAX), the white line w (0 … 1), bore 0 … 1 (the sea running back in over the seabed, its edge churned white)
   function hillSeaDraw(id, t, u, w = 0, bore = 0, agi = 0) {
