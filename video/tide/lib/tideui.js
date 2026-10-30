@@ -9,12 +9,43 @@
 //   TideUI.live(tl, layer, t0, dur, o)     จูน's livestream over the shot (the shot behind is her phone's view): avatar ring + name,
 //                                          LIVE badge, viewers counting o.viewers [from, to], the side buttons, hearts rising, comments
 //                                          o.comments [[t, name, text]…] sliding in and pushing the older ones up · o.name, o.title, o.out
+//                                          · o.cy the bottom row's y (1500; 1310 keeps the whole stack above the caption band)
+//                                          · o.typing [[t, name, until?]…] a "name กำลังพิมพ์ •••" row joins the stack; it stops at `until`,
+//                                          at that name's next comment or pin, else 2.5 s on (stopping with no comment = they went quiet)
+//                                          · o.pin [t, name, text] the pinned comment: pops in bigger than it stays (flash, a ring bursts
+//                                          off it), gold rim, breathing glow, a "ปักหมุด" chip; sits above the stack (which keeps 3 rows), stays
+//                                          · o.likes [from, to] the heart counter climbs (default a fixed 12.4K)
+//                                          · a comment, typing row or pin with t < 0 was already there: it stands in place from t0 with no
+//                                          entry (the live seen again after a cutaway keeps ยายพร❤️'s pin and the last comments)
+//                                          · o.end t (s after t0): the stream cuts — a glitch tear, the picture and the UI dim, LIVE turns
+//                                          grey, counts and hearts stop, no comments after it, a "ไลฟ์สิ้นสุดแล้ว · สัญญาณขาดหาย" panel with
+//                                          a lost-signal icon (bars searching, a red X) floats at o.endY (820). Keep the set still after it
+//                                          (no camera drift, nothing moving) so the picture reads frozen.
 //   TideUI.choice(tl, layer, t0, dur, o)   the choice on driftwood boards: o.q, o.a / o.b { text, icon } (icon: a coin name or raw SVG),
 //                                          a lifebuoy countdown (o.secs); the frame hovers (o.hover [[t, k]…]); o.pull "a" | "b": at o.at
 //                                          a wave surges up the screen and drags the frame onto that card, then drains, leaving it wet ·
 //                                          o.out
 //   TideUI.endCard(tl, layer, t0, dur, o)  the blue tsunami evacuation sign on its pole at dusk, a paper note taped below it flapping in
-//                                          the wind: o.l1 "ตอนที่ 2", o.l2 "คลื่นแรกไป" · o.final → "ตอนจบ"
+//                                          the wind: o.l1 "ตอนที่ 2", o.l2 "คลื่นแรกไป" · o.final → "ตอนจบ" · o.tag true | "text": a red
+//                                          sticker ("ตอนจบ") stamped on the note's top corner at o.tagAt (1.0 s), then pulsing — announces
+//                                          the next episode as the finale while l1/l2 stay short ("ตอนที่ 3" / "หนีไม่ทัน")
+//   TideUI.series(tl, layer, t0, dur, o)   the waves come as a series, painted in a rope-framed window on a driftwood board hung on two
+//                                          ropes (x 40–1040, y o.y 230 … ~1434, above the caption band), its title painted above the window
+//     o.phase "train"    a cross-section, deep sea → coast (hotel, palms, hill): three crests — turbulent bores, not surf curls —
+//                        roll in one after another, the one nearest the coast first, each bigger; at o.at[3] brackets with spinning
+//                        clocks open between them under one label o.gap ("ห่างกัน <u>5 นาที – 2 ชั่วโมง</u>", <u> = red).
+//                        o.at [c0, c1, c2, gaps] (0.3, 0.9, 1.5, 2.2) · title "สึนามิไม่ได้มาลูกเดียว"
+//     o.phase "heights"  one fixed scale (ruler 0–15 ม., 50 px a metre): a person (1.7 m), a one-storey house, the 5-storey hotel
+//                        (3 m a storey, "ชั้น 1…5" badges kept above the water). Each crest comes in from the sea side (left) as a
+//                        muddy bore, its foaming front racing across, holds, then drains before the next, leaving a dashed mark and
+//                        its tag o.tags[k] ("09:38 · 2–3 ม.", "09:43 · 6–7 ม.", "10:03 · เกิน 10 ม.") at o.h[k] metres (2.5, 6.5,
+//                        11: the third tops the 3rd floor and stays). o.at [w0, w1, w2] when each front comes in (0.6, 2.4, 4.2);
+//                        its mark and tag land 0.6 s later · title "ปี 2547 · ชายหาดแห่งหนึ่ง"
+//                        both: o.title, o.y (board top), o.out (s after t0: lifts away and fades)
+//   TideUI.pa(tl, layer, t0, dur, o)       the warning tower's loudspeaker announcement on a note slab with a crawling yellow/black
+//                                          hazard band and a "หอเตือนภัย" tab: the horn cluster shudders, sound rings pulse out; o.l1
+//                                          ("โปรดทราบ โปรดทราบ…") is written on with the voice, o.l2 ("ขณะนี้เกิดคลื่นสึนามิ", red) slams
+//                                          in, gets underlined and shakes. o.at [panel, l1, l2] (0, 0.35, 1.4) · o.y (centre, 470) · o.out
 //   TideUI.source(tl, layer, t0, dur, o)   the source chip (a foam-white slab with a wave badge): o.text, o.y (default 1790)
 //   TideUI.ICON.<name>() / TideUI.icon(name, x, y, s, id) / TideUI.iconPop(tl, root, t) / TideUI.iconLife(tl, root, t, dur)
 //                                          the rule coins (120-unit box): recede (the sea draws back, a runner goes up the hill),
@@ -42,6 +73,12 @@
   const tone = (h, k) => { const c = hex(h), t = k >= 0 ? 255 : 0, a = Math.abs(k); return "#" + c.map((v) => Math.round(v + (t - v) * a).toString(16).padStart(2, "0")).join(""); };
   const wobble = (n = 4) => (p) => Math.sin(p * Math.PI * 2 * n) * (1 - p);
   const plain = (s) => s.replace(/<[^>]+>/g, "");
+  // text width in em of Kanit 900 (calibrated on the real fonts: Thai marks take no width; Kanit 700 ≈ 0.97, Sriracha ≈ 0.95)
+  const emW = (t) => { let w = 0; for (const c of plain(t)) {
+    if (/[\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\uFE0F]/.test(c)) continue;
+    w += c === " " ? 0.2 : /[0-9]/.test(c) ? 0.56 : /[.:·,]/.test(c) ? 0.22 : c === "–" ? 0.54 : c === "…" ? 0.75 : /[“”]/.test(c) ? 0.38
+      : c === "เ" ? 0.36 : /[โใไ]/.test(c) ? 0.42 : c === "แ" ? 0.62 : c === "ะ" ? 0.44 : c === "า" ? 0.55 : /[\u0E00-\u0E7F]/.test(c) ? 0.64 : c.codePointAt(0) > 0x2000 ? 1 : 0.58; }
+    return w; };
 
   // coin palettes: face, face highlight, rim, rim shade
   const PAL = {
@@ -270,7 +307,10 @@
   const NAMECOL = ["#ffd23a", "#7ae0ff", "#ff9ac0", "#a8f08a", "#ffb070", "#c8a8ff"];
   const hashN = (s) => { let h = 7; for (const ch of s) h = (h * 31 + ch.codePointAt(0)) % 9973; return h; };
   function live(tl, layer, t0, dur, o = {}) {
-    const id = nid(), V = o.viewers || [120, 4800], comments = o.comments || [], name = o.name || "จูน ทะเลใส", R = mkR(5);
+    const id = nid(), V = o.viewers || [120, 4800], name = o.name || "จูน ทะเลใส", R = mkR(5);
+    const run = o.end !== undefined ? Math.min(dur, o.end) : dur;   // the stream is live until o.end
+    const comments = (o.comments || []).filter(([t]) => t < run), pin = o.pin && o.pin[0] < run ? o.pin : null;
+    const CY = o.cy ?? 1500, ROW = 104, fmt = (v) => (v >= 10000 ? `${(v / 1000).toFixed(1)}K` : v >= 1000 ? `${(v / 1000).toFixed(2)}K` : String(Math.round(v)));
     // a little portrait of จูน in the avatar (black hair, pink ends, the shell clip)
     const avatar = `<g transform="translate(96,146)"><circle r="50" fill="url(#tuStory)"/><circle r="44" fill="#1a1418"/><circle r="40" fill="#bfe8f4"/>
       <defs><clipPath id="${id}-av"><circle r="40"/></clipPath></defs><g clip-path="url(#${id}-av)">
@@ -279,63 +319,158 @@
         <circle cx="-6" cy="-6" r="2" fill="#2a1a12"/><circle cx="7" cy="-6" r="2" fill="#2a1a12"/><path d="M-3,3q4,3 7,0" stroke="#c8506a" stroke-width="2" fill="none"/></g></g>`;
     const eye = `<path d="M-16,0Q0,-12 16,0Q0,12 -16,0Z" fill="none" stroke="#fff" stroke-width="3.4"/><circle r="4.6" fill="#fff"/>`;
     const btn = (y, art, count, k) => `<g transform="translate(990,${y})"><g id="${id}-b${k}"><circle r="46" fill="#000" opacity=".28"/><circle r="40" fill="#1a1e24" opacity=".55"/>${art}
-      <text y="74" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="26" fill="#fff" stroke="#000" stroke-width="5" paint-order="stroke" opacity=".95">${count}</text></g></g>`;
+      <text id="${id}-n${k}" y="74" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="26" fill="#fff" stroke="#000" stroke-width="5" paint-order="stroke" opacity=".95">${count}</text></g></g>`;
     const heartD = "M0,14C-26,-4 -28,-22 -16,-28C-8,-32 -2,-28 0,-20C2,-28 8,-32 16,-28C28,-22 26,-4 0,14Z";
     const heartBtn = `<path d="${heartD}" transform="translate(0,4) scale(1.15)" fill="#ff3a5a" stroke="#fff" stroke-width="3"/>`;
     const talkBtn = `<path d="M-20,-16H20Q26,-16 26,-10V8Q26,14 20,14H0L-12,24V14H-20Q-26,14 -26,8V-10Q-26,-16 -20,-16Z" fill="#fff"/><circle cx="-10" cy="-1" r="3" fill="#1a1e24"/><circle cx="0" cy="-1" r="3" fill="#1a1e24"/><circle cx="10" cy="-1" r="3" fill="#1a1e24"/>`;
     const shareBtn = `<path d="M-18,16V2Q-18,-10 -2,-10H6V-22L26,-2L6,18V6H0Q-12,6 -18,16Z" fill="#fff"/>`;
-    let g = `<rect width="1080" height="260" fill="url(#${id}-tg)"/><rect y="1300" width="1080" height="620" fill="url(#${id}-bg)"/>
-      <defs><linearGradient id="${id}-tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
-        <linearGradient id="${id}-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".62"/></linearGradient></defs>
-      <g id="${id}-top">${avatar}
+    const top = `<g id="${id}-top">${avatar}
         <text x="160" y="140" font-family="Kanit" font-weight="700" font-size="38" fill="#fff" stroke="#000" stroke-width="6" paint-order="stroke">${name}</text>
         <g transform="translate(160,158)"><rect width="150" height="40" rx="20" fill="#ff3a5a"/><text x="75" y="29" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="24" fill="#fff">+ ติดตาม</text></g>
         <g transform="translate(560,104)"><g id="${id}-live"><rect width="132" height="58" rx="14" fill="#7a0e1c" transform="translate(0,6)"/><rect width="132" height="58" rx="14" fill="url(#tuLiveR)" stroke="#fff" stroke-width="3"/>
-          <circle id="${id}-dot" cx="28" cy="29" r="9" fill="#fff"/><text x="84" y="41" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#fff">LIVE</text></g></g>
+          <circle id="${id}-dot" cx="28" cy="29" r="9" fill="#fff"/><text x="84" y="41" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#fff">LIVE</text></g>
+          ${o.end !== undefined ? `<g id="${id}-off" opacity="0"><rect width="132" height="58" rx="14" fill="#1a1e24" transform="translate(0,6)"/><rect width="132" height="58" rx="14" fill="#4a5058" stroke="#9aa4ae" stroke-width="3"/>
+            <circle cx="28" cy="29" r="9" fill="#7a848e"/><text x="84" y="41" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#9aa4ae">LIVE</text></g>` : ""}</g>
         <g transform="translate(710,104)"><rect width="200" height="58" rx="29" fill="#000" opacity=".45"/><g transform="translate(40,29)">${eye}</g>
-          <text id="${id}-v" x="72" y="41" font-family="Kanit" font-weight="700" font-size="32" fill="#fff">${V[0]}</text></g>
+          <text id="${id}-v" x="72" y="41" font-family="Kanit" font-weight="700" font-size="32" fill="#fff">${fmt(V[0])}</text></g>
         <g transform="translate(990,132)"><circle r="30" fill="#000" opacity=".35"/><path d="M-12,-12L12,12M12,-12L-12,12" stroke="#fff" stroke-width="5" stroke-linecap="round"/></g>
         ${o.title ? `<g transform="translate(40,212)"><rect width="${plain(o.title).length * 24 + 60}" height="52" rx="26" fill="#000" opacity=".4"/><path d="M24,26q8,-12 16,0t16,0" stroke="#7ae0ff" stroke-width="5" fill="none" stroke-linecap="round" transform="translate(-4,0)"/>
           <text x="62" y="36" font-family="Kanit" font-weight="700" font-size="28" fill="#fff">${o.title}</text></g>` : ""}</g>`;
-    g += btn(1080, heartBtn, "12.4K", 0) + btn(1230, talkBtn, "856", 1) + btn(1380, shareBtn, "แชร์", 2);
+    let g = `<rect width="1080" height="260" fill="url(#${id}-tg)"/><rect y="1300" width="1080" height="620" fill="url(#${id}-bg)"/>
+      <defs><linearGradient id="${id}-tg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+        <linearGradient id="${id}-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".62"/></linearGradient></defs>`;
+    g += btn(1080, heartBtn, o.likes ? fmt(o.likes[0]) : "12.4K", 0) + btn(1230, talkBtn, "856", 1) + btn(1380, shareBtn, "แชร์", 2);
     // hearts rising from the heart button
-    const HN = Math.max(6, Math.round(dur / 0.28)), HC = ["#ff3a5a", "#ff8ab8", "#ffd23a", "#8a6aff", "#ff6a3a"];
+    const HN = Math.max(6, Math.round(run / 0.28)), HC = ["#ff3a5a", "#ff8ab8", "#ffd23a", "#8a6aff", "#ff6a3a"];
     for (let k = 0; k < HN; k++) g += `<g id="${id}-h${k}" opacity="0" transform="translate(990,1070)"><g transform="scale(${f1(0.7 + R() * 0.6)})"><path d="${heartD}" fill="${HC[k % HC.length]}" stroke="#fff" stroke-width="3"/></g></g>`;
-    // comments: a pill each, stacked from the bottom; new ones push the old up
-    const CY = 1500, ROW = 104;
-    comments.forEach(([, who, text], k) => {
-      const c = NAMECOL[hashN(who) % NAMECOL.length], w = Math.min(860, 120 + Math.max(plain(who).length * 18, plain(text).length * 22));
-      g += `<g id="${id}-c${k}" opacity="0" transform="translate(36,${CY})"><g id="${id}-cm${k}">
-        <rect width="${w}" height="88" rx="44" fill="#000" opacity=".5"/><circle cx="44" cy="44" r="31" fill="${c}" stroke="#fff" stroke-width="3"/><text x="44" y="56" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="32" fill="#1a1418">${plain(who).slice(0, 1)}</text>
-        <text x="90" y="37" font-family="Kanit" font-weight="700" font-size="28" fill="${c}">${who}</text><text x="90" y="72" font-family="Kanit" font-weight="500" font-size="32" fill="#fff">${text}</text></g></g>`;
+    // the stack: comments and "… กำลังพิมพ์" rows, a pill each, newest at the bottom (y = CY); new ones push the old up
+    const rows = [...comments.map(([t, who, text]) => ({ t, who, text })), ...(o.typing || []).filter(([t]) => t < run).map(([t, who, until]) => ({ t, who, until, typing: true }))];
+    rows.sort((a, b) => a.t - b.t);
+    rows.forEach((r) => {   // a typing row stops at its own `until`, at that name's next comment or pin, at the end of the stream, or 2.5 s on
+      if (!r.typing) return;
+      const next = [...rows.filter((q) => !q.typing && q.who === r.who && q.t > r.t).map((q) => q.t), ...(pin && pin[1] === r.who && pin[0] > r.t ? [pin[0]] : [])];
+      r.end = Math.min(r.until ?? (next.length ? Infinity : r.t + 2.5), ...next, run);
     });
+    rows.forEach((r, k) => {
+      const c = NAMECOL[hashN(r.who) % NAMECOL.length];
+      const w = r.typing ? Math.round(118 + Math.max(emW(r.who) * 27, emW("กำลังพิมพ์") * 28 + 76)) : Math.min(860, 120 + Math.max(plain(r.who).length * 18, plain(r.text).length * 22));
+      g += `<g id="${id}-c${k}" opacity="0" transform="translate(36,${CY})"><g id="${id}-cm${k}">
+        <rect width="${w}" height="88" rx="44" fill="#000" opacity="${r.typing ? 0.38 : 0.5}"/><circle cx="44" cy="44" r="31" fill="${c}" stroke="#fff" stroke-width="3"/><text x="44" y="56" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="32" fill="#1a1418">${plain(r.who).slice(0, 1)}</text>
+        <text x="90" y="37" font-family="Kanit" font-weight="700" font-size="28" fill="${c}">${r.who}</text>${r.typing
+          ? `<text x="90" y="72" font-family="Kanit" font-weight="400" font-size="28" fill="#fff" opacity=".8">กำลังพิมพ์</text>${[0, 1, 2].map((j) => `<circle class="tuDot" cx="${f1(90 + emW("กำลังพิมพ์") * 28 + 22 + j * 20)}" cy="62" r="6.5" fill="#fff"/>`).join("")}`
+          : `<text x="90" y="72" font-family="Kanit" font-weight="500" font-size="32" fill="#fff">${r.text}</text>`}</g></g>`;
+    });
+    // the pinned comment: bigger, gold-rimmed, glowing, above the stack (which then keeps 3 rows)
+    const PH = 132, pinY = CY - 2 * ROW - 34 - PH;
+    let pw = 0;
+    if (pin) {
+      const [, pwho, ptext] = pin, c = NAMECOL[hashN(pwho) % NAMECOL.length];
+      pw = Math.round(Math.min(900, 150 + Math.max(emW(pwho) * 34, emW(ptext) * 48)));
+      const pushpin = `<g transform="rotate(32)"><path d="M-10,-24H10L7,-8Q17,-2 15,6H-15Q-17,-2 -7,-8Z" fill="#e8392c" ${OUT(2.6)}/><path d="M0,6V24" stroke="#c8d0d8" stroke-width="3.6" stroke-linecap="round"/><path d="M-4,-20H3" stroke="#fff" stroke-width="2.6" opacity=".7" stroke-linecap="round"/></g>`;
+      g += `<g transform="translate(36,${pinY})"><g id="${id}-pin" opacity="0"><g id="${id}-pS">
+        <g id="${id}-pg">${[[24, 0.12], [15, 0.2], [8, 0.34]].map(([e, op]) => `<rect x="${-e}" y="${-e}" width="${pw + 2 * e}" height="${PH + 2 * e}" rx="${PH / 2 + e}" fill="#ffd23a" opacity="${op}"/>`).join("")}</g>
+        <rect y="9" width="${pw}" height="${PH}" rx="${PH / 2}" fill="#6a4a08" stroke="${INK}" stroke-width="3"/>
+        <rect width="${pw}" height="${PH}" rx="${PH / 2}" fill="#1a1418" opacity=".9"/><rect width="${pw}" height="${PH}" rx="${PH / 2}" fill="none" stroke="#ffd23a" stroke-width="5"/>
+        <rect x="${PH / 4}" y="8" width="${pw - PH / 2}" height="30" rx="15" fill="#fff" opacity=".08"/>
+        <circle cx="66" cy="66" r="47" fill="${c}" stroke="#ffd23a" stroke-width="5"/><text x="66" y="84" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="50" fill="#1a1418">${plain(pwho).slice(0, 1)}</text>
+        <text x="134" y="54" font-family="Kanit" font-weight="700" font-size="34" fill="${c}">${pwho}</text>
+        <text x="134" y="110" font-family="Kanit" font-weight="700" font-size="48" fill="#fff">${ptext}</text>
+        <rect id="${id}-pf" width="${pw}" height="${PH}" rx="${PH / 2}" fill="#fff" opacity="0"/>
+        <rect id="${id}-pr" x="-4" y="-4" width="${pw + 8}" height="${PH + 8}" rx="${PH / 2 + 4}" fill="none" stroke="#ffd23a" stroke-width="6" opacity="0"/>
+        <g transform="translate(${pw - 150},-12)"><g id="${id}-pc" opacity="0">${slab(0, -24, 150, 48, 24, { face: "url(#tuNote)", body: "#8a6e4c", d: 6, sw: 3 })}
+          <g transform="translate(28,-2)"><g id="${id}-pp">${pushpin}</g></g><text x="92" y="9" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="26" fill="#1e2a3a">ปักหมุด</text></g></g></g></g></g>`;
+    }
     g += `<g transform="translate(36,1618)"><rect width="760" height="76" rx="38" fill="#000" opacity=".42"/><text x="40" y="49" font-family="Kanit" font-weight="400" font-size="30" fill="#fff" opacity=".7">แสดงความคิดเห็น…</text></g>
       <g transform="translate(870,1656)"><rect x="-34" y="-30" width="68" height="60" rx="10" fill="#ff8a3a" stroke="#fff" stroke-width="3"/><path d="M-34,-10H34M0,-30V30" stroke="#fff" stroke-width="5"/><path d="M0,-30Q-20,-50 -26,-34Q-20,-26 0,-30Q20,-50 26,-34Q20,-26 0,-30" fill="#ffd23a" stroke="#fff" stroke-width="3"/></g>
       <g transform="translate(990,1656)"><circle r="38" fill="#000" opacity=".4"/>${shareBtn}</g>`;
-    put(layer, `<g id="${id}" opacity="0">${g}</g>`);
+    // the end of the stream: a glitch, the picture dims, "ไลฟ์สิ้นสุดแล้ว" with a lost-signal icon (above the caption band)
+    const EY = o.endY ?? 820;
+    const endPanel = o.end === undefined ? "" : `<rect id="${id}-dim" width="1080" height="1920" fill="#05070a" opacity="0"/>
+      <g id="${id}-gl" opacity="0">${[[300, 56, "#fff", 0.5], [760, 22, "#7ae0ff", 0.6], [1120, 40, "#ff5a8a", 0.45], [1460, 16, "#fff", 0.6], [520, 10, "#ffd23a", 0.5]].map(([y, h, c, op], k) => `<rect class="tuGb" data-k="${k}" x="-40" y="${y}" width="1160" height="${h}" fill="${c}" opacity="${op}"/>`).join("")}</g>
+      <g transform="translate(540,${EY})"><g id="${id}-ep" opacity="0">
+        <ellipse cx="0" cy="236" rx="280" ry="24" fill="url(#tuSoftSh)" opacity=".7"/>
+        ${slab(-300, -200, 600, 400, 44, { face: "#262b33", body: "#0a0c10", bodyStroke: "#000", stroke: "#4a525c", d: 14, sw: 4, gloss: false })}
+        <g transform="translate(0,-74)"><circle r="92" fill="#1a1e24" stroke="#4a525c" stroke-width="4"/>
+          ${[0, 1, 2, 3].map((k) => `<rect class="tuBar" data-k="${k}" x="${-52 + k * 28}" y="${34 - (24 + k * 20)}" width="20" height="${24 + k * 20}" rx="4" fill="${k ? "#5a646e" : "#e8ecee"}"/>`).join("")}
+          <g transform="translate(52,-50)"><g id="${id}-x"><circle r="27" fill="#e8392c" stroke="#fff" stroke-width="4"/><path d="M-10,-10L10,10M10,-10L-10,10" stroke="#fff" stroke-width="6" stroke-linecap="round"/></g></g></g>
+        <text y="92" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff">ไลฟ์สิ้นสุดแล้ว</text>
+        <text y="148" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="34" fill="#9aa4ae">สัญญาณขาดหาย</text></g></g>`;
+    put(layer, `<g id="${id}" opacity="0"><g id="${id}-ui">${g}</g>${endPanel}${top}</g>`);
     tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0);
     tl.fromTo(`#${id}-top`, { y: -60 }, { y: 0, duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0);
-    tl.fromTo(`#${id}-live`, { scale: 1, svgOrigin: "66 29" }, { scale: 1.08, svgOrigin: "66 29", duration: 0.5, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
-    tl.fromTo(`#${id}-dot`, { opacity: 1 }, { opacity: 0.2, duration: 0.45, repeat: Math.ceil(dur / 0.45), yoyo: true, ease: "none", immediateRender: false }, t0);
-    // the viewer count climbs (faster as the sea gets stranger)
-    const vEl = document.getElementById(`${id}-v`), vc = { v: V[0] }, fmt = (v) => (v >= 10000 ? `${(v / 1000).toFixed(1)}K` : v >= 1000 ? `${(v / 1000).toFixed(2)}K` : String(Math.round(v)));
-    tl.fromTo(vc, { v: V[0] }, { v: V[1], duration: dur, ease: "power2.in", immediateRender: false, onUpdate: () => (vEl.textContent = fmt(vc.v)) }, t0);
+    tl.fromTo(`#${id}-live`, { scale: 1, svgOrigin: "66 29" }, { scale: 1.08, svgOrigin: "66 29", duration: 0.5, repeat: Math.ceil(run / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+    tl.fromTo(`#${id}-dot`, { opacity: 1 }, { opacity: 0.2, duration: 0.45, repeat: Math.ceil(run / 0.45), yoyo: true, ease: "none", immediateRender: false }, t0);
+    // the viewer count climbs (faster as the sea gets stranger); the likes too, if given
+    const vEl = document.getElementById(`${id}-v`), vc = { v: V[0] };
+    tl.fromTo(vc, { v: V[0] }, { v: V[1], duration: run, ease: "power2.in", immediateRender: false, onUpdate: () => (vEl.textContent = fmt(vc.v)) }, t0);
+    if (o.likes) { const nEl = document.getElementById(`${id}-n0`), lc = { v: o.likes[0] }; tl.fromTo(lc, { v: o.likes[0] }, { v: o.likes[1], duration: run, ease: "power1.in", immediateRender: false, onUpdate: () => (nEl.textContent = fmt(lc.v)) }, t0); }
     [0, 1, 2].forEach((k) => tl.fromTo(`#${id}-b${k}`, { x: 120 }, { x: 0, duration: 0.45, ease: "back.out(2)", immediateRender: false }, t0 + 0.15 + k * 0.08));
     for (let k = 0; k < HN; k++) {
       const tk = t0 + 0.3 + k * 0.28 + R() * 0.1, dx = (R() - 0.5) * 140, len = 1.5 + R() * 0.5;
-      if (tk > t0 + dur - 0.3) continue;
+      if (tk > t0 + run - 0.3) continue;
       tl.fromTo(`#${id}-h${k}`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, tk);
       tl.fromTo(`#${id}-h${k}`, { x: 990, y: 1070 }, { keyframes: [{ x: 990 + dx * 0.4, y: 920, duration: len * 0.35, ease: "sine.out" }, { x: 990 - dx * 0.3, y: 780, duration: len * 0.35, ease: "sine.inOut" }, { x: 990 + dx, y: 620, duration: len * 0.3, ease: "sine.in" }], immediateRender: false }, tk);
       tl.to(`#${id}-h${k}`, { opacity: 0, duration: 0.35 }, tk + len - 0.35);
+      if (o.end !== undefined && tk + len > t0 + run) tl.to(`#${id}-h${k}`, { opacity: 0, duration: 0.12 }, t0 + run);
     }
-    if (comments.length) tl.fromTo(`#${id}-b0`, { scale: 1, svgOrigin: "0 0" }, { scale: 1.18, svgOrigin: "0 0", duration: 0.14, repeat: Math.ceil(dur / 0.28), yoyo: true, ease: "power2.out", immediateRender: false }, t0 + 0.4);
-    // each new comment slides up from below, the earlier ones move up a row; four rows show, older ones fade
-    comments.forEach(([tc], k) => {
-      const ta = t0 + tc;
-      tl.fromTo(`#${id}-c${k}`, { opacity: 0, y: CY + 70 }, { opacity: 1, y: CY, duration: 0.28, ease: "back.out(1.6)", immediateRender: false }, ta);
-      tl.fromTo(`#${id}-cm${k}`, { scale: 0.7, svgOrigin: "0 40" }, { scale: 1, svgOrigin: "0 40", duration: 0.35, ease: "back.out(2.2)", immediateRender: false }, ta);
-      comments.forEach(([tj], j) => { if (j < k) { const n = k - j; tl.to(`#${id}-c${j}`, { y: CY - n * ROW, opacity: n >= 4 ? 0 : 1 - n * 0.15, duration: 0.25, ease: "power2.out" }, ta); } });
+    if (rows.length) tl.fromTo(`#${id}-b0`, { scale: 1, svgOrigin: "0 0" }, { scale: 1.18, svgOrigin: "0 0", duration: 0.14, repeat: Math.ceil(run / 0.28), yoyo: true, ease: "power2.out", immediateRender: false }, t0 + 0.4);
+    // lay the stack out at every arrival / stop: newest first, a row higher and fainter each; 4 rows show (3 under a pin)
+    // (rows and a pin with t < 0 were already there before the shot: they stand in place from t0, no entry)
+    const evts = [...new Set([...rows.map((r) => Math.max(0, r.t)), ...rows.filter((r) => r.typing && r.end > 0).map((r) => r.end), ...(pin ? [Math.max(0, pin[0])] : [])])].filter((t) => t < run).sort((a, b) => a - b);
+    const cur = rows.map(() => null);
+    evts.forEach((te) => {
+      const T = t0 + te, cap = pin && pin[0] <= te ? 3 : 4;
+      rows.forEach((r, k) => { if (r.typing && r.end === te && cur[k]) { tl.fromTo(`#${id}-c${k}`, { opacity: cur[k][1] }, { opacity: 0, duration: 0.2, immediateRender: false }, T); cur[k] = null; } });
+      const act = rows.map((_, k) => k).filter((k) => rows[k].t <= te && !(rows[k].typing && rows[k].end <= te)).sort((a, b) => rows[b].t - rows[a].t || b - a);
+      act.forEach((k, slot) => {
+        const y = CY - slot * ROW, op = slot >= cap ? 0 : +(1 - slot * 0.15).toFixed(2);
+        if (rows[k].t === te) {
+          tl.fromTo(`#${id}-c${k}`, { opacity: 0, y: CY + 70 }, { opacity: op, y, duration: 0.28, ease: "back.out(1.6)", immediateRender: false }, T);
+          tl.fromTo(`#${id}-cm${k}`, { scale: 0.7, svgOrigin: "0 40" }, { scale: 1, svgOrigin: "0 40", duration: 0.35, ease: "back.out(2.2)", immediateRender: false }, T);
+        } else if (!cur[k]) {
+          tl.set(`#${id}-c${k}`, { y, opacity: op }, T);
+        } else if (cur[k][0] !== y || cur[k][1] !== op) {
+          tl.fromTo(`#${id}-c${k}`, { y: cur[k][0], opacity: cur[k][1] }, { y, opacity: op, duration: 0.25, ease: "power2.out", immediateRender: false }, T);
+        }
+        cur[k] = [y, op];
+      });
     });
+    // the typing dots hop in turn while the row shows
+    rows.forEach((r, k) => { if (!r.typing) return;
+      document.getElementById(`${id}-c${k}`).querySelectorAll(".tuDot").forEach((d, j) => tl.fromTo(d, { y: 0 }, { y: -10, duration: 0.2, repeat: Math.ceil((r.end - r.t) / 0.2), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + Math.max(0, r.t) + j * 0.1)); });
+    if (pin && pin[0] <= 0) {
+      tl.set([`#${id}-pin`, `#${id}-pc`], { opacity: 1 }, t0);
+      tl.fromTo(`#${id}-pg`, { opacity: 1, scale: 1, svgOrigin: `${pw / 2} ${PH / 2}` }, { opacity: 0.45, scale: 1.035, svgOrigin: `${pw / 2} ${PH / 2}`, duration: 0.6, repeat: Math.ceil(dur / 0.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+      tl.fromTo(`#${id}-pp`, { rotation: -10, svgOrigin: "0 20" }, { rotation: 10, svgOrigin: "0 20", duration: 0.5, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+    } else if (pin) {
+      const tp = t0 + pin[0], O = `0 ${PH / 2}`;
+      // it pops in bigger than it stays, flashes, a ring bursts off it; the glow keeps breathing and the pin chip lands on it
+      tl.fromTo(`#${id}-pin`, { opacity: 0 }, { opacity: 1, duration: 0.1, immediateRender: false }, tp);
+      tl.fromTo(`#${id}-pS`, { scale: 0.35, svgOrigin: O }, { scale: 1.14, svgOrigin: O, duration: 0.26, ease: "power2.out", immediateRender: false }, tp);
+      tl.fromTo(`#${id}-pS`, { scale: 1.14, svgOrigin: O }, { scale: 1, svgOrigin: O, duration: 0.6, ease: "elastic.out(1, 0.45)", immediateRender: false }, tp + 0.26);
+      tl.fromTo(`#${id}-pf`, { opacity: 0.85 }, { opacity: 0, duration: 0.45, ease: "power2.out", immediateRender: false }, tp + 0.05);
+      tl.fromTo(`#${id}-pr`, { opacity: 1, scale: 1, svgOrigin: `${pw / 2} ${PH / 2}` }, { opacity: 0, scale: 1.18, svgOrigin: `${pw / 2} ${PH / 2}`, duration: 0.6, ease: "power2.out", immediateRender: false }, tp + 0.12);
+      tl.fromTo(`#${id}-pg`, { opacity: 1, scale: 1, svgOrigin: `${pw / 2} ${PH / 2}` }, { opacity: 0.45, scale: 1.035, svgOrigin: `${pw / 2} ${PH / 2}`, duration: 0.6, repeat: Math.ceil(dur / 0.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, tp + 0.3);
+      tl.fromTo(`#${id}-pc`, { opacity: 0, scale: 0, rotation: -25, svgOrigin: "75 0" }, { opacity: 1, scale: 1, rotation: 0, svgOrigin: "75 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, tp + 0.3);
+      tl.fromTo(`#${id}-pp`, { rotation: -10, svgOrigin: "0 20" }, { rotation: 10, svgOrigin: "0 20", duration: 0.5, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "sine.inOut", immediateRender: false }, tp + 0.8);
+    }
+    if (o.end !== undefined) {
+      const tE = t0 + run;
+      // the picture tears for a few frames, then the stream is gone: grey LIVE, counts frozen, everything dims under the panel
+      tl.set(`#${id}-gl`, { opacity: 1 }, tE);
+      document.getElementById(`${id}-gl`).querySelectorAll(".tuGb").forEach((b, k) => tl.fromTo(b, { x: 0 }, { keyframes: [{ x: (k % 2 ? 1 : -1) * (60 + k * 30), duration: 0.05 }, { x: (k % 2 ? -1 : 1) * (30 + k * 12), duration: 0.05 }, { x: 0, duration: 0.05 }], ease: "none", immediateRender: false }, tE));
+      tl.set(`#${id}-gl`, { opacity: 0 }, tE + 0.18);
+      tl.fromTo(`#${id}-ui`, { x: 0 }, { keyframes: [{ x: -14, duration: 0.04 }, { x: 10, duration: 0.04 }, { x: -6, duration: 0.04 }, { x: 0, duration: 0.04 }], ease: "none", immediateRender: false }, tE);
+      tl.fromTo(`#${id}-dim`, { opacity: 0 }, { opacity: 0.74, duration: 0.4, ease: "power2.out", immediateRender: false }, tE + 0.06);
+      tl.set(`#${id}-live`, { opacity: 0 }, tE);
+      tl.set(`#${id}-off`, { opacity: 1 }, tE);
+      tl.fromTo(`#${id}-ep`, { opacity: 0, y: 50, scale: 0.7, svgOrigin: "0 0" }, { opacity: 1, y: 0, scale: 1, svgOrigin: "0 0", duration: 0.6, ease: "back.out(2)", immediateRender: false }, tE + 0.35);
+      tl.fromTo(`#${id}-x`, { scale: 0, rotation: -40, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.55, ease: "elastic.out(1, 0.45)", immediateRender: false }, tE + 0.7);
+      // searching: the bars light up one by one and drop out again; the panel floats
+      const rest = Math.max(0.6, dur - run);
+      document.getElementById(`${id}-ep`).querySelectorAll(".tuBar").forEach((b, k) => { if (k) tl.fromTo(b, { fill: "#5a646e" }, { fill: "#e8ecee", duration: 0.12, repeat: Math.ceil(rest / 0.9), repeatDelay: 0.78, yoyo: true, ease: "none", immediateRender: false }, tE + 0.9 + k * 0.18); });
+      tl.fromTo(`#${id}-ep`, { y: 0 }, { y: -8, duration: 1.1, repeat: Math.ceil(rest / 1.1), yoyo: true, ease: "sine.inOut", immediateRender: false }, tE + 0.95);
+    }
     if (o.out !== undefined) tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + o.out);
     return id;
   }
@@ -469,6 +604,11 @@
       ${[[-300, -196], [300, -196], [-300, 174], [300, 174]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="9" fill="#c8d0d8" ${OUT(2)}/><path d="M${a - 5},${b}h10" stroke="#5a646c" stroke-width="2"/>`).join("")}
       <path d="M-330,-226L-100,-226L-330,40Z" fill="#fff" opacity=".1"/><path d="M180,-210l40,30M-250,150l30,20M120,170l50,-6" stroke="#fff" stroke-width="3" opacity=".25"/>
       <circle cx="248" cy="-150" r="14" fill="#a85a2a" opacity=".35"/><circle cx="-268" cy="120" r="9" fill="#a85a2a" opacity=".3"/></g></g>`;
+    // o.tag: a red sticker slapped on the note's top-right corner ("ตอนจบ" when true), so the next episode can be announced as the finale
+    const tag = o.tag === true ? "ตอนจบ" : o.tag || "", tgW = Math.round(emW(tag) * 40 + 48);
+    const tagMk = !tag ? "" : `<g transform="translate(${200 - tgW / 2 + 28},${fin ? 16 : 12}) rotate(-9)"><g id="${id}-tag" opacity="0">${slab(-tgW / 2, -31, tgW, 62, 16, { face: "url(#tuLiveR)", body: "#7a0e1c", d: 7, sw: 3.4 })}
+        <rect x="${-tgW / 2 + 7}" y="-24" width="${tgW - 14}" height="48" rx="10" fill="none" stroke="#fff" stroke-width="2.4" stroke-dasharray="7 5" opacity=".75"/>
+        <text y="14" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#fff">${tag}</text></g></g>`;
     const note = `<g transform="translate(540,${fin ? 1010 : 1000})"><g id="${id}-nt">
       <path d="M-200,0H200V${fin ? 300 : 280}H-200Z" fill="#000" opacity=".3" transform="translate(10,14)"/>
       <path d="M-200,0H200V${fin ? 300 : 280}H-200Z" fill="url(#tuNote)" stroke="#a8946a" stroke-width="3"/>
@@ -478,7 +618,7 @@
         <text y="248" text-anchor="middle" font-family="Mali" font-weight="700" font-size="${fit(l2, 92)}" fill="#c8281e">${l2}</text>`
       : `<text y="112" text-anchor="middle" font-family="Mali" font-weight="700" font-size="${fit(l1, 54)}" fill="#5a4a3a">${l1}</text>
         <text y="214" text-anchor="middle" font-family="Mali" font-weight="700" font-size="${fit(l2, 84)}" fill="#c8281e">${l2}</text>`}
-      <path d="M-170,${fin ? 270 : 252}q60,-8 120,0" stroke="#c8281e" stroke-width="4" fill="none" opacity=".5"/></g></g>`;
+      <path d="M-170,${fin ? 270 : 252}q60,-8 120,0" stroke="#c8281e" stroke-width="4" fill="none" opacity=".5"/>${tagMk}</g></g>`;
     put(layer, `<g id="${id}" opacity="0"><g id="${id}-all">${bg}${sign}${note}</g></g>`);
     tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
     tl.fromTo(`#${id}-all`, { scale: 1, svgOrigin: "540 960" }, { scale: 1.05, svgOrigin: "540 960", duration: dur, ease: "none", immediateRender: false }, t0);
@@ -487,6 +627,11 @@
     tl.fromTo(`#${id}-nt`, { scale: 0.2, rotation: -20, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.6, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.25);
     tl.fromTo(`#${id}-nt`, { rotation: -3, svgOrigin: "0 0" }, { rotation: 4, svgOrigin: "0 0", duration: 0.55, repeat: Math.ceil(dur / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.85);
     tl.fromTo(`#${id}-nt`, { skewY: 0 }, { skewY: 3, duration: 0.33, repeat: Math.ceil(dur / 0.33), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.85);
+    if (tag) {
+      const ts = t0 + (o.tagAt ?? 1.0);
+      tl.fromTo(`#${id}-tag`, { opacity: 0, scale: 2.4, rotation: -16, svgOrigin: "0 0" }, { opacity: 1, scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.42, ease: "back.out(2.2)", immediateRender: false }, ts);
+      tl.fromTo(`#${id}-tag`, { scale: 1, svgOrigin: "0 0" }, { scale: 1.07, svgOrigin: "0 0", duration: 0.55, repeat: Math.ceil(dur / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, ts + 0.42);
+    }
     for (let k = 0; k < 3; k++) {
       tl.fromTo(`#${id}-bd${k}`, { x: -80 - k * 70, y: 420 + k * 60 }, { x: 1180, y: 300 + k * 40, duration: dur + 1, ease: "none", immediateRender: false }, t0);
       tl.fromTo(`#${id}-bd${k} path`, { scaleY: 1, svgOrigin: "0 0" }, { scaleY: -0.6, svgOrigin: "0 0", duration: 0.2, repeat: Math.ceil(dur / 0.2), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + k * 0.07);
@@ -668,6 +813,246 @@
     for (let k = 0; k < 6; k++) tl.fromTo(`#${id}-mo${k}`, { rotation: 0, svgOrigin: "540 820" }, { rotation: k % 2 ? -360 : 360, svgOrigin: "540 820", duration: 3 + k * 0.6, repeat: Math.ceil(dur / 3), ease: "none", immediateRender: false }, t0);
   }
 
-  window.TideUI = { rule, live, choice, endCard, source, legendAnim, ICON, icon, iconPop, iconLife, RULES };
+
+  // ---------------- the waves come as a series (EP.2): the train, then the heights at one beach in 2547 ----------------
+  // painted on a driftwood board hung on two ropes (the rule board's language), the scene inside a rope-framed window.
+  // A crest is drawn as a turbulent bore: a ragged churned top, a steep front with foam rolling down it and spray thrown forward,
+  // never a surf curl (NOAA: "Tsunamis rarely become great towering breaking waves").
+  const crest = (w, h, seed) => {
+    const r = mkR(seed), n = Math.max(7, Math.round(w / 26)), top = [];
+    for (let k = 0; k <= n; k++) { const u = k / n; top.push([-w + w * u, -h * Math.pow(Math.sin(Math.min(1, u * 1.08) * Math.PI / 2), 1.6) + (k && k < n ? (r() - 0.5) * h * 0.16 : 0)]); }
+    const front = [[6, -h * 0.72], [16, -h * 0.4], [w * 0.1 + 14, 0]];
+    // the hump is the sea itself lifted: no outline along its foot, its fill runs a little under the surface line
+    const edge = `M${-w},0 ` + top.map(([a, b]) => `L${f1(a)},${f1(b)}`).join(" ") + " " + front.map(([a, b]) => `L${f1(a)},${f1(b)}`).join(" "), body = `${edge} L${f1(w * 0.1 + 14)},8 L${-w},8 Z`;
+    let foam = "";
+    for (let k = 1; k < n; k++) { const [a, b] = top[k]; if (a > -w * 0.55) foam += `<circle cx="${f1(a)}" cy="${f1(b + 3)}" r="${f1(5 + r() * 7 + h * 0.05)}" fill="#f4fbff"/>`; }
+    for (let k = 0; k < 4; k++) foam += `<circle cx="${f1(8 + k * 7 + r() * 6)}" cy="${f1(-h * (0.68 - k * 0.17))}" r="${f1(5 + r() * 5)}" fill="#f4fbff"/>`;
+    const spray = Array.from({ length: 7 }, () => `<circle cx="${f1(14 + r() * 34)}" cy="${f1(-h * (0.5 + r() * 0.55))}" r="${f1(2 + r() * 3.2)}" fill="#e8f8ff" opacity="${f1(0.55 + r() * 0.4)}"/>`).join("");
+    const churn = Array.from({ length: 4 }, (_, k) => { const x = -w * (0.78 - k * 0.17); return `<path d="M${f1(x)},${f1(-h * 0.06)}Q${f1(x + w * 0.06)},${f1(-h * 0.3)} ${f1(x + w * 0.16)},${f1(-h * (0.42 + k * 0.08))}" stroke="${k % 2 ? "#d8f0ff" : "#1e4ea0"}" stroke-width="${k % 2 ? 3 : 4}" fill="none" opacity="${k % 2 ? 0.55 : 0.4}" stroke-linecap="round"/>`; }).join("");
+    return `<path d="${body}" fill="url(#tuBoreG)"/><path d="${edge}" stroke="${INK}" stroke-width="4" stroke-linejoin="round" fill="none"/>${churn}<g class="tuFoam">${foam}</g>${spray}`;
+  };
+  Sets.DEFS += `<linearGradient id="tuBoreG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ac4f4"/><stop offset=".4" stop-color="#5a9ae6"/><stop offset="1" stop-color="#3a7ad8"/></linearGradient>
+    <linearGradient id="tuFloodG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a9a90" stop-opacity=".8"/><stop offset=".5" stop-color="#4a7470" stop-opacity=".82"/><stop offset="1" stop-color="#2e4a4c" stop-opacity=".88"/></linearGradient>
+    <linearGradient id="tuSkyP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe4f4"/><stop offset="1" stop-color="#f4f8ee"/></linearGradient>
+    <linearGradient id="tuGroundP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8d2a0"/><stop offset="1" stop-color="#c8a870"/></linearGradient>
+    <linearGradient id="tuHotelF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fbf8f0"/><stop offset=".7" stop-color="#ece6d8"/><stop offset="1" stop-color="#d2cab8"/></linearGradient>
+    <pattern id="tuHaz" width="56" height="56" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="56" height="56" fill="#ffd23a"/><rect width="28" height="56" fill="#1e1a16"/></pattern>`;
+  function seriesBoard(id, X, Y0, W, H, title) {
+    const outline = boardPath(X, Y0, W, H, 31), ts = Math.min(80, Math.floor((W - 170) / (emW(title) * 0.95))), uw = Math.min(400, emW(title) * 0.95 * ts / 2);
+    return `${rope(X + 130, -40, Y0 + 24)}${rope(X + W - 130, -40, Y0 + 24)}
+      <path d="${outline}" fill="url(#tuWoodSide)" stroke="${INK}" stroke-width="5" transform="translate(0,16)"/>
+      <path d="${outline}" fill="url(#tuWood)" stroke="${INK}" stroke-width="5"/>
+      <defs><clipPath id="${id}-bc"><path d="${outline}"/></clipPath></defs>
+      <g clip-path="url(#${id}-bc)">${grain(X, Y0, W, H, 41, { knots: 3, stains: 4 })}<rect x="${X}" y="${Y0}" width="${W}" height="40" fill="#fff" opacity=".12"/></g>
+      ${[[X + 130, Y0 + 26], [X + W - 130, Y0 + 26]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="12" fill="#5a3a22" ${OUT(2)}/><circle cx="${a}" cy="${b}" r="6" fill="#2a1a10"/>`).join("")}
+      <g transform="translate(540,${Y0 + 104})"><g id="${id}-ti">
+        <text y="18" text-anchor="middle" font-family="Sriracha" font-size="${ts}" fill="#fffaf0" stroke="#fffaf0" stroke-width="16" stroke-linejoin="round">${title}</text>
+        <text y="18" text-anchor="middle" font-family="Sriracha" font-size="${ts}" fill="#d8312a">${title}</text>
+        <path d="M${f1(-uw)},42Q0,56 ${f1(uw)},42" stroke="#d8312a" stroke-width="6" fill="none" stroke-linecap="round" opacity=".8"/></g></g>`;
+  }
+  // the painted window inside the board: a rope frame around a rounded scene
+  const windowFrame = (x, y, w, h) => `<rect x="${x - 10}" y="${y - 10}" width="${w + 20}" height="${h + 20}" rx="30" fill="none" stroke="${INK}" stroke-width="14"/><rect x="${x - 10}" y="${y - 10}" width="${w + 20}" height="${h + 20}" rx="30" fill="none" stroke="url(#tuRope)" stroke-width="9"/>
+    <path d="${Array.from({ length: Math.ceil((w + 20) / 18) }, (_, k) => `M${x - 6 + k * 18},${y - 14}l9,8`).join("")}" stroke="#7a5a2a" stroke-width="2.4" opacity=".6"/>`;
+  function series(tl, layer, t0, dur, o = {}) {
+    const id = nid(), phase = o.phase || "train", Y0 = o.y ?? 230, X = 54, W = 972, H = 1180;   // the board spans x 48–1030 (±8 swaying)
+    const wx = 80, wy = Y0 + 186, ww = 920, wh = H - 228;   // the painted window (y 416 … 1368 at the default o.y)
+    const title = o.title || (phase === "heights" ? "ปี 2547 · ชายหาดแห่งหนึ่ง" : "สึนามิไม่ได้มาลูกเดียว");
+    let scene = "";
+    const R = mkR(phase === "heights" ? 61 : 53);
+    const mount = () => {
+      put(layer, `<g id="${id}" opacity="0"><g id="${id}-m"><g id="${id}-sw">${seriesBoard(id, X, Y0, W, H, title)}
+        <defs><clipPath id="${id}-wc"><rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" rx="22"/></clipPath></defs>
+        <g clip-path="url(#${id}-wc)"><g id="${id}-sc">${scene}</g></g>${windowFrame(wx, wy, ww, wh)}</g></g></g>`);
+      boardIn(tl, id, t0, dur, Y0);
+    };
+    if (phase === "train") {
+      const SL = wy + 560, at = o.at || [0.3, 0.9, 1.5, 2.2], shoreX = wx + 740;
+      // sky with two clouds, the sea, the seabed rising to the shore, the coast: a beach, palms, the hotel, the hill
+      scene += `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="url(#tuSkyP)"/>
+        ${[[wx + 150, wy + 96, 0.9], [wx + 640, wy + 70, 0.7]].map(([cx, cy, s]) => `<g transform="translate(${cx},${cy}) scale(${s})"><path d="M-90,20Q-90,-14 -54,-16Q-44,-46 -6,-42Q26,-60 54,-30Q92,-30 92,6Q92,24 70,24H-74Q-90,24 -90,20Z" fill="#fff" stroke="#9ab8c8" stroke-width="3"/></g>`).join("")}
+        <path d="M${wx},${SL}H${shoreX + 10}L${wx + ww},${SL - 60}V${wy + wh}H${wx}Z" fill="url(#tuDeepG)"/>
+        <path d="M${wx},${wy + wh - 30}C${wx + 300},${wy + wh - 50} ${wx + 560},${SL + 210} ${shoreX - 60},${SL + 40}L${shoreX + 10},${SL}L${wx + ww},${SL - 60}V${wy + wh}H${wx}Z" fill="#c8a870" ${OUT(3)}/>
+        <path d="M${wx},${wy + wh - 30}C${wx + 300},${wy + wh - 50} ${wx + 560},${SL + 210} ${shoreX - 60},${SL + 40}" stroke="#e8d2a0" stroke-width="5" fill="none" opacity=".6"/>
+        <path d="M${shoreX - 30},${SL + 2}L${wx + ww},${SL - 62}V${SL + 40}L${shoreX + 40},${SL + 18}Z" fill="url(#tuGroundP)"/>
+        <path d="M${wx + 820},${SL - 50}Q${wx + 860},${SL - 250} ${wx + 940},${SL - 300}Q${wx + 920},${SL - 160} ${wx + ww},${SL - 120}V${SL - 56}Z" fill="url(#tuHillG)" ${OUT(3)}/>
+        <g transform="translate(${shoreX + 44},${SL - 16})"><rect x="-20" y="-96" width="44" height="96" fill="url(#tuHotelF)" ${OUT(2.6)}/>${[0, 1, 2, 3, 4].map((k) => `<path d="M-20,${-19 * k}H24" stroke="${INK}" stroke-width="1.4"/><rect x="-12" y="${-17 - 19 * k}" width="8" height="9" fill="#7ab4e0"/><rect x="6" y="${-17 - 19 * k}" width="8" height="9" fill="#7ab4e0"/>`).join("")}</g>
+        ${[[shoreX + 8, SL - 4, 0.7], [shoreX + 112, SL - 34, 0.8]].map(([px, py, s]) => `<g transform="translate(${px},${py}) scale(${s})"><path d="M0,0Q6,-50 -6,-96" stroke="#7a5a3a" stroke-width="7" fill="none"/>${[-150, -100, -50, 0, 40].map((a) => `<path d="M-6,-96q${f1(30 * Math.cos(a * Math.PI / 180))},${f1(30 * Math.sin(a * Math.PI / 180) - 10)} ${f1(56 * Math.cos(a * Math.PI / 180))},${f1(56 * Math.sin(a * Math.PI / 180) + 12)}" stroke="#3e8a44" stroke-width="7" fill="none" stroke-linecap="round"/>`).join("")}</g>`).join("")}
+        <path d="M${wx},${SL}H${shoreX}" stroke="#bff2ff" stroke-width="4" opacity=".8"/>
+        ${Array.from({ length: 10 }, () => `<path d="M${f1(wx + 30 + R() * 640)},${f1(SL + 40 + R() * 160)}h${f1(30 + R() * 40)}" stroke="#7ab4f0" stroke-width="3" opacity=".45" stroke-linecap="round"/>`).join("")}
+        <text x="${wx + 36}" y="${SL + 150}" font-family="Kanit" font-weight="700" font-size="32" fill="#e8f4ff" opacity=".9">ทะเลลึก</text>
+        <g id="${id}-dir" opacity=".4">${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M${wx + 60 + k * 96},${SL + 40}l22,22l-22,22" stroke="#e8f8ff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`).join("")}</g>
+        <g transform="translate(${shoreX + 70},${SL + 70})"><path d="M-40,0H24M10,-14L26,0L10,14" stroke="#fffaf0" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text x="34" y="11" font-family="Kanit" font-weight="800" font-size="32" fill="#fffaf0" stroke="${INK}" stroke-width="5" paint-order="stroke">ฝั่ง</text></g>`;
+      // three crests, the one nearest the coast first; the later ones bigger (the first is often not the largest)
+      const CR = [[shoreX - 60, 170, 70], [shoreX - 320, 220, 110], [shoreX - 580, 260, 150]];
+      CR.forEach(([x, w, h], k) => { scene += `<g transform="translate(${x},${SL})"><g id="${id}-k${k}" opacity="0"><g id="${id}-kw${k}">${crest(w, h, 70 + k)}</g></g></g>`; });
+      // the gaps: a bracket between each pair of crests with a clock on it, one label over both
+      const by = SL - 214;
+      const br = (x0, x1, k) => `<g id="${id}-g${k}" opacity="0"><path d="M${x0 + 10},${by}H${x1 - 10}" stroke="${INK}" stroke-width="10" stroke-linecap="round"/><path d="M${x0 + 10},${by}H${x1 - 10}" stroke="#ffd23a" stroke-width="5" stroke-linecap="round"/>
+        <path d="M${x0 + 26},${by - 14}L${x0 + 8},${by}L${x0 + 26},${by + 14}M${x1 - 26},${by - 14}L${x1 - 8},${by}L${x1 - 26},${by + 14}" stroke="${INK}" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(${(x0 + x1) / 2},${by})"><circle r="26" fill="#fffaf0" ${OUT(4)}/><path d="M0,-14V0L10,7" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/><g class="tuHand"><path d="M0,0V-17" stroke="#d8312a" stroke-width="3" stroke-linecap="round"/></g></g></g>`;
+      scene += br(CR[2][0], CR[1][0], 0) + br(CR[1][0], CR[0][0], 1);
+      const gap = o.gap || "ห่างกัน <u>5 นาที – 2 ชั่วโมง</u>", gw = Math.round(emW(gap) * 46 + 80), lx = (CR[2][0] + CR[0][0]) / 2, ly = by - 136;
+      scene += `<g id="${id}-gl" opacity="0"><path d="M${lx - 40},${ly + 40}L${(CR[2][0] + CR[1][0]) / 2},${by - 28}M${lx + 40},${ly + 40}L${(CR[1][0] + CR[0][0]) / 2},${by - 28}" stroke="${INK}" stroke-width="4" stroke-dasharray="10 8" opacity=".7"/>
+        <g transform="translate(${lx},${ly})"><g id="${id}-gp">${slab(-gw / 2, -42, gw, 84, 42, { face: "url(#tuNote)", body: "#8a6e4c", d: 9 })}
+          <text y="16" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#1e2a3a">${gap.replace(/<u>(.*?)<\/u>/g, `<tspan fill="#d8312a">$1</tspan>`)}</text></g></g></g>`;
+      mount();
+      CR.forEach((_, k) => {
+        const ta = t0 + at[k];
+        tl.fromTo(`#${id}-k${k}`, { opacity: 0, x: -620 }, { opacity: 1, x: 0, duration: 1.0, ease: "power2.out", immediateRender: false }, ta);
+        tl.fromTo(`#${id}-kw${k}`, { scaleX: 0.8, scaleY: 0.6, svgOrigin: "0 0" }, { scaleX: 1, scaleY: 1, svgOrigin: "0 0", duration: 1.1, ease: "back.out(1.6)", immediateRender: false }, ta);
+        // keep rolling in: a slow drift toward the coast and a churning top
+        tl.fromTo(`#${id}-k${k}`, { x: 0 }, { x: 26, duration: Math.max(0.5, dur - at[k] - 1.0), ease: "none", immediateRender: false }, ta + 1.0);
+        tl.fromTo(`#${id}-kw${k}`, { scaleY: 1, svgOrigin: "0 0" }, { scaleY: 1.07, svgOrigin: "0 0", duration: 0.45, repeat: Math.ceil(dur / 0.45), yoyo: true, ease: "sine.inOut", immediateRender: false }, ta + 1.1);
+      });
+      tl.fromTo(`#${id}-dir`, { x: -40 }, { x: 56, duration: 0.9, repeat: Math.ceil(dur / 0.9), ease: "none", immediateRender: false }, t0);
+      const tg = t0 + at[3];
+      [0, 1].forEach((k) => {
+        const ox = `${(CR[2 - k][0] + CR[1 - k][0]) / 2} ${by}`;
+        tl.fromTo(`#${id}-g${k}`, { opacity: 0, scaleX: 0.2, svgOrigin: ox }, { opacity: 1, scaleX: 1, svgOrigin: ox, duration: 0.5, ease: "back.out(2.2)", immediateRender: false }, tg + k * 0.15);
+        document.getElementById(`${id}-g${k}`).querySelectorAll(".tuHand").forEach((h) => tl.fromTo(h, { rotation: 0, svgOrigin: "0 0" }, { rotation: 360, svgOrigin: "0 0", duration: 1.2, repeat: Math.ceil(dur / 1.2), ease: "none", immediateRender: false }, tg));
+      });
+      tl.fromTo(`#${id}-gl`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, tg + 0.3);
+      tl.fromTo(`#${id}-gp`, { scale: 0.3, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.6, ease: "elastic.out(1, 0.5)", immediateRender: false }, tg + 0.3);
+      tl.fromTo(`#${id}-gp`, { y: 0 }, { y: -6, duration: 0.8, repeat: Math.ceil(dur / 0.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, tg + 0.9);
+    } else {
+      // heights: one fixed scale (1 m = K px) on the ground G; a person (1.7 m), a one-storey house, the 5-storey hotel (3 m a storey)
+      const K = 50, G = wy + wh - 64, at = o.at || [0.6, 2.4, 4.2], HM = o.h || [2.5, 6.5, 11];
+      const tags = o.tags || ["09:38 · 2–3 ม.", "09:43 · 6–7 ม.", "10:03 · เกิน 10 ม."], TC = ["#2a9ca6", "#e8823a", "#d8312a"];
+      const yM = (m) => G - m * K, hx = wx + 300, hw = 210;
+      scene += `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="url(#tuSkyP)"/>
+        <g transform="translate(${wx + 740},${wy + 110}) scale(.8)"><path d="M-90,20Q-90,-14 -54,-16Q-44,-46 -6,-42Q26,-60 54,-30Q92,-30 92,6Q92,24 70,24H-74Q-90,24 -90,20Z" fill="#fff" stroke="#9ab8c8" stroke-width="3"/></g>
+        <rect x="${wx}" y="${G}" width="${ww}" height="${wy + wh - G}" fill="url(#tuGroundP)"/><path d="M${wx},${G}H${wx + ww}" stroke="${INK}" stroke-width="4"/>`;
+      // the hotel: 5 storeys with windows, the roof railing and the flag (its floor badges go on top of the water, below)
+      let hotel = `<rect x="${hx + 8}" y="${yM(15)}" width="${hw}" height="${15 * K}" fill="#000" opacity=".15"/><rect x="${hx}" y="${yM(15)}" width="${hw}" height="${15 * K}" fill="url(#tuHotelF)" ${OUT(4)}/>`;
+      for (let f = 0; f < 5; f++) {
+        const yb = yM(3 * f);
+        hotel += `<path d="M${hx},${f1(yb)}H${hx + hw}" stroke="${INK}" stroke-width="${f ? 3 : 0}"/>`;
+        for (let j = 0; j < 2; j++) hotel += `<rect x="${hx + 96 + j * 56}" y="${f1(yb - 3 * K + 32)}" width="40" height="${f1(3 * K - 62)}" fill="#7ab4e0" stroke="${INK}" stroke-width="2.4"/><path d="M${hx + 102 + j * 56},${f1(yb - 3 * K + 38)}l12,20" stroke="#fff" stroke-width="3" opacity=".6"/>`;
+      }
+      hotel += `<path d="M${hx - 6},${yM(15)}H${hx + hw + 6}V${yM(15) - 12}H${hx - 6}Z" fill="#c2baae" ${OUT(2.4)}/>${Array.from({ length: 9 }, (_, k) => `<path d="M${f1(hx + k * hw / 8)},${yM(15) - 12}V${yM(15) - 38}" stroke="#8a929a" stroke-width="3"/>`).join("")}<path d="M${hx},${yM(15) - 38}H${hx + hw}" stroke="#8a929a" stroke-width="4"/>
+        <path d="M${hx + hw - 30},${yM(15) - 38}V${yM(15) - 100}" stroke="#6a6a6a" stroke-width="4"/><path d="M${hx + hw - 30},${yM(15) - 100}h40v30h-40Z" fill="#e8392c"/><path d="M${hx + hw - 30},${yM(15) - 94}h40v18h-40Z" fill="#fff"/><path d="M${hx + hw - 30},${yM(15) - 89}h40v8h-40Z" fill="#2a4aa8"/>`;
+      const badges = Array.from({ length: 5 }, (_, f) => `<g transform="translate(${hx + 44},${f1(yM(3 * f) - 1.5 * K)})"><circle r="30" fill="#fffaf0" ${OUT(3)}/><text y="-2" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="17" fill="#5a4a3a">ชั้น</text><text y="21" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#1e2a3a">${f + 1}</text></g>`).join("");
+      // the house (x 240 … 350): a wall ~2.6 m, a tin roof to ~4.2 m · the person (1.7 m) between the scale and the house
+      const house = `<rect x="${wx + 160}" y="${yM(2.6)}" width="110" height="${2.6 * K}" fill="#e2cca4" ${OUT(3)}/><rect x="${wx + 176}" y="${yM(2.0)}" width="34" height="${2.0 * K}" fill="#8a5a3a" ${OUT(2.4)}/><rect x="${wx + 224}" y="${yM(2.0)}" width="32" height="32" fill="#7ab4e0" ${OUT(2.4)}/>
+        <path d="M${wx + 146},${yM(2.6)}L${wx + 215},${yM(4.2)}L${wx + 284},${yM(2.6)}Z" fill="#a8b4bc" ${OUT(3)}/><path d="M${wx + 170},${yM(3.0)}L${wx + 215},${yM(3.9)}M${wx + 196},${yM(2.8)}L${wx + 228},${yM(3.7)}" stroke="#d8e0e6" stroke-width="3" opacity=".7"/>`;
+      const px = wx + 124, person = `<g transform="translate(${px},${G})"><circle cx="0" cy="${-1.7 * K + 9}" r="9" fill="url(#tuHead)" ${OUT(2)}/><path d="M-9,${-1.7 * K + 20}H9L7,${-0.85 * K}H-7Z" fill="#ff8a3a" ${OUT(2)}/><path d="M-5,${-0.85 * K}L-6,0M5,${-0.85 * K}L6,0" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><path d="M-9,${-1.7 * K + 24}L-14,${-1 * K}M9,${-1.7 * K + 24}L14,${-1 * K}" stroke="#ebc19c" stroke-width="5" stroke-linecap="round"/></g>`;
+      // the scale on the left: a tick every metre, numbers at 5, 10, 15
+      let rule = `<path d="M${wx + 26},${G}V${yM(15)}" stroke="${INK}" stroke-width="5"/>`;
+      for (let m = 0; m <= 15; m++) rule += `<path d="M${wx + 26},${f1(yM(m))}h${m % 5 ? 12 : 24}" stroke="${INK}" stroke-width="${m % 5 ? 2.4 : 4}"/>${m && m % 5 === 0 ? `<text x="${wx + 56}" y="${f1(yM(m) + 10)}" font-family="Kanit" font-weight="800" font-size="28" fill="#1e2a3a" stroke="#fffaf0" stroke-width="6" paint-order="stroke">${m} ม.</text>` : ""}`;
+      rule += `<text x="${wx + 40}" y="${G + 44}" font-family="Kanit" font-weight="700" font-size="26" fill="#5a4a3a">← ทะเล</text>`;
+      // the mark each crest leaves and its tag: a dashed line at its height (under the floor badges), a slab with the time and the height
+      let marks = "", tagMk = "";
+      HM.forEach((m, k) => {
+        const y = yM(m), [tm, hg] = tags[k].includes(" · ") ? tags[k].split(" · ") : ["", tags[k]], red = k === HM.length - 1;
+        const tw = Math.round((tm ? emW(`${tm} · `) * 32 : 0) + emW(hg) * 46 + 56);
+        marks += `<g id="${id}-mk${k}" opacity="0"><path d="M${wx + 36},${f1(y)}H${wx + 520}" stroke="${TC[k % 3]}" stroke-width="7" stroke-dasharray="20 12"/><path d="M${wx + 36},${f1(y)}H${wx + 520}" stroke="#fff" stroke-width="2" stroke-dasharray="20 12" opacity=".6"/></g>`;
+        tagMk += `<g transform="translate(${wx + 530},${f1(y)})"><g id="${id}-tg${k}" opacity="0">${slab(0, -38, tw, 76, 38, { face: red ? "url(#tuLiveR)" : "url(#tuNote)", body: red ? "#7a0e1c" : "#8a6e4c", d: 8 })}
+            <path d="M-2,0l-16,-12v24z" fill="${red ? "#d8243a" : "#f2e6c8"}" ${OUT(2.4)}/><circle cx="16" cy="0" r="7" fill="${TC[k % 3]}" stroke="${INK}" stroke-width="2"/>
+            <text x="30" y="15" font-family="Kanit" font-weight="900">${tm ? `<tspan font-size="32" fill="${red ? "#ffe2e2" : "#6a5a4a"}">${tm} · </tspan>` : ""}<tspan font-size="46" fill="${red ? "#fff" : "#1e2a3a"}">${hg}</tspan></text></g></g>`;
+      });
+      scene += hotel + house + person + `<path id="${id}-fl" d="" fill="url(#tuFloodG)"/><g id="${id}-ff"></g>` + marks + badges + rule + tagMk;
+      mount();
+      // the water: each crest comes in from the sea side (left) as a bore, its front racing across, holds churning, then
+      // drains away leaving its mark; the last one stays. One proxy tween redraws the flood, so any seek gives the right frame.
+      const RISE = 0.75, DRAIN = 0.55, fl = document.getElementById(`${id}-fl`), ff = document.getElementById(`${id}-ff`), RF = mkR(88);
+      const specks = Array.from({ length: 16 }, () => [RF(), RF(), RF()]), up = gsap.parseEase("power2.out"), dn = gsap.parseEase("power1.in");
+      const state = (tt) => {   // → [level m, front 0..1]
+        let L = 0, F = 1;
+        HM.forEach((m, k) => {
+          const a = at[k], b = k + 1 < HM.length ? at[k + 1] - 0.15 : 1e9;
+          if (tt < a) return;
+          const u = tt - a;
+          if (u < RISE) { const e = up(u / RISE); L = Math.max(L, m * (0.55 + 0.45 * e)); F = e; }
+          else if (tt < b - DRAIN || k + 1 === HM.length) { L = Math.max(L, m); F = 1; }
+          else if (tt < b) L = Math.max(L, m * (1 - dn((tt - (b - DRAIN)) / DRAIN)));
+        });
+        return [L, F];
+      };
+      const draw = (tt) => {
+        const [Lm, F] = state(tt);
+        if (Lm < 0.02) { fl.setAttribute("d", ""); ff.innerHTML = ""; return; }
+        const yTop = yM(Lm), x0 = wx - 10, xf = wx + 40 + (ww + 40) * F, pts = [];
+        for (let x = x0; x <= xf; x += 24) pts.push([x, yTop + 7 * Math.sin(x * 0.045 + tt * 5.2) + 4 * Math.sin(x * 0.11 - tt * 7.3)]);
+        const front = F < 1 ? `L${f1(xf + 26)},${f1(yTop + (G - yTop) * 0.35)} L${f1(xf + 70)},${G}` : `L${wx + ww + 20},${f1(yTop)} L${wx + ww + 20},${G}`;
+        fl.setAttribute("d", `M${x0},${G + 30} L${pts.map(([a, b]) => `${f1(a)},${f1(b)}`).join(" L")} ${front} L${wx + ww + 20},${G + 30} Z`);
+        let fo = `<path d="M${pts.map(([a, b]) => `${f1(a)},${f1(b)}`).join(" L")}" stroke="#f4fbff" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+        specks.forEach(([a, b, c], j) => { const x = x0 + a * (xf - x0), y = yTop + 18 + b * Math.max(20, G - yTop - 30);
+          fo += j % 3 ? `<circle cx="${f1(x + 10 * Math.sin(tt * 3 + j))}" cy="${f1(y)}" r="${f1(3 + c * 5)}" fill="none" stroke="#c8ecee" stroke-width="2.4" opacity=".6"/>`
+            : `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(18 + c * 26)}" height="7" rx="2" fill="#6a4a2a" opacity=".85" transform="rotate(${f1(-20 + c * 40 + 12 * Math.sin(tt * 2 + j))} ${f1(x)} ${f1(y)})"/>`; });
+        if (F < 1) fo += Array.from({ length: 6 }, (_, j) => `<circle cx="${f1(xf + 10 + j * 9)}" cy="${f1(yTop + (G - yTop) * (0.08 + j * 0.13))}" r="${f1(9 - j)}" fill="#f4fbff" opacity=".9"/>`).join("");
+        ff.innerHTML = fo;
+      };
+      draw(0);
+      const c = { t: 0 };
+      tl.to(c, { t: dur, duration: dur, ease: "none", immediateRender: false, onUpdate: () => draw(c.t) }, t0);
+      HM.forEach((_, k) => {
+        const tm = t0 + at[k] + RISE * 0.8;
+        tl.fromTo(`#${id}-mk${k}`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, tm);
+        tl.fromTo(`#${id}-tg${k}`, { opacity: 0, x: 40, scale: 0.5, svgOrigin: "0 0" }, { opacity: 1, x: 0, scale: 1, svgOrigin: "0 0", duration: 0.55, ease: "back.out(2.4)", immediateRender: false }, tm);
+        tl.fromTo(`#${id}-tg${k}`, { y: 0 }, { y: -5, duration: 0.75, repeat: Math.ceil(dur / 0.75), yoyo: true, ease: "sine.inOut", immediateRender: false }, tm + 0.6);
+      });
+    }
+    if (o.out !== undefined) { tl.to(`#${id}-m`, { y: -200, duration: 0.3, ease: "power2.in" }, t0 + o.out); tl.to(`#${id}`, { opacity: 0, duration: 0.3 }, t0 + o.out); }
+    return id;
+  }
+  // the board drops on its ropes, swings, settles, then sways until the shot ends
+  function boardIn(tl, id, t0, dur, Y0) {
+    tl.set(`#${id}`, { opacity: 1 }, t0);
+    tl.fromTo(`#${id}-m`, { y: -1200 }, { y: 0, duration: 0.55, ease: "power3.out", immediateRender: false }, t0);
+    tl.fromTo(`#${id}-sw`, { rotation: 4, svgOrigin: `540 ${Y0 - 900}` }, { rotation: 0, svgOrigin: `540 ${Y0 - 900}`, duration: 1.5, ease: "elastic.out(1, 0.32)", immediateRender: false }, t0 + 0.4);
+    tl.fromTo(`#${id}-sw`, { rotation: 0, svgOrigin: `540 ${Y0 - 900}` }, { rotation: 0.22, svgOrigin: `540 ${Y0 - 900}`, duration: 0.7, ease: "sine.out", immediateRender: false }, t0 + 1.9);
+    tl.fromTo(`#${id}-sw`, { rotation: 0.22, svgOrigin: `540 ${Y0 - 900}` }, { rotation: -0.22, svgOrigin: `540 ${Y0 - 900}`, duration: 1.4, repeat: Math.ceil(dur / 1.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 2.6);
+    tl.fromTo(`#${id}-ti`, { scale: 0.6, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.6, ease: "back.out(2.6)", immediateRender: false }, t0 + 0.3);
+  }
+
+  // ---------------- the warning tower's loudspeakers: the real announcement ----------------
+  // a slab with a hazard band, the horn cluster pulsing sound rings, the two quoted lines (Thai PBS: the tower's message M3).
+  const hornCluster = () => `<path d="M-6,30V96" stroke="#5a646c" stroke-width="10"/><rect x="-26" y="-6" width="52" height="40" rx="8" fill="#8a949c" ${OUT(3)}/>
+    ${[[-1, -18], [1, -18], [-1, 22], [1, 22]].map(([s, y]) => `<g transform="translate(${s * 24},${y}) scale(${s},1)"><path d="M0,-12L44,-30V30L0,12Z" fill="#e8ecee" ${OUT(3)}/><path d="M44,-30Q52,0 44,30" fill="#c8d0d4" ${OUT(2.6)}/><path d="M6,-8L40,-22" stroke="#fff" stroke-width="3" opacity=".7"/></g>`).join("")}
+    <circle cx="0" cy="-36" r="9" fill="#e8392c" ${OUT(2.4)}/>`;
+  function pa(tl, layer, t0, dur, o = {}) {
+    const id = nid(), at = o.at || [0, 0.35, 1.4], Y = o.y ?? 470, l1 = o.l1 || "โปรดทราบ โปรดทราบ…", l2 = o.l2 || "ขณะนี้เกิดคลื่นสึนามิ";
+    const W = 960, Hh = 330, x0 = -W / 2, y0 = -Hh / 2, TX = x0 + 300;
+    // both lines shrink to fit the 620 px beside the horn (Kanit 800/900)
+    const s1 = Math.min(52, Math.floor(620 / (emW(`“${l1}”`) * 0.96))), s2 = Math.min(64, Math.floor(620 / emW(`“${l2}”`)));
+    const w2 = emW(`“${l2}”`) * s2;
+    const rings = (s) => [1, 2, 3].map((k) => `<path class="tuRing" data-k="${k}" d="M${s * (66 + k * 16)},-${28 + k * 14}Q${s * (84 + k * 22)},0 ${s * (66 + k * 16)},${28 + k * 14}" stroke="#ffd23a" stroke-width="${8 - k}" fill="none" stroke-linecap="round" opacity="${f1(1 - k * 0.22)}"/>`).join("");
+    put(layer, `<g transform="translate(540,${Y})"><g id="${id}" opacity="0"><g id="${id}-in">
+      <ellipse cx="0" cy="${Hh / 2 + 30}" rx="${W / 2 - 40}" ry="26" fill="url(#tuSoftSh)" opacity=".7"/>
+      <rect x="${x0}" y="${y0 + 14}" width="${W}" height="${Hh}" rx="40" fill="#3a2a1a" ${OUT(5)}/>
+      <rect x="${x0}" y="${y0}" width="${W}" height="${Hh}" rx="40" fill="url(#tuNote)" ${OUT(5)}/>
+      <defs><clipPath id="${id}-hc"><rect x="${x0}" y="${y0}" width="${W}" height="${Hh}" rx="40"/></clipPath></defs>
+      <g clip-path="url(#${id}-hc)"><g id="${id}-hz"><rect x="${x0 - 112}" y="${y0}" width="${W + 224}" height="34" fill="url(#tuHaz)"/></g><path d="M${x0},${y0 + 34}H${-x0}" stroke="${INK}" stroke-width="4"/>
+        <rect x="${x0}" y="${y0 + 34}" width="${W}" height="40" fill="#fff" opacity=".18"/></g>
+      <g transform="translate(${x0 + 150},${y0 + 190})"><circle r="104" fill="#1e2a3a" ${OUT(4)}/><circle r="96" fill="none" stroke="#ffd23a" stroke-width="5" opacity=".5"/>
+        <g id="${id}-hn">${hornCluster()}</g>${rings(-1)}${rings(1)}</g>
+      <g transform="translate(${x0 + 30},${y0 - 34})"><g id="${id}-lb">${slab(0, -26, 250, 56, 28, { face: "url(#tuLiveR)", body: "#7a0e1c", d: 7 })}
+        <path d="M30,18V-14M22,-14h16l-8,-10z" stroke="#fff" stroke-width="4" fill="#fff" stroke-linejoin="round"/><text x="140" y="11" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#fff">หอเตือนภัย</text></g></g>
+      <defs><clipPath id="${id}-c1"><rect id="${id}-r1" x="${TX - 10}" y="${y0 + 60}" width="0" height="100"/></clipPath></defs>
+      <g clip-path="url(#${id}-c1)"><text x="${TX}" y="${y0 + 136}" font-family="Kanit" font-weight="800" font-size="${s1}" fill="#1e2a3a">“${l1}”</text></g>
+      <g transform="translate(${TX},${y0 + 240})"><g id="${id}-l2" opacity="0">
+        <text font-family="Kanit" font-weight="900" font-size="${s2}" fill="#fffaf0" stroke="#fffaf0" stroke-width="10" stroke-linejoin="round">“${l2}”</text>
+        <text font-family="Kanit" font-weight="900" font-size="${s2}" fill="#d8312a">“${l2}”</text>
+        <path id="${id}-ul" d="M6,22Q${f1(w2 / 2)},34 ${f1(w2)},20" stroke="#d8312a" stroke-width="7" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/></g></g>
+    </g></g></g>`);
+    const ta = t0 + at[0];
+    tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, ta);
+    tl.fromTo(`#${id}-in`, { y: -90, scaleX: 0.6, scaleY: 1.25, svgOrigin: `0 ${Hh / 2}` }, { y: 0, scaleX: 1, scaleY: 1, svgOrigin: `0 ${Hh / 2}`, duration: 0.7, ease: "elastic.out(1, 0.5)", immediateRender: false }, ta);
+    tl.fromTo(`#${id}-lb`, { scale: 0, rotation: -12, svgOrigin: "0 0" }, { scale: 1, rotation: -4, svgOrigin: "0 0", duration: 0.5, ease: "back.out(2.6)", immediateRender: false }, ta + 0.2);
+    // the horns shudder with the sound, the rings pulse outward, the hazard band crawls
+    tl.fromTo(`#${id}-hn`, { rotation: -2, svgOrigin: "0 0" }, { rotation: 2, svgOrigin: "0 0", duration: 0.07, repeat: Math.ceil(dur / 0.07), yoyo: true, ease: "none", immediateRender: false }, ta);
+    document.getElementById(id).querySelectorAll(".tuRing").forEach((r) => { const k = +r.dataset.k;
+      tl.fromTo(r, { opacity: 0, scale: 0.7, svgOrigin: "0 0" }, { opacity: 0.95, scale: 1.08, svgOrigin: "0 0", duration: 0.55, repeat: Math.ceil(dur / 0.55), ease: "power1.out", immediateRender: false }, ta + k * 0.12); });
+    tl.fromTo(`#${id}-hz`, { x: 0 }, { x: -79.2, duration: 0.6, repeat: Math.ceil(dur / 0.6), ease: "none", immediateRender: false }, ta);
+    // line 1 is written on with the voice (it takes the time until line 2), line 2 slams in, gets underlined and shakes
+    tl.fromTo(`#${id}-r1`, { attr: { width: 0 } }, { attr: { width: 640 }, duration: Math.min(1.2, Math.max(0.5, at[2] - at[1] - 0.1)), ease: "power1.inOut", immediateRender: false }, t0 + at[1]);
+    tl.fromTo(`#${id}-l2`, { opacity: 0, scale: 0.4, svgOrigin: `${f1(w2 / 2)} -20` }, { opacity: 1, scale: 1, svgOrigin: `${f1(w2 / 2)} -20`, duration: 0.55, ease: "back.out(2.4)", immediateRender: false }, t0 + at[2]);
+    tl.fromTo(`#${id}-ul`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.45, ease: "power2.out", immediateRender: false }, t0 + at[2] + 0.35);
+    tl.fromTo(`#${id}-l2`, { x: 0 }, { x: 4, duration: 0.09, repeat: 7, yoyo: true, ease: "none", immediateRender: false }, t0 + at[2] + 0.6);
+    if (o.out !== undefined) { tl.to(`#${id}-in`, { y: -60, duration: 0.3, ease: "power2.in" }, t0 + o.out); tl.to(`#${id}`, { opacity: 0, duration: 0.3 }, t0 + o.out); }
+    return id;
+  }
+
+  window.TideUI = { rule, live, choice, endCard, source, legendAnim, series, pa, ICON, icon, iconPop, iconLife, RULES };
   Object.assign(Sets, { tideLegend });
 })();
