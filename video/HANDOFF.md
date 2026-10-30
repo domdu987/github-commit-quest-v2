@@ -566,6 +566,8 @@
 
 ## 5. Pipeline (คำสั่งจริง ทีละขั้น)
 
+> **ประวัติ:** คำสั่งในหัวข้อนี้เป็นของ pipeline รุ่นแรก (`video/workspace.sh`, ประโยคซิกเนเจอร์ที่เลิกใช้แล้ว) ปัจจุบันใช้ `.claude/skills/rodmai-club-video/references/playbook.md`
+
 **ต้องมี:** python3 + numpy, ffmpeg, node/npx, Chromium (มีใน environment แล้ว)
 และ `pip install faster-whisper` สำหรับตรวจเสียง (ครั้งแรกโหลดโมเดล `large-v3-turbo` ~1.6 GB ไปที่ `WHISPER_DIR`)
 

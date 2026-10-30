@@ -19,7 +19,7 @@
 
 ```bash
 K=.claude/skills/rodmai-club-video/scripts
-W=<scratchpad>/work
+W=<scratchpad>/mw
 bash $K/setup_workspace.sh $W <story>1 tide1=video/tide/ep1  # hf/lib hf/rig synth.py music + ตอนใหม่ / ตอนที่ทำต่อ (เสียงพากย์มาด้วย)
 cd $W/<story>1
 # ... lines.json → voices (audio-and-delivery.md) → python3 timing.py → schedule.json ... เขียน body.part
@@ -57,7 +57,9 @@ add("key", {                                   // key ต้องมีใน s
 ```
 
 - เวลาในช็อต: `vo(k,i)` เสียงที่ i เริ่ม · `voEnd(k,i)` · `F(k,i,j)` ท่อนซับที่ j ของเสียง i · `D(k)` ความยาวช็อต
-- กล้อง: `fr(wx, wy, s, sx=540, sy=760)` วางจุด (wx,wy) ของฉากไว้ที่ (sx,sy) บนจอด้วยซูม s · `CU(x, y, s, sy)` เฟรมหน้าตัวละครสเกล s ที่ยืนที่ (x,y)
+- กล้อง: `fr(wx, wy, s, sx=540, sy=760)` วางจุด (wx,wy) ของฉากไว้ที่ (sx,sy) บนจอด้วยซูม s (ประกาศใน `head.part`) · ภาพใกล้ใช้ `fr()` ที่หัวตัวละครด้วยซูม 1.8–2.4
+  - `CU()` และ `oneHand()` ไม่อยู่ในแม่แบบ เป็น helper ใน body ของเห็ดปอบ (`video/pop/v2/ep3/body.part` บรรทัด 10–13) ก๊อปมาใช้ถ้าต้องการ
+  - engine ดันกล้องเข้าเอง 1.2%/วิ ในทุก key (`drift.s` ค่าเริ่มต้น 0.012) ช็อตที่ต้องนิ่งใส่ `drift: { s: 0 }`
 - `split(k, at, A, B)` = ช็อตเดียว (เสียงเดียว) สองการตั้งกล้อง/สองฉาก · `capsFrom(k, at, lines, o)` ซับของช่วงหลัง
 - `oneHand(id, i)` ลบของในมือหลังของนักแสดงที่ i · `tf(tl, sel, t, dur, "transform…")` tween attr.transform · `put(el, html)`
 - preset แสงที่ใช้แล้ว (ประกาศใน body.part):
@@ -99,7 +101,8 @@ C.name = { v2: { skin, iris, lash, blush, lip, bags, w (กว้าง), limb (
   - ท่าที่ไม่มีอยู่จริงทำให้ทั้ง timeline พัง
 - **ของในมือ:** cast variant `{ ...Rig.CAST.mint, hand: Pop2.PROP.phone() }` (ฝ่ามือที่ (0,118) ของกลุ่มมือ) แล้ว `oneHand(id, i)` ใน fx
 - **ตำแหน่งของร่างกาย:** `x, y` = เท้า · ส่วนสูง ~620·s · `flip` = หันกลับ · `blinks: [t…]`
-  - `moveTo` = เดินไปจุดหมาย · `path: [{t,x,y,flip}]` = เดินตามจุดหลายจุด (ใช้กับบันได)
+  - `moveTo: { x, y, s, dur, ease, at }` = เดินไปจุดหมาย (`s` = scale ตอนถึง ใช้เมื่อเดินเข้าหาหรือออกจากกล้อง) · `path: [{t,x,y,flip,s}]` = เดินตามจุดหลายจุด (บันได)
+  - rig มีแต่ด้านหน้า (หันซ้ายขวาด้วย `flip`) ไม่มีมุมหลัง ไม่มีท่าคว้าหรือถูกดึงข้อมือ ต้องเขียน `Rig.MODES` ใหม่
   - **เปลี่ยน mode → blend 0.22 วิเอง** · ตาเปลี่ยนเป็น wide → สะดุ้งเอง
 
 ## 5. ชุดฉาก v2 และการเขียน lib ของเรื่องใหม่
@@ -161,6 +164,7 @@ C.name = { v2: { skin, iris, lash, blush, lip, bags, w (กว้าง), limb (
   - ที่มีแล้ว: mush mushQ basketX hospital belly skull check cross clock spoon rice shallot fire palette nose shape pot
   - และจาก pop2hosp: throat saltglass lungs vomit bag photo people form liver doctor trend bowl
 - **เรื่องใหม่:** ทำ `<story>ui.js` ที่วาดการ์ดในลายมือของโลกเรื่องนั้น โดยใช้ PopUI เป็นต้นแบบ
+- เรื่องล่าสุดใช้ `TideUI` (`tideui.js`): `rule` `live` `choice` (ตัวเลือกที่ถูกดึงใช้ `pull: "a"` ไม่ใช่ `possessed`) `endCard` `source` `legendAnim` · option ทั้งหมดอยู่ในหัวไฟล์
 
 ## 7. กับดักที่เจอแล้ว
 

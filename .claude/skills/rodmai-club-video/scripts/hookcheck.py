@@ -1,12 +1,14 @@
-"""Check the first seconds of an episode against the 3-second hook rules (SKILL.md H1–H6) from its schedule and lines.
+"""Check the first seconds of an episode against the 3-second hook rules (SKILL.md H) from its schedule and lines.
 
-Prints the first lines with their times, when the command ("อย่า…" / "ห้าม…") starts, and what fails.
-Visual rules (the lure moving in frame 1, two visual changes) still need a look at the snapshots at 0.0 / 1.0 / 2.0 / 3.0 s.
+Checks from the data: the narration starts by 0.5 s (H2), the first words are "ถ้าวันหนึ่ง… คุณ…" (S1), the narrator's command
+("อย่า…" / "ห้าม…") starts by ~3 s and sits in a red {…} box (H4), the first shot is short enough to cut inside 3 s (H5, rough).
+H1, H3, H5 (the lure moving in frame 1, the wrong detail, two visual changes) need a look at the stills at 0 / 1 / 2 / 3 s.
 
 usage: python3 hookcheck.py <episode dir>      (needs schedule.json and lines.json; run python3 timing.py first)
 """
 import json
 import os
+import re
 import sys
 
 
@@ -30,9 +32,14 @@ def main():
         fails.append("S1 the first words are not 'ถ้าวันหนึ่ง… คุณ…'")
     if first and "คุณ" not in lines[first[2]]["text"]:
         fails.append("S1 the first line does not speak to 'คุณ'")
-    cmd = next((r for r in rows if any(w in lines[r[2]]["text"] for w in ("อย่า", "ห้าม"))), None)
+    # the hook's command is the narrator's ("อย่า…" / "ห้าม…"; not "อย่าง"), not a character shouting "อย่า…" in a scene
+    def is_cmd(vid):
+        ln = lines[vid]
+        narrator = ln["voice"] == "Puck" if "voice" in ln else vid.startswith("n")  # the narrator is always Puck (rule A1), ids n01…
+        return narrator and re.search(r"(อย่า(?!ง)|ห้าม)", ln["text"]) is not None
+    cmd = next((r for r in rows if is_cmd(r[2])), None)
     if not cmd:
-        fails.append("H4 no command ('อย่า…' / 'ห้าม…') in the episode")
+        fails.append("H4 no narrator command ('อย่า…' / 'ห้าม…') in the episode")
     else:
         print(f"command starts at {cmd[0]:.2f}s: {cmd[3]}")
         if cmd[0] > 3.5:

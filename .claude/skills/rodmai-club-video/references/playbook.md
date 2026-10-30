@@ -21,7 +21,7 @@
 ## 0. เริ่มแชท
 
 1. อ่าน `SKILL.md` ให้จบ แล้วอ่าน `video/STATUS.md` (งานค้าง ขั้นถัดไป) และ `video/<เรื่อง>/ARC.md` ของเรื่องที่ทำอยู่
-2. ตั้ง workspace ใน scratchpad:
+2. ตั้ง workspace ใน scratchpad (รันจาก root ของ repo · ถ้ามีตอนที่กำลังเรนเดอร์อยู่ใน `<scratchpad>/mw` ให้ใช้โฟลเดอร์ใหม่ เพราะ setup เขียนทับ `hf/lib`):
    ```bash
    K=.claude/skills/rodmai-club-video/scripts; W=<scratchpad>/mw
    bash $K/setup_workspace.sh $W tide1=video/tide/ep1      # ทำต่อจากงานที่เก็บไว้ (เสียงพากย์มาด้วย ไม่เสียเครดิต)
@@ -132,7 +132,8 @@
 
 - **เรนเดอร์ภาพก่อน** เพราะช้าที่สุดและไม่ต้องใช้ mix (Bash `run_in_background: true`, `timeout: 7200000`):
   ```bash
-  cd $W/hf/tide1 && npx --yes hyperframes@0.8.185 render -f 60 -o $W/tide1/raw.mp4 > $W/tide1/render.log 2>&1
+  bash $K/render.sh $W/hf/tide1 $W/tide1 EP1-thale-thoi-ya-khoi-du          # ยังไม่มี mix.wav → เรนเดอร์ raw.mp4 อย่างเดียว
+  bash $K/render.sh $W/hf/tide1 $W/tide1 EP1-thale-thoi-ya-khoi-du --mux    # หลัง python3 mix.py → ได้ *-HQ.mp4 และ *-share.mp4
   ```
   ความเร็วราว 200 เฟรม/นาที บนเครื่อง 4 คอร์ (คลิป 2:00 = 7,100 เฟรม ≈ 35–40 นาที) · ดูความคืบหน้า: `tail -c 300 render.log`
   ห้ามรัน `make.py` ของตอนที่กำลังเรนเดอร์
@@ -142,7 +143,7 @@
 - `python3 mix.py` → ต้องได้ราว −14 LUFS, พีก ≤ −1 dB (`ffmpeg -nostats -i mix.wav -af ebur128=peak=true -f null -`)
 - ตรวจว่าเสียงประกอบไม่กลบคำ: ตัดช่วงบรรทัดที่มี SFX ดังทับ (คลื่น หอยสังข์ วิ่ง) จาก `mix.wav` แล้วถอดความด้วย Whisper
   ต้องได้คำครบเท่ากับตอนตรวจเสียงเดี่ยว
-- เรนเดอร์เสร็จแล้ว mux ด้วย 2 บรรทัด ffmpeg ท้าย `scripts/render.sh` (HQ copy ภาพ + share บีบ)
+- เรนเดอร์เสร็จแล้ว mux ด้วย `render.sh … --mux` (HQ copy ภาพ ไม่บีบซ้ำ + share บีบ CRF 21 สำหรับ repo)
 
 ## 9. ตรวจไฟล์ ส่งมอบ เก็บ
 

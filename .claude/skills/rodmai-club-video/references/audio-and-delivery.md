@@ -96,7 +96,9 @@ GAP = 0.08
   - riser whistle crackle siren hum creak crank shutter stream roar drip squelch rewind gong ching beep squish
   - scream growl tap sputter slam clang shriek thud steps latch marker click powerdown shatter
   - เสียงรถ: engine screech blinker ratchet motor
-  - (static wind rain hiss มีในไฟล์ แต่ห้ามใช้ทำ noise bed)
+  - น้ำ ทะเล คนวิ่ง (ใช้ในทะเลลด): splash bubbles plop flap pant debris trumpet (หอยสังข์) whistlefar drum shutter notif
+  - ดูชื่อทั้งหมดได้ด้วย `grep -o 'kind == "[a-z0-9]*"' synth.py`
+  - (static wind rain hiss lap มีในไฟล์ แต่ห้ามใช้ทำ noise bed)
 - **ดนตรี:** `music/suno1.mp3` (Suno ที่ผู้ใช้ให้มา) · ถ้าผู้ใช้ส่งเพลงใหม่มา ให้ใช้ตามสั่ง
 
 - **ตรวจว่า SFX ไม่กลบคำ:** หลัง `python3 mix.py` ตัดช่วงบรรทัดที่มีเสียงดังทับ (คลื่น หอยสังข์ วิ่ง) ออกจาก `mix.wav` แล้วถอดความด้วย Whisper

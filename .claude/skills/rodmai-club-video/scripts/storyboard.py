@@ -1,7 +1,7 @@
 """Storyboard sheets for the user's approval: one frame per beat, numbered and labelled with the shot key and time.
 
 usage: python3 storyboard.py <frames dir> <labels.json> <out prefix> [columns=6] [per sheet=18]
-  labels.json = [[t, "shot key"], ...] in story order; frames are <frames dir>/t<t:.2f>.png (take them with snap.cjs)
+  labels.json = [[t, "short Thai label (≤ ~24 chars, no emoji)"], ...] in story order; frames are <frames dir>/t<t:.2f>.png (take them with snap.cjs)
   writes <out prefix>_1.jpg, <out prefix>_2.jpg, ... and prints their paths
 """
 import json
