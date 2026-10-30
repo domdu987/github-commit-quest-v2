@@ -20,8 +20,8 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("open", ["n01"], 0.15, 0.12, 2.6),            # EP.1's last frame on the hill (the bay drawn back, the white line); จูน dashes for the steps down
-    ("grab", ["n02"], 0.05, 0.5, 1.8),             # insert: ตาจุ่น's old hand clamps จูน's wrist on "อย่า" (sting); her sandal skids
+    ("open", ["n01"], 0.15, -0.3, 2.6),            # EP.1's last frame on the hill (the bay drawn back, the white line); จูน dashes for the steps down
+    ("grab", ["n02"], 0.3, 0.5, 1.8),             # insert: ตาจุ่น's old hand clamps จูน's wrist on "อย่า" (sting); her sandal skids
     ("pull", ["j01"], 0.12, 0.4, 2.6),             # two-shot on the steps: จูน yanks against the grip
     ("face", ["c01"], 0.3, 0.5, 2.8),              # close on ตาจุ่น: "ครั้งนี้… ตาไม่ปล่อย" (the rumour turned round)
     ("rule", ["c02"], 0.3, 0.6, 3.6),              # two-shot + ยาย's board: rule 1 ticked, rule 2 painted on
@@ -40,7 +40,7 @@ SHOTS = [
     ("hush", [], 0, 0, 2.4),                       # silence: the kids frozen on the hill
     ("live", ["t01", ("j04", 0.2)], 1.35, 0.6, 5.0),   # จูน's live still on: "ยายพร❤️: ยายอยู่ชั้น 5 โรงแรม" pops up (the twist)
     ("raft", ["n12"], 0.2, 0.5, 3.4),              # a tourist clings to an ice cooler in the floodwater (UNESCO-IOC · USGS)
-    ("notyet", ["c03"], 0.3, 0.6, 2.4),            # ตาจุ่น looks back at the sea: "ยังไม่จบ…"
+    ("notyet", ["c03"], 0.3, 1.5, 2.4),            # ตาจุ่น looks back at the sea: "ยังไม่จบ…"
     ("wave3", [], 0, 0, 4.4),                      # the next wave, bigger: the water climbs the hotel to the 3rd floor
     ("comment", [], 0, 0, 3.2),                    # the live: "ยายพร❤️: น้ำถึงชั้นสามแล้ว", then the typing stops
     ("tang", ["t02"], 0.3, 0.6, 2.6),              # close on ตังค์: "ยาย… ไม่พิมพ์แล้ว…"

@@ -313,3 +313,200 @@
   // bent forward, reaching down to the sand (picking up a fish)
   M.scoop = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.1); return { ...M.crouch(u, o), uaF: -30 + 8 * b, faF: -12, uaB: -10 - 6 * b, faB: -20, torso: 34, head: 14 }; };
 })();
+
+// ---------------- EP.2 "คลื่นแรกไป อย่าไว้ใจ": the wrist grab, ยาย hugging the photo, the tourist on the cooler ----------------
+// Extra faces on every v2 cast (injected after the build, chosen in a track entry like the others):
+//   eyes "up" (looking up, brows raised and worried) · "upSide" (up and toward +x: up-left on screen when flipped) · "sideWorry" / "sideAngry"
+//   (looking toward +x, brows raised / knit: to whoever stands on that side) · "strain" (narrowed,
+//   brows knit: holding on with everything) · mouth "grit" (teeth clenched)
+// Poses (Rig.MODES):
+//   grabHold  ตาจุ่น reaching to his right and down, the front fist closed on someone's wrist, braced back (leaning away, knees bent,
+//             the free arm out for balance); o.reachIn (s) shoots the arm out from hanging at the start of the segment
+//   yanked    จูน (drawn flipped) leaning away toward the steps, the held front arm trailing back to the holder, the free arm reaching
+//             forward, the back foot pushing off; o.flip false if the actor is not flipped
+//             The two share one tug (TideCast.tug: the pair sways and jerks together), so a hand set on a wrist stays there
+//   lookUp    head tilted back, hands a little raised and tense: use with eyes "up" / "upSide"
+//   hugPhoto  ยาย clutching the framed photo flat against her chest, both forearms over it (use yaiTideHug); o.up 0…1 tips the head
+//             back to look up (with eyes "up" / "upSide")
+//   cling     arms draped over something floating in front of the chest, bobbing (the tourist on his cooler: Tide.raft)
+// Cast: taJunGrip (ตาจุ่น with the front fist closed round a wrist) · juneYank (จูน with the held hand straining open) · yaiTideHug (ยาย with the photo for hugPhoto: the frame against her
+//   chest, her front forearm and both hands over it) · tourist (นักท่องเที่ยว ~30: sunburnt, sunglasses pushed up on his head, a loud
+//   blue floral shirt, orange board shorts)
+// TideCast.armPoint(mode, side, along, u, opts) → [x, y] a point `along` units down the forearm (0 the elbow, 118 the palm) in the
+//   actor's own units (feet at 0,0) for a pose at time u
+// TideCast.gripPair(x, y, s, o) → { x, y, s, hand } where to stand จูน (flipped, "yanked") so ตาจุ่น's fist (taJunGrip at x, y, scale s,
+//   unflipped, "grabHold") closes on her wrist: list จูน first and ตาจุ่น after her so his fist is drawn over her wrist.
+//   o.wrist (80) how far down her forearm he holds (her pink band shows between his fist and her hand), o.hold / o.held other poses
+// TideCast.headPoint(mode, u, opts) → [x, y] the middle of the face for a pose (actor units; mirror x for a flipped actor) to frame close shots
+(function () {
+  const { LINE, dk, hi, shade, paint, limbD } = Rig2;
+  const C = Rig.CAST, M = Rig.MODES, TC = window.TideCast;
+  const ln = (w = 2.6) => `stroke="${LINE}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const backOut = (k) => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); };
+  const f = (v) => (+v).toFixed(1);
+
+  // ---------------- extra eyes and mouth (same geometry as rig2's eye set) ----------------
+  const EX = [-17, 19], EY = -548;
+  function extraFace(V) {
+    const iris = V.iris || "#4a2e20", brow = V.brow || V.hair.c, lid = LINE, lash = V.lash;
+    const sclera = (rx, ry, dy = 0) => EX.map((x) => `<ellipse cx="${x}" cy="${EY + dy}" rx="${rx}" ry="${ry}" fill="#fbf7f0" stroke="${lid}" stroke-width="1.6"/>`).join("");
+    const pupil = (r, dx, dy) => EX.map((x) => `<circle cx="${x + dx}" cy="${EY + dy}" r="${r}" fill="${iris}"/><circle cx="${x + dx}" cy="${EY + dy}" r="${f(r * 0.55)}" fill="#160e0c"/>
+      <circle cx="${f(x + dx - r * 0.38)}" cy="${f(EY + dy - r * 0.45)}" r="${f(Math.max(1.6, r * 0.32))}" fill="#fff"/>`).join("");
+    const lids = (lift = 0) => EX.map((x, i) => `<path d="M${x - 10},${EY - 3 - lift}Q${x},${EY - 15 - lift} ${x + 10},${EY - 4 - lift}" stroke="${lid}" stroke-width="3.4" fill="none" stroke-linecap="round"/>` +
+      (lash ? `<path d="M${x + (i ? 10 : -10)},${EY - 4 - lift}l${i ? 4 : -4},-4" stroke="${lid}" stroke-width="2.6" stroke-linecap="round"/>` : "")).join("");
+    const brows = (ty = 0, tilt = 0) => EX.map((x, i) => { const s = i ? 1 : -1, inner = -tilt, outer = tilt * 0.6;
+      return `<path d="M${x - 11},${EY - 20 + ty + (s < 0 ? outer : inner)}Q${x},${EY - 26 + ty} ${x + 11},${EY - 20 + ty + (s < 0 ? inner : outer)}" stroke="${brow}" stroke-width="4.6" fill="none" stroke-linecap="round"/>`; }).join("");
+    const bags = V.bags ? EX.map((x) => `<path d="M${x - 9},${EY + 9}q9,7 18,0" stroke="${shade(V.skin, 0.3)}" stroke-width="3" fill="none" opacity=".8"/>`).join("") : "";
+    // the lower lid squeezed up and the creases of a hard squint (strain)
+    const squint = EX.map((x) => `<path d="M${x - 9},${EY + 5}Q${x},${EY + 1} ${x + 9},${EY + 5}" stroke="${lid}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`).join("") +
+      `<path d="M-2,-572l3,8M6,-572l-3,8" stroke="${shade(V.skin, 0.35)}" stroke-width="2.2" stroke-linecap="round" opacity=".8"/>`;
+    return {
+      eyes: {
+        up: sclera(8.6, 10.6) + pupil(6.2, 0.6, -4.8) + lids(2.5) + brows(-7, -5) + bags,
+        upSide: sclera(8.6, 10.6) + pupil(6.0, 3.6, -4.4) + lids(2.5) + brows(-7, -5) + bags,
+        strain: sclera(8.6, 8.2, 1) + pupil(5.8, 1.5, 1.5) + lids(-2) + squint + brows(6, 10) + bags,
+        sideWorry: sclera(8.6, 10.4) + pupil(6.2, 4.2, 1) + lids(1) + brows(-5, -6) + bags,
+        sideAngry: sclera(8.6, 8.8, 1) + pupil(6, 4.2, 2) + lids(-2) + brows(5, 8) + bags,
+      },
+      mouths: {
+        grit: `<path d="M-12,-514Q-4,-522 4,-522Q12,-522 20,-514L17,-508Q4,-512 -9,-508Z" fill="#f4eee2" stroke="${LINE}" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M-9,-512Q4,-516 17,-512" stroke="#b8ae9c" stroke-width="1.4" fill="none"/><path d="M-2,-520v9M4,-521v10M10,-520v9" stroke="#b8ae9c" stroke-width="1.2"/>
+          <path d="M-13,-514q-4,5 -3,11M21,-514q4,5 3,11M-4,-503q8,3 16,0" stroke="${shade(V.skin, 0.34)}" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+      },
+    };
+  }
+  const build1 = Rig.build;
+  Rig.build = (parent, id, P) => {
+    const el = build1(parent, id, P);
+    if (P && P.v2) {
+      const x = extraFace(P.v2), eg = document.getElementById(`${id}-eyes`), mg = document.getElementById(`${id}-mouth`);
+      if (eg) eg.insertAdjacentHTML("beforeend", Object.entries(x.eyes).map(([n, v]) => `<g class="eye-${n}" display="none">${v}</g>`).join(""));
+      if (mg) mg.insertAdjacentHTML("beforeend", Object.entries(x.mouths).map(([n, v]) => `<g class="mouth-${n}" display="none">${v}</g>`).join(""));
+      // V.sleevePrint: SVG laid on each upper arm's sleeve (the arm's own frame: the shoulder at 0, down the arm +y)
+      if (P.v2.sleevePrint) ["F", "B"].forEach((sd) => { const ua = document.getElementById(`${id}-ua${sd}`); if (ua) ua.insertAdjacentHTML("beforeend", P.v2.sleevePrint); });
+    }
+    return el;
+  };
+
+  // ---------------- the tug the two share ----------------
+  // the pair sways toward the steps and back and jerks: x in local units toward +x (the holder's side moves the same way on screen)
+  const tugX = (u) => 5 * Math.sin((u * 2 * Math.PI) / 0.9) + 2.2 * Math.sin((u * 2 * Math.PI) / 0.37 + 1);
+  const tugY = (u) => 3 * Math.abs(Math.sin((u * 2 * Math.PI) / 0.9));
+  TC.tug = (u) => ({ x: tugX(u), y: tugY(u) });
+
+  // ---------------- poses ----------------
+  M.grabHold = (u, o) => {
+    const k = o.reachIn ? backOut(clamp(u / o.reachIn, 0, 1)) : 1, j = Math.sin(u * 23) * 0.6;
+    return { ...M.idle(u, o), uaF: lerp(6, -50, k), faF: lerp(-8, -28, k), uaB: 34 + 4 * Math.sin(u * 2.9), faB: 32 + 6 * Math.sin(u * 3.7), torso: -5 + j, head: 3 + 2 * Math.sin(u * 4.1),
+      thF: -18, shF: 8, thB: 22, shB: -20, rootR: -5, rootX: tugX(u), rootY: 0, bodyY: 12 + tugY(u), hair: 0, acc: 0 };
+  };
+  M.yanked = (u, o) => {
+    const s = o.flip === false ? -1 : 1, a = Math.sin(u * 7.3), b = Math.sin(u * 5.1 + 1);
+    return { ...M.idle(u, o), uaF: -66, faF: -4, uaB: 70 + 12 * a, faB: 12 + 10 * b, torso: -8 + 1.5 * b, head: -8 + 3 * Math.sin(u * 6.2),
+      thF: -24, shF: 32, thB: 26, shB: 6, rootR: -9, rootX: -s * tugX(u), rootY: 0, bodyY: 10 + tugY(u) };
+  };
+  M.lookUp = (u, o) => { const b = Math.sin((u * 2 * Math.PI) / 3); return { ...M.idle(u, o), uaF: 10 + b, faF: -28, uaB: -10 - b, faB: 28, torso: -3, head: -12 + 1.5 * b, bodyY: -2 }; };
+  const HUG = { uaF: -8, faF: 156, uaB: 27, faB: -167 };
+  M.hugPhoto = (u, o) => {
+    const b = Math.sin((u * 2 * Math.PI) / 3.4), up = o.up || 0;
+    return { ...M.idle(u, o), uaF: HUG.uaF + 0.6 * b, faF: HUG.faF, uaB: HUG.uaB - 0.6 * b, faB: HUG.faB, torso: 1 - 3 * up, head: 6 - 18 * up + b, bodyY: -1 - b };
+  };
+  M.cling = (u, o) => {
+    const b = Math.sin((u * 2 * Math.PI) / 2.2), j = Math.sin(u * 3.3);
+    return { ...M.idle(u, o), uaF: -74 + 1.5 * b, faF: 164 - 1.5 * b, uaB: 74 - 1.5 * b, faB: -164 + 1.5 * b, torso: 1.5 * j, head: -4 + 7 * Math.sin(u * 1.7) + 2 * j, bodyY: 0 };
+  };
+
+  // ---------------- where a point on an arm ends up ----------------
+  const rot = (p, deg) => { const a = (deg * Math.PI) / 180, c = Math.cos(a), s = Math.sin(a); return [p[0] * c - p[1] * s, p[0] * s + p[1] * c]; };
+  TC.armPoint = (mode, side = "F", along = 118, u = 0, opts = {}) => {
+    const p = M[mode](u, opts), F = side === "F";
+    let q = rot([0, along], F ? p.faF : p.faB);
+    q = rot([q[0], q[1] + 122], F ? p.uaF : p.uaB);
+    q = rot([q[0] + (F ? 46 : -46), q[1] - 455 + p.bodyY], p.rootR || 0);
+    return [q[0] + (p.rootX || 0), q[1] + (p.rootY || 0)];
+  };
+  TC.gripPair = (x, y, s, o = {}) => {
+    const a = TC.armPoint(o.hold || "grabHold", "F", 118), b = TC.armPoint(o.held || "yanked", "F", o.wrist ?? 80);
+    return { x: Math.round(x + (a[0] + b[0]) * s), y: Math.round(y + (a[1] - b[1]) * s), s, hand: [Math.round(x + a[0] * s), Math.round(y + a[1] * s)] };
+  };
+  // the middle of the face (between the eyes) for a pose, in the actor's units → frame a close shot on it (x is mirrored when flipped)
+  TC.headPoint = (mode, u = 0, opts = {}) => {
+    const p = M[mode](u, opts), hs = 1.12;
+    let q = rot([0, (-548 + 500) * hs], p.head || 0);
+    q = rot([q[0], q[1] - 500 + 300], p.torso || 0);
+    q = rot([q[0], q[1] - 300 + p.bodyY], p.rootR || 0);
+    return [q[0] + (p.rootX || 0), q[1] + (p.rootY || 0)];
+  };
+  // a body point (in the actor's units, under the body's bob) seen from inside a forearm at a pose → [x, y] in that forearm's frame
+  const toFore = (mode, side, P, u = 0, opts = {}) => {
+    const p = M[mode](u, opts), F = side === "F";
+    let q = rot([P[0] - (F ? 46 : -46), P[1] + 455], -(F ? p.uaF : p.uaB));
+    return rot([q[0], q[1] - 122], -(F ? p.faF : p.faB));
+  };
+
+  // ---------------- ตาจุ่น's fist closed round a wrist (a hand prop at the palm; drawn over the default hand) ----------------
+  const junSkin = C.taJun.v2.skin, junD = shade(junSkin, 0.3), junL = hi(junSkin, 0.22);
+  const gripFist = () => `<g transform="translate(1,116) rotate(-34)">
+    <path d="M-17,-14Q-21,4 -16,18Q-4,26 12,22Q24,16 23,0Q22,-16 10,-21Q-8,-24 -17,-14Z" fill="${junSkin}" ${ln(2.4)}/>
+    <path d="M-12,-10Q-14,4 -10,14" stroke="${junD}" stroke-width="2" fill="none" opacity=".7"/>
+    ${[[-6, -17], [3, -18], [12, -14], [19, -7]].map(([x, y]) => `<path d="M${x - 5},${y + 2}q5,-7 10,0" fill="${junSkin}" ${ln(2)}/><path d="M${x - 2},${y - 1}q2,-2 4,0" stroke="${junL}" stroke-width="1.6" fill="none"/>`).join("")}
+    <path d="M-2,-10Q2,4 0,18M7,-10Q11,4 9,18M15,-6Q18,6 16,15" stroke="${junD}" stroke-width="1.8" fill="none" opacity=".75"/>
+    <path d="M-17,0Q-26,6 -22,16Q-14,22 -6,16" fill="${junSkin}" ${ln(2.2)}/><path d="M-21,12q4,3 8,1" stroke="${junD}" stroke-width="1.4" fill="none"/>
+    <path d="M-10,-14Q2,-20 14,-16" stroke="${junL}" stroke-width="2.4" fill="none" opacity=".55" stroke-linecap="round"/></g>`;
+  C.taJunGrip = { v2: C.taJun.v2, hand: gripFist(), keep: "F" };
+  // จูน's held hand straining open: the fingers splayed and bent back, the thumb out (drawn over the default hand)
+  const juneSk = C.june.v2.skin, juneD = shade(juneSk, 0.3);
+  const splay = () => `<g transform="translate(0,104)">
+    <path d="M-12,0Q-15,14 -11,26Q-2,34 9,30Q15,20 13,2Z" fill="${juneSk}" ${ln(2.4)}/>
+    ${[[-10, 26, 28, 22], [-3, 30, 34, 8], [5, 30, 32, -6], [11, 25, 25, -20]].map(([x, y, l, a]) => `<g transform="translate(${x},${y}) rotate(${a})"><rect x="-3.6" y="-3" width="7.2" height="${l}" rx="3.6" fill="${juneSk}" ${ln(2)}/><rect x="-2.2" y="${l - 7}" width="4.4" height="4.6" rx="2" fill="#f6dcd0"/></g>`).join("")}
+    <path d="M12,6Q26,4 32,14Q30,19 24,16Q18,12 12,14" fill="${juneSk}" ${ln(2.2)}/>
+    <path d="M-6,20q4,3 9,2" stroke="${juneD}" stroke-width="1.6" fill="none"/></g>`;
+  C.juneYank = { v2: C.june.v2, hand: splay(), keep: "F" };
+
+  // ---------------- ยาย hugging the photo: the frame flat on her chest, her front forearm and both hands over it ----------------
+  {
+    const V = C.yaiTide.v2, sk = V.skin, skS = shade(sk, 0.2), skD = shade(sk, 0.34), skB = dk(sk, 0.1), tot = HUG.uaF + HUG.faF;
+    const [cx, cy] = toFore("hugPhoto", "F", [0, -404]), [bx, by] = toFore("hugPhoto", "F", [-64, -394]);
+    const hand = (c, cd) => `<path d="M-11,104Q-14,118 -10,128Q-2,138 8,132Q14,124 12,108Z" fill="${c}" stroke="${LINE}" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M9,108Q19,112 16,122Q13,126 9,122" fill="${c}" stroke="${LINE}" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M-4,118Q-1,128 -3,134M3,118Q6,128 4,134" stroke="${cd}" stroke-width="1.6" fill="none" opacity=".8" stroke-linecap="round"/>
+      <path d="M-6,124q4,4 9,3" stroke="${cd}" stroke-width="1.6" fill="none"/>`;
+    // the frame, upright against the chest (its photo faces out), then the left hand gripping its far edge, then the front forearm and hand
+    const hug = `${TC.photo(f(cx), f(cy), 0.6, { rot: f(-tot) })}
+      <g transform="translate(${f(bx)},${f(by)}) rotate(71) translate(0,-118)"><g transform="translate(0,66)">${paint(limbD(40, 22, 19), skB)}</g>${hand(skB, shade(skB, 0.34))}</g>
+      ${paint(limbD(106, 25, 19), sk)}<path d="M-6,30q4,20 0,40" stroke="${skS}" stroke-width="2" fill="none" opacity=".5"/>${hand(sk, skD)}`;
+    C.yaiTideHug = { v2: V, hand: hug, keep: "F" };
+  }
+
+  // ---------------- นักท่องเที่ยว: ~30, sunburnt, sunglasses pushed up on his head, a loud floral shirt ----------------
+  const touristHair = (h) => `
+    <path d="M-47,-552C-51,-600 -24,-622 4,-622C33,-622 55,-602 50,-552Q47,-566 40,-574L37,-558L28,-579L19,-563L8,-584L-3,-565L-15,-582L-24,-563L-34,-577Q-43,-568 -47,-552Z" fill="${h.c}" ${ln()}/>
+    <path d="M-30,-600Q-10,-614 14,-612M-38,-586q8,-10 18,-14M24,-604q14,4 22,16" stroke="${h.sh}" stroke-width="3" fill="none" opacity=".5" stroke-linecap="round"/>
+    <path d="M-44,-560v14M47,-560v12" stroke="${h.c}" stroke-width="7" stroke-linecap="round"/>`;
+  // aviators pushed up onto the hair: two dark teardrop lenses catching the sky, the bridge, the arms going back into the hair
+  const shades = `<g transform="translate(2,-610) rotate(-3)">
+    <path d="M-48,8L-38,2M48,8L38,2" stroke="#2a2420" stroke-width="3.4" stroke-linecap="round"/>
+    ${[-1, 1].map((s) => `<path d="M${s * 4},-2Q${s * 6},-8 ${s * 18},-8Q${s * 38},-8 ${s * 40},2Q${s * 40},16 ${s * 26},18Q${s * 8},18 ${s * 5},6Z" fill="#26323c" stroke="#c8a040" stroke-width="2.6" stroke-linejoin="round"/>
+      <path d="M${s * 12},-3Q${s * 22},-5 ${s * 32},0" stroke="#8ec4e0" stroke-width="3" fill="none" opacity=".75" stroke-linecap="round"/><path d="M${s * 10},8l${s * 8},-6" stroke="#fff" stroke-width="2" opacity=".5" stroke-linecap="round"/>`).join("")}
+    <path d="M-5,-1Q0,-5 5,-1" stroke="#c8a040" stroke-width="2.6" fill="none"/></g>`;
+  // sunburn: a red nose and cheeks, peeling on the nose, a tan line at the neck of the shirt
+  const sunburn = `<ellipse cx="6" cy="-531" rx="11" ry="8" fill="#e8584a" opacity=".38"/><ellipse cx="-27" cy="-526" rx="13" ry="8" fill="#e8584a" opacity=".3"/><ellipse cx="33" cy="-526" rx="13" ry="8" fill="#e8584a" opacity=".3"/>
+    <path d="M2,-540q3,-2 5,1M8,-536q2,-2 4,1" stroke="#fff4ec" stroke-width="1.4" fill="none" opacity=".8"/><path d="M-26,-584q12,-3 22,0" stroke="#e8584a" stroke-width="5" opacity=".25" stroke-linecap="round"/>`;
+  // the print: big white and yellow hibiscus, monstera leaves and palm fronds on electric blue
+  const flower = (x, y, s, c, cc) => `<g transform="translate(${x},${y}) scale(${s})">${[0, 72, 144, 216, 288].map((a) => `<path d="M0,0C-9,-6 -10,-20 0,-24C10,-20 9,-6 0,0Z" fill="${c}" transform="rotate(${a})"/>`).join("")}
+    <circle r="5" fill="${cc}"/><path d="M0,0l9,-12" stroke="${cc}" stroke-width="2.4"/><circle cx="9" cy="-12" r="2.4" fill="#ffe14a"/></g>`;
+  const leaf = (x, y, a, s) => `<g transform="translate(${x},${y}) rotate(${a}) scale(${s})"><path d="M0,0C-14,-10 -16,-34 0,-46C16,-34 14,-10 0,0Z" fill="#2fa860"/><path d="M0,-2V-44M0,-14l-9,-6M0,-24l-10,-6M0,-14l9,-6M0,-24l10,-6" stroke="#1e7a44" stroke-width="2"/></g>`;
+  const floral = `<g opacity=".95">${leaf(-44, -430, -30, 1)}${leaf(36, -340, 40, 1.1)}${leaf(-20, -330, -150, 0.9)}${leaf(48, -462, 120, 0.8)}${leaf(-50, -476, -80, 0.7)}
+    ${flower(-34, -462, 1, "#fff6ec", "#e8483a")}${flower(36, -446, 1.05, "#ffd43a", "#e8483a")}${flower(-38, -364, 0.95, "#ff8ab4", "#c8203a")}${flower(16, -318, 0.9, "#fff6ec", "#e8483a")}
+    ${flower(2, -404, 0.85, "#ff8ab4", "#c8203a")}${flower(44, -348, 0.55, "#ffd43a", "#e8483a")}</g>`;
+  const sleeveFlowers = `${leaf(-6, 34, 150, 0.6)}${flower(4, 14, 0.62, "#fff6ec", "#e8483a")}${flower(-8, 44, 0.45, "#ffd43a", "#e8483a")}`;
+  C.tourist = { v2: {
+    skin: "#e2946c", iris: "#2e1c12", blush: 1.0, lip: "#c45e52", w: 1.08, limb: 1.02,
+    hair: { c: "#2c1e16", s: "#120c08", sh: "#7a5a44", front: (x) => touristHair(x.hair) },
+    top: { kind: "shirt", c: "#1e8fd6", sleeve: "short", neck: "collar", collar: "#1a7cbc", button: "#f4f0e2" },
+    print: floral, sleevePrint: sleeveFlowers, bottom: { kind: "shorts", c: "#f2963a" }, feet: { kind: "bare" },
+    face: sunburn, faceTop: shades,
+  } };
+})();

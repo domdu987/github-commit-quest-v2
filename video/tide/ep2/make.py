@@ -14,7 +14,7 @@ for f in ("package.json", "hyperframes.json", "meta.json"):
         shutil.copy(os.path.join(HERE, "..", "hf", "rig", f), PROJ)
 if not os.path.exists(os.path.join(PROJ, "assets", "fonts")):
     shutil.copytree(os.path.join(HERE, "..", "hf", "rig", "assets", "fonts"), os.path.join(PROJ, "assets", "fonts"))
-for f in ("rig.js", "sets.js", "camp.js", "koi.js", "zom.js", "hands.js", "mok.js", "pov.js", "phrai.js", "ui.js", "gameui.js", "mokui.js", "phraiui.js", "pop.js", "grain.js", "pop2.js", "pop2kok.js", "pop2kitchen.js", "pop2room.js", "pop2ui.js", "pop2more.js", "pop2hosp.js", "pop2end.js", "rig2.js", "popcast.js", "mm.js", "mm2.js", "mapsdata.js", "maps.js", "mmui.js", "mmui2.js", "mmui3.js", "qkmat.js", "quake.js", "quake2.js", "quakeui.js", "quakemap.js", "tide.js", "tidemap.js", "tideui.js", "mmcast.js", "quakecast.js", "tidecast.js", "fx.js", "engine.js", "opener.js", "openers.js"):
+for f in ("rig.js", "sets.js", "camp.js", "koi.js", "zom.js", "hands.js", "mok.js", "pov.js", "phrai.js", "ui.js", "gameui.js", "mokui.js", "phraiui.js", "pop.js", "grain.js", "pop2.js", "pop2kok.js", "pop2kitchen.js", "pop2room.js", "pop2ui.js", "pop2more.js", "pop2hosp.js", "pop2end.js", "rig2.js", "popcast.js", "mm.js", "mm2.js", "mapsdata.js", "maps.js", "mmui.js", "mmui2.js", "mmui3.js", "qkmat.js", "quake.js", "quake2.js", "quakeui.js", "quakemap.js", "tide.js", "tide2.js", "tidemap.js", "tideui.js", "mmcast.js", "quakecast.js", "tidecast.js", "fx.js", "engine.js", "opener.js", "openers.js"):
     shutil.copy(os.path.join(LIB, f), os.path.join(PROJ, "assets", f))
 
 

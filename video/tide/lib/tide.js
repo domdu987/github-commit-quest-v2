@@ -20,6 +20,19 @@
 //     view "land"  from the shallows looking inland: #id-hotel (#id-f1 … #id-f5 the storeys, #id-roof, #id-stair, #id-hsign, the
 //                  roof flag #id-flag), #id-shop (#id-clue = the old photo + the newspaper clipping on its back wall), #id-tower
 //                  (#id-beacon), #id-sign (the evacuation sign), #id-boatL0, #id-swash (the water's edge at the bottom), #id-palm0…
+//                  · after the big wave: o.shop "gone" (#id-ruin in its place: snapped stumps, a tipped piece of deck, planks, the
+//                  blue awning on a post), o.mark the hotel's high-water stain (as on the hill), o.flood the storeys of water still
+//                  standing round the hotel · Tide.landFlood(tl, id, t0, dur, o) the flood in front of the hotel: its depth goes
+//                  from o.from (o.flood) to o.to storeys between o.at and o.at + o.len (o.ease); a muddy surface from the village
+//                  (#id-lfW; #id-lfFar the far edge at the foot of the hill) down to the camera, foam lines (#id-lfs0 …) and patches
+//                  (#id-lfp0 …) riding a current across the frame (o.dir −1 to the left, 1 to the right; o.flow its speed), debris
+//                  turning on it (#id-lfd0 …: a plank, a cooler, an umbrella, a roof sheet, a chair, a frond, the shop's sign once
+//                  the shop has gone), a foam collar where it meets the hotel, the shop, the sign and the palm (their parts above
+//                  the water drawn again over it, clipped at their waterlines: #id-lfHR #id-lfSR #id-lfGR #id-lfPR, collars
+//                  #id-lfHF …, wakes #id-lfHK …); o.duck true floats the yellow duck ring (TideCast.duckRing, #id-lfDuck) across
+//                  in front of the hotel between o.duckAt and o.duckAt + o.duckLen seconds (0.12 / 0.8 of the call), at o.duckY on
+//                  the water (screen y; default a bit under halfway down it); o.after true: the still flood once it has gone quiet
+//                  (a slow drift, no wakes). The set's own perspective puts the camera ~3.3 storeys up, so keep o.to ≤ 3
 //   Tide.sea(tl, id, t0, dur, o)       runs a "sea" view: swash, glitter, bobbing boats, flopping fish, scuttling crabs, walkers, birds;
 //                                      o.to (target level), o.at / o.len (seconds into the call the water starts / takes to draw
 //                                      back), o.ease, o.walkAt (when the walkers set off), o.birds "flee"
@@ -39,13 +52,20 @@
 //   Sets.tideHill(L, o)    on the evacuation steps high on the hill, looking down at the village and the bay: concrete steps with a
 //                          steel handrail, the blue sign "เส้นทางหนีคลื่นยักษ์" (#id-sign), the warning tower (#id-tower, #id-beacon),
 //                          the hotel's roof beside ยาย's shop, roofs, palms, the karsts; o.sea the bay's level: 0 the sea at the beach
-//                          … 1 drawn back (the first time) … 1.7 the second time, far out toward the karsts; o.line 0…1 the white line;
-//                          o.wet true once the first wave has been (every shot after Tide.surge: the village ground stays wet)
-//                          on the horizon · run it with Tide.land (the flag, o.siren the beacon) and, for the water, one of:
+//                          … 1 drawn back (the first time) … 1.7 the second time, far out toward the karsts; o.line 0…1 the white line
+//                          on the horizon, 1…2 the line thickening into the wall of water itself (#id-bw: the risen sea dark behind it
+//                          #id-bwB, its front churned white #id-bwC over a muddy foot #id-bwF, a foam skirt #id-bwK, spray #id-bwS0 …),
+//                          coming in off the horizon (~60 px below it at 2); o.wet true once the first wave has been (every shot after
+//                          Tide.surge: the village ground stays wet) · after the big wave (EP.2): o.shop "gone" (ยาย's shop knocked
+//                          down: #id-shopW hidden, its ruin #id-ruin — snapped stumps, a tipped piece of deck, planks, the blue awning
+//                          snagged on a post); o.flood the water still standing in the village, in storeys of the hotel (0.6 once the
+//                          big wave has drained); o.mark the highest it has been (2 after the big wave, 3 after the third): a muddy stain
+//                          up the hotel to there (#id-hwS, its scum line #id-hwL), the windows below it broken and dark (#id-hw1 … hw5)
+//                          · run it with Tide.land (the flag, o.siren the beacon) and, for the water, one of:
 //     Tide.hillSea(tl, id, t0, dur, o)  the bay draws back (or in) from o.from (the set's level) to o.to between o.at and o.at + o.len
 //                          seconds into the call (o.ease); the bare seabed (#id-bed, its edge #id-bedE) is redrawn, the two longtails
 //                          out on the bay (#id-hb0/1, waterline #id-hb0-w) bob, then lie over on the mud; o.line [w0, w1] grows the
-//                          white line (#id-wl) from o.lineAt seconds (0.6 of the call) to the end
+//                          white line (#id-wl) from o.lineAt seconds (0.6 of the call) to the end (up to 2: the wall forming, #id-bw)
 //     Tide.surge(tl, id, t0, dur, o)    the first wave: the sea runs back in over the seabed (its edge churned white), pours over the
 //                          beach and floods the village ground round the shop and the hotel's ground floor (~2–3 m; #id-flood under
 //                          copies of the roofs and crowns #id-above, a band of water over the foot of the hotel, the shop, each palm
@@ -53,6 +73,23 @@
 //                          then drains back out to sea leaving the ground dark and wet with a line of litter (#id-fwet); o.to the
 //                          height at its peak (1), o.rise / o.hold the fractions of the call where it peaks / starts to drain
 //                          (0.34 / 0.6), o.after the bay's level once it has gone (0.35, already drawing back again)
+//     Tide.bigWave(tl, id, t0, dur, o)  the big wave (EP.2): the wall comes in from out by the horizon (from where the set's o.line
+//                          left it) over the bare seabed — a turbulent muddy bore, no curling surf — picks up the two longtails and
+//                          rolls them in its front (#id-bwb0/1), breaks over the beach and races through the village behind a churning
+//                          front (#id-fW), floods it o.to storeys deep (2: the shop goes under, the hotel's floors 1–2; the house roofs
+//                          go under, #id-aboveH; it climbs the foot of the steps, #id-sw), churns with debris — the plank, cooler,
+//                          chair and umbrella, the yellow duck ring and, once the shop goes, its sign, the blue awning, planks, a
+//                          table (#id-fx0 …) — knocks ยาย's shop down (o.wreck, default true; it lurches, racks and goes under, gone
+//                          afterwards: give the following shots o.shop "gone") and drains part way back out to sea (o.after storeys
+//                          left standing, 0.6), leaving its mark on the hotel. Fractions of the call: o.reach (0.34) the wall gets to
+//                          the beach, o.rise (0.55) the flood peaks, o.hold (0.75) it starts to drain. o.p0 where the wall starts:
+//                          0 by the horizon (default) … 1 at the beach; to split the approach over two shots give the first o.reach
+//                          > 1 (it ends at p = 1 / o.reach, out on the bay) and the next o.p0 = that. o.from the water already
+//                          standing (the set's o.flood): it runs back out to sea until the wall arrives. o.height the wall's height
+//                          at the beach in px (90 + 12·o.to). The third wave: o.to 3 on a set with o.shop "gone", o.flood 0.6, o.mark 2
+//     Tide.hillFlood(tl, id, t0, dur, o)  the water left standing in the village: its depth goes from o.from (the set's o.flood) to o.to
+//                          storeys between o.at and o.at + o.len seconds into the call (o.ease), flowing back out to sea (o.dir −0.5;
+//                          1 running inland), the debris turning on it
 //   Sets.tideSand(L, o)    the opener: straight down onto wet sand as the sea pulls back off it; the title pressed into the sand
 //                          (o.title "ทะเลลด", o.sub "EP.1", o.fs size), fish beside it, a crab · Tide.sandTitle(tl, id, t0, dur, o)
 //                          runs the water off (o.from 0 = sea over the frame … o.to 1 = gone off the top) · o.hand true adds ตังค์'s
@@ -101,6 +138,8 @@
   const mix = (a, b, k) => { const A = hx(a), B = hx(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join(""); };
   const el = (id) => document.getElementById(id);
   const P2 = (p) => `${f1(p[0])},${f1(p[1])}`;
+  const f2 = (v) => (+v).toFixed(2);
+  const wrap = (v, a, b) => a + ((((v - a) % (b - a)) + (b - a)) % (b - a));
 
   Sets.DEFS += `
     <linearGradient id="tdCloudM" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#eef4f8"/><stop offset="1" stop-color="#c4d6e2"/></linearGradient>
@@ -416,6 +455,47 @@
   // the Thai flag on a pole: the cloth is redrawn by Tide.land (#id-flag, #id-flagw, #id-flagb) from the pole top (px, py), scale s
   const flagPole = (id, px, py, h, s) => `<path d="M${f1(px)},${f1(py + h * s)}V${f1(py)}" stroke="#d8dcdc" stroke-width="${f1(6 * s)}"/><circle cx="${f1(px)}" cy="${f1(py - 4 * s)}" r="${f1(6 * s)}" fill="#e8c040"/><path id="${id}-flag" d="" fill="#e0282a"/><path id="${id}-flagw" d="" fill="#ffffff"/><path id="${id}-flagb" d="" fill="#2a3a8a"/>`;
 
+  // the hotel's high-water mark (hotel-local units, as hotel() at s 1): a muddy stain up to the highest the water has been (#id-hwS),
+  // its scum line (#id-hwL) and, below it, the windows broken and dark (#id-hw1 … hw5) — set by hwetDraw(id, storeys)
+  const hwetSVG = (id) => {
+    const { W, FH, NF } = HOTEL, X0 = -W / 2, X1 = W / 2 - 112, bw = (X1 - X0) / 4;
+    let g = `<rect id="${id}-hwS" x="${X0 - 72}" y="0" width="${W + 72}" height="0" fill="#4a3c26" opacity=".34"/>`;
+    for (let n = 1; n <= NF; n++) {
+      const y0 = -n * FH;
+      let w = "";
+      if (n === 1) w += `<rect x="${X0 + 20}" y="${y0 + 22}" width="${X1 - X0 - 40}" height="${FH - 22}" fill="#1e2422" opacity=".82"/><path d="M${X0 + 60},${y0 + 30}l30,34l-14,8l26,36M${X0 + 300},${y0 + 26}l-20,30l12,6l-16,40" stroke="#8aa8b0" stroke-width="3" fill="none" opacity=".45"/>`;
+      else for (let k = 0; k < 4; k++) { const bx = X0 + k * bw; w += `<rect x="${bx + 18}" y="${y0 + 18}" width="${bw - 36}" height="${FH - 24}" fill="#1e2422" opacity=".82"/><path d="M${bx + 26},${y0 + 24}l16,22l-9,6l18,30" stroke="#8aa8b0" stroke-width="2.5" fill="none" opacity=".45"/>`; }
+      g += `<g id="${id}-hw${n}" opacity="0">${w}</g>`;
+    }
+    return g + `<path id="${id}-hwL" d="" stroke="#3a2e1c" stroke-width="7" fill="none" opacity="0"/>`;
+  };
+  function hwetDraw(id, hm) {
+    const s = el(`${id}-hwS`);
+    if (!s) return;
+    const y = -hm * HOTEL.FH;
+    s.setAttribute("y", f1(y)); s.setAttribute("height", f1(Math.max(0, -y)));
+    const L = el(`${id}-hwL`);
+    L.setAttribute("d", hm > 0.05 ? `M-352,${f1(y + 4)}q40,-5 80,0t80,0t80,0t80,0t80,0t80,0t80,0t72,0` : "");
+    L.setAttribute("opacity", hm > 0.05 ? ".55" : "0");
+    for (let n = 1; n <= HOTEL.NF; n++) el(`${id}-hw${n}`).setAttribute("opacity", hm >= n - 0.35 ? "1" : "0");
+  }
+  // what the big wave leaves of ยาย's shop (shop-local units as shop() at s 1, origin the sand under the front middle; o.shop "gone"):
+  // the stumps snapped off at odd heights, a piece of the deck tipped up on them, loose planks and a sheet of the tin roof, the blue
+  // awning torn off and snagged on the tallest stump, a dark wet scar
+  function shopRuin(seed) {
+    const r = mk(seed);
+    let g = `<ellipse cx="0" cy="4" rx="400" ry="46" fill="#3a2e1e" opacity=".3"/>` + CS(0, 6, 340, 30, 0.6);
+    g += `<g transform="translate(-60,-60) rotate(-13)"><rect x="-170" y="-10" width="330" height="22" fill="#a8743e" ${OUT2}/><rect x="-170" y="-22" width="330" height="12" fill="#c89464" ${OUT2}/>${Array.from({ length: 6 }, (_, k) => `<path d="M${-160 + k * 56},-10v22" stroke="#6a4424" stroke-width="2"/>`).join("")}<path d="M160,-22l14,8l-8,10l12,16H160Z" fill="#c89464" ${OUT2}/></g>`;
+    [[-280, 74], [-140, 128], [0, 46], [140, 104], [270, 60]].forEach(([px, h]) => {
+      const tilt = (r() - 0.5) * 18, j = Array.from({ length: 4 }, () => 4 + r() * 12);
+      g += `<g transform="translate(${px},0) rotate(${f1(tilt)})"><path d="M-11,0V${f1(-h + j[0])}L-5,${f1(-h)}L0,${f1(-h + j[1])}L5,${f1(-h - j[2] * 0.4)}L11,${f1(-h + j[3])}V0Z" fill="#bcb6aa" ${OUT2}/><path d="M-4,${f1(-h + 16)}V-6" stroke="#8e887c" stroke-width="3"/></g>`;
+    });
+    g += `<path d="M-150,-120Q-126,-140 -132,-112Q-96,-70 -42,-34Q-28,-8 -62,-2Q-112,-4 -152,-20Q-178,-62 -150,-120Z" fill="url(#tdTarp)" ${OUT2}/><path d="M-150,-22Q-138,-10 -126,-22Q-114,-10 -102,-22Q-90,-10 -78,-22" stroke="#1a4a84" stroke-width="3" fill="none"/><path d="M-136,-98Q-110,-68 -88,-46" stroke="#7ab8f0" stroke-width="3" fill="none" opacity=".6"/>`;
+    for (let k = 0; k < 7; k++) { const x = -330 + r() * 640, y = -4 - r() * 14, a = (r() - 0.5) * 40, L = 90 + r() * 120; g += `<rect x="${f1(x - L / 2)}" y="${f1(y - 6)}" width="${f1(L)}" height="12" fill="${r() < 0.5 ? "#a87a4a" : "#8a6a44"}" ${OUT2} transform="rotate(${f1(a)} ${f1(x)} ${f1(y)})"/>`; }
+    g += `<path d="M120,-30L260,-46L266,-8L126,2Z" fill="url(#tdTin)" ${OUT2}/><path d="M150,-34l2,32M180,-37l2,32M210,-40l2,32M240,-43l2,32" stroke="#7a8488" stroke-width="2.5" opacity=".7"/>`;
+    return g;
+  }
+
   // ---------------- the warning tower: a steel pole, a ladder, a solar panel, two tiers of horn speakers, a red beacon ----------------
   Tide.tower = (x, G, s, id) => {
     const H = 700;
@@ -712,6 +792,8 @@
     const id = o.id || "tl", P = PAL[o.time || "morning"], r = mk(o.seed || 9);
     sky(L, id, P, 1200, { seed: (o.seed || 9) + 1, sunX: 1260, sunY: 180 });
     put(L.far, hill(id, P, r, { top: 300, foot: 1260, path: [[60, 1250], [-40, 1085], [170, 935], [20, 785], [230, 640], [110, 490], [330, 385]] }));
+    // a flood's far edge at the foot of the hill behind the village (Tide.landFlood)
+    put(L.far, `<g id="${id}-lfFar" opacity="0"><path id="${id}-lfFarW" d="" fill="#8e8a72"/><path id="${id}-lfFarF" d="" stroke="#eeeadc" stroke-width="3" fill="none" opacity=".7"/></g>`);
     // mid: the houses and trees of the village, the warning tower
     const Gm = 1330;
     let m = "";
@@ -726,10 +808,12 @@
     s += `<path d="M-3000,1330Q540,1290 4000,1340V2400H-3000Z" fill="url(#${id}-sandG)"/>`;
     for (let k = 0; k < 24; k++) { const y = 1380 + Math.pow(r(), 1.2) * 480, x = -900 + r() * 2900, w = 70 + r() * 220; s += `<path d="M${f1(x)},${f1(y)}q${f1(w / 2)},-7 ${f1(w)},0" stroke="#fff" stroke-width="3" fill="none" opacity=".4"/>`; }
     for (let k = 0; k < 18; k++) { const u = k / 17, x = 560 + Math.sin(u * 4) * 80 + (k % 2 ? 18 : -18), y = 1860 - u * 420, sz = 22 * (1.1 - u * 0.6); s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(sz * 0.5)}" ry="${f1(sz * 0.25)}" fill="${T(P.sand[2], -0.2)}" opacity=".5"/>`; }
-    s += `<path d="M95,1490L560,1490L330,1660L-260,1660Z" fill="#2a2018" opacity=".16"/><path d="M590,1560L1075,1560L860,1700L380,1700Z" fill="#2a2018" opacity=".14"/>`;
-    s += hotel(id, 330, 1490, 0.84);
+    const gone = o.shop === "gone", seed = o.seed || 9;
+    s += `<path d="M95,1490L560,1490L330,1660L-260,1660Z" fill="#2a2018" opacity=".16"/>${gone ? "" : `<path d="M590,1560L1075,1560L860,1700L380,1700Z" fill="#2a2018" opacity=".14"/>`}`;
+    s += hotel(id, 330, 1490, 0.84) + `<g transform="translate(330,1490) scale(.84)">${hwetSVG(id)}</g>`;
     s += flagPole(id, 120, 896, 160, 0.84);
-    s += shop(id, 830, 1560, 0.86, r);
+    // ยาย's shop, or once the big wave has been (o.shop "gone") what it left of it
+    s += gone ? `<g id="${id}-ruin" transform="translate(830,1560) scale(.86)">${shopRuin(seed + 33)}</g>` : shop(id, 830, 1560, 0.86, r);
     s += `<g id="${id}-boatL0" transform="translate(700,1790) rotate(-3) scale(0.48)">${CS(0, 46, 520, 40, 0.9)}${Tide.longtail({ hull: "#2f6fa0", band: "#d8423a", no: "พง 3127", flip: true, seed: 11 })}</g>`;
     s += Tide.evacSign(160, 1770, 0.72, { id: `${id}-sign`, dir: 0 });
     const rr = mk((o.seed || 9) + 5);
@@ -738,10 +822,15 @@
     s += coco(1400, 2000, 2.3, -0.06, (o.seed || 9) + 71, { id: `${id}-palm0`, pal: P.leaf, fl: 0.6 });
     // the water's edge at the bottom (redrawn): shallows over the sand, the foam lace
     s += `<path id="${id}-swashW" d="" fill="${P.sea[4]}" opacity=".78"/><path id="${id}-swash" d="" stroke="#fff" stroke-width="13" fill="none" stroke-linecap="round" opacity=".95"/><path id="${id}-swash2" d="" stroke="#fff" stroke-width="5" fill="none" opacity=".55"/>`;
+    // the flood in front of the hotel (Tide.landFlood, o.flood), hidden while there is none
+    const LF = landFloodParts(id, P, gone, seed);
+    s += LF.svg;
     put(L.set, s);
     put(L.fg, `<g transform="translate(-80,-60) rotate(22)">${coco(0, 0, 1.25, 0, 77, { trunk: false, pal: [T(P.leaf[0], -0.3), T(P.leaf[1], -0.25), P.leaf[1]] })}</g>`);
-    ST[id] = { kind: "land", P, flag: { px: 120, py: 896, s: 0.84 }, swashY: 1846 };
+    ST[id] = { kind: "land", P, flag: { px: 120, py: 896, s: 0.84 }, swashY: 1846, flood: o.flood || 0, mark: o.mark ?? (o.flood || 0), shopGone: gone, LF };
     landDraw(id, 0);
+    hwetDraw(id, ST[id].mark); hwetDraw(`${id}X`, ST[id].mark);
+    landFloodDraw(id, 0, o.flood || 0, 0, { still: true });
   }
 
   // the Thai flag's cloth as five bands rippling from the pole top (px, py)
@@ -772,6 +861,133 @@
       [0, 1].forEach((k) => { const p = el(`${id}-palm${k}`); if (p) { const [px, py] = p.getAttribute("data-o").split(" "); p.setAttribute("transform", `rotate(${f1(1.8 * Math.sin(t * 1.1 + k * 2))} ${px} ${py})`); } });
       if (bc) bc.setAttribute("opacity", o.siren ? f1(Math.max(0, Math.sin(t * 9))) : "0");
     } }, t0);
+  };
+
+  // ---------- the flood in front of the hotel, "land" view (Tide.landFlood, the set's o.flood) ----------
+  // The set's own perspective puts the camera LFE ≈ 3.3 storeys up (the horizon at y 1200 crosses the hotel there), so water D storeys
+  // deep meets anything standing on the ground at y G at y = 1200 + (G − 1200)(1 − D / LFE), and a metre on the water at screen y is
+  // LFM (y − 1200) / (290 (1 − D / LFE)) px. LFC: what stands in it and is drawn again above its waterline — key, ground y, x range.
+  const LFE = 290 / (HOTEL.FH * 0.84), LFM = (HOTEL.FH * 0.84) / 3;
+  const LFC = [["H", 1490, 36, 565], ["S", 1560, 568, 1092], ["G", 1770, 52, 268], ["P", 2000, 1300, 1500]];
+  function landFloodParts(id, P, gone, seed) {
+    const r = mk(seed + 811);
+    const LS = Array.from({ length: 46 }, () => ({ u: r(), x: -600 + r() * 2400, v: 0.6 + r() * 0.8, L: 0.8 + r() * 3, ph: r() * 6 }));
+    const LP = Array.from({ length: 18 }, () => ({ u: r(), x: -600 + r() * 2400, v: 0.5 + r() * 0.6, R: 0.2 + r() * 0.4, d: blob(0, 0, 10, r, 7), ph: r() * 6 }));
+    // what it carries (100 units = 1 m): w the width in metres, u how far down the water (0 just in front of the hotel … 1 the camera),
+    // x where it starts across, v its speed with the current, a / sp its angle and turn, flat things lie foreshortened on the water
+    const sheet = `<path d="M-110,-40L110,-48L104,36L-104,44Z" fill="url(#tdTin)" ${OUT2}/><path d="M-90,-42L-86,40M-60,-43L-56,41M-30,-44L-26,42M0,-45L2,43M30,-46L32,42M60,-47L62,40M90,-48L92,38" stroke="#7a8488" stroke-width="3" opacity=".7"/>`;
+    const chair = `<g transform="rotate(100)"><path d="M-30,30V-34H30V30M-30,0H30" stroke="#d8402e" stroke-width="9" fill="none" stroke-linejoin="round"/><path d="M-30,-34H30" stroke="#a83020" stroke-width="5"/></g>`;
+    const frond = `<path d="M-160,10Q0,-30 160,0" stroke="#5a7a3a" stroke-width="8" fill="none"/>${Array.from({ length: 12 }, (_, i) => `<path d="M${-140 + i * 25},${f1(4 - i * 0.6)}l${-8 + (i % 3) * 3},${22 + (i % 2) * 8}" stroke="#6a8a44" stroke-width="6" stroke-linecap="round"/>`).join("")}`;
+    const sign = `<g transform="rotate(-4)"><rect x="-120" y="-28" width="230" height="56" rx="6" fill="#f8f4ea" stroke="#1e4e94" stroke-width="7"/><path d="M110,-28l14,16l-10,12l14,28H104Z" fill="#f8f4ea" stroke="#1e4e94" stroke-width="5"/><text x="-4" y="14" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#d8302a" stroke="#7a1410" stroke-width="1.2">ร้านยายพร</text></g>`;
+    const LD = [
+      { svg: plankSVG(240, 22, "#9a7046", false), w: 2.4, u: 0.3, x: 260, v: 1, a: 10, sp: 8, ph: 0.5, flat: true },
+      { svg: coolerSVG, w: 0.7, u: 0.55, x: 920, v: 0.85, a: -6, sp: -12, ph: 1.9 },
+      { svg: umbSVG, w: 2, u: 0.2, x: 1320, v: 0.9, a: 158, sp: 6, ph: 3.1 },
+      { svg: sheet, w: 2.2, u: 0.42, x: -320, v: 0.7, a: -8, sp: 4, ph: 4.4, flat: true },
+      { svg: chair, w: 0.7, u: 0.68, x: 520, v: 1.1, a: 0, sp: -18, ph: 2.7 },
+      { svg: frond, w: 3.2, u: 0.84, x: 1560, v: 1.2, a: -14, sp: 8, ph: 5.6, flat: true },
+      ...(gone ? [{ svg: sign, w: 2.4, u: 0.36, x: 700, v: 0.75, a: -4, sp: 3, ph: 0.2, flat: true }] : []),
+    ];
+    const duck = window.TideCast ? TideCast.duckRing(0, 0, 1, { water: true }) : `<ellipse rx="120" ry="58" fill="#ffd23a" ${OUT2}/>`;
+    const copies = {
+      H: hotel(id + "X", 330, 1490, 0.84) + `<g transform="translate(330,1490) scale(.84)">${hwetSVG(id + "X")}</g>`,
+      S: gone ? `<g transform="translate(830,1560) scale(.86)">${shopRuin(seed + 33)}</g>` : shop(id + "X", 830, 1560, 0.86),
+      G: Tide.evacSign(160, 1770, 0.72, { dir: 0 }),
+      P: coco(1400, 2000, 2.3, -0.06, seed + 71, { pal: P.leaf, fl: 0.6 }),
+    };
+    let g = `<g id="${id}-lf" opacity="0"><defs><linearGradient id="${id}-lfG" gradientUnits="userSpaceOnUse" x1="0" y1="1200" x2="0" y2="1920"><stop offset="0" stop-color="#a8a892"/><stop offset=".1" stop-color="#878060"/><stop offset=".45" stop-color="#6a6246"/><stop offset="1" stop-color="#4c4632"/></linearGradient>
+      ${LFC.map(([k]) => `<clipPath id="${id}-lf${k}C"><rect id="${id}-lf${k}R" x="-3000" y="0" width="7000" height="0"/></clipPath>`).join("")}<clipPath id="${id}-lfDC"><rect x="-300" y="-300" width="600" height="312"/></clipPath></defs>`;
+    g += `<path id="${id}-lfW" d="" fill="url(#${id}-lfG)"/>`;
+    g += LP.map((q, k) => `<path id="${id}-lfp${k}" d="${q.d}" fill="#efeadb" opacity="0"/>`).join("");
+    g += LS.map((_, k) => `<path id="${id}-lfs${k}" d="" stroke="#f4f0e2" fill="none" stroke-linecap="round" opacity="0"/>`).join("");
+    g += `<path id="${id}-lfF2" d="" stroke="#ece8da" stroke-width="10" fill="none" opacity=".25"/><path id="${id}-lfF" d="" stroke="#f4f0e4" stroke-width="4" fill="none" stroke-linecap="round" opacity=".85"/>`;
+    LFC.forEach(([k]) => { g += `<g clip-path="url(#${id}-lf${k}C)">${copies[k]}</g><path id="${id}-lf${k}F" d="" fill="#f2eee2" opacity="0"/><path id="${id}-lf${k}K" d="" stroke="#ffffff" fill="none" stroke-linecap="round" opacity="0"/>`; });
+    g += LD.map((q, k) => `<g id="${id}-lfd${k}" opacity="0"><ellipse cx="0" cy="8" rx="${f1(q.w * 58)}" ry="18" fill="#f2eee2" opacity=".42"/>${q.svg}</g>`).join("");
+    g += `<g id="${id}-lfDuck" opacity="0"><ellipse cx="0" cy="14" rx="172" ry="36" fill="#f2eee2" opacity=".5"/><g clip-path="url(#${id}-lfDC)">${duck}</g><path d="M-130,10Q-64,22 0,12T130,8" stroke="#ffffff" stroke-width="7" fill="none" stroke-linecap="round" opacity=".8"/></g>`;
+    return { svg: g + `</g>`, LS, LP, LD };
+  }
+  // redraw it: D storeys deep, F the flow clock (metres the water has moved), X { still, dirX −1 | 1, duck: { p 0 … 1 across, y } }
+  function landFloodDraw(id, t, D, F, X = {}) {
+    const S = ST[id], g = el(`${id}-lf`);
+    if (!g) return;
+    const on = D > 0.02;
+    g.setAttribute("opacity", on ? "1" : "0");
+    el(`${id}-lfFar`).setAttribute("opacity", on ? "1" : "0");
+    if (!on) return;
+    const a = 1 - Math.min(D, LFE - 0.15) / LFE, wl = (G) => 1200 + (G - 1200) * a, mpx = (y) => (LFM * (y - 1200)) / (290 * a);
+    const still = !!X.still, dirX = X.dirX ?? -1, yFar = wl(1330);
+    const xs = []; for (let x = -1400; x <= 2600; x += 40) xs.push(x);
+    const edge = (y0, amp) => xs.map((x) => [x, y0 + amp * (Math.sin(x * 0.021 + t * 2.1) + 0.6 * Math.sin(x * 0.053 - t * 3.1))]);
+    // the far edge: at the foot of the hill behind the village (far layer) and across the village itself
+    const fh = edge(wl(1262), 0.8);
+    el(`${id}-lfFarW`).setAttribute("d", `M${fh.map(P2).join("L")}L2600,1500L-1400,1500Z`);
+    el(`${id}-lfFarF`).setAttribute("d", `M${fh.map(P2).join("L")}`);
+    const fv = edge(yFar, 1.4);
+    el(`${id}-lfW`).setAttribute("d", `M${fv.map(P2).join("L")}L2600,2600L-1400,2600Z`);
+    el(`${id}-lfF`).setAttribute("d", `M${fv.map(([x, y]) => P2([x, y + 1.5])).join("L")}`);
+    el(`${id}-lfF2`).setAttribute("d", `M${fv.map(([x, y]) => P2([x, y + 7])).join("L")}`);
+    el(`${id}-lfG`).setAttribute("y1", f1(yFar));
+    // foam lines and patches riding the current, bigger and faster the nearer they are
+    S.LF.LS.forEach((q, k) => {
+      const e = el(`${id}-lfs${k}`), y = yFar + 6 + (1980 - yFar) * Math.pow(q.u, 1.7), m = mpx(y), x = wrap(q.x + dirX * F * q.v * m, -700, 1800), len = clamp(q.L * m, 6, 460);
+      e.setAttribute("d", `M${f1(x - len / 2)},${f1(y)}q${f1(len / 2)},${f1(-1 - 0.04 * m)} ${f1(len)},0`);
+      e.setAttribute("stroke-width", f1(clamp(0.05 * m, 0.8, 9)));
+      e.setAttribute("opacity", f2((still ? 0.22 : 0.55) * (0.6 + 0.4 * Math.sin(t * 1.3 + q.ph))));
+    });
+    S.LF.LP.forEach((q, k) => {
+      const e = el(`${id}-lfp${k}`), y = yFar + 10 + (1960 - yFar) * Math.pow(q.u, 1.5), m = mpx(y), x = wrap(q.x + dirX * F * q.v * m, -600, 1700), sq = clamp((y - 1200) / 1000, 0.1, 0.55), R = (q.R * m) / 10;
+      e.setAttribute("transform", `translate(${f1(x)},${f1(y)}) scale(${f2(R * 1.8)},${f2(R * sq)}) rotate(${f1(t * 12 + k * 40)})`);
+      e.setAttribute("opacity", f2((still ? 0.22 : 0.34) * (0.7 + 0.3 * Math.sin(t * 0.9 + q.ph))));
+    });
+    // the hotel, the shop, the sign and the palm above the water: drawn again down to their waterlines, a foam collar where the water
+    // meets them, the water heaped up on the side the current comes from and a wake trailing off the other
+    LFC.forEach(([k, G, x0, x1]) => {
+      const w = wl(G), R = el(`${id}-lf${k}R`), Fp = el(`${id}-lf${k}F`), Kp = el(`${id}-lf${k}K`);
+      R.setAttribute("y", f1(yFar - 6)); R.setAttribute("height", f1(Math.max(0, w + 1 - (yFar - 6))));
+      let lo = x0, hi = x1, show = w > yFar + 2;
+      if (k === "G") { if (w < 1440) show = false; else if (w > 1576) { lo = 150; hi = 170; } }
+      if (k === "S" && S.shopGone && w < 1560 - 128 * 0.86) show = false;
+      Fp.setAttribute("opacity", show ? ".9" : "0"); Kp.setAttribute("opacity", show && !still ? ".7" : "0");
+      if (!show) return;
+      const m = mpx(w), th = clamp(0.1 * m, 2, 14), n = Math.max(4, Math.round((hi - lo) / 12)), up = [], dn = [];
+      for (let i = 0; i <= n; i++) { const x = lerp(lo - 4, hi + 4, i / n), j = fbm(x * 0.05 + t * 2.3 + G); up.push([x, w - th * (0.5 + 0.8 * j)]); dn.push([x, w + th * (0.3 + 0.5 * j)]); }
+      const us = dirX < 0 ? hi : lo, ds = dirX < 0 ? lo : hi, pile = still ? th * 0.6 : th * (2 + 0.6 * Math.sin(t * 3 + G)), L = clamp(1.8 * m, 20, 280);
+      Fp.setAttribute("d", `M${up.map(P2).join("L")}L${dn.reverse().map(P2).join("L")}Z${shardD(us - dirX * pile * 0.6, w - pile * 0.3, pile * 1.3, pile * 0.7, 0, [1, 0.7, 0.9, 0.6, 1, 0.8, 0.9, 0.7])}`);
+      Kp.setAttribute("d", `M${f1(ds)},${f1(w + th * 0.4)}q${f1(dirX * L * 0.4)},${f1(th * 0.6)} ${f1(dirX * L)},${f1(th * 2.2)}M${f1(ds)},${f1(w + th * 1.3)}q${f1(dirX * L * 0.3)},${f1(th * 1.4)} ${f1(dirX * L * 0.7)},${f1(th * 4)}`);
+      Kp.setAttribute("stroke-width", f1(clamp(0.05 * m, 1.5, 6)));
+      Kp.setAttribute("stroke-dasharray", `${f1(L * 0.2)} ${f1(L * 0.08)}`);
+      Kp.setAttribute("stroke-dashoffset", f1(dirX * F * m * 0.4));
+    });
+    // debris on the nearer water, in front of the hotel and the shop
+    const yD = Math.max(wl(1490), wl(1560)) + 30;
+    S.LF.LD.forEach((q, k) => {
+      const e = el(`${id}-lfd${k}`), y0 = yD + (1940 - yD) * q.u, m = mpx(y0), x = wrap(q.x + dirX * F * q.v * m * 0.8, -500, 1600), y = y0 + 0.05 * m * Math.sin(t * 1.6 + q.ph), s = m / 100, sq = q.flat ? clamp((y - 1200) / 700, 0.3, 0.9) : 1;
+      e.setAttribute("transform", `translate(${f1(x)},${f1(y)}) scale(${s.toFixed(3)},${(s * sq).toFixed(3)}) rotate(${f1(q.a + q.sp * Math.sin(t * 0.4 + q.ph))})`);
+      e.setAttribute("opacity", f2(sm(0.15, 0.5, D)));
+    });
+    // the duck ring drifting across in front of the hotel, head first
+    const dk = el(`${id}-lfDuck`), du = X.duck;
+    if (!du || du.p < -0.05 || du.p > 1.05) dk.setAttribute("opacity", "0");
+    else {
+      const y0 = du.y ?? wl(1490) + 0.5 * (1920 - wl(1490)), m = mpx(y0), p = clamp(du.p, 0, 1), s = (0.95 * m) / 240;
+      const x = dirX < 0 ? lerp(1240, -180, p) : lerp(-160, 1260, p), y = y0 + 0.04 * m * Math.sin(t * 2.2);
+      dk.setAttribute("transform", `translate(${f1(x)},${f1(y)}) rotate(${f1(-6 + 12 * p + 4 * Math.sin(t * 1.3))}) scale(${(dirX < 0 ? -s : s).toFixed(3)},${s.toFixed(3)})`);
+      dk.setAttribute("opacity", "1");
+    }
+  }
+  // the flood in front of the hotel ("land" view): o.from (the set's o.flood) → o.to storeys between o.at and o.at + o.len (o.ease),
+  // the current across the frame (o.dir −1 to the left, 1 to the right; o.flow 1 its speed), o.duck true the duck ring drifting past
+  // (o.duckAt, o.duckLen seconds; o.duckY on the water), o.after true the still flood (a slow drift)
+  Tide.landFlood = (tl, id, t0, dur, o = {}) => {
+    const S = ST[id], c = { t: 0 }, d0 = o.from ?? S.flood, d1 = o.to ?? d0, at = o.at ?? 0, len = o.len ?? Math.max(0.01, dur - at), E = gsap.parseEase(o.ease || "power1.inOut");
+    const still = !!o.after, fv = 2.2 * (o.flow ?? (still ? 0.12 : 1)), dirX = o.dir ?? -1, dAt = o.duckAt ?? dur * 0.12, dLen = o.duckLen ?? dur * 0.8;
+    const draw = (tt) => {
+      const D = tt <= at ? d0 : tt >= at + len ? d1 : lerp(d0, d1, E((tt - at) / len)), hm = Math.max(S.mark, d0, D);
+      landFloodDraw(id, t0 + tt, D, fv * (t0 + tt), { still, dirX, duck: o.duck ? { p: (tt - dAt) / dLen, y: o.duckY } : null });
+      hwetDraw(id, hm); hwetDraw(`${id}X`, hm);
+    };
+    draw(0);
+    tl.to(c, { t: dur, duration: dur, ease: "none", immediateRender: false, onUpdate: () => draw(c.t) }, t0);
   };
 
   // ======================== the wave: low on the beach, a wall of muddy water rolling in over the sand ========================
@@ -1134,6 +1350,24 @@
     // two longtails out on the bay: afloat they bob, left on the mud they lie over on their keels
     const HB = [{ x: 210, y: 936, s: 0.056, flip: false, hull: "#2f6fa0", band: "#d8423a", ph: 0.7 }, { x: 985, y: 864, s: 0.046, flip: true, hull: "#2e8a5a", band: "#f2c02a", ph: 2.6 }];
     HB.forEach((b, k) => { f += `<g id="${id}-hb${k}"><ellipse id="${id}-hb${k}-s" cx="0" cy="40" rx="560" ry="46" fill="#2a2418" opacity="0"/>${Tide.longtail({ hull: b.hull, band: b.band, no: false, flip: b.flip, water: P.sea[3], wid: `${id}-hb${k}-w`, seed: 41 + k, k: 7 + k })}</g>`; });
+    // the wall of water (o.line beyond 1, Tide.bigWave; redrawn by boreDraw): the risen sea dark behind it with foam streaks running in,
+    // a soft glow while it is still the white line far out, its front — a dark muddy face under a torn white crest, streaks of foam and
+    // mud pouring down it, things tumbling in it — a churned foot where it runs over the seabed, the two longtails it picks up, spray
+    const r3 = mk((o.seed || 13) + 907);
+    const BW = { L: Array.from({ length: 24 }, (_, k) => ({ x: -500 + ((k + r3()) / 24) * 2100, p: r3(), v: 0.5 + r3() * 0.5, w: 0.5 + r3() * 0.7, mud: k % 3 !== 0 })),
+      S: Array.from({ length: 16 }, (_, k) => ({ x: -350 + ((k + r3()) / 16) * 1800, p: r3(), v: 0.35 + r3() * 0.35, R: 0.7 + r3() * 0.6 })),
+      T: Array.from({ length: 20 }, (_, k) => ({ x: -700 + ((k + r3()) / 20) * 2400, p: r3(), v: 0.12 + r3() * 0.1, w: 50 + r3() * 140 })),
+      D: Array.from({ length: 12 }, (_, k) => ({ x: -300 + ((k + r3()) / 12) * 1700, ph: r3() * 6, v: 0.6 + r3() * 0.9, s: 0.7 + r3() * 0.6, c: ["#3a2e22", "#6a5034", "#e8e2d4", "#2e6aa8", "#c8402e", "#5a4632"][k % 6] })) };
+    const bwDark = mix(T(P.sea[2], -0.45), "#3a3626", 0.45);
+    f += `<g id="${id}-bw" opacity="0"><defs><linearGradient id="${id}-bwBG" gradientUnits="userSpaceOnUse" x1="0" y1="${HZ}" x2="0" y2="${BY}"><stop offset="0" stop-color="${bwDark}" stop-opacity="0"/><stop offset=".55" stop-color="${bwDark}" stop-opacity=".5"/><stop offset="1" stop-color="${bwDark}" stop-opacity=".94"/></linearGradient>
+      <linearGradient id="${id}-bwFG" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mix(bwDark, "#3c3a30", 0.6)}"/><stop offset=".55" stop-color="#5c5644"/><stop offset="1" stop-color="#8a7e5e"/></linearGradient></defs>
+      <path id="${id}-bwB" d="" fill="url(#${id}-bwBG)"/>${BW.T.map((_, k) => `<path id="${id}-bwT${k}" d="" stroke="#e8ecea" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}
+      <path id="${id}-bwA" d="" fill="#ffffff" opacity="0"/><path id="${id}-bwF" d="" fill="url(#${id}-bwFG)"/><path id="${id}-bwC" d="" fill="#f3f0e6"/><path id="${id}-bwH" d="" fill="#ffffff" opacity=".9"/>
+      ${BW.L.map((q, k) => `<path id="${id}-bwL${k}" d="" stroke="${q.mud ? "#7a6a48" : "#fbf8ee"}" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}
+      ${BW.D.map((q, k) => `<rect id="${id}-bwD${k}" x="-1" y="-.3" width="2" height=".6" fill="${q.c}" opacity="0"/>`).join("")}
+      <path id="${id}-bwK" d="" fill="#ece6d4"/>
+      ${HB.map((b, k) => `<g id="${id}-bwb${k}" opacity="0">${Tide.longtail({ hull: b.hull, band: b.band, no: false, flip: b.flip, seed: 41 + k, k: 7 + k })}</g>`).join("")}
+      ${BW.S.map((_, k) => `<ellipse id="${id}-bwS${k}" rx="1" ry="1" fill="url(#tdSpray)" opacity="0"/>`).join("")}</g>`;
     // the beach: a pale curve of sand with the swash
     f += `<path d="M-3000,${BY}Q540,${BY - 40} 4000,${BY + 20}V${BY + 420}H-3000Z" fill="${P.sand[1]}"/><path id="${id}-fwb" d="M-3000,${BY}Q540,${BY - 40} 4000,${BY + 20}V${BY + 120}Q540,${BY + 60} -3000,${BY + 110}Z" fill="#5a4a32" opacity="0"/><path id="${id}-swh" d="M-3000,${BY}Q540,${BY - 40} 4000,${BY + 20}" stroke="#fff" stroke-width="5" fill="none" opacity="${sea > 0 ? 0.2 : 0.85}"/>`;
     put(L.far, f);
@@ -1152,7 +1386,7 @@
     // the flood (Tide.surge): the wet ground it leaves behind, the moving water, the roofs and crowns again on top of it
     const FM = (x) => 1306 + 34 * (fbm(x * 0.004 + 7.3) - 0.5);
     m += `<defs><linearGradient id="${id}-fG" gradientUnits="userSpaceOnUse" x1="0" y1="${BY - 44}" x2="0" y2="1330"><stop offset="0" stop-color="${mix(P.sea[4], "#5a6450", 0.6)}" stop-opacity="0"/><stop offset=".1" stop-color="${mix(P.sea[3], "#565c48", 0.65)}"/><stop offset=".34" stop-color="#5e5a40"/><stop offset=".7" stop-color="#6c6244"/><stop offset="1" stop-color="#7a6c48"/></linearGradient>
-      <clipPath id="${id}-fC"><path id="${id}-fCP" d=""/></clipPath><clipPath id="${id}-fwC"><path id="${id}-fwCP" d=""/></clipPath></defs>`;
+      <clipPath id="${id}-fC"><path id="${id}-fCP" d=""/></clipPath><clipPath id="${id}-fwC"><path id="${id}-fwCP" d=""/></clipPath>${[0, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => `<clipPath id="${id}-ck${k}"><path id="${id}-ck${k}p" d="${CKF}"/></clipPath>`).join("")}</defs>`;
     let wet = `<rect x="-1400" y="${BY - 60}" width="4000" height="420" fill="#3e3424" opacity=".55"/>`;
     wet += `<path d="${Array.from({ length: 150 }, (_, i) => { const x = -1300 + i * 25; return `${i ? "L" : "M"}${x},${f1(FM(x) - 2)}`; }).join("")}" stroke="#3a3024" stroke-width="4" fill="none" stroke-dasharray="7 4 16 6 4 5" opacity=".75"/>`;
     for (let k = 0; k < 26; k++) { const x = -200 + r2() * 1500, y = FM(x) - 4 - r2() * 60, a = r2() * 180, c = ["#8a6a44", "#5a4632", "#e8e2d4", "#d84a36", "#2a8ad0"][k % 5]; wet += `<rect x="${f1(x - 6)}" y="${f1(y - 1.5)}" width="${f1(8 + r2() * 10)}" height="3" rx="1" fill="${c}" transform="rotate(${f1(a)} ${f1(x)} ${f1(y)})" opacity=".85"/>`; }
@@ -1168,6 +1402,8 @@
     // white water churning over the crest of the beach, and bores (torn white bands) running in across the flood toward us
     fl += `<g id="${id}-pour" opacity="0"><path id="${id}-crB" d="" fill="#ffffff" opacity=".35"/><path id="${id}-crA" d="" fill="#ffffff" opacity=".85"/></g>`;
     fl += `<g clip-path="url(#${id}-fC)">${[0, 1, 2, 3].map((k) => `<path id="${id}-bo${k}" d="" fill="#f4f2e8" opacity="0"/>`).join("")}</g>`;
+    // a big wave's front: a band of churning water standing up as it races through the village (Tide.bigWave)
+    fl += `<g id="${id}-fW" opacity="0"><path id="${id}-fWb" d="" fill="#7a6e4e"/><path id="${id}-fWt" d="" fill="#f2eee2"/></g>`;
     fl += `<path id="${id}-fFd" d="" stroke="#3e3626" stroke-width="18" fill="none" opacity=".3"/><path id="${id}-fF2" d="" stroke="#ffffff" stroke-width="24" fill="none" opacity=".42" stroke-linecap="round"/><path id="${id}-fF1" d="" stroke="#ffffff" stroke-width="7" fill="none" opacity=".95" stroke-linecap="round" stroke-dasharray="46 7 20 6 64 9"/>`;
     const FC = Array.from({ length: 40 }, (_, k) => ({ x: -250 + ((k + r2()) / 40) * 1600, R: 5 + r2() * 9, ph: r2() * 6 }));
     fl += FC.map((_, k) => `<circle id="${id}-fc${k}" r="1" fill="#ffffff" opacity="0"/>`).join("");
@@ -1180,22 +1416,44 @@
       `<rect x="-6" y="-8" width="12" height="16" rx="3" fill="#2a6ab8" stroke="${INK}" stroke-width="1.2"/><path d="M-6,-3H6M-6,3H6" stroke="#1a4a8a" stroke-width="1.2"/>`,
       `<path d="M-18,2Q0,-6 18,0" stroke="#5a7a3a" stroke-width="3" fill="none"/><path d="M-14,0l-3,6M-8,-2l-2,7M-2,-3l-1,7M4,-3l1,7M10,-2l2,6" stroke="#6a8a44" stroke-width="2"/>`];
     fl += DB.map((b, k) => `<g id="${id}-fd${k}" opacity="0"><g transform="scale(1.7)">${dbArt[k]}</g></g>`).join("");
-    m += `<g id="${id}-flood" opacity="0">${fl}</g><g id="${id}-above" opacity="0">${HU.join("")}${CR.join("")}</g>`;
+    // in a big wave (Tide.bigWave) the yellow duck ring rides it too (x, a as above) and, as ยาย's shop goes, its sign, the blue awning,
+    // planks and a table break loose at the wreck's progress `at` and drift off from just in front of it (sx, sy → vx, vy) (#id-fx0 …,
+    // drawn over everything standing in the village; `keep`: still floating about in a later wave, once the shop is gone)
+    const duckA = window.TideCast ? TideCast.duckRing(0, 0, 0.12, { water: true }) : `<ellipse rx="14" ry="7" fill="#ffd23a" stroke="${INK}" stroke-width="1.2"/>`;
+    const DX = [
+      { art: duckA, x: 300, a: 0.92, ph: 0.9, r0: 8, sp: 30, at: -1 },
+      { art: `<g transform="rotate(-3)"><rect x="-30" y="-7.5" width="58" height="15" rx="1.5" fill="#f8f4ea" stroke="#1e4e94" stroke-width="2.2"/><path d="M28,-7.5l4,4l-3,4l4,7H26Z" fill="#f8f4ea" stroke="#1e4e94" stroke-width="1.4"/><text x="-1" y="4.2" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="11" fill="#d8302a">ร้านยายพร</text></g>`, sx: 790, sy: 1300, vx: 9, vy: 4, ph: 2.4, r0: -6, sp: -10, at: 0.42 },
+      { art: `<path d="M-24,-6Q-12,-15 3,-8Q16,-15 25,-4Q21,7 6,8Q-8,13 -21,6Z" fill="url(#tdTarp)" stroke="${INK}" stroke-width="1.2"/><path d="M-15,-2Q0,4 17,-2" stroke="#7ab8f0" stroke-width="1.6" fill="none" opacity=".7"/>`, sx: 735, sy: 1298, vx: -11, vy: 5, ph: 4.1, r0: 24, sp: 36, at: 0.32, keep: true },
+      { art: `<rect x="-21" y="-2.6" width="42" height="5.2" fill="#a87a4a" stroke="${INK}" stroke-width="1"/><rect x="-15" y="-2.3" width="31" height="4.6" fill="#c89464" stroke="${INK}" stroke-width="1" transform="rotate(26)"/>`, sx: 815, sy: 1304, vx: 13, vy: 6, ph: 1.7, r0: 64, sp: -50, at: 0.26, keep: true },
+      { art: `<rect x="-12" y="-3" width="24" height="5" rx="1.5" fill="#d8402e" stroke="${INK}" stroke-width="1"/><path d="M-9,-3l-2,-8M9,-3l2,-8" stroke="#a83020" stroke-width="2.2"/>`, sx: 700, sy: 1302, vx: -7, vy: 7, ph: 5.3, r0: -26, sp: 44, at: 0.5, keep: true },
+      { art: `<path d="M-27,-2.6H23l-3,2.6l4,2.6H-27Z" fill="#9a7046" stroke="${INK}" stroke-width="1"/>`, sx: 860, sy: 1300, vx: 15, vy: 3, ph: 3.2, r0: 12, sp: -30, at: 0.3, keep: true },
+    ];
+    const fxg = `<g id="${id}-fxg">${DX.map((b, k) => `<g id="${id}-fx${k}" opacity="0">${b.art}</g>`).join("")}</g>`;
+    // a deep flood's surface (#id-fT: foam streaks racing with the current, whirls turning in it)
+    const FT = Array.from({ length: 40 }, (_, k) => ({ x: -250 + ((k + r3()) / 40) * 1600, p: r3(), v: 0.3 + r3() * 0.25, w: 24 + r3() * 60 }));
+    const FV = Array.from({ length: 7 }, (_, k) => ({ x: 120 + k * 150 + r3() * 80, y: BY + 110 + r3() * 150, R: 10 + r3() * 12, dir: k % 2 ? 1 : -1 }));
+    fl += `<g clip-path="url(#${id}-fC)"><g id="${id}-fT" opacity="0">${FT.map((_, k) => `<path id="${id}-fT${k}" d="" stroke="#f4f2e8" stroke-width="${f1(1.6 + (k % 3) * 0.9)}" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}
+      ${FV.map((v, k) => `<g id="${id}-fV${k}"><ellipse rx="${f1(v.R)}" ry="${f1(v.R * 0.32)}" fill="#3a3424" opacity=".25"/><ellipse id="${id}-fV${k}e" rx="${f1(v.R)}" ry="${f1(v.R * 0.32)}" fill="none" stroke="#efece0" stroke-width="2" stroke-dasharray="${f1(v.R * 1.6)} ${f1(v.R * 0.9)}" opacity=".7"/></g>`).join("")}</g></g>`;
+    m += `<g id="${id}-flood" opacity="0">${fl}</g><g id="${id}-above" opacity="0"><g id="${id}-aboveH">${HU.join("")}</g>${CR.join("")}</g>`;
     // the hotel seen from above: its roof with the railing, the five storeys foreshortened; the shop's blue awning beside it. Each thing that
     // stands in the flood gets a band of water over its foot (#id-fb0 …), drawn right after it so whatever stands in front still covers it.
     const SD = [], band = (k) => `<g id="${id}-fb${k}" opacity="0"><path id="${id}-fb${k}w" d="" fill="url(#${id}-fG)"/><path id="${id}-fb${k}k" d="" stroke="#ffffff" stroke-width="2.2" fill="none" opacity=".7" stroke-linecap="round" stroke-dasharray="9 5"/><path id="${id}-fb${k}f" d="" stroke="#ffffff" stroke-width="3.2" fill="none" opacity=".95" stroke-linecap="round"/><g id="${id}-fb${k}s" fill="#ffffff">${[0, 1, 2, 3, 4, 5].map((i) => `<circle id="${id}-fb${k}s${i}" r="1" opacity="0"/>`).join("")}</g></g>`;
-    m += `<g transform="translate(560,${BY + 236}) scale(.36)"><path d="M-288,-554H168L196,-640H-262Z" fill="#e2dccf" ${OUT2}/><path d="M-262,-640H196" stroke="#a8aeb0" stroke-width="6"/>${hotel(id, 0, 0, 1)}</g>` + band(0);
+    m += `<g clip-path="url(#${id}-ck0)"><g transform="translate(560,${BY + 236}) scale(.36)"><path d="M-288,-554H168L196,-640H-262Z" fill="#e2dccf" ${OUT2}/><path d="M-262,-640H196" stroke="#a8aeb0" stroke-width="6"/>${hotel(id, 0, 0, 1)}${hwetSVG(id)}</g></g>` + band(0);
     SD.push([432, 663, BY + 236, 30]);
-    m += `<g transform="translate(760,${BY + 250}) scale(.34)">${shop(id + "s", 0, 0, 1, r)}</g>` + band(1);
+    // ยาย's shop (#id-shopW) and its ruin (#id-ruin, once it has gone: o.shop "gone"), clipped to what stands above the water (#id-shKP)
+    // so a big wave can take the shop under (Tide.bigWave o.wreck)
+    const gone = o.shop === "gone";
+    m += `<defs><clipPath id="${id}-shK"><path id="${id}-shKP" d="M-3000,-3000H4000V4000H-3000Z"/></clipPath></defs><g clip-path="url(#${id}-shK)"><g id="${id}-shopW" transform="translate(760,${BY + 250}) scale(.34)"${gone ? ' opacity="0"' : ""}>${shop(id + "s", 0, 0, 1, r)}</g>`;
+    m += `<g id="${id}-ruin" transform="translate(760,${BY + 250}) scale(.34)" opacity="${gone ? 1 : 0}">${shopRuin((o.seed || 13) + 33)}</g></g>` + band(1);
     SD.push([652, 868, BY + 250, 32]);
     for (let k = 0; k < 7; k++) {
       const cx = -500 + k * 300 + r() * 120, cy = BY + 240 + r() * 40, cs = 0.42 + r() * 0.1, cl = (r() - 0.5) * 0.4;
-      m += coco(cx, cy, cs, cl, (o.seed || 13) + 80 + k, { q: 0.5, pal: P.leaf }) + band(2 + k);
+      m += `<g clip-path="url(#${id}-ck${2 + k})">${coco(cx, cy, cs, cl, (o.seed || 13) + 80 + k, { q: 0.5, pal: P.leaf })}</g>` + band(2 + k);
       SD.push([cx - 36 * cs, cx + 36 * cs, cy, 20]);
     }
-    m += Tide.tower(330, GV + 30, 0.62, id) + band(9);
+    m += `<g clip-path="url(#${id}-ck9)">${Tide.tower(330, GV + 30, 0.62, id)}</g>` + band(9);
     SD.push([300, 360, GV + 30, 22]);
-    m += flagPole(id, 488, BY + 0, 120, 0.36);
+    m += flagPole(id, 488, BY + 0, 120, 0.36) + fxg;
     put(L.mid, m);
     // set: the hillside jungle either side, the concrete steps coming down toward the village, the steel handrail, the sign
     let s = "";
@@ -1215,13 +1473,18 @@
     let rail = "", top = [];
     for (let k = 0; k <= steps; k += 2) { const x = cxK(k) + wK(k) / 2 + wK(k) * 0.06, y = yK(k), h = wK(k) * 0.42; rail += `<path d="M${f1(x)},${f1(y)}V${f1(y - h)}" stroke="#a8b0b4" stroke-width="${f1(clamp(wK(k) * 0.016, 1.5, 12))}" stroke-linecap="round"/>`; top.push([x, y - h]); }
     s += rail + `<path d="M${top.map(P2).join("L")}" stroke="#d8dee0" stroke-width="${f1(10)}" fill="none" stroke-linecap="round"/><path d="M${top.map(P2).join("L")}" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/>`;
+    // a big wave's flood climbing the foot of the steps (Tide.bigWave): #id-sw
+    s += `<g id="${id}-sw" opacity="0"><path id="${id}-swW" d="" fill="#7a6c48"/>${[0, 1, 2, 3, 4].map((k) => `<path id="${id}-sws${k}" d="" stroke="#f2eee2" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}<path id="${id}-swF" d="" stroke="#f2eee2" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"/><path id="${id}-swF2" d="" stroke="#ffffff" stroke-width="2" fill="none" opacity=".55" stroke-dasharray="16 9"/></g>`;
     s += Tide.evacSign(170, 1880, 1.0, { id: `${id}-sign`, dir: 0 });
     put(L.set, s);
     put(L.fg, `<g transform="translate(1180,-80) rotate(-30)">${coco(0, 0, 1.3, 0, 91, { trunk: false, pal: [T(P.leaf[0], -0.3), T(P.leaf[1], -0.2), P.leaf[1]] })}</g>`);
-    ST[id] = { kind: "hill", P, HZ, flag: { px: 488, py: BY, s: 0.36 }, lvl: sea, line: o.line || 0, HB, SD, FS, FP, FC, DB, WC, FM, gTop, eOff: (x) => qAt(x, -3000, 0, 540, -30, 4000, 10) };
+    ST[id] = { kind: "hill", P, HZ, flag: { px: 488, py: BY, s: 0.36 }, lvl: sea, line: o.line || 0, HB, SD, FS, FP, FC, DB, WC, FM, gTop, eOff: (x) => qAt(x, -3000, 0, 540, -30, 4000, 10),
+      BW, DX, FT, FV, SW: { farY, near, steps, cxK, wK }, wet: !!o.wet, shopGone: gone, flood: o.flood || 0, mark: o.mark ?? (o.flood || 0) };
     landDraw(id, 0);
     hillSeaDraw(id, 0, sea, o.line || 0, 0);
-    floodDraw(id, 0, 0, o.wet ? 1 : 0, 0, 1);  // o.wet: the ground the first wave reached stays dark and wet, with its line of litter
+    // o.wet: the ground the first wave reached stays dark and wet, with its line of litter; o.flood: water still standing in the village
+    if (o.flood) floodDraw(id, 0, 1, 1, 0, -0.5, o.flood, { ch: 0.25 }); else floodDraw(id, 0, 0, o.wet ? 1 : 0, 0, 1);
+    hwetDraw(id, ST[id].mark);
   }
   // redraw the bay: level u (0 … HILL.LMAX), the white line w (0 … 1), bore 0 … 1 (the sea running back in over the seabed, its edge churned white)
   function hillSeaDraw(id, t, u, w = 0, bore = 0, agi = 0) {
@@ -1255,9 +1518,11 @@
       el(`${id}-hb${k}-w`).setAttribute("opacity", f1(1 - g));
       el(`${id}-hb${k}-s`).setAttribute("opacity", f1(0.35 * g));
     });
-    // the white line: a crest spreading out from the middle of the bay, a dark face under it, a soft glow
-    const wl = el(`${id}-wl`), q = clamp(w, 0, 1);
-    wl.setAttribute("opacity", f1(sm(0, 0.12, q) * (0.88 + 0.12 * Math.sin(t * 7))));
+    // the white line: a crest spreading out from the middle of the bay, a dark face under it, a soft glow; beyond 1 it thickens into
+    // the wall of water itself (boreDraw), still out near the horizon
+    const wl = el(`${id}-wl`), q = clamp(w, 0, 1), q2 = clamp(w - 1, 0, 1);
+    wl.setAttribute("opacity", f1(sm(0, 0.12, q) * (1 - sm(0, 0.3, q2)) * (0.88 + 0.12 * Math.sin(t * 7))));
+    boreDraw(id, t, boreY(S, q2), sm(0, 0.3, q2));
     if (q > 0) {
       const half = 90 + 1300 * Math.pow(q, 1.2), cx = 560, y0 = HZ + 9;
       const band = (th, dy) => { const up = [], dn = []; for (let x = cx - half; x <= cx + half + 1; x += 20) { const v = (x - cx) / half, tw = th * Math.pow(Math.max(0, 1 - v * v), 0.6), yy = y0 + dy + 0.8 * Math.sin(x * 0.04 + t * 2.4); up.push([x, yy - tw / 2]); dn.push([x, yy + tw / 2]); } return `M${up.map(P2).join("L")}L${dn.reverse().map(P2).join("L")}Z`; };
@@ -1267,47 +1532,83 @@
     }
   }
   // redraw the flood over the village: K 0 … 1 how far in it has run and how deep, Km the furthest it has reached (the ground stays wet
-  // up to there), F the flow clock (seconds of flow, run backwards while it drains), dir +1 running inland … −1 back out to sea
-  function floodDraw(id, t, K, Km, F, dir) {
-    const S = ST[id], BY = HILL.BY, on = K > 0.002, xs = [];
+  // up to there), F the flow clock (seconds of flow, run backwards while it drains), dir +1 running inland … −1 back out to sea.
+  // A big wave (Tide.bigWave, Tide.hillFlood, a set's o.flood) also gives Dp, the depth in storeys of the hotel (K is then only how far
+  // in it has run), and X { ch the churn 0 … 1, imp the moment it hits 0 … 1 (spray up the walls), w the shop's wreck 0 … 1, age
+  // seconds since the shop broke up }
+  const CKF = "M-3000,-3000H4000V4000H-3000Z";   // a clip that hides nothing
+  function floodDraw(id, t, K, Km, F, dir, Dp, X = {}) {
+    const S = ST[id], BY = HILL.BY, on = K > 0.002, xs = [], deep = Dp !== undefined, ch = X.ch || 0;
     for (let x = -1300; x <= 2400; x += 25) xs.push(x);
     el(`${id}-flood`).setAttribute("opacity", f1(sm(0, 0.04, K)));
     el(`${id}-above`).setAttribute("opacity", on ? "1" : "0");
+    el(`${id}-aboveH`).setAttribute("opacity", deep ? f2(1 - sm(0.75, 1.25, Dp)) : "1");   // the house roofs go under
     el(`${id}-fwet`).setAttribute("opacity", Km > 0.002 ? "1" : "0");
     el(`${id}-fwb`).setAttribute("opacity", f1(0.42 * sm(0, 0.3, Km)));
     el(`${id}-fwCP`).setAttribute("d", Km > 0.002 ? `M-1300,${BY - 60}H2400L${xs.slice().reverse().map((x) => P2([x, lerp(BY + 34, S.FM(x) + 4, Km)])).join("L")}Z` : "");
-    if (!on) { S.SD.forEach((_, k) => el(`${id}-fb${k}`).setAttribute("opacity", "0")); return; }
-    const yF = (x) => lerp(BY + 34, S.FM(x), K) + 3 * Math.sin(x * 0.023 + t * 4.2) + 2 * Math.sin(x * 0.061 - t * 6.1);
+    // a deep flood is darker (its gradient is shared with the bands round everything standing in it, so they stay one water)
+    const dk = deep ? 0.5 * sm(0.3, 2.6, Dp) : 0;
+    if (deep) floodTone(id, dk);
+    stepsWater(id, t, deep && on ? Dp * sm(0.8, 1, K) : 0, dk);
+    if (!on) { S.SD.forEach((_, k) => { el(`${id}-fb${k}`).setAttribute("opacity", "0"); const c = el(k === 1 ? `${id}-shKP` : `${id}-ck${k}p`); if (c) c.setAttribute("d", CKF); }); return; }
+    // a deep flood runs on in to the foot of the hill (yF; yV the village, where its streaks and debris stay) and heaves more
+    const reach = deep ? 18 * Math.min(Dp, 1) + 240 * sm(0.4, 1.4, Dp) : 0, rip = 1 + 0.8 * ch;
+    const yF = (x) => lerp(BY + 34, S.FM(x) + reach, K) + rip * (3 * Math.sin(x * 0.023 + t * 4.2) + 2 * Math.sin(x * 0.061 - t * 6.1));
+    const yV = deep ? (x) => Math.min(yF(x), S.FM(x) + 26 + 3 * Math.sin(x * 0.023 + t * 4.2)) : yF;
     const front = xs.map((x) => [x, yF(x)]), d = `M-1300,${BY - 44}H2400L${front.slice().reverse().map(P2).join("L")}Z`, fl = `M${front.map(P2).join("L")}`;
     el(`${id}-fS`).setAttribute("d", d);
-    const pr = sm(0.05, 0.4, K) * clamp(dir + 0.3, 0, 1);
+    const pr = sm(0.05, 0.4, K) * clamp(dir + 0.3, 0, 1), big = deep ? (1 + 0.25 * Math.min(Dp, 3)) * (1 + 0.5 * (X.imp || 0)) : 1, bigB = deep ? 1 + 0.3 * Math.min(Dp, 2) : 1;
     el(`${id}-pour`).setAttribute("opacity", f1(pr));
     const crY = (x) => qAt(x, -1300, BY + 36, 540, BY + 6, 2400, BY + 50), torn = (y0, th, ph) => {
       const up = [], dn = [];
       for (let x = -1300; x <= 2400; x += 20) { const c = y0(x); up.push([x, c - th * (0.4 + fbm(x * 0.021 + ph + t * 1.7))]); dn.push([x, c + th * (0.3 + fbm(x * 0.017 - ph - t * 1.3))]); }
       return `M${up.map(P2).join("L")}L${dn.reverse().map(P2).join("L")}Z`;
     };
-    if (pr > 0.01) { el(`${id}-crA`).setAttribute("d", torn(crY, 9, 0)); el(`${id}-crB`).setAttribute("d", torn(crY, 22, 3)); }
+    if (pr > 0.01) { el(`${id}-crA`).setAttribute("d", torn(crY, 9 * big, 0)); el(`${id}-crB`).setAttribute("d", torn(crY, 22 * big, 3)); }
     [0, 1, 2, 3].forEach((k) => {
-      const q = (((k * 0.27 + F * 0.22) % 1) + 1) % 1, e = el(`${id}-bo${k}`), y0 = (x) => lerp(crY(x) + 14, yF(x) - 4, q);
-      e.setAttribute("d", torn(y0, 3 + 7 * q, k * 2.1));
+      const q = (((k * 0.27 + F * 0.22) % 1) + 1) % 1, e = el(`${id}-bo${k}`), y0 = (x) => lerp(crY(x) + 14, yV(x) - 4, q);
+      e.setAttribute("d", torn(y0, (3 + 7 * q) * bigB, k * 2.1));
       e.setAttribute("opacity", f1(0.75 * Math.sin(Math.PI * q) * sm(0.2, 0.6, K) * clamp(dir + 0.4, 0, 1)));
     });
     el(`${id}-fCP`).setAttribute("d", d);
+    // a deep flood's surface: foam streaks racing with the current and whirls turning in it
+    const tg = el(`${id}-fT`);
+    tg.setAttribute("opacity", deep ? f2(sm(0.1, 0.4, K) * sm(0.15, 0.6, Dp)) : "0");
+    if (deep && S.FT) {
+      S.FT.forEach((s0, k) => {
+        const q = (((s0.p + s0.v * F * 1.3) % 1) + 1) % 1, x = s0.x + 22 * Math.sin(q * 5 + k) + ch * 18 * Math.sin(t * 0.9 + k), y = lerp(BY + 22, yV(x) - 6, q), w = s0.w * (0.5 + 0.6 * q), e = el(`${id}-fT${k}`);
+        e.setAttribute("d", `M${f1(x - w / 2)},${f1(y)}q${f1(w * 0.3)},${f1(-2 - 2 * q)} ${f1(w * 0.55)},${f1(-0.5)}t${f1(w * 0.45)},${f1(1)}`);
+        e.setAttribute("opacity", f2(0.75 * Math.sin(Math.PI * q)));
+      });
+      S.FV.forEach((v, k) => {
+        const y = Math.min(v.y, yV(v.x) - 10);
+        el(`${id}-fV${k}`).setAttribute("transform", `translate(${f1(v.x + 8 * Math.sin(t * 0.4 + k))},${f1(y)})`);
+        el(`${id}-fV${k}e`).setAttribute("stroke-dashoffset", f1(v.dir * t * 40));
+      });
+    }
+    // a big wave's front: muddy water standing up behind a torn white top while it races in
+    const fwo = deep ? sm(0.02, 0.12, K) * (1 - sm(0.88, 1, K)) * clamp(dir, 0, 1) : 0;
+    el(`${id}-fW`).setAttribute("opacity", f2(fwo));
+    if (fwo > 0.005) {
+      const hW = 8 + 14 * Math.min(X.top ?? Dp, 3), up = [], dn = [], tp = [];
+      for (let x = -1300; x <= 2400; x += 20) { const y = yF(x), h = hW * (0.55 + 0.6 * fbm(x * 0.013 + t * 1.3)); up.push([x, y - h]); dn.push([x, y + 3]); tp.push([x, y - h * (0.6 - 0.3 * fbm(x * 0.031 - t * 2))]); }
+      el(`${id}-fWb`).setAttribute("d", `M${up.map(P2).join("L")}L${dn.reverse().map(P2).join("L")}Z`);
+      el(`${id}-fWt`).setAttribute("d", `M${up.map(([x, y]) => P2([x, y - 2])).join("L")}L${tp.reverse().map(P2).join("L")}Z`);
+    }
     el(`${id}-fF1`).setAttribute("d", fl);
     el(`${id}-fF1`).setAttribute("stroke-dashoffset", f1(-F * 34));
     el(`${id}-fF2`).setAttribute("d", fl);
     el(`${id}-fFd`).setAttribute("d", `M${front.map(([x, y]) => P2([x, y - 10])).join("L")}`);
     // the flow streaks ride from the beach to the front (and back again while it drains)
     S.FS.forEach((s, k) => {
-      const q = (((s.p + s.v * F) % 1) + 1) % 1, x = s.x + 16 * Math.sin(q * 6 + k), y0 = BY + 16, y1 = yF(x) - 8, e = el(`${id}-fs${k}`);
+      const q = (((s.p + s.v * F) % 1) + 1) % 1, x = s.x + 16 * Math.sin(q * 6 + k), y0 = BY + 16, y1 = yV(x) - 8, e = el(`${id}-fs${k}`);
       if (y1 < y0 + 12) { e.setAttribute("opacity", "0"); return; }
       const y = lerp(y0, y1, q), w = s.w * (0.55 + 0.45 * q);
       e.setAttribute("d", `M${f1(x - w / 2)},${f1(y)}q${f1(w / 2)},${f1(-2.5 - 3 * q)} ${f1(w)},0`);
       e.setAttribute("opacity", f1(0.8 * Math.sin(Math.PI * q)));
     });
     S.FP.forEach((s0, k) => {
-      const q = (((s0.p + s0.v * F) % 1) + 1) % 1, x = s0.x + 20 * Math.sin(q * 4 + k), y = lerp(BY + 20, yF(x) - 10, q), e = el(`${id}-fp${k}`), R = s0.R * (0.6 + 0.6 * q);
+      const q = (((s0.p + s0.v * F) % 1) + 1) % 1, x = s0.x + 20 * Math.sin(q * 4 + k), y = lerp(BY + 20, yV(x) - 10, q), e = el(`${id}-fp${k}`), R = s0.R * (0.6 + 0.6 * q);
       e.setAttribute("transform", `translate(${f1(x)},${f1(y)}) scale(${(R / 10).toFixed(2)},${(R * 0.036).toFixed(3)}) rotate(${f1(t * 20 + k * 40)})`);
       e.setAttribute("opacity", f1(0.55 * Math.sin(Math.PI * q) * sm(0.2, 0.6, K)));
     });
@@ -1317,31 +1618,55 @@
       e.setAttribute("opacity", f1(0.85 * sm(0.05, 0.3, K)));
     });
     S.DB.forEach((b, k) => {
-      const x = b.x + 26 * Math.sin(t * 0.55 + b.ph) + 6 * F * Math.sin(b.ph), y = lerp(BY + 40, yF(b.x) - 16, b.a) + 2 * Math.sin(t * 2.1 + b.ph), e = el(`${id}-fd${k}`);
-      e.setAttribute("transform", `translate(${f1(x)},${f1(y)}) rotate(${f1(b.r0 + 20 * Math.sin(t * 0.8 + b.ph))})`);
+      const x = b.x + 26 * Math.sin(t * 0.55 + b.ph) + 6 * F * Math.sin(b.ph) + ch * 34 * Math.sin(t * 1.1 + b.ph * 2), y = lerp(BY + 40, yV(b.x) - 16, b.a) + 2 * Math.sin(t * 2.1 + b.ph) + ch * 6 * Math.sin(t * 1.7 + b.ph), e = el(`${id}-fd${k}`);
+      e.setAttribute("transform", `translate(${f1(x)},${f1(y)}) rotate(${f1(b.r0 + 20 * Math.sin(t * 0.8 + b.ph) + ch * 50 * Math.sin(t * 0.45 + b.ph))})`);
       e.setAttribute("opacity", f1(sm(0.12, 0.35, K)));
+    });
+    // a big wave's own debris: the duck ring, and the pieces of ยาย's shop drifting off from where it stood
+    if (S.DX) S.DX.forEach((b, k) => {
+      const e = el(`${id}-fx${k}`), free = b.at < 0;
+      const v = deep ? sm(0.12, 0.35, K) * (free ? 1 : S.shopGone ? (b.keep ? 1 : 0) : sm(b.at, b.at + 0.18, X.w || 0)) : 0;
+      e.setAttribute("opacity", f2(v));
+      if (v <= 0.005) return;
+      let x, y;
+      if (free) { x = b.x + 26 * Math.sin(t * 0.5 + b.ph) + 6 * F * Math.sin(b.ph + 1) + ch * 30 * Math.sin(t * 0.9 + b.ph * 2); y = lerp(BY + 40, yV(b.x) - 14, b.a); }
+      else { const age = S.shopGone ? 14 : Math.max(0, X.age ?? 14), go = 6 * (1 - Math.exp(-age / 6)); x = b.sx + b.vx * go + 6 * Math.sin(t * 0.7 + b.ph) + ch * 14 * Math.sin(t * 0.8 + b.ph); y = Math.min(b.sy + b.vy * go, yV(x) - 8); }
+      y += 2 * Math.sin(t * 2.3 + b.ph) + ch * 4 * Math.sin(t * 1.5 + b.ph);
+      e.setAttribute("transform", `translate(${f1(x)},${f1(y)}) rotate(${f1(b.r0 + 14 * Math.sin(t * 0.7 + b.ph) + (b.sp || 0) * ch * Math.sin(t * 0.3 + b.ph))})`);
     });
     // the water round the foot of the hotel, the shop, the palms and the tower: a band up to the waterline, a foam line, a wake downstream
     S.SD.forEach(([x0, x1, yb, D], k) => {
-      const dpt = D * K * sm(yb - 16, yb + 4, yF((x0 + x1) / 2)), g = el(`${id}-fb${k}`);
+      const dpt = (deep ? Dp * HSTO : D * K) * sm(yb - 16, yb + 4, yF((x0 + x1) / 2)), g = el(`${id}-fb${k}`), ck = el(k === 1 ? `${id}-shKP` : `${id}-ck${k}p`);
       g.setAttribute("opacity", dpt > 0.6 ? "1" : "0");
+      // deep water: the thing is cut off at its waterline and the flood shows below it (no band of water painted over it)
+      if (ck) ck.setAttribute("d", deep && dpt > 0.6 ? `M-3000,-3000H4000V${f1(yb - dpt + 1.5)}H-3000Z` : CKF);
       if (dpt <= 0.6) return;
       const pts = [], n = Math.max(4, Math.round((x1 - x0) / 8));
       for (let i = 0; i <= n; i++) { const x = x0 - 4 + ((x1 - x0 + 8) * i) / n; pts.push([x, yb - dpt + 1.6 * Math.sin(x * 0.2 + t * 5 + k)]); }
       const tp = `M${pts.map(P2).join("L")}`;
-      el(`${id}-fb${k}w`).setAttribute("d", `${tp}L${f1(x1 + 4)},${f1(yb + 5)}L${f1(x0 - 4)},${f1(yb + 5)}Z`);
+      el(`${id}-fb${k}w`).setAttribute("d", deep ? "" : `${tp}L${f1(x1 + 4)},${f1(yb + 5)}L${f1(x0 - 4)},${f1(yb + 5)}Z`);
       el(`${id}-fb${k}f`).setAttribute("d", tp);
-      const wl = 8 + dpt * 1.1, wk = el(`${id}-fb${k}k`);
+      const wl = 8 + Math.min(dpt, 40) * 1.1, wk = el(`${id}-fb${k}k`);
       wk.setAttribute("d", `M${f1(x0 - 2)},${f1(yb + 2)}q${f1(-wl * 0.3)},${f1(wl * 0.5)} ${f1(-wl * 0.8)},${f1(wl)}M${f1(x1 + 2)},${f1(yb + 2)}q${f1(wl * 0.3)},${f1(wl * 0.5)} ${f1(wl * 0.8)},${f1(wl)}`);
       wk.setAttribute("stroke-dashoffset", f1(-F * 40));
-      wk.setAttribute("opacity", f1(0.75 * clamp(dir, 0, 1)));
-      // spray thrown up round the corners of the big ones
+      wk.setAttribute("opacity", deep ? "0" : f1(0.75 * clamp(dir, 0, 1)));
+      // spray thrown up round the corners of the big ones (in a big wave: up the walls as it hits)
+      const ds = deep ? Math.min(dpt, 34) * (0.3 + 0.9 * (X.imp || 0)) : dpt, hi = deep ? 1 + 1.5 * (X.imp || 0) : 1, rs = deep ? 1.7 : 1;
       for (let i = 0; i < 6; i++) {
-        const sp = el(`${id}-fb${k}s${i}`), big = D >= 30, side = i % 2 ? x1 + 3 : x0 - 3, ph = t * (3 + i) + i * 1.7, up = (0.5 + 0.5 * Math.sin(ph)) * dpt * 0.9;
-        sp.setAttribute("cx", f1(side + (i % 2 ? 1 : -1) * (2 + i * 1.5))); sp.setAttribute("cy", f1(yb - dpt - up)); sp.setAttribute("r", f1(big ? 3 + dpt * 0.18 * (1 + (i % 3)) : 0));
-        sp.setAttribute("opacity", f1(big ? 0.75 * (1 - 0.6 * Math.sin(ph)) * clamp(dpt / 20, 0, 1) : 0));
+        const sp = el(`${id}-fb${k}s${i}`), big = D >= 30, side = i % 2 ? x1 + 3 : x0 - 3, ph = t * (3 + i) + i * 1.7, up = (0.5 + 0.5 * Math.sin(ph)) * ds * 0.9 * hi;
+        sp.setAttribute("cx", f1(side + (i % 2 ? 1 : -1) * (2 + i * 1.5))); sp.setAttribute("cy", f1(yb - dpt - up)); sp.setAttribute("r", f1(big ? (3 + ds * 0.18 * (1 + (i % 3))) * rs : 0));
+        sp.setAttribute("fill", deep ? "url(#tdSpray)" : "#ffffff");
+        sp.setAttribute("opacity", f1(big ? 0.75 * (1 - 0.6 * Math.sin(ph)) * clamp(ds / 20, 0, 1) : 0));
       }
     });
+  }
+  // a deep flood's water darker, dk 0 … 1 of the way to mud (Tide.bigWave, Tide.hillFlood)
+  function floodTone(id, dk) {
+    const S = ST[id], v = f2(dk);
+    if (!S.fGs) S.fGs = [...el(`${id}-fG`).querySelectorAll("stop")].map((s) => [s, s.getAttribute("stop-color")]);
+    if (S.fGk === v) return;
+    S.fGk = v;
+    S.fGs.forEach(([s, c]) => s.setAttribute("stop-color", mix(c, "#3a3424", dk)));
   }
   // the first wave, from the hill: the sea runs back in over the bare seabed (its edge churned white), pours over the beach and floods
   // the village ground round the shop and the hotel's ground floor (~2–3 m), swirls past them carrying planks and a cooler, then drains
@@ -1370,6 +1695,167 @@
     const draw = (tt) => {
       const u = tt <= at ? u0 : tt >= at + len ? u1 : lerp(u0, u1, E((tt - at) / len));
       hillSeaDraw(id, t0 + tt, u, lerp(w0, w1, Ew(clamp((tt - la) / Math.max(0.01, dur - la), 0, 1))), 0);
+    };
+    draw(0);
+    tl.to(c, { t: dur, duration: dur, ease: "none", immediateRender: false, onUpdate: () => draw(c.t) }, t0);
+  };
+
+
+  // ======================== the big wave from the hill (EP.2): the wall on the bay, the deep flood, ยาย's shop going ========================
+  const HSTO = HOTEL.FH * 0.36;   // a storey of the hotel in the hill view (px)
+  const BW_H = 88;                // the wall's height at the beach (px), unless a call gives its own
+  // where the wall stands while the set's line is 1 … 2 (q2 0 … 1): just in front of the horizon, coming in
+  const boreY = (S, q2) => S.HZ + 12 + 52 * Math.pow(q2, 1.5);
+  // the wall of water on the bay (far layer, #id-bw): its foot at yb in the middle of the bay (following the curve of the shore), op its
+  // opacity, H its height at the beach, burst 0 … 1 as it breaks on the beach (the spray goes up); out by the horizon it reads as the
+  // white line it grew from (a bright line over a dark band), closer in as a dark muddy face under a torn white crest, foam pouring
+  // down it, debris tumbling in it, a churned foot, the risen sea dark behind it; it picks the two longtails off the mud as it reaches them
+  function boreDraw(id, t, yb, op, H = BW_H, burst = 0) {
+    const S = ST[id], g = el(`${id}-bw`);
+    if (!g) return;
+    g.setAttribute("opacity", f2(clamp(op, 0, 1)));
+    if (op <= 0.004) return;
+    const { HZ } = S, BY = HILL.BY, dd = clamp((yb - HZ) / (BY - HZ), 0.02, 1), hF = Math.max(7, H * Math.pow(dd, 0.9)), far = 1 - sm(0.05, 0.3, dd);
+    const xs = []; for (let x = -1300; x <= 2400; x += 20) xs.push(x);
+    const B = xs.map((x) => yb + S.eOff(x) + Math.max(0.4, dd) * (2.4 * Math.sin(x * 0.012 + t * 1.8) + 1.4 * Math.sin(x * 0.035 - t * 2.6)));
+    const Hh = xs.map((x) => hF * (0.55 + 0.75 * Math.pow(fbm(x * 0.0026 + 3.1 + t * 0.12), 1.3) + 0.12 * fbm(x * 0.02 - t * 0.8)));
+    const at = (x) => clamp(Math.round((x + 1300) / 20), 0, xs.length - 1), top = (i) => B[i] - Hh[i];
+    const band = (a, b) => `M${xs.map((x, i) => P2([x, a(x, i)])).join("L")}L${xs.map((x, i) => P2([x, b(x, i)])).reverse().join("L")}Z`;
+    // the risen sea behind it, darkest right behind its crest, foam streaks running in toward it
+    el(`${id}-bwB`).setAttribute("d", band(() => HZ + 3, (x, i) => top(i) + 3));
+    el(`${id}-bwBG`).setAttribute("y2", f1(yb - hF * 0.9));
+    S.BW.T.forEach((q, k) => {
+      const e = el(`${id}-bwT${k}`), u = (q.p + t * q.v) % 1, x = q.x + 14 * Math.sin(t * 0.5 + k), i = at(x);
+      if (top(i) - HZ < 30) { e.setAttribute("opacity", "0"); return; }
+      const y = lerp(HZ + 14, top(i) - 4, u), d0 = clamp((y - HZ) / (BY - HZ), 0.05, 1), w = q.w * (0.3 + d0);
+      e.setAttribute("d", `M${f1(x - w / 2)},${f1(y)}q${f1(w / 2)},${f1(-1.5 - 3 * d0)} ${f1(w)},0`);
+      e.setAttribute("stroke-width", f1(0.8 + 3 * d0));
+      e.setAttribute("opacity", f2(0.5 * Math.sin(Math.PI * u)));
+    });
+    // a soft glow round it while it is still far out
+    const gA = el(`${id}-bwA`);
+    gA.setAttribute("opacity", f2(0.3 * far));
+    if (far > 0.01) gA.setAttribute("d", band((x, i) => top(i) - 4 - Hh[i] * 0.5, (x, i) => B[i] + 3 + Hh[i] * 0.2));
+    // the face: dark muddy water, lighter and churned toward the foot
+    el(`${id}-bwF`).setAttribute("d", band((x, i) => top(i) + 1, (x, i) => B[i] + 1));
+    const fg = el(`${id}-bwFG`);
+    fg.setAttribute("y1", f1(yb - hF)); fg.setAttribute("y2", f1(yb));
+    // the crest: a torn white band along the top with fingers of foam pouring down the face from it (far out, half the wall: the line)
+    el(`${id}-bwC`).setAttribute("d", band((x, i) => top(i) - Hh[i] * (0.03 + 0.16 * Math.pow(fbm(x * 0.06 + t * 2.4), 2.5)), (x, i) => top(i) + Hh[i] * lerp(0.13 + 0.34 * Math.pow(fbm(x * 0.043 - t * 1.3 + 5), 2), 0.5, far)));
+    el(`${id}-bwH`).setAttribute("d", band((x, i) => top(i) - 1 - Hh[i] * 0.05 * fbm(x * 0.05 + t * 3), (x, i) => top(i) + Hh[i] * (0.03 + 0.06 * fbm(x * 0.023 - t * 1.7))));
+    // streaks of foam and mud pouring down the face
+    S.BW.L.forEach((q, k) => {
+      const e = el(`${id}-bwL${k}`);
+      if (far > 0.6) { e.setAttribute("opacity", "0"); return; }
+      const x = q.x + 5 * Math.sin(t * 0.8 + k), i = at(x), u = (q.p + t * q.v) % 1, h = Hh[i], y = lerp(top(i) + h * 0.16, B[i] - h * 0.16, u), len = h * 0.26 * q.w;
+      e.setAttribute("d", `M${f1(x)},${f1(y)}l${f1(-len * 0.16)},${f1(len)}`);
+      e.setAttribute("stroke-width", f1(0.6 + 2.6 * dd * q.w));
+      e.setAttribute("opacity", f2((q.mud ? 0.65 : 0.75) * Math.sin(Math.PI * u) * (1 - far)));
+    });
+    // things tumbling in it: planks, bits of boats, a cooler
+    S.BW.D.forEach((q, k) => {
+      const e = el(`${id}-bwD${k}`), x = q.x + 22 * Math.sin(t * 0.3 + q.ph), i = at(x), h = Hh[i], v = sm(0.2, 0.4, dd);
+      e.setAttribute("opacity", f2(v));
+      if (v <= 0.01) return;
+      const y = lerp(top(i) + h * 0.3, B[i] - h * 0.22, 0.5 + 0.45 * Math.sin(t * q.v + q.ph)), sz = h * 0.07 * q.s;
+      e.setAttribute("transform", `translate(${f1(x)},${f1(y)}) rotate(${f1(q.ph * 60 + t * 90 * q.v)}) scale(${f2(sz)})`);
+    });
+    // the foot: churned foam where it runs over the seabed
+    el(`${id}-bwK`).setAttribute("d", band((x, i) => B[i] - Hh[i] * (0.1 + 0.12 * fbm(x * 0.027 + t * 2.4)), (x, i) => B[i] + Math.max(1.5, Hh[i] * (0.04 + 0.09 * fbm(x * 0.019 - t * 1.9 + 2)))));
+    // spray torn off the crest and thrown up (higher as it breaks on the beach)
+    S.BW.S.forEach((q, k) => {
+      const e = el(`${id}-bwS${k}`), u = (q.p + t * q.v) % 1, x = q.x + 18 * Math.sin(t * 0.4 + k * 1.3), i = at(x), h = Hh[i] * (1 + 1.6 * burst);
+      const r = h * (0.24 + 0.55 * u) * q.R;
+      e.setAttribute("cx", f1(x + u * h * 0.25)); e.setAttribute("cy", f1(top(i) - h * (0.05 + 0.6 * u)));
+      e.setAttribute("rx", f1(r * 1.9)); e.setAttribute("ry", f1(r * 0.8));
+      e.setAttribute("opacity", f2(0.75 * (1 - u) * sm(0.12, 0.35, dd)));
+    });
+    // the two longtails: lifted off the mud as it reaches them, thrown up its face and rolled over, then gone into it
+    S.HB.forEach((b, k) => {
+      const e = el(`${id}-bwb${k}`), i = at(b.x), past = B[i] - b.y, p = clamp(past / 90, 0, 1);
+      el(`${id}-hb${k}`).setAttribute("opacity", past > 0 ? "0" : "1");
+      e.setAttribute("opacity", f2(past > 0 ? 1 - sm(0.55, 1, p) : 0));
+      if (past <= 0) return;
+      const y = B[i] - Hh[i] * (0.3 + 0.45 * Math.sin(Math.PI * Math.min(1, p * 1.4))), s = b.s * (1 + past / 520), sg = b.flip ? -1 : 1;
+      e.setAttribute("transform", `translate(${f1(b.x + sg * 40 * p)},${f1(y)}) rotate(${f1(sg * (14 + 160 * p))}) scale(${s.toFixed(4)})`);
+    });
+  }
+  // a deep flood climbing the foot of the hill steps (set layer, #id-sw): Dw storeys of water at the bottom of the flight
+  function stepsWater(id, t, Dw, dk = 0) {
+    const S = ST[id], g = el(`${id}-sw`);
+    if (!g || !S.SW) return;
+    g.setAttribute("opacity", f2(sm(0.12, 0.4, Dw)));
+    if (Dw < 0.12) return;
+    const { farY, near, steps, cxK, wK } = S.SW, yW = farY + 16 * Dw * (1 + 0.2 * Dw), top = farY - 1;
+    el(`${id}-swW`).setAttribute("fill", mix("#7a6c48", "#3a3424", dk));
+    const kAt = (y) => steps * Math.pow(clamp((y - farY) / (near - farY), 0, 1), 1 / 1.7);
+    const side = (y, sd) => { const k = kAt(y); return cxK(k) + sd * (wK(k) / 2 + lerp(20, 80, k / steps) + 8); };
+    const ys = Array.from({ length: 9 }, (_, i) => lerp(top, yW, i / 8)), wl = [];
+    for (let i = 0; i <= 28; i++) { const x = lerp(side(yW, -1), side(yW, 1), i / 28); wl.push([x, yW + 2.2 * Math.sin(x * 0.06 + t * 3.1) + 1.4 * Math.sin(x * 0.17 - t * 4.4)]); }
+    el(`${id}-swW`).setAttribute("d", `M${ys.map((y) => P2([side(y, -1), y])).join("L")}L${wl.map(P2).join("L")}L${ys.slice().reverse().map((y) => P2([side(y, 1), y])).join("L")}Z`);
+    el(`${id}-swF`).setAttribute("d", `M${wl.map(P2).join("L")}`);
+    const f2e = el(`${id}-swF2`);
+    f2e.setAttribute("d", `M${wl.map(([x, y]) => P2([x, y - 5])).join("L")}`);
+    f2e.setAttribute("stroke-dashoffset", f1(-t * 30));
+    // foam streaking across the drowned steps
+    for (let k = 0; k < 5; k++) {
+      const e = el(`${id}-sws${k}`), y = lerp(top + 3, yW - 4, (k + 0.5) / 5), x0 = side(y, -1) + 6, x1 = side(y, 1) - 6, u = (t * (0.22 + 0.07 * k) + k * 0.37) % 1, len = (x1 - x0) * 0.35, a = Math.max(x0, lerp(x0 - len, x1, u)), b = Math.min(x1, lerp(x0 - len, x1, u) + len);
+      e.setAttribute("d", b > a + 2 ? `M${f1(a)},${f1(y)}H${f1(b)}` : "");
+      e.setAttribute("opacity", f2(0.55 * Math.sin(Math.PI * u)));
+    }
+  }
+  // ยาย's shop in a big wave: w 0 … 1 shoves it inland and over, racks it as the stumps give, then tears it apart and takes it under
+  // (floodDraw clips it at the waterline); its ruin shows as the water goes down
+  function shopDraw(id, t, w) {
+    const S = ST[id], g = el(`${id}-shopW`), G = HILL.BY + 250;
+    if (!g || S.shopGone) return;
+    const a = sm(0, 0.3, w), b = sm(0.2, 1, w);
+    const dx = 22 * a + 34 * b + 2.5 * Math.sin(t * 11) * a * (1 - b), dy = 8 * a + 200 * b * b, rot = -7 * a - 12 * b + 1.5 * Math.sin(t * 7) * a * (1 - b), sk = -18 * b;
+    g.setAttribute("transform", `translate(${f1(760 + dx)},${f1(G + dy)}) rotate(${f1(rot)}) skewX(${f1(sk)}) scale(.34,${(0.34 * (1 - 0.3 * b)).toFixed(3)})`);
+    g.setAttribute("opacity", w >= 0.999 ? "0" : "1");
+    el(`${id}-ruin`).setAttribute("opacity", f2(sm(0.75, 1, w)));
+  }
+  // the big wave from the hill (see the header): the wall in from the horizon over the seabed, the village flooded o.to storeys deep,
+  // ยาย's shop knocked down (o.wreck), part drained again (o.after); o.reach / o.rise / o.hold fractions of the call, o.p0 where the
+  // wall starts (0 by the horizon … 1 at the beach), o.from the water already standing, o.sea the bay's level before it (the set's),
+  // o.mark the hotel's high-water stain before it (the set's), o.height the wall's height at the beach (px)
+  Tide.bigWave = (tl, id, t0, dur, o = {}) => {
+    const S = ST[id], c = { t: 0 }, BY = HILL.BY, top = o.to ?? 2, d0 = o.from ?? S.flood, dA = o.after ?? 0.6, u0 = o.sea ?? S.lvl, mark0 = o.mark ?? S.mark;
+    const RE = o.reach ?? 0.34, RI = Math.max(RE + 0.1, o.rise ?? 0.55), HD = Math.max(RI + 0.04, o.hold ?? 0.75), p0 = o.p0 ?? 0, H = o.height ?? 90 + 12 * top;
+    const wreck = (o.wreck ?? true) && !S.shopGone, kF = 0.085, kw0 = RE + 0.045, kw1 = Math.max(kw0 + 0.08, RI);
+    const yb0 = boreY(S, clamp(S.line - 1, 0, 1)), uAt = (y) => clamp((BY - 6 - y) / ((BY - S.HZ) * 0.42 - 6), 0, HILL.LMAX);
+    const Eo = gsap.parseEase("power4.out"), Es = gsap.parseEase("sine.inOut"), Ef = gsap.parseEase("power3.out");
+    // how far in (K), how deep (storeys), which way the water runs (the standing water runs back out to sea until the wall comes), how fast
+    const Kat = (k) => (d0 > 0 ? 1 : Ef(clamp((k - RE) / kF, 0, 1)));
+    const Dat = (k) => (k < RE ? d0 : k < RI ? lerp(d0, top, Eo((k - RE) / (RI - RE))) : k < HD ? top * (1 + 0.03 * Math.sin((Math.PI * (k - RI)) / (HD - RI))) : lerp(top, dA, Es((k - HD) / (1 - HD))));
+    const dirIn = (k) => (d0 > 0 ? lerp(-0.6, 1, sm(RE - 0.03, RE + 0.03, k)) : 1);
+    const dir = (k) => (k < HD - 0.02 ? dirIn(k) : Math.cos(Math.PI * sm(HD - 0.02, HD + 0.14, k)));
+    const spd = (k) => 1 + 0.7 * sm(RE, RE + 0.05, k) * (1 - sm(RI, HD, k));
+    const flowAt = (k) => { let F = 0; const n = Math.max(1, Math.ceil(k * 120)); for (let i = 0; i < n; i++) { const kk = ((i + 0.5) / n) * k; F += (dir(kk) * spd(kk) * k * dur) / n; } return F; };
+    const draw = (tt) => {
+      const k = clamp(tt / dur, 0, 1), t = t0 + tt;
+      // the wall out on the bay: p 0 by the horizon … 1 at the beach (faster on screen as it comes), slumping into the flood once in
+      const p = clamp(p0 + ((1 - p0) * k) / RE, 0, 1), yb = lerp(yb0, BY - 10, Math.pow(p, 2.1)), sl = sm(RE - 0.01, RE + 0.07, k);
+      hillSeaDraw(id, t, k < RE ? Math.min(u0, uAt(yb + 3)) : 0, 0, 0, sm(RE, RE + 0.1, k));
+      boreDraw(id, t, yb + 8 * sl, 1 - sl, H * (1 - 0.6 * sl), sl);
+      const on = d0 > 0 || k >= RE, K = Kat(k), Dp = Dat(k), w = wreck ? clamp((k - kw0) / (kw1 - kw0), 0, 1) : 0;
+      const ch = sm(RE, RE + 0.06, k) * (1 - 0.4 * sm(HD, 1, k)) + (d0 > 0 ? 0.25 : 0) * (1 - sm(RE, RE + 0.06, k)), imp = sm(RE + 0.03, RE + 0.08, k) * (1 - sm(RI - 0.06, RI + 0.08, k));
+      const wetK = S.wet ? 1 : 0;
+      if (on) floodDraw(id, t, K, Math.max(K, wetK), flowAt(k), dir(k), Dp, { ch, imp, w, top, age: (k - kw0 - 0.3 * (kw1 - kw0)) * dur });
+      else floodDraw(id, t, 0, wetK, 0, 1);
+      shopDraw(id, t, w);
+      hwetDraw(id, Math.max(mark0, on ? (k < RI ? Dp : top) : 0));
+    };
+    draw(0);
+    tl.to(c, { t: dur, duration: dur, ease: "none", immediateRender: false, onUpdate: () => draw(c.t) }, t0);
+  };
+  // the water left standing in the village after a big wave (see the header)
+  Tide.hillFlood = (tl, id, t0, dur, o = {}) => {
+    const S = ST[id], c = { t: 0 }, d0 = o.from ?? S.flood, d1 = o.to ?? d0, at = o.at ?? 0, len = o.len ?? Math.max(0.01, dur - at), E = gsap.parseEase(o.ease || "sine.inOut"), dr = o.dir ?? -0.5;
+    const draw = (tt) => {
+      const D = tt <= at ? d0 : tt >= at + len ? d1 : lerp(d0, d1, E((tt - at) / len)), t = t0 + tt;
+      if (D > 0.01) floodDraw(id, t, 1, 1, dr * t, dr, D, { ch: 0.25 }); else floodDraw(id, t, 0, 1, 0, dr);
+      hwetDraw(id, Math.max(S.mark, d0, D));
     };
     draw(0);
     tl.to(c, { t: dur, duration: dur, ease: "none", immediateRender: false, onUpdate: () => draw(c.t) }, t0);

@@ -85,6 +85,8 @@
     recede: ["#c4efe8", "#f4fffc", "#2a9ca6", "#1a6a74"],
     waves: ["#d2e6fb", "#f6fbff", "#3a6cc8", "#22468a"],
     floor: ["#fde0bc", "#fff7ee", "#e8823a", "#b4561a"],
+    far: ["#dff2cf", "#fbfff4", "#5aa83a", "#2e6a1a"],
+    foot: ["#f8dcd8", "#fff6f4", "#d8453a", "#8a1e18"],
   };
   let coinDefs = "";
   for (const [n, [b, l, r, rd]] of Object.entries(PAL)) coinDefs += `<radialGradient id="tuF-${n}" cx=".33" cy=".25" r=".9"><stop offset="0" stop-color="${l}"/><stop offset=".5" stop-color="${b}"/><stop offset="1" stop-color="${tone(b, -0.2)}"/></radialGradient>
@@ -158,6 +160,19 @@
         <g class="tuWave"><path d="M0,-2L9,-12" stroke="${INK}" stroke-width="3.4" stroke-linecap="round"/></g><path d="M0,-2L-8,4" stroke="${INK}" stroke-width="3.4" stroke-linecap="round"/></g>
       <g class="tuArr2"><path d="M98,56L110,38L122,56H115V80H105V56Z" fill="#7a2e08" transform="translate(2,3)"/><path d="M98,56L110,38L122,56H115V80H105V56Z" fill="url(#tuOrA)" ${OUT(2.6)}/><path d="M109,42V74" stroke="#ffe0c0" stroke-width="2.4" opacity=".8" stroke-linecap="round"/></g>`],
   };
+  // ที่ราบ ห่างฝั่ง 3 กม.: the sea at the left edge, a runner heading inland along a dashed arrow, the distance tag
+  PICT.far = () => [`<path d="M-6,124Q4,96 18,92Q30,90 34,100L38,130H-6Z" fill="url(#tuSeaG)" ${OUT(3)}/><path d="M18,92Q30,90 34,100" stroke="#effcff" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M30,118Q70,112 130,116V130H30Z" fill="url(#tuSandG)" ${OUT(2.6)}/>
+      <path d="M44,96H100" stroke="${INK}" stroke-width="9" stroke-linecap="round"/><path d="M44,96H100" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="7 6"/>
+      <path d="M96,84L114,96L96,108Z" fill="url(#tuGrn)" ${OUT(2.6)}/><g class="tuRun"><g transform="translate(70,78)"><path d="M0,-12L-4,4" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><path d="M0,-12L-4,4" stroke="#ff8a3a" stroke-width="4.5" stroke-linecap="round"/><path d="M-4,4L2,14M-4,4L-12,10M-1,-8L8,-4M-1,-8L-10,-6" stroke="${INK}" stroke-width="3.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="1" cy="-19" r="5.4" fill="url(#tuHead)" stroke="${INK}" stroke-width="2"/></g></g>`,
+    `<g transform="translate(64,30)"><rect x="-30" y="-15" width="60" height="28" rx="10" fill="#fff" ${OUT(2.4)}/><text y="6" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="17" fill="${INK}">3 กม.</text></g>`];
+  // หนีด้วยเท้า ไม่ใช่รถ: a runner with a green tick, a car crossed out in red
+  PICT.foot = () => [`<path d="M-6,118Q40,112 130,118V130H-6Z" fill="url(#tuSandG)" ${OUT(2.6)}/>
+      <g transform="translate(78,106)"><path d="M-34,0V-14Q-32,-24 -20,-26L-11,-38H16L27,-26Q36,-24 36,-12V0Z" fill="#c3c9cf" ${OUT(2.4)}/><path d="M-7,-35H13L21,-26H-14Z" fill="#3f4e5e" ${OUT(1.6)}/>
+        <circle cx="-18" cy="2" r="8" fill="#15181c" ${OUT(2)}/><circle cx="20" cy="2" r="8" fill="#15181c" ${OUT(2)}/></g>
+      <g class="tuRun"><g transform="translate(30,62)"><path d="M0,-12L-4,4" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><path d="M0,-12L-4,4" stroke="#ff8a3a" stroke-width="4.5" stroke-linecap="round"/><path d="M-4,4L2,14M-4,4L-12,10M-1,-8L8,-4M-1,-8L-10,-6" stroke="${INK}" stroke-width="3.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="1" cy="-19" r="5.4" fill="url(#tuHead)" stroke="${INK}" stroke-width="2"/></g></g>`,
+    `<path d="M52,74L104,124M104,74L52,124" stroke="#fff" stroke-width="15" stroke-linecap="round"/><path d="M52,74L104,124M104,74L52,124" stroke="#e2392c" stroke-width="9" stroke-linecap="round"/>
+      <path d="M16,26l9,10l18,-22" stroke="#fff" stroke-width="11" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M16,26l9,10l18,-22" stroke="#1e9a50" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`];
   const coin = (name) => {
     const [inside, top] = PICT[name]();
     return `<ellipse class="tuSh" cx="60" cy="120" rx="50" ry="9" fill="url(#tuCoinSh)"/>
@@ -241,20 +256,21 @@
   }
   function rule(tl, layer, t0, dur, o = {}) {
     const id = nid(), act = o.active ?? 0, done = o.done || [], at = o.at || [0.55, 0.7, 0.85], Y0 = o.y ?? 300;
-    const X = 70, W = 940, H = 760, rowY = (k) => Y0 + 250 + k * 190;
+    const RR = o.rules || RULES, n = RR.length, GAP = o.gap ?? 190, isAct = (k) => (o.seq ? true : k === act), TITLE = o.title || "กฎของยาย";
+    const X = 70, W = 940, H = o.h ?? 250 + n * GAP - 60, rowY = (k) => Y0 + 250 + k * GAP;
     const outline = boardPath(X, Y0, W, H, 7);
     let rows = "";
-    RULES.forEach(([ic, txt], k) => {
-      const st = k === act ? "act" : done.includes(k) ? "done" : "later", y = rowY(k), len = plain(txt).length;
+    RR.forEach(([ic, txt], k) => {
+      const st = isAct(k) ? "act" : done.includes(k) ? "done" : "later", y = rowY(k), len = plain(txt).length;
       const col = st === "later" ? "#8a7f70" : "#1e2a3a", rc = st === "later" ? "#9a8e7e" : "#d8312a";
       const t = txt.replace(/<u>(.*?)<\/u>/g, `<tspan class="tuU" fill="${rc}">$1</tspan>`);
       const tw = Math.min(700, len * 36 + 30);
       rows += `<g id="${id}-r${k}" opacity="${st === "later" ? 0.5 : 0}">
-        ${st === "act" ? `<path id="${id}-hl" d="M246,${y - 50}Q420,${y - 66} ${246 + tw},${y - 52}L${250 + tw},${y + 40}Q440,${y + 54} 240,${y + 36}Z" fill="url(#tuBrush)"/>
+        ${st === "act" ? `<path id="${id}-hl${k}" d="M246,${y - 50}Q420,${y - 66} ${246 + tw},${y - 52}L${250 + tw},${y + 40}Q440,${y + 54} 240,${y + 36}Z" fill="url(#tuBrush)"/>
           <path d="M${250 + tw - 30},${y - 46}l26,6M${250 + tw - 40},${y + 38}l30,-4" stroke="#ffd23a" stroke-width="4" opacity=".6" stroke-linecap="round"/>` : ""}
         <g transform="translate(36,${y - 84})"><g id="${id}-s${k}"${st === "act" ? ` opacity="0"` : ""}>${icon(ic, 0, 0, 1.45, `${id}-ic${k}`)}</g></g>
-        ${st === "act" ? `<defs><clipPath id="${id}-cp"><rect id="${id}-cr" x="230" y="${y - 70}" width="0" height="120"/></clipPath></defs>` : ""}
-        <g${st === "act" ? ` clip-path="url(#${id}-cp)"` : ""}>
+        ${st === "act" ? `<defs><clipPath id="${id}-cp${k}"><rect id="${id}-cr${k}" x="230" y="${y - 70}" width="0" height="120"/></clipPath></defs>` : ""}
+        <g${st === "act" ? ` clip-path="url(#${id}-cp${k})"` : ""}>
           <text x="262" y="${y + 26}" font-family="Sriracha" font-size="72" fill="#fffaf0" stroke="#fffaf0" stroke-width="10" stroke-linejoin="round" opacity="${st === "later" ? 0.4 : 0.85}">${plain(txt)}</text>
           <text x="262" y="${y + 26}" font-family="Sriracha" font-size="72" fill="${col}">${t}</text></g>
         ${st === "done" ? `<path id="${id}-tk${k}" d="M${270 + tw},${y - 6}l22,26l46,-58" stroke="#1e9a50" stroke-width="15" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>` : ""}
@@ -277,8 +293,8 @@
       ${[[X + 120, Y0 + 26], [X + W - 120, Y0 + 26]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="12" fill="#5a3a22" ${OUT(2)}/><circle cx="${a}" cy="${b}" r="6" fill="#2a1a10"/>`).join("")}
       ${[[X + 30, Y0 + 60], [X + W - 34, Y0 + H - 40], [X + W - 30, Y0 + 300]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="6" fill="#7a4a22" opacity=".8"/><path d="M${a - 2},${b + 4}q-2,14 2,26" stroke="#9a5a2a" stroke-width="3" opacity=".35" fill="none"/>`).join("")}
       <g transform="translate(540,${Y0 + 122})"><path d="M-330,-14q20,-14 40,0t40,0M290,-14q20,-14 40,0t40,0" stroke="#2a9ca6" stroke-width="7" fill="none" stroke-linecap="round"/>
-        <text y="18" text-anchor="middle" font-family="Sriracha" font-size="96" fill="#fffaf0" stroke="#fffaf0" stroke-width="16" stroke-linejoin="round">กฎของยาย</text>
-        <text y="18" text-anchor="middle" font-family="Sriracha" font-size="96" fill="#d8312a">กฎของยาย</text>
+        <text y="18" text-anchor="middle" font-family="Sriracha" font-size="96" fill="#fffaf0" stroke="#fffaf0" stroke-width="16" stroke-linejoin="round">${TITLE}</text>
+        <text y="18" text-anchor="middle" font-family="Sriracha" font-size="96" fill="#d8312a">${TITLE}</text>
         <path d="M-200,38Q0,52 200,38" stroke="#d8312a" stroke-width="6" fill="none" stroke-linecap="round" opacity=".8"/></g>
       ${rows}${net}${barn}${star}${chime}</g></g></g>`);
     tl.set(`#${id}`, { opacity: 1 }, t0);
@@ -288,16 +304,16 @@
     tl.fromTo(`#${id}-sw`, { rotation: 0, svgOrigin: `540 ${Y0 - 900}` }, { rotation: 0.6, svgOrigin: `540 ${Y0 - 900}`, duration: 1.3, repeat: Math.ceil(dur / 1.3), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 2);
     tl.fromTo(`#${id}-ch`, { rotation: -14, svgOrigin: "0 0" }, { rotation: 10, svgOrigin: "0 0", duration: 0.9, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.5);
     // rows land; the active one is brushed on
-    RULES.forEach((_, k) => { if (k === act || done.includes(k)) tl.fromTo(`#${id}-r${k}`, { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + at[k]); });
-    if (act >= 0 && act < 3) {
+    RR.forEach((_, k) => { if (isAct(k) || done.includes(k)) tl.fromTo(`#${id}-r${k}`, { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + at[k]); });
+    (o.seq ? RR.map((_, k) => k) : act >= 0 && act < n ? [act] : []).forEach((act) => {
       const ta = t0 + at[act];
-      tl.fromTo(`#${id}-cr`, { attr: { width: 0 } }, { attr: { width: 780 }, duration: 0.7, ease: "power1.inOut", immediateRender: false }, ta + 0.1);
-      tl.fromTo(`#${id}-hl`, { scaleX: 0, svgOrigin: `240 ${rowY(act)}` }, { scaleX: 1, svgOrigin: `240 ${rowY(act)}`, duration: 0.5, ease: "power2.inOut", immediateRender: false }, ta + 0.6);
+      tl.fromTo(`#${id}-cr${act}`, { attr: { width: 0 } }, { attr: { width: 780 }, duration: 0.7, ease: "power1.inOut", immediateRender: false }, ta + 0.1);
+      tl.fromTo(`#${id}-hl${act}`, { scaleX: 0, svgOrigin: `240 ${rowY(act)}` }, { scaleX: 1, svgOrigin: `240 ${rowY(act)}`, duration: 0.5, ease: "power2.inOut", immediateRender: false }, ta + 0.6);
       tl.fromTo(`#${id}-s${act}`, { scale: 0, rotation: -40, opacity: 1, svgOrigin: "87 87" }, { scale: 1, rotation: 0, opacity: 1, svgOrigin: "87 87", duration: 0.5, ease: "back.out(2.6)", immediateRender: false }, ta);
       iconPop(tl, document.getElementById(`${id}-ic${act}`), ta);
       iconLife(tl, document.getElementById(`${id}-ic${act}`), ta + 0.6, dur - at[act] - 0.6);
       document.getElementById(`${id}-r${act}`).querySelectorAll(".tuU").forEach((u, j) => { u.setAttribute("font-size", 72); tl.fromTo(u, { attr: { "font-size": 72 } }, { attr: { "font-size": 86 }, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out", immediateRender: false }, ta + 1.0 + j * 0.25); });
-    }
+    });
     done.forEach((d) => { const el = document.getElementById(`${id}-tk${d}`); if (el) tl.fromTo(el, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + at[d] + 0.35); });
     if (o.out !== undefined) { tl.to(`#${id}-m`, { y: -200, duration: 0.3, ease: "power2.in" }, t0 + o.out); tl.to(`#${id}`, { opacity: 0, duration: 0.3 }, t0 + o.out); }
     return id;

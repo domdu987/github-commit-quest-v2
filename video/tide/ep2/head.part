@@ -40,6 +40,7 @@
     <script src="assets/quakeui.js"></script>
     <script src="assets/quakemap.js"></script>
   <script src="assets/tide.js"></script>
+  <script src="assets/tide2.js"></script>
   <script src="assets/tidemap.js"></script>
     <script src="assets/tideui.js"></script>
     <script src="assets/rig2.js"></script>

@@ -159,7 +159,7 @@ CUES = [
     # a tourist clings to a cooler
     ("raft", 0.1, "splash", 0.26), ("raft", 0.8, "bubbles", 0.18), ("raft", 1.6, "splash", 0.2), ("raft", 2.4, "debris", 0.14),
     # ตาจุ่น: "มันยังไม่จบ…"
-    ("notyet", 0.1, "swell", 0.26), *beats("notyet", 0.3, D["notyet"] - 0.3, 0.75, 0.3),
+    ("notyet", 0.1, "swell", 0.26), *beats("notyet", 0.3, vo_end("notyet") + 0.1, 0.75, 0.3), ("notyet", vo_end("notyet") + 0.15, "riser", 0.26),  # then the bay drawing back again
     # the third wave climbs the hotel: the roar, the windows going
     ("wave3", 0.0, "roar", 0.5), ("wave3", 1.3, "roar", 0.4), ("wave3", 0.8, "debris", 0.28), ("wave3", 2.0, "shatter", 0.2), ("wave3", 2.8, "splash", 0.28),
     # her last comment; she types… and stops
