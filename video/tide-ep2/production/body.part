@@ -1,0 +1,310 @@
+      // ---------- ทะเลลด EP.2 คลื่นแรกไป อย่าไว้ใจ ----------
+      // camera grammar: EP.1's last frame on the hill, จูน dashes for the steps (hook) → insert: an old hand clamps her wrist on "อย่า" →
+      // two-shot on the steps → close on ตาจุ่น / rule 2 on ยาย's board / close on จูน → wide from the hill: people back on the wet
+      // beach, the line on the horizon thickens → the graphic: a series of waves, their heights against the hotel → back on the hill →
+      // the tower for real → the people below run back up → down at the shop: ยาย and the photo, she looks up at the hotel →
+      // the wall of water at beach level → from the hill: the village floods, the shop goes → the duck ring floats past the hotel →
+      // silence → จูน's live: "ยายพร❤️" is on the 5th floor (the twist) → a tourist on a cooler → "ยังไม่จบ" → the next wave climbs the
+      // hotel to the 3rd floor → the last comment → ตังค์ close → the live ends → the choice → black → the end card
+      const EERIE = { from: "right", rim: "#f4ecd0", rimOp: 0.6, shade: "#2a2a38", shadeOp: 0.34, cast: { len: 1.4, op: 0.24 }, vol: false };
+      const STORM = { from: "right", rim: "#dfe6e8", rimOp: 0.5, shade: "#1e2430", shadeOp: 0.4, cast: false, vol: false };
+      const GEERIE = { top: "#f2e2b4", bottom: "#7e9294", op: 0.24 }, GSTORM = { top: "#c8ccc4", bottom: "#4e5a5e", op: 0.3 };
+      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const SRC = (L, tl, t0, dur, text) => TideUI.source(tl, L.light, t0, dur, { text });
+      const QUO = { quote: true };
+      // the hill after the first wave: the bay drawn back far, the white line, the village still wet
+      const HILL = (id, o = {}) => ({ set: "tideHill", setOpts: { id, time: "eerie", sea: 1.7, line: 1, wet: true, ...o }, dark: 0, light: EERIE, grade: GEERIE });
+      // after the second wave: the bay back in, the shop gone, water standing in the village, the stain on the hotel to the 2nd floor;
+      // after the third: the water up to the hotel's 3rd floor
+      const AFTER2 = { sea: 0.3, line: 0, shop: "gone", flood: 1.2, mark: 2 }, AFTER3 = { sea: 0, line: 0, shop: "gone", flood: 2.7, mark: 3 };
+      // small figures walking with a two-frame cycle, scaled with distance (EP.1's helper; from → to, s0 → s1)
+      const walkers = (L, tl, t0, dur, id, list) => list.forEach((p, k) => {
+        const pal = [["#e85a4a", "#2a3a5a", "#c88a5a", 0], ["#3a8ac8", "#e8dcc8", "#a8784a", "#f0d050"], ["#f0c040", "#4a4a4a", "#d8a070", 0], ["#58b088", "#2a3a5a", "#b88058", 0], ["#f4f0e8", "#3a5a8a", "#e0b088", "#e8e0c8"]][k % 5];
+        const n = `${id}-wk${k}`;
+        put(L.act, `<g transform="translate(${p.x0},${p.y0})"><g id="${n}"><g id="${n}-s">${Tide.fig(`${n}-f`, pal)}</g></g></g>`);
+        tl.set(`#${n}`, { opacity: 0 }, 0);
+        tl.fromTo(`#${n}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + p.at);
+        tl.fromTo(`#${n}`, { x: 0, y: 0 }, { x: p.x1 - p.x0, y: p.y1 - p.y0, duration: dur - p.at, ease: "none", immediateRender: false }, t0 + p.at);
+        tl.fromTo(`#${n}-s`, { scale: p.s0, svgOrigin: "0 0" }, { scale: p.s1, svgOrigin: "0 0", duration: dur - p.at, ease: "none", immediateRender: false }, t0 + p.at);
+        for (let t = p.at, i = 0; t < dur; t += p.step || 0.2, i++) { tl.set(`#${n}-f-a`, { opacity: i % 2 ? 0 : 1 }, t0 + t); tl.set(`#${n}-f-b`, { opacity: i % 2 ? 1 : 0 }, t0 + t); }
+      });
+      // the two on the steps: ตาจุ่น above on the left, จูน placed so his fist closes on her wrist (TideCast.gripPair)
+      const JT = { x: 300, y: 1860, s: 0.8 }, JG = TideCast.gripPair(JT.x, JT.y, JT.s), TANG = { x: 860, y: 1900, s: 0.62 };
+      const HJ = TideCast.headPoint("grabHold"), HY = TideCast.headPoint("yanked");
+      const faceJun = [JT.x + HJ[0] * JT.s, JT.y + HJ[1] * JT.s], faceJune = [JG.x - HY[0] * JG.s, JG.y + HY[1] * JG.s];
+      const GRIP = (eyes, mouth, talk) => A("taJunGrip", JT.x, JT.y, JT.s, [{ t: 0, mode: "grabHold", eyes, mouth }], talk ? { talk } : {});
+      const YANK = (eyes, mouth, talk) => A("juneYank", JG.x, JG.y, JG.s, [{ t: 0, mode: "yanked", eyes, mouth }], { flip: true, ...(talk ? { talk } : {}) });
+      const JUNE = { x: 640, y: 1880, s: 0.78 };
+      // the land view: ยาย on the sand in front of her shop; the hotel's upper floors to look up to
+      const YAI = { x: 800, y: 1700, s: 0.62 }, HOTEL = { x: 330, y: 1000 };
+      // จูน's live (EP.1's stream, still on): the same header every time it is seen; ยายพร❤️'s pin stays once it has popped
+      const LIVE = { name: "จูน ทะเลใส", title: "ทะเลหายไปไหน!?", cy: 1310 };
+      const PIN = [-5, "ยายพร❤️", "ยายอยู่ชั้น 5 โรงแรม"];
+      // her phone's zoom on the hotel (from the hill at fr(600, 1150, 1.4, 540, 1000) the hotel stands at ~(520, 1030)): it fills
+      // y ~510–880, between the live header and ยายพร❤️'s pin
+      const PHONE1 = "translate(540 700) scale(1) translate(-540 -700)", PHONEZ = "translate(540 700) scale(2.2) translate(-520 -1030)";
+      const phoneZoom = (id) => document.getElementById(`${id}-world`).setAttribute("transform", PHONEZ);
+
+      // ---------- 1. hook: EP.1's last frame; จูน dashes for the steps down ----------
+      add("open", {
+        ...HILL("th0", { line: 1 }), blur: { sky: 1, far: 1, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.12, 540, 900) }, { t: D("open"), glide: D("open"), ...fr(560, 1240, 1.25, 540, 1000) }] },
+        actors: [A("june", 980, 1870, 0.78, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: JG.x + 60, y: JG.y, s: JG.s, dur: D("open"), ease: "power1.out" } })],
+        captions: caps("open"),
+        fx(tl, id, t0) { Tide.land(tl, "th0", t0, D("open"), { siren: false }); Tide.hillSea(tl, "th0", t0, D("open"), { from: 1.7, to: 1.7, line: [1, 1] }); },
+      });
+      // ---------- 2. insert: ตาจุ่น's hand clamps her wrist on "อย่า" ----------
+      add("grab", {
+        set: "tideGrab", setOpts: { id: "gb" }, dark: 0.06, blur: { far: 4, set: 1.2, fg: 8 }, light: false, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        shake: (t) => ({ x: (t < 0.4 ? 6 : 2) * Math.sin(t * 31), y: (t < 0.4 ? 4 : 1) * Math.sin(t * 27), r: 0 }),
+        captions: caps("grab"),
+        fx(tl, id, t0) { Tide.grab(tl, "gb", t0, D("grab"), { at: vo("grab", 0) }); },
+      });
+      // ---------- 3. two-shot on the steps: จูน yanks against the grip ----------
+      add("pull", {
+        ...HILL("th1"), blur: { sky: 3, far: 3, mid: 2, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(504, 1571, 1.3, 540, 1150) }, { t: D("pull"), glide: D("pull"), ...fr(504, 1571, 1.38, 540, 1150) }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 17), y: 2 * Math.sin(t * 13), r: 0 }),
+        actors: [GRIP("strain", "grit"), YANK("sideAngry", "scream", [TALK("pull", 0, "scream")])],
+        captions: caps("pull", undefined, QUO),
+      });
+      // ---------- 4. close on ตาจุ่น: "ครั้งนี้… ตาไม่ปล่อย" ----------
+      add("face", {
+        ...HILL("th1b"), blur: { sky: 6, far: 6, mid: 6, set: 4, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(faceJun[0], faceJun[1], 3.6, 520, 760) }, { t: D("face"), glide: D("face"), ...fr(faceJun[0], faceJun[1], 3.9, 520, 760) }] },
+        actors: [GRIP("strain", "grit", [TALK("face", 0, "o")]), YANK("sideAngry", "frown")],
+        captions: caps("face", undefined, QUO),
+      });
+      // ---------- 5. rule 2 word for word, on ยาย's board ----------
+      add("rule", {
+        ...HILL("th1c"), blur: { sky: 6, far: 6, mid: 6, set: 6, fg: 10 }, dark: 0.08,
+        cam: { keys: [{ t: 0, ...fr(504, 1450, 1.25, 540, 1300) }] },
+        actors: [GRIP("strain", "flat", [TALK("rule", 0, "o")]), YANK("wide", "o")],
+        captions: caps("rule", undefined, QUO),
+        fx(tl, id, t0, L) {
+          TideUI.rule(tl, L.light, t0 + 0.1, D("rule") - 0.1, { active: 1, done: [0], y: 300 });
+          SRC(L, tl, t0 + 0.8, D("rule") - 0.8, "ที่มา: ปภ. · UNESCO-IOC");
+        },
+      });
+      // ---------- 6. close on จูน: "ตารู้ได้ไง… นั่นกฎของยาย" ----------
+      add("how", {
+        ...HILL("th1d"), blur: { sky: 6, far: 6, mid: 6, set: 4, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(faceJune[0], faceJune[1], 3.6, 560, 760) }, { t: D("how"), glide: D("how"), ...fr(faceJune[0], faceJune[1], 3.9, 560, 760) }] },
+        actors: [GRIP("strain", "flat"), YANK("worry", "o", [TALK("how", 0, "o")])],
+        captions: caps("how", undefined, QUO),
+      });
+      // ---------- 7. from the hill: people back down on the wet beach; the line thickens ----------
+      add("below", {
+        ...HILL("th2"), blur: { sky: 1, far: 1, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }, { t: D("below"), glide: D("below"), ...fr(560, 900, 1.12, 540, 900) }] },
+        captions: caps("below"),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "th2", t0, D("below"), { siren: false });
+          Tide.hillSea(tl, "th2", t0, D("below"), { from: 1.7, to: 1.7, line: [1, 1.3], lineAt: 0 });
+          walkers(L, tl, t0, D("below"), "th2", [
+            { x0: 548, y0: 1300, x1: 560, y1: 1236, s0: 1.0, s1: 0.85, at: 0 }, { x0: 566, y0: 1340, x1: 572, y1: 1262, s0: 1.1, s1: 0.95, at: 0.3 },
+            { x0: 540, y0: 1280, x1: 556, y1: 1232, s0: 0.95, s1: 0.82, at: 0.6 },
+          ]);
+        },
+      });
+      // ---------- 8. the graphic: tsunamis come as a series ----------
+      add("series", {
+        ...HILL("th3"), blur: { sky: 8, far: 8, mid: 8, set: 8, fg: 12 }, dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        captions: caps("series"),
+        fx(tl, id, t0, L) {
+          TideUI.series(tl, L.light, t0, D("series"), { phase: "train", at: [vo("series", 0) + 0.1, vo("series", 0) + 0.7, F("series", 0, 1), vo("series", 1) + 0.2] });
+          SRC(L, tl, t0 + 0.4, D("series") - 0.4, "ที่มา: NOAA · UNESCO-IOC");
+        },
+      });
+      // ---------- 9. the graphic: 2–3 m → 6–7 m → over 10 m against the hotel ----------
+      add("heights", {
+        ...HILL("th3b"), blur: { sky: 8, far: 8, mid: 8, set: 8, fg: 12 }, dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        captions: caps("heights"),
+        fx(tl, id, t0, L) {
+          TideUI.series(tl, L.light, t0, D("heights"), { phase: "heights", at: [1, 2, 3].map((i) => F("heights", i, 1) - 0.6) });   // each tag lands on its number
+          SRC(L, tl, t0 + 0.4, D("heights") - 0.4, "ที่มา: กรมทรัพยากรธรณี");
+        },
+      });
+      // ---------- 10. back on the hill: stay up until it is called off ----------
+      add("stay", {
+        ...HILL("th4", { line: 1.3 }), blur: { sky: 3, far: 3, mid: 2, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(560, 1560, 1.2, 540, 1130) }, { t: D("stay"), glide: D("stay"), ...fr(560, 1560, 1.27, 540, 1130) }] },
+        actors: [GRIP("normal", "flat"), YANK("worry", "flat"), A("tang", TANG.x, TANG.y, TANG.s, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { flip: true })],
+        captions: caps("stay"),
+        fx(tl, id, t0, L) { Tide.land(tl, "th4", t0, D("stay"), { siren: false }); Tide.hillSea(tl, "th4", t0, D("stay"), { from: 1.7, to: 1.7, line: [1.3, 1.5], lineAt: 0 }); SRC(L, tl, t0 + 0.4, D("stay") - 0.4, "ที่มา: กรมป้องกันและบรรเทาสาธารณภัย"); },
+      });
+      // ---------- 11. the tower for real: EP.1's Wednesday-test angle again; the panel writes the words on (it is the caption) ----------
+      add("siren", {
+        set: "tideBeach", setOpts: { id: "lv1", view: "land", time: "eerie" }, dark: 0.05, blur: { sky: 1, far: 1.5, mid: 1, fg: 4 }, light: EERIE, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(860, 1150, 1.25, 540, 900) }, { t: D("siren"), glide: D("siren"), ...fr(860, 1090, 1.4, 540, 900) }] },
+        shake: (t) => ({ x: 1.5 * Math.sin(t * 40), y: 0, r: 0 }),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "lv1", t0, D("siren"), { siren: true });
+          TideUI.pa(tl, L.light, t0, D("siren"), { l1: "โปรดทราบ โปรดทราบ…", l2: "ขณะนี้เกิดคลื่นสึนามิ", at: [0.05, vo("siren", 0), F("siren", 0, 1)], y: 1180 });
+          SRC(L, tl, t0 + 0.6, D("siren") - 0.6, "ข้อความจริงของหอเตือนภัย: Thai PBS");
+        },
+      });
+      // ---------- 12. the people below turn and run back up the steps ----------
+      add("turn", {
+        ...HILL("th5", { line: 1.5 }), blur: { sky: 1, far: 1, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(560, 1180, 1.1, 540, 960) }, { t: D("turn"), glide: D("turn"), ...fr(560, 1220, 1.18, 540, 980) }] },
+        shake: (t) => ({ x: 2 * Math.sin(t * 9), y: 2 * Math.sin(t * 11), r: 0 }),
+        captions: caps("turn", undefined, QUO),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "th5", t0, D("turn"), { siren: true });
+          Tide.hillSea(tl, "th5", t0, D("turn"), { from: 1.7, to: 1.7, line: [1.5, 2], lineAt: 0 });
+          walkers(L, tl, t0, D("turn"), "th5", [
+            { x0: 556, y0: 1250, x1: 528, y1: 1420, s0: 0.9, s1: 1.3, at: 0, step: 0.12 }, { x0: 572, y0: 1280, x1: 582, y1: 1460, s0: 1.0, s1: 1.4, at: 0.15, step: 0.12 },
+            { x0: 548, y0: 1238, x1: 505, y1: 1360, s0: 0.85, s1: 1.15, at: 0.35, step: 0.12 }, { x0: 566, y0: 1320, x1: 562, y1: 1500, s0: 1.1, s1: 1.45, at: 0.55, step: 0.12 },
+          ]);
+        },
+      });
+      // ---------- 13. down at the shop: ยาย and the old photo ----------
+      add("shop", {
+        set: "tideBeach", setOpts: { id: "sf0", view: "land", time: "eerie" }, dark: 0.05, blur: { sky: 2, far: 2, mid: 1.5 }, light: EERIE, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(YAI.x, YAI.y - 260, 1.55, 540, 1000) }, { t: D("shop"), glide: D("shop"), ...fr(YAI.x, YAI.y - 260, 1.65, 540, 1000) }] },
+        actors: [A("yaiTideHug", YAI.x, YAI.y, YAI.s, [{ t: 0, mode: "hugPhoto", eyes: "worry", mouth: "frown" }], { talk: [TALK("shop", 0, "o")] })],
+        fx(tl, id, t0) { Tide.land(tl, "sf0", t0, D("shop"), { siren: true }); },
+        captions: caps("shop", undefined, QUO),
+      });
+      // ---------- 14. she looks up at the 5-storey hotel next door → cut before she moves ----------
+      add("hotel", {
+        set: "tideBeach", setOpts: { id: "sf1", view: "land", time: "eerie" }, dark: 0.05, blur: { sky: 1, far: 1 }, light: EERIE, grade: GEERIE,
+        cam: { keys: [{ t: 0, ...fr(YAI.x, YAI.y - 300, 1.3, 540, 1150) }, { t: D("hotel"), glide: D("hotel") - 0.6, ease: "power2.inOut", ...fr(HOTEL.x, HOTEL.y, 1.15, 540, 760) }] },
+        actors: [A("yaiTideHug", YAI.x, YAI.y, YAI.s, [{ t: 0, mode: "hugPhoto", eyes: "worry", mouth: "frown" }, { t: 0.7, mode: "hugPhoto", opts: { up: 1 }, eyes: "upSide", mouth: "o" }], { flip: true, talk: [TALK("hotel", 0, "o")] })],
+        fx(tl, id, t0) { Tide.land(tl, "sf1", t0, D("hotel"), { siren: true }); },
+        captions: caps("hotel", undefined, QUO),
+      });
+      // ---------- 15. the second wave: a turbulent wall of water at beach level, a runner ahead of it ----------
+      add("wall", {
+        set: "tideWave", setOpts: { id: "wv", time: "squall" }, dark: 0.08, blur: { sky: 1, far: 1 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("wall"), glide: D("wall"), ...fr(540, 980, 1.06, 540, 960) }] },
+        shake: (t) => ({ x: (2 + 4 * Math.min(1, t / 3)) * Math.sin(t * 19), y: (2 + 3 * Math.min(1, t / 3)) * Math.sin(t * 23), r: 0.3 * Math.sin(t * 7) }),
+        captions: caps("wall"),
+        fx(tl, id, t0) { Tide.waveIn(tl, "wv", t0, D("wall"), { from: 0.15, to: 0.95 }); },
+      });
+      // ---------- 16. from the hill: the village floods, ยาย's shop goes under ----------
+      add("smash", {
+        ...HILL("th6", { line: 2 }), blur: { sky: 1, far: 1, fg: 4 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(700, 1190, 2.2, 540, 900) }, { t: D("smash"), glide: D("smash"), ...fr(700, 1190, 2.35, 540, 900) }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 13), y: 2 * Math.sin(t * 17), r: 0 }),
+        captions: caps("smash", undefined, QUO),
+        fx(tl, id, t0) { Tide.land(tl, "th6", t0, D("smash"), { siren: true }); Tide.bigWave(tl, "th6", t0, D("smash"), { p0: 0.625, reach: 0.1, rise: 0.45, hold: 0.9, to: 2, after: 1.9 }); },
+      });
+      // ---------- 17. the duck ring floats past the hotel ----------
+      add("duck", {
+        set: "tideBeach", setOpts: { id: "lv2", view: "land", time: "eerie", shop: "gone", flood: 2, mark: 2 }, dark: 0.08, blur: { sky: 1, far: 1.5, mid: 1, fg: 4 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(420, 1450, 1.25, 540, 1050) }, { t: D("duck"), glide: D("duck"), ...fr(440, 1450, 1.3, 540, 1050) }] },
+        fx(tl, id, t0) { Tide.land(tl, "lv2", t0, D("duck")); Tide.landFlood(tl, "lv2", t0, D("duck"), { to: 1.6, duck: true, dir: -1 }); },
+      });
+      // ---------- 18. silence: the kids frozen on the hill, the phone still live in จูน's hand ----------
+      add("hush", {
+        ...HILL("th7", AFTER2), blur: { sky: 4, far: 4, mid: 4, set: 3, fg: 6 }, dark: 0.1, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(700, 1520, 1.45, 540, 1080), drift: { s: 0 } }] },
+        actors: [
+          A("junePhone", JUNE.x, JUNE.y, JUNE.s, [{ t: 0, mode: "phoneLook", eyes: "dead", mouth: "flat" }], { flip: true }),
+          A("tang", TANG.x, TANG.y, TANG.s, [{ t: 0, mode: "idle", eyes: "dead", mouth: "o" }], { flip: true }),
+        ],
+      });
+      // ---------- 19. the live: "ยายพร❤️: ยายอยู่ชั้น 5 โรงแรม" (the twist) ----------
+      add("live", {
+        ...HILL("th8", AFTER2), blur: { sky: 1, far: 1, fg: 4 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(600, 1150, 1.4, 540, 1000) }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 2.9) + 1.5 * Math.sin(t * 7.3), y: 2 * Math.sin(t * 2.1), r: 0.3 * Math.sin(t * 1.6) }),
+        captions: caps("live", undefined, QUO),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "th8", t0, D("live"), { siren: true }); Tide.hillFlood(tl, "th8", t0, D("live"), { to: 1.0 });
+          // the stack is already there, ยายพร❤️ starts typing, her comment pops in pinned, then ตังค์ reads it out;
+          // on "ยายอยู่ชั้นห้า…" จูน zooms her phone in on the hotel (a flat zoom of the whole picture: the phone's, not a dolly)
+          tl.set(`#${id}-world`, { attr: { transform: PHONE1 } }, t0);
+          tl.to(`#${id}-world`, { attr: { transform: PHONEZ }, duration: 1.1, ease: "power2.inOut", immediateRender: false }, t0 + vo("live", 1) - 0.15);
+          TideUI.live(tl, L.light, t0, D("live"), { ...LIVE, viewers: [5210, 12840], likes: [12400, 18600],
+            comments: [[-2, "ฟ้าใส99", "พี่จูนโอเคมั้ย"], [0.15, "นนท์", "ยายพี่อยู่ไหน"]],
+            typing: [[0.35, "ยายพร❤️"]], pin: [vo("live", 0) - 0.35, "ยายพร❤️", "ยายอยู่ชั้น 5 โรงแรม"] });
+        },
+      });
+      // ---------- 20. a tourist clings to an ice cooler ----------
+      add("raft", {
+        set: "tideRaft", setOpts: { id: "rf" }, dark: 0.08, blur: { sky: 2, far: 4, mid: 3, fg: 3 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        actors: [A("tourist", 330, 1900, 1.67, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }])],
+        captions: caps("raft"),
+        fx(tl, id, t0, L) { Tide.raft(tl, "rf", t0, D("raft"), { actor: `${id}-a0` }); SRC(L, tl, t0 + 0.4, D("raft") - 0.4, "ที่มา: UNESCO-IOC · USGS"); },
+      });
+      // ---------- 21. ตาจุ่น looks back at the sea: "ยังไม่จบ…" ----------
+      // close on ตาจุ่น as he says it, then what he sees: the bay drawing back again, a new white line on the horizon
+      const NY = voEnd("notyet") + 0.12;
+      split("notyet", NY, {
+        ...HILL("th9", { ...AFTER2, sea: 1.2, line: 0.6, flood: 0.6 }), blur: { sky: 2, far: 2, mid: 3, set: 3, fg: 6 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(JT.x + 40, JT.y - 0.8 * 560, 2.0, 540, 980) }, { t: NY, glide: NY, ...fr(JT.x + 40, JT.y - 0.8 * 560, 2.15, 540, 980) }] },
+        actors: [A("taJun", JT.x, JT.y, JT.s, [{ t: 0, mode: "shadeEyes", eyes: "worry", mouth: "flat" }], { talk: [TALK("notyet", 0, "o")] })],
+        fx(tl, id, t0) { Tide.land(tl, "th9", t0, NY, { siren: true }); },
+        captions: caps("notyet", undefined, QUO),
+      }, {
+        ...HILL("th9b", { ...AFTER2, sea: 1.2, line: 0.6, flood: 0.6 }), blur: { sky: 1, far: 1, fg: 4 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(540, 760, 1.15, 540, 900) }, { t: D("notyet") - NY, glide: D("notyet") - NY, ...fr(540, 700, 1.3, 540, 860) }] },
+        fx(tl, id, t0) { Tide.land(tl, "th9b", t0, D("notyet") - NY, { siren: true }); Tide.hillSea(tl, "th9b", t0, D("notyet") - NY, { from: 1.2, to: 1.3, line: [0.6, 1.3], lineAt: 0 }); },
+      });
+      // ---------- 22. the next wave, bigger: the water climbs the hotel to the 3rd floor ----------
+      add("wave3", {
+        set: "tideBeach", setOpts: { id: "lv3", view: "land", time: "eerie", shop: "gone", flood: 0.6, mark: 2 }, dark: 0.1, blur: { sky: 1, far: 1.5, mid: 1, fg: 4 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(540, 1400, 1.0, 540, 1000) }, { t: D("wave3"), glide: D("wave3"), ...fr(500, 1300, 1.12, 540, 960) }] },
+        shake: (t) => ({ x: 2 * Math.sin(t * 15), y: 1.5 * Math.sin(t * 11), r: 0 }),
+        fx(tl, id, t0) { Tide.land(tl, "lv3", t0, D("wave3"), { siren: true }); Tide.landFlood(tl, "lv3", t0, D("wave3"), { to: 3, at: 0.2, len: D("wave3") - 0.8 }); },
+      });
+      // ---------- 23. the last comment, then the typing stops ----------
+      add("comment", {
+        ...HILL("th10", AFTER3), blur: { sky: 1, far: 1, fg: 4 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(600, 1150, 1.4, 540, 1000) }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 2.9) + 1.5 * Math.sin(t * 7.3), y: 2 * Math.sin(t * 2.1), r: 0.3 * Math.sin(t * 1.6) }),
+        fx(tl, id, t0, L) {
+          Tide.land(tl, "th10", t0, D("comment"), { siren: true });
+          // her last comment; she starts typing again… and stops with nothing sent
+          phoneZoom(id);
+          TideUI.live(tl, L.light, t0, D("comment"), { ...LIVE, viewers: [12840, 15030], likes: [18600, 21300], pin: PIN,
+            comments: [[-3, "boyza", "ยายสู้ๆ"], [-2, "ปลาทู", "น้ำมาอีกแล้ว!!"], [0.3, "ยายพร❤️", "น้ำถึงชั้นสามแล้ว"]],
+            typing: [[1.2, "ยายพร❤️", D("comment") - 0.5]] });
+        },
+      });
+      // ---------- 24. close on ตังค์: "ยาย… ไม่พิมพ์แล้ว…" ----------
+      add("tang", {
+        ...HILL("th11", AFTER3), blur: { sky: 6, far: 6, mid: 6, set: 4, fg: 8 }, dark: 0.08, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(TANG.x, TANG.y - 0.62 * 520, 2.3, 540, 900) }, { t: D("tang"), glide: D("tang"), ...fr(TANG.x, TANG.y - 0.62 * 520, 2.45, 540, 900) }] },
+        actors: [A("tang", TANG.x, TANG.y, TANG.s, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("tang", 0, "o")] })],
+        captions: caps("tang", undefined, QUO),
+      });
+      // ---------- 25. the live freezes and ends ----------
+      add("close", {
+        ...HILL("th12", AFTER3), blur: { sky: 1, far: 1, fg: 4 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(600, 1150, 1.4, 540, 1000), drift: { s: 0 } }] },
+        captions: caps("close"),
+        fx(tl, id, t0, L) {
+          // the stream cuts on "ดับ"; the set stops with it so the last picture reads frozen
+          const off = voEnd("close", 1) - 0.22;
+          phoneZoom(id);
+          Tide.land(tl, "th12", t0, off, { siren: true });
+          TideUI.live(tl, L.light, t0, D("close"), { ...LIVE, viewers: [15030, 15410], likes: [21300, 21900], pin: PIN,
+            comments: [[-3, "ปลาทู", "น้ำมาอีกแล้ว!!"], [-2, "ยายพร❤️", "น้ำถึงชั้นสามแล้ว"], [0.6, "นนท์", "ยายตอบหน่อย"]], end: off });
+        },
+      });
+      // ---------- 26. the choice, pulled toward going down to the hotel → black ----------
+      add("choice", {
+        ...HILL("th13", AFTER3), dark: 0.25, blur: { sky: 6, far: 6, mid: 6, set: 6, fg: 10 }, light: false, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) {
+          const down = `<circle r="70" fill="#e8823a" stroke="#2a2420" stroke-width="5"/><path d="M-30,-30L30,30M30,30V0M30,30H0" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+          TideUI.choice(tl, L.light, t0, D("choice"), { q: "จะทำยังไง?", a: { text: "ลงไปที่โรงแรม", icon: down }, b: { text: "รอจนกว่าจะประกาศ", icon: "recede" }, secs: 3, pull: "a", at: D("choice") - 1.3 });
+          tl.set("#black", { opacity: 1 }, t0 + D("choice") - 0.12);
+        },
+      });
+      // ---------- 27. the end card: ตอนที่ 3 · หนีไม่ทัน (ตอนจบ) ----------
+      add("end", {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        fx(tl, id, t0, L) { tl.set("#black", { opacity: 0 }, t0); TideUI.endCard(tl, L.light, t0, D("end"), { l1: "ตอนที่ 3", l2: "หนีไม่ทัน", tag: true }); },
+      });

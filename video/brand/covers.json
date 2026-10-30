@@ -344,5 +344,28 @@
    "x": 0,
    "y": 40
   }
+ },
+ {
+  "id": "tide-ep2",
+  "page": "tide-ep2/composition/index.html",
+  "out": "video/tide-ep2/cover.jpg",
+  "t": 3.1,
+  "series": "ทะเลลด",
+  "ep": 2,
+  "epTitle": "คลื่นแรกไป อย่าไว้ใจ",
+  "finale": false,
+  "setup": "รอดคลื่นลูกแรก/[แล้ววิ่งลงไปหายาย]…",
+  "cmd": "อย่าเพิ่งลงไป!",
+  "glow": "#2fb8d8",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.08,
+   "x": 540,
+   "y": 700
+  },
+  "shift": {
+   "x": 0,
+   "y": 0
+  }
  }
 ]
