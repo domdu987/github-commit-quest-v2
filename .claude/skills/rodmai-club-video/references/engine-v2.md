@@ -20,7 +20,7 @@
 ```bash
 K=.claude/skills/rodmai-club-video/scripts
 W=<scratchpad>/work
-bash $K/setup_workspace.sh $W <story>1 <story>2 <story>3    # hf/lib hf/rig synth.py music + โฟลเดอร์ตอน
+bash $K/setup_workspace.sh $W <story>1 tide1=video/tide/ep1  # hf/lib hf/rig synth.py music + ตอนใหม่ / ตอนที่ทำต่อ (เสียงพากย์มาด้วย)
 cd $W/<story>1
 # ... lines.json → voices (audio-and-delivery.md) → python3 timing.py → schedule.json ... เขียน body.part
 cat helpers.part body.part > shots.part && cat head.part sigcard.part shots.part foot.part > ep.tmpl.html && python3 make.py
@@ -178,6 +178,12 @@ C.name = { v2: { skin, iris, lash, blush, lip, bags, w (กว้าง), limb (
 - tween `attr.transform` ต้องมีค่าเริ่มต้นรูปแบบเดียวกันอยู่ใน element ก่อน
 - lint ห้าม template literal ใน `querySelector` → ใช้ `getElementById(id).querySelectorAll(".x")`
 
+- **กล้อง `cam.keys`:** `glide` จบที่เวลา `t` ของ key นั้น (เริ่มที่ t − glide) · key ที่ไม่มี `glide` คือตัดฉับที่ t ·
+  จะดันเข้าช้าๆ แล้วตัดไปอีกมุมกลางช็อต ต้องมี key ปิดท้ายการดันเข้าก่อน key ที่ตัด (ตัวอย่าง `shot-design.md` หัวข้อ 2)
+- **ซับในช็อตที่มีทั้งตัวละครและผู้บรรยาย:** `captions: [...caps(k, [0], { quote: true }), ...caps(k, [1])]` ผู้บรรยายห้ามมี “ ”
+- **ของที่ต้องอยู่หน้าฉากแต่ไม่ใช่ rig** (คนเล็กเดินลงบันได): ใส่ `L.act` ใน `fx()` · ซ่อนด้วย `tl.set(sel, { opacity: 0 }, 0)` แล้วเฟดเข้า
+- **ฉากที่ fork ยังทำไม่เสร็จ:** ใส่ stub ใน body ให้ build ได้ (`if (!Sets.x) Sets.x = …` / `Tide[f] = () => {}`) แล้วลบเมื่อของจริงมา
+- **ของที่วาดใน `L.mid`** (หมู่บ้านเมื่อมองลงจากเขา) เลื่อนช้ากว่ากล้อง การเฟรมด้วย `fr()` จึงไม่ตรงพิกัด ให้ลองค่าแล้วถ่ายภาพนิ่งดู
 - กับดักข้างบนเกิดซ้ำได้แม้รู้แล้ว (ตึกโยก EP.1: ป้าย EP ในชื่อเรื่องหลุดไปมุมซ้ายบน และการ์ดโน้ตแม่เบี้ยว) ให้เขียนแบบนี้ทุกครั้ง:
   `<g transform="translate(x,y)"><g id="…">…</g></g>` แล้ว tween ตัวใน · ถ้าต้องทั้งเลื่อน ย่อ และแกว่ง ให้แยกเป็น 3 ชั้น
   (`-m` เลื่อน x/y · `-s` scale+rotation ด้วย svgOrigin เดียว · `-w` แกว่ง) ดู `QkUI.note` ใน `video/quake/lib/quakeui.js`
@@ -202,9 +208,12 @@ C.name = { v2: { skin, iris, lash, blush, lip, bags, w (กว้าง), limb (
 - `cover.cjs` ถ่ายซ้ำจนสองภาพติดกันเหมือนกันก่อนบันทึก (หน้าที่ SVG หนักวาดทีละแผ่น ภาพแรกอาจวาดไม่ครบ)
 - ต้อง `seek(t, false)` (เปิด events) ไม่งั้นกล้องไม่ขยับ
 - `npx hyperframes check` หมดเวลาบ่อย ให้ดู console ผ่าน `snap.cjs` แทน (ต้องไม่มี PAGEERROR)
+- faster-whisper ใน environment นี้เปิดไฟล์เสียงเองไม่ได้ (`av.open … metadata_errors`) ให้ถอดเสียงด้วย ffmpeg เป็น float32 16 kHz แล้วส่ง numpy array เข้า `transcribe()`
 
 **เครื่องมือ**
 - เรนเดอร์ด้วย `nohup … &` ใน Bash ธรรมดาจะโดนยกเลิก ต้องใช้ `run_in_background` และตั้ง `timeout: 7200000` (ค่าเริ่มต้น 30 นาทีฆ่างาน)
+- เรนเดอร์ภาพก่อนมิกซ์ได้ (`npx --yes hyperframes@0.8.185 render -f 60 -o raw.mp4` ในโฟลเดอร์ `hf/<ep>`) แล้วค่อย mux ด้วย ffmpeg สองบรรทัดท้าย `render.sh`
+  ความเร็วราว 200 เฟรม/นาที (คลิป 2 นาที ≈ 35–40 นาที) · ห้ามรัน `make.py` ของตอนที่กำลังเรนเดอร์ (ใช้ workspace อื่นทดสอบได้)
 - ห้าม `pkill -f`/`pgrep -f` ด้วย pattern ที่อยู่ในบรรทัดคำสั่งของตัวเอง (จะฆ่า shell ตัวเอง) ให้ใช้ `ps -eo pid,args | grep` แล้วเลือก PID
 - เซิร์ฟเวอร์ `http.server` ตายได้เมื่อ container รีสตาร์ต ถ้า snap ขึ้น `ERR_CONNECTION_REFUSED` ให้เปิดใหม่
 
