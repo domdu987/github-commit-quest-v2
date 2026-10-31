@@ -181,6 +181,21 @@
     <path d="M-160,0v150M160,0v150M-130,10v140M130,10v140" stroke="#8a6a34" stroke-width="16"/><rect x="-180" y="-16" width="360" height="30" rx="8" fill="#c8a45a" ${OUT3}/>
     ${Array.from({ length: 8 }, (_, k) => `<path d="M${-170 + k * 46},-14v26" stroke="#9a7a3a" stroke-width="3"/>`).join("")}</g>`;
 
+  // the house's doorway at the top of the stairs (village2's house2 has none): house-local coords, so pass the house's x, G, s.
+  // o.open: the door leaf swung in and a warm dark room behind · ids ${id}-leaf (rotate it to slam)
+  Hn.door = (id, hx, G, hs, o = {}) => `<g transform="translate(${hx},${G}) scale(${hs})"><rect x="150" y="-740" width="104" height="270" fill="${o.open ? "#2a1a10" : "#5a3a22"}" ${OUT3}/>
+    ${o.open ? `<path d="M160,-730h84v250h-84z" fill="#ffcf88" opacity=".25"/><rect x="176" y="-700" width="30" height="200" fill="#ffe6b0" opacity=".18"/>` : ""}
+    <g id="${id}-leaf"><path d="M${o.open ? "150,-740L122,-760V-450L150,-470Z" : "150,-740H254V-470H150Z"}" fill="#7a4a28" ${OUT3}/>${o.open ? "" : `<circle cx="236" cy="-600" r="7" fill="#d8b46a"/>`}</g>
+    <path d="M140,-750H264" stroke="#4a2e1a" stroke-width="12"/></g>`;
+  // ลุงสิงห์'s tool shed: plank walls, a tin lean-to roof, a screened window, a door (o.open), hoes and a sprayer
+  Hn.shed = (id, x, G, s, o = {}) => `<g transform="translate(${x},${G}) scale(${s})"><ellipse cx="0" cy="10" rx="300" ry="34" fill="url(#p2AO)"/>
+    <path d="M-240,0V-400H240V0Z" fill="#9a6a40" ${OUT}/>${Array.from({ length: 12 }, (_, k) => `<path d="M${-240 + k * 40},-400V0" stroke="#6a4428" stroke-width="3"/>`).join("")}
+    <path d="M-290,-390L290,-470L300,-440L-280,-360Z" fill="url(#p2Zinc)" ${OUT3}/>
+    <rect x="60" y="-320" width="140" height="120" fill="#3a3a3a" ${OUT3}/>${Array.from({ length: 9 }, (_, k) => `<path d="M${62 + k * 16},-318v116M62,${-318 + k * 13}h136" stroke="#8a8a8a" stroke-width="1.4"/>`).join("")}
+    <rect x="-170" y="-300" width="150" height="300" fill="${o.open ? "#1a120a" : "#6a4024"}" ${OUT3}/>
+    <g id="${id}-leaf"><path d="${o.open ? "M-170,-300L-220,-312V-8L-170,0Z" : "M-170,-300H-20V0H-170Z"}" fill="#7a4a28" ${OUT3}/></g>
+    <path d="M-260,0l-30,-260M-252,-250h-50" stroke="#8a6a3a" stroke-width="8"/><g transform="translate(250,-20)"><rect x="-26" y="-90" width="52" height="90" rx="10" fill="#2f6aa8" ${OUT3}/><path d="M0,-90v-30h30" stroke="#2e2a26" stroke-width="5" fill="none"/></g></g>`;
+
   // ---------------- the yard ----------------
   function hnYard(L, o = {}) {
     const id = o.id || "hy", G = o.ground ?? 1320, t = o.time || "day", dusk = t === "dusk";
@@ -202,6 +217,8 @@
           <path d="M-2,22q4,4 0,8M2,40q4,4 0,8" stroke="#5a3418" stroke-width="2" fill="none"/></g>`; }
       put(L.set, `<g id="${id}-pods">${pd}</g>`);
     }
+    if (o.house !== false && o.door) { const [hx0, hs0] = o.house || [-380, 0.9]; put(L.set, `<g id="${id}-door">${Hn.door(`${id}-d`, hx0, G, hs0, { open: o.door === "open" })}</g>`); }
+    if (o.shed) put(L.set, Hn.shed(`${id}-sh`, o.shed[0], G + (o.shed[2] || 40), o.shed[1] || 1, { open: o.shedOpen }));
     if (o.shrine !== false) put(L.set, Hn.shrine(o.shrine ?? TX - 60, G + 70, o.shrineS ?? 0.95));
     if (o.title) put(L.set, `<g id="${id}-title">${Hn.titlePlank(o.title.x ?? 380, o.title.y ?? G + 220, o.title.s ?? 1, { sub: o.title.sub })}</g>`);
     if (o.pond !== false) put(L.set, `<g id="${id}-pond">${Hn.pond(o.pond ?? 1500, G + 260, o.pondS ?? 1, { time: t })}</g>`);
