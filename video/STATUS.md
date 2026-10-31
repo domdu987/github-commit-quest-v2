@@ -41,7 +41,8 @@
 
 ## ผลิตคู่ขนาน (เจ้าของอนุมัติ 31 ต.ค. 2026 · เป้า 6–9 คลิปใหม่/วัน · แผน `video/release/PLAN-6TO9.md`)
 - แชทนี้ = แชทประสานงาน (`session_01UrmfYm4mSaaTB25kG8juWV`): เตรียมหัวข้อ ตรวจแพ็กเกจ เขียนคิววัน `video/release/day-<วันที่>.json` อ่านข้อมูลช่อง
-- เลน A `session_017iwyCwasHJqyZ1jk1hBAwf` · branch `prod/lane-a` · ไฟดูดหน้าน้ำท่วม (`video/shock/`) สำรอง: สุนัขกัด/พิษสุนัขบ้า
+- เลน A `session_017iwyCwasHJqyZ1jk1hBAwf` · branch `prod/lane-a` · สุนัขกัด/พิษสุนัขบ้า (`video/rabies/`) · ไฟดูดหน้าน้ำท่วมตัดทิ้งเพราะซ้ำ แสงกระสือ
+  · ระวังทับ ชั้น 23 EP.1 ที่สอนล้างแผล 15 นาทีไปแล้ว
 - เลน B `session_017iwyCvx1zDsQSsZQNMKKUs` · branch `prod/lane-b` · ต่อหัวเสือ (`video/hornet/`) สำรอง: แก๊สหุงต้มรั่ว
 - ยังรอเจ้าของ: งบค่าเสียง/SFX ต่อวัน (เลนหยุดก่อนเรียก TTS ครั้งแรกของแต่ละเรื่อง) · เลน C เปิดเมื่อเลน A/B เรนเดอร์ผ่านรอบแรก
 - HQ อยู่ใน repo แล้วที่ `video/release/hq/` (เจ้าของอนุมัติ) · ตั้ง `git config gc.auto 0` ทุก clone (auto-gc ทำดิสก์เต็ม)
