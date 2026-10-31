@@ -1,0 +1,82 @@
+      // ---------- นาทีก่อนจม: real hands and arms (the ทะเลลด hand: palm, two-part fingers with nails and creases, a thumb) ----------
+      const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
+      const P2s = (p) => `${f1(p[0])},${f1(p[1])}`;
+      // a tapered limb between A and B (widths wa, wb) with round ends
+      const limbD = (A, B, wa, wb) => {
+        const dx = B[0] - A[0], dy = B[1] - A[1], l = Math.hypot(dx, dy) || 1, nx = -dy / l, ny = dx / l;
+        const a1 = [A[0] + (nx * wa) / 2, A[1] + (ny * wa) / 2], a2 = [A[0] - (nx * wa) / 2, A[1] - (ny * wa) / 2], b1 = [B[0] + (nx * wb) / 2, B[1] + (ny * wb) / 2], b2 = [B[0] - (nx * wb) / 2, B[1] - (ny * wb) / 2];
+        return `M${P2s(a1)}L${P2s(b1)}A${f1(wb / 2)},${f1(wb / 2)} 0 0 0 ${P2s(b2)}L${P2s(a2)}A${f1(wa / 2)},${f1(wa / 2)} 0 0 0 ${P2s(a1)}Z`;
+      };
+      // two-bone reach: the elbow for shoulder S, wrist W, bones l1 l2, bent to `side` (+1 | −1)
+      const elbowAt = (S, W, l1, l2, side) => {
+        const dx = W[0] - S[0], dy = W[1] - S[1], d = clampN(Math.hypot(dx, dy), Math.abs(l1 - l2) + 1, l1 + l2 - 1), a = Math.atan2(dy, dx);
+        const b = Math.acos(clampN((l1 * l1 + d * d - l2 * l2) / (2 * l1 * d), -1, 1)) * side;
+        return [S[0] + Math.cos(a + b) * l1, S[1] + Math.sin(a + b) * l1];
+      };
+      const SK = { ton: ["#d39a6e", "#a8704a", "#ecc09a"], kim: ["#ebc19c", "#c4946c", "#f8dcc0"] };
+      // a right hand seen from the back: the wrist at (0, 0), fingers toward −y, the thumb on the left.
+      // o.curl [index, middle, ring, little] 0 straight … 1 folded (the tip tucked away, the knuckle lit); o.thumb 0 out … 1 tucked in
+      const handBack = (sk, o = {}) => {
+        const [s, sD, sL] = sk, cu = o.curl || [0, 0, 0, 0], th = o.thumb ?? 0, W = (v) => f1(v * (o.sw ?? 1));
+        const palm = "M-21,22C-24,8 -30,-14 -29,-34C-28,-48 -25,-56 -22,-60L24,-61C29,-52 31,-40 30,-26C29,-8 24,8 21,22Z";
+        let g = `<path d="${palm}" fill="${s}"/><path d="M-21,22C-24,8 -30,-14 -29,-34C-28,-48 -25,-56 -22,-60M24,-61C29,-52 31,-40 30,-26C29,-8 24,8 21,22" stroke="${INK}" stroke-width="${W(3)}" fill="none" stroke-linecap="round"/>
+          <path d="M14,18C20,4 26,-14 26,-30C26,-42 24,-52 22,-58L28,-56C31,-42 31,-22 27,-6C25,6 22,14 20,22Z" fill="${sD}" opacity=".35"/><path d="M-12,-46Q4,-40 20,-48" stroke="${sL}" stroke-width="${W(5)}" fill="none" opacity=".6"/>`;
+        // the thumb (behind the fingers when tucked)
+        const thumb = `<g transform="rotate(${f1(th * 38)} -26 -22)"><path d="M-27,-14C-40,-20 -52,-34 -56,-50C-58,-58 -50,-62 -46,-56C-41,-46 -34,-38 -25,-34Z" fill="${s}" stroke="${INK}" stroke-width="${W(2.8)}"/>
+          <path d="M-53,-52q4,-5 9,-1" stroke="${sL}" stroke-width="${W(3)}" fill="none"/><path d="M-42,-36Q-38,-31 -31,-29" stroke="${sD}" stroke-width="${W(1.6)}" fill="none"/></g>`;
+        if (th > 0.5) g += thumb;
+        [[-17, -57, 44, -9, 13.5], [-5, -60, 49, -3, 14], [7, -59, 45, 3, 13.5], [18, -54, 35, 10, 12]].forEach(([x, y, len, a, w], i) => {
+          const c = cu[i], l1 = len * 0.5 * (1 - 0.45 * c), l2 = len * 0.52 * (1 - 0.9 * c);
+          let f = `<rect x="${f1(-w / 2)}" y="${f1(-l1 - 2)}" width="${w}" height="${f1(l1 + 8)}" rx="${f1(w / 2)}" fill="${s}" stroke="${INK}" stroke-width="${W(2.8)}"/>`;
+          if (l2 > 6) f += `<g transform="translate(0,${f1(-l1 + 2)}) rotate(${a > 0 ? 6 : -4})"><rect x="${f1(-w * 0.47)}" y="${f1(-l2)}" width="${f1(w * 0.94)}" height="${f1(l2 + 4)}" rx="${f1(w * 0.47)}" fill="${s}" stroke="${INK}" stroke-width="${W(2.8)}"/>
+            <rect x="${f1(-w * 0.3)}" y="${f1(-l2 + 2.5)}" width="${f1(w * 0.6)}" height="${f1(Math.min(l2 * 0.42, 10))}" rx="${f1(w * 0.28)}" fill="${sL}" stroke="${sD}" stroke-width="${W(1.2)}"/></g>`;
+          else f += `<ellipse cx="0" cy="${f1(-l1 + 1)}" rx="${f1(w * 0.36)}" ry="${f1(w * 0.24)}" fill="${sL}" opacity=".8"/>`;
+          f += `<path d="M${f1(-w * 0.3)},${f1(-l1 + 3)}q${f1(w * 0.3)},3 ${f1(w * 0.6)},0" stroke="${sD}" stroke-width="${W(1.5)}" fill="none"/><path d="M${f1(w * 0.22)},${f1(-l1 + 4)}V4" stroke="${sD}" stroke-width="${W(2.2)}" opacity=".35"/>`;
+          g += `<g transform="translate(${x},${y}) rotate(${a})">${f}</g>`;
+        });
+        if (th <= 0.5) g += thumb;
+        g += `<path d="M-15,-56q4,-4 8,0M-3,-59q4,-4 8,0M9,-58q4,-4 8,0M19,-53q3,-3 7,0" stroke="${sD}" stroke-width="${W(1.8)}" fill="none"/><path d="M-6,-18Q4,-12 14,-20" stroke="${sD}" stroke-width="${W(1.4)}" fill="none" opacity=".5"/>`;
+        return g;
+      };
+      const POKE = { curl: [0, 1, 1, 1], thumb: 1 }, GRIP = { curl: [0.75, 0.8, 0.8, 0.85], thumb: 0.7 };
+      // an arm from shoulder S to wrist W (IK), bent to `side`, then the hand pointing on from the forearm (+ o.turn degrees).
+      // o.w [upper, forearm] widths, o.sleeve [colour, length 0..1 of the upper arm], o.band a wristband colour, o.hs hand scale, o.hand handBack options
+      const arm = (S, W, l1, l2, side, sk, o = {}) => {
+        const E = elbowAt(S, W, l1, l2, side), [wu, wf] = o.w || [34, 28], [s, sD] = sk;
+        const ang = o.fix ?? (Math.atan2(W[1] - E[1], W[0] - E[0]) * 180) / Math.PI + 90 + (o.turn || 0);   // o.fix: the hand's own angle (0 = fingers up)
+        let g = `<path d="${limbD(S, E, wu, wf * 1.05)}" fill="${s}" stroke="${INK}" stroke-width="3"/><path d="${limbD(E, W, wf * 1.05, wf * 0.82)}" fill="${s}" stroke="${INK}" stroke-width="3"/>
+          <path d="${limbD([E[0] + (W[0] - E[0]) * 0.12 + 4, E[1] + (W[1] - E[1]) * 0.12 + 3], [E[0] + (W[0] - E[0]) * 0.85 + 3, E[1] + (W[1] - E[1]) * 0.85 + 3], wf * 0.3, wf * 0.2)}" fill="${sD}" opacity=".3"/>`;
+        if (o.sleeve) { const [c, k] = o.sleeve, M = [S[0] + (E[0] - S[0]) * k, S[1] + (E[1] - S[1]) * k]; g += `<path d="${limbD(S, M, wu * 1.25, wu * 1.18)}" fill="${c}" stroke="${INK}" stroke-width="3"/>`; }
+        if (o.band) { const B0 = [E[0] + (W[0] - E[0]) * 0.8, E[1] + (W[1] - E[1]) * 0.8], B1 = [E[0] + (W[0] - E[0]) * 0.93, E[1] + (W[1] - E[1]) * 0.93]; g += `<path d="${limbD(B0, B1, wf * 1.02, wf * 0.98)}" fill="${o.band}" stroke="${INK}" stroke-width="2.6"/>`; }
+        const hs = o.hs ?? wf / 30;
+        g += `<g transform="translate(${P2s(W)}) rotate(${f1(ang)}) scale(${o.mirror ? -hs : hs},${hs})">${handBack(sk, o.hand || {})}</g>`;
+        return g;
+      };
+      // a hand on its own (an insert): wrist at W, fingers pointing at `deg` (0 = up), scale k; the forearm runs back out of frame
+      const handAt = (W, deg, k, sk, o = {}) => {
+        const len = o.fore ?? 900, back = [W[0] - Math.sin((deg * Math.PI) / 180) * len, W[1] + Math.cos((deg * Math.PI) / 180) * len];
+        const sw = o.sw ?? 1;
+        let g = `<path d="${limbD(back, W, 46 * k, 40 * k)}" fill="${sk[0]}" stroke="${INK}" stroke-width="${f1(3 * k * sw)}"/><path d="${limbD([back[0] + 10 * k, back[1]], [W[0] + 8 * k, W[1] + 4 * k], 12 * k, 8 * k)}" fill="${sk[1]}" opacity=".25"/>`;
+        if (o.band) { const t0 = 0.86, t1 = 0.95, B0 = [back[0] + (W[0] - back[0]) * t0, back[1] + (W[1] - back[1]) * t0], B1 = [back[0] + (W[0] - back[0]) * t1, back[1] + (W[1] - back[1]) * t1]; g += `<path d="${limbD(B0, B1, 48 * k, 46 * k)}" fill="${o.band}" stroke="${INK}" stroke-width="${f1(3 * k * sw)}"/>`; }
+        return g + `<g transform="translate(${P2s(W)}) rotate(${deg}) scale(${o.mirror ? -k : k},${k})">${handBack(sk, o)}</g>`;
+      };
+      // the elbow bent outward (dirX −1 to the left, +1 to the right) or downward (dirX 0)
+      const elbowOut = (S, W, l1, l2, dirX) => {
+        const a = elbowAt(S, W, l1, l2, 1), b = elbowAt(S, W, l1, l2, -1);
+        return dirX ? ((a[0] - b[0]) * dirX > 0 ? 1 : -1) : (a[1] > b[1] ? 1 : -1);
+      };
+      // a rig's shoulders in the world (its arms hang from (∓46, −455) in its own units) and a switch to hide its own arms
+      const shoulders = (c) => [[c.x - 46 * c.s, c.y - 455 * c.s], [c.x + 46 * c.s, c.y - 455 * c.s]];
+      const hideRigArms = (aid) => ["uaF", "uaB"].forEach((p) => { const e = document.getElementById(`${aid}-${p}`); if (e) e.setAttribute("display", "none"); });
+      // ต้น's arms to the wheel at ten and two, the backs of his hands to us, fingers over the rim
+      const tonOnWheel = (c, G) => {
+        const [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, o = { w: [30 * c.s, 26 * c.s], band: BAND, hs: 0.56 * c.s / 0.95 };
+        return `<g>${arm(SL, G[0], l1, l2, elbowOut(SL, G[0], l1, l2, -1), SK.ton, { ...o, hand: { ...GRIP }, turn: 0, fix: 165 })}
+          ${arm(SR, G[1], l1, l2, elbowOut(SR, G[1], l1, l2, 1), SK.ton, { ...o, hand: { ...GRIP }, mirror: true, fix: 195 })}</g>`;
+      };
+      // ขิม holding on to the two front seats (her lilac sleeves)
+      const kimHolds = (c, G) => {
+        const [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, o = { w: [26 * c.s, 22 * c.s], sleeve: ["#b89ad8", 0.42], hs: 0.3 };
+        return `<g>${arm(SL, G[0], l1, l2, elbowOut(SL, G[0], l1, l2, 0), SK.kim, { ...o, hand: { ...GRIP }, fix: 175 })}
+          ${arm(SR, G[1], l1, l2, elbowOut(SR, G[1], l1, l2, 0), SK.kim, { ...o, hand: { ...GRIP }, mirror: true, fix: 185 })}</g>`;
+      };

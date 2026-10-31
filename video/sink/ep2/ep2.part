@@ -1,0 +1,145 @@
+      // ---------- นาทีก่อนจม EP.2 kit: his open window, the windscreen that cracks and holds, the headrest, the side glass, the escape ----------
+      const FIST = { curl: [1, 1, 1, 1], thumb: 0.85 };
+      // in the cutaway (seen from the passenger side, mirrored): the driver's window (WIN_F) is open and the canal pours through it;
+      // the rear window beside it still has its glass (a sheen on it). Draw after Sets.carCut, before the cast.
+      const openWin = (L, tl, id, t0, dur) => {
+        // the open one: no glass (the slot it sank into at the sill), the canal shoving in through the whole opening and spilling over the sill
+        const flow = Array.from({ length: 16 }, (_, k) => `<path class="${id}-ofl" d="M${700 - k * 14},${1068 + (k % 4) * 10}Q${640 - k * 10},${1130 + (k % 3) * 8} ${560 - k * 12},${1200 + (k % 4) * 6}" stroke="#ffffff" stroke-width="${3 + (k % 3) * 2}" fill="none" stroke-dasharray="46 24" opacity=".8"/>`).join("");
+        const fall = Array.from({ length: 12 }, (_, k) => `<path class="${id}-ofl" d="M${500 + k * 32},1214L${494 + k * 32},1300" stroke="#ffffff" stroke-width="${4 + (k % 3) * 2}" stroke-dasharray="26 16" opacity=".85"/>`).join("");
+        put(L.set, MIR(id, `<linearGradient id="${id}-og" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8fff8" stop-opacity=".95"/><stop offset=".5" stop-color="#8fe0cc" stop-opacity=".8"/><stop offset="1" stop-color="#3a9a88" stop-opacity=".7"/></linearGradient>
+          <path d="${WIN_F}" fill="url(#${id}-og)"/>${flow}
+          <path d="M488,1210H890" stroke="#05070a" stroke-width="14"/><path d="M492,1203H884" stroke="#9aa6b4" stroke-width="3" opacity=".8"/>
+          <path d="M488,1212Q690,1236 896,1212L908,1304Q690,1322 476,1304Z" fill="#dffcf4" opacity=".6"/>${fall}
+          ${Array.from({ length: 10 }, (_, k) => `<ellipse cx="${500 + k * 42}" cy="${1302 + (k % 2) * 6}" rx="${30 + (k % 3) * 8}" ry="10" fill="#ffffff" opacity=".75"/>`).join("")}
+          ${Array.from({ length: 14 }, (_, k) => `<circle class="${id}-ofb" cx="${520 + ((k * 67) % 340)}" cy="${1090 + ((k * 41) % 110)}" r="${4 + (k % 3) * 3}" fill="none" stroke="#ffffff" stroke-width="2.4" opacity=".9"/>`).join("")}
+          <path d="${WIN_R}" fill="#b8d8ec" opacity=".22"/><path d="M250,1072L300,1072L170,1212H120Z" fill="#ffffff" opacity=".28"/><path d="M322,1072H340L210,1212H192Z" fill="#ffffff" opacity=".32"/>
+          <path d="${WIN_R}" fill="none" stroke="#dff4ff" stroke-width="3" opacity=".5"/>`));
+        tl.fromTo(`.${id}-ofl`, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -140 }, duration: 0.28, repeat: Math.ceil(dur / 0.28), ease: "none", immediateRender: false }, t0);
+        document.querySelectorAll(`.${id}-ofb`).forEach((el, k) => tl.fromTo(el, { x: 0, y: 0, opacity: 0.9 }, { x: -120 - (k % 4) * 30, y: 90 + (k % 3) * 40, opacity: 0, duration: 0.65, repeat: Math.ceil(dur / 0.65), delay: (k % 5) * 0.11, ease: "power1.in", immediateRender: false }, t0));
+      };
+      // a star of cracks on glass at (x, y): radial lines with kinks and two broken rings; grows in at t (n = how far it has spread, 0..1)
+      const crackStar = (L, layer, tl, id, x, y, t, r = 170, n = 12) => {
+        let g = `<g id="${id}" opacity="0" transform="translate(${x},${y})">`;
+        for (let k = 0; k < n; k++) {
+          const a = (k / n) * Math.PI * 2 + ((k * 37) % 10) * 0.03, l = r * (0.6 + ((k * 53) % 10) * 0.05);
+          const p1 = [Math.cos(a) * l * 0.45 + ((k * 17) % 7) - 3, Math.sin(a) * l * 0.45 + ((k * 29) % 7) - 3], p2 = [Math.cos(a + 0.06) * l, Math.sin(a + 0.06) * l];
+          g += `<path d="M0,0L${f1(p1[0])},${f1(p1[1])}L${f1(p2[0])},${f1(p2[1])}" stroke="#f2fbff" stroke-width="3" fill="none" opacity=".85"/>`;
+        }
+        [0.3, 0.62].forEach((q) => { g += `<path d="${Array.from({ length: n + 1 }, (_, k) => { const a = (k / n) * Math.PI * 2; const l = r * q * (0.9 + ((k * 31) % 5) * 0.05); return `${k ? "L" : "M"}${f1(Math.cos(a) * l)},${f1(Math.sin(a) * l)}`; }).join("")}" stroke="#e8f6ff" stroke-width="2.2" fill="none" opacity=".6"/>`; });
+        g += `<circle r="14" fill="#ffffff" opacity=".85"/><circle id="${id}-fl" r="60" fill="#ffffff" opacity="0"/></g>`;
+        put(L[layer], g);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.35, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.09, ease: "power3.out", immediateRender: false }, t);
+        tl.fromTo(`#${id}-fl`, { opacity: 0.9 }, { opacity: 0, duration: 0.25, immediateRender: false }, t);
+      };
+      // the windscreen from inside: the drowned headlights reaching into the murk, the glass, his fist (#id-fist) punching it twice
+      Sets.wsIns = (L, o = {}) => {
+        const id = o.id || "ws";
+        put(L.sky, `<linearGradient id="${id}-mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#173c36"/><stop offset=".6" stop-color="#0a1c1a"/><stop offset="1" stop-color="#030909"/></linearGradient>
+          <rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-mg)"/>
+          <linearGradient id="${id}-bg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e8fff0" stop-opacity=".5"/><stop offset="1" stop-color="#e8fff0" stop-opacity="0"/></linearGradient>
+          <path d="M220,1500L420,700H560L460,1500Z" fill="url(#${id}-bg)"/><path d="M640,1500L640,700H780L860,1500Z" fill="url(#${id}-bg)"/>
+          ${Array.from({ length: 40 }, (_, k) => `<circle cx="${f1(60 + ((k * 211) % 960))}" cy="${f1(300 + ((k * 137) % 1200))}" r="${f1(2 + (k % 4) * 1.5)}" fill="#bfe8d8" opacity="${(0.2 + (k % 5) * 0.1).toFixed(2)}"/>`).join("")}`);
+        put(L.set, `<path d="M-900,-600H2000V2600H-900ZM110,330Q540,280 970,330L1010,1330Q540,1290 70,1330Z" fill="#11151c" fill-rule="evenodd"/>
+          <path d="M110,330Q540,280 970,330L1010,1330Q540,1290 70,1330Z" fill="none" stroke="#0b0e13" stroke-width="20"/>
+          <path d="M200,420L330,380L180,1150Z" fill="#ffffff" opacity=".05"/><path d="M760,380L860,400L700,1100Z" fill="#ffffff" opacity=".04"/>
+          <rect x="430" y="330" width="220" height="62" rx="16" fill="#1c2027" stroke="#0b0e13" stroke-width="5"/>
+          <path d="M-900,1330Q540,1290 2000,1330V2600H-900Z" fill="#1a1e25"/><path d="M-900,1330Q540,1290 2000,1330" stroke="#2c323b" stroke-width="10" fill="none"/>`);
+        put(L.act, `<g id="${id}-fist"><g id="${id}-fi">${handAt([150, 230], -24, 3.0, SK.ton, { ...FIST, band: BAND, sw: 0.55, fore: 900 })}</g></g>`);
+      };
+      // punch at t: back, then into the glass at (x, y) (the knuckles land there), a shake after
+      const punch = (tl, id, t, x, y) => {
+        tl.set(`#${id}-fist`, { x: x - 30, y: y + 30 }, 0);
+        tl.fromTo(`#${id}-fi`, { x: 260, y: 340, scale: 1.25, transformOrigin: "50% 50%" }, { x: 160, y: 220, scale: 1.15, duration: 0.18, ease: "power2.out", immediateRender: false }, t - 0.22);
+        tl.to(`#${id}-fi`, { x: 0, y: 0, scale: 0.92, duration: 0.09, ease: "power3.in" }, t - 0.04);
+        tl.to(`#${id}-fi`, { x: 70, y: 90, scale: 1.02, duration: 0.3, ease: "power2.out" }, t + 0.06);
+      };
+      // the lock with its light dead: the finger presses it again and again, nothing
+      const pressDead = (tl, id, t, n = 3) => {
+        tl.fromTo(`#${id}-finger`, { x: 0, y: 0 }, { x: -170, y: -350, duration: 0.42, ease: "power2.out", immediateRender: false }, t);
+        tl.to(`#${id}-finger`, { y: -334, duration: 0.09, yoyo: true, repeat: n * 2 - 1, ease: "power1.inOut" }, t + 0.45);
+      };
+      // the headrest: two hands pull it up out of the seat on its chrome prongs (#id-hr moves)
+      Sets.headIns = (L, o = {}) => {
+        const id = o.id || "hi";
+        put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#0b0f15"/>`);
+        put(L.set, `<path d="M-900,-600H2000V2600H-900Z" fill="#151a22"/><path d="M-900,-600H2000V200Q540,150 -900,200Z" fill="#1d2430"/>
+          <path d="M160,1900V1260Q160,1150 270,1150H810Q920,1150 920,1260V1900Z" fill="#26303c" stroke="#0b0e13" stroke-width="8"/><path d="M230,1240V1900M850,1240V1900" stroke="#1d242f" stroke-width="10"/>
+          <rect x="400" y="1136" width="56" height="30" rx="10" fill="#0e1218" stroke="#000" stroke-width="4"/><rect x="624" y="1136" width="56" height="30" rx="10" fill="#0e1218" stroke="#000" stroke-width="4"/>`);
+        const prong = (x) => `<rect x="${x - 14}" y="880" width="28" height="300" rx="10" fill="#c9ced6" stroke="#0b0e13" stroke-width="4"/><path d="M${x - 6},890V1170" stroke="#ffffff" stroke-width="5" opacity=".7"/>${[960, 1000, 1040].map((y) => `<path d="M${x - 14},${y}h10" stroke="#0b0e13" stroke-width="5"/>`).join("")}`;
+        put(L.act, `<g id="${id}-hr">${prong(428)}${prong(652)}
+          <path d="M300,920Q296,700 420,690H660Q784,700 780,920Q780,960 740,962H340Q300,960 300,920Z" fill="#2c3644" stroke="#0b0e13" stroke-width="8"/>
+          <path d="M330,770Q540,740 750,770" stroke="#3a4656" stroke-width="10" fill="none"/><path d="M340,880Q540,900 740,880" stroke="#1d242f" stroke-width="8" fill="none"/>
+          ${handAt([250, 940], 40, 2.2, SK.ton, { ...GRIP, band: BAND, sw: 0.6, fore: 800, mirror: true })}${handAt([830, 940], -40, 2.2, SK.ton, { ...GRIP, band: BAND, sw: 0.6, fore: 800 })}</g>`);
+      };
+      // the headrest's prongs thrust at the window's lower front corner (carWindow): (x, y) the tip lands there; returns nothing, n strikes
+      const prongStrike = (L, tl, id, t, x, y, n = 2, every = 0.55) => {
+        put(L.act, `<g id="${id}" transform="translate(${x},${y}) scale(1.45)"><g id="${id}-p"><g transform="rotate(-38)">
+          <rect x="-56" y="0" width="22" height="300" rx="9" fill="#c9ced6" stroke="#0b0e13" stroke-width="4"/><rect x="34" y="0" width="22" height="300" rx="9" fill="#c9ced6" stroke="#0b0e13" stroke-width="4"/>
+          <path d="M-120,300Q-124,200 -40,196H40Q124,200 120,300V560H-120Z" fill="#2c3644" stroke="#0b0e13" stroke-width="7"/></g>
+          ${handAt([220, 420], -60, 2.1, SK.ton, { ...GRIP, band: BAND, sw: 0.6, fore: 700 })}</g></g>`);
+        tl.set(`#${id}-p`, { x: 420, y: 520 }, 0);
+        tl.to(`#${id}-p`, { x: 60, y: 70, duration: 0.3, ease: "power2.out" }, t - 0.32);
+        for (let k = 0; k < n; k++) {
+          const tk = t + k * every;
+          tl.to(`#${id}-p`, { x: 0, y: 0, duration: 0.07, ease: "power3.in" }, tk - 0.07);
+          tl.to(`#${id}-p`, { x: 60, y: 70, duration: 0.2, ease: "power2.out" }, tk + 0.02);
+          put(L.act, `<g id="${id}-s${k}" opacity="0" transform="translate(${x},${y})"><path d="M-14,-6L${10 + k * 6},${-12 - k * 4}M-8,8L${16 + k * 5},${4 + k * 3}" stroke="#ffffff" stroke-width="3" opacity=".9"/><circle r="22" fill="#ffffff" opacity=".5"/></g>`);
+          tl.fromTo(`#${id}-s${k}`, { opacity: 1 }, { opacity: 0.25, duration: 0.3, immediateRender: false }, tk);
+        }
+      };
+      // laminated side glass: a spiderweb spreads from (x, y) but the pane stays (draw on the glass so it rides with it)
+      const webCrack = (tl, id, glassId, t, x, y) => {
+        const g = document.getElementById(glassId); if (!g) return;
+        let w = `<g id="${id}" opacity="0" transform="translate(${x},${y})">`;
+        for (let k = 0; k < 16; k++) { const a = Math.PI + (k / 15) * Math.PI * 0.62 + ((k * 7) % 5) * 0.02, l = 260 + ((k * 61) % 9) * 40; w += `<path d="M0,0L${f1(Math.cos(a) * l * 0.4 + 6)},${f1(Math.sin(a) * l * 0.4 - 4)}L${f1(Math.cos(a) * l)},${f1(Math.sin(a) * l)}" stroke="#eef8ff" stroke-width="3" fill="none" opacity=".8"/>`; }
+        [70, 150, 240].forEach((r) => { w += `<path d="M${-r},0Q${-r * 0.8},${-r * 0.7} 0,${-r}" stroke="#eef8ff" stroke-width="2.2" fill="none" opacity=".55"/>`; });
+        g.insertAdjacentHTML("beforeend", w + `</g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.3, transformOrigin: "0% 0%" }, { opacity: 1, scale: 1, duration: 0.14, ease: "power3.out", immediateRender: false }, t);
+      };
+      // out through his window: ขิม's legs (light jeans, white sneakers) going away from us into the canal, his hands at her feet
+      const kimOut = (L, tl, id, t, dur) => {
+        const leg = (dx, k) => `<g id="${id}-l${k}"><path d="M${dx},-40C${dx - 6},60 ${dx + 6},160 ${dx},250" stroke="#2b3a52" stroke-width="66" stroke-linecap="round"/><path d="M${dx},-40C${dx - 6},60 ${dx + 6},160 ${dx},250" stroke="#8fb3d9" stroke-width="56" stroke-linecap="round"/>
+          <path d="M${dx - 34},250Q${dx - 40},330 ${dx},344Q${dx + 40},330 ${dx + 34},250Z" fill="#f4f4f0" stroke="#0b0e13" stroke-width="5"/><path d="M${dx - 30},318Q${dx},338 ${dx + 30},318" stroke="#c8ccd2" stroke-width="10" fill="none"/></g>`;
+        put(L.act, `<g id="${id}" transform="translate(540,900)"><g id="${id}-k">${leg(-40, 0)}${leg(44, 1)}</g>
+          <g id="${id}-hands">${handAt([-60, 480], 10, 2.0, SK.ton, { curl: [0.2, 0.2, 0.25, 0.3], thumb: 0.3, band: BAND, sw: 0.6, fore: 700, mirror: true })}${handAt([70, 480], -10, 2.0, SK.ton, { curl: [0.2, 0.2, 0.25, 0.3], thumb: 0.3, band: BAND, sw: 0.6, fore: 700 })}</g></g>`);
+        tl.fromTo(`#${id}-k`, { y: 160, scale: 1.25, transformOrigin: "50% 0%" }, { y: -120, scale: 0.45, opacity: 0, duration: dur * 0.75, ease: "power2.in", immediateRender: false }, t);
+        [0, 1].forEach((k) => tl.fromTo(`#${id}-l${k}`, { rotation: k ? 6 : -6, transformOrigin: "50% 0%" }, { rotation: k ? -6 : 6, duration: 0.16, yoyo: true, repeat: Math.ceil(dur / 0.16), ease: "sine.inOut", immediateRender: false }, t));
+        tl.fromTo(`#${id}-hands`, { y: 0 }, { y: -160, duration: dur * 0.5, ease: "power2.out", immediateRender: false }, t + 0.1);
+        tl.to(`#${id}-hands`, { y: 120, opacity: 0, duration: 0.5, ease: "power2.in" }, t + dur * 0.7);
+      };
+      // on the canal: the night from the water's skin; she comes up through it (draw the water after the cast)
+      Sets.surf = (L, o = {}) => {
+        const id = o.id || "sf", lv = o.lv ?? 1200;
+        put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060a14"/><stop offset="1" stop-color="#1a2a40"/></linearGradient>
+          <rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-sk)"/>${Array.from({ length: 40 }, (_, k) => `<circle cx="${f1(-200 + ((k * 263) % 1500))}" cy="${f1(100 + ((k * 89) % 800))}" r="${f1(1.4 + (k % 3))}" fill="#dfe8ff" opacity="${(0.25 + (k % 4) * 0.15).toFixed(2)}"/>`).join("")}`);
+        put(L.far, `<radialGradient id="${id}-lg"><stop offset="0" stop-color="#ffd08a" stop-opacity=".9"/><stop offset=".25" stop-color="#ff9a3a" stop-opacity=".32"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient>
+          <path d="M-900,${lv - 70}L2000,${lv - 90}V${lv}H-900Z" fill="#0a110e"/>${Array.from({ length: 40 }, (_, k) => `<path d="M${-300 + k * 46},${lv - 80 - (k % 3) * 2}q${k % 2 ? 7 : -7},-50 ${k % 2 ? -3 : 5},-${60 + (k * 13) % 40}" stroke="#0e1812" stroke-width="7" fill="none"/>`).join("")}
+          <rect x="806" y="${lv - 560}" width="12" height="480" fill="#141a20"/><circle cx="724" cy="${lv - 560}" r="230" fill="url(#${id}-lg)"/><circle cx="724" cy="${lv - 562}" r="11" fill="#fff4d0"/>`);
+      };
+      const surfWater = (L, tl, id, t0, dur, lv) => {
+        put(L.act, `<g id="${id}-w"><linearGradient id="${id}-wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c4a48" stop-opacity=".88"/><stop offset=".4" stop-color="#0c2224" stop-opacity=".96"/><stop offset="1" stop-color="#040a0c"/></linearGradient>
+          <rect x="-900" y="${lv}" width="2900" height="1600" fill="url(#${id}-wg)"/>
+          <path id="${id}-sk2" d="M-900,${lv}Q-800,${lv - 12} -700,${lv}T-500,${lv}T-300,${lv}T-100,${lv}T100,${lv}T300,${lv}T500,${lv}T700,${lv}T900,${lv}T1100,${lv}T1300,${lv}T1500,${lv}T1700,${lv}T1900,${lv}T2100,${lv}" stroke="#e8fff6" stroke-width="5" fill="none"/>
+          ${Array.from({ length: 8 }, (_, k) => `<rect x="${f1(690 + ((k * 37) % 90) - k * 6)}" y="${lv + 10 + k * 14}" width="${70 - k * 6}" height="5" rx="2.5" fill="#ffb45a" opacity="${(0.7 - k * 0.07).toFixed(2)}"/>`).join("")}</g>`);
+        tl.fromTo(`#${id}-sk2`, { x: 0 }, { x: -200, duration: 1.1, repeat: Math.ceil(dur / 1.1), ease: "none", immediateRender: false }, t0);
+      };
+      // the pedals under the water: his sneaker caught under the brake pedal; he pulls, it holds (the shoe jerks, #id-ft)
+      Sets.footIns = (L, o = {}) => {
+        const id = o.id || "fi";
+        put(L.sky, `<linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#123430"/><stop offset="1" stop-color="#040c0c"/></linearGradient><rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-g)"/>`);
+        put(L.set, `<path d="M-900,1500L2000,1380V2600H-900Z" fill="#0c1416"/><path d="M-200,1520L1300,1420" stroke="#1a2628" stroke-width="40" opacity=".7"/>
+          <path d="M520,-200V860" stroke="#1a1f26" stroke-width="44"/><path d="M520,860Q540,960 600,1000" stroke="#1a1f26" stroke-width="44" fill="none"/>
+          <g transform="translate(640,1040) rotate(-14)"><rect x="-120" y="-56" width="240" height="112" rx="24" fill="#22282f" stroke="#000" stroke-width="6"/>${[-80, -40, 0, 40, 80].map((x) => `<path d="M${x},-40V40" stroke="#14181d" stroke-width="10"/>`).join("")}</g>
+          <path d="M880,-200V1000" stroke="#1a1f26" stroke-width="30"/><g transform="translate(900,1180) rotate(-10)"><rect x="-56" y="-120" width="112" height="240" rx="20" fill="#22282f" stroke="#000" stroke-width="6"/></g>`);
+        put(L.act, `<g id="${id}-ft"><path d="M-300,200C0,500 200,800 330,1000" stroke="#1d2a3e" stroke-width="196" stroke-linecap="round" fill="none"/><path d="M-300,200C0,500 200,800 330,1000" stroke="#3b4a63" stroke-width="180" stroke-linecap="round" fill="none"/>
+          <path d="M-200,280C40,560 200,820 300,980" stroke="#2c3850" stroke-width="22" fill="none" opacity=".6"/>
+          <g transform="translate(400,1090) rotate(-18)"><path d="M-130,-70Q-160,40 -100,90H260Q330,86 330,30Q330,-30 230,-46Q120,-60 60,-100Q-40,-130 -130,-70Z" fill="#e8e2d4" stroke="#0b0e13" stroke-width="7"/>
+          <path d="M-100,90H260Q330,86 330,30" stroke="#3a3530" stroke-width="22" fill="none"/>${[0, 1, 2, 3].map((k) => `<path d="M${-20 + k * 40},${-90 + k * 8}l40,30" stroke="#c8c0b0" stroke-width="8"/>`).join("")}</g></g>`);
+      };
+      const footTug = (tl, id, t, n = 3) => {
+        for (let k = 0; k < n; k++) {
+          const tk = t + k * 0.62;
+          tl.to(`#${id}-ft`, { x: -40, y: -26, rotation: -3, transformOrigin: "30% 10%", duration: 0.12, ease: "power2.out" }, tk);
+          tl.to(`#${id}-ft`, { x: 0, y: 0, rotation: 0, duration: 0.2, ease: "power2.in" }, tk + 0.14);
+        }
+      };

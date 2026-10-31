@@ -45,7 +45,6 @@
           Canal.car(L, "c1", 560, WY + 42, 0.42, { beam: 0 }); tl.set("#c1-r", { rotation: 15, svgOrigin: "0 0" }, t0);
           tl.fromTo("#c1-r", { y: 0 }, { y: 6, duration: 0.9, repeat: Math.ceil(D("float") / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
           Canal.front(L, "c1f", WY + 8); bubbles(L, tl, "c1bb", t0, D("float"), 700, WY + 10, 10, 220);
-          ring(L, tl, t0 + 0.4, D("float") - 0.4, "rg1", 60);
         },
       });
       // ---------- 4. under the water: the beams in the murk ----------
@@ -100,7 +99,6 @@
           ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
           cutFront(L, "cc0"); cutWater(L, tl, "cc0", t0, D("inrush"), 1520, 1470); cutOutside(tl, "cc0", t0, D("inrush"), 1150, 1120); cutCanal(L, tl, "cc0", t0, D("inrush"), 1150, 1120);
           sealJets(L, tl, "cc0", t0, D("inrush"), { at: [[1000, 1300, -1, 0.75], [990, 1440, -1, 0.6], [470, 1460, 1, 0.55], [60, 1380, 1, 0.6]] });
-          ring(L, tl, t0 + 0.5, D("inrush") - 0.5, "rg2", 58);
         },
       });
       // ---------- 9. step 1: no phone, the seatbelt ----------
@@ -111,8 +109,7 @@
         fx(tl, id, t0, L) {
           beltPress(tl, "bi0", t0 + F("belt", 0, 1) - 0.35);
           cabWater(L, tl, "bi0", t0, D("belt"), 2060, 1840, { items: false }); bubbles(L, tl, "bi0bb", t0, D("belt"), 600, 1980, 10, 520);
-          chip(L, tl, t0 + 0.2, D("belt") - 0.2, "cp1", "phone", "อย่าแตะมือถือ", false); chip(L, tl, t0 + F("belt", 0, 1), D("belt") - F("belt", 0, 1), "cp2", "belt", "ปลดเข็มขัด", true, { y: 480 });
-          ring(L, tl, t0, D("belt"), "rg3", 52);
+          
         },
       });
       // ---------- 10. the door: the water outside holds it shut ----------
@@ -122,9 +119,7 @@
         captions: caps("door"),
         fx(tl, id, t0, L) {
           outsideRich(L, tl, "cw0o", t0, D("door"), 980, 880); glassDrops("cw0"); doorTug(L, tl, "cw0d", t0 + 0.15);
-          chip(L, tl, t0 + 0.2, D("door") - 0.2, "cp3", "door", "ประตูเปิดไม่ออก", false, { y: 160 });
-          fact(L, tl, t0 + F("door", 0, 1), D("door") - F("door", 0, 1), "fc3", "น้ำดันประตูไว้ 750–1,000 นิวตัน", "≈ 76–102 กิโลกรัมแรง · McDonald & Giesbrecht 2013", { y: 300 });
-          ring(L, tl, t0, D("door"), "rg4", 47);
+          
         },
       });
       // ---------- 11. his window: down, now ----------
@@ -137,9 +132,7 @@
           tl.fromTo("#cw1-glass", { y: 0 }, { y: 760, duration: 1.4, ease: "power1.in", immediateRender: false }, t0 + 0.5);
           pourIn(L, tl, "cw1p", t0 + 1.55, D("window") - 1.55, 815);
           winSwitch(L, "cw1s"); tl.set("#cw1s-f", { x: 30, y: 560 }, 0); pressSwitch(tl, "cw1s", t0 + 0.15, 1);
-          chip(L, tl, t0 + 0.2, D("window") - 0.2, "cp4", "window", "เปิดกระจกทันที", true, { y: 160 });
-          fact(L, tl, t0 + F("window", 0, 1), D("window") - F("window", 0, 1), "fc4", "กระจกไฟฟ้าอาจใช้ได้แค่ 15–60 วินาที", "Giesbrecht 2016 · University of Manitoba", { y: 300 });
-          ring(L, tl, t0, D("window"), "rg5", 41);
+          
         },
       });
       // ---------- 12. ขิม: her belt, children out first ----------
@@ -155,8 +148,7 @@
         fx(tl, id, t0, L) {
           beltPress(tl, "bi1", t0 + 0.1);
           cabWater(L, tl, "bi1", t0, KB, 1720, 1620, { items: false }); bubbles(L, tl, "bi1bb", t0, KB, 600, 1760, 10, 520);
-          chip(L, tl, t0 + 0.2, KB - 0.2, "cp5a", "belt", "ปลดเข็มขัดให้เด็ก", true, { y: 160 });
-          ring(L, tl, t0, KB, "rg6", 34);
+          
         },
       }, {
         ...CUT("cc1", 1090),
@@ -165,9 +157,7 @@
         captions: capsFrom("kid", KB),
         fx(tl, id, t0, L) {
           noShadows(tl, id); cutFront(L, "cc1", { free: ["ton", "kim"] }); cutWater(L, tl, "cc1", t0, D("kid") - KB, 1370, 1350); cutOutside(tl, "cc1", t0, D("kid") - KB, 1090, 1080); cutCanal(L, tl, "cc1", t0, D("kid") - KB, 1090, 1080);
-          chip(L, tl, t0 + 0.1, D("kid") - KB - 0.1, "cp5", "kid", "ส่งเด็กออกก่อน", true, { y: 160 });
-          fact(L, tl, t0 + F("kid", 0, 1) - KB, D("kid") - F("kid", 0, 1), "fc5", "เด็กหลายคน: คนโตก่อน แล้วไล่ไปคนเล็ก", "Giesbrecht · University of Manitoba", { y: 300 });
-          ring(L, tl, t0, D("kid") - KB, "rg6b", 34 - KB);
+          
         },
       });
       // ---------- 13. the phone on the seat; call once ashore ----------
@@ -177,9 +167,7 @@
         captions: caps("phone"),
         fx(tl, id, t0, L) {
           tl.fromTo("#ph0-wt", { y: 0 }, { y: -220, duration: D("phone"), ease: "none", immediateRender: false }, t0);
-          chip(L, tl, t0 + 0.2, D("phone") - 0.2, "cp6", "phone", "ขึ้นฝั่งแล้วค่อยโทร", true, { y: 160 });
-          fact(L, tl, t0 + F("phone", 0, 1), D("phone") - F("phone", 0, 1), "fc6", "1669 เจ็บป่วยฉุกเฉิน · 191 เหตุด่วน", "แล้วไปโรงพยาบาลทุกราย · กรมควบคุมโรค", { y: 300 });
-          ring(L, tl, t0, D("phone"), "rg7", 30);
+          
         },
       });
       // ---------- 14. the twist: rewind to 0:04 ----------
@@ -199,7 +187,6 @@
         captions: caps("kim", undefined, QUO),
         fx(tl, id, t0, L) {
           noShadows(tl, id); cutFront(L, "cc2", { free: ["ton", "kim"] }); cutWater(L, tl, "cc2", t0, KS, 1335, 1325); cutOutside(tl, "cc2", t0, KS, 1070, 1066); cutCanal(L, tl, "cc2", t0, KS, 1070, 1066);
-          ring(L, tl, t0, KS, "rg8", 18);
         },
       }, {
         ...WIN("cw2"),
@@ -210,7 +197,6 @@
           outsideRich(L, tl, "cw2o", t0, D("kim") - KS, 720, 680); glassDrops("cw2");
           kidSwitch(L, "ks");
           tl.fromTo("#ks-kf", { y: 0 }, { y: -30, duration: 0.14, yoyo: true, repeat: Math.ceil((D("kim") - KS) / 0.14), ease: "power2.inOut", immediateRender: false }, t0 + 0.05);
-          ring(L, tl, t0, D("kim") - KS, "rg8b", 18 - KS);
         },
       });
       // ---------- 16. the lock's light, still on ----------
@@ -221,7 +207,6 @@
         fx(tl, id, t0, L) {
           tl.set("#lk2-finger", { opacity: 0 }, t0);
           ledGlow(L, tl, "lk2-halo", t0, D("led"), 786, 949);
-          ring(L, tl, t0, D("led"), "rg9", 15);
         },
       });
       // ---------- 17. her window on his own panel: nothing (some cars lock every window but the driver's) ----------
@@ -234,7 +219,6 @@
           tl.to("#lk3-finger", { y: 258, duration: 0.09, yoyo: true, repeat: 5 }, t0 + 0.7);
           put(L.light, `<g id="lk3x" opacity="0" transform="translate(${290},${1092})"><circle r="70" fill="#ff2a2a" opacity=".25"/><path d="M-34,-34L34,34M34,-34L-34,34" stroke="#ff4a3a" stroke-width="14" stroke-linecap="round"/></g>`);
           tl.fromTo("#lk3x", { opacity: 0 }, { opacity: 1, duration: 0.1, yoyo: true, repeat: 5, immediateRender: false }, t0 + 0.75);
-          ring(L, tl, t0, D("panel"), "rg10", 12);
         },
       });
       // ---------- 18. the dash flickers; single digits ----------
@@ -247,7 +231,6 @@
           noShadows(tl, id); cutFront(L, "cc3", { free: ["ton", "kim"] }); cutWater(L, tl, "cc3", t0, D("flicker"), 1320, 1285); cutOutside(tl, "cc3", t0, D("flicker"), 1060, 1036); cutCanal(L, tl, "cc3", t0, D("flicker"), 1060, 1036);
           bubbles(L, tl, "cc3bb", t0, D("flicker"), 520, 1330, 14, 700);
           flickerOut(L, tl, "cc3", t0, D("flicker"));
-          ring(L, tl, t0, D("flicker"), "rg11", 9);
         },
       });
       // ---------- 19. next episode ----------
