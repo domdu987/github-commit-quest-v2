@@ -277,5 +277,71 @@
     tl.to(`#${id}-c${pa ? 1 : 0}`, { opacity: 0.35, duration: 0.3 }, at + 0.25);
   };
 
+  // ---------------- EP.2 cards ----------------
+  // the home dog meets a dog from outside (a fight over the fence) → the bite; and the herb poultice crossed out
+  RabUI.homeDog = (tl, layer, t0, dur, o = {}) => {
+    const id = "rh" + Math.round(t0 * 100), y = o.y ?? 520;
+    let s = `<rect x="70" y="-60" width="940" height="820" rx="34" fill="#fdfaf2" ${O(5)}/><rect x="70" y="-60" width="940" height="90" rx="34" fill="#c8402e"/><rect x="70" y="0" width="940" height="30" fill="#c8402e"/>
+      <text x="540" y="4" font-family="Kanit" font-weight="900" font-size="46" fill="#fff" text-anchor="middle">หมาเลี้ยง ก็ติดได้</text>
+      <rect x="110" y="70" width="860" height="330" rx="20" fill="#e8f0d8" ${O(3)}/><path d="M540,90V380" stroke="#8a6a44" stroke-width="10" stroke-dasharray="4 26"/>
+      <text x="300" y="380" font-family="Kanit" font-weight="700" font-size="28" fill="#4a6a2e" text-anchor="middle">หมาในบ้าน</text><text x="780" y="380" font-family="Kanit" font-weight="700" font-size="28" fill="#8a3a2a" text-anchor="middle">หมานอกบ้าน</text>
+      <g id="${id}-bang" opacity="0"><path d="M540,180l20,-40l10,36l40,-20l-20,38l40,10l-40,16l20,36l-40,-16l-10,40l-18,-38l-38,18l16,-38l-40,-12l40,-14l-16,-38Z" fill="#ffd23a" ${O(3)}/></g>
+      <g transform="translate(0,450)"><rect x="110" y="0" width="860" height="250" rx="20" fill="#f4ecd8" ${O(3)}/>
+        <g transform="translate(330,130)"><ellipse rx="110" ry="80" fill="#e8b48a" ${O(3)}/><ellipse rx="70" ry="48" fill="#6a9a3a" ${O(3)}/><path d="M-50,-10q20,14 40,0q20,14 40,0" stroke="#3a6a1e" stroke-width="5" fill="none"/></g>
+        <g id="${id}-x" opacity="0"><path d="M240,40L420,220M420,40L240,220" stroke="#e2382e" stroke-width="22" stroke-linecap="round"/></g>
+        <text x="700" y="120" font-family="Kanit" font-weight="900" font-size="40" fill="#c8282a" text-anchor="middle">สมุนไพรพอกแผล</text><text x="700" y="176" font-family="Kanit" font-weight="900" font-size="40" fill="#c8282a" text-anchor="middle">ไม่ช่วย</text></g>`;
+    put(layer, `<g id="${id}" transform="translate(0,${y})" opacity="0">${s}<g id="${id}-d"></g></g>`);
+    const g = document.getElementById(id + "-d");
+    put(g, Dog.svg({ id: id + "-a", kind: "dam", x: 330, y: 330, s: 0.95 }) + Dog.svg({ id: id + "-b", kind: "dam", x: 760, y: 330, s: 0.95, flip: true }));
+    tl.set(`#${id}`, { opacity: 0 }, 0);
+    tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+    Dog.drive(tl, id + "-a", t0, 0.8, "growl"); Dog.drive(tl, id + "-a", t0 + 0.8, 0.5, "lunge", { to: 420 }); Dog.drive(tl, id + "-a", t0 + 1.3, dur - 1.3, "bark");
+    Dog.drive(tl, id + "-b", t0, 0.8, "growl"); Dog.drive(tl, id + "-b", t0 + 0.8, 0.5, "lunge", { to: 670 }); Dog.drive(tl, id + "-b", t0 + 1.3, dur - 1.3, "bark");
+    tl.fromTo(`#${id}-bang`, { opacity: 0 }, { opacity: 1, duration: 0.1, yoyo: true, repeat: 3, immediateRender: false }, t0 + 1.2);
+    tl.fromTo(`#${id}-x`, { opacity: 0, attr: { transform: "scale(1.4)" } }, { opacity: 1, attr: { transform: "scale(1)" }, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0 + (o.xAt ?? 3.2));
+    if (o.out !== false) tl.to(`#${id}`, { opacity: 0, duration: 0.25 }, t0 + dur - 0.25);
+  };
+  // the race: a track from the bite to "symptoms"; the incubation can be as short as a week; the vaccine needle wins if it starts today
+  RabUI.race = (tl, layer, t0, dur, o = {}) => {
+    const id = "rq" + Math.round(t0 * 100), y = o.y ?? 560;
+    let s = `<rect x="70" y="-60" width="940" height="620" rx="34" fill="#fdfaf2" ${O(5)}/><rect x="70" y="-60" width="940" height="90" rx="34" fill="#2e6a8a"/><rect x="70" y="0" width="940" height="30" fill="#2e6a8a"/>
+      <text x="540" y="4" font-family="Kanit" font-weight="900" font-size="46" fill="#fff" text-anchor="middle">แข่งกับเวลา</text>
+      <path d="M150,230H930" stroke="#c8c0aa" stroke-width="18" stroke-linecap="round"/><path id="${id}-bar" d="M150,230H930" stroke="#e2382e" stroke-width="18" stroke-linecap="round" stroke-dasharray="780" stroke-dashoffset="780"/>
+      <g transform="translate(150,230)"><circle r="34" fill="#ffd2c8" ${O(3)}/><text y="12" font-family="Kanit" font-weight="900" font-size="30" fill="#c8282a" text-anchor="middle">กัด</text></g>
+      <g transform="translate(330,150)"><rect x="-120" y="-40" width="240" height="66" rx="14" fill="#ffd23a" ${O(3)}/><text y="6" font-family="Kanit" font-weight="900" font-size="30" fill="${INK}" text-anchor="middle">เร็วสุด 1 สัปดาห์</text></g>
+      <path d="M330,190V215" stroke="${INK}" stroke-width="4"/>
+      <g transform="translate(800,150)"><rect x="-120" y="-40" width="240" height="66" rx="14" fill="#efe8da" ${O(3)}/><text y="6" font-family="Kanit" font-weight="900" font-size="30" fill="#5a5048" text-anchor="middle">นานเกิน 1 ปี</text></g>
+      <g transform="translate(930,230)"><circle r="40" fill="#2a1c18" ${O(3)}/><text y="10" font-family="Kanit" font-weight="900" font-size="24" fill="#fff" text-anchor="middle">อาการ</text></g>
+      <g id="${id}-v" opacity="0" transform="translate(0,0)"><g transform="translate(260,350)"><rect x="-30" y="-14" width="120" height="28" rx="8" fill="#9ad0f0" ${O(3)}/><path d="M90,0h60" stroke="${INK}" stroke-width="5"/><rect x="-60" y="-8" width="30" height="16" fill="#c8ccd2" ${O(2)}/></g>
+        <text x="560" y="362" font-family="Kanit" font-weight="900" font-size="38" fill="#1e7a48">ฉีดวัคซีน วันนี้เลย</text></g>
+      <g id="${id}-dead" opacity="0"><text x="540" y="480" font-family="Kanit" font-weight="900" font-size="44" fill="#c8282a" text-anchor="middle">มีอาการแล้ว = ตายเกือบทุกราย</text></g>`;
+    put(layer, `<g id="${id}" transform="translate(0,${y})" opacity="0">${s}</g>`);
+    tl.set(`#${id}`, { opacity: 0 }, 0);
+    tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+    tl.to(`#${id}-bar`, { attr: { "stroke-dashoffset": 0 }, duration: 1.6, ease: "power1.in" }, t0 + 0.4);
+    tl.fromTo(`#${id}-v`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.9);
+    tl.fromTo(`#${id}-dead`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + (o.deadAt ?? 2.6));
+    if (o.out !== false) tl.to(`#${id}`, { opacity: 0, duration: 0.25 }, t0 + dur - 0.25);
+  };
+  // a chain-link pen under the house (the dog kept in, watched 10 days) · Rab.pen(x, G, s, o) returns SVG; o.collar: the red collar hung on the post instead
+  Rab.pen = (x, G, s = 1, o = {}) => {
+    let g = `<g transform="translate(${x},${G}) scale(${s})"><rect x="-260" y="-300" width="520" height="300" fill="none" stroke="#8a9098" stroke-width="8" ${""}/>`;
+    for (let k = -240; k <= 240; k += 30) g += `<path d="M${k},-300L${k + 30},0M${k + 30},-300L${k},0" stroke="#a8b0b8" stroke-width="2.4" opacity=".8"/>`;
+    g += `<rect x="-270" y="-310" width="20" height="310" fill="#6a7078" ${O(2)}/><rect x="250" y="-310" width="20" height="310" fill="#6a7078" ${O(2)}/><path d="M-270,-310H270" stroke="#5a6068" stroke-width="12"/>`;
+    if (o.sign) g += `<g transform="translate(0,-360) rotate(-3)"><rect x="-150" y="-36" width="300" height="72" rx="8" fill="#fdf6d8" ${O(3)}/><text y="12" font-family="Mali" font-weight="700" font-size="34" fill="#2a3a8a" text-anchor="middle">${o.sign}</text></g>`;
+    return g + `</g>`;
+  };
+  Rab.collar = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><circle cx="0" cy="-10" r="8" fill="#8a8e94" ${O(2)}/><ellipse cx="0" cy="60" rx="46" ry="62" fill="none" stroke="#c8322a" stroke-width="16"/><ellipse cx="0" cy="60" rx="46" ry="62" fill="none" stroke="${INK}" stroke-width="2" stroke-dasharray="4 7" opacity=".6"/></g>`;
+  // the series end card: the rule board with both rules ticked + "ตอนจบ" + the line to take home
+  RabUI.finale = (tl, layer, t0, dur, o = {}) => {
+    const id = "rf" + Math.round(t0 * 100);
+    RabUI.rules(tl, layer, t0, dur, { active: -1, done: [0, 1], y: o.y ?? 640, out: false });
+    put(layer, `<g id="${id}" opacity="0"><g transform="translate(540,${(o.y ?? 640) + 330}) rotate(-4)"><rect x="-150" y="-44" width="300" height="88" rx="12" fill="#c8282a" ${O(4)}/>
+      <text y="18" font-family="Kanit" font-weight="900" font-size="52" fill="#fff" text-anchor="middle">ตอนจบ</text></g>
+      ${o.line ? `<text x="540" y="${(o.y ?? 640) + 470}" font-family="Mali" font-weight="700" font-size="40" fill="#fff4dc" text-anchor="middle" stroke="#2a1c18" stroke-width="8" paint-order="stroke">${o.line}</text>` : ""}</g>`);
+    tl.set(`#${id}`, { opacity: 0 }, 0);
+    tl.fromTo(`#${id}`, { opacity: 0, attr: { transform: "translate(0,40)" } }, { opacity: 1, attr: { transform: "translate(0,0)" }, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 0.8);
+  };
+
   window.Rab = Rab; window.RabUI = RabUI;
 })();

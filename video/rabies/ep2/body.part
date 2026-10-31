@@ -1,0 +1,169 @@
+      // ---------- หมาดำตาสี่ EP.1 อย่าอุ้มมัน ----------
+      // grammar: morning yard (lure, wide→close→insert) · clock back · map · arrival (wide) · ยาย+ไอ้ดำ (medium) · shadow legend · rule board ·
+      // hug (medium close) · cards (puppies 2–6 months, saliva) · dusk: the sick puppy · pull back · shrug · rewind → the knee · night (dark, eyes) ·
+      // morning (empty bowl) · close on the ear · choice · end board
+      // the planted mistake: at 0:04 the puppy licks the graze on ภูมิ's knee (insert "knee"); revealed at "rw" / "lick"
+      const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.55, shade: "#2a2040", shadeOp: 0.3, cast: false, vol: false };
+      const DUSKL = { from: "left", rim: "#ffb070", rimOp: 0.6, shade: "#2a1838", shadeOp: 0.36, cast: false, vol: false };
+      const MOONL = { from: "right", rim: "#a8c8ff", rimOp: 0.5, shade: "#0a0e1e", shadeOp: 0.5, cast: false, vol: false };
+      const GDAYR = { top: "#fff4d8", bottom: "#c8e8d0", op: 0.12 }, GDUSKR = { top: "#ffb878", bottom: "#4a2a5a", op: 0.2 }, GNITE = { top: "#1a2a4a", bottom: "#05060a", op: 0.3 };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const TALK = (k, i, m = "o") => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      const CARD = { dark: 0.12, blur: { far: 8, mid: 8, set: 8, fg: 10 }, light: DAYL, grade: GDAYR };
+      const still = (x, y, s, sx = 540, sy = 1100) => ({ keys: [{ t: 0, ...fr(x, y, s, sx, sy), drift: { s: 0 } }] });
+      const push = (k, a, b) => ({ keys: [{ t: 0, ...fr(...a) }, { t: D(k), glide: D(k), ...fr(...b) }] });
+
+      const TUBE = { from: "left", rim: "#e8fff4", rimOp: 0.6, shade: "#102028", shadeOp: 0.4, cast: false, vol: false }, GWARD = { top: "#d8f0f0", bottom: "#4a6a7a", op: 0.15 };
+      const GW = 1500, f1 = (v) => (+v).toFixed(1);
+      // the planted mistake of EP.2: at 0:03 the bite on ไอ้ดำ's ear (from the fight with the puppy in EP.1) is right there as ยาย strokes it
+
+      // ---------- 1. hook: ไอ้ดำ wags by ยาย; her hand is bound in herbs; it looks fine ----------
+      add("hook", {
+        set: "village2", setOpts: { id: "v1", time: "day", house: [-360, 1.4] }, dark: 0, blur: { far: 3, mid: 2, fg: 8 }, light: DAYL, grade: GDAYR,
+        cam: push("hook", [560, 1250, 1.2, 540, 1050], [600, 1300, 1.35, 540, 1050]),
+        actors: [A("yaiBuaHerb", 400, 1640, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        captions: caps("hook"),
+        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "h1d", kind: "dam", x: 760, y: 1680, s: 1.0, flip: true, earWound: true })); Dog.drive(tl, "h1d", t0, D("hook"), "wag"); },
+      });
+      // ---------- 2. the command over the planted mistake: close on its head, the bite on the ear ----------
+      add("cmd", {
+        set: "village2", setOpts: { id: "v2", time: "day", house: [-300, 1.3] }, dark: 0, blur: { far: 5, mid: 5, set: 4, fg: 8 }, light: DAYL, grade: GDAYR,
+        cam: push("cmd", [640, 1150, 1.3, 540, 900], [660, 1010, 1.7, 540, 760]),
+        captions: caps("cmd"),
+        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "c2d", kind: "dam", x: 380, y: 1580, s: 2.6, earWound: true })); Dog.drive(tl, "c2d", t0, D("cmd"), "idle"); },
+      });
+      // ---------- 3. back two nights: the clock spins back, then ยาย at the stair stops the kids ----------
+      split("warn", 0.8, {
+        set: "clock2", setOpts: { id: "ck3", night: true }, dark: 0.1, blur: { far: 6 }, grade: GNITE, cam: still(540, 860, 1.05, 540, 880),
+        captions: capsFrom("warn", 0, []),
+        fx(tl, id, t0) { tl.fromTo("#ck3-mm", { attr: { transform: "rotate(0)" } }, { attr: { transform: "rotate(-17280)" }, duration: 0.75, ease: "power2.inOut", immediateRender: false }, t0); tl.fromTo("#ck3-hh", { attr: { transform: "rotate(60)" } }, { attr: { transform: "rotate(-1380)" }, duration: 0.75, ease: "power2.inOut", immediateRender: false }, t0); },
+      }, {
+        set: "village2", setOpts: { id: "v3", time: "night", house: [-60, 1.5] }, dark: 0.2, blur: { far: 2, fg: 8 }, light: MOONL, grade: GNITE,
+        cam: push("warn", [540, 1300, 1.05, 540, 1100], [540, 1300, 1.12, 540, 1100]),
+        actors: [A("yaiBua", 300, 1680, 1.0, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }], { talk: [[vo("warn", 0) - 0.8, voEnd("warn", 0) - 0.8, "o"]] }),
+          A("prae", 620, 1690, 0.92, [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat" }], { flip: true }), A("phum", 820, 1700, 0.76, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: capsFrom("warn", 0.8, [0], QUO),
+      });
+      // ---------- 4. under the house: only its eyes ----------
+      add("hide", {
+        set: "underHouse", setOpts: { id: "u4", eyes: [600, 1180], lamp: 900 }, dark: 0.15, light: MOONL, grade: GNITE,
+        cam: push("hide", [540, 1150, 1.0, 540, 960], [600, 1180, 1.3, 540, 960]),
+        captions: caps("hide"),
+        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "u4d", kind: "dam", x: 600, y: 1290, s: 0.8, silhouette: true })); put(L.glow, Dog.svg({ id: "u4e", kind: "dam", x: 600, y: 1290, s: 0.8, glow: true, eyesOnly: true }));
+          Dog.drive(tl, "u4d", t0, D("hide"), "lie"); Dog.drive(tl, "u4e", t0, D("hide"), "lie", { glow: true }); },
+      });
+      // ---------- 5. ยาย crawls in with rice; a snap in the dark ----------
+      add("snap", {
+        set: "underHouse", setOpts: { id: "u5", eyes: [700, 1180], lamp: 300 }, dark: 0.12, light: MOONL, grade: GNITE,
+        cam: push("snap", [520, 1300, 1.2, 540, 1000], [560, 1300, 1.3, 540, 1000]),
+        shake: (t) => (t > 2.4 && t < 2.8 ? { x: 10 * Math.sin(t * 60), y: 6 * Math.sin(t * 47), r: 0 } : 0),
+        actors: [A("yaiBuaHerb", 330, 1720, 1.0, [{ t: 0, mode: "offer", eyes: "normal", mouth: "smile" }, { t: 2.4, mode: "recoil", eyes: "wide", mouth: "scream" }])],
+        captions: caps("snap"),
+        fx(tl, id, t0, L) {
+          tl.set(`#${id}-a0-hand`, { opacity: 1 }, 0);
+          put(L.act, Dog.svg({ id: "s5d", kind: "dam", x: 760, y: 1300, s: 0.85, flip: true, silhouette: true })); put(L.glow, Dog.svg({ id: "s5e", kind: "dam", x: 760, y: 1300, s: 0.85, flip: true, glow: true, eyesOnly: true }));
+          ["s5d", "s5e"].forEach((d) => { Dog.drive(tl, d, t0, 2.2, "growl", { glow: d === "s5e" }); Dog.drive(tl, d, t0 + 2.2, 0.5, "lunge", { to: 660, glow: d === "s5e" }); Dog.drive(tl, d, t0 + 2.7, D("snap") - 2.7, "growl", { glow: d === "s5e" }); });
+          tl.fromTo("#flashw", { opacity: 0 }, { opacity: 0.5, duration: 0.06, yoyo: true, repeat: 1, immediateRender: false }, t0 + 2.4);
+        },
+      });
+      // ---------- 6. the kitchen: ยาย binds herbs on her hand ----------
+      add("herb", {
+        set: "kitchen2", setOpts: { id: "k6", time: "evening", stove: 860 }, dark: 0.08, blur: { far: 2, fg: 8 }, light: { from: "left", rim: "#ffb860", rimOp: 0.6, shade: "#1a0e08", shadeOp: 0.4, cast: false, vol: false }, grade: { top: "#ffb060", bottom: "#2a1a3a", op: 0.2 },
+        cam: push("herb", [560, 1150, 1.4, 540, 1000], [560, 1150, 1.5, 540, 1000]),
+        actors: [A("yaiBuaHerb", 560, 1560, 1.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { talk: [TALK("herb", 0)] })],
+        captions: caps("herb", undefined, QUO),
+        fx(tl, id, t0, L) { Pop2.flicker && Pop2.flicker(tl, "k6-fire", t0, D("herb")); },
+      });
+      // ---------- 7. card: the home dog can catch it · herbs crossed out ----------
+      add("home", { set: "village2", setOpts: { id: "v7", time: "dusk" }, ...CARD, light: DUSKL, grade: GDUSKR, cam: still(540, 1200, 1.0), captions: caps("home"),
+        fx(tl, id, t0, L) { RabUI.homeDog(tl, L.light, t0 + 0.1, D("home") - 0.1, { y: 470, xAt: F("home", 0, 2) + 0.1 }); } });
+      // ---------- 8. villagers with sticks; ลุงเขียว steps in ----------
+      add("khiao", {
+        set: "village2", setOpts: { id: "v8", time: "day", house: [-200, 1.2] }, dark: 0, blur: { far: 2, fg: 8 }, light: DAYL, grade: GDAYR,
+        cam: push("khiao", [600, 1250, 1.05, 540, 1100], [620, 1250, 1.15, 540, 1100]),
+        actors: [A("thong", 160, 1600, 0.9, [{ t: 0, mode: "idle", eyes: "angry", mouth: "snarl" }]), A("boon", 340, 1590, 0.88, [{ t: 0, mode: "point", eyes: "angry", mouth: "o" }]),
+          A("khiaoBox", 700, 1640, 1.0, [{ t: 0, mode: "raise", eyes: "angry", mouth: "o" }], { flip: true, talk: [TALK("khiao", 0)] })],
+        captions: caps("khiao", undefined, QUO),
+        fx(tl, id, t0, L) { put(L.act, `<path d="M230,1260L120,1560" stroke="#7a5438" stroke-width="16" stroke-linecap="round"/><path d="M230,1260L120,1560" stroke="#a8784e" stroke-width="5" stroke-linecap="round"/>`); },
+      });
+      // ---------- 9. ไอ้ดำ penned under the house; the note "ดูอาการ 10 วัน" ----------
+      add("pen", {
+        set: "village2", setOpts: { id: "v9", time: "day", house: [-100, 1.6] }, dark: 0.03, blur: { far: 3, fg: 8 }, light: DAYL, grade: GDAYR,
+        cam: push("pen", [560, 1350, 1.2, 540, 1050], [560, 1380, 1.32, 540, 1050]),
+        actors: [A("khiao", 860, 1700, 1.0, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }], { flip: true })],
+        captions: caps("pen"),
+        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "p9d", kind: "dam", x: 500, y: 1640, s: 0.85, earWound: true }) + Rab.pen(500, 1660, 1.0, { sign: "ดูอาการ 10 วัน" })); Dog.drive(tl, "p9d", t0, D("pen"), "sick"); },
+      });
+      // ---------- 10. the village map: the motorbike to the clinic ----------
+      const V = Maps.VIL;
+      add("map", {
+        set: "mapVillage", setOpts: { id: "mv", name: "บ้านโนนหมาก", vehicle: "moto", carS: 1.1, from: "บ้านยาย", to: "รพ.สต.", fromIcon: Maps.ICON.house, toIcon: Maps.ICON.hospital, labDx: [-40, 0], labDy: [0, -20],
+          route: [V.keng, [200, 872], [418, 870], [312, 1000], [300, 1128], [340, 1160], [700, 1162], [1100, 1163], [1240, 1150], V.hospital] },
+        dark: 0, light: false, grade: { top: "#fff8e8", bottom: "#d8f0f0", op: 0.12 },
+        cam: { keys: [{ t: 0, ...fr(90 + 380, 300 + 960, 1.0, 540, 900) }, { t: 0.4, glide: 2.4, ...fr(90 + 1080, 300 + 1060, 1.0, 540, 900) }] },
+        captions: caps("map"),
+        fx(tl, id, t0) { Maps.route(tl, "mv", t0, { go: [0.2, 2.6], ease: "power1.inOut" }); },
+      });
+      // ---------- 11. card: the race ----------
+      add("race", { set: "ward2", setOpts: { id: "w11", time: "day" }, ...CARD, light: TUBE, grade: GWARD, cam: still(540, 1200, 1.0), captions: caps("race"),
+        fx(tl, id, t0, L) { RabUI.race(tl, L.light, t0 + 0.1, D("race") - 0.1, { y: 520, deadAt: F("race", 0, 1) + 0.2 }); } });
+      // ---------- 12. the clinic: ยาย says the rule; the board ----------
+      add("rule", {
+        set: "ward2", setOpts: { id: "w12", time: "day" }, dark: 0.04, blur: { sky: 6, far: 6, set: 6 }, light: TUBE, grade: GWARD, cam: still(540, GW - 200, 1.0),
+        actors: [A("yaiBuaHerb", 320, GW + 260, 1.05, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }], { talk: [TALK("rule", 0)] })],
+        captions: caps("rule", undefined, QUO),
+        fx(tl, id, t0, L) { RabUI.rules(tl, L.light, t0 + vo("rule", 0) + 0.3, D("rule") - vo("rule", 0) - 0.3, { active: 1, done: [0], y: 560 }); },
+      });
+      // ---------- 13. ภูมิ raises his hand ----------
+      add("confess", {
+        set: "ward2", setOpts: { id: "w13", time: "day" }, dark: 0.04, blur: { sky: 6, far: 6, set: 6 }, light: TUBE, grade: GWARD,
+        cam: push("confess", [540, GW - 100, 1.3, 540, 1000], [540, GW - 100, 1.45, 540, 1000]),
+        actors: [A("prae", 260, GW + 260, 1.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "o" }]), A("phum", 560, GW + 280, 0.85, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }, { t: 1.0, mode: "raise", eyes: "worry", mouth: "o" }], { talk: [TALK("confess", 0)] }),
+          A("yaiBuaHerb", 840, GW + 260, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("confess", undefined, QUO),
+      });
+      // ---------- 14. rewind → 0:03, the ear ----------
+      split("rw", vo("rw", 1) - 0.1, {
+        set: "ward2", setOpts: { id: "w14", time: "day" }, dark: 0.04, blur: { sky: 6, far: 6, set: 6 }, light: TUBE, grade: GWARD, cam: still(540, GW - 100, 1.45, 540, 1000),
+        actors: [A("yaiBuaHerb", 540, GW + 260, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])],
+        captions: caps("rw", [0]),
+        fx(tl, id, t0, L) { RabUI.rewind(tl, L.light, t0 + vo("rw", 1) - 0.8, 0.8); },
+      }, {
+        set: "village2", setOpts: { id: "v14", time: "day", house: [-300, 1.3] }, dark: 0, blur: { far: 5, mid: 5, set: 4, fg: 8 }, light: DAYL, grade: { top: "#d8d0c0", bottom: "#4a4a5a", op: 0.25 },
+        cam: still(660, 1010, 1.7, 540, 760), captions: capsFrom("rw", vo("rw", 1) - 0.1, [1]),
+        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "r14d", kind: "dam", x: 380, y: 1580, s: 2.6, earWound: true })); Dog.drive(tl, "r14d", t0, 1.2, "idle"); },
+      });
+      // ---------- 15. the ear, ringed ----------
+      add("ear", {
+        set: "village2", setOpts: { id: "v15", time: "day", house: [-300, 1.3] }, dark: 0, blur: { far: 5, mid: 5, set: 4, fg: 8 }, light: DAYL, grade: GDAYR,
+        cam: push("ear", [660, 1010, 1.7, 540, 760], [680, 900, 2.1, 540, 760]),
+        captions: caps("ear"),
+        fx(tl, id, t0, L) {
+          put(L.act, Dog.svg({ id: "e15d", kind: "dam", x: 380, y: 1580, s: 2.6, earWound: true })); Dog.drive(tl, "e15d", t0, D("ear"), "idle");
+          put(L.glow, `<g id="e15-ring" opacity="0"><circle cx="${f1(380 + 2.6 * (86 + 34))}" cy="${f1(1580 + 2.6 * (-176 - 84))}" r="70" fill="none" stroke="#e2382e" stroke-width="10" stroke-dasharray="450" stroke-dashoffset="450"/></g>`);
+          tl.set("#e15-ring", { opacity: 0 }, 0); tl.to("#e15-ring", { opacity: 1, duration: 0.1 }, t0 + 0.5);
+          tl.fromTo("#e15-ring circle", { attr: { "stroke-dashoffset": 450 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + 0.5);
+        },
+      });
+      // ---------- 16. day six: the empty pen, the red collar on the post ----------
+      add("day6", {
+        set: "village2", setOpts: { id: "v16", time: "dusk", house: [-100, 1.6] }, dark: 0.08, blur: { far: 3, fg: 8 }, light: DUSKL, grade: GDUSKR,
+        cam: push("day6", [520, 1350, 1.25, 540, 1050], [520, 1300, 1.45, 540, 1000]),
+        captions: caps("day6"),
+        fx(tl, id, t0, L) { put(L.act, Rab.pen(500, 1660, 1.0, { sign: "วันที่ 6" }) + `<rect x="236" y="900" width="40" height="760" fill="#5e3e28" ${'stroke="#2a1c18" stroke-width="4"'}/>` + Rab.collar(256, 1100, 1.1)); },
+      });
+      // ---------- 17. ภูมิ with the collar; ยาย beside him ----------
+      add("end", {
+        set: "village2", setOpts: { id: "v17", time: "dusk", house: [-100, 1.6] }, dark: 0.08, blur: { far: 3, mid: 2, fg: 8 }, light: DUSKL, grade: GDUSKR,
+        cam: push("end", [540, 1200, 1.4, 540, 1000], [540, 1200, 1.5, 540, 1000]),
+        actors: [A("yaiBuaHerb", 320, 1640, 1.0, [{ t: 0, mode: "idle", eyes: "closed", mouth: "frown" }]), A("phum", 600, 1660, 0.85, [{ t: 0, mode: "hug", eyes: "normal", mouth: "frown" }], { talk: [TALK("end", 0)] })],
+        captions: caps("end", undefined, QUO),
+        fx(tl, id, t0, L) { put(L.act, Rab.collar(600, 1270, 0.65)); },
+      });
+      // ---------- 18. the board: both rules ticked, ตอนจบ ----------
+      add("final", {
+        set: "village2", setOpts: { id: "v18", time: "dusk", house: [-60, 1.5] }, dark: 0.08, blur: { far: 4, mid: 4, set: 4, fg: 8 }, light: DUSKL, grade: GDUSKR, cam: still(540, 1200, 1.0),
+        captions: caps("final"),
+        fx(tl, id, t0, L) { RabUI.finale(tl, L.light, t0 + 0.1, D("final") - 0.1, { y: 560 }); },
+      });

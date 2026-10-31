@@ -20,25 +20,24 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.15, -0.3, 2.6),          # the canal road at 1 a.m.: the car's headlights along the dark water, no rail
-    ("lock", ["n02"], 0.3, 0.3, 1.9),            # insert: ต้น presses the window lock (the planted mistake, LED on at ~0:04)
-    ("float", ["n03"], 0.2, 0.3, 3.4),           # the car floating nose-down in the canal; the countdown starts
-    ("all", ["n04"], 0.1, 0.4, 2.6),             # under the water: the headlights' beams in the murk, bubbles
-    ("drive", ["n05"], 0.2, 0.2, 4.0),           # 1 a.m., the drive home: the road through the windscreen
-    ("swerve", ["n06"], 0.1, 0.8, 2.4),          # an unlit motorbike in the headlights → the swerve
-    ("plunge", [], 0, 0, 1.6),                   # outside: the car goes off the bank into the canal, the splash
-    ("inrush", [], 0, 0, 2.0),                   # inside: the jolt, water spurting in at the door seals, the countdown appears
-    ("belt", ["n07"], 0.2, 0.3, 2.8),            # in the cabin: water at the floor; step 1
-    ("door", ["n08"], 0.2, 0.3, 3.2),            # the door: the water outside presses it shut
-    ("window", ["n09"], 0.2, 0.3, 3.4),          # his window goes down
-    ("kid", ["n10"], 0.2, 0.3, 2.8),             # he turns to ขิม
-    ("phone", ["n11"], 0.2, 0.4, 3.0),           # the phone on the seat, the water rising round it; call 1669 once ashore
-    ("rw", ["n12"], 0.2, 0.6, 4.2),              # rewind to 0:04: the lock pressed
-    ("kim", ["k01"], 0.1, 0.4, 2.2),             # her window: she presses, nothing; the water outside at the glass
-    ("led", ["n13"], 0.2, 0.3, 2.4),             # the lock's orange light still on
-    ("panel", ["n14"], 0.2, 0.3, 3.0),           # he presses her window on his own panel: nothing (some cars lock every window but the driver's)
-    ("flicker", ["n15"], 0.2, 0.9, 2.8),         # the dash lights flicker; the countdown at single digits
-    ("next", [], 0, 0, 4.2),                     # next-episode card + channel
+    ("hook", ["n01"], 0.1, -0.15, 2.5),            # day: ไอ้ดำ wagging by ยาย, her hand bound in herbs; it looks fine
+    ("cmd", ["n02"], 0.05, 0.25, 1.6),          # close: ยาย strokes its head — the bite on its ear (the planted mistake, ~0:03)
+    ("warn", ["y01"], 0.15, 0.3, 2.6),          # two days earlier, night: ยาย stops the kids at the stair
+    ("hide", ["n03"], 0.15, 0.4, 3.0),          # under the house: only its eyes
+    ("snap", ["n04"], 0.15, 0.5, 3.0),          # ยาย crawls in with rice; a snap in the dark
+    ("herb", ["y02"], 0.15, 0.4, 3.0),          # the kitchen: ยาย pounds herbs onto her hand
+    ("home", ["n05"], 0.15, 0.5, 5.0),          # card: the home dog fights a dog from outside · herbs crossed out
+    ("khiao", ["k01"], 0.15, 0.4, 2.6),         # villagers with sticks at the fence; ลุงเขียว steps in
+    ("pen", ["n06"], 0.15, 0.4, 3.0),           # ไอ้ดำ in a pen under the house, a note "ดูอาการ 10 วัน"
+    ("map", ["n07"], 0.1, 0.4, 2.8),            # the village map: the motorbike to the clinic
+    ("race", ["n08"], 0.15, 0.5, 4.0),          # card: the race
+    ("rule", ["y03"], 0.15, 0.5, 3.0),          # the clinic: ยาย says the rule; the board, rule 2
+    ("confess", ["p01"], 0.15, 0.5, 2.8),       # ภูมิ raises his hand
+    ("rw", ["n09", "n10"], 0.15, 0.4, 3.2),     # rewind to 0:03
+    ("ear", ["n11"], 0.15, 0.5, 3.0),           # the ear, ringed
+    ("day6", ["n12"], 0.2, 0.5, 3.4),           # the empty pen, the red collar on the post · then the clinic card
+    ("end", ["p02"], 0.2, 0.6, 3.0),            # ภูมิ with the collar, ยาย beside him
+    ("final", ["n13"], 0.2, 1.2, 3.6),          # the board, both rules ticked, ตอนจบ
 ]
 GAP = 0.08
 
