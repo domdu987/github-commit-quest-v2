@@ -187,12 +187,14 @@
   War.blast = (tl, L, x, y, t, o = {}) => {
     const id = o.id || nid(), s = o.s ?? 1, r = mk(o.seed || 17);
     // white-out (3 frames) then a warm afterglow
-    tl.fromTo("#flashw", { opacity: 0, backgroundColor: "#ffffff" }, { keyframes: [{ opacity: 1, duration: 0.01 }, { opacity: 1, duration: 0.04 }, { opacity: 0, duration: 0.22, ease: "power2.out" }], immediateRender: false }, t);
+    tl.fromTo("#flashw", { opacity: 1, backgroundColor: "#ffffff" }, { keyframes: [{ opacity: 1, duration: 0.05 }, { opacity: 0, duration: 0.22, ease: "power2.out" }], immediateRender: false }, t);
     let jets = "", clods = "", spray = "", blades = "", puffs = "";
     for (let k = 0; k < 9; k++) { const a = (k - 4) * 9 + (r() - 0.5) * 6, h = 380 + r() * 260, w = 26 + r() * 22;
       jets += `<g transform="rotate(${f1(a)})"><g id="${id}-j${k}" opacity="0"><path d="M${-w},0Q${f1(-w * 0.6)},${f1(-h * 0.6)} 0,${f1(-h)}Q${f1(w * 0.6)},${f1(-h * 0.6)} ${w},0Z" fill="url(#wyJet)"/></g></g>`; }
-    for (let k = 0; k < 30; k++) { const big = k % 4 === 0, sz = big ? 1.8 : 0.8 + r() * 0.6;
-      clods += `<g id="${id}-c${k}" opacity="0"><path d="M${f1(-10 * sz)},${f1(-4 * sz)}Q${f1(-2 * sz)},${f1(-14 * sz)} ${f1(11 * sz)},${f1(-7 * sz)}Q${f1(15 * sz)},${f1(6 * sz)} ${f1(4 * sz)},${f1(11 * sz)}Q${f1(-11 * sz)},${f1(13 * sz)} ${f1(-12 * sz)},${f1(2 * sz)}Z" fill="${k % 3 ? "#5a4028" : "#7a5a38"}" ${O(1.6)}/><path d="M${f1(-6 * sz)},${f1(-6 * sz)}q${f1(6 * sz)},${f1(-4 * sz)} ${f1(12 * sz)},0" stroke="#a8865a" stroke-width="2" fill="none"/></g>`; }
+    for (let k = 0; k < 30; k++) { const big = k % 4 === 0, sz = big ? 1.8 : 0.7 + r() * 0.7, nv = 5 + (k % 3), el = 0.6 + r() * 0.7;
+      const pts = Array.from({ length: nv }, (_, i) => { const a = (i / nv) * Math.PI * 2 + (r() - 0.5) * 0.7, rr = 12 * sz * (0.55 + r() * 0.6); return [Math.cos(a) * rr, Math.sin(a) * rr * el]; });
+      const d = "M" + pts.map(([a, b]) => `${f1(a)},${f1(b)}`).join("L") + "Z", hi = `M${f1(pts[nv - 1][0] * 0.7)},${f1(pts[nv - 1][1] * 0.7)}L${f1(pts[0][0] * 0.7)},${f1(pts[0][1] * 0.7)}`;
+      clods += `<g id="${id}-c${k}" opacity="0"><path d="${d}" fill="${["#5a4028", "#6e5032", "#4a3420", "#7a5a38"][k % 4]}" ${O(1.6)}/><path d="${hi}" stroke="#b0905e" stroke-width="2.4" fill="none"/>${k % 5 === 0 ? `<path d="M0,0q-4,-14 -10,-22M2,0q4,-12 10,-18" stroke="#7a9a3a" stroke-width="3" fill="none"/>` : ""}</g>`; }
     for (let k = 0; k < 14; k++) blades += `<g id="${id}-b${k}" opacity="0"><path d="M-3,22Q-6,0 2,-26Q6,0 3,22Z" fill="${k % 2 ? "#8aa040" : "#c8c070"}"/></g>`;
     for (let k = 0; k < 50; k++) spray += `<circle id="${id}-p${k}" r="${f1(2 + r() * 3)}" fill="${k % 2 ? "#8a6a44" : "#c4a47a"}" opacity="0"/>`;
     for (let k = 0; k < 7; k++) { const px = (r() - 0.5) * 140, py = -50 - k * 50, pr = 60 + r() * 40; puffs += `<g transform="translate(${f1(px)},${f1(py)})"><g id="${id}-u${k}" opacity="0"><path d="${blob(8, 10, pr, r, 9)}" fill="#7a5e40"/><path d="${blob(0, 0, pr * 0.92, r, 9)}" fill="#b0906a"/><path d="${blob(-pr * 0.25, -pr * 0.25, pr * 0.5, r, 8)}" fill="#dcc4a0" opacity=".85"/></g></g>`; }
@@ -233,19 +235,21 @@
   // ---------------- a bullet in slow motion through the bush ----------------
   War.bulletSlow = (tl, L, o = {}) => {
     const id = nid(), r = mk(o.seed || 29), y = o.y, x0 = o.x0 ?? 900, x1 = o.x1 ?? 250, T = o.t, slow = o.slow ?? 0.4;
-    const bullet = (k) => `<g transform="translate(0,${y + (k ? (r() - 0.5) * 120 : 0)})"><g id="${id}-k${k}" opacity="0"><path d="M0,-7L360,-2L360,2L0,7Z" fill="url(#wyTrail)"/><ellipse rx="22" ry="9" fill="#fff6d0" opacity=".6"/><ellipse rx="11" ry="4.5" fill="#fff"/></g></g>`;
+    const dir = o.dir ?? -1;
+    const bullet = (k) => `<g transform="translate(0,${y + (k ? (r() - 0.5) * 120 : 0)}) scale(${-dir},1)"><g id="${id}-k${k}" opacity="0"><path d="M0,-7L360,-2L360,2L0,7Z" fill="url(#wyTrail)"/><ellipse rx="22" ry="9" fill="#fff6d0" opacity=".6"/><ellipse rx="11" ry="4.5" fill="#fff"/></g></g>`;
     let g = ""; for (let k = 0; k < 4; k++) g += bullet(k);
     // leaf bursts along the slow stretch
     const NB = 7; let leaves = "";
     for (let b = 0; b < NB; b++) { const bx = x0 + ((x1 - x0) * (b + 0.5)) / NB; for (let j = 0; j < 7; j++) leaves += `<g transform="translate(${f1(bx)},${f1(y + (r() - 0.5) * 30)})"><g id="${id}-l${b}-${j}" opacity="0">${j === 6 ? `<path d="M-14,0H14" stroke="#4a3624" stroke-width="5" stroke-linecap="round"/>` : `<path d="M0,-14Q14,0 0,16Q-14,0 0,-14Z" fill="${j % 3 === 0 ? "#d8e07a" : j % 3 === 1 ? "#7aa244" : "#3e6a2c"}" ${O(1.4)}/><path d="M0,-12V14" stroke="#2a4a1e" stroke-width="1.4"/>`}</g></g>`; }
     put(L.glow, `<g>${leaves}${g}</g>`);
     // the slow one: in fast, through the bush at 0.3×, out fast
-    tl.fromTo(`#${id}-k0`, { x: 1500, opacity: 1 }, { keyframes: [{ x: x0, duration: 0.05, ease: "none" }, { x: x1, duration: slow, ease: "none" }, { x: -500, duration: 0.05, ease: "none" }, { opacity: 0, duration: 0.01 }], immediateRender: false }, T);
+    const X = (v) => (dir < 0 ? v : -v); // the bullet group is mirrored for left→right
+    tl.fromTo(`#${id}-k0`, { x: X(dir < 0 ? 1500 : -500), opacity: 1 }, { keyframes: [{ x: X(x0), duration: 0.05, ease: "none" }, { x: X(x1), duration: slow, ease: "none" }, { x: X(dir < 0 ? -500 : 1600), duration: 0.05, ease: "none" }, { opacity: 0, duration: 0.01 }], immediateRender: false }, T);
     for (let b = 0; b < NB; b++) { const tb = T + 0.05 + (slow * (b + 0.5)) / NB, sl = 2.6;
-      for (let j = 0; j < 7; j++) { const a = Math.PI + (r() - 0.5) * 1.6, v = 60 + r() * 120;
+      for (let j = 0; j < 7; j++) { const a = (dir < 0 ? Math.PI : 0) + (r() - 0.5) * 1.6, v = 60 + r() * 120;
         tl.fromTo(`#${id}-l${b}-${j}`, { x: 0, y: 0, rotation: 0, opacity: 1 }, { x: Math.cos(a) * v * 1.4, y: Math.sin(a) * v + 30, rotation: (r() > 0.5 ? 1 : -1) * 300, opacity: 0, duration: 1.2 * sl * 0.5, ease: "power2.out", immediateRender: false }, tb); } }
     // real speed after
-    for (let k = 1; k < 4; k++) { const tk = T + 0.05 + slow + 0.15 + k * 0.17; tl.fromTo(`#${id}-k${k}`, { x: 1500, opacity: 1 }, { keyframes: [{ x: -500, duration: 0.12, ease: "none" }, { opacity: 0, duration: 0.01 }], immediateRender: false }, tk); }
+    for (let k = 1; k < 4; k++) { const tk = T + 0.05 + slow + 0.15 + k * 0.17; tl.fromTo(`#${id}-k${k}`, { x: X(dir < 0 ? 1500 : -500), opacity: 1 }, { keyframes: [{ x: X(dir < 0 ? -500 : 1600), duration: 0.12, ease: "none" }, { opacity: 0, duration: 0.01 }], immediateRender: false }, tk); }
     return { slowFrom: T + 0.05, slowTo: T + 0.05 + slow };
   };
 
@@ -287,7 +291,9 @@
     return { ...M.lie(u, o), uaF: -150 + 24 * s, faF: -30 + 20 * s, uaB: -20 - 30 * lift, faB: -40, head: -16 - 22 * lift, torso: -6 * lift, thF: 8 * s, shF: 14 + 10 * lift, thB: -6 * s }; };
   M.duckLow = (u, o) => { const j = Math.sin(u * 19) * 1.6, b = Math.sin(u * 2 * Math.PI / 0.9);
     return { ...M.crouch(u, o), uaF: -150 + j, faF: -116, uaB: 150 - j, faB: 112, torso: 34 + j * 0.4 + 2 * b, head: -26 + j, bodyY: 175 + 4 * b }; };
-  M.startle = (u, o) => { const k = Math.min(1, u / 0.15), j = Math.sin(u * 31) * 2; return { ...M.idle(u, o), uaF: -60 * k + j, faF: -100 * k, uaB: -50 * k, faB: -90 * k, torso: -10 * k, head: -12 * k + j, bodyY: 6 * k }; };
+  M.hunker = (u, o) => { const j = Math.sin(u * 21) * 1.2, b = Math.sin(u * 2 * Math.PI / 0.8);
+    return { ...M.crouch(u, o), thF: -96, shF: 128, thB: -70, shB: 120, torso: 26 + 2 * b + j * 0.3, head: 30 + j, uaF: -78 + j, faF: -122, uaB: -70 - j, faB: -118, bodyY: 205 + 3 * b }; };
+  M.startle = (u, o) => { const k = Math.min(1, (u + 0.08) / 0.15), j = Math.sin(u * 31) * 2; return { ...M.idle(u, o), uaF: -60 * k + j, faF: -100 * k, uaB: -50 * k, faB: -90 * k, torso: -10 * k, head: -12 * k + j, bodyY: 6 * k }; };
   M.pointAt = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.8); return { ...M.idle(u, o), uaF: -82 + 3 * b, faF: -4, uaB: 6, faB: -16, torso: 4, head: 2 + b, bodyY: -1 }; };
 
   // the helmet strap (moves with the head) and the dog tag on its chain (#aid-tagj) for the war cast
@@ -349,7 +355,7 @@
         <rect width="${PW}" height="${PH}" rx="34" fill="${good ? "url(#wyPanelG)" : "url(#wyPanelR)"}" ${O(5)}/>
         <path d="M30,380Q470,360 910,382V440Q470,452 30,440Z" fill="#9a7a4a" opacity=".9"/><path d="M30,380Q470,360 910,382" stroke="${INK}" stroke-width="4" fill="none"/>
         ${War.grass(40, 900, 384, 40, mk(good ? 3 : 4), TONES.day, { n: 5, step: 40, amp: 0 })}
-        <g transform="translate(330,382) scale(1.05)">${man("#c8946a")}</g>
+        <g transform="translate(330,382) scale(1.36)">${man("#c8946a")}</g>
         ${good ? `<g transform="translate(600,382)"><path d="M-70,0Q-60,-180 -52,-330H52Q60,-180 70,0Z" fill="url(#wyBark)" ${O(4)}/><path d="M-30,-40Q-24,-180 -20,-300M20,-60Q16,-200 24,-300" stroke="#2a1e14" stroke-width="4" opacity=".5" fill="none"/>
             <path d="M-52,-330Q0,-350 52,-330" stroke="${INK}" stroke-width="4" fill="#6a4a30"/><g id="${gid}-imp" opacity="0"><circle cx="72" cy="-172" r="40" fill="url(#wyPuff)"/><path d="M70,-172l-14,-8l4,8l-8,6z" fill="#fff6c0"/></g></g>`
           : War.bushHTML(560, 382, "", 0.62, { seed: 9 })}
