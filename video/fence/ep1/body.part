@@ -125,6 +125,7 @@
           Fence.life(tl, "g11", t0, D("gate"));
           tl.fromTo("#g11-horde", { y: -60, scale: 0.85, svgOrigin: "560 1300" }, { y: 0, scale: 1, svgOrigin: "560 1300", duration: 1.3, ease: "power1.in", immediateRender: false }, t0);
           tl.to("#g11-lock", { rotation: 18, svgOrigin: "0 -30", duration: 0.12, yoyo: true, repeat: 5, ease: "sine.inOut" }, t0 + 1.28);
+          impact(L, tl, t0 + 1.28, 540, 1040, { col: "#e8c8a0", chip: "#5e6e6c" });
         },
       });
       // ---------- 12. the classroom at dusk: ก้อง shows the crate (k02), the others round him ----------
@@ -231,5 +232,5 @@
       add("next", {
         set: "fenceGate", setOpts: { id: "g22", time: "night", lock: "open", mud: true }, dark: 0.1, light: NITE, grade: GN, blur: BLUR,
         cam: { keys: [{ t: 0, ...still(fr(540, 1300, 0.8, 540, 1000)) }] },
-        fx(tl, id, t0, L) { FenceUI.next(tl, L.light, t0, D("next"), { ep: 2, l1: "ถ้าต้องดูดน้ำมันจากรถร้าง…", l2: "อย่าใช้ปาก" }); },
+        fx(tl, id, t0, L) { FenceUI.next(tl, L.light, t0, D("next"), { ep: "2 (ตอนจบ)", l1: "ถ้าโดนตะปูตำ แผลแค่รูเดียว…", l2: "อย่าคิดว่าไม่เป็นไร" }); },
       });

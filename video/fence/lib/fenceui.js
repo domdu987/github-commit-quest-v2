@@ -58,10 +58,19 @@
   I.five = () => `<text y="24" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="66" fill="${U.red}">5</text><text y="46" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="20" fill="${U.ink}">ปี</text>`;
   I.people = () => [-30, -10, 10, 30].map((x, k) => `<circle cx="${x}" cy="-14" r="9" fill="${["#c8946a", "#e8b48a", "#9a6a44", "#f0c4a0"][k]}" ${O(2.5)}/><path d="M${x - 10},24V4Q${x},-4 ${x + 10},4V24Z" fill="${["#bcd8f0", "#f2c83a", "#2e3c62", "#c8303a"][k]}" ${O(2.5)}/>`).join("");
   FU.ICON = I;
-  const coin = (k, s = 1, id = "") => `<g transform="scale(${s})"${id ? ` id="${id}"` : ""}><ellipse cx="0" cy="58" rx="56" ry="10" fill="#000" opacity=".2"/><circle r="62" fill="#c8c0ae" ${O(4)} transform="translate(0,8)"/><circle r="62" fill="url(#fuCoin)" ${O(4)}/><path d="M-44,-38Q-20,-60 14,-58" stroke="#fff" stroke-width="7" fill="none" opacity=".8" stroke-linecap="round"/>${(I[k] || (() => ""))()}</g>`;
-  const mark = (m, id) => m === "x" ? `<g id="${id}"><circle r="30" fill="${U.red}" ${O(4)}/><path d="M-12,-12L12,12M12,-12L-12,12" stroke="#fff" stroke-width="8" stroke-linecap="round"/></g>`
-    : m === "ok" ? `<g id="${id}"><circle r="30" fill="${U.green}" ${O(4)}/><path d="M-13,1l9,10l18,-20" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>` : "";
+  const coin = (k, s = 1, id = "") => `<g transform="scale(${s})"${id ? ` id="${id}"` : ""}><ellipse cx="0" cy="58" rx="56" ry="10" fill="#000" opacity=".2"/><circle r="62" fill="#c8c0ae" ${O(4)} transform="translate(0,8)"/><circle r="62" fill="url(#fuCoin)" ${O(4)}/><path d="M-44,-38Q-20,-60 14,-58" stroke="#fff" stroke-width="7" fill="none" opacity=".8" stroke-linecap="round"/><circle cx="-6" cy="8" r="62" fill="none" stroke="#000" stroke-width="3" opacity=".12"/>${(I[k] || (() => ""))()}</g>`;
+  const mark = (m, id) => (m ? `<circle id="${id}-ring" r="34" fill="none" stroke="${m === "x" ? U.red : U.green}" stroke-width="8" opacity="0"/>` +
+    (m === "ok" ? [0, 90, 180, 270].map((a, k) => `<path id="${id}-sp${k}" d="M0,-8L3,-3L8,0L3,3L0,8L-3,3L-8,0L-3,-3Z" fill="#fff6a0" stroke="${U.ink}" stroke-width="1.5" opacity="0" transform="rotate(${a})"/>`).join("") : "") : "") +
+    (m === "x" ? `<g id="${id}"><circle r="30" fill="${U.red}" ${O(4)}/><path d="M-12,-12L12,12M12,-12L-12,12" stroke="#fff" stroke-width="8" stroke-linecap="round"/></g>`
+    : m === "ok" ? `<g id="${id}"><circle r="30" fill="${U.green}" ${O(4)}/><path d="M-13,1l9,10l18,-20" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>` : "");
   const pop = (tl, sel, t, s0 = 0.4) => tl.fromTo(sel, { opacity: 0, scale: s0, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.4)", immediateRender: false }, t);
+  // a mark lands: ring burst; "ok" adds 4 sparkles flying out, "x" shakes the row and flashes red
+  const markFx = (tl, id, t, m, rowSel) => {
+    if (!m) return;
+    tl.fromTo(`#${id}-ring`, { opacity: 0.9, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 0, scale: 2.6, duration: 0.5, ease: "power2.out", immediateRender: false }, t + 0.05);
+    if (m === "ok") [0, 1, 2, 3].forEach((k) => { const a = k * Math.PI / 2 + 0.6; tl.fromTo(`#${id}-sp${k}`, { opacity: 1, x: 0, y: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 0, x: Math.cos(a) * 70, y: Math.sin(a) * 70, scale: 1.4, duration: 0.55, ease: "power2.out", immediateRender: false }, t + 0.05); });
+    if (m === "x" && rowSel) tl.fromTo(rowSel, { x: -10 }, { x: 0, duration: 0.4, ease: "elastic.out(1.2,0.25)", immediateRender: false }, t + 0.05);
+  };
   const bob = (tl, sel, t, dur, a = 6) => tl.fromTo(sel, { y: 0 }, { y: -a, duration: 0.9, yoyo: true, repeat: Math.max(1, Math.ceil(dur / 0.9)), ease: "sine.inOut", immediateRender: false }, t);
   const hide = (tl, sel, t0) => tl.set(sel, { opacity: 0 }, t0);
   const out = (tl, sel, t) => tl.to(sel, { opacity: 0, duration: 0.18, immediateRender: false }, t);
@@ -138,7 +147,7 @@
       tl.fromTo(`#${id}-row${k}`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, at);
       tl.fromTo(`#${id}-i${k}`, { scale: 0.3, rotation: -30, transformOrigin: "50% 50%" }, { scale: 1, rotation: 0, duration: 0.6, ease: "elastic.out(1,0.5)", immediateRender: false }, at);
       bob(tl, `#${id}-i${k}`, at + 0.6, t0 + dur - at - 0.6, 5);
-      if (r.mark) { hide(tl, `#${id}-m${k}`, 0); pop(tl, `#${id}-m${k}`, at + (r.markAt ?? 0.45), 2.4); }
+      if (r.mark) { hide(tl, `#${id}-m${k}`, 0); pop(tl, `#${id}-m${k}`, at + (r.markAt ?? 0.45), 2.4); markFx(tl, `${id}-m${k}`, at + (r.markAt ?? 0.45), r.mark, `#${id}-row${k}`); }
     });
     if (o.foot) { hide(tl, `#${id}-foot`, 0); pop(tl, `#${id}-foot`, t0 + (o.footAt ?? 0.3 + rows.length * 0.35), 0.6); }
     out(tl, `#${id}`, t0 + dur - 0.18);
@@ -154,7 +163,7 @@
     let c = (o.title ? `<g transform="translate(540,${Y - 330})"><rect x="-380" y="-50" width="760" height="100" rx="50" fill="${o.color || U.ink}" ${O(4)}/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="50" fill="#fff">${o.title}</text></g>` : "") + side(o.a, 300, 0) + side(o.b, 780, 1);
     put(layer, `<g id="${id}">${c}</g>`);
     hide(tl, `#${id}`, 0); tl.set(`#${id}`, { opacity: 1 }, t0);
-    [0, 1].forEach((k) => { tl.fromTo(`#${id}-s${k}`, { opacity: 0, y: 140 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0 + k * (o.gap ?? 0.5)); hide(tl, `#${id}-m${k}`, 0); pop(tl, `#${id}-m${k}`, t0 + (o.markAt || [0.6, 1.1])[k], 2.4); });
+    [0, 1].forEach((k) => { tl.fromTo(`#${id}-s${k}`, { opacity: 0, y: 140 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0 + k * (o.gap ?? 0.5)); hide(tl, `#${id}-m${k}`, 0); pop(tl, `#${id}-m${k}`, t0 + (o.markAt || [0.6, 1.1])[k], 2.4); markFx(tl, `${id}-m${k}`, t0 + (o.markAt || [0.6, 1.1])[k], [o.a, o.b][k].mark, `#${id}-s${k}`); });
     out(tl, `#${id}`, t0 + dur - 0.18);
   };
 
@@ -226,10 +235,10 @@
     put(layer, `<g id="${id}"><rect width="1080" height="1920" fill="#0c0a0a" opacity=".86"/>
       <g transform="translate(540,560) rotate(-3)"><g id="${id}-pg"><g filter="url(#fuDrop)"><rect x="-430" y="-260" width="860" height="700" fill="url(#fuLines)" ${O(4)}/></g><path d="M-330,-260V440" stroke="#e86a6a" stroke-width="3"/>
         <rect x="-440" y="-286" width="880" height="44" rx="6" fill="#2a5a3a" ${O(4)}/>
-        <text x="-300" y="-150" font-family="Sriracha" font-size="56" fill="#2a3a8a">พรุ่งนี้ต้องหา:</text>
-        <text x="-300" y="-40" font-family="Sriracha" font-size="48" fill="#c8302a">ตอนที่ ${o.ep}</text>
+        <text x="-300" y="-150" font-family="Sriracha" font-size="56" fill="#2a3a8a">${o.head || "พรุ่งนี้ต้องหา:"}</text>
+        <text x="-300" y="-40" font-family="Sriracha" font-size="48" fill="#c8302a">${o.ep ? "ตอนที่ " + o.ep : ""}</text>
         <text x="-300" y="80" font-family="Kanit" font-weight="900" font-size="${Math.min(54, Math.round(1180 / o.l1.length))}" fill="#2a2a3a">${o.l1}</text>
-        <text x="-300" y="170" font-family="Kanit" font-weight="900" font-size="64" fill="#c8302a">${o.l2}</text>
+        <text x="-300" y="170" font-family="Kanit" font-weight="900" font-size="${Math.min(64, Math.round(1240 / o.l2.length))}" fill="#c8302a">${o.l2}</text>
         <path d="M-300,200Q0,214 330,196" stroke="#c8302a" stroke-width="6" fill="none"/>
         <text x="-300" y="320" font-family="Sriracha" font-size="40" fill="#5a5a6a">${o.cta || "กดติดตาม… แล้วอยู่หลังรั้วไปด้วยกัน"}</text></g></g>
       <text x="540" y="1340" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff" letter-spacing="10">ROD MAI CLUB</text>

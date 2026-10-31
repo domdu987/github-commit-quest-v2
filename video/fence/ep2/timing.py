@@ -1,4 +1,4 @@
-"""รั้วสุดท้าย EP.2. Derive shot timing from the recorded voice so picture and sound share one schedule.
+"""รั้วสุดท้าย EP.2 (ตอนจบ). Derive shot timing from the recorded voice so picture and sound share one schedule.
 
 Each shot lists its voice lines in order, as "id", ("id", gap) where gap is the time from the end of
 the previous line (negative = overlap), or ("id", offset, "start") to start offset seconds after the
@@ -20,27 +20,25 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.15, -0.3, 2.6),          # noon: ลุงหมาน's lips round the hose at the pickup's fuel filler
-    ("dont", ["n02"], 0.2, 0.2, 1.6),            # the command: fuel surges up the hose (the planted gulp at ~0:04)
-    ("lung", ["n03"], 0.15, 0.3, 4.0),           # card: the airway split — food pipe vs windpipe, a drop into the lung, the lung inflames
-    ("dad", ["n04"], 0.1, 0.3, 2.8),             # card: three generations with the hose (the belief)
-    ("gen", ["n05"], 0.15, 0.2, 4.0),            # day 101: ลุงหมาน drags the generator in through the gate
-    ("fan", ["k01"], 0.1, 0.3, 2.6),             # he pats it, laughs
-    ("tank", ["n06"], 0.1, 0.3, 3.2),            # the generator's tank empty → the pickup outside the fence
-    ("noon", ["n07"], 0.1, 0.3, 3.6),            # noon heat: the horde slow in the haze + rule slate (rule 1)
-    ("why", ["k02"], 0.1, 0.2, 2.0),             # ก้อง: ใช้ปากเลยเหรอ
-    ("forty", ["k03"], 0.1, 0.3, 3.0),           # ลุงหมาน waves him off
-    ("gulp", [], 0, 0, 2.2),                     # the fuel comes: he chokes, coughs, spits
-    ("fine", ["n08"], 0.1, 0.3, 2.4),            # he waves: fine; they carry the jerrycan in
-    ("night", ["n09"], 0.15, 0.3, 4.4),          # night: the generator running, the fan; ลุงหมาน coughing, sweating
-    ("bit", ["k04"], 0.05, 0.3, 1.6),            # เจ๊หงส์ backs away; ก้อง raises the bat
-    ("twist", ["n10"], 0.15, 0.3, 3.0),          # card: not ห่า — the lung with fuel in it
-    ("vomit", ["n11"], 0.15, 0.4, 4.8),          # card: don't make yourself vomit → doctor now
-    ("rw", ["n12"], 0.2, 0.5, 3.8),              # rewind to 0:04
-    ("swallow", ["n13"], 0.1, 0.4, 3.4),         # the gulp, slowed: he swallows, wipes his mouth, smiles
-    ("sound", ["n14"], 0.15, 0.3, 2.8),          # the sound rolls out over the paddies to the hill
-    ("blink", ["n15"], 0.1, 0.9, 3.2),           # a torch on the hill blinks back three times
-    ("next", [], 0, 0, 4.2),
+    ("hook", ["n01"], 0.1, -0.5, 2.6),           # a bare foot comes down on the nail in the brace plank
+    ("dont", ["n02"], 0.15, 0.2, 1.8),           # the command: the blood on the nail (inside face of the fence, planted ~0:03)
+    ("dirty", ["n03"], 0.15, 0.3, 4.2),          # card: a deep puncture vs a wide clean scrape
+    ("man", ["n04"], 0.15, 0.3, 4.0),            # dawn day 102: a man lying outside the gate
+    ("plead", ["k01"], 0.1, 0.3, 3.8),           # ภู through the bars
+    ("rule", ["k02"], 0.1, 0.4, 2.6),            # ครูพิม + rule slate (rule 2)
+    ("search", ["n05"], 0.1, 0.3, 3.2),          # they search him: no bite, the foot wound
+    ("germ", ["n06"], 0.15, 0.3, 4.4),           # card: the germ in soil and dust → into the wound
+    ("jaw", ["n07"], 0.15, 0.3, 4.4),            # card: the jaw locking + calendar 3–21 days
+    ("ha", ["k03"], 0.05, 0.3, 2.4),             # เจ๊หงส์ points
+    ("shot", ["n08", "n09"], 0.15, 0.4, 6.2),    # card: last shot more than 5 years → the booster
+    ("radio", ["n10", "r01"], 0.2, 0.5, 3.6),    # night: the radio, still "หก"
+    ("rw", ["n11"], 0.2, 0.5, 3.8),              # rewind to 0:03
+    ("inside", ["n12"], 0.1, 0.4, 2.8),          # the nail on the INSIDE face, the gate beyond
+    ("notout", ["n13"], 0.1, 0.4, 2.2),          # ภู asleep, his bandaged foot
+    ("tower", ["n14"], 0.1, 0.4, 3.0),           # the water tower at night: a blanket, wrappers, the bare prints down the ladder
+    ("ask", ["k04"], 0.1, 0.6, 4.6),             # ปั้น at his side with her drawing: ภู behind the fence talking to a shadow
+    ("bag", ["n15"], 0.15, 0.9, 4.0),            # his bag: a walkie-talkie, its red light on, "ศูนย์… หก" glowing
+    ("end", [], 0, 0, 4.2),                      # the series end card (ตอนจบ)
 ]
 GAP = 0.08
 

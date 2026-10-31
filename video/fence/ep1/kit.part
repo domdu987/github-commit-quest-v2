@@ -36,3 +36,11 @@
       const SP = (cam, x, y) => [cam.sx + (x - cam.wx) * cam.s, cam.sy + (y - cam.wy) * cam.s];
       const CAM = (wx, wy, s, sx = 540, sy = 760) => ({ wx, wy, s, sx, sy, k: fr(wx, wy, s, sx, sy) });
       const blackOut = (tl, L, t, d = 0.25) => { put(L.light, `<rect id="bo${Math.round(t * 100)}" width="1080" height="1920" fill="#000" opacity="0"/>`); tl.to(`#bo${Math.round(t * 100)}`, { opacity: 1, duration: d, immediateRender: false }, t); };
+      // impact (V11): a white flash, a dust puff and flying chips at screen point (x, y)
+      const impact = (L, tl, t, x, y, o = {}) => {
+        const id = `im${Math.round(t * 100)}`, n = o.n || 10, col = o.col || "#d8c8a8";
+        put(L.light, `<g id="${id}"><rect id="${id}-f" width="1080" height="1920" fill="#fff" opacity="0"/>${Array.from({ length: 5 }, (_, k) => `<circle id="${id}-d${k}" cx="${x + (k - 2) * 40}" cy="${y}" r="60" fill="${col}" opacity="0"/>`).join("")}${Array.from({ length: n }, (_, k) => `<rect id="${id}-c${k}" x="${x - 6}" y="${y - 4}" width="${10 + (k % 3) * 6}" height="8" rx="2" fill="${o.chip || "#8a6a48"}" opacity="0"/>`).join("")}</g>`);
+        tl.fromTo(`#${id}-f`, { opacity: 0.7 }, { opacity: 0, duration: 0.18, ease: "power1.out", immediateRender: false }, t);
+        for (let k = 0; k < 5; k++) tl.fromTo(`#${id}-d${k}`, { opacity: 0.6, scale: 0.3, transformOrigin: "50% 50%" }, { opacity: 0, scale: 2.2, x: (k - 2) * 50, y: -40 - (k % 2) * 30, duration: 0.8, ease: "power2.out", immediateRender: false }, t);
+        for (let k = 0; k < n; k++) { const a = -Math.PI * (0.1 + 0.8 * (k / (n - 1))), v = 180 + (k * 37) % 140; tl.fromTo(`#${id}-c${k}`, { opacity: 1, x: 0, y: 0, rotation: 0 }, { opacity: 0, x: Math.cos(a) * v, y: Math.sin(a) * v + 120, rotation: 200 + k * 40, duration: 0.7, ease: "power2.out", immediateRender: false }, t); }
+      };

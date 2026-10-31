@@ -1,213 +1,207 @@
-      // ---------- รั้วสุดท้าย EP.2 น้ำมันในปอด ----------
-      // the planted mistake: at ~0:04 ลุงหมาน swallows a mouthful ("อึก"), wipes his mouth and says nothing; revealed at the end
-      const PK = 760;                                   // the pickup in front of the school (fenceOut), its fuel flap at about PK − 255
-      const OUTN = (id, o = {}) => ({ set: "fenceOut", setOpts: { id, time: "noon", pickup: PK, ...o }, dark: 0, light: NOONL, grade: GNOON });
-      const MANP = [400, 1460, 0.95];                   // ลุงหมาน crouched at the filler
-      // the hose from the fuel filler to his mouth; #id-fuel is the amber column that climbs it
-      const hoseTo = (L, tl, id, t0, rise) => {
-        const F0 = [PK - 255, 1275], M = [MANP[0] + 16, MANP[1] - 492 * MANP[2]], d = `M${F0[0]},${F0[1]}C${F0[0] - 40},${F0[1] + 160} ${M[0] + 60},${M[1] + 260} ${M[0]},${M[1]}`;
-        put(L.act, `<g id="${id}"><path d="${d}" stroke="#2a5a3a" stroke-width="20" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#3aa86a" stroke-width="14" fill="none" stroke-linecap="round"/>
-          <path id="${id}-fuel" d="${d}" stroke="#e8b42a" stroke-width="8" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/></g>`);
-        if (rise) tl.to(`#${id}-fuel`, { attr: { "stroke-dashoffset": 0 }, duration: rise[1], ease: "power2.in", immediateRender: false }, t0 + rise[0]);
-      };
-      const gulpFx = (L, tl, t, x = 600, y = 560) => {
-        const id = `gp${Math.round(t * 100)}`;
-        put(L.light, `<g id="${id}"><text x="${x}" y="${y}" font-family="Sriracha" font-size="70" fill="#fff" stroke="#26201c" stroke-width="8" paint-order="stroke" transform="rotate(-8 ${x} ${y})">อึก</text></g>`);
+      // ---------- รั้วสุดท้าย EP.2 (ตอนจบ) คนแปลกหน้า ----------
+      // the planted mistake: at ~0:03 the bloody nail is on the INSIDE face of the brace post (the gate and the road behind it) —
+      // ภู hurt himself climbing OUT, so he was inside the fence before he "arrived" (and the radio still says six)
+      const GATE = (id, o = {}) => ({ set: "fenceGate", setOpts: { id, time: "day", lock: "locked", nail: "blood", ...o }, dark: 0, light: DAYL, grade: GD });
+      const drawingCard = (tl, layer, t0, dur) => {
+        const id = `dc${Math.round(t0 * 100)}`;
+        put(layer, `<g id="${id}"><g transform="translate(540,760) rotate(-4)"><g filter="url(#fuDrop)"><rect x="-400" y="-300" width="800" height="600" fill="#fbf6e8" stroke="#26201c" stroke-width="5"/></g>
+          <path d="M-360,200H360" stroke="#8a6a48" stroke-width="10"/>${Array.from({ length: 13 }, (_, k) => `<path d="M${-330 + k * 55},200V-40" stroke="#4a5a5a" stroke-width="7"/>`).join("")}<path d="M-360,-30H360M-360,90H360" stroke="#4a5a5a" stroke-width="7"/>
+          <g stroke-linecap="round" fill="none"><circle cx="-120" cy="-110" r="34" stroke="#c88a5a" stroke-width="9"/><path d="M-120,-76V40M-120,0l-50,-30M-120,0l50,-40M-120,40l-40,90M-120,40l40,90" stroke="#e8823a" stroke-width="14"/>
+          <path d="M-150,-20H-90" stroke="#e8823a" stroke-width="30"/></g>
+          <g><path d="M120,200Q90,-20 140,-150Q190,-200 230,-130Q270,-10 230,200Z" fill="#1a1a22"/><circle cx="170" cy="-120" r="10" fill="#9af070"/><circle cx="205" cy="-118" r="10" fill="#9af070"/></g>
+          <path d="M-60,-120q40,-30 90,-10" stroke="#2a2a2a" stroke-width="6" fill="none" stroke-dasharray="10 10"/>
+          <text x="-340" y="-230" font-family="Sriracha" font-size="44" fill="#d8392e">พี่ภู</text><text x="250" y="-230" font-family="Sriracha" font-size="44" fill="#2a2a2a">???</text></g></g>`);
         tl.set(`#${id}`, { opacity: 0 }, 0);
-        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.4, svgOrigin: `${x} ${y}` }, { opacity: 1, scale: 1, svgOrigin: `${x} ${y}`, duration: 0.25, ease: "back.out(3)", immediateRender: false }, t);
-        tl.to(`#${id}`, { opacity: 0, duration: 0.2, immediateRender: false }, t + 0.7);
-      };
-      const MANCU = (mode, mouth, extra = {}) => A("man", MANP[0], MANP[1], MANP[2], [T(mode === "siphon" ? "whistle" : mode, "normal", mouth)], extra);
-      const genIn = (L, tl, id, x, y, s, t0, dx = 0, dur = 0) => {
-        put(L.act, `<g id="${id}">${Fence.gen(x, y, s, id, false)}</g>`);
-        if (dur) tl.fromTo(`#${id}`, { x: -dx }, { x: 0, duration: dur, ease: "power1.out", immediateRender: false }, t0);
-      };
-      const rings = (L, tl, id, x, y, t0, dur) => {
-        put(L.glow, `<g id="${id}">${[0, 1, 2, 3].map((k) => `<circle id="${id}-${k}" cx="${x}" cy="${y}" r="120" fill="none" stroke="#ffe0a0" stroke-width="10" opacity="0"/>`).join("")}</g>`);
-        [0, 1, 2, 3].forEach((k) => tl.fromTo(`#${id}-${k}`, { scale: 0.3, opacity: 0.8, svgOrigin: `${x} ${y}` }, { scale: 6, opacity: 0, svgOrigin: `${x} ${y}`, duration: 1.6, repeat: Math.ceil(dur / 1.6), ease: "power1.out", immediateRender: false }, t0 + k * 0.4));
+        tl.fromTo(`#${id}`, { opacity: 0, y: 200 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.6)", immediateRender: false }, t0);
+        tl.fromTo(`#${id} circle[fill="#9af070"]`, { opacity: 1 }, { opacity: 0.2, duration: 0.25, yoyo: true, repeat: Math.ceil(dur / 0.25), immediateRender: false }, t0 + 0.6);
       };
 
-      // ---------- 1. hook: noon, ลุงหมาน crouched at the abandoned pickup, the hose at his lips ----------
+      // ---------- 1. hook: a bare foot comes down on the nail in the brace plank ----------
       add("hook", {
-        ...OUTN("o1"),
-        cam: { keys: [{ t: 0, ...fr(560, 1250, 1.05, 540, 1060) }, { t: D("hook"), glide: D("hook"), ...fr(540, 1200, 1.25, 540, 1060) }] },
-        actors: [MANCU("siphon", "o", { flip: false })],
+        set: "fenceNail", setOpts: { id: "n1", time: "day", foot: true }, dark: 0, light: false, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 0.85, 540, 960) }, { t: D("hook"), glide: D("hook"), ...fr(540, 1000, 1.0, 540, 960) }] },
+        shake: (t) => (t > 1.55 && t < 1.85 ? { x: 10 * Math.sin(t * 70), y: 8 * Math.sin(t * 61), r: 0 } : 0),
         captions: caps("hook"),
-        fx(tl, id, t0, L) { Fence.life(tl, "o1", t0, D("hook")); hoseTo(L, tl, "h1", t0, null); },
+        fx(tl, id, t0, L) { tl.fromTo("#n1-foot", { y: -500 }, { y: 0, duration: 1.5, ease: "power2.in", immediateRender: false }, t0 + 0.05); put(L.light, `<rect id="h1r" width="1080" height="1920" fill="#e2382e" opacity="0"/>`); tl.fromTo("#h1r", { opacity: 0.35 }, { opacity: 0, duration: 0.5, immediateRender: false }, t0 + 1.55); impact(L, tl, t0 + 1.55, 520, 900, { col: "#e8d8c0", chip: "#8a6440" }); },
       });
-      // ---------- 2. the command: the fuel climbs the hose — and he swallows (planted at ~0:04) ----------
+      // ---------- 2. the command over the planted wide: the brace post INSIDE the gate, the blood on its nail ----------
       add("dont", {
-        ...OUTN("o2"),
-        cam: { keys: [{ t: 0, ...fr(520, 1120, 1.5, 540, 1000) }, { t: D("dont"), glide: D("dont"), ...fr(520, 1110, 1.6, 540, 1000) }] },
-        actors: [MANCU("siphon", "o")],
+        ...GATE("g2", { time: "day" }),
+        cam: { keys: [{ t: 0, ...fr(330, 1180, 1.5, 540, 1000) }, { t: D("dont"), glide: D("dont"), ...fr(400, 1200, 1.2, 540, 1000) }] },
         captions: caps("dont"),
-        fx(tl, id, t0, L) { hoseTo(L, tl, "h2", t0, [0.0, 0.7]); gulpFx(L, tl, t0 + 0.9, 640, 560); },
+        fx(tl, id, t0) { Fence.life(tl, "g2", t0, D("dont")); },
       });
-      // ---------- 3. card: a little fuel into the lung → the lung inflames ----------
-      add("lung", {
-        ...OUTN("o3"), blur: BLUR,
-        cam: { keys: [{ t: 0, ...still(fr(560, 1200, 0.9, 540, 1000)) }] },
-        captions: caps("lung"),
+      // ---------- 3. card: a deep puncture counts as a dirty wound ----------
+      add("dirty", {
+        set: "fenceNail", setOpts: { id: "n3", time: "day", blood: true }, dark: 0, light: false, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(540, 1000, 0.9, 540, 960)) }] },
+        captions: caps("dirty"),
         fx(tl, id, t0, L) {
           put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".45"/>`);
-          FenceUI.card(tl, L.light, t0, D("lung"), { title: "น้ำมันหลุดเข้าปอด", color: "#e2382e", y: 300,
-            rows: [{ icon: "hose", text: "แค่นิดเดียว", sub: "สำลักตอนดูด", at: F("lung", 0, 0) }, { icon: "lung", text: "ปอดอักเสบ", sub: "บวม เลือดออก", at: F("lung", 0, 2), mark: "x" }] });
+          FenceUI.versus(tl, L.light, t0, D("dirty"), { title: "แผลไหนเสี่ยงกว่า", a: { icon: "scrape", text: "ถลอกกว้าง", sub: "ล้างสะอาดแล้ว", mark: "" }, b: { icon: "nail", text: "แทงลึก", sub: "นับเป็นแผลสกปรก", mark: "x" }, gap: 0.5, markAt: [9, F("dirty", 0, 1) + 0.3], y: 720 });
         },
       });
-      // ---------- 4. "but our fathers did it all their lives": ลุงหมาน wipes his mouth and grins ----------
-      add("dad", {
-        ...OUTN("o4"),
-        cam: { keys: [{ t: 0, ...fr(520, 1300, 1.0, 540, 1100) }, { t: D("dad"), glide: D("dad"), ...fr(520, 1260, 1.08, 540, 1100) }] },
-        actors: [A("man", 520, 1640, 0.98, [T("whistle", "normal", "laugh")]), A("kong", 860, 1660, 0.92, [T("idle", "worry", "frown")], { flip: true })],
-        captions: caps("dad"),
-        fx(tl, id, t0, L) { Fence.life(tl, "o4", t0, D("dad")); trio(tl, L.light, t0, D("dad"), [["hose", "", 0.2], ["people", "", 0.5]], 330, 0.9); },
+      // ---------- 4. dawn, day 102: a man lying outside the gate ----------
+      add("man", {
+        set: "fenceGate", setOpts: { id: "g4", time: "day", lock: "locked", nail: "blood", man: true }, dark: 0, light: DAYL, grade: { top: "#ffd8b0", bottom: "#3a2a30", op: 0.14 },
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 0.7, 540, 1050) }, { t: D("man"), glide: D("man"), ...fr(560, 1180, 0.95, 540, 1050) }] },
+        actors: [A("pim", 380, 1620, 0.9, [T("idle", "worry", "frown")]), A("kongBat", 720, 1630, 0.92, [T("bat", "angry", "flat")], { flip: true })],
+        captions: caps("man"),
+        fx(tl, id, t0, L) { Fence.life(tl, "g4", t0, D("man")); chalkWord(tl, L.light, t0 + 0.1, D("man"), "วันที่ 101", 330, 120); },
       });
-      // ---------- 5. day 101: ลุงหมาน drags the generator in through the gate ----------
-      add("gen", {
-        set: "fenceGate", setOpts: { id: "g5", time: "day", lock: "locked", open: 0.5 }, dark: 0, light: DAYL, grade: GD,
-        cam: { keys: [{ t: 0, ...fr(540, 1300, 0.8, 540, 1100) }, { t: D("gen"), glide: D("gen"), ...fr(540, 1330, 0.86, 540, 1100) }] },
-        actors: [A("man", 520, 1600, 0.9, [T("walk", "normal", "smile")], { moveTo: { x: 330, y: 1700, s: 1.0, dur: D("gen") } })],
-        captions: caps("gen"),
-        fx(tl, id, t0, L) { Fence.life(tl, "g5", t0, D("gen")); genIn(L, tl, "g5g", 640, 1720, 1.0, t0, -200, D("gen")); chalkWord(tl, L.light, t0 + 0.1, D("gen"), "วันที่ 101", 330, 120); },
+      // ---------- 5. ภู outside the gate: "I wasn't bitten… just a nail" ----------
+      add("plead", {
+        set: "fenceOut", setOpts: { id: "o5", time: "day" }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(540, 1440, 1.2, 540, 1200) }, { t: D("plead"), glide: D("plead"), ...fr(540, 1420, 1.3, 540, 1200) }] },
+        actors: [A("phu", 560, 1660, 0.95, [T("sit", "worry", "o")], { talk: [TALK("plead", 0)] })],
+        captions: caps("plead", undefined, QUO),
+        fx(tl, id, t0) { Fence.life(tl, "o5", t0, D("plead")); },
       });
-      // ---------- 6. "tonight we get the fan!" ----------
-      add("fan", {
-        set: "fenceYard", setOpts: { id: "y6", time: "day", gen: 620 }, dark: 0, light: DAYL, grade: GD,
-        cam: { keys: [{ t: 0, ...fr(560, 1380, 1.0, 540, 1150) }, { t: D("fan"), glide: D("fan"), ...fr(560, 1360, 1.06, 540, 1150) }] },
-        actors: [A("man", 380, 1600, 0.95, [T("raise", "normal", "laugh")], { talk: [TALK("fan", 0, "laugh")] }), A("pan", 860, 1620, 0.6, [T("idle", "wide", "smile")], { flip: true })],
-        captions: caps("fan", undefined, QUO),
-        fx(tl, id, t0) { Fence.life(tl, "y6", t0, D("fan")); },
+      // ---------- 6. ครูพิม: "help — but don't trust" + rule 2 ----------
+      add("rule", {
+        ...GATE("g6", { man: true }), blur: { far: 3, mid: 3, set: 2, fg: 7 },
+        cam: { keys: [{ t: 0, ...still(fr(420, 1180, 1.3, 540, 1250)) }] },
+        actors: [A("pim", 420, 1640, 1.0, [T("idle", "angry", "flat")], { talk: [TALK("rule", 0)] })],
+        captions: caps("rule", undefined, QUO),
+        fx(tl, id, t0, L) { FenceUI.rules(tl, L.light, t0 + 0.1, D("rule"), { active: 1, done: [0], y: 380 }); },
       });
-      // ---------- 7. the tank is dry → the fuel is in the pickup outside the fence ----------
-      split("tank", 1.4, {
-        set: "fenceYard", setOpts: { id: "y7", time: "day", gen: 540 }, dark: 0, light: DAYL, grade: GD,
-        cam: { keys: [{ t: 0, ...still(fr(540, 1480, 2.0, 540, 1000)) }] },
-        captions: caps("tank"),
-        fx(tl, id, t0, L) { tl.fromTo("#y7-gen", { x: -3 }, { x: 3, duration: 0.06, yoyo: true, repeat: 8, immediateRender: false }, t0 + 0.2); trio(tl, L.light, t0, 1.4, [["trash", "x", 0.3]], 360, 0.9); },
-      }, {
-        ...OUTN("o7"),
-        cam: { keys: [{ t: 0, ...fr(560, 1260, 0.7, 540, 1060) }, { t: D("tank") - 1.4, glide: D("tank") - 1.4, ...fr(520, 1260, 0.95, 540, 1060) }] },
-        captions: capsFrom("tank", 1.4),
-        fx(tl, id, t0) { Fence.life(tl, "o7", t0, D("tank") - 1.4); },
+      // ---------- 7. the search: inside, ภู sitting, ก้อง with the bat, ครูพิม checks; no bite — the foot bandaged ----------
+      add("search", {
+        set: "fenceYard", setOpts: { id: "y7", time: "day" }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(480, 1400, 1.0, 540, 1150) }, { t: D("search"), glide: D("search"), ...fr(480, 1420, 1.08, 540, 1150) }] },
+        actors: [A("phu", 420, 1640, 0.95, [T("sit", "worry", "flat")]), A("pim", 180, 1650, 0.95, [T("phoneLook", "normal", "flat")]), A("kongBat", 780, 1660, 0.98, [T("bat", "angry", "flat")], { flip: true })],
+        captions: caps("search"),
+        fx(tl, id, t0, L) { Fence.life(tl, "y7", t0, D("search")); trio(tl, L.light, t0, D("search"), [["skull", "x", F("search", 0, 1)], ["nail", "", F("search", 0, 1) + 0.4]], 330, 0.9); },
       });
-      // ---------- 8. noon: the heat haze, ผีห่า dragging slow + rule 1 ----------
-      add("noon", {
-        set: "fenceRoad", setOpts: { id: "r8", time: "noon", horde: 10 }, dark: 0, light: NOONL, grade: GNOON,
-        cam: { keys: [{ t: 0, ...fr(540, 1250, 0.8, 540, 1100) }, { t: D("noon"), glide: D("noon"), ...fr(540, 1260, 0.84, 540, 1100) }] },
-        actors: [A("hz1", 380, 1650, 0.9, [T("shamble", "glow", "flat")], { moveTo: { x: 450, y: 1650, dur: D("noon") } }), A("hz3", 760, 1700, 0.95, [T("shamble", "glow", "flat")], { flip: true, moveTo: { x: 700, y: 1700, dur: D("noon") } })],
-        captions: caps("noon"),
-        fx(tl, id, t0, L) { Fence.life(tl, "r8", t0, D("noon")); FenceUI.rules(tl, L.light, t0 + F("noon", 0, 1), D("noon") - F("noon", 0, 1), { active: 0, y: 330 }); },
-      });
-      // ---------- 9. ก้อง: "with your mouth?!" ----------
-      add("why", {
-        ...OUTN("o9"),
-        cam: { keys: [{ t: 0, ...still(fr(820, 1220, 1.2, 540, 1150)) }] },
-        actors: [MANCU("siphon", "flat"), A("kongBat", 860, 1680, 1.0, [T("point", "wide", "o")], { flip: true, talk: [TALK("why", 0)] })],
-        captions: caps("why", undefined, QUO),
-        fx(tl, id, t0, L) { hoseTo(L, tl, "h9", t0, null); },
-      });
-      // ---------- 10. ลุงหมาน: "forty years, never a problem" ----------
-      add("forty", {
-        ...OUTN("o10"),
-        cam: { keys: [{ t: 0, ...fr(500, 1150, 1.4, 540, 1050) }, { t: D("forty"), glide: D("forty"), ...fr(500, 1140, 1.5, 540, 1050) }] },
-        actors: [A("man", 400, 1460, 0.95, [T("idle", "normal", "smile")], { talk: [TALK("forty", 0, "smile")] })],
-        captions: caps("forty", undefined, QUO),
-        fx(tl, id, t0, L) { Fence.life(tl, "o10", t0, D("forty")); },
-      });
-      // ---------- 11. the fuel comes (no voice): he chokes, coughs, spits ----------
-      add("gulp", {
-        ...OUTN("o11"),
-        cam: { keys: [{ t: 0, ...still(fr(520, 1150, 1.45, 540, 1000)) }] },
-        shake: (t) => (t > 0.5 && t < 1.6 ? { x: 6 * Math.sin(t * 50), y: 4 * Math.sin(t * 43), r: 0 } : 0),
-        actors: [A("man", 400, 1460, 0.95, [T("whistle", "normal", "o"), T("cough", "closed", "scream", 0.55)])],
+      // ---------- 8. card: tetanus — the germ in the world around us → in through the wound ----------
+      add("germ", {
+        set: "fenceYard", setOpts: { id: "y8", time: "day" }, dark: 0, light: false, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(480, 1300, 0.9, 540, 1100)) }] },
+        captions: caps("germ"),
         fx(tl, id, t0, L) {
-          hoseTo(L, tl, "h11", t0, [0, 0.45]); tl.to("#h11", { opacity: 0, duration: 0.1 }, t0 + 0.55);
-          put(L.glow, `<g id="sp11">${[0, 1, 2, 3, 4].map((k) => `<circle cx="${560 + k * 18}" cy="${1060 + (k % 2) * 14}" r="${8 - k}" fill="#e8b42a"/>`).join("")}</g>`);
-          tl.set("#sp11", { opacity: 0 }, 0); tl.fromTo("#sp11", { opacity: 1, x: 0, y: 0 }, { opacity: 0, x: 90, y: 60, duration: 0.5, immediateRender: false }, t0 + 0.55);
+          put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".4"/>`);
+          FenceUI.card(tl, L.light, t0, D("germ"), { title: "บาดทะยัก", color: "#2fa864", y: 300,
+            rows: [{ icon: "soil", text: "เชื้ออยู่รอบตัว", sub: "ในสิ่งแวดล้อม", at: F("germ", 0, 1) }, { icon: "germ", text: "เข้าทางแผล", sub: "ผิวหนังที่เปิด", at: F("germ", 0, 2) }] });
         },
       });
-      // ---------- 12. a few coughs… gone: he waves it off; they carry the jerrycan in ----------
-      add("fine", {
-        set: "fenceGate", setOpts: { id: "g12", time: "day", lock: "locked", open: 0.5 }, dark: 0, light: DAYL, grade: GD,
-        cam: { keys: [{ t: 0, ...fr(540, 1300, 0.85, 540, 1100) }, { t: D("fine"), glide: D("fine"), ...fr(540, 1320, 0.9, 540, 1100) }] },
-        actors: [A("man", 470, 1560, 0.9, [T("wave", "normal", "smile")], { moveTo: { x: 380, y: 1680, s: 1.0, dur: D("fine") } }), A("kong", 640, 1540, 0.88, [T("carry", "worry", "flat")], { flip: true, moveTo: { x: 700, y: 1660, s: 0.98, dur: D("fine") } })],
-        captions: caps("fine"),
-        fx(tl, id, t0, L) { Fence.life(tl, "g12", t0, D("fine")); },
-      });
-      // ---------- 13. night: the generator running, the fan in the window; ลุงหมาน coughing, sweating ----------
-      add("night", {
-        set: "fenceYard", setOpts: { id: "y13", time: "night", gen: 620, genOn: true, lit: true }, dark: 0.04, light: NITE, grade: GN,
-        cam: { keys: [{ t: 0, ...fr(480, 1350, 0.9, 540, 1100) }, { t: D("night"), glide: D("night"), ...fr(420, 1400, 1.15, 540, 1100) }] },
-        actors: [A("man", 360, 1600, 0.95, [T("cough", "pain", "o")]), A("pim", 120, 1620, 0.9, [T("idle", "worry", "frown")])],
-        captions: caps("night"),
+      // ---------- 9. card: the first sign — the jaw locks; within 3–21 days ----------
+      add("jaw", {
+        set: "fenceYard", setOpts: { id: "y9", time: "day" }, dark: 0, light: false, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(480, 1300, 0.9, 540, 1100)) }] },
+        captions: caps("jaw"),
         fx(tl, id, t0, L) {
-          Fence.life(tl, "y13", t0, D("night"));
-          tl.fromTo("#y13-gen", { x: -2 }, { x: 2, duration: 0.05, yoyo: true, repeat: Math.ceil(D("night") / 0.05), ease: "none", immediateRender: false }, t0);
-          tl.set(`#${id}-a0-sweat`, { display: "inline" }, t0);
+          put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".4"/>`);
+          FenceUI.card(tl, L.light, t0, D("jaw"), { title: "อาการแรก", color: "#e2382e", y: 300,
+            rows: [{ icon: "jaw", text: "ขากรรไกรเกร็ง", sub: "อ้าปากไม่ได้", at: F("jaw", 0, 1) }, { icon: "cal", text: "3–21 วัน", sub: "หลังได้แผล", at: F("jaw", 0, 2) }] });
         },
       });
-      // ---------- 14. เจ๊หงส์: "were you bitten?!" — ก้อง raises the bat ----------
-      add("bit", {
-        set: "fenceYard", setOpts: { id: "y14", time: "night", gen: 620, genOn: true, lit: true }, dark: 0.04, light: NITE, grade: GN,
-        cam: { keys: [{ t: 0, ...still(fr(620, 1300, 1.1, 540, 1100)) }] },
-        shake: (t) => (t < 0.3 ? { x: 8 * Math.sin(t * 60), y: 0, r: 0 } : 0),
-        actors: [A("hong", 560, 1640, 0.95, [T("tremble", "wide", "scream")], { flip: true, talk: [TALK("bit", 0, "scream")] }), A("kongBat", 860, 1640, 0.98, [T("bat", "angry", "frown")], { flip: true })],
-        captions: caps("bit", undefined, QUO),
+      // ---------- 10. เจ๊หงส์: "can't open his mouth… just like ห่า!" ----------
+      add("ha", {
+        set: "fenceYard", setOpts: { id: "y10", time: "day" }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...still(fr(640, 1300, 1.25, 540, 1150)) }] },
+        actors: [A("phu", 420, 1640, 0.95, [T("sit", "wide", "flat")]), A("hong", 820, 1650, 0.95, [T("point", "wide", "scream")], { flip: true, talk: [TALK("ha", 0, "scream")] })],
+        captions: caps("ha", undefined, QUO),
+        fx(tl, id, t0) { Fence.life(tl, "y10", t0, D("ha")); },
       });
-      // ---------- 15. the twist card: not ห่า — fuel in the lung ----------
-      add("twist", {
-        set: "fenceYard", setOpts: { id: "y15", time: "night", gen: 620, genOn: true, lit: true }, dark: 0.04, light: false, grade: GN, blur: BLUR,
-        cam: { keys: [{ t: 0, ...still(fr(500, 1300, 0.9, 540, 1100)) }] },
-        captions: caps("twist"),
+      // ---------- 11. card: in real life — a wound like this, last shot over 5 years → the booster ----------
+      add("shot", {
+        set: "fenceYard", setOpts: { id: "y11", time: "day" }, dark: 0, light: false, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(480, 1300, 0.9, 540, 1100)) }] },
+        captions: caps("shot"),
         fx(tl, id, t0, L) {
-          put(L.light, `<rect width="1080" height="1920" fill="#0a0c14" opacity=".45"/>`);
-          FenceUI.versus(tl, L.light, t0, D("twist"), { title: "ไอ หอบ ตัวร้อน", a: { icon: "skull", text: "โดนห่ากัด", mark: "x" }, b: { icon: "lung", text: "น้ำมันลงปอด", mark: "ok" }, gap: 0.4, markAt: [0.6, F("twist", 0, 1) + 0.3], y: 720 });
+          put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".4"/>`);
+          FenceUI.card(tl, L.light, t0, D("shot"), { title: "ในชีวิตจริง", color: "#2f6fd0", y: 220,
+            rows: [{ icon: "nail", text: "แผลแทงลึก แผลสกปรก", size: 48, at: F("shot", 0, 0) + 0.4 }, { icon: "five", text: "ฉีดครั้งสุดท้าย", sub: "เกิน 5 ปี", at: F("shot", 0, 1) }, { icon: "syringe", text: "ไปฉีดกระตุ้น", at: vo("shot", 1), mark: "ok" }] });
         },
       });
-      // ---------- 16. card: swallowed fuel → don't make yourself vomit, see a doctor now ----------
-      add("vomit", {
-        set: "fenceYard", setOpts: { id: "y16", time: "night", gen: 620, genOn: true, lit: true }, dark: 0.04, light: false, grade: GN, blur: BLUR,
-        cam: { keys: [{ t: 0, ...still(fr(500, 1300, 0.9, 540, 1100)) }] },
-        captions: caps("vomit"),
+      // ---------- 12. night: the radio — still "หก" ----------
+      add("radio", {
+        set: "fenceRadio", setOpts: { id: "ra12" }, dark: 0, light: false, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 0.85, 540, 1000) }, { t: D("radio"), glide: D("radio"), ...fr(560, 1180, 1.0, 540, 1000) }] },
+        captions: [...caps("radio", [0]), ...caps("radio", [1], QUO)],
         fx(tl, id, t0, L) {
-          put(L.light, `<rect width="1080" height="1920" fill="#0a0c14" opacity=".45"/>`);
-          FenceUI.card(tl, L.light, t0, D("vomit"), { title: "ถ้ากลืนน้ำมันเข้าไป", color: "#2f6fd0", y: 300,
-            rows: [{ icon: "nofinger", text: "อย่าล้วงคอ", sub: "อย่าทำให้อาเจียน", at: F("vomit", 0, 1), mark: "x" }, { icon: "doctor", text: "รีบไปหาหมอ", sub: "ทันที ไม่ต้องรออาการ", at: F("vomit", 0, 2), mark: "ok" }] });
+          Fence.life(tl, "ra12", t0, D("radio"));
+          tl.fromTo(["#ra12-glow", "#ra12-halo"], { opacity: 0.15 }, { opacity: 1, duration: 0.08, yoyo: true, repeat: 7, ease: "none", immediateRender: false }, t0 + 0.5);
+          FenceUI.radio(tl, L.light, t0, D("radio"), { word: "0 6", at: vo("radio", 1) + 0.6, y: 520 });
         },
       });
-      // ---------- 17. rewind to 0:04 ----------
+      // ---------- 13. rewind to 0:03: the nail is on the inside ----------
       add("rw", {
-        ...OUTN("o17"),
-        cam: { keys: [{ t: 0, ...fr(520, 1120, 1.5, 540, 1000) }, { t: D("rw"), glide: D("rw") - 0.5, ...fr(500, 1080, 2.1, 540, 900) }] },
-        actors: [MANCU("siphon", "o")],
+        ...GATE("g13"),
+        cam: { keys: [{ t: 0, ...fr(330, 1180, 1.5, 540, 1000) }, { t: D("rw"), glide: D("rw") - 0.5, ...fr(540, 1200, 0.85, 540, 1000) }] },
         captions: caps("rw"),
-        fx(tl, id, t0, L) { hoseTo(L, tl, "h17", t0, [0.2, 0.7]); FenceUI.rewind(tl, L.light, t0, D("rw"), "0:04"); gulpFx(L, tl, t0 + 1.2, 640, 520); },
+        fx(tl, id, t0, L) { FenceUI.rewind(tl, L.light, t0, D("rw"), "0:03"); },
       });
-      // ---------- 18. slowed: he swallows, wipes his mouth, smiles, says nothing ----------
-      add("swallow", {
-        ...OUTN("o18"),
-        cam: { keys: [{ t: 0, ...fr(500, 1100, 2.0, 540, 900) }, { t: D("swallow"), glide: D("swallow"), ...fr(500, 1100, 2.2, 540, 900) }] },
-        actors: [A("man", 400, 1460, 0.95, [T("whistle", "closed", "flat"), T("idle", "normal", "smile", 1.4)])],
-        captions: caps("swallow"),
-        fx(tl, id, t0, L) { gulpFx(L, tl, t0 + 0.3, 640, 520); put(L.light, `<rect width="1080" height="1920" fill="#3a2a10" opacity=".18"/>`); },
+      // ---------- 14. "the bloody nail… is on the inside": an arrow from the nail to the yard side ----------
+      add("inside", {
+        ...GATE("g14"),
+        cam: { keys: [{ t: 0, ...still(fr(420, 1250, 0.95, 540, 1000)) }] },
+        captions: caps("inside"),
+        fx(tl, id, t0, L) {
+          const c = CAM(420, 1250, 0.95, 540, 1000), [nx, ny] = SP(c, 318, 1170);
+          put(L.light, `<g id="in14"><circle cx="${nx}" cy="${ny}" r="70" fill="none" stroke="#ff5a3a" stroke-width="9" stroke-dasharray="18 10"/>
+            <g transform="translate(${nx + 30},${ny + 330})"><rect x="-150" y="-44" width="300" height="88" rx="44" fill="#ff5a3a" stroke="#fff" stroke-width="5"/><text y="16" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="48" fill="#fff">ด้านในรั้ว</text></g>
+            <path d="M${nx + 10},${ny + 90}V${ny + 270}" stroke="#ff5a3a" stroke-width="9" stroke-linecap="round"/></g>`);
+          tl.set("#in14", { opacity: 0 }, 0); tl.fromTo("#in14", { opacity: 0, scale: 1.4, svgOrigin: `${nx} ${ny}` }, { opacity: 1, scale: 1, svgOrigin: `${nx} ${ny}`, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + F("inside", 0, 1));
+        },
       });
-      // ---------- 19. the sound rolls out over the dark paddies ----------
-      add("sound", {
-        set: "fenceOut", setOpts: { id: "o19", time: "night", hill: true, blink: true, lit: true }, dark: 0.04, light: NITE, grade: GN,
-        cam: { keys: [{ t: 0, ...fr(540, 1150, 0.7, 540, 1050) }, { t: D("sound"), glide: D("sound"), ...fr(100, 1100, 0.66, 540, 1050) }] },
-        captions: caps("sound"),
-        fx(tl, id, t0, L) { rings(L, tl, "rg19", 300, 1000, t0, D("sound")); },
+      // ---------- 15. ภู asleep in the classroom, the bandaged foot ----------
+      add("notout", {
+        set: "fenceClass", setOpts: { id: "c15", time: "night" }, dark: 0.06, light: NITE, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(-300, 1720, 1.1, 540, 1150) }, { t: D("notout"), glide: D("notout"), ...fr(-280, 1700, 1.2, 540, 1150) }] },
+        actors: [A("phu", -300, 1880, 0.8, [T("lie", "closed", "flat")])],
+        captions: caps("notout"),
+        fx(tl, id, t0) { Fence.life(tl, "c15", t0, D("notout")); },
       });
-      // ---------- 20. a torch on the hill blinks back three times ----------
-      add("blink", {
-        set: "fenceOut", setOpts: { id: "o20", time: "night", hill: true, blink: true, lit: true }, dark: 0.04, light: NITE, grade: GN,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("blink"), glide: D("blink"), ...fr(540, 960, 1.05, 540, 960) }] },
-        captions: caps("blink"),
-        fx(tl, id, t0, L) { [0, 1, 2].forEach((k) => tl.fromTo("#o20-blink", { opacity: 0 }, { opacity: 1, duration: 0.12, yoyo: true, repeat: 1, ease: "none", immediateRender: false }, t0 + F("blink", 0, 1) + k * 0.45)); },
+      // ---------- 16. ปั้น beside him with her drawing: "พี่ภูคะ… เมื่อคืนพี่คุยกับใคร" → the drawing ----------
+      split("ask", 2.4, {
+        set: "fenceClass", setOpts: { id: "c16", time: "night" }, dark: 0.06, light: NITE, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(-120, 1560, 1.3, 540, 1100) }, { t: 2.4, glide: 2.4, ...fr(-100, 1540, 1.42, 540, 1100) }] },
+        actors: [A("phu", -360, 1880, 0.8, [T("lie", "normal", "flat")]), A("panDraw", 40, 1820, 0.62, [T("hold", "normal", "flat")], { flip: true, talk: [TALK("ask", 0, "o")] })],
+        captions: caps("ask", undefined, QUO),
+        fx(tl, id, t0) { Fence.life(tl, "c16", t0, 2.4); },
+      }, {
+        set: "fenceClass", setOpts: { id: "c16b", time: "night" }, dark: 0.1, light: false, grade: GN, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(0, 1400, 0.9, 540, 1000)) }] },
+        captions: capsFrom("ask", 2.4, undefined, QUO),
+        fx(tl, id, t0, L) { put(L.light, `<rect width="1080" height="1920" fill="#0a0c14" opacity=".5"/>`); drawingCard(tl, L.light, t0, D("ask") - 2.4); },
       });
-      // ---------- 21. next ----------
-      add("next", {
-        set: "fenceOut", setOpts: { id: "o21", time: "night", hill: true }, dark: 0.1, light: NITE, grade: GN, blur: BLUR,
-        cam: { keys: [{ t: 0, ...still(fr(540, 1200, 0.8, 540, 1000)) }] },
-        fx(tl, id, t0, L) { FenceUI.next(tl, L.light, t0, D("next"), { ep: 3, l1: "ถ้าโดนตะปูตำ แผลแค่รูเดียว…", l2: "อย่าคิดว่าไม่เป็นไร" }); },
+      // ---------- 16b. the water tower at night: a blanket, wrappers, a water bottle up on the tank ----------
+      add("tower", {
+        set: "fenceYard", setOpts: { id: "y16t", time: "night", lit: true }, dark: 0.04, light: NITE, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(1160, 820, 1.0, 540, 900) }, { t: D("tower"), glide: D("tower"), ...fr(1180, 720, 1.4, 540, 900) }] },
+        captions: caps("tower"),
+        fx(tl, id, t0, L) {
+          Fence.life(tl, "y16t", t0, D("tower"));
+          const X = 1180, top = 1190 - 0.62 * 920;
+          put(L.act, `<g id="tw16"><path d="M${X - 70},${top}q30,-34 70,-26q40,-6 64,20Z" fill="#7a3a5a" stroke="${INK}" stroke-width="3"/><path d="M${X - 50},${top - 8}q30,-14 60,-6" stroke="#c87aa0" stroke-width="4" fill="none"/>
+            <rect x="${X + 30}" y="${top - 34}" width="14" height="30" rx="4" fill="#9ad0f0" stroke="${INK}" stroke-width="2.5"/><path d="M${X - 90},${top + 4}l16,-6l6,10ZM${X + 70},${top + 2}l14,-4l2,8Z" fill="#e8c860" stroke="${INK}" stroke-width="2"/></g>`);
+          put(L.glow, `<circle cx="${X}" cy="${top - 20}" r="200" fill="url(#fcMoon)" opacity=".8"/>`);
+        },
+      });
+      // ---------- 16c. his bag on the floor: a walkie-talkie, its red light on, the screen reads 06 ----------
+      add("bag", {
+        set: "fenceClass", setOpts: { id: "c16c", time: "night" }, dark: 0.1, light: false, grade: GN, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(0, 1500, 0.9, 540, 1000)) }] },
+        captions: caps("bag"),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect width="1080" height="1920" fill="#06080c" opacity=".55"/><g transform="translate(540,900)"><g id="bg16">
+            <path d="M-360,380Q-380,40 -300,-40H300Q380,40 360,380Z" fill="#e8823a" stroke="${INK}" stroke-width="6"/><path d="M-300,-40Q0,-120 300,-40" fill="none" stroke="#a8541c" stroke-width="10"/>
+            <path d="M-330,120H330" stroke="#e8ecf0" stroke-width="22" opacity=".85"/><text x="-250" y="300" font-family="Kanit" font-weight="900" font-size="54" fill="#7a3a1a" opacity=".8">กู้ภัย</text>
+            <g id="bg16w" transform="translate(40,-40)"><g id="bg16r"><rect x="-26" y="-330" width="22" height="160" rx="10" fill="#2a2a2e" stroke="${INK}" stroke-width="4"/>
+              <rect x="-110" y="-190" width="220" height="400" rx="40" fill="#2e3238" stroke="${INK}" stroke-width="6"/><rect x="-110" y="-190" width="60" height="400" rx="30" fill="#4a5058" opacity=".6"/>
+              <rect x="-70" y="-140" width="140" height="90" rx="12" fill="#ffb84a" stroke="${INK}" stroke-width="4"/><text x="0" y="-74" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="62" fill="#3a2410">06</text>
+              ${Array.from({ length: 6 }, (_, k) => `<path d="M-70,${-10 + k * 26}H70" stroke="#16181c" stroke-width="10" stroke-linecap="round"/>`).join("")}
+              <circle id="bg16led" cx="70" cy="-168" r="12" fill="#ff3a2a" stroke="${INK}" stroke-width="3"/></g></g></g></g>`);
+          tl.set("#bg16", { opacity: 0 }, 0);
+          tl.fromTo("#bg16", { opacity: 0, y: 160 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.5)", immediateRender: false }, t0);
+          tl.fromTo("#bg16led", { opacity: 1 }, { opacity: 0.15, duration: 0.3, yoyo: true, repeat: Math.ceil(D("bag") / 0.3), ease: "none", immediateRender: false }, t0 + 0.5);
+          tl.fromTo("#bg16r", { rotation: -16 }, { rotation: -8, svgOrigin: "0 200", duration: 0.9, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + 0.3);
+        },
+      });
+      // ---------- 17. the end card ----------
+      add("end", {
+        ...GATE("g17", { time: "night" }), light: NITE, grade: GN, dark: 0.1, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(540, 1300, 0.8, 540, 1000)) }] },
+        fx(tl, id, t0, L) { FenceUI.next(tl, L.light, t0, D("end"), { head: "รั้วสุดท้าย · ตอนจบ", ep: "", l1: "กระป๋องบวม: อย่าแม้แต่จะชิม", l2: "ตะปูตำ: อย่าคิดว่าไม่เป็นไร", cta: "แชร์ให้คนที่คุณรัก… ก่อนวันที่ต้องใช้" }); },
       });
