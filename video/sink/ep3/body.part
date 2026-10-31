@@ -35,12 +35,48 @@
         fx(tl, id, t0, L) { noShadows(tl, id, 1); Klong.life(tl, "cn1", t0, D("jump")); inWater(L, tl, t0, D("jump"), "j0");
           put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".35"/>`); SinkUI.nope(tl, L.light, t0, D("jump"), { what: "jump", y: 800, stamp: 0.35 }); },
       });
-      // ---------- 3. what would happen: under the water she has him round the neck and takes him down; he claws for the surface ----------
+      // ---------- 3. what would happen, imagined in the canal itself (owner 31 Oct: no shadow puppets in a story that is not a ghost story):
+      //      under the water she has him round the neck and takes him down; he claws for the surface. Cool blue tint, not grey, not black ----------
       add("grab", {
-        dark: 0, light: false,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        set: "drown2", setOpts: { id: "dr0", sy: 400, pal: { g0: "#4fa3c4", g1: "#1f6a8e", g2: "#0c2f48", top: "#7cc6dc", line: "#eaffff", ray: "#e8fbff", rayOp: 0.15, mote: "#d8f2ff" } },
+        dark: 0, light: false, grade: { top: "#5aa8c8", bottom: "#0c2f48", op: 0.16 }, blur: { sky: 1 },
+        cam: { keys: [{ t: 0, ...fr(540, 1030, 1.34, 540, 860) }, { t: D("grab"), glide: D("grab"), ...fr(540, 1130, 1.42, 540, 860) }] },
+        actors: [A("mint", 462, 1160, 0.66, [{ t: 0, mode: "cling", eyes: "wide", mouth: "scream" }], { blinks: [] }),
+          A("rider", 560, 1300, 0.95, [{ t: 0, mode: "flail", eyes: "wide", mouth: "scream" }], { blinks: [] })],
         captions: caps("grab"),
-        fx(tl, id, t0, L) { SinkUI.shadow(tl, L.light, t0, D("grab")); },
+        fx(tl, id, t0, L) {
+          const DG = D("grab");
+          noShadows(tl, id, 2);
+          const k = `${id}-a0`, r = `${id}-a1`, w = wrap(r, "gp0"); w.insertBefore(document.getElementById(k), w.firstChild);
+          realHands(r, SK.rider, OPEN, OPEN, { under: true }); hideRigArms(k);
+          const c = { x: 462, y: 1160, s: 0.66 }, [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, o = { w: [24, 20], sleeve: ["#c9b6ea", 0.4], hs: 0.34, hand: { ...GRIP } };
+          const WN = [588, 932], WF = [548, 950];
+          put(w, `<g>${armK(SL, WF, l1, l2, -1, SK.kim, { ...o, fix: 120 })}${armK(SR, WN, l1, l2, -1, SK.kim, { ...o, fix: 110, mirror: true })}</g>`);
+          // bubbles out of his chin bar and her mouth, riding down with them
+          const bub = (bid, x, y, n, sp, t1) => { put(w, `<g>${Array.from({ length: n }, (_, j) => `<circle id="${bid}-${j}" cx="${x + ((j * 37) % sp) - sp / 2}" cy="${y}" r="${4 + (j % 4) * 3}" fill="none" stroke="#f0ffff" stroke-width="3" opacity="0"/>`).join("")}</g>`);
+            for (let j = 0; j < n; j++) tl.fromTo(`#${bid}-${j}`, { y: 0, opacity: 0.9 }, { y: -(300 + (j % 5) * 70), x: ((j % 3) - 1) * 16, opacity: 0, duration: 1.1 + (j % 3) * 0.3, repeat: Math.ceil(DG / 1.1), ease: "power1.in", immediateRender: false }, t1 + (j % 6) * 0.17); };
+          bub("gpb0", 590, 860, 12, 40, t0 + 0.2); bub("gpb1", 474, 820, 9, 30, t0 + 0.5);
+          // the dive: a burst of bubbles and a white churn from the surface as the scene opens
+          put(L.act, `<g>${Array.from({ length: 26 }, (_, j) => `<circle id="gpd-${j}" cx="${430 + ((j * 53) % 220)}" cy="${640 + ((j * 29) % 160)}" r="${5 + (j % 5) * 4}" fill="none" stroke="#f0ffff" stroke-width="3" opacity="0"/>`).join("")}</g>`);
+          for (let j = 0; j < 26; j++) tl.fromTo(`#gpd-${j}`, { y: 60, opacity: 0.95 }, { y: -220 - (j % 4) * 60, opacity: 0, duration: 0.9 + (j % 3) * 0.25, ease: "power2.out", immediateRender: false }, t0 + (j % 5) * 0.04);
+          put(L.mid, `<g id="gpch" opacity="0">${Array.from({ length: 9 }, (_, j) => `<ellipse cx="${400 + j * 34}" cy="${420 + (j % 3) * 14}" rx="${46 - (j % 3) * 8}" ry="${18 - (j % 3) * 3}" fill="#ffffff" opacity="${0.35 + (j % 3) * 0.12}"/>`).join("")}</g>`);
+          tl.fromTo("#gpch", { opacity: 1, y: 0 }, { opacity: 0, y: -40, duration: 0.9, ease: "power2.out", immediateRender: false }, t0);
+          // the canal around them: hyacinth roots hanging from the surface, light shafts breathing, caustic lines, silt drifting up
+          put(L.mid, `<g>${[[150, 210], [330, 150], [770, 240], [930, 170]].map(([x, len], q) => `<g id="gprt${q}"><path d="M${x},400q-8,${len * 0.4} 6,${len * 0.7}t-4,${len * 0.3}M${x + 14},400q10,${len * 0.35} -2,${len * 0.6}M${x - 12},402q-12,${len * 0.3} 2,${len * 0.5}" stroke="#2c4a3e" stroke-width="4" fill="none" opacity=".7" stroke-linecap="round"/><ellipse cx="${x}" cy="398" rx="44" ry="12" fill="#2f6a3a"/></g>`).join("")}</g>`);
+          [0, 1, 2, 3].forEach((q) => tl.fromTo(`#gprt${q}`, { rotation: -3, svgOrigin: `${[150, 330, 770, 930][q]} 400` }, { rotation: 3, svgOrigin: `${[150, 330, 770, 930][q]} 400`, duration: 1.3 + q * 0.2, yoyo: true, repeat: Math.ceil(DG / 1.3), ease: "sine.inOut", immediateRender: false }, t0));
+          tl.fromTo(".dr0-ray", { opacity: 0.1 }, { opacity: 0.24, duration: 0.7, yoyo: true, repeat: Math.ceil(DG / 0.7), ease: "sine.inOut", stagger: 0.23, immediateRender: false }, t0);
+          put(L.mid, `<g id="gpcs" opacity=".55">${Array.from({ length: 7 }, (_, j) => `<path d="M${-60 + j * 170},${440 + (j % 3) * 22}q40,-14 80,0t80,0" stroke="#eaffff" stroke-width="3" fill="none" opacity="${0.25 + (j % 3) * 0.1}"/>`).join("")}</g>`);
+          tl.fromTo("#gpcs", { x: -40 }, { x: 40, duration: DG, ease: "none", immediateRender: false }, t0);
+          tl.fromTo("#dr0-motes", { y: 0 }, { y: -90, duration: DG, ease: "none", immediateRender: false }, t0);
+          // down they go, twisting; the surface and its light fall away
+          tl.fromTo("#gp0", { y: -40 }, { y: 250, duration: DG, ease: "sine.in", immediateRender: false }, t0);
+          tl.fromTo("#gp0", { rotation: -4, svgOrigin: "540 980" }, { rotation: 4, svgOrigin: "540 980", duration: 0.55, yoyo: true, repeat: Math.ceil(DG / 0.55), ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#dr0-top", { y: 0 }, { y: -170, duration: DG, ease: "sine.in", immediateRender: false }, t0);
+          // imagined, not real: a cool tint and a soft round vignette (no grey, no black-out)
+          put(L.light, `<rect width="1080" height="1920" fill="#1a4a7a" opacity=".14"/><radialGradient id="gpvg" cx=".5" cy=".45" r=".75"><stop offset=".55" stop-color="#06203a" stop-opacity="0"/><stop offset="1" stop-color="#06203a" stop-opacity=".6"/></radialGradient><rect width="1080" height="1920" fill="url(#gpvg)"/>`);
+          put(L.light, `<rect id="gpdk" width="1080" height="1920" fill="#04121e" opacity="0"/>`);
+          tl.fromTo("#gpdk", { opacity: 0 }, { opacity: 0.28, duration: DG, ease: "power1.in", immediateRender: false }, t0);
+        },
       });
       // ---------- 4. back to what really happened: he never went in. His helmet off on the grass, he stops at the edge ----------
       add("three", {
