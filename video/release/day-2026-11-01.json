@@ -1,0 +1,79 @@
+{
+ "date": "2026-11-01",
+ "tz": "Asia/Bangkok",
+ "made_by": "Claude (แชทประสานงาน)",
+ "status": "proposed — เจ้าของหรือ Hermes ปรับเวลา/ลำดับได้ · ตอนของเรื่องเดียวกันต้องลงเรียง EP",
+ "rules": [
+  "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
+  "แคปชัน แฮชแท็ก คอมเมนต์ปักหมุด และชื่อ YouTube อยู่ในไฟล์ package ของแต่ละเรื่อง (commit เดียวกัน)",
+  "ลงได้เฉพาะ status final · EP.N+1 หลัง EP.N ลงแล้วเท่านั้น",
+  "หมาดำตาสี่ (เลน A) จะเพิ่มเข้าคิวเมื่อ final"
+ ],
+ "items": [
+  {
+   "order": 1,
+   "id": "sink-ep1",
+   "series": "นาทีก่อนจม",
+   "status": "final",
+   "branch": "ccr-fb88c4b3-kcqyid",
+   "commit": "48c6150",
+   "package": "video/release/sink.json",
+   "video_hq": "video/release/hq/sink-ep1-HQ.mp4",
+   "video_hq_sha256": "5c7c6184ab2a3d93b7127a13aee36616f12b8893e455a80e42340e8c0ae3478c",
+   "video_hq_bytes": 49233393,
+   "suggested_time": "2026-11-01T19:30+07:00"
+  },
+  {
+   "order": 2,
+   "id": "sink-ep2",
+   "series": "นาทีก่อนจม",
+   "status": "final",
+   "branch": "ccr-fb88c4b3-kcqyid",
+   "commit": "48c6150",
+   "package": "video/release/sink.json",
+   "video_hq": "video/release/hq/sink-ep2-HQ.mp4",
+   "video_hq_sha256": "a53b14bddbc07053083cdbbf0d7bcdb46888de1e2a0aad0474d77476d7d63572",
+   "video_hq_bytes": 54982523,
+   "suggested_time": "2026-11-01T20:15+07:00"
+  },
+  {
+   "order": 3,
+   "id": "sink-ep3",
+   "series": "นาทีก่อนจม",
+   "status": "final",
+   "branch": "ccr-fb88c4b3-kcqyid",
+   "commit": "48c6150",
+   "package": "video/release/sink.json",
+   "video_hq": "video/release/hq/sink-ep3-HQ.mp4",
+   "video_hq_sha256": "a9e0dedf17db342de51b707055600e2536ee1430deae76d0770d1b1d157e2d48",
+   "video_hq_bytes": 56814580,
+   "suggested_time": "2026-11-01T21:00+07:00"
+  },
+  {
+   "order": 4,
+   "id": "hornet-ep1",
+   "series": "ต่อหัวเสือ",
+   "status": "final",
+   "branch": "prod/lane-b",
+   "commit": "9e9eb2d",
+   "package": "video/release/hornet.json",
+   "video_hq": "video/release/hq/hornet-ep1-HQ.mp4",
+   "video_hq_sha256": "5aefc850ce479a66b6517df4d153ab7651c700a2196f7847b1ba502fb3c66a0b",
+   "video_hq_bytes": 77367536,
+   "suggested_time": "2026-11-01T21:45+07:00"
+  },
+  {
+   "order": 5,
+   "id": "hornet-ep2",
+   "series": "ต่อหัวเสือ",
+   "status": "final",
+   "branch": "prod/lane-b",
+   "commit": "9e9eb2d",
+   "package": "video/release/hornet.json",
+   "video_hq": "video/release/hq/hornet-ep2-HQ.mp4",
+   "video_hq_sha256": "6ef1675291b0542da4a176b28d92107c59dcaf5a5f98d88edb452ed2f2351b6d",
+   "video_hq_bytes": 54790695,
+   "suggested_time": "2026-11-01T22:30+07:00"
+  }
+ ]
+}
