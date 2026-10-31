@@ -1,0 +1,49 @@
+      // ---------- หมาดำตาสี่ · style frames ----------
+      const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.55, shade: "#2a2040", shadeOp: 0.3, cast: false, vol: false };
+      const DUSKL = { from: "left", rim: "#ffb070", rimOp: 0.6, shade: "#2a1838", shadeOp: 0.36, cast: false, vol: false };
+      const MOONL = { from: "right", rim: "#a8c8ff", rimOp: 0.5, shade: "#0a0e1e", shadeOp: 0.5, cast: false, vol: false };
+      const GDAYR = { top: "#fff4d8", bottom: "#c8e8d0", op: 0.12 }, GDUSKR = { top: "#ffb878", bottom: "#4a2a5a", op: 0.2 };
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.8, 2.4], ...extra });
+      // 1. opener: under the stilt house, the title on the zinc sheet, the puppy licks ภูมิ's hand
+      add("s1", { set: "rabTitle", setOpts: { id: "t1", ep: "EP.1 อย่าอุ้มมัน" }, dark: 0, light: DAYL, grade: GDAYR,
+        cam: { keys: [{ t: 0, ...fr(560, 1180, 1.05, 540, 1000) }, { t: 3, glide: 3, ...fr(560, 1200, 1.12, 540, 1000) }] },
+        actors: [A("phumRice", 320, 1640, 0.95, [{ t: 0, mode: "offer", eyes: "normal", mouth: "laugh" }])],
+        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "s1p", kind: "pup", x: 600, y: 1660, s: 1.7, flip: true })); Dog.drive(tl, "s1p", t0, 3, "wag"); } });
+      // 2. the planted mistake: the knee
+      add("s2", { set: "kneeIns", setOpts: { id: "k2" }, dark: 0, light: false, grade: GDAYR, cam: { keys: [{ t: 0, ...fr(640, 1040, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        fx(tl, id, t0) { RabUI.lick(tl, "k2", t0, 3, 3); } });
+      // 3. the map
+      add("s3", { set: "mapTH", setOpts: { id: "mp", x: 90, y: 300, s: 1, region: [103.3, 15.9, 240, "อีสาน"], route: [[100.52, 13.75], [101.2, 14.4], [102.1, 14.97], [102.9, 15.7], [103.4, 16.1]],
+          from: "กรุงเทพฯ", to: "บ้านโนนหมาก", vehicle: "van", labDx: [-40, 20] }, dark: 0, light: false, grade: { top: "#fff8e8", bottom: "#d8f0f0", op: 0.15 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] }, fx(tl, id, t0) { Maps.route(tl, "mp", t0, { go: [0.2, 2.2] }); } });
+      // 4. arrival: the cast in the yard, ไอ้ดำ runs to ยายบัว
+      add("s4", { set: "village2", setOpts: { id: "v4", time: "day", house: [-200, 1.2] }, dark: 0, light: DAYL, grade: GDAYR,
+        cam: { keys: [{ t: 0, ...fr(560, 1260, 0.95, 540, 1100), drift: { s: 0 } }] },
+        actors: [A("prae", 170, 1580, 0.92, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }]), A("phum", 400, 1600, 0.76, [{ t: 0, mode: "wave", mouth: "laugh" }]),
+          A("yaiBua", 800, 1570, 0.9, [{ t: 0, mode: "idle", mouth: "smile" }], { flip: true })],
+        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "s4d", kind: "dam", x: 560, y: 1700, s: 0.9 })); Dog.drive(tl, "s4d", t0, 3, "wag"); } });
+      // 5. the legend on the shadow screen
+      add("s5", { set: "legend2", setOpts: { id: "lg" }, dark: 0, light: false, grade: { top: "#ffd890", bottom: "#3a1a08", op: 0.1 },
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 900), drift: { s: 0.015 } }] },
+        fx(tl, id, t0, L) { tl.set(["#lg-man", "#lg-pob"], { opacity: 0 }, 0); RabUI.legendDog(L, "lgd"); tl.fromTo("#lgd-ghost", { opacity: 0 }, { opacity: 1, duration: 1, immediateRender: false }, t0 + 1); } });
+      // 6. the rule board
+      add("s6", { set: "village2", setOpts: { id: "v6", time: "dusk", house: [-200, 1.2] }, dark: 0.05, blur: { far: 4, mid: 4, set: 4, fg: 8 }, light: DUSKL, grade: GDUSKR,
+        cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100), drift: { s: 0 } }] },
+        actors: [A("yaiBua", 360, 1700, 1.0, [{ t: 0, mode: "point", mouth: "o" }])],
+        fx(tl, id, t0, L) { RabUI.rules(tl, L.light, t0 + 0.1, 3, { active: 0, y: 560, out: false }); } });
+      // 7. how it gets in
+      add("s7", { set: "village2", setOpts: { id: "v7", time: "day" }, dark: 0.1, blur: { far: 8, mid: 8, set: 8, fg: 10 }, light: DAYL, grade: GDAYR,
+        cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100), drift: { s: 0 } }] }, fx(tl, id, t0, L) { RabUI.saliva(tl, L.light, t0, 3.2, { y: 520, out: false }); } });
+      // 8. puppies 2–6 months
+      add("s8", { set: "village2", setOpts: { id: "v8", time: "day" }, dark: 0.1, blur: { far: 8, mid: 8, set: 8, fg: 10 }, light: DAYL, grade: GDAYR,
+        cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100), drift: { s: 0 } }] }, fx(tl, id, t0, L) { RabUI.pupAge(tl, L.light, t0, 3.2, { y: 600, out: false }); } });
+      // 9. the "ghost": under the house at night, only the eyes
+      add("s9", { set: "underHouse", setOpts: { id: "u9", eyes: [600, 1180], lamp: 900 }, dark: 0.15, light: MOONL, grade: { top: "#1a2a4a", bottom: "#05060a", op: 0.3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 1.0, 540, 960) }, { t: 3, glide: 3, ...fr(600, 1180, 1.25, 540, 960) }] },
+        actors: [A("phum", 260, 1800, 1.05, [{ t: 0, mode: "recoil", eyes: "wide", mouth: "o" }])],
+        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "s9d", kind: "dam", x: 600, y: 1290, s: 0.8, silhouette: true })); put(L.glow, Dog.svg({ id: "s9e", kind: "dam", x: 600, y: 1290, s: 0.8, glow: true, eyesOnly: true }));
+          Dog.drive(tl, "s9d", t0, 3, "lie"); Dog.drive(tl, "s9e", t0, 3, "lie", { glow: true }); } });
+      // 10. end card
+      add("s10", { set: "village2", setOpts: { id: "v10", time: "dusk" }, dark: 0.05, blur: { far: 3, mid: 3, set: 3, fg: 8 }, light: DUSKL, grade: GDUSKR,
+        cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100), drift: { s: 0 } }] },
+        fx(tl, id, t0, L) { RabUI.signEnd(tl, L.light, t0, 3, { ep: "ตอนที่ 2 · หมาบ้านเรา", next: ["ถ้าหมาที่บ้านไปหมอบเงียบใต้ถุน…", "อย่าเข้าไปกอดมัน"] }); } });

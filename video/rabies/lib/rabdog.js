@@ -123,7 +123,9 @@
   Dog.svg = (o = {}) => {
     const id = o.id || "dg", kind = o.kind || "dam", c = PAL[kind], P = PLAN[kind], s = o.s ?? 1, sx = o.flip ? -s : s;
     POS[id] = [o.x ?? 540, o.y ?? 1400, sx, s]; DK[id] = kind;
-    return `<g id="${id}" transform="translate(${f(o.x ?? 540)},${f(o.y ?? 1400)}) scale(${f(sx)},${f(s)})">
+    const only = o.eyesOnly ? `<style>#${id} *{fill-opacity:0;stroke-opacity:0}#${id}-glow,#${id}-glow *{fill-opacity:1;stroke-opacity:1}</style>` : "";
+    const sil = o.silhouette ? ` style="filter:brightness(0)"` : "";
+    return `${only}<g id="${id}"${sil} transform="translate(${f(o.x ?? 540)},${f(o.y ?? 1400)}) scale(${f(sx)},${f(s)})">
       <ellipse cx="-6" cy="2" rx="${kind === "dam" ? 150 : 82}" ry="${kind === "dam" ? 16 : 10}" fill="url(#dgShadow)"/>
       <g id="${id}-body" transform="translate(0,0) rotate(0)">
         <g transform="translate(${P.hipF[0] - 14},${P.hipF[1]})">${legSvg(id, 2, P, c, true)}</g>
