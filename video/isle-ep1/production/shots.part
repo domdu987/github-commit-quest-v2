@@ -161,8 +161,8 @@
         fx(tl, id, t0, L) { tl.set("#sv3-shelter", { opacity: 0 }, t0); tl.fromTo("#sv3-shelter", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.75); Fx.heart(tl, t0 + VA("survive", 2.3, 0), 3, 0.8, 0.3); },
       });
 
-      // ---------- 6. the fish: it swims to him; the balloon; the photo; ยาย's rule against ลุงนวล's method ----------
-      split3("fish", vo("fish", 2) - 0.15, vo("fish", 3) - 0.15, {
+      // ---------- 6. the fish: it swims to him; the balloon; ยาย's rule against ลุงนวล's method (the photo joke cut for pace) ----------
+      split("fish", vo("fish", 2) - 0.15, {
         set: "pool", setOpts: { id: "fs", time: "dusk", puff: 0, puffX: 560, puffY: 640, puffS: 0.9 }, dark: 0.22, blur: { far: 4 }, cu: false,
         cam: { keys: [{ t: 0, ...fr(540, 1060, 1.0, 540, 960), drift: { s: 0.02 } }, { t: vo("fish", 1) - 0.2, glide: 0.5, ...fr(540, 1180, 1.25, 540, 940), drift: { s: 0.03 } }] },
         shake: (t) => 2.5 * Math.sin(t * 2.4) + 1.2 * Math.sin(t * 6.3),
@@ -178,19 +178,13 @@
           Fx.heart(tl, t0, D("fish"), 0.7, 0.35);
         },
       }, {
-        set: "beach", setOpts: { id: "fs2", time: "dusk", fire: true, fireX: 560, fireY: 1600, shelter: true, pool: true, washY: 1840 }, dark: 0.4, blur: { far: 5, mid: 3 },
-        cam: { keys: [{ t: 0, ...fr(560, 1420, 1.45, 540, 980), drift: { s: 0.02 } }] },
-        actors: [TG(420, 1660, 0.68, [{ t: 0, mode: "holdBall", eyes: "wide", mouth: "smileOpen" }], { prop: "puffball" }), PW(760, 1680, 0.82, [{ t: 0, mode: "holdPhone", eyes: "normal", mouth: "smile" }], { flip: true, prop: "phone" })],
-        bubbles: [bubAt(bub("fish", 2, 760, 520, 760, { br: true }), vo("fish", 2) - 0.15, vo("fish", 3) - 0.15)],
-        fx(tl, id, t0, L) { const T = t0 + VA("fish", vo("fish", 2) - 0.15, 2) + 0.9; tl.fromTo("#flashw", { opacity: 0.9 }, { opacity: 0, duration: 0.3, immediateRender: false }, T); },
-      }, {
         set: "beach", setOpts: { id: "fs3", time: "dusk", fire: true, fireX: 560, fireY: 1600, shelter: true, pool: true, washY: 1840 }, dark: 0.42, blur: { far: 5, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(580, 1420, 1.35, 540, 980), drift: { s: 0.02 } }] },
-        actors: [TG(420, 1660, 0.68, [{ t: 0, mode: "holdBall", eyes: "normal", mouth: "flat", look: -6 }, { t: VA("fish", vo("fish", 3) - 0.15, 4) - 0.1, mode: "holdBall", eyes: "squint", mouth: "smile" }], { prop: "puffball" }),
-          PW(760, 1680, 0.82, [{ t: 0, mode: "point", eyes: "squint", mouth: "flat" }, { t: VA("fish", vo("fish", 3) - 0.15, 4), mode: "armsCrossed", eyes: "squint", mouth: "frown" }], { flip: true })],
-        bubbles: [bubAt(bub("fish", 3, 700, 520, 760, { br: true, end: vo("fish", 4) - 0.05 }), vo("fish", 3) - 0.15, D("fish")), bubAt(bub("fish", 4, 460, 520, 420, { br: true }), vo("fish", 3) - 0.15, D("fish"))],
-        react: [{ a: 0, t: VA("fish", vo("fish", 3) - 0.15, 4) + 1.4, dur: 1.2 }],
-        fx(tl, id, t0, L) { Fx.heart(tl, t0, D("fish") - (vo("fish", 3) - 0.15), 0.7, 0.4); },
+        actors: [TG(420, 1660, 0.68, [{ t: 0, mode: "holdBall", eyes: "normal", mouth: "flat", look: -6 }, { t: VA("fish", vo("fish", 2) - 0.15, 3) - 0.1, mode: "holdBall", eyes: "squint", mouth: "smile" }], { prop: "puffball" }),
+          PW(760, 1680, 0.82, [{ t: 0, mode: "point", eyes: "squint", mouth: "flat" }, { t: VA("fish", vo("fish", 2) - 0.15, 3), mode: "armsCrossed", eyes: "squint", mouth: "frown" }], { flip: true })],
+        bubbles: [bubAt(bub("fish", 2, 700, 520, 760, { br: true, end: vo("fish", 3) - 0.05 }), vo("fish", 2) - 0.15, D("fish")), bubAt(bub("fish", 3, 460, 520, 420, { br: true }), vo("fish", 2) - 0.15, D("fish"))],
+        react: [{ a: 0, t: VA("fish", vo("fish", 2) - 0.15, 3) + 1.4, dur: 1.2 }],
+        fx(tl, id, t0, L) { Fx.heart(tl, t0, D("fish") - (vo("fish", 2) - 0.15), 0.7, 0.4); },
       });
 
       // ---------- 7. the grill: the viewer is told first ("พิษไม่กลัวไฟ"), then the first bite, "อร่อยเหมือนไก่" ----------
@@ -208,20 +202,20 @@
       // ---------- 8. the wait: twenty minutes of nothing; the numb lip; the stick he cannot hold; the poison climbs ----------
       add("wait", {
         set: "beach", setOpts: { id: "wt", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840 }, dark: 0.52, blur: { far: 6, mid: 4 },
-        cam: { keys: [{ t: 0, ...fr(560, 1440, 1.4, 540, 980), drift: { s: 0.02 } }, { t: vo("wait", 1) - 0.3, glide: 0.8, ...fr(440, 1430, 2.1, 540, 940), drift: { s: 0.03 } }, { t: vo("wait", 2) - 0.1, ...fr(780, 1450, 2.0, 540, 940) }, { t: vo("wait", 3) - 0.3, ...fr(450, 1480, 1.9, 540, 980), drift: { s: 0.03 } }, { t: vo("wait", 4) + 0.2, glide: 2.5, ...fr(440, 1400, 3.0, 540, 900), drift: { s: 0.04 } }] },
-        actors: [TG(440, 1670, 0.68, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }, { t: vo("wait", 1) - 0.4, mode: "numbLip", eyes: "worry", mouth: "flat" }, { t: vo("wait", 3) - 0.4, mode: "dropStick", eyes: "wide", mouth: "o" }, { t: vo("wait", 4) + 0.2, mode: "sit", eyes: "wide", mouth: "o", opts: {} }], { cu: false, prop: "stickfish" }),
-          PW(800, 1690, 0.82, [{ t: 0, mode: "hugKnees", eyes: "squint", mouth: "flat" }, { t: vo("wait", 2) - 0.2, mode: "hugKnees", eyes: "squint", mouth: "smile", look: -8 }, { t: vo("wait", 3) + 0.3, mode: "hugKnees", eyes: "normal", mouth: "flat", look: -10 }], { flip: true, cu: false })],
-        captions: caps("wait", [0, 4]),
-        bubbles: [bub("wait", 1, 440, 520, 440, { br: true }), bub("wait", 2, 780, 540, 780), bub("wait", 3, 450, 560, 450)],
-        ui: [{ type: "counter", t: vo("wait", 0) - 0.1, end: vo("wait", 1) + 1.2, label: "ผ่านไปแล้ว", icon: "clock", unit: "นาที", keys: [{ t: vo("wait", 0), v: 0 }, { t: vo("wait", 0) + 1.9, v: 20 }], right: true, top: 150 }],
+        cam: { keys: [{ t: 0, ...fr(560, 1440, 1.4, 540, 980), drift: { s: 0.02 } }, { t: vo("wait", 0) - 0.3, glide: 0.8, ...fr(440, 1430, 2.1, 540, 940), drift: { s: 0.03 } }, { t: vo("wait", 1) - 0.1, ...fr(780, 1450, 2.0, 540, 940) }, { t: vo("wait", 2) - 0.3, ...fr(450, 1480, 1.9, 540, 980), drift: { s: 0.03 } }, { t: vo("wait", 3) + 0.2, glide: 2.5, ...fr(440, 1400, 3.0, 540, 900), drift: { s: 0.04 } }] },
+        actors: [TG(440, 1670, 0.68, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }, { t: vo("wait", 0) - 0.4, mode: "numbLip", eyes: "worry", mouth: "flat" }, { t: vo("wait", 2) - 0.4, mode: "dropStick", eyes: "wide", mouth: "o" }, { t: vo("wait", 3) + 0.2, mode: "sit", eyes: "wide", mouth: "o", opts: {} }], { cu: false, prop: "stickfish" }),
+          PW(800, 1690, 0.82, [{ t: 0, mode: "hugKnees", eyes: "squint", mouth: "flat" }, { t: vo("wait", 1) - 0.2, mode: "hugKnees", eyes: "squint", mouth: "smile", look: -8 }, { t: vo("wait", 2) + 0.3, mode: "hugKnees", eyes: "normal", mouth: "flat", look: -10 }], { flip: true, cu: false })],
+        captions: caps("wait", [3]),
+        bubbles: [bub("wait", 0, 440, 520, 440, { br: true, end: vo("wait", 1) - 0.05 }), bub("wait", 1, 780, 540, 780), bub("wait", 2, 450, 560, 450)],
+        ui: [{ type: "counter", t: 0.1, end: vo("wait", 0) + 1.2, label: "ผ่านไปแล้ว", icon: "clock", unit: "นาที", keys: [{ t: 0.15, v: 0 }, { t: 1.35, v: 20 }], right: true, top: 150 }],
         fx(tl, id, t0, L) {
           // the stick leaves his hand at "พี่…": the prop vanishes, a loose one falls to the sand
-          const T = t0 + vo("wait", 3) + 0.15; tl.set(`#${id}-a0-handF`, { opacity: 0.001 }, T);
+          const T = t0 + vo("wait", 2) + 0.15; tl.set(`#${id}-a0-handF`, { opacity: 0.001 }, T);
           put(L.act, `<g id="wt-stk" opacity="0" transform="translate(470,1500)">${Isle.STICKFISH(0, 0, 0.42, -80)}</g>`); const sw = wrapEl("#wt-stk"); tl.set("#wt-stk", { opacity: 1 }, T);
           tl.to(sw, { y: 160, rotation: 70, duration: 0.45, ease: "power2.in", transformOrigin: "470px 1500px", immediateRender: false }, T);
-          Fx.desat(tl, `#${id} .stage`, t0 + vo("wait", 4), t0 + D("wait"), 0.45);
-          Fx.heart(tl, t0, vo("wait", 1), 0.9, 0.3); Fx.heart(tl, t0 + vo("wait", 1), D("wait") - vo("wait", 1), 0.55, 0.65);
-          Fx.tunnel(tl, t0 + vo("wait", 4), t0 + D("wait"), 0.5);
+          Fx.desat(tl, `#${id} .stage`, t0 + vo("wait", 3), t0 + D("wait"), 0.45);
+          Fx.heart(tl, t0, vo("wait", 0), 0.9, 0.3); Fx.heart(tl, t0 + vo("wait", 0), D("wait") - vo("wait", 0), 0.55, 0.65);
+          Fx.tunnel(tl, t0 + vo("wait", 3), t0 + D("wait"), 0.5);
         },
       });
 
@@ -331,16 +325,16 @@
       // ---------- 12. the night: her hand on his chest counting; the breaths she gives when the count hits nothing; the moon crosses ----------
       add("night", {
         set: "beach", setOpts: { id: "nt", time: "night", fire: true, fireX: 560, fireY: 1600, shelter: true, washY: 1840, moonX: 1000, moonY: 260 }, dark: 0.58, blur: { far: 7, mid: 5 }, cu: false,
-        cam: { keys: [{ t: 0, ...fr(420, 1480, 1.3, 540, 980), drift: { s: 0.012 } }, { t: 2.0, glide: 1.2, ...fr(380, 1560, 1.9, 540, 1000), drift: { s: 0.02 } }, { t: 5.8, ...fr(520, 1380, 1.0, 540, 940), drift: { s: 0.015 } }] },
+        cam: { keys: [{ t: 0, ...fr(420, 1480, 1.3, 540, 980), drift: { s: 0.012 } }, { t: 2.0, glide: 1.2, ...fr(380, 1560, 1.9, 540, 1000), drift: { s: 0.02 } }, { t: 5.3, ...fr(520, 1380, 1.0, 540, 940), drift: { s: 0.015 } }] },
         actors: [TG(520, 1700, 0.68, [{ t: 0, mode: "lieStill", eyes: "wide", mouth: "o" }], { ...NOBLINK, cu: false }),
-          PW(330, 1700, 0.82, [{ t: 0, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: 2.1, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.5, n: 2, t0: 0 } }, { t: 3.9, mode: "compress", eyes: "worry", mouth: "grit", opts: { period: 0.5, n: 6, t0: 0 } }, { t: 5.8, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: 6.7, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.5, n: 1, t0: 0 } }], { flip: true, cu: false })],
+          PW(330, 1700, 0.82, [{ t: 0, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: 2.0, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.5, n: 2, t0: 0 } }, { t: 3.6, mode: "compress", eyes: "worry", mouth: "grit", opts: { period: 0.5, n: 6, t0: 0 } }, { t: 5.3, mode: "kneelWatch", eyes: "worry", mouth: "flat" }, { t: 6.1, mode: "breathe", eyes: "closed", mouth: "o", opts: { period: 1.5, n: 1, t0: 0 } }], { flip: true, cu: false })],
         captions: caps("night"),
-        ui: [{ type: "counter", t: 0.1, end: D("night") - 0.05, label: "ลมหายใจ", icon: "lung", unit: "ครั้ง/นาที", keys: [{ t: 0.2, v: 14 }, { t: 1.3, v: 9 }, { t: 2.0, v: 0 }, { t: 3.3, v: 0 }, { t: 3.7, v: 6 }, { t: 5.8, v: 6 }, { t: 6.5, v: 0 }, { t: 7.6, v: 5 }], alarm: 2.0, right: true, top: 150 }],
+        ui: [{ type: "counter", t: 0.1, end: D("night") - 0.05, label: "ลมหายใจ", icon: "lung", unit: "ครั้ง/นาที", keys: [{ t: 0.2, v: 14 }, { t: 1.2, v: 9 }, { t: 1.9, v: 0 }, { t: 3.0, v: 0 }, { t: 3.4, v: 6 }, { t: 5.3, v: 6 }, { t: 6.0, v: 0 }, { t: 7.0, v: 5 }], alarm: 1.9, right: true, top: 150 }],
         fx(tl, id, t0, L) {
           document.querySelectorAll(`#${id} .capbox`).forEach((c) => c.classList.add("inner"));
           tl.fromTo("#nt-moon", { x: 0 }, { x: -560, duration: D("night"), ease: "none", immediateRender: false }, t0);
           tl.fromTo("#nt-fire-fl", { scale: 1 }, { scale: 0.35, duration: D("night"), ease: "none", transformOrigin: "50% 100%", immediateRender: false }, t0);
-          red(tl, t0 + 2.0, 0.4, 0.8); red(tl, t0 + 6.5, 0.35, 0.8);
+          red(tl, t0 + 1.9, 0.4, 0.8); red(tl, t0 + 6.0, 0.35, 0.8);
           Fx.heart(tl, t0, D("night"), 0.52, 0.7);
         },
       });

@@ -66,7 +66,7 @@ D = {k: SH[k]["dur"] for k in SH}
 # the same beats as shots.part
 HK2 = vo_t("hook", 1) - 0.08                       # the cut to the sand
 BT2 = 2.6                                          # the cut into the boat
-FSH = vo_t("fish", 2) - 0.15; FS3 = vo_t("fish", 3) - 0.15
+FSH = vo_t("fish", 2) - 0.15
 ST2 = vo_t("still", 1) - 0.25; ST3 = vo_t("still", 4) - 0.45
 RU2 = vo_t("rule", 1) - 0.5; RU3 = vo_t("rule", 2) - 0.3
 DW2 = vo_t("dawn", 1) - 0.4; DW3 = vo_t("dawn", 2) - 0.3
@@ -118,16 +118,16 @@ CUES = [
     *[x for o in (2.4, 2.7, 3.2) for x in (("survive", o, "page", 0.4), ("survive", o + 0.25, "pen", 0.5), ("survive", o + 0.3, "ding", 0.3))], ("survive", vo_t("survive", 0) + 1.0, "page", 0.5), ("survive", frag("survive", 0, 1), "sting", 0.5),
     # the pool: it swims to him, the hands go in, the grunt as it blows up; the photo; the argument
     *bed("waves", T("fish", 0), T("fish", -0.1), 0.24, 4.6), ("fish", 1.6, "splash", 0.7), ("fish", 2.0, "squelch", 0.3), ("fish", vo_t("fish", 1) + 0.05, "squeak", 0.8), ("fish", vo_t("fish", 1) + 0.1, "pop", 0.5), ("fish", vo_t("fish", 1) + 0.15, "sting", 0.5),
-    ("fish", FSH + vo_t("fish", 2) - FSH + 0.9, "shutter", 0.45), ("fish", FS3 + 0.1, "whoosh", 0.3), ("fish", vo_t("fish", 4), "sting", 0.4), *beats("fish", vo_t("fish", 3), D["fish"] - vo_t("fish", 3), 0.7, 0.4),
+    ("fish", FSH + 0.1, "whoosh", 0.3), ("fish", vo_t("fish", 3), "sting", 0.4), *beats("fish", vo_t("fish", 2), D["fish"] - vo_t("fish", 2), 0.7, 0.4),
     # the grill: fat on the fire, the sign, the bite
     *bed("sizzle", T("grill", 0), T("grill", -0.1), 0.35, 2.6), *bed("waves", T("grill", 0), T("sig", -0.1), 0.14, 4.6), *bed("crickets", T("grill", 0), T("night", -0.1), 0.1, 4.0),
     ("grill", frag("grill", 0, 1), "page", 0.5), ("grill", frag("grill", 0, 1) + 0.3, "marker", 0.6), ("grill", frag("grill", 0, 1) + 0.35, "sting", 0.7), ("grill", frag("grill", 0, 1) + 0.35, "boom", 0.3),
     ("grill", vo_t("grill", 1) - 0.3, "squish", 0.5), *beats("grill", 0.0, D["grill"], 0.7, 0.45),
     # the wait: the clock, the lip, the stick on the sand; the poison climbs
-    *[("wait", vo_t("wait", 0) + 0.1 + k * 0.19, "tick", 0.35) for k in range(10)], ("wait", vo_t("wait", 0) + 2.0, "ding", 0.3),
-    ("wait", vo_t("wait", 1) - 0.2, "sting", 0.35), ("wait", vo_t("wait", 3) + 0.6, "thud", 0.6), ("wait", vo_t("wait", 3) + 0.62, "rustle", 0.3),
-    ("wait", vo_t("wait", 4), "riser", 0.5), ("wait", frag("wait", 4, 4), "sting", 0.9), ("wait", frag("wait", 4, 4), "boom", 0.5),
-    *beats("wait", 0.0, vo_t("wait", 1), 0.9, 0.3), *beats("wait", vo_t("wait", 1), D["wait"] - vo_t("wait", 1), 0.55, 0.7),
+    *[("wait", 0.15 + k * 0.12, "tick", 0.35) for k in range(10)], ("wait", 1.4, "ding", 0.3),
+    ("wait", vo_t("wait", 0) - 0.2, "sting", 0.35), ("wait", vo_t("wait", 2) + 0.6, "thud", 0.6), ("wait", vo_t("wait", 2) + 0.62, "rustle", 0.3),
+    ("wait", vo_t("wait", 3), "riser", 0.5), ("wait", frag("wait", 3, 4), "sting", 0.9), ("wait", frag("wait", 3, 4), "boom", 0.5),
+    *beats("wait", 0.0, vo_t("wait", 0), 0.9, 0.3), *beats("wait", vo_t("wait", 0), D["wait"] - vo_t("wait", 0), 0.55, 0.7),
     # still: he goes down; the cut inside his head — the world muffled; her tears; she says it; the blanket drawn over his face
     ("still", 0.1, "thud", 0.8), ("still", 0.12, "rustle", 0.5), ("still", 0.1, "boom", 0.4), ("still", ST2, "whoosh", 0.4), ("still", ST2 + 0.05, "boom", 0.5),
     ("still", frag("still", 2, 3), "sting", 1.0), ("still", frag("still", 2, 3), "boom", 0.6), ("still", frag("still", 2, 3), "glitch", 0.4),
@@ -145,8 +145,8 @@ CUES = [
     *[x for o in (0.1, vo_t("card", 0) + 0.1, frag("card", 0, 1), frag("card", 0, 3)) for x in (("card", o, "page", 0.4), ("card", o + 0.3, "pen", 0.5), ("card", o + 0.35, "ding", 0.25))], ("card", frag("card", 0, 2), "ring", 0.35),
     # the night: her count, the breaths she gives, the compressions, the dying fire; the moon
     *bed("waves", T("night", 0), T("night", -0.1), 0.2, 4.6),
-    ("night", 2.0, "sting", 0.7), ("night", 2.0, "boom", 0.4), ("night", 2.2, "breath", 0.9), ("night", 3.6, "breath", 0.9), *[("night", 4.0 + k * 0.5, "thud", 0.5) for k in range(5)],
-    ("night", 6.5, "sting", 0.6), ("night", 6.8, "breath", 0.9), ("night", 7.7, "gasp", 0.5), *beats("night", 0.0, D["night"], 0.52, 0.7),
+    ("night", 1.9, "sting", 0.7), ("night", 1.9, "boom", 0.4), ("night", 2.1, "breath", 0.9), ("night", 3.3, "breath", 0.9), *[("night", 3.7 + k * 0.45, "thud", 0.5) for k in range(5)],
+    ("night", 6.0, "sting", 0.6), ("night", 6.3, "breath", 0.9), ("night", 7.1, "gasp", 0.5), *beats("night", 0.0, D["night"], 0.52, 0.7),
     # the signature
     ("sig", 0.05, "page", 0.8), ("sig", 0.36, "thud", 0.25),
     *[x for o in (frag("sig", 0, 0) + 0.3, frag("sig", 0, 0) + 0.62, frag("sig", 0, 1) + 0.15) for x in (("sig", o, "pen", 0.9), ("sig", o + 0.05, "ding", 0.3))],
@@ -194,7 +194,7 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 dip(0.0, T("hook", -0.1), 0.3, 0.05)
 dip(T("yai", frag("yai", 1, 1)), T("yai", frag("yai", 1, 2) + 0.6), 0.4)
-dip(T("wait", vo_t("wait", 3) - 0.2), T("wait", -0.05), 0.25)
+dip(T("wait", vo_t("wait", 2) - 0.2), T("wait", -0.05), 0.25)
 dip(T("still", 0), T("still", -0.05), 0.12)                          # the world drops away while he cannot move
 dip(T("cloth", 0), T("cloth", -0.05), 0.08)
 dip(T("rule", 0), T("rule", RU2), 0.3)

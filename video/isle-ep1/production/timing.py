@@ -21,21 +21,21 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
     ("hook", ["n01", ("n02", 0.12)], 0.25, 0.35, 6.5),                      # frame one: the balloon fish in his hands; cut to the sand, looking up, unable to blink
-    ("yai", ["y01", ("y02", 0.25), ("t01", 0.3), ("y04", 0.3)], 0.4, 0.4, 9.0),               # the porch: the rule, the joke, the last line
-    ("boat", ["t02", ("u01", 0.2), ("u02", 0.2)], 0.6, 0.4, 8.0),             # the longtail: ลุงนวล's method; "มารับก่อนมืด"
-    ("stranded", ["n04", ("p02", 0.25), ("t03", 0.25)], 0.5, 0.3, 8.0),        # the squall; no signal; โต้ง's dream come true
-    ("survive", ["t04"], 2.8, 0.4, 5.8),                                       # fire, water, shelter — all right; "เหลือข้อเดียว… อาหาร"
-    ("fish", ["t05", ("t06", 0.3), ("p03", 0.3), ("p04", 0.35), ("t07", 0.3)], 0.6, 0.4, 11.0),   # the pool: it swims to him; the balloon; the photo; ยาย's rule vs ลุงนวล's method
-    ("grill", ["n06", ("t08", 0.4), ("p05", 0.3)], 0.5, 0.5, 8.0),             # over the fire: the viewer is told first; the first bite; "ไม่กิน… อ้วน"
-    ("wait", ["n07", ("t09", 0.4), ("p06", 0.25), ("t10", 0.6), ("n08", 0.25)], 0.3, 0.3, 12.0),   # twenty minutes of nothing; the numb lip; the stick he can't hold
-    ("still", ["p07", ("i01", 0.3), ("n09", 0.25), ("p08", 0.3), ("p11", 0.6)], 0.4, 1.9, 14.0),   # eyes open, nothing moves; inside his head; she hears nothing, says it; the blanket (post 2.0)
+    ("yai", ["y01", ("y02", 0.2), ("t01", 0.25), ("y04", 0.25)], 0.3, 0.3, 8.0),               # the porch: the rule, the joke, the last line
+    ("boat", ["t02", ("u01", 0.15), ("u02", 0.15)], 0.5, 0.35, 8.0),             # the longtail: ลุงนวล's method; "มารับก่อนมืด"
+    ("stranded", ["n04", ("p02", 0.2), ("t03", 0.2)], 0.4, 0.25, 7.5),        # the squall; no signal; โต้ง's dream come true
+    ("survive", ["t04"], 2.5, 0.3, 5.3),                                       # fire, water, shelter — all right; "เหลือข้อเดียว… อาหาร"
+    ("fish", ["t05", ("t06", 0.3), ("p04", 0.4), ("t07", 0.3)], 0.6, 0.35, 9.0),   # the pool: it swims to him; the balloon; the photo; ยาย's rule vs ลุงนวล's method
+    ("grill", ["n06", ("t08", 0.3), ("p05", 0.25)], 0.5, 0.4, 7.5),             # over the fire: the viewer is told first; the first bite; "ไม่กิน… อ้วน"
+    ("wait", ["t09", ("p06", 0.2), ("t10", 0.45), ("n08", 0.2)], 1.6, 0.25, 10.0),   # twenty minutes of nothing; the numb lip; the stick he can't hold
+    ("still", ["p07", ("i01", 0.2), ("n09", 0.2), ("p08", 0.25), ("p11", 0.5)], 0.3, 1.85, 14.0),   # eyes open, nothing moves; inside his head; she hears nothing, says it; the blanket (post 2.0)
     ("cloth", ["i03"], 0.8, 0.6, 3.4),                                         # from under the blanket: "พี่… อย่าคลุม… ผมยังอยู่"
-    ("rule", ["y05", ("p09", 0.6), ("n10", 0.5)], 0.8, 0.8, 11.0),   # ยาย's words in memory; she uncovers him; the breath stops; no antidote — breathe for him
+    ("rule", ["y05", ("p09", 0.5), ("n10", 0.4)], 0.6, 0.7, 11.0),   # ยาย's words in memory; she uncovers him; the breath stops; no antidote — breathe for him
     ("card", ["n11"], 0.25, 0.45, 7.0),                                        # the safety card: gutting doesn't help, 1669, 2 breaths 30 compressions
-    ("night", ["i02"], 0.5, 4.3, 8.2),                                         # the night: breaths counted, breaths given; the moon crosses (the counter tells it)
+    ("night", ["i02"], 0.5, 3.7, 7.6),                                         # the night: breaths counted, breaths given; the moon crosses (the counter tells it)
     ("sig", ["s01"], 0.15, 0.5, 4.2),
-    ("dawn", ["t11", ("u03", 1.3), ("p10", 0.45)], 1.0, 1.8, 10.0),             # his finger moves; the boat; ลุงนวล sees; "ลุงบอกว่ากินได้"; the stick by the fire
-    ("line", ["t12"], 0.7, 1.0, 10.0),                                         # on the boat home: "เขาตัวเย็นมาก"
+    ("dawn", ["t11", ("u03", 1.1), ("p10", 0.4)], 0.9, 1.5, 9.0),             # his finger moves; the boat; ลุงนวล sees; "ลุงบอกว่ากินได้"; the stick by the fire
+    ("line", ["t12"], 0.5, 1.0, 9.0),                                         # on the boat home: "เขาตัวเย็นมาก"
     ("choice", [], 0.0, 0.0, 3.6),
 ]
 
