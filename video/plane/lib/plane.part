@@ -374,12 +374,14 @@
           <path d="M300,862L520,802L700,792L880,842L860,850L700,804L520,814Z" fill="${night ? "#1a2416" : "#8a8a4a"}"/>`;
         if (o.front) s += `<g transform="translate(560,820) scale(.42) rotate(5)"><path d="M-300,-30L700,-60Q820,-60 860,-120Q860,-170 780,-200L-280,-210L-320,-160L-290,-110Z" fill="url(#plFus)" ${PO(8)}/><path d="M-300,-120L760,-130" stroke="#f4c430" stroke-width="12"/><path d="M-300,-104L765,-114" stroke="${PL.navy}" stroke-width="9"/>
           ${Array.from({ length: 22 }, (_, k) => `<rect x="${-200 + k * 40}" y="-180" width="20" height="28" rx="9" fill="#1a2440"/>`).join("")}<path d="M-300,-30L-280,-210" stroke="#6a707e" stroke-width="16"/><path d="M60,-40L-150,120Q-170,134 -150,104L0,-46Z" fill="#c8d0dc" ${PO(6)}/></g>`;
-        const ppl = o.front ? 7 : 0;
+        const ppl = o.front && !o.empty ? 7 : 0;
+        if (o.empty) s += `<g transform="translate(470,812) rotate(80)"><rect x="-6" y="-24" width="12" height="30" rx="3" fill="#3a3e48"/><circle cy="-24" r="7" fill="#fff6c0" opacity=".5"/></g>${Array.from({ length: 9 }, (_, k) => `<ellipse cx="${440 - k * 34}" cy="${818 + k * 9}" rx="6" ry="3" fill="#1a1a20" opacity=".7"/>`).join("")}`;
         for (let k = 0; k < ppl; k++) { const x = 380 + k * 52 + (k % 2) * 8, y = 810 - (k % 3) * 4, c = ["#2f6fd0", "#e2382e", "#2fa864", "#ffd23a", "#8a5ad0", "#e8823a", "#2a2e38"][k];
-          s += `<g transform="translate(${x},${y})"><circle cy="-46" r="9" fill="#e8b88a" ${PO(2)}/><path d="M-9,-36h18l2,26h-22z" fill="${c}" ${PO(2)}/><path d="M-6,-10v12M6,-10v12" stroke="#2a2420" stroke-width="5"/><g id="${id}-wv${k}"><path d="M8,-32l14,-22" stroke="${c}" stroke-width="5" stroke-linecap="round"/></g>
-            ${o.torches ? `<g transform="translate(22,-56)"><circle r="40" fill="url(#plTorch)"/><circle id="${id}-tch${k}" r="6" fill="#fff6c0"/></g>` : ""}</g>`; }
-        if (o.torches && !o.front) for (let k = 0; k < 6; k++) s += `<g transform="translate(${420 + k * 46},${800 + (k % 2) * 10})"><circle r="60" fill="url(#plTorch)"/><circle id="${id}-tch${k}" r="7" fill="#fff6c0"/></g>`;
+          s += `<g id="${id}-pp${k}"><g transform="translate(${x},${y})"><circle cy="-46" r="9" fill="#e8b88a" ${PO(2)}/><path d="M-9,-36h18l2,26h-22z" fill="${c}" ${PO(2)}/><path d="M-6,-10v12M6,-10v12" stroke="#2a2420" stroke-width="5"/><g id="${id}-wv${k}"><path d="M8,-32l14,-22" stroke="${c}" stroke-width="5" stroke-linecap="round"/></g>
+            ${o.torches ? `<g transform="translate(22,-56)"><circle r="40" fill="url(#plTorch)"/><circle id="${id}-tch${k}" r="6" fill="#fff6c0"/></g>` : ""}</g></g>`; }
+        if (o.torches && !o.front && !o.empty) for (let k = 0; k < 6; k++) s += `<g transform="translate(${420 + k * 46},${800 + (k % 2) * 10})"><circle r="60" fill="url(#plTorch)"/><circle id="${id}-tch${k}" r="7" fill="#fff6c0"/></g>`;
         if (o.tail) s += `<g transform="translate(${o.tailX ?? 120},1500) scale(${o.tailS ?? 0.9}) rotate(-5)">${Plane.tail(`${id}-tail`)}</g>`;
+        if (o.phone) s += `<g transform="translate(${o.phoneX ?? -120},${o.phoneY ?? 960})"><circle r="70" fill="url(#plTorch)"/><circle id="${id}-ph" r="9" fill="#e8f4ff"/></g>`;
         if (o.smoke) s += `<g>${Plane.puffMk(`${id}-sp`, 640, 760, 8, night ? "dark" : "light", 60)}</g>`;
         s += `<path d="M-1200,1500Q0,1440 600,1470T2200,1460V2600H-1200Z" fill="${night ? "#08090c" : "#1e1e26"}"/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-200 + k * 170},1480q${k % 2 ? 16 : -16},-70 ${k % 2 ? -6 : 6},-110" stroke="${night ? "#141a10" : "#6a6a3a"}" stroke-width="7" fill="none"/>`).join("")}`;
         put(L.set, s);

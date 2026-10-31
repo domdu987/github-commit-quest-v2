@@ -20,7 +20,7 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.12, -0.25, 2.5),         # down the aisle: masks swinging, the bin bursts, the camera bag falls with its tag (title)
+    ("hook", ["n01"], 0.05, -0.15, 2.4),         # down the aisle: masks swinging, the bin bursts, the camera bag falls with its tag (title)
     ("cmd", ["n02"], 0.15, 0.35, 1.5),           # his hand reaches for the strap → the red box
     ("seat", ["n03"], 0.2, 0.2, 4.2),            # 40 min before, calm cabin cut: คิว moves to the empty last row (the planted mistake at ~0:05)
     ("nap", ["q01"], 0.1, 0.3, 4.6),             # headphones on, he leans back; behind him the EXIT glows and the FA points to it
@@ -40,7 +40,7 @@ SHOTS = [
     ("behind", ["n13"], 0.2, 0.3, 3.0),          # the door one row behind him
     ("rows", ["n14"], 0.2, 0.5, 4.4),            # the safety card: rule 1 + count the rows, front and back
     ("jump", ["n15"], 0.2, 0.3, 3.0),            # out the door, down the slide, away from the fire
-    ("alone", ["n16", ("n17", 0.25)], 0.2, 0.9, 5.4),   # the smoke clears: no front section, only the jungle (smoke behind the ridge)
+    ("alone", ["n16", ("n17", 0.25), ("n18", 0.3)], 0.2, 0.9, 7.0),   # the smoke clears: no front section, only the jungle (smoke behind the ridge)
     ("next", [], 0, 0, 4.2),                     # next-episode card
 ]
 GAP = 0.08

@@ -24,33 +24,35 @@
         tl.to(`#${id}`, { scale: 1.12, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: Math.ceil(dur / 0.35), ease: "sine.inOut" }, t0 + 0.4); };
 
       // ---------- 1. hook: down the aisle, the plane tilting, masks swinging; the bin bursts and the camera bag falls (title on its tag) ----------
-      add("hook", { set: "cabinAisle", setOpts: { id: "ha", state: "alarm", bin: true, title: { l1: "รอดคนเดียว", l2: "EP.1 ทิ้งกระเป๋า" } }, dark: 0.18, light: false, grade: GEMR,
-        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.25, 540, 980) }, { t: D("hook"), glide: D("hook"), ...fr(470, 960, 1.4, 540, 960) }] },
-        shake: (t) => ({ x: 9 * Math.sin(t * 31), y: 7 * Math.sin(t * 27), r: -4 + 2.5 * Math.sin(t * 2.2) }),
+      add("hook", { ...CAB("ha", "alarm", { wingFire: true, wingX: 760, noBag: true }),
+        cam: { keys: [{ t: 0, ...fr(560, 1230, 1.45, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(520, 1210, 1.65, 540, 1000) }] },
+        shake: (t) => ({ x: 10 * Math.sin(t * 31), y: 8 * Math.sin(t * 27), r: -3 + 2 * Math.sin(t * 2) }),
+        actors: [A("kiw", KX + 220, PF - 6, KS, [{ t: 0, mode: "brace", eyes: "wide", mouth: "scream" }])],
         captions: caps("hook"),
-        fx(tl, id, t0, L) {
-          Plane.aisleLife(tl, "ha", t0, D("hook"));
-          tl.fromTo("#ha-tag-sw", { rotation: -24, svgOrigin: "0 0" }, { rotation: 22, svgOrigin: "0 0", duration: 0.32, yoyo: true, repeat: 8, ease: "sine.inOut", immediateRender: false }, t0);
-          tl.fromTo("#ha-fbag", { y: 0, rotation: 0, svgOrigin: "0 -60" }, { y: 18, rotation: 4, svgOrigin: "0 -60", duration: 0.12, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, t0);
-          tl.to("#ha-fbag", { y: 700, x: 160, rotation: 38, svgOrigin: "0 -60", duration: 0.7, ease: "power2.in" }, t0 + 1.45);
-          Plane.burst(tl, L.glow, 560, 1500, t0 + 2.15, { n: 12, v: 300 });
-          SU.flash(tl, L.light, t0 + 2.15, "#ffffff", 0.25);
-        } });
-      // ---------- 2. the command: the bag in the aisle at his feet, his hand reaching for its strap → red ----------
-      add("cmd", { ...CAB("cm", "alarm"), blur: { far: 3, set: 0, fg: 7 },
-        cam: { keys: [{ t: 0, ...fr(420, 1380, 2.3, 540, 1100) }, { t: D("cmd"), glide: D("cmd"), ...fr(420, 1420, 2.6, 540, 1100) }] },
-        shake: (t) => ({ x: 5 * Math.sin(t * 37), y: 4 * Math.sin(t * 29), r: 0 }),
-        actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "wide", mouth: "o" }])],
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "ha", t0, D("hook"), { chase: true });
+          for (let k = 0; k < 7; k++) tl.fromTo(`#ha-mask${k}`, { y: -170 }, { y: 0, duration: 0.5, ease: "bounce.out", immediateRender: false }, t0 + 0.05 + k * 0.04);
+          put(L.glow, `<g transform="translate(${KX + 300},${PF - 150})"><g id="hk-bag">${Plane.bag(0.9, { strap: false, tag: "hk-tag", l1: "รอดคนเดียว", l2: "EP.1 ทิ้งกระเป๋า" })}</g></g>`);
+          tl.fromTo("#hk-tag-sw", { rotation: -20, svgOrigin: "0 0" }, { rotation: 18, svgOrigin: "0 0", duration: 0.3, yoyo: true, repeat: 8, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#hk-bag", { y: -4 }, { y: 4, duration: 0.09, yoyo: true, repeat: 30, ease: "sine.inOut", immediateRender: false }, t0);
+          SU.flash(tl, L.light, t0 + 0.1, "#ff8a3a", 0.35); } });
+      // ---------- 2. the command: close on his fists on the bag in the shaking cabin → red ----------
+      add("cmd", { ...CAB("cm", "alarm", { wingFire: true, wingX: 760, noBag: true }), blur: { far: 3, set: 2, fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(660, 1330, 2.6, 540, 1000) }, { t: D("cmd"), glide: D("cmd"), ...fr(660, 1340, 2.9, 540, 1000) }] },
+        shake: (t) => ({ x: 6 * Math.sin(t * 37), y: 5 * Math.sin(t * 29), r: 0 }),
+        actors: [A("kiw", KX + 220, PF - 6, KS, [{ t: 0, mode: "brace", eyes: "wide", mouth: "scream" }])],
         captions: caps("cmd"),
-        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "cm", t0, D("cmd"), { chase: true }); SU.flash(tl, L.light, t0 + F("cmd", 0, 0) + 0.02, "#ff3b2e", 0.3); } });
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "cm", t0, D("cmd"));
+          put(L.glow, `<g transform="translate(${KX + 300},${PF - 150})"><g id="cm-bag">${Plane.bag(0.9, { strap: false })}</g></g>`);
+          tl.fromTo("#cm-bag", { y: -4 }, { y: 4, duration: 0.09, yoyo: true, repeat: 20, ease: "sine.inOut", immediateRender: false }, t0);
+          SU.flash(tl, L.light, t0 + F("cmd", 0, 0) + 0.02, "#ff3b2e", 0.35); } });
       // ---------- 3. forty minutes before (calm): he walks down the aisle, past the FA, and takes the empty last row (row 30) ----------
       add("seat", { ...CAB("cs1", "calm"),
-        cam: { keys: [{ t: 0, ...fr(560, 1260, 1.12, 540, 1020) }, { t: 1.6, glide: 1.6, ...fr(420, 1270, 1.2, 540, 1020) }, { t: D("seat"), glide: D("seat") - 1.6, ...fr(360, 1250, 1.32, 540, 1020) }] },
-        actors: [A("fa", 820, PF - 30, KS, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: 1.7, mode: "pointBack", eyes: "normal", mouth: "flat" }], { flip: true }),
-          A("kiw", 980, PF - 30, KS, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }, { t: 1.25, mode: "sitChair", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: KX, y: PF - 6, dur: 1.25, ease: "power1.inOut" } })],
+        cam: { keys: [{ t: 0, ...fr(480, 1260, 1.15, 540, 1020) }, { t: D("seat"), glide: D("seat"), ...fr(360, 1250, 1.32, 540, 1020) }] },
+        actors: [A("fa", 820, PF - 30, KS, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: 0.3, mode: "pointBack", eyes: "normal", mouth: "flat" }], { flip: true }),
+          A("kiw", 640, PF - 30, KS, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }, { t: 0.6, mode: "sitChair", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: KX, y: PF - 6, dur: 0.6, ease: "power1.out" } })],
         captions: caps("seat"),
         fx(tl, id, t0, L) { noSh(tl, id); Plane.cabinLife(tl, "cs1", t0, D("seat"));
-          SinkUI.tag(tl, L.light, t0 + 1.6, D("seat") - 1.6, 420, 640, "คิว · 24", "#d9a43a"); } });
+          SinkUI.tag(tl, L.light, t0 + 1.0, D("seat") - 1.0, 420, 640, "คิว · 24", "#d9a43a"); } });
       // ---------- 4. the nap: headphones on, he leans back; behind his head the EXIT glows, the FA still points to it ----------
       add("nap", { ...CAB("cs2", "calm"), blur: { far: 3, set: 0, fg: 7 },
         cam: { keys: [{ t: 0, ...fr(260, 1200, 1.75, 540, 980) }, { t: D("nap"), glide: D("nap"), ...fr(250, 1180, 1.9, 540, 980) }] },
@@ -160,10 +162,10 @@
         fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "cj", t0, D("jump")); PlaneUI.rules(tl, L.light, t0 + 1.4, D("jump") - 1.4 + 0.01, { active: 0, y: 480 }); } });
       // ---------- 21. the smoke clears: no front section, only the island and the sea; (clue) smoke over the far headland ----------
       add("alone", { ...SITE("ca", { fire: 0.35, plume: true, plumeX: 900 }),
-        cam: { keys: [{ t: 0, ...fr(200, 1520, 2.4, 540, 1150) }, { t: D("alone"), glide: D("alone"), ...fr(520, 1300, 0.95, 540, 1050) }] },
+        cam: { keys: [{ t: 0, ...fr(200, 1520, 2.4, 540, 1150) }, { t: vo("alone", 2) - 0.3, glide: vo("alone", 2) - 0.3, ...fr(520, 1300, 0.95, 540, 1050) }, { t: D("alone"), glide: D("alone") - vo("alone", 2) + 0.3, ...fr(900, 1160, 2.2, 540, 1000) }] },
         actors: [A("kiw", 150, 1585, 0.16, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 3.2, mode: "holdHead", eyes: "worry", mouth: "frown" }])],
         captions: caps("alone"),
         fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "ca", t0, D("alone")); } });
       // ---------- 22. next: the boarding pass ----------
       add("next", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
-        fx(tl, id, t0, L) { PlaneUI.next(tl, L.light, t0, D("next"), { l1: "ตอนต่อไป · EP.2", l2: "รอดคนเดียวบนเกาะ", l3: "อย่าเดินออกไปหาคนช่วย" }); } });
+        fx(tl, id, t0, L) { PlaneUI.next(tl, L.light, t0, D("next"), { l1: "ตอนต่อไป · EP.2", l2: "ถ้าคุณเห็นไฟอีกฝั่งอ่าว", l3: "อย่าเดินไปหามัน" }); } });
