@@ -1,0 +1,1 @@
+cat helpers.part kit.part kit2.part hands.part kit3.part cut.part rich.part sinkui.part plane.part planecast.part planeui.part body.part > shots.part 2>/dev/null && cat head.part sigcard.part shots.part foot.part > ep.tmpl.html && python3 make.py

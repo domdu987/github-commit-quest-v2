@@ -1,0 +1,24 @@
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const WARM = { from: "right", rim: "#ffd9a0", rimOp: 0.5, shade: "#1a1430", shadeOp: 0.35, cast: false, vol: false };
+      const EMERG = { from: "right", rim: "#ff9a4a", rimOp: 0.6, shade: "#1a0a10", shadeOp: 0.45, cast: false, vol: false };
+      const GCAB = { top: "#f6e2c0", bottom: "#2a2030", op: 0.12 }, GEMR = { top: "#ff6a3a", bottom: "#1a0a10", op: 0.22 };
+      const KX = ROW30 + 40;   // คิว's feet in row 30
+      add("hook", { set: "cabinAisle", setOpts: { id: "ha", state: "alarm", bin: true, title: { l1: "รอดคนเดียว", l2: "EP.1 ทิ้งกระเป๋า" } }, dark: 0.2, light: false, grade: GEMR,
+        cam: { keys: [{ t: 0, ...fr(540, 1010, 1.3, 540, 980) }] }, captions: caps("hook"),
+        fx(tl, id, t0, L) { Plane.aisleLife(tl, "ha", t0, D("hook")); } });
+      add("seat", { set: "cabinCut", setOpts: { id: "cs1", state: "calm" }, dark: 0, light: WARM, grade: GCAB,
+        cam: { keys: [{ t: 0, ...fr(400, 1300, 1.25, 540, 1000) }] },
+        actors: [A("kiw", KX, PF - 6, 0.8, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile" }]), A("fa", 760, PF - 30, 0.8, [{ t: 0, mode: "pointBack", eyes: "normal", mouth: "flat" }])],
+        captions: caps("seat"), fx(tl, id, t0, L) { Plane.cabinLife(tl, "cs1", t0, D("seat")); } });
+      add("engine", { set: "planeSky", setOpts: { id: "sk1", fire: true, s: 0.55 }, dark: 0, light: false, grade: { top: "#ffd0a0", bottom: "#3a2050", op: 0.12 },
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 900) }] }, captions: caps("engine"),
+        fx(tl, id, t0, L) { Plane.skyLife(tl, "sk1", t0, D("engine")); } });
+      add("smoke", { set: "cabinCut", setOpts: { id: "cs2", state: "fire" }, dark: 0.1, light: EMERG, grade: GEMR,
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.05, 540, 1000) }] },
+        actors: [A("kiw", KX, PF - 6, 0.8, [{ t: 0, mode: "brace", eyes: "wide", mouth: "scream" }])],
+        captions: caps("smoke"), fx(tl, id, t0, L) { Plane.cabinLife(tl, "cs2", t0, D("smoke"), { chase: true }); } });
+      add("alone", { set: "crashSite", setOpts: { id: "cs9", time: "dusk", fire: 0.5, ridgeSmoke: true }, dark: 0, light: false, grade: { top: "#ffb080", bottom: "#1a1030", op: 0.15 },
+        cam: { keys: [{ t: 0, ...fr(560, 1200, 0.8, 540, 1000) }] },
+        actors: [A("kiw", 300, 1530, 0.3, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("alone"), fx(tl, id, t0, L) { Plane.siteLife(tl, "cs9", t0, D("alone")); } });
