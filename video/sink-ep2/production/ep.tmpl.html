@@ -1354,6 +1354,590 @@
         put(L.act, `<g id="${id}" opacity="0" transform="translate(458,1208)"><circle r="26" fill="#ffffff" opacity=".6"/><path d="M-12,-4L10,-14M-8,8L14,2" stroke="#ffffff" stroke-width="3"/></g>`);
         tl.fromTo(`#${id}`, { opacity: 1 }, { opacity: 0.3, duration: 0.3, immediateRender: false }, t);
       };
+      // ---------- นาทีก่อนจม world (remake in the house style of ทะเลลด / ผีแม่ม่าย / เห็ดปอบ): the village canal road at 1 a.m. ----------
+      // A full, lit world instead of a dark strip: a violet night with a big moon, the temple's string lights across the fields, wooden
+      // houses with lit windows, ป้าแดง's shop under a fluorescent tube, the spirit house, banana trees, lamp posts with amber cones,
+      // the road with its guardrail (a gap where the car goes in), the bank, and the canal full of reflections, hyacinth and a moored boat.
+      // Same geometry as Canal.set (road at RY, water at WY) so every framing helper still works. Ids from o.id.
+      const KL = { ink: "#1c1a2a", wood: "#6a4a34", woodL: "#8e6648", woodD: "#3e2a1e", roof: "#3c4256", roofL: "#5a6278", tile: "#8a3a2c", win: "#ffcf72",
+        leaf: "#2f6a3c", leafL: "#79b85a", leafD: "#1c4428", road: "#2e3140", roadL: "#4a4c58", rail: "#c4c8d0", red: "#d8392e", gold: "#e8b860" };
+      const KO = (w = 3) => `stroke="${KL.ink}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+      Sets.DEFS += `
+        <linearGradient id="klSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0f2e"/><stop offset=".45" stop-color="#1c2360"/><stop offset=".78" stop-color="#3a3478"/><stop offset="1" stop-color="#7a4a78"/></linearGradient>
+        <radialGradient id="klMoon"><stop offset="0" stop-color="#fff6dc" stop-opacity=".55"/><stop offset=".4" stop-color="#fff0c8" stop-opacity=".16"/><stop offset="1" stop-color="#fff0c8" stop-opacity="0"/></radialGradient>
+        <linearGradient id="klWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a4e78"/><stop offset=".4" stop-color="#1a3656"/><stop offset="1" stop-color="#0a1828"/></linearGradient>
+        <radialGradient id="klLamp"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".95"/><stop offset=".3" stop-color="#ffb860" stop-opacity=".4"/><stop offset="1" stop-color="#ffb860" stop-opacity="0"/></radialGradient>
+        <radialGradient id="klWin"><stop offset="0" stop-color="#ffd890" stop-opacity=".7"/><stop offset="1" stop-color="#ffd890" stop-opacity="0"/></radialGradient>
+        <radialGradient id="klTube"><stop offset="0" stop-color="#e8fff6" stop-opacity=".8"/><stop offset="1" stop-color="#bff0ff" stop-opacity="0"/></radialGradient>
+        <radialGradient id="klBulb"><stop offset="0" stop-color="#fff0b0"/><stop offset=".35" stop-color="#ffc860" stop-opacity=".6"/><stop offset="1" stop-color="#ffc860" stop-opacity="0"/></radialGradient>
+        <linearGradient id="klCone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd890" stop-opacity=".34"/><stop offset="1" stop-color="#ffd890" stop-opacity="0"/></linearGradient>
+        <linearGradient id="klGlowH" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a6a" stop-opacity="0"/><stop offset="1" stop-color="#ff9a6a" stop-opacity=".32"/></linearGradient>
+        <linearGradient id="klWinG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe6a8"/><stop offset="1" stop-color="#ffb850"/></linearGradient>`;
+      const Klong = {};
+      // a wooden house (side-front), ground at y; o.stilts lifts it, o.lit [win…] windows lit, o.roof colour
+      Klong.house = (x, y, s, o = {}) => {
+        const st = o.stilts ? 70 : 0, W = 300, H = 190, rc = o.roof || KL.roof;
+        let g = `<g transform="translate(${x},${y}) scale(${s})">`;
+        if (st) g += [-120, -40, 40, 120].map((px) => `<rect x="${px - 7}" y="${-st}" width="14" height="${st}" fill="${KL.woodD}" ${KO(2.4)}/>`).join("") + `<path d="M-150,${-st + 6}H150" stroke="${KL.woodD}" stroke-width="8"/>`;
+        g += `<rect x="${-W / 2}" y="${-st - H}" width="${W}" height="${H}" fill="${KL.wood}" ${KO()}/>` +
+          Array.from({ length: 9 }, (_, k) => `<path d="M${-W / 2 + 4},${-st - H + 18 + k * 20}H${W / 2 - 4}" stroke="${KL.woodD}" stroke-width="2.4" opacity=".55"/>`).join("") +
+          `<path d="M${-W / 2},${-st - H}H${W / 2}" stroke="${KL.woodL}" stroke-width="5" opacity=".7"/>`;
+        // the roof: a tall gable with a dark eave line and a lit rim
+        g += `<path d="M${-W / 2 - 34},${-st - H + 6}L0,${-st - H - 120}L${W / 2 + 34},${-st - H + 6}Z" fill="${rc}" ${KO()}/><path d="M${-W / 2 - 34},${-st - H + 6}L0,${-st - H - 120}" stroke="#9aa6c8" stroke-width="4" opacity=".5"/>
+          ${Array.from({ length: 7 }, (_, k) => `<path d="M${-W / 2 - 20 + k * 52},${-st - H}L${-W / 2 - 20 + k * 52 + (k < 3.5 ? 26 : -26) * 0.4},${-st - H - 60 + Math.abs(k - 3) * 14}" stroke="${KL.ink}" stroke-width="2" opacity=".35"/>`).join("")}`;
+        // windows: shutters open, warm light, a curtain edge; a door
+        const wins = o.wins || [[-90, -st - 120], [60, -st - 120]];
+        wins.forEach(([wx, wy], k) => {
+          const lit = (o.lit || [0, 1]).includes(k);
+          g += `<rect x="${wx - 30}" y="${wy - 34}" width="60" height="68" fill="${lit ? "url(#klWinG)" : "#1a2030"}" ${KO(2.6)}/>` + (lit ? `<path d="M${wx - 30},${wy - 34}h18v68h-18Z" fill="#c86a3a" opacity=".55"/><path d="M${wx},${wy - 34}v68M${wx - 30},${wy}h60" stroke="${KL.woodD}" stroke-width="3"/>` : `<path d="M${wx},${wy - 34}v68" stroke="${KL.woodD}" stroke-width="3"/>`) +
+            `<path d="M${wx - 52},${wy - 36}h22v72h-22Z M${wx + 30},${wy - 36}h22v72h-22Z" fill="${KL.woodL}" ${KO(2.2)}/>`;
+        });
+        if (o.door !== false) g += `<rect x="-14" y="${-st - 112}" width="50" height="112" fill="${KL.woodD}" ${KO(2.6)}/><circle cx="26" cy="${-st - 56}" r="3" fill="${KL.gold}"/>`;
+        if (st) g += `<path d="M-14,${-st}L-54,0M36,${-st}L76,0" stroke="${KL.woodD}" stroke-width="7"/>${[0, 1, 2, 3].map((k) => `<path d="M${-22 - k * 10},${-st + 14 + k * 16}h${54 + k * 20}" stroke="${KL.woodD}" stroke-width="5"/>`).join("")}`;
+        return g + `</g>`;
+      };
+      // a banana clump: trunk(s) and big split leaves, lamp-lit edges
+      Klong.banana = (x, y, s, flip = 1) => {
+        const P = (a, L, W) => { const c = Math.cos((a * Math.PI) / 180), n = Math.sin((a * Math.PI) / 180), mx = (L / 2) * c, my = (L / 2) * n;
+          return `M0,0Q${f1(mx - W * n)},${f1(my + W * c)} ${f1(L * c)},${f1(L * n)}Q${f1(mx + W * n)},${f1(my - W * c)} 0,0Z`; };
+        let g = `<g transform="translate(${x},${y}) scale(${s * flip},${s})"><path d="M-10,0Q-16,-120 -6,-240H16Q22,-120 14,0Z" fill="#5a6a3a" ${KO(2.4)}/><path d="M-2,-20Q-6,-120 0,-230" stroke="#7a8a4a" stroke-width="4" opacity=".6"/>`;
+        [[-168, 230, 42, 1], [-138, 250, 46, 0], [-108, 220, 40, 1], [-72, 230, 44, 0], [-40, 250, 46, 1], [-8, 230, 42, 0], [18, 190, 36, 1]].forEach(([a, L, W, k]) => {
+          const c = Math.cos((a * Math.PI) / 180), n = Math.sin((a * Math.PI) / 180);
+          g += `<g transform="translate(2,-232)"><path d="${P(a, L, W)}" fill="${k ? KL.leaf : "#3a7a44"}" ${KO(2.2)}/><path d="M0,0L${f1(L * c * 0.96)},${f1(L * n * 0.96)}" stroke="${KL.leafL}" stroke-width="3.5" opacity=".7"/>
+            ${[0.35, 0.55, 0.75].map((q) => `<path d="M${f1(L * c * q)},${f1(L * n * q)}l${f1(-n * W * 0.8)},${f1(c * W * 0.8)}" stroke="${KL.leafD}" stroke-width="2" opacity=".55"/>`).join("")}</g>`;
+        });
+        return g + `</g>`;
+      };
+      // the spirit house on its pillar: red and gold, a tiny lamp, marigold garlands, a glass of red soda
+      Klong.shrine = (x, y, s) => `<g transform="translate(${x},${y}) scale(${s})">
+        <rect x="-12" y="-150" width="24" height="150" fill="#e8e2d6" ${KO(2.4)}/><rect x="-46" y="-162" width="92" height="14" fill="#e8e2d6" ${KO(2.4)}/>
+        <rect x="-38" y="-240" width="76" height="80" fill="${KL.red}" ${KO(2.6)}/><path d="M-30,-232h60v64h-60Z" fill="#7a1a14"/><circle cx="0" cy="-205" r="9" fill="#ffd36a"/>
+        <path d="M-52,-238L0,-290L52,-238Z" fill="${KL.gold}" ${KO(2.6)}/><path d="M-40,-262L0,-312L40,-262" fill="none" stroke="${KL.gold}" stroke-width="7"/><path d="M0,-312V-336" stroke="${KL.gold}" stroke-width="5"/>
+        <path d="M-52,-238Q-62,-254 -66,-246M52,-238Q62,-254 66,-246" stroke="${KL.gold}" stroke-width="6" fill="none"/>
+        <path d="M-40,-166q20,22 40,0q20,22 40,0" stroke="#ff9a2a" stroke-width="8" fill="none" stroke-dasharray="3 5"/>
+        <rect x="24" y="-178" width="10" height="16" fill="#e8302a" opacity=".85"/></g>`;
+      // ป้าแดง's shop: a shophouse front, roller shutter half up, the fluorescent tube under the awning, a sign, crates of drinks
+      Klong.shop = (x, y, s) => `<g transform="translate(${x},${y}) scale(${s})">
+        <rect x="-170" y="-260" width="340" height="260" fill="#7c8496" ${KO()}/><rect x="-170" y="-260" width="340" height="26" fill="#949cb0" ${KO(2.4)}/>
+        <rect x="-150" y="-200" width="300" height="200" fill="#2a2420"/><rect x="-150" y="-200" width="300" height="86" fill="#a8b0bc" ${KO(2.4)}/>
+        ${Array.from({ length: 8 }, (_, k) => `<path d="M-150,${-192 + k * 10}H150" stroke="#7c8494" stroke-width="2"/>`).join("")}
+        <rect x="-140" y="-112" width="120" height="112" fill="#3a3028"/>${[0, 1, 2].map((k) => `<rect x="${-134 + k * 38}" y="-100" width="30" height="20" fill="${["#e8402a", "#2a8ad8", "#f2c040"][k]}" opacity=".8"/>`).join("")}
+        ${[0, 1].map((k) => `<rect x="${-134}" y="${-70 + k * 34}" width="108" height="26" fill="#5a4a3a" ${KO(1.8)}/>`).join("")}
+        <path d="M-196,-210H196L180,-176H-180Z" fill="#2f6ad8" ${KO(2.6)}/>${Array.from({ length: 7 }, (_, k) => `<path d="M${-180 + k * 60},-176l12,-34" stroke="#fff" stroke-width="10" opacity=".85"/>`).join("")}
+        <rect x="-110" y="-252" width="220" height="40" rx="6" fill="#f2ecd8" ${KO(2.2)}/><text x="0" y="-222" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="28" fill="#b82a20">ร้านป้าแดง</text>
+        <rect id="klTube" x="-60" y="-174" width="120" height="8" rx="4" fill="#f0fffa"/>
+        <rect x="40" y="-60" width="70" height="60" fill="#c8302a" ${KO(2.2)}/><rect x="46" y="-54" width="58" height="22" fill="#e8e0d0"/></g>`;
+      // a lamp post (concrete, curved arm, sodium head) at ground y; glow drawn separately
+      Klong.lamp = (x, y, h = 490) => `<path d="M${x},${y}V${y - h}Q${x},${y - h - 40} ${x + 52},${y - h - 40}" stroke="#4a4e5a" stroke-width="12" fill="none"/><path d="M${x - 3},${y}V${y - h}" stroke="#7a7e8a" stroke-width="3" opacity=".6"/>
+        <rect x="${x + 40}" y="${y - h - 52}" width="50" height="18" rx="7" fill="#3a3e48" ${KO(2)}/><rect x="${x + 44}" y="${y - h - 38}" width="42" height="7" rx="3" fill="#ffe6a6"/>`;
+      // the guardrail along the canal side of the road: white posts with red bands and a steel rail, with a gap
+      Klong.rail = (y, gap = [600, 860]) => {
+        let g = "";
+        for (let x = -1180; x < 2300; x += 120) { if (x > gap[0] - 40 && x < gap[1] + 40) continue; g += `<rect x="${x - 9}" y="${y - 58}" width="18" height="62" fill="#ece8e0" ${KO(2.2)}/><rect x="${x - 9}" y="${y - 50}" width="18" height="12" fill="${KL.red}"/>`; }
+        const seg = (a, b) => `<path d="M${a},${y - 40}H${b}" stroke="${KL.rail}" stroke-width="16" stroke-linecap="round"/><path d="M${a},${y - 46}H${b}" stroke="#f4f6fa" stroke-width="4" opacity=".6"/><path d="M${a},${y - 34}H${b}" stroke="#6a7080" stroke-width="3" opacity=".7"/>`;
+        return g + seg(-1190, gap[0] - 40) + seg(gap[1] + 40, 2300) + `<path d="M${gap[0] - 40},${y - 40}l26,22M${gap[1] + 40},${y - 40}l-26,22" stroke="${KL.rail}" stroke-width="12" stroke-linecap="round"/>`;
+      };
+      // a coconut palm silhouette
+      Klong.palm = (x, y, s, c = "#10153a") => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-6,0Q-24,-160 10,-330" stroke="${c}" stroke-width="16" fill="none"/>
+        ${[-150, -110, -60, -10, 40, 90, 140].map((a) => `<path d="M10,-330q${Math.sin((a * Math.PI) / 180) * 90},${-Math.cos((a * Math.PI) / 180) * 40 - 20} ${Math.sin((a * Math.PI) / 180) * 170},${-Math.cos((a * Math.PI) / 180) * 70 + 50}" stroke="${c}" stroke-width="12" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+      // the long-tail boat moored at a post, bow left
+      Klong.boat = (x, y, s) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-260,-30Q-300,-70 -320,-90Q-200,-40 0,-36Q160,-34 240,-50L250,-14Q120,10 -40,8Q-200,6 -260,-30Z" fill="${KL.wood}" ${KO(3)}/>
+        <path d="M-300,-74Q-200,-36 0,-32Q150,-30 244,-44" stroke="#2f6ad8" stroke-width="8" fill="none"/><path d="M-280,-60Q-200,-26 0,-22" stroke="${KL.woodL}" stroke-width="4" fill="none" opacity=".7"/>
+        <path d="M-316,-92l-6,-14" stroke="#e8b860" stroke-width="5"/><path d="M-322,-108q-10,4 -6,14" stroke="#ff8a3a" stroke-width="5" fill="none"/><path d="M-120,-34v-10M60,-34v-10" stroke="${KL.woodD}" stroke-width="10"/></g>`;
+      // a clump of water hyacinth floating (class klHy bobs)
+      Klong.hyacinth = (x, y, s) => `<g class="klHy"><g transform="translate(${x},${y}) scale(${s})">${[-60, -30, 0, 30, 58].map((dx, k) => `<path d="M${dx},0q${-14 + k * 6},-40 ${4 + k * 3},-${46 + (k % 2) * 14}q22,10 10,46Z" fill="${k % 2 ? KL.leaf : "#3a8a4c"}" ${KO(2)}/>`).join("")}
+        <path d="M-6,-44q6,-26 2,-46" stroke="#3a7a3a" stroke-width="4"/>${[[-4, -96], [8, -84], [-14, -80]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="9" fill="#c4a6e8" ${KO(1.6)}/><circle cx="${a}" cy="${b}" r="3" fill="#ffd36a"/>`).join("")}
+        <ellipse cx="0" cy="4" rx="80" ry="10" fill="#0a1a24" opacity=".5"/></g></g>`;
+      // the green road sign with the series title (the opener's in-world title)
+      Klong.titleSign = (x, y, o = {}) => `<g transform="translate(${x},${y})"><rect x="-160" y="-300" width="14" height="300" fill="#8a909c" ${KO(2.4)}/><rect x="146" y="-300" width="14" height="300" fill="#8a909c" ${KO(2.4)}/>
+        <g id="${o.id || "klts"}"><rect x="-250" y="-480" width="500" height="210" rx="16" fill="#1e7a4a" ${KO(4)}/><rect x="-238" y="-468" width="476" height="186" rx="10" fill="none" stroke="#f4f8f4" stroke-width="6"/>
+        <text x="0" y="-380" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="78" fill="#ffffff">นาทีก่อนจม</text>
+        <text x="0" y="-324" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="32" fill="#e8f4ea">${o.sub || "EP.1"}</text>
+        <path d="M-210,-300h60l-14,-12M-150,-300l-14,12" stroke="#f4f8f4" stroke-width="5" fill="none" opacity="${o.arrow === false ? 0 : 0.9}"/>
+        <rect id="${o.id || "klts"}-shine" x="-250" y="-480" width="500" height="210" rx="16" fill="#fff8e0" opacity="0"/></g></g>`;
+      // the curve warning sign (yellow diamond with a bend arrow)
+      Klong.curveSign = (x, y) => `<g transform="translate(${x},${y})"><rect x="-6" y="-250" width="12" height="250" fill="#8a909c" ${KO(2)}/><g transform="translate(0,-300) rotate(45)"><rect x="-56" y="-56" width="112" height="112" rx="10" fill="#f2c020" ${KO(4)}/></g>
+        <path d="M-16,-268v-34q0,-22 22,-22h10" stroke="${KL.ink}" stroke-width="10" fill="none"/><path d="M12,-340l18,16l-18,16Z" fill="${KL.ink}"/></g>`;
+
+      Sets.klong = (L, o = {}) => {
+        const id = o.id || "kl", gap = o.gap || [600, 860];
+        // sky: violet night, stars, the moon with its halo, two lit clouds
+        put(L.sky, `<rect x="-1200" y="-800" width="3500" height="2400" fill="url(#klSky)"/><rect x="-1200" y="700" width="3500" height="420" fill="url(#klGlowH)"/>
+          ${Array.from({ length: 90 }, (_, k) => `<circle class="${id}-st" cx="${f1(-600 + ((k * 397) % 2300))}" cy="${f1(-400 + ((k * 211) % 1100))}" r="${f1(1 + (k % 3) * 0.9)}" fill="#fff" opacity="${(0.3 + (k % 4) * 0.15).toFixed(2)}"/>`).join("")}
+          <circle cx="${o.moonX ?? 860}" cy="${o.moonY ?? 230}" r="300" fill="url(#klMoon)"/><circle cx="${o.moonX ?? 860}" cy="${o.moonY ?? 230}" r="66" fill="#fff6dc"/>
+          <circle cx="${(o.moonX ?? 860) - 20}" cy="${(o.moonY ?? 230) - 12}" r="14" fill="#efe2bc" opacity=".6"/><circle cx="${(o.moonX ?? 860) + 22}" cy="${(o.moonY ?? 230) + 18}" r="9" fill="#efe2bc" opacity=".5"/>
+          ${[[-420, 330, 420], [380, 120, 300], [1260, 300, 380]].map(([x, y, w]) => `<g opacity=".85"><path d="M${x},${y}q${w * 0.18},-50 ${w * 0.42},-18q${w * 0.2},-46 ${w * 0.42},-6q${w * 0.16},2 ${w * 0.16},24Z" fill="#2c2f6a"/><path d="M${x + w * 0.06},${y - 14}q${w * 0.16},-42 ${w * 0.36},-14" stroke="#b8b0e8" stroke-width="4" fill="none" opacity=".55"/></g>`).join("")}`);
+        // far: tree line, palms, the temple with its lit roof edges and string lights, a phone mast blinking
+        let far = `<path d="M-1200,1000Q-1000,930 -820,960T-420,940T0,965T420,930T820,955T1300,935T2300,960V1060H-1200Z" fill="#161b44"/>`;
+        far += [-760, -540, 160, 1180, 1420].map((x, k) => Klong.palm(x, 980, 0.8 + (k % 3) * 0.12)).join("");
+        far += `<g transform="translate(${o.templeX ?? -260},965)"><path d="M-120,0V-80H120V0Z" fill="#232a5a"/><path d="M-150,-78L0,-150L150,-78Z" fill="#2c2a5a" stroke="#e8b860" stroke-width="4"/>
+          <path d="M-100,-128L0,-190L100,-128Z" fill="#2c2a5a" stroke="#e8b860" stroke-width="4"/><path d="M0,-190V-240" stroke="#e8b860" stroke-width="5"/><path d="M-150,-78q-10,-26 -26,-28M150,-78q10,-26 26,-28" stroke="#e8b860" stroke-width="5" fill="none"/></g>`;
+        far += `<path d="M${(o.templeX ?? -260) - 360},950Q${(o.templeX ?? -260) - 180},990 ${o.templeX ?? -260},960T${(o.templeX ?? -260) + 360},950" stroke="#3a3a5a" stroke-width="2" fill="none"/>`;
+        far += `<path d="M1500,960V700M1480,960L1500,700L1520,960" stroke="#2a2e58" stroke-width="5" fill="none"/><circle id="${id}-mast" cx="1500" cy="696" r="7" fill="#ff3a2a"/>`;
+        put(L.far, far);
+        // the canal: deep blue water, the moon's broken column, the lamps' streaks, ripples (drawn before the bank)
+        let wa = `<rect x="-1200" y="${WY - 60}" width="3500" height="1500" fill="url(#klWater)"/>`;
+        for (let j = 0; j < 14; j++) wa += `<path d="M${(o.moonX ?? 860) - 50 + (j % 3) * 20},${WY - 30 + j * 34}h${100 - j * 5}" stroke="#fff4d0" stroke-width="${8 - j * 0.35}" opacity="${(0.85 - j * 0.05).toFixed(2)}" stroke-linecap="round"/>`;
+        [-500, 150, 560, 970, 1400].forEach((x, k) => { for (let j = 0; j < 10; j++) wa += `<path d="M${x + 30 + (j % 2) * 18},${WY - 34 + j * 36}h${70 - j * 5}" stroke="#ffcf80" stroke-width="6" opacity="${(0.7 - j * 0.06).toFixed(2)}" stroke-linecap="round"/>`; });
+        [[-430, "#ffd890"], [470, "#ffd890"], [1000, "#ffd890"], [90, "#cfeeff"]].forEach(([x, c]) => { for (let j = 0; j < 6; j++) wa += `<path d="M${x - 20 + (j % 2) * 10},${WY - 20 + j * 30}h${44 - j * 5}" stroke="${c}" stroke-width="4" opacity="${(0.45 - j * 0.06).toFixed(2)}" stroke-linecap="round"/>`; });
+        for (let k = 0; k < 40; k++) wa += `<path d="M${-1000 + ((k * 263) % 3200)},${WY - 20 + ((k * 37) % 420)}q30,-6 60,0" stroke="#8ab8d8" stroke-width="3" opacity=".28" fill="none" stroke-linecap="round"/>`;
+        // the village behind the road: houses with lit windows, the shop, the spirit house, banana trees, power poles and wires
+        const G = RY - 70;
+        let vil = `<path d="M-1200,${G}H2300V${G - 30}H-1200Z" fill="#20253a"/>`;
+        vil += [-1000, -380, 240, 900, 1560].map((x) => `<path d="M${x},${G}V${G - 420}" stroke="#2a2a3a" stroke-width="12"/><path d="M${x - 40},${G - 400}h80" stroke="#2a2a3a" stroke-width="8"/>`).join("");
+        vil += `<path d="M-1000,${G - 396}Q-690,${G - 340} -380,${G - 396}T240,${G - 396}T900,${G - 396}T1560,${G - 396}" stroke="#1a1a2a" stroke-width="3" fill="none"/><path d="M-1000,${G - 380}Q-690,${G - 320} -380,${G - 380}T240,${G - 380}T900,${G - 380}T1560,${G - 380}" stroke="#1a1a2a" stroke-width="2.4" fill="none"/>`;
+        vil += Klong.banana(-640, G, 0.9) + Klong.house(-430, G, 0.82, { stilts: true, lit: [0], roof: KL.tile }) + Klong.shrine(-200, G, 0.62);
+        vil += Klong.shop(90, G, 0.82) + Klong.banana(330, G, 0.82, -1) + Klong.house(470, G, 0.78, { lit: [1] }) + Klong.banana(1180, G, 1.0);
+        vil += Klong.house(1000, G, 0.86, { stilts: true, lit: [0, 1], roof: "#4a5a7a" }) + Klong.house(1420, G, 0.8, { lit: [0], roof: KL.tile }) + Klong.banana(-1060, G, 0.95, -1);
+        put(L.mid, `<g id="${id}-water">${wa}</g>${vil}`);
+        // the road, its lamps, the guardrail (with the gap), the signs, the bank down to the water, the boat and the hyacinth
+        let s = `<path d="M-1200,${RY - 70}H2300V${RY + 34}H-1200Z" fill="${KL.road}"/>${[-500, 150, 560, 970, 1400].map((x) => `<ellipse cx="${x + 70}" cy="${RY - 10}" rx="230" ry="46" fill="#5a5660" opacity=".45"/>`).join("")}
+          <path d="M-1200,${RY - 66}H2300" stroke="#c8c0a8" stroke-width="5" opacity=".6"/><path d="M-1200,${RY + 28}H2300" stroke="#ece4cc" stroke-width="6" opacity=".8"/>
+          ${Array.from({ length: 14 }, (_, k) => `<path d="M${-1100 + k * 260},${RY - 18}h130" stroke="#f0c850" stroke-width="7" opacity=".8"/>`).join("")}`;
+        s += [-500, 150, 560, 970, 1400].map((x) => Klong.lamp(x, RY - 66)).join("");
+        s += `<path d="M-1200,${RY + 30}H2300V${WY - 30}Q1600,${WY} 900,${WY - 26}T-1200,${WY - 30}Z" fill="#1c3626"/>`;
+        for (let k = 0; k < 70; k++) { const x = -1150 + k * 50 + ((k * 31) % 30); s += `<path d="M${x},${WY - 26}q${(k % 3) - 1 * 8},-50 ${(k % 2 ? 1 : -1) * 12},-${46 + (k % 5) * 12}" stroke="${k % 4 ? "#2e5a34" : "#4a7a3a"}" stroke-width="5" fill="none"/>`; }
+        for (let k = 0; k < 16; k++) s += `<circle cx="${-1100 + k * 210 + (k % 3) * 40}" cy="${RY + 70 + (k % 4) * 22}" r="5" fill="${k % 2 ? "#f4ecd8" : "#ffd36a"}" opacity=".85"/>`;
+        s += Klong.rail(RY + 34, gap);
+        if (o.title) s += Klong.titleSign(o.title.x ?? 380, RY - 66, o.title);
+        if (o.curve !== false) s += Klong.curveSign(o.curveX ?? 1100, RY - 66);
+        s += Klong.boat(o.boatX ?? -300, WY + 70, 0.9) + `<rect x="${(o.boatX ?? -300) + 270}" y="${WY - 60}" width="16" height="190" fill="${KL.woodD}" ${KO(2)}/><path d="M${(o.boatX ?? -300) + 240},${WY + 30}L${(o.boatX ?? -300) + 276},${WY - 30}" stroke="#c8b890" stroke-width="3"/>`;
+        s += [[-760, WY + 40, 0.9], [120, WY + 120, 1.0], [1260, WY + 60, 0.85], [1700, WY + 150, 1.1]].map(([x, y, sc]) => Klong.hyacinth(x, y, sc)).join("");
+        put(L.set, s);
+        // foreground reeds, out of focus
+        put(L.fg, `<g opacity=".95">${Array.from({ length: 18 }, (_, k) => { const x = k < 9 ? -160 + k * 34 : 940 + (k - 9) * 34; return `<path d="M${x},1990q${(k % 3 - 1) * 24},-260 ${(k % 2 ? 44 : -34)},-${380 + (k % 5) * 70}" stroke="#0c1a12" stroke-width="${18 + (k % 3) * 6}" fill="none" stroke-linecap="round"/>`; }).join("")}</g>`);
+        // light: the lamp heads and their cones, the lit windows' spill, the shop's tube, the shrine's red lamp, the string lights
+        let gl = [-500, 150, 560, 970, 1400].map((x) => `<circle cx="${x + 65}" cy="${RY - 66 - 490 - 30}" r="120" fill="url(#klLamp)"/><path d="M${x + 65},${RY - 586}L${x - 120},${RY + 30}H${x + 270}Z" fill="url(#klCone)"/>`).join("");
+        gl += `<ellipse cx="90" cy="${G - 140}" rx="200" ry="110" fill="url(#klTube)" opacity=".8"/><circle cx="-200" cy="${G - 120}" r="36" fill="url(#klBulb)" opacity=".8"/>`;
+        gl += [[-470, G - 160], [470, G - 110], [1000, G - 160], [1060, G - 160], [1420, G - 110]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="80" fill="url(#klWin)" opacity=".7"/>`).join("");
+        const tx = o.templeX ?? -260;
+        gl += Array.from({ length: 22 }, (_, k) => { const x = tx - 340 + k * 32, y = 952 + Math.sin((k / 21) * Math.PI) * 30; return `<circle class="${id}-sl" cx="${x}" cy="${y}" r="5" fill="${["#ffd36a", "#ff8a5a", "#9affc8", "#8ac8ff"][k % 4]}"/><circle cx="${x}" cy="${y}" r="16" fill="url(#klBulb)" opacity=".5"/>`; }).join("");
+        gl += `<path d="M${tx - 150},887L${tx},815L${tx + 150},887" stroke="#ffd890" stroke-width="3" fill="none" opacity=".7"/>`;
+        put(L.glow, gl);
+        // the night's small life (moths at the lamps, fireflies over the water)
+        put(L.act, `<g>${[150, 560, 970].map((x, k) => [0, 1, 2].map((j) => `<circle id="${id}-b${k}${j}" cx="${x + 65}" cy="${RY - 590}" r="3" fill="#fff3c8" opacity=".85"/>`).join("")).join("")}</g>
+          <g>${Array.from({ length: 14 }, (_, k) => `<circle id="${id}-f${k}" cx="${-500 + k * 150 + (k % 3) * 30}" cy="${WY - 80 - (k % 4) * 26}" r="5" fill="#d8ff8a" opacity="0"/>`).join("")}</g>`);
+      };
+      Klong.life = (tl, id, t0, dur) => {
+        tl.fromTo(`#${id}-water`, { x: -7 }, { x: 7, duration: 1.4, repeat: Math.ceil(dur / 1.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+        tl.fromTo(`.${id}-sl`, { opacity: 1 }, { opacity: 0.35, duration: 0.5, repeat: Math.ceil(dur / 0.5), yoyo: true, stagger: { each: 0.09, from: "random" }, ease: "sine.inOut", immediateRender: false }, t0);
+        tl.fromTo(`.${id}-st`, { opacity: 0.9 }, { opacity: 0.3, duration: 0.8, repeat: Math.ceil(dur / 0.8), yoyo: true, stagger: { each: 0.05, from: "random" }, ease: "sine.inOut", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-mast`, { opacity: 1 }, { opacity: 0.15, duration: 0.5, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "steps(1)", immediateRender: false }, t0);
+        tl.fromTo(".klHy", { y: -3 }, { y: 3, duration: 1.6, repeat: Math.ceil(dur / 1.6), yoyo: true, stagger: 0.4, ease: "sine.inOut", immediateRender: false }, t0);
+        for (let k = 0; k < 3; k++) for (let j = 0; j < 3; j++) { const a = (j / 3) * Math.PI * 2, R = 24 + j * 9;
+          tl.fromTo(`#${id}-b${k}${j}`, { x: Math.cos(a) * R, y: Math.sin(a) * R }, { x: Math.cos(a + 6.28) * R, y: Math.sin(a + 6.28) * R * 0.6, duration: 1.1 + j * 0.2, repeat: Math.ceil(dur), ease: "none", immediateRender: false }, t0); }
+        for (let k = 0; k < 14; k++) tl.fromTo(`#${id}-f${k}`, { opacity: 0 }, { opacity: 0.9, duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 1.0), repeatDelay: 0.3 + (k % 4) * 0.25, ease: "sine.inOut", immediateRender: false }, t0 + (k % 5) * 0.23);
+      };
+      // ---------- นาทีก่อนจม on-screen graphics, in the house style of ผีแม่ม่าย / เห็ดปอบ / ทะเลลด ----------
+      // One design language (mmui.js): ink outline 4–5, flat fills, one shade + one highlight, soft drop shadow (#muDrop), Kanit;
+      // everything enters eased (back / elastic) and staggered, then keeps a small secondary motion. Screen space: put into L.light.
+      const SU = { ink: "#26201c", paper: "#fdfaf2", green: "#2fa864", greenD: "#1e7a48", red: "#e2382e", redD: "#a81e18", yellow: "#ffd23a",
+        blue: "#2f6fd0", blueL: "#d6e6fb", water: "#2a7ab8", waterD: "#17507e", slate: "#1e2630", muted: "#8a8f98", car: "#e9edf2", carD: "#b8c2ce" };
+      const SO = (w = 4) => `stroke="${SU.ink}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+      let suSeq = 0;
+      const SinkUI = {};
+      // the four steps' icons (100-unit box, centred): 0 belt release · 1 window down · 2 child out first · 3 out
+      SinkUI.icon = (k, x, y, s, id) => {
+        let g = "";
+        if (k === 0) g = `<path d="M-40,-46L18,24" stroke="#5a6070" stroke-width="18" stroke-linecap="round"/><path d="M-40,-46L18,24" stroke="#8a90a0" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+          <rect x="-6" y="8" width="56" height="40" rx="10" fill="#3a3e48" ${SO(3.5)}/><rect id="${id}-btn" x="8" y="18" width="28" height="20" rx="5" fill="${SU.red}" ${SO(2.5)}/>
+          <path d="M-30,30l-16,16" stroke="${SU.green}" stroke-width="7" stroke-linecap="round"/><path d="M-50,34l-2,14l14,-2" stroke="${SU.green}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+        if (k === 1) g = `<path d="M-46,-40H30L46,-10V42H-46Z" fill="#cfe4f6" ${SO(3.5)}/><rect id="${id}-gl" x="-40" y="-34" width="80" height="34" fill="#7ab4e0" opacity=".85"/>
+          <path d="M-46,4H46" stroke="${SU.ink}" stroke-width="3"/><path d="M0,10V40M-12,28l12,14l12,-14" stroke="${SU.green}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+        if (k === 2) g = `<path d="M-48,44V-28Q-48,-44 -32,-44H40V44" fill="none" ${SO(3.5)}/><circle cx="-6" cy="-14" r="14" fill="#efc6a0" ${SO(3)}/><path d="M-20,-22q14,-14 28,-2" stroke="#3d241b" stroke-width="7" fill="none"/>
+          <path d="M-22,0q16,-6 32,0l4,30h-40Z" fill="#c9b6ea" ${SO(3)}/><path d="M24,-30l20,-20M30,-50h14v14" stroke="${SU.green}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+        if (k === 3) g = `<path d="M-46,44V-8H46V44" fill="#cfe4f6" opacity=".6" ${SO(3.5)}/><circle cx="2" cy="-26" r="14" fill="#d39a6e" ${SO(3)}/><path d="M-16,-8q18,-8 36,0l4,22h-44Z" fill="#2fa45a" ${SO(3)}/>
+          <path d="M-16,-6l-18,-26M20,-6l18,-26" stroke="#d39a6e" stroke-width="8" stroke-linecap="round"/><path d="M0,-48V-62M-10,-54l10,-10l10,10" stroke="${SU.green}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+        return `<g transform="translate(${x},${y}) scale(${s})"><g id="${id}"><circle r="62" fill="#fff" ${SO(4)}/><circle r="62" fill="none" stroke="${SU.green}" stroke-width="8" opacity=".25" transform="scale(.86)"/>${g}</g></g>`;
+      };
+      SinkUI.RULES = ["ปลดเข็มขัด", "เปิดกระจก", "ส่งเด็กออกก่อน", "ออกทางหน้าต่าง"];
+      // the laminated card that hangs from the rear-view mirror: "1 นาที ทำ 4 อย่าง". o.active (−1 none), o.done [i…], o.y, o.s, o.out
+      SinkUI.rules = (tl, layer, t0, dur, o = {}) => {
+        const id = `sr${suSeq++}`, active = o.active ?? -1, done = o.done || [], Y = o.y ?? 470, S = o.s ?? 1, W = 900, H = 800;
+        let c = `<path d="M-50,-${Y + 40}L-14,-6M50,-${Y + 40}L14,-6" stroke="#c8302a" stroke-width="16"/><path d="M-50,-${Y + 40}L-14,-6M50,-${Y + 40}L14,-6" stroke="#ffd36a" stroke-width="3" stroke-dasharray="10 14" opacity=".8"/>
+          <circle r="22" fill="${SU.gold || "#e8b860"}" ${SO(3)}/><path d="M-10,-2h20M0,-12v20" stroke="#8a5a1a" stroke-width="4"/>`;
+        c += `<g filter="url(#muDrop)"><rect x="${-W / 2}" y="26" width="${W}" height="${H}" rx="38" fill="${SU.paper}" ${SO(5)}/></g>
+          <path d="M${-W / 2},64Q${-W / 2},26 ${-W / 2 + 38},26H${W / 2 - 38}Q${W / 2},26 ${W / 2},64V170H${-W / 2}Z" fill="${SU.red}" ${SO(5)}/>
+          <circle cx="0" cy="56" r="12" fill="#7a1410"/><text x="0" y="140" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#fff">รถตกน้ำ · <tspan fill="#ffd23a">1 นาที</tspan> ทำ 4 อย่าง</text>`;
+        SinkUI.RULES.forEach((t, k) => {
+          const y = 270 + k * 140, st = done.includes(k) ? "done" : k === active ? "active" : active < 0 ? "all" : "next";
+          c += `<g id="${id}-row${k}" opacity="${st === "next" ? 0.38 : 1}">`;
+          if (st === "active") c += `<rect id="${id}-hl" x="-250" y="${y - 40}" width="${t.length * 40 + 60}" height="80" rx="16" fill="${SU.yellow}" opacity=".75"/>`;
+          c += `<text x="-388" y="${y + 18}" font-family="Kanit" font-weight="900" font-size="46" fill="${SU.red}">${k + 1}</text>`;
+          c += SinkUI.icon(k, -290, y, 0.92, `${id}-i${k}`);
+          c += `<text x="-220" y="${y + 18}" font-family="Kanit" font-weight="${st === "active" ? 900 : 800}" font-size="54" fill="${SU.ink}">${t}</text>`;
+          if (st === "done") c += `<g transform="translate(370,${y})"><circle r="32" fill="${SU.green}" ${SO(3.5)}/><path id="${id}-ck${k}" d="M-14,0l10,11l19,-21" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1"/></g>`;
+          c += `</g>`;
+        });
+        put(layer, `<g transform="translate(540,${Y}) scale(${S})"><g id="${id}" opacity="0">${c}</g></g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        tl.fromTo(`#${id}`, { y: -1000 }, { y: 0, duration: 0.55, ease: "power3.out", immediateRender: false }, t0);
+        tl.fromTo(`#${id}`, { rotation: 9, svgOrigin: `0 -${Y + 40}` }, { rotation: 0, svgOrigin: `0 -${Y + 40}`, duration: 1.8, ease: "elastic.out(1, 0.3)", immediateRender: false }, t0 + 0.2);
+        tl.to(`#${id}`, { rotation: 1.2, svgOrigin: `0 -${Y + 40}`, duration: 1.4, yoyo: true, repeat: Math.max(0, Math.ceil((dur - 2) / 1.4)), ease: "sine.inOut" }, t0 + 2.0);
+        SinkUI.RULES.forEach((_, k) => tl.fromTo(`#${id}-row${k}`, { x: 70 }, { x: 0, duration: 0.45, ease: "power3.out", immediateRender: false }, t0 + 0.4 + k * (o.stagger ?? 0.12)));
+        done.forEach((k, j) => tl.fromTo(`#${id}-ck${k}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + 0.8 + j * 0.12));
+        if (active >= 0) {
+          tl.fromTo(`#${id}-i${active}`, { scale: 0.4, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.6, ease: "back.out(3)", immediateRender: false }, t0 + 0.7);
+          tl.fromTo(`#${id}-hl`, { scaleX: 0, svgOrigin: `-250 0` }, { scaleX: 1, svgOrigin: `-250 0`, duration: 0.5, ease: "power2.inOut", immediateRender: false }, t0 + 0.9);
+          tl.to(`#${id}-i${active}`, { scale: 1.1, svgOrigin: "0 0", duration: 0.45, yoyo: true, repeat: Math.max(1, Math.ceil((dur - 1.4) / 0.45)), ease: "sine.inOut" }, t0 + 1.35);
+        } else SinkUI.RULES.forEach((_, k) => tl.fromTo(`#${id}-i${k}`, { scale: 0.3, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0 + 0.6 + k * (o.stagger ?? 0.12)));
+        if (o.out !== false) tl.to(`#${id}`, { y: -70, opacity: 0, duration: 0.3, ease: "power2.in" }, t0 + (o.out ?? dur) - 0.3);
+        return id;
+      };
+      // a simple sedan side-on for the diagrams (nose right), ink style; (0,0) = the middle of its belly
+      SinkUI.car = (c = SU.car) => `<path d="M-300,-30Q-310,-110 -230,-120L-150,-200Q-60,-218 60,-212Q130,-208 170,-176L240,-120Q300,-112 312,-70L318,-24Q316,0 290,2H-280Q-300,0 -300,-30Z" fill="${c}" ${SO(5)}/>
+        <path d="M-136,-186L-80,-120H40V-196Q-40,-200 -136,-186Z" fill="#5a7a96" ${SO(3.5)}/><path d="M60,-196V-120H200L150,-176Q120,-196 60,-196Z" fill="#5a7a96" ${SO(3.5)}/>
+        <path d="M-120,-180L-90,-130" stroke="#fff" stroke-width="6" opacity=".5"/><path d="M-300,-66H316" stroke="${SU.carD}" stroke-width="5"/><path d="M50,-118V0" stroke="${SU.carD}" stroke-width="4"/>
+        <rect x="292" y="-104" width="26" height="20" rx="6" fill="#fff4c8" ${SO(2.5)}/><rect x="-306" y="-100" width="14" height="24" rx="4" fill="#d8302a" ${SO(2.5)}/>
+        ${[-180, 190].map((x) => `<g transform="translate(${x},0)"><circle r="54" fill="#22262e" ${SO(4)}/><circle r="26" fill="#9aa2ae" ${SO(3)}/><circle r="8" fill="#3a3e48"/></g>`).join("")}`;
+      // a stopwatch (chrome case, crown, the minute dial, a red hand); #id-hand rotates about (0,0)
+      SinkUI.watch = (id, x, y, s) => `<g transform="translate(${x},${y}) scale(${s})"><g filter="url(#muDrop)"><rect x="-26" y="-196" width="52" height="40" rx="8" fill="#c8ccd4" ${SO(4)}/><rect x="-40" y="-214" width="80" height="26" rx="10" fill="#e0e4ea" ${SO(4)}/>
+        <circle r="170" fill="#d4d8de" ${SO(5)}/></g><circle r="148" fill="#fdfaf2" ${SO(4)}/><path d="M-100,-104A148,148 0 0 1 104,-100" stroke="#fff" stroke-width="10" fill="none" opacity=".7"/>
+        ${Array.from({ length: 60 }, (_, k) => { const a = (k / 60) * Math.PI * 2, r0 = k % 5 ? 132 : 120; return `<path d="M${f1(Math.sin(a) * r0)},${f1(-Math.cos(a) * r0)}L${f1(Math.sin(a) * 142)},${f1(-Math.cos(a) * 142)}" stroke="${SU.ink}" stroke-width="${k % 5 ? 2.5 : 5}"/>`; }).join("")}
+        ${[0, 15, 30, 45].map((n) => { const a = (n / 60) * Math.PI * 2; return `<text x="${f1(Math.sin(a) * 96)}" y="${f1(-Math.cos(a) * 96 + 14)}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="38" fill="${SU.ink}">${n || 60}</text>`; }).join("")}
+        <path id="${id}-sweep" d="M0,0V-140A140,140 0 0 1 0,-140Z" fill="${SU.red}" opacity=".18"/><g id="${id}-hand"><path d="M0,22V-128" stroke="${SU.red}" stroke-width="8" stroke-linecap="round"/><circle r="14" fill="${SU.red}" ${SO(3)}/></g></g>`;
+      // the minute afloat: the canal in cross-section, the car floats, tips nose down and goes under while the watch runs to 60
+      SinkUI.minute = (tl, layer, t0, dur, o = {}) => {
+        const id = `sm${suSeq++}`;
+        put(layer, `<g id="${id}"><rect width="1080" height="1920" fill="#1a1e44"/><rect y="0" width="1080" height="560" fill="#2a2a68"/>
+          ${Array.from({ length: 30 }, (_, k) => `<circle cx="${(k * 137) % 1080}" cy="${40 + ((k * 89) % 480)}" r="${1.5 + (k % 3)}" fill="#fff" opacity=".6"/>`).join("")}
+          <path d="M0,560H1080V1920H0Z" fill="#2a7ab8"/><path d="M0,560H1080V1920H0Z" fill="url(#${id}-wg)"/>
+          <linearGradient id="${id}-wg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a9ad0"/><stop offset=".55" stop-color="#1a5a8e"/><stop offset="1" stop-color="#0a2a4a"/></linearGradient>
+          ${[[180, 140], [520, 110], [820, 160]].map(([x, w]) => `<path d="M${x},560h${w}l-160,1360h-${w + 120}Z" fill="#cfefff" opacity=".08"/>`).join("")}
+          <path d="M0,560Q90,548 180,560T360,560T540,560T720,560T900,560T1080,560" stroke="#d8f2ff" stroke-width="7" fill="none"/>
+          <path d="M0,520L0,1920H120Q150,1500 110,1200Q90,900 60,560Z" fill="#3a5a3a" ${SO(4)}/><path d="M0,520H60L62,560" fill="#4a4c58" ${SO(4)}/>
+          <path d="M0,1780Q300,1720 540,1760T1080,1740V1920H0Z" fill="#4a3a2a" ${SO(4)}/>${Array.from({ length: 9 }, (_, k) => `<path d="M${150 + k * 110},${1770 - (k % 3) * 12}q${k % 2 ? 16 : -16},-70 ${k % 2 ? -6 : 6},-110" stroke="#2f6a3c" stroke-width="9" fill="none"/>`).join("")}
+          <g transform="translate(420,600)"><g id="${id}-car"><g transform="scale(.95)">${SinkUI.car()}</g></g></g>
+          ${Array.from({ length: 12 }, (_, k) => `<circle id="${id}-bb${k}" cx="${330 + (k * 37) % 200}" cy="700" r="${6 + (k % 4) * 4}" fill="none" stroke="#e8f8ff" stroke-width="3.5" opacity="0"/>`).join("")}
+          ${SinkUI.watch(`${id}-w`, 850, 290, 0.9)}
+          <g transform="translate(850,500)"><rect x="-130" y="-34" width="260" height="68" rx="34" fill="${SU.paper}" ${SO(4)}/><text y="16" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="${SU.red}">≈ 1 นาที</text></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+        tl.fromTo(`#${id}-w-hand`, { rotation: 0, svgOrigin: "0 0" }, { rotation: 360, svgOrigin: "0 0", duration: dur - 0.4, ease: "none", immediateRender: false }, t0 + 0.2);
+        const sw = { a: 0 }, el = document.getElementById(`${id}-w-sweep`);
+        tl.to(sw, { a: 359.9, duration: dur - 0.4, ease: "none", immediateRender: false, onUpdate: () => { const a = (sw.a * Math.PI) / 180, big = sw.a > 180 ? 1 : 0; el.setAttribute("d", `M0,0V-140A140,140 0 ${big} 1 ${f1(Math.sin(a) * 140)},${f1(-Math.cos(a) * 140)}Z`); } }, t0 + 0.2);
+        // afloat, bobbing; the nose (engine) goes first; under; down to the mud
+        tl.fromTo(`#${id}-car`, { y: 0, rotation: 0, svgOrigin: "0 -80" }, { y: 14, duration: 0.5, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t0 + 0.1);
+        tl.to(`#${id}-car`, { rotation: 32, y: 120, svgOrigin: "0 -80", duration: dur * 0.35, ease: "power1.in" }, t0 + 1.1);
+        tl.to(`#${id}-car`, { rotation: 48, y: 820, svgOrigin: "0 -80", duration: dur * 0.42, ease: "power1.in" }, t0 + 1.1 + dur * 0.35);
+        for (let k = 0; k < 12; k++) tl.fromTo(`#${id}-bb${k}`, { y: 60 + (k % 4) * 80, opacity: 0.9 }, { y: -160, opacity: 0, duration: 1.0 + (k % 3) * 0.3, ease: "power1.out", immediateRender: false }, t0 + 1.3 + (k % 6) * 0.25);
+      };
+      // a forbidden thing on a tile, stamped with the red no-sign: o.what "phone" | "headrest" | "jump" | "door"
+      SinkUI.nope = (tl, layer, t0, dur, o = {}) => {
+        const id = `sn${suSeq++}`, x = o.x ?? 540, y = o.y ?? 820;
+        let pic = "";
+        if (o.what === "phone") pic = `<g transform="rotate(-8)"><rect x="-120" y="-220" width="240" height="440" rx="40" fill="#1b1f26" ${SO(5)}/><rect x="-104" y="-202" width="208" height="404" rx="28" fill="url(#mu2Scr)"/>
+          <circle cx="0" cy="-90" r="56" fill="#f2b6a0" ${SO(3)}/><path d="M-40,-110q40,-50 80,0" stroke="#3a241c" stroke-width="16" fill="none"/><text y="10" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#fff">แม่</text>
+          <text y="52" text-anchor="middle" font-family="Kanit" font-weight="500" font-size="26" fill="#aab4c2">สายเรียกเข้า…</text><circle cx="-60" cy="140" r="34" fill="${SU.red}"/><circle cx="60" cy="140" r="34" fill="${SU.green}"/>
+          <path d="M44,140h32M-76,140h32" stroke="#fff" stroke-width="8" stroke-linecap="round"/></g>`;
+        if (o.what === "jump") pic = `<path d="M-260,120Q-200,96 -130,120T0,120T130,120T260,120V300H-260Z" fill="#5ab0e0" ${SO(4)}/><path d="M-260,120Q-200,96 -130,120T0,120T130,120T260,120" stroke="#fff" stroke-width="8" fill="none" opacity=".6"/>
+          <g transform="translate(-20,-60) rotate(40)"><circle cx="0" cy="-120" r="34" fill="#d39a6e" ${SO(4)}/><path d="M-28,-84Q0,-94 28,-84L32,30H-32Z" fill="#2fa45a" ${SO(4)}/><path d="M-14,30L-20,120M14,30L18,120" stroke="#3b4a63" stroke-width="24" stroke-linecap="round"/>
+            <path d="M-24,-74L-46,-190M24,-74L46,-190" stroke="#2fa45a" stroke-width="20" stroke-linecap="round"/></g>
+          <path d="M140,-40q30,10 40,-20M160,10q30,4 44,-22" stroke="${SU.ink}" stroke-width="6" fill="none" opacity=".5"/>`;
+        if (o.what === "headrest") pic = `<rect x="-150" y="-170" width="300" height="190" rx="70" fill="#4a5060" ${SO(5)}/><path d="M-110,-150Q0,-180 110,-150" stroke="#6a7286" stroke-width="10" fill="none"/><rect x="-80" y="20" width="22" height="200" rx="8" fill="#c8ccd4" ${SO(4)}/><rect x="58" y="20" width="22" height="200" rx="8" fill="#c8ccd4" ${SO(4)}/>`;
+        put(layer, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><g filter="url(#muDrop)"><rect x="-300" y="-330" width="600" height="660" rx="48" fill="${SU.paper}" ${SO(5)}/></g>
+          <rect x="-300" y="-330" width="600" height="660" rx="48" fill="#e9f6ee" opacity=".7"/><g id="${id}-pic">${pic}</g>
+          <g id="${id}-no"><circle r="250" fill="none" stroke="${SU.red}" stroke-width="40" opacity=".92"/><path d="M-176,-176L176,176" stroke="${SU.red}" stroke-width="40" stroke-linecap="round" opacity=".92"/></g>
+          ${o.label ? `<g transform="translate(0,380)"><rect x="-${o.label.length * 22 + 40}" y="-44" width="${o.label.length * 44 + 80}" height="88" rx="44" fill="${SU.red}" ${SO(4)}/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">${o.label}</text></g>` : ""}</g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.6, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(2.4)", immediateRender: false }, t0);
+        if (o.what === "phone") tl.fromTo(`#${id}-pic`, { rotation: -3, svgOrigin: "0 0" }, { rotation: 3, svgOrigin: "0 0", duration: 0.07, yoyo: true, repeat: 9, ease: "none", immediateRender: false }, t0 + 0.3);
+        tl.fromTo(`#${id}-no`, { scale: 2.2, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.32, ease: "power4.in", immediateRender: false }, t0 + (o.stamp ?? 0.55));
+        tl.fromTo(`#${id}`, { x: -10 }, { x: 0, duration: 0.25, ease: "elastic.out(1.2,0.3)", immediateRender: false }, t0 + (o.stamp ?? 0.55) + 0.32);
+        tl.to(`#${id}`, { opacity: 0, scale: 0.9, svgOrigin: "0 0", duration: 0.2, ease: "power2.in" }, t0 + dur - 0.2);
+      };
+      // the door from outside, under the water: the canal leans on it (arrows), about a hundred kilos of it; his push from inside does nothing
+      SinkUI.press = (tl, layer, t0, dur, o = {}) => {
+        const id = `sp${suSeq++}`;
+        put(layer, `<g id="${id}"><rect width="1080" height="1920" fill="#14425e"/><rect width="1080" height="1920" fill="url(#${id}-g)"/>
+          <linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a8ab8"/><stop offset="1" stop-color="#0a2236"/></linearGradient>
+          ${[[140, 120], [460, 90], [760, 140]].map(([x, w]) => `<path d="M${x},0h${w}l-200,1920h-${w + 140}Z" fill="#cfefff" opacity=".07"/>`).join("")}
+          <g transform="translate(640,900)"><g filter="url(#muDrop)"><path d="M-110,-560H260V500H-110Z" fill="#dfe4ea" ${SO(6)}/></g><path d="M-80,-530H230V-60H-80Z" fill="#3a6a8a" ${SO(4)}/><path d="M-60,-500L40,-120" stroke="#fff" stroke-width="10" opacity=".35"/>
+            <rect x="-90" y="40" width="70" height="26" rx="10" fill="#9aa4ae" ${SO(3)}/><path d="M-110,-20H260" stroke="#b8c2ce" stroke-width="6"/>
+            <path d="M260,-560H520V500H260" fill="#2a3a48" opacity=".55"/><text x="330" y="-480" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#e8f0f8">ในรถ</text></g>
+          <g transform="translate(940,960)"><g id="${id}-hand">${handAt([0, 0], -90, 1.5, SK.ton, { ...GRIP, band: BAND, sw: 0.6, fore: 600 })}</g></g>
+          ${[0, 1, 2, 3, 4, 5].map((k) => `<g transform="translate(${130 + (k % 2) * 60},${420 + k * 170})"><g id="${id}-a${k}"><path d="M0,-26H230V-58L330,0L230,58V26H0Z" fill="#7ad0ff" ${SO(4)}/><path d="M14,-12H220" stroke="#fff" stroke-width="6" opacity=".6"/></g></g>`).join("")}
+          <g transform="translate(300,300)"><g id="${id}-kg"><g filter="url(#muDrop)"><path d="M-130,40Q-150,-60 -80,-90H80Q150,-60 130,40Q120,110 0,116Q-120,110 -130,40Z" fill="#3a3e48" ${SO(5)}/></g>
+            <path d="M-60,-90Q-60,-170 0,-170Q60,-170 60,-90" stroke="#3a3e48" stroke-width="30" fill="none"/><path d="M-60,-90Q-60,-170 0,-170Q60,-170 60,-90" stroke="${SU.ink}" stroke-width="4" fill="none"/>
+            <text y="40" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#fff">≈100</text><text y="88" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="36" fill="#d8dce4">กิโล</text></g></g>
+          ${Array.from({ length: 10 }, (_, k) => `<circle id="${id}-bb${k}" cx="${120 + (k * 97) % 860}" cy="1700" r="${6 + (k % 4) * 4}" fill="none" stroke="#e8f8ff" stroke-width="3" opacity=".7"/>`).join("")}
+          <g transform="translate(700,960)"><g id="${id}-x" opacity="0"><circle r="66" fill="${SU.red}" ${SO(5)}/><path d="M-28,-28L28,28M28,-28L-28,28" stroke="#fff" stroke-width="16" stroke-linecap="round"/></g></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+        [0, 1, 2, 3, 4, 5].forEach((k) => { tl.fromTo(`#${id}-a${k}`, { x: -420, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "back.out(1.6)", immediateRender: false }, t0 + 0.2 + k * 0.08);
+          tl.to(`#${id}-a${k}`, { x: 22, duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut" }, t0 + 0.9 + k * 0.06); });
+        tl.fromTo(`#${id}-kg`, { y: -500, rotation: -12, svgOrigin: "0 0" }, { y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.6, ease: "bounce.out", immediateRender: false }, t0 + 0.5);
+        tl.fromTo(`#${id}-hand`, { x: 160 }, { x: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, t0 + 1.2);
+        tl.to(`#${id}-hand`, { x: -14, duration: 0.12, yoyo: true, repeat: 7, ease: "sine.inOut" }, t0 + 1.7);
+        tl.fromTo(`#${id}-x`, { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(3)", immediateRender: false }, t0 + 2.6);
+        for (let k = 0; k < 10; k++) tl.fromTo(`#${id}-bb${k}`, { y: 0 }, { y: -1500, duration: 3 + (k % 3), repeat: 1, ease: "none", immediateRender: false }, t0 + k * 0.2);
+      };
+      // the phone on the bank: 1669 calling, a green "ขึ้นฝั่งแล้ว" chip; the phone wet, dripping, held in a real hand
+      SinkUI.call = (tl, layer, t0, dur, o = {}) => {
+        const id = `sc${suSeq++}`, W = 400, H = 780;
+        put(layer, `<g id="${id}" opacity="0"><g transform="translate(560,860) rotate(-6)"><g id="${id}-ph">
+          <g filter="url(#muDrop)"><rect x="${-W / 2}" y="${-H / 2}" width="${W}" height="${H}" rx="60" fill="#1b1f26" ${SO(5)}/></g><rect x="${-W / 2 + 14}" y="${-H / 2 + 14}" width="${W - 28}" height="${H - 28}" rx="48" fill="url(#mu2Scr)"/>
+          <rect x="-50" y="${-H / 2 + 26}" width="100" height="22" rx="11" fill="#07090c"/>
+          <g transform="translate(0,${-H / 2 + 220})">${[0, 1, 2].map((k) => `<circle id="${id}-rg${k}" r="86" fill="none" stroke="#7fd8a0" stroke-width="5" opacity="0"/>`).join("")}<circle r="86" fill="${SU.green}" ${SO(4)}/>
+            <path d="M-34,-12q6,-26 22,-26l10,22l-12,10q8,18 26,28l10,-12l22,10q0,18 -26,22q-60,-6 -52,-54z" fill="#fff"/></g>
+          <text y="${-H / 2 + 400}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="88" fill="#fff" letter-spacing="2">1669</text>
+          <text y="${-H / 2 + 450}" text-anchor="middle" font-family="Kanit" font-weight="500" font-size="28" fill="#aab4c2">แจ้งเหตุฉุกเฉิน</text>
+          <text id="${id}-st" y="${-H / 2 + 510}" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="32" fill="#7fd8a0">กำลังโทร…</text>
+          <g transform="translate(0,${H / 2 - 110})"><circle r="44" fill="${SU.red}" ${SO(3)}/><path d="M-18,4h36" stroke="#fff" stroke-width="9" stroke-linecap="round"/></g>
+          ${Array.from({ length: 7 }, (_, k) => `<ellipse cx="${-150 + k * 50}" cy="${-260 + (k * 97) % 520}" rx="${6 + (k % 3) * 3}" ry="${9 + (k % 3) * 4}" fill="#cfefff" opacity=".55"/>`).join("")}
+          ${[0, 1, 2].map((k) => `<path id="${id}-dr${k}" d="M${-120 + k * 110},${H / 2 - 6}c-7,12 -7,20 0,22c7,-2 7,-10 0,-22z" fill="#9fd8ff"/>`).join("")}</g></g>
+          <g transform="translate(540,300)"><g id="${id}-chip"><rect x="-230" y="-48" width="460" height="96" rx="48" fill="${SU.paper}" ${SO(5)}/><circle cx="-180" cy="0" r="30" fill="${SU.green}" ${SO(3)}/><path d="M-194,0l10,11l18,-20" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="20" y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="48" fill="${SU.ink}">ขึ้นฝั่งแล้ว</text></g></g></g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        tl.fromTo(`#${id}-ph`, { y: 900, rotation: 10, svgOrigin: "0 0" }, { y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.6, ease: "back.out(1.4)", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-chip`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0 + (o.chip ?? 0.4));
+        for (let k = 0; k < 3; k++) tl.fromTo(`#${id}-rg${k}`, { attr: { r: 86 }, opacity: 0.9 }, { attr: { r: 170 }, opacity: 0, duration: 1.2, repeat: Math.ceil(dur / 1.2), ease: "power1.out", immediateRender: false }, t0 + 0.6 + k * 0.4);
+        for (let k = 0; k < 3; k++) tl.fromTo(`#${id}-dr${k}`, { y: 0, opacity: 1 }, { y: 120, opacity: 0, duration: 0.7, repeat: Math.ceil(dur / 1.0), repeatDelay: 0.3, ease: "power2.in", immediateRender: false }, t0 + 0.5 + k * 0.3);
+        tl.to(`#${id}-ph`, { rotation: 1.5, svgOrigin: "0 0", duration: 1.2, yoyo: true, repeat: Math.ceil(dur / 1.2), ease: "sine.inOut" }, t0 + 0.6);
+      };
+      // from above: the car's four windows; the lock button pressed → three windows lock (red), the driver's stays open (green)
+      SinkUI.locks = (tl, layer, t0, dur, o = {}) => {
+        const id = `sl${suSeq++}`;
+        const lock = (k, x, y, open) => `<g transform="translate(${x},${y})"><g id="${id}-L${k}"><circle r="56" fill="${open ? SU.green : SU.red}" ${SO(4)}/>
+          <rect x="-24" y="-6" width="48" height="38" rx="7" fill="#fff"/><path d="M-14,-6V-20Q-14,-38 0,-38Q14,-38 14,-20${open ? "V-30" : "V-6"}" stroke="#fff" stroke-width="8" fill="none" ${open ? 'transform="translate(14,-4)"' : ""}/></g></g>`;
+        put(layer, `<g id="${id}" opacity="0"><rect width="1080" height="1920" fill="#1e2a44" opacity=".9"/>
+          <g transform="translate(540,880)"><g filter="url(#muDrop)"><path d="M-230,-470Q-230,-560 -120,-570H120Q230,-560 230,-470V460Q230,560 120,570H-120Q-230,560 -230,460Z" fill="${SU.car}" ${SO(6)}/></g>
+            <path d="M-180,-380Q0,-430 180,-380L160,-250Q0,-280 -160,-250Z" fill="#5a7a96" ${SO(4)}/><path d="M-170,360Q0,400 170,360L156,260Q0,284 -156,260Z" fill="#5a7a96" ${SO(4)}/>
+            <rect x="-150" y="-230" width="300" height="470" rx="40" fill="#dfe4ea" ${SO(4)}/><path d="M-150,-10H150" stroke="#b8c2ce" stroke-width="5"/>
+            ${[[-1, -150], [1, -150], [-1, 120], [1, 120]].map(([sd, y]) => `<path d="M${sd * 232},${y}V${y + 210}" stroke="#7ab4e0" stroke-width="18" stroke-linecap="round"/>`).join("")}
+            <path d="M-238,-300l-50,-20v40Z M238,-300l50,-20v40Z" fill="${SU.carD}" ${SO(3)}/>
+            <g transform="translate(90,-80)"><circle r="44" fill="#2a2e38" ${SO(3)}/><circle r="30" fill="none" stroke="#9aa2ae" stroke-width="8"/><text y="96" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="${SU.ink}">คนขับ</text></g></g>
+          ${lock(0, 850, 860, true)}${lock(1, 230, 860, false)}${lock(2, 230, 1130, false)}${lock(3, 850, 1130, false)}
+          <g transform="translate(540,250)"><g id="${id}-btn"><g filter="url(#muDrop)"><rect x="-210" y="-80" width="420" height="160" rx="30" fill="#2a2e38" ${SO(5)}/></g>
+            <rect x="-180" y="-52" width="120" height="104" rx="18" fill="#3a3e4a" ${SO(3)}/><rect x="-148" y="-14" width="56" height="44" rx="8" fill="#e8ecf2"/><path d="M-136,-14V-28Q-136,-44 -120,-44Q-104,-44 -104,-28V-14" stroke="#e8ecf2" stroke-width="8" fill="none"/>
+            <circle id="${id}-led" cx="-82" cy="-38" r="9" fill="#5a3a20"/><text x="60" y="16" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="38" fill="#f4f0e6">ปุ่มล็อกกระจก</text></g></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+        tl.fromTo(`#${id}-btn`, { scale: 0.5, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, t0 + 0.1);
+        tl.to(`#${id}-btn`, { scale: 0.94, svgOrigin: "0 0", duration: 0.1, yoyo: true, repeat: 1 }, t0 + 0.7);
+        tl.set(`#${id}-led`, { attr: { fill: "#ff9a2a" } }, t0 + 0.75);
+        [1, 2, 3].forEach((k, j) => tl.fromTo(`#${id}-L${k}`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(3)", immediateRender: false }, t0 + 0.9 + j * 0.18));
+        tl.fromTo(`#${id}-L0`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0 + (o.driver ?? 1.8));
+        tl.to(`#${id}-L0`, { scale: 1.12, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: Math.max(1, Math.ceil((dur - 2.4) / 0.35)), ease: "sine.inOut" }, t0 + (o.driver ?? 1.8) + 0.5);
+      };
+      // a name tag that pops near someone (screen space), as in ทะเลลด
+      SinkUI.tag = (tl, layer, t0, dur, x, y, text, c = "#e8823a") => {
+        const id = `st${suSeq++}`, w = 30 * text.length + 70;
+        put(layer, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><rect x="${-w / 2 + 4}" y="-30" width="${w}" height="66" rx="33" fill="#0a1a24" opacity=".35"/>
+          <rect x="${-w / 2}" y="-36" width="${w}" height="66" rx="33" fill="${SU.paper}" stroke="#2a2420" stroke-width="4"/><circle cx="${-w / 2 + 34}" cy="-3" r="16" fill="${c}" stroke="#2a2420" stroke-width="3"/>
+          <text x="${-w / 2 + 60}" y="9" font-family="Kanit" font-weight="800" font-size="34" fill="#1e2a3a">${text}</text></g></g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        tl.fromTo(`#${id}`, { scale: 0.3, rotation: -8, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0);
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
+      };
+      // the end card: the canal's warning sign at night, a paper note taped under it names the next episode (wet, dripping)
+      SinkUI.nextSign = (tl, layer, t0, dur, o = {}) => {
+        const id = `sx${suSeq++}`;
+        put(layer, `<g id="${id}" opacity="0"><rect width="1080" height="1920" fill="#120f2e"/><rect width="1080" height="1920" fill="url(#klSky)" opacity=".85"/>
+          <circle cx="820" cy="300" r="240" fill="url(#klMoon)"/><circle cx="820" cy="300" r="58" fill="#fff6dc"/>
+          <path d="M0,1500Q300,1460 540,1490T1080,1470V1920H0Z" fill="#11293e"/>${Array.from({ length: 10 }, (_, j) => `<path d="M${780 + (j % 2) * 16},${1500 + j * 36}h${70 - j * 5}" stroke="#fff4d0" stroke-width="6" opacity="${(0.6 - j * 0.05).toFixed(2)}"/>`).join("")}
+          <rect x="520" y="900" width="40" height="700" fill="#8a909c" ${SO(4)}/>
+          <g transform="translate(540,760)"><g id="${id}-sg"><g filter="url(#muDrop)"><rect x="-330" y="-240" width="660" height="430" rx="26" fill="#f2c020" ${SO(6)}/></g><rect x="-306" y="-216" width="612" height="382" rx="18" fill="none" stroke="${SU.ink}" stroke-width="6"/>
+            <text y="-120" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="92" fill="${SU.ink}">ระวัง!</text>
+            <g transform="translate(0,30)"><path d="M-200,40Q-100,10 0,40T200,40" stroke="${SU.ink}" stroke-width="10" fill="none"/><path d="M-200,80Q-100,50 0,80T200,80" stroke="${SU.ink}" stroke-width="8" fill="none" opacity=".7"/>
+              <g transform="translate(-30,-10) rotate(28)"><path d="M-80,0Q-84,-30 -60,-34L-40,-60H40L60,-34Q84,-30 80,0Z" fill="${SU.ink}"/><circle cx="-50" cy="4" r="16" fill="${SU.ink}"/><circle cx="50" cy="4" r="16" fill="${SU.ink}"/></g></g>
+            <text y="150" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="52" fill="${SU.ink}">ถนนเลียบคลอง</text></g></g>
+          <g transform="translate(560,1130) rotate(3)"><g id="${id}-nt"><rect x="-260" y="0" width="520" height="290" fill="#f4eedc" ${SO(3.5)}/><rect x="-60" y="-18" width="120" height="40" fill="#e8dca8" opacity=".85" transform="rotate(-4)"/>
+            <text y="86" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="46" fill="#b8261c">${o.l1 || "ตอนที่ 2"}</text>
+            <text y="170" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${o.l2 && o.l2.length > 12 ? 58 : 70}" fill="#b8261c">${o.l2 || ""}</text>
+            <text y="244" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="32" fill="#5a4a3a">${o.l3 || "กดติดตาม แล้วพาขิมออกไปด้วยกัน"}</text></g></g>
+          ${Array.from({ length: 6 }, (_, k) => `<path id="${id}-d${k}" d="M${300 + k * 90},1420c-7,12 -7,20 0,22c7,-2 7,-10 0,-22z" fill="#9fc3d8" opacity=".85"/>`).join("")}
+          <text x="540" y="1700" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff" letter-spacing="10">ROD MAI CLUB</text></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.35, immediateRender: false }, t0);
+        tl.fromTo(`#${id}-sg`, { y: -300, rotation: -6, svgOrigin: "0 0" }, { y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.7, ease: "bounce.out", immediateRender: false }, t0 + 0.1);
+        tl.fromTo(`#${id}-nt`, { scaleY: 0, svgOrigin: "0 0" }, { scaleY: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.6);
+        tl.to(`#${id}-nt`, { rotation: 5, svgOrigin: "0 0", duration: 0.9, yoyo: true, repeat: Math.ceil(dur / 0.9), ease: "sine.inOut" }, t0 + 1.1);
+        for (let k = 0; k < 6; k++) tl.fromTo(`#${id}-d${k}`, { y: 0, opacity: 0.9 }, { y: 180, opacity: 0, duration: 0.8, repeat: Math.ceil(dur / 1.2), repeatDelay: 0.4, ease: "power2.in", immediateRender: false }, t0 + 0.4 + k * 0.2);
+      };
+      // ---------- EP.2 cards ----------
+      // a paper card with a coloured header (screen space), returns the inner markup's wrapper ids: #id (in/out), header text
+      const suCard = (id, x, y, W, H, head, hc = SU.red) => `<g transform="translate(${x},${y})"><g id="${id}"><g filter="url(#muDrop)"><rect x="${-W / 2}" y="0" width="${W}" height="${H}" rx="36" fill="${SU.paper}" ${SO(5)}/></g>
+        <path d="M${-W / 2},36Q${-W / 2},0 ${-W / 2 + 36},0H${W / 2 - 36}Q${W / 2},0 ${W / 2},36V112H${-W / 2}Z" fill="${hc}" ${SO(5)}/><text y="78" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">${head}</text>`;
+      const suIn = (tl, id, t0, dur) => { tl.fromTo(`#${id}`, { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0); tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2); };
+      const suBg = (layer, c = "#1a2a44") => put(layer, `<rect width="1080" height="1920" fill="${c}"/><rect width="1080" height="1920" fill="url(#klSky)" opacity=".55"/>`);
+      // the crack star (lines + rings) at (x,y), class `${id}-ck` to draw on
+      const suCrack = (id, x, y, r = 120, n = 11) => `<g transform="translate(${x},${y})">${Array.from({ length: n }, (_, k) => { const a = (k / n) * Math.PI * 2 + (k % 3) * 0.2, L = r * (0.7 + (k % 4) * 0.12);
+        return `<path class="${id}-ck" d="M0,0L${f1(Math.cos(a) * L * 0.5)},${f1(Math.sin(a) * L * 0.5)}L${f1(Math.cos(a + 0.12) * L)},${f1(Math.sin(a + 0.12) * L)}" stroke="#fff" stroke-width="5" fill="none" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>`; }).join("")}
+        ${[0.35, 0.62].map((q) => `<circle class="${id}-ck" r="${f1(r * q)}" fill="none" stroke="#fff" stroke-width="3.5" opacity=".8" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>`).join("")}<circle r="9" fill="#fff"/></g>`;
+      // the windscreen is laminated: glass | film | glass — a hard hit only cracks it, the pieces stay on the film
+      SinkUI.lami = (tl, layer, t0, dur, o = {}) => {
+        const id = `sa${suSeq++}`;
+        suBg(layer);
+        put(layer, suCard(id, 540, 300, 960, 1120, "กระจกหน้า = ลามิเนต") + `
+          <g transform="translate(-110,440)"><path d="M-330,140L-260,-150H260L330,140Z" fill="#9fd0f0" ${SO(5)}/><path d="M-250,-130L-220,-40" stroke="#fff" stroke-width="10" opacity=".6"/>${suCrack(id, -20, 10, 150)}</g>
+          <g transform="translate(310,300)"><circle r="140" fill="#fff" ${SO(4)}/><g clip-path="circle(144px at 0 0)">
+            <rect x="-150" y="-150" width="92" height="300" fill="#9fd0f0"/><rect x="-58" y="-150" width="36" height="300" fill="#ffd36a"/><rect x="-22" y="-150" width="92" height="300" fill="#9fd0f0"/>
+            <path d="M-150,-150V150M-58,-150V150M-22,-150V150M70,-150V150" stroke="${SU.ink}" stroke-width="4"/></g><circle r="150" fill="none" ${SO(5)}/></g>
+          <path d="M230,420L110,530" stroke="${SU.ink}" stroke-width="4" stroke-dasharray="10 8"/>
+          <g id="${id}-lb"><rect x="190" y="520" width="280" height="64" rx="32" fill="${SU.yellow}" ${SO(4)}/><text x="330" y="564" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="38" fill="${SU.ink}">ฟิล์มกั้นกลาง</text></g>
+          <g transform="translate(-60,880)"><g id="${id}-st"><rect x="-210" y="-58" width="420" height="116" rx="58" fill="${SU.red}" ${SO(5)}/><text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#fff">แค่ร้าว</text></g></g>
+          <g id="${id}-fist" transform="translate(-60,200)"><g id="${id}-fi">${handAt([0, 0], 180, 1.4, SK.ton, { curl: [1, 1, 1, 1], thumb: 1, band: BAND, sw: 0.6, fore: 500 })}</g></g></g></g>`);
+        suIn(tl, id, t0, dur);
+        tl.fromTo(`#${id}-fi`, { y: -400 }, { y: 0, duration: 0.3, ease: "power3.in", immediateRender: false }, t0 + 0.5);
+        tl.to(`#${id}-fi`, { y: -120, duration: 0.35, ease: "power2.out" }, t0 + 0.8);
+        tl.to(`#${id}-fi`, { y: 0, duration: 0.22, ease: "power3.in" }, t0 + 1.25);
+        tl.to(`#${id}-fi`, { y: -1100, duration: 0.6, ease: "power2.inOut" }, t0 + 1.5);
+        tl.fromTo(`.${id}-ck`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, stagger: 0.02, ease: "power2.out", immediateRender: false }, t0 + 0.8);
+        tl.fromTo(`#${id}-lb`, { scale: 0, svgOrigin: "330 552" }, { scale: 1, svgOrigin: "330 552", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0 + 1.6);
+        tl.fromTo(`#${id}-st`, { scale: 2, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.3, ease: "power4.in", immediateRender: false }, t0 + (o.stamp ?? 2.6));
+      };
+      // the side window is (mostly) tempered: one sharp hit at the corner and the whole pane drops as small cubes
+      SinkUI.tempered = (tl, layer, t0, dur, o = {}) => {
+        const id = `sb${suSeq++}`;
+        suBg(layer);
+        let cubes = "";
+        for (let k = 0; k < 70; k++) { const x = -250 + ((k * 53) % 500), y = -190 + ((k * 97) % 330), r = (k * 37) % 360;
+          cubes += `<rect class="${id}-cu" x="${x}" y="${y}" width="${16 + (k % 3) * 6}" height="${14 + (k % 4) * 5}" rx="3" fill="#bfe4fa" stroke="#5a8ab0" stroke-width="2" transform="rotate(${r} ${x} ${y})" opacity="0"/>`; }
+        put(layer, suCard(id, 540, 300, 960, 1120, "กระจกข้าง = เทมเปอร์", SU.green) + `
+          <g transform="translate(0,520)"><path id="${id}-pane" d="M-280,-200L-150,-220H240L290,170H-280Z" fill="#9fd0f0" ${SO(5)}/><path d="M-250,-170L-200,-60" stroke="#fff" stroke-width="10" opacity=".6"/>
+            <path d="M-300,-230H310V200H-300Z" fill="none" stroke="#4a5060" stroke-width="18"/>${cubes}
+            <g transform="translate(250,140)"><g id="${id}-hit" opacity="0"><circle r="60" fill="#fff" opacity=".8"/><path d="M-40,-40L40,40M40,-40L-40,40" stroke="#ffd36a" stroke-width="10"/></g></g></g>
+          <g transform="translate(0,940)"><g id="${id}-st"><rect x="-330" y="-58" width="660" height="116" rx="58" fill="${SU.green}" ${SO(5)}/><text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">แตกทั้งบาน ในครั้งเดียว</text></g></g></g></g>`);
+        suIn(tl, id, t0, dur);
+        const hitT = t0 + (o.hit ?? 1.3);
+        tl.fromTo(`#${id}-hit`, { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1.2, svgOrigin: "0 0", duration: 0.12, immediateRender: false }, hitT);
+        tl.to(`#${id}-hit`, { opacity: 0, duration: 0.25 }, hitT + 0.15);
+        tl.set(`#${id}-pane`, { opacity: 0 }, hitT + 0.05);
+        tl.set(`.${id}-cu`, { opacity: 1 }, hitT + 0.05);
+        document.querySelectorAll(`.${id}-cu`).forEach((el, k) => tl.fromTo(el, { y: 0, x: 0 }, { y: 520 + (k % 5) * 60, x: ((k % 7) - 3) * 30, duration: 0.8 + (k % 4) * 0.12, ease: "power2.in", immediateRender: false }, hitT + 0.05 + (k % 9) * 0.015));
+        tl.fromTo(`#${id}-st`, { scale: 0.3, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(2.6)", immediateRender: false }, hitT + 0.5);
+      };
+      // where to hit it: the lower front corner of the side window, with something hard and pointed
+      SinkUI.corner = (tl, layer, t0, dur, o = {}) => {
+        const id = `sk${suSeq++}`;
+        suBg(layer);
+        put(layer, suCard(id, 540, 300, 960, 1120, "ทุบตรงไหน?", SU.blue) + `
+          <g transform="translate(0,560)"><path d="M-300,-230H310V200H-300Z" fill="#4a5060" ${SO(5)}/><path d="M-280,-200L-150,-220H240L290,170H-280Z" fill="#9fd0f0" ${SO(4)}/><path d="M-250,-170L-200,-60" stroke="#fff" stroke-width="10" opacity=".6"/>
+            <text x="-200" y="-250" font-family="Kanit" font-weight="700" font-size="32" fill="${SU.muted}">ท้ายรถ</text><text x="200" y="-250" text-anchor="end" font-family="Kanit" font-weight="700" font-size="32" fill="${SU.muted}">หน้ารถ ▶</text>
+            <g transform="translate(240,130)"><g id="${id}-tg">${[60, 40, 20].map((r, k) => `<circle r="${r}" fill="${k % 2 ? "#fff" : SU.red}" ${SO(3)}/>`).join("")}</g></g>
+            ${suCrack(id, 240, 130, 170, 9)}
+            <g transform="translate(240,130)"><g id="${id}-tool"><g transform="rotate(-40)"><rect x="-22" y="-300" width="44" height="220" rx="12" fill="#e8402a" ${SO(4)}/><path d="M-30,-80H30L10,-20H-10Z" fill="#c8ccd4" ${SO(4)}/><path d="M0,-20V0" stroke="${SU.ink}" stroke-width="8"/></g></g></g></g>
+          <g transform="translate(0,960)"><g id="${id}-st"><rect x="-330" y="-58" width="660" height="116" rx="58" fill="${SU.blue}" ${SO(5)}/><text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">มุมล่าง ด้านหน้า</text></g></g></g></g>`);
+        suIn(tl, id, t0, dur);
+        tl.fromTo(`#${id}-tg`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(3)", immediateRender: false }, t0 + 0.4);
+        tl.to(`#${id}-tg`, { scale: 1.15, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: 3, ease: "sine.inOut" }, t0 + 0.85);
+        tl.fromTo(`#${id}-tool`, { x: 260, y: -260, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.5, ease: "power3.in", immediateRender: false }, t0 + (o.hit ?? 2.0) - 0.5);
+        tl.to(`#${id}-tool`, { x: 30, y: -30, duration: 0.3, ease: "power2.out" }, t0 + (o.hit ?? 2.0) + 0.05);
+        tl.fromTo(`.${id}-ck`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.3, stagger: 0.02, immediateRender: false }, t0 + (o.hit ?? 2.0));
+        tl.fromTo(`#${id}-st`, { scale: 0.3, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(2.6)", immediateRender: false }, t0 + (o.label ?? 1.0));
+      };
+      // many models: the side windows are laminated too (a film between the glass) — three cars, two light up with the film
+      SinkUI.models = (tl, layer, t0, dur, o = {}) => {
+        const id = `sd${suSeq++}`;
+        suBg(layer);
+        const car = (k, y, film) => `<g transform="translate(0,${y})"><g transform="scale(.8)">${SinkUI.car(["#e9edf2", "#d84a3a", "#3a6ad8"][k])}</g>
+          ${film ? `<g id="${id}-f${k}" opacity="0"><path d="M-104,-148L-60,-96H32V-156Q-30,-160 -104,-148Z M48,-156V-96H160L120,-140Q96,-156 48,-156Z" fill="#ffd36a" opacity=".8"/>
+            <g transform="translate(250,-150)"><rect x="-70" y="-30" width="140" height="60" rx="30" fill="${SU.yellow}" ${SO(3.5)}/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="32" fill="${SU.ink}">ฟิล์ม</text></g></g>` : ""}</g>`;
+        put(layer, suCard(id, 540, 300, 960, 1150, "รถหลายรุ่น · กระจกข้าง") + `<g transform="translate(0,0)">${car(0, 420, false)}${car(1, 720, true)}${car(2, 1020, true)}</g></g></g>`);
+        suIn(tl, id, t0, dur);
+        [1, 2].forEach((k, j) => tl.fromTo(`#${id}-f${k}`, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + (o.at ?? 1.6) + j * 0.35));
+      };
+      // it won't break: move to the next window, now — car side-on, a hit that bounces, an arrow to the next pane, that one goes
+      SinkUI.switchWin = (tl, layer, t0, dur, o = {}) => {
+        const id = `sw${suSeq++}`;
+        suBg(layer);
+        put(layer, suCard(id, 540, 420, 980, 900, "ทุบไม่แตก → เปลี่ยนบาน", SU.blue) + `<g transform="translate(0,520)"><g transform="scale(1.35)">${SinkUI.car()}</g>
+          <g transform="translate(90,-215)"><g id="${id}-x" opacity="0"><circle r="40" fill="${SU.red}" ${SO(4)}/><path d="M-16,-16L16,16M16,-16L-16,16" stroke="#fff" stroke-width="10" stroke-linecap="round"/></g></g>
+          <path id="${id}-ar" d="M60,-280Q-20,-360 -100,-280" stroke="${SU.green}" stroke-width="14" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+          <path id="${id}-ah" d="M-100,-280l-6,-34M-100,-280l32,-14" stroke="${SU.green}" stroke-width="14" stroke-linecap="round" opacity="0"/>
+          <g transform="translate(-60,-215)"><g id="${id}-ok" opacity="0"><circle r="40" fill="${SU.green}" ${SO(4)}/><path d="M-16,0l10,12l20,-22" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g></g></g></g>`);
+        suIn(tl, id, t0, dur);
+        tl.fromTo(`#${id}-x`, { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.35, ease: "back.out(3)", immediateRender: false }, t0 + 0.35);
+        tl.fromTo(`#${id}-ar`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.45, ease: "power2.out", immediateRender: false }, t0 + 0.9);
+        tl.set(`#${id}-ah`, { opacity: 1 }, t0 + 1.3);
+        tl.fromTo(`#${id}-ok`, { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.35, ease: "back.out(3)", immediateRender: false }, t0 + 1.55);
+      };
+      // the car in cross-section: the canal outside, the water inside rising; big arrows on the door while it's low;
+      // only when it's nearly full do the arrows even out and the door can open. o.mode "last" (EP.2: the last resort) | "open" (EP.3: it opens)
+      SinkUI.equalize = (tl, layer, t0, dur, o = {}) => {
+        const id = `se${suSeq++}`, last = o.mode !== "open";
+        put(layer, `<g id="${id}"><rect width="1080" height="1920" fill="#14425e"/><rect width="1080" height="1920" fill="url(#${id}-g)"/>
+          <linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a8ab8"/><stop offset="1" stop-color="#0a2236"/></linearGradient>
+          <g transform="translate(540,960)"><g filter="url(#muDrop)"><path d="M-380,-260Q-380,-300 -340,-300H340Q380,-300 380,-260V300H-380Z" fill="#dfe4ea" ${SO(6)}/></g>
+            <rect x="-350" y="-270" width="700" height="540" fill="#f4f0e6"/><clipPath id="${id}-cp"><rect x="-350" y="-270" width="700" height="540"/></clipPath>
+            <g clip-path="url(#${id}-cp)"><rect id="${id}-in" x="-350" y="170" width="700" height="600" fill="#5ab0e0" opacity=".85"/></g>
+            <rect x="-350" y="-270" width="700" height="540" fill="none" ${SO(5)}/>
+            <g transform="translate(380,0)"><g id="${id}-door"><rect x="-20" y="-270" width="24" height="540" fill="#9aa4ae" ${SO(4)}/></g></g>
+            ${[-180, -60, 60, 180].map((y, k) => `<g transform="translate(430,${y})"><g id="${id}-a${k}"><path d="M150,-22H40V-50L-30,0L40,50V22H150Z" fill="#7ad0ff" ${SO(4)}/></g></g>`).join("")}
+            <text x="0" y="-320" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#e8f4ff">ในรถ</text>
+            <g transform="translate(0,-110)"><g id="${id}-air"><rect x="-120" y="-40" width="240" height="80" rx="40" fill="#fff" ${SO(3.5)}/><text y="14" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="36" fill="${SU.ink}">อากาศ</text></g></g></g>
+          <g transform="translate(540,300)"><g id="${id}-lb"><rect x="-310" y="-60" width="620" height="120" rx="60" fill="${last ? SU.red : SU.green}" ${SO(5)}/>
+            <text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#fff">${last ? "ประตู = ทางสุดท้าย" : "แรงดันเท่ากัน → เปิดได้"}</text></g></g>
+          ${Array.from({ length: 10 }, (_, k) => `<circle id="${id}-bb${k}" cx="${150 + (k * 97) % 800}" cy="1750" r="${6 + (k % 4) * 4}" fill="none" stroke="#e8f8ff" stroke-width="3" opacity=".7"/>`).join("")}</g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+        const fillT = last ? dur * 0.75 : dur * 0.45;
+        tl.fromTo(`#${id}-in`, { y: 0 }, { y: -400, duration: fillT, ease: "power1.in", immediateRender: false }, t0 + 0.2);
+        tl.fromTo(`#${id}-air`, { y: 0, scale: 1, svgOrigin: "0 0" }, { y: -100, scale: 0.75, svgOrigin: "0 0", duration: fillT, ease: "power1.in", immediateRender: false }, t0 + 0.2);
+        [0, 1, 2, 3].forEach((k) => { tl.fromTo(`#${id}-a${k}`, { scale: 1.25, svgOrigin: "0 0" }, { scale: 0.45, svgOrigin: "0 0", duration: fillT, ease: "power1.in", immediateRender: false }, t0 + 0.2);
+          tl.to(`#${id}-a${k}`, { x: -14, duration: 0.4, yoyo: true, repeat: Math.ceil(dur / 0.4), ease: "sine.inOut" }, t0 + 0.3 + k * 0.05); });
+        tl.to(`#${id}-door`, { rotation: last ? 18 : 55, svgOrigin: "0 -270", duration: 0.6, ease: "power2.out" }, t0 + 0.2 + fillT);
+        tl.fromTo(`#${id}-lb`, { scale: 0.3, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0 + (o.label ?? (last ? fillT * 0.6 : fillT)));
+        for (let k = 0; k < 10; k++) tl.fromTo(`#${id}-bb${k}`, { y: 0 }, { y: -1600, duration: 3 + (k % 3), ease: "none", immediateRender: false }, t0 + k * 0.2);
+      };
+      // ---------- EP.3 cards ----------
+      // the shadow screen (the house style's legend device): a backlit cloth; what would happen if you jumped in — black shapes
+      SinkUI.shadow = (tl, layer, t0, dur, o = {}) => {
+        const id = `sh${suSeq++}`, WL = 1020;
+        const person = (pid, arms) => `<g id="${pid}"><circle cx="0" cy="-150" r="34" fill="#140c08"/><path d="M-30,-112Q0,-122 30,-112L36,0H-36Z" fill="#140c08"/>
+          <path d="M-14,0L-24,110M14,0L22,110" stroke="#140c08" stroke-width="24" stroke-linecap="round"/>${arms}</g>`;
+        put(layer, `<g id="${id}"><rect width="1080" height="1920" fill="#120a06"/>
+          <radialGradient id="${id}-cl" cx=".5" cy=".45" r=".7"><stop offset="0" stop-color="#ffe2a8"/><stop offset=".6" stop-color="#e8a050"/><stop offset="1" stop-color="#8a4a1c"/></radialGradient>
+          <rect x="40" y="240" width="1000" height="1300" fill="url(#${id}-cl)"/>
+          <path d="M40,240${Array.from({ length: 20 }, (_, k) => `l25,${k % 2 ? -26 : 26}`).join("")}H1040" fill="none" stroke="#2a160a" stroke-width="10"/>
+          <rect x="20" y="220" width="1040" height="1340" fill="none" stroke="#3a200e" stroke-width="40"/>
+          <clipPath id="${id}-cp"><rect x="40" y="240" width="1000" height="1300"/></clipPath>
+          <g clip-path="url(#${id}-cp)">
+            <path d="M40,${WL - 60}L300,${WL - 60}L330,${WL + 400}H40Z" fill="#140c08"/>
+            <g transform="translate(560,${WL + 60})"><g id="${id}-v">${person(`${id}-vp`, `<path d="M-26,-100L-70,-200M26,-100L70,-200" stroke="#140c08" stroke-width="20" stroke-linecap="round"/>`)}</g></g>
+            <g transform="translate(220,${WL - 60})"><g id="${id}-r">${person(`${id}-rp`, `<path d="M-26,-100L-80,-150M26,-100L80,-150" stroke="#140c08" stroke-width="20" stroke-linecap="round"/>`)}</g></g>
+            <path id="${id}-wv" d="M40,${WL}${Array.from({ length: 21 }, (_, k) => `q25,${k % 2 ? 22 : -22} 50,0`).join("")}V1560H40Z" fill="#140c08" opacity=".86"/>
+            ${Array.from({ length: 12 }, (_, k) => `<circle id="${id}-b${k}" cx="${520 + (k * 23) % 120}" cy="${WL + 220}" r="${8 + (k % 3) * 5}" fill="none" stroke="#140c08" stroke-width="5" opacity="0"/>`).join("")}</g>
+          <g transform="translate(540,1700)"><text text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#e8c890" opacity=".85">${o.label || ""}</text></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0);
+        tl.fromTo(`#${id}-wv`, { x: -50 }, { x: 0, duration: 0.9, repeat: Math.ceil(dur / 0.9), ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-v`, { y: 0, rotation: -6, svgOrigin: "0 0" }, { y: -16, rotation: 6, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, t0);
+        // the jump: an arc off the bank into the water beside her
+        tl.fromTo(`#${id}-r`, { x: 0, y: 0, rotation: 0, svgOrigin: "0 0" }, { x: 160, y: -170, rotation: 30, svgOrigin: "0 0", duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + 0.5);
+        tl.to(`#${id}-r`, { x: 270, y: 150, rotation: 70, svgOrigin: "0 0", duration: 0.4, ease: "power2.in" }, t0 + 0.85);
+        tl.to(`#${id}-r`, { x: 300, y: 120, rotation: 0, svgOrigin: "0 0", duration: 0.35, ease: "power2.out" }, t0 + 1.25);
+        // she climbs onto him: her arms round his head, both go down
+        tl.to(`#${id}-v`, { x: -40, y: -60, rotation: -15, svgOrigin: "0 0", duration: 0.35, ease: "power3.out" }, t0 + 1.7);
+        tl.to([`#${id}-v`, `#${id}-r`], { y: "+=460", duration: dur - 2.2, ease: "power1.in" }, t0 + 2.1);
+        tl.to(`#${id}-r`, { rotation: -10, svgOrigin: "0 0", duration: 0.25, yoyo: true, repeat: Math.ceil((dur - 2) / 0.25), ease: "sine.inOut" }, t0 + 1.9);
+        for (let k = 0; k < 12; k++) tl.fromTo(`#${id}-b${k}`, { y: 0, opacity: 0.9 }, { y: -300, opacity: 0, duration: 0.9, ease: "power1.out", immediateRender: false }, t0 + 2.2 + (k % 6) * 0.25);
+      };
+      // three words that help without going in: ตะโกน · โยน · ยื่น (tiles with the drawn icons, the active one lifted)
+      SinkUI.three = (tl, layer, t0, dur, o = {}) => {
+        const id = `s3${suSeq++}`, W = ["ตะโกน", "โยน", "ยื่น"], IC = ["shout", "throw", "reach"], col = [SU.red, SU.blue, SU.green];
+        const tile = (k, x) => `<g transform="translate(${x},${o.y ?? 860})"><g id="${id}-t${k}"><g filter="url(#muDrop)"><rect x="-150" y="-190" width="300" height="380" rx="34" fill="${SU.paper}" ${SO(5)}/></g>
+          <rect x="-150" y="-190" width="300" height="80" rx="34" fill="${col[k]}" ${SO(5)}/><rect x="-150" y="-140" width="300" height="30" fill="${col[k]}"/>
+          <text y="-134" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#fff">${k + 1}</text>
+          <g transform="translate(-102,-90) scale(1.7)">${(window.GameUI && GameUI.ILL[IC[k]]) || ""}</g>
+          <text y="160" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="${SU.ink}">${W[k]}</text></g></g>`;
+        put(layer, `<g id="${id}"><g transform="translate(540,${(o.y ?? 860) - 330})"><g id="${id}-hd"><rect x="-340" y="-56" width="680" height="112" rx="56" fill="${SU.paper}" ${SO(5)}/>
+          <text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="${SU.ink}">ช่วย<tspan fill="${SU.red}">จากบนฝั่ง</tspan> · ไม่ต้องลงน้ำ</text></g></g>${tile(0, 200)}${tile(1, 540)}${tile(2, 880)}</g>`);
+        tl.fromTo(`#${id}-hd`, { scale: 0.4, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, t0);
+        [0, 1, 2].forEach((k) => tl.fromTo(`#${id}-t${k}`, { y: 300, opacity: 0, rotation: (k - 1) * 8, svgOrigin: "0 0" }, { y: 0, opacity: 1, rotation: 0, svgOrigin: "0 0", duration: 0.55, ease: "back.out(1.8)", immediateRender: false }, t0 + 0.3 + k * 0.18));
+        (o.lift || []).forEach(([k, at]) => { tl.to(`#${id}-t${k}`, { y: -30, scale: 1.08, svgOrigin: "0 0", duration: 0.3, ease: "back.out(2)" }, t0 + at); tl.to(`#${id}-t${k}`, { y: 0, scale: 1, svgOrigin: "0 0", duration: 0.3 }, t0 + at + 0.7); });
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
+      };
+      // the end of the series: the card from the mirror with all four ticked, the three words from the bank, share it
+      SinkUI.finale = (tl, layer, t0, dur, o = {}) => {
+        put(layer, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".55"/>`);
+        SinkUI.rules(tl, layer, t0, dur, { active: -1, done: [0, 1, 2, 3], y: 300, s: 0.86, stagger: 0.1, out: false });
+        const id = `sf${suSeq++}`;
+        put(layer, `<g transform="translate(540,1130)"><g id="${id}"><g filter="url(#muDrop)"><rect x="-430" y="-90" width="860" height="250" rx="34" fill="${SU.paper}" ${SO(5)}/></g>
+          <text y="-24" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="${SU.ink}">บนฝั่ง: <tspan fill="${SU.red}">ตะโกน</tspan> · <tspan fill="${SU.blue}">โยน</tspan> · <tspan fill="${SU.green}">ยื่น</tspan></text>
+          ${["shout", "throw", "reach"].map((k, j) => `<g transform="translate(${-260 + j * 260},20) scale(1)">${(window.GameUI && GameUI.ILL[k]) || ""}</g>`).join("")}</g></g>
+          <g transform="translate(540,1460)"><g id="${id}-cta"><rect x="-420" y="-52" width="840" height="104" rx="52" fill="${SU.red}" ${SO(5)}/>
+          <text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff">แชร์ให้คนที่คุณรัก… ก่อนวันที่ต้องใช้</text></g></g>
+          <text x="540" y="1640" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="42" fill="#fff" letter-spacing="10">ROD MAI CLUB</text>
+          <text x="540" y="1690" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#c8d0d8">นาทีก่อนจม · จบ</text>`);
+        tl.fromTo(`#${id}`, { y: 200, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.8)", immediateRender: false }, t0 + 1.2);
+        tl.fromTo(`#${id}-cta`, { scale: 0.3, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0 + 1.8);
+        tl.to(`#${id}-cta`, { scale: 1.05, svgOrigin: "0 0", duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut" }, t0 + 2.4);
+      };
       // ---------- นาทีก่อนจม EP.2 ถ้ากระจกไม่ลง ----------
       // the planted mistake: at 0:03 ต้น punches at the windscreen, and behind him his own window is open, the canal pouring through it;
       // the narrator reveals it at the end ("เขาพลาดไปแล้ว… ตั้งแต่วินาทีที่สาม"). No HUD: the rules are said plainly, the story shows them.
@@ -1368,6 +1952,7 @@
       const TONm = (mode, eyes, mouth) => A("tonJ", TM.x, TM.y, TM.s, [{ t: 0, mode, eyes, mouth }], { flip: true });
       const KIMm = (mode, eyes, mouth, extra = {}) => A("mint", KM.x, KM.y, KM.s, [{ t: 0, mode, eyes, mouth }], { flip: true, ...extra });
       const CUT1 = (id, out) => ({ set: "carCut", setOpts: { id, out }, dark: 0.12, light: CABIN, grade: GNIGHT });
+      const KL0 = (id, extra = {}) => ({ set: "klong", setOpts: { id, ...extra }, dark: 0.02, light: NIGHT, grade: { top: "#3a2e6a", bottom: "#0a0e1e", op: 0.18 }, blur: { far: 1.2, fg: 7 } });
       const noShadows = (tl, id) => ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
       Rig.MODES.punchUp = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: -10, head: -10, uaF: -150 + 8 * Math.sin(u * 9), faF: -12, uaB: -40, faB: -60 });
       Rig.MODES.headUp = (u, o) => { const j = Math.sin(u * 17) * 1.4; return { ...Rig.MODES.sitChair(u, o), bodyY: 104, torso: -6 + j, head: -24 + j, uaF: -120, faF: -30, uaB: -110, faB: -36 }; };
@@ -1379,15 +1964,17 @@
 
       // ---------- 1. hook: her switch, again and again; the glass doesn't move, the canal right outside it ----------
       add("hook", {
-        ...WIN("cw0"),
-        cam: { keys: [{ t: 0, ...fr(540, 1080, 1.12, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(540, 1100, 1.2, 540, 1000) }] },
-        shake: (t) => ({ x: 2 * Math.sin(t * 23), y: 1.5 * Math.sin(t * 19), r: 0 }),
+        ...KL0("kh2", { title: { x: 300, sub: "EP.2 ถ้ากระจกไม่ลง" }, moonX: 760, moonY: 250 }),
+        cam: { keys: [{ t: 0, ...fr(400, 900, 1.2, 540, 900) }, { t: D("hook"), glide: D("hook"), ...fr(470, 950, 1.3, 540, 900) }] },
         captions: caps("hook"),
         fx(tl, id, t0, L) {
-          outsideRich(L, tl, "cw0o", t0, D("hook"), 470, 440); glassDrops("cw0");
-          kidSwitch(L, "ks0");
-          tl.fromTo("#ks0-kf", { y: 0 }, { y: -30, duration: 0.14, yoyo: true, repeat: Math.ceil(D("hook") / 0.14), ease: "power2.inOut", immediateRender: false }, t0 + 0.1);
-          bubbles(L, tl, "cw0bb", t0, D("hook"), 540, 1200, 10, 700);
+          Klong.life(tl, "kh2", t0, D("hook"));
+          Canal.car(L, "h2", 700, WY + 30, 0.42, { beam: 0 }); tl.set("#h2-r", { rotation: 18, svgOrigin: "0 0" }, 0);
+          tl.fromTo("#h2-r", { y: 0 }, { y: 30, duration: D("hook"), ease: "power1.in", immediateRender: false }, t0);
+          Canal.front(L, "h2f", WY + 10);
+          put(L.act, `<radialGradient id="h2g"><stop offset="0" stop-color="#9fe8ff" stop-opacity=".55"/><stop offset="1" stop-color="#9fe8ff" stop-opacity="0"/></radialGradient><ellipse id="h2gl" cx="720" cy="${WY + 70}" rx="240" ry="90" fill="url(#h2g)"/>`);
+          tl.fromTo("#h2gl", { opacity: 0.9 }, { opacity: 0.4, duration: 0.18, yoyo: true, repeat: Math.ceil(D("hook") / 0.18), ease: "steps(1)", immediateRender: false }, t0 + 0.8);
+          bubbles(L, tl, "h2bb", t0, D("hook"), 720, WY + 20, 14, 260);
         },
       });
       // ---------- 2. the command: he swings at the windscreen; behind him, his own window is open (the plant) ----------
@@ -1403,27 +1990,17 @@
       });
       // ---------- 3. the windscreen holds: a star of cracks, then a bigger one, still in one piece ----------
       add("lami", {
-        set: "wsIns", setOpts: { id: "ws0" }, dark: 0.06, light: false, grade: GWATER,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("lami"), glide: D("lami"), ...fr(540, 920, 1.08, 540, 960) }] },
-        shake: (t) => { const a = [0.35, 2.1].map((p) => Math.max(0, 1 - Math.abs(t - p) / 0.18)); const k = Math.max(...a); return { x: 10 * k * Math.sin(t * 70), y: 8 * k * Math.sin(t * 61), r: 0 }; },
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
         captions: caps("lami"),
-        fx(tl, id, t0, L) {
-          punch(tl, "ws0", t0 + 0.35, 520, 830); crackStar(L, "set", tl, "ws0c1", 520, 830, t0 + 0.35, 150);
-          punch(tl, "ws0", t0 + 2.1, 600, 760); crackStar(L, "set", tl, "ws0c2", 600, 760, t0 + 2.1, 260, 16);
-          bubbles(L, tl, "ws0bb", t0, D("lami"), 540, 1300, 12, 800);
-        },
+        fx(tl, id, t0, L) { SinkUI.lami(tl, L.light, t0, D("lami"), { stamp: F("lami", 0, 2) }); },
       });
       // ---------- 4. "but there's another pane": her side window, a gleam across it ----------
       add("tease", {
-        ...WIN("cw1"),
-        cam: { keys: [{ t: 0, ...fr(540, 980, 1.0, 540, 960) }, { t: D("tease"), glide: D("tease"), ...fr(560, 960, 1.14, 540, 960) }] },
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
         captions: caps("tease"),
-        fx(tl, id, t0, L) {
-          outsideRich(L, tl, "cw1o", t0, D("tease"), 440, 420); glassDrops("cw1");
-          put(L.light, `<linearGradient id="cw1gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-            <g id="cw1gls"><path d="M0,380L140,380L-60,1280H-200Z" fill="url(#cw1gl)"/></g>`);
-          tl.fromTo("#cw1gls", { x: 0, opacity: 0 }, { x: 1200, opacity: 1, duration: 1.2, ease: "power2.inOut", immediateRender: false }, t0 + F("tease", 0, 1));
-        },
+        fx(tl, id, t0, L) { SinkUI.tempered(tl, L.light, t0, D("tease"), { hit: F("tease", 0, 1) + 0.25 }); },
       });
       // ---------- 5. the water at their chests, every light dies ----------
       add("dark", {
@@ -1469,39 +2046,49 @@
       });
       // ---------- 9. something hard and pointed: he pulls the headrest out on its prongs ----------
       add("corner", {
-        set: "headIns", setOpts: { id: "hi0" }, dark: 0.1, light: false, grade: GNIGHT,
-        cam: { keys: [{ t: 0, ...fr(540, 980, 1.0, 540, 960) }, { t: D("corner"), glide: D("corner"), ...fr(540, 900, 1.06, 540, 960) }] },
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
         captions: caps("corner"),
-        fx(tl, id, t0, L) {
-          tl.fromTo("#hi0-hr", { y: 0 }, { y: -170, duration: 1.4, ease: "power2.inOut", immediateRender: false }, t0 + 0.3);
-          tl.to("#hi0-hr", { y: -160, duration: 0.08, yoyo: true, repeat: 3 }, t0 + 1.75);
-          bubbles(L, tl, "hi0bb", t0, D("corner"), 540, 1500, 10, 700);
-        },
+        fx(tl, id, t0, L) { SinkUI.corner(tl, L.light, t0, D("corner"), { label: F("corner", 0, 1), hit: F("corner", 0, 1) + 0.9 }); },
       });
       // ---------- 10. the prongs at the lower front corner: they skid ----------
-      add("headrest", {
+      const HS = F("headrest", 0, 1) - 0.15;
+      split("headrest", HS, {
         ...CUT1("cs1", 920),
-        cam: { keys: [{ t: 0, ...fr(430, 1235, 1.55, 540, 960) }, { t: D("headrest"), glide: D("headrest"), ...fr(440, 1230, 1.68, 540, 960) }] },
+        cam: { keys: [{ t: 0, ...fr(430, 1235, 1.55, 540, 960) }, { t: HS, glide: HS, ...fr(440, 1230, 1.68, 540, 960) }] },
         shake: (t) => { const k = Math.max(...[0.7, 1.4, 2.1].map((p) => Math.max(0, 1 - Math.abs(t - p) / 0.12))); return { x: 7 * k * Math.sin(t * 70), y: 5 * k * Math.sin(t * 61), r: 0 }; },
         actors: [A("tonJ", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "reachBack", eyes: "angry", mouth: "scream" }]), A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "scream" }])],
         captions: caps("headrest"),
         fx(tl, id, t0, L) {
-          noShadows(tl, id); hideRigArms(`${id}-a0`); cabRich(L, tl, "cs1", t0, D("headrest"), { caustic: true }); cutFront(L, "cs1", { free: ["ton", "kim"] });
-          cutUnder(L, tl, "cs1", t0, D("headrest"), 1254, 1246, 920, 914);
+          noShadows(tl, id); hideRigArms(`${id}-a0`); cabRich(L, tl, "cs1", t0, HS, { caustic: true }); cutFront(L, "cs1", { free: ["ton", "kim"] });
+          cutUnder(L, tl, "cs1", t0, HS, 1254, 1246, 920, 914);
           strikeArm(L, tl, "cs1a", t0, [0.7, 1.4, 2.1], true); [0.7, 1.4, 2.1].forEach((a, k) => hitMark(L, tl, `cs1h${k}`, t0 + a));
         },
+      }, {
+        ...CUT1("cs8", 920), blur: { sky: 8, far: 8, mid: 8, set: 8, act: 8, fg: 10 },
+        cam: { keys: [{ t: 0, ...fr(430, 1235, 1.55, 540, 960) }] },
+        actors: [A("tonJ", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "reachBack", eyes: "angry", mouth: "scream" }]), A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "scream" }])],
+        captions: capsFrom("headrest", HS),
+        fx(tl, id, t0, L) { noShadows(tl, id); cabRich(L, tl, "cs8", t0, D("headrest") - HS, { caustic: true }); cutFront(L, "cs8"); cutUnder(L, tl, "cs8", t0, D("headrest") - HS, 1254, 1250, 920, 918);
+          put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".4"/>`); SinkUI.nope(tl, L.light, t0, D("headrest") - HS, { what: "headrest", y: 820, stamp: 0.3, label: "ตัวเลือกที่แย่" }); },
       });
       // ---------- 11. one more: the pane cracks into a web and stays (it has the film too) ----------
-      add("third", {
+      const TS = 1.7;
+      split("third", TS, {
         ...WIN("cw4"),
-        cam: { keys: [{ t: 0, ...fr(640, 1040, 1.1, 540, 960) }, { t: D("third"), glide: D("third"), ...fr(620, 1000, 1.2, 540, 960) }] },
+        cam: { keys: [{ t: 0, ...fr(640, 1040, 1.1, 540, 960) }, { t: TS, glide: TS, ...fr(620, 1000, 1.2, 540, 960) }] },
         shake: (t) => { const k = Math.max(0, 1 - Math.abs(t - 0.6) / 0.18); return { x: 10 * k * Math.sin(t * 70), y: 7 * k * Math.sin(t * 61), r: 0 }; },
         captions: caps("third"),
         fx(tl, id, t0, L) {
-          outsideRich(L, tl, "cw4o", t0, D("third"), 380, 360); glassDrops("cw4");
+          outsideRich(L, tl, "cw4o", t0, TS, 380, 360); glassDrops("cw4");
           prongStrike(L, tl, "cw4p", t0 + 0.6, 920, 1200, 1);
           webCrack(tl, "cw4w", "cw4-glass", t0 + 0.62, 920, 1200);
         },
+      }, {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        captions: capsFrom("third", TS),
+        fx(tl, id, t0, L) { SinkUI.models(tl, L.light, t0, D("third") - TS, { at: Math.max(0.5, F("third", 0, 1) - TS + 0.3) }); },
       });
       // ---------- 12. it won't break: another window, now ----------
       add("switch", {
@@ -1512,15 +2099,21 @@
         fx(tl, id, t0, L) { noShadows(tl, id); cabRich(L, tl, "cm3", t0, D("switch"), { openF: true, caustic: true }); openWin(L, tl, "cm3", t0, D("switch")); cutFront(L, "cm3", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm3", t0, D("switch"), 1262, 1250, 930, 920); },
       });
       // ---------- 13. don't wait for it to fill: their faces up in the last of the air ----------
-      add("fill", {
+      const FS = 1.9;
+      split("fill", FS, {
         ...CUTM2("cm4", 900),
-        cam: { keys: [{ t: 0, ...fr(620, 1180, 1.25, 540, 960) }, { t: D("fill"), glide: D("fill"), ...fr(620, 1150, 1.35, 540, 960) }] },
+        cam: { keys: [{ t: 0, ...fr(620, 1180, 1.25, 540, 960) }, { t: FS, glide: FS, ...fr(620, 1150, 1.35, 540, 960) }] },
         actors: [TONm("headUp", "wide", "o"), KIMm("headUp", "wide", "scream")],
         captions: caps("fill"),
         fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "cm4", t0, D("fill"), { openF: true, caustic: true }); openWin(L, tl, "cm4", t0, D("fill")); cutFront(L, "cm4", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm4", t0, D("fill"), 1240, 1180, 900, 880);
-          bubbles(L, tl, "cm4bb", t0, D("fill"), 600, 1300, 16, 700);
+          noShadows(tl, id); cabRich(L, tl, "cm4", t0, FS, { openF: true, caustic: true }); openWin(L, tl, "cm4", t0, FS); cutFront(L, "cm4", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm4", t0, FS, 1240, 1180, 900, 880);
+          bubbles(L, tl, "cm4bb", t0, FS, 600, 1300, 16, 700);
         },
+      }, {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        captions: capsFrom("fill", FS),
+        fx(tl, id, t0, L) { SinkUI.equalize(tl, L.light, t0, D("fill") - FS, { mode: "last", label: Math.max(0.6, F("fill", 0, 1) - FS) }); },
       });
       // ---------- 14. the twist: back to 0:03, closer: his own window, open the whole time ----------
       add("rw", {
@@ -1557,12 +2150,12 @@
       });
       // ---------- 17. on the canal: she breaks the surface ----------
       add("surface", {
-        set: "surf", setOpts: { id: "sf0", lv: 1210 }, dark: 0.04, light: NIGHT, grade: GNIGHT, blur: { far: 1.5 },
+        ...KL0("ks2", { curve: false }), blur: { far: 2, mid: 1.2, fg: 7 },
         cam: { keys: [{ t: 0, ...fr(540, 1110, 1.9, 540, 980) }, { t: D("surface"), glide: D("surface"), ...fr(540, 1100, 2.05, 540, 980) }] },
         actors: [A("mint", 540, 1890, 1.45, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "scream" }], { talk: [TALK("surface", 0, "scream")], path: [{ t: 0, x: 540, y: 2300 }, { t: 0.24, x: 540, y: 1890 }] })],
         captions: caps("surface", undefined, QUO),
         fx(tl, id, t0, L) {
-          tl.set(`#${id}-a0-shadow`, { opacity: 0 }, 0);
+          tl.set(`#${id}-a0-shadow`, { opacity: 0 }, 0); Klong.life(tl, "ks2", t0, D("surface"));
           surfWater(L, tl, "sf0", t0, D("surface"), 1210);
           Canal.splash(L, tl, "sf0s", 540, 1206, t0 + 0.12);
           bubbles(L, tl, "sf0bb", t0, D("surface"), 540, 1500, 12, 400);
@@ -1579,7 +2172,7 @@
       add("next", {
         dark: 0, light: false,
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
-        fx(tl, id, t0, L) { nextCard(L, tl, t0, D("next"), "ถ้าคนที่คุณรักยังอยู่ในน้ำ…", "อย่ากระโดดลงไปช่วย", "กดติดตาม แล้วรอต้นขึ้นมาด้วยกัน"); },
+        fx(tl, id, t0, L) { SinkUI.nextSign(tl, L.light, t0, D("next"), { l1: "ตอนจบ", l2: "ช่วยจากบนฝั่ง", l3: "กดติดตาม แล้วรอต้นขึ้นมาด้วยกัน" }); },
       });
       root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">นาทีก่อนจม · EP.2</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
       Fx.setup(root);
