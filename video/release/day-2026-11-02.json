@@ -7,7 +7,7 @@
   "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
   "แคปชัน แฮชแท็ก คอมเมนต์ปักหมุด และชื่อ YouTube อยู่ในไฟล์ package ของเรื่อง (commit เดียวกัน)",
   "ลงได้เฉพาะ status final · EP.N+1 หลัง EP.N ลงแล้วเท่านั้น",
-  "เรื่องสงคราม (เลน A) จะเพิ่มเข้าคิวเมื่อ final"
+  "สงคราม EP.2 (เลน A) จะเพิ่มเข้าคิวเมื่อ final · EP.1 เพิ่มแล้ว"
  ],
  "items": [
   {
@@ -35,6 +35,19 @@
    "video_hq_sha256": "41f2fced0cff61e749c2b06acae3a3697445cc16d5fcb6d0f6e2a64d5e61a18f",
    "video_hq_bytes": 71253298,
    "suggested_time": "2026-11-02T20:40+07:00"
+  },
+  {
+   "order": 3,
+   "id": "war-ep1",
+   "series": "ทางกลับบ้าน (สงคราม)",
+   "status": "final",
+   "branch": "prod/lane-a",
+   "commit": "04ab3c9",
+   "package": "video/release/war.json",
+   "video_hq": "video/release/hq/war-ep1-HQ.mp4",
+   "video_hq_sha256": "0026829e2b8a1b23634cd4280808b25ce1c592d02f43e7f253f1e81c519f2354",
+   "video_hq_bytes": 89238068,
+   "suggested_time": "2026-11-02T21:20+07:00"
   }
  ]
 }
