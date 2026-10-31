@@ -192,6 +192,15 @@
       put(L.set, `<path d="M${TX + 20},${ny - 60}C${TX + 80},${ny - 80} ${nx - 40},${ny - 40} ${nx + 120},${ny - 50}" stroke="#5e3e28" stroke-width="22" fill="none" stroke-linecap="round"/>
         <path d="M${nx + 60},${ny - 48}q30,-30 60,-20" stroke="#5e3e28" stroke-width="10" fill="none"/>
         <g id="${id}-nest">${Hn.nest(nx, ny - 26, ns, { id: `${id}-nst` })}</g>`);
+      Hn.NEST = { x: nx, y: ny - 26, s: ns };
+    }
+    // ripe tamarind pods hanging round the crown (the lure for the slingshot)
+    if (o.pods !== false) {
+      const r2 = mk(71); let pd = "";
+      for (let k = 0; k < 16; k++) { const px = TX - 260 + r2() * 420, py = G - 760 + r2() * 200, rot = -20 + r2() * 40;
+        pd += `<g transform="translate(${f1(px)},${f1(py)}) rotate(${f1(rot)})"><path d="M0,0v8" stroke="#5e3e28" stroke-width="3"/><path d="M-6,8C-10,30 -4,52 6,70C10,74 16,70 14,64C6,46 4,28 6,8Z" fill="#8a5a30" stroke="#3e2410" stroke-width="2.4"/>
+          <path d="M-2,22q4,4 0,8M2,40q4,4 0,8" stroke="#5a3418" stroke-width="2" fill="none"/></g>`; }
+      put(L.set, `<g id="${id}-pods">${pd}</g>`);
     }
     if (o.shrine !== false) put(L.set, Hn.shrine(o.shrine ?? TX - 60, G + 70, o.shrineS ?? 0.95));
     if (o.title) put(L.set, `<g id="${id}-title">${Hn.titlePlank(o.title.x ?? 380, o.title.y ?? G + 220, o.title.s ?? 1, { sub: o.title.sub })}</g>`);
