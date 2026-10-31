@@ -151,16 +151,16 @@ CUES = [
 
 exec(open(os.path.join(HERE, "..", "samples_inc.py")).read())
 SAMPLES = [
-    ("hook", 0.0, "underwater", 0.4, 2.6), ("hook", 0.25, "kidclicks", 0.6),
+    ("hook", 0.0, "crickets", 0.35, 2.6), ("hook", 0.3, "bubbles", 0.5),
     ("fist", 0.0, "pourin", 0.32, 1.6), ("fist", 0.0, "underwater", 0.25, 1.6),
-    ("lami", 0.3, "fistglass", 1.0), ("lami", 2.05, "fistglass", 1.0), ("lami", 2.12, "glasscrack", 0.7), ("lami", 0.0, "underwater", 0.15, 4.6),
-    ("tease", 0.0, "underwater", 0.18, 3.3),
+    ("lami", 0.8, "fistglass", 0.9), ("lami", 0.84, "glasscrack", 0.55), ("lami", 1.47, "fistglass", 0.85),
+    ("tease", F("tease", 0, 1) + 0.3, "glasscrack", 0.85),
     ("dark", F("dark", 0, 1), "powerdown", 0.85), ("dark", 0.0, "underwater", 0.15, 2.9),
     ("lock", 0.8, "kidclicks", 0.5, 1.4),
     ("kim", 0.0, "bubbles", 0.4),
     ("smash", 0.65, "fistglass", 0.9), ("smash", 1.85, "fistglass", 0.9), ("smash", 0.0, "underwater", 0.15, 4.0),
-    ("corner", 0.3, "headrest", 0.9),
-    ("headrest", 0.66, "prongtap", 1.0, 0.6), ("headrest", 1.36, "prongtap", 1.0, 0.6), ("headrest", 2.06, "prongtap", 1.0, 0.6),
+    ("corner", F("corner", 0, 1) + 0.9, "glasscrack", 0.6),
+    ("headrest", 0.66, "prongtap", 1.0, 0.6), ("headrest", 1.36, "prongtap", 1.0, 0.6),
     ("third", 0.58, "prongtap", 1.0, 0.6), ("third", 0.62, "glasscrack", 0.9),
     ("switch", 0.0, "underwater", 0.3, 2.5),
     ("fill", 0.0, "underwater", 0.45), ("fill", 1.0, "bubbles", 0.45),

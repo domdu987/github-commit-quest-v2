@@ -12,6 +12,7 @@
       const TONm = (mode, eyes, mouth) => A("tonJ", TM.x, TM.y, TM.s, [{ t: 0, mode, eyes, mouth }], { flip: true });
       const KIMm = (mode, eyes, mouth, extra = {}) => A("mint", KM.x, KM.y, KM.s, [{ t: 0, mode, eyes, mouth }], { flip: true, ...extra });
       const CUT1 = (id, out) => ({ set: "carCut", setOpts: { id, out }, dark: 0.12, light: CABIN, grade: GNIGHT });
+      const KL0 = (id, extra = {}) => ({ set: "klong", setOpts: { id, ...extra }, dark: 0.02, light: NIGHT, grade: { top: "#3a2e6a", bottom: "#0a0e1e", op: 0.18 }, blur: { far: 1.2, fg: 7 } });
       const noShadows = (tl, id) => ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
       Rig.MODES.punchUp = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: -10, head: -10, uaF: -150 + 8 * Math.sin(u * 9), faF: -12, uaB: -40, faB: -60 });
       Rig.MODES.headUp = (u, o) => { const j = Math.sin(u * 17) * 1.4; return { ...Rig.MODES.sitChair(u, o), bodyY: 104, torso: -6 + j, head: -24 + j, uaF: -120, faF: -30, uaB: -110, faB: -36 }; };
@@ -23,15 +24,17 @@
 
       // ---------- 1. hook: her switch, again and again; the glass doesn't move, the canal right outside it ----------
       add("hook", {
-        ...WIN("cw0"),
-        cam: { keys: [{ t: 0, ...fr(540, 1080, 1.12, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(540, 1100, 1.2, 540, 1000) }] },
-        shake: (t) => ({ x: 2 * Math.sin(t * 23), y: 1.5 * Math.sin(t * 19), r: 0 }),
+        ...KL0("kh2", { title: { x: 300, sub: "EP.2 ถ้ากระจกไม่ลง" }, moonX: 760, moonY: 250 }),
+        cam: { keys: [{ t: 0, ...fr(400, 900, 1.2, 540, 900) }, { t: D("hook"), glide: D("hook"), ...fr(470, 950, 1.3, 540, 900) }] },
         captions: caps("hook"),
         fx(tl, id, t0, L) {
-          outsideRich(L, tl, "cw0o", t0, D("hook"), 470, 440); glassDrops("cw0");
-          kidSwitch(L, "ks0");
-          tl.fromTo("#ks0-kf", { y: 0 }, { y: -30, duration: 0.14, yoyo: true, repeat: Math.ceil(D("hook") / 0.14), ease: "power2.inOut", immediateRender: false }, t0 + 0.1);
-          bubbles(L, tl, "cw0bb", t0, D("hook"), 540, 1200, 10, 700);
+          Klong.life(tl, "kh2", t0, D("hook"));
+          Canal.car(L, "h2", 700, WY + 30, 0.42, { beam: 0 }); tl.set("#h2-r", { rotation: 18, svgOrigin: "0 0" }, 0);
+          tl.fromTo("#h2-r", { y: 0 }, { y: 30, duration: D("hook"), ease: "power1.in", immediateRender: false }, t0);
+          Canal.front(L, "h2f", WY + 10);
+          put(L.act, `<radialGradient id="h2g"><stop offset="0" stop-color="#9fe8ff" stop-opacity=".55"/><stop offset="1" stop-color="#9fe8ff" stop-opacity="0"/></radialGradient><ellipse id="h2gl" cx="720" cy="${WY + 70}" rx="240" ry="90" fill="url(#h2g)"/>`);
+          tl.fromTo("#h2gl", { opacity: 0.9 }, { opacity: 0.4, duration: 0.18, yoyo: true, repeat: Math.ceil(D("hook") / 0.18), ease: "steps(1)", immediateRender: false }, t0 + 0.8);
+          bubbles(L, tl, "h2bb", t0, D("hook"), 720, WY + 20, 14, 260);
         },
       });
       // ---------- 2. the command: he swings at the windscreen; behind him, his own window is open (the plant) ----------
@@ -47,27 +50,17 @@
       });
       // ---------- 3. the windscreen holds: a star of cracks, then a bigger one, still in one piece ----------
       add("lami", {
-        set: "wsIns", setOpts: { id: "ws0" }, dark: 0.06, light: false, grade: GWATER,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("lami"), glide: D("lami"), ...fr(540, 920, 1.08, 540, 960) }] },
-        shake: (t) => { const a = [0.35, 2.1].map((p) => Math.max(0, 1 - Math.abs(t - p) / 0.18)); const k = Math.max(...a); return { x: 10 * k * Math.sin(t * 70), y: 8 * k * Math.sin(t * 61), r: 0 }; },
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
         captions: caps("lami"),
-        fx(tl, id, t0, L) {
-          punch(tl, "ws0", t0 + 0.35, 520, 830); crackStar(L, "set", tl, "ws0c1", 520, 830, t0 + 0.35, 150);
-          punch(tl, "ws0", t0 + 2.1, 600, 760); crackStar(L, "set", tl, "ws0c2", 600, 760, t0 + 2.1, 260, 16);
-          bubbles(L, tl, "ws0bb", t0, D("lami"), 540, 1300, 12, 800);
-        },
+        fx(tl, id, t0, L) { SinkUI.lami(tl, L.light, t0, D("lami"), { stamp: F("lami", 0, 2) }); },
       });
       // ---------- 4. "but there's another pane": her side window, a gleam across it ----------
       add("tease", {
-        ...WIN("cw1"),
-        cam: { keys: [{ t: 0, ...fr(540, 980, 1.0, 540, 960) }, { t: D("tease"), glide: D("tease"), ...fr(560, 960, 1.14, 540, 960) }] },
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
         captions: caps("tease"),
-        fx(tl, id, t0, L) {
-          outsideRich(L, tl, "cw1o", t0, D("tease"), 440, 420); glassDrops("cw1");
-          put(L.light, `<linearGradient id="cw1gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-            <g id="cw1gls"><path d="M0,380L140,380L-60,1280H-200Z" fill="url(#cw1gl)"/></g>`);
-          tl.fromTo("#cw1gls", { x: 0, opacity: 0 }, { x: 1200, opacity: 1, duration: 1.2, ease: "power2.inOut", immediateRender: false }, t0 + F("tease", 0, 1));
-        },
+        fx(tl, id, t0, L) { SinkUI.tempered(tl, L.light, t0, D("tease"), { hit: F("tease", 0, 1) + 0.25 }); },
       });
       // ---------- 5. the water at their chests, every light dies ----------
       add("dark", {
@@ -113,39 +106,49 @@
       });
       // ---------- 9. something hard and pointed: he pulls the headrest out on its prongs ----------
       add("corner", {
-        set: "headIns", setOpts: { id: "hi0" }, dark: 0.1, light: false, grade: GNIGHT,
-        cam: { keys: [{ t: 0, ...fr(540, 980, 1.0, 540, 960) }, { t: D("corner"), glide: D("corner"), ...fr(540, 900, 1.06, 540, 960) }] },
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
         captions: caps("corner"),
-        fx(tl, id, t0, L) {
-          tl.fromTo("#hi0-hr", { y: 0 }, { y: -170, duration: 1.4, ease: "power2.inOut", immediateRender: false }, t0 + 0.3);
-          tl.to("#hi0-hr", { y: -160, duration: 0.08, yoyo: true, repeat: 3 }, t0 + 1.75);
-          bubbles(L, tl, "hi0bb", t0, D("corner"), 540, 1500, 10, 700);
-        },
+        fx(tl, id, t0, L) { SinkUI.corner(tl, L.light, t0, D("corner"), { label: F("corner", 0, 1), hit: F("corner", 0, 1) + 0.9 }); },
       });
       // ---------- 10. the prongs at the lower front corner: they skid ----------
-      add("headrest", {
+      const HS = F("headrest", 0, 1) - 0.15;
+      split("headrest", HS, {
         ...CUT1("cs1", 920),
-        cam: { keys: [{ t: 0, ...fr(430, 1235, 1.55, 540, 960) }, { t: D("headrest"), glide: D("headrest"), ...fr(440, 1230, 1.68, 540, 960) }] },
+        cam: { keys: [{ t: 0, ...fr(430, 1235, 1.55, 540, 960) }, { t: HS, glide: HS, ...fr(440, 1230, 1.68, 540, 960) }] },
         shake: (t) => { const k = Math.max(...[0.7, 1.4, 2.1].map((p) => Math.max(0, 1 - Math.abs(t - p) / 0.12))); return { x: 7 * k * Math.sin(t * 70), y: 5 * k * Math.sin(t * 61), r: 0 }; },
         actors: [A("tonJ", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "reachBack", eyes: "angry", mouth: "scream" }]), A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "scream" }])],
         captions: caps("headrest"),
         fx(tl, id, t0, L) {
-          noShadows(tl, id); hideRigArms(`${id}-a0`); cabRich(L, tl, "cs1", t0, D("headrest"), { caustic: true }); cutFront(L, "cs1", { free: ["ton", "kim"] });
-          cutUnder(L, tl, "cs1", t0, D("headrest"), 1254, 1246, 920, 914);
+          noShadows(tl, id); hideRigArms(`${id}-a0`); cabRich(L, tl, "cs1", t0, HS, { caustic: true }); cutFront(L, "cs1", { free: ["ton", "kim"] });
+          cutUnder(L, tl, "cs1", t0, HS, 1254, 1246, 920, 914);
           strikeArm(L, tl, "cs1a", t0, [0.7, 1.4, 2.1], true); [0.7, 1.4, 2.1].forEach((a, k) => hitMark(L, tl, `cs1h${k}`, t0 + a));
         },
+      }, {
+        ...CUT1("cs8", 920), blur: { sky: 8, far: 8, mid: 8, set: 8, act: 8, fg: 10 },
+        cam: { keys: [{ t: 0, ...fr(430, 1235, 1.55, 540, 960) }] },
+        actors: [A("tonJ", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "reachBack", eyes: "angry", mouth: "scream" }]), A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "scream" }])],
+        captions: capsFrom("headrest", HS),
+        fx(tl, id, t0, L) { noShadows(tl, id); cabRich(L, tl, "cs8", t0, D("headrest") - HS, { caustic: true }); cutFront(L, "cs8"); cutUnder(L, tl, "cs8", t0, D("headrest") - HS, 1254, 1250, 920, 918);
+          put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".4"/>`); SinkUI.nope(tl, L.light, t0, D("headrest") - HS, { what: "headrest", y: 820, stamp: 0.3, label: "ตัวเลือกที่แย่" }); },
       });
       // ---------- 11. one more: the pane cracks into a web and stays (it has the film too) ----------
-      add("third", {
+      const TS = 1.7;
+      split("third", TS, {
         ...WIN("cw4"),
-        cam: { keys: [{ t: 0, ...fr(640, 1040, 1.1, 540, 960) }, { t: D("third"), glide: D("third"), ...fr(620, 1000, 1.2, 540, 960) }] },
+        cam: { keys: [{ t: 0, ...fr(640, 1040, 1.1, 540, 960) }, { t: TS, glide: TS, ...fr(620, 1000, 1.2, 540, 960) }] },
         shake: (t) => { const k = Math.max(0, 1 - Math.abs(t - 0.6) / 0.18); return { x: 10 * k * Math.sin(t * 70), y: 7 * k * Math.sin(t * 61), r: 0 }; },
         captions: caps("third"),
         fx(tl, id, t0, L) {
-          outsideRich(L, tl, "cw4o", t0, D("third"), 380, 360); glassDrops("cw4");
+          outsideRich(L, tl, "cw4o", t0, TS, 380, 360); glassDrops("cw4");
           prongStrike(L, tl, "cw4p", t0 + 0.6, 920, 1200, 1);
           webCrack(tl, "cw4w", "cw4-glass", t0 + 0.62, 920, 1200);
         },
+      }, {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        captions: capsFrom("third", TS),
+        fx(tl, id, t0, L) { SinkUI.models(tl, L.light, t0, D("third") - TS, { at: Math.max(0.5, F("third", 0, 1) - TS + 0.3) }); },
       });
       // ---------- 12. it won't break: another window, now ----------
       add("switch", {
@@ -156,15 +159,21 @@
         fx(tl, id, t0, L) { noShadows(tl, id); cabRich(L, tl, "cm3", t0, D("switch"), { openF: true, caustic: true }); openWin(L, tl, "cm3", t0, D("switch")); cutFront(L, "cm3", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm3", t0, D("switch"), 1262, 1250, 930, 920); },
       });
       // ---------- 13. don't wait for it to fill: their faces up in the last of the air ----------
-      add("fill", {
+      const FS = 1.9;
+      split("fill", FS, {
         ...CUTM2("cm4", 900),
-        cam: { keys: [{ t: 0, ...fr(620, 1180, 1.25, 540, 960) }, { t: D("fill"), glide: D("fill"), ...fr(620, 1150, 1.35, 540, 960) }] },
+        cam: { keys: [{ t: 0, ...fr(620, 1180, 1.25, 540, 960) }, { t: FS, glide: FS, ...fr(620, 1150, 1.35, 540, 960) }] },
         actors: [TONm("headUp", "wide", "o"), KIMm("headUp", "wide", "scream")],
         captions: caps("fill"),
         fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "cm4", t0, D("fill"), { openF: true, caustic: true }); openWin(L, tl, "cm4", t0, D("fill")); cutFront(L, "cm4", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm4", t0, D("fill"), 1240, 1180, 900, 880);
-          bubbles(L, tl, "cm4bb", t0, D("fill"), 600, 1300, 16, 700);
+          noShadows(tl, id); cabRich(L, tl, "cm4", t0, FS, { openF: true, caustic: true }); openWin(L, tl, "cm4", t0, FS); cutFront(L, "cm4", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm4", t0, FS, 1240, 1180, 900, 880);
+          bubbles(L, tl, "cm4bb", t0, FS, 600, 1300, 16, 700);
         },
+      }, {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        captions: capsFrom("fill", FS),
+        fx(tl, id, t0, L) { SinkUI.equalize(tl, L.light, t0, D("fill") - FS, { mode: "last", label: Math.max(0.6, F("fill", 0, 1) - FS) }); },
       });
       // ---------- 14. the twist: back to 0:03, closer: his own window, open the whole time ----------
       add("rw", {
@@ -201,12 +210,12 @@
       });
       // ---------- 17. on the canal: she breaks the surface ----------
       add("surface", {
-        set: "surf", setOpts: { id: "sf0", lv: 1210 }, dark: 0.04, light: NIGHT, grade: GNIGHT, blur: { far: 1.5 },
+        ...KL0("ks2", { curve: false }), blur: { far: 2, mid: 1.2, fg: 7 },
         cam: { keys: [{ t: 0, ...fr(540, 1110, 1.9, 540, 980) }, { t: D("surface"), glide: D("surface"), ...fr(540, 1100, 2.05, 540, 980) }] },
         actors: [A("mint", 540, 1890, 1.45, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "scream" }], { talk: [TALK("surface", 0, "scream")], path: [{ t: 0, x: 540, y: 2300 }, { t: 0.24, x: 540, y: 1890 }] })],
         captions: caps("surface", undefined, QUO),
         fx(tl, id, t0, L) {
-          tl.set(`#${id}-a0-shadow`, { opacity: 0 }, 0);
+          tl.set(`#${id}-a0-shadow`, { opacity: 0 }, 0); Klong.life(tl, "ks2", t0, D("surface"));
           surfWater(L, tl, "sf0", t0, D("surface"), 1210);
           Canal.splash(L, tl, "sf0s", 540, 1206, t0 + 0.12);
           bubbles(L, tl, "sf0bb", t0, D("surface"), 540, 1500, 12, 400);
@@ -223,5 +232,5 @@
       add("next", {
         dark: 0, light: false,
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
-        fx(tl, id, t0, L) { nextCard(L, tl, t0, D("next"), "ถ้าคนที่คุณรักยังอยู่ในน้ำ…", "อย่ากระโดดลงไปช่วย", "กดติดตาม แล้วรอต้นขึ้นมาด้วยกัน"); },
+        fx(tl, id, t0, L) { SinkUI.nextSign(tl, L.light, t0, D("next"), { l1: "ตอนจบ", l2: "ช่วยจากบนฝั่ง", l3: "กดติดตาม แล้วรอต้นขึ้นมาด้วยกัน" }); },
       });

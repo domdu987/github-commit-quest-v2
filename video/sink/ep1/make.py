@@ -6,7 +6,7 @@ import subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LIB = os.path.join(HERE, "..", "hf", "lib")
-PROJ = os.path.join(HERE, "..", "hf", "sink1")
+PROJ = os.path.join(HERE, "..", "hf", "sinkr1")
 
 os.makedirs(os.path.join(PROJ, "assets"), exist_ok=True)
 for f in ("package.json", "hyperframes.json", "meta.json"):

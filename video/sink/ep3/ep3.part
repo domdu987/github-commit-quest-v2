@@ -16,7 +16,7 @@
           ${Array.from({ length: n - 1 }, (_, k) => `<circle cx="${f1(x0 + dx * (k + 1))}" cy="${f1(y0 + dy * (k + 1))}" r="8" fill="#a8944a" stroke="#0b0e13" stroke-width="2.5"/>`).join("")}`; };
       // the front of the canal over whoever is in it, with a lit skin and rings where she treads water
       const canalFront = (L, tl, id, t0, dur, y, ringX) => {
-        put(L.act, `<g id="${id}"><linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16303a" stop-opacity=".9"/><stop offset=".4" stop-color="#0a1418" stop-opacity=".96"/><stop offset="1" stop-color="#040808"/></linearGradient>
+        put(L.act, `<g id="${id}"><linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a4e78" stop-opacity=".9"/><stop offset=".4" stop-color="#1a3656" stop-opacity=".96"/><stop offset="1" stop-color="#0a1828"/></linearGradient>
           <rect x="-1200" y="${y}" width="3500" height="1400" fill="url(#${id}-g)"/><path id="${id}-sk" d="M-1200,${y}Q-1100,${y - 10} -1000,${y}T-800,${y}T-600,${y}T-400,${y}T-200,${y}T0,${y}T200,${y}T400,${y}T600,${y}T800,${y}T1000,${y}T1200,${y}T1400,${y}T1600,${y}T1800,${y}T2000,${y}T2200,${y}" stroke="#bfe0e8" stroke-width="4" fill="none" opacity=".8"/>
           ${ringX != null ? [0, 1, 2].map((k) => `<ellipse id="${id}-r${k}" cx="${ringX}" cy="${y + 6}" rx="40" ry="9" fill="none" stroke="#cfe8ee" stroke-width="4" opacity="0"/>`).join("") : ""}
           ${[[150, "#ffd890"], [560, "#ffd890"], [970, "#ffd890"]].map(([x, c]) => Array.from({ length: 5 }, (_, j) => `<path d="M${x - 30 + (j % 2) * 16},${y + 10 + j * 30}h${54 - j * 6}" stroke="${c}" stroke-width="5" opacity="${0.5 - j * 0.08}" stroke-linecap="round"/>`).join("")).join("")}</g>`);
