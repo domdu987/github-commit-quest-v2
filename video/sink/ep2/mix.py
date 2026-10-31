@@ -149,6 +149,28 @@ CUES = [
     ("next", 0.1, "whoosh", 0.3), ("next", 0.6, "ding", 0.24),
 ]
 
+exec(open(os.path.join(HERE, "..", "samples_inc.py")).read())
+SAMPLES = [
+    ("hook", 0.0, "underwater", 0.4, 2.6), ("hook", 0.25, "kidclicks", 0.6),
+    ("fist", 0.0, "pourin", 0.32, 1.6), ("fist", 0.0, "underwater", 0.25, 1.6),
+    ("lami", 0.3, "fistglass", 1.0), ("lami", 2.05, "fistglass", 1.0), ("lami", 2.12, "glasscrack", 0.7), ("lami", 0.0, "underwater", 0.15, 4.6),
+    ("tease", 0.0, "underwater", 0.18, 3.3),
+    ("dark", F("dark", 0, 1), "powerdown", 0.85), ("dark", 0.0, "underwater", 0.15, 2.9),
+    ("lock", 0.8, "kidclicks", 0.5, 1.4),
+    ("kim", 0.0, "bubbles", 0.4),
+    ("smash", 0.65, "fistglass", 0.9), ("smash", 1.85, "fistglass", 0.9), ("smash", 0.0, "underwater", 0.15, 4.0),
+    ("corner", 0.3, "headrest", 0.9),
+    ("headrest", 0.66, "prongtap", 1.0, 0.6), ("headrest", 1.36, "prongtap", 1.0, 0.6), ("headrest", 2.06, "prongtap", 1.0, 0.6),
+    ("third", 0.58, "prongtap", 1.0, 0.6), ("third", 0.62, "glasscrack", 0.9),
+    ("switch", 0.0, "underwater", 0.3, 2.5),
+    ("fill", 0.0, "underwater", 0.45), ("fill", 1.0, "bubbles", 0.45),
+    ("open", 0.0, "pourin", 0.9, 3.1),
+    ("push", 0.0, "underwater", 0.35, 4.1), ("push", 0.2, "bubbles", 0.6),
+    ("surface", 0.08, "surface", 0.75, 0.45),
+    ("foot", 0.25, "shoetug", 0.9), ("foot", 1.6, "shoetug", 0.75), ("foot", 0.0, "underwater", 0.3, 3.4),
+]
+CUES = [c for c in CUES if c[2] not in REPLACED]
+
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
 CUES = [c for c in CUES if c[2] not in ("wind", "lap", "pop", "tick") and c[3] > 0]  # no noise beds (user: "เสียงซ่าๆเอาออก")
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
@@ -158,6 +180,8 @@ subprocess.run(["python3", os.path.join(HERE, "..", "synth.py"), os.path.join(HE
                check=True, env={**os.environ, "STEMS": "1"})
 sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
+for k, t0, name, g, *mx in SAMPLES:
+    place(sfx, smp(name, mx[0] if mx else None), T(k, t0), g)
 
 # ---- music with horror dips ----
 mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))

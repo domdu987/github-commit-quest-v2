@@ -12,8 +12,10 @@
       // the cabin: the inside outline (the water fills it), the far-side windows (the night and the canal show through)
       const CABIN_D = "M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236V1500H28Z";
       const WIN_F = "M488,1064H760L888,1218H488Z", WIN_R = "M214,1064H462V1218H58Z";
+      const CUTM = {}, MIR = (id, html) => (CUTM[id] ? `<g transform="translate(1080,0) scale(-1,1)">${html}</g>` : html);
       Sets.carCut = (L, o = {}) => {
         const id = o.id || "cc", lvl = o.out ?? 1120;   // the canal's surface outside
+        CUTM[id] = !!o.mirror;
         // the night outside: sky, stars, the far bank and its lamp, the canal (its surface at lvl)
         put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060a14"/><stop offset="1" stop-color="#16243a"/></linearGradient>
           <rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-sk)"/>${Array.from({ length: 40 }, (_, k) => `<circle cx="${f1(-200 + ((k * 263) % 1500))}" cy="${f1(200 + ((k * 89) % 700))}" r="${f1(1.4 + (k % 3))}" fill="#dfe8ff" opacity="${(0.25 + (k % 4) * 0.15).toFixed(2)}"/>`).join("")}`);
@@ -44,7 +46,7 @@
           <path d="M870,1206Q880,1180 912,1180L936,1206Z" fill="#161a20" stroke="#0b0e13" stroke-width="5"/><rect x="872" y="1214" width="44" height="22" rx="6" fill="#07131c"/><path d="M878,1226h32" stroke="#7fd1ff" stroke-width="4" opacity=".8"/>
           <path d="M940,1500L1012,1500L1012,1380Q960,1372 930,1400Z" fill="#161a20"/><path d="M948,1418L926,1478" stroke="#2c323b" stroke-width="12" stroke-linecap="round"/><rect x="900" y="1470" width="48" height="16" rx="5" fill="#3a3f48" stroke="#0b0e13" stroke-width="3" transform="rotate(-24 924 1478)"/>
           <path d="M984,1420L966,1482" stroke="#2c323b" stroke-width="10" stroke-linecap="round"/><rect x="948" y="1476" width="34" height="14" rx="5" fill="#3a3f48" stroke="#0b0e13" stroke-width="3" transform="rotate(-20 965 1483)"/>`;
-        put(L.set, s);
+        put(L.set, MIR(id, s));
       };
       // over the cast (call in fx): the wheel in his hands, the belts, the near side's cut edge, the body below the floor
       const BELT2 = {
@@ -70,26 +72,26 @@
         // the cut edge of the near side: the sill and the lower door below the cabin floor, the roof's edge, the pillars' stumps
         g += `<path d="M-60,1500H1100L1120,1560Q1000,1596 860,1596H-40Q-80,1580 -60,1500Z" fill="#d8dde3" stroke="#0b0e13" stroke-width="8"/><path d="M-50,1520H1090" stroke="#aeb6c0" stroke-width="6"/>
           <path d="M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236" fill="none" stroke="#e2e6ea" stroke-width="16" stroke-linejoin="round"/><path d="M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236" fill="none" stroke="#0b0e13" stroke-width="4" stroke-linejoin="round" transform="translate(0,-9)"/>`;
-        put(L.act, `<g id="${id}-front">${g}</g>`);
+        put(L.act, MIR(id, `<g id="${id}-front">${g}</g>`));
       };
       // the canal in front of the car: a tint over everything under its surface but the cut-open cabin (call after cutFront)
       const cutCanal = (L, tl, id, t0, dur, y0, y1) => {
-        put(L.act, `<mask id="${id}-nm" maskUnits="userSpaceOnUse" x="-900" y="0" width="2900" height="2600"><rect x="-900" y="0" width="2900" height="2600" fill="#fff"/><path d="${CABIN_D}" fill="#000"/></mask>
+        put(L.act, MIR(id, `<mask id="${id}-nm" maskUnits="userSpaceOnUse" x="-900" y="0" width="2900" height="2600"><rect x="-900" y="0" width="2900" height="2600" fill="#fff"/><path d="${CABIN_D}" fill="#000"/></mask>
           <g mask="url(#${id}-nm)"><g id="${id}-nw"><linearGradient id="${id}-nwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c7a6a" stop-opacity=".5"/><stop offset=".3" stop-color="#123a34" stop-opacity=".8"/><stop offset="1" stop-color="#030a0a" stop-opacity=".95"/></linearGradient>
           <rect x="-900" y="0" width="2900" height="1400" fill="url(#${id}-nwg)"/>
           <path id="${id}-nsk" d="M-900,0Q-800,-12 -700,0T-500,0T-300,0T-100,0T100,0T300,0T500,0T700,0T900,0T1100,0T1300,0T1500,0T1700,0T1900,0T2100,0" stroke="#e8fff6" stroke-width="6" fill="none"/>
-          ${Array.from({ length: 30 }, (_, k) => `<circle cx="${f1(-100 + ((k * 211) % 1300))}" cy="${f1(60 + ((k * 137) % 700))}" r="${f1(2 + (k % 4) * 1.4)}" fill="#bfe8d8" opacity="${(0.2 + (k % 5) * 0.08).toFixed(2)}"/>`).join("")}</g></g>`);
+          ${Array.from({ length: 30 }, (_, k) => `<circle cx="${f1(-100 + ((k * 211) % 1300))}" cy="${f1(60 + ((k * 137) % 700))}" r="${f1(2 + (k % 4) * 1.4)}" fill="#bfe8d8" opacity="${(0.2 + (k % 5) * 0.08).toFixed(2)}"/>`).join("")}</g></g>`));
         tl.set(`#${id}-nw`, { y: y0 }, 0);
         tl.fromTo(`#${id}-nw`, { y: y0 }, { y: y1, duration: dur, ease: "none", immediateRender: false }, t0);
         tl.fromTo(`#${id}-nsk`, { x: 0 }, { x: -200, duration: 1.3, repeat: Math.ceil(dur / 1.3), ease: "none", immediateRender: false }, t0);
       };
       // the water in the cabin, clipped to it (rises y0 → y1); things afloat on it
       const cutWater = (L, tl, id, t, len, y0, y1) => {
-        put(L.act, `<clipPath id="${id}-ccw"><path d="${CABIN_D}"/></clipPath><g clip-path="url(#${id}-ccw)"><g id="${id}-cw2">
+        put(L.act, MIR(id, `<clipPath id="${id}-ccw"><path d="${CABIN_D}"/></clipPath><g clip-path="url(#${id}-ccw)"><g id="${id}-cw2">
           <linearGradient id="${id}-cwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e9a88" stop-opacity=".55"/><stop offset=".4" stop-color="#1c5a52" stop-opacity=".75"/><stop offset="1" stop-color="#08201e" stop-opacity=".9"/></linearGradient>
           <rect x="-200" y="0" width="1500" height="900" fill="url(#${id}-cwg)"/><path id="${id}-cwsk2" d="M-200,0Q-140,-8 -80,0T40,0T160,0T280,0T400,0T520,0T640,0T760,0T880,0T1000,0T1120,0T1240,0T1360,0" stroke="#c8f4e8" stroke-width="6" fill="none"/>
           <g transform="translate(420,-6)"><g class="cwbob2"><g transform="rotate(-80)"><rect x="-14" y="-48" width="28" height="76" rx="11" fill="#9fd8f0" opacity=".8" stroke="#0b0e13" stroke-width="3"/><rect x="-8" y="-62" width="16" height="16" rx="3" fill="#3a7ad8" stroke="#0b0e13" stroke-width="2.4"/></g></g></g>
-          <g transform="translate(150,-10)"><g class="cwbob2"><rect x="-44" y="-30" width="88" height="70" rx="16" fill="#e86aa8" stroke="#0b0e13" stroke-width="4"/><rect x="-28" y="-6" width="56" height="32" rx="9" fill="#f39ac4" stroke="#0b0e13" stroke-width="3"/><path d="M-28,-30q28,-34 56,0" stroke="#0b0e13" stroke-width="6" fill="none"/></g></g></g></g>`);
+          <g transform="translate(150,-10)"><g class="cwbob2"><rect x="-44" y="-30" width="88" height="70" rx="16" fill="#e86aa8" stroke="#0b0e13" stroke-width="4"/><rect x="-28" y="-6" width="56" height="32" rx="9" fill="#f39ac4" stroke="#0b0e13" stroke-width="3"/><path d="M-28,-30q28,-34 56,0" stroke="#0b0e13" stroke-width="6" fill="none"/></g></g></g></g>`));
         tl.set(`#${id}-cw2`, { y: y0 }, 0);
         tl.fromTo(`#${id}-cw2`, { y: y0 }, { y: y1, duration: len, ease: "sine.inOut", immediateRender: false }, t);
         tl.fromTo(`#${id}-cwsk2`, { x: 0 }, { x: -120, duration: 1.2, repeat: Math.ceil(len / 1.2), ease: "none", immediateRender: false }, t);
