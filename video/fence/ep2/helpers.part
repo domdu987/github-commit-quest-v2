@@ -1,7 +1,7 @@
       // ---------- แสงกระสือ: helpers ----------
       const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
       const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
-      const split = (k, at, A, B) => {
+      const split = (k, at, A, B) => { if (!SH[k]) return;
         add(k, A); shots[shots.length - 1].dur = at;
         add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
       };
