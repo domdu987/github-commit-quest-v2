@@ -1,0 +1,6 @@
+out/frames/
+out/snap_*.png
+out/sheet.png
+out/render.log
+audio/voice.wav
+audio/mix.wav
