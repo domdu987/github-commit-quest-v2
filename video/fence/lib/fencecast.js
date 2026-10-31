@@ -113,19 +113,19 @@
   // ---------------- hand props (palm at (0,118)) ----------------
   const P = (window.FenceCast = window.FenceCast || {});
   P.bat = () => `<g transform="translate(0,118) rotate(180)"><path d="M-7,-10L-14,-300Q0,-320 14,-300L7,-10Z" fill="#c8945a" ${ln(2.6)}/><path d="M-9,-60H9M-10,-90H10M-11,-120H11" stroke="#2a2a2a" stroke-width="6"/><path d="M-4,-20L-8,-290" stroke="#f2c890" stroke-width="3" opacity=".7"/></g>`;
-  P.crate = () => `<g transform="translate(60,118)"><rect x="-150" y="-90" width="240" height="120" fill="#c8945a" ${ln(3)}/><path d="M-150,-50H90M-150,-10H90" stroke="#8a6040" stroke-width="5"/>
+  P.crateChest = () => `<g transform="translate(30,-262)"><rect x="-150" y="-90" width="240" height="120" fill="#c8945a" ${ln(3)}/><path d="M-150,-50H90M-150,-10H90" stroke="#8a6040" stroke-width="5"/>
     ${[-120, -60, 0, 60].map((x, k) => `<g transform="translate(${x + 10},-96) scale(.24)"><path d="M-80,-180V0Q0,24 80,0V-180" fill="url(#fcCan)" ${ln(8)}/><path d="M-80,-150Q0,-128 80,-150V-40Q0,-18 -80,-40Z" fill="url(#fcLabel)"/><path d="M-80,-180Q-80,${k === 2 ? -270 : -202} 0,${k === 2 ? -282 : -204}Q80,${k === 2 ? -270 : -202} 80,-180Z" fill="#dfe4e8" ${ln(8)}/></g>`).join("")}</g>`;
   P.hose = () => `<g transform="translate(0,118)"><path d="M0,-10C10,-60 -30,-120 -10,-200" stroke="#3aa86a" stroke-width="12" fill="none" stroke-linecap="round"/><path d="M0,-10C10,-60 -30,-120 -10,-200" stroke="#c8f0d8" stroke-width="3" fill="none" opacity=".6"/></g>`;
   P.book = () => `<g transform="translate(0,118) rotate(-10)"><rect x="-44" y="-60" width="88" height="110" rx="6" fill="#2a5a3a" ${ln(2.6)}/><rect x="-36" y="-52" width="72" height="94" fill="#f4ecd8"/><path d="M-28,-36h50M-28,-20h44M-28,-4h50M-28,12h36" stroke="#5a4a3a" stroke-width="3"/></g>`;
   P.drawing = () => `<g transform="translate(0,118) rotate(-6)"><rect x="-70" y="-110" width="140" height="110" fill="#fbf6e8" ${ln(2.6)}/>${[-50, -30, -10, 10, 30].map((x) => `<g stroke="#2a2a2a" stroke-width="3" fill="none"><circle cx="${x}" cy="-60" r="6"/><path d="M${x},-54v18M${x - 6},-30l6,-6l6,6"/></g>`).join("")}<g stroke="#d8392e" stroke-width="3" fill="none"><path d="M50,-100v40M42,-100h16"/><circle cx="50" cy="-106" r="5"/></g></g>`;
   Object.assign(C, {
-    kongBat: { v2: kongV2, hand: P.bat(), keep: "F" }, kongCrate: { v2: kongV2, hand: P.crate(), keep: "F" },
+    kongBat: { v2: kongV2, hand: P.bat(), keep: "F" }, kongCrate: { v2: { ...kongV2, extra: straps + bandana + P.crateChest() } },
     manHose: { v2: manV2, hand: P.hose(), keep: "F" }, hongBook: { v2: hongV2, hand: P.book(), keep: "B" }, panDraw: { v2: panV2, hand: P.drawing(), keep: "F" },
   });
 
   // ---------------- poses ----------------
   const M = Rig.MODES, idle = (u, o) => M.idle(u, o);
-  M.carry = (u, o) => ({ ...idle(u, o), uaF: -34, faF: -84, uaB: -26, faB: -84, torso: -3 });
+  M.carry = (u, o) => ({ ...idle(u, o), uaF: -14, faF: -62, uaB: 14, faB: 62, torso: -4, head: -3 });
   M.shamble2 = (u, o) => M.lunge(u, o);
   M.cough = (u, o) => ({ ...idle(u, o), uaF: -110 + 3 * Math.sin(u * 20), faF: -150, uaB: 10, faB: -20, torso: 12 + 5 * Math.abs(Math.sin(u * 9)), head: 14 + 4 * Math.abs(Math.sin(u * 9)), bodyY: 8 });
   M.siphon = (u, o) => ({ ...M.crouch(u, o), uaF: -113, faF: -158, head: 6 });

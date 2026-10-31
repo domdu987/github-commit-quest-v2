@@ -208,13 +208,18 @@
           FenceUI.radio(tl, L.light, t0, D("radio"), { word: "0 6", at: vo("radio", 1) + 0.6, y: 520 });
         },
       });
+      const SLEEP = [["man", -900], ["hong", -600], ["pim", -300], ["pan", -40], ["kong", 220]];
       // ---------- 20. five asleep in the classroom; the chalk tally on the board reads 5 ----------
       add("count", {
         set: "fenceClass", setOpts: { id: "c20", time: "night", tally: true }, dark: 0.08, light: NITE, grade: GN,
         cam: { keys: [{ t: 0, ...fr(-300, 1720, 1.0, 540, 1150) }, { t: D("count"), glide: D("count"), ...fr(-260, 1720, 1.08, 540, 1150) }] },
-        actors: [["man", -900], ["hong", -600], ["pim", -300], ["pan", -40], ["kong", 220]].map(([w, x], k) => A(w, x, 1860 + (k % 2) * 40, w === "pan" ? 0.5 : 0.72, [T("lie", "closed", "flat")])),
+        actors: SLEEP.map(([w, x], k) => A(w, x, 1860 + (k % 2) * 40, w === "pan" ? 0.5 : 0.72, [T("lie", "closed", "smile")])),
+        extra(L) { put(L.set, SLEEP.map(([w, x], k) => { const s = w === "pan" ? 0.5 : 0.72, y = 1860 + (k % 2) * 40; return `<ellipse cx="${x - 560 * s}" cy="${y - 30}" rx="${70 * s / 0.72}" ry="${26 * s / 0.72}" fill="#f2ece0" stroke="${INK}" stroke-width="3"/>`; }).join("")); },
         captions: caps("count"),
-        fx(tl, id, t0, L) { Fence.life(tl, "c20", t0, D("count")); trio(tl, L.light, t0, D("count"), [["people", "", 0.1]], 330, 1.1); chalkWord(tl, L.light, t0 + F("count", 0, 1), D("count") - F("count", 0, 1), "5", 520, 150); },
+        fx(tl, id, t0, L) {
+          SLEEP.forEach(([w, x], k) => { const s = w === "pan" ? 0.5 : 0.72, y = 1860 + (k % 2) * 40, c = ["#c8603a", "#3a7ac8", "#8a5ab8", "#e8a83a", "#3aa86a"][k];
+            put(L.act, `<g transform="translate(${x - 400 * s},${y - 20})"><g id="bl${k}"><path d="M-20,0Q${170 * s},${-200 * s} ${440 * s},${-50 * s}L${470 * s},24H-30Z" fill="${c}" stroke="${INK}" stroke-width="3"/><path d="M${40 * s},-6Q${200 * s},${-90 * s} ${400 * s},${-30 * s}" stroke="#fff" stroke-width="4" opacity=".3" fill="none"/></g></g>`);
+            tl.fromTo(`#bl${k}`, { scaleY: 1 }, { scaleY: 1.07, svgOrigin: "0 20", duration: 1.4 + k * 0.17, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0); }); Fence.life(tl, "c20", t0, D("count")); trio(tl, L.light, t0, D("count"), [["people", "", 0.1]], 330, 1.1); chalkWord(tl, L.light, t0 + F("count", 0, 1), D("count") - F("count", 0, 1), "5", 520, 150); },
       });
       // ---------- 21. ปั้น holds up her drawing: six people (k03) → the bare prints in the mud inside the gate ----------
       split("draw", 2.2, {
