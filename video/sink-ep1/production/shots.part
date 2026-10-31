@@ -619,6 +619,20 @@
         put(L.act, `<circle cx="700" cy="1800" r="318" fill="none" stroke="#565c66" stroke-width="7" opacity=".75"/>
           <g>${handAt([452, 1752], 30, 2.6, SK.ton, { ...GRIP, band: BAND, sw: 0.55, fore: 900, mirror: true })}${handAt([948, 1752], -30, 2.6, SK.ton, { ...GRIP, band: BAND, sw: 0.55, fore: 900 })}</g>`);
       };
+      // an unlit underbone crossing the road out of a side soi, right to left, a helmeted rider on it; our headlights light it up
+      const crossBike = (L, tl, id, t0, dur) => {
+        const bike = Mm.moto(0, 0, 1, { color: "#2a5ab8" }).replace('fill="#fff6c8"', 'fill="#3a3a30"').replace('fill="#d8302a"', 'fill="#5a1a18"');
+        put(L.mid, `<g id="${id}" transform="translate(860,1000) scale(-0.16,0.16)"><ellipse cx="0" cy="-300" rx="560" ry="380" fill="#fff6dc" opacity=".07"/>${bike}<g id="${id}-rd" transform="translate(-110,-160) scale(1.13)"></g></g>`);
+        Rig.build(document.getElementById(`${id}-rd`), `${id}-r`, Rig.CAST.rider);
+        Rig.apply(`${id}-r`, { ...Rig.MODES.sitChair(0, {}), thF: -80, shF: 70, thB: -76, shB: 66, uaF: -76, faF: -14, uaB: -70, faB: -18, torso: 14, head: -8, _eyes: "wide", _mouth: "o" }, 0, []);
+        // lift the rider's shadow off the road (it belongs to the bike)
+        const sh = document.getElementById(`${id}-r-shadow`); if (sh) sh.setAttribute("opacity", "0");
+        const K = [[0, 860, 1000, 0.16], [0.45, 700, 1060, 0.27], [0.8, 520, 1170, 0.5], [1, 400, 1290, 0.8]];
+        for (let k = 1; k < K.length; k++) {
+          const [p0, x0, y0, s0] = K[k - 1], [p1, x1, y1, s1] = K[k];
+          tl.fromTo(`#${id}`, { attr: { transform: `translate(${x0},${y0}) scale(${-s0},${s0})` } }, { attr: { transform: `translate(${x1},${y1}) scale(${-s1},${s1})` }, duration: (p1 - p0) * dur, ease: "none", immediateRender: false }, t0 + p0 * dur);
+        }
+      };
       // ---------- นาทีก่อนจม: the car in cutaway — a side view with its near side cut open, sized to the cast ----------
       // the car faces right (its front on the right), so we look at its right side: the driver's (right-hand drive). Rig poses face right
       // when not flipped (sitChair: thighs forward to the right, shins down). Sizes come from the seated cast, not from a drawing:
@@ -792,8 +806,7 @@
         captions: caps("swerve"),
         fx(tl, id, t0, L) {
           povCanal(L, tl, "pv1", t0, D("swerve")); mirrorKid(L, "pv1"); povHands(L, "pv1"); Mok.life(tl, `#${id}`, t0, D("swerve"));
-          put(L.act, `<g transform="translate(540,1010)"><g id="bk">${bikeShape}</g></g>`);
-          tl.fromTo("#bk", { scale: 0.12, opacity: 0, svgOrigin: "0 0" }, { scale: 1.9, opacity: 1, svgOrigin: "0 0", duration: D("swerve") - 0.6, ease: "power2.in", immediateRender: false }, t0 + 0.15);
+          crossBike(L, tl, "bk", t0, D("swerve"));
         },
       });
       // ---------- 7. outside: off the bank and into the canal ----------
