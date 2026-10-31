@@ -62,7 +62,7 @@ def frag(k, i=0, j=0):
 
 
 # ---- voice: every line levelled on its own so whispers and shouts sit at a readable loudness ----
-LINE_GAIN = {"y02": 3}  # ยาย says her own rule softly while climbing: lift it over the bed
+LINE_GAIN = {"k01": 3}   # ขิม shouts over the water: lift her line over the bed and effects
 vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
@@ -144,6 +144,27 @@ CUES = [
     ("next", 0.1, "whoosh", 0.3), ("next", 0.6, "ding", 0.24),
 ]
 
+exec(open(os.path.join(HERE, "..", "samples_inc.py")).read())
+SAMPLES = [
+    ("hook", 0.0, "crickets", 0.4), ("hook", 0.3, "engine", 0.22, 2.4),
+    ("lock", 0.95, "lockclick", 0.9),
+    ("float", 0.0, "crickets", 0.3, 4.2), ("float", 0.3, "bubbles", 0.45),
+    ("all", 0.0, "underwater", 0.6, 2.85), ("all", 0.4, "bubbles", 0.5),
+    ("drive", 0.0, "engine", 0.45, 5.2), ("swerve", 0.0, "engine", 0.42, 2.7),
+    ("swerve", vo_end("swerve") + 0.02, "screech", 0.95),
+    ("plunge", 0.5, "plunge", 1.0),
+    ("inrush", 0.0, "sealjets", 0.85), ("inrush", 0.0, "underwater", 0.4, 2.0),
+    ("belt", F("belt", 0, 1) + 0.62, "beltoff", 0.95), ("belt", 0.0, "underwater", 0.14, 2.9),
+    ("door", 0.4, "doorhandle", 0.9), ("door", 0.0, "underwater", 0.14, 4.0),
+    ("window", 0.45, "winmotor", 0.85), ("window", 1.5, "pourin", 0.85, 2.1),
+    ("kid", 0.6, "beltoff", 0.85), ("kid", 0.0, "underwater", 0.14, 3.0),
+    ("phone", 0.0, "underwater", 0.14, 4.6),
+    ("kim", vo_end("kim") + 0.02, "kidclicks", 0.75, 0.8),
+    ("panel", 0.65, "kidclicks", 0.6, 1.2),
+    ("flicker", 0.2, "powerdown", 0.85), ("flicker", 0.0, "underwater", 0.45, 2.8),
+]
+CUES = [c for c in CUES if c[2] not in REPLACED]
+
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
 CUES = [c for c in CUES if c[2] not in ("wind", "lap", "pop", "tick") and c[3] > 0]   # no HUD: no chip pops, no countdown ticks (user 31 ต.ค.)  # no noise beds (user: "เสียงซ่าๆเอาออก")
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
@@ -153,6 +174,8 @@ subprocess.run(["python3", os.path.join(HERE, "..", "synth.py"), os.path.join(HE
                check=True, env={**os.environ, "STEMS": "1"})
 sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
+for k, t0, name, g, *mx in SAMPLES:
+    place(sfx, smp(name, mx[0] if mx else None), T(k, t0), g)
 
 # ---- music with horror dips ----
 mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
