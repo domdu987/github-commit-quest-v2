@@ -412,5 +412,27 @@
    "x": 0,
    "y": 0
   }
+ },
+ {
+  "id": "sink-ep2",
+  "page": "sink-ep2/composition/index.html",
+  "out": "video/sink-ep2/cover.jpg",
+  "t": 3.3,
+  "series": "นาทีก่อนจม",
+  "ep": 2,
+  "epTitle": "ถ้ากระจกไม่ลง",
+  "setup": "กระจกรถ/[ไม่ลง]…",
+  "cmd": "อย่าทุบกระจกหน้า!",
+  "glow": "#2fb8a0",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.0,
+   "x": 540,
+   "y": 960
+  },
+  "shift": {
+   "x": 0,
+   "y": 0
+  }
  }
 ]

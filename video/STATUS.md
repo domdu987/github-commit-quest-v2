@@ -35,7 +35,8 @@
 - ประกอบ: `cat helpers.part kit.part kit2.part hands.part kit3.part body.part > shots.part && cat head.part sigcard.part shots.part foot.part > ep.tmpl.html && python3 make.py`
 - ผู้ใช้สั่ง 31 ต.ค.: "ผมแค่ให้เอาสูตรเดินเรื่องกับบทมา ไม่ได้ให้ทำอย่างอื่น" + "กฎพูดมาเฉยๆ ไม่ต้องบอกใครบอก" → ตัดป้าย HUD ทั้งหมด (ติ๊กถูก/กากบาท การ์ดตัวเลข วงนับถอยหลัง)
 - **EP.1 ส่งแล้ว** (31 ต.ค.): `video/sink-ep1/` (share + ปก) · HQ 1:02 60fps −14.0 LUFS ส่งให้ผู้ใช้แล้ว (ไม่อยู่ใน repo)
-- **EP.2 ถ้ากระจกไม่ลง:** ประกอบ + มิกซ์เสร็จ (`video/sink/ep2/`, 66.8 วิ, −14.0 LUFS) กำลังเรนเดอร์ · แคปชันอยู่ใน CAPTIONS.md แล้ว
+- **EP.2 ถ้ากระจกไม่ลง ส่งแล้ว** (31 ต.ค.): `video/sink-ep2/` (share + ปก) · HQ 1:07 60fps −14.0 LUFS · งาน: `video/sink/ep2/` · แคปชันใน CAPTIONS.md
+- EP.1 เรนเดอร์ใหม่อีกรอบ (ผู้ใช้ถาม "มอไซด์ต้องเป็นไง": เงาดำวงกลมสองลูก → มอเตอร์ไซค์ทรงเวฟจริงจาก `Mm.moto` + คนขี่ `rider` ตัดจากซอยขวา) ส่งตามเมื่อเสร็จ
   ประกอบ: `cat helpers.part kit.part kit2.part hands.part kit3.part cut.part ep2.part body.part > shots.part` แล้วต่อ head/sigcard/foot
 - ถัดไป: ส่ง EP.2 → EP.3 (ฮุก "ถ้าคนที่คุณรักยังอยู่ในน้ำ… อย่ากระโดดลงไปช่วย" · ตะโกน โยน ยื่น ต้องตรวจแหล่งก่อน) · ปล่อยทั้งซีรีส์คืนเดียว
 
