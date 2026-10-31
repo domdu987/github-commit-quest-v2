@@ -55,6 +55,7 @@
     <script src="assets/rabdog.js"></script>
     <script src="assets/rabcast.js"></script>
     <script src="assets/rabui.js"></script>
+    <script src="assets/rabfx.js"></script>
     <style>
       @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
       @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }

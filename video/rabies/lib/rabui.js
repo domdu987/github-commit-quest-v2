@@ -82,7 +82,7 @@
       <path d="M700,820C820,960 880,1100 880,1260" stroke="#b47a50" stroke-width="10" fill="none" opacity=".5" stroke-linecap="round"/>
       <path d="M560,1020C600,1060 640,1120 660,1190" stroke="#fff2dc" stroke-width="16" fill="none" opacity=".35" stroke-linecap="round"/>`;
     // the graze: red raw skin with scratch lines, a bead of blood; the plaster peeled half off, flapping
-    s += `<g transform="translate(760,1040) rotate(28)"><ellipse cx="0" cy="0" rx="86" ry="58" fill="#e88a7a" ${O(3)}/><ellipse cx="-4" cy="2" rx="64" ry="40" fill="#d0504a"/>
+    s += `<g transform="translate(760,1040) rotate(28)"><ellipse id="${id}-wg" cx="0" cy="0" rx="150" ry="110" fill="url(#rbWound)" opacity=".35"/><ellipse cx="0" cy="0" rx="86" ry="58" fill="#e88a7a" ${O(3)}/><ellipse cx="-4" cy="2" rx="64" ry="40" fill="#d0504a"/>
         ${[-40, -18, 6, 28].map((x) => `<path d="M${x - 20},-26L${x + 16},24" stroke="#a8282a" stroke-width="4" stroke-linecap="round"/>`).join("")}
         <circle cx="20" cy="18" r="9" fill="#b8202a"/><circle cx="17" cy="15" r="3" fill="#fff" opacity=".6"/></g>
       <g id="${id}-plaster"><g transform="translate(700,960) rotate(28)"><path d="M-120,-46H-10L-14,46H-120Q-138,0 -120,-46Z" fill="#f2c8a0" ${O(3.5)}/><rect x="-96" y="-26" width="64" height="52" rx="6" fill="#e8b488"/>
@@ -105,6 +105,7 @@
   };
   const RabUI = {};
   RabUI.lick = (tl, id, t0, dur, n = 3) => {
+    if (window.RabFX) RabFX.pulse(tl, `#${id}-wg`, t0, dur, 0.6, 0.15);
     tl.fromTo(`#${id}-muz`, { attr: { transform: "translate(420,-120)" } }, { attr: { transform: "translate(0,0)" }, duration: 0.45, ease: "power2.out", immediateRender: false }, t0);
     for (let k = 0; k < n; k++) {
       const a = t0 + 0.4 + k * ((dur - 0.6) / n);
@@ -281,7 +282,7 @@
   // the home dog meets a dog from outside (a fight over the fence) → the bite; and the herb poultice crossed out
   RabUI.homeDog = (tl, layer, t0, dur, o = {}) => {
     const id = "rh" + Math.round(t0 * 100), y = o.y ?? 520;
-    let s = `<rect x="70" y="-60" width="940" height="820" rx="34" fill="#fdfaf2" ${O(5)}/><rect x="70" y="-60" width="940" height="90" rx="34" fill="#c8402e"/><rect x="70" y="0" width="940" height="30" fill="#c8402e"/>
+    let s = `<rect x="70" y="-46" width="940" height="820" rx="34" fill="#b8a888" ${O(5)}/><rect x="70" y="-60" width="940" height="820" rx="34" fill="url(#rbSlabF)" ${O(5)}/><rect x="70" y="-60" width="940" height="90" rx="34" fill="#c8402e"/><rect x="70" y="0" width="940" height="30" fill="#c8402e"/>
       <text x="540" y="4" font-family="Kanit" font-weight="900" font-size="46" fill="#fff" text-anchor="middle">หมาเลี้ยง ก็ติดได้</text>
       <rect x="110" y="70" width="860" height="330" rx="20" fill="#e8f0d8" ${O(3)}/><path d="M540,90V380" stroke="#8a6a44" stroke-width="10" stroke-dasharray="4 26"/>
       <text x="300" y="380" font-family="Kanit" font-weight="700" font-size="28" fill="#4a6a2e" text-anchor="middle">หมาในบ้าน</text><text x="780" y="380" font-family="Kanit" font-weight="700" font-size="28" fill="#8a3a2a" text-anchor="middle">หมานอกบ้าน</text>
@@ -304,7 +305,7 @@
   // the race: a track from the bite to "symptoms"; the incubation can be as short as a week; the vaccine needle wins if it starts today
   RabUI.race = (tl, layer, t0, dur, o = {}) => {
     const id = "rq" + Math.round(t0 * 100), y = o.y ?? 560;
-    let s = `<rect x="70" y="-60" width="940" height="620" rx="34" fill="#fdfaf2" ${O(5)}/><rect x="70" y="-60" width="940" height="90" rx="34" fill="#2e6a8a"/><rect x="70" y="0" width="940" height="30" fill="#2e6a8a"/>
+    let s = `<rect x="70" y="-46" width="940" height="620" rx="34" fill="#b8a888" ${O(5)}/><rect x="70" y="-60" width="940" height="620" rx="34" fill="url(#rbSlabF)" ${O(5)}/><rect x="70" y="-60" width="940" height="90" rx="34" fill="#2e6a8a"/><rect x="70" y="0" width="940" height="30" fill="#2e6a8a"/>
       <text x="540" y="4" font-family="Kanit" font-weight="900" font-size="46" fill="#fff" text-anchor="middle">แข่งกับเวลา</text>
       <path d="M150,230H930" stroke="#c8c0aa" stroke-width="18" stroke-linecap="round"/><path id="${id}-bar" d="M150,230H930" stroke="#e2382e" stroke-width="18" stroke-linecap="round" stroke-dasharray="780" stroke-dashoffset="780"/>
       <g transform="translate(150,230)"><circle r="34" fill="#ffd2c8" ${O(3)}/><text y="12" font-family="Kanit" font-weight="900" font-size="30" fill="#c8282a" text-anchor="middle">กัด</text></g>
@@ -312,14 +313,16 @@
       <path d="M330,190V215" stroke="${INK}" stroke-width="4"/>
       <g transform="translate(800,150)"><rect x="-120" y="-40" width="240" height="66" rx="14" fill="#efe8da" ${O(3)}/><text y="6" font-family="Kanit" font-weight="900" font-size="30" fill="#5a5048" text-anchor="middle">นานเกิน 1 ปี</text></g>
       <g transform="translate(930,230)"><circle r="40" fill="#2a1c18" ${O(3)}/><text y="10" font-family="Kanit" font-weight="900" font-size="24" fill="#fff" text-anchor="middle">อาการ</text></g>
-      <g id="${id}-v" opacity="0" transform="translate(0,0)"><g transform="translate(260,350)"><rect x="-30" y="-14" width="120" height="28" rx="8" fill="#9ad0f0" ${O(3)}/><path d="M90,0h60" stroke="${INK}" stroke-width="5"/><rect x="-60" y="-8" width="30" height="16" fill="#c8ccd2" ${O(2)}/></g>
+      <g id="${id}-v" opacity="0" transform="translate(0,0)">${window.RabFX ? RabFX.coin("syringe", 120, 290, 0.9, id + "-cs") : ""}<g transform="translate(260,350)"><rect x="-30" y="-14" width="120" height="28" rx="8" fill="#9ad0f0" ${O(3)}/><path d="M90,0h60" stroke="${INK}" stroke-width="5"/><rect x="-60" y="-8" width="30" height="16" fill="#c8ccd2" ${O(2)}/></g>
         <text x="560" y="362" font-family="Kanit" font-weight="900" font-size="38" fill="#1e7a48">ฉีดวัคซีน วันนี้เลย</text></g>
       <g id="${id}-dead" opacity="0"><text x="540" y="480" font-family="Kanit" font-weight="900" font-size="44" fill="#c8282a" text-anchor="middle">มีอาการแล้ว = ตายเกือบทุกราย</text></g>`;
     put(layer, `<g id="${id}" transform="translate(0,${y})" opacity="0">${s}</g>`);
     tl.set(`#${id}`, { opacity: 0 }, 0);
     tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
     tl.to(`#${id}-bar`, { attr: { "stroke-dashoffset": 0 }, duration: 1.6, ease: "power1.in" }, t0 + 0.4);
-    tl.fromTo(`#${id}-v`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.9);
+    tl.fromTo(`#${id}-v`, { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.45, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.9);
+    if (window.RabFX) { QkUI.iconPop(tl, document.getElementById(id + "-cs"), t0 + 0.9); RabFX.life(tl, document.getElementById(id + "-cs"), t0 + 1.6, dur); }
+    tl.fromTo(`#${id}-dead`, { scale: 1 }, { scale: 1.06, transformOrigin: "50% 50%", duration: 0.4, repeat: Math.ceil(dur / 0.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (o.deadAt ?? 2.6) + 0.3);
     tl.fromTo(`#${id}-dead`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + (o.deadAt ?? 2.6));
     if (o.out !== false) tl.to(`#${id}`, { opacity: 0, duration: 0.25 }, t0 + dur - 0.25);
   };

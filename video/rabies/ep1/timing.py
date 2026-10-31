@@ -24,10 +24,9 @@ SHOTS = [
     ("cmd", ["n02"], 0.05, 0.1, 1.4),           # closer: ภูมิ reaches to pick it up — the command in red
     ("knee", [], 0, 0, 1.3),                     # insert: the puppy licks the graze on his knee (the planted mistake, ~0:04)
     ("clock", ["n03"], 0.15, 0.25, 2.6),         # the rooster clock on the post spins back: three days earlier · then the map
-    ("map", [], 0, 0, 2.0),                      # กรุงเทพฯ → บ้านโนนหมาก by van
     ("arrive", ["r01"], 0.2, 0.3, 2.6),          # the yard: แพร off the van, dogs everywhere
     ("yai", ["y01"], 0.15, 0.3, 2.6),            # ยายบัว and ไอ้ดำ running to her
-    ("legend", ["n04", "n05"], 0.2, 0.4, 5.6),   # the shadow screen: the four-eyed dog under the house, a spirit beside it
+    ("legend", ["n04", "n05"], 0.2, 0.4, 5.6),   # dusk under the house: ไอ้ดำ lies in the dark gap, its eyes catch the light; ยาย tells the kids
     ("rule", ["y02"], 0.15, 0.5, 3.0),           # ยาย points; the zinc rule board, rule 1
     ("hug", ["p01"], 0.15, 0.3, 2.8),            # ภูมิ hugs the puppy anyway
     ("age", ["n06", "n07"], 0.15, 0.4, 5.0),     # card: puppies 2–6 months
@@ -38,7 +37,6 @@ SHOTS = [
     ("rw", ["n11", "n12"], 0.15, 0.4, 3.6),      # the tape rewinds to 0:04
     ("lick", ["n13"], 0.1, 0.4, 3.4),            # the knee insert again, the graze ringed red
     ("night", ["n14"], 0.15, 0.5, 3.0),          # night: ไอ้ดำ drives the puppy out into the dark; eyes, a snarl
-    ("morn", ["p03"], 0.2, 0.4, 2.4),            # morning: ภูมิ by the empty bowl
     ("ear", ["n15"], 0.15, 0.6, 2.8),            # close: the bite on ไอ้ดำ's ear; nobody sees it
     ("choice", [], 0, 0, 3.2),                   # tell ยาย / keep quiet — pulled to "keep quiet"
     ("next", [], 0, 0, 3.4),                     # the ระวังสุนัข board + the note for EP.2

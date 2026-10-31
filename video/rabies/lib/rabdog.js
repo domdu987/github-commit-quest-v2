@@ -36,24 +36,34 @@
   };
   PLAN.pupS = PLAN.pup;
 
+  // a leg is fill-only shapes with ink only on its outer edges (no seam where it meets the body or at the knee): the upper part
+  // overlaps the body and its edge lines start below the belly line; the lower part starts under the upper part's rounded end
   const legSvg = (id, k, P, c, far) => {
-    const fill = far ? c.coatD : c.coat, w = P.legW, back = k % 2 === 1, lw = w * 0.4;
+    const fill = far ? c.coatD : c.coat, w = P.legW, back = k % 2 === 1, lw = w * 0.42, U = P.up, Lo = P.lo;
     const sockC = c === PAL.dam ? (far ? "#8a5a32" : c.tan) : (far ? c.coatD : c.coatL);
-    // upper: front = a tapered capsule, back = a thick thigh; both with rounded ends that overlap the body and the joint (no seam lines)
+    const edge = (d, wd = 2.6) => `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${wd}" stroke-linecap="round" stroke-linejoin="round"/>`;
+    // upper: a thigh (back) or a forearm (front), wide at the top so it melts into the body
     const up = back
-      ? `M${-w * 0.95},-14C${-w * 1.2},${P.up * 0.45} ${-w * 0.5},${P.up + w * 0.5} ${0},${P.up + lw}C${lw * 1.6},${P.up + lw} ${w * 0.8},${P.up * 0.5} ${w * 0.75},-10C${w * 0.6},-24 ${-w * 0.7},-26 ${-w * 0.95},-14Z`
-      : `M${-w * 0.55},-12C${-w * 0.62},${P.up * 0.5} ${-lw * 1.1},${P.up} ${-lw},${P.up}C${-lw},${P.up + lw * 1.2} ${lw},${P.up + lw * 1.2} ${lw},${P.up}C${lw * 1.1},${P.up * 0.6} ${w * 0.62},${P.up * 0.3} ${w * 0.55},-12C${w * 0.4},-22 ${-w * 0.4},-22 ${-w * 0.55},-12Z`;
-    const lo = `M${-lw},0C${-lw},${-lw * 1.1} ${lw},${-lw * 1.1} ${lw},0L${lw * 0.85},${P.lo - 6}L${-lw * 0.85},${P.lo - 6}Z`;
-    const paw = `M${-lw * 1.1},${P.lo - 7}Q${-lw * 1.3},${P.lo + 3} ${-lw * 0.5},${P.lo + 3}L${lw * 2.1},${P.lo + 3}Q${lw * 2.9},${P.lo + 2} ${lw * 2.3},${P.lo - 6}Q${lw * 1.2},${P.lo - 11} ${-lw * 1.1},${P.lo - 7}Z`;
-    const toes = `<path d="M${f(lw * 0.7)},${f(P.lo - 1)}v4M${f(lw * 1.5)},${f(P.lo - 2)}v5" stroke="${INK}" stroke-width="1.6" opacity=".55"/>`;
+      ? `M${-w * 1.3},-30C${-w * 1.5},${U * 0.45} ${-w * 0.7},${U + lw} 0,${U + lw * 1.1}C${lw * 1.6},${U + lw} ${w},${U * 0.5} ${w * 1.05},-28Z`
+      : `M${-w * 0.8},-30C${-w * 0.75},${U * 0.5} ${-lw * 1.15},${U} ${-lw * 1.05},${U + lw * 0.4}C${-lw},${U + lw * 1.4} ${lw},${U + lw * 1.4} ${lw * 1.05},${U + lw * 0.4}C${lw * 1.2},${U * 0.6} ${w * 0.8},${U * 0.3} ${w * 0.8},-30Z`;
+    const upEdge = back
+      ? `M${-w * 1.38},${U * 0.18}C${-w * 1.3},${U * 0.6} ${-w * 0.7},${U + lw} 0,${U + lw * 1.1}C${lw * 1.6},${U + lw} ${w * 0.95},${U * 0.55} ${w * 1.02},${U * 0.3}`
+      : `M${-w * 0.74},${U * 0.3}C${-w * 0.7},${U * 0.6} ${-lw * 1.15},${U} ${-lw * 1.05},${U + lw * 0.4}M${lw * 1.05},${U + lw * 0.4}C${lw * 1.2},${U * 0.6} ${w * 0.78},${U * 0.45} ${w * 0.8},${U * 0.3}`;
+    const fur = back ? `<path d="M${-w * 1.3},${U * 0.55}l-7,4l6,3l-6,6l8,0" fill="${fill}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>` : "";
+    const lo = `M${-lw},${-lw * 0.6}L${-lw * 0.9},${Lo - 4}L${lw * 0.9},${Lo - 4}L${lw},${-lw * 0.6}Z`;
+    const loEdge = `M${-lw},${lw * 0.2}L${-lw * 0.9},${Lo - 4}M${lw * 0.9},${Lo - 4}L${lw},${lw * 0.2}`;
+    const paw = `M${-lw * 1.1},${Lo - 7}Q${-lw * 1.3},${Lo + 3} ${-lw * 0.5},${Lo + 3}L${lw * 2.1},${Lo + 3}Q${lw * 2.9},${Lo + 2} ${lw * 2.3},${Lo - 6}Q${lw * 1.2},${Lo - 11} ${-lw * 1.1},${Lo - 7}Z`;
+    const toes = `<path d="M${f(lw * 0.7)},${f(Lo - 1)}v4M${f(lw * 1.5)},${f(Lo - 2)}v5" stroke="${INK}" stroke-width="1.6" opacity=".55"/>`;
     return `<g id="${id}-leg${k}" transform="rotate(0)">
-      <g transform="translate(0,${P.up})"><g id="${id}-knee${k}" transform="rotate(0)">
-        <path d="${lo}" fill="${fill}" ${ln(2.4)}/>
-        <path d="M${-lw * 0.9},${P.lo * 0.6}L${lw * 0.9},${P.lo * 0.6}L${lw * 0.86},${P.lo - 6}L${-lw * 0.86},${P.lo - 6}Z" fill="${sockC}"/>
-        <path d="${paw}" fill="${sockC}" ${ln(2.4)}/>${toes}
+      <g transform="translate(0,${U})"><g id="${id}-knee${k}" transform="rotate(0)">
+        <path d="${lo}" fill="${fill}"/>${edge(loEdge, 2.4)}
+        <path d="M${-lw * 0.92},${Lo * 0.58}L${lw * 0.92},${Lo * 0.58}L${lw * 0.88},${Lo - 4}L${-lw * 0.88},${Lo - 4}Z" fill="${sockC}"/>
+        <path d="M${-lw * 0.92},${Lo * 0.58}l4,-5l4,5l4,-5l4,5" fill="${sockC}" stroke="none"/>
+        <path d="${paw}" fill="${sockC}" stroke="${INK}" stroke-width="2.4" stroke-linejoin="round"/>${toes}
       </g></g>
-      <path d="${up}" fill="${fill}" ${ln(2.6)}/>
-      ${!far ? `<path d="M${-w * 0.25},2Q${-w * 0.3},${P.up * 0.55} ${-lw * 0.3},${P.up - 2}" stroke="${c.coatL}" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".45"/>` : ""}</g>`;
+      <path d="${up}" fill="${fill}"/>${edge(upEdge)}${fur}
+      ${!far ? `<path d="M${-w * 0.3},${U * 0.25}Q${-w * 0.4},${U * 0.6} ${-lw * 0.3},${U - 4}" stroke="${c.coatL}" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".4"/>
+        <path d="M${w * 0.5},${U * 0.2}Q${w * 0.6},${U * 0.6} ${lw * 0.8},${U}" stroke="${c.coatD}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".35"/>` : ""}</g>`;
   };
 
   const headSvg = (id, kind, c, o) => {
@@ -113,12 +123,22 @@
     const ribs = kind === "pupS" ? `<path d="M-14,-70q6,10 0,20M-2,-72q6,10 0,20M10,-72q6,10 0,20" stroke="${c.coatD}" stroke-width="2.4" fill="none" opacity=".8"/>` : (kind === "pup" ? `<path d="M-8,-70q5,9 0,17M4,-71q5,9 0,17" stroke="${c.coatD}" stroke-width="2" fill="none" opacity=".55"/>` : "");
     const sheen = pup ? `<path d="M-50,-98Q0,-112 50,-96" stroke="${c.coatL}" stroke-width="6" fill="none" stroke-linecap="round" opacity=".55"/>`
       : `<path d="M-96,-176Q-30,-196 60,-178" stroke="${c.coatL}" stroke-width="9" fill="none" stroke-linecap="round" opacity=".5"/><path d="M-60,-110Q0,-100 50,-110" stroke="${c.coatD}" stroke-width="7" fill="none" opacity=".6"/>`;
-    return `<path d="${torso}" fill="${c.coat}" ${ln(3)}/>${chest}${saddle}${ribs}${sheen}`;
+    const tufts = pup
+      ? `<path d="M48,-60l8,6l-1,-9l9,5l-2,-9l8,3" fill="${c.coat}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M-30,-50l3,7l4,-6l4,7l4,-6l4,6" fill="${c.coat}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>`
+      : `<path d="M86,-112l10,8l-2,-11l11,6l-3,-11l10,4" fill="${c.tan}" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/><path d="M-40,-98l4,9l5,-8l5,9l5,-8l5,8l5,-8" fill="${c.coat}" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+         <path d="M70,-186l6,-10l3,9l7,-9l2,10" fill="${c.coat}" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>`;
+    const cy = pup ? -80 : -146;
+    return `<g id="${id}-chest" transform="scale(1,1)" data-cy="${cy}"><path d="${torso}" fill="${c.coat}" ${ln(3)}/>${chest}${saddle}${ribs}${sheen}${tufts}</g>`;
   };
 
-  const tailSvg = (id, kind, c) => kind === "dam"
-    ? `<g id="${id}-tail" transform="rotate(0)"><path d="M0,0C-24,-10 -40,-36 -38,-70Q-30,-80 -24,-70C-26,-44 -14,-22 6,-12Z" fill="${c.coat}" ${ln(2.6)}/><path d="M-36,-66Q-32,-76 -26,-70" stroke="${c.tan}" stroke-width="4" fill="none"/></g>`
-    : `<g id="${id}-tail" transform="rotate(0)"><path d="M0,0C-14,-6 -24,-22 -22,-42Q-16,-48 -12,-42C-14,-26 -6,-14 4,-8Z" fill="${kind === "pup" ? c.tan : c.coatD}" ${ln(2.2)}/></g>`;
+  const tailSvg = (id, kind, c) => {
+    const dam = kind === "dam", col = dam ? c.coat : (kind === "pup" ? c.tan : c.coatD), L1 = dam ? 38 : 22, w = dam ? 13 : 8;
+    const seg = (L, w0, w1) => `M${-w0},0C${-w0},${-L * 0.5} ${-w1},${-L} 0,${-L - w1 * 0.6}C${w1},${-L} ${w0},${-L * 0.5} ${w0},0Z`;
+    const tip = dam ? `<path d="M-6,-34l-4,-12l7,6l2,-12l5,11l5,-9l-1,13Z" fill="${c.tan}" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>` : `<path d="M-4,-20l-3,-8l5,4l1,-8l4,7l3,-6l-1,9Z" fill="${col}" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`;
+    return `<g id="${id}-tail" transform="rotate(0)"><g transform="rotate(-30)"><path d="${seg(L1, w, w * 0.8)}" fill="${col}" ${ln(2.6)}/>
+      <g transform="translate(0,${-L1 + 2})"><g id="${id}-tail2" transform="rotate(0)"><path d="${seg(L1 * 0.95, w * 0.82, w * 0.5)}" fill="${col}" ${ln(2.4)}/>${tip}</g></g>
+      <path d="M${-w * 0.7},-4C${-w * 0.7},${-L1 * 0.6} ${-w * 0.5},${-L1} ${-w * 0.3},${-L1 - 2}" fill="none" stroke="${col}" stroke-width="${w * 0.8}"/></g></g>`;
+  };
 
   const Dog = {};
   const POS = {}, DK = {};   // where each dog stands, in build order: Dog.svg sets it, each drive moves it on (so seeking back is exact)
@@ -150,8 +170,8 @@
   const MODES = {
     idle: (u) => ({ ...rest(), dy: 1.5 * S(u * 3), head: 2 * S(u * 1.3), tail: 10 * S(u * 2.2) - 10 }),
     wag: (u) => ({ ...rest(), dy: 3 * Math.abs(S(u * 7)), head: -6 + 5 * S(u * 7), tail: 28 * S(u * 16) - 22, tongue: 1, jaw: 10 }),
-    walk: (u) => ({ ...rest(), dy: 3 * Math.abs(S(u * 6)), legs: walkLegs(u * 6), head: 3 * S(u * 6), tail: 8 * S(u * 6) - 14 }),
-    trot: (u) => ({ ...rest(), dy: 5 * Math.abs(S(u * 10)), legs: walkLegs(u * 10, 30, 40), head: 4 * S(u * 10), tail: 14 * S(u * 10) - 24, tongue: 1, jaw: 12 }),
+    walk: (u) => ({ ...rest(), dy: 4 - 4 * Math.abs(S(u * 6)), rot: 1.2 * S(u * 6), legs: walkLegs(u * 6), head: -2 * S(u * 12), tail: 10 * S(u * 6) - 14 }),
+    trot: (u) => ({ ...rest(), dy: 6 - 7 * Math.abs(S(u * 10)), rot: 2 * S(u * 10), legs: walkLegs(u * 10, 30, 40), head: -4 * S(u * 20), tail: 16 * S(u * 10) - 24, tongue: 1, jaw: 12 }),
     sniff: (u) => ({ ...rest(), head: 34 + 6 * S(u * 9), legs: [[-6, 6], [4, 0], [-6, 6], [4, 0]], tail: 6 * S(u * 3) - 8 }),
     lick: (u, o) => { const r = o.rate || 2.4, k = Math.max(0, S(u * r * 2 * PI)); return { ...rest(), head: 30 + 4 * k, jaw: 14 * k, tongue: k, tail: 18 * S(u * 9) - 18, legs: [[-6, 6], [4, 0], [-6, 6], [4, 0]] }; },
     growl: (u) => { const j = 1.4 * S(u * 31); return { ...rest(), head: 16 + j, rot: 3, dy: 8, lip: 1, jaw: 4 + 2 * S(u * 23), tail: -36 + j, ear: -14, legs: [[-10, 10], [8, -6], [-10, 10], [8, -6]] }; },
@@ -184,7 +204,7 @@
       u: dur, duration: dur, ease: "none", immediateRender: false,
       onUpdate() {
         if (!els) {
-          els = {}; ["body", "head", "jaw", "tail", "eye", "glow", "tongue", "drool", "lip", "ear"].forEach((k) => (els[k] = document.getElementById(id + "-" + k)));
+          els = {}; ["body", "head", "jaw", "tail", "tail2", "chest", "eye", "glow", "tongue", "drool", "lip", "ear"].forEach((k) => (els[k] = document.getElementById(id + "-" + k)));
           for (let i = 0; i < 4; i++) { els["l" + i] = document.getElementById(id + "-leg" + i); els["k" + i] = document.getElementById(id + "-knee" + i); }
         }
         if (!root()) return;
@@ -199,8 +219,13 @@
         els.body && els.body.setAttribute("transform", `translate(0,${f(P.dy)}) rotate(${f(P.rot)},${f(PV[0] * (P.pv || 0))},${f(PV[1] * (P.pv || 0))})`);
         els.head && els.head.setAttribute("transform", `rotate(${f(P.head)})`);
         els.jaw && els.jaw.setAttribute("transform", `rotate(${f(P.jaw)})`);
+        // secondary motion: the tail tip and the ears lag the body (follow-through), the chest breathes
+        const Q = fn(Math.max(0, u - 0.09), o), lagT = Math.max(-45, Math.min(45, (Q.tail - P.tail) * 1.5)), lagE = Math.max(-30, Math.min(30, (Q.head - P.head) * 1.6 + (Q.dy - P.dy) * 1.2));
+        const floppy = DK[id] === "dam" ? 0.35 : 1;
         els.tail && els.tail.setAttribute("transform", `rotate(${f(P.tail)})`);
-        els.ear && els.ear.setAttribute("transform", `rotate(${f(P.ear)},30,-60)`);
+        els.tail2 && els.tail2.setAttribute("transform", `rotate(${f(lagT + 4 * S(u * 2.1))})`);
+        els.ear && els.ear.setAttribute("transform", `rotate(${f(P.ear + lagE * floppy + 3 * floppy * S(u * 1.7))},30,-60)`);
+        if (els.chest) { const cy = +els.chest.dataset.cy, br = 1 + (mode === "trot" || mode === "lunge" ? 0.035 : 0.018) * S(u * (mode === "trot" ? 9 : 2.6)); els.chest.setAttribute("transform", `translate(0,${f(cy * (1 - br))}) scale(1,${br.toFixed(4)})`); }
         els.tongue && els.tongue.setAttribute("opacity", f(P.tongue));
         els.lip && els.lip.setAttribute("opacity", f(P.lip));
         if (P.drool != null && els.drool) els.drool.setAttribute("opacity", f(P.drool));

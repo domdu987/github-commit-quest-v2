@@ -80,8 +80,7 @@ exec(open(os.path.join(HERE, "..", "samples_inc.py")).read())
 REPLACED = set()
 CUES = [
     ("hook", 0.0, "swell", 0.24), ("cmd", 0.05, "sting", 0.42), ("knee", 0.1, "whoosh", 0.2),
-    ("clock", 0.1, "rewind", 0.3), ("map", 0.1, "whoosh", 0.22), ("map", 1.3, "ding", 0.2),
-    ("legend", 0.0, "swell", 0.2), ("rule", vo_end("rule") + 0.4, "whoosh", 0.25), ("rule", vo_end("rule") + 1.0, "ding", 0.2),
+    ("clock", 0.1, "rewind", 0.3), ("legend", 0.0, "swell", 0.2), ("legend", 3.6, "sting", 0.25), ("rule", vo_end("rule") + 0.4, "whoosh", 0.25), ("rule", vo_end("rule") + 1.0, "ding", 0.2),
     ("age", 0.1, "whoosh", 0.25), ("age", 1.3, "ding", 0.2), ("saliva", 0.1, "whoosh", 0.25), ("saliva", 1.0, "ding", 0.2),
     ("sick", 0.1, "swell", 0.2), *beats("sick", 0.3, D["sick"] - 0.3, 0.6, 0.3), ("pull", 0.0, "sting", 0.28),
     ("rw", vo_t("rw", 1) - 0.8, "sting", 0.32), ("lick", vo_end("lick") - 0.4, "sting", 0.4),
@@ -99,8 +98,8 @@ SAMPLES = [
     ("sick", 0.0, "pupwhine", 0.4), ("pull", 0.0, "nightvil", 0.25, 4.6),
     ("lick", 0.1, "puplick", 0.8), ("rw", vo_t("rw", 1) - 0.8, "rewind", 0.8),
     ("night", 0.0, "nightvil", 0.4, 3.6), ("night", 0.0, "growl", 0.9), ("night", 1.25, "dogfight", 0.95), ("night", 2.4, "yelp", 0.7),
-    ("morn", 0.0, "rooster", 0.6), ("morn", 0.2, "daybed", 0.3, 2.8), ("ear", 0.0, "daybed", 0.25, 3.3), ("ear", 0.4, "dogpant", 0.4),
-    ("choice", 0.0, "nightvil", 0.25, 3.2), ("choice", D["choice"] - 1.4, "growl", 0.7),
+    ("ear", 0.0, "daybed", 0.25, 3.3), ("ear", 0.4, "dogpant", 0.4),
+    ("choice", 0.0, "nightvil", 0.25, 3.2), ("legend", 0.0, "nightvil", 0.3, 7.2), ("legend", 4.2, "growl", 0.35), ("choice", D["choice"] - 1.4, "growl", 0.7),
 ]
 
 

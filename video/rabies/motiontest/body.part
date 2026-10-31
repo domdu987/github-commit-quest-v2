@@ -1,0 +1,54 @@
+      // ---------- หมาดำตาสี่ EP.1 อย่าอุ้มมัน ----------
+      // grammar: morning yard (lure, wide→close→insert) · clock back · map · arrival (wide) · ยาย+ไอ้ดำ (medium) · shadow legend · rule board ·
+      // hug (medium close) · cards (puppies 2–6 months, saliva) · dusk: the sick puppy · pull back · shrug · rewind → the knee · night (dark, eyes) ·
+      // morning (empty bowl) · close on the ear · choice · end board
+      // the planted mistake: at 0:04 the puppy licks the graze on ภูมิ's knee (insert "knee"); revealed at "rw" / "lick"
+      const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.55, shade: "#2a2040", shadeOp: 0.3, cast: false, vol: false };
+      const DUSKL = { from: "left", rim: "#ffb070", rimOp: 0.6, shade: "#2a1838", shadeOp: 0.36, cast: false, vol: false };
+      const MOONL = { from: "right", rim: "#a8c8ff", rimOp: 0.5, shade: "#0a0e1e", shadeOp: 0.5, cast: false, vol: false };
+      const GDAYR = { top: "#fff4d8", bottom: "#c8e8d0", op: 0.12 }, GDUSKR = { top: "#ffb878", bottom: "#4a2a5a", op: 0.2 }, GNITE = { top: "#1a2a4a", bottom: "#05060a", op: 0.3 };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const TALK = (k, i, m = "o") => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      const CARD = { dark: 0.12, blur: { far: 8, mid: 8, set: 8, fg: 10 }, light: DAYL, grade: GDAYR };
+      const still = (x, y, s, sx = 540, sy = 1100) => ({ keys: [{ t: 0, ...fr(x, y, s, sx, sy), drift: { s: 0 } }] });
+      const push = (k, a, b) => ({ keys: [{ t: 0, ...fr(...a) }, { t: D(k), glide: D(k), ...fr(...b) }] });
+
+      // ---------- motion test (V11): the dogs, three cards, the heavy effects ----------
+      add("mt1", {
+        set: "rabTitle", setOpts: { id: "m1", ep: "EP.1 อย่าอุ้มมัน" }, dark: 0, blur: { far: 2, fg: 9 }, light: DAYL, grade: GDAYR,
+        cam: { keys: [{ t: 0, ...fr(600, 1250, 1.05, 540, 1050) }, { t: 2.6, glide: 2.6, ...fr(520, 1350, 1.3, 540, 1050) }, { t: 5.6, glide: 3.0, ...fr(560, 1420, 1.5, 540, 1050) }] },
+        actors: [A("phumRice", 300, 1660, 0.95, [{ t: 0, mode: "offer", eyes: "normal", mouth: "smile" }, { t: 3.0, mode: "offer", eyes: "normal", mouth: "laugh" }])],
+        fx(tl, id, t0, L) {
+          RabFX.motes(tl, L.glow, t0, 5.6, { box: [100, 500, 800, 900], n: 30 });
+          put(L.act, Dog.svg({ id: "m1d", kind: "dam", x: -200, y: 1560, s: 0.75 }) + Dog.svg({ id: "m1p", kind: "pup", x: 1150, y: 1680, s: 1.7, flip: true }));
+          Dog.drive(tl, "m1d", t0, 4.0, "walk", { to: 260 }); Dog.drive(tl, "m1d", t0 + 4.0, 1.6, "idle");
+          Dog.drive(tl, "m1p", t0, 1.8, "trot", { to: 600, ease: (v) => 1 - (1 - v) * (1 - v) }); Dog.drive(tl, "m1p", t0 + 1.8, 1.3, "wag"); Dog.drive(tl, "m1p", t0 + 3.1, 2.5, "lick", { rate: 2.2 });
+          put(L.fg, `<g opacity=".9"><path d="M-80,1920Q-20,1500 60,1380Q90,1560 40,1920Z" fill="#3a6a2a"/><path d="M1100,1920Q1060,1560 980,1440Q940,1620 1000,1920Z" fill="#2e5a22"/></g>`);
+        },
+      });
+      add("mt2", { set: "village2", setOpts: { id: "m2", time: "day" }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 3.8, glide: 3.8, ...fr(560, 1200, 1.06, 540, 1100) }] },
+        fx(tl, id, t0, L) { RabUI.rules(tl, L.light, t0 + 0.1, 3.7, { active: 1, done: [0], y: 640, tickAt: 0.6, writeAt: 1.0 }); } });
+      add("mt3", { set: "village2", setOpts: { id: "m3", time: "day" }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 4.2, glide: 4.2, ...fr(520, 1200, 1.06, 540, 1100) }] },
+        fx(tl, id, t0, L) { RabUI.saliva(tl, L.light, t0 + 0.1, 4.1, { y: 470, badAt: 2.6 }); } });
+      add("mt4", { set: "village2", setOpts: { id: "m4", time: "dusk", house: [-60, 1.5] }, ...CARD, light: DUSKL, grade: GDUSKR, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 3.6, glide: 3.6, ...fr(540, 1200, 1.05, 540, 1100) }] },
+        fx(tl, id, t0, L) {
+          RabFX.motes(tl, L.glow, t0, 3.6, { kind: "fly", box: [0, 900, 1080, 900], n: 16, seed: 5 });
+          QkUI.choice(tl, L.light, t0, 3.6, { q: "ดิวจะทำยังไง?", a: { text: "บอกยาย", icon: "tell" }, b: { text: "ไม่บอก", icon: "shh" }, secs: 3, pick: "b", pickAt: 2.0, mark: { at: 2.4, wrong: "b" } });
+          RabFX.flash(tl, t0 + 2.6, "#ff2a1a", 0.3);
+        } });
+      add("mt5", {
+        set: "village2", setOpts: { id: "m5", time: "night", house: [-60, 1.5] }, dark: 0.3, blur: { far: 2, fg: 9 }, light: MOONL, grade: GNITE,
+        cam: { keys: [{ t: 0, ...fr(560, 1450, 1.25, 540, 1100) }, { t: 3.8, glide: 2.8, ...fr(380, 1350, 1.9, 540, 1000) }] },
+        shake: (t) => (t > 2.3 && t < 2.7 ? { x: 8 * Math.sin(t * 50), y: 5 * Math.sin(t * 43), r: 0 } : 0),
+        fx(tl, id, t0, L) {
+          QkUI.rewind(tl, L.light, t0, 0.9, { from: "0:12", to: "0:04" });
+          RabFX.motes(tl, L.glow, t0, 3.8, { kind: "fly", box: [0, 800, 1080, 900], n: 18, seed: 9 });
+          put(L.act, Dog.svg({ id: "m5d", kind: "dam", x: 300, y: 1640, s: 1.1 }));
+          put(L.glow, Dog.svg({ id: "m5e", kind: "dam", x: 300, y: 1640, s: 1.1, glow: true, eyesOnly: true }));
+          ["m5d", "m5e"].forEach((d) => { Dog.drive(tl, d, t0, 2.2, "growl", { glow: d === "m5e" }); Dog.drive(tl, d, t0 + 2.2, 0.5, "lunge", { to: 520, glow: d === "m5e" }); Dog.drive(tl, d, t0 + 2.7, 1.1, "bark", { beats: [0.15, 0.55], glow: d === "m5e" }); });
+          tl.set("#m5e", { opacity: 1 }, 0);
+          RabFX.flash(tl, t0 + 2.35, "#ffffff", 0.25);
+          RabFX.drool(tl, L.glow, 470, 1450, t0 + 0.3, 2.0, 1.1);
+        },
+      });
