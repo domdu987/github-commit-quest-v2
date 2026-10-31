@@ -1,0 +1,34 @@
+[
+ {
+  "id": "hornet-ep1",
+  "page": "hornet-ep1/composition/index.html",
+  "out": "video/hornet-ep1/cover.jpg",
+  "t": 47.4,
+  "series": "ต่อหัวเสือ",
+  "ep": 1,
+  "epTitle": "ต่อรุม อย่าลงน้ำ",
+  "finale": false,
+  "setup": "ฝูงต่อรุมคุณ/ข้าง[สระน้ำ]",
+  "cmd": "อย่ากระโดดลงน้ำ!",
+  "glow": "#f0a020",
+  "hideLight": true,
+  "zoom": { "s": 1.0, "x": 540, "y": 900 },
+  "shift": { "x": 0, "y": 0 }
+ },
+ {
+  "id": "hornet-ep2",
+  "page": "hornet-ep2/composition/index.html",
+  "out": "video/hornet-ep2/cover.jpg",
+  "t": 3.6,
+  "series": "ต่อหัวเสือ",
+  "ep": 2,
+  "epTitle": "อย่าเพิ่งเชื่อคำว่าไม่เป็นไร",
+  "finale": true,
+  "setup": "ตาบอกคุณว่า/[ไม่เป็นไร]",
+  "cmd": "อย่าเพิ่งเชื่อ!",
+  "glow": "#f0a020",
+  "hideLight": true,
+  "zoom": { "s": 1.0, "x": 540, "y": 900 },
+  "shift": { "x": 0, "y": 0 }
+ }
+]
