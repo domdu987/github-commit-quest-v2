@@ -126,7 +126,7 @@
       <rect x="-150" y="-70" width="300" height="70" fill="#e8d8b8" ${O(3)}/><text x="0" y="-26" font-family="Kanit" font-weight="900" font-size="34" fill="#c8402e" text-anchor="middle">ส้มตำ</text>
       <g transform="translate(-60,-96)"><path d="M-28,0Q-30,24 0,26Q30,24 28,0Z" fill="#8a6a4a" ${O(2.5)}/><path d="M6,-2L30,-40" stroke="#c8a87a" stroke-width="8" stroke-linecap="round"/></g></g>`;
     let flags = ""; for (let k = 0; k < 14; k++) flags += `<path d="M${-200 + k * 90},${G - 520 + Math.sin(k) * 10}l30,0l-15,34Z" fill="${["#e2483c", "#ffd23a", "#2fa864", "#2f6fd0"][k % 4]}" ${O(1.6)}/>`;
-    s += `<path d="M-220,${G - 520}Q500,${G - 470} 1300,${G - 520}" stroke="#5a4a3a" stroke-width="3" fill="none"/>${flags}`;
+    if (o.flags !== false) s += `<path d="M-220,${G - 520}Q500,${G - 470} 1300,${G - 520}" stroke="#5a4a3a" stroke-width="3" fill="none"/>${flags}`;
     if (o.parcel) s += `<g transform="translate(${o.parcelX ?? 420},${G + 40})"><g id="${id}-parcel"><rect x="-70" y="-90" width="140" height="90" rx="6" fill="#c8a06a" ${O(3.5)}/><path d="M-70,-50H70M0,-90V0" stroke="#8a6a3a" stroke-width="6"/>
       <rect x="-50" y="-80" width="60" height="30" fill="#fdfaf2" ${O(2)}/><path d="M-44,-70h44M-44,-60h30" stroke="#8a8a8a" stroke-width="2.4"/></g></g>`;
     put(L.set, s);
@@ -211,7 +211,7 @@
   const PAL = { norush: ["#ffe2c8", "#fff8f0", "#e0703a", "#a84a1e"], bush: ["#d8f0c8", "#f7fff2", "#6aaa52", "#44803a"], bamboo: ["#fde59a", "#fffbe8", "#e3a632", "#a8741a"],
     treex: ["#e4f2cc", "#fbfff2", "#7aa83a", "#4e7a1e"], bones: ["#ece6da", "#fffdf6", "#a8a090", "#7a7262"], weeds: ["#e4f2cc", "#fbfff2", "#8aa83a", "#5a7a1e"],
     rock: ["#dde2e6", "#f8fafc", "#8a949e", "#5a646e"], medic: ["#ffffff", "#ffffff", "#c8ccd2", "#8a949e"], binoc: ["#d6ecfb", "#f6fbff", "#3a8ad0", "#22609a"],
-    parcel: ["#f2dcb8", "#fffaf0", "#c8925a", "#8a6a3a"], still: ["#d6ecfb", "#f6fbff", "#3a8ad0", "#22609a"], dust: ["#f2e4c8", "#fffaf0", "#b8a07a", "#8a7452"] };
+    parcel: ["#f2dcb8", "#fffaf0", "#c8925a", "#8a6a3a"], notouch: ["#ffe2c8", "#fff8f0", "#e0703a", "#a84a1e"], shout: ["#fde59a", "#fffbe8", "#e3a632", "#a8741a"], radio: ["#d8f0c8", "#f7fff2", "#2fa864", "#1e7a48"], still: ["#d6ecfb", "#f6fbff", "#3a8ad0", "#22609a"], dust: ["#f2e4c8", "#fffaf0", "#b8a07a", "#8a7452"] };
   let cdefs = "";
   for (const [n, [b, l, r, rd]] of Object.entries(PAL)) cdefs += `<radialGradient id="wrF-${n}" cx=".33" cy=".25" r=".9"><stop offset="0" stop-color="${l}"/><stop offset=".55" stop-color="${b}"/><stop offset="1" stop-color="${r}" stop-opacity=".55"/></radialGradient>
     <linearGradient id="wrR-${n}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${r}"/><stop offset="1" stop-color="${rd}"/></linearGradient>`;
@@ -236,6 +236,10 @@
     parcel: () => ["", `<g class="rbAn" data-a="bob"><path d="M22,48L60,30L98,48V92L60,110L22,92Z" fill="#c8a06a" ${O(3.5)}/><path d="M22,48L60,66L98,48M60,66V110" stroke="${INK}" stroke-width="3" fill="none"/><path d="M41,39L79,57V70" stroke="#8a6a3a" stroke-width="7" fill="none"/></g>`],
     still: () => [`<path d="M8,96Q60,86 112,96V120H8Z" fill="#a8b46a"/><g transform="translate(60,88)"><circle cx="-30" cy="-6" r="10" fill="#3a4048"/><path d="M-20,-4H26" stroke="#3a4048" stroke-width="11" stroke-linecap="round"/></g>`,
       `<g class="rbAn" data-a="bob"><path d="M44,62V30Q44,24 50,24Q56,24 56,30V20Q56,14 62,14Q68,14 68,20V26Q68,20 74,20Q80,20 80,26V58Q80,72 66,74H54Q44,72 44,62Z" fill="#f2c8a0" ${O(3)}/></g>`],
+    notouch: () => [`<g class="rbAn" data-a="push"><path d="M40,96V58Q40,50 47,50Q54,50 54,58V40Q54,32 61,32Q68,32 68,40V50Q68,44 75,44Q82,44 82,52V86Q82,100 66,102H54Q40,100 40,96Z" fill="#f2c8a0" ${O(3)}/></g>`, `<circle cx="60" cy="60" r="40" fill="none" stroke="#7a140e" stroke-width="11" opacity=".5" transform="translate(2,3)"/><circle cx="60" cy="60" r="40" fill="none" stroke="#e2382e" stroke-width="10"/><path d="M32,32L88,88" stroke="#e2382e" stroke-width="10" stroke-linecap="round"/>`],
+    shout: () => [`<circle cx="44" cy="62" r="24" fill="#c8946a" ${O(3)}/><path d="M50,72q8,4 12,-2" stroke="${INK}" stroke-width="3" fill="none"/><path d="M22,48Q30,34 46,38Q40,30 26,38Z" fill="#5a6a3a" ${O(2)}/>`, `<g class="rbAn" data-a="bob"><path d="M74,46Q86,60 74,76M84,38Q102,60 84,84M94,30Q118,60 94,92" stroke="#e2382e" stroke-width="6" fill="none" stroke-linecap="round"/></g>`],
+    radio: () => ["", `<g class="rbAn" data-a="bob"><rect x="40" y="36" width="40" height="66" rx="8" fill="#3a4048" ${O(3.5)}/><path d="M70,36V12" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><rect x="47" y="46" width="26" height="18" rx="3" fill="#8ad0a0"/><circle cx="52" cy="80" r="4" fill="#c8ccd2"/><circle cx="68" cy="80" r="4" fill="#c8ccd2"/><circle cx="60" cy="92" r="4" fill="#c8ccd2"/></g>
+      <g class="rbAn" data-a="peek"><path d="M84,20q10,8 0,18M92,14q16,14 0,30" stroke="#2fa864" stroke-width="4" fill="none" stroke-linecap="round"/></g>`],
     dust: () => [`<path d="M8,104Q60,96 112,104V120H8Z" fill="#a8b46a"/>`, `<g class="rbAn" data-a="push">${[[60, 86, 18], [52, 62, 20], [66, 40, 22], [56, 18, 18]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#d8c8a8" ${O(2.5)}/>`).join("")}</g>`],
   };
   const wcoin = (name) => { const [inside, top] = WPICT[name]();
@@ -245,7 +249,7 @@
       <g transform="translate(60,57) scale(.9) translate(-60,-60)">${inside ? `<g clip-path="url(#quPicClip)">${inside}</g>` : ""}${top}</g>
       <path d="M21,46A41,41 0 0 1 45,19" stroke="#fff" stroke-width="5.5" fill="none" opacity=".72" stroke-linecap="round"/><circle cx="53.5" cy="15.5" r="2.8" fill="#fff" opacity=".7"/></g></g>`; };
   Object.keys(WPICT).forEach((n) => (QkUI.ICON[n] = () => wcoin(n)));
-  War.coin = (name, x, y, s = 1, id = "") => `<g transform="translate(${x},${y}) scale(${s})"><g ${id ? `id="${id}"` : ""}>${wcoin(name)}</g></g>`;
+  War.coin = (name, x, y, s = 1, id = "") => !WPICT[name] ? RabFX.coin(name, x, y, s, id) : `<g transform="translate(${x},${y}) scale(${s})"><g ${id ? `id="${id}"` : ""}>${wcoin(name)}</g></g>`;
   // the binocular glint on the far ridge: a slow twinkle with a star flare (F6 clue) — animate the inner group
   War.glint = (tl, id, t0, dur, o = {}) => { const sel = `#${id}-glint-in`, P = o.period ?? 1.6;
     tl.fromTo(sel, { scale: 0.55, opacity: 0.55, rotation: 0, transformOrigin: "50% 50%" }, { scale: 1.25, opacity: 1, rotation: 45, transformOrigin: "50% 50%", duration: P / 2, repeat: Math.ceil(dur / (P / 2)), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); };
