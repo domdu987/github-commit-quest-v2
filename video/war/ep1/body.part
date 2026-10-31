@@ -140,7 +140,7 @@
         captions: caps("fix"),
         fx(tl, id, t0, L) {
           War.rocket(L.set, 780, 1790, 1.05, "rk9"); War.sparkle(tl, "#rk9-gl", t0, D("fix"), 1.2);
-          War.spot(tl, L.glow, 800, 1700, t0 + vo("fix", 0) + LINE("fix", 0, 1) - 0.2, D("fix"), { label: "ทีมเก็บกู้เท่านั้น", icon: "notouch", r: 140, w: 270, tx: 60 });
+          War.spot(tl, L.glow, 760, 1700, t0 + vo("fix", 0) + LINE("fix", 0, 1) - 0.2, D("fix"), { label: "อย่าแตะ", icon: "notouch", r: 140, w: 170, tx: 40 });
           live(tl, t0, D("fix"), L); motes(tl, t0, D("fix"), L, 13);
         },
       });

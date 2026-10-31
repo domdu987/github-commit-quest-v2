@@ -90,19 +90,19 @@ CUES = [
     ("end", 0.1, "whoosh", 0.3), ("end", 0.8, "ding", 0.24),
 ]
 SAMPLES = [
-    ("hook", 0.0, "whiz", 1.2), ("hook", 0.0, "leaves", 0.9), ("hook", 0.5, "leaves", 0.7), ("hook", 1.4, "whiz", 0.9), ("hook", 0.0, "field", 0.25, 2.6),
-    ("cmd", 0.5, "whiz", 0.7), ("cmd", 0.5, "leaves", 0.6), ("rule", 0.2, "whiz", 0.6), ("rule", 0.0, "field", 0.25, 3.4), ("rule", vo_end("rule") - 0.9, "dogtag", 0.8),
+    ("hook", 0.0, "whiz", 0.4), ("hook", 0.0, "leaves", 0.3), ("hook", 0.5, "leaves", 0.25), ("hook", 2.2, "whiz", 0.6), ("hook", 0.0, "field", 0.12, 2.6),
+    ("cmd", 1.5, "whiz", 0.5), ("cmd", 1.5, "leaves", 0.4), ("rule", 0.0, "whiz", 0.35), ("rule", 0.0, "field", 0.25, 3.4), ("rule", vo_end("rule") - 0.9, "dogtag", 0.8),
     ("hide", 0.0, "field", 0.2, 5.7), ("cover", 0.0, "field", 0.3, 6.6), ("cover", 0.0, "distshots", 0.25),
-    ("down", 0.0, "whiz", 0.8), ("down", 1.1, "whiz", 0.7), ("down", 2.0, "distshots", 0.5), ("down", 2.9, "whiz", 0.6),
-    ("ditch", 0.0, "field", 0.3, 5.5), ("joe", 0.0, "field", 0.25, 3.0), ("law", 0.0, "field", 0.25, 6.0),
+    ("down", 0.0, "whiz", 0.35), ("down", 1.1, "whiz", 0.3), ("down", 2.0, "distshots", 0.25), ("down", 2.9, "whiz", 0.3),
+    ("ditch", 0.0, "field", 0.15, 5.5), ("joe", 0.0, "field", 0.25, 3.0), ("law", 0.0, "field", 0.25, 6.0),
     ("bandage", 0.0, "field", 0.25, 4.7), ("bandage", 2.0, "truck", 0.3), ("rule2", 0.0, "dogtag", 0.8),
-    ("rw", vo_t("rw", 1) - 0.8, "rewind", 0.8), ("reveal", 1.6, "whiz", 0.5), ("reveal", 1.6, "leaves", 0.6),
-    ("home", 0.0, "songkran", 0.4, 3.3), ("hug", 0.0, "songkran", 0.3, 3.0), ("parcel", 0.0, "songkran", 0.25, 3.7), ("open", 0.1, "parcel", 0.7),
+    ("rw", vo_t("rw", 1) - 0.8, "rewind", 0.8), ("reveal", 1.6, "whiz", 0.25), ("reveal", 1.6, "leaves", 0.3),
+    ("home", 0.0, "songkran", 0.22, 3.3), ("hug", 0.0, "songkran", 0.3, 3.0), ("parcel", 0.0, "songkran", 0.25, 3.7), ("open", 0.1, "parcel", 0.7),
 ]
 
 
 def music_dips(dip):
-    dip(T("hook", 0), T("cmd", -0.01), 0.4)
+    dip(T("hook", 0), T("cmd", -0.01), 0.3)
     dip(T("ditch", 0), T("joe", -0.01), 0.45)
     dip(T("open", 0), T("open", -0.01), 0.5)
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")

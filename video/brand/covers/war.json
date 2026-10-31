@@ -1,0 +1,47 @@
+[
+ {
+  "id": "war-ep1",
+  "page": "war-ep1/composition/index.html",
+  "out": "video/war-ep1/cover.jpg",
+  "t": 1.5,
+  "series": "ทางกลับบ้าน",
+  "ep": 1,
+  "epTitle": "อย่าวิ่งเข้าไปช่วย",
+  "setup": "เพื่อนโดน/[ทุ่นระเบิด]ตรงหน้า…",
+  "cmd": "อย่าวิ่งเข้าไปช่วย!",
+  "glow": "#ffd23a",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.15,
+   "x": 560,
+   "y": 1150
+  },
+  "shift": {
+   "x": 0,
+   "y": -260
+  }
+ },
+ {
+  "id": "war-ep2",
+  "page": "war-ep2/composition/index.html",
+  "out": "video/war-ep2/cover.jpg",
+  "t": 0.9,
+  "series": "ทางกลับบ้าน",
+  "ep": 2,
+  "epTitle": "อย่าหลบหลังพุ่มไม้",
+  "finale": true,
+  "setup": "กระสุน/[พุ่งมาหาคุณ]…",
+  "cmd": "อย่าหลบหลังพุ่มไม้!",
+  "glow": "#ffd23a",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.1,
+   "x": 560,
+   "y": 1100
+  },
+  "shift": {
+   "x": 0,
+   "y": -220
+  }
+ }
+]
