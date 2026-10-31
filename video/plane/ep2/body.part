@@ -1,274 +1,159 @@
-      // ---------- นาทีก่อนจม EP.1 อย่าเพิ่งโทรหาใคร ----------
-      // the planted mistake: at 0:04 ต้น presses the window lock so ขิม stops playing with her window; the narrator reveals it at the end
-      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      // ---------- รอดคนเดียว EP.2 อยู่กับซาก ----------
+      // grammar: night on the island (the tail on the rocks, lights across the bay) → command as he steps down (the planted mistake: the
+      // orange vest hidden under his jacket against the cold, ~0:04) → inside the tail out of the wind → the lights at 4 a.m. → "a village!"
+      // → three cards (one person from the air ✗ · the wreck ✓ · search the flight path) → he sits back down → dawn: the helicopter flies
+      // past → rewind to 0:04 → the vest out, on the tailplane, the panel to the sun → the glint → found → the lights were torches: the
+      // front section's survivors across the bay → "not alone"; the safety card ticks both rules → the end card
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.7, 2.6, 4.4], ...extra }; };
       const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
       const QUO = { quote: true };
-      Sets.canal = (L, o) => Canal.rich(L, o);
-      Sets.lockIns = (L, o) => lockInsert(L, o.id, o);
-      Sets.phoneIns = (L, o) => phoneInsert(L, o.id);
-      const CAB = (id) => ({ set: "sinkCab", setOpts: { id }, dark: 0.08, light: CABIN, grade: GNIGHT });
-      const TON = (eyes, mouth) => A("boss", CT.x, CT.y, CT.s, [{ t: 0, mode: "idle", eyes, mouth }]);
-      const KIM = (eyes, mouth, extra = {}, c = CK) => A("mint", c.x, c.y, c.s, [{ t: 0, mode: "idle", eyes, mouth }], extra);
-      const POV = (id) => ({ set: "carPOV", setOpts: { id, fig: 0, clock: "01:00", clear: true, sleeve: SKIN, cuff: BAND }, dark: 0.06, light: false, grade: GNIGHT });
-      const noShadow = (tl, id) => tl.set(`#${id}-a1-shadow`, { opacity: 0 }, 0);
-      const WIN = (id) => ({ set: "carWindow", setOpts: { id, face: 0, knock: 0 }, dark: 0.1, light: false, grade: GWATER });
-      const outside = (L, tl, id, t0, dur, y0, y1) => {   // the canal outside the side window, rising
-        put(L.far, `<g id="${id}"><rect x="-900" y="0" width="2900" height="2400" fill="#14302a" opacity=".95"/><path d="M-900,0Q-300,-16 300,0T1500,0T2000,0" stroke="#8fc0b0" stroke-width="7" fill="none" opacity=".7"/></g>`);
-        tl.set(`#${id}`, { y: y0 }, 0); tl.fromTo(`#${id}`, { y: y0 }, { y: y1, duration: dur, ease: "none", immediateRender: false }, t0);
-      };
+      const NIGHTL = { from: "right", rim: "#9fb8ff", rimOp: 0.55, shade: "#060a18", shadeOp: 0.5, cast: false, vol: false };
+      const DAWNL = { from: "right", rim: "#ffe0b0", rimOp: 0.6, shade: "#1a2030", shadeOp: 0.35, cast: false, vol: false };
+      const LAMPL = { from: "left", rim: "#ffe0a0", rimOp: 0.6, shade: "#0a0e1e", shadeOp: 0.5, cast: false, vol: false };
+      const GNT = { top: "#2a3a6a", bottom: "#05070f", op: 0.28 }, GDWN = { top: "#ffd8b0", bottom: "#1a2a3a", op: 0.12 };
+      const KX = ROW30 + 40, KS = 0.8, DX = 198, DY = 1474, KT = 0.15;   // the door of the tail on the rocks, คิว's scale there
+      const noSh = (tl, id, n = 2) => { for (let i = 0; i < n; i++) tl.set(`#${id}-a${i}-shadow`, { opacity: 0 }, 0); };
+      const sway = (amp = 1) => (t) => ({ x: 3 * Math.sin(t * 1.7), y: 2 * Math.sin(t * 1.3), r: amp * Math.sin(t * 1.1) });
+      const NSITE = (id, extra = {}) => ({ set: "crashSite", setOpts: { id, time: "night", spray: true, fire: 0, smoke: false, torches: true, ...extra }, dark: 0.15, light: NIGHTL, grade: GNT, blur: { far: 1.2, mid: 0.5, fg: 7 } });
+      const DSITE = (id, extra = {}) => ({ set: "crashSite", setOpts: { id, time: "dawn", fire: 0, smoke: false, ...extra }, dark: 0, light: DAWNL, grade: GDWN, blur: { far: 1.2, mid: 0.5, fg: 7 } });
+      const INSIDE = (id, extra = {}) => ({ set: "cabinCut", setOpts: { id, state: "fire", noFlame: true, night: true, breakX: 1000, ...extra }, dark: 0.05, light: LAMPL, grade: GNT });
+      const hiRing = (L, tl, x, y, t0, dur, r = 110, c = SU.yellow) => { const id = `rg${Math.round(t0 * 100)}`;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><circle r="${r}" fill="none" stroke="${c}" stroke-width="12"/><circle r="${r}" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/>
+          <g transform="translate(${r + 70},${-r - 40}) rotate(225)"><path d="M0,0L-40,-24V-10H-110V10H-40V24Z" fill="${c}" stroke="${SU.ink}" stroke-width="4" stroke-linejoin="round"/></g></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 2, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.35, ease: "back.out(2.4)", immediateRender: false }, t0);
+        tl.to(`#${id}`, { scale: 1.12, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: Math.ceil(dur / 0.35), ease: "sine.inOut" }, t0 + 0.4); };
+      const heliAt = (L, tl, id, x, y, s, t0, dur, mv) => { put(L.glow, `<g transform="translate(${x},${y}) scale(${s})"><g id="${id}-m">${Plane.heli(id)}</g></g>`); Plane.heliLife(tl, id, t0, dur);
+        if (mv) tl.fromTo(`#${id}-m`, mv.from, { ...mv.to, duration: mv.dur ?? dur, ease: mv.ease || "power1.inOut", immediateRender: false }, t0 + (mv.at ?? 0));
+        tl.fromTo(`#${id}`, { y: -6 }, { y: 6, duration: 0.6, yoyo: true, repeat: Math.ceil(dur / 0.6), ease: "sine.inOut", immediateRender: false }, t0); };
+      const spot = (L, tl, x, y, t0, dur) => { const id = `gl${Math.round(t0 * 100)}`;   // the sun's glint off the panel: a star + rays
+        put(L.glow, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><circle r="120" fill="#fff8d0" opacity=".45"/>${[0, 45, 90, 135].map((a) => `<path d="M0,-${a % 90 ? 120 : 260}L10,0L0,${a % 90 ? 120 : 260}L-10,0Z" fill="#fffbe0" transform="rotate(${a})"/>`).join("")}<circle r="26" fill="#fff"/></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.2, rotation: 0, svgOrigin: "0 0" }, { opacity: 1, scale: 1.2, rotation: 30, svgOrigin: "0 0", duration: 0.25, yoyo: true, repeat: Math.max(1, Math.floor(dur / 0.5)), repeatDelay: 0.15, ease: "power2.out", immediateRender: false }, t0); };
 
-      Sets.klong2 = (L, o) => Sets.klong(L, o);
-      const KL0 = (id, extra = {}) => ({ set: "klong", setOpts: { id, ...extra }, dark: 0.02, light: NIGHT, grade: { top: "#3a2e6a", bottom: "#0a0e1e", op: 0.18 }, blur: { far: 1.2, fg: 7 } });
-      const BOKEH = { sky: 8, far: 8, mid: 8, set: 8, act: 8, fg: 10 };
-      const CUT = (id, out) => ({ set: "carCut", setOpts: { id, out }, dark: 0.06, light: CABIN, grade: GNIGHT });
-      const TON2 = (mode, eyes, mouth) => A("tonJ", CT2.x, CT2.y, CT2.s, [{ t: 0, mode, eyes, mouth }]);
-      const KIM2 = (mode, eyes, mouth, extra = {}) => A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode, eyes, mouth }], extra);
-      const noShadows = (tl, id) => ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
-
-      // ---------- 1. hook (opener): the village canal road at 1 a.m., the title on the road sign; headlights come along, swerve, and the car goes in ----------
-      add("hook", {
-        ...KL0("kh0", { title: { x: 300, sub: "EP.1 อย่าเพิ่งโทรหาใคร" }, moonX: 700, moonY: 260 }),
-        cam: { keys: [{ t: 0, ...fr(440, 880, 1.18, 540, 900) }, { t: D("hook"), glide: D("hook"), ...fr(480, 920, 1.3, 540, 900) }] },
-        shake: (t) => (t > 2.05 && t < 2.5 ? { x: 12 * Math.sin(t * 60), y: 9 * Math.sin(t * 53), r: 0 } : 0),
+      // ---------- 1. hook: night, the wind and spray; the tail on the black rocks, คิว in its door; lights blinking across the bay ----------
+      add("hook", { set: "bayView", setOpts: { id: "h0", time: "night", torches: true, tail: true, tailX: -60, tailS: 1.3 }, dark: 0.12, light: NIGHTL, grade: GNT, blur: { fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(480, 1150, 1.05, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(520, 1000, 1.35, 540, 950) }] },
+        shake: sway(0.8),
+        actors: [A("kiwHidden", 830, 1700, 0.55, [{ t: 0, mode: "shadeEyes", eyes: "wide", mouth: "o" }])],
         captions: caps("hook"),
-        fx(tl, id, t0, L) {
-          Klong.life(tl, "kh0", t0, D("hook"));
-          Canal.lights(L, "h0l", -260, RY + 10, 0.42); Canal.car(L, "h0", -260, RY + 10, 0.42, { beam: 0 });
-          tl.fromTo(["#h0-r", "#h0l-lt"], { x: 0 }, { x: 760, duration: 1.45, ease: "none", immediateRender: false }, t0);
-          tl.fromTo("#klts-shine", { opacity: 0 }, { opacity: 0.45, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t0 + 0.75);
-          // off the road through the gap and down into the water
-          tl.to("#h0-r", { x: 1010, y: WY - RY + 30, rotation: 26, svgOrigin: "0 0", duration: 0.62, ease: "power2.in" }, t0 + 1.45);
-          tl.to("#h0l-lt", { opacity: 0, duration: 0.3 }, t0 + 1.6);
-          tl.to("#h0-r", { y: WY - RY + 46, rotation: 16, svgOrigin: "0 0", duration: 0.5, ease: "power2.out" }, t0 + 2.07);
-          Canal.front(L, "h0f", WY + 10); Canal.splash(L, tl, "h0s", 760, WY + 4, t0 + 2.05);
-        },
-      });
-      // ---------- 2. the command, over the planted mistake: the car on the road (lit inside) → his finger on the window lock at 0:04 ----------
-      split("lock", 0.85, {
-        ...KL0("kl1"),
-        cam: { keys: [{ t: 0, ...fr(560, 940, 1.7, 540, 960) }, { t: 0.85, glide: 0.85, ...fr(600, 945, 1.75, 540, 960) }] },
-        captions: caps("lock"),
-        fx(tl, id, t0, L) {
-          Klong.life(tl, "kl1", t0, 0.85);
-          Canal.lights(L, "l1l", 380, RY + 10, 0.42); Canal.car(L, "l1", 380, RY + 10, 0.42, { beam: 0 });
-          tl.fromTo(["#l1-r", "#l1l-lt"], { x: 0 }, { x: 260, duration: 0.85, ease: "none", immediateRender: false }, t0);
-        },
-      }, {
-        set: "lockIns", setOpts: { id: "lk0" }, dark: 0.02, light: false, grade: { top: "#3a3050", bottom: "#0e1018", op: 0.1 },
-        cam: { keys: [{ t: 0, ...fr(560, 980, 1.15, 540, 960), drift: { s: 0.03 } }] },
-        captions: capsFrom("lock", 0.85),
-        fx(tl, id, t0) { pressLock(tl, "lk0", t0 + 0.35); },
-      });
-      // ---------- 3. the minute: the canal in cross-section, the car afloat, nose first, under — the watch runs to 60 ----------
-      add("float", {
-        dark: 0, light: false,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
-        captions: caps("float"),
-        fx(tl, id, t0, L) { SinkUI.minute(tl, L.light, t0, D("float")); },
-      });
-      // ---------- 4. "and that minute is all you have": the card off the mirror — four things, in order ----------
-      add("all", {
-        ...CUT("ca0", 1100), blur: BOKEH,
-        cam: { keys: [{ t: 0, ...fr(470, 1280, 1.25, 540, 980), drift: { s: 0.02 } }] },
-        actors: [TON2("brace", "wide", "o"), KIM2("sitHold", "wide", "scream")],
-        captions: caps("all"),
-        fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "ca0", t0, D("all"), { caustic: true }); cutFront(L, "ca0"); cutWater(L, tl, "ca0", t0, D("all"), 1460, 1440); cutOutside(tl, "ca0", t0, D("all"), 1100, 1090); cutCanal(L, tl, "ca0", t0, D("all"), 1100, 1090);
-          put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".45"/>`);
-          SinkUI.rules(tl, L.light, t0 + 0.05, D("all"), { active: -1, y: 430, s: 1, stagger: 0.16 });
-        },
-      });
-      // ---------- 5. 1 a.m.: inside, warm (ต้น, then ขิม named) → the car along the canal road, the village asleep ----------
-      const DS = F("drive", 0, 2) - 0.25;
-      split("drive", DS, {
-        set: "carCut", setOpts: { id: "cd0", out: 2600 }, dark: 0.02, light: CABIN, grade: { top: "#3a3050", bottom: "#141018", op: 0.12 },
-        cam: { keys: [{ t: 0, ...fr(620, 1250, 1.45, 540, 980) }, { t: DS, glide: DS, ...fr(480, 1255, 1.45, 540, 980) }] },
-        actors: [TON2("drive", "normal", "smile"), KIM2("sitHold", "normal", "smile")],
-        captions: caps("drive"),
-        fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "cd0", t0, DS, { caustic: false }); cutFront(L, "cd0");
-          put(L.far, `<rect x="-900" y="-400" width="2900" height="2600" fill="#2a2a5a"/>${Array.from({ length: 8 }, (_, k) => `<circle id="cd0-lp${k}" cx="${-300 + k * 380}" cy="${880 + (k % 2) * 30}" r="46" fill="url(#klBulb)"/>`).join("")}`);
-          tl.fromTo([0, 1, 2, 3, 4, 5, 6, 7].map((k) => `#cd0-lp${k}`), { x: 0 }, { x: -1500, duration: DS, ease: "none", immediateRender: false }, t0);
-          SinkUI.tag(tl, L.light, t0 + 0.6, DS - 0.6, 760, 640, "ต้น", "#2fa45a");
-          SinkUI.tag(tl, L.light, t0 + F("drive", 0, 1) - 0.1, DS - F("drive", 0, 1) + 0.1, 330, 820, "ขิม · 8 ขวบ", "#c9b6ea");
-        },
-      }, {
-        ...KL0("kd1"),
-        cam: { keys: [{ t: 0, ...fr(260, 960, 1.35, 540, 900) }, { t: D("drive") - DS, glide: D("drive") - DS, ...fr(1260, 960, 1.35, 540, 900) }] },
-        captions: capsFrom("drive", DS),
-        fx(tl, id, t0, L) {
-          Klong.life(tl, "kd1", t0, D("drive") - DS);
-          Canal.lights(L, "d1l", 60, RY + 10, 0.42); Canal.car(L, "d1", 60, RY + 10, 0.42, { beam: 0 });
-          tl.fromTo(["#d1-r", "#d1l-lt"], { x: 0 }, { x: 1000, duration: D("drive") - DS, ease: "none", immediateRender: false }, t0);
-        },
-      });
-      add("swerve", {
-        ...POV("pv1"),
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
-        shake: (t) => { const k = Math.max(0, t - (D("swerve") - 0.9)); return { x: -180 * Math.min(1, k / 0.5) + 8 * Math.sin(t * 40) * (k > 0), y: 6 * Math.sin(t * 37) * (k > 0), r: -9 * Math.min(1, k / 0.5) }; },
-        captions: caps("swerve"),
-        fx(tl, id, t0, L) {
-          povCanal(L, tl, "pv1", t0, D("swerve")); mirrorKid(L, "pv1"); povHands(L, "pv1"); Mok.life(tl, `#${id}`, t0, D("swerve"));
-          crossBike(L, tl, "bk", t0, D("swerve"));
-        },
-      });
-      // ---------- 7. outside: through the gap in the rail, down the bank and into the canal ----------
-      add("plunge", {
-        ...KL0("kp0", { moonX: 900 }),
-        cam: { keys: [{ t: 0, ...fr(560, 1060, 1.35, 540, 980), drift: { s: 0 } }] },
-        shake: (t) => (t > 0.72 && t < 1.3 ? { x: 14 * Math.sin(t * 60), y: 10 * Math.sin(t * 53), r: 0 } : 0),
-        fx(tl, id, t0, L) {
-          Klong.life(tl, "kp0", t0, D("plunge"));
-          Canal.car(L, "c2", 360, RY + 10, 0.42, { beam: 0 });
-          tl.fromTo("#c2-r", { x: 0, y: 0, rotation: 0, svgOrigin: "0 0" }, { x: 360, y: WY - RY + 26, rotation: 24, svgOrigin: "0 0", duration: 0.75, ease: "power2.in", immediateRender: false }, t0);
-          tl.to("#c2-r", { y: WY - RY + 40, rotation: 16, duration: 0.8, ease: "power2.out" }, t0 + 0.75);
-          Canal.front(L, "c2f", WY + 10); Canal.splash(L, tl, "c2s", 760, WY + 4, t0 + 0.72);
-        },
-      });
-      add("inrush", {
-        set: "carCut", setOpts: { id: "cc0", out: 1150 }, dark: 0.06, light: CABIN, grade: GNIGHT,
-        cam: { keys: [{ t: 0, ...fr(500, 1310, 1.3, 540, 980), drift: { s: 0.03 } }] },
-        shake: (t) => (t < 0.6 ? { x: 16 * Math.sin(t * 50) * (1 - t / 0.6), y: 12 * Math.sin(t * 43) * (1 - t / 0.6), r: 1.5 * Math.sin(t * 31) } : 0),
-        actors: [A("tonJ", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "brace", eyes: "wide", mouth: "scream" }]), A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode: "sitHold", eyes: "wide", mouth: "scream" }])],
-        fx(tl, id, t0, L) {
-          ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
-          cabRich(L, tl, "cc0", t0, D("inrush")); cutFront(L, "cc0"); cutWater(L, tl, "cc0", t0, D("inrush"), 1520, 1470); cutOutside(tl, "cc0", t0, D("inrush"), 1150, 1120); cutCanal(L, tl, "cc0", t0, D("inrush"), 1150, 1120);
-          sealJets(L, tl, "cc0", t0, D("inrush"), { at: [[1000, 1300, -1, 0.75], [990, 1440, -1, 0.6], [470, 1460, 1, 0.55], [60, 1380, 1, 0.6]] });
-        },
-      });
-      // ---------- 9. step 1: not the phone (it rings: แม่) → the seatbelt ----------
-      const BS = 1.3;
-      split("belt", BS, {
-        set: "beltIns", setOpts: { id: "bn0" }, dark: 0.06, light: false, grade: GNIGHT, blur: BOKEH,
-        cam: { keys: [{ t: 0, ...fr(600, 1080, 1.0, 540, 960) }] },
-        captions: caps("belt"),
-        fx(tl, id, t0, L) { put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".4"/>`); SinkUI.nope(tl, L.light, t0, BS, { what: "phone", y: 800, stamp: 0.45 }); },
-      }, {
-        set: "beltIns", setOpts: { id: "bi0" }, dark: 0.06, light: false, grade: GNIGHT,
-        cam: { keys: [{ t: 0, ...fr(600, 1080, 1.0, 540, 960) }, { t: D("belt") - BS, glide: D("belt") - BS, ...fr(610, 1095, 1.08, 540, 960) }] },
-        captions: capsFrom("belt", BS),
-        fx(tl, id, t0, L) {
-          beltPress(tl, "bi0", t0 + Math.max(0.15, F("belt", 0, 1) + 0.15 - BS));
-          cabWater(L, tl, "bi0", t0, D("belt") - BS, 2060, 1880, { items: false }); bubbles(L, tl, "bi0bb", t0, D("belt") - BS, 600, 1980, 10, 520);
-        },
-      });
-      // ---------- 10. the door: the canal leans on it, about a hundred kilos ----------
-      add("door", {
-        dark: 0, light: false,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
-        captions: caps("door"),
-        fx(tl, id, t0, L) { SinkUI.press(tl, L.light, t0, D("door")); },
-      });
-      // ---------- 11. step 2 on the card → his window: down, now (the motor may die any second) ----------
-      const WS = 1.25;
-      split("window", WS, {
-        ...CUT("cw9", 1080), blur: BOKEH,
-        cam: { keys: [{ t: 0, ...fr(470, 1280, 1.25, 540, 980) }] },
-        actors: [TON2("brace", "wide", "o"), KIM2("sitHold", "wide", "scream")],
-        captions: caps("window"),
-        fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "cw9", t0, WS, { caustic: true }); cutFront(L, "cw9"); cutWater(L, tl, "cw9", t0, WS, 1420, 1410); cutOutside(tl, "cw9", t0, WS, 1080, 1078); cutCanal(L, tl, "cw9", t0, WS, 1080, 1078);
-          put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".45"/>`);
-          SinkUI.rules(tl, L.light, t0, WS + 0.1, { active: 1, done: [0], y: 430, s: 1, stagger: 0.05, out: false });
-        },
-      }, {
-        ...WIN("cw1"),
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
-        captions: capsFrom("window", WS),
-        fx(tl, id, t0, L) {
-          const d = D("window") - WS;
-          outsideRich(L, tl, "cw1o", t0, d, 860, 780); glassDrops("cw1");
-          tl.fromTo("#cw1-glass", { y: 0 }, { y: 760, duration: 1.2, ease: "power1.in", immediateRender: false }, t0 + 0.2);
-          pourIn(L, tl, "cw1p", t0 + 1.1, d - 1.1, 815);
-          winSwitch(L, "cw1s"); tl.set("#cw1s-f", { x: 30, y: 560 }, 0); pressSwitch(tl, "cw1s", t0 + 0.05, 1);
-        },
-      });
-      // ---------- 12. step 3 on the card → he reaches back: ขิม's belt, children out first ----------
-      const KB = 1.2;
-      split("kid", KB, {
-        ...CUT("ck9", 1075), blur: BOKEH,
-        cam: { keys: [{ t: 0, ...fr(470, 1280, 1.25, 540, 980) }] },
-        actors: [TON2("brace", "wide", "o"), KIM2("sitHold", "wide", "scream")],
-        captions: caps("kid"),
-        fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "ck9", t0, KB, { caustic: true }); cutFront(L, "ck9"); cutWater(L, tl, "ck9", t0, KB, 1390, 1380); cutOutside(tl, "ck9", t0, KB, 1075, 1072); cutCanal(L, tl, "ck9", t0, KB, 1075, 1072);
-          put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".45"/>`);
-          SinkUI.rules(tl, L.light, t0, KB + 0.1, { active: 2, done: [0, 1], y: 430, s: 1, stagger: 0.05, out: false });
-        },
-      }, {
-        ...CUT("cc1", 1070),
-        cam: { keys: [{ t: 0, ...fr(420, 1270, 1.55, 540, 980) }, { t: D("kid") - KB, glide: D("kid") - KB, ...fr(400, 1260, 1.65, 540, 980) }] },
-        actors: [TON2("reachBack", "worry", "o"), KIM2("sitStand", "wide", "scream")],
-        captions: capsFrom("kid", KB),
-        fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "cc1", t0, D("kid") - KB, { caustic: true }); cutFront(L, "cc1", { free: ["ton", "kim"] }); cutWater(L, tl, "cc1", t0, D("kid") - KB, 1360, 1340); cutOutside(tl, "cc1", t0, D("kid") - KB, 1070, 1060); cutCanal(L, tl, "cc1", t0, D("kid") - KB, 1070, 1060);
-        },
-      });
-      // ---------- 13. the phone: once you're on the bank, 1669 ----------
-      add("phone", {
-        ...KL0("kc0"), blur: BOKEH,
-        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.3, 540, 960), drift: { s: 0.02 } }] },
-        captions: caps("phone"),
-        fx(tl, id, t0, L) { Klong.life(tl, "kc0", t0, D("phone")); put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".3"/>`); SinkUI.call(tl, L.light, t0, D("phone"), { chip: F("phone", 0, 1) - 0.1 }); },
-      });
-      add("rw", {
-        set: "lockIns", setOpts: { id: "lk1", on: true }, dark: 0.12, light: false, grade: GNIGHT,
-        cam: { keys: [{ t: 0, ...fr(700, 1020, 1.3, 540, 980) }, { t: D("rw"), glide: D("rw"), ...fr(730, 1005, 1.75, 540, 980) }] },
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.bayLife(tl, "h0", t0, D("hook"));
+          put(L.light, `<g transform="translate(540,300)"><g id="h0-tt"><rect x="-300" y="-70" width="600" height="140" rx="24" fill="${PL.navy}" stroke="${PL.ink}" stroke-width="6"/><path d="M-300,40H300" stroke="${PL.gold}" stroke-width="8"/>
+            <text y="12" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="72" fill="#fff">รอดคนเดียว</text><text y="104" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="38" fill="${PL.gold}">EP.2 อยู่กับซาก</text></g></g>`);
+          tl.fromTo("#h0-tt", { y: -300 }, { y: 0, duration: 0.6, ease: "back.out(1.6)", immediateRender: false }, t0); tl.to("#h0-tt", { opacity: 0, y: -200, duration: 0.3 }, t0 + D("hook") - 0.3); } });
+      // ---------- 2. the command: he steps down the slide toward the lights (the orange hem under his jacket: the planted mistake) ----------
+      add("cmd", { ...NSITE("h1"),
+        cam: { keys: [{ t: 0, ...fr(190, 1480, 3.4, 540, 1050) }, { t: D("cmd"), glide: D("cmd"), ...fr(150, 1530, 4.6, 540, 1000) }] },
+        shake: sway(0.6),
+        actors: [A("kiwHidden", DX, DY, KT, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: 0.5, mode: "walk", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 127, y: 1570, dur: 1.4, at: 0.5, ease: "power1.inOut" } })],
+        captions: caps("cmd"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "h1", t0, D("cmd")); SU.flash(tl, L.light, t0 + F("cmd", 0, 0) + 0.02, "#ff3b2e", 0.3); } });
+      // ---------- 3. the first night inside the tail: out of the wind, the masks still dangling, hugging himself ----------
+      add("night", { ...INSIDE("n0"),
+        cam: { keys: [{ t: 0, ...fr(420, 1280, 1.6, 540, 1020) }, { t: D("night"), glide: D("night"), ...fr(400, 1260, 1.75, 540, 1020) }] },
+        shake: sway(0.4),
+        actors: [A("kiwHidden", KX, PF - 6, KS, [{ t: 0, mode: "sitHold", eyes: "worry", mouth: "frown" }])],
+        captions: caps("night"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "n0", t0, D("night"));
+          put(L.glow, `<g id="n0-wind">${Array.from({ length: 12 }, (_, k) => `<path d="M${1100 + k * 30},${PF - 500 + k * 36}l-160,${10 + (k % 3) * 6}" stroke="#9fb8d8" stroke-width="3" opacity=".45"/>`).join("")}</g>`);
+          tl.fromTo("#n0-wind", { x: 120, opacity: 0.8 }, { x: -200, opacity: 0, duration: 0.6, repeat: Math.ceil(D("night") / 0.6), ease: "power1.in", immediateRender: false }, t0); } });
+      // ---------- 4. the only shelter: outside, the wind and spray beat the tail; his phone light glows in the door ----------
+      add("roof", { ...NSITE("n1"),
+        cam: { keys: [{ t: 0, ...fr(560, 1360, 1.0, 540, 1080) }, { t: D("roof"), glide: D("roof"), ...fr(420, 1380, 1.25, 540, 1080) }] },
+        shake: sway(1.2),
+        fx(tl, id, t0, L) { Plane.siteLife(tl, "n1", t0, D("roof"));
+          put(L.glow, `<circle id="n1-lt" cx="${DX}" cy="${DY - 40}" r="60" fill="#ffe6b0" opacity=".5"/>`); tl.fromTo("#n1-lt", { opacity: 0.35 }, { opacity: 0.6, duration: 0.4, yoyo: true, repeat: Math.ceil(D("roof") / 0.4), ease: "sine.inOut", immediateRender: false }, t0); } });
+      // ---------- 5. 4 a.m.: across the bay, small lights blink ----------
+      add("lights", { set: "bayView", setOpts: { id: "n2", time: "night", torches: true }, dark: 0.1, light: NIGHTL, grade: GNT, blur: { fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 1000) }, { t: D("lights"), glide: D("lights"), ...fr(540, 860, 1.6, 540, 900) }] },
+        shake: sway(0.4),
+        captions: caps("lights"),
+        fx(tl, id, t0, L) { Plane.bayLife(tl, "n2", t0, D("lights")); } });
+      // ---------- 6. "a village!": he jumps up in the door ----------
+      add("village", { ...NSITE("n3"),
+        cam: { keys: [{ t: 0, ...fr(200, 1460, 3.0, 540, 1100) }] },
+        shake: sway(0.6),
+        actors: [A("kiwHidden", DX, DY, KT, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.3, mode: "point", eyes: "wide", mouth: "laugh" }], { talk: [TALK("village", 0, "laugh")] })],
+        captions: caps("village", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "n3", t0, D("village")); } });
+      // ---------- 7–9. the cards over the dark island ----------
+      const CARD = (k, fn) => add(k, { ...NSITE(`cd${k}`), blur: { far: 6, mid: 6, set: 6, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.1, 540, 1040) }, { t: D(k), glide: D(k), ...fr(600, 1300, 1.18, 540, 1040) }] },
+        captions: caps(k), fx(tl, id, t0, L) { Plane.siteLife(tl, `cd${k}`, t0, D(k)); fn(tl, L, t0); } });
+      CARD("spot", (tl, L, t0) => PlaneUI.spot(tl, L.light, t0, D("spot"), { phase: 1 }));
+      CARD("wreck", (tl, L, t0) => PlaneUI.spot(tl, L.light, t0, D("wreck"), { phase: 2 }));
+      add("route", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] }, captions: caps("route"),
+        fx(tl, id, t0, L) { PlaneUI.route(tl, L.light, t0, D("route")); } });
+      // ---------- 10. "then I'll wait here": he sits back down in the door ----------
+      add("wait", { ...NSITE("n4"),
+        cam: { keys: [{ t: 0, ...fr(200, 1460, 3.0, 540, 1100) }, { t: D("wait"), glide: D("wait"), ...fr(210, 1470, 3.2, 540, 1100) }] },
+        shake: sway(0.4),
+        actors: [A("kiwHidden", DX, DY, KT, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 0.6, mode: "sit", eyes: "normal", mouth: "flat" }], { talk: [TALK("wait", 0, "flat")] })],
+        captions: caps("wait", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "n4", t0, D("wait")); } });
+      // ---------- 11. dawn: rotor thud, a helicopter low over the sea ----------
+      add("heli", { ...DSITE("d0"),
+        cam: { keys: [{ t: 0, ...fr(700, 1000, 1.2, 540, 900) }, { t: D("heli"), glide: D("heli"), ...fr(620, 1050, 1.3, 540, 900) }] },
+        captions: caps("heli"),
+        fx(tl, id, t0, L) { Plane.siteLife(tl, "d0", t0, D("heli")); heliAt(L, tl, "hc0", 1150, 760, 0.55, t0, D("heli"), { from: { x: 300 }, to: { x: -260 } }); } });
+      // ---------- 12. he waves and shouts on the rocks ----------
+      add("wave", { ...DSITE("d1"),
+        cam: { keys: [{ t: 0, ...fr(150, 1500, 2.6, 540, 1150) }] },
+        shake: sway(0.5),
+        actors: [A("kiwHidden", 140, 1560, KT, [{ t: 0, mode: "wave2", eyes: "wide", mouth: "scream" }], { talk: [TALK("wave", 0, "scream")] })],
+        captions: caps("wave", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "d1", t0, D("wave")); heliAt(L, tl, "hc1", 520, 1180, 0.35, t0, D("wave"), { from: { x: 200 }, to: { x: -200 } }); } });
+      // ---------- 13. it flies on: the grey wreck on grey rocks, lost in the foam ----------
+      add("pass", { ...DSITE("d2", { spray: true }),
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 0.95, 540, 1000) }, { t: D("pass"), glide: D("pass"), ...fr(520, 1250, 0.85, 540, 1000) }] },
+        captions: caps("pass"),
+        fx(tl, id, t0, L) { Plane.siteLife(tl, "d2", t0, D("pass")); heliAt(L, tl, "hc2", 700, 900, 0.5, t0, D("pass"), { from: { x: 0, y: 0 }, to: { x: 1400, y: -300 }, ease: "power1.in" }); } });
+      // ---------- 14. rewind to 0:04: the orange hem under the jacket ----------
+      add("rw", { ...NSITE("r0"),
+        cam: { keys: [{ t: 0, ...fr(190, 1480, 3.4, 540, 1050) }, { t: D("rw"), glide: D("rw"), ...fr(198, 1455, 4.8, 540, 1000) }] },
+        actors: [A("kiwHidden", DX, DY, KT, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
         captions: caps("rw"),
-        fx(tl, id, t0, L) { rewind(L, tl, t0, D("rw"), "0:04"); tl.fromTo("#lk1-led", { opacity: 1 }, { opacity: 0.4, duration: 0.3, yoyo: true, repeat: Math.ceil(D("rw") / 0.3), immediateRender: false }, t0); },
-      });
-      // ---------- 15. ขิม's window: she presses, nothing ----------
-      const KS = vo("kim") + 0.8, KH = CK3.y - CK3.s * (548 - 96);   // the cut inside her line · her head, risen
-      split("kim", KS, {
-        ...CUT("cc2", 1070),
-        cam: { keys: [{ t: 0, ...fr(CK3.x + 6, KH + 40, 3.1, 540, 900) }, { t: KS, glide: KS, ...fr(CK3.x + 6, KH + 40, 3.35, 540, 900) }] },
-        shake: (t) => ({ x: 3 * Math.sin(t * 23), y: 2 * Math.sin(t * 19), r: 0 }),
-        actors: [TON2("brace", "wide", "o"), KIM2("sitStand", "wide", "scream", { talk: [TALK("kim", 0, "scream")] })],
-        captions: caps("kim", undefined, QUO),
-        fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "cc2", t0, KS, { caustic: true }); cutFront(L, "cc2", { free: ["ton", "kim"] }); cutWater(L, tl, "cc2", t0, KS, 1335, 1325); cutOutside(tl, "cc2", t0, KS, 1070, 1066); cutCanal(L, tl, "cc2", t0, KS, 1070, 1066);
-        },
-      }, {
-        ...WIN("cw2"),
-        cam: { keys: [{ t: 0, ...fr(540, 1060, 1.08, 540, 1000), drift: { s: 0.03 } }] },
-        shake: (t) => ({ x: 3 * Math.sin(t * 23), y: 2 * Math.sin(t * 19), r: 0 }),
-        captions: capsFrom("kim", KS, undefined, QUO),
-        fx(tl, id, t0, L) {
-          outsideRich(L, tl, "cw2o", t0, D("kim") - KS, 720, 680); glassDrops("cw2");
-          kidSwitch(L, "ks");
-          tl.fromTo("#ks-kf", { y: 0 }, { y: -30, duration: 0.14, yoyo: true, repeat: Math.ceil((D("kim") - KS) / 0.14), ease: "power2.inOut", immediateRender: false }, t0 + 0.05);
-        },
-      });
-      add("led", {
-        set: "lockIns", setOpts: { id: "lk2", on: true }, dark: 0.45, light: false, grade: GNIGHT,
-        cam: { keys: [{ t: 0, ...fr(730, 1005, 2.2, 540, 960) }, { t: D("led"), glide: D("led"), ...fr(730, 1005, 2.45, 540, 960) }] },
-        captions: caps("led"),
-        fx(tl, id, t0, L) {
-          tl.set("#lk2-finger", { opacity: 0 }, t0);
-          ledGlow(L, tl, "lk2-halo", t0, D("led"), 786, 949);
-        },
-      });
-      // ---------- 17. "some cars lock every window but the driver's": the car from above ----------
-      add("panel", {
-        dark: 0, light: false,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
-        captions: caps("panel"),
-        fx(tl, id, t0, L) { SinkUI.locks(tl, L.light, t0, D("panel"), { driver: F("panel", 0, 1) - 0.2 }); },
-      });
-      add("flicker", {
-        ...CUT("cc3", 1060),
-        cam: { keys: [{ t: 0, ...fr(470, 1280, 1.28, 540, 980), drift: { s: 0.04 } }] },
-        actors: [TON2("brace", "wide", "o"), KIM2("sitStand", "wide", "scream")],
-        captions: caps("flicker"),
-        fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "cc3", t0, D("flicker"), { caustic: true }); cutFront(L, "cc3", { free: ["ton", "kim"] }); cutWater(L, tl, "cc3", t0, D("flicker"), 1320, 1285); cutOutside(tl, "cc3", t0, D("flicker"), 1060, 1036); cutCanal(L, tl, "cc3", t0, D("flicker"), 1060, 1036);
-          bubbles(L, tl, "cc3bb", t0, D("flicker"), 520, 1330, 14, 700);
-          flickerOut(L, tl, "cc3", t0, D("flicker"));
-        },
-      });
-      // ---------- 19. next episode: the canal's warning sign, the paper note ----------
-      add("next", {
-        dark: 0, light: false,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
-        fx(tl, id, t0, L) { SinkUI.nextSign(tl, L.light, t0, D("next"), { l1: "ตอนที่ 2", l2: "ถ้ากระจกไม่ลง…" }); },
-      });
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "r0", t0, D("rw")); rewind(L, tl, t0, D("rw"), "0:04"); hiRing(L, tl, 540, 930, t0 + F("rw", 0, 1), D("rw") - F("rw", 0, 1), 90); } });
+      // ---------- 15. the jacket opens: the brightest thing on the island ----------
+      add("vest", { ...DSITE("d3"),
+        cam: { keys: [{ t: 0, ...fr(140, 1500, 3.4, 540, 1100) }, { t: D("vest"), glide: D("vest"), ...fr(140, 1500, 3.8, 540, 1100) }] },
+        actors: [A("kiwHidden", 140, 1560, KT, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }]), A("kiwVest", 140, 1560, KT, [{ t: 0, mode: "wave2", eyes: "wide", mouth: "laugh" }])],
+        captions: caps("vest"),
+        fx(tl, id, t0, L) { noSh(tl, id); Plane.siteLife(tl, "d3", t0, D("vest")); tl.set(`#${id}-a1`, { opacity: 0 }, t0); tl.set(`#${id}-a0`, { opacity: 0 }, t0 + 1.1); tl.set(`#${id}-a1`, { opacity: 1 }, t0 + 1.1); SU.fxAt(tl, L.light, `#${id}-a1`, t0 + 1.1, { n: 12, c: "#ff8a3a", r1: 160 }); } });
+      // ---------- 16. the vest on the tailplane, the cowl panel propped to the sun; the two medals ----------
+      add("lay", { ...DSITE("d4", { vest: "wing", panel: true }),
+        cam: { keys: [{ t: 0, ...fr(80, 1300, 2.2, 540, 1000) }, { t: D("lay"), glide: D("lay"), ...fr(160, 1320, 1.8, 540, 1000) }] },
+        actors: [A("kiwVest", 90, 1565, KT, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }])],
+        captions: caps("lay"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "d4", t0, D("lay")); PlaneUI.bright(tl, L.light, t0 + 0.9, D("lay") - 0.9 + 0.01); } });
+      // ---------- 17. wide: the orange and the flash stand out from rock and foam ----------
+      add("stand", { ...DSITE("d5", { vest: "wing", panel: true }),
+        cam: { keys: [{ t: 0, ...fr(420, 1300, 0.95, 540, 1000) }, { t: D("stand"), glide: D("stand"), ...fr(300, 1340, 1.15, 540, 1000) }] },
+        actors: [A("kiwVest", 90, 1565, KT, [{ t: 0, mode: "wave2", eyes: "wide", mouth: "laugh" }])],
+        captions: caps("stand"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "d5", t0, D("stand")); spot(L, tl, 50, 1360, t0 + 0.6, D("stand") - 0.6); } });
+      // ---------- 18. the glint: the helicopter banks back toward it ----------
+      add("glint", { ...DSITE("d6", { vest: "wing", panel: true }),
+        cam: { keys: [{ t: 0, ...fr(520, 1100, 1.0, 540, 950) }] },
+        fx(tl, id, t0, L) { Plane.siteLife(tl, "d6", t0, D("glint")); spot(L, tl, 50, 1360, t0 + 0.1, D("glint"));
+          heliAt(L, tl, "hc3", 1300, 820, 0.5, t0, D("glint"), { from: { x: 300, y: -100 }, to: { x: -500, y: 120 }, ease: "power2.out" }); SU.flash(tl, L.light, t0 + 0.3, "#fffbe0", 0.5); } });
+      // ---------- 19. found: hovering over him, the crewman at the door with the radio ----------
+      add("found", { ...DSITE("d7", { vest: "wing", panel: true }),
+        cam: { keys: [{ t: 0, ...fr(260, 1420, 1.9, 540, 1050) }, { t: D("found"), glide: D("found"), ...fr(240, 1440, 2.1, 540, 1050) }] },
+        shake: (t) => ({ x: 4 * Math.sin(t * 23), y: 3 * Math.sin(t * 19), r: 0 }),
+        actors: [A("kiwVest", 140, 1570, KT, [{ t: 0, mode: "wave2", eyes: "wide", mouth: "laugh" }]), A("rescuer", 300, 1570, 0.17, [{ t: 0, mode: "radio", eyes: "normal", mouth: "o" }], { flip: true, talk: [TALK("found", 0, "o")] })],
+        captions: caps("found", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id); Plane.siteLife(tl, "d7", t0, D("found")); heliAt(L, tl, "hc4", 420, 1300, 0.4, t0, D("found"));
+          put(L.glow, `<g id="fd-dn">${Array.from({ length: 14 }, (_, k) => `<path d="M${200 + k * 30},${1250 + (k % 3) * 40}l${k % 2 ? 40 : -40},90" stroke="#fff" stroke-width="3" opacity=".4"/>`).join("")}</g>`);
+          tl.fromTo("#fd-dn", { y: -40, opacity: 0.6 }, { y: 60, opacity: 0, duration: 0.4, repeat: Math.ceil(D("found") / 0.4), ease: "none", immediateRender: false }, t0); } });
+      // ---------- 20. the truth: across the bay, the front section on the headland — survivors waving torches ----------
+      add("truth", { set: "bayView", setOpts: { id: "d8", time: "dawn", torches: true, front: true }, dark: 0, light: DAWNL, grade: GDWN, blur: { fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 1000) }, { t: D("truth"), glide: D("truth"), ...fr(560, 800, 2.2, 540, 900) }] },
+        captions: caps("truth"),
+        fx(tl, id, t0, L) { Plane.bayLife(tl, "d8", t0, D("truth")); for (let k = 0; k < 7; k++) tl.fromTo(`#d8-wv${k}`, { rotation: -30, svgOrigin: "8 -32" }, { rotation: 30, svgOrigin: "8 -32", duration: 0.3, yoyo: true, repeat: Math.ceil(D("truth") / 0.3), ease: "sine.inOut", immediateRender: false }, t0 + k * 0.07); } });
+      // ---------- 21. not alone: he laughs and cries; the safety card ticks rule 2 ----------
+      add("end", { ...DSITE("d9", { vest: "wing", panel: true }),
+        cam: { keys: [{ t: 0, ...fr(140, 1500, 3.0, 540, 1150) }] },
+        actors: [A("kiwVest", 140, 1570, KT, [{ t: 0, mode: "idle", eyes: "closed", mouth: "laugh" }])],
+        captions: caps("end"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "d9", t0, D("end")); PlaneUI.rules(tl, L.light, t0 + 0.5, D("end") - 0.5 + 0.01, { active: 1, done: [0, 1], y: 520, tickAt: 1.0 }); } });
+      add("fin", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        fx(tl, id, t0, L) { PlaneUI.next(tl, L.light, t0, D("fin"), { l1: "รอดคนเดียว · EP.2", l2: "ไม่ได้รอดคนเดียว", l3: "ทิ้งกระเป๋า · อยู่กับซาก", cta: "แชร์ให้คนที่คุณรัก ก่อนวันที่ต้องใช้", end: true }); } });

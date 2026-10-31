@@ -23,6 +23,7 @@
           top: { kind: "coat", c: "#d9a43a", sleeve: "long" }, print: kiwPrint,
           bottom: { kind: "jeans", c: "#3b4a63" }, feet: { kind: "sneaker", c: "#f2f0ea", sole: "#3a3530", lace: "#8a8e94" } };
         C.kiw = { v2: { ...kiwV2, extra: neckPhones } };
+        C.kiwHidden = { v2: { ...kiwV2, extra: neckPhones + `<path d="M-54,-262H54L50,-226H-50Z" fill="#ff6a14" ${ln(2.2)}/><path d="M-50,-246H50" stroke="#fff4d0" stroke-width="5"/>` } };
         C.kiwPhones = { v2: { ...kiwV2, faceTop: phones(true) } };
         C.kiwVest = { v2: { ...kiwV2, extra: `<path d="M-50,-486L-58,-300H-8L-14,-480ZM50,-486L58,-300H8L14,-480Z" fill="#ff6a14" ${ln(2.4)}/><path d="M-54,-380h40M14,-380h40" stroke="#fff4d0" stroke-width="7"/>` } };
         const bun = (h) => `<path d="M-50,-546C-54,-604 -24,-624 2,-624C30,-624 56,-604 50,-546Q44,-588 2,-592Q-40,-588 -50,-546Z" fill="${h.c}" ${ln()}/><path d="M-20,-614Q6,-622 30,-610" stroke="${h.sh}" stroke-width="5" fill="none" opacity=".5"/>`;
@@ -39,11 +40,11 @@
           faceTop: `<path d="M-58,-560C-64,-640 64,-640 58,-560Z" fill="#f4f4f0" ${ln(2.6)}/><path d="M-50,-600Q0,-628 50,-600" stroke="#fff" stroke-width="6" fill="none"/><path d="M-60,-560H60" stroke="#c8302a" stroke-width="7"/><rect x="-30" y="-640" width="60" height="16" rx="5" fill="#2a2e38"/>`,
           bottom: { kind: "trousers", c: "#e8601a" }, feet: { kind: "boot", c: "#2a221c" } } };
         const M = Rig.MODES;
-        M.nap = (u, o) => ({ ...M.sitChair(u, o), torso: -12 + 1.2 * Math.sin(u * 1.4), head: -16 + 1.5 * Math.sin(u * 1.4), uaF: -20, faF: -96, uaB: -14, faB: -92 });
+        M.nap = (u, o) => ({ ...M.sitChair(u, o), torso: -9 + 1.2 * Math.sin(u * 1.4), head: -12 + 1.5 * Math.sin(u * 1.4), uaF: -20, faF: -96, uaB: -14, faB: -92 });
         M.phonesOn = (u, o) => ({ ...M.sitChair(u, o), torso: -6, head: -4 + 2 * Math.sin(u * 2), uaF: -150, faF: -110, uaB: -140, faB: -112 });
-        M.reachDown = (u, o) => { const j = Math.sin(u * 9) * 3; return { ...M.sitChair(u, o), torso: 34 + j, head: 20, uaF: 30 + j, faF: 10, uaB: 10, faB: -30 }; };
-        M.tug = (u, o) => { const j = Math.sin(u * 14) * 9; return { ...M.sitChair(u, o), torso: 22 - j * 0.6, head: 10, uaF: 14 - j, faF: -20 - j, uaB: 6 - j, faB: -24 }; };
-        M.cough = (u, o) => { const j = Math.abs(Math.sin(u * 8)) * 6; return { ...M.idle(u, o), torso: 18 + j, head: 16 + j, uaF: -40, faF: -120, uaB: 18, faB: -20 }; };
+        M.reachDown = (u, o) => { const j = Math.sin(u * 9) * 3; return { ...M.sitChair(u, o), torso: 22 + j, head: 8, uaF: 22 + j, faF: -6, uaB: 6, faB: -30 }; };
+        M.tug = (u, o) => { const j = Math.sin(u * 14) * 9; return { ...M.sitChair(u, o), torso: 16 - j * 0.6, head: 6, uaF: 10 - j, faF: -20 - j, uaB: 4 - j, faB: -24 }; };
+        M.cough = (u, o) => { const j = Math.abs(Math.sin(u * 8)) * 6; return { ...M.idle(u, o), torso: 16 + j, head: 14 + j, uaF: -40, faF: -120, uaB: 18, faB: -20 }; };
         M.wave2 = (u, o) => { const j = Math.sin(u * 10) * 22; return { ...M.idle(u, o), torso: -4, head: -10, uaF: -160 + j, faF: -20, uaB: 160 - j, faB: 20, bodyY: -Math.abs(Math.sin(u * 5)) * 10 }; };
         M.pointBack = (u, o) => ({ ...M.idle(u, o), torso: -3, head: -10, uaF: -20, faF: -30, uaB: 96 + 2 * Math.sin(u * 3), faB: 6 });
         M.sitDazed = (u, o) => ({ ...M.sitChair(u, o), torso: 10 + 2 * Math.sin(u * 2), head: 14 + 3 * Math.sin(u * 1.3), uaF: -10, faF: -30, uaB: 8, faB: -20 });

@@ -20,25 +20,28 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.15, -0.3, 2.6),          # the canal road at 1 a.m.: the car's headlights along the dark water, no rail
-    ("lock", ["n02"], 0.3, 0.3, 1.9),            # insert: ต้น presses the window lock (the planted mistake, LED on at ~0:04)
-    ("float", ["n03"], 0.2, 0.3, 3.4),           # the car floating nose-down in the canal; the countdown starts
-    ("all", ["n04"], 0.1, 0.4, 2.6),             # under the water: the headlights' beams in the murk, bubbles
-    ("drive", ["n05"], 0.2, 0.2, 4.0),           # 1 a.m., the drive home: the road through the windscreen
-    ("swerve", ["n06"], 0.1, 0.8, 2.4),          # an unlit motorbike in the headlights → the swerve
-    ("plunge", [], 0, 0, 1.6),                   # outside: the car goes off the bank into the canal, the splash
-    ("inrush", [], 0, 0, 2.0),                   # inside: the jolt, water spurting in at the door seals, the countdown appears
-    ("belt", ["n07"], 0.2, 0.3, 2.8),            # in the cabin: water at the floor; step 1
-    ("door", ["n08"], 0.2, 0.3, 3.2),            # the door: the water outside presses it shut
-    ("window", ["n09"], 0.2, 0.3, 3.4),          # his window goes down
-    ("kid", ["n10"], 0.2, 0.3, 2.8),             # he turns to ขิม
-    ("phone", ["n11"], 0.2, 0.4, 3.0),           # the phone on the seat, the water rising round it; call 1669 once ashore
-    ("rw", ["n12"], 0.2, 0.6, 4.2),              # rewind to 0:04: the lock pressed
-    ("kim", ["k01"], 0.1, 0.4, 2.2),             # her window: she presses, nothing; the water outside at the glass
-    ("led", ["n13"], 0.2, 0.3, 2.4),             # the lock's orange light still on
-    ("panel", ["n14"], 0.2, 0.3, 3.0),           # he presses her window on his own panel: nothing (some cars lock every window but the driver's)
-    ("flicker", ["n15"], 0.2, 0.9, 2.8),         # the dash lights flicker; the countdown at single digits
-    ("next", [], 0, 0, 4.2),                     # next-episode card + channel
+    ("hook", ["n01"], 0.12, -0.2, 2.6),          # night on the island: the tail on the rocks in the wind, lights across the bay; คิว in the door
+    ("cmd", ["n02"], 0.15, 0.35, 1.5),           # he steps down toward the lights → red
+    ("night", ["n03"], 0.2, 0.2, 3.6),           # inside the tail: hunched against the cold, the orange vest under his jacket (the planted mistake ~0:04)
+    ("roof", ["n04"], 0.2, 0.3, 3.0),            # outside: the wind and spray beat on the tail; his light inside
+    ("lights", ["n05"], 0.2, 0.3, 3.2),          # 4 a.m.: lights blink across the bay
+    ("village", ["q01"], 0.1, 0.3, 2.6),         # he jumps up
+    ("spot", ["n06"], 0.2, 0.3, 3.4),            # card: one person from the air (✗)
+    ("wreck", ["n07"], 0.2, 0.3, 3.4),           # card: the wreck from the air (✓)
+    ("route", ["n08"], 0.2, 0.4, 4.0),           # card: they search the flight path first
+    ("wait", ["q02"], 0.1, 0.4, 2.4),            # he sits back down by the wreck
+    ("heli", ["n09"], 0.2, 0.2, 2.6),            # dawn: rotor sound, a helicopter over the sea
+    ("wave", ["q03"], 0.1, 0.3, 2.2),            # he waves and shouts
+    ("pass", ["n10"], 0.2, 0.3, 3.6),            # it flies on: the grey wreck lost on the grey rocks
+    ("rw", ["n11"], 0.2, 0.6, 4.0),              # rewind to 0:04
+    ("vest", ["n12"], 0.2, 0.3, 2.6),            # he opens the jacket: the orange vest
+    ("lay", ["n13"], 0.2, 0.4, 4.0),             # the vest on the tailplane, the cowl panel propped to the sun
+    ("stand", ["n14"], 0.2, 0.3, 2.6),           # wide: the tail stands out
+    ("glint", [], 0, 0, 2.2),                    # the helicopter turns back, the panel flashes
+    ("found", ["r01"], 0.1, 0.4, 3.2),           # "found!" — hovering over him
+    ("truth", ["n15", ("n16", 0.3)], 0.2, 0.6, 6.0),   # the lights were torches: the front section across the bay, survivors waving
+    ("end", ["n17"], 0.2, 1.2, 3.4),             # he laughs/cries; the safety card ticks both rules
+    ("fin", [], 0, 0, 4.0),                      # end card: ตอนจบ
 ]
 GAP = 0.08
 
