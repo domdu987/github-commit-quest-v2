@@ -1,0 +1,110 @@
+      // ---------- นาทีก่อนจม EP.3 polish: real hands on the rigs, the rider's face, the what-if grade, the struggle, the reach, the door ----------
+      // the rider with his helmet off (from the moment he stops at the edge): the same jacket, short black hair, his face
+      Rig.CAST.riderF = { v2: { ...Rig.CAST.rider.v2, faceTop: "", blush: 0.2, hair: Rig.CAST.ton.v2.hair } };
+      SK.rider = ["#c99068", "#9c6844", "#e2b48c"]; SK.tonR = ["#d39a6e", "#a8704a", "#ecc09a"];
+      const RELAX = { curl: [0.3, 0.35, 0.4, 0.45], thumb: 0.25 }, OPEN = { curl: [0, 0, 0, 0], thumb: 0 }, CUP = { curl: [0.45, 0.45, 0.5, 0.55], thumb: 0.2 };
+      const RLINE = "#3a2622";
+      // swap a rig's mitten hands for real ones (the hand rides the forearm; o.under puts it under a long sleeve's cuff)
+      const realHands = (aid, sk, pf = RELAX, pb = RELAX, o = {}) => ["F", "B"].forEach((side) => {
+        const fa = document.getElementById(`${aid}-fa${side}`); if (!fa) return;
+        fa.querySelectorAll(":scope > path").forEach((p) => { const d = p.getAttribute("d") || ""; if (/^M-11,104|^M9,108|^M-6,124/.test(d)) p.setAttribute("display", "none"); });
+        const hs = o.hs ?? 0.44, m = side === "F" ? -1 : 1;
+        const html = `<g transform="translate(0,${o.under ? 100 : 96}) rotate(180) scale(${f1(m * hs)},${hs})">${handBack(sk, { ...(side === "F" ? pf : pb), sw: 1.9 }).split(INK).join(RLINE)}</g>`;
+        if (o.under) fa.insertAdjacentHTML("afterbegin", html);
+        else { const hg = document.getElementById(`${aid}-hand${side}`); if (hg) hg.insertAdjacentHTML("beforebegin", html); else fa.insertAdjacentHTML("beforeend", html); }
+      });
+      // an arm in a long sleeve (shoulder S to wrist W): the hand first, the sleeve over its wrist
+      const armSl = (S, W, l1, l2, side, sk, cloth, o = {}) => {
+        const E = elbowAt(S, W, l1, l2, side), [wu, wf] = o.w || [34, 28], [c, cD] = cloth, ln = o.line || RLINE;
+        const ang = o.fix ?? (Math.atan2(W[1] - E[1], W[0] - E[0]) * 180) / Math.PI + 90 + (o.turn || 0), hs = o.hs ?? wf / 30;
+        const C0 = [E[0] + (W[0] - E[0]) * 0.84, E[1] + (W[1] - E[1]) * 0.84];
+        return `<g transform="translate(${P2s(W)}) rotate(${f1(ang)}) scale(${o.mirror ? -hs : hs},${hs})">${handBack(sk, { ...(o.hand || {}), sw: o.sw ?? 1.2 }).split(INK).join(ln)}</g>
+          <path d="${limbD(S, E, wu, wf * 1.1)}" fill="${c}" stroke="${ln}" stroke-width="2.6"/><path d="${limbD(E, C0, wf * 1.1, wf * 1.04)}" fill="${c}" stroke="${ln}" stroke-width="2.6"/>
+          <path d="${limbD([E[0] + (C0[0] - E[0]) * 0.1 + 3, E[1] + (C0[1] - E[1]) * 0.1 + 3], [E[0] + (C0[0] - E[0]) * 0.9 + 3, E[1] + (C0[1] - E[1]) * 0.9 + 3], wf * 0.3, wf * 0.2)}" fill="${cD}" opacity=".35"/>`;
+      };
+      const GREEN = ["#2fa45a", "#1e6e3c"], LILAC = ["#c9b6ea", "#9a86c0"];
+      // a bare arm (short sleeve), lined like the rig
+      const armK = (S, W, l1, l2, side, sk, o = {}) => arm(S, W, l1, l2, side, sk, o).split(INK).join(RLINE);
+      // move an actor into a wrapper group (animate the wrapper; overlays drawn into it ride along)
+      const wrap = (aid, wid) => { const g = document.getElementById(aid); const w = document.createElementNS("http://www.w3.org/2000/svg", "g"); w.setAttribute("id", wid); g.parentNode.insertBefore(w, g); w.appendChild(g); return w; };
+      const rigArms = (tl, aid, on, t) => ["uaF", "uaB"].forEach((p) => tl.set(`#${aid}-${p}`, { display: on ? "inline" : "none" }, t));
+      // the what-if grade: colour drains out, the edges close in (a blend over the whole shot; its own opacity, not a group's)
+      const whatIf = (L, tl, t0, at = 0, k = 0.85) => {
+        const id = `wf${Math.round(t0 * 100)}`;
+        put(L.light, `<rect id="${id}-s" width="1080" height="1920" fill="#808080" style="mix-blend-mode:saturation" opacity="0"/>
+          <radialGradient id="${id}-vg" cx=".5" cy=".42" r=".78"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".75"/></radialGradient>
+          <rect id="${id}-v" width="1080" height="1920" fill="url(#${id}-vg)" opacity="0"/>`);
+        tl.fromTo([`#${id}-s`, `#${id}-v`], { opacity: at ? 0 : k }, { opacity: k, duration: at ? 0.4 : 0.01, immediateRender: false }, t0 + at);
+      };
+      // back to what really happened: a quick white tear up the frame
+      const tear = (L, tl, t0, len = 0.42) => {
+        const id = `tr${Math.round(t0 * 100)}`;
+        put(L.light, `<g id="${id}" opacity="0"><rect width="1080" height="1920" fill="#e8f0f4" opacity=".22"/>${Array.from({ length: 8 }, (_, k) => `<rect id="${id}-l${k}" x="0" y="${200 + k * 240}" width="1080" height="${10 + (k % 3) * 9}" fill="#fff" opacity=".35"/>`).join("")}</g>`);
+        tl.fromTo(`#${id}`, { opacity: 1 }, { opacity: 0, duration: len, ease: "power2.in", immediateRender: false }, t0);
+        for (let k = 0; k < 8; k++) tl.fromTo(`#${id}-l${k}`, { y: 0 }, { y: -1100, duration: len, ease: "none", immediateRender: false }, t0);
+      };
+      // his helmet, put down on the grass (rig units: the helmet's centre at (0, −556))
+      const helmetProp = (x, y, s, rot = -14) => `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s}) translate(0,500)">
+        <ellipse cx="0" cy="-470" rx="70" ry="12" fill="#000" opacity=".35"/>
+        <path d="M-62,-556C-66,-628 -24,-656 4,-656C42,-656 72,-628 68,-556L66,-506Q62,-478 38,-472H-30Q-58,-478 -60,-506Z" fill="#2b3036" stroke="${RLINE}" stroke-width="3"/>
+        <path d="M-50,-626Q4,-664 58,-626" stroke="#2fa45a" stroke-width="12" fill="none" stroke-linecap="round"/>
+        <path d="M-48,-584Q4,-604 56,-584L54,-528Q4,-512 -46,-528Z" fill="#141a20" stroke="${RLINE}" stroke-width="2.8"/>
+        <path d="M30,-582L14,-530M42,-580L28,-532" stroke="#d8eef8" stroke-width="5" opacity=".35" stroke-linecap="round"/></g>`;
+      // the phone in his hand (on the rig's hand group, the palm at (0,118)): the screen lit, a glow on his cheek
+      const phoneIn = (aid, id) => {
+        const hg = document.getElementById(`${aid}-handF`); if (!hg) return;
+        hg.insertAdjacentHTML("beforeend", `<g id="${id}" display="none" transform="translate(4,120) rotate(170)"><circle r="70" fill="#9fdcff" opacity=".18"/>
+          <rect x="-15" y="-32" width="30" height="62" rx="6" fill="#1a1d22" stroke="${RLINE}" stroke-width="2.4"/><rect x="-12" y="-28" width="24" height="52" rx="3" fill="#7fd1ff"/>
+          <path d="M-8,-20h16M-8,-12h10" stroke="#e8f8ff" stroke-width="3" opacity=".8"/></g>`);
+      };
+      // a small splash (something light landing): a few drops and rings, no crown
+      const smallSplash = (L, tl, id, x, y, t) => {
+        put(L.act, `<g id="${id}">${Array.from({ length: 14 }, (_, k) => `<circle id="${id}-p${k}" cx="${x}" cy="${y}" r="${3 + (k % 3) * 2}" fill="#e2f2f6" opacity="0"/>`).join("")}
+          ${[0, 1].map((k) => `<ellipse id="${id}-r${k}" cx="${x}" cy="${y + 6}" rx="20" ry="5" fill="none" stroke="#c8e0e8" stroke-width="4" opacity="0"/>`).join("")}</g>`);
+        for (let k = 0; k < 14; k++) { const a = -Math.PI * (0.15 + 0.7 * ((k * 37) % 14) / 14), v = 70 + ((k * 53) % 7) * 18;
+          tl.fromTo(`#${id}-p${k}`, { x: 0, y: 0, opacity: 0.95 }, { x: Math.cos(a) * v, y: Math.sin(a) * v, duration: 0.25, ease: "power2.out", immediateRender: false }, t);
+          tl.to(`#${id}-p${k}`, { y: "+=" + (60 + (k % 4) * 14), opacity: 0, duration: 0.3, ease: "power2.in" }, t + 0.25); }
+        [0, 1].forEach((k) => tl.fromTo(`#${id}-r${k}`, { attr: { rx: 20, ry: 5 }, opacity: 0.8 }, { attr: { rx: 150 + k * 60, ry: 22 + k * 6 }, opacity: 0, duration: 1.0, ease: "power1.out", immediateRender: false }, t + k * 0.15));
+      };
+      // poses
+      Rig.MODES.flail = (u, o) => { const a = Math.sin(u * 7.5), b = Math.sin(u * 7.5 + 2.1), c = Math.sin(u * 5.2);
+        return { ...Rig.MODES.idle(u, o), uaF: -152 + 20 * a, faF: -28 + 24 * b, uaB: -144 - 20 * b, faB: -22 + 24 * a, thF: -26 + 22 * c, shF: 42 + 18 * a, thB: -6 - 22 * c, shB: 36 - 18 * a, torso: -4 + 3 * c, head: -16 + 3 * a, bodyY: 0 }; };
+      Rig.MODES.cling = (u, o) => { const c = Math.sin(u * 5.6); return { ...Rig.MODES.idle(u, o), head: 12 + 4 * c, torso: 8, thF: -34 + 14 * c, shF: 56, thB: -12 - 10 * c, shB: 44, bodyY: 0 }; };
+      Rig.MODES.callOut = (u, o) => { const w = Math.sin(u * 2 * Math.PI / 0.7); return { ...Rig.MODES.idle(u, o), uaF: -165 + 14 * w, faF: -18 + 10 * w, uaB: -16, faB: -60, torso: -3, head: -10, bodyY: -2 }; };
+      Rig.MODES.swimUp = (u, o) => { const a = Math.sin(u * 6.2), b = Math.sin(u * 6.2 + 1.7);
+        return { ...Rig.MODES.idle(u, o), uaF: -160 + 14 * a, faF: -20 + 16 * b, uaB: -150 - 14 * b, faB: -14 + 16 * a, thF: -40 + 10 * a, shF: 60, thB: -8, shB: 30, torso: -8, head: -18, bodyY: 0 }; };
+      // under the water, closer: the two of them sink, she has his neck, he claws for the surface
+      Sets.drown2 = (L, o = {}) => {
+        const id = o.id || "dw", sy = o.sy ?? 560;
+        put(L.sky, `<linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a6a5e"/><stop offset=".35" stop-color="#11362f"/><stop offset="1" stop-color="#020606"/></linearGradient>
+          <rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-g)"/>
+          <g id="${id}-top"><rect x="-900" y="-600" width="2900" height="${sy + 600}" fill="#3a8a78" opacity=".35"/>
+          <path d="M-900,${sy}Q-760,${sy - 14} -620,${sy}T-340,${sy}T-60,${sy}T220,${sy}T500,${sy}T780,${sy}T1060,${sy}T1340,${sy}T1620,${sy}T1900,${sy}" stroke="#d8fff2" stroke-width="7" fill="none" opacity=".7"/>
+          ${[[240, 150], [560, 120], [820, 170]].map(([x, w]) => `<path class="${id}-ray" d="M${x},${sy}L${x + w},${sy}L${x + w - 240},${sy + 1500}L${x - 320},${sy + 1500}Z" fill="#cfffee" opacity=".08"/>`).join("")}</g>`);
+        put(L.far, Array.from({ length: 60 }, (_, k) => `<circle cx="${f1(-200 + ((k * 211) % 1500))}" cy="${f1(sy + 40 + ((k * 137) % 1400))}" r="${f1(2 + (k % 4) * 1.5)}" fill="#bfe8d8" opacity="${(0.18 + (k % 5) * 0.07).toFixed(2)}"/>`).join(""));
+      };
+      // the door from outside under the water (on Sets.sinkOut): it swings open, ต้น pushes out head first … and stops: his foot
+      const doorOut = (L, tl, id, t, carId, dur) => {
+        const g = document.getElementById(`${carId}-car`); if (!g) return;
+        g.setAttribute("style", "filter: brightness(.74) saturate(.78)");
+        const DP = "M-80,-250L-60,-360Q60,-372 160,-362L160,-70H-80Z";
+        g.insertAdjacentHTML("beforeend", `<path d="${DP}" fill="#051210"/><g id="${id}-tw"><g transform="translate(36,-78) scale(0.36)"><g id="${id}-tr"></g></g></g>
+          <g id="${id}-d"><path d="${DP}" fill="#cfd6dc" stroke="#0b0e13" stroke-width="6"/><path d="M-60,-250L-40,-350Q60,-360 150,-352L150,-250Z" fill="#0c2a2e"/><rect x="100" y="-200" width="40" height="12" rx="5" fill="#8a929c"/>
+            <path d="${DP}" fill="#1c5a52" opacity=".38"/></g>`);
+        Rig.build(document.getElementById(`${id}-tr`), `${id}-t`, Rig.CAST.tonJ);
+        const sh = document.getElementById(`${id}-t-shadow`); if (sh) sh.setAttribute("opacity", "0");
+        Rig.drive(tl, `${id}-t`, t - 0.8, dur + 0.8, [{ t: 0, mode: "swimUp", eyes: "wide", mouth: "o" }], []);
+        realHands(`${id}-t`, SK.tonR, OPEN, OPEN);
+        tl.fromTo(`#${id}-d`, { scaleX: 1, transformOrigin: "100% 50%" }, { scaleX: 0.15, duration: 0.7, ease: "power2.inOut", immediateRender: false }, t);
+        tl.fromTo(`#${id}-tw`, { y: 0 }, { y: -118, duration: 1.0, ease: "power2.out", immediateRender: false }, t + 0.5);
+        tl.to(`#${id}-tw`, { y: -92, duration: 0.12, ease: "power3.in" }, t + 1.55);
+        tl.fromTo(`#${id}-tw`, { x: -5 }, { x: 5, duration: 0.11, yoyo: true, repeat: Math.max(2, Math.ceil((dur - 1.7) / 0.11)), ease: "sine.inOut", immediateRender: false }, t + 1.7);
+        // his last breath streaming up
+        g.insertAdjacentHTML("beforeend", `<g>${Array.from({ length: 10 }, (_, j) => `<circle id="${id}-b${j}" cx="${48 + ((j * 13) % 26) - 13}" cy="-300" r="${4 + (j % 3) * 3}" fill="none" stroke="#e2fff4" stroke-width="2.6" opacity="0"/>`).join("")}</g>`);
+        for (let j = 0; j < 10; j++) tl.fromTo(`#${id}-b${j}`, { y: 0, opacity: 0.9 }, { y: -(260 + (j % 4) * 60), opacity: 0, duration: 1.0 + (j % 3) * 0.3, repeat: Math.ceil(dur / 1.0), ease: "power1.in", immediateRender: false }, t + 0.9 + (j % 5) * 0.16);
+      };
+      // drips off wet hair and chins (world points), on a loop
+      const wetDrips = (L, tl, id, t0, dur, pts) => {
+        put(L.act, `<g>${pts.map(([x, y], j) => `<ellipse id="${id}-${j}" cx="${x}" cy="${y}" rx="3.2" ry="4.6" fill="#cfe8f4" opacity="0"/>`).join("")}</g>`);
+        pts.forEach((p, j) => tl.fromTo(`#${id}-${j}`, { y: 0, opacity: 0.9 }, { y: 46, opacity: 0, duration: 0.7, repeat: Math.ceil(dur / 1.1), repeatDelay: 0.4, ease: "power2.in", immediateRender: false }, t0 + j * 0.27));
+      };

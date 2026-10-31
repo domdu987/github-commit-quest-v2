@@ -114,7 +114,7 @@ CUES = [
     ("grab", 0.0, "sting", 0.26), *beats("grab", 0.3, D["grab"] - 0.3, 0.45, 0.32),
     ("throw", 0.45, "whoosh", 0.24), ("reach", 0.3, "whoosh", 0.2),
     *beats("full", 0.0, D["full"], 0.5, 0.35),
-    ("rw", 0.0, "rewind", 0.42), ("rw", 0.65, "sting", 0.3),
+    ("three", 0.0, "rewind", 0.18), ("rw", 0.0, "rewind", 0.42), ("rw", 0.65, "sting", 0.3),
     ("lamp", 0.1, "sting", 0.22), ("same", 0.0, "swell", 0.2),
     ("end", 0.1, "whoosh", 0.3), ("end", 0.6, "ding", 0.24),
 ]
@@ -123,7 +123,7 @@ exec(open(os.path.join(HERE, "..", "samples_inc.py")).read())
 SAMPLES = [
     ("hook", 0.0, "crickets", 0.3, 2.9), ("hook", 0.0, "struggle", 0.45, 2.9), ("hook", 0.2, "scooter", 0.55, 2.7),
     ("jump", 0.0, "struggle", 0.35, 1.6), ("jump", 0.0, "crickets", 0.25, 1.6),
-    ("grab", 0.0, "underwater", 0.55, 5.2), ("grab", 0.5, "bubbles", 0.5),
+    ("grab", 0.0, "plunge", 0.32, 0.9), ("grab", 0.0, "underwater", 0.55, 5.2), ("grab", 0.5, "bubbles", 0.5),
     ("three", 0.0, "struggle", 0.3, 3.6), ("three", 0.0, "crickets", 0.25, 3.6),
     ("shout", 0.0, "struggle", 0.18, 3.5),
     ("throw", 1.38, "jugsplash", 0.9), ("throw", 0.0, "struggle", 0.18, 1.4),

@@ -26,30 +26,58 @@
           tl.fromTo("#bk0", { attr: { transform: `translate(1300,${BIKE.y}) scale(${-BIKE.s},${BIKE.s})` } }, { attr: { transform: `translate(${BIKE.x},${BIKE.y}) scale(${-BIKE.s},${BIKE.s})` }, duration: 1.6, ease: "power2.out", immediateRender: false }, t0);
         },
       });
-      // ---------- 2. the command: he kicks off his shoes at the edge ----------
+      // ---------- 2. the command: he steps off the edge (what would happen: the colour drains out) ----------
       add("jump", {
         ...BANK("cn1"),
         cam: { keys: [{ t: 0, ...fr(600, 1060, 1.9, 540, 980) }, { t: D("jump"), glide: D("jump"), ...fr(610, 1050, 2.0, 540, 980) }] },
         actors: [KIMw("cheer", "wide", "scream"), RIDER("kick", "wide", "o")],
         captions: caps("jump"),
-        fx(tl, id, t0, L) { noShadows(tl, id, 2); Canal.life(tl, "cn1", t0, D("jump")); inWater(L, tl, t0, D("jump"), "j0"); parkedBike(L, "bk1", BIKE.x, BIKE.y, BIKE.s); },
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 2); Canal.life(tl, "cn1", t0, D("jump")); inWater(L, tl, t0, D("jump"), "j0"); parkedBike(L, "bk1", BIKE.x, BIKE.y, BIKE.s);
+          realHands(`${id}-a0`, SK.kim, OPEN, OPEN); realHands(`${id}-a1`, SK.rider, OPEN, RELAX, { under: true }); whatIf(L, tl, t0, 0.7);
+        },
       });
-      // ---------- 3. what would happen: under the water she clings round his neck and takes him down ----------
+      // ---------- 3. what would happen: under the water she has him round the neck and takes him down; he claws for the surface ----------
       add("grab", {
-        set: "drown", setOpts: { id: "dr0" }, dark: 0.02, light: false, grade: GWATER, blur: { sky: 1 },
-        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }, { t: D("grab"), glide: D("grab"), ...fr(540, 1080, 1.1, 540, 960) }] },
-        actors: [A("mint", 530, 1480, 0.66, [{ t: 0, mode: "hug", eyes: "wide", mouth: "scream" }], { path: [{ t: 0, x: 530, y: 1462 }, { t: D("grab"), x: 530, y: 1782 }] }),
-          A("rider", 560, 1700, 0.95, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "scream" }], { path: [{ t: 0, x: 560, y: 1640 }, { t: D("grab"), x: 560, y: 1960 }] })],
+        set: "drown2", setOpts: { id: "dr0", sy: 400 }, dark: 0.02, light: false, grade: GWATER, blur: { sky: 1 },
+        cam: { keys: [{ t: 0, ...fr(540, 1030, 1.34, 540, 860) }, { t: D("grab"), glide: D("grab"), ...fr(540, 1130, 1.42, 540, 860) }] },
+        actors: [A("mint", 462, 1160, 0.66, [{ t: 0, mode: "cling", eyes: "wide", mouth: "scream" }], { blinks: [] }),
+          A("rider", 560, 1300, 0.95, [{ t: 0, mode: "flail", eyes: "wide", mouth: "scream" }], { blinks: [] })],
         captions: caps("grab"),
-        fx(tl, id, t0, L) { noShadows(tl, id, 2); bubbles(L, tl, "dr0bb", t0, D("grab"), 540, 900, 24, 300); },
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 2);
+          const k = `${id}-a0`, r = `${id}-a1`, w = wrap(r, "gp0"); w.insertBefore(document.getElementById(k), w.firstChild);
+          realHands(r, SK.rider, OPEN, OPEN, { under: true }); hideRigArms(k);
+          const c = { x: 462, y: 1160, s: 0.66 }, [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, o = { w: [24, 20], sleeve: ["#c9b6ea", 0.4], hs: 0.34, hand: { ...GRIP } };
+          const WN = [588, 932], WF = [548, 950];
+          put(w, `<g>${armK(SL, WF, l1, l2, -1, SK.kim, { ...o, fix: 120 })}${armK(SR, WN, l1, l2, -1, SK.kim, { ...o, fix: 110, mirror: true })}</g>`);
+          // the bubbles: out of his chin bar and her mouth, riding down with them
+          const bub = (bid, x, y, n, sp, t1) => { put(w, `<g>${Array.from({ length: n }, (_, j) => `<circle id="${bid}-${j}" cx="${x + ((j * 37) % sp) - sp / 2}" cy="${y}" r="${4 + (j % 4) * 3}" fill="none" stroke="#e2fff4" stroke-width="2.6" opacity="0"/>`).join("")}</g>`);
+            for (let j = 0; j < n; j++) tl.fromTo(`#${bid}-${j}`, { y: 0, opacity: 0.9 }, { y: -(300 + (j % 5) * 70), x: ((j % 3) - 1) * 16, opacity: 0, duration: 1.1 + (j % 3) * 0.3, repeat: Math.ceil(D("grab") / 1.1), ease: "power1.in", immediateRender: false }, t1 + (j % 6) * 0.17); };
+          bub("gpb0", 590, 860, 12, 40, t0 + 0.2); bub("gpb1", 474, 820, 9, 30, t0 + 0.5);
+          // the dive: a burst from the surface as the scene opens
+          put(L.act, `<g>${Array.from({ length: 22 }, (_, j) => `<circle id="gpd-${j}" cx="${430 + ((j * 53) % 220)}" cy="${640 + ((j * 29) % 160)}" r="${5 + (j % 5) * 4}" fill="none" stroke="#e8fff6" stroke-width="3" opacity="0"/>`).join("")}</g>`);
+          for (let j = 0; j < 22; j++) tl.fromTo(`#gpd-${j}`, { y: 60, opacity: 0.95 }, { y: -220 - (j % 4) * 60, opacity: 0, duration: 0.9 + (j % 3) * 0.25, ease: "power2.out", immediateRender: false }, t0 + (j % 5) * 0.04);
+          // down they go, twisting; the surface and its light fall away; the dark closes in
+          tl.fromTo("#gp0", { y: -40 }, { y: 250, duration: D("grab"), ease: "sine.in", immediateRender: false }, t0);
+          tl.fromTo("#gp0", { rotation: -4, svgOrigin: "540 980" }, { rotation: 4, svgOrigin: "540 980", duration: 0.55, yoyo: true, repeat: Math.ceil(D("grab") / 0.55), ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#dr0-top", { y: 0 }, { y: -170, duration: D("grab"), ease: "sine.in", immediateRender: false }, t0);
+          put(L.light, `<rect id="gpdk" width="1080" height="1920" fill="#000" opacity="0"/>`);
+          tl.fromTo("#gpdk", { opacity: 0 }, { opacity: 0.38, duration: D("grab"), ease: "power1.in", immediateRender: false }, t0);
+          whatIf(L, tl, t0, 0);
+        },
       });
-      // ---------- 4. three words, and none of them is "jump": he stops at the edge ----------
+      // ---------- 4. back to what really happened: he never went in. His helmet off on the grass, he stops at the edge ----------
       add("three", {
         ...BANK("cn2"),
         cam: { keys: [{ t: 0, ...fr(560, 1080, 1.6, 540, 980) }, { t: D("three"), glide: D("three"), ...fr(560, 1090, 1.7, 540, 980) }] },
-        actors: [KIMw("cheer", "wide", "scream"), RIDER("idle", "worry", "flat")],
+        actors: [KIMw("cheer", "wide", "scream"), A("riderF", EDGE.x, EDGE.y, EDGE.s, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true })],
         captions: caps("three"),
-        fx(tl, id, t0, L) { noShadows(tl, id, 2); Canal.life(tl, "cn2", t0, D("three")); inWater(L, tl, t0, D("three"), "t0"); parkedBike(L, "bk2", BIKE.x, BIKE.y, BIKE.s); },
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 2); Canal.life(tl, "cn2", t0, D("three")); inWater(L, tl, t0, D("three"), "t0"); parkedBike(L, "bk2", BIKE.x, BIKE.y, BIKE.s);
+          put(L.act, helmetProp(EDGE.x + 104, EDGE.y - 18, 0.72));
+          realHands(`${id}-a0`, SK.kim, OPEN, OPEN); realHands(`${id}-a1`, SK.rider, RELAX, RELAX, { under: true }); tear(L, tl, t0);
+        },
       });
       // ---------- 5. ขิม: her brother is still down there ----------
       add("kim", {
@@ -58,48 +86,85 @@
         shake: (t) => ({ x: 3 * Math.sin(t * 21), y: 2 * Math.sin(t * 17), r: 0 }),
         actors: [KIMw("cheer", "wide", "scream", { talk: [TALK("kim", 0, "scream")] })],
         captions: caps("kim", undefined, QUO),
-        fx(tl, id, t0, L) { noShadows(tl, id, 1); inWater(L, tl, t0, D("kim"), "k0"); },
+        fx(tl, id, t0, L) { noShadows(tl, id, 1); inWater(L, tl, t0, D("kim"), "k0"); realHands(`${id}-a0`, SK.kim, OPEN, OPEN); },
       });
-      // ---------- 6. ตะโกน: he shouts up the road, then the phone: 1669 ----------
+      // ---------- 6. ตะโกน: he shouts up the road, waving; then the phone to his ear: 1669 ----------
       add("shout", {
         ...BANK("cn4"),
         cam: { keys: [{ t: 0, ...fr(640, 1000, 2.1, 540, 980) }, { t: D("shout"), glide: D("shout"), ...fr(640, 990, 2.2, 540, 980) }] },
-        actors: [RIDER("phoneEar", "wide", "scream")],
+        actors: [A("riderF", EDGE.x, EDGE.y, EDGE.s, [{ t: 0, mode: "callOut", eyes: "wide", mouth: "scream" }, { t: F("shout", 0, 1) - 0.25, mode: "phoneEar", eyes: "worry", mouth: "o" }], { flip: true })],
         captions: caps("shout"),
-        fx(tl, id, t0, L) { noShadows(tl, id, 1); Canal.life(tl, "cn4", t0, D("shout")); parkedBike(L, "bk4", BIKE.x, BIKE.y, BIKE.s); inWater(L, tl, t0, D("shout"), "s0"); },
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 1); Canal.life(tl, "cn4", t0, D("shout")); parkedBike(L, "bk4", BIKE.x, BIKE.y, BIKE.s); inWater(L, tl, t0, D("shout"), "s0");
+          put(L.act, helmetProp(EDGE.x + 104, EDGE.y - 18, 0.72));
+          const r = `${id}-a0`; realHands(r, SK.rider, OPEN, RELAX, { under: true }); phoneIn(r, "ph4");
+          tl.set("#ph4", { display: "inline" }, t0 + F("shout", 0, 1) - 0.25);
+          // his voice carrying up the road
+          put(L.act, `<g id="sh4" transform="translate(${EDGE.x - 70},${EDGE.y - 395})">${[0, 1, 2].map((j) => `<path id="sh4-${j}" d="M0,${-22 - j * 14}Q${-26 - j * 16},0 0,${22 + j * 14}" stroke="#fff4dc" stroke-width="6" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}</g>`);
+          [0, 1, 2].forEach((j) => tl.fromTo(`#sh4-${j}`, { x: 0, opacity: 0.85 }, { x: -60, opacity: 0, duration: 0.5, repeat: 2, ease: "power1.out", immediateRender: false }, t0 + 0.2 + j * 0.12));
+        },
       });
-      // ---------- 7. โยน: the empty gallon from his basket, out over the water to her; she hugs it ----------
+      // ---------- 7. โยน: the empty gallon from his basket, out over the water to her; she gets both arms round it ----------
       add("throw", {
         ...BANK("cn5"),
         cam: { keys: [{ t: 0, ...fr(520, 1100, 1.5, 540, 980) }, { t: D("throw"), glide: D("throw"), ...fr(470, 1120, 1.65, 540, 980) }] },
-        actors: [A("mint", KW.x, KW.y, KW.s, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "scream" }, { t: 1.5, mode: "hug", eyes: "wide", mouth: "o" }]), RIDER("swing", "wide", "o")],
+        actors: [A("mint", KW.x, KW.y, KW.s, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "scream" }, { t: 1.5, mode: "idle", eyes: "wide", mouth: "o" }]), A("riderF", EDGE.x, EDGE.y, EDGE.s, [{ t: 0, mode: "swing", eyes: "wide", mouth: "o" }], { flip: true })],
         captions: caps("throw"),
         fx(tl, id, t0, L) {
           noShadows(tl, id, 2); Canal.life(tl, "cn5", t0, D("throw")); parkedBike(L, "bk5", BIKE.x, BIKE.y, BIKE.s); inWater(L, tl, t0, D("throw"), "w0");
-          put(L.act, gallon("gl0", 620, 980, 0.7));
-          tl.fromTo("#gl0", { x: 0 }, { x: KW.x + 30 - 620, duration: 0.9, ease: "none", immediateRender: false }, t0 + 0.5);
-          tl.fromTo("#gl0", { y: 0 }, { y: -120, duration: 0.42, ease: "power2.out", immediateRender: false }, t0 + 0.5);
-          tl.to("#gl0", { y: WY - 6 - 980, duration: 0.48, ease: "power2.in" }, t0 + 0.92);
-          tl.fromTo("#gl0-r", { rotation: 0 }, { rotation: 300, duration: 0.9, ease: "none", immediateRender: false }, t0 + 0.5);
-          tl.to("#gl0", { y: WY - 30 - 980, duration: 0.5, ease: "power2.out" }, t0 + 1.45);
-          Canal.splash(L, tl, "gls", KW.x + 30, WY, t0 + 1.4);
+          put(L.act, helmetProp(EDGE.x + 104, EDGE.y - 18, 0.72));
+          const k = `${id}-a0`; realHands(k, SK.kim, OPEN, OPEN); realHands(`${id}-a1`, SK.rider, OPEN, OPEN, { under: true });
+          // the gallon flies (outer group moves, inner group spins), lands, bobs; drawn under the water's skin so it floats
+          const GX = 404, GY = 1176, wat = document.getElementById("w0w");
+          wat.insertAdjacentHTML("beforebegin", `<g id="gl0m"><g transform="translate(620,980)"><g id="gl0s"><g transform="scale(0.62)">${gallon("gl0", 0, 0, 1)}</g></g></g></g>`);
+          tl.fromTo("#gl0m", { x: 0 }, { x: GX - 620, duration: 0.9, ease: "none", immediateRender: false }, t0 + 0.5);
+          tl.fromTo("#gl0m", { y: 0 }, { y: -130, duration: 0.42, ease: "power2.out", immediateRender: false }, t0 + 0.5);
+          tl.to("#gl0m", { y: GY - 980, duration: 0.48, ease: "power2.in" }, t0 + 0.92);
+          tl.fromTo("#gl0s", { rotation: 0 }, { rotation: -340, transformOrigin: "50% 50%", duration: 0.9, ease: "none", immediateRender: false }, t0 + 0.5);
+          tl.to("#gl0s", { rotation: -380, transformOrigin: "50% 50%", duration: 0.5, ease: "power2.out" }, t0 + 1.4);
+          tl.to("#gl0m", { y: GY - 980 + 8, duration: 0.6, yoyo: true, repeat: 3, ease: "sine.inOut" }, t0 + 1.45);
+          smallSplash(L, tl, "gls", GX, WY - 2, t0 + 1.4);
+          // she grabs it: her own arms out of the water and round the gallon
+          const c = { x: KW.x, y: KW.y, s: KW.s }, [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, o = { w: [22, 19], sleeve: ["#c9b6ea", 0.4], hs: 0.3, hand: { ...GRIP } };
+          wat.insertAdjacentHTML("beforebegin", `<g id="kh7" opacity="0">${armK(SR, [GX + 18, GY - 34], l1, l2, 1, SK.kim, { ...o, fix: 100, mirror: true })}</g>`);
+          rigArms(tl, k, false, t0 + 1.5); tl.set("#kh7", { opacity: 1 }, t0 + 1.5);
         },
       });
-      // ---------- 8. ยื่น: a long bamboo pole off the bank; she grabs it and he walks her in ----------
+      // ---------- 8. ยื่น: sitting low on the bank he slides a long bamboo pole out; she takes it in both hands; he draws her in ----------
       add("reach", {
         ...BANK("cn6"),
-        cam: { keys: [{ t: 0, ...fr(500, 1120, 1.55, 540, 980) }, { t: D("reach"), glide: D("reach"), ...fr(540, 1100, 1.65, 540, 980) }] },
-        actors: [A("mint", KW.x, KW.y, KW.s, [{ t: 0, mode: "hug", eyes: "wide", mouth: "o" }], { path: [{ t: 0, x: KW.x, y: KW.y }, { t: 1.6, x: KW.x, y: KW.y }, { t: D("reach"), x: 520, y: 1430 }] }),
-          RIDER("reachPole", "worry", "flat", 700, 1150, EDGE.s)],
+        cam: { keys: [{ t: 0, ...fr(520, 1110, 1.6, 540, 900) }, { t: D("reach"), glide: D("reach"), ...fr(560, 1100, 1.7, 540, 900) }] },
+        actors: [A("mint", KW.x, KW.y, KW.s, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "scream" }, { t: 1.2, mode: "idle", eyes: "wide", mouth: "o" }]),
+          A("riderF", 742, 1118, 0.66, [{ t: 0, mode: "sit", eyes: "worry", mouth: "flat" }], { flip: true })],
         captions: caps("reach"),
         fx(tl, id, t0, L) {
           noShadows(tl, id, 2); Canal.life(tl, "cn6", t0, D("reach")); parkedBike(L, "bk6", BIKE.x, BIKE.y, BIKE.s); inWater(L, tl, t0, D("reach"), "r0");
-          put(L.act, `<g id="pl0"></g>`);
-          const el = document.getElementById("pl0"), c = { p: 0, q: 0 };
-          const draw = () => { const ext = c.p, kx = KW.x + (520 - KW.x) * c.q, ky = 1150 - 70 * c.q; el.innerHTML = pole(640, 1060, 640 + (kx + 20 - 640) * ext, 1060 + (ky - 1060) * ext); };
+          put(L.act, helmetProp(836, 1104, 0.72, 8));
+          const k = `${id}-a0`, r = `${id}-a1`; realHands(k, SK.kim, OPEN, OPEN); hideRigArms(r);
+          const kw = wrap(k, "kw6"), wat = document.getElementById("r0w"); wat.parentNode.insertBefore(kw, wat);
+          // the line of the pole: from the tip at the waterline beside her chin, up through his two grips (arms near straight)
+          const TIP = [372, 1174], s = 0.66, SHF = [742 - 46 * s, 1118 - 165 * s], SHB = [742 + 46 * s, 1118 - 165 * s], al1 = 122 * s, al2 = 108 * s;
+          const dF = [TIP[0] - SHF[0], TIP[1] - SHF[1]], dl = Math.hypot(dF[0], dF[1]), GF = [SHF[0] + dF[0] / dl * 128, SHF[1] + dF[1] / dl * 128];
+          const ux = GF[0] - TIP[0], uy = GF[1] - TIP[1], ul = Math.hypot(ux, uy), U = [ux / ul, uy / ul], GB = [GF[0] + U[0] * 56, GF[1] + U[1] * 56], PULL = [U[0] * 200, U[1] * 200];
+          // her arms up to the tip (inside her wrapper, so they come with her)
+          const c = { x: KW.x, y: KW.y, s: KW.s }, [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, ko = { w: [22, 19], sleeve: ["#c9b6ea", 0.4], hs: 0.3, hand: { ...GRIP } };
+          put(kw, `<g id="kh8" opacity="0">${armK(SL, [TIP[0] + 18, TIP[1] - 4], l1, l2, 1, SK.kim, { ...ko, fix: 70 })}${armK(SR, [TIP[0] - 2, TIP[1] + 2], l1, l2, 1, SK.kim, { ...ko, fix: 65, mirror: true })}</g>`);
+          rigArms(tl, k, false, t0 + 1.2); tl.set("#kh8", { opacity: 1 }, t0 + 1.2);
+          // the pole and his arms, redrawn every frame
+          put(L.act, `<g id="pl8"></g>`);
+          const el = document.getElementById("pl8"), st = { e: 0, q: 0, h: 0 }, ro = { w: [22, 18], hs: 0.3 }, L0 = ul;
+          const draw = () => {
+            const hb = st.h * 22, gB = [GB[0] + U[0] * hb, GB[1] + U[1] * hb], gF = [GF[0] + U[0] * hb, GF[1] + U[1] * hb];
+            const pq = [PULL[0] * st.q, PULL[1] * st.q], len = 70 + (L0 - 70) * st.e, tip = [GF[0] - U[0] * len + pq[0], GF[1] - U[1] * len + pq[1]];
+            const back = [GB[0] + U[0] * 70 + pq[0], GB[1] + U[1] * 70 + pq[1]];
+            el.innerHTML = pole(back[0], back[1], tip[0], tip[1]) +
+              armSl(SHB, gB, al1, al2, elbowOut(SHB, gB, al1, al2, 0), SK.rider, GREEN, { ...ro, hand: { ...GRIP } }) + armSl(SHF, gF, al1, al2, elbowOut(SHF, gF, al1, al2, 0), SK.rider, GREEN, { ...ro, hand: { ...GRIP }, mirror: true });
+          };
           draw();
-          tl.to(c, { p: 1, duration: 0.8, ease: "power2.out", immediateRender: false, onUpdate: draw }, t0 + 0.3);
-          tl.to(c, { q: 1, duration: D("reach") - 1.6, ease: "sine.inOut", onUpdate: draw }, t0 + 1.6);
+          tl.to(st, { e: 1, duration: 0.85, ease: "power2.out", immediateRender: false, onUpdate: draw }, t0 + 0.25);
+          tl.to(st, { q: 1, duration: D("reach") - 1.6, ease: "sine.inOut", onUpdate: draw }, t0 + 1.6);
+          tl.to(st, { h: 1, duration: 0.5, yoyo: true, repeat: Math.ceil((D("reach") - 1.6) / 0.5), ease: "sine.inOut", onUpdate: draw }, t0 + 1.6);
+          tl.fromTo("#kw6", { x: 0, y: 0 }, { x: PULL[0], y: PULL[1], duration: D("reach") - 1.6, ease: "sine.inOut", immediateRender: false }, t0 + 1.6);
         },
       });
       // ---------- 9. in the car, full of water: ต้น holding the last breath ----------
@@ -114,12 +179,12 @@
           bubbles(L, tl, "cf0bb", t0, D("full"), 650, 1140, 14, 120);
         },
       });
-      // ---------- 10. now the pressure's even: his door gives, he's out ----------
+      // ---------- 10. now the pressure's even: his door gives; he pushes out, and stops: the foot ----------
       add("door", {
         set: "sinkOut", setOpts: { id: "so1", y: 1300, tilt: 6, kim: false }, dark: 0, light: false, grade: GWATER, blur: { sky: 1.5, far: 1 },
-        cam: { keys: [{ t: 0, ...fr(560, 1150, 1.15, 540, 960) }, { t: D("door"), glide: D("door"), ...fr(560, 1060, 1.25, 540, 960) }] },
+        cam: { keys: [{ t: 0, ...fr(610, 1110, 1.55, 540, 880) }, { t: D("door"), glide: D("door"), ...fr(610, 1060, 1.7, 540, 880) }] },
         captions: caps("door"),
-        fx(tl, id, t0, L) { doorOpen(L, tl, "so1d", t0 + 0.8, "so1"); bubbles(L, tl, "so1bb", t0 + 0.9, D("door") - 0.9, 600, 1050, 18, 200); },
+        fx(tl, id, t0, L) { doorOut(L, tl, "so1d", t0 + 0.8, "so1", D("door") - 0.8); bubbles(L, tl, "so1bb", t0 + 0.9, D("door") - 0.9, 600, 1050, 18, 200); },
       });
       // ---------- 11. his foot: out of the shoe; the shoe stays under the pedal ----------
       add("shoe", {
@@ -154,22 +219,31 @@
         ...BANK("cn8"),
         cam: { keys: [{ t: 0, ...fr(560, 900, 1.7, 540, 960) }, { t: D("sorry"), glide: D("sorry"), ...fr(570, 900, 1.8, 540, 960) }] },
         actors: [A("tonJ", 420, RY + 40, 0.62, [{ t: 0, mode: "sit", eyes: "worry", mouth: "flat" }]), A("mint", 500, RY + 40, 0.46, [{ t: 0, mode: "sit", eyes: "worry", mouth: "o" }]),
-          RIDER("bow", "worry", "flat", 700, RY + 30, 0.66, { talk: [TALK("sorry", 0, "o")] })],
+          A("riderF", 700, RY + 30, 0.66, [{ t: 0, mode: "bow", eyes: "worry", mouth: "flat" }], { flip: true, talk: [TALK("sorry", 0, "o")] })],
         captions: caps("sorry", undefined, QUO),
-        fx(tl, id, t0, L) { noShadows(tl, id, 3); Canal.life(tl, "cn8", t0, D("sorry")); parkedBike(L, "bk8", BIKE.x + 120, BIKE.y, BIKE.s); },
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 3); Canal.life(tl, "cn8", t0, D("sorry")); parkedBike(L, "bk8", BIKE.x + 120, BIKE.y, BIKE.s);
+          realHands(`${id}-a0`, SK.tonR, RELAX, RELAX); realHands(`${id}-a1`, SK.kim, RELAX, RELAX); realHands(`${id}-a2`, SK.rider, RELAX, RELAX, { under: true });
+          wetDrips(L, tl, "wd8", t0, D("sorry"), [[402, RY - 92], [440, RY - 96], [486, RY - 58], [516, RY - 60]]);
+        },
       });
-      // ---------- 16. the ambulance's lights on the canal road ----------
+      // ---------- 16. the ambulance pulls up, its lights on the canal road ----------
       add("hosp", {
         ...BANK("cn9"),
         cam: { keys: [{ t: 0, ...fr(600, 940, 1.35, 540, 960) }, { t: D("hosp"), glide: D("hosp"), ...fr(620, 930, 1.45, 540, 960) }] },
         actors: [A("tonJ", 420, RY + 40, 0.62, [{ t: 0, mode: "sit", eyes: "worry", mouth: "flat" }]), A("mint", 500, RY + 40, 0.46, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]),
-          RIDER("idle", "worry", "flat", 660, RY + 30, 0.66)],
+          A("riderF", 660, RY + 30, 0.66, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true })],
         captions: caps("hosp"),
-        fx(tl, id, t0, L) { noShadows(tl, id, 3); Canal.life(tl, "cn9", t0, D("hosp")); ambulance(L, tl, "amb", t0, D("hosp"), 1000); },
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 3); Canal.life(tl, "cn9", t0, D("hosp")); ambulance(L, tl, "amb", t0, D("hosp"), 930);
+          tl.fromTo("#amb", { x: 520 }, { x: 0, duration: 1.3, ease: "power2.out", immediateRender: false }, t0);
+          realHands(`${id}-a0`, SK.tonR, RELAX, RELAX); realHands(`${id}-a1`, SK.kim, RELAX, RELAX); realHands(`${id}-a2`, SK.rider, RELAX, RELAX, { under: true });
+          wetDrips(L, tl, "wd9", t0, D("hosp"), [[402, RY - 92], [440, RY - 96], [486, RY - 58], [516, RY - 60]]);
+        },
       });
-      // ---------- 17. the end ----------
+      // ---------- 17. the end: the canal, quiet again, under the card ----------
       add("end", {
-        dark: 0, light: false,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
-        fx(tl, id, t0, L) { finaleCard(L, tl, t0, D("end")); },
+        ...BANK("cn10"), dark: 0.2,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.2, 540, 960) }, { t: D("end"), glide: D("end"), ...fr(540, 1000, 1.28, 540, 960) }] },
+        fx(tl, id, t0, L) { Canal.life(tl, "cn10", t0, D("end")); finaleCard(L, tl, t0, D("end")); },
       });

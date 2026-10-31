@@ -9,8 +9,9 @@
       // the cutaway seen from the passenger side: the car's front on the left, the driver's door (his open window) behind him
       const CUTM2 = (id, out) => ({ set: "carCut", setOpts: { id, out, mirror: true }, dark: 0.12, light: CABIN, grade: GNIGHT });
       const TM = { x: 1080 - CT2.x, y: CT2.y, s: CT2.s }, KM = { x: 1080 - CK3.x, y: CK3.y, s: CK3.s };
-      const TONm = (mode, eyes, mouth) => A("boss", TM.x, TM.y, TM.s, [{ t: 0, mode, eyes, mouth }], { flip: true });
+      const TONm = (mode, eyes, mouth) => A("tonJ", TM.x, TM.y, TM.s, [{ t: 0, mode, eyes, mouth }], { flip: true });
       const KIMm = (mode, eyes, mouth, extra = {}) => A("mint", KM.x, KM.y, KM.s, [{ t: 0, mode, eyes, mouth }], { flip: true, ...extra });
+      const CUT1 = (id, out) => ({ set: "carCut", setOpts: { id, out }, dark: 0.12, light: CABIN, grade: GNIGHT });
       const noShadows = (tl, id) => ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
       Rig.MODES.punchUp = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: -10, head: -10, uaF: -150 + 8 * Math.sin(u * 9), faF: -12, uaB: -40, faB: -60 });
       Rig.MODES.headUp = (u, o) => { const j = Math.sin(u * 17) * 1.4; return { ...Rig.MODES.sitChair(u, o), bodyY: 104, torso: -6 + j, head: -24 + j, uaF: -120, faF: -30, uaB: -110, faB: -36 }; };
@@ -40,7 +41,7 @@
         actors: [TONm("punchUp", "angry", "scream"), KIMm("sitHold", "wide", "scream")],
         captions: caps("fist"),
         fx(tl, id, t0, L) {
-          noShadows(tl, id); openWin(L, tl, "cm0", t0, D("fist"));
+          noShadows(tl, id); cabRich(L, tl, "cm0", t0, D("fist"), { openF: true, caustic: false }); openWin(L, tl, "cm0", t0, D("fist"));
           cutFront(L, "cm0", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm0", t0, D("fist"), 1300, 1294);
         },
       });
@@ -75,7 +76,7 @@
         actors: [TONm("brace", "wide", "o"), KIMm("sitHold", "wide", "scream")],
         captions: caps("dark"),
         fx(tl, id, t0, L) {
-          noShadows(tl, id); openWin(L, tl, "cm1", t0, D("dark"));
+          noShadows(tl, id); cabRich(L, tl, "cm1", t0, D("dark"), { openF: true, caustic: false }); openWin(L, tl, "cm1", t0, D("dark"));
           cutFront(L, "cm1", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm1", t0, D("dark"), 1294, 1284, 950, 940);
           put(L.light, `<rect id="cm1dk" width="1080" height="1920" fill="#000" opacity="0"/>`);
           [[F("dark", 0, 1), 0.5], [F("dark", 0, 1) + 0.12, 0.1], [F("dark", 0, 1) + 0.3, 0.55]].forEach(([t, o]) => tl.set("#cm1dk", { opacity: o }, t0 + t));
@@ -95,19 +96,19 @@
         shake: (t) => ({ x: 3 * Math.sin(t * 23), y: 2 * Math.sin(t * 19), r: 0 }),
         actors: [TONm("brace", "wide", "o"), KIMm("sitStand", "wide", "scream", { talk: [TALK("kim", 0, "scream")] })],
         captions: caps("kim", undefined, QUO),
-        fx(tl, id, t0, L) { noShadows(tl, id); cutFront(L, "cm2", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm2", t0, D("kim"), 1272, 1262, 940, 930); },
+        fx(tl, id, t0, L) { noShadows(tl, id); cabRich(L, tl, "cm2", t0, D("kim"), { openF: true, caustic: true }); cutFront(L, "cm2", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm2", t0, D("kim"), 1272, 1262, 940, 930); },
       });
       // ---------- 8. her window: his fist, twice; it doesn't give ----------
       add("smash", {
-        ...WIN("cw2"),
-        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.05, 540, 960), drift: { s: 0.02 } }] },
+        ...CUT1("cs0", 930),
+        cam: { keys: [{ t: 0, ...fr(430, 1235, 1.55, 540, 960) }, { t: D("smash"), glide: D("smash"), ...fr(420, 1230, 1.65, 540, 960) }] },
         shake: (t) => { const k = Math.max(...[0.7, 1.9].map((p) => Math.max(0, 1 - Math.abs(t - p) / 0.15))); return { x: 9 * k * Math.sin(t * 70), y: 6 * k * Math.sin(t * 61), r: 0 }; },
+        actors: [A("tonJ", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "reachBack", eyes: "angry", mouth: "scream" }]), A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "scream" }])],
         captions: caps("smash"),
         fx(tl, id, t0, L) {
-          outsideRich(L, tl, "cw2o", t0, D("smash"), 420, 400); glassDrops("cw2");
-          put(L.act, `<g id="cw2f-fist"><g id="cw2f-fi">${handAt([150, 230], -24, 2.6, SK.ton, { ...FIST, band: BAND, sw: 0.55, fore: 900 })}</g></g>`);
-          punch(tl, "cw2f", t0 + 0.7, 560, 820); punch(tl, "cw2f", t0 + 1.9, 600, 760);
-          tl.to("#cw2-glass", { x: 5, duration: 0.05, yoyo: true, repeat: 3 }, t0 + 0.7); tl.to("#cw2-glass", { x: 5, duration: 0.05, yoyo: true, repeat: 3 }, t0 + 1.9);
+          noShadows(tl, id); hideRigArms(`${id}-a0`); cabRich(L, tl, "cs0", t0, D("smash"), { caustic: true }); cutFront(L, "cs0", { free: ["ton", "kim"] });
+          cutUnder(L, tl, "cs0", t0, D("smash"), 1262, 1254, 930, 924);
+          strikeArm(L, tl, "cs0a", t0, [0.7, 1.9], false); hitMark(L, tl, "cs0h1", t0 + 0.7); hitMark(L, tl, "cs0h2", t0 + 1.9);
         },
       });
       // ---------- 9. something hard and pointed: he pulls the headrest out on its prongs ----------
@@ -123,12 +124,15 @@
       });
       // ---------- 10. the prongs at the lower front corner: they skid ----------
       add("headrest", {
-        ...WIN("cw3"),
-        cam: { keys: [{ t: 0, ...fr(760, 1100, 1.3, 540, 960), drift: { s: 0.02 } }] },
+        ...CUT1("cs1", 920),
+        cam: { keys: [{ t: 0, ...fr(430, 1235, 1.55, 540, 960) }, { t: D("headrest"), glide: D("headrest"), ...fr(440, 1230, 1.68, 540, 960) }] },
+        shake: (t) => { const k = Math.max(...[0.7, 1.4, 2.1].map((p) => Math.max(0, 1 - Math.abs(t - p) / 0.12))); return { x: 7 * k * Math.sin(t * 70), y: 5 * k * Math.sin(t * 61), r: 0 }; },
+        actors: [A("tonJ", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "reachBack", eyes: "angry", mouth: "scream" }]), A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "scream" }])],
         captions: caps("headrest"),
         fx(tl, id, t0, L) {
-          outsideRich(L, tl, "cw3o", t0, D("headrest"), 400, 380); glassDrops("cw3");
-          prongStrike(L, tl, "cw3p", t0 + 0.7, 920, 1200, 3, 0.7);
+          noShadows(tl, id); hideRigArms(`${id}-a0`); cabRich(L, tl, "cs1", t0, D("headrest"), { caustic: true }); cutFront(L, "cs1", { free: ["ton", "kim"] });
+          cutUnder(L, tl, "cs1", t0, D("headrest"), 1254, 1246, 920, 914);
+          strikeArm(L, tl, "cs1a", t0, [0.7, 1.4, 2.1], true); [0.7, 1.4, 2.1].forEach((a, k) => hitMark(L, tl, `cs1h${k}`, t0 + a));
         },
       });
       // ---------- 11. one more: the pane cracks into a web and stays (it has the film too) ----------
@@ -149,7 +153,7 @@
         cam: { keys: [{ t: 0, ...fr(760, 1240, 1.4, 540, 980) }, { t: D("switch"), glide: D("switch") * 0.6, ...fr(520, 1240, 1.3, 540, 980) }] },
         actors: [TONm("reachBack", "worry", "o"), KIMm("sitStand", "wide", "scream")],
         captions: caps("switch"),
-        fx(tl, id, t0, L) { noShadows(tl, id); openWin(L, tl, "cm3", t0, D("switch")); cutFront(L, "cm3", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm3", t0, D("switch"), 1262, 1250, 930, 920); },
+        fx(tl, id, t0, L) { noShadows(tl, id); cabRich(L, tl, "cm3", t0, D("switch"), { openF: true, caustic: true }); openWin(L, tl, "cm3", t0, D("switch")); cutFront(L, "cm3", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm3", t0, D("switch"), 1262, 1250, 930, 920); },
       });
       // ---------- 13. don't wait for it to fill: their faces up in the last of the air ----------
       add("fill", {
@@ -158,7 +162,7 @@
         actors: [TONm("headUp", "wide", "o"), KIMm("headUp", "wide", "scream")],
         captions: caps("fill"),
         fx(tl, id, t0, L) {
-          noShadows(tl, id); openWin(L, tl, "cm4", t0, D("fill")); cutFront(L, "cm4", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm4", t0, D("fill"), 1240, 1180, 900, 880);
+          noShadows(tl, id); cabRich(L, tl, "cm4", t0, D("fill"), { openF: true, caustic: true }); openWin(L, tl, "cm4", t0, D("fill")); cutFront(L, "cm4", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm4", t0, D("fill"), 1240, 1180, 900, 880);
           bubbles(L, tl, "cm4bb", t0, D("fill"), 600, 1300, 16, 700);
         },
       });
@@ -169,7 +173,7 @@
         actors: [TONm("punchUp", "angry", "scream"), KIMm("sitHold", "wide", "scream")],
         captions: caps("rw"),
         fx(tl, id, t0, L) {
-          noShadows(tl, id); openWin(L, tl, "cm5", t0, D("rw")); cutFront(L, "cm5", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm5", t0, D("rw"), 1300, 1294);
+          noShadows(tl, id); cabRich(L, tl, "cm5", t0, D("rw"), { openF: true, caustic: false }); openWin(L, tl, "cm5", t0, D("rw")); cutFront(L, "cm5", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm5", t0, D("rw"), 1300, 1294);
           rewind(L, tl, t0, D("rw"), "0:03");
         },
       });

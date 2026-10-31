@@ -143,3 +143,34 @@
           tl.to(`#${id}-ft`, { x: 0, y: 0, rotation: 0, duration: 0.2, ease: "power2.in" }, tk + 0.14);
         }
       };
+      // ต้น turned back in the cutaway (EP.1's side): his own arms (IK) to the far rear window's lower front corner — a fist, or the headrest
+      // in both hands, its prongs first. Hide his rig arms in the shot. n strikes at `at` (seconds from t).
+      const TSH = { F: [646, 1234], B: [569, 1253] };   // his shoulders in reachBack (torso −14°), from the rig's geometry
+      const strikeArm = (L, tl, id, t, at, prop) => {
+        const l1 = 122 * CT2.s, l2 = 108 * CT2.s, T = [458, 1208], R0 = [560, 1250], o = { w: [30 * CT2.s, 26 * CT2.s], band: BAND, hs: 0.56 };
+        put(L.act, `<g id="${id}"></g>`);
+        const el = document.getElementById(id), c = { p: 0 };
+        const head = (H) => `<g transform="translate(${P2s(H)})"><rect x="-96" y="-14" width="96" height="10" rx="4" fill="#c9ced6" stroke="#0b0e13" stroke-width="3"/><rect x="-96" y="10" width="96" height="10" rx="4" fill="#c9ced6" stroke="#0b0e13" stroke-width="3"/>
+          <path d="M-4,-58Q60,-62 66,-20V40Q60,62 -4,58Z" fill="#2c3644" stroke="#0b0e13" stroke-width="5"/><path d="M10,-40Q48,-40 52,-6" stroke="#3a4656" stroke-width="5" fill="none"/></g>`;
+        const draw = (p) => {
+          if (prop) {
+            const H = [R0[0] + (T[0] + 96 - R0[0]) * p, R0[1] + (T[1] - R0[1]) * p];
+            el.innerHTML = head(H) + arm(TSH.B, [H[0] + 30, H[1] - 44], l1, l2, elbowOut(TSH.B, [H[0] + 30, H[1] - 44], l1, l2, 0), SK.ton, { ...o, hand: { ...GRIP }, fix: -100 })
+              + arm(TSH.F, [H[0] + 40, H[1] + 46], l1, l2, elbowOut(TSH.F, [H[0] + 40, H[1] + 46], l1, l2, 0), SK.ton, { ...o, hand: { ...GRIP }, fix: -80, mirror: true });
+          } else {
+            const W = [R0[0] + (T[0] + 26 - R0[0]) * p, R0[1] + (T[1] + 8 - R0[1]) * p];
+            el.innerHTML = arm(TSH.F, W, l1, l2, elbowOut(TSH.F, W, l1, l2, 0), SK.ton, { ...o, hand: { ...FIST } });
+          }
+        };
+        draw(0);
+        at.forEach((a) => {
+          tl.to(c, { p: 0.25, duration: 0.16, ease: "power2.out", onUpdate: () => draw(c.p) }, t + a - 0.26);
+          tl.to(c, { p: 1, duration: 0.1, ease: "power3.in", onUpdate: () => draw(c.p) }, t + a - 0.1);
+          tl.to(c, { p: 0.15, duration: 0.3, ease: "power2.out", onUpdate: () => draw(c.p) }, t + a + 0.02);
+        });
+      };
+      // the hit on the glass: a white flash at the corner and a scuff that stays
+      const hitMark = (L, tl, id, t, n = 1) => {
+        put(L.act, `<g id="${id}" opacity="0" transform="translate(458,1208)"><circle r="26" fill="#ffffff" opacity=".6"/><path d="M-12,-4L10,-14M-8,8L14,2" stroke="#ffffff" stroke-width="3"/></g>`);
+        tl.fromTo(`#${id}`, { opacity: 1 }, { opacity: 0.3, duration: 0.3, immediateRender: false }, t);
+      };

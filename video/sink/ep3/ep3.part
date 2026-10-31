@@ -44,7 +44,7 @@
       };
       // the end of the series
       const finaleCard = (L, tl, t0, dur) => {
-        put(L.light, `<g id="fin"><rect width="1080" height="1920" fill="#06080c" opacity=".93"/>
+        put(L.light, `<g id="fin"><rect width="1080" height="1920" fill="#06080c" opacity=".84"/>
           <text x="540" y="640" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="46" fill="#ff5a3a">นาทีก่อนจม · จบ</text>
           <text x="540" y="790" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff">ปลดเข็มขัด · เปิดกระจก</text>
           <text x="540" y="880" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff">ส่งเด็กออกก่อน · ออก</text>
