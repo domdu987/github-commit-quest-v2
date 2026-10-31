@@ -1,0 +1,230 @@
+      // ---------- นาทีก่อนจม EP.3 (จบ) ช่วยจากบนฝั่ง ----------
+      // the planted mistake: at 0:02 the motorbike rolls up the canal road with its headlight dark; the twist: it's the same unlit bike
+      // that came out in front of ต้น (EP.1). No HUD: the rules are said plainly, the story shows them.
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      Sets.canal = (L, o) => Sets.klong(L, { curve: false, ...o });
+      Rig.MODES.ride = (u, o) => ({ ...Rig.MODES.sitChair(u, o), thF: -80, shF: 70, thB: -76, shB: 66, uaF: -76, faF: -14, uaB: -70, faB: -18, torso: 14, head: -8 });
+      const BANK = (id) => ({ set: "canal", setOpts: { id }, dark: 0.05, light: NIGHT, grade: GNIGHT, blur: { far: 1.5, fg: 6 } });
+      const KW = { x: 330, y: 1500, s: 0.62 }, EDGE = { x: 660, y: 1140, s: 0.66 }, BIKE = { x: 860, y: RY + 26, s: 0.3 };
+      const KIMw = (mode, eyes, mouth, extra = {}) => A("mint", KW.x, KW.y, KW.s, [{ t: 0, mode, eyes, mouth }], extra);
+      const RIDER = (mode, eyes, mouth, x = EDGE.x, y = EDGE.y, s = EDGE.s, extra = {}) => A("rider", x, y, s, [{ t: 0, mode, eyes, mouth }], { flip: true, ...extra });
+      const noShadows = (tl, id, n = 3) => Array.from({ length: n }, (_, k) => tl.set(`#${id}-a${k}-shadow`, { opacity: 0 }, 0));
+      // the canal water in front of her, her rings, the bubbles where the car went down
+      const inWater = (L, tl, t0, dur, key) => { canalFront(L, tl, `${key}w`, t0, dur, WY + 4, KW.x); bubbles(L, tl, `${key}bb`, t0, dur, 600, WY + 10, 10, 160); };
+
+      // ---------- 1. hook: ขิม in the canal over the bubbles; at 0:02 a motorbike rolls up the road, its headlight dark ----------
+      add("hook", {
+        ...BANK("cn0"), setOpts: { id: "cn0", title: { x: 300, sub: "EP.3 ช่วยจากบนฝั่ง · ตอนจบ" }, moonX: 760, moonY: 250 },
+        cam: { keys: [{ t: 0, ...fr(460, 1060, 1.25, 540, 960) }, { t: D("hook"), glide: D("hook"), ...fr(480, 1075, 1.32, 540, 960) }] },
+        actors: [KIMw("cheer", "wide", "scream"), A("rider", 1333, 988, 0.34, [{ t: 0, mode: "ride", eyes: "normal", mouth: "flat" }], { flip: true, path: [{ t: 0, x: 1333, y: 988 }, { t: 1.6, x: BIKE.x + 33, y: 988 }] })],
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 2); Klong.life(tl, "cn0", t0, D("hook")); inWater(L, tl, t0, D("hook"), "h0");
+          parkedBike(L, "bk0", 1300, BIKE.y, BIKE.s);
+          tl.fromTo("#bk0", { attr: { transform: `translate(1300,${BIKE.y}) scale(${-BIKE.s},${BIKE.s})` } }, { attr: { transform: `translate(${BIKE.x},${BIKE.y}) scale(${-BIKE.s},${BIKE.s})` }, duration: 1.6, ease: "power2.out", immediateRender: false }, t0);
+        },
+      });
+      // ---------- 2. the command: he steps off the edge (what would happen: the colour drains out) ----------
+      add("jump", {
+        ...BANK("cn1"), blur: { sky: 8, far: 8, mid: 8, set: 8, act: 8, fg: 10 },
+        cam: { keys: [{ t: 0, ...fr(600, 1060, 1.9, 540, 980) }] },
+        actors: [KIMw("cheer", "wide", "scream")],
+        captions: caps("jump"),
+        fx(tl, id, t0, L) { noShadows(tl, id, 1); Klong.life(tl, "cn1", t0, D("jump")); inWater(L, tl, t0, D("jump"), "j0");
+          put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".35"/>`); SinkUI.nope(tl, L.light, t0, D("jump"), { what: "jump", y: 800, stamp: 0.35 }); },
+      });
+      // ---------- 3. what would happen: under the water she has him round the neck and takes him down; he claws for the surface ----------
+      add("grab", {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        captions: caps("grab"),
+        fx(tl, id, t0, L) { SinkUI.shadow(tl, L.light, t0, D("grab")); },
+      });
+      // ---------- 4. back to what really happened: he never went in. His helmet off on the grass, he stops at the edge ----------
+      add("three", {
+        ...BANK("cn2"), blur: { sky: 8, far: 8, mid: 8, set: 8, act: 8, fg: 10 },
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 1.6, 540, 980) }, { t: D("three"), glide: D("three"), ...fr(560, 1090, 1.7, 540, 980) }] },
+        actors: [KIMw("cheer", "wide", "scream"), A("riderF", EDGE.x, EDGE.y, EDGE.s, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true })],
+        captions: caps("three"),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 2); Klong.life(tl, "cn2", t0, D("three")); inWater(L, tl, t0, D("three"), "t0"); parkedBike(L, "bk2", BIKE.x, BIKE.y, BIKE.s);
+          put(L.act, helmetProp(EDGE.x + 104, EDGE.y - 18, 0.72));
+          realHands(`${id}-a0`, SK.kim, OPEN, OPEN); realHands(`${id}-a1`, SK.rider, RELAX, RELAX, { under: true }); put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".35"/>`); SinkUI.three(tl, L.light, t0, D("three"), { y: 900 });
+        },
+      });
+      // ---------- 5. ขิม: her brother is still down there ----------
+      add("kim", {
+        ...BANK("cn3"),
+        cam: { keys: [{ t: 0, ...fr(KW.x, 1150, 3.0, 540, 900) }, { t: D("kim"), glide: D("kim"), ...fr(KW.x, 1150, 3.2, 540, 900) }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 21), y: 2 * Math.sin(t * 17), r: 0 }),
+        actors: [KIMw("cheer", "wide", "scream", { talk: [TALK("kim", 0, "scream")] })],
+        captions: caps("kim", undefined, QUO),
+        fx(tl, id, t0, L) { noShadows(tl, id, 1); inWater(L, tl, t0, D("kim"), "k0"); realHands(`${id}-a0`, SK.kim, OPEN, OPEN); },
+      });
+      // ---------- 6. ตะโกน: he shouts up the road, waving; then the phone to his ear: 1669 ----------
+      add("shout", {
+        ...BANK("cn4"),
+        cam: { keys: [{ t: 0, ...fr(640, 1000, 2.1, 540, 980) }, { t: D("shout"), glide: D("shout"), ...fr(640, 990, 2.2, 540, 980) }] },
+        actors: [A("riderF", EDGE.x, EDGE.y, EDGE.s, [{ t: 0, mode: "callOut", eyes: "wide", mouth: "scream" }, { t: F("shout", 0, 1) - 0.25, mode: "phoneEar", eyes: "worry", mouth: "o" }], { flip: true })],
+        captions: caps("shout"),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 1); Klong.life(tl, "cn4", t0, D("shout")); parkedBike(L, "bk4", BIKE.x, BIKE.y, BIKE.s); inWater(L, tl, t0, D("shout"), "s0");
+          put(L.act, helmetProp(EDGE.x + 104, EDGE.y - 18, 0.72));
+          const r = `${id}-a0`; realHands(r, SK.rider, OPEN, RELAX, { under: true }); phoneIn(r, "ph4");
+          tl.set("#ph4", { display: "inline" }, t0 + F("shout", 0, 1) - 0.25);
+          // his voice carrying up the road
+          put(L.act, `<g id="sh4" transform="translate(${EDGE.x - 70},${EDGE.y - 395})">${[0, 1, 2].map((j) => `<path id="sh4-${j}" d="M0,${-22 - j * 14}Q${-26 - j * 16},0 0,${22 + j * 14}" stroke="#fff4dc" stroke-width="6" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}</g>`);
+          [0, 1, 2].forEach((j) => tl.fromTo(`#sh4-${j}`, { x: 0, opacity: 0.85 }, { x: -60, opacity: 0, duration: 0.5, repeat: 2, ease: "power1.out", immediateRender: false }, t0 + 0.2 + j * 0.12));
+        },
+      });
+      // ---------- 7. โยน: the empty gallon from his basket, out over the water to her; she gets both arms round it ----------
+      add("throw", {
+        ...BANK("cn5"),
+        cam: { keys: [{ t: 0, ...fr(520, 1100, 1.5, 540, 980) }, { t: D("throw"), glide: D("throw"), ...fr(470, 1120, 1.65, 540, 980) }] },
+        actors: [A("mint", KW.x, KW.y, KW.s, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "scream" }, { t: 1.5, mode: "idle", eyes: "wide", mouth: "o" }]), A("riderF", EDGE.x, EDGE.y, EDGE.s, [{ t: 0, mode: "swing", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("throw"),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 2); Klong.life(tl, "cn5", t0, D("throw")); parkedBike(L, "bk5", BIKE.x, BIKE.y, BIKE.s); inWater(L, tl, t0, D("throw"), "w0");
+          put(L.act, helmetProp(EDGE.x + 104, EDGE.y - 18, 0.72));
+          const k = `${id}-a0`; realHands(k, SK.kim, OPEN, OPEN); realHands(`${id}-a1`, SK.rider, OPEN, OPEN, { under: true });
+          // the gallon flies (outer group moves, inner group spins), lands, bobs; drawn under the water's skin so it floats
+          const GX = 404, GY = 1176, wat = document.getElementById("w0w");
+          wat.insertAdjacentHTML("beforebegin", `<g id="gl0m"><g transform="translate(620,980)"><g id="gl0s"><g transform="scale(0.62)">${gallon("gl0", 0, 0, 1)}</g></g></g></g>`);
+          tl.fromTo("#gl0m", { x: 0 }, { x: GX - 620, duration: 0.9, ease: "none", immediateRender: false }, t0 + 0.5);
+          tl.fromTo("#gl0m", { y: 0 }, { y: -130, duration: 0.42, ease: "power2.out", immediateRender: false }, t0 + 0.5);
+          tl.to("#gl0m", { y: GY - 980, duration: 0.48, ease: "power2.in" }, t0 + 0.92);
+          tl.fromTo("#gl0s", { rotation: 0 }, { rotation: -340, transformOrigin: "50% 50%", duration: 0.9, ease: "none", immediateRender: false }, t0 + 0.5);
+          tl.to("#gl0s", { rotation: -380, transformOrigin: "50% 50%", duration: 0.5, ease: "power2.out" }, t0 + 1.4);
+          tl.to("#gl0m", { y: GY - 980 + 8, duration: 0.6, yoyo: true, repeat: 3, ease: "sine.inOut" }, t0 + 1.45);
+          smallSplash(L, tl, "gls", GX, WY - 2, t0 + 1.4);
+          // she grabs it: her own arms out of the water and round the gallon
+          const c = { x: KW.x, y: KW.y, s: KW.s }, [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, o = { w: [22, 19], sleeve: ["#c9b6ea", 0.4], hs: 0.3, hand: { ...GRIP } };
+          wat.insertAdjacentHTML("beforebegin", `<g id="kh7" opacity="0">${armK(SR, [GX + 18, GY - 34], l1, l2, 1, SK.kim, { ...o, fix: 100, mirror: true })}</g>`);
+          rigArms(tl, k, false, t0 + 1.5); tl.set("#kh7", { opacity: 1 }, t0 + 1.5);
+        },
+      });
+      // ---------- 8. ยื่น: sitting low on the bank he slides a long bamboo pole out; she takes it in both hands; he draws her in ----------
+      add("reach", {
+        ...BANK("cn6"),
+        cam: { keys: [{ t: 0, ...fr(520, 1110, 1.6, 540, 900) }, { t: D("reach"), glide: D("reach"), ...fr(560, 1100, 1.7, 540, 900) }] },
+        actors: [A("mint", KW.x, KW.y, KW.s, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "scream" }, { t: 1.2, mode: "idle", eyes: "wide", mouth: "o" }]),
+          A("riderF", 742, 1118, 0.66, [{ t: 0, mode: "sit", eyes: "worry", mouth: "flat" }], { flip: true })],
+        captions: caps("reach"),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 2); Klong.life(tl, "cn6", t0, D("reach")); parkedBike(L, "bk6", BIKE.x, BIKE.y, BIKE.s); inWater(L, tl, t0, D("reach"), "r0");
+          put(L.act, helmetProp(836, 1104, 0.72, 8));
+          const k = `${id}-a0`, r = `${id}-a1`; realHands(k, SK.kim, OPEN, OPEN); hideRigArms(r);
+          const kw = wrap(k, "kw6"), wat = document.getElementById("r0w"); wat.parentNode.insertBefore(kw, wat);
+          // the line of the pole: from the tip at the waterline beside her chin, up through his two grips (arms near straight)
+          const TIP = [372, 1174], s = 0.66, SHF = [742 - 46 * s, 1118 - 165 * s], SHB = [742 + 46 * s, 1118 - 165 * s], al1 = 122 * s, al2 = 108 * s;
+          const dF = [TIP[0] - SHF[0], TIP[1] - SHF[1]], dl = Math.hypot(dF[0], dF[1]), GF = [SHF[0] + dF[0] / dl * 128, SHF[1] + dF[1] / dl * 128];
+          const ux = GF[0] - TIP[0], uy = GF[1] - TIP[1], ul = Math.hypot(ux, uy), U = [ux / ul, uy / ul], GB = [GF[0] + U[0] * 56, GF[1] + U[1] * 56], PULL = [U[0] * 200, U[1] * 200];
+          // her arms up to the tip (inside her wrapper, so they come with her)
+          const c = { x: KW.x, y: KW.y, s: KW.s }, [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, ko = { w: [22, 19], sleeve: ["#c9b6ea", 0.4], hs: 0.3, hand: { ...GRIP } };
+          put(kw, `<g id="kh8" opacity="0">${armK(SL, [TIP[0] + 18, TIP[1] - 4], l1, l2, 1, SK.kim, { ...ko, fix: 70 })}${armK(SR, [TIP[0] - 2, TIP[1] + 2], l1, l2, 1, SK.kim, { ...ko, fix: 65, mirror: true })}</g>`);
+          rigArms(tl, k, false, t0 + 1.2); tl.set("#kh8", { opacity: 1 }, t0 + 1.2);
+          // the pole and his arms, redrawn every frame
+          put(L.act, `<g id="pl8"></g>`);
+          const el = document.getElementById("pl8"), st = { e: 0, q: 0, h: 0 }, ro = { w: [22, 18], hs: 0.3 }, L0 = ul;
+          const draw = () => {
+            const hb = st.h * 22, gB = [GB[0] + U[0] * hb, GB[1] + U[1] * hb], gF = [GF[0] + U[0] * hb, GF[1] + U[1] * hb];
+            const pq = [PULL[0] * st.q, PULL[1] * st.q], len = 70 + (L0 - 70) * st.e, tip = [GF[0] - U[0] * len + pq[0], GF[1] - U[1] * len + pq[1]];
+            const back = [GB[0] + U[0] * 70 + pq[0], GB[1] + U[1] * 70 + pq[1]];
+            el.innerHTML = pole(back[0], back[1], tip[0], tip[1]) +
+              armSl(SHB, gB, al1, al2, elbowOut(SHB, gB, al1, al2, 0), SK.rider, GREEN, { ...ro, hand: { ...GRIP } }) + armSl(SHF, gF, al1, al2, elbowOut(SHF, gF, al1, al2, 0), SK.rider, GREEN, { ...ro, hand: { ...GRIP }, mirror: true });
+          };
+          draw();
+          tl.to(st, { e: 1, duration: 0.85, ease: "power2.out", immediateRender: false, onUpdate: draw }, t0 + 0.25);
+          tl.to(st, { q: 1, duration: D("reach") - 1.6, ease: "sine.inOut", onUpdate: draw }, t0 + 1.6);
+          tl.to(st, { h: 1, duration: 0.5, yoyo: true, repeat: Math.ceil((D("reach") - 1.6) / 0.5), ease: "sine.inOut", onUpdate: draw }, t0 + 1.6);
+          tl.fromTo("#kw6", { x: 0, y: 0 }, { x: PULL[0], y: PULL[1], duration: D("reach") - 1.6, ease: "sine.inOut", immediateRender: false }, t0 + 1.6);
+        },
+      });
+      // ---------- 9. in the car, full of water: ต้น holding the last breath ----------
+      add("full", {
+        set: "carCut", setOpts: { id: "cf0", out: 860 }, dark: 0.16, light: CABIN, grade: GWATER,
+        cam: { keys: [{ t: 0, ...fr(600, 1220, 1.6, 540, 960) }, { t: D("full"), glide: D("full"), ...fr(610, 1210, 1.75, 540, 960) }] },
+        actors: [A("tonJ", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "headUp", eyes: "wide", mouth: "o" }])],
+        captions: caps("full"),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 1); cabRich(L, tl, "cf0", t0, D("full"), { caustic: false }); cutFront(L, "cf0", { free: ["ton", "kim"] });
+          cutWater(L, tl, "cf0", t0, D("full"), 1000, 990); cutOutside(tl, "cf0", t0, D("full"), 860, 850); cutCanal(L, tl, "cf0", t0, D("full"), 860, 850);
+          bubbles(L, tl, "cf0bb", t0, D("full"), 650, 1140, 14, 120);
+        },
+      });
+      // ---------- 10. now the pressure's even: his door gives; he pushes out, and stops: the foot ----------
+      const DSP = 2.3;
+      split("door", DSP, {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        captions: caps("door"),
+        fx(tl, id, t0, L) { SinkUI.equalize(tl, L.light, t0, DSP, { mode: "open", label: 0.9 }); },
+      }, {
+        set: "sinkOut", setOpts: { id: "so1", y: 1300, tilt: 6, kim: false }, dark: 0, light: false, grade: GWATER, blur: { sky: 1.5, far: 1 },
+        cam: { keys: [{ t: 0, ...fr(610, 1110, 1.55, 540, 880) }, { t: D("door") - DSP, glide: D("door") - DSP, ...fr(610, 1060, 1.7, 540, 880) }] },
+        captions: capsFrom("door", DSP),
+        fx(tl, id, t0, L) { doorOut(L, tl, "so1d", t0 + 0.1, "so1", D("door") - DSP - 0.1); bubbles(L, tl, "so1bb", t0 + 0.2, D("door") - DSP - 0.2, 600, 1050, 18, 200); },
+      });
+      // ---------- 11. his foot: out of the shoe; the shoe stays under the pedal ----------
+      add("shoe", {
+        set: "footIns", setOpts: { id: "fi0" }, dark: 0.1, light: false, grade: GWATER,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.0, 540, 960) }, { t: D("shoe"), glide: D("shoe"), ...fr(560, 980, 1.08, 540, 960) }] },
+        captions: caps("shoe"),
+        fx(tl, id, t0, L) { shoeOff(L, tl, "fi0", t0 + 0.7); bubbles(L, tl, "fi0bb", t0, D("shoe"), 500, 1200, 16, 600); },
+      });
+      // ---------- 12. the twist: back to 0:02, closer: the bike rolling up with its headlight dark ----------
+      add("rw", {
+        ...BANK("cn7"),
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 1.45, 540, 980) }, { t: D("rw"), glide: D("rw") * 0.85, ...fr(BIKE.x - 0.3 * 283, BIKE.y - 0.3 * 430, 3.4, 540, 900) }] },
+        actors: [KIMw("cheer", "wide", "scream"), A("rider", BIKE.x + 33, 988, 0.34, [{ t: 0, mode: "ride", eyes: "normal", mouth: "flat" }], { flip: true })],
+        captions: caps("rw"),
+        fx(tl, id, t0, L) { noShadows(tl, id, 2); Klong.life(tl, "cn7", t0, D("rw")); inWater(L, tl, t0, D("rw"), "x0"); parkedBike(L, "bk7", BIKE.x, BIKE.y, BIKE.s); rewind(L, tl, t0, D("rw"), "0:02"); },
+      });
+      // ---------- 13. the headlight, close: no light in it ----------
+      add("lamp", {
+        set: "headlamp", setOpts: { id: "hl0" }, dark: 0.05, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("lamp"), glide: D("lamp"), ...fr(540, 940, 1.12, 540, 960) }] },
+        captions: caps("lamp"),
+      });
+      // ---------- 14. the same bike, in ต้น's headlights: the drive, again ----------
+      add("same", {
+        set: "carPOV", setOpts: { id: "pv9", fig: 0, clock: "01:00", clear: true, sleeve: SKIN, cuff: BAND }, dark: 0.1, light: false, grade: { top: "#3a4050", bottom: "#0a0c10", op: 0.45 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        captions: caps("same"),
+        fx(tl, id, t0, L) { povCanal(L, tl, "pv9", t0, D("same")); mirrorKid(L, "pv9"); povHands(L, "pv9"); Mok.life(tl, `#${id}`, t0, D("same")); crossBike(L, tl, "bk9", t0, D("same")); },
+      });
+      // ---------- 15. on the bank, soaked: "ผมขอโทษครับ…" ----------
+      add("sorry", {
+        ...BANK("cn8"),
+        cam: { keys: [{ t: 0, ...fr(560, 900, 1.7, 540, 960) }, { t: D("sorry"), glide: D("sorry"), ...fr(570, 900, 1.8, 540, 960) }] },
+        actors: [A("tonJ", 420, RY + 40, 0.62, [{ t: 0, mode: "sit", eyes: "worry", mouth: "flat" }]), A("mint", 500, RY + 40, 0.46, [{ t: 0, mode: "sit", eyes: "worry", mouth: "o" }]),
+          A("riderF", 700, RY + 30, 0.66, [{ t: 0, mode: "bow", eyes: "worry", mouth: "flat" }], { flip: true, talk: [TALK("sorry", 0, "o")] })],
+        captions: caps("sorry", undefined, QUO),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 3); Klong.life(tl, "cn8", t0, D("sorry")); parkedBike(L, "bk8", BIKE.x + 120, BIKE.y, BIKE.s);
+          realHands(`${id}-a0`, SK.tonR, RELAX, RELAX); realHands(`${id}-a1`, SK.kim, RELAX, RELAX); realHands(`${id}-a2`, SK.rider, RELAX, RELAX, { under: true });
+          wetDrips(L, tl, "wd8", t0, D("sorry"), [[402, RY - 92], [440, RY - 96], [486, RY - 58], [516, RY - 60]]);
+        },
+      });
+      // ---------- 16. the ambulance pulls up, its lights on the canal road ----------
+      add("hosp", {
+        ...BANK("cn9"),
+        cam: { keys: [{ t: 0, ...fr(600, 940, 1.35, 540, 960) }, { t: D("hosp"), glide: D("hosp"), ...fr(620, 930, 1.45, 540, 960) }] },
+        actors: [A("tonJ", 420, RY + 40, 0.62, [{ t: 0, mode: "sit", eyes: "worry", mouth: "flat" }]), A("mint", 500, RY + 40, 0.46, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]),
+          A("riderF", 660, RY + 30, 0.66, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true })],
+        captions: caps("hosp"),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id, 3); Klong.life(tl, "cn9", t0, D("hosp")); ambulance(L, tl, "amb", t0, D("hosp"), 930);
+          tl.fromTo("#amb", { x: 520 }, { x: 0, duration: 1.3, ease: "power2.out", immediateRender: false }, t0);
+          realHands(`${id}-a0`, SK.tonR, RELAX, RELAX); realHands(`${id}-a1`, SK.kim, RELAX, RELAX); realHands(`${id}-a2`, SK.rider, RELAX, RELAX, { under: true });
+          wetDrips(L, tl, "wd9", t0, D("hosp"), [[402, RY - 92], [440, RY - 96], [486, RY - 58], [516, RY - 60]]);
+        },
+      });
+      // ---------- 17. the end: the canal, quiet again, under the card ----------
+      add("end", {
+        ...BANK("cn10"), dark: 0.1, blur: { sky: 6, far: 6, mid: 6, set: 6, act: 6, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.2, 540, 960) }, { t: D("end"), glide: D("end"), ...fr(540, 1000, 1.28, 540, 960) }] },
+        fx(tl, id, t0, L) { Klong.life(tl, "cn10", t0, D("end")); SinkUI.finale(tl, L.light, t0, D("end")); },
+      });

@@ -24,14 +24,27 @@
 - Herman (model 6.1 sol) ส่งข้อมูลช่องรายวัน → `video/analytics/daily/` (รูปแบบใน `video/analytics/README.md`) → Claude วิเคราะห์ลง `video/analytics/reports/`
 - Hermes ลงคลิปในช่องจากแพ็กเกจ `video/release/<เรื่อง>.json` · นาทีก่อนจม: `video/release/sink.json`
 
-## กำลังทำ: นาทีก่อนจม รุ่นทำใหม่ทั้ง 3 ตอน (31 ต.ค. 2026 ค่ำ)
+## ส่งแล้วล่าสุด: นาทีก่อนจม รุ่นทำใหม่ครบ 3 ตอน (31 ต.ค. 2026 · 22:00)
 
 ผู้ใช้สั่ง: "พอเลย ไปดูก่อนทำวิดีโอ เห็ดปอบ ผีแม่ม่าย ทะเลลด มาดีกว่าเยอะเลย ทำคลิปวิดีโอแบบคลิปก่อน และบทการเดินเรื่องเอาสูตรมาใช้
 ทำให้จบเรื่องนี้ ทำให้เสร็จแล้วเราค่อยมาคุยกัน" → บทและเสียงเดิม (สูตร) · ภาพทำใหม่แบบซีรีส์ก่อน (ดู `video/sink/ARC.md` หัวข้อภาษาภาพ)
-- งาน: `video/sink/ep1..3/` (เพิ่ม `world.part` = Sets.klong, `sinkui.part` = SinkUI.*) · workspace ใน scratchpad `mw/sinkr1..3`, HF `mw/hf/sinkr1..3`
-- ประกอบ EP.1: `cat helpers kit kit2 hands kit3 cut rich world sinkui body` (.part) · EP.2: แทรก `ep2` ก่อน world · EP.3: แทรก `ep2 ep3 ep3b` ก่อน world
-- รุ่นแรก (มืด ช็อตมือบนพื้นดำ) ยังอยู่ใน `video/sink-ep1/`, `video/sink-ep2/` จนกว่าจะเก็บรุ่นใหม่ทับ · EP.3 รุ่นแรกไม่ได้เรนเดอร์
-- เรนเดอร์รุ่นใหม่ช้ากว่าเดิม (ฉากละเอียด) ราว 40 นาทีต่อตอน · ดิสก์ต้องว่าง > 1 GB ก่อนเรนเดอร์
+
+| ตอน | ไฟล์ | สรุป |
+|---|---|---|
+| EP.1 อย่าเพิ่งโทรหาใคร | `video/sink-ep1/` · HQ `video/release/hq/sink-ep1-HQ.mp4` | 1:02 · −13.9 LUFS · ปก t 21.0 |
+| EP.2 ถ้ากระจกไม่ลง | `video/sink-ep2/` · HQ `video/release/hq/sink-ep2-HQ.mp4` | 1:06 · −13.9 LUFS · ปก t 3.5 |
+| EP.3 ช่วยจากบนฝั่ง (ตอนจบ) | `video/sink-ep3/` · HQ `video/release/hq/sink-ep3-HQ.mp4` | 1:00 · −14.1 LUFS · พีก −1.4 dB · ปก t 14.6 |
+
+- แพ็กเกจลงคลิป: `video/release/sink.json` (ทั้ง 3 ตอน `status: final` + sha256 ของ HQ) · แคปชัน: `video/sink/CAPTIONS.md`
+- งานทำต่อ: `video/sink/ep1..3/` (`world.part` = Sets.klong, `sinkui.part` = SinkUI.*) · ประกอบ EP.1: `cat helpers kit kit2 hands kit3 cut rich world sinkui body` (.part)
+  · EP.2: แทรก `ep2` ก่อน world · EP.3: แทรก `ep2 ep3 ep3b` ก่อน world · เรนเดอร์ราว 21 นาทีต่อตอน
+
+## ผลิตคู่ขนาน (เจ้าของอนุมัติ 31 ต.ค. 2026 · เป้า 6–9 คลิปใหม่/วัน · แผน `video/release/PLAN-6TO9.md`)
+- แชทนี้ = แชทประสานงาน (`session_01UrmfYm4mSaaTB25kG8juWV`): เตรียมหัวข้อ ตรวจแพ็กเกจ เขียนคิววัน `video/release/day-<วันที่>.json` อ่านข้อมูลช่อง
+- เลน A `session_017iwyCwasHJqyZ1jk1hBAwf` · branch `prod/lane-a` · ไฟดูดหน้าน้ำท่วม (`video/shock/`) สำรอง: สุนัขกัด/พิษสุนัขบ้า
+- เลน B `session_017iwyCvx1zDsQSsZQNMKKUs` · branch `prod/lane-b` · ต่อหัวเสือ (`video/hornet/`) สำรอง: แก๊สหุงต้มรั่ว
+- ยังรอเจ้าของ: งบค่าเสียง/SFX ต่อวัน (เลนหยุดก่อนเรียก TTS ครั้งแรกของแต่ละเรื่อง) · เลน C เปิดเมื่อเลน A/B เรนเดอร์ผ่านรอบแรก
+- HQ อยู่ใน repo แล้วที่ `video/release/hq/` (เจ้าของอนุมัติ) · ตั้ง `git config gc.auto 0` ทุก clone (auto-gc ทำดิสก์เต็ม)
 
 ## ถัดไป
 

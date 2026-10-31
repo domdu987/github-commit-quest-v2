@@ -1,0 +1,87 @@
+      // ---------- นาทีก่อนจม EP.3 kit: the rescue from the bank (ตะโกน โยน ยื่น), the escape, the unlit bike, the end ----------
+      Rig.MODES.reachPole = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.6); return { ...Rig.MODES.crouch(u, o), torso: 30 + 2 * b, head: -8, uaF: -66 + 3 * b, faF: -6, uaB: -58 + 3 * b, faB: -10 }; };
+      Rig.MODES.hug = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.2); return { ...Rig.MODES.idle(u, o), uaF: -52, faF: -96 + 4 * b, uaB: 52, faB: 96 - 4 * b, head: 6 + 2 * b, bodyY: 3 * b }; };
+      Rig.MODES.headUp = (u, o) => { const j = Math.sin(u * 17) * 1.4; return { ...Rig.MODES.sitChair(u, o), bodyY: 104, torso: -6 + j, head: -24 + j, uaF: -120, faF: -30, uaB: -110, faB: -36 }; };
+      Rig.MODES.bow = (u, o) => ({ ...Rig.MODES.idle(u, o), head: 18, torso: 8, uaF: 6, faF: -14, uaB: -6, faB: -14 });
+      Rig.MODES.kick = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 0.5); return { ...Rig.MODES.idle(u, o), thF: -30 - 20 * Math.max(0, b), shF: 40, torso: 10, head: 10, uaF: -30, faF: -40, uaB: 20, faB: -20 }; };
+      // the bike parked on the road, side-on, facing left, its headlight dark (o.id-moto); the rider is an actor
+      const parkedBike = (L, id, x, y, s) => put(L.act, `<g id="${id}" transform="translate(${x},${y}) scale(${-s},${s})">${Mm.moto(0, 0, 1, { color: "#2a5ab8" }).replace('fill="#fff6c8"', 'fill="#2e2e28"').replace('fill="#d8302a"', 'fill="#5a1a18"')}</g>`);
+      // things in the water: the empty gallon, the bamboo pole (from the hands at (x0,y0) to the tip at (x1,y1))
+      const gallon = (id, x, y, s = 1, rot = 0) => `<g id="${id}" transform="translate(${x},${y})"><g id="${id}-r" transform="rotate(${rot}) scale(${s})">
+        <path d="M-34,-40Q-36,-62 -16,-64H14Q34,-62 34,-40V48Q34,62 18,62H-18Q-34,62 -34,48Z" fill="#eef2ee" fill-opacity=".9" stroke="#0b0e13" stroke-width="4"/>
+        <path d="M-10,-64V-78H10V-64" fill="#e8504a" stroke="#0b0e13" stroke-width="3"/><path d="M14,-50Q40,-50 40,-24Q40,-4 30,-4" stroke="#0b0e13" stroke-width="12" fill="none"/><path d="M14,-50Q40,-50 40,-24Q40,-4 30,-4" stroke="#eef2ee" stroke-width="6" fill="none"/>
+        <path d="M-22,-30V40" stroke="#ffffff" stroke-width="6" opacity=".8"/></g></g>`;
+      const pole = (x0, y0, x1, y1) => { const n = 7, dx = (x1 - x0) / n, dy = (y1 - y0) / n;
+        return `<path d="M${x0},${y0}L${x1},${y1}" stroke="#0b0e13" stroke-width="20" stroke-linecap="round"/><path d="M${x0},${y0}L${x1},${y1}" stroke="#c8b46a" stroke-width="13" stroke-linecap="round"/>
+          ${Array.from({ length: n - 1 }, (_, k) => `<circle cx="${f1(x0 + dx * (k + 1))}" cy="${f1(y0 + dy * (k + 1))}" r="8" fill="#a8944a" stroke="#0b0e13" stroke-width="2.5"/>`).join("")}`; };
+      // the front of the canal over whoever is in it, with a lit skin and rings where she treads water
+      const canalFront = (L, tl, id, t0, dur, y, ringX) => {
+        put(L.act, `<g id="${id}"><linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a4e78" stop-opacity=".9"/><stop offset=".4" stop-color="#1a3656" stop-opacity=".96"/><stop offset="1" stop-color="#0a1828"/></linearGradient>
+          <rect x="-1200" y="${y}" width="3500" height="1400" fill="url(#${id}-g)"/><path id="${id}-sk" d="M-1200,${y}Q-1100,${y - 10} -1000,${y}T-800,${y}T-600,${y}T-400,${y}T-200,${y}T0,${y}T200,${y}T400,${y}T600,${y}T800,${y}T1000,${y}T1200,${y}T1400,${y}T1600,${y}T1800,${y}T2000,${y}T2200,${y}" stroke="#bfe0e8" stroke-width="4" fill="none" opacity=".8"/>
+          ${ringX != null ? [0, 1, 2].map((k) => `<ellipse id="${id}-r${k}" cx="${ringX}" cy="${y + 6}" rx="40" ry="9" fill="none" stroke="#cfe8ee" stroke-width="4" opacity="0"/>`).join("") : ""}
+          ${[[150, "#ffd890"], [560, "#ffd890"], [970, "#ffd890"]].map(([x, c]) => Array.from({ length: 5 }, (_, j) => `<path d="M${x - 30 + (j % 2) * 16},${y + 10 + j * 30}h${54 - j * 6}" stroke="${c}" stroke-width="5" opacity="${0.5 - j * 0.08}" stroke-linecap="round"/>`).join("")).join("")}</g>`);
+        tl.fromTo(`#${id}-sk`, { x: 0 }, { x: -200, duration: 1.2, repeat: Math.ceil(dur / 1.2), ease: "none", immediateRender: false }, t0);
+        if (ringX != null) [0, 1, 2].forEach((k) => tl.fromTo(`#${id}-r${k}`, { attr: { rx: 40, ry: 9 }, opacity: 0.8 }, { attr: { rx: 200, ry: 30 }, opacity: 0, duration: 1.2, repeat: Math.ceil(dur / 1.2), ease: "power1.out", immediateRender: false }, t0 + k * 0.4));
+      };
+      // under the water, what would happen: she clings round his neck and pulls him down (o.id); the two are actors, this is the murk
+      Sets.drown = (L, o = {}) => {
+        const id = o.id || "dr";
+        put(L.sky, `<linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#21524a"/><stop offset=".5" stop-color="#0c2a26"/><stop offset="1" stop-color="#020606"/></linearGradient>
+          <rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-g)"/>${[[260, 160], [620, 140]].map(([x, w]) => `<path d="M${x},-200L${x + w},-200L${x + w - 260},1800L${x - 340},1800Z" fill="#cfffee" opacity=".06"/>`).join("")}
+          <path d="M-900,330Q-700,318 -500,330T-100,330T300,330T700,330T1100,330T1500,330T1900,330" stroke="#cfffee" stroke-width="5" fill="none" opacity=".55"/>`);
+        put(L.far, Array.from({ length: 50 }, (_, k) => `<circle cx="${f1(-200 + ((k * 211) % 1500))}" cy="${f1(400 + ((k * 137) % 1500))}" r="${f1(2 + (k % 4) * 1.5)}" fill="#bfe8d8" opacity="${(0.2 + (k % 5) * 0.08).toFixed(2)}"/>`).join(""));
+      };
+      // the dead headlight close: the lens, the chrome rim, the street lamp's reflection, no light in it
+      Sets.headlamp = (L, o = {}) => {
+        const id = o.id || "hl";
+        put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#0a0e14"/><radialGradient id="${id}-lg"><stop offset="0" stop-color="#ffd08a" stop-opacity=".5"/><stop offset="1" stop-color="#ffd08a" stop-opacity="0"/></radialGradient><circle cx="900" cy="300" r="420" fill="url(#${id}-lg)"/>`);
+        put(L.set, `<path d="M-200,1500Q100,1300 400,1250L900,1180Q1180,1160 1300,1300V2600H-200Z" fill="#2a5ab8" stroke="#0b0e13" stroke-width="10"/><path d="M-100,1460Q300,1300 900,1240" stroke="#5a8ae0" stroke-width="12" fill="none" opacity=".7"/>
+          <g transform="translate(540,920)"><ellipse rx="330" ry="250" fill="#b8c0ca" stroke="#0b0e13" stroke-width="10"/><ellipse rx="290" ry="214" fill="#1a1e24" stroke="#0b0e13" stroke-width="6"/>
+            <ellipse rx="250" ry="180" fill="#262b33"/>${[-160, -80, 0, 80, 160].map((x) => `<path d="M${x},-170V170" stroke="#2e343c" stroke-width="10"/>`).join("")}
+            <ellipse cx="0" cy="10" rx="70" ry="60" fill="#30363f" stroke="#1a1e24" stroke-width="6"/><path d="M-200,-120Q-120,-170 -20,-150" stroke="#ffffff" stroke-width="14" fill="none" opacity=".35" stroke-linecap="round"/>
+            <ellipse cx="160" cy="-110" rx="44" ry="20" fill="#ffd08a" opacity=".45"/></g>
+          <path d="M-200,520Q200,470 700,560L1300,640" stroke="#1d2027" stroke-width="40" fill="none"/>`);
+      };
+      // the end of the series
+      const finaleCard = (L, tl, t0, dur) => {
+        put(L.light, `<g id="fin"><rect width="1080" height="1920" fill="#06080c" opacity=".84"/>
+          <text x="540" y="640" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="46" fill="#ff5a3a">นาทีก่อนจม · จบ</text>
+          <text x="540" y="790" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff">ปลดเข็มขัด · เปิดกระจก</text>
+          <text x="540" y="880" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff">ส่งเด็กออกก่อน · ออก</text>
+          <text x="540" y="1000" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#ffd23a">บนฝั่ง: ตะโกน โยน ยื่น</text>
+          <text x="540" y="1180" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="40" fill="#c8d0d8">แชร์ให้คนที่คุณรัก… ก่อนวันที่ต้องใช้</text>
+          <text x="540" y="1660" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff" letter-spacing="10">ROD MAI CLUB</text></g>`);
+        tl.fromTo("#fin", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0);
+      };
+      // the ambulance on the canal road, its bar flashing red and blue over everything
+      const ambulance = (L, tl, id, t0, dur, x) => {
+        put(L.act, `<g transform="translate(${x},${RY + 26})"><g id="${id}"><rect x="-230" y="-200" width="400" height="170" rx="22" fill="#f2f2ee" stroke="#0b0e13" stroke-width="6"/><path d="M170,-150H230Q260,-150 270,-110L280,-40H170Z" fill="#f2f2ee" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M-230,-110H280" stroke="#e8402a" stroke-width="18"/><rect x="190" y="-138" width="56" height="44" rx="6" fill="#20303c"/><rect x="-120" y="-226" width="160" height="26" rx="8" fill="#20232a"/>
+          <rect id="${id}-r" x="-116" y="-222" width="72" height="18" rx="5" fill="#ff3a2a"/><rect id="${id}-b" x="-36" y="-222" width="72" height="18" rx="5" fill="#2a6aff"/>
+          ${[-150, 170].map((wx) => `<circle cx="${wx}" cy="-24" r="34" fill="#14161a" stroke="#0b0e13" stroke-width="5"/><circle cx="${wx}" cy="-24" r="14" fill="#8a929c"/>`).join("")}</g></g>`);
+        put(L.light, `<rect id="${id}-wr" width="1080" height="1920" fill="#ff2a1a" opacity="0"/><rect id="${id}-wb" width="1080" height="1920" fill="#1a4aff" opacity="0"/>`);
+        for (let k = 0; k < dur; k += 0.5) {
+          tl.set(`#${id}-wr`, { opacity: 0.16 }, t0 + k); tl.set(`#${id}-wb`, { opacity: 0 }, t0 + k);
+          tl.set(`#${id}-wr`, { opacity: 0 }, t0 + k + 0.25); tl.set(`#${id}-wb`, { opacity: 0.16 }, t0 + k + 0.25);
+          tl.set(`#${id}-r`, { opacity: 1 }, t0 + k); tl.set(`#${id}-r`, { opacity: 0.25 }, t0 + k + 0.25);
+          tl.set(`#${id}-b`, { opacity: 0.25 }, t0 + k); tl.set(`#${id}-b`, { opacity: 1 }, t0 + k + 0.25);
+        }
+      };
+      // the car's door from outside under the water: it swings open, ต้น pushes out (on Sets.sinkOut; draw after it)
+      const doorOpen = (L, tl, id, t, carId) => {
+        const g = document.getElementById(`${carId}-car`); if (!g) return;
+        g.insertAdjacentHTML("beforeend", `<path d="M-80,-250L-60,-360Q60,-372 160,-362L160,-70H-80Z" fill="#071614"/>
+          <g id="${id}-sw"><g id="${id}-d"><path d="M-80,-250L-60,-360Q60,-372 160,-362L160,-70H-80Z" fill="#d6dce2" stroke="#0b0e13" stroke-width="6"/><path d="M-60,-250L-40,-350Q60,-360 150,-352L150,-250Z" fill="#0c2a2e"/><rect x="100" y="-200" width="40" height="12" rx="5" fill="#8a929c"/></g></g>
+          <g id="${id}-p" opacity="0"><ellipse cx="40" cy="-210" rx="30" ry="34" fill="#d8a078"/><path d="M12,-232Q14,-262 40,-262Q66,-262 68,-232Q54,-246 40,-246Q26,-246 12,-232Z" fill="#1a1410"/><path d="M0,-180Q40,-196 80,-180L90,-90H-10Z" fill="#4a9a5a"/></g>`);
+        tl.fromTo(`#${id}-d`, { scaleX: 1, transformOrigin: "100% 50%" }, { scaleX: 0.15, duration: 0.7, ease: "power2.inOut", immediateRender: false }, t);
+        tl.fromTo(`#${id}-p`, { opacity: 0, y: 0 }, { opacity: 1, y: -60, duration: 0.6, ease: "power2.out", immediateRender: false }, t + 0.6);
+        tl.to(`#${id}-p`, { y: -420, duration: 1.4, ease: "power1.in" }, t + 1.2);
+      };
+      // the foot slips out of the sneaker: the shoe stays under the pedal, the socked foot pulls away (on Sets.footIns)
+      const shoeOff = (L, tl, id, t) => {
+        const ft = document.getElementById(`${id}-ft`); if (!ft) return;
+        ft.insertAdjacentHTML("beforeend", `<g id="${id}-sock" opacity="0" transform="translate(400,1090) rotate(-18)"><path d="M-110,-60Q-140,30 -90,70H120Q170,60 160,10Q150,-40 60,-60Q0,-80 -110,-60Z" fill="#e8e4dc" stroke="#0b0e13" stroke-width="6"/></g>`);
+        const shoe = ft.querySelector("g[transform^='translate(400,1090)']"); if (shoe) { shoe.setAttribute("id", `${id}-shoe`); ft.parentNode.appendChild(shoe); }
+        tl.set(`#${id}-sock`, { opacity: 1 }, t);
+        tl.to(`#${id}-ft`, { x: -380, y: -420, rotation: -12, transformOrigin: "30% 10%", duration: 0.9, ease: "power2.inOut" }, t);
+      };
