@@ -82,7 +82,9 @@
     const earF = pup
       ? `<g id="${id}-ear"><path d="M22,-62C18,-92 32,-104 46,-100C56,-90 52,-70 40,-58C48,-50 46,-40 40,-40C32,-44 26,-52 22,-62Z" fill="${kind === "pup" ? c.tan : c.coatD}" ${ln(2.6)}/>
           <path d="M30,-70C30,-86 38,-94 44,-92" stroke="${c.inner}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/></g>`
-      : `<g id="${id}-ear"><path d="M18,-56L18,-112Q26,-118 34,-110L48,-58Z" fill="${c.coat}" ${ln(2.6)}/><path d="M26,-62L26,-100Q30,-104 34,-98L40,-62Z" fill="${c.inner}" opacity=".85"/></g>`;
+      : `<g id="${id}-ear"><path d="M18,-56L18,-112Q26,-118 34,-110L48,-58Z" fill="${c.coat}" ${ln(2.6)}/><path d="M26,-62L26,-100Q30,-104 34,-98L40,-62Z" fill="${c.inner}" opacity=".85"/>
+          ${o.earWound ? `<path d="M38,-92L30,-86L40,-80Z" fill="#7a1018" stroke="${INK}" stroke-width="1.6"/><path d="M36,-96L28,-88M38,-78L30,-72" stroke="#d8303a" stroke-width="3" stroke-linecap="round"/>
+            <path d="M33,-84q-2,8 0,14" stroke="#b81e2a" stroke-width="3.4" fill="none" stroke-linecap="round"/><circle cx="33" cy="-68" r="3" fill="#b81e2a"/>` : ""}</g>`;
     const jaw = pup
       ? `<g transform="translate(36,4)"><g id="${id}-jaw" transform="rotate(0)"><path d="M-8,-2Q24,10 64,2Q70,10 60,16Q30,22 -6,12Z" fill="${c.coat}" ${ln(2.4)}/>
           <g id="${id}-tongue" opacity="0"><path d="M30,8Q48,12 62,8Q72,22 60,34Q48,40 42,28Q38,18 30,14Z" fill="#e8607a" ${ln(2)}/><path d="M50,14q2,10 0,18" stroke="#b83a52" stroke-width="2" fill="none"/></g></g></g>`

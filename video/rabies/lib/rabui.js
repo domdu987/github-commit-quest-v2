@@ -46,7 +46,7 @@
     const ep = o.ep ? `<g transform="translate(0,${H / 2 - 46}) rotate(-2)"><rect x="-190" y="-30" width="380" height="56" rx="6" fill="#ffd23a" opacity=".92" ${O(3)}/>
       <text x="0" y="12" font-family="Kanit" font-weight="900" font-size="34" fill="${INK}" text-anchor="middle">${o.ep}</text></g>` : "";
     return `<g id="${id}" transform="translate(${f1(x)},${f1(y)}) scale(${f1(s)})"><g id="${id}-s" transform="rotate(${o.rot ?? -2})">
-      <path d="M${-W / 2 + 30},${-H / 2}L0,${-H / 2 - 90}L${W / 2 - 30},${-H / 2}" stroke="#8a8e94" stroke-width="4" fill="none"/><circle cx="0" cy="${-H / 2 - 92}" r="9" fill="#5a5048" ${O(3)}/>
+      ${o.noWire ? "" : `<path d="M${-W / 2 + 30},${-H / 2}L0,${-H / 2 - 90}L${W / 2 - 30},${-H / 2}" stroke="#8a8e94" stroke-width="4" fill="none"/><circle cx="0" cy="${-H / 2 - 92}" r="9" fill="#5a5048" ${O(3)}/>`}
       <rect x="${-W / 2 + 10}" y="${-H / 2 + 12}" width="${W}" height="${H}" rx="8" fill="#000" opacity=".35"/>
       <rect x="${-W / 2}" y="${-H / 2}" width="${W}" height="${H}" rx="8" fill="url(#rbZinc)" ${O(4)}/>
       <rect x="${-W / 2}" y="${-H / 2}" width="${W}" height="${H}" rx="8" fill="url(#rbZincD)"/>
@@ -134,18 +134,18 @@
   };
 
   // ---------------- the rule board ----------------
-  const RULES = ["ลูกหมาน่ารัก อย่าทักอย่าอุ้ม", "หมาบ้านเรา กัดเบาก็ต้องฉีด", "อย่ารอดูหมา รีบไปหาหมอ"];
+  const RULES = ["ลูกหมาน่ารัก อย่าทักอย่าอุ้ม", "อย่ารอดูหมา รีบไปหาหมอ"];
   RabUI.RULES = RULES;
   RabUI.rules = (tl, layer, t0, dur, o = {}) => {
     const id = "rr" + Math.round(t0 * 100), act = o.active ?? 0, done = o.done ?? [], y = o.y ?? 640, s = o.s ?? 1;
     const rows = RULES.map((r, k) => {
-      const on = k === act, d = done.includes(k), op = on || d ? 1 : 0.3, yy = -70 + k * 104;
+      const on = k === act, d = done.includes(k), op = on || d ? 1 : 0.3, yy = -40 + k * 120;
       return `<g opacity="${op}"><text x="-232" y="${yy}" font-family="Sriracha" font-size="40" fill="${on ? CH.y : CH.w}">${k + 1}. ${r}</text>
         ${on ? `<path id="${id}-u${k}" d="M-232,${yy + 16}Q0,${yy + 26} 244,${yy + 12}" stroke="${CH.y}" stroke-width="5" fill="none" stroke-dasharray="520" stroke-dashoffset="520"/>` : ""}
         ${d ? `<path d="M-286,${yy - 14}l14,16l26,-36" stroke="${CH.g}" stroke-width="8" fill="none" stroke-linecap="round"/>` : `<circle cx="-266" cy="${yy - 12}" r="16" fill="none" stroke="${CH.w}" stroke-width="4" opacity=".7"/>`}</g>`;
     }).join("");
-    put(layer, `<g id="${id}" transform="translate(540,${y}) scale(${s})" opacity="0"><g id="${id}-in">${Rab.zinc(0, 0, 1, { id: id + "-z", w: 640, h: 420, rot: 0, lines: [] })}
-      <g transform="rotate(0)"><text x="0" y="-150" font-family="Kanit" font-weight="900" font-size="40" fill="${CH.y}" text-anchor="middle">กฎของยายบัว</text>${rows}</g></g></g>`);
+    put(layer, `<g id="${id}" transform="translate(540,${y}) scale(${s})" opacity="0"><g id="${id}-in">${Rab.zinc(0, 0, 1, { id: id + "-z", w: 640, h: 380, rot: 0, lines: [] })}
+      <g transform="rotate(0)"><text x="0" y="-120" font-family="Kanit" font-weight="900" font-size="40" fill="${CH.y}" text-anchor="middle">กฎของยายบัว</text>${rows}</g></g></g>`);
     tl.set(`#${id}`, { opacity: 0 }, 0);
     tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0);
     tl.fromTo(`#${id}-in`, { attr: { transform: "translate(0,-700) rotate(-8)" } }, { attr: { transform: "translate(0,0) rotate(0)" }, duration: 0.6, ease: "back.out(1.6)", immediateRender: false }, t0);
@@ -254,6 +254,27 @@
     tl.set(`#${id}`, { opacity: 0 }, 0);
     tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.12, immediateRender: false }, t0);
     tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
+  };
+
+  // ---------------- the choice: two chalk boards; a dog's shadow drags the frame to o.pull ----------------
+  RabUI.choice = (tl, layer, t0, dur, o = {}) => {
+    const id = "rc" + Math.round(t0 * 100), Y = o.y ?? 700, at = t0 + (o.at ?? dur - 1.3), pa = o.pull === "a";
+    const card = (k, c, yy) => `<g transform="translate(540,${yy})"><g id="${id}-c${k}">${Rab.zinc(0, 0, 1, { id: id + "-z" + k, w: 800, h: 210, rot: k ? 1.5 : -1.5, lines: [], noWire: true })}
+      <g transform="translate(-280,0) scale(.8)">${c.icon || ""}</g><text x="-170" y="16" font-family="Sriracha" font-size="50" fill="#f4f2ea">${c.text}</text></g></g>`;
+    put(layer, `<g id="${id}" opacity="0"><rect width="1080" height="1920" fill="#0a0810" opacity=".35"/>
+      <text x="540" y="${Y - 230}" font-family="Kanit" font-weight="900" font-size="64" fill="#fff4dc" text-anchor="middle" stroke="#2a1c18" stroke-width="10" paint-order="stroke">${o.q || "จะทำยังไง?"}</text>
+      ${card(0, o.a, Y)}${card(1, o.b, Y + 290)}
+      <rect id="${id}-f" x="130" y="${Y - 120}" width="820" height="240" rx="26" fill="none" stroke="#ffd23a" stroke-width="12"/>
+      <g id="${id}-sh" opacity="0"><path d="M-200,2200C100,1900 300,1700 600,1650C800,1620 1000,1700 1300,1900V2400H-200Z" fill="#05040a"/>
+        <ellipse cx="560" cy="1700" rx="14" ry="9" fill="#9aff5a"/><ellipse cx="620" cy="1696" rx="14" ry="9" fill="#9aff5a"/></g></g>`);
+    tl.set(`#${id}`, { opacity: 0 }, 0);
+    tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+    [0, 1].forEach((k) => tl.fromTo(`#${id}-c${k}`, { attr: { transform: "translate(-1200,0)" } }, { attr: { transform: "translate(0,0)" }, duration: 0.5, ease: "back.out(1.4)", immediateRender: false }, t0 + 0.1 + k * 0.15));
+    tl.fromTo(`#${id}-f`, { attr: { y: Y - 120 } }, { attr: { y: Y + 170 }, duration: 0.35, ease: "sine.inOut", yoyo: true, repeat: 2, immediateRender: false }, t0 + 0.7);
+    tl.fromTo(`#${id}-sh`, { opacity: 0, attr: { transform: "translate(0,300)" } }, { opacity: 1, attr: { transform: "translate(0,0)" }, duration: 0.5, ease: "power2.out", immediateRender: false }, at - 0.3);
+    tl.to(`#${id}-f`, { attr: { y: pa ? Y - 120 : Y + 170 }, duration: 0.25, ease: "power3.in" }, at);
+    tl.to(`#${id}-c${pa ? 0 : 1}`, { attr: { transform: "translate(0,0) scale(1.05)" }, duration: 0.2 }, at + 0.25);
+    tl.to(`#${id}-c${pa ? 1 : 0}`, { opacity: 0.35, duration: 0.3 }, at + 0.25);
   };
 
   window.Rab = Rab; window.RabUI = RabUI;

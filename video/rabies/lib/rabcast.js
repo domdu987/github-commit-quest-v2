@@ -11,6 +11,8 @@
   const C = Rig.CAST;
   // ภูมิ holds the rice out to the puppy, bent forward a little; a scared step back
   Rig.MODES.offer = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 10, head: 8, uaF: -28 + 3 * Math.sin(u * 3), faF: -40, uaB: 8, faB: 10 });
+  Rig.MODES.hug = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 3 * Math.sin(u * 2), head: 6, uaF: 14, faF: 110, uaB: -14, faB: -110 });
+  Rig.MODES.shrug = (u, o) => ({ ...Rig.MODES.idle(u, o), head: -8 + 3 * Math.sin(u * 4), uaF: -26, faF: -50, uaB: 26, faB: 50 });
   Rig.MODES.recoil = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: -8, head: -6, uaF: -40, faF: -60, uaB: 30, faB: 50 });
   const ln = (w = 2.6) => `stroke="${LINE}" stroke-width="${w}" stroke-linejoin="round"`;
 
