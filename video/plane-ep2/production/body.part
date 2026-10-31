@@ -1,0 +1,152 @@
+      // ---------- รอดคนเดียว EP.2 อยู่กับซาก ----------
+      // grammar: night on the island (the tail on the rocks, lights across the bay) → command as he steps down (the planted mistake: the
+      // orange vest hidden under his jacket against the cold, ~0:04) → inside the tail out of the wind → the lights at 4 a.m. → "a village!"
+      // → three cards (one person from the air ✗ · the wreck ✓ · search the flight path) → he sits back down → dawn: the helicopter flies
+      // past → rewind to 0:04 → the vest out, on the tailplane, the panel to the sun → the glint → found → the lights were torches: the
+      // front section's survivors across the bay → "not alone"; the safety card ticks both rules → the end card
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.7, 2.6, 4.4], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      const NIGHTL = { from: "right", rim: "#9fb8ff", rimOp: 0.55, shade: "#060a18", shadeOp: 0.5, cast: false, vol: false };
+      const DAWNL = { from: "right", rim: "#ffe0b0", rimOp: 0.6, shade: "#1a2030", shadeOp: 0.35, cast: false, vol: false };
+      const LAMPL = { from: "left", rim: "#ffe0a0", rimOp: 0.6, shade: "#0a0e1e", shadeOp: 0.5, cast: false, vol: false };
+      const GNT = { top: "#2a3a6a", bottom: "#05070f", op: 0.28 }, GDWN = { top: "#ffd8b0", bottom: "#1a2a3a", op: 0.12 };
+      const KX = ROW30 + 40, KS = 0.8, DX = 198, DY = 1474, KT = 0.15;   // the door of the tail on the rocks, คิว's scale there
+      const noSh = (tl, id, n = 2) => { for (let i = 0; i < n; i++) tl.set(`#${id}-a${i}-shadow`, { opacity: 0 }, 0); };
+      const sway = (amp = 1) => (t) => ({ x: 3 * Math.sin(t * 1.7), y: 2 * Math.sin(t * 1.3), r: amp * Math.sin(t * 1.1) });
+      const NSITE = (id, extra = {}) => ({ set: "crashSite", setOpts: { id, time: "night", spray: true, fire: 0, smoke: false, torches: true, ...extra }, dark: 0.15, light: NIGHTL, grade: GNT, blur: { far: 1.2, mid: 0.5, fg: 7 } });
+      const DSITE = (id, extra = {}) => ({ set: "crashSite", setOpts: { id, time: "dawn", fire: 0, smoke: false, ...extra }, dark: 0, light: DAWNL, grade: GDWN, blur: { far: 1.2, mid: 0.5, fg: 7 } });
+      const INSIDE = (id, extra = {}) => ({ set: "cabinCut", setOpts: { id, state: "fire", noFlame: true, night: true, breakX: 1000, ...extra }, dark: 0.05, light: LAMPL, grade: GNT });
+      const hiRing = (L, tl, x, y, t0, dur, r = 110, c = SU.yellow) => { const id = `rg${Math.round(t0 * 100)}`;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><circle r="${r}" fill="none" stroke="${c}" stroke-width="12"/><circle r="${r}" fill="none" stroke="#fff" stroke-width="3" opacity=".7"/>
+          <g transform="translate(${r + 70},${-r - 40}) rotate(225)"><path d="M0,0L-40,-24V-10H-110V10H-40V24Z" fill="${c}" stroke="${SU.ink}" stroke-width="4" stroke-linejoin="round"/></g></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 2, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.35, ease: "back.out(2.4)", immediateRender: false }, t0);
+        tl.to(`#${id}`, { scale: 1.12, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: Math.ceil(dur / 0.35), ease: "sine.inOut" }, t0 + 0.4); };
+      const heliAt = (L, tl, id, x, y, s, t0, dur, mv) => { put(L.glow, `<g transform="translate(${x},${y}) scale(${s})"><g id="${id}-m">${Plane.heli(id)}</g></g>`); Plane.heliLife(tl, id, t0, dur);
+        if (mv) tl.fromTo(`#${id}-m`, mv.from, { ...mv.to, duration: mv.dur ?? dur, ease: mv.ease || "power1.inOut", immediateRender: false }, t0 + (mv.at ?? 0));
+        tl.fromTo(`#${id}`, { y: -6 }, { y: 6, duration: 0.6, yoyo: true, repeat: Math.ceil(dur / 0.6), ease: "sine.inOut", immediateRender: false }, t0); };
+      const spot = (L, tl, x, y, t0, dur) => { const id = `gl${Math.round(t0 * 100)}`;   // the sun's glint off the panel: a star + rays
+        put(L.glow, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><circle r="120" fill="#fff8d0" opacity=".45"/>${[0, 45, 90, 135].map((a) => `<path d="M0,-${a % 90 ? 120 : 260}L10,0L0,${a % 90 ? 120 : 260}L-10,0Z" fill="#fffbe0" transform="rotate(${a})"/>`).join("")}<circle r="26" fill="#fff"/></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.2, rotation: 0, svgOrigin: "0 0" }, { opacity: 1, scale: 1.2, rotation: 30, svgOrigin: "0 0", duration: 0.25, yoyo: true, repeat: Math.max(1, Math.floor(dur / 0.5)), repeatDelay: 0.15, ease: "power2.out", immediateRender: false }, t0); };
+
+      // ---------- 1. hook: night, the wind and spray; the tail on the black rocks, คิว in its door; lights blinking across the bay ----------
+      add("hook", { set: "bayView", setOpts: { id: "h0", time: "night", torches: true, tail: true, tailX: -60, tailS: 1.3 }, dark: 0.12, light: NIGHTL, grade: GNT, blur: { fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(480, 1150, 1.05, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(520, 1000, 1.35, 540, 950) }] },
+        shake: sway(0.8),
+        actors: [A("kiwHidden", 830, 1700, 0.55, [{ t: 0, mode: "shadeEyes", eyes: "wide", mouth: "o" }])],
+        captions: caps("hook"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.bayLife(tl, "h0", t0, D("hook"));
+          put(L.light, `<g transform="translate(540,300)"><g id="h0-tt"><rect x="-300" y="-70" width="600" height="140" rx="24" fill="${PL.navy}" stroke="${PL.ink}" stroke-width="6"/><path d="M-300,40H300" stroke="${PL.gold}" stroke-width="8"/>
+            <text y="12" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="72" fill="#fff">รอดคนเดียว</text><text y="104" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="38" fill="${PL.gold}">EP.2 อยู่กับซาก</text></g></g>`);
+          tl.fromTo("#h0-tt", { y: -300 }, { y: 0, duration: 0.6, ease: "back.out(1.6)", immediateRender: false }, t0); tl.to("#h0-tt", { opacity: 0, y: -200, duration: 0.3 }, t0 + D("hook") - 0.3); } });
+      // ---------- 2. the command: he steps down the slide toward the lights (the orange hem under his jacket: the planted mistake) ----------
+      add("cmd", { ...NSITE("h1"),
+        cam: { keys: [{ t: 0, ...fr(190, 1480, 3.4, 540, 1050) }, { t: D("cmd"), glide: D("cmd"), ...fr(150, 1530, 4.6, 540, 1000) }] },
+        shake: sway(0.6),
+        actors: [A("kiwHidden", DX, DY, KT, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: 0.5, mode: "walk", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 127, y: 1570, dur: 1.4, at: 0.5, ease: "power1.inOut" } })],
+        captions: caps("cmd"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "h1", t0, D("cmd")); SU.flash(tl, L.light, t0 + F("cmd", 0, 0) + 0.02, "#ff3b2e", 0.3); } });
+      // ---------- 3. the first night inside the tail: out of the wind, the masks still dangling, hugging himself ----------
+      add("night", { ...INSIDE("n0"),
+        cam: { keys: [{ t: 0, ...fr(420, 1280, 1.6, 540, 1020) }, { t: D("night"), glide: D("night"), ...fr(400, 1260, 1.75, 540, 1020) }] },
+        shake: sway(0.4),
+        actors: [A("kiwHidden", KX, PF - 6, KS, [{ t: 0, mode: "sitHold", eyes: "worry", mouth: "frown" }])],
+        captions: caps("night"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "n0", t0, D("night"));
+          put(L.glow, `<g id="n0-wind">${Array.from({ length: 12 }, (_, k) => `<path d="M${1100 + k * 30},${PF - 500 + k * 36}l-160,${10 + (k % 3) * 6}" stroke="#9fb8d8" stroke-width="3" opacity=".45"/>`).join("")}</g>`);
+          tl.fromTo("#n0-wind", { x: 120, opacity: 0.8 }, { x: -200, opacity: 0, duration: 0.6, repeat: Math.ceil(D("night") / 0.6), ease: "power1.in", immediateRender: false }, t0); } });
+      // ---------- 5. 4 a.m.: across the bay, small lights blink ----------
+      add("lights", { set: "bayView", setOpts: { id: "n2", time: "night", torches: true }, dark: 0.1, light: NIGHTL, grade: GNT, blur: { fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 1000) }, { t: D("lights"), glide: D("lights"), ...fr(540, 860, 1.6, 540, 900) }] },
+        shake: sway(0.4),
+        captions: caps("lights"),
+        fx(tl, id, t0, L) { Plane.bayLife(tl, "n2", t0, D("lights")); } });
+      // ---------- 6. "a village!": he jumps up in the door ----------
+      add("village", { ...NSITE("n3"),
+        cam: { keys: [{ t: 0, ...fr(200, 1460, 3.0, 540, 1100) }] },
+        shake: sway(0.6),
+        actors: [A("kiwHidden", DX, DY, KT, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.3, mode: "point", eyes: "wide", mouth: "laugh" }], { talk: [TALK("village", 0, "laugh")] })],
+        captions: caps("village", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "n3", t0, D("village"));
+          put(L.glow, `<g id="n3-lt"><circle cx="${DX + 16}" cy="${DY - 46}" r="22" fill="#e8f4ff" opacity=".9"/><path d="M${DX + 16},${DY - 46}L1500,${DY - 300}L1500,${DY + 80}Z" fill="#e8f4ff" opacity=".16"/></g>`);
+          tl.fromTo("#n3-lt", { opacity: 0.7 }, { opacity: 1, duration: 0.3, yoyo: true, repeat: Math.ceil(D("village") / 0.3), ease: "sine.inOut", immediateRender: false }, t0); } });
+      // ---------- 7–9. the cards over the dark island ----------
+      const CARD = (k, fn) => add(k, { ...NSITE(`cd${k}`), blur: { far: 6, mid: 6, set: 6, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.1, 540, 1040) }, { t: D(k), glide: D(k), ...fr(600, 1300, 1.18, 540, 1040) }] },
+        captions: caps(k), fx(tl, id, t0, L) { Plane.siteLife(tl, `cd${k}`, t0, D(k)); fn(tl, L, t0); } });
+      CARD("spot", (tl, L, t0) => PlaneUI.spot(tl, L.light, t0, D("spot"), { phase: 1 }));
+      CARD("wreck", (tl, L, t0) => PlaneUI.spot(tl, L.light, t0, D("wreck"), { phase: 2 }));
+      add("route", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] }, captions: caps("route"),
+        fx(tl, id, t0, L) { PlaneUI.route(tl, L.light, t0, D("route")); } });
+      // ---------- 10. "then I'll wait here": he sits back down in the door ----------
+      add("wait", { ...NSITE("n4"),
+        cam: { keys: [{ t: 0, ...fr(200, 1460, 3.0, 540, 1100) }, { t: D("wait"), glide: D("wait"), ...fr(210, 1470, 3.2, 540, 1100) }] },
+        shake: sway(0.4),
+        actors: [A("kiwHidden", DX, DY, KT, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 0.6, mode: "sit", eyes: "normal", mouth: "flat" }], { talk: [TALK("wait", 0, "flat")] })],
+        captions: caps("wait", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "n4", t0, D("wait")); } });
+      // ---------- 11. dawn: rotor thud, a helicopter low over the sea ----------
+      add("heli", { ...DSITE("d0"),
+        cam: { keys: [{ t: 0, ...fr(700, 1000, 1.2, 540, 900) }, { t: D("heli"), glide: D("heli"), ...fr(620, 1050, 1.3, 540, 900) }] },
+        captions: caps("heli"),
+        fx(tl, id, t0, L) { Plane.siteLife(tl, "d0", t0, D("heli")); heliAt(L, tl, "hc0", 1150, 760, 0.55, t0, D("heli"), { from: { x: 300 }, to: { x: -260 } }); } });
+      // ---------- 13. it flies on: the grey wreck on grey rocks, lost in the foam ----------
+      add("pass", { ...DSITE("d2", { spray: true }),
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 0.95, 540, 1000) }, { t: D("pass"), glide: D("pass"), ...fr(520, 1250, 0.85, 540, 1000) }] },
+        captions: caps("pass"),
+        fx(tl, id, t0, L) { Plane.siteLife(tl, "d2", t0, D("pass")); heliAt(L, tl, "hc2", 700, 900, 0.5, t0, D("pass"), { from: { x: 0, y: 0 }, to: { x: 1400, y: -300 }, ease: "power1.in" }); } });
+      // ---------- 14. rewind to 0:04: the orange hem under the jacket ----------
+      add("rw", { ...NSITE("r0"),
+        cam: { keys: [{ t: 0, ...fr(190, 1480, 3.4, 540, 1050) }, { t: D("rw"), glide: D("rw"), ...fr(198, 1455, 4.8, 540, 1000) }] },
+        actors: [A("kiwHidden", DX, DY, KT, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
+        captions: caps("rw"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "r0", t0, D("rw")); rewind(L, tl, t0, D("rw"), "0:04"); hiRing(L, tl, 540, 930, t0 + F("rw", 0, 1), D("rw") - F("rw", 0, 1), 90); } });
+      // ---------- 15. the jacket opens: the brightest thing on the island ----------
+      add("vest", { ...DSITE("d3"),
+        cam: { keys: [{ t: 0, ...fr(140, 1500, 3.4, 540, 1100) }, { t: D("vest"), glide: D("vest"), ...fr(140, 1500, 3.8, 540, 1100) }] },
+        actors: [A("kiwHidden", 140, 1560, KT, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }]), A("kiwVest", 140, 1560, KT, [{ t: 0, mode: "wave2", eyes: "wide", mouth: "laugh" }])],
+        captions: caps("vest"),
+        fx(tl, id, t0, L) { noSh(tl, id); Plane.siteLife(tl, "d3", t0, D("vest")); tl.set(`#${id}-a1`, { opacity: 0 }, t0); tl.set(`#${id}-a0`, { opacity: 0 }, t0 + 1.1); tl.set(`#${id}-a1`, { opacity: 1 }, t0 + 1.1); SU.fxAt(tl, L.light, `#${id}-a1`, t0 + 1.1, { n: 12, c: "#ff8a3a", r1: 160 }); } });
+      // ---------- 16. the vest on the tailplane, the cowl panel propped to the sun; the two medals ----------
+      add("lay", { ...DSITE("d4", { vest: "wing", panel: true }),
+        cam: { keys: [{ t: 0, ...fr(80, 1300, 2.2, 540, 1000) }, { t: vo("lay", 1), glide: vo("lay", 1), ...fr(160, 1320, 1.8, 540, 1000) }, { t: D("lay"), glide: D("lay") - vo("lay", 1), ...fr(380, 1300, 0.95, 540, 1000) }] },
+        actors: [A("kiwVest", 90, 1565, KT, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }])],
+        captions: caps("lay"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "d4", t0, D("lay")); PlaneUI.bright(tl, L.light, t0 + 0.9, vo("lay", 1) - 0.9); spot(L, tl, 50, 1360, t0 + vo("lay", 1), D("lay") - vo("lay", 1)); } });
+      // ---------- 19. found: hovering over him, the crewman at the door with the radio ----------
+      add("found", { ...DSITE("d7", { vest: "wing", panel: true }),
+        cam: { keys: [{ t: 0, ...fr(260, 1420, 1.9, 540, 1050) }, { t: D("found"), glide: D("found"), ...fr(240, 1440, 2.1, 540, 1050) }] },
+        shake: (t) => ({ x: 4 * Math.sin(t * 23), y: 3 * Math.sin(t * 19), r: 0 }),
+        actors: [A("kiwVest", 140, 1570, KT, [{ t: 0, mode: "wave2", eyes: "wide", mouth: "laugh" }]), A("rescuer", 300, 1570, 0.17, [{ t: 0, mode: "radio", eyes: "normal", mouth: "o" }], { flip: true, talk: [TALK("found", 0, "o")] })],
+        captions: caps("found", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id); Plane.siteLife(tl, "d7", t0, D("found")); heliAt(L, tl, "hc4", 420, 1300, 0.4, t0, D("found"));
+          put(L.glow, `<g id="fd-dn">${Array.from({ length: 14 }, (_, k) => `<path d="M${200 + k * 30},${1250 + (k % 3) * 40}l${k % 2 ? 40 : -40},90" stroke="#fff" stroke-width="3" opacity=".4"/>`).join("")}</g>`);
+          tl.fromTo("#fd-dn", { y: -40, opacity: 0.6 }, { y: 60, opacity: 0, duration: 0.4, repeat: Math.ceil(D("found") / 0.4), ease: "none", immediateRender: false }, t0); } });
+      // ---------- 20. the turn: across the bay at dawn, the front section — empty: a dropped torch, footprints leading away ----------
+      add("empty", { set: "bayView", setOpts: { id: "e0", time: "dawn", front: true, empty: true }, dark: 0, light: DAWNL, grade: GDWN, blur: { fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.5, 540, 900) }, { t: D("empty"), glide: D("empty"), ...fr(500, 840, 2.6, 540, 900) }] },
+        captions: caps("empty", undefined, QUO),
+        fx(tl, id, t0, L) { Plane.bayLife(tl, "e0", t0, D("empty")); SU.flash(tl, L.light, t0 + F("empty", 0, 1), "#ff3b2e", 0.3); } });
+      // ---------- 21. flashback, 4 a.m. (cold, desaturated): the torches were survivors — and across the bay, HIS phone light ----------
+      const FLASH = { top: "#3a4a6a", bottom: "#05070f", op: 0.45 };
+      add("truth", { set: "bayView", setOpts: { id: "t0", time: "night", front: true, torches: true, phone: true, phoneX: 60, phoneY: 1000 }, dark: 0.2, light: NIGHTL, grade: FLASH, blur: { fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(560, 860, 2.2, 540, 900) }, { t: vo("truth", 1) - 0.2, glide: vo("truth", 1) - 0.2, ...fr(520, 880, 2.0, 540, 900) }, { t: D("truth"), glide: D("truth") - vo("truth", 1) + 0.2, ...fr(240, 960, 1.4, 540, 900) }] },
+        captions: caps("truth"),
+        fx(tl, id, t0, L) { Plane.bayLife(tl, "t0", t0, D("truth")); rewind(L, tl, t0, 0.5, "ตีสี่");
+          for (let k = 0; k < 7; k++) tl.fromTo(`#t0-wv${k}`, { rotation: -30, svgOrigin: "8 -32" }, { rotation: 30, svgOrigin: "8 -32", duration: 0.3, yoyo: true, repeat: Math.ceil(D("truth") / 0.3), ease: "sine.inOut", immediateRender: false }, t0 + k * 0.07);
+          tl.fromTo("#t0-ph", { opacity: 0.4, scale: 0.8, svgOrigin: "0 0" }, { opacity: 1, scale: 1.3, svgOrigin: "0 0", duration: 0.4, yoyo: true, repeat: Math.ceil(D("truth") / 0.4), ease: "sine.inOut", immediateRender: false }, t0); } });
+      // ---------- 22. flashback: they leave their wreck in the dark, the torches wind along the shore toward his light — and go out ----------
+      add("walkoff", { set: "bayView", setOpts: { id: "w0", time: "night", front: true, torches: true, phone: true, phoneX: 60, phoneY: 1000 }, dark: 0.25, light: NIGHTL, grade: FLASH, blur: { fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(420, 900, 1.6, 540, 900) }, { t: D("walkoff"), glide: D("walkoff"), ...fr(240, 960, 1.8, 540, 900) }] },
+        captions: caps("walkoff"),
+        fx(tl, id, t0, L) { Plane.bayLife(tl, "w0", t0, D("walkoff"));
+          for (let k = 0; k < 7; k++) { tl.fromTo(`#w0-pp${k}`, { x: 0, y: 0 }, { x: -260 - k * 30, y: 110 + (k % 3) * 20, duration: D("walkoff") * 0.9, ease: "none", immediateRender: false }, t0 + k * 0.12);
+            tl.to(`#w0-pp${k}`, { opacity: 0, duration: 0.4 }, t0 + D("walkoff") * 0.55 + k * 0.18); } } });
+      // ---------- 23. he is lifted away; the card ticks both rules; the last two lines ----------
+      add("end", { ...DSITE("d9", { vest: "wing", panel: true }),
+        cam: { keys: [{ t: 0, ...fr(260, 1380, 1.7, 540, 1050) }, { t: D("end"), glide: D("end"), ...fr(400, 1300, 1.2, 540, 1000) }] },
+        captions: caps("end"),
+        fx(tl, id, t0, L) { Plane.siteLife(tl, "d9", t0, D("end")); heliAt(L, tl, "hc5", 300, 1250, 0.45, t0, D("end"), { from: { x: 0, y: 0 }, to: { x: 200, y: -500 }, ease: "power1.in", at: 0.6 });
+          PlaneUI.rules(tl, L.light, t0 + 0.4, vo("end", 1) - 0.2, { active: 1, done: [0, 1], y: 480, tickAt: 0.9 }); } });
+      add("fin", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        fx(tl, id, t0, L) { PlaneUI.next(tl, L.light, t0, D("fin"), { l1: "รอดคนเดียว · EP.2", l2: "อยู่กับซาก อย่าจากไป", l3: "ทิ้งกระเป๋า · อยู่กับซาก", cta: "แชร์ให้คนที่คุณรัก ก่อนวันที่ต้องใช้", end: true }); } });

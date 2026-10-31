@@ -1,9 +1,12 @@
 # เลน D · รอดคนเดียว (เครื่องบินตก เกาะกลางแอตแลนติก) · สถานะ
 
-อัปเดต 1 พ.ย. 2569 · branch `prod/lane-d`
+อัปเดต 1 พ.ย. 2569 · branch `prod/lane-d` · **จบเรื่องแล้ว 2 ตอน final** · รอเจ้าของ/แชทประสานงานสั่งหัวข้อถัดไป (F5: ห้ามเริ่มเรื่องใหม่เอง)
 
-- ขั้น: **ส่ง style frames + คลิปทดสอบการขยับ + สตอรี่บอร์ด 2 ตอน รอแชทประสานงานตรวจ** (เจ้าของมอบให้แชทประสานงานตรวจแทน)
-- ARC + แหล่ง: `video/plane/ARC.md` · งบ: `video/plane/BUDGET.md` (ใช้ไป ~$0.58 / $3.10)
-- งานทำต่อ: `video/plane/ep1/`, `video/plane/ep2/` (บท เสียง จังหวะ ช็อต) · โลกของเรื่อง `video/plane/lib/` (plane.part ฉาก · planecast.part ตัวละคร · planeui.part การ์ด) · `video/plane/lib/rig2.js` = rig แก้ข้อต่อ (69ed673)
-- ประกอบ: ตั้ง workspace ด้วย `setup_workspace.sh <mw> plane1=video/plane/ep1 plane2=video/plane/ep2` → คัดลอก `video/plane/lib/*.part` ไปไว้ใน `<mw>/plane1/` และ `rig2.js` ไป `<mw>/hf/lib/` → `python3 ../hf/lib/voice.py lines.json vo && python3 timing.py && bash build.sh` (EP.2 build.sh อ่าน world parts จาก ../plane1)
-- ถัดไปหลังผ่าน: mix.py (SFX จาก synth.py) → เรนเดอร์ทีละตอน → QA → ปก → store.sh → `video/release/plane.json`
+| ตอน | ไฟล์ | สรุป |
+|---|---|---|
+| EP.1 ทิ้งกระเป๋า | `video/plane-ep1/` · HQ `video/release/hq/plane-ep1-HQ.mp4` | 74.5 วิ · −14.0 LUFS · พีก −1.4 · ฮุก 3.15 วิ |
+| EP.2 อยู่กับซาก (ตอนจบ) | `video/plane-ep2/` · HQ `video/release/hq/plane-ep2-HQ.mp4` | 80.5 วิ · −13.6 LUFS · พีก −1.4 · ฮุก 2.74 วิ |
+
+- แพ็กเกจ `video/release/plane.json` (ทั้ง 2 ตอน final + sha256) · แคปชัน `video/plane/CAPTIONS.md` · ปก `video/brand/covers/plane.json`
+- ARC + แหล่ง `video/plane/ARC.md` · งบ `video/plane/BUDGET.md` (~$0.70 / $3.10) · โลกของเรื่อง `video/plane/lib/` · งานทำต่อ `video/plane/ep1..2/`
+- ชุดตรวจ `video/plane/review/` (style frames, ฮุก 3 แบบ, สตอรี่บอร์ด, คลิปทดสอบการขยับ 540p)
