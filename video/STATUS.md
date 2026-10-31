@@ -44,6 +44,8 @@
 - เลน A `session_017iwyCwasHJqyZ1jk1hBAwf` · branch `prod/lane-a` · สุนัขกัด/พิษสุนัขบ้า (`video/rabies/`) · ไฟดูดหน้าน้ำท่วมตัดทิ้งเพราะซ้ำ แสงกระสือ
   · ระวังทับ ชั้น 23 EP.1 ที่สอนล้างแผล 15 นาทีไปแล้ว
 - เลน B `session_017iwyCvx1zDsQSsZQNMKKUs` · branch `prod/lane-b` · ต่อหัวเสือ (`video/hornet/`) สำรอง: แก๊สหุงต้มรั่ว
+- **เลน C หยุดแล้ว** (เจ้าของพิมพ์ในแชทเลน C 31 ต.ค. 23:25: "หยุดเลย เพราะมีแชทอื่นทำแล้วเรื่องนี้") · ไม่เรนเดอร์รั้วสุดท้าย · เรื่องเกาะรอเจ้าของยืนยัน
+  · เจ้าของมีแชทผลิตอีกแชท "Rob mai club" (session_01WTm8cCJkDpczPTcYo6WoAn) ระวังทำซ้ำเรื่องกัน
 - เลน C `session_017iwyCw495QJRYFRbRfxgtH` · branch `prod/lane-c` · เรื่องแนวหนัง เรื่องละ 1–2 ตอน เริ่มที่ซอมบี้ (`video/<เรื่อง>/`)
   ใช้โลกของ `video/fence/ARC.md` ได้ (เจ้าของ 31 ต.ค.: "ทำเรื่องเวอร์ๆด้วยตามในหนังเช่นซอมบี้" แล้ว "เรื่องล่ะ1 หรือ2ก้ได้")
 - เลน D `session_017iwyCuqgwupug85dXqQKB5` · branch `prod/lane-d` · เครื่องบินตก รอดคนเดียว (`video/plane/`)
