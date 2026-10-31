@@ -79,14 +79,14 @@
         set: "canteen", setOpts: { id: "hg" }, dark: 0.42, blur: { far: 5, mid: 4 },
         cam: { keys: [{ t: 0, ...fr(820, 1330, 1.5, 540, 1000), drift: { s: 0.015 } }, { t: vo("hong", 1) - 0.2, glide: 0.5, ...fr(860, 1300, 1.9, 540, 980), drift: { s: 0.02 } }] },
         actors: [HO(880, 1560, 0.9, [{ t: 0, mode: "holdVial", eyes: "worry", mouth: "flat" }, { t: vo("hong", 1) + 0.9, mode: "pushAway", eyes: "sad", mouth: "frown" }], { prop: "vial", cu: false }),
-          PU(620, 1555, 0.55, [{ t: 0, mode: "sitLook", eyes: "normal", mouth: "flat" }, { t: vo("hong", 1), mode: "sitLook", eyes: "worry", mouth: "o" }], { cu: false })],
+          PU(660, 1560, 0.55, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("hong", 1), mode: "idle", eyes: "worry", mouth: "o" }], { cu: false })],
         captions: capsAt("hong", 0, D("hong"), [0]),
         bubbles: [bub("hong", 1, 760, 500, 860, { br: true, end: D("hong") - 0.05 })],
         react: [{ a: 1, t: vo("hong", 1) + 1.6, dur: 1.0, fast: true }],
         fx(tl, id, t0, L) {
           put(L.far, Estate8.FRIDGE8("hg-fr", 1060, 1300, 0.95, { open: true, light: false }));
           put(L.act, `<g id="hg-box" transform="translate(760,1560) scale(0.8)">${Estate8.INSULIN("hg-ins", { name: "หงส์" })}</g>`);
-          const bw = wrapEl("#hg-box"); tl.to(bw, { x: -120, y: 10, rotation: -12, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + vo("hong", 1) + 1.0);
+          const bw = wrapEl("#hg-box"); tl.to(bw, { x: -70, y: 10, rotation: -12, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + vo("hong", 1) + 1.0);
           tableBefore(id, L, Estate.TABLEF(400, 1300, 1460, { seed: 41 }), 99);
           const X = t0 + F("hong", 1, 1); Fx.punch(tl, `#${id} .stage`, X, 1.04, 0.3); red(tl, X, 0.3, 0.5); Fx.heart(tl, t0, D("hong"), 0.6, 0.45);
         },
@@ -140,7 +140,7 @@
         actors: [PU(560, 1580, 0.55, [{ t: 0, mode: "offerBox", eyes: "worry", mouth: "o" }, { t: vo("label", 2), mode: "offerBox", eyes: "wide", mouth: "smile" }], { prop: "insulin", cu: false }),
           PH(800, 1560, 0.9, [{ t: 0, mode: "readBox", eyes: "normal", mouth: "flat" }, { t: vo("label", 2) - 0.2, mode: "stare", eyes: "normal", mouth: "flat" }], { flip: true, cu: false }),
           HO(1000, 1560, 0.9, [{ t: 0, mode: "lieWeak", eyes: "closed", mouth: "frown" }, { t: vo("label", 2) + 0.4, mode: "lieWeak", eyes: "normal", mouth: "flat" }], { ...NOBLINK, cu: false })],
-        bubbles: [bub("label", 0, 500, 560, 560, { br: true, end: vo("label", 1) - 0.05 }), bub("label", 1, 820, 480, 800, { br: true, end: vo("label", 2) - 0.05 }), bub("label", 2, 820, 480, 800, { br: true, end: D("label") - 0.05 })],
+        bubbles: [bub("label", 0, 500, 560, 560, { br: true, end: vo("label", 1) - 0.05 }), bub("label", 1, 620, 480, 800, { br: true, end: vo("label", 2) - 0.05 }), bub("label", 2, 620, 480, 800, { br: true, end: D("label") - 0.05 })],
         ui: [{ type: "label", t: vo("label", 1) + 0.2, end: D("label") - 0.05, title: "อินซูลิน · 10 มล.", lines: ["เก็บในตู้เย็น 2–8 °C", "<em>นอกตู้เย็น ไม่เกิน 30 °C ได้ 28 วัน</em>", "ห้ามแช่แข็ง"], ringAt: F("label", 1, 1), top: 250 }],
         react: [{ a: 2, t: vo("label", 2) + 0.5, dur: 1.0, fast: true }],
         fx(tl, id, t0) { const X = t0 + F("label", 1, 1); Fx.punch(tl, `#${id} .stage`, X, 1.04, 0.3); Fx.heart(tl, t0, D("label"), 0.7, 0.4); },
@@ -258,7 +258,7 @@
           KO(540, 1500, 0.9, [{ t: 0, mode: "crouchLow", eyes: "worry", mouth: "frown" }, { t: vo("confess", 1) + 1.0, mode: "idle", eyes: "wide", mouth: "flat" }], { flip: true, cu: false }),
           PU(640, 1515, 0.55, [{ t: 0, mode: "hugBox", eyes: "wide", mouth: "o" }], { prop: "insulin", flip: true, cu: false }),
           PH(760, 1500, 0.92, [{ t: 0, mode: "holdWalkie", eyes: "set", mouth: "flat" }, { t: vo("confess", 1) - 0.2, mode: "idle", eyes: "set", mouth: "flat" }, { t: vo("confess", 1) + 0.6, mode: "walk", eyes: "set", mouth: "flat" }], { flip: true, prop: "walkie", moveTo: { x: -200, y: 1500, dur: D("confess") - vo("confess", 1) - 0.6, ease: "none", at: vo("confess", 1) + 0.6 }, cu: false })],
-        bubbles: [bub("confess", 0, 760, 500, 760, { br: true, end: vo("confess", 1) - 0.05 }), bub("confess", 1, 700, 520, 700, { br: true, end: vo("confess", 2) - 0.05 }), bub("confess", 2, 400, 560, 400, { end: D("confess") - 0.05 })],
+        bubbles: [bub("confess", 0, 540, 480, 740, { br: true, end: vo("confess", 1) - 0.05 }), bub("confess", 1, 520, 500, 680, { br: true, end: vo("confess", 2) - 0.05 }), bub("confess", 2, 400, 560, 400, { end: D("confess") - 0.05 })],
         react: [{ a: 0, t: vo("confess", 2) - 0.05, dur: 0.9, fast: true }],
         fx(tl, id, t0) { const X = t0 + F("confess", 0, 2); Fx.punch(tl, `#${id} .stage`, X, 1.06, 0.4); red(tl, X, 0.45, 0.6); Fx.heart(tl, t0, D("confess"), 0.5, 0.6); },
       });
@@ -267,7 +267,7 @@
       const GO = 0.5;
       add("dawn", {
         set: "estateGate", setOpts: { id: "dg", time: "morning", open: 0 }, dark: 0.18, blur: { far: 3, mid: 2 },
-        cam: { keys: [{ t: 0, ...fr(640, 1260, 1.05, 540, 1050), drift: { s: 0.015 } }, { t: vo("dawn", 2) - 0.2, glide: 0.8, ...fr(900, 1300, 1.5, 540, 1020), drift: { s: 0.02 } }] },
+        cam: { keys: [{ t: 0, ...fr(640, 1260, 1.05, 540, 1050), drift: { s: 0.015 } }, { t: vo("dawn", 2) - 0.2, glide: 0.8, ...fr(800, 1320, 1.5, 540, 1020), drift: { s: 0.02 } }] },
         actors: [PI(240, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }, { t: vo("dawn", 1), mode: "idle", eyes: "normal", mouth: "smile" }], { cu: false }),
           KO(120, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { cu: false }),
           PU(340, 1570, 0.55, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("dawn", 1) - 0.3, mode: "run", eyes: "wide", mouth: "smileOpen" }, { t: vo("dawn", 1) + 0.9, mode: "idle", eyes: "normal", mouth: "smileOpen" }], { prop: "insulin", moveTo: { x: 520, y: 1570, dur: 1.0, at: vo("dawn", 1) - 0.3 }, cu: false }),
@@ -276,8 +276,8 @@
         captions: caps("dawn", [0, 2]),
         fx(tl, id, t0, L) {
           // ภู behind the bars, the red scarf on; the gate opens GO of the way at 0.6, closes again after "มีคนเดียว"
-          behind(L, tl, "dg-phu", "phuR", 1180, 1540, 0.9, true, t0, D("dawn"), [{ t: 0, mode: "idle", eyes: "set", mouth: "flat" }, { t: vo("dawn", 2) + 0.3, mode: "stopHand", eyes: "set", mouth: "flat" }]);
-          const gw = wrapEl("#dg-gate"); tl.fromTo(gw, { x: 0 }, { x: GO * 620, duration: 1.2, ease: "power1.out", immediateRender: false }, t0 + 0.6);
+          behind(L, tl, "dg-phu", "phuR", 800, 1540, 0.9, true, t0, D("dawn"), [{ t: 0, mode: "idle", eyes: "set", mouth: "flat" }, { t: vo("dawn", 2) + 0.3, mode: "stopHand", eyes: "set", mouth: "flat" }]);
+          const gw = wrapEl("#dg-gate"); tl.fromTo(gw, { x: 0 }, { x: -GO * 620, duration: 1.2, ease: "power1.out", immediateRender: false }, t0 + 0.6);
           tl.to(gw, { x: 0, duration: 1.0, ease: "power1.in", immediateRender: false }, t0 + vo("dawn", 2) + 0.9);
           const S = t0 + vo("dawn", 2) + 1.9; impact(tl, id, L, S, 760, 1200, 0.6); Fx.punch(tl, `#${id} .stage`, S, 1.05, 0.4); red(tl, S, 0.3, 0.6);
           Fx.heart(tl, t0, D("dawn"), 0.65, 0.45);
@@ -338,8 +338,12 @@
       add("end", {
         set: "fieldNight", setOpts: { id: "nx" }, dark: 0.75, blur: { far: 6, set: 6 },
         cam: { keys: [{ t: 0, ...fr(560, 1200, 1.0, 540, 960), drift: { s: 0.03 } }] },
-        ui: [{ type: "nextCard", t: 0.3, big: "จบ", tag: "เอาชีวิตรอด 99 วัน · ขอบคุณที่ดูจนจบ", top: 150 }, { type: "ledger", t: 0.6, day: "เหลือ 91 วัน → ไม่นับแล้ว", rows: [["คน", "4"], ["เจ๊หงส์", "กลับมาแล้ว"], ["ยาเจ๊หงส์", "ยังใช้ได้"], ["ภู", "อยู่ในนิคม", "warn"], ["วิทยุ", "ปิด"]], cta: "ไม่ต้องให้ใครนับเราอีก", top: 560 }],
-        fx(tl, id, t0) { tl.set("#black", { opacity: 0 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 0.3 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 1 }, t0 + 0.45); Fx.heart(tl, t0 + 1.2, D("end") - 1.2, 0.8, 0.3); },
+        ui: [{ type: "nextCard", t: 0.3, big: "จบ", tag: "เอาชีวิตรอด 99 วัน · ขอบคุณที่ดูจนจบ", top: 150 }, { type: "ledger", t: 0.6, day: "ไม่นับวันแล้ว", rows: [["คน", "4"], ["เจ๊หงส์", "กลับมาแล้ว"], ["ยาเจ๊หงส์", "ยังใช้ได้"], ["ภู", "อยู่ในนิคม", "warn"], ["วิทยุ", "ปิด"]], next: "ไม่ต้องหาแล้ว… เรานับกันเอง", cta: "กดติดตาม · ขอบคุณที่ดูจนจบ", top: 560 }],
+        fx(tl, id, t0) {
+          tl.set("#black", { opacity: 0 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 0.3 }, t0 + 0.3); tl.set(`#${id} .stage`, { opacity: 1 }, t0 + 0.45); Fx.heart(tl, t0 + 1.2, D("end") - 1.2, 0.8, 0.3);
+          tl.call(() => { document.querySelectorAll(`#${id} *`).forEach((el) => { if (el.children.length === 0 && el.textContent.trim() === "ตอนต่อไป") el.textContent = "ตอนจบ"; });
+            document.querySelectorAll(`#${id} .fledger .next`).forEach((el) => { el.innerHTML = "พรุ่งนี้:<b>ไม่ต้องหาอะไรแล้ว… เรานับกันเอง</b>"; }); }, null, t0 + 0.05);
+        },
       });
 
       // no source cards and no source names on screen (user, 26 Oct 2026: "เอา ที่มา ออกให้หมด"); the sources live in the pinned comment (CAPTIONS.md)
