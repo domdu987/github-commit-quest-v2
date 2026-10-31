@@ -1,4 +1,4 @@
-"""ต่อหัวเสือ EP.2 ต่อรุม อย่าลงน้ำ. Derive shot timing from the recorded voice so picture and sound share one schedule.
+"""ต่อหัวเสือ EP.2 อย่าเชื่อคำว่าไม่เป็นไร. Derive shot timing from the recorded voice so picture and sound share one schedule.
 
 Each shot lists its voice lines in order, as "id", ("id", gap) where gap is the time from the end of
 the previous line (negative = overlap), or ("id", offset, "start") to start offset seconds after the
@@ -20,24 +20,22 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.1, -0.1, 2.5),        # the yard: เตย running for the pond, the swarm streaming behind her
-    ("cmd", ["n02"], 0.05, 0.4, 1.7),         # เตย at the pond's edge; behind her ยาย's door stands open (0:03, the planted mistake)
-    ("why", ["n03"], 0.15, 0.5, 4.6),         # card: the pond in section — they wait above the water; you have to come up to breathe
-    ("run", ["n04"], 0.1, 0.3, 2.6),          # wide: เตย runs, the swarm follows; ภูมิ breaks for the house
-    ("toey", ["t01"], 0.05, 0.3, 1.8),        # เตย: "สระ! โดดน้ำ!"
-    ("rule", ["y01"], 0.1, 1.2, 3.6),         # ยาย's voice from somewhere → the rule board (rule 2 highlighted)
-    ("know", ["n05", "n06"], 0.15, 0.4, 5.2),  # card: open ground ✗ / indoors ✓
-    ("one", ["n12"], 0.1, 0.4, 3.0),          # split screen in the yard: one hornet → still · a swarm → run
-    ("grab", ["n07"], 0.1, 0.4, 3.0),         # ลุงสิงห์ throws his towel over เตย's head and hauls her off the bank
-    ("shed", ["s01"], 0.05, 1.0, 2.6),        # the shed door slams; hornets thud on the screen
-    ("thanks", ["t02"], 0.1, 0.3, 2.0),       # inside the shed, dim: เตย shaking, the towel round her
-    ("scars", ["n13"], 0.1, 0.5, 3.2),        # insert: ลุงสิงห์'s hand on the door bar — the back of it covered in old scars
-    ("phum", ["n08"], 0.1, 0.3, 2.6),         # ภูมิ up ยาย's stairs and in
-    ("where", ["p01"], 0.1, 0.6, 2.2),        # the empty room: "ยาย! ยายอยู่ไหน?"
-    ("rw", ["n09", "n10"], 0.2, 0.6, 6.4),    # ↺ 0:03: the open door right behind her
-    ("shrine", ["n11"], 0.1, 0.4, 3.0),       # ยาย at the shrine, hunched, the swarm in the tree above
-    ("fine", ["y02"], 0.1, 0.9, 2.6),         # ยาย's weak smile, her arms dotted with stings
-    ("next", [], 0, 0, 4.2),                  # next: ตอนที่ 3 ยายบอกว่าไม่เป็นไร
+    ("hook", ["n01"], 0.1, -0.1, 2.6),        # dusk at the shrine: ยาย smiling on the bench, she draws the ผ้าขาวม้า over her arm (0:02, the planted mistake)
+    ("cmd", ["n02"], 0.05, 0.4, 1.5),         # the cloth slips: her forearm dotted with stings
+    ("why", ["n03"], 0.15, 0.4, 4.4),         # card: many stings → within 2 days → the kidneys
+    ("yai", ["y01"], 0.1, 0.3, 3.0),          # ยาย laughing it off, the ice pack on her arm
+    ("aid", ["n04"], 0.15, 0.3, 4.2),         # card: soap and water · ice in a cloth · 20 minutes ✓
+    ("count", ["n05"], 0.1, 0.6, 4.6),        # card: not enough — the stings counted past 10
+    ("night", ["n06"], 0.2, 0.4, 5.6),        # night: the house lit; ภูมิ on the stairs sees ยาย come out holding her back → the tea-dark cup card
+    ("phum", ["p01"], 0.05, 0.3, 1.9),        # ภูมิ: "ยายต้องไปหาหมอ!"
+    ("rule", ["y02"], 0.1, 1.2, 4.6),         # ยาย, weak, smiles and says her own rule → the board (rule 3)
+    ("danger", ["n07"], 0.15, 0.4, 5.0),      # card: three danger signs → โทร 1669; ภูมิ dialling
+    ("drive", ["n08"], 0.2, 0.6, 3.6),        # the map: ลุงสิงห์'s pickup from the village to the hospital
+    ("rw", ["n09", "n10"], 0.2, 0.6, 6.0),    # ↺ 0:02: the cloth over the stings
+    ("lung", ["s01"], 0.1, 0.5, 3.0),         # the hospital bench at night: ลุงสิงห์, sleeves rolled up, the scars
+    ("truth", ["n11"], 0.15, 0.5, 3.6),       # ภูมิ looks at him; the old photo on his phone: him in a hospital bed
+    ("end", ["n12"], 0.2, 0.8, 3.6),          # morning: ยาย in the ward, smiling, ภูมิ holding her hand
+    ("finale", [], 0, 0, 5.0),                # the series end card
 ]
 GAP = 0.08
 

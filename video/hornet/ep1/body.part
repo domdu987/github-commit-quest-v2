@@ -1,146 +1,151 @@
-      // ---------- ต่อหัวเสือ EP.1 อย่าปัดมัน ----------
-      // grammar: hook wide (the lure: a hornet at the lens) → the planted mistake (0:04 stone hits the nest's branch) → card → nest close → map →
-      // cast in the yard (name tags) → tilt up to the nest (the audience sees it first) → ยาย + rule board → shadow-screen legend → เตย scoffs →
-      // ลุงสิงห์ in long sleeves → the first hornet → ภูมิ stands still (the turn) → เตย swats → ↺ 0:04 → the soldiers pour out → next card
+      // ---------- ต่อหัวเสือ EP.1 ต่อรุม อย่าลงน้ำ ----------
+      // (2-episode cut, 31 ต.ค.: EP.1 = the old EP.1 setup + the swarm; rule 1 = ต่อรุมให้วิ่ง อย่าทิ้งตัวลงน้ำ)
+      // grammar: chase wide + title plank → the command at the pond (0:03: ยาย's door open behind เตย) → pond card → 10 minutes earlier → the nest, the legend, ลุงสิงห์ → เตย swats → card → the soldiers wake → "สระ!" → rule 1 → card indoors → ลุงสิงห์ grabs her → shed → ↺ 0:03 → the empty house → ยาย at the shrine → next
       const SUN = { from: "left", rim: "#fff6dc", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.3, op: 0.28 }, vol: false };
-      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 }, GHOT = { top: "#fff0c0", bottom: "#f4d8a0", op: 0.16 };
+      const DIM = { from: "right", rim: "#ffe0a8", rimOp: 0.6, shade: "#1a120c", shadeOp: 0.45, cast: false, vol: false };
+      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 }, GIN = { top: "#3a2a1a", bottom: "#120c08", op: 0.25 };
       const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
       const TALK = (k, i, m = "o") => [vo(k, i), voEnd(k, i), m];
       const QUO = { quote: true };
-      const G = 1320, TX = 760, NX = 910, NY = 454;           // the yard's ground, the tamarind, the nest's hanging point (Hn.NEST)
-      const Y0 = (id, o = {}) => ({ set: "hnYard", setOpts: { id, ...o }, dark: 0, light: SUN, grade: GDAY, blur: { far: 1, fg: 6 } });
+      const G = 1320, HX = -100, HS = 0.9;            // ยาย's house; its doorway (world) ≈ x 35–129, y 654–897; the stairs from (278,1320) up to (143,897)
+      const DOOR = [82, 780], STB = [300, 1330], STT = [150, 900];
+      const Y2 = (id, o = {}) => ({ set: "hnYard", setOpts: { id, house: [HX, HS], door: "open", tree: 1400, shrine: 1330, pond: 820, shed: [1900, 1], ...o }, dark: 0, light: SUN, grade: GDAY, blur: { far: 1, fg: 6 } });
       const BLUR = { sky: 4, far: 6, mid: 6, set: 5, act: 5, fg: 8 };
-      const sway = (tl, id, t0, a = 9, n = 3) => { for (let k = 0; k < n; k++) tl.to(`#${id}-nest`, { rotation: (k % 2 ? -a : a) * (1 - k / (n + 1)), svgOrigin: `${NX} ${NY}`, duration: 0.32, ease: "sine.inOut" }, t0 + k * 0.32);
-        tl.to(`#${id}-nest`, { rotation: 0, svgOrigin: `${NX} ${NY}`, duration: 0.4, ease: "sine.out" }, t0 + n * 0.32); };
-      // the slingshot stone: from (x0,y0) up to a pod, glances off to the nest's branch (screen-world coords of the yard)
-      const stone = (L, tl, id, t0, x0, y0) => {
-        put(L.glow, `<g id="${id}-st"><circle r="9" fill="#8a8a84" stroke="#2e2a26" stroke-width="3"/></g>`);
-        tl.set(`#${id}-st`, { opacity: 0 }, 0); tl.set(`#${id}-st`, { opacity: 1, x: x0, y: y0 }, t0);
-        tl.to(`#${id}-st`, { x: 700, y: 640, duration: 0.28, ease: "none" }, t0);
-        tl.to(`#${id}-st`, { x: NX - 70, y: NY - 70, duration: 0.2, ease: "none" }, t0 + 0.28);
-        tl.to(`#${id}-st`, { x: NX - 160, y: 900, opacity: 0, duration: 0.5, ease: "power1.in" }, t0 + 0.48);
-        put(L.glow, `<g id="${id}-hit" opacity="0" transform="translate(${NX - 70},${NY - 70})"><path d="M-30,0H30M0,-30V30M-20,-20L20,20M20,-20L-20,20" stroke="#fff6c8" stroke-width="6" stroke-linecap="round"/></g>`);
-        tl.set(`#${id}-hit`, { opacity: 0 }, 0); tl.fromTo(`#${id}-hit`, { opacity: 1, scale: 0.4, svgOrigin: `${NX - 70} ${NY - 70}` }, { opacity: 0, scale: 1.4, svgOrigin: `${NX - 70} ${NY - 70}`, duration: 0.3, immediateRender: false }, t0 + 0.48);
-      };
-      const buzz = (tl, layer, id, t0, dur, cx, cy, s = 0.9, rx = 90, ry = 60, n = 1, seed = 3) => Hn.swarm(tl, layer, { id, n, s, cx, cy, rx, ry, t0, dur, seed });
+      const swarmOn = (tl, L, id, t0, dur, path, o = {}) => Hn.swarm(tl, L.glow, { id, n: o.n || 28, s: o.s || 0.45, path, rx: o.rx || 170, ry: o.ry || 120, chase: o.chase ?? 0.45, t0, dur, seed: o.seed || 9 });
+      // a towel thrown over เตย's head (world coords at her head), follows her with the same tween as the actor
+      const towel = (L, id, x, y, s) => put(L.glow, `<g id="${id}"><g transform="translate(${x},${y}) scale(${s})"><path d="M-70,-60C-60,-110 60,-110 70,-60L90,90Q0,110 -90,90Z" fill="#f4f0e4" stroke="#2e2a26" stroke-width="4"/>
+        <path d="M-60,40h120M-64,60h128" stroke="#c8402a" stroke-width="6"/></g></g>`);
 
-      // ---------- 1. hook: the yard at noon; a hornet right at the lens, the nest in the tamarind, the title plank ----------
-      add("hook", {
-        ...Y0("y0", { title: { x: 420, y: 1560, s: 1.55, sub: "EP.1 อย่าปัดมัน" } }),
-        cam: { keys: [{ t: 0, ...fr(600, 1180, 0.74, 540, 980) }, { t: D("hook"), glide: D("hook"), ...fr(640, 1100, 0.86, 540, 980) }] },
+      const TX = 1400, NX = 1550, NY = 454, GHOT = { top: "#fff0c0", bottom: "#f4d8a0", op: 0.16 };
+      const buzz = (tl, layer, id, t0, dur, cx, cy, s = 0.9, rx = 90, ry = 60, n = 1, seed = 3) => Hn.swarm(tl, layer, { id, n, s, cx, cy, rx, ry, t0, dur, seed });
+      // ---------- 1. hook: the yard, เตย running for the pond, the swarm behind ----------
+      add("hook", { ...Y2("e0", { title: { x: 760, y: 1380, s: 1.2, sub: "EP.1 ต่อรุม อย่าลงน้ำ" } }),
+        cam: { keys: [{ t: 0, ...fr(420, 1180, 0.8, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(440, 1220, 0.92, 540, 1000) }] },
+        actors: [A("toey", 60, 1520, 0.8, [{ t: 0, mode: "runCover", eyes: "wide", mouth: "scream" }], { moveTo: { x: 430, y: 1540, dur: D("hook") + 0.4, ease: "none" } })],
         captions: caps("hook"),
-        fx(tl, id, t0, L) {
-          buzz(tl, L.glow, "h0s", t0, D("hook"), NX, NY + 200, 0.32, 110, 80, 7, 5);
-          // the hero hornet hovering in front of the lens, drifting and turning
-          put(L.light, `<g id="h0h"><g id="h0hf"><g transform="rotate(-14)">${Hn.hornet({ s: 3.6 })}</g></g></g>`);
-          tl.fromTo("#h0h", { x: 1180, y: 600 }, { x: 760, y: 760, duration: 0.9, ease: "power2.out", immediateRender: false }, t0);
-          tl.to("#h0h", { x: 640, y: 720, duration: 0.9, yoyo: true, repeat: 2, ease: "sine.inOut" }, t0 + 0.9);
-          tl.to("#h0hf", { y: 18, duration: 0.11, yoyo: true, repeat: Math.ceil(D("hook") / 0.11), ease: "sine.inOut" }, t0);
-          tl.to("#h0h .hnw > g", { scaleY: 0.25, svgOrigin: "0 0", duration: 0.02, yoyo: true, repeat: Math.ceil(D("hook") / 0.02) }, t0);
-        },
-      });
-      // ---------- 2. the command, over the planted mistake: ภูมิ's stone clacks off a pod and hits the nest's branch (0:04) ----------
-      add("cmd", {
-        ...Y0("y1"), cam: { keys: [{ t: 0, ...fr(640, 1000, 0.92, 540, 900) }] },
-        actors: [A("phumSling", 360, 1500, 0.78, [{ t: 0, mode: "aim", eyes: "normal", mouth: "smile" }, { t: 0.95, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id, t0, L) { swarmOn(tl, L, "e0s", t0, D("hook") + 2, [[0, -40, 1060], [D("hook") + 0.4, 360, 1080], [D("hook") + 2, 400, 1080]]); } });
+      // ---------- 2. the command at the pond's edge; ยาย's door open behind her (0:03) ----------
+      add("cmd", { ...Y2("e1"), cam: { keys: [{ t: 0, ...fr(270, 1180, 1.0, 540, 1040) }] },
+        actors: [A("toey", 430, 1540, 0.8, [{ t: 0, mode: "cover", eyes: "wide", mouth: "scream" }])],
         captions: caps("cmd"),
-        fx(tl, id, t0, L) { stone(L, tl, "c1", t0 + 0.7, 470, 1080); sway(tl, "y1", t0 + 1.18, 7, 3); buzz(tl, L.glow, "c1s", t0, D("cmd"), NX, NY + 220, 0.32, 110, 80, 6, 7); },
-      });
-      // ---------- 3. why: stand still ✓ / swatting gets you stung ✗ ----------
-      add("why", { ...Y0("y2"), blur: BLUR, cam: { keys: [{ t: 0, ...fr(700, 1000, 1.1, 540, 960) }] }, captions: caps("why"),
-        fx(tl, id, t0, L) { HnUI.still(tl, L.light, t0 + 0.1, D("why") - 0.1, { y: 330 }); } });
-      // ---------- 4. the whole nest behind it ----------
-      add("nest", { set: "hnNest", setOpts: { id: "n4" }, dark: 0, light: false, grade: GDAY,
-        cam: { keys: [{ t: 0, ...fr(560, 900, 0.8, 540, 960) }, { t: D("nest"), glide: D("nest"), ...fr(600, 1250, 1.25, 540, 960) }] }, captions: caps("nest"),
-        fx(tl, id, t0, L) { buzz(tl, L.glow, "n4s", t0, D("nest"), 560, 1500, 1.0, 380, 200, 9, 11); } });
-      // ---------- 5. the trip: Bangkok → บ้านโนนมะขาม (Isan) ----------
-      const MP = { x: 90, y: 300, s: 1 }, PB = Maps.P(100.52, 13.75), PV = Maps.P(102.6, 15.6);
-      const mw = (p) => [MP.x + p[0] * MP.s, MP.y + p[1] * MP.s], WB = mw(PB), WV = mw(PV);
-      add("map", {
-        set: "mapTH", setOpts: { id: "mp", ...MP, region: [103.2, 15.6, 230, "อีสาน"], route: [[100.52, 13.75], [100.9, 14.3], [101.6, 14.9], [102.1, 15.0], [102.6, 15.6]],
-          from: "กรุงเทพฯ", to: "บ้านโนนมะขาม", vehicle: "van", toIcon: `<g transform="translate(0,-16) scale(.12)">${Hn.hornet({ s: 1 })}</g>`, labDx: [40, -30] },
-        dark: 0, light: false, grade: GDAY,
-        cam: { keys: [{ t: 0, ...fr((WB[0] + WV[0]) / 2, (WB[1] + WV[1]) / 2, 1.5, 540, 900) }, { t: D("map") - 0.2, glide: 1.4, ...fr(WV[0], WV[1], 2.6, 540, 880) }] },
-        captions: caps("map"),
-        fx(tl, id, t0) { Maps.route(tl, "mp", t0, { go: [0.4, D("map") - 1.5] }); },
-      });
-      // ---------- 6. ภูมิ aims at the pods ----------
-      add("phum", { ...Y0("y6"), cam: { keys: [{ t: 0, ...fr(470, 1180, 1.35, 540, 1100) }, { t: D("phum"), glide: D("phum"), ...fr(470, 1160, 1.45, 540, 1100) }] },
-        actors: [A("phumSling", 420, 1500, 0.8, [{ t: 0, mode: "aim", eyes: "normal", mouth: "smile" }], { talk: [TALK("phum", 0)] })],
-        captions: caps("phum", undefined, QUO),
-        fx(tl, id, t0, L) { HnUI.tag(tl, L.light, t0 + 0.3, D("phum") - 0.3, { x: 330, y: 560, text: "ภูมิ 10 ขวบ", c: "#d8302a" }); } });
-      // ---------- 7. เตย and her phone ----------
-      add("toey", { ...Y0("y7", { tree: 1500, shrine: 1440, pond: false }), cam: { keys: [{ t: 0, ...fr(560, 1150, 1.4, 540, 1100) }] },
-        actors: [A("toeyPhone", 560, 1500, 0.86, [{ t: 0, mode: "raise", eyes: "worry", mouth: "frown" }], { talk: [TALK("toey", 0, "frown")] })],
-        captions: caps("toey", undefined, QUO),
-        fx(tl, id, t0, L) { HnUI.tag(tl, L.light, t0 + 0.2, D("toey") - 0.2, { x: 760, y: 520, text: "พี่เตย 15", c: "#ec5e9e" }); } });
-      // ---------- 8. the reveal: from the shrine up the trunk to the nest (the kids never look up) ----------
-      add("reveal", { ...Y0("y8"),
-        cam: { keys: [{ t: 0, ...fr(700, 1300, 1.25, 540, 1100) }, { t: F("reveal", 0, 1) + 0.1, glide: 1.6, ...fr(880, 560, 1.5, 540, 800) }] },
-        actors: [A("phumSling", 400, 1500, 0.78, [{ t: 0, mode: "aim", eyes: "normal", mouth: "smile" }]), A("toeyPhone", 1080, 1480, 0.86, [{ t: 0, mode: "phoneLook", eyes: "side", mouth: "flat" }], { flip: true })],
+        fx(tl, id, t0, L) { swarmOn(tl, L, "e1s", t0, D("cmd"), [[0, 400, 1100], [D("cmd"), 430, 1110]], { rx: 150, ry: 90 }); } });
+      // ---------- 3. the pond in section ----------
+      add("why", { ...Y2("e2"), blur: BLUR, cam: { keys: [{ t: 0, ...fr(820, 1400, 1.2, 540, 1000) }] }, captions: caps("why"),
+        fx(tl, id, t0, L) { HnUI.water(tl, L.light, t0 + 0.1, D("why") - 0.1, { y: 260 }); } });
+      // ---------- 4. ten minutes earlier: the calm yard, ปาล์ม and เตย ----------
+      add("back", { ...Y2("e20"), cam: { keys: [{ t: 0, ...fr(1150, 1200, 0.95, 540, 1060) }, { t: D("back"), glide: D("back"), ...fr(1180, 1180, 1.05, 540, 1060) }] },
+        actors: [A("phumSling", 1050, 1500, 0.74, [{ t: 0, mode: "aim", eyes: "normal", mouth: "smile" }]), A("toeyPhone", 1300, 1490, 0.86, [{ t: 0, mode: "raise", eyes: "worry", mouth: "frown" }], { flip: true })],
+        captions: caps("back"),
+        fx(tl, id, t0, L) { HnUI.tag(tl, L.light, t0 + F("back", 0, 1), D("back") - F("back", 0, 1), { x: 360, y: 760, text: "ปาล์ม 10 ขวบ", c: "#d8302a" });
+          HnUI.tag(tl, L.light, t0 + F("back", 0, 1) + 0.3, D("back") - F("back", 0, 1) - 0.3, { x: 740, y: 640, text: "พี่เตย 15", c: "#ec5e9e" });
+          HnUI.tag(tl, L.light, t0 + F("back", 0, 2), D("back") - F("back", 0, 2), { x: 300, y: 380, text: "บ้านยายบัว", c: "#a888c8" }); } });
+      // ---------- 5. ปาล์ม aims at the pods ----------
+      add("palm", { ...Y2("e21"), cam: { keys: [{ t: 0, ...fr(1150, 1180, 1.35, 540, 1100) }, { t: D("palm"), glide: D("palm"), ...fr(1150, 1160, 1.45, 540, 1100) }] },
+        actors: [A("phumSling", 1100, 1500, 0.8, [{ t: 0, mode: "aim", eyes: "normal", mouth: "smile" }], { talk: [TALK("palm", 0)] })],
+        captions: caps("palm", undefined, QUO),
+        fx(tl, id, t0, L) { buzz(tl, L.glow, "e21s", t0, D("palm"), NX, NY + 220, 0.32, 110, 80, 5, 7); } });
+      // ---------- 6. the reveal: from the shrine up the trunk to the nest ----------
+      add("reveal", { ...Y2("e22"),
+        cam: { keys: [{ t: 0, ...fr(1340, 1300, 1.25, 540, 1100) }, { t: F("reveal", 0, 1) + 0.1, glide: 1.6, ...fr(NX - 30, 560, 1.5, 540, 800) }] },
+        actors: [A("phumSling", 1060, 1500, 0.78, [{ t: 0, mode: "aim", eyes: "normal", mouth: "smile" }]), A("toeyPhone", 1720, 1480, 0.86, [{ t: 0, mode: "phoneLook", eyes: "side", mouth: "flat" }], { flip: true })],
         captions: caps("reveal"),
-        fx(tl, id, t0, L) { buzz(tl, L.glow, "r8s", t0, D("reveal"), NX, NY + 230, 0.34, 110, 80, 10, 13); } });
-      // ---------- 9. ยาย at the shrine → the rule board ----------
-      split("rule", 1.9, { ...Y0("y9"), cam: { keys: [{ t: 0, ...fr(640, 1180, 1.5, 540, 1100) }] },
-        actors: [A("yaiBua", 520, 1470, 0.92, [{ t: 0, mode: "wagFinger", eyes: "normal", mouth: "flat" }], { talk: [TALK("rule", 0)] }),
-          A("phum", 880, 1500, 0.72, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
-        captions: caps("rule", undefined, QUO),
-        fx(tl, id, t0, L) { HnUI.tag(tl, L.light, t0 + 0.2, 1.6, { x: 300, y: 560, text: "ยายบัว 68", c: "#a888c8" }); } },
-      { ...Y0("y9b"), blur: BLUR, cam: { keys: [{ t: 0, ...fr(700, 1100, 1.2, 540, 980) }] }, captions: capsFrom("rule", 1.9, [0], QUO),
-        fx(tl, id, t0, L) { HnUI.rules(tl, L.light, t0, D("rule") - 1.9, { active: 0, y: 380 }); } });
-      // ---------- 10. the legend: the เจ้าที่ and his soldiers ----------
+        fx(tl, id, t0, L) { buzz(tl, L.glow, "e22s", t0, D("reveal"), NX, NY + 230, 0.34, 110, 80, 10, 13); } });
+      // ---------- 7. the legend: the เจ้าที่ and his soldiers ----------
       add("legend", { set: "hnLegend", setOpts: { id: "lg" }, dark: 0, light: false, grade: GDAY,
         cam: { keys: [{ t: 0, ...fr(540, 900, 1, 540, 960) }, { t: D("legend"), glide: D("legend"), ...fr(540, 960, 1.08, 540, 960) }] }, captions: caps("legend"),
-        fx(tl, id, t0, L) { Hn.legend(tl, "lg", t0 + vo("legend", 1) - 0.3, D("legend") - vo("legend", 1) + 0.3, L); } });
-      // ---------- 11. เตย scoffs ----------
-      add("dismiss", { ...Y0("y11", { tree: 1500, shrine: 1440 }), cam: { keys: [{ t: 0, ...fr(560, 1080, 1.9, 540, 1000) }] },
-        actors: [A("toeyPhone", 560, 1500, 0.86, [{ t: 0, mode: "phoneLook", eyes: "side", mouth: "smile" }], { talk: [TALK("dismiss", 0, "smile")] })],
-        captions: caps("dismiss", undefined, QUO) });
-      // ---------- 12. ลุงสิงห์: long sleeves, a hat, boots, under a blazing sun ----------
-      add("sing", { ...Y0("y12", { house: [-200, 0.9], tree: 1700, shrine: 1640, pond: false, fence: [-300], sunX: 900, sunY: 260 }), grade: GHOT,
-        cam: { keys: [{ t: 0, ...fr(560, 1180, 1.6, 540, 1100) }, { t: D("sing"), glide: D("sing"), ...fr(560, 1160, 1.75, 540, 1100) }] },
-        actors: [A("lungSing", 560, 1480, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+        fx(tl, id, t0, L) { Hn.legend(tl, "lg", t0 + F("legend", 0, 2) - 0.2, D("legend") - F("legend", 0, 2) + 0.2, L); } });
+      // ---------- 8. ลุงสิงห์ by his shed: long sleeves, a hat, boots, under a blazing sun ----------
+      add("sing", { ...Y2("e23", { sunX: 1700, sunY: 260 }), grade: GHOT,
+        cam: { keys: [{ t: 0, ...fr(1950, 1180, 1.6, 540, 1100) }, { t: D("sing"), glide: D("sing"), ...fr(1950, 1160, 1.75, 540, 1100) }] },
+        actors: [A("lungSing", 1950, 1480, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
         captions: caps("sing"),
         fx(tl, id, t0, L) { HnUI.tag(tl, L.light, t0 + 0.3, D("sing") - 0.3, { x: 780, y: 600, text: "ลุงสิงห์ ข้างบ้าน", c: "#6a8aa8" });
-          put(L.glow, `<g id="s12h">${[0, 1, 2].map((k) => `<path d="M${380 + k * 110},${1000 - k * 30}q20,-30 0,-60q-20,-30 0,-60" stroke="#fff6dc" stroke-width="6" fill="none" opacity=".45"/>`).join("")}</g>`);
-          tl.fromTo("#s12h", { y: 0, opacity: 0.8 }, { y: -60, opacity: 0.2, duration: 1.2, repeat: 4, ease: "none", immediateRender: false }, t0); } });
-      // ---------- 13. "ลุงบ้าแน่เลย" ----------
-      add("crazy", { ...Y0("y13", { tree: 1500, shrine: 1440 }), cam: { keys: [{ t: 0, ...fr(560, 1120, 1.55, 540, 1080) }] },
-        actors: [A("phum", 420, 1500, 0.74, [{ t: 0, mode: "idle", eyes: "side", mouth: "laugh" }], { talk: [TALK("crazy", 0, "smile")] }),
-          A("toeyPhone", 700, 1490, 0.86, [{ t: 0, mode: "phoneLook", eyes: "side", mouth: "smile" }], { flip: true })],
+          put(L.glow, `<g id="e23h">${[0, 1, 2].map((k) => `<path d="M${1770 + k * 110},${1000 - k * 30}q20,-30 0,-60q-20,-30 0,-60" stroke="#fff6dc" stroke-width="6" fill="none" opacity=".45"/>`).join("")}</g>`);
+          tl.fromTo("#e23h", { y: 0, opacity: 0.8 }, { y: -60, opacity: 0.2, duration: 1.2, repeat: 4, ease: "none", immediateRender: false }, t0); } });
+      // ---------- 9. "ลุงบ้าแน่เลย" ----------
+      add("crazy", { ...Y2("e24"), cam: { keys: [{ t: 0, ...fr(1290, 1120, 1.55, 540, 1080) }] },
+        actors: [A("phum", 1150, 1500, 0.74, [{ t: 0, mode: "idle", eyes: "side", mouth: "laugh" }], { talk: [TALK("crazy", 0, "smile")] }),
+          A("toeyPhone", 1430, 1490, 0.86, [{ t: 0, mode: "phoneLook", eyes: "side", mouth: "smile" }], { flip: true })],
         captions: caps("crazy", undefined, QUO) });
-      // ---------- 14. the first hornet circles ภูมิ's face ----------
-      add("first", { ...Y0("y14"), cam: { keys: [{ t: 0, ...fr(460, 1060, 2.0, 540, 1080) }, { t: D("first"), glide: D("first"), ...fr(460, 1060, 2.25, 540, 1080) }] },
-        actors: [A("phumSling", 460, 1500, 0.8, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+      // ---------- 10. the first hornet circles เตย's face — she swats it ----------
+      add("first", { ...Y2("e25"), cam: { keys: [{ t: 0, ...fr(1300, 1060, 1.9, 540, 1080) }, { t: D("first"), glide: D("first"), ...fr(1300, 1060, 2.1, 540, 1080) }] },
+        shake: (t) => (t > F("first", 0, 2) + 0.4 && t < F("first", 0, 2) + 0.7 ? { x: 10 * Math.sin(t * 70), y: 6 * Math.sin(t * 61), r: 0 } : 0),
+        actors: [A("toeyPhone", 1300, 1490, 0.86, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: F("first", 0, 2) - 0.15, mode: "swat", eyes: "angry", mouth: "snarl" }, { t: F("first", 0, 2) + 0.45, mode: "scratch", eyes: "pain", mouth: "scream" }], { flip: true })],
         captions: caps("first"),
-        fx(tl, id, t0, L) { buzz(tl, L.glow, "f14", t0, D("first"), 470, 1080, 0.85, 120, 60, 1, 17); } });
-      // ---------- 15. ภูมิ stands still — the turn ----------
-      add("still", { ...Y0("y15"), cam: { keys: [{ t: 0, ...fr(460, 1110, 2.6, 540, 1080), drift: { s: 0.03 } }] },
-        actors: [A("phumSling", 460, 1500, 0.8, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "flat" }])],
-        captions: caps("still"),
-        fx(tl, id, t0, L) { buzz(tl, L.glow, "f15", t0, D("still"), 470, 1080, 0.85, 110, 50, 1, 19); } });
-      // ---------- 16. เตย swats — and is stung ----------
-      add("swat", { ...Y0("y16"), cam: { keys: [{ t: 0, ...fr(600, 1140, 1.5, 540, 1080) }] },
-        shake: (t) => (t > 1.0 && t < 1.3 ? { x: 10 * Math.sin(t * 70), y: 6 * Math.sin(t * 61), r: 0 } : 0),
-        actors: [A("phumSling", 440, 1500, 0.78, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "flat" }]),
-          A("toeyPhone", 720, 1490, 0.86, [{ t: 0, mode: "swat", eyes: "angry", mouth: "snarl" }, { t: 1.05, mode: "scratch", eyes: "pain", mouth: "scream" }], { flip: true })],
-        captions: caps("swat"),
-        fx(tl, id, t0, L) { buzz(tl, L.glow, "f16", t0, D("swat"), 640, 1100, 0.6, 140, 70, 3, 23);
-          put(L.light, `<rect id="s16r" width="1080" height="1920" fill="#ff2a1a" opacity="0"/>`); tl.set("#s16r", { opacity: 0 }, 0);
-          tl.fromTo("#s16r", { opacity: 0.4 }, { opacity: 0, duration: 0.35, immediateRender: false }, t0 + 1.05); } });
-      // ---------- 17. ↺ 0:04 — the stone hit the nest's branch ----------
-      split("rw", 3.4, { ...Y0("y17"), cam: { keys: [{ t: 0, ...fr(640, 1000, 0.92, 540, 900) }, { t: 3.4, glide: 2.4, ...fr(NX - 60, NY + 100, 1.8, 540, 820) }] },
-        actors: [A("phumSling", 360, 1500, 0.78, [{ t: 0, mode: "aim", eyes: "normal", mouth: "smile" }, { t: 0.6, mode: "idle", eyes: "normal", mouth: "smile" }])],
-        captions: caps("rw", [0]),
-        fx(tl, id, t0, L) { rewind(L, tl, t0, 3.4, "0:04"); stone(L, tl, "r17", t0 + 0.35, 470, 1080); sway(tl, "y17", t0 + 0.83, 7, 3); } },
-      { ...Y0("y17b"), cam: { keys: [{ t: 0, ...fr(NX - 60, NY + 60, 2.2, 540, 900) }] }, captions: capsFrom("rw", 3.4, [1]),
-        fx(tl, id, t0, L) { const d = D("rw") - 3.4; stone(L, tl, "r17b", t0 + 0.4, 520, 820); sway(tl, "y17b", t0 + 0.88, 9, 4);
-          buzz(tl, L.glow, "r17s", t0, d, NX, NY + 200, 0.5, 120, 80, 8, 29); } });
-      // ---------- 18. the soldiers wake ----------
-      add("wake", { set: "hnNest", setOpts: { id: "n18", crawl: 14 }, dark: 0, light: false, grade: GDAY,
+        fx(tl, id, t0, L) { buzz(tl, L.glow, "e25s", t0, D("first"), 1300, 1010, 0.85, 120, 60, 1, 17);
+          put(L.light, `<rect id="e25r" width="1080" height="1920" fill="#ff2a1a" opacity="0"/>`); tl.set("#e25r", { opacity: 0 }, 0);
+          tl.fromTo("#e25r", { opacity: 0.4 }, { opacity: 0, duration: 0.35, immediateRender: false }, t0 + F("first", 0, 2) + 0.45); } });
+      // ---------- 11. card: one → stand still ✓ / swat → stung ✗ ----------
+      add("still", { ...Y2("e26"), blur: BLUR, cam: { keys: [{ t: 0, ...fr(1300, 1000, 1.1, 540, 960) }] }, captions: caps("still"),
+        fx(tl, id, t0, L) { HnUI.still(tl, L.light, t0 + 0.1, D("still") - 0.1, { y: 330 }); } });
+      // ---------- 12. the soldiers wake ----------
+      add("wake", { set: "hnNest", setOpts: { id: "n27", crawl: 14 }, dark: 0, light: false, grade: GDAY,
         cam: { keys: [{ t: 0, ...fr(600, 1300, 1.2, 540, 960) }, { t: D("wake"), glide: D("wake"), ...fr(600, 1330, 1.5, 540, 960) }] },
-        shake: (t) => 3 * Math.sin(t * 40),
-        captions: caps("wake"),
-        fx(tl, id, t0, L) { Hn.swarm(tl, L.glow, { id: "w18", n: 40, s: 1.0, path: [[0, 610, 1330], [D("wake"), 560, 1500]], rx: 420, ry: 420, grow: [0.1, 1.8], t0, dur: D("wake"), seed: 31 }); } });
-      // ---------- 19. next ----------
-      add("next", { ...Y0("y19"), captions: [], fx(tl, id, t0, L) { HnUI.nextBoard(tl, L.light, t0, D("next"), { l1: "ตอนที่ 2", l2: "ต่อรุม อย่าลงน้ำ" }); } });
+        shake: (t) => 3 * Math.sin(t * 40), captions: caps("wake"),
+        fx(tl, id, t0, L) { Hn.swarm(tl, L.glow, { id: "w27", n: 40, s: 1.0, path: [[0, 610, 1330], [D("wake"), 560, 1500]], rx: 420, ry: 420, grow: [0.1, 1.8], t0, dur: D("wake"), seed: 31 }); } });
+      // ---------- 5. "สระ! โดดน้ำ!" ----------
+      add("toey", { ...Y2("e4"), cam: { keys: [{ t: 0, ...fr(900, 1260, 1.8, 540, 1060) }] },
+        actors: [A("toey", 900, 1640, 0.8, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }], { talk: [TALK("toey", 0, "scream")] })],
+        captions: caps("toey", undefined, QUO),
+        fx(tl, id, t0, L) { swarmOn(tl, L, "e4s", t0, D("toey"), [[0, 900, 1220]], { rx: 160, ry: 90, n: 14, s: 0.8 }); } });
+      // ---------- 6. ยาย's voice from somewhere → the rule board (rule 2) ----------
+      split("rule", 1.1, { ...Y2("e5"), cam: { keys: [{ t: 0, ...fr(900, 1240, 1.8, 540, 1060) }] },
+        actors: [A("toey", 900, 1640, 0.8, [{ t: 0, mode: "cover", eyes: "side", mouth: "o" }])], captions: caps("rule", undefined, QUO),
+        fx(tl, id, t0, L) { swarmOn(tl, L, "e5s", t0, 1.1, [[0, 900, 1220]], { rx: 160, ry: 90, n: 14, s: 0.8 }); } },
+      { ...Y2("e5b"), blur: BLUR, cam: { keys: [{ t: 0, ...fr(1300, 1100, 1.2, 540, 980) }] }, captions: capsFrom("rule", 1.1, [0], QUO),
+        fx(tl, id, t0, L) { HnUI.rules(tl, L.light, t0, D("rule") - 1.1, { active: 0, y: 380 }); } });
+      // ---------- 7. open ground ✗ / indoors ✓ ----------
+      add("know", { ...Y2("e6"), blur: BLUR, cam: { keys: [{ t: 0, ...fr(200, 1100, 1.1, 540, 980) }] }, captions: caps("know"),
+        fx(tl, id, t0, L) { HnUI.indoors(tl, L.light, t0 + 0.1, D("know") - 0.1, { y: 360 }); } });
+      // ---------- 9. ลุงสิงห์ throws his towel over เตย and hauls her off the bank ----------
+      add("grab", { ...Y2("e8"), cam: { keys: [{ t: 0, ...fr(1000, 1250, 1.05, 540, 1060) }, { t: D("grab"), glide: D("grab"), ...fr(1300, 1250, 1.05, 540, 1060) }] },
+        actors: [A("toey", 900, 1640, 0.8, [{ t: 0, mode: "cover", eyes: "closed", mouth: "scream" }], { moveTo: { x: 1500, y: 1500, dur: D("grab") - 0.6, ease: "power1.in", at: 0.6 } }),
+          A("lungSing", 1120, 1600, 0.92, [{ t: 0, mode: "push", eyes: "angry", mouth: "flat" }], { flip: true, moveTo: { x: 1620, y: 1480, dur: D("grab") - 0.6, ease: "power1.in", at: 0.6 } })],
+        captions: caps("grab"),
+        fx(tl, id, t0, L) { swarmOn(tl, L, "e8s", t0, D("grab"), [[0, 900, 1250], [D("grab"), 1100, 1150]], { n: 26 });
+          towel(L, "e8t", 900, 1640 - 0.8 * 560, 0.8); tl.set("#e8t", { opacity: 0 }, 0); tl.fromTo("#e8t", { opacity: 1, y: -160 }, { y: 0, duration: 0.3, ease: "power2.in", immediateRender: false }, t0 + 0.2);
+          tl.to("#e8t", { x: 600, y: -140, duration: D("grab") - 0.6, ease: "power1.in" }, t0 + 0.6); } });
+      // ---------- 10. the shed door slams; hornets thud on the screen ----------
+      add("shed", { ...Y2("e9", { shed: [600, 1.25], shedOpen: true, house: [-900, 0.9], tree: 1700, shrine: 1640, pond: false }),
+        cam: { keys: [{ t: 0, ...fr(600, 1150, 1.25, 540, 1080) }] },
+        shake: (t) => (t > 0.55 && t < 0.8 ? { x: 9 * Math.sin(t * 80), y: 6 * Math.sin(t * 71), r: 0 } : 0),
+        captions: caps("shed", undefined, QUO),
+        fx(tl, id, t0, L) {
+          put(L.glow, `<g id="e9c"><path d="M${600 - 170 * 1.25},${1360 - 300 * 1.25}h${150 * 1.25}v${300 * 1.25}h-${150 * 1.25}z" fill="#7a4a28" stroke="#2e2a26" stroke-width="4"/><circle cx="${600 - 40 * 1.25}" cy="${1360 - 150 * 1.25}" r="8" fill="#d8b46a"/></g>`);
+          tl.set("#e9c", { opacity: 0 }, 0); tl.set("#e9c", { opacity: 1 }, t0 + 0.55);
+          Hn.swarm(tl, L.glow, { id: "e9s", n: 22, s: 0.5, cx: 600 + 130 * 1.25, cy: 1360 - 260 * 1.25, rx: 180, ry: 110, t0, dur: D("shed"), seed: 41 }); } });
+      // ---------- 11. inside the shed: เตย shaking under the towel ----------
+      const shedIn = (L) => { put(L.set, `<rect x="-600" y="-200" width="2300" height="2400" fill="#3a2614"/>${Array.from({ length: 30 }, (_, k) => `<path d="M${-600 + k * 80},-200V2200" stroke="#2a1a0c" stroke-width="5"/>`).join("")}
+          <rect x="-600" y="1500" width="2300" height="700" fill="#4a3420"/><g transform="translate(760,700)"><rect x="-140" y="-120" width="280" height="240" fill="#e8f0e0" opacity=".85" stroke="#2e2a26" stroke-width="6"/>
+          ${Array.from({ length: 14 }, (_, k) => `<path d="M${-140 + k * 20},-120v240M-140,${-120 + k * 17}h280" stroke="#6a6a6a" stroke-width="1.6"/>`).join("")}</g>
+          <path d="M620,820L300,1700H1100L900,820Z" fill="#fff0c8" opacity=".14"/><rect x="200" y="1360" width="220" height="150" fill="#6a4a2a" stroke="#2e2a26" stroke-width="4"/>`); };
+      // ---------- 15. ↺ 0:03 — the door was open behind her ----------
+      split("rw", 3.0, { ...Y2("e14"), cam: { keys: [{ t: 0, ...fr(270, 1180, 1.0, 540, 1040) }, { t: 3.0, glide: 2.2, ...fr(DOOR[0] + 20, DOOR[1] + 40, 2.1, 540, 900) }] },
+        actors: [A("toey", 430, 1540, 0.8, [{ t: 0, mode: "cover", eyes: "wide", mouth: "scream" }])], captions: caps("rw", [0]),
+        fx(tl, id, t0, L) { rewind(L, tl, t0, 3.0, "0:03"); swarmOn(tl, L, "e14s", t0, 3, [[0, 400, 1100]], { rx: 150, ry: 90 }); } },
+      { ...Y2("e14b"), cam: { keys: [{ t: 0, ...fr(DOOR[0] + 60, DOOR[1] + 140, 1.45, 540, 960) }] }, captions: capsFrom("rw", 3.0, [1]),
+        actors: [A("toey", 430, 1540, 0.8, [{ t: 0, mode: "cover", eyes: "wide", mouth: "scream" }])],
+        fx(tl, id, t0, L) { put(L.glow, `<g id="e14r"><ellipse cx="${DOOR[0]}" cy="${DOOR[1]}" rx="110" ry="160" fill="none" stroke="#ff3a2a" stroke-width="10" stroke-dasharray="1 1" pathLength="1"/></g>`);
+          tl.fromTo("#e14r ellipse", { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.6, immediateRender: false }, t0 + 0.3); } });
+      // ---------- 14. the empty room: "ยาย! ยายอยู่ไหน?" ----------
+      add("where", { set: "hnYard", setOpts: { id: "e13", nest: false, pond: false, shrine: false, house: false }, dark: 0.05, light: DIM, grade: GIN, cam: { keys: [{ t: 0, ...fr(540, 1150, 1.2, 540, 1060) }] },
+        extra(L) { put(L.set, `<rect x="-600" y="-200" width="2300" height="2400" fill="#6a4630"/>${Array.from({ length: 30 }, (_, k) => `<rect x="${-600 + k * 80}" y="-200" width="80" height="1700" fill="${k % 2 ? "#7a5236" : "#704a30"}"/>`).join("")}
+          <rect x="-600" y="1500" width="2300" height="700" fill="#8a6440"/><rect x="200" y="760" width="240" height="300" fill="#cfe6f4" stroke="#2e2a26" stroke-width="6"/><path d="M320,760v300M200,910h240" stroke="#2e2a26" stroke-width="5"/>
+          <rect x="700" y="1260" width="380" height="60" rx="8" fill="#5a3a22" stroke="#2e2a26" stroke-width="4"/><path d="M720,1320v180M1060,1320v180" stroke="#4a2e1a" stroke-width="14"/>
+          <g transform="translate(860,560)"><rect x="-90" y="-60" width="180" height="120" fill="#e8dcc4" stroke="#2e2a26" stroke-width="5"/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#5a3a22">ยายบัว</text></g>`); },
+        actors: [A("phum", 480, 1520, 0.8, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }], { talk: [TALK("where", 0, "scream")] })],
+        captions: caps("where", undefined, QUO) });
+      // ---------- 16. ยาย at the shrine all along ----------
+      add("shrine", { ...Y2("e15", {}), cam: { keys: [{ t: 0, ...fr(1420, 1000, 1.0, 540, 980) }, { t: D("shrine"), glide: D("shrine"), ...fr(1440, 1180, 1.35, 540, 1040) }] },
+        extra(L) { put(L.set, Hn.bench(1520, 1340, 0.8)); },
+        actors: [A("yaiBua", 1520, 1462, 0.86, [{ t: 0, mode: "cover", eyes: "closed", mouth: "frown" }], { flip: true })],
+        captions: caps("shrine"),
+        fx(tl, id, t0, L) { Hn.swarm(tl, L.glow, { id: "e15s", n: 16, s: 0.4, cx: 1550, cy: 700, rx: 160, ry: 120, t0, dur: D("shrine"), seed: 51 }); } });
+      // ---------- 17. "ยายไม่เป็นไรหรอก" — her arms dotted with stings ----------
+      add("fine", { ...Y2("e16", {}), cam: { keys: [{ t: 0, ...fr(1520, 1090, 2.4, 540, 1000), drift: { s: 0.02 } }] },
+        extra(L) { put(L.set, Hn.bench(1520, 1340, 0.8)); },
+        actors: [A("yaiBua", 1520, 1462, 0.86, [{ t: 0, mode: "sitChair", eyes: "closed", mouth: "smile" }], { flip: true, talk: [TALK("fine", 0, "smile")] })],
+        captions: caps("fine", undefined, QUO),
+        fx(tl, id, t0, L) { put(L.glow, `<g id="e16d">${[[1480, 1180], [1492, 1205], [1470, 1220], [1505, 1235], [1485, 1250], [1560, 1190], [1575, 1215], [1552, 1232], [1568, 1252]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="#ff7a6a" opacity=".55"/><circle cx="${x}" cy="${y}" r="2.6" fill="#a01e18"/>`).join("")}</g>`); } });
+      // ---------- 22. next ----------
+      add("next", { ...Y2("e17"), captions: [], fx(tl, id, t0, L) { HnUI.nextBoard(tl, L.light, t0, D("next"), { l1: "ตอนที่ 2 (ตอนจบ)", l2: "ยายบอกว่าไม่เป็นไร", l3: "กดติดตาม แล้วพายายไปหาหมอด้วยกัน" }); } });

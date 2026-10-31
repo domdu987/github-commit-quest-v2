@@ -1,4 +1,4 @@
-"""ต่อหัวเสือ EP.1 อย่าปัดมัน. Derive shot timing from the recorded voice so picture and sound share one schedule.
+"""ต่อหัวเสือ EP.1 ต่อรุม อย่าลงน้ำ. Derive shot timing from the recorded voice so picture and sound share one schedule.
 
 Each shot lists its voice lines in order, as "id", ("id", gap) where gap is the time from the end of
 the previous line (negative = overlap), or ("id", offset, "start") to start offset seconds after the
@@ -20,25 +20,28 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.1, -0.15, 2.6),       # the yard: a hornet buzzing right at the lens, the nest in the tamarind, the title plank on the shrine fence
-    ("cmd", ["n02"], 0.05, 0.35, 1.5),        # ภูมิ's slingshot: the stone clacks off a pod and hits the nest's branch (0:04, the planted mistake)
-    ("why", ["n03"], 0.15, 0.3, 3.0),         # card: stand still ✓ / swatting gets you stung ✗
-    ("nest", ["n04"], 0.1, 0.5, 2.4),         # the nest close: hornets on the paper shell, push in on the hole
-    ("map", ["n05"], 0.2, 0.6, 3.8),          # map: กรุงเทพฯ → บ้านโนนมะขาม (อีสาน)
-    ("phum", ["p01"], 0.2, 0.3, 3.0),         # ภูมิ aims at the pods, name tag
-    ("toey", ["t01"], 0.1, 0.3, 2.2),         # เตย holds her phone up for signal, name tag
-    ("reveal", ["n06"], 0.2, 0.4, 4.6),       # tilt from the shrine up the trunk to the nest — the kids never look up
-    ("rule", ["y01"], 0.2, 1.4, 4.0),         # ยาย at the shrine changing the garland, wags a finger → the rule board (rule 1)
-    ("legend", ["n07", "n08"], 0.2, 0.4, 6.0),  # the shadow screen: the เจ้าที่ and his soldiers
-    ("dismiss", ["t02"], 0.1, 0.3, 2.2),      # เตย rolls her eyes
-    ("sing", ["n09"], 0.2, 0.3, 4.4),         # ลุงสิงห์ at his fence, long sleeves, boots, the sun blazing
-    ("crazy", ["p02"], 0.1, 0.3, 1.8),        # ภูมิ leans to เตย
-    ("first", ["n10"], 0.1, 0.3, 2.8),        # the first hornet circles ภูมิ's face
-    ("still", ["n11"], 0.1, 0.4, 2.4),        # ภูมิ frozen, eyes on it — he does what ยาย said
-    ("swat", ["n12"], 0.05, 0.9, 2.4),        # เตย swats — a sting, she yelps
-    ("rw", ["n13", "n14"], 0.2, 0.6, 7.0),    # ↺ 0:04: the stone hits the branch, the nest swings
-    ("wake", ["n15"], 0.2, 0.9, 2.8),         # the hole: the soldiers pour out
-    ("next", [], 0, 0, 4.2),                  # the plank sign + note: ตอนที่ 2 ต่อรุม อย่าลงน้ำ
+    ("hook", ["n01"], 0.1, -0.1, 2.5),        # the yard, the title plank on the shrine fence; เตย running for the pond, the swarm behind her
+    ("cmd", ["n02"], 0.05, 0.4, 1.7),         # เตย at the pond's edge; behind her ยาย's door stands open (0:03, the planted mistake)
+    ("why", ["n03"], 0.1, 0.2, 4.4),         # card: the pond in section — they wait above the water; you have to come up to breathe
+    ("back", ["n04"], 0.1, 0.3, 3.6),         # ten minutes earlier: the calm yard, ปาล์ม and เตย, name tags
+    ("palm", ["p01"], 0.1, 0.3, 2.8),         # ปาล์ม aims his slingshot at the pods
+    ("reveal", ["n05"], 0.1, 0.15, 4.6),       # tilt from the shrine up to the nest — nobody looks up
+    ("legend", ["n06"], 0.1, 0.2, 5.4),       # the shadow screen: the เจ้าที่ and his soldiers
+    ("sing", ["n07"], 0.2, 0.3, 4.2),         # ลุงสิงห์: long sleeves, boots, the sun blazing
+    ("crazy", ["p02"], 0.1, 0.3, 1.8),        # ปาล์ม leans to เตย
+    ("first", ["n08"], 0.1, 0.6, 3.6),        # the first hornet circles เตย's face — she swats it
+    ("still", ["n09"], 0.15, 0.4, 3.6),       # card: one → stand still ✓ / swat → stung ✗
+    ("wake", ["n10"], 0.15, 0.7, 2.6),        # the nest's hole: the soldiers pour out
+    ("toey", ["t02"], 0.05, 0.3, 1.8),        # เตย: "สระ! โดดน้ำ!"
+    ("rule", ["y01"], 0.1, 1.0, 3.8),         # ยาย's voice from somewhere → the rule board (rule 1)
+    ("know", ["n11"], 0.1, 0.2, 5.0),        # card: open ground ✗ / indoors ✓
+    ("grab", ["n12"], 0.1, 0.3, 2.8),         # ลุงสิงห์ throws his towel over เตย and hauls her off the bank (the scars on his hand)
+    ("shed", ["s01"], 0.05, 0.9, 2.4),        # the shed door slams; hornets thud on the screen
+    ("rw", ["n13", "n14"], 0.15, 0.4, 6.2),    # ↺ 0:03: the open door behind her
+    ("where", ["p03"], 0.1, 0.4, 2.2),        # ปาล์ม made it into ยาย's house: the empty room
+    ("shrine", ["n15"], 0.1, 0.3, 2.8),       # ยาย at the shrine all along, hunched, the swarm above
+    ("fine", ["y02"], 0.1, 0.9, 2.4),         # "ยายไม่เป็นไรหรอก" — her arm dotted with stings
+    ("next", [], 0, 0, 3.8),                  # next: ตอนที่ 2 (ตอนจบ) ยายบอกว่าไม่เป็นไร
 ]
 GAP = 0.08
 

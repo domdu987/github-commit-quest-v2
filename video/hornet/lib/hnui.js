@@ -44,10 +44,11 @@
     return `<g transform="translate(${x},${y}) scale(${s})"><g id="${id}"><circle r="62" fill="#fff" ${SO(4)}/><circle r="62" fill="none" stroke="${U.orange}" stroke-width="8" opacity=".3" transform="scale(.86)"/>${g}</g></g>`;
   };
   // the rhyme of each rule: [first half, second half]; the rhyming words get the underline
-  HnUI.RULES = [["ต่อบินมาวน", "อย่าลนอย่าปัด"], ["ต่อรุมให้วิ่ง", "อย่าทิ้งตัวลงน้ำ"], ["ต่อยหลายแผล อย่าแค่นอนรอ", "ต้องไปหาหมอ"]];
+  // 2-episode cut (31 ต.ค.): two rules; [first half, second half, icon index]
+  HnUI.RULES = [["ต่อรุมให้วิ่ง", "อย่าทิ้งตัวลงน้ำ", 1], ["ต่อยหลายแผล อย่าแค่นอนรอ", "ต้องไปหาหมอ", 2]];
 
   HnUI.rules = (tl, layer, t0, dur, o = {}) => {
-    const id = `hr${seq++}`, active = o.active ?? -1, done = o.done || [], Y = o.y ?? 420, S = o.s ?? 1, W = 920, H = 820;
+    const id = `hr${seq++}`, active = o.active ?? -1, done = o.done || [], Y = o.y ?? 420, S = o.s ?? 1, W = 920, H = 260 + HnUI.RULES.length * 210;
     let c = `<path d="M-300,-${Y}L-260,40M300,-${Y}L260,40" stroke="${U.red}" stroke-width="22"/><path d="M-300,-${Y}L-260,40M300,-${Y}L260,40" stroke="${U.yellow}" stroke-width="6" stroke-dasharray="18 22"/>`;
     c += `<g filter="url(#muDrop)"><rect x="${-W / 2}" y="20" width="${W}" height="${H}" rx="22" fill="${U.teak}" ${SO(6)}/></g>
       ${Array.from({ length: 7 }, (_, k) => `<path d="M${-W / 2 + 20},${80 + k * 118}q${W / 2},${k % 2 ? 14 : -12} ${W - 40},0" stroke="${U.teakD}" stroke-width="3" fill="none" opacity=".55"/>`).join("")}
@@ -55,11 +56,11 @@
       <text y="138" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="${U.redD}">กฎของยายบัว</text>
       <path d="M-200,160q200,14 400,0" stroke="${U.orange}" stroke-width="6" fill="none" stroke-linecap="round"/>
       ${[-280, 280].map((x) => `<circle cx="${x}" cy="120" r="12" fill="${U.teakD}"/>`).join("")}`;
-    HnUI.RULES.forEach(([a, b], k) => {
-      const y = 290 + k * 200, st = done.includes(k) ? "done" : k === active ? "active" : active < 0 ? "all" : "next";
+    HnUI.RULES.forEach(([a, b, ic], k) => {
+      const y = 300 + k * 210, st = done.includes(k) ? "done" : k === active ? "active" : active < 0 ? "all" : "next";
       c += `<g id="${id}-row${k}" opacity="${st === "next" ? 0.35 : 1}">`;
       if (st === "active") c += `<rect id="${id}-hl" x="-300" y="${y - 74}" width="700" height="150" rx="20" fill="${U.yellow}" opacity=".6"/>`;
-      c += HnUI.icon(k, -340, y, 0.95, `${id}-i${k}`);
+      c += HnUI.icon(ic ?? k, -340, y, 0.95, `${id}-i${k}`);
       c += `<text x="-250" y="${y - 12}" font-family="Kanit" font-weight="${st === "active" ? 900 : 800}" font-size="${a.length > 14 ? 46 : 54}" fill="${U.ink}">${a}</text>
         <text x="-250" y="${y + 56}" font-family="Kanit" font-weight="900" font-size="54" fill="${U.redD}">${b}</text>`;
       if (st === "active") c += `<path id="${id}-ul" d="M-250,${y + 72}h${b.length * 34}" stroke="${U.red}" stroke-width="7" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>`;
