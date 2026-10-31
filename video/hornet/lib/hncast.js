@@ -90,6 +90,10 @@
   M.aim = (u, o) => ({ ...M.idle(u, o), uaF: -88, faF: -6, uaB: 80, faB: 120, torso: -2, head: -4 });
   // rubbing the forearm (a sting)
   M.scratch = (u, o) => { const a = Math.sin(u * 2 * Math.PI / 0.4); return { ...M.idle(u, o), uaF: -20, faF: -96, uaB: -30 + 6 * a, faB: -70, torso: 6, head: 10 }; };
+  // panting after a run: bent a little, hands on the knees, the chest heaving fast
+  M.pant = (u, o) => { const h = Math.sin(u * 2 * Math.PI / 0.42); return { ...M.idle(u, o), uaF: -20, faF: -30, uaB: 20, faB: 30, torso: 16 + 2 * h, head: 6 - 3 * h, bodyY: 18 + 4 * h }; };
+  // the half-beat before a sprint: dips, leans back, arms cocked (anticipation)
+  M.antic = (u, o) => ({ ...M.idle(u, o), thF: -30, shF: 50, thB: -20, shB: 40, torso: -8, head: -8, uaF: 30, faF: -60, uaB: -40, faB: 60, bodyY: 40 });
   // waving someone in (through a door)
   M.beckon = (u, o) => { const a = Math.sin(u * 2 * Math.PI / 0.45); return { ...M.idle(u, o), uaF: -110, faF: -60 + 40 * a, uaB: 6, faB: -14, torso: -3, head: -4 }; };
 })();

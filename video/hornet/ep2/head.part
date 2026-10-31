@@ -45,6 +45,7 @@
     <script src="assets/tideui.js"></script>
     <script src="assets/hornet.js"></script>
     <script src="assets/hnui.js"></script>
+    <script src="assets/hnfx.js"></script>
     <script src="assets/rig2.js"></script>
     <script src="assets/popcast.js"></script>
     <script src="assets/mmcast.js"></script>

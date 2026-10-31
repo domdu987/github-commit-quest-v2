@@ -1,0 +1,46 @@
+      // ---------- ต่อหัวเสือ · motion test (V11): the chase, a sting, the pond what-if, three cards ----------
+      const SUN = { from: "left", rim: "#fff6dc", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.3, op: 0.28 }, vol: false };
+      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 };
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.6, 2.1, 3.4], ...extra });
+      const Y2 = (id, o = {}) => ({ set: "hnYard", setOpts: { id, house: [-100, 0.9], door: "open", tree: 1400, shrine: 1330, pond: 820, shed: [1900, 1], ...o }, dark: 0, light: SUN, grade: GDAY, blur: { far: 1, fg: 6 } });
+      const BLUR = { sky: 4, far: 6, mid: 6, set: 5, act: 5, fg: 8 };
+      const NX = 1550, NY = 454;
+      // 1. the chase: แทน dips (anticipation), sprints for the pond; the swarm streams out of the tamarind after him, trails and blurred wings;
+      //    dust at every stride; the camera pans with him and shakes as the swarm reaches the lens; dust motes and leaves in the sun
+      add("chase", { ...Y2("t1"),
+        cam: { keys: [{ t: 0, ...fr(1150, 1180, 0.85, 540, 1020) }, { t: 4.4, glide: 4.0, ...fr(560, 1220, 1.0, 540, 1040) }] },
+        shake: HnFx.shakeNear(2.6, 3.6, 9),
+        actors: [A("tan", 1180, 1500, 0.86, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 0.35, mode: "antic", eyes: "wide", mouth: "o" }, { t: 0.62, mode: "runCover", eyes: "wide", mouth: "scream" }],
+          { flip: true, moveTo: { x: 420, y: 1560, dur: 3.6, ease: "power1.in", at: 0.62 } })],
+        fx(tl, id, t0, L) {
+          HnFx.yard(tl, L, t0, 4.4, { leafX: 300, leafW: 1200 });
+          HnFx.swarm(tl, L.glow, { id: "t1s", n: 34, s: 0.5, path: [[0, NX, NY + 160], [0.9, 1300, 900], [4.4, 470, 1080]], rx: 190, ry: 120, chase: 0.5, grow: [0, 0.9], t0, dur: 4.4, seed: 9 });
+          HnFx.run(tl, L.act, t0 + 0.62, 3.6, [[0, 1180, 1500], [3.6, 420, 1560]], 0.9);
+          // a few hornets fly past the lens, big and blurred
+          HnFx.swarm(tl, L.light, { id: "t1n", n: 4, s: 2.6, path: [[0, 1400, 300], [2.5, 1300, 600], [4.4, 300, 900]], rx: 300, ry: 200, t0: t0 + 1.8, dur: 2.6, seed: 4 });
+        } });
+      // 2. a sting: close on แทน; a hornet lands on his forearm — flash, ring, the welt swells and throbs; he flinches and clutches it
+      add("sting", { ...Y2("t2"), cam: { keys: [{ t: 0, ...fr(560, 1150, 2.0, 540, 1040) }, { t: 2.6, glide: 2.6, ...fr(560, 1150, 2.2, 540, 1040) }] },
+        shake: (t) => (t > 1.0 && t < 1.3 ? { x: 12 * Math.sin(t * 70), y: 8 * Math.sin(t * 61), r: 0 } : 0),
+        actors: [A("tan", 560, 1520, 0.86, [{ t: 0, mode: "swat", eyes: "angry", mouth: "snarl" }, { t: 1.02, mode: "scratch", eyes: "pain", mouth: "scream" }], { flip: true })],
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, 2.6, { leaves: 3 }); HnFx.swarm(tl, L.glow, { id: "t2s", n: 3, s: 0.8, cx: 560, cy: 1050, rx: 150, ry: 70, t0, dur: 2.6, seed: 17 });
+          HnFx.sting(tl, L, t0 + 1.0, 520, 1230, 1.0); } });
+      // 3. the what-if: he jumps — splash, rings, drops — the colour drains; under, the swarm waits over the water; he comes up, they drop on him
+      const PW = 1560;
+      add("whatif", { ...Y2("t3"), cam: { keys: [{ t: 0, ...fr(820, 1460, 1.4, 540, 1000) }, { t: 3.4, glide: 3.4, ...fr(820, 1480, 1.6, 540, 1000) }] },
+        actors: [A("tan", 820, PW + 600, 0.86, [{ t: 0, mode: "raise", eyes: "closed", mouth: "flat" }, { t: 2.1, mode: "cover", eyes: "wide", mouth: "scream" }],
+          { moveTo: { x: 820, y: PW + 400, dur: 0.45, ease: "power2.out", at: 1.9 } })],
+        fx(tl, id, t0, L) {
+          put(L.glow, `<g><rect x="300" y="${PW}" width="1040" height="700" fill="#2e6a6e" opacity=".5"/><path d="M300,${PW}q60,-10 120,0t120,0t120,0t120,0t120,0t120,0t120,0t120,0" stroke="#e6f6ff" stroke-width="7" fill="none"/></g>`);
+          HnFx.splash(tl, L.glow, t0 + 0.05, 820, PW, 1.6); HnFx.splash(tl, L.glow, t0 + 2.0, 820, PW, 1.0);
+          HnFx.swarm(tl, L.glow, { id: "t3s", n: 24, s: 0.55, path: [[0, 820, PW - 140], [1.9, 820, PW - 120], [2.4, 820, PW - 70], [3.4, 820, PW - 60]], rx: 300, ry: 60, t0, dur: 3.4, seed: 21 });
+          HnFx.sting(tl, L, t0 + 2.5, 800, PW - 40, 0.8);
+          put(L.light, `<rect id="t3w" width="1080" height="1920" fill="#808080" style="mix-blend-mode:saturation" opacity="0"/><radialGradient id="t3vg" cx=".5" cy=".42" r=".78"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".75"/></radialGradient><rect id="t3v" width="1080" height="1920" fill="url(#t3vg)" opacity="0"/>`);
+          tl.set(["#t3w", "#t3v"], { opacity: 0 }, 0); tl.to(["#t3w", "#t3v"], { opacity: 0.85, duration: 0.4 }, t0 + 0.4);
+        } });
+      add("still", { ...Y2("t4"), blur: BLUR, cam: { keys: [{ t: 0, ...fr(1300, 1000, 1.1, 540, 960) }, { t: 3.4, glide: 3.4, ...fr(1320, 1000, 1.16, 540, 960) }] },
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, 3.4); HnUI.still(tl, L.light, t0 + 0.1, 3.3, { y: 330 }); } });
+      add("rules", { ...Y2("t5"), blur: BLUR, cam: { keys: [{ t: 0, ...fr(1300, 1100, 1.2, 540, 980) }, { t: 3.4, glide: 3.4, ...fr(1320, 1100, 1.26, 540, 980) }] },
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, 3.4); HnUI.rules(tl, L.light, t0, 3.4, { active: 1, done: [0], y: 380 }); } });
+      add("indoors", { ...Y2("t6"), blur: BLUR, cam: { keys: [{ t: 0, ...fr(200, 1100, 1.1, 540, 980) }, { t: 3.0, glide: 3.0, ...fr(220, 1100, 1.16, 540, 980) }] },
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, 3.0); HnUI.indoors(tl, L.light, t0 + 0.1, 2.9, { y: 360 }); } });

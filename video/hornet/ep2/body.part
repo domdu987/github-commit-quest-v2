@@ -24,26 +24,26 @@
         cam: { keys: [{ t: 0, ...fr(820, 1130, 1.25, 540, 1040) }, { t: D("hook"), glide: D("hook"), ...fr(860, 1170, 1.6, 540, 1040) }] },
         actors: [YAI("sitChair", "normal", "smile"), A("bai", 560, 1500, 0.72, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])],
         captions: caps("hook"),
-        fx(tl, id, t0, L) { stings(L, "t0s"); cloth(L, "t0c"); tl.set("#t0c", { opacity: 0 }, 0);
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, D("hook"), { leaves: 4 }); stings(L, "t0s"); cloth(L, "t0c"); tl.set("#t0c", { opacity: 0 }, 0);
           tl.fromTo("#t0c", { opacity: 1, x: 120, y: -60, rotation: -20, svgOrigin: "755 1295" }, { x: 0, y: 0, rotation: 0, svgOrigin: "755 1295", duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + 1.6); } });
       // ---------- 2. "อย่าเชื่อ": the cloth slips, the stings ----------
       add("cmd", { ...Y3("t1"), extra: bench, cam: { keys: [{ t: 0, ...fr(755, 1295, 3.2, 540, 960), drift: { s: 0.03 } }] },
         actors: [YAI("sitChair", "closed", "smile")], captions: caps("cmd"),
-        fx(tl, id, t0, L) { stings(L, "t1s"); cloth(L, "t1c"); tl.set("#t1c", { opacity: 1, x: 0, y: 0 }, t0);
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, D("cmd"), { leaves: 4 }); stings(L, "t1s"); cloth(L, "t1c"); tl.set("#t1c", { opacity: 1, x: 0, y: 0 }, t0);
           tl.to("#t1c", { y: 160, x: 40, rotation: 14, svgOrigin: "755 1295", opacity: 0, duration: 0.5, ease: "power2.in" }, t0 + 0.3); } });
       // ---------- 3. card: the poison comes later ----------
       add("why", { ...Y3("t2"), extra: bench, blur: BLUR, actors: [YAI("sitChair", "closed", "smile")], cam: { keys: [{ t: 0, ...fr(850, 1150, 1.3, 540, 1000) }] }, captions: caps("why"),
-        fx(tl, id, t0, L) { HnUI.kidney(tl, L.light, t0 + 0.1, D("why") - 0.1, { y: 330 }); } });
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, D("why"), { leaves: 4 }); HnUI.kidney(tl, L.light, t0 + 0.1, D("why") - 0.1, { y: 330 }); } });
       // ---------- 4. ยาย laughs it off, ice on her arm ----------
       add("yai", { ...Y3("t3"), extra: bench, cam: { keys: [{ t: 0, ...fr(860, 1100, 2.1, 540, 1040) }] },
         actors: [YAI("sitChair", "closed", "laugh", { talk: [TALK("yai", 0, "laugh")] })], captions: caps("yai", undefined, QUO),
-        fx(tl, id, t0, L) { put(L.glow, `<g><rect x="805" y="1170" width="90" height="60" rx="16" fill="#e8e4d8" stroke="#2e2a26" stroke-width="4"/>${[825, 850, 875].map((x) => `<rect x="${x - 9}" y="1188" width="18" height="18" rx="3" fill="#bfe4f8" stroke="#6aaad0" stroke-width="2"/>`).join("")}</g>`); } });
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, D("yai"), { leaves: 4 }); put(L.glow, `<g><rect x="805" y="1170" width="90" height="60" rx="16" fill="#e8e4d8" stroke="#2e2a26" stroke-width="4"/>${[825, 850, 875].map((x) => `<rect x="${x - 9}" y="1188" width="18" height="18" rx="3" fill="#bfe4f8" stroke="#6aaad0" stroke-width="2"/>`).join("")}</g>`); } });
       // ---------- 5. card: first aid, right ----------
       add("aid", { ...Y3("t4"), extra: bench, blur: BLUR, actors: [YAI("sitChair", "closed", "smile")], cam: { keys: [{ t: 0, ...fr(850, 1150, 1.3, 540, 1000) }] }, captions: caps("aid"),
-        fx(tl, id, t0, L) { HnUI.aid(tl, L.light, t0 + 0.1, D("aid") - 0.1, { y: 380, at: [F("aid", 0, 0) + 0.5, F("aid", 0, 1) + 0.5, F("aid", 0, 1) + 1.2] }); } });
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, D("aid"), { leaves: 4 }); HnUI.aid(tl, L.light, t0 + 0.1, D("aid") - 0.1, { y: 380, at: [F("aid", 0, 0) + 0.5, F("aid", 0, 1) + 0.5, F("aid", 0, 1) + 1.2] }); } });
       // ---------- 6. card: not enough — past ten ----------
       add("count", { ...Y3("t5"), extra: bench, blur: BLUR, actors: [YAI("sitChair", "closed", "smile")], cam: { keys: [{ t: 0, ...fr(850, 1150, 1.3, 540, 1000) }] }, captions: caps("count"),
-        fx(tl, id, t0, L) { HnUI.count(tl, L.light, t0 + 0.1, D("count") - 0.1, { y: 340 }); } });
+        fx(tl, id, t0, L) { HnFx.yard(tl, L, t0, D("count"), { leaves: 4 }); HnUI.count(tl, L.light, t0 + 0.1, D("count") - 0.1, { y: 340 }); } });
       // ---------- 7. night: ภูมิ sees ยาย come out holding her back → the cup ----------
       split("night", F("night", 0, 2) - 0.1, { ...Y3("t6", { time: "night", house: [200, 0.9], door: "open", tree: 1500, shrine: 1430, pond: false }), dark: 0.12, light: NIGHTL, grade: GNT,
         cam: { keys: [{ t: 0, ...fr(330, 1100, 1.1, 540, 1060) }] },

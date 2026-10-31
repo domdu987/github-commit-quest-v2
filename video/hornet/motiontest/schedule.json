@@ -1,0 +1,47 @@
+{
+ "total": 20.2,
+ "shots": [
+  {
+   "key": "chase",
+   "start": 0,
+   "dur": 4.4,
+   "vo": [],
+   "voEnd": 0
+  },
+  {
+   "key": "sting",
+   "start": 4.4,
+   "dur": 2.6,
+   "vo": [],
+   "voEnd": 0
+  },
+  {
+   "key": "whatif",
+   "start": 7.0,
+   "dur": 3.4,
+   "vo": [],
+   "voEnd": 0
+  },
+  {
+   "key": "still",
+   "start": 10.4,
+   "dur": 3.4,
+   "vo": [],
+   "voEnd": 0
+  },
+  {
+   "key": "rules",
+   "start": 13.8,
+   "dur": 3.4,
+   "vo": [],
+   "voEnd": 0
+  },
+  {
+   "key": "indoors",
+   "start": 17.2,
+   "dur": 3.0,
+   "vo": [],
+   "voEnd": 0
+  }
+ ]
+}

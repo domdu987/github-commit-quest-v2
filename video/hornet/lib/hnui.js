@@ -230,7 +230,7 @@
   HnUI.finale = (tl, layer, t0, dur, o = {}) => {
     put(layer, `<rect id="hfin-bg" width="1080" height="1920" fill="#f4e6c8" opacity="0"/>`);
     tl.set("#hfin-bg", { opacity: 0 }, 0); tl.to("#hfin-bg", { opacity: 1, duration: 0.3 }, t0);
-    HnUI.rules(tl, layer, t0, dur, { done: [0, 1, 2], y: 380 });
+    HnUI.rules(tl, layer, t0, dur, { done: HnUI.RULES.map((_, k) => k), y: 380 });
     const id = `hf${seq++}`;
     put(layer, `<g id="${id}"><text x="540" y="1420" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="60" fill="${U.redD}">ตอนจบ</text>
       <text x="540" y="1510" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="46" fill="${U.ink}">แชร์ให้คนที่คุณรัก… ก่อนวันที่ต้องใช้</text>
