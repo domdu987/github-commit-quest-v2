@@ -1,0 +1,48 @@
+[
+ {
+  "id": "rabies-ep1",
+  "page": "rabies-ep1/composition/index.html",
+  "out": "video/rabies-ep1/cover.jpg",
+  "t": 1.9,
+  "series": "หมาดำตาสี่",
+  "ep": 1,
+  "epTitle": "อย่าอุ้มมัน",
+  "setup": "ลูกหมาจร/[เดินมาหาคุณ]…",
+  "cmd": "อย่าอุ้มมันขึ้นมา!",
+  "glow": "#9aff5a",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.0,
+   "x": 540,
+   "y": 960
+  },
+  "shift": {
+   "x": 0,
+   "y": 0
+  }
+ },
+ {
+  "id": "rabies-ep2",
+  "page": "rabies-ep2/composition/index.html",
+  "out": "video/rabies-ep2/cover.jpg",
+  "t": 13.0,
+  "series": "หมาดำตาสี่",
+  "ep": 2,
+  "epTitle": "อย่ารอดูหมา",
+  "finale": true,
+  "setup": "หมาที่บ้านกัดคุณ/[แต่ยังดูปกติ]…",
+  "cmd": "อย่ารอดูว่ามันจะตาย!",
+  "glow": "#9aff5a",
+  "hideLight": true,
+  "bright": 1.3,
+  "zoom": {
+   "s": 1.0,
+   "x": 540,
+   "y": 960
+  },
+  "shift": {
+   "x": 0,
+   "y": 0
+  }
+ }
+]
