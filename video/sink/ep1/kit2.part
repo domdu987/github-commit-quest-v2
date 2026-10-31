@@ -131,4 +131,4 @@
       };
       // her window from inside (carWindow), the child's finger on her own switch below the glass
       const kidSwitch = (L, id) => put(L.act, `<g transform="translate(540,1352)"><rect x="-90" y="-50" width="180" height="100" rx="20" fill="#30343c" stroke="${INK}" stroke-width="5"/><path d="M-22,12L0,-14L22,12" stroke="#9aa2aa" stroke-width="7" fill="none" stroke-linecap="round"/>
-        <g id="${id}-kf" transform="translate(70,150)"><path d="M-26,0Q-32,-80 -12,-100Q14,-112 28,-92Q40,-40 34,30L40,300H-40Z" fill="#ebc19c" stroke="${INK}" stroke-width="4"/></g></g>`);
+        <g id="${id}-kf" transform="translate(70,150)">${handAt([36, 48], 0, 1.5, SK.kim, { ...POKE, sw: 0.7, fore: 600 })}</g></g>`);

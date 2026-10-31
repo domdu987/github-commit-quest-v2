@@ -6,7 +6,7 @@
       const ptOf = (c, lx, ly) => [c.x + c.s * lx, c.y + c.s * ly];   // a point on a seated rig, in its own units
       const BELT = {   // shoulder anchor (B-pillar, outboard) → over the shoulder → the buckle at the inboard hip
         ton: { a: [70, 1150], sh: ptOf(CT, -40, -470), b: ptOf(CT, 58, -296), lap: ptOf(CT, -70, -300) },
-        kim: { a: [686, 1004], sh: ptOf(CK, 40, -470), b: ptOf(CK, -58, -296), lap: ptOf(CK, 70, -300) },
+        kim: { a: [648, 1100], sh: ptOf(CK, 40, -470), b: ptOf(CK, -58, -296), lap: ptOf(CK, 70, -300) },
       };
       Sets.sinkCab = (L, o = {}) => {
         const id = o.id || "sc";
@@ -30,7 +30,7 @@
           <path d="M40,330L120,1900" stroke="#1f2530" stroke-width="10"/><path d="M1040,330L960,1900" stroke="#1f2530" stroke-width="10"/>`;
         // the front seats (the passenger's is drawn over ขิม in cabFront: she sits behind it)
         w += seat(CT, 200, 1190, 112);
-        w += `<g><circle cx="${BELT.ton.a[0]}" cy="${BELT.ton.a[1]}" r="20" fill="#2a2e36" stroke="#0b0e13" stroke-width="5"/><circle cx="${BELT.kim.a[0]}" cy="${BELT.kim.a[1]}" r="14" fill="#2a2e36" stroke="#0b0e13" stroke-width="4"/></g>`;
+        w += `<g><circle cx="${BELT.ton.a[0]}" cy="${BELT.ton.a[1]}" r="20" fill="#2a2e36" stroke="#0b0e13" stroke-width="5"/></g>`;
         put(L.set, w);
       };
       const seat = (c, hw, top, hr) => `<path d="M${c.x - hw},1900V${top + 70}Q${c.x - hw},${top} ${c.x - hw + 70},${top}H${c.x + hw - 70}Q${c.x + hw},${top} ${c.x + hw},${top + 70}V1900Z" fill="#232a35" stroke="#0b0e13" stroke-width="6"/>
@@ -40,31 +40,36 @@
       const cabFront = (L, id, o = {}) => {
         const free = o.free || [];
         let g = seat({ x: 830 }, 180, 1210, 100)   // the empty front passenger seat, in front of ขิม; the console between the seats
-          + `<path d="M512,1900V1306Q512,1272 546,1272H654Q688,1272 688,1306V1900Z" fill="#1c2129" stroke="#0b0e13" stroke-width="6"/><rect x="540" y="1300" width="120" height="44" rx="14" fill="#11151c"/><path d="M600,1420V1520" stroke="#2c323b" stroke-width="26" stroke-linecap="round"/>`;
+          + `<path d="M512,1900V1274Q512,1240 546,1240H654Q688,1240 688,1274V1900Z" fill="#1c2129" stroke="#0b0e13" stroke-width="6"/><rect x="540" y="1266" width="120" height="44" rx="14" fill="#11151c"/><path d="M600,1380V1450" stroke="#2c323b" stroke-width="26" stroke-linecap="round"/>`;
         ["ton", "kim"].forEach((k) => {
           const B = BELT[k], off = free.includes(k);
           const d = `M${B.a[0]},${B.a[1]}L${f1(B.sh[0])},${f1(B.sh[1])}L${f1(B.b[0])},${f1(B.b[1])}`;
           g += `<g id="${id}-bl${k}" opacity="${off ? 0 : 1}">
             <path id="${id}-lap${k}" d="M${f1(B.b[0])},${f1(B.b[1])}L${f1(B.lap[0])},${f1(B.lap[1] + 8)}" pathLength="1" stroke-dasharray="1 1" stroke="#2c323b" stroke-width="${k === "ton" ? 30 : 18}" stroke-linecap="round"/>
-            <path id="${id}-st${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#0b0e13" stroke-width="${k === "ton" ? 34 : 22}" stroke-linejoin="round"/>
-            <path id="${id}-sf${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#3a414c" stroke-width="${k === "ton" ? 26 : 15}" stroke-linejoin="round"/>
+            <path id="${id}-st${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#0b0e13" stroke-width="${k === "ton" ? 31 : 17}" stroke-linejoin="round"/>
+            <path id="${id}-sf${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#56606e" stroke-width="${k === "ton" ? 25 : 12}" stroke-linejoin="round"/>
+            <path id="${id}-sh${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#8a95a6" stroke-width="${k === "ton" ? 3 : 2}" stroke-linejoin="round" opacity=".8"/>
             <g id="${id}-tg${k}"><rect x="${f1(B.b[0] - 16)}" y="${f1(B.b[1] - 12)}" width="32" height="26" rx="5" fill="#c9ced6" stroke="#0b0e13" stroke-width="4"/></g>
             <g transform="translate(${f1(B.b[0] + (k === "ton" ? 10 : -10))},${f1(B.b[1] + 26)})"><rect x="-22" y="-12" width="44" height="58" rx="10" fill="#0f1114" stroke="#000" stroke-width="3"/><rect x="-14" y="-8" width="28" height="14" rx="4" fill="#d8322a"/></g></g>`;
         });
-        // the wheel in front of ต้น, his fists at ten and two, the red wristband
-        g += `<g id="${id}-wheel"><ellipse cx="${CT.x}" cy="1720" rx="236" ry="200" fill="none" stroke="#07090c" stroke-width="56"/><ellipse cx="${CT.x}" cy="1720" rx="236" ry="200" fill="none" stroke="#1d2127" stroke-width="40"/>
-          <path d="M${CT.x - 220},1760Q${CT.x},1820 ${CT.x + 220},1760M${CT.x},1800V1920" stroke="#16191e" stroke-width="54" fill="none"/><ellipse cx="${CT.x}" cy="1790" rx="70" ry="56" fill="#1a1d22" stroke="#07090c" stroke-width="5"/>
-          ${[[-206, 1610], [206, 1610]].map(([dx, y]) => `<g transform="translate(${CT.x + dx},${y})"><path d="M${dx < 0 ? -10 : 10},40L${dx < 0 ? -90 : 90},260" stroke="#0b0e13" stroke-width="64" stroke-linecap="round"/><path d="M${dx < 0 ? -10 : 10},40L${dx < 0 ? -90 : 90},260" stroke="${SKIN}" stroke-width="54" stroke-linecap="round"/>
-            <path d="M${dx < 0 ? -16 : 16},70l${dx < 0 ? -12 : 12},34" stroke="${BAND}" stroke-width="58"/><circle r="40" fill="${SKIN}" stroke="#0b0e13" stroke-width="5"/><path d="M-22,-12q22,-14 44,0" stroke="${SKINS}" stroke-width="5" fill="none"/></g>`).join("")}</g>`;
+        // ขิม holding on to the two front seats (o.kimGrip: her own arms are hidden by the shot)
+        if (o.kimGrip) g += kimHolds(CK, [[505, 1172], [676, 1196]]);
+        // the wheel in front of ต้น (tilted: an ellipse), spokes and the hub; his arms to it at ten and two, the backs of his hands to us
+        const WX = CT.x, WY0 = 1452, RX = 196, RYw = 104;
+        g += `<g id="${id}-wheel"><ellipse cx="${WX}" cy="${WY0}" rx="${RX}" ry="${RYw}" fill="none" stroke="#07090c" stroke-width="44"/><ellipse cx="${WX}" cy="${WY0}" rx="${RX}" ry="${RYw}" fill="none" stroke="#22262d" stroke-width="32"/>
+          <path d="M${WX - RX + 18},${WY0 - 30}Q${WX},${WY0 - RYw - 30} ${WX + RX - 18},${WY0 - 30}" stroke="#3a3f48" stroke-width="5" fill="none" opacity=".7"/>
+          <path d="M${WX - RX + 10},${WY0 + 14}L${WX - 60},${WY0 + 22}M${WX + RX - 10},${WY0 + 14}L${WX + 60},${WY0 + 22}" stroke="#16191e" stroke-width="30"/>
+          <ellipse cx="${WX}" cy="${WY0 + 26}" rx="70" ry="44" fill="#1a1d22" stroke="#07090c" stroke-width="5"/><ellipse cx="${WX}" cy="${WY0 + 22}" rx="22" ry="12" fill="#2c3038"/></g>`;
+        if (!o.noTonArms) g += tonOnWheel(CT, [[WX - 168, WY0 - 92], [WX + 168, WY0 - 92]]);
         g += `<linearGradient id="${id}-dashG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262b33"/><stop offset="1" stop-color="#0c0e11"/></linearGradient>
-          <path d="M-900,1700Q540,1610 2000,1700V2600H-900Z" fill="url(#${id}-dashG)"/><path d="M-900,1700Q540,1610 2000,1700" stroke="#3a3f48" stroke-width="10" fill="none"/>
-          <g id="${id}-scr"><rect x="470" y="1690" width="150" height="70" rx="12" fill="#07131c" stroke="#3a3f48" stroke-width="5"/><text x="545" y="1738" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#7fd1ff">01:0${o.min ?? 1}</text></g>`;
+          <path d="M-900,1520Q540,1400 2000,1520V2600H-900Z" fill="url(#${id}-dashG)"/><path d="M-900,1520Q540,1400 2000,1520" stroke="#3a3f48" stroke-width="10" fill="none"/>
+          <g id="${id}-scr"><rect x="470" y="1486" width="150" height="66" rx="12" fill="#07131c" stroke="#3a3f48" stroke-width="5"/><text x="545" y="1532" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="32" fill="#7fd1ff">01:0${o.min ?? 1}</text></g>`;
         put(L.act, `<g id="${id}-front">${g}</g>`);
       };
       // one belt comes off: the strap reels back into its pillar, the latch plate flies up with it
       const beltOff = (tl, id, k, t) => {
         const B = BELT[k];
-        tl.to([`#${id}-st${k}`, `#${id}-sf${k}`], { attr: { "stroke-dashoffset": 1 }, duration: 0.32, ease: "power3.in" }, t);
+        tl.to([`#${id}-st${k}`, `#${id}-sf${k}`, `#${id}-sh${k}`], { attr: { "stroke-dashoffset": 1 }, duration: 0.32, ease: "power3.in" }, t);
         tl.to(`#${id}-lap${k}`, { attr: { "stroke-dashoffset": -1 }, duration: 0.2, ease: "power2.in" }, t);
         tl.to(`#${id}-tg${k}`, { x: B.sh[0] - B.b[0], y: B.sh[1] - B.b[1], duration: 0.16, ease: "power2.in" }, t);
         tl.to(`#${id}-tg${k}`, { x: B.a[0] - B.b[0], y: B.a[1] - B.b[1], opacity: 0, duration: 0.16, ease: "none" }, t + 0.16);
@@ -99,9 +104,12 @@
       };
       // water forcing through the door seals at both sides
       const sealJets = (L, tl, id, t0, dur) => {
-        put(L.act, `<g id="${id}-jets">${[[60, 1240, 1], [60, 1500, 1], [1020, 1330, -1], [1020, 1560, -1]].map(([x, y, d], k) => `<g transform="translate(${x},${y}) scale(${d},1)">${[0, 1, 2].map((j) => `<path class="jet" d="M0,${j * 14}q${90 + j * 30},${-20 + j * 10} ${200 + j * 50},${110 + j * 40}" stroke="#d8f4f0" stroke-width="${12 - j * 3}" fill="none" stroke-linecap="round" stroke-dasharray="40 30" opacity=".85"/>`).join("")}</g>`).join("")}</g>`);
-        tl.fromTo(`#${id}-jets .jet`, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -140 }, duration: 0.3, repeat: Math.ceil(dur / 0.3), ease: "none", immediateRender: false }, t0);
+        const jet = `<path d="M0,-7C70,-15 150,8 232,88L238,104C150,40 72,15 0,8Z" fill="url(#${id}-jg)"/><path d="M4,-2C70,-8 142,13 216,82" stroke="#ffffff" stroke-width="3" fill="none" opacity=".75"/>`
+          + [0, 1, 2, 3, 4].map((j) => `<circle cx="${224 + j * 15}" cy="${100 + j * 17}" r="${f1(5.5 - j * 0.7)}" fill="#e8fbff" opacity=".85"/>`).join("");
+        put(L.act, `<linearGradient id="${id}-jg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f2fdff" stop-opacity=".95"/><stop offset="1" stop-color="#9fd8e8" stop-opacity=".2"/></linearGradient>
+          <g id="${id}-jets" opacity="0">${[[72, 1250, 1, 0.9], [72, 1420, 1, 0.7], [1008, 1320, -1, 0.85], [1008, 1470, -1, 0.65]].map(([x, y, d, k]) => `<g transform="translate(${x},${y}) scale(${d * k},${k})"><g class="jt">${jet}</g></g>`).join("")}</g>`);
         tl.fromTo(`#${id}-jets`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0 + 0.15);
+        tl.fromTo(`#${id}-jets .jt`, { scaleX: 0.9, scaleY: 1.06, transformOrigin: "0% 50%" }, { scaleX: 1.08, scaleY: 0.94, duration: 0.09, repeat: Math.ceil(dur / 0.09), yoyo: true, ease: "none", immediateRender: false }, t0 + 0.15);
       };
 
       // ---------- close insert: his thumb on the red release, the latch pops, the strap whips away ----------
@@ -116,9 +124,7 @@
         put(L.act, `<g id="${id}-strap"><path d="M-500,-400L560,1070" stroke="#0b0e13" stroke-width="150" stroke-linecap="butt"/><path d="M-500,-400L560,1070" stroke="#3a414c" stroke-width="134"/>${Array.from({ length: 14 }, (_, k) => `<path d="M${-470 + k * 74},${-430 + k * 103}l-70,48" stroke="#2c323b" stroke-width="6"/>`).join("")}
             <g transform="translate(600,1100) rotate(-36)"><path d="M-70,-40H70L60,70H-60Z" fill="#c9ced6" stroke="#0b0e13" stroke-width="6"/><rect x="-36" y="-16" width="72" height="22" rx="8" fill="#0b0e13"/><path d="M-50,-30H40" stroke="#fff" stroke-width="6" opacity=".7"/></g></g>
           <g transform="translate(640,1130) rotate(-18)"><rect x="-96" y="-30" width="192" height="64" rx="30" fill="#0e1013" stroke="#000" stroke-width="6"/><rect x="-60" y="-12" width="120" height="14" rx="6" fill="#000"/></g>
-          <g id="${id}-thumb" transform="translate(${o.tx ?? 650},${o.ty ?? 1236})"><g id="${id}-th"><path d="M40,30L520,760" stroke="#0b0e13" stroke-width="230" stroke-linecap="round"/><path d="M40,30L520,760" stroke="${SKIN}" stroke-width="216" stroke-linecap="round"/>
-            <path d="M250,360L330,480" stroke="${BAND}" stroke-width="236"/><path d="M-10,-40Q-40,-10 -20,40Q30,90 120,60Q160,20 120,-30Q60,-80 -10,-40Z" fill="${SKIN}" stroke="#0b0e13" stroke-width="7"/>
-            <path d="M6,-28Q-10,-6 4,20" stroke="${SKINS}" stroke-width="8" fill="none" opacity=".7"/><ellipse cx="22" cy="-10" rx="26" ry="18" fill="#e8b8a8" opacity=".85"/></g></g>
+          <g id="${id}-thumb" transform="translate(665,1208)"><g id="${id}-th">${handAt([223, 252], -30, 3.2, SK.ton, { ...POKE, band: BAND, sw: 0.55 })}</g></g>
           <g id="${id}-streaks" opacity="0">${[0, 1, 2, 3].map((k) => `<path d="M${200 + k * 60},${560 + k * 90}L${-80 + k * 60},${170 + k * 90}" stroke="#e8f0f8" stroke-width="10" stroke-linecap="round" opacity="${0.7 - k * 0.12}"/>`).join("")}</g>`);
       };
       const beltPress = (tl, id, t) => {
@@ -195,20 +201,20 @@
       };
       // ต้น's arm reaching back to ขิม's buckle: the hand comes in from the lower left, presses, her belt goes (call after cabFront)
       const reachBelt = (L, tl, id, t) => {
-        const [bx, by] = BELT.kim.b;
-        put(L.act, `<g id="${id}-arm"><path d="M${bx - 520},${by + 520}L${bx - 34},${by + 30}" stroke="#0b0e13" stroke-width="86" stroke-linecap="round"/><path d="M${bx - 520},${by + 520}L${bx - 34},${by + 30}" stroke="${SKIN}" stroke-width="74" stroke-linecap="round"/>
-          <path d="M${bx - 150},${by + 150}l-46,46" stroke="${BAND}" stroke-width="80"/><circle cx="${bx - 14}" cy="${by + 14}" r="40" fill="${SKIN}" stroke="#0b0e13" stroke-width="6"/>
-          <path d="M${bx - 4},${by - 6}q16,-26 2,-44" stroke="${SKIN}" stroke-width="26" stroke-linecap="round" fill="none"/><path d="M${bx - 4},${by - 6}q16,-26 2,-44" stroke="#0b0e13" stroke-width="4" fill="none" opacity=".5"/></g>`);
-        tl.fromTo(`#${id}-arm`, { x: -420, y: 420 }, { x: 0, y: 0, duration: 0.42, ease: "power2.out", immediateRender: false }, t);
-        tl.to(`#${id}-arm`, { x: 8, y: -8, duration: 0.07, yoyo: true, repeat: 1 }, t + 0.45);
+        const S = shoulders(CT)[1], l1 = 122 * CT.s, l2 = 108 * CT.s, B = BELT.kim.b, T = [B[0] - 2, B[1] + 4], R0 = [S[0] + 30, S[1] + 160];
+        put(L.act, `<g id="${id}-arm"></g>`);
+        const el = document.getElementById(`${id}-arm`), c = { p: 0 };
+        const draw = (p) => { const W = [R0[0] + (T[0] - R0[0]) * p, R0[1] + (T[1] - R0[1]) * p]; el.innerHTML = arm(S, W, l1, l2, elbowOut(S, W, l1, l2, 0), SK.ton, { w: [30 * CT.s, 26 * CT.s], band: BAND, hs: 0.56, hand: { ...POKE } }); };
+        draw(0);
+        tl.to(c, { p: 1, duration: 0.42, ease: "power2.out", immediateRender: false, onUpdate: () => draw(c.p) }, t);
+        tl.to(c, { p: 0.95, duration: 0.07, yoyo: true, repeat: 1, onUpdate: () => draw(c.p) }, t + 0.45);
         beltOff(tl, id, "kim", t + 0.52);
-        tl.to(`#${id}-arm`, { x: -420, y: 420, duration: 0.4, ease: "power2.in" }, t + 0.9);
+        tl.to(c, { p: 0, duration: 0.4, ease: "power2.in", onUpdate: () => draw(c.p) }, t + 0.9);
       };
       // a window switch on the door panel and a finger on it (adult: ต้น · kid: ขิม); #id-f moves
       const winSwitch = (L, id, kid) => put(L.act, `<g transform="translate(540,1352)"><rect x="-110" y="-56" width="220" height="112" rx="24" fill="#2a2e36" stroke="#0b0e13" stroke-width="6"/><rect x="-80" y="-34" width="160" height="68" rx="16" fill="#3a3f48" stroke="#0b0e13" stroke-width="4"/>
         <path d="M-26,14L0,-16L26,14" stroke="#c8ccd2" stroke-width="8" fill="none" stroke-linecap="round"/>
-        <g id="${id}-f" transform="translate(${kid ? 66 : 80},${kid ? 134 : 170})"><path d="M${kid ? "-26,0Q-32,-80 -12,-100Q14,-112 28,-92Q40,-40 34,30L40,330H-40Z" : "-36,0Q-44,-110 -16,-136Q20,-152 38,-124Q54,-56 46,40L56,360H-56Z"}" fill="${kid ? "#ebc19c" : SKIN}" stroke="#0b0e13" stroke-width="5"/>
-          <ellipse cx="${kid ? 6 : 8}" cy="${kid ? -86 : -116}" rx="${kid ? 16 : 22}" ry="${kid ? 12 : 16}" fill="#f0c8b8" opacity=".85"/>${kid ? "" : `<path d="M-50,250H50" stroke="${BAND}" stroke-width="60"/>`}</g></g>`);
+        <g id="${id}-f" transform="translate(${kid ? 66 : 80},${kid ? 134 : 170})">${kid ? handAt([36, 48], 0, 1.5, SK.kim, { ...POKE, sw: 0.7, fore: 600 }) : handAt([53, 82], 0, 2.2, SK.ton, { ...POKE, band: BAND, sw: 0.6, fore: 600 })}</g></g>`);
       const pressSwitch = (tl, id, t, n = 1) => {
         tl.fromTo(`#${id}-f`, { x: 30, y: 260 }, { x: -70, y: -40, duration: 0.3, ease: "power2.out", immediateRender: false }, t);
         tl.to(`#${id}-f`, { y: -24, duration: 0.09, yoyo: true, repeat: n * 2 - 1, ease: "power1.inOut" }, t + 0.32);
@@ -216,9 +222,8 @@
       // the inner door handle and his hand yanking it: the door doesn't give
       const doorTug = (L, tl, id, t, n = 3) => {
         put(L.act, `<g transform="translate(300,1350)"><rect x="-120" y="-44" width="240" height="88" rx="40" fill="#0e1014" stroke="#000" stroke-width="5"/>
-          <g id="${id}-lev"><path d="M-84,-8H64Q86,-8 86,8Q86,24 64,24H-84Z" fill="#b8bec8" stroke="#0b0e13" stroke-width="5"/></g>
-          <g id="${id}-hd"><path d="M-30,40L-300,640" stroke="#0b0e13" stroke-width="124" stroke-linecap="round"/><path d="M-30,40L-300,640" stroke="${SKIN}" stroke-width="110" stroke-linecap="round"/>
-            <path d="M-140,290l-34,76" stroke="${BAND}" stroke-width="124"/>${[-56, -18, 20, 58].map((x) => `<rect x="${x - 17}" y="-16" width="36" height="62" rx="17" fill="${SKIN}" stroke="#0b0e13" stroke-width="5"/>`).join("")}</g></g>`);
+          <g id="${id}-hd">${handAt([0, 175], -6, 2.4, SK.ton, { ...GRIP, band: BAND, sw: 0.6, fore: 700 })}</g>
+          <g id="${id}-lev"><path d="M-84,-8H64Q86,-8 86,8Q86,24 64,24H-84Z" fill="#b8bec8" stroke="#0b0e13" stroke-width="5"/><path d="M-76,-1H60" stroke="#eef2f6" stroke-width="4" opacity=".8"/></g></g>`);
         tl.set(`#${id}-hd`, { y: 560 }, 0);
         tl.to(`#${id}-hd`, { y: 0, duration: 0.25, ease: "power2.out" }, t);
         for (let k = 0; k < n; k++) {
@@ -256,4 +261,10 @@
         }
         for (let k = 0; k < 3; k++) tl.fromTo(`#${id}-r${k}`, { attr: { rx: 40, ry: 10 }, opacity: 0.8 }, { attr: { rx: 520 + k * 140, ry: 70 + k * 18 }, opacity: 0, duration: 1.4, ease: "power1.out", immediateRender: false }, t + k * 0.18);
         tl.fromTo(`#${id}-foam`, { attr: { rx: 10, ry: 4 }, opacity: 0.9 }, { attr: { rx: 260, ry: 34 }, opacity: 0.5, duration: 0.9, ease: "power2.out", immediateRender: false }, t);
+      };
+      // the driver's view: his own hands on the rim, backs to us, fingers over the top (replaces the set's fists)
+      const povHands = (L, id) => {
+        ["gripL", "gripR"].forEach((k) => { const e = document.getElementById(`${id}-${k}`); if (e) e.setAttribute("display", "none"); });
+        put(L.act, `<circle cx="700" cy="1800" r="318" fill="none" stroke="#565c66" stroke-width="7" opacity=".75"/>
+          <g>${handAt([452, 1752], 30, 2.6, SK.ton, { ...GRIP, band: BAND, sw: 0.55, fore: 900, mirror: true })}${handAt([948, 1752], -30, 2.6, SK.ton, { ...GRIP, band: BAND, sw: 0.55, fore: 900 })}</g>`);
       };

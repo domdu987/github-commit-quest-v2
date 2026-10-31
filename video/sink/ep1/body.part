@@ -63,7 +63,7 @@
         ...POV("pv0"),
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
         captions: caps("drive"),
-        fx(tl, id, t0, L) { povCanal(L, tl, "pv0", t0, D("drive")); mirrorKid(L, "pv0"); Mok.life(tl, `#${id}`, t0, D("drive")); },
+        fx(tl, id, t0, L) { povCanal(L, tl, "pv0", t0, D("drive")); mirrorKid(L, "pv0"); povHands(L, "pv0"); Mok.life(tl, `#${id}`, t0, D("drive")); },
       });
       // ---------- 6. an unlit motorbike in the headlights → the swerve ----------
       add("swerve", {
@@ -72,7 +72,7 @@
         shake: (t) => { const k = Math.max(0, t - (D("swerve") - 0.9)); return { x: -180 * Math.min(1, k / 0.5) + 8 * Math.sin(t * 40) * (k > 0), y: 6 * Math.sin(t * 37) * (k > 0), r: -9 * Math.min(1, k / 0.5) }; },
         captions: caps("swerve"),
         fx(tl, id, t0, L) {
-          povCanal(L, tl, "pv1", t0, D("swerve")); mirrorKid(L, "pv1"); Mok.life(tl, `#${id}`, t0, D("swerve"));
+          povCanal(L, tl, "pv1", t0, D("swerve")); mirrorKid(L, "pv1"); povHands(L, "pv1"); Mok.life(tl, `#${id}`, t0, D("swerve"));
           put(L.act, `<g transform="translate(540,1010)"><g id="bk">${bikeShape}</g></g>`);
           tl.fromTo("#bk", { scale: 0.12, opacity: 0, svgOrigin: "0 0" }, { scale: 1.9, opacity: 1, svgOrigin: "0 0", duration: D("swerve") - 0.6, ease: "power2.in", immediateRender: false }, t0 + 0.15);
         },
@@ -97,7 +97,7 @@
         shake: (t) => (t < 0.6 ? { x: 16 * Math.sin(t * 50) * (1 - t / 0.6), y: 12 * Math.sin(t * 43) * (1 - t / 0.6), r: 1.5 * Math.sin(t * 31) } : 0),
         actors: [TON("wide", "scream"), KIM("wide", "scream")],
         fx(tl, id, t0, L) {
-          noShadow(tl, id); cabFront(L, "sc0"); cabWater(L, tl, "sc0", t0, D("inrush"), 1800, 1700, { items: false }); sealJets(L, tl, "sc0", t0, D("inrush")); cabGlow(L, tl, "sc0", t0, D("inrush"));
+          noShadow(tl, id); hideRigArms(`${id}-a0`); hideRigArms(`${id}-a1`); cabFront(L, "sc0", { kimGrip: true }); cabWater(L, tl, "sc0", t0, D("inrush"), 1800, 1700, { items: false }); sealJets(L, tl, "sc0", t0, D("inrush")); cabGlow(L, tl, "sc0", t0, D("inrush"));
           ring(L, tl, t0 + 0.5, D("inrush") - 0.5, "rg2", 58);
         },
       });
@@ -147,7 +147,7 @@
         actors: [TON("worry", "o"), KIM("wide", "scream", { path: [{ t: 0, x: CK.x, y: CK.y }, { t: F("kid", 0, 1), x: CK.x, y: CK.y }, { t: F("kid", 0, 1) + 0.5, x: CK2.x, y: CK2.y }] })],
         captions: caps("kid"),
         fx(tl, id, t0, L) {
-          noShadow(tl, id); cabFront(L, "sc1", { free: ["ton"] }); reachBelt(L, tl, "sc1", t0 + 0.15);
+          noShadow(tl, id); hideRigArms(`${id}-a0`); cabFront(L, "sc1", { free: ["ton"], noTonArms: true }); reachBelt(L, tl, "sc1", t0 + 0.15);
           cabWater(L, tl, "sc1", t0, D("kid"), 1430, 1390); cabGlow(L, tl, "sc1", t0, D("kid"));
           bubbles(L, tl, "sc1bb", t0, D("kid"), 600, 1420, 10, 420);
           chip(L, tl, t0 + 0.2, D("kid") - 0.2, "cp5", "kid", "ส่งเด็กออกก่อน", true, { y: 160 });
@@ -183,7 +183,7 @@
         actors: [TON("wide", "o"), KIM("wide", "scream", { talk: [TALK("kim", 0, "scream")] }, CK2)],
         captions: caps("kim", undefined, QUO),
         fx(tl, id, t0, L) {
-          noShadow(tl, id); cabFront(L, "sc2", { free: ["ton", "kim"] }); cabWater(L, tl, "sc2", t0, KS, 1330, 1315); cabGlow(L, tl, "sc2", t0, KS);
+          noShadow(tl, id); hideRigArms(`${id}-a0`); cabFront(L, "sc2", { free: ["ton", "kim"] }); cabWater(L, tl, "sc2", t0, KS, 1330, 1315); cabGlow(L, tl, "sc2", t0, KS);
           ring(L, tl, t0, KS, "rg8", 18);
         },
       }, {
@@ -229,7 +229,7 @@
         actors: [TON("wide", "o"), KIM("wide", "scream", {}, CK2)],
         captions: caps("flicker"),
         fx(tl, id, t0, L) {
-          noShadow(tl, id); cabFront(L, "sc3", { free: ["ton", "kim"], min: 2 }); cabWater(L, tl, "sc3", t0, D("flicker"), 1330, 1270); cabGlow(L, tl, "sc3", t0, D("flicker"));
+          noShadow(tl, id); hideRigArms(`${id}-a0`); cabFront(L, "sc3", { free: ["ton", "kim"], min: 2 }); cabWater(L, tl, "sc3", t0, D("flicker"), 1330, 1270); cabGlow(L, tl, "sc3", t0, D("flicker"));
           bubbles(L, tl, "sc3bb", t0, D("flicker"), 540, 1320, 14, 700);
           flickerOut(L, tl, "sc3", t0, D("flicker"));
           ring(L, tl, t0, D("flicker"), "rg11", 9);
