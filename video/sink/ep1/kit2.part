@@ -1,0 +1,134 @@
+      // ---------- นาทีก่อนจม kit, part 2: the look (mist, light, water life, splash, under water, the cabin's light, the HUD) ----------
+      Engine.look = { ...(Engine.look || {}), vignette: 0.55, grain: 0.05 };
+      // a richer canal: layered far bank with a warm city haze, mist bands over the water, lamp cones, moths, fireflies, blurred reeds
+      Canal.rich = (L, o = {}) => {
+        const id = o.id || "cn";
+        Canal.set(L, o);
+        put(L.sky, `<defs><linearGradient id="${id}-haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a50" stop-opacity="0"/><stop offset="1" stop-color="#ff9a50" stop-opacity=".22"/></linearGradient>
+          <linearGradient id="${id}-mist" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8d8e8" stop-opacity="0"/><stop offset=".5" stop-color="#c8d8e8" stop-opacity=".22"/><stop offset="1" stop-color="#c8d8e8" stop-opacity="0"/></linearGradient>
+          <linearGradient id="${id}-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd890" stop-opacity=".32"/><stop offset="1" stop-color="#ffd890" stop-opacity="0"/></linearGradient></defs>
+          <rect x="-1200" y="760" width="3500" height="300" fill="url(#${id}-haze)"/>
+          ${[[-500, 230, 260], [250, 150, 340], [1150, 260, 240]].map(([x, y, w]) => `<path d="M${x},${y}q${w * 0.3},-60 ${w * 0.6},-10q${w * 0.3},-40 ${w * 0.5},10q60,10 40,40H${x}Z" fill="#1a2440" opacity=".7"/>`).join("")}`);
+        // a second, nearer tree line on the far bank, with a temple's tiered roof catching the city glow
+        put(L.far, `<path d="M-1200,1080Q-1000,1010 -820,1050T-420,1030T60,1060T520,1035T980,1055T1500,1030T2300,1060V1200H-1200Z" fill="#070d0a"/>
+          <g transform="translate(700,1035)"><path d="M-60,0V-70H60V0Z" fill="#0c1216"/><path d="M-90,-70L0,-130L90,-70Z" fill="#0a1014"/><path d="M-60,-110L0,-160L60,-110Z" fill="#0a1014"/><path d="M0,-160V-210" stroke="#0a1014" stroke-width="6"/></g>`);
+        // mist over the water (drifts), each lamp's cone (screen light)
+        put(L.mid, `<g id="${id}-mist">${[0, 1, 2].map((k) => `<rect id="${id}-m${k}" x="-1400" y="${WY - 90 + k * 70}" width="4000" height="${120 + k * 30}" fill="url(#${id}-mist)" opacity="${0.9 - k * 0.2}"/>`).join("")}</g>`);
+        put(L.glow, [150, 560, 970].map((x) => `<path d="M${x + 40},${RY - 556}L${x - 160},${RY + 40}H${x + 300}Z" fill="url(#${id}-cone)"/>`).join(""));
+        put(L.act, `<g id="${id}-bugs">${[150, 560, 970].map((x, k) => [0, 1, 2, 3].map((j) => `<circle id="${id}-b${k}${j}" cx="${x + 62}" cy="${RY - 560}" r="3" fill="#fff3c8" opacity=".8"/>`).join("")).join("")}</g>
+          <g id="${id}-ff">${Array.from({ length: 12 }, (_, k) => `<circle id="${id}-f${k}" cx="${-400 + k * 160 + (k % 3) * 30}" cy="${WY - 70 - (k % 4) * 22}" r="5" fill="#d8ff8a" opacity="0"/>`).join("")}</g>`);
+        put(L.fg, `<g opacity=".95">${Array.from({ length: 16 }, (_, k) => { const x = k < 8 ? -120 + k * 34 : 900 + (k - 8) * 34; return `<path d="M${x},1980q${(k % 3 - 1) * 20},-260 ${(k % 2 ? 40 : -30)},-${380 + (k % 5) * 60}" stroke="#0a120c" stroke-width="${18 + (k % 3) * 6}" fill="none" stroke-linecap="round"/>`; }).join("")}</g>`);
+      };
+      // the canal's life over a shot: mist drifting, reflections and ripples shimmering, moths circling the lamps, fireflies blinking
+      Canal.life = (tl, id, t0, dur) => {
+        [0, 1, 2].forEach((k) => tl.fromTo(`#${id}-m${k}`, { x: -120 * (k + 1) }, { x: 120 * (k + 1), duration: dur, ease: "none", immediateRender: false }, t0));
+        tl.fromTo(`#${id}-water`, { x: -6 }, { x: 6, duration: 1.3, repeat: Math.ceil(dur / 1.3), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+        for (let k = 0; k < 3; k++) for (let j = 0; j < 4; j++) {
+          const a = (j / 4) * Math.PI * 2, R = 26 + j * 8;
+          tl.fromTo(`#${id}-b${k}${j}`, { x: Math.cos(a) * R, y: Math.sin(a) * R }, { x: Math.cos(a + 6.28) * R, y: Math.sin(a + 6.28) * R * 0.6, duration: 1.1 + j * 0.2, repeat: Math.ceil(dur), ease: "none", immediateRender: false }, t0);
+        }
+        for (let k = 0; k < 12; k++) tl.fromTo(`#${id}-f${k}`, { opacity: 0 }, { opacity: 0.9, duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 1.0), repeatDelay: 0.3 + (k % 4) * 0.25, ease: "sine.inOut", immediateRender: false }, t0 + (k % 5) * 0.27);
+      };
+      // headlights as real beams on the road + tail lights, over Canal.car (screen-space glow layer, follow the car with the same tween)
+      Canal.lights = (L, id, x, y, s, o = {}) => {
+        put(L.glow, `<defs><linearGradient id="${id}-hb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff6d8" stop-opacity=".55"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></linearGradient>
+          <radialGradient id="${id}-tl"><stop offset="0" stop-color="#ff3020" stop-opacity=".9"/><stop offset="1" stop-color="#ff3020" stop-opacity="0"/></radialGradient></defs>
+          <g id="${id}-lt" transform="translate(${x},${y})"><g transform="scale(${s})"><path d="M330,-110L1700,-300V40L330,-60Z" fill="url(#${id}-hb)"/><ellipse cx="900" cy="20" rx="560" ry="46" fill="#fff6d8" opacity=".12"/>
+          <circle cx="-330" cy="-108" r="70" fill="url(#${id}-tl)"/></g></g>`);
+      };
+      // the splash where the car hits: spray flung up and out, rings, foam
+      Canal.splash = (L, tl, id, x, y, t) => {
+        let g = `<g id="${id}">`;
+        for (let k = 0; k < 26; k++) g += `<circle id="${id}-p${k}" cx="${x}" cy="${y}" r="${6 + (k % 4) * 5}" fill="#e8f4f8" opacity="0"/>`;
+        for (let k = 0; k < 3; k++) g += `<ellipse id="${id}-r${k}" cx="${x}" cy="${y + 10}" rx="40" ry="10" fill="none" stroke="#c8e0e8" stroke-width="6" opacity="0"/>`;
+        g += `<ellipse id="${id}-foam" cx="${x}" cy="${y + 6}" rx="10" ry="4" fill="#e8f4f8" opacity="0"/></g>`;
+        put(L.act, g);
+        for (let k = 0; k < 26; k++) {
+          const a = -Math.PI * (0.15 + 0.7 * ((k * 37) % 26) / 26), v = 260 + ((k * 53) % 9) * 45;
+          tl.fromTo(`#${id}-p${k}`, { x: 0, y: 0, opacity: 0.95 }, { x: Math.cos(a) * v, y: Math.sin(a) * v * 1.2, duration: 0.45, ease: "power2.out", immediateRender: false }, t);
+          tl.to(`#${id}-p${k}`, { y: "+=" + (220 + (k % 5) * 40), opacity: 0, duration: 0.55, ease: "power2.in" }, t + 0.45);
+        }
+        for (let k = 0; k < 3; k++) tl.fromTo(`#${id}-r${k}`, { attr: { rx: 40, ry: 10 }, opacity: 0.8 }, { attr: { rx: 520 + k * 140, ry: 70 + k * 18 }, opacity: 0, duration: 1.4, ease: "power1.out", immediateRender: false }, t + k * 0.18);
+        tl.fromTo(`#${id}-foam`, { attr: { rx: 10, ry: 4 }, opacity: 0.9 }, { attr: { rx: 260, ry: 34 }, opacity: 0.5, duration: 0.9, ease: "power2.out", immediateRender: false }, t);
+      };
+      // bubbles rising from (x, y) over a shot
+      const bubbles = (L, tl, id, t0, dur, x, y, n = 14, spread = 260, layer = "act") => {
+        put(L[layer], `<g id="${id}">${Array.from({ length: n }, (_, k) => `<circle id="${id}-${k}" cx="${x + ((k * 97) % spread) - spread / 2}" cy="${y}" r="${4 + (k % 4) * 3}" fill="none" stroke="#d8f0f0" stroke-width="2.5" opacity="0"/>`).join("")}</g>`);
+        for (let k = 0; k < n; k++) tl.fromTo(`#${id}-${k}`, { y: 0, opacity: 0.8 }, { y: -(380 + (k % 5) * 90), opacity: 0, duration: 1.6 + (k % 3) * 0.4, repeat: Math.ceil(dur / 1.6), ease: "power1.in", immediateRender: false }, t0 + (k % 7) * 0.22);
+      };
+      // under the water: the car's dark belly above, its headlights cutting two beams through the murk, silt drifting, bubbles
+      Sets.under = (L, o = {}) => {
+        const id = o.id || "uw";
+        put(L.sky, `<defs><linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a5a50"/><stop offset=".45" stop-color="#0e2a26"/><stop offset="1" stop-color="#020806"/></linearGradient>
+          <linearGradient id="${id}-beam" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8f8d8" stop-opacity=".5"/><stop offset="1" stop-color="#e8f8d8" stop-opacity="0"/></linearGradient></defs>
+          <rect x="-1200" y="-800" width="3500" height="3600" fill="url(#${id}-g)"/>
+          <path d="M-1200,170Q-600,140 0,170T1200,165T2300,170V-800H-1200Z" fill="#6aa89a" opacity=".35"/>`);
+        put(L.far, `<g opacity=".6">${Array.from({ length: 60 }, (_, k) => `<circle cx="${-500 + ((k * 211) % 2100)}" cy="${200 + ((k * 389) % 1700)}" r="${1.5 + (k % 3)}" fill="#c8e8d0" opacity="${0.2 + (k % 4) * 0.12}"/>`).join("")}</g>`);
+        put(L.set, `<g transform="translate(560,180) rotate(18)"><path d="M-420,40Q-430,-40 -380,-70H360Q430,-60 440,10L420,80H-400Z" fill="#06100e" stroke="#0e2420" stroke-width="6"/>
+          <circle cx="-260" cy="80" r="70" fill="#040a08"/><circle cx="250" cy="80" r="70" fill="#040a08"/></g>`);
+        put(L.glow, `<path id="${id}-b1" d="M930,330L1700,1900H300Z" fill="url(#${id}-beam)" opacity=".8"/><path id="${id}-b2" d="M860,300L1300,1950H-200Z" fill="url(#${id}-beam)" opacity=".55"/>
+          <circle cx="930" cy="320" r="34" fill="#f4ffe8" opacity=".9"/><circle cx="860" cy="292" r="28" fill="#f4ffe8" opacity=".8"/>`);
+      };
+      // the cabin's light: the blue instrument glow on the faces, light off the water shimmering on the ceiling
+      const cabinLight = (L, tl, id, t0, dur) => {
+        put(L.glow, `<radialGradient id="${id}-dg"><stop offset="0" stop-color="#6ab8ff" stop-opacity=".45"/><stop offset="1" stop-color="#6ab8ff" stop-opacity="0"/></radialGradient>
+          <ellipse id="${id}-dash-glow" cx="300" cy="1180" rx="420" ry="260" fill="url(#${id}-dg)"/>
+          <g id="${id}-caus" opacity=".35">${Array.from({ length: 7 }, (_, k) => `<path d="M${-100 + k * 180},${180 + (k % 2) * 30}q60,-30 120,0t120,0" stroke="#bff0e0" stroke-width="5" fill="none"/>`).join("")}</g>`);
+        tl.fromTo(`#${id}-caus`, { x: -40 }, { x: 40, duration: 1.6, repeat: Math.ceil(dur / 1.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+      };
+      const flickerOut = (L, tl, id, t0, dur) => {
+        put(L.light, `<rect id="${id}-dk" width="1080" height="1920" fill="#000" opacity="0"/>`);
+        [[0.3, 0.7], [0.5, 0], [0.9, 0.8], [1.05, 0.1], [1.5, 0.85], [1.62, 0.2], [2.1, 0.9]].forEach(([t, o]) => tl.set(`#${id}-dk`, { opacity: o }, t0 + t));
+      };
+      // an unlit motorbike and its rider, seen in the headlights (a dark silhouette, the reflector strip only)
+      const bikeShape = `<g><circle cx="-70" cy="0" r="46" fill="#0a0c10"/><circle cx="80" cy="0" r="46" fill="#0a0c10"/><path d="M-70,0L-10,-70H60L80,0" stroke="#0a0c10" stroke-width="22" fill="none"/>
+        <path d="M-20,-70Q-10,-180 20,-200Q60,-210 64,-160L50,-70Z" fill="#0c0e12"/><circle cx="34" cy="-230" r="36" fill="#0c0e12"/><rect x="-96" y="-36" width="36" height="10" fill="#c83a2a" opacity=".85"/></g>`;
+      // HUD: the countdown as a ring that drains, with the seconds in the middle
+      const ring = (L, tl, t0, dur, id, from, o = {}) => {
+        const x = o.x ?? 880, y = o.y ?? 250, R = 74, C = 2 * Math.PI * R;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><circle r="${R + 22}" fill="#0a0e14" opacity=".82"/><circle r="${R}" fill="none" stroke="#2a3038" stroke-width="14"/>
+          <circle id="${id}-arc" r="${R}" fill="none" stroke="#ff5a3a" stroke-width="14" stroke-linecap="round" transform="rotate(-90)" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - from / 60)}"/>
+          <text id="${id}-v" y="14" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#fff">${from}</text>
+          <text y="56" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="22" fill="#ff8a6a">วินาที</text></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.5, svgOrigin: `${x} ${y}` }, { opacity: 1, scale: 1, svgOrigin: `${x} ${y}`, duration: 0.3, ease: "back.out(2.4)", immediateRender: false }, t0);
+        const to = Math.max(0, from - (o.rate ?? 1) * dur), c = { s: from }, el = document.getElementById(`${id}-v`), arc = document.getElementById(`${id}-arc`);
+        tl.fromTo(c, { s: from }, { s: to, duration: dur, ease: "none", immediateRender: false, onUpdate: () => { el.textContent = Math.ceil(c.s); arc.setAttribute("stroke-dashoffset", C * (1 - c.s / 60)); } }, t0);
+        if (from - to > 0 && to < 12) tl.fromTo(`#${id}-arc`, { attr: { stroke: "#ff5a3a" } }, { attr: { stroke: "#ff2020" }, duration: 0.25, yoyo: true, repeat: Math.ceil(dur / 0.25), immediateRender: false }, t0);
+      };
+      // HUD: a step chip with a pictogram (belt, door, window, kid, phone), a tick or a cross
+      const PICT = {
+        belt: `<path d="M-18,-22L18,22" stroke="#fff" stroke-width="9" stroke-linecap="round"/><rect x="-8" y="-6" width="16" height="12" rx="3" fill="#ffd23a"/>`,
+        door: `<rect x="-20" y="-24" width="40" height="48" rx="6" fill="none" stroke="#fff" stroke-width="6"/><path d="M8,0h8" stroke="#fff" stroke-width="6" stroke-linecap="round"/>`,
+        window: `<rect x="-22" y="-22" width="44" height="34" rx="6" fill="none" stroke="#fff" stroke-width="6"/><path d="M0,-12V12M-9,4L0,14L9,4" stroke="#7ad0ff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+        kid: `<circle cy="-16" r="9" fill="#fff"/><path d="M0,-6V12M0,12L-9,24M0,12L9,24M-11,0H11" stroke="#fff" stroke-width="6" stroke-linecap="round"/>`,
+        phone: `<rect x="-14" y="-24" width="28" height="48" rx="6" fill="none" stroke="#fff" stroke-width="6"/><circle cy="16" r="3" fill="#fff"/>`,
+      };
+      const chip = (L, tl, t0, dur, id, icon, text, ok = true, o = {}) => {
+        const x = o.x ?? 60, y = o.y ?? 360, w = 120 + text.length * 30, c = ok ? "#3ad06a" : "#ff4a3a";
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><rect x="6" y="8" width="${w}" height="96" rx="30" fill="#000" opacity=".3"/>
+          <rect width="${w}" height="96" rx="30" fill="#0e1218" opacity=".9" stroke="${c}" stroke-width="5"/><g transform="translate(52,48)">${PICT[icon]}</g>
+          <text x="96" y="62" font-family="Kanit" font-weight="800" font-size="40" fill="#fff">${text}</text>
+          <g transform="translate(${w - 34},20)"><circle r="20" fill="${c}"/>${ok ? `<path d="M-9,0l6,7l12,-14" stroke="#0e1218" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` : `<path d="M-8,-8L8,8M8,-8L-8,8" stroke="#fff" stroke-width="6" stroke-linecap="round"/>`}</g></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0);
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
+      };
+      // a fact tag under a chip: the number and its source, small
+      const fact = (L, tl, t0, dur, id, text, src, o = {}) => {
+        const x = o.x ?? 60, y = o.y ?? 470;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><text font-family="Kanit" font-weight="800" font-size="34" fill="#ffd23a">${text}</text>
+          <text y="36" font-family="Kanit" font-weight="400" font-size="22" fill="#9aa4b0">${src}</text></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0);
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
+      };
+      // the phone on the seat: lit screen, the water creeping round it
+      const phoneInsert = (L, id) => {
+        put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#14181e"/>`);
+        put(L.set, `<path d="M-900,700Q540,620 2000,700V2600H-900Z" fill="#2a2e36"/><path d="M-900,760Q540,690 2000,760" stroke="#3a3e46" stroke-width="10" fill="none"/>
+          <g transform="translate(560,1150) rotate(-12)"><rect x="-150" y="-300" width="300" height="600" rx="40" fill="#0a0c10" stroke="#3a3e46" stroke-width="8"/><rect x="-130" y="-270" width="260" height="540" rx="26" fill="#1e3a5a"/>
+            <text y="-120" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#fff">โทรฉุกเฉิน</text><text y="10" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="96" fill="#fff">1669</text>
+            <circle cy="170" r="54" fill="#3ad06a"/><path d="M-18,160q10,30 36,30" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/></g>`);
+        put(L.act, `<g id="${id}-wt"><rect x="-900" y="1500" width="2900" height="1400" fill="#2a4a3a" opacity=".7"/><path d="M-900,1500Q-300,1484 300,1500T1500,1500T2000,1500" stroke="#9fc8b8" stroke-width="6" fill="none" opacity=".7"/></g>`);
+      };
+      // her window from inside (carWindow), the child's finger on her own switch below the glass
+      const kidSwitch = (L, id) => put(L.act, `<g transform="translate(540,1480)"><rect x="-90" y="-50" width="180" height="100" rx="20" fill="#30343c" stroke="${INK}" stroke-width="5"/><path d="M-22,12L0,-14L22,12" stroke="#9aa2aa" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <g id="${id}-kf" transform="translate(70,150)"><path d="M-26,0Q-32,-80 -12,-100Q14,-112 28,-92Q40,-40 34,30L40,300H-40Z" fill="#ebc19c" stroke="${INK}" stroke-width="4"/></g></g>`);

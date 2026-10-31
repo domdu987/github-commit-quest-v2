@@ -1,0 +1,228 @@
+      // ---------- นาทีก่อนจม EP.1 อย่าเพิ่งโทรหาใคร ----------
+      // the planted mistake: at 0:04 ต้น presses the window lock so ขิม stops playing with her window; the narrator reveals it at the end
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      Sets.canal = (L, o) => Canal.rich(L, o);
+      Sets.lockIns = (L, o) => lockInsert(L, o.id, o);
+      Sets.phoneIns = (L, o) => phoneInsert(L, o.id);
+      const CAB = (id) => ({ set: "carInterior", setOpts: { id }, dark: 0.12, light: CABIN, grade: GNIGHT, blur: { sky: 4 } });
+      const TON = (eyes, mouth) => A("boss", 270, 1390, 0.62, [{ t: 0, mode: "idle", eyes, mouth }]);
+      const KIM = (eyes, mouth, talk) => A("mint", 560, 1310, 0.4, [{ t: 0, mode: "idle", eyes, mouth }], talk ? { talk } : {});
+      const WIN = (id) => ({ set: "carWindow", setOpts: { id, face: 0, knock: 0 }, dark: 0.1, light: false, grade: GWATER });
+      const outside = (L, tl, id, t0, dur, y0, y1) => {   // the canal outside the side window, rising
+        put(L.far, `<g id="${id}"><rect x="-900" y="0" width="2900" height="2400" fill="#14302a" opacity=".95"/><path d="M-900,0Q-300,-16 300,0T1500,0T2000,0" stroke="#8fc0b0" stroke-width="7" fill="none" opacity=".7"/></g>`);
+        tl.set(`#${id}`, { y: y0 }, 0); tl.fromTo(`#${id}`, { y: y0 }, { y: y1, duration: dur, ease: "none", immediateRender: false }, t0);
+      };
+
+      // ---------- 1. hook: the canal road at night, headlights along the dark water ----------
+      add("hook", {
+        set: "canal", setOpts: { id: "cn0" }, dark: 0.04, light: NIGHT, grade: GNIGHT, blur: { sky: 0, far: 1.5, mid: 0.6, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(560, 990, 1.08, 540, 980) }, { t: D("hook"), glide: D("hook"), ...fr(600, 1000, 1.18, 540, 980) }] },
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          Canal.life(tl, "cn0", t0, D("hook"));
+          Canal.lights(L, "c0l", -200, RY + 10, 0.42); Canal.car(L, "c0", -200, RY + 10, 0.42, { beam: 0 });
+          tl.fromTo(["#c0-r", "#c0l-lt"], { x: 0 }, { x: 760, duration: D("hook"), ease: "none", immediateRender: false }, t0);
+        },
+      });
+      // ---------- 2. the command, over the planted mistake: his finger on the window lock (the LED comes on at 0:04) ----------
+      add("lock", {
+        set: "lockIns", setOpts: { id: "lk0" }, dark: 0.05, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(560, 980, 1.15, 540, 960), drift: { s: 0.03 } }] },
+        captions: caps("lock"),
+        fx(tl, id, t0) { pressLock(tl, "lk0", t0 + 0.75); },
+      });
+      // ---------- 3. the car afloat, nose down: the minute starts ----------
+      add("float", {
+        set: "canal", setOpts: { id: "cn1" }, dark: 0.08, light: NIGHT, grade: GNIGHT, blur: { far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(600, 1120, 1.7, 540, 1000) }, { t: D("float"), glide: D("float"), ...fr(610, 1130, 1.85, 540, 1000) }] },
+        captions: caps("float"),
+        fx(tl, id, t0, L) {
+          Canal.life(tl, "cn1", t0, D("float"));
+          Canal.car(L, "c1", 560, WY + 42, 0.42, { beam: 0 }); tl.set("#c1-r", { rotation: 15, svgOrigin: "0 0" }, t0);
+          tl.fromTo("#c1-r", { y: 0 }, { y: 6, duration: 0.9, repeat: Math.ceil(D("float") / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Canal.front(L, "c1f", WY + 8); bubbles(L, tl, "c1bb", t0, D("float"), 700, WY + 10, 10, 220);
+          ring(L, tl, t0 + 0.4, D("float") - 0.4, "rg1", 60);
+        },
+      });
+      // ---------- 4. under the water: the beams in the murk ----------
+      add("all", {
+        set: "under", setOpts: { id: "uw0" }, dark: 0, light: false, grade: GWATER, blur: { far: 2 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("all"), glide: D("all"), ...fr(560, 1000, 1.1, 540, 960) }] },
+        captions: caps("all"),
+        fx(tl, id, t0, L) {
+          bubbles(L, tl, "uwbb", t0, D("all"), 620, 520, 18, 500);
+          tl.fromTo("#uw0-b1", { opacity: 0.8 }, { opacity: 0.55, duration: 0.18, yoyo: true, repeat: 7, immediateRender: false }, t0 + 0.8);
+        },
+      });
+      // ---------- 5. 1 a.m., the drive home ----------
+      add("drive", {
+        set: "carPOV", setOpts: { id: "pv0", fig: 0, clock: "01:00", sleeve: "#4f9a5a", cuff: "#6ab878" }, dark: 0.1, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        captions: caps("drive"),
+      });
+      // ---------- 6. an unlit motorbike in the headlights → the swerve ----------
+      add("swerve", {
+        set: "carPOV", setOpts: { id: "pv1", fig: 0, clock: "01:00", sleeve: "#4f9a5a", cuff: "#6ab878" }, dark: 0.1, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        shake: (t) => { const k = Math.max(0, t - (D("swerve") - 0.9)); return { x: -180 * Math.min(1, k / 0.5) + 8 * Math.sin(t * 40) * (k > 0), y: 6 * Math.sin(t * 37) * (k > 0), r: -9 * Math.min(1, k / 0.5) }; },
+        captions: caps("swerve"),
+        fx(tl, id, t0, L) {
+          put(L.act, `<g transform="translate(540,1010)"><g id="bk">${bikeShape}</g></g>`);
+          tl.fromTo("#bk", { scale: 0.12, opacity: 0, svgOrigin: "0 0" }, { scale: 1.9, opacity: 1, svgOrigin: "0 0", duration: D("swerve") - 0.6, ease: "power2.in", immediateRender: false }, t0 + 0.15);
+        },
+      });
+      // ---------- 7. outside: off the bank and into the canal ----------
+      add("plunge", {
+        set: "canal", setOpts: { id: "cn2" }, dark: 0.06, light: NIGHT, grade: GNIGHT, blur: { far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(480, 1060, 1.35, 540, 980), drift: { s: 0 } }] },
+        shake: (t) => (t > 0.72 && t < 1.3 ? { x: 14 * Math.sin(t * 60), y: 10 * Math.sin(t * 53), r: 0 } : 0),
+        fx(tl, id, t0, L) {
+          Canal.life(tl, "cn2", t0, D("plunge"));
+          Canal.car(L, "c2", 220, RY + 10, 0.42, { beam: 0 });
+          tl.fromTo("#c2-r", { x: 0, y: 0, rotation: 0, svgOrigin: "0 0" }, { x: 340, y: WY - RY + 26, rotation: 24, svgOrigin: "0 0", duration: 0.75, ease: "power2.in", immediateRender: false }, t0);
+          tl.to("#c2-r", { y: WY - RY + 40, rotation: 16, duration: 0.8, ease: "power2.out" }, t0 + 0.75);
+          Canal.front(L, "c2f", WY + 10); Canal.splash(L, tl, "c2s", 640, WY + 4, t0 + 0.72);
+        },
+      });
+      // ---------- 8. inside: the jolt, water spurting at the door seals; the countdown appears ----------
+      add("inrush", {
+        ...CAB("ci0"),
+        cam: { keys: [{ t: 0, ...fr(420, 1180, 1.25, 540, 1000), drift: { s: 0.03 } }] },
+        shake: (t) => (t < 0.6 ? { x: 16 * Math.sin(t * 50) * (1 - t / 0.6), y: 12 * Math.sin(t * 43) * (1 - t / 0.6), r: 1.5 * Math.sin(t * 31) } : 0),
+        actors: [TON("wide", "scream"), KIM("wide", "scream")],
+        fx(tl, id, t0, L) {
+          cabinTop(L, "ci0"); cabinLight(L, tl, "ci0", t0, D("inrush"));
+          put(L.act, `<g id="ci0sp">${[[90, 900], [1000, 900], [120, 1100], [980, 1080]].map(([x, y], k) => `<path id="ci0sp${k}" d="M${x},${y}q${x < 540 ? 60 : -60},20 ${x < 540 ? 110 : -110},90" stroke="#d8f0f0" stroke-width="10" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}</g>`);
+          [0, 1, 2, 3].forEach((k) => tl.fromTo(`#ci0sp${k}`, { opacity: 0 }, { opacity: 0.9, duration: 0.12, yoyo: true, repeat: 9, immediateRender: false }, t0 + 0.2 + k * 0.07));
+          ring(L, tl, t0 + 0.5, D("inrush") - 0.5, "rg2", 58);
+        },
+      });
+      // ---------- 9. step 1: no phone, the seatbelt ----------
+      add("belt", {
+        ...CAB("ci1"),
+        cam: { keys: [{ t: 0, ...fr(300, 1180, 1.6, 540, 1080) }, { t: D("belt"), glide: D("belt"), ...fr(300, 1180, 1.7, 540, 1080) }] },
+        actors: [TON("wide", "flat"), KIM("wide", "o")],
+        captions: caps("belt"),
+        fx(tl, id, t0, L) {
+          cabinWater(L, tl, "ci1", t0, D("belt"), 1340, 1280); cabinTop(L, "ci1"); cabinLight(L, tl, "ci1", t0, D("belt"));
+          chip(L, tl, t0 + 0.2, D("belt") - 0.2, "cp1", "phone", "อย่าแตะมือถือ", false); chip(L, tl, F("belt", 0, 1), D("belt") - F("belt", 0, 1), "cp2", "belt", "ปลดเข็มขัด", true, { y: 480 });
+          ring(L, tl, t0, D("belt"), "rg3", 52);
+        },
+      });
+      // ---------- 10. the door: the water outside holds it shut ----------
+      add("door", {
+        ...WIN("cw0"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("door"),
+        fx(tl, id, t0, L) {
+          outside(L, tl, "cw0o", t0, D("door"), 980, 860);
+          chip(L, tl, t0 + 0.2, D("door") - 0.2, "cp3", "door", "ประตูเปิดไม่ออก", false, { y: 160 });
+          fact(L, tl, F("door", 0, 1), D("door") - F("door", 0, 1), "fc3", "น้ำดันประตูไว้ 750–1,000 นิวตัน", "≈ 76–102 กิโลกรัมแรง · McDonald & Giesbrecht 2013", { y: 300 });
+          ring(L, tl, t0, D("door"), "rg4", 47);
+        },
+      });
+      // ---------- 11. his window: down, now ----------
+      add("window", {
+        ...WIN("cw1"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("window"),
+        fx(tl, id, t0, L) {
+          outside(L, tl, "cw1o", t0, D("window"), 860, 760);
+          tl.fromTo("#cw1-glass", { y: 0 }, { y: 760, duration: 1.4, ease: "power1.in", immediateRender: false }, t0 + 0.5);
+          chip(L, tl, t0 + 0.2, D("window") - 0.2, "cp4", "window", "เปิดกระจกทันที", true, { y: 160 });
+          fact(L, tl, F("window", 0, 1), D("window") - F("window", 0, 1), "fc4", "กระจกไฟฟ้าอาจใช้ได้แค่ 15–60 วินาที", "Giesbrecht 2016 · University of Manitoba", { y: 300 });
+          ring(L, tl, t0, D("window"), "rg5", 41);
+        },
+      });
+      // ---------- 12. ขิม: her belt, children out first ----------
+      add("kid", {
+        ...CAB("ci2"),
+        cam: { keys: [{ t: 0, ...fr(480, 1120, 1.5, 540, 1040) }, { t: D("kid"), glide: D("kid"), ...fr(520, 1110, 1.62, 540, 1040) }] },
+        actors: [TON("worry", "o"), KIM("wide", "scream")],
+        captions: caps("kid"),
+        fx(tl, id, t0, L) {
+          cabinWater(L, tl, "ci2", t0, D("kid"), 1250, 1170); cabinTop(L, "ci2"); cabinLight(L, tl, "ci2", t0, D("kid"));
+          bubbles(L, tl, "ci2bb", t0, D("kid"), 540, 1220, 10, 600);
+          chip(L, tl, t0 + 0.2, D("kid") - 0.2, "cp5", "kid", "ส่งเด็กออกก่อน", true, { y: 160 });
+          fact(L, tl, F("kid", 0, 1), D("kid") - F("kid", 0, 1), "fc5", "เด็กหลายคน: คนโตก่อน แล้วไล่ไปคนเล็ก", "Giesbrecht · University of Manitoba", { y: 300 });
+          ring(L, tl, t0, D("kid"), "rg6", 34);
+        },
+      });
+      // ---------- 13. the phone on the seat; call once ashore ----------
+      add("phone", {
+        set: "phoneIns", setOpts: { id: "ph0" }, dark: 0.1, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 1.2, 540, 1000) }, { t: D("phone"), glide: D("phone"), ...fr(560, 1100, 1.3, 540, 1000) }] },
+        captions: caps("phone"),
+        fx(tl, id, t0, L) {
+          tl.fromTo("#ph0-wt", { y: 0 }, { y: -220, duration: D("phone"), ease: "none", immediateRender: false }, t0);
+          chip(L, tl, t0 + 0.2, D("phone") - 0.2, "cp6", "phone", "ขึ้นฝั่งแล้วค่อยโทร", true, { y: 160 });
+          fact(L, tl, F("phone", 0, 1), D("phone") - F("phone", 0, 1), "fc6", "1669 เจ็บป่วยฉุกเฉิน · 191 เหตุด่วน", "แล้วไปโรงพยาบาลทุกราย · กรมควบคุมโรค", { y: 300 });
+          ring(L, tl, t0, D("phone"), "rg7", 30);
+        },
+      });
+      // ---------- 14. the twist: rewind to 0:04 ----------
+      add("rw", {
+        set: "lockIns", setOpts: { id: "lk1", on: true }, dark: 0.12, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(700, 1020, 1.3, 540, 980) }, { t: D("rw"), glide: D("rw"), ...fr(730, 1005, 1.75, 540, 980) }] },
+        captions: caps("rw"),
+        fx(tl, id, t0, L) { rewind(L, tl, t0, D("rw"), "0:04"); tl.fromTo("#lk1-led", { opacity: 1 }, { opacity: 0.4, duration: 0.3, yoyo: true, repeat: Math.ceil(D("rw") / 0.3), immediateRender: false }, t0); },
+      });
+      // ---------- 15. ขิม's window: she presses, nothing ----------
+      add("kim", {
+        ...WIN("cw2"),
+        cam: { keys: [{ t: 0, ...fr(540, 1060, 1.08, 540, 1000), drift: { s: 0.03 } }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 23), y: 2 * Math.sin(t * 19), r: 0 }),
+        captions: caps("kim", undefined, QUO),
+        fx(tl, id, t0, L) {
+          outside(L, tl, "cw2o", t0, D("kim"), 760, 680);
+          kidSwitch(L, "ks");
+          tl.fromTo("#ks-kf", { y: 0 }, { y: -30, duration: 0.14, yoyo: true, repeat: Math.ceil(D("kim") / 0.14), ease: "power2.inOut", immediateRender: false }, t0 + 0.3);
+          ring(L, tl, t0, D("kim"), "rg8", 18);
+        },
+      });
+      // ---------- 16. the lock's light, still on ----------
+      add("led", {
+        set: "lockIns", setOpts: { id: "lk2", on: true }, dark: 0.45, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(730, 1005, 2.2, 540, 960) }, { t: D("led"), glide: D("led"), ...fr(730, 1005, 2.45, 540, 960) }] },
+        captions: caps("led"),
+        fx(tl, id, t0, L) {
+          tl.set("#lk2-finger", { opacity: 0 }, t0);
+          put(L.glow, `<circle id="lk2-halo" cx="786" cy="949" r="60" fill="#ff8a2a" opacity=".5"/>`);
+          tl.fromTo("#lk2-halo", { scale: 0.7, svgOrigin: "786 949" }, { scale: 1.3, svgOrigin: "786 949", duration: 0.5, yoyo: true, repeat: Math.ceil(D("led") / 0.5), immediateRender: false }, t0);
+          ring(L, tl, t0, D("led"), "rg9", 15);
+        },
+      });
+      // ---------- 17. her window on his own panel: nothing (some cars lock every window but the driver's) ----------
+      add("panel", {
+        set: "lockIns", setOpts: { id: "lk3", on: true }, dark: 0.1, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(480, 1060, 1.35, 540, 980), drift: { s: 0.02 } }] },
+        captions: caps("panel"),
+        fx(tl, id, t0, L) {
+          tl.fromTo("#lk3-finger", { x: 0, y: 0 }, { x: -440, y: 240, duration: 0.45, ease: "power2.out", immediateRender: false }, t0 + 0.2);
+          tl.to("#lk3-finger", { y: 258, duration: 0.09, yoyo: true, repeat: 5 }, t0 + 0.7);
+          put(L.light, `<g id="lk3x" opacity="0" transform="translate(${290},${1092})"><circle r="70" fill="#ff2a2a" opacity=".25"/><path d="M-34,-34L34,34M34,-34L-34,34" stroke="#ff4a3a" stroke-width="14" stroke-linecap="round"/></g>`);
+          tl.fromTo("#lk3x", { opacity: 0 }, { opacity: 1, duration: 0.1, yoyo: true, repeat: 5, immediateRender: false }, t0 + 0.75);
+          ring(L, tl, t0, D("panel"), "rg10", 12);
+        },
+      });
+      // ---------- 18. the dash flickers; single digits ----------
+      add("flicker", {
+        ...CAB("ci3"),
+        cam: { keys: [{ t: 0, ...fr(480, 1100, 1.45, 540, 1040), drift: { s: 0.04 } }] },
+        actors: [TON("wide", "o"), KIM("wide", "scream")],
+        captions: caps("flicker"),
+        fx(tl, id, t0, L) {
+          cabinWater(L, tl, "ci3", t0, D("flicker"), 1120, 1010); cabinTop(L, "ci3"); cabinLight(L, tl, "ci3", t0, D("flicker"));
+          bubbles(L, tl, "ci3bb", t0, D("flicker"), 540, 1060, 14, 700);
+          flickerOut(L, tl, "ci3", t0, D("flicker"));
+          ring(L, tl, t0, D("flicker"), "rg11", 9);
+        },
+      });
+      // ---------- 19. next episode ----------
+      add("next", {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        fx(tl, id, t0, L) { nextCard(L, tl, t0, D("next"), "ถ้ากระจกไม่ลง…", "อย่าทุบกระจกหน้า", "กดติดตาม แล้วพาขิมออกไปด้วยกัน"); },
+      });
