@@ -1,0 +1,119 @@
+      // ---------- ต่อหัวเสือ EP.3 อย่าเชื่อคำว่าไม่เป็นไร (ตอนจบ) ----------
+      // grammar: dusk at the shrine, ยาย covers her arm (0:02, the planted mistake) → the stings revealed → card: poison later → ยาย laughs it off →
+      // card: first aid ✓ → card: not enough, >10 → night, the tea-dark cup → ภูมิ: "ต้องไปหาหมอ" → ยาย's own rule (board 3) → danger signs / 1669 →
+      // map to the hospital → ↺ 0:02 → ลุงสิงห์'s scars at the hospital bench → the rumour turned → morning in the ward → the series end card
+      const SUN = { from: "left", rim: "#ffd8a8", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.3, cast: { len: 1.4, op: 0.3 }, vol: false };
+      const NIGHTL = { from: "right", rim: "#ffd9a0", rimOp: 0.55, shade: "#0e1422", shadeOp: 0.42, cast: false, vol: false };
+      const TUBE = { from: "left", rim: "#e8fff4", rimOp: 0.6, shade: "#102028", shadeOp: 0.4, cast: { len: 1.2, op: 0.3 }, vol: false };
+      const GDUSK = { top: "#ffd0a0", bottom: "#6a4a6a", op: 0.18 }, GNT = { top: "#1a2a5a", bottom: "#2a1a3a", op: 0.3 }, GWARD = { top: "#2a4a5a", bottom: "#1a2a3a", op: 0.25 }, GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m = "o") => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      const BLUR = { sky: 4, far: 6, mid: 6, set: 5, act: 5, fg: 8 };
+      const Y3 = (id, o = {}) => ({ set: "hnYard", setOpts: { id, time: "dusk", house: [-700, 0.9], pond: 1600, ...o }, dark: 0.04, light: SUN, grade: GDUSK, blur: { far: 1, fg: 6 } });
+      const bench = (L) => put(L.set, Hn.bench(880, 1340, 0.8));
+      // the stings on ยาย's forearm (world coords near her front arm when sitting at the bench), and the cloth that hides them
+      const STINGS = [[700, 1300], [718, 1290], [736, 1302], [752, 1288], [770, 1298], [786, 1290], [802, 1300], [744, 1310], [712, 1312]];
+      const stings = (L, id) => put(L.glow, `<g id="${id}">${STINGS.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="#ff7a6a" opacity=".6"/><circle cx="${x}" cy="${y}" r="2.6" fill="#a01e18"/>`).join("")}</g>`);
+      const cloth = (L, id) => put(L.glow, `<g id="${id}"><path d="M690,1268Q755,1258 822,1270L826,1322Q755,1334 686,1322Z" fill="#c8402a" stroke="#2e2a26" stroke-width="4"/>
+        <path d="M700,1268v58M725,1265v62M750,1264v64M775,1265v62M800,1267v58" stroke="#2a6ac8" stroke-width="5"/></g>`);
+      const YAI = (mode, eyes, mouth, extra = {}) => A("yaiBua", 880, 1462, 0.86, [{ t: 0, mode, eyes, mouth }], { flip: true, ...extra });
+
+      // ---------- 1. hook: dusk at the shrine; ยาย smiles, draws the cloth over her arm (0:02) ----------
+      add("hook", { ...Y3("t0"), extra: bench,
+        cam: { keys: [{ t: 0, ...fr(820, 1130, 1.25, 540, 1040) }, { t: D("hook"), glide: D("hook"), ...fr(860, 1170, 1.6, 540, 1040) }] },
+        actors: [YAI("sitChair", "normal", "smile"), A("phum", 560, 1500, 0.72, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])],
+        captions: caps("hook"),
+        fx(tl, id, t0, L) { stings(L, "t0s"); cloth(L, "t0c"); tl.set("#t0c", { opacity: 0 }, 0);
+          tl.fromTo("#t0c", { opacity: 1, x: 120, y: -60, rotation: -20, svgOrigin: "755 1295" }, { x: 0, y: 0, rotation: 0, svgOrigin: "755 1295", duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + 1.6); } });
+      // ---------- 2. "อย่าเชื่อ": the cloth slips, the stings ----------
+      add("cmd", { ...Y3("t1"), extra: bench, cam: { keys: [{ t: 0, ...fr(755, 1295, 3.2, 540, 960), drift: { s: 0.03 } }] },
+        actors: [YAI("sitChair", "closed", "smile")], captions: caps("cmd"),
+        fx(tl, id, t0, L) { stings(L, "t1s"); cloth(L, "t1c"); tl.set("#t1c", { opacity: 1, x: 0, y: 0 }, t0);
+          tl.to("#t1c", { y: 160, x: 40, rotation: 14, svgOrigin: "755 1295", opacity: 0, duration: 0.5, ease: "power2.in" }, t0 + 0.3); } });
+      // ---------- 3. card: the poison comes later ----------
+      add("why", { ...Y3("t2"), extra: bench, blur: BLUR, actors: [YAI("sitChair", "closed", "smile")], cam: { keys: [{ t: 0, ...fr(850, 1150, 1.3, 540, 1000) }] }, captions: caps("why"),
+        fx(tl, id, t0, L) { HnUI.kidney(tl, L.light, t0 + 0.1, D("why") - 0.1, { y: 330 }); } });
+      // ---------- 4. ยาย laughs it off, ice on her arm ----------
+      add("yai", { ...Y3("t3"), extra: bench, cam: { keys: [{ t: 0, ...fr(860, 1100, 2.1, 540, 1040) }] },
+        actors: [YAI("sitChair", "closed", "laugh", { talk: [TALK("yai", 0, "laugh")] })], captions: caps("yai", undefined, QUO),
+        fx(tl, id, t0, L) { put(L.glow, `<g><rect x="805" y="1170" width="90" height="60" rx="16" fill="#e8e4d8" stroke="#2e2a26" stroke-width="4"/>${[825, 850, 875].map((x) => `<rect x="${x - 9}" y="1188" width="18" height="18" rx="3" fill="#bfe4f8" stroke="#6aaad0" stroke-width="2"/>`).join("")}</g>`); } });
+      // ---------- 5. card: first aid, right ----------
+      add("aid", { ...Y3("t4"), extra: bench, blur: BLUR, actors: [YAI("sitChair", "closed", "smile")], cam: { keys: [{ t: 0, ...fr(850, 1150, 1.3, 540, 1000) }] }, captions: caps("aid"),
+        fx(tl, id, t0, L) { HnUI.aid(tl, L.light, t0 + 0.1, D("aid") - 0.1, { y: 380, at: [F("aid", 0, 0) + 0.5, F("aid", 0, 1) + 0.5, F("aid", 0, 1) + 1.2] }); } });
+      // ---------- 6. card: not enough — past ten ----------
+      add("count", { ...Y3("t5"), extra: bench, blur: BLUR, actors: [YAI("sitChair", "closed", "smile")], cam: { keys: [{ t: 0, ...fr(850, 1150, 1.3, 540, 1000) }] }, captions: caps("count"),
+        fx(tl, id, t0, L) { HnUI.count(tl, L.light, t0 + 0.1, D("count") - 0.1, { y: 340 }); } });
+      // ---------- 7. night: ภูมิ sees ยาย come out holding her back → the cup ----------
+      split("night", F("night", 0, 2) - 0.1, { ...Y3("t6", { time: "night", house: [200, 0.9], door: "open", tree: 1500, shrine: 1430, pond: false }), dark: 0.12, light: NIGHTL, grade: GNT,
+        cam: { keys: [{ t: 0, ...fr(330, 1100, 1.1, 540, 1060) }] },
+        actors: [A("yaiBua", 520, 1430, 0.86, [{ t: 0, mode: "walk", eyes: "pain", mouth: "frown", opts: { period: 1.6 } }], { flip: true, moveTo: { x: 300, y: 1420, dur: 3.4, ease: "none" } }),
+          A("phum", 760, 1500, 0.7, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { flip: true })],
+        captions: caps("night"),
+        fx(tl, id, t0, L) { Pop2.particles(tl, L.glow, { type: "firefly", n: 12, box: [-200, 700, 1500, 600], t0, dur: 4, seed: 5 }); } },
+      { ...Y3("t6b", { time: "night", house: [200, 0.9], door: "open", tree: 1500, shrine: 1430, pond: false }), dark: 0.12, light: NIGHTL, grade: GNT, blur: BLUR,
+        cam: { keys: [{ t: 0, ...fr(400, 1100, 1.2, 540, 1060) }] }, captions: capsFrom("night", F("night", 0, 2) - 0.1),
+        fx(tl, id, t0, L) { const d = D("night") - F("night", 0, 2) + 0.1;
+          put(L.light, `<g id="t6cup"><g transform="translate(540,900)"><g filter="url(#muDrop)"><circle r="230" fill="#fdf6e6" stroke="#26201c" stroke-width="5"/></g>
+            <path d="M-80,-120h160l-24,240h-112Z" fill="#fff" stroke="#26201c" stroke-width="5"/><path id="t6u" d="M-72,40h144l-12,80h-120Z" fill="#7a4a1a"/>
+            <path d="M-70,-60h40M-70,-20h30M-70,20h40" stroke="#9a9a9a" stroke-width="3"/><text y="300" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#a01e18">น้อย · สีเข้มเหมือนชา</text></g></g>`);
+          tl.set("#t6cup", { opacity: 0 }, 0); tl.fromTo("#t6cup", { opacity: 0, scale: 0.5, svgOrigin: "540 900" }, { opacity: 1, scale: 1, svgOrigin: "540 900", duration: 0.45, ease: "back.out(2)", immediateRender: false }, t0);
+          tl.to("#t6cup", { opacity: 0, duration: 0.2 }, t0 + d - 0.2); } });
+      // ---------- 8. "ยายต้องไปหาหมอ!" ----------
+      add("phum", { ...Y3("t7", { time: "night", house: [200, 0.9], door: "open", tree: 1500, shrine: 1430, pond: false }), dark: 0.1, light: NIGHTL, grade: GNT,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 2.1, 540, 1060) }] },
+        actors: [A("phum", 560, 1500, 0.78, [{ t: 0, mode: "point", eyes: "angry", mouth: "scream" }], { talk: [TALK("phum", 0, "scream")] })], captions: caps("phum", undefined, QUO) });
+      // ---------- 9. ยาย says her own rule → the board (rule 3) ----------
+      split("rule", 2.2, { ...Y3("t8", { time: "night", house: [200, 0.9], door: "open", tree: 1500, shrine: 1430, pond: false }), dark: 0.1, light: NIGHTL, grade: GNT,
+        cam: { keys: [{ t: 0, ...fr(330, 1080, 2.0, 540, 1060) }] },
+        actors: [A("yaiBua", 330, 1430, 0.86, [{ t: 0, mode: "holdHead", eyes: "closed", mouth: "smile" }], { talk: [TALK("rule", 0, "smile")] })], captions: caps("rule", undefined, QUO) },
+      { ...Y3("t8b", { time: "night", house: [200, 0.9], door: "open", tree: 1500, shrine: 1430, pond: false }), dark: 0.1, light: NIGHTL, grade: GNT, blur: BLUR,
+        cam: { keys: [{ t: 0, ...fr(900, 1100, 1.1, 540, 980) }] }, captions: capsFrom("rule", 2.2, [0], QUO),
+        fx(tl, id, t0, L) { HnUI.rules(tl, L.light, t0, D("rule") - 2.2, { active: 2, done: [0, 1], y: 380 }); } });
+      // ---------- 10. danger signs → 1669 ----------
+      add("danger", { ...Y3("t9", { time: "night", house: [200, 0.9], door: "open", tree: 1500, shrine: 1430, pond: false }), dark: 0.1, light: NIGHTL, grade: GNT, blur: BLUR,
+        cam: { keys: [{ t: 0, ...fr(560, 1080, 1.4, 540, 1060) }] }, actors: [A("phum", 560, 1500, 0.78, [{ t: 0, mode: "phoneEar", eyes: "worry", mouth: "o" }])], captions: caps("danger"),
+        fx(tl, id, t0, L) { HnUI.danger(tl, L.light, t0 + 0.1, D("danger") - 0.1, { y: 330 }); } });
+      // ---------- 11. the map: the pickup to the hospital ----------
+      const V = Maps.VIL;
+      add("drive", {
+        set: "mapVillage", setOpts: { id: "mr", name: "บ้านโนนมะขาม", vehicle: "van", carS: 1.15, from: "บ้านยายบัว", to: "โรงพยาบาล", fromIcon: Maps.ICON.house, toIcon: Maps.ICON.hospital, labDx: [-40, 0], labDy: [0, -20],
+          route: [V.keng, [200, 872], [418, 870], [312, 1000], [300, 1128], [340, 1160], [700, 1162], [1100, 1163], [1240, 1150], V.hospital] },
+        dark: 0, light: false, grade: { top: "#2a3a6a", bottom: "#1a1a3a", op: 0.2 },
+        cam: { keys: [{ t: 0, ...fr(90 + 380, 300 + 960, 1.0, 540, 900) }, { t: 0.5, glide: D("drive") - 0.6, ...fr(90 + 1080, 300 + 1060, 1.0, 540, 900) }] },
+        captions: caps("drive"),
+        fx(tl, id, t0) { tl.set('#mr path[fill="#e2382e"]', { opacity: 0 }, t0); Maps.route(tl, "mr", t0, { go: [0.3, D("drive") - 0.6], ease: "power1.inOut" }); } });
+      // ---------- 12. ↺ 0:02 — the cloth over the stings ----------
+      split("rw", 3.0, { ...Y3("t11"), extra: bench, cam: { keys: [{ t: 0, ...fr(820, 1130, 1.25, 540, 1040) }, { t: 3.0, glide: 2.4, ...fr(755, 1295, 2.6, 540, 1000) }] },
+        actors: [YAI("sitChair", "normal", "smile"), A("phum", 560, 1500, 0.72, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])], captions: caps("rw", [0]),
+        fx(tl, id, t0, L) { rewind(L, tl, t0, 3.0, "0:02"); stings(L, "t11s"); cloth(L, "t11c"); tl.set("#t11c", { opacity: 0 }, 0);
+          tl.fromTo("#t11c", { opacity: 1, x: 120, y: -60, rotation: -20, svgOrigin: "755 1295" }, { x: 0, y: 0, rotation: 0, svgOrigin: "755 1295", duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + 0.8); } },
+      { ...Y3("t11b"), extra: bench, cam: { keys: [{ t: 0, ...fr(755, 1295, 3.0, 540, 1000) }] }, actors: [YAI("sitChair", "closed", "smile")], captions: capsFrom("rw", 3.0, [1]),
+        fx(tl, id, t0, L) { stings(L, "t11bs"); cloth(L, "t11bc"); tl.set("#t11bc", { opacity: 1 }, t0); tl.to("#t11bc", { opacity: 0.25, duration: 0.6 }, t0 + 0.6);
+          put(L.glow, `<ellipse id="t11r" cx="755" cy="1295" rx="95" ry="60" fill="none" stroke="#ff3a2a" stroke-width="8" stroke-dasharray="1 1" pathLength="1"/>`);
+          tl.fromTo("#t11r", { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.6, immediateRender: false }, t0 + 0.3); } });
+      // ---------- 13. the hospital bench at night: ลุงสิงห์, sleeves rolled ----------
+      add("lung", { set: "erFront2", setOpts: { id: "ef" }, dark: 0.1, blur: { far: 3 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 1.5, 540, 1100) }] }, extra(L) { put(L.set, Hn.bench(560, 1360, 0.8)); },
+        actors: [A("lungSing", 560, 1482, 0.86, [{ t: 0, mode: "sitChair", eyes: "closed", mouth: "frown" }], { talk: [TALK("lung", 0, "frown")] })],
+        captions: caps("lung", undefined, QUO) });
+      // ---------- 14. the rumour turned: the old photo on his phone ----------
+      add("truth", { set: "erFront2", setOpts: { id: "ef2" }, dark: 0.1, blur: { far: 3, set: 5 }, light: TUBE, grade: GWARD,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 1.3, 540, 1100) }] }, extra(L) { put(L.set, Hn.bench(560, 1360, 0.8)); },
+        actors: [A("lungSing", 560, 1482, 0.86, [{ t: 0, mode: "sitChair", eyes: "side", mouth: "flat" }]), A("phum", 860, 1500, 0.72, [{ t: 0, mode: "idle", eyes: "side", mouth: "o" }], { flip: true })],
+        captions: caps("truth"),
+        fx(tl, id, t0, L) { put(L.light, `<g id="t13p"><g transform="translate(540,620) rotate(-4)"><g filter="url(#muDrop)"><rect x="-200" y="-330" width="400" height="660" rx="40" fill="#2a2a32" stroke="#26201c" stroke-width="5"/></g>
+            <rect x="-180" y="-300" width="360" height="560" rx="10" fill="#e8f0f4"/><rect x="-150" y="-120" width="300" height="80" rx="10" fill="#fff" stroke="#9aa" stroke-width="3"/>
+            <circle cx="-90" cy="-130" r="40" fill="#a8744a" stroke="#26201c" stroke-width="3"/><path d="M-130,-150q40,-30 80,0" stroke="#e8e4d8" stroke-width="10" fill="none"/>
+            <path d="M120,-280v120M120,-160q-10,30 -40,40" stroke="#6a8aa8" stroke-width="5" fill="none"/><rect x="100" y="-300" width="40" height="40" rx="6" fill="#cfe6f4" stroke="#26201c" stroke-width="3"/>
+            <text y="60" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="36" fill="#26201c">ปีก่อน · โรงพยาบาล</text>
+            ${[[-60, -90], [-30, -100], [0, -88], [30, -96]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="#ff7a6a"/>`).join("")}</g></g>`);
+          tl.set("#t13p", { opacity: 0 }, 0); tl.fromTo("#t13p", { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0 + 0.3); } });
+      // ---------- 15. morning in the ward: ยาย smiling, ภูมิ at the bed ----------
+      add("end", { set: "ward2", setOpts: { id: "w15", time: "day" }, dark: 0.02, blur: { sky: 3 }, light: TUBE, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(600, 1080, 0.95, 540, 1050) }, { t: D("end"), glide: D("end"), ...fr(620, 1080, 1.05, 540, 1050) }] },
+        actors: [A("yaiBua", 560, 1220, 0.75, [{ t: 0, mode: "lie", eyes: "normal", mouth: "smile" }]), A("phum", 880, 1540, 0.74, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
+        captions: caps("end") });
+      // ---------- 16. the series end card ----------
+      add("finale", { set: "ward2", setOpts: { id: "w16", time: "day" }, dark: 0, light: false, grade: GDAY, captions: [],
+        fx(tl, id, t0, L) { HnUI.finale(tl, L.light, t0, D("finale")); } });

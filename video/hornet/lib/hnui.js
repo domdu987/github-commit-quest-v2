@@ -237,3 +237,44 @@
     tl.set(`#${id}`, { opacity: 0 }, 0); tl.to(`#${id}`, { opacity: 1, duration: 0.4 }, t0 + 1);
   };
 })();
+// ---------- EP.3 cards ----------
+(function () {
+  const U = { ink: "#26201c", paper: "#fdf6e6", red: "#d8302a", redD: "#a01e18", green: "#2fa864", greenD: "#1e7a48", water: "#3a8ab8", yellow: "#ffd23a" };
+  const SO = (w = 4) => `stroke="${U.ink}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+  const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+  let seq = 0;
+  const card = (id, x, y, W, H, head, hc) => `<g transform="translate(${x},${y})"><g id="${id}"><g filter="url(#muDrop)"><rect x="${-W / 2}" y="0" width="${W}" height="${H}" rx="36" fill="${U.paper}" ${SO(5)}/></g>
+    <path d="M${-W / 2},36Q${-W / 2},0 ${-W / 2 + 36},0H${W / 2 - 36}Q${W / 2},0 ${W / 2},36V112H${-W / 2}Z" fill="${hc}" ${SO(5)}/><text y="78" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#fff">${head}</text>`;
+  const inOut = (tl, id, t0, dur) => { tl.set(`#${id}`, { opacity: 0 }, 0); tl.fromTo(`#${id}`, { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0); tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2); };
+  const tick = (x, y, id) => `<g transform="translate(${x},${y})"><circle r="30" fill="${U.green}" ${SO(3.5)}/><path id="${id}" d="M-13,0l9,11l18,-21" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/></g>`;
+  // first aid, ticked one by one: soap and water · ice in a cloth · 20 minutes (o.at: tick times relative to t0)
+  HnUI.aid = (tl, layer, t0, dur, o = {}) => {
+    const id = `ha${seq++}`, at = o.at || [0.6, 1.4, 2.2];
+    let c = card(id, 540, o.y ?? 380, 940, 700, "ปฐมพยาบาล", U.greenD);
+    const step = (x, label, art, k) => `<g transform="translate(${x},330)"><circle r="110" fill="#fff" ${SO(4)}/>${art}<text y="164" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="${U.ink}">${label}</text>${tick(80, -80, `${id}-k${k}`)}</g>`;
+    c += step(-300, "น้ำ + สบู่", `<path d="M-60,10h120l-14,60h-92Z" fill="#cfe6f4" ${SO(3)}/><rect x="-30" y="-50" width="60" height="36" rx="12" fill="#f4c8e0" ${SO(3)}/><circle cx="20" cy="-62" r="10" fill="none" stroke="#9ac8e8" stroke-width="3"/><circle cx="-14" cy="-70" r="7" fill="none" stroke="#9ac8e8" stroke-width="3"/>`, 0)
+      + step(0, "ประคบเย็น", `<rect x="-60" y="-36" width="120" height="72" rx="20" fill="#e8e4d8" ${SO(3)}/>${[-30, 0, 30].map((x) => `<rect x="${x - 12}" y="-14" width="24" height="24" rx="4" fill="#bfe4f8" stroke="#6aaad0" stroke-width="2"/>`).join("")}`, 1)
+      + step(300, "20 นาที", `<circle r="70" fill="#fff" ${SO(4)}/><path d="M0,0V-50M0,0L36,20" stroke="${U.ink}" stroke-width="8" stroke-linecap="round"/><path d="M0,-70A70,70 0 0 1 66,22" stroke="${U.green}" stroke-width="10" fill="none"/>`, 2);
+    put(layer, c + `</g></g>`);
+    inOut(tl, id, t0, dur);
+    at.forEach((a, k) => tl.fromTo(`#${id}-k${k}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.3, immediateRender: false }, t0 + a));
+  };
+  // "not enough": a forearm whose stings appear one by one while a counter climbs past 10 → "เสี่ยงอาการรุนแรง"
+  HnUI.count = (tl, layer, t0, dur, o = {}) => {
+    const id = `hc${seq++}`, n = o.n || 14;
+    const dots = Array.from({ length: n }, (_, k) => [-250 + ((k * 137) % 500), -40 + ((k * 61) % 80)]);
+    let c = card(id, 540, o.y ?? 380, 940, 760, "ยังไม่พอ", U.red);
+    c += `<g transform="translate(0,330)"><rect x="-330" y="-70" width="660" height="140" rx="70" fill="#e8b48a" ${SO(4)}/><path d="M330,-50q60,0 60,50q0,50 -60,50" fill="#e8b48a" ${SO(4)}/>
+      ${dots.map(([x, y], k) => `<g id="${id}-d${k}" opacity="0"><circle cx="${x}" cy="${y}" r="16" fill="#ff7a6a" opacity=".55"/><circle cx="${x}" cy="${y}" r="5" fill="${U.redD}"/></g>`).join("")}</g>
+      <g transform="translate(0,560)"><text id="${id}-n" y="10" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="110" fill="${U.redD}">0</text>
+      <text y="80" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="${U.ink}">แผล</text></g>
+      <g id="${id}-w" opacity="0" transform="translate(0,690)"><rect x="-330" y="-46" width="660" height="80" rx="40" fill="${U.red}" ${SO(4)}/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff">เกิน 10 แผล เสี่ยงอาการรุนแรง</text></g></g></g>`;
+    put(layer, c);
+    inOut(tl, id, t0, dur);
+    const span = Math.min(dur * 0.55, 2.2), el = () => document.getElementById(`${id}-n`);
+    dots.forEach((_, k) => { const t = t0 + 0.4 + (k / n) * span; tl.set(`#${id}-d${k}`, { opacity: 0 }, 0); tl.set(`#${id}-d${k}`, { opacity: 1 }, t); tl.call(() => { const e = el(); if (e) e.textContent = String(k + 1); }, null, t); });
+    tl.call(() => { const e = el(); if (e) e.textContent = "0"; }, null, t0);
+    tl.set(`#${id}-w`, { opacity: 0 }, 0);
+    tl.fromTo(`#${id}-w`, { opacity: 0, scale: 0.4, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(3)", immediateRender: false }, t0 + 0.4 + span * (10 / n));
+  };
+})();
