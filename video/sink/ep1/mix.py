@@ -126,15 +126,15 @@ CUES = [
     # inside: the water pouring in, heartbeats
     ("inrush", 0.1, "splash", 0.3), ("inrush", 0.3, "bubbles", 0.3), *beats("inrush", 0.4, D["inrush"] - 0.4, 0.55, 0.3),
     # the steps: each chip a pop, ticking under
-    ("belt", 0.2, "pop", 0.2), ("belt", F("belt", 0, 1), "click", 0.36), *ticks("belt", 0.1, D["belt"] - 0.1, 0.12, 1.0),
-    ("door", 0.2, "pop", 0.2), ("door", 0.5, "knock", 0.3), ("door", 1.0, "knock", 0.26), *ticks("door", 0.1, D["door"] - 0.1, 0.12, 1.0),
-    ("window", 0.2, "pop", 0.2), ("window", 0.5, "motor", 0.3), *ticks("window", 0.1, D["window"] - 0.1, 0.12, 1.0),
-    ("kid", 0.2, "pop", 0.2), ("kid", 0.6, "bubbles", 0.2), *ticks("kid", 0.1, D["kid"] - 0.1, 0.13, 1.0),
+    ("belt", 0.2, "pop", 0.2), ("belt", F("belt", 0, 1) + 0.15, "click", 0.4), ("belt", F("belt", 0, 1) + 0.33, "whoosh", 0.22), *ticks("belt", 0.1, D["belt"] - 0.1, 0.12, 1.0),
+    ("door", 0.2, "pop", 0.2), *[c for k in range(3) for c in (("door", 0.45 + k * 0.55, "click", 0.32), ("door", 0.5 + k * 0.55, "thud", 0.16))], *ticks("door", 0.1, D["door"] - 0.1, 0.12, 1.0),
+    ("window", 0.2, "pop", 0.2), ("window", 0.47, "click", 0.3), ("window", 0.5, "motor", 0.3), ("window", 1.55, "splash", 0.42), ("window", 1.6, "roar", 0.3), ("window", 1.9, "bubbles", 0.24), *ticks("window", 0.1, D["window"] - 0.1, 0.12, 1.0),
+    ("kid", 0.2, "pop", 0.2), ("kid", 0.62, "click", 0.36), ("kid", 0.68, "whoosh", 0.18), ("kid", F("kid", 0, 1), "splash", 0.18), ("kid", 0.9, "bubbles", 0.2), *ticks("kid", 0.1, D["kid"] - 0.1, 0.13, 1.0),
     ("phone", 0.2, "pop", 0.2), ("phone", 0.5, "notif", 0.16), *ticks("phone", 0.1, D["phone"] - 0.1, 0.13, 1.0),
     # the rewind to 0:04
     ("rw", 0.0, "rewind", 0.42), ("rw", 0.6, "click", 0.36), ("rw", 0.65, "sting", 0.3),
     # her switch: click click click, nothing; the ticks get louder
-    *[("kim", 0.3 + i * 0.28, "click", 0.3) for i in range(6)], *ticks("kim", 0.1, D["kim"] - 0.1, 0.16, 1.0),
+    *[("kim", 1.09 + i * 0.28, "click", 0.3) for i in range(6)], *ticks("kim", 0.1, D["kim"] - 0.1, 0.16, 1.0),
     ("led", 0.1, "swell", 0.2), *ticks("led", 0.1, D["led"] - 0.1, 0.17, 1.0), *beats("led", 0.3, D["led"] - 0.3, 0.5, 0.32),
     *[("panel", 0.7 + i * 0.18, "click", 0.28) for i in range(4)], ("panel", 0.8, "buzz", 0.2), *ticks("panel", 0.1, D["panel"] - 0.1, 0.18, 1.0),
     # the flicker

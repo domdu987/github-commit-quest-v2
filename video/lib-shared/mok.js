@@ -104,8 +104,8 @@
   // a waving villager somewhere in the fog (#id-fig, opacity by o.fig)
   function carPOV(L, o = {}) {
     const id = o.id || "cp", r = mk(o.seed || 83);
-    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#5e646c"/>`);
-    let far = `<rect x="-900" y="600" width="2900" height="1400" fill="#4a4f57"/>`;
+    put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="${o.clear ? "#070b16" : "#5e646c"}"/>`);
+    let far = `<rect x="-900" y="${o.clear ? 944 : 600}" width="2900" height="1400" fill="${o.clear ? "#11151c" : "#4a4f57"}"/>`;   // o.clear: the sky reaches down to the horizon
     const mv = o.moving !== false, flow = (from, to, p, k, n, body) => {   // stopped: the copies sit spread along the road instead
       const A = from.split(",").map(Number), B = to.split(",").map(Number), f = mv ? 0 : ((k + 0.5) / n) ** 2, P = A.map((v, j) => v + (B[j] - v) * f);
       return `<g class="flow" data-from="${from}" data-to="${to}" data-p="${p}" data-o="${(k / n).toFixed(3)}"${mv ? "" : ' data-still="1"'} transform="translate(${f1(P[0])},${f1(P[1])}) scale(${P[2].toFixed(3)})">${body}</g>`;
@@ -115,13 +115,13 @@
     const post = `<rect x="-9" y="-110" width="18" height="110" rx="4" fill="#d9dde2"/><rect x="-9" y="-96" width="18" height="16" fill="#ff9a3a"/>`;
     for (let k = 0; k < 4; k++) ln += flow("470,948,0.05", "-180,1560,1.7", 1.6, k, 4, post) + flow("610,948,0.05", "1260,1560,1.7", 1.6, k + 0.5, 4, post);
     far += `<g id="${id}-lines" opacity="${o.lines ?? 0.8}">${ln}</g>`;
-    far += fogBands(r, 420, 1100, 6, 0.75) + fogBlobs(r, 8, -300, 1400, 500, 1100, 0.55);
+    if (!o.clear) far += fogBands(r, 420, 1100, 6, 0.75) + fogBlobs(r, 8, -300, 1400, 500, 1100, 0.55);   // o.clear: a clear night, no fog
     put(L.far, far);
     // the villager sits in front of the far fog so it reads; a light veil keeps it ghostly
     put(L.mid, `<g id="${id}-fig" opacity="${o.fig ?? 0}">${villager(o.figX ?? 640, o.figY ?? 1040, o.figS ?? 0.55, { wave: o.wave !== false })}</g>
-      <g id="${id}-low" opacity="${o.high ? 0 : 1}"><path d="M120,1460L470,980H610L960,1460Z" fill="url(#mkBeam)" opacity=".5"/><ellipse cx="540" cy="1060" rx="520" ry="200" fill="url(#mkPuff)" opacity=".7"/></g>
+      <g id="${id}-low" opacity="${o.high ? 0 : 1}"><path d="M120,1460L470,980H610L960,1460Z" fill="url(#mkBeam)" opacity=".5"/><ellipse cx="540" cy="1060" rx="520" ry="200" fill="url(#mkPuff)" opacity="${o.clear ? 0.2 : 0.7}"/></g>
       <g id="${id}-high" opacity="${o.high ? 1 : 0}"><rect x="-900" y="300" width="2900" height="1300" fill="#e9ebe6" opacity=".9"/><ellipse cx="540" cy="900" rx="900" ry="600" fill="url(#mkFogGlow)"/></g>
-      ${fogBlobs(r, 6, -200, 1300, 700, 1250, 0.35)}`);
+      ${o.clear ? "" : fogBlobs(r, 6, -200, 1300, 700, 1250, 0.35)}`);
     // the cabin: roof liner, A-pillars, mirror, dashboard
     let s = `<path d="M-900,-600H2000V300Q1500,250 1150,250L1000,330Q540,280 80,330L-70,250Q-420,250 -900,300Z" fill="#14171b"/>
       <path d="M-70,250L80,330L-60,1500H-900V300Q-420,250 -70,250Z" fill="#1b1e23"/><path d="M1150,250L1000,330L1140,1500H2000V300Q1500,250 1150,250Z" fill="#1b1e23"/>

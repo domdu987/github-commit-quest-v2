@@ -130,5 +130,5 @@
         put(L.act, `<g id="${id}-wt"><rect x="-900" y="1500" width="2900" height="1400" fill="#2a4a3a" opacity=".7"/><path d="M-900,1500Q-300,1484 300,1500T1500,1500T2000,1500" stroke="#9fc8b8" stroke-width="6" fill="none" opacity=".7"/></g>`);
       };
       // her window from inside (carWindow), the child's finger on her own switch below the glass
-      const kidSwitch = (L, id) => put(L.act, `<g transform="translate(540,1480)"><rect x="-90" y="-50" width="180" height="100" rx="20" fill="#30343c" stroke="${INK}" stroke-width="5"/><path d="M-22,12L0,-14L22,12" stroke="#9aa2aa" stroke-width="7" fill="none" stroke-linecap="round"/>
+      const kidSwitch = (L, id) => put(L.act, `<g transform="translate(540,1352)"><rect x="-90" y="-50" width="180" height="100" rx="20" fill="#30343c" stroke="${INK}" stroke-width="5"/><path d="M-22,12L0,-14L22,12" stroke="#9aa2aa" stroke-width="7" fill="none" stroke-linecap="round"/>
         <g id="${id}-kf" transform="translate(70,150)"><path d="M-26,0Q-32,-80 -12,-100Q14,-112 28,-92Q40,-40 34,30L40,300H-40Z" fill="#ebc19c" stroke="${INK}" stroke-width="4"/></g></g>`);
