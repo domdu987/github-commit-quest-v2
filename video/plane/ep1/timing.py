@@ -22,26 +22,25 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 SHOTS = [
     ("hook", ["n01"], 0.05, -0.15, 2.4),         # down the aisle: masks swinging, the bin bursts, the camera bag falls with its tag (title)
     ("cmd", ["n02"], 0.15, 0.35, 1.5),           # his hand reaches for the strap → the red box
-    ("seat", ["n03"], 0.2, 0.2, 4.2),            # 40 min before, calm cabin cut: คิว moves to the empty last row (the planted mistake at ~0:05)
-    ("nap", ["q01"], 0.1, 0.3, 4.6),             # headphones on, he leans back; behind him the EXIT glows and the FA points to it
-    ("map", ["n04"], 0.2, 0.4, 4.0),             # the route map กรุงเทพ → เชียงราย over the northern ranges
-    ("engine", ["n05"], 0.15, 0.6, 3.0),         # outside: the left engine bursts into flame, the plane lurches
-    ("brace", ["x01"], 0.1, 0.2, 2.6),           # masks drop, amber light, คิว braces, the FA shouts
-    ("dive", [], 0, 0, 1.7),                     # outside: the dive toward the ridge
-    ("impact", [], 0, 0, 2.1),                   # the tail tears off into the trees: flash, shake, debris
-    ("smoke", ["n06"], 0.2, 0.3, 3.0),           # the cabin torn open at the break, smoke rolling, fire
-    ("grab", ["q02"], 0.1, 0.3, 2.4),            # he reaches down for the bag
-    ("ninety", ["n07"], 0.2, 0.3, 3.6),          # card: 90 seconds
-    ("half", ["n08"], 0.2, 0.3, 3.2),            # card: nearly half stop for their bags
-    ("block", ["n09"], 0.2, 0.3, 3.2),           # card: the aisle jammed by bags
-    ("snag", ["n10"], 0.2, 0.3, 3.2),            # the strap snags on the armrest; fire creeping in
-    ("run", ["n11"], 0.2, 0.3, 3.4),             # he drops it and runs forward, toward the fire
+    ("seat", ["n03"], 0.10, 0.10, 3.8),            # 40 min before, calm cabin cut: คิว moves to the empty last row (the planted mistake at ~0:05)
+    ("nap", ["q01"], 0.08, 0.18, 4.2),             # headphones on, he leans back; behind him the EXIT glows and the FA points to it
+    ("map", ["n04"], 0.10, 0.28, 3.6),             # the route map กรุงเทพ → เชียงราย over the northern ranges
+    ("engine", ["n05"], 0.08, 0.48, 2.6),         # outside: the left engine bursts into flame, the plane lurches
+    ("brace", ["x01"], 0.08, 0.10, 2.2),           # masks drop, amber light, คิว braces, the FA shouts
+    ("dive", [], 0.08, 0.10, 1.0),                     # outside: the dive toward the ridge
+    ("impact", [], 0.08, 0.10, 1.5),                   # the tail tears off into the trees: flash, shake, debris
+    ("smoke", ["n06"], 0.10, 0.18, 2.6),           # the cabin torn open at the break, smoke rolling, fire
+    ("grab", ["q02"], 0.08, 0.18, 2.0),            # he reaches down for the bag
+    ("ninety", ["n07"], 0.10, 0.18, 3.2),          # card: 90 seconds
+    ("half", ["n08"], 0.10, 0.18, 2.8),            # card: nearly half stop for their bags
+    ("block", ["n09"], 0.10, 0.18, 2.8),           # card: the aisle jammed by bags
+    ("run", ["n11"], 0.10, 0.18, 3.0),             # he drops it and runs forward, toward the fire
     ("rw", ["n12"], 0.2, 0.6, 4.0),              # rewind to 0:05
-    ("behind", ["n13"], 0.2, 0.3, 3.0),          # the door one row behind him
-    ("rows", ["n14"], 0.2, 0.5, 4.4),            # the safety card: rule 1 + count the rows, front and back
-    ("jump", ["n15"], 0.2, 0.3, 3.0),            # out the door, down the slide, away from the fire
+    ("behind", ["n13"], 0.10, 0.18, 2.6),          # the door one row behind him
+    ("rows", ["n14"], 0.10, 0.38, 4.0),            # the safety card: rule 1 + count the rows, front and back
+    ("jump", ["n15"], 0.10, 0.18, 2.6),            # out the door, down the slide, away from the fire
     ("alone", ["n16", ("n17", 0.25), ("n18", 0.3)], 0.2, 0.9, 7.0),   # the smoke clears: no front section, only the jungle (smoke behind the ridge)
-    ("next", [], 0, 0, 4.2),                     # next-episode card
+    ("next", [], 0.08, 0.10, 3.0),                     # next-episode card
 ]
 GAP = 0.08
 

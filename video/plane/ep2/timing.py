@@ -22,28 +22,24 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 SHOTS = [
     ("hook", ["n01"], 0.05, -0.15, 2.4),          # night on the island: the tail on the rocks in the wind, lights across the bay; คิว in the door
     ("cmd", ["n02"], 0.15, 0.35, 1.5),           # he steps down toward the lights → red
-    ("night", ["n03"], 0.2, 0.2, 3.6),           # inside the tail: hunched against the cold, the orange vest under his jacket (the planted mistake ~0:04)
-    ("roof", ["n04"], 0.2, 0.3, 3.0),            # outside: the wind and spray beat on the tail; his light inside
-    ("lights", ["n05"], 0.2, 0.3, 3.2),          # 4 a.m.: lights blink across the bay
-    ("village", ["q01"], 0.1, 0.3, 2.6),         # he jumps up
-    ("spot", ["n06"], 0.2, 0.3, 3.4),            # card: one person from the air (✗)
-    ("wreck", ["n07"], 0.2, 0.3, 3.4),           # card: the wreck from the air (✓)
-    ("route", ["n08"], 0.2, 0.4, 4.0),           # card: they search the flight path first
-    ("wait", ["q02"], 0.1, 0.4, 2.4),            # he sits back down by the wreck
-    ("heli", ["n09"], 0.2, 0.2, 2.6),            # dawn: rotor sound, a helicopter over the sea
-    ("wave", ["q03"], 0.1, 0.3, 2.2),            # he waves and shouts
-    ("pass", ["n10"], 0.2, 0.3, 3.6),            # it flies on: the grey wreck lost on the grey rocks
+    ("night", ["n03", ("n04", 0.2)], 0.10, 0.10, 3.2),           # inside the tail: hunched against the cold, the orange vest under his jacket (the planted mistake ~0:04)
+    ("lights", ["n05"], 0.10, 0.18, 2.8),          # 4 a.m.: lights blink across the bay
+    ("village", ["q01"], 0.08, 0.18, 2.2),         # he jumps up
+    ("spot", ["n06"], 0.10, 0.18, 3.0),            # card: one person from the air (✗)
+    ("wreck", ["n07"], 0.10, 0.18, 3.0),           # card: the wreck from the air (✓)
+    ("route", ["n08"], 0.10, 0.28, 3.6),           # card: they search the flight path first
+    ("wait", ["q02"], 0.08, 0.28, 2.0),            # he sits back down by the wreck
+    ("heli", ["n09", ("q03", 0.15)], 0.10, 0.10, 2.2),            # dawn: rotor sound, a helicopter over the sea
+    ("pass", ["n10"], 0.10, 0.18, 3.2),            # it flies on: the grey wreck lost on the grey rocks
     ("rw", ["n11"], 0.2, 0.6, 4.0),              # rewind to 0:04
-    ("vest", ["n12"], 0.2, 0.3, 2.6),            # he opens the jacket: the orange vest
-    ("lay", ["n13"], 0.2, 0.4, 4.0),             # the vest on the tailplane, the cowl panel propped to the sun
-    ("stand", ["n14"], 0.2, 0.3, 2.6),           # wide: the tail stands out
-    ("glint", [], 0, 0, 2.2),                    # the helicopter turns back, the panel flashes
-    ("found", ["r01"], 0.1, 0.4, 3.2),           # "found!" — hovering over him: relief
-    ("empty", ["r02"], 0.1, 0.5, 3.0),           # the turn: the front section across the bay at dawn — empty, a dropped torch, footprints
-    ("truth", ["n15", ("n16", 0.3)], 0.2, 0.4, 5.6),   # flashback, 4 a.m.: the torches were survivors, and they saw HIS phone light
-    ("walkoff", ["n18"], 0.2, 0.5, 3.6),         # flashback: the torches leave the wreck and wind off along the shore into the dark
-    ("end", ["n17", ("n19", 0.4)], 0.2, 1.2, 5.0),   # the helicopter lifts him away; the safety card ticks both rules
-    ("fin", [], 0, 0, 4.0),                      # end card: ตอนจบ
+    ("vest", ["n12"], 0.10, 0.18, 2.2),            # he opens the jacket: the orange vest
+    ("lay", ["n13", ("n14", 0.15)], 0.10, 0.28, 3.6),             # the vest on the tailplane, the cowl panel propped to the sun
+    ("found", ["r01"], 0.08, 0.28, 2.8),           # "found!" — hovering over him: relief
+    ("empty", ["r02"], 0.08, 0.38, 2.6),           # the turn: the front section across the bay at dawn — empty, a dropped torch, footprints
+    ("truth", ["n15", ("n16", 0.15)], 0.10, 0.2, 4.6),   # flashback, 4 a.m.: the torches were survivors, and they saw HIS phone light
+    ("walkoff", ["n18"], 0.10, 0.38, 3.2),         # flashback: the torches leave the wreck and wind off along the shore into the dark
+    ("end", ["n17", ("n19", 0.25)], 0.10, 0.8, 4.2),   # the helicopter lifts him away; the safety card ticks both rules
+    ("fin", [], 0, 0, 3.0),                      # end card: ตอนจบ
 ]
 GAP = 0.08
 

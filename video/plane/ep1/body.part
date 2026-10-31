@@ -24,12 +24,20 @@
         tl.to(`#${id}`, { scale: 1.12, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: Math.ceil(dur / 0.35), ease: "sine.inOut" }, t0 + 0.4); };
 
       // ---------- 1. hook: down the aisle, the plane tilting, masks swinging; the bin bursts and the camera bag falls (title on its tag) ----------
-      add("hook", { ...CAB("ha", "alarm", { wingFire: true, wingX: 760, noBag: true }),
-        cam: { keys: [{ t: 0, ...fr(560, 1230, 1.45, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(520, 1210, 1.65, 540, 1000) }] },
+      const HX = 0.8;   // the first 0.8 s: outside, close on the burning engine — then inside
+      split("hook", HX, { set: "planeSky", setOpts: { id: "hx", fire: true, s: 0.5, y: 820, x: 560 }, dark: 0, light: false, grade: { top: "#ffd0a0", bottom: "#2a2050", op: 0.14 },
+        cam: { keys: [{ t: 0, ...fr(560, 840, 3.2, 540, 860) }, { t: HX, glide: HX, ...fr(600, 840, 2.6, 540, 860) }] },
+        shake: (t) => ({ x: 14 * Math.sin(t * 61), y: 10 * Math.sin(t * 47), r: 1.4 * Math.sin(t * 33) }),
+        captions: caps("hook"),
+        fx(tl, id, t0, L) { Plane.skyLife(tl, "hx", t0, HX); tl.fromTo("#hx-jet-fire", { scale: 1.6, svgOrigin: "0 0" }, { scale: 2.1, svgOrigin: "0 0", duration: HX, ease: "power1.out", immediateRender: false }, t0);
+          put(L.glow, `<g transform="translate(600,850)"><circle r="110" fill="url(#plAmb)"/>${Plane.flames("hxf", 80, 1.5)}</g>`);
+          put(L.set, `<g>${Plane.puffMk("hxs", 600, 800, 10, "dark", 40)}</g>`); Plane.flicker(tl, "hxf", t0, HX); Plane.puffs(tl, "hxs", t0, HX, 10, { dx: -260, dy: -140, per: 0.9, op: 0.9 });
+          SU.flash(tl, L.light, t0, "#fff4c0", 0.6); Plane.burst(tl, L.glow, 600, 840, t0 + 0.05, { n: 16, v: 320 }); } }, { ...CAB("ha", "alarm", { wingFire: true, wingX: 760, noBag: true }),
+        cam: { keys: [{ t: 0, ...fr(560, 1230, 1.45, 540, 1000) }, { t: D("hook") - HX, glide: D("hook") - HX, ...fr(520, 1210, 1.65, 540, 1000) }] },
         shake: (t) => ({ x: 10 * Math.sin(t * 31), y: 8 * Math.sin(t * 27), r: -3 + 2 * Math.sin(t * 2) }),
         actors: [A("kiw", KX + 220, PF - 6, KS, [{ t: 0, mode: "brace", eyes: "wide", mouth: "scream" }])],
-        captions: caps("hook"),
-        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "ha", t0, D("hook"), { chase: true });
+        captions: capsFrom("hook", HX),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "ha", t0, D("hook") - HX, { chase: true });
           for (let k = 0; k < 7; k++) tl.fromTo(`#ha-mask${k}`, { y: -170 }, { y: 0, duration: 0.5, ease: "bounce.out", immediateRender: false }, t0 + 0.05 + k * 0.04);
           put(L.glow, `<g transform="translate(${KX + 300},${PF - 150})"><g id="hk-bag">${Plane.bag(0.9, { strap: false, tag: "hk-tag", l1: "รอดคนเดียว", l2: "EP.1 ทิ้งกระเป๋า" })}</g></g>`);
           tl.fromTo("#hk-tag-sw", { rotation: -20, svgOrigin: "0 0" }, { rotation: 18, svgOrigin: "0 0", duration: 0.3, yoyo: true, repeat: 8, ease: "sine.inOut", immediateRender: false }, t0);
@@ -122,16 +130,6 @@
       CARD("ninety", (tl, L, t0) => PlaneUI.ninety(tl, L.light, t0, D("ninety")));
       CARD("half", (tl, L, t0) => PlaneUI.half(tl, L.light, t0, D("half")));
       CARD("block", (tl, L, t0) => PlaneUI.block(tl, L.light, t0, D("block")));
-      // ---------- 15. the snag: the strap caught on the armrest, he tugs; the fire edges closer ----------
-      add("snag", { ...CAB("cf3", "fire", { breakX: 860, smokeH: 600 }),
-        cam: { keys: [{ t: 0, ...fr(440, 1290, 1.6, 540, 1040) }, { t: D("snag"), glide: D("snag"), ...fr(520, 1290, 1.5, 540, 1040) }] },
-        shake: sway(1.6),
-        actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "tug", eyes: "angry", mouth: "scream" }])],
-        captions: caps("snag"),
-        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "cf3", t0, D("snag"));
-          put(L.glow, `<path id="sn-st" d="M${KX + 30},${PF - 190}Q${KX + 120},${PF - 240} ${ROW30 + PP - 130},${PF - 196}" stroke="#3a2a22" stroke-width="10" fill="none"/>`);
-          tl.fromTo("#sn-st", { attr: { "stroke-width": 10 } }, { attr: { "stroke-width": 7 }, duration: 0.14, yoyo: true, repeat: Math.ceil(D("snag") / 0.14), ease: "sine.inOut", immediateRender: false }, t0);
-          tl.fromTo("#cf3-fire", { x: 120 }, { x: -60, duration: D("snag"), ease: "power1.in", immediateRender: false }, t0); } });
       // ---------- 16. he drops it and runs forward — the only way he knows — toward the fire ----------
       add("run", { ...CAB("cf4", "fire", { breakX: 1150, smokeH: 620 }),
         cam: { keys: [{ t: 0, ...fr(440, 1230, 1.15, 540, 1000) }, { t: D("run"), glide: D("run"), ...fr(860, 1230, 1.2, 540, 1000) }] },

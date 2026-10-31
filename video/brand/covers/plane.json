@@ -1,0 +1,8 @@
+[
+ {"id": "plane-ep1", "page": "plane-ep1/composition/index.html", "out": "video/plane-ep1/cover.jpg", "t": 0.4,
+  "series": "รอดคนเดียว", "ep": 1, "epTitle": "ทิ้งกระเป๋า", "setup": "เครื่องยนต์[ไฟลุก]/กลางแอตแลนติก…", "cmd": "อย่าคว้ากระเป๋า!",
+  "glow": "#2a8f94", "hideLight": true, "zoom": {"s": 1.0, "x": 540, "y": 960}, "shift": {"x": 0, "y": 0}},
+ {"id": "plane-ep2", "page": "plane-ep2/composition/index.html", "out": "video/plane-ep2/cover.jpg", "t": 1.6,
+  "series": "รอดคนเดียว", "ep": 2, "epTitle": "อยู่กับซาก", "finale": true, "setup": "เห็น[ไฟ]อีกฝั่งอ่าว/ตอนติดเกาะ…", "cmd": "อย่าเดินไปหามัน!",
+  "glow": "#2a8f94", "hideLight": true, "bright": 1.3, "zoom": {"s": 1.2, "x": 640, "y": 900}, "shift": {"x": 0, "y": 0}}
+]

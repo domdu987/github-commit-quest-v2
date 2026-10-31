@@ -97,7 +97,7 @@
         // what the windows show (painted in the set, clipped to the glass): sky + clouds, or the burning engine on the wing (o.wingFire), or night
         s += `<g clip-path="url(#${id}-wcp)"><rect x="-1200" y="${PF - 400}" width="3600" height="140" fill="${o.night ? "#0a1226" : "url(#plSkyW)"}"/>${Array.from({ length: 12 }, (_, k) => `<ellipse cx="${-600 + k * 260}" cy="${PF - 300}" rx="90" ry="16" fill="#fff4e6" opacity="${o.night ? 0.1 : 0.8}"/>`).join("")}
           ${o.wingFire ? `<g id="${id}-wing"><path d="M-600,${PF - 300}L2400,${PF - 330}L2400,${PF - 270}L-600,${PF - 250}Z" fill="#c8d0dc"/><circle cx="${o.wingX ?? 900}" cy="${PF - 320}" r="240" fill="url(#plAmb)"/>
-            <g transform="translate(${o.wingX ?? 900},${PF - 290})">${Plane.flames(`${id}-wf`, 130, 1.4)}</g>${Plane.puffMk(`${id}-wsm`, (o.wingX ?? 900) - 40, PF - 360, 8, "dark", 50)}</g>` : ""}</g>`;
+            <g transform="translate(${o.wingX ?? 900},${PF - 290})">${Plane.flames(`${id}-wf`, 190, 1.6)}</g>${Plane.puffMk(`${id}-wsm`, (o.wingX ?? 900) - 40, PF - 360, 8, "dark", 50)}</g>` : ""}</g>`;
         for (let k = 0; k < 16; k++) { const wx = winL + k * 150;
           s += `<path d="M${wx - 48},${PF - 356}a40,40 0 0 1 40,-40h16a40,40 0 0 1 40,40v52a40,40 0 0 1 -40,40h-16a40,40 0 0 1 -40,-40z M${wx - 34},${PF - 350}a30,30 0 0 1 30,-30h8a30,30 0 0 1 30,30v40a30,30 0 0 1 -30,30h-8a30,30 0 0 1 -30,-30z" fill="#d8d1c3" fill-rule="evenodd" ${PO(3)}/><rect x="${wx - 34}" y="${PF - 380}" width="68" height="100" rx="30" fill="none" stroke="#a89e8a" stroke-width="3"/>
             <rect x="${wx - 34}" y="${PF - 396}" width="68" height="${alarm ? 40 : 18}" rx="12" fill="#f0ebe0" ${PO(2)}/>`; }
