@@ -92,12 +92,14 @@
       });
       // ---------- 8. inside: the jolt, water spurting at the door seals; the countdown appears ----------
       add("inrush", {
-        ...CAB("sc0"),
-        cam: { keys: [{ t: 0, ...fr(540, 1260, 1.12, 540, 1000), drift: { s: 0.03 } }] },
+        set: "carCut", setOpts: { id: "cc0", out: 1150 }, dark: 0.06, light: CABIN, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(500, 1310, 1.3, 540, 980), drift: { s: 0.03 } }] },
         shake: (t) => (t < 0.6 ? { x: 16 * Math.sin(t * 50) * (1 - t / 0.6), y: 12 * Math.sin(t * 43) * (1 - t / 0.6), r: 1.5 * Math.sin(t * 31) } : 0),
-        actors: [TON("wide", "scream"), KIM("wide", "scream")],
+        actors: [A("boss", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "brace", eyes: "wide", mouth: "scream" }]), A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode: "sitHold", eyes: "wide", mouth: "scream" }])],
         fx(tl, id, t0, L) {
-          noShadow(tl, id); hideRigArms(`${id}-a0`); hideRigArms(`${id}-a1`); cabFront(L, "sc0", { kimGrip: true }); cabWater(L, tl, "sc0", t0, D("inrush"), 1800, 1700, { items: false }); sealJets(L, tl, "sc0", t0, D("inrush")); cabGlow(L, tl, "sc0", t0, D("inrush"));
+          ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
+          cutFront(L, "cc0"); cutWater(L, tl, "cc0", t0, D("inrush"), 1520, 1470); cutOutside(tl, "cc0", t0, D("inrush"), 1150, 1120); cutCanal(L, tl, "cc0", t0, D("inrush"), 1150, 1120);
+          sealJets(L, tl, "cc0", t0, D("inrush"), { at: [[1000, 1300, -1, 0.75], [990, 1440, -1, 0.6], [470, 1460, 1, 0.55], [60, 1380, 1, 0.6]] });
           ring(L, tl, t0 + 0.5, D("inrush") - 0.5, "rg2", 58);
         },
       });
@@ -141,18 +143,31 @@
         },
       });
       // ---------- 12. ขิม: her belt, children out first ----------
-      add("kid", {
-        ...CAB("sc1"),
-        cam: { keys: [{ t: 0, ...fr(610, 1170, 2.0, 540, 960) }, { t: D("kid"), glide: D("kid"), ...fr(650, 1160, 2.15, 540, 960) }] },
-        actors: [TON("worry", "o"), KIM("wide", "scream", { path: [{ t: 0, x: CK.x, y: CK.y }, { t: F("kid", 0, 1), x: CK.x, y: CK.y }, { t: F("kid", 0, 1) + 0.5, x: CK2.x, y: CK2.y }] })],
+      const CUT = (id, out) => ({ set: "carCut", setOpts: { id, out }, dark: 0.06, light: CABIN, grade: GNIGHT });
+      const TON2 = (mode, eyes, mouth) => A("boss", CT2.x, CT2.y, CT2.s, [{ t: 0, mode, eyes, mouth }]);
+      const KIM2 = (mode, eyes, mouth, extra = {}) => A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode, eyes, mouth }], extra);
+      const noShadows = (tl, id) => ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
+      const KB = 1.5;
+      split("kid", KB, {
+        set: "beltIns", setOpts: { id: "bi1", kid: true }, dark: 0.06, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(600, 1080, 1.05, 540, 960) }, { t: KB, glide: KB, ...fr(610, 1095, 1.12, 540, 960) }] },
         captions: caps("kid"),
         fx(tl, id, t0, L) {
-          noShadow(tl, id); hideRigArms(`${id}-a0`); cabFront(L, "sc1", { free: ["ton"], noTonArms: true }); reachBelt(L, tl, "sc1", t0 + 0.15);
-          cabWater(L, tl, "sc1", t0, D("kid"), 1430, 1390); cabGlow(L, tl, "sc1", t0, D("kid"));
-          bubbles(L, tl, "sc1bb", t0, D("kid"), 600, 1420, 10, 420);
-          chip(L, tl, t0 + 0.2, D("kid") - 0.2, "cp5", "kid", "ส่งเด็กออกก่อน", true, { y: 160 });
-          fact(L, tl, t0 + F("kid", 0, 1), D("kid") - F("kid", 0, 1), "fc5", "เด็กหลายคน: คนโตก่อน แล้วไล่ไปคนเล็ก", "Giesbrecht · University of Manitoba", { y: 300 });
-          ring(L, tl, t0, D("kid"), "rg6", 34);
+          beltPress(tl, "bi1", t0 + 0.1);
+          cabWater(L, tl, "bi1", t0, KB, 1720, 1620, { items: false }); bubbles(L, tl, "bi1bb", t0, KB, 600, 1760, 10, 520);
+          chip(L, tl, t0 + 0.2, KB - 0.2, "cp5a", "belt", "ปลดเข็มขัดให้เด็ก", true, { y: 160 });
+          ring(L, tl, t0, KB, "rg6", 34);
+        },
+      }, {
+        ...CUT("cc1", 1090),
+        cam: { keys: [{ t: 0, ...fr(420, 1270, 1.55, 540, 980) }, { t: D("kid") - KB, glide: D("kid") - KB, ...fr(400, 1260, 1.65, 540, 980) }] },
+        actors: [TON2("reachBack", "worry", "o"), KIM2("sitStand", "wide", "scream")],
+        captions: capsFrom("kid", KB),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id); cutFront(L, "cc1", { free: ["ton", "kim"] }); cutWater(L, tl, "cc1", t0, D("kid") - KB, 1370, 1350); cutOutside(tl, "cc1", t0, D("kid") - KB, 1090, 1080); cutCanal(L, tl, "cc1", t0, D("kid") - KB, 1090, 1080);
+          chip(L, tl, t0 + 0.1, D("kid") - KB - 0.1, "cp5", "kid", "ส่งเด็กออกก่อน", true, { y: 160 });
+          fact(L, tl, t0 + F("kid", 0, 1) - KB, D("kid") - F("kid", 0, 1), "fc5", "เด็กหลายคน: คนโตก่อน แล้วไล่ไปคนเล็ก", "Giesbrecht · University of Manitoba", { y: 300 });
+          ring(L, tl, t0, D("kid") - KB, "rg6b", 34 - KB);
         },
       });
       // ---------- 13. the phone on the seat; call once ashore ----------
@@ -175,15 +190,15 @@
         fx(tl, id, t0, L) { rewind(L, tl, t0, D("rw"), "0:04"); tl.fromTo("#lk1-led", { opacity: 1 }, { opacity: 0.4, duration: 0.3, yoyo: true, repeat: Math.ceil(D("rw") / 0.3), immediateRender: false }, t0); },
       });
       // ---------- 15. ขิม's window: she presses, nothing ----------
-      const KS = vo("kim") + 0.8, KH = CK2.y - CK2.s * 548;   // the cut inside her line · her head
+      const KS = vo("kim") + 0.8, KH = CK3.y - CK3.s * (548 - 96);   // the cut inside her line · her head, risen
       split("kim", KS, {
-        ...CAB("sc2"),
-        cam: { keys: [{ t: 0, ...fr(CK2.x - 20, KH + 10, 3.3, 540, 900) }, { t: KS, glide: KS, ...fr(CK2.x - 20, KH + 10, 3.55, 540, 900) }] },
+        ...CUT("cc2", 1070),
+        cam: { keys: [{ t: 0, ...fr(CK3.x + 6, KH + 40, 3.1, 540, 900) }, { t: KS, glide: KS, ...fr(CK3.x + 6, KH + 40, 3.35, 540, 900) }] },
         shake: (t) => ({ x: 3 * Math.sin(t * 23), y: 2 * Math.sin(t * 19), r: 0 }),
-        actors: [TON("wide", "o"), KIM("wide", "scream", { talk: [TALK("kim", 0, "scream")] }, CK2)],
+        actors: [TON2("brace", "wide", "o"), KIM2("sitStand", "wide", "scream", { talk: [TALK("kim", 0, "scream")] })],
         captions: caps("kim", undefined, QUO),
         fx(tl, id, t0, L) {
-          noShadow(tl, id); hideRigArms(`${id}-a0`); cabFront(L, "sc2", { free: ["ton", "kim"] }); cabWater(L, tl, "sc2", t0, KS, 1330, 1315); cabGlow(L, tl, "sc2", t0, KS);
+          noShadows(tl, id); cutFront(L, "cc2", { free: ["ton", "kim"] }); cutWater(L, tl, "cc2", t0, KS, 1335, 1325); cutOutside(tl, "cc2", t0, KS, 1070, 1066); cutCanal(L, tl, "cc2", t0, KS, 1070, 1066);
           ring(L, tl, t0, KS, "rg8", 18);
         },
       }, {
@@ -224,14 +239,14 @@
       });
       // ---------- 18. the dash flickers; single digits ----------
       add("flicker", {
-        ...CAB("sc3"),
-        cam: { keys: [{ t: 0, ...fr(540, 1200, 1.3, 540, 980), drift: { s: 0.04 } }] },
-        actors: [TON("wide", "o"), KIM("wide", "scream", {}, CK2)],
+        ...CUT("cc3", 1060),
+        cam: { keys: [{ t: 0, ...fr(470, 1280, 1.28, 540, 980), drift: { s: 0.04 } }] },
+        actors: [TON2("brace", "wide", "o"), KIM2("sitStand", "wide", "scream")],
         captions: caps("flicker"),
         fx(tl, id, t0, L) {
-          noShadow(tl, id); hideRigArms(`${id}-a0`); cabFront(L, "sc3", { free: ["ton", "kim"], min: 2 }); cabWater(L, tl, "sc3", t0, D("flicker"), 1330, 1270); cabGlow(L, tl, "sc3", t0, D("flicker"));
-          bubbles(L, tl, "sc3bb", t0, D("flicker"), 540, 1320, 14, 700);
-          flickerOut(L, tl, "sc3", t0, D("flicker"));
+          noShadows(tl, id); cutFront(L, "cc3", { free: ["ton", "kim"] }); cutWater(L, tl, "cc3", t0, D("flicker"), 1320, 1285); cutOutside(tl, "cc3", t0, D("flicker"), 1060, 1036); cutCanal(L, tl, "cc3", t0, D("flicker"), 1060, 1036);
+          bubbles(L, tl, "cc3bb", t0, D("flicker"), 520, 1330, 14, 700);
+          flickerOut(L, tl, "cc3", t0, D("flicker"));
           ring(L, tl, t0, D("flicker"), "rg11", 9);
         },
       });
