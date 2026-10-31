@@ -1,0 +1,237 @@
+      // ---------- แสงกระสือ: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      // ---------- ทางกลับบ้าน EP.2 อย่าเข้าไปหลบหลังพุ่มไม้ ----------
+      // grammar: side view (frame 0 the leaves already tearing) · closer · จ่าเม่น behind the bank → the tag · the cross-section · the field's
+      // real cover · down flat · the ditch: a wounded soldier of the other side · โจ้ "leave him" · the rule of war · the bandage, the red cross ·
+      // the tag, rule 2 ✓ · rewind → replay 0.3× · Songkran · แม่ · the parcel · the note (F6) · choice · the tag, both ✓
+      // the planted mistake: 0:00–0:04 โจ้ hides behind the bush; at 0:03 a bullet passes inches over his head (rw / reveal)
+      const LINE = (k, i, j) => SH[k].vo[i].frags[j], LINES_F = (k, i) => SH[k].vo[i].frags;
+      const GOLD = { from: "left", rim: "#ffd08a", rimOp: 0.75, shade: "#2a2048", shadeOp: 0.34, cast: { len: 3.4, op: 0.42 }, vol: false };
+      const GOLDR = { from: "right", rim: "#ffd08a", rimOp: 0.75, shade: "#2a2048", shadeOp: 0.34, cast: { len: 3.4, op: 0.42 }, vol: false };
+      const DUSKL = { from: "left", rim: "#ffa060", rimOp: 0.7, shade: "#2a1838", shadeOp: 0.38, cast: { len: 3.8, op: 0.42 }, vol: false };
+      const GGOLD = { top: "#ffe2b0", bottom: "#5a6a3a", op: 0.16 }, GDUSKR = { top: "#ffb878", bottom: "#4a2a5a", op: 0.22 }, GVHS = { top: "#d8d0c0", bottom: "#3a3a4a", op: 0.3 };
+      const GHOME = { top: "#fff0c8", bottom: "#6a8a5a", op: 0.12 };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const TALK = (k, i, m = "o") => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      const CARD = { dark: 0.1, blur: { sky: 4, far: 8, mid: 8, set: 8, fg: 12 }, light: GOLD, grade: GGOLD };
+      const decay = (at, amp, len, f = 60) => (t) => (t > at && t < at + len ? amp * Math.pow(1 - (t - at) / len, 2) * Math.sin(t * f) : 0);
+      const hand = (t) => 2.2 * Math.sin(t * 2.3) + 1.4 * Math.sin(t * 3.7);
+      const HAND = (t) => ({ x: hand(t), y: hand(t + 1.3) * 0.6, r: 0 });
+      const live = (tl, t0, dur, L) => { War.sway(tl, L.set, t0, dur); War.sway(tl, L.fg, t0, dur); War.sway(tl, L.glow, t0, dur); };
+      const motes = (tl, t0, dur, L, seed = 4) => RabFX.motes(tl, L.glow, t0, dur, { box: [-100, 600, 1300, 1000], n: 24, seed });
+      const push = (k, a, b) => ({ keys: [{ t: 0, ...fr(...a) }, { t: D(k), glide: D(k), ...fr(...b) }] });
+      const slowmo = (tl, id, t, d) => tl.fromTo(`#${id}-world`, { filter: "saturate(1) contrast(1)" }, { keyframes: [{ filter: "saturate(0.6) contrast(1.15)", duration: 0.06 }, { filter: "saturate(0.6) contrast(1.15)", duration: d }, { filter: "saturate(1) contrast(1)", duration: 0.08 }], immediateRender: false }, t);
+      const HEDGE = { ground: 1400, bank: 1500, tree: false, lift: 160, bushFront: true, fgH: 0.5, sunX: 980 };
+      const BUSH = (L) => War.bush(L.set, 270, 1690, 1.5, "", { seed: 12 });
+
+      // ---------- 1. hook: side view, frame 0 the leaves already tearing; the slow bullet over the helmet ----------
+      add("hook", {
+        set: "hedge", setOpts: { ...HEDGE, id: "h1" }, dark: 0, blur: { sky: 2, far: 2.4, mid: 1.6, fg: 8 }, light: GOLDR, grade: GGOLD,
+        cam: { keys: [{ t: 0, ...fr(520, 1500, 1.35, 540, 1150), drift: { s: 0.01 } }, { t: 0.95, glide: 0.5, ...fr(560, 1420, 1.7, 540, 1080), drift: { s: 0 } }, { t: 1.25, ...fr(520, 1500, 1.38, 540, 1150), drift: { s: 0.02 } }] },
+        shake: (t) => ({ x: decay(0, 10, 0.5, 55)(t) + decay(1.2, 14, 1.2, 55)(t) + hand(t) * 0.6, y: decay(1.2, 9, 1.2, 43)(t) + hand(t + 2) * 0.5, r: 0 }),
+        actors: [A("joe", 700, 1680, 0.82, [{ t: 0, mode: "hunker", eyes: "closed", mouth: "frown" }, { t: 1.25, mode: "hunker", eyes: "closed", mouth: "scream" }])],
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          BUSH(L); live(tl, t0, D("hook"), L);
+          War.bulletSlow(tl, L, { t: t0 - 0.02, y: 1360, x0: 60, x1: 700, slow: 0.08, seed: 3, dir: 1 }); // already tearing at frame 0
+          War.bulletSlow(tl, L, { t: t0 + 0.45, y: 1292, x0: 60, x1: 960, slow: 0.42, seed: 7, dir: 1 });
+          slowmo(tl, id, t0 + 0.5, 0.42); War.jiggle(tl, `${id}-a0`, t0, D("hook"), { amp: 8, period: 0.22 }); motes(tl, t0, D("hook"), L, 8);
+        },
+      });
+      // ---------- 2. the command: closer, leaves still falling on his helmet ----------
+      add("cmd", {
+        set: "hedge", setOpts: { ...HEDGE, id: "h2" }, dark: 0, blur: { sky: 3, far: 4, mid: 3, fg: 9 }, light: GOLDR, grade: GGOLD,
+        cam: push("cmd", [640, 1380, 2.2, 540, 1000], [640, 1380, 2.35, 540, 1000]), shake: (t) => ({ x: hand(t) * 1.4 + decay(0.6, 8, 0.5)(t), y: hand(t + 1) * 0.6, r: 0 }),
+        actors: [A("joe", 700, 1680, 0.82, [{ t: 0, mode: "hunker", eyes: "closed", mouth: "scream" }])],
+        captions: caps("cmd"),
+        fx(tl, id, t0, L) { BUSH(L); War.bulletSlow(tl, L, { t: t0 + 0.5, y: 1250, x0: 60, x1: 960, slow: 0.05, seed: 9, dir: 1 }); live(tl, t0, D("cmd"), L); War.jiggle(tl, `${id}-a0`, t0, D("cmd"), { amp: 8, period: 0.22 }); },
+      });
+      // ---------- 3. the rule: จ่าเม่น flat behind the earth bank, shouting; then the tag ----------
+      split("rule", vo("rule", 0) + LINE("rule", 0, 1) - 0.1, {
+        set: "hedge", setOpts: { ...HEDGE, id: "h3", bank: 1700, bushFront: true }, dark: 0, blur: { sky: 2, far: 3, mid: 2, fg: 8 }, light: GOLDR, grade: GGOLD,
+        cam: { keys: [{ t: 0, ...fr(560, 1480, 1.7, 540, 1150), drift: { s: 0.02 } }] }, shake: HAND,
+        actors: [A("mem", 600, 1700, 0.9, [{ t: 0, mode: "duck", eyes: "angry", mouth: "scream" }], { flip: true, talk: [TALK("rule", 0, "scream")] })],
+        captions: caps("rule", undefined, QUO),
+        fx(tl, id, t0, L) { put(L.glow, `<g transform="translate(560,1550)"><path d="M-300,120Q-240,-40 0,-60Q240,-40 300,120Z" fill="#8a6440" stroke="#2a2420" stroke-width="4"/><path d="M-230,40Q0,-40 230,40" stroke="#b08a5a" stroke-width="12" fill="none" opacity=".6"/></g>`);
+          War.bulletSlow(tl, L, { t: t0 + 0.3, y: 1180, x0: 60, x1: 960, slow: 0.05, seed: 13, dir: 1 }); live(tl, t0, D("rule"), L); War.jiggle(tl, `${id}-a0`, t0, 2, { amp: 6 }); },
+      }, {
+        set: "hedge", setOpts: { ...HEDGE, id: "h3c" }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1300, 1.0, 540, 1100), drift: { s: 0.02 } }] },
+        captions: capsFrom("rule", vo("rule", 0) + LINE("rule", 0, 1) - 0.1, undefined, QUO),
+        fx(tl, id, t0, L) { WarUI.tag(tl, L.light, t0 + 0.02, 3, { active: 1, done: [0], tickAt: 0.8, y: 820, out: false }); RabFX.motes(tl, L.glow, t0, 3, { n: 20, seed: 11 }); },
+      });
+      // ---------- 4. the cross-section: concealment vs cover ----------
+      add("hide", { set: "hedge", setOpts: { ...HEDGE, id: "h4", bushFront: false }, ...CARD, cam: push("hide", [540, 1300, 1.0, 540, 1100], [540, 1290, 1.05, 540, 1100]), captions: caps("hide"),
+        fx(tl, id, t0, L) { WarUI.cover(tl, L.light, t0 + 0.1, D("hide") - 0.1, { y: 420, out: false }); RabFX.motes(tl, L.glow, t0, D("hide"), { n: 20, seed: 6 }); } });
+      // ---------- 5. real cover in the field: a big tree, a rock, the earth bank, a ditch ----------
+      { const K = "cover", v = vo(K, 0), f = LINES_F(K, 0);
+        add(K, {
+          set: "border", setOpts: { time: "day", ground: 1300, lift: 220, glint: false, id: "b5", pathX: -400, tree: 260, treeS: 0.85, band: [-400, 2600, 1700, 46], fgH: 0.45, sunX: 1200 },
+          dark: 0, blur: { sky: 1, far: 1.5, mid: 1, fg: 8 }, light: GOLDR, grade: GGOLD,
+          cam: { keys: [{ t: 0, ...fr(300, 1300, 1.2, 540, 1150), drift: { s: 0 } }, { t: v + f[1] + 0.9, glide: 0.8, ...fr(820, 1400, 1.3, 540, 1150), drift: { s: 0 } }, { t: v + f[2] + 0.4, glide: 0.8, ...fr(1450, 1420, 1.3, 540, 1150), drift: { s: 0.01 } }] },
+          shake: HAND, captions: caps(K),
+          fx(tl, id, t0, L) {
+            War.rock(L.set, 760, 1500, 1.0);
+            put(L.set, `<g transform="translate(1180,1480)"><path d="M-260,0Q-200,-150 0,-170Q200,-150 260,0Z" fill="#8a6440" stroke="#2a2420" stroke-width="4"/><path d="M-200,-60Q0,-140 200,-60" stroke="#b08a5a" stroke-width="12" fill="none" opacity=".6"/></g>`);
+            War.ditch(L.set, 1560, 1560, 480);
+            const S = (x, y, t, label, icon, w, dur) => War.spot(tl, L.glow, x, y, t0 + t, dur, { label, icon, r: 140, w, tx: 50, out: true });
+            S(270, 1180, v + f[1], "ต้นไม้ใหญ่", "treex", 230, 1.0);
+            S(760, 1400, v + f[1] + 0.9, "หิน", "rock", 170, 1.0);
+            S(1180, 1400, v + f[1] + 1.8, "คันดิน", "rock", 200, 1.2);
+            S(1560, 1520, v + f[2] + 0.2, "หลุมต่ำกว่าพื้น", "rock", 290, D(K) - v - f[2] - 0.3);
+            live(tl, t0, D(K), L); motes(tl, t0, D(K), L, 14);
+          },
+        }); }
+      // ---------- 6. down flat: hands over the head, stay low; tracers overhead ----------
+      { const K = "down", v = vo(K, 0), f = LINES_F(K, 0);
+        add(K, {
+          set: "hedge", setOpts: { ...HEDGE, id: "h6", bank: 150, bushFront: true }, dark: 0, blur: { sky: 2, far: 3, mid: 2, fg: 8 }, light: GOLDR, grade: GGOLD,
+          cam: { keys: [{ t: 0, ...fr(560, 1640, 1.5, 540, 1250), drift: { s: 0.02 } }] }, shake: (t) => ({ x: hand(t) + decay(0.2, 8, 3, 50)(t), y: hand(t + 1) * 0.6, r: 0 }),
+          actors: [A("tao", 400, 1720, 0.85, [{ t: 0, mode: "duck", eyes: "wide", mouth: "o" }, { t: v + 0.6, mode: "prone", eyes: "closed", mouth: "frown" }], { flip: true })],
+          captions: caps(K),
+          fx(tl, id, t0, L) {
+            [0.2, 1.1, 2.0, 2.9].forEach((dt, k) => War.bulletSlow(tl, L, { t: t0 + dt, y: 1300 + k * 25, x0: 60, x1: 960, slow: 0.05, seed: 20 + k, dir: 1 }));
+            WarUI.steps(tl, L.light, t0, [{ icon: "still", text: "หมอบทันที", at: v + 0.1, red: true }, { icon: "notouch", text: "มือปิดหัว", at: v + f[1] }, { icon: "rock", text: "อยู่ต่ำ", at: v + f[2] }], { y: 330, w: 250, dur: D(K) });
+            live(tl, t0, D(K), L); War.jiggle(tl, `${id}-a0`, t0, D(K), { amp: 6 });
+          },
+        }); }
+      // ---------- 7. quiet: the ditch ahead, a wounded soldier from the other side ----------
+      { const K = "ditch", v = vo(K, 0), f = LINES_F(K, 0);
+        split(K, v + f[1] - 0.1, {
+          set: "border", setOpts: { time: "dusk", ground: 1300, lift: 220, glint: false, id: "b7", pathX: -400, tree: false, fgH: 0.4, sunX: 1100 },
+          dark: 0.04, blur: { sky: 1.5, far: 2, mid: 1.5, fg: 8 }, light: DUSKL, grade: GDUSKR,
+          cam: push(K, [560, 1500, 1.3, 540, 1150], [560, 1500, 1.4, 540, 1150]),
+          actors: [A("tao", 760, 1760, 0.85, [{ t: 0, mode: "kneel", eyes: "worry", mouth: "flat" }], { flip: true })],
+          captions: caps(K),
+          fx(tl, id, t0, L) { War.column(tl, L, 300, 1380, t0, 3, { s: 0.6, dusk: true }); live(tl, t0, 3, L); RabFX.motes(tl, L.glow, t0, 3, { kind: "fly", box: [0, 900, 1080, 900], n: 10, seed: 3 }); },
+        }, {
+          set: "border", setOpts: { time: "dusk", ground: 1300, lift: 220, glint: false, id: "b7b", pathX: -400, tree: false, fgH: 0.4, sunX: 1100 },
+          dark: 0.04, blur: { sky: 2, far: 3, mid: 2, fg: 9 }, light: DUSKL, grade: GDUSKR,
+          cam: { keys: [{ t: 0, ...fr(480, 1520, 1.9, 540, 1100), drift: { s: 0.025 } }] },
+          actors: [A("enemyHurt", 480, 1700, 0.85, [{ t: 0, mode: "sit", eyes: "worry", mouth: "frown" }, { t: f[2] - f[1] + 0.2, mode: "sit", eyes: "closed", mouth: "frown" }])],
+          captions: capsFrom(K, v + f[1] - 0.1),
+          fx(tl, id, t0, L) { War.ditch(L.glow, 480, 1700, 700); live(tl, t0, 4, L); RabFX.motes(tl, L.glow, t0, 4, { kind: "fly", box: [0, 900, 1080, 900], n: 10, seed: 4 }); },
+        }); }
+      // ---------- 8. โจ้: "leave him" ----------
+      add("joe", {
+        set: "border", setOpts: { time: "dusk", ground: 1300, lift: 220, glint: false, id: "b8", pathX: -400, tree: false, fgH: 0.4, sunX: 1100 },
+        dark: 0.04, blur: { sky: 2, far: 3, mid: 2, fg: 9 }, light: DUSKL, grade: GDUSKR,
+        cam: push("joe", [620, 1500, 1.6, 540, 1150], [640, 1500, 1.7, 540, 1150]), shake: HAND,
+        actors: [A("tao", 520, 1760, 0.88, [{ t: 0, mode: "kneel", eyes: "worry", mouth: "flat" }], { flip: true }), A("joe", 780, 1770, 0.9, [{ t: 0, mode: "pullHand", eyes: "angry", mouth: "o" }], { flip: true, talk: [TALK("joe", 0)] })],
+        captions: caps("joe", undefined, QUO),
+        fx(tl, id, t0, L) { live(tl, t0, D("joe"), L); ["a0", "a1"].forEach((a) => War.jiggle(tl, `${id}-${a}`, t0, D("joe"), { amp: 5, period: 0.5 })); },
+      });
+      // ---------- 9. the rule of war ----------
+      add("law", {
+        set: "border", setOpts: { time: "dusk", ground: 1300, lift: 220, glint: false, id: "b9", pathX: -400, tree: false, fgH: 0.4, sunX: 1100 },
+        dark: 0.04, blur: { sky: 2, far: 3, mid: 2, fg: 9 }, light: DUSKL, grade: GDUSKR,
+        cam: push("law", [560, 1520, 1.45, 540, 1250], [560, 1520, 1.52, 540, 1250]),
+        actors: [A("enemyHurt", 420, 1730, 0.85, [{ t: 0, mode: "sit", eyes: "worry", mouth: "frown" }]), A("tao", 720, 1760, 0.88, [{ t: 0, mode: "kneel", eyes: "normal", mouth: "flat" }], { flip: true })],
+        captions: caps("law"),
+        fx(tl, id, t0, L) { War.ditch(L.glow, 420, 1730, 600);
+          WarUI.steps(tl, L.light, t0, [{ icon: "notouch", text: "ห้ามทำร้าย", at: vo("law", 0) + 0.8, red: true }, { icon: "bandage", text: "รักษาเท่ากัน", at: vo("law", 0) + LINE("law", 0, 1) }], { y: 330, w: 280, dur: D("law") });
+          live(tl, t0, D("law"), L); },
+      });
+      // ---------- 10. the bandage; the medics with the red cross ----------
+      { const K = "bandage", v = vo(K, 0), f = LINES_F(K, 0);
+        split(K, v + f[1] - 0.1, {
+          set: "border", setOpts: { time: "dusk", ground: 1300, lift: 220, glint: false, id: "b10", pathX: -400, tree: false, fgH: 0.4, sunX: 1100 },
+          dark: 0.04, blur: { sky: 2, far: 3, mid: 2, fg: 9 }, light: DUSKL, grade: GDUSKR,
+          cam: { keys: [{ t: 0, ...fr(520, 1600, 2.1, 540, 1150), drift: { s: 0.02 } }] },
+          actors: [A("enemyHurt", 420, 1730, 0.85, [{ t: 0, mode: "sit", eyes: "closed", mouth: "frown" }]), A("tao", 640, 1760, 0.88, [{ t: 0, mode: "kneel", eyes: "normal", mouth: "flat" }], { flip: true })],
+          captions: caps(K),
+          fx(tl, id, t0, L) { War.ditch(L.glow, 420, 1730, 600); War.bandage(tl, L.glow, 600, 1712, t0 + 0.2, 1.3, 0.85); live(tl, t0, 2, L); },
+        }, {
+          set: "border", setOpts: { time: "dusk", ground: 1300, lift: 220, glint: false, id: "b10b", pathX: -400, tree: false, fgH: 0.4, sunX: 1100 },
+          dark: 0.04, blur: { sky: 1.5, far: 2, mid: 1.5, fg: 8 }, light: DUSKL, grade: GDUSKR,
+          cam: push(K, [470, 1500, 1.22, 540, 1150], [470, 1500, 1.28, 540, 1150]),
+          actors: [A("medic", 300, 1680, 0.78, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { path: [{ t: 0, x: 120, y: 1680 }, { t: 2.2, x: 330, y: 1690 }] }),
+            A("medic", 470, 1700, 0.8, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { path: [{ t: 0, x: 280, y: 1700 }, { t: 2.2, x: 480, y: 1710 }] }),
+            A("enemyHurt", 640, 1740, 0.8, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]), A("tao", 860, 1770, 0.85, [{ t: 0, mode: "kneel", eyes: "normal", mouth: "smile" }], { flip: true })],
+          captions: capsFrom(K, v + f[1] - 0.1),
+          fx(tl, id, t0, L) { War.crossFlag(L.set, 160, 1560, 0.9, "cf10"); War.wave(tl, "#cf10-fl", t0, 3); War.spot(tl, L.glow, 285, 1150, t0 + f[2] - f[1] + 0.1, 2, { label: "หน่วยแพทย์", icon: "bandage", r: 130, w: 230, tx: 50 }); live(tl, t0, 3, L); },
+        }); }
+      // ---------- 11. the tag: rule 2 ✓ ----------
+      add("rule2", { set: "hedge", setOpts: { ...HEDGE, id: "h11", time: "dusk" }, ...CARD, light: DUSKL, grade: GDUSKR, cam: push("rule2", [540, 1300, 1.0, 540, 1100], [540, 1300, 1.04, 540, 1100]),
+        captions: caps("rule2", undefined, QUO),
+        fx(tl, id, t0, L) { WarUI.tag(tl, L.light, t0 + 0.05, D("rule2") - 0.05, { active: 1, done: [0, 1], tickAt: vo("rule2", 0) + LINE("rule2", 0, 1) + 0.6, y: 820, out: false }); RabFX.motes(tl, L.glow, t0, D("rule2"), { kind: "fly", n: 14, seed: 12 }); } });
+      // ---------- 12. rewind → 0:03 ----------
+      split("rw", vo("rw", 1) - 0.1, {
+        set: "border", setOpts: { time: "dusk", ground: 1300, lift: 220, glint: false, id: "b12", pathX: -400, tree: false, fgH: 0.4, sunX: 1100 },
+        dark: 0.04, blur: { sky: 2, far: 3, mid: 2, fg: 9 }, light: DUSKL, grade: GDUSKR,
+        cam: { keys: [{ t: 0, ...fr(600, 1500, 1.5, 540, 1150), drift: { s: 0.02 } }] },
+        actors: [A("joe", 600, 1760, 0.9, [{ t: 0, mode: "kneel", eyes: "worry", mouth: "flat" }], { flip: true })],
+        captions: caps("rw"),
+        fx(tl, id, t0, L) { QkUI.rewind(tl, L.light, t0 + vo("rw", 1) - 1.0, 0.9, { from: "0:49", to: "0:03" }); live(tl, t0, 4, L); },
+      }, {
+        set: "hedge", setOpts: { ...HEDGE, id: "h12b" }, dark: 0, blur: { sky: 2, far: 2.4, mid: 1.6, fg: 8 }, light: GOLDR, grade: GVHS,
+        cam: { keys: [{ t: 0, ...fr(520, 1500, 1.35, 540, 1150), drift: { s: 0.02 } }] },
+        actors: [A("joe", 700, 1680, 0.82, [{ t: 0, mode: "hunker", eyes: "closed", mouth: "frown" }])],
+        captions: capsFrom("rw", vo("rw", 1) - 0.1),
+        fx(tl, id, t0, L) { BUSH(L); War.spot(tl, L.glow, 330, 1520, t0 + 0.1, 1.2, { label: "วินาทีที่ 3", icon: "bush", r: 220, w: 220, tx: 50 }); },
+      });
+      // ---------- 13. replay at 0.3×: through the leaves, inches over his head ----------
+      add("reveal", {
+        set: "hedge", setOpts: { ...HEDGE, id: "h13" }, dark: 0, blur: { sky: 2, far: 2.4, mid: 1.6, fg: 8 }, light: GOLDR, grade: GVHS,
+        cam: push("reveal", [560, 1440, 1.6, 540, 1100], [620, 1400, 1.85, 540, 1050]),
+        actors: [A("joe", 700, 1680, 0.82, [{ t: 0, mode: "hunker", eyes: "closed", mouth: "frown" }])],
+        captions: caps("reveal"),
+        fx(tl, id, t0, L) {
+          BUSH(L); const tb = t0 + vo("reveal", 0) + LINE("reveal", 0, 1) - 0.1;
+          War.bulletSlow(tl, L, { t: tb, y: 1292, x0: 60, x1: 960, slow: 1.4, seed: 7, dir: 1 }); slowmo(tl, id, tb, 1.4);
+          War.gap(tl, L.glow, 760, 1292, 1338, t0 + vo("reveal", 0) + LINE("reveal", 0, 2), 2.0, "ไม่กี่นิ้ว");
+          live(tl, t0, D("reveal"), L);
+        },
+      });
+      // ---------- 14. the war ends: Songkran ----------
+      add("home", {
+        set: "home", setOpts: { id: "hm14", parcel: true, parcelX: 720 }, dark: 0, blur: { far: 2, fg: 9 }, light: GOLD, grade: GHOME,
+        cam: push("home", [600, 1300, 1.05, 540, 1100], [560, 1320, 1.15, 540, 1100]),
+        actors: [A("taoBare", 300, 1660, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { path: [{ t: 0, x: 120, y: 1690 }, { t: D("home"), x: 420, y: 1660 }] }),
+          A("mom", 620, 1640, 0.92, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "flat" }, { t: 1.4, mode: "offer", eyes: "wide", mouth: "laugh" }], { flip: true })],
+        captions: caps("home"),
+        fx(tl, id, t0, L) { RabFX.motes(tl, L.glow, t0, D("home"), { box: [0, 700, 1080, 900], n: 24, seed: 5 }); },
+      });
+      // ---------- 15. แม่ ----------
+      add("hug", {
+        set: "home", setOpts: { id: "hm15", parcel: true, parcelX: 720 }, dark: 0, blur: { far: 2, fg: 9 }, light: GOLD, grade: GHOME,
+        cam: push("hug", [470, 1300, 1.3, 540, 1100], [460, 1300, 1.42, 540, 1100]),
+        actors: [A("mom", 400, 1640, 0.95, [{ t: 0, mode: "hug", eyes: "closed", mouth: "laugh" }], { talk: [TALK("hug", 0, "laugh")] }), A("taoBare", 500, 1650, 0.95, [{ t: 0, mode: "hug", eyes: "closed", mouth: "smile" }], { flip: true })],
+        captions: caps("hug", undefined, QUO),
+        fx(tl, id, t0, L) { RabFX.motes(tl, L.glow, t0, D("hug"), { box: [100, 700, 900, 900], n: 22, seed: 9 }); },
+      });
+      // ---------- 16. the parcel from across the border ----------
+      add("parcel", {
+        set: "home", setOpts: { id: "hm16", parcel: true, parcelX: 720 }, dark: 0, blur: { far: 4, mid: 3, fg: 9 }, light: GOLD, grade: GHOME,
+        cam: push("parcel", [720, 1440, 2.2, 540, 1150], [720, 1450, 2.5, 540, 1150]),
+        captions: caps("parcel"),
+        fx(tl, id, t0, L) { War.spot(tl, L.glow, 720, 1430, t0 + vo("parcel", 0) + LINE("parcel", 0, 1), 2, { label: "จากอีกฝั่ง", icon: "parcel", r: 110, w: 200, tx: 40 }); RabFX.motes(tl, L.glow, t0, D("parcel"), { n: 18, seed: 10 }); },
+      });
+      // ---------- 17. inside: binoculars, and the note (F6) ----------
+      add("open", {
+        set: "parcelTop", setOpts: { id: "pt17" }, dark: 0, light: false, grade: GHOME,
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960), drift: { s: 0.01 } }, { t: vo("open", 0) + LINE("open", 0, 2), glide: 0.8, ...fr(710, 920, 1.9, 540, 960), drift: { s: 0.015 } }] },
+        captions: caps("open"),
+        fx(tl, id, t0, L) {
+          tl.fromTo("#pt17-bi", { y: 30, rotation: 0, transformOrigin: "50% 50%" }, { y: 0, rotation: -2, transformOrigin: "50% 50%", duration: 0.8, ease: "power2.out", immediateRender: false }, t0 + 0.2);
+          War.spot(tl, L.glow, 420, 1040, t0 + vo("open", 0) + 0.3, 1.6, { label: "กล้องส่องทางไกล", icon: "binoc", r: 200, w: 290, tx: 60, out: true });
+          tl.fromTo("#pt17-note", { scale: 0.85, rotation: 6, transformOrigin: "50% 50%" }, { scale: 1, rotation: 0, transformOrigin: "50% 50%", duration: 0.6, ease: "back.out(2)", immediateRender: false }, t0 + vo("open", 0) + LINE("open", 0, 2) - 0.3);
+          tl.fromTo("#pt17-ink", { opacity: 0 }, { opacity: 1, duration: 0.5, immediateRender: false }, t0 + vo("open", 0) + LINE("open", 0, 2));
+          RabFX.motes(tl, L.glow, t0, D("open"), { box: [0, 400, 1080, 1200], n: 20, seed: 13 });
+        },
+      });
+      // ---------- 18. choice ----------
+      add("choice", {
+        set: "hedge", setOpts: { ...HEDGE, id: "h18", time: "dusk" }, ...CARD, light: DUSKL, grade: GDUSKR, cam: push("choice", [540, 1300, 1.0, 540, 1100], [540, 1300, 1.05, 540, 1100]),
+        fx(tl, id, t0, L) { QkUI.choice(tl, L.light, t0, D("choice"), { q: "จะหลบหลังอะไร?", a: { text: "พุ่มไม้", icon: "bush" }, b: { text: "ต้นไม้ใหญ่", icon: "treex" }, secs: 3, pick: "b", pickAt: D("choice") - 1.2, mark: { at: D("choice") - 0.8, wrong: "a" } }); },
+      });
+      // ---------- 19. the tag, both rules ticked ----------
+      add("end", { set: "home", setOpts: { id: "hm19", parcel: false }, ...CARD, light: GOLD, grade: GHOME, cam: push("end", [540, 1300, 1.0, 540, 1100], [540, 1300, 1.04, 540, 1100]),
+        fx(tl, id, t0, L) { WarUI.tag(tl, L.light, t0 + 0.05, D("end") - 0.05, { active: 1, done: [0, 1], tickAt: 0.7, y: 820, out: false }); RabFX.motes(tl, L.glow, t0, D("end"), { n: 20, seed: 15 }); } });
