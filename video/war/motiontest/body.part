@@ -1,0 +1,46 @@
+      // ---------- ทางกลับบ้าน · style frames + motion test (V11) ----------
+      const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.55, shade: "#2a2040", shadeOp: 0.3, cast: false, vol: false };
+      const DUSKL = { from: "left", rim: "#ffb070", rimOp: 0.6, shade: "#2a1838", shadeOp: 0.36, cast: false, vol: false };
+      const GDAYR = { top: "#fff4d8", bottom: "#c8e8d0", op: 0.12 }, GDUSKR = { top: "#ffb878", bottom: "#4a2a5a", op: 0.2 };
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra });
+      const CARD = { dark: 0.12, blur: { far: 8, mid: 8, set: 8, fg: 10 }, light: DAYL, grade: GDAYR };
+      const boom = (t0, at, amp = 16, len = 0.6) => (t) => (t > at && t < at + len ? { x: amp * (1 - (t - at) / len) * Math.sin(t * 60), y: amp * 0.7 * (1 - (t - at) / len) * Math.sin(t * 47), r: 0 } : 0);
+
+      // EP.1 hook: the mine goes off, โจ้ down in the grass, เต๋า lunging, จ่าเม่น dragging him back — the glint on the ridge (F6)
+      add("w1", {
+        set: "border", setOpts: { id: "b1", time: "day", bamboo: 60, glintX: 640, tree: 1140, pathX: 620, fgH: 0.55 }, dark: 0, blur: { far: 1.5, mid: 1, fg: 9 }, light: DAYL, grade: GDAYR,
+        cam: { keys: [{ t: 0, ...fr(540, 1330, 1.15, 540, 1060) }, { t: 3.0, glide: 3.0, ...fr(520, 1330, 1.25, 540, 1060) }] },
+        shake: boom(0, 0.05, 22, 0.7),
+        actors: [
+          A("joe", 250, 1560, 0.6, [{ t: 0, mode: "reachUp", eyes: "wide", mouth: "scream" }], { flip: true }),
+          A("tao", 790, 1650, 0.66, [{ t: 0, mode: "strain", eyes: "wide", mouth: "scream" }], { flip: true }),
+          A("mem", 930, 1670, 0.68, [{ t: 0, mode: "hold", eyes: "angry", mouth: "scream" }], { flip: true }),
+        ],
+        fx(tl, id, t0, L) {
+          War.blast(tl, L, 250, 1540, t0 + 0.02, { id: "bl1", s: 1.0, linger: 3 });
+          War.glint(tl, "b1", t0, 3.0);
+        },
+      });
+      // EP.2 hook: bullets cutting through the bush, โจ้ crouched behind it
+      add("w2", {
+        set: "hedge", setOpts: { id: "h2", bush: 560, bank: 130, tree: 900, bushFront: true }, dark: 0, blur: { far: 2, mid: 1.5, fg: 9 }, light: DAYL, grade: GDAYR,
+        cam: { keys: [{ t: 0, ...fr(560, 1380, 1.35, 540, 1100) }, { t: 2.4, glide: 2.4, ...fr(560, 1400, 1.5, 540, 1100) }] },
+        shake: (t) => (t > 0.1 && t < 1.8 ? { x: 5 * Math.sin(t * 70), y: 3 * Math.sin(t * 53), r: 0 } : 0),
+        actors: [A("joe", 600, 1600, 0.78, [{ t: 0, mode: "duck", eyes: "wide", mouth: "scream" }])],
+        fx(tl, id, t0, L) { put(L.act, War.bushHTML(560, 1560, "h2-bush")); War.bullets(tl, L, t0 + 0.05, 2.0, { n: 9, box: [380, 1360, 380, 260], seed: 11 }); },
+      });
+      // the rule card: the squad's dog tag
+      add("w3", { set: "border", setOpts: { id: "b3", time: "day", glint: false }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 2.6, glide: 2.6, ...fr(550, 1200, 1.05, 540, 1100) }] },
+        fx(tl, id, t0, L) { RabFX.motes(tl, L.glow, t0, 2.6, { box: [100, 300, 880, 1200], n: 24 }); WarUI.tag(tl, L.light, t0 + 0.05, 2.55, { active: 0, done: [], y: 700, out: false }); } });
+      // cover vs concealment
+      add("w4", { set: "hedge", setOpts: { id: "h4" }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 2.6, glide: 2.6, ...fr(530, 1200, 1.05, 540, 1100) }] },
+        fx(tl, id, t0, L) { WarUI.cover(tl, L.light, t0 + 0.05, 2.55, { y: 600, out: false }); } });
+      // the warning signs
+      add("w5", { set: "border", setOpts: { id: "b5", time: "dusk", glint: false }, ...CARD, light: DUSKL, grade: GDUSKR, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 2.6, glide: 2.6, ...fr(540, 1200, 1.05, 540, 1100) }] },
+        fx(tl, id, t0, L) { WarUI.signs(tl, L.light, t0 + 0.05, 2.55, { y: 520, title: "สัญญาณว่ามีทุ่นระเบิด", out: false }); } });
+      // home at Songkran: แม่, เต๋า, the parcel on the step
+      add("w6", {
+        set: "home", setOpts: { id: "hm6", parcel: true, parcelX: 720 }, dark: 0, blur: { far: 2, fg: 9 }, light: DAYL, grade: GDAYR,
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.15, 540, 1100) }, { t: 2.6, glide: 2.6, ...fr(540, 1320, 1.25, 540, 1100) }] },
+        actors: [A("mom", 400, 1640, 0.95, [{ t: 0, mode: "hug", eyes: "closed", mouth: "laugh" }]), A("taoBare", 500, 1650, 0.95, [{ t: 0, mode: "hug", eyes: "closed", mouth: "smile" }], { flip: true })],
+      });
