@@ -1,0 +1,99 @@
+      // ---------- นาทีก่อนจม: the car in cutaway — a side view with its near side cut open, sized to the cast ----------
+      // the car faces right (its front on the right), so we look at its right side: the driver's (right-hand drive). Rig poses face right
+      // when not flipped (sitChair: thighs forward to the right, shins down). Sizes come from the seated cast, not from a drawing:
+      // ต้น s 0.86 sits 0.86 × 460 ≈ 400 px from heel to crown, so the cabin is 470 px floor to roof, seats and wheel to his reach.
+      const CF = 1500;                                           // the cabin floor
+      const CT2 = { x: 640, y: CF + 2, s: 0.86 }, CK3 = { x: 248, y: CF + 2, s: 0.6 };
+      Rig.MODES.drive = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: -7 + 0.6 * Math.sin(u * 1.7), head: -3, uaF: -66, faF: -34, uaB: -60, faB: -36 });
+      Rig.MODES.brace = (u, o) => { const j = Math.sin(u * 27) * 1.6; return { ...Rig.MODES.sitChair(u, o), torso: 6 + j, head: 8 + j, uaF: -84 + j, faF: -26, uaB: -76 - j, faB: -30 }; };
+      Rig.MODES.reachBack = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: -14, head: -16, uaF: 112, faF: 16, uaB: -50, faB: -40 });
+      Rig.MODES.sitHold = (u, o) => { const j = Math.sin(u * 19) * 1.2; return { ...Rig.MODES.sitChair(u, o), torso: 3 + j, head: 4, uaF: -96 + j, faF: -24, uaB: -86, faB: -30 }; };
+      Rig.MODES.sitStand = (u, o) => ({ ...Rig.MODES.sitChair(u, o), bodyY: 96, thF: -60, shF: 70, thB: -58, shB: 66, torso: 8, head: 6, uaF: -150, faF: -20, uaB: -140, faB: -24 });
+      // the cabin: the inside outline (the water fills it), the far-side windows (the night and the canal show through)
+      const CABIN_D = "M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236V1500H28Z";
+      const WIN_F = "M488,1064H760L888,1218H488Z", WIN_R = "M214,1064H462V1218H58Z";
+      Sets.carCut = (L, o = {}) => {
+        const id = o.id || "cc", lvl = o.out ?? 1120;   // the canal's surface outside
+        // the night outside: sky, stars, the far bank and its lamp, the canal (its surface at lvl)
+        put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060a14"/><stop offset="1" stop-color="#16243a"/></linearGradient>
+          <rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-sk)"/>${Array.from({ length: 40 }, (_, k) => `<circle cx="${f1(-200 + ((k * 263) % 1500))}" cy="${f1(200 + ((k * 89) % 700))}" r="${f1(1.4 + (k % 3))}" fill="#dfe8ff" opacity="${(0.25 + (k % 4) * 0.15).toFixed(2)}"/>`).join("")}`);
+        put(L.far, `<radialGradient id="${id}-lg"><stop offset="0" stop-color="#ffd08a" stop-opacity=".9"/><stop offset=".25" stop-color="#ff9a3a" stop-opacity=".32"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient>
+          <linearGradient id="${id}-cw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16303a"/><stop offset=".3" stop-color="#0c1e22"/><stop offset="1" stop-color="#040a0c"/></linearGradient>
+          <rect x="-900" y="${lvl}" width="2900" height="2000" fill="url(#${id}-cw)"/>${Array.from({ length: 8 }, (_, k) => `<rect x="${f1(690 + ((k * 37) % 90) - k * 6)}" y="${lvl + 8 + k * 14}" width="${70 - k * 6}" height="5" rx="2.5" fill="#ffb45a" opacity="${(0.7 - k * 0.07).toFixed(2)}"/>`).join("")}
+          <path d="M-900,${lvl - 46}L2000,${lvl - 60}V${lvl}H-900Z" fill="#0a110e"/>${Array.from({ length: 40 }, (_, k) => `<path d="M${-300 + k * 46},${lvl - 50 - (k % 3) * 2}q${k % 2 ? 7 : -7},-50 ${k % 2 ? -3 : 5},-${60 + (k * 13) % 40}" stroke="#0e1812" stroke-width="7" fill="none"/>`).join("")}
+          <rect x="806" y="${lvl - 520}" width="12" height="470" fill="#141a20"/><path d="M812,${lvl - 514}q-40,-24 -92,-12" stroke="#141a20" stroke-width="9" fill="none"/><circle cx="724" cy="${lvl - 520}" r="230" fill="url(#${id}-lg)"/><circle cx="724" cy="${lvl - 522}" r="11" fill="#fff4d0"/>`);
+        // the car: the far side of the cabin (door panels, window frames, roof liner), the seats, the dash; the cut edge of the near side
+        let s = `<linearGradient id="${id}-uw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c7a6a"/><stop offset=".25" stop-color="#14403a"/><stop offset="1" stop-color="#040c0c"/></linearGradient>
+          <clipPath id="${id}-wf"><path d="${WIN_F}"/><path d="${WIN_R}"/></clipPath>
+          <g clip-path="url(#${id}-wf)"><g id="${id}-outw"><rect x="-900" y="0" width="2900" height="1200" fill="url(#${id}-uw)"/><path d="M-900,0Q-700,-10 -500,0T-100,0T300,0T700,0T1100,0T1500,0T1900,0" stroke="#e8fff6" stroke-width="5" fill="none"/></g></g>
+          <path d="M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236V1500H28ZM${WIN_F.slice(1)}M${WIN_R.slice(1)}" fill="#1a2029" fill-rule="evenodd"/>
+          <path d="${WIN_F}" fill="none" stroke="#0b0e13" stroke-width="12"/><path d="${WIN_R}" fill="none" stroke="#0b0e13" stroke-width="12"/>
+          <path d="M470,1050V1500" stroke="#11151c" stroke-width="34"/><path d="M60,1290H1000" stroke="#232a35" stroke-width="10"/>
+          <path d="M210,1040Q480,1018 760,1040L770,1058Q480,1036 214,1058Z" fill="#2a3240"/><ellipse cx="480" cy="1046" rx="40" ry="9" fill="#3a4458"/>`;
+        // the rear bench: backrest leaning back, the cushion, its headrest
+        s += `<path d="M86,1500V1420Q86,1392 116,1390H330Q356,1392 352,1420L346,1500Z" fill="#2a3240" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M92,1404L52,1150Q48,1122 76,1118L118,1114Q142,1116 146,1142L170,1392Z" fill="#232a35" stroke="#0b0e13" stroke-width="6"/>
+          <rect x="44" y="1050" width="86" height="70" rx="24" transform="rotate(-8 87 1085)" fill="#2a3240" stroke="#0b0e13" stroke-width="6"/>`;
+        // the driver's seat: cushion, backrest, headrest; the B-pillar's belt anchor
+        s += `<path d="M520,1500V1424Q520,1396 548,1394H720Q748,1396 744,1424L738,1500Z" fill="#2c3644" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M530,1408L486,1142Q482,1112 512,1108L556,1106Q582,1108 586,1136L610,1398Z" fill="#26303c" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M506,1128L540,1392" stroke="#1d242f" stroke-width="8"/><rect x="480" y="1036" width="94" height="74" rx="26" transform="rotate(-9 527 1073)" fill="#2c3644" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M528,1108V1124M556,1106V1122" stroke="#8a929c" stroke-width="8"/>`;
+        // the dash, the column and the instrument hood; the pedals
+        s += `<path d="M1012,1236L930,1206L866,1206Q846,1210 846,1232L860,1330Q900,1352 1012,1360Z" fill="#20252d" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M870,1206Q880,1180 912,1180L936,1206Z" fill="#161a20" stroke="#0b0e13" stroke-width="5"/><rect x="872" y="1214" width="44" height="22" rx="6" fill="#07131c"/><path d="M878,1226h32" stroke="#7fd1ff" stroke-width="4" opacity=".8"/>
+          <path d="M940,1500L1012,1500L1012,1380Q960,1372 930,1400Z" fill="#161a20"/><path d="M948,1418L926,1478" stroke="#2c323b" stroke-width="12" stroke-linecap="round"/><rect x="900" y="1470" width="48" height="16" rx="5" fill="#3a3f48" stroke="#0b0e13" stroke-width="3" transform="rotate(-24 924 1478)"/>
+          <path d="M984,1420L966,1482" stroke="#2c323b" stroke-width="10" stroke-linecap="round"/><rect x="948" y="1476" width="34" height="14" rx="5" fill="#3a3f48" stroke="#0b0e13" stroke-width="3" transform="rotate(-20 965 1483)"/>`;
+        put(L.set, s);
+      };
+      // over the cast (call in fx): the wheel in his hands, the belts, the near side's cut edge, the body below the floor
+      const BELT2 = {
+        ton: { a: [520, 1118], sh: [608, 1214], b: [612, 1398], lap: [700, 1392] },
+        kim: { a: [120, 1196], sh: [232, 1270], b: [236, 1398], lap: [300, 1394] },
+      };
+      const cutFront = (L, id, o = {}) => {
+        const free = o.free || [];
+        let g = "";
+        ["ton", "kim"].forEach((k) => {
+          const B = BELT2[k], off = free.includes(k), w = k === "ton" ? 1 : 0.75;
+          const d = `M${B.a[0]},${B.a[1]}L${B.sh[0]},${B.sh[1]}L${B.b[0]},${B.b[1]}`;
+          g += `<g id="${id}-bl${k}" opacity="${off ? 0 : 1}">
+            <path id="${id}-lap${k}" d="M${B.b[0]},${B.b[1]}L${B.lap[0]},${B.lap[1]}" pathLength="1" stroke-dasharray="1 1" stroke="#56606e" stroke-width="${f1(15 * w)}" stroke-linecap="round"/>
+            <path id="${id}-st${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#0b0e13" stroke-width="${f1(20 * w)}" stroke-linejoin="round"/>
+            <path id="${id}-sf${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#56606e" stroke-width="${f1(14 * w)}" stroke-linejoin="round"/>
+            <path id="${id}-sh${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#8a95a6" stroke-width="2" opacity=".8"/>
+            <g id="${id}-tg${k}"><rect x="${B.b[0] - 11}" y="${B.b[1] - 9}" width="22" height="18" rx="4" fill="#c9ced6" stroke="#0b0e13" stroke-width="3"/></g></g>`;
+        });
+        // the wheel, seen from the side: a tilted ring at his reach, the column into the dash
+        g += `<g id="${id}-wheel"><path d="M852,1292L912,1258" stroke="#14171c" stroke-width="26" stroke-linecap="round"/>
+          <ellipse cx="826" cy="1262" rx="20" ry="86" transform="rotate(-24 826 1262)" fill="none" stroke="#07090c" stroke-width="24"/><ellipse cx="826" cy="1262" rx="20" ry="86" transform="rotate(-24 826 1262)" fill="none" stroke="#2a2f37" stroke-width="14"/></g>`;
+        // the cut edge of the near side: the sill and the lower door below the cabin floor, the roof's edge, the pillars' stumps
+        g += `<path d="M-60,1500H1100L1120,1560Q1000,1596 860,1596H-40Q-80,1580 -60,1500Z" fill="#d8dde3" stroke="#0b0e13" stroke-width="8"/><path d="M-50,1520H1090" stroke="#aeb6c0" stroke-width="6"/>
+          <path d="M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236" fill="none" stroke="#e2e6ea" stroke-width="16" stroke-linejoin="round"/><path d="M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236" fill="none" stroke="#0b0e13" stroke-width="4" stroke-linejoin="round" transform="translate(0,-9)"/>`;
+        put(L.act, `<g id="${id}-front">${g}</g>`);
+      };
+      // the canal in front of the car: a tint over everything under its surface but the cut-open cabin (call after cutFront)
+      const cutCanal = (L, tl, id, t0, dur, y0, y1) => {
+        put(L.act, `<mask id="${id}-nm" maskUnits="userSpaceOnUse" x="-900" y="0" width="2900" height="2600"><rect x="-900" y="0" width="2900" height="2600" fill="#fff"/><path d="${CABIN_D}" fill="#000"/></mask>
+          <g mask="url(#${id}-nm)"><g id="${id}-nw"><linearGradient id="${id}-nwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c7a6a" stop-opacity=".5"/><stop offset=".3" stop-color="#123a34" stop-opacity=".8"/><stop offset="1" stop-color="#030a0a" stop-opacity=".95"/></linearGradient>
+          <rect x="-900" y="0" width="2900" height="1400" fill="url(#${id}-nwg)"/>
+          <path id="${id}-nsk" d="M-900,0Q-800,-12 -700,0T-500,0T-300,0T-100,0T100,0T300,0T500,0T700,0T900,0T1100,0T1300,0T1500,0T1700,0T1900,0T2100,0" stroke="#e8fff6" stroke-width="6" fill="none"/>
+          ${Array.from({ length: 30 }, (_, k) => `<circle cx="${f1(-100 + ((k * 211) % 1300))}" cy="${f1(60 + ((k * 137) % 700))}" r="${f1(2 + (k % 4) * 1.4)}" fill="#bfe8d8" opacity="${(0.2 + (k % 5) * 0.08).toFixed(2)}"/>`).join("")}</g></g>`);
+        tl.set(`#${id}-nw`, { y: y0 }, 0);
+        tl.fromTo(`#${id}-nw`, { y: y0 }, { y: y1, duration: dur, ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-nsk`, { x: 0 }, { x: -200, duration: 1.3, repeat: Math.ceil(dur / 1.3), ease: "none", immediateRender: false }, t0);
+      };
+      // the water in the cabin, clipped to it (rises y0 → y1); things afloat on it
+      const cutWater = (L, tl, id, t, len, y0, y1) => {
+        put(L.act, `<clipPath id="${id}-ccw"><path d="${CABIN_D}"/></clipPath><g clip-path="url(#${id}-ccw)"><g id="${id}-cw2">
+          <linearGradient id="${id}-cwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e9a88" stop-opacity=".55"/><stop offset=".4" stop-color="#1c5a52" stop-opacity=".75"/><stop offset="1" stop-color="#08201e" stop-opacity=".9"/></linearGradient>
+          <rect x="-200" y="0" width="1500" height="900" fill="url(#${id}-cwg)"/><path id="${id}-cwsk2" d="M-200,0Q-140,-8 -80,0T40,0T160,0T280,0T400,0T520,0T640,0T760,0T880,0T1000,0T1120,0T1240,0T1360,0" stroke="#c8f4e8" stroke-width="6" fill="none"/>
+          <g transform="translate(420,-6)"><g class="cwbob2"><g transform="rotate(-80)"><rect x="-14" y="-48" width="28" height="76" rx="11" fill="#9fd8f0" opacity=".8" stroke="#0b0e13" stroke-width="3"/><rect x="-8" y="-62" width="16" height="16" rx="3" fill="#3a7ad8" stroke="#0b0e13" stroke-width="2.4"/></g></g></g>
+          <g transform="translate(150,-10)"><g class="cwbob2"><rect x="-44" y="-30" width="88" height="70" rx="16" fill="#e86aa8" stroke="#0b0e13" stroke-width="4"/><rect x="-28" y="-6" width="56" height="32" rx="9" fill="#f39ac4" stroke="#0b0e13" stroke-width="3"/><path d="M-28,-30q28,-34 56,0" stroke="#0b0e13" stroke-width="6" fill="none"/></g></g></g></g>`);
+        tl.set(`#${id}-cw2`, { y: y0 }, 0);
+        tl.fromTo(`#${id}-cw2`, { y: y0 }, { y: y1, duration: len, ease: "sine.inOut", immediateRender: false }, t);
+        tl.fromTo(`#${id}-cwsk2`, { x: 0 }, { x: -120, duration: 1.2, repeat: Math.ceil(len / 1.2), ease: "none", immediateRender: false }, t);
+        document.querySelectorAll(`#${id}-cw2 .cwbob2`).forEach((el, k) => tl.fromTo(el, { y: -4, rotation: -6, transformOrigin: "50% 50%" }, { y: 5, rotation: 6, duration: 0.8 + k * 0.17, repeat: Math.ceil(len / 0.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, t));
+      };
+      // the canal outside the car rises too (the far windows): y is the surface's height in the world
+      const cutOutside = (tl, id, t, len, y0, y1) => { tl.set(`#${id}-outw`, { y: y0 }, 0); tl.fromTo(`#${id}-outw`, { y: y0 }, { y: y1, duration: len, ease: "none", immediateRender: false }, t); };

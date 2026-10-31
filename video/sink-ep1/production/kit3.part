@@ -1,0 +1,272 @@
+      // ---------- นาทีก่อนจม kit 3: the sinking cabin (bigger cast, real belts), belt insert, the canal outside the glass ----------
+      const SKIN = "#d39a6e", SKINS = "#b27c52", BAND = "#e05a3a";   // ต้น: tank top, bare arms, a red wristband
+      // cabin layout (world, everything at parallax 1), seen from the dash: ต้น left (right-hand drive), the empty front seat right,
+      // ขิม in the back between the front seats (CK); once her belt is off she scrambles toward her window (CK2)
+      const CT = { x: 330, y: 1720, s: 0.95 }, CK = { x: 600, y: 1384, s: 0.5 }, CK2 = { x: 690, y: 1366, s: 0.5 };
+      const ptOf = (c, lx, ly) => [c.x + c.s * lx, c.y + c.s * ly];   // a point on a seated rig, in its own units
+      const BELT = {   // shoulder anchor (B-pillar, outboard) → over the shoulder → the buckle at the inboard hip
+        ton: { a: [70, 1150], sh: ptOf(CT, -40, -470), b: ptOf(CT, 58, -296), lap: ptOf(CT, -70, -300) },
+        kim: { a: [648, 1100], sh: ptOf(CK, 40, -470), b: ptOf(CK, -58, -296), lap: ptOf(CK, 70, -300) },
+      };
+      Sets.sinkCab = (L, o = {}) => {
+        const id = o.id || "sc";
+        put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#05080e"/>`);
+        // the night through the rear window: sky, stars, the street lamp on the bank, the reeds
+        let w = `<linearGradient id="${id}-skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1222"/><stop offset="1" stop-color="#1a2a40"/></linearGradient>
+          <radialGradient id="${id}-lampG"><stop offset="0" stop-color="#ffd08a" stop-opacity=".95"/><stop offset=".22" stop-color="#ff9a3a" stop-opacity=".4"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient>
+          <rect x="-900" y="-600" width="2900" height="1700" fill="url(#${id}-skyG)"/>`;
+        for (let k = 0; k < 34; k++) w += `<circle cx="${f1(120 + ((k * 97) % 860))}" cy="${f1(380 + ((k * 53) % 300))}" r="${f1(1.5 + (k % 3))}" fill="#dfe8ff" opacity="${(0.3 + (k % 4) * 0.15).toFixed(2)}"/>`;
+        w += `<path d="M-900,800L2000,730V1300H-900Z" fill="#0a110e"/>${Array.from({ length: 22 }, (_, k) => `<path d="M${120 + k * 40},${790 - k * 2}q${(k % 2 ? 8 : -8)},-60 ${(k % 2 ? -4 : 6)},-${70 + (k * 13) % 50}" stroke="#0e1812" stroke-width="7" fill="none"/>`).join("")}
+          <rect x="776" y="430" width="12" height="380" fill="#151a20"/><path d="M782,436q-40,-26 -96,-14" stroke="#151a20" stroke-width="10" fill="none"/><rect x="660" y="418" width="56" height="16" rx="6" fill="#2a2e34"/>
+          <circle id="${id}-lamp" cx="688" cy="440" r="210" fill="url(#${id}-lampG)"/><circle cx="688" cy="436" r="12" fill="#fff4d0"/>`;
+        // the cabin shell around the rear window, the roof liner, the rear bench with its headrests, the B-pillars
+        const win = "M250,360H830Q900,360 912,430L940,780Q944,812 908,812H172Q136,812 140,780L168,430Q180,360 250,360Z";
+        w += `<path d="M-900,-600H2000V2600H-900Z${win}" fill="#151a22" fill-rule="evenodd"/>
+          <path d="${win}" fill="none" stroke="#0b0e13" stroke-width="22"/><path d="M-900,-600H2000V250Q540,200 -900,250Z" fill="#1d2430"/>
+          <ellipse cx="540" cy="292" rx="70" ry="22" fill="#2a3242"/><ellipse cx="540" cy="292" rx="44" ry="12" fill="#3a4458"/>
+          <path d="M40,1560V1200Q40,850 200,812H880Q1040,850 1040,1200V1560Z" fill="#1a2029"/><path d="M60,1290Q540,1250 1020,1290" stroke="#11151c" stroke-width="10" fill="none"/>
+          ${[260, 540, 820].map((x) => `<rect x="${x - 80}" y="770" width="160" height="96" rx="34" fill="#202734" stroke="#0b0e13" stroke-width="5"/>`).join("")}
+          <path d="M-900,300L40,330L120,1900H-900Z" fill="#11151c"/><path d="M2000,300L1040,330L960,1900H2000Z" fill="#11151c"/>
+          <path d="M40,330L120,1900" stroke="#1f2530" stroke-width="10"/><path d="M1040,330L960,1900" stroke="#1f2530" stroke-width="10"/>`;
+        // the front seats (the passenger's is drawn over ขิม in cabFront: she sits behind it)
+        w += seat(CT, 200, 1190, 112);
+        w += `<g><circle cx="${BELT.ton.a[0]}" cy="${BELT.ton.a[1]}" r="20" fill="#2a2e36" stroke="#0b0e13" stroke-width="5"/></g>`;
+        put(L.set, w);
+      };
+      const seat = (c, hw, top, hr) => `<path d="M${c.x - hw},1900V${top + 70}Q${c.x - hw},${top} ${c.x - hw + 70},${top}H${c.x + hw - 70}Q${c.x + hw},${top} ${c.x + hw},${top + 70}V1900Z" fill="#232a35" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M${c.x - hw + 40},${top + 60}V1900M${c.x + hw - 40},${top + 60}V1900" stroke="#1a2029" stroke-width="8"/>
+          <rect x="${c.x - hr}" y="${top - 150}" width="${hr * 2}" height="150" rx="44" fill="#2a3240" stroke="#0b0e13" stroke-width="6"/><path d="M${c.x - 26},${top - 6}V${top + 16}M${c.x + 26},${top - 6}V${top + 16}" stroke="#8a929c" stroke-width="10"/>`;
+      // over the cast (call in fx): the belts, the wheel, the dashboard; o.free lists belts already off
+      const cabFront = (L, id, o = {}) => {
+        const free = o.free || [];
+        let g = seat({ x: 830 }, 180, 1210, 100)   // the empty front passenger seat, in front of ขิม; the console between the seats
+          + `<path d="M512,1900V1274Q512,1240 546,1240H654Q688,1240 688,1274V1900Z" fill="#1c2129" stroke="#0b0e13" stroke-width="6"/><rect x="540" y="1266" width="120" height="44" rx="14" fill="#11151c"/><path d="M600,1380V1450" stroke="#2c323b" stroke-width="26" stroke-linecap="round"/>`;
+        ["ton", "kim"].forEach((k) => {
+          const B = BELT[k], off = free.includes(k);
+          const d = `M${B.a[0]},${B.a[1]}L${f1(B.sh[0])},${f1(B.sh[1])}L${f1(B.b[0])},${f1(B.b[1])}`;
+          g += `<g id="${id}-bl${k}" opacity="${off ? 0 : 1}">
+            <path id="${id}-lap${k}" d="M${f1(B.b[0])},${f1(B.b[1])}L${f1(B.lap[0])},${f1(B.lap[1] + 8)}" pathLength="1" stroke-dasharray="1 1" stroke="#2c323b" stroke-width="${k === "ton" ? 30 : 18}" stroke-linecap="round"/>
+            <path id="${id}-st${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#0b0e13" stroke-width="${k === "ton" ? 31 : 17}" stroke-linejoin="round"/>
+            <path id="${id}-sf${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#56606e" stroke-width="${k === "ton" ? 25 : 12}" stroke-linejoin="round"/>
+            <path id="${id}-sh${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#8a95a6" stroke-width="${k === "ton" ? 3 : 2}" stroke-linejoin="round" opacity=".8"/>
+            <g id="${id}-tg${k}"><rect x="${f1(B.b[0] - 16)}" y="${f1(B.b[1] - 12)}" width="32" height="26" rx="5" fill="#c9ced6" stroke="#0b0e13" stroke-width="4"/></g>
+            <g transform="translate(${f1(B.b[0] + (k === "ton" ? 10 : -10))},${f1(B.b[1] + 26)})"><rect x="-22" y="-12" width="44" height="58" rx="10" fill="#0f1114" stroke="#000" stroke-width="3"/><rect x="-14" y="-8" width="28" height="14" rx="4" fill="#d8322a"/></g></g>`;
+        });
+        // ขิม holding on to the two front seats (o.kimGrip: her own arms are hidden by the shot)
+        if (o.kimGrip) g += kimHolds(CK, [[505, 1172], [676, 1196]]);
+        // the wheel in front of ต้น (tilted: an ellipse), spokes and the hub; his arms to it at ten and two, the backs of his hands to us
+        const WX = CT.x, WY0 = 1452, RX = 196, RYw = 104;
+        g += `<g id="${id}-wheel"><ellipse cx="${WX}" cy="${WY0}" rx="${RX}" ry="${RYw}" fill="none" stroke="#07090c" stroke-width="44"/><ellipse cx="${WX}" cy="${WY0}" rx="${RX}" ry="${RYw}" fill="none" stroke="#22262d" stroke-width="32"/>
+          <path d="M${WX - RX + 18},${WY0 - 30}Q${WX},${WY0 - RYw - 30} ${WX + RX - 18},${WY0 - 30}" stroke="#3a3f48" stroke-width="5" fill="none" opacity=".7"/>
+          <path d="M${WX - RX + 10},${WY0 + 14}L${WX - 60},${WY0 + 22}M${WX + RX - 10},${WY0 + 14}L${WX + 60},${WY0 + 22}" stroke="#16191e" stroke-width="30"/>
+          <ellipse cx="${WX}" cy="${WY0 + 26}" rx="70" ry="44" fill="#1a1d22" stroke="#07090c" stroke-width="5"/><ellipse cx="${WX}" cy="${WY0 + 22}" rx="22" ry="12" fill="#2c3038"/></g>`;
+        if (!o.noTonArms) g += tonOnWheel(CT, [[WX - 168, WY0 - 92], [WX + 168, WY0 - 92]]);
+        g += `<linearGradient id="${id}-dashG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262b33"/><stop offset="1" stop-color="#0c0e11"/></linearGradient>
+          <path d="M-900,1520Q540,1400 2000,1520V2600H-900Z" fill="url(#${id}-dashG)"/><path d="M-900,1520Q540,1400 2000,1520" stroke="#3a3f48" stroke-width="10" fill="none"/>
+          <g id="${id}-scr"><rect x="470" y="1486" width="150" height="66" rx="12" fill="#07131c" stroke="#3a3f48" stroke-width="5"/><text x="545" y="1532" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="32" fill="#7fd1ff">01:0${o.min ?? 1}</text></g>`;
+        put(L.act, `<g id="${id}-front">${g}</g>`);
+      };
+      // one belt comes off: the strap reels back into its pillar, the latch plate flies up with it
+      const beltOff = (tl, id, k, t) => {
+        const B = BELT[k];
+        tl.to([`#${id}-st${k}`, `#${id}-sf${k}`, `#${id}-sh${k}`], { attr: { "stroke-dashoffset": 1 }, duration: 0.32, ease: "power3.in" }, t);
+        tl.to(`#${id}-lap${k}`, { attr: { "stroke-dashoffset": -1 }, duration: 0.2, ease: "power2.in" }, t);
+        tl.to(`#${id}-tg${k}`, { x: B.sh[0] - B.b[0], y: B.sh[1] - B.b[1], duration: 0.16, ease: "power2.in" }, t);
+        tl.to(`#${id}-tg${k}`, { x: B.a[0] - B.b[0], y: B.a[1] - B.b[1], opacity: 0, duration: 0.16, ease: "none" }, t + 0.16);
+      };
+      // the water inside: a teal body over everything below its surface, a bright skin, things afloat (rises y0 → y1 over [t, t+len])
+      const cabWater = (L, tl, id, t, len, y0, y1, o = {}) => {
+        const bob = (x, body, k) => `<g transform="translate(${x},0)"><g class="cwbob" data-k="${k}">${body}</g></g>`;
+        const bottle = `<g transform="rotate(-70)"><rect x="-18" y="-60" width="36" height="96" rx="14" fill="#9fd8f0" opacity=".75" stroke="#0b0e13" stroke-width="4"/><rect x="-10" y="-78" width="20" height="20" rx="4" fill="#3a7ad8" stroke="#0b0e13" stroke-width="3"/><rect x="-18" y="-20" width="36" height="26" fill="#e8f4f8" opacity=".7"/></g>`;
+        const bag = `<g transform="rotate(8)"><rect x="-60" y="-40" width="120" height="96" rx="22" fill="#e86aa8" stroke="#0b0e13" stroke-width="5"/><rect x="-40" y="-8" width="80" height="44" rx="12" fill="#f39ac4" stroke="#0b0e13" stroke-width="4"/><path d="M-40,-40q40,-46 80,0" stroke="#0b0e13" stroke-width="8" fill="none"/><circle cx="0" cy="14" r="9" fill="#fff6a8"/></g>`;
+        const leaf = (r) => `<path transform="rotate(${r})" d="M-26,0Q0,-14 26,0Q0,14 -26,0Z" fill="#4a6a3a" stroke="#0b0e13" stroke-width="3"/>`;
+        const items = (o.items ?? true) ? bob(o.bottleX ?? 600, bottle, 0) + bob(o.bagX ?? 980, bag, 1) + bob(160, leaf(20), 2) + bob(700, leaf(-30), 3) + bob(470, leaf(60), 4) : "";
+        put(L.act, `<g id="${id}-cw"><linearGradient id="${id}-cwG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e9a88" stop-opacity=".5"/><stop offset=".35" stop-color="#1c5a52" stop-opacity=".72"/><stop offset="1" stop-color="#08201e" stop-opacity=".9"/></linearGradient>
+          <rect x="-900" y="0" width="2900" height="2200" fill="url(#${id}-cwG)"/>
+          <g id="${id}-cwsk"><path d="M-900,0Q-780,-12 -660,0T-420,0T-180,0T60,0T300,0T540,0T780,0T1020,0T1260,0T1500,0T1740,0T1980,0T2220,0" stroke="#c8f4e8" stroke-width="7" fill="none" opacity=".8"/>
+          <path d="M-900,16Q-760,6 -620,16T-340,16T-60,16T220,16T500,16T780,16T1060,16T1340,16T1620,16T1900,16T2180,16" stroke="#8fd8c4" stroke-width="4" fill="none" opacity=".45"/></g>
+          ${items}</g>`);
+        tl.set(`#${id}-cw`, { y: y0 }, 0);
+        tl.fromTo(`#${id}-cw`, { y: y0 }, { y: y1, duration: len, ease: "sine.inOut", immediateRender: false }, t);
+        tl.fromTo(`#${id}-cwsk`, { x: 0 }, { x: -240, duration: 1.6, repeat: Math.ceil(len / 1.6), ease: "none", immediateRender: false }, t);
+        document.querySelectorAll(`#${id}-cw .cwbob`).forEach((el) => {
+          const k = +el.dataset.k;
+          tl.fromTo(el, { y: -4, rotation: -5, transformOrigin: "50% 50%" }, { y: 6, rotation: 5, duration: 0.7 + k * 0.13, repeat: Math.ceil(len / 0.7), yoyo: true, ease: "sine.inOut", immediateRender: false }, t + k * 0.1);
+        });
+      };
+      // light in the sinking cabin: the cyan dash glow on their faces, the lamp's warm spill, water caustics on the roof and seats
+      const cabGlow = (L, tl, id, t0, dur) => {
+        put(L.glow, `<radialGradient id="${id}-gg"><stop offset="0" stop-color="#5ab8ff" stop-opacity=".38"/><stop offset="1" stop-color="#5ab8ff" stop-opacity="0"/></radialGradient>
+          <radialGradient id="${id}-gw"><stop offset="0" stop-color="#ffb060" stop-opacity=".22"/><stop offset="1" stop-color="#ffb060" stop-opacity="0"/></radialGradient>
+          <ellipse cx="545" cy="1640" rx="620" ry="420" fill="url(#${id}-gg)"/><ellipse cx="700" cy="560" rx="520" ry="340" fill="url(#${id}-gw)"/>
+          <g id="${id}-caus" opacity=".3">${Array.from({ length: 6 }, (_, k) => `<path d="M${-60 + k * 200},${120 + (k % 2) * 40}q50,-24 100,0t100,0" stroke="#c8fff0" stroke-width="6" fill="none"/>`).join("")}</g>`);
+        tl.fromTo(`#${id}-caus`, { x: -50, opacity: 0.2 }, { x: 50, opacity: 0.4, duration: 1.3, repeat: Math.ceil(dur / 1.3), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+      };
+      // water forcing through the door seals at both sides
+      const sealJets = (L, tl, id, t0, dur, o = {}) => {
+        const jet = `<path d="M0,-7C70,-15 150,8 232,88L238,104C150,40 72,15 0,8Z" fill="url(#${id}-jg)"/><path d="M4,-2C70,-8 142,13 216,82" stroke="#ffffff" stroke-width="3" fill="none" opacity=".75"/>`
+          + [0, 1, 2, 3, 4].map((j) => `<circle cx="${224 + j * 15}" cy="${100 + j * 17}" r="${f1(5.5 - j * 0.7)}" fill="#e8fbff" opacity=".85"/>`).join("");
+        put(L.act, `<linearGradient id="${id}-jg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f2fdff" stop-opacity=".95"/><stop offset="1" stop-color="#9fd8e8" stop-opacity=".2"/></linearGradient>
+          <g id="${id}-jets" opacity="0">${(o.at || [[72, 1250, 1, 0.9], [72, 1420, 1, 0.7], [1008, 1320, -1, 0.85], [1008, 1470, -1, 0.65]]).map(([x, y, d, k]) => `<g transform="translate(${x},${y}) scale(${d * k},${k})"><g class="jt">${jet}</g></g>`).join("")}</g>`);
+        tl.fromTo(`#${id}-jets`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0 + 0.15);
+        tl.fromTo(`#${id}-jets .jt`, { scaleX: 0.9, scaleY: 1.06, transformOrigin: "0% 50%" }, { scaleX: 1.08, scaleY: 0.94, duration: 0.09, repeat: Math.ceil(dur / 0.09), yoyo: true, ease: "none", immediateRender: false }, t0 + 0.15);
+      };
+
+      // ---------- close insert: his thumb on the red release, the latch pops, the strap whips away ----------
+      Sets.beltIns = (L, o = {}) => {
+        const id = o.id || "bi";
+        put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#0c1016"/>`);
+        put(L.set, `<path d="M-900,-600H2000V2600H-900Z" fill="#1b212b"/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-300 + k * 180},-200L${300 + k * 180},2200" stroke="#151a22" stroke-width="10"/>`).join("")}
+          ${o.kid ? `<path d="M-900,-600H760L600,1240Q200,1170 -900,1240Z" fill="#c8b4e6"/><path d="M-200,-300Q-120,400 -60,1100M260,-300Q300,400 380,1150" stroke="#a894c8" stroke-width="12" fill="none" opacity=".7"/>
+            <path d="M-40,560c-60,-80 -170,-10 -90,90l90,90l90,-90c80,-100 -30,-170 -90,-90z" fill="#e8508a" opacity=".85"/>` : ""}
+          <path d="M-900,1260Q200,1180 520,1300L640,2600H-900Z" fill="${o.kid ? "#8fb3d9" : "#3b4a63"}" stroke="#0b0e13" stroke-width="8"/><path d="M-900,1330Q160,1250 470,1360" stroke="${o.kid ? "#6f93b9" : "#2c3850"}" stroke-width="14" fill="none"/><path d="M-100,1400L-60,2600" stroke="#c8a24a" stroke-width="6" stroke-dasharray="18 14" opacity=".6"/>
+          <path d="M700,600L1100,500V2600H760Z" fill="#14181e" stroke="#0b0e13" stroke-width="8"/>
+          <g transform="translate(640,1130) rotate(-18)"><rect x="-96" y="-30" width="192" height="360" rx="44" fill="#0e1013" stroke="#000" stroke-width="6"/><rect x="-80" y="-14" width="160" height="40" rx="12" fill="#1c1f24"/>
+            <g id="${id}-btn"><rect x="-66" y="44" width="132" height="76" rx="16" fill="#d8322a" stroke="#000" stroke-width="5"/><text x="0" y="96" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#fff">PRESS</text></g></g>`);
+        put(L.act, `<g id="${id}-strap"><path d="M-500,-400L560,1070" stroke="#0b0e13" stroke-width="150" stroke-linecap="butt"/><path d="M-500,-400L560,1070" stroke="#3a414c" stroke-width="134"/>${Array.from({ length: 14 }, (_, k) => `<path d="M${-470 + k * 74},${-430 + k * 103}l-70,48" stroke="#2c323b" stroke-width="6"/>`).join("")}
+            <g transform="translate(600,1100) rotate(-36)"><path d="M-70,-40H70L60,70H-60Z" fill="#c9ced6" stroke="#0b0e13" stroke-width="6"/><rect x="-36" y="-16" width="72" height="22" rx="8" fill="#0b0e13"/><path d="M-50,-30H40" stroke="#fff" stroke-width="6" opacity=".7"/></g></g>
+          <g transform="translate(640,1130) rotate(-18)"><rect x="-96" y="-30" width="192" height="64" rx="30" fill="#0e1013" stroke="#000" stroke-width="6"/><rect x="-60" y="-12" width="120" height="14" rx="6" fill="#000"/></g>
+          <g id="${id}-thumb" transform="translate(665,1208)"><g id="${id}-th">${handAt([223, 252], -30, 3.2, SK.ton, { ...POKE, band: BAND, sw: 0.55 })}</g></g>
+          <g id="${id}-streaks" opacity="0">${[0, 1, 2, 3].map((k) => `<path d="M${200 + k * 60},${560 + k * 90}L${-80 + k * 60},${170 + k * 90}" stroke="#e8f0f8" stroke-width="10" stroke-linecap="round" opacity="${0.7 - k * 0.12}"/>`).join("")}</g>`);
+      };
+      const beltPress = (tl, id, t) => {
+        tl.fromTo(`#${id}-th`, { x: 360, y: 520 }, { x: 0, y: 0, duration: 0.42, ease: "power2.out", immediateRender: false }, t);
+        tl.to(`#${id}-th`, { x: -10, y: 16, duration: 0.08, ease: "power2.in" }, t + 0.5);
+        tl.to(`#${id}-btn`, { y: 10, duration: 0.08 }, t + 0.5);
+        tl.to(`#${id}-strap`, { x: -40, y: -50, duration: 0.07, ease: "power2.out" }, t + 0.6);
+        tl.to(`#${id}-strap`, { x: -1500, y: -2000, duration: 0.34, ease: "power3.in" }, t + 0.7);
+        tl.fromTo(`#${id}-streaks`, { opacity: 0 }, { opacity: 1, duration: 0.06, yoyo: true, repeat: 1, immediateRender: false }, t + 0.8);
+        tl.to(`#${id}-btn`, { y: 0, duration: 0.1 }, t + 0.75);
+        tl.to(`#${id}-th`, { x: 40, y: 50, duration: 0.3, ease: "power2.out" }, t + 0.8);
+      };
+
+      // ---------- the canal outside a side window: night above, a lit skin, rays, silt and bubbles below; rises y0 → y1 ----------
+      const outsideRich = (L, tl, id, t0, dur, y0, y1) => {
+        const rays = [[180, 260], [420, 330], [700, 250], [930, 300]].map(([x, w], k) => `<path class="ray" d="M${x},0L${x + w},0L${x + w - 200},1100L${x - 280},1100Z" fill="#cfffee" opacity="${0.07 + (k % 2) * 0.03}"/>`).join("");
+        const silt = Array.from({ length: 46 }, (_, k) => `<circle class="silt" cx="${f1(60 + ((k * 211) % 980))}" cy="${f1(50 + ((k * 137) % 1100))}" r="${f1(2 + (k % 4) * 1.6)}" fill="#bfe8d8" opacity="${(0.25 + (k % 5) * 0.1).toFixed(2)}"/>`).join("");
+        const refl = Array.from({ length: 7 }, (_, k) => `<rect x="${f1(780 - 60 + ((k * 47) % 130))}" y="${f1(-4 + k * 9)}" width="${f1(40 + ((k * 31) % 70))}" height="6" rx="3" fill="#ffb45a" opacity="${(0.75 - k * 0.08).toFixed(2)}"/>`).join("");
+        put(L.far, `<g id="${id}"><linearGradient id="${id}-uG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c7a6a"/><stop offset=".3" stop-color="#14403a"/><stop offset="1" stop-color="#040c0c"/></linearGradient>
+          <radialGradient id="${id}-lG"><stop offset="0" stop-color="#ffd08a" stop-opacity=".9"/><stop offset=".25" stop-color="#ff9a3a" stop-opacity=".35"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient>
+          <rect x="-900" y="-1800" width="2900" height="1800" fill="#0a1424"/>
+          <path d="M-900,-60Q-400,-90 100,-70T1100,-80T2000,-60V0H-900Z" fill="#0a120e"/><rect x="820" y="-520" width="12" height="460" fill="#141a20"/><circle cx="800" cy="-500" r="230" fill="url(#${id}-lG)"/><circle cx="800" cy="-504" r="11" fill="#fff4d0"/>
+          <rect x="-900" y="0" width="2900" height="2400" fill="url(#${id}-uG)"/>${rays}<g class="siltg">${silt}</g>
+          <g class="skin"><path d="M-900,0Q-800,-14 -700,0T-500,0T-300,0T-100,0T100,0T300,0T500,0T700,0T900,0T1100,0T1300,0T1500,0T1700,0T1900,0T2100,0V18H-900Z" fill="#9fe0cc" opacity=".55"/>
+            <path d="M-900,0Q-800,-14 -700,0T-500,0T-300,0T-100,0T100,0T300,0T500,0T700,0T900,0T1100,0T1300,0T1500,0T1700,0T1900,0T2100,0" stroke="#e8fff6" stroke-width="5" fill="none"/></g>${refl}</g>`);
+        tl.set(`#${id}`, { y: y0 }, 0);
+        tl.fromTo(`#${id}`, { y: y0 }, { y: y1, duration: dur, ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id} .skin`, { x: 0 }, { x: -200, duration: 1.2, repeat: Math.ceil(dur / 1.2), ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id} .siltg`, { y: 0, x: 0 }, { y: -60, x: 30, duration: dur, ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id} .ray`, { opacity: 0.05 }, { opacity: 0.13, duration: 0.8, repeat: Math.ceil(dur / 0.8), yoyo: true, stagger: 0.2, ease: "sine.inOut", immediateRender: false }, t0);
+      };
+      // drops on the inside of the glass (they ride the glass down)
+      const glassDrops = (id) => {
+        const g = document.getElementById(`${id}-glass`); if (!g) return;
+        g.insertAdjacentHTML("beforeend", Array.from({ length: 16 }, (_, k) => { const x = 130 + ((k * 173) % 820), y = 440 + ((k * 97) % 760), r = 5 + (k % 4) * 2.5;
+          return `<g opacity=".75"><path d="M${x},${y - r * 2.2}Q${x + r},${y - r * 0.4} ${x},${y + r}Q${x - r},${y - r * 0.4} ${x},${y - r * 2.2}Z" fill="#dff4f4" opacity=".55"/><path d="M${x},${y - r * 2.2}V${y - r * 2.2 - 30 - (k % 3) * 20}" stroke="#dff4f4" stroke-width="3" opacity=".35"/><circle cx="${x - r * 0.3}" cy="${y - r * 0.3}" r="${f1(r * 0.3)}" fill="#fff"/></g>`; }).join(""));
+      };
+      // the glass top passes under the waterline: the canal pours in over it (#id-pour), spray bursting toward us
+      const pourIn = (L, tl, id, t, dur, yTop) => {
+        put(L.act, `<g id="${id}" opacity="0"><linearGradient id="${id}-pG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8fff4" stop-opacity=".75"/><stop offset=".25" stop-color="#5ab8a4" stop-opacity=".55"/><stop offset="1" stop-color="#1c5a52" stop-opacity=".7"/></linearGradient>
+          <path d="M100,${yTop}Q540,${yTop - 30} 980,${yTop}L1040,2000H40Z" fill="url(#${id}-pG)"/>
+          ${Array.from({ length: 18 }, (_, k) => `<path class="pst" d="M${130 + k * 48},${yTop + 10}L${110 + k * 50},2000" stroke="#e8fff8" stroke-width="${4 + (k % 3) * 3}" stroke-dasharray="${90 + (k % 4) * 30} 60" opacity=".7"/>`).join("")}
+          <g id="${id}-foam">${Array.from({ length: 12 }, (_, k) => `<ellipse cx="${130 + k * 74}" cy="${yTop + 6}" rx="${50 + (k % 3) * 14}" ry="${18 + (k % 2) * 8}" fill="#f2fffb" opacity=".85"/>`).join("")}</g>
+          <g id="${id}-spray">${Array.from({ length: 24 }, (_, k) => `<circle class="spr" cx="${150 + ((k * 151) % 780)}" cy="${yTop}" r="${4 + (k % 4) * 3}" fill="#f2fffb" opacity=".9"/>`).join("")}</g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.12, immediateRender: false }, t);
+        tl.fromTo(`#${id} .pst`, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -300 }, duration: 0.35, repeat: Math.ceil(dur / 0.35), ease: "none", immediateRender: false }, t);
+        document.querySelectorAll(`#${id} .spr`).forEach((el, k) => tl.fromTo(el, { x: 0, y: 0, opacity: 0.9 }, { x: ((k % 7) - 3) * 40, y: 160 + (k % 5) * 120, opacity: 0, duration: 0.5, repeat: Math.ceil(dur / 0.5), delay: (k % 6) * 0.07, ease: "power1.in", immediateRender: false }, t));
+        tl.fromTo(`#${id}-foam`, { y: 0 }, { y: 6, duration: 0.15, repeat: Math.ceil(dur / 0.15), yoyo: true, ease: "sine.inOut", immediateRender: false }, t);
+      };
+
+      // ---------- a real canal road for the driver's view: stars, the canal on the left with the lamps passing over it ----------
+      const povCanal = (L, tl, id, t0, dur) => {
+        const stars = Array.from({ length: 46 }, (_, k) => `<circle cx="${f1(-300 + ((k * 263) % 1700))}" cy="${f1(330 + ((k * 89) % 560))}" r="${f1(1.4 + (k % 3) * 0.9)}" fill="#dfe8ff" opacity="${(0.25 + (k % 4) * 0.17).toFixed(2)}"/>`).join("");
+        put(L.sky, `<linearGradient id="${id}-pskG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050912"/><stop offset=".8" stop-color="#0e1a2c"/><stop offset="1" stop-color="#1a2638"/></linearGradient>
+          <rect x="-900" y="-600" width="2900" height="1560" fill="url(#${id}-pskG)"/>${stars}<ellipse cx="820" cy="944" rx="360" ry="46" fill="#ff9a3a" opacity=".18"/>`);
+        // ground: tree line, the canal (left), its bank, the road, the verge (right)
+        const lampG = `<radialGradient id="${id}-plG"><stop offset="0" stop-color="#ffd08a" stop-opacity=".95"/><stop offset=".25" stop-color="#ff9a3a" stop-opacity=".35"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient>
+          <linearGradient id="${id}-pwG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a3440"/><stop offset="1" stop-color="#0c1c24"/></linearGradient>
+          <linearGradient id="${id}-prG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14171c"/><stop offset="1" stop-color="#2a2d33"/></linearGradient>`;
+        const trees = `<path d="M-900,946${Array.from({ length: 30 }, (_, k) => `L${-900 + k * 100},${930 - ((k * 37) % 4) * 9}`).join("")}L2100,946Z" fill="#070b0a"/>`;
+        const ground = `<path d="M-900,946H452L120,1440H-900Z" fill="url(#${id}-pwG)"/>
+          ${Array.from({ length: 9 }, (_, k) => `<path class="glint" d="M${-500 + k * 90 + k * k * 4},${960 + k * k * 6}h${60 + k * 20}" stroke="#7fa8b8" stroke-width="${2 + k * 0.6}" opacity=".5"/>`).join("")}
+          <path d="M452,946H470L160,1440H120Z" fill="#101a12"/><path d="M470,946H610L900,1440H160Z" fill="url(#${id}-prG)"/><path d="M610,946H2100V1440H900Z" fill="#0a100c"/>`;
+        // lamp posts on the canal bank, coming at us and their wobbling reflections in the water
+        const lamp = `<rect x="-8" y="-760" width="16" height="760" fill="#1e232a"/><path d="M0,-750Q60,-800 150,-776" stroke="#1e232a" stroke-width="12" fill="none"/><rect x="120" y="-784" width="74" height="20" rx="8" fill="#3a3e46"/>
+          <circle cx="157" cy="-764" r="150" fill="url(#${id}-plG)"/><circle cx="157" cy="-768" r="12" fill="#fff4d0"/><path d="M125,-764L40,0H290L190,-764Z" fill="#ffcf8a" opacity=".06"/>
+          <path d="M-60,30q14,40 0,80q-14,40 0,80q14,40 0,80" stroke="#ffb45a" stroke-width="22" opacity=".4" fill="none"/>`;
+        const flow = (k, n) => `<g class="flow" data-from="452,950,0.04" data-to="-420,1300,1.4" data-p="1.3" data-o="${(k / n).toFixed(3)}" transform="translate(452,950) scale(0.04)">${lamp}</g>`;
+        const far = [[0.05, 445], [0.09, 438], [0.15, 426]].map(([sc, x]) => `<g transform="translate(${x},${f1(946 + sc * 120)}) scale(${sc})">${lamp}</g>`).join("");
+        const shine = Array.from({ length: 12 }, (_, k) => `<path class="glint" d="M${f1(330 - k * 60)},${f1(990 + k * 34)}h${f1(26 + k * 9)}" stroke="#ffb45a" stroke-width="${f1(3 + k * 0.6)}" opacity=".55"/>`).join("");
+        put(L.far, lampG + trees + ground + shine + far + [0, 1, 2, 3].map((k) => flow(k, 4)).join(""));
+        // keep the road lines and posts in front of the new ground
+        const lines = document.getElementById(`${id}-lines`); if (lines) L.far.appendChild(lines);
+      };
+      // ต้น's arm reaching back to ขิม's buckle: the hand comes in from the lower left, presses, her belt goes (call after cabFront)
+      const reachBelt = (L, tl, id, t) => {
+        const S = shoulders(CT)[1], l1 = 122 * CT.s, l2 = 108 * CT.s, B = BELT.kim.b, T = [B[0] - 2, B[1] + 4], R0 = [S[0] + 30, S[1] + 160];
+        put(L.act, `<g id="${id}-arm"></g>`);
+        const el = document.getElementById(`${id}-arm`), c = { p: 0 };
+        const draw = (p) => { const W = [R0[0] + (T[0] - R0[0]) * p, R0[1] + (T[1] - R0[1]) * p]; el.innerHTML = arm(S, W, l1, l2, elbowOut(S, W, l1, l2, 0), SK.ton, { w: [30 * CT.s, 26 * CT.s], band: BAND, hs: 0.56, hand: { ...POKE } }); };
+        draw(0);
+        tl.to(c, { p: 1, duration: 0.42, ease: "power2.out", immediateRender: false, onUpdate: () => draw(c.p) }, t);
+        tl.to(c, { p: 0.95, duration: 0.07, yoyo: true, repeat: 1, onUpdate: () => draw(c.p) }, t + 0.45);
+        beltOff(tl, id, "kim", t + 0.52);
+        tl.to(c, { p: 0, duration: 0.4, ease: "power2.in", onUpdate: () => draw(c.p) }, t + 0.9);
+      };
+      // a window switch on the door panel and a finger on it (adult: ต้น · kid: ขิม); #id-f moves
+      const winSwitch = (L, id, kid) => put(L.act, `<g transform="translate(540,1352)"><rect x="-110" y="-56" width="220" height="112" rx="24" fill="#2a2e36" stroke="#0b0e13" stroke-width="6"/><rect x="-80" y="-34" width="160" height="68" rx="16" fill="#3a3f48" stroke="#0b0e13" stroke-width="4"/>
+        <path d="M-26,14L0,-16L26,14" stroke="#c8ccd2" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <g id="${id}-f" transform="translate(${kid ? 66 : 80},${kid ? 134 : 170})">${kid ? handAt([36, 48], 0, 1.5, SK.kim, { ...POKE, sw: 0.7, fore: 600 }) : handAt([53, 82], 0, 2.2, SK.ton, { ...POKE, band: BAND, sw: 0.6, fore: 600 })}</g></g>`);
+      const pressSwitch = (tl, id, t, n = 1) => {
+        tl.fromTo(`#${id}-f`, { x: 30, y: 260 }, { x: -70, y: -40, duration: 0.3, ease: "power2.out", immediateRender: false }, t);
+        tl.to(`#${id}-f`, { y: -24, duration: 0.09, yoyo: true, repeat: n * 2 - 1, ease: "power1.inOut" }, t + 0.32);
+      };
+      // the inner door handle and his hand yanking it: the door doesn't give
+      const doorTug = (L, tl, id, t, n = 3) => {
+        put(L.act, `<g transform="translate(300,1350)"><rect x="-120" y="-44" width="240" height="88" rx="40" fill="#0e1014" stroke="#000" stroke-width="5"/>
+          <g id="${id}-hd">${handAt([0, 175], -6, 2.4, SK.ton, { ...GRIP, band: BAND, sw: 0.6, fore: 700 })}</g>
+          <g id="${id}-lev"><path d="M-84,-8H64Q86,-8 86,8Q86,24 64,24H-84Z" fill="#b8bec8" stroke="#0b0e13" stroke-width="5"/><path d="M-76,-1H60" stroke="#eef2f6" stroke-width="4" opacity=".8"/></g></g>`);
+        tl.set(`#${id}-hd`, { y: 560 }, 0);
+        tl.to(`#${id}-hd`, { y: 0, duration: 0.25, ease: "power2.out" }, t);
+        for (let k = 0; k < n; k++) {
+          const tk = t + 0.3 + k * 0.55;
+          tl.to([`#${id}-hd`, `#${id}-lev`], { x: -30, duration: 0.09, ease: "power2.out" }, tk);
+          tl.to([`#${id}-hd`, `#${id}-lev`], { x: 0, duration: 0.2, ease: "power2.in" }, tk + 0.11);
+        }
+      };
+      // ขิม in the rear-view mirror (the drive): a small face over the back seat
+      const mirrorKid = (L, id) => put(L.set, `<clipPath id="${id}-mc"><rect x="428" y="298" width="224" height="48" rx="12"/></clipPath><g clip-path="url(#${id}-mc)">
+        <rect x="420" y="290" width="240" height="64" fill="#141820"/><rect x="560" y="300" width="70" height="30" rx="8" fill="#1e2430"/>
+        <path d="M566,360Q566,334 592,332Q618,334 618,360Z" fill="#b89ad8"/><circle cx="592" cy="318" r="15" fill="#ebc19c"/><path d="M576,316Q578,298 592,298Q606,298 608,316Q600,306 592,307Q584,306 576,316Z" fill="#2a1e18"/>
+        <circle cx="587" cy="319" r="2.4" fill="#1e2228"/><circle cx="598" cy="319" r="2.4" fill="#1e2228"/><rect x="420" y="290" width="240" height="64" fill="#9fc4ff" opacity=".08"/></g>`);
+      const ledGlow = (L, tl, id, t0, dur, x, y) => {
+        put(L.set, `<radialGradient id="${id}-g"><stop offset="0" stop-color="#ffd0a0" stop-opacity="1"/><stop offset=".3" stop-color="#ff8a2a" stop-opacity=".7"/><stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/></radialGradient>
+          <circle id="${id}" cx="${x}" cy="${y}" r="44" fill="url(#${id}-g)"/>`);
+        tl.fromTo(`#${id}`, { opacity: 0.55 }, { opacity: 1, duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut", immediateRender: false }, t0);
+      };
+      // the splash, finer: a white crown both sides of the nose, fine spray falling back, rings and foam
+      Canal.splash = (L, tl, id, x, y, t) => {
+        let g = `<g id="${id}"><g transform="translate(${x},${y})">`;
+        [-1, 1].forEach((d, j) => { g += `<g id="${id}-c${j}" opacity="0"><path transform="scale(${d},1)" d="M20,0Q90,-60 150,-250Q170,-120 230,-160Q200,-60 260,0Z" fill="#e2f2f6" opacity=".6"/><path transform="scale(${d},1)" d="M60,0Q110,-50 150,-200" stroke="#ffffff" stroke-width="6" fill="none" opacity=".8"/></g>`; });
+        for (let k = 0; k < 40; k++) g += `<circle id="${id}-p${k}" cx="0" cy="0" r="${f1(2.5 + (k % 4) * 1.6)}" fill="#d8ecf2" opacity="0"/>`;
+        for (let k = 0; k < 3; k++) g += `<ellipse id="${id}-r${k}" cx="0" cy="10" rx="40" ry="10" fill="none" stroke="#c8e0e8" stroke-width="5" opacity="0"/>`;
+        g += `<ellipse id="${id}-foam" cx="0" cy="6" rx="10" ry="4" fill="#e8f4f8" opacity="0"/></g></g>`;
+        put(L.act, g);
+        [0, 1].forEach((j) => {
+          tl.fromTo(`#${id}-c${j}`, { scale: 0.2, opacity: 0.95, transformOrigin: "50% 100%" }, { scale: 0.75, duration: 0.3, ease: "power2.out", immediateRender: false }, t);
+          tl.to(`#${id}-c${j}`, { scaleY: 0.2, opacity: 0, duration: 0.5, ease: "power2.in" }, t + 0.3);
+        });
+        for (let k = 0; k < 40; k++) {
+          const a = -Math.PI * (0.12 + 0.76 * ((k * 37) % 40) / 40), v = 180 + ((k * 53) % 11) * 34;
+          tl.fromTo(`#${id}-p${k}`, { x: 0, y: 0, opacity: 0.9 }, { x: Math.cos(a) * v, y: Math.sin(a) * v, duration: 0.35, ease: "power2.out", immediateRender: false }, t + (k % 5) * 0.02);
+          tl.to(`#${id}-p${k}`, { y: "+=" + (160 + (k % 5) * 30), opacity: 0, duration: 0.45, ease: "power2.in" }, t + 0.37 + (k % 5) * 0.02);
+        }
+        for (let k = 0; k < 3; k++) tl.fromTo(`#${id}-r${k}`, { attr: { rx: 40, ry: 10 }, opacity: 0.8 }, { attr: { rx: 520 + k * 140, ry: 70 + k * 18 }, opacity: 0, duration: 1.4, ease: "power1.out", immediateRender: false }, t + k * 0.18);
+        tl.fromTo(`#${id}-foam`, { attr: { rx: 10, ry: 4 }, opacity: 0.9 }, { attr: { rx: 260, ry: 34 }, opacity: 0.5, duration: 0.9, ease: "power2.out", immediateRender: false }, t);
+      };
+      // the driver's view: his own hands on the rim, backs to us, fingers over the top (replaces the set's fists)
+      const povHands = (L, id) => {
+        ["gripL", "gripR"].forEach((k) => { const e = document.getElementById(`${id}-${k}`); if (e) e.setAttribute("display", "none"); });
+        put(L.act, `<circle cx="700" cy="1800" r="318" fill="none" stroke="#565c66" stroke-width="7" opacity=".75"/>
+          <g>${handAt([452, 1752], 30, 2.6, SK.ton, { ...GRIP, band: BAND, sw: 0.55, fore: 900, mirror: true })}${handAt([948, 1752], -30, 2.6, SK.ton, { ...GRIP, band: BAND, sw: 0.55, fore: 900 })}</g>`);
+      };

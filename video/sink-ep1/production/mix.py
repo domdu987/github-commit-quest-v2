@@ -1,0 +1,193 @@
+"""นาทีก่อนจม EP.1: the soundtrack from schedule.json: levelled voice, synthesized SFX (crickets, engine, the lock click, the countdown
+ticks, the screech, the splash, water pouring in, bubbles, the window motor, the rewind, the child's switch, the flicker) and the Suno bed
+with dips and ducking; the bed fades out over the next-episode card. Output -14 LUFS, no noise beds."""
+import json
+import os
+import subprocess
+
+import numpy as np
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+SR = 48000
+SC = json.load(open(os.path.join(HERE, "schedule.json")))
+SH = {s["key"]: s for s in SC["shots"]}
+TOTAL = SC["total"]
+N = int(TOTAL * SR)
+
+
+def load(path):
+    raw = subprocess.check_output(["ffmpeg", "-v", "error", "-i", path, "-f", "f32le", "-ac", "1", "-ar", str(SR), "-"])
+    return np.frombuffer(raw, dtype=np.float32).copy()
+
+
+def place(buf, x, t, g=1.0):
+    i = int(t * SR)
+    j = min(len(buf), i + len(x))
+    if i < len(buf):
+        buf[i:j] += x[: j - i] * g
+
+
+def rms_db(x):
+    x = x[np.abs(x) > 1e-4]
+    return 20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-9)
+
+
+def level(x, target):
+    return x * 10 ** ((target - rms_db(x)) / 20)
+
+
+def box(x, n):
+    """Centered moving average via cumulative sums (np.convolve with a long kernel is far too slow here)."""
+    c = np.concatenate([[0.0], np.cumsum(x, dtype=np.float64)])
+    i = np.arange(len(x))
+    lo, hi = np.clip(i - n // 2, 0, len(x)), np.clip(i - n // 2 + n, 0, len(x))
+    return ((c[hi] - c[lo]) / n).astype(np.float32)
+
+
+def T(k, t):
+    s = SH[k]
+    return s["start"] + (t if t >= 0 else s["dur"] + t)
+
+
+def vo_t(k, i=0):
+    return SH[k]["vo"][i]["t"]
+
+
+def vo_end(k, i=0):
+    return SH[k]["vo"][i]["t"] + SH[k]["vo"][i]["dur"]
+
+
+def frag(k, i=0, j=0):
+    return SH[k]["vo"][i]["t"] + SH[k]["vo"][i]["frags"][j]
+
+
+# ---- voice: every line levelled on its own so whispers and shouts sit at a readable loudness ----
+LINE_GAIN = {"y02": 3}  # ยาย says her own rule softly while climbing: lift it over the bed
+vo = np.zeros(N, np.float32)
+for s in SC["shots"]:
+    for v in s["vo"]:
+        x = load(os.path.join(HERE, "vo", f"{v['id']}.wav"))
+        place(vo, level(x, -18 + LINE_GAIN.get(v["id"], 0)), s["start"] + v["t"])
+
+# ---- sfx cues: (shot, t from shot start (negative = from its end), type, gain) ----
+D = {k: SH[k]["dur"] for k in SH}
+
+
+def beats(k, t0, dur, period, g=0.9):  # heartbeat sfx in step with Fx.heart
+    return [(k, t0 + i * period, "heartbeat", g) for i in range(int((dur - 0.1) / period) + 1)]
+
+
+def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between absolute times a and b
+    out, t = [], a - 0.6
+    while t < b - 1.0:
+        out.append((None, t, kind, g))
+        t += step
+    return out
+
+
+F = frag
+
+
+def monitor(k, a, b, g=0.18, step=1.0):  # a bedside-monitor style beep
+    return [(k, a + i * step, "beep", g) for i in range(int((b - a) / step) + 1)]
+
+
+def ticks(k, a, b, g=0.2, step=1.0):  # the wall clock / the stopwatch
+    return [(k, a + i * step, "tick", g) for i in range(int((b - a) / step) + 1)]
+
+
+def pushes(k, a, b, g=0.12, period=60 / 110):  # the compressions, on the same beat as the rig (Rig.MODES.cpr / MmUI.cpr)
+    return [(k, a + i * period, "knock", g) for i in range(int((b - a) / period) + 1)]
+
+
+def quake(k, a, b, g=0.5, step=2.4):  # the building's rumble, overlapping copies between a and b (seconds into shot k)
+    return [(k, a + i * step, "quake", g) for i in range(int(max(0, b - a - 0.5) / step) + 1)]
+
+
+def tick3(k, a, g=0.3):  # the choice ring: three ticks
+    return [(k, a + i * 1.0, "tick", g) for i in range(3)]
+
+
+CUES = [
+    # the canal road at 1 a.m.: a sound on frame 0, crickets, the engine passing
+    ("hook", 0.0, "swell", 0.26), ("hook", 0.1, "crickets", 0.16), ("hook", 0.3, "engine", 0.2),
+    # the lock: its click (the planted mistake)
+    ("lock", 0.95, "click", 0.4), ("lock", 1.0, "beep", 0.08),
+    # afloat: the water lapping the body, the countdown ticks
+    ("float", 0.1, "bubbles", 0.22), *ticks("float", 0.4, D["float"] - 0.1, 0.16, 1.0),
+    # under the water: muffled, bubbles
+    ("all", 0.0, "boom", 0.22), ("all", 0.2, "bubbles", 0.3), ("all", 1.2, "bubbles", 0.2),
+    # the drive
+    ("drive", 0.0, "engine", 0.22), ("drive", 2.0, "engine", 0.18),
+    # the unlit bike, the screech
+    ("swerve", 0.2, "engine", 0.16), ("swerve", vo_end("swerve") + 0.02, "screech", 0.4), ("swerve", vo_end("swerve") + 0.3, "sting", 0.3),
+    # off the bank: the thud, the splash
+    ("plunge", 0.55, "thud", 0.4), ("plunge", 0.72, "splash", 0.55), ("plunge", 0.8, "roar", 0.3), ("plunge", 1.1, "bubbles", 0.3),
+    # inside: the water pouring in, heartbeats
+    ("inrush", 0.1, "splash", 0.3), ("inrush", 0.3, "bubbles", 0.3), *beats("inrush", 0.4, D["inrush"] - 0.4, 0.55, 0.3),
+    # the steps: each chip a pop, ticking under
+    ("belt", 0.2, "pop", 0.2), ("belt", F("belt", 0, 1) + 0.15, "click", 0.4), ("belt", F("belt", 0, 1) + 0.33, "whoosh", 0.22), *ticks("belt", 0.1, D["belt"] - 0.1, 0.12, 1.0),
+    ("door", 0.2, "pop", 0.2), *[c for k in range(3) for c in (("door", 0.45 + k * 0.55, "click", 0.32), ("door", 0.5 + k * 0.55, "thud", 0.16))], *ticks("door", 0.1, D["door"] - 0.1, 0.12, 1.0),
+    ("window", 0.2, "pop", 0.2), ("window", 0.47, "click", 0.3), ("window", 0.5, "motor", 0.3), ("window", 1.55, "splash", 0.42), ("window", 1.6, "roar", 0.3), ("window", 1.9, "bubbles", 0.24), *ticks("window", 0.1, D["window"] - 0.1, 0.12, 1.0),
+    ("kid", 0.2, "pop", 0.2), ("kid", 0.62, "click", 0.36), ("kid", 0.68, "whoosh", 0.18), ("kid", F("kid", 0, 1), "splash", 0.18), ("kid", 0.9, "bubbles", 0.2), *ticks("kid", 0.1, D["kid"] - 0.1, 0.13, 1.0),
+    ("phone", 0.2, "pop", 0.2), ("phone", 0.5, "notif", 0.16), *ticks("phone", 0.1, D["phone"] - 0.1, 0.13, 1.0),
+    # the rewind to 0:04
+    ("rw", 0.0, "rewind", 0.42), ("rw", 0.6, "click", 0.36), ("rw", 0.65, "sting", 0.3),
+    # her switch: click click click, nothing; the ticks get louder
+    *[("kim", 1.09 + i * 0.28, "click", 0.3) for i in range(6)], *ticks("kim", 0.1, D["kim"] - 0.1, 0.16, 1.0),
+    ("led", 0.1, "swell", 0.2), *ticks("led", 0.1, D["led"] - 0.1, 0.17, 1.0), *beats("led", 0.3, D["led"] - 0.3, 0.5, 0.32),
+    *[("panel", 0.7 + i * 0.18, "click", 0.28) for i in range(4)], ("panel", 0.8, "buzz", 0.2), *ticks("panel", 0.1, D["panel"] - 0.1, 0.18, 1.0),
+    # the flicker
+    ("flicker", 0.3, "glitch", 0.3), ("flicker", 0.9, "glitch", 0.26), ("flicker", 1.5, "powerdown", 0.32), ("flicker", 0.2, "bubbles", 0.24),
+    *ticks("flicker", 0.1, D["flicker"] - 0.2, 0.2, 0.5), *beats("flicker", 0.2, D["flicker"] - 0.2, 0.42, 0.38),
+    # the next card
+    ("next", 0.1, "whoosh", 0.3), ("next", 0.6, "ding", 0.24),
+]
+
+# no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
+CUES = [c for c in CUES if c[2] not in ("wind", "lap", "pop", "tick") and c[3] > 0]   # no HUD: no chip pops, no countdown ticks (user 31 ต.ค.)  # no noise beds (user: "เสียงซ่าๆเอาออก")
+cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
+        "sfx": [{"t": round(t if k is None else T(k, t), 3), "type": typ, "gain": g} for k, t, typ, g in CUES]}
+json.dump(cues, open(os.path.join(HERE, "sfx_cues.json"), "w"))
+subprocess.run(["python3", os.path.join(HERE, "..", "synth.py"), os.path.join(HERE, "sfx_cues.json"), os.path.join(HERE, "sfx.wav")],
+               check=True, env={**os.environ, "STEMS": "1"})
+sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
+sfx = np.pad(sfx, (0, N - len(sfx)))
+
+# ---- music with horror dips ----
+mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
+while len(mus) < N:
+    mus = np.concatenate([mus, mus])
+mus = mus[:N]
+t = np.arange(N) / SR
+gain = np.ones(N, np.float32)
+
+
+def dip(t0, t1, lvl, ramp=0.25):
+    a = np.clip((t - (t0 - ramp)) / ramp, 0, 1) * np.clip(((t1 + ramp) - t) / ramp, 0, 1)
+    np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
+
+
+dip(T("plunge", 0), T("inrush", -0.01), 0.35)   # the splash and the water pouring in
+dip(T("rw", 0), T("flicker", -0.01), 0.55)       # the rewind and the twist
+mus = mus * gain
+a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
+mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card
+mus[b:] = 0
+
+# ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
+mus = level(mus, -30)
+sfx = level(sfx, -27)
+env = box(np.abs(vo), int(0.05 * SR))
+duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
+duck = box(duck, int(0.25 * SR))
+mix = vo + mus * duck + sfx
+peak = np.max(np.abs(mix))
+if peak > 0.98:
+    mix = np.tanh(mix / peak * 1.2) * 0.95
+out = os.path.join(HERE, "mix_raw.wav")
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-ac", "2", out],
+               input=mix.astype(np.float32).tobytes(), check=True)
+# single-pass loudnorm lands ~0.8 dB under its target on this mix: aim at -13.2 to measure -14
+subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", out, "-af", "loudnorm=I=-13.2:TP=-1.5:LRA=11", "-ar", "48000", os.path.join(HERE, "mix.wav")], check=True)
+print("mix written", TOTAL)

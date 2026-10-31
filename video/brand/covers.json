@@ -390,5 +390,27 @@
    "x": 0,
    "y": 0
   }
+ },
+ {
+  "id": "sink-ep1",
+  "page": "sink-ep1/composition/index.html",
+  "out": "video/sink-ep1/cover.jpg",
+  "t": 22.6,
+  "series": "นาทีก่อนจม",
+  "ep": 1,
+  "epTitle": "อย่าเพิ่งโทรหาใคร",
+  "setup": "รถตก/[คลอง]กลางดึก…",
+  "cmd": "อย่าเพิ่งโทรหาใคร!",
+  "glow": "#2fb8a0",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.0,
+   "x": 540,
+   "y": 960
+  },
+  "shift": {
+   "x": 0,
+   "y": 0
+  }
  }
 ]

@@ -1,0 +1,1484 @@
+<!doctype html>
+<html lang="th" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/rig.js"></script>
+    <script src="assets/sets.js"></script>
+    <script src="assets/camp.js"></script>
+    <script src="assets/koi.js"></script>
+    <script src="assets/zom.js"></script>
+    <script src="assets/hands.js"></script>
+    <script src="assets/mok.js"></script>
+    <script src="assets/pov.js"></script>
+    <script src="assets/phrai.js"></script>
+    <script src="assets/ui.js"></script>
+    <script src="assets/gameui.js"></script>
+    <script src="assets/mokui.js"></script>
+    <script src="assets/phraiui.js"></script>
+    <script src="assets/pop.js"></script>
+    <script src="assets/grain.js"></script>
+    <script src="assets/pop2.js"></script>
+    <script src="assets/pop2kok.js"></script>
+    <script src="assets/pop2kitchen.js"></script>
+    <script src="assets/pop2room.js"></script>
+    <script src="assets/pop2ui.js"></script>
+    <script src="assets/pop2more.js"></script>
+    <script src="assets/pop2hosp.js"></script>
+    <script src="assets/pop2end.js"></script>
+    <script src="assets/mm.js"></script>
+    <script src="assets/mm2.js"></script>
+    <script src="assets/mapsdata.js"></script>
+    <script src="assets/maps.js"></script>
+    <script src="assets/mmui.js"></script>
+    <script src="assets/mmui2.js"></script>
+    <script src="assets/mmui3.js"></script>
+    <script src="assets/qkmat.js"></script>
+    <script src="assets/quake.js"></script>
+    <script src="assets/quake2.js"></script>
+    <script src="assets/quakeui.js"></script>
+    <script src="assets/quakemap.js"></script>
+  <script src="assets/tide.js"></script>
+  <script src="assets/tide2.js"></script>
+  <script src="assets/tidemap.js"></script>
+    <script src="assets/tideui.js"></script>
+    <script src="assets/rig2.js"></script>
+    <script src="assets/popcast.js"></script>
+    <script src="assets/mmcast.js"></script>
+    <script src="assets/quakecast.js"></script>
+    <script src="assets/tidecast.js"></script>
+    <script src="assets/fx.js"></script>
+    <script src="assets/engine.js"></script>
+    <script src="assets/opener.js"></script>
+    <script src="assets/openers.js"></script>
+    <style>
+      @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 900; src: url(assets/fonts/f3.ttf); }
+      @font-face { font-family: 'Mali'; font-weight: 600; src: url(assets/fonts/mali6.ttf); }
+      @font-face { font-family: 'Mali'; font-weight: 700; src: url(assets/fonts/mali7.ttf); }
+      @font-face { font-family: 'Sriracha'; font-weight: 400; src: url(assets/fonts/sriracha.ttf); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05080a; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Kanit, sans-serif; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .stage { position: absolute; inset: 0; }
+      .fgblur { filter: blur(7px); }
+      .badge { z-index: 56; position: absolute; left: 36px; bottom: 150px; font: 700 26px/1 Kanit; color: #f4ecd8; opacity: .75; letter-spacing: 2px;
+        background: rgba(5,8,10,.55); padding: 8px 14px 10px; border-radius: 10px; }
+      #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 64% at 50% 48%, transparent 50%, rgba(3,6,8,.8) 100%); }
+      #grain { z-index: 57; position: absolute; inset: -60px; opacity: .11; mix-blend-mode: overlay; pointer-events: none; }
+      #flashw { z-index: 60; position: absolute; inset: 0; background: #e8f0ff; opacity: 0; pointer-events: none; }
+      #black { z-index: 61; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+      
+    .uicard { position:absolute; display:flex; gap:14px; align-items:center; max-width:640px; background:rgba(244,236,216,.95);
+      border:4px solid #2e2a26; border-radius:16px; box-shadow:5px 5px 0 rgba(46,42,38,.7); padding:12px 20px 14px 14px; opacity:0; }
+    .uicard .lbl { font:700 22px/1.1 Kanit; color:#7a6c5d; letter-spacing:2px; }
+    .uicard .txt { font:900 38px/1.15 Kanit; color:#2e2a26; white-space:nowrap; }
+    .uicard .val { margin-left:6px; font:900 46px/1 Kanit; color:#b0553a; }
+    .uicard .k, .capbox .k { display:inline-block; padding:0 .14em; margin:0 .04em; background:#e07a4f; border:3px solid #2e2a26; border-radius:7px; transform:rotate(-2deg); }
+    .capwrap { position:absolute; left:0; right:0; top:1630px; display:flex; justify-content:center; pointer-events:none; }
+    .capbox { position:absolute; background:#f4ecd8; color:#2e2a26; border:5px solid #2e2a26; border-radius:6px; box-shadow:8px 8px 0 rgba(46,42,38,.85);
+      padding:14px 30px 18px; font:900 58px/1.25 Kanit; white-space:nowrap; opacity:0; }
+    .bubble { position:absolute; background:#f4ecd8; border:5px solid #2e2a26; border-radius:26px; padding:16px 26px 20px; font:900 46px/1.2 Kanit; color:#2e2a26;
+      box-shadow:6px 6px 0 rgba(46,42,38,.8); white-space:nowrap; opacity:0; }
+    .bubble:after { content:""; position:absolute; bottom:-30px; left:var(--tail, 40px); width:40px; height:32px; background:#f4ecd8; border:5px solid #2e2a26; border-top:0;
+      clip-path:polygon(0 0,100% 0,30% 100%); }
+      
+    .gui { position:absolute; z-index:58; opacity:0; color:#f4ecd8; font-family:Kanit; }
+    .gui .k { display:inline-block; padding:0 .16em; margin:0 .05em; background:#f2c55c; color:#2e2a26; border-radius:8px; transform:rotate(-2deg); }
+    .gui .chip { display:inline-block; font:700 22px/1 Kanit; letter-spacing:2px; color:#10171a; background:#7fd1b9; padding:6px 12px 7px; border-radius:20px; }
+    .gui .fm { width:76px; height:76px; border-radius:50%; overflow:hidden; background:radial-gradient(circle at 40% 35%, #3b4a50, #1a2226); border:3px solid #f4ecd8; flex:none; }
+    .gui .fm .face { width:100%; height:100%; }
+    .tip { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; display:flex; gap:20px; align-items:center; padding:16px 30px 22px 16px; max-width:1010px; }
+    .tip.warn .chip { background:#f0a070; } .tip.danger .chip { background:#e8705a; } .tip.rule .chip { background:#f2c55c; }
+    .tip .med, .steps .ic { width:124px; height:124px; flex:none; border-radius:50%; background:radial-gradient(circle at 38% 32%, #fffaf0, #e6d6b4 75%); border:4px solid #2e2a26; box-shadow:0 0 0 4px #f4ecd8, 0 6px 14px rgba(0,0,0,.4); display:grid; place-items:center; }
+    .tip .med svg { width:104px; height:104px; overflow:visible; }
+    .tip .txt { font:900 40px/1.22 Kanit; margin-top:8px; white-space:nowrap; }
+    .gui .bar { position:absolute; left:26px; right:26px; bottom:9px; height:5px; border-radius:3px; background:rgba(244,236,216,.15); overflow:hidden; }
+    .gui .bar i { position:absolute; inset:0; background:#7fd1b9; }
+    .steps { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; padding:16px 22px 26px; text-align:center; }
+    .steps .row { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:12px; }
+    .steps .st { display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .steps .ic { width:132px; height:132px; } .steps .ic svg { width:108px; height:108px; overflow:visible; }
+    .steps .st b { font:900 38px/1 Kanit; } .steps .st:first-child b { color:#f2c55c; }
+    .steps .arr { font:900 56px/1 Kanit; color:rgba(244,236,216,.45); margin-top:-40px; }
+    .choice { text-align:center; }
+    .choice .q { display:inline-block; font:700 34px/1 Kanit; letter-spacing:1px; padding:10px 24px 12px; border-radius:24px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); }
+    .choice .opts { display:flex; align-items:center; justify-content:center; gap:22px; margin-top:16px; }
+    .choice .opt { display:flex; align-items:center; gap:14px; font:900 44px/1 Kanit; padding:18px 26px 22px; border-radius:22px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); white-space:nowrap; }
+    .choice .key { display:grid; place-items:center; width:50px; height:50px; border-radius:12px; background:#f4ecd8; color:#2e2a26; font-size:26px; box-shadow:0 4px 0 #9c8e76; }
+    .choice .timer { position:relative; width:120px; height:120px; flex:none; } .choice .timer svg { width:120px; height:120px; }
+    .choice .n { position:absolute; inset:0; display:grid; place-items:center; font:900 54px/1 Kanit; opacity:0; }
+    .choice .who2 { position:absolute; left:0; right:0; color:#7fd1b9; } .choice .who { margin-top:14px; font:700 30px/1 Kanit; color:#f2c55c; opacity:0; text-shadow:0 2px 8px #000; }
+    .qte { text-align:center; }
+    .qte .lbl { display:inline-block; font:900 44px/1 Kanit; letter-spacing:2px; padding:12px 30px 16px; border-radius:26px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); }
+    .qte .btnwrap { position:relative; width:220px; height:220px; margin:10px auto 0; }
+    .qte .btnwrap svg { position:absolute; inset:0; width:220px; height:220px; overflow:visible; }
+    .qte .key { position:absolute; inset:0; display:grid; place-items:center; font:900 38px/1 Kanit; }
+    .qte .ok { position:absolute; inset:0; display:grid; place-items:center; font:900 96px/1 Kanit; color:#7fd1b9; opacity:0; }
+    .qte .ecg { display:block; width:520px; height:56px; margin:4px auto 0; }
+    .qte .res { font:900 40px/1 Kanit; color:#7fd1b9; opacity:0; text-shadow:0 2px 8px #000; }
+    .rel { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:26px; display:flex; align-items:center; gap:16px; padding:14px 22px 16px 14px; }
+    .rel .faces { display:flex; align-items:center; gap:2px; } .rel .link { width:44px; height:24px; }
+    .rel .chip { background:#f2c55c; } .rel .txt { font:900 32px/1.2 Kanit; margin-top:6px; white-space:nowrap; } .rel .up { color:#7fd1b9; display:inline-block; }
+    .rel .hearts { display:flex; gap:6px; margin-top:6px; } .rel .hearts svg { width:30px; height:27px; overflow:visible; }
+    .intro { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:60px 26px 26px 60px; display:flex; align-items:center; gap:18px; padding:10px 30px 12px 10px; }
+    .intro .fm.big { width:104px; height:104px; } .intro .name { font:900 52px/1 Kanit; }
+    .intro .trait { display:inline-block; margin-top:6px; font:700 26px/1 Kanit; color:#2e2a26; padding:5px 12px 7px; border-radius:14px; }
+    .intro .brush { display:block; width:220px; height:14px; margin-top:4px; }
+    .status { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:44px 22px 22px 44px; display:flex; align-items:center; gap:14px; padding:8px 26px 10px 8px; }
+    .status .nm { font:900 34px/1 Kanit; } .status .st { display:flex; align-items:center; gap:8px; margin-top:6px; font:700 28px/1 Kanit; color:#e8705a; }
+    .status.unknown .st { color:#b9a8e8; } .status.safe .st { color:#7fd1b9; } .status .st svg { width:28px; height:26px; overflow:visible; }
+    .polaroid { background:#f7f1e2; padding:16px 16px 18px; border-radius:6px; box-shadow:0 18px 40px rgba(0,0,0,.6); }
+    .polaroid svg { display:block; } .polaroid .pc { font:900 34px/1 Kanit; color:#2e2a26; text-align:center; margin-top:12px; }
+    .polaroid .tag { position:absolute; left:-30px; top:-24px; font:700 24px/1 Kanit; color:#10171a; background:#b9a8e8; padding:6px 14px 8px; border-radius:16px; transform:rotate(-4deg); white-space:nowrap; }
+    .phone { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:34px; padding:18px 26px 24px; }
+    .phone .hdr { display:flex; align-items:center; gap:14px; } .phone .nm { font:900 36px/1 Kanit; }
+    .phone .sig { display:flex; align-items:flex-end; gap:4px; margin-top:6px; } .phone .sig i { display:block; width:8px; background:#7fd1b9; border-radius:2px; }
+    .phone .sig i:nth-child(1) { height:8px; } .phone .sig i:nth-child(2) { height:14px; } .phone .sig i:nth-child(3) { height:20px; } .phone .sig i:nth-child(4) { height:26px; }
+    .phone .sig span { margin-left:10px; font:700 22px/1 Kanit; color:#7fd1b9; }
+    .phone .typing { display:flex; gap:8px; margin:18px 0 0 6px; padding:16px 22px; background:#e9e1cf; border-radius:22px 22px 22px 6px; width:max-content; }
+    .phone .typing i { display:block; width:14px; height:14px; border-radius:50%; background:#7a6c5d; }
+    .phone .msg { margin-top:16px; background:#f4ecd8; color:#2e2a26; font:900 38px/1.25 Kanit; padding:16px 22px 14px; border-radius:24px 24px 24px 6px; opacity:0; }
+    .phone .msg .k { background:#e8705a; color:#fff; }
+    .phone .time { font:700 22px/1 Kanit; color:#7a6c5d; margin-top:10px; } .phone .time b { font-weight:900; }
+    .hud { display:flex; flex-direction:column; align-items:flex-end; gap:10px; opacity:1; }
+    .hud .c { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:22px; display:flex; align-items:center; gap:10px; padding:8px 18px 10px 10px; font:700 26px/1 Kanit; opacity:0; }
+    .hud .c b { font:900 34px/1 Kanit; } .hud .ci { width:46px; height:46px; } .hud .bat { width:64px; height:32px; } .hud .bars { width:48px; height:36px; }
+    .hud .lb { color:rgba(244,236,216,.7); font-size:22px; } .hud .sig.none span { color:#e8705a; }
+    .chapter { text-align:center; text-shadow:0 3px 14px rgba(0,0,0,.8); }
+    .chapter .sm { font:700 30px/1 Kanit; letter-spacing:10px; color:#f2c55c; } .chapter .big { font:900 92px/1.1 Kanit; margin-top:6px; }
+    .chapter svg { width:800px; height:20px; margin-top:6px; }
+    .qte .meter { display:flex; align-items:center; gap:12px; justify-content:center; margin-top:6px; font:700 26px/1 Kanit; }
+    .qte .mbar { position:relative; width:300px; height:22px; border-radius:11px; background:rgba(16,22,26,.9); border:2px solid rgba(244,236,216,.5); overflow:hidden; }
+    .qte .mbar i { position:absolute; left:0; top:0; bottom:0; width:100%; background:linear-gradient(90deg,#7fd1b9,#f2c55c 70%,#e8705a); transform-origin:0 50%; transform:scaleX(.3); }
+    .qte .mbar b { position:absolute; left:72%; top:-2px; bottom:-2px; width:5px; background:#e8705a; }
+    .choice .opt { position:relative; } .choice .opt .lbg { position:absolute; left:90px; opacity:0; color:#ff9a9a; } .choice .opt.B .lbg { left:auto; right:90px; }
+    .gui .fm.sm { width:54px; height:54px; display:inline-block; vertical-align:middle; }
+    .clockw { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; align-items:center; gap:18px; padding:14px 26px 14px 14px; }
+    .clockw .dial { width:190px; height:190px; flex:none; }
+    .clockw .dig { font:900 74px/1 Kanit; margin-top:6px; letter-spacing:2px; transform-origin:0 50%; }
+    .clockw .sub { display:flex; align-items:center; gap:10px; margin-top:8px; font:900 30px/1.1 Kanit; color:#f2c55c; opacity:0; }
+    .clockw .dots { display:inline-flex; gap:5px; } .clockw .dots i { width:9px; height:9px; border-radius:50%; background:#f2c55c; display:block; }
+    .fig { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; align-items:center; gap:20px; padding:14px 28px 16px 14px; }
+    .fig .art { flex:none; background:radial-gradient(circle at 40% 35%, #fffaf0, #e6d6b4 80%); border:4px solid #2e2a26; border-radius:24px; padding:8px; box-shadow:0 0 0 4px #f4ecd8; }
+    .fig .art svg { display:block; width:100%; height:auto; overflow:visible; }
+    .fig.dark .art { background:#0d1418; }
+    .fig .txt { font:900 40px/1.2 Kanit; margin-top:8px; white-space:nowrap; } .fig .txt2 { opacity:.15; }
+    .fig.warn .chip { background:#f0a070; } .fig.danger .chip { background:#e8705a; } .fig.rule .chip { background:#f2c55c; }
+    .radar { display:flex; align-items:center; gap:14px; } .radar svg { width:200px; height:200px; }
+    .radar .rl { display:flex; flex-direction:column; gap:8px; font:900 40px/1.1 Kanit; text-shadow:0 2px 10px #000; } .radar .chip { background:#e8705a; width:max-content; }
+    .memo { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:40px; display:flex; align-items:center; gap:12px; padding:8px 26px 8px 8px; font:900 32px/1 Kanit; overflow:hidden; }
+    .memo .shine { position:absolute; top:0; bottom:0; left:0; width:30%; background:linear-gradient(90deg,transparent,rgba(242,197,92,.45),transparent); }
+    .pov { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; }
+    .pov .lb { font:700 24px/1 Kanit; color:rgba(244,236,216,.7); } .pov .rec { width:16px; height:16px; border-radius:50%; background:#e8705a; display:block; }
+    .pov .bpm { display:flex; align-items:center; gap:6px; margin-left:10px; color:#e8705a; } .pov .bpm svg { width:30px; height:27px; overflow:visible; }
+    .mm { display:flex; flex-direction:column; align-items:center; gap:8px; } .mm svg { width:230px; height:230px; filter:drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
+
+    .gui { --tone: #7fd1b9; --glow: .3; }
+    .tip, .fig, .clockw, .steps, .rel, .intro, .status, .phone, .memo, .pov { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(127,209,185,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.warn, .fig.warn { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(240,160,112,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.danger, .fig.danger, .status.danger { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(232,112,90,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.rule, .fig.rule { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(242,197,92,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .fx-ring { position: absolute; inset: -4px; border-radius: inherit; padding: 4px; pointer-events: none; --a: 0deg;
+      background: conic-gradient(from var(--a), transparent 0deg 210deg, var(--tone) 290deg, #fffbe8 312deg, var(--tone) 330deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+    .fx-shw { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+    .fx-sheen { position: absolute; top: -10%; bottom: -10%; left: 0; width: 30%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.2), transparent); transform: translateX(-160%); }
+    .fx-flash { position: absolute; inset: 0; border-radius: inherit; background: var(--tone); opacity: 0; pointer-events: none; }
+    .fx-shock { position: absolute; inset: -6px; border-radius: 50%; border: 4px solid var(--tone); opacity: 0; pointer-events: none; }
+    .fig .fx-shock, .clockw .fx-shock { border-radius: 26px; }
+    .fx-spk { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: #fff3c8; box-shadow: 0 0 10px var(--tone); opacity: 0; pointer-events: none; }
+    .tip .txt, .fig .txt { font-size: 44px; } .gui .chip { font-size: 24px; }
+    .pov { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 22px 14px; }
+    .pov .top { display: flex; align-items: center; gap: 10px; font: 900 32px/1 Kanit; }
+    .pov .row { display: flex; align-items: center; gap: 14px; }
+    .pov .bpmh { width: 74px; height: 70px; display: grid; place-items: center; } .pov .bpmh .hb { width: 70px; height: 64px; overflow: visible; filter: drop-shadow(0 0 12px rgba(232,112,90,.8)); }
+    .pov .bpmh .fx-shock { border-color: #e8705a; }
+    .pov .ecg2 { width: 170px; height: 54px; }
+    .pov .bnum { display: flex; align-items: baseline; gap: 6px; } .pov .bnum b { font: 900 60px/1 Kanit; } .pov .bnum span { font: 700 22px/1 Kanit; color: rgba(244,236,216,.7); }
+
+    .call { opacity:0; } .call .dev { position:relative; margin:0 auto; width:420px; height:760px; border-radius:56px; background:#1a1d20; border:6px solid #2e2a26; box-shadow:0 30px 60px rgba(0,0,0,.6), 0 0 40px rgba(127,209,185,.25); padding:22px; }
+    .call .scr { width:100%; height:100%; border-radius:40px; background:linear-gradient(180deg,#24343c,#0f171b); display:flex; flex-direction:column; align-items:center; padding-top:60px; }
+    .call .lbl { font:700 28px/1 Kanit; color:rgba(244,236,216,.75); } .call .av { position:relative; width:180px; height:180px; margin-top:40px; }
+    .call .av .fm { position:absolute; inset:0; width:180px; height:180px; border-width:5px; } .call .rg { position:absolute; inset:0; border-radius:50%; border:4px solid #7fd1b9; }
+    .call .nm { font:900 76px/1 Kanit; margin-top:36px; } .call .sub { font:700 26px/1 Kanit; color:rgba(244,236,216,.6); margin-top:12px; }
+    .call .bt { margin-top:auto; margin-bottom:70px; display:flex; gap:120px; } .call .bt span { width:110px; height:110px; border-radius:50%; display:grid; place-items:center; font:900 54px/1 Kanit; color:#fff; }
+    .call .no { background:#e8705a; } .call .yes { background:#4fb37a; } .call .hand { position:absolute; left:0; right:0; bottom:-170px; width:520px; height:520px; }
+
+    .stealth { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; display:flex; align-items:center; gap:18px; padding:14px 26px 16px 16px; }
+    .stealth .seye { width:130px; height:88px; flex:none; } .stealth .rows { display:flex; flex-direction:column; gap:8px; }
+    .stealth .row { display:flex; align-items:center; gap:12px; font:700 26px/1 Kanit; } .stealth .row span { width:130px; }
+    .stealth .sbar { position:relative; width:260px; height:20px; border-radius:10px; background:rgba(244,236,216,.15); overflow:hidden; border:2px solid rgba(244,236,216,.4); }
+    .stealth .sbar i { position:absolute; inset:0; transform-origin:0 50%; transform:scaleX(0); }
+    .stealth .det i { background:linear-gradient(90deg,#f2c55c,#e8705a); } .stealth .noi i { background:linear-gradient(90deg,#7fd1b9,#f2c55c 60%,#e8705a); }
+    .stealth .pct { font:900 30px/1 Kanit; color:#e8705a; width:70px; }
+    .stealth .found { position:absolute; right:-30px; top:-30px; font:900 54px/1 Kanit; color:#fff; background:#d8463a; padding:8px 22px 12px; border-radius:14px; border:4px solid #2e2a26; opacity:0; box-shadow:0 0 30px rgba(232,80,80,.8); }
+    .mm .ml { display:flex; flex-direction:column; align-items:center; gap:6px; font:900 32px/1 Kanit; text-shadow:0 2px 10px #000; }
+      .capwrap { z-index: 56; top: 1480px; }
+      .capbox { background: rgba(12,18,20,.86); color: #f4ecd8; border: 2px solid rgba(244,236,216,.4); border-radius: 22px;
+        box-shadow: 0 0 0 4px rgba(10,14,16,.45), 0 14px 30px rgba(0,0,0,.55); font: 900 64px/1.22 Kanit; padding: 12px 34px 18px; }
+      .capbox .k { background: #f2c55c; color: #2e2a26; border: 0; border-radius: 10px; padding: 0 .16em; transform: rotate(-1.5deg); }
+      .capbox .k.kr, .k.kr { background: #d8443a; color: #fff4ea; }
+      .capbox.q { background: rgba(244,236,216,.94); color: #2e2a26; border-color: #2e2a26; }
+      .bubble { z-index: 57; white-space: normal !important; max-width: 640px; text-align: center; }
+      .sfxw { position: absolute; z-index: 55; font-family: Kanit; font-weight: 900; letter-spacing: -1px; opacity: 0; white-space: nowrap;
+        text-shadow: -4px -4px 0 #2e2a26, 4px -4px 0 #2e2a26, -4px 4px 0 #2e2a26, 4px 4px 0 #2e2a26, 8px 8px 0 #2e2a26; }
+      /* phone camera overlay (REC) */
+      .rec { position: absolute; inset: 0; z-index: 52; pointer-events: none; font-family: Kanit; color: #f4ecd8; }
+      .rec .br { position: absolute; width: 90px; height: 90px; border: 6px solid rgba(244,236,216,.85); }
+      .rec .tl { left: 40px; top: 120px; border-right: 0; border-bottom: 0; } .rec .tr { right: 40px; top: 120px; border-left: 0; border-bottom: 0; }
+      .rec .bl { left: 40px; bottom: 120px; border-right: 0; border-top: 0; } .rec .brr { right: 40px; bottom: 120px; border-left: 0; border-top: 0; }
+      .rec .top { position: absolute; left: 70px; right: 70px; top: 150px; display: flex; justify-content: space-between; align-items: center; font: 900 40px/1 Kanit; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+      .rec .dot { display: inline-block; width: 26px; height: 26px; border-radius: 50%; background: #e8443a; margin-right: 12px; vertical-align: -2px; box-shadow: 0 0 14px #e8443a; }
+      .rec .tc { font-family: 'Kanit'; letter-spacing: 2px; }
+      .rec .bat { display: inline-block; width: 56px; height: 28px; border: 4px solid #f4ecd8; border-radius: 6px; position: relative; margin-left: 14px; vertical-align: -4px; }
+      .rec .bat:after { content: ""; position: absolute; left: 3px; top: 3px; bottom: 3px; width: 34%; background: #e8705a; }
+      .rec .mode { position: absolute; left: 70px; top: 220px; font: 700 30px/1 Kanit; letter-spacing: 3px; padding: 6px 12px; border-radius: 8px; background: rgba(0,0,0,.4); }
+      .rec .af { position: absolute; width: 170px; height: 190px; border: 5px solid #f2c55c; border-radius: 10px; opacity: 0; box-shadow: 0 0 18px rgba(242,197,92,.6); }
+      .rec .af b { position: absolute; left: -5px; top: -50px; font: 900 28px/1 Kanit; color: #2e2a26; background: #f2c55c; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+      /* channel signature: "ทุกอย่าง… ถูกทาง / พลาดแค่… เรื่องเดียว" checklist */
+      .chk { position: absolute; left: 110px; width: 860px; top: 520px; z-index: 52; padding: 30px 38px 34px; border-radius: 30px; opacity: 0;
+        background: rgba(10,15,17,.9); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 0 0 6px rgba(10,14,16,.4), 0 24px 60px rgba(0,0,0,.6); font-family: Kanit; }
+      .chk .chk-t { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; margin-bottom: 22px; }
+      .chk .chk-r { display: flex; align-items: center; gap: 26px; padding: 14px 0; border-top: 2px solid rgba(244,236,216,.12); opacity: 0; }
+      .chk .box { width: 84px; height: 84px; border-radius: 18px; border: 5px solid rgba(244,236,216,.6); display: flex; align-items: center; justify-content: center; flex: none; }
+      .chk .box b { font: 900 64px/1 Kanit; opacity: 0; }
+      .chk .ok b { color: #7fd1b9; } .chk .bad b { color: #ff5a4a; }
+      .chk .tx { font: 900 60px/1.1 Kanit; color: #f4ecd8; }
+      .chk .bad .tx { color: #ff8a7a; letter-spacing: 8px; }
+      .rec .scrub { position: absolute; left: 70px; right: 70px; bottom: 170px; height: 12px; border-radius: 6px; background: rgba(244,236,216,.3); }
+      .rec .scrub i { display: block; height: 100%; border-radius: 6px; background: #e8443a; }
+      /* body temperature card */
+      .thermo { position: absolute; z-index: 52; display: flex; align-items: center; gap: 22px; padding: 18px 28px 18px 20px; border-radius: 26px; opacity: 0;
+        background: rgba(10,15,17,.88); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 14px 40px rgba(0,0,0,.55); font-family: Kanit; color: #f4ecd8; }
+      .thermo .val { font: 900 92px/1 Kanit; letter-spacing: -2px; } .thermo .val small { font-size: 44px; }
+      .thermo .lbl { font: 700 28px/1.1 Kanit; letter-spacing: 3px; color: #f2c55c; margin-bottom: 6px; }
+      .thermo .note { font: 900 34px/1.1 Kanit; color: #ff8a7a; height: 38px; }
+      .rec.nv:before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 3px, transparent 3px 6px); }
+
+      /* the guide's rule: a lacquer-and-gold card, one rhyming line per row (กอย / ถอย / คอย) */
+      .krule { position: absolute; left: 60px; width: 960px; z-index: 52; opacity: 0; padding: 22px 34px 30px; border-radius: 28px; box-sizing: border-box;
+        background: linear-gradient(180deg, #1d1611 0%, #120d0a 100%); border: 4px solid #c9a55a; overflow: hidden;
+        box-shadow: 0 0 0 10px rgba(18,13,10,.92), 0 0 0 13px #7a5f2e, 0 26px 60px rgba(0,0,0,.65), inset 0 0 60px rgba(201,165,90,.12); font-family: Kanit; }
+      .krule::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(201,165,90,.05) 0 2px, transparent 2px 46px); pointer-events: none; }
+      .krule .cn { position: absolute; width: 46px; height: 46px; border: 5px solid #e2c27a; }
+      .krule .cn::after { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #e2c27a; }
+      .krule .cn.tl { left: 12px; top: 12px; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; } .krule .cn.tl::after { left: 10px; top: 10px; }
+      .krule .cn.tr { right: 12px; top: 12px; border-left: 0; border-bottom: 0; border-top-right-radius: 14px; } .krule .cn.tr::after { right: 10px; top: 10px; }
+      .krule .cn.bl { left: 12px; bottom: 12px; border-right: 0; border-top: 0; border-bottom-left-radius: 14px; } .krule .cn.bl::after { left: 10px; bottom: 10px; }
+      .krule .cn.br { right: 12px; bottom: 12px; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; } .krule .cn.br::after { right: 10px; bottom: 10px; }
+      .krule .kr-h { text-align: center; margin: 4px 0 14px; }
+      .krule .kr-h span { display: inline-block; padding: 6px 34px 8px; border-radius: 40px; background: linear-gradient(180deg, #b8322a, #8e2018); color: #ffe7b0;
+        font-weight: 900; font-size: 38px; letter-spacing: 1px; border: 3px solid #e2c27a; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+      .krule .kr-r { display: flex; align-items: center; gap: 26px; padding: 12px 10px; opacity: 0; }
+      .krule .kr-r + .kr-r { border-top: 2px dashed rgba(201,165,90,.35); }
+      .krule .kr-i { flex: none; width: 118px; height: 118px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fbf3df, #e6d3a8); border: 5px solid #c9a55a; box-shadow: 0 6px 14px rgba(0,0,0,.5); }
+      .krule .kr-i svg { width: 100%; height: 100%; }
+      .krule .kr-t { color: #f4ecd8; font-weight: 900; font-size: 60px; line-height: 1.15; text-shadow: 0 4px 0 rgba(0,0,0,.55); white-space: nowrap; }
+      .krule .kr-t strong { color: #f2c55c; font-weight: 900; }
+      .krule .kr-t em { font-style: normal; background: #c8392b; color: #fff; padding: 0 14px 4px; border-radius: 14px; margin-right: 8px; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
+      .krule .kr-t u { text-decoration: none; position: relative; }
+      .krule .kr-t u::after { content: ""; position: absolute; left: -4px; right: -4px; bottom: -6px; height: 8px; border-radius: 4px; background: #e2c27a; box-shadow: 0 0 14px #e2c27a; transform: scaleX(var(--k, 0)); transform-origin: 0 50%; }
+      .krule .sheen { position: absolute; top: -40%; left: -40%; width: 26%; height: 180%; background: linear-gradient(90deg, transparent, rgba(255,236,190,.22), transparent); transform: rotate(18deg); pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="61.997" data-width="1080" data-height="1920">
+      <svg id="grain" width="1200" height="2040"><filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5" /></filter><rect width="1200" height="2040" filter="url(#nz)" /></svg>
+    </div>
+    <script>
+      const SCHED = {"total": 61.997, "shots": [{"key": "hook", "start": 0.0, "dur": 2.6, "vo": [{"id": "n01", "t": 0.15, "dur": 2.151, "cap": "ถ้าวันหนึ่ง… / รถคุณ[ตกคลอง]กลางดึก", "frags": [0.0, 0.93]}], "voEnd": 2.301}, {"key": "lock", "start": 2.6, "dur": 1.9, "vo": [{"id": "n02", "t": 0.3, "dur": 1.149, "cap": "{อย่าเพิ่งโทรหาใคร}", "frags": [0.0]}], "voEnd": 1.449}, {"key": "float", "start": 4.5, "dur": 4.198, "vo": [{"id": "n03", "t": 0.2, "dur": 3.698, "cap": "รถจะลอยอยู่ได้[ราวหนึ่งนาที]… / หรือน้อยกว่านั้น", "frags": [0.0, 2.73]}], "voEnd": 3.898}, {"key": "all", "start": 8.698, "dur": 2.846, "vo": [{"id": "n04", "t": 0.1, "dur": 2.346, "cap": "และนาทีนั้น… / คือ[ทั้งหมด]ที่คุณมี", "frags": [0.0, 1.15]}], "voEnd": 2.446}, {"key": "drive", "start": 11.544, "dur": 5.158, "vo": [{"id": "n05", "t": 0.2, "dur": 4.758, "cap": "ตีหนึ่ง ต้นขับรถพา[ขิม] / น้องสาววัยแปดขวบ / กลับบ้านทาง[เลียบคลอง]", "frags": [0.0, 2.15, 2.99]}], "voEnd": 4.958}, {"key": "swerve", "start": 16.702, "dur": 3.491, "vo": [{"id": "n06", "t": 0.1, "dur": 2.591, "cap": "มอเตอร์ไซค์[ไม่เปิดไฟ]… / โผล่มาตรงหน้า", "frags": [0.0, 1.66]}], "voEnd": 2.691}, {"key": "plunge", "start": 20.193, "dur": 1.6, "vo": [], "voEnd": 0}, {"key": "inrush", "start": 21.793, "dur": 2.0, "vo": [], "voEnd": 0}, {"key": "belt", "start": 23.793, "dur": 2.873, "vo": [{"id": "n07", "t": 0.2, "dur": 2.373, "cap": "{อย่าแตะมือถือ}… / ปลด[เข็มขัด]ตัวเองก่อน", "frags": [0.0, 1.29]}], "voEnd": 2.573}, {"key": "door", "start": 26.666, "dur": 4.057, "vo": [{"id": "n08", "t": 0.2, "dur": 3.557, "cap": "อย่าเสียเวลากับ[ประตู]… / น้ำดันมันไว้[เกือบร้อยกิโล]", "frags": [0.0, 1.73]}], "voEnd": 3.757}, {"key": "window", "start": 30.723, "dur": 3.568, "vo": [{"id": "n09", "t": 0.2, "dur": 3.068, "cap": "กด[กระจกลง]เดี๋ยวนี้… / มันอาจ[หยุดทำงาน]เมื่อไหร่ก็ได้", "frags": [0.0, 1.51]}], "voEnd": 3.268}, {"key": "kid", "start": 34.291, "dur": 3.085, "vo": [{"id": "n10", "t": 0.2, "dur": 2.585, "cap": "แล้วปลดเข็มขัดให้ขิม… / ส่ง[เด็กออกก่อน]", "frags": [0.0, 1.66]}], "voEnd": 2.785}, {"key": "phone", "start": 37.376, "dur": 4.674, "vo": [{"id": "n11", "t": 0.2, "dur": 4.074, "cap": "ส่วนมือถือ… / ขึ้นฝั่งแล้วค่อยโทร [1669]", "frags": [0.0, 1.17]}], "voEnd": 4.274}, {"key": "rw", "start": 42.05, "dur": 4.2, "vo": [{"id": "n12", "t": 0.2, "dur": 3.241, "cap": "เขาพลาดไปแล้ว… / ตั้งแต่[วินาทีที่ 4] / คุณเห็นไหม?", "frags": [0.0, 1.21, 2.66]}], "voEnd": 3.441}, {"key": "kim", "start": 46.25, "dur": 2.638, "vo": [{"id": "k01", "t": 0.1, "dur": 2.138, "cap": "พี่! / [กระจกหนูไม่ลง]!", "frags": [0.0, 0.57]}], "voEnd": 2.238}, {"key": "led", "start": 48.888, "dur": 2.4, "vo": [{"id": "n13", "t": 0.2, "dur": 1.772, "cap": "ปุ่ม[ล็อกกระจก]… / ยังติดอยู่", "frags": [0.0, 1.08]}], "voEnd": 1.972}, {"key": "panel", "start": 51.288, "dur": 3.641, "vo": [{"id": "n14", "t": 0.2, "dur": 3.141, "cap": "บางรุ่น… / ปุ่มนี้[ล็อกทุกบาน] ยกเว้นบานคนขับ", "frags": [0.0, 0.86]}], "voEnd": 3.341}, {"key": "flicker", "start": 54.929, "dur": 2.868, "vo": [{"id": "n15", "t": 0.2, "dur": 1.768, "cap": "และไฟในรถ… / [เริ่มกะพริบ]", "frags": [0.0, 1.1]}], "voEnd": 1.968}, {"key": "next", "start": 57.797, "dur": 4.2, "vo": [], "voEnd": 0}]};
+      const SH = Object.fromEntries(SCHED.shots.map((s) => [s.key, s]));
+      const vo = (k, i = 0) => SH[k].vo[i].t;                       // voice start, relative to the shot
+      const voEnd = (k, i = 0) => SH[k].vo[i].t + SH[k].vo[i].dur;
+      const F = (k, i = 0, j = 0) => SH[k].vo[i].t + SH[k].vo[i].frags[j]; // start of caption fragment j
+      const D = (k) => SH[k].dur;
+      const fr = (wx, wy, s, sx = 540, sy = 760, extra = {}) => ({ x: wx - 540 - (sx - 540) / s, y: wy - 960 - (sy - 960) / s, s, ...extra });
+      const root = document.getElementById("root");
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // one caption per fragment of the spoken line, on the beat of the voice
+      function caps(k, lines, o = {}) {
+        const out = [];
+        (lines ?? SH[k].vo.map((_, i) => i)).forEach((i) => {
+          const v = SH[k].vo[i], fr = v.cap.split(" / ");
+          fr.forEach((txt, j) => out.push({ text: o.quote ? `“${txt}”` : txt, t: v.t + v.frags[j] - 0.06,
+            end: j + 1 < fr.length ? v.t + v.frags[j + 1] - 0.08 : Math.min(D(k) - 0.06, v.t + v.dur + (o.hold ?? 0.35)) }));
+        });
+        out.sort((a, b) => a.t - b.t);
+        for (let n = 0; n + 1 < out.length; n++) out[n].end = Math.min(out[n].end, out[n + 1].t - 0.03);
+        return out;
+      }
+      const bub = (k, i, x, y, tail, o = {}) => ({ text: `“${SH[k].vo[i].cap.replace(/ \/ /g, " ")}”`, x, y, tail, t: vo(k, i) - 0.05, end: o.end ?? Math.min(D(k) - 0.05, voEnd(k, i) + 0.35) });
+
+      // extra poses
+      Rig.MODES.selfie = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -42 + 2 * Math.sin(u * 1.7), faF: -16, uaB: 8, faB: -16, head: 4 + 2 * Math.sin(u * 2.3), torso: -1 });
+      Rig.MODES.laugh = (u, o) => { const b = Math.abs(Math.sin(u * 9)); return { ...Rig.MODES.idle(u, o), uaF: 14, faF: -110, uaB: -18, faB: -20, torso: -6 - 3 * b, head: -14 - 5 * b, bodyY: -3 * b }; };
+      Rig.MODES.shiver = (u, o) => { const j = Math.sin(u * 47) * 1.6; return { ...Rig.MODES.tremble(u, o), uaF: -110 + j, faF: -120, uaB: 110 - j, faB: 120, torso: 8 + j * 0.5, head: -4 + j }; };
+      Rig.MODES.stick = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -12, faF: -24 });
+      Rig.MODES.crouchTorch = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -70 + 4 * Math.sin(u * 1.3), faF: -10 });
+      const shakeH = (t) => 7 * Math.sin(t * 2.3) + 3 * Math.sin(t * 7.1);
+
+      // phone camera overlay: REC dot, running timecode, battery, optional face box that locks onto something
+      GameUI.C.rec = {
+        html: (id, o) => `<div id="${id}" class="rec${o.nv ? " nv" : ""}"><i class="br tl"></i><i class="br tr"></i><i class="br bl"></i><i class="br brr"></i>
+          <div class="top">${o.play ? `<span>▶ คลิปเมื่อคืน</span>` : `<span><i class="dot"></i>REC</span>`}<span class="tc">00:00:00</span><span>${o.nv ? "IR" : "4K"}<i class="bat"></i></span></div>
+          ${o.mode ? `<div class="mode">${o.mode}</div>` : ""}${o.play ? `<div class="scrub"><i></i></div>` : ""}${o.af ? `<div class="af" style="left:${o.af.x}px;top:${o.af.y}px;${o.af.w ? `width:${o.af.w}px;height:${o.af.h}px` : ""}"><b>${o.af.label}</b></div>` : ""}</div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), tc = el.querySelector(".tc"), c = { t: 0 }, base = o.tc0 || 0;
+          tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0);
+          tl.to(c, { t: o.dur, duration: o.dur, ease: "none", immediateRender: false, onUpdate: () => {
+            const s = base + c.t, f = Math.floor((s % 1) * 30), p2 = (v) => String(Math.floor(v)).padStart(2, "0");
+            tc.textContent = s >= 3600 ? `${Math.floor(s / 3600)}:${p2((s % 3600) / 60)}:${p2(s % 60)}` : `${p2(s / 60)}:${p2(s % 60)}:${p2(f)}`;
+          } }, t0);
+          if (o.play) tl.fromTo(`#${id} .scrub i`, { width: `${o.play[0]}%` }, { width: `${o.play[1]}%`, duration: o.dur, ease: "none", immediateRender: false }, t0);
+          if (!o.play) tl.fromTo(`#${id} .dot`, { opacity: 1 }, { opacity: 0.15, duration: 0.5, repeat: Math.ceil(o.dur / 0.5), yoyo: true, immediateRender: false }, t0);
+          if (o.af) {
+            const a = o.t0abs + o.af.at;
+            tl.fromTo(`#${id} .af`, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.18, ease: "back.out(2)", immediateRender: false }, a);
+            tl.to(`#${id} .af`, { opacity: 0.2, duration: 0.08, repeat: 5, yoyo: true }, a + 0.25);
+          }
+        },
+      };
+      // channel signature: a checklist ticked on "ทุกอย่าง… ถูกทาง", then one red cross on "เรื่องเดียว"
+      // the guide's rule card: rows stamp in at o.at[i] (seconds into the shot); the rhyming syllables get a gold underline
+      GameUI.C.koiRule = {
+        html: (id, o) => {
+          const IK = "#2e2a26", rows = o.rows || [
+            [`<path d="M74,20C46,16 28,38 30,62C32,78 44,82 46,94C48,106 60,112 68,102C74,94 68,86 74,78C84,66 94,58 92,44C90,30 84,22 74,20Z" fill="#e9bc93" stroke="${IK}" stroke-width="4"/>
+              <path d="M76,40C66,34 52,40 54,54C56,62 64,62 64,70" stroke="${IK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+              ${[0, 1, 2].map((i) => `<path class="kw" d="M${22 - i * 9},${44 - i * 6}q-${10 + i * 3},${18 + i * 6} 0,${36 + i * 12}" stroke="#7a3fb0" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+              `ได้ยิน<strong>เสียง<u>กอย</u></strong>`],
+            [`<g class="krun"><circle cx="66" cy="28" r="10" fill="${IK}"/><path d="M62,40L52,66M52,66L70,78L66,98M52,66L36,82L24,80M60,46L78,56L90,50M60,46L44,52L36,64" stroke="${IK}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+              <g class="kno"><circle cx="60" cy="60" r="46" fill="none" stroke="#d8322a" stroke-width="9"/><path d="M28,28L92,92" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/></g>`,
+              `<em>อย่าวิ่ง</em><em>อย่า<u>ถอย</u></em>`],
+            [`<path d="M40,112C44,80 42,40 46,8H64C66,40 66,80 72,112Z" fill="#6a4a2e" stroke="${IK}" stroke-width="4"/><path d="M60,52Q84,46 108,38" stroke="#6a4a2e" stroke-width="10" stroke-linecap="round"/><circle cx="96" cy="24" r="16" fill="#4f8a55" stroke="${IK}" stroke-width="3"/><circle cx="30" cy="20" r="14" fill="#4f8a55" stroke="${IK}" stroke-width="3"/>
+              <g class="kclimb"><circle cx="84" cy="32" r="7" fill="#e8b830" stroke="${IK}" stroke-width="3"/><path d="M84,40v12M84,52l-6,10M84,52l7,9" stroke="${IK}" stroke-width="4" stroke-linecap="round"/></g>
+              <g transform="translate(18,78)"><path d="M0,0h22M0,30h22M3,0q8,15 0,30M19,0q-8,15 0,30" stroke="${IK}" stroke-width="3.5" fill="#f2c55c" stroke-linejoin="round"/><path class="ksand" d="M7,22h8l-4,-6z" fill="#c9a55a"/></g>`,
+              `<strong>ปีนต้นไม้</strong> แล้ว<u>คอย</u>`],
+          ];
+          return `<div id="${id}" class="krule" style="top:${o.top ?? 170}px"><i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i><i class="sheen"></i>
+            <div class="kr-h"><span>${o.label || "กฎของบังหมาด"}</span></div>
+            ${rows.map(([ill, txt], i) => `<div class="kr-r" id="${id}-r${i}"><div class="kr-i"><svg viewBox="0 0 120 120">${ill}</svg></div><div class="kr-t">${txt}</div></div>`).join("")}</div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.7)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .kr-h span`, { scaleX: 0.2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.08);
+          tl.fromTo(`#${id} .sheen`, { x: 0 }, { x: 1500, duration: 0.9, ease: "power1.inOut", immediateRender: false }, t0 + 0.25);
+          o.at.forEach((at, i) => {
+            const r = el.querySelector(`#${id}-r${i}`);
+            tl.fromTo(r, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.28, ease: "power2.out", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector(".kr-i"), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector("u"), { "--k": 0 }, { "--k": 1, duration: 0.35, ease: "power2.out", immediateRender: false }, A(at) + 0.3);
+          });
+          el.querySelectorAll(".kw").forEach((w, i) => tl.fromTo(w, { opacity: 0.1 }, { opacity: 1, duration: 0.28, repeat: 9, yoyo: true, immediateRender: false }, A(o.at[0]) + i * 0.1));
+          tl.fromTo(el.querySelector(".kno"), { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, svgOrigin: "60 60", duration: 0.22, ease: "power3.in", immediateRender: false }, A(o.at[1]) + 0.2);
+          tl.fromTo(el.querySelector(".kclimb"), { y: 46 }, { y: 0, duration: 0.8, ease: "power1.out", immediateRender: false }, A(o.at[2]));
+          tl.fromTo(el.querySelector(".ksand"), { scaleY: 1 }, { scaleY: 0.2, svgOrigin: "11 22", duration: 1.6, ease: "none", immediateRender: false }, A(o.at[2]) + 0.4);
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, y: -30, duration: 0.25 }, A(o.end));
+        },
+      };
+      GameUI.C.checklist = {
+        html: (id, o) => `<div id="${id}" class="chk"><div class="chk-t">${o.title}</div>${o.items.map(([txt, ok], i) => `<div class="chk-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="box"><b>${ok ? "✓" : "✗"}</b></span><span class="tx">${txt}</span></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t;
+          tl.fromTo(`#${id}`, { opacity: 0, y: 40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.8)", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, A(o.show[i]));
+            tl.fromTo(`#${id}-r${i} .box b`, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(3)", immediateRender: false }, A(o.mark[i]));
+            if (ok) tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)" }, { borderColor: "#7fd1b9", duration: 0.2, immediateRender: false }, A(o.mark[i]));
+            else {
+              tl.fromTo(`#${id}-r${i} .box`, { opacity: 1 }, { opacity: 0.25, duration: 0.18, repeat: 5, yoyo: true, immediateRender: false }, A(o.show[i]));
+              tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)", boxShadow: "0 0 0 0 rgba(255,90,74,.9)" }, { borderColor: "#ff5a4a", boxShadow: "0 0 0 26px rgba(255,90,74,0)", duration: 0.5, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}`, { x: 0 }, { x: 10, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}`, { borderColor: "rgba(255,90,74,.8)", duration: 0.2 }, A(o.mark[i]));
+            }
+          });
+        },
+      };
+
+      // extra illustrations for the knowledge cards
+      Object.assign(GameUI.ILL, {
+        muddy: `<path d="M10,70q25,-14 50,0t50,0V110H10Z" fill="#9c7d55" stroke="#2e2a26" stroke-width="4"/><path class="a-bob" d="M30,40q30,-20 60,0" stroke="#7fb3ab" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M30,84q8,-4 16,0M64,92q8,-4 16,0" stroke="#5a4636" stroke-width="4" fill="none"/>`,
+        rise: `<rect x="20" y="20" width="16" height="90" rx="4" fill="#e9dcc0" stroke="#2e2a26" stroke-width="4"/>${[0, 1, 2, 3].map((k) => `<path d="M36,${34 + k * 20}h10" stroke="#2e2a26" stroke-width="4"/>`).join("")}<path class="a-pulse" d="M60,104V40M44,58l16,-20 16,20" stroke="#e8705a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M10,96q20,-10 40,0t40,0t30,0" stroke="#7fb3ab" stroke-width="7" fill="none"/>`,
+        roar: `<path d="M14,96L46,40L60,62L76,34L106,96Z" fill="#3e5a44" stroke="#2e2a26" stroke-width="4" stroke-linejoin="round"/>${[0, 1, 2].map((k) => `<path class="a-wave" data-i="${k}" d="M${70 + k * 12},${20 + k * 4}q${12 + k * 4},${14} 0,${28 + k * 4}" stroke="#f2c55c" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+        leech: `<path d="M24,86C10,60 30,30 60,26C92,22 104,44 96,62C88,80 66,70 58,82C50,94 34,100 24,86Z" fill="#3b3a22" stroke="#2e2a26" stroke-width="4"/><path d="M40,48q8,8 0,18M56,38q8,10 0,22M72,40q8,10 2,22" stroke="#6d6a3a" stroke-width="3" fill="none"/>`,
+        drop: `<path class="a-bob" d="M60,16C40,46 30,62 30,78a30,30 0 0 0 60,0C90,62 80,46 60,16Z" fill="#c0392b" stroke="#2e2a26" stroke-width="4"/><path d="M46,78a14,14 0 0 0 10,14" stroke="#f4ecd8" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/>`,
+      });
+
+      const shots = [];
+      const add = (k, spec) => { if (SH[k]) shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec }); };
+      const FA_ARM = { sleeve: "#e8b830", skin: "#ebbd95", cuff: "#c4931c" };
+
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .zchk { position: absolute; left: 80px; width: 920px; z-index: 52; opacity: 0; font-family: Kanit; }
+        .zchk .zc-in { position: relative; padding: 26px 36px 30px; border-radius: 28px; overflow: hidden;
+          background: linear-gradient(180deg, rgba(16,20,22,.95), rgba(7,9,11,.97)); border: 4px solid rgba(244,236,216,.3); box-shadow: 0 24px 60px rgba(0,0,0,.7); }
+        .zchk .zc-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 6px); pointer-events: none; }
+        .zchk .zc-bar { position: absolute; left: 0; right: 0; top: 0; height: 110px; background: linear-gradient(180deg, transparent, rgba(255,60,50,.32), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-h { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+        .zchk .zc-dot { width: 20px; height: 20px; border-radius: 50%; background: #ff4a3a; box-shadow: 0 0 14px #ff4a3a; flex: none; }
+        .zchk .zc-h b { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; flex: 1; }
+        .zchk .zc-tally { font: 900 46px/1 Kanit; color: #7fd1b9; min-width: 120px; text-align: right; }
+        .zchk .zc-r { position: relative; display: flex; align-items: center; gap: 26px; padding: 14px 14px; margin: 0 -14px; border-top: 2px solid rgba(244,236,216,.1); opacity: 0; border-radius: 16px; }
+        .zchk .zc-sw { position: absolute; inset: 0; overflow: hidden; border-radius: 16px; pointer-events: none; }
+        .zchk .zc-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(127,209,185,.45), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-box { width: 86px; height: 86px; border-radius: 18px; border: 5px solid rgba(244,236,216,.55); flex: none; position: relative; box-sizing: border-box; }
+        .zchk .zc-box svg { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; overflow: visible; }
+        .zchk .ck { fill: none; stroke: #7fd1b9; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 90; stroke-dashoffset: 90; }
+        .zchk .xx { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; opacity: 0; } .zchk .xx svg { left: 0; top: 0; }
+        .zchk .xx path { stroke: #fff; stroke-width: 12; stroke-linecap: round; }
+        .zchk .zc-t { font: 900 60px/1.1 Kanit; color: #f4ecd8; position: relative; }
+        .zchk .bad .zc-t { color: #ff8a7a; letter-spacing: 8px; }
+        .zchk .zc-box svg.zc-crack { left: 38px; top: 38px; width: 2px; height: 2px; overflow: visible; pointer-events: none; }
+        .zchk .zc-crack path { fill: none; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .zchk .zc-crack .c1 { stroke: rgba(0,0,0,.6); stroke-width: 7; } .zchk .zc-crack .c2 { stroke: rgba(255,240,230,.92); stroke-width: 2.6; }
+      </style>`);
+      GameUI.C.sigCard = {
+        html: (id, o) => {
+          const r = (() => { let q = 23; return () => ((q = (q * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+          let cracks = "";
+          for (let k = 0; k < 7; k++) {
+            let x = 0, y = 0, d = "M0,0", br = "";
+            const ang = -1.7 + k * 0.29;
+            for (let j = 0; j < 8; j++) {
+              const a2 = ang + (r() - 0.5) * 0.8, L = 45 + r() * 75;
+              x += Math.cos(a2) * L; y += Math.sin(a2) * L; d += `L${x.toFixed(0)},${y.toFixed(0)}`;
+              if (j === 2 || j === 5) { const ba = a2 + (r() > 0.5 ? 0.9 : -0.9); br += `M${x.toFixed(0)},${y.toFixed(0)}l${(Math.cos(ba) * 70).toFixed(0)},${(Math.sin(ba) * 70).toFixed(0)}l${(Math.cos(ba + 0.4) * 40).toFixed(0)},${(Math.sin(ba + 0.4) * 40).toFixed(0)}`; }
+            }
+            cracks += `<path class="c1" d="${d}${br}"/><path class="c2" d="${d}${br}"/>`;
+          }
+          return `<div id="${id}" class="zchk" style="top:${o.top ?? 470}px"><div class="zc-in" id="${id}-in"><div class="zc-scan"></div><div class="zc-bar" id="${id}-bar"></div>
+            <div class="zc-h"><span class="zc-dot" id="${id}-dot"></span><b>${o.title}</b><span class="zc-tally" id="${id}-tally">✓ 0</span></div>
+            ${o.items.map(([txt, ok], i) => `<div class="zc-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="zc-sw"><i class="zc-sweep"></i></span><span class="zc-box">${ok
+              ? `<svg viewBox="0 0 86 86"><path class="ck" d="M20,45 L37,61 L67,25"/></svg>`
+              : `<span class="xx"><svg viewBox="0 0 86 86"><path d="M22,22L64,64M64,22L22,64"/></svg></span><svg class="zc-crack" id="${id}-crack">${cracks}</svg>`}</span><span class="zc-t">${txt}</span></div>`).join("")}
+            </div></div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id), inner = document.getElementById(`${id}-in`);
+          const bar = document.getElementById(`${id}-bar`), tally = document.getElementById(`${id}-tally`), dot = document.getElementById(`${id}-dot`);
+          const qtx = el.querySelector(`#${id}-r${o.items.length - 1} .zc-t`), S3 = o.show[o.items.length - 1], X = o.mark[o.items.length - 1];
+          const GL = ["???", "?▓?", "▒?░", "??▓", "░▒▓", "?!?", "▓?▒", "?░?"];
+          const h = (n) => { const v = Math.sin(n * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+          // entrance: flicker on like a failing screen, with a colour split that settles
+          tl.fromTo(`#${id}`, { opacity: 0, scale: 1.08, filter: "drop-shadow(14px 0 0 rgba(255,40,60,.8)) drop-shadow(-14px 0 0 rgba(40,220,255,.8))" },
+            { opacity: 1, scale: 1, filter: "drop-shadow(0px 0 0 rgba(255,40,60,0)) drop-shadow(0px 0 0 rgba(40,220,255,0))", duration: 0.32, ease: "power3.out", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.2, ease: "power3.out", immediateRender: false }, A(o.show[i]));
+            if (ok) {
+              tl.fromTo(`#${id}-r${i} .ck`, { strokeDashoffset: 90 }, { strokeDashoffset: 0, duration: 0.18, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)", boxShadow: "0 0 0 0 rgba(127,209,185,.9)" }, { borderColor: "#7fd1b9", boxShadow: "0 0 0 22px rgba(127,209,185,0)", duration: 0.4, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-sweep`, { opacity: 1, x: -380 }, { opacity: 0, x: 1100, duration: 0.45, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}-r${i}`, { opacity: 0.42, filter: "saturate(.3)", duration: 0.3 }, A(S3) + 0.05);   // the good news fades while ??? takes over
+            } else {
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)" }, { borderColor: "#ff5a4a", duration: 0.12, repeat: 7, yoyo: true, immediateRender: false }, A(S3));
+              tl.fromTo(`#${id}-r${i} .xx`, { opacity: 0, scale: 3.2 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.14, ease: "power4.in", immediateRender: false }, A(X));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { backgroundColor: "rgba(216,50,42,0)", borderColor: "#ff5a4a", boxShadow: "0 0 0 0 rgba(255,90,74,.95)" },
+                { backgroundColor: "rgba(216,50,42,1)", borderColor: "#ff5a4a", boxShadow: "0 0 0 40px rgba(255,90,74,0)", duration: 0.45, immediateRender: false }, A(X) + 0.12);
+              tl.fromTo(`#${id}-r${i}`, { backgroundColor: "rgba(216,50,42,0)" }, { backgroundColor: "rgba(216,50,42,.35)", duration: 0.2, immediateRender: false }, A(X) + 0.12);
+            }
+          });
+          tl.fromTo(`#${id}-crack path`, { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.015, ease: "power3.out", immediateRender: false }, A(X) + 0.12);
+          // per-frame state: tally, scrambling ???, heartbeat border, scan bar, shake, dying-screen flicker
+          const clock = { t: 0 }, Dsh = D("sig");
+          const render = () => {
+            const t = clock.t, sus = Math.min(1, Math.max(0, (t - S3) / (X - S3))), after = t >= X + 0.12;
+            const n = o.mark.filter((m, i) => o.items[i][1] && t >= m).length;
+            tally.textContent = after ? "✗ 1" : `✓ ${n}`; tally.style.color = after ? "#ff5a4a" : "#7fd1b9";
+            qtx.textContent = t >= S3 && t < X + 0.12 ? GL[Math.floor(t * 18) % GL.length] : "???";
+            const beat = Math.pow(Math.max(0, Math.sin((2 * Math.PI * (t - S3)) / 0.38)), 4) * (t >= S3 && !after ? 0.35 + 0.65 * sus : 0);
+            inner.style.borderColor = after ? "#ff4a3a" : `rgba(255,${Math.round(236 - 170 * beat)},${Math.round(216 - 160 * beat)},${(0.3 + 0.7 * beat).toFixed(2)})`;
+            inner.style.boxShadow = after ? "0 0 46px rgba(255,60,50,.55), 0 24px 60px rgba(0,0,0,.7)" : `0 0 ${Math.round(50 * beat)}px rgba(255,60,50,${(0.8 * beat).toFixed(2)}), 0 24px 60px rgba(0,0,0,.7)`;
+            bar.style.opacity = t >= S3 && !after ? (0.4 + 0.5 * sus).toFixed(2) : 0;
+            bar.style.transform = `translateY(${Math.round((((t - S3) * 1.7) % 1) * 560 - 110)}px)`;
+            dot.style.opacity = Math.floor(t * (after ? 8 : 2.5)) % 2 ? 0.25 : 1;
+            const amp = after ? 2 + 20 * Math.exp(-(t - X) * 5) : t >= S3 ? 1 + 6 * sus * sus : 0, k = Math.floor(t * 30);
+            const fl = after && t > X + 0.4 && h(k * 3.1) > 0.82 ? 0.45 : 1;
+            inner.style.transform = `translate(${((h(k) - 0.5) * 2 * amp).toFixed(1)}px,${((h(k + 0.5) - 0.5) * 2 * amp).toFixed(1)}px) rotate(${((h(k + 0.25) - 0.5) * amp * 0.12 + (after ? -1.6 : 0)).toFixed(2)}deg)`;
+            inner.style.opacity = fl;
+          };
+          tl.to(clock, { t: Dsh, duration: Dsh, ease: "none", immediateRender: false, onUpdate: render }, o.t0abs);
+          render();
+        },
+      };
+      const SF = (j) => F("sig", 0, j);
+      // ---------- แสงกระสือ: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      // ---------- นาทีก่อนจม: the story's own kit (canal road at night, the window-lock insert, the HUD, the cards) ----------
+      const INK = "#1e2228", f1 = (v) => (+v).toFixed(1);
+      const NIGHT = { from: "left", rim: "#ffd9a0", rimOp: 0.55, shade: "#0e1422", shadeOp: 0.42, cast: false, vol: false };
+      const CABIN = { from: "right", rim: "#9fd0ff", rimOp: 0.45, shade: "#0a0e16", shadeOp: 0.45, cast: false, vol: false };
+      const GNIGHT = { top: "#2a3a5a", bottom: "#0a1018", op: 0.3 }, GWATER = { top: "#3a5a4a", bottom: "#0a1810", op: 0.35 };
+      // the canal road at 1 a.m. (screen coordinates at the identity camera): stars, the far bank's trees and a few lit windows, the canal
+      // (dark water, streetlight reflections), the near bank sloping up to the road with its lamp posts; no rail where the car goes in.
+      // o.water: the canal's surface y (WY) · Canal.car(L, id, x, y, s, o) puts a side-view car (Mok.car; o.flip nose left) with headlight beams
+      const WY = 1180, RY = 1010;
+      const Canal = {
+        set(L, o = {}) {
+          const id = o.id || "cn";
+          put(L.sky, `<defs><linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060a16"/><stop offset=".7" stop-color="#14203a"/><stop offset="1" stop-color="#2a3550"/></linearGradient>
+            <radialGradient id="${id}-lamp"><stop offset="0" stop-color="#ffd890" stop-opacity=".9"/><stop offset=".35" stop-color="#ffb860" stop-opacity=".35"/><stop offset="1" stop-color="#ffb860" stop-opacity="0"/></radialGradient>
+            <linearGradient id="${id}-wa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2a2a"/><stop offset="1" stop-color="#050a0a"/></linearGradient></defs>
+            <rect x="-1200" y="-800" width="3500" height="3600" fill="url(#${id}-sk)"/>
+            ${Array.from({ length: 70 }, (_, k) => `<circle cx="${f1(-600 + ((k * 397) % 2300))}" cy="${f1(-300 + ((k * 211) % 1000))}" r="${(k % 3) + 1.2}" fill="#fff" opacity="${0.25 + (k % 4) * 0.15}"/>`).join("")}
+            <circle cx="860" cy="210" r="46" fill="#f4ecd0" opacity=".9"/><circle cx="860" cy="210" r="140" fill="#f4ecd0" opacity=".08"/>`);
+          // far bank: a dark tree line, two houses on stilts with a lit window, a temple roof
+          let far = `<path d="M-1200,1060Q-900,960 -600,1010T0,990T600,1000T1200,980T2300,1000V1190H-1200Z" fill="#0b1410"/>`;
+          [[-200, 1000], [320, 990], [1080, 1000]].forEach(([x, y], k) => {
+            far += `<g transform="translate(${x},${y})"><path d="M-90,0V-90H90V0Z" fill="#141c22"/><path d="M-110,-88L0,-150L110,-88Z" fill="#101820"/>
+              <rect x="${k === 1 ? -50 : 20}" y="-70" width="34" height="28" fill="#ffcf70" opacity=".85"/><path d="M-70,0V40M70,0V40" stroke="#141c22" stroke-width="10"/></g>`;
+          });
+          put(L.far, far);
+          // the canal: dark water with the moon and the streetlights broken into ripples
+          let mid = `<rect x="-1200" y="${WY - 60}" width="3500" height="1400" fill="url(#${id}-wa)"/>`;
+          for (let k = 0; k < 26; k++) mid += `<path d="M${-900 + ((k * 263) % 2900)},${WY - 30 + ((k * 37) % 240)}h${40 + (k % 5) * 30}" stroke="#9fb8c8" stroke-width="3" opacity=".25" stroke-linecap="round"/>`;
+          [[150, "#ffd890"], [560, "#ffd890"], [970, "#ffd890"], [860, "#f4ecd0"]].forEach(([x, c], k) => {
+            for (let j = 0; j < 7; j++) mid += `<path d="M${x - 30 + (j % 2) * 16},${WY - 40 + j * 36}h${60 - j * 5}" stroke="${c}" stroke-width="5" opacity="${0.55 - j * 0.07}" stroke-linecap="round"/>`;
+          });
+          put(L.mid, `<g id="${id}-water">${mid}</g>`);
+          // near bank and road (set layer): the grass slope down to the water, the asphalt with its edge line, lamp posts with glows
+          let s = `<path d="M-1200,${RY + 30}H2300V${WY - 40}Q1200,${WY - 10} 540,${WY - 30}T-1200,${WY - 40}Z" fill="#15221a"/>
+            <path d="M-1200,${RY - 70}H2300V${RY + 34}H-1200Z" fill="#2a2c30"/><path d="M-1200,${RY + 28}H2300" stroke="#d8d0b8" stroke-width="6" opacity=".7"/>
+            ${Array.from({ length: 14 }, (_, k) => `<path d="M${-1100 + k * 260},${RY - 20}h120" stroke="#e8d890" stroke-width="7" opacity=".55"/>`).join("")}`;
+          [150, 560, 970].forEach((x) => { s += `<path d="M${x},${RY - 70}V${RY - 520}Q${x},${RY - 560} ${x + 50},${RY - 560}" stroke="#3a3e46" stroke-width="12" fill="none"/><rect x="${x + 40}" y="${RY - 572}" width="44" height="16" rx="6" fill="#ffe0a0"/>`; });
+          // reeds along the waterline, and the few concrete posts that stop short of where the car will go in
+          for (let k = 0; k < 40; k++) { const x = -900 + k * 75 + ((k * 31) % 40); s += `<path d="M${x},${WY - 34}q${(k % 3) - 1 * 6},-60 ${(k % 2 ? 1 : -1) * 14},-${70 + (k % 4) * 14}" stroke="#2a4a30" stroke-width="5" fill="none"/>`; }
+          [-640, -460, -280, 1240, 1420].forEach((x) => { s += `<rect x="${x}" y="${RY + 34}" width="22" height="60" fill="#c8c4b8" stroke="${INK}" stroke-width="3"/><rect x="${x}" y="${RY + 44}" width="22" height="12" fill="#d8312a"/>`; });
+          put(L.set, s);
+          put(L.glow, [150, 560, 970].map((x) => `<circle cx="${x + 62}" cy="${RY - 560}" r="220" fill="url(#${id}-lamp)"/>`).join(""));
+        },
+        car(L, id, x, y, s, o = {}) {
+          const beam = `<path d="M${o.flip ? -330 : 330},-110L${o.flip ? -1500 : 1500},-260V60Z" fill="#fff3c8" opacity=".16"/>`;
+          put(L.act, `<g id="${id}" transform="translate(${x},${y})"><g id="${id}-r"><g id="${id}-beam" opacity="${o.beam ?? 1}" transform="scale(${s})">${beam}</g>${Mok.car(`${id}-b`, 0, 0, s, { flip: o.flip })}</g></g>`);
+        },
+        // the water's front over a floating or sinking car: a band from y down, with a lit ripple line on top
+        front(L, id, y) { put(L.act, `<g id="${id}"><rect x="-1200" y="${y}" width="3500" height="1400" fill="#0a1414" opacity=".88"/><path d="M-1200,${y}Q-600,${y - 10} 0,${y}T1200,${y}T2300,${y}" stroke="#9fb8c8" stroke-width="5" fill="none" opacity=".6"/></g>`); },
+      };
+      // insert: the driver's armrest, the four window switches and the lock button (the planted mistake). o.on: the lock already on
+      const lockInsert = (L, id, o = {}) => {
+        put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#14181e"/>`);
+        put(L.set, `<g transform="translate(540,980)"><path d="M-520,-260Q-540,-300 -480,-310H500Q560,-300 540,-250L560,330H-560Z" fill="#2a2e36" stroke="${INK}" stroke-width="6"/>
+          <path d="M-480,-300H500" stroke="#4a505a" stroke-width="8"/><rect x="-400" y="-200" width="820" height="420" rx="40" fill="#1a1d22" stroke="#3a3e46" stroke-width="6"/>
+          ${[[-250, -60], [-80, -60], [-250, 110], [-80, 110]].map(([x, y], k) => `<g transform="translate(${x},${y})"><rect x="-60" y="-55" width="120" height="110" rx="18" fill="#30343c" stroke="${INK}" stroke-width="4"/>
+            <path d="M-20,10L0,-20L20,10" stroke="#9aa2aa" stroke-width="6" fill="none" stroke-linecap="round"/><text y="44" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="22" fill="#7a828c">${["คนขับ", "ข้าง", "หลังซ้าย", "หลังขวา"][k]}</text></g>`).join("")}
+          <g id="${id}-lock" transform="translate(190,25)"><rect x="-80" y="-80" width="160" height="160" rx="26" fill="#30343c" stroke="${INK}" stroke-width="4"/>
+            <rect x="-40" y="-20" width="80" height="54" rx="8" fill="none" stroke="#c8ccd2" stroke-width="7"/><path d="M-24,-20V-38Q-24,-60 0,-60Q24,-60 24,-38V-20" stroke="#c8ccd2" stroke-width="7" fill="none"/>
+            <circle id="${id}-led" cx="56" cy="-56" r="10" fill="#ff8a2a" opacity="${o.on ? 1 : 0.15}"/></g></g>`);
+        put(L.act, `<g transform="translate(${o.on ? 730 : 900},${o.on ? 1000 : 1350})"><g id="${id}-finger">${handAt([98, 96], -8, 2.6, SK.ton, { ...POKE, band: BAND, sw: 0.55, fore: 800 })}</g></g>`);
+      };
+      const pressLock = (tl, id, t) => {
+        tl.fromTo(`#${id}-finger`, { x: 0, y: 0 }, { x: -170, y: -350, duration: 0.45, ease: "power2.out", immediateRender: false }, t);
+        tl.to(`#${id}-finger`, { y: -335, duration: 0.08, yoyo: true, repeat: 1 }, t + 0.45);
+        tl.to(`#${id}-led`, { opacity: 1, duration: 0.05 }, t + 0.5);
+      };
+      // HUD (screen space): a dark slab with a big value and a label; returns the value element's id to drive
+      const hudCard = (L, tl, t0, dur, id, o) => {
+        const x = o.x ?? 540, y = o.y ?? 250, w = o.w ?? 420, c = o.color || "#ff5a3a";
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><rect x="${-w / 2 + 6}" y="-62" width="${w}" height="130" rx="30" fill="#000" opacity=".35"/>
+          <rect x="${-w / 2}" y="-68" width="${w}" height="130" rx="30" fill="#0e1218" opacity=".9" stroke="${c}" stroke-width="5"/>
+          <text x="${-w / 2 + 34}" y="-22" font-family="Kanit" font-weight="700" font-size="30" fill="#c8d0d8">${o.label}</text>
+          <text id="${id}-v" x="${-w / 2 + 34}" y="40" font-family="Kanit" font-weight="900" font-size="64" fill="${c}">${o.value}</text>
+          ${o.src ? `<text x="${w / 2 - 24}" y="44" text-anchor="end" font-family="Kanit" font-weight="400" font-size="22" fill="#7a8490">${o.src}</text>` : ""}</g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.6, svgOrigin: `${x} ${y}` }, { opacity: 1, scale: 1, svgOrigin: `${x} ${y}`, duration: 0.35, ease: "back.out(2.2)", immediateRender: false }, t0);
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
+        return `${id}-v`;
+      };
+      // the one-minute countdown: whole seconds tick down from `from` while the shot runs
+      const countdown = (L, tl, t0, dur, id, from, o = {}) => {
+        const v = hudCard(L, tl, t0, dur, id, { label: "รถลอยได้อีก", value: `${from} วิ`, color: "#ff5a3a", x: o.x ?? 790, y: o.y ?? 230, w: 360, src: o.src });
+        const el = document.getElementById(v), c = { s: from };
+        tl.fromTo(c, { s: from }, { s: Math.max(0, from - (o.rate ?? 1) * dur), duration: dur, ease: "none", immediateRender: false, onUpdate: () => (el.textContent = `${Math.ceil(c.s)} วิ`) }, t0);
+      };
+      // the steps (screen space, left column): each lands with a tick at its time
+      const stepList = (L, tl, t0, dur, id, items, o = {}) => {
+        const x = o.x ?? 60, y0 = o.y ?? 380;
+        put(L.light, `<g id="${id}" opacity="0">${items.map(([txt], k) => `<g id="${id}-s${k}" opacity="0" transform="translate(${x},${y0 + k * 96})"><rect width="${34 + txt.length * 26}" height="76" rx="22" fill="#0e1218" opacity=".88" stroke="#3ad06a" stroke-width="4"/>
+          <circle cx="40" cy="38" r="22" fill="#3ad06a"/><path d="M29,38l8,9l16,-18" stroke="#0e1218" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="76" y="50" font-family="Kanit" font-weight="800" font-size="36" fill="#fff">${txt}</text></g>`).join("")}</g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        items.forEach(([, t], k) => tl.fromTo(`#${id}-s${k}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + t));
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
+      };
+      // the rewind: a VHS tear over the shot and the "↺ 0:04" badge
+      const rewind = (L, tl, t0, dur, label) => {
+        const id = `rw${Math.round(t0 * 100)}`;
+        put(L.light, `<g id="${id}"><rect width="1080" height="1920" fill="#0a0e14" opacity=".25"/>${Array.from({ length: 9 }, (_, k) => `<rect id="${id}-l${k}" x="0" y="${k * 220}" width="1080" height="${8 + (k % 3) * 6}" fill="#fff" opacity=".18"/>`).join("")}
+          <g transform="translate(540,300)"><rect x="-190" y="-70" width="380" height="140" rx="70" fill="#ff5a3a" stroke="#fff" stroke-width="6"/>
+          <text y="26" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="78" fill="#fff">↺ ${label}</text></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.12, immediateRender: false }, t0);
+        for (let k = 0; k < 9; k++) tl.fromTo(`#${id}-l${k}`, { y: 0 }, { y: 1920, duration: 0.6, repeat: Math.ceil(dur / 0.6), ease: "none", immediateRender: false }, t0 + k * 0.05);
+      };
+      // the next-episode card and the channel card (screen space)
+      const nextCard = (L, tl, t0, dur, l1, l2, cta) => {
+        put(L.light, `<g id="nx"><rect width="1080" height="1920" fill="#06080c" opacity=".92"/><text x="540" y="700" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="46" fill="#ff5a3a">ตอนต่อไป</text>
+          <text x="540" y="820" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="66" fill="#fff">${l1}</text>
+          <text x="540" y="920" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="66" fill="#ffd23a">${l2}</text>
+          <text x="540" y="1120" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="40" fill="#c8d0d8">${cta}</text>
+          <text x="540" y="1660" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff" letter-spacing="10">ROD MAI CLUB</text>
+          <text x="540" y="1716" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="32" fill="#8a94a0">นาทีก่อนจม</text></g>`);
+        tl.fromTo("#nx", { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0);
+      };
+      // the cabin from the bonnet (Sets.carInterior): call after the actors exist. Brings the dashboard (and a seat back that hides the
+      // back-seat passenger's legs) over the people, and adds murky water rising from y0 to y1 between t and t + len
+      const cabinWater = (L, tl, id, t, len, y0, y1) => {
+        put(L.act, `<g id="${id}-cw"><rect x="-900" y="0" width="2900" height="2000" fill="#2a4a3a" opacity=".55"/><path d="M-900,0Q-300,-14 300,0T1500,0T2000,0" stroke="#9fc8b8" stroke-width="6" fill="none" opacity=".6"/></g>`);
+        tl.set(`#${id}-cw`, { y: y0 }, 0); tl.fromTo(`#${id}-cw`, { y: y0 }, { y: y1, duration: len, ease: "sine.inOut", immediateRender: false }, t);
+      };
+      const cabinTop = (L, id) => {
+        put(L.act, `<rect x="640" y="760" width="360" height="520" rx="60" fill="#2a2e34" stroke="#1e2228" stroke-width="5"/><rect x="720" y="700" width="200" height="100" rx="36" fill="#30353c" stroke="#1e2228" stroke-width="5"/>`);
+        const d = document.getElementById(`${id}-dash`); if (d) L.act.appendChild(d);
+      };
+      // ---------- นาทีก่อนจม kit, part 2: the look (mist, light, water life, splash, under water, the cabin's light, the HUD) ----------
+      Engine.look = { ...(Engine.look || {}), vignette: 0.55, grain: 0.05 };
+      // a richer canal: layered far bank with a warm city haze, mist bands over the water, lamp cones, moths, fireflies, blurred reeds
+      Canal.rich = (L, o = {}) => {
+        const id = o.id || "cn";
+        Canal.set(L, o);
+        put(L.sky, `<defs><linearGradient id="${id}-haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a50" stop-opacity="0"/><stop offset="1" stop-color="#ff9a50" stop-opacity=".22"/></linearGradient>
+          <linearGradient id="${id}-mist" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8d8e8" stop-opacity="0"/><stop offset=".5" stop-color="#c8d8e8" stop-opacity=".22"/><stop offset="1" stop-color="#c8d8e8" stop-opacity="0"/></linearGradient>
+          <linearGradient id="${id}-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd890" stop-opacity=".32"/><stop offset="1" stop-color="#ffd890" stop-opacity="0"/></linearGradient></defs>
+          <rect x="-1200" y="760" width="3500" height="300" fill="url(#${id}-haze)"/>
+          ${[[-500, 230, 260], [250, 150, 340], [1150, 260, 240]].map(([x, y, w]) => `<path d="M${x},${y}q${w * 0.3},-60 ${w * 0.6},-10q${w * 0.3},-40 ${w * 0.5},10q60,10 40,40H${x}Z" fill="#1a2440" opacity=".7"/>`).join("")}`);
+        // a second, nearer tree line on the far bank, with a temple's tiered roof catching the city glow
+        put(L.far, `<path d="M-1200,1080Q-1000,1010 -820,1050T-420,1030T60,1060T520,1035T980,1055T1500,1030T2300,1060V1200H-1200Z" fill="#070d0a"/>
+          <g transform="translate(700,1035)"><path d="M-60,0V-70H60V0Z" fill="#0c1216"/><path d="M-90,-70L0,-130L90,-70Z" fill="#0a1014"/><path d="M-60,-110L0,-160L60,-110Z" fill="#0a1014"/><path d="M0,-160V-210" stroke="#0a1014" stroke-width="6"/></g>`);
+        // mist over the water (drifts), each lamp's cone (screen light)
+        put(L.mid, `<g id="${id}-mist">${[0, 1, 2].map((k) => `<rect id="${id}-m${k}" x="-1400" y="${WY - 90 + k * 70}" width="4000" height="${120 + k * 30}" fill="url(#${id}-mist)" opacity="${0.9 - k * 0.2}"/>`).join("")}</g>`);
+        put(L.glow, [150, 560, 970].map((x) => `<path d="M${x + 40},${RY - 556}L${x - 160},${RY + 40}H${x + 300}Z" fill="url(#${id}-cone)"/>`).join(""));
+        put(L.act, `<g id="${id}-bugs">${[150, 560, 970].map((x, k) => [0, 1, 2, 3].map((j) => `<circle id="${id}-b${k}${j}" cx="${x + 62}" cy="${RY - 560}" r="3" fill="#fff3c8" opacity=".8"/>`).join("")).join("")}</g>
+          <g id="${id}-ff">${Array.from({ length: 12 }, (_, k) => `<circle id="${id}-f${k}" cx="${-400 + k * 160 + (k % 3) * 30}" cy="${WY - 70 - (k % 4) * 22}" r="5" fill="#d8ff8a" opacity="0"/>`).join("")}</g>`);
+        put(L.fg, `<g opacity=".95">${Array.from({ length: 16 }, (_, k) => { const x = k < 8 ? -120 + k * 34 : 900 + (k - 8) * 34; return `<path d="M${x},1980q${(k % 3 - 1) * 20},-260 ${(k % 2 ? 40 : -30)},-${380 + (k % 5) * 60}" stroke="#0a120c" stroke-width="${18 + (k % 3) * 6}" fill="none" stroke-linecap="round"/>`; }).join("")}</g>`);
+      };
+      // the canal's life over a shot: mist drifting, reflections and ripples shimmering, moths circling the lamps, fireflies blinking
+      Canal.life = (tl, id, t0, dur) => {
+        [0, 1, 2].forEach((k) => tl.fromTo(`#${id}-m${k}`, { x: -120 * (k + 1) }, { x: 120 * (k + 1), duration: dur, ease: "none", immediateRender: false }, t0));
+        tl.fromTo(`#${id}-water`, { x: -6 }, { x: 6, duration: 1.3, repeat: Math.ceil(dur / 1.3), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+        for (let k = 0; k < 3; k++) for (let j = 0; j < 4; j++) {
+          const a = (j / 4) * Math.PI * 2, R = 26 + j * 8;
+          tl.fromTo(`#${id}-b${k}${j}`, { x: Math.cos(a) * R, y: Math.sin(a) * R }, { x: Math.cos(a + 6.28) * R, y: Math.sin(a + 6.28) * R * 0.6, duration: 1.1 + j * 0.2, repeat: Math.ceil(dur), ease: "none", immediateRender: false }, t0);
+        }
+        for (let k = 0; k < 12; k++) tl.fromTo(`#${id}-f${k}`, { opacity: 0 }, { opacity: 0.9, duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 1.0), repeatDelay: 0.3 + (k % 4) * 0.25, ease: "sine.inOut", immediateRender: false }, t0 + (k % 5) * 0.27);
+      };
+      // headlights as real beams on the road + tail lights, over Canal.car (screen-space glow layer, follow the car with the same tween)
+      Canal.lights = (L, id, x, y, s, o = {}) => {
+        put(L.glow, `<defs><linearGradient id="${id}-hb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff6d8" stop-opacity=".55"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></linearGradient>
+          <radialGradient id="${id}-tl"><stop offset="0" stop-color="#ff3020" stop-opacity=".9"/><stop offset="1" stop-color="#ff3020" stop-opacity="0"/></radialGradient></defs>
+          <g id="${id}-lt" transform="translate(${x},${y})"><g transform="scale(${s})"><path d="M330,-110L1700,-300V40L330,-60Z" fill="url(#${id}-hb)"/><ellipse cx="900" cy="20" rx="560" ry="46" fill="#fff6d8" opacity=".12"/>
+          <circle cx="-330" cy="-108" r="70" fill="url(#${id}-tl)"/></g></g>`);
+      };
+      // the splash where the car hits: spray flung up and out, rings, foam
+      Canal.splash = (L, tl, id, x, y, t) => {
+        let g = `<g id="${id}">`;
+        for (let k = 0; k < 26; k++) g += `<circle id="${id}-p${k}" cx="${x}" cy="${y}" r="${6 + (k % 4) * 5}" fill="#e8f4f8" opacity="0"/>`;
+        for (let k = 0; k < 3; k++) g += `<ellipse id="${id}-r${k}" cx="${x}" cy="${y + 10}" rx="40" ry="10" fill="none" stroke="#c8e0e8" stroke-width="6" opacity="0"/>`;
+        g += `<ellipse id="${id}-foam" cx="${x}" cy="${y + 6}" rx="10" ry="4" fill="#e8f4f8" opacity="0"/></g>`;
+        put(L.act, g);
+        for (let k = 0; k < 26; k++) {
+          const a = -Math.PI * (0.15 + 0.7 * ((k * 37) % 26) / 26), v = 260 + ((k * 53) % 9) * 45;
+          tl.fromTo(`#${id}-p${k}`, { x: 0, y: 0, opacity: 0.95 }, { x: Math.cos(a) * v, y: Math.sin(a) * v * 1.2, duration: 0.45, ease: "power2.out", immediateRender: false }, t);
+          tl.to(`#${id}-p${k}`, { y: "+=" + (220 + (k % 5) * 40), opacity: 0, duration: 0.55, ease: "power2.in" }, t + 0.45);
+        }
+        for (let k = 0; k < 3; k++) tl.fromTo(`#${id}-r${k}`, { attr: { rx: 40, ry: 10 }, opacity: 0.8 }, { attr: { rx: 520 + k * 140, ry: 70 + k * 18 }, opacity: 0, duration: 1.4, ease: "power1.out", immediateRender: false }, t + k * 0.18);
+        tl.fromTo(`#${id}-foam`, { attr: { rx: 10, ry: 4 }, opacity: 0.9 }, { attr: { rx: 260, ry: 34 }, opacity: 0.5, duration: 0.9, ease: "power2.out", immediateRender: false }, t);
+      };
+      // bubbles rising from (x, y) over a shot
+      const bubbles = (L, tl, id, t0, dur, x, y, n = 14, spread = 260, layer = "act") => {
+        put(L[layer], `<g id="${id}">${Array.from({ length: n }, (_, k) => `<circle id="${id}-${k}" cx="${x + ((k * 97) % spread) - spread / 2}" cy="${y}" r="${4 + (k % 4) * 3}" fill="none" stroke="#d8f0f0" stroke-width="2.5" opacity="0"/>`).join("")}</g>`);
+        for (let k = 0; k < n; k++) tl.fromTo(`#${id}-${k}`, { y: 0, opacity: 0.8 }, { y: -(380 + (k % 5) * 90), opacity: 0, duration: 1.6 + (k % 3) * 0.4, repeat: Math.ceil(dur / 1.6), ease: "power1.in", immediateRender: false }, t0 + (k % 7) * 0.22);
+      };
+      // under the water: the car's dark belly above, its headlights cutting two beams through the murk, silt drifting, bubbles
+      Sets.under = (L, o = {}) => {
+        const id = o.id || "uw";
+        put(L.sky, `<defs><linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a5a50"/><stop offset=".45" stop-color="#0e2a26"/><stop offset="1" stop-color="#020806"/></linearGradient>
+          <linearGradient id="${id}-beam" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8f8d8" stop-opacity=".5"/><stop offset="1" stop-color="#e8f8d8" stop-opacity="0"/></linearGradient></defs>
+          <rect x="-1200" y="-800" width="3500" height="3600" fill="url(#${id}-g)"/>
+          <path d="M-1200,170Q-600,140 0,170T1200,165T2300,170V-800H-1200Z" fill="#6aa89a" opacity=".35"/>`);
+        put(L.far, `<g opacity=".6">${Array.from({ length: 60 }, (_, k) => `<circle cx="${-500 + ((k * 211) % 2100)}" cy="${200 + ((k * 389) % 1700)}" r="${1.5 + (k % 3)}" fill="#c8e8d0" opacity="${0.2 + (k % 4) * 0.12}"/>`).join("")}</g>`);
+        put(L.set, `<g transform="translate(560,180) rotate(18)"><path d="M-420,40Q-430,-40 -380,-70H360Q430,-60 440,10L420,80H-400Z" fill="#06100e" stroke="#0e2420" stroke-width="6"/>
+          <circle cx="-260" cy="80" r="70" fill="#040a08"/><circle cx="250" cy="80" r="70" fill="#040a08"/></g>`);
+        put(L.glow, `<path id="${id}-b1" d="M930,330L1700,1900H300Z" fill="url(#${id}-beam)" opacity=".8"/><path id="${id}-b2" d="M860,300L1300,1950H-200Z" fill="url(#${id}-beam)" opacity=".55"/>
+          <circle cx="930" cy="320" r="34" fill="#f4ffe8" opacity=".9"/><circle cx="860" cy="292" r="28" fill="#f4ffe8" opacity=".8"/>`);
+      };
+      // the cabin's light: the blue instrument glow on the faces, light off the water shimmering on the ceiling
+      const cabinLight = (L, tl, id, t0, dur) => {
+        put(L.glow, `<radialGradient id="${id}-dg"><stop offset="0" stop-color="#6ab8ff" stop-opacity=".45"/><stop offset="1" stop-color="#6ab8ff" stop-opacity="0"/></radialGradient>
+          <ellipse id="${id}-dash-glow" cx="300" cy="1180" rx="420" ry="260" fill="url(#${id}-dg)"/>
+          <g id="${id}-caus" opacity=".35">${Array.from({ length: 7 }, (_, k) => `<path d="M${-100 + k * 180},${180 + (k % 2) * 30}q60,-30 120,0t120,0" stroke="#bff0e0" stroke-width="5" fill="none"/>`).join("")}</g>`);
+        tl.fromTo(`#${id}-caus`, { x: -40 }, { x: 40, duration: 1.6, repeat: Math.ceil(dur / 1.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+      };
+      const flickerOut = (L, tl, id, t0, dur) => {
+        put(L.light, `<rect id="${id}-dk" width="1080" height="1920" fill="#000" opacity="0"/>`);
+        [[0.3, 0.7], [0.5, 0], [0.9, 0.8], [1.05, 0.1], [1.5, 0.85], [1.62, 0.2], [2.1, 0.9]].forEach(([t, o]) => tl.set(`#${id}-dk`, { opacity: o }, t0 + t));
+      };
+      // an unlit motorbike and its rider, seen in the headlights (a dark silhouette, the reflector strip only)
+      const bikeShape = `<g><circle cx="-70" cy="0" r="46" fill="#0a0c10"/><circle cx="80" cy="0" r="46" fill="#0a0c10"/><path d="M-70,0L-10,-70H60L80,0" stroke="#0a0c10" stroke-width="22" fill="none"/>
+        <path d="M-20,-70Q-10,-180 20,-200Q60,-210 64,-160L50,-70Z" fill="#0c0e12"/><circle cx="34" cy="-230" r="36" fill="#0c0e12"/><rect x="-96" y="-36" width="36" height="10" fill="#c83a2a" opacity=".85"/></g>`;
+      // HUD: the countdown as a ring that drains, with the seconds in the middle
+      const ring = (L, tl, t0, dur, id, from, o = {}) => {
+        const x = o.x ?? 880, y = o.y ?? 250, R = 74, C = 2 * Math.PI * R;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><circle r="${R + 22}" fill="#0a0e14" opacity=".82"/><circle r="${R}" fill="none" stroke="#2a3038" stroke-width="14"/>
+          <circle id="${id}-arc" r="${R}" fill="none" stroke="#ff5a3a" stroke-width="14" stroke-linecap="round" transform="rotate(-90)" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - from / 60)}"/>
+          <text id="${id}-v" y="14" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#fff">${from}</text>
+          <text y="56" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="22" fill="#ff8a6a">วินาที</text></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.5, svgOrigin: `${x} ${y}` }, { opacity: 1, scale: 1, svgOrigin: `${x} ${y}`, duration: 0.3, ease: "back.out(2.4)", immediateRender: false }, t0);
+        const to = Math.max(0, from - (o.rate ?? 1) * dur), c = { s: from }, el = document.getElementById(`${id}-v`), arc = document.getElementById(`${id}-arc`);
+        tl.fromTo(c, { s: from }, { s: to, duration: dur, ease: "none", immediateRender: false, onUpdate: () => { el.textContent = Math.ceil(c.s); arc.setAttribute("stroke-dashoffset", C * (1 - c.s / 60)); } }, t0);
+        if (from - to > 0 && to < 12) tl.fromTo(`#${id}-arc`, { attr: { stroke: "#ff5a3a" } }, { attr: { stroke: "#ff2020" }, duration: 0.25, yoyo: true, repeat: Math.ceil(dur / 0.25), immediateRender: false }, t0);
+      };
+      // HUD: a step chip with a pictogram (belt, door, window, kid, phone), a tick or a cross
+      const PICT = {
+        belt: `<path d="M-18,-22L18,22" stroke="#fff" stroke-width="9" stroke-linecap="round"/><rect x="-8" y="-6" width="16" height="12" rx="3" fill="#ffd23a"/>`,
+        door: `<rect x="-20" y="-24" width="40" height="48" rx="6" fill="none" stroke="#fff" stroke-width="6"/><path d="M8,0h8" stroke="#fff" stroke-width="6" stroke-linecap="round"/>`,
+        window: `<rect x="-22" y="-22" width="44" height="34" rx="6" fill="none" stroke="#fff" stroke-width="6"/><path d="M0,-12V12M-9,4L0,14L9,4" stroke="#7ad0ff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+        kid: `<circle cy="-16" r="9" fill="#fff"/><path d="M0,-6V12M0,12L-9,24M0,12L9,24M-11,0H11" stroke="#fff" stroke-width="6" stroke-linecap="round"/>`,
+        phone: `<rect x="-14" y="-24" width="28" height="48" rx="6" fill="none" stroke="#fff" stroke-width="6"/><circle cy="16" r="3" fill="#fff"/>`,
+      };
+      const chip = (L, tl, t0, dur, id, icon, text, ok = true, o = {}) => {
+        const x = o.x ?? 60, y = o.y ?? 360, w = 120 + text.length * 30, c = ok ? "#3ad06a" : "#ff4a3a";
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><rect x="6" y="8" width="${w}" height="96" rx="30" fill="#000" opacity=".3"/>
+          <rect width="${w}" height="96" rx="30" fill="#0e1218" opacity=".9" stroke="${c}" stroke-width="5"/><g transform="translate(52,48)">${PICT[icon]}</g>
+          <text x="96" y="62" font-family="Kanit" font-weight="800" font-size="40" fill="#fff">${text}</text>
+          <g transform="translate(${w - 34},20)"><circle r="20" fill="${c}"/>${ok ? `<path d="M-9,0l6,7l12,-14" stroke="#0e1218" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` : `<path d="M-8,-8L8,8M8,-8L-8,8" stroke="#fff" stroke-width="6" stroke-linecap="round"/>`}</g></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0);
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
+      };
+      // a fact tag under a chip: the number and its source, small
+      const fact = (L, tl, t0, dur, id, text, src, o = {}) => {
+        const x = o.x ?? 60, y = o.y ?? 470;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><text font-family="Kanit" font-weight="800" font-size="34" fill="#ffd23a">${text}</text>
+          <text y="36" font-family="Kanit" font-weight="400" font-size="22" fill="#9aa4b0">${src}</text></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0);
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
+      };
+      // the phone on the seat: lit screen, the water creeping round it
+      const phoneInsert = (L, id) => {
+        put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#14181e"/>`);
+        put(L.set, `<path d="M-900,700Q540,620 2000,700V2600H-900Z" fill="#2a2e36"/><path d="M-900,760Q540,690 2000,760" stroke="#3a3e46" stroke-width="10" fill="none"/>
+          <g transform="translate(560,1150) rotate(-12)"><rect x="-150" y="-300" width="300" height="600" rx="40" fill="#0a0c10" stroke="#3a3e46" stroke-width="8"/><rect x="-130" y="-270" width="260" height="540" rx="26" fill="#1e3a5a"/>
+            <text y="-120" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#fff">โทรฉุกเฉิน</text><text y="10" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="96" fill="#fff">1669</text>
+            <circle cy="170" r="54" fill="#3ad06a"/><path d="M-18,160q10,30 36,30" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/></g>`);
+        put(L.act, `<g id="${id}-wt"><rect x="-900" y="1500" width="2900" height="1400" fill="#2a4a3a" opacity=".7"/><path d="M-900,1500Q-300,1484 300,1500T1500,1500T2000,1500" stroke="#9fc8b8" stroke-width="6" fill="none" opacity=".7"/></g>`);
+      };
+      // her window from inside (carWindow), the child's finger on her own switch below the glass
+      const kidSwitch = (L, id) => put(L.act, `<g transform="translate(540,1352)"><rect x="-90" y="-50" width="180" height="100" rx="20" fill="#30343c" stroke="${INK}" stroke-width="5"/><path d="M-22,12L0,-14L22,12" stroke="#9aa2aa" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <g id="${id}-kf" transform="translate(70,150)">${handAt([36, 48], 0, 1.5, SK.kim, { ...POKE, sw: 0.7, fore: 600 })}</g></g>`);
+      // ---------- นาทีก่อนจม: real hands and arms (the ทะเลลด hand: palm, two-part fingers with nails and creases, a thumb) ----------
+      const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
+      const P2s = (p) => `${f1(p[0])},${f1(p[1])}`;
+      // a tapered limb between A and B (widths wa, wb) with round ends
+      const limbD = (A, B, wa, wb) => {
+        const dx = B[0] - A[0], dy = B[1] - A[1], l = Math.hypot(dx, dy) || 1, nx = -dy / l, ny = dx / l;
+        const a1 = [A[0] + (nx * wa) / 2, A[1] + (ny * wa) / 2], a2 = [A[0] - (nx * wa) / 2, A[1] - (ny * wa) / 2], b1 = [B[0] + (nx * wb) / 2, B[1] + (ny * wb) / 2], b2 = [B[0] - (nx * wb) / 2, B[1] - (ny * wb) / 2];
+        return `M${P2s(a1)}L${P2s(b1)}A${f1(wb / 2)},${f1(wb / 2)} 0 0 0 ${P2s(b2)}L${P2s(a2)}A${f1(wa / 2)},${f1(wa / 2)} 0 0 0 ${P2s(a1)}Z`;
+      };
+      // two-bone reach: the elbow for shoulder S, wrist W, bones l1 l2, bent to `side` (+1 | −1)
+      const elbowAt = (S, W, l1, l2, side) => {
+        const dx = W[0] - S[0], dy = W[1] - S[1], d = clampN(Math.hypot(dx, dy), Math.abs(l1 - l2) + 1, l1 + l2 - 1), a = Math.atan2(dy, dx);
+        const b = Math.acos(clampN((l1 * l1 + d * d - l2 * l2) / (2 * l1 * d), -1, 1)) * side;
+        return [S[0] + Math.cos(a + b) * l1, S[1] + Math.sin(a + b) * l1];
+      };
+      const SK = { ton: ["#d39a6e", "#a8704a", "#ecc09a"], kim: ["#ebc19c", "#c4946c", "#f8dcc0"] };
+      // a right hand seen from the back: the wrist at (0, 0), fingers toward −y, the thumb on the left.
+      // o.curl [index, middle, ring, little] 0 straight … 1 folded (the tip tucked away, the knuckle lit); o.thumb 0 out … 1 tucked in
+      const handBack = (sk, o = {}) => {
+        const [s, sD, sL] = sk, cu = o.curl || [0, 0, 0, 0], th = o.thumb ?? 0, W = (v) => f1(v * (o.sw ?? 1));
+        const palm = "M-21,22C-24,8 -30,-14 -29,-34C-28,-48 -25,-56 -22,-60L24,-61C29,-52 31,-40 30,-26C29,-8 24,8 21,22Z";
+        let g = `<path d="${palm}" fill="${s}"/><path d="M-21,22C-24,8 -30,-14 -29,-34C-28,-48 -25,-56 -22,-60M24,-61C29,-52 31,-40 30,-26C29,-8 24,8 21,22" stroke="${INK}" stroke-width="${W(3)}" fill="none" stroke-linecap="round"/>
+          <path d="M14,18C20,4 26,-14 26,-30C26,-42 24,-52 22,-58L28,-56C31,-42 31,-22 27,-6C25,6 22,14 20,22Z" fill="${sD}" opacity=".35"/><path d="M-12,-46Q4,-40 20,-48" stroke="${sL}" stroke-width="${W(5)}" fill="none" opacity=".6"/>`;
+        // the thumb (behind the fingers when tucked)
+        const thumb = `<g transform="rotate(${f1(th * 38)} -26 -22)"><path d="M-27,-14C-40,-20 -52,-34 -56,-50C-58,-58 -50,-62 -46,-56C-41,-46 -34,-38 -25,-34Z" fill="${s}" stroke="${INK}" stroke-width="${W(2.8)}"/>
+          <path d="M-53,-52q4,-5 9,-1" stroke="${sL}" stroke-width="${W(3)}" fill="none"/><path d="M-42,-36Q-38,-31 -31,-29" stroke="${sD}" stroke-width="${W(1.6)}" fill="none"/></g>`;
+        if (th > 0.5) g += thumb;
+        [[-17, -57, 44, -9, 13.5], [-5, -60, 49, -3, 14], [7, -59, 45, 3, 13.5], [18, -54, 35, 10, 12]].forEach(([x, y, len, a, w], i) => {
+          const c = cu[i], l1 = len * 0.5 * (1 - 0.45 * c), l2 = len * 0.52 * (1 - 0.9 * c);
+          let f = `<rect x="${f1(-w / 2)}" y="${f1(-l1 - 2)}" width="${w}" height="${f1(l1 + 8)}" rx="${f1(w / 2)}" fill="${s}" stroke="${INK}" stroke-width="${W(2.8)}"/>`;
+          if (l2 > 6) f += `<g transform="translate(0,${f1(-l1 + 2)}) rotate(${a > 0 ? 6 : -4})"><rect x="${f1(-w * 0.47)}" y="${f1(-l2)}" width="${f1(w * 0.94)}" height="${f1(l2 + 4)}" rx="${f1(w * 0.47)}" fill="${s}" stroke="${INK}" stroke-width="${W(2.8)}"/>
+            <rect x="${f1(-w * 0.3)}" y="${f1(-l2 + 2.5)}" width="${f1(w * 0.6)}" height="${f1(Math.min(l2 * 0.42, 10))}" rx="${f1(w * 0.28)}" fill="${sL}" stroke="${sD}" stroke-width="${W(1.2)}"/></g>`;
+          else f += `<ellipse cx="0" cy="${f1(-l1 + 1)}" rx="${f1(w * 0.36)}" ry="${f1(w * 0.24)}" fill="${sL}" opacity=".8"/>`;
+          f += `<path d="M${f1(-w * 0.3)},${f1(-l1 + 3)}q${f1(w * 0.3)},3 ${f1(w * 0.6)},0" stroke="${sD}" stroke-width="${W(1.5)}" fill="none"/><path d="M${f1(w * 0.22)},${f1(-l1 + 4)}V4" stroke="${sD}" stroke-width="${W(2.2)}" opacity=".35"/>`;
+          g += `<g transform="translate(${x},${y}) rotate(${a})">${f}</g>`;
+        });
+        if (th <= 0.5) g += thumb;
+        g += `<path d="M-15,-56q4,-4 8,0M-3,-59q4,-4 8,0M9,-58q4,-4 8,0M19,-53q3,-3 7,0" stroke="${sD}" stroke-width="${W(1.8)}" fill="none"/><path d="M-6,-18Q4,-12 14,-20" stroke="${sD}" stroke-width="${W(1.4)}" fill="none" opacity=".5"/>`;
+        return g;
+      };
+      const POKE = { curl: [0, 1, 1, 1], thumb: 1 }, GRIP = { curl: [0.75, 0.8, 0.8, 0.85], thumb: 0.7 };
+      // an arm from shoulder S to wrist W (IK), bent to `side`, then the hand pointing on from the forearm (+ o.turn degrees).
+      // o.w [upper, forearm] widths, o.sleeve [colour, length 0..1 of the upper arm], o.band a wristband colour, o.hs hand scale, o.hand handBack options
+      const arm = (S, W, l1, l2, side, sk, o = {}) => {
+        const E = elbowAt(S, W, l1, l2, side), [wu, wf] = o.w || [34, 28], [s, sD] = sk;
+        const ang = o.fix ?? (Math.atan2(W[1] - E[1], W[0] - E[0]) * 180) / Math.PI + 90 + (o.turn || 0);   // o.fix: the hand's own angle (0 = fingers up)
+        let g = `<path d="${limbD(S, E, wu, wf * 1.05)}" fill="${s}" stroke="${INK}" stroke-width="3"/><path d="${limbD(E, W, wf * 1.05, wf * 0.82)}" fill="${s}" stroke="${INK}" stroke-width="3"/>
+          <path d="${limbD([E[0] + (W[0] - E[0]) * 0.12 + 4, E[1] + (W[1] - E[1]) * 0.12 + 3], [E[0] + (W[0] - E[0]) * 0.85 + 3, E[1] + (W[1] - E[1]) * 0.85 + 3], wf * 0.3, wf * 0.2)}" fill="${sD}" opacity=".3"/>`;
+        if (o.sleeve) { const [c, k] = o.sleeve, M = [S[0] + (E[0] - S[0]) * k, S[1] + (E[1] - S[1]) * k]; g += `<path d="${limbD(S, M, wu * 1.25, wu * 1.18)}" fill="${c}" stroke="${INK}" stroke-width="3"/>`; }
+        if (o.band) { const B0 = [E[0] + (W[0] - E[0]) * 0.8, E[1] + (W[1] - E[1]) * 0.8], B1 = [E[0] + (W[0] - E[0]) * 0.93, E[1] + (W[1] - E[1]) * 0.93]; g += `<path d="${limbD(B0, B1, wf * 1.02, wf * 0.98)}" fill="${o.band}" stroke="${INK}" stroke-width="2.6"/>`; }
+        const hs = o.hs ?? wf / 30;
+        g += `<g transform="translate(${P2s(W)}) rotate(${f1(ang)}) scale(${o.mirror ? -hs : hs},${hs})">${handBack(sk, o.hand || {})}</g>`;
+        return g;
+      };
+      // a hand on its own (an insert): wrist at W, fingers pointing at `deg` (0 = up), scale k; the forearm runs back out of frame
+      const handAt = (W, deg, k, sk, o = {}) => {
+        const len = o.fore ?? 900, back = [W[0] - Math.sin((deg * Math.PI) / 180) * len, W[1] + Math.cos((deg * Math.PI) / 180) * len];
+        const sw = o.sw ?? 1;
+        let g = `<path d="${limbD(back, W, 46 * k, 40 * k)}" fill="${sk[0]}" stroke="${INK}" stroke-width="${f1(3 * k * sw)}"/><path d="${limbD([back[0] + 10 * k, back[1]], [W[0] + 8 * k, W[1] + 4 * k], 12 * k, 8 * k)}" fill="${sk[1]}" opacity=".25"/>`;
+        if (o.band) { const t0 = 0.86, t1 = 0.95, B0 = [back[0] + (W[0] - back[0]) * t0, back[1] + (W[1] - back[1]) * t0], B1 = [back[0] + (W[0] - back[0]) * t1, back[1] + (W[1] - back[1]) * t1]; g += `<path d="${limbD(B0, B1, 48 * k, 46 * k)}" fill="${o.band}" stroke="${INK}" stroke-width="${f1(3 * k * sw)}"/>`; }
+        return g + `<g transform="translate(${P2s(W)}) rotate(${deg}) scale(${o.mirror ? -k : k},${k})">${handBack(sk, o)}</g>`;
+      };
+      // the elbow bent outward (dirX −1 to the left, +1 to the right) or downward (dirX 0)
+      const elbowOut = (S, W, l1, l2, dirX) => {
+        const a = elbowAt(S, W, l1, l2, 1), b = elbowAt(S, W, l1, l2, -1);
+        return dirX ? ((a[0] - b[0]) * dirX > 0 ? 1 : -1) : (a[1] > b[1] ? 1 : -1);
+      };
+      // a rig's shoulders in the world (its arms hang from (∓46, −455) in its own units) and a switch to hide its own arms
+      const shoulders = (c) => [[c.x - 46 * c.s, c.y - 455 * c.s], [c.x + 46 * c.s, c.y - 455 * c.s]];
+      const hideRigArms = (aid) => ["uaF", "uaB"].forEach((p) => { const e = document.getElementById(`${aid}-${p}`); if (e) e.setAttribute("display", "none"); });
+      // ต้น's arms to the wheel at ten and two, the backs of his hands to us, fingers over the rim
+      const tonOnWheel = (c, G) => {
+        const [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, o = { w: [30 * c.s, 26 * c.s], band: BAND, hs: 0.56 * c.s / 0.95 };
+        return `<g>${arm(SL, G[0], l1, l2, elbowOut(SL, G[0], l1, l2, -1), SK.ton, { ...o, hand: { ...GRIP }, turn: 0, fix: 165 })}
+          ${arm(SR, G[1], l1, l2, elbowOut(SR, G[1], l1, l2, 1), SK.ton, { ...o, hand: { ...GRIP }, mirror: true, fix: 195 })}</g>`;
+      };
+      // ขิม holding on to the two front seats (her lilac sleeves)
+      const kimHolds = (c, G) => {
+        const [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, o = { w: [26 * c.s, 22 * c.s], sleeve: ["#b89ad8", 0.42], hs: 0.3 };
+        return `<g>${arm(SL, G[0], l1, l2, elbowOut(SL, G[0], l1, l2, 0), SK.kim, { ...o, hand: { ...GRIP }, fix: 175 })}
+          ${arm(SR, G[1], l1, l2, elbowOut(SR, G[1], l1, l2, 0), SK.kim, { ...o, hand: { ...GRIP }, mirror: true, fix: 185 })}</g>`;
+      };
+      // ---------- นาทีก่อนจม kit 3: the sinking cabin (bigger cast, real belts), belt insert, the canal outside the glass ----------
+      const SKIN = "#d39a6e", SKINS = "#b27c52", BAND = "#e05a3a";   // ต้น: tank top, bare arms, a red wristband
+      // cabin layout (world, everything at parallax 1), seen from the dash: ต้น left (right-hand drive), the empty front seat right,
+      // ขิม in the back between the front seats (CK); once her belt is off she scrambles toward her window (CK2)
+      const CT = { x: 330, y: 1720, s: 0.95 }, CK = { x: 600, y: 1384, s: 0.5 }, CK2 = { x: 690, y: 1366, s: 0.5 };
+      const ptOf = (c, lx, ly) => [c.x + c.s * lx, c.y + c.s * ly];   // a point on a seated rig, in its own units
+      const BELT = {   // shoulder anchor (B-pillar, outboard) → over the shoulder → the buckle at the inboard hip
+        ton: { a: [70, 1150], sh: ptOf(CT, -40, -470), b: ptOf(CT, 58, -296), lap: ptOf(CT, -70, -300) },
+        kim: { a: [648, 1100], sh: ptOf(CK, 40, -470), b: ptOf(CK, -58, -296), lap: ptOf(CK, 70, -300) },
+      };
+      Sets.sinkCab = (L, o = {}) => {
+        const id = o.id || "sc";
+        put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#05080e"/>`);
+        // the night through the rear window: sky, stars, the street lamp on the bank, the reeds
+        let w = `<linearGradient id="${id}-skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1222"/><stop offset="1" stop-color="#1a2a40"/></linearGradient>
+          <radialGradient id="${id}-lampG"><stop offset="0" stop-color="#ffd08a" stop-opacity=".95"/><stop offset=".22" stop-color="#ff9a3a" stop-opacity=".4"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient>
+          <rect x="-900" y="-600" width="2900" height="1700" fill="url(#${id}-skyG)"/>`;
+        for (let k = 0; k < 34; k++) w += `<circle cx="${f1(120 + ((k * 97) % 860))}" cy="${f1(380 + ((k * 53) % 300))}" r="${f1(1.5 + (k % 3))}" fill="#dfe8ff" opacity="${(0.3 + (k % 4) * 0.15).toFixed(2)}"/>`;
+        w += `<path d="M-900,800L2000,730V1300H-900Z" fill="#0a110e"/>${Array.from({ length: 22 }, (_, k) => `<path d="M${120 + k * 40},${790 - k * 2}q${(k % 2 ? 8 : -8)},-60 ${(k % 2 ? -4 : 6)},-${70 + (k * 13) % 50}" stroke="#0e1812" stroke-width="7" fill="none"/>`).join("")}
+          <rect x="776" y="430" width="12" height="380" fill="#151a20"/><path d="M782,436q-40,-26 -96,-14" stroke="#151a20" stroke-width="10" fill="none"/><rect x="660" y="418" width="56" height="16" rx="6" fill="#2a2e34"/>
+          <circle id="${id}-lamp" cx="688" cy="440" r="210" fill="url(#${id}-lampG)"/><circle cx="688" cy="436" r="12" fill="#fff4d0"/>`;
+        // the cabin shell around the rear window, the roof liner, the rear bench with its headrests, the B-pillars
+        const win = "M250,360H830Q900,360 912,430L940,780Q944,812 908,812H172Q136,812 140,780L168,430Q180,360 250,360Z";
+        w += `<path d="M-900,-600H2000V2600H-900Z${win}" fill="#151a22" fill-rule="evenodd"/>
+          <path d="${win}" fill="none" stroke="#0b0e13" stroke-width="22"/><path d="M-900,-600H2000V250Q540,200 -900,250Z" fill="#1d2430"/>
+          <ellipse cx="540" cy="292" rx="70" ry="22" fill="#2a3242"/><ellipse cx="540" cy="292" rx="44" ry="12" fill="#3a4458"/>
+          <path d="M40,1560V1200Q40,850 200,812H880Q1040,850 1040,1200V1560Z" fill="#1a2029"/><path d="M60,1290Q540,1250 1020,1290" stroke="#11151c" stroke-width="10" fill="none"/>
+          ${[260, 540, 820].map((x) => `<rect x="${x - 80}" y="770" width="160" height="96" rx="34" fill="#202734" stroke="#0b0e13" stroke-width="5"/>`).join("")}
+          <path d="M-900,300L40,330L120,1900H-900Z" fill="#11151c"/><path d="M2000,300L1040,330L960,1900H2000Z" fill="#11151c"/>
+          <path d="M40,330L120,1900" stroke="#1f2530" stroke-width="10"/><path d="M1040,330L960,1900" stroke="#1f2530" stroke-width="10"/>`;
+        // the front seats (the passenger's is drawn over ขิม in cabFront: she sits behind it)
+        w += seat(CT, 200, 1190, 112);
+        w += `<g><circle cx="${BELT.ton.a[0]}" cy="${BELT.ton.a[1]}" r="20" fill="#2a2e36" stroke="#0b0e13" stroke-width="5"/></g>`;
+        put(L.set, w);
+      };
+      const seat = (c, hw, top, hr) => `<path d="M${c.x - hw},1900V${top + 70}Q${c.x - hw},${top} ${c.x - hw + 70},${top}H${c.x + hw - 70}Q${c.x + hw},${top} ${c.x + hw},${top + 70}V1900Z" fill="#232a35" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M${c.x - hw + 40},${top + 60}V1900M${c.x + hw - 40},${top + 60}V1900" stroke="#1a2029" stroke-width="8"/>
+          <rect x="${c.x - hr}" y="${top - 150}" width="${hr * 2}" height="150" rx="44" fill="#2a3240" stroke="#0b0e13" stroke-width="6"/><path d="M${c.x - 26},${top - 6}V${top + 16}M${c.x + 26},${top - 6}V${top + 16}" stroke="#8a929c" stroke-width="10"/>`;
+      // over the cast (call in fx): the belts, the wheel, the dashboard; o.free lists belts already off
+      const cabFront = (L, id, o = {}) => {
+        const free = o.free || [];
+        let g = seat({ x: 830 }, 180, 1210, 100)   // the empty front passenger seat, in front of ขิม; the console between the seats
+          + `<path d="M512,1900V1274Q512,1240 546,1240H654Q688,1240 688,1274V1900Z" fill="#1c2129" stroke="#0b0e13" stroke-width="6"/><rect x="540" y="1266" width="120" height="44" rx="14" fill="#11151c"/><path d="M600,1380V1450" stroke="#2c323b" stroke-width="26" stroke-linecap="round"/>`;
+        ["ton", "kim"].forEach((k) => {
+          const B = BELT[k], off = free.includes(k);
+          const d = `M${B.a[0]},${B.a[1]}L${f1(B.sh[0])},${f1(B.sh[1])}L${f1(B.b[0])},${f1(B.b[1])}`;
+          g += `<g id="${id}-bl${k}" opacity="${off ? 0 : 1}">
+            <path id="${id}-lap${k}" d="M${f1(B.b[0])},${f1(B.b[1])}L${f1(B.lap[0])},${f1(B.lap[1] + 8)}" pathLength="1" stroke-dasharray="1 1" stroke="#2c323b" stroke-width="${k === "ton" ? 30 : 18}" stroke-linecap="round"/>
+            <path id="${id}-st${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#0b0e13" stroke-width="${k === "ton" ? 31 : 17}" stroke-linejoin="round"/>
+            <path id="${id}-sf${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#56606e" stroke-width="${k === "ton" ? 25 : 12}" stroke-linejoin="round"/>
+            <path id="${id}-sh${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#8a95a6" stroke-width="${k === "ton" ? 3 : 2}" stroke-linejoin="round" opacity=".8"/>
+            <g id="${id}-tg${k}"><rect x="${f1(B.b[0] - 16)}" y="${f1(B.b[1] - 12)}" width="32" height="26" rx="5" fill="#c9ced6" stroke="#0b0e13" stroke-width="4"/></g>
+            <g transform="translate(${f1(B.b[0] + (k === "ton" ? 10 : -10))},${f1(B.b[1] + 26)})"><rect x="-22" y="-12" width="44" height="58" rx="10" fill="#0f1114" stroke="#000" stroke-width="3"/><rect x="-14" y="-8" width="28" height="14" rx="4" fill="#d8322a"/></g></g>`;
+        });
+        // ขิม holding on to the two front seats (o.kimGrip: her own arms are hidden by the shot)
+        if (o.kimGrip) g += kimHolds(CK, [[505, 1172], [676, 1196]]);
+        // the wheel in front of ต้น (tilted: an ellipse), spokes and the hub; his arms to it at ten and two, the backs of his hands to us
+        const WX = CT.x, WY0 = 1452, RX = 196, RYw = 104;
+        g += `<g id="${id}-wheel"><ellipse cx="${WX}" cy="${WY0}" rx="${RX}" ry="${RYw}" fill="none" stroke="#07090c" stroke-width="44"/><ellipse cx="${WX}" cy="${WY0}" rx="${RX}" ry="${RYw}" fill="none" stroke="#22262d" stroke-width="32"/>
+          <path d="M${WX - RX + 18},${WY0 - 30}Q${WX},${WY0 - RYw - 30} ${WX + RX - 18},${WY0 - 30}" stroke="#3a3f48" stroke-width="5" fill="none" opacity=".7"/>
+          <path d="M${WX - RX + 10},${WY0 + 14}L${WX - 60},${WY0 + 22}M${WX + RX - 10},${WY0 + 14}L${WX + 60},${WY0 + 22}" stroke="#16191e" stroke-width="30"/>
+          <ellipse cx="${WX}" cy="${WY0 + 26}" rx="70" ry="44" fill="#1a1d22" stroke="#07090c" stroke-width="5"/><ellipse cx="${WX}" cy="${WY0 + 22}" rx="22" ry="12" fill="#2c3038"/></g>`;
+        if (!o.noTonArms) g += tonOnWheel(CT, [[WX - 168, WY0 - 92], [WX + 168, WY0 - 92]]);
+        g += `<linearGradient id="${id}-dashG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262b33"/><stop offset="1" stop-color="#0c0e11"/></linearGradient>
+          <path d="M-900,1520Q540,1400 2000,1520V2600H-900Z" fill="url(#${id}-dashG)"/><path d="M-900,1520Q540,1400 2000,1520" stroke="#3a3f48" stroke-width="10" fill="none"/>
+          <g id="${id}-scr"><rect x="470" y="1486" width="150" height="66" rx="12" fill="#07131c" stroke="#3a3f48" stroke-width="5"/><text x="545" y="1532" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="32" fill="#7fd1ff">01:0${o.min ?? 1}</text></g>`;
+        put(L.act, `<g id="${id}-front">${g}</g>`);
+      };
+      // one belt comes off: the strap reels back into its pillar, the latch plate flies up with it
+      const beltOff = (tl, id, k, t) => {
+        const B = BELT[k];
+        tl.to([`#${id}-st${k}`, `#${id}-sf${k}`, `#${id}-sh${k}`], { attr: { "stroke-dashoffset": 1 }, duration: 0.32, ease: "power3.in" }, t);
+        tl.to(`#${id}-lap${k}`, { attr: { "stroke-dashoffset": -1 }, duration: 0.2, ease: "power2.in" }, t);
+        tl.to(`#${id}-tg${k}`, { x: B.sh[0] - B.b[0], y: B.sh[1] - B.b[1], duration: 0.16, ease: "power2.in" }, t);
+        tl.to(`#${id}-tg${k}`, { x: B.a[0] - B.b[0], y: B.a[1] - B.b[1], opacity: 0, duration: 0.16, ease: "none" }, t + 0.16);
+      };
+      // the water inside: a teal body over everything below its surface, a bright skin, things afloat (rises y0 → y1 over [t, t+len])
+      const cabWater = (L, tl, id, t, len, y0, y1, o = {}) => {
+        const bob = (x, body, k) => `<g transform="translate(${x},0)"><g class="cwbob" data-k="${k}">${body}</g></g>`;
+        const bottle = `<g transform="rotate(-70)"><rect x="-18" y="-60" width="36" height="96" rx="14" fill="#9fd8f0" opacity=".75" stroke="#0b0e13" stroke-width="4"/><rect x="-10" y="-78" width="20" height="20" rx="4" fill="#3a7ad8" stroke="#0b0e13" stroke-width="3"/><rect x="-18" y="-20" width="36" height="26" fill="#e8f4f8" opacity=".7"/></g>`;
+        const bag = `<g transform="rotate(8)"><rect x="-60" y="-40" width="120" height="96" rx="22" fill="#e86aa8" stroke="#0b0e13" stroke-width="5"/><rect x="-40" y="-8" width="80" height="44" rx="12" fill="#f39ac4" stroke="#0b0e13" stroke-width="4"/><path d="M-40,-40q40,-46 80,0" stroke="#0b0e13" stroke-width="8" fill="none"/><circle cx="0" cy="14" r="9" fill="#fff6a8"/></g>`;
+        const leaf = (r) => `<path transform="rotate(${r})" d="M-26,0Q0,-14 26,0Q0,14 -26,0Z" fill="#4a6a3a" stroke="#0b0e13" stroke-width="3"/>`;
+        const items = (o.items ?? true) ? bob(o.bottleX ?? 600, bottle, 0) + bob(o.bagX ?? 980, bag, 1) + bob(160, leaf(20), 2) + bob(700, leaf(-30), 3) + bob(470, leaf(60), 4) : "";
+        put(L.act, `<g id="${id}-cw"><linearGradient id="${id}-cwG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e9a88" stop-opacity=".5"/><stop offset=".35" stop-color="#1c5a52" stop-opacity=".72"/><stop offset="1" stop-color="#08201e" stop-opacity=".9"/></linearGradient>
+          <rect x="-900" y="0" width="2900" height="2200" fill="url(#${id}-cwG)"/>
+          <g id="${id}-cwsk"><path d="M-900,0Q-780,-12 -660,0T-420,0T-180,0T60,0T300,0T540,0T780,0T1020,0T1260,0T1500,0T1740,0T1980,0T2220,0" stroke="#c8f4e8" stroke-width="7" fill="none" opacity=".8"/>
+          <path d="M-900,16Q-760,6 -620,16T-340,16T-60,16T220,16T500,16T780,16T1060,16T1340,16T1620,16T1900,16T2180,16" stroke="#8fd8c4" stroke-width="4" fill="none" opacity=".45"/></g>
+          ${items}</g>`);
+        tl.set(`#${id}-cw`, { y: y0 }, 0);
+        tl.fromTo(`#${id}-cw`, { y: y0 }, { y: y1, duration: len, ease: "sine.inOut", immediateRender: false }, t);
+        tl.fromTo(`#${id}-cwsk`, { x: 0 }, { x: -240, duration: 1.6, repeat: Math.ceil(len / 1.6), ease: "none", immediateRender: false }, t);
+        document.querySelectorAll(`#${id}-cw .cwbob`).forEach((el) => {
+          const k = +el.dataset.k;
+          tl.fromTo(el, { y: -4, rotation: -5, transformOrigin: "50% 50%" }, { y: 6, rotation: 5, duration: 0.7 + k * 0.13, repeat: Math.ceil(len / 0.7), yoyo: true, ease: "sine.inOut", immediateRender: false }, t + k * 0.1);
+        });
+      };
+      // light in the sinking cabin: the cyan dash glow on their faces, the lamp's warm spill, water caustics on the roof and seats
+      const cabGlow = (L, tl, id, t0, dur) => {
+        put(L.glow, `<radialGradient id="${id}-gg"><stop offset="0" stop-color="#5ab8ff" stop-opacity=".38"/><stop offset="1" stop-color="#5ab8ff" stop-opacity="0"/></radialGradient>
+          <radialGradient id="${id}-gw"><stop offset="0" stop-color="#ffb060" stop-opacity=".22"/><stop offset="1" stop-color="#ffb060" stop-opacity="0"/></radialGradient>
+          <ellipse cx="545" cy="1640" rx="620" ry="420" fill="url(#${id}-gg)"/><ellipse cx="700" cy="560" rx="520" ry="340" fill="url(#${id}-gw)"/>
+          <g id="${id}-caus" opacity=".3">${Array.from({ length: 6 }, (_, k) => `<path d="M${-60 + k * 200},${120 + (k % 2) * 40}q50,-24 100,0t100,0" stroke="#c8fff0" stroke-width="6" fill="none"/>`).join("")}</g>`);
+        tl.fromTo(`#${id}-caus`, { x: -50, opacity: 0.2 }, { x: 50, opacity: 0.4, duration: 1.3, repeat: Math.ceil(dur / 1.3), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+      };
+      // water forcing through the door seals at both sides
+      const sealJets = (L, tl, id, t0, dur, o = {}) => {
+        const jet = `<path d="M0,-7C70,-15 150,8 232,88L238,104C150,40 72,15 0,8Z" fill="url(#${id}-jg)"/><path d="M4,-2C70,-8 142,13 216,82" stroke="#ffffff" stroke-width="3" fill="none" opacity=".75"/>`
+          + [0, 1, 2, 3, 4].map((j) => `<circle cx="${224 + j * 15}" cy="${100 + j * 17}" r="${f1(5.5 - j * 0.7)}" fill="#e8fbff" opacity=".85"/>`).join("");
+        put(L.act, `<linearGradient id="${id}-jg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f2fdff" stop-opacity=".95"/><stop offset="1" stop-color="#9fd8e8" stop-opacity=".2"/></linearGradient>
+          <g id="${id}-jets" opacity="0">${(o.at || [[72, 1250, 1, 0.9], [72, 1420, 1, 0.7], [1008, 1320, -1, 0.85], [1008, 1470, -1, 0.65]]).map(([x, y, d, k]) => `<g transform="translate(${x},${y}) scale(${d * k},${k})"><g class="jt">${jet}</g></g>`).join("")}</g>`);
+        tl.fromTo(`#${id}-jets`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0 + 0.15);
+        tl.fromTo(`#${id}-jets .jt`, { scaleX: 0.9, scaleY: 1.06, transformOrigin: "0% 50%" }, { scaleX: 1.08, scaleY: 0.94, duration: 0.09, repeat: Math.ceil(dur / 0.09), yoyo: true, ease: "none", immediateRender: false }, t0 + 0.15);
+      };
+
+      // ---------- close insert: his thumb on the red release, the latch pops, the strap whips away ----------
+      Sets.beltIns = (L, o = {}) => {
+        const id = o.id || "bi";
+        put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#0c1016"/>`);
+        put(L.set, `<path d="M-900,-600H2000V2600H-900Z" fill="#1b212b"/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-300 + k * 180},-200L${300 + k * 180},2200" stroke="#151a22" stroke-width="10"/>`).join("")}
+          ${o.kid ? `<path d="M-900,-600H760L600,1240Q200,1170 -900,1240Z" fill="#c8b4e6"/><path d="M-200,-300Q-120,400 -60,1100M260,-300Q300,400 380,1150" stroke="#a894c8" stroke-width="12" fill="none" opacity=".7"/>
+            <path d="M-40,560c-60,-80 -170,-10 -90,90l90,90l90,-90c80,-100 -30,-170 -90,-90z" fill="#e8508a" opacity=".85"/>` : ""}
+          <path d="M-900,1260Q200,1180 520,1300L640,2600H-900Z" fill="${o.kid ? "#8fb3d9" : "#3b4a63"}" stroke="#0b0e13" stroke-width="8"/><path d="M-900,1330Q160,1250 470,1360" stroke="${o.kid ? "#6f93b9" : "#2c3850"}" stroke-width="14" fill="none"/><path d="M-100,1400L-60,2600" stroke="#c8a24a" stroke-width="6" stroke-dasharray="18 14" opacity=".6"/>
+          <path d="M700,600L1100,500V2600H760Z" fill="#14181e" stroke="#0b0e13" stroke-width="8"/>
+          <g transform="translate(640,1130) rotate(-18)"><rect x="-96" y="-30" width="192" height="360" rx="44" fill="#0e1013" stroke="#000" stroke-width="6"/><rect x="-80" y="-14" width="160" height="40" rx="12" fill="#1c1f24"/>
+            <g id="${id}-btn"><rect x="-66" y="44" width="132" height="76" rx="16" fill="#d8322a" stroke="#000" stroke-width="5"/><text x="0" y="96" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#fff">PRESS</text></g></g>`);
+        put(L.act, `<g id="${id}-strap"><path d="M-500,-400L560,1070" stroke="#0b0e13" stroke-width="150" stroke-linecap="butt"/><path d="M-500,-400L560,1070" stroke="#3a414c" stroke-width="134"/>${Array.from({ length: 14 }, (_, k) => `<path d="M${-470 + k * 74},${-430 + k * 103}l-70,48" stroke="#2c323b" stroke-width="6"/>`).join("")}
+            <g transform="translate(600,1100) rotate(-36)"><path d="M-70,-40H70L60,70H-60Z" fill="#c9ced6" stroke="#0b0e13" stroke-width="6"/><rect x="-36" y="-16" width="72" height="22" rx="8" fill="#0b0e13"/><path d="M-50,-30H40" stroke="#fff" stroke-width="6" opacity=".7"/></g></g>
+          <g transform="translate(640,1130) rotate(-18)"><rect x="-96" y="-30" width="192" height="64" rx="30" fill="#0e1013" stroke="#000" stroke-width="6"/><rect x="-60" y="-12" width="120" height="14" rx="6" fill="#000"/></g>
+          <g id="${id}-thumb" transform="translate(665,1208)"><g id="${id}-th">${handAt([223, 252], -30, 3.2, SK.ton, { ...POKE, band: BAND, sw: 0.55 })}</g></g>
+          <g id="${id}-streaks" opacity="0">${[0, 1, 2, 3].map((k) => `<path d="M${200 + k * 60},${560 + k * 90}L${-80 + k * 60},${170 + k * 90}" stroke="#e8f0f8" stroke-width="10" stroke-linecap="round" opacity="${0.7 - k * 0.12}"/>`).join("")}</g>`);
+      };
+      const beltPress = (tl, id, t) => {
+        tl.fromTo(`#${id}-th`, { x: 360, y: 520 }, { x: 0, y: 0, duration: 0.42, ease: "power2.out", immediateRender: false }, t);
+        tl.to(`#${id}-th`, { x: -10, y: 16, duration: 0.08, ease: "power2.in" }, t + 0.5);
+        tl.to(`#${id}-btn`, { y: 10, duration: 0.08 }, t + 0.5);
+        tl.to(`#${id}-strap`, { x: -40, y: -50, duration: 0.07, ease: "power2.out" }, t + 0.6);
+        tl.to(`#${id}-strap`, { x: -1500, y: -2000, duration: 0.34, ease: "power3.in" }, t + 0.7);
+        tl.fromTo(`#${id}-streaks`, { opacity: 0 }, { opacity: 1, duration: 0.06, yoyo: true, repeat: 1, immediateRender: false }, t + 0.8);
+        tl.to(`#${id}-btn`, { y: 0, duration: 0.1 }, t + 0.75);
+        tl.to(`#${id}-th`, { x: 40, y: 50, duration: 0.3, ease: "power2.out" }, t + 0.8);
+      };
+
+      // ---------- the canal outside a side window: night above, a lit skin, rays, silt and bubbles below; rises y0 → y1 ----------
+      const outsideRich = (L, tl, id, t0, dur, y0, y1) => {
+        const rays = [[180, 260], [420, 330], [700, 250], [930, 300]].map(([x, w], k) => `<path class="ray" d="M${x},0L${x + w},0L${x + w - 200},1100L${x - 280},1100Z" fill="#cfffee" opacity="${0.07 + (k % 2) * 0.03}"/>`).join("");
+        const silt = Array.from({ length: 46 }, (_, k) => `<circle class="silt" cx="${f1(60 + ((k * 211) % 980))}" cy="${f1(50 + ((k * 137) % 1100))}" r="${f1(2 + (k % 4) * 1.6)}" fill="#bfe8d8" opacity="${(0.25 + (k % 5) * 0.1).toFixed(2)}"/>`).join("");
+        const refl = Array.from({ length: 7 }, (_, k) => `<rect x="${f1(780 - 60 + ((k * 47) % 130))}" y="${f1(-4 + k * 9)}" width="${f1(40 + ((k * 31) % 70))}" height="6" rx="3" fill="#ffb45a" opacity="${(0.75 - k * 0.08).toFixed(2)}"/>`).join("");
+        put(L.far, `<g id="${id}"><linearGradient id="${id}-uG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c7a6a"/><stop offset=".3" stop-color="#14403a"/><stop offset="1" stop-color="#040c0c"/></linearGradient>
+          <radialGradient id="${id}-lG"><stop offset="0" stop-color="#ffd08a" stop-opacity=".9"/><stop offset=".25" stop-color="#ff9a3a" stop-opacity=".35"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient>
+          <rect x="-900" y="-1800" width="2900" height="1800" fill="#0a1424"/>
+          <path d="M-900,-60Q-400,-90 100,-70T1100,-80T2000,-60V0H-900Z" fill="#0a120e"/><rect x="820" y="-520" width="12" height="460" fill="#141a20"/><circle cx="800" cy="-500" r="230" fill="url(#${id}-lG)"/><circle cx="800" cy="-504" r="11" fill="#fff4d0"/>
+          <rect x="-900" y="0" width="2900" height="2400" fill="url(#${id}-uG)"/>${rays}<g class="siltg">${silt}</g>
+          <g class="skin"><path d="M-900,0Q-800,-14 -700,0T-500,0T-300,0T-100,0T100,0T300,0T500,0T700,0T900,0T1100,0T1300,0T1500,0T1700,0T1900,0T2100,0V18H-900Z" fill="#9fe0cc" opacity=".55"/>
+            <path d="M-900,0Q-800,-14 -700,0T-500,0T-300,0T-100,0T100,0T300,0T500,0T700,0T900,0T1100,0T1300,0T1500,0T1700,0T1900,0T2100,0" stroke="#e8fff6" stroke-width="5" fill="none"/></g>${refl}</g>`);
+        tl.set(`#${id}`, { y: y0 }, 0);
+        tl.fromTo(`#${id}`, { y: y0 }, { y: y1, duration: dur, ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id} .skin`, { x: 0 }, { x: -200, duration: 1.2, repeat: Math.ceil(dur / 1.2), ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id} .siltg`, { y: 0, x: 0 }, { y: -60, x: 30, duration: dur, ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id} .ray`, { opacity: 0.05 }, { opacity: 0.13, duration: 0.8, repeat: Math.ceil(dur / 0.8), yoyo: true, stagger: 0.2, ease: "sine.inOut", immediateRender: false }, t0);
+      };
+      // drops on the inside of the glass (they ride the glass down)
+      const glassDrops = (id) => {
+        const g = document.getElementById(`${id}-glass`); if (!g) return;
+        g.insertAdjacentHTML("beforeend", Array.from({ length: 16 }, (_, k) => { const x = 130 + ((k * 173) % 820), y = 440 + ((k * 97) % 760), r = 5 + (k % 4) * 2.5;
+          return `<g opacity=".75"><path d="M${x},${y - r * 2.2}Q${x + r},${y - r * 0.4} ${x},${y + r}Q${x - r},${y - r * 0.4} ${x},${y - r * 2.2}Z" fill="#dff4f4" opacity=".55"/><path d="M${x},${y - r * 2.2}V${y - r * 2.2 - 30 - (k % 3) * 20}" stroke="#dff4f4" stroke-width="3" opacity=".35"/><circle cx="${x - r * 0.3}" cy="${y - r * 0.3}" r="${f1(r * 0.3)}" fill="#fff"/></g>`; }).join(""));
+      };
+      // the glass top passes under the waterline: the canal pours in over it (#id-pour), spray bursting toward us
+      const pourIn = (L, tl, id, t, dur, yTop) => {
+        put(L.act, `<g id="${id}" opacity="0"><linearGradient id="${id}-pG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8fff4" stop-opacity=".75"/><stop offset=".25" stop-color="#5ab8a4" stop-opacity=".55"/><stop offset="1" stop-color="#1c5a52" stop-opacity=".7"/></linearGradient>
+          <path d="M100,${yTop}Q540,${yTop - 30} 980,${yTop}L1040,2000H40Z" fill="url(#${id}-pG)"/>
+          ${Array.from({ length: 18 }, (_, k) => `<path class="pst" d="M${130 + k * 48},${yTop + 10}L${110 + k * 50},2000" stroke="#e8fff8" stroke-width="${4 + (k % 3) * 3}" stroke-dasharray="${90 + (k % 4) * 30} 60" opacity=".7"/>`).join("")}
+          <g id="${id}-foam">${Array.from({ length: 12 }, (_, k) => `<ellipse cx="${130 + k * 74}" cy="${yTop + 6}" rx="${50 + (k % 3) * 14}" ry="${18 + (k % 2) * 8}" fill="#f2fffb" opacity=".85"/>`).join("")}</g>
+          <g id="${id}-spray">${Array.from({ length: 24 }, (_, k) => `<circle class="spr" cx="${150 + ((k * 151) % 780)}" cy="${yTop}" r="${4 + (k % 4) * 3}" fill="#f2fffb" opacity=".9"/>`).join("")}</g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.12, immediateRender: false }, t);
+        tl.fromTo(`#${id} .pst`, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -300 }, duration: 0.35, repeat: Math.ceil(dur / 0.35), ease: "none", immediateRender: false }, t);
+        document.querySelectorAll(`#${id} .spr`).forEach((el, k) => tl.fromTo(el, { x: 0, y: 0, opacity: 0.9 }, { x: ((k % 7) - 3) * 40, y: 160 + (k % 5) * 120, opacity: 0, duration: 0.5, repeat: Math.ceil(dur / 0.5), delay: (k % 6) * 0.07, ease: "power1.in", immediateRender: false }, t));
+        tl.fromTo(`#${id}-foam`, { y: 0 }, { y: 6, duration: 0.15, repeat: Math.ceil(dur / 0.15), yoyo: true, ease: "sine.inOut", immediateRender: false }, t);
+      };
+
+      // ---------- a real canal road for the driver's view: stars, the canal on the left with the lamps passing over it ----------
+      const povCanal = (L, tl, id, t0, dur) => {
+        const stars = Array.from({ length: 46 }, (_, k) => `<circle cx="${f1(-300 + ((k * 263) % 1700))}" cy="${f1(330 + ((k * 89) % 560))}" r="${f1(1.4 + (k % 3) * 0.9)}" fill="#dfe8ff" opacity="${(0.25 + (k % 4) * 0.17).toFixed(2)}"/>`).join("");
+        put(L.sky, `<linearGradient id="${id}-pskG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050912"/><stop offset=".8" stop-color="#0e1a2c"/><stop offset="1" stop-color="#1a2638"/></linearGradient>
+          <rect x="-900" y="-600" width="2900" height="1560" fill="url(#${id}-pskG)"/>${stars}<ellipse cx="820" cy="944" rx="360" ry="46" fill="#ff9a3a" opacity=".18"/>`);
+        // ground: tree line, the canal (left), its bank, the road, the verge (right)
+        const lampG = `<radialGradient id="${id}-plG"><stop offset="0" stop-color="#ffd08a" stop-opacity=".95"/><stop offset=".25" stop-color="#ff9a3a" stop-opacity=".35"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient>
+          <linearGradient id="${id}-pwG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a3440"/><stop offset="1" stop-color="#0c1c24"/></linearGradient>
+          <linearGradient id="${id}-prG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14171c"/><stop offset="1" stop-color="#2a2d33"/></linearGradient>`;
+        const trees = `<path d="M-900,946${Array.from({ length: 30 }, (_, k) => `L${-900 + k * 100},${930 - ((k * 37) % 4) * 9}`).join("")}L2100,946Z" fill="#070b0a"/>`;
+        const ground = `<path d="M-900,946H452L120,1440H-900Z" fill="url(#${id}-pwG)"/>
+          ${Array.from({ length: 9 }, (_, k) => `<path class="glint" d="M${-500 + k * 90 + k * k * 4},${960 + k * k * 6}h${60 + k * 20}" stroke="#7fa8b8" stroke-width="${2 + k * 0.6}" opacity=".5"/>`).join("")}
+          <path d="M452,946H470L160,1440H120Z" fill="#101a12"/><path d="M470,946H610L900,1440H160Z" fill="url(#${id}-prG)"/><path d="M610,946H2100V1440H900Z" fill="#0a100c"/>`;
+        // lamp posts on the canal bank, coming at us and their wobbling reflections in the water
+        const lamp = `<rect x="-8" y="-760" width="16" height="760" fill="#1e232a"/><path d="M0,-750Q60,-800 150,-776" stroke="#1e232a" stroke-width="12" fill="none"/><rect x="120" y="-784" width="74" height="20" rx="8" fill="#3a3e46"/>
+          <circle cx="157" cy="-764" r="150" fill="url(#${id}-plG)"/><circle cx="157" cy="-768" r="12" fill="#fff4d0"/><path d="M125,-764L40,0H290L190,-764Z" fill="#ffcf8a" opacity=".06"/>
+          <path d="M-60,30q14,40 0,80q-14,40 0,80q14,40 0,80" stroke="#ffb45a" stroke-width="22" opacity=".4" fill="none"/>`;
+        const flow = (k, n) => `<g class="flow" data-from="452,950,0.04" data-to="-420,1300,1.4" data-p="1.3" data-o="${(k / n).toFixed(3)}" transform="translate(452,950) scale(0.04)">${lamp}</g>`;
+        const far = [[0.05, 445], [0.09, 438], [0.15, 426]].map(([sc, x]) => `<g transform="translate(${x},${f1(946 + sc * 120)}) scale(${sc})">${lamp}</g>`).join("");
+        const shine = Array.from({ length: 12 }, (_, k) => `<path class="glint" d="M${f1(330 - k * 60)},${f1(990 + k * 34)}h${f1(26 + k * 9)}" stroke="#ffb45a" stroke-width="${f1(3 + k * 0.6)}" opacity=".55"/>`).join("");
+        put(L.far, lampG + trees + ground + shine + far + [0, 1, 2, 3].map((k) => flow(k, 4)).join(""));
+        // keep the road lines and posts in front of the new ground
+        const lines = document.getElementById(`${id}-lines`); if (lines) L.far.appendChild(lines);
+      };
+      // ต้น's arm reaching back to ขิม's buckle: the hand comes in from the lower left, presses, her belt goes (call after cabFront)
+      const reachBelt = (L, tl, id, t) => {
+        const S = shoulders(CT)[1], l1 = 122 * CT.s, l2 = 108 * CT.s, B = BELT.kim.b, T = [B[0] - 2, B[1] + 4], R0 = [S[0] + 30, S[1] + 160];
+        put(L.act, `<g id="${id}-arm"></g>`);
+        const el = document.getElementById(`${id}-arm`), c = { p: 0 };
+        const draw = (p) => { const W = [R0[0] + (T[0] - R0[0]) * p, R0[1] + (T[1] - R0[1]) * p]; el.innerHTML = arm(S, W, l1, l2, elbowOut(S, W, l1, l2, 0), SK.ton, { w: [30 * CT.s, 26 * CT.s], band: BAND, hs: 0.56, hand: { ...POKE } }); };
+        draw(0);
+        tl.to(c, { p: 1, duration: 0.42, ease: "power2.out", immediateRender: false, onUpdate: () => draw(c.p) }, t);
+        tl.to(c, { p: 0.95, duration: 0.07, yoyo: true, repeat: 1, onUpdate: () => draw(c.p) }, t + 0.45);
+        beltOff(tl, id, "kim", t + 0.52);
+        tl.to(c, { p: 0, duration: 0.4, ease: "power2.in", onUpdate: () => draw(c.p) }, t + 0.9);
+      };
+      // a window switch on the door panel and a finger on it (adult: ต้น · kid: ขิม); #id-f moves
+      const winSwitch = (L, id, kid) => put(L.act, `<g transform="translate(540,1352)"><rect x="-110" y="-56" width="220" height="112" rx="24" fill="#2a2e36" stroke="#0b0e13" stroke-width="6"/><rect x="-80" y="-34" width="160" height="68" rx="16" fill="#3a3f48" stroke="#0b0e13" stroke-width="4"/>
+        <path d="M-26,14L0,-16L26,14" stroke="#c8ccd2" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <g id="${id}-f" transform="translate(${kid ? 66 : 80},${kid ? 134 : 170})">${kid ? handAt([36, 48], 0, 1.5, SK.kim, { ...POKE, sw: 0.7, fore: 600 }) : handAt([53, 82], 0, 2.2, SK.ton, { ...POKE, band: BAND, sw: 0.6, fore: 600 })}</g></g>`);
+      const pressSwitch = (tl, id, t, n = 1) => {
+        tl.fromTo(`#${id}-f`, { x: 30, y: 260 }, { x: -70, y: -40, duration: 0.3, ease: "power2.out", immediateRender: false }, t);
+        tl.to(`#${id}-f`, { y: -24, duration: 0.09, yoyo: true, repeat: n * 2 - 1, ease: "power1.inOut" }, t + 0.32);
+      };
+      // the inner door handle and his hand yanking it: the door doesn't give
+      const doorTug = (L, tl, id, t, n = 3) => {
+        put(L.act, `<g transform="translate(300,1350)"><rect x="-120" y="-44" width="240" height="88" rx="40" fill="#0e1014" stroke="#000" stroke-width="5"/>
+          <g id="${id}-hd">${handAt([0, 175], -6, 2.4, SK.ton, { ...GRIP, band: BAND, sw: 0.6, fore: 700 })}</g>
+          <g id="${id}-lev"><path d="M-84,-8H64Q86,-8 86,8Q86,24 64,24H-84Z" fill="#b8bec8" stroke="#0b0e13" stroke-width="5"/><path d="M-76,-1H60" stroke="#eef2f6" stroke-width="4" opacity=".8"/></g></g>`);
+        tl.set(`#${id}-hd`, { y: 560 }, 0);
+        tl.to(`#${id}-hd`, { y: 0, duration: 0.25, ease: "power2.out" }, t);
+        for (let k = 0; k < n; k++) {
+          const tk = t + 0.3 + k * 0.55;
+          tl.to([`#${id}-hd`, `#${id}-lev`], { x: -30, duration: 0.09, ease: "power2.out" }, tk);
+          tl.to([`#${id}-hd`, `#${id}-lev`], { x: 0, duration: 0.2, ease: "power2.in" }, tk + 0.11);
+        }
+      };
+      // ขิม in the rear-view mirror (the drive): a small face over the back seat
+      const mirrorKid = (L, id) => put(L.set, `<clipPath id="${id}-mc"><rect x="428" y="298" width="224" height="48" rx="12"/></clipPath><g clip-path="url(#${id}-mc)">
+        <rect x="420" y="290" width="240" height="64" fill="#141820"/><rect x="560" y="300" width="70" height="30" rx="8" fill="#1e2430"/>
+        <path d="M566,360Q566,334 592,332Q618,334 618,360Z" fill="#b89ad8"/><circle cx="592" cy="318" r="15" fill="#ebc19c"/><path d="M576,316Q578,298 592,298Q606,298 608,316Q600,306 592,307Q584,306 576,316Z" fill="#2a1e18"/>
+        <circle cx="587" cy="319" r="2.4" fill="#1e2228"/><circle cx="598" cy="319" r="2.4" fill="#1e2228"/><rect x="420" y="290" width="240" height="64" fill="#9fc4ff" opacity=".08"/></g>`);
+      const ledGlow = (L, tl, id, t0, dur, x, y) => {
+        put(L.set, `<radialGradient id="${id}-g"><stop offset="0" stop-color="#ffd0a0" stop-opacity="1"/><stop offset=".3" stop-color="#ff8a2a" stop-opacity=".7"/><stop offset="1" stop-color="#ff8a2a" stop-opacity="0"/></radialGradient>
+          <circle id="${id}" cx="${x}" cy="${y}" r="44" fill="url(#${id}-g)"/>`);
+        tl.fromTo(`#${id}`, { opacity: 0.55 }, { opacity: 1, duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut", immediateRender: false }, t0);
+      };
+      // the splash, finer: a white crown both sides of the nose, fine spray falling back, rings and foam
+      Canal.splash = (L, tl, id, x, y, t) => {
+        let g = `<g id="${id}"><g transform="translate(${x},${y})">`;
+        [-1, 1].forEach((d, j) => { g += `<g id="${id}-c${j}" opacity="0"><path transform="scale(${d},1)" d="M20,0Q90,-60 150,-250Q170,-120 230,-160Q200,-60 260,0Z" fill="#e2f2f6" opacity=".6"/><path transform="scale(${d},1)" d="M60,0Q110,-50 150,-200" stroke="#ffffff" stroke-width="6" fill="none" opacity=".8"/></g>`; });
+        for (let k = 0; k < 40; k++) g += `<circle id="${id}-p${k}" cx="0" cy="0" r="${f1(2.5 + (k % 4) * 1.6)}" fill="#d8ecf2" opacity="0"/>`;
+        for (let k = 0; k < 3; k++) g += `<ellipse id="${id}-r${k}" cx="0" cy="10" rx="40" ry="10" fill="none" stroke="#c8e0e8" stroke-width="5" opacity="0"/>`;
+        g += `<ellipse id="${id}-foam" cx="0" cy="6" rx="10" ry="4" fill="#e8f4f8" opacity="0"/></g></g>`;
+        put(L.act, g);
+        [0, 1].forEach((j) => {
+          tl.fromTo(`#${id}-c${j}`, { scale: 0.2, opacity: 0.95, transformOrigin: "50% 100%" }, { scale: 0.75, duration: 0.3, ease: "power2.out", immediateRender: false }, t);
+          tl.to(`#${id}-c${j}`, { scaleY: 0.2, opacity: 0, duration: 0.5, ease: "power2.in" }, t + 0.3);
+        });
+        for (let k = 0; k < 40; k++) {
+          const a = -Math.PI * (0.12 + 0.76 * ((k * 37) % 40) / 40), v = 180 + ((k * 53) % 11) * 34;
+          tl.fromTo(`#${id}-p${k}`, { x: 0, y: 0, opacity: 0.9 }, { x: Math.cos(a) * v, y: Math.sin(a) * v, duration: 0.35, ease: "power2.out", immediateRender: false }, t + (k % 5) * 0.02);
+          tl.to(`#${id}-p${k}`, { y: "+=" + (160 + (k % 5) * 30), opacity: 0, duration: 0.45, ease: "power2.in" }, t + 0.37 + (k % 5) * 0.02);
+        }
+        for (let k = 0; k < 3; k++) tl.fromTo(`#${id}-r${k}`, { attr: { rx: 40, ry: 10 }, opacity: 0.8 }, { attr: { rx: 520 + k * 140, ry: 70 + k * 18 }, opacity: 0, duration: 1.4, ease: "power1.out", immediateRender: false }, t + k * 0.18);
+        tl.fromTo(`#${id}-foam`, { attr: { rx: 10, ry: 4 }, opacity: 0.9 }, { attr: { rx: 260, ry: 34 }, opacity: 0.5, duration: 0.9, ease: "power2.out", immediateRender: false }, t);
+      };
+      // the driver's view: his own hands on the rim, backs to us, fingers over the top (replaces the set's fists)
+      const povHands = (L, id) => {
+        ["gripL", "gripR"].forEach((k) => { const e = document.getElementById(`${id}-${k}`); if (e) e.setAttribute("display", "none"); });
+        put(L.act, `<circle cx="700" cy="1800" r="318" fill="none" stroke="#565c66" stroke-width="7" opacity=".75"/>
+          <g>${handAt([452, 1752], 30, 2.6, SK.ton, { ...GRIP, band: BAND, sw: 0.55, fore: 900, mirror: true })}${handAt([948, 1752], -30, 2.6, SK.ton, { ...GRIP, band: BAND, sw: 0.55, fore: 900 })}</g>`);
+      };
+      // ---------- นาทีก่อนจม: the car in cutaway — a side view with its near side cut open, sized to the cast ----------
+      // the car faces right (its front on the right), so we look at its right side: the driver's (right-hand drive). Rig poses face right
+      // when not flipped (sitChair: thighs forward to the right, shins down). Sizes come from the seated cast, not from a drawing:
+      // ต้น s 0.86 sits 0.86 × 460 ≈ 400 px from heel to crown, so the cabin is 470 px floor to roof, seats and wheel to his reach.
+      const CF = 1500;                                           // the cabin floor
+      const CT2 = { x: 640, y: CF + 2, s: 0.86 }, CK3 = { x: 248, y: CF + 2, s: 0.6 };
+      Rig.MODES.drive = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: -7 + 0.6 * Math.sin(u * 1.7), head: -3, uaF: -66, faF: -34, uaB: -60, faB: -36 });
+      Rig.MODES.brace = (u, o) => { const j = Math.sin(u * 27) * 1.6; return { ...Rig.MODES.sitChair(u, o), torso: 6 + j, head: 8 + j, uaF: -84 + j, faF: -26, uaB: -76 - j, faB: -30 }; };
+      Rig.MODES.reachBack = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: -14, head: -16, uaF: 112, faF: 16, uaB: -50, faB: -40 });
+      Rig.MODES.sitHold = (u, o) => { const j = Math.sin(u * 19) * 1.2; return { ...Rig.MODES.sitChair(u, o), torso: 3 + j, head: 4, uaF: -96 + j, faF: -24, uaB: -86, faB: -30 }; };
+      Rig.MODES.sitStand = (u, o) => ({ ...Rig.MODES.sitChair(u, o), bodyY: 96, thF: -60, shF: 70, thB: -58, shB: 66, torso: 8, head: 6, uaF: -150, faF: -20, uaB: -140, faB: -24 });
+      // the cabin: the inside outline (the water fills it), the far-side windows (the night and the canal show through)
+      const CABIN_D = "M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236V1500H28Z";
+      const WIN_F = "M488,1064H760L888,1218H488Z", WIN_R = "M214,1064H462V1218H58Z";
+      Sets.carCut = (L, o = {}) => {
+        const id = o.id || "cc", lvl = o.out ?? 1120;   // the canal's surface outside
+        // the night outside: sky, stars, the far bank and its lamp, the canal (its surface at lvl)
+        put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060a14"/><stop offset="1" stop-color="#16243a"/></linearGradient>
+          <rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-sk)"/>${Array.from({ length: 40 }, (_, k) => `<circle cx="${f1(-200 + ((k * 263) % 1500))}" cy="${f1(200 + ((k * 89) % 700))}" r="${f1(1.4 + (k % 3))}" fill="#dfe8ff" opacity="${(0.25 + (k % 4) * 0.15).toFixed(2)}"/>`).join("")}`);
+        put(L.far, `<radialGradient id="${id}-lg"><stop offset="0" stop-color="#ffd08a" stop-opacity=".9"/><stop offset=".25" stop-color="#ff9a3a" stop-opacity=".32"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient>
+          <linearGradient id="${id}-cw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16303a"/><stop offset=".3" stop-color="#0c1e22"/><stop offset="1" stop-color="#040a0c"/></linearGradient>
+          <rect x="-900" y="${lvl}" width="2900" height="2000" fill="url(#${id}-cw)"/>${Array.from({ length: 8 }, (_, k) => `<rect x="${f1(690 + ((k * 37) % 90) - k * 6)}" y="${lvl + 8 + k * 14}" width="${70 - k * 6}" height="5" rx="2.5" fill="#ffb45a" opacity="${(0.7 - k * 0.07).toFixed(2)}"/>`).join("")}
+          <path d="M-900,${lvl - 46}L2000,${lvl - 60}V${lvl}H-900Z" fill="#0a110e"/>${Array.from({ length: 40 }, (_, k) => `<path d="M${-300 + k * 46},${lvl - 50 - (k % 3) * 2}q${k % 2 ? 7 : -7},-50 ${k % 2 ? -3 : 5},-${60 + (k * 13) % 40}" stroke="#0e1812" stroke-width="7" fill="none"/>`).join("")}
+          <rect x="806" y="${lvl - 520}" width="12" height="470" fill="#141a20"/><path d="M812,${lvl - 514}q-40,-24 -92,-12" stroke="#141a20" stroke-width="9" fill="none"/><circle cx="724" cy="${lvl - 520}" r="230" fill="url(#${id}-lg)"/><circle cx="724" cy="${lvl - 522}" r="11" fill="#fff4d0"/>`);
+        // the car: the far side of the cabin (door panels, window frames, roof liner), the seats, the dash; the cut edge of the near side
+        let s = `<linearGradient id="${id}-uw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c7a6a"/><stop offset=".25" stop-color="#14403a"/><stop offset="1" stop-color="#040c0c"/></linearGradient>
+          <clipPath id="${id}-wf"><path d="${WIN_F}"/><path d="${WIN_R}"/></clipPath>
+          <g clip-path="url(#${id}-wf)"><g id="${id}-outw"><rect x="-900" y="0" width="2900" height="1200" fill="url(#${id}-uw)"/><path d="M-900,0Q-700,-10 -500,0T-100,0T300,0T700,0T1100,0T1500,0T1900,0" stroke="#e8fff6" stroke-width="5" fill="none"/></g></g>
+          <path d="M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236V1500H28ZM${WIN_F.slice(1)}M${WIN_R.slice(1)}" fill="#1a2029" fill-rule="evenodd"/>
+          <path d="${WIN_F}" fill="none" stroke="#0b0e13" stroke-width="12"/><path d="${WIN_R}" fill="none" stroke="#0b0e13" stroke-width="12"/>
+          <path d="M470,1050V1500" stroke="#11151c" stroke-width="34"/><path d="M60,1290H1000" stroke="#232a35" stroke-width="10"/>
+          <path d="M210,1040Q480,1018 760,1040L770,1058Q480,1036 214,1058Z" fill="#2a3240"/><ellipse cx="480" cy="1046" rx="40" ry="9" fill="#3a4458"/>`;
+        // the rear bench: backrest leaning back, the cushion, its headrest
+        s += `<path d="M86,1500V1420Q86,1392 116,1390H330Q356,1392 352,1420L346,1500Z" fill="#2a3240" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M92,1404L52,1150Q48,1122 76,1118L118,1114Q142,1116 146,1142L170,1392Z" fill="#232a35" stroke="#0b0e13" stroke-width="6"/>
+          <rect x="44" y="1050" width="86" height="70" rx="24" transform="rotate(-8 87 1085)" fill="#2a3240" stroke="#0b0e13" stroke-width="6"/>`;
+        // the driver's seat: cushion, backrest, headrest; the B-pillar's belt anchor
+        s += `<path d="M520,1500V1424Q520,1396 548,1394H720Q748,1396 744,1424L738,1500Z" fill="#2c3644" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M530,1408L486,1142Q482,1112 512,1108L556,1106Q582,1108 586,1136L610,1398Z" fill="#26303c" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M506,1128L540,1392" stroke="#1d242f" stroke-width="8"/><rect x="480" y="1036" width="94" height="74" rx="26" transform="rotate(-9 527 1073)" fill="#2c3644" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M528,1108V1124M556,1106V1122" stroke="#8a929c" stroke-width="8"/>`;
+        // the dash, the column and the instrument hood; the pedals
+        s += `<path d="M1012,1236L930,1206L866,1206Q846,1210 846,1232L860,1330Q900,1352 1012,1360Z" fill="#20252d" stroke="#0b0e13" stroke-width="6"/>
+          <path d="M870,1206Q880,1180 912,1180L936,1206Z" fill="#161a20" stroke="#0b0e13" stroke-width="5"/><rect x="872" y="1214" width="44" height="22" rx="6" fill="#07131c"/><path d="M878,1226h32" stroke="#7fd1ff" stroke-width="4" opacity=".8"/>
+          <path d="M940,1500L1012,1500L1012,1380Q960,1372 930,1400Z" fill="#161a20"/><path d="M948,1418L926,1478" stroke="#2c323b" stroke-width="12" stroke-linecap="round"/><rect x="900" y="1470" width="48" height="16" rx="5" fill="#3a3f48" stroke="#0b0e13" stroke-width="3" transform="rotate(-24 924 1478)"/>
+          <path d="M984,1420L966,1482" stroke="#2c323b" stroke-width="10" stroke-linecap="round"/><rect x="948" y="1476" width="34" height="14" rx="5" fill="#3a3f48" stroke="#0b0e13" stroke-width="3" transform="rotate(-20 965 1483)"/>`;
+        put(L.set, s);
+      };
+      // over the cast (call in fx): the wheel in his hands, the belts, the near side's cut edge, the body below the floor
+      const BELT2 = {
+        ton: { a: [520, 1118], sh: [608, 1214], b: [612, 1398], lap: [700, 1392] },
+        kim: { a: [120, 1196], sh: [232, 1270], b: [236, 1398], lap: [300, 1394] },
+      };
+      const cutFront = (L, id, o = {}) => {
+        const free = o.free || [];
+        let g = "";
+        ["ton", "kim"].forEach((k) => {
+          const B = BELT2[k], off = free.includes(k), w = k === "ton" ? 1 : 0.75;
+          const d = `M${B.a[0]},${B.a[1]}L${B.sh[0]},${B.sh[1]}L${B.b[0]},${B.b[1]}`;
+          g += `<g id="${id}-bl${k}" opacity="${off ? 0 : 1}">
+            <path id="${id}-lap${k}" d="M${B.b[0]},${B.b[1]}L${B.lap[0]},${B.lap[1]}" pathLength="1" stroke-dasharray="1 1" stroke="#56606e" stroke-width="${f1(15 * w)}" stroke-linecap="round"/>
+            <path id="${id}-st${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#0b0e13" stroke-width="${f1(20 * w)}" stroke-linejoin="round"/>
+            <path id="${id}-sf${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#56606e" stroke-width="${f1(14 * w)}" stroke-linejoin="round"/>
+            <path id="${id}-sh${k}" d="${d}" pathLength="1" stroke-dasharray="1 1" fill="none" stroke="#8a95a6" stroke-width="2" opacity=".8"/>
+            <g id="${id}-tg${k}"><rect x="${B.b[0] - 11}" y="${B.b[1] - 9}" width="22" height="18" rx="4" fill="#c9ced6" stroke="#0b0e13" stroke-width="3"/></g></g>`;
+        });
+        // the wheel, seen from the side: a tilted ring at his reach, the column into the dash
+        g += `<g id="${id}-wheel"><path d="M852,1292L912,1258" stroke="#14171c" stroke-width="26" stroke-linecap="round"/>
+          <ellipse cx="826" cy="1262" rx="20" ry="86" transform="rotate(-24 826 1262)" fill="none" stroke="#07090c" stroke-width="24"/><ellipse cx="826" cy="1262" rx="20" ry="86" transform="rotate(-24 826 1262)" fill="none" stroke="#2a2f37" stroke-width="14"/></g>`;
+        // the cut edge of the near side: the sill and the lower door below the cabin floor, the roof's edge, the pillars' stumps
+        g += `<path d="M-60,1500H1100L1120,1560Q1000,1596 860,1596H-40Q-80,1580 -60,1500Z" fill="#d8dde3" stroke="#0b0e13" stroke-width="8"/><path d="M-50,1520H1090" stroke="#aeb6c0" stroke-width="6"/>
+          <path d="M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236" fill="none" stroke="#e2e6ea" stroke-width="16" stroke-linejoin="round"/><path d="M28,1258L198,1040Q480,1012 772,1040L930,1206L1012,1236" fill="none" stroke="#0b0e13" stroke-width="4" stroke-linejoin="round" transform="translate(0,-9)"/>`;
+        put(L.act, `<g id="${id}-front">${g}</g>`);
+      };
+      // the canal in front of the car: a tint over everything under its surface but the cut-open cabin (call after cutFront)
+      const cutCanal = (L, tl, id, t0, dur, y0, y1) => {
+        put(L.act, `<mask id="${id}-nm" maskUnits="userSpaceOnUse" x="-900" y="0" width="2900" height="2600"><rect x="-900" y="0" width="2900" height="2600" fill="#fff"/><path d="${CABIN_D}" fill="#000"/></mask>
+          <g mask="url(#${id}-nm)"><g id="${id}-nw"><linearGradient id="${id}-nwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c7a6a" stop-opacity=".5"/><stop offset=".3" stop-color="#123a34" stop-opacity=".8"/><stop offset="1" stop-color="#030a0a" stop-opacity=".95"/></linearGradient>
+          <rect x="-900" y="0" width="2900" height="1400" fill="url(#${id}-nwg)"/>
+          <path id="${id}-nsk" d="M-900,0Q-800,-12 -700,0T-500,0T-300,0T-100,0T100,0T300,0T500,0T700,0T900,0T1100,0T1300,0T1500,0T1700,0T1900,0T2100,0" stroke="#e8fff6" stroke-width="6" fill="none"/>
+          ${Array.from({ length: 30 }, (_, k) => `<circle cx="${f1(-100 + ((k * 211) % 1300))}" cy="${f1(60 + ((k * 137) % 700))}" r="${f1(2 + (k % 4) * 1.4)}" fill="#bfe8d8" opacity="${(0.2 + (k % 5) * 0.08).toFixed(2)}"/>`).join("")}</g></g>`);
+        tl.set(`#${id}-nw`, { y: y0 }, 0);
+        tl.fromTo(`#${id}-nw`, { y: y0 }, { y: y1, duration: dur, ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-nsk`, { x: 0 }, { x: -200, duration: 1.3, repeat: Math.ceil(dur / 1.3), ease: "none", immediateRender: false }, t0);
+      };
+      // the water in the cabin, clipped to it (rises y0 → y1); things afloat on it
+      const cutWater = (L, tl, id, t, len, y0, y1) => {
+        put(L.act, `<clipPath id="${id}-ccw"><path d="${CABIN_D}"/></clipPath><g clip-path="url(#${id}-ccw)"><g id="${id}-cw2">
+          <linearGradient id="${id}-cwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3e9a88" stop-opacity=".55"/><stop offset=".4" stop-color="#1c5a52" stop-opacity=".75"/><stop offset="1" stop-color="#08201e" stop-opacity=".9"/></linearGradient>
+          <rect x="-200" y="0" width="1500" height="900" fill="url(#${id}-cwg)"/><path id="${id}-cwsk2" d="M-200,0Q-140,-8 -80,0T40,0T160,0T280,0T400,0T520,0T640,0T760,0T880,0T1000,0T1120,0T1240,0T1360,0" stroke="#c8f4e8" stroke-width="6" fill="none"/>
+          <g transform="translate(420,-6)"><g class="cwbob2"><g transform="rotate(-80)"><rect x="-14" y="-48" width="28" height="76" rx="11" fill="#9fd8f0" opacity=".8" stroke="#0b0e13" stroke-width="3"/><rect x="-8" y="-62" width="16" height="16" rx="3" fill="#3a7ad8" stroke="#0b0e13" stroke-width="2.4"/></g></g></g>
+          <g transform="translate(150,-10)"><g class="cwbob2"><rect x="-44" y="-30" width="88" height="70" rx="16" fill="#e86aa8" stroke="#0b0e13" stroke-width="4"/><rect x="-28" y="-6" width="56" height="32" rx="9" fill="#f39ac4" stroke="#0b0e13" stroke-width="3"/><path d="M-28,-30q28,-34 56,0" stroke="#0b0e13" stroke-width="6" fill="none"/></g></g></g></g>`);
+        tl.set(`#${id}-cw2`, { y: y0 }, 0);
+        tl.fromTo(`#${id}-cw2`, { y: y0 }, { y: y1, duration: len, ease: "sine.inOut", immediateRender: false }, t);
+        tl.fromTo(`#${id}-cwsk2`, { x: 0 }, { x: -120, duration: 1.2, repeat: Math.ceil(len / 1.2), ease: "none", immediateRender: false }, t);
+        document.querySelectorAll(`#${id}-cw2 .cwbob2`).forEach((el, k) => tl.fromTo(el, { y: -4, rotation: -6, transformOrigin: "50% 50%" }, { y: 5, rotation: 6, duration: 0.8 + k * 0.17, repeat: Math.ceil(len / 0.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, t));
+      };
+      // the canal outside the car rises too (the far windows): y is the surface's height in the world
+      const cutOutside = (tl, id, t, len, y0, y1) => { tl.set(`#${id}-outw`, { y: y0 }, 0); tl.fromTo(`#${id}-outw`, { y: y0 }, { y: y1, duration: len, ease: "none", immediateRender: false }, t); };
+      // ---------- นาทีก่อนจม EP.1 อย่าเพิ่งโทรหาใคร ----------
+      // the planted mistake: at 0:04 ต้น presses the window lock so ขิม stops playing with her window; the narrator reveals it at the end
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      Sets.canal = (L, o) => Canal.rich(L, o);
+      Sets.lockIns = (L, o) => lockInsert(L, o.id, o);
+      Sets.phoneIns = (L, o) => phoneInsert(L, o.id);
+      const CAB = (id) => ({ set: "sinkCab", setOpts: { id }, dark: 0.08, light: CABIN, grade: GNIGHT });
+      const TON = (eyes, mouth) => A("boss", CT.x, CT.y, CT.s, [{ t: 0, mode: "idle", eyes, mouth }]);
+      const KIM = (eyes, mouth, extra = {}, c = CK) => A("mint", c.x, c.y, c.s, [{ t: 0, mode: "idle", eyes, mouth }], extra);
+      const POV = (id) => ({ set: "carPOV", setOpts: { id, fig: 0, clock: "01:00", clear: true, sleeve: SKIN, cuff: BAND }, dark: 0.06, light: false, grade: GNIGHT });
+      const noShadow = (tl, id) => tl.set(`#${id}-a1-shadow`, { opacity: 0 }, 0);
+      const WIN = (id) => ({ set: "carWindow", setOpts: { id, face: 0, knock: 0 }, dark: 0.1, light: false, grade: GWATER });
+      const outside = (L, tl, id, t0, dur, y0, y1) => {   // the canal outside the side window, rising
+        put(L.far, `<g id="${id}"><rect x="-900" y="0" width="2900" height="2400" fill="#14302a" opacity=".95"/><path d="M-900,0Q-300,-16 300,0T1500,0T2000,0" stroke="#8fc0b0" stroke-width="7" fill="none" opacity=".7"/></g>`);
+        tl.set(`#${id}`, { y: y0 }, 0); tl.fromTo(`#${id}`, { y: y0 }, { y: y1, duration: dur, ease: "none", immediateRender: false }, t0);
+      };
+
+      // ---------- 1. hook: the canal road at night, headlights along the dark water ----------
+      add("hook", {
+        set: "canal", setOpts: { id: "cn0" }, dark: 0.04, light: NIGHT, grade: GNIGHT, blur: { sky: 0, far: 1.5, mid: 0.6, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(240, 1000, 1.55, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(720, 1005, 1.72, 540, 1000) }] },
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          Canal.life(tl, "cn0", t0, D("hook"));
+          Canal.lights(L, "c0l", 60, RY + 10, 0.42); Canal.car(L, "c0", 60, RY + 10, 0.42, { beam: 0 });
+          tl.fromTo(["#c0-r", "#c0l-lt"], { x: 0 }, { x: 640, duration: D("hook"), ease: "none", immediateRender: false }, t0);
+        },
+      });
+      // ---------- 2. the command, over the planted mistake: his finger on the window lock (the LED comes on at 0:04) ----------
+      add("lock", {
+        set: "lockIns", setOpts: { id: "lk0" }, dark: 0.05, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(560, 980, 1.15, 540, 960), drift: { s: 0.03 } }] },
+        captions: caps("lock"),
+        fx(tl, id, t0) { pressLock(tl, "lk0", t0 + 0.75); },
+      });
+      // ---------- 3. the car afloat, nose down: the minute starts ----------
+      add("float", {
+        set: "canal", setOpts: { id: "cn1" }, dark: 0.08, light: NIGHT, grade: GNIGHT, blur: { far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(600, 1120, 1.7, 540, 1000) }, { t: D("float"), glide: D("float"), ...fr(610, 1130, 1.85, 540, 1000) }] },
+        captions: caps("float"),
+        fx(tl, id, t0, L) {
+          Canal.life(tl, "cn1", t0, D("float"));
+          Canal.car(L, "c1", 560, WY + 42, 0.42, { beam: 0 }); tl.set("#c1-r", { rotation: 15, svgOrigin: "0 0" }, t0);
+          tl.fromTo("#c1-r", { y: 0 }, { y: 6, duration: 0.9, repeat: Math.ceil(D("float") / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          Canal.front(L, "c1f", WY + 8); bubbles(L, tl, "c1bb", t0, D("float"), 700, WY + 10, 10, 220);
+        },
+      });
+      // ---------- 4. under the water: the beams in the murk ----------
+      add("all", {
+        set: "under", setOpts: { id: "uw0" }, dark: 0, light: false, grade: GWATER, blur: { far: 2 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("all"), glide: D("all"), ...fr(560, 1000, 1.1, 540, 960) }] },
+        captions: caps("all"),
+        fx(tl, id, t0, L) {
+          bubbles(L, tl, "uwbb", t0, D("all"), 620, 520, 18, 500);
+          tl.fromTo("#uw0-b1", { opacity: 0.8 }, { opacity: 0.55, duration: 0.18, yoyo: true, repeat: 7, immediateRender: false }, t0 + 0.8);
+        },
+      });
+      // ---------- 5. 1 a.m., the drive home ----------
+      add("drive", {
+        ...POV("pv0"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        captions: caps("drive"),
+        fx(tl, id, t0, L) { povCanal(L, tl, "pv0", t0, D("drive")); mirrorKid(L, "pv0"); povHands(L, "pv0"); Mok.life(tl, `#${id}`, t0, D("drive")); },
+      });
+      // ---------- 6. an unlit motorbike in the headlights → the swerve ----------
+      add("swerve", {
+        ...POV("pv1"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        shake: (t) => { const k = Math.max(0, t - (D("swerve") - 0.9)); return { x: -180 * Math.min(1, k / 0.5) + 8 * Math.sin(t * 40) * (k > 0), y: 6 * Math.sin(t * 37) * (k > 0), r: -9 * Math.min(1, k / 0.5) }; },
+        captions: caps("swerve"),
+        fx(tl, id, t0, L) {
+          povCanal(L, tl, "pv1", t0, D("swerve")); mirrorKid(L, "pv1"); povHands(L, "pv1"); Mok.life(tl, `#${id}`, t0, D("swerve"));
+          put(L.act, `<g transform="translate(540,1010)"><g id="bk">${bikeShape}</g></g>`);
+          tl.fromTo("#bk", { scale: 0.12, opacity: 0, svgOrigin: "0 0" }, { scale: 1.9, opacity: 1, svgOrigin: "0 0", duration: D("swerve") - 0.6, ease: "power2.in", immediateRender: false }, t0 + 0.15);
+        },
+      });
+      // ---------- 7. outside: off the bank and into the canal ----------
+      add("plunge", {
+        set: "canal", setOpts: { id: "cn2" }, dark: 0.06, light: NIGHT, grade: GNIGHT, blur: { far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(480, 1060, 1.35, 540, 980), drift: { s: 0 } }] },
+        shake: (t) => (t > 0.72 && t < 1.3 ? { x: 14 * Math.sin(t * 60), y: 10 * Math.sin(t * 53), r: 0 } : 0),
+        fx(tl, id, t0, L) {
+          Canal.life(tl, "cn2", t0, D("plunge"));
+          Canal.car(L, "c2", 220, RY + 10, 0.42, { beam: 0 });
+          tl.fromTo("#c2-r", { x: 0, y: 0, rotation: 0, svgOrigin: "0 0" }, { x: 340, y: WY - RY + 26, rotation: 24, svgOrigin: "0 0", duration: 0.75, ease: "power2.in", immediateRender: false }, t0);
+          tl.to("#c2-r", { y: WY - RY + 40, rotation: 16, duration: 0.8, ease: "power2.out" }, t0 + 0.75);
+          Canal.front(L, "c2f", WY + 10); Canal.splash(L, tl, "c2s", 640, WY + 4, t0 + 0.72);
+        },
+      });
+      // ---------- 8. inside: the jolt, water spurting at the door seals; the countdown appears ----------
+      add("inrush", {
+        set: "carCut", setOpts: { id: "cc0", out: 1150 }, dark: 0.06, light: CABIN, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(500, 1310, 1.3, 540, 980), drift: { s: 0.03 } }] },
+        shake: (t) => (t < 0.6 ? { x: 16 * Math.sin(t * 50) * (1 - t / 0.6), y: 12 * Math.sin(t * 43) * (1 - t / 0.6), r: 1.5 * Math.sin(t * 31) } : 0),
+        actors: [A("boss", CT2.x, CT2.y, CT2.s, [{ t: 0, mode: "brace", eyes: "wide", mouth: "scream" }]), A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode: "sitHold", eyes: "wide", mouth: "scream" }])],
+        fx(tl, id, t0, L) {
+          ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
+          cutFront(L, "cc0"); cutWater(L, tl, "cc0", t0, D("inrush"), 1520, 1470); cutOutside(tl, "cc0", t0, D("inrush"), 1150, 1120); cutCanal(L, tl, "cc0", t0, D("inrush"), 1150, 1120);
+          sealJets(L, tl, "cc0", t0, D("inrush"), { at: [[1000, 1300, -1, 0.75], [990, 1440, -1, 0.6], [470, 1460, 1, 0.55], [60, 1380, 1, 0.6]] });
+        },
+      });
+      // ---------- 9. step 1: no phone, the seatbelt ----------
+      add("belt", {
+        set: "beltIns", setOpts: { id: "bi0" }, dark: 0.06, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(600, 1080, 1.0, 540, 960) }, { t: D("belt"), glide: D("belt"), ...fr(610, 1095, 1.08, 540, 960) }] },
+        captions: caps("belt"),
+        fx(tl, id, t0, L) {
+          beltPress(tl, "bi0", t0 + F("belt", 0, 1) - 0.35);
+          cabWater(L, tl, "bi0", t0, D("belt"), 2060, 1840, { items: false }); bubbles(L, tl, "bi0bb", t0, D("belt"), 600, 1980, 10, 520);
+          
+        },
+      });
+      // ---------- 10. the door: the water outside holds it shut ----------
+      add("door", {
+        ...WIN("cw0"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("door"),
+        fx(tl, id, t0, L) {
+          outsideRich(L, tl, "cw0o", t0, D("door"), 980, 880); glassDrops("cw0"); doorTug(L, tl, "cw0d", t0 + 0.15);
+          
+        },
+      });
+      // ---------- 11. his window: down, now ----------
+      add("window", {
+        ...WIN("cw1"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
+        captions: caps("window"),
+        fx(tl, id, t0, L) {
+          outsideRich(L, tl, "cw1o", t0, D("window"), 860, 760); glassDrops("cw1");
+          tl.fromTo("#cw1-glass", { y: 0 }, { y: 760, duration: 1.4, ease: "power1.in", immediateRender: false }, t0 + 0.5);
+          pourIn(L, tl, "cw1p", t0 + 1.55, D("window") - 1.55, 815);
+          winSwitch(L, "cw1s"); tl.set("#cw1s-f", { x: 30, y: 560 }, 0); pressSwitch(tl, "cw1s", t0 + 0.15, 1);
+          
+        },
+      });
+      // ---------- 12. ขิม: her belt, children out first ----------
+      const CUT = (id, out) => ({ set: "carCut", setOpts: { id, out }, dark: 0.06, light: CABIN, grade: GNIGHT });
+      const TON2 = (mode, eyes, mouth) => A("boss", CT2.x, CT2.y, CT2.s, [{ t: 0, mode, eyes, mouth }]);
+      const KIM2 = (mode, eyes, mouth, extra = {}) => A("mint", CK3.x, CK3.y, CK3.s, [{ t: 0, mode, eyes, mouth }], extra);
+      const noShadows = (tl, id) => ["a0", "a1"].forEach((a) => tl.set(`#${id}-${a}-shadow`, { opacity: 0 }, 0));
+      const KB = 1.5;
+      split("kid", KB, {
+        set: "beltIns", setOpts: { id: "bi1", kid: true }, dark: 0.06, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(600, 1080, 1.05, 540, 960) }, { t: KB, glide: KB, ...fr(610, 1095, 1.12, 540, 960) }] },
+        captions: caps("kid"),
+        fx(tl, id, t0, L) {
+          beltPress(tl, "bi1", t0 + 0.1);
+          cabWater(L, tl, "bi1", t0, KB, 1720, 1620, { items: false }); bubbles(L, tl, "bi1bb", t0, KB, 600, 1760, 10, 520);
+          
+        },
+      }, {
+        ...CUT("cc1", 1090),
+        cam: { keys: [{ t: 0, ...fr(420, 1270, 1.55, 540, 980) }, { t: D("kid") - KB, glide: D("kid") - KB, ...fr(400, 1260, 1.65, 540, 980) }] },
+        actors: [TON2("reachBack", "worry", "o"), KIM2("sitStand", "wide", "scream")],
+        captions: capsFrom("kid", KB),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id); cutFront(L, "cc1", { free: ["ton", "kim"] }); cutWater(L, tl, "cc1", t0, D("kid") - KB, 1370, 1350); cutOutside(tl, "cc1", t0, D("kid") - KB, 1090, 1080); cutCanal(L, tl, "cc1", t0, D("kid") - KB, 1090, 1080);
+          
+        },
+      });
+      // ---------- 13. the phone on the seat; call once ashore ----------
+      add("phone", {
+        set: "phoneIns", setOpts: { id: "ph0" }, dark: 0.1, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 1.2, 540, 1000) }, { t: D("phone"), glide: D("phone"), ...fr(560, 1100, 1.3, 540, 1000) }] },
+        captions: caps("phone"),
+        fx(tl, id, t0, L) {
+          tl.fromTo("#ph0-wt", { y: 0 }, { y: -220, duration: D("phone"), ease: "none", immediateRender: false }, t0);
+          
+        },
+      });
+      // ---------- 14. the twist: rewind to 0:04 ----------
+      add("rw", {
+        set: "lockIns", setOpts: { id: "lk1", on: true }, dark: 0.12, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(700, 1020, 1.3, 540, 980) }, { t: D("rw"), glide: D("rw"), ...fr(730, 1005, 1.75, 540, 980) }] },
+        captions: caps("rw"),
+        fx(tl, id, t0, L) { rewind(L, tl, t0, D("rw"), "0:04"); tl.fromTo("#lk1-led", { opacity: 1 }, { opacity: 0.4, duration: 0.3, yoyo: true, repeat: Math.ceil(D("rw") / 0.3), immediateRender: false }, t0); },
+      });
+      // ---------- 15. ขิม's window: she presses, nothing ----------
+      const KS = vo("kim") + 0.8, KH = CK3.y - CK3.s * (548 - 96);   // the cut inside her line · her head, risen
+      split("kim", KS, {
+        ...CUT("cc2", 1070),
+        cam: { keys: [{ t: 0, ...fr(CK3.x + 6, KH + 40, 3.1, 540, 900) }, { t: KS, glide: KS, ...fr(CK3.x + 6, KH + 40, 3.35, 540, 900) }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 23), y: 2 * Math.sin(t * 19), r: 0 }),
+        actors: [TON2("brace", "wide", "o"), KIM2("sitStand", "wide", "scream", { talk: [TALK("kim", 0, "scream")] })],
+        captions: caps("kim", undefined, QUO),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id); cutFront(L, "cc2", { free: ["ton", "kim"] }); cutWater(L, tl, "cc2", t0, KS, 1335, 1325); cutOutside(tl, "cc2", t0, KS, 1070, 1066); cutCanal(L, tl, "cc2", t0, KS, 1070, 1066);
+        },
+      }, {
+        ...WIN("cw2"),
+        cam: { keys: [{ t: 0, ...fr(540, 1060, 1.08, 540, 1000), drift: { s: 0.03 } }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 23), y: 2 * Math.sin(t * 19), r: 0 }),
+        captions: capsFrom("kim", KS, undefined, QUO),
+        fx(tl, id, t0, L) {
+          outsideRich(L, tl, "cw2o", t0, D("kim") - KS, 720, 680); glassDrops("cw2");
+          kidSwitch(L, "ks");
+          tl.fromTo("#ks-kf", { y: 0 }, { y: -30, duration: 0.14, yoyo: true, repeat: Math.ceil((D("kim") - KS) / 0.14), ease: "power2.inOut", immediateRender: false }, t0 + 0.05);
+        },
+      });
+      // ---------- 16. the lock's light, still on ----------
+      add("led", {
+        set: "lockIns", setOpts: { id: "lk2", on: true }, dark: 0.45, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(730, 1005, 2.2, 540, 960) }, { t: D("led"), glide: D("led"), ...fr(730, 1005, 2.45, 540, 960) }] },
+        captions: caps("led"),
+        fx(tl, id, t0, L) {
+          tl.set("#lk2-finger", { opacity: 0 }, t0);
+          ledGlow(L, tl, "lk2-halo", t0, D("led"), 786, 949);
+        },
+      });
+      // ---------- 17. her window on his own panel: nothing (some cars lock every window but the driver's) ----------
+      add("panel", {
+        set: "lockIns", setOpts: { id: "lk3", on: true }, dark: 0.1, light: false, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(480, 1060, 1.35, 540, 980), drift: { s: 0.02 } }] },
+        captions: caps("panel"),
+        fx(tl, id, t0, L) {
+          tl.fromTo("#lk3-finger", { x: 0, y: 0 }, { x: -440, y: 240, duration: 0.45, ease: "power2.out", immediateRender: false }, t0 + 0.2);
+          tl.to("#lk3-finger", { y: 258, duration: 0.09, yoyo: true, repeat: 5 }, t0 + 0.7);
+          put(L.light, `<g id="lk3x" opacity="0" transform="translate(${290},${1092})"><circle r="70" fill="#ff2a2a" opacity=".25"/><path d="M-34,-34L34,34M34,-34L-34,34" stroke="#ff4a3a" stroke-width="14" stroke-linecap="round"/></g>`);
+          tl.fromTo("#lk3x", { opacity: 0 }, { opacity: 1, duration: 0.1, yoyo: true, repeat: 5, immediateRender: false }, t0 + 0.75);
+        },
+      });
+      // ---------- 18. the dash flickers; single digits ----------
+      add("flicker", {
+        ...CUT("cc3", 1060),
+        cam: { keys: [{ t: 0, ...fr(470, 1280, 1.28, 540, 980), drift: { s: 0.04 } }] },
+        actors: [TON2("brace", "wide", "o"), KIM2("sitStand", "wide", "scream")],
+        captions: caps("flicker"),
+        fx(tl, id, t0, L) {
+          noShadows(tl, id); cutFront(L, "cc3", { free: ["ton", "kim"] }); cutWater(L, tl, "cc3", t0, D("flicker"), 1320, 1285); cutOutside(tl, "cc3", t0, D("flicker"), 1060, 1036); cutCanal(L, tl, "cc3", t0, D("flicker"), 1060, 1036);
+          bubbles(L, tl, "cc3bb", t0, D("flicker"), 520, 1330, 14, 700);
+          flickerOut(L, tl, "cc3", t0, D("flicker"));
+        },
+      });
+      // ---------- 19. next episode ----------
+      add("next", {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        fx(tl, id, t0, L) { nextCard(L, tl, t0, D("next"), "ถ้ากระจกไม่ลง…", "อย่าทุบกระจกหน้า", "กดติดตาม แล้วพาขิมออกไปด้วยกัน"); },
+      });
+      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">นาทีก่อนจม · EP.1</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
+      Fx.setup(root);
+      Engine.build(root, tl, shots);
+
+      root.appendChild(document.getElementById("grain"));
+      const rnd = (() => { let s = 99; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+      for (let i = 0; i * 0.083 < SCHED.total; i++) tl.set("#grain", { x: Math.round(-50 + rnd() * 50), y: Math.round(-50 + rnd() * 50) }, i * 0.083);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
