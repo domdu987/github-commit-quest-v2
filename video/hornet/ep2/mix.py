@@ -1,4 +1,4 @@
-"""นาทีก่อนจม EP.1: the soundtrack from schedule.json: levelled voice, synthesized SFX (crickets, engine, the lock click, the countdown
+"""ต่อหัวเสือ EP.2 (from the นาทีก่อนจม mixer): the soundtrack from schedule.json: levelled voice, synthesized SFX (crickets, engine, the lock click, the countdown
 ticks, the screech, the splash, water pouring in, bubbles, the window motor, the rewind, the child's switch, the flicker) and the Suno bed
 with dips and ducking; the bed fades out over the next-episode card. Output -14 LUFS, no noise beds."""
 import json
@@ -62,7 +62,7 @@ def frag(k, i=0, j=0):
 
 
 # ---- voice: every line levelled on its own so whispers and shouts sit at a readable loudness ----
-LINE_GAIN = {"k01": 3}   # ขิม shouts over the water: lift her line over the bed and effects
+LINE_GAIN = {"p01": 2}   # ขิม shouts over the water: lift her line over the bed and effects
 vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
@@ -109,59 +109,21 @@ def tick3(k, a, g=0.3):  # the choice ring: three ticks
 
 
 CUES = [
-    # the canal road at 1 a.m.: a sound on frame 0, crickets, the engine passing
-    ("hook", 0.0, "swell", 0.26), ("hook", 0.1, "crickets", 0.16), ("hook", 0.3, "engine", 0.2),
-    # the lock: its click (the planted mistake)
-    ("lock", 0.95, "click", 0.4), ("lock", 1.0, "beep", 0.08),
-    # afloat: the water lapping the body, the countdown ticks
-    ("float", 0.1, "bubbles", 0.22), *ticks("float", 0.4, D["float"] - 0.1, 0.16, 1.0),
-    # under the water: muffled, bubbles
-    ("all", 0.0, "boom", 0.22), ("all", 0.2, "bubbles", 0.3), ("all", 1.2, "bubbles", 0.2),
-    # the drive
-    ("drive", 0.0, "engine", 0.22), ("drive", 2.0, "engine", 0.18),
-    # the unlit bike, the screech
-    ("swerve", 0.2, "engine", 0.16), ("swerve", vo_end("swerve") + 0.02, "screech", 0.4), ("swerve", vo_end("swerve") + 0.3, "sting", 0.3),
-    # off the bank: the thud, the splash
-    ("plunge", 0.55, "thud", 0.4), ("plunge", 0.72, "splash", 0.55), ("plunge", 0.8, "roar", 0.3), ("plunge", 1.1, "bubbles", 0.3),
-    # inside: the water pouring in, heartbeats
-    ("inrush", 0.1, "splash", 0.3), ("inrush", 0.3, "bubbles", 0.3), *beats("inrush", 0.4, D["inrush"] - 0.4, 0.55, 0.3),
-    # the steps: each chip a pop, ticking under
-    ("belt", 0.2, "pop", 0.2), ("belt", F("belt", 0, 1) + 0.15, "click", 0.4), ("belt", F("belt", 0, 1) + 0.33, "whoosh", 0.22), *ticks("belt", 0.1, D["belt"] - 0.1, 0.12, 1.0),
-    ("door", 0.2, "pop", 0.2), *[c for k in range(3) for c in (("door", 0.45 + k * 0.55, "click", 0.32), ("door", 0.5 + k * 0.55, "thud", 0.16))], *ticks("door", 0.1, D["door"] - 0.1, 0.12, 1.0),
-    ("window", 0.2, "pop", 0.2), ("window", 0.47, "click", 0.3), ("window", 0.5, "motor", 0.3), ("window", 1.55, "splash", 0.42), ("window", 1.6, "roar", 0.3), ("window", 1.9, "bubbles", 0.24), *ticks("window", 0.1, D["window"] - 0.1, 0.12, 1.0),
-    ("kid", 0.2, "pop", 0.2), ("kid", 0.62, "click", 0.36), ("kid", 0.68, "whoosh", 0.18), ("kid", F("kid", 0, 1), "splash", 0.18), ("kid", 0.9, "bubbles", 0.2), *ticks("kid", 0.1, D["kid"] - 0.1, 0.13, 1.0),
-    ("phone", 0.2, "pop", 0.2), ("phone", 0.5, "notif", 0.16), *ticks("phone", 0.1, D["phone"] - 0.1, 0.13, 1.0),
-    # the rewind to 0:04
-    ("rw", 0.0, "rewind", 0.42), ("rw", 0.6, "click", 0.36), ("rw", 0.65, "sting", 0.3),
-    # her switch: click click click, nothing; the ticks get louder
-    *[("kim", 1.09 + i * 0.28, "click", 0.3) for i in range(6)], *ticks("kim", 0.1, D["kim"] - 0.1, 0.16, 1.0),
-    ("led", 0.1, "swell", 0.2), *ticks("led", 0.1, D["led"] - 0.1, 0.17, 1.0), *beats("led", 0.3, D["led"] - 0.3, 0.5, 0.32),
-    *[("panel", 0.7 + i * 0.18, "click", 0.28) for i in range(4)], ("panel", 0.8, "buzz", 0.2), *ticks("panel", 0.1, D["panel"] - 0.1, 0.18, 1.0),
-    # the flicker
-    ("flicker", 0.3, "glitch", 0.3), ("flicker", 0.9, "glitch", 0.26), ("flicker", 1.5, "powerdown", 0.32), ("flicker", 0.2, "bubbles", 0.24),
-    *ticks("flicker", 0.1, D["flicker"] - 0.2, 0.2, 0.5), *beats("flicker", 0.2, D["flicker"] - 0.2, 0.42, 0.38),
-    # the next card
-    ("next", 0.1, "whoosh", 0.3), ("next", 0.6, "ding", 0.24),
+    ("hook", 0.0, "swell", 0.22), ("cmd", vo_t("cmd") - 0.02, "sting", 0.32), ("why", 0.1, "whoosh", 0.2),
+    ("aid", 0.1, "whoosh", 0.18), ("count", 0.1, "whoosh", 0.18), ("count", 2.6, "sting", 0.24),
+    ("night", 0.0, "crickets", 0.2), ("night", F("night", 0, 2) - 0.1, "sting", 0.26), *beats("night", 0.3, D["night"] - 0.2, 0.62, 0.26),
+    ("phum", 0.0, "sting", 0.2), ("rule", 2.2, "whoosh", 0.2), ("danger", 0.1, "whoosh", 0.2), ("danger", 2.4, "notif", 0.2),
+    ("drive", 0.0, "engine", 0.22), ("rw", 0.0, "rewind", 0.42), ("rw", 3.0, "sting", 0.28),
+    ("lung", 0.0, "beep", 0.08), ("truth", 0.2, "notif", 0.16), ("end", 0.2, "swell", 0.2),
+    ("finale", 0.1, "whoosh", 0.3), ("finale", 0.8, "ding", 0.26),
 ]
 
 exec(open(os.path.join(HERE, "..", "samples_inc.py")).read())
 SAMPLES = [
-    ("hook", 0.0, "crickets", 0.4), ("hook", 0.3, "engine", 0.22, 1.8), ("hook", 2.1, "plunge", 0.38, 0.9),
-    ("lock", 1.28, "lockclick", 0.9),
-    ("float", 0.0, "crickets", 0.3, 4.2), ("float", 0.3, "bubbles", 0.45),
-    ("all", 0.0, "underwater", 0.6, 2.85), ("all", 0.4, "bubbles", 0.5),
-    ("drive", 0.0, "engine", 0.45, 5.2), ("swerve", 0.0, "engine", 0.42, 2.7),
-    ("swerve", vo_end("swerve") + 0.02, "screech", 0.95),
-    ("plunge", 0.5, "plunge", 1.0),
-    ("inrush", 0.0, "sealjets", 0.85), ("inrush", 0.0, "underwater", 0.4, 2.0),
-    ("belt", 1.3 + max(0.15, F("belt", 0, 1) + 0.15 - 1.3) + 0.47, "beltoff", 0.95), ("belt", 0.0, "underwater", 0.14, 2.9),
-    ("door", 1.7, "doorhandle", 0.8), ("door", 0.0, "underwater", 0.14, 4.0),
-    ("window", 1.35, "winmotor", 0.85), ("window", 2.35, "pourin", 0.85, 1.2),
-    ("kid", 1.9, "beltoff", 0.85), ("kid", 0.0, "underwater", 0.14, 3.0),
-    ("phone", 0.0, "underwater", 0.14, 4.6),
-    ("kim", vo_end("kim") + 0.02, "kidclicks", 0.75, 0.8),
-    ("panel", 0.75, "lockclick", 0.7),
-    ("flicker", 0.2, "powerdown", 0.85), ("flicker", 0.0, "underwater", 0.45, 2.8),
+    ("hook", 0.0, "village", 0.45, 3.0), ("hook", 0.0, "swarmfar", 0.3, 3.0), ("cmd", 0.0, "swarmfar", 0.3, 1.6),
+    ("yai", 0.6, "ice", 0.8), ("yai", 0.0, "village", 0.35, 4.2), ("aid", 0.0, "village", 0.3, 4.3), ("count", 0.0, "village", 0.25, 4.6),
+    ("night", 0.0, "crickets", 0.45, 5.8), ("phum", 0.0, "crickets", 0.4, 1.9), ("rule", 0.0, "crickets", 0.4, 6.0), ("danger", 0.0, "crickets", 0.3, 5.3),
+    ("drive", 0.0, "engine", 0.45, 3.6), ("rw", 0.0, "swarmfar", 0.25, 3.0),
 ]
 CUES = [c for c in CUES if c[2] not in REPLACED]
 
@@ -191,10 +153,10 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(T("plunge", 0), T("inrush", -0.01), 0.35)   # the splash and the water pouring in
-dip(T("rw", 0), T("flicker", -0.01), 0.55)       # the rewind and the twist
+dip(T("night", 0), T("danger", -0.01), 0.55)   # the night: quiet, the heartbeat
+dip(T("rw", 0), T("truth", -0.01), 0.5)         # the rewind and the confession
 mus = mus * gain
-a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
+a, b = int(T("finale", 0) * SR), int(T("finale", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card
 mus[b:] = 0
 
