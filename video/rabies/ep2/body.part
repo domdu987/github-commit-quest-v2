@@ -50,7 +50,7 @@
         set: "underHouse", setOpts: { id: "u4", eyes: [600, 1180], lamp: 900 }, dark: 0.15, light: MOONL, grade: GNITE,
         cam: push("hide", [540, 1150, 1.0, 540, 960], [600, 1180, 1.3, 540, 960]),
         captions: caps("hide"),
-        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "u4d", kind: "dam", x: 600, y: 1290, s: 0.8, silhouette: true })); put(L.glow, Dog.svg({ id: "u4e", kind: "dam", x: 600, y: 1290, s: 0.8, glow: true, eyesOnly: true }));
+        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "u4d", kind: "dam", night: true, x: 600, y: 1290, s: 0.8 })); put(L.glow, Dog.svg({ id: "u4e", kind: "dam", x: 600, y: 1290, s: 0.8, glow: true, eyesOnly: true }));
           Dog.drive(tl, "u4d", t0, D("hide"), "lie"); Dog.drive(tl, "u4e", t0, D("hide"), "lie", { glow: true }); RabFX.motes(tl, L.glow, t0, D("hide"), { kind: "fly", box: [0, 700, 1080, 900], n: 12, seed: 4 }); },
       });
       // ---------- 5. ยาย crawls in with rice; a snap in the dark ----------
@@ -62,7 +62,7 @@
         captions: caps("snap"),
         fx(tl, id, t0, L) {
           tl.set(`#${id}-a0-hand`, { opacity: 1 }, 0);
-          put(L.act, Dog.svg({ id: "s5d", kind: "dam", x: 760, y: 1300, s: 0.85, flip: true, silhouette: true })); put(L.glow, Dog.svg({ id: "s5e", kind: "dam", x: 760, y: 1300, s: 0.85, flip: true, glow: true, eyesOnly: true }));
+          put(L.act, Dog.svg({ id: "s5d", kind: "dam", night: true, x: 760, y: 1300, s: 0.85, flip: true })); put(L.glow, Dog.svg({ id: "s5e", kind: "dam", x: 760, y: 1300, s: 0.85, flip: true, glow: true, eyesOnly: true }));
           ["s5d", "s5e"].forEach((d) => { Dog.drive(tl, d, t0, 2.2, "growl", { glow: d === "s5e" }); Dog.drive(tl, d, t0 + 2.2, 0.5, "lunge", { to: 660, glow: d === "s5e" }); Dog.drive(tl, d, t0 + 2.7, D("snap") - 2.7, "growl", { glow: d === "s5e" }); });
           RabFX.flash(tl, t0 + 2.4, "#ffffff", 0.45);
         },

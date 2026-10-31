@@ -22,6 +22,8 @@
   const ln = (w = 3) => `stroke="${INK}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
   const PAL = {
     dam: { coat: "#24212a", coatL: "#3e3a4a", coatD: "#121016", tan: "#c98a4c", tanL: "#e2aa6a", nose: "#141014", inner: "#6a4048", collar: "#c8322a" },
+    // ไอ้ดำ at night: the same black coat lifted by moonlight (blue sheen) so its shape reads before its eyes do
+    damN: { coat: "#3a3c56", coatL: "#9aaee0", coatD: "#1e1e30", tan: "#b07a48", tanL: "#d09a64", nose: "#141014", inner: "#6a4a58", collar: "#c8322a" },
     pup: { coat: "#ecd2a6", coatL: "#fbecd0", coatD: "#c8a272", tan: "#9a5a32", tanL: "#b8784a", nose: "#2a1e1e", inner: "#e0909a", collar: null },
     pupS: { coat: "#d2bc94", coatL: "#e4d2b0", coatD: "#a8906a", tan: "#80502e", tanL: "#9a6a44", nose: "#2a1e1e", inner: "#c88088", collar: null },
   };
@@ -40,7 +42,7 @@
   // overlaps the body and its edge lines start below the belly line; the lower part starts under the upper part's rounded end
   const legSvg = (id, k, P, c, far) => {
     const fill = far ? c.coatD : c.coat, w = P.legW, back = k % 2 === 1, lw = w * 0.42, U = P.up, Lo = P.lo;
-    const sockC = c === PAL.dam ? (far ? "#8a5a32" : c.tan) : (far ? c.coatD : c.coatL);
+    const sockC = (c === PAL.dam || c === PAL.damN) ? (far ? "#8a5a32" : c.tan) : (far ? c.coatD : c.coatL);
     const edge = (d, wd = 2.6) => `<path d="${d}" fill="none" stroke="${INK}" stroke-width="${wd}" stroke-linecap="round" stroke-linejoin="round"/>`;
     // upper: a thigh (back) or a forearm (front), wide at the top so it melts into the body
     const up = back
@@ -143,11 +145,12 @@
   const Dog = {};
   const POS = {}, DK = {};   // where each dog stands, in build order: Dog.svg sets it, each drive moves it on (so seeking back is exact)
   Dog.svg = (o = {}) => {
-    const id = o.id || "dg", kind = o.kind || "dam", c = PAL[kind], P = PLAN[kind], s = o.s ?? 1, sx = o.flip ? -s : s;
+    const id = o.id || "dg", kind = o.kind || "dam", c = o.night && kind === "dam" ? PAL.damN : PAL[kind], P = PLAN[kind], s = o.s ?? 1, sx = o.flip ? -s : s;
     POS[id] = [o.x ?? 540, o.y ?? 1400, sx, s]; DK[id] = kind;
     const only = o.eyesOnly ? `<style>#${id} *{fill-opacity:0;stroke-opacity:0}#${id}-glow,#${id}-glow *{fill-opacity:1;stroke-opacity:1}</style>` : "";
+    const rim = o.rimOnly ? `<style>#${id} *{fill-opacity:0!important;stroke:${o.rimOnly}!important;stroke-opacity:.9}#${id}-glow,#${id}-glow *,#${id} ellipse[fill^="url"]{opacity:0}</style>` : "";
     const sil = o.silhouette ? ` style="filter:brightness(0)"` : "";
-    return `${only}<g id="${id}"${sil} transform="translate(${f(o.x ?? 540)},${f(o.y ?? 1400)}) scale(${f(sx)},${f(s)})">
+    return `${only}${rim}<g id="${id}"${sil} transform="translate(${f(o.x ?? 540)},${f(o.y ?? 1400)}) scale(${f(sx)},${f(s)})">
       <ellipse cx="-6" cy="2" rx="${kind === "dam" ? 150 : 82}" ry="${kind === "dam" ? 16 : 10}" fill="url(#dgShadow)"/>
       <g id="${id}-body" transform="translate(0,0) rotate(0)">
         <g transform="translate(${P.hipF[0] - 14},${P.hipF[1]})">${legSvg(id, 2, P, c, true)}</g>

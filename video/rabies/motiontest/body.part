@@ -38,13 +38,13 @@
           RabFX.flash(tl, t0 + 2.6, "#ff2a1a", 0.3);
         } });
       add("mt5", {
-        set: "village2", setOpts: { id: "m5", time: "night", house: [-60, 1.5] }, dark: 0.3, blur: { far: 2, fg: 9 }, light: MOONL, grade: GNITE,
+        set: "village2", setOpts: { id: "m5", time: "night", house: [-60, 1.5] }, dark: 0.14, blur: { far: 2, fg: 9 }, light: MOONL, grade: GNITE,
         cam: { keys: [{ t: 0, ...fr(560, 1450, 1.25, 540, 1100) }, { t: 3.8, glide: 2.8, ...fr(380, 1350, 1.9, 540, 1000) }] },
         shake: (t) => (t > 2.3 && t < 2.7 ? { x: 8 * Math.sin(t * 50), y: 5 * Math.sin(t * 43), r: 0 } : 0),
         fx(tl, id, t0, L) {
           QkUI.rewind(tl, L.light, t0, 0.9, { from: "0:12", to: "0:04" });
           RabFX.motes(tl, L.glow, t0, 3.8, { kind: "fly", box: [0, 800, 1080, 900], n: 18, seed: 9 });
-          put(L.act, Dog.svg({ id: "m5d", kind: "dam", x: 300, y: 1640, s: 1.1 }));
+          put(L.act, Dog.svg({ id: "m5d", kind: "dam", night: true, x: 300, y: 1640, s: 1.1 }));
           put(L.glow, Dog.svg({ id: "m5e", kind: "dam", x: 300, y: 1640, s: 1.1, glow: true, eyesOnly: true }));
           ["m5d", "m5e"].forEach((d) => { Dog.drive(tl, d, t0, 2.2, "growl", { glow: d === "m5e" }); Dog.drive(tl, d, t0 + 2.2, 0.5, "lunge", { to: 520, glow: d === "m5e" }); Dog.drive(tl, d, t0 + 2.7, 1.1, "bark", { beats: [0.15, 0.55], glow: d === "m5e" }); });
           tl.set("#m5e", { opacity: 1 }, 0);

@@ -69,7 +69,7 @@
         actors: [A("yaiBua", 200, 1760, 1.05, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }]), A("phum", 400, 1790, 0.82, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
         captions: caps("legend"),
         fx(tl, id, t0, L) {
-          put(L.act, Dog.svg({ id: "l8d", kind: "dam", x: 760, y: 1300, s: 0.8, flip: true, silhouette: true }));
+          put(L.act, Dog.svg({ id: "l8d", kind: "dam", night: true, x: 760, y: 1300, s: 0.8, flip: true }));
           put(L.glow, Dog.svg({ id: "l8e", kind: "dam", x: 760, y: 1300, s: 0.8, flip: true, glow: true, eyesOnly: true }));
           Dog.drive(tl, "l8d", t0, D("legend"), "lie"); Dog.drive(tl, "l8e", t0, D("legend"), "lie", { glow: true });
           tl.set("#l8e", { opacity: 0 }, 0); tl.fromTo("#l8e", { opacity: 0 }, { opacity: 1, duration: 0.8, immediateRender: false }, t0 + vo("legend", 1));
@@ -144,12 +144,12 @@
       });
       // ---------- 18. night: ไอ้ดำ drives the puppy out into the dark ----------
       add("night", {
-        set: "village2", setOpts: { id: "v18", time: "night", house: [-60, 1.5] }, dark: 0.25, blur: { far: 2, fg: 8 }, light: MOONL, grade: GNITE,
+        set: "village2", setOpts: { id: "v18", time: "night", house: [-60, 1.5] }, dark: 0.12, blur: { far: 2, fg: 8 }, light: MOONL, grade: GNITE,
         cam: push("night", [560, 1450, 1.3, 540, 1100], [600, 1450, 1.4, 540, 1100]),
         shake: (t) => (t > 1.3 && t < 1.8 ? { x: 6 * Math.sin(t * 50), y: 4 * Math.sin(t * 43), r: 0 } : 0),
         captions: caps("night"),
         fx(tl, id, t0, L) {
-          put(L.act, Dog.svg({ id: "n18d", kind: "dam", x: 300, y: 1640, s: 1.1 }) + Dog.svg({ id: "n18p", kind: "pupS", x: 760, y: 1660, s: 1.0, flip: true }));
+          put(L.act, Dog.svg({ id: "n18d", kind: "dam", night: true, x: 300, y: 1640, s: 1.1 }) + Dog.svg({ id: "n18p", kind: "pupS", x: 760, y: 1660, s: 1.0, flip: true }));
           put(L.glow, Dog.svg({ id: "n18e", kind: "dam", x: 300, y: 1640, s: 1.1, glow: true, eyesOnly: true }));
           RabFX.motes(tl, L.glow, t0, D("night"), { kind: "fly", box: [0, 900, 1080, 800], n: 16, seed: 9 }); RabFX.flash(tl, t0 + 1.3, "#ffffff", 0.22);
           ["n18d", "n18e"].forEach((d) => { Dog.drive(tl, d, t0, 1.2, "growl", { glow: d === "n18e" }); Dog.drive(tl, d, t0 + 1.2, 0.5, "lunge", { to: 560, glow: d === "n18e" }); Dog.drive(tl, d, t0 + 1.7, D("night") - 1.7, "bark", { beats: [0.2, 0.6, 1.0], glow: d === "n18e" }); });

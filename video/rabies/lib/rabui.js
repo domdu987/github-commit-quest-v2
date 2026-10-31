@@ -31,7 +31,8 @@
     <linearGradient id="rbBoard" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8925a"/><stop offset="1" stop-color="#9a6a3a"/></linearGradient>
     <linearGradient id="rbSkin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8b48a"/><stop offset="1" stop-color="#d49a6e"/></linearGradient>
     <linearGradient id="rbMuscle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8505a"/><stop offset="1" stop-color="#a8323e"/></linearGradient>
-    <radialGradient id="rbGap"><stop offset="0" stop-color="#010103" stop-opacity=".95"/><stop offset=".6" stop-color="#010103" stop-opacity=".8"/><stop offset="1" stop-color="#010103" stop-opacity="0"/></radialGradient>
+    <linearGradient id="rbShaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffc070" stop-opacity=".5"/><stop offset="1" stop-color="#ff9a40" stop-opacity=".12"/></linearGradient>
+    <radialGradient id="rbGap"><stop offset="0" stop-color="#010103" stop-opacity=".6"/><stop offset=".6" stop-color="#010103" stop-opacity=".45"/><stop offset="1" stop-color="#010103" stop-opacity="0"/></radialGradient>
     <radialGradient id="rbMorning" cx=".3" cy=".2" r=".9"><stop offset="0" stop-color="#fff2c8" stop-opacity=".6"/><stop offset="1" stop-color="#fff2c8" stop-opacity="0"/></radialGradient>`;
 
   const Rab = {};
@@ -130,6 +131,10 @@
       <g transform="translate(1080,1300)">${Array.from({ length: 6 }, (_, k) => `<rect x="${-120 + (k % 3) * 70}" y="${-50 - Math.floor(k / 3) * 46}" width="140" height="40" rx="18" fill="#3a2616" ${O(2.4)}/>`).join("")}</g>`;
     put(L.set, s);
     if (o.lamp) put(L.glow, `<circle cx="${o.lamp}" cy="560" r="380" fill="url(#p2Lamp)" opacity=".35"/>`);
+    // warm light from the house above, falling through the floorboards onto the ground round the dog's gap
+    const ex = o.eyes ? o.eyes[0] : 540, ey = o.eyes ? o.eyes[1] : 1180;
+    put(L.glow, `<g style="mix-blend-mode:screen"><path d="M${ex - 220},-320L${ex - 340},${ey + 160}H${ex + 260}L${ex + 150},-320Z" fill="url(#rbShaft)" opacity=".55"/>
+      <ellipse cx="${ex}" cy="${ey + 140}" rx="380" ry="80" fill="#ff9a40" opacity=".22"/></g>`);
     // the gap at the back where the dog lies: deeper black, and only its eyes
     put(L.set, `<ellipse cx="${o.eyes ? o.eyes[0] : 540}" cy="${o.eyes ? o.eyes[1] + 30 : 1220}" rx="520" ry="230" fill="url(#rbGap)"/>`);
   };
