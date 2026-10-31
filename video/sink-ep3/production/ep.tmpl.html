@@ -1519,12 +1519,13 @@
       // under the water, closer: the two of them sink, she has his neck, he claws for the surface
       Sets.drown2 = (L, o = {}) => {
         const id = o.id || "dw", sy = o.sy ?? 560;
-        put(L.sky, `<linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a6a5e"/><stop offset=".35" stop-color="#11362f"/><stop offset="1" stop-color="#020606"/></linearGradient>
+        const P = { g0: "#2a6a5e", g1: "#11362f", g2: "#020606", top: "#3a8a78", line: "#d8fff2", ray: "#cfffee", rayOp: 0.08, mote: "#bfe8d8", ...(o.pal || {}) };
+        put(L.sky, `<linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.g0}"/><stop offset=".35" stop-color="${P.g1}"/><stop offset="1" stop-color="${P.g2}"/></linearGradient>
           <rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-g)"/>
-          <g id="${id}-top"><rect x="-900" y="-600" width="2900" height="${sy + 600}" fill="#3a8a78" opacity=".35"/>
-          <path d="M-900,${sy}Q-760,${sy - 14} -620,${sy}T-340,${sy}T-60,${sy}T220,${sy}T500,${sy}T780,${sy}T1060,${sy}T1340,${sy}T1620,${sy}T1900,${sy}" stroke="#d8fff2" stroke-width="7" fill="none" opacity=".7"/>
-          ${[[240, 150], [560, 120], [820, 170]].map(([x, w]) => `<path class="${id}-ray" d="M${x},${sy}L${x + w},${sy}L${x + w - 240},${sy + 1500}L${x - 320},${sy + 1500}Z" fill="#cfffee" opacity=".08"/>`).join("")}</g>`);
-        put(L.far, Array.from({ length: 60 }, (_, k) => `<circle cx="${f1(-200 + ((k * 211) % 1500))}" cy="${f1(sy + 40 + ((k * 137) % 1400))}" r="${f1(2 + (k % 4) * 1.5)}" fill="#bfe8d8" opacity="${(0.18 + (k % 5) * 0.07).toFixed(2)}"/>`).join(""));
+          <g id="${id}-top"><rect x="-900" y="-600" width="2900" height="${sy + 600}" fill="${P.top}" opacity=".35"/>
+          <path d="M-900,${sy}Q-760,${sy - 14} -620,${sy}T-340,${sy}T-60,${sy}T220,${sy}T500,${sy}T780,${sy}T1060,${sy}T1340,${sy}T1620,${sy}T1900,${sy}" stroke="${P.line}" stroke-width="7" fill="none" opacity=".7"/>
+          ${[[240, 150], [560, 120], [820, 170]].map(([x, w]) => `<path class="${id}-ray" d="M${x},${sy}L${x + w},${sy}L${x + w - 240},${sy + 1500}L${x - 320},${sy + 1500}Z" fill="${P.ray}" opacity="${P.rayOp}"/>`).join("")}</g>`);
+        put(L.far, `<g id="${id}-motes">${Array.from({ length: 60 }, (_, k) => `<circle cx="${f1(-200 + ((k * 211) % 1500))}" cy="${f1(sy + 40 + ((k * 137) % 1400))}" r="${f1(2 + (k % 4) * 1.5)}" fill="${P.mote}" opacity="${(0.18 + (k % 5) * 0.07).toFixed(2)}"/>`).join("")}</g>`);
       };
       // the door from outside under the water (on Sets.sinkOut): it swings open, ต้น pushes out head first … and stops: his foot
       const doorOut = (L, tl, id, t, carId, dur) => {
@@ -1733,6 +1734,39 @@
       const SO = (w = 4) => `stroke="${SU.ink}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
       let suSeq = 0;
       const SinkUI = {};
+      // ---------- 2.5D medals and effects (owner 31 Oct 2026: "Icon เอฟเฟค ขยับอย่ากาก ทำดีๆดิ") ----------
+      // medal = drop shadow + rim (its thickness) + gradient face + bevel ring + highlight arc + a relief shadow of the art + a sheen that sweeps
+      SU.defs = (layer) => { if (document.getElementById("suSil")) return;
+        put(layer, `<defs><filter id="suSil" x="-20%" y="-20%" width="140%" height="140%"><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/></filter>
+          <filter id="suGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`); };
+      const f2 = (v) => (+v).toFixed(1);
+      SU.medal = (id, r, art, o = {}) => {
+        const hi = o.hi || "#ffffff", face = o.face || "#fbfdff", face2 = o.face2 || "#dbe6f1", rim = o.rim || "#a7b6c8", acc = o.accent || SU.green;
+        const ghost = o.noGhost ? "" : `<g transform="translate(${f2(r * 0.05)},${f2(r * 0.08)})" opacity=".2" filter="url(#suSil)">${art.replace(/\sid="[^"]*"/g, "")}</g>`;
+        return `<g id="${id}"><defs><radialGradient id="${id}-fg" cx=".34" cy=".28" r=".9"><stop offset="0" stop-color="${hi}"/><stop offset=".5" stop-color="${face}"/><stop offset="1" stop-color="${face2}"/></radialGradient>
+          <clipPath id="${id}-cp"><circle r="${r}"/></clipPath></defs>
+          <ellipse cy="${f2(r * 1.1)}" rx="${f2(r * 0.84)}" ry="${f2(r * 0.2)}" fill="#000" opacity=".24"/>
+          <circle cy="${f2(r * 0.14)}" r="${r}" fill="${rim}" ${SO(4)}/><circle r="${r}" fill="url(#${id}-fg)" ${SO(4)}/>
+          <circle r="${f2(r * 0.86)}" fill="none" stroke="${acc}" stroke-width="${f2(r * 0.08)}" opacity=".3"/>
+          <path d="M${f2(-r * 0.7)},${f2(-r * 0.34)}A${f2(r * 0.78)},${f2(r * 0.78)} 0 0 1 ${f2(r * 0.12)},${f2(-r * 0.78)}" fill="none" stroke="#fff" stroke-width="${f2(r * 0.08)}" stroke-linecap="round" opacity=".9"/>
+          ${ghost}<g id="${id}-art">${art}</g>
+          <g clip-path="url(#${id}-cp)"><g transform="rotate(24)"><rect id="${id}-sh" x="${f2(-r * 0.16)}" y="${f2(-r * 1.5)}" width="${f2(r * 0.32)}" height="${f2(r * 3)}" fill="#fff" opacity="0"/></g></g></g>`;
+      };
+      // a light sweep across a medal every `every` seconds while it is on screen
+      SU.sheen = (tl, id, r, t, dur, every = 2.4) => {
+        const n = Math.max(1, Math.floor(dur / every) || 1);
+        for (let k = 0; k < n; k++) tl.fromTo(`#${id}-sh`, { x: -r * 1.7, opacity: 0.6 }, { x: r * 1.7, opacity: 0.6, duration: 0.55, ease: "power1.inOut", immediateRender: false }, t + k * every);
+      };
+      // a ring and sparkle stars that fly out from (x, y): markup goes into the card (so it moves with it), SU.fxGo fires it
+      SU.fxMk = (id, x, y, n = 10, c = SU.yellow) => `<g transform="translate(${x},${y})"><circle id="${id}-rg" r="20" fill="none" stroke="#fff" stroke-width="7" opacity="0"/>${Array.from({ length: n }, (_, j) => `<path id="${id}-s${j}" d="M0,-13L3,-3L13,0L3,3L0,13L-3,3L-13,0L-3,-3Z" fill="${j % 3 ? c : "#ffffff"}" opacity="0"/>`).join("")}</g>`;
+      SU.fxGo = (tl, id, t, o = {}) => {
+        const n = o.n ?? 10, r1 = o.r1 ?? 110;
+        tl.fromTo(`#${id}-rg`, { attr: { r: o.r0 ?? 24 }, opacity: 0.95 }, { attr: { r: r1 }, opacity: 0, duration: 0.55, ease: "power2.out", immediateRender: false }, t);
+        for (let j = 0; j < n; j++) { const a = (j / n) * Math.PI * 2 + (j % 2) * 0.35, d = r1 * (0.75 + (j % 3) * 0.18);
+          tl.fromTo(`#${id}-s${j}`, { x: 0, y: 0, scale: 0.2, rotation: 0, opacity: 1 }, { x: Math.cos(a) * d, y: Math.sin(a) * d, scale: 0.7 + (j % 4) * 0.25, rotation: 120, opacity: 0, duration: 0.65 + (j % 3) * 0.1, ease: "power2.out", immediateRender: false }, t + (j % 3) * 0.025); }
+      };
+      SU.flash = (tl, layer, t, c = "#ff3b2e", op = 0.32) => { const id = `sx${suSeq++}`; put(layer, `<rect id="${id}" width="1080" height="1920" fill="${c}" opacity="0"/>`);
+        tl.fromTo(`#${id}`, { opacity: op }, { opacity: 0, duration: 0.3, ease: "power2.out", immediateRender: false }, t); };
       // the four steps' icons (100-unit box, centred): 0 belt release · 1 window down · 2 child out first · 3 out
       SinkUI.icon = (k, x, y, s, id) => {
         let g = "";
@@ -1745,11 +1779,12 @@
           <path d="M-22,0q16,-6 32,0l4,30h-40Z" fill="#c9b6ea" ${SO(3)}/><path d="M24,-30l20,-20M30,-50h14v14" stroke="${SU.green}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
         if (k === 3) g = `<path d="M-46,44V-8H46V44" fill="#cfe4f6" opacity=".6" ${SO(3.5)}/><circle cx="2" cy="-26" r="14" fill="#d39a6e" ${SO(3)}/><path d="M-16,-8q18,-8 36,0l4,22h-44Z" fill="#2fa45a" ${SO(3)}/>
           <path d="M-16,-6l-18,-26M20,-6l18,-26" stroke="#d39a6e" stroke-width="8" stroke-linecap="round"/><path d="M0,-48V-62M-10,-54l10,-10l10,10" stroke="${SU.green}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-        return `<g transform="translate(${x},${y}) scale(${s})"><g id="${id}"><circle r="62" fill="#fff" ${SO(4)}/><circle r="62" fill="none" stroke="${SU.green}" stroke-width="8" opacity=".25" transform="scale(.86)"/>${g}</g></g>`;
+        return `<g transform="translate(${x},${y}) scale(${s})"><g id="${id}">${SU.medal(`${id}-m`, 62, g, { accent: SU.green, face2: "#d6eadf", rim: "#9cc0ab" })}</g></g>`;
       };
       SinkUI.RULES = ["ปลดเข็มขัด", "เปิดกระจก", "ส่งเด็กออกก่อน", "ออกทางหน้าต่าง"];
       // the laminated card that hangs from the rear-view mirror: "1 นาที ทำ 4 อย่าง". o.active (−1 none), o.done [i…], o.y, o.s, o.out
       SinkUI.rules = (tl, layer, t0, dur, o = {}) => {
+        SU.defs(layer);
         const id = `sr${suSeq++}`, active = o.active ?? -1, done = o.done || [], Y = o.y ?? 470, S = o.s ?? 1, W = 900, H = 800;
         let c = `<path d="M-50,-${Y + 40}L-14,-6M50,-${Y + 40}L14,-6" stroke="#c8302a" stroke-width="16"/><path d="M-50,-${Y + 40}L-14,-6M50,-${Y + 40}L14,-6" stroke="#ffd36a" stroke-width="3" stroke-dasharray="10 14" opacity=".8"/>
           <circle r="22" fill="${SU.gold || "#e8b860"}" ${SO(3)}/><path d="M-10,-2h20M0,-12v20" stroke="#8a5a1a" stroke-width="4"/>`;
@@ -1763,7 +1798,7 @@
           c += `<text x="-388" y="${y + 18}" font-family="Kanit" font-weight="900" font-size="46" fill="${SU.red}">${k + 1}</text>`;
           c += SinkUI.icon(k, -290, y, 0.92, `${id}-i${k}`);
           c += `<text x="-220" y="${y + 18}" font-family="Kanit" font-weight="${st === "active" ? 900 : 800}" font-size="54" fill="${SU.ink}">${t}</text>`;
-          if (st === "done") c += `<g transform="translate(370,${y})"><circle r="32" fill="${SU.green}" ${SO(3.5)}/><path id="${id}-ck${k}" d="M-14,0l10,11l19,-21" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1"/></g>`;
+          if (st === "done") c += `<g transform="translate(370,${y})">${SU.medal(`${id}-cm${k}`, 34, `<path id="${id}-ck${k}" d="M-14,0l10,11l19,-21" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1"/>`, { hi: "#9af0bd", face: "#3fbf74", face2: SU.green, rim: SU.greenD, accent: "#ffffff", noGhost: true })}</g>${SU.fxMk(`${id}-fx${k}`, 370, y, 9)}`;
           c += `</g>`;
         });
         put(layer, `<g transform="translate(540,${Y}) scale(${S})"><g id="${id}" opacity="0">${c}</g></g>`);
@@ -1772,12 +1807,19 @@
         tl.fromTo(`#${id}`, { rotation: 9, svgOrigin: `0 -${Y + 40}` }, { rotation: 0, svgOrigin: `0 -${Y + 40}`, duration: 1.8, ease: "elastic.out(1, 0.3)", immediateRender: false }, t0 + 0.2);
         tl.to(`#${id}`, { rotation: 1.2, svgOrigin: `0 -${Y + 40}`, duration: 1.4, yoyo: true, repeat: Math.max(0, Math.ceil((dur - 2) / 1.4)), ease: "sine.inOut" }, t0 + 2.0);
         SinkUI.RULES.forEach((_, k) => tl.fromTo(`#${id}-row${k}`, { x: 70 }, { x: 0, duration: 0.45, ease: "power3.out", immediateRender: false }, t0 + 0.4 + k * (o.stagger ?? 0.12)));
-        done.forEach((k, j) => tl.fromTo(`#${id}-ck${k}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + 0.8 + j * 0.12));
+        done.forEach((k, j) => {
+          tl.fromTo(`#${id}-cm${k}`, { scale: 0.2, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(3.2)", immediateRender: false }, t0 + 0.7 + j * 0.12);
+          tl.fromTo(`#${id}-ck${k}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + 0.85 + j * 0.12);
+          SU.fxGo(tl, `${id}-fx${k}`, t0 + 1.05 + j * 0.12, { r1: 84, n: 9 });
+          SU.sheen(tl, `${id}-cm${k}`, 34, t0 + 1.3 + j * 0.12, Math.max(0.6, dur - 1.6), 2.6);
+        });
         if (active >= 0) {
           tl.fromTo(`#${id}-i${active}`, { scale: 0.4, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.6, ease: "back.out(3)", immediateRender: false }, t0 + 0.7);
           tl.fromTo(`#${id}-hl`, { scaleX: 0, svgOrigin: `-250 0` }, { scaleX: 1, svgOrigin: `-250 0`, duration: 0.5, ease: "power2.inOut", immediateRender: false }, t0 + 0.9);
           tl.to(`#${id}-i${active}`, { scale: 1.1, svgOrigin: "0 0", duration: 0.45, yoyo: true, repeat: Math.max(1, Math.ceil((dur - 1.4) / 0.45)), ease: "sine.inOut" }, t0 + 1.35);
-        } else SinkUI.RULES.forEach((_, k) => tl.fromTo(`#${id}-i${k}`, { scale: 0.3, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0 + 0.6 + k * (o.stagger ?? 0.12)));
+          SU.sheen(tl, `${id}-i${active}-m`, 62, t0 + 1.2, Math.max(0.6, dur - 1.4), 1.6);
+        } else SinkUI.RULES.forEach((_, k) => { tl.fromTo(`#${id}-i${k}`, { scale: 0.3, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0 + 0.6 + k * (o.stagger ?? 0.12));
+          SU.sheen(tl, `${id}-i${k}-m`, 62, t0 + 1.1 + k * 0.18, 1, 9); });
         if (o.out !== false) tl.to(`#${id}`, { y: -70, opacity: 0, duration: 0.3, ease: "power2.in" }, t0 + (o.out ?? dur) - 0.3);
         return id;
       };
@@ -1833,12 +1875,13 @@
         if (o.what === "headrest") pic = `<rect x="-150" y="-170" width="300" height="190" rx="70" fill="#4a5060" ${SO(5)}/><path d="M-110,-150Q0,-180 110,-150" stroke="#6a7286" stroke-width="10" fill="none"/><rect x="-80" y="20" width="22" height="200" rx="8" fill="#c8ccd4" ${SO(4)}/><rect x="58" y="20" width="22" height="200" rx="8" fill="#c8ccd4" ${SO(4)}/>`;
         put(layer, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><g filter="url(#muDrop)"><rect x="-300" y="-330" width="600" height="660" rx="48" fill="${SU.paper}" ${SO(5)}/></g>
           <rect x="-300" y="-330" width="600" height="660" rx="48" fill="#e9f6ee" opacity=".7"/><g id="${id}-pic">${pic}</g>
-          <g id="${id}-no"><circle r="250" fill="none" stroke="${SU.red}" stroke-width="40" opacity=".92"/><path d="M-176,-176L176,176" stroke="${SU.red}" stroke-width="40" stroke-linecap="round" opacity=".92"/></g>
+          <g id="${id}-no"><circle r="250" fill="none" stroke="${SU.redD}" stroke-width="40" opacity=".5" transform="translate(6,10)"/><circle r="250" fill="none" stroke="${SU.red}" stroke-width="40" opacity=".95"/><circle r="250" fill="none" stroke="#ff8a80" stroke-width="8" opacity=".8" transform="translate(-6,-8) scale(.985)"/><path d="M-176,-176L176,176" stroke="${SU.redD}" stroke-width="40" stroke-linecap="round" opacity=".5" transform="translate(6,10)"/><path d="M-176,-176L176,176" stroke="${SU.red}" stroke-width="40" stroke-linecap="round" opacity=".95"/></g>${SU.fxMk(`${id}-fx`, 0, 0, 14, SU.red)}
           ${o.label ? `<g transform="translate(0,380)"><rect x="-${o.label.length * 22 + 40}" y="-44" width="${o.label.length * 44 + 80}" height="88" rx="44" fill="${SU.red}" ${SO(4)}/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">${o.label}</text></g>` : ""}</g></g>`);
         tl.fromTo(`#${id}`, { opacity: 0, scale: 0.6, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(2.4)", immediateRender: false }, t0);
         if (o.what === "phone") tl.fromTo(`#${id}-pic`, { rotation: -3, svgOrigin: "0 0" }, { rotation: 3, svgOrigin: "0 0", duration: 0.07, yoyo: true, repeat: 9, ease: "none", immediateRender: false }, t0 + 0.3);
         tl.fromTo(`#${id}-no`, { scale: 2.2, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.32, ease: "power4.in", immediateRender: false }, t0 + (o.stamp ?? 0.55));
-        tl.fromTo(`#${id}`, { x: -10 }, { x: 0, duration: 0.25, ease: "elastic.out(1.2,0.3)", immediateRender: false }, t0 + (o.stamp ?? 0.55) + 0.32);
+        tl.fromTo(`#${id}`, { x: -18 }, { x: 0, duration: 0.35, ease: "elastic.out(1.2,0.3)", immediateRender: false }, t0 + (o.stamp ?? 0.55) + 0.32);
+        SU.fxGo(tl, `${id}-fx`, t0 + (o.stamp ?? 0.55) + 0.3, { r0: 120, r1: 330, n: 14 }); SU.flash(tl, layer, t0 + (o.stamp ?? 0.55) + 0.3);
         tl.to(`#${id}`, { opacity: 0, scale: 0.9, svgOrigin: "0 0", duration: 0.2, ease: "power2.in" }, t0 + dur - 0.2);
       };
       // the door from outside, under the water: the canal leans on it (arrows), about a hundred kilos of it; his push from inside does nothing
@@ -2048,6 +2091,7 @@
       // the car in cross-section: the canal outside, the water inside rising; big arrows on the door while it's low;
       // only when it's nearly full do the arrows even out and the door can open. o.mode "last" (EP.2: the last resort) | "open" (EP.3: it opens)
       SinkUI.equalize = (tl, layer, t0, dur, o = {}) => {
+        SU.defs(layer);
         const id = `se${suSeq++}`, last = o.mode !== "open";
         put(layer, `<g id="${id}"><rect width="1080" height="1920" fill="#14425e"/><rect width="1080" height="1920" fill="url(#${id}-g)"/>
           <linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a8ab8"/><stop offset="1" stop-color="#0a2236"/></linearGradient>
@@ -2056,7 +2100,8 @@
             <g clip-path="url(#${id}-cp)"><rect id="${id}-in" x="-350" y="170" width="700" height="600" fill="#5ab0e0" opacity=".85"/></g>
             <rect x="-350" y="-270" width="700" height="540" fill="none" ${SO(5)}/>
             <g transform="translate(380,0)"><g id="${id}-door"><rect x="-20" y="-270" width="24" height="540" fill="#9aa4ae" ${SO(4)}/></g></g>
-            ${[-180, -60, 60, 180].map((y, k) => `<g transform="translate(430,${y})"><g id="${id}-a${k}"><path d="M150,-22H40V-50L-30,0L40,50V22H150Z" fill="#7ad0ff" ${SO(4)}/></g></g>`).join("")}
+            ${[-180, -60, 60, 180].map((y, k) => `<g transform="translate(430,${y})"><g id="${id}-a${k}"><path d="M150,-22H40V-50L-30,0L40,50V22H150Z" fill="#2f86c8" transform="translate(4,7)" ${SO(4)}/><path d="M150,-22H40V-50L-30,0L40,50V22H150Z" fill="#7ad0ff" ${SO(4)}/><path d="M146,-12H36V-34L-14,-2" stroke="#e8f8ff" stroke-width="6" fill="none" stroke-linecap="round" opacity=".8"/></g></g>`).join("")}
+            ${SU.fxMk(`${id}-dfx`, 380, 0, 12, "#bfefff")}
             <text x="0" y="-320" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#e8f4ff">ในรถ</text>
             <g transform="translate(0,-110)"><g id="${id}-air"><rect x="-120" y="-40" width="240" height="80" rx="40" fill="#fff" ${SO(3.5)}/><text y="14" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="36" fill="${SU.ink}">อากาศ</text></g></g></g>
           <g transform="translate(540,300)"><g id="${id}-lb"><rect x="-310" y="-60" width="620" height="120" rx="60" fill="${last ? SU.red : SU.green}" ${SO(5)}/>
@@ -2069,6 +2114,7 @@
         [0, 1, 2, 3].forEach((k) => { tl.fromTo(`#${id}-a${k}`, { scale: 1.25, svgOrigin: "0 0" }, { scale: 0.45, svgOrigin: "0 0", duration: fillT, ease: "power1.in", immediateRender: false }, t0 + 0.2);
           tl.to(`#${id}-a${k}`, { x: -14, duration: 0.4, yoyo: true, repeat: Math.ceil(dur / 0.4), ease: "sine.inOut" }, t0 + 0.3 + k * 0.05); });
         tl.to(`#${id}-door`, { rotation: last ? 18 : 55, svgOrigin: "0 -270", duration: 0.6, ease: "power2.out" }, t0 + 0.2 + fillT);
+        SU.fxGo(tl, `${id}-dfx`, t0 + 0.25 + fillT, { r1: 200, n: 12 });
         tl.fromTo(`#${id}-lb`, { scale: 0.3, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0 + (o.label ?? (last ? fillT * 0.6 : fillT)));
         for (let k = 0; k < 10; k++) tl.fromTo(`#${id}-bb${k}`, { y: 0 }, { y: -1600, duration: 3 + (k % 3), ease: "none", immediateRender: false }, t0 + k * 0.2);
       };
@@ -2106,32 +2152,40 @@
       };
       // three words that help without going in: ตะโกน · โยน · ยื่น (tiles with the drawn icons, the active one lifted)
       SinkUI.three = (tl, layer, t0, dur, o = {}) => {
-        const id = `s3${suSeq++}`, W = ["ตะโกน", "โยน", "ยื่น"], IC = ["shout", "throw", "reach"], col = [SU.red, SU.blue, SU.green];
+        SU.defs(layer);
+        const id = `s3${suSeq++}`, W = ["ตะโกน", "โยน", "ยื่น"], IC = ["shout", "throw", "reach"], col = [SU.red, SU.blue, SU.green], tint = ["#fbd9d4", "#d6e4fa", "#d4f1de"], rimc = ["#d79a92", "#93aed6", "#8fc7a4"];
         const tile = (k, x) => `<g transform="translate(${x},${o.y ?? 860})"><g id="${id}-t${k}"><g filter="url(#muDrop)"><rect x="-150" y="-190" width="300" height="380" rx="34" fill="${SU.paper}" ${SO(5)}/></g>
           <rect x="-150" y="-190" width="300" height="80" rx="34" fill="${col[k]}" ${SO(5)}/><rect x="-150" y="-140" width="300" height="30" fill="${col[k]}"/>
           <text y="-134" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#fff">${k + 1}</text>
-          <g transform="translate(-102,-90) scale(1.7)">${(window.GameUI && GameUI.ILL[IC[k]]) || ""}</g>
-          <text y="160" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="${SU.ink}">${W[k]}</text></g></g>`;
+          <g transform="translate(0,-6)"><g id="${id}-bob${k}">${SU.medal(`${id}-m${k}`, 88, `<g transform="scale(1.24) translate(-60,-60)">${(window.GameUI && GameUI.ILL[IC[k]]) || ""}</g>`, { accent: col[k], face2: tint[k], rim: rimc[k] })}</g></g>
+          ${SU.fxMk(`${id}-fx${k}`, 0, -6, 12, col[k])}
+          <text y="172" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="${SU.ink}">${W[k]}</text></g></g>`;
         put(layer, `<g id="${id}"><g transform="translate(540,${(o.y ?? 860) - 330})"><g id="${id}-hd"><rect x="-340" y="-56" width="680" height="112" rx="56" fill="${SU.paper}" ${SO(5)}/>
           <text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="${SU.ink}">ช่วย<tspan fill="${SU.red}">จากบนฝั่ง</tspan> · ไม่ต้องลงน้ำ</text></g></g>${tile(0, 200)}${tile(1, 540)}${tile(2, 880)}</g>`);
         tl.fromTo(`#${id}-hd`, { scale: 0.4, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, t0);
         [0, 1, 2].forEach((k) => tl.fromTo(`#${id}-t${k}`, { y: 300, opacity: 0, rotation: (k - 1) * 8, svgOrigin: "0 0" }, { y: 0, opacity: 1, rotation: 0, svgOrigin: "0 0", duration: 0.55, ease: "back.out(1.8)", immediateRender: false }, t0 + 0.3 + k * 0.18));
-        (o.lift || []).forEach(([k, at]) => { tl.to(`#${id}-t${k}`, { y: -30, scale: 1.08, svgOrigin: "0 0", duration: 0.3, ease: "back.out(2)" }, t0 + at); tl.to(`#${id}-t${k}`, { y: 0, scale: 1, svgOrigin: "0 0", duration: 0.3 }, t0 + at + 0.7); });
+        [0, 1, 2].forEach((k) => { tl.to(`#${id}-bob${k}`, { y: -10, duration: 1.05 + k * 0.17, yoyo: true, repeat: Math.max(1, Math.ceil(dur / 1.05)), ease: "sine.inOut" }, t0 + 0.9 + k * 0.18);
+          SU.fxGo(tl, `${id}-fx${k}`, t0 + 0.62 + k * 0.18, { r1: 120, n: 8 }); SU.sheen(tl, `${id}-m${k}`, 88, t0 + 1.0 + k * 0.4, Math.max(0.6, dur - 1.2), 2.2); });
+        (o.lift || []).forEach(([k, at]) => { tl.to(`#${id}-t${k}`, { y: -30, scale: 1.08, svgOrigin: "0 0", duration: 0.3, ease: "back.out(2)" }, t0 + at); tl.to(`#${id}-t${k}`, { y: 0, scale: 1, svgOrigin: "0 0", duration: 0.3 }, t0 + at + 0.7);
+          SU.fxGo(tl, `${id}-fx${k}`, t0 + at + 0.05, { r1: 170, n: 12 }); });
         tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2);
       };
       // the end of the series: the card from the mirror with all four ticked, the three words from the bank, share it
       SinkUI.finale = (tl, layer, t0, dur, o = {}) => {
-        put(layer, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".55"/>`);
+        SU.defs(layer); put(layer, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".55"/>`);
         SinkUI.rules(tl, layer, t0, dur, { active: -1, done: [0, 1, 2, 3], y: 300, s: 0.86, stagger: 0.1, out: false });
         const id = `sf${suSeq++}`;
         put(layer, `<g transform="translate(540,1130)"><g id="${id}"><g filter="url(#muDrop)"><rect x="-430" y="-90" width="860" height="250" rx="34" fill="${SU.paper}" ${SO(5)}/></g>
           <text y="-24" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="${SU.ink}">บนฝั่ง: <tspan fill="${SU.red}">ตะโกน</tspan> · <tspan fill="${SU.blue}">โยน</tspan> · <tspan fill="${SU.green}">ยื่น</tspan></text>
-          ${["shout", "throw", "reach"].map((k, j) => `<g transform="translate(${-260 + j * 260},20) scale(1)">${(window.GameUI && GameUI.ILL[k]) || ""}</g>`).join("")}</g></g>
+          ${["shout", "throw", "reach"].map((k, j) => `<g transform="translate(${-260 + j * 260},74)"><g id="${id}-p${j}">${SU.medal(`${id}-m${j}`, 58, `<g transform="scale(.8) translate(-60,-60)">${(window.GameUI && GameUI.ILL[k]) || ""}</g>`, { accent: [SU.red, SU.blue, SU.green][j], face2: ["#fbd9d4", "#d6e4fa", "#d4f1de"][j], rim: ["#d79a92", "#93aed6", "#8fc7a4"][j] })}</g>${SU.fxMk(`${id}-fx${j}`, 0, 0, 8, [SU.red, SU.blue, SU.green][j])}</g>`).join("")}</g></g>
           <g transform="translate(540,1460)"><g id="${id}-cta"><rect x="-420" y="-52" width="840" height="104" rx="52" fill="${SU.red}" ${SO(5)}/>
           <text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff">แชร์ให้คนที่คุณรัก… ก่อนวันที่ต้องใช้</text></g></g>
           <text x="540" y="1640" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="42" fill="#fff" letter-spacing="10">ROD MAI CLUB</text>
           <text x="540" y="1690" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#c8d0d8">นาทีก่อนจม · จบ</text>`);
         tl.fromTo(`#${id}`, { y: 200, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.8)", immediateRender: false }, t0 + 1.2);
+        [0, 1, 2].forEach((j) => { tl.fromTo(`#${id}-p${j}`, { scale: 0.2, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(3)", immediateRender: false }, t0 + 1.45 + j * 0.15);
+          SU.fxGo(tl, `${id}-fx${j}`, t0 + 1.6 + j * 0.15, { r1: 90, n: 8 }); SU.sheen(tl, `${id}-m${j}`, 58, t0 + 2.2 + j * 0.3, Math.max(0.6, dur - 2.4), 2.4);
+          tl.to(`#${id}-p${j}`, { y: -6, duration: 0.9 + j * 0.15, yoyo: true, repeat: Math.max(1, Math.ceil(dur / 0.9)), ease: "sine.inOut" }, t0 + 2.1 + j * 0.15); });
         tl.fromTo(`#${id}-cta`, { scale: 0.3, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0 + 1.8);
         tl.to(`#${id}-cta`, { scale: 1.05, svgOrigin: "0 0", duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut" }, t0 + 2.4);
       };
@@ -2172,12 +2226,48 @@
         fx(tl, id, t0, L) { noShadows(tl, id, 1); Klong.life(tl, "cn1", t0, D("jump")); inWater(L, tl, t0, D("jump"), "j0");
           put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".35"/>`); SinkUI.nope(tl, L.light, t0, D("jump"), { what: "jump", y: 800, stamp: 0.35 }); },
       });
-      // ---------- 3. what would happen: under the water she has him round the neck and takes him down; he claws for the surface ----------
+      // ---------- 3. what would happen, imagined in the canal itself (owner 31 Oct: no shadow puppets in a story that is not a ghost story):
+      //      under the water she has him round the neck and takes him down; he claws for the surface. Cool blue tint, not grey, not black ----------
       add("grab", {
-        dark: 0, light: false,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        set: "drown2", setOpts: { id: "dr0", sy: 400, pal: { g0: "#4fa3c4", g1: "#1f6a8e", g2: "#0c2f48", top: "#7cc6dc", line: "#eaffff", ray: "#e8fbff", rayOp: 0.15, mote: "#d8f2ff" } },
+        dark: 0, light: false, grade: { top: "#5aa8c8", bottom: "#0c2f48", op: 0.16 }, blur: { sky: 1 },
+        cam: { keys: [{ t: 0, ...fr(540, 1030, 1.34, 540, 860) }, { t: D("grab"), glide: D("grab"), ...fr(540, 1130, 1.42, 540, 860) }] },
+        actors: [A("mint", 462, 1160, 0.66, [{ t: 0, mode: "cling", eyes: "wide", mouth: "scream" }], { blinks: [] }),
+          A("rider", 560, 1300, 0.95, [{ t: 0, mode: "flail", eyes: "wide", mouth: "scream" }], { blinks: [] })],
         captions: caps("grab"),
-        fx(tl, id, t0, L) { SinkUI.shadow(tl, L.light, t0, D("grab")); },
+        fx(tl, id, t0, L) {
+          const DG = D("grab");
+          noShadows(tl, id, 2);
+          const k = `${id}-a0`, r = `${id}-a1`, w = wrap(r, "gp0"); w.insertBefore(document.getElementById(k), w.firstChild);
+          realHands(r, SK.rider, OPEN, OPEN, { under: true }); hideRigArms(k);
+          const c = { x: 462, y: 1160, s: 0.66 }, [SL, SR] = shoulders(c), l1 = 122 * c.s, l2 = 108 * c.s, o = { w: [24, 20], sleeve: ["#c9b6ea", 0.4], hs: 0.34, hand: { ...GRIP } };
+          const WN = [588, 932], WF = [548, 950];
+          put(w, `<g>${armK(SL, WF, l1, l2, -1, SK.kim, { ...o, fix: 120 })}${armK(SR, WN, l1, l2, -1, SK.kim, { ...o, fix: 110, mirror: true })}</g>`);
+          // bubbles out of his chin bar and her mouth, riding down with them
+          const bub = (bid, x, y, n, sp, t1) => { put(w, `<g>${Array.from({ length: n }, (_, j) => `<circle id="${bid}-${j}" cx="${x + ((j * 37) % sp) - sp / 2}" cy="${y}" r="${4 + (j % 4) * 3}" fill="none" stroke="#f0ffff" stroke-width="3" opacity="0"/>`).join("")}</g>`);
+            for (let j = 0; j < n; j++) tl.fromTo(`#${bid}-${j}`, { y: 0, opacity: 0.9 }, { y: -(300 + (j % 5) * 70), x: ((j % 3) - 1) * 16, opacity: 0, duration: 1.1 + (j % 3) * 0.3, repeat: Math.ceil(DG / 1.1), ease: "power1.in", immediateRender: false }, t1 + (j % 6) * 0.17); };
+          bub("gpb0", 590, 860, 12, 40, t0 + 0.2); bub("gpb1", 474, 820, 9, 30, t0 + 0.5);
+          // the dive: a burst of bubbles and a white churn from the surface as the scene opens
+          put(L.act, `<g>${Array.from({ length: 26 }, (_, j) => `<circle id="gpd-${j}" cx="${430 + ((j * 53) % 220)}" cy="${640 + ((j * 29) % 160)}" r="${5 + (j % 5) * 4}" fill="none" stroke="#f0ffff" stroke-width="3" opacity="0"/>`).join("")}</g>`);
+          for (let j = 0; j < 26; j++) tl.fromTo(`#gpd-${j}`, { y: 60, opacity: 0.95 }, { y: -220 - (j % 4) * 60, opacity: 0, duration: 0.9 + (j % 3) * 0.25, ease: "power2.out", immediateRender: false }, t0 + (j % 5) * 0.04);
+          put(L.mid, `<g id="gpch" opacity="0">${Array.from({ length: 9 }, (_, j) => `<ellipse cx="${400 + j * 34}" cy="${420 + (j % 3) * 14}" rx="${46 - (j % 3) * 8}" ry="${18 - (j % 3) * 3}" fill="#ffffff" opacity="${0.35 + (j % 3) * 0.12}"/>`).join("")}</g>`);
+          tl.fromTo("#gpch", { opacity: 1, y: 0 }, { opacity: 0, y: -40, duration: 0.9, ease: "power2.out", immediateRender: false }, t0);
+          // the canal around them: hyacinth roots hanging from the surface, light shafts breathing, caustic lines, silt drifting up
+          put(L.mid, `<g>${[[150, 210], [330, 150], [770, 240], [930, 170]].map(([x, len], q) => `<g id="gprt${q}"><path d="M${x},400q-8,${len * 0.4} 6,${len * 0.7}t-4,${len * 0.3}M${x + 14},400q10,${len * 0.35} -2,${len * 0.6}M${x - 12},402q-12,${len * 0.3} 2,${len * 0.5}" stroke="#2c4a3e" stroke-width="4" fill="none" opacity=".7" stroke-linecap="round"/><ellipse cx="${x}" cy="398" rx="44" ry="12" fill="#2f6a3a"/></g>`).join("")}</g>`);
+          [0, 1, 2, 3].forEach((q) => tl.fromTo(`#gprt${q}`, { rotation: -3, svgOrigin: `${[150, 330, 770, 930][q]} 400` }, { rotation: 3, svgOrigin: `${[150, 330, 770, 930][q]} 400`, duration: 1.3 + q * 0.2, yoyo: true, repeat: Math.ceil(DG / 1.3), ease: "sine.inOut", immediateRender: false }, t0));
+          tl.fromTo(".dr0-ray", { opacity: 0.1 }, { opacity: 0.24, duration: 0.7, yoyo: true, repeat: Math.ceil(DG / 0.7), ease: "sine.inOut", stagger: 0.23, immediateRender: false }, t0);
+          put(L.mid, `<g id="gpcs" opacity=".55">${Array.from({ length: 7 }, (_, j) => `<path d="M${-60 + j * 170},${440 + (j % 3) * 22}q40,-14 80,0t80,0" stroke="#eaffff" stroke-width="3" fill="none" opacity="${0.25 + (j % 3) * 0.1}"/>`).join("")}</g>`);
+          tl.fromTo("#gpcs", { x: -40 }, { x: 40, duration: DG, ease: "none", immediateRender: false }, t0);
+          tl.fromTo("#dr0-motes", { y: 0 }, { y: -90, duration: DG, ease: "none", immediateRender: false }, t0);
+          // down they go, twisting; the surface and its light fall away
+          tl.fromTo("#gp0", { y: -40 }, { y: 250, duration: DG, ease: "sine.in", immediateRender: false }, t0);
+          tl.fromTo("#gp0", { rotation: -4, svgOrigin: "540 980" }, { rotation: 4, svgOrigin: "540 980", duration: 0.55, yoyo: true, repeat: Math.ceil(DG / 0.55), ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#dr0-top", { y: 0 }, { y: -170, duration: DG, ease: "sine.in", immediateRender: false }, t0);
+          // imagined, not real: a cool tint and a soft round vignette (no grey, no black-out)
+          put(L.light, `<rect width="1080" height="1920" fill="#1a4a7a" opacity=".14"/><radialGradient id="gpvg" cx=".5" cy=".45" r=".75"><stop offset=".55" stop-color="#06203a" stop-opacity="0"/><stop offset="1" stop-color="#06203a" stop-opacity=".6"/></radialGradient><rect width="1080" height="1920" fill="url(#gpvg)"/>`);
+          put(L.light, `<rect id="gpdk" width="1080" height="1920" fill="#04121e" opacity="0"/>`);
+          tl.fromTo("#gpdk", { opacity: 0 }, { opacity: 0.28, duration: DG, ease: "power1.in", immediateRender: false }, t0);
+        },
       });
       // ---------- 4. back to what really happened: he never went in. His helmet off on the grass, he stops at the edge ----------
       add("three", {

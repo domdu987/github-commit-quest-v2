@@ -76,12 +76,13 @@
       // under the water, closer: the two of them sink, she has his neck, he claws for the surface
       Sets.drown2 = (L, o = {}) => {
         const id = o.id || "dw", sy = o.sy ?? 560;
-        put(L.sky, `<linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a6a5e"/><stop offset=".35" stop-color="#11362f"/><stop offset="1" stop-color="#020606"/></linearGradient>
+        const P = { g0: "#2a6a5e", g1: "#11362f", g2: "#020606", top: "#3a8a78", line: "#d8fff2", ray: "#cfffee", rayOp: 0.08, mote: "#bfe8d8", ...(o.pal || {}) };
+        put(L.sky, `<linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.g0}"/><stop offset=".35" stop-color="${P.g1}"/><stop offset="1" stop-color="${P.g2}"/></linearGradient>
           <rect x="-900" y="-600" width="2900" height="3400" fill="url(#${id}-g)"/>
-          <g id="${id}-top"><rect x="-900" y="-600" width="2900" height="${sy + 600}" fill="#3a8a78" opacity=".35"/>
-          <path d="M-900,${sy}Q-760,${sy - 14} -620,${sy}T-340,${sy}T-60,${sy}T220,${sy}T500,${sy}T780,${sy}T1060,${sy}T1340,${sy}T1620,${sy}T1900,${sy}" stroke="#d8fff2" stroke-width="7" fill="none" opacity=".7"/>
-          ${[[240, 150], [560, 120], [820, 170]].map(([x, w]) => `<path class="${id}-ray" d="M${x},${sy}L${x + w},${sy}L${x + w - 240},${sy + 1500}L${x - 320},${sy + 1500}Z" fill="#cfffee" opacity=".08"/>`).join("")}</g>`);
-        put(L.far, Array.from({ length: 60 }, (_, k) => `<circle cx="${f1(-200 + ((k * 211) % 1500))}" cy="${f1(sy + 40 + ((k * 137) % 1400))}" r="${f1(2 + (k % 4) * 1.5)}" fill="#bfe8d8" opacity="${(0.18 + (k % 5) * 0.07).toFixed(2)}"/>`).join(""));
+          <g id="${id}-top"><rect x="-900" y="-600" width="2900" height="${sy + 600}" fill="${P.top}" opacity=".35"/>
+          <path d="M-900,${sy}Q-760,${sy - 14} -620,${sy}T-340,${sy}T-60,${sy}T220,${sy}T500,${sy}T780,${sy}T1060,${sy}T1340,${sy}T1620,${sy}T1900,${sy}" stroke="${P.line}" stroke-width="7" fill="none" opacity=".7"/>
+          ${[[240, 150], [560, 120], [820, 170]].map(([x, w]) => `<path class="${id}-ray" d="M${x},${sy}L${x + w},${sy}L${x + w - 240},${sy + 1500}L${x - 320},${sy + 1500}Z" fill="${P.ray}" opacity="${P.rayOp}"/>`).join("")}</g>`);
+        put(L.far, `<g id="${id}-motes">${Array.from({ length: 60 }, (_, k) => `<circle cx="${f1(-200 + ((k * 211) % 1500))}" cy="${f1(sy + 40 + ((k * 137) % 1400))}" r="${f1(2 + (k % 4) * 1.5)}" fill="${P.mote}" opacity="${(0.18 + (k % 5) * 0.07).toFixed(2)}"/>`).join("")}</g>`);
       };
       // the door from outside under the water (on Sets.sinkOut): it swings open, ต้น pushes out head first … and stops: his foot
       const doorOut = (L, tl, id, t, carId, dur) => {
