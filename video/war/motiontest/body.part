@@ -1,46 +1,74 @@
-      // ---------- ทางกลับบ้าน · style frames + motion test (V11) ----------
-      const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.55, shade: "#2a2040", shadeOp: 0.3, cast: false, vol: false };
-      const DUSKL = { from: "left", rim: "#ffb070", rimOp: 0.6, shade: "#2a1838", shadeOp: 0.36, cast: false, vol: false };
-      const GDAYR = { top: "#fff4d8", bottom: "#c8e8d0", op: 0.12 }, GDUSKR = { top: "#ffb878", bottom: "#4a2a5a", op: 0.2 };
+      // ---------- ทางกลับบ้าน · style frames + motion test (V11 pass 2) ----------
+      const GOLD = { from: "left", rim: "#ffd08a", rimOp: 0.75, shade: "#2a2048", shadeOp: 0.34, cast: { len: 3.4, op: 0.42 }, vol: false };
+      const DUSKL = { from: "left", rim: "#ffa060", rimOp: 0.7, shade: "#2a1838", shadeOp: 0.38, cast: { len: 3.8, op: 0.42 }, vol: false };
+      const GGOLD = { top: "#ffe2b0", bottom: "#5a6a3a", op: 0.16 }, GDUSKR = { top: "#ffb878", bottom: "#4a2a5a", op: 0.2 };
       const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra });
-      const CARD = { dark: 0.12, blur: { far: 8, mid: 8, set: 8, fg: 10 }, light: DAYL, grade: GDAYR };
-      const boom = (t0, at, amp = 16, len = 0.6) => (t) => (t > at && t < at + len ? { x: amp * (1 - (t - at) / len) * Math.sin(t * 60), y: amp * 0.7 * (1 - (t - at) / len) * Math.sin(t * 47), r: 0 } : 0);
+      const CARD = { dark: 0.1, blur: { sky: 4, far: 8, mid: 8, set: 8, fg: 12 }, light: GOLD, grade: GGOLD };
+      const decay = (at, amp, len, f = 60) => (t) => (t > at && t < at + len ? amp * Math.pow(1 - (t - at) / len, 2) * Math.sin(t * f) : 0);
+      const hand = (t) => 2.2 * Math.sin(t * 2.3) + 1.4 * Math.sin(t * 3.7);
+      const live = (tl, id, t0, dur, L) => { War.sway(tl, L.set, t0, dur); War.sway(tl, L.fg, t0, dur); War.sway(tl, L.glow, t0, dur); };
 
-      // EP.1 hook: the mine goes off, โจ้ down in the grass, เต๋า lunging, จ่าเม่น dragging him back — the glint on the ridge (F6)
+      // EP.1 hook: โจ้ steps on it — white-out, the fountain, the wave; เต๋า fights to run in, จ่าเม่น hauls him back; the glint on the ridge (F6)
       add("w1", {
-        set: "border", setOpts: { id: "b1", time: "day", bamboo: 60, glintX: 640, tree: 1140, pathX: 620, fgH: 0.55 }, dark: 0, blur: { far: 1.5, mid: 1, fg: 9 }, light: DAYL, grade: GDAYR,
-        cam: { keys: [{ t: 0, ...fr(540, 1330, 1.15, 540, 1060) }, { t: 3.0, glide: 3.0, ...fr(520, 1330, 1.25, 540, 1060) }] },
-        shake: boom(0, 0.05, 22, 0.7),
+        set: "border", setOpts: { id: "b1", time: "day", ground: 1300, lift: 300, sunX: 40, glintX: 815, tree: false, pathX: 300, band: [-300, 1400, 1660, 70], wire: [-400, 420, 2010, 1.3], fgBags: [1000, 2080, 1.5, 3], fgH: 0.6 },
+        dark: 0, blur: { sky: 1, far: 1.2, mid: 0.8, fg: 7 }, light: GOLD, grade: GGOLD,
+        cam: { keys: [{ t: 0, ...fr(540, 1470, 1.4, 540, 1180), drift: { s: 0 } }, { t: 0.2, glide: 0.1, ...fr(450, 1520, 1.62, 540, 1180), drift: { s: 0 } },
+          { t: 1.0, glide: 0.8, ...fr(540, 1480, 1.46, 540, 1180), drift: { s: 0.02 } }, { t: 3.0, glide: 2.0, ...fr(560, 1480, 1.56, 540, 1180) }] },
+        shake: (t) => { const k = decay(0.1, 34, 0.8)(t), k2 = decay(0.1, 22, 0.8, 47)(t); return { x: k + hand(t), y: k2 + hand(t + 1.3) * 0.7, r: decay(0.1, 1.2, 0.6, 33)(t) }; },
         actors: [
-          A("joe", 250, 1560, 0.6, [{ t: 0, mode: "reachUp", eyes: "wide", mouth: "scream" }], { flip: true }),
-          A("tao", 790, 1650, 0.66, [{ t: 0, mode: "strain", eyes: "wide", mouth: "scream" }], { flip: true }),
-          A("mem", 930, 1670, 0.68, [{ t: 0, mode: "hold", eyes: "angry", mouth: "scream" }], { flip: true }),
+          A("joe", 330, 1640, 0.8, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { until: 0.11 }),
+          A("joe", 250, 1625, 0.8, [{ t: 0, mode: "reachUp", eyes: "wide", mouth: "scream" }], { flip: true, from: 0.11 }),
+          A("tao", 680, 1650, 0.82, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 0.12, mode: "startle", eyes: "wide", mouth: "o" }, { t: 0.4, mode: "surge", eyes: "wide", mouth: "scream" }],
+            { flip: true, path: [{ t: 0, x: 700, y: 1650 }, { t: 0.4, x: 680, y: 1650 }, { t: 0.7, x: 610, y: 1652 }, { t: 1.0, x: 645, y: 1650 }, { t: 1.35, x: 590, y: 1652 }, { t: 1.7, x: 635, y: 1650 }, { t: 2.1, x: 580, y: 1652 }, { t: 2.5, x: 630, y: 1650 }, { t: 3.0, x: 600, y: 1651 }] }),
+          A("mem", 840, 1665, 0.84, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 0.12, mode: "startle", eyes: "wide", mouth: "o" }, { t: 0.4, mode: "drag", eyes: "angry", mouth: "scream" }],
+            { flip: true, path: [{ t: 0, x: 880, y: 1665 }, { t: 0.4, x: 850, y: 1665 }, { t: 0.7, x: 800, y: 1667 }, { t: 1.0, x: 825, y: 1665 }, { t: 1.35, x: 785, y: 1667 }, { t: 1.7, x: 815, y: 1665 }, { t: 2.1, x: 775, y: 1667 }, { t: 2.5, x: 810, y: 1665 }, { t: 3.0, x: 785, y: 1666 }] }),
         ],
         fx(tl, id, t0, L) {
-          War.blast(tl, L, 250, 1540, t0 + 0.02, { id: "bl1", s: 1.0, linger: 3 });
-          War.glint(tl, "b1", t0, 3.0);
+          live(tl, id, t0, 3.0, L);
+          document.getElementById(`${id}-a1`).style.opacity = 0; tl.set(`#${id}-a1`, { opacity: 1 }, t0 + 0.11); tl.set(`#${id}-a0`, { opacity: 0 }, t0 + 0.11);
+          War.blast(tl, L, 360, 1640, t0 + 0.1, { id: "bl1", s: 1.25, world: `${id}-world`, bend: `#${id}-glow .wrSway`, linger: true });
+          War.glint(tl, "b1", t0, 3.0, { at: [-0.05, 1.3, 2.4] });
+          ["a1", "a2", "a3"].forEach((a) => War.jiggle(tl, `${id}-${a}`, t0 + 0.12, 2.9, { amp: 14, period: 0.28 }));
+          RabFX.motes(tl, L.glow, t0, 3.0, { box: [0, 700, 1080, 900], n: 30, seed: 4 });
         },
       });
-      // EP.2 hook: bullets cutting through the bush, โจ้ crouched behind it
+      // EP.2 hook: the bullet over โจ้'s helmet, slow (0.3×) through the bush, then real speed
       add("w2", {
-        set: "hedge", setOpts: { id: "h2", bush: 560, bank: 130, tree: 900, bushFront: true }, dark: 0, blur: { far: 2, mid: 1.5, fg: 9 }, light: DAYL, grade: GDAYR,
-        cam: { keys: [{ t: 0, ...fr(560, 1380, 1.35, 540, 1100) }, { t: 2.4, glide: 2.4, ...fr(560, 1400, 1.5, 540, 1100) }] },
-        shake: (t) => (t > 0.1 && t < 1.8 ? { x: 5 * Math.sin(t * 70), y: 3 * Math.sin(t * 53), r: 0 } : 0),
-        actors: [A("joe", 600, 1600, 0.78, [{ t: 0, mode: "duck", eyes: "wide", mouth: "scream" }])],
-        fx(tl, id, t0, L) { put(L.act, War.bushHTML(560, 1560, "h2-bush")); War.bullets(tl, L, t0 + 0.05, 2.0, { n: 9, box: [380, 1360, 380, 260], seed: 11 }); },
+        set: "hedge", setOpts: { id: "h2", ground: 1400, bank: 1010, tree: false, lift: 160, bushFront: true, fgH: 0.6, sunX: 80 }, dark: 0, blur: { sky: 2, far: 2.4, mid: 1.6, fg: 8 }, light: GOLD, grade: GGOLD,
+        cam: { keys: [{ t: 0, ...fr(560, 1420, 1.5, 540, 1100), drift: { s: 0.01 } }, { t: 0.75, glide: 0.45, ...fr(560, 1290, 1.95, 540, 1000), drift: { s: 0 } }, { t: 1.05, ...fr(560, 1420, 1.55, 540, 1100), drift: { s: 0.02 } }] },
+        shake: (t) => (t > 1.0 ? { x: decay(1.0, 14, 1.2, 55)(t) + hand(t), y: decay(1.0, 9, 1.2, 43)(t) + hand(t + 2) * 0.6, r: 0 } : { x: hand(t) * 0.5, y: 0, r: 0 }),
+        actors: [A("joe", 560, 1640, 0.82, [{ t: 0, mode: "duckLow", eyes: "wide", mouth: "frown" }, { t: 1.05, mode: "duckLow", eyes: "closed", mouth: "scream" }])],
+        fx(tl, id, t0, L) {
+          War.bush(L.glow, 560, 1660, 1.35, "h2bush", { gaps: true, seed: 12 });
+          live(tl, id, t0, 2.6, L);
+          War.bulletSlow(tl, L, { t: t0 + 0.28, y: 1218, x0: 900, x1: 190, slow: 0.42, seed: 7 });
+          War.jiggle(tl, `${id}-a0`, t0, 2.6, { amp: 8, period: 0.22 });
+          tl.fromTo(`#${id}-world`, { filter: "saturate(1) contrast(1)" }, { keyframes: [{ filter: "saturate(0.6) contrast(1.15)", duration: 0.06 }, { filter: "saturate(0.6) contrast(1.15)", duration: 0.42 }, { filter: "saturate(1) contrast(1)", duration: 0.08 }], immediateRender: false }, t0 + 0.3);
+          RabFX.motes(tl, L.glow, t0, 2.6, { box: [0, 800, 1080, 800], n: 24, seed: 8 });
+        },
       });
-      // the rule card: the squad's dog tag
-      add("w3", { set: "border", setOpts: { id: "b3", time: "day", glint: false }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 2.6, glide: 2.6, ...fr(550, 1200, 1.05, 540, 1100) }] },
-        fx(tl, id, t0, L) { RabFX.motes(tl, L.glow, t0, 2.6, { box: [100, 300, 880, 1200], n: 24 }); WarUI.tag(tl, L.light, t0 + 0.05, 2.55, { active: 0, done: [], y: 700, out: false }); } });
-      // cover vs concealment
-      add("w4", { set: "hedge", setOpts: { id: "h4" }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 2.6, glide: 2.6, ...fr(530, 1200, 1.05, 540, 1100) }] },
-        fx(tl, id, t0, L) { WarUI.cover(tl, L.light, t0 + 0.05, 2.55, { y: 600, out: false }); } });
-      // the warning signs
-      add("w5", { set: "border", setOpts: { id: "b5", time: "dusk", glint: false }, ...CARD, light: DUSKL, grade: GDUSKR, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 2.6, glide: 2.6, ...fr(540, 1200, 1.05, 540, 1100) }] },
-        fx(tl, id, t0, L) { WarUI.signs(tl, L.light, t0 + 0.05, 2.55, { y: 520, title: "สัญญาณว่ามีทุ่นระเบิด", out: false }); } });
-      // home at Songkran: แม่, เต๋า, the parcel on the step
+      // a warning sign shown in the field: the camera pans, the crossed bamboo lights up
+      add("w3", {
+        set: "border", setOpts: { id: "b3", time: "day", ground: 1300, lift: 200, sunX: -200, glint: false, tree: 1240, notch: true, pathX: -200, bamboo: 640, bones: [1000, 1480, 0.8], band: [-400, 1500, 1660, 90], fgH: 0.6 },
+        dark: 0, blur: { sky: 1, far: 1.5, mid: 1, fg: 8 }, light: GOLD, grade: GGOLD,
+        cam: { keys: [{ t: 0, ...fr(300, 1360, 1.5, 540, 1150), drift: { s: 0 } }, { t: 1.2, glide: 1.1, ...fr(640, 1340, 1.62, 540, 1150), drift: { s: 0.02 } }] },
+        shake: (t) => ({ x: hand(t) * 0.6, y: hand(t + 1) * 0.4, r: 0 }),
+        actors: [A("mem", 330, 1700, 0.78, [{ t: 0, mode: "kneel", eyes: "normal", mouth: "flat" }, { t: 0.9, mode: "pointAt", eyes: "normal", mouth: "o" }])],
+        fx(tl, id, t0, L) {
+          live(tl, id, t0, 2.0, L);
+          War.spot(tl, L.glow, 640, 1290, t0 + 0.9, 1.1, { label: "ไม้ไขว้", icon: "bamboo", r: 125, w: 200 });
+          RabFX.motes(tl, L.glow, t0, 2.0, { box: [0, 800, 1300, 800], n: 24, seed: 3 });
+        },
+      });
+      // cover vs concealment as a cross-section
+      add("w4", { set: "hedge", setOpts: { id: "h4", ground: 1400, bank: 1010 }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 2.4, glide: 2.4, ...fr(530, 1180, 1.06, 540, 1100) }] },
+        fx(tl, id, t0, L) { WarUI.cover(tl, L.light, t0 + 0.05, 2.35, { y: 420, out: false }); RabFX.motes(tl, L.glow, t0, 2.4, { n: 20, seed: 6 }); } });
+      // the rule card: the dog tag
+      add("w5", { set: "border", setOpts: { id: "b5", time: "day", glint: false, tree: 900 }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1200, 1.0, 540, 1100) }, { t: 2.4, glide: 2.4, ...fr(550, 1200, 1.05, 540, 1100) }] },
+        fx(tl, id, t0, L) { RabFX.motes(tl, L.glow, t0, 2.4, { box: [100, 300, 880, 1200], n: 24 }); WarUI.tag(tl, L.light, t0 + 0.05, 2.35, { active: 0, done: [], y: 820, out: false }); } });
+      // home at Songkran (kept)
       add("w6", {
-        set: "home", setOpts: { id: "hm6", parcel: true, parcelX: 720 }, dark: 0, blur: { far: 2, fg: 9 }, light: DAYL, grade: GDAYR,
-        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.15, 540, 1100) }, { t: 2.6, glide: 2.6, ...fr(540, 1320, 1.25, 540, 1100) }] },
+        set: "home", setOpts: { id: "hm6", parcel: true, parcelX: 720 }, dark: 0, blur: { far: 2, fg: 9 }, light: GOLD, grade: GGOLD,
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.15, 540, 1100) }, { t: 2.4, glide: 2.4, ...fr(540, 1320, 1.25, 540, 1100) }] },
         actors: [A("mom", 400, 1640, 0.95, [{ t: 0, mode: "hug", eyes: "closed", mouth: "laugh" }]), A("taoBare", 500, 1650, 0.95, [{ t: 0, mode: "hug", eyes: "closed", mouth: "smile" }], { flip: true })],
       });
