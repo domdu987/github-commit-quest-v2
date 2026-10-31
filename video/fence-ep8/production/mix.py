@@ -92,12 +92,8 @@ CUES = [
     ("hook", -0.2, "whoosh", 0.6), *[("hook", 0.5 + k * 0.9, "drip", 0.35) for k in range(7)], ("hook", 0.3, "creak", 0.5), ("hook", 1.4, "click", 0.3),
     *[("hook", vo_t("hook", 0) + 0.4 + k * 0.55, "tick", 0.3) for k in range(10)],
     ("hook", frag("hook", 2, 1), "sting", 1.0), ("hook", frag("hook", 2, 1), "boom", 0.6), ("hook", frag("hook", 2, 1), "glitch", 0.5), *beats("hook", 0.3, D["hook"] - 0.3, 0.55, 0.6),
-    # the yard after the storm: the board; wind, water off the panels, a broom
-    ("chapter", 0.05, "page", 0.9), ("chapter", 0.4, "chalk", 0.5), ("chapter", 0.5, "slam", 0.5), *[("chapter", 0.9 + k * 0.16, "pop", 0.4) for k in range(2)],
-    *bed("wind", T("chapter", 0), T("chapter", -0.1), 0.25, 3.2), *[("chapter", 0.8 + k * 0.7, "drip", 0.3) for k in range(5)], *[("chapter", 1.2 + k * 0.5, "rustle", 0.25) for k in range(6)],
-    ("chapter", frag("chapter", 0, 2), "sting", 0.5),
     # the canteen: the dead fridge with its door open; คุณวิน keeps the power
-    *bed("crickets", T("dark", 0), T("hong", -0.1), 0.08, 4.0), ("dark", 0.3, "creak", 0.5), ("dark", frag("dark", 0, 1), "sting", 0.5), ("dark", vo_t("dark", 1) - 0.1, "whoosh", 0.3), ("dark", frag("dark", 1, 1), "sting", 0.6), ("dark", frag("dark", 1, 1), "boom", 0.3), *beats("dark", 0.0, D["dark"], 0.8, 0.35),
+    ("dark", 0.1, "page", 0.9), ("dark", 0.45, "chalk", 0.5), ("dark", 0.55, "slam", 0.5), *bed("crickets", T("dark", 0), T("hong", -0.1), 0.08, 4.0), ("dark", 0.3, "creak", 0.5), ("dark", frag("dark", 0, 2), "sting", 0.5), ("dark", frag("dark", 1, 1), "sting", 0.6), ("dark", frag("dark", 1, 1), "boom", 0.3), *beats("dark", 0.0, D["dark"], 0.8, 0.35),
     # เจ๊หงส์ and the warm vial; the box shoved away
     ("hong", 0.3, "click", 0.3), ("hong", frag("hong", 1, 1), "sting", 0.6), ("hong", vo_t("hong", 1) + 1.0, "slam", 0.35), ("hong", vo_t("hong", 1) + 1.05, "rustle", 0.4), *beats("hong", 0.0, D["hong"], 0.7, 0.4),
     # the dorm at dusk: the fan, her breathing
@@ -110,18 +106,23 @@ CUES = [
     ("label", vo_t("label", 1) + 0.2, "page", 0.5), ("label", vo_t("label", 1) + 0.5, "pen", 0.5), ("label", frag("label", 1, 1), "sting", 0.6), ("label", frag("label", 1, 1) + 0.05, "ding", 0.3), ("label", vo_t("label", 2) + 0.1, "sting", 0.5), ("label", vo_t("label", 2) + 0.5, "gasp", 0.35), *beats("label", 0.0, D["label"], 0.75, 0.35),
     # the card
     *[x for o in (vo_t("card", 0), vo_t("card", 1), frag("card", 1, 2), frag("card", 1, 3) + 0.6) for x in (("card", o, "page", 0.4), ("card", o + 0.3, "pen", 0.5), ("card", o + 0.35, "ding", 0.25))],
-    # in real life
-    ("real", 0.1, "page", 0.4), ("real", 0.4, "pen", 0.4), ("real", frag("real", 0, 1), "ding", 0.3),
     # the torch on his face, the box on the floor, the guards, the bell
     ("alarm", 0.3, "click", 0.7), ("alarm", 0.3, "sting", 1.0), ("alarm", 0.3, "boom", 0.6), ("alarm", 0.3, "glitch", 0.5), ("alarm", 0.8, "thud", 0.5), ("alarm", 0.82, "rustle", 0.3), *[("alarm", 0.2 + k * 0.3, "steps", 0.4) for k in range(4)], *[("alarm", 1.0 + k * 0.48, "bell", 0.6) for k in range(8)],
     ("alarm", frag("alarm", 0, 2), "sting", 0.7), ("alarm", frag("alarm", 0, 2), "boom", 0.4), *beats("alarm", 0.0, D["alarm"], 0.36, 0.9),
     # across the yard: the bell, running feet, ภู's shove, the gate
     *[("run", 0.1 + k * 0.6, "bell", 0.45) for k in range(8)], *[("run", 0.05 + k * 0.22, "steps", 0.4) for k in range(20)], ("run", vo_t("run", 0), "sting", 0.5), ("run", 1.1, "thud", 0.7), ("run", 1.12, "boom", 0.3), *bed("wind", T("run", 0), T("gate", -0.1), 0.15, 3.2), *beats("run", 0.0, D["run"], 0.36, 0.9),
     ("gate", 0.3, "gate", 0.8), ("gate", 1.2, "gate", 0.6), *[("gate", 0.05 + k * 0.24, "steps", 0.35) for k in range(10)], ("gate", vo_t("gate", 0), "sting", 0.5), ("gate", vo_t("gate", 1) - 0.1, "slam", 1.0), ("gate", vo_t("gate", 1) - 0.1, "boom", 0.7), ("gate", vo_t("gate", 1) - 0.1, "glitch", 0.4), ("gate", vo_t("gate", 1) - 0.05, "clang", 0.6), *beats("gate", 0.0, D["gate"], 0.36, 0.95),
-    # the field: crickets, wind; the walkie's LED, its crackle, the voice
-    *bed("crickets", T("outside", 0), T("sig", -0.1), 0.16, 4.0), *bed("wind", T("outside", 0), T("sig", -0.1), 0.12, 3.2), ("outside", 0.6, "breath", 0.4), *beats("outside", 0.0, D["outside"], 0.6, 0.5),
-    *[("walkie", 0.2 + k * 0.45, "beep", 0.15) for k in range(int((vo_t("walkie", 0) - 0.5) / 0.45))], ("walkie", vo_t("walkie", 0) - 0.35, "static", 0.6), ("walkie", vo_t("walkie", 0) - 0.3, "rustle", 0.4), *bed("radiobed", T("walkie", vo_t("walkie", 0) - 0.3), T("walkie", vo_end("walkie", 1) + 0.2), 0.25, 3.0),
-    ("walkie", frag("walkie", 0, 1), "sting", 0.5), ("walkie", frag("walkie", 1, 2), "sting", 1.0), ("walkie", frag("walkie", 1, 2), "boom", 0.6), ("walkie", frag("walkie", 1, 2), "glitch", 0.5), ("walkie", vo_t("walkie", 2), "sting", 0.5), *beats("walkie", 0.0, D["walkie"], 0.5, 0.6),
+    *bed("crickets", T("walkie", 0), T("sig", -0.1), 0.16, 4.0), *bed("wind", T("walkie", 0), T("sig", -0.1), 0.12, 3.2), ("walkie", 0.3, "breath", 0.4),
+    *[("walkie", vo_end("walkie", 0) + 0.1 + k * 0.45, "beep", 0.15) for k in range(int((vo_t("walkie", 1) - vo_end("walkie", 0) - 0.5) / 0.45))], ("walkie", vo_t("walkie", 1) - 0.35, "static", 0.6), ("walkie", vo_t("walkie", 1) - 0.3, "rustle", 0.4), *bed("radiobed", T("walkie", vo_t("walkie", 1) - 0.3), T("walkie", vo_end("walkie", 2) + 0.2), 0.25, 3.0),
+    ("walkie", frag("walkie", 1, 1), "sting", 0.5), ("walkie", frag("walkie", 2, 2), "sting", 1.0), ("walkie", frag("walkie", 2, 2), "boom", 0.6), ("walkie", frag("walkie", 2, 2), "glitch", 0.5), ("walkie", vo_t("walkie", 3), "sting", 0.5), *beats("walkie", 0.0, D["walkie"], 0.5, 0.6),
+    # ภู's confession; he walks away into the dark
+    ("confess", frag("confess", 0, 2), "sting", 0.8), ("confess", frag("confess", 0, 2), "boom", 0.4), ("confess", vo_t("confess", 1) + 0.3, "sting", 0.4), *[("confess", vo_t("confess", 1) + 0.8 + k * 0.5, "steps", 0.3 - k * 0.02) for k in range(8)], ("confess", vo_t("confess", 2), "sting", 0.5), *beats("confess", 0.0, D["confess"], 0.55, 0.55),
+    # dawn: birds, the gate rolling open, her steps, ปั้น running; the gate rolling shut
+    *bed("wind", T("dawn", 0), T("dawn", -0.1), 0.14, 3.2), ("dawn", 0.2, "whistlefar", 0.3), ("dawn", 2.6, "whistlefar", 0.25), ("dawn", 0.6, "gate", 0.7), ("dawn", 1.4, "gate", 0.5), *[("dawn", 1.7 + k * 0.42, "steps", 0.3) for k in range(6)], *[("dawn", vo_t("dawn", 1) - 0.3 + k * 0.22, "steps", 0.3) for k in range(4)], ("dawn", vo_t("dawn", 1) + 0.9, "rustle", 0.4),
+    ("dawn", vo_t("dawn", 2) + 0.9, "gate", 0.7), ("dawn", vo_t("dawn", 2) + 1.9, "slam", 0.8), ("dawn", vo_t("dawn", 2) + 1.9, "clang", 0.5), ("dawn", vo_t("dawn", 2) + 1.9, "boom", 0.4), *beats("dawn", 0.0, D["dawn"], 0.7, 0.4),
+    # the radio: static, the dial, the day torn off, "สี่"; the click of the knob; her line
+    ("radio", vo_t("radio", 0) - 0.4, "static", 0.7), ("radio", vo_t("radio", 0) - 0.3, "radio", 0.5), *bed("radiobed", T("radio", vo_t("radio", 0) - 0.4), T("radio", vo_end("radio", 0) + 0.6), 0.3, 3.0), ("radio", frag("radio", 0, 1), "rip", 0.8), ("radio", frag("radio", 0, 1) + 0.1, "page", 0.4), ("radio", frag("radio", 0, 2), "sting", 1.0), ("radio", frag("radio", 0, 2), "boom", 0.6), ("radio", frag("radio", 0, 2), "glitch", 0.4),
+    ("radio", vo_end("radio", 0) + 0.5, "click", 0.9), ("radio", vo_end("radio", 0) + 0.52, "powerdown", 0.5), *bed("crickets", T("radio", vo_t("radio", 1) - 0.3), T("sig", -0.1), 0.14, 4.0), *beats("radio", 0.0, D["radio"], 0.6, 0.5),
     # the signature
     ("sig", 0.05, "page", 0.8), ("sig", 0.36, "thud", 0.25),
     *[x for o in (frag("sig", 0, 0) + 0.3, frag("sig", 0, 0) + 0.62, frag("sig", 0, 1) + 0.15) for x in (("sig", o, "pen", 0.9), ("sig", o + 0.05, "ding", 0.3))],
@@ -131,13 +132,9 @@ CUES = [
     ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "pen", 1.0), ("sig", frag("sig", 0, 3) + 0.1, "pen", 1.0),
     ("sig", frag("sig", 0, 3) + 0.24, "rip", 1.1), ("sig", frag("sig", 0, 3) + 0.86, "thud", 0.8), ("sig", frag("sig", 0, 3) + 0.86, "slam", 0.35),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
-    # the radio: static, the dial, the day torn off, the number
-    ("count", vo_t("count", 0) - 0.4, "static", 0.7), ("count", vo_t("count", 0) - 0.3, "radio", 0.5), *bed("radiobed", T("count", vo_t("count", 0) - 0.4), T("count", -0.1), 0.3, 3.0), ("count", frag("count", 0, 1), "rip", 0.8), ("count", frag("count", 0, 1) + 0.1, "page", 0.4), ("count", frag("count", 0, 2), "sting", 1.0), ("count", frag("count", 0, 2), "boom", 0.6), ("count", frag("count", 0, 2), "glitch", 0.4), *beats("count", 0.0, D["count"], 0.5, 0.6),
-    # the drawing under the lightning
-    ("drawing", 0.1, "crayon", 0.6), ("drawing", 0.9, "crayon", 0.5), ("drawing", frag("drawing", 0, 1) - 0.3, "thunder", 0.8), ("drawing", frag("drawing", 0, 1), "sting", 0.6), *bed("rain", T("drawing", 0), T("drawing", -0.1), 0.2, 3.0), *beats("drawing", 0.0, D["drawing"], 0.55, 0.5),
     # the choice, then black; the end card
     *beats("choice", 0.0, D["choice"] - 0.3, 0.38, 1.0), *[("choice", 0.05 + k * 1.0, "tick", 1.0) for k in range(3)], ("choice", 1.0, "glitch", 0.6), ("choice", D["choice"] - 0.6, "riser", 0.8), ("choice", D["choice"] - 0.2, "sting", 1.0), ("choice", D["choice"] - 0.2, "boom", 0.7),
-    ("next", 0.3, "page", 0.7), ("next", 0.6, "page", 0.5), *[("next", 0.9 + k * 0.22, "pen", 0.5) for k in range(5)], ("next", 1.9, "glitch", 0.4),
+    ("end", 0.3, "page", 0.7), ("end", 0.6, "page", 0.5), *[("end", 0.9 + k * 0.22, "pen", 0.5) for k in range(5)],
 ]
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
         "sfx": [{"t": round(float(t) if k is None else T(k, float(t)), 3), "type": typ, "gain": g} for k, t, typ, g in CUES]}
@@ -166,10 +163,11 @@ dip(T("hong", frag("hong", 1, 1) - 0.2), T("hong", -0.05), 0.4)
 dip(T("steal", 0), T("steal", -0.05), 0.3)
 dip(T("alarm", 0.2), T("alarm", 1.0), 0.15)
 dip(T("gate", vo_t("gate", 1) - 0.2), T("gate", -0.05), 0.3)
-dip(T("walkie", vo_t("walkie", 0) - 0.4), T("walkie", -0.05), 0.2)
+dip(T("walkie", vo_t("walkie", 1) - 0.4), T("walkie", -0.05), 0.2)
 dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)
-dip(T("count", vo_t("count", 0) - 0.4), T("count", -0.05), 0.2)
-dip(T("drawing", frag("drawing", 0, 1)), T("drawing", -0.05), 0.35)
+dip(T("confess", frag("confess", 0, 2) - 0.2), T("confess", vo_t("confess", 1) + 0.4), 0.3)
+dip(T("dawn", vo_t("dawn", 2)), T("dawn", -0.05), 0.35)
+dip(T("radio", vo_t("radio", 0) - 0.4), T("radio", vo_end("radio", 0) + 0.8), 0.2)
 dip(T("choice", 0), T("choice", -0.3), 0.5)
 boost = np.ones(N, np.float32)  # the action plays with the music up
 for a0, a1 in ((T("alarm", 1.0), T("alarm", -0.05)), (T("run", 0), T("run", -0.05)), (T("gate", 0), T("gate", vo_t("gate", 1) - 0.3))):
@@ -186,7 +184,7 @@ env = box(np.abs(vo), int(0.05 * SR))
 duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
 duck = box(duck, int(0.25 * SR))
 mix = vo + mus * duck + sfx
-cut, card = int(T("choice", -0.2) * SR), int(T("next", 0.3) * SR)
+cut, card = int(T("choice", -0.2) * SR), int(T("end", 0.3) * SR)
 mix[cut - 240:cut] *= np.linspace(1, 0, 240)
 mix[cut:card] = 0  # a beat of black and silence after the cliffhanger, then only the end card's own sounds
 peak = np.max(np.abs(mix))

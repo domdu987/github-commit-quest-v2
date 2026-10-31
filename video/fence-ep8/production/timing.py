@@ -20,26 +20,24 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01", ("n02", 0.2), ("n03", 0.25)], 0.4, 0.5, 8.5),      # inside the dead medicine fridge: เจ๊หงส์'s hand on the insulin vial, thermometer creeping up, "ไฟดับมาแล้ว" 1 → 26 h
-    ("chapter", ["n04"], 0.3, 0.5, 5.0),                                # the yard after the storm, cracked solar panels; the board "เหลือ 92 วัน"
-    ("dark", ["n05", ("w01", 0.3)], 0.3, 0.5, 6.5),                     # the canteen: the red-cross fridge dark; คุณวิน keeps the power for his own room
-    ("hong", ["n06", ("h01", 0.3)], 0.3, 0.7, 7.5),                     # เจ๊หงส์ takes out her insulin, feels the warm vial, pushes the box away; ปั้น watches
-    ("skip", ["n07", ("n08", 0.3)], 0.4, 0.5, 5.5),                     # the dorm at dusk: she skipped it; by night she can't get up; ปั้น hugs the box
-    ("kong", ["k01", ("p01", 0.15)], 0.3, 0.9, 4.8),                    # ก้อง at the barred window, คุณวิน's lit window; "ก้อง… อย่า!" — he's gone
-    ("steal", ["n09"], 0.6, 1.6, 4.8),                                  # the office: ก้อง opens the small fridge, cold light on his face; a torch behind the door glass
-    ("label", ["pn01", ("ph01", 0.3), ("ph02", 0.25)], 0.3, 0.6, 10.0), # ปั้น holds the box out to ภู; the label card "28 วัน"; เจ๊หงส์ opens her eyes
-    ("card", ["n10", ("n11", 0.35)], 0.2, 0.6, 12.0),                   # the card: a day without power → replace, unless the label says; insulin 28 days; a life-saving drug — don't stop
-    ("real", ["n13"], 0.2, 0.5, 4.4),                     # in real life: shade, coolest place, never frozen; check sugar more often; doctor or pharmacist
-    ("alarm", ["n14"], 0.3, 1.4, 6.0),                                  # the torch on ก้อง, the box drops, guards; the estate bell
-    ("run", ["w02", ("p02", 0.5)], 0.6, 2.4, 4.8),                      # across the yard under the searchlights; ภู shoves a guard, ก้อง breaks free
-    ("gate", ["h02", ("p03", 0.9)], 0.8, 1.2, 5.5),                     # the sliding gate from outside: เจ๊หงส์ pushes ปั้น through; it slams with her inside
-    ("outside", ["pn02"], 0.8, 0.6, 4.2),                               # the dark field; ปั้น holds the insulin box
-    ("walkie", ["w03", ("w04", 0.4), ("n15", 0.5)], 0.6, 0.6, 12.0),    # ภู's bag crackles: คุณวิน "ขอบใจนะ ที่บอกทางไปโรงเรียนให้ฉัน ตั้งแต่วันแรก"; rule three
+    ("hook", ["n01", ("n02", 0.2), ("n03", 0.25)], 0.3, 0.2, 7.0),      # inside the dead medicine fridge: her hand on the vial, the thermometer, "ไฟดับมาแล้ว 26 ชม."
+    ("dark", ["n04", ("n05", 0.3)], 0.3, 0.3, 7.0),                     # the canteen: the board "เหลือ 92 วัน"; the storm broke the panels; the red-cross fridge dark all night
+    ("hong", ["n06", ("h01", 0.3)], 0.3, 0.5, 6.8),                     # เจ๊หงส์ feels the warm vial, pushes the box away; ปั้น watches
+    ("skip", ["n07", ("n08", 0.3)], 0.3, 0.3, 4.8),                     # the dorm at dusk: she skipped it; by night she can't get up
+    ("kong", ["k01", ("p01", 0.15)], 0.3, 0.7, 4.4),                    # ก้อง at the barred window; "ก้อง… อย่า!" — he's gone
+    ("steal", ["n09"], 0.6, 0.8, 3.6),                                  # the office: the bar fridge, cold light; a torch behind the door glass
+    ("label", ["pn01", ("ph01", 0.3), ("ph02", 0.25)], 0.3, 0.3, 8.0),  # the label: 28 days; "ยังใช้ได้… อย่าหยุดยา"; เจ๊หงส์ opens her eyes
+    ("card", ["n10", ("n11", 0.3)], 0.2, 0.3, 10.0),                    # the four rules
+    ("alarm", ["n14"], 0.3, 0.7, 4.6),                                  # the torch on ก้อง, the box drops, the bell
+    ("run", ["w02", ("p02", 0.5)], 0.6, 1.5, 3.8),                      # across the yard under the searchlights
+    ("gate", ["h02", ("p03", 0.9)], 0.8, 0.8, 4.6),                     # the gate slams with เจ๊หงส์ inside
+    ("walkie", ["pn02", ("w03", 0.4), ("w04", 0.3), ("n15", 0.35)], 0.3, 0.3, 12.0),   # the field: "ยาของเจ๊อยู่กับหนู"; the walkie: "ขอบใจที่บอกทาง… ตั้งแต่วันแรก"
+    ("confess", ["ph03", ("ph04", 0.4), ("p04", 0.35)], 0.3, 1.2, 9.0), # ภู: the voice is คุณวิน counting; "ผมจะไปพาเจ๊กลับมาเอง" — he walks back; "ภู…!"
+    ("dawn", ["n17", ("pn03", 1.1), ("n18", 0.5)], 0.4, 1.3, 7.5),      # the gate opens at dawn; เจ๊หงส์ walks out alone; ภู behind the bars; it closes
+    ("radio", ["r01", ("p05", 0.9)], 0.4, 0.6, 8.0),                    # "เก้าสิบเอ็ดวัน… สี่" — ครูพิม turns it off: "ไม่ต้องให้ใครนับเราอีก"
     ("sig", ["s01"], 0.15, 0.5, 4.2),
-    ("count", ["r01"], 0.4, 0.8, 6.0),                                  # the radio: "เก้าสิบเอ็ดวัน… สี่"
-    ("drawing", ["n16"], 0.3, 0.6, 4.4),                                # ปั้น's drawing: everyone wading through a flooded field (EP.9)
     ("choice", [], 0.0, 0.0, 3.4),
-    ("next", [], 0.0, 0.0, 2.6),
+    ("end", [], 0.0, 0.0, 2.8),
 ]
 GAP = 0.08
 
