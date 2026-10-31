@@ -52,6 +52,33 @@
   C.lungSing = { v2: { ...tj, faceTop: hat, top: { kind: "shirt", c: "#6a8aa8", sleeve: "long", neck: "collar", collar: "#5a7a98", button: "#e8e4d8" }, print: towel,
     bottom: { kind: "trousers", c: "#3a3a40" }, legs: undefined, extra: "", skirt: undefined, feet: { kind: "boot", c: "#2a2a2e" } } };
 
+
+  // ---------------- v2 cast (31 ต.ค. ค่ำ: lane A keeps sister+brother+grandma+uncle, so this story changes its set) ----------------
+  //   tan      พี่แทน 16: spiky hair, white earbuds, a cobalt tee with two white stripes, black shorts, white sneakers · tanPhone (phone in hand)
+  //   bai      ใบข้าว 9 (draw ~0.72): two short pigtails with yellow bobbles, a sunflower-yellow tee with a tamarind print, green shorts, sandals
+  //            · baiSling (the slingshot in the front fist)
+  //   taPerm   ตาเพิ่ม 70: grey stubble hair, a white singlet with a checked ผ้าขาวม้า over the shoulder, navy fisherman trousers, sandals
+  //   paNuan   ป้านวล 52 (the neighbour the kids call crazy): a wide straw hat, a long-sleeved faded blue work shirt to the wrist, a towel
+  //            round the neck, dark trousers, rubber boots, old scars on the backs of her hands
+  const tg = base("tang");
+  const num = `<path d="M-58,-430H58M-58,-414H58" stroke="#ffffff" stroke-width="7" opacity=".9"/>`;
+  C.tan = { v2: { ...tg, headScale: 1.06, w: 1, limb: 1, face: "", faceTop: buds, top: { kind: "tee", c: "#2f62c8", sleeve: "short" }, print: num,
+    bottom: { kind: "shorts", c: "#22252c" }, feet: { kind: "sneaker", c: "#f6f4ee", mark: "#2f62c8" } } };
+  C.tanPhone = { ...C.tan, hand: phone(), keep: "F" };
+  const pig = (h) => `<g><path d="M-52,-560C-78,-560 -92,-536 -86,-510Q-70,-524 -50,-540Z" fill="${h.c}" ${ln()}/><path d="M54,-560C80,-560 94,-536 88,-510Q72,-524 52,-540Z" fill="${h.c}" ${ln()}/>
+    <circle cx="-56" cy="-556" r="9" fill="#ffd23a" ${ln(1.8)}/><circle cx="58" cy="-556" r="9" fill="#ffd23a" ${ln(1.8)}/></g>`;
+  const tama = `<g transform="translate(0,-404) rotate(-20)"><path d="M-30,0C-20,-14 20,-14 30,0C20,10 -20,10 -30,0Z" fill="#8a5a30" ${ln(2)}/><path d="M-10,-6v12M6,-7v13" stroke="#5a3418" stroke-width="2"/></g>`;
+  C.bai = { v2: { ...mintV, headScale: 1.2, w: 0.92, limb: 0.9, hair: { ...(mintV.hair || {}), c: "#1a1412", back: pig }, faceTop: "", top: { kind: "tee", c: "#ffc83a", sleeve: "short" }, print: tama,
+    bottom: { kind: "shorts", c: "#4a9a5a" }, feet: { kind: "sandal", c: "#ec5e9e" } } };
+  C.baiSling = { ...C.bai, hand: sling(), keep: "F" };
+  const th = base("thong");
+  C.taPerm = { v2: { ...th, hair: { c: "#d8d4cc", s: "#a8a49c", sh: "#f4f2ee", front: (x) => `<path d="M-46,-552C-50,-604 -18,-622 4,-622C30,-621 53,-604 49,-552Q46,-570 41,-578L-41,-578Q-45,-566 -46,-552Z" fill="${x.hair.c}" ${ln()}/>
+      <g fill="${x.hair.s}" opacity=".5">${[[-30, -600], [-14, -608], [2, -610], [18, -606], [32, -598]].map(([x0, y0]) => `<circle cx="${x0}" cy="${y0}" r="2.4"/>`).join("")}</g>` },
+    top: { kind: "singlet", c: "#f2ede2", sleeve: "none" }, print: pakama, bottom: { kind: "trousers", c: "#24365a" }, feet: { kind: "sandal", c: "#3a2a1e" } } };
+  const ch = base("chan");
+  C.paNuan = { v2: { ...ch, extra: "", faceTop: hat, top: { kind: "shirt", c: "#6a8aa8", sleeve: "long", neck: "collar", collar: "#5a7a98", button: "#e8e4d8" }, print: towel,
+    bottom: { kind: "trousers", c: "#3a3a40" }, skirt: undefined, feet: { kind: "boot", c: "#2a2a2e" } } };
+
   // ---------------- poses ----------------
   // flailing both forearms in front of the face: the wrong instinct
   M.swat = (u, o) => { const a = Math.sin(u * 2 * Math.PI / 0.32), b = Math.sin(u * 2 * Math.PI / 0.27 + 1); return { ...M.idle(u, o), uaF: -100 + 30 * a, faF: -60 + 40 * b, uaB: 96 - 30 * b, faB: 56 - 40 * a, torso: -4 + 3 * a, head: -6 + 4 * b, bodyY: -2 }; };

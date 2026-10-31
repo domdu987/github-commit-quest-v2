@@ -2,7 +2,7 @@
 // soft drop shadow (#muDrop from mmui.js), Kanit; everything enters eased and staggered, then keeps a small secondary motion.
 // The world's materials: a weathered teak board hung from the shrine post by a red-and-yellow cloth, a paper talisman strip, a plank sign.
 // Screen space: pass L.light. Every function: (tl, layer, t0, dur, o)
-//   HnUI.rules(…, { active, done: [i…], y, s })   กฎของยายบัว: the teak board, 3 rows (icon · rhyme), done rows ticked, the active row
+//   HnUI.rules(…, { active, done: [i…], y, s })   กฎของตาเพิ่ม: the teak board, 3 rows (icon · rhyme), done rows ticked, the active row
 //                                                highlighted with its rhyme words underlined, rows not reached faded
 //   HnUI.tag(…, { x, y, text, c })                a name pill (ภูมิ 10 ขวบ …) that pops in
 //   HnUI.still(…)                                 card: one hornet circling a calm face = ✓ stand still · a hand swatting = ✗ (stings)
@@ -53,7 +53,7 @@
     c += `<g filter="url(#muDrop)"><rect x="${-W / 2}" y="20" width="${W}" height="${H}" rx="22" fill="${U.teak}" ${SO(6)}/></g>
       ${Array.from({ length: 7 }, (_, k) => `<path d="M${-W / 2 + 20},${80 + k * 118}q${W / 2},${k % 2 ? 14 : -12} ${W - 40},0" stroke="${U.teakD}" stroke-width="3" fill="none" opacity=".55"/>`).join("")}
       <rect x="${-W / 2 + 26}" y="46" width="${W - 52}" height="${H - 52}" rx="14" fill="${U.paper}" ${SO(4)}/>
-      <text y="138" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="${U.redD}">กฎของยายบัว</text>
+      <text y="138" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="${U.redD}">กฎของตาเพิ่ม</text>
       <path d="M-200,160q200,14 400,0" stroke="${U.orange}" stroke-width="6" fill="none" stroke-linecap="round"/>
       ${[-280, 280].map((x) => `<circle cx="${x}" cy="120" r="12" fill="${U.teakD}"/>`).join("")}`;
     HnUI.RULES.forEach(([a, b, ic], k) => {

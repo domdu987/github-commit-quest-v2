@@ -23,16 +23,16 @@ SHOTS = [
     ("hook", ["n01"], 0.1, -0.1, 2.6),        # dusk at the shrine: ยาย smiling on the bench, she draws the ผ้าขาวม้า over her arm (0:02, the planted mistake)
     ("cmd", ["n02"], 0.05, 0.4, 1.5),         # the cloth slips: her forearm dotted with stings
     ("why", ["n03"], 0.15, 0.4, 4.4),         # card: many stings → within 2 days → the kidneys
-    ("yai", ["y01"], 0.1, 0.3, 3.0),          # ยาย laughing it off, the ice pack on her arm
+    ("yai", ["g01"], 0.1, 0.3, 3.0),          # ยาย laughing it off, the ice pack on her arm
     ("aid", ["n04"], 0.15, 0.3, 4.2),         # card: soap and water · ice in a cloth · 20 minutes ✓
     ("count", ["n05"], 0.1, 0.6, 4.6),        # card: not enough — the stings counted past 10
     ("night", ["n06"], 0.2, 0.4, 5.6),        # night: the house lit; ภูมิ on the stairs sees ยาย come out holding her back → the tea-dark cup card
-    ("phum", ["p01"], 0.05, 0.3, 1.9),        # ภูมิ: "ยายต้องไปหาหมอ!"
-    ("rule", ["y02"], 0.1, 1.2, 4.6),         # ยาย, weak, smiles and says her own rule → the board (rule 3)
+    ("phum", ["b01"], 0.05, 0.3, 1.9),        # ภูมิ: "ยายต้องไปหาหมอ!"
+    ("rule", ["g02"], 0.1, 1.2, 4.6),         # ยาย, weak, smiles and says her own rule → the board (rule 3)
     ("danger", ["n07"], 0.15, 0.4, 5.0),      # card: three danger signs → โทร 1669; ภูมิ dialling
-    ("drive", ["n08"], 0.2, 0.6, 3.6),        # the map: ลุงสิงห์'s pickup from the village to the hospital
+    ("drive", ["n08"], 0.2, 0.6, 3.6),        # the map: ป้านวล's pickup from the village to the hospital
     ("rw", ["n09", "n10"], 0.2, 0.6, 6.0),    # ↺ 0:02: the cloth over the stings
-    ("lung", ["s01"], 0.1, 0.5, 3.0),         # the hospital bench at night: ลุงสิงห์, sleeves rolled up, the scars
+    ("lung", ["w01"], 0.1, 0.5, 3.0),         # the hospital bench at night: ป้านวล, sleeves rolled up, the scars
     ("truth", ["n11"], 0.15, 0.5, 3.6),       # ภูมิ looks at him; the old photo on his phone: him in a hospital bed
     ("end", ["n12"], 0.2, 0.8, 3.6),          # morning: ยาย in the ward, smiling, ภูมิ holding her hand
     ("finale", [], 0, 0, 5.0),                # the series end card

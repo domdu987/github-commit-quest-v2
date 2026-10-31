@@ -20,27 +20,27 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.1, -0.1, 2.5),        # the yard, the title plank on the shrine fence; เตย running for the pond, the swarm behind her
-    ("cmd", ["n02"], 0.05, 0.4, 1.7),         # เตย at the pond's edge; behind her ยาย's door stands open (0:03, the planted mistake)
+    ("hook", ["n01"], 0.1, -0.1, 2.5),        # the yard, the title plank on the shrine fence; แทน running for the pond, the swarm behind her
+    ("cmd", ["n02"], 0.05, 0.4, 1.7),         # แทน at the pond's edge; behind her ตา's door stands open (0:03, the planted mistake)
     ("why", ["n03"], 0.1, 0.2, 4.4),         # card: the pond in section — they wait above the water; you have to come up to breathe
-    ("back", ["n04"], 0.1, 0.3, 3.6),         # ten minutes earlier: the calm yard, ปาล์ม and เตย, name tags
-    ("palm", ["p01"], 0.1, 0.3, 2.8),         # ปาล์ม aims his slingshot at the pods
+    ("back", ["n04"], 0.1, 0.3, 3.6),         # ten minutes earlier: the calm yard, ใบข้าว and แทน, name tags
+    ("palm", ["b01"], 0.1, 0.3, 2.8),         # ใบข้าว aims his slingshot at the pods
     ("reveal", ["n05"], 0.1, 0.15, 4.6),       # tilt from the shrine up to the nest — nobody looks up
     ("legend", ["n06"], 0.1, 0.2, 5.4),       # the shadow screen: the เจ้าที่ and his soldiers
-    ("sing", ["n07"], 0.2, 0.3, 4.2),         # ลุงสิงห์: long sleeves, boots, the sun blazing
-    ("crazy", ["p02"], 0.1, 0.3, 1.8),        # ปาล์ม leans to เตย
-    ("first", ["n08"], 0.1, 0.6, 3.6),        # the first hornet circles เตย's face — she swats it
+    ("sing", ["n07"], 0.2, 0.3, 4.2),         # ป้านวล: long sleeves, boots, the sun blazing
+    ("crazy", ["b02"], 0.1, 0.3, 1.8),        # ใบข้าว leans to แทน
+    ("first", ["n08"], 0.1, 0.6, 3.6),        # the first hornet circles แทน's face — she swats it
     ("still", ["n09"], 0.15, 0.4, 3.6),       # card: one → stand still ✓ / swat → stung ✗
     ("wake", ["n10"], 0.15, 0.7, 2.6),        # the nest's hole: the soldiers pour out
-    ("toey", ["t02"], 0.05, 0.3, 1.8),        # เตย: "สระ! โดดน้ำ!"
-    ("rule", ["y01"], 0.1, 1.0, 3.8),         # ยาย's voice from somewhere → the rule board (rule 1)
+    ("toey", ["k01"], 0.05, 0.3, 1.8),        # แทน: "สระ! โดดน้ำ!"
+    ("rule", ["g01"], 0.1, 1.0, 3.8),         # ตา's voice from somewhere → the rule board (rule 1)
     ("know", ["n11"], 0.1, 0.2, 5.0),        # card: open ground ✗ / indoors ✓
-    ("grab", ["n12"], 0.1, 0.3, 2.8),         # ลุงสิงห์ throws his towel over เตย and hauls her off the bank (the scars on his hand)
-    ("shed", ["s01"], 0.05, 0.9, 2.4),        # the shed door slams; hornets thud on the screen
+    ("grab", ["n12"], 0.1, 0.3, 2.8),         # ป้านวล throws his towel over แทน and hauls her off the bank (the scars on his hand)
+    ("shed", ["w01"], 0.05, 0.9, 2.4),        # the shed door slams; hornets thud on the screen
     ("rw", ["n13", "n14"], 0.15, 0.4, 6.2),    # ↺ 0:03: the open door behind her
-    ("where", ["p03"], 0.1, 0.4, 2.2),        # ปาล์ม made it into ยาย's house: the empty room
+    ("where", ["b03"], 0.1, 0.4, 2.2),        # ใบข้าว made it into ตา's house: the empty room
     ("shrine", ["n15"], 0.1, 0.3, 2.8),       # ยาย at the shrine all along, hunched, the swarm above
-    ("fine", ["y02"], 0.1, 0.9, 2.4),         # "ยายไม่เป็นไรหรอก" — her arm dotted with stings
+    ("fine", ["g02"], 0.1, 0.9, 2.4),         # "ยายไม่เป็นไรหรอก" — her arm dotted with stings
     ("next", [], 0, 0, 3.8),                  # next: ตอนที่ 2 (ตอนจบ) ยายบอกว่าไม่เป็นไร
 ]
 GAP = 0.08

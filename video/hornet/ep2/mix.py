@@ -62,7 +62,7 @@ def frag(k, i=0, j=0):
 
 
 # ---- voice: every line levelled on its own so whispers and shouts sit at a readable loudness ----
-LINE_GAIN = {"p01": 2}   # ขิม shouts over the water: lift her line over the bed and effects
+LINE_GAIN = {"b01": 2}   # ขิม shouts over the water: lift her line over the bed and effects
 vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
