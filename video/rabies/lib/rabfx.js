@@ -134,7 +134,7 @@
       ${good ? `<path d="M${cx - r * 0.5},${cy}l${r * 0.34},${r * 0.38}l${r * 0.64},${r * 0.72 * -1}" stroke="#fff" stroke-width="${r * 0.24}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
         : `<path d="M${cx - r * 0.42},${cy - r * 0.42}L${cx + r * 0.42},${cy + r * 0.42}M${cx + r * 0.42},${cy - r * 0.42}L${cx - r * 0.42},${cy + r * 0.42}" stroke="#fff" stroke-width="${r * 0.24}" stroke-linecap="round"/>`}`;
   }
-  const stampIn = (tl, id, cx, cy, t) => tl.fromTo(`#${id}-s`, { scale: 2.2, opacity: 0, svgOrigin: `${cx} ${cy}` }, { scale: 1, opacity: 1, svgOrigin: `${cx} ${cy}`, duration: 0.35, ease: "back.out(2.6)", immediateRender: false }, t);
+  const stampIn = (tl, id, cx, cy, t) => tl.set(`#${id}-s`, { opacity: 0 }, 0) && tl.fromTo(`#${id}-s`, { scale: 2.2, opacity: 0, svgOrigin: `${cx} ${cy}` }, { scale: 1, opacity: 1, svgOrigin: `${cx} ${cy}`, duration: 0.35, ease: "back.out(2.6)", immediateRender: false }, t);
   const slab = (x, y, w, h, r, face = "url(#rbSlabF)", body = "#b8a888") => `<rect x="${x}" y="${y + 14}" width="${w}" height="${h}" rx="${r}" fill="${body}" ${OUT(5)}/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${face}" ${OUT(5)}/>
     <rect x="${x + 16}" y="${y + 8}" width="${w - 32}" height="${Math.min(60, h * 0.3)}" rx="${r * 0.7}" fill="#fff" opacity=".35"/>`;
   const head = (x, w, y, text, color) => `<rect x="${x}" y="${y}" width="${w}" height="96" rx="30" fill="${color}" ${OUT(5)}/><rect x="${x + 14}" y="${y + 8}" width="${w - 28}" height="30" rx="14" fill="#fff" opacity=".22"/>
@@ -199,7 +199,7 @@
       <g id="${id}-drop${k}"><path d="M${x + w / 2},-130q-36,52 -36,78a36,36 0 0 0 72,0q0,-26 -36,-78Z" fill="#cfe8ff" ${OUT(3.5)}/><path d="M${x + w / 2 - 14},-60q0,-20 10,-36" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
         <path class="${id}-gl" d="M${x + w / 2 + 12},-74l3,-9l3,9l9,3l-9,3l-3,9l-3,-9l-9,-3Z" fill="#fff"/>
         ${virus(x + w / 2 - 6, -62, 0, 0.9, `${id}-wig`)}${virus(x + w / 2 + 10, -40, 30, 0.8, `${id}-wig`)}</g>
-      ${graze ? `<g id="${id}-in" opacity="0">${virus(x + w / 2, 80, 90, 1, `${id}-wig`)}${virus(x + w / 2 - 20, 150, 80, 1, `${id}-wig`)}${virus(x + w / 2 + 16, 240, 100, 1, `${id}-wig`)}</g>
+      ${graze ? `<g id="${id}-vin" opacity="0">${virus(x + w / 2, 80, 90, 1, `${id}-wig`)}${virus(x + w / 2 - 20, 150, 80, 1, `${id}-wig`)}${virus(x + w / 2 + 16, 240, 100, 1, `${id}-wig`)}</g>
         <path id="${id}-nerve0" d="M${x + w / 2 + 20},260C${x + w / 2 + 120},250 ${x + w - 30},200 ${x + w - 10},60" stroke="#ffd23a" stroke-width="20" fill="none" opacity=".35" stroke-dasharray="420" stroke-dashoffset="420" stroke-linecap="round"/>
         <path id="${id}-nerve" d="M${x + w / 2 + 20},260C${x + w / 2 + 120},250 ${x + w - 30},200 ${x + w - 10},60" stroke="#fff3a0" stroke-width="8" fill="none" stroke-dasharray="420" stroke-dashoffset="420" stroke-linecap="round"/>
         ${badStamp(x + w - 60, 330, 44, `${id}-x`)}` : okStamp(x + w - 60, 330, 44, `${id}-ok`)}
@@ -215,7 +215,7 @@
     stampIn(tl, `${id}-ok`, 110 + 410 - 60, 330, t0 + 1.2); sparkle(tl, `${id}-ok`, t0 + 1.3);
     // graze: throbs, virus slips in, races up the nerve, ✗ with a shake and a red flash
     RabFX.pulse(tl, `#${id}-wg`, t0 + 0.5, dur, 0.7, 0.3);
-    tl.fromTo(`#${id}-in`, { opacity: 0, y: -100 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.inOut", immediateRender: false }, t0 + 1.1);
+    tl.fromTo(`#${id}-vin`, { opacity: 0, y: -100 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.inOut", immediateRender: false }, t0 + 1.1);
     tl.to([`#${id}-nerve0`, `#${id}-nerve`], { attr: { "stroke-dashoffset": 0 }, duration: 0.8, ease: "power2.in" }, t0 + 1.7);
     const xt = t0 + (o.badAt ?? 2.4);
     stampIn(tl, `${id}-x`, 560 + 410 - 60, 330, xt); RabFX.shakeSel(tl, `#${id}-x`, xt + 0.3, 12); RabFX.flash(tl, xt + 0.3, "#ff2a1a", 0.28);
