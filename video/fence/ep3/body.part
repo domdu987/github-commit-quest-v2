@@ -1,0 +1,174 @@
+      // ---------- รั้วสุดท้าย EP.3 คนแปลกหน้า ----------
+      // the planted mistake: at ~0:03 the bloody nail is on the INSIDE face of the brace post (the gate and the road behind it) —
+      // ภู hurt himself climbing OUT, so he was inside the fence before he "arrived" (and the radio still says six)
+      const GATE = (id, o = {}) => ({ set: "fenceGate", setOpts: { id, time: "day", lock: "locked", nail: "blood", ...o }, dark: 0, light: DAYL, grade: GD });
+      const drawingCard = (tl, layer, t0, dur) => {
+        const id = `dc${Math.round(t0 * 100)}`;
+        put(layer, `<g id="${id}"><g transform="translate(540,760) rotate(-4)"><g filter="url(#fuDrop)"><rect x="-400" y="-300" width="800" height="600" fill="#fbf6e8" stroke="#26201c" stroke-width="5"/></g>
+          <path d="M-360,200H360" stroke="#8a6a48" stroke-width="10"/>${Array.from({ length: 13 }, (_, k) => `<path d="M${-330 + k * 55},200V-40" stroke="#4a5a5a" stroke-width="7"/>`).join("")}<path d="M-360,-30H360M-360,90H360" stroke="#4a5a5a" stroke-width="7"/>
+          <g stroke-linecap="round" fill="none"><circle cx="-120" cy="-110" r="34" stroke="#c88a5a" stroke-width="9"/><path d="M-120,-76V40M-120,0l-50,-30M-120,0l50,-40M-120,40l-40,90M-120,40l40,90" stroke="#e8823a" stroke-width="14"/>
+          <path d="M-150,-20H-90" stroke="#e8823a" stroke-width="30"/></g>
+          <g><path d="M120,200Q90,-20 140,-150Q190,-200 230,-130Q270,-10 230,200Z" fill="#1a1a22"/><circle cx="170" cy="-120" r="10" fill="#9af070"/><circle cx="205" cy="-118" r="10" fill="#9af070"/></g>
+          <path d="M-60,-120q40,-30 90,-10" stroke="#2a2a2a" stroke-width="6" fill="none" stroke-dasharray="10 10"/>
+          <text x="-340" y="-230" font-family="Sriracha" font-size="44" fill="#d8392e">พี่ภู</text><text x="250" y="-230" font-family="Sriracha" font-size="44" fill="#2a2a2a">???</text></g></g>`);
+        tl.set(`#${id}`, { opacity: 0 }, 0);
+        tl.fromTo(`#${id}`, { opacity: 0, y: 200 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.6)", immediateRender: false }, t0);
+        tl.fromTo(`#${id} circle[fill="#9af070"]`, { opacity: 1 }, { opacity: 0.2, duration: 0.25, yoyo: true, repeat: Math.ceil(dur / 0.25), immediateRender: false }, t0 + 0.6);
+      };
+
+      // ---------- 1. hook: a bare foot comes down on the nail in the brace plank ----------
+      add("hook", {
+        set: "fenceNail", setOpts: { id: "n1", time: "day", foot: true }, dark: 0, light: false, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 0.85, 540, 960) }, { t: D("hook"), glide: D("hook"), ...fr(540, 1000, 1.0, 540, 960) }] },
+        shake: (t) => (t > 1.55 && t < 1.85 ? { x: 10 * Math.sin(t * 70), y: 8 * Math.sin(t * 61), r: 0 } : 0),
+        captions: caps("hook"),
+        fx(tl, id, t0, L) { tl.fromTo("#n1-foot", { y: -500 }, { y: 0, duration: 1.5, ease: "power2.in", immediateRender: false }, t0 + 0.05); put(L.light, `<rect id="h1r" width="1080" height="1920" fill="#e2382e" opacity="0"/>`); tl.fromTo("#h1r", { opacity: 0.35 }, { opacity: 0, duration: 0.5, immediateRender: false }, t0 + 1.55); },
+      });
+      // ---------- 2. the command over the planted wide: the brace post INSIDE the gate, the blood on its nail ----------
+      add("dont", {
+        ...GATE("g2", { time: "day" }),
+        cam: { keys: [{ t: 0, ...fr(330, 1180, 1.5, 540, 1000) }, { t: D("dont"), glide: D("dont"), ...fr(400, 1200, 1.2, 540, 1000) }] },
+        captions: caps("dont"),
+        fx(tl, id, t0) { Fence.life(tl, "g2", t0, D("dont")); },
+      });
+      // ---------- 3. card: a deep puncture counts as a dirty wound ----------
+      add("dirty", {
+        set: "fenceNail", setOpts: { id: "n3", time: "day", blood: true }, dark: 0, light: false, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(540, 1000, 0.9, 540, 960)) }] },
+        captions: caps("dirty"),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".45"/>`);
+          FenceUI.versus(tl, L.light, t0, D("dirty"), { title: "แผลไหนเสี่ยงกว่า", a: { icon: "scrape", text: "ถลอกกว้าง", sub: "ล้างสะอาดแล้ว", mark: "" }, b: { icon: "nail", text: "แทงลึก", sub: "นับเป็นแผลสกปรก", mark: "x" }, gap: 0.5, markAt: [9, F("dirty", 0, 1) + 0.3], y: 720 });
+        },
+      });
+      // ---------- 4. dawn, day 102: a man lying outside the gate ----------
+      add("man", {
+        set: "fenceGate", setOpts: { id: "g4", time: "day", lock: "locked", nail: "blood", man: true }, dark: 0, light: DAYL, grade: { top: "#ffd8b0", bottom: "#3a2a30", op: 0.14 },
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 0.7, 540, 1050) }, { t: D("man"), glide: D("man"), ...fr(560, 1180, 0.95, 540, 1050) }] },
+        actors: [A("pim", 380, 1620, 0.9, [T("idle", "worry", "frown")]), A("kongBat", 720, 1630, 0.92, [T("bat", "angry", "flat")], { flip: true })],
+        captions: caps("man"),
+        fx(tl, id, t0, L) { Fence.life(tl, "g4", t0, D("man")); chalkWord(tl, L.light, t0 + 0.1, D("man"), "วันที่ 102", 330, 120); },
+      });
+      // ---------- 5. ภู outside the gate: "I wasn't bitten… just a nail" ----------
+      add("plead", {
+        set: "fenceOut", setOpts: { id: "o5", time: "day" }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(540, 1440, 1.2, 540, 1200) }, { t: D("plead"), glide: D("plead"), ...fr(540, 1420, 1.3, 540, 1200) }] },
+        actors: [A("phu", 560, 1660, 0.95, [T("sit", "worry", "o")], { talk: [TALK("plead", 0)] })],
+        captions: caps("plead", undefined, QUO),
+        fx(tl, id, t0) { Fence.life(tl, "o5", t0, D("plead")); },
+      });
+      // ---------- 6. ครูพิม: "help — but don't trust" + rule 2 ----------
+      add("rule", {
+        ...GATE("g6", { man: true }), blur: { far: 3, mid: 3, set: 2, fg: 7 },
+        cam: { keys: [{ t: 0, ...still(fr(420, 1180, 1.3, 540, 1250)) }] },
+        actors: [A("pim", 420, 1640, 1.0, [T("idle", "angry", "flat")], { talk: [TALK("rule", 0)] })],
+        captions: caps("rule", undefined, QUO),
+        fx(tl, id, t0, L) { FenceUI.rules(tl, L.light, t0 + 0.1, D("rule"), { active: 1, done: [0], y: 380 }); },
+      });
+      // ---------- 7. the search: inside, ภู sitting, ก้อง with the bat, ครูพิม checks; no bite — the foot bandaged ----------
+      add("search", {
+        set: "fenceYard", setOpts: { id: "y7", time: "day" }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(480, 1400, 1.0, 540, 1150) }, { t: D("search"), glide: D("search"), ...fr(480, 1420, 1.08, 540, 1150) }] },
+        actors: [A("phu", 420, 1640, 0.95, [T("sit", "worry", "flat")]), A("pim", 180, 1650, 0.95, [T("phoneLook", "normal", "flat")]), A("kongBat", 780, 1660, 0.98, [T("bat", "angry", "flat")], { flip: true })],
+        captions: caps("search"),
+        fx(tl, id, t0, L) { Fence.life(tl, "y7", t0, D("search")); trio(tl, L.light, t0, D("search"), [["skull", "x", F("search", 0, 1)], ["nail", "", F("search", 0, 1) + 0.4]], 330, 0.9); },
+      });
+      // ---------- 8. card: tetanus — the germ in the world around us → in through the wound ----------
+      add("germ", {
+        set: "fenceYard", setOpts: { id: "y8", time: "day" }, dark: 0, light: false, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(480, 1300, 0.9, 540, 1100)) }] },
+        captions: caps("germ"),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".4"/>`);
+          FenceUI.card(tl, L.light, t0, D("germ"), { title: "บาดทะยัก", color: "#2fa864", y: 300,
+            rows: [{ icon: "soil", text: "เชื้ออยู่รอบตัว", sub: "ในสิ่งแวดล้อม", at: F("germ", 0, 1) }, { icon: "germ", text: "เข้าทางแผล", sub: "ผิวหนังที่เปิด", at: F("germ", 0, 2) }] });
+        },
+      });
+      // ---------- 9. card: the first sign — the jaw locks; within 3–21 days ----------
+      add("jaw", {
+        set: "fenceYard", setOpts: { id: "y9", time: "day" }, dark: 0, light: false, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(480, 1300, 0.9, 540, 1100)) }] },
+        captions: caps("jaw"),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".4"/>`);
+          FenceUI.card(tl, L.light, t0, D("jaw"), { title: "อาการแรก", color: "#e2382e", y: 300,
+            rows: [{ icon: "jaw", text: "ขากรรไกรเกร็ง", sub: "อ้าปากไม่ได้", at: F("jaw", 0, 1) }, { icon: "cal", text: "3–21 วัน", sub: "หลังได้แผล", at: F("jaw", 0, 2) }] });
+        },
+      });
+      // ---------- 10. เจ๊หงส์: "can't open his mouth… just like ห่า!" ----------
+      add("ha", {
+        set: "fenceYard", setOpts: { id: "y10", time: "day" }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...still(fr(640, 1300, 1.25, 540, 1150)) }] },
+        actors: [A("phu", 420, 1640, 0.95, [T("sit", "wide", "flat")]), A("hong", 820, 1650, 0.95, [T("point", "wide", "scream")], { flip: true, talk: [TALK("ha", 0, "scream")] })],
+        captions: caps("ha", undefined, QUO),
+        fx(tl, id, t0) { Fence.life(tl, "y10", t0, D("ha")); },
+      });
+      // ---------- 11. card: in real life — a wound like this, last shot over 5 years → the booster ----------
+      add("shot", {
+        set: "fenceYard", setOpts: { id: "y11", time: "day" }, dark: 0, light: false, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(480, 1300, 0.9, 540, 1100)) }] },
+        captions: caps("shot"),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".4"/>`);
+          FenceUI.card(tl, L.light, t0, D("shot"), { title: "ในชีวิตจริง", color: "#2f6fd0", y: 220,
+            rows: [{ icon: "nail", text: "แผลแทงลึก แผลสกปรก", size: 48, at: F("shot", 0, 0) + 0.4 }, { icon: "five", text: "ฉีดครั้งสุดท้าย", sub: "เกิน 5 ปี", at: F("shot", 0, 1) }, { icon: "syringe", text: "ไปฉีดกระตุ้น", at: vo("shot", 1), mark: "ok" }] });
+        },
+      });
+      // ---------- 12. night: the radio — still "หก" ----------
+      add("radio", {
+        set: "fenceRadio", setOpts: { id: "ra12" }, dark: 0, light: false, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 0.85, 540, 1000) }, { t: D("radio"), glide: D("radio"), ...fr(560, 1180, 1.0, 540, 1000) }] },
+        captions: [...caps("radio", [0]), ...caps("radio", [1], QUO)],
+        fx(tl, id, t0, L) {
+          Fence.life(tl, "ra12", t0, D("radio"));
+          tl.fromTo(["#ra12-glow", "#ra12-halo"], { opacity: 0.15 }, { opacity: 1, duration: 0.08, yoyo: true, repeat: 7, ease: "none", immediateRender: false }, t0 + 0.5);
+          FenceUI.radio(tl, L.light, t0, D("radio"), { word: "0 6", at: vo("radio", 1) + 0.6, y: 520 });
+        },
+      });
+      // ---------- 13. rewind to 0:03: the nail is on the inside ----------
+      add("rw", {
+        ...GATE("g13"),
+        cam: { keys: [{ t: 0, ...fr(330, 1180, 1.5, 540, 1000) }, { t: D("rw"), glide: D("rw") - 0.5, ...fr(540, 1200, 0.85, 540, 1000) }] },
+        captions: caps("rw"),
+        fx(tl, id, t0, L) { FenceUI.rewind(tl, L.light, t0, D("rw"), "0:03"); },
+      });
+      // ---------- 14. "the bloody nail… is on the inside": an arrow from the nail to the yard side ----------
+      add("inside", {
+        ...GATE("g14"),
+        cam: { keys: [{ t: 0, ...still(fr(420, 1250, 0.95, 540, 1000)) }] },
+        captions: caps("inside"),
+        fx(tl, id, t0, L) {
+          const c = CAM(420, 1250, 0.95, 540, 1000), [nx, ny] = SP(c, 318, 1170);
+          put(L.light, `<g id="in14"><circle cx="${nx}" cy="${ny}" r="70" fill="none" stroke="#ff5a3a" stroke-width="9" stroke-dasharray="18 10"/>
+            <g transform="translate(${nx + 30},${ny + 330})"><rect x="-150" y="-44" width="300" height="88" rx="44" fill="#ff5a3a" stroke="#fff" stroke-width="5"/><text y="16" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="48" fill="#fff">ด้านในรั้ว</text></g>
+            <path d="M${nx + 10},${ny + 90}V${ny + 270}" stroke="#ff5a3a" stroke-width="9" stroke-linecap="round"/></g>`);
+          tl.set("#in14", { opacity: 0 }, 0); tl.fromTo("#in14", { opacity: 0, scale: 1.4, svgOrigin: `${nx} ${ny}` }, { opacity: 1, scale: 1, svgOrigin: `${nx} ${ny}`, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + F("inside", 0, 1));
+        },
+      });
+      // ---------- 15. ภู asleep in the classroom, the bandaged foot ----------
+      add("notout", {
+        set: "fenceClass", setOpts: { id: "c15", time: "night" }, dark: 0.06, light: NITE, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(-300, 1720, 1.1, 540, 1150) }, { t: D("notout"), glide: D("notout"), ...fr(-280, 1700, 1.2, 540, 1150) }] },
+        actors: [A("phu", -300, 1880, 0.8, [T("lie", "closed", "flat")])],
+        captions: caps("notout"),
+        fx(tl, id, t0) { Fence.life(tl, "c15", t0, D("notout")); },
+      });
+      // ---------- 16. ปั้น beside him with her drawing: "พี่ภูคะ… เมื่อคืนพี่คุยกับใคร" → the drawing ----------
+      split("ask", 2.4, {
+        set: "fenceClass", setOpts: { id: "c16", time: "night" }, dark: 0.06, light: NITE, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(-120, 1560, 1.3, 540, 1100) }, { t: 2.4, glide: 2.4, ...fr(-100, 1540, 1.42, 540, 1100) }] },
+        actors: [A("phu", -360, 1880, 0.8, [T("lie", "normal", "flat")]), A("panDraw", 40, 1820, 0.62, [T("hold", "normal", "flat")], { flip: true, talk: [TALK("ask", 0, "o")] })],
+        captions: caps("ask", undefined, QUO),
+        fx(tl, id, t0) { Fence.life(tl, "c16", t0, 2.4); },
+      }, {
+        set: "fenceClass", setOpts: { id: "c16b", time: "night" }, dark: 0.1, light: false, grade: GN, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(0, 1400, 0.9, 540, 1000)) }] },
+        captions: capsFrom("ask", 2.4, undefined, QUO),
+        fx(tl, id, t0, L) { put(L.light, `<rect width="1080" height="1920" fill="#0a0c14" opacity=".5"/>`); drawingCard(tl, L.light, t0, D("ask") - 2.4); },
+      });
+      // ---------- 17. next ----------
+      add("next", {
+        ...GATE("g17", { time: "night" }), light: NITE, grade: GN, dark: 0.1, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(540, 1300, 0.8, 540, 1000)) }] },
+        fx(tl, id, t0, L) { FenceUI.next(tl, L.light, t0, D("next"), { ep: 4, l1: "ถ้าได้ยินเสียงเด็กร้องให้ช่วยนอกรั้ว…", l2: "อย่าเพิ่งออกไป" }); },
+      });

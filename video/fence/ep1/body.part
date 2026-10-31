@@ -1,0 +1,235 @@
+      // ---------- รั้วสุดท้าย EP.1 กระป๋องบวม ----------
+      // grammar: hook insert (can + chalk title) → the planted wide (the gate from the window, padlock open at ~0:05) → cards →
+      // day 100 establishing → the five → rule slate → ledger → map → market → the dusk run → the gate → the crate → cards →
+      // rewind → padlock → night radio → five asleep → ปั้น's drawing → prints in the mud → next card
+      const CANSET = (id, o = {}) => ({ set: "fenceCanIns", setOpts: { id, time: "dusk", bulge: 0.45, chalk: "รั้วสุดท้าย", chalk2: "วันที่ 100", ...o }, dark: 0, light: false, grade: GK });
+      const WINV = (id) => ({ set: "fenceGate", setOpts: { id, time: "dusk", lock: "open", horde: 12 }, dark: 0, light: DUSKL, grade: GK });
+      const kidHand = (L, id, W, deg, k = 0.62) => put(L.act, `<g id="${id}">${handAt(W, deg, k, KIDSK, { fore: 700 })}</g>`);
+      const adultHand = (L, id, W, deg, k = 0.85) => put(L.act, `<g id="${id}">${handAt(W, deg, k, PIMSK, { fore: 900, band: "#bcd8f0" })}</g>`);
+
+      // ---------- 1. hook: the domed can on the desk, the chalk title behind; a small hand comes in with the opener ----------
+      add("hook", {
+        ...CANSET("ci0"),
+        cam: { keys: [{ t: 0, ...fr(540, 1080, 0.82, 540, 960) }, { t: D("hook"), glide: D("hook"), ...fr(540, 1180, 0.98, 540, 960) }] },
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          kidHand(L, "h1k", [880, 1120], -70, 0.85);
+          put(L.act, `<g id="h1op" transform="translate(860,1090) rotate(-28)"><rect x="-150" y="-16" width="240" height="32" rx="14" fill="#c8ccd0" stroke="${INK}" stroke-width="3"/><path d="M90,-30L170,-10L160,26L90,20Z" fill="#9aa0a6" stroke="${INK}" stroke-width="3"/></g>`);
+          tl.set("#ci0-op", { opacity: 0 }, 0);
+          tl.fromTo(["#h1k", "#h1op"], { x: 420, y: 160 }, { x: 0, y: 0, duration: 1.6, ease: "power2.out", immediateRender: false }, t0 + 0.2);
+          tl.fromTo("#ci0-c-lid", { scale: 1 }, { scale: 1.06, svgOrigin: "0 -180", duration: 0.5, yoyo: true, repeat: 4, ease: "sine.inOut", immediateRender: false }, t0);
+        },
+      });
+      // ---------- 2. the command: the lid swells; ครูพิม's hand slaps down between the opener and the can ----------
+      add("dont", {
+        ...CANSET("ci1", { bulge: 0.7 }),
+        cam: { keys: [{ t: 0, ...fr(560, 1230, 1.12, 540, 960) }, { t: D("dont"), glide: D("dont"), ...fr(560, 1230, 1.2, 540, 960) }] },
+        shake: (t) => (t > 0.1 && t < 0.45 ? { x: 10 * Math.sin(t * 70), y: 6 * Math.sin(t * 61), r: 0 } : 0),
+        captions: caps("dont"),
+        fx(tl, id, t0, L) {
+          kidHand(L, "h2k", [780, 1060], -80); adultHand(L, "h2a", [420, 1020], 40);
+          tl.fromTo("#ci1-c-lid", { scale: 1 }, { scale: 1.16, svgOrigin: "0 -180", duration: 0.35, ease: "back.out(3)", immediateRender: false }, t0 + 0.05);
+          tl.fromTo("#h2a", { x: -500, y: -200 }, { x: 0, y: 0, duration: 0.22, ease: "power3.out", immediateRender: false }, t0 + 0.08);
+          tl.to("#h2k", { x: 260, y: 90, duration: 0.3, ease: "power2.out" }, t0 + 0.2);
+          put(L.light, `<rect id="d2r" width="1080" height="1920" fill="#e2382e" opacity="0"/>`);
+          tl.fromTo("#d2r", { opacity: 0.35 }, { opacity: 0, duration: 0.5, immediateRender: false }, t0 + 0.08);
+        },
+      });
+      // ---------- 3. the planted wide: from the classroom window, the gate at dusk — the padlock hangs OPEN; the horde outside ----------
+      add("tox", {
+        ...WINV("g3"),
+        cam: { keys: [{ t: 0, ...fr(540, 1260, 0.9, 540, 1080) }, { t: D("tox"), glide: D("tox"), ...fr(540, 1260, 0.96, 540, 1080) }] },
+        actors: [A("pim", 330, 1560, 0.8, [T("idle", "worry", "flat")]), A("kong", 800, 1570, 0.82, [T("idle", "normal", "smile")], { flip: true })],
+        captions: caps("tox"),
+        fx(tl, id, t0, L) { Fence.life(tl, "g3", t0, D("tox")); trio(tl, L.light, t0, D("tox"), [["eye", "x", F("tox", 0, 0) + 0.3], ["nose", "x", F("tox", 0, 1)], ["tongue", "x", F("tox", 0, 1) + 0.5]], 330, 0.85); },
+      });
+      // ---------- 4. "one taste can kill": spoon → skull ----------
+      add("die", {
+        ...CANSET("ci4", { bulge: 0.7 }), blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(540, 1200, 1.0, 540, 960)) }] },
+        captions: caps("die"),
+        fx(tl, id, t0, L) { put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".45"/>`); FenceUI.versus(tl, L.light, t0, D("die"), { a: { icon: "spoon", text: "ชิมนิดเดียว", mark: "" }, b: { icon: "skull", text: "ก็ตายได้", mark: "x" }, gap: 0.6, markAt: [9, 0.9], y: 760 }); },
+      });
+      // ---------- 5. day 100 after ห่าลง: the school from the road, ผีห่า shambling past the gate ----------
+      const C5 = CAM(540, 1230, 0.6, 540, 1080);
+      add("day", {
+        set: "fenceOut", setOpts: { id: "o5", time: "day" }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(380, 1230, 0.6, 540, 1080) }, { t: D("day"), glide: D("day"), ...fr(560, 1230, 0.64, 540, 1080) }] },
+        actors: [A("hz1", -300, 1620, 0.85, [T("shamble", "glow", "snarl")], { moveTo: { x: 60, y: 1620, dur: D("day") } }), A("hz3", 1300, 1660, 0.88, [T("shamble", "glow", "snarl")], { flip: true, moveTo: { x: 980, y: 1660, dur: D("day") } }),
+          A("hz2", 760, 1700, 0.95, [T("lunge", "glow", "scream")], { flip: true })],
+        captions: caps("day"),
+        fx(tl, id, t0, L) { Fence.life(tl, "o5", t0, D("day")); chalkWord(tl, L.light, t0 + 0.15, D("day"), "วันที่ 100", 330, 130); },
+      });
+      // ---------- 6. the five in the yard (name tags), pan across ----------
+      const P6 = [[60, 1530, "pim", 0.86], [270, 1550, "kongBat", 0.9], [480, 1545, "man", 0.88], [690, 1535, "hong", 0.84], [880, 1560, "pan", 0.56]];
+      add("five", {
+        set: "fenceYard", setOpts: { id: "y6", time: "day" }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(400, 1200, 0.78, 540, 1080) }, { t: D("five"), glide: D("five"), ...fr(520, 1220, 0.82, 540, 1080) }] },
+        actors: P6.map(([x, y, w, s], k) => A(w, x, y, s, [T(k === 1 ? "idle" : k === 4 ? "wave" : "idle", "normal", k === 2 ? "flat" : "smile")], { flip: k > 2 })),
+        captions: caps("five"),
+        fx(tl, id, t0, L) {
+          Fence.life(tl, "y6", t0, D("five"));
+          const c = CAM(460, 1210, 0.8, 540, 1080), names = ["ครูพิม", "ก้อง", "ลุงหมาน", "เจ๊หงส์", "ปั้น"];
+          FenceUI.tags(tl, L.light, t0, P6.map(([x, y, w, s], k) => { const [sx, sy] = SP(c, x, y - 640 * s); return [sx, sy - 40, names[k], F("five", 0, 0) + 0.3 + k * 0.28, k % 2 ? 4 : -4]; }), D("five"));
+        },
+      });
+      // ---------- 7. ครูพิม at the gate: rule 1 on the slate ----------
+      add("rule", {
+        set: "fenceGate", setOpts: { id: "g7", time: "day", lock: "locked" }, dark: 0, light: DAYL, grade: GD, blur: { far: 3, mid: 3, set: 2, fg: 7 },
+        cam: { keys: [{ t: 0, ...still(fr(420, 1180, 1.3, 540, 1250)) }] },
+        actors: [A("pim", 420, 1640, 1.0, [T("point", "normal", "flat")], { talk: [TALK("rule", 0)] })],
+        captions: caps("rule", undefined, QUO),
+        fx(tl, id, t0, L) { FenceUI.rules(tl, L.light, t0 + 0.1, D("rule"), { active: 0, y: 380 }); },
+      });
+      // ---------- 8. the ledger: rice for 3 days → ก้อง slips out through the gate with his bat ----------
+      split("rice", 2.0, {
+        set: "fenceClass", setOpts: { id: "c8", time: "day" }, dark: 0, light: DAYL, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(300, 900, 0.7, 540, 960)) }] },
+        captions: caps("rice", undefined),
+        fx(tl, id, t0, L) { FenceUI.ledger(tl, L.light, t0, 2.0, { day: "วันที่ 100", y: 380, rows: [["ข้าวสาร", "เหลือ 3 วัน", 0.5, "circle"], ["น้ำปลา", "ครึ่งขวด", 1.0]] }); },
+      }, {
+        set: "fenceGate", setOpts: { id: "g8", time: "day", lock: "locked", open: 0.5 }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(540, 1250, 0.8, 540, 1100) }, { t: D("rice") - 2.0, glide: D("rice") - 2.0, ...fr(540, 1230, 0.86, 540, 1100) }] },
+        actors: [A("kongBat", 540, 1620, 0.9, [T("walk", "normal", "smile")], { flip: true, moveTo: { x: 560, y: 1340, s: 0.55, dur: D("rice") - 2.0 } }), A("pim", 200, 1640, 0.95, [T("wave", "worry", "flat")])],
+        captions: capsFrom("rice", 2.0),
+        fx(tl, id, t0) { Fence.life(tl, "g8", t0, D("rice") - 2.0); },
+      });
+      // ---------- 9. the map school → market, then the market: one crate of cans ----------
+      split("map", 1.7, {
+        set: "fenceYard", setOpts: { id: "y9", time: "day" }, dark: 0, light: false, grade: GD, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(540, 1200, 0.7, 540, 1000)) }] },
+        captions: caps("map"),
+        fx(tl, id, t0, L) { FenceUI.map(tl, L.light, t0, 1.7, { go: [0.25, 1.45] }); },
+      }, {
+        set: "fenceMarket", setOpts: { id: "m9", time: "dusk" }, dark: 0, light: DUSKL, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(540, 1220, 0.78, 540, 1100) }, { t: D("map") - 1.7, glide: D("map") - 1.7, ...fr(540, 1260, 0.86, 540, 1100) }] },
+        actors: [A("kongCrate", 520, 1660, 0.95, [T("carry", "worry", "o")])],
+        captions: capsFrom("map", 1.7),
+      });
+      // ---------- 10. the run (no voice): the dusk road, ก้อง flat out with the crate, the horde behind ----------
+      add("run", {
+        set: "fenceRoad", setOpts: { id: "r10", time: "dusk", horde: 22 }, dark: 0, light: DUSKL, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 0.75, 540, 1100) }, { t: D("run"), glide: D("run"), ...fr(540, 1420, 0.9, 540, 1100) }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 17), y: 4 * Math.sin(t * 23), r: 0 }),
+        actors: [A("kongCrate", 520, 1600, 0.75, [T("run", "wide", "scream")], { moveTo: { x: 560, y: 1880, s: 1.15, dur: D("run") } })],
+        fx(tl, id, t0) { Fence.life(tl, "r10", t0, D("run")); tl.fromTo("#r10-horde", { scale: 0.9, svgOrigin: "560 1300" }, { scale: 1.12, svgOrigin: "560 1300", duration: D("run"), ease: "none", immediateRender: false }, t0); },
+      });
+      // ---------- 11. the gate: he slips in, ครูพิม slams it, the horde hits the bars ----------
+      add("gate", {
+        set: "fenceGate", setOpts: { id: "g11", time: "dusk", lock: "open", horde: 16 }, dark: 0, light: DUSKL, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(540, 1250, 0.74, 540, 1100) }, { t: D("gate"), glide: D("gate"), ...fr(540, 1230, 0.8, 540, 1100) }] },
+        shake: (t) => (t > 1.25 && t < 1.6 ? { x: 14 * Math.sin(t * 70), y: 9 * Math.sin(t * 57), r: 0 } : 0),
+        actors: [A("kongCrate", 560, 1450, 0.7, [T("run", "wide", "scream")], { moveTo: { x: 820, y: 1700, s: 1.0, dur: 1.0 } }), A("pim", 300, 1620, 0.92, [T("slam", "angry", "scream")], { moveTo: { x: 430, y: 1620, dur: 1.2, at: 0.2 } })],
+        captions: caps("gate"),
+        fx(tl, id, t0, L) {
+          Fence.life(tl, "g11", t0, D("gate"));
+          tl.fromTo("#g11-horde", { y: -60, scale: 0.85, svgOrigin: "560 1300" }, { y: 0, scale: 1, svgOrigin: "560 1300", duration: 1.3, ease: "power1.in", immediateRender: false }, t0);
+          tl.to("#g11-lock", { rotation: 18, svgOrigin: "0 -30", duration: 0.12, yoyo: true, repeat: 5, ease: "sine.inOut" }, t0 + 1.28);
+        },
+      });
+      // ---------- 12. the classroom at dusk: ก้อง shows the crate (k02), the others round him ----------
+      add("free", {
+        set: "fenceClass", setOpts: { id: "c12", time: "dusk", chalk: ["รั้วสุดท้าย", "วันที่ 100"] }, dark: 0, light: DUSKL, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(380, 1220, 0.86, 540, 1100) }, { t: D("free"), glide: D("free"), ...fr(400, 1230, 0.92, 540, 1100) }] },
+        actors: [A("hong", 60, 1700, 0.9, [T("idle", "normal", "smile")]), A("kongCrate", 360, 1720, 0.95, [T("carry", "normal", "laugh")], { talk: [TALK("free", 0, "laugh")] }),
+          A("pan", 620, 1730, 0.6, [T("idle", "wide", "o")], { flip: true }), A("man", 780, 1715, 0.9, [T("idle", "normal", "flat")], { flip: true })],
+        captions: caps("free", undefined, QUO),
+        fx(tl, id, t0) { Fence.life(tl, "c12", t0, D("free")); },
+      });
+      // ---------- 13. insert: one of them is domed — we see it first ----------
+      add("bulge", {
+        ...CANSET("ci13", { bulge: 1, chalk: "", chalk2: "" }),
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 0.9, 540, 960) }, { t: D("bulge"), glide: D("bulge"), ...fr(540, 1080, 1.25, 540, 960) }] },
+        captions: caps("bulge"),
+        fx(tl, id, t0, L) { tl.fromTo("#ci13-c-lid", { scale: 1 }, { scale: 1.05, svgOrigin: "0 -180", duration: 0.4, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, t0); put(L.light, `<rect id="b13" width="1080" height="1920" fill="#e2382e" opacity="0"/>`); tl.fromTo("#b13", { opacity: 0 }, { opacity: 0.18, duration: 0.3, yoyo: true, repeat: 3, immediateRender: false }, t0 + F("bulge", 0, 1)); },
+      });
+      // ---------- 14. card: bulging · leaking · foaming → throw it out ----------
+      add("signs", {
+        ...CANSET("ci14", { bulge: 1 }), blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(540, 1150, 0.9, 540, 960)) }] },
+        captions: caps("signs"),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".5"/>`);
+          FenceUI.card(tl, L.light, t0, D("signs"), { title: "กระป๋องแบบนี้ ห้ามกิน", color: "#e2382e", y: 240,
+            rows: [{ icon: "canB", text: "บวม ฝาโป่ง", at: F("signs", 0, 0) + 0.1, mark: "x" }, { icon: "canL", text: "รั่ว ซึม", at: F("signs", 0, 0) + 0.7, mark: "x" }, { icon: "canF", text: "ฟองพุ่งตอนเปิด", at: F("signs", 0, 1), mark: "x" }],
+            foot: "ทิ้งไปทั้งกระป๋อง", footAt: F("signs", 0, 2) });
+        },
+      });
+      // ---------- 15. ปั้น's drawing on the desk: the can with a skull — she already knew ----------
+      add("taste", {
+        ...CANSET("ci15", { bulge: 1, drawing: true }),
+        cam: { keys: [{ t: 0, ...fr(300, 1560, 1.1, 540, 1000) }, { t: D("taste"), glide: D("taste"), ...fr(240, 1620, 1.35, 540, 1000) }] },
+        captions: caps("taste"),
+        fx(tl, id, t0, L) { kidHand(L, "h15", [380, 1760], -20, 0.7); trio(tl, L.light, t0, D("taste"), [["tongue", "x", 0.2]], 380, 1.1); },
+      });
+      // ---------- 16. card: if you've eaten it → blurred / drooping eyelids / hard to swallow → hospital now ----------
+      add("sympt", {
+        set: "fenceClass", setOpts: { id: "c16", time: "dusk" }, dark: 0, light: false, grade: GK, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(300, 900, 0.7, 540, 960)) }] },
+        captions: caps("sympt"),
+        fx(tl, id, t0, L) {
+          put(L.light, `<rect width="1080" height="1920" fill="#14100c" opacity=".45"/>`);
+          FenceUI.card(tl, L.light, t0, D("sympt"), { title: "ถ้ากินไปแล้ว", color: "#2f6fd0", y: 200,
+            rows: [{ icon: "blur", text: "ตาพร่า เห็นภาพซ้อน", at: F("sympt", 0, 1) }, { icon: "lid", text: "หนังตาตก", at: F("sympt", 0, 1) + 0.6 }, { icon: "throat", text: "กลืนลำบาก พูดไม่ชัด", at: F("sympt", 0, 2) }],
+            foot: "ไปโรงพยาบาลทันที อย่ารอ", footColor: "#e2382e", footAt: F("sympt", 0, 3) });
+        },
+      });
+      // ---------- 17. the rewind to 0:05: the window shot again, pushing in on the padlock ----------
+      add("rw", {
+        ...WINV("g17"),
+        cam: { keys: [{ t: 0, ...fr(540, 1260, 0.9, 540, 1080) }, { t: D("rw"), glide: D("rw") - 0.6, ...fr(570, 1300, 1.6, 540, 960) }] },
+        actors: [A("pim", 330, 1560, 0.8, [T("idle", "worry", "flat")]), A("kong", 800, 1570, 0.82, [T("idle", "normal", "smile")], { flip: true })],
+        captions: caps("rw"),
+        fx(tl, id, t0, L) {
+          FenceUI.rewind(tl, L.light, t0, D("rw"), "0:05");
+          const c = CAM(570, 1300, 1.6, 540, 960), [sx, sy] = SP(c, 568, 1320);
+          put(L.light, `<circle id="rw17c" cx="${sx}" cy="${sy}" r="120" fill="none" stroke="#ff5a3a" stroke-width="10" stroke-dasharray="20 12"/>`);
+          tl.set("#rw17c", { opacity: 0 }, 0); tl.fromTo("#rw17c", { opacity: 0, scale: 1.6, svgOrigin: `${sx} ${sy}` }, { opacity: 1, scale: 1, svgOrigin: `${sx} ${sy}`, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0 + D("rw") - 1.2);
+        },
+      });
+      // ---------- 18. the open padlock swinging on the chain, the horde beyond the bars ----------
+      add("lock", {
+        set: "fenceLock", setOpts: { id: "l18", time: "dusk", lock: "open", horde: 9 }, dark: 0, light: false, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(560, 1020, 0.9, 540, 960) }, { t: D("lock"), glide: D("lock"), ...fr(560, 1040, 1.02, 540, 960) }] },
+        captions: caps("lock"),
+        fx(tl, id, t0) { tl.fromTo("#l18-lk", { rotation: -10 }, { rotation: 10, svgOrigin: "560 780", duration: 0.7, yoyo: true, repeat: 4, ease: "sine.inOut", immediateRender: false }, t0); },
+      });
+      // ---------- 19. night: the radio wakes on its own — "หก" ----------
+      add("radio", {
+        set: "fenceRadio", setOpts: { id: "ra19" }, dark: 0, light: false, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 0.85, 540, 1000) }, { t: D("radio"), glide: D("radio"), ...fr(560, 1180, 1.0, 540, 1000) }] },
+        captions: [...caps("radio", [0]), ...caps("radio", [1], QUO)],
+        fx(tl, id, t0, L) {
+          Fence.life(tl, "ra19", t0, D("radio"));
+          tl.fromTo(["#ra19-glow", "#ra19-halo"], { opacity: 0.15 }, { opacity: 1, duration: 0.08, yoyo: true, repeat: 7, ease: "none", immediateRender: false }, t0 + 0.6);
+          tl.fromTo("#ra19-rled", { opacity: 0.2 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0 + 0.6);
+          tl.fromTo("#ra19-needle", { x: 0 }, { x: 70, duration: 1.2, ease: "power2.inOut", immediateRender: false }, t0 + 0.6);
+          FenceUI.radio(tl, L.light, t0, D("radio"), { word: "0 6", at: vo("radio", 1) + 0.6, y: 520 });
+        },
+      });
+      // ---------- 20. five asleep in the classroom; the chalk tally on the board reads 5 ----------
+      add("count", {
+        set: "fenceClass", setOpts: { id: "c20", time: "night", tally: true }, dark: 0.08, light: NITE, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(-300, 1720, 1.0, 540, 1150) }, { t: D("count"), glide: D("count"), ...fr(-260, 1720, 1.08, 540, 1150) }] },
+        actors: [["man", -900], ["hong", -600], ["pim", -300], ["pan", -40], ["kong", 220]].map(([w, x], k) => A(w, x, 1860 + (k % 2) * 40, w === "pan" ? 0.5 : 0.72, [T("lie", "closed", "flat")])),
+        captions: caps("count"),
+        fx(tl, id, t0, L) { Fence.life(tl, "c20", t0, D("count")); trio(tl, L.light, t0, D("count"), [["people", "", 0.1]], 330, 1.1); chalkWord(tl, L.light, t0 + F("count", 0, 1), D("count") - F("count", 0, 1), "5", 520, 150); },
+      });
+      // ---------- 21. ปั้น holds up her drawing: six people (k03) → the bare prints in the mud inside the gate ----------
+      split("draw", 2.2, {
+        set: "fenceClass", setOpts: { id: "c21", time: "night" }, dark: 0.06, light: NITE, grade: GN, blur: { far: 4, mid: 4, set: 4, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(600, 1400, 1.7, 540, 900) }, { t: 2.2, glide: 2.2, ...fr(640, 1390, 2.0, 540, 900) }] },
+        actors: [A("panDraw", 560, 1700, 0.62, [T("hold", "normal", "smile")], { talk: [TALK("draw", 0, "smile")] })],
+        captions: caps("draw", undefined, QUO),
+        fx(tl, id, t0) { Fence.life(tl, "c21", t0, 2.2); },
+      }, {
+        set: "fenceGate", setOpts: { id: "g21", time: "night", lock: "open", mud: true }, dark: 0.04, light: NITE, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(540, 1600, 0.95, 540, 1150) }, { t: D("draw") - 2.2, glide: D("draw") - 2.2, ...fr(540, 1450, 0.85, 540, 1150) }] },
+        captions: capsFrom("draw", 2.2, undefined, QUO),
+      });
+      // ---------- 22. next episode ----------
+      add("next", {
+        set: "fenceGate", setOpts: { id: "g22", time: "night", lock: "open", mud: true }, dark: 0.1, light: NITE, grade: GN, blur: BLUR,
+        cam: { keys: [{ t: 0, ...still(fr(540, 1300, 0.8, 540, 1000)) }] },
+        fx(tl, id, t0, L) { FenceUI.next(tl, L.light, t0, D("next"), { ep: 2, l1: "ถ้าต้องดูดน้ำมันจากรถร้าง…", l2: "อย่าใช้ปาก" }); },
+      });

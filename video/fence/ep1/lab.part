@@ -1,0 +1,38 @@
+      // ---------- lab: style-frame test of the world ----------
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.5, shade: "#3a3048", shadeOp: 0.25, cast: { len: 0.5, op: 0.25 }, vol: false };
+      const DUSKL = { from: "left", rim: "#ffb070", rimOp: 0.7, shade: "#2a1a3a", shadeOp: 0.35, cast: false, vol: false };
+      const NITE = { from: "right", rim: "#ffd090", rimOp: 0.6, shade: "#0a0e1e", shadeOp: 0.45, cast: false, vol: false };
+      const GD = { top: "#fff0d0", bottom: "#3a2a20", op: 0.08 }, GK = { top: "#5a3a6a", bottom: "#2a1418", op: 0.18 }, GN = { top: "#1a2448", bottom: "#05070e", op: 0.3 };
+      add("hook", { set: "fenceYard", setOpts: { id: "y0", time: "day", gen: 600 }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(540, 1200, 0.75, 540, 1100), drift: { s: 0 } }] },
+        actors: [A("pim", 100, 1560, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]), A("kongBat", 330, 1580, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]),
+          A("man", 560, 1570, 0.92, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), A("hong", 780, 1560, 0.88, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]),
+          A("pan", 960, 1590, 0.6, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id, t0) { Fence.life(tl, "y0", t0, D("hook")); } });
+      add("dont", { set: "fenceGate", setOpts: { id: "g0", time: "dusk", lock: "open", horde: 14, nail: "blood" }, dark: 0, light: DUSKL, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 0.8, 540, 1000), drift: { s: 0 } }] }, fx(tl, id, t0) { Fence.life(tl, "g0", t0, D("dont")); } });
+      add("tox", { set: "fenceOut", setOpts: { id: "o0", time: "noon", pickup: 1350, hill: true }, dark: 0, light: DAYL, grade: GD,
+        cam: { keys: [{ t: 0, ...fr(700, 1200, 0.62, 540, 1100), drift: { s: 0 } }] },
+        actors: [A("hz1", -200, 1600, 0.9, [{ t: 0, mode: "shamble", eyes: "glow", mouth: "snarl" }]), A("hz2", 120, 1640, 0.8, [{ t: 0, mode: "lunge", eyes: "glow", mouth: "scream" }]), A("hz3", 1800, 1620, 0.9, [{ t: 0, mode: "shamble", eyes: "glow", mouth: "snarl" }])],
+        fx(tl, id, t0) { Fence.life(tl, "o0", t0, D("tox")); } });
+      add("die", { set: "fenceClass", setOpts: { id: "c0", time: "dusk", chalk: ["รั้วสุดท้าย", "วันที่ 100"] }, dark: 0, light: DUSKL, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(300, 900, 0.6, 540, 960), drift: { s: 0 } }] },
+        actors: [A("phu", 300, 1700, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), A("panDraw", 600, 1720, 0.6, [{ t: 0, mode: "hold", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id, t0) { Fence.life(tl, "c0", t0, D("die")); } });
+      add("day", { set: "fenceClass", setOpts: { id: "c1", time: "night", tally: true }, dark: 0.1, light: NITE, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(500, 900, 0.6, 540, 960), drift: { s: 0 } }] }, fx(tl, id, t0) { Fence.life(tl, "c1", t0, D("day")); } });
+      add("five", { set: "fenceMarket", setOpts: { id: "m0", time: "dusk" }, dark: 0, light: DUSKL, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 0.7, 540, 1000), drift: { s: 0 } }] },
+        actors: [A("kongCrate", 540, 1650, 0.95, [{ t: 0, mode: "carry", eyes: "normal", mouth: "o" }])] });
+      add("rule", { set: "fenceRoad", setOpts: { id: "r0", time: "dusk", horde: 20 }, dark: 0, light: DUSKL, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 0.7, 540, 1000), drift: { s: 0 } }] },
+        actors: [A("kongCrate", 540, 1750, 1.05, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }])], fx(tl, id, t0) { Fence.life(tl, "r0", t0, D("rule")); } });
+      add("rice", { set: "fenceCanIns", setOpts: { id: "ci0", time: "dusk", bulge: 0.9, chalk: "รั้วสุดท้าย", chalk2: "วันที่ 100", drawing: true }, dark: 0, light: false, grade: GK,
+        cam: { keys: [{ t: 0, ...fr(540, 1200, 0.8, 540, 1000), drift: { s: 0 } }] } });
+      add("map", { set: "fenceSiphon", setOpts: { id: "si0" }, dark: 0, light: false, grade: GD, cam: { keys: [{ t: 0, ...fr(540, 1100, 0.8, 540, 1000), drift: { s: 0 } }] } });
+      add("run", { set: "fenceNail", setOpts: { id: "n0", blood: true, foot: true }, dark: 0, light: false, grade: GD, cam: { keys: [{ t: 0, ...fr(540, 900, 0.8, 540, 1000), drift: { s: 0 } }] } });
+      add("gate", { set: "fenceLock", setOpts: { id: "l0", lock: "open", horde: 8 }, dark: 0, light: false, grade: GK, cam: { keys: [{ t: 0, ...fr(540, 1000, 0.8, 540, 1000), drift: { s: 0 } }] } });
+      add("free", { set: "fenceRadio", setOpts: { id: "ra0" }, dark: 0, light: false, grade: GN, cam: { keys: [{ t: 0, ...fr(540, 1150, 0.8, 540, 1000), drift: { s: 0 } }] }, fx(tl, id, t0) { Fence.life(tl, "ra0", t0, D("free")); } });
+      add("bulge", { set: "fenceOut", setOpts: { id: "o1", time: "night", hill: true, blink: true, lit: true }, dark: 0.05, light: NITE, grade: GN,
+        cam: { keys: [{ t: 0, ...fr(400, 1150, 0.62, 540, 1000), drift: { s: 0 } }] }, fx(tl, id, t0) { tl.set("#o1-blink", { opacity: 1 }, t0); } });
