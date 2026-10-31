@@ -211,7 +211,7 @@
   const PAL = { norush: ["#ffe2c8", "#fff8f0", "#e0703a", "#a84a1e"], bush: ["#d8f0c8", "#f7fff2", "#6aaa52", "#44803a"], bamboo: ["#fde59a", "#fffbe8", "#e3a632", "#a8741a"],
     treex: ["#e4f2cc", "#fbfff2", "#7aa83a", "#4e7a1e"], bones: ["#ece6da", "#fffdf6", "#a8a090", "#7a7262"], weeds: ["#e4f2cc", "#fbfff2", "#8aa83a", "#5a7a1e"],
     rock: ["#dde2e6", "#f8fafc", "#8a949e", "#5a646e"], medic: ["#ffffff", "#ffffff", "#c8ccd2", "#8a949e"], binoc: ["#d6ecfb", "#f6fbff", "#3a8ad0", "#22609a"],
-    parcel: ["#f2dcb8", "#fffaf0", "#c8925a", "#8a6a3a"], notouch: ["#ffe2c8", "#fff8f0", "#e0703a", "#a84a1e"], shout: ["#fde59a", "#fffbe8", "#e3a632", "#a8741a"], radio: ["#d8f0c8", "#f7fff2", "#2fa864", "#1e7a48"], still: ["#d6ecfb", "#f6fbff", "#3a8ad0", "#22609a"], dust: ["#f2e4c8", "#fffaf0", "#b8a07a", "#8a7452"] };
+    parcel: ["#f2dcb8", "#fffaf0", "#c8925a", "#8a6a3a"], bandage: ["#e4f2cc", "#fbfff2", "#7aa83a", "#4e7a1e"], notouch: ["#ffe2c8", "#fff8f0", "#e0703a", "#a84a1e"], shout: ["#fde59a", "#fffbe8", "#e3a632", "#a8741a"], radio: ["#d8f0c8", "#f7fff2", "#2fa864", "#1e7a48"], still: ["#d6ecfb", "#f6fbff", "#3a8ad0", "#22609a"], dust: ["#f2e4c8", "#fffaf0", "#b8a07a", "#8a7452"] };
   let cdefs = "";
   for (const [n, [b, l, r, rd]] of Object.entries(PAL)) cdefs += `<radialGradient id="wrF-${n}" cx=".33" cy=".25" r=".9"><stop offset="0" stop-color="${l}"/><stop offset=".55" stop-color="${b}"/><stop offset="1" stop-color="${r}" stop-opacity=".55"/></radialGradient>
     <linearGradient id="wrR-${n}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${r}"/><stop offset="1" stop-color="${rd}"/></linearGradient>`;
@@ -240,6 +240,7 @@
     shout: () => [`<circle cx="44" cy="62" r="24" fill="#c8946a" ${O(3)}/><path d="M50,72q8,4 12,-2" stroke="${INK}" stroke-width="3" fill="none"/><path d="M22,48Q30,34 46,38Q40,30 26,38Z" fill="#5a6a3a" ${O(2)}/>`, `<g class="rbAn" data-a="bob"><path d="M74,46Q86,60 74,76M84,38Q102,60 84,84M94,30Q118,60 94,92" stroke="#e2382e" stroke-width="6" fill="none" stroke-linecap="round"/></g>`],
     radio: () => ["", `<g class="rbAn" data-a="bob"><rect x="40" y="36" width="40" height="66" rx="8" fill="#3a4048" ${O(3.5)}/><path d="M70,36V12" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><rect x="47" y="46" width="26" height="18" rx="3" fill="#8ad0a0"/><circle cx="52" cy="80" r="4" fill="#c8ccd2"/><circle cx="68" cy="80" r="4" fill="#c8ccd2"/><circle cx="60" cy="92" r="4" fill="#c8ccd2"/></g>
       <g class="rbAn" data-a="peek"><path d="M84,20q10,8 0,18M92,14q16,14 0,30" stroke="#2fa864" stroke-width="4" fill="none" stroke-linecap="round"/></g>`],
+    bandage: () => ["", `<g class="rbAn" data-a="bob"><path d="M46,34H96V94H46" fill="#fdfdfa" ${O(3.5)}/><path d="M60,46H90M60,58H90M60,70H90M60,82H90" stroke="#d8d4c8" stroke-width="3"/><ellipse cx="46" cy="64" rx="24" ry="30" fill="#fdfdfa" ${O(3.5)}/><ellipse cx="46" cy="64" rx="9" ry="11" fill="#d8d4c8" ${O(2)}/></g>`],
     dust: () => [`<path d="M8,104Q60,96 112,104V120H8Z" fill="#a8b46a"/>`, `<g class="rbAn" data-a="push">${[[60, 86, 18], [52, 62, 20], [66, 40, 22], [56, 18, 18]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#d8c8a8" ${O(2.5)}/>`).join("")}</g>`],
   };
   const wcoin = (name) => { const [inside, top] = WPICT[name]();

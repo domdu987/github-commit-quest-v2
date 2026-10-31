@@ -127,7 +127,7 @@
         actors: [A("enemyHurt", 420, 1730, 0.85, [{ t: 0, mode: "sit", eyes: "worry", mouth: "frown" }]), A("tao", 720, 1760, 0.88, [{ t: 0, mode: "kneel", eyes: "normal", mouth: "flat" }], { flip: true })],
         captions: caps("law"),
         fx(tl, id, t0, L) { War.ditch(L.glow, 420, 1730, 600);
-          WarUI.steps(tl, L.light, t0, [{ icon: "notouch", text: "ห้ามทำร้าย", at: vo("law", 0) + 0.8, red: true }, { icon: "medic", text: "รักษาเท่ากัน", at: vo("law", 0) + LINE("law", 0, 1) }], { y: 330, w: 280, dur: D("law") });
+          WarUI.steps(tl, L.light, t0, [{ icon: "notouch", text: "ห้ามทำร้าย", at: vo("law", 0) + 0.8, red: true }, { icon: "bandage", text: "รักษาเท่ากัน", at: vo("law", 0) + LINE("law", 0, 1) }], { y: 330, w: 280, dur: D("law") });
           live(tl, t0, D("law"), L); },
       });
       // ---------- 10. the bandage; the medics with the red cross ----------
@@ -142,12 +142,12 @@
         }, {
           set: "border", setOpts: { time: "dusk", ground: 1300, lift: 220, glint: false, id: "b10b", pathX: -400, tree: false, fgH: 0.4, sunX: 1100 },
           dark: 0.04, blur: { sky: 1.5, far: 2, mid: 1.5, fg: 8 }, light: DUSKL, grade: GDUSKR,
-          cam: push(K, [560, 1500, 1.25, 540, 1150], [560, 1500, 1.32, 540, 1150]),
+          cam: push(K, [470, 1500, 1.22, 540, 1150], [470, 1500, 1.28, 540, 1150]),
           actors: [A("medic", 300, 1680, 0.78, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { path: [{ t: 0, x: 120, y: 1680 }, { t: 2.2, x: 330, y: 1690 }] }),
             A("medic", 470, 1700, 0.8, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { path: [{ t: 0, x: 280, y: 1700 }, { t: 2.2, x: 480, y: 1710 }] }),
             A("enemyHurt", 640, 1740, 0.8, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]), A("tao", 860, 1770, 0.85, [{ t: 0, mode: "kneel", eyes: "normal", mouth: "smile" }], { flip: true })],
           captions: capsFrom(K, v + f[1] - 0.1),
-          fx(tl, id, t0, L) { War.crossFlag(L.set, 160, 1560, 0.9, "cf10"); War.wave(tl, "#cf10-fl", t0, 3); War.spot(tl, L.glow, 245, 1150, t0 + f[2] - f[1] + 0.1, 2, { label: "กาชาด", icon: "medic", r: 120, w: 170, tx: 40 }); live(tl, t0, 3, L); },
+          fx(tl, id, t0, L) { War.crossFlag(L.set, 160, 1560, 0.9, "cf10"); War.wave(tl, "#cf10-fl", t0, 3); War.spot(tl, L.glow, 285, 1150, t0 + f[2] - f[1] + 0.1, 2, { label: "หน่วยแพทย์", icon: "bandage", r: 130, w: 230, tx: 50 }); live(tl, t0, 3, L); },
         }); }
       // ---------- 11. the tag: rule 2 ✓ ----------
       add("rule2", { set: "hedge", setOpts: { ...HEDGE, id: "h11", time: "dusk" }, ...CARD, light: DUSKL, grade: GDUSKR, cam: push("rule2", [540, 1300, 1.0, 540, 1100], [540, 1300, 1.04, 540, 1100]),
