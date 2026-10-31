@@ -3,7 +3,8 @@
 #   video/<repo ep dir>/<name>-share.mp4, mix.wav,
 #   production/ (lines.json, timing.py, schedule.json, make.py, mix.py, every *.part, ep.tmpl.html, synth.py, vo/ incl. the mp3 cache),
 #   composition/ (index.html + assets + HyperFrames json), lib/ (the exact libraries rendered + voice.py + voice_qa.py)
-# The HQ file is NOT committed (it can pass 100 MB); it goes to the user with SendUserFile.
+# HQ (owner approved 31 Oct 2026): <name>-HQ.mp4 is copied to video/release/hq/<repo ep dir>-HQ.mp4 when it is under 95 MB
+# (GitHub refuses files over 100 MB); the script prints its sha256 and size for video/release/<series>.json.
 # usage: store.sh <episode dir> <hf project dir> <repo ep dir name, e.g. pop-ep1-v2> <name stem>
 set -euo pipefail
 W="$(cd "$1" && pwd)"; H="$(cd "$2" && pwd)"; N="$4"
@@ -24,4 +25,15 @@ cp -r "$H/index.html" "$H/assets" "$H/package.json" "$H/hyperframes.json" "$H/me
 rm -rf "$E/lib" && mkdir -p "$E/lib"
 cp "$H"/assets/*.js "$E/lib/"
 cp "$H/../lib/voice.py" "$H/../lib/voice_qa.py" "$E/lib/" 2>/dev/null || true
+if [ -f "$W/$N-HQ.mp4" ]; then
+  B=$(stat -c %s "$W/$N-HQ.mp4")
+  if [ "$B" -lt 99614720 ]; then
+    mkdir -p "$R/release/hq"
+    rm -f "$R/release/hq/$3-HQ.mp4"
+    ln "$W/$N-HQ.mp4" "$R/release/hq/$3-HQ.mp4" 2>/dev/null || cp "$W/$N-HQ.mp4" "$R/release/hq/$3-HQ.mp4"
+    echo "HQ: video/release/hq/$3-HQ.mp4 bytes=$B sha256=$(sha256sum "$R/release/hq/$3-HQ.mp4" | cut -d' ' -f1)"
+  else
+    echo "HQ is $B bytes (over 95 MB): not stored; send it with SendUserFile and say so in the package" >&2
+  fi
+fi
 du -sh "$E"

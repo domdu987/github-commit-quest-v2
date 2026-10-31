@@ -9,22 +9,25 @@
 - 2 เลน = 6 คลิป/วัน · 3 เลน = 9 คลิป/วัน · แชทเดียว = 3 คลิป/วัน
 
 ## 2. กันเขียนทับ
-- แต่ละเลนมี branch ของตัวเอง `prod/<เรื่อง>` แตกจาก branch งานปัจจุบัน · แต่ละ cloud session มี clone ของตัวเอง จึงไม่ใช้ working tree ร่วมกัน
+- แต่ละเลนมี branch ของตัวเอง `prod/lane-<x>` (ทุกเรื่องของเลนนั้น แต่ละเรื่องอยู่คนละโฟลเดอร์) แตกจาก branch งานปัจจุบัน · แต่ละ cloud session มี clone ของตัวเอง จึงไม่ใช้ working tree ร่วมกัน
   (ถ้าจำเป็นต้องทำ 2 เรื่องในเครื่องเดียว ใช้ `git worktree add ../wt-<เรื่อง> prod/<เรื่อง>`)
-- เลนเขียนได้เฉพาะ `video/<เรื่อง>/**` `video/<เรื่อง>-epN/**` `video/release/<เรื่อง>.json` และไฟล์ปกแยกต่อเรื่อง `video/brand/covers/<เรื่อง>.json`
+- เลนเขียนได้เฉพาะ `video/<เรื่อง>/**` `video/<เรื่อง>-epN/**` `video/release/<เรื่อง>.json` `video/release/hq/<เรื่อง>-epN-HQ.mp4` และไฟล์ปกแยกต่อเรื่อง `video/brand/covers/<เรื่อง>.json`
 - ไฟล์กลาง (`video/STATUS.md`, `video/brand/covers.json`, skill, `video/lib-shared/`) แก้โดยเลนประสานงานตอนรวมงานเท่านั้น · ฉากหรือชุดการ์ดใหม่อยู่ในโฟลเดอร์เรื่องก่อน
 
 ## 3. คิวเรนเดอร์และดิสก์
 - เรนเดอร์ทีละตอนต่อเครื่อง (60fps · ตอนละ ~20–40 นาทีสำหรับฉากละเอียด วัดคืนนี้: EP.2 18 นาทีเมื่อไม่มีงานอื่นแย่ง CPU) และเรนเดอร์ตอนก่อนระหว่างประกอบตอนถัดไป
 - clone แบบ sparse + shallow (skill, `video/lib-shared`, `video/brand`, โฟลเดอร์เรื่องตัวเอง) เพราะประวัติ repo เต็มหนัก ~7.5 GB
 - ต้องมีที่ว่าง ≥ 2 GB ก่อนเรนเดอร์ทุกตอน (HyperFrames ปฏิเสธถ้าต่ำกว่า 1 GB และโหมดสำรองกินที่เพิ่ม คืนนี้ EP.3 ล้มเพราะดิสก์เต็ม) ·
-  ลบ `raw.mp4` หลังได้ HQ/share · ไม่ commit ไฟล์ HQ จนกว่าเจ้าของอนุมัติ
+  ลบ `raw.mp4` หลังได้ HQ/share · HQ เก็บใน repo ที่ `video/release/hq/<id>-HQ.mp4` (เจ้าของอนุมัติ 31 ต.ค.)
+- ตั้ง `git config gc.auto 0` ทุก clone: repo นี้มี object หลวม ~6 GB ถ้า git gc อัตโนมัติทำงาน มันจะเขียนไฟล์ชั่วคราวจนดิสก์เต็ม
+  (31 ต.ค. ทิ้ง `tmp_pack` 1.9 GB ไว้ และเป็นเหตุให้ EP.3 เรนเดอร์ล้ม) · ถ้าเจอ `.git/objects/pack/tmp_pack_*` ตอนไม่มี git ทำงาน ลบได้
 
 ## 4. ขั้นตอนรวมงานปล่อย (ต่อตอน)
 1. เลน: เรนเดอร์สุดท้าย → `qa_video.sh` (1080×1920 60fps, −14 LUFS ±1, พีก ≤ −1 dB) + `edgecheck` `origin_check` `hookcheck` + Whisper ช่วงที่แก้
 2. เลน: ปก → `store.sh` → ใส่ตอนลง `video/release/<เรื่อง>.json` (ชื่อ แคปชันแยกแพลตฟอร์ม แฮชแท็ก คอมเมนต์ปักหมุดพร้อมแหล่ง path ไฟล์ commit สถานะ `final`) → push branch เลน
-3. ประสานงาน: รวมเข้า branch ปล่อยของวัน (`release/<วันที่>`) · ตรวจว่า EP.N+1 ไม่ถูกตั้ง `final` ก่อน EP.N · เขียนคิววัน `video/release/day-<วันที่>.json` (ลำดับ + เวลาแนะนำ)
-4. Hermes: อ่านเฉพาะคิววันบน branch ปล่อย · ลงเรียงลำดับ · เขียนกลับ `posted_at` + ลิงก์ · EP.N+1 ลงหลัง EP.N ลงแล้วเท่านั้น
+3. ประสานงาน: ตรวจแพ็กเกจของเลน (ตัวเลข QA · EP.N+1 ไม่ถูกตั้ง `final` ก่อน EP.N) แล้วเขียนคิววัน `video/release/day-<วันที่>.json` บน `ccr-fb88c4b3-kcqyid`
+   แต่ละรายการชี้ branch + commit + path + sha256 ของไฟล์บน branch เลน (ไม่ต้อง merge ไฟล์วิดีโอข้าม branch) + ลำดับ + เวลาแนะนำ
+4. Hermes: อ่านคิววันบน `ccr-fb88c4b3-kcqyid` · ดึงไฟล์ตาม commit ที่ระบุ ตรวจ sha256 · ลงเรียงลำดับ · เขียนกลับ `posted_at` + ลิงก์ · EP.N+1 ลงหลัง EP.N ลงแล้วเท่านั้น
 - HQ: ใช้ไฟล์ดาวน์โหลดจากแชทตามที่ Moji แจ้ง ถ้า Hermes ดึงเองได้ · ไม่งั้นใช้ไฟล์ share ใน repo (1080×1920 60fps ~2.6 Mbps)
 - YouTube ต้องมีชื่อคลิป (≤ 100 ตัวอักษร) + คำอธิบาย: จะเพิ่มฟิลด์ `youtube` ในแพ็กเกจทุกเรื่องต่อจากนี้
 
@@ -57,8 +60,8 @@ SFX `fal-ai/elevenlabs/sound-effects/v2` · ดนตรีจากคลัง
 ที่มาราคา: fal TTS guide https://fal.ai/learn/tools/best-text-to-speech-apis · ElevenLabs SFX https://elevenlabs.io/docs/help-center/product/content-production/sound-effects/how-much-does-it-cost-to-generate-sound-effects ·
 https://modelslab.com/sound-effects-api-pricing (ข้อมูลรอง) · ราคาจริงให้ดูหน้าโมเดลหรือ dashboard ของ fal ก่อนอนุมัติ
 
-## 7. รอเจ้าของอนุมัติ (ยังไม่ทำ)
-1. เปิดเลนเพิ่ม 1–2 session (6 หรือ 9 คลิป/วัน)
-2. งบค่าเสียงต่อวันตามตารางข้อ 6
-3. วิธีส่ง HQ (ไฟล์ดาวน์โหลดจากแชท หรือ commit เข้า repo)
-4. สิทธิ์ push `main` หรือ branch ปล่อยสำหรับ Hermes อ่าน
+## 7. การอนุมัติ
+1. ✅ เปิดคู่ขนาน (เจ้าของ 31 ต.ค.): เปิดเลน A B ก่อน (6/วัน) · เลน C (9/วัน) เปิดเมื่อเลนแรกเรนเดอร์ผ่านรอบแรก
+2. ⏳ งบค่าเสียงต่อวันตามตารางข้อ 6 · ระหว่างรอ เลนทำได้ทุกขั้นที่ไม่เสียเงิน แล้วหยุดก่อนเรียก TTS/SFX ครั้งแรก
+3. ✅ HQ commit เข้า repo (เจ้าของ 31 ต.ค.) ที่ `video/release/hq/`
+4. ไม่ต้องใช้แล้ว: คิววันอยู่บน `ccr-fb88c4b3-kcqyid` ซึ่ง Hermes อ่านอยู่แล้ว
