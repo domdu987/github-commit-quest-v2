@@ -72,8 +72,7 @@
         captions: caps("swerve"),
         fx(tl, id, t0, L) {
           povCanal(L, tl, "pv1", t0, D("swerve")); mirrorKid(L, "pv1"); povHands(L, "pv1"); Mok.life(tl, `#${id}`, t0, D("swerve"));
-          put(L.act, `<g transform="translate(540,1010)"><g id="bk">${bikeShape}</g></g>`);
-          tl.fromTo("#bk", { scale: 0.12, opacity: 0, svgOrigin: "0 0" }, { scale: 1.9, opacity: 1, svgOrigin: "0 0", duration: D("swerve") - 0.6, ease: "power2.in", immediateRender: false }, t0 + 0.15);
+          crossBike(L, tl, "bk", t0, D("swerve"));
         },
       });
       // ---------- 7. outside: off the bank and into the canal ----------
