@@ -1,0 +1,33 @@
+      const SUN = { from: "left", rim: "#fff6dc", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.3, op: 0.28 }, vol: false };
+      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 }, GDUSK = { top: "#ffd0a0", bottom: "#6a4a6a", op: 0.18 };
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.8, 2.9], ...extra });
+      const Y0 = (id, o = {}) => ({ set: "hnYard", setOpts: { id, ...o }, dark: 0, light: SUN, grade: GDAY, blur: { far: 1, fg: 6 } });
+      add("hook", { ...Y0("y0", { title: { x: 420, y: 1560, s: 1.55, sub: "EP.1 อย่าปัดมัน" } }),
+        cam: { keys: [{ t: 0, ...fr(600, 1180, 0.74, 540, 980) }] }, captions: [],
+        fx(tl, id, t0, L) { Hn.swarm(tl, L.glow, { id: "s0", n: 8, s: 0.35, cx: 910, cy: 690, rx: 120, ry: 90, t0, dur: D("hook") });
+          put(L.light, `<g transform="translate(760,760) rotate(-14)">${Hn.hornet({ s: 3.6 })}</g>`); } });
+      add("lock", { ...Y0("y1"), cam: { keys: [{ t: 0, ...fr(640, 1260, 0.78, 540, 1080) }] },
+        actors: [A("yaiBua", 200, 1460, 0.92, [{ t: 0, mode: "wagFinger", eyes: "normal", mouth: "smile" }]),
+          A("phumSling", 430, 1500, 0.72, [{ t: 0, mode: "aim", eyes: "normal", mouth: "smile" }]),
+          A("toeyPhone", 920, 1480, 0.88, [{ t: 0, mode: "phoneLook", eyes: "side", mouth: "flat" }], { flip: true }),
+          A("lungSing", 1190, 1420, 0.78, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+        fx(tl, id, t0, L) { const t = t0 + 0.2, d = D("lock");
+          HnUI.tag(tl, L.light, t, d, { x: 200, y: 690, text: "ยายบัว 68", c: "#a888c8" }); HnUI.tag(tl, L.light, t, d, { x: 420, y: 880, text: "ภูมิ 10 ขวบ", c: "#d8302a" });
+          HnUI.tag(tl, L.light, t, d, { x: 720, y: 770, text: "พี่เตย 15", c: "#ec5e9e" }); HnUI.tag(tl, L.light, t, d, { x: 960, y: 880, text: "ลุงสิงห์", c: "#6a8aa8" }); } });
+      add("float", { set: "hnNest", setOpts: { id: "n0" }, dark: 0, light: false, grade: GDAY, cam: { keys: [{ t: 0, ...fr(560, 940, 0.82, 540, 960) }] }, captions: [],
+        fx(tl, id, t0, L) { Hn.swarm(tl, L.glow, { id: "s1", n: 10, s: 1.1, cx: 560, cy: 1450, rx: 380, ry: 220, t0, dur: D("float") }); } });
+      add("all", { set: "hnLegend", setOpts: { id: "lg" }, dark: 0, light: false, grade: GDAY, cam: { keys: [{ t: 0, ...fr(540, 900, 1, 540, 960) }] }, captions: [],
+        fx(tl, id, t0, L) { Hn.legend(tl, "lg", t0, D("all"), L); } });
+      add("drive", { ...Y0("y2"), blur: { sky: 4, far: 6, mid: 6, set: 5, fg: 8 }, cam: { keys: [{ t: 0, ...fr(700, 1100, 1.2, 540, 980) }] }, captions: [],
+        fx(tl, id, t0, L) { HnUI.rules(tl, L.light, t0, D("drive"), { active: 0, y: 380 }); } });
+      add("swerve", { ...Y0("y3", { house: [180, 0.9], tree: 1500, shrine: 1440, pond: 900 }), cam: { keys: [{ t: 0, ...fr(560, 1250, 0.78, 540, 1060) }] }, captions: [],
+        actors: [A("toey", 640, 1520, 0.85, [{ t: 0, mode: "runCover", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 900, y: 1560, dur: 3 } })],
+        fx(tl, id, t0, L) { Hn.swarm(tl, L.glow, { id: "s3", n: 30, s: 0.45, path: [[0, 520, 1050], [3, 760, 1080]], rx: 200, ry: 150, chase: 0.5, t0, dur: D("swerve"), seed: 9 }); } });
+      add("plunge", { ...Y0("y4"), blur: { sky: 4, far: 6, mid: 6, set: 5, fg: 8 }, cam: { keys: [{ t: 0, ...fr(1300, 1500, 1, 540, 980) }] },
+        fx(tl, id, t0, L) { HnUI.water(tl, L.light, t0, D("plunge"), {}); } });
+      add("inrush", { ...Y0("y5"), blur: { sky: 4, far: 6, mid: 6, set: 5, fg: 8 }, cam: { keys: [{ t: 0, ...fr(400, 1200, 1, 540, 980) }] },
+        fx(tl, id, t0, L) { HnUI.kidney(tl, L.light, t0, D("inrush"), {}); } });
+      add("belt", { ...Y0("y6", { time: "dusk" }), grade: GDUSK, cam: { keys: [{ t: 0, ...fr(700, 1280, 1.5, 540, 1100) }] }, captions: [],
+        extra(L) { put(L.set, Hn.bench(880, 1340, 0.8)); },
+        actors: [A("yaiBua", 880, 1462, 0.86, [{ t: 0, mode: "sitChair", eyes: "closed", mouth: "smile" }], { flip: true })] });
+      add("door", { ...Y0("y7"), captions: [], fx(tl, id, t0, L) { HnUI.nextBoard(tl, L.light, t0, D("door"), { l1: "ตอนที่ 2", l2: "ต่อรุม อย่าลงน้ำ" }); } });
