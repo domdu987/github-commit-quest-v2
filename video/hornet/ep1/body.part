@@ -163,7 +163,7 @@
           <rect x="-600" y="1500" width="2300" height="700" fill="#8a6440"/><rect x="200" y="760" width="240" height="300" fill="#cfe6f4" stroke="#2e2a26" stroke-width="6"/><path d="M320,760v300M200,910h240" stroke="#2e2a26" stroke-width="5"/>
           <rect x="700" y="1260" width="380" height="60" rx="8" fill="#5a3a22" stroke="#2e2a26" stroke-width="4"/><path d="M720,1320v180M1060,1320v180" stroke="#4a2e1a" stroke-width="14"/>
           <g transform="translate(860,560)"><rect x="-90" y="-60" width="180" height="120" fill="#e8dcc4" stroke="#2e2a26" stroke-width="5"/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#5a3a22">ตาเพิ่ม</text></g>`); },
-        actors: [A("bai", 480, 1520, 0.8, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }], { talk: [TALK("where", 0, "scream")] })],
+        actors: [A("bai", 480, 1520, 0.8, [{ t: 0, mode: "pant", eyes: "wide", mouth: "o" }, { t: Math.max(0.1, vo("where", 0) - 0.15), mode: "point", eyes: "wide", mouth: "scream" }], { talk: [TALK("where", 0, "scream")] })],
         captions: caps("where", undefined, QUO) });
       // ---------- 16. ยาย at the shrine all along ----------
       add("shrine", { ...Y2("e15", {}), cam: { keys: [{ t: 0, ...fr(1420, 1000, 1.0, 540, 980) }, { t: D("shrine"), glide: D("shrine"), ...fr(1440, 1180, 1.35, 540, 1040) }] },
