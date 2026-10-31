@@ -153,11 +153,12 @@
             <path d="M-24,-74L-46,-190M24,-74L46,-190" stroke="#2fa45a" stroke-width="20" stroke-linecap="round"/></g>
           <path d="M140,-40q30,10 40,-20M160,10q30,4 44,-22" stroke="${SU.ink}" stroke-width="6" fill="none" opacity=".5"/>`;
         if (o.what === "headrest") pic = `<rect x="-150" y="-170" width="300" height="190" rx="70" fill="#4a5060" ${SO(5)}/><path d="M-110,-150Q0,-180 110,-150" stroke="#6a7286" stroke-width="10" fill="none"/><rect x="-80" y="20" width="22" height="200" rx="8" fill="#c8ccd4" ${SO(4)}/><rect x="58" y="20" width="22" height="200" rx="8" fill="#c8ccd4" ${SO(4)}/>`;
-        put(layer, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><g filter="url(#muDrop)"><rect x="-300" y="-330" width="600" height="660" rx="48" fill="${SU.paper}" ${SO(5)}/></g>
+        put(layer, `<g transform="translate(${x},${y})"><g id="${id}" opacity="0"><g id="${id}-z"><g filter="url(#muDrop)"><rect x="-300" y="-330" width="600" height="660" rx="48" fill="${SU.paper}" ${SO(5)}/></g>
           <rect x="-300" y="-330" width="600" height="660" rx="48" fill="#e9f6ee" opacity=".7"/><g id="${id}-pic">${pic}</g>
           <g id="${id}-no"><circle r="250" fill="none" stroke="${SU.redD}" stroke-width="40" opacity=".5" transform="translate(6,10)"/><circle r="250" fill="none" stroke="${SU.red}" stroke-width="40" opacity=".95"/><circle r="250" fill="none" stroke="#ff8a80" stroke-width="8" opacity=".8" transform="translate(-6,-8) scale(.985)"/><path d="M-176,-176L176,176" stroke="${SU.redD}" stroke-width="40" stroke-linecap="round" opacity=".5" transform="translate(6,10)"/><path d="M-176,-176L176,176" stroke="${SU.red}" stroke-width="40" stroke-linecap="round" opacity=".95"/></g>${SU.fxMk(`${id}-fx`, 0, 0, 14, SU.red)}
-          ${o.label ? `<g transform="translate(0,380)"><rect x="-${o.label.length * 22 + 40}" y="-44" width="${o.label.length * 44 + 80}" height="88" rx="44" fill="${SU.red}" ${SO(4)}/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">${o.label}</text></g>` : ""}</g></g>`);
+          ${o.label ? `<g transform="translate(0,380)"><rect x="-${o.label.length * 22 + 40}" y="-44" width="${o.label.length * 44 + 80}" height="88" rx="44" fill="${SU.red}" ${SO(4)}/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">${o.label}</text></g>` : ""}</g></g></g>`);
         tl.fromTo(`#${id}`, { opacity: 0, scale: 0.6, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(2.4)", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-z`, { scale: 1 }, { scale: 1.05, svgOrigin: "0 0", duration: dur, ease: "sine.inOut", immediateRender: false }, t0);
         if (o.what === "phone") tl.fromTo(`#${id}-pic`, { rotation: -3, svgOrigin: "0 0" }, { rotation: 3, svgOrigin: "0 0", duration: 0.07, yoyo: true, repeat: 9, ease: "none", immediateRender: false }, t0 + 0.3);
         tl.fromTo(`#${id}-no`, { scale: 2.2, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.32, ease: "power4.in", immediateRender: false }, t0 + (o.stamp ?? 0.55));
         tl.fromTo(`#${id}`, { x: -18 }, { x: 0, duration: 0.35, ease: "elastic.out(1.2,0.3)", immediateRender: false }, t0 + (o.stamp ?? 0.55) + 0.32);
@@ -238,6 +239,8 @@
         [1, 2, 3].forEach((k, j) => tl.fromTo(`#${id}-L${k}`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(3)", immediateRender: false }, t0 + 0.9 + j * 0.18));
         tl.fromTo(`#${id}-L0`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0 + (o.driver ?? 1.8));
         SU.fxAt(tl, layer, `#${id}-L0`, t0 + (o.driver ?? 1.8) + 0.25, { n: 10, c: SU.green, r1: 130 });
+        tl.fromTo(`#${id}`, { scale: 1 }, { scale: 1.05, transformOrigin: "50% 50%", duration: dur, ease: "sine.inOut", immediateRender: false }, t0);
+        for (let q = 0; q < Math.max(1, Math.floor((dur - (o.driver ?? 1.8) - 0.6) / 0.7)); q++) SU.fxAt(tl, layer, `#${id}-L0`, t0 + (o.driver ?? 1.8) + 0.9 + q * 0.7, { n: 0, c: SU.green, r0: 56, r1: 120 });
         tl.to(`#${id}-L0`, { scale: 1.12, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: Math.max(1, Math.ceil((dur - 2.4) / 0.35)), ease: "sine.inOut" }, t0 + (o.driver ?? 1.8) + 0.5);
       };
       // a name tag that pops near someone (screen space), as in ทะเลลด
@@ -281,6 +284,7 @@
       const suCard = (id, x, y, W, H, head, hc = SU.red) => `<g transform="translate(${x},${y})"><g id="${id}"><g filter="url(#muDrop)"><rect x="${-W / 2}" y="0" width="${W}" height="${H}" rx="36" fill="${SU.paper}" ${SO(5)}/></g>
         <path d="M${-W / 2},36Q${-W / 2},0 ${-W / 2 + 36},0H${W / 2 - 36}Q${W / 2},0 ${W / 2},36V112H${-W / 2}Z" fill="${hc}" ${SO(5)}/><text y="78" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">${head}</text>`;
       const suIn = (tl, id, t0, dur) => { tl.fromTo(`#${id}`, { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0); tl.to(`#${id}`, { opacity: 0, duration: 0.2 }, t0 + dur - 0.2); };
+      const suBreathe = (tl, id, t0, dur, k = 1.045) => tl.fromTo(`#${id}`, { scale: 1 }, { scale: k, transformOrigin: "50% 50%", duration: dur, ease: "sine.inOut", immediateRender: false }, t0);
       const suBg = (layer, c = "#1a2a44") => put(layer, `<rect width="1080" height="1920" fill="${c}"/><rect width="1080" height="1920" fill="url(#klSky)" opacity=".55"/>`);
       // the crack star (lines + rings) at (x,y), class `${id}-ck` to draw on
       const suCrack = (id, x, y, r = 120, n = 11) => `<g transform="translate(${x},${y})">${Array.from({ length: n }, (_, k) => { const a = (k / n) * Math.PI * 2 + (k % 3) * 0.2, L = r * (0.7 + (k % 4) * 0.12);
@@ -299,7 +303,7 @@
           <g id="${id}-lb"><rect x="190" y="520" width="280" height="64" rx="32" fill="${SU.yellow}" ${SO(4)}/><text x="330" y="564" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="38" fill="${SU.ink}">ฟิล์มกั้นกลาง</text></g>
           <g transform="translate(-60,880)"><g id="${id}-st"><rect x="-210" y="-58" width="420" height="116" rx="58" fill="${SU.red}" ${SO(5)}/><text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#fff">แค่ร้าว</text></g></g>
           <g id="${id}-fist" transform="translate(-60,200)"><g id="${id}-fi">${handAt([0, 0], 180, 1.4, SK.ton, { curl: [1, 1, 1, 1], thumb: 1, band: BAND, sw: 0.6, fore: 500 })}</g></g></g></g>`);
-        suIn(tl, id, t0, dur);
+        suIn(tl, id, t0, dur); suBreathe(tl, id, t0, dur);
         tl.fromTo(`#${id}-fi`, { y: -400 }, { y: 0, duration: 0.3, ease: "power3.in", immediateRender: false }, t0 + 0.5);
         tl.to(`#${id}-fi`, { y: -120, duration: 0.35, ease: "power2.out" }, t0 + 0.8);
         tl.to(`#${id}-fi`, { y: 0, duration: 0.22, ease: "power3.in" }, t0 + 1.25);
@@ -322,7 +326,7 @@
             <path d="M-300,-230H310V200H-300Z" fill="none" stroke="#4a5060" stroke-width="18"/>${cubes}
             <g transform="translate(250,140)"><g id="${id}-hit" opacity="0"><circle r="60" fill="#fff" opacity=".8"/><path d="M-40,-40L40,40M40,-40L-40,40" stroke="#ffd36a" stroke-width="10"/></g></g></g>
           <g transform="translate(0,940)"><g id="${id}-st"><rect x="-330" y="-58" width="660" height="116" rx="58" fill="${SU.green}" ${SO(5)}/><text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">แตกทั้งบาน ในครั้งเดียว</text></g></g></g></g>`);
-        suIn(tl, id, t0, dur);
+        suIn(tl, id, t0, dur); suBreathe(tl, id, t0, dur);
         const hitT = t0 + (o.hit ?? 1.3);
         tl.fromTo(`#${id}-hit`, { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1.2, svgOrigin: "0 0", duration: 0.12, immediateRender: false }, hitT);
         tl.to(`#${id}-hit`, { opacity: 0, duration: 0.25 }, hitT + 0.15);
@@ -344,7 +348,7 @@
             ${suCrack(id, 240, 130, 170, 9)}
             <g transform="translate(240,130)"><g id="${id}-tool"><g transform="rotate(-40)"><rect x="-22" y="-300" width="44" height="220" rx="12" fill="#e8402a" ${SO(4)}/><path d="M-30,-80H30L10,-20H-10Z" fill="#c8ccd4" ${SO(4)}/><path d="M0,-20V0" stroke="${SU.ink}" stroke-width="8"/></g></g></g></g>
           <g transform="translate(0,960)"><g id="${id}-st"><rect x="-330" y="-58" width="660" height="116" rx="58" fill="${SU.blue}" ${SO(5)}/><text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">มุมล่าง ด้านหน้า</text></g></g></g></g>`);
-        suIn(tl, id, t0, dur);
+        suIn(tl, id, t0, dur); suBreathe(tl, id, t0, dur);
         tl.fromTo(`#${id}-tg`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(3)", immediateRender: false }, t0 + 0.4);
         tl.to(`#${id}-tg`, { scale: 1.15, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: 3, ease: "sine.inOut" }, t0 + 0.85);
         tl.fromTo(`#${id}-tool`, { x: 260, y: -260, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.5, ease: "power3.in", immediateRender: false }, t0 + (o.hit ?? 2.0) - 0.5);
@@ -361,7 +365,7 @@
           ${film ? `<g id="${id}-f${k}" opacity="0"><path d="M-104,-148L-60,-96H32V-156Q-30,-160 -104,-148Z M48,-156V-96H160L120,-140Q96,-156 48,-156Z" fill="#ffd36a" opacity=".8"/>
             <g transform="translate(250,-150)"><rect x="-70" y="-30" width="140" height="60" rx="30" fill="${SU.yellow}" ${SO(3.5)}/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="32" fill="${SU.ink}">ฟิล์ม</text></g></g>` : ""}</g>`;
         put(layer, suCard(id, 540, 300, 960, 1150, "รถหลายรุ่น · กระจกข้าง") + `<g transform="translate(0,0)">${car(0, 420, false)}${car(1, 720, true)}${car(2, 1020, true)}</g></g></g>`);
-        suIn(tl, id, t0, dur);
+        suIn(tl, id, t0, dur); suBreathe(tl, id, t0, dur);
         [1, 2].forEach((k, j) => tl.fromTo(`#${id}-f${k}`, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + (o.at ?? 1.6) + j * 0.35));
       };
       // it won't break: move to the next window, now — car side-on, a hit that bounces, an arrow to the next pane, that one goes
@@ -373,7 +377,7 @@
           <path id="${id}-ar" d="M60,-280Q-20,-360 -100,-280" stroke="${SU.green}" stroke-width="14" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
           <path id="${id}-ah" d="M-100,-280l-6,-34M-100,-280l32,-14" stroke="${SU.green}" stroke-width="14" stroke-linecap="round" opacity="0"/>
           <g transform="translate(-60,-215)"><g id="${id}-ok" opacity="0"><circle r="40" fill="${SU.green}" ${SO(4)}/><path d="M-16,0l10,12l20,-22" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g></g></g></g>`);
-        suIn(tl, id, t0, dur);
+        suIn(tl, id, t0, dur); suBreathe(tl, id, t0, dur);
         tl.fromTo(`#${id}-x`, { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.35, ease: "back.out(3)", immediateRender: false }, t0 + 0.35);
         tl.fromTo(`#${id}-ar`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.45, ease: "power2.out", immediateRender: false }, t0 + 0.9);
         tl.set(`#${id}-ah`, { opacity: 1 }, t0 + 1.3);

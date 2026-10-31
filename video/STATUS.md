@@ -35,6 +35,9 @@
 | EP.2 ถ้ากระจกไม่ลง | `video/sink-ep2/` · HQ `video/release/hq/sink-ep2-HQ.mp4` | 1:06 · −13.9 LUFS · ปก t 3.5 |
 | EP.3 ช่วยจากบนฝั่ง (ตอนจบ) | `video/sink-ep3/` · HQ `video/release/hq/sink-ep3-HQ.mp4` | 1:00 · −14.1 LUFS · พีก −1.4 dB · ปก t 14.6 |
 
+- 1 พ.ย. 00:15 อัปเกรดทั้ง 3 ตอนตามเจ้าของ ("Icon เอฟเฟค ขยับอย่ากาก"): ไอคอนเหรียญ 2.5D + เอฟเฟค (SU.medal/fxGo/fxAt/sheen/flash ใน sinkui.part)
+  การ์ดหายใจ (ซูมช้า) ไม่มีช่วงภาพค้าง ≥ 0.8 วิ · EP.3 ฉากจินตนาการใต้น้ำแทนหนังตะลุง · HQ ใหม่ทั้ง 3 ตอน (sha256 ใน sink.json)
+
 - แพ็กเกจลงคลิป: `video/release/sink.json` (ทั้ง 3 ตอน `status: final` + sha256 ของ HQ) · แคปชัน: `video/sink/CAPTIONS.md`
 - งานทำต่อ: `video/sink/ep1..3/` (`world.part` = Sets.klong, `sinkui.part` = SinkUI.*) · ประกอบ EP.1: `cat helpers kit kit2 hands kit3 cut rich world sinkui body` (.part)
   · EP.2: แทรก `ep2` ก่อน world · EP.3: แทรก `ep2 ep3 ep3b` ก่อน world · เรนเดอร์ราว 21 นาทีต่อตอน
