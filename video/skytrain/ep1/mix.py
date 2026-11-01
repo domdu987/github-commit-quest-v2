@@ -138,8 +138,8 @@ CUES = [
     ("glass", 0.0, "slam", 0.4), ("glass", 0.5, "slam", 0.4), ("glass", 1.0, "slam", 0.4), ("glass", F("glass", 0, 1) + 0.1, "shatter", 0.36), ("glass", 0.2, "growl", 0.3), *accel("glass", 0.2, D["glass"], 0.62, 0.5),
     ("suit", 0.2, "ratchet", 0.34), ("suit", 0.6, "rattle", 0.3), *accel("suit", 0.0, D["suit"], 0.5, 0.46),
     ("lever", 0.0, "rattle", 0.2), *accel("lever", 0.0, D["lever"], 0.5, 0.46, 0.28), ("lever", F("lever", 0, 2), "ding", 0.2),
-    ("drop", 0.0, "whoosh", 0.3), ("drop", 0.0, "engine", 0.18), ("drop", 0.45, "pop", 0.0), ("drop", 0.6, "zap", 0.0), ("drop", 1.95, "zap", 0.24), *rails("drop", 0.0, D["drop"], 0.14, 0.4),
-    ("rule", 0.0, "thud", 0.3), ("rule", vo_t("rule") + 0.5, "whoosh", 0.24), ("rule", vo_t("rule") + 0.9, "ding", 0.24), *accel("rule", 0.0, D["rule"], 0.46, 0.44),
+    ("drop", 0.0, "whoosh", 0.3), ("drop", 0.0, "engine", 0.18), ("drop", 0.45, "pop", 0.0), ("drop", 0.6, "zap", 0.0), *rails("drop", 0.0, D["drop"], 0.14, 0.4),
+    ("rule", 0.0, "thud", 0.3), *accel("rule", 0.0, D["rule"], 0.46, 0.44),
     # the bell, control answers (a radio squelch)
     ("bell", 0.75, "click", 0.3), ("bell", 0.8, "ring", 0.24), *accel("bell", 0.0, D["bell"], 0.46, 0.44, 0.26),
     ("occ", 0.0, "radiosq", 0.3), ("occ", D["occ"] - 0.3, "radiosq", 0.24), *rails("occ", 0.0, D["occ"], 0.12, 0.45),
@@ -154,6 +154,7 @@ CUES = [
     ("turn", F("turn", 0, 1), "sting", 0.5), ("turn", F("turn", 0, 1) + 0.05, "growl", 0.4), ("turn", F("turn", 0, 1) + 0.1, "swell", 0.3),
     ("next", 0.1, "whoosh", 0.3), ("next", 0.8, "ding", 0.24),
 ]
+CUES += [(None, c["t"], c["type"], c["gain"]) for c in json.load(open(os.path.join(HERE, "iconfx_cues.json")))]   # IconFX hits (icons, the clipboard), frame-exact
 SAMPLES = []
 REPLACED = set()
 CUES = [c for c in CUES if c[2] not in REPLACED]

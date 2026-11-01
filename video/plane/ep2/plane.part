@@ -1,0 +1,402 @@
+      // ---------- รอดคนเดียว: the world (fictional airline ฟ้าราม แอร์, flight FR 623 กรุงเทพ → เชียงราย) ----------
+      // Sets.cabinCut(L, o)  the cabin cut open along its length (we look at the far wall); the nose is to the RIGHT, so rig poses
+      //   face forward unflipped (sitChair: thighs to the right). Floor y PF (1500); seat rows every PP px; row 30 (the last) at x ROW30,
+      //   the rear door with its lit EXIT sign at x DOORX to its left. Sized to the cast at s 0.8 (≈ 1.75 m ≈ 496 px; 1 m ≈ 283 px).
+      //   o.id · o.state "calm" | "alarm" (masks down, amber/red emergency light, floor-path strip) | "smoke" (alarm + the smoke layer)
+      //       | "fire" (smoke + the cabin torn open at o.breakX with fire beyond) · o.rows [first, last] row numbers drawn (default [24, 30])
+      //   ids: #id-mask0… (oxygen masks: sway about their tube tops) · #id-exit (the EXIT sign glow) · #id-door · #id-smoke (smoke sheet)
+      //        #id-fire (the fire at the break) · #id-pathK (floor-path lights) · #id-bag (the camera bag under the seat ahead of row 30)
+      // Sets.cabinAisle(L, o)  down the aisle toward the nose, one-point perspective (vanishing point 540, 860). o.state as above,
+      //   o.bin open bin over row 29 (the bag falls from it: #id-fbag, title tag #id-tag), o.title {l1, l2}, o.exitBack (the camera
+      //   faces the tail: the rear door + EXIT sign at the end instead of the break)
+      // Sets.planeSky(L, o)  outside at golden hour over the northern ranges: layered mountains, clouds; the airliner (#id-jet, side
+      //   view facing right, wraps #id-jetb for bank/dive) · o.fire (left engine on fire + the smoke trail #id-trail) · o.time "dusk"|"day"
+      // Sets.crashSite(L, o)  the valley where the tail came down: ridges, jungle, mist; the tail section (#id-tail) tilted on the slope,
+      //   its torn end (#id-fire, #id-smk) and the open rear door with the slide · o.time "dusk" | "night" | "rain" | "dawn"
+      //   o.fire 0…1 · o.ridgeSmoke (EP.1 clue: smoke over the far ridge) · o.torches (EP.2: torch dots on the far ridge, #id-tch0…)
+      //   o.vest "pillow" | "wing" | false · o.panel (a cowl panel propped on the stabiliser: #id-panel, its glint #id-glint)
+      // Plane.heli(id, o)  a rescue helicopter (white/orange), side view facing right; #id-rot (main rotor blur), #id-tr (tail rotor)
+      const { mk } = Pop2;
+      const PF = 1500, PP = 224, ROW30 = 300, DOORX = 70;
+      const PL = { ink: "#1f1a17", navy: "#1d2c5e", navyD: "#121c40", teal: "#1f8a8a", gold: "#f4c430", seat: "#2d3f7c", seatD: "#1e2b58", seatL: "#4a62a8",
+        wall: "#e9e4da", wallD: "#c9c1b2", bin: "#f2eee6", binD: "#cfc6b6", floor: "#3a3f52", amber: "#ffb648", red: "#e8382c", jungle: "#1f4a32" };
+      const PO = (w = 4) => `stroke="${PL.ink}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+      const Plane = (window.Plane = {});
+      Sets.DEFS += `<linearGradient id="plSeat" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1e2b58"/><stop offset=".55" stop-color="#2d3f7c"/><stop offset="1" stop-color="#3d55a0"/></linearGradient>
+        <linearGradient id="plWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f0e8"/><stop offset=".7" stop-color="#e2dccf"/><stop offset="1" stop-color="#bdb4a2"/></linearGradient>
+        <linearGradient id="plBin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf8f2"/><stop offset="1" stop-color="#d9d1c2"/></linearGradient>
+        <linearGradient id="plSkyW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6aa8e8"/><stop offset=".6" stop-color="#ffc98a"/><stop offset="1" stop-color="#ff8a5a"/></linearGradient>
+        <radialGradient id="plGlowG"><stop offset="0" stop-color="#7dffb0" stop-opacity=".9"/><stop offset=".4" stop-color="#2ee07a" stop-opacity=".35"/><stop offset="1" stop-color="#2ee07a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="plFireG"><stop offset="0" stop-color="#fff2b0" stop-opacity="1"/><stop offset=".3" stop-color="#ffb030" stop-opacity=".85"/><stop offset=".7" stop-color="#ff5a1a" stop-opacity=".35"/><stop offset="1" stop-color="#ff3a10" stop-opacity="0"/></radialGradient>
+        <radialGradient id="plAmb"><stop offset="0" stop-color="#ff7a3a" stop-opacity=".55"/><stop offset="1" stop-color="#ff3a10" stop-opacity="0"/></radialGradient>
+        <radialGradient id="plPuffD"><stop offset="0" stop-color="#2a2830" stop-opacity=".8"/><stop offset=".55" stop-color="#2a2830" stop-opacity=".45"/><stop offset="1" stop-color="#2a2830" stop-opacity="0"/></radialGradient><radialGradient id="plPuffL"><stop offset="0" stop-color="#9a94a0" stop-opacity=".75"/><stop offset=".55" stop-color="#7a7480" stop-opacity=".4"/><stop offset="1" stop-color="#6a6470" stop-opacity="0"/></radialGradient>
+        <radialGradient id="plSpray"><stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset=".5" stop-color="#d8ecff" stop-opacity=".5"/><stop offset="1" stop-color="#d8ecff" stop-opacity="0"/></radialGradient>
+        <radialGradient id="plTorch"><stop offset="0" stop-color="#fff6c0" stop-opacity=".8"/><stop offset=".35" stop-color="#ffd27a" stop-opacity=".35"/><stop offset="1" stop-color="#ffb040" stop-opacity="0"/></radialGradient>
+        <linearGradient id="plSmoke" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16141a" stop-opacity=".97"/><stop offset=".5" stop-color="#26242c" stop-opacity=".82"/><stop offset=".75" stop-color="#2a2830" stop-opacity=".45"/><stop offset="1" stop-color="#3a3840" stop-opacity="0"/></linearGradient>
+        <linearGradient id="plFus" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#eef1f6"/><stop offset=".8" stop-color="#c9d0dc"/><stop offset="1" stop-color="#9aa4b4"/></linearGradient>
+        <linearGradient id="plBelly" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3d82"/><stop offset="1" stop-color="#15204a"/></linearGradient>
+        <linearGradient id="plFin" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a8f94"/><stop offset="1" stop-color="#16585e"/></linearGradient>`;
+
+      // ---------- props ----------
+      // the camera bag (burnt-orange canvas, leather trim, a lens bulge, the strap); (0,0) = the middle of its bottom
+      Plane.bag = (s = 1, o = {}) => `<g transform="scale(${s})"><ellipse cy="4" rx="70" ry="10" fill="#000" opacity=".28"/>
+        <path d="M-66,0V-74Q-66,-92 -48,-92H48Q66,-92 66,-74V0Z" fill="#c8642c" ${PO(4)}/><path d="M-66,-30H66" stroke="#9a4418" stroke-width="5"/>
+        <path d="M-60,-86Q0,-104 60,-86L62,-60Q0,-74 -62,-60Z" fill="#7a3a1c" ${PO(3)}/><rect x="-14" y="-62" width="28" height="18" rx="4" fill="#e8c06a" ${PO(2.5)}/>
+        <path d="M-56,-22Q-40,-6 -10,-12" stroke="#e8955a" stroke-width="5" fill="none" opacity=".7"/><path d="M48,-80L52,-6" stroke="#9a4418" stroke-width="3" stroke-dasharray="6 6"/>
+        ${o.strap === false ? "" : `<path d="M-58,-88Q-70,-170 0,-180Q70,-170 58,-88" stroke="#3a2a22" stroke-width="9" fill="none"/>`}
+        ${o.tag ? `<g id="${o.tag}" transform="translate(54,-70)"><g id="${o.tag}-sw"><path d="M0,0L22,40" stroke="#c8302a" stroke-width="4"/><g transform="translate(22,40) rotate(8)"><rect x="-58" y="0" width="190" height="96" rx="14" fill="#fdfaf2" ${PO(4)}/>
+          <circle cx="-38" cy="20" r="8" fill="none" stroke="${PL.ink}" stroke-width="3"/><rect x="-58" y="0" width="190" height="26" rx="12" fill="${PL.navy}"/><text x="38" y="20" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="17" fill="${PL.gold}">FR 623 · CEI</text>
+          <text x="38" y="62" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="${PL.red}">${o.l1 || "รอดคนเดียว"}</text><text x="38" y="86" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="19" fill="${PL.ink}">${o.l2 || "EP.1"}</text></g></g></g>` : ""}</g>`;
+      // an oxygen mask on its tube; the tube top at (0,0), the cup ~150 below
+      Plane.mask = (id) => `<g id="${id}"><path d="M0,0C6,40 -6,90 2,140" stroke="#e8e4da" stroke-width="5" fill="none"/><path d="M0,0C6,40 -6,90 2,140" stroke="#9aa0aa" stroke-width="1.6" fill="none" stroke-dasharray="3 5"/>
+        <path d="M-26,138Q0,124 26,138L22,170Q0,184 -22,170Z" fill="#f6d23a" ${PO(3)}/><path d="M-18,142Q0,134 14,140" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>
+        <path d="M-26,150Q-44,152 -40,170M26,150Q44,152 40,170" stroke="#d8d2c4" stroke-width="2.5" fill="none"/></g>`;
+      // the EXIT sign: a lit box (green, Thai + English) and its spill of light; (0,0) = its centre
+      Plane.exit = (id, s = 1) => `<g transform="scale(${s})"><circle id="${id}-gl" r="190" fill="url(#plGlowG)"/><rect x="-92" y="-34" width="184" height="68" rx="10" fill="#0e3a22" ${PO(4)}/>
+        <rect x="-82" y="-26" width="164" height="52" rx="6" fill="#2ee07a"/><rect x="-82" y="-26" width="164" height="18" rx="6" fill="#9dffc8" opacity=".6"/>
+        <text x="-6" y="0" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#073a1c">EXIT</text><text x="-6" y="21" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="17" fill="#073a1c">ทางออก</text>
+        <path d="M54,-12l20,12l-20,12z" fill="#073a1c"/></g>`;
+      // flames: a flickering stack of tongues (three tones) around (0,0), height h; class `${id}-fl` flickers
+      Plane.flames = (id, h = 200, w = 1) => { let g = `<circle r="${h * 1.4}" fill="url(#plFireG)" opacity=".75" class="${id}-fg"/>`;
+        [[-60, 0.75, "#ff4a14"], [40, 0.9, "#ff4a14"], [-20, 1, "#ff8a1a"], [26, 0.7, "#ff8a1a"], [-8, 0.6, "#ffd24a"], [12, 0.45, "#fff4c0"]].forEach(([x, k, c], j) => {
+          const H = h * k, W = h * 0.34 * k * w;
+          g += `<path class="${id}-fl" data-o="${x} 0" d="M${x - W},0C${x - W},${-H * 0.4} ${x - W * 0.2},${-H * 0.55} ${x},${-H}C${x + W * 0.25},${-H * 0.55} ${x + W},${-H * 0.4} ${x + W},0Z" fill="${c}"/>`; });
+        return g; };
+      Plane.flicker = (tl, id, t0, dur) => { const n = Math.max(1, Math.round(dur / 0.16));
+        document.querySelectorAll(`.${id}-fl`).forEach((el, j) => { const o = el.getAttribute("data-o"); tl.fromTo(el, { scaleY: 0.82, scaleX: 1.06, svgOrigin: o }, { scaleY: 1.12, scaleX: 0.92, svgOrigin: o, duration: 0.12 + (j % 3) * 0.04, yoyo: true, repeat: n, ease: "sine.inOut", immediateRender: false }, t0 + j * 0.03); });
+        document.querySelectorAll(`.${id}-fg`).forEach((el) => tl.fromTo(el, { opacity: 0.55 }, { opacity: 0.85, duration: 0.17, yoyo: true, repeat: n, ease: "sine.inOut", immediateRender: false }, t0)); };
+      // rolling smoke puffs drifting up/left from (x, y): ids `${id}-p0…`, call Plane.puffs to animate
+      Plane.puffMk = (id, x, y, n = 8, c = "#2a2830", r = 70) => Array.from({ length: n }, (_, k) => `<g transform="translate(${x + (k % 3) * 20},${y})"><g id="${id}-p${k}" opacity="0">${[[0, 0, 1], [-0.55, 0.2, 0.7], [0.5, 0.25, 0.75], [0.1, -0.45, 0.65]].map(([dx, dy, q]) => `<circle cx="${f1(dx * r)}" cy="${f1(dy * r)}" r="${f1((r + (k % 4) * 14) * q)}" fill="url(#${c === "light" ? "plPuffL" : "plPuffD"})"/>`).join("")}</g></g>`).join("");
+      Plane.puffs = (tl, id, t0, dur, n = 8, o = {}) => { for (let k = 0; k < n; k++) { const per = o.per ?? 2.4, rep = Math.ceil(dur / per) + 1;
+        tl.fromTo(`#${id}-p${k}`, { x: 0, y: 0, scale: 0.4, opacity: o.op ?? 0.75 }, { x: (o.dx ?? -160) * (0.6 + (k % 3) * 0.3), y: o.dy ?? -520, scale: 2.2, opacity: 0, duration: per, repeat: rep, ease: "power1.out", immediateRender: false }, t0 - (k / n) * per); } };
+
+      // ---------- the cabin cut open ----------
+      const seatSide = (x, row, o = {}) => {   // one seat in profile, facing right; x = the front of its cushion
+        const bx = x - 150;   // the backrest's foot
+        let g = `<path d="M${bx + 10},${PF}L${bx + 30},${PF - 100}M${x - 30},${PF}L${x - 46},${PF - 100}" stroke="#7a8090" stroke-width="10"/><path d="M${bx},${PF}H${x - 8}" stroke="#5a6070" stroke-width="7"/>
+          <path d="M${bx - 4},${PF - 96}H${x}Q${x + 10},${PF - 96} ${x + 8},${PF - 120}Q${x},${PF - 136} ${x - 20},${PF - 136}H${bx + 6}Z" fill="url(#plSeat)" ${PO(4)}/>
+          <path d="M${bx + 4},${PF - 128}L${bx - 34},${PF - 362}Q${bx - 38},${PF - 388} ${bx - 12},${PF - 392}L${bx + 40},${PF - 396}Q${bx + 62},${PF - 394} ${bx + 62},${PF - 370}L${bx + 50},${PF - 128}Z" fill="url(#plSeat)" ${PO(4)}/>
+          <path d="M${bx - 24},${PF - 330}L${bx - 34},${PF - 382}Q${bx - 34},${PF - 396} ${bx - 18},${PF - 398}L${bx + 44},${PF - 402}Q${bx + 60},${PF - 400} ${bx + 60},${PF - 386}L${bx + 58},${PF - 332}Z" fill="#f4f0e6" ${PO(3)}/>
+          <path d="M${bx - 16},${PF - 352}H${bx + 54}" stroke="${PL.teal}" stroke-width="6"/>
+          <path d="M${bx + 46},${PF - 130}L${bx + 58},${PF - 360}" stroke="#4a62a8" stroke-width="7" opacity=".7"/>
+          <path d="M${bx + 20},${PF - 196}H${x - 28}" stroke="#2a2e3a" stroke-width="12" stroke-linecap="round"/><path d="M${bx + 20},${PF - 200}H${x - 28}" stroke="#8a90a0" stroke-width="3" stroke-linecap="round" opacity=".6"/>`;
+        if (o.back !== false) g += `<path d="M${bx + 50},${PF - 352}L${bx + 66},${PF - 156}" stroke="#3a3e4a" stroke-width="10" stroke-linecap="round"/><path d="M${bx + 54},${PF - 300}h20v120h-12z" fill="#2a3060" ${PO(2.5)}/>
+          <rect x="${bx + 56}" y="${PF - 296}" width="10" height="34" rx="2" fill="#f4f0e6" stroke="${PL.ink}" stroke-width="1.6"/>`;
+        return g; };
+      Sets.cabinCut = (L, o = {}) => {
+        const id = o.id || "cc", st = o.state || "calm", r0 = (o.rows || [24, 30])[0], alarm = st !== "calm", smoke = st === "smoke" || st === "fire";
+        const top = PF - 640, binY = PF - 470;
+        put(L.sky, `<rect x="-2000" y="-1400" width="5200" height="4800" fill="url(#plSkyW)"/>`);
+        // outside the windows: the sky at golden hour (moves in L.far with the flight), or the jungle after the crash
+        put(L.far, `<rect x="-1200" y="${top - 400}" width="3600" height="1200" fill="url(#plSkyW)"/>${Array.from({ length: 9 }, (_, k) => `<ellipse cx="${-900 + k * 420}" cy="${PF - 300 + (k % 3) * 40}" rx="${160 + (k % 3) * 40}" ry="34" fill="#fff4e6" opacity=".75"/>`).join("")}
+          <path d="M-1200,${PF - 230}L-900,${PF - 290}L-600,${PF - 250}L-300,${PF - 310}L0,${PF - 260}L300,${PF - 300}L600,${PF - 240}L900,${PF - 300}L1200,${PF - 250}L1500,${PF - 290}L1800,${PF - 240}L2400,${PF - 280}V${PF}H-1200Z" fill="#6a5a8a" opacity=".7"/>`);
+        // the far wall: sidewall panels with windows, the bins, the ceiling
+        let s = `<rect x="-1200" y="${top}" width="3600" height="${PF - top}" fill="url(#plWall)"/>`;
+        const winL = DOORX + 210;
+        s += `<clipPath id="${id}-wcp">${Array.from({ length: 16 }, (_, k) => `<rect x="${winL + k * 150 - 34}" y="${PF - 380}" width="68" height="100" rx="30"/>`).join("")}</clipPath>`;
+        // what the windows show (painted in the set, clipped to the glass): sky + clouds, or the burning engine on the wing (o.wingFire), or night
+        s += `<g clip-path="url(#${id}-wcp)"><rect x="-1200" y="${PF - 400}" width="3600" height="140" fill="${o.night ? "#0a1226" : "url(#plSkyW)"}"/>${Array.from({ length: 12 }, (_, k) => `<ellipse cx="${-600 + k * 260}" cy="${PF - 300}" rx="90" ry="16" fill="#fff4e6" opacity="${o.night ? 0.1 : 0.8}"/>`).join("")}
+          ${o.wingFire ? `<g id="${id}-wing"><path d="M-600,${PF - 300}L2400,${PF - 330}L2400,${PF - 270}L-600,${PF - 250}Z" fill="#c8d0dc"/><circle cx="${o.wingX ?? 900}" cy="${PF - 320}" r="240" fill="url(#plAmb)"/>
+            <g transform="translate(${o.wingX ?? 900},${PF - 290})">${Plane.flames(`${id}-wf`, 190, 1.6)}</g>${Plane.puffMk(`${id}-wsm`, (o.wingX ?? 900) - 40, PF - 360, 8, "dark", 50)}</g>` : ""}</g>`;
+        for (let k = 0; k < 16; k++) { const wx = winL + k * 150;
+          s += `<path d="M${wx - 48},${PF - 356}a40,40 0 0 1 40,-40h16a40,40 0 0 1 40,40v52a40,40 0 0 1 -40,40h-16a40,40 0 0 1 -40,-40z M${wx - 34},${PF - 350}a30,30 0 0 1 30,-30h8a30,30 0 0 1 30,30v40a30,30 0 0 1 -30,30h-8a30,30 0 0 1 -30,-30z" fill="#d8d1c3" fill-rule="evenodd" ${PO(3)}/><rect x="${wx - 34}" y="${PF - 380}" width="68" height="100" rx="30" fill="none" stroke="#a89e8a" stroke-width="3"/>
+            <rect x="${wx - 34}" y="${PF - 396}" width="68" height="${alarm ? 40 : 18}" rx="12" fill="#f0ebe0" ${PO(2)}/>`; }
+        s += `<rect x="-1200" y="${PF - 64}" width="3600" height="64" fill="${PL.floor}"/><path d="M-1200,${PF - 64}H2400" stroke="#262a38" stroke-width="5"/>
+          <path d="M-1200,${binY}H2400V${top}H-1200Z" fill="url(#plBin)"/><path d="M-1200,${binY}H2400" stroke="${PL.ink}" stroke-width="4"/><path d="M-1200,${binY - 8}H2400" stroke="#fff" stroke-width="3" opacity=".8"/>
+          <path d="M-1200,${binY + 34}H2400" stroke="#b8ae9c" stroke-width="3"/>${Array.from({ length: 16 }, (_, k) => `<path d="M${DOORX + 140 + k * PP},${top}V${binY}" stroke="#c4bba8" stroke-width="3"/><rect x="${DOORX + 230 + k * PP}" y="${binY - 70}" width="60" height="16" rx="6" fill="#bdb3a0" ${PO(1.6)}/>`).join("")}
+          <rect x="-1200" y="${top - 60}" width="3600" height="62" fill="#d7d0c2"/>${Array.from({ length: 16 }, (_, k) => `<g transform="translate(${DOORX + 250 + k * PP},${binY + 18})"><rect x="-26" y="-9" width="52" height="18" rx="5" fill="#cfc7b6" ${PO(1.8)}/><circle cx="-12" r="4" fill="${alarm ? "#ffcc3a" : "#fffbe8"}"/><circle cx="6" r="4" fill="#9aa"/><text x="20" y="4" font-family="Kanit" font-weight="800" font-size="11" fill="#5a5444">${r0 + 15 - k}</text></g>`).join("")}`;
+        // the rear: galley wall, the door (handle, window, the arming bar), the EXIT sign above
+        s += `<rect x="-1200" y="${top}" width="${DOORX + 1060}" height="${PF - top}" fill="#d5cdbd"/><path d="M${DOORX + 140},${top}V${PF}" stroke="${PL.ink}" stroke-width="5"/>
+          <g id="${id}-door"><rect x="${DOORX - 130}" y="${PF - 520}" width="250" height="500" rx="40" fill="#e6e0d4" ${PO(5)}/><rect x="${DOORX - 108}" y="${PF - 498}" width="206" height="456" rx="30" fill="none" stroke="#bdb3a0" stroke-width="3"/>
+            <rect x="${DOORX - 40}" y="${PF - 440}" width="70" height="90" rx="30" fill="#b8d4ee" ${PO(3)}/><rect x="${DOORX - 30}" y="${PF - 430}" width="22" height="70" rx="10" fill="#fff" opacity=".5"/>
+            <rect x="${DOORX - 90}" y="${PF - 300}" width="150" height="34" rx="12" fill="#c8302a" ${PO(3)}/><text x="${DOORX - 15}" y="${PF - 276}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="18" fill="#fff">ยกขึ้น ↑</text>
+            <path d="M${DOORX + 70},${PF - 340}v90" stroke="#5a6070" stroke-width="16" stroke-linecap="round"/><path d="M${DOORX + 66},${PF - 336}v80" stroke="#c8ccd4" stroke-width="5" stroke-linecap="round"/></g>
+          <g transform="translate(${DOORX - 6},${PF - 572})"><g id="${id}-exit">${Plane.exit(`${id}-ex`)}</g></g>`;
+        // the floor-path lights (lit in an emergency)
+        s += Array.from({ length: 22 }, (_, k) => `<rect id="${id}-path${k}" x="${DOORX + 60 + k * 90}" y="${PF - 22}" width="40" height="10" rx="5" fill="${alarm ? "#9dffc8" : "#5a6070"}" opacity="${alarm ? 0.95 : 0.5}"/>`).join("");
+        if (alarm) s += `<rect x="-1200" y="${top}" width="3600" height="${PF - top}" fill="#ff5a1a" opacity=".08"/>`;
+        // the seats, last row (30, leftmost) forward; a little seat number tag on each backrest top
+        for (let r = 30; r >= r0; r--) { const x = ROW30 + (30 - r) * PP;
+          s += seatSide(x, r) + `<text x="${x - 160}" y="${PF - 410}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="20" fill="#7a7060">${r}</text>`; }
+        // the camera bag under the seat ahead of row 30 (in the foot space)
+        if (!o.noBag) s += `<g id="${id}-bag" transform="translate(${ROW30 + PP - 120},${PF - 4})">${Plane.bag(0.72, { strap: true })}</g>`;
+        put(L.set, s);
+        // the masks hang from the bins (in glow so they sit over heads)
+        let gl = "";
+        if (alarm) for (let k = 0; k < 7; k++) gl += `<g transform="translate(${ROW30 - 100 + k * PP + (k === 1 ? 50 : 0)},${binY + 6})">${Plane.mask(`${id}-mask${k}`)}</g>`;
+        if (st === "fire") { const bx = o.breakX ?? 1180;
+          gl += `<g id="${id}-fire"><path d="M${bx},${top - 80}L${bx - 40},${binY}L${bx + 30},${PF - 300}L${bx - 20},${PF + 40}H2600V${top - 80}Z" fill="#1a0e0a"/>
+            ${o.noFlame ? `<rect x="${bx}" y="${top - 80}" width="1400" height="${PF - top + 120}" fill="#0a1222"/>${Array.from({ length: 12 }, (_, k) => `<path d="M${bx + 60 + k * 70},${PF - 20 - (k % 3) * 30}l40,-20" stroke="#8ab0c8" stroke-width="3" opacity=".4"/>`).join("")}` : `<circle cx="${bx + 260}" cy="${PF - 260}" r="520" fill="url(#plAmb)"/><g transform="translate(${bx + 120},${PF - 10})">${Plane.flames(`${id}-f`, 330, 1.2)}</g>`}
+            <path d="M${bx},${top - 80}L${bx - 40},${binY}L${bx + 30},${PF - 300}L${bx - 20},${PF + 40}" stroke="#8a8f98" stroke-width="14" fill="none"/><path d="M${bx - 30},${binY - 40}l-40,18M${bx + 20},${PF - 260}l-46,-10M${bx - 10},${PF - 80}l-36,20" stroke="#5a6070" stroke-width="8"/></g>`; }
+        if (smoke) put(L.fg, `<g id="${id}-smoke"><rect x="-1200" y="${top - 300}" width="3600" height="${(o.smokeH ?? 520) + 420}" fill="url(#plSmoke)"/>${Plane.puffMk(`${id}-sm`, 900, binY + 60, 10, "dark", 110)}</g>`);
+        if (o.night) gl += `<rect x="-1200" y="${top - 200}" width="3600" height="1400" fill="#0a1030" opacity=".55"/>`;
+        put(L.glow, gl);
+        // the hull cut open (a doll's-house section): the crown above the ceiling, the floor beams, the cargo hold full of suitcases, the belly
+        const cr = top - 60, hb = PF + 52, hh = PF + 380, rr = mk(77);
+        let hull = `<rect x="-1200" y="${cr - 70}" width="3600" height="70" fill="#e9edf2"/><rect x="-1200" y="${cr - 70}" width="3600" height="16" fill="#fff"/><rect x="-1200" y="${cr - 16}" width="3600" height="16" fill="#e8c46a"/>
+          ${Array.from({ length: 30 }, (_, k) => `<rect x="${-1200 + k * 130}" y="${cr - 60}" width="18" height="60" fill="#b8c2ce"/>`).join("")}<path d="M-1200,${cr - 70}H2400M-1200,${cr}H2400" stroke="${PL.ink}" stroke-width="6"/>`;
+        hull += `<rect x="-1200" y="${PF}" width="3600" height="${hb - PF}" fill="#8a929e"/>${Array.from({ length: 40 }, (_, k) => `<rect x="${-1200 + k * 96}" y="${PF + 8}" width="40" height="${hb - PF - 16}" fill="#6a727e"/><circle cx="${-1180 + k * 96}" cy="${PF + 26}" r="5" fill="#c8ccd4"/>`).join("")}
+          <rect x="-1200" y="${hb}" width="3600" height="${hh - hb}" fill="#3a3f4c"/><rect x="-1200" y="${hb}" width="3600" height="${hh - hb}" fill="url(#r2AO)"/>`;
+        for (let k = 0; k < 34; k++) { const x = -1150 + k * 104 + rr() * 20, w = 80 + rr() * 30, h = 110 + rr() * 120, c = ["#c8302a", "#2f6fd0", "#f4c430", "#2fa864", "#6a4ac8", "#e8823a", "#2a2e38"][k % 7];
+          hull += `<g transform="translate(${f1(x)},${hh - 10})"><rect x="0" y="${f1(-h)}" width="${f1(w)}" height="${f1(h)}" rx="12" fill="${c}" ${PO(3.5)}/><rect x="6" y="${f1(-h + 6)}" width="${f1(w * 0.3)}" height="${f1(h - 12)}" rx="6" fill="#fff" opacity=".18"/>
+            <path d="M${f1(w * 0.3)},${f1(-h - 14)}v14M${f1(w * 0.7)},${f1(-h - 14)}v14M${f1(w * 0.3)},${f1(-h - 14)}H${f1(w * 0.7)}" stroke="${PL.ink}" stroke-width="5" fill="none"/>
+            ${k % 3 === 0 ? `<rect x="${f1(w * 0.55)}" y="${f1(-h * 0.6)}" width="22" height="34" rx="3" fill="#fdfaf2" ${PO(2)}/>` : ""}</g>`; }
+        hull += `<path d="M-1200,${hh}H2400" stroke="${PL.ink}" stroke-width="6"/><rect x="-1200" y="${hh}" width="3600" height="60" fill="url(#plBelly)"/><rect x="-1200" y="${hh + 60}" width="3600" height="14" fill="#f4c430"/><path d="M-1200,${hh + 74}H2400" stroke="${PL.ink}" stroke-width="6"/>
+          <path d="M-1200,${hb}H2400" stroke="${PL.ink}" stroke-width="5"/><path d="M-1200,${PF}H2400" stroke="${PL.ink}" stroke-width="6"/>`;
+        put(L.set, hull);
+        put(L.far, `<rect x="-1200" y="${hh + 74}" width="3600" height="900" fill="#ffc98a"/>${Array.from({ length: 8 }, (_, k) => `<ellipse cx="${-1000 + k * 480}" cy="${hh + 260 + (k % 3) * 60}" rx="260" ry="60" fill="#fff4e6" opacity=".8"/>`).join("")}`);
+      };
+      // life in the cut cabin: masks sway, the exit sign pulses, the floor-path lights chase toward the door, smoke rolls, fire flickers
+      Plane.cabinLife = (tl, id, t0, dur, o = {}) => {
+        for (let k = 0; k < 7; k++) if (document.getElementById(`${id}-mask${k}`)) tl.fromTo(`#${id}-mask${k}`, { rotation: -7 + (k % 3) * 3, svgOrigin: "0 0" }, { rotation: 7 - (k % 2) * 3, svgOrigin: "0 0", duration: 0.7 + (k % 3) * 0.17, yoyo: true, repeat: Math.ceil(dur / 0.7), ease: "sine.inOut", immediateRender: false }, t0 - k * 0.11);
+        if (document.getElementById(`${id}-ex-gl`)) tl.fromTo(`#${id}-ex-gl`, { opacity: 0.55, scale: 0.92, svgOrigin: "0 0" }, { opacity: 1, scale: 1.08, svgOrigin: "0 0", duration: 0.6, yoyo: true, repeat: Math.ceil(dur / 0.6), ease: "sine.inOut", immediateRender: false }, t0);
+        if (o.chase) for (let k = 0; k < 22; k++) tl.fromTo(`#${id}-path${k}`, { opacity: 0.35 }, { opacity: 1, duration: 0.16, yoyo: true, repeat: 1, repeatDelay: 0.9, ease: "sine.inOut", immediateRender: false }, t0 + ((21 - k) % 22) * 0.05);
+        if (document.getElementById(`${id}-smoke`)) { Plane.puffs(tl, `${id}-sm`, t0, dur, 10, { dx: -420, dy: 60, per: 3, op: 0.6 });
+          tl.fromTo(`#${id}-smoke`, { y: o.smokeFrom ?? -40 }, { y: o.smokeTo ?? 60, duration: dur, ease: "sine.inOut", immediateRender: false }, t0); }
+        if (document.getElementById(`${id}-fire`)) Plane.flicker(tl, `${id}-f`, t0, dur);
+        if (document.querySelector(`.${id}-wf-fl`)) { Plane.flicker(tl, `${id}-wf`, t0, dur); Plane.puffs(tl, `${id}-wsm`, t0, dur, 8, { dx: -700, dy: -80, per: 1.4, op: 0.8 }); }
+      };
+
+      // ---------- down the aisle (one-point perspective) ----------
+      const AV = { x: 540, y: 880, F: 900, eye: 1.15 };
+      const AP = (X, Y, Z) => [AV.x + (AV.F * X) / Z, AV.y + (AV.F * (AV.eye - Y)) / Z];
+      const AS = (p) => `${f1(p[0])},${f1(p[1])}`;
+      const aq = (pts) => `M${pts.map(AS).join("L")}Z`;
+      Sets.cabinAisle = (L, o = {}) => {
+        const id = o.id || "ca", st = o.state || "alarm", alarm = st !== "calm", smoke = st === "smoke" || st === "fire";
+        const W = 1.85, Z0 = 1.0, Z1 = 24, BX = 0.78, BY = 1.62, BT = 1.98, CY = 2.18;
+        const sw = (z, w) => f1(Math.max(0.8, w / z));
+        let s = `<rect x="-1200" y="-800" width="3600" height="3600" fill="#cfc6b4"/>`;
+        // the end wall far away: the forward bulkhead (or the rear door + EXIT when o.exitBack)
+        s += `<path d="${aq([AP(-W, 0, Z1), AP(W, 0, Z1), AP(W, CY, Z1), AP(-W, CY, Z1)])}" fill="#bfb5a2"/>`;
+        const ec = AP(0, 1.95, Z1 - 0.1);
+        if (o.exitBack) s += `<path d="${aq([AP(-0.5, 0, Z1 - 0.1), AP(0.5, 0, Z1 - 0.1), AP(0.5, 1.85, Z1 - 0.1), AP(-0.5, 1.85, Z1 - 0.1)])}" fill="#e6e0d4" ${PO(2)}/>`;
+        s += `<g transform="translate(${f1(ec[0])},${f1(ec[1])})"><g id="${id}-exit">${Plane.exit(`${id}-ex`, 0.32)}</g></g>`;
+        // floor: carpet with a pattern, the aisle runner; side walls with windows; bins; ceiling with the light strip
+        s += `<path d="${aq([AP(-W, 0, Z0), AP(W, 0, Z0), AP(W, 0, Z1), AP(-W, 0, Z1)])}" fill="#353a58"/>`;
+        s += `<path d="${aq([AP(-0.3, 0, Z0), AP(0.3, 0, Z0), AP(0.3, 0, Z1), AP(-0.3, 0, Z1)])}" fill="#262b46"/>`;
+        for (let z = Z0; z < Z1; z += 0.6) s += `<path d="M${AS(AP(-0.3, 0, z))}L${AS(AP(0.3, 0, z))}" stroke="#3a4066" stroke-width="${sw(z, 6)}"/>`;
+        [-1, 1].forEach((sd) => {
+          s += `<path d="${aq([AP(sd * W, 0, Z0), AP(sd * W, 0, Z1), AP(sd * W, BY, Z1), AP(sd * W, BY, Z0)])}" fill="${sd < 0 ? "#e6e0d4" : "#d8d0c0"}"/>`;
+          s += `<path d="${aq([AP(sd * W, BY, Z0), AP(sd * W, BY, Z1), AP(sd * BX, BY, Z1), AP(sd * BX, BY, Z0)])}" fill="#e9e3d6"/>`;
+          s += `<path d="${aq([AP(sd * BX, BY, Z0), AP(sd * BX, BY, Z1), AP(sd * (BX - 0.04), BT, Z1), AP(sd * (BX - 0.04), BT, Z0)])}" fill="url(#plBin)"/>`;
+          s += `<path d="M${AS(AP(sd * BX, BY, Z0))}L${AS(AP(sd * BX, BY, Z1))}" stroke="${PL.ink}" stroke-width="3"/>`;
+          s += `<path d="${aq([AP(sd * (BX - 0.04), BT, Z0), AP(sd * (BX - 0.04), BT, Z1), AP(0, CY, Z1), AP(0, CY, Z0)])}" fill="${sd < 0 ? "#f3efe6" : "#e9e3d8"}"/>`;
+        });
+        s += `<path d="${aq([AP(-0.12, CY - 0.005, Z0), AP(0.12, CY - 0.005, Z0), AP(0.12, CY - 0.005, Z1), AP(-0.12, CY - 0.005, Z1)])}" fill="${alarm ? "#ffd6a0" : "#fffbe8"}" opacity=".9"/>`;
+        // windows (shade half down), bin seams with row numbers, reading-light panels
+        for (let z = Z0 + 0.3; z < Z1; z += 0.53) [-1, 1].forEach((sd) => { const a = AP(sd * W, 0.95, z), b = AP(sd * W, 1.32, z + 0.24), w = Math.abs(b[0] - a[0]);
+          s += `<rect x="${f1(Math.min(a[0], b[0]))}" y="${f1(b[1])}" width="${f1(w)}" height="${f1(a[1] - b[1])}" rx="${f1(w * 0.45)}" fill="#ffc98a" stroke="#a89e8a" stroke-width="${sw(z, 4)}"/>
+            <rect x="${f1(Math.min(a[0], b[0]))}" y="${f1(b[1])}" width="${f1(w)}" height="${f1((a[1] - b[1]) * 0.35)}" rx="${f1(w * 0.4)}" fill="#f0ebe0"/>`; });
+        for (let r = 0; r < 30; r++) { const z = 1.3 + r * 0.8; if (z > Z1) break; [-1, 1].forEach((sd) => {
+          s += `<path d="M${AS(AP(sd * BX, BY, z))}L${AS(AP(sd * (BX - 0.04), BT, z))}" stroke="#b5ab98" stroke-width="${sw(z, 5)}"/><path d="M${AS(AP(sd * W, BY, z))}L${AS(AP(sd * BX, BY, z))}" stroke="#cfc6b4" stroke-width="${sw(z, 4)}"/>`;
+          const p = AP(sd * 1.3, BY - 0.005, z + 0.4); s += `<ellipse cx="${f1(p[0])}" cy="${f1(p[1])}" rx="${sw(z, 40)}" ry="${sw(z, 10)}" fill="${alarm ? "#ffcc3a" : "#fffbe8"}" opacity=".8"/>`; }); }
+        // the floor-path lights along the aisle
+        for (let k = 0; k < 44; k++) { const z = 1.1 + k * 0.5; if (z > Z1) break; [-0.32, 0.32].forEach((x, j) => { const p = AP(x, 0.005, z);
+          s += `<circle id="${id}-p${j ? "b" : "a"}${k}" cx="${f1(p[0])}" cy="${f1(p[1])}" r="${sw(z, 16)}" fill="${alarm ? "#9dffc8" : "#5a6070"}"/>`; }); }
+        // seats, 3 + 3 per row, their backs toward us: far rows first; headrest covers, the tray table and the seat pocket
+        const zs = []; for (let r = 0; r < 26; r++) { const z = 1.15 + r * 0.8; if (z > Z1 - 0.5) break; zs.push(z); }
+        zs.slice().reverse().forEach((z) => { const rn = (o.row0 ?? 29) - Math.round((z - 1.15) / 0.8);
+          [[-W + 0.08, -0.34], [0.34, W - 0.08]].forEach(([x0, x1]) => {
+            for (let k = 0; k < 3; k++) { const xa = x0 + ((x1 - x0) * (k + 0.04)) / 3, xb = x0 + ((x1 - x0) * (k + 0.96)) / 3, xm = (xa + xb) / 2;
+              const back = [AP(xa, 0.42, z), AP(xb, 0.42, z), AP(xb, 1.12, z), AP(xm, 1.18, z), AP(xa, 1.12, z)];
+              s += `<path d="M${back.map(AS).join("L")}Z" fill="url(#plSeat)" stroke="${PL.ink}" stroke-width="${sw(z, 7)}" stroke-linejoin="round"/>`;
+              s += `<path d="${aq([AP(xa + 0.05, 1.0, z - 0.01), AP(xb - 0.05, 1.0, z - 0.01), AP(xb - 0.05, 1.15, z - 0.01), AP(xa + 0.05, 1.15, z - 0.01)])}" fill="#f4f0e6" stroke="${PL.ink}" stroke-width="${sw(z, 3)}"/>`;
+              s += `<path d="M${AS(AP(xa + 0.05, 1.07, z - 0.01))}L${AS(AP(xb - 0.05, 1.07, z - 0.01))}" stroke="${PL.teal}" stroke-width="${sw(z, 8)}"/>`;
+              if (z < 9) { s += `<path d="${aq([AP(xa + 0.08, 0.66, z - 0.01), AP(xb - 0.08, 0.66, z - 0.01), AP(xb - 0.08, 0.92, z - 0.01), AP(xa + 0.08, 0.92, z - 0.01)])}" fill="#1e2b58" stroke="#121c40" stroke-width="${sw(z, 3)}"/>`;
+                s += `<path d="${aq([AP(xa + 0.1, 0.5, z - 0.01), AP(xb - 0.1, 0.5, z - 0.01), AP(xb - 0.1, 0.6, z - 0.01), AP(xa + 0.1, 0.6, z - 0.01)])}" fill="#2a3060"/>`; }
+              s += `<path d="M${AS(AP(xa + 0.04, 0.5, z - 0.005))}L${AS(AP(xa + 0.06, 1.08, z - 0.005))}" stroke="#4a62a8" stroke-width="${sw(z, 6)}" opacity=".7"/>`; }
+            if (z < 6) { const t = AP((x0 + x1) / 2, BY - 0.07, z); s += `<text x="${f1(t[0])}" y="${f1(t[1])}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="${sw(z, 70)}" fill="#7a7060">${rn}</text>`; }
+          }); });
+        // the open bin over the left near rows: the door swung up, the dark inside
+        if (o.bin) { const z0 = 1.35, z1 = 2.3;
+          s += `<path d="${aq([AP(-W, BY, z0), AP(-BX, BY, z0), AP(-BX, BY, z1), AP(-W, BY, z1)])}" fill="#2a2620"/><path d="${aq([AP(-BX, BY, z0), AP(-BX, BY, z1), AP(-0.45, 1.95, z1), AP(-0.45, 1.95, z0)])}" fill="#d9d1c2" stroke="#8a806c" stroke-width="3"/>
+            <path d="${aq([AP(-W, BY + 0.02, z0 + 0.1), AP(-1.1, BY + 0.02, z0 + 0.1), AP(-1.1, BY + 0.02, z1 - 0.1), AP(-W, BY + 0.02, z1 - 0.1)])}" fill="#2a6ac8" opacity=".9"/>`; }
+        put(L.set, s);
+        let g = "";
+        if (o.bin) { const c = AP(-0.85, BY - 0.05, 2.0); g += `<g transform="translate(${f1(c[0])},${f1(c[1])})"><g id="${id}-fbag"><g id="${id}-fbag-r">${Plane.bag(1.35, { strap: false, tag: `${id}-tag`, l1: o.title?.l1, l2: o.title?.l2 })}</g></g></g>`; }
+        if (alarm) for (let k = 0; k < 12; k++) { const z = 1.9 + (k >> 1) * 0.8, c = AP(k % 2 ? 1.2 : -1.2, BY, z); g += `<g transform="translate(${f1(c[0])},${f1(c[1])}) scale(${f1(2.4 / z)})">${Plane.mask(`${id}-mask${k}`)}</g>`; }
+        if (st === "fire") { const c = AP(0, 1.0, 12); g += `<g transform="translate(${f1(c[0])},${f1(c[1]) + 120})"><circle r="360" fill="url(#plAmb)"/>${Plane.flames(`${id}-f`, 260, 1.4)}</g>`; }
+        if (alarm) g += `<rect x="-1200" y="-800" width="3600" height="3600" fill="#ff3a10" opacity=".08"/>`;
+        put(L.glow, g);
+        if (smoke) put(L.fg, `<g id="${id}-smoke"><rect x="-1200" y="-800" width="3600" height="${o.smokeH ?? 1500}" fill="url(#plSmoke)"/>${Plane.puffMk(`${id}-sm`, 540, 700, 10, "dark", 160)}</g>`);
+      };
+      Plane.aisleLife = (tl, id, t0, dur) => {
+        for (let k = 0; k < 10; k++) if (document.getElementById(`${id}-mask${k}`)) tl.fromTo(`#${id}-mask${k}`, { rotation: -9 + (k % 3) * 4, svgOrigin: "0 0" }, { rotation: 9 - (k % 2) * 4, svgOrigin: "0 0", duration: 0.55 + (k % 3) * 0.15, yoyo: true, repeat: Math.ceil(dur / 0.55), ease: "sine.inOut", immediateRender: false }, t0 - k * 0.09);
+        for (let k = 0; k < 40; k++) if (document.getElementById(`${id}-pa${k}`)) tl.fromTo([`#${id}-pa${k}`, `#${id}-pb${k}`], { opacity: 0.35 }, { opacity: 1, duration: 0.15, yoyo: true, repeat: Math.ceil(dur / 1.2), repeatDelay: 0.9, ease: "sine.inOut", immediateRender: false }, t0 + (k % 24) * 0.05);
+        if (document.querySelector(`.${id}-f-fl`)) Plane.flicker(tl, `${id}-f`, t0, dur);
+        if (document.getElementById(`${id}-smoke`)) { Plane.puffs(tl, `${id}-sm`, t0, dur, 10, { dx: 0, dy: 300, per: 2.6, op: 0.55 }); tl.fromTo(`#${id}-smoke`, { y: -120 }, { y: 80, duration: dur, ease: "sine.inOut", immediateRender: false }, t0); }
+      };
+
+      // ---------- outside: the airliner over the northern ranges ----------
+      Plane.jet = (id, o = {}) => {   // side view facing right, ~1500 long; (0,0) = the wing root at the belly
+        const fire = o.fire;
+        return `<g id="${id}"><g id="${id}-b">
+          <path d="M-760,-120L-880,-430Q-892,-460 -862,-458L-770,-450Q-740,-446 -722,-414L-560,-130Z" fill="url(#plFin)" ${PO(6)}/>
+          <path d="M-850,-420L-760,-290" stroke="#f4c430" stroke-width="16"/><text transform="translate(-776,-336) rotate(-62)" font-family="Kanit" font-weight="900" font-size="46" fill="#fff">ฟ้าราม</text>
+          <path d="M-790,-110L-930,-150Q-950,-150 -940,-130L-820,-70Z" fill="#c8d0dc" ${PO(5)}/>
+          <path d="M-800,-150Q-880,-140 -880,-100Q-860,-40 -760,-30L640,-10Q760,-10 800,-70Q820,-120 760,-170Q700,-210 600,-214L-560,-220Q-720,-214 -800,-150Z" fill="url(#plFus)" ${PO(6)}/>
+          <path d="M-860,-80Q-820,-40 -760,-30L640,-10Q760,-10 800,-70L780,-80Q720,-40 620,-40L-760,-56Q-820,-60 -860,-80Z" fill="url(#plBelly)"/>
+          <path d="M-820,-120L780,-120" stroke="#f4c430" stroke-width="10"/><path d="M-820,-104L790,-104" stroke="${PL.navy}" stroke-width="7"/>
+          ${Array.from({ length: 30 }, (_, k) => `<rect x="${-600 + k * 40}" y="-176" width="20" height="28" rx="9" fill="#2a3a5a" stroke="#1a2440" stroke-width="2"/>`).join("")}
+          <path d="M660,-190Q720,-196 760,-170L752,-150Q712,-170 668,-170Z" fill="#2a3a5a" ${PO(3)}/>
+          <rect x="560" y="-196" width="44" height="120" rx="12" fill="none" stroke="#9aa4b4" stroke-width="3"/><rect x="-700" y="-188" width="40" height="110" rx="12" fill="none" stroke="#9aa4b4" stroke-width="3"/>
+          <text x="-100" y="-185" font-family="Kanit" font-weight="900" font-size="40" fill="${PL.navy}">ฟ้าราม แอร์</text>
+          <path d="M-560,-206Q0,-232 600,-206" stroke="#fff" stroke-width="8" fill="none" opacity=".9"/>
+          <path d="M120,-40L-280,120Q-310,134 -290,104L-60,-46Z" fill="#c8d0dc" ${PO(6)}/><path d="M-280,120L-310,90" stroke="${PL.ink}" stroke-width="5"/>
+          <g id="${id}-eng"><path d="M-40,30Q-50,0 -20,-6H160Q190,0 186,30Q190,60 160,64H-20Q-50,60 -40,30Z" fill="#dfe4ec" ${PO(5)}/><ellipse cx="174" cy="30" rx="16" ry="30" fill="#2a2e38" ${PO(3)}/>
+            <path d="M-30,30H170" stroke="#9aa4b4" stroke-width="4"/><path d="M10,-2Q60,-10 140,-2" stroke="#fff" stroke-width="5" fill="none"/></g>
+          ${fire ? `<g transform="translate(-40,40) rotate(-90)"><g id="${id}-fire">${Plane.flames(`${id}-ef`, 120, 1)}</g></g><g id="${id}-trail">${Plane.puffMk(`${id}-tr`, -60, 30, 12, "#2a2830", 60)}</g>` : ""}
+          </g></g>`; };
+      Sets.planeSky = (L, o = {}) => {
+        const id = o.id || "ps", dusk = (o.time || "dusk") === "dusk";
+        put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${dusk ? "#3a4aa0" : "#4a90e0"}"/><stop offset=".55" stop-color="${dusk ? "#f08a6a" : "#9ad0f4"}"/><stop offset="1" stop-color="${dusk ? "#ffcf7a" : "#e8f6ff"}"/></linearGradient>
+          <rect x="-2000" y="-1400" width="5200" height="4800" fill="url(#${id}-sk)"/><circle cx="${o.sunX ?? 260}" cy="${o.sunY ?? 1180}" r="260" fill="#fff0c0" opacity=".45"/><circle cx="${o.sunX ?? 260}" cy="${o.sunY ?? 1180}" r="90" fill="#fff8e0"/>`);
+        const ridge = (y, amp, c, seed) => { const r = mk(seed); let d = `M-2000,${y}`; for (let x = -2000; x <= 3200; x += 120) d += `L${x},${f1(y - amp * (0.4 + r() * 0.6) * (1 + Math.sin(x / 300)) / 1.4)}`; return `<path d="${d}V3400H-2000Z" fill="${c}"/>`; };
+        put(L.far, `<rect x="-2000" y="1380" width="5200" height="2000" fill="${dusk ? "#5a6a9a" : "#4a8ac0"}"/><rect x="-2000" y="1380" width="5200" height="16" fill="#ffe0c0" opacity=".6"/>
+          ${Array.from({ length: 20 }, (_, k) => `<path d="M${-1800 + k * 260},${1420 + (k % 5) * 60}h${90 + (k % 3) * 50}" stroke="#ffe6d0" stroke-width="4" opacity=".4"/>`).join("")}
+          ${Array.from({ length: 6 }, (_, k) => `<ellipse cx="${-1400 + k * 800}" cy="${1330 + (k % 2) * 60}" rx="560" ry="60" fill="#ffe6d0" opacity=".55"/>`).join("")}`);
+        put(L.mid, `<rect x="-2000" y="1700" width="5200" height="1800" fill="${dusk ? "#34406a" : "#2a6a9a"}"/>
+          <g transform="translate(${o.islandX ?? 300},1760)"><path d="M-380,40L-260,-60L-150,-110L-40,-170L60,-120L170,-140L300,-40L420,40Z" fill="#2a2a32"/><path d="M-150,-110L-40,-170L60,-120" stroke="#5a5664" stroke-width="8" fill="none"/>
+            <path d="M-260,-60L-150,-110L-40,-170L60,-120L170,-140L160,-120L60,-100L-40,-150L-150,-92Z" fill="#6a6a3a"/><path d="M-420,46Q0,20 440,46" stroke="#fff" stroke-width="8" fill="none" opacity=".6"/></g>
+          ${Array.from({ length: 30 }, (_, k) => `<path d="M${-1900 + k * 180},${1800 + (k % 6) * 70}q30,-10 60,0" stroke="#bcd4ec" stroke-width="5" fill="none" opacity=".35"/>`).join("")}`);
+        put(L.set, `<g transform="translate(${o.x ?? 540},${o.y ?? 760}) scale(${o.s ?? 0.62}) rotate(${o.rot ?? 0})">${Plane.jet(`${id}-jet`, { fire: o.fire })}</g>`);
+        put(L.fg, Array.from({ length: 5 }, (_, k) => `<g id="${id}-cl${k}"><ellipse cx="${-900 + k * 700}" cy="${300 + (k % 3) * 600}" rx="380" ry="110" fill="#fff" opacity=".85"/><ellipse cx="${-780 + k * 700}" cy="${250 + (k % 3) * 600}" rx="200" ry="90" fill="#fff" opacity=".9"/></g>`).join(""));
+      };
+      Plane.skyLife = (tl, id, t0, dur, o = {}) => {
+        for (let k = 0; k < 5; k++) tl.fromTo(`#${id}-cl${k}`, { x: 0 }, { x: -(o.cloud ?? 900), duration: dur, ease: "none", immediateRender: false }, t0);
+        if (document.getElementById(`${id}-jet-ef-fg`) || document.querySelector(`.${id}-jet-ef-fl`)) Plane.flicker(tl, `${id}-jet-ef`, t0, dur);
+        if (document.getElementById(`${id}-jet-tr-p0`)) Plane.puffs(tl, `${id}-jet-tr`, t0, dur, 12, { dx: -700, dy: -60, per: 1.6, op: 0.85 });
+        tl.fromTo(`#${id}-jet-b`, { y: -8 }, { y: 8, duration: 1.1, yoyo: true, repeat: Math.ceil(dur / 1.1), ease: "sine.inOut", immediateRender: false }, t0);
+      };
+
+      // ---------- the crash site ----------
+      Plane.tail = (id, o = {}) => {   // the tail section on its own: ~1100 long, nose (torn end) to the right; (0,0) = belly middle
+        return `<g id="${id}">
+          <path d="M-520,-130L-640,-470Q-650,-500 -620,-498L-530,-490Q-500,-486 -484,-454L-330,-140Z" fill="url(#plFin)" ${PO(6)}/>
+          <path d="M-610,-460L-520,-320" stroke="#f4c430" stroke-width="16"/><text transform="translate(-536,-370) rotate(-62)" font-family="Kanit" font-weight="900" font-size="46" fill="#fff">ฟ้าราม</text>
+          <path d="M-560,-120L-700,-160Q-720,-160 -710,-140L-590,-80Z" fill="#c8d0dc" ${PO(5)}/>
+          ${o.panel ? `<g id="${id}-panel" transform="translate(-690,-170) rotate(-24)"><rect x="-70" y="-50" width="140" height="100" rx="12" fill="#e8eef6" ${PO(4)}/><path d="M-50,-30L40,30" stroke="#fff" stroke-width="10" opacity=".9"/><circle id="${id}-glint" cx="0" cy="-10" r="40" fill="#fff" opacity="0"/></g>` : ""}
+          <path d="M-560,-150Q-640,-140 -640,-100Q-620,-40 -520,-30L230,-6L270,-60L240,-120L282,-170L250,-232L-330,-232Q-480,-226 -560,-150Z" fill="url(#plFus)" ${PO(6)}/>
+          <path d="M-620,-80Q-580,-40 -520,-30L230,-6L250,-30L-520,-56Z" fill="url(#plBelly)"/><path d="M-580,-120L250,-120" stroke="#f4c430" stroke-width="10"/><path d="M-580,-104L255,-104" stroke="${PL.navy}" stroke-width="7"/>
+          ${Array.from({ length: 15 }, (_, k) => `<rect x="${-380 + k * 40}" y="-188" width="20" height="28" rx="9" fill="#1a2440"/>`).join("")}
+          <rect id="${id}-door" x="-470" y="-206" width="48" height="128" rx="12" fill="#1a1416" ${PO(4)}/>
+          <path d="M-470,-90L-580,40H-500L-424,-86Z" fill="#f4c430" ${PO(4)}/><path d="M-560,30L-470,-80" stroke="#fff" stroke-width="5" opacity=".6"/>
+          <path d="M230,-6L270,-60L240,-120L282,-170L250,-232Q330,-120 230,-6Z" fill="#141016"/><path d="M246,-60h26v-50h-26zM254,-150h22v-40h-22z" fill="#2d3f7c" opacity=".8"/><path d="M230,-6L270,-60L240,-120L282,-170L250,-232" stroke="#6a707e" stroke-width="16" fill="none"/><path d="M230,-6L270,-60L240,-120L282,-170L250,-232" stroke="#2a2a30" stroke-width="5" fill="none"/><path d="M262,-40q30,10 40,40M276,-150q40,-10 50,20M250,-200q30,-20 60,-4" stroke="#e8c46a" stroke-width="7" fill="none"/><path d="M270,-100q40,20 30,60M262,-180q50,0 46,40" stroke="#c8302a" stroke-width="4" fill="none"/>
+          <path d="M-300,-226Q0,-240 220,-228" stroke="#fff" stroke-width="8" fill="none" opacity=".8"/>
+          <path d="M-200,-60l60,-20M100,-50l80,-30" stroke="#8a8a90" stroke-width="5" opacity=".5"/>
+          ${o.vest === "wing" ? `<g transform="translate(-640,-160) rotate(-14)"><path d="M-46,-40H46L40,40H-40Z" fill="#ff6a14" ${PO(4)}/><path d="M-10,-40V40M10,-40V40" stroke="#c84a08" stroke-width="5"/><rect x="-40" y="-8" width="80" height="14" fill="#fff4d0" opacity=".9"/></g>` : ""}
+          </g>`; };
+      Sets.crashSite = (L, o = {}) => {
+        const id = o.id || "cs", tm = o.time || "dusk", night = tm === "night" || tm === "rain";
+        const sky = { dusk: ["#3a4a6a", "#c87a6a", "#f2b080"], night: ["#05070f", "#0c1426", "#16223a"], rain: ["#080a12", "#121a28", "#1a2434"], dawn: ["#7a90b8", "#e8b8a8", "#fff0d8"] }[tm];
+        const sea = { dusk: ["#3a5a78", "#1e3448"], night: ["#0c1a2a", "#060e18"], rain: ["#0e1a28", "#08101a"], dawn: ["#6a90b0", "#2e5a7a"] }[tm];
+        const rock = night ? ["#0c0e12", "#16191f", "#262a32"] : tm === "dawn" ? ["#2a2a30", "#3e3e46", "#6a6a74"] : ["#1e1e26", "#2e2e38", "#5a5664"];
+        const grass = night ? "#1a2416" : tm === "dawn" ? "#8a8a4a" : "#6a6a3a";
+        put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset=".62" stop-color="${sky[1]}"/><stop offset="1" stop-color="${sky[2]}"/></linearGradient>
+          <rect x="-2000" y="-1400" width="5200" height="4800" fill="url(#${id}-sk)"/>
+          ${tm === "dawn" || tm === "dusk" ? `<circle cx="${tm === "dawn" ? 860 : 220}" cy="1020" r="320" fill="#fff0c8" opacity=".35"/><circle cx="${tm === "dawn" ? 860 : 220}" cy="1020" r="70" fill="#fff6e0" opacity=".9"/>` : `<circle cx="820" cy="330" r="160" fill="#9ab0d8" opacity=".12"/><circle cx="820" cy="330" r="46" fill="#dfe8ff" opacity="${tm === "rain" ? 0.25 : 0.7}"/>`}
+          ${Array.from({ length: 7 }, (_, k) => `<g id="${id}-cl${k}"><ellipse cx="${-1200 + k * 560}" cy="${200 + (k % 3) * 170}" rx="${420 + (k % 2) * 160}" ry="${70 + (k % 3) * 20}" fill="${night ? "#1a2234" : "#8a90a8"}" opacity="${night ? 0.8 : 0.55}"/></g>`).join("")}`);
+        // the open ocean to the horizon; the far headland across the bay (where the front section lies)
+        let far = `<rect x="-2000" y="1060" width="5200" height="900" fill="${sea[0]}"/><rect x="-2000" y="1060" width="5200" height="10" fill="#fff" opacity="${night ? 0.08 : 0.3}"/>
+          ${Array.from({ length: 16 }, (_, k) => `<path d="M${-1500 + k * 260},${1090 + (k % 4) * 16}h${80 + (k % 3) * 40}" stroke="#fff" stroke-width="3" opacity="${night ? 0.1 : 0.3}"/>`).join("")}
+          <path d="M-900,1070L-700,980L-560,1000L-480,940L-380,990L-200,1070Z" fill="${rock[1]}" opacity=".8"/><path d="M-120,1070l20,-120l30,6l14,114Z" fill="${rock[1]}" opacity=".8"/>
+          <path d="M900,1080L1020,930L1150,880L1260,860L1380,900L1520,960L1700,1000L2400,1050V1100H900Z" fill="${rock[1]}"/><path d="M1020,930L1150,880L1260,860" stroke="${rock[2]}" stroke-width="5" fill="none" opacity=".6"/>`;
+        if (o.ridgeSmoke) far += `<g id="${id}-rs">${Plane.puffMk(`${id}-rsp`, 1250, 860, 8, night ? "dark" : "light", 70)}</g><circle cx="1250" cy="880" r="150" fill="url(#plAmb)" opacity=".7"/>`;
+        if (o.torches) far += Array.from({ length: 5 }, (_, k) => `<g transform="translate(${1130 + k * 48},${878 + (k % 2) * 10})"><circle r="26" fill="#fff6c0" opacity=".22"/><circle id="${id}-tch${k}" r="7" fill="#fff6c0"/></g>`).join("");
+        if (o.front) far += `<g transform="translate(1250,890) scale(.24) rotate(4)"><path d="M-300,-30L700,-60Q820,-60 860,-120Q860,-170 780,-200L-280,-210L-320,-160L-290,-110Z" fill="url(#plFus)" ${PO(8)}/><path d="M-300,-120L760,-130" stroke="#f4c430" stroke-width="12"/></g>${Array.from({ length: 6 }, (_, k) => `<g transform="translate(${1150 + k * 40},${900})"><circle cy="-22" r="5" fill="#2a2420"/><path d="M0,-16v16" stroke="#2a2420" stroke-width="5"/><path id="${id}-wv${k}" d="M0,-14l${k % 2 ? 10 : -10},-12" stroke="#2a2420" stroke-width="3"/></g>`).join("")}`;
+        put(L.far, far);
+        // the bay: swells rolling in, foam lines; the cliff on the left with seabirds on its ledges
+        let mid = `<rect x="-2000" y="1240" width="5200" height="700" fill="${sea[1]}"/>
+          ${Array.from({ length: 8 }, (_, k) => `<path id="${id}-sw${k}" d="M-1600,${1260 + k * 34}q100,-14 200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0" stroke="${night ? "#2a3a50" : "#8ab0c8"}" stroke-width="${3 + k * 0.6}" fill="none" opacity="${0.3 + k * 0.05}"/>`).join("")}
+          <path d="M-1400,1500L-1300,700L-1120,620L-980,660L-860,820L-820,1000L-760,1300L-700,1500Z" fill="${rock[0]}"/><path d="M-1120,620L-1050,900L-980,1100M-980,660L-900,880" stroke="${rock[2]}" stroke-width="6" fill="none" opacity=".5"/>
+          <path d="M-1300,700L-1120,620L-980,660L-1000,690L-1120,660Z" fill="${grass}"/>${Array.from({ length: 6 }, (_, k) => `<path d="M${-1180 + k * 30},${760 + k * 60}q8,-6 16,0q8,-6 16,0" stroke="#fff" stroke-width="3" fill="none" opacity=".8"/>`).join("")}`;
+        put(L.mid, mid);
+        // the shore: black lava rock, tussock grass, the tail section on the rocks at the waterline, its slide down to the water, debris
+        const r = mk(o.seed || 21);
+        let s = `<path d="M-2000,1600Q-900,1470 -200,1500Q300,1520 760,1486Q1300,1460 3200,1530V3400H-2000Z" fill="${rock[1]}"/>
+          <path d="M-2000,1600Q-900,1470 -200,1500Q300,1520 760,1486Q1300,1460 3200,1530" stroke="${rock[2]}" stroke-width="8" fill="none"/>`;
+        for (let k = 0; k < 30; k++) { const x = -1500 + k * 130 + r() * 50, y = 1520 + r() * 120, w = 70 + r() * 90, h = 30 + r() * 50;
+          s += `<path d="M${f1(x - w / 2)},${f1(y)}Q${f1(x - w / 3)},${f1(y - h)} ${f1(x)},${f1(y - h * 1.1)}Q${f1(x + w / 3)},${f1(y - h)} ${f1(x + w / 2)},${f1(y)}Z" fill="${rock[0]}"/><path d="M${f1(x - w / 4)},${f1(y - h * 0.8)}Q${f1(x)},${f1(y - h * 1.05)} ${f1(x + w / 5)},${f1(y - h * 0.85)}" stroke="${rock[2]}" stroke-width="4" fill="none" opacity=".7"/>`; }
+        for (let k = 0; k < 22; k++) { const x = -1400 + k * 170 + r() * 60, y = 1560 + r() * 200;
+          s += `<g id="${id}-tu${k}" data-o="${f1(x)} ${f1(y)}">${Array.from({ length: 7 }, (_, j) => `<path d="M${f1(x)},${f1(y)}q${f1(-30 + j * 10)},${f1(-40 - (j % 3) * 14)} ${f1(-50 + j * 16)},${f1(-70 - (j % 3) * 20)}" stroke="${grass}" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}</g>`; }
+        s += `<path d="M-2000,1480Q-600,1440 300,1470" stroke="#fff" stroke-width="10" fill="none" opacity="${night ? 0.15 : 0.5}" id="${id}-foam"/>`;
+        s += `<g transform="translate(${o.tx ?? 560},${o.ty ?? 1500}) rotate(${o.trot ?? -6}) scale(${o.ts ?? 0.8})">${Plane.tail(`${id}-tail`, o)}
+          ${(o.fire ?? 0) > 0 ? `<g id="${id}-fire" transform="translate(270,-60)"><circle r="380" fill="url(#plAmb)"/>${Plane.flames(`${id}-f`, 260 * o.fire, 1.1)}</g>` : ""}
+          ${o.smoke !== false ? `<g id="${id}-smk">${Plane.puffMk(`${id}-sp`, 270, -200, 10, night ? "dark" : "light", 80)}</g>` : ""}</g>`;
+        s += `<g transform="translate(980,1530) rotate(-14)"><path d="M0,0L120,-30L150,10L30,30Z" fill="#dfe4ec" ${PO(4)}/><path d="M20,0L120,-20" stroke="#f4c430" stroke-width="8"/></g>
+          <g transform="translate(1160,1570) rotate(10)"><path d="M0,0h70v-30h-70zM60,-30l10,-90h-24l-6,90z" fill="#2d3f7c" ${PO(3)}/></g><g transform="translate(-80,1560)"><circle r="40" fill="#22262e" ${PO(4)}/><circle r="16" fill="#9aa2ae"/></g>`;
+        if (o.plume) s += `<g transform="translate(${o.plumeX ?? 1060},1150)"><circle r="70" fill="url(#plAmb)"/>${Plane.puffMk(`${id}-pl`, 0, 0, 8, "light", 46)}</g>`;
+        put(L.set, s);
+        let gl = `<g id="${id}-birds">${Array.from({ length: 5 }, (_, k) => `<g transform="translate(${-200 + k * 260},${380 + (k % 3) * 120})"><path id="${id}-bd${k}" d="M-26,0q13,-14 26,0q13,-14 26,0" stroke="${night ? "#8a96b0" : "#2a2a30"}" stroke-width="5" fill="none" stroke-linecap="round"/></g>`).join("")}</g>`;
+        if (tm === "rain" || o.spray) gl += `<g id="${id}-rain">${Array.from({ length: 110 }, (_, k) => `<path d="M${-600 + ((k * 137) % 2400)},${(k * 211) % 2000 - 200}l-60,40" stroke="#b4c8e0" stroke-width="3" opacity=".4"/>`).join("")}</g>`;
+        if (o.storm) gl += `<g id="${id}-bolt" opacity="0"><rect x="-1200" y="-800" width="3600" height="3600" fill="#cfe0ff" opacity=".35"/><path d="M820,-100L760,260L840,280L720,640L800,660L640,1060" stroke="#fff" stroke-width="14" fill="none" stroke-linejoin="round"/><path d="M820,-100L760,260L840,280L720,640L800,660L640,1060" stroke="#b8d0ff" stroke-width="30" fill="none" opacity=".35"/></g>
+          ${[[-200, 1470, 1.4], [980, 1460, 1.1], [420, 1500, 0.9]].map(([x, y, q], k) => `<g transform="translate(${x},${y}) scale(${q})"><g id="${id}-wc${k}" opacity="0">${Array.from({ length: 9 }, (_, j) => `<circle cx="${-160 + j * 40}" cy="${-60 - (j % 3) * 50}" r="${70 + (j % 4) * 20}" fill="url(#plSpray)"/>`).join("")}<path d="M-260,0Q-120,-260 0,-320Q120,-260 260,0" fill="url(#plSpray)"/></g></g>`).join("")}`;
+        put(L.glow, gl);
+        const fc = night ? ["#030405", "#0c0e12"] : ["#0e0e12", "#24242c"];
+        put(L.fg, `<g id="${id}-fgl"><path d="M-900,2400L-700,1720Q-600,1660 -420,1700L-200,1800L-120,2400Z" fill="${fc[0]}"/><path d="M-700,1720Q-600,1660 -420,1700" stroke="${fc[1]}" stroke-width="10" fill="none"/>
+          ${Array.from({ length: 9 }, (_, j) => `<path d="M${-520 + j * 14},1720q${-40 + j * 10},-120 ${-80 + j * 24},-190" stroke="${night ? "#141a10" : "#4a4a24"}" stroke-width="9" fill="none" stroke-linecap="round"/>`).join("")}
+          <path d="M1300,2400L1460,1760Q1560,1700 1700,1760L1900,2400Z" fill="${fc[0]}"/></g>`);
+      };
+      Plane.siteLife = (tl, id, t0, dur) => {
+        if (document.getElementById(`${id}-bolt`)) [0.25, 1.9, 3.4].forEach((t) => { if (t < dur) { tl.fromTo(`#${id}-bolt`, { opacity: 1 }, { opacity: 0, duration: 0.1, repeat: 1, yoyo: true, immediateRender: false }, t0 + t); tl.to(`#${id}-bolt`, { opacity: 0, duration: 0.25 }, t0 + t + 0.2); } });
+        for (let k = 0; k < 3; k++) if (document.getElementById(`${id}-wc${k}`)) tl.fromTo(`#${id}-wc${k}`, { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1.3, svgOrigin: "0 0", duration: 0.9, repeat: Math.ceil(dur / 1.8), repeatDelay: 0.9, yoyo: false, ease: "power2.out", immediateRender: false, onRepeat: null }, t0 + k * 0.6);
+        if (document.getElementById(`${id}-fire`)) Plane.flicker(tl, `${id}-f`, t0, dur);
+        if (document.getElementById(`${id}-sp-p0`)) Plane.puffs(tl, `${id}-sp`, t0, dur, 10, { dx: -420, dy: -560, per: 3.0, op: 0.7 });
+        if (document.getElementById(`${id}-pl-p0`)) Plane.puffs(tl, `${id}-pl`, t0, dur, 8, { dx: -160, dy: -420, per: 3.4, op: 0.75 });
+        if (document.getElementById(`${id}-rsp-p0`)) Plane.puffs(tl, `${id}-rsp`, t0, dur, 8, { dx: -200, dy: -460, per: 3.6, op: 0.6 });
+        for (let k = 0; k < 8; k++) if (document.getElementById(`${id}-sw${k}`)) tl.fromTo(`#${id}-sw${k}`, { x: (k % 2) * -100 }, { x: -200 + (k % 2) * -100, duration: 2.4 + k * 0.3, repeat: Math.ceil(dur / 2.4), ease: "none", immediateRender: false }, t0);
+        if (document.getElementById(`${id}-foam`)) tl.fromTo(`#${id}-foam`, { opacity: 0.15, y: 10 }, { opacity: 0.7, y: -8, duration: 1.6, yoyo: true, repeat: Math.ceil(dur / 1.6), ease: "sine.inOut", immediateRender: false }, t0);
+        for (let k = 0; k < 7; k++) if (document.getElementById(`${id}-cl${k}`)) tl.fromTo(`#${id}-cl${k}`, { x: 0 }, { x: -120, duration: dur, ease: "none", immediateRender: false }, t0);
+        for (let k = 0; k < 5; k++) if (document.getElementById(`${id}-bd${k}`)) { tl.fromTo(`#${id}-bd${k}`, { scaleY: 1, svgOrigin: "0 0" }, { scaleY: -0.6, svgOrigin: "0 0", duration: 0.22 + (k % 3) * 0.04, yoyo: true, repeat: Math.ceil(dur / 0.22), ease: "sine.inOut", immediateRender: false }, t0 + k * 0.07);
+          tl.fromTo(`#${id}-bd${k}`, { x: 0, y: 0 }, { x: 160 + k * 30, y: -40 + (k % 2) * 60, duration: dur, ease: "sine.inOut", immediateRender: false }, t0); }
+        for (let k = 0; k < 22; k++) { const el = document.getElementById(`${id}-tu${k}`); if (el) tl.fromTo(el, { rotation: -3, svgOrigin: el.getAttribute("data-o") }, { rotation: 5, svgOrigin: el.getAttribute("data-o"), duration: 0.5 + (k % 4) * 0.1, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut", immediateRender: false }, t0 + k * 0.05); }
+        if (document.getElementById(`${id}-fgl`)) tl.fromTo(`#${id}-fgl`, { x: -6 }, { x: 6, duration: 1.8, yoyo: true, repeat: Math.ceil(dur / 1.8), ease: "sine.inOut", immediateRender: false }, t0);
+        if (document.getElementById(`${id}-rain`)) tl.fromTo(`#${id}-rain`, { y: -160, x: 240 }, { y: 0, x: 0, duration: 0.3, repeat: Math.ceil(dur / 0.3), ease: "none", immediateRender: false }, t0);
+        for (let k = 0; k < 5; k++) if (document.getElementById(`${id}-tch${k}`)) tl.fromTo(`#${id}-tch${k}`, { opacity: 0.3, x: -6 }, { opacity: 1, x: 6, duration: 0.5 + k * 0.13, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut", immediateRender: false }, t0 + k * 0.2);
+        for (let k = 0; k < 6; k++) if (document.getElementById(`${id}-wv${k}`)) tl.fromTo(`#${id}-wv${k}`, { rotation: -30, svgOrigin: "0 -14" }, { rotation: 30, svgOrigin: "0 -14", duration: 0.3, yoyo: true, repeat: Math.ceil(dur / 0.3), ease: "sine.inOut", immediateRender: false }, t0 + k * 0.1);
+      };
+
+      // debris burst at (x, y) in a layer: chunks of skin, rock and sparks thrown out and falling; Plane.burst returns nothing
+      Plane.burst = (tl, layer, x, y, t, o = {}) => { const id = `pb${Math.round(t * 100)}${Math.round(x)}`, n = o.n ?? 16, r = mk(Math.round(x + y));
+        put(layer, `<g transform="translate(${x},${y})">${Array.from({ length: n }, (_, k) => `<path id="${id}-${k}" d="M0,0l${f1(10 + r() * 22)},${f1(-4 - r() * 10)}l${f1(-4 - r() * 8)},${f1(14 + r() * 10)}z" fill="${["#dfe4ec", "#2a2a32", "#f4c430", "#ff8a1a", "#5a5664"][k % 5]}" stroke="${PL.ink}" stroke-width="2" opacity="0"/>`).join("")}</g>`);
+        for (let k = 0; k < n; k++) { const a = -Math.PI * (0.1 + r() * 0.8), v = (o.v ?? 420) * (0.5 + r() * 0.7);
+          tl.fromTo(`#${id}-${k}`, { x: 0, y: 0, rotation: 0, opacity: 1 }, { keyframes: [{ x: Math.cos(a) * v * 0.6, y: Math.sin(a) * v * 0.6, rotation: 200, duration: 0.35, ease: "power2.out" }, { x: Math.cos(a) * v, y: Math.sin(a) * v * 0.2 + 260, rotation: 420, opacity: 0, duration: 0.6, ease: "power2.in" }], immediateRender: false }, t); } };
+      // Sets.bayView(L, o)  looking across the bay from the tail: the water in front, the far headland in L.set (so it frames exactly),
+      //   o.time "night" | "dawn" · o.torches (blinking lights #id-tch0…) · o.front (the front section on the headland, survivors waving #id-wv0…)
+      Sets.bayView = (L, o = {}) => {
+        const id = o.id || "bv", night = (o.time || "night") === "night";
+        put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${night ? "#05070f" : "#7a90b8"}"/><stop offset=".7" stop-color="${night ? "#121c32" : "#e8b8a8"}"/><stop offset="1" stop-color="${night ? "#1a2640" : "#fff0d8"}"/></linearGradient>
+          <rect x="-2000" y="-1400" width="5200" height="4800" fill="url(#${id}-sk)"/>${night ? Array.from({ length: 40 }, (_, k) => `<circle cx="${-400 + ((k * 263) % 1900)}" cy="${(k * 97) % 800}" r="${1.2 + (k % 3)}" fill="#cfe0ff" opacity=".45"/>`).join("") : `<circle cx="300" cy="820" r="260" fill="#fff4d0" opacity=".45"/>`}`);
+        let s = `<rect x="-1200" y="1000" width="3400" height="1400" fill="${night ? "#0c1a2a" : "#5a84a8"}"/>
+          ${Array.from({ length: 10 }, (_, k) => `<path id="${id}-sw${k}" d="M-1600,${1030 + k * 60}q100,-${8 + k}  200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0t200,0" stroke="${night ? "#2a3a50" : "#a8c8e0"}" stroke-width="${3 + k}" fill="none" opacity="${0.25 + k * 0.05}"/>`).join("")}
+          <path d="M-100,1010L120,900L300,860L520,800L700,790L880,840L1080,900L1300,1010Z" fill="${night ? "#10141c" : "#3e3e46"}"/><path d="M300,860L520,800L700,790" stroke="${night ? "#2a2e38" : "#6a6a74"}" stroke-width="6" fill="none"/>
+          <path d="M300,862L520,802L700,792L880,842L860,850L700,804L520,814Z" fill="${night ? "#1a2416" : "#8a8a4a"}"/>`;
+        if (o.front) s += `<g transform="translate(560,820) scale(.42) rotate(5)"><path d="M-300,-30L700,-60Q820,-60 860,-120Q860,-170 780,-200L-280,-210L-320,-160L-290,-110Z" fill="url(#plFus)" ${PO(8)}/><path d="M-300,-120L760,-130" stroke="#f4c430" stroke-width="12"/><path d="M-300,-104L765,-114" stroke="${PL.navy}" stroke-width="9"/>
+          ${Array.from({ length: 22 }, (_, k) => `<rect x="${-200 + k * 40}" y="-180" width="20" height="28" rx="9" fill="#1a2440"/>`).join("")}<path d="M-300,-30L-280,-210" stroke="#6a707e" stroke-width="16"/><path d="M60,-40L-150,120Q-170,134 -150,104L0,-46Z" fill="#c8d0dc" ${PO(6)}/></g>`;
+        const ppl = o.front && !o.empty ? 7 : 0;
+        if (o.empty) s += `<g transform="translate(470,812) rotate(80)"><rect x="-6" y="-24" width="12" height="30" rx="3" fill="#3a3e48"/><circle cy="-24" r="7" fill="#fff6c0" opacity=".5"/></g>${Array.from({ length: 9 }, (_, k) => `<ellipse cx="${440 - k * 34}" cy="${818 + k * 9}" rx="6" ry="3" fill="#1a1a20" opacity=".7"/>`).join("")}`;
+        for (let k = 0; k < ppl; k++) { const x = 380 + k * 52 + (k % 2) * 8, y = 810 - (k % 3) * 4, c = ["#2f6fd0", "#e2382e", "#2fa864", "#ffd23a", "#8a5ad0", "#e8823a", "#2a2e38"][k];
+          s += `<g id="${id}-pp${k}"><g transform="translate(${x},${y})"><circle cy="-46" r="9" fill="#e8b88a" ${PO(2)}/><path d="M-9,-36h18l2,26h-22z" fill="${c}" ${PO(2)}/><path d="M-6,-10v12M6,-10v12" stroke="#2a2420" stroke-width="5"/><g id="${id}-wv${k}"><path d="M8,-32l14,-22" stroke="${c}" stroke-width="5" stroke-linecap="round"/></g>
+            ${o.torches ? `<g transform="translate(22,-56)"><circle r="40" fill="url(#plTorch)"/><circle id="${id}-tch${k}" r="6" fill="#fff6c0"/></g>` : ""}</g></g>`; }
+        if (o.torches && !o.front && !o.empty) for (let k = 0; k < 6; k++) s += `<g transform="translate(${420 + k * 46},${800 + (k % 2) * 10})"><circle r="60" fill="url(#plTorch)"/><circle id="${id}-tch${k}" r="7" fill="#fff6c0"/></g>`;
+        if (o.tail) s += `<g transform="translate(${o.tailX ?? 120},1500) scale(${o.tailS ?? 0.9}) rotate(-5)">${Plane.tail(`${id}-tail`)}</g>`;
+        if (o.phone) s += `<g transform="translate(${o.phoneX ?? -120},${o.phoneY ?? 960})"><circle r="70" fill="url(#plTorch)"/><circle id="${id}-ph" r="9" fill="#e8f4ff"/></g>`;
+        if (o.smoke) s += `<g>${Plane.puffMk(`${id}-sp`, 640, 760, 8, night ? "dark" : "light", 60)}</g>`;
+        s += `<path d="M-1200,1500Q0,1440 600,1470T2200,1460V2600H-1200Z" fill="${night ? "#08090c" : "#1e1e26"}"/>${Array.from({ length: 9 }, (_, k) => `<path d="M${-200 + k * 170},1480q${k % 2 ? 16 : -16},-70 ${k % 2 ? -6 : 6},-110" stroke="${night ? "#141a10" : "#6a6a3a"}" stroke-width="7" fill="none"/>`).join("")}`;
+        put(L.set, s);
+        if (night) put(L.glow, `<g id="${id}-rain">${Array.from({ length: 80 }, (_, k) => `<path d="M${-400 + ((k * 137) % 1900)},${(k * 211) % 2000 - 200}l-60,40" stroke="#b4c8e0" stroke-width="3" opacity=".35"/>`).join("")}</g>`);
+      };
+      Plane.bayLife = (tl, id, t0, dur) => { Plane.siteLife(tl, id, t0, dur);
+        for (let k = 0; k < 7; k++) if (document.getElementById(`${id}-tch${k}`)) tl.fromTo(`#${id}-tch${k}`, { opacity: 0.2 }, { opacity: 1, duration: 0.35 + (k % 3) * 0.12, yoyo: true, repeat: Math.ceil(dur / 0.35), ease: "sine.inOut", immediateRender: false }, t0 + k * 0.17); };
+      // ---------- the rescue helicopter ----------
+      Plane.heli = (id) => `<g id="${id}"><ellipse cy="150" rx="200" ry="20" fill="#000" opacity="0"/>
+        <path d="M-120,-10Q-130,-80 -40,-90H90Q170,-86 190,-20Q200,30 150,40H-80Q-120,40 -120,-10Z" fill="#f4f2ee" ${PO(5)}/><path d="M-118,0Q-100,40 -80,40H150Q190,30 196,0Z" fill="#ff6a14"/>
+        <path d="M120,-76Q178,-60 188,-20H120Z" fill="#7ab8e8" ${PO(3)}/><rect x="-30" y="-64" width="110" height="60" rx="10" fill="#7ab8e8" ${PO(3)}/>
+        <path d="M-120,-30L-420,-40L-430,-80L-400,-80L-390,-50L-120,-50Z" fill="#f4f2ee" ${PO(4)}/><path d="M-400,-40h300" stroke="#ff6a14" stroke-width="12"/>
+        <g transform="translate(-420,-60)"><g id="${id}-tr"><ellipse rx="10" ry="46" fill="#3a3e48" opacity=".55"/></g></g>
+        <path d="M-60,40L-80,80H160L140,40M-90,80H180" stroke="${PL.ink}" stroke-width="7" fill="none"/><rect x="-10" y="-120" width="60" height="30" rx="8" fill="#5a6070" ${PO(3)}/>
+        <g transform="translate(20,-124)"><g id="${id}-rot"><ellipse rx="380" ry="16" fill="#2a2e38" opacity=".45"/><path d="M-380,0H380" stroke="#2a2e38" stroke-width="6"/></g></g>
+        <text x="40" y="22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="28" fill="#fff">กู้ภัย</text></g>`;
+      Plane.heliLife = (tl, id, t0, dur) => { tl.fromTo(`#${id}-rot`, { scaleX: 1, svgOrigin: "0 0" }, { scaleX: -1, svgOrigin: "0 0", duration: 0.07, repeat: Math.ceil(dur / 0.07), yoyo: true, ease: "none", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-tr`, { rotation: 0, svgOrigin: "0 0" }, { rotation: 360, svgOrigin: "0 0", duration: 0.15, repeat: Math.ceil(dur / 0.15), ease: "none", immediateRender: false }, t0); };

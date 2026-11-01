@@ -128,7 +128,7 @@ CUES = [
     ("cmd", 0.0, "steps", 0.2), ("cmd", F("cmd", 0, 0), "sting", 0.26),
     ("back", 0.1, "click", 0.3), ("back", 0.2, "radiosq", 0.2), ("back", 0.9, "latch", 0.34), *accel("back", 0.0, D["back"], 0.4, 0.38),
     ("jump", 0.0, "rattle", 0.26), *accel("jump", 0.0, D["jump"], 0.4, 0.38),
-    ("track", 0.0, "buzz", 0.22), ("track", F("track", 0, 1) - 0.2, "zap", 0.3), ("track", 1.5, "engine", 0.2), ("track", 2.5, "whoosh", 0.2),
+    ("track", 0.0, "buzz", 0.22), ("track", 1.5, "engine", 0.2), ("track", 2.5, "whoosh", 0.2),
     ("end", 0.0, "slam", 0.4), ("end", 0.5, "creak", 0.4), ("end", 0.2, "growl", 0.34), ("end", 1.0, "slam", 0.4), *accel("end", 0.0, D["end"], 0.42, 0.38),
     ("cross", vo_t("cross") + 0.2, "thud", 0.2),
     ("move", 0.3, "steps", 0.34), ("move", 0.8, "thud", 0.3), ("move", 1.3, "thud", 0.3), ("move", 1.8, "thud", 0.3), ("move", 0.1, "latch", 0.3),
@@ -136,7 +136,7 @@ CUES = [
     ("occ", 0.0, "radiosq", 0.3), ("occ", D["occ"] - 0.2, "radiosq", 0.22), ("occ", 1.2, "powerdown", 0.2),
     ("slide", 0.4, "scrape", 0.4), ("slide", 1.0, "scrape", 0.4), ("slide", 1.6, "scrape", 0.4), ("slide", 2.2, "scrape", 0.4), ("slide", 0.2, "slam", 0.4), ("slide", 1.3, "slam", 0.4), *accel("slide", 0.0, D["slide"], 0.4, 0.34, 0.34),
     ("walk", 0.2, "ratchet", 0.3), ("walk", 0.8, "rattle", 0.3), *accel("walk", 0.0, D["walk"], 0.36, 0.34),
-    ("wait", 0.0, "thud", 0.3), ("wait", 0.35, "whoosh", 0.24), ("wait", 0.8, "ding", 0.26),
+    ("wait", 0.0, "thud", 0.3),
     ("evac", 0.0, "powerdown", 0.3), ("evac", 1.0, "wind", 0.0), ("evac", 0.4, "hum", 0.08),
     ("torch", 0.2, "steps", 0.24), ("torch", 1.2, "steps", 0.28), ("torch", 2.2, "steps", 0.3),
     ("staff", 0.0, "radiosq", 0.22), ("staff", 0.3, "latch", 0.3),
@@ -149,6 +149,7 @@ CUES = [
     ("here", 0.2, "engine", 0.24), *rails("here", 0.6, D["here"], 0.2, 0.4), ("here", D["here"] - 0.4, "screech", 0.3), ("here", D["here"] - 0.2, "sting", 0.5),
     ("end2", 0.1, "whoosh", 0.3), ("end2", 1.1, "boom", 0.3), ("end2", 1.2, "ding", 0.24),
 ]
+CUES += [(None, c["t"], c["type"], c["gain"]) for c in json.load(open(os.path.join(HERE, "iconfx_cues.json")))]   # IconFX hits (icons, the clipboard), frame-exact
 SAMPLES = []
 REPLACED = set()
 CUES = [c for c in CUES if c[2] not in REPLACED]

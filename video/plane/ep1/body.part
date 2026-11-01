@@ -151,7 +151,7 @@
         cam: { keys: [{ t: 0, ...fr(200, 1480, 2.6, 540, 1050) }, { t: D("jump"), glide: D("jump"), ...fr(160, 1500, 2.2, 540, 1050) }] },
         actors: [A("kiw", 198, 1474, 0.15, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.7, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, path: [{ t: 0, x: 198, y: 1474 }, { t: 0.7, x: 127, y: 1570 }, { t: 1.8, x: 0, y: 1590, s: 0.17 }] })],
         captions: caps("jump"),
-        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "cj", t0, D("jump")); PlaneUI.rules(tl, L.light, t0 + 1.4, D("jump") - 1.4 + 0.01, { active: 0, y: 480 }); } });
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "cj", t0, D("jump")); IconFX.board(tl, L.light, { skin: "seatcard", title: "การ์ดความปลอดภัย", t: t0 + 1.0, dur: D("jump") - 1.0 + 0.01, y: 380, active: 0, at: [0.45, 0.6], items: [{ text: "<u>ทิ้งกระเป๋า</u> ก้าวออกไว", art: `<g transform="translate(0,90) scale(1.7)">${Plane.bag(1, { strap: false })}</g>` }, { text: "<u>อยู่กับซาก</u> อย่าจากไป", art: `<g transform="translate(-20,40) scale(.22)">${Plane.tail("sct" + Math.round(t0 * 10))}</g>` }] }); } });
       // ---------- 21. the smoke clears: no front section, only the island and the sea; (clue) smoke over the far headland ----------
       add("alone", { ...SITE("ca", { fire: 0.35, plume: true, plumeX: 900 }),
         cam: { keys: [{ t: 0, ...fr(200, 1520, 2.4, 540, 1150) }, { t: vo("alone", 2) - 0.3, glide: vo("alone", 2) - 0.3, ...fr(520, 1300, 0.95, 540, 1050) }, { t: D("alone"), glide: D("alone") - vo("alone", 2) + 0.3, ...fr(900, 1160, 2.2, 540, 1000) }] },

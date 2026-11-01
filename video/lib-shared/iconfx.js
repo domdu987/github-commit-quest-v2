@@ -249,6 +249,7 @@
     tailgate: { font: "Kanit", size: 62, ink: "#14161c", acc: "#d8312a", later: "#6a6258", tool: "spray", enter: "drop", sound: "clang", hiSound: "hiss", titleFont: "Kanit", titleC: "#14161c" },
     canal: { font: "Kanit", size: 60, ink: "#14161c", acc: "#c8201a", later: "#8a8478", tool: "brush", enter: "swing", sound: "creak", hiSound: "rustle", titleFont: "Kanit", titleC: "#c8201a" },
     fieldbook: { font: "Sriracha", size: 62, ink: "#2a2a24", acc: "#b8201a", later: "#8a866e", tool: "grease", enter: "slap", sound: "thud", hiSound: "rustle", titleFont: "Kanit", titleC: "#2a3018" },
+    seatcard: { font: "Kanit", size: 60, ink: "#14204a", acc: "#d8312a", later: "#8a90a0", tool: "pen", enter: "pocket", sound: "rustle", hiSound: "rustle", titleFont: "Kanit", titleC: "#ffffff" },
     yant: { font: "Sriracha", size: 62, ink: "#5a1208", acc: "#c8201a", later: "#a89878", tool: "gold", enter: "unfurl", sound: "whoosh", hiSound: "ching", titleFont: "Sriracha", titleC: "#a8180c" },
   };
   // seeded material textures inside (x, y, w, h)
@@ -276,6 +277,7 @@
       return `<g id="${id}"><rect x="${x0}" y="${y - 40}" width="${x1 - x0}" height="62" rx="26" fill="#ff8a2a" opacity=".55" filter="url(#ifxBlur3)"/>${d}</g>`; }
     if (tool === "brush") return `<path id="${id}" d="M${x0},${y - 30}Q${(x0 + x1) / 2},${y - 44} ${x1},${y - 34}L${x1 + 12},${y + 14}Q${(x0 + x1) / 2},${y + 26} ${x0 - 8},${y + 16}Z" fill="#ffd23a" opacity=".55"/>`;
     if (tool === "grease") return `<ellipse id="${id}" cx="${(x0 + x1) / 2}" cy="${y - 10}" rx="${(x1 - x0) / 2 + 26}" ry="52" fill="none" stroke="#c8201a" stroke-width="8" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" transform="rotate(-2 ${(x0 + x1) / 2} ${y - 10})"/>`;
+    if (tool === "pen") return `<path id="${id}" d="M${x0 - 10},${y + 26}Q${(x0 + x1) / 2},${y + 34} ${x1 + 10},${y + 22}" stroke="#d8312a" stroke-width="7" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>`;
     return `<path id="${id}" d="M${x0},${y - 30}Q${(x0 + x1) / 2},${y - 40} ${x1},${y - 30}L${x1 + 6},${y + 18}Q${(x0 + x1) / 2},${y + 26} ${x0 - 6},${y + 16}Z" fill="#e8b830" opacity=".5"/>`;
   };
   const tick = (tool, id, x, y) => { const c = tool === "chalk" ? "#f4f2e8" : tool === "spray" ? "#1e9a50" : tool === "gold" ? "#c8901a" : tool === "grease" ? "#b8201a" : "#d8312a";
@@ -284,7 +286,7 @@
   // the object for each skin: { back, front, life(tl,id,t,dur), enter(tl,id,t) } — back = the material + its fixtures, front = props over the rows
   const objects = {
     clipboard: (id, X, Y, W, H, o) => ({
-      back: `<rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="34" fill="#000" opacity=".3" filter="url(#ifxBlur8)"/>
+      back: `<rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="34" fill="#000" opacity=".3"/>
         <rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="34" fill="url(#ifxAlu)" ${O(5)}/>${tex.brushed(X, Y, W, H, 3)}
         <g id="${id}-paper"><path d="M${X + 46},${Y + 120}H${X + W - 46}V${Y + H - 90}L${X + W - 110},${Y + H - 40}H${X + 46}Z" fill="#fbf8ee" ${O(3)}/>${tex.paper(X + 46, Y + 120, W - 92, H - 160, 9)}
           ${Array.from({ length: Math.floor((H - 260) / 60) }, (_, k) => `<path d="M${X + 60},${Y + 260 + k * 60}H${X + W - 60}" stroke="#7ab0e0" stroke-width="2" opacity=".55"/>`).join("")}<path d="M${X + 130},${Y + 130}V${Y + H - 50}" stroke="#e86a6a" stroke-width="2.5" opacity=".6"/>
@@ -307,7 +309,7 @@
         tl.fromTo(`#${id}-paper`, { skewX: 0, svgOrigin: `540 ${Y + 120}` }, { skewX: 0.6, svgOrigin: `540 ${Y + 120}`, duration: 0.7, yoyo: true, repeat: R(0.7), ease: "sine.inOut", immediateRender: false }, t); } }),
     chalk: (id, X, Y, W, H) => ({
       back: `<path d="M${X + 140},-40L${X + 200},${Y}M${X + W - 140},-40L${X + W - 200},${Y}" stroke="#3a3a3a" stroke-width="5"/>
-        <rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="14" fill="#000" opacity=".3" filter="url(#ifxBlur8)"/>
+        <rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="14" fill="#000" opacity=".3"/>
         <rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="14" fill="#8a5a30" ${O(5)}/><rect x="${X + 26}" y="${Y + 26}" width="${W - 52}" height="${H - 52}" rx="6" fill="url(#ifxSlate)" ${O(4)}/>${tex.slate(X + 26, Y + 26, W - 52, H - 52, 5)}
         ${Array.from({ length: 6 }, (_, k) => `<path d="M${X + 4},${Y + 20 + k * (H / 6)}h${W - 8}" stroke="#6a4020" stroke-width="2" opacity=".3"/>`).join("")}
         <rect x="${X - 10}" y="${Y + H - 8}" width="${W + 20}" height="34" rx="8" fill="#9a6a3a" ${O(4)}/>`,
@@ -322,7 +324,7 @@
         tl.fromTo(`#${id}-chalk`, { rotation: -3, svgOrigin: "45 0" }, { rotation: 3, svgOrigin: "45 0", duration: 0.7, yoyo: true, repeat: R(0.7), ease: "sine.inOut", immediateRender: false }, t);
         document.querySelectorAll(`#${id}-dust circle`).forEach((c, k) => tl.fromTo(c, { y: 0, opacity: 0.6 }, { y: -120 - k * 10, x: (k % 2 ? 20 : -20), opacity: 0, duration: 1.6, repeat: R(1.6), ease: "sine.out", immediateRender: false }, t + k * 0.17)); } }),
     tailgate: (id, X, Y, W, H) => ({
-      back: `<rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="10" fill="#000" opacity=".35" filter="url(#ifxBlur8)"/>
+      back: `<rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="10" fill="#000" opacity=".35"/>
         <rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="10" fill="url(#ifxGate)" ${O(5)}/>${Array.from({ length: Math.floor(H / 70) }, (_, k) => `<rect x="${X + 16}" y="${Y + 40 + k * 70}" width="${W - 32}" height="20" rx="8" fill="#fff" opacity=".09"/><path d="M${X + 16},${Y + 60 + k * 70}H${X + W - 16}" stroke="#000" stroke-width="3" opacity=".12"/>`).join("")}
         ${tex.mud(X, Y, W, H, 31)}${tex.rust(X, Y, W, H, 37).replace(/#a8521a|#7a3410/g, "#5a4630")}
         ${[[X + 50, Y + 50], [X + W - 50, Y + 50], [X + 50, Y + H - 50], [X + W - 50, Y + H - 50]].map(([a, b], k) => `<g transform="translate(${a},${b})"><circle r="30" fill="#2a2e36" ${O(3)}/><circle id="${id}-rf${k}" r="22" fill="${k < 2 ? "#ff6a2a" : "#e8201a"}" ${O(2)}/>${Array.from({ length: 6 }, (_, j) => `<path d="M0,0L${f(Math.cos(j) * 20)},${f(Math.sin(j) * 20)}" stroke="#fff" stroke-width="1.5" opacity=".45"/>`).join("")}<circle cx="-7" cy="-8" r="5" fill="#fff" opacity=".8"/></g>`).join("")}
@@ -336,7 +338,7 @@
         for (let k = 0; k < 4; k++) for (let j = 0; j * 1.4 < dur; j++) tl.fromTo(`#${id}-rf${k}`, { attr: { fill: k < 2 ? "#fff2c0" : "#ffb0a0" } }, { attr: { fill: k < 2 ? "#ff6a2a" : "#e8201a" }, duration: 0.35, ease: "power2.out", immediateRender: false }, t + 0.2 + j * 1.4 + k * 0.12); } }),
     canal: (id, X, Y, W, H) => ({
       back: `<rect x="${X + W / 2 - 30}" y="${Y + H - 10}" width="60" height="700" fill="url(#ifxPost)" ${O(4)}/>
-        <rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="18" fill="#000" opacity=".35" filter="url(#ifxBlur8)"/>
+        <rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="18" fill="#000" opacity=".35"/>
         <rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="18" fill="#f2efe4" ${O(5)}/><rect x="${X + 20}" y="${Y + 20}" width="${W - 40}" height="${H - 40}" rx="12" fill="none" stroke="#c8201a" stroke-width="16"/>
         ${tex.rust(X, Y, W, H, 41)}${[[X + 40, Y + 40], [X + W - 40, Y + 40], [X + 40, Y + H - 40], [X + W - 40, Y + H - 40]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="11" fill="#8a3e14" ${O(2)}/><path d="M${a - 6},${b}h12" stroke="#2a1a10" stroke-width="3"/>`).join("")}
         <g id="${id}-ripple" opacity=".18">${Array.from({ length: 5 }, (_, k) => `<path d="M${X},${Y + 200 + k * 120}q120,-24 240,0t240,0t240,0t240,0" stroke="#8ad0ff" stroke-width="10" fill="none"/>`).join("")}</g>`,
@@ -350,7 +352,7 @@
         tl.fromTo(`#${id}-ripple`, { x: 0 }, { x: -240, duration: 2.4, repeat: R(2.4), ease: "none", immediateRender: false }, t);
         document.querySelectorAll(`#${id}-drips path`).forEach((d, k) => tl.fromTo(d, { y: 0, opacity: 1 }, { y: 220, opacity: 0, duration: 0.8, repeat: R(1.3), repeatDelay: 0.5, ease: "power2.in", immediateRender: false }, t + k * 0.29)); } }),
     fieldbook: (id, X, Y, W, H) => ({
-      back: `<rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="26" fill="#000" opacity=".35" filter="url(#ifxBlur8)"/>
+      back: `<rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="26" fill="#000" opacity=".35"/>
         <rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="26" fill="#5a6238" ${O(5)}/>${tex.canvas(X, Y, W, H, 43)}
         <rect x="${X + 16}" y="${Y + 16}" width="${W - 32}" height="${H - 32}" rx="18" fill="none" stroke="#c8c098" stroke-width="3" stroke-dasharray="12 9"/>
         <rect x="${X + 40}" y="${Y + 140}" width="${W - 80}" height="${H - 190}" rx="6" fill="#efe8cc" ${O(3)}/>${tex.paper(X + 40, Y + 140, W - 80, H - 190, 47)}
@@ -366,11 +368,33 @@
         tl.fromTo(`#${id}-strap`, { rotation: -4, svgOrigin: "0 0" }, { rotation: 4, svgOrigin: "0 0", duration: 1.1, yoyo: true, repeat: R(1.1), ease: "sine.inOut", immediateRender: false }, t);
         tl.fromTo(`#${id}-pencil`, { rotation: 0, svgOrigin: "0 0" }, { rotation: -6, svgOrigin: "0 0", duration: 0.9, yoyo: true, repeat: R(0.9), ease: "sine.inOut", immediateRender: false }, t);
         tl.fromTo(`#${id}-m`, { y: 0 }, { y: -6, duration: 1.3, yoyo: true, repeat: R(1.3), ease: "sine.inOut", immediateRender: false }, t); } }),
+    seatcard: (id, X, Y, W, H, o) => { const nv = o.band || "#1d2c5e", gd = o.gold || "#f4c430";
+      return {
+      back: `<rect x="${X + 8}" y="${Y + 18}" width="${W}" height="${H + 120}" rx="30" fill="#000" opacity=".3"/>
+        <rect x="${X}" y="${Y}" width="${W}" height="${H + 120}" rx="30" fill="#fbfaf6" ${O(5)}/>${tex.paper(X, Y, W, H, 61)}
+        <path d="M${X},${Y + 30}Q${X},${Y} ${X + 30},${Y}H${X + W - 30}Q${X + W},${Y} ${X + W},${Y + 30}V${Y + 150}H${X}Z" fill="${nv}" ${O(5)}/><rect x="${X}" y="${Y + 150}" width="${W}" height="12" fill="${gd}"/>
+        <text x="${X + 40}" y="${Y + 62}" font-family="Kanit" font-weight="800" font-size="30" fill="${gd}">${o.brand || "ฟ้าราม แอร์"} · SAFETY</text>
+        <g transform="translate(${X + W - 90},${Y + 76}) rotate(-8)"><path d="M-40,0L30,-8L40,4L-30,14Z" fill="#fff"/><path d="M-6,-2L-24,-26H-12L10,-4Z" fill="#fff"/></g>
+        <path d="M${X + W / 2},${Y + 170}V${Y + H + 110}" stroke="#d8d4c8" stroke-width="3" stroke-dasharray="10 8"/>
+        <path d="M${X + 40},${Y + H - 40}h${W - 80}" stroke="#e8e4d8" stroke-width="2"/>
+        <g opacity=".5">${[0, 1, 2].map((k) => `<g transform="translate(${X + 120 + k * 120},${Y + H + 40})"><circle r="26" fill="#e8ecf2" ${O(2)}/><path d="M-10,8V-6h20V8M0,-6V-16" stroke="${nv}" stroke-width="4" fill="none"/></g>`).join("")}<text x="${X + W - 60}" y="${Y + H + 52}" text-anchor="end" font-family="Kanit" font-weight="700" font-size="26" fill="#8a90a0">โปรดอ่านก่อนออกเดินทาง</text></g>
+        <path id="${id}-gloss" d="M${X + 80},${Y + 170}L${X + 260},${Y + 170}L${X + 120},${Y + H + 100}L${X - 60},${Y + H + 100}Z" fill="#ffffff" opacity=".22"/>`,
+      front: "",
+      over: o.pocket === false ? "" : `<g transform="translate(0,${Y + H - 10})"><defs><linearGradient id="${id}-fab" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24346a"/><stop offset=".55" stop-color="#24346a" stop-opacity=".85"/><stop offset="1" stop-color="#24346a" stop-opacity="0"/></linearGradient></defs><rect x="-40" y="0" width="1160" height="300" fill="url(#${id}-fab)"/>${Array.from({ length: 10 }, (_, k) => `<path d="M-40,${k * 18}H1160" stroke="#1a2650" stroke-width="3" opacity="${(0.5 - k * 0.045).toFixed(2)}"/>`).join("")}
+        <path d="M20,0H1060V140Q540,170 20,140Z" fill="#2a3c78" ${O(5)}/>${Array.from({ length: 34 }, (_, k) => `<path d="M${30 + k * 31},6V136" stroke="#14204a" stroke-width="3" opacity=".55"/>`).join("")}<path d="M20,4H1060" stroke="#4a5c98" stroke-width="12"/><path d="M20,4H1060" stroke="${INK}" stroke-width="4"/>
+        <g transform="translate(860,60)"><g id="${id}-belt"><rect x="-60" y="0" width="120" height="44" rx="10" fill="#c8ccd2" ${O(4)}/><rect x="-30" y="10" width="60" height="24" rx="6" fill="#8a929c"/><path d="M-60,22H-180" stroke="#5a6070" stroke-width="30"/></g></g></g>`,
+      enter: (tl, t) => { tl.fromTo(`#${id}-m`, { y: 900 }, { y: 0, duration: 0.55, ease: "power3.out", immediateRender: false }, t);
+        tl.fromTo(`#${id}-k`, { rotation: 4, svgOrigin: `540 ${Y + H}` }, { rotation: -1, svgOrigin: `540 ${Y + H}`, duration: 0.9, ease: "elastic.out(1,0.45)", immediateRender: false }, t + 0.3); return t + 0.5; },
+      life: (tl, t, dur) => { const R = (p) => Math.ceil(dur / p);
+        tl.fromTo(`#${id}-sw`, { rotation: -0.6, svgOrigin: `540 ${Y + H}` }, { rotation: 0.6, svgOrigin: `540 ${Y + H}`, duration: 1.2, yoyo: true, repeat: R(1.2), ease: "sine.inOut", immediateRender: false }, t);
+        tl.fromTo(`#${id}-gloss`, { x: -120, opacity: 0.1 }, { x: 780, opacity: 0.3, duration: 1.8, repeat: R(1.8), ease: "sine.inOut", immediateRender: false }, t);
+        tl.fromTo(`#${id}-belt`, { rotation: -6, svgOrigin: "-60 22" }, { rotation: 6, svgOrigin: "-60 22", duration: 0.7, yoyo: true, repeat: R(0.7), ease: "sine.inOut", immediateRender: false }, t);
+        tl.fromTo(`#${id}-m`, { y: 0 }, { y: -6, duration: 0.11, yoyo: true, repeat: R(0.11), ease: "sine.inOut", immediateRender: false }, t); } }; },
     yant: (id, X, Y, W, H) => { const burnt = `M${X},${Y + 20}H${X + W}V${Y + H}` + Array.from({ length: 12 }, (_, k) => `L${X + W - (k + 1) * W / 12},${Y + H + (k % 2 ? 26 : -4)}`).join("") + "Z";
       return {
       back: `<path d="M${X - 40},${Y}H${X + W + 40}" stroke="#8a6a30" stroke-width="22" stroke-linecap="round"/><path d="M${X - 40},${Y}H${X + W + 40}" stroke="#c8a060" stroke-width="8" stroke-linecap="round" opacity=".6"/>
         <path d="M${X + 140},${Y}L${X + 540 - 70},-40L${X + W - 140},${Y}" stroke="#c8201a" stroke-width="5" fill="none"/>
-        <g id="${id}-cloth"><path d="${burnt}" fill="#000" opacity=".3" filter="url(#ifxBlur8)" transform="translate(10,20)"/><path d="${burnt}" fill="url(#ifxCloth)" ${O(5)}/>${tex.cloth(X, Y, W, H, 53)}
+        <g id="${id}-cloth"><path d="${burnt}" fill="#000" opacity=".3" transform="translate(10,20)"/><path d="${burnt}" fill="url(#ifxCloth)" ${O(5)}/>${tex.cloth(X, Y, W, H, 53)}
           <rect x="${X + 24}" y="${Y + 44}" width="${W - 48}" height="${H - 90}" fill="none" stroke="#b8201a" stroke-width="5"/><rect x="${X + 36}" y="${Y + 56}" width="${W - 72}" height="${H - 114}" fill="none" stroke="#b8201a" stroke-width="2" stroke-dasharray="14 6"/>
           ${Array.from({ length: 8 }, (_, k) => `<path d="M${X + 60 + k * 112},${Y + H - 70}l20,-20l20,20l-20,20z" fill="none" stroke="#b8201a" stroke-width="3" opacity=".7"/>`).join("")}
           <path d="M${X + W - 120},${Y + 110}c-30,-10 -30,30 0,26c40,-6 30,-60 -10,-60c-50,0 -60,70 0,80c50,6 60,-30 70,-80" stroke="#b8201a" stroke-width="5" fill="none" opacity=".75"/>
@@ -402,19 +426,20 @@
     const obj = objects[o.skin || "clipboard"](id, X, Y, W, H, o);
     const tx = X + (o.skin === "canal" || o.skin === "tailgate" ? 220 : 210);
     let rows = "";
-    items.forEach((it, k) => { const st = k === act ? "act" : done.includes(k) ? "done" : "later", y = rowY(k), tw = Math.min(W - 300, plain(it.text).length * sk.size * 0.5 + 30);
+    items.forEach((it, k) => { const st = k === act ? "act" : done.includes(k) ? "done" : "later", y = rowY(k), fs = Math.min(sk.size, Math.floor((X + W - tx - 110) / (plain(it.text).length * 0.5))), tw = Math.min(W - 300, plain(it.text).length * fs * 0.5 + 30);
       const col = st === "later" ? sk.later : sk.ink;
       rows += `<g id="${id}-r${k}" opacity="${st === "later" ? 0.55 : 0}">${st === "act" ? `<defs><clipPath id="${id}-hc"><rect id="${id}-hcr" x="${tx - 20}" y="${y - 80}" width="0" height="130"/></clipPath></defs><g clip-path="url(#${id}-hc)">${hiTool(sk.tool, `${id}-hl`, tx - 10, tx + tw, y)}</g>` : ""}
         ${it.art ? `<g transform="translate(${X + 120},${y - 18}) scale(.5)"><g id="${id}-a${k}">${it.art}</g></g>` : ""}
-        <text x="${tx}" y="${y + 12}" font-family="${sk.font}" font-weight="${sk.font === "Kanit" ? 900 : 400}" font-size="${sk.size}" fill="${col}"${sk.tool === "chalk" ? ` opacity=".92"` : ""}>${st === "later" ? plain(it.text) : marked(it.text, sk.acc)}</text>
-        ${sk.tool === "spray" && st !== "later" ? `<text x="${tx}" y="${y + 12}" font-family="Kanit" font-weight="900" font-size="${sk.size}" fill="none" stroke="${col}" stroke-width="7" opacity=".14" filter="url(#ifxBlur3)">${plain(it.text)}</text>` : ""}
+        <text x="${tx}" y="${y + 12}" font-family="${sk.font}" font-weight="${sk.font === "Kanit" ? 900 : 400}" font-size="${fs}" fill="${col}"${sk.tool === "chalk" ? ` opacity=".92"` : ""}>${st === "later" ? plain(it.text) : marked(it.text, sk.acc)}</text>
+        ${sk.tool === "spray" && st !== "later" ? `<text x="${tx}" y="${y + 12}" font-family="Kanit" font-weight="900" font-size="${fs}" fill="none" stroke="${col}" stroke-width="7" opacity=".14" filter="url(#ifxBlur3)">${plain(it.text)}</text>` : ""}
         ${st === "done" ? tick(sk.tool, `${id}-tk${k}`, tx + tw + 20, y) : ""}</g>`; });
     const title = o.skin === "fieldbook"
       ? `<text x="${X + 60}" y="${Y + 100}" font-family="Kanit" font-weight="900" font-size="70" fill="#e8e0b8" letter-spacing="6">${o.title || ""}</text>${Array.from({ length: 6 }, (_, k) => `<rect x="${X + 90 + k * 92}" y="${Y + 66}" width="8" height="40" fill="#5a6238"/>`).join("")}`
+      : o.skin === "seatcard" ? `<text x="${X + 40}" y="${Y + 128}" font-family="Kanit" font-weight="900" font-size="56" fill="#ffffff">${o.title || ""}</text>`
       : `<text x="540" y="${Y + (o.skin === "clipboard" ? 210 : 140)}" text-anchor="middle" font-family="${sk.titleFont}" font-weight="${sk.titleFont === "Kanit" ? 900 : 400}" font-size="${o.skin === "clipboard" ? 74 : 84}" fill="${sk.titleC}">${o.title || ""}</text>
         ${o.sub ? `<text x="540" y="${Y + (o.skin === "clipboard" ? 268 : 196)}" text-anchor="middle" font-family="${sk.font}" font-size="34" fill="${sk.later}">${o.sub}</text>` : ""}
         <path d="M${540 - 200},${Y + (o.skin === "clipboard" ? 226 : 160)}Q540,${Y + (o.skin === "clipboard" ? 240 : 174)} ${540 + 200},${Y + (o.skin === "clipboard" ? 226 : 160)}" stroke="${sk.acc}" stroke-width="6" fill="none" stroke-linecap="round" opacity=".8"/>`;
-    put(layer, `<g id="${id}" opacity="0"><g id="${id}-m"><g id="${id}-k"><g id="${id}-sw">${obj.back}${title}${rows}${obj.front}</g></g></g></g>`);
+    put(layer, `<g id="${id}" opacity="0"><g id="${id}-m"><g id="${id}-k"><g id="${id}-sw">${obj.back}${title}${rows}${obj.front}</g></g></g>${obj.over || ""}</g>`);
     const cuesOut = [];
     tl.set(`#${id}`, { opacity: 1 }, t0);
     const land = obj.enter(tl, t0); cue(t0, "whoosh", 0.26); cue(land, sk.sound, 0.5); cuesOut.push({ t: land, type: sk.sound });
@@ -422,12 +447,12 @@
     items.forEach((_, k) => { if (k === act || done.includes(k)) tl.fromTo(`#${id}-r${k}`, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + at[k]); });
     if (act >= 0 && act < items.length) { const ta = t0 + at[act];
       tl.fromTo(`#${id}-hcr`, { attr: { width: 0 } }, { attr: { width: W - 200 }, duration: 0.55, ease: "power1.inOut", immediateRender: false }, ta + 0.2);
-      if (sk.tool === "chalk" || sk.tool === "grease") tl.fromTo(`#${id}-hl`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power1.inOut", immediateRender: false }, ta + 0.2);
+      if (sk.tool === "chalk" || sk.tool === "grease" || sk.tool === "pen") tl.fromTo(`#${id}-hl`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power1.inOut", immediateRender: false }, ta + 0.2);
       if (document.getElementById(`${id}-a${act}`)) { tl.fromTo(`#${id}-a${act}`, { scale: 0.2, rotation: -40, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.8)", immediateRender: false }, ta);
         tl.to(`#${id}-a${act}`, { scale: 1.12, svgOrigin: "0 0", duration: 0.4, yoyo: true, repeat: Math.max(1, Math.ceil((dur - at[act]) / 0.4)), ease: "sine.inOut" }, ta + 0.5); }
       cue(ta + 0.2, sk.hiSound, 0.26); cuesOut.push({ t: ta + 0.2, type: sk.hiSound }); }
     done.forEach((d) => { tl.fromTo(`#${id}-tk${d}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + at[d] + 0.3); cue(t0 + at[d] + 0.3, "tap", 0.3); });
-    if (o.out !== false) { tl.to(`#${id}-m`, { y: o.skin === "clipboard" ? 1300 : -1300, duration: 0.32, ease: "power2.in" }, t0 + dur - 0.32); tl.set(`#${id}`, { opacity: 0 }, t0 + dur); cue(t0 + dur - 0.32, "whoosh", 0.2); }
+    if (o.out !== false) { tl.to(`#${id}-m`, { y: o.skin === "clipboard" || o.skin === "seatcard" ? 1300 : -1300, duration: 0.32, ease: "power2.in" }, t0 + dur - 0.32); tl.set(`#${id}`, { opacity: 0 }, t0 + dur); cue(t0 + dur - 0.32, "whoosh", 0.2); }
     return { id, cues: cuesOut };
   };
 
