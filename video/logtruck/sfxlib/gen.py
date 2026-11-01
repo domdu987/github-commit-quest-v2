@@ -1,6 +1,13 @@
 # ท่อนซุงลงเขา: ElevenLabs sound effects via fal (run in the sfxlib folder; cached files are skipped). $0.002/s.
 import json, urllib.request, concurrent.futures as cf, os
 LIB = {
+# the in-world cards (1 Nov): steel sounds only
+ "boarddrop": ("A heavy steel truck tailgate dropping on chains: chains rattling fast then a loud heavy metal clang and a small bounce", 1.6),
+ "chainclink": ("Light steel chain links clinking softly as a hanging metal plate sways", 2.0),
+ "spray": ("A spray paint can shaken with the ball rattling, then a short aerosol spray hiss", 1.2),
+ "spraytick": ("One very short quick aerosol spray paint hiss", 0.5),
+ "signboing": ("A metal road sign on a steel post springing up and wobbling with a deep boing vibration", 1.2),
+ "stake": ("A steel post hammered into the ground with one solid thud and a short ring", 0.8),
  "chainsnap": ("A heavy steel load chain snapping under tension with a sharp metallic crack, links whipping and clanking against a steel truck bed", 1.5),
  "logthud": ("A heavy wooden log falling and slamming onto an asphalt road with a deep thud, then bouncing once", 1.5),
  "logroll": ("A large wooden log rolling and tumbling across an asphalt road, rumbling, then knocking against a metal guardrail", 2.5),
