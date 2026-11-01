@@ -1,0 +1,33 @@
+[
+ {
+  "id": "skytrain-ep1",
+  "page": "skytrain-ep1/composition/index.html",
+  "out": "video/skytrain-ep1/cover.jpg",
+  "t": 0.45,
+  "series": "ซอมบี้รถไฟฟ้า",
+  "ep": 1,
+  "epTitle": "กดกระดิ่ง",
+  "setup": "ซอมบี้บุก[รถไฟฟ้า]/ตอนคุณยืนตู้กลาง…",
+  "cmd": "อย่าเปิดประตูฉุกเฉิน!",
+  "glow": "#e8382c",
+  "hideLight": true,
+  "zoom": { "s": 1.0, "x": 540, "y": 960 },
+  "shift": { "x": 0, "y": 120 }
+ },
+ {
+  "id": "skytrain-ep2",
+  "page": "skytrain-ep2/composition/index.html",
+  "out": "video/skytrain-ep2/cover.jpg",
+  "t": 0.5,
+  "series": "ซอมบี้รถไฟฟ้า",
+  "ep": 2,
+  "epTitle": "ข้ามตู้",
+  "finale": true,
+  "setup": "ชานชาลามี[พวกมัน]/รออยู่…",
+  "cmd": "อย่ากระโดดลงราง!",
+  "glow": "#e8382c",
+  "hideLight": true,
+  "zoom": { "s": 1.0, "x": 540, "y": 960 },
+  "shift": { "x": 0, "y": 120 }
+ }
+]
