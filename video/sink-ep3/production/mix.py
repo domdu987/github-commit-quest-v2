@@ -114,7 +114,7 @@ CUES = [
     ("grab", 0.0, "sting", 0.26), *beats("grab", 0.3, D["grab"] - 0.3, 0.45, 0.32),
     ("throw", 0.45, "whoosh", 0.24), ("reach", 0.3, "whoosh", 0.2),
     *beats("full", 0.0, D["full"], 0.5, 0.35),
-    ("rw", 0.0, "rewind", 0.42), ("rw", 0.65, "sting", 0.3),
+    ("rw", 0.2, "swell", 0.18),
     ("lamp", 0.1, "sting", 0.22), ("same", 0.0, "swell", 0.2),
     ("end", 0.1, "whoosh", 0.3), ("end", 0.6, "ding", 0.24),
 ]
@@ -165,7 +165,7 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 dip(T("grab", 0), T("grab", -0.01), 0.6)         # what would happen under the water
 dip(T("kim", 0), T("kim", -0.01), 0.35)          # her shout over the water, the music almost gone
-dip(T("rw", 0), T("same", -0.01), 0.55)          # the rewind and the twist
+dip(T("rw", 0), T("same", -0.01), 0.55)          # the push-in and the twist
 mus = mus * gain
 a, b = int(T("end", 0) * SR), int(T("end", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card

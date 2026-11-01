@@ -214,9 +214,8 @@
       add("rw", {
         ...BANK("cn7"),
         cam: { keys: [{ t: 0, ...fr(560, 1100, 1.45, 540, 980) }, { t: D("rw"), glide: D("rw") * 0.85, ...fr(BIKE.x - 0.3 * 283, BIKE.y - 0.3 * 430, 3.4, 540, 900) }] },
-        actors: [KIMw("cheer", "wide", "scream"), A("rider", BIKE.x + 33, 988, 0.34, [{ t: 0, mode: "ride", eyes: "normal", mouth: "flat" }], { flip: true })],
-        captions: caps("rw"),
-        fx(tl, id, t0, L) { noShadows(tl, id, 2); Klong.life(tl, "cn7", t0, D("rw")); inWater(L, tl, t0, D("rw"), "x0"); parkedBike(L, "bk7", BIKE.x, BIKE.y, BIKE.s); rewind(L, tl, t0, D("rw"), "0:02"); },
+        actors: [KIMw("cheer", "wide", "scream")],
+        fx(tl, id, t0, L) { noShadows(tl, id, 2); Klong.life(tl, "cn7", t0, D("rw")); inWater(L, tl, t0, D("rw"), "x0"); parkedBike(L, "bk7", BIKE.x, BIKE.y, BIKE.s); },
       });
       // ---------- 13. the headlight, close: no light in it ----------
       add("lamp", {

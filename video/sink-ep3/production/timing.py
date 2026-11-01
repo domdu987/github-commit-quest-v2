@@ -31,7 +31,7 @@ SHOTS = [
     ("full", ["n08"], 0.2, 0.2, 2.4),        # in the car: full of water, ต้น holding his last breath
     ("door", ["n09"], 0.2, 0.3, 3.4),        # his hand on the handle: now it gives
     ("shoe", ["n10"], 0.2, 0.3, 2.6),        # the foot slips out of the sneaker, the shoe stays under the pedal
-    ("rw", ["n11"], 0.2, 0.6, 4.0),          # rewind to 0:02: the bike rolling up, headlight dark
+    ("rw", [], 0, 0, 1.8),                   # silent push-in on the parked bike at the bank (was the rewind; owner 1 Nov: no "second X")
     ("lamp", ["n12"], 0.2, 0.3, 2.6),        # close on the dead headlight
     ("same", ["n13"], 0.2, 0.4, 3.2),        # the drive again: the same unlit bike in ต้น's headlights
     ("sorry", ["r01"], 0.2, 0.5, 2.2),       # on the bank, soaked: "ผมขอโทษครับ…"
