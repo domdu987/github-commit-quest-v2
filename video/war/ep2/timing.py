@@ -31,8 +31,6 @@ SHOTS = [
     ("law", ["n07"], 0.1, 0.4, 5.9),            # the rule of war: the wounded who can't fight — no harm, equal care
     ("bandage", ["n08"], 0.1, 0.5, 4.6),        # เต๋า bandages him; the medics with the red cross arrive
     ("rule2", ["j02"], 0.1, 0.6, 4.3),          # the dog tag: rule 2 ticked
-    ("rw", ["n09", "n10"], 0.1, 0.4, 4.0),      # the tape rewinds to 0:03
-    ("reveal", ["n11"], 0.1, 0.5, 5.0),         # replay at 0.3×: behind the bush — the bullet through the leaves, inches over his head
     ("home", ["n12"], 0.15, 0.3, 3.2),          # the war ends: เต๋า walks into the village at Songkran
     ("hug", ["m02"], 0.1, 0.5, 2.9),            # แม่ hugs him; the parcel on the step behind
     ("parcel", ["n13"], 0.1, 0.4, 3.6),         # the parcel from across the border

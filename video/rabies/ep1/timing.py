@@ -34,7 +34,6 @@ SHOTS = [
     ("sick", ["n09"], 0.15, 0.4, 2.6),           # dusk: the puppy under the stairs, drooling, swaying
     ("pull", ["n10"], 0.15, 0.4, 3.0),           # แพร pulls ภูมิ back from it
     ("shrug", ["p02"], 0.1, 0.3, 2.4),           # ภูมิ shrugs: "it only licked me"
-    ("rw", ["n11", "n12"], 0.15, 0.4, 3.6),      # the tape rewinds to 0:04
     ("lick", ["n13"], 0.1, 0.4, 3.4),            # the knee insert again, the graze ringed red
     ("night", ["n14"], 0.15, 0.5, 3.0),          # night: ไอ้ดำ drives the puppy out into the dark; eyes, a snarl
     ("ear", ["n15"], 0.15, 0.6, 2.8),            # close: the bite on ไอ้ดำ's ear; nobody sees it

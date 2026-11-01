@@ -84,7 +84,6 @@ CUES = [
     ("cover", vo_t("cover") + 3.0, "ding", 0.2), ("cover", vo_t("cover") + 3.9, "ding", 0.2), ("cover", vo_t("cover") + 4.8, "ding", 0.2), ("cover", vo_t("cover") + 4.1, "ding", 0.2),
     ("down", 0.2, "ding", 0.16), ("ditch", 0.1, "swell", 0.2), ("law", 0.9, "ding", 0.18), ("law", vo_t("law") + 3.2, "ding", 0.18),
     ("bandage", vo_t("bandage") + 2.8, "ding", 0.2), ("rule2", vo_end("rule2") + 0.3, "ding", 0.25),
-    ("rw", vo_t("rw", 1) - 0.8, "sting", 0.32), ("reveal", vo_end("reveal") - 0.6, "sting", 0.35),
     ("home", 0.1, "swell", 0.2), ("parcel", 0.3, "sting", 0.25), ("open", vo_t("open") + 3.3, "swell", 0.24), ("open", D["open"] - 1.1, "sting", 0.45),
     *beats("choice", 0.2, D["choice"] - 0.2, 0.5, 0.3), ("choice", D["choice"] - 0.8, "ding", 0.3),
     ("end", 0.1, "whoosh", 0.3), ("end", 0.8, "ding", 0.24),
@@ -96,7 +95,7 @@ SAMPLES = [
     ("down", 0.0, "whiz", 0.35), ("down", 1.1, "whiz", 0.3), ("down", 2.0, "distshots", 0.25), ("down", 2.9, "whiz", 0.3),
     ("ditch", 0.0, "field", 0.15, 5.5), ("joe", 0.0, "field", 0.25, 3.0), ("law", 0.0, "field", 0.25, 6.0),
     ("bandage", 0.0, "field", 0.25, 4.7), ("bandage", 2.0, "truck", 0.3), ("rule2", 0.0, "dogtag", 0.8),
-    ("rw", vo_t("rw", 1) - 0.8, "rewind", 0.8), ("reveal", 1.6, "whiz", 0.25), ("reveal", 1.6, "leaves", 0.3),
+    
     ("home", 0.0, "songkran", 0.22, 3.3), ("hug", 0.0, "songkran", 0.3, 3.0), ("parcel", 0.0, "songkran", 0.25, 3.7), ("open", 0.1, "parcel", 0.7),
 ]
 

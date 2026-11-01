@@ -2,7 +2,7 @@
       // grammar: morning yard (lure, wide→close→insert) · clock back · map · arrival (wide) · ยาย+ไอ้ดำ (medium) · shadow legend · rule board ·
       // hug (medium close) · cards (puppies 2–6 months, saliva) · dusk: the sick puppy · pull back · shrug · rewind → the knee · night (dark, eyes) ·
       // morning (empty bowl) · close on the ear · choice · end board
-      // the planted mistake: at 0:04 the puppy licks the graze on ดิว's knee (insert "knee"); revealed at "rw" / "lick"
+      // the planted mistake: at 0:04 the puppy licks the graze on ดิว's knee (insert "knee"); shown again at "lick" (no rewind: removed 1 Nov)
       const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.55, shade: "#2a2040", shadeOp: 0.3, cast: false, vol: false };
       const DUSKL = { from: "left", rim: "#ffb070", rimOp: 0.6, shade: "#2a1838", shadeOp: 0.36, cast: false, vol: false };
       const MOONL = { from: "right", rim: "#a8c8ff", rimOp: 0.5, shade: "#0a0e1e", shadeOp: 0.5, cast: false, vol: false };
@@ -122,17 +122,6 @@
         actors: [A("prae", 260, GW + 260, 1.0, [{ t: 0, mode: "idle", eyes: "side", mouth: "o" }]), A("phum", 560, GW + 280, 0.85, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }, { t: 1.0, mode: "raise", eyes: "worry", mouth: "o" }], { talk: [TALK("confess", 0)] }),
           A("yaiBuaHerb", 840, GW + 260, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
         captions: caps("confess", undefined, QUO),
-      });
-      // ---------- 14. rewind → 0:03, the ear ----------
-      split("rw", vo("rw", 1) - 0.1, {
-        set: "ward2", setOpts: { id: "w14", time: "day" }, dark: 0.04, blur: { sky: 6, far: 6, set: 6 }, light: TUBE, grade: GWARD, cam: still(540, GW - 100, 1.45, 540, 1000),
-        actors: [A("yaiBuaHerb", 540, GW + 260, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])],
-        captions: caps("rw", [0]),
-        fx(tl, id, t0, L) { QkUI.rewind(tl, L.light, t0 + vo("rw", 1) - 0.9, 0.9, { from: "1:00", to: "0:03" }); },
-      }, {
-        set: "village2", setOpts: { id: "v14", time: "day", house: [-300, 1.3] }, dark: 0, blur: { far: 5, mid: 5, set: 4, fg: 8 }, light: DAYL, grade: { top: "#d8d0c0", bottom: "#4a4a5a", op: 0.25 },
-        cam: still(660, 1010, 1.7, 540, 760), captions: capsFrom("rw", vo("rw", 1) - 0.1, [1]),
-        fx(tl, id, t0, L) { put(L.act, Dog.svg({ id: "r14d", kind: "dam", x: 380, y: 1580, s: 2.6, earWound: true })); Dog.drive(tl, "r14d", t0, 1.2, "idle"); },
       });
       // ---------- 15. the ear, ringed ----------
       add("ear", {
