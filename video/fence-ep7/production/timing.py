@@ -1,4 +1,4 @@
-"""Derive shot timing from the recorded voice so picture and sound share one schedule (เอาชีวิตรอด 99 วัน EP.5 ปั๊มร้าง).
+"""Derive shot timing from the recorded voice so picture and sound share one schedule (เอาชีวิตรอด 99 วัน EP.7 คนไร้ประโยชน์).
 
 Each shot lists its voice lines in order, as "id", ("id", gap) where gap is the time from the end of
 the previous line (negative = overlap), or ("id", offset, "start") to start offset seconds after the
@@ -20,20 +20,23 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01", ("n02", 0.25)], 0.3, 0.3, 7.0),                                   # trucks at night from the roof; the flash of the swarm on the headlights
-    ("count", ["w01", ("ph01", 0.3)], 0.3, 0.5, 7.0),                    # the loudspeaker counts to ten; rule two is for the dead; lights off
-    ("dark", ["n03"], 0.3, 0.3, 6.0),                                                  # adapted eyes vs the men in their own beams
-    ("arrive", ["n04"], 0.3, 0.6, 5.0),                                  # the horde arrives before ten
-    ("lights", ["n05", ("p02", 0.3)], 0.3, 0.4, 7.0),                    # every torch turns to them, they turn to every torch
-    ("ladder", ["ph02", ("g02", 0.5), ("p03", 0.4)], 0.4, 0.4, 8.0),                   # the guard up the ladder; "เพราะเรานับได้หก"
-    ("trucks", ["n06"], 0.6, 0.6, 6.0),                                  # the swarm on the trucks; the lights die one by one
-    ("dawn", ["n07", ("g03", 0.3), ("h01", 0.3)], 0.3, 0.4, 9.0),                      # no trucks, no lights, no sound; the guard's lie
-    ("rule6", ["n08"], 0.3, 0.6, 5.0),                                                 # rule six on the wall
-    ("later", ["n09", ("r01", 0.3), ("p04", 0.3)], 0.3, 0.4, 9.0),      # twenty days later: the radio counts them as nought
-    ("cliff", ["pn01"], 0.4, 0.9, 6.0),                                                # "แล้ววันที่ศูนย์… จะมีใครมามั้ย"; the storm; black
-    ("sig", ["s01"], 0.15, 0.4, 4.2),
-    ("next", [], 0.0, 0.0, 3.6),                                                       # ตอนที่ 8 card + tease + CTA
-    ("end", [], 0.0, 0.0, 0.5),
+    ("hook", ["n01", ("n02", 0.2), ("n03", 0.2)], 0.3, 0.45, 8.0),     # at the canteen table: ปั้น's hands at her throat, our hand slapping her back, the slap count climbing; "อย่ามัวแต่ตบหลัง"
+    ("chapter", ["n04"], 0.3, 0.5, 4.8),                                # the yard at dawn, the board "เหลือ 93 วัน"; ยายจันทร์'s brush by the washroom door
+    ("board", ["w01", ("n05", 0.3)], 0.3, 0.6, 7.0),                    # คุณวิน to the line-up: the least useful must go at the week's end; the score card — ปั้น at the bottom
+    ("dinner", ["d01", ("d02", 0.25)], 0.4, 0.3, 5.0),                  # ปั้น wolfs her rice to go and wash up; "กินช้าๆ ลูก"
+    ("choke", ["n06", ("n07", 0.25)], 0.3, 0.3, 6.0),                   # silent, hands at her throat; can't cough, can't speak, can't breathe
+    ("panic", ["d03"], 0.2, 1.4, 3.6),                                  # เจ๊หงส์ slaps, ก้อง grabs a cup, the slap counter climbs; คุณวิน stands and watches
+    ("phu", ["p01", ("p02", 2.3)], 0.2, 2.2, 9.5),                       # ภู kneels behind: lean forward, five back blows (counter); not out — abdominal thrusts, out on the third
+    ("breathe", ["d04"], 0.8, 0.6, 4.4),                                # she breathes; ครูพิม holds her; "หนูขอโทษ… หนูจะไม่เป็นภาระ"
+    ("card", ["n08"], 0.2, 0.6, 7.0),                                   # the steps card: still coughing → keep coughing; not → 5 back blows, 5 abdominal thrusts, alternate
+    ("real", ["n09"], 0.2, 0.6, 5.5),                                   # in real life: not out → ambulance; even if out → hospital; babies under 1 → no abdominal thrusts
+    ("win", ["w02", ("n10", 0.3), ("n11", 0.4)], 0.3, 0.7, 9.0),        # "มือยังไวเหมือนเดิมนะ ภู" — he has seen it before; the notebook: ปั้น → ภาระ
+    ("sig", ["s01"], 0.15, 0.5, 4.2),
+    ("scarf", ["n12", ("n13", 0.3)], 0.5, 0.5, 6.2),                    # midnight, from the dorm window: ภู ties a red scarf under the lamp and walks to the office
+    ("office", ["r01", ("w03", 0.4)], 0.4, 0.8, 7.0),                   # outside คุณวิน's lit window: the radio "92… five"; "ผ้าผืนนี้ ฉันเก็บไว้ให้นายตลอด"
+    ("drawing", ["n14"], 0.3, 0.6, 4.4),                                # ปั้น's drawing: เจ๊หงส์ behind bars, a fridge with a red cross
+    ("choice", [], 0.0, 0.0, 3.4),
+    ("next", [], 0.0, 0.0, 2.6),
 ]
 GAP = 0.08
 
