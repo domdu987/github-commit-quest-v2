@@ -1,4 +1,4 @@
-"""รั้วสุดท้าย EP.1. Derive shot timing from the recorded voice so picture and sound share one schedule.
+"""ห้องสอบ EP.2. Derive shot timing from the recorded voice so picture and sound share one schedule.
 
 Each shot lists its voice lines in order, as "id", ("id", gap) where gap is the time from the end of
 the previous line (negative = overlap), or ("id", offset, "start") to start offset seconds after the
@@ -20,28 +20,23 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.15, -0.3, 2.6),          # the bulging can on the desk under ปั้น's opener, the title in chalk behind
-    ("dont", ["n02"], 0.2, 0.2, 1.8),            # insert: the lid swells; ครูพิม's hand pulls the opener away
-    ("tox", ["n03"], 0.15, 0.25, 3.4),           # from the classroom window down to the gate at dusk: the padlock hangs OPEN (planted, ~0:05)
-    ("die", ["n04"], 0.1, 0.3, 2.2),             # card: a taste on a spoon → the skull
-    ("day", ["n05"], 0.15, 0.2, 2.4),            # day 100: the school from the road, the horde in the paddies
-    ("five", ["n06"], 0.1, 0.3, 3.4),            # the yard: the five, name tags
-    ("rule", ["k01"], 0.1, 0.4, 2.8),            # ครูพิม at the gate + the camp's rule slate (rule 1)
-    ("rice", ["n07"], 0.1, 0.3, 4.0),            # เจ๊หงส์'s ledger: rice 3 days → ก้อง slips out of the gate
-    ("map", ["n08"], 0.1, 0.3, 3.2),             # map school → market, then the market: one crate of cans
-    ("run", [], 0, 0, 2.6),                      # dusk road: ก้อง running with the crate, the horde behind
-    ("gate", ["n09"], 0.1, 0.3, 2.8),            # the gate: he slips in, ครูพิม slams it, the horde hits the bars
-    ("free", ["k02"], 0.1, 0.3, 2.4),            # the classroom: ก้อง shows the crate
-    ("bulge", ["n10"], 0.1, 0.3, 2.2),           # insert: one can's lid is domed (we see it first)
-    ("signs", ["n11"], 0.15, 0.3, 4.2),          # card: bulging · leaking · foam → throw it out
-    ("taste", ["n12"], 0.1, 0.3, 2.2),           # ปั้น's drawing: the can with a skull — she knew
-    ("sympt", ["n13"], 0.15, 0.4, 5.6),          # card: blurred vision · drooping eyelids · hard to swallow → hospital now
-    ("rw", ["n14"], 0.2, 0.5, 4.0),              # rewind to 0:05: the window shot
-    ("lock", ["n15"], 0.1, 0.4, 2.4),            # insert: the open padlock swinging on the chain
-    ("radio", ["n16", "r01"], 0.2, 0.5, 3.6),    # night: the radio wakes by itself, "หก"
-    ("count", ["n17"], 0.1, 0.3, 2.6),           # the classroom at night: five asleep, five chalk marks
-    ("draw", ["k03"], 0.1, 0.6, 2.8),            # ปั้น's drawing of six people (one on the water tower) → bare prints in the mud by the gate
-    ("next", [], 0, 0, 4.2),                     # next-episode card on the ledger + channel
+    ("hook", ["n01"], 0.1, -0.2, 2.6),           # frame 0: the bag lights up and jumps, "แม่" ringing — the head in the glass snaps toward it
+    ("dont", ["n02"], 0.15, 0.2, 1.6),           # the phone medal stamped "ห้ามรับ"
+    ("quiet", ["n03"], 0.1, 0.25, 2.8),          # the dark room along the wall, the silhouette at the glass
+    ("mute", ["n04"], 0.1, 0.4, 3.4),            # ฝน's thumb flips the phone silent + the rules card (phone · quiet)
+    ("pass", ["n05"], 0.1, 0.4, 4.0),            # the shadow on the floor light stays… stays… then slides away
+    ("knock", ["n06"], 0.1, 0.3, 3.0),           # the clock jumps to 11:40 → the door shakes: knocking
+    ("cop", ["k01"], 0.1, 0.3, 2.6),             # through the glass: a cap, a fist on the door
+    ("up", ["n07"], 0.1, 0.2, 2.0),              # everyone gets up; บีม reaches for the lock
+    ("wait", ["k02"], 0.1, 0.3, 2.6),            # ครูอร grabs his wrist: don't open
+    ("rule", ["n08", "n09"], 0.1, 0.4, 4.6),     # the rules card: locked → don't open · wait for the key
+    ("key", [], 0, 0, 2.6),                      # the knob turns from outside, a key slides in, the door opens: daylight
+    ("safe", ["n10"], 0.1, 0.3, 2.0),            # the corridor in daylight, ฝน breathes out
+    ("call", ["n11", "k03"], 0.1, 0.4, 4.6),     # the class in line; ครูอร counts down the list — 31… complete
+    ("thirty", ["n12"], 0.1, 0.4, 3.2),          # insert: the roll list "30 คน" circled in red
+    ("cab", ["n13"], 0.1, 0.4, 3.4),             # the back cabinet: open, empty, a misted handprint, shoe prints in the dust
+    ("where", ["k04"], 0.1, 1.2, 3.4),           # ฝน asks — at the far end of the corridor one student walks away alone
+    ("end", [], 0, 0, 4.0),                      # the end card
 ]
 GAP = 0.08
 

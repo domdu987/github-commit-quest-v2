@@ -1,0 +1,56 @@
+{
+ "series": "ห้องสอบ",
+ "made_by": "Claude (rodmai-club-video)",
+ "posted_by": "Hermes",
+ "rules": [
+  "ลง 2 ตอนคืนเดียว 2 พ.ย. EP.1 20:00 → EP.2 20:30",
+  "ใช้ไฟล์ HQ (video_hq ใน repo · ตรวจ sha256 ก่อนลง) ถ้าไม่มีหรือดึงไม่ได้ให้ใช้ video_repo",
+  "ปักหมุดคอมเมนต์แหล่งอ้างอิงทุกตอนทันทีหลังลง",
+  "IG: ซับไทยในคลิป · Facebook: ไทยอย่างเดียว · แฮชแท็กไม่เกิน 5",
+  "ตอนลงจริงให้บันทึกเวลา posted_at ต่อแพลตฟอร์ม แล้วส่งกลับมาในข้อมูลรายวัน"
+ ],
+ "episodes": [
+  {
+   "id": "exam-ep1",
+   "order": 1,
+   "title": "ซอมบี้บุกตอนคุณนั่งสอบ… อย่ายกมือถือขึ้นถ่าย | ห้องสอบ EP.1",
+   "status": "draft",
+   "video_hq": "video/release/hq/exam-ep1-HQ.mp4",
+   "video_hq_sha256": "",
+   "video_hq_bytes": 0,
+   "video_repo": "video/exam-ep1/exam-ep1-share.mp4",
+   "cover": "video/exam-ep1/cover.jpg",
+   "caption": "ถ้าวันหนึ่ง… ซอมบี้บุกตอนคุณนั่งสอบ 🧟📝 อย่ายกมือถือขึ้นถ่าย\n\nห้องที่จะรอดต้องดูเหมือนไม่มีคน… แล้วมือถือใครสั่น? 📱 คอมเมนต์บอกหน่อยว่าคุณจะทำยังไง\n\nห้องสอบ EP.1/2\n#ซอมบี้ #เอาตัวรอด #ล็อกดาวน์ #ห้องสอบ #RodMaiClub",
+   "hashtags": [
+    "#ซอมบี้",
+    "#เอาตัวรอด",
+    "#ล็อกดาวน์",
+    "#ห้องสอบ",
+    "#RodMaiClub"
+   ],
+   "pinned_comment": "📚 แหล่งอ้างอิง\n\"Lock interior doors · Turn out the lights · Move away from sight · Do not open the door · Maintain silence · Take attendance\": Standard Response Protocol (I Love U Guys Foundation) โปสเตอร์ LOCKDOWN\nล็อกประตู ปิดไฟให้ห้องดูเหมือนไม่มีคน หลบพ้นแนวกระจกช่องประตู เงียบ: Jordan School District (Utah) เอกสาร LOCKDOWN\n\"Blockade the door with heavy furniture\": US DHS คู่มือการหลบซ่อนในอาคาร\nซอมบี้และตัวละครในเรื่องเป็นเรื่องสมมติ · ใช้กฎซ้อมล็อกดาวน์ของโรงเรียนจริง\n👉 EP.2 ถ้าแม่โทรหาคุณตอนซ่อนอยู่… อย่ารับสาย",
+   "suggested_time": "2026-11-02T20:00+07:00"
+  },
+  {
+   "id": "exam-ep2",
+   "order": 2,
+   "title": "แม่โทรหาคุณตอนซ่อนอยู่… อย่ารับสาย | ห้องสอบ EP.2 ตอนจบ",
+   "status": "draft",
+   "video_hq": "video/release/hq/exam-ep2-HQ.mp4",
+   "video_hq_sha256": "",
+   "video_hq_bytes": 0,
+   "video_repo": "video/exam-ep2/exam-ep2-share.mp4",
+   "cover": "video/exam-ep2/cover.jpg",
+   "caption": "ถ้าวันหนึ่ง… แม่โทรหาคุณตอนซอมบี้บุก 🧟📱 อย่ารับสาย\n\nแล้วถ้ามีคนเคาะว่า \"ตำรวจ เปิดได้แล้ว\"… คุณจะเปิดไหม? 🚪 ดูให้จบ ห้องนี้มีกี่คนกันแน่\n\nห้องสอบ EP.2/2 ตอนจบ\n#ซอมบี้ #เอาตัวรอด #ล็อกดาวน์ #ห้องสอบ #RodMaiClub",
+   "hashtags": [
+    "#ซอมบี้",
+    "#เอาตัวรอด",
+    "#ล็อกดาวน์",
+    "#ห้องสอบ",
+    "#RodMaiClub"
+   ],
+   "pinned_comment": "📚 แหล่งอ้างอิง\n\"Silence your cell phone\" · \"Turn off any source of noise\" · \"Remain quiet\": US DHS คู่มือการหลบซ่อนในอาคาร\n\"No indication of occupancy should be revealed until first responders open the door\": Jordan School District (Utah) เอกสาร LOCKDOWN\n\"Do not open the door\" · \"Take attendance\": Standard Response Protocol (I Love U Guys Foundation)\nซอมบี้และตัวละครในเรื่องเป็นเรื่องสมมติ · ใช้กฎซ้อมล็อกดาวน์ของโรงเรียนจริง",
+   "suggested_time": "2026-11-02T20:30+07:00"
+  }
+ ]
+}

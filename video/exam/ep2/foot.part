@@ -1,4 +1,4 @@
-      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">ห้องสอบ · EP.2 ตอนจบ</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
+      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">ห้องสอบ · EP.2</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
       Fx.setup(root);
       Engine.build(root, tl, shots);
 

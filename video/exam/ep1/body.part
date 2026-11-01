@@ -168,22 +168,21 @@
       // ---------- 14. ฝน: drag the desk! — low and close: she hauls the teacher's desk backwards, บีม shoves, legs scraping ----------
       add("drag", {
         ...ROOM("r14", { dark: 0.7 }), blur: { fg: 8 },
-        cam: { keys: [{ t: 0, ...fr(-560, 1520, 1.25, 540, 1250) }, { t: D("drag"), glide: D("drag"), ...fr(-860, 1520, 1.32, 540, 1250) }] },
+        cam: { keys: [{ t: 0, ...fr(-560, 1440, 0.8, 540, 1150) }, { t: D("drag"), glide: D("drag"), ...fr(-700, 1450, 0.88, 540, 1150) }] },
         shake: (t) => { const e = D("drag") - 0.9; return t > e && t < e + 0.4 ? { x: 12 * Math.sin(t * 70), y: 8 * Math.sin(t * 57), r: 0 } : { x: 2 * Math.sin(t * 9), y: 1.5 * Math.sin(t * 7.3), r: 0 }; },
         actors: [A("fon", -520, 1640, 0.86, [T("dragHard", "angry", "scream")], { talk: [TALK("drag", 0, "scream")], moveTo: { x: -1150, y: 1650, dur: D("drag") - 0.9, ease: "power1.in" } }),
           A("beam", 150, 1600, 0.84, [T("shove", "wide", "o")], { moveTo: { x: -480, y: 1610, dur: D("drag") - 0.9, ease: "power1.in" } })],
         captions: [...caps("drag", [0], QUO), ...caps("drag", [1])],
         fx(tl, id, t0, L) {
           const dd = D("drag") - 0.9, X = (u) => -200 - 660 * u * u;
-          tl.fromTo("#r14-tdesk", { attr: { transform: "translate(-200,1520)" } }, { attr: { transform: "translate(-860,1500)" }, duration: dd, ease: "power1.in", immediateRender: false }, t0);
-          tl.fromTo("#r14-tdesk", { rotation: -1.2, svgOrigin: "0 0" }, { rotation: 1.2, svgOrigin: "0 0", duration: 0.09, yoyo: true, repeat: Math.ceil(dd / 0.09), ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#r14-tdm", { x: -1260, y: 40 }, { x: -1920, y: 20, duration: dd, ease: "power1.in", immediateRender: false }, t0);
           // scrape: dust puffs at the desk's legs + streaks left on the floor
           for (let k = 0; k < 13; k++) { const u = (k + 0.5) / 13, x = X(u), t = t0 + u * dd, pid = `scr14-${k}`;
             put(L.act, `<g id="${pid}" opacity="0"><circle cx="${f1(x + 220)}" cy="1512" r="26" fill="#d8c8a8"/><circle cx="${f1(x - 220)}" cy="1512" r="22" fill="#d8c8a8"/><path d="M${f1(x + 200)},1518h${f1(90 + k * 6)}M${f1(x - 240)},1520h${f1(80 + k * 6)}" stroke="#6a5a44" stroke-width="5" opacity=".7"/></g>`);
             tl.fromTo(`#${pid}`, { opacity: 0.85, y: 0, scale: 0.6, transformOrigin: "50% 100%" }, { opacity: 0, y: -50, scale: 1.8, duration: 0.6, ease: "power2.out", immediateRender: false }, t); }
           tl.fromTo("#r14b-door", { scaleX: 0.82, svgOrigin: "-116 0" }, { scaleX: 1, svgOrigin: "-116 0", duration: 0.25, ease: "power3.in", immediateRender: false }, t0 + dd - 0.2);
-          impact(L, tl, t0 + dd, 300, 1080, { col: "#d8c8a8", chip: "#8a6440" });
-          fgDesk(L, fr(-560, 1520, 1.25, 540, 1250), 900, 1940, 1.9);
+          impact(L, tl, t0 + dd, 230, 1180, { col: "#d8c8a8", chip: "#8a6440" });
+          fgDesk(L, fr(-560, 1440, 0.8, 540, 1150), 960, 1960, 1.6);
         },
       });
       // ---------- 15. the corridor: tubes flickering, three of them dragging their feet toward the classrooms ----------

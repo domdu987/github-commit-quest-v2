@@ -111,9 +111,9 @@
     const rows = [[1620, 1.0], [1760, 1.08], [1920, 1.18]];
     rows.forEach(([y, sc], k) => { for (let c = 0; c < 4; c++) s += desk(-560 + c * 430 + (k % 2) * 40, y, sc); });
     const tdx = o.desk === "door" ? -1080 : 1060, tdy = o.desk === "door" ? G - 20 : 1480;
-    s += `<g id="${id}-tdesk" transform="translate(${tdx},${tdy})"><ellipse cy="8" rx="240" ry="24" fill="url(#exAO)"/><rect x="-220" y="-230" width="440" height="230" fill="#8a5a34" ${O(4)}/><rect x="-236" y="-256" width="472" height="30" fill="#b07e44" ${O(4)}/>
+    s += `<g id="${id}-tdm"><g id="${id}-tdesk" transform="translate(${tdx},${tdy})"><ellipse cy="8" rx="240" ry="24" fill="url(#exAO)"/><rect x="-220" y="-230" width="440" height="230" fill="#8a5a34" ${O(4)}/><rect x="-236" y="-256" width="472" height="30" fill="#b07e44" ${O(4)}/>
       <g transform="translate(-120,-262)"><rect x="-60" y="-14" width="120" height="14" fill="#fbfaf4" ${O(2)}/><text x="-50" y="-18" font-family="Kanit" font-weight="800" font-size="20" fill="#2a2a2a">รายชื่อ 30 คน</text></g>
-      <path d="M60,-262l50,-10" stroke="#d8392e" stroke-width="7" stroke-linecap="round"/></g>`;
+      <path d="M60,-262l50,-10" stroke="#d8392e" stroke-width="7" stroke-linecap="round"/></g></g>`;
     // ceiling fans, fluorescent tubes (on/off)
     s += [-200, 900].map((x) => `<g transform="translate(${x},40)"><path d="M0,-200V-20" stroke="#5a5a5a" stroke-width="8"/><ellipse rx="30" ry="14" fill="#d8d4c8" ${O(3)}/><g class="exfan"><path d="M-20,0L-240,22L-240,6Z M20,0L240,-6L240,14Z" fill="#c8c4b8" ${O(3)}/></g></g>`).join("");
     s += [-500, 400, 1300].map((x) => `<g transform="translate(${x},-120)"><rect x="-150" y="-12" width="300" height="24" rx="10" fill="${dark ? "#8a8a8a" : "#fbfff8"}" ${O(3)}/></g>`).join("");
@@ -133,12 +133,13 @@
   }
   // a zombie seen against the lit corridor through a door's glass: tilted head, messy hair, a shoulder, one hand flat on the glass
   E.sil = (id) => `<clipPath id="${id}-cp"><rect x="-40" y="-470" width="80" height="210"/></clipPath><g clip-path="url(#${id}-cp)"><rect x="-40" y="-470" width="80" height="210" fill="#d8e8f8" opacity=".9"/>
-    <g id="${id}"><path d="M-60,-260C-56,-286 -40,-298 -18,-302L-10,-318H8L16,-302C38,-298 54,-286 60,-260Z" fill="#161a24"/>
-      <g transform="rotate(-22 0 -318)"><path d="M-2,-318C-24,-318 -30,-336 -28,-356C-26,-380 -12,-392 4,-390C22,-388 30,-372 28,-352C27,-334 18,-318 -2,-318Z" fill="#161a24"/>
-        <path d="M-26,-370q-14,-6 -16,-18q10,6 16,4M-18,-386q-8,-14 -2,-24q4,12 10,14M2,-390q2,-14 12,-18q-2,12 2,18M20,-382q12,-8 22,-4q-12,6 -14,12M26,-362q12,2 16,12q-12,-2 -18,0" fill="#161a24" stroke="#161a24" stroke-width="3" stroke-linejoin="round"/>
-        <circle cx="-12" cy="-350" r="2.6" fill="#d8f0c0" opacity=".85"/><circle cx="8" cy="-348" r="2.6" fill="#d8f0c0" opacity=".85"/></g>
+    <g id="${id}"><path d="M-62,-260C-60,-282 -46,-296 -22,-300L-10,-316H10L18,-306C40,-304 56,-290 60,-260Z" fill="#161a24"/>
+      <path d="M-14,-306L-2,-292L-8,-282ZM12,-308L4,-292L14,-284Z" fill="#c8d0dc" opacity=".55"/>
+      <g transform="rotate(-20 0 -318)"><path d="M-2,-318C-24,-318 -30,-336 -28,-356C-26,-380 -12,-392 4,-390C22,-388 30,-372 28,-352C27,-334 18,-318 -2,-318Z" fill="#161a24"/>
+        <path d="M-24,-372q-9,2 -15,-4M-20,-382q-6,-8 -14,-8M-12,-388q-2,-9 -9,-14M-3,-391q1,-10 -3,-17M6,-391q4,-8 2,-13M14,-388q7,-7 13,-6M21,-381q8,-2 12,4M25,-370q9,1 11,8M27,-360q6,4 6,12M-27,-362q-7,4 -8,11" stroke="#161a24" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+        <path d="M-8,-350q3,-2 6,0M8,-348q3,-2 6,0" stroke="#5a6a7a" stroke-width="1.4" fill="none" opacity=".5"/></g>
       <g transform="translate(26,-366) rotate(8)"><path d="M-12,30C-16,10 -14,-4 -10,-8L-12,-34Q-10,-40 -6,-34L-4,-12L-2,-40Q1,-46 4,-40L4,-12L8,-38Q12,-43 14,-36L12,-10L16,-30Q20,-34 21,-28L18,0Q24,-6 28,-2Q26,6 18,16L12,30Z" fill="#202634" stroke="#5a6a80" stroke-width="1.6"/></g>
-      <path d="M-56,-262C-50,-284 -36,-296 -18,-300" stroke="#6a7a94" stroke-width="2" fill="none" opacity=".7"/></g></g>`;
+      <path d="M-58,-262C-52,-282 -38,-294 -20,-298" stroke="#6a7a94" stroke-width="2" fill="none" opacity=".7"/></g></g>`;
 
   // ---------------- Sets.examDoor: close on the side door from inside ----------------
   function examDoor(L, o = {}) {
