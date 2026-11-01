@@ -105,6 +105,10 @@
         <g transform="translate(0,-14)"><g id="${id}-lh"><rect x="-12" y="0" width="24" height="84" rx="10" fill="#f4f4f0" ${SO2(3)}/><rect x="-26" y="66" width="52" height="24" rx="10" fill="#f4f4f0" ${SO2(3)}/></g></g>
         <circle cy="-14" r="8" fill="#2a2e36"/></g>`;
 
+      Sky.barricade = (id) => `<g id="${id}"><g id="${id}-b0"><rect x="0" y="-150" width="120" height="150" rx="16" fill="#c8302a" ${SO2(4)}/><rect x="8" y="-142" width="30" height="134" rx="8" fill="#fff" opacity=".2"/><path d="M40,-166v16M80,-166v16M40,-166H80" stroke="${SKC.ink}" stroke-width="6" fill="none"/></g>
+        <g id="${id}-b1"><rect x="120" y="-210" width="140" height="210" rx="18" fill="#2f6fd0" ${SO2(4)}/><rect x="130" y="-200" width="36" height="190" rx="8" fill="#fff" opacity=".2"/><path d="M165,-226v16M215,-226v16M165,-226H215" stroke="${SKC.ink}" stroke-width="6" fill="none"/></g>
+        <g id="${id}-b2"><rect x="20" y="-260" width="190" height="96" rx="10" fill="#c8642c" ${SO2(4)}/><rect x="20" y="-226" width="190" height="16" fill="#9a4418"/><rect x="95" y="-280" width="40" height="22" rx="6" fill="none" stroke="${SKC.ink}" stroke-width="6"/></g>
+        <g id="${id}-b3" transform="translate(150,-210) rotate(-28)"><path d="M0,0L-10,-170" stroke="#3a3f4a" stroke-width="12" stroke-linecap="round"/><path d="M-40,-170H20" stroke="#3a3f4a" stroke-width="10" stroke-linecap="round"/><rect x="-10" y="-14" width="200" height="22" rx="8" fill="${SKC.yellow}" ${SO2(3)}/><circle cx="0" cy="18" r="22" fill="#2a2e36" ${SO2(3)}/><circle cx="180" cy="18" r="22" fill="#2a2e36" ${SO2(3)}/></g></g>`;
       // ---------- Sets.carCut ----------
       Sets.carCut = (L, o = {}) => {
         const id = o.id || "cc", st = o.state || "calm", alarm = st === "alarm", dim = st === "dim", r = mk(5);
@@ -269,6 +273,10 @@
         if (o.train !== false) { s += `<rect x="-1400" y="${PFL - 640}" width="4200" height="560" fill="url(#skBody)" ${SO2(5)}/><rect x="-1400" y="${PFL - 250}" width="4200" height="26" fill="${SKC.stripe}"/>`;
           for (let k = 0; k < 6; k++) { const x = -1100 + k * 640;
             s += k % 2 ? `<rect x="${x}" y="${PFL - 600}" width="300" height="160" rx="14" fill="${o.inside || "#fff2c8"}" ${SO2(3)}/>` : `<rect x="${x - 40}" y="${PFL - 610}" width="380" height="530" fill="${o.inside || "#fff2c8"}" ${SO2(4)}/><rect x="${x - 40}" y="${PFL - 610}" width="380" height="530" fill="url(#r2AO)"/><rect x="${x - 70}" y="${PFL - 610}" width="30" height="530" fill="#c8ced4" ${SO2(3)}/><rect x="${x + 340}" y="${PFL - 610}" width="30" height="530" fill="#c8ced4" ${SO2(3)}/>`; } }
+        if (o.train === false) { s += `<rect x="-1400" y="${PFL - 260}" width="4200" height="260" fill="#1a1c22"/><rect x="-1400" y="${PFL - 420}" width="4200" height="160" fill="${dead ? "#20242c" : "#4a5060"}"/>
+            ${Array.from({ length: 40 }, (_, k) => `<rect x="${-1400 + k * 110}" y="${PFL - 120}" width="70" height="22" fill="#4a3a2a"/>`).join("")}
+            <rect x="-1400" y="${PFL - 136}" width="4200" height="14" fill="#9aa2ac"/><rect x="-1400" y="${PFL - 96}" width="4200" height="14" fill="#9aa2ac"/>
+            <g id="${id}-third"><rect x="-1400" y="${PFL - 60}" width="4200" height="26" fill="#c8a020" ${SO2(3)}/>${Array.from({ length: 14 }, (_, k) => `<g transform="translate(${-1200 + k * 320},${PFL - 47})"><path d="M0,-12L12,10H-12Z" fill="${SKC.ink}"/><path d="M1,-6l-3,7h4l-3,7" stroke="${SKC.yellow}" stroke-width="2" fill="none"/></g>`).join("")}</g>`; }
         // the platform roof, columns, the lights, the station sign
         s += `<rect x="-1400" y="300" width="4200" height="160" fill="${dead ? "#2a2e36" : "#5a6070"}" ${SO2(4)}/>
           ${Array.from({ length: 8 }, (_, k) => `<rect x="${-1200 + k * 520}" y="460" width="60" height="1100" fill="${dead ? "#3a3e46" : "#9aa2ac"}" ${SO2(3)}/><rect x="${-1200 + k * 520}" y="460" width="60" height="1100" fill="url(#r2Cyl)"/>`).join("")}`;

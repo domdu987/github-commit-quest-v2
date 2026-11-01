@@ -1,0 +1,298 @@
+      // ---------- ซอมบี้รถไฟฟ้า: the world (a generic Thai elevated metro, no real brand; fictional stations ท่าเรือใหม่ → สวนหลวงเก่า → ประตูเมือง) ----------
+      // Sets.carCut(L, o)  a doll's-house section through two cars on the viaduct at dusk: the END car on the left (x < GX), the MIDDLE car on
+      //   the right; the partition with the gangway door at GX. Floor y TF (1500); 1 m ≈ 283 px (cast at s 0.8). Far wall: big windows with the
+      //   city scrolling past (#id-city*), long bench seats, poles, straps (#id-st0…), ceiling light strips (#id-lt0…). The passenger door at
+      //   DX with its yellow bell button (#id-bell) and the red emergency lever box (#id-lever, handle #id-lh) on its right; the car screen above
+      //   it (#id-lcd: the route strip, the closed station greyed, "เดินรถอัตโนมัติ"). Below the floor: the bogies, the rail, the concrete girder,
+      //   and the street far below. o.id · o.state "calm" | "alarm" (end car red, alarm wash #id-red) | "dim" · o.end "zombies" | "empty" |
+      //   "calm" · o.crack 0…3 (cracks on the gangway glass, #id-ck1…3) · o.bent (the door's hinge bent: a gap, #id-gap) · o.stopped (no scroll)
+      //   o.station (a platform outside instead of the city: "dead" (the closed one, dark) | "busy")
+      // Sets.gangClose(L, o)  close on the gangway door from the middle car: the steel frame, the glass, behind it the red-lit end car and its
+      //   windows on the elevated city; zombie faces pressed (#id-zf0…) and the slamming palms (#id-zh0…, pivot at the wrist). o.crack 0…3
+      // Sets.viaduct(L, o)  outside: the train (#id-train, 3 cars, facing right) on the concrete viaduct high over the evening city, the
+      //   emergency walkway with its railing along the girder, pillars down to the street (cars' lights). o.time "dusk" | "night" ·
+      //   o.lights (staff torches on the walkway #id-tc0…) · o.people (a file of walkers #id-wk0…) · o.power false (dark rail lamps)
+      // Sets.platform(L, o)  an elevated station platform, side view: the train's open doors behind (y PFL), the platform floor, the yellow
+      //   line, benches, the roof with the station sign (#id-sign, o.name, o.closed → "งดให้บริการ" tape), lights (#id-pl0…, o.dim halves them)
+      //   o.crowd (a busy evening crowd, drawn) · o.train false (the track empty)
+      // Sky.lcd(id, o)  the car screen art (route strip) for close-ups; o.progress 0…1 (the dot between stations), o.next name
+      const { mk } = Pop2;
+      const TF = 1500, GX = 360, DX = 1240, WALLT = 860;
+      const SKC = { ink: "#1f1a17", steel: "#c9cfd6", steelD: "#8a929c", steelL: "#eef2f6", seat: "#2f5fa8", seatD: "#1f3f78", seatL: "#5a8ad0",
+        wall: "#eef0ee", wallD: "#cfd4d2", floor: "#5a6068", stripe: "#e8603a", navy: "#1d2c5e", yellow: "#f4c430", red: "#e8382c", conc: "#b8b4ac", concD: "#8a867e" };
+      const SO2 = (w = 4) => `stroke="${SKC.ink}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+      const Sky = (window.Sky = {});
+      Sets.DEFS += `<linearGradient id="skDusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a5a"/><stop offset=".45" stop-color="#8a4a7a"/><stop offset=".75" stop-color="#ff8a5a"/><stop offset="1" stop-color="#ffc07a"/></linearGradient>
+        <linearGradient id="skNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0e24"/><stop offset=".6" stop-color="#1a1e44"/><stop offset="1" stop-color="#3a2a4a"/></linearGradient>
+        <linearGradient id="skWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f7f4"/><stop offset=".7" stop-color="#e4e7e3"/><stop offset="1" stop-color="#c4c9c6"/></linearGradient>
+        <linearGradient id="skSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a8ad0"/><stop offset=".5" stop-color="#2f5fa8"/><stop offset="1" stop-color="#1f3f78"/></linearGradient>
+        <linearGradient id="skPole" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a929c"/><stop offset=".4" stop-color="#ffffff"/><stop offset="1" stop-color="#9aa2ac"/></linearGradient>
+        <linearGradient id="skConc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfcac0"/><stop offset="1" stop-color="#8a867e"/></linearGradient>
+        <linearGradient id="skBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#eceff2"/><stop offset="1" stop-color="#b8c0ca"/></linearGradient>
+        <linearGradient id="skRedCar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a1a24"/><stop offset="1" stop-color="#2a0a12"/></linearGradient>
+        <linearGradient id="skGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".34"/><stop offset=".35" stop-color="#ffffff" stop-opacity=".06"/><stop offset=".6" stop-color="#ffffff" stop-opacity=".16"/><stop offset="1" stop-color="#ffffff" stop-opacity=".02"/></linearGradient>
+        <radialGradient id="skLamp"><stop offset="0" stop-color="#fff6d8" stop-opacity=".9"/><stop offset=".4" stop-color="#ffe6a8" stop-opacity=".35"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="skRedG"><stop offset="0" stop-color="#ff3a2a" stop-opacity=".7"/><stop offset="1" stop-color="#ff3a2a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="skTorch"><stop offset="0" stop-color="#fffbe0" stop-opacity=".95"/><stop offset=".3" stop-color="#ffe9a0" stop-opacity=".45"/><stop offset="1" stop-color="#ffd060" stop-opacity="0"/></radialGradient>`;
+
+      // ---------- the city at dusk: layered towers with lit windows; (x0, base y), width w; seeded ----------
+      const towers = (seed, x0, w, base, hMin, hMax, col, winC, n, o = {}) => { const r = mk(seed); let s = "", x = x0;
+        while (x < x0 + w) { const tw = 70 + r() * 130, th = hMin + r() * (hMax - hMin), c = col[Math.floor(r() * col.length)];
+          s += `<rect x="${f1(x)}" y="${f1(base - th)}" width="${f1(tw)}" height="${f1(th + 4)}" fill="${c}"/>`;
+          if (r() < 0.3) s += `<rect x="${f1(x + tw * 0.3)}" y="${f1(base - th - 30)}" width="${f1(tw * 0.4)}" height="32" fill="${c}"/><path d="M${f1(x + tw * 0.5)},${f1(base - th - 30)}v-40" stroke="${c}" stroke-width="4"/><circle cx="${f1(x + tw * 0.5)}" cy="${f1(base - th - 72)}" r="4" fill="#ff4a3a"/>`;
+          const cols = Math.max(2, Math.floor(tw / 26)), rows = Math.floor(th / 34);
+          for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) if (r() < (o.lit ?? 0.42)) s += `<rect x="${f1(x + 10 + i * (tw - 20) / cols)}" y="${f1(base - th + 14 + j * 34)}" width="${f1((tw - 20) / cols - 8)}" height="16" fill="${winC}" opacity="${f1(0.55 + r() * 0.45)}"/>`;
+          x += tw + 6 + r() * 30; }
+        return s; };
+      // the scrolling view through the windows (L.far): three depths of towers + the other track's girder below the sills
+      const cityView = (id, y0, o = {}) => { const night = o.time === "night";
+        return `<rect x="-1400" y="${y0 - 500}" width="4200" height="1100" fill="url(#${night ? "skNight" : "skDusk"})"/>
+          <circle cx="1500" cy="${y0 + 40}" r="70" fill="#ffe0a0" opacity="${night ? 0 : 0.85}"/>
+          <g id="${id}-c3">${towers(11, -1400, 8200, y0 + 260, 120, 330, night ? ["#1a1e3a", "#22264a"] : ["#7a5a8a", "#8a6a9a", "#6a4a7a"], "#ffd890", 60, { lit: 0.25 })}</g>
+          <g id="${id}-c2">${towers(23, -1400, 8200, y0 + 300, 180, 420, night ? ["#14182e", "#1c2040"] : ["#4a3a6a", "#563f72", "#3f3060"], "#ffe2a0", 60, { lit: 0.4 })}</g>
+          <g id="${id}-c1">${towers(37, -1400, 8200, y0 + 360, 260, 520, night ? ["#0c1024", "#12162c"] : ["#2a2448", "#33284e", "#241e3e"], "#ffeab8", 60, { lit: 0.55 })}
+            ${Array.from({ length: 30 }, (_, k) => `<g transform="translate(${-1200 + k * 300},${y0 + 360})"><rect x="-8" y="0" width="16" height="200" fill="${night ? "#0a0c18" : "#3a3048"}"/></g>`).join("")}</g>
+          <g id="${id}-c0"><rect x="-1400" y="${y0 + 330}" width="8400" height="46" fill="url(#skConc)"/><path d="M-1400,${y0 + 330}H7000" stroke="#5a5650" stroke-width="5"/>
+            ${Array.from({ length: 70 }, (_, k) => `<rect x="${-1400 + k * 120}" y="${y0 + 318}" width="10" height="14" fill="#6a6660"/>`).join("")}<rect x="-1400" y="${y0 + 314}" width="8400" height="6" fill="#9aa2ac"/></g>`; };
+      Sky.cityScroll = (tl, id, t0, dur, v = 1) => { [[`${id}-c0`, 1800], [`${id}-c1`, 520], [`${id}-c2`, 260], [`${id}-c3`, 110]].forEach(([s, sp]) => {
+        if (document.getElementById(s)) tl.fromTo(`#${s}`, { x: 0 }, { x: -sp * v * dur, duration: dur, ease: "none", immediateRender: false }, t0); }); };
+
+      // ---------- the car screen (route strip): ท่าเรือใหม่ ● — สวนหลวงเก่า (grey, งดให้บริการ) — ประตูเมือง ----------
+      Sky.STATIONS = ["ท่าเรือใหม่", "สวนหลวงเก่า", "ประตูเมือง"];
+      Sky.lcd = (id, o = {}) => { const p = o.progress ?? 0.15, W = 360, H = 96, x0 = -W / 2;
+        const sx = (k) => x0 + 50 + k * 130;
+        return `<g><rect x="${x0 - 10}" y="-10" width="${W + 20}" height="${H + 20}" rx="12" fill="#2a2e36" ${SO2(3)}/><rect x="${x0}" y="0" width="${W}" height="${H}" rx="6" fill="#0c1424"/>
+          <rect x="${x0}" y="0" width="${W}" height="22" rx="6" fill="#16243e"/><text x="${x0 + 10}" y="16" font-family="Kanit" font-weight="700" font-size="13" fill="#9fd8ff">สถานีถัดไป · ${o.next || Sky.STATIONS[1]}</text>
+          <text x="${x0 + W - 10}" y="16" text-anchor="end" font-family="Kanit" font-weight="700" font-size="11" fill="#7ad0a0">เดินรถอัตโนมัติ</text>
+          <path d="M${sx(0)},56H${sx(2)}" stroke="#3a4a64" stroke-width="8" stroke-linecap="round"/><path id="${id}-prog" d="M${sx(0)},56H${f1(sx(0) + (sx(2) - sx(0)) * p)}" stroke="#4ae08a" stroke-width="8" stroke-linecap="round"/>
+          ${Sky.STATIONS.map((n, k) => `<circle cx="${sx(k)}" cy="56" r="${k === 1 ? 9 : 10}" fill="${k === 1 ? "#4a5060" : k === 0 ? "#4ae08a" : "#ffffff"}" stroke="#0c1424" stroke-width="3"/>
+            <text x="${sx(k)}" y="${k === 1 ? 84 : 84}" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="12" fill="${k === 1 ? "#7a8090" : "#e8f0ff"}">${n}</text>`).join("")}
+          <g transform="translate(${sx(1)},34)"><rect x="-40" y="-9" width="80" height="16" rx="4" fill="#5a1a1a"/><text y="4" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="10" fill="#ff8a7a">งดให้บริการ</text></g>
+          <g id="${id}-dot" transform="translate(${f1(sx(0) + (sx(2) - sx(0)) * p)},56)"><circle r="9" fill="#ffd84a" stroke="#0c1424" stroke-width="2"/></g>
+          <rect x="${x0}" y="0" width="${W}" height="${H}" rx="6" fill="url(#skGlass)"/></g>`; };
+
+      // ---------- the zombie face pressed to glass (drawn art, no blood): grey-green skin, milky eyes, open jaw; (0,0) = chin ----------
+      Sky.zFace = (id, s = 1, o = {}) => { const sk = o.skin || "#9aa88e", skD = "#6a7a62";
+        return `<g id="${id}" transform="scale(${s})"><path d="M-70,40Q-90,-60 -60,-130Q0,-170 60,-130Q90,-60 70,40Q0,70 -70,40Z" fill="${sk}" ${SO2(4)}/>
+          <path d="M-70,40Q-90,-60 -60,-130Q-30,-150 0,-152Q-50,-100 -52,30Z" fill="${skD}" opacity=".35"/>
+          <path d="M-64,-110Q-30,-160 30,-150Q60,-140 66,-112Q40,-136 0,-132Q-40,-130 -64,-110Z" fill="${o.hair || "#2a2420"}" ${SO2(3)}/>
+          <ellipse cx="-28" cy="-58" rx="24" ry="22" fill="#2a3028" opacity=".75"/><ellipse cx="28" cy="-58" rx="24" ry="22" fill="#2a3028" opacity=".75"/>
+          <ellipse cx="-28" cy="-60" rx="13" ry="12" fill="#dfe4d2" ${SO2(2.5)}/><ellipse cx="28" cy="-60" rx="13" ry="12" fill="#dfe4d2" ${SO2(2.5)}/><circle cx="-27" cy="-59" r="2.2" fill="#6a7268"/><circle cx="29" cy="-59" r="2.2" fill="#6a7268"/>
+          <path d="M-46,-86l28,12M46,-86l-28,12" stroke="${SKC.ink}" stroke-width="6" stroke-linecap="round"/>
+          <path d="M-34,-4L-22,-12L-10,-6L0,-14L12,-6L24,-12L34,-2L28,30L14,38L0,34L-14,40L-28,30Z" fill="#160a0e" ${SO2(3)}/><path d="M-26,-6l4,8l5,-8l5,8l5,-8l5,8l5,-8l5,8" stroke="#cfc8a8" stroke-width="3.5" fill="none"/><path d="M-20,34l4,-7l5,7l5,-7l5,7" stroke="#cfc8a8" stroke-width="3" fill="none"/>
+          <path d="M-58,-30q10,10 4,24q8,6 6,18M56,-36q-8,12 0,22q-6,8 -2,18" stroke="#5a6a58" stroke-width="3" fill="none" opacity=".8"/>
+          <path d="M-60,-20q-8,16 4,30M58,-30q10,18 -2,34" stroke="${skD}" stroke-width="4" fill="none" opacity=".7"/><path d="M-8,-40l-6,18h12" stroke="${skD}" stroke-width="4" fill="none"/></g>`; };
+      // a palm flat on the glass (fingers up); (0,0) = the wrist
+      Sky.zPalm = (id, s = 1, o = {}) => `<g id="${id}" transform="scale(${s})"><path d="M-34,0Q-44,-60 -40,-90L-46,-170Q-46,-184 -34,-184Q-24,-184 -22,-170L-18,-110L-14,-196Q-14,-210 0,-210Q12,-210 12,-196L12,-112L22,-188Q24,-202 36,-200Q48,-198 46,-184L40,-108L54,-160Q58,-172 68,-168Q80,-162 74,-148L58,-80Q50,-30 34,0Z" fill="${o.skin || "#9aa88e"}" ${SO2(4)}/>
+        <path d="M-30,-50q30,14 60,0" stroke="#6a7a62" stroke-width="4" fill="none"/><path d="M-30,-6q30,10 60,0" stroke="#6a7a62" stroke-width="3" fill="none" opacity=".6"/>
+        <ellipse cx="2" cy="-60" rx="58" ry="70" fill="#ffffff" opacity=".12"/></g>`;
+      // glass cracks radiating from (0,0); level 1…3
+      Sky.crack = (id, lvl = 3) => { const r = mk(91); let s = "";
+        for (let k = 0; k < 7 + lvl * 4; k++) { const a = r() * Math.PI * 2, L1 = 40 + r() * 70 * lvl, mx = Math.cos(a + 0.2) * L1 * 0.5, my = Math.sin(a + 0.2) * L1 * 0.5;
+          s += `<path d="M0,0L${f1(mx)},${f1(my)}L${f1(Math.cos(a) * L1)},${f1(Math.sin(a) * L1)}" stroke="#ffffff" stroke-width="${f1(2 + r() * 2.5)}" fill="none" opacity=".9"/>`; }
+        for (let j = 1; j <= lvl; j++) s += `<path d="M${-30 * j},${-10 * j}Q${0},${-40 * j} ${32 * j},${-6 * j}Q${40 * j},${24 * j} ${6 * j},${36 * j}Q${-34 * j},${30 * j} ${-30 * j},${-10 * j}" stroke="#ffffff" stroke-width="2.4" fill="none" opacity=".7"/>`;
+        return `<g id="${id}">${s}</g>`; };
+
+      // ---------- props ----------
+      // the yellow bell intercom: a round yellow-rimmed button with a bell, a grille, a label; (0,0) = button centre
+      Sky.bell = (id, s = 1) => `<g transform="scale(${s})"><rect x="-46" y="-70" width="92" height="160" rx="12" fill="#e4e7ea" ${SO2(3)}/><g id="${id}-gl"><circle r="56" fill="url(#skLamp)" opacity="0"/></g>
+        <circle r="30" fill="${SKC.yellow}" ${SO2(3)}/><circle r="20" fill="#fff6c8" ${SO2(2)}/><path d="M-9,6Q-9,-12 0,-12Q9,-12 9,6L12,9H-12Z" fill="${SKC.ink}"/><circle cy="12" r="3" fill="${SKC.ink}"/>
+        ${Array.from({ length: 4 }, (_, k) => `<path d="M-24,${44 + k * 9}H24" stroke="#8a929c" stroke-width="4" stroke-linecap="round"/>`).join("")}
+        <text y="-46" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="13" fill="${SKC.ink}">แจ้งเหตุ</text></g>`;
+      // the red emergency lever box (door release); handle #id-lh pivots at its hinge (0,0 of the handle group)
+      Sky.lever = (id, s = 1) => `<g transform="scale(${s})"><rect x="-56" y="-90" width="112" height="180" rx="10" fill="${SKC.red}" ${SO2(3.5)}/><rect x="-46" y="-80" width="92" height="160" rx="6" fill="#c42a20"/>
+        <text y="-56" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="17" fill="#fff">ฉุกเฉิน</text><text y="-38" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="11" fill="#ffe0d8">ใช้เมื่อจอดที่สถานีเท่านั้น</text>
+        <g transform="translate(0,-14)"><g id="${id}-lh"><rect x="-12" y="0" width="24" height="84" rx="10" fill="#f4f4f0" ${SO2(3)}/><rect x="-26" y="66" width="52" height="24" rx="10" fill="#f4f4f0" ${SO2(3)}/></g></g>
+        <circle cy="-14" r="8" fill="#2a2e36"/></g>`;
+
+      Sky.barricade = (id) => `<g id="${id}"><g id="${id}-b0"><rect x="0" y="-150" width="120" height="150" rx="16" fill="#c8302a" ${SO2(4)}/><rect x="8" y="-142" width="30" height="134" rx="8" fill="#fff" opacity=".2"/><path d="M40,-166v16M80,-166v16M40,-166H80" stroke="${SKC.ink}" stroke-width="6" fill="none"/></g>
+        <g id="${id}-b1"><rect x="120" y="-210" width="140" height="210" rx="18" fill="#2f6fd0" ${SO2(4)}/><rect x="130" y="-200" width="36" height="190" rx="8" fill="#fff" opacity=".2"/><path d="M165,-226v16M215,-226v16M165,-226H215" stroke="${SKC.ink}" stroke-width="6" fill="none"/></g>
+        <g id="${id}-b2"><rect x="20" y="-260" width="190" height="96" rx="10" fill="#c8642c" ${SO2(4)}/><rect x="20" y="-226" width="190" height="16" fill="#9a4418"/><rect x="95" y="-280" width="40" height="22" rx="6" fill="none" stroke="${SKC.ink}" stroke-width="6"/></g>
+        <g id="${id}-b3" transform="translate(150,-210) rotate(-28)"><path d="M0,0L-10,-170" stroke="#3a3f4a" stroke-width="12" stroke-linecap="round"/><path d="M-40,-170H20" stroke="#3a3f4a" stroke-width="10" stroke-linecap="round"/><rect x="-10" y="-14" width="200" height="22" rx="8" fill="${SKC.yellow}" ${SO2(3)}/><circle cx="0" cy="18" r="22" fill="#2a2e36" ${SO2(3)}/><circle cx="180" cy="18" r="22" fill="#2a2e36" ${SO2(3)}/></g></g>`;
+      // ---------- Sets.carCut ----------
+      Sets.carCut = (L, o = {}) => {
+        const id = o.id || "cc", st = o.state || "calm", alarm = st === "alarm", dim = st === "dim", r = mk(5);
+        const wy = WALLT + 112, wh = 232;                               // window band
+        put(L.sky, `<rect x="-2000" y="-1400" width="5200" height="4800" fill="url(#${o.time === "night" ? "skNight" : "skDusk"})"/>`);
+        // beyond the windows (L.far): the city scrolling, or a station platform
+        if (o.station) put(L.far, `<rect x="-1400" y="${wy - 300}" width="4200" height="900" fill="${o.station === "dead" ? "#141820" : "#3a4256"}"/>
+            ${Array.from({ length: 12 }, (_, k) => `<rect x="${-1200 + k * 340}" y="${wy - 120}" width="18" height="520" fill="${o.station === "dead" ? "#222832" : "#5a6478"}"/><circle cx="${-1191 + k * 340}" cy="${wy - 90}" r="${o.station === "dead" ? (k % 3 ? 0 : 60) : 90}" fill="url(#skLamp)" opacity="${o.station === "dead" ? 0.35 : 0.8}"/>`).join("")}
+            <rect x="-1400" y="${wy + 200}" width="4200" height="60" fill="${o.station === "dead" ? "#2a2e36" : "#8a8e96"}"/><rect x="-1400" y="${wy + 196}" width="4200" height="10" fill="${SKC.yellow}" opacity="${o.station === "dead" ? 0.4 : 0.9}"/>`);
+        else put(L.far, `<g id="${id}-city">${cityView(`${id}-cy`, wy - 60, o)}</g>`);
+        // the wall with window holes (evenodd), so L.far shows through
+        const holes = [], seatsX = [];
+        const bays = [[-900, GX - 60], [GX + 70, DX - 350], [DX + 400, 2400]];
+        bays.forEach(([a, b]) => { for (let x = a + 40; x + 300 <= b; x += 340) { holes.push(`M${x},${wy}h300v${wh}h-300z`); seatsX.push([x, x + 300]); } });
+        // the passenger door windows (tall)
+        holes.push(`M${DX - 190},${wy - 20}h150v${wh + 120}h-150z`, `M${DX + 40},${wy - 20}h150v${wh + 120}h-150z`);
+        let s = `<path d="M-1400,${WALLT}H2800V${TF}H-1400Z ${holes.join(" ")}" fill="url(#skWall)" fill-rule="evenodd"/>`;
+        // window frames + glass sheen
+        holes.forEach((h) => { const m = h.match(/M(-?[\d.]+),(-?[\d.]+)h(-?[\d.]+)v(-?[\d.]+)/); const x = +m[1], y = +m[2], w = +m[3], hh = +m[4];
+          s += `<rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="16" fill="url(#skGlass)" stroke="#9aa2ac" stroke-width="10"/><rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="16" fill="none" ${SO2(3)}/>`; });
+        if (alarm || dim) s += `<rect x="-1400" y="${WALLT - 90}" width="4200" height="${TF - WALLT + 90}" fill="${alarm ? "#2a0610" : "#0a1020"}" opacity="${alarm ? 0.5 : 0.45}"/>`;
+        // the orange livery stripe + ad frames above the windows
+        s += `<rect x="-1400" y="${WALLT + 92}" width="4200" height="18" fill="${SKC.stripe}"/>`;
+        seatsX.forEach(([a, b], k) => { if (k % 2) s += `<rect x="${a + 40}" y="${WALLT + 18}" width="${b - a - 80}" height="64" rx="6" fill="${["#ffe08a", "#bfe6ff", "#ffc8d8", "#c8f0c8"][k % 4]}" ${SO2(2.5)}/><rect x="${a + 60}" y="${WALLT + 32}" width="${(b - a) * 0.35}" height="10" rx="4" fill="#5a5a6a" opacity=".5"/><rect x="${a + 60}" y="${WALLT + 52}" width="${(b - a) * 0.5}" height="8" rx="4" fill="#5a5a6a" opacity=".35"/>`; });
+        // bench seats along the wall (backrest under the windows, the seat, the shadow)
+        bays.forEach(([a, b]) => { const x0 = a + 30, x1 = b - 30; if (x1 - x0 < 200) return;
+          s += `<rect x="${x0}" y="${TF - 330}" width="${x1 - x0}" height="110" rx="20" fill="url(#skSeat)" ${SO2(3.5)}/>${Array.from({ length: Math.floor((x1 - x0) / 120) }, (_, k) => `<path d="M${x0 + 120 + k * 120},${TF - 324}v98" stroke="${SKC.seatD}" stroke-width="4"/>`).join("")}
+            <rect x="${x0 - 6}" y="${TF - 226}" width="${x1 - x0 + 12}" height="44" rx="14" fill="${SKC.seatL}" ${SO2(3.5)}/><rect x="${x0}" y="${TF - 182}" width="${x1 - x0}" height="150" fill="#8a929c" ${SO2(3)}/><rect x="${x0}" y="${TF - 182}" width="${x1 - x0}" height="150" fill="url(#r2AO)"/>`; });
+        // the passenger door: two panels, a yellow edge strip on the floor; the bell to its right, the lever box above the bell
+        s += `<rect x="${DX - 210}" y="${WALLT + 40}" width="420" height="${TF - WALLT - 40}" fill="#d4d8dc" ${SO2(4)}/>
+          <path d="M${DX},${WALLT + 40}V${TF}" stroke="${SKC.ink}" stroke-width="5"/><rect x="${DX - 200}" y="${TF - 14}" width="400" height="14" fill="${SKC.yellow}"/>
+          <g transform="translate(${DX + 290},${TF - 450})"><g id="${id}-bell">${Sky.bell(`${id}-bl`, 1)}</g></g>
+          <g transform="translate(${DX - 280},${TF - 470})"><g id="${id}-lever">${Sky.lever(`${id}-lv`, 1)}</g></g>
+          <g transform="translate(${DX},${WALLT + 10}) scale(1.1)"><g id="${id}-lcd">${Sky.lcd(`${id}-sc`, { progress: o.progress ?? 0.15 })}</g></g>`;
+        // the floor + the yellow line
+        s += `<rect x="-1400" y="${TF}" width="4200" height="40" fill="${SKC.floor}"/><path d="M-1400,${TF}H2800" stroke="${SKC.ink}" stroke-width="5"/>`;
+        // the ceiling: the light strips (ids for flicker) and the grab rail with straps
+        s += `<rect x="-1400" y="${WALLT - 90}" width="4200" height="90" fill="#dfe3e6"/><path d="M-1400,${WALLT}H2800" stroke="${SKC.ink}" stroke-width="4"/>
+          ${Array.from({ length: 12 }, (_, k) => `<g id="${id}-lt${k}"><rect x="${-1300 + k * 360}" y="${WALLT - 70}" width="280" height="22" rx="10" fill="${dim ? "#8a8e90" : "#fffbea"}" ${SO2(2.5)}/></g>`).join("")}
+          <path d="M-1400,${WALLT + 130}H2800" stroke="url(#skPole)" stroke-width="12"/>`;
+        put(L.set, s);
+        // poles + straps (glow, over the cast's heads? no: in L.set after cast would be wrong; straps hang high, keep in set)
+        let p = "";
+        [GX + 300, GX + 640, DX - 380, DX + 420, DX + 760].forEach((x) => { p += `<rect x="${x - 8}" y="${WALLT}" width="16" height="${TF - WALLT}" fill="url(#skPole)" ${SO2(2)}/>`; });
+        for (let k = 0; k < 22; k++) { const x = -1300 + k * 180; p += `<g transform="translate(${x},${WALLT + 130})"><g id="${id}-st${k}"><path d="M0,0V70" stroke="#3a3f4a" stroke-width="8"/><path d="M-22,70L22,70L0,108Z" fill="none" stroke="${SKC.yellow}" stroke-width="9" stroke-linejoin="round"/></g></g>`; }
+        put(L.set, p);
+        // light: pools under each ceiling strip on the wall and floor, a floor sheen; the near poles + straps in the foreground (depth)
+        put(L.glow, Array.from({ length: 12 }, (_, k) => `<ellipse cx="${-1160 + k * 360}" cy="${WALLT + 120}" rx="230" ry="190" fill="url(#skLamp)" opacity="${dim ? 0.12 : alarm ? 0.22 : 0.42}"/>`).join("") +
+          `<rect x="-1400" y="${TF - 4}" width="4200" height="22" fill="#ffffff" opacity="${dim ? 0.04 : 0.12}"/>`);
+        if (o.fg !== false) put(L.fg, [-300, 2100].map((x) => `<rect x="${x - 26}" y="${WALLT - 200}" width="52" height="1400" fill="url(#skPole)" ${SO2(3)}/><g transform="translate(${x + 160},${WALLT + 40})"><path d="M0,0V120" stroke="#2a2f3a" stroke-width="14"/><path d="M-40,120L40,120L0,190Z" fill="none" stroke="${SKC.yellow}" stroke-width="16" stroke-linejoin="round"/></g>`).join(""));
+        // the end car (x < GX) in the alarm: red emergency light, the gangway partition and its door at GX
+        let e = "";
+        if (o.end && o.end !== "calm") e += `<rect x="-1400" y="${WALLT - 90}" width="${1400 + GX - 70}" height="${TF - WALLT + 130}" fill="#7a0a14" opacity="${o.end === "zombies" ? 0.42 : 0.25}"/>`;
+        e += `<rect x="${GX - 70}" y="${WALLT - 90}" width="140" height="${TF - WALLT + 90}" fill="#a8b0b8" ${SO2(4)}/><g id="${id}-gdoor"><rect x="${GX - 52}" y="${WALLT + 40}" width="104" height="${TF - WALLT - 40}" fill="#c8ced4" ${SO2(3.5)}/>
+          <rect x="${GX - 36}" y="${WALLT + 90}" width="72" height="320" rx="8" fill="#1a2030"/><rect x="${GX - 36}" y="${WALLT + 90}" width="72" height="320" rx="8" fill="url(#skGlass)"/>
+          ${[1, 2, 3].map((k) => `<g transform="translate(${GX},${WALLT + 230})" opacity="${(o.crack || 0) >= k ? 1 : 0}"><g transform="scale(.32)">${Sky.crack(`${id}-ck${k}`, k)}</g></g>`).join("")}
+          <rect x="${GX + 30}" y="${TF - 520}" width="14" height="70" rx="6" fill="#5a6070"/></g>
+          ${o.bent ? `<path id="${id}-gap" d="M${GX + 52},${WALLT + 60}L${GX + 90},${WALLT + 120}L${GX + 70},${TF - 40}L${GX + 52},${TF}Z" fill="#2a0a12" ${SO2(3)}/>` : ""}`;
+        put(L.set, e);
+        if (alarm) put(L.glow, `<rect id="${id}-red" x="-1400" y="${WALLT - 100}" width="4200" height="${TF - WALLT + 160}" fill="#ff2a1a" opacity=".12"/>`);
+        // below the floor: the car body, the bogies, the rail on the concrete girder, then the drop to the street
+        const rr = mk(17);
+        let u = `<rect x="-1400" y="${TF + 40}" width="4200" height="90" fill="url(#skBody)"/><rect x="-1400" y="${TF + 80}" width="4200" height="14" fill="${SKC.stripe}"/><path d="M-1400,${TF + 130}H2800" stroke="${SKC.ink}" stroke-width="5"/>
+          ${[-700, -100, 760, 1500, 2200].map((x) => `<g transform="translate(${x},${TF + 150})"><rect x="-140" y="-24" width="280" height="44" rx="10" fill="#3a3f4a" ${SO2(3)}/><circle cx="-80" cy="22" r="36" fill="#2a2e36" ${SO2(3)}/><circle cx="80" cy="22" r="36" fill="#2a2e36" ${SO2(3)}/><circle cx="-80" cy="22" r="12" fill="#8a929c"/><circle cx="80" cy="22" r="12" fill="#8a929c"/></g>`).join("")}
+          <rect x="-1400" y="${TF + 196}" width="4200" height="16" fill="#8a929c" ${SO2(2)}/><rect x="-1400" y="${TF + 212}" width="4200" height="170" fill="url(#skConc)"/><path d="M-1400,${TF + 212}H2800M-1400,${TF + 382}H2800" stroke="${SKC.ink}" stroke-width="5"/>
+          <rect x="-1400" y="${TF + 382}" width="4200" height="40" fill="#6a665e"/>`;
+        put(L.set, u);
+        // the street far below (L.mid so it slides slower): pillars, cars' lights
+        put(L.mid, `<rect x="-1400" y="${TF + 420}" width="4200" height="1400" fill="${o.time === "night" ? "#0a0c1a" : "#2a2240"}"/>
+          ${Array.from({ length: 10 }, (_, k) => `<rect x="${-1200 + k * 420}" y="${TF + 400}" width="90" height="900" fill="#6a6670"/><rect x="${-1200 + k * 420}" y="${TF + 400}" width="90" height="900" fill="url(#r2Cyl)"/>`).join("")}
+          ${Array.from({ length: 40 }, () => `<circle cx="${f1(-1300 + rr() * 4000)}" cy="${f1(TF + 900 + rr() * 300)}" r="${f1(5 + rr() * 6)}" fill="${rr() < 0.5 ? "#ffe8a0" : "#ff5a4a"}" opacity=".85"/>`).join("")}`);
+      };
+      // life in the car: the city scrolls, the straps sway, the lights flicker in the alarm, the red wash pulses
+      Sky.carLife = (tl, id, t0, dur, o = {}) => {
+        if (!o.stopped) Sky.cityScroll(tl, `${id}-cy`, t0, dur, o.speed ?? 1);
+        for (let k = 0; k < 22; k++) if (document.getElementById(`${id}-st${k}`)) tl.fromTo(`#${id}-st${k}`, { rotation: -(o.sway ?? 6), svgOrigin: "0 0" }, { rotation: o.sway ?? 6, svgOrigin: "0 0", duration: 0.9 + (k % 3) * 0.13, yoyo: true, repeat: Math.ceil(dur / 0.9), ease: "sine.inOut", immediateRender: false }, t0 - (k % 5) * 0.2);
+        if (document.getElementById(`${id}-red`)) tl.fromTo(`#${id}-red`, { opacity: 0.06 }, { opacity: 0.22, duration: 0.45, yoyo: true, repeat: Math.ceil(dur / 0.45), ease: "sine.inOut", immediateRender: false }, t0);
+        if (o.flicker) for (let k = 0; k < 12; k++) tl.fromTo(`#${id}-lt${k}`, { opacity: 1 }, { opacity: 0.25, duration: 0.06, yoyo: true, repeat: 3, repeatDelay: 0.5 + (k % 4) * 0.37, ease: "none", immediateRender: false }, t0 + (k % 5) * 0.21);
+        if (o.knock) tl.fromTo(`#${id}-gdoor`, { x: 0 }, { x: 5, duration: 0.07, yoyo: true, repeat: Math.ceil(dur / 0.07), ease: "sine.inOut", immediateRender: false }, t0);
+        if (o.progress) { const [a, b] = o.progress, sx = (k) => -130 + k * 130;
+          tl.fromTo(`#${id}-sc-dot`, { x: sx(0) + 260 * a }, { x: sx(0) + 260 * b, duration: dur, ease: "none", immediateRender: false }, t0); }
+      };
+
+      // ---------- Sets.gangClose: close on the gangway door ----------
+      Sets.gangClose = (L, o = {}) => {
+        const id = o.id || "gc", cx = 540, gy = 900, gw = 540, gh = 760;
+        put(L.sky, `<rect x="-2000" y="-1400" width="5200" height="4800" fill="#2a0a12"/>`);
+        // behind the glass (L.far): the end car under red light, its windows on the elevated city (towers + the girder far below the sill)
+        put(L.far, `<rect x="-1400" y="-200" width="4200" height="2600" fill="url(#skRedCar)"/>
+          <clipPath id="${id}-wc"><rect x="60" y="400" width="960" height="380" rx="24"/></clipPath>
+          <g clip-path="url(#${id}-wc)"><g id="${id}-city">${cityView(`${id}-cy`, 300, o)}</g></g>
+          <rect x="60" y="400" width="960" height="380" rx="24" fill="none" stroke="#4a1a22" stroke-width="22"/><path d="M540,400V780" stroke="#4a1a22" stroke-width="16"/><rect x="60" y="400" width="960" height="380" rx="24" fill="url(#skGlass)"/>
+          <rect x="-1400" y="790" width="4200" height="60" fill="#3a0e16"/>
+          <rect x="-1400" y="1260" width="4200" height="800" fill="#1a060a"/><circle cx="540" cy="700" r="520" fill="url(#skRedG)" opacity=".7"/>
+          ${[[300, 1160, 1.2, "#9aa88e", "#2a2420"], [760, 1180, 1.25, "#a8b49a", "#4a3a2a"], [150, 1220, 1.0, "#8e9c84", "#1a1414"], [930, 1230, 1.0, "#9aa88e", "#2a2a2a"]].map(([x, y, s2, c, h], k) => `<g transform="translate(${x},${y})"><g id="${id}-bz${k}"><path d="M-130,200Q-140,40 -60,10H60Q140,40 130,200Z" fill="${["#3a4a6a", "#6a3a3a", "#2a3a2a", "#4a4a5a"][k]}" ${SO2(4)}/>${Sky.zFace(`${id}-bf${k}`, s2 * 0.8, { skin: c, hair: h })}</g></g>`).join("")}`);
+        // the door (L.set): steel frame around the glass hole (evenodd), rubber seal, handle, the sign
+        let s = `<path d="M-1400,-200H2800V2400H-1400Z M${cx - gw / 2},${gy - gh / 2}h${gw}v${gh}h${-gw}z" fill="#c8ced4" fill-rule="evenodd"/>
+          <rect x="${cx - gw / 2 - 90}" y="${gy - gh / 2 - 120}" width="${gw + 180}" height="${gh + 900}" rx="20" fill="none" stroke="#9aa2ac" stroke-width="14"/>
+          <rect x="${cx - gw / 2 - 90}" y="${gy - gh / 2 - 120}" width="${gw + 180}" height="${gh + 900}" rx="20" fill="url(#r2Cyl)"/>
+          <rect x="${cx - gw / 2 - 10}" y="${gy - gh / 2 - 10}" width="${gw + 20}" height="${gh + 20}" rx="22" fill="none" stroke="#2a2e36" stroke-width="20"/>
+          <rect x="${cx + gw / 2 + 20}" y="${gy + gh / 2 + 80}" width="40" height="200" rx="16" fill="#5a6070" ${SO2(3)}/><rect x="${cx + gw / 2 + 26}" y="${gy + gh / 2 + 86}" width="12" height="188" rx="6" fill="#c8ccd4"/>
+          <g transform="translate(${cx},${gy + gh / 2 + 120})"><rect x="-150" y="-30" width="300" height="60" rx="10" fill="#fdfaf2" ${SO2(3)}/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="${SKC.navy}">ทางเชื่อมตู้</text></g>
+          <rect x="-1400" y="1620" width="4200" height="800" fill="${SKC.floor}"/><rect x="-1400" y="1620" width="4200" height="14" fill="${SKC.yellow}"/>`;
+        // the glass + whatever is pressed on it (faces, palms) + cracks (in L.set above the hole)
+        s += `<g transform="translate(${cx},${gy})">
+          <g transform="translate(-90,330)">${Sky.zFace(`${id}-zf0`, 1.15)}</g><g transform="translate(140,360)">${Sky.zFace(`${id}-zf1`, 1.0, { skin: "#a4b096", hair: "#4a3424" })}</g>
+          <rect x="${-gw / 2}" y="${-gh / 2}" width="${gw}" height="${gh}" fill="url(#skGlass)"/>
+          <g transform="translate(-110,60)"><g id="${id}-zh0">${Sky.zPalm(`${id}-zp0`, 1.1)}</g></g><g transform="translate(130,10) scale(-1,1)"><g id="${id}-zh1">${Sky.zPalm(`${id}-zp1`, 1.0, { skin: "#a4b096" })}</g></g>
+          ${[1, 2, 3].map((k) => `<g transform="translate(-70,-120)" id="${id}-ckw${k}" opacity="${(o.crack || 0) >= k ? 1 : 0}">${Sky.crack(`${id}-ck${k}`, k)}</g>`).join("")}</g>`;
+        s += `<path d="M-1400,-200H2800V2400H-1400Z M${cx - gw / 2},${gy - gh / 2}h${gw}v${gh}h${-gw}z" fill="#2a0610" fill-rule="evenodd" opacity=".5"/>`;
+        put(L.set, s);
+      };
+      // the palms slam the glass (scale punch toward camera), faces push, the frame shudders
+      Sky.slam = (tl, id, t0, dur, o = {}) => { const per = o.per ?? 0.42;
+        [0, 1].forEach((k) => { if (!document.getElementById(`${id}-zh${k}`)) return;
+          for (let t = (k ? per * 0.5 : 0); t < dur - 0.05; t += per) {
+            tl.fromTo(`#${id}-zh${k}`, { scale: 0.78, y: 30, svgOrigin: "0 0" }, { scale: 1.06, y: 0, svgOrigin: "0 0", duration: 0.09, ease: "power3.in", immediateRender: false }, t0 + t);
+            tl.to(`#${id}-zh${k}`, { scale: 0.86, y: 18, svgOrigin: "0 0", duration: per - 0.12, ease: "power1.out" }, t0 + t + 0.09); } });
+        [0, 1].forEach((k) => { if (document.getElementById(`${id}-zf${k}`)) tl.fromTo(`#${id}-zf${k}`, { x: -8, rotation: -3, svgOrigin: "0 0" }, { x: 8, rotation: 3, svgOrigin: "0 0", duration: 0.5 + k * 0.13, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut", immediateRender: false }, t0); });
+        for (let k = 0; k < 4; k++) if (document.getElementById(`${id}-bz${k}`)) tl.fromTo(`#${id}-bz${k}`, { x: -10, y: 0 }, { x: 10, y: -8, duration: 0.6 + k * 0.11, yoyo: true, repeat: Math.ceil(dur / 0.6), ease: "sine.inOut", immediateRender: false }, t0 - k * 0.2);
+        if (o.crackAt) o.crackAt.forEach((t, j) => { tl.fromTo(`#${id}-ckw${j + 1}`, { opacity: 0, scale: 0.4, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.12, ease: "power4.out", immediateRender: false }, t0 + t); });
+        if (!o.stopped) Sky.cityScroll(tl, `${id}-cy`, t0, dur, 0.8);
+      };
+
+      // ---------- Sets.viaduct: outside ----------
+      Sky.train = (id, o = {}) => { let s = "";
+        for (let c = 0; c < 3; c++) { const x0 = c * 1180;
+          s += `<g transform="translate(${x0},0)"><rect x="0" y="-360" width="1150" height="320" rx="${c === 2 ? 60 : 18}" fill="url(#skBody)" ${SO2(5)}/>
+            ${c === 2 ? `<path d="M1150,-360Q1240,-330 1250,-200L1250,-60Q1250,-40 1150,-40Z" fill="url(#skBody)" ${SO2(5)}/><path d="M1160,-330Q1220,-300 1228,-220L1160,-220Z" fill="#1a2a3a" ${SO2(3)}/>` : ""}
+            <rect x="0" y="-150" width="1150" height="26" fill="${SKC.stripe}"/><rect x="0" y="-124" width="1150" height="10" fill="${SKC.navy}"/>
+            ${[60, 360, 640, 940].map((wx, k) => k === 1 || k === 3 ? `<rect x="${wx}" y="-330" width="120" height="270" rx="8" fill="#c8ced4" ${SO2(3)}/><rect x="${wx + 12}" y="-312" width="44" height="150" rx="6" fill="${o.lit === false ? "#141822" : "#ffe9b0"}" ${SO2(2)}/><rect x="${wx + 64}" y="-312" width="44" height="150" rx="6" fill="${o.lit === false ? "#141822" : "#ffe9b0"}" ${SO2(2)}/>`
+              : `<rect x="${wx}" y="-320" width="230" height="140" rx="16" fill="${o.lit === false ? "#141822" : c === 0 && o.redEnd ? "#ff5a4a" : "#ffe9b0"}" ${SO2(3)}/><rect x="${wx + 10}" y="-312" width="70" height="124" rx="10" fill="#fff" opacity=".35"/>`).join("")}
+            ${[180, 970].map((bx) => `<g transform="translate(${bx},-10)"><rect x="-110" y="-20" width="220" height="40" rx="10" fill="#3a3f4a" ${SO2(3)}/><circle cx="-60" cy="20" r="28" fill="#2a2e36" ${SO2(3)}/><circle cx="60" cy="20" r="28" fill="#2a2e36" ${SO2(3)}/></g>`).join("")}</g>`;
+          if (c < 2) s += `<rect x="${x0 + 1150}" y="-330" width="30" height="270" fill="#3a3f4a" ${SO2(3)}/>`; }
+        return `<g id="${id}">${s}</g>`; };
+      Sets.viaduct = (L, o = {}) => {
+        const id = o.id || "vd", night = o.time === "night", GY = 1080, rr = mk(29);
+        put(L.sky, `<rect x="-2000" y="-1400" width="5200" height="4800" fill="url(#${night ? "skNight" : "skDusk"})"/>${night ? Array.from({ length: 60 }, () => `<circle cx="${f1(-1200 + rr() * 3600)}" cy="${f1(-400 + rr() * 900)}" r="${f1(1 + rr() * 2)}" fill="#fff" opacity="${f1(0.3 + rr() * 0.6)}"/>`).join("") : ""}`);
+        put(L.far, `<g id="${id}-far">${towers(51, -1600, 5200, 1500, 300, 900, night ? ["#12162c", "#181c36"] : ["#5a4272", "#6a4a7a", "#4a3a68"], "#ffe2a0", 80, { lit: night ? 0.5 : 0.3 })}</g>`);
+        put(L.mid, `<g id="${id}-mid">${towers(63, -1600, 5200, 1900, 400, 1100, night ? ["#0c1024", "#10142a"] : ["#33284e", "#2a2448", "#3a2e58"], "#ffeab8", 80, { lit: 0.5 })}
+          <rect x="-1600" y="1880" width="5200" height="700" fill="${night ? "#06080e" : "#1a1428"}"/>${Array.from({ length: 60 }, () => `<circle cx="${f1(-1500 + rr() * 5000)}" cy="${f1(1930 + rr() * 200)}" r="${f1(6 + rr() * 8)}" fill="${rr() < 0.5 ? "#ffe8a0" : "#ff5a4a"}" opacity=".85"/>`).join("")}</g>`);
+        // the viaduct: girder, the walkway with railing (on the near side), pillars
+        let s = `${Array.from({ length: 8 }, (_, k) => `<rect x="${-1300 + k * 620}" y="${GY + 160}" width="160" height="1400" fill="url(#skConc)" ${SO2(4)}/><rect x="${-1300 + k * 620}" y="${GY + 160}" width="160" height="1400" fill="url(#r2Cyl)"/><rect x="${-1340 + k * 620}" y="${GY + 130}" width="240" height="60" rx="8" fill="${SKC.conc}" ${SO2(4)}/>`).join("")}
+          <rect x="-1600" y="${GY}" width="5200" height="140" fill="url(#skConc)" ${SO2(5)}/><rect x="-1600" y="${GY + 140}" width="5200" height="20" fill="${SKC.concD}"/>
+          <rect x="-1600" y="${GY - 16}" width="5200" height="16" fill="#8a929c"/>`;
+        put(L.set, s + Sky.train(`${id}-train`, o).replace(`<g id="${id}-train">`, `<g transform="translate(${o.trainX ?? -600},${GY - 16})"><g id="${id}-train">`) + `</g>`);
+        // the walkway on the near side: deck + railing (in front of the train's wheels)
+        let w = `<rect x="-1600" y="${GY - 30}" width="5200" height="40" fill="#8a867e" ${SO2(4)}/>${Array.from({ length: 70 }, (_, k) => `<path d="M${-1600 + k * 80},${GY - 30}v-110" stroke="#c8ccd4" stroke-width="7"/>`).join("")}
+          <path d="M-1600,${GY - 140}H3600M-1600,${GY - 86}H3600" stroke="#dfe3e6" stroke-width="10"/><path d="M-1600,${GY - 140}H3600" stroke="${SKC.ink}" stroke-width="2" opacity=".6"/>
+          ${Array.from({ length: 14 }, (_, k) => `<g transform="translate(${-1500 + k * 400},${GY - 150})"><path d="M0,0v-60" stroke="#5a6070" stroke-width="6"/><circle id="${id}-lp${k}" cy="-64" r="${o.power === false ? 0 : 50}" fill="url(#skLamp)" opacity=".7"/><circle cy="-64" r="8" fill="${o.power === false ? "#3a3f4a" : "#fff6d8"}"/></g>`).join("")}`;
+        if (o.lights) w += Array.from({ length: o.lights }, (_, k) => `<g id="${id}-tc${k}" transform="translate(${1700 + k * 160},${GY - 120})"><circle r="120" fill="url(#skTorch)"/><circle r="10" fill="#fffbe0"/></g>`).join("");
+        put(L.glow, w);
+      };
+
+      // ---------- Sets.platform ----------
+      Sets.platform = (L, o = {}) => {
+        const id = o.id || "pf", PFL = 1500, dead = !!o.closed, rr = mk(41);
+        put(L.sky, `<rect x="-2000" y="-1400" width="5200" height="4800" fill="${dead ? "#0e1018" : "#2a2e40"}"/>`);
+        // the train behind the platform edge, its doors open (dark inside the end car if o.redEnd)
+        if (o.train !== false) put(L.far, `<rect x="-1400" y="600" width="4200" height="900" fill="${dead ? "#141822" : "#3a4256"}"/>`);
+        let s = "";
+        if (o.train !== false) { s += `<rect x="-1400" y="${PFL - 640}" width="4200" height="560" fill="url(#skBody)" ${SO2(5)}/><rect x="-1400" y="${PFL - 250}" width="4200" height="26" fill="${SKC.stripe}"/>`;
+          for (let k = 0; k < 6; k++) { const x = -1100 + k * 640;
+            s += k % 2 ? `<rect x="${x}" y="${PFL - 600}" width="300" height="160" rx="14" fill="${o.inside || "#fff2c8"}" ${SO2(3)}/>` : `<rect x="${x - 40}" y="${PFL - 610}" width="380" height="530" fill="${o.inside || "#fff2c8"}" ${SO2(4)}/><rect x="${x - 40}" y="${PFL - 610}" width="380" height="530" fill="url(#r2AO)"/><rect x="${x - 70}" y="${PFL - 610}" width="30" height="530" fill="#c8ced4" ${SO2(3)}/><rect x="${x + 340}" y="${PFL - 610}" width="30" height="530" fill="#c8ced4" ${SO2(3)}/>`; } }
+        if (o.train === false) { s += `<rect x="-1400" y="${PFL - 260}" width="4200" height="260" fill="#1a1c22"/><rect x="-1400" y="${PFL - 420}" width="4200" height="160" fill="${dead ? "#20242c" : "#4a5060"}"/>
+            ${Array.from({ length: 40 }, (_, k) => `<rect x="${-1400 + k * 110}" y="${PFL - 120}" width="70" height="22" fill="#4a3a2a"/>`).join("")}
+            <rect x="-1400" y="${PFL - 136}" width="4200" height="14" fill="#9aa2ac"/><rect x="-1400" y="${PFL - 96}" width="4200" height="14" fill="#9aa2ac"/>
+            <g id="${id}-third"><rect x="-1400" y="${PFL - 60}" width="4200" height="26" fill="#c8a020" ${SO2(3)}/>${Array.from({ length: 14 }, (_, k) => `<g transform="translate(${-1200 + k * 320},${PFL - 47})"><path d="M0,-12L12,10H-12Z" fill="${SKC.ink}"/><path d="M1,-6l-3,7h4l-3,7" stroke="${SKC.yellow}" stroke-width="2" fill="none"/></g>`).join("")}</g>`; }
+        // the platform roof, columns, the lights, the station sign
+        s += `<rect x="-1400" y="300" width="4200" height="160" fill="${dead ? "#2a2e36" : "#5a6070"}" ${SO2(4)}/>
+          ${Array.from({ length: 8 }, (_, k) => `<rect x="${-1200 + k * 520}" y="460" width="60" height="1100" fill="${dead ? "#3a3e46" : "#9aa2ac"}" ${SO2(3)}/><rect x="${-1200 + k * 520}" y="460" width="60" height="1100" fill="url(#r2Cyl)"/>`).join("")}`;
+        put(L.mid, s);
+        let g = Array.from({ length: 10 }, (_, k) => { const on = !o.dim || k % 2 === 0; return `<g id="${id}-pl${k}" opacity="${on ? 1 : 0.15}"><rect x="${-1250 + k * 420}" y="460" width="200" height="18" rx="8" fill="#fffbe8"/><ellipse cx="${-1150 + k * 420}" cy="560" rx="260" ry="200" fill="url(#skLamp)" opacity="${dead ? 0.35 : 0.7}"/></g>`; }).join("");
+        put(L.glow, g);
+        let f = `<rect x="-1400" y="${PFL}" width="4200" height="600" fill="${dead ? "#3a3e44" : "#9a9ea4"}"/><rect x="-1400" y="${PFL + 30}" width="4200" height="34" fill="${SKC.yellow}" opacity="${dead ? 0.55 : 1}"/>
+          ${Array.from({ length: 140 }, (_, k) => `<circle cx="${-1390 + k * 30}" cy="${PFL + 47}" r="5" fill="#c8a020" opacity="${dead ? 0.5 : 0.9}"/>`).join("")}
+          <path d="M-1400,${PFL}H2800" stroke="${SKC.ink}" stroke-width="5"/>
+          <g transform="translate(${o.signX ?? 540},380)"><g id="${id}-sign"><path d="M-6,-80V-30M-200,-80V-30" stroke="#3a3f4a" stroke-width="6" transform="translate(100,0)"/>
+            <rect x="-300" y="-40" width="600" height="130" rx="14" fill="${SKC.navy}" ${SO2(4)}/><text y="30" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff">${o.name || Sky.STATIONS[1]}</text>
+            <text y="74" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="26" fill="#9fd8ff">${o.name === Sky.STATIONS[2] ? "PRATU MUEANG" : "SUAN LUANG KAO"}</text>
+            ${dead ? `<g transform="rotate(-8)"><rect x="-320" y="0" width="640" height="56" fill="${SKC.yellow}" ${SO2(3)}/>${Array.from({ length: 11 }, (_, k) => `<path d="M${-320 + k * 60},56l40,-56h22l-40,56z" fill="${SKC.ink}"/>`).join("")}<rect x="-170" y="6" width="340" height="44" rx="6" fill="${SKC.yellow}"/><text y="40" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="36" fill="${SKC.ink}">งดให้บริการ</text></g>` : ""}</g></g>
+          ${Array.from({ length: 4 }, (_, k) => `<g transform="translate(${-900 + k * 900},${PFL + 260})"><rect x="-140" y="-70" width="280" height="22" rx="8" fill="#5a8ad0" ${SO2(3)}/><rect x="-130" y="-48" width="16" height="60" fill="#5a6070"/><rect x="114" y="-48" width="16" height="60" fill="#5a6070"/></g>`).join("")}`;
+        if (o.crowd) f += Array.from({ length: 26 }, (_, k) => { const x = -1200 + k * 150 + rr() * 60, y = PFL + 120 + rr() * 120, c = ["#2f6fd0", "#e8603a", "#3a3f4a", "#f4c430", "#8a5ad0", "#2fa864", "#fdfaf2"][k % 7];
+          return `<g transform="translate(${f1(x)},${f1(y)})"><path d="M-34,0Q-38,-120 0,-130Q38,-120 34,0Z" fill="${c}" ${SO2(3)}/><circle cy="-160" r="30" fill="${["#e0b088", "#c88a5a", "#ebc19c"][k % 3]}" ${SO2(3)}/><path d="M-30,-170Q0,-200 30,-170Q24,-186 0,-190Q-24,-186 -30,-170Z" fill="#1a1410"/></g>`; }).join("");
+        put(L.set, f);
+        if (dead) put(L.light, `<rect width="1080" height="1920" fill="#0a1020" opacity=".25"/>`);
+      };

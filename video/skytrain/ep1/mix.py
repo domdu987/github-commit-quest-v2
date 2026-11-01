@@ -1,6 +1,5 @@
-"""นาทีก่อนจม EP.1: the soundtrack from schedule.json: levelled voice, synthesized SFX (crickets, engine, the lock click, the countdown
-ticks, the screech, the splash, water pouring in, bubbles, the window motor, the rewind, the child's switch, the flicker) and the Suno bed
-with dips and ducking; the bed fades out over the next-episode card. Output -14 LUFS, no noise beds."""
+"""ซอมบี้รถไฟฟ้า: the soundtrack from schedule.json: levelled voice, synthesized SFX (rail clacks, slams, the alarm, the bell, radio,
+heartbeat speeding up, silences before the big moments) and the Suno bed with dips and ducking. Output -14 LUFS."""
 import json
 import os
 import subprocess
@@ -62,7 +61,7 @@ def frag(k, i=0, j=0):
 
 
 # ---- voice: every line levelled on its own so whispers and shouts sit at a readable loudness ----
-LINE_GAIN = {"x01": 2, "q03": 2, "r01": 2, "r02": 2}   # ขิม shouts over the water: lift her line over the bed and effects
+LINE_GAIN = {"c01": 2}   # ขิม shouts over the water: lift her line over the bed and effects
 vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
@@ -108,34 +107,51 @@ def tick3(k, a, g=0.3):  # the choice ring: three ticks
     return [(k, a + i * 1.0, "tick", g) for i in range(3)]
 
 
+
+def rails(k, a, b, g=0.14, period=0.62):  # wheel clacks over the rail joints (clack-clack), the tempo of the ride
+    out, t = [], a
+    while t < b:
+        out += [(k, t, "knock", g), (k, t + 0.11, "knock", g * 0.8)]
+        t += period
+    return out
+
+
+def accel(k, a, b, p0=0.62, p1=0.34, g=0.32):  # a heartbeat that speeds up toward the crisis
+    out, t = [], a
+    while t < b:
+        out.append((k, t, "heartbeat", g)); f = (t - a) / max(0.01, b - a); t += p0 + (p1 - p0) * f
+    return out
+
+
 CUES = [
-    # the hook: frame 0 the engine bursts (boom + roar), inside the alarm, masks drop, he screams
-    ("hook", 0.0, "boom", 0.5), ("hook", 0.02, "roar", 0.42), ("hook", 0.05, "crackle", 0.3), ("hook", 0.8, "alarm", 0.18), ("hook", 0.85, "rattle", 0.3), ("hook", 1.0, "debris", 0.22),
-    ("cmd", 0.0, "rattle", 0.24), ("cmd", F("cmd", 0, 0), "sting", 0.42), ("cmd", 0.1, "crackle", 0.2),
-    # 40 minutes before: the calm cabin, a ding, steps, the seat
-    ("seat", 0.0, "hum", 0.12), ("seat", 0.1, "steps", 0.2), ("seat", 0.6, "thud", 0.16), ("seat", 1.0, "liftding", 0.16),
-    ("nap", 0.0, "hum", 0.12), ("nap", 0.3, "click", 0.2),
-    ("map", 0.2, "whoosh", 0.26), ("map", 0.5, "ding", 0.14), ("map", 1.2, "engine", 0.12),
-    # the engine bursts
-    ("engine", 0.0, "engine", 0.18), ("engine", F("engine", 0, 1) + 0.1, "boom", 0.6), ("engine", F("engine", 0, 1) + 0.12, "roar", 0.4), ("engine", F("engine", 0, 1) + 0.2, "debris", 0.3), ("engine", F("engine", 0, 1) + 0.3, "crackle", 0.3),
-    ("brace", 0.0, "alarm", 0.2), ("brace", 0.05, "rattle", 0.32), ("brace", 0.1, "clang", 0.2), *beats("brace", 0.3, D["brace"] - 0.3, 0.42, 0.32),
-    ("dive", 0.0, "riser", 0.4), ("dive", 0.0, "roar", 0.32), ("dive", 0.1, "whoosh", 0.34),
-    # impact on the island rocks
-    ("impact", 0.33, "boom", 0.8), ("impact", 0.35, "debris", 0.6), ("impact", 0.38, "scrape", 0.5), ("impact", 0.42, "splash", 0.5), ("impact", 0.5, "shatter", 0.3), ("impact", 0.6, "crackle", 0.3),
-    ("smoke", 0.0, "tinnitus", 0.2), ("smoke", 0.4, "crackle", 0.26), ("smoke", 1.2, "creak", 0.2), ("smoke", 1.6, "hiss", 0.0),
-    ("grab", 0.1, "crackle", 0.22), ("grab", 0.4, "rustle", 0.26), *beats("grab", 0.2, D["grab"] - 0.2, 0.45, 0.26),
-    # the cards: an entry whoosh, ticking stopwatch for 90 s, pops of bags, the jam (thud + sting)
-    ("ninety", 0.15, "whoosh", 0.26), *ticks("ninety", 0.6, D["ninety"] - 0.3, 0.16, 0.5), ("ninety", D["ninety"] - 0.7, "ding", 0.24),
-    ("half", 0.15, "whoosh", 0.24), *[("half", 1.0 + j * 0.22, "pop", 0.0) for j in range(5)], *[("half", 1.0 + j * 0.22, "click", 0.22) for j in range(5)], ("half", 2.2, "sting", 0.2),
-    ("block", 0.15, "whoosh", 0.24), ("block", 0.4, "steps", 0.2), ("block", 1.35, "thud", 0.4), ("block", 1.36, "sting", 0.3),
-    # he drops it, runs the wrong way into the heat
-    ("run", 0.2, "thud", 0.26), ("run", 0.9, "steps", 0.3), ("run", 1.6, "steps", 0.3), ("run", 0.5, "crackle", 0.3), ("run", D["run"] - 0.8, "roar", 0.4), *beats("run", 0.2, D["run"] - 0.2, 0.38, 0.32),
-    ("behind", 0.2, "steps", 0.28), ("behind", 1.0, "steps", 0.28), ("behind", 0.1, "crackle", 0.2), *beats("behind", 0.2, D["behind"] - 0.2, 0.38, 0.3),
-    ("rows", 0.15, "whoosh", 0.24), *[("rows", 0.6 + j * 0.22, "click", 0.16) for j in range(8)], ("rows", 2.8, "ding", 0.3),
-    # out: the door, down the slide, the surf; the card ticks
-    ("jump", 0.1, "latch", 0.3), ("jump", 0.3, "whoosh", 0.36), ("jump", 0.75, "thud", 0.3), ("jump", 0.9, "roar", 0.2), ("jump", 1.4, "ding", 0.2), ("jump", 0.0, "crackle", 0.2),
-    # alone: the surf, the gulls, then the smoke across the bay (sting)
-    ("alone", 0.0, "stream", 0.16), ("alone", 1.0, "flap", 0.18), ("alone", 3.0, "flap", 0.14), ("alone", vo_t("alone", 2), "sting", 0.34), ("alone", vo_t("alone", 2) + 0.2, "swell", 0.2),
+    # hook: palms slam the glass (slams, the crack), alarm, the car rattling
+    ("hook", 0.0, "slam", 0.42), ("hook", 0.36, "slam", 0.4), ("hook", 0.38, "shatter", 0.3), ("hook", 0.0, "growl", 0.3), ("hook", 0.8, "alarm", 0.2), ("hook", 0.82, "rattle", 0.3), *rails("hook", 0.8, D["hook"], 0.16, 0.4),
+    ("cmd", 0.0, "rattle", 0.24), ("cmd", 0.15, "ratchet", 0.3), ("cmd", F("cmd", 0, 0), "sting", 0.42),
+    # ten minutes before: the train passes on the viaduct (roar + clacks), the calm car
+    ("before", 0.0, "whoosh", 0.3), ("before", 0.0, "engine", 0.22), *rails("before", 0.0, D["before"], 0.16, 0.62), ("before", 1.5, "hum", 0.1),
+    ("live", 0.0, "hum", 0.1), *rails("live", 0.0, D["live"], 0.12, 0.62), ("live", 0.2, "notif", 0.14),
+    ("rhyme", 0.0, "hum", 0.1), *rails("rhyme", 0.0, D["rhyme"], 0.12, 0.62),
+    ("lcd", 0.0, "ding", 0.2), *rails("lcd", 0.0, D["lcd"], 0.1, 0.62),
+    # the screams from the end car
+    ("scream", 0.0, "scream", 0.2), ("scream", 0.1, "alarm", 0.12), ("scream", D["scream"] - 0.6, "growl", 0.24), ("scream", 0.5, "steps", 0.18), *rails("scream", 0.0, D["scream"], 0.14, 0.5),
+    ("shut", 0.4, "slam", 0.6), ("shut", 0.45, "latch", 0.3), *rails("shut", 0.0, D["shut"], 0.14, 0.5),
+    ("glass", 0.0, "slam", 0.4), ("glass", 0.5, "slam", 0.4), ("glass", 1.0, "slam", 0.4), ("glass", F("glass", 0, 1) + 0.1, "shatter", 0.36), ("glass", 0.2, "growl", 0.3), *accel("glass", 0.2, D["glass"], 0.62, 0.5),
+    ("suit", 0.2, "ratchet", 0.34), ("suit", 0.6, "rattle", 0.3), *accel("suit", 0.0, D["suit"], 0.5, 0.46),
+    ("lever", 0.0, "rattle", 0.2), *accel("lever", 0.0, D["lever"], 0.5, 0.46, 0.28), ("lever", F("lever", 0, 2), "ding", 0.2),
+    ("drop", 0.0, "whoosh", 0.3), ("drop", 0.0, "engine", 0.18), ("drop", 0.45, "pop", 0.0), ("drop", 0.6, "zap", 0.0), ("drop", 1.95, "zap", 0.24), *rails("drop", 0.0, D["drop"], 0.14, 0.4),
+    ("rule", 0.0, "thud", 0.3), ("rule", vo_t("rule") + 0.5, "whoosh", 0.24), ("rule", vo_t("rule") + 0.9, "ding", 0.24), *accel("rule", 0.0, D["rule"], 0.46, 0.44),
+    # the bell, control answers (a radio squelch)
+    ("bell", 0.75, "click", 0.3), ("bell", 0.8, "ring", 0.24), *accel("bell", 0.0, D["bell"], 0.46, 0.44, 0.26),
+    ("occ", 0.0, "radiosq", 0.3), ("occ", D["occ"] - 0.3, "radiosq", 0.24), *rails("occ", 0.0, D["occ"], 0.12, 0.45),
+    # the hinge bends; backs to the door; the heartbeat races
+    ("bend", 0.0, "creak", 0.5), ("bend", F("bend", 0, 1), "clang", 0.4), ("bend", 0.2, "growl", 0.34), *accel("bend", 0.0, D["bend"], 0.42, 0.36, 0.34),
+    ("push", 0.0, "slam", 0.4), ("push", 0.6, "slam", 0.4), ("push", 1.2, "slam", 0.4), ("push", 0.3, "growl", 0.3), *accel("push", 0.0, D["push"] - 0.45, 0.36, 0.3, 0.38),
+    # silence 0.45 s, then the train slows (screech) into the dark station
+    ("arrive", 0.0, "screech", 0.3), ("arrive", 0.6, "powerdown", 0.26),
+    ("out", 0.2, "hiss", 0.0), ("out", 0.25, "latch", 0.34), ("out", 0.35, "steps", 0.4), ("out", 0.9, "steps", 0.3), ("out", 0.2, "pant", 0.26),
+    ("quiet", 0.3, "drip", 0.14),
+    ("sign", 0.05, "creak", 0.12),
+    ("turn", F("turn", 0, 1), "sting", 0.5), ("turn", F("turn", 0, 1) + 0.05, "growl", 0.4), ("turn", F("turn", 0, 1) + 0.1, "swell", 0.3),
     ("next", 0.1, "whoosh", 0.3), ("next", 0.8, "ding", 0.24),
 ]
 SAMPLES = []
@@ -167,18 +183,18 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(T("impact", 0), T("smoke", 1.0), 0.35)
-dip(T("alone", vo_t("alone", 2) - 0.3), T("next", 0), 0.4)
+dip(T("push", -0.45), T("arrive", 0.05), 0.0, ramp=0.08)                 # 0.45 s of silence before the station
+dip(T("turn", F("turn", 0, 1) - 0.4), T("turn", F("turn", 0, 1) - 0.02), 0.15, ramp=0.08)
 mus = mus * gain
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card
 mus[b:] = 0
 
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
-mus = level(mus, -30)
+mus = level(mus, -33)
 sfx = level(sfx, -27)
 env = box(np.abs(vo), int(0.05 * SR))
-duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
+duck = 1 - 0.8 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
 duck = box(duck, int(0.25 * SR))
 mix = vo + mus * duck + sfx
 peak = np.max(np.abs(mix))
