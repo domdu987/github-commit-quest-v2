@@ -1,4 +1,4 @@
-"""Derive shot timing from the recorded voice so picture and sound share one schedule (เอาชีวิตรอด 99 วัน EP.6 นิคม).
+"""Derive shot timing from the recorded voice so picture and sound share one schedule (เอาชีวิตรอด 99 วัน EP.5 ปั๊มร้าง).
 
 Each shot lists its voice lines in order, as "id", ("id", gap) where gap is the time from the end of
 the previous line (negative = overlap), or ("id", offset, "start") to start offset seconds after the
@@ -20,29 +20,19 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01", ("n02", 0.2), ("n03", 0.2)], 0.3, 0.4, 7.5),     # first person in the washroom, a bottle in each hand over the bucket; "อย่าผสม"
-    ("chapter", ["n04"], 0.3, 0.45, 4.8),                                # the board over the road at dawn, the six walking up; the camera glides to the lit fence
-    ("gate", ["g01", ("n07", 0.25)], 0.3, 0.45, 5.2),                     # "เปิดประตู… ภูกลับมาแล้ว" — the gate slides, the whole estate stares at ภู
-    ("win", ["w01", ("d01", 0.6)], 0.3, 0.45, 6.5),                      # คุณวิน: "ยินดีต้อนรับกลับบ้าน" (skill card เจ้านาย in the gap); ปั้น: the red tie from her drawing
-    ("offer", ["w02", ("w03", 0.25)], 0.2, 0.5, 7.0),                   # rooms, three meals, power, tap water — for one thing: everyone must be useful
-    ("register", ["w04", ("d02", 0.2)], 0.6, 1.3, 6.0),                 # the roster fills (no narration); "แล้วเด็กคนนี้ทำอะไรได้" — ปั้น gets "รอดู"
-    ("knows", ["w05", ("d03", 0.25), ("n10", 0.25)], 0.2, 0.75, 8.0),      # he already knows the school; rule 3 on the card — "มีใครบางคน… บอกทางไปแล้ว"
-    ("workshop", ["n11", ("d04", 2.6)], 0.2, 1.4, 7.5),   # the workshop: upgrade, first person (the card runs in the gap); "เราอยู่ที่นี่เถอะ" — "ขอครูคิดก่อน"
-    ("calm", ["n14", ("n15", 0.3)], 0.4, 0.5, 5.0),                    # orderly, quiet, too quiet; one old woman in the whole estate
-    ("yai", ["d06", ("y01", 0.2)], 0.2, 0.45, 6.0),                     # ยายจันทร์ scrubbing; "ยายยังทำไหว… ต้องให้เขาเห็น"
-    ("mix", ["y02", ("n16", 0.2), ("n17", 0.2)], 0.2, 0.5, 8.5),      # two bottles into one bucket; bleach + the acid in toilet cleaner = chlorine gas
-    ("sink", ["n18", ("n19", 0.2)], 0.2, 0.5, 6.0),                    # heavier than air, it pools on the floor — where ยาย kneels
-    ("signs", ["n20", ("n21", 0.2)], 0.2, 0.55, 7.5),                  # coughing, stinging eyes, breathing hard; more → chest pain; enough → death
-    ("out", ["d07", ("d08", 0.25)], 0.1, 0.6, 7.0),                     # "ออกไปข้างนอก!" — ภู: doors and windows open, don't go back in until the gas has gone
-    ("real", ["n22"], 0.15, 0.55, 5.0),                                 # in real life: never mix cleaners; trouble breathing → ambulance
-    ("watch", ["n24", ("n25", 0.3)], 0.3, 0.6, 6.4),                    # ยาย lives but can't work today; at the first-floor window someone writes it down
-    ("dinner", ["d10"], 0.9, 0.6, 4.4),                                 # the canteen: คุณวิน presiding — "ที่นี่ไม่มีเด็กเลย นอกจากปั้น"
-    ("sig", ["s01"], 0.15, 0.5, 4.2),
-    ("radio", ["r01", ("n27", 0.3)], 0.5, 0.55, 7.5),                   # 93… five; and in คุณวิน's room another radio is on
-    ("night", ["n28", ("n29", 0.3)], 0.4, 0.9, 7.6),                    # midnight: the gate opens; ยายจันทร์ walked out; the gate closes (1 → 0)
-    ("drawing", ["n30", ("n31", 0.2)], 0.2, 0.5, 5.2),                  # ปั้น's drawing: ยาย outside the fence among the black shapes
-    ("choice", [], 0.0, 0.0, 3.4),
-    ("next", [], 0.0, 0.0, 2.6),
+    ("hook", ["n01", ("n02", 0.12), ("n03", 0.2)], 0.2, 0.2, 5.0),
+    ("deal", ["n04", ("g02", 0.25)], 0.2, 0.3, 5.5),
+    ("who", ["n06"], 0.2, 0.3, 4.5),
+    ("count", ["n08", ("n09", 0.2)], 0.2, 0.2, 6.0),
+    ("refuse", ["p02", ("n09b", 0.25)], 0.2, 0.3, 4.0),
+    ("rules", ["n10", ("n11", 0.15)], 0.2, 0.3, 7.0),
+    ("movie", ["n13c"], 0.2, 0.3, 4.0),
+    ("days", ["n14b", ("pn01", 0.15)], 0.2, 0.3, 5.0),
+    ("radio", ["r01", ("n15", 0.15)], 0.2, 0.3, 5.0),
+    ("twist", ["n17", ("w01", 0.2), ("n18", 0.15)], 0.5, 0.5, 8.0),
+    ("sig", ["s01"], 0.15, 0.4, 4.2),
+    ("next", [], 0.0, 0.0, 3.5),
+    ("end", [], 0.0, 0.0, 0.5),
 ]
 GAP = 0.08
 

@@ -13,7 +13,6 @@
     <script src="assets/zom.js"></script>
     <script src="assets/fence.js"></script>
     <script src="assets/road.js"></script>
-    <script src="assets/estate.js"></script>
     <script src="assets/ui.js"></script>
     <script src="assets/gameui.js"></script>
     <script src="assets/sig.js"></script>
@@ -190,7 +189,7 @@
       Camp.hand.broom = `<g transform="translate(0,118) rotate(-70) scale(0.5)"><rect x="-700" y="-18" width="864" height="36" rx="12" fill="#c9955c" stroke="#2e2a26" stroke-width="4"/><path d="M-740,-60q-40,60 0,120h70q10,-60 0,-120z" fill="#e2c988" stroke="#2e2a26" stroke-width="4"/></g>`;
       Camp.hand.tape = `<g transform="translate(0,118)"><circle r="34" fill="#1f1d1a" stroke="#2e2a26" stroke-width="3"/><circle r="14" fill="#f4ecd8"/></g>`;
       Camp.hand.belt = `<g transform="translate(0,118)"><path d="M-10,-20q40,30 0,90" stroke="#3a2e22" stroke-width="12" fill="none" stroke-linecap="round"/><rect x="-16" y="-30" width="22" height="18" rx="3" fill="#8d9299" stroke="#2e2a26" stroke-width="2"/></g>`;
-      // ---------- poses for EP.5 (the highway in the heat) ----------
+      // ---------- poses for EP.6 (the highway in the heat) ----------
       Rig.MODES.dizzy = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 1.5 }); const sw = Math.sin(u * 2.1) * 9 + Math.sin(u * 5.3) * 3; return { ...w, thF: w.thF * 0.6, thB: w.thB * 0.6, torso: 8 + sw, head: 14 + sw * 1.4, uaF: 10 + sw, uaB: -6 - sw, faF: -6, faB: -6, bodyY: 8, rootR: sw * 0.35 }; };   // walking in a heat daze, swaying
       Rig.MODES.carry = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 1.3 }); return { ...w, torso: 12, head: 6, uaF: -40, faF: -70, uaB: -30, faB: -80, bodyY: 6 + 3 * Math.abs(Math.sin(u * 4.8)) }; };   // bent under the load, both hands on the straps
       Rig.MODES.fan = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -110 + 30 * Math.sin(u * 14), faF: -40, uaB: -30, faB: -40, torso: 24, head: 16 });   // kneeling, waving a flap of cardboard fast
@@ -236,55 +235,6 @@
       Camp.hand.bottleE = `<g transform="translate(0,124) scale(0.42)">${Road.BOTTLE("", 0.12)}</g>`;
       Camp.hand.card = `<g transform="translate(0,118) rotate(-20)"><path d="M-10,-10L100,-30L112,90L4,104Z" fill="#c9a06c" stroke="#2e2a26" stroke-width="3"/><path d="M8,20l90,-12M14,60l90,-10" stroke="#a5804f" stroke-width="4" fill="none"/></g>`;
       Camp.hand.packs = `<g transform="translate(0,118)"><rect x="-40" y="-10" width="80" height="110" rx="16" fill="#3d4d45" stroke="#2e2a26" stroke-width="3"/><path d="M-30,30h60" stroke="#2e2a26" stroke-width="3"/></g>`;
-      // ---------- poses for EP.6 (the estate) ----------
-      const cough = (u, p = 0.46) => Math.pow(Math.max(0, Math.sin(u * 2 * Math.PI / p)), 3);
-      const KNEEL = { thF: -20, shF: 95, thB: 20, shB: 100, bodyY: 120 };   // on both knees, shins flat behind (the end of "fall")
-      Rig.MODES.scrub = (u, o) => { const k = Math.sin(u * 2 * Math.PI / 0.55); return { ...Rig.MODES.idle(u, o), ...KNEEL, uaF: -40 + 16 * k, faF: -24 + 12 * k, uaB: -24, faB: -40, torso: 44 + 2 * k, head: 26 }; };   // on her knees, bent to the floor, the brush going
-      Rig.MODES.pourKneel = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEEL, uaF: -76 + Math.sin(u * 3) * 1.5, faF: -40, uaB: -50, faB: -60, torso: 22, head: 22 });   // kneeling, a bottle tipped over the bucket
-      Rig.MODES.cough = (u, o) => { const c = cough(u, o.period || 0.46); return { ...Rig.MODES.idle(u, o), uaF: -22, faF: -140, uaB: -8, faB: -40, torso: 16 + 18 * c, head: 20 + 14 * c, bodyY: 8 + 8 * c }; };   // bent, a hand at the mouth, jolting with each cough
-      Rig.MODES.coughKneel = (u, o) => { const c = cough(u, o.period || 0.5); return { ...Rig.MODES.idle(u, o), ...KNEEL, uaF: -22, faF: -140, uaB: -48, faB: -22, torso: 34 + 16 * c, head: 28 + 12 * c, bodyY: 120 + 4 * c }; };   // on her knees, one hand down, coughing
-      Rig.MODES.coughWalk = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 1.0 }), c = cough(u, 0.5); return { ...w, uaF: -22, faF: -140, torso: 18 + 12 * c, head: 18 + 10 * c, bodyY: w.bodyY + 6 * c }; };
-      Rig.MODES.wipeEyes = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -36, faF: -152 + 6 * Math.sin(u * 9), uaB: -6, faB: -30, torso: 14, head: 20 });
-      Rig.MODES.welcome = (u, o) => { const b = Math.sin(u * 1.4); return { ...Rig.MODES.idle(u, o), uaF: -72 + 3 * b, faF: -34, uaB: -46 - 3 * b, faB: -26, torso: -4, head: -4 }; };   // both hands out to the guest: "welcome home"
-      Rig.MODES.present = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -62 + 2 * Math.sin(u * 1.3), faF: -30, uaB: 6, faB: -14, torso: 2, head: -4 });   // an open hand toward all of it
-      Rig.MODES.writeStand = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -44, faF: -86 + 3 * Math.sin(u * 9), uaB: -40, faB: -100, torso: 6, head: 20 });   // standing, the register on the back forearm, the pen moving
-      Rig.MODES.writeSit = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -44, faF: -66 + 3 * Math.sin(u * 9), uaB: -36, faB: -70, torso: 10, head: 22 });   // at the table, writing
-      Rig.MODES.stampDown = (u, o) => { const k = Math.pow(Math.max(0, Math.sin(u * 2 * Math.PI / 0.8)), 2); return { ...Rig.MODES.sitChair(u, o), uaF: -64 - 26 * k, faF: -40 + 30 * k, uaB: -34, faB: -66, torso: 12, head: 20 }; };
-      Rig.MODES.escort = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 1.5 }); return { ...w, uaF: -66, faF: -10, torso: 4, head: 2 }; };   // walking, a hand on someone's arm
-      Rig.MODES.shuffle = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 1.7 }); return { ...w, thF: w.thF * 0.55, thB: w.thB * 0.55, shF: w.shF * 0.6, shB: w.shB * 0.6, torso: 16, head: 10, uaF: -16, faF: -34, uaB: 6, faB: -20, bodyY: w.bodyY + 10 }; };   // an old woman's slow, bent walk
-      Rig.MODES.hunch = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 14 + Math.sin(u * 1.1), head: 8, uaF: -12, faF: -34, uaB: 4, faB: -30, bodyY: 8 });
-      Rig.MODES.sitEat = (u, o) => { const k = Math.pow(Math.max(0, Math.sin(u * 2 * Math.PI / 1.7)), 2); return { ...Rig.MODES.sitChair(u, o), uaF: -40 - 22 * k, faF: -60 - 64 * k, uaB: -30, faB: -50, torso: 6, head: 10 - 6 * k }; };   // on the bench, the spoon to the mouth
-      Rig.MODES.sitTable = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -44, faF: -46, uaB: -32, faB: -50, torso: 4 + Math.sin(u * 1.2), head: 6 });
-      Rig.MODES.lean = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -30, faF: -90, uaB: -40, faB: -60, torso: 14, head: 20 });   // leaning in to whisper over the table
-      Rig.MODES.lookOut = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -70, faF: -24, uaB: -8, faB: -30, head: -4 + Math.sin(u * 0.8), torso: 6 });   // at the window, a hand on the bars
-      Rig.MODES.watchWin = (u, o) => ({ ...Rig.MODES.handChest(u, o), head: -13 + 0.8 * Math.sin(u * 0.7), torso: -2 });   // awake at night, a hand at her chest, eyes up on the window
-      Rig.MODES.leadHand = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 0.9 }); return { ...w, uaB: 44, faB: -8, torso: 12, head: 4 }; };   // hurrying for the door, the far hand reaching back to the one she leads
-      Rig.MODES.coughLed = (u, o) => ({ ...Rig.MODES.coughWalk(u, o), uaB: -52, faB: -10 });   // coughing, led by the hand: the far arm out in front
-      Rig.MODES.helpOut = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 1.1 }); return { ...w, uaB: -104, faB: -36, uaF: -58, faF: -26, torso: 12, head: 6 }; };   // hurrying someone out, an arm round them
-      Rig.MODES.carryBox = (u, o) => { const w = Rig.MODES.walk(u, { ...o, period: 1.3 }); return { ...w, uaF: -58, faF: -78, uaB: -48, faB: -86, torso: 6, head: -2 }; };
-      Rig.MODES.stare = (u, o) => ({ ...Rig.MODES.idle(u, o), head: 4 + Math.sin(u * 0.6) * 0.5, torso: 1, uaF: 2, faF: -8, uaB: -2, faB: -8 });   // stopped dead, watching
-      Rig.MODES.openWin = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150 + 4 * Math.sin(u * 4), faF: -14, uaB: -8, faB: -20, torso: -6, head: -16 });   // reaching up to push the window open
-      Rig.MODES.sitDazed = (u, o) => { const c = cough(u, 0.9) * 0.5; return { ...Rig.MODES.sit(u, o), uaF: -20, faF: -130, uaB: -10, faB: -30, torso: 16 + 8 * c, head: 24 + 6 * c }; };   // on the ground outside, still coughing a little
-      Rig.MODES.pushPull = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -92, faF: -6, uaB: -86, faB: -10, torso: 14, head: 6, thF: 16, shF: 12, thB: -12 });   // both hands on the gate, sliding it
-      // props for EP.6
-      Camp.hand.brush = `<g transform="translate(0,118) rotate(78)"><rect x="-11" y="-84" width="22" height="92" rx="6" fill="#c9a55a" stroke="#2e2a26" stroke-width="3"/><rect x="-40" y="6" width="80" height="34" rx="8" fill="#2f6fb8" stroke="#2e2a26" stroke-width="3"/><path d="M-34,40v16M-20,40v16M-6,40v16M8,40v16M22,40v16M34,40v16" stroke="#e8d8a8" stroke-width="4"/></g>`;
-      Camp.hand.jug = `<g transform="translate(-4,186) scale(0.42)">${Estate.BLEACH("")}</g>`;
-      Camp.hand.acid = `<g transform="translate(0,190) scale(0.4)">${Estate.ACID("")}</g>`;
-      Camp.hand.acidPour = `<g transform="translate(10,120) rotate(-118) translate(0,40) scale(0.4)">${Estate.ACID("")}</g>`;
-      Camp.hand.clipboard = `<g transform="translate(0,118) rotate(-70)"><rect x="-50" y="-70" width="100" height="136" rx="6" fill="#a5804f" stroke="#2e2a26" stroke-width="3"/><rect x="-42" y="-56" width="84" height="114" fill="#f7f1e2"/><rect x="-18" y="-78" width="36" height="16" rx="4" fill="#8d969d" stroke="#2e2a26" stroke-width="2"/><path d="M-32,-36h64M-32,-20h64M-32,-4h50M-32,12h60M-32,28h40" stroke="#5b6066" stroke-width="3"/></g>`;
-      Camp.hand.pen = `<g transform="translate(0,118) rotate(-30)"><rect x="-4" y="-10" width="8" height="58" rx="3" fill="#2f4a8a" stroke="#2e2a26" stroke-width="2"/></g>`;
-      Camp.hand.stamp = `<g transform="translate(0,118)"><rect x="-12" y="-4" width="24" height="40" rx="8" fill="#6b4a2e" stroke="#2e2a26" stroke-width="2.5"/><rect x="-26" y="34" width="52" height="16" rx="3" fill="#c8392b" stroke="#2e2a26" stroke-width="2.5"/></g>`;
-      Camp.hand.cup = `<g transform="translate(0,124)"><path d="M-22,-24L-18,26H18L22,-24Z" fill="#c9d0d4" stroke="#2e2a26" stroke-width="3"/><path d="M22,-14q20,6 0,26" stroke="#2e2a26" stroke-width="5" fill="none"/></g>`;
-      Camp.hand.spoon = `<g transform="translate(0,118) rotate(-60)"><rect x="-4" y="0" width="8" height="70" rx="3" fill="#c9d0d4" stroke="#2e2a26" stroke-width="2"/><ellipse cx="0" cy="78" rx="14" ry="20" fill="#c9d0d4" stroke="#2e2a26" stroke-width="2"/></g>`;
-      Camp.hand.box = `<g transform="translate(40,96)"><rect x="-70" y="-60" width="140" height="110" rx="6" fill="#c9a06c" stroke="#2e2a26" stroke-width="3"/><path d="M-70,-30h140M0,-60v30" stroke="#a5804f" stroke-width="4"/></g>`;
-      Camp.hand.notebookW = `<g transform="translate(0,118) rotate(-80)"><rect x="-44" y="-60" width="88" height="120" rx="6" fill="#2f2a4a" stroke="#2e2a26" stroke-width="3"/><rect x="-38" y="-54" width="76" height="108" fill="#f7f1e2"/><path d="M-28,-34h56M-28,-18h56M-28,-2h40M-28,14h50" stroke="#5b6066" stroke-width="3"/></g>`;
-      // the knife-spear +2 (EP.6, the estate's workshop): a steel collar over the blade joint and the grip wrapped in strips of inner tube — it no longer rattles
-      const SPEAR2_SVG = (fwd) => `<g transform="translate(0,118) rotate(${fwd ? 90 : -90}) scale(0.5)"><rect x="-350" y="-18" width="864" height="36" rx="12" fill="#b9c0c6" stroke="#2e2a26" stroke-width="4"/><path d="M-330,-6h820" stroke="#fff" stroke-width="3" opacity=".5"/><g transform="translate(514,0)">${Fence.KNIFE("", 0.9)}</g>${Array.from({ length: 9 }, (_, k) => `<rect x="${-300 + k * 34}" y="-24" width="28" height="48" rx="6" fill="#1f1d1a" stroke="#2e2a26" stroke-width="3"/>`).join("")}<rect x="330" y="-30" width="120" height="60" rx="10" fill="#c9d0d5" stroke="#2e2a26" stroke-width="4"/><path d="M350,-30v60M390,-30v60M430,-30v60" stroke="#7d868c" stroke-width="4"/><path d="M-350,-18h40v36h-40z" fill="#1f1d1a" stroke="#2e2a26" stroke-width="3"/></g>`;
-      Camp.hand.spear2 = SPEAR2_SVG(false); Camp.hand.spear2f = SPEAR2_SVG(true);
-      // the estate's people (cast in estate.js) and helpers
-      const WI = (x, y, s, track, extra = {}) => ({ who: "win", x, y, s, track, ...extra });
-      const YA = (x, y, s, track, extra = {}) => ({ who: "yai", x, y, s, track, ...extra });
-      const GU = (x, y, s, track, extra = {}) => ({ who: "guard", x, y, s, track, ...extra });   // the station guard from EP.5, who brings them
       const PH = (x, y, s, track, extra = {}) => ({ who: "phu", x, y, s, track, ...extra });
       const PI = (x, y, s, track, extra = {}) => ({ who: "pim", x, y, s, track, ...extra });
       const KO = (x, y, s, track, extra = {}) => ({ who: "kong", x, y, s, track, ...extra });
