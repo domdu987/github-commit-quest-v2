@@ -56,10 +56,11 @@
    "branch": "prod/lane-d",
    "package": "video/release/skytrain.json",
    "suggested_time": "2026-11-03T20:00+07:00",
-   "commit": "6d33faf",
+   "commit": "2828c00",
    "video_hq": "video/release/hq/skytrain-ep1-HQ.mp4",
-   "video_hq_sha256": "40c393eafdab16c34c2e62ace00d702193acebd7be638bbed0f08b7b414b2834",
-   "video_hq_bytes": 90887903
+   "video_hq_sha256": "dae4bee7533af06c82702e17c7804df01a1b58a53ee50244f035a312b168cace",
+   "video_hq_bytes": 93148512,
+   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว"
   },
   {
    "order": 4,
@@ -70,10 +71,11 @@
    "branch": "prod/lane-d",
    "package": "video/release/skytrain.json",
    "suggested_time": "2026-11-03T20:30+07:00",
-   "commit": "6d33faf",
+   "commit": "2828c00",
    "video_hq": "video/release/hq/skytrain-ep2-HQ.mp4",
-   "video_hq_sha256": "c4eed4600edc928c979a49c763b83f8a4cddcac872362a45969f1fe89f583eab",
-   "video_hq_bytes": 82742994
+   "video_hq_sha256": "1862e5e3b4631d06016ac43c9b52b81d71a1e6eb2309397e37c3c0538cb0b0ac",
+   "video_hq_bytes": 84593799,
+   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว"
   }
  ]
 }
