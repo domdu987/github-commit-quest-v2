@@ -115,6 +115,10 @@
       for (let k = 0; k < n; k++) ends.push([(k - (n - 1) / 2) * (R * 2 - 6) + (r() - 0.5) * 10, cy + (r() - 0.5) * 8, R + (r() - 0.5) * 10]);
       yy = cy - R * 0.62 + 8;
     });
+    // the cab's side mirrors stick out past the load: from behind you see the driver's face in them only when you're far enough back
+    g += [-1, 1].map((sd) => `<g transform="translate(${sd * 400},-640)"><path d="M${-sd * 60},40L0,20" stroke="#2a2b2e" stroke-width="10"/><rect x="-26" y="-50" width="52" height="96" rx="10" fill="#1e1f22" ${OUT3}/><rect x="-19" y="-43" width="38" height="82" rx="6" fill="#9ab8cc"/>
+      <g id="${id}-face${sd < 0 ? "L" : "R"}" opacity="${o.face ?? 0}"><circle cx="0" cy="-4" r="14" fill="#c88a5a" ${OUT2}/><path d="M-12,-14Q0,-24 12,-14" stroke="#1a1410" stroke-width="7" fill="none"/><circle cx="-5" cy="-4" r="2" fill="${INK}"/><circle cx="5" cy="-4" r="2" fill="${INK}"/></g></g>`).join("");
+    g += `<g id="${id}-stack">`;
     g += ends.map(([cx, cy, R], k) => Lt.logEnd(cx, cy, R, (o.seed || 41) + k)).join("");
     const topY = yy - 64;
     g += [-1, 1].map((sd) => `<g><rect x="${sd * 318 - 12}" y="${topY - 30}" width="24" height="${-262 - topY + 30}" fill="url(#ltSteel)" ${OUT3}/><rect x="${sd * 318 - 16}" y="${topY - 40}" width="32" height="16" rx="4" fill="#3a3f45" ${OUT3}/></g>`).join("");
@@ -126,6 +130,8 @@
     g += `<g id="${id}-top">${Lt.logEnd(0, topY + 10, 70, (o.seed || 41) + 20)}</g>`;
     g += `<g id="${id}-ch0">${half(0, "L", 0)}${half(0, "R", 0)}</g>`;
     // the binder (ratchet) on the right stake
+    g += `<g id="${id}-binder1" transform="translate(-300,-230)"><rect x="-14" y="-40" width="28" height="80" rx="8" fill="#c88a1a" ${OUT3}/><path d="M0,-30L-44,-80" stroke="${INK}" stroke-width="13" stroke-linecap="round"/><path d="M0,-30L-44,-80" stroke="#e0a42a" stroke-width="8" stroke-linecap="round"/></g>`;
+    g += `</g>`;   // end of the stack (lean it with #id-stack)
     g += `<g id="${id}-binder" transform="translate(300,-300)"><rect x="-14" y="-40" width="28" height="80" rx="8" fill="#c88a1a" ${OUT3}/><path d="M0,-30L44,-80" stroke="${INK}" stroke-width="13" stroke-linecap="round"/><path d="M0,-30L44,-80" stroke="#e0a42a" stroke-width="8" stroke-linecap="round"/></g>`;
     // the red rag tied on the longest log (bottom right)
     g += `<g transform="translate(${f1(ends[3][0] + 30)},${f1(ends[3][1] + 40)})"><path d="M0,0V60" stroke="#3a2a1a" stroke-width="4"/><path class="flag" d="M0,8Q40,0 70,16Q44,32 0,40Z" fill="#d8301e" ${OUT2}/></g>`;
@@ -226,13 +232,13 @@
     sky(L, r, { id, late: o.late, sunX: o.sunX ?? 120, sunY: o.sunY ?? 520 });
     ridges(L, r, HZ - 60);
     // the valley floor far below with fields and haze; the near ridge (green) the road is cut into
-    let far = `<path d="${ridge(r, HZ + 60, 120, 6)}" fill="url(#ltRidge3)"/>${canopy(r, 700, 2000, HZ + 40, 26, "#3e6a4e", "#7a9a6a", 44)}<rect x="-900" y="${HZ - 40}" width="2900" height="200" fill="url(#ltHaze)" opacity=".7"/>`;
+    let far = `<path d="${ridge(r, HZ + 60, 120, 6)}" fill="url(#ltRidge3)"/>${Array.from({ length: 22 }, (_, k) => Lt.bush(700 + r() * 1300, HZ + 40 + r() * 40, 34 + r() * 20, 300 + k, "far", { line: 1.5 })).join("")}<rect x="-900" y="${HZ - 40}" width="2900" height="200" fill="url(#ltHaze)" opacity=".7"/>`;
     // mountain mist: low banks in the valley and drifting puffs (class fogb, Mok.life drifts them)
     if (o.mist !== false) far += Mok.fogBands(r, HZ - 120, HZ + 80, 3, 0.45, "url(#ltHaze)") + Mok.fogBlobs(r, 9, -600, 1700, HZ - 200, HZ + 60, o.mist ?? 0.75);
     put(L.far, far);
     // the road: asphalt wedge to the vanishing point, the yellow centre line flowing toward us, the guardrail on the right, rock on the left
     let s = `<path d="M-900,${HZ + 20}L${VX - 40},${HZ + 4}Q${VX - 160},${HZ + 120} -300,1500H-900Z" fill="url(#ltRock)"/>`;
-    s += canopy(r, -900, VX - 160, HZ - 40, 22, "#2f5a3e", "#6f9a5e", 70);
+    for (let k = 0; k < 16; k++) s += Lt.tree(-900 + r() * (VX - 200 + 900), HZ + 30 + r() * 30, 160 + r() * 140, 400 + k, "mid");
     s += `<path d="M${VX - 40},${HZ + 4}L${VX + 30},${HZ + 4}L1700,1500H-300Q${VX - 160},${HZ + 120} ${VX - 40},${HZ + 4}Z" fill="url(#ltRoad)"/>`;
     s += `<path d="M${VX - 30},${HZ + 6}Q${VX - 140},${HZ + 120} -250,1500" stroke="#f2f0e4" stroke-width="10" fill="none" opacity=".8"/><path d="M${VX + 26},${HZ + 6}L1650,1500" stroke="#f2f0e4" stroke-width="10" fill="none" opacity=".8"/>`;
     // the guardrail: posts flowing toward us + the beam
@@ -300,6 +306,9 @@
     let g = `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><rect x="-10" y="-300" width="20" height="300" fill="#c8ccd0" ${OUT3}/>`;
     if (k === "slope") g += `<g transform="translate(0,-420)"><rect x="-150" y="-150" width="300" height="300" rx="24" fill="#ffc81e" transform="rotate(45)" ${OUT}/><path d="M-90,60L90,-40V60Z" fill="${INK}"/><text x="40" y="-6" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="${INK}">${o.pct || "12%"}</text></g>`;
     else if (k === "gear") g += `<g transform="translate(0,-420)"><rect x="-220" y="-130" width="440" height="260" rx="18" fill="#fff" stroke="#d8302a" stroke-width="14"/><text x="0" y="-30" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="66" fill="${INK}">ลงเขา</text><text x="0" y="62" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="66" fill="#d8302a">ใช้เกียร์ต่ำ</text></g>`;
+    else if (k === "title") g += `<g transform="translate(0,-470)"><rect x="-330" y="-190" width="660" height="380" rx="24" fill="#1e7a46" stroke="#fff" stroke-width="12"/><rect x="-330" y="-190" width="660" height="380" rx="24" fill="none" ${OUT}/>
+      <text x="0" y="-50" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="104" fill="#fff">${o.top || "ท่อนซุงลงเขา"}</text><path d="M-280,10H280" stroke="#fff" stroke-width="5" opacity=".6"/>
+      <text x="0" y="110" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${o.fs || 62}" fill="#ffd84a">${o.km || "EP.1"}</text></g>`;
     else if (k === "ramp") g += `<g transform="translate(0,-440)"><rect x="-260" y="-150" width="520" height="300" rx="20" fill="#1e7a46" stroke="#fff" stroke-width="10"/><text x="0" y="-50" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff">ทางหนีภัย</text><text x="-30" y="62" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="80" fill="#ffd84a">${o.km || "1 กม."}</text><path d="M170,80V10H140L190,-40L240,10H210V80Z" fill="#fff"/></g>`;
     else g += `<g transform="translate(0,-420)"><rect x="-260" y="-140" width="520" height="280" rx="20" fill="#1e7a46" stroke="#fff" stroke-width="10"/><text x="0" y="-36" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#fff">${o.top || "ทางลงเขาลาดชัน"}</text><text x="0" y="74" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="86" fill="#ffd84a">${o.km || "อีก 8 กม."}</text></g>`;
     return g + `</g>`;
@@ -307,27 +316,74 @@
 
   // ---------------------------------------------------------------- the descent in profile
   // the road runs from upper left down to the right at o.slope degrees (default 9); hillside above, valley haze below
+  // leafy clumps (not circles): a scalloped silhouette in three tones (shade, body, sunlit top-left) with leaf tips round the edge
+  const scallop = (r, cx, cy, R, n, j = 0.22) => {
+    let d = "", pts = [];
+    for (let k = 0; k < n; k++) { const a = (k / n) * Math.PI * 2, rr = R * (1 + (r() - 0.5) * j); pts.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr * 0.86]); }
+    pts.forEach(([x, y], k) => { const [nx, ny] = pts[(k + 1) % n], mx = (x + nx) / 2, my = (y + ny) / 2, ox = mx - cx, oy = my - cy, l = Math.hypot(ox, oy) || 1, bulge = R * (0.16 + r() * 0.1);
+      d += `${k ? "" : `M${f1(x)},${f1(y)}`}Q${f1(mx + (ox / l) * bulge)},${f1(my + (oy / l) * bulge)} ${f1(nx)},${f1(ny)}`; });
+    return d + "Z";
+  };
+  const PALS = { near: ["#1f3e2a", "#2f5a3a", "#5e8c4a", "#a8c870"], mid: ["#2e4e3c", "#3e6a4e", "#6a9260", "#a8c48a"], far: ["#4a6a64", "#5a7c72", "#7e9c8a", "#b8ccb8"], cool: ["#2a4450", "#38586a", "#5a7a84", "#9ab8bc"] };
+  Lt.bush = (x, y, R, seed = 1, pal = "mid", o = {}) => {
+    const r = mk(seed * 53 + 7), P = PALS[pal] || pal, n = 9 + Math.floor(r() * 4);
+    let g = `<g transform="translate(${f1(x)},${f1(y)})"${o.cls ? ` class="${o.cls}"` : ""}>`;
+    g += `<path d="${scallop(r, 0, 0, R, n)}" fill="${P[0]}" stroke="${INK}" stroke-width="${o.line ?? 3}" stroke-linejoin="round"/>`;
+    g += `<path d="${scallop(r, -R * 0.1, -R * 0.12, R * 0.82, n - 1)}" fill="${P[1]}"/>`;
+    g += `<path d="${scallop(r, -R * 0.24, -R * 0.3, R * 0.5, n - 3)}" fill="${P[2]}"/>`;
+    g += `<path d="${scallop(r, -R * 0.34, -R * 0.42, R * 0.22, 6)}" fill="${P[3]}" opacity=".85"/>`;
+    for (let k = 0; k < 7; k++) { const a = -2.6 + r() * 2.2, rr = R * (0.55 + r() * 0.35), lx = Math.cos(a) * rr, ly = Math.sin(a) * rr * 0.86; g += `<path d="M${f1(lx)},${f1(ly)}q${f1(R * 0.08)},${f1(-R * 0.1)} ${f1(R * 0.16)},0q${f1(-R * 0.08)},${f1(R * 0.1)} ${f1(-R * 0.16)},0Z" fill="${P[3]}" opacity=".7"/>`; }
+    return g + `</g>`;
+  };
+  // a tree: a trunk and 3–5 clumps
+  Lt.tree = (x, y, h, seed = 1, pal = "mid") => {
+    const r = mk(seed * 71 + 3), R = h * 0.32;
+    let g = `<path d="M${f1(x - h * 0.03)},${f1(y)}L${f1(x - h * 0.015)},${f1(y - h * 0.6)}M${f1(x)},${f1(y - h * 0.4)}L${f1(x + h * 0.14)},${f1(y - h * 0.62)}" stroke="#3a2a1c" stroke-width="${f1(Math.max(4, h * 0.05))}" stroke-linecap="round" fill="none"/>`;
+    const cl = [[0, -0.66, 1], [-0.22, -0.52, 0.72], [0.24, -0.56, 0.74], [0.04, -0.86, 0.66]];
+    cl.forEach(([dx, dy, k], i) => { g += Lt.bush(x + dx * h + (r() - 0.5) * 10, y + dy * h, R * k, seed * 10 + i, pal); });
+    return g;
+  };
+  // the descent in profile: the road runs from upper left down to the right at o.slope degrees (default 9); a leafy cut bank above,
+  // the drop below the guardrail: treetops falling away into layered mist, the valley far below in cool shade
   Sets.ltSlope = function (L, o = {}) {
     const id = o.id || "ls", r = mk(o.seed || 223), A = (o.slope ?? 9) * Math.PI / 180, G = o.ground ?? 1300, tn = Math.tan(A);
     const yAt = (x) => G + (x - 540) * tn;
     sky(L, r, { id, late: o.late, sunX: o.sunX ?? 120, sunY: o.sunY ?? 360 });
     ridges(L, r, 760);
-    put(L.far, `<path d="${ridge(r, 900, 140, 8)}" fill="url(#ltRidge3)"/>${canopy(r, -900, 2000, 880, 40, "#3e6a4e", "#7a9a6a", 46)}<rect x="-900" y="760" width="2900" height="300" fill="url(#ltHaze)" opacity=".8"/>`);
-    // the hillside the road is cut into (above the road), the road band, the guardrail on the valley edge (below), the drop
+    // the valley far below: cool ridges stepping down, mist between them, a river glint
+    let far = `<path d="${ridge(r, 1500, 160, 7)}" fill="#7c94a8"/><rect x="-900" y="1340" width="2900" height="260" fill="url(#ltHaze)"/>`;
+    far += `<path d="${ridge(r, 1900, 200, 6)}" fill="#5e7a8e"/><path d="M-900,2080Q-200,2010 400,2090T2000,2060" stroke="#cfe2ea" stroke-width="10" fill="none" opacity=".6"/><rect x="-900" y="1740" width="2900" height="300" fill="url(#ltHaze)"/>`;
+    far += `<path d="${ridge(r, 2300, 180, 6)}" fill="#4a6476"/>` + Mok.fogBands(r, 1300, 2300, 5, 0.6, "url(#ltHaze)");
+    put(L.far, far);
     const X0 = -1600, X1 = 2800;
-    let s = `<path d="M${X0},${f1(yAt(X0) - 900)}L${X1},${f1(yAt(X1) - 700)}L${X1},${f1(yAt(X1) - 40)}L${X0},${f1(yAt(X0) - 40)}Z" fill="url(#ltRock)"/>`;
-    s += canopy(r, X0, X1, 0, 0, "", "");
-    for (let k = 0; k < 40; k++) { const x = X0 + r() * (X1 - X0), yy = yAt(x) - 120 - r() * 520, R = 50 + r() * 60; s += `<g><circle cx="${f1(x)}" cy="${f1(yy)}" r="${f1(R)}" fill="#2f5a3e"/><circle cx="${f1(x - R * 0.3)}" cy="${f1(yy - R * 0.3)}" r="${f1(R * 0.55)}" fill="#6f9a5e" opacity=".75"/></g>`; }
-    let road = `<path d="M${X0},${f1(yAt(X0) - 60)}L${X1},${f1(yAt(X1) - 60)}L${X1},${f1(yAt(X1) + 60)}L${X0},${f1(yAt(X0) + 60)}Z" fill="url(#ltRoadS)"/>`;
-    road += `<path d="M${X0},${f1(yAt(X0) - 60)}L${X1},${f1(yAt(X1) - 60)}" stroke="#8a7a62" stroke-width="10"/><path d="M${X0},${f1(yAt(X0) + 10)}L${X1},${f1(yAt(X1) + 10)}" stroke="#f2c230" stroke-width="8" stroke-dasharray="80 60"/>`;
-    s += `<path d="M${X0},${f1(yAt(X0) + 60)}L${X1},${f1(yAt(X1) + 60)}L${X1},2800L${X0},2800Z" fill="#4e6a4a"/>`;
-    for (let k = 0; k < 30; k++) { const x = X0 + r() * (X1 - X0), yy = yAt(x) + 200 + r() * 600, R = 60 + r() * 70; s += `<g><circle cx="${f1(x)}" cy="${f1(yy)}" r="${f1(R)}" fill="#355e44"/><circle cx="${f1(x - R * 0.3)}" cy="${f1(yy - R * 0.3)}" r="${f1(R * 0.5)}" fill="#7a9a6a" opacity=".6"/></g>`; }
+    // the cut bank above the road: rock face with strata, trees along the crest and clumps hanging over
+    let s = `<path d="M${X0},${f1(yAt(X0) - 900)}L${X1},${f1(yAt(X1) - 700)}L${X1},${f1(yAt(X1) - 60)}L${X0},${f1(yAt(X0) - 60)}Z" fill="url(#ltRock)"/>`;
+    for (let k = 0; k < 6; k++) s += `<path d="M${X0},${f1(yAt(X0) - 140 - k * 110)}L${X1},${f1(yAt(X1) - 140 - k * 90)}" stroke="#6a5a48" stroke-width="${4 + (k % 3) * 2}" opacity=".35"/>`;
+    for (let x = X0; x < X1; x += 150 + r() * 120) s += Lt.tree(x, yAt(x) - 560 - r() * 260, 300 + r() * 200, Math.floor(x + 2000), "mid");
+    for (let x = X0; x < X1; x += 120 + r() * 140) s += Lt.bush(x, yAt(x) - 110 - r() * 60, 60 + r() * 40, Math.floor(x + 3000), "near", { line: 2.5 });
+    // the drop below the guardrail: treetops in rows, each row lower, smaller, cooler and veiled in mist
+    const rows = [[160, "mid", 110, 1], [420, "far", 90, 0.85], [700, "cool", 80, 0.7]];
+    rows.slice().reverse().forEach(([dy, pal, R, op], ri) => {
+      s += `<g opacity="${op}">`;
+      for (let x = X0; x < X1; x += R * (1.1 + r() * 0.5)) s += Lt.bush(x, yAt(x) + dy + (r() - 0.5) * 60, R * (0.8 + r() * 0.5), Math.floor(x + ri * 997 + 5000), pal, { line: 2 });
+      s += `</g><rect x="${X0}" y="${f1(yAt(540) + dy - 120)}" width="${X1 - X0}" height="260" fill="url(#ltHaze)" opacity=".7" transform="rotate(${o.slope ?? 9} 540 ${f1(yAt(540) + dy)})"/>`;
+    });
+    // cool shade over the low part of the frame (the valley side is in shadow; the sun lights the road and the bank)
+    s += `<rect x="${X0}" y="${f1(G + 380)}" width="${X1 - X0}" height="1600" fill="#24384a" opacity=".22"/>`;
     put(L.set, s);
-    // the guardrail in front of the vehicles (fg): beam + posts
-    let gr = `<path d="M${X0},${f1(yAt(X0) + 40)}L${X1},${f1(yAt(X1) + 40)}" stroke="#c8ccd0" stroke-width="22"/><path d="M${X0},${f1(yAt(X0) + 34)}L${X1},${f1(yAt(X1) + 34)}" stroke="#f2f4f6" stroke-width="6"/>`;
-    for (let x = X0; x < X1; x += 220) gr += `<rect x="${x - 8}" y="${f1(yAt(x) + 30)}" width="16" height="90" fill="#9aa2aa"/>`;
+    put(L.mid, Mok.fogBlobs(r, 8, -800, 1900, 1500, 2300, 0.55));
+    // the road with its kerb edge in depth; the guardrail with a lit top face and posts that step down the slope
+    let road = `<path d="M${X0},${f1(yAt(X0) - 70)}L${X1},${f1(yAt(X1) - 70)}L${X1},${f1(yAt(X1) + 60)}L${X0},${f1(yAt(X0) + 60)}Z" fill="url(#ltRoadS)"/>`;
+    road += `<path d="M${X0},${f1(yAt(X0) - 70)}L${X1},${f1(yAt(X1) - 70)}" stroke="#8a7a62" stroke-width="12"/><path d="M${X0},${f1(yAt(X0) + 10)}L${X1},${f1(yAt(X1) + 10)}" stroke="#f2c230" stroke-width="8" stroke-dasharray="80 60"/>`;
+    road += `<path d="M${X0},${f1(yAt(X0) + 60)}L${X1},${f1(yAt(X1) + 60)}L${X1},${f1(yAt(X1) + 90)}L${X0},${f1(yAt(X0) + 90)}Z" fill="#3e4248"/>`;
+    let gr = "";
+    for (let x = X0; x < X1; x += 200) gr += `<rect x="${x - 10}" y="${f1(yAt(x) + 34)}" width="20" height="110" fill="#8a929a" stroke="${INK}" stroke-width="2.5"/><rect x="${x - 10}" y="${f1(yAt(x) + 34)}" width="7" height="110" fill="#c8ced4"/>`;
+    gr += `<path d="M${X0},${f1(yAt(X0) + 22)}L${X1},${f1(yAt(X1) + 22)}L${X1},${f1(yAt(X1) + 58)}L${X0},${f1(yAt(X0) + 58)}Z" fill="#b8bec4" stroke="${INK}" stroke-width="3"/>`;
+    gr += `<path d="M${X0},${f1(yAt(X0) + 30)}L${X1},${f1(yAt(X1) + 30)}" stroke="#f4f6f8" stroke-width="6"/><path d="M${X0},${f1(yAt(X0) + 50)}L${X1},${f1(yAt(X1) + 50)}" stroke="#7a828a" stroke-width="5"/>`;
+    for (let x = X0 + 100; x < X1; x += 400) gr += `<rect x="${x - 7}" y="${f1(yAt(x) + 30)}" width="14" height="14" fill="#ff9a3a"/>`;
+    if (o.title) road = `<g id="${id}-title">${Lt.sign(o.title.x, yAt(o.title.x) - 70, o.title.s ?? 0.8, { kind: "title", top: o.title.top, km: o.title.km, fs: o.title.fs })}</g>` + road;
+    if (o.post != null) road += Lt.post(`${id}-post`, o.post, yAt(o.post) - 62, 0.9);
     put(L.act, road);
-    // the convoy (on the road line; rotated to the slope). o.convoy { truck: x, car: x, tank: x | false } in road x
     const C = o.convoy || {}, rot = (o.slope ?? 9);
     const at = (x, dy = 0) => `translate(${f1(x)},${f1(yAt(x) + dy)}) rotate(${rot})`;
     let v = "";
@@ -336,6 +392,8 @@
     if (C.car != null) v += `<g id="${id}-car"><g transform="${at(C.car, 4)}">${Lt.carSide(`${id}-c`, 0, 0, C.cs ?? 0.42, { brake: C.cbrake })}</g></g>`;
     if (C.truck != null) v += `<g id="${id}-truck"><g transform="${at(C.truck, 4)}">${Lt.truckSide(`${id}-t`, 0, 0, C.trs ?? 0.42, { smoke: C.smoke, brake: C.brake, arm: C.arm })}</g></g>`;
     put(L.act, v + `<g id="${id}-rail">${gr}</g>`);
+    // foreground leaves at the bottom corners (blurred by the shot's fg blur) for depth
+    if (o.fgLeaves !== false) put(L.fg, Lt.bush(-120, 2150, 320, 91, "near") + Lt.bush(1240, 2200, 360, 92, "near") + Lt.bush(140, 2380, 260, 93, "near"));
   };
   Lt.slopeY = (o, x) => (o.ground ?? 1300) + (x - 540) * Math.tan((o.slope ?? 9) * Math.PI / 180);
 
@@ -343,7 +401,12 @@
   Sets.ltMirror = function (L, o = {}) {
     const id = o.id || "lm", r = mk(o.seed || 227);
     put(L.sky, `<rect x="-900" y="-600" width="2900" height="3400" fill="#1c1916"/>`);
-    put(L.far, `<rect x="-900" y="-600" width="2900" height="3400" fill="url(#ltLiner)"/><path d="M-900,1500Q540,1360 2000,1500V2800H-900Z" fill="#6a8aa4" opacity=".25"/>`);
+    // the cabin roof above, the windscreen below the mirror: the road ahead, the log truck's back (so it reads as a mirror)
+    let ws = `<rect x="-900" y="-600" width="2900" height="3400" fill="url(#ltLiner)"/><clipPath id="${id}-ws"><path d="M-900,1180Q540,1120 2000,1180V2100H-900Z"/></clipPath><g clip-path="url(#${id}-ws)">`;
+    ws += `<rect x="-900" y="1100" width="2900" height="1000" fill="url(#ltSky)"/><path d="${ridge(r, 1500, 160, 6)}" fill="url(#ltRidge2)"/><path d="M-400,2100L520,1560H600L1500,2100Z" fill="url(#ltRoad)"/><path d="M560,1570L470,2100" stroke="#f2c230" stroke-width="14" stroke-dasharray="60 50"/>`;
+    ws += `<g id="${id}-ahead">${Lt.truckRear(`${id}-tr`, 560, 1840, 0.42, { brake: o.brake ?? 1 })}</g>${Mok.fogBlobs(r, 4, -400, 1500, 1450, 1650, 0.5)}<rect x="-900" y="1100" width="2900" height="1000" fill="url(#ltGlare)"/></g>`;
+    ws += `<path d="M-900,1180Q540,1120 2000,1180" stroke="#141210" stroke-width="16" fill="none"/>`;
+    put(L.far, ws);
     // the frame
     let s = `<rect x="-60" y="560" width="1200" height="560" rx="110" fill="#0e0d0c" ${OUT}/><path d="M540,560V300" stroke="#0e0d0c" stroke-width="60"/>`;
     s += `<clipPath id="${id}-clip"><rect x="-30" y="590" width="1140" height="500" rx="90"/></clipPath>`;
@@ -432,13 +495,31 @@
     document.querySelectorAll(`#${gid} .sp`).forEach((e, k) => tl.fromTo(e, { x: 0, y: 0 }, { x: parts[k][0], y: parts[k][1], duration: 0.5, ease: "power2.out", immediateRender: false }, t));
   };
 
+
+  // a white roadside post with an orange reflector; o.ring pulses a glow ring round it (id ${id}-ring) — the counting marker
+  Lt.post = (id, x, y, s = 1) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><rect x="-12" y="-150" width="24" height="150" rx="5" fill="#f2f4f6" stroke="${INK}" stroke-width="3"/><rect x="-12" y="-130" width="24" height="26" fill="#ff8a1a"/>
+    <g id="${id}-ring" opacity="0"><circle cy="-80" r="90" fill="none" stroke="#ffd84a" stroke-width="10"/><circle cy="-80" r="120" fill="none" stroke="#ffd84a" stroke-width="4" opacity=".5"/></g></g>`;
+  // rain over the frame (glow layer): slanted streaks, a wet sheen; fade the group in (#id) and Lt.life's .rainS scrolls it
+  Lt.rain = (id, op = 0) => `<g id="${id}" opacity="${op}"><rect x="-900" y="-600" width="2900" height="3400" fill="#3a4a5a" opacity=".25"/><g class="rainS">${Array.from({ length: 90 }, (_, k) => { const x = -900 + ((k * 397) % 2900), y = -600 + ((k * 211) % 3400); return `<path d="M${x},${y}l-30,90" stroke="#dfe8f0" stroke-width="3" opacity=".55" stroke-linecap="round"/>`; }).join("")}</g></g>`;
+  // the end card: dusk on the descent, the green board with the next episode, headlights sweeping through the mist
+  Sets.ltNext = function (L, o = {}) {
+    const id = o.id || "ln", r = mk(o.seed || 241);
+    sky(L, r, { id, late: true, sunX: 900, sunY: 900 });
+    ridges(L, r, 1000);
+    put(L.far, Mok.fogBands(r, 900, 1500, 4, 0.6, "url(#ltHaze)") + `<path d="M-900,1500L2000,1380V2800H-900Z" fill="#3a3e44"/>`);
+    put(L.set, `<g id="${id}-board">${Lt.sign(540, 1500, 1.15, { kind: "title", top: o.l1 || "ตอนที่ 2 (ตอนจบ)", km: o.l2 || "ซุงหล่นตรงหน้า", fs: 70 })}</g>` + Lt.tree(-60, 1520, 520, 7, "mid") + Lt.tree(1150, 1500, 560, 8, "mid"));
+    put(L.fg, `<text x="540" y="1760" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#f4ecd8" stroke="#141210" stroke-width="10" paint-order="stroke">${o.l3 || "กดติดตาม แล้วลงเขาไปด้วยกัน"}</text>`);
+    put(L.glow, `<g id="${id}-sweep" opacity=".8"><ellipse cx="540" cy="1100" rx="560" ry="380" fill="url(#ltHead)"/></g>`);
+  };
+
   // ---------------------------------------------------------------- motion
   Lt.life = function (tl, scope, t0, dur) {
     const q = (c) => document.querySelectorAll(`${scope} ${c}`);
     Mok.life(tl, scope, t0, dur);   // .flow / .scroll
     q(".flag").forEach((el, i) => tl.fromTo(el, { attr: { transform: "skewY(0)" } }, { attr: { transform: "skewY(14)" }, duration: 0.14, repeat: Math.ceil(dur / 0.14), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.05));
-    q(".puff").forEach((el, i) => { const k = +el.dataset.k; tl.fromTo(el, { y: 0, x: 0, opacity: 0.2, scale: 0.6, transformOrigin: "50% 50%" }, { y: -140 - k * 20, x: -60 - k * 10, opacity: 0, scale: 1.6, duration: 1.1, repeat: Math.ceil(dur / 1.1), ease: "power1.out", immediateRender: false }, t0 + (k * 0.18) % 1.1); });
+    q(".puff").forEach((el, i) => { const k = +el.dataset.k; tl.fromTo(el, { y: 0, x: 0, opacity: 0.95, scale: 0.6, transformOrigin: "50% 50%" }, { y: -140 - k * 20, x: -60 - k * 10, opacity: 0, scale: 1.6, duration: 1.1, repeat: Math.ceil(dur / 1.1), ease: "power1.out", immediateRender: false }, t0 + (k * 0.18) % 1.1); });
     q(".swing").forEach((el, i) => { const a = +el.dataset.a || 5; tl.fromTo(el, { rotation: -a, svgOrigin: "0 0" }, { rotation: a, svgOrigin: "0 0", duration: 0.9, repeat: Math.ceil(dur / 0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); });
+    q(".rainS").forEach((el) => tl.fromTo(el, { x: 0, y: 0 }, { x: -120, y: 360, duration: 0.3, repeat: Math.ceil(dur / 0.3) + 1, ease: "none", immediateRender: false }, t0));
     q(".cloud").forEach((el) => tl.fromTo(el, { x: 0 }, { x: -(+el.dataset.d) * dur, duration: dur, ease: "none", immediateRender: false }, t0));
     q(".dap").forEach((el, i) => tl.fromTo(el, { x: 400 }, { x: -900, duration: 1.4 + (i % 3) * 0.3, repeat: Math.ceil(dur / 1.4), ease: "none", immediateRender: false }, t0 + i * 0.21));
     q(".spin").forEach((el) => tl.fromTo(el, { rotation: 0, svgOrigin: "0 -70" }, { rotation: 360, svgOrigin: "0 -70", duration: 0.3, repeat: Math.ceil(dur / 0.3), ease: "none", immediateRender: false }, t0));
