@@ -20,8 +20,9 @@
       const CABCAM = (k, z = 0.04) => ({ keys: [{ t: 0, ...fr(540, 1100, 1.05, 540, 1000) }, { t: D(k), glide: D(k), ...fr(540, 1100, 1.05 + z, 540, 1000) }] });
       const JENG = (track, extra = {}) => A("jeng", 320, 1880, 1.6, track, extra);
       const NING = (track, extra = {}) => A(extra.phone ? "ningPhone" : "ning", 770, 1880, 1.52, track, extra);
-      const coin = (tl, L, name, id, t, dur, x = 540, y = 470, s = 2.4) => { put(L.glow, Lt.coin(name, x, y, s, id)); Lt.coinIn(tl, id, t, dur); };
-      const hxcoin = (tl, L, name, id, t, dur, x, y, s) => { put(L.glow, HnFx.coin(name, x, y, s, id)); HnFx.pop(tl, id, t); HnFx.life(tl, id, t, dur); };
+      // in-world cards (owner 1 Nov): roadside reflective signs on posts and the tailgate "กฎลงเขา" hung on chains — no UI boxes
+      const plate = (tl, layer, name, id, t, dur, x, y, s = 1, kind = "warn") => { put(layer, Lt.plate(name, x, y, s, id, kind)); Lt.plateIn(tl, id, t, dur); };
+      const board = (tl, L, t, dur, active, done = [], o = {}) => Lt.board(tl, L.light, t, dur, { rows: o.rows || [0, 1, 2], active, done, y: o.y ?? 240 });
       const beams = (tl, sels, t0, times, on = 0.16) => times.forEach((k) => { tl.set(sels, { opacity: 1 }, t0 + k); tl.set(sels, { opacity: 0 }, t0 + k + on); });
       const ST = (id, o = {}) => ({ set: "ltStation", setOpts: { id, car: 300, cs: 0.8, ...o }, dark: 0, light: DUSK, grade: GDUSK, blur: { far: 2, fg: 6 } });
       const G = 1500, TANK_END = 0, TANK_Y = 1440;
@@ -67,7 +68,7 @@
           tl.set("#o-truck-stack", { rotation: -16, y: 90, transformOrigin: "50% 100%" }, 0);
           tl.fromTo("#o-loose", { attr: { transform: "translate(560,1160) scale(0.6)" } }, { attr: { transform: "translate(540,1390) scale(1.35)" }, duration: 1.4, ease: "power2.out", immediateRender: false }, t0);
           tl.fromTo("#o-loose .lroll", { x: 0 }, { x: 10, duration: 0.07, repeat: 14, yoyo: true, immediateRender: false }, t0);
-          coin(tl, L, "gap", "o-coin", t0 + F("short", 0, 1) - 0.1, D("short") - F("short", 0, 1), 780, 560, 2.2);
+          plate(tl, L.set, "gap", "o-pl", t0 + F("short", 0, 1) - 0.1, D("short") - F("short", 0, 1), 830, 700, 0.95);
         }, D("short")) });
 
       // ---------- 5. the logs at the rail; then the mirror: the grille rushes in, air brakes, stops inches away ----------
@@ -101,7 +102,7 @@
         captions: caps("k4"),
         fx: LIFE("k4", (tl, id, t0, L) => {
           put(L.act, `<g id="k-lg">${Lt.logEnd(1400, 1300 + 860 * TN - 14, 34, 51)}</g>`);
-          coin(tl, L, "nolift", "k-coin", t0 + F("k4", 0, 1) - 0.1, D("k4") - F("k4", 0, 1), 1250, 880, 2.4);
+          board(tl, L, t0 + 0.1, D("k4"), 3, [0, 1, 2], { rows: [0, 1, 2, 3], y: 200 });
         }) });
 
       // ---------- 9. the calls: หนิง on the phone; coins 1586 / 1193 and 1669 ----------
@@ -109,8 +110,8 @@
         actors: [JENG([{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), NING([{ t: 0, mode: "phoneEar", eyes: "normal", mouth: "flat" }], { flip: true, phone: true })],
         captions: caps("call"),
         fx: LIFE("call", (tl, id, t0, L) => {
-          coin(tl, L, "call", "cl-c1", t0 + 0.15, D("call"), 330, 560, 2.3);
-          hxcoin(tl, L, "phone", "cl-c2", t0 + F("call", 0, 2) - 0.1, D("call") - F("call", 0, 2), 750, 560, 2.3);
+          plate(tl, L.fg, "call", "cl-p1", t0 + 0.15, D("call"), 250, 1490, 0.9, "info");
+          plate(tl, L.fg, "ems", "cl-p2", t0 + F("call", 0, 2) - 0.1, D("call") - F("call", 0, 2), 830, 1490, 0.9, "rule");
         }) });
 
       // ---------- 10. the foot of the hill: the gas station in the late sun; relief ----------
@@ -143,7 +144,7 @@
       add("orange", { set: "ltPlate", setOpts: { id: "pl", smoke: 0.9 }, dark: 0, grade: GDUSK,
         cam: { keys: [{ t: 0, ...fr(540, 1460, 1.15, 540, 1100) }, { t: D("orange"), glide: D("orange"), ...fr(720, 760, 1.3, 540, 900) }] },
         captions: caps("orange"),
-        fx: LIFE("orange", (tl, id, t0, L) => { coin(tl, L, "orange", "pl-coin", t0 + F("orange", 0, 1) - 0.1, D("orange") - F("orange", 0, 1), 260, 900, 2.0); }) });
+        fx: LIFE("orange", (tl, id, t0, L) => { plate(tl, L.light, "tanker", "pl-pl", t0 + F("orange", 0, 1) - 0.1, D("orange") - F("orange", 0, 1), 250, 720, 0.85); }) });
 
       // ---------- 15. K6: หนิง lowers the phone; the smoke drifts toward the pumps; coins back away / no phone ----------
       add("k6", { ...ST("k", { tank: 0, ts: 0.62, tsmoke: 1 }), cam: { keys: [{ t: 0, ...fr(760, 1240, 0.86, 540, 1000) }, { t: D("k6"), glide: D("k6"), ...fr(700, 1240, 0.92, 540, 1000) }] },
@@ -153,8 +154,8 @@
         fx: LIFE("k6", (tl, id, t0, L) => {
           tl.set("#k-tank", { y: -60 }, 0);
           tl.fromTo("#k-drift", { opacity: 0, x: 380, y: TANK_Y - 120 }, { opacity: 0.85, x: 820, y: G - 260, duration: D("k6"), ease: "sine.inOut", immediateRender: false }, t0);
-          coin(tl, L, "back", "k-c1", t0 + F("k6", 0, 1) - 0.1, D("k6"), 420, 520, 2.0);
-          coin(tl, L, "nophone", "k-c2", t0 + F("k6", 0, 2) - 0.1, D("k6") - F("k6", 0, 2), 820, 520, 2.0);
+          plate(tl, L.set, "nophone", "k-ps", t0 + 0.2, D("k6"), 470, G - 360, 0.62, "rule");   // the station's own sign on the pump island
+          board(tl, L, t0 + F("k6", 0, 1) - 0.2, D("k6") - F("k6", 0, 1) + 0.2, 4, [3], { rows: [3, 4], y: 200 });
         }) });
 
       // ---------- 16. the question over the smoke at the pump; the hiss; black ----------
