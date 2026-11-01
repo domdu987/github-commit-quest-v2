@@ -1,0 +1,34 @@
+[
+ {
+  "id": "logtruck-ep1",
+  "page": "logtruck-ep1/composition/index.html",
+  "out": "video/logtruck-ep1/cover.jpg",
+  "t": 0.62,
+  "series": "ท่อนซุงลงเขา",
+  "ep": 1,
+  "epTitle": "อย่าขับชิดท้ายมัน",
+  "finale": false,
+  "setup": "คุณขับตาม/[รถบรรทุกท่อนซุง]ลงเขา",
+  "cmd": "อย่าขับชิดท้ายมัน!",
+  "glow": "#e8a23a",
+  "hideLight": true,
+  "zoom": { "s": 1.0, "x": 540, "y": 900 },
+  "shift": { "x": 0, "y": 0 }
+ },
+ {
+  "id": "logtruck-ep2",
+  "page": "logtruck-ep2/composition/index.html",
+  "out": "video/logtruck-ep2/cover.jpg",
+  "t": 0.55,
+  "series": "ท่อนซุงลงเขา",
+  "ep": 2,
+  "epTitle": "ซุงหล่นตรงหน้า",
+  "finale": true,
+  "setup": "[ท่อนซุง]หล่นจาก/รถคันหน้าคุณ",
+  "cmd": "อย่าลงไปยกมันเอง!",
+  "glow": "#e8a23a",
+  "hideLight": true,
+  "zoom": { "s": 1.0, "x": 540, "y": 900 },
+  "shift": { "x": 0, "y": 0 }
+ }
+]

@@ -1,0 +1,216 @@
+      // ---------- ท่อนซุงลงเขา EP.1 อย่าขับชิดท้ายมัน ----------
+      // grammar: the snap (0–0.9 full-screen action) → the log bounces → the sandwich in profile + title board → the two-shot → the log at the rail
+      // → K1 (sign 8 km, the post, the count, 2 s / wet ×2) → plan fails (the big one behind closes in, air horn first, high beams) → 5 km, smoke
+      // → K2 (the arm, the mirrors) → เจ๋ง's "brake all the way" → K3 low gear → last bend, she counts → the second binder springs → black → next
+      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.08 }, GLATE = { top: "#ffe0b0", bottom: "#c8d8ec", op: 0.12 };
+      const SUN = { from: "left", rim: "#fff6dc", rimOp: 0.7, shade: "#2a2440", shadeOp: 0.22, cast: false, vol: false };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = Array.isArray(extra.talk[0]) ? extra.talk : [extra.talk]; return { who, x, y, s, track, blinks: [0.7, 2.3, 3.9], ...extra }; };
+      const TALK = (k, i, m = "o") => [vo(k, i), voEnd(k, i), m];
+      const LIFE = (k, extra, dur) => (tl, id, t0, L) => { Lt.life(tl, `#${id}`, t0, dur ?? D(k)); if (extra) extra(tl, id, t0, L); };
+      const flash = (tl, t, op = 0.85) => { tl.set("#flashw", { opacity: op }, t); tl.to("#flashw", { opacity: 0, duration: 0.25 }, t + 0.03); };
+      const kick = (a, b, amp) => (t) => (t >= a && t < b ? { x: amp * Math.sin(t * 61) * (1 - (t - a) / (b - a)), y: amp * 0.8 * Math.sin(t * 47) * (1 - (t - a) / (b - a)), r: 0 } : 0);
+      const rumble = (amp = 2.2) => (t) => ({ x: amp * Math.sin(t * 23) + amp * 0.5 * Math.sin(t * 61), y: amp * 0.8 * Math.sin(t * 31), r: 0.12 * Math.sin(t * 7) });
+      const TN = Math.tan(9 * Math.PI / 180), yAt = (x) => 1300 + (x - 540) * TN;
+      const POV = (id, o = {}) => ({ set: "ltPOV", setOpts: { id, mirror: 0.8, ...o }, dark: 0, grade: GDAY, blur: { fg: 2 } });
+      const SLOPE = (id, o = {}) => ({ set: "ltSlope", setOpts: { id, ground: 1300, slope: 9, ...o }, dark: 0, grade: GDAY, blur: { far: 1.5, fg: 8 } });
+      const CONVOY = (o = {}) => ({ truck: 1500, car: 900, tank: -270, trs: 0.62, cs: 0.62, ts: 0.62, cabOnly: true, ...o });
+      const CAB = (id, o = {}) => ({ set: "ltCabin", setOpts: { id, rear: "grille", ...o }, dark: 0, light: SUN, grade: GDAY, blur: { far: 3, fg: 0.5 } });
+      const CABCAM = (k, z = 0.04) => ({ keys: [{ t: 0, ...fr(540, 1100, 1.05, 540, 1000) }, { t: D(k), glide: D(k), ...fr(540, 1100, 1.05 + z, 540, 1000) }] });
+      const JENG = (k, track, extra = {}) => A("jeng", 320, 1880, 1.6, track, extra);
+      const NING = (k, track, extra = {}) => A(extra.phone ? "ningPhone" : "ning", 770, 1880, 1.52, track, extra);
+      const slide = (tl, sel, t, dur, d, ease = "none") => tl.to(sel, { x: d, y: d * TN, duration: dur, ease }, t);
+      const coin = (tl, L, name, id, t, dur, x = 540, y = 470, s = 2.4) => { put(L.glow, Lt.coin(name, x, y, s, id)); Lt.coinIn(tl, id, t, dur); };
+      const truckShrink = (tl, id, t, dur, from, to, ease = "power1.inOut") => tl.fromTo(`#${id}-truck`, { attr: { transform: `translate(${from[0]},${from[1]}) scale(${from[2]})` } }, { attr: { transform: `translate(${to[0]},${to[1]}) scale(${to[2]})` }, duration: dur, ease, immediateRender: false }, t);
+      const signIn = (tl, id, t, dur, to = "translate(-40,1330) scale(0.8)") => tl.fromTo(`#${id}-sign`, { attr: { transform: "translate(520,905) scale(0.06)" } }, { attr: { transform: to }, duration: dur, ease: "power2.in", immediateRender: false }, t);
+      const beams = (tl, sels, t0, times, on = 0.16) => times.forEach((k) => { tl.set(sels, { opacity: 1 }, t0 + k); tl.set(sels, { opacity: 0 }, t0 + k + on); });
+
+      // ---------- 1. the snap (0–0.9) then the log hits the road, bounces to the rail; เจ๋ง stamps on the brake ----------
+      split("hook", 0.9,
+        { ...POV("h", { mirror: 0.85, truck: { x: 560, y: 1300, s: 0.8, brake: 1, smoke: 0.4 } }),
+          cam: { keys: [{ t: 0, ...fr(560, 1020, 1.22, 540, 960) }, { t: 0.9, glide: 0.88, ...fr(560, 1000, 1.38, 540, 960) }] },
+          shake: (t) => (t > 0.02 ? { x: 9 * Math.sin(t * 70), y: 7 * Math.sin(t * 53), r: 0.4 * Math.sin(t * 31) } : 0),
+          captions: caps("hook").filter((c) => c.t < 0.9),
+          fx: LIFE("hook", (tl, id, t0, L) => {
+            Lt.snap(tl, "h", t0 + 0.02);
+            Lt.sparks(tl, L.glow, t0 + 0.02, 560, 806, 1.3, 18, 5); Lt.sparks(tl, L.glow, t0 + 0.06, 800, 1060, 0.9, 10, 9);
+            tl.fromTo("#h-truck-top", { x: 0, y: 0, scale: 1, rotation: 0, transformOrigin: "50% 50%" }, { keyframes: [{ x: -10, y: -60, scale: 1.4, rotation: 30, duration: 0.18, ease: "power2.out" }, { x: -26, y: 150, scale: 7.5, rotation: 170, duration: 0.6, ease: "power2.in" }], immediateRender: false }, t0 + 0.06);
+            flash(tl, t0 + 0.84, 0.6);
+          }, 0.9) },
+        { ...POV("b", { mirror: 0.95, truck: { x: 600, y: 1240, s: 0.56, brake: 1 }, loose: { x: 420, y: 760, s: 1.5 } }),
+          cam: { keys: [{ t: 0, ...fr(560, 1000, 1.18, 540, 960) }, { t: D("hook") - 0.9, glide: 1.6, ...fr(580, 1010, 1.12, 540, 960) }] },
+          shake: (t) => { const d = kick(0.28, 0.7, 14)(t); const dip = t < 0.9 ? 18 * Math.sin(Math.min(1, t / 0.9) * Math.PI) : 0; return { x: d ? d.x : 0, y: (d ? d.y : 0) + dip, r: t < 0.9 ? -0.6 * Math.sin(t / 0.9 * Math.PI) : 0 }; },
+          captions: capsFrom("hook", 0.9),
+          fx: LIFE("hook", (tl, id, t0, L) => {
+            tl.fromTo("#b-loose", { attr: { transform: "translate(420,760) scale(1.5) rotate(-24)" } }, { keyframes: [
+              { attr: { transform: "translate(520,1330) scale(1.45) rotate(4)" }, duration: 0.3, ease: "power2.in" },
+              { attr: { transform: "translate(760,1160) scale(1.08) rotate(16)" }, duration: 0.28, ease: "power2.out" },
+              { attr: { transform: "translate(930,1250) scale(0.9) rotate(8)" }, duration: 0.24, ease: "power2.in" },
+              { attr: { transform: "translate(1060,1190) scale(0.78) rotate(2)" }, duration: 0.7, ease: "power3.out" }], immediateRender: false }, t0);
+            tl.fromTo("#b-loose .lroll", { x: 0 }, { x: 18, duration: 0.05, repeat: 18, yoyo: true, immediateRender: false }, t0);
+            HnFx.dust(tl, L.glow, t0 + 0.3, 520, 1380, 2.2); HnFx.dust(tl, L.glow, t0 + 0.82, 930, 1290, 1.6);
+          }, D("hook") - 0.9) });
+
+      // ---------- 2. the command: the sandwich in profile, the title board on the cut bank ----------
+      add("cmd", { ...SLOPE("c", { convoy: CONVOY({ smoke: 0.3, brake: 1, cbrake: 1 }), title: { x: 1060, s: 0.62, top: "ท่อนซุงลงเขา", km: "EP.1 อย่าขับชิดท้ายมัน", fs: 54 } }),
+        cam: { keys: [{ t: 0, ...fr(1000, 1200, 0.86, 540, 1000) }, { t: D("cmd"), glide: D("cmd"), ...fr(1040, 1230, 0.92, 540, 1000) }] }, shake: rumble(1.6),
+        captions: caps("cmd"),
+        fx: LIFE("cmd", (tl, id, t0) => { slide(tl, "#c-truck", t0, D("cmd"), 110); slide(tl, "#c-car", t0, D("cmd"), 110); slide(tl, "#c-tank", t0, D("cmd"), 130); }) });
+
+      // ---------- 3. the two-shot: เจ๋ง shouts ----------
+      add("hey", { ...CAB("e"), cam: CABCAM("hey", 0.06), shake: kick(0, 0.8, 10),
+        actors: [JENG("hey", [{ t: 0, mode: "idle", eyes: "wide", mouth: "scream" }], { talk: TALK("hey", 0, "scream") }), NING("hey", [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("hey", null, { quote: true }), fx: LIFE("hey") });
+
+      // ---------- 4. the log at the guardrail; we pass it; the truck rolls on ----------
+      add("rest", { ...POV("r", { mirror: 0.8, truck: { x: 590, y: 1230, s: 0.5, brake: 0 }, loose: { x: 1060, y: 1190, s: 0.78 } }),
+        cam: { keys: [{ t: 0, ...fr(600, 1010, 1.12, 540, 960) }, { t: D("rest"), glide: D("rest"), ...fr(640, 1010, 1.16, 540, 960) }] }, shake: rumble(1.4),
+        captions: caps("rest"),
+        fx: LIFE("rest", (tl, id, t0) => {
+          tl.fromTo("#r-loose", { attr: { transform: "translate(1060,1190) scale(0.78) rotate(2)" } }, { attr: { transform: "translate(1500,1560) scale(1.7) rotate(0)" }, duration: D("rest"), ease: "power2.in", immediateRender: false }, t0);
+          truckShrink(tl, "r", t0, D("rest"), [590, 1230, 0.5], [585, 1210, 0.46]);
+        }) });
+
+      // ---------- 5. หนิง: will more fall? ----------
+      add("back", { ...CAB("bk"), cam: CABCAM("back"), shake: rumble(1.2),
+        actors: [JENG("back", [{ t: 0, mode: "idle", eyes: "wide", mouth: "flat" }]), NING("back", [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }, { t: 0.9, mode: "point", eyes: "wide", mouth: "o" }], { flip: true, talk: TALK("back", 0) })],
+        captions: caps("back", null, { quote: true }), fx: LIFE("back") });
+
+      // ---------- 6. K1 the law: the sign "อีก 8 กม." comes up; the gap coin ----------
+      add("law", { ...POV("l", { mirror: 0.8, truck: { x: 580, y: 1250, s: 0.56, brake: 1, smoke: 0.2 }, sign: { kind: "km", top: "ทางลงเขาลาดชัน", km: "อีก 8 กม.", x: 520, y: 905, s: 0.06 } }),
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.1, 540, 960) }, { t: D("law"), glide: D("law"), ...fr(560, 1000, 1.16, 540, 960) }] }, shake: rumble(1.4),
+        captions: caps("law"),
+        fx: LIFE("law", (tl, id, t0, L) => { signIn(tl, "l", t0, D("law") * 0.9); coin(tl, L, "gap", "l-coin", t0 + F("law", 0, 1) - 0.1, D("law") - F("law", 0, 1), 760, 560, 2.2); }) });
+
+      // ---------- 7. the post: the truck's tail passes a white post (ring) ----------
+      add("post", { ...SLOPE("p", { convoy: CONVOY({ truck: 1700, car: 980, tank: -200, brake: 1 }), post: 1180 }),
+        cam: { keys: [{ t: 0, ...fr(1150, 1240, 0.9, 540, 1000) }, { t: D("post"), glide: D("post"), ...fr(1260, 1260, 0.94, 540, 1000) }] }, shake: rumble(1.4),
+        captions: caps("post"),
+        fx: LIFE("post", (tl, id, t0) => {
+          slide(tl, "#p-truck", t0, D("post"), 260); slide(tl, "#p-car", t0, D("post"), 240); slide(tl, "#p-tank", t0, D("post"), 250);
+          tl.fromTo("#p-post-ring", { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.3, ease: "back.out(3)", immediateRender: false }, t0 + F("post", 0, 1));
+          tl.to("#p-post-ring", { scale: 1.12, transformOrigin: "50% 50%", duration: 0.35, repeat: 5, yoyo: true, ease: "sine.inOut" }, t0 + F("post", 0, 1) + 0.3);
+        }) });
+
+      // ---------- 8. หนิง counts: the post flicks by, the truck pulls away, the gap opens ----------
+      add("count", { ...POV("n", { mirror: 0.75, truck: { x: 580, y: 1260, s: 0.62, brake: 0 } }),
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.12, 540, 960) }, { t: D("count"), glide: D("count"), ...fr(560, 1000, 1.08, 540, 960) }] }, shake: rumble(1.2),
+        captions: caps("count", null, { quote: true }),
+        fx: LIFE("count", (tl, id, t0, L) => {
+          truckShrink(tl, "n", t0 + 0.3, D("count") - 0.6, [580, 1260, 0.62], [575, 1160, 0.4]);
+          put(L.set, `<g id="n-mk" transform="translate(560,910) scale(0.05)">${Lt.post("n-mkp", 0, 0, 1)}</g>`);
+          tl.fromTo("#n-mk", { attr: { transform: "translate(470,915) scale(0.08)" } }, { attr: { transform: "translate(-260,1500) scale(2.2)" }, duration: 1.5, ease: "power2.in", immediateRender: false }, t0 + 0.2);
+          tl.set("#n-mkp-ring", { opacity: 1 }, t0 + 0.2);
+          sfxRing(tl, L, t0 + F("count", 0, 0) + 0.1, "1"); sfxRing(tl, L, t0 + F("count", 0, 1) + 0.1, "2");
+        }) });
+
+      // ---------- 9. two seconds; wet → twice: rain sweeps in, the car falls further back ----------
+      add("twosec", { ...SLOPE("w", { convoy: CONVOY({ truck: 1700, car: 860, tank: -360, brake: 0 }) }),
+        cam: { keys: [{ t: 0, ...fr(1120, 1260, 0.82, 540, 1040) }, { t: D("twosec"), glide: D("twosec"), ...fr(1060, 1260, 0.8, 540, 1040) }] }, shake: rumble(1.2),
+        captions: caps("twosec"),
+        fx: LIFE("twosec", (tl, id, t0, L) => {
+          coin(tl, L, "gap", "w-coin", t0 + 0.1, D("twosec"), 1210, 860, 2.4);
+          put(L.glow, Lt.rain("w-rain"));
+          tl.to("#w-rain", { opacity: 1, duration: 0.4 }, t0 + F("twosec", 0, 1));
+          slide(tl, "#w-car", t0 + F("twosec", 0, 1), D("twosec") - F("twosec", 0, 1), -320, "power2.inOut");
+          slide(tl, "#w-tank", t0 + F("twosec", 0, 1), D("twosec") - F("twosec", 0, 1), -320, "power2.inOut");
+        }) });
+
+      // ---------- 10. the air horn first, then the mirror (wide → in), high beams; then the cabin floods ----------
+      split("horn", 2.0,
+        { set: "ltMirror", setOpts: { id: "m", is: 1.0, iy: 1330 }, dark: 0, grade: GDAY, blur: { fg: 3 },
+          cam: { keys: [{ t: 0, ...fr(540, 1000, 0.82, 540, 960) }, { t: 2.0, glide: 1.6, ...fr(540, 860, 1.5, 540, 900) }] }, shake: kick(0.45, 1.1, 6),
+          captions: caps("horn").filter((c) => c.t < 2.0), fx: LIFE("horn", (tl, id, t0) => {
+            tl.fromTo("#m-img", { attr: { transform: "translate(540,1330) scale(1.0)" } }, { attr: { transform: "translate(540,1500) scale(1.35)" }, duration: 2, ease: "power1.in", immediateRender: false }, t0);
+            beams(tl, ["#m-t-beam"], t0, [0.55, 0.95, 1.4], 0.18); [0.55, 0.95, 1.4].forEach((k) => { tl.set("#m-flash", { opacity: 0.5 }, t0 + k); tl.to("#m-flash", { opacity: 0, duration: 0.2 }, t0 + k + 0.02); });
+          }, 2.0) },
+        { ...CAB("hc", { beam: 0, folS: 0.8, folY: 1260 }), cam: CABCAM("horn", 0.05), shake: rumble(1.6),
+          actors: [JENG("horn", [{ t: 0, mode: "idle", eyes: "pain", mouth: "flat" }], { talk: [Math.max(0, vo("horn") - 2.0), voEnd("horn") - 2.0, "o"] }), NING("horn", [{ t: 0, mode: "idle", eyes: "pain", mouth: "o" }], { flip: true })],
+          captions: capsFrom("horn", 2.0, null, { quote: true }),
+          fx: LIFE("horn", (tl, id, t0) => { beams(tl, ["#hc-hibeam", "#hc-tk-beam"], t0, [0.0, 0.5, 1.0, 1.5], 0.26); }, D("horn") - 2.0) });
+
+      // ---------- 11. the plan fails: the big one closes the gap behind; our car is pushed back up to the logs ----------
+      add("squeeze", { ...SLOPE("q", { convoy: CONVOY({ truck: 1700, car: 860, tank: -420, smoke: 0.5, brake: 1 }) }),
+        cam: { keys: [{ t: 0, ...fr(1060, 1250, 0.82, 540, 1040) }, { t: D("squeeze"), glide: D("squeeze"), ...fr(1200, 1270, 0.9, 540, 1040) }] }, shake: rumble(1.8),
+        captions: caps("squeeze"),
+        fx: LIFE("squeeze", (tl, id, t0) => {
+          slide(tl, "#q-tank", t0, D("squeeze") * 0.6, 380, "power2.in");
+          slide(tl, "#q-car", t0 + 0.6, D("squeeze") - 0.8, 300, "power2.inOut");
+          tl.fromTo("#q-c-brake", { opacity: 1 }, { opacity: 0, duration: 0.12, repeat: 7, yoyo: true, immediateRender: false }, t0 + 0.5);
+        }) });
+
+      // ---------- 12. "อีก 5 กม." — smoke at the truck's wheels; then close on the wheels ----------
+      split("five", 2.0,
+        { ...POV("f", { mirror: 0.95, truck: { x: 570, y: 1300, s: 0.78, brake: 1, smoke: 1 }, sign: { kind: "km", top: "ทางลงเขาลาดชัน", km: "อีก 5 กม.", x: 520, y: 905, s: 0.06 } }),
+          cam: { keys: [{ t: 0, ...fr(560, 1010, 1.12, 540, 960) }, { t: 2.0, glide: 2, ...fr(560, 1010, 1.18, 540, 960) }] }, shake: rumble(1.8),
+          captions: caps("five", null, { quote: true }).filter((c) => c.t < 2.0), fx: LIFE("five", (tl, id, t0) => { signIn(tl, "f", t0, 2.0, "translate(-60,1360) scale(0.85)"); }, 2.0) },
+        { set: "ltWheel", setOpts: { id: "fw", brake: 1, smoke: 1 }, dark: 0, grade: GDAY, cam: { keys: [{ t: 0, ...fr(540, 1380, 0.9, 540, 1000) }, { t: D("five") - 2, glide: D("five") - 2, ...fr(540, 1360, 0.98, 540, 1000) }] }, shake: rumble(2.4),
+          captions: capsFrom("five", 2.0, null, { quote: true }), fx: LIFE("five", null, D("five") - 2.0) });
+
+      // ---------- 13. K2: the arm out of the cab window; then the cab's mirrors: no face → drop back → his face ----------
+      split("wave", 2.4,
+        { ...SLOPE("v", { convoy: CONVOY({ truck: 1500, car: 900, tank: -270, smoke: 0.8, brake: 1, arm: 1 }) }),
+          cam: { keys: [{ t: 0, ...fr(2120, 1330, 0.9, 540, 1000) }, { t: 2.4, glide: 2.4, ...fr(2240, 1350, 0.96, 540, 1000) }] }, shake: rumble(1.6),
+          captions: caps("wave").filter((c) => c.t < 2.4),
+          fx: LIFE("wave", (tl, id, t0) => {
+            slide(tl, "#v-truck", t0, 2.4, 150); slide(tl, "#v-car", t0, 2.4, 150); slide(tl, "#v-tank", t0, 2.4, 150);
+            tl.fromTo("#v-t-arm", { rotation: -20, svgOrigin: "1180 -390" }, { rotation: 22, svgOrigin: "1180 -390", duration: 0.28, repeat: 8, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          }, 2.4) },
+        { ...POV("vm", { mirror: 0.8, truck: { x: 560, y: 1330, s: 0.82, brake: 1, smoke: 0.5, face: 0 } }),
+          cam: { keys: [{ t: 0, ...fr(560, 1000, 1.18, 540, 960) }, { t: D("wave") - 2.4, glide: D("wave") - 2.4, ...fr(560, 1000, 1.12, 540, 960) }] }, shake: rumble(1.4),
+          captions: capsFrom("wave", 2.4),
+          fx: LIFE("wave", (tl, id, t0, L) => {
+            const at = Math.max(0.2, F("wave", 0, 2) - 2.4);
+            truckShrink(tl, "vm", t0 + at, 1.4, [560, 1330, 0.82], [570, 1240, 0.56]);
+            tl.to(["#vm-truck-faceL", "#vm-truck-faceR"], { opacity: 1, duration: 0.3 }, t0 + at + 1.2);
+            tl.fromTo(["#vm-truck-faceL", "#vm-truck-faceR"], { scale: 1.6, transformOrigin: "50% 50%" }, { scale: 1, transformOrigin: "50% 50%", duration: 0.4, ease: "back.out(3)", immediateRender: false }, t0 + at + 1.2);
+            coin(tl, L, "mirror", "vm-coin", t0 + at + 1.4, D("wave") - 2.4 - at - 1.4, 760, 520, 2.3);
+          }, D("wave") - 2.4) });
+
+      // ---------- 14. เจ๋ง: brake all the way ----------
+      add("brake", { ...CAB("br"), cam: CABCAM("brake"), shake: rumble(1.2),
+        actors: [JENG("brake", [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { talk: TALK("brake", 0) }), NING("brake", [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true })],
+        captions: caps("brake", null, { quote: true }), fx: LIFE("brake") });
+
+      // ---------- 15. K3: low gear; riding the brakes fades them — the truck's wheels smoke; the gear coin ----------
+      add("gear", { set: "ltWheel", setOpts: { id: "g", brake: 1, smoke: 1 }, dark: 0, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(540, 1380, 0.86, 540, 1000) }, { t: D("gear"), glide: D("gear"), ...fr(540, 1340, 0.94, 540, 1000) }] }, shake: rumble(2.6),
+        captions: caps("gear"),
+        fx: LIFE("gear", (tl, id, t0, L) => { coin(tl, L, "gear", "g-coin", t0 + 0.15, D("gear"), 540, 760, 2.6); }) });
+
+      // ---------- 16. the last bend: "อีก 2 กม."; she counts, the gap opens ----------
+      add("last", { ...POV("t", { mirror: 0.9, vx: 520, late: true, truck: { x: 560, y: 1300, s: 0.74, brake: 1, smoke: 1 }, sign: { kind: "km", top: "ทางลงเขาลาดชัน", km: "อีก 2 กม.", x: 520, y: 905, s: 0.06 } }),
+        dark: 0, grade: GLATE, cam: { keys: [{ t: 0, ...fr(560, 1000, 1.12, 540, 960) }, { t: D("last"), glide: D("last"), ...fr(540, 1000, 1.1, 540, 960) }] }, shake: rumble(1.6),
+        captions: caps("last", null, { quote: true }),
+        fx: LIFE("last", (tl, id, t0) => {
+          signIn(tl, "t", t0, 2.4, "translate(-80,1380) scale(0.9)");
+          truckShrink(tl, "t", t0 + F("last", 0, 1), D("last") - F("last", 0, 1), [560, 1300, 0.74], [560, 1200, 0.5]);
+          tl.fromTo("#t-wheel .steer", { rotation: 0 }, { rotation: -12, svgOrigin: "0 0", duration: 1.2, ease: "sine.inOut", immediateRender: false }, t0 + 0.4);
+          beams(tl, ["#t-hibeam", "#t-mt-beam"], t0, [1.2, 2.6], 0.2);
+        }) });
+
+      // ---------- 17. the binder springs (sound first): the stack leans toward the lens, high beams flood → black ----------
+      add("pop", { ...POV("o", { mirror: 1, late: true, truck: { x: 560, y: 1290, s: 0.6, brake: 1, smoke: 1 } }), dark: 0, grade: GLATE,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.12, 540, 960) }, { t: D("pop"), glide: D("pop"), ...fr(560, 1020, 1.4, 540, 960) }] },
+        shake: (t) => (t > 0.3 ? { x: 6 * Math.sin(t * 41), y: 5 * Math.sin(t * 37), r: 0.3 * Math.sin(t * 17) } : 0),
+        captions: caps("pop"),
+        fx: LIFE("pop", (tl, id, t0, L) => {
+          const tb = t0 + 0.35;
+          tl.to("#o-truck-binder1", { rotation: -80, svgOrigin: "0 0", duration: 0.12, ease: "back.out(3)" }, tb);
+          Lt.sparks(tl, L.glow, tb, 560 - 300 * 0.6, 1290 - 230 * 0.6, 0.8, 12, 13);
+          tl.to("#o-truck-ch1", { opacity: 0.2, duration: 0.2 }, tb + 0.1);
+          tl.to("#o-truck-stack", { keyframes: [{ rotation: -5, y: -10, duration: 0.5, ease: "power2.out" }, { rotation: -9, y: 30, scale: 1.08, duration: D("pop") - 1.4, ease: "power1.in" }], transformOrigin: "50% 100%" }, tb + 0.15);
+          beams(tl, ["#o-hibeam", "#o-mt-beam"], t0, [0.9, 1.5, 2.0], 0.22);
+          tl.set("#black", { opacity: 1 }, t0 + D("pop") - 0.25); tl.set("#black", { opacity: 0 }, t0 + D("pop") + 0.02);
+        }) });
+
+      // ---------- 18. next: EP.2 ----------
+      add("next", { set: "ltNext", setOpts: { id: "x", l1: "ตอนที่ 2 (ตอนจบ)", l2: "ซุงหล่นตรงหน้า", l3: "กดติดตาม แล้วลงเขาไปด้วยกัน" }, dark: 0, grade: GLATE, blur: { fg: 0 },
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 0.95, 540, 960) }, { t: D("next"), glide: D("next"), ...fr(540, 1150, 1.02, 540, 960) }] }, captions: [],
+        fx: LIFE("next", (tl, id, t0) => { tl.fromTo("#x-sweep", { x: -700 }, { x: 700, duration: D("next"), ease: "sine.inOut", immediateRender: false }, t0); }) });
+
+      // the counted seconds: a big "1" / "2" in a ring that pops and fades (no text label)
+      function sfxRing(tl, L, t, n) {
+        const id = `ring${n}${Math.round(t * 100)}`;
+        put(L.glow, `<g transform="translate(${n === "1" ? 330 : 750},560)"><g id="${id}" opacity="0"><circle r="110" fill="#fffdf2" opacity=".92" stroke="#2e2a26" stroke-width="6"/><circle r="96" fill="none" stroke="#2fa864" stroke-width="10"/><text y="44" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="130" fill="#2e2a26">${n}</text></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.3, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.35, ease: "back.out(3)", immediateRender: false }, t);
+      }
