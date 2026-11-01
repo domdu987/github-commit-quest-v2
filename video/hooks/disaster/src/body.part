@@ -1,0 +1,24 @@
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [9], ...extra });
+      const LAMP = { from: "right", rim: "#ffd890", rimOp: 0.8, shade: "#0a0e18", shadeOp: 0.45, cast: false, vol: false };
+      const FIRE = { from: "left", rim: "#ffb060", rimOp: 0.9, shade: "#0a0e18", shadeOp: 0.4, cast: false, vol: false };
+      const GNH = { top: "#3a4a6a", bottom: "#0a0e14", op: 0.18 };
+      const GCH = { top: "#6a5a2a", bottom: "#0a0e14", op: 0.16 };
+      const cap = (text) => [{ text, t: 0, end: 1 }];
+      const ARM = (L, fx, fy, sx, sy, sleeve = "#f4f2ec", sc = 1) => { const ang = Math.atan2(sy - fy, sx - fx) * 180 / Math.PI, len = Math.hypot(sx - fx, sy - fy) / sc; put(L.glow, `<g transform="translate(${fx},${fy}) rotate(${ang}) scale(${sc})">${Hands.poke({ r: 50, sleeve, cuff: "#ffffff", sleeveLen: Math.max(80, len - 120) })}</g>`); };
+      // ---- Hook A: ไฟดับทั้งประเทศ · dad hauls the generator into the shuttered front room where his son sleeps ----
+      const MAT = { matX: 280, matY: 1590, shX: 60, shW: 600 };
+      add("g0", { set: "dsGarage", setOpts: { id: "a", ...MAT, gen: { x: 760, y: 1520, s: 0.85 }, fume: 0, bulb: 0 }, dark: 0.12, light: LAMP, grade: GNH, cam: { keys: [{ t: 0, ...fr(560, 1180, 0.95, 540, 980) }] },
+        actors: [A("keng", 960, 1560, 1.3, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { flip: true })], captions: cap("ถ้าวันหนึ่ง… [ไฟดับ]ทั้งประเทศ") });
+      add("g1", { set: "dsGarage", setOpts: { id: "b", ...MAT, gen: { x: 660, y: 1540, s: 0.95, on: 1 }, fume: 0.45, bulb: 0.6, lampX: 640 }, dark: 0.08, light: LAMP, grade: GNH, cam: { keys: [{ t: 0, ...fr(560, 1300, 1.2, 540, 1000) }] },
+        actors: [A("keng", 900, 1580, 1.3, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })], captions: cap("พ่อเปิด[เครื่องปั่นไฟ]ในบ้าน") });
+      add("g2", { set: "dsGarage", setOpts: { id: "c", ...MAT, gen: { x: 620, y: 1550, s: 1.0, on: 1 }, fume: 1, bulb: 0.9, lampX: 640 }, dark: 0.06, light: LAMP, grade: { top: "#6a6a6a", bottom: "#0a0e14", op: 0.2 }, cam: { keys: [{ t: 0, ...fr(420, 1450, 1.7, 540, 1060) }] },
+        captions: cap("{อย่าเปิดเครื่องปั่นไฟในบ้าน!}") });
+      // ---- Hook B: ไซเรนโรงงานเคมี · the yellow plume drifts at the house; she reaches for the AC ----
+      add("c0", { set: "dsChem", setOpts: { id: "d", plume: 0.1, press: 0, siren: 1 }, dark: 0.05, light: FIRE, grade: GCH, cam: { keys: [{ t: 0, ...fr(540, 820, 1.0, 540, 820) }] },
+        actors: [A("dew", 820, 1640, 1.35, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })], captions: cap("ถ้าวันหนึ่ง… [โรงงานเคมี]ไฟไหม้") });
+      add("c1", { set: "dsChem", setOpts: { id: "e", plume: 0.75, press: 0.25, siren: 0.6 }, dark: 0.05, light: FIRE, grade: GCH, cam: { keys: [{ t: 0, ...fr(560, 860, 1.12, 540, 860) }] },
+        actors: [A("dew", 700, 1660, 1.35, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])], captions: cap("ควันสีเหลือง[ลอยมาทางบ้านคุณ]"),
+        fx: (tl, id, t0, L) => { put(L.glow, Ds.remote(980, 980, 0.6)); ARM(L, 800, 1080, 960, 1000, "#3aa0a8"); } });
+      add("c2", { set: "dsChem", setOpts: { id: "f", plume: 1, press: 0.85, siren: 1 }, dark: 0.05, light: FIRE, grade: GCH, cam: { keys: [{ t: 0, ...fr(560, 560, 1.25, 540, 620) }] },
+        captions: cap("{อย่าเปิดแอร์!}"),
+        fx: (tl, id, t0, L) => { put(L.glow, Ds.remote(700, 860, 1.25, { press: 1 })); ARM(L, 980, 1180, 700, 820, "#3aa0a8", 1.4); } });
