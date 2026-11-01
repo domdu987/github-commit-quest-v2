@@ -41,7 +41,7 @@
         const M = Rig.MODES;
         M.nap = (u, o) => ({ ...M.sitChair(u, o), torso: -9 + 1.2 * Math.sin(u * 1.4), head: -12 + 1.5 * Math.sin(u * 1.4), uaF: -20, faF: -96, uaB: -14, faB: -92 });
         M.phonesOn = (u, o) => ({ ...M.sitChair(u, o), torso: -6, head: -4 + 2 * Math.sin(u * 2), uaF: -150, faF: -110, uaB: -140, faB: -112 });
-        M.reachDown = (u, o) => { const j = Math.sin(u * 9) * 3; return { ...M.sitChair(u, o), torso: 24 + j, head: 6, uaF: 34 + j, faF: -58, uaB: 10, faB: -40 }; };
+        M.reachDown = (u, o) => { const j = Math.sin(u * 9) * 3; return { ...M.sitChair(u, o), torso: 30 + j, head: 4, uaF: 58 + j, faF: -92, uaB: 24, faB: -80 }; };
         M.tug = (u, o) => { const j = Math.sin(u * 14) * 9; return { ...M.sitChair(u, o), torso: 16 - j * 0.6, head: 6, uaF: 10 - j, faF: -20 - j, uaB: 4 - j, faB: -24 }; };
         M.cough = (u, o) => { const j = Math.abs(Math.sin(u * 8)) * 6; return { ...M.idle(u, o), torso: 16 + j, head: 14 + j, uaF: -40, faF: -120, uaB: 18, faB: -20 }; };
         M.wave2 = (u, o) => { const j = Math.sin(u * 10) * 22; return { ...M.idle(u, o), torso: -4, head: -10, uaF: -160 + j, faF: -20, uaB: 160 - j, faB: 20, bodyY: -Math.abs(Math.sin(u * 5)) * 10 }; };
