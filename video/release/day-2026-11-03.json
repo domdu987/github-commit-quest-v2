@@ -18,21 +18,29 @@
    "order": 1,
    "id": "logtruck-ep1",
    "series": "ท่อนซุงลงเขา (ฟีล Final Destination)",
-   "status": "in_production",
+   "status": "final",
    "slot": "เที่ยง",
    "branch": "prod/lane-b",
    "package": "video/release/logtruck.json",
-   "suggested_time": "2026-11-03T12:00+07:00"
+   "suggested_time": "2026-11-03T12:00+07:00",
+   "commit": "159df44",
+   "video_hq": "video/release/hq/logtruck-ep1-HQ.mp4",
+   "video_hq_sha256": "6e260648adcd0150a17c9c78b397186e66edb2c3fcc23314f3b09d53161b0f8a",
+   "video_hq_bytes": 90993125
   },
   {
    "order": 2,
    "id": "logtruck-ep2",
    "series": "ท่อนซุงลงเขา (ฟีล Final Destination)",
-   "status": "in_production",
+   "status": "final",
    "slot": "เที่ยง",
    "branch": "prod/lane-b",
    "package": "video/release/logtruck.json",
-   "suggested_time": "2026-11-03T12:30+07:00"
+   "suggested_time": "2026-11-03T12:30+07:00",
+   "commit": "159df44",
+   "video_hq": "video/release/hq/logtruck-ep2-HQ.mp4",
+   "video_hq_sha256": "8c29260e889b89383938c33fd158a9d7886797789cc0abeba58d801ac437c806",
+   "video_hq_bytes": 63324377
   },
   {
    "order": 3,
