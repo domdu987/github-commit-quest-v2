@@ -31,7 +31,7 @@
         <linearGradient id="skBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#eceff2"/><stop offset="1" stop-color="#b8c0ca"/></linearGradient>
         <linearGradient id="skRedCar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a1a24"/><stop offset="1" stop-color="#2a0a12"/></linearGradient>
         <linearGradient id="skGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".34"/><stop offset=".35" stop-color="#ffffff" stop-opacity=".06"/><stop offset=".6" stop-color="#ffffff" stop-opacity=".16"/><stop offset="1" stop-color="#ffffff" stop-opacity=".02"/></linearGradient>
-        <radialGradient id="skLamp"><stop offset="0" stop-color="#fff6d8" stop-opacity=".9"/><stop offset=".4" stop-color="#ffe6a8" stop-opacity=".35"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
+        <filter id="skFgBlur" x="-50%" y="-10%" width="200%" height="120%"><feGaussianBlur stdDeviation="9"/></filter><radialGradient id="skLamp"><stop offset="0" stop-color="#fff6d8" stop-opacity=".9"/><stop offset=".4" stop-color="#ffe6a8" stop-opacity=".35"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
         <radialGradient id="skRedG"><stop offset="0" stop-color="#ff3a2a" stop-opacity=".7"/><stop offset="1" stop-color="#ff3a2a" stop-opacity="0"/></radialGradient>
         <radialGradient id="skTorch"><stop offset="0" stop-color="#fffbe0" stop-opacity=".95"/><stop offset=".3" stop-color="#ffe9a0" stop-opacity=".45"/><stop offset="1" stop-color="#ffd060" stop-opacity="0"/></radialGradient>`;
 
@@ -73,7 +73,7 @@
 
       // ---------- the zombie face pressed to glass (drawn art, no blood): grey-green skin, milky eyes, open jaw; (0,0) = chin ----------
       Sky.zFace = (id, s = 1, o = {}) => { const sk = o.skin || "#9aa88e", skD = "#6a7a62";
-        return `<g id="${id}" transform="scale(${s})"><path d="M-70,40Q-90,-60 -60,-130Q0,-170 60,-130Q90,-60 70,40Q0,70 -70,40Z" fill="${sk}" ${SO2(4)}/>
+        return `<g id="${id}" transform="scale(${s})"><path d="M-150,320Q-150,90 -60,40H60Q150,90 150,320Z" fill="${o.coat || "#3a4a6a"}" ${SO2(4)}/><path d="M-40,40L0,110L40,40" fill="${o.shirt || "#d8d4c8"}" ${SO2(3)}/><path d="M-150,320Q-150,90 -60,40H-20Q-110,110 -100,320Z" fill="#000" opacity=".22"/><path d="M-70,40Q-90,-60 -60,-130Q0,-170 60,-130Q90,-60 70,40Q0,70 -70,40Z" fill="${sk}" ${SO2(4)}/>
           <path d="M-70,40Q-90,-60 -60,-130Q-30,-150 0,-152Q-50,-100 -52,30Z" fill="${skD}" opacity=".35"/>
           <path d="M-64,-110Q-30,-160 30,-150Q60,-140 66,-112Q40,-136 0,-132Q-40,-130 -64,-110Z" fill="${o.hair || "#2a2420"}" ${SO2(3)}/>
           <ellipse cx="-28" cy="-58" rx="24" ry="22" fill="#2a3028" opacity=".75"/><ellipse cx="28" cy="-58" rx="24" ry="22" fill="#2a3028" opacity=".75"/>
@@ -109,6 +109,24 @@
         <g id="${id}-b1"><rect x="120" y="-210" width="140" height="210" rx="18" fill="#2f6fd0" ${SO2(4)}/><rect x="130" y="-200" width="36" height="190" rx="8" fill="#fff" opacity=".2"/><path d="M165,-226v16M215,-226v16M165,-226H215" stroke="${SKC.ink}" stroke-width="6" fill="none"/></g>
         <g id="${id}-b2"><rect x="20" y="-260" width="190" height="96" rx="10" fill="#c8642c" ${SO2(4)}/><rect x="20" y="-226" width="190" height="16" fill="#9a4418"/><rect x="95" y="-280" width="40" height="22" rx="6" fill="none" stroke="${SKC.ink}" stroke-width="6"/></g>
         <g id="${id}-b3" transform="translate(150,-210) rotate(-28)"><path d="M0,0L-10,-170" stroke="#3a3f4a" stroke-width="12" stroke-linecap="round"/><path d="M-40,-170H20" stroke="#3a3f4a" stroke-width="10" stroke-linecap="round"/><rect x="-10" y="-14" width="200" height="22" rx="8" fill="${SKC.yellow}" ${SO2(3)}/><circle cx="0" cy="18" r="22" fill="#2a2e36" ${SO2(3)}/><circle cx="180" cy="18" r="22" fill="#2a2e36" ${SO2(3)}/></g></g>`;
+      // screen-space depth + mood for close-ups: a blurred pole and strap at the frame edge (drifting a little), the red emergency light pulsing
+      let skFg = 0;
+      Sky.fgPole = (tl, L, t0, dur, o = {}) => { const id = `skf${skFg++}`, x = o.x ?? 120;
+        put(L.light, `<g id="${id}" filter="url(#skFgBlur)" opacity="0"><rect x="${x - 34}" y="-40" width="68" height="2000" fill="url(#skPole)"/><rect x="${x - 34}" y="-40" width="68" height="2000" fill="#1a0a10" opacity="${o.red ? 0.35 : 0.15}"/>
+          ${o.strap === false ? "" : `<g transform="translate(${x + 190},-20)"><path d="M0,0V170" stroke="#1a1c22" stroke-width="20"/><path d="M-58,170L58,170L0,268Z" fill="none" stroke="${SKC.yellow}" stroke-width="22" stroke-linejoin="round"/></g>`}</g>`);
+        tl.set(`#${id}`, { opacity: 0.92 }, t0); tl.fromTo(`#${id}`, { x: 0 }, { x: o.drift ?? -40, duration: dur, ease: "sine.inOut", immediateRender: false }, t0);
+        tl.set(`#${id}`, { opacity: 0 }, t0 + dur); };
+      Sky.redPulse = (tl, L, t0, dur, op = 0.2) => { const id = `skf${skFg++}`;
+        put(L.light, `<rect id="${id}" width="1080" height="1920" fill="#ff1a10" opacity="0" style="mix-blend-mode:multiply"/>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: op, duration: 0.32, yoyo: true, repeat: Math.max(1, Math.ceil(dur / 0.32) - 1), ease: "sine.inOut", immediateRender: false }, t0);
+        tl.set(`#${id}`, { opacity: 0 }, t0 + dur); };
+      // a real hand closing round the lever's handle: the black suit sleeve, the white cuff, the wrist, four fingers wrapped over the bar,
+      // the thumb on top; drawn in the lever's handle coordinates ((0,0) = the handle's hinge, the bar from y 0 to 84)
+      Sky.gripHand = (id) => `<g id="${id}"><path d="M-260,250Q-170,170 -70,96L-30,140Q-120,200 -200,300Z" fill="#1c1d22" ${SO2(4)}/><path d="M-120,175Q-80,140 -50,118" stroke="#3a3c46" stroke-width="6" fill="none"/>
+        <path d="M-80,90L-40,128L-26,114L-66,76Z" fill="#f6f4ee" ${SO2(3)}/><circle cx="-50" cy="104" r="5" fill="#c8a040" ${SO2(1.5)}/>
+        <path d="M-60,78Q-50,40 -22,28Q-4,24 -2,40L-6,96Q-20,112 -44,106Z" fill="#e0b088" ${SO2(3.5)}/>
+        ${[0, 1, 2, 3].map((k) => `<path d="M-14,${14 + k * 18}Q22,${8 + k * 18} 30,${20 + k * 18}Q32,${30 + k * 18} 20,${32 + k * 18}Q-2,${34 + k * 18} -14,${30 + k * 18}Z" fill="#e8bc94" ${SO2(3)}/><path d="M18,${20 + k * 18}q6,4 4,9" stroke="#c89470" stroke-width="2" fill="none"/>`).join("")}
+        <path d="M-30,30Q-10,2 14,2Q26,4 22,14Q4,16 -10,34Z" fill="#e8bc94" ${SO2(3)}/></g>`;
       // ---------- Sets.carCut ----------
       Sets.carCut = (L, o = {}) => {
         const id = o.id || "cc", st = o.state || "calm", alarm = st === "alarm", dim = st === "dim", r = mk(5);
@@ -214,7 +232,7 @@
           <rect x="-1400" y="1620" width="4200" height="800" fill="${SKC.floor}"/><rect x="-1400" y="1620" width="4200" height="14" fill="${SKC.yellow}"/>`;
         // the glass + whatever is pressed on it (faces, palms) + cracks (in L.set above the hole)
         s += `<g transform="translate(${cx},${gy})">
-          <g transform="translate(-90,330)">${Sky.zFace(`${id}-zf0`, 1.15)}</g><g transform="translate(140,360)">${Sky.zFace(`${id}-zf1`, 1.0, { skin: "#a4b096", hair: "#4a3424" })}</g>
+          <clipPath id="${id}-gcp"><rect x="${-gw / 2}" y="${-gh / 2}" width="${gw}" height="${gh}"/></clipPath><g clip-path="url(#${id}-gcp)"><g transform="translate(-90,330)">${Sky.zFace(`${id}-zf0`, 1.15)}</g><g transform="translate(140,360)">${Sky.zFace(`${id}-zf1`, 1.0, { skin: "#a4b096", hair: "#4a3424", coat: "#6a3a3a", shirt: "#e8e4dc" })}</g></g>
           <rect x="${-gw / 2}" y="${-gh / 2}" width="${gw}" height="${gh}" fill="url(#skGlass)"/>
           <g transform="translate(-110,60)"><g id="${id}-zh0">${Sky.zPalm(`${id}-zp0`, 1.1)}</g></g><g transform="translate(130,10) scale(-1,1)"><g id="${id}-zh1">${Sky.zPalm(`${id}-zp1`, 1.0, { skin: "#a4b096" })}</g></g>
           ${[1, 2, 3].map((k) => `<g transform="translate(-70,-120)" id="${id}-ckw${k}" opacity="${(o.crack || 0) >= k ? 1 : 0}">${Sky.crack(`${id}-ck${k}`, k)}</g>`).join("")}</g>`;
