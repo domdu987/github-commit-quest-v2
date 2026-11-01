@@ -12,6 +12,11 @@
       const DUSK = { from: "left", rim: "#ffb080", rimOp: 0.55, shade: "#141a2a", shadeOp: 0.42, cast: false, vol: false };
       const DEAD = { from: "right", rim: "#9ab8ff", rimOp: 0.45, shade: "#06080e", shadeOp: 0.55, cast: false, vol: false };
       const GCALM = { top: "#ffe2c0", bottom: "#2a2040", op: 0.1 }, GALR = { top: "#c8202a", bottom: "#12040a", op: 0.3 }, GDEAD = { top: "#3a4a6a", bottom: "#05060c", op: 0.3 };
+      const ARTX = { tower: `<g><rect x="-34" y="-74" width="68" height="140" fill="#5a6a8a" stroke="#1b1714" stroke-width="5"/>${Array.from({ length: 10 }, (_, k) => `<rect x="${-24 + (k % 2) * 28}" y="${-62 + Math.floor(k / 2) * 26}" width="20" height="14" fill="#ffe08a"/>`).join("")}<path d="M-70,68H70" stroke="#1b1714" stroke-width="7"/>
+        <path d="M54,-76v140" stroke="#e8382c" stroke-width="7" stroke-dasharray="12 8"/><path d="M42,-64l12,-14l12,14M42,52l12,14l12,-14" stroke="#e8382c" stroke-width="7" fill="none"/></g>`,
+        bolt: `<path d="M12,-78L-40,8H-4L-18,78L42,-14H6Z" fill="#ffd84a" stroke="#1b1714" stroke-width="6" stroke-linejoin="round"/>`,
+        train: `<g><rect x="-66" y="-56" width="132" height="98" rx="24" fill="#eef0f2" stroke="#1b1714" stroke-width="6"/><rect x="-48" y="-40" width="96" height="40" rx="8" fill="#1a2a3a"/><circle cx="-34" cy="24" r="11" fill="#fff6c8" stroke="#1b1714" stroke-width="3"/><circle cx="34" cy="24" r="11" fill="#fff6c8" stroke="#1b1714" stroke-width="3"/><path d="M-80,60H80" stroke="#1b1714" stroke-width="8"/></g>` };
+      const RULESK = [{ text: "<u>กดกระดิ่ง</u> อย่าวิ่งลงราง", art: IconFX.ART.bell }, { text: "<u>ข้ามตู้</u> กั้นประตู รอคนนำทาง", art: IconFX.ART.gangway }];
       const S = 0.8, Y = TF - 6;
       const shk = (amp = 12) => (t) => ({ x: amp * Math.sin(t * 61), y: amp * 0.7 * Math.sin(t * 47), r: 0.5 * Math.sin(t * 37) });
       const rattle = (amp = 3) => (t) => ({ x: amp * Math.sin(t * 23), y: amp * 0.8 * Math.sin(t * 31), r: 0.15 * Math.sin(t * 7) });
@@ -122,7 +127,7 @@
       add("drop", { set: "viaduct", setOpts: { id: "vd", trainX: -700 }, dark: 0.05, light: false, grade: { top: "#ff9a6a", bottom: "#100a20", op: 0.18 }, blur: { far: 1.5, mid: 0.6, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(500, 1000, 0.62, 540, 700) }, { t: D("drop"), glide: D("drop"), ...fr(500, 1150, 0.7, 540, 700) }] },
         captions: caps("drop"),
-        fx(tl, id, t0, L) { tl.fromTo("#vd-train", { x: 0 }, { x: 700, duration: D("drop"), ease: "none", immediateRender: false }, t0); SkyUI.risk(tl, L.light, t0 + 0.4, Math.min(2.0, D("drop") - 0.5)); } });
+        fx(tl, id, t0, L) { tl.fromTo("#vd-train", { x: 0 }, { x: 700, duration: D("drop"), ease: "none", immediateRender: false }, t0); IconFX.enter(tl, L.light, { theme: "zombie", art: ARTX.tower, x: 300, y: 620, r: 150, t: t0 + 0.3, from: "left", label: "สูงเท่าตึก", idle: D("drop") - 1.5, exit: "fly" }); IconFX.enter(tl, L.light, { theme: "zombie", art: ARTX.bolt, x: 780, y: 620, r: 150, t: t0 + F("drop", 0, 1) - 0.25, from: "right", label: "รางอาจมีไฟ", idle: Math.max(0.3, D("drop") - F("drop", 0, 1) - 0.9), exit: "fly" }); } });
       // ---------- 13. ลุงเชิด grabs his arm; the rule ----------
       add("rule", { ...CAR("cg", "alarm", { end: "zombies", crack: 1 }), blur: { far: 3, mid: 1, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(LVX - 210, 1060, 2.4, 540, 1000) }, { t: D("rule"), glide: D("rule"), ...fr(LVX - 200, 1050, 2.7, 540, 1000) }] },
@@ -130,7 +135,7 @@
         actors: [A("suit", LVX - 90, Y, S, [{ t: 0, mode: "yank", eyes: "wide", mouth: "scream" }]),
           A("cherd", LVX - 330, Y, S, [{ t: 0, mode: "grabArm", eyes: "angry", mouth: "scream" }], { talk: [TALK("rule", 0, "scream")] })],
         captions: caps("rule", undefined, QUO),
-        fx(tl, id, t0, L) { noSh(tl, id); Sky.carLife(tl, "cg", t0, D("rule")); Sky.fgPole(tl, L, t0, D("rule"), { x: 110, red: true }); Sky.redPulse(tl, L, t0, D("rule")); SkyUI.rule(tl, L.light, t0 + vo("rule", 0) + 0.5, Math.min(2.0, D("rule") - vo("rule", 0) - 0.5), { active: 0, y: 360 }); } });
+        fx(tl, id, t0, L) { noSh(tl, id); Sky.carLife(tl, "cg", t0, D("rule")); Sky.fgPole(tl, L, t0, D("rule"), { x: 110, red: true }); Sky.redPulse(tl, L, t0, D("rule")); IconFX.board(tl, L.light, { skin: "clipboard", title: "กฎของลุงเชิด", sub: "ใบงานซ่อม · ช่างรถไฟฟ้า 30 ปี", t: t0 + vo("rule", 0) + 0.2, dur: Math.min(2.6, D("rule") - vo("rule", 0) - 0.2), y: 200, active: 0, at: [0.45, 0.6], items: RULESK }); } });
       // ---------- 14. เมย์ presses the yellow bell ----------
       add("bell", { ...CAR("cbl", "alarm", { end: "zombies", crack: 1 }), blur: { far: 4, mid: 1.5, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(BLX - 170, 1050, 2.4, 540, 900) }, { t: D("bell"), glide: D("bell"), ...fr(BLX - 120, 1040, 2.8, 540, 900) }] },

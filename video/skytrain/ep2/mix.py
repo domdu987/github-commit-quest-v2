@@ -149,7 +149,9 @@ CUES = [
     ("here", 0.2, "engine", 0.24), *rails("here", 0.6, D["here"], 0.2, 0.4), ("here", D["here"] - 0.4, "screech", 0.3), ("here", D["here"] - 0.2, "sting", 0.5),
     ("end2", 0.1, "whoosh", 0.3), ("end2", 1.1, "boom", 0.3), ("end2", 1.2, "ding", 0.24),
 ]
-CUES += [(None, c["t"], c["type"], c["gain"]) for c in json.load(open(os.path.join(HERE, "iconfx_cues.json")))]   # IconFX hits (icons, the clipboard), frame-exact
+import sys; sys.path.insert(0, "/home/user/github-commit-quest-v2/video/lib-shared/sfx"); import iconfx_mix
+_ic, SAMP = iconfx_mix.split(json.load(open(os.path.join(HERE, "iconfx_cues.json"))) if os.path.exists(os.path.join(HERE, "iconfx_cues.json")) else [], N, SR)
+CUES += [(None, c["t"], c["type"], c["gain"]) for c in _ic]   # IconFX hits (icons, the clipboard), frame-exact
 SAMPLES = []
 REPLACED = set()
 CUES = [c for c in CUES if c[2] not in REPLACED]
@@ -166,7 +168,8 @@ sfx = np.pad(sfx, (0, N - len(sfx)))
 
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
+mus = load(os.path.join(HERE, "..", "music", "skytrain-theme.mp3"))   # theme score (owner 1 Nov: "ซาวเพลงทำให้เข้าธีมด้วย")
+mus = mus[int(max(0.0, len(mus) / SR - TOTAL - 1.0) * SR):]   # start so the track's peak (its last ~20 s) lands on the cliffhanger
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -187,7 +190,7 @@ mus[b:] = 0
 
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
 mus = level(mus, -33)
-sfx = level(sfx, -27)
+sfx = level(sfx, -27) + SAMP
 env = box(np.abs(vo), int(0.05 * SR))
 duck = 1 - 0.8 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
 duck = box(duck, int(0.25 * SR))
