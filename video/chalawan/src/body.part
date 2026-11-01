@@ -1,0 +1,44 @@
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [9], ...extra });
+      const NGT = { from: "left", rim: "#ffd890", rimOp: 0.8, shade: "#0a0e18", shadeOp: 0.45, cast: false, vol: false };
+      const COLD = { from: "right", rim: "#9ec8ff", rimOp: 0.8, shade: "#0a0e18", shadeOp: 0.45, cast: false, vol: false };
+      const GNH = { top: "#3a4a6a", bottom: "#0a0e14", op: 0.18 };
+      const cap = (text) => [{ text, t: 0, end: 1 }];
+      const W = 1420;
+      const PUP = (L, x, y, s, id = "") => put(L.set, `<g ${id ? `id="${id}"` : ""} transform="translate(${x},${y}) scale(${s})"><ellipse rx="130" ry="34" fill="#2a8ac8" stroke="#1e1a16" stroke-width="5"/><ellipse cy="-8" rx="110" ry="22" fill="#4aa8e0"/>
+        <g transform="translate(0,-40)"><ellipse rx="60" ry="40" fill="#e8c890" stroke="#1e1a16" stroke-width="4"/><circle cx="40" cy="-40" r="34" fill="#e8c890" stroke="#1e1a16" stroke-width="4"/><path d="M14,-62Q-4,-40 6,-12Q22,-30 22,-58Z" fill="#8a5a2a" stroke="#1e1a16" stroke-width="3"/><path d="M62,-66Q86,-50 80,-20Q66,-34 56,-60Z" fill="#8a5a2a" stroke="#1e1a16" stroke-width="3"/>
+        <ellipse cx="56" cy="-24" rx="22" ry="15" fill="#f4e0bc" stroke="#1e1a16" stroke-width="3"/><circle cx="66" cy="-30" r="7" fill="#1e1a16"/><circle cx="34" cy="-46" r="5" fill="#1e1a16"/><circle cx="54" cy="-48" r="5" fill="#1e1a16"/><path d="M50,-12q6,10 12,0" fill="#e85a6a" stroke="#1e1a16" stroke-width="2"/><path d="M-50,-10q-30,-20 -36,-40" stroke="#e8c890" stroke-width="12" stroke-linecap="round" fill="none"/></g></g>`);
+      const reach = (L, x, y, rot, s, sleeve = "#3aa0a8") => put(L.glow, `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s})">${Hands.poke({ r: 56, sleeve, cuff: "#e8fbf8", sleeveLen: 700 })}</g>`);
+      // ---- H1 ปลั๊กจมน้ำ: her phone charging on the wall right above the socket the water is reaching ----
+      const ARM = (L, fx, fy, sx, sy, sc = 1) => { const ang = Math.atan2(sy - fy, sx - fx) * 180 / Math.PI, len = Math.hypot(sx - fx, sy - fy) / sc; put(L.glow, `<g transform="translate(${fx},${fy}) rotate(${ang}) scale(${sc})">${Hands.poke({ r: 50, sleeve: "#3aa0a8", cuff: "#e8fbf8", sleeveLen: Math.max(80, len - 120) })}</g>`); };
+      const SOCK = { sockX: 560, sockS: 1.6, stairs: false, fgWaterAll: true };
+      add("e0", { set: "cwRoom", setOpts: { id: "a", water: W, spark: 0.5, bulb: 0.9, flash: 0.2, ...SOCK }, dark: 0.05, light: NGT, grade: GNH, cam: { keys: [{ t: 0, ...fr(520, 1180, 1.05, 540, 960) }] },
+        actors: [A("dew", 250, W + 330, 1.55, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])], captions: cap("ถ้าวันหนึ่ง… [น้ำท่วม]ถึงปลั๊กในบ้านคุณ"),
+        fx: (tl, id, t0, L) => ARM(L, 600, 1060, 320, 1020) });
+      add("e1", { set: "cwRoom", setOpts: { id: "b", water: W - 25, spark: 1.0, bulb: 0.4, flash: 0.45, ...SOCK }, dark: 0.05, light: NGT, grade: GNH, cam: { keys: [{ t: 0, ...fr(500, 1150, 1.5, 540, 980) }] },
+        actors: [A("dew", 300, W + 320, 1.55, [{ t: 0, mode: "idle", eyes: "normal", mouth: "o" }])], captions: cap("มือถือยัง[ชาร์จ]อยู่ตรงนั้น"),
+        fx: (tl, id, t0, L) => ARM(L, 720, 1090, 370, 1020) });
+      add("e2", { set: "cwRoom", setOpts: { id: "c", water: W - 45, spark: 1.8, bulb: 0.1, flash: 0.9, ...SOCK }, dark: 0.05, light: COLD, grade: GNH, cam: { keys: [{ t: 0, ...fr(560, 1130, 2.0, 540, 940) }] },
+        actors: [A("dew", 360, W + 310, 1.55, [{ t: 0, mode: "idle", eyes: "wide", mouth: "scream" }])], captions: cap("{อย่าแตะปลั๊ก!}"),
+        fx: (tl, id, t0, L) => ARM(L, 748, 1112, 430, 1020) });
+      // ---- H2 ตาในน้ำ (ลูกหมาบนกะละมัง) ----
+      add("p0", { set: "cwRoom", setOpts: { id: "d", sock: false, water: W, bulb: 0.7, flash: 1, croc: { x: -150, y: W + 30, s: 0.7, side: 1, dir: 1, shine: 1 } }, dark: 0.05, light: COLD, grade: GNH, cam: { keys: [{ t: 0, ...fr(420, 1260, 1.0, 540, 1000) }] },
+        actors: [A("pao", 880, W + 40, 1.3, [{ t: 0, mode: "point", eyes: "normal", mouth: "o" }], { flip: true })], captions: cap("ถ้าวันหนึ่ง… [ลูกหมา]ลอยกลางน้ำในบ้าน"),
+        fx: (tl, id, t0, L) => PUP(L, 420, W + 60, 1.3) });
+      add("p1", { set: "cwRoom", setOpts: { id: "e", sock: false, water: W, bulb: 0.4, flash: 0.4, croc: { x: 60, y: W + 50, s: 1.4, side: 1, dir: 1, shine: 1 } }, dark: 0.05, light: COLD, grade: GNH, cam: { keys: [{ t: 0, ...fr(560, 1330, 1.35, 540, 1000) }] },
+        actors: [A("pao", 830, W + 110, 1.3, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { flip: true })], captions: cap("เด็กกำลังจะ[ก้าวลงไป]"),
+        fx: (tl, id, t0, L) => PUP(L, 470, W + 70, 1.3) });
+      add("p2", { set: "cwRoom", setOpts: { id: "f", sock: false, water: W, bulb: 0.15, flash: 0.9, croc: { x: 330, y: W + 150, s: 0.95, open: 1, shine: 1 } }, dark: 0.05, light: COLD, grade: GNH, cam: { keys: [{ t: 0, ...fr(600, 1360, 1.55, 540, 1000) }] },
+        actors: [A("pao", 820, W + 150, 1.3, [{ t: 0, mode: "walk", eyes: "wide", mouth: "scream" }], { flip: true })], captions: cap("{อย่าก้าวลงน้ำ!}"),
+        fx: (tl, id, t0, L) => PUP(L, 560, W + 70, 1.3) });
+      // ---- H3 ลุยน้ำกลับบ้าน ----
+      const WL = 1300;
+      add("l0", { set: "cwLane", setOpts: { id: "g", water: WL, flash: 0.6, torch: { x: 600, y: 1120, tx: 300, ty: WL + 40 }, croc: { x: 140, y: WL + 30, s: 0.7, side: 1, dir: 1, shine: 1 } }, dark: 0.05, light: NGT, grade: GNH, cam: { keys: [{ t: 0, ...fr(560, 1200, 1.0, 540, 980) }] },
+        actors: [A("yaiEiam", 720, WL + 300, 1.45, [{ t: 0, mode: "torch", eyes: "normal", mouth: "flat" }], { flip: true })], captions: cap("ถ้าวันหนึ่ง… คุณต้อง[ลุยน้ำ]กลับบ้าน") });
+      add("l1", { set: "cwLane", setOpts: { id: "h", water: WL, flash: 0.3, torch: { x: 620, y: 1130, tx: 360, ty: WL + 60 }, croc: { x: 230, y: WL + 50, s: 1.05, side: 1, dir: 1, shine: 1 } }, dark: 0.05, light: NGT, grade: GNH, cam: { keys: [{ t: 0, ...fr(540, 1260, 1.3, 540, 1000) }] },
+        actors: [A("yaiEiam", 740, WL + 300, 1.45, [{ t: 0, mode: "torch", eyes: "wide", mouth: "o" }], { flip: true })], captions: cap("ไฟฉายส่องไปเจอ[บางอย่าง]") });
+      add("l2", { set: "cwLane", setOpts: { id: "i", water: WL, flash: 0.9, torch: { x: 640, y: 1140, tx: 420, ty: WL + 80 }, croc: { x: 360, y: WL + 140, s: 1.0, open: 1, shine: 1 } }, dark: 0.05, light: COLD, grade: GNH, cam: { keys: [{ t: 0, ...fr(560, 1300, 1.55, 540, 1000) }] },
+        actors: [A("yaiEiam", 780, WL + 300, 1.45, [{ t: 0, mode: "torch", eyes: "wide", mouth: "scream" }], { flip: true })], captions: cap("{อย่าเดินลุยน้ำ!}") });
+      // ---- look sheet ----
+      add("v0", { set: "cwRiver", setOpts: { id: "v", water: 1350, croc: { x: 760, y: 1420, s: 0.7, side: 1, dir: -1, shine: 0.8 } }, dark: 0, light: { from: "right", rim: "#ffd8a0", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.3, cast: false, vol: false }, grade: { top: "#ffd8a0", bottom: "#3a2a4a", op: 0.15 }, blur: { far: 2 }, cam: { keys: [{ t: 0, ...fr(400, 1050, 0.9, 540, 960) }] }, captions: [] });
+      add("v1", { set: "cwRiver", setOpts: { id: "w", water: 1640 }, dark: 0, light: { from: "right", rim: "#ffd8a0", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.3, cast: false, vol: false }, grade: { top: "#ffd8a0", bottom: "#3a2a4a", op: 0.12 }, blur: { far: 3, set: 2 }, cam: { keys: [{ t: 0, ...fr(560, 1200, 1.0, 540, 960) }] },
+        actors: [A("lungChot", 140, 1650, 1.05, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), A("yaiEiam", 390, 1650, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]), A("dew", 640, 1650, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }), A("pao", 880, 1650, 0.85, [{ t: 0, mode: "idle", eyes: "normal", mouth: "laugh" }], { flip: true })], captions: [] });
