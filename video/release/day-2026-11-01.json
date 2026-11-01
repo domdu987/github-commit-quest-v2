@@ -89,31 +89,31 @@
    "order": 6,
    "id": "hornet-ep1",
    "series": "ต่อหัวเสือ",
-   "status": "hold",
+   "status": "final",
    "branch": "prod/lane-b",
-   "commit": "9e9eb2d",
+   "commit": "18efedb",
    "package": "video/release/hornet.json",
    "video_hq": "video/release/hq/hornet-ep1-HQ.mp4",
-   "video_hq_sha256": "5aefc850ce479a66b6517df4d153ab7651c700a2196f7847b1ba502fb3c66a0b",
-   "video_hq_bytes": 77367536,
+   "video_hq_sha256": "5679509bc6bf6e00741f4d51d650180e2ba170d51b8e1d50037d1a4ef0fcef1a",
+   "video_hq_bytes": 71215875,
    "suggested_time": "2026-11-01T20:00+07:00",
-   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)",
-   "slot": "กลางคืน"
+   "slot": "กลางคืน",
+   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)"
   },
   {
    "order": 7,
    "id": "hornet-ep2",
    "series": "ต่อหัวเสือ",
-   "status": "hold",
+   "status": "final",
    "branch": "prod/lane-b",
-   "commit": "9e9eb2d",
+   "commit": "18efedb",
    "package": "video/release/hornet.json",
    "video_hq": "video/release/hq/hornet-ep2-HQ.mp4",
-   "video_hq_sha256": "6ef1675291b0542da4a176b28d92107c59dcaf5a5f98d88edb452ed2f2351b6d",
-   "video_hq_bytes": 54790695,
+   "video_hq_sha256": "a2a0a0273a847df71d18d6565a3ca52372a94e4ba714f5aeada014145d46b3f2",
+   "video_hq_bytes": 48083644,
    "suggested_time": "2026-11-01T20:30+07:00",
-   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)",
-   "slot": "กลางคืน"
+   "slot": "กลางคืน",
+   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)"
   }
  ],
  "slots": {
