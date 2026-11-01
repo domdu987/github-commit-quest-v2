@@ -6,7 +6,7 @@ import subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 LIB = os.path.join(HERE, "..", "hf", "lib")
-PROJ = os.path.join(HERE, "..", "hf", os.environ.get("HF_PROJ", "fence7"))   # HF_PROJ=<name> builds a side-by-side variant project
+PROJ = os.path.join(HERE, "..", "hf", os.environ.get("HF_PROJ", "fence1"))   # HF_PROJ=<name> builds a side-by-side variant project
 
 os.makedirs(os.path.join(PROJ, "assets"), exist_ok=True)
 for f in ("package.json", "hyperframes.json", "meta.json"):
@@ -14,7 +14,7 @@ for f in ("package.json", "hyperframes.json", "meta.json"):
         shutil.copy(os.path.join(HERE, "..", "hf", "rig", f), PROJ)
 if not os.path.exists(os.path.join(PROJ, "assets", "fonts")):
     shutil.copytree(os.path.join(HERE, "..", "hf", "rig", "assets", "fonts"), os.path.join(PROJ, "assets", "fonts"))
-for f in ("rig.js", "hand.js", "sets.js", "dress.js", "camp.js", "koi.js", "zom.js", "fence.js", "road.js", "estate.js", "estate7.js", "sig.js", "ui.js", "gameui.js", "fx.js", "engine.js"):
+for f in ("rig.js", "hand.js", "sets.js", "dress.js", "camp.js", "koi.js", "zom.js", "fence.js", "road.js", "sig.js", "ui.js", "gameui.js", "fx.js", "engine.js"):
     shutil.copy(os.path.join(LIB, f), os.path.join(PROJ, "assets", f))
 ART = os.path.join(HERE, "..", "art")   # AI-painted plates referenced by the template as assets/art/<name>.png
 os.makedirs(os.path.join(PROJ, "assets", "art"), exist_ok=True)
@@ -32,8 +32,8 @@ def css(lib, name):
 
 sched = json.load(open(os.path.join(HERE, "schedule.json")))
 # lip-sync (user 28 Oct, character pass): each spoken line carries its loudness track and the character who speaks it
-OFFSCREEN = set()
-VOICE2WHO = {"Kore": "pim", "Pulcherrima": "hong", "Zubenelgenubi": "kong", "Algenib": "man", "Leda": "pun", "Charon": "phu", "Alnilam": "guard", "Orus": "win", "Gacrux": "yai"}
+OFFSCREEN = {"l01"}   # EP.4: the lure — a child crying outside the fence, not น้องปั้น
+VOICE2WHO = {"Kore": "pim", "Pulcherrima": "hong", "Zubenelgenubi": "kong", "Algenib": "man", "Leda": "pun", "Charon": "phu", "Alnilam": "guard"}
 if os.path.exists(os.path.join(HERE, "lipsync.json")):
     _lip = json.load(open(os.path.join(HERE, "lipsync.json")))
     _voice = {ln["id"]: ln["voice"] for ln in json.load(open(os.path.join(HERE, "lines.json")))}

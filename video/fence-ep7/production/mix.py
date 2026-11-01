@@ -1,7 +1,7 @@
-"""Build the episode soundtrack from schedule.json (เอาชีวิตรอด 99 วัน EP.7 "คนไร้ประโยชน์"): per-line levelled voice, synthesized SFX
-(the canteen's tubes and spoons, the slaps that do nothing, the silence of a child who can't breathe, ภู's five back blows and the
-thrusts, the score board, คุณวิน's pen, the yard at midnight, the radio in the office) and the Suno music bed with dips and ducking.
-Every noise sound comes from the de-hissed synth.py (fband on every bed). Output -14 LUFS, hard cut to silence at the cliffhanger."""
+"""Build the episode soundtrack from schedule.json (เอาชีวิตรอด 99 วัน EP.7 เสียงเรียกฝูง): per-line levelled voice, synthesized SFX
+(cicadas in the noon heat, the pickup and its last cough, footsteps on hot asphalt, the fall, water poured on cloth and the cardboard fan,
+the lunge under the bridge, the station at dusk, the rifle, the radio) and the Suno music bed with dips and sidechain ducking under the voice.
+Output -14 LUFS, hard cut to silence at the cliffhanger, only the end card's own sounds after it."""
 import json
 import os
 import subprocess
@@ -62,20 +62,16 @@ def frag(k, i=0, j=0):
     return SH[k]["vo"][i]["t"] + SH[k]["vo"][i]["frags"][j]
 
 
-D = {k: SH[k]["dur"] for k in SH}
-# the same beats as shots.part
-HS = vo_t("hook", 1) - 0.1; HN = int((vo_t("hook", 2) - HS) / 0.3)                         # the hook's slaps: every 0.3 s until "อย่ามัวแต่ตบหลัง"
-BL, TH = 0.36, 0.42
-B0 = frag("phu", 0, 2) + 0.35; T0 = vo_end("phu", 1) + 0.05; POP = T0 + 2 * TH + 0.12      # first back blow; first thrust; out on the third
-BA = vo_t("board", 1) - 0.25                                                               # the score card's shot starts here
-
-# ---- voice: every line levelled on its own so shouts and the child's line sit at a readable loudness ----
-LINE_GAIN = {"r01": -2, "d03": -1, "d04": 1, "s01": 0}
+# ---- voice: every line levelled on its own ----
+LINE_GAIN = {"r01": -2, "g02": -1, "g03": -1, "w01": -2, "ph01": 0.5, "ph02": 0.5, "p02": 1.5, "pn01": 0.5, "s01": 0}
 vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
         x = load(os.path.join(HERE, "vo", f"{v['id']}.wav"))
         place(vo, level(x, -18 + LINE_GAIN.get(v["id"], 0)), s["start"] + v["t"])
+
+# ---- sfx cues: (shot, t from shot start (negative = from its end), type, gain) ----
+D = {k: SH[k]["dur"] for k in SH}
 
 
 def beats(k, t0, dur, period, g=0.9):  # heartbeat sfx in step with Fx.heart
@@ -90,43 +86,59 @@ def bed(kind, a, b, g, step=4.6):  # overlapping copies of an ambience between a
     return out
 
 
+def growls(k, a, b, g=0.7, step=0.7):
+    return [(k, a + i * step, "growl", g * (0.7 + 0.3 * (i % 2))) for i in range(int((b - a) / step))]
+
+
+HK2 = vo_t("hook", 1) - 0.1          # the swarm flash on the headlights
+CT2 = vo_t("count", 1) - 0.2         # the roof: ภู's rule, the lamp goes out
+LT2 = vo_t("lights", 1) - 0.2        # the roof: the whispered rule
+LA2 = vo_t("ladder", 1) - 0.2        # the guard lands on the roof
+LR2 = vo_t("later", 1) - 0.4         # the radio close-up
+CX = D["cliff"] - 1.4                # the cliff's punch; black at D - 0.08
+T1 = frag("trucks", 0, 1) + 0.6      # the lights go out one by one
+
 CUES = [
-    # cold open: the canteen under the tubes; our hand slapping her back, again and again; "อย่ามัวแต่ตบหลัง" — the jolt
-    *bed("hum", T("hook", 0), T("hook", -0.1), 0.25, 3.0), ("hook", -0.25, "whoosh", 0.7), *[("hook", HS + i * 0.3 + 0.09, "slap", 0.55 + 0.05 * (i % 2)) for i in range(HN)],
-    ("hook", vo_t("hook", 2), "sting", 1.0), ("hook", vo_t("hook", 2), "boom", 0.6), ("hook", vo_t("hook", 2), "glitch", 0.5), *beats("hook", 0.4, D["hook"] - 0.4, 0.45, 0.6),
-    # dawn, the board: "เหลือ 93 วัน"; ยายจันทร์'s brush by the door
-    ("chapter", 0.05, "page", 0.9), ("chapter", 0.4, "chalk", 0.5), ("chapter", 0.5, "slam", 0.5), *[("chapter", 0.9 + k * 0.16, "pop", 0.4) for k in range(2)], ("chapter", frag("chapter", 0, 1), "sting", 0.6),
-    *bed("wind", T("chapter", 0), T("board", -0.1), 0.2, 3.2), *bed("crickets", T("chapter", 0), T("chapter", -0.1), 0.1, 4.0),
-    # the line-up: คุณวิน's rule; the score card — ปั้น at the bottom, the red ring, the stamp
-    *[("board", 0.2 + k * 0.5, "steps", 0.2) for k in range(3)], ("board", frag("board", 0, 2), "sting", 0.7), ("board", frag("board", 0, 2), "boom", 0.35),
-    ("board", BA + 0.05, "page", 0.8), ("board", BA + 0.4, "slam", 0.45), *[("board", BA + 0.55 + i * 0.32, "pen", 0.45) for i in range(5)],
-    ("board", frag("board", 1, 1) - 0.05, "marker", 0.6), ("board", frag("board", 1, 1), "sting", 0.8), ("board", frag("board", 1, 1), "boom", 0.4), ("board", frag("board", 1, 1) + 0.5, "slam", 0.7), ("board", frag("board", 1, 1) + 0.5, "thud", 0.5),
-    *beats("board", vo_t("board", 0), D["board"] - vo_t("board", 0), 0.6, 0.4),
-    # dinner under the tubes: spoons, ปั้น's quick spoon; "เดี๋ยวติดคอ"
-    *bed("hum", T("dinner", 0), T("sig", -0.1), 0.28, 3.0), *bed("fan", T("dinner", 0), T("breathe", -0.1), 0.14, 4.0), *[("dinner", 0.2 + k * 0.8, "ching", 0.1) for k in range(8)], *[("dinner", 0.3 + k * 0.36, "ching", 0.07) for k in range(10)],
-    ("dinner", frag("dinner", 1, 1), "sting", 0.4),
-    # she chokes: the room drops away — only the heartbeat and the tubes; the three ✗
-    ("choke", 0.05, "riser", 0.5), *[x for o in (vo_t("choke", 1), frag("choke", 1, 1), frag("choke", 1, 2)) for x in (("choke", o, "pop", 0.45), ("choke", o + 0.3, "marker", 0.35))],
-    ("choke", frag("choke", 1, 2), "sting", 0.9), ("choke", frag("choke", 1, 2), "boom", 0.45), *beats("choke", 0.0, D["choke"], 0.42, 0.85),
-    # panic: slap after slap, a cup set down, the count climbing; คุณวิน doesn't move
-    *[("panic", t, "slap", 0.5) for t in np.arange(0.12, D["panic"] - 0.05, 0.3)], ("panic", 0.4, "ching", 0.35), ("panic", D["panic"] - 1.0, "sting", 0.5), *beats("panic", 0.0, D["panic"], 0.36, 0.95),
-    # ภู: steps, the skill card; five back blows (the tally ticks), "ยังไม่หลุด"; the thrusts — out on the third
-    *[("phu", k * 0.16, "steps", 0.45) for k in range(3)], ("phu", 0.15, "page", 0.6), ("phu", 0.45, "slam", 0.5), ("phu", 0.55, "sting", 0.6),
-    *[x for i in range(5) for x in (("phu", B0 + i * BL + 0.1, "blow", 0.85), ("phu", B0 + i * BL + 0.12, "pop", 0.3))],
-    ("phu", B0 + 5 * BL + 0.05, "slam", 0.6), ("phu", B0 + 5 * BL + 0.05, "buzz", 0.35),
-    *[x for i in range(3) for x in (("phu", T0 + i * TH + 0.1, "thud", 0.45), ("phu", T0 + i * TH + 0.12, "pop", 0.3))],
-    ("phu", POP, "pop", 0.8), ("phu", POP, "sting", 1.0), ("phu", POP, "boom", 0.5), ("phu", POP + 0.1, "ding", 0.6), ("phu", POP + 0.85, "tap", 0.5), ("phu", POP + 0.2, "cough", 0.45),
-    *beats("phu", 0.0, POP, 0.4, 0.8),
-    # she breathes: coughing, then quiet; "หนูขอโทษ…"
-    *[("breathe", 0.1 + k * 0.35, "cough", 0.4 - 0.08 * k) for k in range(3)], ("breathe", frag("breathe", 0, 1), "sting", 0.35),
-    # the steps card and the real-life tips
-    *[x for o in (vo_t("card", 0), frag("card", 0, 1), frag("card", 0, 2), frag("card", 0, 3)) for x in (("card", o, "page", 0.4), ("card", o + 0.3, "pen", 0.5), ("card", o + 0.35, "ding", 0.25))],
-    ("real", frag("real", 0, 1) - 0.1, "page", 0.6), ("real", frag("real", 0, 1) + 0.2, "slam", 0.5), ("real", frag("real", 0, 2), "page", 0.6), ("real", frag("real", 0, 2) + 0.3, "slam", 0.5), ("real", frag("real", 0, 3), "ding", 0.4),
-    # คุณวิน crosses to ภู: "เหมือนเดิม…"; his pen: ปั้น → ภาระ
-    *[("win", 0.1 + k * 0.45, "steps", 0.3) for k in range(2)], ("win", frag("win", 1, 0) + 0.05, "sting", 0.7), ("win", frag("win", 1, 0) + 0.05, "boom", 0.35),
-    ("win", frag("win", 2, 1) - 0.45, "marker", 0.5), ("win", frag("win", 2, 1) - 0.15, "pen", 0.8), ("win", frag("win", 2, 1) + 0.45, "pen", 0.8), ("win", frag("win", 2, 1) + 0.6, "sting", 0.8), ("win", frag("win", 2, 1) + 0.6, "boom", 0.4),
-    *beats("win", vo_t("win", 1), D["win"] - vo_t("win", 1), 0.55, 0.5),
-    # the signature
+    # BEAT 0: the trucks' lights from the roof (engines up the road, crickets), the sting on "อย่าลงไป", the swarm flash, the growls
+    *bed("crickets", T("hook", 0), T("count", CT2 + 0.5), 0.26, 5.0), *bed("engine", T("hook", 0), T("count", -0.1), 0.42, 4.0),
+    ("hook", frag("hook", 1, 0), "sting", 0.9), ("hook", frag("hook", 1, 0), "boom", 0.4), ("hook", HK2, "whoosh", 0.45), ("hook", HK2 + 0.05, "glitch", 0.4),
+    *growls("hook", frag("hook", 1, 2) - 0.2, D["hook"], 0.55, 0.6), *beats("hook", frag("hook", 1, 0), D["hook"] - frag("hook", 1, 0), 0.5, 0.6),
+    # BEAT 1: the loudspeaker counts; rule two is for the dead (red); lights off, be still; the lamp goes out
+    ("count", vo_t("count", 0) - 0.3, "static", 0.5), ("count", vo_t("count", 0) - 0.25, "trumpet", 0.5), ("count", vo_t("count", 0) - 0.2, "radio", 0.45),
+    ("count", frag("count", 0, 2), "sting", 0.5), ("count", vo_t("count", 1) - 0.1, "page", 0.5), ("count", frag("count", 1, 2), "sting", 0.85), ("count", frag("count", 1, 2), "slam", 0.6), ("count", frag("count", 1, 2), "boom", 0.45),
+    *[x for o in (frag("count", 1, 2) + 0.9, frag("count", 1, 2) + 1.3) for x in (("count", o, "pop", 0.45), ("count", o + 0.2, "pen", 0.5))], ("count", frag("count", 1, 2) + 1.3, "click", 0.6), ("count", frag("count", 1, 2) + 1.35, "powerdown", 0.35),
+    *beats("count", 0.0, D["count"], 0.6, 0.45),
+    # BEAT 2: the dark (the engines idle below, the wind), the adapted eye
+    *bed("engine", T("dark", 0), T("dark", -0.1), 0.3, 4.0), *bed("wind", T("dark", 0), T("dark", -0.1), 0.15, 3.2), ("dark", 0.2, "swell", 0.45), ("dark", frag("dark", 0, 1), "sting", 0.5), *beats("dark", 0.0, D["dark"], 0.75, 0.4),
+    # BEAT 3: what followed the engines arrives before ten (red): the roar, the beam swings, the men's shriek
+    *bed("engine", T("arrive", 0), T("trucks", T1 + 1.1), 0.45, 4.0), *growls("arrive", 0.0, D["arrive"], 0.8, 0.5),
+    ("arrive", frag("arrive", 0, 1), "roar", 1.0), ("arrive", frag("arrive", 0, 1), "boom", 0.6), ("arrive", frag("arrive", 0, 1) + 0.05, "glitch", 0.5), ("arrive", frag("arrive", 0, 1) + 0.25, "whoosh", 0.5), ("arrive", frag("arrive", 0, 1) + 0.5, "shriek", 0.35), ("arrive", frag("arrive", 0, 1) + 0.6, "scream", 0.3),
+    *beats("arrive", 0.0, D["arrive"], 0.42, 0.85),
+    # BEAT 4: every torch turns to them, they turn to every torch (the lunge); on the roof, the whispered rule
+    *growls("lights", 0.0, LT2, 0.85, 0.45), ("lights", 0.6, "whoosh", 0.45), ("lights", 1.4, "whoosh", 0.45), ("lights", 2.0, "steps", 0.4), ("lights", frag("lights", 0, 1), "sting", 0.9), ("lights", frag("lights", 0, 1), "boom", 0.5), ("lights", frag("lights", 0, 1) + 1.5, "roar", 0.8), ("lights", frag("lights", 0, 1) + 1.5, "slam", 0.5),
+    *bed("crickets", T("lights", LT2), T("ladder", LA2), 0.2, 5.0), *growls("lights", LT2, D["lights"], 0.4, 0.7), ("lights", frag("lights", 1, 1), "sting", 0.5), ("lights", frag("lights", 1, 1), "ding", 0.3),
+    *beats("lights", 0.0, LT2, 0.42, 0.85), *beats("lights", LT2, D["lights"] - LT2, 0.45, 0.7),
+    # BEAT 5: the ladder: the rungs, the claws, the pull over the edge; "เพราะเรานับได้หก"
+    *[("ladder", o, "clang", 0.45) for o in (0.6, 1.1, 1.6, 2.1)], *growls("ladder", 0.0, LA2, 0.8, 0.5), ("ladder", frag("ladder", 0, 1), "sting", 0.6), ("ladder", 2.3, "rustle", 0.45), ("ladder", 2.5, "roar", 0.85), ("ladder", 2.5, "boom", 0.4),
+    ("ladder", LA2 + 0.1, "thud", 0.6), ("ladder", LA2 + 0.3, "gasp", 0.5), ("ladder", LA2 + 0.9, "breath", 0.5), *growls("ladder", LA2, D["ladder"], 0.4, 0.7), ("ladder", vo_t("ladder", 2) - 0.1, "page", 0.4), ("ladder", vo_t("ladder", 2), "sting", 0.7), ("ladder", vo_t("ladder", 2) + 0.4, "ding", 0.4),
+    *beats("ladder", 0.0, LA2, 0.42, 0.85), *beats("ladder", LA2, D["ladder"] - LA2, 0.5, 0.6),
+    # BEAT 6: the swarm takes the trucks (red): everything a horde wants; the lights die one by one; the engines die
+    *growls("trucks", 0.0, T1 + 1.5, 0.9, 0.4), ("trucks", 0.25, "roar", 1.0), ("trucks", 0.25, "boom", 0.8), ("trucks", 0.3, "glitch", 0.6), ("trucks", 0.3, "slam", 0.6), ("trucks", 0.8, "scream", 0.35), ("trucks", 1.0, "shatter", 0.6), ("trucks", 1.6, "scream", 0.3),
+    ("trucks", frag("trucks", 0, 1), "sting", 0.9), ("trucks", frag("trucks", 0, 1), "boom", 0.5), ("trucks", T1, "click", 0.6), ("trucks", T1 + 1.1, "click", 0.6), ("trucks", T1 + 1.1, "powerdown", 0.7),
+    *growls("trucks", T1 + 1.5, D["trucks"], 0.5, 0.6), *beats("trucks", 0.0, D["trucks"], 0.42, 0.85),
+    # BEAT 7: dawn: no trucks, no lights, no sound; the guard's lie; เจ๊หงส์'s message
+    *bed("cicada", T("dawn", 0), T("rule6", -0.1), 0.35, 5.0), *bed("wind", T("dawn", 0), T("rule6", -0.1), 0.15, 3.2), ("dawn", 0.5, "gull", 0.25), ("dawn", frag("dawn", 0, 2), "sting", 0.45),
+    ("dawn", vo_t("dawn", 1) - 0.4, "steps", 0.35), ("dawn", frag("dawn", 1, 1), "sting", 0.6), ("dawn", frag("dawn", 2, 1), "pop", 0.35), ("dawn", frag("dawn", 2, 1) + 0.05, "ding", 0.35), *beats("dawn", 0.0, D["dawn"], 0.8, 0.3),
+    # BEAT 8: rule six on the wall (red)
+    ("rule6", frag("rule6", 0, 1) - 0.1, "page", 0.6), ("rule6", frag("rule6", 0, 1), "marker", 0.5), ("rule6", frag("rule6", 0, 2), "slam", 0.6), ("rule6", frag("rule6", 0, 2), "sting", 0.8), ("rule6", frag("rule6", 0, 2), "boom", 0.4), *beats("rule6", 0.0, D["rule6"], 0.7, 0.35),
+    # BEAT 9: twenty days later (rain), the radio counts them as nought (red); "ดี" (the false safety)
+    *bed("rain", T("later", 0), T("cliff", -0.1), 0.4, 4.0), ("later", 0.6, "thunder", 0.3), ("later", frag("later", 0, 1), "page", 0.5), ("later", frag("later", 0, 1) + 0.25, "pen", 0.5), ("later", frag("later", 0, 1) + 0.5, "ding", 0.3),
+    ("later", vo_t("later", 1) - 0.2, "static", 0.5), ("later", vo_t("later", 1) - 0.15, "radio", 0.6), *bed("radiobed", T("later", vo_t("later", 1) - 0.15), T("later", vo_end("later", 1) + 0.2), 0.3, 3.0),
+    ("later", frag("later", 1, 1), "page", 0.5), ("later", frag("later", 1, 1), "rip", 0.4), ("later", frag("later", 1, 2), "sting", 0.85), ("later", frag("later", 1, 2), "glitch", 0.5), ("later", frag("later", 1, 2), "boom", 0.4),
+    ("later", frag("later", 2, 1), "ding", 0.4), *beats("later", vo_t("later", 1), D["later"] - vo_t("later", 1), 0.6, 0.45),
+    # BEAT 10: the cliff: the storm, more of them than ever below the roof; the question; black
+    ("cliff", 0.3, "thunder", 0.5), ("cliff", 4.0, "thunder", 0.45), *growls("cliff", 0.0, CX, 0.5, 0.7), ("cliff", frag("cliff", 0, 2), "sting", 0.7), ("cliff", CX, "roar", 0.9), ("cliff", CX, "boom", 0.8), ("cliff", CX, "slam", 0.6), ("cliff", CX + 0.05, "glitch", 0.5),
+    *beats("cliff", 0.0, CX, 0.45, 0.8),
     ("sig", 0.05, "page", 0.8), ("sig", 0.36, "thud", 0.25),
     *[x for o in (frag("sig", 0, 0) + 0.3, frag("sig", 0, 0) + 0.62, frag("sig", 0, 1) + 0.15) for x in (("sig", o, "pen", 0.9), ("sig", o + 0.05, "ding", 0.3))],
     ("sig", frag("sig", 0, 2) + 0.45, "marker", 0.45), *beats("sig", frag("sig", 0, 2), frag("sig", 0, 3) - frag("sig", 0, 2), 0.38, 0.8),
@@ -135,32 +147,18 @@ CUES = [
     ("sig", frag("sig", 0, 3), "sting", 1.1), ("sig", frag("sig", 0, 3), "boom", 0.7), ("sig", frag("sig", 0, 3), "pen", 1.0), ("sig", frag("sig", 0, 3) + 0.1, "pen", 1.0),
     ("sig", frag("sig", 0, 3) + 0.24, "rip", 1.1), ("sig", frag("sig", 0, 3) + 0.86, "thud", 0.8), ("sig", frag("sig", 0, 3) + 0.86, "slam", 0.35),
     *beats("sig", frag("sig", 0, 3), D["sig"] - frag("sig", 0, 3), 0.5, 0.7),
-    # midnight: the dorm, then through the bars — ภู under the lamp, the knot, his steps to the office
-    *bed("crickets", T("scarf", 0), T("choice", -0.3), 0.22, 4.0), *bed("wind", T("scarf", 0), T("office", -0.1), 0.12, 3.2),
-    ("scarf", vo_t("scarf", 0) + 0.3, "rustle", 0.6), ("scarf", vo_t("scarf", 0) + 1.0, "rustle", 0.5), ("scarf", frag("scarf", 0, 1), "sting", 0.7), ("scarf", frag("scarf", 1, 1), "sting", 0.8), ("scarf", frag("scarf", 1, 1), "boom", 0.4),
-    *[("scarf", D["scarf"] - 1.0 + k * 0.48, "steps", 0.2) for k in range(2)], *beats("scarf", 0.0, D["scarf"], 0.55, 0.5),
-    # the office window: the radio — 92… five — then คุณวิน: "ฉันเก็บไว้ให้นายตลอด"
-    ("office", vo_t("office", 0) - 0.4, "radio", 1.0), *bed("radiobed", T("office", vo_t("office", 0) - 0.1), T("office", vo_end("office", 0) + 0.3), 0.5, 3.0),
-    ("office", frag("office", 0, 2), "tick", 0.5), ("office", frag("office", 0, 2), "sting", 0.8), ("office", frag("office", 0, 2), "glitch", 0.35),
-    ("office", vo_t("office", 1) - 0.1, "static", 0.25), ("office", frag("office", 1, 1), "sting", 1.0), ("office", frag("office", 1, 1), "boom", 0.6), ("office", frag("office", 1, 1), "glitch", 0.5),
-    *beats("office", vo_t("office", 0), D["office"] - vo_t("office", 0), 0.5, 0.55),
-    # ปั้น's drawing
-    ("drawing", 0.1, "crayon", 0.6), ("drawing", 0.9, "crayon", 0.5), ("drawing", frag("drawing", 0, 1) - 0.4, "riser", 0.4), ("drawing", frag("drawing", 0, 1), "sting", 0.9), ("drawing", frag("drawing", 0, 1), "boom", 0.5), ("drawing", frag("drawing", 0, 1) + 0.2, "glitch", 0.45),
-    *beats("drawing", 0.3, D["drawing"] - 0.3, 0.55, 0.5),
-    # the choice, then black; the end card
-    *beats("choice", 0.0, D["choice"] - 0.3, 0.38, 1.0), *[("choice", 0.05 + k * 1.0, "tick", 1.0) for k in range(3)], ("choice", 1.0, "glitch", 0.6), ("choice", 1.0, "radio", 0.5),
-    ("choice", D["choice"] - 2.2, "riser", 1.0), ("choice", D["choice"] - 0.62, "sting", 1.0), ("choice", D["choice"] - 0.6, "glitch", 0.8), ("choice", D["choice"] - 0.6, "boom", 0.7),
-    ("next", 0.3, "page", 0.9), ("next", 0.6, "marker", 0.35), ("next", 1.0, "marker", 0.35), ("next", 1.45, "sting", 0.6), ("next", 1.9, "glitch", 0.3), *beats("next", 1.2, D["next"] - 1.2, 0.7, 0.5),
+    # ตอนที่ 8: the card slaps on, the tease, the CTA
+    ("next", 0.1, "page", 0.8), ("next", 0.45, "slam", 0.5), ("next", 0.6, "sting", 0.6), ("next", 1.5, "pop", 0.4), ("next", 2.4, "pop", 0.4), ("next", 2.45, "ding", 0.3),
 ]
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
-        "sfx": [{"t": round(float(t) if k is None else T(k, float(t)), 3), "type": typ, "gain": g} for k, t, typ, g in CUES]}
+        "sfx": [{"t": round(t if k is None else T(k, t), 3), "type": typ, "gain": g} for k, t, typ, g in CUES]}
 json.dump(cues, open(os.path.join(HERE, "sfx_cues.json"), "w"))
 subprocess.run(["python3", os.path.join(HERE, "..", "synth.py"), os.path.join(HERE, "sfx_cues.json"), os.path.join(HERE, "sfx.wav")],
                check=True, env={**os.environ, "STEMS": "1"})
 sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
 
-# ---- music with horror dips ----
+# ---- music with horror dips: the reference drops ~10 dB before the twist ----
 mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
@@ -175,33 +173,29 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 dip(0.0, T("hook", -0.1), 0.3, 0.05)
-dip(T("board", frag("board", 1, 1) - 0.2), T("board", -0.05), 0.35)
-dip(T("choke", 0.1), T("choke", -0.05), 0.12)                      # the room drops away while she can't breathe
-dip(T("phu", POP - 0.1), T("phu", POP + 0.6), 0.25)
-dip(T("win", frag("win", 1, 0)), T("win", -0.05), 0.35)
+dip(T("count", CT2), T("dark", -0.05), 0.4)              # the roof whispers and the dark
+dip(T("lights", LT2), T("lights", -0.05), 0.4)           # the whispered rule
+dip(T("later", vo_t("later", 1) - 0.2), T("later", vo_end("later", 1) + 0.2), 0.2)
+dip(T("cliff", 0), T("cliff", vo_t("cliff", 0) + 0.4), 0.3, 0.6)   # the drop before the question
 dip(T("sig", frag("sig", 0, 2)), T("sig", frag("sig", 0, 3) + 0.05), 0.05, 0.12)
-dip(T("office", vo_t("office", 0) - 0.4), T("office", vo_end("office", 0) + 0.3), 0.15)
-dip(T("office", frag("office", 1, 1)), T("office", -0.05), 0.3)
-dip(T("drawing", frag("drawing", 0, 1)), T("drawing", -0.05), 0.35)
-dip(T("choice", 0), T("choice", -0.3), 0.5)
 boost = np.ones(N, np.float32)  # the action plays with the music up
-for a0, a1 in ((T("panic", 0), T("panic", -0.05)), (T("phu", 0.2), T("phu", POP - 0.1))):
+for a0, a1 in ((T("arrive", 0), T("lights", LT2 - 0.1)), (T("trucks", 0), T("trucks", T1 + 1.1)), (T("cliff", CX - 0.2), T("cliff", -0.1))):
     boost += 0.4 * (np.clip((t - a0) / 0.3, 0, 1) * np.clip((a1 - t) / 0.2, 0, 1)).astype(np.float32)
 mus = mus * gain * boost
-end = int(T("choice", -0.2) * SR)
-mus[end:] = 0  # hard cut to black and silence
+end = int(T("cliff", -0.08) * SR)
+mus[end:int(T("sig", 0) * SR)] = 0  # the cliffhanger cuts to black and silence until the signature
 
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
-SFX_GAIN_DB = -1.648   # the same absolute effects level as EP.6 (its de-hissed stem kept level(sfx, -27) of the v2 stem); not re-normalised per episode
 mus = level(mus, -30)
-sfx = sfx * 10 ** (SFX_GAIN_DB / 20)
+sfx = level(sfx, -27)
 env = box(np.abs(vo), int(0.05 * SR))
 duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
 duck = box(duck, int(0.25 * SR))
 mix = vo + mus * duck + sfx
-cut, card = int(T("choice", -0.2) * SR), int(T("next", 0.3) * SR)
+cut, back = int(T("cliff", -0.08) * SR), int(T("sig", 0.0) * SR)
 mix[cut - 240:cut] *= np.linspace(1, 0, 240)
-mix[cut:card] = 0  # a beat of black and silence after the cliffhanger, then only the end card's own sounds
+mix[cut:back] = 0  # a beat of black and silence after the cliffhanger
+mix[int(T("end", 0.0) * SR):] = 0
 peak = np.max(np.abs(mix))
 if peak > 0.98:
     mix = np.tanh(mix / peak * 1.2) * 0.95
