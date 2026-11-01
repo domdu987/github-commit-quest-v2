@@ -437,6 +437,16 @@
       <radialGradient id="ifxCandle"><stop offset="0" stop-color="#ffd27a" stop-opacity=".8"/><stop offset="1" stop-color="#ffb040" stop-opacity="0"/></radialGradient>
       <filter id="ifxBlur8" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="8"/></filter><filter id="ifxBlur3" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="3"/></filter></defs>`); };
 
+  // each skin's own sounds (files in video/lib-shared/sfx/, cue type "file:<name>"): enter, land, extra [name, seconds after landing], highlight, tick
+  const SND = {
+    clipboard: { enter: [], land: ["clip_snap", "paper_flutter"], extra: [["paper_flutter", 1.2]], hi: "marker_write", tick: "marker_write" },
+    chalk: { enter: [], land: ["board_knock"], extra: [["eraser_rub", 0.9]], hi: "chalk_tap", tick: "chalk_tap" },
+    tailgate: { enter: ["chain_rattle"], land: ["steel_slam", "chain_rattle"], extra: [], hi: "spray_short", tick: "spray_short" },
+    canal: { enter: [], land: ["sign_bong"], extra: [["water_drip", 0.6], ["water_drip", 1.7]], hi: "brush_swipe", tick: "brush_swipe" },
+    fieldbook: { enter: [], land: ["canvas_slap", "buckle_clink"], extra: [["buckle_clink", 1.1]], hi: "pencil_scratch", tick: "pencil_scratch" },
+    yant: { enter: ["cloth_flap"], land: ["temple_bell"], extra: [["candle_whoosh", 0.8]], hi: "candle_whoosh", tick: "temple_bell" },
+    seatcard: { enter: [], land: ["seat_card"], extra: [], hi: "pen_line", tick: "pen_line" },
+  };
   IconFX.board = (tl, layer, o = {}) => {
     const sk = SK[o.skin] || SK.clipboard, id = o.id || `ifb${seq++}`, items = o.items || [], act = o.active ?? 0, done = o.done || [];
     const EX = o.skin === "clipboard" ? 80 : 0, Y = o.y ?? 300, X = 70, W = 940, rowH = 170, H = 290 + EX + items.length * rowH, t0 = o.t ?? 0, dur = o.dur ?? 3;
@@ -461,7 +471,9 @@
     put(layer, `<g id="${id}" opacity="0"><g id="${id}-m"><g id="${id}-k"><g id="${id}-sw">${obj.back}${title}${rows}${obj.front}</g></g></g>${obj.over || ""}</g>`);
     const cuesOut = [];
     tl.set(`#${id}`, { opacity: 1 }, t0);
-    const land = obj.enter(tl, t0); cue(t0, "whoosh", 0.26); cue(land, sk.sound, 0.5); cuesOut.push({ t: land, type: sk.sound });
+    const land = obj.enter(tl, t0), sn = SND[o.skin || "clipboard"];
+    sn.enter.forEach((n) => cue(t0 + 0.05, `file:${n}`, 0.5)); sn.land.forEach((n, j) => cue(land + j * 0.05, `file:${n}`, j ? 0.4 : 0.7)); sn.extra.forEach(([n, dt]) => { if (dt < dur - (land - t0)) cue(land + dt, `file:${n}`, 0.35); });
+    cuesOut.push({ t: land, type: `file:${sn.land[0]}` });
     obj.life(tl, land + 0.4, dur - (land - t0) - 0.2);
     items.forEach((_, k) => { if (k === act || done.includes(k)) tl.fromTo(`#${id}-r${k}`, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + at[k]); });
     if (act >= 0 && act < items.length) { const ta = t0 + at[act];
@@ -469,8 +481,8 @@
       if (sk.tool === "chalk" || sk.tool === "grease" || sk.tool === "pen") tl.fromTo(`#${id}-hl`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power1.inOut", immediateRender: false }, ta + 0.2);
       if (document.getElementById(`${id}-a${act}`)) { tl.fromTo(`#${id}-a${act}`, { scale: 0.2, rotation: -40, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.8)", immediateRender: false }, ta);
         tl.to(`#${id}-a${act}`, { scale: 1.12, svgOrigin: "0 0", duration: 0.4, yoyo: true, repeat: Math.max(1, Math.ceil((dur - at[act]) / 0.4)), ease: "sine.inOut" }, ta + 0.5); }
-      cue(ta + 0.2, sk.hiSound, 0.26); cuesOut.push({ t: ta + 0.2, type: sk.hiSound }); }
-    done.forEach((d) => { tl.fromTo(`#${id}-tk${d}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + at[d] + 0.3); cue(t0 + at[d] + 0.3, "tap", 0.3); });
+      cue(ta + 0.2, `file:${sn.hi}`, 0.55); cuesOut.push({ t: ta + 0.2, type: `file:${sn.hi}` }); }
+    done.forEach((d) => { tl.fromTo(`#${id}-tk${d}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + at[d] + 0.3); cue(t0 + at[d] + 0.3, `file:${sn.tick}`, 0.45); });
     if (o.out !== false) { tl.to(`#${id}-m`, { y: o.skin === "clipboard" || o.skin === "seatcard" ? 1300 : -1300, duration: 0.32, ease: "power2.in" }, t0 + dur - 0.32); tl.set(`#${id}`, { opacity: 0 }, t0 + dur); cue(t0 + dur - 0.32, "whoosh", 0.2); }
     return { id, cues: cuesOut };
   };

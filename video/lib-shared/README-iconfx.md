@@ -81,3 +81,18 @@ IconFX.board(tl, L.light, { skin: "clipboard", title: "กฎของลุง�
 - ห้ามรวม x/y กับ scale/rotation+svgOrigin ใน tween เดียวกันบน element เดียว (ตำแหน่งเพี้ยน) · board แยกเป็น 3 ชั้น: `-m` (เลื่อนขึ้นลง) › `-k` (ย่อขยาย/หมุนตอนเข้า) › `-sw` (แกว่ง)
 - ภาพนิ่งตรวจงานด้วย Playwright ต้องเปิด Chrome ด้วย `--force-gpu-mem-available-mb=8045` แบบเดียวกับตัวเรนเดอร์ ไม่งั้นได้บล็อกสีเทา/แดงที่ไม่ได้อยู่ในคลิปจริง
 - ตัวหนังสือไทยห้ามตัดช่องแบบสเตนซิล (อ่านเป็นฟอนต์พัง) · ใช้ฟอนต์หนาเต็มตัวแล้วเพิ่มขอบฟุ้ง/ละอองแทน
+
+## เสียงของวัสดุ (video/lib-shared/sfx/) · เจ้าของ 1 พ.ย. "ซาวเพลงทำให้เข้าธีมด้วย"
+ทุก skin ของ `IconFX.board` บันทึกเสียงของวัสดุตัวเองลง `IconFX.cues` เป็น type `file:<ชื่อ>` (ไม่ใช้ whoosh/ding ตัวเดียวกันทุก skin)
+| skin | ตอนเข้า / ตกถึง | ระหว่างอยู่ | ไฮไลต์ | ✓ |
+|---|---|---|---|---|
+| clipboard | `clip_snap` + `paper_flutter` | `paper_flutter` | `marker_write` | `marker_write` |
+| chalk | `board_knock` | `eraser_rub` | `chalk_tap` | `chalk_tap` |
+| tailgate | `chain_rattle` → `steel_slam` + `chain_rattle` | – | `spray_short` | `spray_short` |
+| canal | `sign_bong` | `water_drip` ×2 | `brush_swipe` | `brush_swipe` |
+| fieldbook | `canvas_slap` + `buckle_clink` | `buckle_clink` | `pencil_scratch` | `pencil_scratch` |
+| yant | `cloth_flap` → `temple_bell` | `candle_whoosh` | `candle_whoosh` | `temple_bell` |
+| seatcard | `seat_card` | – | `pen_line` | `pen_line` |
+- ไฟล์ทำด้วย ElevenLabs Sound Effects v2 ผ่าน fal ($0.002/วิ · ชุดนี้ 18.4 วิ ≈ $0.04) · สคริปต์ `sfx/gen_sfx.py` (เพิ่มเสียงใหม่ใน `SFX` แล้วรัน `python3 -I gen_sfx.py <ชื่อ>`)
+- ใน mix.py: `import iconfx_mix` (อยู่ใน `sfx/`) แล้ว `synth_cues, SAMP = iconfx_mix.split(cues, N, SR)` → ใส่ synth_cues ใน CUES และ `sfx = level(sfx, -27) + SAMP` (แต่ละเสียงปรับไว้ราว −24 dB × gain)
+- เพลงธีมของเรื่องอยู่ที่ `video/music/<เรื่อง>-theme.mp3` (ดู `video/music/README.md`) · เริ่มเพลงให้ช่วงพีก (20 วิท้าย) ตรงปมค้างท้ายตอน
