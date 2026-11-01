@@ -137,12 +137,6 @@
         actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "sitStand", eyes: "wide", mouth: "o" }, { t: 0.9, mode: "run", eyes: "wide", mouth: "scream" }, { t: D("run") - 0.9, mode: "cough", eyes: "pain", mouth: "o" }], { moveTo: { x: 960, y: PF - 30, dur: 2.4, ease: "power1.inOut", at: 0.9 } })],
         captions: caps("run"),
         fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "cf4", t0, D("run"), { chase: true }); SU.flash(tl, L.light, t0 + D("run") - 0.8, "#ff6a1a", 0.35); } });
-      // ---------- 17. rewind to 0:05: the calm cabin again, the ring on the EXIT right behind his seat ----------
-      add("rw", { ...CAB("cr", "calm"),
-        cam: { keys: [{ t: 0, ...fr(300, 1250, 1.35, 540, 1020) }, { t: D("rw"), glide: D("rw"), ...fr(200, 1180, 1.6, 540, 1000) }] },
-        actors: [A("kiwPhones", KX, PF - 6, KS, [{ t: 0, mode: "phonesOn", eyes: "normal", mouth: "smile" }]), A("fa", 700, PF - 30, KS, [{ t: 0, mode: "pointBack", eyes: "normal", mouth: "flat" }], { flip: true })],
-        captions: caps("rw"),
-        fx(tl, id, t0, L) { noSh(tl, id); Plane.cabinLife(tl, "cr", t0, D("rw")); rewind(L, tl, t0, D("rw"), "0:05"); hiRing(L, tl, 330, 620, t0 + F("rw", 0, 1), D("rw") - F("rw", 0, 1)); } });
       // ---------- 18. the door one row behind: he turns back through the smoke to the lit EXIT ----------
       add("behind", { ...CAB("cf5", "smoke", { smokeH: 560 }),
         cam: { keys: [{ t: 0, ...fr(380, 1220, 1.25, 540, 1000) }, { t: D("behind"), glide: D("behind"), ...fr(200, 1200, 1.45, 540, 1000) }] },

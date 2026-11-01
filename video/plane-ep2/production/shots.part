@@ -2098,12 +2098,6 @@
         cam: { keys: [{ t: 0, ...fr(540, 1300, 0.95, 540, 1000) }, { t: D("pass"), glide: D("pass"), ...fr(520, 1250, 0.85, 540, 1000) }] },
         captions: caps("pass"),
         fx(tl, id, t0, L) { Plane.siteLife(tl, "d2", t0, D("pass")); heliAt(L, tl, "hc2", 700, 900, 0.5, t0, D("pass"), { from: { x: 0, y: 0 }, to: { x: 1400, y: -300 }, ease: "power1.in" }); } });
-      // ---------- 14. rewind to 0:04: the orange hem under the jacket ----------
-      add("rw", { ...NSITE("r0"),
-        cam: { keys: [{ t: 0, ...fr(190, 1480, 3.4, 540, 1050) }, { t: D("rw"), glide: D("rw"), ...fr(198, 1455, 4.8, 540, 1000) }] },
-        actors: [A("kiwHidden", DX, DY, KT, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
-        captions: caps("rw"),
-        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "r0", t0, D("rw")); rewind(L, tl, t0, D("rw"), "0:04"); hiRing(L, tl, 540, 930, t0 + F("rw", 0, 1), D("rw") - F("rw", 0, 1), 90); } });
       // ---------- 15. the jacket opens: the brightest thing on the island ----------
       add("vest", { ...DSITE("d3"),
         cam: { keys: [{ t: 0, ...fr(140, 1500, 3.4, 540, 1100) }, { t: D("vest"), glide: D("vest"), ...fr(140, 1500, 3.8, 540, 1100) }] },
@@ -2135,7 +2129,7 @@
       add("truth", { set: "bayView", setOpts: { id: "t0", time: "night", front: true, torches: true, phone: true, phoneX: 60, phoneY: 1000 }, dark: 0.2, light: NIGHTL, grade: FLASH, blur: { fg: 7 },
         cam: { keys: [{ t: 0, ...fr(560, 860, 2.2, 540, 900) }, { t: vo("truth", 1) - 0.2, glide: vo("truth", 1) - 0.2, ...fr(520, 880, 2.0, 540, 900) }, { t: D("truth"), glide: D("truth") - vo("truth", 1) + 0.2, ...fr(240, 960, 1.4, 540, 900) }] },
         captions: caps("truth"),
-        fx(tl, id, t0, L) { Plane.bayLife(tl, "t0", t0, D("truth")); rewind(L, tl, t0, 0.5, "ตีสี่");
+        fx(tl, id, t0, L) { Plane.bayLife(tl, "t0", t0, D("truth"));
           for (let k = 0; k < 7; k++) tl.fromTo(`#t0-wv${k}`, { rotation: -30, svgOrigin: "8 -32" }, { rotation: 30, svgOrigin: "8 -32", duration: 0.3, yoyo: true, repeat: Math.ceil(D("truth") / 0.3), ease: "sine.inOut", immediateRender: false }, t0 + k * 0.07);
           tl.fromTo("#t0-ph", { opacity: 0.4, scale: 0.8, svgOrigin: "0 0" }, { opacity: 1, scale: 1.3, svgOrigin: "0 0", duration: 0.4, yoyo: true, repeat: Math.ceil(D("truth") / 0.4), ease: "sine.inOut", immediateRender: false }, t0); } });
       // ---------- 22. flashback: they leave their wreck in the dark, the torches wind along the shore toward his light — and go out ----------

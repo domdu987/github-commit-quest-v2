@@ -31,7 +31,6 @@ SHOTS = [
     ("wait", ["q02"], 0.08, 0.28, 2.0),            # he sits back down by the wreck
     ("heli", ["n09", ("q03", 0.15)], 0.10, 0.10, 2.2),            # dawn: rotor sound, a helicopter over the sea
     ("pass", ["n10"], 0.10, 0.18, 3.2),            # it flies on: the grey wreck lost on the grey rocks
-    ("rw", ["n11"], 0.2, 0.6, 4.0),              # rewind to 0:04
     ("vest", ["n12"], 0.10, 0.18, 2.2),            # he opens the jacket: the orange vest
     ("lay", ["n13", ("n14", 0.15)], 0.10, 0.28, 3.6),             # the vest on the tailplane, the cowl panel propped to the sun
     ("found", ["r01"], 0.08, 0.28, 2.8),           # "found!" — hovering over him: relief

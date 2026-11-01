@@ -122,13 +122,12 @@ CUES = [
     # dawn: rotor thuds approach; his shout; it leaves
     *[("heli", 0.05 + j * 0.42, "drum", 0.22) for j in range(int(D["heli"] / 0.42))],
     *[("pass", 0.05 + j * 0.45, "drum", 0.22 - j * 0.02) for j in range(int(D["pass"] / 0.45))], ("pass", 1.0, "powerdown", 0.14),
-    ("rw", 0.0, "rewind", 0.45), ("rw", F("rw", 0, 1), "sting", 0.34),
     ("vest", 0.3, "rustle", 0.3), ("vest", 1.1, "pop", 0.0), ("vest", 1.1, "ching", 0.28),
     ("lay", 0.3, "rustle", 0.24), ("lay", 1.0, "clang", 0.2), ("lay", 1.2, "whoosh", 0.2), ("lay", vo_t("lay", 1), "ching", 0.4),
     *[("found", 0.05 + j * 0.4, "drum", 0.24) for j in range(int(D["found"] / 0.4))], ("found", 0.1, "radiosq", 0.3), ("found", 0.3, "swell", 0.22),
     # the turn: silence, the radio, a low sting
     ("empty", 0.0, "radiosq", 0.34), ("empty", F("empty", 0, 1), "sting", 0.45), ("empty", F("empty", 0, 1) + 0.1, "boom", 0.3),
-    ("truth", 0.0, "rewind", 0.4), ("truth", 0.5, "thunder", 0.18), *beats("truth", 0.6, D["truth"] - 0.6, 0.6, 0.28),
+    ("truth", 0.0, "swell", 0.24), ("truth", 0.5, "thunder", 0.18), *beats("truth", 0.6, D["truth"] - 0.6, 0.6, 0.28),
     ("walkoff", 0.0, "steps", 0.14), ("walkoff", 1.0, "steps", 0.12), ("walkoff", 2.2, "thunder", 0.2), *beats("walkoff", 0.1, D["walkoff"] - 0.1, 0.55, 0.32),
     ("end", 0.0, "drum", 0.2), ("end", 0.5, "drum", 0.18), ("end", 1.0, "ding", 0.24), ("end", vo_t("end", 1), "sting", 0.3), ("end", vo_t("end", 1) + 0.1, "swell", 0.2),
     ("fin", 0.1, "whoosh", 0.3), ("fin", 1.1, "thud", 0.4), ("fin", 1.15, "gong", 0.26),
