@@ -1,4 +1,4 @@
-"""ต่อหัวเสือ EP.1 (from the นาทีก่อนจม mixer): the soundtrack from schedule.json: levelled voice, synthesized SFX (crickets, engine, the lock click, the countdown
+"""ท่อนซุงลงเขา EP.1 (from the นาทีก่อนจม mixer): the soundtrack from schedule.json: levelled voice, synthesized SFX (crickets, engine, the lock click, the countdown
 ticks, the screech, the splash, water pouring in, bubbles, the window motor, the rewind, the child's switch, the flicker) and the Suno bed
 with dips and ducking; the bed fades out over the next-episode card. Output -14 LUFS, no noise beds."""
 import json
@@ -62,7 +62,7 @@ def frag(k, i=0, j=0):
 
 
 # ---- voice: every line levelled on its own so whispers and shouts sit at a readable loudness ----
-LINE_GAIN = {"k01": 2, "g01": 2, "w01": 1}   # ขิม shouts over the water: lift her line over the bed and effects
+LINE_GAIN = {"j01": 1, "j02": 1}
 vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
@@ -109,30 +109,27 @@ def tick3(k, a, g=0.3):  # the choice ring: three ticks
 
 
 CUES = [
-    ("hook", 0.0, "swell", 0.24), ("cmd", vo_t("cmd") - 0.02, "sting", 0.32), ("why", 0.1, "whoosh", 0.2),
-    ("back", 0.0, "rewind", 0.3), ("legend", 0.0, "swell", 0.2), ("wake", 0.0, "boom", 0.3), ("wake", 0.1, "sting", 0.26),
-    ("still", 0.1, "whoosh", 0.18), ("know", 0.1, "whoosh", 0.18), ("rule", 1.0, "whoosh", 0.2),
-    ("fine", 0.2, "swell", 0.2), *beats("fine", 0.3, D["fine"] - 0.2, 0.6, 0.3),
-    ("next", 0.1, "whoosh", 0.3), ("next", 0.6, "ding", 0.24),
+    ("hook", 0.0, "swell", 0.2), ("cmd", vo_t("cmd") - 0.02, "sting", 0.3), ("law", 0.1, "whoosh", 0.16),
+    ("squeeze", 0.0, "swell", 0.18), ("pop", 0.3, "boom", 0.3), ("next", 0.1, "whoosh", 0.3), ("next", 0.6, "ding", 0.24),
 ]
 
 exec(open(os.path.join(HERE, "..", "samples_inc.py")).read())
 SAMPLES = [
-    ("hook", 0.0, "swarm", 0.9, 2.9), ("hook", 0.0, "run", 0.6, 2.9), ("cmd", 0.0, "swarm", 0.85, 1.9),
-    ("why", 0.0, "swarmfar", 0.35, 4.6),
-    ("back", 0.3, "village", 0.5, 3.6), ("palm", 0.0, "village", 0.45, 3.3), ("palm", 0.0, "swarmfar", 0.25, 3.3),
-    ("reveal", 0.0, "village", 0.35, 6.2), ("reveal", 1.6, "swarmfar", 0.55, 4.5),
-    ("legend", 0.1, "puppet", 0.7), ("legend", F("legend", 0, 2), "swarmfar", 0.4, 3.5),
-    ("sing", 0.0, "village", 0.45, 4.4), ("crazy", 0.0, "village", 0.4, 2.0),
-    ("first", 0.0, "hornet1", 0.8, 3.0), ("first", F("first", 0, 2) - 0.05, "swat", 0.9),
-    ("still", 0.0, "hornet1", 0.3, 3.0),
-    ("wake", 0.0, "swarm", 0.95, 3.0), ("toey", 0.0, "swarm", 0.8, 2.2), ("toey", 0.0, "run", 0.5, 2.2),
-    ("rule", 0.0, "swarm", 0.6, 1.2), ("know", 0.0, "swarmfar", 0.3, 5.9),
-    ("grab", 0.0, "swarm", 0.8, 3.0), ("grab", 0.5, "run", 0.6, 2.5),
-    ("shed", 0.55, "doorslam", 1.0), ("shed", 0.7, "screen", 0.7, 2.2),
-    ("where", 0.0, "swarmfar", 0.25, 2.4),
-    ("shrine", 0.0, "swarmfar", 0.55, 2.8), ("fine", 0.0, "swarmfar", 0.3, 2.5),
+    ("hook", 0.0, "chainsnap", 1.0), ("hook", 0.95, "ltscreech", 0.8), ("hook", 1.2, "logthud", 1.0), ("hook", 1.7, "logroll", 0.7),
+    ("cmd", 0.0, "airbrake", 0.45), ("rest", 0.0, "logroll", 0.35, 2.0),
+    ("horn", 0.0, "airhorn", 1.0), ("horn", 1.0, "airhorn", 0.75),
+    ("squeeze", 0.3, "airhorn", 0.7), ("squeeze", 1.2, "chainrattle", 0.5),
+    ("five", 0.2, "airbrake", 0.7), ("five", 1.9, "chainrattle", 0.75),
+    ("wave", 0.3, "truckahead", 0.5), ("gear", 0.0, "airbrake", 0.8), ("gear", F("gear", 0, 1) - 0.2, "gearshift", 0.8),
+    ("last", 0.4, "chainrattle", 0.8), ("last", 2.4, "airbrake", 0.6),
+    ("pop", 0.0, "binder", 1.0), ("pop", 0.1, "chainsnap", 0.55), ("pop", 0.3, "logslide", 1.0), ("pop", 1.3, "airhorn", 0.8),
 ]
+_t = 0.0
+while _t < SH["next"]["start"] - 1.0:      # the cabin hum and the truck ahead under everything until the end card
+    SAMPLES.append((None, _t, "cabin", 0.38, 7.6)); _t += 7.0
+_t = 0.0
+while _t < SH["next"]["start"] - 1.0:
+    SAMPLES.append((None, _t, "truckahead", 0.3, 5.8)); _t += 5.4
 CUES = [c for c in CUES if c[2] not in REPLACED]
 
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
@@ -145,7 +142,7 @@ subprocess.run(["python3", os.path.join(HERE, "..", "synth.py"), os.path.join(HE
 sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
 for k, t0, name, g, *mx in SAMPLES:
-    place(sfx, smp(name, mx[0] if mx else None), T(k, t0), g)
+    place(sfx, smp(name, mx[0] if mx else None), t0 if k is None else T(k, t0), g)
 
 # ---- music with horror dips ----
 mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
@@ -161,8 +158,8 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(T("wake", 0), T("grab", -0.01), 0.55)      # the swarm: the bed sits under the buzzing
-dip(T("shrine", 0), T("fine", -0.01), 0.5)     # ตา at the shrine: quiet under the reveal
+dip(T("hook", 0), T("cmd", 0.3), 0.4)        # the snap and the log: effects lead
+dip(T("pop", 0), T("pop", -0.01), 0.35)       # the binder: effects lead
 mus = mus * gain
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card

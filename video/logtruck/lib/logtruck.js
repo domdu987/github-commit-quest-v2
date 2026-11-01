@@ -258,6 +258,8 @@
     put(L.set, `<g id="${id}-truckW">${o.truck === false ? "" : Lt.truckRear(`${id}-truck`, T.x ?? 560, T.y ?? 1330, T.s ?? 0.62, T)}</g>`);
     // a loose log lying across the road (the one that fell): ${id}-loose, centred on its own origin; shots move it
     if (o.loose) put(L.set, `<g id="${id}-loose" transform="translate(${o.loose.x ?? 540},${o.loose.y ?? 1300}) scale(${o.loose.s ?? 1})" opacity="${o.loose.op ?? 1}"><ellipse cx="0" cy="70" rx="300" ry="26" fill="#1a1612" opacity=".35" class="lsh"/><g class="lroll">${Lt.logSide(-260, 0, 520, 62, 11)}</g></g>`);
+    // spilled logs (EP.2): o.spill n logs lying across, ids ${id}-sp0…, placed at the truck's deck; shots throw them down the road
+    if (o.spill) put(L.set, Array.from({ length: o.spill }, (_, k) => `<g id="${id}-sp${k}" transform="translate(${560 + (k - 1) * 30},${1000 - k * 40}) scale(0.45)"><g class="lroll">${Lt.logSide(-260, 0, 520, 62, 21 + k)}</g></g>`).join(""));
     // sun dapple through the windscreen
     put(L.set, `<g id="${id}-dapple" opacity=".5">${Array.from({ length: 6 }, () => `<ellipse class="dap" cx="${f1(-100 + r() * 1300)}" cy="${f1(500 + r() * 900)}" rx="${f1(200 + r() * 200)}" ry="${f1(60 + r() * 80)}" fill="#ffe8b8" opacity=".14"/>`).join("")}</g>`);
     // the cabin: roof liner, A-pillars, sun visors, the mirror (its image = the tanker's grille), the garland hanging under it, dash, wheel
@@ -436,7 +438,7 @@
 
   // ---------------------------------------------------------------- V11 coins (same 2.5D build and classes as HnFx.coin, so HnFx.pop / HnFx.life drive them)
   const tone = (hex, k) => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => Math.round(k > 0 ? v + (255 - v) * k : v * (1 + k))); return `#${c.map((v) => v.toString(16).padStart(2, "0")).join("")}`; };
-  const CP = { gap: ["#d8f0c8", "#4a9a4a"], mirror: ["#cfe8f6", "#3a8ab8"], gear: ["#fde59a", "#e3a632"], nolift: ["#fbe0da", "#d8584a"], call: ["#fdeaea", "#d8302a"], orange: ["#ffe0c0", "#e8701a"], back: ["#e4e0f4", "#7a6ab8"] };
+  const CP = { gap: ["#d8f0c8", "#4a9a4a"], mirror: ["#cfe8f6", "#3a8ab8"], gear: ["#fde59a", "#e3a632"], nolift: ["#fbe0da", "#d8584a"], call: ["#fdeaea", "#d8302a"], orange: ["#ffe0c0", "#e8701a"], nophone: ["#fbe0da", "#d8584a"], back: ["#e4e0f4", "#7a6ab8"] };
   let cdefs = "";
   for (const [n, [f, r]] of Object.entries(CP)) cdefs += `<radialGradient id="ltF-${n}" cx=".33" cy=".25" r=".9"><stop offset="0" stop-color="${tone(f, 0.7)}"/><stop offset=".55" stop-color="${f}"/><stop offset="1" stop-color="${tone(f, -0.12)}"/></radialGradient><linearGradient id="ltR-${n}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${r}"/><stop offset=".6" stop-color="${tone(r, -0.15)}"/><stop offset="1" stop-color="${tone(r, -0.4)}"/></linearGradient>`;
   Sets.DEFS += cdefs + `<clipPath id="ltFace"><circle cx="60" cy="57" r="46"/></clipPath>`;
@@ -456,6 +458,8 @@
       <g class="ltWv"><path d="M88,40q8,8 0,16M94,34q14,14 0,28" stroke="#1e7a46" stroke-width="4" fill="none" stroke-linecap="round"/></g>`, ""],
     orange: () => [`<rect x="14" y="40" width="92" height="44" rx="4" fill="#ff8a1a" ${O(3.5)}/><path d="M16,62H104" stroke="${INK}" stroke-width="3"/><text x="60" y="58" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="16" fill="${INK}">23</text><text x="60" y="79" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="16" fill="${INK}">1075</text>
       <g class="ltFlame"><path d="M92,30C100,40 104,46 99,54C96,59 88,59 85,54C81,46 89,42 92,30Z" fill="#d8301e" ${O(2)}/></g>`, ""],
+    nophone: () => [`<g class="ltRing"><rect x="40" y="24" width="40" height="72" rx="8" fill="#2a2a32" ${O(3)}/><rect x="45" y="32" width="30" height="52" rx="3" fill="#8ac8f0"/></g><g class="ltFlame"><path d="M92,24C100,34 104,40 99,48C96,53 88,53 85,48C81,40 89,36 92,24Z" fill="#d8301e" ${O(2)}/></g>`,
+      `<circle cx="60" cy="57" r="40" fill="none" stroke="#c8241a" stroke-width="8"/><path d="M32,85L88,29" stroke="#c8241a" stroke-width="8" stroke-linecap="round"/>`],
     back: () => [`<path d="M0,94H120" stroke="#6a6e74" stroke-width="18"/><g class="ltBack">${miniCar(64, 92, "#7cc9ae")}</g><path d="M36,58H16M16,58l10,-8M16,58l10,8" stroke="#7a6ab8" stroke-width="6" stroke-linecap="round" fill="none"/>
       <g transform="translate(96,70)"><rect x="-14" y="-26" width="28" height="26" fill="#ff8a1a" ${O(2)}/></g>`, ""],
   };
@@ -510,6 +514,43 @@
     put(L.set, `<g id="${id}-board">${Lt.sign(540, 1500, 1.15, { kind: "title", top: o.l1 || "ตอนที่ 2 (ตอนจบ)", km: o.l2 || "ซุงหล่นตรงหน้า", fs: 70 })}</g>` + Lt.tree(-60, 1520, 520, 7, "mid") + Lt.tree(1150, 1500, 560, 8, "mid"));
     put(L.fg, `<text x="540" y="1760" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#f4ecd8" stroke="#141210" stroke-width="10" paint-order="stroke">${o.l3 || "กดติดตาม แล้วลงเขาไปด้วยกัน"}</text>`);
     put(L.glow, `<g id="${id}-sweep" opacity=".8"><ellipse cx="540" cy="1100" rx="560" ry="380" fill="url(#ltHead)"/></g>`);
+  };
+
+
+  // ---------------------------------------------------------------- the gas station at the foot of the hill (no brand: a plain canopy)
+  // ground G 1500; canopy over two pump islands (o.pumps x[]), the shop on the right, the mountain behind in the late sun.
+  // o.car x (our hatchback parked at a pump), o.tank x (the tanker in profile, facing right, #id-tank to slide in), o.tsmoke its wheel smoke
+  Sets.ltStation = function (L, o = {}) {
+    const id = o.id || "lst", r = mk(o.seed || 251), G = o.ground ?? 1500;
+    sky(L, r, { id, late: true, sunX: o.sunX ?? 860, sunY: o.sunY ?? 640 });
+    ridges(L, r, 1100);
+    put(L.far, `<path d="${ridge(r, 1300, 260, 6)}" fill="url(#ltRidge3)"/>` + Array.from({ length: 14 }, (_, k) => Lt.bush(-800 + k * 200 + r() * 80, 1260 + r() * 60, 60 + r() * 30, 600 + k, "far", { line: 1.5 })).join("") + Mok.fogBands(r, 1100, 1350, 2, 0.5, "url(#ltHaze)"));
+    let s = `<rect x="-900" y="${G - 40}" width="2900" height="1400" fill="#8a8e92"/><path d="M-900,${G - 40}H2000" stroke="#6a6e72" stroke-width="8"/>`;
+    for (let k = 0; k < 9; k++) s += `<path d="M${-800 + k * 340},${G}L${-900 + k * 380},${G + 1200}" stroke="#7a7e82" stroke-width="5" opacity=".6"/>`;
+    // the shop
+    s += `<g transform="translate(${o.shop ?? 1500},${G})"><rect x="-300" y="-520" width="600" height="520" fill="#f2ead8" stroke="${INK}" stroke-width="5"/><rect x="-320" y="-560" width="640" height="60" fill="#3e8a5a" stroke="${INK}" stroke-width="5"/>
+      <rect x="-250" y="-420" width="280" height="300" fill="url(#ltGlassD)" stroke="${INK}" stroke-width="4"/><rect x="80" y="-420" width="160" height="420" fill="#c8b48a" stroke="${INK}" stroke-width="4"/><rect x="-240" y="-410" width="120" height="280" fill="#ffe8b0" opacity=".35"/></g>`;
+    // canopy posts + pump islands
+    const P = o.pumps || [200, 800];
+    s += P.map((x) => `<rect x="${x - 26}" y="${G - 640}" width="52" height="640" fill="#d8dcde" stroke="${INK}" stroke-width="4"/><rect x="${x - 160}" y="${G - 40}" width="320" height="50" rx="8" fill="#c8ccd0" stroke="${INK}" stroke-width="4"/>
+      <g transform="translate(${x + 80},${G - 40})"><rect x="-44" y="-230" width="88" height="230" rx="10" fill="#e8ecee" stroke="${INK}" stroke-width="4"/><rect x="-32" y="-210" width="64" height="44" rx="6" fill="#1a2a32"/><text x="0" y="-178" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="#7fd1b9">0.00</text><rect x="-44" y="-120" width="88" height="20" fill="#3e8a5a"/><path d="M44,-150Q76,-150 76,-90V-40" stroke="#1a1a1a" stroke-width="8" fill="none"/></g>`).join("");
+    put(L.set, s);
+    // the canopy roof (in front of the sky, behind the actors): white fascia with a green band, lights under it
+    put(L.set, `<path d="M-900,${G - 700}H2000V${G - 620}H-900Z" fill="#f4f6f6" stroke="${INK}" stroke-width="5"/><path d="M-900,${G - 650}H2000" stroke="#3e8a5a" stroke-width="16"/>${[-500, 0, 500, 1000, 1500].map((x) => `<rect x="${x}" y="${G - 620}" width="140" height="14" rx="6" fill="#fffbe8"/>`).join("")}`);
+    // vehicles
+    let v = "";
+    if (o.car != null) v += `<g id="${id}-car">${Lt.carSide(`${id}-c`, o.car, G + 30, o.cs ?? 0.8, { flip: o.carFlip })}</g>`;
+    if (o.tank != null) v += `<g id="${id}-tank">${Lt.tankerSide(`${id}-tk`, o.tank, G + 60, o.ts ?? 0.75, { smoke: o.tsmoke ?? 0 })}</g>`;
+    put(L.act, v);
+    put(L.glow, `<g id="${id}-sweep" opacity="0"><ellipse cx="0" cy="${G - 200}" rx="700" ry="300" fill="url(#ltHead)"/></g>` + `<g id="${id}-drift" opacity="0">${smokeCloud(0, 0, 3, 31)}</g>`);
+  };
+  // close on the tanker's front corner: the orange plate and the red diamond (EP.2 reveal); o.smoke wheel smoke
+  Sets.ltPlate = function (L, o = {}) {
+    const id = o.id || "lpl", r = mk(o.seed || 257);
+    sky(L, r, { id, late: true, sunX: 900, sunY: 500 });
+    put(L.far, `<rect x="-900" y="1500" width="2900" height="1400" fill="#8a8e92"/>`);
+    put(L.set, `<g id="${id}-t">${Lt.tankerFront(`${id}-tf`, 540, 1900, 1.8, { plate: true, dia: true })}</g>`);
+    put(L.glow, `<g id="${id}-smoke" opacity="${o.smoke ?? 0.9}">${smokeCloud(30, 1820, 2.6, 41)}${smokeCloud(1050, 1820, 2.6, 43)}</g>`);
   };
 
   // ---------------------------------------------------------------- motion
