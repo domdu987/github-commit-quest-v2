@@ -112,7 +112,7 @@ CUES = [
     ("hook", 0.0, "swell", 0.24), ("cmd", vo_t("cmd") - 0.02, "sting", 0.32), ("why", 0.1, "whoosh", 0.2),
     ("back", 0.0, "rewind", 0.3), ("legend", 0.0, "swell", 0.2), ("wake", 0.0, "boom", 0.3), ("wake", 0.1, "sting", 0.26),
     ("still", 0.1, "whoosh", 0.18), ("know", 0.1, "whoosh", 0.18), ("rule", 1.0, "whoosh", 0.2),
-    ("rw", 0.0, "rewind", 0.42), ("rw", 3.0, "sting", 0.28), ("fine", 0.2, "swell", 0.2), *beats("fine", 0.3, D["fine"] - 0.2, 0.6, 0.3),
+    ("fine", 0.2, "swell", 0.2), *beats("fine", 0.3, D["fine"] - 0.2, 0.6, 0.3),
     ("next", 0.1, "whoosh", 0.3), ("next", 0.6, "ding", 0.24),
 ]
 
@@ -130,7 +130,7 @@ SAMPLES = [
     ("rule", 0.0, "swarm", 0.6, 1.2), ("know", 0.0, "swarmfar", 0.3, 5.9),
     ("grab", 0.0, "swarm", 0.8, 3.0), ("grab", 0.5, "run", 0.6, 2.5),
     ("shed", 0.55, "doorslam", 1.0), ("shed", 0.7, "screen", 0.7, 2.2),
-    ("rw", 0.0, "swarm", 0.35, 3.0), ("where", 0.0, "swarmfar", 0.25, 2.4),
+    ("where", 0.0, "swarmfar", 0.25, 2.4),
     ("shrine", 0.0, "swarmfar", 0.55, 2.8), ("fine", 0.0, "swarmfar", 0.3, 2.5),
 ]
 CUES = [c for c in CUES if c[2] not in REPLACED]
@@ -162,7 +162,7 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 dip(T("wake", 0), T("grab", -0.01), 0.55)      # the swarm: the bed sits under the buzzing
-dip(T("rw", 0), T("fine", -0.01), 0.5)         # the rewind and the reveal
+dip(T("shrine", 0), T("fine", -0.01), 0.5)     # ตา at the shrine: quiet under the reveal
 mus = mus * gain
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card

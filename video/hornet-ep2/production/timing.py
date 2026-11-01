@@ -31,7 +31,6 @@ SHOTS = [
     ("rule", ["g02"], 0.1, 1.2, 4.6),         # ยาย, weak, smiles and says her own rule → the board (rule 3)
     ("danger", ["n07"], 0.15, 0.4, 5.0),      # card: three danger signs → โทร 1669; ภูมิ dialling
     ("drive", ["n08"], 0.2, 0.6, 3.6),        # the map: ป้านวล's pickup from the village to the hospital
-    ("rw", ["n09", "n10"], 0.2, 0.6, 6.0),    # ↺ 0:02: the cloth over the stings
     ("lung", ["w01"], 0.1, 0.5, 3.0),         # the hospital bench at night: ป้านวล, sleeves rolled up, the scars
     ("truth", ["n11"], 0.15, 0.5, 3.6),       # ภูมิ looks at him; the old photo on his phone: him in a hospital bed
     ("end", ["n12"], 0.2, 0.8, 3.6),          # morning: ยาย in the ward, smiling, ภูมิ holding her hand
