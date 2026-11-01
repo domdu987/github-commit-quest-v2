@@ -1,0 +1,37 @@
+      // ---------- ลมงวงช้างกลางกรุง · hook stills (0 / 1 / 2 s) ----------
+      const STORM = { from: "right", rim: "#c8ffb0", rimOp: 0.55, shade: "#0a140c", shadeOp: 0.45, cast: false, vol: false };
+      const GSTORM = { top: "#2a5a3a", bottom: "#0a120c", op: 0.28 };
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.8, 2.4], ...extra });
+      const shake = (t) => ({ x: 6 * Math.sin(t * 47) + 3 * Math.sin(t * 31), y: 4 * Math.sin(t * 39), r: 0.4 * Math.sin(t * 23) });
+      // 0 s: the funnel comes down the road behind the expressway; people run for the deck
+      add("f0", {
+        set: "bkk", setOpts: { id: "k0", ground: 1500, xway: 1060, boltX: 980 }, dark: 0.04, blur: { sky: 1, far: 2, mid: 1, fg: 6 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 1.0, 540, 1000), drift: { s: 0.02 } }] }, shake,
+        actors: [A("keng", 720, 1760, 0.95, [{ t: -0.35, mode: "run", eyes: "wide", mouth: "scream" }], { flip: true }),
+          A("prae", 430, 1720, 0.88, [{ t: -0.2, mode: "run", eyes: "wide", mouth: "scream" }], { flip: true }),
+          A("piak", 930, 1700, 0.85, [{ t: -0.3, mode: "duck", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: [{ text: "ถ้าวันหนึ่ง… [ลมงวงช้าง]", t: 0, end: 0.98 }],
+        fx(tl, id, t0, L) {
+          Tw.funnel(L.mid, 330, 180, 1260, 640, "fn0", { bend: 0.12, skirt: 380 });
+          put(L.set, Mm.moto(860, 1840, 1.1, { color: "#c8282a" }));
+          Tw.debris(L.glow, [-100, 250, 1300, 650], 26, 3); Tw.debris(L.glow, [-100, 1480, 1300, 250], 8, 4); Tw.debris(L.fg, [-100, 1800, 1300, 300], 5, 11);
+        },
+      });
+      // 1 s: close on the rider's face, looking back at it
+      add("f1", {
+        set: "bkk", setOpts: { id: "k1", ground: 1500, xway: 640, boltX: 300 }, dark: 0.04, blur: { sky: 2, far: 4, mid: 2, set: 3, fg: 8 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(850, 1150, 2.3, 540, 1050), drift: { s: 0.03 } }] }, shake,
+        actors: [A("keng", 930, 1760, 0.95, [{ t: -0.3, mode: "recoil", eyes: "wide", mouth: "scream" }], { flip: false })],
+        captions: [{ text: "พุ่งเข้า[กลางกรุง]", t: 0, end: 0.98 }],
+        fx(tl, id, t0, L) { Tw.funnel(L.mid, 640, 200, 1260, 600, "fn1", { bend: 0.1 }); Tw.debris(L.glow, [640, 760, 520, 360], 9, 6); Tw.debris(L.fg, [0, 1700, 1300, 400], 4, 13); },
+      });
+      // 2 s: under the deck — the wind is squeezed and the debris shoots through; the command
+      add("f2", {
+        set: "bkk", setOpts: { id: "k2", ground: 1500, xway: 1060, boltX: 700 }, dark: 0.08, blur: { sky: 2, far: 3, mid: 2, fg: 7 }, light: STORM, grade: GSTORM,
+        cam: { keys: [{ t: 0, ...fr(560, 1330, 1.55, 540, 1000), drift: { s: 0.02 } }] }, shake,
+        actors: [A("prae", 380, 1560, 0.72, [{ t: 0, mode: "duck", eyes: "wide", mouth: "scream" }], { flip: true }),
+          A("keng", 620, 1570, 0.74, [{ t: -0.3, mode: "duck", eyes: "closed", mouth: "scream" }]),
+          A("piak", 800, 1560, 0.7, [{ t: -0.2, mode: "holdHead", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: [{ text: "{อย่าหลบใต้สะพาน!}", t: 0, end: 0.98 }],
+        fx(tl, id, t0, L) { Tw.funnel(L.mid, 900, 200, 1300, 1000, "fn2", { bend: 0.12 }); Tw.jets(L.glow, 0, 1100, 1110, 10); Tw.debris(L.glow, [0, 1380, 1100, 200], 14, 7); Tw.debris(L.glow, [0, 1100, 160, 300], 4, 8); },
+      });
