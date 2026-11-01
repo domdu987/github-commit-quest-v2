@@ -33,7 +33,6 @@ SHOTS = [
     ("hurt", ["n07"], 0.1, 0.4, 5.8),           # high wide: the gap between เต๋า and โจ้ — the dotted run line crossed out
     ("steps", ["n08"], 0.1, 0.5, 6.4),          # stop · warn · call · shout "don't move, we're helping"
     ("clear", ["n09"], 0.1, 0.5, 4.2),          # the clearance team probes and marks a lane to โจ้
-    ("rw", ["n10", "n11"], 0.1, 0.4, 3.8),      # the tape rewinds to 0:04
     ("reveal", ["n12"], 0.1, 0.5, 3.6),         # replay: โจ้ walks round the crossed bamboo into the grass
     ("relief", ["n13"], 0.15, 0.4, 4.6),        # dusk, two hours later: โจ้ out on the lane, เต๋า hugs him, everyone breathes
     ("twist", ["n14"], 0.1, 0.9, 4.4),          # the dust still hanging over the field — up to the ridge: the glint, closer

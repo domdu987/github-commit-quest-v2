@@ -383,7 +383,7 @@
       // ---------- ทางกลับบ้าน EP.2 อย่าเข้าไปหลบหลังพุ่มไม้ ----------
       // grammar: side view (frame 0 the leaves already tearing) · closer · จ่าเม่น behind the bank → the tag · the cross-section · the field's
       // real cover · down flat · the ditch: a wounded soldier of the other side · โจ้ "leave him" · the rule of war · the bandage, the red cross ·
-      // the tag, rule 2 ✓ · rewind → replay 0.3× · Songkran · แม่ · the parcel · the note (F6) · choice · the tag, both ✓
+      // the tag, rule 2 ✓ · (rewind + replay cut 1 Nov) · Songkran · แม่ · the parcel · the note (F6) · choice · the tag, both ✓
       // the planted mistake: 0:00–0:04 โจ้ hides behind the bush; at 0:03 a bullet passes inches over his head (rw / reveal)
       const LINE = (k, i, j) => SH[k].vo[i].frags[j], LINES_F = (k, i) => SH[k].vo[i].frags;
       const GOLD = { from: "left", rim: "#ffd08a", rimOp: 0.75, shade: "#2a2048", shadeOp: 0.34, cast: { len: 3.4, op: 0.42 }, vol: false };
@@ -535,34 +535,6 @@
       add("rule2", { set: "hedge", setOpts: { ...HEDGE, id: "h11", time: "dusk" }, ...CARD, light: DUSKL, grade: GDUSKR, cam: push("rule2", [540, 1300, 1.0, 540, 1100], [540, 1300, 1.04, 540, 1100]),
         captions: caps("rule2", undefined, QUO),
         fx(tl, id, t0, L) { WarUI.tag(tl, L.light, t0 + 0.05, D("rule2") - 0.05, { active: 1, done: [0, 1], tickAt: vo("rule2", 0) + LINE("rule2", 0, 1) + 0.6, y: 820, out: false }); RabFX.motes(tl, L.glow, t0, D("rule2"), { kind: "fly", n: 14, seed: 12 }); } });
-      // ---------- 12. rewind → 0:03 ----------
-      split("rw", vo("rw", 1) - 0.1, {
-        set: "border", setOpts: { time: "dusk", ground: 1300, lift: 220, glint: false, id: "b12", pathX: -400, tree: false, fgH: 0.4, sunX: 1100 },
-        dark: 0.04, blur: { sky: 2, far: 3, mid: 2, fg: 9 }, light: DUSKL, grade: GDUSKR,
-        cam: { keys: [{ t: 0, ...fr(600, 1500, 1.5, 540, 1150), drift: { s: 0.02 } }] },
-        actors: [A("joe", 600, 1760, 0.9, [{ t: 0, mode: "kneel", eyes: "worry", mouth: "flat" }], { flip: true })],
-        captions: caps("rw"),
-        fx(tl, id, t0, L) { QkUI.rewind(tl, L.light, t0 + vo("rw", 1) - 1.0, 0.9, { from: "0:49", to: "0:03" }); live(tl, t0, 4, L); },
-      }, {
-        set: "hedge", setOpts: { ...HEDGE, id: "h12b" }, dark: 0, blur: { sky: 2, far: 2.4, mid: 1.6, fg: 8 }, light: GOLDR, grade: GVHS,
-        cam: { keys: [{ t: 0, ...fr(520, 1500, 1.35, 540, 1150), drift: { s: 0.02 } }] },
-        actors: [A("joe", 700, 1680, 0.82, [{ t: 0, mode: "hunker", eyes: "closed", mouth: "frown" }])],
-        captions: capsFrom("rw", vo("rw", 1) - 0.1),
-        fx(tl, id, t0, L) { BUSH(L); War.spot(tl, L.glow, 330, 1520, t0 + 0.1, 1.2, { label: "วินาทีที่ 3", icon: "bush", r: 220, w: 220, tx: 50 }); },
-      });
-      // ---------- 13. replay at 0.3×: through the leaves, inches over his head ----------
-      add("reveal", {
-        set: "hedge", setOpts: { ...HEDGE, id: "h13" }, dark: 0, blur: { sky: 2, far: 2.4, mid: 1.6, fg: 8 }, light: GOLDR, grade: GVHS,
-        cam: push("reveal", [560, 1440, 1.6, 540, 1100], [620, 1400, 1.85, 540, 1050]),
-        actors: [A("joe", 700, 1680, 0.82, [{ t: 0, mode: "hunker", eyes: "closed", mouth: "frown" }])],
-        captions: caps("reveal"),
-        fx(tl, id, t0, L) {
-          BUSH(L); const tb = t0 + vo("reveal", 0) + LINE("reveal", 0, 1) - 0.1;
-          War.bulletSlow(tl, L, { t: tb, y: 1292, x0: 60, x1: 960, slow: 1.4, seed: 7, dir: 1 }); slowmo(tl, id, tb, 1.4);
-          War.gap(tl, L.glow, 760, 1292, 1338, t0 + vo("reveal", 0) + LINE("reveal", 0, 2), 2.0, "ไม่กี่นิ้ว");
-          live(tl, t0, D("reveal"), L);
-        },
-      });
       // ---------- 14. the war ends: Songkran ----------
       add("home", {
         set: "home", setOpts: { id: "hm14", parcel: true, parcelX: 720 }, dark: 0, blur: { far: 2, fg: 9 }, light: GOLD, grade: GHOME,

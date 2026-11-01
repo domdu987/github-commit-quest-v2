@@ -10,7 +10,7 @@
       // ---------- ทางกลับบ้าน EP.1 อย่าวิ่งเข้าไปช่วย ----------
       // grammar: white-out → the mine at โจ้ (deep) / เต๋า + จ่าเม่น (foreground) · the command (closer) · insert 0:04 the crossed bamboo ·
       // โจ้ in the grass · the draw (insert) · home · the rule (field + tag) · the lure · the fix · the field and its signs · the run line ·
-      // the steps · the clearance lane · rewind → replay · relief at dusk · the dust and the glint (F6) · choice · end sign
+      // the steps · the clearance lane · the bamboo now (no rewind, cut 1 Nov) · relief at dusk · the dust and the glint (F6) · choice · end sign
       // the planted mistake: 0:04.5 the crossed bamboo across the path with โจ้'s footprints going round it (clue / reveal)
       const LINE = (k, i, j) => SH[k].vo[i].frags[j], LINES_F = (k, i) => SH[k].vo[i].frags;
       const GOLD = { from: "left", rim: "#ffd08a", rimOp: 0.75, shade: "#2a2048", shadeOp: 0.34, cast: { len: 3.4, op: 0.42 }, vol: false };
@@ -96,7 +96,6 @@
         cam: push("card", [560, 1150, 1.0, 540, 1000], [560, 1120, 1.12, 540, 1000]),
         captions: caps("card"),
         fx(tl, id, t0, L) {
-          QkUI.rewind(tl, L.light, t0, 0.7, { from: "0:05", to: "-3 เดือน" });
           tl.fromTo("#d5-hand", { y: 200, rotation: 0, transformOrigin: "50% 100%" }, { y: -60, rotation: -4, transformOrigin: "50% 100%", duration: 0.9, ease: "power3.out", immediateRender: false }, t0 + vo("card", 0) + 0.6);
           tl.fromTo("#d5-hand", { y: -60 }, { y: -76, duration: 0.5, repeat: 4, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + vo("card", 0) + 1.5);
           tl.fromTo("#d5-card", { rotation: 0, transformOrigin: "50% 50%" }, { rotation: -6, transformOrigin: "50% 50%", duration: 0.3, repeat: 7, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + vo("card", 0) + 1.4);
@@ -220,30 +219,20 @@
         captions: caps("clear"),
         fx(tl, id, t0, L) { War.lane(tl, L.set, [[880, 1700], [760, 1650], [640, 1600], [540, 1560], [440, 1530]], t0 + 0.3, D("clear") - 0.4, { s: 0.7 }); live(tl, t0, D("clear"), L); motes(tl, t0, D("clear"), L, 18); },
       });
-      // ---------- 14. rewind → 0:04 ----------
-      split("rw", vo("rw", 1) - 0.1, {
-        set: "border", setOpts: { ...FIELD, id: "b14", pathX: 160, band: [-300, 900, 1505, 26], fgH: 0.5 },
-        dark: 0, blur: { sky: 1, far: 1.2, mid: 0.8, fg: 7 }, light: GOLD, grade: GGOLD,
-        cam: { keys: [{ t: 0, ...fr(580, 1560, 1.26, 540, 1240), drift: { s: 0.01 } }] }, shake: HAND,
-        actors: [A("joe", JOE[0], JOE[1], 0.5, [{ t: 0, mode: "lie", eyes: "normal", mouth: "flat" }], { flip: true }), A("tao", 720, 1790, 0.95, [{ t: 0, mode: "kneel", eyes: "worry", mouth: "flat" }], { flip: true })],
-        captions: caps("rw"),
-        fx(tl, id, t0, L) { QkUI.rewind(tl, L.light, t0 + vo("rw", 1) - 1.0, 0.9, { from: "0:56", to: "0:04" }); live(tl, t0, 3, L); },
-      }, {
-        set: "border", setOpts: { ...FIELD, id: "b14b", glint: false, pathX: 380, bamboo: 470, band: [-300, 1500, 1640, 50], fgH: 0.5 },
-        dark: 0, blur: { sky: 2, far: 3, mid: 2, fg: 8 }, light: GOLD, grade: GVHS,
-        cam: { keys: [{ t: 0, ...fr(560, 1560, 1.7, 540, 1150), drift: { s: 0.03 } }] },
-        captions: capsFrom("rw", vo("rw", 1) - 0.1),
-        fx(tl, id, t0, L) { War.bush(L.set, 230, 1450, 0.8, "", { seed: 31 }); War.spot(tl, L.glow, 470, 1300, t0 + 0.1, 1.4, { label: "วินาทีที่ 4", icon: "bamboo", r: 130, w: 220, tx: 50 }); },
-      });
-      // ---------- 15. replay: โจ้ walks round the crossed bamboo into the grass ----------
+      // ---------- 15. now: the crossed bamboo beside the path, and the footprints that go round it ----------
       add("reveal", {
         set: "border", setOpts: { ...FIELD, id: "b15", glint: false, pathX: 380, bamboo: 470, band: [-300, 1500, 1640, 40], fgH: 0.45 },
-        dark: 0, blur: { sky: 1.5, far: 2, mid: 1.5, fg: 8 }, light: GOLD, grade: GVHS,
-        cam: push("reveal", [480, 1430, 1.6, 540, 1150], [560, 1420, 1.75, 540, 1150]),
-        actors: [A("joe", 400, 1560, 0.5, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }],
-          { flip: false, path: [{ t: 0, x: 300, y: 1600, s: 0.52, flip: false }, { t: 1.0, x: 330, y: 1490, s: 0.47, flip: false }, { t: 2.0, x: 600, y: 1470, s: 0.46, flip: false }, { t: 3.6, x: 780, y: 1395, s: 0.42, flip: false }] })],
+        dark: 0, blur: { sky: 1.5, far: 2, mid: 1.5, fg: 8 }, light: GOLD, grade: GGOLD,
+        cam: push("reveal", [500, 1460, 1.5, 540, 1150], [500, 1430, 1.7, 540, 1150]), shake: HAND,
         captions: caps("reveal"),
-        fx(tl, id, t0, L) { War.spot(tl, L.glow, 470, 1300, t0 + 0.15, D("reveal") - 0.2, { label: "ไม้ไผ่ปักไขว้", icon: "bamboo", r: 130, w: 250, tx: 50 }); live(tl, t0, D("reveal"), L); War.jiggle(tl, `${id}-a0`, t0, D("reveal"), { amp: 6, period: 0.48 }); },
+        fx(tl, id, t0, L) {
+          War.bush(L.set, 230, 1450, 0.8, "", { seed: 31 });
+          let fp = ""; [[400, 1650], [380, 1590], [390, 1530], [420, 1470], [560, 1440], [640, 1420], [720, 1400]].forEach(([x, y], k) => { fp += `<g transform="translate(${x + (k % 2 ? 10 : -10)},${y})"><g id="${id}-fp${k}" opacity="0"><ellipse rx="16" ry="7" fill="#5a4028" opacity=".6" transform="rotate(${k < 3 ? -40 : 10})"/></g></g>`; });
+          put(L.set, `<g>${fp}</g>`);
+          [0, 1, 2, 3, 4, 5, 6].forEach((k) => tl.fromTo(`#${id}-fp${k}`, { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.2, ease: "back.out(2)", immediateRender: false }, t0 + vo("reveal", 0) + LINE("reveal", 0, 1) + k * 0.16));
+          War.spot(tl, L.glow, 470, 1300, t0 + 0.15, D("reveal") - 0.2, { label: "ไม้ไผ่ปักไขว้", icon: "bamboo", r: 130, w: 250, tx: 50 });
+          live(tl, t0, D("reveal"), L); motes(tl, t0, D("reveal"), L, 21);
+        },
       });
       // ---------- 16. two hours later, dusk: โจ้ out on the lane; เต๋า hugs him ----------
       add("relief", {
