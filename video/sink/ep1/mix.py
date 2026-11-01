@@ -131,8 +131,8 @@ CUES = [
     ("window", 0.2, "pop", 0.2), ("window", 0.47, "click", 0.3), ("window", 0.5, "motor", 0.3), ("window", 1.55, "splash", 0.42), ("window", 1.6, "roar", 0.3), ("window", 1.9, "bubbles", 0.24), *ticks("window", 0.1, D["window"] - 0.1, 0.12, 1.0),
     ("kid", 0.2, "pop", 0.2), ("kid", 0.62, "click", 0.36), ("kid", 0.68, "whoosh", 0.18), ("kid", F("kid", 0, 1), "splash", 0.18), ("kid", 0.9, "bubbles", 0.2), *ticks("kid", 0.1, D["kid"] - 0.1, 0.13, 1.0),
     ("phone", 0.2, "pop", 0.2), ("phone", 0.5, "notif", 0.16), *ticks("phone", 0.1, D["phone"] - 0.1, 0.13, 1.0),
-    # the rewind to 0:04
-    ("rw", 0.0, "rewind", 0.42), ("rw", 0.6, "click", 0.36), ("rw", 0.65, "sting", 0.3),
+    # the twist: her window will not go down
+    ("kim", 0.0, "sting", 0.3),
     # her switch: click click click, nothing; the ticks get louder
     *[("kim", 1.09 + i * 0.28, "click", 0.3) for i in range(6)], *ticks("kim", 0.1, D["kim"] - 0.1, 0.16, 1.0),
     ("led", 0.1, "swell", 0.2), *ticks("led", 0.1, D["led"] - 0.1, 0.17, 1.0), *beats("led", 0.3, D["led"] - 0.3, 0.5, 0.32),
@@ -192,7 +192,7 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 dip(T("plunge", 0), T("inrush", -0.01), 0.35)   # the splash and the water pouring in
-dip(T("rw", 0), T("flicker", -0.01), 0.55)       # the rewind and the twist
+dip(T("kim", 0), T("flicker", -0.01), 0.55)      # the twist
 mus = mus * gain
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card

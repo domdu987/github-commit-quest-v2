@@ -33,7 +33,6 @@ SHOTS = [
     ("window", ["n09"], 0.2, 0.3, 3.4),          # his window goes down
     ("kid", ["n10"], 0.2, 0.3, 2.8),             # he turns to ขิม
     ("phone", ["n11"], 0.2, 0.4, 3.0),           # the phone on the seat, the water rising round it; call 1669 once ashore
-    ("rw", ["n12"], 0.2, 0.6, 4.2),              # rewind to 0:04: the lock pressed
     ("kim", ["k01"], 0.1, 0.4, 2.2),             # her window: she presses, nothing; the water outside at the glass
     ("led", ["n13"], 0.2, 0.3, 2.4),             # the lock's orange light still on
     ("panel", ["n14"], 0.2, 0.3, 3.0),           # he presses her window on his own panel: nothing (some cars lock every window but the driver's)

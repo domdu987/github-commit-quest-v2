@@ -211,12 +211,6 @@
         captions: caps("phone"),
         fx(tl, id, t0, L) { Klong.life(tl, "kc0", t0, D("phone")); put(L.light, `<rect width="1080" height="1920" fill="#0a0c18" opacity=".3"/>`); SinkUI.call(tl, L.light, t0, D("phone"), { chip: F("phone", 0, 1) - 0.1 }); },
       });
-      add("rw", {
-        set: "lockIns", setOpts: { id: "lk1", on: true }, dark: 0.12, light: false, grade: GNIGHT,
-        cam: { keys: [{ t: 0, ...fr(700, 1020, 1.3, 540, 980) }, { t: D("rw"), glide: D("rw"), ...fr(730, 1005, 1.75, 540, 980) }] },
-        captions: caps("rw"),
-        fx(tl, id, t0, L) { rewind(L, tl, t0, D("rw"), "0:04"); tl.fromTo("#lk1-led", { opacity: 1 }, { opacity: 0.4, duration: 0.3, yoyo: true, repeat: Math.ceil(D("rw") / 0.3), immediateRender: false }, t0); },
-      });
       // ---------- 15. ขิม's window: she presses, nothing ----------
       const KS = vo("kim") + 0.8, KH = CK3.y - CK3.s * (548 - 96);   // the cut inside her line · her head, risen
       split("kim", KS, {
