@@ -1,0 +1,20 @@
+      // ---------- ฮุก ถ้ำน้ำท่วม: 0.0 the face in the headlamp, chest-deep, the jet roaring · 1.5 the water climbs, มิ้น gulps air to dive for the drowned way out · 3.0 โค้ชเจต grabs her arm: อย่าดำน้ำหนี ----------
+      const WL = 1300, L1 = [380, 1650, 1.0], L2 = [700, 1600, 0.82], L3 = [1010, 1590, 0.76];
+      const lamp = ([x, y, s], d, len) => [x, Math.round(y - 603 * s), d, len];
+      add("h", {
+        set: "caveFlood", setOpts: { id: "cf", wl: WL, beams: [lamp(L1, 4, 1400), lamp(L2, 196, 1300), lamp(L3, 160, 1100)], jetX: 760, dark: 0.74, ripples: [[L1[0], 150], [L2[0], 120], [L3[0], 110]] },
+        dark: 0, light: { from: "left", rim: "#ffe8a8", rimOp: 0.7, shade: "#0a0806", shadeOp: 0.5, cast: false, vol: false }, grade: { top: "#2a2418", bottom: "#050403", op: 0.25 },
+        cam: { keys: [{ t: 0, ...fr(430, 1090, 1.75, 540, 900) }, { t: 1.5, glide: 1.4, ...fr(640, 1120, 1.12, 540, 900) }, { t: 3.0, glide: 1.4, ...fr(820, 1100, 1.7, 540, 900) }] },
+        shake: (t) => ({ x: 4 * Math.sin(t * 6.3) + 2 * Math.sin(t * 13), y: 3 * Math.sin(t * 5.1), r: 0.3 * Math.sin(t * 3.7) }),
+        actors: [A("cav1", ...L1, [T("wade", "wide", "o")]),
+          A("cav2", ...L2, [T("wade", "wide", "flat"), T("point", "angry", "o", 1.0)], { flip: true }),
+          A("cav3", ...L3, [T("wade", "wide", "o"), T("grabArm", "angry", "scream", 2.2)], { flip: true, moveTo: { x: 900, y: 1595, at: 2.1, dur: 0.6 } })],
+        captions: [{ text: "ถ้าวันหนึ่ง… [น้ำท่วมปิดทางออกถ้ำ]", t: 0, end: 2.55 }, { text: "{อย่าดำน้ำหนี}", t: 2.6, end: 3.55 }],
+        fx(tl, id, t0, L) {
+          tl.fromTo("#cf-wtr", { y: 0 }, { y: -80, duration: 3.4, ease: "power1.in", immediateRender: false }, t0);
+          document.querySelectorAll(".cvj").forEach((e, k) => tl.fromTo(e, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -420 - k * 30 }, duration: 3.6, ease: "none", immediateRender: false }, t0));
+          [0, 1, 2].forEach((k) => tl.fromTo(`#cf-b${k}`, { rotation: -2, svgOrigin: "0 0" }, { rotation: 2, svgOrigin: "0 0", duration: 0.5 + k * 0.17, yoyo: true, repeat: 8, ease: "sine.inOut", immediateRender: false }, t0));
+          Pop2.particles(tl, L.glow, { type: "rain", n: 30, box: [-700, 600, 300, 700], t0, dur: 3.6, seed: 5 });
+          put(L.light, `<radialGradient id="vgH"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".75"/></radialGradient><rect width="1080" height="1920" fill="url(#vgH)"/>`);
+        },
+      });
