@@ -15,6 +15,11 @@ LIB = {
  "songkran": ("Thai Songkran festival in a village street: water splashing, children laughing, distant festive music from a speaker, cheerful", 8),
  "parcel": ("A cardboard parcel being set down on a wooden step, then tape being torn open", 2),
  "rewind": ("A cassette tape rewinding fast, whirring with a click at the end", 1.2),
+ "canvas": ("A heavy canvas-bound field notebook slapped down onto dry dirt, a soft thump and a little dust, close", 1.0),
+ "pencil": ("A pencil sketching quickly on rough paper, scratchy strokes, close", 1.5),
+ "buckle": ("A canvas strap swinging and its metal buckle clinking twice, close", 1.0),
+ "spray": ("A spray paint can shaken with the ball rattling, then a short hiss of spray through a stencil", 1.5),
+ "stake": ("A wooden stake knocked into dry ground with two thuds, then a rope creaking as a cardboard tag swings", 1.3),
 }
 def gen(k):
     text, d = LIB[k]
