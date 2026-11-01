@@ -89,6 +89,14 @@ CUES = [
     *beats("choice", 0.2, D["choice"] - 0.2, 0.5, 0.3), ("choice", D["choice"] - 0.8, "ding", 0.3),
     ("next", 0.1, "whoosh", 0.3), ("next", 0.6, "thud", 0.3),
 ]
+CARDS = [  # the in-world cards make the sound of their material (owner 1 Nov)
+    ("fix", frag("fix", 0, 1) - 0.2, "spray", 0.55), ("fix", frag("fix", 0, 1) + 0.05, "stake", 0.6),
+    *[x for t in (frag("field", 1, 1) + 0.2, frag("field", 1, 1) + 1.5, frag("field", 1, 2) + 0.2, frag("field", 1, 2) + 1.4) for x in (("field", t, "spray", 0.45), ("field", t + 0.25, "stake", 0.5))],
+    ("hurt", frag("hurt", 0, 1) - 0.3, "spray", 0.45), ("hurt", frag("hurt", 0, 1) + 0.5, "spray", 0.6),
+    ("steps", vo_t("steps") - 0.05, "buckle", 0.6), ("steps", vo_t("steps") + 0.1, "spray", 0.4), ("steps", vo_t("steps") + 0.8, "spray", 0.4), ("steps", vo_t("steps") + 1.6, "spray", 0.4), ("steps", frag("steps", 0, 1), "spray", 0.4),
+    ("steps", frag("steps", 0, 2) + 0.15, "stake", 0.5), ("reveal", 0.0, "spray", 0.3), ("reveal", 0.25, "stake", 0.35),
+    ("choice", 0.0, "canvas", 0.7), ("choice", 0.6, "pencil", 0.45), ("choice", D["choice"] - 1.4, "pencil", 0.55), ("choice", D["choice"] - 1.0, "pencil", 0.55),
+]
 SAMPLES = [
     ("hook", 0.0, "mine", 1.6), ("hook", 0.15, "debris", 0.9), ("hook", 0.3, "tinnitus", 0.5, 2.0), ("hook", 1.0, "field", 0.25, 2.0),
     ("cmd", 0.0, "field", 0.3, 1.5), ("cmd", 0.1, "crawl", 0.5), ("clue", 0.0, "field", 0.4, 1.2),
@@ -104,8 +112,8 @@ SAMPLES = [
 
 
 def music_dips(dip):
-    dip(T("hook", 0), T("cmd", -0.01), 0.35)
-    dip(T("twist", 0), T("twist", -0.01), 0.5)
+    dip(T("twist", 0), T("twist", frag("twist", 0, 1)), 0.35)   # the hush before "…ให้อีกฝั่งมองเห็น", then the theme's peak lands on the cliffhanger
+BOOST = [("hook", 0.0, 0.1, 1.6), ("hook", 2.7, 0.3, 1.5)]   # the mine: the snare and timpani pushed up (ducked under the voice anyway)
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
 CUES = [c for c in CUES if c[2] not in ("wind", "lap", "pop", "tick") and c[3] > 0]   # no HUD: no chip pops, no countdown ticks (user 31 ต.ค.)  # no noise beds (user: "เสียงซ่าๆเอาออก")
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
@@ -115,11 +123,11 @@ subprocess.run(["python3", os.path.join(HERE, "..", "synth.py"), os.path.join(HE
                check=True, env={**os.environ, "STEMS": "1"})
 sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
-for k, t0, name, g, *mx in SAMPLES:
+for k, t0, name, g, *mx in SAMPLES + CARDS:
     place(sfx, smp(name, mx[0] if mx else None), T(k, t0), g)
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
+mus = load(os.path.join(HERE, "..", "music", "war-theme.mp3"))[int(11.76 * SR):]   # war theme (owner 1 Nov), offset so its peak lands on the cliffhanger
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -133,6 +141,8 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 music_dips(dip)
+for k, a0, d0, g0 in BOOST:
+    gain[int(T(k, a0) * SR):int(T(k, a0 + d0) * SR)] *= g0
 mus = mus * gain
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card

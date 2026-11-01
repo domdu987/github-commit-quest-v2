@@ -59,6 +59,7 @@
     <script src="assets/war.js"></script>
     <script src="assets/war2.js"></script>
     <script src="assets/war3.js"></script>
+    <script src="assets/war4.js"></script>
     <style>
       @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
       @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
@@ -665,7 +666,7 @@
         captions: caps("fix"),
         fx(tl, id, t0, L) {
           War.rocket(L.set, 780, 1790, 1.05, "rk9"); War.sparkle(tl, "#rk9-gl", t0, D("fix"), 1.2);
-          War.spot(tl, L.glow, 760, 1700, t0 + vo("fix", 0) + LINE("fix", 0, 1) - 0.2, D("fix"), { label: "อย่าแตะ", icon: "notouch", r: 140, w: 170, tx: 40 });
+          War.spot(tl, L.glow, 760, 1700, t0 + vo("fix", 0) + LINE("fix", 0, 1) - 0.2, D("fix"), { label: "อย่าแตะ", icon: "notouch", r: 140, w: 170, tx: 40, side: -1 });
           live(tl, t0, D("fix"), L); motes(tl, t0, D("fix"), L, 13);
         },
       });
@@ -747,7 +748,7 @@
           let fp = ""; [[400, 1650], [380, 1590], [390, 1530], [420, 1470], [560, 1440], [640, 1420], [720, 1400]].forEach(([x, y], k) => { fp += `<g transform="translate(${x + (k % 2 ? 10 : -10)},${y})"><g id="${id}-fp${k}" opacity="0"><ellipse rx="16" ry="7" fill="#5a4028" opacity=".6" transform="rotate(${k < 3 ? -40 : 10})"/></g></g>`; });
           put(L.set, `<g>${fp}</g>`);
           [0, 1, 2, 3, 4, 5, 6].forEach((k) => tl.fromTo(`#${id}-fp${k}`, { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.2, ease: "back.out(2)", immediateRender: false }, t0 + vo("reveal", 0) + LINE("reveal", 0, 1) + k * 0.16));
-          War.spot(tl, L.glow, 470, 1300, t0 + 0.15, D("reveal") - 0.2, { label: "ไม้ไผ่ปักไขว้", icon: "bamboo", r: 130, w: 250, tx: 50 });
+          War.spot(tl, L.glow, 470, 1300, t0 + 0.15, D("reveal") - 0.2, { label: "ไม้ไผ่ปักไขว้", icon: "bamboo", r: 130, w: 250, tx: 50, tagDx: -110, top: -400 });
           live(tl, t0, D("reveal"), L); motes(tl, t0, D("reveal"), L, 21);
         },
       });
@@ -772,7 +773,7 @@
       // ---------- 18. choice ----------
       add("choice", {
         set: "border", setOpts: { ...FIELD, id: "b18", time: "dusk", glint: false }, ...CARD, light: DUSKL, grade: GDUSKR, cam: push("choice", [540, 1200, 1.0, 540, 1100], [540, 1200, 1.05, 540, 1100]),
-        fx(tl, id, t0, L) { QkUI.choice(tl, L.light, t0, D("choice"), { q: "ถ้าเป็นคุณ จะทำยังไง?", a: { text: "วิ่งไปช่วย", icon: "norush" }, b: { text: "หยุด เรียกคนช่วย", icon: "still" }, secs: 3, pick: "b", pickAt: D("choice") - 1.2, mark: { at: D("choice") - 0.8, wrong: "a" } }); },
+        fx(tl, id, t0, L) { WarUI.choice(tl, L.light, t0, D("choice"), { q: "ถ้าเป็นคุณ จะทำยังไง?", a: { text: "วิ่งไปช่วย", icon: "norush" }, b: { text: "หยุด เรียกคนช่วย", icon: "still" }, secs: 3, pick: "b", pickAt: D("choice") - 1.2, mark: { at: D("choice") - 0.8, wrong: "a" } }); },
       });
       // ---------- 19. end sign + next ----------
       add("next", {

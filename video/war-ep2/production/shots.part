@@ -69,7 +69,7 @@
       });
       // ---------- 4. the cross-section: concealment vs cover ----------
       add("hide", { set: "hedge", setOpts: { ...HEDGE, id: "h4", bushFront: false }, ...CARD, cam: push("hide", [540, 1300, 1.0, 540, 1100], [540, 1290, 1.05, 540, 1100]), captions: caps("hide"),
-        fx(tl, id, t0, L) { WarUI.cover(tl, L.light, t0 + 0.1, D("hide") - 0.1, { y: 420, out: false }); RabFX.motes(tl, L.glow, t0, D("hide"), { n: 20, seed: 6 }); } });
+        fx(tl, id, t0, L) { WarUI.cover(tl, L.light, t0 + 0.1, D("hide") - 0.1, { y: 250, out: false, gap: 1.5 }); RabFX.motes(tl, L.glow, t0, D("hide"), { n: 20, seed: 6 }); } });
       // ---------- 5. real cover in the field: a big tree, a rock, the earth bank, a ditch ----------
       { const K = "cover", v = vo(K, 0), f = LINES_F(K, 0);
         add(K, {
@@ -81,11 +81,11 @@
             War.rock(L.set, 760, 1500, 1.0);
             put(L.set, `<g transform="translate(1180,1480)"><path d="M-260,0Q-200,-150 0,-170Q200,-150 260,0Z" fill="#8a6440" stroke="#2a2420" stroke-width="4"/><path d="M-200,-60Q0,-140 200,-60" stroke="#b08a5a" stroke-width="12" fill="none" opacity=".6"/></g>`);
             War.ditch(L.set, 1560, 1560, 480);
-            const S = (x, y, t, label, icon, w, dur) => War.spot(tl, L.glow, x, y, t0 + t, dur, { label, icon, r: 140, w, tx: 50, out: true });
+            const S = (x, y, t, label, icon, w, dur, side) => War.spot(tl, L.glow, x, y, t0 + t, dur, { label, icon, r: 140, w, tx: 50, out: true, side });
             S(270, 1180, v + f[1], "ต้นไม้ใหญ่", "treex", 230, 1.0);
             S(760, 1400, v + f[1] + 0.9, "หิน", "rock", 170, 1.0);
             S(1180, 1400, v + f[1] + 1.8, "คันดิน", "rock", 200, 1.2);
-            S(1560, 1520, v + f[2] + 0.2, "หลุมต่ำกว่าพื้น", "rock", 290, D(K) - v - f[2] - 0.3);
+            S(1560, 1520, v + f[2] + 0.2, "หลุมต่ำกว่าพื้น", "rock", 290, D(K) - v - f[2] - 0.3, -1);
             live(tl, t0, D(K), L); motes(tl, t0, D(K), L, 14);
           },
         }); }
@@ -156,7 +156,7 @@
             A("medic", 470, 1700, 0.8, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { path: [{ t: 0, x: 280, y: 1700 }, { t: 2.2, x: 480, y: 1710 }] }),
             A("enemyHurt", 640, 1740, 0.8, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }]), A("tao", 860, 1770, 0.85, [{ t: 0, mode: "kneel", eyes: "normal", mouth: "smile" }], { flip: true })],
           captions: capsFrom(K, v + f[1] - 0.1),
-          fx(tl, id, t0, L) { War.crossFlag(L.set, 160, 1560, 0.9, "cf10"); War.wave(tl, "#cf10-fl", t0, 3); War.spot(tl, L.glow, 285, 1150, t0 + f[2] - f[1] + 0.1, 2, { label: "หน่วยแพทย์", icon: "bandage", r: 130, w: 230, tx: 50 }); live(tl, t0, 3, L); },
+          fx(tl, id, t0, L) { War.crossFlag(L.set, 160, 1560, 0.9, "cf10"); War.wave(tl, "#cf10-fl", t0, 3); War.spot(tl, L.glow, 285, 1150, t0 + f[2] - f[1] + 0.1, 2, { label: "หน่วยแพทย์", icon: "bandage", r: 130, w: 230, tx: 50, side: 1, tagDx: 120 }); live(tl, t0, 3, L); },
         }); }
       // ---------- 11. the tag: rule 2 ✓ ----------
       add("rule2", { set: "hedge", setOpts: { ...HEDGE, id: "h11", time: "dusk" }, ...CARD, light: DUSKL, grade: GDUSKR, cam: push("rule2", [540, 1300, 1.0, 540, 1100], [540, 1300, 1.04, 540, 1100]),
@@ -202,7 +202,7 @@
       // ---------- 18. choice ----------
       add("choice", {
         set: "hedge", setOpts: { ...HEDGE, id: "h18", time: "dusk" }, ...CARD, light: DUSKL, grade: GDUSKR, cam: push("choice", [540, 1300, 1.0, 540, 1100], [540, 1300, 1.05, 540, 1100]),
-        fx(tl, id, t0, L) { QkUI.choice(tl, L.light, t0, D("choice"), { q: "จะหลบหลังอะไร?", a: { text: "พุ่มไม้", icon: "bush" }, b: { text: "ต้นไม้ใหญ่", icon: "treex" }, secs: 3, pick: "b", pickAt: D("choice") - 1.2, mark: { at: D("choice") - 0.8, wrong: "a" } }); },
+        fx(tl, id, t0, L) { WarUI.choice(tl, L.light, t0, D("choice"), { q: "จะหลบหลังอะไร?", a: { text: "พุ่มไม้", icon: "bush" }, b: { text: "ต้นไม้ใหญ่", icon: "treex" }, secs: 3, pick: "b", pickAt: D("choice") - 1.2, mark: { at: D("choice") - 0.8, wrong: "a" } }); },
       });
       // ---------- 19. the tag, both rules ticked ----------
       add("end", { set: "home", setOpts: { id: "hm19", parcel: false }, ...CARD, light: GOLD, grade: GHOME, cam: push("end", [540, 1300, 1.0, 540, 1100], [540, 1300, 1.04, 540, 1100]),
