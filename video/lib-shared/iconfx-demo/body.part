@@ -1,0 +1,24 @@
+      // ---------- IconFX demo: old vs new (zombie rule, road "2 วิ"), a checklist card, the five themes idling ----------
+      const tag = (L, tl, t0, d, txt, c) => { const id = `tg${Math.round(t0 * 100)}`; put(L.light, `<g id="${id}" opacity="0"><rect x="40" y="70" width="${txt.length * 46 + 70}" height="96" rx="20" fill="${c}" stroke="#1b1714" stroke-width="5"/><text x="74" y="138" font-family="Kanit" font-weight="900" font-size="58" fill="#fff">${txt}</text></g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0); tl.set(`#${id}`, { opacity: 0 }, t0 + d); };
+      const BG = { set: "carCut", setOpts: { id: "bg", state: "alarm", end: "zombies", crack: 2 }, dark: 0.3, light: false, grade: { top: "#c8202a", bottom: "#12040a", op: 0.3 }, blur: { far: 6, mid: 4, set: 5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(900, 1200, 1.2, 540, 1000) }] } };
+      const RD = { set: "viaduct", setOpts: { id: "rd", time: "night" }, dark: 0.2, light: false, grade: { top: "#3a4a6a", bottom: "#05060c", op: 0.25 }, blur: { far: 5, mid: 4, set: 5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(700, 1000, 1.0, 540, 1000) }] } };
+      add("old1", { ...BG, fx(tl, id, t0, L) { tag(L, tl, t0, D("old1"), "เดิม", "#6a6e78"); SkyUI.rule(tl, L.light, t0 + 0.05, D("old1") - 0.05, { active: 0, y: 600 }); } });
+      add("new1", { ...BG, fx(tl, id, t0, L) { tag(L, tl, t0, D("new1"), "ใหม่", "#e8382c");
+        IconFX.enter(tl, L.light, { theme: "zombie", art: IconFX.ART.bell, x: 330, y: 760, r: 170, t: t0 + 0.05, from: "left", label: "กดกระดิ่ง", idle: 1.2, exit: "none" });
+        IconFX.enter(tl, L.light, { theme: "zombie", art: IconFX.ART.noTrack, x: 760, y: 1230, r: 170, t: t0 + 0.55, from: "right", label: "อย่าวิ่งลงราง", idle: 0.7, exit: "dock", dockX: 960, dockY: 300, dockR: 80 }); } });
+      add("old2", { ...RD, fx(tl, id, t0, L) { tag(L, tl, t0, D("old2"), "เดิม", "#6a6e78"); SU.defs(L.light);
+        put(L.light, `<g transform="translate(540,820)"><g id="om">${SU.medal("omd", 66, `<g transform="scale(.62)">${IconFX.ART.stopwatch("2 วิ")}</g>`)}</g></g>`);
+        tl.fromTo("#om", { scale: 0.2, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, t0 + 0.1); SU.sheen(tl, "omd", 66, t0 + 0.7, 0.5, 2); } });
+      add("new2", { ...RD, fx(tl, id, t0, L) { tag(L, tl, t0, D("new2"), "ใหม่", "#e8382c");
+        IconFX.enter(tl, L.light, { theme: "roadWarn", art: IconFX.ART.stopwatch("2 วิ"), x: 540, y: 820, r: 190, t: t0 + 0.05, from: "below", label: "ท่อนซุงโผล่ · เหลือ 2 วินาที", idle: 0.9, exit: "fly" }); } });
+      add("card", { ...BG, fx(tl, id, t0, L) { tag(L, tl, t0, D("card"), "การ์ด", "#e8382c");
+        IconFX.card(tl, L.light, { theme: "zombie", title: "กฎรถไฟฟ้า", t: t0 + 0.02, dur: D("card") - 0.02, y: 380, step: 0.3, items: [
+          { text: "กดกระดิ่ง", sub: "คุยกับศูนย์ได้ทันที", mark: "ok", art: IconFX.ART.bell }, { text: "ข้ามตู้ กั้นประตู", sub: "รอคนนำทาง", mark: "ok", art: IconFX.ART.gangway },
+          { text: "เปิดประตูฉุกเฉิน", sub: "กลางรางยกระดับ", mark: "no", art: IconFX.ART.noTrack }] }); } });
+      add("all", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) { put(L.light, `<rect width="1080" height="1920" fill="#14161e"/><text x="540" y="230" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff">5 ธีม · ตามเรื่อง</text>`);
+          [["zombie", IconFX.ART.bell, 300, 560, "ซอมบี้"], ["road", IconFX.ART.log, 780, 560, "ถนน"], ["water", IconFX.ART.buoy, 300, 1020, "น้ำ"], ["military", IconFX.ART.helmet, 780, 1020, "ทหาร"], ["ghost", IconFX.ART.candle, 540, 1480, "ผีไทย"]]
+            .forEach(([th, art, x, y, lb], k) => IconFX.enter(tl, L.light, { theme: th, art, x, y, r: 140, t: t0 - 0.25 + k * 0.04, from: "below", label: lb, idle: D("all"), exit: "none" })); } });

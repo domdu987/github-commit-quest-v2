@@ -1,0 +1,1 @@
+cat helpers.part kit.part kit2.part hands.part kit3.part cut.part rich.part sinkui.part skytrain.part skycast.part skyui.part /home/user/github-commit-quest-v2/video/lib-shared/iconfx.js body.part > shots.part && cat head.part sigcard.part shots.part foot.part > ep.tmpl.html && python3 make.py
