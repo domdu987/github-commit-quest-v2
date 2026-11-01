@@ -59,7 +59,7 @@
         cam: { keys: [{ t: 0, ...fr(300, 1560, 2.25, 540, 1100) }, { t: D("dont"), glide: D("dont"), ...fr(300, 1560, 2.4, 540, 1100) }] },
         captions: caps("dont"),
         fx(tl, id, t0, L) { bag(L, "bg2", 300, 1650); tl.fromTo("#bg2p", { x: -4 }, { x: 4, duration: 0.05, yoyo: true, repeat: Math.ceil(D("dont") / 0.05), immediateRender: false }, t0);
-          ExamUI.nope(tl, L.light, t0, D("dont"), { icon: "phone", text: "ห้ามรับ", y: 640, stamp: 0.35 }); },
+          ExamUI.nope(tl, L.light, t0, D("dont"), { icon: "phone", text: "ห้ามรับ", y: 640, stamp: 0.35, name: "ฝน" }); },
       });
       // ---------- 3. the hidden room: everyone along the wall, the head at the glass ----------
       add("quiet", {

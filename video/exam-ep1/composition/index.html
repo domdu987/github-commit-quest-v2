@@ -1211,6 +1211,116 @@
         tl.fromTo(`#${id}-pg`, { y: 0, rotation: 0 }, { y: -14, rotation: 1.2, svgOrigin: "0 0", duration: 0.8, yoyo: true, repeat: Math.ceil(rest / 0.8), ease: "sine.inOut", immediateRender: false }, t0 + 0.65);
         tl.fromTo(`#${id}-c`, { scale: 1 }, { scale: 1.04, transformOrigin: "50% 50%", duration: 0.45, yoyo: true, repeat: Math.ceil(rest / 0.45), ease: "sine.inOut", immediateRender: false }, t0 + 1.3);
       };
+      // ---------- ห้องสอบ cards as things in the classroom (owner 1 Nov: "เข้าตามธีมเรื่อง", no UI boxes) ----------
+      //   ExamUI.rules → a small classroom chalkboard hung on a nail by a cord: drops in, swings, settles and keeps swaying;
+      //                  each rule is chalked in (handwriting reveal + a chalk stick riding the line + dust), then ticked and
+      //                  underlined in yellow chalk; chalk dust drifts the whole time, the eraser and chalk lie on the tray
+      //   ExamUI.nope  → a student's answer sheet flutters down; the teacher's red pen crosses out the pencil sketch and
+      //                  writes the order ("ห้ามถ่าย") with a double underline and a red 0
+      const CH = "#f4f2ea", CHY = "#ffe27a";
+      const chalkDefs = (layer) => { if (document.getElementById("exChalkF")) return; put(layer, `<defs>
+        <filter id="exChalkF" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="4" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G" result="d"/>
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 2.1" result="m"/><feComposite in="d" in2="m" operator="in"/></filter>
+        <linearGradient id="exSlate" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f4a3e"/><stop offset=".55" stop-color="#263d33"/><stop offset="1" stop-color="#1e3229"/></linearGradient>
+        <linearGradient id="exFrame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8925a"/><stop offset="1" stop-color="#8a5a30"/></linearGradient>
+        <linearGradient id="exPaper" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#efe8d6"/></linearGradient></defs>`); };
+      // chalk-line icons (outline drawings, as a teacher would sketch them)
+      const CHI = {
+        lock: `<rect x="-26" y="-4" width="52" height="40" rx="6"/><path d="M-15,-4V-20Q-15,-38 0,-38Q15,-38 15,-20V-4M0,10v12"/>`,
+        light: `<path d="M-20,-8Q-24,-38 0,-40Q24,-38 20,-8Q14,2 13,12H-13Q-14,2 -20,-8ZM-11,20H11M-8,28H8"/><path d="M-36,-44L36,36" stroke="${CHY}"/>`,
+        sight: `<path d="M-40,0Q0,-34 40,0Q0,34 -40,0Z"/><circle r="11"/><path d="M-38,-32L38,32" stroke="${CHY}"/>`,
+        quiet: `<path d="M-30,-14H-12L8,-32V32L-12,14H-30Z"/><path d="M18,-14L38,12M38,-14L18,12" stroke="${CHY}"/>`,
+        phone: `<rect x="-20" y="-36" width="40" height="72" rx="8"/><path d="M-6,26h12M-30,-30L30,30" /><path d="M-30,-30L30,30" stroke="${CHY}"/>`,
+        door: `<rect x="-24" y="-40" width="48" height="80" rx="3"/><rect x="-8" y="-30" width="16" height="26"/><circle cx="14" cy="6" r="3"/>`,
+        key: `<circle cx="-16" cy="0" r="15"/><circle cx="-16" cy="0" r="4"/><path d="M-1,0H38M28,0v12M36,0v9"/>`,
+        list: `<rect x="-24" y="-36" width="48" height="72" rx="4"/><path d="M-14,-18l5,5l9,-10M6,-16h10M-14,-2l5,5l9,-10M6,0h10M-14,14l5,5l9,-10M6,16h10"/>`,
+      };
+      ExamUI.rules = (tl, layer, t0, dur, o = {}) => {
+        chalkDefs(layer);
+        const id = `xr${exSeq++}`, rows = o.rows || [["lock", "ล็อกประตู"], ["light", "ปิดไฟ"], ["sight", "หลบพ้นช่องกระจก"], ["quiet", "เงียบ"]];
+        const Y = o.y ?? 300, S = o.s ?? 1, at = o.at || rows.map((_, k) => 0.35 + k * 0.4);
+        const Wd = 880, Hb = 196 + rows.length * 132, NY = -130, rowY = (k) => 196 + k * 132;
+        const ln = (w) => `stroke="${CH}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"`;
+        let rs = "";
+        rows.forEach(([ic, t], k) => {
+          const y = rowY(k), tw = Math.min(560, t.length * 36 + 20);
+          rs += `<g id="${id}-r${k}" opacity="0"><g transform="translate(-330,${y})" filter="url(#exChalkF)"><g id="${id}-i${k}" ${ln(5)}>${CHI[ic] || CHI.list}</g></g>
+            <clipPath id="${id}-c${k}"><rect id="${id}-cr${k}" x="-260" y="${y - 70}" width="0" height="110"/></clipPath>
+            <g clip-path="url(#${id}-c${k})" filter="url(#exChalkF)"><text x="-250" y="${y + 22}" font-family="Sriracha" font-size="66" fill="${CH}">${t}</text></g>
+            <path id="${id}-u${k}" d="M-256,${y + 44}q${f1(tw * 0.25)},10 ${f1(tw * 0.5)},0t${f1(tw * 0.5)},2" stroke="${CHY}" stroke-width="7" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" filter="url(#exChalkF)"/>
+            <path id="${id}-t${k}" d="M${f1(-230 + tw)},${y - 2}l18,22l40,-52" stroke="${CHY}" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" filter="url(#exChalkF)"/>
+            <g id="${id}-d${k}" opacity="0">${[0, 1, 2, 3, 4].map((j) => `<circle cx="${-250 + j * 14}" cy="${y + 30}" r="${4 + (j % 3) * 2}" fill="${CH}" opacity=".6"/>`).join("")}</g></g>`;
+        });
+        // eraser smears behind the writing, the tray with chalk sticks and a felt eraser, a nail and a cord
+        const smear = [[-200, 120, 220], [150, 90, 260], [-60, Hb - 90, 300], [260, Hb - 150, 180]].map(([x, y, w], k) => `<path d="M${x - w / 2},${y}q${w / 4},-24 ${w / 2},0t${w / 2},0" stroke="${CH}" stroke-width="${26 - k * 3}" opacity=".07" fill="none" stroke-linecap="round"/>`).join("");
+        const tray = `<rect x="-${Wd / 2 + 10}" y="${Hb + 18}" width="${Wd + 20}" height="22" rx="4" fill="#8a5a30" stroke="${INK}" stroke-width="4"/>
+          <g id="${id}-ck"><rect x="190" y="${Hb + 6}" width="70" height="14" rx="6" fill="${CH}" stroke="#bdb8a8" stroke-width="2"/></g><rect x="290" y="${Hb + 8}" width="46" height="12" rx="5" fill="${CHY}" stroke="#c8a840" stroke-width="2"/>
+          <g transform="translate(-300,${Hb - 4})"><rect x="-70" y="0" width="140" height="22" rx="4" fill="#3a3a44" stroke="${INK}" stroke-width="3"/><rect x="-70" y="-20" width="140" height="22" rx="5" fill="#b07e44" stroke="${INK}" stroke-width="3"/><rect x="-62" y="18" width="124" height="6" fill="${CH}" opacity=".5"/></g>`;
+        const motes = Array.from({ length: 12 }, (_, k) => `<circle id="${id}-mo${k}" cx="${-380 + ((k * 137) % 760)}" cy="${Hb - 20 - ((k * 53) % 120)}" r="${1.6 + (k % 3)}" fill="${CH}" opacity=".5"/>`).join("");
+        put(layer, `<g id="${id}" opacity="0" transform="translate(540,${Y}) scale(${S})"><g id="${id}-m"><g id="${id}-sw">
+          <path d="M0,${NY}L-300,0M0,${NY}L300,0" stroke="#3a2a1a" stroke-width="5"/><circle cx="0" cy="${NY}" r="11" fill="#9aa4aa" stroke="${INK}" stroke-width="3"/>
+          <rect x="-${Wd / 2 + 6}" y="-2" width="${Wd + 24}" height="${Hb + 24}" rx="14" fill="#000" opacity=".25" transform="translate(10,14)"/>
+          <rect x="-${Wd / 2 + 8}" y="-8" width="${Wd + 16}" height="${Hb + 16}" rx="12" fill="url(#exFrame)" stroke="${INK}" stroke-width="5"/>
+          <rect x="-${Wd / 2 - 16}" y="16" width="${Wd - 32}" height="${Hb - 32}" rx="4" fill="url(#exSlate)" stroke="#4a3018" stroke-width="4"/>
+          <path d="M-${Wd / 2 - 20},22H${Wd / 2 - 20}" stroke="#fff" stroke-width="5" opacity=".06"/>${smear}
+          <g filter="url(#exChalkF)"><text id="${id}-ti" x="0" y="104" text-anchor="middle" font-family="Sriracha" font-size="64" fill="${CH}">${o.title || "ล็อก · ปิด · หลบ · เงียบ"}</text>
+            <path d="M-300,128q150,12 300,0t300,0" stroke="${CH}" stroke-width="4" fill="none" opacity=".7"/></g>
+          ${rs}${tray}<g id="${id}-mo">${motes}</g>
+          <g id="${id}-stk" opacity="0"><rect x="-6" y="-34" width="16" height="50" rx="6" fill="${CH}" stroke="#a8a498" stroke-width="2" transform="rotate(28)"/></g></g></g></g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        // in: dropped on its cord, swings around the nail, settles, then keeps a slow sway; it is lifted away at the end
+        tl.fromTo(`#${id}-m`, { y: -1000 }, { y: 0, duration: 0.45, ease: "power3.out", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-sw`, { rotation: 7, svgOrigin: `0 ${NY}` }, { rotation: 0, svgOrigin: `0 ${NY}`, duration: 1.4, ease: "elastic.out(1, 0.3)", immediateRender: false }, t0 + 0.3);
+        tl.fromTo(`#${id}-sw`, { rotation: 0, svgOrigin: `0 ${NY}` }, { rotation: 0.9, svgOrigin: `0 ${NY}`, duration: 1.2, repeat: Math.ceil(dur / 1.2), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 1.7);
+        for (let k = 0; k < 12; k++) tl.fromTo(`#${id}-mo${k}`, { y: 0, x: 0, opacity: 0 }, { y: 60 + (k % 4) * 20, x: (k % 2 ? 14 : -10), opacity: 0.55, duration: 2.2 + (k % 3) * 0.6, repeat: Math.ceil(dur / 2.2), ease: "sine.inOut", immediateRender: false }, t0 + (k % 5) * 0.3);
+        tl.fromTo(`#${id}-ck`, { x: 0 }, { x: 8, duration: 0.9, yoyo: true, repeat: Math.ceil(dur / 0.9), ease: "sine.inOut", immediateRender: false }, t0 + 0.5);
+        rows.forEach((r, k) => {
+          const a = t0 + at[k], y = rowY(k), tw = Math.min(560, r[1].length * 36 + 20), wr = Math.min(0.75, 0.25 + r[1].length * 0.03);
+          tl.set(`#${id}-r${k}`, { opacity: 1 }, a);
+          tl.fromTo(`#${id}-i${k}`, { scale: 0.2, rotation: -25, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, a);
+          tl.fromTo(`#${id}-cr${k}`, { attr: { width: 0 } }, { attr: { width: tw + 40 }, duration: wr, ease: "none", immediateRender: false }, a + 0.1);
+          tl.fromTo(`#${id}-stk`, { opacity: 1, x: -250, y }, { x: -250 + tw, y: y + 6, duration: wr, ease: "none", immediateRender: false }, a + 0.1);
+          tl.to(`#${id}-stk`, { opacity: 0, duration: 0.1, immediateRender: false }, a + 0.1 + wr);
+          tl.fromTo(`#${id}-d${k}`, { opacity: 0.9, x: 0, y: 0 }, { opacity: 0, x: tw, y: 30, duration: wr + 0.4, ease: "power1.out", immediateRender: false }, a + 0.1);
+          tl.to(`#${id}-u${k}`, { attr: { "stroke-dashoffset": 0 }, duration: 0.3, ease: "power2.out", immediateRender: false }, a + 0.15 + wr);
+          tl.to(`#${id}-t${k}`, { attr: { "stroke-dashoffset": 0 }, duration: 0.25, ease: "power2.out", immediateRender: false }, a + 0.4 + wr);
+          tl.fromTo(`#${id}-i${k}`, { y: 0 }, { y: -5, duration: 0.7, yoyo: true, repeat: Math.ceil(dur / 0.7), ease: "sine.inOut", immediateRender: false }, a + 0.5);
+        });
+        tl.to(`#${id}-m`, { y: -900, duration: 0.3, ease: "power2.in", immediateRender: false }, t0 + dur - 0.3);
+      };
+      ExamUI.nope = (tl, layer, t0, dur, o = {}) => {
+        chalkDefs(layer);
+        const id = `xn${exSeq++}`, X = o.x ?? 540, Y = o.y ?? 520, st = o.stamp ?? 0.35, txt = o.text || "ห้ามถ่าย", RED = "#d8262a";
+        const lines = Array.from({ length: 9 }, (_, k) => `<path d="M-330,${-120 + k * 52}H330" stroke="#9ec0e0" stroke-width="2" opacity=".7"/>`).join("");
+        const sketch = `<g transform="translate(-150,30) scale(2.1)" opacity=".75" stroke="#5a5a62" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round">${CHI[o.icon || "phone"].replace(/stroke="[^"]*"/g, "")}</g>`;
+        const tw = txt.length * 50;
+        put(layer, `<g id="${id}" opacity="0" transform="translate(${X},${Y})"><g id="${id}-p">
+          <rect x="-370" y="-300" width="740" height="660" fill="#000" opacity=".28" transform="translate(14,18) rotate(2)"/>
+          <rect x="-370" y="-300" width="740" height="660" fill="url(#exPaper)" stroke="#bdb39a" stroke-width="3"/>
+          <path d="M-260,-300V360" stroke="#e86a6a" stroke-width="3" opacity=".7"/>${lines}
+          <text x="-340" y="-240" font-family="Kanit" font-weight="700" font-size="34" fill="#4a4a5a">กระดาษคำตอบ · ม.3/4</text>
+          <text x="80" y="-240" font-family="Sriracha" font-size="38" fill="#4a4a5a">ชื่อ ${o.name || "บีม"}</text>${sketch}
+          <path id="${id}-x" d="M-260,-80L-40,150M-40,-80L-260,150" stroke="${RED}" stroke-width="16" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+          <clipPath id="${id}-cc"><rect id="${id}-cr" x="0" y="-60" width="0" height="140"/></clipPath>
+          <g clip-path="url(#${id}-cc)"><text x="10" y="44" font-family="Sriracha" font-size="${Math.min(110, Math.round(1500 / txt.length / 1.2))}" fill="${RED}" transform="rotate(-6 10 44)">${txt}</text></g>
+          <path id="${id}-ul" d="M10,82q${f1(tw * 0.3)},-12 ${f1(Math.min(330, tw))},-20M20,104q${f1(tw * 0.3)},-12 ${f1(Math.min(320, tw))},-18" stroke="${RED}" stroke-width="7" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+          <g id="${id}-sc" opacity="0" transform="translate(250,240)"><circle r="62" fill="none" stroke="${RED}" stroke-width="7" transform="rotate(-20)"/><text y="26" text-anchor="middle" font-family="Sriracha" font-size="82" fill="${RED}">0</text></g>
+          <g id="${id}-pen" opacity="0"><g transform="rotate(35)"><rect x="-10" y="-150" width="22" height="150" rx="6" fill="${RED}" stroke="${INK}" stroke-width="3"/><path d="M-10,0L1,26L12,0Z" fill="#e8e0d0" stroke="${INK}" stroke-width="3"/><rect x="-10" y="-150" width="22" height="34" rx="5" fill="#8a1a1a"/></g></g></g></g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        // the sheet flutters down (swaying side to side as paper does), lands with a small bounce, then breathes in the fan's draught
+        tl.fromTo(`#${id}-p`, { y: -1200, x: -120, rotation: -14, svgOrigin: "0 0" }, { keyframes: [{ y: -600, x: 90, rotation: 10, duration: 0.14 }, { y: -160, x: -40, rotation: -6, duration: 0.12 }, { y: 0, x: 0, rotation: -2, duration: 0.1, ease: "power2.in" }], immediateRender: false }, t0);
+        tl.fromTo(`#${id}-p`, { rotation: -2, svgOrigin: "0 0" }, { rotation: 0.8, y: -8, svgOrigin: "0 0", duration: 0.9, yoyo: true, repeat: Math.ceil(dur / 0.9), ease: "sine.inOut", immediateRender: false }, t0 + 0.4);
+        // the red pen: the X over the sketch, then the order, underlined twice, then the 0
+        tl.set(`#${id}-pen`, { opacity: 1 }, t0 + st - 0.05);
+        tl.fromTo(`#${id}-pen`, { x: -260, y: -80 }, { keyframes: [{ x: -40, y: 150, duration: 0.12 }, { x: -40, y: -80, duration: 0.05 }, { x: -260, y: 150, duration: 0.12 }, { x: 10, y: 40, duration: 0.08 }, { x: Math.min(340, tw), y: 30, duration: 0.45 }, { x: 250, y: 240, duration: 0.15 }, { x: 420, y: 320, duration: 0.2 }], immediateRender: false }, t0 + st);
+        tl.to(`#${id}-x`, { attr: { "stroke-dashoffset": 0 }, duration: 0.3, ease: "none", immediateRender: false }, t0 + st);
+        tl.fromTo(`#${id}-cr`, { attr: { width: 0 } }, { attr: { width: 520 }, duration: 0.45, ease: "none", immediateRender: false }, t0 + st + 0.38);
+        tl.to(`#${id}-ul`, { attr: { "stroke-dashoffset": 0 }, duration: 0.2, ease: "power2.out", immediateRender: false }, t0 + st + 0.8);
+        tl.fromTo(`#${id}-sc`, { opacity: 0, scale: 1.8, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.2, ease: "back.out(2)", immediateRender: false }, t0 + st + 0.95);
+        tl.fromTo(`#${id}-p`, { x: -10 }, { x: 0, duration: 0.3, ease: "elastic.out(1.2,0.3)", immediateRender: false }, t0 + st + 0.3);
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2);
+      };
       // ---------- ห้องสอบ EP.1 ----------
       // grammar: frame-0 action at the glass (phone filming → face slams) → stamp → calm wide (planted shoes) → clock → joke → scream →
       // the run to the door → the slam from inside → the rule sheet → lock + lights → hide → under-desk sight line → the broken latch →

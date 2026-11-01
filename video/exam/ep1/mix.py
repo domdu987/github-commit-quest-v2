@@ -74,10 +74,9 @@ def ticks(k, a, b, g=0.2, step=1.0):
     return [(k, a + i * step, "tick", g) for i in range(int((b - a) / step) + 1)]
 dd = D["drag"] - 0.9
 CUES = [
-    ("hook", 0.0, "sting", 0.3), ("dont", 0.35, "thud", 0.3),
+    ("hook", 0.0, "sting", 0.3), 
     *ticks("clock", 0.05, 1.25, 0.3),
     ("viral", 0.1, "whoosh", 0.2),
-    *[("rule", 0.25 + a, "pop", 0.18) for a in (0.2, 0.55, 0.9, 1.3)],
     ("desk", F("desk", 0, 1), "sting", 0.22),
     *beats("hide", 0.3, D["hide"] - 0.3, 0.75, 0.26),
     *[("rooms", F("rooms", 0, k), "thud", 0.2) for k in range(3)],
@@ -87,7 +86,7 @@ CUES = [
 ]
 exec(open(os.path.join(HERE, "..", "samples_inc.py")).read())
 SAMPLES = [
-    ("hook", 0.0, "glassslam", 1.0), ("hook", 0.02, "glasscrack", 0.6), ("hook", 0.3, "groan", 0.45), ("hook", 1.2, "handslap", 0.85), ("hook", 1.25, "glasscrack", 0.4),
+    ("hook", 0.0, "glassslam", 1.0), ("hook", 0.02, "glasscrack", 0.6), ("hook", 0.3, "groan", 0.18), ("hook", 1.2, "handslap", 0.55), ("hook", 1.25, "glasscrack", 0.25),
     ("dont", 0.0, "groan", 0.35, 1.6),
     ("calm", 0.0, "classroom", 0.55, 4.84), ("clock", 0.0, "classroom", 0.45, 3.85), ("clock", 1.6, "doorbang", 0.85), ("joke", 0.0, "classroom", 0.4, 3.1),
     ("scream", 0.05, "scream", 0.95), ("scream", 0.4, "flicker", 0.35, 2.8), ("scream", 1.4, "groan", 0.45),
@@ -100,6 +99,17 @@ SAMPLES = [
     ("breath", 0.2, "breath", 0.7),
     ("buzz", 0.4, "phonebuzz", 0.9, D["buzz"] - 0.6), ("buzz", 1.95, "groan", 0.55),
 ]
+
+# ---- the classroom cards: the chalkboard (drop + swing on its nail, chalk writing each rule, quick chalk ticks) and the red-pen answer sheet ----
+def board(k, t0, ats, texts):
+    out = [(k, t0 + 0.3, "boarddrop", 0.8)]
+    for a, tx in zip(ats, texts):
+        wr = min(0.75, 0.25 + len(tx) * 0.03)
+        out += [(k, t0 + a + 0.1, "chalkwrite", 0.75, wr + 0.05), (k, t0 + a + 0.15 + wr, "chalkswipe", 0.6), (k, t0 + a + 0.4 + wr, "chalkswipe", 0.55)]
+    return out + [(k, t0 + 0.2, "eraser", 0.25)]
+def sheet(k, st=0.35):
+    return [(k, 0.0, "paperflutter", 0.4), (k, st, "redpen", 0.45), (k, st + 0.8, "redpen", 0.35, 0.35)]
+SAMPLES += sheet("dont") + board("rule", 0.05, [0.2, 0.55, 0.9, 1.3], ["ล็อกประตู", "ปิดไฟ", "หลบพ้นช่องกระจก", "เงียบ"])
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
         "sfx": [{"t": round(t if k is None else T(k, t), 3), "type": typ, "gain": g} for k, t, typ, g in CUES]}
 json.dump(cues, open(os.path.join(HERE, "sfx_cues.json"), "w"))
@@ -111,10 +121,8 @@ for k, t0, name, g, *mx in SAMPLES:
     place(sfx, smp(name, mx[0] if mx else None), T(k, t0), g)
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
-while len(mus) < N:
-    mus = np.concatenate([mus, mus])
-mus = mus[:N]
+mus = load(os.path.join(HERE, "..", "music", "exam-theme.mp3"))[int(27.0 * SR):]   # the theme: its abrupt cut (~85 s) lands on the cliffhanger
+mus = np.pad(mus, (0, max(0, N - len(mus))))[:N]
 t = np.arange(N) / SR
 gain = np.ones(N, np.float32)
 
@@ -125,8 +133,9 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 dip(T("calm", 0), T("joke", -0.01), 0.45)        # the quiet exam room
-dip(T("hide", 0), T("desk", -0.01), 0.4)
-dip(T("stop", 0), T("buzz", -0.3), 0.12)         # the held breath: near silence before the buzz
+dip(T("hide", 0), T("desk", -0.01), 0.5)
+dip(T("stop", 0), T("breath", -0.01), 0.3)         # the held breath: the bed sinks, the song peaks back in on the buzz
+gain[int(T("drag", 0) * SR):int(T("drag", -0.01) * SR)] *= 1.3   # the escape: the bed pushes
 mus = mus * gain
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)

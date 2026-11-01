@@ -22,6 +22,12 @@ LIB = {
  "crowdwalk": ("Many students walking out of a classroom into a corridor, shuffling shoes and soft murmuring, distant sirens", 5),
  "cabinet": ("A steel locker cabinet door slowly creaking open on its own, a thin metal whine", 2.2),
  "breath": ("A frightened teenage girl holding her breath and then a tiny shaky exhale, very close", 2.0),
+ "boarddrop": ("A small wooden classroom chalkboard dropped onto a nail on a cord: a wooden knock against the nail, then the cord creaking as it swings", 1.2),
+ "chalkwrite": ("Chalk writing quickly on a blackboard: sharp taps and short scratchy strokes, close", 1.4),
+ "chalkswipe": ("One fast chalk stroke on a blackboard, a quick squeaky swipe", 0.6),
+ "eraser": ("A felt blackboard eraser brushed across a chalkboard, soft dusty swish", 0.8),
+ "paperflutter": ("A single sheet of paper fluttering down through the air and landing on a desk", 1.2),
+ "redpen": ("A marker pen striking hard across paper twice, a fast scribble, close", 0.8),
 }
 def gen(k):
     text, d = LIB[k]
@@ -37,6 +43,6 @@ def gen(k):
         except Exception as e:
             err = str(e)
     return k, "fail " + err
-with cf.ThreadPoolExecutor(5) as ex:
+with cf.ThreadPoolExecutor(1) as ex:
     for k, s in ex.map(gen, list(LIB)):
         print(k, s, flush=True)

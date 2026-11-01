@@ -73,15 +73,14 @@ def beats(k, t0, dur, period, g=0.3):
 def ticks(k, a, b, g=0.2, step=1.0):
     return [(k, a + i * step, "tick", g) for i in range(int((b - a) / step) + 1)]
 CUES = [
-    ("hook", 0.0, "sting", 0.3), ("dont", 0.35, "thud", 0.3),
+    ("hook", 0.0, "sting", 0.3), 
     *beats("quiet", 0.2, D["quiet"] - 0.2, 0.7, 0.26),
-    ("mute", 0.5, "click", 0.35), *[("mute", a, "pop", 0.18) for a in (0.75, F("mute", 0, 1) + 0.3)],
+    ("mute", 0.5, "click", 0.35),
     *beats("pass", 0.0, F("pass", 0, 2), 0.5, 0.32),
     *ticks("knock", 0.05, 1.2, 0.25, 0.25),
     ("up", 0.3, "whoosh", 0.15),
-    ("rule", F("rule", 0, 1) + 0.2, "pop", 0.18), ("rule", vo_t("rule", 1) + 0.6, "pop", 0.18),
     ("key", 1.5, "swell", 0.3),
-    ("call", F("call", 0, 1) + 0.4, "pop", 0.18), ("call", vo_t("call", 1) + 0.5, "ding", 0.18),
+    ("call", vo_t("call", 1) + 0.5, "ding", 0.18),
     ("thirty", F("thirty", 0, 1) + 0.4, "sting", 0.35),
     ("cab", 0.1, "swell", 0.2),
     ("where", D["where"] - 1.0, "sting", 0.3),
@@ -99,6 +98,17 @@ SAMPLES = [
     ("cab", 0.0, "cabinet", 0.75),
     ("where", 0.0, "crowdwalk", 0.25, 1.5), ("where", 1.4, "shuffle", 0.4, 1.8),
 ]
+
+# ---- the classroom cards: the chalkboard (drop + swing on its nail, chalk writing each rule, quick chalk ticks) and the red-pen answer sheet ----
+def board(k, t0, ats, texts):
+    out = [(k, t0 + 0.3, "boarddrop", 0.8)]
+    for a, tx in zip(ats, texts):
+        wr = min(0.75, 0.25 + len(tx) * 0.03)
+        out += [(k, t0 + a + 0.1, "chalkwrite", 0.75, wr + 0.05), (k, t0 + a + 0.15 + wr, "chalkswipe", 0.6), (k, t0 + a + 0.4 + wr, "chalkswipe", 0.55)]
+    return out + [(k, t0 + 0.2, "eraser", 0.25)]
+def sheet(k, st=0.35):
+    return [(k, 0.0, "paperflutter", 0.4), (k, st, "redpen", 0.45), (k, st + 0.8, "redpen", 0.35, 0.35)]
+SAMPLES += sheet("dont") + board("mute", 0.05, [0.35, F("mute", 0, 1) - 0.1], ["ปิดเสียงมือถือ", "ปิดทุกอย่างที่ดังได้"]) + board("rule", 0.05, [F("rule", 0, 1) - 0.2, vo_t("rule", 1) + 0.2], ["ห้ามเปิดให้ใคร", "รอเจ้าหน้าที่ไขเอง"]) + board("call", vo_t("call", 0), [F("call", 0, 1) - vo_t("call", 0)], ["เช็กชื่อให้ครบ"])
 cues = {"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}],
         "sfx": [{"t": round(t if k is None else T(k, t), 3), "type": typ, "gain": g} for k, t, typ, g in CUES]}
 json.dump(cues, open(os.path.join(HERE, "sfx_cues.json"), "w"))
@@ -110,10 +120,8 @@ for k, t0, name, g, *mx in SAMPLES:
     place(sfx, smp(name, mx[0] if mx else None), T(k, t0), g)
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
-while len(mus) < N:
-    mus = np.concatenate([mus, mus])
-mus = mus[:N]
+mus = load(os.path.join(HERE, "..", "music", "exam-theme.mp3"))[int(33.4 * SR):]   # the theme: its abrupt cut (~85 s) lands on the cliffhanger
+mus = np.pad(mus, (0, max(0, N - len(mus))))[:N]
 t = np.arange(N) / SR
 gain = np.ones(N, np.float32)
 
@@ -123,9 +131,9 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(T("hook", 0), T("knock", -0.01), 0.3)       # hiding: near silence
-dip(T("key", 0), T("key", -0.01), 0.2)
-dip(T("thirty", 0), T("where", -0.01), 0.35)
+dip(T("hook", 0), T("knock", -0.01), 0.35)      # hiding: near silence
+dip(T("key", 0), T("key", -0.01), 0.3)
+gain[int(T("thirty", 0) * SR):int(T("where", -0.01) * SR)] *= 1.25   # the twist: the bed rises to its peak
 mus = mus * gain
 a, b = int(T("end", 0) * SR), int(T("end", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)
