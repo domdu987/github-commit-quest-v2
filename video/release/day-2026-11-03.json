@@ -2,7 +2,7 @@
  "date": "2026-11-03",
  "tz": "Asia/Bangkok",
  "made_by": "Claude (แชทประสานงาน)",
- "status": "proposed — ยังไม่มีไฟล์ · ลงได้เฉพาะ item ที่ status final พร้อม sha",
+ "status": "เที่ยงและกลางคืนพร้อม (final + sha) · ช่องเช้ายังว่าง รอเจ้าของสั่งหัวข้อ",
  "rules": [
   "เจ้าของสั่ง 1 พ.ย.: \"เราจะลงเช้า 1 เรื่อง เที่ยง 1 เรื่อง กลางคืน 1 เรื่อง\" · 1 เรื่อง = ทุกตอนของเรื่องนั้น ลงช่วงเดียวกันเรียง EP ห่างกัน 30 นาที",
   "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
@@ -46,21 +46,29 @@
    "order": 3,
    "id": "skytrain-ep1",
    "series": "ซอมบี้รถไฟฟ้า (ฟีล Train to Busan)",
-   "status": "in_production",
+   "status": "final",
    "slot": "กลางคืน",
    "branch": "prod/lane-d",
    "package": "video/release/skytrain.json",
-   "suggested_time": "2026-11-03T20:00+07:00"
+   "suggested_time": "2026-11-03T20:00+07:00",
+   "commit": "6d33faf",
+   "video_hq": "video/release/hq/skytrain-ep1-HQ.mp4",
+   "video_hq_sha256": "40c393eafdab16c34c2e62ace00d702193acebd7be638bbed0f08b7b414b2834",
+   "video_hq_bytes": 90887903
   },
   {
    "order": 4,
    "id": "skytrain-ep2",
    "series": "ซอมบี้รถไฟฟ้า (ฟีล Train to Busan)",
-   "status": "in_production",
+   "status": "final",
    "slot": "กลางคืน",
    "branch": "prod/lane-d",
    "package": "video/release/skytrain.json",
-   "suggested_time": "2026-11-03T20:30+07:00"
+   "suggested_time": "2026-11-03T20:30+07:00",
+   "commit": "6d33faf",
+   "video_hq": "video/release/hq/skytrain-ep2-HQ.mp4",
+   "video_hq_sha256": "c4eed4600edc928c979a49c763b83f8a4cddcac872362a45969f1fe89f583eab",
+   "video_hq_bytes": 82742994
   }
  ]
 }
