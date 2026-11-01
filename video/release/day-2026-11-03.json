@@ -1,0 +1,58 @@
+{
+ "date": "2026-11-03",
+ "tz": "Asia/Bangkok",
+ "made_by": "Claude (แชทประสานงาน)",
+ "status": "proposed — ยังไม่มีไฟล์ · ลงได้เฉพาะ item ที่ status final พร้อม sha",
+ "rules": [
+  "เจ้าของสั่ง 1 พ.ย.: \"เราจะลงเช้า 1 เรื่อง เที่ยง 1 เรื่อง กลางคืน 1 เรื่อง\" · 1 เรื่อง = ทุกตอนของเรื่องนั้น ลงช่วงเดียวกันเรียง EP ห่างกัน 30 นาที",
+  "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
+  "ลงได้เฉพาะ status final · EP.N+1 หลัง EP.N ลงแล้วเท่านั้น"
+ ],
+ "slots": {
+  "เช้า": "ว่าง: รอเจ้าของสั่งหัวข้อ",
+  "เที่ยง": "12:00–12:30",
+  "กลางคืน": "20:00–20:30"
+ },
+ "items": [
+  {
+   "order": 1,
+   "id": "logtruck-ep1",
+   "series": "ท่อนซุงลงเขา (ฟีล Final Destination)",
+   "status": "in_production",
+   "slot": "เที่ยง",
+   "branch": "prod/lane-b",
+   "package": "video/release/logtruck.json",
+   "suggested_time": "2026-11-03T12:00+07:00"
+  },
+  {
+   "order": 2,
+   "id": "logtruck-ep2",
+   "series": "ท่อนซุงลงเขา (ฟีล Final Destination)",
+   "status": "in_production",
+   "slot": "เที่ยง",
+   "branch": "prod/lane-b",
+   "package": "video/release/logtruck.json",
+   "suggested_time": "2026-11-03T12:30+07:00"
+  },
+  {
+   "order": 3,
+   "id": "skytrain-ep1",
+   "series": "ซอมบี้รถไฟฟ้า (ฟีล Train to Busan)",
+   "status": "in_production",
+   "slot": "กลางคืน",
+   "branch": "prod/lane-d",
+   "package": "video/release/skytrain.json",
+   "suggested_time": "2026-11-03T20:00+07:00"
+  },
+  {
+   "order": 4,
+   "id": "skytrain-ep2",
+   "series": "ซอมบี้รถไฟฟ้า (ฟีล Train to Busan)",
+   "status": "in_production",
+   "slot": "กลางคืน",
+   "branch": "prod/lane-d",
+   "package": "video/release/skytrain.json",
+   "suggested_time": "2026-11-03T20:30+07:00"
+  }
+ ]
+}
