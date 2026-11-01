@@ -171,7 +171,7 @@
     g += `<g id="${id}-hl">${[-1, 1].map((sd) => `<g><rect x="${sd < 0 ? -292 : 196}" y="-330" width="96" height="58" rx="12" fill="#fffbe8" ${OUT3}/><circle cx="${sd * 244}" cy="-301" r="18" fill="#fff"/></g>`).join("")}</g>`;
     g += `<rect x="-310" y="-250" width="620" height="90" rx="14" fill="#c8ccd0" ${OUT}/><rect x="-300" y="-160" width="600" height="20" fill="#2a2b2e"/>`;
     if (o.plate !== false) g += `<g id="${id}-plate"><rect x="-96" y="-238" width="192" height="68" rx="4" fill="#ff8a1a" ${OUT3}/><path d="M-90,-204H90" stroke="${INK}" stroke-width="4"/><text x="0" y="-212" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="${INK}">23</text><text x="0" y="-178" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="${INK}">1075</text></g>`;
-    g += `<g id="${id}-dia" transform="translate(200,-700) rotate(45)"><rect x="-56" y="-56" width="112" height="112" fill="#d8301e" stroke="#fff" stroke-width="8"/><rect x="-56" y="-56" width="112" height="112" fill="none" ${OUT3}/></g><g transform="translate(200,-700)"><path d="M0,-34C14,-14 22,-4 14,12C10,22 -10,22 -14,12C-20,-2 -6,-10 0,-34Z" fill="#fff"/><text x="0" y="44" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="#fff">2</text></g>`;
+    if (o.dia) g += `<g id="${id}-dia" transform="translate(200,-700) rotate(45)"><rect x="-56" y="-56" width="112" height="112" fill="#d8301e" stroke="#fff" stroke-width="8"/><rect x="-56" y="-56" width="112" height="112" fill="none" ${OUT3}/></g><g transform="translate(200,-700)"><path d="M0,-34C14,-14 22,-4 14,12C10,22 -10,22 -14,12C-20,-2 -6,-10 0,-34Z" fill="#fff"/><text x="0" y="44" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="#fff">2</text></g>`;
     g += `<rect x="-300" y="-120" width="140" height="120" rx="26" fill="#17181a" ${OUT}/><rect x="160" y="-120" width="140" height="120" rx="26" fill="#17181a" ${OUT}/>`;
     g += `<g id="${id}-beam" opacity="${o.beam ?? 0}">${[-1, 1].map((sd) => `<circle cx="${sd * 244}" cy="-301" r="200" fill="url(#ltHead)"/>`).join("")}</g>`;
     return g + `</g>`;
@@ -180,11 +180,13 @@
   Lt.tankerSide = (id, x, y, s, o = {}) => {
     let g = `<g id="${id}" transform="translate(${f1(x)},${f1(y)}) scale(${o.flip ? -s : s},${s})"><ellipse cx="520" cy="6" rx="900" ry="30" fill="#141210" opacity=".45"/>`;
     g += `<rect x="-240" y="-200" width="1360" height="56" fill="#1e1f22" ${OUT}/>`;
+    if (!o.cabOnly) {
     g += `<path d="M-260,-560Q-330,-560 -330,-420Q-330,-280 -260,-280H940Q1010,-280 1010,-420Q1010,-560 940,-560Z" fill="url(#ltTank)" ${OUT}/>`;
     g += `<path d="M-300,-470H990" stroke="#d8352a" stroke-width="22"/><path d="M-310,-500Q340,-560 980,-500" stroke="#fff" stroke-width="10" fill="none" opacity=".7"/>`;
     g += `<text x="340" y="-370" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#d8352a">ไวไฟ · ห้ามสูบบุหรี่</text>`;
     g += `<g transform="translate(-120,-380) rotate(45)"><rect x="-46" y="-46" width="92" height="92" fill="#d8301e" stroke="#fff" stroke-width="6"/></g><g transform="translate(-120,-380)"><path d="M0,-28C12,-12 18,-3 12,10C8,18 -8,18 -12,10C-16,-2 -5,-8 0,-28Z" fill="#fff"/></g>`;
     g += `<g><rect x="-60" y="-262" width="160" height="56" rx="4" fill="#ff8a1a" ${OUT3}/><path d="M-56,-234H96" stroke="${INK}" stroke-width="3"/><text x="20" y="-240" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="${INK}">23</text><text x="20" y="-212" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="${INK}">1075</text></g>`;
+    }
     g += `<g><path d="M1040,-150V-560Q1040,-600 1080,-600H1260Q1310,-600 1330,-540L1380,-330Q1392,-290 1392,-250V-150Z" fill="#f2f2ee" ${OUT}/><path d="M1100,-560H1250Q1286,-560 1300,-520L1336,-380H1100Z" fill="url(#ltGlassD)" ${OUT3}/><rect x="1352" y="-280" width="44" height="36" rx="8" fill="#fff6d0" ${OUT3}/><rect x="1040" y="-210" width="360" height="60" fill="#2a2b2e" ${OUT3}/><path d="M1076,-610H1300" stroke="#ffb22a" stroke-width="16" stroke-linecap="round"/></g>`;
     g += [0, 160, 1250].map((wx) => `<g transform="translate(${wx},0)"><circle cy="-70" r="78" fill="#17181a" ${OUT}/><circle cy="-70" r="40" fill="#6a7178" ${OUT3}/><g class="spin"><path d="M-28,-70H28M0,-98V-42" stroke="${INK}" stroke-width="6"/></g></g>`).join("");
     g += `<g id="${id}-smoke" opacity="${o.smoke ?? 0}">${smokeCloud(0, -40, 0.9, 13)}${smokeCloud(160, -40, 0.9, 17)}</g>`;
@@ -246,6 +248,8 @@
     // the truck
     const T = o.truck || {};
     put(L.set, `<g id="${id}-truckW">${o.truck === false ? "" : Lt.truckRear(`${id}-truck`, T.x ?? 560, T.y ?? 1330, T.s ?? 0.62, T)}</g>`);
+    // a loose log lying across the road (the one that fell): ${id}-loose, centred on its own origin; shots move it
+    if (o.loose) put(L.set, `<g id="${id}-loose" transform="translate(${o.loose.x ?? 540},${o.loose.y ?? 1300}) scale(${o.loose.s ?? 1})" opacity="${o.loose.op ?? 1}"><ellipse cx="0" cy="70" rx="300" ry="26" fill="#1a1612" opacity=".35" class="lsh"/><g class="lroll">${Lt.logSide(-260, 0, 520, 62, 11)}</g></g>`);
     // sun dapple through the windscreen
     put(L.set, `<g id="${id}-dapple" opacity=".5">${Array.from({ length: 6 }, () => `<ellipse class="dap" cx="${f1(-100 + r() * 1300)}" cy="${f1(500 + r() * 900)}" rx="${f1(200 + r() * 200)}" ry="${f1(60 + r() * 80)}" fill="#ffe8b8" opacity=".14"/>`).join("")}</g>`);
     // the cabin: roof liner, A-pillars, sun visors, the mirror (its image = the tanker's grille), the garland hanging under it, dash, wheel
@@ -310,23 +314,24 @@
     let s = `<path d="M${X0},${f1(yAt(X0) - 900)}L${X1},${f1(yAt(X1) - 700)}L${X1},${f1(yAt(X1) - 40)}L${X0},${f1(yAt(X0) - 40)}Z" fill="url(#ltRock)"/>`;
     s += canopy(r, X0, X1, 0, 0, "", "");
     for (let k = 0; k < 40; k++) { const x = X0 + r() * (X1 - X0), yy = yAt(x) - 120 - r() * 520, R = 50 + r() * 60; s += `<g><circle cx="${f1(x)}" cy="${f1(yy)}" r="${f1(R)}" fill="#2f5a3e"/><circle cx="${f1(x - R * 0.3)}" cy="${f1(yy - R * 0.3)}" r="${f1(R * 0.55)}" fill="#6f9a5e" opacity=".75"/></g>`; }
-    s += `<path d="M${X0},${f1(yAt(X0) - 40)}L${X1},${f1(yAt(X1) - 40)}L${X1},${f1(yAt(X1) + 60)}L${X0},${f1(yAt(X0) + 60)}Z" fill="url(#ltRoadS)"/>`;
-    s += `<path d="M${X0},${f1(yAt(X0) + 10)}L${X1},${f1(yAt(X1) + 10)}" stroke="#f2c230" stroke-width="8" stroke-dasharray="80 60"/>`;
+    let road = `<path d="M${X0},${f1(yAt(X0) - 60)}L${X1},${f1(yAt(X1) - 60)}L${X1},${f1(yAt(X1) + 60)}L${X0},${f1(yAt(X0) + 60)}Z" fill="url(#ltRoadS)"/>`;
+    road += `<path d="M${X0},${f1(yAt(X0) - 60)}L${X1},${f1(yAt(X1) - 60)}" stroke="#8a7a62" stroke-width="10"/><path d="M${X0},${f1(yAt(X0) + 10)}L${X1},${f1(yAt(X1) + 10)}" stroke="#f2c230" stroke-width="8" stroke-dasharray="80 60"/>`;
     s += `<path d="M${X0},${f1(yAt(X0) + 60)}L${X1},${f1(yAt(X1) + 60)}L${X1},2800L${X0},2800Z" fill="#4e6a4a"/>`;
     for (let k = 0; k < 30; k++) { const x = X0 + r() * (X1 - X0), yy = yAt(x) + 200 + r() * 600, R = 60 + r() * 70; s += `<g><circle cx="${f1(x)}" cy="${f1(yy)}" r="${f1(R)}" fill="#355e44"/><circle cx="${f1(x - R * 0.3)}" cy="${f1(yy - R * 0.3)}" r="${f1(R * 0.5)}" fill="#7a9a6a" opacity=".6"/></g>`; }
     put(L.set, s);
     // the guardrail in front of the vehicles (fg): beam + posts
     let gr = `<path d="M${X0},${f1(yAt(X0) + 40)}L${X1},${f1(yAt(X1) + 40)}" stroke="#c8ccd0" stroke-width="22"/><path d="M${X0},${f1(yAt(X0) + 34)}L${X1},${f1(yAt(X1) + 34)}" stroke="#f2f4f6" stroke-width="6"/>`;
     for (let x = X0; x < X1; x += 220) gr += `<rect x="${x - 8}" y="${f1(yAt(x) + 30)}" width="16" height="90" fill="#9aa2aa"/>`;
-    put(L.fg, `<g id="${id}-rail">${gr}</g>`);
+    put(L.act, road);
     // the convoy (on the road line; rotated to the slope). o.convoy { truck: x, car: x, tank: x | false } in road x
     const C = o.convoy || {}, rot = (o.slope ?? 9);
     const at = (x, dy = 0) => `translate(${f1(x)},${f1(yAt(x) + dy)}) rotate(${rot})`;
     let v = "";
-    if (C.tank !== false && C.tank != null) v += `<g id="${id}-tank" transform="${at(C.tank, 4)}">${Lt.tankerSide(`${id}-tk`, 0, 0, C.ts ?? 0.42, { smoke: C.tsmoke })}</g>`;
-    if (C.car != null) v += `<g id="${id}-car" transform="${at(C.car, 4)}">${Lt.carSide(`${id}-c`, 0, 0, C.cs ?? 0.42, { brake: C.cbrake })}</g>`;
-    if (C.truck != null) v += `<g id="${id}-truck" transform="${at(C.truck, 4)}">${Lt.truckSide(`${id}-t`, 0, 0, C.trs ?? 0.42, { smoke: C.smoke, brake: C.brake, arm: C.arm })}</g>`;
-    put(L.act, v);
+    // the id group carries no transform (shots slide it with x / y along the slope); the inner group sits it on the road
+    if (C.tank !== false && C.tank != null) v += `<g id="${id}-tank"><g transform="${at(C.tank, 4)}">${Lt.tankerSide(`${id}-tk`, 0, 0, C.ts ?? 0.42, { smoke: C.tsmoke, cabOnly: C.cabOnly })}</g></g>`;
+    if (C.car != null) v += `<g id="${id}-car"><g transform="${at(C.car, 4)}">${Lt.carSide(`${id}-c`, 0, 0, C.cs ?? 0.42, { brake: C.cbrake })}</g></g>`;
+    if (C.truck != null) v += `<g id="${id}-truck"><g transform="${at(C.truck, 4)}">${Lt.truckSide(`${id}-t`, 0, 0, C.trs ?? 0.42, { smoke: C.smoke, brake: C.brake, arm: C.arm })}</g></g>`;
+    put(L.act, v + `<g id="${id}-rail">${gr}</g>`);
   };
   Lt.slopeY = (o, x) => (o.ground ?? 1300) + (x - 540) * Math.tan((o.slope ?? 9) * Math.PI / 180);
 
@@ -359,6 +364,68 @@
     let s = `<g transform="translate(540,1560) scale(2.2)">${Lt.truckRear(`${id}-t`, 0, 0, 1, { smoke: 0, brake: o.brake ?? 0, seed: 43 })}</g>`;
     put(L.act, s);
     put(L.glow, `<g id="${id}-smoke" opacity="${o.smoke ?? 0.8}">${smokeCloud(40, 1450, 3.2, 21)}${smokeCloud(1040, 1450, 3.2, 23)}</g>`);
+  };
+
+
+  // ---------------------------------------------------------------- V11 coins (same 2.5D build and classes as HnFx.coin, so HnFx.pop / HnFx.life drive them)
+  const tone = (hex, k) => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => Math.round(k > 0 ? v + (255 - v) * k : v * (1 + k))); return `#${c.map((v) => v.toString(16).padStart(2, "0")).join("")}`; };
+  const CP = { gap: ["#d8f0c8", "#4a9a4a"], mirror: ["#cfe8f6", "#3a8ab8"], gear: ["#fde59a", "#e3a632"], nolift: ["#fbe0da", "#d8584a"], call: ["#fdeaea", "#d8302a"], orange: ["#ffe0c0", "#e8701a"], back: ["#e4e0f4", "#7a6ab8"] };
+  let cdefs = "";
+  for (const [n, [f, r]] of Object.entries(CP)) cdefs += `<radialGradient id="ltF-${n}" cx=".33" cy=".25" r=".9"><stop offset="0" stop-color="${tone(f, 0.7)}"/><stop offset=".55" stop-color="${f}"/><stop offset="1" stop-color="${tone(f, -0.12)}"/></radialGradient><linearGradient id="ltR-${n}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${r}"/><stop offset=".6" stop-color="${tone(r, -0.15)}"/><stop offset="1" stop-color="${tone(r, -0.4)}"/></linearGradient>`;
+  Sets.DEFS += cdefs + `<clipPath id="ltFace"><circle cx="60" cy="57" r="46"/></clipPath>`;
+  const O = (w) => `stroke="${INK}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+  const miniCar = (x, y, c) => `<g transform="translate(${x},${y})"><path d="M-16,0V-8Q-14,-14 -8,-15L-4,-22H8L13,-15Q18,-14 18,-8V0Z" fill="${c}" ${O(2)}/><circle cx="-8" cy="1" r="4" fill="${INK}"/><circle cx="10" cy="1" r="4" fill="${INK}"/></g>`;
+  const miniTruck = (x, y) => `<g transform="translate(${x},${y})"><rect x="-26" y="-22" width="36" height="22" fill="#8a6242" ${O(2)}/><circle cx="-18" cy="-27" r="6" fill="#e2b47a" ${O(1.5)}/><circle cx="-6" cy="-27" r="6" fill="#e2b47a" ${O(1.5)}/><rect x="10" y="-20" width="16" height="20" rx="3" fill="#2f6a9e" ${O(2)}/><circle cx="-16" cy="1" r="4" fill="${INK}"/><circle cx="16" cy="1" r="4" fill="${INK}"/></g>`;
+  const CPIC = {
+    gap: () => [`<path d="M0,92H120" stroke="#6a6e74" stroke-width="22"/><path d="M8,92H112" stroke="#f2c230" stroke-width="2.5" stroke-dasharray="8 6"/>${miniCar(28, 90, "#7cc9ae")}${miniTruck(90, 90)}
+      <g class="ltGapA"><path d="M46,66H70" stroke="#2fa864" stroke-width="5" stroke-linecap="round"/><path d="M46,60V72M70,60V72" stroke="#2fa864" stroke-width="4"/></g><g transform="translate(46,40)"><circle r="13" fill="#fff" ${O(2.5)}/><path d="M0,0V-8M0,0L6,3" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/><rect x="-3" y="-19" width="6" height="5" fill="${INK}"/></g><text x="76" y="50" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="${INK}">2</text>`, ""],
+    mirror: () => [`<rect x="24" y="22" width="44" height="64" rx="10" fill="#2a2b2e" ${O(3)}/><rect x="29" y="27" width="34" height="54" rx="6" fill="#bfe0f4"/><circle cx="46" cy="50" r="10" fill="url(#hxSkin)" ${O(2)}/><circle cx="43" cy="48" r="1.6" fill="${INK}"/><circle cx="49" cy="48" r="1.6" fill="${INK}"/>
+      <g class="ltEye"><path d="M74,64q14,-14 28,0q-14,14 -28,0Z" fill="#fff" ${O(2.5)}/><circle cx="88" cy="64" r="5" fill="${INK}"/></g><path d="M68,54h-6" stroke="${INK}" stroke-width="3"/>`, ""],
+    gear: () => [`<rect x="36" y="80" width="48" height="16" rx="6" fill="#3a3632" ${O(3)}/><g class="ltShift"><path d="M60,82V44" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><path d="M60,82V44" stroke="#6a6e74" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="38" r="12" fill="#2a2b2e" ${O(3)}/><text x="60" y="43" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="15" fill="#ffd84a">L</text></g>
+      <path d="M18,40l18,10M18,60l14,0" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>`, ""],
+    nolift: () => [`<path d="M0,96H120" stroke="#6a6e74" stroke-width="20"/><g class="ltRoll">${Lt.logSide(14, 78, 72, 14, 9)}</g><g class="ltReach"><circle cx="72" cy="48" r="11" fill="url(#hxSkin)" ${O(2.5)}/><path d="M72,59l-8,14" stroke="#3a6ea8" stroke-width="7" stroke-linecap="round"/></g>`,
+      `<circle cx="60" cy="57" r="40" fill="none" stroke="#c8241a" stroke-width="8"/><path d="M32,85L88,29" stroke="#c8241a" stroke-width="8" stroke-linecap="round"/>`],
+    call: () => [`<g class="ltRing"><rect x="40" y="24" width="40" height="72" rx="8" fill="#2a2a32" ${O(3)}/><rect x="45" y="32" width="30" height="52" rx="3" fill="#1e7a46"/><text x="60" y="56" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="12" fill="#fff">1586</text><text x="60" y="72" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="12" fill="#ffd84a">1193</text></g>
+      <g class="ltWv"><path d="M88,40q8,8 0,16M94,34q14,14 0,28" stroke="#1e7a46" stroke-width="4" fill="none" stroke-linecap="round"/></g>`, ""],
+    orange: () => [`<rect x="14" y="40" width="92" height="44" rx="4" fill="#ff8a1a" ${O(3.5)}/><path d="M16,62H104" stroke="${INK}" stroke-width="3"/><text x="60" y="58" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="16" fill="${INK}">23</text><text x="60" y="79" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="16" fill="${INK}">1075</text>
+      <g class="ltFlame"><path d="M92,30C100,40 104,46 99,54C96,59 88,59 85,54C81,46 89,42 92,30Z" fill="#d8301e" ${O(2)}/></g>`, ""],
+    back: () => [`<path d="M0,94H120" stroke="#6a6e74" stroke-width="18"/><g class="ltBack">${miniCar(64, 92, "#7cc9ae")}</g><path d="M36,58H16M16,58l10,-8M16,58l10,8" stroke="#7a6ab8" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <g transform="translate(96,70)"><rect x="-14" y="-26" width="28" height="26" fill="#ff8a1a" ${O(2)}/></g>`, ""],
+  };
+  Lt.coin = (name, x, y, s = 1, id = "") => {
+    const [inside, top] = CPIC[name]();
+    return `<g transform="translate(${x},${y}) scale(${s}) translate(-60,-60)"><g ${id ? `id="${id}"` : ""} class="hxCoin">
+      <ellipse class="hxSh" cx="60" cy="122" rx="48" ry="9" fill="url(#hxSh)"/>
+      <g class="hxBob"><g class="hxSq">
+        <circle cx="60" cy="67" r="52" fill="url(#ltR-${name})" ${OUT}/><path d="M12,67A48,48 0 0 0 108,67" stroke="#000" stroke-width="3" fill="none" opacity=".18"/>
+        <circle cx="60" cy="57" r="52" fill="url(#ltF-${name})" ${OUT}/><circle cx="60" cy="57" r="46" fill="none" stroke="url(#hxBev)" stroke-width="4"/>
+        <g clip-path="url(#ltFace)">${inside}</g>${top || ""}
+        <path d="M21,46A41,41 0 0 1 45,19" stroke="#fff" stroke-width="5.5" fill="none" opacity=".72" stroke-linecap="round"/><circle class="hxGlint" cx="53.5" cy="15.5" r="3" fill="#fff" opacity=".8"/>
+      </g></g></g></g>`;
+  };
+  Lt.coinIn = (tl, id, t, dur) => {
+    HnFx.pop(tl, id, t); HnFx.life(tl, id, t, dur);
+    const r = document.getElementById(id); if (!r) return;
+    const q = (c) => r.querySelectorAll(c), N = (p) => Math.ceil(dur / p) + 1;
+    q(".ltGapA").forEach((e) => tl.fromTo(e, { scaleX: 0.2, svgOrigin: "46 66" }, { scaleX: 1, svgOrigin: "46 66", duration: 0.6, repeat: N(1.2), yoyo: true, ease: "power2.inOut", immediateRender: false }, t));
+    q(".ltEye").forEach((e) => tl.fromTo(e, { scaleY: 1, svgOrigin: "88 64" }, { scaleY: 0.1, svgOrigin: "88 64", duration: 0.08, repeat: N(1.1), repeatDelay: 1, yoyo: true, immediateRender: false }, t + 0.5));
+    q(".ltShift").forEach((e) => tl.fromTo(e, { rotation: 18, svgOrigin: "60 84" }, { rotation: -14, svgOrigin: "60 84", duration: 0.25, repeat: N(1.2), repeatDelay: 0.7, yoyo: true, ease: "back.out(3)", immediateRender: false }, t + 0.3));
+    q(".ltRoll").forEach((e) => tl.fromTo(e, { x: -20 }, { x: 10, duration: 0.6, repeat: N(0.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t));
+    q(".ltReach").forEach((e) => tl.fromTo(e, { y: 0 }, { y: 6, duration: 0.3, repeat: N(0.3), yoyo: true, immediateRender: false }, t));
+    q(".ltRing").forEach((e) => tl.fromTo(e, { rotation: -6, svgOrigin: "60 60" }, { rotation: 6, svgOrigin: "60 60", duration: 0.06, repeat: N(0.06), yoyo: true, ease: "none", immediateRender: false }, t));
+    q(".ltWv").forEach((e) => tl.fromTo(e, { opacity: 0, x: -4 }, { opacity: 1, x: 4, duration: 0.3, repeat: N(0.6), yoyo: true, immediateRender: false }, t));
+    q(".ltFlame").forEach((e) => tl.fromTo(e, { scale: 0.85, svgOrigin: "92 56" }, { scale: 1.2, svgOrigin: "92 56", duration: 0.18, repeat: N(0.18), yoyo: true, immediateRender: false }, t));
+    q(".ltBack").forEach((e) => tl.fromTo(e, { x: 0 }, { x: -22, duration: 0.8, repeat: N(0.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, t));
+  };
+  // sparks bursting from a point (glow layer): n streaks flying out and falling, gone in 0.5 s
+  Lt.sparks = (tl, layer, t, x, y, s = 1, n = 14, seed = 3) => {
+    const r = mk(seed), gid = `lts${Math.round(x)}_${Math.round(y)}_${Math.round(t * 100)}`;
+    let g = `<g id="${gid}" opacity="0"><circle cx="${x}" cy="${y}" r="${f1(90 * s)}" fill="url(#ltSpark)"/>`;
+    const parts = [];
+    for (let k = 0; k < n; k++) { const a = r() * Math.PI * 2, d = (80 + r() * 200) * s; parts.push([Math.cos(a) * d, Math.sin(a) * d + 60 * s]); g += `<g class="sp"><path d="M${x},${y}l${f1(Math.cos(a) * 18 * s)},${f1(Math.sin(a) * 18 * s)}" stroke="#ffe27a" stroke-width="${f1(5 * s)}" stroke-linecap="round"/></g>`; }
+    put(layer, g + `</g>`);
+    tl.set(`#${gid}`, { opacity: 1 }, t); tl.to(`#${gid}`, { opacity: 0, duration: 0.2 }, t + 0.35);
+    document.querySelectorAll(`#${gid} .sp`).forEach((e, k) => tl.fromTo(e, { x: 0, y: 0 }, { x: parts[k][0], y: parts[k][1], duration: 0.5, ease: "power2.out", immediateRender: false }, t));
   };
 
   // ---------------------------------------------------------------- motion
