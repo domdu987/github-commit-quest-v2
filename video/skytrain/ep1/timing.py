@@ -1,4 +1,4 @@
-"""รอดคนเดียว EP.1 ทิ้งกระเป๋า. Derive shot timing from the recorded voice so picture and sound share one schedule.
+"""ซอมบี้รถไฟฟ้า EP.1 กดกระดิ่ง. Derive shot timing from the recorded voice so picture and sound share one schedule.
 
 Each shot lists its voice lines in order, as "id", ("id", gap) where gap is the time from the end of
 the previous line (negative = overlap), or ("id", offset, "start") to start offset seconds after the
@@ -20,26 +20,29 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.05, -0.15, 2.4),         # down the aisle: masks swinging, the bin bursts, the camera bag falls with its tag (title)
-    ("cmd", ["n02"], 0.15, 0.35, 1.5),           # his hand reaches for the strap → the red box
-    ("seat", ["n03"], 0.10, 0.10, 3.8),            # 40 min before, calm cabin cut: คิว moves to the empty last row (the planted mistake at ~0:05)
-    ("nap", ["q01"], 0.08, 0.18, 4.2),             # headphones on, he leans back; behind him the EXIT glows and the FA points to it
-    ("map", ["n04"], 0.10, 0.28, 3.6),             # the route map กรุงเทพ → เชียงราย over the northern ranges
-    ("engine", ["n05"], 0.08, 0.48, 2.6),         # outside: the left engine bursts into flame, the plane lurches
-    ("brace", ["x01"], 0.08, 0.10, 2.2),           # masks drop, amber light, คิว braces, the FA shouts
-    ("dive", [], 0.08, 0.10, 1.0),                     # outside: the dive toward the ridge
-    ("impact", [], 0.08, 0.10, 1.5),                   # the tail tears off into the trees: flash, shake, debris
-    ("smoke", ["n06"], 0.10, 0.18, 2.6),           # the cabin torn open at the break, smoke rolling, fire
-    ("grab", ["q02"], 0.08, 0.18, 2.0),            # he reaches down for the bag
-    ("ninety", ["n07"], 0.10, 0.18, 3.2),          # card: 90 seconds
-    ("half", ["n08"], 0.10, 0.18, 2.8),            # card: nearly half stop for their bags
-    ("block", ["n09"], 0.10, 0.18, 2.8),           # card: the aisle jammed by bags
-    ("run", ["n11"], 0.10, 0.18, 3.0),             # he drops it and runs forward, toward the fire
-    ("behind", ["n13"], 0.10, 0.18, 2.6),          # the door one row behind him
-    ("rows", ["n14"], 0.10, 0.38, 4.0),            # the safety card: rule 1 + count the rows, front and back
-    ("jump", ["n15"], 0.10, 0.18, 2.6),            # out the door, down the slide, away from the fire
-    ("alone", ["n16", ("n17", 0.25), ("n18", 0.3)], 0.2, 0.9, 7.0),   # the smoke clears: no front section, only the jungle (smoke behind the ridge)
-    ("next", [], 0.08, 0.10, 3.0),                     # next-episode card
+    ("hook", ["n01"], 0.10, -0.32, 2.6),          # 0-0.8 s close: zombie palms slam the gangway glass, the city high outside; then the car in alarm
+    ("cmd", ["n02"], 0.06, 0.22, 1.5),           # a hand closes on the red emergency lever
+    ("before", ["n03"], 0.20, 0.15, 3.4),        # ten minutes before: the train glides along the viaduct at dusk → inside, calm
+    ("live", ["t01"], 0.10, 0.20, 2.2),          # นัท live on the selfie stick; the car screen above the door behind him
+    ("rhyme", ["c01", ("t02", 0.15), ("c02", 0.15)], 0.15, 0.30, 4.0),   # ลุงเชิด on the bench muttering; นัท jokes; ลุง answers
+    ("lcd", [], 0.0, 0.0, 1.1),                  # insert: the car screen (สวนหลวงเก่า greyed: งดให้บริการ · เดินรถอัตโนมัติ)
+    ("scream", ["n04"], 0.12, 0.15, 2.8),        # the end car: a passenger lunges; people run toward the middle car
+    ("shut", ["m01"], 0.04, 0.25, 1.5),          # นัท slams the gangway door shut
+    ("glass", ["n05"], 0.15, 0.25, 3.4),         # close: faces and palms on the glass, the first crack
+    ("suit", ["s01"], 0.08, 0.20, 1.7),          # the man in the suit grabs the lever
+    ("lever", ["n06"], 0.15, 0.25, 3.0),         # close on the lever box: "ใช้เมื่อจอดที่สถานีเท่านั้น"
+    ("drop", ["n07"], 0.15, 0.25, 3.2),          # outside: the drop from the viaduct to the street; the electrified rail
+    ("rule", ["c03"], 0.12, 0.50, 2.8),          # ลุงเชิด grabs his arm; the rule card
+    ("bell", ["n08"], 0.15, 0.15, 3.0),          # เมย์ presses the yellow bell
+    ("occ", ["o01"], 0.10, 0.25, 3.8),           # the control centre answers through the grille; the screen's dot moves on
+    ("bend", ["n10"], 0.12, 0.15, 2.3),          # the hinge bends, a gap, a hand through
+    ("push", ["m02"], 0.08, 0.70, 2.6),          # everyone's back against the door; the dot nears the station
+    ("arrive", [], 0.0, 0.0, 1.5),               # outside: the train slows into a dark station (silence before the doors)
+    ("out", ["m03"], 0.55, 0.35, 2.6),           # the doors open, everyone pours out; เมย์ on her knees: รอดแล้ว
+    ("quiet", ["n11"], 0.15, 0.25, 2.4),         # the platform: half the lights off, nobody
+    ("sign", ["n12"], 0.12, 0.25, 2.8),          # the sign: สวนหลวงเก่า + the งดให้บริการ tape
+    ("turn", ["n13"], 0.12, 0.95, 3.2),          # the staff at the far end turns: milky eyes
+    ("next", [], 0.0, 0.0, 3.2),                 # next-episode card
 ]
 GAP = 0.08
 
