@@ -1,7 +1,7 @@
       // ---------- ต่อหัวเสือ EP.2 อย่าเชื่อคำว่าไม่เป็นไร (ตอนจบ) ----------
       // grammar: dusk at the shrine, ยาย covers her arm (0:02, the planted mistake) → the stings revealed → card: poison later → ยาย laughs it off →
       // card: first aid ✓ → card: not enough, >10 → night, the tea-dark cup → ภูมิ: "ต้องไปหาหมอ" → ยาย's own rule (board 3) → danger signs / 1669 →
-      // map to the hospital → ↺ 0:02 → ลุงสิงห์'s scars at the hospital bench → the rumour turned → morning in the ward → the series end card
+      // map to the hospital → ลุงสิงห์'s scars at the hospital bench → the rumour turned → morning in the ward → the series end card
       const SUN = { from: "left", rim: "#ffd8a8", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.3, cast: { len: 1.4, op: 0.3 }, vol: false };
       const NIGHTL = { from: "right", rim: "#ffd9a0", rimOp: 0.55, shade: "#0e1422", shadeOp: 0.42, cast: false, vol: false };
       const TUBE = { from: "left", rim: "#e8fff4", rimOp: 0.6, shade: "#102028", shadeOp: 0.4, cast: { len: 1.2, op: 0.3 }, vol: false };
@@ -83,15 +83,6 @@
         cam: { keys: [{ t: 0, ...fr(90 + 380, 300 + 960, 1.0, 540, 900) }, { t: 0.5, glide: D("drive") - 0.6, ...fr(90 + 1080, 300 + 1060, 1.0, 540, 900) }] },
         captions: caps("drive"),
         fx(tl, id, t0) { tl.set('#mr path[fill="#e2382e"]', { opacity: 0 }, t0); Maps.route(tl, "mr", t0, { go: [0.3, D("drive") - 0.6], ease: "power1.inOut" }); } });
-      // ---------- 12. ↺ 0:02 — the cloth over the stings ----------
-      split("rw", 3.0, { ...Y3("t11"), extra: bench, cam: { keys: [{ t: 0, ...fr(820, 1130, 1.25, 540, 1040) }, { t: 3.0, glide: 2.4, ...fr(755, 1295, 2.6, 540, 1000) }] },
-        actors: [YAI("sitChair", "normal", "smile"), A("bai", 560, 1500, 0.72, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }])], captions: caps("rw", [0]),
-        fx(tl, id, t0, L) { rewind(L, tl, t0, 3.0, "0:02"); stings(L, "t11s"); cloth(L, "t11c"); tl.set("#t11c", { opacity: 0 }, 0);
-          tl.fromTo("#t11c", { opacity: 1, x: 120, y: -60, rotation: -20, svgOrigin: "755 1295" }, { x: 0, y: 0, rotation: 0, svgOrigin: "755 1295", duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + 0.8); } },
-      { ...Y3("t11b"), extra: bench, cam: { keys: [{ t: 0, ...fr(755, 1295, 3.0, 540, 1000) }] }, actors: [YAI("sitChair", "closed", "smile")], captions: capsFrom("rw", 3.0, [1]),
-        fx(tl, id, t0, L) { stings(L, "t11bs"); cloth(L, "t11bc"); tl.set("#t11bc", { opacity: 1 }, t0); tl.to("#t11bc", { opacity: 0.25, duration: 0.6 }, t0 + 0.6);
-          put(L.glow, `<ellipse id="t11r" cx="755" cy="1295" rx="95" ry="60" fill="none" stroke="#ff3a2a" stroke-width="8" stroke-dasharray="1 1" pathLength="1"/>`);
-          tl.fromTo("#t11r", { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.6, immediateRender: false }, t0 + 0.3); } });
       // ---------- 13. the hospital bench at night: ลุงสิงห์, sleeves rolled ----------
       add("lung", { set: "erFront2", setOpts: { id: "ef" }, dark: 0.1, blur: { far: 3 }, light: TUBE, grade: GWARD,
         cam: { keys: [{ t: 0, ...fr(560, 1250, 1.5, 540, 1100) }] }, extra(L) { put(L.set, Hn.bench(560, 1360, 0.8)); },

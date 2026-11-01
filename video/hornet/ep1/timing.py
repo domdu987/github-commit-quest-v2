@@ -37,7 +37,6 @@ SHOTS = [
     ("know", ["n11"], 0.1, 0.2, 5.0),        # card: open ground ✗ / indoors ✓
     ("grab", ["n12"], 0.1, 0.3, 2.8),         # ป้านวล throws his towel over แทน and hauls her off the bank (the scars on his hand)
     ("shed", ["w01"], 0.05, 0.9, 2.4),        # the shed door slams; hornets thud on the screen
-    ("rw", ["n13", "n14"], 0.15, 0.4, 6.2),    # ↺ 0:03: the open door behind her
     ("where", ["b03"], 0.1, 0.4, 2.2),        # ใบข้าว made it into ตา's house: the empty room
     ("shrine", ["n15"], 0.1, 0.3, 2.8),       # ยาย at the shrine all along, hunched, the swarm above
     ("fine", ["g02"], 0.1, 0.9, 2.4),         # "ยายไม่เป็นไรหรอก" — her arm dotted with stings

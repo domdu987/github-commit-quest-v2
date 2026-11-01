@@ -113,8 +113,7 @@ CUES = [
     ("aid", 0.1, "whoosh", 0.18), ("count", 0.1, "whoosh", 0.18), ("count", 2.6, "sting", 0.24),
     ("night", 0.0, "crickets", 0.2), ("night", F("night", 0, 2) - 0.1, "sting", 0.26), *beats("night", 0.3, D["night"] - 0.2, 0.62, 0.26),
     ("phum", 0.0, "sting", 0.2), ("rule", 2.2, "whoosh", 0.2), ("danger", 0.1, "whoosh", 0.2), ("danger", 2.4, "notif", 0.2),
-    ("drive", 0.0, "engine", 0.22), ("rw", 0.0, "rewind", 0.42), ("rw", 3.0, "sting", 0.28),
-    ("lung", 0.0, "beep", 0.08), ("truth", 0.2, "notif", 0.16), ("end", 0.2, "swell", 0.2),
+    ("drive", 0.0, "engine", 0.22), ("lung", 0.0, "beep", 0.08), ("truth", 0.2, "notif", 0.16), ("end", 0.2, "swell", 0.2),
     ("finale", 0.1, "whoosh", 0.3), ("finale", 0.8, "ding", 0.26),
 ]
 
@@ -123,8 +122,7 @@ SAMPLES = [
     ("hook", 0.0, "village", 0.45, 3.0), ("hook", 0.0, "swarmfar", 0.3, 3.0), ("cmd", 0.0, "swarmfar", 0.3, 1.6),
     ("yai", 0.6, "ice", 0.8), ("yai", 0.0, "village", 0.35, 4.2), ("aid", 0.0, "village", 0.3, 4.3), ("count", 0.0, "village", 0.25, 4.6),
     ("night", 0.0, "crickets", 0.45, 5.8), ("phum", 0.0, "crickets", 0.4, 1.9), ("rule", 0.0, "crickets", 0.4, 6.0), ("danger", 0.0, "crickets", 0.3, 5.3),
-    ("drive", 0.0, "engine", 0.45, 3.6), ("rw", 0.0, "swarmfar", 0.25, 3.0),
-]
+    ("drive", 0.0, "engine", 0.45, 3.6), ]
 CUES = [c for c in CUES if c[2] not in REPLACED]
 
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
@@ -154,7 +152,7 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 dip(T("night", 0), T("danger", -0.01), 0.55)   # the night: quiet, the heartbeat
-dip(T("rw", 0), T("truth", -0.01), 0.5)         # the rewind and the confession
+dip(T("lung", 0), T("truth", -0.01), 0.5)       # the confession
 mus = mus * gain
 a, b = int(T("finale", 0) * SR), int(T("finale", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card
