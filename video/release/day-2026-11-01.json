@@ -29,16 +29,16 @@
    "order": 2,
    "id": "sink-ep2",
    "series": "นาทีก่อนจม",
-   "status": "hold",
+   "status": "final",
    "branch": "ccr-fb88c4b3-kcqyid",
-   "commit": "48c6150",
+   "commit": "bd2020f",
    "package": "video/release/sink.json",
    "video_hq": "video/release/hq/sink-ep2-HQ.mp4",
-   "video_hq_sha256": "a53b14bddbc07053083cdbbf0d7bcdb46888de1e2a0aad0474d77476d7d63572",
-   "video_hq_bytes": 54982523,
+   "video_hq_sha256": "9c93be77ad904e73d0f0ad61ae160c4d347d50be2d749550deb6cab3de4c4b9a",
+   "video_hq_bytes": 50347280,
    "suggested_time": "2026-11-01T10:00+07:00",
-   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)",
-   "slot": "เช้า"
+   "slot": "เช้า",
+   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ 3 แล้ว (sha ใหม่)"
   },
   {
    "order": 3,
