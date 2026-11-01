@@ -108,7 +108,7 @@
 
 ★4 **ของที่ไม่รู้จัก**
 - [A] ch.9: "Eat only those plants you can positively identify and you know are safe to eat."
-- [A] ch.9: "Do not eat any plant unless you have positively identified it first."
+- [A] ch.10: "Do not eat any plant unless you have positively identified it first."
 
 ★5 **หอย**
 - [A] ch.8: "Rocks along beaches or extending as reefs into deeper water often bear clinging shellfish."

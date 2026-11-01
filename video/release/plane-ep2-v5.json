@@ -1,0 +1,34 @@
+{
+ "series": "รอดคนเดียว",
+ "made_by": "Claude (rodmai-club-video) · lane C",
+ "posted_by": "Hermes",
+ "rules": [
+  "ใช้ไฟล์ HQ (video_hq · ตรวจ sha256 ก่อนลง)",
+  "ปักหมุดคอมเมนต์แหล่งอ้างอิงทันทีหลังลง",
+  "IG: ซับไทยในคลิป · Facebook: ไทยอย่างเดียว · แฮชแท็กไม่เกิน 5",
+  "ฉบับ v5 แยกจาก plane-ep2 เดิม: ห้ามลงจนกว่าเจ้าของจะผ่าน"
+ ],
+ "episodes": [
+  {
+   "id": "plane-ep2-v5",
+   "order": 2,
+   "title": "เห็นควันอีกฝั่งอ่าวตอนติดเกาะ… อย่าเดินไปหามัน | รอดคนเดียว EP.2 ตอนจบ",
+   "status": "rendered, waiting for coordinator and owner review",
+   "video_hq": "video/release/hq/plane-ep2-v5-HQ.mp4",
+   "video_hq_sha256": "",
+   "video_hq_bytes": 0,
+   "video_repo": "video/plane-ep2-v5/plane-ep2-v5-share.mp4",
+   "cover": "video/plane-ep2-v5/cover.jpg",
+   "caption": "ถ้าวันหนึ่ง… คุณเห็นควันอีกฝั่งอ่าว 🌫️🏝️ อย่าเดินไปหามัน\n\nน้ำหมดขวด หิวจนเกือบกินผลไม้ที่ไม่รู้จัก แล้วเฮลิคอปเตอร์ก็บินผ่านไป… ถ้าเป็นคุณจะทำยังไงให้มันเห็น? 🚁 ดูให้จบ แล้วคนท่อนหน้าหายไปไหน\n\nรอดคนเดียว EP.2/2 ตอนจบ\n#เอาตัวรอด #ติดเกาะ #เครื่องบินตก #รอดคนเดียว #RodMaiClub",
+   "hashtags": [
+    "#เอาตัวรอด",
+    "#ติดเกาะ",
+    "#เครื่องบินตก",
+    "#รอดคนเดียว",
+    "#RodMaiClub"
+   ],
+   "pinned_comment": "📚 แหล่งอ้างอิง (คำตรงจากคู่มือ)\n• \"by drinking seawater you deplete your body's water supply, which can cause death.\" — US Army FM 3-05.70 Survival (2002) Fig 6-2 หน้า 6-4\n• \"The milk from young, green (unripe) coconuts is a good thirst quencher. However, the milk from mature, brown, coconuts contains an oil that acts as a laxative.\" — FM 3-05.70 ข้อ 6-9 หน้า 6-7\n• \"Rainwater collected in clean containers or in plants is usually safe for drinking.\" / \"Keep the tarpaulin handy for catching water.\" — FM 21-76 Survival (1992) บทที่ 6 และ 16\n• \"Eat only those plants you can positively identify and you know are safe to eat.\" — FM 21-76 บทที่ 9\n• \"Do not eat shellfish that are not covered by water at high tide!\" / \"Steam, boil, or bake mollusks in the shell.\" — FM 21-76 บทที่ 8\n• \"On a sunny day, a mirror is your best signaling device. If you don't have a mirror, polish … a similar object that will reflect the sun's rays.\" — FM 21-76 บทที่ 19\n• \"If you practically smother a large fire with green leaves, moss, or a little water, the fire will produce white smoke.\" — FM 21-76 บทที่ 19\n• \"it's easier for search parties to find a downed aircraft than a person.\" — AOPA Safety Spotlight: Survival\nตัวละคร สายการบิน และเหตุการณ์เป็นเรื่องสมมติ",
+   "duration_s": 119.99
+  }
+ ]
+}

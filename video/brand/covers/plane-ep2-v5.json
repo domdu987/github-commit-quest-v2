@@ -1,0 +1,18 @@
+[
+ {
+  "id": "plane-ep2-v5",
+  "page": "index.html",
+  "out": "video/plane-ep2-v5/cover.jpg",
+  "t": 1.6,
+  "series": "รอดคนเดียว",
+  "ep": 2,
+  "epTitle": "อยู่กับซาก",
+  "finale": true,
+  "setup": "เห็น[ควัน]อีกฝั่งอ่าว/ตอนติดเกาะ…",
+  "cmd": "อย่าเดินไปหามัน!",
+  "glow": "#2a8f94",
+  "hideLight": true,
+  "zoom": { "s": 1.12, "x": 600, "y": 760 },
+  "shift": { "x": 0, "y": 30 }
+ }
+]
