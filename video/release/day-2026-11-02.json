@@ -2,7 +2,7 @@
  "date": "2026-11-02",
  "tz": "Asia/Bangkok",
  "made_by": "Claude (แชทประสานงาน)",
- "status": "ลงได้เฉพาะ item ที่ status final (sha ใหม่หลังตัดฉาก) · item ที่ยัง hold ห้ามลง",
+ "status": "พร้อมทั้งวัน: ทุก item status final พร้อม sha",
  "rules": [
   "เจ้าของสั่ง 1 พ.ย. (พิมพ์ในแชทเลน D): \"เราจะลงเช้า 1 เรื่อง เที่ยง 1 เรื่อง กลางคืน 1 เรื่อง\" · 1 เรื่อง = ทุกตอนของเรื่องนั้น ลงช่วงเดียวกันเรียง EP ห่างกัน 30 นาที",
   "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
@@ -69,14 +69,39 @@
    "suggested_time": "2026-11-02T12:30+07:00",
    "slot": "เที่ยง",
    "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)"
+  },
+  {
+   "order": 5,
+   "id": "exam-ep1",
+   "series": "ห้องสอบ (ซอมบี้บุกตอนนั่งสอบ)",
+   "status": "final",
+   "slot": "กลางคืน",
+   "branch": "prod/lane-c",
+   "commit": "1c6b88d",
+   "package": "video/release/exam.json",
+   "video_hq": "video/release/hq/exam-ep1-HQ.mp4",
+   "video_hq_sha256": "cf4e7c318c046e698aa927d9b42803a27999d1a79ff3351d2c81e8c9794cb8fa",
+   "video_hq_bytes": 53652648,
+   "suggested_time": "2026-11-02T20:00+07:00"
+  },
+  {
+   "order": 6,
+   "id": "exam-ep2",
+   "series": "ห้องสอบ (ซอมบี้บุกตอนนั่งสอบ)",
+   "status": "final",
+   "slot": "กลางคืน",
+   "branch": "prod/lane-c",
+   "commit": "1c6b88d",
+   "package": "video/release/exam.json",
+   "video_hq": "video/release/hq/exam-ep2-HQ.mp4",
+   "video_hq_sha256": "d4acb01087d4d7a7c6047e66adf64b3fff4a12de53ee6e496feb02dba40999aa",
+   "video_hq_bytes": 41332661,
+   "suggested_time": "2026-11-02T20:30+07:00"
   }
  ],
  "slots": {
   "เช้า": "ราว 08:00–10:30",
   "เที่ยง": "12:00–12:30",
   "กลางคืน": "20:00–20:30"
- },
- "empty_slots": {
-  "กลางคืน": "จองไว้ให้เรื่องใหม่ของเจ้าของ (1 พ.ย.): \"ถ้าซอมบี้บุกขณะที่คุณนั่งเรียนอยู่\" · เลน C · 20:00/20:30 · ต้อง final ภายใน 17:00"
  }
 }
