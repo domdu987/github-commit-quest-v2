@@ -20,12 +20,13 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("old1", [], 0, 0, 1.5),
-    ("new1", [], 0, 0, 2.3),
-    ("old2", [], 0, 0, 1.1),
-    ("new2", [], 0, 0, 1.7),
-    ("card", [], 0, 0, 2.0),
-    ("all", [], 0, 0, 1.6),
+    ("zom", [], 0, 0, 2.6),
+    ("road", [], 0, 0, 2.4),
+    ("water", [], 0, 0, 2.1),
+    ("school", [], 0, 0, 2.0),
+    ("army", [], 0, 0, 2.0),
+    ("ghost", [], 0, 0, 2.0),
+    ("icons", [], 0, 0, 1.8),
 ]
 GAP = 0.08
 

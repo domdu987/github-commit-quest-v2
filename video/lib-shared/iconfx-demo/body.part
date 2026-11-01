@@ -1,24 +1,35 @@
-      // ---------- IconFX demo: old vs new (zombie rule, road "2 วิ"), a checklist card, the five themes idling ----------
-      const tag = (L, tl, t0, d, txt, c) => { const id = `tg${Math.round(t0 * 100)}`; put(L.light, `<g id="${id}" opacity="0"><rect x="40" y="70" width="${txt.length * 46 + 70}" height="96" rx="20" fill="${c}" stroke="#1b1714" stroke-width="5"/><text x="74" y="138" font-family="Kanit" font-weight="900" font-size="58" fill="#fff">${txt}</text></g>`);
+      // ---------- IconFX demo 2: rule cards as real objects of each story's world + icons of every theme ----------
+      const bgFill = (L, svg) => put(L.light, `<g>${svg}</g>`);
+      const ROADBG = `<rect width="1080" height="1920" fill="#0e1424"/><rect y="0" width="1080" height="760" fill="#1a2240"/><path d="M0,760H1080V1920H0Z" fill="#2a2e36"/>
+        <path d="M500,760L580,760L1180,1920H-100Z" fill="#3a3e46"/><path d="M520,760L-40,1920M560,760L1120,1920" stroke="#f4c430" stroke-width="10"/>${Array.from({ length: 6 }, (_, k) => { const a = k / 6, y = 760 + 1160 * a * a; return `<rect x="${537 - 4 - 18 * a}" y="${y}" width="${8 + 36 * a}" height="${30 + 120 * a}" fill="#f4f4ee"/>`; }).join("")}
+        <circle cx="540" cy="770" r="40" fill="#fff6c0" opacity=".8"/><circle cx="540" cy="770" r="180" fill="#fff6c0" opacity=".12"/>`;
+      const CANALBG = `<rect width="1080" height="1920" fill="#2a3a5a"/><rect y="0" width="1080" height="900" fill="#ff9a6a" opacity=".55"/><path d="M0,900H1080V1920H0Z" fill="#2a5a6a"/>${Array.from({ length: 14 }, (_, k) => `<path d="M${(k * 97) % 1080},${960 + k * 64}q60,-16 120,0" stroke="#8ad0e0" stroke-width="5" fill="none" opacity=".45"/>`).join("")}
+        <path d="M0,880Q300,840 540,880T1080,870V940H0Z" fill="#4a6a3a"/>${Array.from({ length: 9 }, (_, k) => `<path d="M${40 + k * 120},880q20,-120 40,0" fill="#2a4a2a"/>`).join("")}`;
+      const CLASSBG = `<rect width="1080" height="1920" fill="#e8d8b8"/><rect y="1500" width="1080" height="420" fill="#8a6a4a"/>${Array.from({ length: 12 }, (_, k) => `<path d="M0,${1520 + k * 34}H1080" stroke="#6a4a2a" stroke-width="3" opacity=".4"/>`).join("")}
+        <rect x="60" y="1560" width="300" height="40" rx="8" fill="#c8a070"/><rect x="720" y="1560" width="300" height="40" rx="8" fill="#c8a070"/><rect x="820" y="200" width="200" height="200" rx="100" fill="#fdfaf2" stroke="#3a3a3a" stroke-width="8"/><path d="M920,300V230M920,300L970,320" stroke="#2a2a2a" stroke-width="8" stroke-linecap="round"/>`;
+      const ARMYBG = `<rect width="1080" height="1920" fill="#3a4a2a"/><rect y="0" width="1080" height="820" fill="#c8b890" opacity=".5"/>${Array.from({ length: 10 }, (_, k) => `<path d="M${k * 120 - 40},820q60,-240 120,0" fill="#2a3a1a"/>`).join("")}
+        <path d="M0,820H1080V1920H0Z" fill="#6a5a3a"/>${Array.from({ length: 30 }, (_, k) => `<circle cx="${(k * 137) % 1080}" cy="${900 + ((k * 53) % 900)}" r="${4 + (k % 4) * 3}" fill="#4a3a20" opacity=".5"/>`).join("")}`;
+      const GHOSTBG = `<rect width="1080" height="1920" fill="#120a14"/><circle cx="540" cy="1500" r="700" fill="#ff9a3a" opacity=".12"/>${Array.from({ length: 7 }, (_, k) => `<rect x="${60 + k * 150}" y="${300 + (k % 2) * 80}" width="34" height="1400" fill="#24141a"/>`).join("")}
+        <path d="M0,1600H1080V1920H0Z" fill="#2a1a14"/><path d="M200,300Q540,120 880,300" stroke="#3a2420" stroke-width="40" fill="none"/>`;
+      const tagT = (L, tl, t0, d, txt) => { const id = `tg${Math.round(t0 * 100)}`; put(L.light, `<g id="${id}" opacity="0"><rect x="36" y="60" width="${txt.length * 30 + 60}" height="78" rx="18" fill="#14161c" stroke="#fff" stroke-width="3" opacity=".85"/><text x="64" y="114" font-family="Kanit" font-weight="800" font-size="40" fill="#fff">${txt}</text></g>`);
         tl.set(`#${id}`, { opacity: 1 }, t0); tl.set(`#${id}`, { opacity: 0 }, t0 + d); };
       const BG = { set: "carCut", setOpts: { id: "bg", state: "alarm", end: "zombies", crack: 2 }, dark: 0.3, light: false, grade: { top: "#c8202a", bottom: "#12040a", op: 0.3 }, blur: { far: 6, mid: 4, set: 5, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(900, 1200, 1.2, 540, 1000) }] } };
-      const RD = { set: "viaduct", setOpts: { id: "rd", time: "night" }, dark: 0.2, light: false, grade: { top: "#3a4a6a", bottom: "#05060c", op: 0.25 }, blur: { far: 5, mid: 4, set: 5, fg: 6 },
-        cam: { keys: [{ t: 0, ...fr(700, 1000, 1.0, 540, 1000) }] } };
-      add("old1", { ...BG, fx(tl, id, t0, L) { tag(L, tl, t0, D("old1"), "เดิม", "#6a6e78"); SkyUI.rule(tl, L.light, t0 + 0.05, D("old1") - 0.05, { active: 0, y: 600 }); } });
-      add("new1", { ...BG, fx(tl, id, t0, L) { tag(L, tl, t0, D("new1"), "ใหม่", "#e8382c");
-        IconFX.enter(tl, L.light, { theme: "zombie", art: IconFX.ART.bell, x: 330, y: 760, r: 170, t: t0 + 0.05, from: "left", label: "กดกระดิ่ง", idle: 1.2, exit: "none" });
-        IconFX.enter(tl, L.light, { theme: "zombie", art: IconFX.ART.noTrack, x: 760, y: 1230, r: 170, t: t0 + 0.55, from: "right", label: "อย่าวิ่งลงราง", idle: 0.7, exit: "dock", dockX: 960, dockY: 300, dockR: 80 }); } });
-      add("old2", { ...RD, fx(tl, id, t0, L) { tag(L, tl, t0, D("old2"), "เดิม", "#6a6e78"); SU.defs(L.light);
-        put(L.light, `<g transform="translate(540,820)"><g id="om">${SU.medal("omd", 66, `<g transform="scale(.62)">${IconFX.ART.stopwatch("2 วิ")}</g>`)}</g></g>`);
-        tl.fromTo("#om", { scale: 0.2, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, t0 + 0.1); SU.sheen(tl, "omd", 66, t0 + 0.7, 0.5, 2); } });
-      add("new2", { ...RD, fx(tl, id, t0, L) { tag(L, tl, t0, D("new2"), "ใหม่", "#e8382c");
-        IconFX.enter(tl, L.light, { theme: "roadWarn", art: IconFX.ART.stopwatch("2 วิ"), x: 540, y: 820, r: 190, t: t0 + 0.05, from: "below", label: "ท่อนซุงโผล่ · เหลือ 2 วินาที", idle: 0.9, exit: "fly" }); } });
-      add("card", { ...BG, fx(tl, id, t0, L) { tag(L, tl, t0, D("card"), "การ์ด", "#e8382c");
-        IconFX.card(tl, L.light, { theme: "zombie", title: "กฎรถไฟฟ้า", t: t0 + 0.02, dur: D("card") - 0.02, y: 380, step: 0.3, items: [
-          { text: "กดกระดิ่ง", sub: "คุยกับศูนย์ได้ทันที", mark: "ok", art: IconFX.ART.bell }, { text: "ข้ามตู้ กั้นประตู", sub: "รอคนนำทาง", mark: "ok", art: IconFX.ART.gangway },
-          { text: "เปิดประตูฉุกเฉิน", sub: "กลางรางยกระดับ", mark: "no", art: IconFX.ART.noTrack }] }); } });
-      add("all", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
-        fx(tl, id, t0, L) { put(L.light, `<rect width="1080" height="1920" fill="#14161e"/><text x="540" y="230" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff">5 ธีม · ตามเรื่อง</text>`);
-          [["zombie", IconFX.ART.bell, 300, 560, "ซอมบี้"], ["road", IconFX.ART.log, 780, 560, "ถนน"], ["water", IconFX.ART.buoy, 300, 1020, "น้ำ"], ["military", IconFX.ART.helmet, 780, 1020, "ทหาร"], ["ghost", IconFX.ART.candle, 540, 1480, "ผีไทย"]]
-            .forEach(([th, art, x, y, lb], k) => IconFX.enter(tl, L.light, { theme: th, art, x, y, r: 140, t: t0 - 0.25 + k * 0.04, from: "below", label: lb, idle: D("all"), exit: "none" })); } });
+      const FLAT = { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] } };
+      add("zom", { ...BG, fx(tl, id, t0, L) { tagT(L, tl, t0, D("zom"), "ซอมบี้ · คลิปบอร์ดลุงเชิด");
+        IconFX.board(tl, L.light, { skin: "clipboard", title: "กฎของลุงเชิด", sub: "ใบงานซ่อม · ขบวน 07", t: t0 + 0.05, dur: D("zom") - 0.05, y: 260, active: 1, done: [0], at: [0.5, 0.75],
+          items: [{ text: "<u>กดกระดิ่ง</u> อย่าวิ่งลงราง", art: IconFX.ART.bell }, { text: "<u>ข้ามตู้</u> กั้นประตู", art: IconFX.ART.gangway }] }); } });
+      add("road", { ...FLAT, fx(tl, id, t0, L) { bgFill(L, ROADBG); tagT(L, tl, t0, D("road"), "ถนน · ฝาท้ายรถบรรทุก");
+        IconFX.board(tl, L.light, { skin: "tailgate", title: "กฎถนนกลางคืน", t: t0 + 0.05, dur: D("road") - 0.05, y: 360, active: 0, at: [0.55, 0.7], items: [{ text: "<u>เว้นระยะ</u> 3 วินาที", art: IconFX.ART.car }, { text: "ไฟสูง ห้ามจ้องตาม" }] });
+        IconFX.enter(tl, L.light, { theme: "road", art: IconFX.ART.carSmall, x: 820, y: 1540, r: 150, t: t0 + 1.1, from: "right", label: "ถนน", idle: 0.6, exit: "none" }); } });
+      add("water", { ...FLAT, fx(tl, id, t0, L) { bgFill(L, CANALBG); tagT(L, tl, t0, D("water"), "น้ำ · ป้ายเตือนริมคลอง");
+        IconFX.board(tl, L.light, { skin: "canal", title: "ระวัง น้ำลึก", t: t0 + 0.05, dur: D("water") - 0.05, y: 340, active: 0, at: [0.55, 0.7], items: [{ text: "<u>โยน</u> ของที่ลอยได้", art: IconFX.ART.buoy }, { text: "ยื่นไม้ยาวให้จับ" }] }); } });
+      add("school", { ...FLAT, fx(tl, id, t0, L) { bgFill(L, CLASSBG); tagT(L, tl, t0, D("school"), "ห้องเรียน · กระดานดำ");
+        IconFX.board(tl, L.light, { skin: "chalk", title: "ล็อก ปิด หลบ", t: t0 + 0.05, dur: D("school") - 0.05, y: 360, active: 0, at: [0.5, 0.65], items: [{ text: "<u>ล็อก</u>ประตู ปิดไฟ" }, { text: "หลบให้พ้นช่องกระจก" }] }); } });
+      add("army", { ...FLAT, fx(tl, id, t0, L) { bgFill(L, ARMYBG); tagT(L, tl, t0, D("army"), "ทหาร · สมุดสนาม");
+        IconFX.board(tl, L.light, { skin: "fieldbook", title: "บันทึกสนาม", t: t0 + 0.05, dur: D("army") - 0.05, y: 380, active: 0, at: [0.45, 0.6], items: [{ text: "<u>หมอบ</u> ต่ำกว่าแนวดิน", art: IconFX.ART.helmet }, { text: "นับถอยหลังก่อนลุก" }] }); } });
+      add("ghost", { ...FLAT, fx(tl, id, t0, L) { bgFill(L, GHOSTBG); tagT(L, tl, t0, D("ghost"), "ผีไทย · ผ้ายันต์");
+        IconFX.board(tl, L.light, { skin: "yant", title: "ข้อห้ามของหลวงตา", t: t0 + 0.05, dur: D("ghost") - 0.05, y: 300, active: 0, at: [0.6, 0.75], items: [{ text: "<u>อย่าขาน</u>ตอบเสียงเรียก", art: IconFX.ART.candle }, { text: "เทียนดับ อย่าจุดซ้ำ" }] }); } });
+      add("icons", { ...FLAT, fx(tl, id, t0, L) { put(L.light, `<rect width="1080" height="1920" fill="#14161e"/><text x="540" y="230" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="60" fill="#fff">ไอคอนตามธีม</text>`);
+          [["zombie", IconFX.ART.bell, 300, 560, "ซอมบี้"], ["road", IconFX.ART.carSmall, 780, 560, "ถนน"], ["water", IconFX.ART.buoy, 300, 1020, "น้ำ"], ["military", IconFX.ART.helmet, 780, 1020, "ทหาร"], ["ghost", IconFX.ART.candle, 540, 1480, "ผีไทย"]]
+            .forEach(([th, art, x, y, lb], k) => IconFX.enter(tl, L.light, { theme: th, art, x, y, r: 145, t: t0 + k * 0.07, from: "below", label: lb, idle: D("icons"), exit: "none" })); } });
