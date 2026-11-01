@@ -130,7 +130,6 @@ CUES = [
     ("block", 0.15, "whoosh", 0.24), ("block", 0.4, "steps", 0.2), ("block", 1.35, "thud", 0.4), ("block", 1.36, "sting", 0.3),
     # he drops it, runs the wrong way into the heat
     ("run", 0.2, "thud", 0.26), ("run", 0.9, "steps", 0.3), ("run", 1.6, "steps", 0.3), ("run", 0.5, "crackle", 0.3), ("run", D["run"] - 0.8, "roar", 0.4), *beats("run", 0.2, D["run"] - 0.2, 0.38, 0.32),
-    ("rw", 0.0, "rewind", 0.45), ("rw", F("rw", 0, 1), "sting", 0.34),
     ("behind", 0.2, "steps", 0.28), ("behind", 1.0, "steps", 0.28), ("behind", 0.1, "crackle", 0.2), *beats("behind", 0.2, D["behind"] - 0.2, 0.38, 0.3),
     ("rows", 0.15, "whoosh", 0.24), *[("rows", 0.6 + j * 0.22, "click", 0.16) for j in range(8)], ("rows", 2.8, "ding", 0.3),
     # out: the door, down the slide, the surf; the card ticks
@@ -169,7 +168,6 @@ def dip(t0, t1, lvl, ramp=0.25):
 
 
 dip(T("impact", 0), T("smoke", 1.0), 0.35)
-dip(T("rw", 0), T("rw", -0.01), 0.55)
 dip(T("alone", vo_t("alone", 2) - 0.3), T("next", 0), 0.4)
 mus = mus * gain
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)

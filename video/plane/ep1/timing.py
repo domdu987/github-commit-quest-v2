@@ -35,7 +35,6 @@ SHOTS = [
     ("half", ["n08"], 0.10, 0.18, 2.8),            # card: nearly half stop for their bags
     ("block", ["n09"], 0.10, 0.18, 2.8),           # card: the aisle jammed by bags
     ("run", ["n11"], 0.10, 0.18, 3.0),             # he drops it and runs forward, toward the fire
-    ("rw", ["n12"], 0.2, 0.6, 4.0),              # rewind to 0:05
     ("behind", ["n13"], 0.10, 0.18, 2.6),          # the door one row behind him
     ("rows", ["n14"], 0.10, 0.38, 4.0),            # the safety card: rule 1 + count the rows, front and back
     ("jump", ["n15"], 0.10, 0.18, 2.6),            # out the door, down the slide, away from the fire
