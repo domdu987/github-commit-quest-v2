@@ -144,7 +144,7 @@
       add("orange", { set: "ltPlate", setOpts: { id: "pl", smoke: 0.9 }, dark: 0, grade: GDUSK,
         cam: { keys: [{ t: 0, ...fr(540, 1460, 1.15, 540, 1100) }, { t: D("orange"), glide: D("orange"), ...fr(720, 760, 1.3, 540, 900) }] },
         captions: caps("orange"),
-        fx: LIFE("orange", (tl, id, t0, L) => { plate(tl, L.light, "orange", "pl-pl", t0 + F("orange", 0, 1) - 0.1, D("orange") - F("orange", 0, 1), 250, 720, 0.85); }) });
+        fx: LIFE("orange", (tl, id, t0, L) => { plate(tl, L.light, "tanker", "pl-pl", t0 + F("orange", 0, 1) - 0.1, D("orange") - F("orange", 0, 1), 250, 720, 0.85); }) });
 
       // ---------- 15. K6: หนิง lowers the phone; the smoke drifts toward the pumps; coins back away / no phone ----------
       add("k6", { ...ST("k", { tank: 0, ts: 0.62, tsmoke: 1 }), cam: { keys: [{ t: 0, ...fr(760, 1240, 0.86, 540, 1000) }, { t: D("k6"), glide: D("k6"), ...fr(700, 1240, 0.92, 540, 1000) }] },
