@@ -29,6 +29,8 @@
   const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
   const f1 = (v) => (+v).toFixed(1);
   const Lt = (window.Lt = window.Lt || {});
+  const flameSym = (x, y, s, col = "#fff", line = "") => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-24,30C-36,14 -30,-4 -18,-14C-20,-2 -14,6 -8,8C-14,-12 -4,-30 2,-46C6,-30 20,-24 18,-6C22,-10 25,-16 24,-24C36,-8 34,16 24,30Z" fill="${col}"${line}/><rect x="-30" y="34" width="60" height="7" fill="${col}"/></g>`;
+  Lt.flameSym = flameSym;
 
   Sets.DEFS += `
     <linearGradient id="ltSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fa6d6"/><stop offset=".55" stop-color="#bcd6e6"/><stop offset=".85" stop-color="#f6dcb0"/><stop offset="1" stop-color="#ffd59a"/></linearGradient>
@@ -56,6 +58,12 @@
     <radialGradient id="ltSmoke"><stop offset="0" stop-color="#e8e4de" stop-opacity=".85"/><stop offset=".6" stop-color="#cfcac2" stop-opacity=".4"/><stop offset="1" stop-color="#bcb6ae" stop-opacity="0"/></radialGradient>
     <radialGradient id="ltDust"><stop offset="0" stop-color="#d8bf98" stop-opacity=".9"/><stop offset=".6" stop-color="#c8a87a" stop-opacity=".4"/><stop offset="1" stop-color="#b8986a" stop-opacity="0"/></radialGradient>
     <radialGradient id="ltSpark"><stop offset="0" stop-color="#fffbe0"/><stop offset=".3" stop-color="#ffd04a" stop-opacity=".8"/><stop offset="1" stop-color="#ff8a1a" stop-opacity="0"/></radialGradient>
+    <linearGradient id="ltFrame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f5f8"/><stop offset=".35" stop-color="#aab2ba"/><stop offset=".6" stop-color="#6a737c"/><stop offset="1" stop-color="#c8d0d8"/></linearGradient>
+    <linearGradient id="ltPanel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d8442c"/><stop offset=".5" stop-color="#b02a18"/><stop offset="1" stop-color="#7a1a0e"/></linearGradient>
+    <linearGradient id="ltBead" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a7a"/><stop offset=".35" stop-color="#d8442c"/><stop offset=".75" stop-color="#9a2214"/><stop offset="1" stop-color="#5a1008"/></linearGradient>
+    <linearGradient id="ltHinge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8dee4"/><stop offset=".5" stop-color="#7a828a"/><stop offset="1" stop-color="#3a4046"/></linearGradient>
+    <radialGradient id="ltBolt" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#b8c0c8"/><stop offset="1" stop-color="#4a525a"/></radialGradient>
+    <linearGradient id="ltGlint" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
     <linearGradient id="ltGlare" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>`;
 
   // ---------------------------------------------------------------- pieces
@@ -177,7 +185,7 @@
     g += `<g id="${id}-hl">${[-1, 1].map((sd) => `<g><rect x="${sd < 0 ? -292 : 196}" y="-330" width="96" height="58" rx="12" fill="#fffbe8" ${OUT3}/><circle cx="${sd * 244}" cy="-301" r="18" fill="#fff"/></g>`).join("")}</g>`;
     g += `<rect x="-310" y="-250" width="620" height="90" rx="14" fill="#c8ccd0" ${OUT}/><rect x="-300" y="-160" width="600" height="20" fill="#2a2b2e"/>`;
     if (o.plate !== false) g += `<g id="${id}-plate"><rect x="-96" y="-238" width="192" height="68" rx="4" fill="#ff8a1a" ${OUT3}/><path d="M-90,-204H90" stroke="${INK}" stroke-width="4"/><text x="0" y="-212" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="${INK}">23</text><text x="0" y="-178" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="${INK}">1075</text></g>`;
-    if (o.dia) g += `<g id="${id}-dia" transform="translate(200,-700) rotate(45)"><rect x="-56" y="-56" width="112" height="112" fill="#d8301e" stroke="#fff" stroke-width="8"/><rect x="-56" y="-56" width="112" height="112" fill="none" ${OUT3}/></g><g transform="translate(200,-700)"><path d="M0,-34C14,-14 22,-4 14,12C10,22 -10,22 -14,12C-20,-2 -6,-10 0,-34Z" fill="#fff"/><text x="0" y="44" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="#fff">2</text></g>`;
+    if (o.dia) g += `<g id="${id}-dia" transform="translate(200,-700) rotate(45)"><rect x="-56" y="-56" width="112" height="112" fill="#d8301e" stroke="#fff" stroke-width="8"/><rect x="-56" y="-56" width="112" height="112" fill="none" ${OUT3}/></g><g transform="translate(200,-700)">${flameSym(0, -12, 0.62)}<text x="0" y="44" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="#fff">2</text></g>`;
     g += `<rect x="-300" y="-120" width="140" height="120" rx="26" fill="#17181a" ${OUT}/><rect x="160" y="-120" width="140" height="120" rx="26" fill="#17181a" ${OUT}/>`;
     g += `<g id="${id}-beam" opacity="${o.beam ?? 0}">${[-1, 1].map((sd) => `<circle cx="${sd * 244}" cy="-301" r="200" fill="url(#ltHead)"/>`).join("")}</g>`;
     return g + `</g>`;
@@ -190,7 +198,7 @@
     g += `<path d="M-260,-560Q-330,-560 -330,-420Q-330,-280 -260,-280H940Q1010,-280 1010,-420Q1010,-560 940,-560Z" fill="url(#ltTank)" ${OUT}/>`;
     g += `<path d="M-300,-470H990" stroke="#d8352a" stroke-width="22"/><path d="M-310,-500Q340,-560 980,-500" stroke="#fff" stroke-width="10" fill="none" opacity=".7"/>`;
     g += `<text x="340" y="-370" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#d8352a">ไวไฟ · ห้ามสูบบุหรี่</text>`;
-    g += `<g transform="translate(-120,-380) rotate(45)"><rect x="-46" y="-46" width="92" height="92" fill="#d8301e" stroke="#fff" stroke-width="6"/></g><g transform="translate(-120,-380)"><path d="M0,-28C12,-12 18,-3 12,10C8,18 -8,18 -12,10C-16,-2 -5,-8 0,-28Z" fill="#fff"/></g>`;
+    g += `<g transform="translate(-120,-380) rotate(45)"><rect x="-46" y="-46" width="92" height="92" fill="#d8301e" stroke="#fff" stroke-width="6"/></g><g transform="translate(-120,-380)">${flameSym(0, -10, 0.5)}<text x="0" y="34" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="18" fill="#fff">2</text></g>`;
     g += `<g><rect x="-60" y="-262" width="160" height="56" rx="4" fill="#ff8a1a" ${OUT3}/><path d="M-56,-234H96" stroke="${INK}" stroke-width="3"/><text x="20" y="-240" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="${INK}">23</text><text x="20" y="-212" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="${INK}">1075</text></g>`;
     }
     g += `<g><path d="M1040,-150V-560Q1040,-600 1080,-600H1260Q1310,-600 1330,-540L1380,-330Q1392,-290 1392,-250V-150Z" fill="#f2f2ee" ${OUT}/><path d="M1100,-560H1250Q1286,-560 1300,-520L1336,-380H1100Z" fill="url(#ltGlassD)" ${OUT3}/><rect x="1352" y="-280" width="44" height="36" rx="8" fill="#fff6d0" ${OUT3}/><rect x="1040" y="-210" width="360" height="60" fill="#2a2b2e" ${OUT3}/><path d="M1076,-610H1300" stroke="#ffb22a" stroke-width="16" stroke-linecap="round"/></g>`;
@@ -438,29 +446,37 @@
 
   // ---------------------------------------------------------------- V11 coins (same 2.5D build and classes as HnFx.coin, so HnFx.pop / HnFx.life drive them)
   const tone = (hex, k) => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => Math.round(k > 0 ? v + (255 - v) * k : v * (1 + k))); return `#${c.map((v) => v.toString(16).padStart(2, "0")).join("")}`; };
-  const CP = { gap: ["#d8f0c8", "#4a9a4a"], mirror: ["#cfe8f6", "#3a8ab8"], gear: ["#fde59a", "#e3a632"], nolift: ["#fbe0da", "#d8584a"], call: ["#fdeaea", "#d8302a"], orange: ["#ffe0c0", "#e8701a"], nophone: ["#fbe0da", "#d8584a"], back: ["#e4e0f4", "#7a6ab8"] };
+  const CP = { gap: ["#d8f0c8", "#4a9a4a"], mirror: ["#cfe8f6", "#3a8ab8"], gear: ["#fde59a", "#e3a632"], nolift: ["#fbe0da", "#d8584a"], call: ["#fdeaea", "#d8302a"], orange: ["#ffe0c0", "#e8701a"], tanker: ["#ffe0c0", "#e8701a"], nophone: ["#fbe0da", "#d8584a"], ems: ["#fdeaea", "#d8302a"], back: ["#e4e0f4", "#7a6ab8"] };
   let cdefs = "";
   for (const [n, [f, r]] of Object.entries(CP)) cdefs += `<radialGradient id="ltF-${n}" cx=".33" cy=".25" r=".9"><stop offset="0" stop-color="${tone(f, 0.7)}"/><stop offset=".55" stop-color="${f}"/><stop offset="1" stop-color="${tone(f, -0.12)}"/></radialGradient><linearGradient id="ltR-${n}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${r}"/><stop offset=".6" stop-color="${tone(r, -0.15)}"/><stop offset="1" stop-color="${tone(r, -0.4)}"/></linearGradient>`;
   Sets.DEFS += cdefs + `<clipPath id="ltFace"><circle cx="60" cy="57" r="46"/></clipPath>`;
   const O = (w) => `stroke="${INK}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
   const miniCar = (x, y, c) => `<g transform="translate(${x},${y})"><path d="M-16,0V-8Q-14,-14 -8,-15L-4,-22H8L13,-15Q18,-14 18,-8V0Z" fill="${c}" ${O(2)}/><circle cx="-8" cy="1" r="4" fill="${INK}"/><circle cx="10" cy="1" r="4" fill="${INK}"/></g>`;
   const miniTruck = (x, y) => `<g transform="translate(${x},${y})"><rect x="-26" y="-22" width="36" height="22" fill="#8a6242" ${O(2)}/><circle cx="-18" cy="-27" r="6" fill="#e2b47a" ${O(1.5)}/><circle cx="-6" cy="-27" r="6" fill="#e2b47a" ${O(1.5)}/><rect x="10" y="-20" width="16" height="20" rx="3" fill="#2f6a9e" ${O(2)}/><circle cx="-16" cy="1" r="4" fill="${INK}"/><circle cx="16" cy="1" r="4" fill="${INK}"/></g>`;
+  const roadStrip = (y, h = 34) => `<rect x="-4" y="${y - h / 2}" width="128" height="${h}" fill="#34373c"/><rect x="-4" y="${y - h / 2}" width="128" height="${h}" fill="url(#ltRoad)" opacity=".35"/>
+    <path d="M-4,${y - h / 2 + 3}H124M-4,${y + h / 2 - 3}H124" stroke="#f2c230" stroke-width="3"/><path d="M-4,${y}H124" stroke="#fff" stroke-width="3.4" stroke-dasharray="11 8"/>
+    ${[8, 38, 68, 98].map((x) => `<circle cx="${x}" cy="${y - h / 2 + 3}" r="2.2" fill="#fff6d0"/><circle cx="${x + 15}" cy="${y + h / 2 - 3}" r="2.2" fill="#ffd84a"/>`).join("")}`;
   const CPIC = {
-    gap: () => [`<path d="M0,92H120" stroke="#6a6e74" stroke-width="22"/><path d="M8,92H112" stroke="#f2c230" stroke-width="2.5" stroke-dasharray="8 6"/>${miniCar(28, 90, "#7cc9ae")}${miniTruck(90, 90)}
+    gap: () => [`${roadStrip(90, 40)}${miniCar(28, 90, "#7cc9ae")}${miniTruck(90, 90)}
       <g class="ltGapA"><path d="M46,66H70" stroke="#2fa864" stroke-width="5" stroke-linecap="round"/><path d="M46,60V72M70,60V72" stroke="#2fa864" stroke-width="4"/></g><g transform="translate(46,40)"><circle r="13" fill="#fff" ${O(2.5)}/><path d="M0,0V-8M0,0L6,3" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/><rect x="-3" y="-19" width="6" height="5" fill="${INK}"/></g><text x="76" y="50" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="${INK}">2</text>`, ""],
     mirror: () => [`<rect x="24" y="22" width="44" height="64" rx="10" fill="#2a2b2e" ${O(3)}/><rect x="29" y="27" width="34" height="54" rx="6" fill="#bfe0f4"/><circle cx="46" cy="50" r="10" fill="url(#hxSkin)" ${O(2)}/><circle cx="43" cy="48" r="1.6" fill="${INK}"/><circle cx="49" cy="48" r="1.6" fill="${INK}"/>
       <g class="ltEye"><path d="M74,64q14,-14 28,0q-14,14 -28,0Z" fill="#fff" ${O(2.5)}/><circle cx="88" cy="64" r="5" fill="${INK}"/></g><path d="M68,54h-6" stroke="${INK}" stroke-width="3"/>`, ""],
     gear: () => [`<rect x="36" y="80" width="48" height="16" rx="6" fill="#3a3632" ${O(3)}/><g class="ltShift"><path d="M60,82V44" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><path d="M60,82V44" stroke="#6a6e74" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="38" r="12" fill="#2a2b2e" ${O(3)}/><text x="60" y="43" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="15" fill="#ffd84a">L</text></g>
       <path d="M18,40l18,10M18,60l14,0" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>`, ""],
-    nolift: () => [`<path d="M0,96H120" stroke="#6a6e74" stroke-width="20"/><g class="ltRoll">${Lt.logSide(14, 78, 72, 14, 9)}</g><g class="ltReach"><circle cx="72" cy="48" r="11" fill="url(#hxSkin)" ${O(2.5)}/><path d="M72,59l-8,14" stroke="#3a6ea8" stroke-width="7" stroke-linecap="round"/></g>`,
+    nolift: () => [`${roadStrip(92, 40)}<g class="ltRoll">${Lt.logSide(14, 78, 72, 14, 9)}</g><g class="ltReach"><circle cx="72" cy="48" r="11" fill="url(#hxSkin)" ${O(2.5)}/><path d="M72,59l-8,14" stroke="#3a6ea8" stroke-width="7" stroke-linecap="round"/></g>`,
       `<circle cx="60" cy="57" r="40" fill="none" stroke="#c8241a" stroke-width="8"/><path d="M32,85L88,29" stroke="#c8241a" stroke-width="8" stroke-linecap="round"/>`],
     call: () => [`<g class="ltRing"><rect x="40" y="24" width="40" height="72" rx="8" fill="#2a2a32" ${O(3)}/><rect x="45" y="32" width="30" height="52" rx="3" fill="#1e7a46"/><text x="60" y="56" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="12" fill="#fff">1586</text><text x="60" y="72" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="12" fill="#ffd84a">1193</text></g>
       <g class="ltWv"><path d="M88,40q8,8 0,16M94,34q14,14 0,28" stroke="#1e7a46" stroke-width="4" fill="none" stroke-linecap="round"/></g>`, ""],
     orange: () => [`<rect x="14" y="40" width="92" height="44" rx="4" fill="#ff8a1a" ${O(3.5)}/><path d="M16,62H104" stroke="${INK}" stroke-width="3"/><text x="60" y="58" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="16" fill="${INK}">23</text><text x="60" y="79" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="16" fill="${INK}">1075</text>
-      <g class="ltFlame"><path d="M92,30C100,40 104,46 99,54C96,59 88,59 85,54C81,46 89,42 92,30Z" fill="#d8301e" ${O(2)}/></g>`, ""],
-    nophone: () => [`<g class="ltRing"><rect x="40" y="24" width="40" height="72" rx="8" fill="#2a2a32" ${O(3)}/><rect x="45" y="32" width="30" height="52" rx="3" fill="#8ac8f0"/></g><g class="ltFlame"><path d="M92,24C100,34 104,40 99,48C96,53 88,53 85,48C81,40 89,36 92,24Z" fill="#d8301e" ${O(2)}/></g>`,
+      <g class="ltFlame">${flameSym(92, 36, 0.28, "#d8301e")}</g>`, ""],
+    tanker: () => [`${roadStrip(96, 30)}<g class="ltBack"><path d="M14,82V60Q14,50 24,50H74Q84,50 84,60V82Z" fill="#f4f6f6" ${O(2.5)}/><path d="M16,62H82" stroke="#d8352a" stroke-width="4"/><rect x="84" y="56" width="20" height="26" rx="3" fill="#f4f6f6" ${O(2.5)}/><rect x="88" y="60" width="12" height="9" fill="#5a7a94"/>
+      <rect x="26" y="70" width="18" height="10" fill="#ff8a1a" ${O(1.5)}/><circle cx="28" cy="86" r="6" fill="${INK}"/><circle cx="66" cy="86" r="6" fill="${INK}"/><circle cx="94" cy="86" r="6" fill="${INK}"/></g>
+      <g transform="translate(60,30) rotate(45)"><rect x="-17" y="-17" width="34" height="34" fill="#d8301e" stroke="#fff" stroke-width="3"/></g>${flameSym(60, 28, 0.2)}`, ""],
+    nophone: () => [`<g class="ltRing"><rect x="40" y="24" width="40" height="72" rx="8" fill="#2a2a32" ${O(3)}/><rect x="45" y="32" width="30" height="52" rx="3" fill="#8ac8f0"/></g><g class="ltFlame">${flameSym(92, 32, 0.28, "#d8301e")}</g>`,
       `<circle cx="60" cy="57" r="40" fill="none" stroke="#c8241a" stroke-width="8"/><path d="M32,85L88,29" stroke="#c8241a" stroke-width="8" stroke-linecap="round"/>`],
-    back: () => [`<path d="M0,94H120" stroke="#6a6e74" stroke-width="18"/><g class="ltBack">${miniCar(64, 92, "#7cc9ae")}</g><path d="M36,58H16M16,58l10,-8M16,58l10,8" stroke="#7a6ab8" stroke-width="6" stroke-linecap="round" fill="none"/>
+    ems: () => [`<g class="ltRing"><rect x="40" y="24" width="40" height="72" rx="8" fill="#2a2a32" ${O(3)}/><rect x="45" y="32" width="30" height="52" rx="3" fill="#d8302a"/><text x="60" y="64" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="13" fill="#fff">1669</text></g>
+      <g class="ltWv"><path d="M88,40q8,8 0,16M94,34q14,14 0,28" stroke="#d8302a" stroke-width="4" fill="none" stroke-linecap="round"/></g>`, ""],
+    back: () => [`${roadStrip(92, 36)}<g class="ltBack">${miniCar(64, 92, "#7cc9ae")}</g><path d="M36,58H16M16,58l10,-8M16,58l10,8" stroke="#7a6ab8" stroke-width="6" stroke-linecap="round" fill="none"/>
       <g transform="translate(96,70)"><rect x="-14" y="-26" width="28" height="26" fill="#ff8a1a" ${O(2)}/></g>`, ""],
   };
   Lt.coin = (name, x, y, s = 1, id = "") => {
@@ -488,6 +504,145 @@
     q(".ltFlame").forEach((e) => tl.fromTo(e, { scale: 0.85, svgOrigin: "92 56" }, { scale: 1.2, svgOrigin: "92 56", duration: 0.18, repeat: N(0.18), yoyo: true, immediateRender: false }, t));
     q(".ltBack").forEach((e) => tl.fromTo(e, { x: 0 }, { x: -22, duration: 0.8, repeat: N(0.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, t));
   };
+
+  // ---------------------------------------------------------------- in-world cards (owner 1 Nov: no UI boxes; things from the story's world)
+  // a reflective steel road sign roundel holding a pictogram (the coin art, clipped round): red rim, bolt heads, the retro-reflective sheen
+  let sgn = 0;
+  Lt.roundel = (name, x, y, s = 1, id = "") => {
+    const [inside, top] = CPIC[name](), k = `ltRd${sgn++}`;
+    return `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><g ${id ? `id="${id}"` : ""} class="ltRoundel">
+      <circle cx="4" cy="8" r="66" fill="#000" opacity=".3"/><circle r="66" fill="#8a929a" stroke="${INK}" stroke-width="4"/><circle r="62" fill="#fff" stroke="#d8302a" stroke-width="12"/>
+      <clipPath id="${k}"><circle r="50"/></clipPath><g clip-path="url(#${k})"><g transform="translate(-60,-60)">${inside}</g></g><g transform="translate(-60,-60)">${top || ""}</g>
+      <circle r="50" fill="none" stroke="#141210" stroke-width="2" opacity=".5"/>${[[-44, -44], [44, 44]].map(([a, b]) => `<circle cx="${a * 0.82}" cy="${b * 0.82}" r="3.5" fill="#c8ccd0" stroke="${INK}" stroke-width="1.5"/>`).join("")}
+      <g class="ltSheen"><path d="M-80,-30L-40,-80L-24,-80L-64,-30Z" fill="#fff" opacity=".45"/></g></g></g>`;
+  };
+  // a roadside reflective sign on a steel post (yellow diamond = warning / white rectangle = rule / blue = info) with the pictogram;
+  // it springs up from the verge on its post, overshoots and wobbles, then shivers in the wind of the passing traffic (Lt.plateIn)
+  Lt.plate = (name, x, y, s = 1, id = "", kind = "warn") => {
+    const [inside, top] = CPIC[name](), k = `ltPl${sgn++}`;
+    const face = kind === "warn" ? `<rect x="-128" y="-128" width="256" height="256" rx="22" transform="rotate(45)" fill="#2a2b2e" stroke="${INK}" stroke-width="5"/><rect x="-118" y="-118" width="236" height="236" rx="16" transform="rotate(45)" fill="#ffc81e"/><rect x="-104" y="-104" width="208" height="208" rx="12" transform="rotate(45)" fill="none" stroke="#141210" stroke-width="6"/>`
+      : kind === "info" ? `<rect x="-160" y="-140" width="320" height="280" rx="26" fill="#2a2b2e" stroke="${INK}" stroke-width="5"/><rect x="-150" y="-130" width="300" height="260" rx="20" fill="#1f5aa8"/><rect x="-136" y="-116" width="272" height="232" rx="14" fill="none" stroke="#fff" stroke-width="6"/>`
+      : `<rect x="-160" y="-140" width="320" height="280" rx="26" fill="#2a2b2e" stroke="${INK}" stroke-width="5"/><rect x="-150" y="-130" width="300" height="260" rx="20" fill="#fff"/><rect x="-140" y="-120" width="280" height="240" rx="14" fill="none" stroke="#d8302a" stroke-width="12"/>`;
+    const win = kind === "warn" ? `<rect x="-78" y="-78" width="156" height="156" rx="8" transform="rotate(45)"/>` : `<rect x="-120" y="-100" width="240" height="200" rx="10"/>`;
+    return `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><g ${id ? `id="${id}"` : ""} class="ltPlate">
+      <g class="ltPost"><rect x="-14" y="120" width="28" height="1600" fill="url(#ltSteel)" stroke="${INK}" stroke-width="4"/><rect x="-14" y="120" width="9" height="1600" fill="#d8dee4" opacity=".6"/>
+        ${[150, 230].map((yy) => `<rect x="-30" y="${yy}" width="60" height="16" rx="5" fill="#5c646c" stroke="${INK}" stroke-width="3"/>`).join("")}</g>
+      <g class="ltBoard"><g transform="translate(6,12)" opacity=".3"><rect x="-150" y="-140" width="300" height="280" rx="26" fill="#000" ${kind === "warn" ? `transform="rotate(45) scale(.85)"` : ""}/></g>${face}
+        <clipPath id="${k}">${win}</clipPath><g clip-path="url(#${k})"><rect x="-160" y="-160" width="320" height="320" fill="${kind === "warn" ? "#ffd84a" : kind === "info" ? "#fff" : "#fff"}"/><g transform="translate(-102,-102) scale(1.7)">${inside}</g></g>
+        <g transform="translate(-102,-102) scale(1.7)">${top || ""}</g>
+        ${[[-1, -1], [1, 1]].map(([a, b]) => `<circle cx="${a * 10}" cy="${b * 80 + (kind === "warn" ? 0 : 0)}" r="6" fill="#c8ccd0" stroke="${INK}" stroke-width="2"/>`).join("")}
+        <g class="ltSheen"><path d="M-170,-40L-110,-160L-80,-160L-140,-40Z" fill="#fff" opacity=".35"/></g>
+        <path d="M-120,100q20,-12 40,0t40,0" stroke="#7a5a3a" stroke-width="10" fill="none" opacity=".25" stroke-linecap="round"/></g></g></g>`;
+  };
+  Lt.plateIn = (tl, id, t, dur) => {
+    const r = document.getElementById(id); if (!r) return;
+    const N = (p) => Math.ceil(dur / p) + 1;
+    tl.set(r, { opacity: 0 }, 0); tl.set(r, { opacity: 1 }, t);
+    tl.fromTo(r, { y: 900 }, { y: 0, duration: 0.42, ease: "back.out(1.6)", immediateRender: false }, t);
+    r.querySelectorAll(".ltBoard").forEach((b) => {
+      tl.fromTo(b, { rotation: 14, svgOrigin: "0 140" }, { rotation: 0, svgOrigin: "0 140", duration: 1.3, ease: "elastic.out(1, 0.28)", immediateRender: false }, t + 0.3);
+      tl.fromTo(b, { rotation: -0.8, svgOrigin: "0 140" }, { rotation: 0.8, svgOrigin: "0 140", duration: 0.21, repeat: N(0.21), yoyo: true, ease: "sine.inOut", immediateRender: false }, t + 1.6);
+    });
+    r.querySelectorAll(".ltSheen").forEach((e) => tl.fromTo(e, { x: -60, opacity: 0 }, { x: 320, opacity: 1, duration: 0.7, repeat: N(1.9), repeatDelay: 1.2, ease: "power1.inOut", immediateRender: false }, t + 0.5));
+    Lt.coinIn(tl, id, t + 0.25, dur);   // the pictogram's own motion (cars, gear stick, flame…) via the shared classes
+  };
+
+
+  Lt.numPost = (n, x, y, s = 1, id = "") => `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><g ${id ? `id="${id}"` : ""} class="ltPlate"><g class="ltBoard">
+    <path d="M-70,-150Q-70,-190 0,-196Q70,-190 70,-150V1600H-70Z" fill="#f2f4f6" stroke="${INK}" stroke-width="5"/><path d="M-70,-150Q-70,-190 0,-196Q70,-190 70,-150V-110H-70Z" fill="#d8302a" stroke="${INK}" stroke-width="4"/>
+    <rect x="-40" y="-90" width="80" height="40" rx="6" fill="#ffd84a" stroke="${INK}" stroke-width="3"/><path d="M-70,-150V1600" stroke="#c8ccd0" stroke-width="18" opacity=".6"/>
+    <text x="0" y="90" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="150" fill="#1a1a1a">${n}</text>
+    <g class="ltSheen"><path d="M-70,-120L-30,-196L-10,-196L-50,-120Z" fill="#fff" opacity=".5"/></g></g></g></g>`;
+
+  // ---------------------------------------------------------------- "กฎลงเขา": the rules spray-painted on a truck's steel tailgate, hung on two chains
+  // red steel with pressed ribs, mud splashed up from the road, rust at the hinges, a row of red ruby reflectors (ทับทิม) top and bottom,
+  // a red-white reflective chevron strip; the rule text in spray-paint handwriting, the active rule's key words get a yellow spray stroke.
+  // It drops in on its chains, swings and settles, then judders with the engine and sways with the road (Lt.boardIn).
+  Lt.RULES = [
+    ["gap", "ตามรถใหญ่ <u>เว้น</u>ไว้ <u>สองวิ</u>"],
+    ["mirror", "ไม่เห็น<u>หน้า</u>เขา เขาไม่เห็น<u>เรา</u>"],
+    ["gear", "ลงเขา<u>เกียร์ต่ำ</u> อย่า<u>เบรกแช่</u>"],
+    ["nolift", "ของตก อย่า<u>ลงยก</u> จอดแล้ว<u>โทร</u>"],
+    ["nophone", "ป้าย<u>ส้ม</u>มีเหตุ <u>ถอยห่าง</u> ไม่ใช้<u>มือถือ</u>"],
+  ];
+  let bseq = 0;
+  Lt.board = (tl, layer, t0, dur, o = {}) => {
+    const id = `ltb${bseq++}`, rows = o.rows || [0, 1, 2], act = o.active ?? -1, done = o.done || [], Y0 = o.y ?? 250, X = 60, W = 960;
+    const H = 230 + rows.length * 150, rowY = (k) => Y0 + 250 + k * 150, r = mk(o.seed || 61);
+    const plain = (t) => t.replace(/<\/?u>/g, "");
+    let g = "";
+    // chains up out of frame
+    g += [X + 150, X + W - 150].map((cx) => `<g>${chain(`M${cx},${-700}L${cx},${Y0 + 30}`, 14)}</g>`).join("");
+    // the plate, built to read as pressed STEEL at a glance (coordinator 1 Nov): a silver steel frame with bolt heads, a painted red panel with
+    // raised pressed beads (lit top edge, shaded bottom edge, rounded ends), latch handles on both sides, hinges and pins along the bottom,
+    // rust running down from the bolts, two dents, mud thrown up from the road, a metallic glint sweeping across (class ltPanelSheen)
+    const FW = 24, PX = X + FW, PY = Y0 + FW, PW = W - FW * 2, PH = H - FW * 2;
+    g += `<rect x="${X}" y="${Y0 + 18}" width="${W}" height="${H}" rx="16" fill="#2a2e33" stroke="${INK}" stroke-width="5"/>`;
+    g += `<rect x="${X}" y="${Y0}" width="${W}" height="${H}" rx="16" fill="url(#ltFrame)" stroke="${INK}" stroke-width="5"/><rect x="${X + 6}" y="${Y0 + 5}" width="${W - 12}" height="8" rx="4" fill="#fff" opacity=".7"/>`;
+    g += `<rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="8" fill="url(#ltPanel)" stroke="${INK}" stroke-width="4"/>`;
+    g += `<clipPath id="${id}-c"><rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="8"/></clipPath><g clip-path="url(#${id}-c)">`;
+    for (let yy = PY + 66; yy < PY + PH - 60; yy += 74) g += `<rect x="${PX + 34}" y="${yy - 13 + 6}" width="${PW - 68}" height="26" rx="13" fill="#4a0e08" opacity=".55"/><rect x="${PX + 34}" y="${yy - 13}" width="${PW - 68}" height="26" rx="13" fill="url(#ltBead)" stroke="#5a1410" stroke-width="2"/><path d="M${PX + 46},${yy - 8}H${PX + PW - 46}" stroke="#ffc0a8" stroke-width="3" opacity=".8" stroke-linecap="round"/>`;
+    // dents
+    [[PX + PW * 0.78, PY + PH * 0.3, 46], [PX + PW * 0.14, PY + PH * 0.55, 36]].forEach(([dx, dy, dr]) => { g += `<ellipse cx="${f1(dx)}" cy="${f1(dy)}" rx="${dr}" ry="${f1(dr * 0.7)}" fill="#5a1410" opacity=".35"/><path d="M${f1(dx - dr * 0.8)},${f1(dy + dr * 0.2)}A${dr},${f1(dr * 0.7)} 0 0 0 ${f1(dx + dr * 0.8)},${f1(dy + dr * 0.2)}" stroke="#ffb8a0" stroke-width="5" fill="none" opacity=".7" stroke-linecap="round"/><path d="M${f1(dx - dr * 0.7)},${f1(dy - dr * 0.25)}A${dr},${f1(dr * 0.7)} 0 0 1 ${f1(dx + dr * 0.7)},${f1(dy - dr * 0.25)}" stroke="#3a0a06" stroke-width="5" fill="none" opacity=".5" stroke-linecap="round"/>`; });
+    // mud thrown up from the road: a heavy band at the bottom with splats and runs, clearly visible
+    for (let k = 0; k < 34; k++) { const mx = PX + r() * PW, my = PY + PH - r() * 120, rr = 16 + r() * 42; g += `<ellipse cx="${f1(mx)}" cy="${f1(my)}" rx="${f1(rr)}" ry="${f1(rr * 0.6)}" fill="${k % 3 ? "#6a4a2a" : "#4e3418"}" opacity="${(0.6 + r() * 0.3).toFixed(2)}"/>`; }
+    for (let k = 0; k < 14; k++) { const mx = PX + r() * PW; g += `<path d="M${f1(mx)},${PY + PH}q${f1((r() - 0.5) * 24)},${f1(-70 - r() * 110)} ${f1((r() - 0.5) * 36)},${f1(-150 - r() * 130)}" stroke="#6a4a2a" stroke-width="${f1(10 + r() * 12)}" fill="none" opacity=".7" stroke-linecap="round"/>`; }
+    g += `<rect class="ltPanelSheen" x="${PX - 260}" y="${PY - 40}" width="160" height="${PH + 80}" fill="url(#ltGlint)" transform="skewX(-20)"/></g>`;
+    // bolt heads on the frame (corners + along the edges), rust running down from some of them
+    const bolts = [];
+    for (let k = 0; k <= 8; k++) bolts.push([X + 12 + k * (W - 24) / 8, Y0 + 12], [X + 12 + k * (W - 24) / 8, Y0 + H - 12]);
+    for (let k = 1; k < 4; k++) bolts.push([X + 12, Y0 + k * H / 4], [X + W - 12, Y0 + k * H / 4]);
+    bolts.forEach(([bx, by], k) => {
+      if (k % 3 === 1 && by < Y0 + H - 20) g += `<path d="M${f1(bx)},${f1(by + 6)}q${f1((r() - 0.5) * 8)},${f1(40 + r() * 40)} ${f1((r() - 0.5) * 10)},${f1(90 + r() * 70)}" stroke="#a8541e" stroke-width="${f1(7 + r() * 5)}" fill="none" opacity=".75" stroke-linecap="round"/><path d="M${f1(bx)},${f1(by + 6)}v${f1(30 + r() * 30)}" stroke="#7a3410" stroke-width="4" opacity=".7" stroke-linecap="round"/>`;
+      g += `<circle cx="${f1(bx)}" cy="${f1(by)}" r="9.5" fill="url(#ltBolt)" stroke="${INK}" stroke-width="2.5"/><path d="M${f1(bx - 4)},${f1(by - 3)}h8" stroke="#fff" stroke-width="2.2" opacity=".8" stroke-linecap="round"/>`;
+    });
+    // latch handles on both sides, hinges with pins along the bottom
+    [-1, 1].map((sd) => { const lx = sd < 0 ? X - 6 : X + W + 6, ly = Y0 + H * 0.45;
+      g += `<g><rect x="${lx - 22}" y="${ly - 46}" width="44" height="92" rx="10" fill="url(#ltFrame)" stroke="${INK}" stroke-width="4"/><path d="M${lx},${ly - 30}L${lx + sd * 46},${ly + 34}" stroke="${INK}" stroke-width="20" stroke-linecap="round"/><path d="M${lx},${ly - 30}L${lx + sd * 46},${ly + 34}" stroke="#c8ced4" stroke-width="12" stroke-linecap="round"/><circle cx="${lx}" cy="${ly - 30}" r="10" fill="url(#ltBolt)" stroke="${INK}" stroke-width="3"/></g>`; });
+    [0.16, 0.5, 0.84].forEach((k) => { const hx = X + W * k; g += `<rect x="${f1(hx - 50)}" y="${Y0 + H - 4}" width="100" height="30" rx="14" fill="url(#ltHinge)" stroke="${INK}" stroke-width="4"/><circle cx="${f1(hx - 54)}" cy="${Y0 + H + 11}" r="8" fill="#8a929a" stroke="${INK}" stroke-width="2.5"/><circle cx="${f1(hx + 54)}" cy="${Y0 + H + 11}" r="8" fill="#8a929a" stroke="${INK}" stroke-width="2.5"/>`; });
+    // chevron reflective strip along the bottom, ruby reflectors along the top, chain shackles
+    g += `<clipPath id="${id}-cs"><rect x="${X + 20}" y="${Y0 + H - 46}" width="${W - 40}" height="30" rx="6"/></clipPath><g clip-path="url(#${id}-cs)"><rect x="${X + 20}" y="${Y0 + H - 46}" width="${W - 40}" height="30" fill="#f4f2ec"/>${Array.from({ length: 26 }, (_, k) => `<path d="M${X + k * 40},${Y0 + H - 46}h20l-20,30h-20z" fill="#d8302a"/>`).join("")}</g><rect x="${X + 20}" y="${Y0 + H - 46}" width="${W - 40}" height="30" rx="6" fill="none" stroke="${INK}" stroke-width="3"/>`;
+    g += Array.from({ length: 9 }, (_, k) => `<g class="ltRuby"><path d="M${X + 100 + k * 95},${Y0 + 22}l14,14l-14,14l-14,-14z" fill="#e8281a" stroke="${INK}" stroke-width="2.5"/><path d="M${X + 96 + k * 95},${Y0 + 30}l4,-4" stroke="#fff" stroke-width="3" opacity=".8"/></g>`).join("");
+    g += [X + 150, X + W - 150].map((cx) => `<path d="M${cx - 22},${Y0 + 8}Q${cx},${Y0 - 38} ${cx + 22},${Y0 + 8}" stroke="${INK}" stroke-width="16" fill="none"/><path d="M${cx - 22},${Y0 + 8}Q${cx},${Y0 - 38} ${cx + 22},${Y0 + 8}" stroke="#8a929a" stroke-width="9" fill="none"/>`).join("");
+    // title: spray-painted, with drips
+    g += `<g transform="translate(540,${Y0 + 140})"><text text-anchor="middle" font-family="Sriracha" font-size="104" fill="#fff6dc" stroke="#2a0c08" stroke-width="10" stroke-linejoin="round" paint-order="stroke">${o.title || "กฎลงเขา"}</text>
+      ${[-150, -40, 90, 170].map((dx, k) => `<path d="M${dx},6v${18 + k * 7}" stroke="#fff6dc" stroke-width="5" stroke-linecap="round" opacity=".85"/><circle cx="${dx}" cy="${10 + 18 + k * 7}" r="4.5" fill="#fff6dc" opacity=".85"/>`).join("")}</g>`;
+    // rows
+    rows.forEach((ri, k) => {
+      const [ic, txt] = Lt.RULES[ri], y = rowY(k), st = ri === act ? "act" : done.includes(ri) ? "done" : "later";
+      const n = plain(txt).length, fs = Math.min(64, Math.floor(1460 / n)), t = txt.replace(/<u>(.*?)<\/u>/g, `<tspan fill="#ffd84a">$1</tspan>`), tw = Math.min(700, n * fs * 0.47 + 20);
+      g += `<g id="${id}-r${k}" opacity="${st === "later" ? 0.45 : 0}">`;
+      if (st === "act") g += `<path id="${id}-hl" d="M232,${y - 52}Q420,${y - 70} ${236 + tw},${y - 50}L${242 + tw},${y + 32}Q430,${y + 48} 226,${y + 30}Z" fill="#ffd84a" opacity=".38"/>`;
+      g += Lt.roundel(ic, 150, y - 16, 0.92, `${id}-ic${k}`);
+      if (st === "act") g += `<defs><clipPath id="${id}-cp"><rect id="${id}-cr" x="220" y="${y - 76}" width="0" height="130"/></clipPath></defs>`;
+      g += `<g${st === "act" ? ` clip-path="url(#${id}-cp)"` : ""}><text x="244" y="${y + 18}" font-family="Sriracha" font-size="${fs}" fill="#ffffff" stroke="#2a0c08" stroke-width="9" stroke-linejoin="round" paint-order="stroke">${t}</text></g>`;
+      if (st === "done") g += `<path id="${id}-tk${k}" d="M${262 + tw},${y - 8}l20,24l42,-54" stroke="#7ad86a" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>`;
+      g += `</g>`;
+    });
+    put(layer, `<g id="${id}" opacity="0"><g id="${id}-m"><g id="${id}-sw">${g}</g></g></g>`);
+    tl.set(`#${id}`, { opacity: 0 }, 0); tl.set(`#${id}`, { opacity: 1 }, t0);
+    const pv = `540 ${-700}`, N = (p) => Math.ceil(dur / p) + 1;
+    tl.fromTo(`#${id}-m`, { y: -1300 }, { y: 0, duration: 0.5, ease: "power3.in", immediateRender: false }, t0);
+    tl.fromTo(`#${id}-m`, { y: 0 }, { keyframes: [{ y: 26, duration: 0.08, ease: "power2.out" }, { y: -8, duration: 0.14, ease: "sine.inOut" }, { y: 0, duration: 0.18, ease: "sine.out" }], immediateRender: false }, t0 + 0.5);
+    tl.fromTo(`#${id}-sw`, { rotation: 4, svgOrigin: pv }, { rotation: 0, svgOrigin: pv, duration: 1.6, ease: "elastic.out(1, 0.3)", immediateRender: false }, t0 + 0.5);
+    tl.fromTo(`#${id}-sw`, { rotation: -0.5, svgOrigin: pv }, { rotation: 0.5, svgOrigin: pv, duration: 1.2, repeat: N(1.2), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 2.1);
+    tl.fromTo(`#${id}-m`, { x: -1.5 }, { x: 1.5, duration: 0.06, repeat: N(0.06), yoyo: true, ease: "none", immediateRender: false }, t0 + 0.9);   // engine judder
+    tl.fromTo(`#${id} .ltPanelSheen`, { x: 0 }, { x: 1400, duration: 0.9, repeat: N(2.4), repeatDelay: 1.5, ease: "power1.inOut", immediateRender: false }, t0 + 0.8);
+    document.querySelectorAll(`#${id} .ltRuby`).forEach((e, k) => tl.fromTo(e, { opacity: 1 }, { opacity: 0.45, duration: 0.18, repeat: N(1.6), repeatDelay: 1.4, yoyo: true, immediateRender: false }, t0 + 0.6 + k * 0.08));
+    rows.forEach((ri, k) => { if (ri === act || done.includes(ri)) tl.fromTo(`#${id}-r${k}`, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + 0.55 + k * 0.12); });
+    const ka = rows.indexOf(act);
+    if (ka >= 0) {
+      const ta = t0 + 0.75 + ka * 0.12;
+      tl.fromTo(`#${id}-cr`, { attr: { width: 0 } }, { attr: { width: 800 }, duration: 0.7, ease: "power1.inOut", immediateRender: false }, ta + 0.1);
+      tl.fromTo(`#${id}-hl`, { scaleX: 0, svgOrigin: `226 ${rowY(ka)}` }, { scaleX: 1, svgOrigin: `226 ${rowY(ka)}`, duration: 0.5, ease: "power2.inOut", immediateRender: false }, ta + 0.7);
+      tl.fromTo(`#${id}-ic${ka}`, { scale: 0, rotation: -60, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "back.out(2.6)", immediateRender: false }, ta);
+      Lt.coinIn(tl, `${id}-ic${ka}`, ta, dur);
+    }
+    rows.forEach((ri, k) => { if (done.includes(ri)) tl.fromTo(`#${id}-tk${k}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + 0.9 + k * 0.12); });
+    if (o.out !== undefined) { tl.to(`#${id}-m`, { y: -1400, duration: 0.35, ease: "power2.in" }, t0 + o.out); }
+    return id;
+  };
+
   // sparks bursting from a point (glow layer): n streaks flying out and falling, gone in 0.5 s
   Lt.sparks = (tl, layer, t, x, y, s = 1, n = 14, seed = 3) => {
     const r = mk(seed), gid = `lts${Math.round(x)}_${Math.round(y)}_${Math.round(t * 100)}`;

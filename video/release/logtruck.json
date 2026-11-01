@@ -20,8 +20,8 @@
    "status": "final",
    "duration_s": 70.1,
    "video_hq": "video/release/hq/logtruck-ep1-HQ.mp4",
-   "video_hq_sha256": "6e260648adcd0150a17c9c78b397186e66edb2c3fcc23314f3b09d53161b0f8a",
-   "video_hq_bytes": 90993125,
+   "video_hq_sha256": "9260b12cc1fc65b05e05786f2430448e9e154d39e0a6e7a7217437cdbcc60c32",
+   "video_hq_bytes": 94632075,
    "video_repo": "video/logtruck-ep1/EP1-logtruck-share.mp4",
    "cover": "video/logtruck-ep1/cover.jpg",
    "caption": "ถ้าวันหนึ่ง… คุณขับตามรถบรรทุกท่อนซุงลงเขา 🪵 อย่าขับชิดท้ายมัน!\nในคลิปมีความรู้ใช้ได้จริง: นับระยะ 2 วินาทียังไง · มองไม่เห็นหน้าคนขับในกระจกข้างแปลว่าอะไร · ลงเขาใช้เกียร์อะไร\nถ้าเป็นคุณ… คันหลังจี้จนไฟสูงเต็มกระจก แต่คันหน้าซุงกำลังจะหล่น คุณจะทำยังไง? คอมเมนต์บอกหน่อย 👇\nท่อนซุงลงเขา EP.1/2\n#ท่อนซุงลงเขา #เอาตัวรอด #ขับรถลงเขา #ขับขี่ปลอดภัย #RodMaiClub",
@@ -50,7 +50,8 @@
     "edgecheck": "no edge problems",
     "origin_check": "0 BAD",
     "whisper": "all lines pass (EP.2 n06: digits 1586/1193/1669 written as numerals, content correct)"
-   }
+   },
+   "revision": "1 พ.ย. 2569 (บ่าย): การ์ดเป็นของในโลกของเรื่อง (ฝาท้ายเหล็ก กฎลงเขา แขวนโซ่ · ป้ายจราจรริมทาง · หลักเลข) แทนเหรียญลอย · ไอคอนถนนเป็นยางมะตอย · เพลงธีมเรื่อง + เสียงเหล็กของการ์ด"
   },
   {
    "id": "logtruck-ep2",

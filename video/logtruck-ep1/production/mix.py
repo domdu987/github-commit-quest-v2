@@ -130,6 +130,21 @@ while _t < SH["next"]["start"] - 1.0:      # the cabin hum and the truck ahead u
 _t = 0.0
 while _t < SH["next"]["start"] - 1.0:
     SAMPLES.append((None, _t, "truckahead", 0.3, 5.8)); _t += 5.4
+# ---- the in-world cards (1 Nov): steel sounds in step with Lt.board / Lt.plateIn / Lt.numPost (times mirror body.part) ----
+def board_sfx(tb, active_row, done_rows, dur):   # tb = the board's drop start (absolute); rows indexed on the board
+    out = [(None, tb + 0.05, "boarddrop", 0.9), (None, tb + 1.4, "chainclink", 0.35)]
+    if dur > 3.6: out.append((None, tb + 3.2, "chainclink", 0.3))
+    if active_row >= 0: ta = tb + 0.75 + active_row * 0.12; out.append((None, ta, "spray", 0.55))
+    out += [(None, tb + 0.9 + k * 0.12, "spraytick", 0.4) for k in done_rows]
+    return out
+def plate_sfx(t): return [(None, t, "signboing", 0.65)]
+_at = max(0.2, F("wave", 0, 2) - 2.4)
+SAMPLES += plate_sfx(T("law", F("law", 0, 1) - 0.1))
+SAMPLES += [(None, T("count", F("count", 0, j) + 0.1), "stake", 0.7) for j in (0, 1)]
+SAMPLES += board_sfx(T("twosec", 0.05), 0, [], D["twosec"])
+SAMPLES += board_sfx(T("wave", 2.4 + _at + 1.0), 1, [0], D["wave"] - 2.4 - _at - 1.0)
+SAMPLES += board_sfx(T("gear", 0.1), 2, [0, 1], D["gear"])
+
 CUES = [c for c in CUES if c[2] not in REPLACED]
 
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
@@ -145,7 +160,7 @@ for k, t0, name, g, *mx in SAMPLES:
     place(sfx, smp(name, mx[0] if mx else None), t0 if k is None else T(k, t0), g)
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
+mus = load(os.path.join(HERE, "..", "music", "logtruck-theme.mp3"))[int(6.0 * SR):]   # ท่อนซุงลงเขา theme (owner 1 Nov: no suno1); offset puts the peak on the cliffhanger
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -157,9 +172,20 @@ def dip(t0, t1, lvl, ramp=0.25):
     a = np.clip((t - (t0 - ramp)) / ramp, 0, 1) * np.clip(((t1 + ramp) - t) / ramp, 0, 1)
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
+def boost(t0, t1, lvl, ramp=0.25):   # lift the bed under the action (the logs coming loose)
+    global gain
+    a = np.clip((t - (t0 - ramp)) / ramp, 0, 1) * np.clip(((t1 + ramp) - t) / ramp, 0, 1)
+    gain = gain * (1 + (lvl - 1) * a)
 
-dip(T("hook", 0), T("cmd", 0.3), 0.4)        # the snap and the log: effects lead
-dip(T("pop", 0), T("pop", -0.01), 0.35)       # the binder: effects lead
+
+
+
+
+boost(T("hook", 0), T("cmd", 0.3), 1.7)       # the snap and the log: the bed drives it
+dip(T("horn", 0) - 0.25, T("horn", 0.5), 0.3)   # a breath before the air horn
+boost(T("squeeze", 0), T("squeeze", -0.01), 1.3)
+dip(T("pop", 0) - 0.3, T("pop", 0.35), 0.2)     # silence before the binder springs
+boost(T("pop", 0.35), T("pop", -0.01), 1.8)     # the peak on the cliffhanger
 mus = mus * gain
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
 mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card

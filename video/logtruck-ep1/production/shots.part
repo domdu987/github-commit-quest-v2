@@ -152,7 +152,9 @@
       const JENG = (k, track, extra = {}) => A("jeng", 320, 1880, 1.6, track, extra);
       const NING = (k, track, extra = {}) => A(extra.phone ? "ningPhone" : "ning", 770, 1880, 1.52, track, extra);
       const slide = (tl, sel, t, dur, d, ease = "none") => tl.to(sel, { x: d, y: d * TN, duration: dur, ease }, t);
-      const coin = (tl, L, name, id, t, dur, x = 540, y = 470, s = 2.4) => { put(L.glow, Lt.coin(name, x, y, s, id)); Lt.coinIn(tl, id, t, dur); };
+      // in-world cards (owner 1 Nov): roadside reflective signs on posts and the tailgate "กฎลงเขา" hung on chains — no UI boxes
+      const plate = (tl, layer, name, id, t, dur, x, y, s = 1, kind = "warn") => { put(layer, Lt.plate(name, x, y, s, id, kind)); Lt.plateIn(tl, id, t, dur); };
+      const board = (tl, L, t, dur, active, done = [], o = {}) => Lt.board(tl, L.light, t, dur, { rows: o.rows || [0, 1, 2], active, done, y: o.y ?? 240 });
       const truckShrink = (tl, id, t, dur, from, to, ease = "power1.inOut") => tl.fromTo(`#${id}-truck`, { attr: { transform: `translate(${from[0]},${from[1]}) scale(${from[2]})` } }, { attr: { transform: `translate(${to[0]},${to[1]}) scale(${to[2]})` }, duration: dur, ease, immediateRender: false }, t);
       const signIn = (tl, id, t, dur, to = "translate(-40,1330) scale(0.8)") => tl.fromTo(`#${id}-sign`, { attr: { transform: "translate(520,905) scale(0.06)" } }, { attr: { transform: to }, duration: dur, ease: "power2.in", immediateRender: false }, t);
       const beams = (tl, sels, t0, times, on = 0.16) => times.forEach((k) => { tl.set(sels, { opacity: 1 }, t0 + k); tl.set(sels, { opacity: 0 }, t0 + k + on); });
@@ -212,7 +214,7 @@
       add("law", { ...POV("l", { mirror: 0.8, truck: { x: 580, y: 1250, s: 0.56, brake: 1, smoke: 0.2 }, sign: { kind: "km", top: "ทางลงเขาลาดชัน", km: "อีก 8 กม.", x: 520, y: 905, s: 0.06 } }),
         cam: { keys: [{ t: 0, ...fr(560, 1000, 1.1, 540, 960) }, { t: D("law"), glide: D("law"), ...fr(560, 1000, 1.16, 540, 960) }] }, shake: rumble(1.4),
         captions: caps("law"),
-        fx: LIFE("law", (tl, id, t0, L) => { signIn(tl, "l", t0, D("law") * 0.9); coin(tl, L, "gap", "l-coin", t0 + F("law", 0, 1) - 0.1, D("law") - F("law", 0, 1), 760, 560, 2.2); }) });
+        fx: LIFE("law", (tl, id, t0, L) => { signIn(tl, "l", t0, D("law") * 0.9); plate(tl, L.set, "gap", "l-pl", t0 + F("law", 0, 1) - 0.1, D("law") - F("law", 0, 1), 820, 700, 0.95); }) });
 
       // ---------- 7. the post: the truck's tail passes a white post (ring) ----------
       add("post", { ...SLOPE("p", { convoy: CONVOY({ truck: 1700, car: 980, tank: -200, brake: 1 }), post: 1180 }),
@@ -241,7 +243,7 @@
         cam: { keys: [{ t: 0, ...fr(1120, 1260, 0.82, 540, 1040) }, { t: D("twosec"), glide: D("twosec"), ...fr(1060, 1260, 0.8, 540, 1040) }] }, shake: rumble(1.2),
         captions: caps("twosec"),
         fx: LIFE("twosec", (tl, id, t0, L) => {
-          coin(tl, L, "gap", "w-coin", t0 + 0.1, D("twosec"), 1210, 860, 2.4);
+          board(tl, L, t0 + 0.05, D("twosec"), 0, [], { y: 230 });
           put(L.glow, Lt.rain("w-rain"));
           tl.to("#w-rain", { opacity: 1, duration: 0.4 }, t0 + F("twosec", 0, 1));
           slide(tl, "#w-car", t0 + F("twosec", 0, 1), D("twosec") - F("twosec", 0, 1), -320, "power2.inOut");
@@ -296,7 +298,7 @@
             truckShrink(tl, "vm", t0 + at, 1.4, [560, 1330, 0.82], [570, 1240, 0.56]);
             tl.to(["#vm-truck-faceL", "#vm-truck-faceR"], { opacity: 1, duration: 0.3 }, t0 + at + 1.2);
             tl.fromTo(["#vm-truck-faceL", "#vm-truck-faceR"], { scale: 1.6, transformOrigin: "50% 50%" }, { scale: 1, transformOrigin: "50% 50%", duration: 0.4, ease: "back.out(3)", immediateRender: false }, t0 + at + 1.2);
-            coin(tl, L, "mirror", "vm-coin", t0 + at + 1.4, D("wave") - 2.4 - at - 1.4, 760, 520, 2.3);
+            board(tl, L, t0 + at + 1.0, D("wave") - 2.4 - at - 1.0, 1, [0]);
           }, D("wave") - 2.4) });
 
       // ---------- 14. เจ๋ง: brake all the way ----------
@@ -308,7 +310,7 @@
       add("gear", { set: "ltWheel", setOpts: { id: "g", brake: 1, smoke: 1 }, dark: 0, grade: GLATE,
         cam: { keys: [{ t: 0, ...fr(540, 1380, 0.86, 540, 1000) }, { t: D("gear"), glide: D("gear"), ...fr(540, 1340, 0.94, 540, 1000) }] }, shake: rumble(2.6),
         captions: caps("gear"),
-        fx: LIFE("gear", (tl, id, t0, L) => { coin(tl, L, "gear", "g-coin", t0 + 0.15, D("gear"), 540, 760, 2.6); }) });
+        fx: LIFE("gear", (tl, id, t0, L) => { board(tl, L, t0 + 0.1, D("gear"), 2, [0, 1]); }) });
 
       // ---------- 16. the last bend: "อีก 2 กม."; she counts, the gap opens ----------
       add("last", { ...POV("t", { mirror: 0.9, vx: 520, late: true, truck: { x: 560, y: 1300, s: 0.74, brake: 1, smoke: 1 }, sign: { kind: "km", top: "ทางลงเขาลาดชัน", km: "อีก 2 กม.", x: 520, y: 905, s: 0.06 } }),
@@ -341,9 +343,8 @@
         cam: { keys: [{ t: 0, ...fr(540, 1150, 0.95, 540, 960) }, { t: D("next"), glide: D("next"), ...fr(540, 1150, 1.02, 540, 960) }] }, captions: [],
         fx: LIFE("next", (tl, id, t0) => { tl.fromTo("#x-sweep", { x: -700 }, { x: 700, duration: D("next"), ease: "sine.inOut", immediateRender: false }, t0); }) });
 
-      // the counted seconds: a big "1" / "2" in a ring that pops and fades (no text label)
+      // the counted seconds: a white roadside post with the number stencilled on it springs up beside the road (no text label)
       function sfxRing(tl, L, t, n) {
-        const id = `ring${n}${Math.round(t * 100)}`;
-        put(L.glow, `<g transform="translate(${n === "1" ? 330 : 750},560)"><g id="${id}" opacity="0"><circle r="110" fill="#fffdf2" opacity=".92" stroke="#2e2a26" stroke-width="6"/><circle r="96" fill="none" stroke="#2fa864" stroke-width="10"/><text y="44" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="130" fill="#2e2a26">${n}</text></g></g>`);
-        tl.fromTo(`#${id}`, { opacity: 0, scale: 0.3, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.35, ease: "back.out(3)", immediateRender: false }, t);
+        const id = `np${n}${Math.round(t * 100)}`;
+        put(L.set, Lt.numPost(n, n === "1" ? 250 : 830, 820, 0.95, id)); Lt.plateIn(tl, id, t, 3);
       }
