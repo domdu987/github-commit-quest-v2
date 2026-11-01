@@ -53,4 +53,23 @@
   M.film = M.film || ((u, o) => ({ ...M.idle(u, o), uaF: -80, faF: -60, head: 4 }));
   M.drag = (u, o) => ({ ...M.idle(u, o), uaF: -70, faF: -10, uaB: -64, faB: -8, torso: -16 + 3 * Math.sin(u * 8), head: -6, thF: -20, shF: 30, thB: 24, shB: 10, bodyY: 18 });
   M.crouchHide = (u, o) => ({ ...M.crouch(u, o), uaF: -100, faF: -150, head: 6 });
+
+  // บีม's fall (stagger back 0–0.3 s → butt hits the floor 0.3–0.55 → scoots away on hands and heels, never still)
+  const sm = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }, lp = (a, b, k) => a + (b - a) * k;
+  M.fallBack = (u, o) => {
+    const k1 = sm(u / 0.3), k2 = sm((u - 0.3) / 0.25), sc = Math.max(0, u - 0.55), w = Math.sin(sc * 13), pw = Math.max(0, w);
+    const st = { thF: lp(0, -10, k1), shF: lp(0, 20, k1), thB: lp(0, 26, k1), shB: lp(0, 30, k1), torso: lp(0, -24, k1), head: lp(0, -14, k1), uaF: lp(0, -130, k1), faF: lp(0, -70, k1), uaB: lp(0, -110, k1), faB: lp(0, -60, k1), bodyY: lp(0, 20, k1), rootX: lp(0, -60, k1) };
+    const sit = { thF: -84 + 10 * w, shF: 14 + 34 * pw, thB: -82 - 10 * w, shB: 18 + 34 * Math.max(0, -w), torso: -16 + 3 * w, head: -6 + 4 * Math.sin(u * 19), uaF: 46, faF: -14, uaB: 56, faB: -10, bodyY: 290 - 8 * pw, rootX: -120 - 150 * sc - 10 * pw };
+    const r = {}; Object.keys(sit).forEach((j) => (r[j] = lp(st[j], sit[j], k2))); return { ...M.idle(u, o), ...r, hair: 6 * Math.sin(u * 17) };
+  };
+  // pulling a heavy desk backwards: leaning far back, front leg braced, feet slipping every ~0.7 s, arms straight out
+  M.dragHard = (u, o) => {
+    const ph = (u % 0.7) / 0.7, slip = ph < 0.18 ? Math.sin((ph / 0.18) * Math.PI) : 0, j = Math.sin(u * 23);
+    return { ...M.idle(u, o), torso: -26 + 4 * Math.sin(u * 7) - 6 * slip, head: -12 + 3 * j, uaF: -84 + 4 * j, faF: -14, uaB: -78 - 4 * j, faB: -10,
+      thF: -42 - 16 * slip, shF: 18 + 10 * slip, thB: 26, shB: 34, bodyY: 36 + 5 * Math.sin(u * 7) + 16 * slip, rootX: -18 * slip, rootR: -4 - 3 * slip, hair: -8 + 4 * j };
+  };
+  // shoving from behind: leaning hard in, little steps
+  M.shove = (u, o) => { const j = Math.sin(u * 9); return { ...M.idle(u, o), torso: 24 + 3 * j, head: 8, uaF: -96, faF: -8, uaB: -90, faB: -6, thF: -30 + 18 * j, shF: 30, thB: 30 - 18 * j, shB: 24, bodyY: 26 + 4 * Math.abs(j) }; };
+  // hiding, trembling, breath held (never quite still)
+  M.hideShake = (u, o) => { const t = Math.sin(u * 31) * 0.8 + Math.sin(u * 17) * 0.6; return { ...M.crouchHide(u, o), head: 6 + t, uaF: -100 + t, torso: 22 + 0.6 * t, bodyY: 115 + 0.8 * Math.sin(u * 2.2) }; };
 })();
