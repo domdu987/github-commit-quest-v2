@@ -227,6 +227,8 @@
     ridges(L, r, HZ - 60);
     // the valley floor far below with fields and haze; the near ridge (green) the road is cut into
     let far = `<path d="${ridge(r, HZ + 60, 120, 6)}" fill="url(#ltRidge3)"/>${canopy(r, 700, 2000, HZ + 40, 26, "#3e6a4e", "#7a9a6a", 44)}<rect x="-900" y="${HZ - 40}" width="2900" height="200" fill="url(#ltHaze)" opacity=".7"/>`;
+    // mountain mist: low banks in the valley and drifting puffs (class fogb, Mok.life drifts them)
+    if (o.mist !== false) far += Mok.fogBands(r, HZ - 120, HZ + 80, 3, 0.45, "url(#ltHaze)") + Mok.fogBlobs(r, 9, -600, 1700, HZ - 200, HZ + 60, o.mist ?? 0.75);
     put(L.far, far);
     // the road: asphalt wedge to the vanishing point, the yellow centre line flowing toward us, the guardrail on the right, rock on the left
     let s = `<path d="M-900,${HZ + 20}L${VX - 40},${HZ + 4}Q${VX - 160},${HZ + 120} -300,1500H-900Z" fill="url(#ltRock)"/>`;
@@ -244,7 +246,7 @@
     for (let k = 0; k < 4; k++) fl += flow(`${VX - 60},${HZ + 2},0.04`, `-500,1500,1.7`, 1.5, k + 0.5, 4, `<rect x="-9" y="-110" width="18" height="110" rx="4" fill="#eef0f2"/><rect x="-9" y="-96" width="18" height="16" fill="#ff9a3a"/>`);
     put(L.mid, `<g id="${id}-road">${fl}</g>`);
     // an optional roadside sign (positioned by the shot; kind "km" = distance board, "ramp" = escape ramp, "gear" = low gear)
-    if (o.sign) put(L.mid, `<g id="${id}-sign">${Lt.sign(o.sign.x ?? 160, o.sign.y ?? 1100, o.sign.s ?? 0.6, o.sign)}</g>`);
+    if (o.sign) put(L.mid, `<g id="${id}-sign" transform="translate(${o.sign.x ?? 160},${o.sign.y ?? 1100}) scale(${o.sign.s ?? 0.6})">${Lt.sign(0, 0, 1, o.sign)}</g>`);
     // the truck
     const T = o.truck || {};
     put(L.set, `<g id="${id}-truckW">${o.truck === false ? "" : Lt.truckRear(`${id}-truck`, T.x ?? 560, T.y ?? 1330, T.s ?? 0.62, T)}</g>`);
@@ -286,6 +288,8 @@
       <g transform="translate(-306,-100) rotate(-25)">${""}</g></g>`;
     w += `<g id="${id}-gripL">${grip(430, 1700, -1)}</g><g id="${id}-gripR">${grip(1010, 1700, 1)}</g></g>`;
     put(L.fg, w);
+    // high beams from behind: the mirror blazes and the cabin roof catches the light (${id}-hibeam, shots flash it)
+    put(L.fg, `<g id="${id}-hibeam" opacity="0"><circle cx="${MX}" cy="${MY}" r="260" fill="url(#ltHead)"/><circle cx="${MX}" cy="${MY}" r="120" fill="#fff" opacity=".7"/><path d="M-900,-600H2000V420Q540,330 -900,420Z" fill="#fff6dc" opacity=".22"/></g>`);
     put(L.glow, `<g id="${id}-glare" opacity="${o.glare ?? 0.6}"><path d="M-200,400L400,400L-200,1300Z" fill="#fff6dc" opacity=".08"/><circle cx="${o.sunX ?? 120}" cy="${o.sunY ?? 520}" r="300" fill="url(#ltSun)" opacity=".5"/></g>`);
   };
 

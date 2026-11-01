@@ -15,7 +15,7 @@
           flash(tl, t0 + 0.84, 0.6);
         }) });
       // 2. the log hits the road in front, bounces, rolls to the guardrail; เจ๋ง stamps on the brake (camera dips), the garland swings
-      add("bounce", { set: "ltPOV", setOpts: { id: "b", mirror: 0.95, truck: { x: 600, y: 1240, s: 0.56, brake: 1 }, loose: { x: 420, y: 760, s: 1.5 } }, dark: 0, grade: GDAY, blur: { fg: 2 },
+      add("bounce", { set: "ltPOV", setOpts: { id: "b", mirror: 0.95, truck: { x: 600, y: 1240, s: 0.56, brake: 1 }, loose: { x: 420, y: 760, s: 1.5 }, sign: { kind: "km", top: "ทางลงเขาลาดชัน", km: "อีก 8 กม.", x: 520, y: 905, s: 0.06 } }, dark: 0, grade: GDAY, blur: { fg: 2 },
         cam: { keys: [{ t: 0, ...fr(560, 1000, 1.18, 540, 960) }, { t: 2, glide: 1.6, ...fr(580, 1010, 1.12, 540, 960) }] },
         shake: (t) => { const d = kick(0.28, 0.7, 14)(t); const dip = t < 0.9 ? 18 * Math.sin(Math.min(1, t / 0.9) * Math.PI) : 0; return { x: d ? d.x : 0, y: (d ? d.y : 0) + dip, r: t < 0.9 ? -0.6 * Math.sin(t / 0.9 * Math.PI) : 0 }; },
         fx: LIFE(2, (tl, id, t0, L) => {
@@ -25,6 +25,8 @@
             { attr: { transform: "translate(930,1250) scale(0.9) rotate(8)" }, duration: 0.24, ease: "power2.in" },
             { attr: { transform: "translate(1060,1190) scale(0.78) rotate(2)" }, duration: 0.7, ease: "power3.out" }], immediateRender: false }, t0);
           tl.fromTo("#b-loose .lroll", { x: 0 }, { x: 18, duration: 0.05, repeat: 18, yoyo: true, immediateRender: false }, t0);
+          tl.fromTo("#b-sign", { attr: { transform: "translate(520,905) scale(0.06)" } }, { attr: { transform: "translate(-40,1330) scale(0.8)" }, duration: 2, ease: "power2.in", immediateRender: false }, t0);
+          [0.9, 1.25, 1.6].forEach((k) => { tl.set(["#b-mt-beam", "#b-hibeam"], { opacity: 1 }, t0 + k); tl.set(["#b-mt-beam", "#b-hibeam"], { opacity: 0 }, t0 + k + 0.16); });
           HnFx.dust(tl, L.glow, t0 + 0.3, 520, 1380, 2.2); HnFx.dust(tl, L.glow, t0 + 0.82, 930, 1290, 1.6);
         }) });
       // 3. the mirror: the chrome grille fills it and comes closer, high beams flash twice (the air horn will lead it in the mix)
