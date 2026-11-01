@@ -39,17 +39,24 @@
    "id": "plane-ep2",
    "series": "รอดคนเดียว (เครื่องบินตก)",
    "status": "hold",
-   "branch": "prod/lane-d",
-   "commit": "a59271e",
-   "package": "video/release/plane.json",
-   "video_hq": "video/release/hq/plane-ep2-HQ.mp4",
-   "video_hq_sha256": "3baf38b728e312e02bed7db5da54ddae35bd49bdfd650df0adb97086d4df5311",
-   "video_hq_bytes": 67614831,
+   "branch": "prod/lane-c",
+   "commit": "90cf731",
+   "package": "video/release/plane-ep2-v5.json",
+   "video_hq": "video/release/hq/plane-ep2-v5-HQ.mp4",
+   "video_hq_sha256": "e7200f690d91ed08419d69205a30102d76d46a8db9641d74cdeaf6037ac4aa52",
+   "video_hq_bytes": 90971058,
    "suggested_time": "2026-11-02T08:30+07:00",
    "slot": "เช้า",
    "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
-   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว",
-   "hold_note": "เจ้าของ 1 พ.ย. ~23:30 น. ตอบเรื่องคิวเช้าว่า \"ทำมาก่อน\" → พักรอดคนเดียวไว้จนกว่าตัวใหม่ (ภาพยกระดับ + ประโยคแรก \"ถ้าวันหนึ่ง… คุณ…\") จะเสร็จและเจ้าของอนุมัติ · ห้ามลงทุกแพลตฟอร์ม · ถ้าตั้งเวลาไว้แล้ว ให้ยกเลิกการตั้งเวลา (YouTube ตั้งเป็น private ไม่มีกำหนดเวลา · Facebook ยกเลิก Reels ที่ตั้งเวลาไว้) ไม่ต้องลบไฟล์"
+   "revision_note": "v5 2 พ.ย. (เลน C 90cf731): บทใหม่ตามเจ้าของ \"ไม่ใช่นั่งรออย่างเดียว\" คิวหาน้ำ (อย่าดื่มน้ำทะเล/มะพร้าวอ่อน/น้ำฝน) อาหาร (อย่ากินของที่ไม่รู้จัก/หอยใต้เส้นน้ำขึ้น) สัญญาณ (ของสีสด/แผ่นโลหะ/ควันขาว) · แหล่ง FM 21-76, FM 3-05.70, AOPA เทียบ PDF แล้ว · ตรวจแผ่นภาพ 1 เฟรม/วิ ก่อนและหลังเรนเดอร์ · sha ตรง 1080×1920 60fps 48 kHz 119.99 วิ −14.2 LUFS พีก −1.7 ไม่มีภาพค้าง · คำสั่งวิ 2.2",
+   "hold_note": "รอเจ้าของดู EP.1 v4b + EP.2 v5 แล้วอนุมัติ ค่อยลงคู่กัน · ห้ามลงทุกแพลตฟอร์ม",
+   "fallback_old_style": {
+    "branch": "prod/lane-d",
+    "commit": "a59271e",
+    "video_hq": "video/release/hq/plane-ep2-HQ.mp4",
+    "video_hq_sha256": "3baf38b728e312e02bed7db5da54ddae35bd49bdfd650df0adb97086d4df5311",
+    "video_hq_bytes": 67614831
+   }
   },
   {
    "order": 3,
