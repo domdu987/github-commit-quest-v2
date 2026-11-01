@@ -78,12 +78,13 @@
    "status": "final",
    "slot": "กลางคืน",
    "branch": "prod/lane-c",
-   "commit": "1c6b88d",
+   "commit": "2c7fb2e",
    "package": "video/release/exam.json",
    "video_hq": "video/release/hq/exam-ep1-HQ.mp4",
-   "video_hq_sha256": "cf4e7c318c046e698aa927d9b42803a27999d1a79ff3351d2c81e8c9794cb8fa",
-   "video_hq_bytes": 53652648,
-   "suggested_time": "2026-11-02T20:00+07:00"
+   "video_hq_sha256": "3d0d8da0a864ae9f8937f867c9d9d7b0925e7f70a30c702588acfc3c66bbadb6",
+   "video_hq_bytes": 55230690,
+   "suggested_time": "2026-11-02T20:00+07:00",
+   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว"
   },
   {
    "order": 6,
@@ -92,12 +93,13 @@
    "status": "final",
    "slot": "กลางคืน",
    "branch": "prod/lane-c",
-   "commit": "1c6b88d",
+   "commit": "2c7fb2e",
    "package": "video/release/exam.json",
    "video_hq": "video/release/hq/exam-ep2-HQ.mp4",
-   "video_hq_sha256": "d4acb01087d4d7a7c6047e66adf64b3fff4a12de53ee6e496feb02dba40999aa",
-   "video_hq_bytes": 41332661,
-   "suggested_time": "2026-11-02T20:30+07:00"
+   "video_hq_sha256": "2f485abd2a0c44ac51922ee1a260f48cae5875aaf8473eb3ab75ad04362d572a",
+   "video_hq_bytes": 45467023,
+   "suggested_time": "2026-11-02T20:30+07:00",
+   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว"
   }
  ],
  "slots": {

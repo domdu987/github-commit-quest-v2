@@ -24,10 +24,11 @@
    "branch": "prod/lane-b",
    "package": "video/release/logtruck.json",
    "suggested_time": "2026-11-03T12:00+07:00",
-   "commit": "159df44",
+   "commit": "7ad3f95",
    "video_hq": "video/release/hq/logtruck-ep1-HQ.mp4",
-   "video_hq_sha256": "6e260648adcd0150a17c9c78b397186e66edb2c3fcc23314f3b09d53161b0f8a",
-   "video_hq_bytes": 90993125
+   "video_hq_sha256": "9260b12cc1fc65b05e05786f2430448e9e154d39e0a6e7a7217437cdbcc60c32",
+   "video_hq_bytes": 94632075,
+   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว"
   },
   {
    "order": 2,
@@ -38,10 +39,11 @@
    "branch": "prod/lane-b",
    "package": "video/release/logtruck.json",
    "suggested_time": "2026-11-03T12:30+07:00",
-   "commit": "159df44",
+   "commit": "7ad3f95",
    "video_hq": "video/release/hq/logtruck-ep2-HQ.mp4",
-   "video_hq_sha256": "8c29260e889b89383938c33fd158a9d7886797789cc0abeba58d801ac437c806",
-   "video_hq_bytes": 63324377
+   "video_hq_sha256": "b92adbfebd3dd2323fe177a66c5d359c3babbb4c3b6e0d2bc9ea8516912332d1",
+   "video_hq_bytes": 70045435,
+   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว"
   },
   {
    "order": 3,
