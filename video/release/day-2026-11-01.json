@@ -2,7 +2,7 @@
  "date": "2026-11-01",
  "tz": "Asia/Bangkok",
  "made_by": "Claude (แชทประสานงาน)",
- "status": "ลงได้เฉพาะ item ที่ status final (sha ใหม่หลังตัดฉาก) · item ที่ยัง hold ห้ามลง",
+ "status": "พร้อมทั้งวัน: ทุก item status final (sha ใหม่หลังตัดฉากตามเจ้าของสั่ง 1 พ.ย.)",
  "rules": [
   "เจ้าของสั่ง 1 พ.ย. (พิมพ์ในแชทเลน D): \"เราจะลงเช้า 1 เรื่อง เที่ยง 1 เรื่อง กลางคืน 1 เรื่อง\" · 1 เรื่อง = ทุกตอนของเรื่องนั้น ลงช่วงเดียวกันเรียง EP ห่างกัน 30 นาที",
   "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
@@ -44,16 +44,16 @@
    "order": 3,
    "id": "sink-ep3",
    "series": "นาทีก่อนจม",
-   "status": "hold",
+   "status": "final",
    "branch": "ccr-fb88c4b3-kcqyid",
-   "commit": "48c6150",
+   "commit": "63cc978",
    "package": "video/release/sink.json",
    "video_hq": "video/release/hq/sink-ep3-HQ.mp4",
-   "video_hq_sha256": "a9e0dedf17db342de51b707055600e2536ee1430deae76d0770d1b1d157e2d48",
-   "video_hq_bytes": 56814580,
+   "video_hq_sha256": "5f8eac7c344dae43de63847f5bb25d6795b3abd9c6eb4f65641f62f5ec795db3",
+   "video_hq_bytes": 54612135,
    "suggested_time": "2026-11-01T10:30+07:00",
-   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)",
-   "slot": "เช้า"
+   "slot": "เช้า",
+   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ 2 แล้ว (sha ใหม่)"
   },
   {
    "order": 4,
