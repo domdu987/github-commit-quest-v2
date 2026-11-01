@@ -1,0 +1,54 @@
+      // ---------- ถ้ำพญานาค หน้าฝน: hooks A/B/C (frames at 0 / 1 / 2 s, the order by 2 s) + 3 sample stills ----------
+      const WL = 1320, CAVEL = { from: "left", rim: "#ffe8b0", rimOp: 0.6, shade: "#1a1612", shadeOp: 0.35, cast: false, vol: false }, CAVEG = { top: "#3a3424", bottom: "#0a0806", op: 0.16 };
+      const RAINL = { from: "left", rim: "#dfe8e8", rimOp: 0.5, shade: "#2a3a3a", shadeOp: 0.28, cast: false, vol: false };
+      const VG = (L, a = 0.6) => { const g = `vg${L.light.id}`; put(L.light, `<radialGradient id="${g}"><stop offset=".58" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${a}"/></radialGradient><rect width="1080" height="1920" fill="url(#${g})"/>`); };
+      const lamp = (x, y, s, d, len = 1300) => [x, Math.round(y - 602 * s), d, len];
+      const rain = (tl, L, t0, dur, n = 70) => Pop2.particles(tl, L.glow, { type: "rain", n, box: [-600, -400, 2400, 2400], t0, dur, seed: 7 });
+      add("pad", { set: "nagaCave", setOpts: { id: "np" }, dark: 0, light: CAVEL, grade: CAVEG, cam: { keys: [{ t: 0, ...still(fr(540, 1000, 1, 540, 960)) }] } });
+      // A: chest-deep, the low exit passage drowned; เพชร gulps air to dive for it → ปุยฝ้าย grabs his shirt: อย่าดำหาทาง
+      const PA = [-280, 1680, 1.15], FA = [60, 1700, 1.05];
+      add("hA", {
+        set: "nagaCave", setOpts: { id: "na", wl: WL, beams: [lamp(...PA, 190), lamp(FA[0], FA[1] - 60, FA[2], -10, 1500)], ripples: [[PA[0], 160], [FA[0], 140]], pillar: 1700 },
+        dark: 0, light: CAVEL, grade: CAVEG,
+        cam: { keys: [{ t: 0, ...fr(-140, 1080, 1.55, 540, 900) }, { t: 1.0, glide: 0.9, ...fr(-240, 1060, 1.75, 540, 900) }, { t: 2.0, glide: 0.8, ...fr(-120, 1080, 1.95, 540, 880) }] },
+        shake: (t) => ({ x: 4 * Math.sin(t * 6.3) + 2 * Math.sin(t * 13), y: 3 * Math.sin(t * 5.1), r: 0.3 * Math.sin(t * 3.7) }),
+        actors: [A("petch", ...PA, [T("wade", "wide", "o"), T("breath", "angry", "o", 0.6)], { flip: true }), A("puifai", ...FA, [T("wade", "wide", "scream"), T("tug", "wide", "scream", 1.4)], { flip: true, moveTo: { x: -40, y: 1700, at: 1.3, dur: 0.5 } })],
+        captions: [{ text: "ถ้าวันหนึ่ง… [น้ำท่วมปิดทางออกถ้ำ]", t: -0.35, end: 1.45 }, { text: "{อย่าดำหาทาง!}", t: 1.5, end: 2.35 }],
+        fx(tl, id, t0, L) { tl.fromTo("#na-wtr", { y: 0 }, { y: -60, duration: 2.4, ease: "power1.in", immediateRender: false }, t0); Pop2.particles(tl, L.glow, { type: "rain", n: 26, box: [-700, 700, 400, 700], t0, dur: 2.4, seed: 3 }); VG(L, 0.55); },
+      });
+      // B: rain at the naga stair, the rope "ปิดช่วงฤดูฝน" — they duck under it → inside, mud water already round their feet → อย่าเข้าไปหลบฝนในถ้ำ
+      split("hB", 1.0, {
+        set: "nagaMouth", setOpts: { id: "nb" }, dark: 0, light: RAINL, grade: { top: "#3a4a52", bottom: "#1a2020", op: 0.14 },
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 0.72, 540, 980) }, { t: 1.0, glide: 1.0, ...fr(540, 1180, 0.82, 540, 980) }] },
+        actors: [A("petchPhone", 460, 1720, 1.0, [T("crouch", "normal", "smile")], { moveTo: { x: 520, y: 1600, dur: 1.0 } }), A("puifai", 700, 1760, 0.9, [T("walk", "wide", "o")], { moveTo: { x: 620, y: 1660, dur: 1.0 } })],
+        captions: [{ text: "ถ้าวันหนึ่ง… [ฝนตกหนักหน้าถ้ำพญานาค]", t: -0.35, end: 0.98 }],
+        fx(tl, id, t0, L) { rain(tl, L, t0, 1.0); tl.fromTo("#nb-rope", { rotation: -2, svgOrigin: "540 1300" }, { rotation: 2, svgOrigin: "540 1300", duration: 0.25, yoyo: true, repeat: 3, immediateRender: false }, t0); VG(L, 0.5); },
+      }, {
+        set: "nagaCave", setOpts: { id: "nb2", wl: 1620, beams: [lamp(560, 1700, 1.25, -20, 1500)], ripples: [[560, 120], [860, 100]], pillar: false, amb: 0.36 },
+        dark: 0, light: CAVEL, grade: CAVEG,
+        cam: { keys: [{ t: 0, ...fr(760, 1160, 1.3, 540, 900) }, { t: 1.4, glide: 1.0, ...fr(640, 1180, 1.75, 540, 860) }] },
+        actors: [A("petchPhone", 560, 1700, 1.25, [T("filmUp", "normal", "smile"), T("idle", "wide", "o", 0.7)]), A("puifai", 880, 1720, 1.1, [T("idle", "wide", "scream")], { flip: true })],
+        captions: [{ text: "{อย่าเข้าไปหลบฝนในถ้ำ!}", t: 0.45, end: 1.35 }],
+        fx(tl, id, t0, L) { tl.fromTo("#nb2-wtr", { y: 120 }, { y: 0, duration: 1.3, ease: "power2.out", immediateRender: false }, t0); VG(L, 0.55); },
+      });
+      // C: on the ledge above the last scale line, one headlamp left and flickering; เพชร stands to go off alone with his phone light → อย่าแยกกันหาทาง
+      const PC = [1260, WL - 520 + 10, 1.0], FC = [1480, WL - 520 + 10, 0.92];
+      add("hC", {
+        set: "nagaCave", setOpts: { id: "nc", wl: WL - 160, beams: [lamp(FC[0], FC[1] + 120, FC[2], 200, 1100)], ripples: [], pillar: 2100, amb: 0.6 },
+        dark: 0, light: CAVEL, grade: { top: "#2a2418", bottom: "#050403", op: 0.25 },
+        cam: { keys: [{ t: 0, ...fr(1300, WL - 860, 1.4, 540, 900) }, { t: 1.0, glide: 0.9, ...fr(1250, WL - 880, 1.55, 540, 900) }, { t: 2.0, glide: 0.8, ...fr(1330, WL - 900, 1.85, 540, 880) }] },
+        actors: [A("puifai", ...FC, [T("sit", "wide", "o"), T("tug", "wide", "scream", 1.3)], { flip: true }), A("petchPhone", ...PC, [T("sit", "normal", "flat"), T("walk", "angry", "flat", 0.6)], { moveTo: { x: 1180, y: PC[1], at: 0.6, dur: 1.0 } })],
+        captions: [{ text: "ถ้าวันหนึ่ง… [ไฟฉายดวงสุดท้ายกำลังดับ]", t: -0.35, end: 1.45 }, { text: "{อย่าแยกกันหาทาง!}", t: 1.5, end: 2.35 }],
+        fx(tl, id, t0, L) { tl.fromTo("#nc-b0", { opacity: 1 }, { opacity: 0.25, duration: 0.06, yoyo: true, repeat: 5, ease: "steps(1)", immediateRender: false }, t0 + 0.4); VG(L, 0.6); },
+      });
+      // samples
+      add("s1", { set: "nagaMouth", setOpts: { id: "n1" }, dark: 0, light: RAINL, grade: { top: "#3a4a52", bottom: "#1a2020", op: 0.12 }, cam: { keys: [{ t: 0, ...still(fr(540, 1150, 0.62, 540, 980)) }] },
+        actors: [A("yai", 1260, 1760, 0.95, [T("point", "angry", "o")], { flip: true }), A("saeng", -120, 1760, 1.0, [T("idle", "normal", "flat")])],
+        fx(tl, id, t0, L) { rain(tl, L, t0, 0.6); VG(L, 0.45); } });
+      add("s2", { set: "nagaCave", setOpts: { id: "n2", wl: WL, beams: [lamp(240, 1660, 1.0, -8, 1600), lamp(520, 1680, 0.95, -20, 1500)], ripples: [[240, 140], [520, 130]], pillar: 1900, amb: 0.3 }, dark: 0, light: CAVEL, grade: CAVEG,
+        cam: { keys: [{ t: 0, ...still(fr(520, 1020, 0.72, 540, 960)) }] },
+        actors: [A("petch", 240, 1660, 1.0, [T("wade", "wide", "o")]), A("puifai", 520, 1680, 0.95, [T("wade", "wide", "o")], { flip: true })],
+        fx(tl, id, t0, L) { VG(L, 0.45); } });
+      add("s3", { set: "nagaMouth", setOpts: { id: "n3" }, dark: 0, light: RAINL, grade: { top: "#3a4a52", bottom: "#1a2020", op: 0.12 }, blur: { far: 6, mid: 6, set: 5, act: 3 }, cam: { keys: [{ t: 0, ...still(fr(540, 1300, 0.9, 540, 1100)) }] },
+        actors: [A("yai", 540, 1900, 1.3, [T("point", "angry", "o")])],
+        fx(tl, id, t0, L) { NagaUI.rules(tl, L.light, t0, 2.0, { active: 1, y: 230, at: 0.0 }); rain(tl, L, t0, 0.8); } });
