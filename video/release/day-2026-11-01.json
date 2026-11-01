@@ -2,7 +2,7 @@
  "date": "2026-11-01",
  "tz": "Asia/Bangkok",
  "made_by": "Claude (แชทประสานงาน)",
- "status": "proposed — เจ้าของหรือ Hermes ปรับเวลา/ลำดับได้ · ตอนของเรื่องเดียวกันต้องลงเรียง EP",
+ "status": "HOLD — ห้ามลงไฟล์ที่ระบุตอนนี้ · เจ้าของสั่ง 1 พ.ย. ตัดช่วง \"เขาพลาดไปแล้ว… ตั้งแต่วินาทีที่ X คุณเห็นไหม\" ออกจากทุกเรื่อง · กำลังเรนเดอร์ใหม่ แชทประสานงานจะใส่ commit/sha ใหม่และเปลี่ยนกลับเป็น final ทีละคลิป",
  "rules": [
   "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
   "แคปชัน แฮชแท็ก คอมเมนต์ปักหมุด และชื่อ YouTube อยู่ในไฟล์ package ของแต่ละเรื่อง (commit เดียวกัน)",
@@ -13,92 +13,99 @@
    "order": 1,
    "id": "sink-ep1",
    "series": "นาทีก่อนจม",
-   "status": "final",
+   "status": "hold",
    "branch": "ccr-fb88c4b3-kcqyid",
    "commit": "48c6150",
    "package": "video/release/sink.json",
    "video_hq": "video/release/hq/sink-ep1-HQ.mp4",
    "video_hq_sha256": "5c7c6184ab2a3d93b7127a13aee36616f12b8893e455a80e42340e8c0ae3478c",
    "video_hq_bytes": 49233393,
-   "suggested_time": "2026-11-01T19:00+07:00"
+   "suggested_time": "2026-11-01T19:00+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   },
   {
    "order": 2,
    "id": "sink-ep2",
    "series": "นาทีก่อนจม",
-   "status": "final",
+   "status": "hold",
    "branch": "ccr-fb88c4b3-kcqyid",
    "commit": "48c6150",
    "package": "video/release/sink.json",
    "video_hq": "video/release/hq/sink-ep2-HQ.mp4",
    "video_hq_sha256": "a53b14bddbc07053083cdbbf0d7bcdb46888de1e2a0aad0474d77476d7d63572",
    "video_hq_bytes": 54982523,
-   "suggested_time": "2026-11-01T19:40+07:00"
+   "suggested_time": "2026-11-01T19:40+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   },
   {
    "order": 3,
    "id": "sink-ep3",
    "series": "นาทีก่อนจม",
-   "status": "final",
+   "status": "hold",
    "branch": "ccr-fb88c4b3-kcqyid",
    "commit": "48c6150",
    "package": "video/release/sink.json",
    "video_hq": "video/release/hq/sink-ep3-HQ.mp4",
    "video_hq_sha256": "a9e0dedf17db342de51b707055600e2536ee1430deae76d0770d1b1d157e2d48",
    "video_hq_bytes": 56814580,
-   "suggested_time": "2026-11-01T20:20+07:00"
+   "suggested_time": "2026-11-01T20:20+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   },
   {
    "order": 4,
    "id": "hornet-ep1",
    "series": "ต่อหัวเสือ",
-   "status": "final",
+   "status": "hold",
    "branch": "prod/lane-b",
    "commit": "9e9eb2d",
    "package": "video/release/hornet.json",
    "video_hq": "video/release/hq/hornet-ep1-HQ.mp4",
    "video_hq_sha256": "5aefc850ce479a66b6517df4d153ab7651c700a2196f7847b1ba502fb3c66a0b",
    "video_hq_bytes": 77367536,
-   "suggested_time": "2026-11-01T21:00+07:00"
+   "suggested_time": "2026-11-01T21:00+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   },
   {
    "order": 5,
    "id": "hornet-ep2",
    "series": "ต่อหัวเสือ",
-   "status": "final",
+   "status": "hold",
    "branch": "prod/lane-b",
    "commit": "9e9eb2d",
    "package": "video/release/hornet.json",
    "video_hq": "video/release/hq/hornet-ep2-HQ.mp4",
    "video_hq_sha256": "6ef1675291b0542da4a176b28d92107c59dcaf5a5f98d88edb452ed2f2351b6d",
    "video_hq_bytes": 54790695,
-   "suggested_time": "2026-11-01T21:40+07:00"
+   "suggested_time": "2026-11-01T21:40+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   },
   {
    "order": 6,
    "id": "rabies-ep1",
    "series": "หมาดำตาสี่",
-   "status": "final",
+   "status": "hold",
    "branch": "prod/lane-a",
    "commit": "b02db9a",
    "package": "video/release/rabies.json",
    "video_hq": "video/release/hq/rabies-ep1-HQ.mp4",
    "video_hq_sha256": "c447cf27cd8722981038a5906ab0394773e6ecdcf9fcaeb98a0fc58e06a295f0",
    "video_hq_bytes": 74031427,
-   "suggested_time": "2026-11-01T22:20+07:00"
+   "suggested_time": "2026-11-01T22:20+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   },
   {
    "order": 7,
    "id": "rabies-ep2",
    "series": "หมาดำตาสี่",
-   "status": "final",
+   "status": "hold",
    "branch": "prod/lane-a",
    "commit": "b02db9a",
    "package": "video/release/rabies.json",
    "video_hq": "video/release/hq/rabies-ep2-HQ.mp4",
    "video_hq_sha256": "c06d53800d24f567d266ddd5230a60adb4e6085472792ef43506f6aa4e5ecd0b",
    "video_hq_bytes": 65751693,
-   "suggested_time": "2026-11-01T23:00+07:00"
+   "suggested_time": "2026-11-01T23:00+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   }
  ]
 }

@@ -2,7 +2,7 @@
  "date": "2026-11-02",
  "tz": "Asia/Bangkok",
  "made_by": "Claude (แชทประสานงาน)",
- "status": "proposed — เจ้าของหรือ Hermes ปรับเวลา/ลำดับได้ · ตอนของเรื่องเดียวกันต้องลงเรียง EP",
+ "status": "HOLD — ห้ามลงไฟล์ที่ระบุตอนนี้ · เจ้าของสั่ง 1 พ.ย. ตัดช่วง \"เขาพลาดไปแล้ว… ตั้งแต่วินาทีที่ X คุณเห็นไหม\" ออกจากทุกเรื่อง · กำลังเรนเดอร์ใหม่ แชทประสานงานจะใส่ commit/sha ใหม่และเปลี่ยนกลับเป็น final ทีละคลิป",
  "rules": [
   "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
   "แคปชัน แฮชแท็ก คอมเมนต์ปักหมุด และชื่อ YouTube อยู่ในไฟล์ package ของเรื่อง (commit เดียวกัน)",
@@ -13,53 +13,57 @@
    "order": 1,
    "id": "plane-ep1",
    "series": "รอดคนเดียว (เครื่องบินตก)",
-   "status": "final",
+   "status": "hold",
    "branch": "prod/lane-d",
    "commit": "4ebd839",
    "package": "video/release/plane.json",
    "video_hq": "video/release/hq/plane-ep1-HQ.mp4",
    "video_hq_sha256": "4afdd329bcb3d297265d8ebcaa4efb76512b8145ceb48d294587c20d603e15d7",
    "video_hq_bytes": 82024470,
-   "suggested_time": "2026-11-02T20:00+07:00"
+   "suggested_time": "2026-11-02T20:00+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   },
   {
    "order": 2,
    "id": "plane-ep2",
    "series": "รอดคนเดียว (เครื่องบินตก)",
-   "status": "final",
+   "status": "hold",
    "branch": "prod/lane-d",
    "commit": "4ebd839",
    "package": "video/release/plane.json",
    "video_hq": "video/release/hq/plane-ep2-HQ.mp4",
    "video_hq_sha256": "41f2fced0cff61e749c2b06acae3a3697445cc16d5fcb6d0f6e2a64d5e61a18f",
    "video_hq_bytes": 71253298,
-   "suggested_time": "2026-11-02T20:40+07:00"
+   "suggested_time": "2026-11-02T20:40+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   },
   {
    "order": 3,
    "id": "war-ep1",
    "series": "ทางกลับบ้าน (สงคราม)",
-   "status": "final",
+   "status": "hold",
    "branch": "prod/lane-a",
    "commit": "04ab3c9",
    "package": "video/release/war.json",
    "video_hq": "video/release/hq/war-ep1-HQ.mp4",
    "video_hq_sha256": "0026829e2b8a1b23634cd4280808b25ce1c592d02f43e7f253f1e81c519f2354",
    "video_hq_bytes": 89238068,
-   "suggested_time": "2026-11-02T21:20+07:00"
+   "suggested_time": "2026-11-02T21:20+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   },
   {
    "order": 4,
    "id": "war-ep2",
    "series": "ทางกลับบ้าน (สงคราม)",
-   "status": "final",
+   "status": "hold",
    "branch": "prod/lane-a",
    "commit": "cb838b9",
    "package": "video/release/war.json",
    "video_hq": "video/release/hq/war-ep2-HQ.mp4",
    "video_hq_sha256": "60a6a8cb6e8b2193e59215f95e28f44d2a24b3618785999b3e9352f37a093b1b",
    "video_hq_bytes": 80576425,
-   "suggested_time": "2026-11-02T22:00+07:00"
+   "suggested_time": "2026-11-02T22:00+07:00",
+   "hold_reason": "รอตัดช่วง 'พลาดตั้งแต่วินาทีที่ X' ออก + เรนเดอร์ใหม่ (sha เดิมใช้ไม่ได้)"
   }
  ]
 }
