@@ -357,14 +357,14 @@
       ]);
       // ===== 18. the door opens (low angle) | down the slide | before the fire reaches him =====
       seg("out", [
-        [0, (d) => ({ ...CAB("o1", "smoke", { smokeH: 600 }, 0.06), cam: { keys: [{ t: 0, ...fr(DOORX + 30, PF - 260, 1.9, 540, 1000) }] },
+        [0, (d) => ({ ...CAB("o1", "alarm", { noMasks: true }, 0.06), cam: { keys: [{ t: 0, ...fr(DOORX + 30, PF - 260, 1.9, 540, 1000) }] },
           actors: [A("kiw", DOORX + 260, PF - 30, KS, [{ t: 0, mode: "crouchLook", eyes: "wide", mouth: "o" }], { flip: true })],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "o1", t0, d);
             tl.fromTo("#o1-door", { x: 0, opacity: 1 }, { x: -260, opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, t0 + 0.25);
             const X0 = DOORX - 120, Y0 = PF - 515;
             put(L.glow, `<linearGradient id="o1-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a7ab8"/><stop offset=".55" stop-color="#f09a7a"/><stop offset="1" stop-color="#ffd9a0"/></linearGradient>
               <linearGradient id="o1-sl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4c430"/><stop offset=".5" stop-color="#ffe070"/><stop offset="1" stop-color="#d9a020"/></linearGradient>
-              <linearGradient id="o1-bm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".55"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></linearGradient>
+              <linearGradient id="o1-bm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".28"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></linearGradient>
               <clipPath id="o1-dc"><rect x="${X0}" y="${Y0}" width="240" height="495" rx="40"/></clipPath>
               <g id="o1-day" opacity="0"><g clip-path="url(#o1-dc)">
                 <rect x="${X0 - 10}" y="${Y0 - 10}" width="260" height="230" fill="url(#o1-sk)"/><circle cx="${X0 + 70}" cy="${Y0 + 205}" r="34" fill="#fff0c8"/>
@@ -374,9 +374,9 @@
                 <path d="M${X0 + 120},${Y0 + 500}L${X0 + 10},${Y0 + 270}Q${X0 + 40},${Y0 + 250} ${X0 + 80},${Y0 + 262}L${X0 + 230},${Y0 + 500}Z" fill="url(#o1-sl)" stroke="#1f1a17" stroke-width="5"/>
                 ${[0, 1, 2, 3].map((k) => `<path d="M${X0 + 30 + k * 34},${Y0 + 300 + k * 52}L${X0 + 82 + k * 38},${Y0 + 292 + k * 54}" stroke="#c89020" stroke-width="7" stroke-linecap="round"/>`).join("")}</g>
                 <rect x="${X0 - 6}" y="${Y0 - 6}" width="252" height="507" rx="44" fill="none" stroke="#c9c1b2" stroke-width="16"/><rect x="${X0 - 14}" y="${Y0 - 14}" width="268" height="523" rx="50" fill="none" stroke="#1f1a17" stroke-width="5"/>
-                <path d="M${X0 + 240},${Y0 + 40}L${X0 + 760},${Y0 + 300}L${X0 + 760},${Y0 + 560}L${X0 + 240},${Y0 + 470}Z" fill="url(#o1-bm)" style="mix-blend-mode:screen"/></g>
+                </g>
               <rect id="o1-glow" x="${DOORX - 160}" y="${PF - 560}" width="320" height="580" rx="60" fill="#ffd9a0" opacity="0" filter="url(#plBlur24)" style="mix-blend-mode:screen"/>`);
-            tl.fromTo("#o1-day", { opacity: 0 }, { opacity: 1, duration: 0.35, immediateRender: false }, t0 + 0.3); tl.fromTo("#o1-glow", { opacity: 0 }, { opacity: 0.18, duration: 0.45, immediateRender: false }, t0 + 0.3); } })],
+            tl.fromTo("#o1-day", { opacity: 0 }, { opacity: 1, duration: 0.35, immediateRender: false }, t0 + 0.3);  } })],
         [C("out", 0, 1), (d) => ({ ...SITE("o2", { fire: 0.9 }),
           cam: { keys: [{ t: 0, ...fr(190, 1500, 3.2, 540, 1000) }, { t: d, glide: d, ...fr(130, 1540, 3.0, 540, 1000) }] },
           actors: [A("kiw", 198, 1474, 0.15, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.7, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, path: [{ t: 0, x: 198, y: 1474 }, { t: 0.7, x: 127, y: 1570 }, { t: 1.6, x: 60, y: 1590, s: 0.17 }] })],
