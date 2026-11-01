@@ -142,5 +142,22 @@
           document.querySelectorAll(`.issw`).forEach((e, k) => tl.fromTo(e, { x: 0 }, { x: -220, duration: 3 + (k % 4), repeat: Math.ceil(dur / 3), ease: "none", immediateRender: false }, t0));
           document.querySelectorAll(`.issm, .fssm`).forEach((e, k) => tl.fromTo(e, { y: 0, scale: 1, transformOrigin: "50% 50%" }, { y: -60, scale: 1.25, duration: 2 + (k % 3) * 0.5, repeat: Math.ceil(dur / 2), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
         };
-        Object.assign(Sets, { isle, tailIn, frontSite });
+
+        // the island from the sky (S4: a person is a dot, the wreck reads as a plane): sea with swell lines, the grey rock island with foam,
+        // the tail wreck shape, a tiny คิว; o.window frames it in an aircraft window; o.ring circles the wreck (#id-ring)
+        function aerial(L, o = {}) {
+          const id = o.id || "ae", r = R(23);
+          put(L.sky, `<rect x="-2000" y="-1400" width="5200" height="4800" fill="#1d6a8a"/>${Array.from({ length: 40 }, () => `<path d="M${f1(-1400 + r() * 3800)},${f1(-800 + r() * 3400)}q40,-8 80,0" stroke="#bfe8f8" stroke-width="4" fill="none" opacity=".45"/>`).join("")}`);
+          let s = `<path d="M60,700Q120,440 420,420Q760,380 900,560Q1100,760 980,1080Q900,1360 600,1420Q260,1460 120,1240Q-20,1000 60,700Z" fill="#fff" opacity=".7"/>
+            <path d="M90,710Q150,470 430,450Q740,412 870,580Q1060,770 950,1070Q870,1330 600,1390Q280,1430 150,1230Q20,1000 90,710Z" fill="#7a7a82"/>
+            ${Array.from({ length: 50 }, () => `<circle cx="${f1(160 + r() * 760)}" cy="${f1(500 + r() * 860)}" r="${f1(10 + r() * 30)}" fill="${r() < 0.5 ? "#8a8a92" : "#6a6a72"}"/>`).join("")}
+            <path d="M380,560Q520,520 640,600Q700,700 600,760Q460,780 400,700Z" fill="#3a6a3a"/>${Array.from({ length: 12 }, () => `<circle cx="${f1(400 + r() * 220)}" cy="${f1(580 + r() * 160)}" r="${f1(16 + r() * 18)}" fill="#4a8a44"/>`).join("")}
+            <g transform="translate(560,1110) rotate(-24) scale(.55)"><path d="M-260,-30H200Q240,-30 250,0Q240,30 200,30H-260Z" fill="#e8ecf2" stroke="#3a3a42" stroke-width="5"/><path d="M120,-30L200,-140L230,-30Z" fill="#2aa898"/><path d="M-60,-30L-100,-200H-40L40,-30ZM-60,30L-100,200H-40L40,30Z" fill="#c8ccd4" stroke="#3a3a42" stroke-width="4"/></g>
+            <circle id="${id}-dot" cx="700" cy="1180" r="5" fill="#d9a43a"/>
+            <circle id="${id}-ring" cx="560" cy="1110" r="160" fill="none" stroke="#ff6a14" stroke-width="10" opacity="0" stroke-dasharray="40 20"/>`;
+          put(L.set, s);
+          if (o.window) put(L.fg, `<path fill-rule="evenodd" d="M-2000,-1400H3200V3400H-2000Z M540,420C820,420 900,620 900,960C900,1300 820,1500 540,1500C260,1500 180,1300 180,960C180,620 260,420 540,420Z" fill="#d8dce4"/>
+            <path d="M540,440C800,440 880,630 880,960C880,1290 800,1480 540,1480C280,1480 200,1290 200,960C200,630 280,440 540,440Z" fill="none" stroke="#8a90a0" stroke-width="30"/><path d="M300,520Q420,470 560,480" stroke="#fff" stroke-width="14" opacity=".5" fill="none"/>`);
+        }
+        Object.assign(Sets, { isle, tailIn, frontSite, aerial });
       })();
