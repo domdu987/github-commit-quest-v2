@@ -246,7 +246,7 @@
   const SK = {
     clipboard: { font: "Sriracha", size: 66, ink: "#1d3a8a", acc: "#d8312a", later: "#8a90a0", tool: "marker", enter: "thrust", sound: "thud", hiSound: "rustle", titleFont: "Sriracha", titleC: "#1d3a8a" },
     chalk: { font: "Mali", size: 64, ink: "#f4f2e8", acc: "#ffd84a", later: "#7a8a7e", tool: "chalk", enter: "hang", sound: "creak", hiSound: "rustle", titleFont: "Mali", titleC: "#ffffff" },
-    tailgate: { font: "Kanit", size: 62, ink: "#14161c", acc: "#d8312a", later: "#6a6258", tool: "spray", enter: "drop", sound: "clang", hiSound: "hiss", titleFont: "Kanit", titleC: "#14161c" },
+    tailgate: { font: "Kanit", size: 60, ink: "#fffaf0", acc: "#ffd84a", later: "#f0b8a8", tool: "spray", enter: "drop", sound: "clang", hiSound: "hiss", titleFont: "Kanit", titleC: "#fffaf0" },
     canal: { font: "Kanit", size: 60, ink: "#14161c", acc: "#c8201a", later: "#8a8478", tool: "brush", enter: "swing", sound: "creak", hiSound: "rustle", titleFont: "Kanit", titleC: "#c8201a" },
     fieldbook: { font: "Sriracha", size: 62, ink: "#2a2a24", acc: "#b8201a", later: "#8a866e", tool: "grease", enter: "slap", sound: "thud", hiSound: "rustle", titleFont: "Kanit", titleC: "#2a3018" },
     seatcard: { font: "Kanit", size: 60, ink: "#14204a", acc: "#d8312a", later: "#8a90a0", tool: "pen", enter: "pocket", sound: "rustle", hiSound: "rustle", titleFont: "Kanit", titleC: "#ffffff" },
@@ -323,19 +323,38 @@
         tl.fromTo(`#${id}-eraser`, { x: 0 }, { x: -30, duration: 0.9, yoyo: true, repeat: R(0.9), ease: "sine.inOut", immediateRender: false }, t);
         tl.fromTo(`#${id}-chalk`, { rotation: -3, svgOrigin: "45 0" }, { rotation: 3, svgOrigin: "45 0", duration: 0.7, yoyo: true, repeat: R(0.7), ease: "sine.inOut", immediateRender: false }, t);
         document.querySelectorAll(`#${id}-dust circle`).forEach((c, k) => tl.fromTo(c, { y: 0, opacity: 0.6 }, { y: -120 - k * 10, x: (k % 2 ? 20 : -20), opacity: 0, duration: 1.6, repeat: R(1.6), ease: "sine.out", immediateRender: false }, t + k * 0.17)); } }),
-    tailgate: (id, X, Y, W, H) => ({
-      back: `<rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="10" fill="#000" opacity=".35"/>
-        <rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="10" fill="url(#ifxGate)" ${O(5)}/>${Array.from({ length: Math.floor(H / 70) }, (_, k) => `<rect x="${X + 16}" y="${Y + 40 + k * 70}" width="${W - 32}" height="20" rx="8" fill="#fff" opacity=".09"/><path d="M${X + 16},${Y + 60 + k * 70}H${X + W - 16}" stroke="#000" stroke-width="3" opacity=".12"/>`).join("")}
-        ${tex.mud(X, Y, W, H, 31)}${tex.rust(X, Y, W, H, 37).replace(/#a8521a|#7a3410/g, "#5a4630")}
-        ${[[X + 50, Y + 50], [X + W - 50, Y + 50], [X + 50, Y + H - 50], [X + W - 50, Y + H - 50]].map(([a, b], k) => `<g transform="translate(${a},${b})"><circle r="30" fill="#2a2e36" ${O(3)}/><circle id="${id}-rf${k}" r="22" fill="${k < 2 ? "#ff6a2a" : "#e8201a"}" ${O(2)}/>${Array.from({ length: 6 }, (_, j) => `<path d="M0,0L${f(Math.cos(j) * 20)},${f(Math.sin(j) * 20)}" stroke="#fff" stroke-width="1.5" opacity=".45"/>`).join("")}<circle cx="-7" cy="-8" r="5" fill="#fff" opacity=".8"/></g>`).join("")}
-        <path d="M${X},${Y + H + 4}H${X + W}" stroke="#2a2e36" stroke-width="14"/>${[X + 160, X + W - 160].map((a) => `<rect x="${a - 26}" y="${Y + H - 6}" width="52" height="26" rx="6" fill="#5a606a" ${O(3)}/>`).join("")}`,
-      front: `${[[X - 6, 1], [X + W + 6, -1]].map(([a, s], k) => `<g transform="translate(${a},${Y + 30})"><g id="${id}-ch${k}">${Array.from({ length: 9 }, (_, j) => `<ellipse cx="${s * j * 3}" cy="${j * 26}" rx="8" ry="14" fill="none" stroke="#9aa2ac" stroke-width="5"/>`).join("")}</g></g>`).join("")}`,
+    // a truck's steel tailgate (owner: "ถนนเหมือนไม้เลย" → it must read as STEEL): pressed ribs (lit top edge, shadowed lower edge, rounded
+    // ends), a silver frame with highlights, bolt heads along it, lock handles both sides, hinges and pins below, rust running from the bolts,
+    // dents, a band of mud spray at the bottom, a hazard stripe, a metal sheen sweeping across
+    tailgate: (id, X, Y, W, H) => { const rr = rnd(77), ribs = Math.floor((H - 150) / 64);
+      let ribsS = ""; for (let k = 0; k < ribs; k++) { const y = Y + 120 + k * 64;
+        ribsS += `<rect x="${X + 70}" y="${y}" width="${W - 140}" height="38" rx="19" fill="#9a2a1e"/><rect x="${X + 70}" y="${y}" width="${W - 140}" height="38" rx="19" fill="url(#ifxRib)"/>
+          <path d="M${X + 88},${y + 4}H${X + W - 88}" stroke="#ff9a7a" stroke-width="4" stroke-linecap="round" opacity=".8"/><path d="M${X + 88},${y + 36}H${X + W - 88}" stroke="#4a0e0a" stroke-width="5" stroke-linecap="round" opacity=".7"/>`; }
+      let bolts = ""; for (let k = 0; k < 9; k++) { const bx = X + 60 + k * (W - 120) / 8;
+        [[bx, Y + 34], [bx, Y + H - 34]].forEach(([a, b]) => { bolts += `<circle cx="${f(a)}" cy="${b}" r="11" fill="#c8ccd2" ${O(2)}/><path d="M${f(a - 6)},${b}h12" stroke="#5a606a" stroke-width="3"/>`;
+          if (rr() < 0.45) bolts += `<path d="M${f(a)},${b + 10}q${f(-3 + rr() * 6)},${f(30 + rr() * 30)} 0,${f(60 + rr() * 50)}" stroke="#8a3e14" stroke-width="${f(4 + rr() * 4)}" opacity=".55" fill="none" stroke-linecap="round"/>`; }); }
+      let dents = ""; for (let k = 0; k < 4; k++) { const dx = X + 160 + rr() * (W - 320), dy = Y + 140 + rr() * (H - 260); dents += `<ellipse cx="${f(dx)}" cy="${f(dy)}" rx="${f(26 + rr() * 30)}" ry="${f(10 + rr() * 12)}" fill="#3a0a06" opacity=".22"/><path d="M${f(dx - 20)},${f(dy - 6)}q20,-8 40,0" stroke="#ffb0a0" stroke-width="3" opacity=".45" fill="none"/>`; }
+      let mud = ""; for (let k = 0; k < 60; k++) { const mx = X + rr() * W, my = Y + H - 20 - Math.pow(rr(), 2) * 130; mud += `<ellipse cx="${f(mx)}" cy="${f(my)}" rx="${f(2 + rr() * 10)}" ry="${f(2 + rr() * 6)}" fill="#4a3a28" opacity="${f(0.35 + rr() * 0.4)}"/>`; }
+      return {
+      back: `<rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="22" fill="#000" opacity=".35"/>
+        <rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="22" fill="url(#ifxSteelF)" ${O(5)}/><rect x="${X + 8}" y="${Y + 8}" width="${W - 16}" height="10" rx="5" fill="#ffffff" opacity=".7"/>
+        <rect x="${X + 40}" y="${Y + 54}" width="${W - 80}" height="${H - 108}" rx="10" fill="#b8321f" ${O(4)}/>${ribsS}
+        <path d="M${X + 40},${Y + 54}H${X + W - 40}" stroke="#ff8a6a" stroke-width="4" opacity=".7"/>${dents}
+        <g transform="translate(${X + 40},${Y + H - 108})"><clipPath id="${id}-hz"><rect width="${W - 80}" height="36"/></clipPath><rect width="${W - 80}" height="36" fill="#f4f4ee"/><g clip-path="url(#${id}-hz)">${Array.from({ length: Math.ceil((W - 80) / 40) + 1 }, (_, k) => `<path d="M${k * 40},36l26,-36h18l-26,36z" fill="#d8201a"/>`).join("")}</g><rect width="${W - 80}" height="36" fill="none" ${O(3)}/></g>
+        ${mud}${bolts}
+        ${[[X + 4, 1], [X + W - 4, -1]].map(([a, sg]) => `<g transform="translate(${a},${Y + H / 2})"><rect x="${sg > 0 ? -34 : -10}" y="-60" width="44" height="120" rx="10" fill="url(#ifxSteelF)" ${O(4)}/><rect x="${sg > 0 ? -24 : 0}" y="-40" width="24" height="80" rx="8" fill="#5a606a" ${O(3)}/><circle cx="${sg > 0 ? -12 : 12}" cy="-48" r="7" fill="#2a2e36"/></g>`).join("")}
+        ${[X + 170, X + W / 2, X + W - 170].map((a) => `<g transform="translate(${a},${Y + H})"><rect x="-44" y="-10" width="88" height="30" rx="8" fill="url(#ifxSteelF)" ${O(3)}/><rect x="-6" y="-16" width="12" height="42" rx="5" fill="#8a929c" ${O(2)}/></g>`).join("")}
+        <g clip-path="url(#${id}-gclip)"><rect id="${id}-sheen" x="${X - 300}" y="${Y}" width="140" height="${H}" fill="#ffffff" opacity=".22" transform="skewX(-20)"/></g>
+        <defs><clipPath id="${id}-gclip"><rect x="${X}" y="${Y}" width="${W}" height="${H}" rx="22"/></clipPath></defs>
+        ${[[X + 60, Y + 60], [X + W - 60, Y + 60]].map(([a, b], k) => `<g transform="translate(${a},${b})"><circle r="24" fill="#2a2e36" ${O(3)}/><circle id="${id}-rf${k}" r="17" fill="#ff6a2a" ${O(2)}/><circle cx="-5" cy="-6" r="4" fill="#fff" opacity=".8"/></g>`).join("")}`,
+      front: `${[[X - 6, 1], [X + W + 6, -1]].map(([a, sg], k) => `<g transform="translate(${a},${Y + 10})"><g id="${id}-ch${k}">${Array.from({ length: 9 }, (_, j) => `<ellipse cx="${sg * j * 3}" cy="${j * 26}" rx="8" ry="14" fill="none" stroke="#9aa2ac" stroke-width="5"/>`).join("")}</g></g>`).join("")}`,
       enter: (tl, t) => { tl.fromTo(`#${id}-m`, { y: -1400 }, { y: 0, duration: 0.42, ease: "power3.in", immediateRender: false }, t);
         tl.fromTo(`#${id}-sw`, { scaleY: 0.86, scaleX: 1.04, svgOrigin: `540 ${Y + H}` }, { scaleY: 1, scaleX: 1, svgOrigin: `540 ${Y + H}`, duration: 0.6, ease: "elastic.out(1.2,0.3)", immediateRender: false }, t + 0.42); return t + 0.42; },
       life: (tl, t, dur) => { const R = (p) => Math.ceil(dur / p);
         tl.fromTo(`#${id}-k`, { y: 0 }, { y: 3, duration: 0.07, yoyo: true, repeat: R(0.07), ease: "sine.inOut", immediateRender: false }, t);
         [0, 1].forEach((k) => tl.fromTo(`#${id}-ch${k}`, { rotation: -6, svgOrigin: "0 0" }, { rotation: 6, svgOrigin: "0 0", duration: 0.5 + k * 0.1, yoyo: true, repeat: R(0.5), ease: "sine.inOut", immediateRender: false }, t));
-        for (let k = 0; k < 4; k++) for (let j = 0; j * 1.4 < dur; j++) tl.fromTo(`#${id}-rf${k}`, { attr: { fill: k < 2 ? "#fff2c0" : "#ffb0a0" } }, { attr: { fill: k < 2 ? "#ff6a2a" : "#e8201a" }, duration: 0.35, ease: "power2.out", immediateRender: false }, t + 0.2 + j * 1.4 + k * 0.12); } }),
+        tl.fromTo(`#${id}-sheen`, { x: 0 }, { x: W + 600, duration: 1.4, repeat: R(1.8), repeatDelay: 0.4, ease: "power1.inOut", immediateRender: false }, t);
+        for (let k = 0; k < 2; k++) for (let j = 0; j * 1.4 < dur; j++) tl.fromTo(`#${id}-rf${k}`, { attr: { fill: "#fff2c0" } }, { attr: { fill: "#ff6a2a" }, duration: 0.35, ease: "power2.out", immediateRender: false }, t + 0.2 + j * 1.4 + k * 0.2); } }; },
     canal: (id, X, Y, W, H) => ({
       back: `<rect x="${X + W / 2 - 30}" y="${Y + H - 10}" width="60" height="700" fill="url(#ifxPost)" ${O(4)}/>
         <rect x="${X + 10}" y="${Y + 22}" width="${W}" height="${H}" rx="18" fill="#000" opacity=".35"/>
@@ -397,7 +416,7 @@
         <g id="${id}-cloth"><path d="${burnt}" fill="#000" opacity=".3" transform="translate(10,20)"/><path d="${burnt}" fill="url(#ifxCloth)" ${O(5)}/>${tex.cloth(X, Y, W, H, 53)}
           <rect x="${X + 24}" y="${Y + 44}" width="${W - 48}" height="${H - 90}" fill="none" stroke="#b8201a" stroke-width="5"/><rect x="${X + 36}" y="${Y + 56}" width="${W - 72}" height="${H - 114}" fill="none" stroke="#b8201a" stroke-width="2" stroke-dasharray="14 6"/>
           ${Array.from({ length: 8 }, (_, k) => `<path d="M${X + 60 + k * 112},${Y + H - 70}l20,-20l20,20l-20,20z" fill="none" stroke="#b8201a" stroke-width="3" opacity=".7"/>`).join("")}
-          <path d="M${X + W - 120},${Y + 110}c-30,-10 -30,30 0,26c40,-6 30,-60 -10,-60c-50,0 -60,70 0,80c50,6 60,-30 70,-80" stroke="#b8201a" stroke-width="5" fill="none" opacity=".75"/>
+          <path d="M${X + W - 110},${Y + H - 170}c-30,-10 -30,30 0,26c40,-6 30,-60 -10,-60c-50,0 -60,70 0,80c50,6 60,-30 70,-80" stroke="#b8201a" stroke-width="5" fill="none" opacity=".55"/>
           ${Array.from({ length: 10 }, (_, k) => `<ellipse cx="${X + 30 + k * 95}" cy="${Y + H - 8 + (k % 2) * 20}" rx="24" ry="9" fill="#3a2010" opacity=".35"/>`).join("")}</g>`,
       front: `<g transform="translate(${X + W - 70},${Y + H + 120})"><rect x="-26" y="0" width="52" height="150" rx="6" fill="#fff4d8" ${O(4)}/><g id="${id}-flame"><path d="M0,0C-24,-36 -8,-74 0,-96C8,-74 24,-36 0,0Z" fill="#ffb030" ${O(3)}/><path d="M0,-10C-10,-28 -4,-48 0,-60C4,-48 10,-28 0,-10Z" fill="#fff2a0"/></g>
           <circle cy="-40" r="110" fill="url(#ifxCandle)" opacity=".6"/>${Array.from({ length: 4 }, (_, k) => `<circle id="${id}-sm${k}" cy="-100" r="${18 + k * 6}" fill="#c8c0b8" opacity="0"/>`).join("")}</g>`,
@@ -412,7 +431,7 @@
     put(layer, `<defs><linearGradient id="ifxAlu" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8ecf0"/><stop offset=".45" stop-color="#b8c0ca"/><stop offset=".7" stop-color="#d8dee4"/><stop offset="1" stop-color="#8a929c"/></linearGradient>
       <linearGradient id="ifxAluD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8d0d8"/><stop offset="1" stop-color="#6a727c"/></linearGradient>
       <linearGradient id="ifxSlate" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a4a3a"/><stop offset="1" stop-color="#14281e"/></linearGradient>
-      <linearGradient id="ifxGate" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4c430"/><stop offset=".6" stop-color="#e0a820"/><stop offset="1" stop-color="#b8861a"/></linearGradient>
+      <linearGradient id="ifxSteelF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6f8"/><stop offset=".3" stop-color="#b8c0ca"/><stop offset=".55" stop-color="#e2e6ea"/><stop offset="1" stop-color="#7a828c"/></linearGradient><linearGradient id="ifxRib" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7a5a"/><stop offset=".35" stop-color="#d8442e"/><stop offset=".7" stop-color="#a82a1c"/><stop offset="1" stop-color="#6a160e"/></linearGradient>
       <linearGradient id="ifxPost" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a606a"/><stop offset=".5" stop-color="#9aa2ac"/><stop offset="1" stop-color="#4a505a"/></linearGradient>
       <linearGradient id="ifxCloth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf2d4"/><stop offset="1" stop-color="#e8d4a0"/></linearGradient>
       <radialGradient id="ifxCandle"><stop offset="0" stop-color="#ffd27a" stop-opacity=".8"/><stop offset="1" stop-color="#ffb040" stop-opacity="0"/></radialGradient>
@@ -430,11 +449,11 @@
       const col = st === "later" ? sk.later : sk.ink;
       rows += `<g id="${id}-r${k}" opacity="${st === "later" ? 0.55 : 0}">${st === "act" ? `<defs><clipPath id="${id}-hc"><rect id="${id}-hcr" x="${tx - 20}" y="${y - 80}" width="0" height="130"/></clipPath></defs><g clip-path="url(#${id}-hc)">${hiTool(sk.tool, `${id}-hl`, tx - 10, tx + tw, y)}</g>` : ""}
         ${it.art ? `<g transform="translate(${X + 120},${y - 18}) scale(.5)"><g id="${id}-a${k}">${it.art}</g></g>` : ""}
-        <text x="${tx}" y="${y + 12}" font-family="${sk.font}" font-weight="${sk.font === "Kanit" ? 900 : 400}" font-size="${fs}" fill="${col}"${sk.tool === "chalk" ? ` opacity=".92"` : ""}>${st === "later" ? plain(it.text) : marked(it.text, sk.acc)}</text>
+        ${o.skin === "tailgate" ? `<text x="${tx}" y="${y + 12}" font-family="Kanit" font-weight="900" font-size="${fs}" fill="none" stroke="#3a0a06" stroke-width="10" stroke-linejoin="round">${plain(it.text)}</text>` : ""}<text x="${tx}" y="${y + 12}" font-family="${sk.font}" font-weight="${sk.font === "Kanit" ? 900 : 400}" font-size="${fs}" fill="${col}"${sk.tool === "chalk" ? ` opacity=".92"` : ""}>${st === "later" ? plain(it.text) : marked(it.text, sk.acc)}</text>
         ${sk.tool === "spray" && st !== "later" ? `<text x="${tx}" y="${y + 12}" font-family="Kanit" font-weight="900" font-size="${fs}" fill="none" stroke="${col}" stroke-width="7" opacity=".14" filter="url(#ifxBlur3)">${plain(it.text)}</text>` : ""}
         ${st === "done" ? tick(sk.tool, `${id}-tk${k}`, tx + tw + 20, y) : ""}</g>`; });
     const title = o.skin === "fieldbook"
-      ? `<text x="${X + 60}" y="${Y + 100}" font-family="Kanit" font-weight="900" font-size="70" fill="#e8e0b8" letter-spacing="6">${o.title || ""}</text>${Array.from({ length: 6 }, (_, k) => `<rect x="${X + 90 + k * 92}" y="${Y + 66}" width="8" height="40" fill="#5a6238"/>`).join("")}`
+      ? `<text x="${X + 60}" y="${Y + 104}" font-family="Kanit" font-weight="900" font-size="70" fill="#f0e8c0" opacity=".45" filter="url(#ifxBlur3)">${o.title || ""}</text>${Array.from({ length: 50 }, (_, k) => { const r2 = rnd(k + 5); return `<circle cx="${f(X + 60 + r2() * 420)}" cy="${f(Y + 40 + r2() * 80)}" r="${f(1 + r2() * 2.4)}" fill="#f0e8c0" opacity="${f(0.2 + r2() * 0.4)}"/>`; }).join("")}<text x="${X + 60}" y="${Y + 100}" font-family="Kanit" font-weight="900" font-size="70" fill="#f0e8c0">${o.title || ""}</text>`
       : o.skin === "seatcard" ? `<text x="${X + 40}" y="${Y + 128}" font-family="Kanit" font-weight="900" font-size="56" fill="#ffffff">${o.title || ""}</text>`
       : `<text x="540" y="${Y + (o.skin === "clipboard" ? 210 : 140)}" text-anchor="middle" font-family="${sk.titleFont}" font-weight="${sk.titleFont === "Kanit" ? 900 : 400}" font-size="${o.skin === "clipboard" ? 74 : 84}" fill="${sk.titleC}">${o.title || ""}</text>
         ${o.sub ? `<text x="540" y="${Y + (o.skin === "clipboard" ? 268 : 196)}" text-anchor="middle" font-family="${sk.font}" font-size="34" fill="${sk.later}">${o.sub}</text>` : ""}
