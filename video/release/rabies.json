@@ -15,10 +15,10 @@
    "id": "rabies-ep1",
    "order": 1,
    "title": "ลูกหมาจรเดินมาหาคุณ… อย่าอุ้มมันขึ้นมา | หมาดำตาสี่ EP.1",
-   "status": "draft",
+   "status": "final",
    "video_hq": "video/release/hq/rabies-ep1-HQ.mp4",
-   "video_hq_sha256": "c447cf27cd8722981038a5906ab0394773e6ecdcf9fcaeb98a0fc58e06a295f0",
-   "video_hq_bytes": 74031427,
+   "video_hq_sha256": "c1267ed7c7da3341ac1b6ad9ce45eff89ca0a2361eed96073d04c2890689394a",
+   "video_hq_bytes": 69525071,
    "video_repo": "video/rabies-ep1/EP1-ya-um-man-share.mp4",
    "cover": "video/rabies-ep1/cover.jpg",
    "caption": "ถ้าวันหนึ่ง… ลูกหมาจรเดินมาหาคุณ 🐶 อย่าอุ้มมันขึ้นมา\n\nถ้าเป็นคุณ… ลูกหมาจรน่ารักเดินมาหา จะอดใจไม่อุ้มได้ไหม? 🤔 คอมเมนต์บอกหน่อย\n\nหมาดำตาสี่ EP.1/2\n#พิษสุนัขบ้า #หมากัด #เอาตัวรอด #หมาดำตาสี่ #RodMaiClub",
@@ -39,23 +39,24 @@
    "qa": {
     "size": "1080x1920",
     "fps": 60,
-    "duration_s": 79.75,
+    "duration_s": 75.83,
     "lufs": -13.9,
     "peak_db": -1.3,
     "freezedetect": "none ≥1.5 s",
     "hookcheck": "PASS (คำสั่ง 2.97 วิ)",
-    "edgecheck": "no edge problems"
+    "edgecheck": "no edge problems",
+    "whisper_cut": "ผ่าน (รอยตัดต่อลื่น)"
    },
-   "note": "1 พ.ย.: ตัดฉาก 'พลาดตั้งแต่วินาทีที่ X / คุณเห็นไหม' + ภาพย้อนเวลา ตามที่เจ้าของสั่ง · กำลังเรนเดอร์ใหม่"
+   "note": "1 พ.ย.: ตัดฉาก 'พลาดตั้งแต่วินาทีที่ X / คุณเห็นไหม' และภาพย้อนเวลาออกตามที่เจ้าของสั่ง · เรนเดอร์ใหม่แล้ว"
   },
   {
    "id": "rabies-ep2",
    "order": 2,
    "title": "หมาที่บ้านกัดคุณ แต่ยังดูปกติ… อย่ารอดูว่ามันจะตาย | หมาดำตาสี่ EP.2 ตอนจบ",
-   "status": "draft",
+   "status": "final",
    "video_hq": "video/release/hq/rabies-ep2-HQ.mp4",
-   "video_hq_sha256": "c06d53800d24f567d266ddd5230a60adb4e6085472792ef43506f6aa4e5ecd0b",
-   "video_hq_bytes": 65751693,
+   "video_hq_sha256": "fe63e442d2e1ec2b2f9841e7c2f895be495a323e63177c5b97b48879276691e9",
+   "video_hq_bytes": 62851675,
    "video_repo": "video/rabies-ep2/EP2-ya-ro-du-ma-share.mp4",
    "cover": "video/rabies-ep2/cover.jpg",
    "caption": "ถ้าวันหนึ่ง… หมาที่บ้านกัดคุณ แต่มันยังดูปกติ 🐕 อย่ารอดูว่ามันจะตาย\n\nถ้าหมาที่บ้านกัด คุณจะรอดูมัน หรือรีบไปหาหมอ? 🤔 คอมเมนต์บอกหน่อย\n\nหมาดำตาสี่ EP.2/2 ตอนจบ · แชร์ให้คนที่เลี้ยงหมา ก่อนวันที่ต้องใช้\n#พิษสุนัขบ้า #หมากัด #เอาตัวรอด #หมาดำตาสี่ #RodMaiClub",
@@ -76,14 +77,15 @@
    "qa": {
     "size": "1080x1920",
     "fps": 60,
-    "duration_s": 80.8,
+    "duration_s": 76.83,
     "lufs": -13.7,
     "peak_db": -1.4,
     "freezedetect": "none ≥1.5 s",
     "hookcheck": "PASS (คำสั่ง 3.38 วิ)",
-    "edgecheck": "no edge problems"
+    "edgecheck": "no edge problems",
+    "whisper_cut": "ผ่าน (รอยตัดต่อลื่น)"
    },
-   "note": "1 พ.ย.: ตัดฉาก 'พลาดตั้งแต่วินาทีที่ X / คุณเห็นไหม' + ภาพย้อนเวลา ตามที่เจ้าของสั่ง · กำลังเรนเดอร์ใหม่"
+   "note": "1 พ.ย.: ตัดฉาก 'พลาดตั้งแต่วินาทีที่ X / คุณเห็นไหม' และภาพย้อนเวลาออกตามที่เจ้าของสั่ง · เรนเดอร์ใหม่แล้ว"
   }
  ]
 }

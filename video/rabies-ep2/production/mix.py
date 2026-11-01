@@ -85,7 +85,7 @@ CUES = [
     ("khiao", 0.0, "sting", 0.2), ("pen", 0.2, "whoosh", 0.18), ("map", 0.2, "whoosh", 0.22), ("map", 2.6, "ding", 0.22),
     ("race", 0.1, "whoosh", 0.25), *beats("race", 0.4, 1.8, 0.4, 0.28), ("race", F("race", 0, 3), "sting", 0.35),
     ("rule", vo_end("rule") + 0.3, "whoosh", 0.25), ("rule", vo_end("rule") + 0.9, "ding", 0.2), ("confess", vo_end("confess") - 0.6, "sting", 0.35),
-    ("rw", vo_t("rw", 1) - 0.8, "sting", 0.32), ("ear", 0.5, "sting", 0.4),
+    ("ear", 0.5, "sting", 0.4),
     ("day6", 0.0, "swell", 0.22), ("final", 0.1, "whoosh", 0.28), ("final", 0.9, "ding", 0.26),
 ]
 SAMPLES = [
@@ -95,7 +95,7 @@ SAMPLES = [
     ("herb", 0.0, "mortar", 0.5), ("herb", 2.4, "mortar", 0.4), ("home", 0.9, "dogfight", 0.5),
     ("khiao", 0.0, "daybed", 0.3, 3.0), ("pen", 0.0, "daybed", 0.25, 5.4), ("pen", 0.5, "chain", 0.75),
     ("map", 0.2, "moto", 0.5), ("race", 0.0, "clinic", 0.25, 5.5), ("rule", 0.0, "clinic", 0.3, 5.1), ("rule", vo_end("rule") + 0.35, "zinc", 0.5), ("rule", vo_end("rule") + 0.8, "chalk", 0.55),
-    ("confess", 0.0, "clinic", 0.3, 4.3), ("rw", 0.0, "clinic", 0.25, 2.5), ("rw", vo_t("rw", 1) - 0.8, "rewind", 0.8),
+    ("confess", 0.0, "clinic", 0.3, 4.3),
     ("ear", 0.0, "daybed", 0.22, 3.9), ("day6", 0.0, "nightvil", 0.25, 5.0), ("end", 0.0, "nightvil", 0.22, 4.4), ("final", 0.6, "chalk", 0.5),
 ]
 

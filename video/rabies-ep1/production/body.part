@@ -2,7 +2,7 @@
       // grammar: morning yard (lure, wide→close→insert) · clock back · map · arrival (wide) · ยาย+ไอ้ดำ (medium) · shadow legend · rule board ·
       // hug (medium close) · cards (puppies 2–6 months, saliva) · dusk: the sick puppy · pull back · shrug · rewind → the knee · night (dark, eyes) ·
       // morning (empty bowl) · close on the ear · choice · end board
-      // the planted mistake: at 0:04 the puppy licks the graze on ดิว's knee (insert "knee"); revealed at "rw" / "lick"
+      // the planted mistake: at 0:04 the puppy licks the graze on ดิว's knee (insert "knee"); shown again at "lick" (no rewind: removed 1 Nov)
       const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.55, shade: "#2a2040", shadeOp: 0.3, cast: false, vol: false };
       const DUSKL = { from: "left", rim: "#ffb070", rimOp: 0.6, shade: "#2a1838", shadeOp: 0.36, cast: false, vol: false };
       const MOONL = { from: "right", rim: "#a8c8ff", rimOp: 0.5, shade: "#0a0e1e", shadeOp: 0.5, cast: false, vol: false };
@@ -118,18 +118,6 @@
         cam: push("shrug", [460, 1200, 1.7, 540, 1000], [460, 1200, 1.8, 540, 1000]),
         actors: [A("phum", 460, 1640, 0.95, [{ t: 0, mode: "shrug", eyes: "side", mouth: "smile" }], { talk: [TALK("shrug", 0)] })],
         captions: caps("shrug", undefined, QUO),
-      });
-      // ---------- 16. rewind → back to 0:04 ----------
-      split("rw", vo("rw", 1) - 0.1, {
-        set: "village2", setOpts: { id: "v16", time: "dusk", house: [-60, 1.5] }, dark: 0.08, blur: { far: 3, mid: 2, fg: 8 }, light: DUSKL, grade: GDUSKR,
-        cam: push("rw", [460, 1200, 1.8, 540, 1000], [460, 1250, 1.5, 540, 1000]),
-        actors: [A("phum", 460, 1640, 0.95, [{ t: 0, mode: "shrug", eyes: "side", mouth: "smile" }])],
-        captions: caps("rw", [0]),
-        fx(tl, id, t0, L) { QkUI.rewind(tl, L.light, t0 + vo("rw", 1) - 0.9, 0.9, { from: "1:00", to: "0:04" }); },
-      }, {
-        set: "kneeIns", setOpts: { id: "k16" }, dark: 0, light: false, grade: { top: "#d8d0c0", bottom: "#4a4a5a", op: 0.25 }, cam: { keys: [{ t: 0, ...fr(700, 1040, 1.15, 540, 960), drift: { s: 0.03 } }] },
-        captions: capsFrom("rw", vo("rw", 1) - 0.1, [1]),
-        fx(tl, id, t0) { RabUI.lick(tl, "k16", t0, 1.4, 1); },
       });
       // ---------- 17. the graze, ringed ----------
       add("lick", {

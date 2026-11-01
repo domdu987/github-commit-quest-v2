@@ -33,7 +33,6 @@ SHOTS = [
     ("race", ["n08"], 0.15, 0.5, 4.0),          # card: the race
     ("rule", ["y03"], 0.15, 0.5, 3.0),          # the clinic: ยาย says the rule; the board, rule 2
     ("confess", ["p01"], 0.15, 0.5, 2.8),       # ภูมิ raises his hand
-    ("rw", ["n09", "n10"], 0.15, 0.4, 3.2),     # rewind to 0:03
     ("ear", ["n11"], 0.15, 0.5, 3.0),           # the ear, ringed
     ("day6", ["n12"], 0.2, 0.5, 3.4),           # the empty pen, the red collar on the post · then the clinic card
     ("end", ["p02"], 0.2, 0.6, 3.0),            # ภูมิ with the collar, ยาย beside him

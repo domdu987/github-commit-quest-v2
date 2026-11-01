@@ -125,7 +125,12 @@
         foot = `<path d="M-13,118Q-14,110 -4,110H8Q14,114 18,124Q34,128 36,138Q36,144 28,144H-14Q-17,132 -13,118Z" fill="${sk2}" stroke="${LINE}" stroke-width="2.4" stroke-linejoin="round"/>
           <path d="M22,136v6M28,136v6" stroke="${skinD}" stroke-width="1.6"/>${ft.kind === "sandal" ? `<path d="M-15,144H38" stroke="${ft.c || "#6a4a2a"}" stroke-width="5"/><path d="M6,118q6,10 16,8" stroke="${ft.c || "#6a4a2a"}" stroke-width="4" fill="none"/>` : ""}`;
       }
-      return `<g id="${id}-th${side}"><g>${thigh}</g><g transform="translate(0,150)"><g id="${id}-sh${side}">${shin}${foot}</g></g></g>`;
+      // hide the wooden-doll seam at the knee (skill V11): after the shin, redraw the thigh's own shape (fill only) clipped to a disc
+      // round the knee — the shin's top-cap outline inside the thigh disappears, the outer silhouette stays, the leg reads as one piece
+      const kw0 = bt.kind === "shorts" ? tw0 - 6 : tw0 + (bt.kind === "sarong" ? 10 : 0), kw1 = bt.kind === "shorts" ? tw1 - 6 : tw1 + (bt.kind === "sarong" ? 10 : 0);
+      const kneeC = bt.kind === "shorts" ? sk : c, kd = limbD(150, kw0, kw1);
+      const knee = `<clipPath id="${id}-kc${side}"><circle cx="0" cy="150" r="${f(kw1 * 0.95)}"/></clipPath><g clip-path="url(#${id}-kc${side})"><path d="${kd}" fill="${kneeC}"/><path d="${kd}" fill="url(#r2Cyl)"/></g>`;
+      return `<g id="${id}-th${side}"><g>${thigh}</g><g transform="translate(0,150)"><g id="${id}-sh${side}">${shin}${foot}</g></g>${knee}</g>`;
     };
 
     // ---- arms ----
@@ -149,7 +154,10 @@
         <path d="M-6,124q4,4 9,3" stroke="${skinD}" stroke-width="1.6" fill="none"/>${V.wristband && !B ? `<path d="M-11,98H11V106H-11Z" fill="${V.wristband}" stroke="${LINE}" stroke-width="2"/>` : ""}`;
       const tor = `<g id="${id}-torch" display="none" transform="translate(0,118)"><rect x="-9" y="-6" width="18" height="44" rx="4" fill="#3d3833" stroke="${LINE}" stroke-width="2.6"/>
           <path id="${id}-beam" d="M-8,38L-230,900H230L8,38Z" fill="url(#beamg)"/></g>`;
-      return `<g id="${id}-ua${side}">${upper}<g transform="translate(0,122)"><g id="${id}-fa${side}">${fore}${hand}<g id="${id}-hand${side}">${side === "F" ? tor : ""}${extra}</g></g></g></g>`;
+      // the elbow seam, same fix as the knee (skipped when the sleeve ends at the elbow: that edge is a real hem)
+      const upEnd = sl === "none" || sl === "short" ? sk : tc, ud = limbD(122, uw0, uw1);
+      const elbow = upEnd === fc ? `<clipPath id="${id}-ec${side}"><circle cx="0" cy="122" r="${f(uw1 * 0.95)}"/></clipPath><g clip-path="url(#${id}-ec${side})"><path d="${ud}" fill="${upEnd}"/><path d="${ud}" fill="url(#r2Cyl)"/></g>` : "";
+      return `<g id="${id}-ua${side}">${upper}<g transform="translate(0,122)"><g id="${id}-fa${side}">${fore}${hand}<g id="${id}-hand${side}">${side === "F" ? tor : ""}${extra}</g></g></g>${elbow}</g>`;
     };
 
     // ---- torso ----
