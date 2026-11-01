@@ -20,47 +20,47 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("hook", ["n01"], 0.05, 0.04, 1.0),      # B0 คิว points at the smoke behind the far karst (EP.1's last frame)
-    ("cmd", ["n02"], 0.03, 0.20, 0.9),       # his face → red
-    ("why", ["n03"], 0.10, 0.15, 3.0),       # B1 up and away: a dot on grey rock (aerial)
-    ("wreck", ["n04"], 0.08, 0.15, 2.4),     # the tail from the sky, ring | the wet chart
-    ("bottle", ["n05"], 0.08, 0.12, 1.8),    # half a bottle of water in his hand (the clock)
-    ("sun", ["n06"], 0.06, 0.30, 1.4),       # sun on the rocks, heat shimmer → red
-    ("empty1", ["n07"], 0.10, 0.10, 1.6),    # B2 the last drop, the empty bottle
-    ("thirst", ["n08"], 0.06, 0.10, 1.8),    # cracked lips | he kneels at the water's edge, cupping seawater
-    ("nosea", ["n09"], 0.04, 0.25, 1.0),     # his hands stop at his mouth → red
-    ("salt", ["n10"], 0.08, 0.12, 2.4),      # the water runs out of his fingers; salt crust on the rock
-    ("look", ["n11"], 0.06, 0.10, 1.6),      # he looks up: green coconuts
-    ("coco", ["n12"], 0.08, 0.12, 3.0),      # he knocks one down, opens it on a metal edge, drinks | a brown one beside
-    ("onetree", ["n13"], 0.06, 0.30, 1.6),   # wide: the only palm on the island → red
-    ("rain", ["n14"], 0.12, 0.10, 3.0),      # B3 night rain: the plastic sheet from the wreck catching water
-    ("vest", ["n15"], 0.08, 0.15, 3.0),      # plant: orange vest under the jacket | the phone light out of the tail
-    ("glow", ["n16"], 0.08, 0.25, 1.6),      # 4 a.m.: the fire across the bay | his face lit orange → red
-    ("q1", ["q01"], 0.06, 0.12, 1.6),        # คิว jumps up: the village!
-    ("lure", ["n17"], 0.08, 0.12, 2.4),      # the cliff side-on, he walks toward the light
+    ("hook", ["n01"], 0.03, 0.02, 1.0),      # B0 คิว points at the smoke behind the far karst (EP.1's last frame)
+    ("cmd", ["n02"], 0.03, 0.2, 0.9),       # his face → red
+    ("why", ["n03"], 0.06, 0.075, 3.0),       # B1 up and away: a dot on grey rock (aerial)
+    ("wreck", ["n04"], 0.048, 0.075, 2.4),     # the tail from the sky, ring | the wet chart
+    ("bottle", ["n05"], 0.048, 0.06, 1.8),    # half a bottle of water in his hand (the clock)
+    ("sun", ["n06"], 0.06, 0.3, 1.4),       # sun on the rocks, heat shimmer → red
+    ("empty1", ["n07"], 0.06, 0.05, 1.6),    # B2 the last drop, the empty bottle
+    ("thirst", ["n08"], 0.036, 0.05, 1.8),    # cracked lips | he kneels at the water's edge, cupping seawater
+    ("nosea", ["n09"], 0.04, 0.2, 1.0),     # his hands stop at his mouth → red
+    ("salt", ["n10"], 0.048, 0.06, 2.4),      # the water runs out of his fingers; salt crust on the rock
+    ("look", ["n11"], 0.036, 0.05, 1.6),      # he looks up: green coconuts
+    ("coco", ["n12"], 0.048, 0.06, 3.0),      # he knocks one down, opens it on a metal edge, drinks | a brown one beside
+    ("onetree", ["n13"], 0.06, 0.3, 1.6),   # wide: the only palm on the island → red
+    ("rain", ["n14"], 0.072, 0.05, 3.0),      # B3 night rain: the plastic sheet from the wreck catching water
+    ("vest", ["n15"], 0.048, 0.075, 3.0),      # plant: orange vest under the jacket | the phone light out of the tail
+    ("glow", ["n16"], 0.08, 0.2, 1.6),      # 4 a.m.: the fire across the bay | his face lit orange → red
+    ("q1", ["q01"], 0.036, 0.06, 1.6),        # คิว jumps up: the village!
+    ("lure", ["n17"], 0.048, 0.06, 2.4),      # the cliff side-on, he walks toward the light
     ("dont", ["n18"], 0.05, 0.25, 1.3),      # he brakes at the edge, stones fall
-    ("q2", ["q02"], 0.08, 0.20, 1.6),        # back in the tail: I'll wait here
-    ("tide", ["n19"], 0.12, 0.10, 3.4),      # B4 low tide: limpets on the rocks | a bush with bright red fruit, his hand reaching
-    ("nofruit", ["n20"], 0.04, 0.25, 1.2),   # his hand stops → red
-    ("shell", ["n21"], 0.08, 0.10, 1.8),     # he prises limpets off a rock the sea covers at high tide
-    ("cook", ["n22"], 0.06, 0.10, 1.4),      # shells on the embers
-    ("fire", ["n23"], 0.06, 0.10, 2.0),      # the lighter from a passenger's bag, the fire catches
-    ("rotor", ["n24"], 0.04, 0.30, 1.4),     # he looks up → red
-    ("q3", ["q03"], 0.04, 0.10, 1.6),        # B5 he runs out waving, the helicopter high
-    ("pass", ["n25"], 0.08, 0.15, 4.0),      # it flies past | his face | grey wreck, thin smoke
-    ("under", ["n26"], 0.08, 0.30, 1.6),     # close: the orange edge under his zip → red
-    ("bright", ["n27"], 0.10, 0.10, 1.4),    # B6 the safety card | the vest spread on the wreck
-    ("flash", ["n28"], 0.06, 0.10, 1.4),     # the metal panel tilted, a flash
-    ("leaves", ["n29"], 0.06, 0.15, 2.6),    # green leaves on the fire, white smoke against black rock
-    ("back", ["n30"], 0.08, 0.25, 1.6),      # the helicopter turns back → red
-    ("found", ["r01"], 0.06, 0.12, 2.0),     # the rescuer: found him
-    ("saved", ["n31"], 0.08, 0.15, 2.4),     # คิว crying-smiling, rotor wind
-    ("empty", ["r02"], 0.08, 0.20, 2.0),     # the front section: nobody → red
+    ("q2", ["q02"], 0.048, 0.1, 1.6),        # back in the tail: I'll wait here
+    ("tide", ["n19"], 0.072, 0.05, 3.4),      # B4 low tide: limpets on the rocks | a bush with bright red fruit, his hand reaching
+    ("nofruit", ["n20"], 0.04, 0.2, 1.2),   # his hand stops → red
+    ("shell", ["n21"], 0.048, 0.05, 1.8),     # he prises limpets off a rock the sea covers at high tide
+    ("cook", ["n22"], 0.036, 0.05, 1.4),      # shells on the embers
+    ("fire", ["n23"], 0.036, 0.05, 2.0),      # the lighter from a passenger's bag, the fire catches
+    ("rotor", ["n24"], 0.04, 0.3, 1.4),     # he looks up → red
+    ("q3", ["q03"], 0.024, 0.05, 1.6),        # B5 he runs out waving, the helicopter high
+    ("pass", ["n25"], 0.048, 0.075, 4.0),      # it flies past | his face | grey wreck, thin smoke
+    ("under", ["n26"], 0.08, 0.3, 1.6),     # close: the orange edge under his zip → red
+    ("bright", ["n27"], 0.06, 0.05, 1.4),    # B6 the safety card | the vest spread on the wreck
+    ("flash", ["n28"], 0.036, 0.05, 1.4),     # the metal panel tilted, a flash
+    ("leaves", ["n29"], 0.036, 0.075, 2.6),    # green leaves on the fire, white smoke against black rock
+    ("back", ["n30"], 0.08, 0.2, 1.6),      # the helicopter turns back → red
+    ("found", ["r01"], 0.036, 0.06, 2.0),     # the rescuer: found him
+    ("saved", ["n31"], 0.048, 0.075, 2.4),     # คิว crying-smiling, rotor wind
+    ("empty", ["r02"], 0.08, 0.2, 2.0),     # the front section: nobody → red
     ("hush", [], 0.0, 0.0, 0.5),             # twist: silence, darker
-    ("twist", ["n32"], 0.12, 0.15, 4.0),     # B7 the smoke | the signal fire by the front section | the phone light seen from there
-    ("walk", ["n33"], 0.08, 0.15, 1.8),      # torches leaving into the jungle at night
-    ("lost", ["n34"], 0.10, 0.60, 1.8),      # footprints into the dark jungle, the rescuer kneeling → red
-    ("end", [], 0.05, 0.10, 3.0),            # the safety card: three rules ticked
+    ("twist", ["n32"], 0.072, 0.075, 4.0),     # B7 the smoke | the signal fire by the front section | the phone light seen from there
+    ("walk", ["n33"], 0.048, 0.075, 1.8),      # torches leaving into the jungle at night
+    ("lost", ["n34"], 0.1, 0.45, 1.8),      # footprints into the dark jungle, the rescuer kneeling → red
+    ("end", [], 0.05, 0.05, 2.2),            # the safety card: three rules ticked
 ]
 GAP = 0.08
 

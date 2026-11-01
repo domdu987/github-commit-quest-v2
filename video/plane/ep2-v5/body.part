@@ -38,25 +38,25 @@
       // ---- v5: inserts are drawn at the identity camera (world = screen), the set behind thrown out of focus ----
       const ID = fr(540, 960, 1.0, 540, 960);
       const INS = (base, d, push = 0.04) => ({ ...base, blur: { far: 8, mid: 8, set: 9, fg: 14 }, cam: { keys: [{ t: 0, ...ID }, { t: d, glide: d, ...fr(540, 960, 1 + push, 540, 960) }] } });
+      Rig.MODES.pull = (u, o) => ({ ...Rig.MODES.kneel(u, o), torso: 4 + 2 * Math.sin(u * 3), head: -10, uaF: -92 + 3 * Math.sin(u * 5), faF: -6, uaB: -82, faB: -14 });
       Rig.MODES.cup = (u, o) => ({ ...Rig.MODES.kneel(u, o), torso: 34, head: 6, uaF: -54, faF: -48, uaB: -44, faB: -56 });
       Rig.MODES.sitFire = (u, o) => ({ ...Rig.MODES.kneel(u, o), torso: 18, head: -4 + 2 * Math.sin(u * 1.2), uaF: -60, faF: -30, uaB: -20, faB: -60 });
       Rig.MODES.throwF = (u, o) => { const k = Math.min(1, u / 0.35); return { ...Rig.MODES.idle(u, o), torso: 10 * k - 6, head: -4, uaF: 40 - 150 * k, faF: -60 + 50 * k, uaB: 10, faB: -20 }; };
       const DAYR = (id, extra = {}) => ISLE(id, "day", "rocks", extra);
       // B0 frame 0 = EP.1 v4b's last place: the ทะเลลด beach at eerie dusk, the smoke behind the far karst (820, 650); คิว big in front, pointing at it
-      add("hook", { set: "tideBeach", setOpts: { id: "h0", view: "sea", time: "eerie", sea: 0, boats: 0, fish: 0, people: 0, seed: 7 }, dark: 0.02, light: { from: "left", rim: "#ffc890", rimOp: 0.9, shade: "#141a2a", shadeOp: 0.25, cast: { len: 0.6, op: 0.3 }, vol: false },
+      add("hook", { set: "tideBeach", setOpts: { id: "h0", view: "sea", time: "eerie", sea: 0, boats: 0, fish: 0, people: 0, seed: 7, palms: false }, dark: 0.02, light: { from: "left", rim: "#ffc890", rimOp: 0.9, shade: "#141a2a", shadeOp: 0.25, cast: { len: 0.6, op: 0.3 }, vol: false },
         grade: { top: "#ff8a5a", bottom: "#2a2050", op: 0.18 }, blur: { fg: 6 },
-        cam: { keys: [{ t: 0, ...fr(640, 1000, 1.15, 540, 900) }, { t: D("hook"), glide: D("hook"), ...fr(680, 960, 1.24, 540, 900) }] }, captions: caps("hook"),
-        actors: [A("kiw", 420, 1500, 1.6, [T("idle", "wide", "o"), T("cock", "wide", "o", 0.5), T("pointF", "wide", "o", 0.72)])],
+        cam: { keys: [{ t: 0, ...fr(640, 820, 1.0, 540, 900) }, { t: D("hook"), glide: D("hook"), ...fr(660, 800, 1.06, 540, 900) }] }, captions: caps("hook"),
+        actors: [A("kiw", 380, 1560, 1.75, [T("idle", "wide", "o"), T("cock", "wide", "o", 0.5), T("pointF", "wide", "o", 0.72)])],
         fx(tl, id, t0, L) { Tide.sea(tl, "h0", t0, D("hook"), {});
           put(L.sky, `<linearGradient id="h0-dk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4a6a"/><stop offset=".6" stop-color="#c87a6a"/><stop offset="1" stop-color="#f2b080"/></linearGradient><rect x="-2000" y="-1400" width="5200" height="2050" fill="url(#h0-dk)"/><circle cx="260" cy="640" r="260" fill="#fff0c8" opacity=".35"/><circle cx="260" cy="640" r="66" fill="#fff6e0"/>`);
-          put(L.far, `${Isle.plume("h0p", 830, 655, 620, { lean: 0.32, sunX: 260, n: 20 })}<g>${Plane.puffMk("h0c", 820, 650, 14, "dark", 70)}</g><circle cx="830" cy="655" r="40" fill="#ff7a2a" opacity=".8" filter="url(#plBlur14)"/>`);
-          Plane.puffs(tl, "h0c", t0 - 3, D("hook") + 3.5, 14, { dx: 80, dy: -560, per: 2.0, op: 0.95 }); life(tl, t0, D("hook")); } });
+          put(L.far, `${Isle.billow("h0b", 800, 640, 900, { lean: 0.2, n: 22, s: 1.45, grey: true })}`); Isle.billowLife(tl, t0, D("hook")); life(tl, t0, D("hook")); } });
       // the command on his face (≥ 1/3): eyes on the smoke, gold rim from the left
       add("cmd", { ...CU(ROCKS("c0"), "kiw", 380, [T("pointF", "wide", "o")], { dx: 50 })(D("cmd")), captions: caps("cmd") });
       seg("why", [
         [0, (d) => ({ ...ROCKS("w1", { fg: false }), cam: { keys: [{ t: 0, ...fr(560, 1500, 1.2, 540, 960) }, { t: d, glide: d, ...fr(560, 1300, 0.42, 540, 960) }] },
           actors: [A("kiw", 520, 1780, 1.45, [T("idle", "wide", "o")])], fx(tl, id, t0) { life(tl, t0, d); } })],
-        [C("why", 0, 2), (d) => ({ set: "aerial", setOpts: { id: "w2", window: true }, dark: 0, light: false, grade: GDAY,
+        [C("why", 0, 2), (d) => ({ set: "aerial", setOpts: { id: "w2" }, dark: 0, light: false, grade: GDAY,
           cam: { keys: [{ t: 0, ...fr(560, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(620, 1100, 1.25, 540, 960) }] },
           fx(tl, id, t0) { life(tl, t0, d); tl.fromTo("#w2-dot", { opacity: 1 }, { opacity: 0.3, duration: 0.2, yoyo: true, repeat: 6, immediateRender: false }, t0); } })],
       ]);
@@ -83,7 +83,7 @@
           tl.fromTo("#su-h", { opacity: 0.1 }, { opacity: 0.35, duration: 0.4, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, t0); } });
       // the last drop
       add("empty1", { ...INS(DAYR("e1", { fg: false }), D("empty1")), captions: caps("empty1"),
-        fx(tl, id, t0, L) { life(tl, t0, D("empty1")); put(L.act, `<g transform="translate(560,620) scale(1.8) rotate(160)">${Isle.bottle("bo2", 0.03)}</g>`);
+        fx(tl, id, t0, L) { life(tl, t0, D("empty1")); put(L.act, `<g transform="translate(560,620) scale(1.8) rotate(160)">${Isle.bottle("bo2", 0.03)}</g>${Isle.hand([700, 930], -28, 2.0, { hand: { curl: [0.8, 0.85, 0.85, 0.9], thumb: 0.2 } })}`);
           tl.fromTo("#bo2-d", { opacity: 1, attr: { cy: -330 } }, { opacity: 1, attr: { cy: -560 }, duration: 0.6, ease: "power2.in", immediateRender: false }, t0 + 0.3); tl.to("#bo2-d", { opacity: 0, duration: 0.1 }, t0 + 0.9); } });
       // cracked lips (≥ 1/3) → he kneels at the water's edge and cups the sea in both hands
       seg("thirst", [
@@ -96,12 +96,22 @@
         fx(tl, id, t0, L) { life(tl, t0, D("nosea")); put(L.act, `<g id="ns-h">${Isle.hand([470, 1120], 18, 2.4, { hand: { curl: [0.25, 0.25, 0.25, 0.3], thumb: 0.6 } })}${Isle.hand([610, 1120], -18, 2.4, { mirror: true, hand: { curl: [0.25, 0.25, 0.25, 0.3], thumb: 0.6 } })}<ellipse cx="540" cy="1000" rx="120" ry="34" fill="#5ab0d8" opacity=".85"/><path d="M450,990q90,-20 180,0" stroke="#fff" stroke-width="6" opacity=".7" fill="none"/></g>`);
           tl.fromTo("#ns-h", { y: 160 }, { y: 0, duration: 0.25, ease: "power3.out", immediateRender: false }, t0); } });
       // the water runs out between his fingers onto the rock; the salt crust left where the sea dried
-      add("salt", { ...INS(DAYR("sl", { fg: false }), D("salt")), captions: caps("salt"),
-        fx(tl, id, t0, L) { life(tl, t0, D("salt")); const r = Pop2.mk(4);
-          put(L.act, `<path d="M-200,1500Q300,1440 1300,1520V2200H-200Z" fill="#4a4a54"/>${Array.from({ length: 26 }, () => `<ellipse cx="${f1(r() * 1080)}" cy="${f1(1540 + r() * 300)}" rx="${f1(20 + r() * 60)}" ry="${f1(6 + r() * 14)}" fill="#f4f2ee" opacity="${f1(0.5 + r() * 0.4)}"/>`).join("")}
-            ${Isle.hand([500, 1050], 0, 2.4, { hand: { curl: [0, 0, 0, 0], thumb: 0 } })}<g id="sl-dr">${Array.from({ length: 8 }, (_, k) => `<circle cx="${440 + k * 18}" cy="${980}" r="${6 + (k % 3) * 2}" fill="#7ac8f0"/>`).join("")}</g>`);
-          tl.fromTo("#sl-dr", { y: 0, opacity: 1 }, { y: 560, opacity: 0.2, duration: 0.6, repeat: 3, ease: "power2.in", immediateRender: false }, t0); } });
-      // he looks up: green coconuts high in the only palm
+      // the mechanism with his own bottles: one bottle of seawater goes in → two bottles of the body's water pour out → salt crystals on his palm
+      seg("salt", [
+        [0, (d) => ({ ...INS(DAYR("sl1", { fg: false }), d), fx(tl, id, t0, L) { life(tl, t0, d);
+          put(L.act, `<path d="M-300,1500Q500,1440 1400,1520V2400H-300Z" fill="#4a4a54"/><g id="sl1b" transform="translate(540,1120) scale(2.0)">${Isle.bottle("sb1", 0.95, { c: "#3a9a9a", label: "น้ำทะเล" })}</g>${Isle.hand([470, 1080], 70, 2.1, { hand: { curl: [0.8, 0.85, 0.85, 0.9], thumb: 0.2 } })}`);
+          tl.fromTo("#sl1b", { rotation: 0, svgOrigin: "540 1120" }, { rotation: -150, svgOrigin: "540 1120", duration: d * 0.6, ease: "power1.inOut", immediateRender: false }, t0 + 0.1);
+          tl.fromTo("#sb1-w", { scaleY: 1, svgOrigin: "0 0" }, { scaleY: 0.02, svgOrigin: "0 0", duration: d * 0.7, ease: "power1.in", immediateRender: false }, t0 + 0.3); } })],
+        [C("salt", 0, 1), (d) => ({ ...INS(DAYR("sl2", { fg: false }), d), fx(tl, id, t0, L) { life(tl, t0, d);
+          put(L.act, `<path d="M-300,1450Q500,1400 1400,1470V2400H-300Z" fill="#4a4a54"/>${[[330, "sb2"], [750, "sb3"]].map(([x, b2]) => `<g id="${b2}g" transform="translate(${x},1180) scale(1.8)">${Isle.bottle(b2, 0.95, { label: "น้ำในตัว" })}</g><path id="${b2}s" d="M${x},700Q${x + 90},900 ${x + 70},1450" stroke="#7ac8f0" stroke-width="22" fill="none" stroke-linecap="round" opacity="0"/>`).join("")}
+            <g id="sl2d">${Array.from({ length: 14 }, (_, k) => `<circle cx="${200 + (k * 71) % 700}" cy="${1440 + (k % 3) * 14}" r="${8 + (k % 3) * 3}" fill="#7ac8f0"/>`).join("")}</g>`);
+          ["sb2", "sb3"].forEach((b2, j) => { tl.fromTo(`#${b2}g`, { rotation: 0, svgOrigin: `${j ? 750 : 330} 1180` }, { rotation: j ? 120 : -120, svgOrigin: `${j ? 750 : 330} 1180`, duration: 0.45, ease: "power2.in", immediateRender: false }, t0 + 0.15 + j * 0.2);
+            tl.fromTo(`#${b2}-w`, { scaleY: 1, svgOrigin: "0 0" }, { scaleY: 0.02, svgOrigin: "0 0", duration: d - 0.8, ease: "none", immediateRender: false }, t0 + 0.55 + j * 0.2); });
+          tl.fromTo("#sl2d", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, immediateRender: false }, t0 + 0.7); } })],
+        [C("salt", 0, 2), (d) => ({ ...INS(DAYR("sl3", { fg: false }), d, 0.08), fx(tl, id, t0, L) { life(tl, t0, d); const r = Pop2.mk(9);
+          put(L.act, `${Isle.hand([540, 1250], 0, 3.0, { hand: { curl: [0, 0, 0, 0], thumb: 0 } })}<g id="sl3c">${Array.from({ length: 34 }, () => { const x = 460 + r() * 170, y = 1020 + r() * 210, s2 = 5 + r() * 9; return `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(s2)}" height="${f1(s2)}" fill="#ffffff" stroke="#c8d4dc" stroke-width="1.5" transform="rotate(${f1(r() * 90)} ${f1(x)} ${f1(y)})"/>`; }).join("")}</g>`);
+          tl.fromTo("#sl3c", { opacity: 0.2 }, { opacity: 1, duration: 0.18, yoyo: true, repeat: Math.ceil(d / 0.18), ease: "sine.inOut", immediateRender: false }, t0); } })],
+      ]);
       add("look", { ...DAYR("lk", { fg: false }), cam: { keys: [{ t: 0, ...fr(480, 1200, 0.95, 540, 1000) }, { t: D("look"), glide: D("look"), ...fr(460, 1000, 1.05, 540, 1000) }] }, captions: caps("look"),
         actors: [A("kiw", 330, 1820, 1.3, [T("lookUp", "wide", "o")])],
         fx(tl, id, t0, L) { life(tl, t0, D("look")); put(L.act, `<g>${Tide.coco(760, 1850, 1.3, -0.12, 41, { pal: ["#2f6e3a", "#4f9a44", "#9ccc6a"] })}</g>`); } });
@@ -115,7 +125,7 @@
         actors: [A("kiw", -160, 1480, 0.9, [T("idle", "worry", "frown")])], fx(tl, id, t0) { life(tl, t0, D("onetree")); } });
       // night rain: the plastic sheet from the wreck tied between rocks, its belly filling, dripping into the bottle
       add("rain", { ...ISLE("rn", "night", "rocks", { tail: [-800, 1420, 1.0] }), cam: { keys: [{ t: 0, ...fr(560, 1400, 1.2, 540, 1000) }, { t: D("rain"), glide: D("rain"), ...fr(560, 1420, 1.3, 540, 1000) }] }, captions: caps("rain"),
-        actors: [A("kiwHidden", 200, 1760, 1.2, [T("crouch", "normal", "smile")])],
+        actors: [A("kiwHidden", 230, 1760, 1.2, [T("pull", "normal", "smile")])],
         fx(tl, id, t0, L) { life(tl, t0, D("rain")); Isle.life3(tl, t0, D("rain")); put(L.act, `${Isle.sheet("rs", 620, 1420, 560)}<g transform="translate(620,1760) scale(.8)">${Isle.bottle("rb", 0.1)}</g>`); Isle.rainOver(L, "rn");
           tl.fromTo("#rb-w", { scaleY: 1, svgOrigin: "0 0" }, { scaleY: 6, svgOrigin: "0 0", duration: D("rain"), ease: "none", immediateRender: false }, t0);
           tl.fromTo("#rs-pool", { attr: { rx: 40 } }, { attr: { rx: 110 }, duration: D("rain"), ease: "none", immediateRender: false }, t0); } });
@@ -150,7 +160,7 @@
       // morning, low tide: limpets on the wet rock | a bush of bright red fruit, his hand reaching for it
       seg("tide", [
         [0, (d) => ({ ...INS(ISLE("td1", "dawn", "rocks", { fg: false }), d), fx(tl, id, t0, L) { life(tl, t0, d);
-          put(L.act, `<path d="M-300,760Q500,700 1400,780V2400H-300Z" fill="#4a4456"/><path d="M-300,760Q500,700 1400,780V860Q500,800 -300,860Z" fill="#6a6474"/><path d="M-200,820q300,-30 600,0" stroke="#fff" stroke-width="6" opacity=".4" fill="none"/><g transform="translate(540,1020) scale(2.3)">${Isle.limpets(0, 0, 14, 3)}</g><g transform="translate(300,1250) scale(1.8)">${Isle.limpets(0, 0, 8, 4)}</g><ellipse cx="760" cy="880" rx="150" ry="30" fill="#f6b0a0" opacity=".55"/>`); } })],
+          put(L.act, Isle.tideRock("trk", { top: 560, line: 860, ls: 2.4 })); } })],
         [C("tide", 0, 2), (d) => ({ ...INS(ISLE("td2", "dawn", "rocks", { fg: false }), d), fx(tl, id, t0, L) { life(tl, t0, d); Isle.life3(tl, t0, d);
           put(L.act, `${Isle.redBush("rbs", 420, 1500, 2.2)}<g id="td2h">${Isle.hand([900, 1080], -62, 2.2, { hand: { curl: [0.1, 0.15, 0.2, 0.25], thumb: 0.2 } })}</g>`);
           tl.fromTo("#td2h", { x: 400, y: 120 }, { x: 0, y: 0, duration: d, ease: "power1.out", immediateRender: false }, t0); } })],
@@ -162,8 +172,7 @@
       // only the shells the sea covers at high tide: the dark wet band under the waterline; he prises one off
       add("shell", { ...INS(ISLE("sh", "dawn", "rocks", { fg: false }), D("shell")), captions: caps("shell"),
         fx(tl, id, t0, L) { life(tl, t0, D("shell"));
-          put(L.act, `<path d="M-300,500Q500,460 1400,520V2400H-300Z" fill="#8a8494"/><path d="M-300,820Q500,770 1400,830V2400H-300Z" fill="#4a4456"/><path d="M-300,820Q500,770 1400,830" stroke="#c8e4f0" stroke-width="8" stroke-dasharray="22 14" fill="none"/>
-            <g transform="translate(520,1060) scale(2.2)">${Isle.limpets(0, 0, 12, 7)}</g><g id="shh">${Isle.hand([660, 1000], -20, 2.2, { hand: { curl: [0.5, 0.6, 0.7, 0.75], thumb: 0.5 } })}</g>`);
+          put(L.act, `${Isle.tideRock("srk", { top: 420, line: 760, ls: 2.2, lx: 480, lseed: 7, n: 12 })}<g id="shh">${Isle.hand([660, 1000], -20, 2.2, { hand: { curl: [0.5, 0.6, 0.7, 0.75], thumb: 0.5 } })}</g>`);
           tl.fromTo("#shh", { x: 120, y: 80 }, { x: 0, y: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, t0); tl.to("#shh", { y: -60, duration: 0.3, ease: "power2.in", immediateRender: false }, t0 + D("shell") - 0.5); } });
       add("cook", { ...INS(ISLE("ck", "dawn", "rocks", { fg: false }), D("cook"), 0.06), captions: caps("cook"),
         fx(tl, id, t0, L) { life(tl, t0, D("cook")); put(L.act, `${Isle.firePit("ckf", 540, 1400, 2.4, { shells: true, smoke: "thin" })}`); life(tl, t0, D("cook")); } });
