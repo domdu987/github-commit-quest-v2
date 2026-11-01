@@ -47,14 +47,15 @@
    "series": "ทางกลับบ้าน (สงคราม)",
    "status": "final",
    "branch": "prod/lane-a",
-   "commit": "deee5d9",
+   "commit": "390304b",
    "package": "video/release/war.json",
    "video_hq": "video/release/hq/war-ep1-HQ.mp4",
-   "video_hq_sha256": "d909b6ee2316eba8238505474ab710cc6e5ba7c8e6197fa7a97efb964ecc5329",
-   "video_hq_bytes": 84219657,
+   "video_hq_sha256": "26daa7ad0ba71cdc487e2885db903b5c62b8ebc3f3bffe3f356c9f18aa040baf",
+   "video_hq_bytes": 84282630,
    "suggested_time": "2026-11-02T12:00+07:00",
    "slot": "เที่ยง",
-   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)"
+   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
+   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว"
   },
   {
    "order": 4,
@@ -62,14 +63,15 @@
    "series": "ทางกลับบ้าน (สงคราม)",
    "status": "final",
    "branch": "prod/lane-a",
-   "commit": "deee5d9",
+   "commit": "390304b",
    "package": "video/release/war.json",
    "video_hq": "video/release/hq/war-ep2-HQ.mp4",
-   "video_hq_sha256": "4f7da48bd170c46641421f1a64ad68a626cd4557fecb89a1360c84d5c0e6958f",
-   "video_hq_bytes": 71595158,
+   "video_hq_sha256": "35c929b3f9436cb4dc0f8fe2a772900391959384451e9ab001c5da2d44831f80",
+   "video_hq_bytes": 73761965,
    "suggested_time": "2026-11-02T12:30+07:00",
    "slot": "เที่ยง",
-   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)"
+   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
+   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว"
   },
   {
    "order": 5,
