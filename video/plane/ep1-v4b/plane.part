@@ -199,7 +199,7 @@
           s += `<path d="M${AS(AP(sd * BX, BY, Z0))}L${AS(AP(sd * BX, BY, Z1))}" stroke="${PL.ink}" stroke-width="3"/>`;
           s += `<path d="${aq([AP(sd * (BX - 0.04), BT, Z0), AP(sd * (BX - 0.04), BT, Z1), AP(0, CY, Z1), AP(0, CY, Z0)])}" fill="${sd < 0 ? "#f3efe6" : "#e9e3d8"}"/>`;
         });
-        s += `<path d="${aq([AP(-0.12, CY - 0.005, Z0), AP(0.12, CY - 0.005, Z0), AP(0.12, CY - 0.005, Z1), AP(-0.12, CY - 0.005, Z1)])}" fill="${alarm ? "#ffd6a0" : "#fffbe8"}" opacity=".9"/>`;
+        s += `<path d="${aq([AP(-0.12, CY - 0.005, Z0), AP(0.12, CY - 0.005, Z0), AP(0.12, CY - 0.005, Z1), AP(-0.12, CY - 0.005, Z1)])}" fill="#fffbe8" opacity="${alarm ? 0 : 0.9}"/>`;
         // windows (shade half down), bin seams with row numbers, reading-light panels
         for (let z = Z0 + 0.3; z < Z1; z += 0.53) [-1, 1].forEach((sd) => { const a = AP(sd * W, 0.95, z), b = AP(sd * W, 1.32, z + 0.24), w = Math.abs(b[0] - a[0]);
           s += `<rect x="${f1(Math.min(a[0], b[0]))}" y="${f1(b[1])}" width="${f1(w)}" height="${f1(a[1] - b[1])}" rx="${f1(w * 0.45)}" fill="#ffc98a" stroke="#a89e8a" stroke-width="${sw(z, 4)}"/>

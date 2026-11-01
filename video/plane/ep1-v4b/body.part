@@ -40,6 +40,9 @@
       const fireLight = (tl, L, id, t0, dur, op = 0.3, side = "right") => {
         put(L.light, `<radialGradient id="${id}-flg" cx="${side === "right" ? 1 : 0}" cy=".55" r="1"><stop offset="0" stop-color="#ff7a2a" stop-opacity="1"/><stop offset=".6" stop-color="#ff5a1a" stop-opacity=".35"/><stop offset="1" stop-color="#ff5a1a" stop-opacity="0"/></radialGradient>
           <rect id="${id}-fl" width="1080" height="1920" fill="url(#${id}-flg)" opacity="0" style="mix-blend-mode:screen"/>`); flick(tl, `#${id}-fl`, t0, dur, op * 0.45, op); };
+      const frontLight = (tl, L, id, t0, dur, op = 0.32) => {
+        put(L.light, `<radialGradient id="${id}-frg" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#ff7a2a" stop-opacity="1"/><stop offset=".45" stop-color="#ff5a1a" stop-opacity=".4"/><stop offset="1" stop-color="#ff5a1a" stop-opacity="0"/></radialGradient>
+          <rect id="${id}-fr" width="1080" height="1920" fill="url(#${id}-frg)" opacity="0" style="mix-blend-mode:screen"/>`); flick(tl, `#${id}-fr`, t0, dur, op * 0.5, op); };
       const dropDark = (tl, id, at, to = 0.6, d = 0.25) => tl.to(`#${id}-dark`, { opacity: to, duration: d, ease: "power2.in" }, at);
       // the cabin reacts: dust and grit falling from the ceiling, a bin door pops open, a bottle rolls along the floor
       const react = (tl, L, id, t0, d, o = {}) => { const r = mk(Math.round(t0 * 100) + 7), x0 = o.x0 ?? 300, x1 = o.x1 ?? 1500;
@@ -52,7 +55,7 @@
         if (o.bin !== false) tl.fromTo(`#${id}-bd`, { scaleY: 1, svgOrigin: "0 -150" }, { scaleY: -0.14, svgOrigin: "0 -150", duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, t0 + (o.binAt ?? 0.25));
         if (o.bottle !== false) tl.fromTo(`#${id}-bt`, { x: 0, rotation: 0, svgOrigin: "0 0" }, { x: -260, rotation: -720, svgOrigin: "0 0", duration: d, ease: "power1.inOut", immediateRender: false }, t0); };
       // passengers (real cast from the channel's library) — standing in the aisle, some with bags; in the side cut or down the aisle
-      const PAX = ["tourist", "boss", "mother", "chai", "joe", "pin", "somsak", "fon", "kla", "samarn"];
+      const PAX = ["chan", "fon", "bua", "samarn", "tourist", "boss", "june", "yaiTide", "mint", "chan"];   // rig2 everyday people: office worker, auntie, student, older men, a grandmother
       const pax = (i, x, y, s, mode, extra = {}) => A(PAX[i % PAX.length], x, y, s, [{ t: 0, mode, eyes: extra.eyes ?? "wide", mouth: extra.mouth ?? "o" }], extra);
       const heldBag = (x, y, s, k) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${f1(s)})">${k % 2 ? Plane.bag(0.9, { strap: true }) : `<rect x="-70" y="-110" width="140" height="110" rx="14" fill="${["#c8302a", "#2f6fd0", "#2fa864", "#6a4ac8"][k % 4]}" stroke="${PL.ink}" stroke-width="5"/><path d="M-30,-110v-24h60v24" stroke="${PL.ink}" stroke-width="7" fill="none"/>`}</g>`;
       // down the aisle (one-point perspective): a person at depth Z (m), lateral X (m) → world point and rig scale
@@ -134,9 +137,9 @@
         [0, (d) => ({ ...CAB("w1", "smoke", { smokeH: 300 }, 0.16), cam: { keys: [{ t: 0, ...fr(760, 1180, 1.15, 540, 980) }, { t: d, glide: d, ...fr(640, 1180, 1.22, 540, 980) }] }, shake: rumble(3),
           actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "brace", eyes: "wide", mouth: "o" }])],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "w1", t0, d, { chase: true, smokeFrom: -200, smokeTo: 20 }); react(tl, L, "w1r", t0, d, { binX: 990, botX: 1100 }); fireLight(tl, L, id, t0, d, 0.26); } })],
-        [C("why", 0, 1), (d) => ({ ...AISLE("w2", "smoke"), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 940, 1.08, 540, 960) }] }, shake: sway(1),
-          actors: [[-0.28, 1.7, 0], [0.3, 2.2, 3], [-0.22, 2.9, 6], [0.24, 3.7, 1], [-0.05, 4.8, 4]].map(([X, Z, k], i) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, i % 2 ? "cough" : "holdHead", { flip: X > 0 }); }),
-          fx(tl, id, t0, L) { noSh(tl, id, 5); Plane.aisleLife(tl, "w2", t0, d); fireLight(tl, L, id, t0, d, 0.24, "left"); } })],
+        [C("why", 0, 1), (d) => ({ ...AISLE("w2", "smoke"), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 940, 1.06, 540, 960) }] }, shake: sway(1),
+          actors: [[-0.62, 1.9, 0, "cough"], [0.5, 2.5, 1, "holdHead"], [0.1, 4.0, 7, "cough"]].map(([X, Z, k, m]) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, m, { flip: X > 0 }); }),
+          fx(tl, id, t0, L) { Plane.aisleLife(tl, "w2", t0, d); frontLight(tl, L, id, t0, d, 0.3); } })],
         [C("why", 0, 2), (d) => ({ ...CAB("w3", "fire", { breakX: 900, smokeH: 360 }, 0.12), cam: { keys: [{ t: 0, ...fr(1060, 1200, 1.6, 540, 960) }, { t: d, glide: d, ...fr(1080, 1200, 1.75, 540, 960) }] }, shake: rumble(4),
           fx(tl, id, t0, L) { Plane.cabinLife(tl, "w3", t0, d); put(L.glow, `<g transform="translate(1060,${PF - 10})">${Plane.flames("w3f", 340, 1.3)}</g>`); Plane.flicker(tl, "w3f", t0, d); fireLight(tl, L, id, t0, d, 0.4); Plane.burst(tl, L.glow, 980, 1250, t0 + 0.15, { n: 10, v: 300 }); } })],
         [C("why", 0, 3), (d) => ({ ...CAB("w4", "smoke", { noMasks: true, smokeH: 520 }, 0.1), blur: { far: 2, set: 0.8, fg: 8 },
@@ -213,17 +216,18 @@
         <rect x="0" y="-74" width="78" height="70" rx="8" fill="#c8302a" stroke="${PL.ink}" stroke-width="3"/><path d="M-70,-110Q-20,-130 30,-108Q60,-96 78,-112" stroke="#6a8a4a" stroke-width="22" fill="none" stroke-linecap="round"/>
         <g id="bn${k}"><rect x="-90" y="-150" width="180" height="150" rx="8" fill="#ece6da" stroke="${PL.ink}" stroke-width="4"/><rect x="-24" y="-30" width="48" height="12" rx="5" fill="#bdb3a0"/></g></g>`).join(""));
       seg("half", [
-        [0, (d) => ({ ...AISLE("f1", "smoke"), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 950, 1.06, 540, 960) }] }, shake: sway(1),
-          actors: [[0.3, 1.6, 0], [-0.3, 2.0, 1], [0.22, 2.6, 2], [-0.24, 3.2, 3], [0.18, 4.0, 4], [-0.12, 5.0, 5]].map(([X, Z, k], i) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, i % 3 === 0 ? "reachBin" : "hugBag", { flip: X > 0 }); }),
-          fx(tl, id, t0, L) { noSh(tl, id, 6); Plane.aisleLife(tl, "f1", t0, d); fireLight(tl, L, id, t0, d, 0.22, "left");
-            put(L.act, [[0.22, 2.6, 2], [-0.24, 3.2, 3], [-0.3, 2.0, 1]].map(([X, Z, k]) => { const q = AQ(X, Z); return heldBag(q.x + (X > 0 ? -60 : 60) * q.s, q.y - 300 * q.s, q.s * 0.9, k); }).join("")); } })],
+        [0, (d) => ({ ...AISLE("f1", "smoke"), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 950, 1.05, 540, 960) }] }, shake: sway(1),
+          actors: [[-0.5, 1.9, 3, "reachBin"], [0.44, 2.6, 4, "hugBag"], [0.0, 3.7, 6, "hugBag"]].map(([X, Z, k, m]) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, m, { flip: X > 0 }); }),
+          fx(tl, id, t0, L) { Plane.aisleLife(tl, "f1", t0, d); frontLight(tl, L, id, t0, d, 0.28);
+            put(L.act, [[0.44, 2.6, 1], [0.0, 3.7, 2]].map(([X, Z, k]) => { const q = AQ(X, Z); return heldBag(q.x + (X > 0 ? -20 : 20) * q.s, q.y - 250 * q.s, q.s * 0.8, k); }).join("")); } })],
         [C("half", 0, 1), (d) => ({ ...CAB("f2", "smoke", { noMasks: true, smokeH: 300 }, 0.14), cam: { keys: [{ t: 0, ...fr(990, PF - 270, 2.0, 540, 1100) }, { t: d, glide: d, ...fr(1000, PF - 270, 2.1, 540, 1100) }] },
           actors: [pax(0, 820, PF - 30, KS, "hugBag"), pax(2, 990, PF - 30, KS, "hugBag", { flip: true }), pax(4, 1160, PF - 30, KS, "cough")],
-          fx(tl, id, t0, L) { noSh(tl, id, 3); Plane.cabinLife(tl, "f2", t0, d); put(L.act, heldBag(830, PF - 330, 0.75, 1) + heldBag(980, PF - 330, 0.75, 2)); fireLight(tl, L, id, t0, d, 0.24); } })],
-        [C("half", 0, 2), (d) => ({ ...CAB("f3", "smoke", { noMasks: true, smokeH: 300 }, 0.14), cam: { keys: [{ t: 0, ...fr(1000, 1160, 1.15, 540, 960) }] },
-          actors: [[640, 1, 0], [780, 0, 1], [920, 1, 2], [1060, 0, 3], [1200, 0, 4], [1340, 1, 5], [1480, 0, 6]].map(([x, up, k]) => pax(k, x, PF - 30, KS, up ? "reachBin" : "cough", { flip: k % 3 === 2 && !up })),
-          fx(tl, id, t0, L) { noSh(tl, id, 7); Plane.cabinLife(tl, "f3", t0, d); fireLight(tl, L, id, t0, d, 0.24);
-            binRow(L, [[640, "a"], [920, "b"], [1340, "c"]]); ["a", "b", "c"].forEach((k, i) => tl.fromTo(`#bn${k}`, { scaleY: 1, svgOrigin: "0 -150" }, { scaleY: -0.14, svgOrigin: "0 -150", duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.08 + i * 0.1)); } })],
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "f2", t0, d); put(L.act, heldBag(840, PF - 250, 0.6, 1) + heldBag(990, PF - 250, 0.6, 2)); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("half", 0, 2), (d) => ({ ...CAB("f3", "smoke", { noMasks: true, smokeH: 300 }, 0.14), cam: { keys: [{ t: 0, ...fr(960, PF - 300, 1.6, 540, 1080) }] },
+          actors: [pax(6, 700, PF - 30, KS, "reachBin"), pax(7, 960, PF - 30, KS, "reachBin", { flip: true }), pax(0, 1220, PF - 30, KS, "hugBag")],
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "f3", t0, d); fireLight(tl, L, id, t0, d, 0.24);
+            binRow(L, [[720, "a"], [960, "b"], [1200, "c"]]); ["a", "b", "c"].forEach((k, i) => tl.fromTo(`#bn${k}`, { scaleY: 1, svgOrigin: "0 -150" }, { scaleY: -0.14, svgOrigin: "0 -150", duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.08 + i * 0.1));
+            put(L.act, heldBag(975, PF - 610, 0.6, 0) + heldBag(1225, PF - 240, 0.6, 3)); } })],
         [C("half", 0, 3), (d) => ({ ...CAB("f4", "smoke", { noMasks: true, smokeH: 300 }, 0.12), blur: { far: 3, set: 1, fg: 9 }, cam: { keys: [{ t: 0, ...fr(930, PF - 600, 2.4, 540, 820) }, { t: d, glide: d, ...fr(930, PF - 580, 2.6, 540, 820) }] },
           actors: [pax(1, 920, PF - 30, KS, "reachBin")],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "f4", t0, d); fireLight(tl, L, id, t0, d, 0.26); put(L.glow, `<g id="f4-bag">${heldBag(985, PF - 540, 0.8, 1)}</g>`); tl.fromTo("#f4-bag", { y: -40 }, { y: 50, duration: d, ease: "power2.in", immediateRender: false }, t0); } })],
@@ -234,9 +238,9 @@
           fx(tl, id, t0, L) { Plane.cabinLife(tl, "b1", t0, d); put(L.act, [700, 820, 960, 1100, 1220].map((x, k) => `<g transform="translate(${x},${PF - 12}) rotate(${(k % 3 - 1) * 9})">${heldBag(0, 0, 0.62 + (k % 2) * 0.1, k)}</g>`).join("")); fireLight(tl, L, id, t0, d, 0.24);
             [0, 1, 2].forEach((k) => Plane.burst(tl, L.glow, 760 + k * 200, PF - 30, t0 + 0.1 + k * 0.3, { n: 4, v: 120 })); } })],
         [C("block", 0, 1), (d) => ({ ...AISLE("b2", "smoke"), cam: { keys: [{ t: 0, ...fr(540, 980, 1.0, 540, 960) }] }, shake: rumble(3),
-          actors: [[0.26, 2.5, 6], [-0.26, 2.8, 7], [0.2, 3.4, 8], [-0.18, 4.0, 9], [0.05, 4.8, 0]].map(([X, Z, k], i) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, i % 2 ? "push" : "cough", { flip: X > 0 }); }),
-          fx(tl, id, t0, L) { noSh(tl, id, 5); Plane.aisleLife(tl, "b2", t0, d); fireLight(tl, L, id, t0, d, 0.26, "left");
-            put(L.act, [[-0.12, 1.5, 0], [0.16, 1.7, 1], [0, 1.95, 2], [-0.22, 2.2, 3]].map(([X, Z, k]) => { const q = AQ(X, Z); return heldBag(q.x, q.y, q.s * 0.9, k); }).join(""));
+          actors: [[-0.6, 2.6, 5, "cough"], [0.52, 3.0, 8, "push"], [0.06, 4.6, 2, "holdHead"]].map(([X, Z, k, m]) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, m, { flip: X > 0 }); }),
+          fx(tl, id, t0, L) { Plane.aisleLife(tl, "b2", t0, d); frontLight(tl, L, id, t0, d, 0.28);
+            put(L.act, [[-0.14, 1.6, 0], [0.16, 1.8, 1], [0.0, 2.05, 2]].map(([X, Z, k]) => { const q = AQ(X, Z); return heldBag(q.x, q.y, q.s * 0.9, k); }).join(""));
             SU.flash(tl, L.light, t0 + 0.06, "#ff3b2e", 0.25); dropDark(tl, id, t0 + 0.6, 0.45, 0.5); } })],
       ]);
       // ===== B3 · 11. คิว drops the bag | runs forward… | the only way he knows (the EXIT glows behind him) =====
@@ -284,7 +288,7 @@
           fx(tl, id, t0, L) { Plane.cabinLife(tl, "e1", t0, d, { chase: true }); put(L.glow, `<g transform="translate(${DOORX - 6},${PF - 572})"><circle r="260" fill="url(#plGlowG)" opacity=".7"/></g>`); } })],
         [C("behind", 0, 1), (d) => ({ ...AISLE("e2", "smoke", { exitBack: true }), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 900, 1.25, 540, 900) }] }, shake: sway(1),
           actors: [(() => { const q = AQ(0.05, 1.9); return A("kiw", q.x, q.y, q.s, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }], { flip: true }); })()],
-          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.aisleLife(tl, "e2", t0, d); } })],
+          fx(tl, id, t0, L) { Plane.aisleLife(tl, "e2", t0, d); frontLight(tl, L, id, t0, d, 0.22); } })],
         [C("behind", 0, 2), (d) => ({ ...CAB("e3", "smoke", { noMasks: true, smokeH: 520 }, 0.16), cam: { keys: [{ t: 0, ...fr(DOORX + 200, PF - 270, 2.0, 540, 1150) }, { t: d, glide: d, ...fr(DOORX + 200, PF - 270, 2.1, 540, 1150) }] }, shake: sway(1),
           actors: [A("kiw", KX + 20, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }])],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "e3", t0, d, { chase: true }); put(L.glow, `<g transform="translate(${DOORX - 6},${PF - 572})"><circle r="260" fill="url(#plGlowG)" opacity=".7"/></g>`); } })],
@@ -312,7 +316,7 @@
             <path d="M-200,-206H200" stroke="${PL.gold}" stroke-width="6"/><text x="-176" y="-232" font-family="Kanit" font-weight="900" font-size="32" fill="${PL.gold}">นับแถวไปทางออก</text><g transform="translate(-30,30)">${plan}</g></g>`;
           const tC = t0 + C("rule", 0, 1), tD = t0 + C("rule", 0, 2), Kc = 1.9, P = (x, y) => [540 + Kc * (x - 30), 860 + Kc * (y + 30)];
           put(L.light, `<g id="u1-card" opacity="0"><rect width="1080" height="1920" fill="#000" opacity=".25"/><g transform="translate(540,860) scale(${Kc})">${card}</g>
-            ${handAt([250, 1420], 28, 2.1, KSK, { fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2 })}<g id="u1-f">${handAt([0, 0], -20, 1.9, KSK, { fore: 1100, curl: [0, 1, 1, 1], thumb: 1, mirror: true })}</g></g>`);
+            ${handAt([250, 1420], 28, 2.1, KSK, { fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2 })}<g id="u1-f">${handAt([0, 0], -52, 1.7, KSK, { fore: 700, curl: [0, 1, 1, 1], thumb: 1, mirror: true })}</g></g>`);
           tl.fromTo("#u1-card", { opacity: 0, y: 260 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.6)", immediateRender: false }, tC);
           const fy = (r) => P(-64 + 22, Y0 + r * DY)[1] + 10, fx0 = P(-30, 0)[0] + 30;
           tl.set("#u1-f", { x: fx0, y: fy(ME) }, tC);
@@ -329,7 +333,7 @@
           fx(tl, id, t0, L) { Plane.cabinLife(tl, "x2", t0, d);
             put(L.light, `<g id="x2-sm" opacity="0">${Plane.puffMk("x2p", 540, 700, 8, "dark", 260)}</g><rect id="x2-sk" width="1080" height="1920" fill="#262026" opacity="0"/>`);
             Plane.puffs(tl, "x2p", t0, d, 8, { dx: 120, dy: 200, per: 1.6, op: 0.95 }); tl.to("#x2-sm", { opacity: 1, duration: 0.3 }, t0);
-            tl.fromTo("#x2-sk", { opacity: 0.05 }, { opacity: 0.9, duration: d * 0.8, ease: "power2.in", immediateRender: false }, t0 + 0.15); } })],
+            tl.fromTo("#x2-sk", { opacity: 0.05 }, { opacity: 0.72, duration: d * 0.8, ease: "power2.in", immediateRender: false }, t0 + 0.15); } })],
       ]);
       // ===== B5 · 17. over his shoulder: his hand counts the seatbacks… (insert) | one =====
       const seatBackHand = (id, x) => { const W = [0, -10], deg = -35, k = 2.3, back = [W[0] + Math.sin(35 * Math.PI / 180) * 900, W[1] + Math.cos(35 * Math.PI / 180) * 900], M = [W[0] + (back[0] - W[0]) * 0.22, W[1] + (back[1] - W[1]) * 0.22];
@@ -356,12 +360,12 @@
         [0, (d) => ({ ...CAB("o1", "smoke", { smokeH: 600 }, 0.06), cam: { keys: [{ t: 0, ...fr(DOORX + 40, PF - 380, 1.9, 540, 1500) }] },
           actors: [A("kiw", DOORX + 260, PF - 30, KS, [{ t: 0, mode: "crouchLook", eyes: "wide", mouth: "o" }], { flip: true })],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "o1", t0, d);
-            tl.fromTo("#o1-door", { x: 0, opacity: 1 }, { x: -230, opacity: 0.2, duration: 0.5, ease: "power2.out", immediateRender: false }, t0 + 0.25);
+            tl.fromTo("#o1-door", { x: 0, opacity: 1 }, { x: -260, opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, t0 + 0.25);
             put(L.glow, `<clipPath id="o1-dc"><rect x="${DOORX - 120}" y="${PF - 515}" width="240" height="495" rx="40"/></clipPath><g id="o1-day" opacity="0" clip-path="url(#o1-dc)">
               <rect x="${DOORX - 130}" y="${PF - 530}" width="260" height="260" fill="#f2b080"/><circle cx="${DOORX - 40}" cy="${PF - 330}" r="50" fill="#fff0c8"/><rect x="${DOORX - 130}" y="${PF - 290}" width="260" height="300" fill="#3a5a78"/>
               <path d="M${DOORX - 130},${PF - 280}h260" stroke="#ffe0c0" stroke-width="5" opacity=".7"/><path d="M${DOORX + 40},${PF - 20}L${DOORX - 120},${PF - 250}L${DOORX - 70},${PF - 260}L${DOORX + 110},${PF - 20}Z" fill="#f4c430" stroke="#1f1a17" stroke-width="5"/></g>
               <rect id="o1-glow" x="${DOORX - 160}" y="${PF - 560}" width="320" height="580" rx="60" fill="#ffd9a0" opacity="0" filter="url(#plBlur24)" style="mix-blend-mode:screen"/>`);
-            tl.fromTo("#o1-day", { opacity: 0 }, { opacity: 1, duration: 0.35, immediateRender: false }, t0 + 0.3); tl.fromTo("#o1-glow", { opacity: 0 }, { opacity: 0.5, duration: 0.45, immediateRender: false }, t0 + 0.3); } })],
+            tl.fromTo("#o1-day", { opacity: 0 }, { opacity: 1, duration: 0.35, immediateRender: false }, t0 + 0.3); tl.fromTo("#o1-glow", { opacity: 0 }, { opacity: 0.18, duration: 0.45, immediateRender: false }, t0 + 0.3); } })],
         [C("out", 0, 1), (d) => ({ ...SITE("o2", { fire: 0.9 }),
           cam: { keys: [{ t: 0, ...fr(190, 1500, 3.2, 540, 1000) }, { t: d, glide: d, ...fr(130, 1540, 3.0, 540, 1000) }] },
           actors: [A("kiw", 198, 1474, 0.15, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.7, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, path: [{ t: 0, x: 198, y: 1474 }, { t: 0.7, x: 127, y: 1570 }, { t: 1.6, x: 60, y: 1590, s: 0.17 }] })],
