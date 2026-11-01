@@ -206,7 +206,7 @@
     g += `<path d="M-230,-252Q-180,-350 -70,-358H40V-252Z" fill="url(#ltGlassD)" ${OUT3}/><path d="M60,-358H116Q200,-352 262,-262L266,-252H60Z" fill="url(#ltGlassD)" ${OUT3}/>`;
     g += `<path d="M50,-360V-36M-240,-250V-40" stroke="${INK}" stroke-width="4"/><path d="M-60,-220h40M120,-220h40" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><path d="M-370,-140H384" stroke="#fff" stroke-width="6" opacity=".35"/>`;
     g += `<rect x="370" y="-210" width="26" height="34" rx="8" fill="#fff6d0" ${OUT3}/><rect x="-392" y="-212" width="22" height="46" rx="6" fill="#a8261c" ${OUT3}/>`;
-    g += [-240, 250].map((wx) => `<g transform="translate(${wx},-34)"><circle r="70" fill="#17181a" ${OUT}/><circle r="38" fill="#a8b0b8" ${OUT3}/><g class="spin"><path d="M-26,0H26M0,-26V26" stroke="${INK}" stroke-width="6"/></g></g>`).join("");
+    g += [-240, 250].map((wx) => `<g transform="translate(${wx},-34)"><circle r="70" fill="#17181a" ${OUT}/><circle r="38" fill="#a8b0b8" ${OUT3}/><g class="spin0"><path d="M-26,0H26M0,-26V26" stroke="${INK}" stroke-width="6"/></g></g>`).join("");
     g += `<g id="${id}-brake" opacity="${o.brake ?? 0}"><circle cx="-384" cy="-190" r="70" fill="url(#ltRed)"/></g>`;
     return g + `</g>`;
   };
@@ -563,8 +563,9 @@
     q(".rainS").forEach((el) => tl.fromTo(el, { x: 0, y: 0 }, { x: -120, y: 360, duration: 0.3, repeat: Math.ceil(dur / 0.3) + 1, ease: "none", immediateRender: false }, t0));
     q(".cloud").forEach((el) => tl.fromTo(el, { x: 0 }, { x: -(+el.dataset.d) * dur, duration: dur, ease: "none", immediateRender: false }, t0));
     q(".dap").forEach((el, i) => tl.fromTo(el, { x: 400 }, { x: -900, duration: 1.4 + (i % 3) * 0.3, repeat: Math.ceil(dur / 1.4), ease: "none", immediateRender: false }, t0 + i * 0.21));
+    q(".spin0").forEach((el) => tl.fromTo(el, { rotation: 0, svgOrigin: "0 0" }, { rotation: 360, svgOrigin: "0 0", duration: 0.3, repeat: Math.ceil(dur / 0.3), ease: "none", immediateRender: false }, t0));
     q(".spin").forEach((el) => tl.fromTo(el, { rotation: 0, svgOrigin: "0 -70" }, { rotation: 360, svgOrigin: "0 -70", duration: 0.3, repeat: Math.ceil(dur / 0.3), ease: "none", immediateRender: false }, t0));
-    q(".steer").forEach((el) => tl.fromTo(el, { rotation: -3, svgOrigin: "720 1860" }, { rotation: 3, svgOrigin: "720 1860", duration: 1.7, repeat: Math.ceil(dur / 1.7), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+    q(".steer").forEach((el) => tl.fromTo(el, { rotation: -3, svgOrigin: "0 0" }, { rotation: 3, svgOrigin: "0 0", duration: 1.7, repeat: Math.ceil(dur / 1.7), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
   };
 
   // the hook: the front chain snaps (halves whip out, sparks), the top log jumps the stake and tumbles end-first at the lens.
@@ -574,7 +575,7 @@
     tl.to(`${T}-ch0L`, { rotation: -38, svgOrigin: "-318 -270", duration: 0.16, ease: "power3.out" }, t0);
     tl.to(`${T}-ch0R`, { rotation: 42, svgOrigin: "318 -270", duration: 0.16, ease: "power3.out" }, t0);
     tl.to(`${T}-ch0`, { opacity: 0, duration: 0.2 }, t0 + 0.22);
-    tl.to(`${T}-binder`, { rotation: 70, svgOrigin: "300 -300", duration: 0.12, ease: "back.out(3)" }, t0);
+    tl.to(`${T}-binder`, { rotation: 70, svgOrigin: "0 0", duration: 0.12, ease: "back.out(3)" }, t0);
   };
   window.Lt = Lt;
 })();
