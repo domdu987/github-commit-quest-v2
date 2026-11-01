@@ -1,0 +1,205 @@
+      // ---------- ซอมบี้รถไฟฟ้า EP.1 กดกระดิ่ง ----------
+      // grammar: palms slam the gangway glass (the city high outside) → the car in alarm, a hand on the red lever → ten minutes before (the train
+      // on the viaduct, the calm car, นัท live, ลุงเชิด's rhyme, the screen: สวนหลวงเก่า งดให้บริการ · เดินรถอัตโนมัติ) → screams from the end car →
+      // the door shut → faces on the glass → the suit grabs the lever → what the lever is for → the drop → ลุงเชิด stops him, the rule → the
+      // yellow bell → control answers → the hinge bends → backs to the door → the dark station → out, relief → silent platform → the sign → the
+      // staff turns → next
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.7, 2.6, 4.4], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      const CALM = { from: "right", rim: "#ffd9a0", rimOp: 0.5, shade: "#1a1430", shadeOp: 0.32, cast: false, vol: false };
+      const ALRM = { from: "left", rim: "#ff6a5a", rimOp: 0.6, shade: "#1a0a14", shadeOp: 0.45, cast: false, vol: false };
+      const DUSK = { from: "left", rim: "#ffb080", rimOp: 0.55, shade: "#141a2a", shadeOp: 0.42, cast: false, vol: false };
+      const DEAD = { from: "right", rim: "#9ab8ff", rimOp: 0.45, shade: "#06080e", shadeOp: 0.55, cast: false, vol: false };
+      const GCALM = { top: "#ffe2c0", bottom: "#2a2040", op: 0.1 }, GALR = { top: "#c8202a", bottom: "#12040a", op: 0.3 }, GDEAD = { top: "#3a4a6a", bottom: "#05060c", op: 0.3 };
+      const S = 0.8, Y = TF - 6;
+      const shk = (amp = 12) => (t) => ({ x: amp * Math.sin(t * 61), y: amp * 0.7 * Math.sin(t * 47), r: 0.5 * Math.sin(t * 37) });
+      const rattle = (amp = 3) => (t) => ({ x: amp * Math.sin(t * 23), y: amp * 0.8 * Math.sin(t * 31), r: 0.15 * Math.sin(t * 7) });
+      const noSh = (tl, id, n = 2) => { for (let i = 0; i < n; i++) tl.set(`#${id}-a${i}-shadow`, { opacity: 0 }, 0); };
+      const CAR = (id, state, extra = {}) => ({ set: "carCut", setOpts: { id, state, ...extra }, dark: state === "calm" ? 0 : 0.26, light: state === "calm" ? CALM : ALRM, grade: state === "calm" ? GCALM : GALR, blur: { far: 2, mid: 1, fg: 6 } });
+      const ZEND = (x, who, mode = "slamZ", flip = false) => A(who, x, Y, S, [{ t: 0, mode, eyes: "dead", mouth: "snarl" }], { flip });
+      // a hand (sleeve + fingers) gripping the lever handle, drawn at the lever box's handle (world)
+      const LVX = DX - 280, LVY = TF - 470, BLX = DX + 290, BLY = TF - 450;
+      const gripHand = (id, skin = "#e0b088", sleeve = "#24262e") => `<g id="${id}"><path d="M-210,190Q-120,120 -40,70L-10,96Q-90,150 -170,236Z" fill="${sleeve}" ${SO2(4)}/><path d="M-50,60Q-20,30 14,40Q40,48 40,80Q40,110 10,118Q-30,124 -46,96Z" fill="${skin}" ${SO2(4)}/>
+        ${[0, 1, 2, 3].map((k) => `<path d="M${-6 + k * 12},${44 + k * 4}q22,-6 26,14" stroke="#3a2622" stroke-width="3" fill="none"/>`).join("")}</g>`;
+
+      // ---------- 1. hook: close on the gangway glass, palms slam, the crack; then the car in alarm: crowd, the lever ----------
+      const HX = 0.8;
+      split("hook", HX, { set: "gangClose", setOpts: { id: "hx", crack: 0 }, dark: 0, light: false, grade: { top: "#ff6a4a", bottom: "#1a0610", op: 0.14 },
+        cam: { keys: [{ t: 0, ...fr(540, 860, 1.25, 540, 900) }, { t: HX, glide: HX, ...fr(540, 860, 1.12, 540, 900) }] },
+        shake: shk(10), captions: caps("hook"),
+        fx(tl, id, t0, L) { Sky.slam(tl, "hx", t0, HX, { per: 0.36, crackAt: [0.36] }); SU.flash(tl, L.light, t0 + 0.36, "#ffffff", 0.35); } },
+        { ...CAR("ha", "alarm", { end: "zombies", crack: 2 }),
+        cam: { keys: [{ t: 0, ...fr(760, 1210, 1.05, 540, 1000) }, { t: D("hook") - HX, glide: D("hook") - HX, ...fr(820, 1220, 1.15, 540, 1000) }] },
+        shake: rattle(4),
+        actors: [ZEND(GX - 150, "zOffice"), ZEND(GX - 330, "zAuntie", "shamble"),
+          A("cherd", GX + 140, Y, S, [{ t: 0, mode: "shrink", eyes: "wide", mouth: "scream" }], { flip: true }), A("nat", GX + 255, Y, S, [{ t: 0, mode: "hugPole", eyes: "wide", mouth: "o" }]),
+          A("suit", LVX - 170, Y, S, [{ t: 0, mode: "reachLever", eyes: "wide", mouth: "scream" }]), A("may", DX - 120, Y, S, [{ t: 0, mode: "strapLook", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: capsFrom("hook", HX),
+        fx(tl, id, t0, L) { const d = D("hook") - HX; noSh(tl, id, 6); Sky.carLife(tl, "ha", t0, d, { flicker: true, knock: true }); Sky.fgPole(tl, L, t0, d, { x: 1000, red: true, drift: 30, strap: false }); Sky.redPulse(tl, L, t0, d, 0.16); SkyUI.title(tl, L.light, t0 + 0.05, d + 1.4, "ซอมบี้รถไฟฟ้า", "EP.1 กดกระดิ่ง"); } });
+      // ---------- 2. the command: close on a hand closing on the red lever → red ----------
+      add("cmd", { ...CAR("cm", "alarm", { end: "zombies", crack: 2 }), blur: { far: 4, set: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(LVX - 40, LVY + 40, 2.6, 540, 900) }, { t: D("cmd"), glide: D("cmd"), ...fr(LVX - 30, LVY + 40, 2.9, 540, 900) }] },
+        shake: rattle(5), captions: caps("cmd"),
+        fx(tl, id, t0, L) { Sky.carLife(tl, "cm", t0, D("cmd")); put(L.set, `<g transform="translate(${LVX},${LVY - 14})">${Sky.gripHand("cm-gh")}</g>`); Sky.redPulse(tl, L, t0, D("cmd"), 0.22);
+          tl.fromTo("#cm-gh", { x: -160, y: 120 }, { x: 0, y: 0, duration: 0.35, ease: "power3.out", immediateRender: false }, t0);
+          tl.fromTo("#cm-lv-lh", { rotation: 0, svgOrigin: "0 0" }, { rotation: -14, svgOrigin: "0 0", duration: 0.25, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0 + 0.4);
+          SU.flash(tl, L.light, t0 + F("cmd", 0, 0) + 0.02, "#ff3b2e", 0.35); } });
+      // ---------- 3. ten minutes before: the train on the viaduct at dusk → inside, calm ----------
+      const BX = 1.3;
+      split("before", BX, { set: "viaduct", setOpts: { id: "vb", trainX: -900 }, dark: 0, light: false, grade: { top: "#ffb080", bottom: "#1a1430", op: 0.12 }, blur: { far: 1.5, mid: 0.6, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(700, 900, 0.82, 540, 900) }, { t: BX, glide: BX, ...fr(760, 900, 0.86, 540, 900) }] },
+        captions: caps("before"),
+        fx(tl, id, t0, L) { tl.fromTo("#vb-train", { x: -600 }, { x: 300, duration: BX, ease: "none", immediateRender: false }, t0); tl.fromTo("#vb-far", { x: 0 }, { x: -40, duration: BX, ease: "none", immediateRender: false }, t0); } },
+        { ...CAR("cb", "calm", { end: "calm" }),
+        cam: { keys: [{ t: 0, ...fr(900, 1200, 0.95, 540, 1000) }, { t: D("before") - BX, glide: D("before") - BX, ...fr(960, 1210, 1.05, 540, 1000) }] },
+        shake: rattle(1.5),
+        actors: [A("cherd", 700, TF - 190, S, [{ t: 0, mode: "sitChair", eyes: "closed", mouth: "flat" }]),
+          A("may", 1060, Y, S, [{ t: 0, mode: "raise", eyes: "normal", mouth: "smile" }], { flip: true }), A("natPhones", 1420, Y, S, [{ t: 0, mode: "bob", eyes: "closed", mouth: "smile" }], { flip: true }),
+          A("zOffice", -300, TF - 190, S, [{ t: 0, mode: "sitChair", eyes: "closed", mouth: "flat" }])],
+        captions: capsFrom("before", BX),
+        fx(tl, id, t0, L) { const d = D("before") - BX; noSh(tl, id, 4); Sky.carLife(tl, "cb", t0, d, { sway: 3 });
+          SinkUI.tag(tl, L.light, t0 + 0.4, d - 0.4, 640, 560, "เมย์ · 24", "#2f6fd0"); SinkUI.tag(tl, L.light, t0 + 0.7, d - 0.7, 900, 700, "นัท · 17", "#e0a820"); } });
+      // ---------- 4. นัท live; the car screen above the door behind him ----------
+      add("live", { ...CAR("cl", "calm", { end: "calm" }), blur: { far: 3, mid: 1, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(1330, 1080, 1.9, 540, 1050) }, { t: D("live"), glide: D("live"), ...fr(1310, 1070, 2.05, 540, 1050) }] },
+        shake: rattle(1.2),
+        actors: [A("natPhones", 1420, Y, S, [{ t: 0, mode: "bob", eyes: "normal", mouth: "laugh" }], { flip: true, talk: [TALK("live", 0, "laugh")] }),
+          A("may", 1120, Y, S, [{ t: 0, mode: "raise", eyes: "side", mouth: "flat" }], { flip: true })],
+        captions: caps("live", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id); Sky.carLife(tl, "cl", t0, D("live"), { sway: 3 }); } });
+      // ---------- 5. ลุงเชิด's rhyme; นัท jokes; ลุง answers ----------
+      add("rhyme", { ...CAR("cr", "calm", { end: "calm" }), blur: { far: 3, mid: 1, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(860, 1180, 1.6, 540, 1020) }, { t: D("rhyme"), glide: D("rhyme"), ...fr(900, 1170, 1.75, 540, 1020) }] },
+        shake: rattle(1.2),
+        actors: [A("cherd", 700, TF - 190, S, [{ t: 0, mode: "sitChair", eyes: "closed", mouth: "flat" }, { t: vo("rhyme", 2) - 0.2, mode: "sitChair", eyes: "angry", mouth: "flat" }], { talk: [TALK("rhyme", 0, "flat"), TALK("rhyme", 2, "flat")] }),
+          A("natPhones", 1010, Y, S, [{ t: 0, mode: "bob", eyes: "closed", mouth: "smile" }, { t: vo("rhyme", 1) - 0.1, mode: "laugh", eyes: "normal", mouth: "laugh" }], { flip: true, talk: [TALK("rhyme", 1, "laugh")] })],
+        captions: caps("rhyme", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id); Sky.carLife(tl, "cr", t0, D("rhyme"), { sway: 3 }); SinkUI.tag(tl, L.light, t0 + 0.3, 2.4, 420, 640, "ลุงเชิด · ช่างรถไฟฟ้าเกษียณ", "#7a8490"); } });
+      // ---------- 6. insert: the car screen ----------
+      add("lcd", { ...CAR("cs", "calm", { end: "calm", progress: 0.2 }), blur: { far: 6, mid: 2, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(DX, WALLT + 64, 3.3, 540, 900) }, { t: D("lcd"), glide: D("lcd"), ...fr(DX, WALLT + 64, 3.6, 540, 900) }] },
+        fx(tl, id, t0, L) { Sky.carLife(tl, "cs", t0, D("lcd"), { progress: [0.2, 0.26] }); } });
+      // ---------- 7. screams: the end car (doll's house, left); a passenger lunged at, people run right ----------
+      add("scream", { ...CAR("ce", "alarm", { end: "zombies" }),
+        cam: { keys: [{ t: 0, ...fr(260, 1180, 1.0, 540, 1000) }, { t: D("scream"), glide: D("scream"), ...fr(420, 1190, 1.1, 540, 1000) }] },
+        shake: rattle(5),
+        actors: [A("zStudent", -260, Y, S, [{ t: 0, mode: "lunge", eyes: "dead", mouth: "snarl" }]), A("zAuntie", -60, Y, S, [{ t: 0, mode: "shamble", eyes: "dead", mouth: "snarl" }]),
+          A("suit", 120, Y, S, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { moveTo: { x: 760, y: Y, dur: 1.6, ease: "power1.in" } }),
+          A("zOffice", -520, Y, S, [{ t: 0, mode: "zrun", eyes: "dead", mouth: "snarl" }], { moveTo: { x: 0, y: Y, dur: D("scream"), ease: "none" } })],
+        captions: caps("scream"),
+        fx(tl, id, t0, L) { noSh(tl, id, 4); Sky.carLife(tl, "ce", t0, D("scream"), { flicker: true }); SU.flash(tl, L.light, t0 + 0.1, "#ff3b2e", 0.3); } });
+      // ---------- 8. นัท slams the gangway door ----------
+      add("shut", { ...CAR("ct", "alarm", { end: "zombies" }), blur: { far: 3, mid: 1, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(GX + 40, 1160, 1.8, 540, 1000) }, { t: D("shut"), glide: D("shut"), ...fr(GX + 40, 1160, 2.0, 540, 1000) }] },
+        shake: shk(6),
+        actors: [A("zOffice", GX - 170, Y, S, [{ t: 0, mode: "slamZ", eyes: "dead", mouth: "snarl" }]),
+          A("nat", GX + 150, Y, S, [{ t: 0, mode: "push", eyes: "wide", mouth: "scream" }], { flip: true }), A("may", GX + 420, Y, S, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }], { flip: true, talk: [TALK("shut", 0, "scream")] })],
+        captions: caps("shut", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 3); Sky.carLife(tl, "ct", t0, D("shut"), { knock: true }); tl.fromTo("#ct-gdoor", { scaleX: 0.2, svgOrigin: `${GX} 0` }, { scaleX: 1, svgOrigin: `${GX} 0`, duration: 0.25, ease: "power4.in", immediateRender: false }, t0 + 0.15); SU.flash(tl, L.light, t0 + 0.4, "#ffffff", 0.25); } });
+      // ---------- 9. close: faces and palms on the glass; the first crack ----------
+      add("glass", { set: "gangClose", setOpts: { id: "gl", crack: 0 }, dark: 0, light: false, grade: { top: "#ff6a4a", bottom: "#1a0610", op: 0.14 },
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.0, 540, 900) }, { t: D("glass"), glide: D("glass"), ...fr(540, 880, 1.18, 540, 900) }] },
+        shake: rattle(4), captions: caps("glass"),
+        fx(tl, id, t0, L) { Sky.slam(tl, "gl", t0, D("glass"), { per: 0.5, crackAt: [F("glass", 0, 1) + 0.1] }); SU.flash(tl, L.light, t0 + F("glass", 0, 1) + 0.1, "#ffffff", 0.3); } });
+      // ---------- 10. the suit grabs the lever ----------
+      add("suit", { ...CAR("cu", "alarm", { end: "zombies", crack: 1 }), blur: { far: 3, mid: 1, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(LVX - 50, 1060, 2.5, 540, 900) }, { t: D("suit"), glide: D("suit"), ...fr(LVX - 40, 1050, 2.8, 540, 900) }] },
+        shake: rattle(4),
+        actors: [A("suit", LVX - 90, Y, S, [{ t: 0, mode: "yank", eyes: "wide", mouth: "scream" }], { talk: [TALK("suit", 0, "scream")] })],
+        captions: caps("suit", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Sky.carLife(tl, "cu", t0, D("suit")); Sky.fgPole(tl, L, t0, D("suit"), { x: 950, red: true, drift: 40 }); Sky.redPulse(tl, L, t0, D("suit"));
+          tl.fromTo("#cu-lv-lh", { rotation: 0, svgOrigin: "0 0" }, { rotation: -18, svgOrigin: "0 0", duration: 0.2, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, t0 + 0.2); } });
+      // ---------- 11. what the lever is for: close on the box, the label ringed ----------
+      add("lever", { ...CAR("cv", "alarm", { end: "zombies", crack: 1 }), blur: { far: 6, mid: 2, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(LVX, LVY - 20, 3.4, 540, 900) }, { t: D("lever"), glide: D("lever"), ...fr(LVX, LVY - 30, 3.7, 540, 900) }] },
+        shake: rattle(3), captions: caps("lever"),
+        fx(tl, id, t0, L) { Sky.carLife(tl, "cv", t0, D("lever"));
+          put(L.light, `<g transform="translate(540,780)"><g id="lv-ring" opacity="0"><rect x="-330" y="-50" width="660" height="100" rx="40" fill="none" stroke="${SU.yellow}" stroke-width="12"/></g></g>`);
+          tl.fromTo("#lv-ring", { opacity: 0, scale: 1.6, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.35, ease: "back.out(2.4)", immediateRender: false }, t0 + F("lever", 0, 2));
+          tl.to("#lv-ring", { scale: 1.08, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: 6, ease: "sine.inOut" }, t0 + F("lever", 0, 2) + 0.4); } });
+      // ---------- 12. outside: the drop from the viaduct; two medals (≤ 2 s) ----------
+      add("drop", { set: "viaduct", setOpts: { id: "vd", trainX: -700 }, dark: 0.05, light: false, grade: { top: "#ff9a6a", bottom: "#100a20", op: 0.18 }, blur: { far: 1.5, mid: 0.6, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(500, 1000, 0.62, 540, 700) }, { t: D("drop"), glide: D("drop"), ...fr(500, 1150, 0.7, 540, 700) }] },
+        captions: caps("drop"),
+        fx(tl, id, t0, L) { tl.fromTo("#vd-train", { x: 0 }, { x: 700, duration: D("drop"), ease: "none", immediateRender: false }, t0); SkyUI.risk(tl, L.light, t0 + 0.4, Math.min(2.0, D("drop") - 0.5)); } });
+      // ---------- 13. ลุงเชิด grabs his arm; the rule ----------
+      add("rule", { ...CAR("cg", "alarm", { end: "zombies", crack: 1 }), blur: { far: 3, mid: 1, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(LVX - 210, 1060, 2.4, 540, 1000) }, { t: D("rule"), glide: D("rule"), ...fr(LVX - 200, 1050, 2.7, 540, 1000) }] },
+        shake: rattle(4),
+        actors: [A("suit", LVX - 90, Y, S, [{ t: 0, mode: "yank", eyes: "wide", mouth: "scream" }]),
+          A("cherd", LVX - 330, Y, S, [{ t: 0, mode: "grabArm", eyes: "angry", mouth: "scream" }], { talk: [TALK("rule", 0, "scream")] })],
+        captions: caps("rule", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id); Sky.carLife(tl, "cg", t0, D("rule")); Sky.fgPole(tl, L, t0, D("rule"), { x: 110, red: true }); Sky.redPulse(tl, L, t0, D("rule")); SkyUI.rule(tl, L.light, t0 + vo("rule", 0) + 0.5, Math.min(2.0, D("rule") - vo("rule", 0) - 0.5), { active: 0, y: 360 }); } });
+      // ---------- 14. เมย์ presses the yellow bell ----------
+      add("bell", { ...CAR("cbl", "alarm", { end: "zombies", crack: 1 }), blur: { far: 4, mid: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(BLX - 170, 1050, 2.4, 540, 900) }, { t: D("bell"), glide: D("bell"), ...fr(BLX - 120, 1040, 2.8, 540, 900) }] },
+        shake: rattle(3),
+        actors: [A("may", BLX - 250, Y, S, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 0.5, mode: "press", eyes: "angry", mouth: "flat" }])],
+        captions: caps("bell"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Sky.carLife(tl, "cbl", t0, D("bell")); Sky.fgPole(tl, L, t0, D("bell"), { x: 100, red: true }); Sky.redPulse(tl, L, t0, D("bell"), 0.16);
+          tl.fromTo("#cbl-bl-gl circle", { opacity: 0, scale: 0.6, svgOrigin: "0 0" }, { opacity: 1, scale: 1.2, svgOrigin: "0 0", duration: 0.4, yoyo: true, repeat: 7, ease: "sine.inOut", immediateRender: false }, t0 + 0.75);
+          SU.fxAt(tl, L.glow, "#cbl-bell", t0 + 0.75, { r1: 110, n: 9 }); } });
+      // ---------- 15. the control centre answers; the screen's dot moves on ----------
+      add("occ", { ...CAR("co", "alarm", { end: "zombies", crack: 1, progress: 0.45 }), blur: { far: 3, mid: 1, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(DX + 120, 1120, 1.45, 540, 1040) }, { t: D("occ"), glide: D("occ"), ...fr(DX + 80, 1110, 1.6, 540, 1040) }] },
+        shake: rattle(3),
+        actors: [A("may", BLX - 250, Y, S, [{ t: 0, mode: "press", eyes: "normal", mouth: "o" }]), A("cherd", DX - 120, Y, S, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }]),
+          A("nat", DX - 360, Y, S, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("occ", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 3); Sky.carLife(tl, "co", t0, D("occ"), { progress: [0.45, 0.62] });
+          tl.fromTo("#co-bl-gl circle", { opacity: 0.3 }, { opacity: 1, duration: 0.2, yoyo: true, repeat: Math.ceil(D("occ") / 0.2), ease: "none", immediateRender: false }, t0); } });
+      // ---------- 16. the hinge bends: a gap, a hand through ----------
+      add("bend", { ...CAR("cn", "alarm", { end: "zombies", crack: 3, bent: true }), blur: { far: 3, mid: 1, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(GX + 60, 1130, 2.3, 540, 1000) }, { t: D("bend"), glide: D("bend"), ...fr(GX + 70, 1130, 2.6, 540, 1000) }] },
+        shake: shk(7),
+        actors: [A("zOffice", GX - 160, Y, S, [{ t: 0, mode: "slamZ", eyes: "dead", mouth: "snarl" }])],
+        captions: caps("bend"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Sky.carLife(tl, "cn", t0, D("bend"), { knock: true, flicker: true }); Sky.redPulse(tl, L, t0, D("bend"), 0.24);
+          put(L.set, `<g transform="translate(${GX + 70},${TF - 380}) rotate(80)"><g id="cn-hand">${Sky.zPalm("cn-hp", 0.42)}</g></g>`);
+          tl.fromTo("#cn-hand", { x: -60, rotation: -20, svgOrigin: "0 0" }, { x: 30, rotation: 10, svgOrigin: "0 0", duration: 0.3, yoyo: true, repeat: Math.ceil(D("bend") / 0.3), ease: "sine.inOut", immediateRender: false }, t0 + 0.3);
+          tl.fromTo("#cn-gap", { scaleX: 0.2, svgOrigin: `${GX + 52} 0` }, { scaleX: 1, svgOrigin: `${GX + 52} 0`, duration: 0.5, ease: "power3.out", immediateRender: false }, t0 + F("bend", 0, 1)); } });
+      // ---------- 17. backs to the door; the dot near the station ----------
+      add("push", { ...CAR("cp", "alarm", { end: "zombies", crack: 3, bent: true, progress: 0.85 }),
+        cam: { keys: [{ t: 0, ...fr(GX + 280, 1220, 1.12, 540, 1000) }, { t: D("push"), glide: D("push"), ...fr(GX + 300, 1210, 1.3, 540, 1000) }] },
+        shake: shk(6),
+        actors: [ZEND(GX - 150, "zOffice"), ZEND(GX - 320, "zStudent"), A("may", GX + 120, Y, S, [{ t: 0, mode: "hold", eyes: "angry", mouth: "scream" }], { talk: [TALK("push", 0, "scream")] }),
+          A("nat", GX + 300, Y, S, [{ t: 0, mode: "hold", eyes: "wide", mouth: "scream" }]), A("cherd", GX + 480, Y, S, [{ t: 0, mode: "hold", eyes: "angry", mouth: "flat" }]),
+          A("suit", GX + 660, Y, S, [{ t: 0, mode: "hold", eyes: "wide", mouth: "o" }])],
+        captions: caps("push", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 6); Sky.carLife(tl, "cp", t0, D("push"), { knock: true, flicker: true, progress: [0.85, 0.97] }); Sky.fgPole(tl, L, t0, D("push"), { x: 980, red: true, drift: 30 }); Sky.redPulse(tl, L, t0, D("push")); } });
+      // ---------- 18. outside: the train slows into a dark station (silence before the doors) ----------
+      add("arrive", { set: "viaduct", setOpts: { id: "va", time: "night", trainX: -1200, power: false }, dark: 0.12, light: false, grade: { top: "#3a4a6a", bottom: "#05060c", op: 0.25 }, blur: { far: 1.5, mid: 0.6, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(700, 900, 0.85, 540, 900) }] },
+        fx(tl, id, t0, L) { tl.fromTo("#va-train", { x: -500 }, { x: 0, duration: D("arrive"), ease: "power3.out", immediateRender: false }, t0); } });
+      // ---------- 19. out: the doors open, everyone pours onto the platform; เมย์ on her knees ----------
+      add("out", { set: "platform", setOpts: { id: "po", closed: true, dim: true, signX: 1500 }, dark: 0.1, light: DEAD, grade: GDEAD,
+        cam: { keys: [{ t: 0, ...fr(560, 1260, 1.0, 540, 1100) }, { t: D("out"), glide: D("out"), ...fr(540, 1300, 1.1, 540, 1100) }] },
+        actors: [A("suit", 160, 1500 + 120, S, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: -300, y: 1500 + 160, dur: 1.4, ease: "power1.out" } }),
+          A("nat", 440, 1500 + 100, S, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.9, mode: "gasp", eyes: "closed", mouth: "o" }], { moveTo: { x: 360, y: 1500 + 170, dur: 0.9, ease: "power2.out" } }),
+          A("may", 640, 1500 + 100, S, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.8, mode: "gasp", eyes: "closed", mouth: "smile" }], { moveTo: { x: 600, y: 1500 + 200, dur: 0.8, ease: "power2.out" }, talk: [TALK("out", 0, "smile")] }),
+          A("cherd", 860, 1500 + 90, S, [{ t: 0, mode: "walk", eyes: "worry", mouth: "flat" }], { flip: true, moveTo: { x: 820, y: 1500 + 150, dur: 1.2, ease: "power1.out" } })],
+        captions: caps("out", undefined, QUO),
+        fx(tl, id, t0, L) { noSh(tl, id, 4); } });
+      // ---------- 20. the platform: half the lights off, nobody ----------
+      add("quiet", { set: "platform", setOpts: { id: "pq", closed: true, dim: true, signX: 900 }, dark: 0.12, light: DEAD, grade: GDEAD,
+        cam: { keys: [{ t: 0, ...fr(900, 1100, 0.85, 540, 1000) }, { t: D("quiet"), glide: D("quiet"), ...fr(1150, 1100, 0.9, 540, 1000) }] },
+        actors: [A("may", 380, 1500 + 200, S, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { flip: false }), A("nat", 230, 1500 + 170, S, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }])],
+        captions: caps("quiet"),
+        fx(tl, id, t0, L) { noSh(tl, id); for (let k = 0; k < 10; k += 2) tl.fromTo(`#pq-pl${k}`, { opacity: 1 }, { opacity: 0.3, duration: 0.05, yoyo: true, repeat: 3, repeatDelay: 0.6 + k * 0.1, immediateRender: false }, t0 + 0.3 + k * 0.17); } });
+      // ---------- 21. the sign: the งดให้บริการ tape ----------
+      add("sign", { set: "platform", setOpts: { id: "ps", closed: true, dim: true, signX: 540 }, dark: 0.08, light: DEAD, grade: GDEAD,
+        cam: { keys: [{ t: 0, ...fr(540, 430, 1.4, 540, 800) }, { t: D("sign"), glide: D("sign"), ...fr(540, 420, 1.75, 540, 800) }] },
+        captions: caps("sign"),
+        fx(tl, id, t0, L) { tl.fromTo("#ps-sign", { rotation: -1.5, svgOrigin: "0 -80" }, { rotation: 1.5, svgOrigin: "0 -80", duration: 1.1, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0); } });
+      // ---------- 22. the staff at the far end turns: milky eyes ----------
+      add("turn", { set: "platform", setOpts: { id: "pt", closed: true, dim: true, signX: -200 }, dark: 0.12, light: DEAD, grade: GDEAD,
+        cam: { keys: [{ t: 0, ...fr(900, 1230, 0.95, 540, 1000) }, { t: 1.5, glide: 1.5, ...fr(1350, 1150, 1.9, 540, 1000) }, { t: D("turn"), glide: D("turn") - 1.5, ...fr(1380, 1060, 2.6, 540, 900) }] },
+        actors: [A("staffZ", 1400, 1500 + 130, S, [{ t: 0, mode: "turnZ", eyes: "closed", mouth: "flat" }]), A("staffZ", 1400, 1500 + 130, S, [{ t: 0, mode: "slamZ", eyes: "dead", mouth: "snarl" }], { flip: true }),
+          A("may", 520, 1500 + 200, S, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), A("nat", 380, 1500 + 170, S, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("turn"),
+        fx(tl, id, t0, L) { noSh(tl, id, 4); const tt = t0 + F("turn", 0, 1); tl.set(`#${id}-a1`, { opacity: 0 }, t0); tl.set(`#${id}-a0`, { opacity: 0 }, tt); tl.set(`#${id}-a1`, { opacity: 1 }, tt);
+          SU.flash(tl, L.light, tt, "#ffffff", 0.3); } });
+      // ---------- 23. next ----------
+      add("next", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        fx(tl, id, t0, L) { SkyUI.next(tl, L.light, t0, D("next"), { l2: "ชานชาลามีพวกมันรออยู่", l3: "อย่ากระโดดลงราง" }); } });
