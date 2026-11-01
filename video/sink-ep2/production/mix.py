@@ -135,8 +135,8 @@ CUES = [
     ("switch", 0.0, "whoosh", 0.24), *beats("switch", 0.1, D["switch"] - 0.1, 0.38, 0.34),
     # the last of the air
     ("fill", 0.2, "bubbles", 0.3), ("fill", 1.4, "bubbles", 0.26), *beats("fill", 0.2, D["fill"] - 0.2, 0.36, 0.38),
-    # the twist: back to 0:03
-    ("rw", 0.0, "rewind", 0.42), ("rw", 0.65, "sting", 0.3),
+    # the twist: his own window, open all along
+    ("open", 0.0, "sting", 0.3),
     # his window: the canal coming through
     ("open", 0.0, "roar", 0.32), ("open", 0.2, "bubbles", 0.3),
     # out she goes
@@ -197,7 +197,7 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(T("rw", 0), T("open", -0.01), 0.55)          # the rewind and the twist
+dip(T("open", 0), T("open", -0.01), 0.55)        # the twist
 dip(T("surface", 0), T("surface", -0.01), 0.6)   # her first breath above the water
 mus = mus * gain
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)

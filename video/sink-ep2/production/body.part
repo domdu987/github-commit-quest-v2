@@ -176,16 +176,6 @@
         fx(tl, id, t0, L) { SinkUI.equalize(tl, L.light, t0, D("fill") - FS, { mode: "last", label: Math.max(0.6, F("fill", 0, 1) - FS) }); },
       });
       // ---------- 14. the twist: back to 0:03, closer: his own window, open the whole time ----------
-      add("rw", {
-        ...CUTM2("cm5", 960),
-        cam: { keys: [{ t: 0, ...fr(560, 1250, 1.28, 540, 980) }, { t: D("rw"), glide: D("rw") * 0.85, ...fr(410, 1150, 2.3, 540, 980) }] },
-        actors: [TONm("punchUp", "angry", "scream"), KIMm("sitHold", "wide", "scream")],
-        captions: caps("rw"),
-        fx(tl, id, t0, L) {
-          noShadows(tl, id); cabRich(L, tl, "cm5", t0, D("rw"), { openF: true, caustic: false }); openWin(L, tl, "cm5", t0, D("rw")); cutFront(L, "cm5", { free: ["ton", "kim"] }); cutUnder(L, tl, "cm5", t0, D("rw"), 1300, 1294);
-          rewind(L, tl, t0, D("rw"), "0:03");
-        },
-      });
       // ---------- 15. his window from inside: no glass, the canal coming through ----------
       add("open", {
         ...WIN("cw5"),

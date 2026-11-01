@@ -33,7 +33,6 @@ SHOTS = [
     ("third", ["n10"], 0.2, 0.2, 3.0),       # a side window that cracks and holds: it has the film too (1 in 3)
     ("switch", ["n11"], 0.15, 0.3, 2.0),     # move to another window, now
     ("fill", ["n12"], 0.2, 0.4, 3.4),        # the car filling: the door gives only when it's nearly full, the last resort
-    ("rw", ["n13"], 0.2, 0.6, 4.0),          # rewind to 0:03: behind ต้น again, his own window open
     ("open", ["n14"], 0.2, 0.3, 2.6),        # close on his window: no glass, the canal flowing in
     ("push", ["n15"], 0.2, 0.3, 3.4),        # he pushes ขิม out through it
     ("surface", ["k02"], 0.55, 0.5, 2.3),     # on the canal: ขิม breaks the surface, gasping
