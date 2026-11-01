@@ -31,7 +31,7 @@ SHOTS = [
     ("glow", ["n09"], 0.08, 0.25, 1.6),      # 4 a.m.: the smoke is a light now, blinking → red
     ("q1", ["q01"], 0.06, 0.12, 1.6),        # B3 คิว jumps up: the village!
     ("lure", ["n10"], 0.08, 0.12, 3.0),      # his feet leave the wreck | the phone light finds the cliff edge, the black surf
-    ("dont", ["n11"], 0.05, 0.35, 0.9),      # one word → a stone drops into the sea
+    ("dont", ["n11"], 0.05, 0.25, 1.3),      # the command again at the edge → stones drop down the cliff
     ("q2", ["q02"], 0.08, 0.20, 1.6),        # he backs into the wreck: I'll wait here
     ("morning", ["n12"], 0.12, 0.08, 1.6),   # B4 orange sky, the helicopter's shadow on the water
     ("q3", ["q03"], 0.04, 0.10, 1.6),        # he runs out waving, face big

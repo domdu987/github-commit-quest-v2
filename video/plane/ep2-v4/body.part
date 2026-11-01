@@ -10,6 +10,7 @@
       Rig.MODES.crouchLook = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -72 + 8 * Math.sin(u * 3.1), faF: -8, uaB: 20, faB: -30, head: -8 });
       Rig.MODES.zip = (u, o) => ({ ...Rig.MODES.sit(u, o), uaF: -40, faF: -120 + 10 * Math.sin(u * 6), uaB: -30, faB: -110, head: 10, torso: 6 });
       Rig.MODES.pointF = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 3, head: -6, uaF: -96 + 3 * Math.sin(u * 4), faF: -4, uaB: 12, faB: -10 });
+      Rig.MODES.cock = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 6, head: 4, uaF: 30, faF: -100, uaB: -10, faB: -20, bodyY: 6 });
       Rig.MODES.lookUp = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: -6, head: -22 + 2 * Math.sin(u * 3), uaF: -20, faF: -60, uaB: 10, faB: -20 });
       const DUSKL = { from: "left", rim: "#ffc890", rimOp: 0.95, shade: "#2a1a3a", shadeOp: 0.2, cast: { len: 0.6, op: 0.3 }, vol: false };
       const EP1L = { from: "left", rim: "#ffc890", rimOp: 0.7, shade: "#141a2a", shadeOp: 0.35, cast: false, vol: false };
@@ -34,13 +35,9 @@
       const warmFace = (L, id, side = "right", col = "#ff8a3a", op = 0.4) => put(L.light, `<radialGradient id="${id}-wf" cx="${side === "right" ? 1 : 0}" cy=".4" r=".9"><stop offset="0" stop-color="${col}" stop-opacity="${op}"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient><rect width="1080" height="1920" fill="url(#${id}-wf)" style="mix-blend-mode:screen"/>`);
 
       // ===== B0 hook: EP.1's last frame (the plume across the bay) → คิว on the rocks, rim-lit, points at a smoke column a third of the frame =====
-      seg("hook", [
-        [0, (d) => ({ set: "crashSite", setOpts: { id: "m1", time: "dusk", fire: 0.2, plume: true, plumeX: 900 }, dark: 0.12, light: EP1L, grade: GSEA, blur: { far: 1.5, mid: 0.6, fg: 7 },
-          cam: { keys: [{ t: 0, ...fr(900, 1020, 1.9, 540, 1100) }, { t: d, glide: d, ...fr(900, 1010, 1.98, 540, 1100) }] },
-          fx(tl, id, t0, L) { Plane.siteLife(tl, "m1", t0, d); put(L.glow, `<g>${Plane.puffMk("m1c", 880, 1130, 14, "dark", 80)}</g><circle cx="890" cy="1150" r="60" fill="#ff7a2a" opacity=".6" filter="url(#plBlur14)"/>`); Plane.puffs(tl, "m1c", t0 - 3, d + 3.5, 14, { dx: 90, dy: -700, per: 2.0, op: 0.95 }); } })],
-        [0.62, (d) => ({ ...ROCKS("h0"), cam: { keys: [{ t: 0, ...fr(600, 1230, 1.18, 540, 1000) }, { t: d, glide: d, ...fr(620, 1200, 1.26, 540, 1000) }] },
-          actors: [A("kiw", 330, 1800, 1.5, [T("idle", "wide", "o"), T("pointF", "wide", "o", 0.45)])], fx(tl, id, t0) { life(tl, t0, d); } })],
-      ]);
+      add("hook", { ...ROCKS("h0"), cam: { keys: [{ t: 0, ...fr(600, 1230, 1.18, 540, 1000) }, { t: D("hook"), glide: D("hook"), ...fr(630, 1190, 1.28, 540, 1000) }] }, captions: caps("hook"),
+        actors: [A("kiw", 330, 1800, 1.5, [T("idle", "wide", "o"), T("cock", "wide", "o", 0.5), T("pointF", "wide", "o", 0.72)])],
+        fx(tl, id, t0, L) { life(tl, t0, D("hook")); put(L.far, `<g>${Plane.puffMk("h0r", PLUME[0], PLUME[1] - 60, 12, "dark", 110)}</g>`); Plane.puffs(tl, "h0r", t0 - 4, D("hook") + 4.5, 12, { dx: 320, dy: -760, per: 2.4, op: 0.95 }); } });
       // the command on his face (≥ 1/3): eyes on the smoke, gold rim from the left
       add("cmd", { ...CU(ROCKS("c0"), "kiw", 380, [T("pointF", "wide", "o")], { dx: 50 })(D("cmd")), captions: caps("cmd") });
       // ===== B1 why: up and away (a dot) → from a plane window → the tail from the sky → the chart (S12) =====
@@ -49,12 +46,12 @@
           actors: [A("kiw", 520, 1780, 1.45, [T("idle", "wide", "o")])], fx(tl, id, t0) { life(tl, t0, d); } })],
         [C("why", 0, 2), (d) => ({ set: "aerial", setOpts: { id: "w2", window: true }, dark: 0, light: false, grade: GDAY,
           cam: { keys: [{ t: 0, ...fr(560, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(620, 1100, 1.25, 540, 960) }] },
-          fx(tl, id, t0) { tl.fromTo("#w2-dot", { opacity: 1 }, { opacity: 0.3, duration: 0.2, yoyo: true, repeat: 6, immediateRender: false }, t0); } })],
+          fx(tl, id, t0) { life(tl, t0, d); tl.fromTo("#w2-dot", { opacity: 1 }, { opacity: 0.3, duration: 0.2, yoyo: true, repeat: 6, immediateRender: false }, t0); } })],
       ]);
       seg("wreck", [
         [0, (d) => ({ set: "aerial", setOpts: { id: "k1" }, dark: 0, light: false, grade: GDAY,
           cam: { keys: [{ t: 0, ...fr(560, 1110, 1.6, 540, 960) }, { t: d, glide: d, ...fr(560, 1110, 2.1, 540, 960) }] },
-          fx(tl, id, t0) { tl.fromTo("#k1-ring", { opacity: 0, scale: 1.5, svgOrigin: "560 1110" }, { opacity: 1, scale: 1, svgOrigin: "560 1110", duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 0.4); } })],
+          fx(tl, id, t0) { life(tl, t0, d); tl.fromTo("#k1-ring", { opacity: 0, scale: 1.5, svgOrigin: "560 1110" }, { opacity: 1, scale: 1, svgOrigin: "560 1110", duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 0.4); } })],
         [C("wreck", 0, 2), (d) => ({ set: "tailIn", setOpts: { id: "k2" }, dark: 0, light: MOONL, grade: { top: "#9ab8f0", bottom: "#1a2236", op: 0.05 }, blur: { far: 5, set: 4 },
           cam: { keys: [{ t: 0, ...still(fr(540, 960, 1.0, 540, 960)) }] },
           fx(tl, id, t0, L) { put(L.act, `<g transform="translate(540,900) rotate(-3) scale(1.55)">${Isle.chart("ch")}</g>`);
@@ -64,8 +61,8 @@
       ]);
       // over his shoulder: only the smoke (it darkens on "แต่")
       add("smoke", { ...ROCKS("s0"), cam: { keys: [{ t: 0, ...fr(700, 900, 1.35, 540, 760) }, { t: D("smoke"), glide: D("smoke"), ...fr(720, 880, 1.45, 540, 760) }] }, blur: { far: 0, mid: 0, set: 2, fg: 10 },
-        actors: [A("kiw", 240, 1900, 2.0, [T("idle", "wide", "flat")])], captions: caps("smoke"),
-        fx(tl, id, t0, L) { life(tl, t0, D("smoke")); put(L.light, `<rect id="s0dk" width="1080" height="1920" fill="#0a0814" opacity="0"/>`); tl.to("#s0dk", { opacity: 0.3, duration: 0.3, immediateRender: false }, t0 + 0.3); } });
+        actors: [A("kiw", 430, 1980, 1.7, [T("idle", "wide", "flat")], { flip: true })], captions: caps("smoke"),
+        fx(tl, id, t0, L) { life(tl, t0, D("smoke")); put(L.far, `<g>${Plane.puffMk("s0r", PLUME[0], PLUME[1] - 60, 12, "dark", 110)}</g>`); Plane.puffs(tl, "s0r", t0 - 4, D("smoke") + 4.5, 12, { dx: 320, dy: -760, per: 2.4, op: 0.95 }); put(L.light, `<rect id="s0dk" width="1080" height="1920" fill="#0a0814" opacity="0"/>`); tl.to("#s0dk", { opacity: 0.3, duration: 0.3, immediateRender: false }, t0 + 0.3); } });
       // ===== B2 the first night =====
       seg("night", [
         [0, (d) => ({ ...ISLE("n1", "night", "rocks", { tail: [500, 1400, 1.0] }), cam: { keys: [{ t: 0, ...fr(560, 1080, 0.85, 540, 960) }, { t: d, glide: d, ...fr(560, 1100, 0.95, 540, 960) }] },
@@ -78,7 +75,7 @@
       seg("vest", [
         [0, (d) => ({ set: "tailIn", setOpts: { id: "v1" }, dark: 0, light: MOONL, grade: GNITE, cam: { keys: [{ t: 0, ...fr(600, 1450, 2.0, 540, 960) }] },
           actors: [A("kiwHidden", 600, 1860, 1.5, [T("zip", "normal", "flat")])] })],
-        [C("vest", 0, 2), (d) => ({ set: "tailIn", setOpts: { id: "v2", phone: [700, 1560] }, dark: 0, light: MOONL, grade: GNITE, cam: { keys: [{ t: 0, ...fr(600, 1280, 1.0, 540, 960) }] },
+        [C("vest", 0, 2), (d) => ({ set: "tailIn", setOpts: { id: "v2", phone: [760, 1700] }, dark: 0, light: MOONL, grade: GNITE, cam: { keys: [{ t: 0, ...fr(600, 1280, 1.0, 540, 960) }] },
           actors: [A("kiwHidden", 600, 1860, 1.5, [T("sit", "wide", "o")])] })],
       ]);
       // 4 a.m.: the smoke is now a fire across the bay → his face lit warm, eyes wide (≥ 1/3)
@@ -105,14 +102,14 @@
       add("morning", { ...ISLE("mo", "dawn", "beach", { tail: [700, 1400, 0.9], grey: true }), cam: { keys: [{ t: 0, ...fr(560, 960, 0.95, 540, 960) }] }, captions: caps("morning"),
         fx(tl, id, t0, L) { life(tl, t0, D("morning")); put(L.mid, `<g id="mohl" transform="translate(-200,520) scale(.9)">${Isle.heliBig("hlm")}</g>`); Isle.heliShake(tl, "hlm", t0, D("morning")); tl.to("#mohl", { x: 420, duration: D("morning"), ease: "none", immediateRender: false }, t0); } });
       add("q3", { ...ISLE("q3s", "day", "beach", { tail: [700, 1400, 0.9], grey: true }), cam: { keys: [{ t: 0, ...fr(420, 1200, 1.3, 540, 1000) }] },
-        actors: [A("kiwHidden", 330, 1800, 1.5, [T("wave2", "wide", "scream")], { talk: [TALK("q3", 0, "scream")] })], captions: caps("q3", undefined, QUO),
-        fx(tl, id, t0, L) { life(tl, t0, D("q3")); put(L.mid, `<g id="q3hl" transform="translate(820,820) scale(1.3)">${Isle.heliBig("hlq")}</g>`); Isle.heliShake(tl, "hlq", t0, D("q3"));
-          Isle.downwash(tl, L.mid, "q3", 840, 1180, t0, D("q3"), { r: 560 }); tl.to("#q3hl", { x: 160, y: -30, duration: D("q3"), ease: "sine.inOut", immediateRender: false }, t0); } });
+        actors: [A("kiwHidden", 260, 1820, 1.45, [T("wave2", "wide", "scream")], { talk: [TALK("q3", 0, "scream")] })], captions: caps("q3", undefined, QUO),
+        fx(tl, id, t0, L) { life(tl, t0, D("q3")); put(L.mid, `<g id="q3hl" transform="translate(1000,560) scale(1.0)">${Isle.heliBig("hlq")}</g>`); Isle.heliShake(tl, "hlq", t0, D("q3"));
+          Isle.downwash(tl, L.mid, "q3", 1000, 1180, t0, D("q3"), { r: 560 }); tl.to("#q3hl", { x: 60, y: -30, duration: D("q3"), ease: "sine.inOut", immediateRender: false }, t0); } });
       seg("pass", [
         // low under it: the helicopter fills the top of the frame, his arms up in the foreground
         [0, (d) => ({ ...ISLE("pa", "day", "beach", { fg: false }), cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 1000) }] }, blur: { far: 2, mid: 1, set: 2, fg: 10 },
-          actors: [A("kiwHidden", 260, 2150, 2.2, [T("wave2", "wide", "scream")])], shake: (t) => ({ x: 4 * Math.sin(t * 41), y: 3 * Math.sin(t * 37), r: 0 }),
-          fx(tl, id, t0, L) { life(tl, t0, d); put(L.mid, `<g id="pahl" transform="translate(-700,520) scale(2.2)">${Isle.heliBig("hlp")}</g>`); Isle.heliShake(tl, "hlp", t0, d);
+          actors: [A("kiwHidden", 260, 2250, 2.1, [T("wave2", "wide", "scream")])], shake: (t) => ({ x: 4 * Math.sin(t * 41), y: 3 * Math.sin(t * 37), r: 0 }),
+          fx(tl, id, t0, L) { life(tl, t0, d); put(L.mid, `<g id="pahl" transform="translate(-700,330) scale(2.0)">${Isle.heliBig("hlp")}</g>`); Isle.heliShake(tl, "hlp", t0, d);
             Isle.downwash(tl, L.mid, "pa", 540, 1200, t0, d, { r: 700 }); tl.to("#pahl", { x: 2500, duration: d + 0.3, ease: "power1.in", immediateRender: false }, t0); } })],
         // his face as it goes (≥ 1/3)
         [C("pass", 0, 1), CU(ISLE("pa2", "day", "beach", { tail: [700, 1400, 0.9], grey: true }), "kiwHidden", 360, [T("lookUp", "wide", "o")], { dx: 60,
@@ -122,19 +119,23 @@
           actors: [A("kiwHidden", 300, 1800, 1.0, [T("idle", "worry", "frown")])], fx(tl, id, t0) { life(tl, t0, d); } })],
       ]);
       add("under", { ...ISLE("un", "day", "beach", { tail: [700, 1400, 0.9], grey: true }), blur: { far: 4, mid: 4, set: 4, fg: 9 },
-        cam: { keys: [{ t: 0, ...fr(330, 1420, 2.6, 540, 960) }, { t: D("under"), glide: D("under"), ...fr(330, 1440, 2.9, 540, 960) }] }, captions: caps("under"),
+        cam: { keys: [{ t: 0, ...fr(330, 1350, 2.0, 540, 1000) }, { t: D("under"), glide: D("under"), ...fr(330, 1370, 2.2, 540, 1000) }] }, captions: caps("under"),
         actors: [A("kiwHidden", 320, 1820, 1.45, [T("idle", "wide", "flat")])], fx(tl, id, t0) { life(tl, t0, D("under")); } });
       // ===== B5 the rule: the airline safety card, wet and creased, hanging on its rope from the tail's antenna; his marker writing =====
-      add("rule", { ...ISLE("ru", "day", "rocks", { tail: [460, 1500, 1.0], vest: true, blanket: true, panel: true, antenna: [700, 1260] }), blur: { far: 6, mid: 6, set: 6, fg: 10 },
-        cam: { keys: [{ t: 0, ...fr(520, 1140, 0.95, 540, 1000) }, { t: C("rule", 0, 4), ...fr(520, 1140, 0.95, 540, 1000) }, { t: D("rule"), glide: D("rule") - C("rule", 0, 4), ...fr(500, 1160, 1.05, 540, 1000) }] }, captions: caps("rule"),
-        actors: [A("kiw", 900, 1860, 1.3, [T("pointBack", "normal", "smile")], { flip: true })],
-        fx(tl, id, t0, L) { life(tl, t0, D("rule")); tl.fromTo("#ru-flash", { opacity: 0 }, { opacity: 1, duration: 0.1, yoyo: true, repeat: 7, immediateRender: false }, t0 + C("rule", 0, 4) + 0.2);
-          Isle.card(tl, L.light, t0 + 0.02, D("rule"), { id: "rc", title: "ทำให้ซากเด่น", y: 200, active: 1, done: [0], at: [0.15, F("rule", 0, 1)], out: C("rule", 0, 4) - 0.2,
-            rows: [{ text: "วาง<u>ของสีสด</u>บนซาก", icon: "vest" }, { text: "<u>ของสะท้อนแสง</u>รอบๆ", icon: "mirror" }] }); } });
+      seg("rule", [
+        [0, (d) => ({ ...ISLE("ru", "day", "rocks", { tail: [460, 1500, 1.0], vest: true, blanket: true, panel: true, antenna: [700, 1260] }), blur: { far: 6, mid: 6, set: 6, fg: 10 },
+          cam: { keys: [{ t: 0, ...fr(560, 1100, 1.1, 540, 1000) }, { t: d, glide: d, ...fr(560, 1100, 1.15, 540, 1000) }] },
+          fx(tl, id, t0, L) { life(tl, t0, d); Isle.card(tl, L.light, t0 + 0.02, d + 0.2, { id: "rc", title: "ทำให้ซากเด่น", y: 200, active: 1, done: [0], at: [0.15, F("rule", 0, 1)],
+            rows: [{ text: "วาง<u>ของสีสด</u>บนซาก", icon: "vest" }, { text: "<u>ของสะท้อนแสง</u>รอบๆ", icon: "mirror" }] }); } })],
+        [C("rule", 0, 4), (d) => ({ ...ISLE("ru2", "day", "rocks", { tail: [460, 1500, 1.0], vest: true, blanket: true, panel: true, antenna: [700, 1260] }),
+          cam: { keys: [{ t: 0, ...fr(520, 1140, 0.95, 540, 1000) }, { t: d, glide: d, ...fr(500, 1160, 1.05, 540, 1000) }] },
+          actors: [A("kiw", 900, 1860, 1.3, [T("pointBack", "normal", "smile")], { flip: true })],
+          fx(tl, id, t0) { life(tl, t0, d); tl.fromTo("#ru2-flash", { opacity: 0 }, { opacity: 1, duration: 0.1, yoyo: true, repeat: 7, immediateRender: false }, t0 + 0.2); } })],
+      ]);
       add("back", { ...ISLE("bk", "day", "rocks", { tail: [460, 1500, 1.0], vest: true, blanket: true, panel: true }), cam: { keys: [{ t: 0, ...fr(520, 1000, 0.9, 540, 1000) }] }, captions: caps("back"),
         actors: [A("kiw", 880, 1860, 1.2, [T("wave2", "wide", "laugh")], { flip: true })],
-        fx(tl, id, t0, L) { life(tl, t0, D("back")); tl.set("#bk-flash", { opacity: 1 }, t0); put(L.mid, `<g id="bkhl" transform="translate(1500,420) scale(-1.2,1.2)">${Isle.heliBig("hlb")}</g>`); Isle.heliShake(tl, "hlb", t0, D("back")); tl.to("#bkhl", { x: -760, y: 120, duration: D("back"), ease: "power2.out", immediateRender: false }, t0);
-          Isle.downwash(tl, L.mid, "bk", 760, 1250, t0 + 0.8, D("back") - 0.8, { r: 460 }); } });
+        fx(tl, id, t0, L) { life(tl, t0, D("back")); tl.set("#bk-flash", { opacity: 1 }, t0); put(L.mid, `<g id="bkhl" transform="translate(1500,520) scale(-1.8,1.8)">${Isle.heliBig("hlb")}</g>`); Isle.heliShake(tl, "hlb", t0, D("back")); tl.to("#bkhl", { x: -760, y: 120, duration: D("back"), ease: "power2.out", immediateRender: false }, t0);
+          Isle.downwash(tl, L.mid, "bk", 700, 1280, t0 + 0.8, D("back") - 0.8, { r: 460 }); } });
       // ===== B6 found =====
       add("found", { ...ISLE("fo", "day", "rocks", { tail: [460, 1500, 1.0], vest: true, blanket: true }), cam: { keys: [{ t: 0, ...fr(560, 1240, 1.5, 540, 1000) }] },
         actors: [A("rescuer", 560, 1860, 1.45, [T("point", "wide", "o")], { talk: [TALK("found", 0, "o")] })], captions: caps("found", undefined, QUO), fx(tl, id, t0) { life(tl, t0, D("found")); } });
@@ -158,12 +159,12 @@
       ]);
       // they walk out at night: torch lights leaving the front section into the jungle
       add("walk", { set: "frontSite", setOpts: { id: "wk", time: "night", prints: false }, dark: 0.1, light: MOONL, grade: GNITE, cam: { keys: [{ t: 0, ...fr(560, 1200, 0.9, 540, 1000) }, { t: D("walk"), glide: D("walk"), ...fr(700, 1150, 1.05, 540, 1000) }] }, captions: caps("walk"),
-        fx(tl, id, t0, L) { life(tl, t0, D("walk")); put(L.glow, Array.from({ length: 4 }, (_, k) => `<g id="wkt${k}" transform="translate(${300 - k * 60},${1700 + k * 40})"><circle r="70" fill="#fffbe8" opacity=".22"/><circle r="12" fill="#fffbe8"/></g>`).join(""));
-          for (let k = 0; k < 4; k++) tl.to(`#wkt${k}`, { x: 520 + k * 60, y: -460 - k * 40, scale: 0.35, duration: D("walk") + 0.5, ease: "power1.inOut", immediateRender: false }, t0 - k * 0.2); } });
+        fx(tl, id, t0, L) { life(tl, t0, D("walk")); put(L.glow, Array.from({ length: 4 }, (_, k) => `<g id="wkt${k}" transform="translate(${420 + k * 70},${1660 + k * 50})"><circle r="70" fill="#fffbe8" opacity=".22"/><circle r="12" fill="#fffbe8"/></g>`).join(""));
+          for (let k = 0; k < 4; k++) tl.to(`#wkt${k}`, { x: 400 - k * 70, y: -420 - k * 50, scale: 0.35, duration: D("walk") + 0.5, ease: "power1.inOut", immediateRender: false }, t0 - k * 0.2); } });
       // one picture: big footprints in the foreground from the wreck into the dark jungle; the dying fire; the rescuer kneeling at them
       add("lost", { set: "frontSite", setOpts: { id: "lo", time: "dawn" }, dark: 0.12, light: DAWNL, grade: GDAY, blur: { far: 1, fg: 10 },
         cam: { keys: [{ t: 0, ...fr(480, 1520, 1.0, 540, 1000) }, { t: D("lost"), glide: D("lost"), ...fr(700, 1340, 1.3, 540, 1000) }] }, captions: caps("lost"),
-        actors: [A("rescuer", 600, 1900, 1.35, [T("crouchTorch", "worry", "frown")], { flip: true })], fx(tl, id, t0) { life(tl, t0, D("lost")); } });
+        actors: [A("rescuer", 640, 1720, 1.15, [T("crouch", "worry", "frown")], { flip: true })], fx(tl, id, t0) { life(tl, t0, D("lost")); } });
       add("end", { ...ISLE("en", "day", "rocks", { tail: [460, 1500, 1.0], vest: true, antenna: [700, 1260] }), blur: { far: 6, mid: 6, set: 6, fg: 10 },
         cam: { keys: [{ t: 0, ...still(fr(540, 1100, 0.9, 540, 1000)) }] },
         fx(tl, id, t0, L) { life(tl, t0, D("end")); Isle.card(tl, L.light, t0 + 0.02, D("end"), { id: "ec", title: "รอดคนเดียว · 2 กฎ", y: 260, active: -1, done: [0, 1], at: [0.15, 0.45],
