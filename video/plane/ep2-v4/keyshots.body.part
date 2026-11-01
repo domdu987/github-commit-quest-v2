@@ -1,0 +1,44 @@
+      // ---------- รอดคนเดียว EP.2 v4 · 6 key stills (style test) ----------
+      const still = (x) => ({ ...x, drift: { s: 0 } });
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.7, 2.6, 4.4], ...extra }; };
+      const T = (mode, eyes = "normal", mouth = "flat", t = 0) => ({ t, mode, eyes, mouth });
+      Rig.MODES.crouchLook = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -72 + 8 * Math.sin(u * 3.1), faF: -8, uaB: 20, faB: -30, head: -8 });
+      const DUSKL = { from: "left", rim: "#ffd29a", rimOp: 0.85, shade: "#3a2a4a", shadeOp: 0.22, cast: { len: 0.4, op: 0.25 }, vol: false };
+      const MOONL = { from: "left", rim: "#cfe0ff", rimOp: 0.9, shade: "#14204a", shadeOp: 0.25, cast: false, vol: false };
+      const DAYL = { from: "right", rim: "#ffffff", rimOp: 0.6, shade: "#3a4a6a", shadeOp: 0.15, cast: { len: 0.35, op: 0.25 }, vol: false };
+      const cap = (text, t = 0, end = 1.15) => [{ text, t, end }];
+      // 1 · hook: on the rocks by the tail at dusk, the smoke column across the bay — คิว big in frame
+      add("k1", { set: "isle", setOpts: { id: "a1", time: "dusk", view: "rocks", smoke: [900, 760], tail: [-160, 1360, 1.05] }, dark: 0, light: DUSKL, grade: { top: "#ffd8a0", bottom: "#2a1a2a", op: 0.06 }, blur: { fg: 9 },
+        cam: { keys: [{ t: 0, ...still(fr(620, 1080, 1.0, 540, 960)) }] },
+        actors: [A("kiw", 520, 1780, 1.45, [T("idle", "wide", "o")], { flip: false })],
+        captions: cap("ถ้าวันหนึ่ง… คุณเห็น[ควันอีกฝั่งอ่าว]"), fx(tl, id, t0) { Isle.life(tl, "a1", t0, 1.2); } });
+      // 2 · night inside the tail: moonlight from the door, the chart on the wall (S12), he zips the jacket over the orange vest, phone light out the door
+      add("k2", { set: "tailIn", setOpts: { id: "a2", phone: [700, 1560] }, dark: 0, light: MOONL, grade: { top: "#3a5a9a", bottom: "#0a1226", op: 0.08 },
+        cam: { keys: [{ t: 0, ...still(fr(600, 1280, 1.0, 540, 960)) }] },
+        actors: [A("kiwHidden", 600, 1860, 1.5, [T("sit", "wide", "o")])],
+        captions: cap("เขาเอาเสื้อชูชีพสีส้ม… [ใส่ไว้ใต้แจ็กเก็ต]"),
+        fx(tl, id, t0, L) { put(L.set, `<g transform="translate(980,620) rotate(4) scale(.75)">${Isle.chart("ch2")}</g>`); } });
+      // 3 · the cliff at four a.m.: the fire blinking across the bay, black surf below, phone light at the edge
+      add("k3", { set: "isle", setOpts: { id: "a3", time: "night", view: "cliff", fire: [900, 860] }, dark: 0, light: MOONL, grade: { top: "#3a5a9a", bottom: "#0a1226", op: 0.06 }, blur: { fg: 9 },
+        cam: { keys: [{ t: 0, ...still(fr(420, 1100, 1.05, 540, 960)) }] },
+        actors: [A("kiw", 300, 1640, 1.35, [T("crouchLook", "wide", "o")], { flip: false })],
+        captions: cap("แต่ระหว่างทางคือ… [หน้าผากับทะเลมืด]"),
+        fx(tl, id, t0, L) { Isle.life(tl, "a3", t0, 1.2); tl.fromTo("#a3-fire", { opacity: 1 }, { opacity: 0.3, duration: 0.15, yoyo: true, repeat: 7, ease: "steps(1)", immediateRender: false }, t0); } });
+      // 4 · morning beach: the helicopter passes, the grey wreck blends into the rocks, he waves
+      add("k4", { set: "isle", setOpts: { id: "a4", time: "day", view: "beach", tail: [700, 1400, 0.9], grey: true }, dark: 0, light: DAYL, grade: { top: "#fff8e0", bottom: "#2a4a6a", op: 0.04 }, blur: { fg: 9 },
+        cam: { keys: [{ t: 0, ...still(fr(500, 1060, 1.0, 540, 960)) }] },
+        actors: [A("kiwHidden", 320, 1820, 1.45, [T("wave2", "wide", "scream")])],
+        captions: cap("แต่มัน{บินผ่านไป}"),
+        fx(tl, id, t0, L) { put(L.mid, `<g transform="translate(860,330) scale(.7)">${Plane.heli("hl4")}</g>`); Plane.heliLife(tl, "hl4", t0, 1.2); Isle.life(tl, "a4", t0, 1.2); } });
+      // 5 · the rule as a big real thing: the airline safety card hung on the antenna, the orange vest + red blanket + a bright panel on the wreck
+      add("k5", { set: "isle", setOpts: { id: "a5", time: "day", view: "rocks", tail: [460, 1500, 1.0], vest: true, blanket: true, panel: true }, dark: 0, light: DAYL, grade: { top: "#fff8e0", bottom: "#2a4a6a", op: 0.04 }, blur: { fg: 9 },
+        cam: { keys: [{ t: 0, ...still(fr(520, 1140, 0.95, 540, 1000)) }] },
+        actors: [A("kiw", 900, 1860, 1.3, [T("pointBack", "normal", "smile")], { flip: true })],
+        fx(tl, id, t0, L) { tl.set("#a5-flash", { opacity: 1 }, t0);
+          IconFX.board(tl, L.light, { skin: "seatcard", title: "ทำให้ซากเด่น", sub: "การ์ดความปลอดภัย · ฟ้าราม", t: t0, dur: 1.2, y: 140, active: 1, done: [0], at: [0, 0],
+            items: [{ text: "วาง<u>ของสีสด</u>บนซาก", art: IconFX.ART.buoy }, { text: "และ<u>ของที่สะท้อนแสง</u>รอบๆ", art: IconFX.ART.helmet }] }); } });
+      // 6 · the twist: the front section on the far shore — the signal fire burned out, footprints walking into the jungle; the rescuer
+      add("k6", { set: "frontSite", setOpts: { id: "a6", time: "dawn" }, dark: 0, light: { from: "right", rim: "#ffe0b0", rimOp: 0.7, shade: "#3a2a4a", shadeOp: 0.22, cast: false, vol: false }, grade: { top: "#ffe0b0", bottom: "#2a2a3a", op: 0.06 }, blur: { fg: 9 },
+        cam: { keys: [{ t: 0, ...still(fr(540, 1180, 0.9, 540, 1000)) }] },
+        actors: [A("rescuer", 160, 1900, 1.4, [T("idle", "wide", "o")])],
+        captions: cap("แต่คนที่เดินออกไป… {ยังไม่มีใครหาเจอ}"), fx(tl, id, t0) { Isle.life(tl, "a6", t0, 1.2); } });

@@ -1,0 +1,146 @@
+      // ---------- รอดคนเดียว EP.2 v4 (lane C): the island, six places, each with its own light ----------
+      //   Sets.isle(L, o)      the shore by the tail wreck. o.time "dusk" (gold, teal sea) | "night" (moon blue, readable) | "day" (fresh, tide-like)
+      //                        o.view "rocks" (on the rocks next to the tail, the bay behind) | "beach" (sand with debris + footprints) | "cliff" (a wet
+      //                        cliff edge over black surf) · o.smoke (smoke column on the far ridge) · o.fire (a blinking signal fire there)
+      //                        o.tail [x, y, s] the tail section · o.debris true · o.vest true (the orange vest spread on the wing) · o.panel true (a bright
+      //                        aluminium panel tilted at the sun, #id-flash)
+      //   Sets.tailIn(L, o)    inside the tail section at night: ribs, torn panels, the last seats, a blanket; moonlight from the door; o.phone [x, y] a
+      //                        phone-light beam out of the door (#id-beam)
+      //   Sets.frontSite(L, o) the front section on the far shore in the morning: a burned-out signal fire, ash, cushions, a water bottle, footprints
+      //                        walking away into the jungle
+      //   Isle.chart(id, o)    a wet navigation chart from the cockpit with the pencil route Lisbon → New York crossing the island (S12, in-world map)
+      (function () {
+        const LN = "#2a2226", ln = (w = 3) => `stroke="${LN}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+        const I = (window.Isle = {});
+        const R = (seed) => { let s = seed; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); };
+        const PAL = {
+          dusk: { sky: ["#3c5a8a", "#e88a6a", "#ffd29a"], sea: ["#2f7f9a", "#1c4a66"], foam: "#fff6e8", rock: ["#4a4250", "#6e6274", "#a8969a"], sand: ["#e8c890", "#c8a070"], jung: ["#2e5a3a", "#4a7a40"], sun: [180, 1040], glow: "#ffd8a0" },
+          night: { sky: ["#0e1a3a", "#1e3466", "#3a5a8e"], sea: ["#1e3a62", "#0e2244"], foam: "#cfe0ff", rock: ["#28304a", "#3a4668", "#6a7aa8"], sand: ["#6a7898", "#4a5878"], jung: ["#142a32", "#1e3e44"], sun: [840, 300], glow: "#cfe0ff" },
+          day: { sky: ["#3a9ad8", "#8ccaf0", "#e8f6ff"], sea: ["#2ab0c8", "#1878a8"], foam: "#ffffff", rock: ["#5a5a62", "#8a8a92", "#c8c4c0"], sand: ["#f4dca8", "#e0c08a"], jung: ["#2a7a3a", "#4aa048"], sun: [880, 240], glow: "#fff8e0" },
+          dawn: { sky: ["#6a7ab8", "#f0a8a0", "#ffe8c8"], sea: ["#4a90b0", "#25607e"], foam: "#fff6ee", rock: ["#4a4858", "#706a7a", "#b0a4a4"], sand: ["#f0d0a0", "#d0a878"], jung: ["#2e5a40", "#4a8048"], sun: [860, 1000], glow: "#ffe0b0" } };
+        // the tail section: a broken fuselage cylinder with windows, the fin in ฟ้าราม teal with a white stripe, torn edge with ribs
+        I.tail = (x, y, s, o = {}) => `<g transform="translate(${x},${y}) scale(${s})">
+          <ellipse cx="0" cy="40" rx="560" ry="46" fill="#000" opacity=".28"/>
+          <path d="M-520,20Q-540,-120 -470,-220L380,-250Q460,-250 520,-200L600,-120Q620,-60 560,-10L420,30Z" fill="url(#isFus)" ${ln(6)}/>
+          <path d="M-500,-150L540,-176" stroke="#f4c430" stroke-width="12"/><path d="M-500,-128L548,-150" stroke="#1d2c5e" stroke-width="8"/>
+          ${Array.from({ length: 11 }, (_, k) => `<rect x="${-420 + k * 78}" y="-216" width="26" height="36" rx="12" fill="#1a2440" ${ln(2)}/><rect x="${-416 + k * 78}" y="-212" width="10" height="14" rx="5" fill="#8ab0d8" opacity=".6"/>`).join("")}
+          <path d="M-520,20Q-560,-80 -500,-220" stroke="#5a5e6a" stroke-width="22" fill="none"/>${[-180, -120, -60, 0].map((d) => `<path d="M-510,${d}l-46,${(d % 40) - 10}" stroke="#7a7e8a" stroke-width="8"/>`).join("")}
+          <path d="M-500,-220l-30,-18l20,40l-34,4l40,20" fill="#c8ccd4" ${ln(3)}/>
+          <path d="M260,-246L420,-640Q450,-660 470,-630L560,-196Z" fill="url(#isFin)" ${ln(6)}/><path d="M300,-250L440,-600" stroke="#fff" stroke-width="18" opacity=".85"/>
+          <text x="400" y="-380" font-family="Kanit" font-weight="900" font-size="56" fill="#fff" transform="rotate(-68 400 -380)">ฟ้าราม</text>
+          <path d="M380,-200L700,-230L720,-196L420,-170Z" fill="#c8ccd4" ${ln(5)}/>
+          ${o.door ? `<path d="M-200,-40L-60,-44L-64,-210L-196,-206Z" fill="#0e1424" ${ln(4)}/>` : ""}
+          ${o.vest ? `<g transform="translate(-30,-262) rotate(-4)"><path d="M-110,0L-120,120H-20L-30,10ZM110,0L120,120H20L30,10Z" fill="#ff6a14" ${ln(4)}/><path d="M-118,60h96M22,60h96" stroke="#fff4d0" stroke-width="10"/><path d="M-30,10Q0,40 30,10" stroke="#ff6a14" stroke-width="16" fill="none"/></g>` : ""}
+          ${o.blanket ? `<path d="M100,-246L360,-256L380,-120L120,-110Z" fill="#d8312a" ${ln(4)}/><path d="M120,-200L370,-208M130,-160L374,-168" stroke="#f4c430" stroke-width="6" opacity=".7"/>` : ""}
+          ${o.panel ? `<g transform="translate(-300,-300) rotate(-24)"><rect x="-120" y="-70" width="240" height="140" rx="6" fill="url(#isAlu)" ${ln(4)}/><path d="M-100,-50L60,60" stroke="#fff" stroke-width="10" opacity=".8"/><g id="${o.flashId || "ispf"}" opacity="0"><circle r="90" fill="#fff" opacity=".85" filter="url(#p2Soft)"/>${Array.from({ length: 8 }, (_, k) => `<path d="M0,0L${Math.round(Math.cos(k * 0.785) * (k % 2 ? 160 : 260))},${Math.round(Math.sin(k * 0.785) * (k % 2 ? 160 : 260))}" stroke="#fff" stroke-width="7" opacity=".8"/>`).join("")}</g></g>` : ""}</g>`;
+        I.chart = (id, o = {}) => `<g id="${id}"><rect x="-300" y="-220" width="600" height="440" rx="10" fill="#e8e0c8" ${ln(4)}/>
+          <path d="M-300,-220h600v440h-600z" fill="#9ac8e0" opacity=".35"/><path d="M-290,-100Q-200,-160 -250,-60T-290,60V-210Z" fill="#c8b890" ${ln(2)}/><path d="M290,-60Q200,0 260,80T290,200V-60Z" fill="#c8b890" ${ln(2)}/>
+          ${Array.from({ length: 6 }, (_, k) => `<path d="M${-300 + k * 120},-220V220M-300,${-220 + k * 88}H300" stroke="#5a7a9a" stroke-width="1.5" opacity=".5"/>`).join("")}
+          <path id="${id}-rt" d="M240,40Q60,-180 -230,-80" stroke="#2a2a3a" stroke-width="5" fill="none" stroke-dasharray="14 10"/><circle cx="240" cy="40" r="10" fill="#d8312a"/><circle cx="-230" cy="-80" r="10" fill="#2a2a3a"/>
+          <text x="180" y="80" font-family="Sriracha" font-size="30" fill="#2a2a3a">ลิสบอน</text><text x="-280" y="-100" font-family="Sriracha" font-size="30" fill="#2a2a3a">นิวยอร์ก</text>
+          <g transform="translate(10,-118)"><ellipse rx="22" ry="12" fill="#8a6a4a" ${ln(2)}/><circle id="${id}-x" r="34" fill="none" stroke="#d8312a" stroke-width="6"/></g>
+          <path d="M-300,120Q-150,90 0,160T300,140V220H-300Z" fill="#6a8aa0" opacity=".25"/><path d="M-260,-200q60,30 140,0" stroke="#7a6a5a" stroke-width="3" opacity=".4" fill="none"/></g>`;
+
+        function isle(L, o = {}) {
+          const id = o.id || "is", P = PAL[o.time || "dusk"], view = o.view || "rocks", r = R(o.seed || 7), SEA = o.sea ?? 1060, night = o.time === "night";
+          put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sky[0]}"/><stop offset=".6" stop-color="${P.sky[1]}"/><stop offset="1" stop-color="${P.sky[2]}"/></linearGradient>
+            <rect x="-2000" y="-1400" width="5200" height="4800" fill="url(#${id}-sk)"/>
+            ${night ? `<circle cx="${P.sun[0]}" cy="${P.sun[1]}" r="70" fill="#f4f6ff"/><circle cx="${P.sun[0]}" cy="${P.sun[1]}" r="260" fill="#cfe0ff" opacity=".18"/>${Array.from({ length: 60 }, () => `<circle cx="${f1(-800 + r() * 2600)}" cy="${f1(-600 + r() * 1400)}" r="${f1(1 + r() * 2.4)}" fill="#fff" opacity="${f1(0.4 + r() * 0.5)}"/>`).join("")}`
+              : `<circle cx="${P.sun[0]}" cy="${P.sun[1]}" r="320" fill="${P.glow}" opacity=".35"/><circle cx="${P.sun[0]}" cy="${P.sun[1]}" r="80" fill="#fffaf0" opacity=".95"/>`}
+            ${Array.from({ length: 6 }, (_, k) => `<g class="iscl"><ellipse cx="${-900 + k * 560}" cy="${120 + (k % 3) * 160}" rx="${300 + (k % 2) * 160}" ry="${50 + (k % 3) * 14}" fill="${night ? "#2a3a66" : "#ffffff"}" opacity="${night ? 0.5 : 0.6}"/></g>`).join("")}`);
+          // far: the opposite ridge of the bay with its jungle line, the smoke column or the blinking fire
+          let far = `<path d="M-1600,${SEA}L-1000,${SEA - 260}L-600,${SEA - 380}L-200,${SEA - 300}L200,${SEA - 420}L600,${SEA - 340}L1000,${SEA - 260}L1600,${SEA - 120}L2200,${SEA}Z" fill="${P.jung[0]}" opacity=".85"/>
+            ${Array.from({ length: 30 }, (_, k) => { const x = -1400 + k * 120, yy = SEA - 260 - Math.sin(k * 0.5) * 120; return `<circle cx="${x}" cy="${f1(yy)}" r="${40 + (k % 3) * 14}" fill="${P.jung[k % 2]}" opacity=".9"/>`; }).join("")}`;
+          if (o.smoke) { const [sx, sy] = o.smoke; far += `<g id="${id}-smk">${Array.from({ length: 9 }, (_, k) => `<ellipse class="issm" cx="${sx + Math.sin(k) * 30 + k * 18}" cy="${sy - k * 90}" rx="${40 + k * 16}" ry="${44 + k * 10}" fill="${night ? "#5a6888" : "#8a8a90"}" opacity="${f1(0.75 - k * 0.06)}"/>`).join("")}<ellipse cx="${sx}" cy="${sy + 20}" rx="40" ry="18" fill="#ff8a3a" opacity=".6"/></g>`; }
+          if (o.fire) { const [fx, fy] = o.fire; far += `<g id="${id}-fire"><circle cx="${fx}" cy="${fy}" r="150" fill="#ffb060" opacity=".35"/><circle cx="${fx}" cy="${fy}" r="60" fill="#ffd080" opacity=".5"/><circle cx="${fx}" cy="${fy}" r="26" fill="#fff0c0"/><path d="M${fx - 30},${fy + 10}q30,-90 30,-100q8,34 30,100z" fill="#ff8a2a"/></g><path d="M${fx - 30},${SEA}l60,0l-30,800z" fill="#ffb060" opacity=".25"/>`; }
+          put(L.far, far);
+          // mid: the sea with layered swells and foam
+          put(L.mid, `<linearGradient id="${id}-se" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sea[0]}"/><stop offset="1" stop-color="${P.sea[1]}"/></linearGradient>
+            <rect x="-2000" y="${SEA}" width="5200" height="2600" fill="url(#${id}-se)"/>
+            ${night ? `<path d="M${P.sun[0] - 40},${SEA}h80l120,900h-320z" fill="#cfe0ff" opacity=".18"/>` : `<path d="M${P.sun[0] - 60},${SEA}h120l200,900h-520z" fill="${P.glow}" opacity=".25"/>`}
+            ${Array.from({ length: 12 }, (_, k) => `<path class="issw" d="M-2000,${SEA + 20 + k * k * 9}${Array.from({ length: 24 }, (_, j) => `q${110},${-10 - k} ${220},0`).join("")}" stroke="${P.foam}" stroke-width="${2 + k * 0.6}" fill="none" opacity="${f1(0.25 + k * 0.03)}"/>`).join("")}`);
+          // set: the ground of the view
+          let s = "";
+          const boulder = (x, y, w, h, k) => { const c = P.rock; return `<path d="M${x - w},${y}Q${x - w * 1.05},${y - h * 0.7} ${x - w * 0.4},${y - h}Q${x + w * 0.3},${y - h * 1.08} ${x + w * 0.8},${y - h * 0.6}Q${x + w * 1.1},${y - h * 0.2} ${x + w},${y}Z" fill="${c[1]}" ${ln(4)}/>
+            <path d="M${x - w * 0.6},${y - h * 0.82}Q${x},${y - h * 1.0} ${x + w * 0.6},${y - h * 0.62}" stroke="${c[2]}" stroke-width="${f1(6 + w * 0.04)}" fill="none" opacity=".75" stroke-linecap="round"/><path d="M${x + w * 0.2},${y}Q${x + w * 0.5},${y - h * 0.5} ${x + w * 0.9},${y - h * 0.3}" stroke="${c[0]}" stroke-width="${f1(10 + w * 0.06)}" fill="none" opacity=".55"/>
+            ${k % 2 ? `<path d="M${x - w * 0.2},${y - h * 0.5}l${f1(w * 0.12)},${f1(h * 0.2)}l${f1(w * 0.08)},${f1(-h * 0.12)}" stroke="${c[0]}" stroke-width="3" fill="none"/>` : ""}`; };
+          const tuft = (x, y, s2, c) => `<g transform="translate(${x},${y}) scale(${s2})">${[-30, -12, 0, 14, 30].map((a, k) => `<path d="M0,0Q${a * 0.6},-60 ${a * 1.6},-${110 - (k % 2) * 20}" stroke="${c}" stroke-width="7" fill="none" stroke-linecap="round"/>`).join("")}</g>`;
+          if (view === "rocks" || view === "cliff") {
+            const G = view === "cliff" ? SEA + 260 : SEA + 340;
+            s += `<path d="M-2000,${G}Q-600,${G - 60} 400,${G - 20}T2600,${G + 10}V3000H-2000Z" fill="${P.rock[0]}"/>`;
+            if (view === "cliff") s += `<path d="M-2000,${G}L300,${G - 30}L460,${G + 40}L520,${G + 900}H-2000Z" fill="${P.rock[1]}" ${ln(5)}/><path d="M300,${G - 30}L460,${G + 40}" stroke="${P.rock[2]}" stroke-width="10" opacity=".7"/>
+              <path d="M520,${G + 900}L460,${G + 40}" stroke="${P.rock[0]}" stroke-width="30"/>${Array.from({ length: 6 }, (_, k) => `<path d="M${560 + k * 120},${G + 700 + (k % 2) * 40}q60,-40 120,0" stroke="${P.foam}" stroke-width="8" fill="none" opacity=".75"/>`).join("")}
+              <ellipse cx="900" cy="${G + 760}" rx="400" ry="60" fill="${P.foam}" opacity=".35"/>`;
+            if (o.tail) s += I.tail(...o.tail, { door: true, vest: o.vest, blanket: o.blanket, panel: o.panel, flashId: `${id}-flash` });
+            s += [[-700, G + 40, 260, 220], [-200, G + 120, 180, 150], [900, G + 60, 300, 240], [1500, G + 30, 240, 200], [300, G + 200, 140, 110]].map(([x, y, w, h], k) => boulder(x, y, w, h, k)).join("");
+            s += Array.from({ length: 8 }, (_, k) => `<ellipse cx="${-900 + k * 330}" cy="${G + 160 + (k % 3) * 40}" rx="${60 + (k % 2) * 30}" ry="14" fill="${P.sea[0]}" opacity=".7"/><ellipse cx="${-900 + k * 330}" cy="${G + 156 + (k % 3) * 40}" rx="${30 + (k % 2) * 20}" ry="5" fill="${P.foam}" opacity=".5"/>`).join("");
+            s += Array.from({ length: 9 }, (_, k) => tuft(-1100 + k * 300, G + 40 + (k % 3) * 30, 0.8 + (k % 2) * 0.3, P.jung[1])).join("");
+          } else if (view === "beach") {
+            const G = SEA + 180;
+            s += `<linearGradient id="${id}-sd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sand[0]}"/><stop offset="1" stop-color="${P.sand[1]}"/></linearGradient>
+              <path d="M-2000,${G}Q-600,${G - 40} 400,${G}T2600,${G}V3000H-2000Z" fill="url(#${id}-sd)"/><path d="M-2000,${G}Q-600,${G - 40} 400,${G}T2600,${G}" stroke="${P.foam}" stroke-width="16" fill="none" opacity=".85"/>
+              <path d="M-2000,${G + 30}Q-600,${G - 10} 400,${G + 30}T2600,${G + 30}" stroke="${P.sea[0]}" stroke-width="22" fill="none" opacity=".35"/>
+              ${Array.from({ length: 40 }, () => `<circle cx="${f1(-1600 + r() * 3800)}" cy="${f1(G + 60 + r() * 1200)}" r="${f1(2 + r() * 4)}" fill="${P.sand[1]}" opacity=".7"/>`).join("")}`;
+            // the island jungle behind the beach (left), palms
+            s += `<path d="M-2000,${G - 20}Q-1400,${G - 700} -800,${G - 560}Q-500,${G - 500} -300,${G - 20}Z" fill="${P.jung[0]}" ${ln(4)}/>${Array.from({ length: 12 }, (_, k) => `<circle cx="${-1800 + k * 130}" cy="${G - 480 - Math.sin(k * 0.7) * 160}" r="${90 + (k % 3) * 30}" fill="${P.jung[k % 2]}" ${ln(3)}/>`).join("")}
+              ${[[-1300, G], [-600, G - 10], [1700, G]].map(([x, y], k) => `<g transform="translate(${x},${y})"><path d="M0,0Q${30 + k * 10},-300 ${-20 + k * 20},-640" stroke="#7a5a3a" stroke-width="30" fill="none"/>${[-150, -90, -20, 50, 120, 180].map((a) => `<path d="M${-20 + k * 20},-640q${Math.cos(a / 57) * 160},${Math.sin(a / 57) * 160 - 40} ${Math.cos(a / 57) * 300},${Math.sin(a / 57) * 300 + 60}" stroke="${P.jung[1]}" stroke-width="28" fill="none" stroke-linecap="round"/>`).join("")}</g>`).join("")}`;
+            if (o.tail) s += `<g${o.grey ? ` filter="url(#isGrey)"` : ""}>${I.tail(...o.tail, { door: true, vest: o.vest, blanket: o.blanket, panel: o.panel, flashId: `${id}-flash` })}</g>`;
+            if (o.debris !== false) s += `<g transform="translate(-500,${G + 340}) rotate(-12)"><rect x="-110" y="-50" width="220" height="100" rx="24" fill="#1d2c5e" ${ln(4)}/><path d="M-90,-20h180" stroke="#2f4a8a" stroke-width="10"/></g>
+              <g transform="translate(980,${G + 420}) rotate(8)"><rect x="-120" y="-90" width="240" height="180" rx="16" fill="#c8302a" ${ln(4)}/><rect x="-40" y="-120" width="80" height="34" rx="10" fill="none" ${ln(6)}/><path d="M-120,0h240" stroke="#8a1a1a" stroke-width="6"/></g>
+              <g transform="translate(300,${G + 520}) rotate(70)"><rect x="-26" y="-70" width="52" height="140" rx="16" fill="#bfe0ff" opacity=".85" ${ln(3)}/><rect x="-14" y="-92" width="28" height="22" rx="4" fill="#2a6ac8"/></g>
+              ${Array.from({ length: 9 }, (_, k) => `<ellipse cx="${-1000 + k * 140 + (k % 2) * 30}" cy="${G + 900 - k * 70}" rx="22" ry="12" fill="${P.sand[1]}" stroke="#a88050" stroke-width="2" transform="rotate(${-20 + (k % 2) * 30} ${-1000 + k * 140} ${G + 900 - k * 70})"/>`).join("")}`;
+          }
+          put(L.set, s);
+          // foreground framing: a dark rock edge and grass, blurred by the shot
+          if (o.fg !== false) put(L.fg, `<path d="M-1600,2300Q-1200,1700 -700,1820Q-500,1900 -460,2300Z" fill="${P.rock[0]}" ${ln(5)}/>${tuft(-900, 1840, 2.2, P.jung[0])}<path d="M2400,2300Q2000,1760 1700,1880Q1560,1960 1540,2300Z" fill="${P.rock[0]}" ${ln(5)}/>`);
+          // light: a warm/cool wash from the key side
+          put(L.glow, `<radialGradient id="${id}-kw"><stop offset="0" stop-color="${P.glow}" stop-opacity="${night ? 0.25 : 0.4}"/><stop offset="1" stop-color="${P.glow}" stop-opacity="0"/></radialGradient><ellipse cx="${P.sun[0]}" cy="${SEA}" rx="1400" ry="1100" fill="url(#${id}-kw)"/>
+            ${night ? `<rect x="-2000" y="-1400" width="5200" height="4800" fill="#0a1430" opacity=".22"/>` : ""}`);
+        }
+
+        function tailIn(L, o = {}) {
+          const id = o.id || "ti";
+          put(L.sky, `<rect x="-2000" y="-1400" width="5200" height="4800" fill="#0a1226"/>`);
+          // the open door at the left: night sea + moon outside
+          put(L.far, `<rect x="-400" y="300" width="760" height="1100" fill="#1e3a6a"/><circle cx="120" cy="520" r="54" fill="#f4f6ff"/><circle cx="120" cy="520" r="200" fill="#cfe0ff" opacity=".2"/>
+            <rect x="-400" y="980" width="760" height="420" fill="#16305a"/>${Array.from({ length: 6 }, (_, k) => `<path d="M-400,${1000 + k * 40}q90,-8 180,0t180,0t180,0t180,0" stroke="#9ab8e8" stroke-width="3" fill="none" opacity=".5"/>`).join("")}
+            ${o.fire ? `<g id="${id}-fire"><circle cx="-120" cy="960" r="40" fill="#ffb060" opacity=".45"/><circle cx="-120" cy="960" r="10" fill="#fff0c0"/></g>` : ""}`);
+          let s = `<path fill-rule="evenodd" d="M-2000,-1400H3200V3400H-2000Z M-380,320H340V1380H-380Z" fill="#3a4258"/>
+            <path d="M-2000,-200Q540,-560 3200,-200V-1400H-2000Z" fill="#2a3044"/>
+            ${Array.from({ length: 9 }, (_, k) => `<path d="M${480 + k * 220},-260Q${560 + k * 220},700 ${480 + k * 220},1700" stroke="#5a6278" stroke-width="26" fill="none"/><path d="M${470 + k * 220},-240Q${548 + k * 220},700 ${470 + k * 220},1680" stroke="#7a84a0" stroke-width="6" fill="none" opacity=".6"/>`).join("")}
+            <path d="M1100,200L1500,260L1460,700L1080,620Z" fill="#c8ccd4" opacity=".9" ${ln(4)}/><path d="M1100,200l60,40l-20,60" stroke="#8a8e98" stroke-width="5" fill="none"/>
+            <rect x="-380" y="320" width="720" height="1060" fill="none" stroke="#8a90a0" stroke-width="30"/>
+            <path d="M-2000,1700H3200V3400H-2000Z" fill="#262c3c"/><path d="M-2000,1700H3200" stroke="#5a6278" stroke-width="12"/>
+            ${[[900, 1700], [1500, 1700]].map(([x, y]) => `<g transform="translate(${x},${y})"><rect x="-170" y="-560" width="340" height="300" rx="40" fill="#2a3a6a" ${ln(5)}/><rect x="-190" y="-270" width="380" height="110" rx="30" fill="#2a3a6a" ${ln(5)}/><path d="M-120,-160V0M120,-160V0" stroke="#5a6278" stroke-width="18"/><rect x="-150" y="-540" width="300" height="60" rx="20" fill="#e8ecf4" opacity=".85"/></g>`).join("")}
+            <path d="M200,1640Q520,1520 800,1660L760,1720H180Z" fill="#d8312a" ${ln(4)}/><path d="M240,1660Q500,1580 760,1680" stroke="#f4c430" stroke-width="6" fill="none"/>`;
+          put(L.set, s);
+          // moonlight from the door across the floor + the phone beam
+          put(L.glow, `<path d="M-380,320L340,320L1400,1900L-900,1900Z" fill="#9ab8f0" opacity=".16"/><rect x="-2000" y="-1400" width="5200" height="4800" fill="#0a1430" opacity=".2"/>
+            ${o.phone ? `<g id="${id}-beam" style="mix-blend-mode:screen"><path d="M${o.phone[0]},${o.phone[1]}L-600,520L-500,1100Z" fill="#fffbe8" opacity=".35"/><circle cx="${o.phone[0]}" cy="${o.phone[1]}" r="40" fill="#fffbe8" opacity=".8"/></g>` : ""}`);
+        }
+
+        function frontSite(L, o = {}) {
+          const id = o.id || "fs", P = PAL[o.time || "dawn"], G = 1500, r = R(19);
+          put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sky[0]}"/><stop offset=".6" stop-color="${P.sky[1]}"/><stop offset="1" stop-color="${P.sky[2]}"/></linearGradient><rect x="-2000" y="-1400" width="5200" height="4800" fill="url(#${id}-sk)"/><circle cx="${P.sun[0]}" cy="${P.sun[1]}" r="90" fill="#fff6e0"/>`);
+          put(L.far, `<path d="M-2000,${G - 200}Q-800,${G - 900} 200,${G - 700}Q1000,${G - 900} 2600,${G - 200}V2400H-2000Z" fill="${P.jung[0]}"/>${Array.from({ length: 26 }, (_, k) => `<circle cx="${-1800 + k * 170}" cy="${G - 640 - Math.sin(k * 0.6) * 200}" r="${100 + (k % 3) * 40}" fill="${P.jung[k % 2]}" ${ln(3)}/>`).join("")}`);
+          let s = `<path d="M-2000,${G}Q0,${G - 60} 2600,${G}V3000H-2000Z" fill="${P.sand[0]}"/>
+            <g transform="translate(-300,${G - 20}) scale(1.05) rotate(4)"><path d="M-600,0L500,-40Q640,-40 700,-120Q720,-200 620,-240L-560,-250L-620,-180Z" fill="url(#isFus)" ${ln(6)}/><path d="M-600,-160L640,-176" stroke="#f4c430" stroke-width="12"/>
+              ${Array.from({ length: 12 }, (_, k) => `<rect x="${-480 + k * 80}" y="-226" width="24" height="34" rx="11" fill="#1a2440"/>`).join("")}<path d="M620,-240Q700,-200 700,-120" stroke="#1a2440" stroke-width="8" fill="none"/><path d="M560,-220l60,-10l20,40" fill="#1a2440"/>
+              <path d="M-600,0L-620,-180" stroke="#5a5e6a" stroke-width="22"/><path d="M-40,-30L-200,-250" stroke="#2a2a30" stroke-width="10" opacity=".4"/></g>
+            <g transform="translate(560,${G + 260})"><ellipse rx="200" ry="50" fill="#3a3430"/>${Array.from({ length: 10 }, (_, k) => `<path d="M${-150 + k * 32},${-10 + (k % 3) * 10}l${60 - (k % 4) * 30},-${40 + (k % 3) * 10}" stroke="#2a1e18" stroke-width="16" stroke-linecap="round"/>`).join("")}
+              ${Array.from({ length: 8 }, (_, k) => `<ellipse class="fssm" cx="${-20 + k * 12}" cy="${-60 - k * 70}" rx="${20 + k * 10}" ry="${18 + k * 6}" fill="#a8a8a8" opacity="${f1(0.45 - k * 0.05)}"/>`).join("")}<circle r="20" fill="#ff8a3a" opacity=".5"/></g>
+            <g transform="translate(-900,${G + 360}) rotate(-20)"><rect x="-120" y="-40" width="240" height="80" rx="22" fill="#1d2c5e" ${ln(4)}/></g><g transform="translate(1100,${G + 320}) rotate(80)"><rect x="-26" y="-70" width="52" height="140" rx="16" fill="#bfe0ff" opacity=".85" ${ln(3)}/></g>
+            ${Array.from({ length: 14 }, (_, k) => `<ellipse cx="${600 + k * 90 + (k % 2) * 40}" cy="${G + 700 - k * 60}" rx="20" ry="11" fill="#c8a070" stroke="#8a6a40" stroke-width="2"/>`).join("")}
+            <path d="M1700,${G - 40}Q1800,${G - 300} 2000,${G - 280}" stroke="${P.jung[0]}" stroke-width="80" fill="none"/>`;
+          put(L.set, s);
+          put(L.fg, `<path d="M-1600,2300Q-1200,1760 -760,1880Q-560,1960 -520,2300Z" fill="${P.jung[0]}" ${ln(5)}/>`);
+        }
+        Sets.DEFS += `<linearGradient id="isFus" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#e8ecf2"/><stop offset="1" stop-color="#a8b0c0"/></linearGradient>
+          <linearGradient id="isFin" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2aa898"/><stop offset="1" stop-color="#16786e"/></linearGradient>
+          <filter id="isGrey"><feColorMatrix type="matrix" values=".26 .22 .08 0 .06  .24 .26 .08 0 .06  .24 .24 .12 0 .07  0 0 0 1 0"/></filter><linearGradient id="isAlu" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f8ff"/><stop offset=".5" stop-color="#b8c4d4"/><stop offset="1" stop-color="#e8eef8"/></linearGradient>`;
+        I.life = (tl, id, t0, dur) => {
+          document.querySelectorAll(`.issw`).forEach((e, k) => tl.fromTo(e, { x: 0 }, { x: -220, duration: 3 + (k % 4), repeat: Math.ceil(dur / 3), ease: "none", immediateRender: false }, t0));
+          document.querySelectorAll(`.issm, .fssm`).forEach((e, k) => tl.fromTo(e, { y: 0, scale: 1, transformOrigin: "50% 50%" }, { y: -60, scale: 1.25, duration: 2 + (k % 3) * 0.5, repeat: Math.ceil(dur / 2), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+        };
+        Object.assign(Sets, { isle, tailIn, frontSite });
+      })();
