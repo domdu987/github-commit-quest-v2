@@ -1,0 +1,63 @@
+      // ---------- นิวเคลียร์กรุงเทพ: 3 hooks (0 / 1.5 / 3.0 s) + 3 sample stills ----------
+      const G = 1180;
+      const DUSK = { from: "right", rim: "#ffc890", rimOp: 0.8, shade: "#2a1a3a", shadeOp: 0.3, cast: false, vol: false };
+      const VIG = (L, a = 0.7) => put(L.light, `<radialGradient id="vg${Math.round(a * 100)}${L.light.id}"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${a}"/></radialGradient><rect width="1080" height="1920" fill="url(#vg${Math.round(a * 100)}${L.light.id})"/>`);
+      const CAP1 = { text: "ถ้าวันหนึ่ง… [ระเบิดนิวเคลียร์ลงกรุงเทพ]", t: 0, end: 2.55 };
+      // a: the flash over the city at dusk, people on the skywalk turn to look → อย่ามองแสงวาบ
+      add("ha", {
+        set: "bkk", setOpts: { id: "ba", view: "skywalk", g: G, flash: [760, G - 520], white: 0, prang: 150 }, dark: 0, light: DUSK, grade: { top: "#3a2a5a", bottom: "#2a1418", op: 0.12 },
+        cam: { keys: [{ t: 0, ...fr(560, G - 120, 0.82, 540, 1000) }, { t: 1.5, glide: 1.3, ...fr(520, G - 160, 0.95, 540, 1000) }, { t: 3.0, glide: 1.0, ...fr(380, G - 420, 2.1, 540, 900) }] },
+        shake: (t) => (t > 1.2 ? { x: 6 * Math.sin(t * 40), y: 4 * Math.sin(t * 33), r: 0 } : { x: 2 * Math.sin(t * 3), y: 0, r: 0 }),
+        actors: [A("ploy", 380, G + 330, 1.3, [T("look", "wide", "o"), T("shield", "wide", "scream", 2.2)]), A("phum", 760, G + 330, 1.15, [T("look", "wide", "o")]), A("st1", 1080, G + 330, 1.2, [T("phoneLook", "wide", "o")], { flip: true })],
+        captions: [CAP1, { text: "{อย่ามองแสงวาบ!}", t: 2.6, end: 3.55 }],
+        fx(tl, id, t0, L) {
+          tl.fromTo("#ba-fl", { scale: 0.35, opacity: 1, svgOrigin: `760 ${G - 520}` }, { scale: 2.6, opacity: 1, svgOrigin: `700 ${G - 260}`, duration: 1.4, ease: "power3.in", immediateRender: false }, t0);
+          tl.fromTo("#ba-white", { opacity: 0 }, { opacity: 0.7, duration: 0.9, ease: "power3.in", immediateRender: false }, t0 + 0.6);
+          tl.to("#ba-white", { opacity: 0.12, duration: 0.8, ease: "power2.out", immediateRender: false }, t0 + 2.2);
+          VIG(L, 0.6);
+        },
+      });
+      // b: the mushroom cloud over the skyline, a jammed road, she runs for her car → อย่าขับรถหนี
+      add("hb", {
+        set: "bkk", setOpts: { id: "bb", view: "street", g: G, cloud: [700, G - 30, 2.0], sun: 300, prang: -60 }, dark: 0, light: DUSK, grade: { top: "#5a2a2a", bottom: "#2a1418", op: 0.18 },
+        cam: { keys: [{ t: 0, ...fr(560, G - 140, 0.72, 540, 960) }, { t: 1.5, glide: 1.4, ...fr(560, G - 100, 0.82, 540, 960) }, { t: 3.0, glide: 1.0, ...fr(260, G + 120, 1.9, 540, 900) }] },
+        shake: (t) => ({ x: 3 * Math.sin(t * 7), y: 2 * Math.sin(t * 5), r: 0 }),
+        actors: [A("ploy", -200, G + 700, 1.35, [T("run", "wide", "scream")], { moveTo: { x: 300, y: G + 700, dur: 2.6 } }),
+          A("st2", 1100, G + 650, 1.2, [T("run", "wide", "scream")], { flip: true, moveTo: { x: 800, y: G + 640, dur: 3.0 } })],
+        captions: [CAP1, { text: "{อย่าขับรถหนี!}", t: 2.6, end: 3.55 }],
+        fx(tl, id, t0, L) {
+          tl.fromTo("#bb-cl", { scale: 0.7, svgOrigin: "0 0" }, { scale: 1.15, svgOrigin: "0 0", duration: 3.5, ease: "power1.out", immediateRender: false }, t0);
+          tl.fromTo("#bb-cl-cap", { y: 60 }, { y: -40, duration: 3.5, ease: "power1.out", immediateRender: false }, t0);
+          put(L.act, `<g transform="translate(420,${G + 690})"><rect x="-260" y="-200" width="520" height="200" rx="50" fill="#e8e4dc" stroke="${INK}" stroke-width="6"/><path d="M-180,-200L-120,-330H140L200,-200Z" fill="#e8e4dc" stroke="${INK}" stroke-width="6"/><path d="M-150,-206L-104,-306H124L170,-206Z" fill="#6a8aa8"/><rect x="-60" y="-150" width="60" height="16" rx="6" fill="#8a8a8a"/><circle cx="-170" cy="0" r="56" fill="#1a1a1a"/><circle cx="170" cy="0" r="56" fill="#1a1a1a"/></g>`);
+          VIG(L, 0.6);
+        },
+      });
+      // c: inside her condo, the cloud in the window; the phone: แม่ "อยู่ไหนลูก" — she grabs the keys for the door → อย่าออกไปตามหาครอบครัว
+      add("hc", {
+        set: "bkk", setOpts: { id: "bc", view: "window", g: G, cloud: [600, G - 40, 1.2], prang: 980 }, dark: 0, light: { from: "left", rim: "#ffb070", rimOp: 0.8, shade: "#2a1a2a", shadeOp: 0.35, cast: false, vol: false }, grade: { top: "#4a2a2a", bottom: "#1a1010", op: 0.2 },
+        cam: { keys: [{ t: 0, ...fr(700, G + 150, 0.95, 540, 1000) }, { t: 1.5, glide: 1.3, ...fr(900, G + 200, 1.0, 540, 1000) }, { t: 3.0, glide: 1.0, ...fr(1280, G + 40, 1.7, 540, 900) }] },
+        actors: [A("ployPhone", 560, G + 860, 1.3, [T("phoneLook", "wide", "o"), T("walk", "angry", "flat", 1.0), T("reachDoor", "angry", "o", 2.2)], { moveTo: { x: 1240, y: G + 860, at: 1.0, dur: 1.4 } })],
+        captions: [CAP1, { text: "{อย่าออกไปตามหาครอบครัว!}", t: 2.6, end: 3.55 }],
+        fx(tl, id, t0, L) {
+          put(L.light, `<g id="ms3" transform="translate(540,640)"><rect x="-300" y="-90" width="600" height="180" rx="40" fill="#fbfaf4" stroke="${INK}" stroke-width="5"/><circle cx="-220" cy="0" r="50" fill="#f2c8a8" stroke="${INK}" stroke-width="4"/><text x="-150" y="-14" font-family="Kanit" font-weight="900" font-size="44" fill="#26201c">แม่</text><text x="-150" y="46" font-family="Kanit" font-weight="700" font-size="44" fill="#26201c">อยู่ไหนลูก</text></g>`);
+          tl.fromTo("#ms3", { scale: 0.3, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.35, ease: "back.out(2.4)", immediateRender: false }, t0 + 0.05);
+          tl.fromTo("#ms3", { x: -4 }, { x: 4, duration: 0.05, yoyo: true, repeat: 20, immediateRender: false }, t0 + 0.4);
+          tl.to("#ms3", { opacity: 0, duration: 0.2, immediateRender: false }, t0 + 2.4);
+          VIG(L, 0.6);
+        },
+      });
+      // sample 1: the skyline at the flash — the cloud and the light filling the frame, two silhouettes on the skywalk
+      add("s1", { set: "bkk", setOpts: { id: "b1", view: "skywalk", g: G, cloud: [640, G - 40, 2.1], flash: [640, G - 1380], prang: 120 }, dark: 0, light: DUSK, grade: { top: "#5a2a2a", bottom: "#2a1418", op: 0.15 },
+        cam: { keys: [{ t: 0, ...still(fr(540, G - 620, 0.6, 540, 1000)) }] },
+        actors: [A("ploy", 340, G + 330, 1.3, [T("look", "wide", "o")]), A("phum", 620, G + 330, 1.15, [T("look", "wide", "o")])],
+        fx(tl, id, t0, L) { tl.set("#b1-fl", { scale: 1.3, opacity: 0.55, svgOrigin: `640 ${G - 1380}` }, t0); VIG(L, 0.55); } });
+      // sample 2: the basement car park under a concrete tower: the middle of the building, away from the ramp
+      add("s2", { set: "shelter", setOpts: { id: "sh2", dust: true }, dark: 0, light: { from: "left", rim: "#fffbe0", rimOp: 0.5, shade: "#1a1a24", shadeOp: 0.4, cast: false, vol: false }, grade: { top: "#3a3a40", bottom: "#101014", op: 0.2 },
+        cam: { keys: [{ t: 0, ...still(fr(380, 1300, 1.25, 540, 1000)) }] },
+        actors: [A("ploy", 160, 1620, 0.95, [T("sit", "wide", "flat")]), A("phum", 420, 1640, 0.9, [T("sit", "side", "flat")], { flip: true }), A("uncle", 760, 1600, 0.95, [T("idle", "normal", "flat")], { flip: true }), A("st2", -200, 1640, 0.9, [T("sit", "wide", "flat")])],
+        fx(tl, id, t0, L) { VIG(L, 0.6); } });
+      // sample 3: the cast close — พลอย (24) · ภูมิ (14) · ลุงชัย (60, the building's guard)
+      add("s3", { set: "shelter", setOpts: { id: "sh3" }, dark: 0, light: { from: "left", rim: "#fffbe0", rimOp: 0.6, shade: "#1a1a24", shadeOp: 0.35, cast: false, vol: false }, grade: { top: "#3a3a40", bottom: "#101014", op: 0.15 }, blur: { set: 6, sky: 6 },
+        cam: { keys: [{ t: 0, ...still(fr(540, 1080, 1.25, 540, 1000)) }] },
+        actors: [A("phum", 300, 1560, 1.0, [T("idle", "wide", "flat")]), A("ploy", 560, 1560, 1.1, [T("idle", "angry", "flat")]), A("uncle", 820, 1560, 1.1, [T("idle", "normal", "flat")], { flip: true })],
+        fx(tl, id, t0, L) { put(L.light, `<g font-family="Kanit" font-weight="900" font-size="40" fill="#fff" stroke="#000" stroke-width="8" paint-order="stroke" text-anchor="middle"><text x="200" y="1500">ภูมิ 14</text><text x="540" y="1500">พลอย 24</text><text x="880" y="1500">ลุงชัย 60</text></g>`); VIG(L, 0.5); } });
