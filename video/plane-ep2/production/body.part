@@ -141,6 +141,6 @@
         cam: { keys: [{ t: 0, ...fr(260, 1380, 1.7, 540, 1050) }, { t: D("end"), glide: D("end"), ...fr(400, 1300, 1.2, 540, 1000) }] },
         captions: caps("end"),
         fx(tl, id, t0, L) { Plane.siteLife(tl, "d9", t0, D("end")); heliAt(L, tl, "hc5", 300, 1250, 0.45, t0, D("end"), { from: { x: 0, y: 0 }, to: { x: 200, y: -500 }, ease: "power1.in", at: 0.6 });
-          PlaneUI.rules(tl, L.light, t0 + 0.4, vo("end", 1) - 0.2, { active: 1, done: [0, 1], y: 480, tickAt: 0.9 }); } });
+          IconFX.board(tl, L.light, { skin: "seatcard", title: "การ์ดความปลอดภัย", t: t0 + 0.4, dur: vo("end", 1) - 0.2, y: 380, active: 1, done: [0, 1], at: [0.5, 0.75], items: [{ text: "<u>ทิ้งกระเป๋า</u> ก้าวออกไว", art: `<g transform="translate(0,90) scale(1.7)">${Plane.bag(1, { strap: false })}</g>` }, { text: "<u>อยู่กับซาก</u> อย่าจากไป", art: `<g transform="translate(-20,40) scale(.22)">${Plane.tail("sct" + Math.round(t0 * 10))}</g>` }] }); } });
       add("fin", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
         fx(tl, id, t0, L) { PlaneUI.next(tl, L.light, t0, D("fin"), { l1: "รอดคนเดียว · EP.2", l2: "อยู่กับซาก อย่าจากไป", l3: "ทิ้งกระเป๋า · อยู่กับซาก", cta: "แชร์ให้คนที่คุณรัก ก่อนวันที่ต้องใช้", end: true }); } });

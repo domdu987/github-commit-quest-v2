@@ -132,6 +132,9 @@ CUES = [
     ("end", 0.0, "drum", 0.2), ("end", 0.5, "drum", 0.18), ("end", 1.0, "ding", 0.24), ("end", vo_t("end", 1), "sting", 0.3), ("end", vo_t("end", 1) + 0.1, "swell", 0.2),
     ("fin", 0.1, "whoosh", 0.3), ("fin", 1.1, "thud", 0.4), ("fin", 1.15, "gong", 0.26),
 ]
+import sys; sys.path.insert(0, "/home/user/github-commit-quest-v2/video/lib-shared/sfx"); import iconfx_mix
+_ic, SAMP = iconfx_mix.split(json.load(open(os.path.join(HERE, "iconfx_cues.json"))) if os.path.exists(os.path.join(HERE, "iconfx_cues.json")) else [], N, SR)
+CUES += [(None, c["t"], c["type"], c["gain"]) for c in _ic]
 SAMPLES = []
 REPLACED = set()
 CUES = [c for c in CUES if c[2] not in REPLACED]
@@ -148,7 +151,8 @@ sfx = np.pad(sfx, (0, N - len(sfx)))
 
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
+mus = load(os.path.join(HERE, "..", "music", "plane-theme.mp3"))   # theme score (owner 1 Nov: "ซาวเพลงทำให้เข้าธีมด้วย")
+mus = mus[int(max(0.0, len(mus) / SR - TOTAL - 1.0) * SR):]   # start so the track's peak (its last ~20 s) lands on the cliffhanger
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -169,10 +173,10 @@ mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over 
 mus[b:] = 0
 
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
-mus = level(mus, -30)
-sfx = level(sfx, -27)
+mus = level(mus, -33)
+sfx = level(sfx, -27) + SAMP
 env = box(np.abs(vo), int(0.05 * SR))
-duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
+duck = 1 - 0.8 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
 duck = box(duck, int(0.25 * SR))
 mix = vo + mus * duck + sfx
 peak = np.max(np.abs(mix))

@@ -133,11 +133,14 @@ CUES = [
     ("behind", 0.2, "steps", 0.28), ("behind", 1.0, "steps", 0.28), ("behind", 0.1, "crackle", 0.2), *beats("behind", 0.2, D["behind"] - 0.2, 0.38, 0.3),
     ("rows", 0.15, "whoosh", 0.24), *[("rows", 0.6 + j * 0.22, "click", 0.16) for j in range(8)], ("rows", 2.8, "ding", 0.3),
     # out: the door, down the slide, the surf; the card ticks
-    ("jump", 0.1, "latch", 0.3), ("jump", 0.3, "whoosh", 0.36), ("jump", 0.75, "thud", 0.3), ("jump", 0.9, "roar", 0.2), ("jump", 1.4, "ding", 0.2), ("jump", 0.0, "crackle", 0.2),
+    ("jump", 0.75, "whoosh", 0.3), ("jump", 0.75, "thud", 0.3), ("jump", 0.9, "roar", 0.2), ("jump", 0.8, "crackle", 0.14),
     # alone: the surf, the gulls, then the smoke across the bay (sting)
     ("alone", 0.0, "stream", 0.16), ("alone", 1.0, "flap", 0.18), ("alone", 3.0, "flap", 0.14), ("alone", vo_t("alone", 2), "sting", 0.34), ("alone", vo_t("alone", 2) + 0.2, "swell", 0.2),
     ("next", 0.1, "whoosh", 0.3), ("next", 0.8, "ding", 0.24),
 ]
+import sys; sys.path.insert(0, "/home/user/github-commit-quest-v2/video/lib-shared/sfx"); import iconfx_mix
+_ic, SAMP = iconfx_mix.split(json.load(open(os.path.join(HERE, "iconfx_cues.json"))) if os.path.exists(os.path.join(HERE, "iconfx_cues.json")) else [], N, SR)
+CUES += [(None, c["t"], c["type"], c["gain"]) for c in _ic]
 SAMPLES = []
 REPLACED = set()
 CUES = [c for c in CUES if c[2] not in REPLACED]
@@ -154,7 +157,8 @@ sfx = np.pad(sfx, (0, N - len(sfx)))
 
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
+mus = load(os.path.join(HERE, "..", "music", "plane-theme.mp3"))   # theme score (owner 1 Nov: "ซาวเพลงทำให้เข้าธีมด้วย")
+mus = mus[int(max(0.0, len(mus) / SR - TOTAL - 1.0) * SR):]   # start so the track's peak (its last ~20 s) lands on the cliffhanger
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -175,10 +179,10 @@ mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over 
 mus[b:] = 0
 
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
-mus = level(mus, -30)
-sfx = level(sfx, -27)
+mus = level(mus, -33)
+sfx = level(sfx, -27) + SAMP
 env = box(np.abs(vo), int(0.05 * SR))
-duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
+duck = 1 - 0.8 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
 duck = box(duck, int(0.25 * SR))
 mix = vo + mus * duck + sfx
 peak = np.max(np.abs(mix))
