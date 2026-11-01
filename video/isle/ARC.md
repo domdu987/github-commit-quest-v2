@@ -98,3 +98,40 @@
 - กล้อง: POV คนที่กะพริบตาไม่ได้ (ขอบมืด ภาพเบลอเป็นช่วง น้ำตาพี่หยดลงเลนส์) · เอียงกล้องตอนตื่นตระหนก · ดันเข้าช้าๆ ตอนรอ
 - ตัวละครใหม่ 4 ตัว หน้าแสดงอารมณ์ละเอียดขึ้น (ปากชาเบี้ยว น้ำตา ตาเบิกค้าง) · มือ POV: ช้อนปลา ถือไฟแช็ก เชยคาง
 - เสียง: คลื่น ลม นกนางนวล ไฟแตก ใต้น้ำอู้อี้ใน POV หัวใจ ดนตรีหายตอนผ้าคลุมลงมา
+
+---
+
+## ความรู้ที่ยืนยันแล้ว EP.2 = กระแสน้ำย้อนกลับ / rip current ("ทะเลดูด") · NOAA Ocean Service + NOAA/USLA Rip Current Basics (PDF) + USLA fact sheet (PDF) · อ่าน 1 พ.ย. 2026 ข้อความตรงตัว
+
+- **เร็วแค่ไหน:** "Moving at speeds of up to eight feet per second, rip currents can move faster than an Olympic swimmer." — https://oceanservice.noaa.gov/facts/ripcurrent.html
+- **ทำอะไรเมื่อโดน:** "If caught in a rip current, don't fight it! Swim parallel to the shore and swim back to land at an angle." — NOAA Ocean Service (ลิงก์เดียวกัน)
+- **คนจมเพราะอะไร:** "Panicked swimmers often try to counter a rip current by swimming straight back to shore—putting themselves at risk of drowning because of fatigue." — NOAA Ocean Service · "People falsely assume that rip currents pull you under the water when in reality rip currents pull you away from the shoreline. People do not go under until they are too tired to swim or float." — NOAA/USLA Rip Current Basics slide notes https://www.weather.gov/media/safety/2021RipCurrentBasicsSlideNotes.pdf
+- **ถ้าหมดแรง:** "If you don't have the strength to swim, then stop swimming, float, and wave for help, some rip currents may recirculate you back toward shore." — slide notes · "If you can't escape this, try to float, or calmly tread water. Rip current strength eventually subsides offshore. When it does, swim toward shore." — USLA fact sheet https://www.weather.gov/media/safety/USLAFact_Sheet_4-07.pdf
+- **เกิดตรงไหน (= ช่องที่สันทรายขาด ตรงกับ "ทะเลแหวก"):** "They form at breaks in sandbars, and are commonly found near structures such as jetties, piers, groins, and revetments. But they can form anywhere at a surf beach." — slide notes · "Rip currents are like treadmills in the surf. Swimmers who fight the current typically make little progress, then they can quickly tire." — slide notes · "Lifeguards refer to rip currents as “Drowning Machines”" — slide notes
+- **คนบนฝั่ง:** "Many have died trying to help others. Don't become a victim while trying to help someone else!" · "Throw the rip current victim something that floats – a lifejacket, a cooler, a ball." · "Yell instructions on how to escape." — USLA fact sheet · "If you feel you must enter the water, first call 9-1-1 or have someone do so, and always take a flotation device with you" — slide notes
+- **สังเกตยังไง:** "Channel of churning, choppy water / Area having a notable difference in water color / Line of foam, seaweed, or debris moving steadily seaward / Break in the incoming wave pattern" — USLA fact sheet
+- **ข่าวจริง (จากผลค้นหา 1 พ.ย. 2026 — หัวข้อ/วันที่/ลิงก์ ยังไม่ได้เปิดอ่านหน้าเต็ม ใช้ในคอมเมนต์ปักหมุดเป็นหัวข้อข่าวเท่านั้น):** หาดกะรน ภูเก็ต ก.ย. 2568 "นักท่องเที่ยวไม่สนธงแดง หาดกะรน 2 วัน ถูกน้ำดูด 13 ราย" (ช่วยได้ 12 เสียชีวิต 1) https://today.line.me/th/v3/article/5yNjyJr · มิ.ย. 2568 "ทะเลภูเก็ตโหด! นักท่องเที่ยวชาวต่างชาติฝ่าธงแดง 2 วัน ดับแล้ว 2 ราย" https://mgronline.com/south/detail/9680000055030 · ก.ค. 2567 นักท่องเที่ยวจีนฝ่าธงแดงหาดกะรน คลื่นซัดจมหาย พบร่างหลัง 3 วัน https://www.matichon.co.th/region/news_5377890
+- **ยืนยันไม่ได้ (ห้ามพูดในคลิป):** หน้าทางการไทย (ปภ./กรมควบคุมโรค) เข้าไม่ได้ (403) · "น้ำขึ้นเร็วกว่าตารางเพราะมรสุม" ไม่มีแหล่ง → ในเรื่องพูดแค่ "คลื่นใหญ่กว่าตอนเช้า ถนนหายแล้ว" · ตัวเลข "80% ของการกู้ภัย" (USLA) หน้าเว็บเข้าไม่ได้ ใช้ "most common hazard" จากสไลด์แทน
+
+## EP.2 "ทะเลแหวก" (ร่าง 1 · 1 พ.ย. 2026 · สูตรใหม่: 60–90 วิ ไม่มีตัวนับวัน ความรู้อยู่ในฉาก จบด้วยภาพอันตรายค้างแล้วตัดดำ · เป็น 2 ตอนจบใน EP.3)
+
+**ของฟรีที่ใครก็อยากได้:** "ทะเลแหวก" ถนนทรายที่โผล่จากทะเลวันละชั่วโมง เดินข้ามไปเกาะหินได้ฟรี ถ่ายรูปสวย · ตอนน้ำขึ้นกลับมา ถนนหาย และตรงที่สันทรายขาดคือ "ทะเลดูด" (rip current)
+**ประโยคเปิด "อย่า…":** "ทะเลแหวก… เดินไปได้ฟรี / ตอนกลับ… ถ้าทะเลดูด อย่าว่ายสู้"
+**กฎของยาย (คล้องจอง):** "ทะเลดูด… อย่าดึง / ลอยนิ่งๆ… ให้มันปล่อย / แล้วค่อยว่ายขวาง" + "เห็นคนจม… อย่าโดดตาม / โยนของลอย… ให้เขาเกาะ"
+**ผู้ใหญ่ที่เราเชื่อแต่ผิด:** ลุงนวล "ตกน้ำก็ว่ายเข้าฝั่งสุดแรงสิ ลุงว่ายมาทั้งชีวิต"
+**โต้งทำถูกทุกข้อ ยกเว้นข้อเดียว:** ดูตารางน้ำ ✓ นกหวีด ✓ เชือก+แกลลอนของยาย ✓ … ว่ายสู้ทะเลดูด ✗
+**ปริศนาซีซัน (ประกาศตั้งแต่ตอนนี้ ย้ำทุกตอน 2 วิ):** รูปชายหนุ่มซีดๆ บนผนังบ้านยาย ยาย: "คนที่สอนยายข้อนี้… ไม่ได้กลับมาสอนข้ออื่น" — กฎทุกข้อของยายแลกมาด้วยใครสักคน (คน ไม่ใช่ผี)
+
+### บททีละช็อต (เวลาโดยประมาณ ~85 วิ)
+1. **hook (0–4)** เฟรมแรก = ถนนทรายกลางทะเล เท้าเด็กสองคู่วิ่งอยู่บนนั้น · N "ทะเลแหวก… ถนนที่โผล่จากทะเลวันละชั่วโมง เดินไปได้ฟรี" → แฟลช 0.5 วิ: หน้าโต้งลอยในคลื่น เหลือแค่ตา · "ตอนกลับ… ถ้าทะเลดูด อย่าว่ายสู้"
+2. **yai (4–12)** ระเบียง ยายผูกเชือกกับแกลลอนน้ำเปล่าให้ "ทะเลดูด อย่าดึง… ลอยนิ่งๆ ให้มันปล่อย" · โต้ง (มุก): "ยาย ทะเลดูดคืออะไร แม่เหล็กเหรอ" · รูปชายหนุ่มบนผนัง 2 วิ: "คนที่สอนยายข้อนี้… ไม่ได้กลับมาสอนข้ออื่น"
+3. **boat (12–20)** ลุงนวลส่งที่เกาะ: "บ่ายสามน้ำขึ้น ถนนหาย เดินกลับก่อนนั้น… ตกน้ำก็ว่ายเข้าฝั่งสุดแรง ลุงว่ายมาทั้งชีวิต" · โต้ง: "ผมดูตารางน้ำแล้ว มีนกหวีด มีเชือก มีแกลลอน" (ติ๊กถูกบนจอ 3 ข้อ)
+4. **road (20–32)** เดินถนนทรายไปเกาะหิน ทะเลสองข้าง ปูวิ่ง · แพรวถ่ายรูป "โพสต์ไม่ได้ก็ถ่ายไว้ก่อน" · โต้ง "เหมือนโมเสสเลย" · ตัดไป: นาฬิกาโต้ง 14:40 มองกลับ ถนนหายแล้ว คลื่นใหญ่กว่าตอนเช้า
+5. **cross (32–45)** ลุยน้ำกลับ แค่เข่า → แค่เอว · N (คนดูรู้ก่อน): "ตรงที่สันทรายขาด… น้ำที่คลื่นดันเข้ามา ต้องไหลกลับออกทะเลผ่านช่องนี้ช่องเดียว / เร็วกว่านักว่ายน้ำโอลิมปิก" · โต้งก้าวลงช่อง ทรายใต้เท้าหาย ถูกดึงออกไป แพรวยังยืนบนสันทราย
+6. **fight (45–57)** โต้งว่ายสู้เข้าหาสันทรายสุดแรง (วิธีลุง) ไม่ขยับ คลื่นตบหน้า · แพรวกรี๊ด "ว่ายมา! ว่ายมา!" · POV โต้ง: แขนหนักเป็นหิน สันทรายถอยห่าง "ผมว่ายเก่ง… ทำไม…" · จมวูบหนึ่ง
+7. **rule (57–68)** เสียงยายในหัว "อย่าดึง… ลอยนิ่ง" → หยุด พลิกตัวนอนหงาย ลอย · น้ำพาออกไปพ้นแนวคลื่นแตกแล้วปล่อย หายใจได้ · "แล้วค่อยว่ายขวาง" → เฉียงไปทางเกาะหิน · ตัดกลับแพรว: กำลังจะโดดตาม → เสียงยาย "เห็นคนจม อย่าโดดตาม" → โยนแกลลอน เชือกสั้นไปสองเมตร เป่านกหวีดออกทะเล
+8. **sig (68–72)** เช็กลิสต์ ตารางน้ำ ✓ นกหวีด ✓ เชือก ✓ ว่ายสู้ทะเลดูด ✗ → ฉีก "ถูกหมด… ผิดแค่ข้อเดียว"
+9. **choice (72–76)** "น้องโดนทะเลดูดออกไป เชือกไม่ถึง… / จะโดดลงไปช่วย หรือยืนอยู่บนสันทราย?"
+10. **cliff (76–84)** กลับไปที่โต้ง: ลอยอยู่ไกล คลื่นลูกใหญ่ขึ้น ฟ้าเริ่มมืด · มุมแพรว: คลื่นลูกหนึ่งผ่านไป… ไม่เห็นโต้งแล้ว · เป่านกหวีด… เงียบ · **ตัดดำ** (ไม่มีการ์ดจบ ไม่มีตอนต่อไป — จบที่ความมืด)
+
+**EP.3 (ตอนจบของเรื่องนี้):** โต้งลอยไปเกาะหิน/เรือประมงเห็นนกหวีด… หลักฐาน + ประโยคหลอน: "ตอนที่พี่โยนแกลลอน… ผมเห็นพี่จะโดดลงมา / ถ้าพี่โดด… เราคงไม่ได้กลับทั้งคู่" · ความรู้ส่วนคนบนฝั่ง (อย่าโดดตาม โยนของลอย เรียกคน) อยู่ในตอนนี้
