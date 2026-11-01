@@ -59,6 +59,7 @@
     <script src="assets/war.js"></script>
     <script src="assets/war2.js"></script>
     <script src="assets/war3.js"></script>
+    <script src="assets/war4.js"></script>
     <style>
       @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
       @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
