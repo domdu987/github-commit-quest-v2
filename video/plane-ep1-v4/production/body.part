@@ -1,0 +1,269 @@
+      // ---------- รอดคนเดียว EP.1 v4 · S17 card rhythm (trial) ----------
+      // one caption card per new fact; the picture cuts on (or just before) every card, ~2.3 s per framing; no UI boxes: the facts live
+      // on things in the cabin (the seat-pocket card, the floor lights, the EXIT sign, the boarding pass). Dark cabin, smoke under the
+      // ceiling, orange flashes; the danger is shown by proxy (silhouettes, glow, smoke). Twist: "ไม่มีส่วนหน้า" echoes "วิ่งไปข้างหน้า".
+      Rig.MODES.crouchLook = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -72 + 8 * Math.sin(u * 3.1), faF: -8, uaB: 20, faB: -30, head: -8 });
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.7, 2.6, 4.4], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      const EMERG = { from: "right", rim: "#ff9a4a", rimOp: 0.7, shade: "#12060a", shadeOp: 0.5, cast: false, vol: false };
+      const CALM = { from: "right", rim: "#ffd9a0", rimOp: 0.5, shade: "#1a1430", shadeOp: 0.35, cast: false, vol: false };
+      const DUSKL = { from: "left", rim: "#ffc890", rimOp: 0.6, shade: "#141a2a", shadeOp: 0.42, cast: false, vol: false };
+      const GEMR = { top: "#ff6a3a", bottom: "#07040a", op: 0.26 }, GCAB = { top: "#f6e2c0", bottom: "#2a2030", op: 0.12 }, GSEA = { top: "#ffb080", bottom: "#101828", op: 0.16 };
+      const KX = ROW30 + 40, KS = 0.8;
+      const sway = (amp = 1.2) => (t) => ({ x: 0, y: 0, r: amp * Math.sin(t * 1.3) });
+      const rumble = (a = 6) => (t) => ({ x: a * Math.sin(t * 37), y: a * 0.8 * Math.sin(t * 29), r: 0.3 * Math.sin(t * 17) });
+      const noSh = (tl, id, n = 2) => { for (let i = 0; i < n; i++) tl.set(`#${id}-a${i}-shadow`, { opacity: 0 }, 0); };
+      // the dark cabin after the crash: no hull section, emergency light, smoke
+      const CAB = (id, state, extra = {}, dark = 0.5) => ({ set: "cabinCut", setOpts: { id, state, noHull: true, noMasks: true, ...extra }, dark: state === "calm" ? 0 : dark, light: state === "calm" ? CALM : EMERG, grade: state === "calm" ? GCAB : GEMR });
+      const SITE = (id, extra = {}) => ({ set: "crashSite", setOpts: { id, time: "dusk", ...extra }, dark: 0.08, light: DUSKL, grade: GSEA, blur: { far: 1.5, mid: 0.6, fg: 7 } });
+      // several framings / sets inside one spoken line: segs = [[at, (dur, at) => spec], ...], cut a hair before each card
+      const seg = (k, segs) => segs.forEach(([at, mkSpec], i) => {
+        const end = i + 1 < segs.length ? segs[i + 1][0] : D(k), dur = end - at, spec = mkSpec(dur, at);
+        add(k, { captions: capsFrom(k, at, undefined, spec.capO), ...spec }); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = dur; });
+      const C = (k, i = 0, j = 0) => Math.max(0, F(k, i, j) - 0.1);           // cut point for card j of line i
+      // a passenger in silhouette (side view, facing right unless flip): dark against the smoke, an ember rim; o.up = an arm up to the bin
+      const sil = (x, o = {}) => { const s = o.s ?? 1, f = o.flip ? -1 : 1, c = o.c ?? "#0c0a0e", rim = `stroke="#ff8a3a" stroke-width="3" stroke-opacity=".55"`;
+        return `<g transform="translate(${x},${PF - 20}) scale(${f * s},${s})"${o.id ? ` id="${o.id}"` : ""}><path d="M-34,0L-28,-230Q-48,-300 -52,-360Q-56,-424 -18,-444L22,-444Q58,-424 52,-360Q46,-300 30,-230L36,0H10L2,-200L-6,0Z" fill="${c}" ${rim}/>
+          <circle cy="-490" r="40" fill="${c}" ${rim}/><g${o.armId ? ` id="${o.armId}"` : ""}>${o.up ? `<path d="M30,-420Q74,-500 66,-580" stroke="${c}" stroke-width="26" stroke-linecap="round" fill="none"/>${o.bag ? `<rect x="20" y="-660" width="110" height="80" rx="12" fill="${c}" ${rim}/>` : ""}`
+          : `<path d="M40,-420Q64,-330 52,-250" stroke="${c}" stroke-width="24" stroke-linecap="round" fill="none"/>${o.bag ? `<rect x="22" y="-270" width="100" height="84" rx="12" fill="${c}" ${rim}/><path d="M40,-270Q70,-330 100,-270" stroke="${c}" stroke-width="8" fill="none"/>` : ""}`}</g></g>`; };
+      // the strap of the camera bag (under row 29) snagged round the rear leg of that seat
+      const STRAPX = ROW30 + PP - 120, LEGX = ROW30 + PP - 150 + 20;
+      const snagStrap = (id) => `<g id="${id}"><path d="M${STRAPX - 40},${PF - 70}Q${STRAPX - 60},${PF - 140} ${LEGX + 10},${PF - 66}" stroke="#3a2a22" stroke-width="9" fill="none"/>
+        <ellipse cx="${LEGX + 4}" cy="${PF - 62}" rx="18" ry="10" fill="none" stroke="#3a2a22" stroke-width="8"/></g>`;
+      const flick = (tl, sel, t0, dur, lo = 0.6, hi = 1) => { const n = Math.max(1, Math.round(dur / 0.11)); for (let i = 0; i < n; i++) tl.set(sel, { opacity: i % 3 === 1 ? lo : hi - (i % 2) * 0.12 }, t0 + i * 0.11); };
+      // the orange fire light flickering over the whole frame (screen blend), and the brightness drop at danger
+      const fireLight = (tl, L, id, t0, dur, op = 0.32) => { put(L.light, `<rect id="${id}-fl" width="1080" height="1920" fill="#ff6a1a" opacity="0" style="mix-blend-mode:screen"/>`); flick(tl, `#${id}-fl`, t0, dur, op * 0.35, op); };
+      const dropDark = (tl, id, at, to = 0.82, d = 0.25) => tl.to(`#${id}-dark`, { opacity: to, duration: d, ease: "power2.in" }, at);
+
+      // ===== B0 · 1. hook: close on คิว's face in the dark, the fire light on it; the burning engine over the sea =====
+      seg("hook", [
+        [0, (d) => ({ ...CAB("h1", "smoke", { wingFire: true, wingX: 520, smokeH: 300 }, 0.42), blur: { far: 2, set: 1.5, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(KX + 40, PF - 420, 3.6, 540, 820) }, { t: d, glide: d, ...fr(KX + 40, PF - 420, 3.9, 540, 820) }] },
+          shake: rumble(5),
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "brace", eyes: "wide", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "h1", t0, d); fireLight(tl, L, id, t0, d, 0.36); } })],
+        [C("hook", 0, 1), (d) => ({ set: "planeSky", setOpts: { id: "h2", fire: true, s: 0.5, y: 820, x: 560 }, dark: 0.1, light: false, grade: { top: "#ffb080", bottom: "#1a1030", op: 0.2 },
+          cam: { keys: [{ t: 0, ...fr(560, 840, 3.0, 540, 860) }, { t: d, glide: d, ...fr(600, 840, 2.5, 540, 860) }] },
+          shake: (t) => ({ x: 12 * Math.sin(t * 61), y: 9 * Math.sin(t * 47), r: 1.2 * Math.sin(t * 33) }),
+          fx(tl, id, t0, L) { Plane.skyLife(tl, "h2", t0, d); tl.fromTo("#h2-jet-fire", { scale: 1.5, svgOrigin: "0 0" }, { scale: 2.1, svgOrigin: "0 0", duration: d, ease: "power1.out", immediateRender: false }, t0);
+            SU.flash(tl, L.light, t0, "#fff4c0", 0.55); Plane.burst(tl, L.glow, 600, 840, t0 + 0.04, { n: 16, v: 320 }); } })],
+      ]);
+      // ===== 2. the command: his fist on the bag strap, red =====
+      add("cmd", { ...CAB("c1", "smoke", { smokeH: 320 }, 0.5), blur: { far: 3, set: 2, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(STRAPX, PF - 90, 3.4, 540, 1000) }, { t: D("cmd"), glide: D("cmd"), ...fr(STRAPX, PF - 90, 3.7, 540, 1000) }] },
+        shake: rumble(6),
+        actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "wide", mouth: "o" }])],
+        captions: caps("cmd"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "c1", t0, D("cmd")); fireLight(tl, L, id, t0, D("cmd"), 0.3); SU.flash(tl, L.light, t0 + vo("cmd") + 0.02, "#ff3b2e", 0.35); } });
+      // ===== 3. why: smoke under the ceiling | silhouettes | the fire at the break | คิว coughing, the EXIT dim behind him (plant) =====
+      seg("why", [
+        [0, (d) => ({ ...CAB("w1", "smoke", { smokeH: 360 }, 0.5), cam: { keys: [{ t: 0, ...fr(700, 1150, 1.25, 540, 900) }, { t: d, glide: d, ...fr(560, 1150, 1.32, 540, 900) }] }, shake: sway(1),
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "sitDazed", eyes: "closed", mouth: "flat" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "w1", t0, d, { chase: true, smokeFrom: -160, smokeTo: 40 }); fireLight(tl, L, id, t0, d, 0.22); } })],
+        [C("why", 0, 1), (d) => ({ ...CAB("w2", "smoke", { smokeH: 460, rows: [25, 30] }, 0.55), cam: { keys: [{ t: 0, ...fr(980, 1180, 1.5, 540, 960) }, { t: d, glide: d, ...fr(1020, 1180, 1.6, 540, 960) }] }, shake: sway(1),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "w2", t0, d); put(L.act, [760, 900, 1050, 1210, 1330].map((x, k) => sil(x, { s: 0.98 + (k % 2) * 0.05, flip: k % 2 === 1 })).join("")); fireLight(tl, L, id, t0, d, 0.26); } })],
+        [C("why", 0, 2), (d) => ({ ...CAB("w3", "fire", { breakX: 900, smokeH: 420 }, 0.4), cam: { keys: [{ t: 0, ...fr(1050, 1220, 1.6, 540, 960) }, { t: d, glide: d, ...fr(1080, 1220, 1.75, 540, 960) }] }, shake: rumble(4),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "w3", t0, d); fireLight(tl, L, id, t0, d, 0.4); } })],
+        [C("why", 0, 3), (d) => ({ ...CAB("w4", "smoke", { smokeH: 560 }, 0.4), blur: { far: 2, set: 1, fg: 8 },
+          cam: { keys: [{ t: 0, ...fr(300, PF - 380, 1.5, 540, 1060) }, { t: d, glide: d, ...fr(300, PF - 380, 1.62, 540, 1060) }] }, shake: sway(1),
+          actors: [A("kiw", KX + 60, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "w4", t0, d, { smokeFrom: 0, smokeTo: 120 }); dropDark(tl, id, t0 + 0.2, 0.62, 0.8); } })],
+      ]);
+      // ===== B1 · 4. the first thing คิว grabs | the camera bag =====
+      seg("grab", [
+        [0, (d) => ({ ...CAB("g1", "smoke", { smokeH: 420 }, 0.48), cam: { keys: [{ t: 0, ...fr(KX + 60, PF - 260, 1.7, 540, 980) }, { t: d, glide: d, ...fr(KX + 60, PF - 260, 1.85, 540, 980) }] }, shake: sway(1),
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "sitDazed", eyes: "worry", mouth: "o" }, { t: 0.5, mode: "reachDown", eyes: "worry", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "g1", t0, d); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("grab", 0, 1), (d) => ({ ...CAB("g2", "smoke", { smokeH: 420 }, 0.4), blur: { far: 3, set: 1.5, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(STRAPX, PF - 60, 3.6, 540, 1080) }, { t: d, glide: d, ...fr(STRAPX, PF - 60, 3.9, 540, 1080) }] },
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "worry", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "g2", t0, d); put(L.glow, `<circle cx="${STRAPX}" cy="${PF - 50}" r="120" fill="url(#plAmb)" opacity=".5"/>`); fireLight(tl, L, id, t0, d, 0.22); } })],
+      ]);
+      // ===== 5. คิว: "กล้องผม! งานทั้งปีอยู่ในนี้!" =====
+      seg("q", [
+        [0, (d) => ({ ...CAB("q1", "smoke", { smokeH: 420 }, 0.42), blur: { far: 2, set: 1.5, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(KX + 120, PF - 330, 3.0, 540, 860) }] }, shake: rumble(3), capO: QUO,
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "worry", mouth: "o" }], { talk: [[vo("q", 0), voEnd("q", 0), "o"]] })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "q1", t0, d); fireLight(tl, L, id, t0, d, 0.3); } })],
+        [C("q", 0, 1), (d, at) => ({ ...CAB("q2", "smoke", { smokeH: 460 }, 0.48), cam: { keys: [{ t: 0, ...fr(KX + 120, PF - 240, 1.6, 540, 980) }, { t: d, glide: d, ...fr(KX + 120, PF - 240, 1.72, 540, 980) }] }, shake: sway(1.2), capO: QUO,
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "worry", mouth: "o" }], { talk: [[0, voEnd("q", 0) - at, "o"]] })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "q2", t0, d); fireLight(tl, L, id, t0, d, 0.26); } })],
+      ]);
+      // ===== 6. อย่า | the strap… | snagged round the seat leg =====
+      seg("snag", [
+        [0, (d) => ({ ...CAB("sn1", "smoke", { smokeH: 420 }, 0.62), blur: { far: 3, set: 2, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(KX + 120, PF - 330, 3.3, 540, 860) }] },
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "wide", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); SU.flash(tl, L.light, t0 + 0.06, "#ff3b2e", 0.4); } })],
+        [C("snag", 0, 1), (d) => ({ ...CAB("sn2", "smoke", { smokeH: 420 }, 0.45), blur: { far: 3, set: 1.5, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(STRAPX - 20, PF - 110, 3.4, 540, 1000) }, { t: d, glide: d, ...fr(LEGX + 20, PF - 80, 3.6, 540, 1000) }] },
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "worry", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "sn2", t0, d); put(L.glow, snagStrap("sn2-st")); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("snag", 0, 2), (d) => ({ ...CAB("sn3", "smoke", { smokeH: 420 }, 0.45), blur: { far: 3, set: 1.5, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(LEGX, PF - 70, 4.6, 540, 1000) }, { t: d, glide: d, ...fr(LEGX, PF - 70, 5.0, 540, 1000) }] }, shake: rumble(2),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "sn3", t0, d); put(L.glow, snagStrap("sn3-st"));
+            tl.fromTo("#sn3-st", { x: 0 }, { x: -6, duration: 0.08, yoyo: true, repeat: Math.ceil(d / 0.08), ease: "sine.inOut", immediateRender: false }, t0); fireLight(tl, L, id, t0, d, 0.24); } })],
+      ]);
+      // ===== 7. he pulls too long | the fire runs along the bins =====
+      seg("pull", [
+        [0, (d) => ({ ...CAB("p1", "smoke", { smokeH: 460 }, 0.5), cam: { keys: [{ t: 0, ...fr(KX + 80, PF - 250, 1.8, 540, 980) }] }, shake: (t) => ({ x: 7 * Math.sin(t * 23), y: 0, r: 0 }),
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "tug", eyes: "pain", mouth: "scream" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "p1", t0, d); put(L.glow, snagStrap("p1-st")); fireLight(tl, L, id, t0, d, 0.28);
+            tl.fromTo(`#${id}-a0`, { x: 0 }, { x: -14, duration: 0.18, yoyo: true, repeat: Math.ceil(d / 0.18), ease: "power2.inOut", immediateRender: false }, t0); } })],
+        [C("pull", 0, 1), (d) => ({ ...CAB("p2", "fire", { breakX: 760, smokeH: 460 }, 0.38), cam: { keys: [{ t: 0, ...fr(760, 1150, 1.5, 540, 960) }, { t: d, glide: d, ...fr(620, 1150, 1.7, 540, 960) }] }, shake: rumble(5),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "p2", t0, d); fireLight(tl, L, id, t0, d, 0.45); tl.fromTo("#p2-fire", { x: 120 }, { x: -60, duration: d, ease: "power1.in", immediateRender: false }, t0);
+            SU.flash(tl, L.light, t0 + 0.05, "#ff6a1a", 0.4); } })],
+      ]);
+      // ===== B2 · 8. built so everyone is out in… | 90 s — on the seat-pocket safety card =====
+      const pocket = (id, x) => `<g transform="translate(${x},${PF - 300})"><rect x="-70" y="0" width="140" height="150" rx="10" fill="#18224a" ${PO(3)}/><g id="${id}"><rect x="-58" y="-90" width="116" height="150" rx="6" fill="#fdfaf2" ${PO(3)}/>
+        <rect x="-58" y="-90" width="116" height="26" rx="6" fill="${PL.navy}"/><text x="0" y="-71" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="14" fill="${PL.gold}">SAFETY</text>
+        <path d="M-40,-50h80M-40,-36h60M-40,-22h70" stroke="#9a9080" stroke-width="5"/><circle cx="0" cy="20" r="22" fill="none" stroke="${PL.red}" stroke-width="5"/></g></g>`;
+      seg("ninety", [
+        [0, (d) => ({ ...CAB("n1", "smoke", { smokeH: 380 }, 0.42), blur: { far: 3, set: 1, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(560, PF - 260, 2.6, 540, 900) }, { t: d, glide: d, ...fr(560, PF - 250, 2.9, 540, 900) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "n1", t0, d); put(L.glow, pocket("n1-cd", 560)); fireLight(tl, L, id, t0, d, 0.24);
+            tl.fromTo("#n1-cd", { y: 0 }, { y: -70, duration: d, ease: "power2.out", immediateRender: false }, t0); } })],
+        [C("ninety", 0, 1), (d, at) => ({ ...CAB("n2", "smoke", { smokeH: 380 }, 0.42), blur: { far: 9, set: 9, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(560, 1200, 1.3, 540, 1000), drift: { s: 0.01 } }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "n2", t0, d); fireLight(tl, L, id, t0, d, 0.2);
+            IconFX.board(tl, L.light, { skin: "seatcard", title: "การ์ดความปลอดภัย", t: t0, dur: d + 0.01, y: 330, active: 0, at: [C("ninety", 0, 2) - at + 0.05],
+              items: [{ text: "ทุกคนออกได้ใน <u>90 วินาที</u>", art: `<g transform="scale(1.25)">${IconFX.ART.stopwatch("90 วิ")}</g>` }] }); } })],
+      ]);
+      // ===== 9. but in real crashes… | people with bags… | nearly half… | stop to grab it =====
+      seg("half", [
+        [0, (d) => ({ ...CAB("f1", "smoke", { smokeH: 440, rows: [24, 30] }, 0.5), cam: { keys: [{ t: 0, ...fr(900, 1160, 1.15, 540, 960) }, { t: d, glide: d, ...fr(980, 1160, 1.2, 540, 960) }] }, shake: sway(1),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "f1", t0, d); put(L.act, [600, 760, 900, 1040, 1180, 1320, 1460].map((x, k) => sil(x, { s: 0.95 + (k % 3) * 0.04, flip: k % 3 === 2 })).join("")); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("half", 0, 1), (d) => ({ ...CAB("f2", "smoke", { smokeH: 440 }, 0.48), cam: { keys: [{ t: 0, ...fr(950, 1200, 1.7, 540, 1000) }, { t: d, glide: d, ...fr(980, 1200, 1.8, 540, 1000) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "f2", t0, d); put(L.act, sil(830, { bag: true }) + sil(1000, { bag: true, flip: true }) + sil(1150, { s: 1.02 })); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("half", 0, 2), (d) => ({ ...CAB("f3", "smoke", { smokeH: 440 }, 0.5), cam: { keys: [{ t: 0, ...fr(980, 1160, 1.2, 540, 960) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "f3", t0, d); fireLight(tl, L, id, t0, d, 0.24);
+            const xs = [640, 780, 920, 1060, 1200, 1340, 1480], up = [1, 0, 1, 0, 0, 1, 0];
+            put(L.act, xs.map((x, k) => sil(x, { up: up[k], bag: up[k], armId: `f3-arm${k}`, flip: k % 3 === 2 && !up[k] })).join(""));
+            xs.forEach((x, k) => { if (up[k]) tl.fromTo(`#f3-arm${k}`, { y: 140 }, { y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.1 + k * 0.05); }); } })],
+        [C("half", 0, 3), (d) => ({ ...CAB("f4", "smoke", { smokeH: 400 }, 0.45), blur: { far: 3, set: 1, fg: 9 }, cam: { keys: [{ t: 0, ...fr(960, PF - 560, 2.5, 540, 760) }, { t: d, glide: d, ...fr(960, PF - 540, 2.7, 540, 760) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "f4", t0, d); put(L.act, sil(920, { up: true, bag: true, armId: "f4-arm" })); fireLight(tl, L, id, t0, d, 0.26);
+            tl.fromTo("#f4-arm", { y: 0 }, { y: 70, duration: d, ease: "power2.in", immediateRender: false }, t0); } })],
+      ]);
+      // ===== 10. and those bags… | block the aisle =====
+      const bags = (xs, k0 = 0) => xs.map((x, k) => `<g transform="translate(${x},${PF - 12}) rotate(${(k % 3 - 1) * 9})">${Plane.bag(0.62 + (k % 2) * 0.1, { strap: k % 2 === 0 })}</g>`).join("");
+      seg("block", [
+        [0, (d) => ({ ...CAB("b1", "smoke", { smokeH: 420 }, 0.45), blur: { far: 3, set: 1, fg: 9 }, cam: { keys: [{ t: 0, ...fr(900, PF - 80, 2.3, 540, 1080) }, { t: d, glide: d, ...fr(1000, PF - 80, 2.4, 540, 1080) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "b1", t0, d); put(L.act, bags([700, 820, 960, 1100, 1220])); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("block", 0, 1), (d) => ({ ...CAB("b2", "smoke", { smokeH: 480 }, 0.55), cam: { keys: [{ t: 0, ...fr(1000, 1180, 1.35, 540, 980) }] }, shake: rumble(3),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "b2", t0, d); put(L.act, bags([860, 960, 1060]) + [1200, 1290, 1370, 1450, 1530].map((x, k) => sil(x, { flip: true, s: 0.96 + (k % 2) * 0.05 })).join(""));
+            fireLight(tl, L, id, t0, d, 0.28); SU.flash(tl, L.light, t0 + 0.06, "#ff3b2e", 0.3); dropDark(tl, id, t0 + 0.6, 0.72, 0.5); } })],
+      ]);
+      // ===== B3 · 11. คิว drops the bag | runs forward… | the only way he knows (the EXIT glows behind him) =====
+      seg("run", [
+        [0, (d) => ({ ...CAB("r1", "smoke", { smokeH: 420 }, 0.45), blur: { far: 3, set: 1, fg: 9 }, cam: { keys: [{ t: 0, ...fr(STRAPX, PF - 80, 3.0, 540, 1050) }] },
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "worry", mouth: "o" }, { t: 0.45, mode: "sitStand", eyes: "wide", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "r1", t0, d); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("run", 0, 1), (d) => ({ ...CAB("r2", "smoke", { smokeH: 520 }, 0.5), cam: { keys: [{ t: 0, ...fr(KX + 160, PF - 330, 1.6, 540, 1050) }, { t: d, glide: d, ...fr(KX + 640, PF - 330, 1.6, 540, 1050) }] }, shake: sway(1.4),
+          actors: [A("kiw", KX + 60, PF - 30, KS, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: KX + 60 + 520, y: PF - 30, dur: d + 0.2, ease: "none" } })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "r2", t0, d, { chase: true }); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("run", 0, 2), (d) => ({ ...CAB("r3", "smoke", { smokeH: 560 }, 0.52), cam: { keys: [{ t: 0, ...fr(980, 1180, 1.1, 540, 980) }, { t: d, glide: d, ...fr(1150, 1180, 1.15, 540, 980) }] }, shake: sway(1.2),
+          actors: [A("kiw", 900, PF - 30, KS, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 1250, y: PF - 30, dur: d + 0.2, ease: "none" } })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "r3", t0, d, { chase: true }); } })],
+      ]);
+      // ===== 12. the smoke so thick… | he can't see his own hand =====
+      seg("blind", [
+        [0, (d) => ({ ...CAB("l1", "smoke", { smokeH: 900 }, 0.55), cam: { keys: [{ t: 0, ...fr(1250, 1160, 1.5, 540, 960) }, { t: d, glide: d, ...fr(1300, 1160, 1.6, 540, 960) }] }, shake: sway(1.2),
+          actors: [A("kiw", 1250, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "l1", t0, d, { smokeFrom: -200, smokeTo: 80 }); fireLight(tl, L, id, t0, d, 0.18); } })],
+        [C("blind", 0, 1), (d) => ({ ...CAB("l2", "smoke", { smokeH: 1100 }, 0.6), blur: { far: 4, set: 3, fg: 12 }, cam: { keys: [{ t: 0, ...fr(1270, PF - 420, 3.0, 540, 860) }, { t: d, glide: d, ...fr(1270, PF - 420, 3.3, 540, 860) }] },
+          actors: [A("kiw", 1250, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "l2", t0, d);
+            put(L.light, `<rect id="l2-wh" width="1080" height="1920" fill="#3a3238" opacity="0"/>`); tl.fromTo("#l2-wh", { opacity: 0.2 }, { opacity: 0.86, duration: d * 0.85, ease: "power1.in", immediateRender: false }, t0); } })],
+      ]);
+      // ===== 13. and ahead… | FIRE =====
+      seg("front", [
+        [0, (d) => ({ ...CAB("t1", "smoke", { smokeH: 900 }, 0.72), cam: { keys: [{ t: 0, ...fr(1500, 1180, 1.4, 540, 960) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "t1", t0, d); put(L.light, `<rect width="1080" height="1920" fill="#2a2228" opacity=".6"/>`); } })],
+        [C("front", 0, 1), (d) => ({ ...CAB("t2", "fire", { breakX: 1350, smokeH: 520 }, 0.3), cam: { keys: [{ t: 0, ...fr(1450, 1200, 1.7, 540, 960) }, { t: d, glide: d, ...fr(1450, 1200, 1.55, 540, 960) }] },
+          shake: (t) => (t < 0.6 ? { x: 20 * Math.sin(t * 61) * (0.6 - t), y: 16 * Math.sin(t * 47) * (0.6 - t), r: 0 } : 0),
+          actors: [A("kiw", 1180, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "wide", mouth: "scream" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "t2", t0, d); fireLight(tl, L, id, t0, d, 0.5); SU.flash(tl, L.light, t0 + 0.02, "#ff8a2a", 0.7); Plane.burst(tl, L.glow, 1420, 1200, t0 + 0.04, { n: 18, v: 420 }); } })],
+      ]);
+      // ===== B4 · 14. the nearest exit… | is behind him | one row =====
+      add("behind", { ...CAB("e1", "smoke", { smokeH: 620 }, 0.55), shake: sway(1),
+        cam: { keys: [{ t: 0, ...fr(DOORX, PF - 560, 2.6, 540, 820) }, { t: C("behind", 0, 1), ...fr(560, 1200, 0.75, 540, 1000) }, { t: C("behind", 0, 2), ...fr(DOORX + 170, PF - 420, 1.5, 540, 960) }, { t: D("behind"), glide: D("behind") - C("behind", 0, 2), ...fr(DOORX + 170, PF - 420, 1.62, 540, 960) }] },
+        actors: [A("kiw", 1150, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }])],
+        captions: caps("behind"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "e1", t0, D("behind"), { chase: true });
+          put(L.glow, `<g transform="translate(${DOORX - 6},${PF - 572})"><circle r="260" fill="url(#plGlowG)" opacity=".7"/></g>`); } });
+      // ===== 15. (you) every flight… | count the rows to the exit | front and back — the seat-back safety card, calm cabin =====
+      add("rule", { ...CAB("u1", "calm", { rows: [25, 30] }), blur: { far: 0, set: 0, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(700, 1250, 1.3, 540, 1020) }, { t: C("rule", 0, 1), ...fr(600, 1200, 1.3, 540, 1000) }, { t: D("rule"), glide: D("rule") - C("rule", 0, 1), ...fr(640, 1200, 1.36, 540, 1000) }] },
+        actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat" }])],
+        captions: caps("rule"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "u1", t0, D("rule"));
+          const seats = (dir) => `<g>${[-60, 0, 60].map((x) => `<rect x="${x - 22}" y="-30" width="44" height="70" rx="10" fill="${PL.seat}" stroke="#1f1a17" stroke-width="4"/>`).join("")}<path d="${dir > 0 ? "M-70,-62H50l-22,-20M50,-62l-22,20" : "M70,-62H-50l22,-20M-50,-62l22,20"}" stroke="#2fa864" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+          IconFX.board(tl, L.light, { skin: "seatcard", title: "นับแถวไปทางออก", t: t0 + C("rule", 0, 1), dur: D("rule") - C("rule", 0, 1) + 0.01, y: 330, active: 1, done: [], at: [0.35, C("rule", 0, 2) - C("rule", 0, 1) + 0.1],
+            items: [{ text: "นับไป<u>ข้างหน้า</u>", art: `<g transform="scale(1.3)">${seats(1)}</g>` }, { text: "และนับไป<u>ข้างหลัง</u>", art: `<g transform="scale(1.3)">${seats(-1)}</g>` }] }); } });
+      // ===== 16. because in smoke… | the signs sink out of sight =====
+      seg("sign", [
+        [0, (d) => ({ ...CAB("x1", "smoke", { smokeH: 700 }, 0.55), cam: { keys: [{ t: 0, ...fr(600, 1200, 0.9, 540, 980) }, { t: d, glide: d, ...fr(560, 1200, 0.95, 540, 980) }] }, shake: sway(1),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "x1", t0, d, { smokeFrom: -100, smokeTo: 60 }); fireLight(tl, L, id, t0, d, 0.18); } })],
+        [C("sign", 0, 1), (d) => ({ ...CAB("x2", "smoke", { smokeH: 700 }, 0.5), cam: { keys: [{ t: 0, ...fr(DOORX, PF - 572, 3.2, 540, 860) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "x2", t0, d);
+            put(L.light, `<rect id="x2-sm" width="1080" height="1920" fill="#262026" opacity="0"/>`); tl.fromTo("#x2-sm", { opacity: 0.1 }, { opacity: 0.92, duration: d * 0.8, ease: "power2.in", immediateRender: false }, t0 + 0.15); } })],
+      ]);
+      // ===== B5 · 17. คิว feels his way, counting seatbacks… | one =====
+      seg("count", [
+        [0, (d) => ({ ...CAB("k1", "smoke", { smokeH: 900 }, 0.48), blur: { far: 3, set: 1.5, fg: 10 },
+          cam: { keys: [{ t: 0, ...fr(700, PF - 400, 2.1, 540, 900) }, { t: d, glide: d, ...fr(460, PF - 400, 2.1, 540, 900) }] },
+          actors: [A("kiw", 820, PF - 30, KS, [{ t: 0, mode: "crouchLook", eyes: "pain", mouth: "o" }], { flip: true, moveTo: { x: 520, y: PF - 30, dur: d, ease: "power1.inOut" } })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "k1", t0, d, { chase: true }); put(L.light, `<rect width="1080" height="1920" fill="#2a2228" opacity=".15"/>`); } })],
+        [C("count", 0, 1), (d) => ({ ...CAB("k2", "smoke", { smokeH: 900 }, 0.55), blur: { far: 3, set: 1, fg: 10 },
+          cam: { keys: [{ t: 0, ...fr(ROW30 - 150, PF - 390, 3.2, 540, 900) }] },
+          actors: [A("kiw", ROW30 + 60, PF - 30, KS, [{ t: 0, mode: "crouchLook", eyes: "wide", mouth: "o" }], { flip: true })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "k2", t0, d, { chase: true }); SU.flash(tl, L.light, t0 + 0.05, "#9dffc8", 0.25); } })],
+      ]);
+      // ===== 18. the door opens | down the slide | before the fire reaches him =====
+      seg("out", [
+        [0, (d) => ({ ...CAB("o1", "smoke", { smokeH: 700 }, 0.5), cam: { keys: [{ t: 0, ...fr(DOORX + 60, PF - 300, 1.7, 540, 1000) }] },
+          actors: [A("kiw", DOORX + 260, PF - 30, KS, [{ t: 0, mode: "crouchLook", eyes: "wide", mouth: "o" }], { flip: true })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "o1", t0, d);
+            tl.fromTo("#o1-door", { x: 0, opacity: 1 }, { x: -230, opacity: 0.2, duration: 0.5, ease: "power2.out", immediateRender: false }, t0 + 0.25);
+            put(L.light, `<rect id="o1-day" width="1080" height="1920" fill="#ffd9a0" opacity="0" style="mix-blend-mode:screen"/>`); tl.fromTo("#o1-day", { opacity: 0 }, { opacity: 0.28, duration: 0.45, immediateRender: false }, t0 + 0.3); } })],
+        [C("out", 0, 1), (d) => ({ ...SITE("o2", { fire: 0.9 }),
+          cam: { keys: [{ t: 0, ...fr(200, 1480, 2.6, 540, 1050) }, { t: d, glide: d, ...fr(160, 1500, 2.2, 540, 1050) }] },
+          actors: [A("kiw", 198, 1474, 0.15, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.7, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, path: [{ t: 0, x: 198, y: 1474 }, { t: 0.7, x: 127, y: 1570 }, { t: 1.6, x: 40, y: 1590, s: 0.17 }] })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "o2", t0, d); } })],
+        [C("out", 0, 2), (d) => ({ ...SITE("o3", { fire: 1 }), cam: { keys: [{ t: 0, ...fr(260, 1460, 1.8, 540, 1050) }, { t: d, glide: d, ...fr(200, 1480, 1.6, 540, 1050) }] },
+          shake: (t) => (t < 0.5 ? { x: 14 * Math.sin(t * 61), y: 10 * Math.sin(t * 47), r: 0 } : 0),
+          actors: [A("kiw", 40, 1590, 0.17, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: -120, y: 1600, dur: d, ease: "none" } })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "o3", t0, d); SU.flash(tl, L.light, t0 + 0.1, "#ff8a2a", 0.6); Plane.burst(tl, L.glow, 330, 1440, t0 + 0.12, { n: 20, v: 380 }); } })],
+      ]);
+      // ===== 19. he made it =====
+      add("safe", { ...SITE("v1", { fire: 0.7 }), cam: { keys: [{ t: 0, ...fr(200, 1520, 2.4, 540, 1150) }, { t: D("safe"), glide: D("safe"), ...fr(190, 1520, 2.6, 540, 1150) }] },
+        actors: [A("kiw", 150, 1585, 0.16, [{ t: 0, mode: "crouch", eyes: "closed", mouth: "o" }])],
+        captions: caps("safe"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "v1", t0, D("safe")); } });
+      // ===== twist: pull out — 0.45 s near-black, then slower =====
+      add("hush", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960) }] },
+        fx(tl, id, t0, L) { put(L.light, `<rect width="1080" height="1920" fill="#030406"/>`); } });
+      // ===== B6 · 20. but when the smoke clears… | no front section… | of the plane any more =====
+      add("twist", { ...SITE("z1", { fire: 0.35 }), dark: 0.3,
+        cam: { keys: [{ t: 0, ...fr(200, 1520, 2.4, 540, 1150) }, { t: C("twist", 0, 1), ...fr(620, 1400, 1.9, 540, 1050) }, { t: C("twist", 0, 2), ...fr(400, 1300, 0.85, 540, 1050) }, { t: D("twist"), glide: D("twist") - C("twist", 0, 2), ...fr(420, 1300, 0.8, 540, 1050) }] },
+        actors: [A("kiw", 150, 1585, 0.16, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("twist"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "z1", t0, D("twist"));
+          put(L.light, `<rect id="z1-haze" width="1080" height="1920" fill="#8a8a92" opacity="0"/>`); tl.fromTo("#z1-haze", { opacity: 0.75 }, { opacity: 0, duration: 1.2, ease: "power1.out", immediateRender: false }, t0); } });
+      // ===== 21. only คิว… | and an island in the middle of the sea =====
+      add("alone", { ...SITE("y1", { fire: 0.25 }), dark: 0.22,
+        cam: { keys: [{ t: 0, ...fr(200, 1520, 2.2, 540, 1150) }, { t: C("alone", 0, 1), ...fr(400, 1280, 0.5, 540, 1100) }, { t: D("alone"), glide: D("alone") - C("alone", 0, 1), ...fr(420, 1280, 0.46, 540, 1100) }] },
+        actors: [A("kiw", 150, 1585, 0.16, [{ t: 0, mode: "holdHead", eyes: "worry", mouth: "frown" }])],
+        captions: caps("alone"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "y1", t0, D("alone")); } });
+      // ===== 22. but across the bay… | smoke is rising =====
+      add("smoke2", { ...SITE("m1", { fire: 0.2, plume: true, plumeX: 900 }), dark: 0.25,
+        cam: { keys: [{ t: 0, ...fr(200, 1520, 2.4, 540, 1150) }, { t: C("smoke2", 0, 1), ...fr(900, 1160, 2.2, 540, 1000) }, { t: D("smoke2"), glide: D("smoke2") - C("smoke2", 0, 1), ...fr(900, 1120, 2.6, 540, 1000) }] },
+        actors: [A("kiw", 150, 1585, 0.16, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: caps("smoke2"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "m1", t0, D("smoke2"));
+          put(L.glow, `<g>${Plane.puffMk("m1c", 880, 1120, 12, "dark", 60)}</g>`); Plane.puffs(tl, "m1c", t0, D("smoke2") + 0.5, 12, { dx: 60, dy: -520, per: 2.2, op: 0.85 }); } });
+      // ===== 23. next: the boarding pass =====
+      add("next", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        fx(tl, id, t0, L) { PlaneUI.next(tl, L.light, t0, D("next"), { l1: "ตอนต่อไป · EP.2", l2: "ควันอีกฝั่งอ่าว", l3: "อย่าเดินไปหามัน" }); } });
