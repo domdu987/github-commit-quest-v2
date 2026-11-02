@@ -1,0 +1,41 @@
+"""ต้นตะเคียนกลางนา EP.1 soundtrack (times follow schedule.json and the shot code in ep1/body.part)."""
+import os, sys
+HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, os.path.join(HERE, "..", "lib"))
+from mixcore import Mix
+m = Mix(HERE)
+m.voices({"t03": -1, "y01": 1})
+F = m.fx
+# the run and the strike
+F("hook", 0.0, "splash", 0.4*0.8); F("hook", 0.45, "rumble", 0.7); F("hook", 1.0, "bark", 0.6); F("hook", 1.6, "splash", 0.4*0.6)
+F("cmd", 0.08, "crack", 1.0); F("cmd", 0.2, "flinch", 0.6)
+F("stop", 0.0, "splash", 0.4*0.5)
+F("why", 0.12, "crack2", 0.7); F("why", 0.3, "zap", 0.6)
+F("nosafe", 1.1, "rumble", 0.6)
+F("timer", 1.0, "stopwatch", 0.8)
+F("buff", 0.6, "buffalo", 0.7)
+F("leg1", 0.0, "cloth", 0.7)
+F("sci1", 0.75, "rumble", 0.6); F("sci1", 2.35, "rumble", 0.5)
+F("sci2", 0.18, "crack2", 0.75); F("sci2", 0.4, "zap", 0.6)
+F("rule1", 0.15, "plankdrop", 0.9); F("rule1", m.vo_end("rule1") - 0.25, "bambootick", 0.8)
+F("hut", 0.1, "splash", 0.4*0.6)
+F("nohut", 0.12, "rumble", 0.8)
+F("go", 0.3, "splash", 0.4*0.7); F("spread", 0.2, "splash", 0.4*0.6); F("spread", 1.6, "splash", 0.4*0.5)
+F("flat", 0.05, "bodyflop", 0.9)
+F("wflat", 0.18, "crack2", 0.7); F("wflat", 0.35, "zap", 0.7)
+F("crouch", 0.28, "crack2", 0.65)
+F("up", 0.0, "splash", 0.4*0.6)
+F("truck", 0.1, "doorslam", 0.8); F("truck", 0.6, "bark", 0.5); F("truck", 2.2, "rumble", 0.5); F("truck", 3.25, "rumble", 0.45)
+F("rope", 0.1, "splash", 0.4*0.6); F("rope", 0.6, "rumble", 0.45); F("rope", 0.9, "buffalo", 0.6)
+F("strike", 0.22, "crack", 1.1); F("strike", 0.75, "fall", 0.9); F("strike", 1.0, "buffalo", 0.5)
+F("taken", 0.3, "rumble", 0.5)
+F("next", 0.2, "paperslap", 0.9); F("next", 1.5, "rumble", 0.4)
+# music: the theme drives the run, holds its breath before each strike, peaks on the cliffhanger
+m.boost(m.T("hook"), m.T("cmd", 0.1), 1.6)
+m.dip(m.T("cmd") - 0.1, m.T("cmd", 0.15), 0.15)
+m.dip(m.T("leg1"), m.T("leg2", -0.01), 0.7)
+m.dip(m.T("strike") - 0.3, m.T("strike", 0.15), 0.25)
+m.boost(m.T("strike", 0.3), m.T("taken", -0.01), 1.6)
+m.dip(m.T("none"), m.T("none", -0.01), 0.55)
+# music = ทะเลลด recipe (owner 2 พ.ย. ~21:00: "เอาซาวเพลงแบบทะเลลด ใช้ทุกคลิปเลย"): suno1 from 0 s, unfiltered, -30 dB RMS, duck 0.65
+m.mus_db = -30; m.duck_depth = 0.65; m.mus_lp = False; m.mus_af = None
+m.finish(music_offset=0.0, fade_from=m.T("next", -0.5))

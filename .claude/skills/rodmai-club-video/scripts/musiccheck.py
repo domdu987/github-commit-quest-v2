@@ -1,24 +1,26 @@
 #!/usr/bin/env python3
-"""Is the theme music actually audible? (rule A5; owner 2 Nov 2569: "เพลงเบาไม่ได้ยินเหมือนไม่ได้ใส่")
+"""Does the music sit like ทะเลลด? (rule A5; owner 2 Nov 2569 ~21:00: "เอาซาวเพลงแบบทะเลลด ใช้ทุกคลิปเลย")
 
     python3 -I musiccheck.py <vo_stem.wav> <music_stem.wav>
 
-Both stems must be exactly what is summed into the final mix: after every gain, dip, duck and low-pass,
-and after the final loudness-normalisation gain (the delivered file is -14 LUFS integrated).
-Loudness is EBU R128 momentary (400 ms) from ffmpeg's ebur128 filter, on a 100 ms grid.
+Every story now uses video/music/suno1.mp3 with the ทะเลลด mix recipe (video/tide-ep1/production/mix.py):
+  suno1 from 0 s, no EQ / low-pass / high-pass / compressor on it · horror dips (x0.4-0.55) on the scary beats
+  level -30 dB RMS (samples above 1e-4, after the dips) · voice lines -18 dB RMS each · SFX -27
+  duck 0.65: 50 ms envelope of |voice| / its median, clipped 0..1, smoothed 0.25 s · final -14 LUFS integrated
+  cliffhanger: hard cut to silence on the choice · finale: fade over the end card
 
-Targets (all must pass):
-  1. music under the voice (voice momentary > -35 LUFS): median -27 .. -22 LUFS
-  2. music between lines (voice < -50 LUFS for >= 1 s, else >= 0.5 s; n/a if the narration never pauses): median -22 .. -17 LUFS
-  3. voice stays clear: median (voice - music) while speaking >= 8 LU
-  4. music not missing: in voice-free time, music below -40 LUFS for <= 15 % (planned hush beats only)
-Old mixes (theme at -30/-33 with an 0.65-0.8 duck and a gate) sit around -45 under the voice and -30 between
-lines, which the owner heard as no music at all.
+Both stems must be exactly what is summed into the final mix (after every gain, dip and duck, and after the final
+loudness gain). Loudness is EBU R128 momentary (400 ms) from ffmpeg's ebur128 filter, on a 100 ms grid.
 
-Every target is checked twice: on the full band, and again on the "phone speaker" band (both stems high-passed
-at 300 Hz, 24 dB/oct). Both passes must hold. Owner 2 Nov 2569 ~19:15: "เพลงหาย ไม่ได้ยินเลย". Every theme
-then had 78-97 % of its energy below 300 Hz, because the music prompt asked to "keep the midrange sparse".
-Full band passed, but on a phone the music sat 22-24 dB under the voice.
+Targets = ทะเลลด EP.1 as delivered (stems rebuilt from its mix.py, measured 2 Nov) +- 3 LU:
+  1. music under the voice (voice momentary > -35 LUFS): median -36.6 .. -30.6 LUFS   (ทะเลลด -33.6)
+  2. music between lines (voice < -50 LUFS for >= 1 s, else >= 0.5 s; n/a if none): median -34.5 .. -28 LUFS (ทะเลลด -31.3)
+  3. voice stays clear: median (voice - music) while speaking >= 8 LU                  (ทะเลลด 18.9)
+  4. music not missing: in voice-free time, music below -40 LUFS for <= 15 %           (ทะเลลด 12 %)
+The phone-speaker band (both stems high-passed at 300 Hz) is printed for information only: ทะเลลด itself reads
+-39.0 under the voice and -35.4 between lines there, and the owner chose ทะเลลด as the sound for every clip.
+History: 2 Nov ~19:15 the owner said "เพลงหาย ไม่ได้ยินเลย" about bass-heavy per-story themes; louder targets and new
+themes followed (gen_theme.py); at ~20:45 and ~21:00 the owner overrode that: suno1 and the ทะเลลด sound everywhere.
 """
 import re
 import subprocess
@@ -75,14 +77,18 @@ def check(vo_path, mus_path, pre=""):
     between = float(np.median(mu[free])) if free.any() else float("nan")
     margin = float(np.median((vo - mu)[speaking])) if speaking.any() else float("nan")
     missing = float(np.mean(mu[free] < -40) * 100) if free.any() else 0.0
-    gap_line = (f"music between lines {between:.1f} LUFS (target -22..-17)", -22 <= between <= -17) if free.any() else \
+    gap_line = (f"music between lines {between:.1f} LUFS (ทะเลลด -31.3; target -34.5..-28)", -34.5 <= between <= -28) if free.any() else \
         ("music between lines: n/a (no voice gap of 0.5 s or more; the narration runs end to end)", True)
     checks = [
-        (f"music under the voice {under:.1f} LUFS (target -27..-22)", -27 <= under <= -22),
+        (f"music under the voice {under:.1f} LUFS (ทะเลลด -33.6; target -36.6..-30.6)", -36.6 <= under <= -30.6),
         gap_line,
-        (f"voice over music {margin:.1f} LU (target >= 8)", margin >= 8),
-        (f"music missing in voice-free time {missing:.0f}% (target <= 15%)", missing <= 15),
+        (f"voice over music {margin:.1f} LU (ทะเลลด 18.9; target >= 8)", margin >= 8),
+        (f"music missing in voice-free time {missing:.0f}% (ทะเลลด 12%; target <= 15%)", missing <= 15),
     ]
+    if pre:   # phone band: information only
+        for text, _ in checks:
+            print("info " + text.split(" (")[0])
+        return True
     ok = all(c[1] for c in checks)
     for text, good in checks:
         print(("ok   " if good else "FAIL ") + text)
@@ -91,12 +97,9 @@ def check(vo_path, mus_path, pre=""):
 
 def main(vo_path, mus_path):
     print("[full band]")
-    a = check(vo_path, mus_path)
-    print("[phone speaker band: both stems high-passed at 300 Hz]")
-    b = check(vo_path, mus_path, PHONE)
-    if not b:
-        print("  -> the theme lives below 300 Hz: regenerate it with a mid-register lead melody (scripts/gen_theme.py)")
-    ok = a and b
+    ok = check(vo_path, mus_path)
+    print("[phone speaker band, info only: both stems high-passed at 300 Hz; ทะเลลด reads -39.0 under the voice, -35.4 between lines]")
+    check(vo_path, mus_path, PHONE)
     print("PASS" if ok else "FAIL")
     return ok
 

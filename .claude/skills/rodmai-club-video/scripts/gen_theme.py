@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Generate a story theme that can be heard on a phone speaker, then check where its energy sits.
+"""RETIRED 2 Nov 2569 ~21:00: every story now uses video/music/suno1.mp3 with the ทะเลลด mix recipe (SKILL.md A5).
+Kept only to measure a file (--check) or if the owner asks for a new theme again.
+
+Generate a story theme that can be heard on a phone speaker, then check where its energy sits.
 
     python3 -I gen_theme.py <out.mp3> <seconds> "<story part of the prompt>"
     python3 -I gen_theme.py --check <theme.mp3>           # only measure an existing file
