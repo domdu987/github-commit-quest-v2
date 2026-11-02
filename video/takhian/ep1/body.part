@@ -129,9 +129,9 @@
           P("ton", 800, 1750, 0.4, "run", "wide", "o", { moveTo: { x: 980, dur: D("spread") } }), P("yaiHom", 420, 1250, 0.44, "run", "worry", "frown", { moveTo: { x: 560, dur: D("spread") } })],
         captions: caps("spread"), fx: (tl, id, t0, L) => put(L.set, Tk.pickup(980, 1150, 0.3, {})) });
       // 21 · ลุงเปี๊ยก throws himself flat in the mud (the rig falls back), พลอย reaches from the side
-      ADD("flat", { ...SC("fl", { horizon: 900 }), cam: push2("flat", fr(540, 1450, 1.35, 540, 1000), fr(500, 1480, 1.42, 540, 1000)),
-        actors: [P("lungPiak", 560, 1640, 0.9, "fallB", "closed", "laugh", { then: [{ t: 0.55, mode: "supine", eyes: "closed", mouth: "smile" }], talk: TALK("flat", 0, "laugh") }), P("ploy", 900, 1600, 0.95, "point", "wide", "o", { flip: true })],
-        captions: caps("flat"), fx: (tl, id, t0, L) => put(L.set, SPLASH([[300, 1650]])) });
+      ADD("flat", { ...SC("fl", { horizon: 900 }), cam: push2("flat", fr(560, 1450, 1.1, 540, 1000), fr(560, 1470, 1.15, 540, 1000)),
+        actors: [P("lungPiak", 760, 1640, 0.9, "fallB", "closed", "laugh", { then: [{ t: 0.55, mode: "supine", eyes: "closed", mouth: "smile" }], talk: TALK("flat", 0, "laugh") }), P("ploy", 960, 1600, 0.95, "point", "wide", "o", { flip: true })],
+        captions: caps("flat"), fx: (tl, id, t0, L) => put(L.set, SPLASH([[480, 1650]])) });
       // 22 · what-if: a strike on the tree behind, the current runs through the wet ground to the man lying flat
       ADD("wflat", { ...SC("wf", { horizon: 1000, tree: { x: 860, y: 1180, s: 0.7 }, bolt: 1, ground: 1.4, flash: 1, reflect: false }), light: FLASHL, grade: { top: "#6a6a6a", bottom: "#1a1a1a", op: 0.2 },
         cam: { keys: [{ t: 0, ...fr(560, 1300, 1.1, 540, 1000) }] }, actors: [LUNG(160, 1640, 0.9, "supine", "wide", "scream")], captions: caps("wflat"),

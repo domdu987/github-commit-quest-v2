@@ -48,7 +48,7 @@
             tl.fromTo("#ph2t", { x: -30, y: 40 }, { x: 60, y: -110, duration: 0.5, ease: "power2.inOut", immediateRender: false }, t0 + 0.4); tl.fromTo("#ph2s", { opacity: 0 }, { opacity: 0.85, duration: 0.1, immediateRender: false }, t0 + 0.9); } }]);
       // 9 · top-down: the phone on speaker on the grass; her hands go to his chest
       ADD("speak", { set: "tkCPR", setOpts: { id: "sp", phone: 1, rain: 0.5 }, dark: 0, light: TEAL, grade: GT,
-        cam: push2("speak", fr(900, 560, 1.6, 540, 700), fr(620, 1050, 0.95, 540, 980)), captions: caps("speak"), fx: (tl, id, t0, L) => TOPARMS(L, tl, t0 + 1.0, D("speak") - 1.0) });
+        cam: push2("speak", fr(900, 560, 1.6, 540, 700), fr(500, 1060, 0.92, 540, 980)), captions: caps("speak"), fx: (tl, id, t0, L) => TOPARMS(L, tl, t0 + 1.0, D("speak") - 1.0) });
       // 10 · side, medium: arms straight, perpendicular to his body — a thin glowing plumb line from her shoulders to the hands, a right-angle mark
       ADD("hands", { ...BUND("hd"), cam: CAMS("hands", 1.85, 1.95),
         actors: [PLOYCPR(), LUNGB("pressed")], captions: caps("hands"),

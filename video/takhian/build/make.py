@@ -26,7 +26,12 @@ def css(lib, name):
 sched = json.load(open(os.environ["TK_SCHED"]))
 html = open(os.environ["TK_TMPL"]).read()
 html = html.replace("/*__SCHEDULE__*/", json.dumps(sched, ensure_ascii=False))
-html = html.replace("/*__TOTAL__*/", str(sched["total"]))
+rng = os.environ.get("TK_RANGE")   # "a b" in seconds (frame-exact: multiples of 1/60): build a render slice of the episode
+if rng:
+    a, b = [float(v) for v in rng.split()]
+    html = html.replace("/*__TOTAL__*/", f"{b - a:.4f}").replace("</head>", f"<script>window.TK_RANGE=[{a},{b}]</script></head>", 1)
+else:
+    html = html.replace("/*__TOTAL__*/", str(sched["total"]))
 html = html.replace("/*__UICSS__*/", css("ui.js", "Ui"))
 html = html.replace("/*__GAMECSS__*/", css("gameui.js", "GameUI"))
 open(os.path.join(PROJ, "index.html"), "w").write(html)
