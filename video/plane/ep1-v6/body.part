@@ -59,7 +59,7 @@
       const frontLight = (tl, L, id, t0, dur, op = 0.32) => {
         put(L.light, `<radialGradient id="${id}-frg" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#ff7a2a" stop-opacity="1"/><stop offset=".45" stop-color="#ff5a1a" stop-opacity=".4"/><stop offset="1" stop-color="#ff5a1a" stop-opacity="0"/></radialGradient>
           <rect id="${id}-fr" width="1080" height="1920" fill="url(#${id}-frg)" opacity="0" style="mix-blend-mode:screen"/>`); flick(tl, `#${id}-fr`, t0, dur, op * 0.5, op); };
-      const exitBeam = (L, x, y, s = 1) => put(L.glow, `<g transform="translate(${x},${y}) scale(${s})"><linearGradient id="exb${x}${y}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7dffb8" stop-opacity=".55"/><stop offset="1" stop-color="#7dffb8" stop-opacity="0"/></linearGradient>
+      const exitBeam = (L, x, y, s = 1, gid = "") => put(L.glow, `<g ${gid ? `id="${gid}" ` : ""}transform="translate(${x},${y}) scale(${s})"><linearGradient id="exb${x}${y}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7dffb8" stop-opacity=".55"/><stop offset="1" stop-color="#7dffb8" stop-opacity="0"/></linearGradient>
         <path d="M-90,30L-260,520H260L90,30Z" fill="url(#exb${x}${y})" style="mix-blend-mode:screen"/><ellipse rx="130" ry="56" fill="#7dffb8" opacity=".5" filter="url(#plBlur14)"/>${Plane.exit(`exg${x}${y}`, 1)}</g>`);
       const dropDark = (tl, id, at, to = 0.6, d = 0.25) => tl.to(`#${id}-dark`, { opacity: to, duration: d, ease: "power2.in" }, at);
       // the cabin reacts: dust and grit falling from the ceiling, a bin door pops open, a bottle rolls along the floor
@@ -488,7 +488,15 @@
           fx(tl, id, t0, L) { Plane.cabinLife(tl, "x1", t0, d, { smokeFrom: -100, smokeTo: 60 }); react(tl, L, "x1r", t0, d, { binX: 1210, botX: 800 }); fireLight(tl, L, id, t0, d, 0.2); } })],
         [C("sign", 0, 1), (d) => ({ ...CAB("x2", "smoke", { noMasks: true, smokeH: 620 }, 0.3), smokeL: false, fgd: false, cam: { keys: [{ t: 0, ...fr(DOORX, PF - 572, 3.4, 540, 860) }] },
           fx(tl, id, t0, L) { Plane.cabinLife(tl, "x2", t0, d); smokeLayer(tl, L, t0, d, { y1: PF - 700, y2: PF - 470 });
-            exitBeam(L, DOORX - 6, PF - 572);
+            exitBeam(L, DOORX - 6, PF - 572, 1, "x2-eb");
+            // "…ป้ายจะจมหายไป": from the word, the smoke rolls down over the sign (~0.9 s) and its green light dies away slowly — a faint glow left inside
+            const tA = t0 + 0.38, tB = t0 + 1.28;
+            put(L.light, `<g id="x2-gw" opacity="0"><ellipse cx="530" cy="870" rx="260" ry="130" fill="#7dffb8" opacity=".35" filter="url(#plBlur14)" style="mix-blend-mode:screen"/></g><g id="x2-sw" opacity=".93"></g>`);
+            smokeLayer(tl, L, t0, d, { y1: -160, y2: -160, top: -1800, layer: document.getElementById("x2-sw") });
+            tl.fromTo("#x2-sw", { y: 0 }, { y: 1300, duration: tB - tA, ease: "power1.inOut", immediateRender: false }, tA);
+            tl.fromTo("#x2-eb", { opacity: 1 }, { opacity: 0.18, duration: tB - tA + 0.15, ease: "power1.in", immediateRender: false }, tA);
+            tl.fromTo("#x2-gw", { opacity: 0 }, { opacity: 0.7, duration: tB - tA, ease: "power1.in", immediateRender: false }, tA);
+            tl.to("#x2-gw", { opacity: 0.35, duration: 0.4, ease: "sine.inOut", immediateRender: false }, tB);
             
              } })],
       ]);
