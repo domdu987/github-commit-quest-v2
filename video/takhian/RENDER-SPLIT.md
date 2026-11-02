@@ -4,7 +4,13 @@
   - เลขอยู่ในข้อความที่เลน B ส่งให้ผู้ประสานงาน
   - ทุกเลน checkout commit เดียวกันนี้
 - **ภาพ:** 1080×1920 ที่ 60fps
-- **เครื่องมือ:** hyperframes 0.8.185 · ใช้ค่าคุณภาพเริ่มต้น (looks) ทุกเลน เพื่อให้ไฟล์ต่อกันได้โดยไม่ต้อง encode ใหม่
+- **เครื่องมือ:** hyperframes 0.8.185 · `-f 60 -w 4` · ใช้ค่าคุณภาพเริ่มต้น (looks) ทุกเลน
+  - เลน C วัดแล้ว: ราว 2.3 เฟรม/วิบนเครื่อง 4 คอร์
+- **สเปกไฟล์ช่วง:** ต้องตรงกันทุกเลน เพื่อต่อแบบ stream copy ไม่ต้องเข้ารหัสซ้ำ
+  - h264 High · yuv420p · 1080×1920 · 60/1 fps
+  - จำนวนเฟรมตรงช่วงพอดี · ไม่มีเสียง
+  - ใช้ `render_range.sh` ของเลน C ได้ (ตัดเฟรม [0, N) พอดี)
+  - เลน C มี join_ep2.sh ที่ทดสอบต่อแล้ว
 
 ## ช่วงเฟรม
 
@@ -33,7 +39,7 @@
 
 ```
 TK_RANGE="80.6 124.733333" video/takhian/build/build.sh 1 <workspace>/hf tk1-d
-cd <workspace>/hf/tk1-d && npx --yes hyperframes@0.8.185 render -f 60 -o <out>/EP1-part2.mp4
+cd <workspace>/hf/tk1-d && npx --yes hyperframes@0.8.185 render -f 60 -w 4 -o <out>/EP1-part2.mp4
 ```
 
 - รันด้วย `run_in_background` และ timeout 7200000
