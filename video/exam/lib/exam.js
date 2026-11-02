@@ -81,10 +81,10 @@
   // ---------------- Sets.examRoom ----------------
   function examRoom(L, o = {}) {
     const id = o.id || "er", r = mk(o.seed || 11), G = 1500, dark = o.dark || 0;
-    put(L.mid, `<rect x="-1400" y="200" width="3900" height="900" fill="#bcd8ec"/><path d="M-1400,900Q0,860 2500,900V1100H-1400Z" fill="#7aa86a"/>`);
-    let s = `<rect x="-1400" y="-900" width="3900" height="${G + 900}" fill="url(#exWall)"/>`;
+    put(L.mid, `<rect x="-2600" y="200" width="5100" height="900" fill="#bcd8ec"/><path d="M-2600,900Q0,860 2500,900V1100H-2600Z" fill="#7aa86a"/>`);
+    let s = `<rect x="-2600" y="-900" width="5100" height="${G + 900}" fill="url(#exWall)"/>`;
     // windows on the left wall (with the sky in L.mid showing through holes)
-    s = `<path d="M-1400,-900H2500V${G}H-1400Z M-1240,330H-640V1000H-1240Z M-520,330H80V1000H-520Z" fill="url(#exWall)" fill-rule="evenodd"/>`;
+    s = `<path d="M-2600,-900H2500V${G}H-2600Z M-1240,330H-640V1000H-1240Z M-520,330H80V1000H-520Z" fill="url(#exWall)" fill-rule="evenodd"/>`;
     s += [[-1240], [-520]].map(([x]) => `<rect x="${x}" y="330" width="600" height="670" fill="none" stroke="#3d78a8" stroke-width="18"/><path d="M${x + 300},330V1000M${x},660H${x + 600}" stroke="#3d78a8" stroke-width="10"/>`).join("");
     s += [[-1240], [-520]].map(([x]) => dark
       ? `<path d="M${x - 20},310H${x + 620}V1010Q${x + 300},990 ${x - 20},1010Z" fill="#5a6a8a" ${O(3)}/>${Array.from({ length: 8 }, (_, k) => `<path d="M${x + k * 80},316V1000" stroke="#3a4a6a" stroke-width="5" opacity=".6"/>`).join("")}`
@@ -93,9 +93,9 @@
     s += `<g transform="translate(1700,700)"><rect x="-200" y="-220" width="400" height="440" fill="#c86a3a" ${O(4)}/>${[[-150, -170, 130, 160, "#fbf4e2", -4], [10, -180, 140, 120, "#d6ecff", 5], [-140, 20, 120, 150, "#fff0a0", 3], [20, -40, 150, 190, "#ffe0e8", -3]].map(([x, y, w, h, c, r]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}" ${O(2)} transform="rotate(${r} ${x} ${y})"/><circle cx="${x + w / 2}" cy="${y + 8}" r="6" fill="#d8392e"/>`).join("")}</g>
       <g transform="translate(560,300)"><rect x="-360" y="-50" width="720" height="80" rx="10" fill="#2c5a8a" ${O(3)}/><text y="8" text-anchor="middle" font-family="Mali" font-weight="700" font-size="46" fill="#fff">ตั้งใจเรียน · มีวินัย · ซื่อสัตย์</text></g>
       <g transform="translate(-580,1180)">${[0, 1, 2].map((k) => `<rect x="${-60 + k * 44}" y="-60" width="38" height="60" fill="${["#2fa864", "#f2c83a", "#e8483a"][k]}" ${O(2)} transform="rotate(${k * 4 - 4})"/>`).join("")}</g>`;
-    s += `<rect x="-1400" y="${G - 300}" width="3900" height="300" fill="#c8b48a" opacity=".55"/><path d="M-1400,${G - 300}H2500" stroke="#3d78a8" stroke-width="10"/>`;
-    s += `<rect x="-1400" y="${G}" width="3900" height="1400" fill="url(#exFloor)"/>` + Array.from({ length: 16 }, (_, k) => `<path d="M-1400,${G + 10 + k * k * 5}H2500" stroke="#8a7a5a" stroke-width="2" opacity=".45"/>`).join("") +
-      Array.from({ length: 24 }, (_, k) => `<path d="M${-1400 + k * 170},${G}L${-1400 + k * 170 + (k * 170 - 1950) * 0.6},${G + 1400}" stroke="#8a7a5a" stroke-width="2" opacity=".3"/>`).join("") + `<path d="M-1400,${G}H2500" stroke="#6a5a40" stroke-width="6"/>`;
+    s += `<rect x="-2600" y="${G - 300}" width="5100" height="300" fill="#c8b48a" opacity=".55"/><path d="M-2600,${G - 300}H2500" stroke="#3d78a8" stroke-width="10"/>`;
+    s += `<rect x="-2600" y="${G}" width="5100" height="1400" fill="url(#exFloor)"/>` + Array.from({ length: 16 }, (_, k) => `<path d="M-2600,${G + 10 + k * k * 5}H2500" stroke="#8a7a5a" stroke-width="2" opacity=".45"/>`).join("") +
+      Array.from({ length: 24 }, (_, k) => `<path d="M${-2600 + k * 170},${G}L${-2600 + k * 170 + (k * 170 - 1950) * 0.6},${G + 1400}" stroke="#8a7a5a" stroke-width="2" opacity=".3"/>`).join("") + `<path d="M-2600,${G}H2500" stroke="#6a5a40" stroke-width="6"/>`;
     // whiteboard + exam title, the clock above it
     s += `<g transform="translate(560,620)"><rect x="-520" y="-240" width="1040" height="480" rx="10" fill="#9aa4aa" ${O(5)}/><rect x="-500" y="-220" width="1000" height="440" fill="url(#exBoard)"/>
       <text x="-460" y="-120" font-family="Mali" font-weight="700" font-size="70" fill="#2a4a9a">สอบกลางภาค</text><text x="-460" y="-20" font-family="Mali" font-weight="700" font-size="60" fill="#d8392e">คณิตศาสตร์ ม.3/4</text>
@@ -120,7 +120,7 @@
     put(L.set, s);
     put(L.glow, `<path d="M-1240,330H-640L-200,${G + 300}H-1300Z M-520,330H80L520,${G + 300}H-420Z" fill="url(#exRay)" opacity="${f1(0.55 * (1 - dark))}"/>`);
     if (dark) {
-      put(L.glow, `<rect x="-1400" y="-900" width="3900" height="3200" fill="#0a1024" opacity="${f1(dark * 0.62)}"/>`);
+      put(L.glow, `<rect x="-2600" y="-900" width="5100" height="3200" fill="#0a1024" opacity="${f1(dark * 0.62)}"/>`);
       // the door's glass throws a lit rectangle onto the floor; a zombie's shadow can cross it (#id-zsh)
       put(L.glow, `<g id="${id}-patch"><linearGradient id="${id}-pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8e8ff" stop-opacity=".55"/><stop offset="1" stop-color="#9ab8e8" stop-opacity=".12"/></linearGradient>
         <path d="M1240,${G}L1340,${G}L1520,${G + 420}L1160,${G + 420}Z" fill="url(#${id}-pg)"/>
@@ -156,18 +156,18 @@
   // ---------------- Sets.examHall: the corridor ----------------
   function examHall(L, o = {}) {
     const id = o.id || "eh", r = mk(o.seed || 21), G = 1450, dark = o.dark || 0;
-    put(L.mid, `<rect x="-1400" y="0" width="3900" height="1100" fill="#bcd8ec"/><path d="M-1400,800Q500,760 2500,800V1100H-1400Z" fill="#7aa86a"/>`);
-    let s = `<path d="M-1400,-900H2500V${G}H-1400Z M-1300,250H-900V800H-1300Z M-500,250H-100V800H-500Z M300,250H700V800H300Z M1100,250H1500V800H1100Z M1900,250H2300V800H1900Z" fill="#e8dcbc" fill-rule="evenodd"/>`;
-    s += `<rect x="-1400" y="${G}" width="3900" height="700" fill="#b8a88a"/>${Array.from({ length: 30 }, (_, k) => `<path d="M${-1400 + k * 140},${G}L${-1400 + k * 140 - 200},${G + 700}" stroke="#a8987a" stroke-width="3"/>`).join("")}`;
-    s += `<rect x="-1400" y="${G - 260}" width="3900" height="260" fill="#c8b48a" opacity=".6"/>`;
-    ["3/1", "3/2", "3/3", "3/4"].forEach((t, k) => {
+    put(L.mid, `<rect x="-2600" y="0" width="5100" height="1100" fill="#bcd8ec"/><path d="M-2600,800Q500,760 2500,800V1100H-2600Z" fill="#7aa86a"/>`);
+    let s = `<path d="M-2600,-900H2500V${G}H-2600Z M-1300,250H-900V800H-1300Z M-500,250H-100V800H-500Z M300,250H700V800H300Z M1100,250H1500V800H1100Z M1900,250H2300V800H1900Z" fill="#e8dcbc" fill-rule="evenodd"/>`.replace(" M-1300,250", " M-2100,250H-1700V800H-2100Z M-1300,250");
+    s += `<rect x="-2600" y="${G}" width="5100" height="700" fill="#b8a88a"/>${Array.from({ length: 39 }, (_, k) => `<path d="M${-2600 + k * 140},${G}L${-2600 + k * 140 - 200},${G + 700}" stroke="#a8987a" stroke-width="3"/>`).join("")}`;
+    s += `<rect x="-2600" y="${G - 260}" width="5100" height="260" fill="#c8b48a" opacity=".6"/>`;
+    (o.signs || ["3/1", "3/2", "3/3", "3/4"]).forEach((t, k) => {
       const x = -1100 + k * 800;
       s += `<g transform="translate(${x},${G})"><rect x="-120" y="-540" width="240" height="540" fill="#a8784a" ${O(4)}/><rect x="-36" y="-460" width="72" height="190" fill="url(#exGlass)" ${O(3)}/>
         <g id="${id}-sign${k}"><rect x="-90" y="-640" width="180" height="70" rx="8" fill="#2c5a8a" ${O(3)}/><text y="-590" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#fff">ม.${t}</text></g></g>`;
     });
     s += `<g transform="translate(-700,${G - 600})"><rect x="-130" y="-100" width="260" height="200" fill="#c86a3a" ${O(3)}/><rect x="-110" y="-80" width="70" height="90" fill="#fbf4e2" transform="rotate(-4)"/><rect x="-20" y="-70" width="60" height="70" fill="#e8f0ff" transform="rotate(5)"/><rect x="50" y="-60" width="50" height="100" fill="#fff0a0"/></g>`;
     put(L.set, s);
-    put(L.glow, `<rect x="-1400" y="-900" width="3900" height="3200" fill="#0a0e1c" opacity="${f1(dark * 0.55)}"/>`);
+    put(L.glow, `<rect x="-2600" y="-900" width="5100" height="3200" fill="#0a0e1c" opacity="${f1(dark * 0.55)}"/>`);
   }
 
   // ---------------- Sets.examHallDeep: one-point perspective corridor, flickering tubes (#id-tube0..4), doors receding ----------------
