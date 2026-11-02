@@ -20,7 +20,8 @@
   const rng = Rup.rng, mix = Rup.mix;
 
   Sets.DEFS += `
-    <linearGradient id="ruLeaf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ead2a0"/><stop offset=".5" stop-color="#dcbc82"/><stop offset="1" stop-color="#c49e62"/></linearGradient>
+    <linearGradient id="ruLeaf" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b88e52"/><stop offset=".08" stop-color="#d8b878"/><stop offset=".5" stop-color="#e2c88e"/><stop offset=".92" stop-color="#d0ae6c"/><stop offset="1" stop-color="#a8804a"/></linearGradient>
+    <linearGradient id="ruLeafV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c8" stop-opacity=".35"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#6a4a20" stop-opacity=".28"/></linearGradient>
     <linearGradient id="ruWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a4a28"/><stop offset=".45" stop-color="#6a3418"/><stop offset="1" stop-color="#3e1c0c"/></linearGradient>
     <linearGradient id="ruGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a0"/><stop offset=".5" stop-color="#e0a83a"/><stop offset="1" stop-color="#9a6418"/></linearGradient>
     <linearGradient id="ruBoard" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c3a32"/><stop offset="1" stop-color="#1a2420"/></linearGradient>
@@ -44,7 +45,7 @@
   RupUI.leaf = (tl, layer, t0, dur, o = {}) => {
     const id = `rul${Math.round(t0 * 100)}`, y = o.y ?? 760, done = o.done || [], act = o.active;
     const lines = o.lines || ["ดินแยกเป็นวง อย่าหลงเข้าใกล้", "น้ำบ่อขุ่นแดง แจ้งแล้วถอย", "รูยังกว้างได้ ไหว้ไกลร้อยเมตร"];
-    const W = 900, H = 128;
+    const W = 920, H = 96;
     const cover = (yy, flip) => `<g transform="translate(0,${yy})">
       <path d="M${-W / 2 - 20},-34Q${-W / 2 - 34},0 ${-W / 2 - 20},34H${W / 2 + 20}Q${W / 2 + 34},0 ${W / 2 + 20},-34Z" fill="url(#ruWood)" ${ln(3.4)}/>
       <clipPath id="${id}-cc${flip}"><path d="M${-W / 2 - 10},-24H${W / 2 + 10}V24H${-W / 2 - 10}Z"/></clipPath>
@@ -60,15 +61,16 @@
       const yy = -128 + k * H, st = done.includes(k) ? "done" : k === act ? "on" : "off", tilt = [-0.8, 0.6, -0.4][k], dx = st === "on" ? 0 : [6, -8, 4][k];
       const lid = `${id}-lf${k}`;
       g += `<g id="${lid}" transform="translate(${dx},${yy}) rotate(${tilt})">
-        <path d="M${-W / 2},-52Q${-W / 2 - 10},0 ${-W / 2},52L${W / 2},54Q${W / 2 + 10},0 ${W / 2},-50Z" fill="url(#ruLeaf)" ${ln(2.6)}/>
-        ${Array.from({ length: 7 }, (_, j) => `<path d="M${-W / 2 + 8},${-40 + j * 13}Q0,${-42 + j * 13 + (j % 2 ? 2 : -2)} ${W / 2 - 8},${-40 + j * 13}" stroke="#b8945a" stroke-width="1.3" fill="none" opacity=".45"/>`).join("")}
-        <path d="M${-W / 2 + 4},48L${W / 2 - 4},50" stroke="#9a7444" stroke-width="3" opacity=".5"/>
-        <circle cx="-330" cy="0" r="9" fill="#5a3a1a"/><circle cx="330" cy="0" r="9" fill="#5a3a1a"/>
-        <text x="-298" y="16" font-family="Kanit" font-weight="700" font-size="46" fill="none" stroke="#a07a44" stroke-width="2.2" opacity=".9">${t}</text>
-        <text x="-300" y="14" font-family="Kanit" font-weight="700" font-size="46" fill="#f4e2b8" opacity=".55">${t}</text>`;
+        <path d="M${-W / 2 + 6},-40L${-W / 2 + 60},-44L${-W / 4},-42L0,-44L${W / 4},-41L${W / 2 - 50},-43L${W / 2 - 4},-38Q${W / 2 + 6},0 ${W / 2 - 4},38L${W / 4},41L0,40L${-W / 4},42L${-W / 2 + 40},41L${-W / 2 + 4},38Q${-W / 2 - 6},0 ${-W / 2 + 6},-40Z" fill="url(#ruLeaf)" ${ln(2.2)}/>
+        <path d="M${-W / 2 + 6},-40L${W / 2 - 4},-38L${W / 2 - 4},38L${-W / 2 + 4},38Z" fill="url(#ruLeafV)"/>
+        ${Array.from({ length: 16 }, (_, j) => `<path d="M${-W / 2 + 10 + (j * 37) % 30},${-36 + j * 4.6}L${W / 2 - 12 - (j * 23) % 40},${-36 + j * 4.6 + (j % 3 - 1) * 0.8}" stroke="${j % 4 ? "#b89458" : "#9a7440"}" stroke-width="${j % 4 ? 0.9 : 1.6}" opacity="${j % 4 ? 0.45 : 0.6}"/>`).join("")}
+        ${Array.from({ length: 6 }, (_, j) => `<ellipse cx="${-380 + j * 150 + (j % 2) * 40}" cy="${-20 + (j * 17) % 40}" rx="${6 + j % 3 * 3}" ry="3" fill="#8a6430" opacity=".25"/>`).join("")}
+        <circle cx="-330" cy="0" r="8" fill="#3a2410" stroke="#8a6430" stroke-width="2"/><circle cx="330" cy="0" r="8" fill="#3a2410" stroke="#8a6430" stroke-width="2"/>
+        <text x="-298" y="16" font-family="Kanit" font-weight="700" font-size="42" fill="none" stroke="#8a6434" stroke-width="1.6" opacity=".9">${t}</text>
+        <text x="-300" y="14" font-family="Kanit" font-weight="700" font-size="42" fill="#f6e6c0" opacity=".35">${t}</text>`;
       if (st !== "off") {
         g += `<clipPath id="${lid}-sc"><rect id="${lid}-sr" x="-310" y="-40" width="${st === "on" ? 0 : 640}" height="80"/></clipPath>
-          <text x="-300" y="14" font-family="Kanit" font-weight="700" font-size="46" fill="#1a120c" clip-path="url(#${lid}-sc)">${t}</text>`;
+          <text x="-300" y="14" font-family="Kanit" font-weight="700" font-size="42" fill="#17100a" stroke="#17100a" stroke-width=".8" clip-path="url(#${lid}-sc)">${t}</text>`;
         if (st === "on") g += `<rect id="${lid}-band" x="-560" y="-52" width="260" height="104" fill="url(#ruCandleBand)" style="mix-blend-mode:screen"/>
           <g id="${lid}-sm" opacity="0"><ellipse cx="0" cy="0" rx="22" ry="12" fill="#2a1a10" opacity=".55"/><ellipse cx="-4" cy="-3" rx="10" ry="5" fill="#4a3a2a" opacity=".6"/></g>`;
       }
@@ -196,13 +198,22 @@
       <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="#9ac87a" stroke-width="56" stroke-dasharray="14 18" opacity=".55"/><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="${ink}" stroke-width="3" stroke-dasharray="2 30"/>`;
     // the naga's body dives in and out of the soil bands (dash gaps = under the earth): only humps, scales, one eye
     const body = "M-120,1640C80,1560 160,1380 340,1440S560,1620 700,1460S760,1180 560,1150S300,1080 420,960S760,900 820,860";
+    const cream = "#f2e6c8";
     const seg = (w, c, extra = "") => `<path d="${body}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="330 140 420 120 380 110 2000" ${extra}/>`;
-    g += `<g id="${id}-naga">${seg(74, ink)}${seg(62, grn)}${seg(62, "#9ac87a", 'opacity=".5" stroke-dashoffset="0" style="stroke-dasharray:12 16"')}${seg(28, "#b8d890", 'opacity=".45"')}
-      <path d="M150,1500q60,-30 120,0M500,1580q60,-30 120,0M540,1130q60,-30 120,0" stroke="${ink}" stroke-width="3" fill="none" opacity=".5"/>
-      <g transform="translate(830,850) rotate(-14) scale(.9)"><path d="M-46,24Q-36,-56 34,-52Q92,-34 76,26Q44,50 -46,24Z" fill="${grn}" stroke="${ink}" stroke-width="5"/>
-        ${[0, 1, 2, 3, 4].map((k) => `<path d="M${-34 + k * 20},-46q6,-46 22,-58q0,34 4,54" fill="${red}" stroke="${ink}" stroke-width="3"/>`).join("")}
-        <path d="M30,30q30,24 60,10" stroke="${ink}" stroke-width="4" fill="none"/>
-        <ellipse id="${id}-eye" cx="44" cy="-10" rx="12" ry="9" fill="#e8e070" stroke="${ink}" stroke-width="3"/><ellipse cx="46" cy="-10" rx="3" ry="8" fill="${ink}"/></g></g>`;
+    // folk-mural naga: ink outline, indigo back, a cream belly line, scales as rows of cream crescents, red-earth fins along the spine
+    g += `<mask id="${id}-nm" maskUnits="userSpaceOnUse" x="-600" y="-200" width="2300" height="2400"><path d="${body}" fill="none" stroke="#fff" stroke-width="90" stroke-linecap="butt" stroke-dasharray="330 140 420 120 380 110 2000"/><rect x="700" y="700" width="400" height="300" fill="#fff"/></mask>
+      <g id="${id}-naga"><g mask="url(#${id}-nm)">${seg(76, ink)}${seg(64, ind)}${seg(22, cream, 'transform="translate(0,14)"')}${seg(6, och, 'transform="translate(0,14)"')}
+      ${seg(40, "none", 'stroke="' + cream + '" style="stroke-dasharray:5 13" opacity=".85"')}
+      ${seg(8, ink, 'transform="translate(0,-30)" style="stroke-dasharray:18 22" opacity=".9"')}
+      ${seg(14, red, 'transform="translate(0,-36)" style="stroke-dasharray:14 26"')}
+      </g><path d="M150,1500q60,-30 120,0M500,1580q60,-30 120,0M540,1130q60,-30 120,0" stroke="${ink}" stroke-width="3" fill="none" opacity=".5"/>
+      <g transform="translate(830,850) rotate(-14) scale(.95)">
+        ${[0, 1, 2, 3].map((k) => `<path d="M${-40 + k * 22},-40c-10,-30 4,-60 26,-70c-10,18 -4,30 8,34c4,-16 14,-26 28,-28c-14,22 -10,44 -22,64Z" fill="${red}" stroke="${ink}" stroke-width="3"/>`).join("")}
+        <path d="M-50,26Q-40,-58 34,-54Q96,-36 84,24Q70,40 40,34L-50,26Z" fill="${ind}" stroke="${ink}" stroke-width="5"/>
+        <path d="M-40,6Q10,-10 70,4" stroke="${cream}" stroke-width="5" fill="none"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M${-36 + k * 18},-24q6,8 12,0" stroke="${cream}" stroke-width="3" fill="none"/>`).join("")}
+        <path d="M40,34Q74,46 96,30L84,24Z" fill="${red}" stroke="${ink}" stroke-width="3"/><path d="M60,36l4,14l4,-12M76,34l3,12l4,-12" fill="#fff" stroke="${ink}" stroke-width="2"/>
+        <path d="M84,22q26,-2 40,-14" stroke="${ink}" stroke-width="3" fill="none"/>
+        <ellipse id="${id}-eye" cx="44" cy="-12" rx="12" ry="9" fill="#f0d860" stroke="${ink}" stroke-width="3"/><ellipse cx="46" cy="-12" rx="3" ry="8" fill="${ink}"/></g></g>`;
     // folk frieze top and bottom (naga scales, lotus band), incense offerings kneeling at the drill site
     g += `<rect x="-600" y="-200" width="2300" height="300" fill="${red}" opacity=".85"/>` + RupUI.scales(-600, 80, 2300, 2, 40, "#e8c060", och) + `<path d="M-600,80H1700M-600,130H1700" stroke="${ink}" stroke-width="4"/>`;
     g += `<rect x="-600" y="1760" width="2300" height="400" fill="${ind}" opacity=".85"/>` + Array.from({ length: 30 }, (_, k) => `<path d="M${-560 + k * 80},1800q40,-50 80,0q-40,24 -80,0Z" fill="#e8dcc0" stroke="${ink}" stroke-width="3"/>`).join("");

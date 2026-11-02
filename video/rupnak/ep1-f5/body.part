@@ -52,6 +52,30 @@
         actors: [A("yaiKham", 170, 600, 0.36, [{ t: 0, mode: "point", eyes: "normal", mouth: "o" }]), A("tonkao", 300, 610, 0.28, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
         fx(tl, id, t0, L) { Rup.cutLife(tl, "s3", t0, 3.2, { wt0: 940, wt1: 1240, at: { pump: 0, drop: 0.2, drain: 1.0, ravel: 1.6, fall: 9 } });
           RupUI.leaf(tl, L.light, t0 + 0.2, 3.0, { y: 420, active: 0 }); } });
+
+      // ---- style frames v2 (screen-space sets, identity camera) ----
+      const ID = (t = 0) => ({ t, ...fr(540, 960, 1, 540, 960) });
+      add("v1", { set: "rupWorld2", setOpts: { id: "v1" }, dark: 0, light: DAYL, grade: GDAY,
+        cam: { keys: [ID(0), { t: 3.2, glide: 3.2, ...fr(540, 980, 1.04, 540, 960) }] },
+        actors: [A("phoSin", 600, 1330, 0.36, [{ t: 0, mode: "talk", eyes: "normal", mouth: "smile" }]),
+          A("yaiKham", 470, 1560, 0.5, [{ t: 0, mode: "talk2", eyes: "normal", mouth: "o" }]), A("tonkao", 760, 1640, 0.5, [{ t: 0, mode: "point", eyes: "wide", mouth: "smile" }], { flip: true }),
+          A("mook", 590, 1760, 0.66, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "flat" }])],
+        fx(tl, id, t0, L) { Rup2.life2(tl, "v1", t0, 3.2); } });
+      add("v2", { set: "rupRim2", setOpts: { id: "v2", time: "night", holeY: 1180, rx: 430, ry: 160 }, dark: 0.08, light: NIGHTL, grade: GNIGHT,
+        cam: { keys: [ID(0), { t: 3.2, glide: 3.2, ...fr(540, 1000, 1.05, 540, 960) }] },
+        actors: [A("bua", 230, 1000, 0.3, [{ t: 0, mode: "kneelWai", eyes: "normal", mouth: "flat" }]), A("samarn", 420, 985, 0.3, [{ t: 0, mode: "kneelWai", eyes: "closed", mouth: "flat" }]),
+          A("chan", 640, 990, 0.3, [{ t: 0, mode: "phoneLook", eyes: "wide", mouth: "o" }], { flip: true }), A("thong", 820, 1010, 0.34, [{ t: 0, mode: "talk", eyes: "normal", mouth: "smile" }], { flip: true }),
+          A("tonkao", 360, 1720, 0.62, [{ t: 0, mode: "phoneLook", eyes: "wide", mouth: "smile" }]), A("mook", 720, 1800, 0.74, [{ t: 0, mode: "stopArm", eyes: "worry", mouth: "o" }], { flip: true })],
+        captions: CAP("{อย่าเข้าไปใกล้ขอบ}", 0.05),
+        fx(tl, id, t0, L) { Rup2.life2(tl, "v2", t0, 3.2); Rup.cracks(tl, "v2", t0, 3.0); Rup2.phoneLight(L, 410, 1430, 380, 1290, 80); Rup2.phoneLight(L, 660, 905, 640, 830, 40); } });
+      add("v3", { set: "rupRim2", setOpts: { id: "v3", time: "day", holeX: 430, holeY: 1300, rx: 400, ry: 160, props: false, horizon: 420 }, dark: 0, light: DAYL, grade: GDAY,
+        cam: { keys: [ID(0), { t: 3.2, glide: 3.2, ...fr(560, 1100, 1.06, 540, 960) }] },
+        actors: [A("tonkao", 840, 1330, 0.66, [{ t: 0, mode: "leanFilm", eyes: "wide", mouth: "smile" }]), A("mook", 820, 1880, 0.8, [{ t: 0, mode: "stopArm", eyes: "angry", mouth: "o" }], { flip: true })],
+        captions: CAP("{อย่าก้มลงไปถ่าย}", 0.05),
+        fx(tl, id, t0, L) { Rup2.life2(tl, "v3", t0, 3.2); Rup2.phoneLight(L, 700, 1180, 760, 1000, 70); } });
+      add("v4", { set: "rupCut2", setOpts: { id: "v4", stage: 1, wt0: 940, pumpY: 1480 }, dark: 0, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(530, 1100, 1.08, 540, 1000) }, { t: 3.2, glide: 3.2, ...fr(530, 1100, 1.12, 540, 1000) }] }, actors: [],
+        fx(tl, id, t0, L) { Rup.cutLife(tl, "v4", t0, 3.2, { wt0: 940, wt1: 1240, at: { pump: 0, drop: 0.2, drain: 1.0, ravel: 1.6, fall: 9 } }); } });
       // ---- F5 round 2: themed cards and icons (story-world objects) ----
       add("r1", { set: "rupField", setOpts: { id: "r1", time: "night", hole: { x: 540, y: 1500, rx: 420, ry: 120 }, crowd: true, sign: false }, dark: 0.15, light: NIGHTL, grade: GNIGHT,
         cam: { keys: [{ t: 0, ...fr(540, 1300, 1.0, 540, 1300) }] }, actors: [],
