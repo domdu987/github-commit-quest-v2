@@ -262,12 +262,16 @@
         [C("why", 0, 1), (d) => ({ ...AISLE("w2", "smoke"), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 940, 1.06, 540, 960) }] }, shake: sway(1),
           actors: [[-0.62, 1.9, 0, "cough"], [0.5, 2.5, 1, "holdHead"], [0.0, 4.0, 7, "cough"]].map(([X, Z, k, m]) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, m, { flip: X <= 0 && Z < 2 ? true : X > 0 }); }),
           fx(tl, id, t0, L) { Plane.aisleLife(tl, "w2", t0, d); frontLight(tl, L, id, t0, d, 0.3); } })],
-        [C("why", 0, 2), (d) => ({ ...CAB("w3", "fire", { breakX: 900, smokeH: 360 }, 0.12), cam: { keys: [{ t: 0, ...fr(1060, 1200, 1.6, 540, 960) }, { t: d, glide: d, ...fr(1080, 1200, 1.75, 540, 960) }] }, shake: rumble(4),
-          fx(tl, id, t0, L) { Plane.cabinLife(tl, "w3", t0, d); fireFX(tl, L, id, t0, d, { ex0: 800, ex1: 1300 }); put(L.glow, Plane.edgeFlames("w3e", 760, 1000, PF - 120, 70)); Plane.flicker(tl, "w3e", t0, d); put(L.glow, `<g transform="translate(1060,${PF - 10})">${Plane.flames("w3f", 340, 1.3)}</g>`); Plane.flicker(tl, "w3f", t0, d); fireLight(tl, L, id, t0, d, 0.4); Plane.burst(tl, L.glow, 980, 1250, t0 + 0.15, { n: 10, v: 300 }); } })],
-        [C("why", 0, 3), (d) => ({ ...CAB("w4", "smoke", { noMasks: true, smokeH: 520 }, 0.1), blur: { far: 2, set: 0.8, fg: 8 },
+        [C("why", 0, 2), (d) => ({ ...CAB("w3", "fire", { breakX: 900, smokeH: 360 }, 0.12), cam: { keys: [{ t: 0, ...fr(800, 1180, 1.18, 540, 960) }, { t: d, glide: d, ...fr(820, 1180, 1.25, 540, 960) }] }, shake: rumble(3),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "w3", t0, d); fireFX(tl, L, id, t0, d, { ex0: 800, ex1: 1300, haze: false }); put(L.glow, Plane.edgeFlames("w3e", 760, 1000, PF - 120, 70)); Plane.flicker(tl, "w3e", t0, d); put(L.glow, `<g transform="translate(1060,${PF - 10})">${Plane.flames("w3f", 340, 1.3)}</g>`); Plane.flicker(tl, "w3f", t0, d); fireLight(tl, L, id, t0, d, 0.4); Plane.burst(tl, L.glow, 980, 1250, t0 + 0.15, { n: 10, v: 300 }); } })],
+        [C("why", 0, 3), (d) => ({ ...CAB("w4", "smoke", { noMasks: true, noSheet: true, smokeH: 520 }, 0.32), blur: { far: 2, set: 0.8, fg: 8 }, smokeL: false,
           cam: { keys: [{ t: 0, ...fr(300, PF - 500, 2.2, 540, 900) }, { t: d, glide: d, ...fr(300, PF - 500, 2.35, 540, 900) }] }, shake: sway(1),
           actors: [A("kiw", KX + 20, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }])],
-          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "w4", t0, d, { smokeFrom: 0, smokeTo: 120 });  } })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "w4", t0, d, { smokeFrom: 0, smokeTo: 120 });
+            // "แต่เพราะควัน": the smoke rolls down to his head as he coughs; the EXIT glows green through it
+            smokeLayer(tl, L, t0, d, { y1: 600, y2: 880, top: -400, layer: L.light });
+            put(L.light, `<g id="w4-ex"><ellipse cx="110" cy="740" rx="200" ry="110" fill="#7dffb8" opacity=".5" filter="url(#plBlur14)" style="mix-blend-mode:screen"/><path d="M60,790L-40,1300H320L200,790Z" fill="#7dffb8" opacity=".16" filter="url(#plBlur6)" style="mix-blend-mode:screen"/></g>`);
+            tl.fromTo("#w4-ex", { opacity: 0.55 }, { opacity: 1, duration: 0.35, yoyo: true, repeat: Math.ceil(d / 0.35), ease: "sine.inOut", immediateRender: false }, t0); } })],
       ]);
       // ===== B1 · 4. the first thing คิว grabs | the camera bag =====
       seg("grab", [
@@ -325,7 +329,7 @@
           fx(tl, id, t0, L) { Plane.cabinLife(tl, "n1", t0, d); fireLight(tl, L, id, t0, d, 0.22);
             const grip = { fore: 900, curl: [0.78, 0.82, 0.86, 0.9], thumb: 0.5 };
             put(L.light, `<g transform="translate(540,1240)"><rect x="-300" y="80" width="600" height="400" rx="26" fill="#1e2b58" stroke="#121c40" stroke-width="8"/><g id="n1-cd">${safetyCard("n1-sc")}</g><rect x="-300" y="150" width="600" height="330" rx="26" fill="#2d3f7c" stroke="#121c40" stroke-width="8"/><path d="M-280,160H280" stroke="#4a62a8" stroke-width="6"/>
-              <g id="n1-hd">${handAt([120, -236], -16, 1.25, KSK, grip)}</g></g>`);
+              <g id="n1-hd">${arm([640, 520], [214, -250], 430, 400, -1, KSK, { w: [66, 56], coat: KCOAT, hs: 1.2, hand: { curl: [0.8, 0.85, 0.88, 0.9], thumb: 0.6 } })}</g></g>`);
             // คิว's hand comes in, pinches the top edge in the pocket, and yanks the card out (fast, with a little overshoot and tilt); the gloss runs across as it tilts to the light
             tl.fromTo("#n1-hd", { x: 260, y: 900 }, { x: 0, y: 160, duration: 0.28, ease: "power3.out", immediateRender: false }, t0);
             tl.fromTo("#n1-cd", { y: 160, rotation: 0, svgOrigin: "0 0" }, { y: -330, rotation: -4, svgOrigin: "0 0", duration: 0.42, ease: "back.out(1.5)", immediateRender: false }, t0 + 0.3);
@@ -335,7 +339,7 @@
         [C("ninety", 0, 1), (d, at) => ({ ...CAB("n2", "smoke", { smokeH: 300, noMasks: true }, 0.1), blur: { far: 8, set: 8, fg: 9 },
           fgd: false, cam: { keys: [{ t: 0, ...fr(560, 1200, 1.3, 540, 1000), drift: { s: 0.01 } }] },
           fx(tl, id, t0, L) { Plane.cabinLife(tl, "n2", t0, d); fireLight(tl, L, id, t0, d, 0.2);
-            put(L.light, `<g id="n2-all"><g transform="translate(540,900) scale(1.9)"><g id="n2-cd">${safetyCard("n2-sc")}</g></g>${handAt([250, 1440], 28, 2.1, KSK, { fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2 })}${handAt([830, 1430], -24, 2.1, KSK, { fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2, mirror: true })}</g>`);
+            put(L.light, `<g id="n2-all"><g transform="translate(540,900) scale(1.9)"><g id="n2-cd">${safetyCard("n2-sc")}</g></g>${handAt([250, 1440], 28, 2.1, KSK, { coat: KCOAT,  fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2 })}${handAt([830, 1430], -24, 2.1, KSK, { coat: KCOAT,  fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2, mirror: true })}</g>`);
             tl.fromTo("#n2-all", { y: 0 }, { y: 10, duration: 0.6, yoyo: true, repeat: Math.ceil(d / 0.6), ease: "sine.inOut", immediateRender: false }, t0);
             tl.fromTo("#n2-cd", { scale: 0.92, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0);
             const t90 = t0 + C("ninety", 0, 2) - at, gap = (t90 - 0.3 - (t0 + 0.12)) / 3;
@@ -393,14 +397,23 @@
       ]);
       // ===== 12. the smoke so thick… | he can't see his own hand (insert: his hand fading in smoke) =====
       const KSK = ["#e0b088", "#b88a64", "#f0c8a0"];
+      const KCOAT = { c: "#d9a43a", d: "#b98a2a" };   // คิว's mustard coat sleeve + cuff on every POV arm
       seg("blind", [
         [0, (d) => ({ ...CAB("l1", "smoke", { noMasks: true, noSheet: true, smokeH: 900 }, 0.2), smokeL: false, cam: { keys: [{ t: 0, ...fr(1250, PF - 420, 3.6, 540, 820) }, { t: d, glide: d, ...fr(1250, PF - 420, 3.9, 540, 820) }] }, shake: sway(1.2),
           actors: [A("kiw", 1230, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "closed", mouth: "o" }])],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "l1", t0, d, { smokeFrom: -200, smokeTo: 80 }); fireLight(tl, L, id, t0, d, 0.22); smokeLayer(tl, L, t0, d, { y1: 330, y2: 420, top: -400, layer: L.light }); fgDepth(L, "seat"); } })],
         [C("blind", 0, 1), (d) => ({ ...CAB("l2", "smoke", { smokeH: 1100 }, 0.25), blur: { far: 6, set: 6, fg: 12 }, fgd: false, cam: { keys: [{ t: 0, ...fr(1270, PF - 420, 1.5, 540, 860) }] },
           fx(tl, id, t0, L) { Plane.cabinLife(tl, "l2", t0, d);
-            put(L.light, `<g id="l2-h">${handAt([560, 900], -8, 2.6, KSK, { fore: 1400, curl: [0.1, 0, 0.1, 0.2], thumb: 0.2 })}</g>`);
-            tl.fromTo("#l2-h", { y: 120 }, { y: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, t0);
+            // "มองไม่เห็นมือตัวเอง": the whole frame is thick smoke; his sleeved arm reaches up into it and is swallowed — fingers first, then the hand
+            const r = mk(77); let pf = "";
+            for (let k = 0; k < 26; k++) { const x = -100 + r() * 1280, y = 200 + r() * 1500, R = 140 + r() * 160; pf += `<circle class="l2-pf" data-d="${f1((r() - 0.5) * 80)}" cx="${f1(x)}" cy="${f1(y)}" r="${f1(R)}" fill="url(#l2-pg)"/>`; }
+            put(L.light, `<radialGradient id="l2-pg"><stop offset="0" stop-color="#3a3436" stop-opacity=".9"/><stop offset="1" stop-color="#3a3436" stop-opacity="0"/></radialGradient>
+              <linearGradient id="l2-sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#191617"/><stop offset=".36" stop-color="#191617"/><stop offset=".62" stop-color="#191617" stop-opacity=".55"/><stop offset=".85" stop-color="#191617" stop-opacity=".12"/><stop offset="1" stop-color="#191617" stop-opacity="0"/></linearGradient>
+              <rect x="-50" y="-50" width="1180" height="2020" fill="#1d191a"/><rect x="-50" y="1500" width="1180" height="470" fill="#4a1e0c" opacity=".35" filter="url(#plBlur14)"/>
+              <g id="l2-h">${handAt([560, 900], -8, 2.6, KSK, { coat: KCOAT, fore: 1400, curl: [0.1, 0, 0.1, 0.2], thumb: 0.2 })}</g>
+              <rect x="-50" y="-50" width="1180" height="2020" fill="url(#l2-sg)"/><g filter="url(#plBlur14)">${pf}</g>`);
+            tl.fromTo("#l2-h", { y: 520 }, { y: -260, duration: d, ease: "sine.inOut", immediateRender: false }, t0);
+            document.querySelectorAll(".l2-pf").forEach((el) => tl.fromTo(el, { x: 0, y: 0 }, { x: +el.dataset.d * d, y: -30 * d, duration: d, ease: "none", immediateRender: false }, t0));
              } })],
       ]);
       // ===== 13. and ahead… | FIRE (big, layered, debris) — his face lit =====
@@ -460,7 +473,7 @@
             <path d="M-200,-206H200" stroke="${PL.gold}" stroke-width="6"/><text x="-176" y="-232" font-family="Kanit" font-weight="900" font-size="32" fill="${PL.gold}">นับแถวไปทางออก</text><g transform="translate(-30,30)">${plan}</g></g>`;
           const tC = t0 + C("rule", 0, 1), tD = t0 + C("rule", 0, 2), Kc = 1.9, P = (x, y) => [540 + Kc * (x - 30), 860 + Kc * (y + 30)];
           put(L.light, `<g id="u1-card" opacity="0"><rect width="1080" height="1920" fill="#000" opacity=".25"/><g transform="translate(540,860) scale(${Kc})">${card}</g>
-            ${handAt([250, 1420], 28, 2.1, KSK, { fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2 })}<g id="u1-f">${handAt([0, 0], -60, 1.7, KSK, { fore: 150, curl: [0, 1, 1, 1], thumb: 1, mirror: true })}<path d="${limbD([Math.sin(60 * Math.PI / 180) * 150 * 0.7, Math.cos(60 * Math.PI / 180) * 150 * 0.7], [Math.sin(60 * Math.PI / 180) * 210, Math.cos(60 * Math.PI / 180) * 210], 96, 104)}" fill="#d9a43a" stroke="#1f1a17" stroke-width="5"/></g></g>`);
+            ${handAt([250, 1420], 28, 2.1, KSK, { coat: KCOAT,  fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2 })}<g id="u1-f">${handAt([0, 0], -60, 1.7, KSK, { coat: KCOAT,  fore: 150, curl: [0, 1, 1, 1], thumb: 1, mirror: true })}<path d="${limbD([Math.sin(60 * Math.PI / 180) * 150 * 0.7, Math.cos(60 * Math.PI / 180) * 150 * 0.7], [Math.sin(60 * Math.PI / 180) * 210, Math.cos(60 * Math.PI / 180) * 210], 96, 104)}" fill="#d9a43a" stroke="#1f1a17" stroke-width="5"/></g></g>`);
           tl.fromTo("#u1-card", { opacity: 0, y: 260 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.6)", immediateRender: false }, tC);
           const fy = (r) => P(-64 + 22, Y0 + r * DY)[1] + 10, fx0 = P(-30, 0)[0] + 30;
           tl.set("#u1-f", { x: fx0, y: fy(ME) }, tC);
@@ -481,7 +494,7 @@
       ]);
       // ===== B5 · 17. over his shoulder: his hand counts the seatbacks… (insert) | one =====
       const seatBackHand = (id, x) => { const W = [0, -10], deg = -35, k = 2.3, back = [W[0] + Math.sin(35 * Math.PI / 180) * 900, W[1] + Math.cos(35 * Math.PI / 180) * 900], M = [W[0] + (back[0] - W[0]) * 0.22, W[1] + (back[1] - W[1]) * 0.22];
-        return `<g id="${id}" transform="translate(${x},0)">${handAt(W, deg, k, KSK, { fore: 900, curl: [0.55, 0.6, 0.65, 0.7], thumb: 0.4 })}<path d="${limbD(M, back, 130, 140)}" fill="#d9a43a" stroke="#1f1a17" stroke-width="5"/><path d="${limbD([M[0] + 6, M[1]], [M[0] + 30, M[1] + 30], 140, 136)}" fill="#b98a2a" opacity=".5"/></g>`; };
+        return `<g id="${id}" transform="translate(${x},0)">${handAt(W, deg, k, KSK, { coat: KCOAT,  fore: 900, curl: [0.55, 0.6, 0.65, 0.7], thumb: 0.4 })}<path d="${limbD(M, back, 130, 140)}" fill="#d9a43a" stroke="#1f1a17" stroke-width="5"/><path d="${limbD([M[0] + 6, M[1]], [M[0] + 30, M[1] + 30], 140, 136)}" fill="#b98a2a" opacity=".5"/></g>`; };
       seg("count", [
         [0, (d) => ({ ...CAB("k1", "smoke", { noMasks: true, smokeH: 900 }, 0.2), blur: { far: 3, set: 1.5, fg: 10 },
           fgd: false, cam: { keys: [{ t: 0, ...fr(560, PF - 420, 2.2, 540, 900) }, { t: d, glide: d, ...fr(380, PF - 420, 2.2, 540, 900) }] },
@@ -494,7 +507,7 @@
             tl.fromTo("#k1-h", { x: 760 }, { x: 360, duration: d, ease: "steps(3)", immediateRender: false }, t0); } })],
         [C("count", 0, 1), (d) => ({ ...CAB("k2", "smoke", { noMasks: true, noSheet: true, smokeH: 900 }, 0.12), blur: { far: 3, set: 1, fg: 10 }, smokeL: false, fgd: false,
           light: { ...EMERG, rim: "#9dffc8", rimOp: 1 },
-          cam: { keys: [{ t: 0, ...fr(ROW30 + 20, PF - 230, 2.7, 540, 1000) }, { t: d, glide: d, ...fr(ROW30 + 20, PF - 230, 2.85, 540, 1000) }] },
+          cam: { keys: [{ t: 0, ...fr(ROW30 + 20, PF - 165, 2.7, 540, 1000) }, { t: d, glide: d, ...fr(ROW30 + 20, PF - 165, 2.85, 540, 1000) }] },
           actors: [A("kiw", ROW30 + 60, PF - 30, KS, [{ t: 0, mode: "crouchLook", eyes: "normal", mouth: "flat" }], { flip: true })],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "k2", t0, d, { chase: true }); SU.flash(tl, L.light, t0 + 0.05, "#9dffc8", 0.3);
             exitBeam(L, DOORX - 6, PF - 572); smokeLayer(tl, L, t0, d, { y1: 380, y2: 460, top: -400, layer: L.light }); } })],
@@ -521,11 +534,11 @@
                 </g>
               <rect id="o1-glow" x="${DOORX - 160}" y="${PF - 560}" width="320" height="580" rx="60" fill="#ffd9a0" opacity="0" filter="url(#plBlur24)" style="mix-blend-mode:screen"/>`);
             tl.fromTo("#o1-day", { opacity: 0 }, { opacity: 1, duration: 0.35, immediateRender: false }, t0 + 0.3);  } })],
-        [C("out", 0, 1), (d) => ({ ...SITE("o2", { fire: 0.9, sand: true }),
+        [C("out", 0, 1), (d) => ({ ...SITE("o2", { fire: 0.9, sand: true, noWheel: true }),
           cam: { keys: [{ t: 0, ...fr(190, 1500, 3.2, 540, 1000) }, { t: d, glide: d, ...fr(130, 1540, 3.0, 540, 1000) }] },
           actors: [A("kiw", 198, 1474, 0.19, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.7, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, path: [{ t: 0, x: 198, y: 1474 }, { t: 0.7, x: 127, y: 1574 }, { t: 1.6, x: 60, y: 1596, s: 0.21 }] })],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "o2", t0, d); put(L.glow, `<g transform="translate(360,1440)">${Plane.flames("o2f", 150, 1.1)}</g>${Plane.puffMk("o2s", 360, 1300, 10, "dark", 70)}`); Plane.flicker(tl, "o2f", t0, d); Plane.puffs(tl, "o2s", t0, d, 10, { dx: 180, dy: -600, per: 1.8, op: 0.9 }); } })],
-        [C("out", 0, 2), (d) => ({ ...SITE("o3", { fire: 1, sand: true }), cam: { keys: [{ t: 0, ...fr(200, 1470, 2.2, 540, 1050) }, { t: d, glide: d, ...fr(170, 1480, 2.0, 540, 1050) }] },
+        [C("out", 0, 2), (d) => ({ ...SITE("o3", { fire: 1, sand: true, noWheel: true }), cam: { keys: [{ t: 0, ...fr(200, 1470, 2.2, 540, 1050) }, { t: d, glide: d, ...fr(170, 1480, 2.0, 540, 1050) }] },
           shake: (t) => (t < 0.5 ? { x: 14 * Math.sin(t * 61), y: 10 * Math.sin(t * 47), r: 0 } : 0),
           actors: [A("kiw", 60, 1596, 0.21, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: -40, y: 1606, dur: d, ease: "none" } })],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "o3", t0, d); fireFX(tl, L, id, t0, d, { ex0: 200, ex1: 500, ey0: 1200, ey1: 1460, haze: false }); put(L.glow, `<g transform="translate(330,1450)">${Plane.flames("o3f", 220, 1.3)}</g>${Plane.puffMk("o3s", 330, 1280, 12, "dark", 80)}`); Plane.flicker(tl, "o3f", t0, d); Plane.puffs(tl, "o3s", t0, d, 12, { dx: 200, dy: -650, per: 1.7, op: 0.92 });
