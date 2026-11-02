@@ -116,8 +116,11 @@
     const id = nid("t"), s = o.s ?? 1, X = (v) => o.x + v * s, Y = (v) => o.y + v * s, r = mk(o.seed ?? 19);
     const scar = [[10, -1232], [-20, -980], [20, -760], [-14, -520], [18, -300], [-4, -60]].map(([a, b]) => [X(a), Y(b)]);
     // the split: white-hot, then orange, then a charred black seam with embers that breathe
-    put(L.set, `<g id="${id}-sc"><path d="${D(scar)}" stroke="#140a06" stroke-width="${f1(30 * s)}" fill="none" stroke-linejoin="round"/>
-      <path id="${id}-hot" d="${D(scar)}" stroke="#ff7a1a" stroke-width="${f1(18 * s)}" fill="none" stroke-linejoin="round" opacity="0"/>
+    // (owner review 2 พ.ย.) the seam is Tk.scarGroove — bark blown off in a ragged strip, a charred split — and the heat is
+    // Tk.scarEmbers: glowing cracks along its lips that flare, then die down to a breathing glow
+    const TT = `transform="translate(${f1(o.x)},${f1(o.y)}) scale(${f1(s)})"`;
+    put(L.set, `<g id="${id}-sc"><g ${TT}>${window.Tk && Tk.scarGroove ? Tk.scarGroove(5) : ""}</g>
+      <g id="${id}-hot" opacity="0"><g ${TT}>${window.Tk && Tk.scarEmbers ? Tk.scarEmbers(5) : ""}</g></g>
       <path id="${id}-wh" d="${D(scar)}" stroke="#fff6d0" stroke-width="${f1(8 * s)}" fill="none" stroke-linejoin="round" opacity="0"/></g>`);
     tl.set(`#${id}-sc`, { opacity: 0 }, 0); tl.set(`#${id}-sc`, { opacity: 1 }, t);
     tl.set(`#${id}-wh`, { opacity: 1 }, t); tl.to(`#${id}-wh`, { opacity: 0, duration: 0.6, ease: "power2.in" }, t + 0.1);
