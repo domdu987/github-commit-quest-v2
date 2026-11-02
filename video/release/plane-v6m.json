@@ -1,0 +1,54 @@
+{
+ "series": "รอดคนเดียว",
+ "made_by": "Claude (rodmai-club-video) · เลน D",
+ "posted_by": "Hermes",
+ "branch": "prod/lane-d",
+ "rules": [
+  "ลงทั้ง 2 ตอนคืนเดียว เรียง EP.1 → EP.2 ห่างกันราว 45 นาที (ช่วง 20:00–24:00)",
+  "ใช้ไฟล์ HQ (video_hq · ตรวจ sha256 ก่อนลง) ถ้าดึงไม่ได้ให้ใช้ video_repo",
+  "ปักหมุดคอมเมนต์แหล่งอ้างอิงทุกตอนทันทีหลังลง",
+  "IG: ซับไทยในคลิป · Facebook: ไทยอย่างเดียว · แฮชแท็กไม่เกิน 5",
+  "EP.2 ลงหลัง EP.1 ลงแล้วเท่านั้น · บันทึก posted_at ต่อแพลตฟอร์ม"
+ ],
+ "note": "Candidate package for รอดคนเดียว EP.1 v6m: v6 picture (stream copy) + the A5 music remix (owner 2 Nov: \"เพลงเบาไม่ได้ยิน\"). Does NOT replace plane-v6.json.",
+ "episodes": [
+  {
+   "id": "plane-ep1-v6m",
+   "order": 1,
+   "title": "เครื่องยนต์ไฟลุกกลางทะเล… อย่าคว้ากระเป๋า | รอดคนเดียว EP.1",
+   "status": "candidate (coordinator-approved frames; owner to choose)",
+   "video_hq": "video/release/hq/plane-ep1-v6m-HQ.mp4",
+   "video_hq_sha256": "f3ed4c51840872fd1cc0afc814220e626e1e768aed38c58be3871a5693c69662",
+   "video_hq_bytes": 85437949,
+   "video_repo": "video/plane-ep1-v6m/EP1-thing-krapao-v6m-share.mp4",
+   "cover": "video/plane-ep1-v6m/cover.jpg",
+   "duration_s": 74.816,
+   "qa": {
+    "resolution": "1080x1920",
+    "fps": 60,
+    "lufs": -14.0,
+    "peak_db": -1.5,
+    "freezedetect": "none (n=0.003, d=1.2)",
+    "hookcheck": "PASS (command 2.43 s; S1 'ถ้าวันหนึ่ง… คุณ')",
+    "whisper": "all 22 lines ok",
+    "notes": "v6m: v6 picture unchanged; score raised (−18.8 before the final gain), duck ≈6 dB (0.5, 80 ms / 400 ms, no gate), score aligned so it plays under the end card, one linear gain to −14 LUFS; stems vo_stem.wav / music_stem.wav are exactly what is summed",
+    "musiccheck": "PASS (under voice −23.9, between lines −19.1, voice over music 8.4 LU, missing 0%)",
+    "hisscheck": "PASS (flatness 0.33, pause HF −76.5 dBFS)"
+   },
+   "caption": "ถ้าวันหนึ่ง… คุณเห็นเครื่องยนต์ไฟลุก ตอนบินกลางทะเล ✈️🔥 อย่าคว้ากระเป๋า\n\n\"ทิ้งกระเป๋า ก้าวออกไว\"\nถ้ากระเป๋าใบนั้นมีงานทั้งปีของคุณ… คุณจะทิ้งมันไหม? 💼\nขึ้นเครื่องครั้งล่าสุด คุณนับแถวไปทางออกไหม? 👇\n\nรอดคนเดียว EP.1/2\n#เครื่องบิน #เอาตัวรอด #รอดคนเดียว #RodMaiClub",
+   "hashtags": [
+    "#เครื่องบิน",
+    "#เอาตัวรอด",
+    "#รอดคนเดียว",
+    "#RodMaiClub"
+   ],
+   "pinned_comment": "📚 แหล่งอ้างอิง\nเครื่องบินที่นั่งเกิน 44 ที่ ต้องพิสูจน์ว่าทุกคนออกได้ใน 90 วินาที: 14 CFR §25.803(c) (กฎการรับรองแบบเครื่องบิน สหรัฐฯ)\nผู้โดยสารที่มีกระเป๋าเกือบ 50% พยายามหยิบกระเป๋าตอนอพยพ · กระเป๋าคือสิ่งที่ขวางทางออกบ่อยที่สุด: NTSB Safety Study SS-00/01 (2000)\nนับแถวไปทางออกทั้งข้างหน้าและข้างหลัง ทางออกที่ใกล้ที่สุดอาจอยู่ข้างหลังคุณ · ทิ้งกระเป๋าไว้บนเครื่อง: FAA (Fly Safe / Every Second Counts)\nในเหตุไฟไหม้ ผู้เสียชีวิตส่วนใหญ่ไม่ได้ตายเพราะไฟ แต่เพราะสูดควันและก๊าซพิษ: FAA (Smoke safety brochure · Civil Aerospace Medical Institute)\nสายการบินและเหตุการณ์ในเรื่องเป็นเรื่องสมมติ\n👉 EP.2 ถ้าคุณเห็นควันอีกฝั่งอ่าว… อย่าเดินไปหามัน",
+   "youtube": {
+    "title": "เครื่องยนต์ไฟลุกกลางทะเล… อย่าคว้ากระเป๋า | รอดคนเดียว EP.1",
+    "description": "ถ้าวันหนึ่ง… คุณเห็นเครื่องยนต์ไฟลุก ตอนบินกลางทะเล ✈️🔥 อย่าคว้ากระเป๋า\n\n\"ทิ้งกระเป๋า ก้าวออกไว\"\nถ้ากระเป๋าใบนั้นมีงานทั้งปีของคุณ… คุณจะทิ้งมันไหม? 💼\nขึ้นเครื่องครั้งล่าสุด คุณนับแถวไปทางออกไหม? 👇\n\nรอดคนเดียว EP.1/2\n#เครื่องบิน #เอาตัวรอด #รอดคนเดียว #RodMaiClub"
+   },
+   "video_repo_sha256": "d7ddc4e5910ad27a81b710976003bce333c8b2203e998de87f4b4e9910bcda4f",
+   "video_repo_bytes": 36137073
+  }
+ ]
+}
