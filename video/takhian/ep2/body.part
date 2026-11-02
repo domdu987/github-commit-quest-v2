@@ -2,8 +2,8 @@
       // ลุง lies head-left on the bund for the whole episode (one rig). The CPR never stops once it starts: ยาย's drag, the argument, the tiredness
       // and the swap all happen while someone keeps pressing.
       const CAMS = (k, z0 = 1.8, z1 = 1.9) => push2(k, fr(560, 1720, z0, 540, 1250), fr(560, 1720, z1, 540, 1250));
-      const BUND = (id, o = {}) => SC(id, { horizon: 980, rain: 0.5, fgRice: false, reflect: false, tree: { x: 1020, y: 1060, s: 0.38, burnt: 0.8 }, ...o });
-      const LUNGB = (mode = "pressed", eyes = "closed", mouth = "flat", o = {}) => LUNG(150, 1860, 0.95, mode, eyes, mouth, o);
+      const BUND = (id, o = {}) => SC(id, { horizon: 980, rain: 0.4, fgRice: false, reflect: false, dof: 1, tree: { x: 1020, y: 1060, s: 0.38, burnt: 0.8 }, ...o });
+      const LUNGB = (mode = "pressed", eyes = "closed", mouth = "flat", o = {}) => LUNG(58, 1860, 1.15, mode, eyes, mouth, o);
       const PLOYCPR = (mode = "kCPR", o = {}) => P("ploy", 470, 1805, 0.95, mode, o.eyes || "normal", o.mouth || "frown", o);
       const ARMS_P = (L, tl, t0, dur) => CPRARMS(L, tl, t0, dur, [527, 1690], [412, 1690], [482, 1760]);
       const ARMS_T = (L, tl, t0, dur) => CPRARMS(L, tl, t0, dur, [520, 1716], [430, 1716], [482, 1764], 0.8, ["#3a9a5a", "#2a7a4a"], SK.ton);
@@ -30,15 +30,15 @@
         captions: caps("rap"), fx: (tl, id, t0, L) => Tk.rules(tl, L.light, t0 + 0.3, D("rap") - 0.3, { active: 1, done: [0], tickAt: voEnd("rap") - 0.35, y: 200 }) });
       // 6 · พลอย taps both his shoulders and shouts his name
       ADD("call", { ...BUND("cl"), cam: CAMS("call"), shake: kick(0, 0.6, 4),
-        actors: [P("ploy", 470, 1805, 0.95, "kTap", "wide", "scream", { talk: TALK("call", 0, "scream") }), LUNGB("supine")], captions: caps("call") });
+        actors: [P("ploy", 420, 1805, 0.95, "kTap", "wide", "scream", { talk: TALK("call", 0, "scream") }), LUNGB("supine")], captions: caps("call") });
       // 7 · no answer → she bends to his chest: it does not rise (side close: her ear over his mouth, eyes on the chest)
       SPLITN("still", [1.4], [
-        { ...BUND("sl"), cam: { keys: [{ t: 0, ...fr(300, 1760, 2.8, 540, 1100) }] }, actors: [P("ploy", 470, 1805, 0.95, "kTap", "worry", "frown"), LUNGB("supine", "closed", "flat")] },
-        { ...BUND("sl2"), cam: push2("still", fr(330, 1770, 2.6, 540, 1150), fr(330, 1770, 2.8, 540, 1150)), actors: [P("ploy", 470, 1805, 0.95, "kLook", "worry", "frown"), LUNGB("supine", "closed", "flat")],
+        { ...BUND("sl"), cam: { keys: [{ t: 0, ...fr(240, 1760, 2.8, 540, 1100) }] }, actors: [P("ploy", 420, 1805, 0.95, "kTap", "worry", "frown"), LUNGB("supine", "closed", "flat")] },
+        { ...BUND("sl2"), cam: push2("still", fr(270, 1770, 2.6, 540, 1150), fr(270, 1770, 2.8, 540, 1150)), actors: [P("ploy", 420, 1805, 0.95, "kLook", "worry", "frown"), LUNGB("supine", "closed", "flat")],
           fx: (tl, id, t0, L) => put(L.glow, `<path d="M300,1640V1600M330,1640V1600" stroke="#9ad0e0" stroke-width="4" stroke-dasharray="6 6" opacity=".5"/>`) }]);
       // 8 · พลอย on the phone: phone at her ear → insert: the phone in her hand, 1669 on the screen, her thumb on the speaker key
       SPLITN("phone", [1.6], [
-        { ...BUND("ph"), cam: CAMS("phone", 1.6, 1.7), actors: [P("ployPhone", 470, 1805, 0.95, "kPhone", "wide", "o", { talk: TALK("phone", 0, "scream") }), LUNGB("supine")] },
+        { ...BUND("ph"), cam: CAMS("phone", 1.6, 1.7), actors: [P("ployPhone", 440, 1805, 0.95, "kPhone", "wide", "o", { talk: TALK("phone", 0, "scream") }), LUNGB("supine")] },
         { ...BUND("ph2", { rain: 0.4 }), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
           fx: (tl, id, t0, L) => { put(L.light, `<g id="ph2p" transform="translate(540,960) rotate(-8)"><rect x="-190" y="-360" width="380" height="720" rx="50" fill="#1e1e24" stroke="#1e1a16" stroke-width="8"/><rect x="-166" y="-320" width="332" height="620" rx="20" fill="#1e5a3e"/>
             <text x="0" y="-150" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="110" fill="#fff">1669</text><text x="0" y="-80" text-anchor="middle" font-family="sans-serif" font-size="36" fill="#cfe">กำลังโทร…</text>
@@ -84,7 +84,7 @@
       ADD("gasp", { ...BUND("gp", { rain: 0.3 }), cam: CAMS("gasp", 1.5, 1.6),
         actors: [P("ploy", 250, 1790, 0.95, "kT", "wide", "o"), P("ton", 760, 1830, 0.8, "kT", "wide", "laugh", { flip: true }), LUNGB("jolt", "wide", "o", { then: [{ t: 0.9, mode: "supine", eyes: "normal", mouth: "o" }] })], captions: caps("gasp") });
       // 19 · ลุง, eyes open, a dry smile on his joke; the two relieved above him
-      ADD("joke", { ...BUND("jk", { rain: 0.2 }), cam: push2("joke", fr(300, 1790, 2.2, 540, 1000), fr(300, 1790, 2.35, 540, 1000)),
+      ADD("joke", { ...BUND("jk", { rain: 0.2 }), cam: push2("joke", fr(250, 1790, 2.2, 540, 1000), fr(250, 1790, 2.35, 540, 1000)),
         actors: [P("ploy", 250, 1790, 0.95, "kT", "normal", "laugh"), P("ton", 600, 1830, 0.8, "kT", "normal", "laugh", { flip: true }), LUNGB("supine", "normal", "smile", { talk: TALK("joke", 0, "smile") })], captions: caps("joke") });
       // 20 · the ambulance arrives on the dirt road (Star of Life, 1669), the rain stops, a rainbow
       ADD("clear", { ...CLR("cr", { horizon: 1050, tree: { x: 260, y: 1100, s: 0.5, burnt: 0.6 }, farStorm: 1, farStormX: 1450 }),
@@ -108,8 +108,7 @@
       ADD("again", { ...CLR("ag", { horizon: 1000, tree: { x: 700, y: 1060, s: 0.36, burnt: 0.4 }, buf: { x: 820, y: 1066, s: 0.2, stake: [780, 1068], flip: 1 }, bund: 540, flash: 0.6, farStorm: 1, farStormX: 1400 }), light: FLASHL,
         cam: push2("again", fr(560, 1300, 1.0, 540, 1000), fr(560, 1380, 1.08, 540, 1000)), shake: kick(0.2, 1.2, 18),
         actors: [P("ton", 520, 1740, 0.85, "run", "normal", "laugh", { flip: true, then: [{ t: 0.3, mode: "jump", eyes: "wide", mouth: "scream" }, { t: 0.55, mode: "sitHard", eyes: "wide", mouth: "scream" }] })], captions: caps("again"),
-        fx: (tl, id, t0, L) => { put(L.glow, `<g id="ag-b" opacity="0"><circle cx="700" cy="500" r="300" fill="url(#tkBoltG)"/>${Tk.bolt(820, -900, 700, 500, 9, 1.0)}${Tk.ground(700, 1060, 0.36, 31, 1)}</g>`);
-          tl.set("#ag-b", { opacity: 1 }, t0 + 0.25); tl.to("#ag-b", { opacity: 0, duration: 0.9, ease: "power2.in" }, t0 + 0.6); Tk.strikeFX(tl, L, t0 + 0.25, { sil: 0.14 }); } });
+        fx: (tl, id, t0, L) => { STRIKE(tl, L, t0, 0.25, { sil: 0.14, dx: 400, ground: 1, to: [[540, 1120], [880, 1130], [640, 1220]] }); } });
       // 26 · ต้น in the mud, shaking
       ADD("alive", { ...CLR("al", { horizon: 1000 }), cam: { keys: [{ t: 0, ...fr(540, 1450, 1.9, 540, 1050) }] },
         shake: (t) => ({ x: 2 * Math.sin(t * 45), y: 0, r: 0 }), actors: [P("ton", 540, 1740, 0.85, "sitHard", "wide", "o", { talk: TALK("alive", 0, "o") })], captions: caps("alive") });

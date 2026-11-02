@@ -66,25 +66,26 @@
     CLOTH.forEach((c, k) => { const yy = -330 - k * 24; g += `<path d="M-114,${yy}Q0,${yy + 20} 114,${yy}V${yy + 22}Q0,${yy + 42} -114,${yy + 22}Z" fill="${c}" ${OUT(3)}/>`; });
     g += `<path d="M60,-322q30,60 10,150" stroke="#d8302a" stroke-width="16" fill="none"/><path d="M80,-320q40,70 30,160" stroke="#f2c230" stroke-width="12" fill="none"/><path d="M40,-316q10,60 -10,120" stroke="#3aa04a" stroke-width="10" fill="none"/>`;
     g += `<path d="M-112,-170Q0,-110 112,-170" stroke="#f2f0ea" stroke-width="12" fill="none" stroke-dasharray="14 8"/>`;
-    // limbs reaching out to the tiers
-    const limb = (x0, y0, x1, y1, w) => `<path d="M${x0},${y0}Q${(x0 + x1) / 2},${y1 + 40} ${x1},${y1}" stroke="${INK}" stroke-width="${w + 12}" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${(x0 + x1) / 2},${y1 + 40} ${x1},${y1}" stroke="#4a3222" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
-    g += limb(-40, -1080, -520, -1180, 34) + limb(40, -1060, 540, -1160, 34) + limb(-20, -1200, -300, -1400, 26) + limb(20, -1200, 320, -1420, 26) + limb(0, -1220, 0, -1560, 24);
-    // the crown: three tiers of jagged leaf clusters (dark underside, mid, lit top) + drooping sprays
-    // the crown: three tiers built from many small scalloped lobes (dark under-layer, mid, lit top), leaf flecks, sprays hanging
-    const lobe = (cx, cy, rr, fill, k = 9) => { let d = ""; for (let j = 0; j <= k; j++) { const a0 = Math.PI * 2 * j / k, a1 = Math.PI * 2 * (j + 1) / k, rj = rr * (0.85 + r() * 0.25);
-        const x0 = cx + Math.cos(a0) * rr, y0 = cy + Math.sin(a0) * rr * 0.72, x1 = cx + Math.cos(a1) * rr, y1 = cy + Math.sin(a1) * rr * 0.72, am = (a0 + a1) / 2, xm = cx + Math.cos(am) * rj * 1.25, ym = cy + Math.sin(am) * rj * 0.9;
+    // the crown (look review 2 พ.ย.): an irregular, lopsided canopy — separate leaf masses on 4 big limbs, sky showing between them,
+    // the limbs visible in the gaps, leaf sprays hanging under each mass. Left ≠ right on purpose.
+    const limb = (x0, y0, cx, cy, x1, y1, w) => `<path d="M${x0},${y0}Q${cx},${cy} ${x1},${y1}" stroke="${INK}" stroke-width="${w + 12}" fill="none" stroke-linecap="round"/><path d="M${x0},${y0}Q${cx},${cy} ${x1},${y1}" stroke="#4a3222" stroke-width="${w}" fill="none" stroke-linecap="round"/><path d="M${x0},${y0 - w * 0.3}Q${cx},${cy - w * 0.3} ${x1},${y1 - w * 0.3}" stroke="${storm ? "#6a5a5a" : "#8a6a48"}" stroke-width="${f1(w * 0.18)}" fill="none" stroke-linecap="round" opacity=".7"/>`;
+    const lobe = (cx, cy, rr, fill, k = 8) => { let d = ""; for (let j = 0; j <= k; j++) { const a0 = Math.PI * 2 * j / k, a1 = Math.PI * 2 * (j + 1) / k, rj = rr * (0.8 + r() * 0.35);
+        const x0 = cx + Math.cos(a0) * rr, y0 = cy + Math.sin(a0) * rr * 0.7, x1 = cx + Math.cos(a1) * rr, y1 = cy + Math.sin(a1) * rr * 0.7, am = (a0 + a1) / 2, xm = cx + Math.cos(am) * rj * 1.25, ym = cy + Math.sin(am) * rj * 0.9;
         d += (j ? "" : `M${f1(x0)},${f1(y0)}`) + `Q${f1(xm)},${f1(ym)} ${f1(x1)},${f1(y1)}`; } return `<path d="${d}Z" fill="${fill}"/>`; };
-    const tiers = [{ y: -1150, w: 640, n: 18, ry: 230 }, { y: -1380, w: 520, n: 15, ry: 220 }, { y: -1580, w: 340, n: 10, ry: 180 }];
-    tiers.forEach((t) => {
-      const pts = Array.from({ length: t.n }, (_, k) => { const u = (k + 0.5) / t.n, x = -t.w + 2 * t.w * u + (r() - 0.5) * 40; return [x, t.y - Math.sin(u * Math.PI) * t.ry * 0.45 + (r() - 0.5) * t.ry * 0.4]; });
-      pts.forEach(([cx, cy]) => { if (r() < 0.5) { const sx = cx + (r() - 0.5) * 60, len = 30 + r() * 70; g += `<path d="M${f1(sx)},${f1(cy + 60)}q${f1(-8 + r() * 16)},${f1(len * 0.6)} ${f1(-6 + r() * 12)},${f1(len)}" stroke="${C1}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M${f1(sx)},${f1(cy + 60 + len * 0.5)}l-10,8M${f1(sx)},${f1(cy + 60 + len * 0.8)}l10,8" stroke="${C2}" stroke-width="5" stroke-linecap="round"/>`; } });
-      g += `<path d="M${-t.w - 40},${t.y + 40}Q0,${t.y + t.ry * 1.1} ${t.w + 40},${t.y + 40}Q${t.w * 0.6},${t.y - t.ry * 0.4} 0,${t.y - t.ry * 0.5}Q${-t.w * 0.6},${t.y - t.ry * 0.4} ${-t.w - 40},${t.y + 40}Z" fill="${C0}"/>`;
-      pts.forEach(([cx, cy]) => { g += lobe(cx, cy + 20, 70 + r() * 30, C0); });
-      pts.forEach(([cx, cy]) => { g += lobe(cx + (r() - 0.5) * 30, cy - 6, 60 + r() * 26, C1); });
-      pts.forEach(([cx, cy]) => { g += lobe(cx + (r() - 0.5) * 30, cy - 36, 38 + r() * 18, C2); });
-      pts.filter(() => r() < 0.7).forEach(([cx, cy]) => { g += lobe(cx + (r() - 0.5) * 30, cy - 58, 20 + r() * 12, C3); g += `<path d="M${f1(cx - 40)},${f1(cy - 64)}Q${f1(cx)},${f1(cy - 100)} ${f1(cx + 40)},${f1(cy - 64)}" stroke="${rim}" stroke-width="5" fill="none" opacity=".55" stroke-linecap="round"/>`; });
-      for (let k = 0; k < 70; k++) { const lx = -t.w + r() * 2 * t.w, ly = t.y - 70 + r() * 120; g += `<path d="M${f1(lx)},${f1(ly)}q6,-8 14,-4q-4,8 -14,4z" fill="${C3}" opacity=".75"/>`; }
-    });
+    // a leaf mass: lobes scattered inside a lumpy ellipse, dark under → lit top, rim light on the upper edge, sprays hanging below
+    const mass = (cx, cy, w, h, n) => { let m = ""; const pts = Array.from({ length: n }, () => { const a = r() * Math.PI * 2, d = Math.sqrt(r()); return [cx + Math.cos(a) * w * d, cy + Math.sin(a) * h * d * 0.85]; });
+      for (let k = 0; k < Math.round(n / 3); k++) { const sx = cx - w * 0.8 + r() * w * 1.6, sy = cy + h * (0.35 + r() * 0.3), len = 50 + r() * 110; m += `<path d="M${f1(sx)},${f1(sy)}q${f1(-10 + r() * 20)},${f1(len * 0.55)} ${f1(-14 + r() * 28)},${f1(len)}" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+        for (let q = 0; q < 4; q++) { const ly = sy + len * (0.35 + q * 0.2), lx = sx + (-6 + r() * 12); m += `<path d="M${f1(lx)},${f1(ly)}q${q % 2 ? 16 : -16},4 ${q % 2 ? 22 : -22},20q${q % 2 ? -14 : 14},-2 ${q % 2 ? -22 : 22},-20z" fill="${q % 2 ? C1 : C2}" stroke="${INK}" stroke-width="2"/>`; } }
+      pts.forEach(([x, y]) => { m += lobe(x, y + 26, 62 + r() * 30, C0); });
+      pts.forEach(([x, y]) => { m += lobe(x + (r() - 0.5) * 24, y, 52 + r() * 24, C1); });
+      pts.filter(([, y]) => y < cy + h * 0.3).forEach(([x, y]) => { m += lobe(x + (r() - 0.5) * 24, y - 28, 36 + r() * 16, C2); });
+      pts.filter(([, y]) => y < cy - h * 0.1).forEach(([x, y]) => { m += lobe(x + (r() - 0.5) * 20, y - 50, 20 + r() * 10, C3); m += `<path d="M${f1(x - 36)},${f1(y - 58)}Q${f1(x)},${f1(y - 92)} ${f1(x + 36)},${f1(y - 58)}" stroke="${rim}" stroke-width="5" fill="none" opacity=".55" stroke-linecap="round"/>`; });
+      for (let k = 0; k < n * 3; k++) { const lx = cx - w + r() * 2 * w, ly = cy - h * 0.6 + r() * h * 1.1; m += `<path d="M${f1(lx)},${f1(ly)}q6,-8 14,-4q-4,8 -14,4z" fill="${C3}" opacity=".7"/>`; }
+      return m; };
+    // big limbs first (they show in the gaps), then the masses, then two twigs crossing in front
+    g += limb(-30, -1010, -300, -1000, -600, -1120, 42) + limb(30, -1090, 260, -1110, 500, -1290, 38) + limb(-10, -1180, -170, -1300, -270, -1480, 30) + limb(10, -1220, 60, -1420, 170, -1620, 26) + limb(40, -1150, 380, -1160, 640, -1160, 18);
+    [[-560, -1180, 330, 165, 22], [-300, -1090, 210, 110, 12], [480, -1330, 330, 175, 24], [250, -1220, 200, 100, 11], [700, -1200, 150, 95, 8], [-280, -1500, 290, 160, 18], [160, -1650, 320, 165, 20], [-60, -1560, 170, 110, 10]].forEach(([cx, cy, w, h, n]) => { g += mass(cx, cy, w, h, n); });
+    g += `<path d="M-300,-1000Q-420,-1060 -470,-1180" stroke="#4a3222" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M260,-1110Q330,-1170 330,-1260" stroke="#4a3222" stroke-width="9" fill="none" stroke-linecap="round"/>`;
     if (o.shrine !== false) g += Tk.shrine(-300, 10, 0.9);
     // fresh strike: a glowing split down the trunk + smoke + bark chips
     if (o.burnt) {
@@ -430,11 +431,18 @@
     <filter id="skBlur4"><feGaussianBlur stdDeviation="4"/></filter><filter id="skBlur10"><feGaussianBlur stdDeviation="10"/></filter><filter id="skBlur24"><feGaussianBlur stdDeviation="24"/></filter>`;
   const PAL = {
     gold: { sky: "skGold", water: "wGold", far1: "#7a6a6a", far2: "#4a4048", far3: "#2a2630", mist: "#ffe0b0", rice: ["#4a6a2a", "#7a9a3a", "#c8c060"], bund: ["#6a4a2a", "#a8805a"], rain: "#e8e0d0" },
-    storm: { sky: "skStorm", water: "wStorm", far1: "#3a5660", far2: "#22363e", far3: "#121e24", mist: "#9ab8bc", rice: ["#18301e", "#2e5034", "#5a8a5a"], bund: ["#2a2620", "#4a443a"], rain: "#c8dce4" },
+    storm: { sky: "skStorm", water: "wStorm", far1: "#3a5660", far2: "#22363e", far3: "#121e24", mist: "#9ab8bc", rice: ["#18301e", "#2e5034", "#5a8a5a"], bund: ["#3a3024", "#5a4c3a"], rain: "#c8dce4" },
     clear: { sky: "skClear", water: "wClear", far1: "#7aa0a8", far2: "#4a7468", far3: "#2a4a3a", mist: "#ffffff", rice: ["#2e6a2a", "#5aa03a", "#b8e070"], bund: ["#6a5032", "#a88a5a"], rain: "#ffffff" },
   };
   const clouds = (r, n, x0, x1, y0, y1, s0, s1, fill, rim, rimSide = 1, op = 1) => { let g = ""; for (let k = 0; k < n; k++) { const cx = x0 + r() * (x1 - x0), cy = y0 + r() * (y1 - y0), s = s0 + r() * (s1 - s0);
       g += `<g opacity="${f1(op)}">${[0, 1, 2, 3, 4].map((j) => { const ex = cx + (j - 2) * s * 0.55 + (r() - 0.5) * s * 0.3, ey = cy - Math.sin(j / 4 * Math.PI) * s * 0.45, er = s * (0.45 + r() * 0.35); return `<ellipse cx="${f1(ex)}" cy="${f1(ey)}" rx="${f1(er)}" ry="${f1(er * 0.78)}" fill="${fill}"/>${rim ? `<path d="M${f1(ex - er * 0.2 * rimSide)},${f1(ey - er * 0.75)}A${f1(er)},${f1(er * 0.78)} 0 0 ${rimSide > 0 ? 1 : 0} ${f1(ex + er * 0.95 * rimSide)},${f1(ey + er * 0.1)}" stroke="${rim}" stroke-width="${f1(er * 0.08)}" fill="none" opacity=".75"/>` : ""}`; }).join("")}<ellipse cx="${f1(cx)}" cy="${f1(cy + s * 0.15)}" rx="${f1(s * 1.5)}" ry="${f1(s * 0.32)}" fill="${fill}"/></g>`; } return g; };
+  // soft cloud masses (look review): big blurred blobs; the light colour drawn first, offset toward the sun and blurred wider, so it only
+  // shows as a glowing edge round the silhouette of the whole mass — no outlines, no curls
+  const softClouds = (r, n, x0, x1, y0, y1, s0, s1, fill, rim, side = 1, op = 1) => { let a = "", b = ""; for (let k = 0; k < n; k++) { const cx = x0 + r() * (x1 - x0), cy = y0 + r() * (y1 - y0), sz = s0 + r() * (s1 - s0);
+      for (let j = 0; j < 4; j++) { const ex = cx + (j - 1.5) * sz * 0.6 + (r() - 0.5) * sz * 0.3, ey = cy - Math.sin((j + 0.5) / 4 * Math.PI) * sz * 0.4 + (r() - 0.5) * sz * 0.2, er = sz * (0.5 + r() * 0.35);
+        a += `<ellipse cx="${f1(ex + side * er * 0.12)}" cy="${f1(ey - er * 0.1)}" rx="${f1(er)}" ry="${f1(er * 0.72)}"/>`; b += `<ellipse cx="${f1(ex)}" cy="${f1(ey)}" rx="${f1(er)}" ry="${f1(er * 0.72)}"/>`; }
+      b += `<ellipse cx="${f1(cx)}" cy="${f1(cy + sz * 0.2)}" rx="${f1(sz * 1.5)}" ry="${f1(sz * 0.3)}"/>`; }
+    return `<g opacity="${f1(op)}">${rim ? `<g fill="${rim}" opacity=".95" filter="url(#skBlur10)">${a}</g>` : ""}<g fill="${fill}" filter="url(#skBlur4)">${b}</g></g>`; };
   const palm = (x, y, s, c) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-4,0Q-8,-160 0,-300" stroke="${c}" stroke-width="10" fill="none"/>${Array.from({ length: 11 }, (_, k) => { const a = -Math.PI + k * Math.PI / 10; return `<path d="M0,-300q${f1(Math.cos(a) * 40)},${f1(Math.sin(a) * 30 - 10)} ${f1(Math.cos(a) * 80)},${f1(Math.sin(a) * 50 + 20)}" stroke="${c}" stroke-width="7" fill="none"/>`; }).join("")}<circle cy="-300" r="26" fill="${c}"/></g>`;
   const chedi = (x, y, s, c) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-60,0V-40H-40V-80Q-40,-130 0,-150Q40,-130 40,-80V-40H60V0Z" fill="${c}"/><path d="M-10,-150L0,-300L10,-150Z" fill="${c}"/><path d="M-26,-180H26M-20,-200H20M-14,-220H14" stroke="${c}" stroke-width="8"/></g>`;
   Sets.tkScape = function (L, o = {}) {
@@ -445,20 +453,20 @@
       s += `<circle cx="${o.sunX ?? 860}" cy="${hz - 260}" r="520" fill="url(#sunG)"/>`;
       for (let k = 0; k < 7; k++) { const a = -0.9 - k * 0.12; s += `<path d="M${o.sunX ?? 860},${hz - 260}L${f1((o.sunX ?? 860) + Math.cos(a) * 2400 - 60)},${f1(hz - 260 + Math.sin(a) * 2400)}L${f1((o.sunX ?? 860) + Math.cos(a) * 2400 + 60)},${f1(hz - 260 + Math.sin(a) * 2400)}Z" fill="url(#rayG)" opacity=".35"/>`; }
       // the storm wall from the left: an anvil, its towering face, gold rim light on its sunward edges, rain shafts below
-      s += `<path d="M-1400,-1200H${o.wallX ?? 520}Q${(o.wallX ?? 520) + 200},-600 ${(o.wallX ?? 520) - 80},-200Q${(o.wallX ?? 520) + 160},150 ${(o.wallX ?? 520) - 40},${hz - 380}Q${(o.wallX ?? 520) + 120},${hz - 200} ${(o.wallX ?? 520) - 200},${hz - 120}L-1400,${hz - 60}Z" fill="url(#stWall)"/>`;
-      s += clouds(r, 9, -800, (o.wallX ?? 520) - 40, -500, hz - 300, 160, 300, "#1e2a36", "#ffcf80", 1, 1);
+      s += `<path d="M-1400,-1200H${o.wallX ?? 520}Q${(o.wallX ?? 520) + 200},-600 ${(o.wallX ?? 520) - 80},-200Q${(o.wallX ?? 520) + 160},150 ${(o.wallX ?? 520) - 40},${hz - 380}Q${(o.wallX ?? 520) + 120},${hz - 200} ${(o.wallX ?? 520) - 200},${hz - 120}L-1400,${hz - 60}Z" fill="#ffcf80" opacity=".75" transform="translate(34,-14)" filter="url(#skBlur24)"/><path d="M-1400,-1200H${o.wallX ?? 520}Q${(o.wallX ?? 520) + 200},-600 ${(o.wallX ?? 520) - 80},-200Q${(o.wallX ?? 520) + 160},150 ${(o.wallX ?? 520) - 40},${hz - 380}Q${(o.wallX ?? 520) + 120},${hz - 200} ${(o.wallX ?? 520) - 200},${hz - 120}L-1400,${hz - 60}Z" fill="url(#stWall)" filter="url(#skBlur4)"/>`;
+      s += softClouds(r, 7, -800, (o.wallX ?? 520) - 300, -500, hz - 300, 160, 300, "#1a2430", "", 1, 1) + softClouds(r, 9, (o.wallX ?? 520) - 280, (o.wallX ?? 520) + 60, -600, hz - 320, 150, 260, "#1e2a36", "#ffd890", 1, 1);
       for (let k = 0; k < 9; k++) { const x = -900 + k * 150 + r() * 60; s += `<path d="M${f1(x)},${hz - 220}L${f1(x - 60 + r() * 30)},${hz}L${f1(x + 50)},${hz}L${f1(x + 90)},${hz - 220}Z" fill="url(#rCurtain)" opacity=".7"/>`; }
-      s += clouds(r, 4, (o.wallX ?? 520) + 100, 1600, 80, 400, 70, 120, "#f4d0a0", "#fff6d8", -1, 0.55);
+      s += softClouds(r, 4, (o.wallX ?? 520) + 100, 1600, 80, 400, 70, 120, "#f4d0a0", "#fff6d8", -1, 0.55);
     } else if (m === "storm") {
-      s += clouds(r, 14, -900, 2000, -300, hz - 450, 160, 320, "#162430", "#4e6a76", 1, 1);
-      s += clouds(r, 10, -900, 2000, hz - 520, hz - 260, 120, 220, "#22384a", "#6a8a94", 1, 0.9);
+      s += softClouds(r, 14, -900, 2000, -300, hz - 450, 160, 320, "#162430", "#4e6a76", 1, 1);
+      s += softClouds(r, 10, -900, 2000, hz - 520, hz - 260, 120, 220, "#22384a", "#6a8a94", 1, 0.9);
       // rain curtains: grey-teal shafts sweeping from the cloud base to the horizon
       for (let k = 0; k < 14; k++) { const x = -1000 + k * 230 + r() * 120, w = 80 + r() * 160; s += `<path d="M${f1(x)},${hz - 420}L${f1(x - 90)},${hz + 10}L${f1(x - 90 + w)},${hz + 10}L${f1(x + w)},${hz - 420}Z" fill="url(#rCurtain)" opacity="${f1(0.5 + r() * 0.4)}"/>`; }
       if (o.flash) s += `<rect x="-1400" y="-1200" width="3900" height="${hz + 1300}" fill="#dfe8ff" opacity="${f1(o.flash * 0.45)}"/><ellipse cx="${o.flashX ?? 700}" cy="${hz - 500}" rx="900" ry="500" fill="#eef4ff" opacity="${f1(o.flash * 0.5)}" filter="url(#skBlur24)"/>`;
       if (o.distBolt) s += `<g opacity=".9">${Tk.bolt(o.distBolt[0], hz - 520, o.distBolt[1], hz - 10, 41, 0.5)}</g>`;
     } else {
       s += `<circle cx="${o.sunX ?? 180}" cy="${hz - 180}" r="420" fill="url(#sunG)" opacity=".9"/>`;
-      s += clouds(r, 6, -600, 1800, 100, hz - 500, 80, 150, "#ffffff", "#ffe8c0", -1, 0.85);
+      s += softClouds(r, 6, -600, 1800, 100, hz - 500, 80, 150, "#ffffff", "#ffe8c0", -1, 0.85);
       const RB = ["#ff5a5a", "#ffa040", "#ffe060", "#60d070", "#4aa0ff", "#5a6aff", "#a060e0"];
       s += `<g opacity=".42" filter="url(#skBlur4)">${RB.map((c, k) => `<path d="M-500,${hz}A${1200 - k * 26},${1200 - k * 26} 0 0 1 ${1900 - k * 52},${hz}" stroke="${c}" stroke-width="26" fill="none" transform="translate(${k * 26},0)"/>`).join("")}</g>`;
       if (o.farStorm) { const fx = o.farStormX ?? 1500; s += `<g><path d="M${fx - 900},${hz}Q${fx - 800},${hz - 380} ${fx - 450},${hz - 420}Q${fx - 200},${hz - 600} ${fx + 100},${hz - 430}Q${fx + 400},${hz - 520} ${fx + 700},${hz - 300}V${hz}Z" fill="#2a3442"/>${clouds(r, 4, fx - 700, fx + 500, hz - 520, hz - 380, 120, 200, "#2a3442", "#ffd8a0", -1, 1)}<path d="M${fx - 500},${hz - 380}L${fx - 600},${hz}H${fx + 300}L${fx + 260},${hz - 380}Z" fill="url(#rCurtain)" opacity=".6"/>${o.farBolt ? `<g>${Tk.bolt(fx - 120, hz - 440, fx - 60, hz - 6, 13, 0.45)}<ellipse cx="${fx - 100}" cy="${hz - 420}" rx="260" ry="160" fill="#eef4ff" opacity=".45" filter="url(#skBlur24)"/></g>` : ""}</g>`; }
@@ -473,7 +481,7 @@
       if (li === 1) for (let j = 0; j < 6; j++) { const x = 1200 + j * 70; f += `<path d="M${x},${hz + dy}V${hz + dy - 30}L${x + 30},${hz + dy - 54}L${x + 60},${hz + dy - 30}V${hz + dy}Z" fill="${c}"/>`; }
       f += `<rect x="-1400" y="${hz + dy - 60}" width="4000" height="70" fill="url(#mistB)" opacity="${m === "storm" ? 0.32 : 0.22}" style="fill:${P.mist}" filter="url(#skBlur10)"/>`;
     });
-    put(L.far, f);
+    put(L.far, o.dof ? `<g filter="url(#skBlur10)">${f}</g>` : f);
     // ---- mid: the paddies — mirror water and rice bands in perspective, wind waves, bunds
     let p = `<rect x="-1400" y="${hz}" width="4000" height="4400" fill="${P.rice[0]}"/>`;
     const rows = 22;
@@ -484,9 +492,13 @@
         p += `<path d="M-1400,${f1(y0 + 2)}H2600" stroke="${m === "storm" ? "#9ac0c4" : "#fff4d0"}" stroke-width="${f1(1 + h * 0.06)}" opacity=".6"/>`;
         if (o.rain) for (let j = 0; j < 10 + k * 2; j++) { const rx = -900 + r() * 2900, ry = y0 + r() * h, rr = 4 + t0 * 30; p += `<ellipse cx="${f1(rx)}" cy="${f1(ry)}" rx="${f1(rr)}" ry="${f1(rr * 0.28)}" fill="none" stroke="#e8f4f8" stroke-width="${f1(0.8 + t0 * 2)}" opacity=".5"/>`; }
         for (let j = 0; j < 6 + k; j++) { const x = -1200 + r() * 3600; p += `<path d="M${f1(x)},${f1(y0 + r() * h)}h${f1(30 + t0 * 200)}" stroke="#ffffff" stroke-width="${f1(1 + t0 * 3)}" opacity=".18"/>`; }
-      } else if (k % 3 === 2) {   // bund
-        p += `<rect x="-1400" y="${f1(y0)}" width="4000" height="${f1(h * 0.55)}" fill="${P.bund[0]}"/><path d="M-1400,${f1(y0 + 1)}H2600" stroke="${P.bund[1]}" stroke-width="${f1(1 + h * 0.05)}"/>`;
-        p += `<rect x="-1400" y="${f1(y0 + h * 0.55)}" width="4000" height="${f1(h * 0.45)}" fill="${P.rice[0]}"/>`;
+      } else if (k % 3 === 2) {   // bund: a narrow mud ridge, a little wavy, grass on its top edge; far ones fade into the mist with no edge line
+        const bh = h * 0.3, op = Math.min(1, 0.25 + t0 * 1.8), ph = r() * 6, amp = 3 + 26 * t0; let top = "", bot = "";
+        for (let x = -1400; x <= 2600; x += 100) top += `${x === -1400 ? "M" : "L"}${x},${f1(y0 + amp * Math.sin(x * 0.0023 + ph))}`;
+        for (let x = 2600; x >= -1400; x -= 100) bot += `L${x},${f1(y0 + bh + amp * Math.sin(x * 0.0023 + ph) * 0.9)}`;
+        p += `<rect x="-1400" y="${f1(y0)}" width="4000" height="${f1(h)}" fill="${P.rice[0]}"/><path d="${top}${bot}Z" fill="${P.bund[0]}" opacity="${f1(op)}"/>`;
+        if (t0 > 0.2) { let gr = ""; const st = 16 + 26 * (1 - t0); for (let x = -1400; x < 2600; x += st * (0.6 + r() * 0.8)) { const yy = y0 + amp * Math.sin(x * 0.0023 + ph) + 2, hh = 6 + 26 * t0 * (0.5 + r()); gr += `M${f1(x)},${f1(yy)}l${f1(-3 - r() * 4)},${f1(-hh)}M${f1(x + 4)},${f1(yy)}l${f1(2 + r() * 5)},${f1(-hh * 0.8)}`; }
+          p += `<path d="${gr}" stroke="${P.rice[1]}" stroke-width="${f1(1 + 3 * t0)}" fill="none" stroke-linecap="round" opacity=".85"/><path d="${bot.replace(/^L/, "M")}" stroke="#000" stroke-width="${f1(1 + 3 * t0)}" fill="none" opacity=".2"/>`; }
       } else {   // rice: dark base, blades, wind-wave highlight bands
         p += `<rect x="-1400" y="${f1(y0)}" width="4000" height="${f1(h)}" fill="${P.rice[0]}"/>`;
         const step = 6 + 40 * t0; let bl = "";
@@ -495,10 +507,16 @@
         for (let j = 0; j < 3; j++) { const ph = r() * 6; let d = `M-1400,${f1(y0 + h * 0.3)}`; for (let x = -1400; x <= 2600; x += 100) d += `L${x},${f1(y0 + h * (0.3 + 0.2 * Math.sin(x * 0.006 + ph)))}`; p += `<path d="${d}" stroke="${P.rice[2]}" stroke-width="${f1(2 + h * 0.18)}" fill="none" opacity="${f1(0.18 + 0.12 * wind)}" stroke-linecap="round"/>`; }
       }
     }
-    const vx = o.vx ?? 540; for (let k = -6; k <= 6; k++) { if (!k) continue; const bx = vx + k * 520; p += `<path d="M${f1(vx + k * 22)},${hz + 6}L${f1(bx * 3 - vx * 2)},4400" stroke="${P.bund[0]}" stroke-width="${Math.abs(k) < 3 ? 46 : 34}" opacity=".9"/><path d="M${f1(vx + k * 22)},${hz + 6}L${f1(bx * 3 - vx * 2)},4400" stroke="${P.bund[1]}" stroke-width="4" opacity=".7" transform="translate(${k > 0 ? -10 : 10},0)"/>`; }
-    if (o.bund != null && o.bund !== false) { const bx = o.bund; p += `<path d="M${bx - 26},${hz + 30}L${bx + 26},${hz + 30}L${bx + 760},4400L${bx - 760},4400Z" fill="${P.bund[0]}"/><path d="M${bx - 26},${hz + 30}L${bx - 760},4400" stroke="${P.bund[1]}" stroke-width="8"/><path d="M${bx + 26},${hz + 30}L${bx + 760},4400" stroke="#000" stroke-width="6" opacity=".25"/>`;
+    // bunds running away from the camera: few, unevenly spaced, slightly curved, mud with grass edges, fading out before the horizon
+    const bfg = `bf${hz}${m}`; p += `<defs><linearGradient id="${bfg}" gradientUnits="userSpaceOnUse" x1="0" y1="${hz}" x2="0" y2="${hz + 560}"><stop offset="0" stop-color="${P.bund[0]}" stop-opacity="0"/><stop offset="1" stop-color="${P.bund[0]}" stop-opacity="1"/></linearGradient></defs>`;
+    const vb = (x0, x1, w0, w1, bend) => { const cx = (x0 + x1) / 2 + bend, cy = (hz + 4400) / 2; let q = `<path d="M${f1(x0 - w0)},${hz + 6}Q${f1(cx - (w0 + w1) / 2)},${cy} ${f1(x1 - w1)},4400L${f1(x1 + w1)},4400Q${f1(cx + (w0 + w1) / 2)},${cy} ${f1(x0 + w0)},${hz + 6}Z" fill="url(#${bfg})"/>`, gr = "";
+      for (let t = 0.12; t < 0.7; t += 0.008 + r() * 0.01) { const u = 1 - t, bx = u * u * x0 + 2 * u * t * cx + t * t * x1, by = u * u * (hz + 6) + 2 * u * t * cy + t * t * 4400, w = w0 + (w1 - w0) * t, hh = 4 + 40 * t * (0.5 + r());
+        gr += `M${f1(bx - w)},${f1(by)}l${f1(-2 - r() * 5)},${f1(-hh)}M${f1(bx + w)},${f1(by)}l${f1(2 + r() * 5)},${f1(-hh)}`; }
+      return q + `<path d="${gr}" stroke="${P.rice[1]}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>`; };
+    const vx = o.vx ?? 540; [-3.3, -1.6, -0.7, 1.1, 2.5].forEach((k) => { const kk = k + (r() - 0.5) * 0.5; p += vb(vx + kk * 34, vx + kk * 1500, 1.5, 70 + r() * 50, (r() - 0.5) * 320); });
+    if (o.bund != null && o.bund !== false) { const bx = o.bund; p += vb(bx, bx, 22, 700, (r() - 0.5) * 200);
       if (o.rain) for (let j = 0; j < 40; j++) { const t = r(), y = hz + 40 + t * t * 3000, x = bx + (r() - 0.5) * (40 + t * t * 1300); p += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(6 + t * 40)}" ry="${f1((6 + t * 40) * 0.3)}" fill="#c8dce4" opacity=".35"/>`; } }
-    put(L.mid, p);
+    put(L.mid, o.dof ? `<g filter="url(#skBlur10)">${p}</g>` : p);   // o.dof: shallow focus for close shots (fewer hard lines behind the actors)
     if (m === "storm") put(L.mid, `<rect x="-1400" y="${hz - 160}" width="4000" height="320" fill="${P.mist}" opacity=".22" filter="url(#skBlur24)"/>`);
     // ---- set: the tree on its island + its reflection, the hut, the buffalo
     let st = "";
@@ -634,10 +652,43 @@
     g += `<path d="M0,0H1080V1920H0Z ${hole}" fill="#1a2026" fill-rule="evenodd"/><path d="${hole}" fill="none" stroke="#0a0e12" stroke-width="22"/>`;
     if (ws) g += `<path d="M0,1320Q540,1270 1080,1320V1920H0Z" fill="#20262c"/><path d="M0,1420Q540,1370 1080,1420" stroke="#2e363e" stroke-width="10" fill="none"/><path d="M700,1520a140,140 0 1 1 1,0" fill="none" stroke="#0e1216" stroke-width="30"/><path d="M60,520L20,1340" stroke="#2a3036" stroke-width="40"/><path d="M1020,520L1060,1340" stroke="#2a3036" stroke-width="40"/><path d="M520,520V600" stroke="#0e1216" stroke-width="14"/><rect x="470" y="600" width="100" height="40" rx="8" fill="#0e1216"/>`;
     else g += `<path d="M70,1300H1040" stroke="#2a3036" stroke-width="30"/><path d="M0,1330H1080V1920H0Z" fill="#20262c"/><path d="M0,1420Q540,1360 1080,1420" stroke="#2e363e" stroke-width="12" fill="none"/><rect x="760" y="1360" width="160" height="40" rx="10" fill="#2e363e"/>`;
-    let gl = `<path d="${hole}" fill="#a8c0d0" opacity=".07"/>`;
-    for (let k = 0; k < 14; k++) { const x = 110 + r() * 860; let d = `M${f1(x)},${f1(400 + r() * 200)}`; let y = 420; for (let j = 0; j < 8; j++) { y += 60 + r() * 60; d += `L${f1(x + (r() - 0.5) * 18)},${f1(y)}`; } gl += `<path d="${d}" stroke="#e8f4ff" stroke-width="${f1(2.5 + r() * 3)}" fill="none" opacity=".3" stroke-linecap="round"/>`; }
-    for (let k = 0; k < 110; k++) { const x = 90 + r() * 930, y = 440 + r() * 840, rr = 3 + r() * 9; gl += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rr)}" ry="${f1(rr * 1.2)}" fill="#0e1820" opacity=".22"/><circle cx="${f1(x - rr * 0.3)}" cy="${f1(y - rr * 0.4)}" r="${f1(rr * 0.35)}" fill="#ffffff" opacity=".65"/>`; }
+    const gl = Tk.wetGlass(r, hole, ws ? [60, 1020, 500, 1320] : [80, 1030, 380, 1290]);
     return { frame: g, glass: gl }; };
+  // rain on glass (look review): wavy rivulets (smooth S-curves, a dark refraction edge + a bright core, a bead at the head), round drops
+  // with a lit rim, and `.wgSlide` drops that slide when animated (Tk.slideDrops)
+  Tk.wetGlass = (r, hole, box) => { const [x0, x1, y0, y1] = box; let gl = `<path d="${hole}" fill="#a8c0d0" opacity=".07"/>`;
+    for (let k = 0; k < 13; k++) { const x = x0 + 30 + r() * (x1 - x0 - 60); let y = y0 + r() * 160, d = `M${f1(x)},${f1(y)}`, xx = x; const n = 4 + Math.floor(r() * 5);
+      for (let j = 0; j < n; j++) { const dy = 70 + r() * 90, sw = (j % 2 ? 1 : -1) * (8 + r() * 16); d += `Q${f1(xx + sw)},${f1(y + dy * 0.5)} ${f1(xx + sw * 0.3)},${f1(y + dy)}`; xx += sw * 0.3; y += dy; if (y > y1 - 40) break; }
+      const w = 3 + r() * 4; gl += `<path d="${d}" stroke="#06101a" stroke-width="${f1(w + 4)}" fill="none" opacity=".28" stroke-linecap="round" transform="translate(3,2)"/><path d="${d}" stroke="#cfe4f4" stroke-width="${f1(w)}" fill="none" opacity=".42" stroke-linecap="round"/><path d="${d}" stroke="#ffffff" stroke-width="${f1(w * 0.3)}" fill="none" opacity=".55" stroke-linecap="round" transform="translate(${f1(-w * 0.2)},0)"/><ellipse cx="${f1(xx)}" cy="${f1(y)}" rx="${f1(w * 1.4)}" ry="${f1(w * 1.8)}" fill="#cfe4f4" opacity=".55"/>`; }
+    for (let k = 0; k < 120; k++) { const x = x0 + r() * (x1 - x0), y = y0 + r() * (y1 - y0), rr = 3 + r() * 10; gl += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rr)}" ry="${f1(rr * 1.15)}" fill="#0e1820" opacity=".22"/><path d="M${f1(x - rr * 0.8)},${f1(y + rr * 0.3)}A${f1(rr)},${f1(rr * 1.15)} 0 0 0 ${f1(x + rr * 0.8)},${f1(y + rr * 0.3)}" stroke="#dcecf8" stroke-width="${f1(1 + rr * 0.15)}" fill="none" opacity=".5"/><circle cx="${f1(x - rr * 0.3)}" cy="${f1(y - rr * 0.4)}" r="${f1(rr * 0.3)}" fill="#ffffff" opacity=".7"/>`; }
+    for (let k = 0; k < 6; k++) { const x = x0 + 40 + r() * (x1 - x0 - 80), y = y0 + 40 + r() * 300, rr = 7 + r() * 5; gl += `<g class="wgSlide" data-y="${f1(y1 - y - 60)}"><path d="M${f1(x)},${f1(y - 70)}Q${f1(x + 6)},${f1(y - 35)} ${f1(x)},${f1(y)}" stroke="#cfe4f4" stroke-width="3" fill="none" opacity=".35"/><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rr)}" ry="${f1(rr * 1.3)}" fill="#cfe4f4" opacity=".5"/><circle cx="${f1(x - 2)}" cy="${f1(y - 3)}" r="${f1(rr * 0.35)}" fill="#fff" opacity=".85"/></g>`; }
+    return gl; };
+  Tk.slideDrops = (tl, root, t0, dur) => { document.querySelectorAll(`${root} .wgSlide`).forEach((e, k) => { const dy = +e.dataset.y, st = t0 + (k * 0.37) % Math.max(0.5, dur - 1.2);
+    tl.fromTo(e, { y: 0 }, { y: dy, duration: 0.9 + (k % 3) * 0.35, ease: "power2.in", immediateRender: false }, st); }); };
+  // inside the pickup from the back seat, looking out the windshield: dashboard and console in the lower half, the ignition keys hanging,
+  // the wiper sweeping, ยาย (left) and พลอย (right) in the front seats turned to each other, faces lit when the lightning flashes (#<id>-lit)
+  Tk.cabIn = (o = {}) => { const r = mk(o.seed || 91), id = o.id || "ci", hole = "M90,330Q540,270 990,330L1040,1180Q540,1150 40,1180Z"; let g = "";
+    g += `<path d="M0,0H1080V1920H0Z ${hole}" fill="#161c22" fill-rule="evenodd"/><path d="${hole}" fill="none" stroke="#0a0e12" stroke-width="24"/><path d="M90,330L40,1180" stroke="#232a30" stroke-width="46"/><path d="M990,330L1040,1180" stroke="#232a30" stroke-width="46"/>`;
+    g += `<path d="M500,330V420" stroke="#0e1216" stroke-width="14"/><rect x="430" y="420" width="140" height="46" rx="10" fill="#0e1216"/><rect x="440" y="428" width="120" height="30" rx="6" fill="#3a4a58" opacity=".6"/>`;
+    // wiper: arm + blade, pivot near the bottom of the glass
+    g += `<g id="${id}-wp"><path d="M330,1166L150,880" stroke="#0a0c0e" stroke-width="14" stroke-linecap="round"/><path d="M186,936L96,792" stroke="#0a0c0e" stroke-width="22" stroke-linecap="round"/><path d="M186,936L96,792" stroke="#3a3f44" stroke-width="5" stroke-linecap="round"/><circle cx="330" cy="1166" r="16" fill="#0a0c0e"/></g>`;
+    // dashboard: top edge, instrument hood (left), vents, the radio, glovebox (right), the gear stick
+    g += `<path d="M0,1160Q540,1110 1080,1160V1920H0Z" fill="#1e252c"/><path d="M0,1180Q540,1130 1080,1180" stroke="#36404a" stroke-width="10" fill="none"/>`;
+    g += `<path d="M60,1190Q220,1120 400,1190V1290H60Z" fill="#12161a"/><circle cx="160" cy="1250" r="44" fill="#0a0e12" stroke="#3a4650" stroke-width="5"/><circle cx="300" cy="1250" r="44" fill="#0a0e12" stroke="#3a4650" stroke-width="5"/><path d="M160,1250l-26,-18M300,1250l20,-22" stroke="#e8a040" stroke-width="4"/>`;
+    g += `<rect x="440" y="1210" width="200" height="56" rx="10" fill="#12161a"/>${[0, 1, 2, 3].map((k) => `<rect x="${456 + k * 46}" y="1222" width="32" height="32" rx="4" fill="#2a323a"/><path d="M${462 + k * 46},1230h20M${462 + k * 46},1238h20M${462 + k * 46},1246h20" stroke="#0a0e12" stroke-width="3"/>`).join("")}`;
+    g += `<rect x="450" y="1300" width="180" height="80" rx="8" fill="#0e1216" stroke="#3a4650" stroke-width="3"/><rect x="466" y="1314" width="100" height="26" rx="3" fill="#2a6a5a" opacity=".8"/><circle cx="594" cy="1328" r="14" fill="#2a323a"/><circle cx="594" cy="1362" r="10" fill="#2a323a"/>`;
+    g += `<path d="M720,1220H1000V1330H720Z" fill="#192026" stroke="#2a323a" stroke-width="4"/><rect x="830" y="1262" width="60" height="12" rx="6" fill="#2a323a"/>`;
+    g += `<path d="M520,1920L540,1520" stroke="#0e1216" stroke-width="30"/><ellipse cx="542" cy="1510" rx="34" ry="28" fill="#2a2a2a" stroke="#0a0a0a" stroke-width="4"/>`;
+    // ignition + hanging keys (pendulum about the ignition, #<id>-keys)
+    g += `<circle cx="420" cy="1340" r="16" fill="#3a4650"/><g id="${id}-keys"><path d="M420,1340L424,1400" stroke="#b8bcc0" stroke-width="4"/><circle cx="424" cy="1412" r="14" fill="none" stroke="#c8ccd0" stroke-width="5"/><path d="M418,1424l-10,60l10,6l6,-14l-4,-6l6,-8Z" fill="#c8ccd0" stroke="#5a6068" stroke-width="2"/><path d="M432,1422l16,52l-10,4" fill="#d8b860" stroke="#7a6030" stroke-width="2"/><rect x="398" y="1420" width="22" height="40" rx="6" fill="#d8302a" transform="rotate(14 409 1440)"/></g>`;
+    // the two front seats: headrests and seatbacks, ยาย and พลอย turned toward each other; a cold lightning light over them (#<id>-lit, opacity 0)
+    const seat = (x) => `<path d="M${x - 170},1920L${x - 150},1600Q${x},1540 ${x + 150},1600L${x + 170},1920Z" fill="#0c1014"/>`;
+    g += seat(170) + seat(910);
+    g += `<path d="M0,1920Q20,1720 170,1705Q320,1720 340,1920Z" fill="#2a3a6a" stroke="#0a0e12" stroke-width="5"/><g>${Tk.winFace(170, 1620, 1.85, "#b98a64", "#d8d4cc", "yai", 1)}</g>`;
+    g += `<path d="M740,1920Q760,1720 910,1705Q1060,1720 1080,1920Z" fill="#e86a8a" stroke="#0a0e12" stroke-width="5"/><g>${Tk.winFace(910, 1625, 1.85, "#e0a880", "#1a120e", "ploy", -1)}</g>`;
+    g += `<g id="${id}-lit" opacity="0" style="mix-blend-mode:screen"><ellipse cx="170" cy="1640" rx="170" ry="190" fill="#9ab8ff" opacity=".55" filter="url(#skBlur24)"/><ellipse cx="910" cy="1645" rx="170" ry="190" fill="#9ab8ff" opacity=".55" filter="url(#skBlur24)"/><path d="M0,1160Q540,1110 1080,1160V1260H0Z" fill="#9ab8ff" opacity=".25"/></g>`;
+    g += `<rect width="1080" height="1920" fill="#000" opacity="0"/>`;
+    return { frame: g, glass: Tk.wetGlass(r, hole, [90, 1000, 300, 1160]), hole }; };
   // ---------------------------------------------------------------- cast
   const { LINE } = Rig2;
   const C = Rig.CAST;

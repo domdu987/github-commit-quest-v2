@@ -27,7 +27,21 @@
       const rumble = (amp = 2) => (t) => ({ x: amp * Math.sin(t * 23) + amp * 0.5 * Math.sin(t * 61), y: amp * 0.8 * Math.sin(t * 31), r: 0.1 * Math.sin(t * 7) });
       const kick = (a, b, amp) => (t) => (t >= a && t < b ? { x: amp * Math.sin(t * 61) * (1 - (t - a) / (b - a)), y: amp * 0.8 * Math.sin(t * 47) * (1 - (t - a) / (b - a)), r: 0 } : 0);
       // a strike on the tree in this shot: the bolt group (L.glow) hidden until t, then the flash / silhouette / relight; the bolt fades to an afterglow
-      const STRIKE = (tl, L, t0, at, o = {}) => { tl.set(L.glow, { opacity: 0 }, t0); tl.set(L.glow, { opacity: 1 }, t0 + at); Tk.strikeFX(tl, L, t0 + at, o); tl.to(L.glow, { opacity: o.after ?? 0, duration: 0.5, ease: "power2.in" }, t0 + at + 0.25); if (o.after) tl.to(L.glow, { opacity: 0, duration: 1.4, ease: "power1.in" }, t0 + at + 1.2); };
+      // StormFX (lane C): every storm shot gets layered rain + wind + its far/in-cloud lightning; STRIKE = the bolt onto this shot's tree
+      let CUR = {};
+      const STORMFX = (spec, tl, t0, L) => { const so = spec.setOpts || {}; CUR = { tree: so.tree, hz: so.horizon ?? 1000, ground: so._ground, rain: null };
+        if (spec.set !== "tkScape" || so.mood !== "storm") return; const dur = spec._dur || 4, hz = CUR.hz, rk = so._rain ?? 0.8;
+        if (rk > 0) CUR.rain = StormFX.rain(L, tl, t0, dur, { wind: 0.22, horizon: hz, density: rk, seed: 101 + (t0 * 10 | 0), ripples: [{ x: -400, y: hz + 40, w: 1900, h: 300, n: Math.round(28 * rk), r: 12, layer: "mid" }], near: so._near ?? true, mid: so._mid ?? true });
+        StormFX.wind(L, tl, t0, dur, { leaves: so._leaves ?? Math.round(2 + 3 * rk), dir: -1, seed: 202 + (t0 * 10 | 0) });
+        if (so._dist) StormFX.bolt(L, tl, t0 + (so._distAt ?? 0.45), { x0: so._dist[0], y0: hz - 560, x1: so._dist[1], y1: hz - 8, seed: 41, w: 0.32, layer: "sky", flash: 0.28, cx: so._dist[0], cy: hz - 600, cloudR: 0.55, leader: 0.08, lit: CUR.rain });
+        else if (so._flash > 0 && !so._strike) { const fx0 = so.flashX ?? 760; StormFX.bolt(L, tl, t0 + (so._flashAt ?? 0.5), { x0: fx0 - 260, y0: hz - 760, x1: fx0 + 220, y1: hz - 600, seed: 53, w: 0.28, layer: "sky", flash: Math.min(0.4, so._flash * 0.6), cx: fx0, cy: hz - 680, cloudR: 0.7, leader: 0.1, depth: 2, lit: CUR.rain }); } };
+      const STRIKE = (tl, L, t0, at, o = {}) => { const T = o.tree || CUR.tree, s = T.s || 1, top = T.y - 1600 * s, lead = 0.14;
+        const b = StormFX.bolt(L, tl, t0 + at - lead, { x0: T.x + (o.dx ?? 280) * s, y0: top - 1500, x1: T.x + 10 * s, y1: top, seed: o.seed ?? 7, w: Math.max(0.55, 1.25 * s), flash: o.flash ?? 1, sil: o.sil ?? 0.12, cx: T.x + 160 * s, cy: top - 380, leader: lead, lit: CUR.rain });
+        StormFX.strikeTree(L, tl, b.tR, { x: T.x, y: T.y, s, seed: o.treeSeed ?? 19, side: o.side ?? 1, dur: o.dur ?? 6, branch: o.branch ?? true });
+        const g = o.ground ?? CUR.ground; if (g) StormFX.ground(L, tl, b.tR + 0.03, { x: T.x, y: T.y + 10 * s, s: Math.max(0.45, s), to: o.to || [[T.x - 560 * s * g, T.y + 170 * s], [T.x + 520 * s * g, T.y + 250 * s], [T.x - 140 * s, T.y + 440 * s * g]] });
+        return b; };
+      // a side flash: the current jumping from the trunk into the people beside it, synced to a STRIKE handle
+      const SIDE = (L, tl, b, x, y, pts) => pts.forEach(([px, py], k) => StormFX.bolt(L, tl, b.tR - 0.03 + 0.02 * k, { x0: x, y0: y, x1: px, y1: py, seed: 60 + k, w: 0.42, flash: 0, cloud: false, leader: 0.03, depth: 1 }));
       const FLICK = (tl, t, op = 0.35) => { tl.set("#flashw", { opacity: op }, t); tl.to("#flashw", { opacity: 0, duration: 0.18 }, t + 0.03); tl.set("#flashw", { opacity: op * 0.7 }, t + 0.12); tl.to("#flashw", { opacity: 0, duration: 0.3 }, t + 0.15); };
       // the rescuer's forearms and stacked real hands over the patient's chest (side view; the rig arms end behind his body)
       const CPRARMS = (L, tl, t0, dur, SF, SB, W, sc = 0.95, sl = ["#e86a8a", "#c04a6a"], skin = SK.ploy) => {
@@ -68,14 +82,26 @@
       Rig.MODES.jump = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -140, faF: -50, uaB: 130, faB: 60, torso: -10, head: -12, bodyY: -30 * Math.exp(-u * 6) });
       // lying ลุง: one rig for the whole story, head always to screen-left; hx = where his head lies, s = scale
       const LUNG = (hx, y, s, mode = "supine", eyes = "closed", mouth = "flat", o = {}) => P("lungPiak", hx + 760 * s, y, s, mode, eyes, mouth, o);
+      // wet look in the rain: clothes ~16% darker, strands of hair stuck to the face, drips from the hair and the hem; ลุง's headband tails and ยาย's sarong hem flap
+      const WETHAIR = { ploy: "#1a120e", ployPhone: "#1a120e", ton: "#16100c", yaiHom: "#d8d4cc" };
+      const WET = (aid, who, tl, t0, dur) => { const a = document.getElementById(aid); if (!a || !who) return; a.style.filter = "brightness(0.84) saturate(1.08)";
+        const hd = document.querySelector(`#${aid}-head > g`), to = document.getElementById(`${aid}-torso`), hc = WETHAIR[who], drop = (k, x, y) => `<circle id="${aid}-wd${k}" cx="${x}" cy="${y}" r="4.5" fill="#d8e8f4" stroke="#1e1a16" stroke-width="1.5" opacity="0"/>`;
+        if (hd && hc) hd.insertAdjacentHTML("beforeend", `<g opacity=".92"><path d="M-24,-590q-14,44 -16,92" stroke="${hc}" stroke-width="5.5" fill="none" stroke-linecap="round"/><path d="M4,-592q-10,26 -2,52" stroke="${hc}" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M26,-588q14,40 8,88" stroke="${hc}" stroke-width="5" fill="none" stroke-linecap="round"/></g>` + drop(0, 40, -520) + drop(1, -36, -524));
+        if (to) to.insertAdjacentHTML("beforeend", drop(2, -30, -296) + drop(3, 34, -300));
+        if (who === "lungPiak" && hd) { hd.insertAdjacentHTML("beforeend", `<g id="${aid}-hb"><path d="M56,-562q32,-8 62,2l-5,15q-28,-8 -52,-3Z" fill="#e8e4d8" stroke="#1e1a16" stroke-width="2.2"/><path d="M56,-554q28,4 50,24l-10,9q-20,-18 -40,-21Z" fill="#e8e4d8" stroke="#1e1a16" stroke-width="2.2"/><path d="M70,-556h34" stroke="#c83a2a" stroke-width="4" stroke-dasharray="8 6"/></g>`);
+          tl.fromTo(`#${aid}-hb`, { rotation: -14, svgOrigin: "56 -558" }, { rotation: 12, svgOrigin: "56 -558", duration: 0.16, ease: "sine.inOut", yoyo: true, repeat: Math.ceil(dur / 0.16), immediateRender: false }, t0); }
+        if (who === "yaiHom") ["F", "B"].forEach((sd) => { const kc = document.getElementById(`${aid}-kc${sd}`); if (!kc) return; kc.insertAdjacentHTML("beforeend", `<path id="${aid}-sf${sd}" d="M-24,96q-18,16 -38,22l4,12q24,-6 40,-26Z" fill="#7a3a2a" stroke="#1e1a16" stroke-width="2"/>`);
+          tl.fromTo(`#${aid}-sf${sd}`, { rotation: -10, svgOrigin: "-22 100" }, { rotation: 16, svgOrigin: "-22 100", duration: 0.22 + (sd === "B" ? 0.04 : 0), ease: "sine.inOut", yoyo: true, repeat: Math.ceil(dur / 0.22), immediateRender: false }, t0); });
+        [0, 1, 2, 3].forEach((k) => { const e = document.getElementById(`${aid}-wd${k}`); if (!e) return; const P = 0.55 + k * 0.08;
+          tl.fromTo(e, { y: 0, opacity: 0.95 }, { y: 70, opacity: 0, duration: P, ease: "power2.in", repeat: Math.ceil(dur / P), immediateRender: false }, t0 + k * 0.17); }); };
       // add() with real hands on every standing/kneeling actor (lying ลุง keeps his relaxed hands too)
-      const withHands = (spec) => ({ ...spec, fx: (tl, id, t0, L) => { (spec.actors || []).forEach((a, i) => { const sk = SKN[a.who]; if (sk && !a.noHands) realHands(`${id}-a${i}`, sk, a.hf || RELAX, a.hb || RELAX, { under: true }); }); if (spec.fx) spec.fx(tl, id, t0, L); } });
-      const ADD = (k, spec) => add(k, withHands(spec));
+      const withHands = (spec) => ({ ...spec, fx: (tl, id, t0, L) => { STORMFX(spec, tl, t0, L); if (spec.set === "tkScape" && spec.setOpts && spec.setOpts.mood === "storm" && (spec.setOpts._rain ?? 0.8) > 0) (spec.actors || []).forEach((a, i) => WET(`${id}-a${i}`, a.who, tl, t0, spec._dur || 4)); (spec.actors || []).forEach((a, i) => { const sk = SKN[a.who]; if (sk && !a.noHands) realHands(`${id}-a${i}`, sk, a.hf || RELAX, a.hb || RELAX, { under: true }); }); if (spec.fx) spec.fx(tl, id, t0, L); } });
+      const ADD = (k, spec) => add(k, withHands({ _dur: D(k), ...spec }));
       // a shot split into several cuts at times `cuts` (seconds into the shot); each spec gets captions from its own window
-      const SPLITN = (k, cuts, specs) => { const b = [0, ...cuts, D(k)]; specs.forEach((sp, j) => { add(k, withHands({ ...sp, captions: sp.captions ?? capsFrom(k, b[j]).filter((c) => c.t < b[j + 1] - b[j]) })); const sh = shots[shots.length - 1]; sh.start = SH[k].start + b[j]; sh.dur = b[j + 1] - b[j]; }); };
+      const SPLITN = (k, cuts, specs) => { const b = [0, ...cuts, D(k)]; specs.forEach((sp, j) => { add(k, withHands({ ...sp, _dur: b[j + 1] - b[j], captions: sp.captions ?? capsFrom(k, b[j]).filter((c) => c.t < b[j + 1] - b[j]) })); const sh = shots[shots.length - 1]; sh.start = SH[k].start + b[j]; sh.dur = b[j + 1] - b[j]; }); };
       // back from a what-if: a full-screen white flash (no tear bands)
       const WHATIF2 = (L, tl, t0, back) => { whatIf(L, tl, t0); if (back != null) { tl.set("#flashw", { opacity: 0.9 }, t0 + back); tl.to("#flashw", { opacity: 0, duration: 0.3 }, t0 + back + 0.04); } };
-      const SC = (id, o = {}) => ({ set: "tkScape", setOpts: { id, mood: "storm", rain: 0.8, wind: 1, ...o }, dark: 0, light: TEAL, grade: GT });
+      const SC = (id, o = {}) => { const { rain = 0.8, flash = 0, ground, distBolt, ...rest } = o; return { set: "tkScape", setOpts: { id, mood: "storm", wind: 1, ...rest, rain: 0, flash: 0, bolt: 0, _rain: rain, _flash: flash, _dist: distBolt, _ground: ground, _strike: o.bolt }, dark: 0, light: TEAL, grade: GT }; };
       const TEAL = { from: "left", rim: "#9ad0e0", rimOp: 0.9, shade: "#06101a", shadeOp: 0.45, cast: false, vol: false };
       const GT = { top: "#1a4a5a", bottom: "#0a1a2a", op: 0.3 }, GG = { top: "#ffb860", bottom: "#3a2a5a", op: 0.22 }, GC = { top: "#fff0c8", bottom: "#4a8ab0", op: 0.14 };
       const GOLDL = { from: "right", rim: "#ffd890", rimOp: 0.95, shade: "#2a1a30", shadeOp: 0.35, cast: false, vol: false };

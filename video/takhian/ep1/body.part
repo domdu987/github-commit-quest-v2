@@ -12,12 +12,12 @@
         actors: FAM("hook", 330, 90), captions: caps("hook"),
         fx: (tl, id, t0, L) => { put(L.set, titleSign(640, 1100, 0.5, "ต้นตะเคียนกลางนา", "EP.1 อย่าวิ่งไปหลบใต้ต้นตะเคียน") + SPLASH([[330, 1650], [580, 1720], [800, 1670], [990, 1610]])); put(L.set, `<g id="hk-dog">${Tk.dog(470, 1770, 0.8, { flip: 1, bark: 1 })}</g>`); tl.fromTo("#hk-dog", { x: 0 }, { x: -110, duration: D("hook"), ease: "none", immediateRender: false }, t0); FLICK(tl, t0 + 0.45, 0.4); FLICK(tl, t0 + 1.9, 0.3); } });
       // 2 · the command: the bolt hits the tree as they come under it — flash, silhouettes, they flinch apart
-      ADD("cmd", { ...SC("c", { horizon: 1420, tree: { x: 540, y: 1780, s: 1.0 }, bolt: 1, ground: 0.9, flash: 1, flashX: 540, rain: 0.8 }), light: FLASHL, grade: { top: "#bcd0ff", bottom: "#0a1a2a", op: 0.2 },
-        cam: push2("cmd", fr(540, 1000, 0.8, 540, 880), fr(540, 1040, 0.86, 540, 880)), shake: kick(0.12, 0.9, 16),
-        actors: [P("lungPiak", 170, 1880, 0.95, "run", "wide", "scream", { then: [{ t: 0.14, mode: "flinch", eyes: "wide", mouth: "scream" }] }),
-          P("ploy", 880, 1900, 1.0, "run", "wide", "scream", { flip: true, then: [{ t: 0.14, mode: "flinch", eyes: "wide", mouth: "scream" }] }),
-          P("ton", 1040, 1830, 0.72, "run", "wide", "scream", { flip: true, then: [{ t: 0.14, mode: "flinch", eyes: "wide", mouth: "scream" }] })],
-        captions: caps("cmd"), fx: (tl, id, t0, L) => STRIKE(tl, L, t0, 0.1, { after: 0.75 }) });
+      ADD("cmd", { ...SC("c", { horizon: 1060, tree: { x: 300, y: 1210, s: 0.44 }, bolt: 1, ground: 0.5, rain: 0.8, bund: 760 }), light: FLASHL, grade: { top: "#bcd0ff", bottom: "#0a1a2a", op: 0.2 },
+        cam: push2("cmd", fr(540, 1300, 1.0, 540, 960), fr(540, 1320, 1.04, 540, 960)), shake: kick(0.12, 0.9, 14),
+        actors: [P("lungPiak", 560, 1980, 1.05, "run", "wide", "scream", { flip: true, then: [{ t: 0.22, mode: "flinch", eyes: "wide", mouth: "scream" }] }),
+          P("ploy", 830, 2030, 1.1, "run", "wide", "scream", { flip: true, then: [{ t: 0.26, mode: "flinch", eyes: "wide", mouth: "scream" }] }),
+          P("ton", 1010, 1960, 0.82, "run", "wide", "scream", { flip: true, then: [{ t: 0.3, mode: "flinch", eyes: "wide", mouth: "scream" }] })],
+        captions: caps("cmd"), fx: (tl, id, t0, L) => { STRIKE(tl, L, t0, 0.1, { to: [[130, 1270], [480, 1290], [300, 1340]] }); put(L.set, SPLASH([[560, 1986], [830, 2036], [1010, 1964]])); } });
       // 3 · ยายหอม grabs พลอย's wrist
       ADD("stop", { ...SC("s", { horizon: 1050, tree: { x: 920, y: 1150, s: 0.42, burnt: 0.6 } }),
         cam: push2("stop", fr(540, 1450, 1.35, 540, 1050), fr(560, 1450, 1.45, 540, 1050)), shake: kick(0, 0.5, 6),
@@ -26,7 +26,7 @@
       ADD("why", { ...SC("w", { horizon: 1300, tree: { x: 540, y: 1650, s: 0.85 }, bolt: 1, ground: 0.6, flash: 1, rain: 0.6, reflect: false }), light: FLASHL, grade: { top: "#6a6a6a", bottom: "#1a1a1a", op: 0.2 },
         cam: push2("why", fr(540, 1000, 0.8, 540, 900), fr(540, 1060, 0.86, 540, 900)),
         actors: [P("lungPiak", 230, 1700, 0.8, "flinch", "wide", "scream"), P("ploy", 850, 1710, 0.82, "flinch", "wide", "scream", { flip: true }), P("ton", 730, 1690, 0.62, "flinch", "wide", "scream", { flip: true })],
-        captions: caps("why"), fx: (tl, id, t0, L) => { WHATIF2(L, tl, t0, D("why") - 0.35); STRIKE(tl, L, t0, 0.15, { after: 0.4 }); put(L.glow, [[300, 1420], [790, 1430]].map(([x, y], k) => `<path d="M540,1350L${x},${y}" stroke="#ffffff" stroke-width="6"/><path d="M540,1350L${x},${y}" stroke="#9ab8ff" stroke-width="20" opacity=".4"/>`).join("")); } });
+        captions: caps("why"), fx: (tl, id, t0, L) => { WHATIF2(L, tl, t0, D("why") - 0.35); const b = STRIKE(tl, L, t0, 0.15); SIDE(L, tl, b, 540, 1350, [[300, 1420], [790, 1430]]); } });
       // 5 · high wide: four tiny people in the open field, the storm wall
       ADD("nosafe", { ...SC("n", { horizon: 700, tree: { x: 260, y: 900, s: 0.3, burnt: 0.4 }, distBolt: [900, 950], fgRice: false }),
         cam: push2("nosafe", fr(540, 1100, 0.62, 540, 960), fr(540, 1100, 0.7, 540, 960)), shake: rumble(1),
@@ -71,7 +71,7 @@
       ADD("sci2", { ...SC("s2", { horizon: 1200, tree: { x: 540, y: 1600, s: 0.85 }, bolt: 1, ground: 1, flash: 1, rain: 0.6, reflect: false }), light: FLASHL, grade: { top: "#6a6a6a", bottom: "#1a1a1a", op: 0.2 },
         cam: push2("sci2", fr(540, 1050, 0.82, 540, 960), fr(540, 1150, 0.9, 540, 960)),
         actors: [P("lungPiak", 230, 1660, 0.78, "flinch", "wide", "scream")], captions: caps("sci2"),
-        fx: (tl, id, t0, L) => { WHATIF2(L, tl, t0, D("sci2") - 0.35); STRIKE(tl, L, t0, 0.2, { after: 0.6 }); put(L.glow, `<path d="M500,1300L280,1380" stroke="#ffffff" stroke-width="6"/><path d="M500,1300L280,1380" stroke="#9ab8ff" stroke-width="20" opacity=".4"/>`); } });
+        fx: (tl, id, t0, L) => { WHATIF2(L, tl, t0, D("sci2") - 0.35); const b = STRIKE(tl, L, t0, 0.2); SIDE(L, tl, b, 520, 1300, [[280, 1380]]); } });
       // 14 · rule 1 on the hut post (bamboo slats), lit and ticked
       ADD("rule1", { set: "tkHut", setOpts: { id: "r1", mood: "storm", dark: 0.9, rain: 0.4, tree: { x: 620, y: 1180, s: 0.5 } }, dark: 0.3, light: ST, grade: GS,
         cam: push2("rule1", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.05, 540, 960)), captions: caps("rule1"),
@@ -117,12 +117,12 @@
       // 22 · what-if: a strike on the tree behind, the current runs through the wet ground to the man lying flat
       ADD("wflat", { ...SC("wf", { horizon: 1000, tree: { x: 860, y: 1180, s: 0.7 }, bolt: 1, ground: 1.4, flash: 1, reflect: false }), light: FLASHL, grade: { top: "#6a6a6a", bottom: "#1a1a1a", op: 0.2 },
         cam: { keys: [{ t: 0, ...fr(560, 1300, 1.1, 540, 1000) }] }, actors: [LUNG(160, 1640, 0.9, "supine", "wide", "scream")], captions: caps("wflat"),
-        fx: (tl, id, t0, L) => { WHATIF2(L, tl, t0, D("wflat") - 0.35); STRIKE(tl, L, t0, 0.2, { after: 0.7 }); } });
+        fx: (tl, id, t0, L) => { WHATIF2(L, tl, t0, D("wflat") - 0.35); STRIKE(tl, L, t0, 0.2); } });
       // 23 · what-if: squatting (heels down) is no help either
       ADD("crouch", { ...SC("cr", { horizon: 1000, tree: { x: 860, y: 1180, s: 0.7 }, bolt: 1, ground: 1.1, flash: 0.9, reflect: false }), light: FLASHL, grade: { top: "#6a6a6a", bottom: "#1a1a1a", op: 0.2 },
         cam: push2("crouch", fr(560, 1350, 1.15, 540, 1000), fr(500, 1450, 1.35, 540, 1000)),
         actors: [P("lungPiak", 380, 1700, 0.95, "kT", "wide", "frown", { opts: { by: 150 } })], captions: caps("crouch"),
-        fx: (tl, id, t0, L) => { WHATIF2(L, tl, t0, D("crouch") - 0.35); STRIKE(tl, L, t0, 0.3, { after: 0.7 }); } });
+        fx: (tl, id, t0, L) => { WHATIF2(L, tl, t0, D("crouch") - 0.35); STRIKE(tl, L, t0, 0.3); } });
       // 24 · พลอย hauls him up (stands beside him, hands on his arm — no arm across him)
       ADD("up", { ...SC("u", { horizon: 900 }), cam: { keys: [{ t: 0, ...fr(540, 1450, 1.4, 540, 1050) }] }, shake: kick(0, 0.4, 6),
         actors: [P("lungPiak", 380, 1720, 0.95, "flinch", "wide", "o"), P("ploy", 760, 1720, 1.0, "grab", "angry", "scream", { flip: true, talk: TALK("up", 0, "scream") })], captions: caps("up") });
@@ -130,26 +130,30 @@
       SPLITN("truck", [1.6], [
         { ...SC("tr", { horizon: 1000, rain: 0.6 }), cam: push2("truck", fr(560, 1450, 1.2, 540, 1050), fr(560, 1450, 1.28, 540, 1050)),
           fx: (tl, id, t0, L) => put(L.set, `<rect x="-900" y="1500" width="2900" height="300" fill="#4a443a"/>` + Tk.pickup(560, 1640, 1.0, {}) + Tk.winFace(410, 1395, 0.95, "#b98a64", "#d8d4cc", "yai") + Tk.winFace(500, 1390, 0.95, "#e0a880", "#1a120e", "ploy") + Tk.winFace(590, 1405, 0.8, "#d39a6e", "#16100c", "ton") + Tk.dog(780, 1660, 0.6, {})) },
-        { ...SC("tr2", { horizon: 1000, tree: { x: 360, y: 1080, s: 0.42 }, buf: { x: 520, y: 1090, s: 0.3, stake: [450, 1092], flip: 1 }, rain: 0.6, fgRice: false }), cam: push2("truck", fr(540, 960, 1.0, 540, 900), fr(540, 960, 1.06, 540, 900)),
+        { ...SC("tr2", { horizon: 1000, tree: { x: 360, y: 1080, s: 0.42 }, buf: { x: 520, y: 1090, s: 0.3, stake: [450, 1092], flip: 1 }, rain: 0.6, fgRice: false, _near: false, _mid: false }), cam: push2("truck", fr(540, 960, 1.0, 540, 900), fr(540, 960, 1.06, 540, 900)),
           actors: [P("lungPiak", 760, 1170, 0.36, "run", "normal", "laugh", { flip: true, moveTo: { x: 640, dur: D("truck") - 1.6 } })],
-          fx: (tl, id, t0, L) => { const c = Tk.cab(); put(L.light, c.glass + c.frame + `<g opacity=".95">${Tk.winFace(170, 1180, 2.6, "#e0a880", "#1a120e", "ploy", -1)}</g>`); } }]);
+          fx: (tl, id, t0, L) => { const c = Tk.cabIn({ id: "tr2c" }), d = D("truck") - 1.6; put(L.light, `<g id="tr2g">${c.glass}</g>` + c.frame);
+            tl.fromTo("#tr2c-wp", { rotation: 0, svgOrigin: "330 1170" }, { rotation: 62, svgOrigin: "330 1170", duration: 0.55, ease: "sine.inOut", yoyo: true, repeat: Math.ceil(d / 0.55), immediateRender: false }, t0);
+            tl.fromTo("#tr2c-keys", { rotation: -9, svgOrigin: "420 1340" }, { rotation: 9, svgOrigin: "420 1340", duration: 0.42, ease: "sine.inOut", yoyo: true, repeat: Math.ceil(d / 0.42), immediateRender: false }, t0);
+            Tk.slideDrops(tl, "#tr2g", t0, d);
+            [0.45, 1.5].forEach((t, k) => { StormFX.bolt(L, tl, t0 + t, { x0: 680 + k * 160, y0: 300, x1: 760 + k * 80, y1: 930, seed: 30 + k, w: 0.4, layer: "sky", flash: 0.3, cx: 760, cy: 380, cloudR: 0.6, leader: 0.06, lit: CUR.rain }); tl.set("#tr2c-lit", { opacity: 1 }, t0 + t + 0.06); tl.to("#tr2c-lit", { opacity: 0, duration: 0.4 }, t0 + t + 0.14); }); } }]);
       // 26 · ลุง jogs back toward the buffalo at the tree; the audience sees light crawling in the cloud above the crown first
       ADD("rope", { ...SC("rp", { horizon: 1000, tree: { x: 300, y: 1150, s: 0.55, burnt: 0.4 }, buf: { x: 520, y: 1160, s: 0.4, stake: [440, 1164], flip: 1 } }),
         cam: push2("rope", fr(560, 1350, 1.05, 540, 1000), fr(460, 1250, 1.12, 540, 1000)),
         actors: [P("lungPiak", 900, 1700, 0.95, "run", "normal", "laugh", { flip: true, moveTo: { x: 640, dur: D("rope") }, talk: TALK("rope", 0, "scream") })], captions: caps("rope"),
-        fx: (tl, id, t0, L) => { put(L.glow, `<g id="rp-pre" opacity="0"><ellipse cx="300" cy="250" rx="360" ry="140" fill="#dfe8ff" opacity=".7" filter="url(#skBlur24)"/>${Tk.bolt(200, 120, 420, 300, 77, 0.3)}</g>`); [0.5, 1.1, 1.5].forEach((t) => { tl.set("#rp-pre", { opacity: 1 }, t0 + t); tl.set("#rp-pre", { opacity: 0 }, t0 + t + 0.08); }); } });
+        fx: (tl, id, t0, L) => { [0.5, 1.1, 1.5].forEach((t, k) => StormFX.bolt(L, tl, t0 + t, { x0: 120 + k * 60, y0: 120, x1: 470 - k * 40, y1: 300 + k * 20, seed: 77 + k, w: 0.3, layer: "sky", flash: 0.12, cx: 300, cy: 240, cloudR: 0.45, leader: 0.06, depth: 2, lit: CUR.rain })); } });
       // 27 · inside the cab: ต้น at the side window, rain running down the glass, ลุง small outside running to the tree
-      ADD("noo", { ...SC("no", { horizon: 1000, tree: { x: 360, y: 1080, s: 0.42 }, buf: { x: 520, y: 1090, s: 0.3, stake: [450, 1092], flip: 1 }, rain: 0.6, fgRice: false }), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 900) }] }, shake: kick(0, 0.5, 5),
+      ADD("noo", { ...SC("no", { horizon: 1000, tree: { x: 360, y: 1080, s: 0.42 }, buf: { x: 520, y: 1090, s: 0.3, stake: [450, 1092], flip: 1 }, rain: 0.6, fgRice: false, _near: false, _mid: false }), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 900) }] }, shake: kick(0, 0.5, 5),
         actors: [P("lungPiak", 600, 1170, 0.36, "run", "normal", "laugh", { flip: true, moveTo: { x: 520, dur: D("noo") } })],
-        fx: (tl, id, t0, L) => { const c = Tk.cab(); put(L.light, c.glass + c.frame + `<g id="noo-f">${Tk.winFace(230, 1260, 3.4, "#d39a6e", "#16100c", "ton", 1)}</g>`); tl.fromTo("#noo-f", { x: -20 }, { x: 20, duration: 0.05, repeat: 9, yoyo: true, immediateRender: false }, t0 + vo("noo")); }, captions: caps("noo"),
+        fx: (tl, id, t0, L) => { const c = Tk.cab(); put(L.light, `<g id="noo-g">${c.glass}</g>` + c.frame + `<g id="noo-f">${Tk.winFace(230, 1260, 3.4, "#d39a6e", "#16100c", "ton", 1)}</g>`); Tk.slideDrops(tl, "#noo-g", t0, D("noo")); tl.fromTo("#noo-f", { x: -20 }, { x: 20, duration: 0.05, repeat: 9, yoyo: true, immediateRender: false }, t0 + vo("noo")); }, captions: caps("noo"),
         extra: (L, id) => {} });
       // 28 · the strike: light in the cloud, the bolt, the flash/silhouette; ลุง is thrown back, drops into the mud with a splash; the buffalo tears its rope and bolts; the shrine shakes
       ADD("strike", { ...SC("st", { horizon: 1100, tree: { x: 640, y: 1500, s: 0.85 }, bolt: 1, ground: 1.2, flash: 1, buf: null, reflect: false }), light: FLASHL,
         cam: push2("strike", fr(540, 1200, 0.85, 540, 960), fr(500, 1300, 0.95, 540, 960)), shake: kick(0.2, 1.2, 22),
-        actors: [P("lungPiak", 300, 1640, 0.85, "grab", "normal", "frown", { then: [{ t: 0.3, mode: "flinch", eyes: "wide", mouth: "scream" }, { t: 0.42, mode: "fallB", eyes: "closed", mouth: "o" }, { t: 0.97, mode: "supine", eyes: "closed", mouth: "flat" }] })],
+        actors: [P("lungPiak", 420, 1640, 0.85, "grab", "normal", "frown", { then: [{ t: 0.3, mode: "flinch", eyes: "wide", mouth: "scream" }, { t: 0.42, mode: "fallB", eyes: "closed", mouth: "o" }, { t: 0.97, mode: "supine", eyes: "closed", mouth: "flat" }] })],
         captions: caps("strike"),
-        fx: (tl, id, t0, L) => { STRIKE(tl, L, t0, 0.25, { after: 0.35, sil: 0.16 });
-          put(L.set, `<g id="st-buf">${Tk.buffalo(840, 1520, 0.5, { flip: 1 })}</g><g id="st-spl" opacity="0">${SPLASH([[200, 1660], [300, 1650]])}</g>` + Tk.scorch(640, 1520, 0.8, 1));
+        fx: (tl, id, t0, L) => { STRIKE(tl, L, t0, 0.25, { sil: 0.16, side: -1 });
+          put(L.set, `<g id="st-buf">${Tk.buffalo(840, 1520, 0.5, { flip: 1 })}</g><g id="st-spl" opacity="0">${SPLASH([[320, 1660], [420, 1650]])}</g>` + Tk.scorch(640, 1520, 0.8, 1));
           tl.fromTo("#st-buf", { x: 0 }, { x: 900, duration: 1.6, ease: "power2.in", immediateRender: false }, t0 + 0.45); tl.fromTo("#st-spl", { opacity: 0 }, { opacity: 1, duration: 0.05, immediateRender: false }, t0 + 0.85); tl.to("#st-spl", { opacity: 0, duration: 0.6 }, t0 + 1.2);
           tl.fromTo(`#${id} .tkSway`, { rotation: 0, svgOrigin: "640 1500" }, { rotation: 1.5, svgOrigin: "640 1500", duration: 0.06, yoyo: true, repeat: 7, immediateRender: false }, t0 + 0.27); } });
       // 29 · the family frozen at the field edge; ลุง small by the tree, scorched ground smoking
@@ -158,10 +162,10 @@
         actors: [LUNG(120, 1090, 0.28), P("yaiHom", 520, 1720, 0.95, "idle", "wide", "o"), P("ploy", 740, 1740, 1.0, "idle", "wide", "o"), P("ton", 920, 1720, 0.78, "idle", "wide", "o", { talk: TALK("taken", 0, "o") })],
         captions: caps("taken"), fx: (tl, id, t0, L) => put(L.set, Tk.scorch(300, 1060, 0.4, 1)) });
       // 30 · พลอย kneels by him, her hand hovers, pulls back (in frame, knees on the ground)
-      ADD("none", { ...SC("nn", { horizon: 900, rain: 0.6, flash: 0.15 }), cam: push2("none", fr(560, 1560, 1.25, 540, 1100), fr(560, 1580, 1.35, 540, 1100)),
+      ADD("none", { ...SC("nn", { horizon: 900, rain: 0.6, flash: 0.15 }), cam: push2("none", fr(620, 1560, 1.25, 540, 1100), fr(620, 1580, 1.35, 540, 1100)),
         actors: [LUNG(120, 1760, 0.85), P("ploy", 860, 1760, 1.0, "kReach", "worry", "frown", { flip: true, then: [{ t: D("none") * 0.6, mode: "kT", eyes: "worry", mouth: "frown" }] })],
         captions: caps("none"), fx: (tl, id, t0, L) => put(L.set, Tk.scorch(820, 1820, 0.5, 0.6)) });
       // 31 · inside the cab, looking out the windshield: the wet note flies in and slaps onto the glass; rain runs over it
-      ADD("next", { ...SC("nx", { horizon: 1000, tree: { x: 420, y: 1100, s: 0.45, burnt: 1 }, rain: 0.7, fgRice: false }), cam: push2("next", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.04, 540, 960)), captions: caps("next"),
+      ADD("next", { ...SC("nx", { horizon: 1000, tree: { x: 420, y: 1100, s: 0.45, burnt: 1 }, rain: 0.7, fgRice: false, _near: false, _mid: false }), cam: push2("next", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.04, 540, 960)), captions: caps("next"),
         fx: (tl, id, t0, L) => { const c = Tk.cab({ view: "windshield" }); put(L.light, `<g id="nx-n">${Tk.note(540, 930, 0.95, ["ถ้าวันหนึ่ง…", "คนข้างคุณโดนฟ้าผ่า", "EP.2 อย่ากลัวจับตัวเขา"])}</g>` + c.glass + c.frame);
           tl.fromTo("#nx-n", { x: 1100, y: -700 }, { x: 0, y: 0, duration: 0.45, ease: "power3.in", immediateRender: false }, t0 + 0.2); } });
