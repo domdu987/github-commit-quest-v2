@@ -1,0 +1,11 @@
+รูพญานาค EP.3 (ตอนจบ) · HQ · lane C · 2 พ.ย. 2569
+picture: one full render (no TK_RANGE) from prod/lane-d d77e15f (video/rupnak/build + lib + ep3), hyperframes 0.8.185, -f 60 -w 4 → 6449 frames, High yuv420p 1080x1920 60/1
+lib md5 in the project = repo: rupnak.js cb6fda7e · rupnak2.js 772325a2 · rupui.js ca32f2b5 · rupcast.js 39ad28ea · rig2-fingers.js→rig2.js 08190770
+5fd196a (the tide mix) changes no EP.3 picture input (lib/build/ep3 body/schedule identical except build/foot2.part = EP.2)
+audio: ep3/mix.wav from prod/lane-d 5fd196a (suno1, ทะเลลด recipe), 107.472 s · hq.sh from 5fd196a (2-pass 6984 kbps, apad + cut to video length)
+HQ: video/release/hq/rupnak-ep3-HQ.mp4 · 97,249,040 B · sha256 352d45eaf10935ae21dd4e98357e8a65202783a07982fcaef8270a0f6e709bda
+  6449 frames · v 107.483333 s · a 107.483 s · -14.1 LUFS · peak -1.9 dBFS (mix.wav -14.1 / -1.7) · HQ audio vs mix.wav correlation 0.99996
+musiccheck (ทะเลลด ±3 LU, 4bb07af) on 5fd196a vo_stem + music_stem: under voice -33.7 · between lines -29.4 · voice over music 18.8 LU · missing 7% → PASS (phone band info: -39.7 / -38.6)
+hisscheck (4bb07af) --vo vo_stem: flatness 0.34 · pause HF -84.3 dBFS → PASS
+edgecheck on the build: no edge problems · blackdetect (0.5 s): none · freezedetect (2 s): none
+sheets: sheets/rupnak-ep3-1fps-1..5.jpg (360x640 per frame)
