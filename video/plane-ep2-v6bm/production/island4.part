@@ -1,0 +1,58 @@
+      // ---------- รอดคนเดียว EP.2 v5 · round 3 polish (lane C) ----------
+      //   Isle.hand(W, deg, k, o)    the insert arm rebuilt: wrist skin, a cuff, a mustard sleeve that widens toward the elbow with fold
+      //                              creases, a shaded side and a lit edge; the forearm leaves the frame (o.fore, default 620)
+      //   Isle.bottle(id, level, o)  o.c the liquid colour (seawater teal), o.label
+      //   Isle.billow(id, x, base, h, o)  a smoke column of separate rolling grey-black billows (cauliflower puffs with lit tops), leaning
+      //                              with the wind, the fire glowing at its foot; billows carry .isbil for Isle.billowLife
+      //   Isle.tideRock(id, o)       a wet boulder seen close: glossy highlights, barnacles, limpets and top-shells, green weed below the
+      //                              high-tide stain line, a tide pool (fills the lower ~2/3 of the frame at the identity camera)
+      (function () {
+        const { mk } = Pop2, I = window.Isle, LN = "#241c22", ln = (w = 3) => `stroke="${LN}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+        const KSK = ["#e0b088", "#b88460", "#f4cca4"];
+        I.hand = (W, deg, k, o = {}) => {
+          const a = (deg * Math.PI) / 180, dx = -Math.sin(a), dy = Math.cos(a), nx = -dy, ny = dx, at = (d) => [W[0] + dx * d * k, W[1] + dy * d * k];
+          const C0 = at(70), C1 = at(100), E = at(o.fore ?? 620);
+          // the sleeve: a tapered tube, wider toward the elbow, with a darker side, a lit edge and fold creases
+          let g = `<path d="${limbD(E, C1, 118 * k, 84 * k)}" fill="#d9a43a" stroke="${LN}" stroke-width="${f1(3.2 * k)}"/>
+            <path d="${limbD([E[0] + nx * 34 * k, E[1] + ny * 34 * k], [C1[0] + nx * 22 * k, C1[1] + ny * 22 * k], 40 * k, 26 * k)}" fill="#a87420" opacity=".55"/>
+            <path d="M${P2s([E[0] - nx * 50 * k, E[1] - ny * 50 * k])}L${P2s([C1[0] - nx * 34 * k, C1[1] - ny * 34 * k])}" stroke="#f4cc70" stroke-width="${f1(7 * k)}" stroke-linecap="round" opacity=".8"/>`;
+          [0.25, 0.48, 0.7].forEach((u, i) => { const P = [C1[0] + (E[0] - C1[0]) * u, C1[1] + (E[1] - C1[1]) * u], w = (84 + 34 * u) * k * 0.42;
+            g += `<path d="M${P2s([P[0] - nx * w, P[1] - ny * w])}Q${P2s([P[0] + dx * 16 * k, P[1] + dy * 16 * k])} ${P2s([P[0] + nx * w * 0.6, P[1] + ny * w * 0.6])}" stroke="#9a6a1e" stroke-width="${f1(3.4 * k)}" fill="none" stroke-linecap="round" opacity=".75"/>`; });
+          // the cuff and the wrist
+          g += `<path d="${limbD(C1, C0, 90 * k, 88 * k)}" fill="#b8862a" stroke="${LN}" stroke-width="${f1(3 * k)}"/><path d="M${P2s([C0[0] - nx * 40 * k, C0[1] - ny * 40 * k])}L${P2s([C0[0] + nx * 40 * k, C0[1] + ny * 40 * k])}" stroke="#e8c070" stroke-width="${f1(3 * k)}" opacity=".7"/>`;
+          g += `<path d="${limbD(at(76), W, 50 * k, 44 * k)}" fill="${KSK[0]}" stroke="${LN}" stroke-width="${f1(3 * k)}"/><path d="${limbD(at(70), at(6), 12 * k, 8 * k)}" fill="${KSK[1]}" opacity=".3" transform="translate(${f1(nx * 10 * k)},${f1(ny * 10 * k)})"/>`;
+          return g + `<g transform="translate(${P2s(W)}) rotate(${deg}) scale(${o.mirror ? -k : k},${k})">${handBack(KSK, o.hand || {})}</g>`;
+        };
+        const bottle0 = I.bottle;
+        I.bottle = (id, level = 0.5, o = {}) => { let s = bottle0(id, level); if (o.c) s = s.replace('fill="#7ac8f0" opacity=".75"', `fill="${o.c}" opacity=".85"`); if (o.label) s = s.replace(">น้ำดื่ม<", `>${o.label}<`); return s; };
+        I.billow = (id, x, base, h, o = {}) => { const r = mk(o.seed || 17), n = o.n ?? 16, lean = o.lean ?? 0.35;
+          let g = `<g id="${id}"><ellipse cx="${x}" cy="${base}" rx="${f1(h * 0.28)}" ry="${f1(h * 0.09)}" fill="url(#isFireG)" opacity=".95"/>`;
+          for (let k = n - 1; k >= 0; k--) { const u = k / (n - 1), cx = x + lean * h * Math.pow(u, 1.5) + (r() - 0.5) * 24, cy = base - 20 - u * h, R = (16 + u * 70) * (o.s ?? 1);
+            const shade = (o.grey ? ["#2e2e32", "#3e3e44", "#504e56"] : ["#2a2630", "#3a3642", "#4a4652"])[k % 3];
+            g += `<g class="isbil" data-o="${f1(cx)} ${f1(cy)}">${[[0, 0, 1], [-0.7, 0.25, 0.75], [0.7, 0.2, 0.8], [-0.3, -0.55, 0.7], [0.35, -0.5, 0.65]].map(([ax, ay, q]) => `<circle cx="${f1(cx + ax * R)}" cy="${f1(cy + ay * R)}" r="${f1(R * q)}" fill="${shade}"/>`).join("")}
+              ${[[-0.3, -0.75, 0.42], [0.25, -0.7, 0.36], [-0.8, -0.1, 0.32]].map(([ax, ay, q]) => `<circle cx="${f1(cx + ax * R)}" cy="${f1(cy + ay * R)}" r="${f1(R * q)}" fill="${o.lit || (o.grey ? "#a8a4a6" : "#8a8090")}" opacity="${f1(0.5 + u * 0.25)}"/>`).join("")}
+              ${u < 0.3 ? `<circle cx="${f1(cx)}" cy="${f1(cy + R * 0.4)}" r="${f1(R * 0.7)}" fill="#ff7a2a" opacity="${f1(0.45 - u)}"/>` : ""}</g>`; }
+          g += `<g class="isfl">${[[-14, 1], [0, 1.4], [14, 1]].map(([d, q]) => `<path d="M${x + d - 8 * q},${base}q${8 * q},${-34 * q} ${8 * q},${-44 * q}q3,${18 * q} ${8 * q},${44 * q}z" fill="#ffb040"/>`).join("")}</g>`;
+          return g + `</g>`; };
+        const Q = (sel) => Array.from(document.querySelectorAll(sel)).filter((e) => { if (e.dataset.lf4) return false; e.dataset.lf4 = 1; return true; });
+        I.billowLife = (tl, t0, dur) => Q(".isbil").forEach((e, k) => { const og = e.getAttribute("data-o");
+          tl.fromTo(e, { x: 0, y: 0, scale: 0.92, rotation: -4, svgOrigin: og }, { x: 30 + (k % 3) * 12, y: -40 - (k % 4) * 10, scale: 1.12, rotation: 6, svgOrigin: og, duration: 1.4 + (k % 4) * 0.25, repeat: Math.ceil(dur / 1.4) + 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (k % 5) * 0.35); });
+        I.tideRock = (id, o = {}) => { const r = mk(o.seed || 12), top = o.top ?? 620, line = o.line ?? 980;
+          const edge = Array.from({ length: 13 }, (_, i) => [-160 + i * 117, top + (r() - 0.5) * 120 + Math.sin(i * 1.3) * 50]);
+          const d = `M-200,2400L${edge.map(([x, y]) => `${f1(x)},${f1(y)}`).join("L")}L1300,2400Z`;
+          let g = `<g id="${id}"><defs><clipPath id="${id}-c"><path d="${d}"/></clipPath><linearGradient id="${id}-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a94a2"/><stop offset="${f1((line - top) / (2400 - top))}" stop-color="#8a8494"/><stop offset="${f1((line - top + 30) / (2400 - top))}" stop-color="#3e3a48"/><stop offset="1" stop-color="#26232e"/></linearGradient></defs>
+            <path d="${d}" fill="url(#${id}-g)" ${ln(5)}/><g clip-path="url(#${id}-c)">`;
+          // the high-tide stain: a white salt line, a dark wet band, green weed hanging below it
+          g += `<path d="M-200,${line}Q300,${line - 30} 700,${line + 10}T1300,${line - 10}" stroke="#f2f0e8" stroke-width="10" fill="none" opacity=".85"/>
+            <path d="M-200,${line + 12}Q300,${line - 18} 700,${line + 22}T1300,${line + 2}V${line + 70}H-200Z" fill="#1e2a26" opacity=".55"/>`;
+          for (let k = 0; k < 40; k++) { const x = -150 + k * 37 + r() * 20, y = line + 20 + r() * 30; g += `<path d="M${f1(x)},${f1(y)}q${f1((r() - 0.5) * 20)},${f1(30 + r() * 40)} ${f1((r() - 0.5) * 16)},${f1(60 + r() * 60)}" stroke="${r() < 0.5 ? "#3a7a3a" : "#5a9a3a"}" stroke-width="${f1(5 + r() * 5)}" fill="none" stroke-linecap="round"/>`; }
+          // cracks and glossy wet highlights
+          for (let k = 0; k < 9; k++) { const x = r() * 1080, y = top + 120 + r() * 1000; g += `<path d="M${f1(x)},${f1(y)}l${f1(30 + r() * 40)},${f1(40 + r() * 40)}l${f1(-10 + r() * 40)},${f1(30 + r() * 50)}" stroke="#1a1820" stroke-width="5" fill="none" opacity=".7"/>`; }
+          for (let k = 0; k < 16; k++) { const x = r() * 1080, y = line + 120 + r() * 900; g += `<path d="M${f1(x)},${f1(y)}q${f1(30 + r() * 40)},${f1(-14)} ${f1(70 + r() * 60)},${f1(-4)}" stroke="#ffffff" stroke-width="${f1(4 + r() * 6)}" fill="none" stroke-linecap="round" opacity="${f1(0.35 + r() * 0.35)}"/>`; }
+          // barnacles: little white volcanoes in clusters
+          for (let c = 0; c < 6; c++) { const cx = 80 + r() * 920, cy = line + 140 + r() * 700; for (let k = 0; k < 9; k++) { const x = cx + (r() - 0.5) * 120, y = cy + (r() - 0.5) * 60, w = 9 + r() * 8; g += `<path d="M${f1(x - w)},${f1(y)}L${f1(x - w * 0.4)},${f1(y - w * 1.1)}H${f1(x + w * 0.4)}L${f1(x + w)},${f1(y)}Z" fill="#e8e2d2" stroke="#6a6458" stroke-width="2"/><ellipse cx="${f1(x)}" cy="${f1(y - w * 1.1)}" rx="${f1(w * 0.35)}" ry="${f1(w * 0.15)}" fill="#3a342e"/>`; } }
+          // a tide pool with the sky in it
+          g += `<ellipse cx="${o.poolX ?? 780}" cy="${line + 620}" rx="170" ry="40" fill="#1a1820"/><ellipse cx="${o.poolX ?? 780}" cy="${line + 624}" rx="150" ry="32" fill="#f4c0a8" opacity=".8"/><path d="M${(o.poolX ?? 780) - 90},${line + 616}h80" stroke="#fff" stroke-width="5" opacity=".8"/>`;
+          g += `<g transform="translate(${o.lx ?? 520},${line + 330}) scale(${o.ls ?? 2.2})">${I.limpets(0, 0, o.n ?? 14, o.lseed ?? 3)}</g>`;
+          return g + `</g></g>`; };
+      })();

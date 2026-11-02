@@ -16,7 +16,7 @@ def _wav(name, x):
 
 def music_mix(vo, mus, sfx, mus_db=-22.0, sfx_db=-27.0, hush=None):
     mus = level(mus, mus_db)
-    sfx = gate(level(sfx, sfx_db))
+    sfx = gate(sfx if sfx_db is None else level(sfx, sfx_db))
     env = box(np.abs(vo), int(0.03 * SR))
     act = np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
     hop = SR // 100
@@ -40,8 +40,20 @@ def music_mix(vo, mus, sfx, mus_db=-22.0, sfx_db=-27.0, hush=None):
         m = mix.copy()
         m[over] = np.sign(mix[over]) * (lim + (1 - lim) * np.tanh((np.abs(mix[over]) - lim) / (1 - lim)) * 0.5)
         mix = m
+    # 16-bit TPDF dither (±1 LSB ≈ −101 dBFS) on the voice, the same samples in the mix: true silences stay measurable
+    rd = np.random.default_rng(29)
+    d = ((rd.random(len(vo)) - rd.random(len(vo))) / 32768.0).astype(np.float32)
+    vo, mix = vo + d, mix + d
     _wav("vo_stem.wav", vo)
     _wav("music_stem.wav", mst)
     _wav("sfx_stem.wav", sfx)
     _wav("mix.wav", mix)
     return mix
+
+
+def ride(mus, win=1.5, lo=0.4, hi=3.0):
+    """a slow level ride on the theme (≈1.5 s): its loud and quiet passages land near one level, so the duck sets the gap"""
+    e = np.sqrt(np.maximum(box(mus.astype(np.float32) ** 2, int(win * SR)), 0) + 1e-10)
+    ref = np.median(e[e > 1e-4]) if (e > 1e-4).any() else 1.0
+    g = np.clip(ref / e, lo, hi)
+    return (mus * box(g.astype(np.float32), int(0.5 * SR))).astype(np.float32)

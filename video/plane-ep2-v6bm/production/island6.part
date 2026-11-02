@@ -1,0 +1,102 @@
+      // ---------- รอดคนเดียว EP.2 v6.1 (lane C): the wet safety card, v2 (owner: "Icon ต่างๆดียัง", "การเคลื่อนไหวของไอคอนดีมั้ย") ----------
+      //   Isle.card2(tl, layer, t0, dur, o)  the same wet, creased airline card on its rope, now:
+      //     o.rows [{ text, icon, fs }]   icon: vest | panel | fire | stay | sea | fruit (hand-drawn marker icons, 1.8× the old size,
+      //                                   each with its own idle motion: straps bob, a sparkle turns, flames flicker + smoke rises,
+      //                                   the flag on the wreck waves, a drop falls, the fruit shakes)
+      //     o.shown [k]                   rows already written (no animation) · o.ticked [k] rows already ticked
+      //     o.write [k, at]               the row Kiw writes now: a marker nib runs along the line as the ink appears (clip follows the nib),
+      //                                   then a yellow highlighter swipes under it (overshoot)
+      //     o.ticks [[k, at] …]           green ticks drawn with an overshoot pop
+      //     o.enter "drop" (falls in on its rope, elastic swing) | "cut" (already hanging: a small swing-settle)
+      //   The card always hangs a little tilted and keeps swaying on its rope while on screen. Everything eases in with overshoot (V11).
+      (function () {
+        const { mk } = Pop2, I = window.Isle, LN = "#1a1418";
+        const S = `stroke="${LN}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"`;
+        const ICON2 = {
+          vest: (id) => `<g id="${id}-a"><path d="M-50,-56Q-34,-64 -18,-50L-14,58H-60Q-66,0 -50,-56ZM50,-56Q34,-64 18,-50L14,58H60Q66,0 50,-56Z" fill="#ff6a14" ${S}/>
+            <path d="M-18,-50Q0,-30 18,-50" stroke="${LN}" stroke-width="5" fill="none"/><path d="M-58,4H-16M16,4H58" stroke="#fff4d0" stroke-width="9"/>
+            ${[-18, 30].map((y) => `<path d="M-62,${y}H62" stroke="#2a2e38" stroke-width="7"/><rect x="-11" y="${y - 8}" width="22" height="16" rx="4" fill="#c8ccd4" ${S.replace("5", "3")}/>`).join("")}</g>`,
+          panel: (id) => `<g transform="rotate(-16)"><rect x="-58" y="-38" width="116" height="80" rx="6" fill="#c8d4e4" ${S}/>${[[-46, -26], [46, -26], [-46, 30], [46, 30]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="4" fill="#6a7484"/>`).join("")}
+            <path d="M-40,-16L20,26" stroke="#fff" stroke-width="9" stroke-linecap="round"/></g><path d="M-90,-90L-30,-30" stroke="#ffb020" stroke-width="5" stroke-dasharray="10 8"/>
+            <g transform="translate(46,-50)"><g id="${id}-a"><path d="M0,-30L7,-7L30,0L7,7L0,30L-7,7L-30,0L-7,-7Z" fill="#fff6a0" ${S.replace("5", "3")}/></g></g>`,
+          fire: (id) => `<path d="M-44,50L40,20M-40,20L44,50" stroke="#6a4020" stroke-width="13" stroke-linecap="round"/>
+            <g id="${id}-a"><path d="M-30,30Q-34,-8 -8,-30Q-10,-6 4,-2Q4,-26 20,-40Q34,-6 30,30Z" fill="#ff8a2a" ${S}/><path d="M-12,30Q-12,6 2,-6Q6,12 14,30Z" fill="#ffe070"/></g>
+            <g id="${id}-s">${[[-4, -54, 11], [8, -72, 13], [-2, -92, 15]].map(([x, y, r2]) => `<circle cx="${x}" cy="${y}" r="${r2}" fill="#f4f6f8" ${S.replace("5", "3")}/>`).join("")}</g>`,
+          stay: (id) => `<path d="M-74,40L40,40Q66,40 70,22L60,4H-60Q-80,18 -74,40Z" fill="#dfe4ec" ${S}/><path d="M24,6L52,-60Q58,-68 64,-58L66,6Z" fill="#2aa898" ${S}/>${[-46, -22, 2].map((x) => `<circle cx="${x}" cy="20" r="6" fill="#1a2440"/>`).join("")}
+            <path d="M-30,6V-78" stroke="${LN}" stroke-width="5"/><g transform="translate(-30,-78)"><g id="${id}-a"><path d="M0,0Q22,-6 40,4Q22,12 0,22Z" fill="#ff6a14" ${S.replace("5", "3")}/></g></g>
+            <g transform="translate(-66,38) scale(.85)"><circle cx="0" cy="-58" r="13" fill="#e0b088" ${S.replace("5", "3")}/><path d="M0,-44V-12M0,-12L22,-12L24,4M0,-34L18,-24" stroke="#d9a43a" stroke-width="9" stroke-linecap="round" fill="none"/></g>`,
+          sea: (id) => `<path d="M-60,22q15,-14 30,0t30,0t30,0t30,0M-60,46q15,-14 30,0t30,0t30,0t30,0" stroke="#2a7ab8" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <g id="${id}-a"><path d="M0,-58q-16,26 -16,36a16,16 0 0,0 32,0q0,-10 -16,-36z" fill="#7ac8f0" ${S.replace("5", "4")}/></g><path d="M-62,-62L62,62" stroke="#d8312a" stroke-width="11" stroke-linecap="round"/>`,
+          fruit: (id) => `<g id="${id}-a">${[[-18, -2], [14, 4], [-2, 26], [0, -26], [24, -20]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="19" fill="#e2185a" ${S.replace("5", "4")}/><circle cx="${a - 6}" cy="${b - 6}" r="5" fill="#fff" opacity=".7"/>`).join("")}<path d="M0,-44l6,-14l6,14" fill="#3a7a2a" ${S.replace("5", "2")}/></g>
+            <path d="M-62,-62L62,62" stroke="#d8312a" stroke-width="11" stroke-linecap="round"/>`,
+        };
+        const LIFE = {
+          vest: (tl, e, t, d) => tl.fromTo(e, { y: 0 }, { y: -6, duration: 0.55, repeat: Math.ceil(d / 0.55), yoyo: true, ease: "sine.inOut", immediateRender: false }, t),
+          panel: (tl, e, t, d) => tl.fromTo(e, { rotation: 0, scale: 0.7, svgOrigin: "0 0" }, { rotation: 90, scale: 1.25, svgOrigin: "0 0", duration: 0.6, repeat: Math.ceil(d / 0.6), yoyo: true, ease: "sine.inOut", immediateRender: false }, t),
+          fire: (tl, e, t, d, id) => { tl.fromTo(e, { scaleY: 0.85, svgOrigin: "0 30" }, { scaleY: 1.15, svgOrigin: "0 30", duration: 0.14, repeat: Math.ceil(d / 0.14), yoyo: true, ease: "sine.inOut", immediateRender: false }, t);
+            const s = document.getElementById(`${id}-s`); if (s) tl.fromTo(s, { y: 10, opacity: 0.5 }, { y: -14, opacity: 1, duration: 0.9, repeat: Math.ceil(d / 0.9), ease: "sine.out", immediateRender: false }, t); },
+          stay: (tl, e, t, d) => tl.fromTo(e, { skewY: -10, scaleX: 0.92, svgOrigin: "0 10" }, { skewY: 12, scaleX: 1.05, svgOrigin: "0 10", duration: 0.32, repeat: Math.ceil(d / 0.32), yoyo: true, ease: "sine.inOut", immediateRender: false }, t),
+          sea: (tl, e, t, d) => tl.fromTo(e, { y: -12, opacity: 1 }, { y: 26, opacity: 0.2, duration: 0.7, repeat: Math.ceil(d / 0.7), ease: "power2.in", immediateRender: false }, t),
+          fruit: (tl, e, t, d) => tl.fromTo(e, { rotation: -5, svgOrigin: "0 0" }, { rotation: 5, svgOrigin: "0 0", duration: 0.09, repeat: Math.ceil(d / 0.09), yoyo: true, ease: "none", immediateRender: false }, t),
+        };
+        const plain = (t) => t.replace(/<\/?u>/g, "");
+        I.card2 = (tl, layer, t0, dur, o = {}) => {
+          const id = o.id || `isd${Math.round(t0 * 100)}`, rows = o.rows || [], shown = o.shown || [], ticked = o.ticked || [], ticks = o.ticks || [], wr = o.write;
+          const X = 70, W = 940, Y0 = o.y ?? 180, H = o.h ?? 1230, r = mk(55), rowY = (k) => Y0 + 460 + k * 270;
+          const edge = [], J = (v) => (r() - 0.5) * v;
+          for (let i = 0; i <= 10; i++) edge.push([X + (W * i) / 10 + J(10), Y0 + J(14)]);
+          for (let i = 1; i <= 12; i++) edge.push([X + W + J(14), Y0 + (H * i) / 12 + J(8)]);
+          edge.push([X + W - 60, Y0 + H + 6], [X + W - 120, Y0 + H - 40], [X + W - 170, Y0 + H + 10]);
+          for (let i = 9; i >= 0; i--) edge.push([X + (W - 200) * i / 9 + J(10), Y0 + H + J(16)]);
+          for (let i = 11; i >= 1; i--) edge.push([X + J(14), Y0 + (H * i) / 12 + J(8)]);
+          const d = `M${edge.map(([a, b]) => `${f1(a)},${f1(b)}`).join("L")}Z`;
+          let wet = ""; for (let k = 0; k < 9; k++) wet += `<ellipse cx="${f1(X + r() * W)}" cy="${f1(Y0 + 200 + r() * (H - 200))}" rx="${f1(60 + r() * 160)}" ry="${f1(30 + r() * 90)}" fill="#a8b4c0" opacity="${f1(0.08 + r() * 0.1)}"/>`;
+          let sand = ""; for (let k = 0; k < 120; k++) { const y = Y0 + H - r() * r() * H * 0.6; sand += `<circle cx="${f1(X + r() * W)}" cy="${f1(y)}" r="${f1(1.2 + r() * 2.8)}" fill="${r() < 0.5 ? "#c8a070" : "#8a6a48"}" opacity="${f1(0.4 + r() * 0.5)}"/>`; }
+          let crease = ""; [0.33, 0.66].forEach((u) => { crease += `<path d="M${f1(X + W * u)},${Y0}L${f1(X + W * u + J(20))},${Y0 + H}" stroke="#fff" stroke-width="5" opacity=".5"/><path d="M${f1(X + W * u + 5)},${Y0}L${f1(X + W * u + 5 + J(20))},${Y0 + H}" stroke="#8a7a5a" stroke-width="3" opacity=".3"/>`; });
+          const band = `<rect x="${X}" y="${Y0}" width="${W}" height="150" fill="#1d2c5e"/><rect x="${X}" y="${Y0 + 150}" width="${W}" height="16" fill="#f4c430"/>
+            <text x="${X + 40}" y="${Y0 + 70}" font-family="Kanit" font-weight="800" font-size="44" fill="#fff">การ์ดความปลอดภัย</text><text x="${X + 40}" y="${Y0 + 122}" font-family="Kanit" font-weight="600" font-size="30" fill="#c8d4f4">SAFETY CARD · ฟ้าราม แอร์ · FR 623</text>
+            <g transform="translate(${X + W - 120},${Y0 + 76})"><path d="M-40,20L40,-30L48,-18L-30,30Z" fill="#2aa898"/><path d="M-6,0L14,-46L26,-40L10,4Z" fill="#fff"/></g>`;
+          const title = `<g transform="translate(540,${Y0 + 290})"><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="#d8312a">${o.title || ""}</text>
+            <path d="M-300,30Q-100,52 120,34T320,40" stroke="#d8312a" stroke-width="9" fill="none" stroke-linecap="round"/></g>`;
+          let rws = "";
+          rows.forEach((rw, k) => { const y = rowY(k), vis = shown.includes(k) || (wr && wr[0] === k), writing = wr && wr[0] === k, tw = Math.min(560, plain(rw.text).length * 31 + 20);
+            const t = rw.text.replace(/<u>(.*?)<\/u>/g, `<tspan fill="#d8312a">$1</tspan>`);
+            rws += `<g id="${id}-r${k}" opacity="${vis ? 1 : 0}">
+              ${writing ? `<path id="${id}-hl" d="M330,${y - 58}Q540,${y - 72} ${340 + tw},${y - 54}L${344 + tw},${y + 24}Q540,${y + 36} 326,${y + 20}Z" fill="url(#isHL)"/>` : ""}
+              <g transform="translate(184,${y - 18}) scale(1.8)"><g id="${id}-ic${k}">${(ICON2[rw.icon] || (() => ""))(`${id}-i${k}`)}</g></g>
+              ${writing ? `<defs><clipPath id="${id}-cp"><rect id="${id}-cr" x="320" y="${y - 100}" width="0" height="170"/></clipPath></defs>` : ""}
+              <g${writing ? ` clip-path="url(#${id}-cp)"` : ""}><text x="340" y="${y + 12}" font-family="Sriracha" font-size="${rw.fs || 64}" fill="#1a1418">${t}</text></g>
+              <path id="${id}-tk${k}" d="M${350 + tw},${y - 18}l22,26l46,-58" stroke="#1e9a50" stroke-width="16" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="${ticked.includes(k) ? 0 : 1}"/></g>`; });
+          // the marker: black body, red tip, it rides the edge of the ink
+          const pen = wr ? `<g id="${id}-pen" opacity="0"><g transform="translate(0,${rowY(wr[0]) - 10}) rotate(-35)"><rect x="-8" y="-150" width="30" height="130" rx="8" fill="#2a2a30" stroke="${LN}" stroke-width="3"/><rect x="-8" y="-150" width="30" height="34" rx="8" fill="#d8312a"/><path d="M-6,-20L20,-20L10,6Z" fill="#d8312a" stroke="${LN}" stroke-width="3"/><path d="M-2,-140V-40" stroke="#fff" stroke-width="4" opacity=".4"/></g></g>` : "";
+          const rope = `<path d="M540,${Y0 - 1400}L540,${Y0 + 30}" stroke="#c8a870" stroke-width="10"/><path d="M540,${Y0 - 1400}L540,${Y0 + 30}" stroke="#8a6a3a" stroke-width="10" stroke-dasharray="6 14"/>
+            <circle cx="540" cy="${Y0 + 46}" r="22" fill="#5a4a3a" stroke="#c8a870" stroke-width="8"/><path d="M520,${Y0 + 10}q20,40 40,0" stroke="#c8a870" stroke-width="9" fill="none"/>`;
+          put(layer, `<g id="${id}" opacity="0"><g id="${id}-m"><g id="${id}-sw"><g id="${id}-tilt">
+            <path d="${d}" fill="#000" opacity=".35" transform="translate(26,34)" filter="url(#p2Soft)"/><path d="${d}" fill="url(#isCard)" stroke="#5a4a3a" stroke-width="4"/>
+            <defs><clipPath id="${id}-bc"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id}-bc)">${band}${wet}${crease}${sand}<path d="M${X + W - 170},${Y0 + H}L${X + W - 120},${Y0 + H - 40}L${X + W - 60},${Y0 + H}Z" fill="#cfc2a0"/></g>
+            ${title}${rws}${pen}${rope}</g></g></g></g>`);
+          const pv = `540 ${Y0 - 1400}`;
+          tl.set(`#${id}`, { opacity: 1 }, t0);
+          const pt = `540 ${Y0 - 40}`; tl.set(`#${id}-tilt`, { rotation: -1.4, svgOrigin: pt }, t0);
+          if ((o.enter || "drop") === "drop") { tl.fromTo(`#${id}-m`, { y: -1500 }, { y: 0, duration: 0.5, ease: "back.out(1.4)", immediateRender: false }, t0);
+            tl.fromTo(`#${id}-sw`, { rotation: 6, svgOrigin: pv }, { rotation: 0, svgOrigin: pv, duration: 1.3, ease: "elastic.out(1, 0.3)", immediateRender: false }, t0 + 0.3); }
+          else { tl.fromTo(`#${id}-m`, { y: -70, scale: 1.04, svgOrigin: pv }, { y: 0, scale: 1, svgOrigin: pv, duration: 0.35, ease: "back.out(2.2)", immediateRender: false }, t0);
+            tl.fromTo(`#${id}-sw`, { rotation: 2.5, svgOrigin: pv }, { rotation: 0, svgOrigin: pv, duration: 0.9, ease: "elastic.out(1, 0.35)", immediateRender: false }, t0); }
+          tl.fromTo(`#${id}-tilt`, { rotation: -2.2, svgOrigin: pt }, { rotation: -0.6, svgOrigin: pt, duration: 1.3, repeat: Math.ceil(dur / 1.3) + 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          // every row on screen keeps its icon alive
+          rows.forEach((rw, k) => { const e = document.getElementById(`${id}-i${k}-a`), on = shown.includes(k) || (wr && wr[0] === k); if (e && on && LIFE[rw.icon]) LIFE[rw.icon](tl, e, t0, dur, `${id}-i${k}`); });
+          if (wr) { const [k, at] = wr, ta = t0 + at, y = rowY(k), tw = Math.min(560, plain(rows[k].text).length * 31 + 20), wd = o.writeDur ?? 0.75;
+            tl.fromTo(`#${id}-ic${k}`, { scale: 0, rotation: -30, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.8)", immediateRender: false }, ta);
+            tl.set(`#${id}-pen`, { opacity: 1 }, ta);
+            tl.fromTo(`#${id}-cr`, { attr: { width: 0 } }, { attr: { width: tw + 40 }, duration: wd, ease: "power1.inOut", immediateRender: false }, ta + 0.05);
+            tl.fromTo(`#${id}-pen`, { x: 330, y: 0 }, { x: 340 + tw + 20, y: 0, duration: wd, ease: "power1.inOut", immediateRender: false }, ta + 0.05);
+            tl.fromTo(`#${id}-pen`, { y: -6 }, { y: 6, duration: 0.07, repeat: Math.ceil(wd / 0.07), yoyo: true, ease: "none", immediateRender: false }, ta + 0.05);
+            tl.to(`#${id}-pen`, { x: `+=140`, y: -120, rotation: 20, opacity: 0, duration: 0.3, ease: "back.in(1.6)", immediateRender: false }, ta + 0.05 + wd);
+            tl.fromTo(`#${id}-hl`, { scaleX: 0, svgOrigin: `326 ${y}` }, { scaleX: 1, svgOrigin: `326 ${y}`, duration: 0.4, ease: "back.out(1.8)", immediateRender: false }, ta + 0.1 + wd); }
+          ticks.forEach(([k, at]) => { const e = document.getElementById(`${id}-tk${k}`), y = rowY(k), tw = Math.min(560, plain(rows[k].text).length * 31 + 20);
+            if (!e) return; tl.fromTo(e, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.22, ease: "power2.out", immediateRender: false }, t0 + at);
+            tl.fromTo(e, { scale: 0.4, svgOrigin: `${380 + tw} ${y}` }, { scale: 1, svgOrigin: `${380 + tw} ${y}`, duration: 0.5, ease: "back.out(3.4)", immediateRender: false }, t0 + at);
+            if (!shown.includes(k)) tl.fromTo(`#${id}-r${k}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + at - 0.25); });
+          if (o.out !== undefined) { tl.to(`#${id}-m`, { y: -260, duration: 0.3, ease: "back.in(1.6)" }, t0 + o.out); tl.to(`#${id}`, { opacity: 0, duration: 0.3 }, t0 + o.out); }
+          return id; };
+      })();

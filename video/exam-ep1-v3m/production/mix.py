@@ -121,7 +121,12 @@ sfx = lp45(sfx)   # the synth stem too: a saw-chord sting has dense harmonics up
 place_samples(sfx, SAMPLES)
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "exam-theme.mp3"))[int(27.0 * SR):]   # the theme: its abrupt cut (~85 s) lands on the cliffhanger
+_th = load(os.path.join(HERE, "..", "music", "exam-theme.mp3"))
+# A5: the theme from 27.0 s up to 81 s (before its own fade-out), then its continuous body (41–81 s) looped with 1 s crossfades
+mus, _body, _xf = _th[int(27.0 * SR):int(81 * SR)].copy(), _th[int(41 * SR):int(81 * SR)].copy(), int(1.0 * SR)
+while len(mus) < N:
+    _r = np.linspace(0, 1, _xf, dtype=np.float32)
+    mus = np.concatenate([mus[:-_xf], mus[-_xf:] * (1 - _r) + _body[:_xf] * _r, _body[_xf:]])   # the theme: its abrupt cut (~85 s) lands on the cliffhanger
 mus = np.pad(mus, (0, max(0, N - len(mus))))[:N]
 t = np.arange(N) / SR
 gain = np.ones(N, np.float32)
@@ -138,10 +143,10 @@ dip(T("stop", 0), T("breath", -0.01), 0.3)         # the held breath: the bed si
 gain[int(T("drag", 0) * SR):int(T("drag", -0.01) * SR)] *= 1.3   # the escape: the bed pushes
 mus = lp45(mus * gain, 6000.0, 48)   # A5: the theme keeps its air (6 kHz); the effects bus stays at 4.5 kHz
 a, b = int(T("next", 0) * SR), int(T("next", -0.01) * SR)
-mus[a:b] *= np.linspace(1, 0, b - a)
+c = max(a, b - int(0.8 * SR)); mus[c:b] *= np.linspace(1, 0, b - c)   # A5: the theme stays over the end card, out in the last 0.8 s
 mus[b:] = 0
 
 # ---- levels, duck, -14 LUFS, stems (A5) ----
 exec(open(os.path.join(HERE, "..", "musicmix_inc.py")).read())
-music_mix(vo, mus, sfx, mus_db=float(os.environ.get("MUS_DB", -22)))
+music_mix(vo, ride(mus), sfx, mus_db=float(os.environ.get("MUS_DB", -22)))
 print("mix written", TOTAL)
