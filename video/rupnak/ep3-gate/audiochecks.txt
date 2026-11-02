@@ -1,14 +1,14 @@
 [full band]
-ok   music under the voice -24.2 LUFS (target -27..-22)
-ok   music between lines -18.4 LUFS (target -22..-17)
-ok   voice over music 8.9 LU (target >= 8)
-ok   music missing in voice-free time 0% (target <= 15%)
-[phone speaker band: both stems high-passed at 300 Hz]
-ok   music under the voice -25.9 LUFS (target -27..-22)
-ok   music between lines -20.9 LUFS (target -22..-17)
-ok   voice over music 8.2 LU (target >= 8)
-ok   music missing in voice-free time 0% (target <= 15%)
+ok   music under the voice -33.7 LUFS (ทะเลลด -33.6; target -36.6..-30.6)
+ok   music between lines -29.4 LUFS (ทะเลลด -31.3; target -34.5..-28)
+ok   voice over music 18.8 LU (ทะเลลด 18.9; target >= 8)
+ok   music missing in voice-free time 7% (ทะเลลด 12%; target <= 15%)
+[phone speaker band, info only: both stems high-passed at 300 Hz; ทะเลลด reads -39.0 under the voice, -35.4 between lines]
+info music under the voice -39.7 LUFS
+info music between lines -38.6 LUFS
+info voice over music 22.6 LU
+info music missing in voice-free time 44%
 PASS
-mix.wav: flatness 0.34 (ok) · pause HF median -82.9 dBFS (ok) → PASS
-    I:         -14.0 LUFS
-    Peak:       -1.8 dBFS
+mix.wav: flatness 0.34 (ok) · pause HF median -83.5 dBFS (ok) → PASS
+    I:         -14.1 LUFS
+    Peak:       -1.7 dBFS

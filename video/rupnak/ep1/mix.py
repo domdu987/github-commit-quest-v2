@@ -2,7 +2,7 @@
 back off the title, the flopping fish, the clock spinning back, the van on the map, the shallows under running feet, the live's pings,
 the tower's 08:00 test tone, the shadow screen's gong, the deep boom of the quake, the glass's faint ring, the seabed's mud and the
 shutter clicks, the conch, the run, the surge round the shop, heartbeats once ยาย is missing, the choice's ticks) and the Suno
-music bed with dips and sidechain ducking under the voice. The music stops when the screen goes black after the choice.
+music bed (suno1, ทะเลลด recipe) with dips and ducking under the voice. The music stops when the screen goes black after the choice.
 Output -14 LUFS. No noise beds and no high hiss (user: "เสียงซ่าๆเอาออก")."""
 import json
 import os
@@ -157,8 +157,9 @@ subprocess.run(["python3", os.path.join(HERE, "..", "synth.py"), os.path.join(HE
 sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
 
-# ---- music with horror dips ----
-mus = load(next(p for p in (os.path.join(HERE, "..", "music", "suno1.mp3"), os.path.join(HERE, "..", "..", "music", "suno1.mp3")) if os.path.exists(p)))  # the channel's own song for every story (owner 2 Nov 2569: "ใช้เพลงเดิมตลอดเลยนะ")
+# ---- music: the ทะเลลด recipe (owner 2 Nov 2569 ~21:00: "เอาซาวเพลงแบบทะเลลด ใช้ทุกคลิปเลย") ----
+# the channel song suno1 from 0 s, unfiltered (no EQ, no dynaudnorm), dipped x0.4-0.55 on the scary beats, -30 dB RMS, duck 0.65
+mus = load(next(p for p in (os.path.join(HERE, "..", "music", "suno1.mp3"), os.path.join(HERE, "..", "..", "music", "suno1.mp3")) if os.path.exists(p)))
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -171,39 +172,32 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(T("collapse", 0.0), T("collapse", 0.55), 0.05, 0.08)
-
+dip(T("collapse", 0.0), T("collapse", 0.55), 0.4, 0.08)  # breath held on the collapse
+dip(T("close", 0), T("choice", 0), 0.4)  # the cliffhanger
 mus = mus * gain
 end = int(T("choice", -0.12) * SR)
 card0 = int(T("end", 0.1) * SR)
-mus[end:card0] = 0  # hard cut to black, then the theme returns softly under the end card
-fi = int(0.4 * SR); mus[card0:card0 + fi] *= np.linspace(0, 1, fi)
+mus[end:card0] = 0  # hard cut to black and silence after the choice
+mus[card0:] *= 0.5; fi = int(0.4 * SR); mus[card0:card0 + fi] *= np.linspace(0, 1, fi)  # then the theme returns softly (x0.5) under the end card
 
-# ---- levels: music audible under a gentle duck (A5), sfx low-passed (no hiss, A4), one linear gain to -14 LUFS ----
-from finalmix import duck_curve, finalize
-def dyn(x):  # even out the plucked theme's peaks and gaps so it reads as a continuous score
-    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", "dynaudnorm=f=400:g=21:m=12", "-f", "f32le", "-"],
-                         input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
-    return np.frombuffer(out, np.float32)[:len(x)]
-def highpass(x, fc):  # thin the theme's low end so the phone-band melody carries the level, not the bass
-    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"highpass=f={fc}:poles=2", "-f", "f32le", "-"],
-                         input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
-    return np.frombuffer(out, np.float32)[:len(x)]
+# ---- levels + ducking (music sits well under the voice while it speaks; no gate), sfx low-passed (no hiss, A4) ----
+from finalmix import finalize
+
+
 def lowpass(x, fc):
     out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"lowpass=f={fc}:poles=2", "-f", "f32le", "-"],
                          input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
     return np.frombuffer(out, np.float32)[:len(x)]
-def presence(x, g):  # lift the melody's 1-2 kHz so the theme carries on phone speakers
-    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"equalizer=f=1500:t=o:w=1.5:g={g}", "-f", "f32le", "-"],
-                         input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
-    return np.frombuffer(out, np.float32)[:len(x)]
-HPF = float(os.environ.get("HPF", 250))
-mus = level(presence(highpass(highpass(lowpass(dyn(mus), 6000), HPF), HPF), float(os.environ.get("PRES", 4))), float(os.environ.get("MUSLVL", -21.9)))
+
+
+mus = level(mus, -30)
 sfx = level(lowpass(lowpass(sfx, 3500), 3500), -27)
-mus_part = mus * duck_curve(vo, float(os.environ.get("DUCK", 0.55)), rel=float(os.environ.get("REL", 0.6)))
+env = box(np.abs(vo), int(0.05 * SR))
+duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
+duck = box(duck, int(0.25 * SR))
+mus_part = (mus * duck).astype(np.float32)
 mix = vo + mus_part + sfx
 cut, card = int(T("choice", -0.12) * SR), int(T("end", 0.1) * SR)
-for x in (mix, mus_part):
-    x[cut - 240:cut] *= np.linspace(1, 0, 240)
-mix[cut:card] = 0
-finalize(HERE, mix.astype(np.float32), vo.copy(), mus_part.astype(np.float32))
+mix[cut - 240:cut] *= np.linspace(1, 0, 240)
+mix[cut:card] = 0  # a beat of black and silence after the cliffhanger, then only the end card's own sounds
+finalize(HERE, mix.astype(np.float32), vo.copy(), mus_part)  # one linear gain to -14 LUFS (stems at the same gain)
