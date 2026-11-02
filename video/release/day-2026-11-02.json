@@ -223,13 +223,13 @@
    "series": "ต้นตะเคียนกลางนา",
    "status": "hold",
    "slot": "เจ้าของเลือกเอง (หลัง EP.1)",
-   "branch": "ccr-fb88c4b3-kcqyid",
+   "branch": "prod/lane-c",
    "package": "video/release/takhian.json",
-   "commit": "6bc1663",
-   "video_hq": "video/release/hq/takhian-ep2-HQ-m2.mp4",
-   "video_hq_sha256": "bf4391fe00684449829afdc04ef7825557f49e9e5402444849c2d641894543a0",
-   "video_hq_bytes": 97381981,
-   "revision_note": "2 พ.ย. ~19:40 น. (ผู้ประสานงาน 6bc1663): เพลงใหม่ที่ได้ยินบนลำโพงมือถือ (เดิมเพลงเป็นเสียงทุ้มต่ำกว่า 300 Hz ถึง 95% เจ้าของแจ้งว่า 'เพลงหาย') · ภาพเดิม copy ครบทุกเฟรม · musiccheck PASS ทั้งย่านปกติและย่านมือถือ · hisscheck PASS · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทนไฟล์เดิม · ก่อนหน้า: 2 พ.ย. (เลน C c37d878): เรนเดอร์ทั้งตอนจาก a0bbecc + ต่อช็อต speak · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 120.7 วิ 60fps 7240 เฟรม · −14.2 LUFS peak −2.7 · ไม่มีภาพค้าง/จอดำ · musiccheck PASS · hisscheck PASS · ดูภาพครบที่ 360×640 · ส่งเจ้าของพร้อมแคปชันแล้ว · จุดเดียว: กล่องซับ 2 บรรทัดชนขอบจอ (ฉบับแก้กำลังทำ)",
+   "commit": "41183c1",
+   "video_hq": "video/takhian-kit/out/EP2-takhian-tonkhian-klang-na-HQ-subfix.mp4",
+   "video_hq_sha256": "3e764932937a6bde16450dd382723cf3729d79aa976ac75314f5bc0852e1e1d5",
+   "video_hq_bytes": 97375351,
+   "revision_note": "2 พ.ย. ~20:20 น. (เลน C 41183c1): ฉบับแก้ซับ (แบ่งท่อนตามช่วงเงียบ + fitCaps ≤ 980 px · edgecheck EP.1/EP.2 no edge problems) + เสียง m2 (แทร็กเสียงเหมือน m2 ทุกไบต์) · ผู้ประสานงานตรวจ: sha ตรง · 7240 เฟรม · −14.2 LUFS · ไม่มีภาพค้างหรือจอดำ · hisscheck PASS · ครอปแถบซับ 52.0/53.6/88.5/89.8 วิห่างขอบชัด · เฟรมอื่นเทียบฉบับเดิม PSNR 40–46 dB · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทน EP.2 ทุกฉบับก่อนหน้า · ก่อนหน้า: 2 พ.ย. ~19:40 น. (ผู้ประสานงาน 6bc1663): เพลงใหม่ที่ได้ยินบนลำโพงมือถือ (เดิมเพลงเป็นเสียงทุ้มต่ำกว่า 300 Hz ถึง 95% เจ้าของแจ้งว่า 'เพลงหาย') · ภาพเดิม copy ครบทุกเฟรม · musiccheck PASS ทั้งย่านปกติและย่านมือถือ · hisscheck PASS · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทนไฟล์เดิม · ก่อนหน้า: 2 พ.ย. (เลน C c37d878): เรนเดอร์ทั้งตอนจาก a0bbecc + ต่อช็อต speak · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 120.7 วิ 60fps 7240 เฟรม · −14.2 LUFS peak −2.7 · ไม่มีภาพค้าง/จอดำ · musiccheck PASS · hisscheck PASS · ดูภาพครบที่ 360×640 · ส่งเจ้าของพร้อมแคปชันแล้ว · จุดเดียว: กล่องซับ 2 บรรทัดชนขอบจอ (ฉบับแก้กำลังทำ)",
    "hold_note": "ไฟล์พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
    "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
    "previous_v1": {
@@ -238,6 +238,13 @@
     "video_hq": "video/takhian-kit/out/EP2-takhian-tonkhian-klang-na-HQ.mp4",
     "video_hq_sha256": "cf91b167f0f23d0d7a03e32c5b9d3fdf2ae1f74a1a00faa3c3ef2c874c8adeff",
     "video_hq_bytes": 97423592
+   },
+   "previous_v2": {
+    "branch": "ccr-fb88c4b3-kcqyid",
+    "commit": "6bc1663",
+    "video_hq": "video/release/hq/takhian-ep2-HQ-m2.mp4",
+    "video_hq_sha256": "bf4391fe00684449829afdc04ef7825557f49e9e5402444849c2d641894543a0",
+    "video_hq_bytes": 97381981
    }
   }
  ],

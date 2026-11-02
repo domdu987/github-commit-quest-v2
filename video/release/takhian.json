@@ -50,12 +50,12 @@
    "id": "takhian-ep2",
    "order": 2,
    "title": "คนข้างคุณโดนฟ้าผ่า… อย่ากลัวจับตัวเขา | ต้นตะเคียนกลางนา EP.2 ตอนจบ",
-   "status": "final (ผู้ประสานงานตรวจไฟล์จริงแล้ว ส่งเจ้าของ 2 พ.ย.) · ฉบับแก้ซับชนขอบกำลังทำที่เลน C",
-   "branch": "ccr-fb88c4b3-kcqyid",
-   "commit": "6bc1663",
-   "video_hq": "video/release/hq/takhian-ep2-HQ-m2.mp4",
-   "video_hq_sha256": "bf4391fe00684449829afdc04ef7825557f49e9e5402444849c2d641894543a0",
-   "video_hq_bytes": 97381981,
+   "status": "final (ฉบับแก้ซับ + เพลง m2 · ผู้ประสานงานตรวจไฟล์จริงแล้ว ส่งเจ้าของ 2 พ.ย. ~20:20 น.)",
+   "branch": "prod/lane-c",
+   "commit": "41183c1",
+   "video_hq": "video/takhian-kit/out/EP2-takhian-tonkhian-klang-na-HQ-subfix.mp4",
+   "video_hq_sha256": "3e764932937a6bde16450dd382723cf3729d79aa976ac75314f5bc0852e1e1d5",
+   "video_hq_bytes": 97375351,
    "duration_s": 120.667,
    "qa": {
     "resolution": "1080x1920",
@@ -69,7 +69,7 @@
     "musiccheck": "PASS (−25.8 / −19.4 LUFS · พูดดังกว่า 10.4 LU · เพลงหาย 0%)",
     "hisscheck": "PASS (flatness 0.36 · ช่วงเงียบ HF −87.5 dBFS)",
     "picture": "ผู้ประสานงานดูภาพ 1 fps ที่ 360×640 ครบ 0–120 วิ: ฮุก ~2.5 วิ · การ์ดกฎ 2 และ 3 ไม่เกิน 2 วิ · ช็อตมุมบน CPR 26.5–30 วิ ถูกตำแหน่ง · ฟ้าผ่าซ้ำ 86–91 วิ · เฉลยรอยไหม้และรูปในศาล",
-    "known_issue": "กล่องซับ 2 บรรทัดกว้างชนขอบจอ (~51–54 วิ x≈1–1079 · ~86–91 วิ x≈5–1075) ตัวหนังสือครบ · edgecheck ไม่ได้รันก่อนเรนเดอร์ · เลน C ทำฉบับแก้",
+    "known_issue": "แก้แล้ว: ซับ 2 บรรทัดที่เคยชนขอบจอถูกแบ่งท่อน (edgecheck PASS)",
     "sources_check": "2 พ.ย. เปิดหน้าจริง: NWS lightning-sports/myths/tips/struck และ PDF รพ.รามาธิบดี (1669 · กึ่งกลางหน้าอก ครึ่งล่างกระดูกอก · 5–6 ซม. · 100–120 ครั้ง/นาที · กดหน้าอกอย่างเดียวจนทีมแพทย์มาถึง) ตรงทุกข้อ",
     "music": "v3 phone-audible theme · musiccheck PASS full band + phone band (300 Hz HP) · see video/release/audio/takhian-music-v3/README.md"
    },
@@ -81,8 +81,15 @@
     "video_hq": "video/takhian-kit/out/EP2-takhian-tonkhian-klang-na-HQ.mp4",
     "video_hq_sha256": "cf91b167f0f23d0d7a03e32c5b9d3fdf2ae1f74a1a00faa3c3ef2c874c8adeff",
     "video_hq_bytes": 97423592
+   },
+   "previous_v2": {
+    "branch": "ccr-fb88c4b3-kcqyid",
+    "commit": "6bc1663",
+    "video_hq": "video/release/hq/takhian-ep2-HQ-m2.mp4",
+    "video_hq_sha256": "bf4391fe00684449829afdc04ef7825557f49e9e5402444849c2d641894543a0",
+    "video_hq_bytes": 97381981
    }
   }
  ],
- "note": "EP.1 + EP.2 ส่งเจ้าของแล้ว · EP.2 ฉบับแก้ซับชนขอบ (เลน C) จะเพิ่มเป็น revision เมื่อผู้ประสานงานตรวจแล้ว"
+ "note": "EP.1 = m2 (ccr 6bc1663) · EP.2 = subfix + m2 (prod/lane-c 41183c1)"
 }
