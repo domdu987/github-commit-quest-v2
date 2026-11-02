@@ -85,23 +85,40 @@ class Mix:
 
     def finish(self, music_offset=0.0, fade_from=None):
         mus = self.load(os.path.join(self.here, "..", "music", "takhian-theme.mp3"))[int(music_offset * SR):]
-        while len(mus) < self.N: mus = np.concatenate([mus, mus])
+        env = self.box(np.abs(mus), int(0.1 * SR)); live = np.where(env > 10 ** (-60 / 20))[0]; mus = mus[: live[-1] + 1]   # drop the file's silent tail
+        NT = self.N + int(7.5 * SR)   # the theme's own decay falls just after the last frame; the episode ends on full music with a short fade
+        if len(mus) < NT:   # too short: repeat a stretch from the middle (80 ms crossfades)
+            ex, s0, xf = NT - len(mus), len(mus) // 2, int(0.08 * SR); seg = mus[s0 - ex - xf: s0 + xf].copy()
+            ramp = np.linspace(0, 1, xf, dtype=np.float32); out = np.concatenate([mus[:s0], np.zeros(ex, np.float32), mus[s0:]])
+            out[s0 - xf: s0] = mus[s0 - xf: s0] * (1 - ramp) + seg[:xf] * ramp; out[s0: s0 + ex] = seg[xf: xf + ex]
+            out[s0 + ex: s0 + ex + xf] = seg[xf + ex: xf + ex + xf] * (1 - ramp) + mus[s0: s0 + xf] * ramp; mus = out
         mus = self.filt(mus[: self.N], "lowpass=f=6000,lowpass=f=6000") * self.gain
         if fade_from is not None:
             a = int(fade_from * SR); mus[a:] *= np.linspace(1, 0, self.N - a)
-        mus = self.level(mus, -30); sfx = self.level(self.filt(self.sfx, "lowpass=f=4500,lowpass=f=4500,highpass=f=40"), -25)
+        # music rule A5 (2 พ.ย.): the theme must be heard — level ~-22 dB RMS before the final gain, ducked only ~6 dB (×0.5) under the voice, no gate
+        mus = self.level(mus, getattr(self, "mus_db", -22)); sfx = self.level(self.filt(self.sfx, "lowpass=f=4500,lowpass=f=4500,highpass=f=40"), -25)
         env = self.box(np.abs(self.vo), int(0.05 * SR))
-        duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
+        duck = 1 - 0.5 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
         duck = self.box(duck, int(0.25 * SR))
-        mix = self.vo + mus * duck + sfx
+        mstem = mus * duck
+        mix = self.vo + mstem + sfx
+        # one static gain to -14 LUFS integrated (no dynamic loudnorm, so the stems below are exactly what is in the mix)
+        tmp = os.path.join(self.here, "mix_raw.wav")
+        wr = lambda path, x: subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-ac", "2", "-c:a", "pcm_s16le", path], input=x.astype(np.float32).tobytes(), check=True)
+        wr(tmp, mix); I = integrated(tmp); wr(tmp, mix * 10 ** ((-14.0 - I) / 20)); I2 = integrated(tmp); os.remove(tmp)
+        g = 10 ** ((-14.0 - I) / 20) * 10 ** ((-14.0 - I2) / 20); mix, vo, mstem = mix * g, self.vo * g, mstem * g
+        dz = (np.random.default_rng(7).standard_normal(self.N) * 1e-5).astype(np.float32); vo = vo + dz; mix = mix + dz   # ~-100 dBFS dither: digital zeros give the R128 meter no readings
         peak = np.max(np.abs(mix))
-        if peak > 0.98: mix = np.tanh(mix / peak * 1.2) * 0.95
-        raw = os.path.join(self.here, "mix_raw.wav")
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-ac", "2", raw], input=mix.astype(np.float32).tobytes(), check=True)
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-af", "loudnorm=I=-13.2:TP=-1.5:LRA=11", "-ar", "48000", os.path.join(self.here, "mix.wav")], check=True)
-        os.remove(raw)
+        if peak > 0.7: ax = np.abs(mix); mix = np.where(ax > 0.7, np.sign(mix) * (0.7 + 0.19 * np.tanh((ax - 0.7) / 0.19)), mix).astype(np.float32)   # soft knee above -3 dBFS, ceiling ≈ -1 dBFS; only strike peaks reach it
+        wr(os.path.join(self.here, "mix.wav"), mix); wr(os.path.join(self.here, "vo_stem.wav"), vo); wr(os.path.join(self.here, "music_stem.wav"), mstem)
         print("mix written", self.TOTAL)
         print(measure(os.path.join(self.here, "mix.wav")))
+
+
+def integrated(path):
+    out = subprocess.run(["ffmpeg", "-nostats", "-i", path, "-af", "ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
+    import re
+    return float(re.findall(r"I:\s+(-?[0-9.]+) LUFS", out)[-1])
 
 
 def measure(path, a=0, b=None):

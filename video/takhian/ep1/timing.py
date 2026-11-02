@@ -31,10 +31,10 @@ SHOTS = [
     ("truck", ["n13"], 0.2, 0.2, 2.21),      # at the pickup: faces behind the glass; the dog under it; ลุง is not there
     ("rope", ["l05"], 0.05, 0.2, 1.7),      # ลุง jogs back toward the buffalo at the tree
     ("noo", ["t03"], 0.05, 0.25, 1.19),       # ต้น at the window, screaming
-    ("strike", [("n14", 1.2)], 0.0, 0.25, 3.91),  # the strike on the tree: flash, silhouette, ground cracks to his feet; he drops; then n14
+    ("strike", ["n14"], 1.9, 0.25, 3.91),  # the strike on the tree: flash, silhouette, ground cracks to his feet; he drops; 1.9 s of crack + music, then n14
     ("taken", ["t04"], 0.2, 0.25, 2.04),      # the family frozen at the field edge
     ("none", ["n15"], 0.1, 0.25, 3.06),       # พลอย's hand hovers, pulls back
-    ("next", ["n16"], 0.3, 1.2, 3.91),       # the wet note slapped on the truck window
+    ("next", ["n16"], 0.3, 2.2, 3.91),       # the wet note slapped on the truck window
 ]
 if __name__ == "__main__":
     T.setup(HERE, SHOTS); T.SHOTS = SHOTS

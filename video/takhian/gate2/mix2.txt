@@ -1,2 +1,2 @@
-mix written 117.962
-{'hf_band_dBFS_median': -51.4, 'flatness_5_14k_median': 0.028, 'noise_windows_pct': np.float64(0.3), 'longest_noise_s': 0.05, 'hi_vs_mid_dB_median': -29.5}
+mix written 120.662
+{'hf_band_dBFS_median': -52.1, 'flatness_5_14k_median': 0.028, 'noise_windows_pct': np.float64(0.3), 'longest_noise_s': 0.05, 'hi_vs_mid_dB_median': -29.9}

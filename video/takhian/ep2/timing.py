@@ -27,13 +27,13 @@ SHOTS = [
     ("far", ["n13"], 0.1, 0.25, 2.55),        # far horizon: the black cloud flickers in silence
     ("watch", ["y02"], 0.05, 0.25, 3.06),    # ยาย grabs ต้น's toy stopwatch: 12:04 since the last thunder
     ("rule3", ["p06"], 0.3, 0.25, 4.59),      # rule 3 on the bamboo; พลอย shouting it
-    ("again", [("n14", 1.2)], 0.0, 0.25, 4.08),  # the bolt from the blue hits the tree again; ต้น stops mid-bund and sits down hard
+    ("again", ["n14"], 1.9, 0.25, 4.08),  # the bolt from the blue hits the tree again; ต้น stops mid-bund and sits down hard
     ("alive", ["t05"], 0.2, 0.25, 1.7),      # ต้น in the mud, shaking
     ("scars", ["n15"], 0.1, 0.25, 3.4),      # the smoke clears: old burn scars down the trunk
     ("photo", ["p07"], 0.1, 0.2, 2.21),      # the shrine photo
     ("grand", ["y03"], 0.1, 0.25, 3.4),      # ยาย, quiet
     ("truth", ["y04"], 0.2, 0.25, 2.89),      # the family, the tree behind them
-    ("end", ["n16"], 0.3, 1.4, 4.42),        # all three rules ticked
+    ("end", ["n16"], 0.3, 2.2, 4.42),        # all three rules ticked
 ]
 if __name__ == "__main__":
     T.setup(HERE, SHOTS); T.SHOTS = SHOTS
