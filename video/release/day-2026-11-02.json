@@ -2,7 +2,7 @@
  "date": "2026-11-02",
  "tz": "Asia/Bangkok",
  "made_by": "Claude (แชทประสานงาน)",
- "status": "ทุกช่อง hold · เช้า: รอดคนเดียว เจ้าของลงเอง · เที่ยง (ทางกลับบ้าน) + กลางคืน (ห้องสอบ): พักไว้รอรีมิกซ์ไม่มีซ่า",
+ "status": "รอดคนเดียว + ห้องสอบ: เจ้าของลงเอง (Moji ห้ามลง) · ทางกลับบ้าน: hold รอเรนเดอร์ภาพที่แก้ (เลน D)",
  "rules": [
   "ก่อนลงอ่าน video/release/MOJI-PLAYBOOK.md · เขียนสถานะลง video/release/posted/<วันที่>.json ทุกคลิปทุกแพลตฟอร์ม",
   "เจ้าของสั่ง 1 พ.ย. (พิมพ์ในแชทเลน D): \"เราจะลงเช้า 1 เรื่อง เที่ยง 1 เรื่อง กลางคืน 1 เรื่อง\" · 1 เรื่อง = ทุกตอนของเรื่องนั้น ลงช่วงเดียวกันเรียง EP ห่างกัน 30 นาที",
@@ -113,14 +113,20 @@
    "status": "hold",
    "slot": "กลางคืน",
    "branch": "prod/lane-c",
-   "commit": "2c7fb2e",
-   "package": "video/release/exam.json",
-   "video_hq": "video/release/hq/exam-ep1-HQ.mp4",
-   "video_hq_sha256": "3d0d8da0a864ae9f8937f867c9d9d7b0925e7f70a30c702588acfc3c66bbadb6",
-   "video_hq_bytes": 55230690,
+   "commit": "632daf3",
+   "package": "video/release/exam-v3.json",
+   "video_hq": "video/release/hq/exam-ep1-v3-HQ.mp4",
+   "video_hq_sha256": "21ad7fd79b16b2df25b8041bd0a649bbdf1d508e9b0947904dd6e21ad282e5f4",
+   "video_hq_bytes": 54747506,
    "suggested_time": "2026-11-02T20:00+07:00",
-   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว",
-   "hold_note": "ผู้ประสานงาน 2 พ.ย. 12:00 น.: วัดเสียงตามกฎ A4 แล้วยังมี 'ซ่า' (เสียงพื้นจาก noise) ราวครึ่งเรื่อง (flatness 5–14 kHz ค่ากลาง 0.62–0.71 · หน้าต่าง noise 52–65% เทียบกับรอดคนเดียว v6 ที่ 0.32 / 3%) → พักไว้รอรีมิกซ์ไม่มีซ่า (ภาพเดิม) · Moji ห้ามลงหรือตั้งเวลาไฟล์ sha เดิม ถ้าตั้งไว้แล้วให้ยกเลิก · ตรวจภาพ 360×640 แล้วต้องแก้ภาพด้วย ดู video/release/review/yesterday-qa-2026-11-02.md"
+   "revision_note": "v3 2 พ.ย. (เลน C 632daf3): รีมิกซ์ไม่มีซ่า (hisscheck PASS 0.34 / −77 dBFS) + แก้ภาพ 4 จุด (นักเรียนซ้อน · ขอบฉากโหว่ · ตัวลอยตอนลากโต๊ะ · ป้าย ม.3/4) · ผู้ประสานงานตรวจไฟล์จริง: 1080×1920 60fps · −14.1 LUFS · ไม่มีภาพค้าง · sheet 360×640 ผ่าน · ส่งเจ้าของแล้ว",
+   "previous_v1": {
+    "commit": "2c7fb2e",
+    "video_hq": "video/release/hq/exam-ep1-HQ.mp4",
+    "video_hq_sha256": "3d0d8da0a864ae9f8937f867c9d9d7b0925e7f70a30c702588acfc3c66bbadb6",
+    "video_hq_bytes": 55230690
+   },
+   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก"
   },
   {
    "order": 6,
@@ -129,14 +135,20 @@
    "status": "hold",
    "slot": "กลางคืน",
    "branch": "prod/lane-c",
-   "commit": "2c7fb2e",
-   "package": "video/release/exam.json",
-   "video_hq": "video/release/hq/exam-ep2-HQ.mp4",
-   "video_hq_sha256": "2f485abd2a0c44ac51922ee1a260f48cae5875aaf8473eb3ab75ad04362d572a",
-   "video_hq_bytes": 45467023,
+   "commit": "632daf3",
+   "package": "video/release/exam-v3.json",
+   "video_hq": "video/release/hq/exam-ep2-v3-HQ.mp4",
+   "video_hq_sha256": "f95cda8b5a11f976e693fa2c905044b7baf831c871d91b63aa2aecbb525f42d8",
+   "video_hq_bytes": 44762264,
    "suggested_time": "2026-11-02T20:30+07:00",
-   "revision_note": "re-cut 1 พ.ย. (เจ้าของ): การ์ดเป็นของในโลกของเรื่อง + เพลงธีมของเรื่อง + เสียงการ์ดตามวัสดุ · ตรวจ sha/60fps/LUFS/ภาพค้างแล้ว",
-   "hold_note": "ผู้ประสานงาน 2 พ.ย. 12:00 น.: วัดเสียงตามกฎ A4 แล้วยังมี 'ซ่า' (เสียงพื้นจาก noise) ราวครึ่งเรื่อง (flatness 5–14 kHz ค่ากลาง 0.62–0.71 · หน้าต่าง noise 52–65% เทียบกับรอดคนเดียว v6 ที่ 0.32 / 3%) → พักไว้รอรีมิกซ์ไม่มีซ่า (ภาพเดิม) · Moji ห้ามลงหรือตั้งเวลาไฟล์ sha เดิม ถ้าตั้งไว้แล้วให้ยกเลิก · ตรวจภาพ 360×640 แล้วต้องแก้ภาพด้วย ดู video/release/review/yesterday-qa-2026-11-02.md"
+   "revision_note": "v3 2 พ.ย. (เลน C 632daf3): รีมิกซ์ไม่มีซ่า (hisscheck PASS 0.34 / −77 dBFS) + แก้ภาพ 4 จุด (นักเรียนซ้อน · ขอบฉากโหว่ · ตัวลอยตอนลากโต๊ะ · ป้าย ม.3/4) · ผู้ประสานงานตรวจไฟล์จริง: 1080×1920 60fps · −14.1 LUFS · ไม่มีภาพค้าง · sheet 360×640 ผ่าน · ส่งเจ้าของแล้ว",
+   "previous_v1": {
+    "commit": "2c7fb2e",
+    "video_hq": "video/release/hq/exam-ep2-HQ.mp4",
+    "video_hq_sha256": "2f485abd2a0c44ac51922ee1a260f48cae5875aaf8473eb3ab75ad04362d572a",
+    "video_hq_bytes": 45467023
+   },
+   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก"
   }
  ],
  "slots": {
