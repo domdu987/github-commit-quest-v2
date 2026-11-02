@@ -13,11 +13,11 @@
    "id": "takhian-ep1",
    "order": 1,
    "title": "ติดพายุกลางทุ่งนา… อย่าวิ่งไปหลบใต้ต้นตะเคียน | ต้นตะเคียนกลางนา EP.1",
-   "status": "final (ผู้ประสานงานตรวจไฟล์จริงแล้ว ส่งเจ้าของ 2 พ.ย.)",
-   "commit": "6bc1663",
-   "video_hq": "video/release/hq/takhian-ep1-HQ-m2.mp4",
-   "video_hq_sha256": "ab6ee40b83cd728775ec65aa8923be516912730771769937170befe2b8a2f2f8",
-   "video_hq_bytes": 97498437,
+   "status": "final (ต้นไม้กับศาลวาดใหม่ + เพลงสูตรทะเลลด · ผู้ประสานงานตรวจไฟล์จริงแล้ว ส่งเจ้าของ 2 พ.ย. ~22:00 น.)",
+   "commit": "b39c0f3",
+   "video_hq": "video/release/hq/takhian-ep1-HQ.mp4",
+   "video_hq_sha256": "645a85812c8189ec194e4d0cc2bb116cc5fe5f453b91b56e6c76eeef28342b36",
+   "video_hq_bytes": 97540767,
    "duration_s": 124.733,
    "qa": {
     "resolution": "1080x1920",
@@ -25,16 +25,17 @@
     "frames": 7484,
     "codec": "H.264 High yuv420p · 2-pass ~6 Mbps · AAC 256k",
     "lufs": -14.2,
-    "peak_db": -3.2,
-    "freeze": "ไม่มีช่วงค้างกลางเรื่อง (มีแค่การ์ดปิดค้าง 1.7 วิท้ายคลิป)",
+    "peak_db": -3.1,
+    "freeze": "none",
     "black": "none",
     "flashes": "แสงฟ้าแลบขาวทั้งจอ 13 ครั้ง ครั้งละ 0.033–0.067 วิ (ตั้งใจ ไม่ใช่ภาพเสีย)",
-    "musiccheck": "PASS (−25.3 / −20.5 LUFS · พูดดังกว่า 9.8 LU · เพลงหาย 0%)",
-    "hisscheck": "PASS (flatness 0.36 · ช่วงเงียบ HF −90.1 dBFS)",
-    "picture": "ผู้ประสานงานดูภาพ 1 fps ที่ 360×640 ครบ 0–124 วิ + เฟรมถี่ช่วงฟ้าผ่า 105.4–111.4 วิ: ลุงคุกเข่าแก้เชือกควายที่หลัก ห่างโคนต้นไม่กี่ก้าว → ฟ้าผ่า → ไฟวิ่งตามดิน ตรงบท",
+    "musiccheck": "PASS เกณฑ์ทะเลลด (−33.7 / −30.0 · พูดดังกว่า 19.1 LU · เพลงหาย 0%) · เสียงใน HQ ตรงกับ mix 4bb07af (corr 0.9999)",
+    "hisscheck": "PASS (0.38)",
+    "picture": "ผู้ประสานงานดู 1 fps ครบ 0–124 วิ: ต้นไม้ ศาล รอยไหม้ใหม่ขึ้นทุกช็อต · จอขาว 3 เฟรมที่ 50.0 วิ = แฟลชฟ้าแลบเดิม (มีใน m2 เหมือนกัน)",
     "sources_check": "คำพูด NWS ทุกข้อใน EP.1 เปิดหน้าเว็บจริงด้วย curl วันที่ 2 พ.ย. ตรงตามต้นฉบับ (lightning-safety · lightning-myths · lightning-tips · lightning-outdoors · lightning-struck) · CDC ใช้ไม่ได้ (403) จึงไม่อ้างใน EP.1",
     "minor_note": "บรรยาย n14 ว่า 'แค่ยืนห่างโคนต้น' ขณะภาพลุงคุกเข่า 0.4 วิ ก่อนโดนผ่า ไม่กระทบความรู้ ไม่แก้",
-    "music": "v3 phone-audible theme · musiccheck PASS full band + phone band (300 Hz HP) · see video/release/audio/takhian-music-v3/README.md"
+    "music": "v3 phone-audible theme · musiccheck PASS full band + phone band (300 Hz HP) · see video/release/audio/takhian-music-v3/README.md",
+    "edgecheck": "no edge problems (B c32fd40)"
    },
    "caption": "ถ้าวันหนึ่ง… คุณติดพายุกลางทุ่งนา ⛈️🌾 อย่าวิ่งไปหลบใต้ต้นตะเคียน\n\n\"ฟ้าคำราม อย่าตามต้นไม้ ต้นสูงกลางนา ฟ้าผ่าก่อนใคร\"\nถ้าคนข้างคุณโดนฟ้าผ่า… คุณจะกล้าจับตัวเขาไหม? 👇\n\nต้นตะเคียนกลางนา EP.1/2\n#ฟ้าผ่า #นางตะเคียน #เอาตัวรอด #RodMaiClub",
    "pinned_comment": "📚 แหล่งอ้างอิง\nมีพายุฟ้าคะนอง ข้างนอกไม่มีที่ไหนปลอดภัย · อยู่ใต้ต้นไม้คือสาเหตุอันดับ 2 ที่คนถูกฟ้าผ่า · อย่าหลบใต้ต้นไม้เดี่ยว: กรมอุตุนิยมวิทยาสหรัฐฯ NWS (Lightning Safety · Lightning Myths · Lightning Tips)\nฟ้าผ่าต้นไม้ ไฟกระโดดเข้าคนที่อยู่ใกล้ แล้ววิ่งออกไปตามพื้นดิน: NWS (How Lightning Strikes People)\nที่หลบต้องเป็นอาคารที่มั่นคง หรือรถหลังคาเหล็กปิดกระจก · เพิงเปิดโล่งอย่างเถียงนาไม่นับ: NWS (Lightning Tips)\nไปกันหลายคนให้แยกห่างกัน กระแสจะได้ไม่วิ่งจากคนหนึ่งไปอีกคน: NWS (Lightning Outdoors)\nนอนราบกับพื้นทำให้โดนกระแสตามดินได้มากขึ้น · นั่งยองๆ ก็ไม่ปลอดภัยขึ้น ต้องรีบเข้าที่หลบ: NWS (Lightning Myths)\nนางตะเคียนเป็นความเชื่อพื้นบ้าน · ตัวละคร หมู่บ้าน และเหตุการณ์ในเรื่องเป็นเรื่องสมมติ\n👉 EP.2 ถ้าคนข้างคุณโดนฟ้าผ่า… อย่ากลัวจับตัวเขา",
@@ -44,7 +45,15 @@
     "video_hq_sha256": "be5d6e8a4df2102982a8220e9288f40b7e29ff77ac9d55212e8d310f57a2ccc7",
     "video_hq_bytes": 97536876
    },
-   "branch": "ccr-fb88c4b3-kcqyid"
+   "branch": "prod/lane-b",
+   "previous_v3": {
+    "commit": "6bc1663",
+    "branch": "ccr-fb88c4b3-kcqyid",
+    "video_hq": "video/release/hq/takhian-ep1-HQ-m2.mp4",
+    "video_hq_sha256": "ab6ee40b83cd728775ec65aa8923be516912730771769937170befe2b8a2f2f8",
+    "video_hq_bytes": 97498437,
+    "why_replaced": "เจ้าของ 2 พ.ย. ~20:46: ต้นไม้กับศาล 'โคตรแย่' + ~21:00 เพลงสูตรทะเลลด"
+   }
   },
   {
    "id": "takhian-ep2",

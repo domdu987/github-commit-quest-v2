@@ -200,12 +200,12 @@
       "series": "ต้นตะเคียนกลางนา",
       "status": "hold",
       "slot": "เจ้าของเลือกเอง",
-      "branch": "ccr-fb88c4b3-kcqyid",
+      "branch": "prod/lane-b",
       "package": "video/release/takhian.json",
-      "commit": "6bc1663",
-      "video_hq": "video/release/hq/takhian-ep1-HQ-m2.mp4",
-      "video_hq_sha256": "ab6ee40b83cd728775ec65aa8923be516912730771769937170befe2b8a2f2f8",
-      "video_hq_bytes": 97498437,
+      "commit": "b39c0f3",
+      "video_hq": "video/release/hq/takhian-ep1-HQ.mp4",
+      "video_hq_sha256": "645a85812c8189ec194e4d0cc2bb116cc5fe5f453b91b56e6c76eeef28342b36",
+      "video_hq_bytes": 97540767,
       "revision_note": "2 พ.ย. ~19:40 น. (ผู้ประสานงาน 6bc1663): เพลงใหม่ที่ได้ยินบนลำโพงมือถือ (เดิมเพลงเป็นเสียงทุ้มต่ำกว่า 300 Hz ถึง 95% เจ้าของแจ้งว่า 'เพลงหาย') · ภาพเดิม copy ครบทุกเฟรม · musiccheck PASS ทั้งย่านปกติและย่านมือถือ · hisscheck PASS · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทนไฟล์เดิม · ก่อนหน้า: 2 พ.ย. (เลน B 6cd0766): เรนเดอร์ทั้งตอนจาก 618743f 7484 เฟรม · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 124.7 วิ 60fps · −14.2 LUFS peak −3.2 · ไม่มีภาพค้างกลางเรื่อง/จอดำ · musiccheck PASS · hisscheck PASS · ดูภาพครบที่ 360×640 · ส่งเจ้าของพร้อมแคปชันแล้ว",
       "hold_note": "ไฟล์พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
       "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
@@ -216,7 +216,14 @@
         "video_hq_sha256": "be5d6e8a4df2102982a8220e9288f40b7e29ff77ac9d55212e8d310f57a2ccc7",
         "video_hq_bytes": 97536876
       },
-      "remake": "2 พ.ย. ~21:00 กำลังทำใหม่: เจ้าของบอกว่าต้นตะเคียนกับศาลตายาย 'โคตรแย่' ให้วาดใหม่ (เลน B) และเปลี่ยนเพลงเป็น suno1 สูตรทะเลลด (video/release/audio/takhian-tide-mix, 4bb07af) · ไฟล์ m2 ในคิวถูกแทนเมื่อไฟล์ใหม่ผ่านการตรวจ · Moji ห้ามลง ห้ามตั้งเวลา"
+      "remake": "เสร็จ 2 พ.ย. ~22:00: ต้นไม้กับศาลใหม่ + เพลงสูตรทะเลลด · ตรวจไฟล์จริงแล้ว ส่งเจ้าของแล้ว · Moji ห้ามลง ห้ามตั้งเวลา",
+      "previous_v3": {
+        "commit": "6bc1663",
+        "branch": "ccr-fb88c4b3-kcqyid",
+        "video_hq": "video/release/hq/takhian-ep1-HQ-m2.mp4",
+        "video_hq_sha256": "ab6ee40b83cd728775ec65aa8923be516912730771769937170befe2b8a2f2f8",
+        "video_hq_bytes": 97498437
+      }
     },
     {
       "order": 8,
