@@ -54,7 +54,7 @@
           let sand = ""; for (let k = 0; k < 120; k++) { const y = Y0 + H - r() * r() * H * 0.6; sand += `<circle cx="${f1(X + r() * W)}" cy="${f1(y)}" r="${f1(1.2 + r() * 2.8)}" fill="${r() < 0.5 ? "#c8a070" : "#8a6a48"}" opacity="${f1(0.4 + r() * 0.5)}"/>`; }
           let crease = ""; [0.33, 0.66].forEach((u) => { crease += `<path d="M${f1(X + W * u)},${Y0}L${f1(X + W * u + J(20))},${Y0 + H}" stroke="#fff" stroke-width="5" opacity=".5"/><path d="M${f1(X + W * u + 5)},${Y0}L${f1(X + W * u + 5 + J(20))},${Y0 + H}" stroke="#8a7a5a" stroke-width="3" opacity=".3"/>`; });
           const band = `<rect x="${X}" y="${Y0}" width="${W}" height="150" fill="#1d2c5e"/><rect x="${X}" y="${Y0 + 150}" width="${W}" height="16" fill="#f4c430"/>
-            <text x="${X + 40}" y="${Y0 + 70}" font-family="Kanit" font-weight="800" font-size="44" fill="#fff">การ์ดความปลอดภัย</text><text x="${X + 40}" y="${Y0 + 122}" font-family="Kanit" font-weight="600" font-size="30" fill="#c8d4f4">SAFETY CARD · ฟ้าราม FR-829</text>
+            <text x="${X + 40}" y="${Y0 + 70}" font-family="Kanit" font-weight="800" font-size="44" fill="#fff">การ์ดความปลอดภัย</text><text x="${X + 40}" y="${Y0 + 122}" font-family="Kanit" font-weight="600" font-size="30" fill="#c8d4f4">SAFETY CARD · ฟ้าราม แอร์ · FR 623</text>
             <g transform="translate(${X + W - 120},${Y0 + 76})"><path d="M-40,20L40,-30L48,-18L-30,30Z" fill="#2aa898"/><path d="M-6,0L14,-46L26,-40L10,4Z" fill="#fff"/></g>`;
           const title = `<g transform="translate(540,${Y0 + 290})"><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="#d8312a">${o.title || ""}</text>
             <path d="M-300,30Q-100,52 120,34T320,40" stroke="#d8312a" stroke-width="9" fill="none" stroke-linecap="round"/></g>`;

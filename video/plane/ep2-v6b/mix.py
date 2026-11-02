@@ -100,7 +100,10 @@ CUES = [
     ("shell", 0.3, "knock", 0.26), ("shell", 0.7, "click", 0.24),
     ("fire", 0.35, "click", 0.32), ("fire", 0.55, "click", 0.2),
     ("leaves", 0.3, "rustle", 0.117),
-    ("bright", 0.1, "rustle", 0.108), ("flash", 0.3, "ching", 0.14), ("flash", 0.7, "ching", 0.1),
+    ("bright", 0.1, "rustle", 0.108), ("flash", 0.97, "ching", 0.14), ("flash", 1.25, "ching", 0.1), ("under", C("under", 0, 1) + 0.15, "rustle", 0.09),
+    ("leaves", C("leaves", 0, 1) + 0.38, "rustle", 0.1),
+    # v6b: the three fast cuts on "และไม่ได้นั่งรอเฉยๆ" — a drop into the bottle · a shell on the hot stones · leaves into the fire
+    ("saved", C("saved", 0, 2) + 0.08, "drip", 0.22), ("saved", C("saved", 0, 2) + 0.6, "click", 0.2), ("saved", C("saved", 0, 2) + 1.12, "rustle", 0.1),
     ("empty", 0.0, "steps", 0.2),
     *[("walk", 0.2 + i * 0.55, "steps", 0.12) for i in range(int(D["walk"] / 0.55))],
     ("lost", 0.4, "flap", 0.08),
@@ -150,7 +153,7 @@ for k, x, kind in PEN:
     place(sfx, pen(kind) * 0.5 * pk, T(k, x))
 heli = np.zeros(N, np.float32)
 for k, a, b, shape in [("rotor", 0.0, -0.01, "in"), ("q3", 0.0, -0.01, "near"), ("pass", 0.0, -0.01, "pass"), ("under", 0.0, 1.2, "out"),
-                       ("back", 0.0, -0.01, "in"), ("found", 0.0, -0.01, "near"), ("saved", 0.0, -0.01, "near")]:
+                       ("back", 0.0, -0.01, "in"), ("found", 0.0, -0.01, "near"), ("saved", 0.0, C("saved", 0, 2), "near")]:
     t0, t1 = T(k, a), T(k, b)
     x = rotor(t1 - t0, 1.0)
     u = np.linspace(0, 1, len(x))

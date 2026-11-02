@@ -41,7 +41,21 @@
       Rig.MODES.pull = (u, o) => ({ ...Rig.MODES.kneel(u, o), torso: 4 + 2 * Math.sin(u * 3), head: -10, uaF: -92 + 3 * Math.sin(u * 5), faF: -6, uaB: -82, faB: -14 });
       Rig.MODES.cup = (u, o) => ({ ...Rig.MODES.kneel(u, o), torso: 34, head: 6, uaF: -54, faF: -48, uaB: -44, faB: -56 });
       Rig.MODES.sitFire = (u, o) => ({ ...Rig.MODES.kneel(u, o), torso: 18, head: -4 + 2 * Math.sin(u * 1.2), uaF: -60, faF: -30, uaB: -20, faB: -60 });
-      Rig.MODES.throwF = (u, o) => { const k = Math.min(1, u / 0.35); return { ...Rig.MODES.idle(u, o), torso: 10 * k - 6, head: -4, uaF: 40 - 150 * k, faF: -60 + 50 * k, uaB: 10, faB: -20 }; };
+      Rig.MODES.throwF = (u, o) => { const c = (x) => Math.max(0, Math.min(1, x)), k1 = c(u / 0.3), k2 = c((u - 0.3) / 0.16), e = k2 * k2 * (3 - 2 * k2), st = c((u - 0.6) / 0.5);
+        // v6b: a real throw — wind the arm back, fling it forward, follow through and settle
+        return { ...Rig.MODES.idle(u, o), torso: -8 * k1 + 20 * e - 8 * st, head: -4 + 4 * e, uaF: 20 + 50 * k1 - 190 * e + 40 * st, faF: -20 - 50 * k1 + 60 * e, uaB: 10 - 25 * e, faB: -20 }; };
+      Rig.MODES.throwFq = (u, o) => Rig.MODES.throwF(u + 0.22, o);
+      const cl = (x) => Math.max(0, Math.min(1, x)), ease = (x) => x * x * (3 - 2 * x);
+      // v6b: both hands take the jacket's edges and pull it open
+      Rig.MODES.openJacket = (u, o) => { const k = ease(cl((u - 0.1) / 0.4)); return { ...Rig.MODES.idle(u, o), uaF: -20 - 26 * k, faF: 112 - 14 * k, uaB: 20 + 26 * k, faB: -112 + 14 * k, head: -6 * k, torso: 0 }; };
+      // v6b: one arm up, holding the metal panel and tilting it at the sun
+      Rig.MODES.holdPanel = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -118 + 6 * Math.sin(u * 7), faF: -14, uaB: 14, faB: -20, head: -10, torso: -3 });
+      { const C = Rig.CAST, k = C.kiw.v2, ln = (w) => `stroke="#241c22" stroke-width="${w}" stroke-linejoin="round"`;
+        // the jacket pulled open: the orange vest across the chest, two silver reflective bands, the jacket's edges folded back to both sides
+        C.kiwOpen = { v2: { ...k, print: "", extra: `<path d="M-50,-484Q0,-470 50,-484L52,-286Q0,-276 -52,-286Z" fill="#ff6a14" ${ln(2.6)}/><path d="M-6,-478V-280" stroke="#c84a0a" stroke-width="4"/>
+          <rect x="-52" y="-430" width="104" height="18" fill="#e8eef4" ${ln(2)}/><rect x="-52" y="-362" width="104" height="18" fill="#e8eef4" ${ln(2)}/><path d="M-50,-425h100M-50,-357h100" stroke="#ffffff" stroke-width="4" opacity=".9"/>
+          <rect x="-14" y="-330" width="28" height="18" rx="4" fill="#2a2a30"/>
+          <path d="M-50,-486L-74,-470L-82,-290L-52,-286Z" fill="#d9a43a" ${ln(2.4)}/><path d="M50,-486L74,-470L82,-290L52,-286Z" fill="#d9a43a" ${ln(2.4)}/><path d="M-60,-470L-66,-300M60,-470L66,-300" stroke="#a87420" stroke-width="4" opacity=".7"/>` + `<path d="M-40,-482Q0,-452 40,-482" stroke="#f4f4f0" stroke-width="9" fill="none"/>` } }; }
       const DAYR = (id, extra = {}) => ISLE(id, "day", "rocks", extra);
       // B0 frame 0 = EP.1 v4b's last place: the ทะเลลด beach at eerie dusk, the smoke behind the far karst (820, 650); คิว big in front, pointing at it
       add("hook", { set: "tideBeach", setOpts: { id: "h0", view: "sea", time: "eerie", sea: 0, boats: 0, fish: 0, people: 0, seed: 7, palms: false }, dark: 0.02, light: { from: "left", rim: "#ffc890", rimOp: 0.9, shade: "#141a2a", shadeOp: 0.25, cast: { len: 0.6, op: 0.3 }, vol: false },
@@ -203,11 +217,19 @@
         [C("pass", 0, 2), (d) => ({ ...ISLE("pa3", "day", "beach", { tail: [700, 1400, 0.9], grey: true }), cam: { keys: [{ t: 0, ...fr(640, 1100, 1.0, 540, 960) }, { t: d, glide: d, ...fr(640, 1140, 0.85, 540, 960) }] },
           actors: [A("kiwHidden", 300, 1800, 1.0, [T("idle", "worry", "frown")])], fx(tl, id, t0) { life(tl, t0, d); } })],
       ]);
-      add("under", { ...ISLE("un", "day", "beach", { tail: [700, 1400, 0.9], grey: true }), blur: { far: 4, mid: 4, set: 4, fg: 9 },
-        cam: { keys: [{ t: 0, ...fr(330, 1350, 2.0, 540, 1000) }, { t: D("under"), glide: D("under"), ...fr(330, 1370, 2.2, 540, 1000) }] }, captions: caps("under"),
-        actors: [A("kiwHidden", 320, 1820, 1.45, [T("idle", "wide", "flat")])], fx(tl, id, t0) { life(tl, t0, D("under")); } });
+      seg("under", [
+        [0, (d) => ({ ...ISLE("un", "day", "beach", { tail: [700, 1400, 0.9], grey: true }), blur: { far: 4, mid: 4, set: 4, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(330, 1330, 1.25, 540, 1000) }, { t: d, glide: d, ...fr(330, 1320, 1.32, 540, 1000) }] },
+          actors: [A("kiw", 320, 1820, 1.45, [T("idle", "wide", "flat")])], fx(tl, id, t0) { life(tl, t0, d); } })],
+        [C("under", 0, 1), (d) => ({ ...ISLE("un2", "day", "beach", { tail: [700, 1400, 0.9], grey: true }), blur: { far: 5, mid: 5, set: 5, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(330, 1290, 1.45, 540, 980) }, { t: d, glide: d, ...fr(330, 1280, 1.55, 540, 980) }] },
+          actors: [A("kiwOpen", 320, 1820, 1.45, [T("openJacket", "normal", "smile")])], fx(tl, id, t0, L) { life(tl, t0, d);
+            put(L.glow, `<g id="un2g" style="mix-blend-mode:screen"><path d="M256,1202h140M256,1306h140" stroke="#ffffff" stroke-width="10" stroke-linecap="round" opacity=".9"/></g>`);
+            tl.fromTo("#un2g", { opacity: 0 }, { opacity: 1, duration: 0.12, yoyo: true, repeat: 3, immediateRender: false }, t0 + 0.5); } })],
+      ]);
       // the safety card: his marker list (≥ half the screen) → the vest spread on the wreck
       // ===== B6 v6.1: the card and the actions alternate — write ① → the vest on the wreck → tick ①, write ② → the panel flashes → tick ②, write ③ → leaves on the fire =====
+      const PANX = 770, PANY = 990;
       const ROWS6 = [{ text: "วาง<u>ของสีสด</u>บนซาก", icon: "vest" }, { text: "<u>แผ่นโลหะ</u>สะท้อนแดด", icon: "panel" }, { text: "<u>ใบไม้สด</u>ลงกองไฟ", icon: "fire" }];
       seg("bright", [
         [0, (d) => ({ ...DAYR("cb1", { tail: [460, 1500, 1.0], vest: true, antenna: [700, 1260] }), blur: { far: 6, mid: 6, set: 6, fg: 10 }, cam: { keys: [{ t: 0, ...fr(560, 1100, 1.1, 540, 1000) }, { t: d, glide: d, ...fr(560, 1100, 1.13, 540, 1000) }] }, fx(tl, id, t0, L) { life(tl, t0, d); Isle.card2(tl, L.light, t0, d + 0.05, { id: "cb1c", title: "ทำให้ซากเด่น", rows: ROWS6, enter: "drop", write: [0, 0.35], writeDur: 0.6 }); } })],
@@ -216,15 +238,22 @@
       ]);
       seg("flash", [
         [0, (d) => ({ ...DAYR("cb2", { tail: [460, 1500, 1.0], vest: true, antenna: [700, 1260] }), blur: { far: 6, mid: 6, set: 6, fg: 10 }, cam: { keys: [{ t: 0, ...fr(560, 1100, 1.1, 540, 1000) }, { t: d, glide: d, ...fr(560, 1100, 1.13, 540, 1000) }] }, fx(tl, id, t0, L) { life(tl, t0, d); Isle.card2(tl, L.light, t0, d + 0.05, { id: "cb2c", title: "ทำให้ซากเด่น", rows: ROWS6, enter: "cut", shown: [0], ticks: [[0, 0.08]], write: [1, 0.3], writeDur: 0.55 }); } })],
-        [C("flash", 0, 1), (d) => ({ ...DAYR("fl", { tail: [460, 1500, 1.0], vest: true, blanket: true, panel: true }), cam: { keys: [{ t: 0, ...fr(260, 1180, 1.5, 540, 960) }, { t: d, glide: d, ...fr(260, 1180, 1.62, 540, 960) }] },
-          fx(tl, id, t0) { life(tl, t0, d); tl.fromTo("#fl-flash", { opacity: 0 }, { opacity: 1, duration: 0.1, yoyo: true, repeat: 5, immediateRender: false }, t0 + 0.1); } })],
+        [0.9, (d) => ({ ...DAYR("fl", { tail: [900, 1500, 1.0], vest: true, blanket: true }), cam: { keys: [{ t: 0, ...fr(560, 1260, 1.12, 540, 1000) }, { t: d, glide: d, ...fr(570, 1250, 1.18, 540, 1000) }] },
+          actors: [A("kiw", 420, 1840, 1.3, [T("holdPanel", "normal", "smile")])],
+          fx(tl, id, t0, L) { life(tl, t0, d);
+            put(L.glow, `<g id="flp"><g transform="translate(${PANX},${PANY})"><g id="flpt"><path d="M-110,-70L100,-90L118,60L-96,80Z" fill="#b8bec8" stroke="#241c22" stroke-width="5" stroke-linejoin="round"/>${[0, 1, 2, 3, 4].map((j) => `<circle cx="${-84 + j * 44}" cy="${-66 - j * 4}" r="5" fill="#6a6e78"/>`).join("")}<path d="M-90,-40L90,-60" stroke="#fff" stroke-width="9" opacity=".7"/><path d="M-80,30L80,10" stroke="#fff" stroke-width="5" opacity=".45"/></g></g>
+              <g id="flgl" style="mix-blend-mode:screen"><circle cx="${PANX + 20}" cy="${PANY - 20}" r="150" fill="#fffbe8" opacity=".55"/><circle cx="${PANX + 20}" cy="${PANY - 20}" r="60" fill="#ffffff"/>
+              <path d="M${PANX + 20},${PANY - 260}L${PANX + 34},${PANY - 34}L${PANX + 260},${PANY - 20}L${PANX + 34},${PANY - 6}L${PANX + 20},${PANY + 220}L${PANX + 6},${PANY - 6}L${PANX - 220},${PANY - 20}L${PANX + 6},${PANY - 34}Z" fill="#ffffff"/></g></g>`);
+            tl.fromTo("#flpt", { rotation: -14, svgOrigin: "0 0" }, { rotation: 8, svgOrigin: "0 0", duration: d, ease: "sine.inOut", immediateRender: false }, t0);
+            tl.fromTo("#flgl", { opacity: 0, scale: 0.6, svgOrigin: `${PANX + 20} ${PANY - 20}` }, { opacity: 1, scale: 1, svgOrigin: `${PANX + 20} ${PANY - 20}`, duration: 0.12, ease: "power2.out", immediateRender: false }, t0 + 0.06);
+            tl.to("#flgl", { scale: 1.18, opacity: 0.8, svgOrigin: `${PANX + 20} ${PANY - 20}`, duration: 0.14, yoyo: true, repeat: Math.ceil(d / 0.14), ease: "sine.inOut", immediateRender: false }, t0 + 0.18); } })],
       ]);
       seg("leaves", [
         [0, (d) => ({ ...DAYR("cb3", { tail: [460, 1500, 1.0], vest: true, antenna: [700, 1260] }), blur: { far: 6, mid: 6, set: 6, fg: 10 }, cam: { keys: [{ t: 0, ...fr(560, 1100, 1.1, 540, 1000) }, { t: d, glide: d, ...fr(560, 1100, 1.13, 540, 1000) }] }, fx(tl, id, t0, L) { life(tl, t0, d); Isle.card2(tl, L.light, t0, d + 0.05, { id: "cb3c", title: "ทำให้ซากเด่น", rows: ROWS6, enter: "cut", shown: [0, 1], ticked: [0], ticks: [[1, 0.08]], write: [2, 0.3], writeDur: 0.7 }); } })],
-        [C("leaves", 0, 1), (d) => ({ ...ISLE("lv", "dusk", "rocks", { tail: [-300, 1420, 1.0], vest: true }), cam: { keys: [{ t: 0, ...fr(600, 1300, 1.0, 540, 1100) }, { t: d, glide: d, ...fr(620, 1100, 0.8, 540, 1100) }] },
+        [C("leaves", 0, 1), (d) => ({ ...ISLE("lv", "day", "rocks", { tail: [-300, 1420, 1.0], vest: true }), cam: { keys: [{ t: 0, ...fr(600, 1300, 1.0, 540, 1100) }, { t: d, glide: d, ...fr(620, 1100, 0.8, 540, 1100) }] },
         actors: [A("kiw", 380, 1780, 1.3, [T("throwF", "wide", "o")])],
-        fx(tl, id, t0, L) { life(tl, t0, d); put(L.act, `${Isle.firePit("lvf", 720, 1740, 1.0, { smoke: "white" })}<g id="lvl" transform="translate(560,1560)">${Array.from({ length: 5 }, (_, k) => `<path d="M0,0q30,-40 70,-10q-30,30 -70,10z" fill="#3a8a3a" transform="rotate(${k * 30 - 60})" stroke="#1a3a1a" stroke-width="2"/>`).join("")}</g>`);
-          tl.fromTo("#lvl", { x: 0, y: 0, rotation: 0, svgOrigin: "560 1560" }, { x: 160, y: 120, rotation: 120, svgOrigin: "560 1560", duration: 0.5, ease: "power1.in", immediateRender: false }, t0 + 0.2); tl.to("#lvl", { opacity: 0, duration: 0.1 }, t0 + 0.7);
+        fx(tl, id, t0, L) { life(tl, t0, d); put(L.act, Isle.firePit("lvf", 720, 1740, 1.0, { smoke: "white" })); put(L.glow, `<g transform="translate(590,1300)"><g id="lvl">${Array.from({ length: 5 }, (_, k) => `<path d="M0,0q30,-40 70,-10q-30,30 -70,10z" fill="#3a8a3a" transform="rotate(${k * 30 - 60})" stroke="#1a3a1a" stroke-width="2"/>`).join("")}</g></g>`);
+          tl.fromTo("#lvl", { opacity: 0 }, { opacity: 1, duration: 0.01, immediateRender: false }, t0 + 0.38); tl.set("#lvl", { opacity: 0 }, t0); tl.fromTo("#lvl", { x: 0, y: 0, rotation: 0, scale: 1.4, svgOrigin: "0 0" }, { x: 130, y: 400, rotation: 160, scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "power1.in", immediateRender: false }, t0 + 0.38); tl.to("#lvl", { opacity: 0, duration: 0.1 }, t0 + 0.88);
           tl.fromTo("#lvf-ws", { scaleY: 0.2, opacity: 0.3, svgOrigin: "0 -180" }, { scaleY: 1, opacity: 1, svgOrigin: "0 -180", duration: 1.6, ease: "power2.out", immediateRender: false }, t0 + 0.6); life(tl, t0, d); } })],
         [C("leaves", 0, 2), (d) => ({ set: "aerial", setOpts: { id: "lva" }, dark: 0, light: false, grade: GDAY,
           cam: { keys: [{ t: 0, ...fr(560, 1080, 1.25, 540, 1100) }, { t: d, glide: d, ...fr(560, 1000, 1.0, 540, 1100) }] },
@@ -239,9 +268,22 @@
       // "เจอแล้ว": the rescuer on the left with room round him, elbow bent, pointing toward คิว (off frame right); the wreck and its vest on the right
       add("found", { ...ISLE("fo", "day", "rocks", { tail: [980, 1520, 0.9], vest: true }), blur: { far: 3, mid: 3, set: 4, fg: 9 }, cam: { keys: [{ t: 0, ...fr(470, 1240, 1.4, 540, 1000) }, { t: D("found"), glide: D("found"), ...fr(480, 1230, 1.46, 540, 1000) }] },
         actors: [A("rescuer2", 330, 1860, 1.4, [T("pointBent", "wide", "o")], { talk: [TALK("found", 0, "o")] })], captions: caps("found", undefined, QUO), fx(tl, id, t0) { life(tl, t0, D("found")); } });
-      add("saved", { ...ISLE("sa", "day", "rocks", { tail: [460, 1500, 1.0], vest: true }), blur: { far: 4, mid: 4, fg: 9 },
-        cam: { keys: [{ t: 0, ...fr(600, 1150, 2.1, 540, 900) }] }, actors: [A("kiw", 600, 1860, 1.45, [T("idle", "closed", "smile")])], captions: caps("saved"),
-        shake: (t) => ({ x: 2 * Math.sin(t * 30), y: 1.5 * Math.sin(t * 27), r: 0 }), fx(tl, id, t0) { life(tl, t0, D("saved")); } });
+      const QK = (D("saved") - C("saved", 0, 2)) / 3;
+      seg("saved", [
+        [0, (d) => ({ ...ISLE("sa", "day", "rocks", { tail: [460, 1500, 1.0], vest: true }), blur: { far: 4, mid: 4, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(600, 1150, 2.1, 540, 900) }] }, actors: [A("kiw", 600, 1860, 1.45, [T("idle", "closed", "smile")])],
+          shake: (t) => ({ x: 2 * Math.sin(t * 30), y: 1.5 * Math.sin(t * 27), r: 0 }), fx(tl, id, t0) { life(tl, t0, d); } })],
+        [C("saved", 0, 2), (d) => ({ ...ISLE("sq1", "night", "rocks", { tail: [-800, 1420, 1.0] }), cam: { keys: [{ t: 0, ...fr(560, 1420, 1.3, 540, 1000) }, { t: d, glide: d, ...fr(560, 1430, 1.38, 540, 1000) }] },
+          actors: [A("kiwHidden", 230, 1760, 1.2, [T("pull", "normal", "smile")])],
+          fx(tl, id, t0, L) { life(tl, t0, d); Isle.life3(tl, t0, d); put(L.act, `${Isle.sheet("sqs", 620, 1420, 560)}<g transform="translate(620,1760) scale(.8)">${Isle.bottle("sqb", 0.45)}</g>`); Isle.rainFX(L, "sq1", { sheet: [620, 1420, 560], bottleY: 1600 }); } })],
+        [C("saved", 0, 2) + QK, (d) => ({ ...INS(ISLE("sq2", "dawn", "rocks", { fg: false }), d, 0.06), fx(tl, id, t0, L) { life(tl, t0, d);
+          put(L.act, `${Isle.firePit("sqf", 540, 1400, 2.4, { shells: true, smoke: "thin" })}<g id="sqh">${Isle.hand([840, 1020], -40, 2.0, { hand: { curl: [0.5, 0.6, 0.7, 0.75], thumb: 0.5 } })}</g>`);
+          tl.fromTo("#sqh", { x: 90, y: -60 }, { x: 0, y: 0, duration: 0.3, ease: "power2.out", immediateRender: false }, t0); } })],
+        [C("saved", 0, 2) + 2 * QK, (d) => ({ ...ISLE("sq3", "day", "rocks", { tail: [-300, 1420, 1.0], vest: true }), cam: { keys: [{ t: 0, ...fr(560, 1400, 1.15, 540, 1050) }] },
+          actors: [A("kiw", 380, 1780, 1.3, [T("throwFq", "wide", "o")])],
+          fx(tl, id, t0, L) { life(tl, t0, d); put(L.act, Isle.firePit("sq3f", 720, 1740, 1.0, { smoke: "white" })); put(L.glow, `<g transform="translate(590,1300)"><g id="sq3l">${Array.from({ length: 5 }, (_, k) => `<path d="M0,0q30,-40 70,-10q-30,30 -70,10z" fill="#3a8a3a" transform="rotate(${k * 30 - 60})" stroke="#1a3a1a" stroke-width="2"/>`).join("")}</g></g>`);
+            tl.set("#sq3l", { opacity: 0 }, t0); tl.set("#sq3l", { opacity: 1 }, t0 + 0.14); tl.fromTo("#sq3l", { x: 0, y: 0, rotation: 0, scale: 1.4, svgOrigin: "0 0" }, { x: 130, y: 400, rotation: 160, scale: 1, svgOrigin: "0 0", duration: 0.34, ease: "power1.in", immediateRender: false }, t0 + 0.14); } })],
+      ]);
       // the front section: the rescuer arrives → "ว่างเปล่า" on his face (≥ 1/3)
       // the front section at the edge of the palms: nose, cockpit, windows, torn end — the rescuer walks up to it → "ว่างเปล่า" on his face
       seg("empty", [
@@ -251,7 +293,7 @@
       ]);
       add("hush", { set: "frontSite", setOpts: { id: "hu", time: "dawn", prints: false }, dark: 0.45, light: DAWNL, grade: GNITE, cam: { keys: [{ t: 0, ...fr(560, 1400, 1.6, 540, 1000) }] } });
       seg("twist", [
-        [0, (d) => ({ ...ROCKS("t1"), dark: 0.2, cam: { keys: [{ t: 0, ...fr(860, 760, 1.4, 540, 960) }, { t: d, glide: d, ...fr(860, 760, 1.25, 540, 960) }] }, fx(tl, id, t0) { life(tl, t0, d); } })],
+        [0, (d) => ({ ...ROCKS("t1", { farSil: true }), dark: 0.2, cam: { keys: [{ t: 0, ...fr(860, 760, 1.4, 540, 960) }, { t: d, glide: d, ...fr(860, 760, 1.25, 540, 960) }] }, fx(tl, id, t0) { life(tl, t0, d); } })],
         // the signal fire in front of the front section; the attendant waving beside it; two more survivors staggered, nobody overlapping
         [C("twist", 0, 2), (d) => ({ set: "frontSite", setOpts: { id: "t2", time: "dusk", prints: false, fire: "signal", fireX: 640 }, dark: 0.15, light: DUSKL, grade: GDUSK, cam: { keys: [{ t: 0, ...fr(520, 1420, 1.0, 540, 1050) }, { t: d, glide: d, ...fr(520, 1400, 0.95, 540, 1050) }] },
           actors: [A("fa2", 400, 1780, 1.25, [T("wave2", "wide", "o")]), A("tourist", 860, 1700, 1.0, [T("wave2", "wide", "o")], { flip: true }), A("fon", 200, 1660, 0.9, [T("idle", "worry", "o")])],
@@ -259,7 +301,7 @@
         // from their side of the bay at night: across the water, the phone beam from the tail's door, small but unmistakable
         [C("twist", 0, 4), (d) => ({ ...ISLE("t3", "night", "beach", { debris: false }), dark: 0.1, cam: { keys: [{ t: 0, ...fr(640, 1180, 1.3, 540, 1000) }, { t: d, glide: d, ...fr(690, 1120, 1.5, 540, 960) }] },
           actors: [A("fa2", 400, 1560, 0.85, [T("pointF", "wide", "o")])],
-          fx(tl, id, t0, L) { life(tl, t0, d); put(L.mid, `<g transform="translate(780,1062)">${Isle.tail(0, 0, 0.3, { door: true })}</g><g id="t3b" style="mix-blend-mode:screen"><path d="M746,1040L470,1110L500,1200Z" fill="#fffbe8" opacity=".7"/><path d="M746,1040L380,1100L420,1280Z" fill="#fffbe8" opacity=".3"/><circle cx="746" cy="1040" r="70" fill="#fffbe8" opacity=".4"/><circle cx="746" cy="1040" r="30" fill="#fffbe8" opacity=".7"/></g><g id="t3c"><circle cx="746" cy="1040" r="34" fill="#fffbe8" opacity=".55"/><circle cx="746" cy="1040" r="18" fill="#ffffff"/><rect x="740" y="1030" width="12" height="20" rx="3" fill="#fffef4"/></g><path d="M716,1072h60l80,420h-220z" fill="#fffbe8" opacity=".18"/>`);
+          fx(tl, id, t0, L) { life(tl, t0, d); put(L.mid, `<g transform="translate(780,1062)">${Isle.tail(0, 0, 0.3, { door: true })}</g><g id="t3b" style="mix-blend-mode:screen"><circle cx="746" cy="1040" r="90" fill="#fffbe8" opacity=".35"/>${[0, 45, 90, 135, 180, 225, 270, 315].map((g) => `<path d="M746,1040l${f1(70 * Math.cos(g * Math.PI / 180))},${f1(70 * Math.sin(g * Math.PI / 180))}" stroke="#fffbe8" stroke-width="5" stroke-linecap="round" opacity=".75"/>`).join("")}</g><g id="t3c"><circle cx="746" cy="1040" r="34" fill="#fffbe8" opacity=".55"/><circle cx="746" cy="1040" r="18" fill="#ffffff"/><rect x="740" y="1030" width="12" height="20" rx="3" fill="#fffef4"/></g><g style="mix-blend-mode:screen">${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M${730 - k * 4},${1100 + k * 34}h${36 + k * 8}" stroke="#fffbe8" stroke-width="${6 - k * 0.6}" stroke-linecap="round" opacity="${f1(0.7 - k * 0.1)}"/>`).join("")}</g>`);
             tl.fromTo("#t3c", { scale: 0.85, svgOrigin: "746 1040" }, { scale: 1.15, svgOrigin: "746 1040", duration: 0.5, yoyo: true, repeat: Math.ceil(d / 0.5), ease: "sine.inOut", immediateRender: false }, t0); tl.fromTo("#t3b", { opacity: 0.6 }, { opacity: 1, duration: 0.5, yoyo: true, repeat: Math.ceil(d / 0.5), ease: "sine.inOut", immediateRender: false }, t0); } })],
       ]);
       // they walk out at night: three people with torches, beams on the ground ahead, along the dark cliff top
@@ -269,7 +311,7 @@
           put(L.glow, [140, -40, -220].map((x, k) => `<g id="wkb${k}" style="mix-blend-mode:screen"><path d="M${x + 40},${1300 - 300}L${x + 330},${1300 - 10}L${x + 150},${1300 + 10}Z" fill="#fffbe8" opacity=".38"/><ellipse cx="${x + 250}" cy="${1300 + 2}" rx="110" ry="16" fill="#fffbe8" opacity=".45"/><circle cx="${x + 40}" cy="${1300 - 300}" r="10" fill="#ffffff"/></g>`).join(""));
           for (let k = 0; k < 3; k++) tl.fromTo(`#wkb${k}`, { x: 0 }, { x: 360, duration: D("walk"), ease: "none", immediateRender: false }, t0); } });
       // one picture: real-size footprints from the front section's door into the palms; the dying fire; the rescuer kneeling upright, a hand on a print, looking along them
-      add("lost", { set: "frontSite", setOpts: { id: "lo", time: "dawn", fireX: 1000 }, dark: 0.08, light: DAWNL, grade: GDAY, blur: { far: 1, fg: 10 },
+      add("lost", { set: "frontSite", setOpts: { id: "lo", time: "dawn", fireX: -80 }, dark: 0.08, light: DAWNL, grade: GDAY, blur: { far: 1, fg: 10 },
         cam: { keys: [{ t: 0, ...fr(440, 1420, 0.95, 540, 1000) }, { t: D("lost"), glide: D("lost"), ...fr(620, 1320, 1.15, 540, 1000) }] }, captions: caps("lost"),
         actors: [A("rescuer2", 300, 1640, 1.0, [T("kneelUp", "worry", "frown")])], fx(tl, id, t0) { life(tl, t0, D("lost")); } });
       add("end", { ...DAYR("en", { tail: [460, 1500, 1.0], vest: true, antenna: [700, 1260] }), blur: { far: 6, mid: 6, set: 6, fg: 10 },

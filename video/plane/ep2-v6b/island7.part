@@ -36,12 +36,13 @@
           put(L.far, far);
           let s = `<linearGradient id="${id}-sd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sand[0]}"/><stop offset="1" stop-color="${P.sand[1]}"/></linearGradient>
             <path d="M-2400,${G}Q0,${G - 50} 3000,${G}V3400H-2400Z" fill="url(#${id}-sd)"/>${Array.from({ length: 40 }, () => `<circle cx="${f1(-1600 + r() * 3800)}" cy="${f1(G + 60 + r() * 1100)}" r="${f1(2 + r() * 4)}" fill="${P.sand[1]}" opacity=".7"/>`).join("")}`;
-          s += I.wreckFront(o.wx ?? 120, G + 70, o.ws ?? 0.85);
-          const fire = o.fire === undefined ? "dying" : o.fire, fx = o.fireX ?? 900, fy = G + 300;
+          // v6b: real size — the fuselage ~2× a standing person, the door as tall as one; the torn end and the open door in frame, the nose off to the right
+          const WX = o.wx ?? 1000, WS = o.ws ?? 2.1; s += I.wreckFront(WX, G + 70, WS);
+          const fire = o.fire === undefined ? "dying" : o.fire, fx = o.fireX ?? 160, fy = G + 300;
           if (fire === "dying") s += I.firePit(`${id}-fp`, fx, fy, 0.8, { flames: false, smoke: "thin" });
           if (fire === "signal") s += I.firePit(`${id}-fp`, fx, fy, 0.9, {}) + I.smokeStream(`${id}-sig`, fx, fy - 140, 1500, { r: 80, lean: 0.15, period: 3.2, n: 18 });
           // footprints: a real stride from the open door into the trees; a print ≈ 15 % of a standing person
-          if (o.prints !== false) { const A0 = [70, G + 160], A1 = [880, G - 10], N = 14; for (let k = 0; k < N; k++) { const u = k / (N - 1), x = A0[0] + (A1[0] - A0[0]) * u + (k % 2 ? 22 : -22) * (1 - u * 0.7), y = A0[1] + (A1[1] - A0[1]) * u, sc = 1.05 - 0.6 * u, a = 70 + (k % 2 ? 6 : -6);
+          if (o.prints !== false) { const A0 = [WX + 30 * WS, G + 70 + 92 * WS], A1 = [-260, G + 40], N = 16; for (let k = 0; k < N; k++) { const u = k / (N - 1), x = A0[0] + (A1[0] - A0[0]) * u + (k % 2 ? 22 : -22) * (1 - u * 0.7), y = A0[1] + (A1[1] - A0[1]) * u, sc = 1.05 - 0.6 * u, a = 70 + (k % 2 ? 6 : -6);
             s += `<g transform="translate(${f1(x)},${f1(y)}) rotate(${a}) scale(${f1(sc)})"><path d="M-12,26Q-19,0 -14,-20Q-7,-38 5,-35Q17,-30 15,-9Q14,12 9,28Q0,38 -12,26Z" fill="${P.sand[1]}" stroke="${night ? "#2a3048" : "#9a7048"}" stroke-width="2.6"/>${[[-10, -44, 5], [-2, -47, 4.4], [6, -45, 4], [12, -40, 3.5], [16, -33, 3]].map(([a2, b, rr]) => `<circle cx="${a2}" cy="${b}" r="${rr}" fill="${P.sand[1]}" stroke="${night ? "#2a3048" : "#9a7048"}" stroke-width="1.8"/>`).join("")}</g>`; } }
           put(L.set, s);
           if (o.fg !== false) put(L.fg, `<g class="isfg"><g transform="translate(1420,1800) scale(-2.2,2.2)">${Tide.coco(0, 0, 1, 0, 29, { trunk: false, pal: P.leaf, q: 0.8 })}</g></g>`);
