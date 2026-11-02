@@ -32,10 +32,11 @@ def momentary(path):
         if a:
             cur = float(a.group(1))
             continue
-        b = re.search(r"lavfi\.r128\.M=(-?[0-9.]+|-inf)", line)
-        if b and cur is not None:
+        b = re.search(r"lavfi\.r128\.M=(-?inf|-?nan|-?[0-9.]+)", line)
+        if b and cur is not None:   # digital silence reads as -inf or nan: count it as -120
+            v = b.group(1)
             t.append(cur)
-            m.append(-120.0 if b.group(1) == "-inf" else float(b.group(1)))
+            m.append(-120.0 if ("inf" in v or "nan" in v) else float(v))
     t, m = np.array(t), np.array(m)
     grid = np.arange(0, t.max() if len(t) else 0, 0.1)
     return grid, np.interp(grid, t, m) if len(t) else np.array([])
