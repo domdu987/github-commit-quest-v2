@@ -158,12 +158,7 @@ sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "rupnak-theme.mp3"))
-# the generated theme ends at ~106 s: crossfade into its middle again so the score runs under the whole episode
-cut0, src0, xf = int(104 * SR), int(30 * SR), int(1.5 * SR)
-tail = mus[src0:src0 + max(0, N - cut0 + xf)]
-ramp = np.linspace(0, 1, xf, dtype=np.float32)
-mus = np.concatenate([mus[:cut0], mus[cut0:cut0 + xf] * (1 - ramp) + tail[:xf] * ramp, tail[xf:]])
+mus = load(os.path.join(HERE, "..", "music", "rupnak-theme-v2-loop.mp3"))
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -190,13 +185,17 @@ def dyn(x):  # even out the plucked theme's peaks and gaps so it reads as a cont
     out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", "dynaudnorm=f=400:g=21:m=12", "-f", "f32le", "-"],
                          input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
     return np.frombuffer(out, np.float32)[:len(x)]
+def highpass(x, fc):  # thin the theme's low end so the phone-band melody carries the level, not the bass
+    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"highpass=f={fc}:poles=2", "-f", "f32le", "-"],
+                         input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
+    return np.frombuffer(out, np.float32)[:len(x)]
 def lowpass(x, fc):
     out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"lowpass=f={fc}:poles=2", "-f", "f32le", "-"],
                          input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
     return np.frombuffer(out, np.float32)[:len(x)]
-mus = level(lowpass(dyn(mus), 6000), -14)
+mus = level(highpass(highpass(lowpass(dyn(mus), 6000), 380), 380), -20)
 sfx = level(lowpass(lowpass(sfx, 3500), 3500), -27)
-mus_part = mus * duck_curve(vo, 0.62)
+mus_part = mus * duck_curve(vo, 0.6)
 mix = vo + mus_part + sfx
 cut, card = int(T("choice", -0.12) * SR), int(T("end", 0.1) * SR)
 for x in (mix, mus_part):
