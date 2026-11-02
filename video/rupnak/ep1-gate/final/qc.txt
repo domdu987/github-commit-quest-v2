@@ -1,0 +1,23 @@
+รูพญานาค EP.1 · QC ของไฟล์ที่ส่ง (2026-11-02 12:45:10)
+ภาพดิบ: เรนเดอร์ทั้งตอนตั้งแต่ 0 · hyperframes 0.8.185 · -f 60 -w 4 · 68 นาที 36 วิ · build rk1 (โค้ด 46b87b6)
+เสียง: mix.wav (f30f069) · เพลง rupnak-theme-v2-loop.mp3
+HQ: build/hq.sh (2-pass · apad · ไม่มี -shortest)
+stream|profile=High|width=1080|height=1920|pix_fmt=yuv420p|r_frame_rate=60/1|nb_read_frames=7151
+video,119.183333
+audio,119.183000
+ขนาด 96881539 bytes · sha256 ce92d7d9be7cf25825f3c99911abe9cb6efb20614601829eeb07375360350d0d
+    I:         -14.0 LUFS
+    Peak:       -2.0 dBFS
+[full band]
+ok   music under the voice -23.0 LUFS (target -27..-22)
+ok   music between lines -17.2 LUFS (target -22..-17)
+ok   voice over music 8.2 LU (target >= 8)
+ok   music missing in voice-free time 4% (target <= 15%)
+[phone speaker band: both stems high-passed at 300 Hz]
+ok   music under the voice -26.8 LUFS (target -27..-22)
+ok   music between lines -20.3 LUFS (target -22..-17)
+ok   voice over music 9.1 LU (target >= 8)
+ok   music missing in voice-free time 6% (target <= 15%)
+PASS
+video/rupnak/ep1/mix.wav: flatness 0.34 (ok) · pause HF median -120.0 dBFS (ok) → PASS
+edgecheck · build rk1 (โค้ด 46b87b6) · node edgecheck.cjs 8934 video/rupnak/ep1/schedule.json · 2026-11-02 12:03:30 → no edge problems

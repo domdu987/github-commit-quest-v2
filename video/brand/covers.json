@@ -457,5 +457,29 @@
    "x": 0,
    "y": 0
   }
+ },
+ {
+  "id": "rupnak-ep1",
+  "page": "rupnak-ep1/composition/index.html",
+  "out": "video/rupnak-ep1/cover.jpg",
+  "t": 2.0,
+  "series": "รูพญานาค",
+  "ep": 1,
+  "epTitle": "ดินแยกเป็นวง อย่าหลงเข้าใกล้",
+  "finale": false,
+  "setup": "นาข้างบ้าน/[ยุบเป็นหลุม]…",
+  "cmd": "อย่าเข้าไปใกล้ขอบ!",
+  "glow": "#e0a83a",
+  "hideLight": false,
+  "zoom": {
+   "s": 1.1,
+   "x": 540,
+   "y": 1100
+  },
+  "shift": {
+   "x": 0,
+   "y": 0
+  },
+  "bright": 1.2
  }
 ]
