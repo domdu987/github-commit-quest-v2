@@ -162,7 +162,7 @@ sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "rupnak-theme-v2-loop.mp3"))
+mus = load(next(p for p in (os.path.join(HERE, "..", "music", "suno1.mp3"), os.path.join(HERE, "..", "..", "music", "suno1.mp3")) if os.path.exists(p)))  # the channel's own song for every story (owner 2 Nov 2569: "ใช้เพลงเดิมตลอดเลยนะ")
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -197,9 +197,14 @@ def lowpass(x, fc):
     out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"lowpass=f={fc}:poles=2", "-f", "f32le", "-"],
                          input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
     return np.frombuffer(out, np.float32)[:len(x)]
-mus = level(highpass(highpass(lowpass(dyn(mus), 6000), 380), 380), -19.1)
+def presence(x, g):  # lift the melody's 1-2 kHz so the theme carries on phone speakers
+    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"equalizer=f=1500:t=o:w=1.5:g={g}", "-f", "f32le", "-"],
+                         input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
+    return np.frombuffer(out, np.float32)[:len(x)]
+HPF = float(os.environ.get("HPF", 250))
+mus = level(presence(highpass(highpass(lowpass(dyn(mus), 6000), HPF), HPF), float(os.environ.get("PRES", 4))), float(os.environ.get("MUSLVL", -19.6)))
 sfx = level(lowpass(lowpass(sfx, 3500), 3500), -27)
-mus_part = mus * duck_curve(vo, 0.635)
+mus_part = mus * duck_curve(vo, float(os.environ.get("DUCK", 0.7)), rel=float(os.environ.get("REL", 0.2)))
 mix = vo + mus_part + sfx
 cut, card = int(T("choice", -0.12) * SR), int(T("end", 0.1) * SR)
 for x in (mix, mus_part):

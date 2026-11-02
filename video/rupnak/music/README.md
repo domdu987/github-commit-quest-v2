@@ -14,3 +14,13 @@
 มิกซ์ EP.1 (`ep1/mix.py`):
 - เพลง: dynaudnorm → low-pass 6 kHz → high-pass 380 Hz สองรอบ → −20
 - duck 0.6 ใต้เสียงพูด · ปรับความดังรวมรอบเดียวให้ได้ −14 LUFS
+
+## เปลี่ยนเป็นเพลงของช่อง suno1 (2 พ.ย. 2569)
+- เจ้าของสั่ง (ผ่านผู้ประสานงาน ~20:45): "ไปเอาเพลงเก่าที่ใช้ทำคลิปตอนแรกมาใช้ดีกว่า ใช้เพลงเดิมตลอดเลยนะ"
+- ทั้ง 3 ตอนใช้ `video/music/suno1.mp3` (133.6 วิ) · ไฟล์ rupnak-theme-v2 ไม่ได้ใช้แล้ว
+- suno1 ดิบมีพลังงานต่ำกว่า 300 Hz 77.1% (gen_theme --check: ช่วงกลาง 22.9% ช่วงอ่อนสุด 14.0% → FAIL) จึงต้อง EQ ใน mix.py:
+  dynaudnorm → low-pass 6 kHz → high-pass 250 Hz ×2 → presence +4 dB ที่ 1.5 kHz → ระดับ/duck ต่อตอน
+  - EP.1: −21.9 dB · duck 0.55 · release 0.6 วิ
+  - EP.2: −19.6 dB · duck 0.70 · release 0.2 วิ
+  - EP.3: −18.4 dB · duck 0.76 · release 0.15 วิ · การ์ดท้าย −2 dB
+- musiccheck PASS ทั้งย่านปกติและย่านลำโพงมือถือทุกตอน (ดู `ep*-gate/audiochecks*.txt`)

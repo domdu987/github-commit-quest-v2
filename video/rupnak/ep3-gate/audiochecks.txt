@@ -1,14 +1,14 @@
 [full band]
-ok   music under the voice -24.1 LUFS (target -27..-22)
-ok   music between lines -17.8 LUFS (target -22..-17)
-ok   voice over music 8.3 LU (target >= 8)
+ok   music under the voice -24.2 LUFS (target -27..-22)
+ok   music between lines -18.4 LUFS (target -22..-17)
+ok   voice over music 8.9 LU (target >= 8)
 ok   music missing in voice-free time 0% (target <= 15%)
 [phone speaker band: both stems high-passed at 300 Hz]
-ok   music under the voice -26.5 LUFS (target -27..-22)
-ok   music between lines -19.1 LUFS (target -22..-17)
-ok   voice over music 8.7 LU (target >= 8)
+ok   music under the voice -25.9 LUFS (target -27..-22)
+ok   music between lines -20.9 LUFS (target -22..-17)
+ok   voice over music 8.2 LU (target >= 8)
 ok   music missing in voice-free time 0% (target <= 15%)
 PASS
-mix.wav: flatness 0.36 (ok) · pause HF median -120.0 dBFS (ok) → PASS
+mix.wav: flatness 0.34 (ok) · pause HF median -82.9 dBFS (ok) → PASS
     I:         -14.0 LUFS
-    Peak:       -1.9 dBFS
+    Peak:       -1.8 dBFS

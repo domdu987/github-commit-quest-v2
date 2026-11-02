@@ -161,7 +161,7 @@ sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "rupnak-theme-v2-loop.mp3"))
+mus = load(next(p for p in (os.path.join(HERE, "..", "music", "suno1.mp3"), os.path.join(HERE, "..", "..", "music", "suno1.mp3")) if os.path.exists(p)))  # the channel's own song for every story (owner 2 Nov 2569: "ใช้เพลงเดิมตลอดเลยนะ")
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -178,8 +178,7 @@ dip(T("rain", -0.25), T("sink", 0.08), 0.3, 0.1)
 dip(T("warn", 0.0), T("warn", -0.2), 0.7, 0.3)
 
 mus = mus * gain
-card0 = int(T("end", 0.0) * SR); mus[card0:] *= 10 ** (float(os.environ.get("CARDUP", 5)) / 20)  # final episode: no choice, the theme swells under the end card
-fo = int(0.5 * SR); mus[N - fo:] *= np.linspace(1, 0, fo)
+
 
 # ---- levels: music audible under a gentle duck (A5), sfx low-passed (no hiss, A4), one linear gain to -14 LUFS ----
 from finalmix import duck_curve, finalize
@@ -195,9 +194,16 @@ def lowpass(x, fc):
     out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"lowpass=f={fc}:poles=2", "-f", "f32le", "-"],
                          input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
     return np.frombuffer(out, np.float32)[:len(x)]
-HPF = float(os.environ.get("HPF", 470))
-mus = level(highpass(highpass(lowpass(dyn(mus), 6000), HPF), HPF), float(os.environ.get("MUSLVL", -18.4)))
+def presence(x, g):  # lift the melody's 1-2 kHz so the theme carries on phone speakers
+    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"equalizer=f=1500:t=o:w=1.5:g={g}", "-f", "f32le", "-"],
+                         input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
+    return np.frombuffer(out, np.float32)[:len(x)]
+HPF = float(os.environ.get("HPF", 250))
+mus = level(presence(highpass(highpass(lowpass(dyn(mus), 6000), HPF), HPF), float(os.environ.get("PRES", 4))), float(os.environ.get("MUSLVL", -18.4)))
 sfx = level(lowpass(lowpass(sfx, 3500), 3500), -27)
 mus_part = mus * duck_curve(vo, float(os.environ.get("DUCK", 0.76)), rel=float(os.environ.get("REL", 0.15)))
+# final episode: no choice; the theme stays up under the end card (applied after dynaudnorm, which would flatten it), short fade at the very end
+card0 = int(T("end", 0.0) * SR); mus_part[card0:] *= 10 ** (float(os.environ.get("CARDUP", -2)) / 20)
+fo = int(0.5 * SR); mus_part[N - fo:] *= np.linspace(1, 0, fo)
 mix = vo + mus_part + sfx
 finalize(HERE, mix.astype(np.float32), vo.copy(), mus_part.astype(np.float32), tp=-2.4)
