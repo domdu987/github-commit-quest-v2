@@ -1,0 +1,90 @@
+      // ---------- รูพญานาค · F5 hook stills + style frames ----------
+      const DAYL = { from: "right", rim: "#fff6dc", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.2, op: 0.28 }, vol: false };
+      const NIGHTL = { from: "left", rim: "#ffcf8a", rimOp: 0.9, shade: "#0a0c20", shadeOp: 0.45, cast: { len: 0.8, op: 0.3 }, vol: false };
+      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 }, GNIGHT = { top: "#1a2448", bottom: "#3a2414", op: 0.3 };
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.8, 2.9], ...extra });
+      const CAP = (text, t = 0.05, end = 3.1) => [{ t, end, text }];
+      const phoneGlow = (L, pts) => put(L.glow, pts.map(([x, y, r]) => `<g transform="translate(${x},${y})"><rect x="-9" y="-16" width="18" height="30" rx="4" fill="#dff0ff" stroke="#1a1a2a" stroke-width="2"/><ellipse cx="0" cy="40" rx="${r}" ry="${r * 0.35}" fill="#cfe4ff" opacity=".16"/></g>`).join(""));
+      // H1 · night: the village at the rim with incense and phones, asking for numbers; a crack runs under their feet
+      add("h1", { set: "rupField", setOpts: { id: "h1", time: "night", hole: { x: 540, y: 1220, rx: 360, ry: 110, signX: 330, signY: -150 }, crowd: true, ep: "EP.1" },
+        dark: 0.05, light: NIGHTL, grade: GNIGHT, blur: { far: 1.5, mid: 1 },
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 1.25, 540, 900) }, { t: 3.2, glide: 3.2, ...fr(540, 1200, 1.34, 540, 900) }] },
+        actors: [A("bua", 250, 1095, 0.4, [{ t: 0, mode: "phoneLook", eyes: "wide", mouth: "o" }]), A("samarn", 430, 1080, 0.42, [{ t: 0, mode: "raise", eyes: "wide", mouth: "smile" }]),
+          A("chan", 790, 1092, 0.4, [{ t: 0, mode: "phoneLook", eyes: "wide", mouth: "o" }], { flip: true }),
+          A("tonkao", 400, 1500, 0.5, [{ t: 0, mode: "point", eyes: "wide", mouth: "smile" }]), A("mook", 760, 1540, 0.6, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { flip: true })],
+        captions: CAP("{อย่าเข้าไปใกล้ขอบ}", 0.05),
+        fx(tl, id, t0, L) { Rup.life(tl, "h1", t0, 3.2); phoneGlow(L, [[296, 950, 70], [744, 948, 70]]); } });
+      // H2 · day, low at the lip: ต้นข้าว on his knees at the edge, phone held out over the dark to film the naga; the lip under him undercut
+      add("h2", { set: "rupField", setOpts: { id: "h2", hole: { x: 620, y: 1360, rx: 420, ry: 130, signX: 330, signY: -150 }, crowd: true, ep: "EP.1" },
+        dark: 0, light: DAYL, grade: GDAY, blur: { far: 2, mid: 1.5 },
+        cam: { keys: [{ t: 0, ...fr(520, 1420, 1.55, 540, 1050) }, { t: 3.2, glide: 3.2, ...fr(530, 1430, 1.68, 540, 1050) }] },
+        actors: [A("mook", 300, 1640, 0.62, [{ t: 0, mode: "point", eyes: "angry", mouth: "o" }]), A("tonkao", 640, 1500, 0.5, [{ t: 0, mode: "phoneLook", eyes: "wide", mouth: "smile" }])],
+        captions: CAP("{อย่าก้มลงไปถ่าย}", 0.05),
+        fx(tl, id, t0, L) { Rup.life(tl, "h2", t0, 3.2); } });
+      // H3 · ยาย's yard: the well water has turned the colour of mud overnight; cracks ring the house
+      add("h3", { set: "rupYard", setOpts: { id: "h3", muddy: 0.9, wellX: 300, wellY: 1600 }, dark: 0, light: DAYL, grade: GDAY, blur: { far: 1.5, mid: 1 },
+        cam: { keys: [{ t: 0, ...fr(480, 1300, 1.1, 540, 960) }, { t: 3.2, glide: 3.2, ...fr(480, 1320, 1.18, 540, 960) }] },
+        actors: [A("yaiKham", 600, 1640, 0.58, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "o" }], { flip: true }), A("mook", 820, 1700, 0.6, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: CAP("{อย่ารอจนบ้านยุบ}", 0.05),
+        fx(tl, id, t0, L) { Rup.cracks(tl, "h3y", t0, 3.0); } });
+      // S1 · world: harvest morning, the Mekong behind; the family walks the bund toward the crowd at the hole
+      add("s1", { set: "rupField", setOpts: { id: "s1", hole: { x: 640, y: 1150, rx: 200, ry: 60, signX: 230, signY: -90 }, crowd: true, ep: "EP.1" },
+        dark: 0, light: DAYL, grade: GDAY, blur: { far: 0.8 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        actors: [A("yaiKham", 300, 1600, 0.52, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }]), A("mook", 470, 1640, 0.56, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }]),
+          A("tonkao", 640, 1660, 0.44, [{ t: 0, mode: "run", eyes: "wide", mouth: "smile" }]), A("phoSin", 900, 1300, 0.36, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
+        fx(tl, id, t0, L) { Rup.life(tl, "s1", t0, 3.2); } });
+      // S2 · disaster (night): the lip breaks off under the offerings; the crowd stumbles back; dust and phone lights
+      add("s2", { set: "rupField", setOpts: { id: "s2", time: "night", hole: { x: 540, y: 1250, rx: 380, ry: 120, signX: 360, signY: -160 }, crowd: true, ep: "EP.1" },
+        dark: 0.05, light: NIGHTL, grade: GNIGHT, shake: (t) => ({ x: 9 * Math.sin(t * 50), y: 6 * Math.sin(t * 41), r: 0.3 * Math.sin(t * 33) }),
+        cam: { keys: [{ t: 0, ...fr(540, 1260, 1.3, 540, 960) }] },
+        actors: [A("samarn", 260, 1560, 0.56, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }]), A("mook", 560, 1640, 0.64, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }]),
+          A("chan", 840, 1580, 0.56, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { flip: true })],
+        fx(tl, id, t0, L) { Rup.life(tl, "s2", t0, 3.2); phoneGlow(L, [[200, 1240, 100]]);
+          put(L.set, `<g transform="translate(540,1250)">${Array.from({ length: 12 }, (_, k) => `<g class="s2-ch" transform="translate(${-300 + k * 54},${30 + (k % 3) * 18})"><path d="M-14,-8l20,-6l12,14l-16,10l-18,-4Z" fill="#5a3a22" stroke="#2a1c16" stroke-width="2"/></g>`).join("")}
+            ${Array.from({ length: 10 }, (_, k) => `<g class="s2-dust" transform="translate(${-300 + k * 66},40)"><circle r="${46 + (k % 3) * 16}" fill="#9a8466" opacity=".6" filter="url(#rpBlur8)"/></g>`).join("")}</g>`);
+          document.querySelectorAll(".s2-ch").forEach((el, k) => tl.fromTo(el, { y: 0, rotation: 0, opacity: 1, svgOrigin: "0 0" }, { y: 120 + (k % 4) * 30, rotation: 120 + k * 20, opacity: 0, svgOrigin: "0 0", duration: 1.0, ease: "power2.in", immediateRender: false }, t0 + 0.5 + k * 0.06));
+          document.querySelectorAll(".s2-dust").forEach((el, k) => tl.fromTo(el, { y: 0, scale: 0.4, opacity: 0, svgOrigin: "0 0" }, { y: -160 - k * 12, scale: 1.8, opacity: 0.9, duration: 1.8, ease: "power2.out", immediateRender: false }, t0 + 0.7 + k * 0.05));
+          Rup.cracks(tl, "s2", t0, 1.2); } });
+      // S3 · knowledge: the ground cut open — pump, water table falling, the cave drained, sand raveling in; ยาย's ใบลาน at the top
+      add("s3", { set: "rupCut", setOpts: { id: "s3", stage: 2, wt0: 940, pumpY: 1480 }, dark: 0, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 1060, 1.0, 540, 1060) }] },
+        actors: [A("yaiKham", 170, 600, 0.36, [{ t: 0, mode: "point", eyes: "normal", mouth: "o" }]), A("tonkao", 300, 610, 0.28, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        fx(tl, id, t0, L) { Rup.cutLife(tl, "s3", t0, 3.2, { wt0: 940, wt1: 1240, at: { pump: 0, drop: 0.2, drain: 1.0, ravel: 1.6, fall: 9 } });
+          RupUI.leaf(tl, L.light, t0 + 0.2, 3.0, { y: 420, active: 0 }); } });
+
+      // ---- style frames v2 (screen-space sets, identity camera) ----
+      const ID = (t = 0) => ({ t, ...fr(540, 960, 1, 540, 960) });
+      add("v1", { set: "rupWorld2", setOpts: { id: "v1" }, dark: 0, light: DAYL, grade: GDAY,
+        cam: { keys: [ID(0), { t: 3.2, glide: 3.2, ...fr(540, 980, 1.04, 540, 960) }] },
+        actors: [A("phoSin", 600, 1330, 0.36, [{ t: 0, mode: "talk", eyes: "normal", mouth: "smile" }]),
+          A("yaiKham", 470, 1560, 0.5, [{ t: 0, mode: "talk2", eyes: "normal", mouth: "o" }]), A("tonkao", 760, 1640, 0.5, [{ t: 0, mode: "point", eyes: "wide", mouth: "smile" }], { flip: true }),
+          A("mook", 590, 1760, 0.66, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "flat" }])],
+        fx(tl, id, t0, L) { Rup2.life2(tl, "v1", t0, 3.2); } });
+      add("v2", { set: "rupRim2", setOpts: { id: "v2", time: "night", holeY: 1180, rx: 430, ry: 160 }, dark: 0.08, light: NIGHTL, grade: GNIGHT,
+        cam: { keys: [ID(0), { t: 3.2, glide: 3.2, ...fr(540, 1000, 1.05, 540, 960) }] },
+        actors: [A("bua", 230, 1000, 0.3, [{ t: 0, mode: "kneelWai", eyes: "normal", mouth: "flat" }]), A("samarn", 420, 985, 0.3, [{ t: 0, mode: "kneelWai", eyes: "closed", mouth: "flat" }]),
+          A("chan", 640, 990, 0.3, [{ t: 0, mode: "phoneLook", eyes: "wide", mouth: "o" }], { flip: true }), A("thong", 820, 1010, 0.34, [{ t: 0, mode: "talk", eyes: "normal", mouth: "smile" }], { flip: true }),
+          A("tonkao", 360, 1720, 0.62, [{ t: 0, mode: "phoneLook", eyes: "wide", mouth: "smile" }]), A("mook", 720, 1800, 0.74, [{ t: 0, mode: "stopArm", eyes: "worry", mouth: "o" }], { flip: true })],
+        captions: CAP("{อย่าเข้าไปใกล้ขอบ}", 0.05),
+        fx(tl, id, t0, L) { Rup2.life2(tl, "v2", t0, 3.2); Rup.cracks(tl, "v2", t0, 3.0); Rup2.phoneLight(L, 410, 1430, 380, 1290, 80); Rup2.phoneLight(L, 660, 905, 640, 830, 40); } });
+      add("v3", { set: "rupRim2", setOpts: { id: "v3", time: "day", holeX: 430, holeY: 1300, rx: 400, ry: 160, props: false, horizon: 420 }, dark: 0, light: DAYL, grade: GDAY,
+        cam: { keys: [ID(0), { t: 3.2, glide: 3.2, ...fr(560, 1100, 1.06, 540, 960) }] },
+        actors: [A("tonkao", 840, 1330, 0.66, [{ t: 0, mode: "leanFilm", eyes: "wide", mouth: "smile" }]), A("mook", 820, 1880, 0.8, [{ t: 0, mode: "stopArm", eyes: "angry", mouth: "o" }], { flip: true })],
+        captions: CAP("{อย่าก้มลงไปถ่าย}", 0.05),
+        fx(tl, id, t0, L) { Rup2.life2(tl, "v3", t0, 3.2); Rup2.phoneLight(L, 700, 1180, 760, 1000, 70); } });
+      add("v4", { set: "rupCut2", setOpts: { id: "v4", stage: 1, wt0: 940, pumpY: 1480 }, dark: 0, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(530, 1100, 1.08, 540, 1000) }, { t: 3.2, glide: 3.2, ...fr(530, 1100, 1.12, 540, 1000) }] }, actors: [],
+        fx(tl, id, t0, L) { Rup.cutLife(tl, "v4", t0, 3.2, { wt0: 940, wt1: 1240, at: { pump: 0, drop: 0.2, drain: 1.0, ravel: 1.6, fall: 9 } }); } });
+      // ---- F5 round 2: themed cards and icons (story-world objects) ----
+      add("r1", { set: "rupField", setOpts: { id: "r1", time: "night", hole: { x: 540, y: 1500, rx: 420, ry: 120 }, crowd: true, sign: false }, dark: 0.15, light: NIGHTL, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 1.0, 540, 1300) }] }, actors: [],
+        fx(tl, id, t0, L) { RupUI.lotto(tl, L.light, t0 + 0.05, 3.1, { y: 760, nums: [9, 2, 7], text: "สามวันก่อน" }); } });
+      add("r2", { set: "rupYard", setOpts: { id: "r2", time: "dusk", muddy: 0.6 }, dark: 0.1, light: DAYL, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 1100) }] }, actors: [],
+        fx(tl, id, t0, L) { RupUI.leaf(tl, L.light, t0 + 0.05, 3.1, { y: 820, active: 1, done: [0], sign: true }); } });
+      add("r3", { set: "rupMural", setOpts: { id: "r3" }, dark: 0, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 560, 960) }] }, actors: [],
+        fx(tl, id, t0, L) { Rup.muralLife(tl, "r3", t0, 3.2);
+          L.light.insertAdjacentHTML("beforeend", RupUI.badge(220, 1640, "ring", 0.9, "r3b0") + RupUI.badge(540, 1640, "well", 0.9, "r3b1") + RupUI.badge(860, 1640, "far", 0.9, "r3b2"));
+          ["#r3b0", "#r3b1", "#r3b2"].forEach((b, k) => RupUI.badgeIn(tl, b, t0 + 0.1 + k * 0.15, 3)); } });
