@@ -1,0 +1,46 @@
+      // ---------- รั้วสุดท้าย shared kit (same in every episode) ----------
+      const INK = "#1e2228", f1 = (v) => (+v).toFixed(1);
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const T = (mode, eyes = "normal", mouth = "flat", t = 0) => ({ t, mode, eyes, mouth });
+      const TALK = (k, i, m = "o") => [vo(k, i), voEnd(k, i), m];
+      const QUO = { quote: true };
+      const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.5, shade: "#3a3048", shadeOp: 0.22, cast: { len: 0.5, op: 0.22 }, vol: false };
+      const NOONL = { from: "left", rim: "#ffffff", rimOp: 0.6, shade: "#3a3048", shadeOp: 0.18, cast: { len: 0.25, op: 0.3 }, vol: false };
+      const DUSKL = { from: "left", rim: "#ffb070", rimOp: 0.75, shade: "#2a1a3a", shadeOp: 0.35, cast: false, vol: false };
+      const NITE = { from: "right", rim: "#ffd090", rimOp: 0.6, shade: "#0a0e1e", shadeOp: 0.45, cast: false, vol: false };
+      const GD = { top: "#fff0d0", bottom: "#3a2a20", op: 0.08 }, GK = { top: "#5a3a6a", bottom: "#2a1418", op: 0.16 }, GN = { top: "#1a2448", bottom: "#05070e", op: 0.3 }, GNOON = { top: "#fff8e0", bottom: "#5a4a30", op: 0.1 };
+      const KIDSK = ["#f0c4a0", "#c8946c", "#f8dcc0"], PIMSK = ["#d8a47a", "#a8784e", "#ecc09a"], MANSK = ["#9a6a44", "#6a4428", "#b88a62"], PHUSK = ["#b88058", "#8a5a3a", "#d0a07a"];
+      const still = (x) => ({ ...x, drift: { s: 0 } });
+      const BLUR = { sky: 9, far: 9, mid: 9, set: 9, act: 9, fg: 10 };
+      // a row of coins with marks (small, top of the screen): items [[icon, mark, at]]
+      const trio = (tl, layer, t0, dur, items, y = 300, s = 0.9) => {
+        const id = `tr${Math.round(t0 * 100)}`, n = items.length;
+        put(layer, `<g id="${id}">${items.map(([ic, m], k) => `<g transform="translate(${540 + (k - (n - 1) / 2) * 250 * s},${y}) scale(${s})"><g id="${id}-c${k}"><circle r="70" fill="#000" opacity=".25" transform="translate(0,10)"/><circle r="62" fill="#c8c0ae" stroke="#26201c" stroke-width="4" transform="translate(0,8)"/><circle r="62" fill="url(#fuCoin)" stroke="#26201c" stroke-width="4"/>${FenceUI.ICON[ic]()}
+          ${m ? `<g id="${id}-m${k}" transform="translate(44,-44)"><circle r="26" fill="${m === "x" ? "#e2382e" : "#2fa864"}" stroke="#26201c" stroke-width="4"/>${m === "x" ? `<path d="M-10,-10L10,10M10,-10L-10,10" stroke="#fff" stroke-width="7" stroke-linecap="round"/>` : `<path d="M-11,1l8,9l15,-17" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>`}</g>` : ""}</g></g>`).join("")}</g>`);
+        items.forEach(([, m, at], k) => {
+          tl.set(`#${id}-c${k}`, { opacity: 0 }, 0);
+          tl.fromTo(`#${id}-c${k}`, { opacity: 0, scale: 0.3, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2.6)", immediateRender: false }, t0 + at);
+          if (m) { tl.set(`#${id}-m${k}`, { opacity: 0 }, 0); tl.fromTo(`#${id}-m${k}`, { opacity: 0, scale: 2.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + at + 0.35); }
+        });
+        tl.to(`#${id}`, { opacity: 0, duration: 0.18, immediateRender: false }, t0 + dur - 0.18);
+      };
+      // a big chalk word on screen (day counter)
+      const chalkWord = (tl, layer, t0, dur, txt, y = 330, size = 120) => {
+        const id = `cw${Math.round(t0 * 100)}`;
+        put(layer, `<g id="${id}"><text x="540" y="${y}" text-anchor="middle" font-family="Mali" font-weight="700" font-size="${size}" fill="#fff" stroke="#2a3a34" stroke-width="10" paint-order="stroke">${txt}</text></g>`);
+        tl.set(`#${id}`, { opacity: 0 }, 0);
+        tl.fromTo(`#${id}`, { opacity: 0, scale: 1.3, svgOrigin: `540 ${y}` }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0);
+        tl.to(`#${id}`, { opacity: 0, duration: 0.18, immediateRender: false }, t0 + dur - 0.18);
+      };
+      // screen position of a world point under a still fr() camera
+      const SP = (cam, x, y) => [cam.sx + (x - cam.wx) * cam.s, cam.sy + (y - cam.wy) * cam.s];
+      const CAM = (wx, wy, s, sx = 540, sy = 760) => ({ wx, wy, s, sx, sy, k: fr(wx, wy, s, sx, sy) });
+      const blackOut = (tl, L, t, d = 0.25) => { put(L.light, `<rect id="bo${Math.round(t * 100)}" width="1080" height="1920" fill="#000" opacity="0"/>`); tl.to(`#bo${Math.round(t * 100)}`, { opacity: 1, duration: d, immediateRender: false }, t); };
+      // impact (V11): a white flash, a dust puff and flying chips at screen point (x, y)
+      const impact = (L, tl, t, x, y, o = {}) => {
+        const id = `im${Math.round(t * 100)}`, n = o.n || 10, col = o.col || "#d8c8a8";
+        put(L.light, `<g id="${id}"><rect id="${id}-f" width="1080" height="1920" fill="#fff" opacity="0"/>${Array.from({ length: 5 }, (_, k) => `<circle id="${id}-d${k}" cx="${x + (k - 2) * 40}" cy="${y}" r="60" fill="${col}" opacity="0"/>`).join("")}${Array.from({ length: n }, (_, k) => `<rect id="${id}-c${k}" x="${x - 6}" y="${y - 4}" width="${10 + (k % 3) * 6}" height="8" rx="2" fill="${o.chip || "#8a6a48"}" opacity="0"/>`).join("")}</g>`);
+        tl.fromTo(`#${id}-f`, { opacity: 0.7 }, { opacity: 0, duration: 0.18, ease: "power1.out", immediateRender: false }, t);
+        for (let k = 0; k < 5; k++) tl.fromTo(`#${id}-d${k}`, { opacity: 0.6, scale: 0.3, transformOrigin: "50% 50%" }, { opacity: 0, scale: 2.2, x: (k - 2) * 50, y: -40 - (k % 2) * 30, duration: 0.8, ease: "power2.out", immediateRender: false }, t);
+        for (let k = 0; k < n; k++) { const a = -Math.PI * (0.1 + 0.8 * (k / (n - 1))), v = 180 + (k * 37) % 140; tl.fromTo(`#${id}-c${k}`, { opacity: 1, x: 0, y: 0, rotation: 0 }, { opacity: 0, x: Math.cos(a) * v, y: Math.sin(a) * v + 120, rotation: 200 + k * 40, duration: 0.7, ease: "power2.out", immediateRender: false }, t); }
+      };

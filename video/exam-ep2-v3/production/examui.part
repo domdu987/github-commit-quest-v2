@@ -1,0 +1,79 @@
+      // ---------- ห้องสอบ graphics: built on SU (2.5D medals + FX) from sinkui.part; material = an exam answer sheet ----------
+      const ExamUI = {};
+      let exSeq = 0;
+      const EXI = {
+        lock: `<rect x="-26" y="-6" width="52" height="40" rx="8" fill="#ffd23a" ${SO(4)}/><path d="M-16,-6V-22Q-16,-40 0,-40Q16,-40 16,-22V-6" fill="none" stroke="#26201c" stroke-width="9"/><path d="M-16,-6V-22Q-16,-40 0,-40Q16,-40 16,-22V-6" fill="none" stroke="#c8ccd2" stroke-width="5"/><circle cy="12" r="6" fill="#26201c"/><path d="M0,14v10" stroke="#26201c" stroke-width="5"/>`,
+        light: `<path d="M-22,-10Q-26,-40 0,-42Q26,-40 22,-10Q16,0 14,12H-14Q-16,0 -22,-10Z" fill="#c8ccd2" ${SO(4)}/><rect x="-14" y="12" width="28" height="18" rx="4" fill="#8a8f98" ${SO(3)}/><path d="M-36,-46L36,34" stroke="#e2382e" stroke-width="9" stroke-linecap="round"/>`,
+        sight: `<path d="M-40,0Q0,-36 40,0Q0,36 -40,0Z" fill="#fff" ${SO(4)}/><circle r="14" fill="#3a2a1a"/><path d="M-38,-34L38,34" stroke="#e2382e" stroke-width="9" stroke-linecap="round"/>`,
+        quiet: `<path d="M-30,-14H-12L8,-34V34L-12,14H-30Z" fill="#2f6fd0" ${SO(4)}/><path d="M18,-14L40,14M40,-14L18,14" stroke="#e2382e" stroke-width="8" stroke-linecap="round"/>`,
+        phone: `<rect x="-20" y="-36" width="40" height="72" rx="8" fill="#26303a" ${SO(4)}/><path d="M-8,-4l4,-6v20l-4,-6h-6v-8z" fill="#fff"/><path d="M2,-6l10,12M12,-6l-10,12" stroke="#e2382e" stroke-width="4"/>`,
+        door: `<rect x="-26" y="-40" width="52" height="80" rx="4" fill="#a8784a" ${SO(4)}/><rect x="-8" y="-30" width="16" height="30" fill="#bcd8ec" ${SO(2)}/><circle cx="16" cy="6" r="5" fill="#ffd23a" ${SO(2)}/><path d="M-40,-46L40,46" stroke="#e2382e" stroke-width="8" stroke-linecap="round"/>`,
+        key: `<circle cx="-14" cy="0" r="16" fill="#ffd23a" ${SO(4)}/><circle cx="-14" cy="0" r="6" fill="#fbfdff"/><path d="M2,0H38M28,0v12M36,0v10" stroke="#26201c" stroke-width="7" stroke-linecap="round"/>`,
+        list: `<rect x="-26" y="-36" width="52" height="72" rx="6" fill="#fbfaf4" ${SO(4)}/>${[-18, -2, 14].map((y) => `<path d="M-14,${y}l5,5l9,-10M6,${y}h12" stroke="#2fa864" stroke-width="4" fill="none" stroke-linecap="round"/>`).join("")}`,
+      };
+      ExamUI.ICON = EXI;
+      // the lockdown rules on an exam answer sheet: rows [icon, text]; o.active [i…] highlighted, the rest faint; each row ticks at o.at[i]
+      ExamUI.rules = (tl, layer, t0, dur, o = {}) => {
+        const id = `xr${exSeq++}`, rows = o.rows || [["lock", "ล็อกประตู"], ["light", "ปิดไฟ"], ["sight", "หลบพ้นช่องกระจก"], ["quiet", "เงียบ"]], Y = o.y ?? 300, S = o.s ?? 1, at = o.at || rows.map((_, k) => 0.35 + k * 0.4);
+        SU.defs(layer);
+        let c = `<g transform="translate(540,${Y}) scale(${S})"><g id="${id}-card"><g filter="url(#muDrop)"><rect x="-430" y="0" width="860" height="${200 + rows.length * 150}" rx="26" fill="#fbfaf4" ${SO(5)}/></g>
+          ${Array.from({ length: rows.length * 3 + 3 }, (_, k) => `<path d="M-400,${120 + k * 50}H400" stroke="#9ec0e0" stroke-width="2" opacity=".6"/>`).join("")}<path d="M-330,0V${200 + rows.length * 150}" stroke="#e86a6a" stroke-width="3"/>
+          <path d="M-430,40Q-430,0 -390,0H390Q430,0 430,40V120H-430Z" fill="${o.color || SU.red}" ${SO(5)}/>
+          <text x="0" y="86" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#fff">${o.title || "ล็อก · ปิด · หลบ · เงียบ"}</text>`;
+        rows.forEach(([ic, t], k) => {
+          const y = 210 + k * 150;
+          c += `<g id="${id}-r${k}"><g transform="translate(-250,${y})">${SU.medal(`${id}-m${k}`, 56, EXI[ic], { accent: o.color || SU.red })}</g>
+            <text x="-160" y="${y + 20}" font-family="Kanit" font-weight="900" font-size="58" fill="${SU.ink}">${t}</text>
+            <g transform="translate(330,${y})"><g id="${id}-ok${k}">${SU.medal(`${id}-c${k}`, 34, `<path d="M-14,0l10,11l19,-21" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`, { hi: "#9af0bd", face: "#3fbf74", face2: SU.green, rim: SU.greenD, accent: "#fff", noGhost: true })}</g></g>
+            ${SU.fxMk(`${id}-fx${k}`, 330, y, 9)}</g>`;
+        });
+        c += `</g></g>`;
+        put(layer, `<g id="${id}">${c}</g>`);
+        tl.set(`#${id}`, { opacity: 0 }, 0); tl.set(`#${id}`, { opacity: 1 }, t0);
+        tl.fromTo(`#${id}-card`, { y: 180, rotation: -6, opacity: 0, svgOrigin: "0 300" }, { y: 0, rotation: 0, opacity: 1, svgOrigin: "0 300", duration: 0.55, ease: "back.out(1.7)", immediateRender: false }, t0);
+        rows.forEach((_, k) => {
+          tl.set(`#${id}-r${k}`, { opacity: 0 }, 0);
+          tl.fromTo(`#${id}-r${k}`, { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.35, ease: "back.out(2.2)", immediateRender: false }, t0 + at[k]);
+          tl.fromTo(`#${id}-m${k}`, { scale: 0.2, rotation: -40, transformOrigin: "50% 50%" }, { scale: 1, rotation: 0, duration: 0.7, ease: "elastic.out(1,0.45)", immediateRender: false }, t0 + at[k]);
+          tl.fromTo(`#${id}-m${k}`, { y: 0 }, { y: -6, duration: 0.8, yoyo: true, repeat: Math.ceil(dur / 0.8), ease: "sine.inOut", immediateRender: false }, t0 + at[k] + 0.7);
+          SU.sheen(tl, `${id}-m${k}`, 56, t0 + at[k] + 0.6 + k * 0.3, dur - at[k] - 0.6, 2.2);
+          tl.set(`#${id}-ok${k}`, { opacity: 0 }, 0);
+          tl.fromTo(`#${id}-ok${k}`, { opacity: 0, scale: 2.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.4)", immediateRender: false }, t0 + at[k] + 0.4);
+          SU.fxGo(tl, `${id}-fx${k}`, t0 + at[k] + 0.45, { r1: 90, n: 9 });
+        });
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2);
+      };
+      // "ห้ามทำ": a big red stamp over a medal (no phone filming / no under-desk / no opening) with a red flash + shake
+      ExamUI.nope = (tl, layer, t0, dur, o = {}) => {
+        const id = `xn${exSeq++}`, X = o.x ?? 540, Y = o.y ?? 520;
+        SU.defs(layer);
+        put(layer, `<g id="${id}" transform="translate(${X},${Y})"><g id="${id}-in">${SU.medal(`${id}-m`, 150, `<g transform="scale(2.4)">${EXI[o.icon || "phone"]}</g>`, { accent: SU.red })}
+          <g id="${id}-st" transform="rotate(-12)"><rect x="-230" y="170" width="460" height="100" rx="18" fill="none" stroke="${SU.red}" stroke-width="12"/><text y="245" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="66" fill="${SU.red}">${o.text || "ห้ามถ่าย"}</text></g>
+          ${SU.fxMk(`${id}-fx`, 0, 0, 12, SU.red)}</g></g>`);
+        tl.set(`#${id}`, { opacity: 0 }, 0); tl.set(`#${id}`, { opacity: 1 }, t0);
+        tl.fromTo(`#${id}-in`, { scale: 0.3, rotation: -30, transformOrigin: "50% 50%" }, { scale: 1, rotation: 0, duration: 0.6, ease: "elastic.out(1,0.5)", immediateRender: false }, t0);
+        tl.set(`#${id}-st`, { opacity: 0 }, 0);
+        tl.fromTo(`#${id}-st`, { opacity: 0, scale: 2.2, svgOrigin: "0 220" }, { opacity: 1, scale: 1, svgOrigin: "0 220", duration: 0.25, ease: "power3.in", immediateRender: false }, t0 + (o.stamp ?? 0.45));
+        SU.fxGo(tl, `${id}-fx`, t0 + (o.stamp ?? 0.45) + 0.25, { r0: 100, r1: 300, n: 12 }); SU.flash(tl, layer, t0 + (o.stamp ?? 0.45) + 0.25);
+        tl.fromTo(`#${id}-in`, { x: -16 }, { x: 0, duration: 0.4, ease: "elastic.out(1.2,0.3)", immediateRender: false }, t0 + (o.stamp ?? 0.45) + 0.25);
+        SU.sheen(tl, `${id}-m`, 150, t0 + 0.8, dur - 0.8, 1.8);
+        tl.to(`#${id}`, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2);
+      };
+      // the next-episode card: an exam paper "ข้อต่อไป" with the next hook circled in red
+      ExamUI.next = (tl, layer, t0, dur, o = {}) => {
+        const id = `xx${exSeq++}`;
+        put(layer, `<g id="${id}"><rect width="1080" height="1920" fill="#0a0c10" opacity=".88"/><g transform="translate(540,640) rotate(-3)"><g id="${id}-pg"><g filter="url(#muDrop)"><rect x="-420" y="-300" width="840" height="720" fill="#fbfaf4" ${SO(4)}/></g>
+          <text x="-360" y="-200" font-family="Mali" font-weight="700" font-size="48" fill="#2a4a9a">${o.head || "ข้อต่อไป (ตอนที่ 2 · ตอนจบ)"}</text><path d="M-380,-170H380" stroke="#2a4a9a" stroke-width="3"/>
+          <text x="-360" y="-60" font-family="Kanit" font-weight="900" font-size="${Math.min(52, Math.round(1300 / (o.l1 || " ").length))}" fill="#26201c">${o.l1 || ""}</text>
+          <text x="-360" y="60" font-family="Kanit" font-weight="900" font-size="${Math.min(70, Math.round(1300 / (o.l2 || " ").length))}" fill="${SU.red}">${o.l2 || ""}</text>
+          <ellipse id="${id}-c" cx="-80" cy="38" rx="320" ry="74" fill="none" stroke="${SU.red}" stroke-width="7" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" transform="rotate(-3 -80 38)"/>
+          <text x="-360" y="240" font-family="Mali" font-size="40" fill="#5a5a6a">${o.cta || "กดติดตาม… แล้วอย่าเพิ่งส่งกระดาษคำตอบ"}</text></g></g>
+          <text x="540" y="1400" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff" letter-spacing="10">ROD MAI CLUB</text></g>`);
+        tl.set(`#${id}`, { opacity: 0 }, 0);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0);
+        tl.fromTo(`#${id}-pg`, { y: 220, rotation: 8, svgOrigin: "0 0" }, { y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.6, ease: "back.out(1.5)", immediateRender: false }, t0 + 0.05);
+        tl.to(`#${id}-c`, { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power2.inOut", immediateRender: false }, t0 + 0.8);
+        const rest = Math.max(0.4, dur - 0.7);
+        tl.fromTo(`#${id}-pg`, { y: 0, rotation: 0 }, { y: -14, rotation: 1.2, svgOrigin: "0 0", duration: 0.8, yoyo: true, repeat: Math.ceil(rest / 0.8), ease: "sine.inOut", immediateRender: false }, t0 + 0.65);
+        tl.fromTo(`#${id}-c`, { scale: 1 }, { scale: 1.04, transformOrigin: "50% 50%", duration: 0.45, yoyo: true, repeat: Math.ceil(rest / 0.45), ease: "sine.inOut", immediateRender: false }, t0 + 1.3);
+      };
