@@ -1,0 +1,223 @@
+      // ---------- ผีปอบร่วมวงลาบ (lane C · 2 พ.ย. 2569): pre-production stills — 3 hooks + style frames ----------
+      const INKL = "#2a1e1a", OL = (w = 5) => `stroke="${INKL}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+      const NIGHT = { from: "right", rim: "#ffd9a0", rimOp: 0.85, shade: "#1a1430", shadeOp: 0.35, cast: false, vol: false };
+      const DUSK = { from: "left", rim: "#ffc890", rimOp: 0.8, shade: "#2a2040", shadeOp: 0.3, cast: false, vol: false };
+      const GN = { top: "#ffd9a0", bottom: "#141a30", op: 0.12 }, GD = { top: "#ffd8a8", bottom: "#3a2a48", op: 0.1 };
+      // ---- the cast: ลุงทิด (the laab maker), ยายบัว (the rules), แพร (big sister), ต้นกล้า (little brother) ----
+      { const C = Rig.CAST, b = (k) => C[k].v2;
+        const pakama = `<path d="M-60,-490L60,-490L52,-462L-52,-462Z" fill="#c8323a" ${OL(2.2)}/>${[-44, -20, 4, 28].map((x) => `<path d="M${x},-490v28" stroke="#2a4a8a" stroke-width="7" opacity=".8"/>`).join("")}`;
+        C.lungThid = { v2: { ...b("taJun"), hair: { ...b("taJun").hair, c: "#3a3430", s: "#1e1a18", sh: "#6a625a" }, brow: "#2a2420", face: `<path d="M-40,-528Q0,-486 40,-528Q36,-500 0,-492Q-36,-500 -40,-528Z" fill="#2a1a10" opacity=".14"/><path d="M-24,-531q12,-8 24,-2q12,-6 24,2" stroke="#2a2420" stroke-width="7" fill="none" stroke-linecap="round"/>`, top: { kind: "tee", c: "#f2efe6", sleeve: "none" }, print: "", bottom: { kind: "shorts", c: "#3a4a6a" }, extra: pakama } };
+        C.yaiBua = { v2: { ...b("yaiTide"), top: { kind: "blouse", c: "#3a4a8a", sleeve: "long", trim: "#2a3468" }, bottom: { kind: "sarong", c: "#7a2a3a" } } };
+        C.prae = { v2: { ...b("june"), top: { kind: "tee", c: "#e8a03a", sleeve: "short" }, print: "", bottom: { kind: "jeans", c: "#2a3a5a" } } };
+        C.tonkla = { v2: { ...b("tang"), top: { kind: "tee", c: "#3a8ad8", sleeve: "short" }, print: "", bottom: { kind: "shorts", c: "#2a2a3a" } } }; }
+      // ---- the ghost: a new ปอบ — chibi, round, sage-green, huge flappy ears (they droop as it goes deaf), a big toothy grin ----
+      const PopL = window.PopL = {};
+      PopL.ghost = (x, y, s = 1, o = {}) => {
+        const face = o.face || "grin", droop = o.droop ?? 0, flip = o.flip ? -1 : 1, id = o.id || "pg";
+        const SK = "#b9cc9a", SKD = "#8a96a6", SKL = "#dfe9c6";
+        const ear = (sd) => { const a = sd * (-18 + droop * 95); return `<g transform="translate(${sd * 150},-410) rotate(${a})"><path d="M0,0C${sd * 40},-90 ${sd * 190},-110 ${sd * 210},-30C${sd * 225},40 ${sd * 120},90 ${sd * 30},60Z" fill="${SK}" ${OL()}/><path d="M${sd * 22},6C${sd * 60},-60 ${sd * 170},-74 ${sd * 182},-24C${sd * 190},26 ${sd * 110},60 ${sd * 40},44Z" fill="#e7a3b6"/><path d="M${sd * 60},-20q${sd * 50},-20 ${sd * 90},10" stroke="#c97a92" stroke-width="5" fill="none"/></g>`; };
+        const eyes = face === "huh"
+          ? [-58, 58].map((ex) => `<g transform="translate(${ex},-405)"><ellipse rx="44" ry="50" fill="#fff7c2" ${OL(4)}/><path d="M-18,-6a10,10 0 1 1 20,4a16,16 0 1 1 -28,-8" stroke="${INKL}" stroke-width="5" fill="none"/></g>`).join("")
+          : [-58, 58].map((ex) => `<g transform="translate(${ex},-405)"><ellipse rx="46" ry="54" fill="#fff7c2" ${OL(4)}/><ellipse rx="34" ry="40" fill="#ffe36a" opacity=".55"/><circle cx="${face === "lick" ? 10 : 0}" cy="${face === "greedy" ? 8 : 0}" r="12" fill="${INKL}"/><circle cx="${face === "lick" ? 15 : 5}" cy="-6" r="4.5" fill="#fff"/></g>`).join("");
+        const brows = face === "huh" ? `<path d="M-100,-470q40,-24 80,-4M20,-474q40,-20 80,6" stroke="${INKL}" stroke-width="7" fill="none"/>` : `<path d="M-104,-470l78,22M104,-470l-78,22" stroke="${INKL}" stroke-width="8" fill="none" stroke-linecap="round"/>`;
+        const mouth = face === "huh"
+          ? `<ellipse cx="0" cy="-318" rx="26" ry="20" fill="#5a1a2a" ${OL(4)}/>`
+          : `<path d="M-84,-334Q0,-262 84,-334Q60,-300 0,-292Q-60,-300 -84,-334Z" fill="#5a1a2a" ${OL(4)}/><path d="M-50,-322l12,22l12,-20M24,-320l12,22l12,-22" fill="#fffdf4" ${OL(2)}/>` +
+            (face === "lick" ? `<path d="M30,-300q40,30 80,10q30,-14 40,-50q-10,30 -40,40q-30,6 -64,-14Z" fill="#ef7a96" ${OL(3)}/>` : `<path d="M-26,-300q26,26 52,0q-10,14 -26,14q-16,0 -26,-14Z" fill="#ef7a96"/>`);
+        return `<g id="${id}" transform="translate(${x},${y}) scale(${flip * s},${s})">
+          <ellipse cx="0" cy="40" rx="140" ry="22" fill="#000" opacity=".22"/>
+          <defs><radialGradient id="${id}-hl" cx=".5" cy=".55" r=".5"><stop offset="0" stop-color="#c6ffd8" stop-opacity=".2"/><stop offset=".55" stop-color="#c6ffd8" stop-opacity=".08"/><stop offset="1" stop-color="#c6ffd8" stop-opacity="0"/></radialGradient>
+            <pattern id="${id}-pk" width="44" height="44" patternUnits="userSpaceOnUse"><rect width="44" height="44" fill="#c8323a"/><rect width="16" height="44" fill="#2a3a7a" opacity=".55"/><rect width="44" height="16" fill="#2a3a7a" opacity=".45"/><rect x="28" width="5" height="44" fill="#f4ead2" opacity=".7"/><rect y="28" width="44" height="5" fill="#f4ead2" opacity=".7"/><rect x="38" width="2" height="44" fill="#1e1a2a" opacity=".5"/><rect y="38" width="44" height="2" fill="#1e1a2a" opacity=".5"/></pattern></defs>
+          <ellipse cx="0" cy="-290" rx="330" ry="380" fill="url(#${id}-hl)"/>
+          ${[[-150, 20, -250, -60, -190, -170], [140, 10, 250, -80, 170, -200], [-40, 40, -120, -10, -60, -90]].map(([a, b2, c, d2, e, g2], k) => `<path d="M${a},${b2}Q${c},${d2} ${e},${g2}" stroke="#dcffe4" stroke-width="${46 - k * 10}" stroke-linecap="round" fill="none" opacity=".07"/><path d="M${a},${b2}Q${c},${d2} ${e},${g2}" stroke="#eafff0" stroke-width="${16 - k * 3}" stroke-linecap="round" fill="none" opacity=".09"/>`).join("")}
+          <path d="M-110,-150C-140,-40 -60,10 -20,30C10,40 40,20 30,0C60,10 90,-10 70,-40C110,-60 120,-110 110,-160Z" fill="${SK}" opacity=".85" ${OL(4)}/>
+          <path d="M-60,-20C-30,10 0,14 20,6" stroke="${SKD}" stroke-width="10" fill="none" opacity=".6"/>
+          <ellipse cx="0" cy="-190" rx="128" ry="128" fill="${SK}" ${OL()}/><ellipse cx="-10" cy="-170" rx="80" ry="86" fill="${SKL}" opacity=".85"/><path d="M80,-250Q140,-170 70,-90" stroke="${SKD}" stroke-width="22" fill="none" opacity=".45"/>
+          <g transform="translate(0,-292)"><path d="M-112,-6Q0,34 112,-6L104,24Q0,62 -104,24Z" fill="url(#${id}-pk)" ${OL(3)}/><path d="M-100,8Q0,44 100,8" stroke="#fff" stroke-width="4" opacity=".25" fill="none"/><path d="M70,18L120,110L80,118L50,30Z" fill="url(#${id}-pk)" ${OL(3)}/>${[96, 104, 112].map((fx) => `<path d="M${fx - 22},${118 - (fx - 96) * 0.2}l-4,16" stroke="#c8323a" stroke-width="4"/>`).join("")}</g>
+          ${ear(-1)}${ear(1)}
+          <ellipse cx="0" cy="-400" rx="168" ry="150" fill="${SK}" ${OL()}/><ellipse cx="-30" cy="-440" rx="96" ry="70" fill="${SKL}" opacity=".7"/><path d="M110,-470Q170,-380 104,-300" stroke="${SKD}" stroke-width="26" fill="none" opacity=".4"/><path d="M-150,-470Q-176,-400 -150,-330" stroke="#efffe0" stroke-width="10" stroke-linecap="round" fill="none" opacity=".55"/><path d="M-70,-540Q0,-562 70,-540" stroke="#efffe0" stroke-width="8" stroke-linecap="round" fill="none" opacity=".45"/>
+          <path d="M-20,-548q-10,-50 20,-70M6,-548q20,-46 54,-50M-40,-544q-30,-34 -14,-66" stroke="${INKL}" stroke-width="7" fill="none" stroke-linecap="round"/>
+          ${brows}${eyes}<path d="M-12,-356q-4,10 4,12M12,-356q4,10 -4,12" stroke="${INKL}" stroke-width="5" fill="none"/>${mouth}
+          <ellipse cx="-96" cy="-344" rx="24" ry="13" fill="#ef9ab0" opacity=".55"/><ellipse cx="96" cy="-344" rx="24" ry="13" fill="#ef9ab0" opacity=".55"/>
+          ${o.arm !== false ? `<path d="M-110,-200Q-170,-170 -190,-110" stroke="${INKL}" stroke-width="40" fill="none" stroke-linecap="round"/><path d="M-110,-200Q-170,-170 -190,-110" stroke="${SK}" stroke-width="28" fill="none" stroke-linecap="round"/>` : ""}
+          ${o.hold ? `<g transform="translate(150,-210)">${o.hold}</g><path d="M100,-200Q140,-210 150,-210" stroke="${INKL}" stroke-width="40" fill="none" stroke-linecap="round"/><path d="M100,-200Q140,-210 150,-210" stroke="${SK}" stroke-width="28" fill="none" stroke-linecap="round"/><circle cx="160" cy="-212" r="26" fill="${SK}" ${OL(4)}/>` : ""}
+          ${droop > 0.3 ? `<text x="150" y="-560" font-family="Kanit" font-weight="900" font-size="90" fill="#fff7c2" stroke="${INKL}" stroke-width="4">?</text>` : ""}
+        </g>`;
+      };
+      // ---- 9: arms with elbows and fingers (one continuous limb, no ball joints) and a lap on the mat (ขัดสมาธิ / พับเพียบ) ----
+      const LN2 = "#3a2622";
+      const mixc = (a, b, k) => { const A = [1, 3, 5].map((i) => parseInt(a.substr(i, 2), 16)), B = [1, 3, 5].map((i) => parseInt(b.substr(i, 2), 16)); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, "0")).join(""); };
+      PopL.hand = (kind, sk, o = {}) => { // local: wrist at 0,0, pointing +x
+        const d = mixc(sk, "#3b2a5c", 0.3), L = `stroke="${LN2}" stroke-width="2.6" stroke-linejoin="round"`;
+        const fing = (x, y, a, len, w = 9) => `<g transform="translate(${x},${y}) rotate(${a})"><rect x="-2" y="${-w / 2}" width="${len}" height="${w}" rx="${w / 2}" fill="${sk}" ${L}/><path d="M${len * 0.55},${-w / 2 + 1}v${w - 2}" stroke="${d}" stroke-width="1.6" opacity=".7"/></g>`;
+        let g = "";
+        if (kind === "grip") { // a fist around a handle (the handle goes across at x=20)
+          g = `<path d="M-2,-13Q20,-18 30,-10Q36,0 30,12Q18,18 -2,13Z" fill="${sk}" ${L}/>` + [-9, -3, 3, 9].map((y) => `<path d="M24,${y - 3}q8,3 0,6" stroke="${LN2}" stroke-width="2.2" fill="none"/>`).join("") + `<path d="M6,-12q14,-8 22,-2" stroke="${LN2}" stroke-width="2.4" fill="${sk}"/>`;
+        } else if (kind === "knead") { // fingers pressed down into the pork, spread
+          g = `<ellipse cx="12" cy="0" rx="17" ry="14" fill="${sk}" ${L}/>` + [[-9, 18], [-3, 6], [3, -6], [9, -18]].map(([y, a], k) => fing(24, y * 0.9, a + 10, 20 - Math.abs(k - 1.5) * 2)).join("") + fing(6, -12, -70, 15, 9);
+        } else if (kind === "pinch") { // thumb and fingers closed on a ball of sticky rice
+          g = `<ellipse cx="10" cy="0" rx="16" ry="13" fill="${sk}" ${L}/>` + [[-7, -20], [0, -6], [7, 8]].map(([y, a]) => fing(20, y, a, 16, 8)).join("") + fing(8, -11, -40, 18, 9);
+        } else if (kind === "rest") { // hand resting on a knee, fingers drooping
+          g = `<ellipse cx="11" cy="0" rx="15" ry="13" fill="${sk}" ${L}/>` + [-8, -3, 2, 7].map((y, k) => fing(20, y, 40 + k * 6, 17 - k, 8)).join("") + fing(8, -11, -30, 14, 8);
+        } else { // open, relaxed
+          g = `<ellipse cx="11" cy="0" rx="16" ry="14" fill="${sk}" ${L}/>` + [[-9, -14], [-3, -4], [3, 5], [9, 14]].map(([y, a], k) => fing(22, y, a, 19 - Math.abs(k - 1.2) * 2, 8.5)).join("") + fing(6, -12, -55, 16, 9);
+        }
+        if (o.plaster) g += `<g transform="translate(26,${kind === "knead" ? -3 : -3}) rotate(${kind === "knead" ? 16 : -4})"><rect x="0" y="-6.5" width="13" height="13" rx="3" fill="#f6efe0" stroke="${LN2}" stroke-width="2"/><path d="M3,-3l3,6M7,-3l3,6" stroke="#d8312a" stroke-width="1.6"/></g>`;
+        return g;
+      };
+      PopL.arm = (S, E, W, o = {}) => { // S shoulder, E elbow, W wrist in the parent's space
+        const w = o.w || 22, sk = o.skin || "#c98a5a", ang = Math.atan2(W[1] - E[1], W[0] - E[0]) * 180 / Math.PI;
+        const P = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+        const d = `M${S[0].toFixed(1)},${S[1].toFixed(1)}L${E[0].toFixed(1)},${E[1].toFixed(1)}L${W[0].toFixed(1)},${W[1].toFixed(1)}`;
+        let g = `<path d="${d}" stroke="${LN2}" stroke-width="${w + 5}" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="${d}" stroke="${sk}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+        g += `<path d="M${S[0].toFixed(1)},${S[1].toFixed(1)}L${P(S, E, 0.7)[0].toFixed(1)},${P(S, E, 0.7)[1].toFixed(1)}" stroke="${mixc(sk, "#3b2a5c", 0.28)}" stroke-width="${w * 0.35}" stroke-linecap="round" opacity=".35" transform="translate(${(w * 0.2).toFixed(1)},${(w * 0.2).toFixed(1)})"/>`;
+        if (o.sleeve && (o.sleeveLen ?? 0.5) < 0.6) { const Q = P(S, E, o.sleeveLen ?? 0.45), nx = -(E[1] - S[1]), ny = E[0] - S[0], nl = Math.hypot(nx, ny) || 1, a = (w * 0.5 + 4) / nl, b2 = (w * 0.5 + 9) / nl, S0 = P(S, E, -0.12);
+          g += `<path d="M${(S0[0] + nx * a).toFixed(1)},${(S0[1] + ny * a).toFixed(1)}L${(Q[0] + nx * b2).toFixed(1)},${(Q[1] + ny * b2).toFixed(1)}Q${Q[0].toFixed(1)},${(Q[1]).toFixed(1)} ${(Q[0] - nx * b2).toFixed(1)},${(Q[1] - ny * b2).toFixed(1)}L${(S0[0] - nx * a).toFixed(1)},${(S0[1] - ny * a).toFixed(1)}Z" fill="${o.sleeve}" stroke="${LN2}" stroke-width="2.6" stroke-linejoin="round"/><path d="M${(Q[0] + nx * b2 * 0.8).toFixed(1)},${(Q[1] + ny * b2 * 0.8).toFixed(1)}L${(Q[0] - nx * b2 * 0.8).toFixed(1)},${(Q[1] - ny * b2 * 0.8).toFixed(1)}" stroke="#000" stroke-width="3" opacity=".15"/>`; }
+        else if (o.sleeve) { const sl = o.sleeveLen ?? 0.5, Q = sl <= 1 ? P(S, E, sl) : P(E, W, sl - 1), sd = sl <= 1 ? `M${S[0]},${S[1]}L${Q[0].toFixed(1)},${Q[1].toFixed(1)}` : `M${S[0]},${S[1]}L${E[0]},${E[1]}L${Q[0].toFixed(1)},${Q[1].toFixed(1)}`;
+          g += `<path d="${sd}" stroke="${LN2}" stroke-width="${w + 13}" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="${sd}" stroke="${o.sleeve}" stroke-width="${w + 8}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`; }
+        const bend = (Math.atan2(E[1] - S[1], E[0] - S[0]) - Math.atan2(W[1] - E[1], W[0] - E[0]));
+        if (Math.abs(Math.sin(bend)) > 0.25) g += `<circle cx="${E[0].toFixed(1)}" cy="${E[1].toFixed(1)}" r="${(w * 0.16).toFixed(1)}" fill="${mixc(sk, "#3b2a5c", 0.35)}" opacity=".45"/>`;
+        return g + `<g transform="translate(${W[0].toFixed(1)},${W[1].toFixed(1)}) rotate(${(o.ha ?? ang).toFixed(1)}) scale(${o.hs || 1}${o.hflip ? ",-" + (o.hs || 1) : ""})">${PopL.hand(o.hand || "open", sk, o)}${o.hold ? `<g transform="translate(22,0)">${o.hold}</g>` : ""}</g>`;
+      };
+      PopL.lap = (kind, pc, sk, o = {}) => { // in the rig's body space (hip ~ (0,-300), the floor at y -290 while seated)
+        const st = (d, w, c) => `<path d="${d}" stroke="${LN2}" stroke-width="${w + 5}" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="${d}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+        const foot = (x, y, a) => `<g transform="translate(${x},${y}) rotate(${a})"><path d="M-6,-12Q22,-16 30,-4Q32,8 18,10Q0,12 -6,8Z" fill="${sk}" stroke="${LN2}" stroke-width="2.4"/>${[4, 10, 16].map((tx) => `<path d="M${tx + 10},${-12 + tx * 0.2}v4" stroke="${LN2}" stroke-width="1.4" opacity=".6"/>`).join("")}</g>`;
+        const sh = `<ellipse cx="0" cy="-286" rx="190" ry="20" fill="#0a0608" opacity=".28"/>`;
+        if (kind === "fold") { // พับเพียบ: both knees to the front side, the feet tucked back on the other side
+          return sh + foot(-150, -300, 160) + st("M-30,-318L150,-312L-110,-298", 44, pc) + st("M-10,-328L170,-326", 50, pc) + (o.sarong ? `<path d="M-60,-350Q90,-360 196,-338Q206,-300 180,-292L-120,-290Q-150,-300 -60,-350Z" fill="${pc}" stroke="${LN2}" stroke-width="2.6"/><path d="M-40,-330Q60,-336 170,-320M-60,-310Q60,-316 160,-302" stroke="#000" stroke-width="3" opacity=".18" fill="none"/>` : "");
+        }
+        return sh + st("M-20,-318L-150,-306", 50, pc) + st("M20,-318L150,-306", 50, pc) + foot(-70, -298, -10) + st("M-160,-300Q-40,-286 60,-296", 42, pc) + foot(70, -296, 10) + st("M160,-300Q40,-288 -50,-292", 42, pc) +
+          `<path d="M-120,-318q20,-8 40,-2M80,-320q20,-8 40,0" stroke="#000" stroke-width="3" opacity=".2" fill="none"/>`;
+      };
+      Rig.MODES.sitX = (u) => { const b = Math.sin(u * 2 * Math.PI / 3.6); return { thF: 0, thB: 0, shF: 0, shB: 0, uaF: 0, faF: 0, uaB: 0, faB: 0, torso: 0.6 * b, head: -2 + Math.sin(u * 1.1), hair: 0, acc: 0, bodyY: 290 + b, rootX: 0, rootY: 0, rootR: 0 }; };
+      // seat actor k of a shot: hide the rig's limbs, draw the lap and two bent arms; o.F / o.B = [elbow, wrist, hand-kind, extra]
+      PopL.seat = (id, k, who, o = {}) => {
+        const aid = `${id}-a${k}`, V = Rig.CAST[who].v2, sk = V.skin, pc = V.bottom.c, top = V.top, sleeve = top.sleeve === "none" ? null : top.c, sl = top.sleeve === "long" ? 1.85 : top.sleeve === "elbow" ? 1.02 : 0.45;
+        ["thF", "thB", "uaF", "uaB"].forEach((j) => { const e = document.getElementById(`${aid}-${j}`); if (e) e.setAttribute("display", "none"); });
+        const tor = document.getElementById(`${aid}-torso`), body = document.getElementById(`${aid}-body`);
+        body.insertAdjacentHTML("afterbegin", `<clipPath id="${aid}-floor"><rect x="-900" y="-2400" width="1800" height="${2400 - 276}"/></clipPath>`); body.setAttribute("clip-path", `url(#${aid}-floor)`);
+        tor.insertAdjacentHTML("beforebegin", `<g>${PopL.lap(o.legs || "cross", pc, sk, { sarong: V.bottom.kind === "sarong" })}</g>`);
+        const F = o.F || [[120, -380], [150, -318], "rest"], B = o.B || [[-120, -380], [-150, -318], "rest"];
+        tor.insertAdjacentHTML("afterbegin", `<g>${PopL.arm([-46, -455], B[0], B[1], { skin: sk, sleeve, sleeveLen: sl, hand: B[2], ...(B[3] || {}) })}</g>`);
+        tor.insertAdjacentHTML("beforeend", `<g>${PopL.arm([46, -455], F[0], F[1], { skin: sk, sleeve, sleeveLen: sl, hand: F[2], ...(F[3] || {}) })}</g>`);
+      };
+      PopL.stand = (id, k, who, o = {}) => {
+        const aid = `${id}-a${k}`, V = Rig.CAST[who].v2, sk = V.skin, top = V.top, sleeve = top.sleeve === "none" ? null : top.c, sl = top.sleeve === "long" ? 1.85 : top.sleeve === "elbow" ? 1.02 : 0.45;
+        const tor = document.getElementById(`${aid}-torso`), body = document.getElementById(`${aid}-body`);
+        ["uaF", "uaB"].forEach((j) => document.getElementById(`${aid}-${j}`).setAttribute("display", "none"));
+        if (V.bottom.kind === "shorts" || V.bottom.kind === "jeans") {
+          ["thF", "thB"].forEach((j) => document.getElementById(`${aid}-${j}`).setAttribute("display", "none"));
+          const pc = V.bottom.c, legW = 30 * (V.limb || 1), shorts = V.bottom.kind === "shorts";
+          const leg = (x, kx, fx) => { const d = `M${x},-300L${kx},-150L${fx},-16`;
+            return `<path d="${d}" stroke="${LN2}" stroke-width="${legW + 5}" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="${d}" stroke="${shorts ? sk : pc}" stroke-width="${legW}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>` +
+              (shorts ? `<path d="M${x},-306L${(x + (kx - x) * 0.62).toFixed(1)},-207" stroke="${LN2}" stroke-width="${legW + 19}" stroke-linecap="butt" fill="none"/><path d="M${x},-306L${(x + (kx - x) * 0.62).toFixed(1)},-209" stroke="${pc}" stroke-width="${legW + 14}" stroke-linecap="butt" fill="none"/>` : "") +
+              `<circle cx="${kx}" cy="-150" r="3.5" fill="#000" opacity=".18"/><g transform="translate(${fx},-12)"><path d="M-14,-8Q-16,10 -4,12H30Q40,10 36,0Q30,-10 10,-12Z" fill="${shorts ? sk : "#5a4a3a"}" stroke="${LN2}" stroke-width="2.4"/></g>`; };
+          tor.insertAdjacentHTML("beforebegin", `<g>${leg(-20, -24, -22)}${leg(20, 26, 24)}</g>`);
+        }
+        const F = o.F || [[64, -340], [60, -236], "open"], B = o.B || [[-64, -340], [-60, -236], "open"];
+        tor.insertAdjacentHTML("afterbegin", `<g>${PopL.arm([-46, -455], B[0], B[1], { skin: sk, sleeve, sleeveLen: sl, hand: B[2], ...(B[3] || {}) })}</g>`);
+        tor.insertAdjacentHTML("beforeend", `<g>${PopL.arm([46, -455], F[0], F[1], { skin: sk, sleeve, sleeveLen: sl, hand: F[2], ...(F[3] || {}) })}</g>`);
+      };
+      // a ball of sticky rice with raw red laab on it (what the ghost offers you)
+      PopL.bite = (s = 1) => `<g transform="scale(${s})"><ellipse cx="0" cy="0" rx="44" ry="34" fill="#f6f0dc" ${OL(3)}/><path d="M-40,-10q40,-40 80,0q-20,-24 -40,-26q-24,4 -40,26Z" fill="#a8323a" ${OL(2.5)}/>${[[-16, -16], [6, -20], [20, -10]].map(([a, b2]) => `<circle cx="${a}" cy="${b2}" r="4" fill="#f2a0a8"/>`).join("")}<path d="M-6,-24l10,-12l6,10z" fill="#4aa04a"/></g>`;
+      // the laab tray on the mat: a mound of raw red minced pork with mint, chilli and shallot; sticky rice baskets; fresh vegetables; a clear unlabelled bottle
+      PopL.tray = (x, y, s = 1) => {
+        const r = (seed => () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296))(17);
+        let m = "";
+        for (let k = 0; k < 70; k++) { const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 1; const px = Math.cos(a) * d * 150, py = -60 + Math.sin(a) * d * 52 - (1 - d) * 50;
+          m += k % 4 === 0 ? `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${(4 + r() * 4).toFixed(1)}" fill="#f2b0b6"/>` : k % 4 === 1 ? `<path d="M${px.toFixed(1)},${py.toFixed(1)}l${(8 + r() * 6).toFixed(1)},-6l6,8z" fill="${r() < 0.5 ? "#3aa04a" : "#6ac25a"}"/>` : k % 4 === 2 ? `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="3" fill="#e8302a"/>` : `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${(5 + r() * 3).toFixed(1)}" fill="#8a1e2a"/>`; }
+        return `<g transform="translate(${x},${y}) scale(${s})">
+          <ellipse cx="0" cy="20" rx="380" ry="96" fill="#000" opacity=".3"/><ellipse cx="0" cy="0" rx="370" ry="92" fill="#b8bec4" ${OL(4)}/><ellipse cx="0" cy="-6" rx="340" ry="78" fill="#d8dce0"/>
+          <ellipse cx="0" cy="-20" rx="200" ry="56" fill="#f4f0e6" ${OL(3)}/>
+          <path d="M-170,-40Q-150,-120 0,-130Q150,-120 170,-40Q120,-10 0,-6Q-120,-10 -170,-40Z" fill="#a8323a" ${OL(3)}/><path d="M-120,-80Q0,-130 120,-80" stroke="#c84a50" stroke-width="10" fill="none" opacity=".7"/>${m}
+          <g transform="translate(-290,-40)"><path d="M-46,-110h92l-8,110h-76Z" fill="#c8a066" ${OL(3)}/>${[-90, -66, -42, -18].map((yy) => `<path d="M-44,${yy}h88" stroke="#9a7442" stroke-width="5"/>`).join("")}<ellipse cx="0" cy="-110" rx="50" ry="12" fill="#b88a50" ${OL(3)}/></g>
+          <g transform="translate(270,-24)"><ellipse cx="0" cy="0" rx="90" ry="30" fill="#e8ece6" ${OL(3)}/><path d="M-60,-10q20,-60 70,-50q-10,40 -70,50z" fill="#cfe8b0" ${OL(2.5)}/><path d="M0,-14l70,-70M10,-10l80,-56" stroke="#4a8a3a" stroke-width="8" stroke-linecap="round"/>${[-40, -10].map((cx) => `<ellipse cx="${cx}" cy="-4" rx="22" ry="10" fill="#bfe0a0" ${OL(2)}/>`).join("")}</g>
+          <g transform="translate(150,-70)"><path d="M-18,-150h36v20l14,30v100h-64v-100l14,-30z" fill="#e8f4f8" opacity=".75" ${OL(3)}/><rect x="-14" y="-170" width="28" height="22" fill="#c8a040" ${OL(2)}/><path d="M-26,-60h52v56h-52z" fill="#d8eef6" opacity=".6"/></g>
+          <path d="M60,-30l120,-40" stroke="#9aa0a6" stroke-width="10" stroke-linecap="round"/><ellipse cx="190" cy="-74" rx="24" ry="12" fill="#b8bec4" ${OL(2)}/></g>`;
+      };
+      PopL.mat = (x, y, w, h) => { let g = `<path d="M${x - w / 2 + 120},${y}H${x + w / 2 - 120}L${x + w / 2},${y + h}H${x - w / 2}Z" fill="#c8a86a" ${OL(4)}/>`;
+        for (let k = 1; k < 10; k++) { const u = k / 10; g += `<path d="M${(x - w / 2 + 120 - 120 * u).toFixed(1)},${(y + h * u).toFixed(1)}H${(x + w / 2 - 120 + 120 * u).toFixed(1)}" stroke="${k % 2 ? "#a8844a" : "#d8442a"}" stroke-width="${k % 2 ? 4 : 10}" opacity=".7"/>`; }
+        return g + `<path d="M${x - w / 2 + 120},${y}H${x + w / 2 - 120}" stroke="#7a5a2a" stroke-width="8"/>`; };
+      // the overlay of a hook still: the line of narration as a subtitle and the command in the red box (the channel's caption look)
+      const hookUI = (L, line, cmd, o = {}) => put(L.light, `<g font-family="Kanit" font-weight="800" text-anchor="middle">
+        <rect x="30" y="${o.y ?? 1300}" width="1020" height="104" rx="22" fill="#0b0d14" opacity=".82"/><text x="540" y="${(o.y ?? 1300) + 68}" font-size="44" fill="#fff">${line}</text>
+        <g transform="translate(540,${(o.y ?? 1300) + 210}) rotate(-2)"><rect x="-300" y="-66" width="600" height="124" rx="18" fill="#d8231f" stroke="#fff" stroke-width="6"/><text y="20" font-size="70" fill="#fff">${cmd}</text></g></g>`);
+      const banner = (L, x, y, w, text) => put(L.set, `<path d="M${x - w / 2},${y}Q${x},${y + 40} ${x + w / 2},${y}" stroke="#4a3424" stroke-width="5" fill="none"/>
+        <path d="M${x - w / 2 + 20},${y + 10}L${x + w / 2 - 20},${y + 10}L${x + w / 2 - 34},${y + 170}L${x},${y + 196}L${x - w / 2 + 34},${y + 170}Z" fill="#f2e2b0" ${OL(4)}/><path d="M${x - w / 2 + 34},${y + 30}H${x + w / 2 - 34}" stroke="#d8442a" stroke-width="12"/>
+        <text x="${x}" y="${y + 128}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="68" fill="#2a1e1a">${text}</text><text x="${x}" y="${y + 166}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#a8282a">EP.1</text>`);
+      const bulbs = (L, x0, x1, y) => put(L.glow, Array.from({ length: 12 }, (_, k) => { const x = x0 + (x1 - x0) * k / 11, yy = y + Math.sin(k / 11 * Math.PI) * 60; return `<circle cx="${x.toFixed(1)}" cy="${yy.toFixed(1)}" r="16" fill="${["#ffd86a", "#ff8a6a", "#9ae0ff"][k % 3]}"/><circle cx="${x.toFixed(1)}" cy="${yy.toFixed(1)}" r="46" fill="${["#ffd86a", "#ff8a6a", "#9ae0ff"][k % 3]}" opacity=".18"/>`; }).join(""));
+      const KIT = (id, o = {}) => ({ set: "kitchen2", setOpts: { id, time: "evening", stove: 900, platform: -200, ...o }, dark: 0.06, light: NIGHT, grade: GN });
+      // ===== HOOK A: the wide — the laab circle under the house at a merit-making night; the ghost leans in and pushes a ball of sticky rice + raw laab at YOU =====
+      add("hA", { ...KIT("ha"), blur: { far: 3, mid: 2, set: 1.5, fg: 6 }, cam: { keys: [{ t: 0, ...fr(540, 1380, 1.05, 540, 1000) }] },
+        actors: [{ who: "prae", x: 190, y: 1540, s: 0.98, blinks: [9], track: [{ t: 0, mode: "sitX", eyes: "worry", mouth: "o" }] },
+          { who: "lungThid", x: 470, y: 1500, s: 1.0, blinks: [9], track: [{ t: 0, mode: "sitX", eyes: "normal", mouth: "laugh" }] }],
+        captions: [], fx(tl, id, t0, L) {
+          banner(L, 540, 420, 760, "ผีปอบร่วมวงลาบ"); bulbs(L, -100, 1180, 330);
+          put(L.set, PopL.mat(540, 1500, 1500, 420));
+          PopL.seat(id, 0, "prae", { legs: "fold", F: [[110, -390], [150, -330], "rest"], B: [[-78, -382], [-40, -322], "rest", { ha: 30 }] });
+          PopL.seat(id, 1, "lungThid", { F: [[140, -400], [110, -470], "pinch", { hold: PopL.bite(0.5) }], B: [[-125, -385], [-150, -320], "rest"] });
+          put(L.act, PopL.tray(450, 1640, 0.95));
+          put(L.act, PopL.ghost(900, 1660, 0.95, { face: "greedy", arm: false, id: "pga" }));
+          // the reach: the arm comes out of the ghost's shoulder TOWARD the lens — foreshortened, widening, the hand and the bite big and close
+          put(L.act, `<path d="M796,1468C760,1500 720,1540 676,1560L612,1548C660,1520 720,1470 760,1430Z" fill="#b9cc9a" ${OL(4)}/><path d="M770,1470C740,1500 700,1528 660,1546" stroke="#8a96a6" stroke-width="14" fill="none" opacity=".35"/>
+            <g transform="translate(590,1600) rotate(-8)"><ellipse cx="0" cy="70" rx="150" ry="40" fill="#000" opacity=".18"/>
+              <path d="M-130,30Q-136,96 -60,116Q0,128 60,116Q136,96 130,30Q80,62 0,66Q-80,62 -130,30Z" fill="#b9cc9a" ${OL(4)}/>
+              <g transform="translate(0,-8) scale(3)"><ellipse cx="0" cy="4" rx="44" ry="32" fill="#f6f0dc" ${OL(1.4)}/>${[[-24, 14], [-6, 20], [14, 16], [28, 8]].map(([a, b2]) => `<ellipse cx="${a}" cy="${b2}" rx="5" ry="3" fill="#fffaf0" stroke="#d8ccb0" stroke-width=".8"/>`).join("")}
+                <path d="M-42,0Q-42,-40 -6,-46Q36,-46 42,-4Q24,8 0,6Q-22,10 -42,0Z" fill="#a8323a" ${OL(1.4)}/><path d="M-30,-20Q0,-40 30,-22" stroke="#c84a50" stroke-width="5" fill="none" opacity=".7"/>
+                ${[[-26, -12, "#f2b0b6"], [-12, -30, "#8a1e2a"], [4, -18, "#f2b0b6"], [20, -30, "#8a1e2a"], [28, -12, "#f2b0b6"], [-4, -4, "#8a1e2a"], [12, -6, "#e8302a"], [-18, -24, "#e8302a"]].map(([a, b2, c]) => `<circle cx="${a}" cy="${b2}" r="3" fill="${c}"/>`).join("")}
+                <path d="M-8,-44l9,-12l7,11zM10,-40l12,-6l-2,10z" fill="#4aa04a" stroke="#2a5a2a" stroke-width=".8"/></g>
+              ${[-92, -40, 12, 64].map((fx2, k) => `<path d="M${fx2},${70 - Math.abs(k - 1.5) * 4}q8,-34 26,-38q14,2 12,18q-6,18 -10,30" fill="#b9cc9a" ${OL(3.4)}/>`).join("")}<path d="M124,40q30,-26 20,-56q-14,-8 -24,8q-6,24 -14,40" fill="#b9cc9a" ${OL(3.4)}/>
+              <path d="M-90,70Q0,96 90,70" stroke="#8a96a6" stroke-width="10" fill="none" opacity=".35"/></g>`);
+          hookUI(L, "ถ้าวันหนึ่ง… ผีปอบมาร่วมวงลาบหมูดิบกับคุณ", "อย่ากินหมูดิบ", { y: 1420 }); } });
+      // ===== HOOK B: the macro — the raw laab fills the frame; a long tongue slides in from the dark; one glowing eye at the edge =====
+      add("hB", { ...KIT("hb"), blur: { sky: 8, far: 8, mid: 8, set: 6, fg: 10 }, cam: { keys: [{ t: 0, ...fr(540, 1500, 1.9, 540, 1050) }] },
+        captions: [], fx(tl, id, t0, L) {
+          put(L.set, PopL.mat(540, 1560, 1500, 420)); put(L.act, PopL.tray(520, 1660, 1.6));
+          put(L.light, `<g transform="translate(1100,640) rotate(-38) scale(1.55)">${PopL.ghost(0, 0, 1, { face: "lick", arm: false, flip: true, id: "pgb" })}</g><radialGradient id="hbV"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient><rect width="1080" height="1920" fill="url(#hbV)"/>`);
+          hookUI(L, "ถ้าวันหนึ่ง… ผีปอบมาร่วมวงลาบหมูดิบกับคุณ", "อย่ากินหมูดิบ", { y: 1360 }); } });
+      // ===== HOOK C: the two-shot — ลุงทิด minces raw pork bare-handed (a plaster on a cut finger); the ghost over his shoulder, spoon ready =====
+      add("hC", { ...KIT("hc"), blur: { far: 4, mid: 3, set: 2, fg: 8 }, cam: { keys: [{ t: 0, ...fr(560, 1180, 1.5, 540, 1000) }] },
+        actors: [{ who: "lungThid", x: 470, y: 1620, s: 1.0, blinks: [9], track: [{ t: 0, mode: "idle", eyes: "normal", mouth: "laugh" }] }],
+        captions: [], fx(tl, id, t0, L) {
+          ["uaF", "uaB"].forEach((j) => document.getElementById(`${id}-a0-${j}`).setAttribute("display", "none"));
+          put(L.act, PopL.ghost(780, 1430, 0.78, { face: "greedy", hold: `<g transform="rotate(-20)"><ellipse cx="0" cy="-40" rx="30" ry="18" fill="#b8bec4" ${OL(3)}/><path d="M0,-24v70" stroke="#9aa0a6" stroke-width="10"/></g>` }));
+          const V = Rig.CAST.lungThid.v2, sk = V.skin;
+          const cleaver = `<g transform="rotate(90)"><rect x="-9" y="-46" width="18" height="60" rx="6" fill="#4a3424" ${OL(2.4)}/><path d="M-50,10H40V64Q-6,80 -50,66Z" fill="#c8ced4" ${OL(2.6)}/><path d="M-42,22H32" stroke="#fff" stroke-width="5" opacity=".7"/><path d="M-50,60Q-6,74 40,60" stroke="#8a9096" stroke-width="3" fill="none"/></g>`;
+          put(L.act, `<g transform="translate(500,1330)"><rect x="-330" y="0" width="660" height="400" fill="#6a4630" ${OL(5)}/><rect x="-330" y="0" width="660" height="40" fill="#8a5e3e" ${OL(4)}/>
+            <ellipse cx="0" cy="-6" rx="250" ry="60" fill="#8a5a34" ${OL(4)}/><ellipse cx="0" cy="-16" rx="232" ry="50" fill="#a8743e"/>
+            <path d="M-150,-24Q0,-90 150,-24Q60,-2 0,0Q-80,-2 -150,-24Z" fill="#a8323a" ${OL(3)}/>${[[-80, -40], [-30, -56], [40, -50], [100, -34]].map(([a, b2]) => `<circle cx="${a}" cy="${b2}" r="7" fill="#f2b0b6"/>`).join("")}</g>
+            ${PopL.arm([424, 1165], [338, 1246], [318, 1160], { skin: sk, w: 24, hand: "grip", hs: 1.25, ha: -90, hold: cleaver })}
+            ${PopL.arm([516, 1165], [612, 1238], [548, 1290], { skin: sk, w: 26, hand: "knead", hs: 2.1, plaster: true })}
+            <g transform="translate(600,1252)"><path d="M0,0q-22,-14 -40,-6" stroke="#fff" stroke-width="3" opacity=".0"/></g>`);
+          hookUI(L, "ถ้าวันหนึ่ง… ผีปอบมาร่วมวงลาบหมูดิบกับคุณ", "อย่ากินหมูดิบ", { y: 1420 }); } });
+      // ===== STYLE FRAME 1: the village at dusk on merit-making day — stilt houses, festival lights, the pork vendor's pickup (the clue) =====
+      add("sf1", { set: "village2", setOpts: { id: "sv", time: "dusk", rain: false, tree: 2600 }, dark: 0.04, light: DUSK, grade: GD, blur: { far: 1, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(540, 1150, 0.9, 540, 960) }] },
+        actors: [{ who: "tonkla", x: 360, y: 1420, s: 0.7, blinks: [9], track: [{ t: 0, mode: "idle", eyes: "normal", mouth: "laugh" }] }, { who: "yaiBua", x: 180, y: 1420, s: 0.72, blinks: [9], track: [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }] }],
+        captions: [], fx(tl, id, t0, L) { bulbs(L, -80, 1160, 860);
+          put(L.set, `<g transform="translate(820,1440)"><ellipse cx="0" cy="10" rx="300" ry="30" fill="#000" opacity=".3"/><path d="M-280,-160h330l60,60h120v100h-510z" fill="#e8e4d8" ${OL(4)}/><path d="M60,-150l50,50h-50z" fill="#9ac8e8" ${OL(3)}/><rect x="-270" y="-230" width="300" height="80" fill="#4a7a9a" opacity=".85" ${OL(3)}/><text x="-120" y="-178" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#fff">หมูสด ราคาถูก</text>${[-180, 140].map((wx) => `<circle cx="${wx}" cy="0" r="46" fill="#1e1e22" ${OL(4)}/><circle cx="${wx}" cy="0" r="20" fill="#8a9096"/>`).join("")}<path d="M-250,-150h250v-0" stroke="#c8a040" stroke-width="0"/><g transform="translate(-130,-120)"><ellipse rx="60" ry="22" fill="#e8b0b0" ${OL(3)}/><path d="M-40,-10l-14,-16M40,-10l14,-16" stroke="${INKL}" stroke-width="4"/></g></g>`);
+          put(L.act, PopL.ghost(1020, 1250, 0.38, { face: "greedy", arm: false }));
+          PopL.stand(id, 0, "tonkla", { F: [[80, -360], [150, -420], "open"], B: [[-62, -345], [-66, -240], "rest", { ha: 100 }] });
+          PopL.stand(id, 1, "yaiBua", { F: [[30, -350], [-30, -310], "rest", { ha: 180 }], B: [[-40, -352], [10, -312], "rest", { ha: 0 }] });
+          const pg = document.getElementById("p2PudD"); if (pg) { pg.innerHTML = `<stop offset="0" stop-color="#3a3a6a"/><stop offset=".45" stop-color="#6a6aa0"/><stop offset=".62" stop-color="#e8b890"/><stop offset=".7" stop-color="#7a78a8"/><stop offset="1" stop-color="#2a2a4a"/>`; }
+          document.querySelectorAll('#sv path[fill="url(#p2PudD)"], path[fill="url(#p2PudD)"]').forEach((e) => { const bb = e.getBBox(), cx = bb.x + bb.width / 2, cy = bb.y + bb.height / 2;
+            e.insertAdjacentHTML("afterend", `<path d="${e.getAttribute("d")}" fill="none" stroke="#1e140e" stroke-width="${Math.max(3, bb.height * 0.12).toFixed(1)}" opacity=".7"/>${[0.32, 0.55, 0.78].map((k) => `<ellipse cx="${(cx + bb.width * 0.12).toFixed(1)}" cy="${(cy + bb.height * 0.05).toFixed(1)}" rx="${(bb.width * 0.5 * k).toFixed(1)}" ry="${(bb.height * 0.5 * k).toFixed(1)}" fill="none" stroke="#e8ecff" stroke-width="${Math.max(1.5, bb.height * 0.04).toFixed(1)}" opacity="${(0.5 - k * 0.4).toFixed(2)}"/>`).join("")}`); }); } });
+      // ===== STYLE FRAME 2: the laab circle at night — the family, ยายบัว, ลุงทิด and the ghost blending in on the mat =====
+      add("sf2", { ...KIT("s2"), blur: { far: 3, mid: 2, fg: 8 }, cam: { keys: [{ t: 0, ...fr(540, 1300, 0.86, 540, 1000) }] },
+        actors: [{ who: "yaiBua", x: 150, y: 1620, s: 0.86, blinks: [9], track: [{ t: 0, mode: "sitX", eyes: "worry", mouth: "flat" }] },
+          { who: "lungThid", x: 380, y: 1580, s: 0.86, blinks: [9], track: [{ t: 0, mode: "sitX", eyes: "normal", mouth: "laugh" }] },
+          { who: "prae", x: 930, y: 1620, s: 0.84, flip: true, blinks: [9], track: [{ t: 0, mode: "sitX", eyes: "worry", mouth: "o" }] },
+          { who: "tonkla", x: 760, y: 1760, s: 0.84, flip: true, blinks: [9], track: [{ t: 0, mode: "sitX", eyes: "normal", mouth: "laugh" }] }],
+        captions: [], fx(tl, id, t0, L) { put(L.set, PopL.mat(540, 1560, 1700, 420));
+          PopL.seat(id, 0, "yaiBua", { legs: "fold", F: [[100, -390], [140, -330], "rest"], B: [[-100, -385], [-130, -325], "rest"] });
+          PopL.seat(id, 1, "lungThid", { F: [[150, -390], [120, -470], "pinch", { hold: PopL.bite(0.5) }], B: [[-125, -385], [-150, -320], "rest"] });
+          PopL.seat(id, 2, "prae", { legs: "fold", F: [[110, -390], [150, -330], "rest"], B: [[-104, -385], [-120, -320], "rest"] });
+          PopL.seat(id, 3, "tonkla", { F: [[140, -395], [190, -440], "open"], B: [[-125, -385], [-150, -320], "rest"] }); put(L.act, PopL.tray(520, 1800, 1.0)); put(L.act, PopL.ghost(560, 1600, 0.62, { face: "grin", hold: PopL.bite(1.3) })); bulbs(L, -200, 1280, 300); } });
+      // ===== STYLE FRAME 3: the ghost sheet — four faces (grin · greedy · lick · deaf, ears drooping) on a shadow-play legend panel =====
+      add("sf3", { set: "kitchen2", setOpts: { id: "s3", time: "late" }, dark: 0.2, light: false, grade: GN, cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960) }] },
+        captions: [], fx(tl, id, t0, L) {
+          put(L.light, `<rect x="40" y="120" width="1000" height="1660" rx="40" fill="#f2e2b8" stroke="#6a4424" stroke-width="10"/><rect x="70" y="150" width="940" height="1600" rx="28" fill="none" stroke="#c8963a" stroke-width="4" stroke-dasharray="18 10"/>
+            <text x="540" y="240" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#5a2a1a">ปอบ · สายกินดิบตัวพ่อ</text>
+            ${[["grin", 300, 760, 0], ["greedy", 780, 760, 0], ["lick", 300, 1460, 0], ["huh", 780, 1460, 0.9]].map(([f, x, y, d]) => PopL.ghost(x, y, 0.62, { face: f, droop: d, id: `sh${f}` })).join("")}
+            ${[["ยิ้มกว้าง", 300, 820], ["ตาเป็นมัน", 780, 820], ["เลียปาก", 300, 1520], ["หูดับ หูตก", 780, 1520]].map(([t, x, y]) => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#5a2a1a">${t}</text>`).join("")}
+            <text x="540" y="1680" text-anchor="middle" font-family="Mali" font-weight="700" font-size="30" fill="#7a3a2a">ตัวกลมหัวโต · หูใหญ่ (ยิ่งกินดิบ หูยิ่งตก) · ผ้าขาวม้าพันคอ</text>`); } });
