@@ -46,15 +46,15 @@
    "series": "รอดคนเดียว (เครื่องบินตก)",
    "status": "hold",
    "branch": "prod/lane-c",
-   "commit": "718a090",
-   "package": "video/release/plane-ep2-v6.json",
-   "video_hq": "video/release/hq/plane-ep2-v6-HQ.mp4",
-   "video_hq_sha256": "583785d46d52d5d280e1d67468affabf70c08f0bf400563ae3ec93b143de3ea5",
-   "video_hq_bytes": 90767932,
+   "commit": "ed87d06",
+   "package": "video/release/plane-ep2-v6b.json",
+   "video_hq": "video/release/hq/plane-ep2-v6b-HQ.mp4",
+   "video_hq_sha256": "55599c004ad454bb5dd894113ba7a460de477691b704c3c5e53e2cf0c953986c",
+   "video_hq_bytes": 90983784,
    "suggested_time": "2026-11-02T08:30+07:00",
    "slot": "เช้า",
    "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
-   "revision_note": "v6 2 พ.ย. (เลน C 718a090): ยกระดับ — โขดหินจริง · มือจับของ · ชุดเจ้าหน้าที่/ลูกเรือ · ฝนกระเซ็น · ไฟ 4 ชั้น · ควันขาวมุมสูง · ฮุกกล้องตรงกับท้าย EP.1 v5 · เสียงไม่มีซ่าชุดเดียวกับ v5b · ตรวจแผ่น 1 เฟรม/วิ ก่อนและหลังเรนเดอร์ · sha ตรง 1080×1920 60fps 48 kHz 119.99 วิ −14.2 LUFS พีก −1.9 ไม่มีภาพค้าง · คำสั่งวิ 2.2 · รอแก้การขยับการ์ด 2 ใบ (v6b)",
+   "revision_note": "v6b 2 พ.ย. (เลน C ed87d06): ช่วงท้าย 83–120 วิทำใหม่ทั้งหมด + ช่วงต้นแก้ 2 จุด (คิวสวมเสื้อชูชีพที่ 39 วิ · ซากบนโขดหินเทา มุมสูงจาก ฮ. ช่วง 72–84 วิ) · ต่อที่รอยตัดช็อต 39.098 / 44.396 / 72.229 วิ · ผู้ประสานงานตรวจไฟล์จริง: 119.993 วิ 1080×1920 60fps · −14.2 LUFS peak −1.9 · ไม่มีภาพค้างหรือจอดำ · ช่วงที่ไม่แตะตรงกับ v6 (PSNR ~53 dB) · เสียงซ่าเท่า v6 (ไม่มีซ่า) · ส่งเจ้าของแล้ว 2 พ.ย. ~11:15 น.",
    "hold_note": "เจ้าของ 2 พ.ย. ~07:10 น.: \"ยกระดับ\" → รอตัวยกระดับภาพ (EP.1 v5 เลน D · EP.2 v6 เลน C) ผ่านการตรวจแผ่นภาพก่อนเรนเดอร์และเจ้าของอนุมัติ แล้วค่อยลงคู่กัน · ตอนนี้ห้ามลงทุกแพลตฟอร์ม",
    "fallback_old_style": {
     "branch": "prod/lane-d",
@@ -62,6 +62,12 @@
     "video_hq": "video/release/hq/plane-ep2-HQ.mp4",
     "video_hq_sha256": "3baf38b728e312e02bed7db5da54ddae35bd49bdfd650df0adb97086d4df5311",
     "video_hq_bytes": 67614831
+   },
+   "previous_v6": {
+    "commit": "718a090",
+    "video_hq": "video/release/hq/plane-ep2-v6-HQ.mp4",
+    "video_hq_sha256": "583785d46d52d5d280e1d67468affabf70c08f0bf400563ae3ec93b143de3ea5",
+    "video_hq_bytes": 90767932
    }
   },
   {
