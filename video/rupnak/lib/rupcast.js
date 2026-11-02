@@ -99,7 +99,7 @@
   M.talk2 = (u, o) => { const s = Math.sin(u * 2.1 + 2), s2 = Math.sin(u * 5.1);
     return { ...M.idle(u, o), uaF: -58 + 10 * s, faF: -54 + 18 * s2, uaB: -40 - 8 * s, faB: -62 + 10 * s2, torso: 2, head: -3 + 3 * s, thF: 10, shF: 8, thB: -6 }; };
   M.leanFilm = (u, o) => { const j = Math.sin(u * 1.4);
-    return { ...Z(), thF: -46, shF: 74, thB: -14, shB: 46, torso: 46 + 2 * j, head: 34, uaF: -74 + 3 * j, faF: -34, uaB: 34 + 4 * j, faB: -36, bodyY: 66 }; };
+    return { ...Z(), thF: -48, shF: 70, thB: 16, shB: 20, torso: 36 + 2 * j, head: 18, uaF: -40 + 3 * j, faF: -20, uaB: 40 + 4 * j, faB: -30, bodyY: 52 }; };
   M.wai = (u, o) => { const b = Math.sin(u * 1.6);
     return { ...Z(), uaF: -38, faF: -122 + 2 * b, uaB: -36, faB: -120 + 2 * b, torso: 8 + b, head: 10, thF: 4, thB: -4, bodyY: 2 }; };
   M.stopArm = (u, o) => { const b = Math.sin(u * 3.1);

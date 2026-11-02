@@ -1,0 +1,10 @@
+รูพญานาค EP.1 · ตรวจเสียง (mix.wav · vo_stem.wav · music_stem.wav)
+    I:         -14.0 LUFS
+    Peak:       -2.0 dBFS
+mix.wav: flatness 0.31 (ok) · pause HF median -86.7 dBFS (ok) → PASS
+ok   music under the voice -26.6 LUFS (target -27..-22)
+ok   music between lines -20.2 LUFS (target -22..-17)
+ok   voice over music 10.2 LU (target >= 8)
+ok   music missing in voice-free time 3% (target <= 15%)
+PASS
+ความยาว: 119.181000 วิ (schedule 119.181)

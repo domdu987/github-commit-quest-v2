@@ -175,6 +175,46 @@
     tl.fromTo(`${sel} .glint`, { opacity: 0, scale: 0.3, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1.2, transformOrigin: "50% 50%", duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out", immediateRender: false }, t0 + 0.6);
   };
 
+
+  // ---------------- the choice: chalked on the lucky-number board, a chalk circle pulled toward option a ----------------
+  RupUI.choice = (tl, layer, t0, dur, o = {}) => {
+    const id = `rch${Math.round(t0 * 100)}`, a = o.a || "นอนต่อจนเช้า", b = o.b || "พายายออกไปตอนนี้";
+    let g = `<g transform="translate(540,900)"><g id="${id}"><rect x="-470" y="-330" width="940" height="560" rx="20" fill="url(#ruWood)" ${ln(4)}/>
+      <clipPath id="${id}-fc"><rect x="-460" y="-322" width="920" height="54"/></clipPath><g clip-path="url(#${id}-fc)">${scales(-460, -330, 920, 3, 34, "url(#ruGold)", "#c88a2a")}</g>
+      <rect x="-430" y="-250" width="860" height="440" rx="8" fill="url(#ruBoard)" ${ln(3)}/>
+      <text x="0" y="-180" text-anchor="middle" font-family="Mali, Kanit" font-weight="700" font-size="54" fill="#ffd84a">ถ้าเป็นคุณ…</text>
+      <g id="${id}-a"><text x="0" y="-60" text-anchor="middle" font-family="Mali, Kanit" font-weight="700" font-size="64" fill="#f6efe0">${a}</text></g>
+      <text x="0" y="20" text-anchor="middle" font-family="Mali, Kanit" font-weight="700" font-size="40" fill="#f6efe0" opacity=".6">หรือ</text>
+      <g id="${id}-b"><text x="0" y="110" text-anchor="middle" font-family="Mali, Kanit" font-weight="700" font-size="64" fill="#f6efe0">${b}</text></g>
+      <ellipse id="${id}-ring" cx="0" cy="-80" rx="340" ry="62" fill="none" stroke="#ff6a4a" stroke-width="7" pathLength="100" stroke-dasharray="100 100" stroke-dashoffset="100" transform="rotate(-2)"/></g></g>`;
+    put(layer, g);
+    const el = document.getElementById(id);
+    tl.set(el, { opacity: 0 }, 0);
+    tl.fromTo(el, { opacity: 0, y: 60, scale: 0.92, transformOrigin: "50% 50%" }, { opacity: 1, y: 0, scale: 1, transformOrigin: "50% 50%", duration: 0.5, ease: "back.out(1.8)", immediateRender: false }, t0);
+    tl.fromTo(`#${id}-a`, { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, t0 + 0.35);
+    tl.fromTo(`#${id}-b`, { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, t0 + 0.6);
+    // the chalk circle hovers over b, then gets pulled up round a (the wrong pull)
+    tl.fromTo(`#${id}-ring`, { attr: { "stroke-dashoffset": 100 }, y: 190 }, { attr: { "stroke-dashoffset": 0 }, y: 190, duration: 0.5, ease: "power1.inOut", immediateRender: false }, t0 + 1.1);
+    tl.to(`#${id}-ring`, { y: 0, duration: 0.7, ease: "back.inOut(2)", immediateRender: false }, t0 + 1.9);
+    tl.to(`#${id}-a`, { scale: 1.08, transformOrigin: "50% 50%", duration: 0.3, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t0 + 2.6);
+    tl.to(el, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2);
+  };
+  // ---------------- the end card: the headman's sign with a paper note ----------------
+  RupUI.endCard = (tl, layer, t0, dur, o = {}) => {
+    const id = `ren${Math.round(t0 * 100)}`;
+    put(layer, `<rect id="${id}-bg" x="-100" y="-100" width="1300" height="2200" fill="#0c0a10"/>
+      <g transform="translate(540,1080)"><g id="${id}"><path d="M-14,0V-300M14,0V-300" stroke="#4a2c1a" stroke-width="22"/>
+      <rect x="-330" y="-760" width="660" height="440" rx="16" fill="#e8d2a8" ${ln(5)}/>${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M-324,${-736 + k * 72}h648" stroke="#c8ae7a" stroke-width="3"/>`).join("")}
+      <text x="0" y="-600" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="130" fill="#b8241e" transform="rotate(-2 0 -600)">รูพญานาค</text>
+      <path d="M-240,-560q80,-14 160,0t160,0t160,0" stroke="#2a6a4a" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <g id="${id}-note" transform="translate(40,-420) rotate(4)"><rect x="-250" y="-70" width="500" height="150" fill="#fbf6ea" ${ln(3)}/><rect x="-60" y="-86" width="120" height="30" fill="#f0d878" opacity=".85"/>
+        <text x="0" y="-6" text-anchor="middle" font-family="Mali, Kanit" font-weight="700" font-size="50" fill="#2a1c16">${o.ep || "ตอนที่ 2"}</text>
+        <text x="0" y="56" text-anchor="middle" font-family="Mali, Kanit" font-weight="700" font-size="46" fill="#b8241e">${o.title || "น้ำบ่อขุ่นแดง"}</text></g></g></g>`);
+    tl.set([`#${id}`, `#${id}-bg`], { opacity: 0 }, 0);
+    tl.set(`#${id}-bg`, { opacity: 1 }, t0);
+    tl.fromTo(`#${id}`, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0 + 0.05);
+    tl.fromTo(`#${id}-note`, { rotation: 4, transformOrigin: "50% 0%" }, { rotation: -3, transformOrigin: "50% 0%", duration: 0.9, yoyo: true, repeat: Math.ceil(dur / 0.9), ease: "sine.inOut", immediateRender: false }, t0 + 0.4);
+  };
   // ---------------- the ฮูปแต้ม mural ----------------
   Rup.mural = (L, o = {}) => {
     const id = o.id || "rmu", r = rng(311);

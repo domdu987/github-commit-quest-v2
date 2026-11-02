@@ -112,66 +112,39 @@ def tick3(k, a, g=0.3):  # the choice ring: three ticks
 
 
 CUES = [
-    # the opener: the wash pulls back off the title (a sound on frame 0), fish flop on the wet sand
-    ("open", 0.0, "splash", 0.32), ("open", 0.35, "bubbles", 0.18), ("open", 1.3, "squish", 0.2), ("open", 2.2, "squish", 0.16),
-    # the hook: the fish flops, the child's hand reaches; a sting on "อย่า"
-    ("hook", 0.0, "squish", 0.3), ("hook", 0.5, "plop", 0.2), ("hook", vo_t("hook") - 0.02, "sting", 0.34), ("hook", 1.2, "rustle", 0.16),
-    # two hours back: the clock's hands spin back, then tick on
-    ("clock", 0.1, "rewind", 0.34), ("clock", 0.2, "whoosh", 0.2), *ticks("clock", D["clock"] - 1.0, D["clock"] - 0.1, 0.22, 0.5),
-    # the map: the route draws, the van, the pin drops
-    ("map", 0.2, "whoosh", 0.26), ("map", 0.6, "engine", 0.14), ("map", D["map"] - 1.4, "pop", 0.3), ("map", D["map"] - 1.1, "ding", 0.26),
-    # arrival: จูน goes live, ตังค์ cheers
-    ("arrive", 0.15, "notif", 0.3), ("arrive", 0.5, "pop", 0.2), ("arrive", 1.2, "rustle", 0.12),
-    # ตังค์ runs through the shallows
-    *[("tang", 0.25 + i * 0.42, "splash", 0.12) for i in range(int(D["tang"] / 0.42))],
-    # the account: taps on the phone, the account is made
-    *[("acct", 0.3 + i * 0.22, "tap", 0.16) for i in range(4)], ("acct", vo_end("acct", 0) - 0.4, "notif", 0.28),
-    # the photo: the cloth rubs the glass, a glint
-    ("photo", 0.3, "rustle", 0.24), ("photo", 1.0, "rustle", 0.22), ("photo", 1.7, "rustle", 0.2), ("photo", D["photo"] - 0.9, "ching", 0.3),
-    # 08:00 Wednesday: the tower's test tone over the beach
-    ("test", 0.3, "siren", 0.26), ("test", 0.25, "pop", 0.22),
-    # the whisper about ตาจุ่น
-    ("rumor", 0.2, "swell", 0.2),
-    # ยาย's board: it lands, the rule is painted, the coin pops
-    ("rule", 0.1, "whoosh", 0.3), ("rule", 0.35, "thud", 0.22), ("rule", 0.8, "marker", 0.26), ("rule", 1.6, "ding", 0.32),
-    # the shadow screen: a gong, the sea drawing back, the elders lead the children up, the seven-layer wave
-    ("legend", 0.1, "gong", 0.36), ("legend", 0.6, "swell", 0.24), *[("legend", 3.9 + i * 0.5, "drum", 0.16) for i in range(6)], ("legend", 6.4, "roar", 0.32),
-    # the quake far out: a deep boom, the rings, the pin at the coast
-    ("quake", 0.3, "boom", 0.5), ("quake", 0.6, "whoosh", 0.28), ("quake", D["quake"] - 1.2, "pop", 0.3), ("quake", D["quake"] - 1.0, "ding", 0.24),
-    # the glass barely trembles: almost nothing
-    ("cup", 0.3, "ching", 0.16), ("cup", 1.4, "ching", 0.12),
-    # the sea draws back: water running off, the mud, birds lift
-    ("recede", 0.1, "bubbles", 0.26), ("recede", 0.7, "swell", 0.24), ("recede", 1.6, "squelch", 0.2), ("recede", 2.0, "flap", 0.16),
-    # the live: comments ping in, ตังค์'s feet on the mud, the fish
-    *[("fish", t, "notif", 0.16) for t in (0.3, 1.0, 1.8, 2.6, 3.3)], ("fish", 0.6, "squish", 0.2), ("fish", 1.5, "squelch", 0.18), ("fish", 2.4, "squelch", 0.16),
-    # people walk out on the seabed taking pictures; the birds flee
-    ("walk", 0.3, "flap", 0.24), ("walk", 1.1, "shutter", 0.3), ("walk", 1.9, "shutter", 0.26), ("walk", 0.8, "squelch", 0.14),
-    # the cross-sections
-    ("know1", 0.1, "whoosh", 0.28), ("know1", 0.6, "swell", 0.24), ("know1", D["know1"] - 1.4, "pop", 0.24),
-    ("know2", 0.1, "whoosh", 0.28), ("know2", 0.5, "pop", 0.26), ("know2", vo_t("know2", 1), "pop", 0.26), ("know2", vo_t("know2", 1) + 0.3, "whoosh", 0.22),
-    # go up now: the time-left bar drains, the riser
-    ("know3", 0.3, "pop", 0.26), *ticks("know3", 0.6, D["know3"] - 0.2, 0.16, 0.5), ("know3", D["know3"] - 1.4, "riser", 0.28),
-    # the conch, then the shout
-    ("conch", 0.05, "trumpet", 0.5), ("conch", 0.1, "whistlefar", 0.2),
-    # the run: feet, breath, the duck ring bounces on the sand
-    *[("run", 0.1 + i * 0.32, "steps", 0.16) for i in range(int(D["run"] / 0.32))], ("run", 0.4, "pant", 0.2), ("run", vo_t("run", 1) - 0.2, "plop", 0.32), ("run", vo_t("run", 1) + 0.05, "plop", 0.18),
-    # up the steps, the tower's alarm
-    *[("hill", 0.1 + i * 0.34, "steps", 0.14) for i in range(int(D["hill"] / 0.34))], ("hill", 0.2, "pant", 0.2), ("hill", 0.3, "siren", 0.18),
-    # the first wave: the surge roars in round the shop, things knock about, it drains; then quiet feet going back down
-    ("wave1", 0.2, "roar", 0.55), ("wave1", 0.9, "splash", 0.32), ("wave1", 1.3, "debris", 0.3), ("wave1", 1.7, "crackle", 0.18), ("wave1", 2.3, "bubbles", 0.2),
-    *[("wave1", vo_t("wave1", 1) + 0.3 + i * 0.4, "steps", 0.1) for i in range(4)],
-    # the sea goes out again: the long breath before the heartbeat
-    ("again", 0.2, "swell", 0.3), ("again", 0.9, "bubbles", 0.16), *beats("again", 1.2, D["again"] - 1.2, 0.8, 0.36),
-    # ยาย is missing
-    *beats("yai", 0.1, D["yai"] - 0.1, 0.7, 0.42), ("yai", vo_t("yai") - 0.05, "sting", 0.26),
-    # the empty shop: the loose door creaks, the shell chime, the far alarm
-    ("clue", 0.2, "creak", 0.3), ("clue", 0.6, "ching", 0.12), ("clue", 1.3, "ching", 0.1), ("clue", 0.9, "rustle", 0.14), ("clue", 0.4, "siren", 0.1),
-    # the white line
-    ("close", 0.2, "riser", 0.3), *beats("close", 0.4, D["close"] - 0.4, 0.75, 0.34),
-    # the choice: ticks, the heartbeat quickens, the pull → black
-    *tick3("choice", 0.0, 0.32), *beats("choice", 0.2, D["choice"] - 0.6, 0.55, 0.4), ("choice", D["choice"] - 1.3, "whoosh", 0.36), ("choice", D["choice"] - 1.2, "splash", 0.4),
-    # the end card: the paper note flaps
-    ("end", 0.15, "whoosh", 0.32), ("end", 0.5, "flap", 0.2), ("end", 1.2, "flap", 0.16), ("end", 0.8, "ding", 0.26),
+    # hook: incense crackle, a far rumble under the field, the bike idling, a clod drops; sting on "อย่า"
+    ("open", 0.0, "crackle", 0.16), ("open", 0.0, "boom", 0.22), ("open", 0.6, "motor", 0.12), ("open", 1.6, "debris", 0.2),
+    ("hook", vo_t("hook") - 0.02, "sting", 0.36), ("hook", 0.3, "crackby", 0.22), ("hook", 0.9, "debris", 0.24),
+    ("crowd", 0.2, "ching", 0.14), ("crowd", 1.4, "crackle", 0.12),
+    # the board rolls back: rewind + wooden ticks + chalk scrape
+    ("lotto", 0.05, "rewind", 0.34), ("lotto", 0.2, "rattle", 0.22), ("lotto", 1.3, "clack", 0.0), ("lotto", 1.5, "scrape", 0.2),
+    ("map", 0.2, "whoosh", 0.26), ("map", 0.6, "engine", 0.12), ("map", D["map"] - 0.8, "pop", 0.24),
+    ("arrive", 0.2, "rustle", 0.12), ("arrive", 1.0, "notif", 0.12),
+    ("ton", 0.0, "steps", 0.22), ("ton", 1.2, "rustle", 0.16),
+    ("door", 0.2, "creak", 0.28), ("door", 1.2, "latch", 0.22), ("door", 1.6, "creak", 0.2),
+    # night: the far pump thumps (a clue)
+    *[("night", 0.3 + i * 0.5, "thud", 0.12) for i in range(6)], *[("notch", 0.2 + i * 0.6, "thud", 0.07) for i in range(5)],
+    ("notch", 1.4, "scrape", 0.24), ("notch", 1.9, "scrape", 0.2),
+    ("rumor", 0.3, "creak", 0.12),
+    ("rule", 0.1, "flap", 0.24), ("rule", 0.8, "scrape", 0.12), ("rule", 1.4, "ding", 0.14),
+    ("morning", 0.0, "rooster", 0.2), ("morning", 0.6, "steps", 0.2),
+    ("sell", 0.2, "ching", 0.18), ("sell", 0.9, "crackle", 0.12),
+    ("legend", 0.2, "gong", 0.26), ("legend", 3.4, "boom", 0.22),
+    ("know0", 0.3, "drip", 0.18), ("know0", 1.6, "drip", 0.16), ("know0", 3.0, "drip", 0.14),
+    ("cave", 0.4, "boom", 0.18), ("cave", 1.5, "swell", 0.2),
+    ("pray", 0.1, "crackle", 0.16), ("ask", 0.1, "crackle", 0.12),
+    ("lean", 0.2, "debris", 0.2), ("lean", vo_t("lean") - 0.02, "sting", 0.32), ("lean", 1.4, "crackby", 0.2),
+    ("crack", 0.1, "crackby", 0.3), ("crack", 1.0, "crackby", 0.26), ("crack", 1.6, "steps", 0.2),
+    # 0.4 s silence, then the collapse
+    ("collapse", 0.55, "quake", 0.5), ("collapse", 0.6, "debris", 0.46), ("collapse", 0.6, "boom", 0.5), ("collapse", 1.0, "debris", 0.3),
+    ("know1", 0.2, "crackby", 0.2), ("know1", 1.4, "crackby", 0.16),
+    ("know2", 0.2, "pop", 0.2), ("know2", 0.7, "pop", 0.2), ("know2", 1.2, "pop", 0.2), ("know2", 0.0, "steps", 0.2),
+    ("thong2", 0.1, "debris", 0.14),
+    ("home", 0.3, "drip", 0.2), ("home", 1.0, "crackby", 0.26), ("home", 2.4, "crackby", 0.2),
+    ("fear", 0.2, "heartbeat", 0.3), ("fear", 1.0, "heartbeat", 0.3), ("fear", 1.8, "heartbeat", 0.3),
+    ("close", 0.2, "riser", 0.26), ("close", 1.2, "quake", 0.34), *beats("close", 0.4, D["close"] - 0.4, 0.75, 0.3),
+    *tick3("choice", 0.0, 0.3), *beats("choice", 0.2, D["choice"] - 0.6, 0.55, 0.36), ("choice", 1.1, "scrape", 0.18), ("choice", D["choice"] - 1.3, "whoosh", 0.32),
+    ("end", 0.15, "whoosh", 0.3), ("end", 0.5, "flap", 0.2), ("end", 1.2, "flap", 0.16), ("end", 0.8, "ding", 0.24),
 ]
 
 # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
@@ -185,7 +158,12 @@ sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]
 sfx = np.pad(sfx, (0, N - len(sfx)))
 
 # ---- music with horror dips ----
-mus = load(os.path.join(HERE, "..", "music", "suno1.mp3"))
+mus = load(os.path.join(HERE, "..", "music", "rupnak-theme.mp3"))
+# the generated theme ends at ~106 s: crossfade into its middle again so the score runs under the whole episode
+cut0, src0, xf = int(104 * SR), int(30 * SR), int(1.5 * SR)
+tail = mus[src0:src0 + max(0, N - cut0 + xf)]
+ramp = np.linspace(0, 1, xf, dtype=np.float32)
+mus = np.concatenate([mus[:cut0], mus[cut0:cut0 + xf] * (1 - ramp) + tail[:xf] * ramp, tail[xf:]])
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -198,27 +176,30 @@ def dip(t0, t1, lvl, ramp=0.25):
     np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
 
 
-dip(T("recede", 0), T("know1", 0), 0.55)
-dip(T("again", 0), T("choice", 0), 0.4)
+dip(T("collapse", 0.0), T("collapse", 0.55), 0.05, 0.08)
+
 mus = mus * gain
 end = int(T("choice", -0.12) * SR)
-mus[end:] = 0  # hard cut to black and silence
+card0 = int(T("end", 0.1) * SR)
+mus[end:card0] = 0  # hard cut to black, then the theme returns softly under the end card
+fi = int(0.4 * SR); mus[card0:card0 + fi] *= np.linspace(0, 1, fi)
 
-# ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
-mus = level(mus, -30)
-sfx = level(sfx, -27)
-env = box(np.abs(vo), int(0.05 * SR))
-duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
-duck = box(duck, int(0.25 * SR))
-mix = vo + mus * duck + sfx
+# ---- levels: music audible under a gentle duck (A5), sfx low-passed (no hiss, A4), one linear gain to -14 LUFS ----
+from finalmix import duck_curve, finalize
+def dyn(x):  # even out the plucked theme's peaks and gaps so it reads as a continuous score
+    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", "dynaudnorm=f=400:g=21:m=12", "-f", "f32le", "-"],
+                         input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
+    return np.frombuffer(out, np.float32)[:len(x)]
+def lowpass(x, fc):
+    out = subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", f"lowpass=f={fc}:poles=2", "-f", "f32le", "-"],
+                         input=x.astype(np.float32).tobytes(), capture_output=True, check=True).stdout
+    return np.frombuffer(out, np.float32)[:len(x)]
+mus = level(lowpass(dyn(mus), 6000), -14)
+sfx = level(lowpass(lowpass(sfx, 3500), 3500), -27)
+mus_part = mus * duck_curve(vo, 0.62)
+mix = vo + mus_part + sfx
 cut, card = int(T("choice", -0.12) * SR), int(T("end", 0.1) * SR)
-mix[cut - 240:cut] *= np.linspace(1, 0, 240)
-mix[cut:card] = 0  # a beat of black and silence after the cliffhanger, then only the end card's own sounds
-peak = np.max(np.abs(mix))
-if peak > 0.98:
-    mix = np.tanh(mix / peak * 1.2) * 0.95
-out = os.path.join(HERE, "mix_raw.wav")
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-ac", "2", out],
-               input=mix.astype(np.float32).tobytes(), check=True)
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", out, "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", "48000", os.path.join(HERE, "mix.wav")], check=True)
-print("mix written", TOTAL)
+for x in (mix, mus_part):
+    x[cut - 240:cut] *= np.linspace(1, 0, 240)
+mix[cut:card] = 0
+finalize(HERE, mix.astype(np.float32), vo.copy(), mus_part.astype(np.float32))
