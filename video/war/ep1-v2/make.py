@@ -5,15 +5,15 @@ import shutil
 import subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-LIB = os.path.join(HERE, "..", "hf", "lib")
-PROJ = os.path.join(HERE, "..", "hf", "warv1")
+LIB = "/tmp/claude-0/-home-user-github-commit-quest-v2/0d2beef4-35e5-59ae-b226-665b332623b9/scratchpad/mw/war/video/war-ep1/lib"
+PROJ = "/tmp/claude-0/-home-user-github-commit-quest-v2/0d2beef4-35e5-59ae-b226-665b332623b9/scratchpad/mw/hf/war1v2"
 
 os.makedirs(os.path.join(PROJ, "assets"), exist_ok=True)
 for f in ("package.json", "hyperframes.json", "meta.json"):
     if not os.path.exists(os.path.join(PROJ, f)):
-        shutil.copy(os.path.join(HERE, "..", "hf", "rig", f), PROJ)
+        shutil.copy(os.path.join("/tmp/claude-0/-home-user-github-commit-quest-v2/0d2beef4-35e5-59ae-b226-665b332623b9/scratchpad/mw/hf/rig", f), PROJ)
 if not os.path.exists(os.path.join(PROJ, "assets", "fonts")):
-    shutil.copytree(os.path.join(HERE, "..", "hf", "rig", "assets", "fonts"), os.path.join(PROJ, "assets", "fonts"))
+    shutil.copytree(os.path.join("/tmp/claude-0/-home-user-github-commit-quest-v2/0d2beef4-35e5-59ae-b226-665b332623b9/scratchpad/mw/hf/rig", "assets", "fonts"), os.path.join(PROJ, "assets", "fonts"))
 for f in ("rig.js", "sets.js", "camp.js", "koi.js", "zom.js", "hands.js", "mok.js", "pov.js", "phrai.js", "ui.js", "gameui.js", "mokui.js", "phraiui.js", "pop.js", "grain.js", "pop2.js", "pop2kok.js", "pop2kitchen.js", "pop2room.js", "pop2ui.js", "pop2more.js", "pop2hosp.js", "pop2end.js", "rig2.js", "popcast.js", "mm.js", "mm2.js", "mapsdata.js", "maps.js", "mmui.js", "mmui2.js", "mmui3.js", "qkmat.js", "quake.js", "quake2.js", "quakeui.js", "quakemap.js", "tide.js", "tide2.js", "tidemap.js", "tideui.js", "mmcast.js", "quakecast.js", "tidecast.js", "fx.js", "engine.js", "opener.js", "openers.js", "rabdog.js", "rabcast.js", "rabui.js", "rabfx.js", "war.js", "war2.js", "war3.js", "war4.js"):
     shutil.copy(os.path.join(LIB, f), os.path.join(PROJ, "assets", f))
 

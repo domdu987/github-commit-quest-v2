@@ -60,8 +60,20 @@
         cam: { keys: [{ t: 0, ...fr(560, 1480, 1.7, 540, 1150), drift: { s: 0.02 } }] }, shake: HAND,
         actors: [A("mem", 600, 1700, 0.9, [{ t: 0, mode: "duck", eyes: "angry", mouth: "scream" }], { flip: true, talk: [TALK("rule", 0, "scream")] })],
         captions: caps("rule", undefined, QUO),
-        fx(tl, id, t0, L) { put(L.glow, `<g transform="translate(560,1550)"><path d="M-300,120Q-240,-40 0,-60Q240,-40 300,120Z" fill="#8a6440" stroke="#2a2420" stroke-width="4"/><path d="M-230,40Q0,-40 230,40" stroke="#b08a5a" stroke-width="12" fill="none" opacity=".6"/></g>`);
-          War.bulletSlow(tl, L, { t: t0 + 0.3, y: 1180, x0: 60, x1: 960, slow: 0.05, seed: 13, dir: 1 }); live(tl, t0, D("rule"), L); War.jiggle(tl, `${id}-a0`, t0, 2, { amp: 6 }); },
+        // "พุ่มไม้บังตา": seen from the other side, he's almost gone behind a thick bush — and the round tears straight through the leaves
+        fx(tl, id, t0, L) { let sd = 31; const r = () => ((sd = (sd * 16807) % 2147483647) - 1) / 2147483646; let b = "";
+          const G = ["#2f5a26", "#3f7a30", "#5a9a3c", "#7ab84a"];
+          for (let k = 0; k < 26; k++) { const x = (r() - 0.5) * 680, y = -40 - r() * 250 + Math.abs(x) * 0.25, R = 70 + r() * 70, c = G[Math.min(3, Math.floor((-y / 290) * 3 + r() * 1.2))];
+            b += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${R.toFixed(0)}" fill="${c}" stroke="#1e3a18" stroke-width="4"/>`; }
+          for (let k = 0; k < 60; k++) { const x = (r() - 0.5) * 640, y = -30 - r() * 300 + Math.abs(x) * 0.25, a = r() * 180;
+            b += `<path d="M${x.toFixed(0)},${y.toFixed(0)}q10,-14 24,-6q-6,14 -24,6Z" fill="${r() > 0.5 ? "#8ac85a" : "#2a5222"}" transform="rotate(${a.toFixed(0)} ${x.toFixed(0)} ${y.toFixed(0)})"/>`; }
+          put(L.glow, `<g transform="translate(570,1650)"><rect x="-400" y="40" width="800" height="300" fill="#3a5a26"/>${b}</g>`);
+          War.bulletSlow(tl, L, { t: t0 + 0.3, y: 1420, x0: 60, x1: 960, slow: 0.05, seed: 13, dir: 1 });
+          // leaves knocked out along the bullet's path
+          let lv = ""; for (let k = 0; k < 18; k++) { const x = 240 + k * 36 + (r() - 0.5) * 20; lv += `<g transform="translate(${x.toFixed(0)},${(1420 + (r() - 0.5) * 30).toFixed(0)})"><path id="h3-lf${k}" d="M-10,0q8,-12 20,-4q-6,12 -20,4Z" fill="${k % 2 ? "#7ab84a" : "#3f7a30"}" opacity="0"/></g>`; }
+          put(L.glow, lv);
+          for (let k = 0; k < 18; k++) tl.fromTo(`#h3-lf${k}`, { opacity: 1, x: 0, y: 0, rotation: 0 }, { opacity: 0, x: 40 + (k % 5) * 18, y: -60 - (k % 4) * 30 + (k % 3) * 50, rotation: 200 + k * 20, duration: 0.9, ease: "power2.out", immediateRender: false }, t0 + 0.35 + k * 0.025);
+          live(tl, t0, D("rule"), L); War.jiggle(tl, `${id}-a0`, t0, 2, { amp: 6 }); },
       }, {
         set: "hedge", setOpts: { ...HEDGE, id: "h3c" }, ...CARD, cam: { keys: [{ t: 0, ...fr(540, 1300, 1.0, 540, 1100), drift: { s: 0.02 } }] },
         captions: capsFrom("rule", vo("rule", 0) + LINE("rule", 0, 1) - 0.1, undefined, QUO),
