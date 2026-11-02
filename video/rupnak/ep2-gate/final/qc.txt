@@ -1,0 +1,23 @@
+รูพญานาค EP.2 HQ QC (2026-11-02)
+file: video/release/hq/rupnak-ep2-HQ.mp4  sha256 9a9f964444d9e255eacc911a73738c424c5b350c6ab53a87194a1d7de4afc44d  size 97187602 bytes
+stream|profile=High|width=1080|height=1920|pix_fmt=yuv420p|r_frame_rate=60/1|nb_read_frames=6652
+format|duration=110.866667
+    I:         -14.1 LUFS
+    Peak:       -1.7 dBFS
+mix: video/rupnak/ep2/mix.wav from 5fd196a (suno1, ทะเลลด recipe)
+[full band]
+ok   music under the voice -33.5 LUFS (ทะเลลด -33.6; target -36.6..-30.6)
+ok   music between lines -32.0 LUFS (ทะเลลด -31.3; target -34.5..-28)
+ok   voice over music 19.1 LU (ทะเลลด 18.9; target >= 8)
+ok   music missing in voice-free time 7% (ทะเลลด 12%; target <= 15%)
+[phone speaker band, info only: both stems high-passed at 300 Hz; ทะเลลด reads -39.0 under the voice, -35.4 between lines]
+info music under the voice -39.2 LUFS
+info music between lines -36.8 LUFS
+info voice over music 22.8 LU
+info music missing in voice-free time 30%
+PASS
+mix.wav: flatness 0.36 (ok) · pause HF median -81.6 dBFS (ok) → PASS
+    I:         -14.0 LUFS
+    Peak:       -1.5 dBFS
+blackdetect (d=0.1, pix_th=0.05): none
+render: full episode from frame 0, -w 4, this machine, hf/rk2 built from repo kit at 5a6b7f8 (byte-identical to the reviewed snapshots)
