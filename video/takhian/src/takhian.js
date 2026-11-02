@@ -223,7 +223,7 @@
     paddies(L, o, hz);
     let s = "";
     if (o.hut) s += Tk.hut(o.hut.x, o.hut.y, o.hut.s || 1, o.hut);
-    if (o.buf) s += `<path d="M${o.buf.stake[0]},${o.buf.stake[1]}v-50" stroke="${INK}" stroke-width="12"/><path d="M${o.buf.stake[0]},${o.buf.stake[1]}v-50" stroke="#8a6a4a" stroke-width="7"/>` + Tk.buffalo(o.buf.x, o.buf.y, o.buf.s || 1, { ...o.buf, rope: [(o.buf.stake[0] - o.buf.x) * (o.buf.flip ? -1 : 1), o.buf.stake[1] - 40 - o.buf.y] });
+    if (o.buf) s += `<path d="M${o.buf.stake[0]},${o.buf.stake[1]}v-50" stroke="${INK}" stroke-width="12"/><path d="M${o.buf.stake[0]},${o.buf.stake[1]}v-50" stroke="#8a6a4a" stroke-width="7"/>` + `<g class="tkBuf">` + Tk.buffalo(o.buf.x, o.buf.y, o.buf.s || 1, { ...o.buf, rope: [(o.buf.stake[0] - o.buf.x) * (o.buf.flip ? -1 : 1), o.buf.stake[1] - 40 - o.buf.y] }) + `</g>`;
     if (o.tree) s += Tk.tree(o.tree.x, o.tree.y, o.tree.s || 1, { storm: S, ...o.tree });
     put(L.set, s);
     if (o.dog) put(L.act || L.set, Tk.dog(o.dog.x, o.dog.y, o.dog.s || 1, o.dog));
@@ -247,6 +247,7 @@
     for (let k = 0; k < 40; k++) f += `<path d="M${-900 + k * 75},${200 - Math.abs(k - 19) * 2}l${-8},${80}" stroke="#7a5a2a" stroke-width="7"/>`;
     f += `<path d="M-900,240Q540,140 2000,240" stroke="#6a4a22" stroke-width="20" fill="none"/>`;
     f += `<rect x="-120" y="140" width="70" height="2000" fill="#5a4030" ${OUT(5)}/><rect x="1130" y="140" width="70" height="2000" fill="#5a4030" ${OUT(5)}/>`;
+    (o.hutPosts || []).forEach((px) => { f += `<rect x="${px - 30}" y="160" width="60" height="1500" fill="#5a4030" ${OUT(5)}/><path d="M${px - 18},170V1650" stroke="#7a5a3a" stroke-width="6" opacity=".7"/>`; });
     f += `<rect x="-900" y="1640" width="2900" height="60" fill="#7a5a3a" ${OUT(5)}/><rect x="-900" y="1700" width="2900" height="500" fill="#5a4030"/>${Array.from({ length: 14 }, (_, k) => `<path d="M${-900 + k * 220},1700v500" stroke="#3a2a1e" stroke-width="6"/>`).join("")}`;
     put(L.fg, f);
   };
@@ -277,7 +278,7 @@
     b += `<g><ellipse cx="${X}" cy="680" rx="118" ry="128" fill="${sk}" ${OUT(5)}/><path d="M${X - 116},640Q${X - 110},560 ${X},552Q${X + 110},560 ${X + 116},640Q${X + 60},600 ${X},598Q${X - 60},600 ${X - 116},640Z" fill="#3a3430" ${OUT(3)}/>
       <path d="M${X - 120},612Q${X},570 ${X + 120},612L${X + 118},640Q${X},600 ${X - 118},640Z" fill="#e8e4d8" ${OUT(3)}/><path d="M${X - 120},626Q${X},586 ${X + 120},626" stroke="#c83a2a" stroke-width="8" fill="none" stroke-dasharray="14 10"/>
       <path d="M${X - 66},690q22,9 44,0M${X + 22},690q22,9 44,0" stroke="#3a2a22" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M${X - 24},730q24,-8 48,0" stroke="#2a2420" stroke-width="6" fill="none" stroke-linecap="round"/>
-      <path d="M${X - 36},752q36,14 72,0" stroke="${skD}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M${X - 50},758Q${X},810 ${X + 50},758" fill="#2a1a10" opacity=".14"/></g></g>`;
+      <path d="M${X - 30},756q30,-3 60,0" stroke="${skD}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M${X - 50},758Q${X},810 ${X + 50},758" fill="#2a1a10" opacity=".14"/></g></g>`;
     // the rescuer from above at his left: her head (braid, parting) and pink shoulders
     if (o.rescuer !== false) b += `<g transform="translate(${X - 330},1080) scale(.85)"><ellipse cx="-30" cy="0" rx="78" ry="200" fill="#e86a8a" stroke="${INK}" stroke-width="5"/><path d="M-30,-190Q10,-196 20,-150M-30,190Q10,196 20,150" stroke="#c04a6a" stroke-width="8" fill="none"/>
       <path d="M-120,10Q-170,30 -200,80Q-230,130 -220,190" stroke="#1a120e" stroke-width="30" fill="none" stroke-linecap="round"/>${Array.from({ length: 6 }, (_, k) => `<path d="M${-128 - k * 16},${20 + k * 26}q10,6 22,-2" stroke="#3a2a22" stroke-width="4" fill="none"/>`).join("")}<circle cx="-220" cy="196" r="10" fill="#e83a6a"/>
@@ -336,6 +337,54 @@
     return id;
   };
 
+  // ยาย's rule board, in the story's world (round 2b, owner: "เข้าตามธีม"): an old wet plank hung from the hut beam on pink เชือกฟาง,
+  // a rice sheaf tied at one corner and three ผ้าแพร tails at the other, rules painted by hand in white with hand-drawn signs (no UI icons,
+  // no ticks). The rule being spoken is lit by the lightning (cold flicker on its row), the others stay in the dark. Shown ≤ 2 s by the shots.
+  //   Tk.board(tl, layer, t0, dur, { active, all, y, flashes:[s…] })   (all: every row lit, for the recap)
+  Tk.board = (tl, layer, t0, dur, o = {}) => {
+    const id = `tkb${rseq++}`, act = o.active ?? -1, Y0 = o.y ?? 300, r = mk(57 + rseq), X = 90, W = 900, H = 820, wob = (v, a = 6) => f1(v + (r() - 0.5) * a);
+    const edge = []; for (let k = 0; k <= 10; k++) edge.push([X + W * k / 10, Y0 + (r() - 0.5) * 14]); for (let k = 1; k <= 6; k++) edge.push([X + W + (r() - 0.5) * 12, Y0 + H * k / 6]);
+    for (let k = 9; k >= 0; k--) edge.push([X + W * k / 10, Y0 + H + (r() - 0.5) * 16]); for (let k = 5; k >= 1; k--) edge.push([X + (r() - 0.5) * 12, Y0 + H * k / 6]);
+    const ol = "M" + edge.map(([a, b]) => `${f1(a)},${f1(b)}`).join("L") + "Z";
+    let g = "";
+    // pink plastic เชือกฟาง from the beam, tied through two holes
+    [X + 150, X + W - 150].forEach((rx, k) => { g += `<path d="M${rx + (k ? 60 : -60)},-700Q${rx + (k ? 20 : -20)},${Y0 - 300} ${rx},${Y0 + 30}" stroke="#e86aa0" stroke-width="12" fill="none"/><path d="M${rx + (k ? 64 : -56)},-700Q${rx + (k ? 24 : -16)},${Y0 - 300} ${rx + 4},${Y0 + 30}" stroke="#ff9ac8" stroke-width="4" fill="none" opacity=".8"/>`; });
+    // the plank: side thickness, wood, grain, two boards' seam, nail holes, a split, wet streaks running down
+    g += `<path d="${ol}" fill="#3a2614" transform="translate(6,18)"/><path d="${ol}" fill="#7a5a36" stroke="#1e140c" stroke-width="6"/>`;
+    g += `<defs><clipPath id="${id}-c"><path d="${ol}"/></clipPath></defs><g clip-path="url(#${id}-c)">`;
+    for (let k = 0; k < 22; k++) { const y = Y0 + 20 + k * 38 + (r() - 0.5) * 10; g += `<path d="M${X},${f1(y)}Q${X + 300},${wob(y, 18)} ${X + 600},${wob(y, 14)}T${X + W},${wob(y, 18)}" stroke="#5a4026" stroke-width="${f1(2 + r() * 3)}" fill="none" opacity=".55"/>`; }
+    g += `<path d="M${X},${Y0 + H / 2}H${X + W}" stroke="#2a1a0c" stroke-width="6"/><path d="M${X},${Y0 + H / 2 + 5}H${X + W}" stroke="#9a7a50" stroke-width="2" opacity=".6"/>`;
+    for (let k = 0; k < 16; k++) { const x = X + 30 + r() * (W - 60), y0 = Y0 + r() * 200, l = 200 + r() * 500; g += `<path d="M${f1(x)},${f1(y0)}q${f1(-6 + r() * 12)},${f1(l / 2)} ${f1(-4 + r() * 8)},${f1(l)}" stroke="#3a2614" stroke-width="${f1(10 + r() * 22)}" opacity=".28" stroke-linecap="round"/>`; }
+    g += `<path d="M${X + W - 220},${Y0 + H}l30,-120l-14,-60" stroke="#1e140c" stroke-width="5" fill="none"/>`;
+    g += `<rect x="${X}" y="${Y0}" width="${W}" height="30" fill="#fff" opacity=".1"/></g>`;
+    [[X + 150, Y0 + 30], [X + W - 150, Y0 + 30]].forEach(([a, b]) => { g += `<circle cx="${a}" cy="${b}" r="13" fill="#1e140c"/>`; });
+    // a rice sheaf tied at the top-left corner, ผ้าแพร tails at the top-right (#<id>-pr flutters)
+    g += `<g transform="translate(${X + 40},${Y0 + 40}) rotate(-28)">${Array.from({ length: 9 }, (_, k) => `<path d="M0,0Q${-40 + k * 10},-90 ${-70 + k * 18},-170" stroke="#c8a040" stroke-width="5" fill="none"/>${[0, 1, 2, 3].map((j) => `<ellipse cx="${f1(-70 + k * 18 - (j * 6))}" cy="${-170 + j * 18}" rx="6" ry="10" fill="#e8c860" stroke="#8a6a20" stroke-width="2"/>`).join("")}`).join("")}<path d="M-14,-30h28" stroke="#e86aa0" stroke-width="10"/></g>`;
+    g += `<g transform="translate(${X + W - 40},${Y0 + 36})"><g id="${id}-pr">${["#d8302a", "#f2c230", "#3aa04a"].map((c, k) => `<path d="M0,${k * 10}q60,${20 + k * 6} 40,${150 + k * 20}l-18,4q14,-120 -26,-${140 - k * 10}Z" fill="${c}" stroke="#1e140c" stroke-width="2.5"/>`).join("")}</g></g>`;
+    // header and the three rules in white paint, hand-drawn signs
+    const paint = (txt, x, y, fs, rot = 0, w = "#f4f0e4") => `<text x="${x}" y="${y}" font-family="Sriracha" font-size="${fs}" fill="${w}" transform="rotate(${rot} ${x} ${y})" stroke="#1e140c" stroke-width="3" paint-order="stroke">${txt}</text>`;
+    g += paint("กฎของยายหอม", 300, Y0 + 120, 76, -2);
+    g += `<path d="M300,${Y0 + 140}Q520,${Y0 + 152} 720,${Y0 + 132}" stroke="#f4f0e4" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+    const signs = [
+      (x, y) => `<path d="M${x},${y + 60}V${y}" stroke="#f4f0e4" stroke-width="9" stroke-linecap="round"/><path d="M${x - 46},${y + 4}Q${x - 50},${y - 40} ${x - 10},${y - 46}Q${x + 20},${y - 70} ${x + 44},${y - 34}Q${x + 60},${y} ${x + 34},${y + 8}Z" fill="none" stroke="#f4f0e4" stroke-width="7" stroke-linejoin="round"/><path d="M${x + 40},${y - 110}l-18,36h20l-22,40" stroke="#f2d070" stroke-width="7" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`,
+      (x, y) => `<path d="M${x - 60},${y + 46}H${x + 60}" stroke="#f4f0e4" stroke-width="7" stroke-linecap="round"/><circle cx="${x - 66}" cy="${y + 30}" r="14" fill="none" stroke="#f4f0e4" stroke-width="6"/><path d="M${x - 50},${y + 34}H${x + 56}" stroke="#f4f0e4" stroke-width="10" stroke-linecap="round"/><path d="M${x + 6},${y - 40}Q${x + 2},${y - 4} ${x + 4},${y + 22}M${x - 10},${y - 34}Q${x - 14},${y - 6} ${x - 8},${y + 20}M${x + 20},${y - 30}Q${x + 22},${y} ${x + 16},${y + 22}" stroke="#f4f0e4" stroke-width="6" fill="none" stroke-linecap="round"/>`,
+      (x, y) => `<circle cx="${x}" cy="${y}" r="52" fill="none" stroke="#f4f0e4" stroke-width="7"/><path d="M${x},${y}V${y - 34}M${x},${y}L${x + 26},${y + 14}" stroke="#f4f0e4" stroke-width="8" stroke-linecap="round"/><path d="M${x},${y - 52}A52,52 0 0 1 ${x},${y + 52}" fill="none" stroke="#f2d070" stroke-width="12" opacity=".8"/>`];
+    Tk.RULES.forEach(([, a, b], k) => { const y = Y0 + 230 + k * 200, hi = (s) => s.replace(/<u>(.*?)<\/u>/g, `<tspan fill="#ffd27a">$1</tspan>`), lit = o.all || k === act;
+      g += `<g id="${id}-r${k}" opacity="${lit ? 1 : 0.38}"><g transform="rotate(${f1((r() - 0.5) * 2)} 540 ${y})">${signs[k](190, y + 40)}${paint(hi(a), 280, y + 34, 54, -1)}${paint(b, 290, y + 104, 44, -0.5, "#e8e0cc")}</g></g>`;
+      if (k === act) g += `<rect id="${id}-lit" x="${X}" y="${y - 40}" width="${W}" height="190" fill="url(#${id}-lg)" opacity="0" style="mix-blend-mode:screen"/>`; });
+    g += `<defs><linearGradient id="${id}-lg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dfe8ff" stop-opacity=".1"/><stop offset=".5" stop-color="#dfe8ff" stop-opacity=".55"/><stop offset="1" stop-color="#dfe8ff" stop-opacity=".1"/></linearGradient></defs>`;
+    // drips off the bottom edge
+    for (let k = 0; k < 6; k++) g += `<circle class="${id}-dr" cx="${f1(X + 80 + k * 150 + r() * 40)}" cy="${Y0 + H + 10}" r="6" fill="#cfe2ee" stroke="#1e140c" stroke-width="1.5" opacity="0"/>`;
+    put(layer, `<g id="${id}" opacity="0"><g id="${id}-m"><g id="${id}-sw">${g}</g></g></g>`);
+    tl.set(`#${id}`, { opacity: 1 }, t0); tl.set(`#${id}`, { opacity: 0 }, t0 + dur);
+    const pv = `540 -700`;
+    tl.fromTo(`#${id}-m`, { y: -1400 }, { y: 0, duration: 0.3, ease: "power3.in", immediateRender: false }, t0);
+    tl.fromTo(`#${id}-sw`, { rotation: 3.5, svgOrigin: pv }, { rotation: 0, svgOrigin: pv, duration: 1.4, ease: "elastic.out(1, 0.35)", immediateRender: false }, t0 + 0.3);
+    tl.fromTo(`#${id}-pr`, { rotation: -10, svgOrigin: "0 0" }, { rotation: 14, svgOrigin: "0 0", duration: 0.26, yoyo: true, repeat: Math.ceil(dur / 0.26), ease: "sine.inOut", immediateRender: false }, t0);
+    document.querySelectorAll(`.${id}-dr`).forEach((d, k) => tl.fromTo(d, { y: 0, opacity: 0.9 }, { y: 120, opacity: 0, duration: 0.5, ease: "power2.in", repeat: Math.ceil(dur / 0.5), immediateRender: false }, t0 + 0.3 + k * 0.11));
+    if (act >= 0) (o.flashes || [0.45, 1.1]).forEach((f) => { tl.set(`#${id}-lit`, { opacity: 1 }, t0 + f); tl.set(`#${id}-lit`, { opacity: 0.3 }, t0 + f + 0.06); tl.set(`#${id}-lit`, { opacity: 0.9 }, t0 + f + 0.12); tl.to(`#${id}-lit`, { opacity: 0.15, duration: 0.35 }, t0 + f + 0.16);
+      tl.set(`#${id}-r${act}`, { filter: "brightness(1.6)" }, t0 + f); tl.set(`#${id}-r${act}`, { filter: "brightness(1)" }, t0 + f + 0.4); });
+    return id; };
   // ผ้าพระบฏ: a long painted cloth hung behind the shrine — นางตะเคียน in the tree, mural style (flat earth colours, gold, red ground)
   Tk.cloth = (x, y, s = 1, o = {}) => {
     const r = mk(44); let g = `<g transform="translate(${x},${y}) scale(${s})">`;
@@ -368,9 +417,11 @@
   // the pickup at the roadside, side view, facing left: hard steel roof, windows up; o.faces [{x,who}] heads behind glass
   Tk.pickup = (x, y, s = 1, o = {}) => `<g transform="translate(${x},${y}) scale(${s})">
     <ellipse cx="0" cy="14" rx="520" ry="34" fill="#000" opacity=".35"/>
-    <path d="M-470,-60Q-480,-150 -440,-170L-300,-190L-200,-330Q-180,-350 -150,-350H40Q70,-350 80,-330L110,-200H480Q500,-200 500,-180V-60Z" fill="${o.c || "#c8ccd0"}" stroke="${INK}" stroke-width="6"/>
-    <path d="M-180,-320L-110,-200H70L50,-320Z" fill="#2a3a4a" stroke="${INK}" stroke-width="5"/><path d="M-280,-200L-210,-320H-190L-260,-200Z" fill="#2a3a4a" stroke="${INK}" stroke-width="4"/>
-    <path d="M-170,-310L-120,-220" stroke="#ffffff" stroke-width="8" opacity=".25"/><path d="M-60,-310L-20,-220" stroke="#ffffff" stroke-width="6" opacity=".2"/>
+    <path d="M-470,-60Q-480,-150 -440,-170L-300,-190L-200,-330Q-180,-350 -150,-350H40Q70,-350 80,-330L110,-200H480Q500,-200 500,-180V-60Z${o.holes ? "M-180,-320L-110,-200H70L50,-320ZM-280,-200L-210,-320H-190L-260,-200Z" : ""}" fill="${o.c || "#c8ccd0"}" fill-rule="evenodd" stroke="${INK}" stroke-width="6"/>
+    <path d="M-470,-110H500V-60H-470Z" fill="#000" opacity=".14"/><path d="M-200,-338H60" stroke="#ffffff" stroke-width="6" opacity=".35"/>
+    ${o.holes ? `<path d="M-430,-64H480V-4H-430Z" fill="#141416"/>` : ""}
+    ${o.holes ? `<path d="M-180,-320L-110,-200H70L50,-320Z" fill="#a8c0d0" opacity=".22" stroke="${INK}" stroke-width="5"/><path d="M-170,-310L-120,-220" stroke="#ffffff" stroke-width="8" opacity=".3"/><path d="M-280,-200L-210,-320H-190L-260,-200Z" fill="none" stroke="${INK}" stroke-width="4"/>` : `<path d="M-180,-320L-110,-200H70L50,-320Z" fill="#2a3a4a" stroke="${INK}" stroke-width="5"/><path d="M-280,-200L-210,-320H-190L-260,-200Z" fill="#2a3a4a" stroke="${INK}" stroke-width="4"/>
+    <path d="M-170,-310L-120,-220" stroke="#ffffff" stroke-width="8" opacity=".25"/><path d="M-60,-310L-20,-220" stroke="#ffffff" stroke-width="6" opacity=".2"/>`}
     ${(o.faces || []).map(([fx, col, hair]) => `<g transform="translate(${fx},-250)"><circle r="34" fill="${col}" opacity=".85"/><path d="M-34,-6Q-30,-44 0,-44Q30,-44 34,-6Q20,-24 0,-26Q-20,-24 -34,-6Z" fill="${hair}" opacity=".9"/></g>`).join("")}
     <path d="M-110,-200V-80M110,-200V-60" stroke="${INK}" stroke-width="4" opacity=".6"/><rect x="-60" y="-170" width="40" height="10" rx="4" fill="${INK}" opacity=".6"/>
     <path d="M120,-196H480V-120H120Z" fill="#9aa0a6" stroke="${INK}" stroke-width="4"/>
@@ -527,7 +578,7 @@
         st += `<g clip-path="url(#${pid})"><g opacity="${m === "storm" ? 0.3 : 0.45}" filter="url(#skBlur4)" transform="translate(0,${f1(2 * t.y + 40 * ts)}) scale(1,-1)">${Tk.tree(t.x, t.y, ts, { storm: m === "storm", shrine: false, ...t, burnt: 0 })}</g>${Array.from({ length: 10 }, (_, k) => `<path d="M${f1(t.x - prx + r() * 2 * prx)},${f1(py + 20 + r() * pry * 1.8)}h${f1(60 + r() * 160)}" stroke="#ffffff" stroke-width="3" opacity=".25"/>`).join("")}${o.rain ? Array.from({ length: 30 }, () => { const rx = t.x - prx + r() * 2 * prx, ry = py + 20 + r() * pry * 1.8, rr = 6 + r() * 16; return `<ellipse cx="${f1(rx)}" cy="${f1(ry)}" rx="${f1(rr)}" ry="${f1(rr * 0.3)}" fill="none" stroke="#e8f4f8" stroke-width="2" opacity=".5"/>`; }).join("") : ""}</g>`; }
       st += `<ellipse cx="${t.x}" cy="${t.y + 10 * ts}" rx="${f1(560 * ts)}" ry="${f1(64 * ts)}" fill="${P.bund[0]}"/><path d="M${f1(t.x - 560 * ts)},${t.y + 10 * ts}A${f1(560 * ts)},${f1(64 * ts)} 0 0 0 ${f1(t.x + 560 * ts)},${t.y + 10 * ts}" stroke="${P.bund[1]}" stroke-width="5" fill="none"/>`; }
     if (o.hut) st += Tk.hut(o.hut.x, o.hut.y, o.hut.s || 1, o.hut);
-    if (o.buf) st += `<path d="M${o.buf.stake[0]},${o.buf.stake[1]}v-50" stroke="${INK}" stroke-width="12"/><path d="M${o.buf.stake[0]},${o.buf.stake[1]}v-50" stroke="#8a6a4a" stroke-width="7"/>` + Tk.buffalo(o.buf.x, o.buf.y, o.buf.s || 1, { ...o.buf, rope: [(o.buf.stake[0] - o.buf.x) * (o.buf.flip ? -1 : 1), o.buf.stake[1] - 40 - o.buf.y] });
+    if (o.buf) st += `<path d="M${o.buf.stake[0]},${o.buf.stake[1]}v-50" stroke="${INK}" stroke-width="12"/><path d="M${o.buf.stake[0]},${o.buf.stake[1]}v-50" stroke="#8a6a4a" stroke-width="7"/>` + `<g class="tkBuf">` + Tk.buffalo(o.buf.x, o.buf.y, o.buf.s || 1, { ...o.buf, rope: [(o.buf.stake[0] - o.buf.x) * (o.buf.flip ? -1 : 1), o.buf.stake[1] - 40 - o.buf.y] }) + `</g>`;
     if (o.tree) { const t = o.tree, ts = t.s || 1; st += `<g class="tkSway">${Tk.tree(t.x, t.y, ts, { storm: m === "storm", ...t })}</g>`;
       // cloths streaming in the wind + incense smoke at the shrine
       st += `<g transform="translate(${t.x},${t.y}) scale(${ts})">${CLOTH.map((c, k) => `<path d="M110,${-322 - k * 24}q${f1(80 + 60 * wind)},${f1(-20 + 30 * Math.sin(k))} ${f1(160 + 140 * wind)},${f1(10 + k * 6)}q${f1(-40)},${f1(14)} ${f1(-160 - 140 * wind)},${f1(-4 - k * 6)}" fill="${c}" stroke="${INK}" stroke-width="2.5" opacity=".95"/>`).join("")}
@@ -719,7 +770,7 @@
     return { frame: g, glass: Tk.wetGlass(r, hole, [90, 1000, 300, 1160]), seats, lit, hole }; };
   // a passenger seen from the back seat: shoulders, the back of the head, the face turned 3/4 toward `look` (±1: cheek, ear and an eye-corner show),
   // kind "ploy" (black hair, long braid over the shoulder, pink shirt) | "yai" (white bun under the งอบ, indigo shirt). Returns { g, rim } — rim goes in the lightning group
-  Tk.backHead = (kind, x, y, s = 1, look = 1) => { const d = look, P = kind === "ploy", hair = P ? "#1a120e" : "#d8d4cc", shirt = P ? "#e86a8a" : "#2a3a6a", skin = P ? "#e0a880" : "#b98a64", O = `stroke="${INK}" stroke-width="4"`;
+  Tk.backHead = (kind, x, y, s = 1, look = 1) => { const d = look, P = kind === "ploy", T = kind === "ton", hair = P ? "#1a120e" : T ? "#16100c" : "#d8d4cc", shirt = P ? "#e86a8a" : T ? "#3a9a5a" : "#2a3a6a", skin = P ? "#e0a880" : T ? "#d39a6e" : "#b98a64", O = `stroke="${INK}" stroke-width="4"`;
     let g = `<g transform="translate(${x},${y}) scale(${s})">`;
     g += `<path d="M-190,330L-176,190Q-150,110 -52,92L52,92Q150,110 176,190L190,330Z" fill="${shirt}" ${O}/>${P ? `<path d="M-52,92Q0,118 52,92" stroke="#d05a7a" stroke-width="10" fill="none"/>` : ""}`;
     g += `<path d="M-30,96V54H30V96Z" fill="${skin}" ${O}/>`;
@@ -729,10 +780,27 @@
     g += `<path d="M${d * 40},-74Q${d * -10},-96 ${d * -62},-60Q${d * -84},-10 ${d * -60},50Q${d * -20},82 ${d * 30},70Q${d * 50},20 ${d * 44},-20Q${d * 56},-60 ${d * 40},-74Z" fill="${hair}" ${O}/>`;
     g += `<path d="M${d * -40},-40Q${d * -50},10 ${d * -30},50M${d * -10},-60Q${d * -20},0 ${d * 0},60" stroke="${P ? "#3a2a22" : "#a8a49c"}" stroke-width="4" fill="none"/>`;
     if (P) g += Array.from({ length: 6 }, (_, k) => `<ellipse cx="${d * (-20 - k * 6)}" cy="${70 + k * 30}" rx="17" ry="19" fill="${hair}" ${O}/>`).join("") + `<circle cx="${d * -56}" cy="236" r="9" fill="#e83a6a" ${O}/>`;
+    else if (T) g += Array.from({ length: 7 }, (_, k) => { const a = -2.6 + k * 0.42; return `<path d="M${f1(Math.cos(a) * 54 - d * 10)},${f1(Math.sin(a) * 60 - 10)}l${f1(Math.cos(a) * 26)},${f1(Math.sin(a) * 30)}l${f1(-Math.sin(a) * 12)},${f1(Math.cos(a) * 12)}Z" fill="${hair}" ${O}/>`; }).join("");
     else g += `<ellipse cx="${d * -30}" cy="-20" rx="30" ry="24" fill="#ece8de" ${O}/><path d="M-170,-40Q0,-170 170,-40Q0,-16 -170,-40Z" fill="#c8a868" ${O}/><path d="M-110,-66Q0,-140 110,-66M-60,-96Q0,-138 60,-96" stroke="#a88a4a" stroke-width="5" fill="none"/><path d="M-170,-40Q0,-16 170,-40" stroke="#8a6a3a" stroke-width="6" fill="none"/>`;
     g += `</g>`;
     const rim = `<g transform="translate(${x},${y}) scale(${s})" fill="none" stroke="#e8f0ff" stroke-linecap="round">${P ? `<path d="M${d * -50},-62Q${d * 0},-92 ${d * 40},-74" stroke-width="8"/>` : `<path d="M-150,-52Q0,-160 150,-52" stroke-width="9"/>`}<path d="M-170,170Q-150,112 -60,96M60,96Q150,112 170,170" stroke-width="8"/></g>`;
     return { g, rim }; };
+  // a solid village house (2.5D: lit front wall, shaded side wall going back, a thick tiled roof with its underside, a gutter), every shutter and
+  // the door shut, a lamp's warm light leaking through the shutter slats (people safe inside). o.flip mirrors the side wall
+  Tk.house = (x, y, s = 1, o = {}) => { const fl = o.flip ? -1 : 1; let g = `<g transform="translate(${x},${y}) scale(${s * fl},${s})">`;
+    g += `<ellipse cx="80" cy="12" rx="560" ry="40" fill="#000" opacity=".35"/>`;
+    g += `<path d="M380,0V-420L600,-500V-70Z" fill="#9a8668" stroke="${INK}" stroke-width="6"/>${[0, 1, 2, 3].map((k) => `<path d="M${380 + k * 55},${-418 - k * 20}V${-2 - k * 17}" stroke="#7a6a50" stroke-width="3" opacity=".6"/>`).join("")}`;
+    g += `<path d="M-380,0V-420H380V0Z" fill="#d8c4a0" stroke="${INK}" stroke-width="7"/><rect x="-380" y="-60" width="760" height="60" fill="#8a7a62" opacity=".5"/>`;
+    for (let k = 0; k < 9; k++) g += `<path d="M-380,${-60 - k * 42}H380" stroke="#c0aa86" stroke-width="2" opacity=".6"/>`;
+    // roof: underside, thick tiled slope, ridge going back over the side wall
+    g += `<path d="M-450,-400L380,-400L620,-490L-60,-700Z" fill="#5a2a1e" stroke="${INK}" stroke-width="6"/><path d="M-470,-400L-60,-690L380,-400Z" fill="#a8442e" stroke="${INK}" stroke-width="7"/>`;
+    for (let k = 1; k < 7; k++) g += `<path d="M${-470 + k * 58},-400L-60,-690M${380 - k * 62},-400L-60,-690" stroke="#7a2e1e" stroke-width="3" opacity=".55"/>`;
+    g += `<path d="M-60,-690L620,-490" stroke="${INK}" stroke-width="8"/><path d="M-480,-396H392" stroke="#4a4a50" stroke-width="12"/>`;
+    // closed door and shutters, lamp light through the slats
+    const shut = (sx, sy, w, h) => `<rect x="${sx}" y="${sy}" width="${w}" height="${h}" fill="#5a3a22" stroke="${INK}" stroke-width="5"/><path d="M${sx + w / 2},${sy}V${sy + h}" stroke="${INK}" stroke-width="4"/>${Array.from({ length: 6 }, (_, k) => `<path d="M${sx + 6},${sy + 14 + k * h / 6.4}H${sx + w - 6}" stroke="#ffcf70" stroke-width="3" opacity=".75"/>`).join("")}`;
+    g += shut(-310, -320, 150, 130) + shut(160, -320, 150, 130) + `<rect x="-70" y="-270" width="140" height="270" fill="#6a4228" stroke="${INK}" stroke-width="6"/><path d="M-70,-4H70" stroke="#ffcf70" stroke-width="5" opacity=".8"/><circle cx="44" cy="-130" r="7" fill="#c8a040"/>`;
+    g += `<path d="M-380,0H600" stroke="${INK}" stroke-width="6"/>`;
+    return g + `</g>`; };
   // ---------------------------------------------------------------- cast
   const { LINE } = Rig2;
   const C = Rig.CAST;

@@ -15,19 +15,20 @@
         captions: caps("hook"), fx: (tl, id, t0, L) => { put(L.set, Tk.scorch(640, 1430, 1, 1)); FLICK(tl, t0 + 0.3, 0.3); } });
       // 2 · the command: พลอย kneels at his shoulder, her hand hovers over him (knees on the ground, fully in frame)
       ADD("cmd", { ...BUND("c"), cam: CAMS("cmd", 1.5, 1.62),
-        actors: [LUNGB("supine"), P("ploy", 780, 1800, 0.95, "kReach", "worry", "frown", { flip: true })], captions: caps("cmd") });
+        actors: [P("ploy", 780, 1800, 0.95, "kReach", "worry", "frown", { flip: true }), LUNGB("supine")], captions: caps("cmd") });
       // 3 · พลอย, close, shaking
       ADD("fear", { ...BUND("f"), cam: { keys: [{ t: 0, ...fr(760, 1499, 2.1, 540, 760) }] }, shake: (t) => ({ x: 2 * Math.sin(t * 40), y: 0, r: 0 }),
-        actors: [LUNGB("supine"), P("ploy", 780, 1800, 0.95, "kT", "worry", "frown", { flip: true, talk: TALK("fear", 0, "o") })], captions: caps("fear") });
+        actors: [P("ploy", 780, 1800, 0.95, "kT", "worry", "frown", { flip: true, talk: TALK("fear", 0, "o") }), LUNGB("supine")], captions: caps("fear") });
       // 4 · ต้น's small hand lands on ลุง's arm: nothing happens (knees on the ground); a slow push, then his face reacts
       SPLITN("safe", [2.0], [
         { ...BUND("sf"), cam: push2("safe", fr(560, 1720, 1.7, 540, 1250), fr(560, 1720, 1.85, 540, 1250)),
-          actors: [LUNGB("supine"), P("ton", 560, 1830, 0.78, "kReach", "wide", "o", { opts: { by: 130 } })] },
-        { ...BUND("sf2"), cam: { keys: [{ t: 0, ...fr(560, 1530, 2.6, 540, 1000) }] }, actors: [LUNGB("supine"), P("ton", 560, 1830, 0.78, "kT", "normal", "smile", { opts: { by: 130 } })] }]);
+          actors: [P("ton", 560, 1830, 0.78, "kReach", "wide", "o", { opts: { by: 130 } }), LUNGB("supine")] },
+        { ...BUND("sf2"), cam: push2("safe", fr(560, 1560, 2.4, 540, 1000), fr(540, 1520, 2.75, 540, 1000)), actors: [P("ton", 560, 1830, 0.78, "kT", "normal", "smile", { opts: { by: 130 }, then: [{ t: 0.9, mode: "kReach", eyes: "wide", mouth: "o" }, { t: 1.9, mode: "kTap", eyes: "normal", mouth: "smile" }, { t: 2.9, mode: "kT", eyes: "normal", mouth: "smile" }] }), LUNGB("supine")] }]);
       // 5 · ต้น raps rule 2 kneeling at the chest; the bamboo rules drop in (rule 1 ticked, rule 2 lit)
-      ADD("rap", { ...BUND("rp"), cam: CAMS("rap", 1.5, 1.55),
-        actors: [LUNGB("supine"), P("ton", 560, 1830, 0.78, "kT", "wide", "frown", { opts: { by: 130 }, talk: TALK("rap", 0, "scream") })],
-        captions: caps("rap"), fx: (tl, id, t0, L) => Tk.rules(tl, L.light, t0 + 0.3, D("rap") - 0.3, { active: 1, done: [0], tickAt: voEnd("rap") - 0.35, y: 200 }) });
+      SPLITN("rap", [1.9], [
+        { set: "tkHut", setOpts: { id: "rp0", mood: "storm", dark: 0.9, rain: 0.4 }, dark: 0.3, light: TEAL, grade: GT, cam: push2("rap", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.04, 540, 960)),
+          fx: (tl, id, t0, L) => Tk.board(tl, L.light, t0, 1.9, { active: 1, y: 330 }) },
+        { ...BUND("rp"), cam: CAMS("rap", 1.5, 1.6), actors: [P("ton", 560, 1830, 0.78, "kReach", "wide", "frown", { opts: { by: 130 }, talk: [0, 2.2, "scream"], then: [{ t: 1.1, mode: "kTap", eyes: "wide", mouth: "scream" }] }), LUNGB("supine")] }]);
       // 6 · พลอย taps both his shoulders and shouts his name
       ADD("call", { ...BUND("cl"), cam: CAMS("call"), shake: kick(0, 0.6, 4),
         actors: [P("ploy", 420, 1805, 0.95, "kTap", "wide", "scream", { talk: TALK("call", 0, "scream") }), LUNGB("supine")], captions: caps("call") });
@@ -64,11 +65,11 @@
         fx: (tl, id, t0, L) => { ARMS_P(L, tl, t0, D("count")); BEAT(L, tl, t0, D("count")); } });
       // 13 · ยาย takes his ankles to drag him to the tree — พลอย keeps pressing
       ADD("drag", { ...BUND("dr", { horizon: 1000 }), cam: CAMS("drag", 1.25, 1.3),
-        actors: [PLOYCPR(), LUNGB("pressed"), P("yaiHom", 1000, 1830, 0.9, "kReach", "worry", "frown", { flip: true, talk: TALK("drag", 0, "o") })], captions: caps("drag"),
+        actors: [PLOYCPR(), P("yaiHom", 1000, 1830, 0.9, "kReach", "worry", "frown", { flip: true, talk: TALK("drag", 0, "o") }), LUNGB("pressed")], captions: caps("drag"),
         fx: (tl, id, t0, L) => { ARMS_P(L, tl, t0, D("drag")); FLICK(tl, t0 + 0.4, 0.3); } });
       // 14 · พลอย shouts at ยาย without lifting her hands, turning her head to the burnt tree
       ADD("no", { ...BUND("no", { horizon: 1000 }), cam: CAMS("no", 1.35, 1.45), shake: kick(0, 0.5, 5),
-        actors: [PLOYCPR("kCPRshout", { eyes: "angry", mouth: "scream", talk: TALK("no", 0, "scream") }), LUNGB("pressed"), P("yaiHom", 1000, 1830, 0.9, "kT", "wide", "o", { flip: true })], captions: caps("no"),
+        actors: [PLOYCPR("kCPRshout", { eyes: "angry", mouth: "scream", talk: TALK("no", 0, "scream") }), P("yaiHom", 1000, 1830, 0.9, "kT", "wide", "o", { flip: true }), LUNGB("pressed")], captions: caps("no"),
         fx: (tl, id, t0, L) => ARMS_P(L, tl, t0, D("no")) });
       // 15 · keep pressing, hands never lift (side medium, a slow arc)
       ADD("only", { ...BUND("on"), cam: push2("only", fr(520, 1720, 1.75, 540, 1250), fr(600, 1730, 1.9, 540, 1250)),
@@ -102,8 +103,13 @@
         { ...CLR("wb", { horizon: 1050, fgRice: false }), cam: push2("watch", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.05, 540, 960)),
           fx: (tl, id, t0, L) => { put(L.glow, `<g id="wbw">${Tk.watch(540, 900, 1.55, { id: "wbw", mm: "12", ss: "04", label: "นับจากฟ้าร้องครั้งสุดท้าย", labelSize: 22, ring: 724 / 1800, sub: "ต้องครบ 30:00" })}</g>`); Tk.watchRun(tl, "wbw", t0, D("watch") - 1.2, 724, { ring: 1 }); tl.fromTo("#wbw", { y: 30 }, { y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0); } }]);
       // 24 · rule 3 on the bamboo
-      ADD("rule3", { ...CLR("r3", { horizon: 1050, farStorm: 1 }), dark: 0.25, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] }, captions: caps("rule3"),
-        fx: (tl, id, t0, L) => Tk.rules(tl, L.light, t0 + 0.2, D("rule3") - 0.2, { active: 2, done: [0, 1], tickAt: voEnd("rule3") - 0.3, y: 200 }) });
+      SPLITN("rule3", [1.9], [
+        { set: "tkHut", setOpts: { id: "r30", mood: "clear", dark: 0.6 }, dark: 0.25, light: CLEARL, grade: GC, cam: push2("rule3", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.04, 540, 960)),
+          fx: (tl, id, t0, L) => Tk.board(tl, L.light, t0, 1.9, { active: 2, y: 330, flashes: [0.6] }) },
+        { ...CLR("r3", { horizon: 1000, tree: { x: 360, y: 1080, s: 0.42, burnt: 0.4 }, farStorm: 1, fgRice: false }), cam: push2("rule3", fr(540, 960, 1.0, 540, 900), fr(540, 960, 1.04, 540, 900)),
+          fx: (tl, id, t0, L) => { const c = Tk.cabIn({ id: "r3c" }), by = Tk.backHead("yai", 200, 1470, 1.3, 1), bp = Tk.backHead("ploy", 880, 1490, 1.25, -1);
+            put(L.set, `<g transform="translate(0,60)">${c.glass}${c.frame}<g transform="translate(560,560) rotate(-8)"><path d="M0,-90V-20" stroke="#e8e4d8" stroke-width="4"/>${Tk.watch(0, 60, 0.32, { mm: "12", ss: "40" })}</g></g>`); put(L.light, by.g + bp.g + c.seats);
+            tl.fromTo("#r3c-keys", { rotation: -4, svgOrigin: "420 1340" }, { rotation: 4, svgOrigin: "420 1340", duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 6, immediateRender: false }, t0); } }]);
       // 25 · the bolt from the blue on the same tree; ต้น stopped on the bund about 30 m from it, sits down hard (the tree far behind him)
       ADD("again", { ...CLR("ag", { horizon: 1000, tree: { x: 700, y: 1060, s: 0.36, burnt: 0.4 }, buf: { x: 820, y: 1066, s: 0.2, stake: [780, 1068], flip: 1 }, bund: 540, flash: 0.6, farStorm: 1, farStormX: 1400 }), light: FLASHL,
         cam: push2("again", fr(560, 1300, 1.0, 540, 1000), fr(560, 1380, 1.08, 540, 1000)), shake: kick(0.2, 1.2, 18),
@@ -135,5 +141,8 @@
           P("medic", 640, 1700, 0.95, "idle", "normal", "flat", { flip: true }), LUNG(260, 1585, 0.62, "supine", "normal", "smile")],
         captions: caps("truth"), fx: (tl, id, t0, L) => put(L.set, Tk.ambulance(120, 1600, 0.75, { open: 1, lit: 0.3 }) + Tk.stretcher(460, 1590, 0.72) + `<path d="M260,1540Q440,1500 640,1540L640,1580H260Z" fill="#e8d8b0" stroke="#1e1a16" stroke-width="3" transform="translate(-20,0)"/>`) });
       // 31 · all three rules ticked
-      ADD("end", { set: "tkHut", setOpts: { id: "en", mood: "clear", tree: { x: 620, y: 1180, s: 0.5, burnt: 0.4 } }, dark: 0.2, light: CLEARL, grade: GC, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] }, captions: caps("end"),
-        fx: (tl, id, t0, L) => Tk.rules(tl, L.light, t0 + 0.2, D("end") - 0.2, { active: -1, done: [0, 1, 2], y: 200 }) });
+      SPLITN("end", [2.0], [
+        { set: "tkHut", setOpts: { id: "en", mood: "clear", dark: 0.5 }, dark: 0.2, light: CLEARL, grade: GC, cam: push2("end", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.04, 540, 960)),
+          fx: (tl, id, t0, L) => Tk.board(tl, L.light, t0, 2.0, { all: 1, y: 330 }) },
+        { ...CLR("en2", { horizon: 1050, tree: { x: 260, y: 1120, s: 0.5, burnt: 0.4 }, bund: 640 }), cam: push2("end", fr(560, 1350, 1.0, 540, 1000), fr(560, 1300, 0.94, 540, 1000)),
+          actors: [P("yaiHom", 520, 1560, 0.6, "walk", "normal", "smile", { moveTo: { x: 600, dur: 5.6 } }), P("ploy", 640, 1640, 0.7, "walk", "normal", "smile", { moveTo: { x: 730, dur: 5.6 } }), P("ton", 780, 1700, 0.62, "walk", "normal", "laugh", { moveTo: { x: 880, dur: 5.6 } })] }]);
