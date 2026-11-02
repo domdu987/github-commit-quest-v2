@@ -1,0 +1,253 @@
+      // ---------- รอดคนเดียว: on-screen cards (screen space, L.light) in the channel's medal style (SU.* from sinkui.part) ----------
+      // every card: a paper panel that drops in with overshoot, its pieces staggered in, a 2.5D medal per idea with a sheen sweep
+      // and an idle (bob / pulse), effects on the beat (ring + sparks on a tick, shake + red flash on a cross)
+      //   PlaneUI.ninety(tl, layer, t0, dur)  the cabin from above, people streaming out of 8 exits while a stopwatch medal runs to 90
+      //   PlaneUI.half(tl, layer, t0, dur)    ten passenger tokens; nearly half of them reach for a bag (each bag pops red)
+      //   PlaneUI.block(tl, layer, t0, dur)   the aisle from above: a bag jams it, the people behind pile up; "ขวางทางออก อันดับ 1"
+      //   PlaneUI.rules(tl, layer, t0, dur, o) the ฟ้าราม safety card from the seat pocket: 2 rhyming rules (o.active, o.done, o.y)
+      //   PlaneUI.rows(tl, layer, t0, dur)    your seat on the plan; the count runs to the front exit (8) and to the rear one (1)
+      //   PlaneUI.map(tl, layer, t0, dur, o)  the North Atlantic: Lisbon → New York arc, the jet on it (o.stop = where it stops: the island)
+      //   PlaneUI.spot(tl, layer, t0, dur, o) two "from the helicopter" lenses: one person on the rocks (✗) | the wreck (✓); o.phase 1|2
+      //   PlaneUI.route(tl, layer, t0, dur)   the flight path and the search band along it, the island pin inside
+      //   PlaneUI.bright(tl, layer, t0, dur)  two medals: the orange vest and the shiny panel (glints)
+      //   PlaneUI.next(tl, layer, t0, dur, o) the end card: a boarding pass for the next episode (o.l1, o.l2, o.l3, o.end)
+      const PlaneUI = {};
+      let puSeq = 0;
+      const PUi = (tl, id, t0, dur, o = {}) => {   // in with overshoot, out with a lift
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        tl.fromTo(`#${id}`, { y: o.from ?? 160, scale: 0.86, svgOrigin: `540 ${o.oy ?? 960}` }, { y: 0, scale: 1, svgOrigin: `540 ${o.oy ?? 960}`, duration: 0.55, ease: "back.out(1.9)", immediateRender: false }, t0);
+        if (o.out !== false) tl.to(`#${id}`, { opacity: 0, y: -60, duration: 0.25, ease: "power2.in" }, t0 + dur - 0.25);
+      };
+      const PUpanel = (x, y, W, H, head, hc = PL.navy) => `<g filter="url(#muDrop)"><rect x="${x}" y="${y + 14}" width="${W}" height="${H}" rx="40" fill="#0a0e1a" opacity=".35"/><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="40" fill="${SU.paper}" ${SO(5)}/></g>
+        <path d="M${x},${y + 40}Q${x},${y} ${x + 40},${y}H${x + W - 40}Q${x + W},${y} ${x + W},${y + 40}V${y + 112}H${x}Z" fill="${hc}" ${SO(5)}/><text x="${x + W / 2}" y="${y + 78}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#fff">${head}</text>`;
+      const dim = (op = 0.5) => `<rect width="1080" height="1920" fill="#060912" opacity="${op}"/>`;
+      // a passenger token (2.5D: a puck with a head), colour c; (0,0) its foot
+      const tok = (c, s = 1) => `<g transform="scale(${s})"><ellipse cy="4" rx="22" ry="8" fill="#000" opacity=".25"/><path d="M-20,0V-24Q-20,-44 0,-44Q20,-44 20,-24V0Z" fill="${c}" ${SO(3)}/><path d="M-14,-30Q-12,-40 -2,-41" stroke="#fff" stroke-width="4" opacity=".5" fill="none"/><circle cy="-58" r="15" fill="#e8b88a" ${SO(3)}/><circle cx="-5" cy="-62" r="4" fill="#fff" opacity=".6"/></g>`;
+      const bagIcon = (s = 1) => `<g transform="scale(${s})"><rect x="-26" y="-30" width="52" height="40" rx="8" fill="#c8642c" ${SO(3)}/><path d="M-12,-30v-10h24v10" stroke="${SU.ink}" stroke-width="4" fill="none"/><rect x="-26" y="-30" width="52" height="12" rx="6" fill="#e8955a" opacity=".6"/></g>`;
+      // the cabin plan from above (nose up): fuselage outline, rows of seats, exits as green chevrons; returns markup at (cx, cy), scale s
+      const plan = (id, rows = 30, o = {}) => { const W = 300, top = -560, rh = 34, H = rows * rh + 120;
+        let g = `<path d="M${-W / 2},${top + 110}Q${-W / 2},${top - 40} 0,${top - 100}Q${W / 2},${top - 40} ${W / 2},${top + 110}V${top + H}Q${W / 2},${top + H + 60} 0,${top + H + 110}Q${-W / 2},${top + H + 60} ${-W / 2},${top + H}Z" fill="#eef1f6" ${SO(5)}/>
+          <path d="M${-W / 2 + 18},${top + 110}V${top + H}" stroke="#c9d0dc" stroke-width="6"/><rect x="-22" y="${top + 60}" width="44" height="${H - 20}" fill="#d8dee8"/>`;
+        for (let r = 0; r < rows; r++) { const y = top + 100 + r * rh; [-1, 1].forEach((sd) => { for (let k = 0; k < 3; k++) g += `<rect id="${id}-s${r}-${sd > 0 ? k + 3 : k}" x="${sd * (34 + k * 36) - (sd < 0 ? 30 : 0)}" y="${y}" width="30" height="26" rx="6" fill="#4a62a8" stroke="${SU.ink}" stroke-width="2"/>`; }); }
+        (o.exits || [top + 70, top + 100 + 10 * rh, top + 100 + 11.5 * rh, top + 100 + rows * rh + 20]).forEach((y, k) => [-1, 1].forEach((sd) => { g += `<g id="${id}-x${k}${sd > 0 ? "r" : "l"}" transform="translate(${sd * (W / 2 + 4)},${y})"><rect x="-14" y="-24" width="28" height="48" rx="6" fill="#2ee07a" ${SO(3)}/><path d="M${sd * -4},-10l${sd * 10},10l${sd * -10},10" stroke="#073a1c" stroke-width="4" fill="none"/></g>`; }));
+        return g; };
+
+      // ---------- EP.1 ----------
+      PlaneUI.ninety = (tl, layer, t0, dur) => {
+        SU.defs(layer); const id = `pn${puSeq++}`, n = 26;
+        let g = `${dim(0.55)}<g id="${id}" opacity="0">${PUpanel(80, 300, 920, 1150, "ทุกคนต้องออกได้ใน 90 วินาที", PL.navy)}
+          <g transform="translate(330,1000) scale(.62)">${plan(`${id}-p`, 24, { exits: [-490, -150, 270, 410] })}${Array.from({ length: n }, (_, k) => `<g id="${id}-m${k}" transform="translate(${(k % 2 ? 1 : -1) * (40 + (k % 5) * 30)},${-400 + (k * 37) % 800})">${tok(["#e2382e", "#2f6fd0", "#2fa864", "#ffd23a", "#8a5ad0"][k % 5], 0.6)}</g>`).join("")}</g>
+          <g transform="translate(760,880)"><g id="${id}-w">${SU.medal(`${id}-md`, 150, `<g transform="scale(.82)"><circle r="150" fill="#fdfaf2"/>${Array.from({ length: 12 }, (_, k) => { const a = k * Math.PI / 6; return `<path d="M${f1(Math.sin(a) * 120)},${f1(-Math.cos(a) * 120)}L${f1(Math.sin(a) * 140)},${f1(-Math.cos(a) * 140)}" stroke="${SU.ink}" stroke-width="6"/>`; }).join("")}
+            <path id="${id}-sw" d="M0,0V-130A130,130 0 0 1 0,-130Z" fill="${SU.red}" opacity=".25"/><g id="${id}-hd"><path d="M0,16V-120" stroke="${SU.red}" stroke-width="10" stroke-linecap="round"/></g><circle r="14" fill="${SU.red}" ${SO(3)}/>
+            <text id="${id}-n" y="90" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="62" fill="${SU.ink}">0</text></g>`, { face2: "#d8e2ee", accent: SU.red })}</g></g>
+          <g transform="translate(760,1180)"><rect x="-170" y="-46" width="340" height="92" rx="46" fill="${SU.yellow}" ${SO(4)}/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="50" fill="${SU.ink}">≤ 90 วินาที</text></g>
+          <g transform="translate(760,1320)"><text text-anchor="middle" font-family="Kanit" font-weight="700" font-size="36" fill="#5a5444">ทางออกครึ่งเดียว · ไฟฉุกเฉิน</text></g>
+          ${SU.fxMk(`${id}-fx`, 760, 880, 12)}</g>`;
+        put(layer, g); PUi(tl, id, t0, dur, { oy: 900 });
+        tl.fromTo(`#${id}-w`, { scale: 0.2, rotation: -40, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.7, ease: "back.out(2.4)", immediateRender: false }, t0 + 0.2);
+        const run = dur - 1.2, o = { v: 0 }, nEl = document.getElementById(`${id}-n`), sw = document.getElementById(`${id}-sw`);
+        tl.fromTo(`#${id}-hd`, { rotation: 0, svgOrigin: "0 0" }, { rotation: 360, svgOrigin: "0 0", duration: run, ease: "power1.inOut", immediateRender: false }, t0 + 0.6);
+        tl.fromTo(o, { v: 0 }, { v: 90, duration: run, ease: "power1.inOut", immediateRender: false, onUpdate: () => { nEl.textContent = Math.round(o.v); const a = (o.v / 90) * 359.9 * Math.PI / 180; sw.setAttribute("d", `M0,0V-130A130,130 0 ${o.v > 45 ? 1 : 0} 1 ${f1(Math.sin(a) * 130)},${f1(-Math.cos(a) * 130)}Z`); } }, t0 + 0.6);
+        for (let k = 0; k < n; k++) { const ex = [[-160, -490], [160, -150], [-160, 270], [160, 410]][k % 4];
+          tl.to(`#${id}-m${k}`, { x: ex[0] * 1.6 - (k % 2 ? -40 : 40), y: ex[1], opacity: 0, duration: 0.9, ease: "power2.in" }, t0 + 0.8 + (k / n) * (run - 0.9)); }
+        SU.fxGo(tl, `${id}-fx`, t0 + 0.6 + run, { r0: 120, r1: 260, n: 12 }); SU.sheen(tl, `${id}-md`, 150, t0 + 0.9, dur - 1.2, 1.4);
+      };
+      PlaneUI.half = (tl, layer, t0, dur) => {
+        SU.defs(layer); const id = `ph${puSeq++}`, grab = [1, 3, 4, 7, 8];
+        let g = `${dim(0.55)}<g id="${id}" opacity="0">${PUpanel(80, 420, 920, 900, "เหตุจริง: คนที่มีกระเป๋า", PL.navy)}`;
+        for (let k = 0; k < 10; k++) { const x = 190 + (k % 5) * 175, y = 760 + Math.floor(k / 5) * 230;
+          g += `<g transform="translate(${x},${y})"><g id="${id}-t${k}">${tok(["#2f6fd0", "#2fa864", "#8a5ad0", "#e8823a", "#2a2e38"][k % 5], 1.6)}</g>${grab.includes(k) ? `<g transform="translate(46,-40)"><g id="${id}-b${k}">${SU.medal(`${id}-bm${k}`, 34, bagIcon(0.9), { face: "#ffe2d8", face2: "#ffb0a0", rim: SU.redD, accent: SU.red, noGhost: true })}</g></g>${SU.fxMk(`${id}-fx${k}`, 46, -40, 8, SU.red)}` : ""}</g>`; }
+        g += `<g transform="translate(540,1230)"><g id="${id}-lb"><rect x="-300" y="-56" width="600" height="112" rx="56" fill="${SU.red}" ${SO(5)}/><text y="22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="62" fill="#fff">เกือบครึ่ง หยิบกระเป๋า</text></g></g></g>`;
+        put(layer, g); PUi(tl, id, t0, dur, { oy: 860 });
+        for (let k = 0; k < 10; k++) { tl.fromTo(`#${id}-t${k}`, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "back.out(3)", immediateRender: false }, t0 + 0.25 + k * 0.06);
+          tl.fromTo(`#${id}-t${k}`, { scaleY: 1, svgOrigin: "0 0" }, { scaleY: 1.04, svgOrigin: "0 0", duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut", immediateRender: false }, t0 + 0.9 + k * 0.07); }
+        grab.forEach((k, j) => { const t = t0 + 1.0 + j * 0.22;
+          tl.set(`#${id}-b${k}`, { opacity: 0 }, t0); tl.fromTo(`#${id}-b${k}`, { scale: 0.1, opacity: 1, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(3.4)", immediateRender: false }, t);
+          SU.fxGo(tl, `${id}-fx${k}`, t + 0.12, { r1: 70, n: 8 }); tl.fromTo(`#${id}-t${k}`, { x: -10 }, { x: 0, duration: 0.35, ease: "elastic.out(1.2,0.3)", immediateRender: false }, t);
+          SU.sheen(tl, `${id}-bm${k}`, 34, t + 0.5, dur - 2, 1.6); });
+        tl.fromTo(`#${id}-lb`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(2.6)", immediateRender: false }, t0 + 2.2);
+        tl.to(`#${id}-lb`, { scale: 1.05, svgOrigin: "0 0", duration: 0.4, yoyo: true, repeat: Math.ceil(dur / 0.4), ease: "sine.inOut" }, t0 + 2.7);
+      };
+      PlaneUI.block = (tl, layer, t0, dur) => {
+        SU.defs(layer); const id = `pb${puSeq++}`;
+        let g = `${dim(0.55)}<g id="${id}" opacity="0">${PUpanel(80, 300, 920, 1200, "สิ่งที่ขวางทางออก บ่อยที่สุด", PL.navy)}
+          <g transform="translate(540,900)"><rect x="-90" y="-460" width="180" height="900" fill="#353a58" ${SO(4)}/>${Array.from({ length: 12 }, (_, r) => [-1, 1].map((sd) => `<rect x="${sd > 0 ? 100 : -250}" y="${-440 + r * 74}" width="150" height="56" rx="10" fill="#4a62a8" ${SO(3)}/>`).join("")).join("")}
+          <g transform="translate(0,-500)"><rect x="-80" y="-26" width="160" height="52" rx="10" fill="#2ee07a" ${SO(3)}/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#073a1c">EXIT ▲</text></g>
+          ${Array.from({ length: 7 }, (_, k) => `<g id="${id}-p${k}" transform="translate(0,${-60 + k * 80})">${tok(["#2f6fd0", "#2fa864", "#e8823a", "#8a5ad0", "#2a2e38", "#ffd23a", "#e2382e"][k], 1.15)}</g>`).join("")}
+          <g transform="translate(-20,-140)"><g id="${id}-bag"><g transform="rotate(-30)">${bagIcon(1.9)}</g></g></g>${SU.fxMk(`${id}-fx`, 0, -150, 12, SU.red)}</g>
+          <g transform="translate(540,1400)"><g id="${id}-lb"><rect x="-260" y="-50" width="520" height="100" rx="50" fill="${SU.red}" ${SO(5)}/><text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="56" fill="#fff">อันดับ 1 = กระเป๋า</text></g></g></g>`;
+        put(layer, g); PUi(tl, id, t0, dur, { oy: 900 });
+        // the line moves up, the bag swings into the aisle, everyone stops and bunches; red flash + shake
+        for (let k = 0; k < 7; k++) { tl.fromTo(`#${id}-p${k}`, { y: 0 }, { y: -140, duration: 0.9, ease: "power1.in", immediateRender: false }, t0 + 0.4);
+          tl.to(`#${id}-p${k}`, { y: -140 - k * -18 + (k ? -70 : 0) * 0, x: (k % 2 ? 1 : -1) * (k ? 14 : 0), duration: 0.35, ease: "back.out(3)" }, t0 + 1.35); }
+        tl.fromTo(`#${id}-bag`, { x: -220, y: -120, rotation: -80, svgOrigin: "0 0" }, { x: 0, y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "back.out(1.6)", immediateRender: false }, t0 + 0.9);
+        SU.fxGo(tl, `${id}-fx`, t0 + 1.35, { r0: 40, r1: 170, n: 12 }); SU.flash(tl, layer, t0 + 1.35); SU.shake(tl, `#${id}-lb`, t0 + 1.6, 16);
+        tl.fromTo(`#${id}-lb`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.8)", immediateRender: false }, t0 + 1.5);
+        tl.to(`#${id}-bag`, { rotation: 6, svgOrigin: "0 0", duration: 0.3, yoyo: true, repeat: Math.ceil(dur / 0.3), ease: "sine.inOut" }, t0 + 1.9);
+      };
+      // the rules on the ฟ้าราม safety card
+      PlaneUI.RULES = [["ทิ้งกระเป๋า", "ก้าวออกไว"], ["อยู่กับซาก", "อย่าจากไป"]];
+      const ruleIcon = (k, id) => k === 0 ? SU.medal(id, 62, `<g transform="translate(0,6)">${bagIcon(1.3)}</g><path d="M-44,-44L44,44" stroke="${SU.red}" stroke-width="12" stroke-linecap="round"/><circle r="50" fill="none" stroke="${SU.red}" stroke-width="10"/>`, { face2: "#f2d8d0", accent: SU.red })
+        : SU.medal(id, 62, `<g transform="translate(0,14) scale(.11)">${Plane.tail(`${id}-tl`)}</g><g transform="translate(-24,10)">${tok("#d9a43a", 0.55)}</g><path d="M-40,40Q0,24 40,40" stroke="#2a2a30" stroke-width="5" fill="none"/>`, { face2: "#d8e8f2", accent: SU.green });
+      PlaneUI.rules = (tl, layer, t0, dur, o = {}) => {
+        SU.defs(layer); const id = `pr${puSeq++}`, act = o.active ?? 0, done = o.done || [], Y = o.y ?? 560;
+        let g = `${o.dim === false ? "" : dim(0.45)}<g transform="translate(540,${Y})"><g id="${id}" opacity="0"><g id="${id}-w">
+          <g filter="url(#muDrop)"><rect x="-430" y="0" width="860" height="${180 + PlaneUI.RULES.length * 210}" rx="30" fill="#fdfaf2" ${SO(5)}/></g>
+          <rect x="-430" y="0" width="860" height="130" rx="30" fill="${PL.navy}" ${SO(5)}/><rect x="-430" y="100" width="860" height="30" fill="${PL.navy}"/><path d="M-430,128H430" stroke="${PL.gold}" stroke-width="8"/>
+          <text x="-380" y="62" font-family="Kanit" font-weight="900" font-size="40" fill="${PL.gold}">ฟ้าราม แอร์</text><text x="-380" y="104" font-family="Kanit" font-weight="700" font-size="30" fill="#fff">การ์ดความปลอดภัย · SAFETY</text>
+          <g transform="translate(330,64) rotate(-8)"><path d="M-40,0L30,-8L40,4L-30,14Z" fill="#fff"/><path d="M-6,-2L-24,-26H-12L10,-4Z" fill="#fff"/></g>`;
+        PlaneUI.RULES.forEach((r, k) => { const y = 250 + k * 210, st = done.includes(k) ? "done" : k === act ? "act" : "next";
+          g += `<g id="${id}-r${k}" opacity="${st === "next" ? 0.35 : 1}">${st === "act" ? `<rect id="${id}-hl" x="-260" y="${y - 70}" width="560" height="140" rx="24" fill="${SU.yellow}" opacity=".7"/>` : ""}
+            <g transform="translate(-330,${y})"><g id="${id}-i${k}">${ruleIcon(k, `${id}-m${k}`)}</g></g>
+            <text x="-230" y="${y - 6}" font-family="Kanit" font-weight="900" font-size="64" fill="${SU.ink}">${r[0]}</text><text x="-230" y="${y + 58}" font-family="Kanit" font-weight="800" font-size="52" fill="${SU.red}">${r[1]}</text>
+            ${st === "done" ? `<g transform="translate(350,${y})"><g id="${id}-c${k}">${SU.medal(`${id}-cm${k}`, 40, `<path id="${id}-ck${k}" d="M-16,0l11,13l22,-24" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1"/>`, { hi: "#9af0bd", face: "#3fbf74", face2: SU.green, rim: SU.greenD, accent: "#fff", noGhost: true })}</g></g>${SU.fxMk(`${id}-fx${k}`, 350, y, 9)}` : ""}</g>`; });
+        g += `</g></g></g>`;
+        put(layer, g);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        tl.fromTo(`#${id}`, { y: 1300 }, { y: 0, duration: 0.6, ease: "power3.out", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-w`, { rotation: 12, svgOrigin: "0 400" }, { rotation: 0, svgOrigin: "0 400", duration: 1.3, ease: "elastic.out(1,0.35)", immediateRender: false }, t0);
+        tl.to(`#${id}-w`, { y: -10, duration: 1.3, yoyo: true, repeat: Math.ceil(dur / 1.3), ease: "sine.inOut" }, t0 + 1.2);
+        PlaneUI.RULES.forEach((_, k) => { tl.fromTo(`#${id}-r${k}`, { x: 80 }, { x: 0, duration: 0.45, ease: "power3.out", immediateRender: false }, t0 + 0.4 + k * 0.15);
+          tl.fromTo(`#${id}-i${k}`, { scale: 0.2, rotation: -60, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.55, ease: "back.out(3)", immediateRender: false }, t0 + 0.55 + k * 0.15);
+          SU.sheen(tl, `${id}-m${k}`, 62, t0 + 1.2 + k * 0.3, dur - 1.6, 2.2); });
+        if (document.getElementById(`${id}-hl`)) { tl.fromTo(`#${id}-hl`, { scaleX: 0, svgOrigin: "-260 0" }, { scaleX: 1, svgOrigin: "-260 0", duration: 0.5, ease: "power2.inOut", immediateRender: false }, t0 + 0.9);
+          tl.to(`#${id}-i${act}`, { scale: 1.12, svgOrigin: "0 0", duration: 0.45, yoyo: true, repeat: Math.ceil(dur / 0.45), ease: "sine.inOut" }, t0 + 1.4); }
+        done.forEach((k, j) => { tl.fromTo(`#${id}-c${k}`, { scale: 0.2, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(3.2)", immediateRender: false }, t0 + (o.tickAt ?? 0.8) + j * 0.3);
+          tl.fromTo(`#${id}-ck${k}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + (o.tickAt ?? 0.8) + 0.15 + j * 0.3);
+          SU.fxGo(tl, `${id}-fx${k}`, t0 + (o.tickAt ?? 0.8) + 0.3 + j * 0.3, { r1: 90, n: 9 }); });
+        if (o.out !== false) tl.to(`#${id}`, { y: 1300, duration: 0.35, ease: "power2.in" }, t0 + dur - 0.35);
+        return id;
+      };
+      PlaneUI.rows = (tl, layer, t0, dur) => {
+        SU.defs(layer); const id = `pw${puSeq++}`, me = 26, front = 18, back = 27;   // rows on the small plan: you at 26; exits after row 18 (wing) and 27 (rear)
+        let g = `${dim(0.5)}<g id="${id}" opacity="0">${PUpanel(80, 240, 920, 1360, "นับแถวไปทางออก", PL.navy)}
+          <g transform="translate(330,1000) scale(.86)">${plan(`${id}-p`, 28, { exits: [-490, -560 + 100 + front * 34 + 4, -560 + 100 + back * 34 + 30] })}
+          <g transform="translate(-74,${-560 + 100 + me * 34 + 13})"><circle id="${id}-me" r="26" fill="${SU.yellow}" ${SO(4)}/><text y="10" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="28" fill="${SU.ink}">คุณ</text></g>
+          ${Array.from({ length: me - front }, (_, k) => `<g transform="translate(190,${-560 + 100 + (me - 1 - k) * 34 + 18})"><g id="${id}-n${k}" opacity="0"><circle r="20" fill="${SU.blue}" ${SO(3)}/><text y="9" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#fff">${k + 1}</text></g></g>`).join("")}
+          <g transform="translate(190,${-560 + 100 + (me + 1) * 34 + 18})"><g id="${id}-nb" opacity="0"><circle r="22" fill="${SU.green}" ${SO(3)}/><text y="10" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="26" fill="#fff">1</text></g></g></g>
+          <g transform="translate(770,720)"><g id="${id}-fa">${SU.medal(`${id}-fm`, 110, `<path d="M0,-60V50M-34,-24L0,-62L34,-24" stroke="${SU.blue}" stroke-width="18" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text y="96" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="${SU.ink}">หน้า 8</text>`, { accent: SU.blue })}</g></g>
+          <g transform="translate(770,1130)"><g id="${id}-ba">${SU.medal(`${id}-bm`, 110, `<path d="M0,60V-50M-34,24L0,62L34,24" stroke="${SU.green}" stroke-width="18" fill="none" stroke-linecap="round" stroke-linejoin="round"/><text y="-74" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="${SU.ink}">หลัง 1</text>`, { hi: "#e8fff0", face2: "#bfe8cc", accent: SU.green })}</g></g>
+          ${SU.fxMk(`${id}-fx`, 770, 1130, 12)}
+          <g transform="translate(770,1420)"><g id="${id}-lb"><rect x="-200" y="-46" width="400" height="92" rx="46" fill="${SU.green}" ${SO(4)}/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#fff">ใกล้สุด = ข้างหลัง</text></g></g></g>`;
+        put(layer, g); PUi(tl, id, t0, dur, { oy: 900 });
+        tl.fromTo(`#${id}-me`, { scale: 1, svgOrigin: "0 0" }, { scale: 1.25, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: Math.ceil(dur / 0.35), ease: "sine.inOut", immediateRender: false }, t0 + 0.4);
+        const n = me - front, step = Math.min(0.22, (dur * 0.42) / n);
+        for (let k = 0; k < n; k++) tl.fromTo(`#${id}-n${k}`, { opacity: 0, scale: 0.2, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.25, ease: "back.out(3)", immediateRender: false }, t0 + 0.6 + k * step);
+        tl.fromTo(`#${id}-fa`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(2.6)", immediateRender: false }, t0 + 0.6 + n * step);
+        const tb = t0 + 0.9 + n * step;
+        tl.fromTo(`#${id}-nb`, { opacity: 0, scale: 0.2, svgOrigin: "0 0" }, { opacity: 1, scale: 1.3, svgOrigin: "0 0", duration: 0.35, ease: "back.out(3)", immediateRender: false }, tb);
+        tl.fromTo(`#${id}-ba`, { scale: 0, rotation: -30, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.55, ease: "back.out(3)", immediateRender: false }, tb + 0.15);
+        SU.fxGo(tl, `${id}-fx`, tb + 0.35, { r0: 80, r1: 220, n: 12 });
+        tl.fromTo(`#${id}-lb`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, tb + 0.45);
+        tl.to(`#${id}-ba`, { y: -12, duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut" }, tb + 0.8);
+        SU.sheen(tl, `${id}-fm`, 110, t0 + 1.4, dur - 1.6, 2); SU.sheen(tl, `${id}-bm`, 110, tb + 0.6, dur - (tb - t0) - 0.8, 1.4);
+      };
+      // the North Atlantic, stylised: Europe/Africa on the right, North America on the left, pins, the arc, the jet riding it
+      PlaneUI.map = (tl, layer, t0, dur, o = {}) => {
+        SU.defs(layer); const id = `pm${puSeq++}`, A = [880, 760], B = [200, 700], stop = o.stop ?? 0.58;
+        const arc = (u) => { const x = A[0] + (B[0] - A[0]) * u, y = A[1] + (B[1] - A[1]) * u - Math.sin(u * Math.PI) * 190; return [x, y]; };
+        const pts = Array.from({ length: 41 }, (_, k) => arc(k / 40));
+        const d = `M${pts.map((p) => `${f1(p[0])},${f1(p[1])}`).join("L")}`;
+        let g = `<g id="${id}" opacity="0"><rect width="1080" height="1920" fill="#1c4e7a"/><rect width="1080" height="1920" fill="url(#plSeaG)"/>
+          <linearGradient id="plSeaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a6aa0"/><stop offset="1" stop-color="#0e2a4a"/></linearGradient>
+          ${Array.from({ length: 14 }, (_, k) => `<path d="M${(k * 173) % 1080},${300 + k * 100}q20,-10 40,0t40,0" stroke="#8ac4ec" stroke-width="3" fill="none" opacity=".35"/>`).join("")}
+          <g transform="translate(0,18)" opacity=".35"><path d="M820,200Q900,300 880,420Q900,520 960,600Q900,700 920,800Q980,900 960,1100Q1000,1300 1080,1400V0H860Z" fill="#000"/><path d="M0,0V1200Q60,1100 120,980Q200,900 180,780Q240,640 160,520Q220,380 120,260Q80,120 0,0Z" fill="#000"/></g>
+          <path d="M820,200Q900,300 880,420Q900,520 960,600Q900,700 920,800Q980,900 960,1100Q1000,1300 1080,1400V0H860Z" fill="#c8b48a" ${SO(5)}/><path d="M900,640Q940,700 930,780" stroke="#a89064" stroke-width="10" fill="none"/>
+          <path d="M0,0V1200Q60,1100 120,980Q200,900 180,780Q240,640 160,520Q220,380 120,260Q80,120 0,0Z" fill="#a8b87a" ${SO(5)}/><path d="M60,400Q120,500 90,620" stroke="#8a9a5a" stroke-width="10" fill="none"/>
+          <path d="${d}" stroke="#fff" stroke-width="7" fill="none" stroke-dasharray="14 14" opacity=".35"/><path id="${id}-ln" d="${d}" stroke="${SU.yellow}" stroke-width="9" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/>
+          ${[[A, "ลิสบอน", 1], [B, "นิวยอร์ก", -1]].map(([p, t, s], k) => `<g transform="translate(${p[0]},${p[1]})"><g id="${id}-pin${k}"><ellipse cy="6" rx="20" ry="7" fill="#000" opacity=".3"/><path d="M0,0C-14,-20 -26,-30 -26,-50A26,26 0 1 1 26,-50C26,-30 14,-20 0,0Z" fill="${k ? SU.blue : SU.red}" ${SO(4)}/><circle cy="-50" r="10" fill="#fff"/></g>
+            <g transform="translate(${s * -10},${44})"><rect x="${s > 0 ? -170 : -10}" y="-30" width="180" height="56" rx="28" fill="${SU.paper}" ${SO(3.5)}/><text x="${s > 0 ? -80 : 80}" y="10" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="${SU.ink}">${t}</text></g></g>`).join("")}
+          <g id="${id}-isl" transform="translate(${f1(arc(stop)[0])},${f1(arc(stop)[1]) + 40})" opacity="0"><ellipse rx="34" ry="14" fill="#5a5a60" ${SO(3)}/><circle r="70" fill="none" stroke="${SU.red}" stroke-width="6" id="${id}-rg"/></g>
+          <g id="${id}-jet"><g id="${id}-jr"><path d="M-36,0L30,-6Q44,-6 46,0Q44,6 30,6Z" fill="#fff" ${SO(3)}/><path d="M-4,-2L-20,-30H-8L12,-2ZM-4,2L-20,30H-8L12,2Z" fill="#fff" ${SO(3)}/><path d="M-30,-2L-40,-14H-32L-22,-2Z" fill="${PL.teal}" ${SO(2)}/></g></g>
+          <text x="540" y="1180" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#fff" opacity=".85">มหาสมุทรแอตแลนติก</text></g>`;
+        put(layer, g);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0);
+        [0, 1].forEach((k) => tl.fromTo(`#${id}-pin${k}`, { y: -200, scaleY: 1.3, svgOrigin: "0 0" }, { y: 0, scaleY: 1, svgOrigin: "0 0", duration: 0.5, ease: "bounce.out", immediateRender: false }, t0 + 0.2 + k * 0.25));
+        const go = { u: 0 }, jet = document.getElementById(`${id}-jet`), ln = document.getElementById(`${id}-ln`), T = dur - 1.0;
+        tl.set(`#${id}-jet`, { opacity: 1 }, t0);
+        tl.fromTo(go, { u: 0 }, { u: stop, duration: T, ease: "power1.inOut", immediateRender: false, onUpdate: () => { const p = arc(go.u), q = arc(Math.min(1, go.u + 0.01)), a = Math.atan2(q[1] - p[1], q[0] - p[0]) * 180 / Math.PI;
+          jet.setAttribute("transform", `translate(${f1(p[0])},${f1(p[1])}) rotate(${f1(a + 180)}) scale(-1,1)`); ln.setAttribute("stroke-dashoffset", f1(1 - go.u)); } }, t0 + 0.6);
+        tl.fromTo(`#${id}-jr`, { y: -3 }, { y: 3, duration: 0.4, yoyo: true, repeat: Math.ceil(dur / 0.4), ease: "sine.inOut", immediateRender: false }, t0);
+        if (o.island !== false) { tl.to(`#${id}-isl`, { opacity: 1, duration: 0.3 }, t0 + 0.6 + T * 0.85); tl.fromTo(`#${id}-rg`, { attr: { r: 20 } }, { attr: { r: 90 }, opacity: 0, duration: 0.8, repeat: 2, ease: "power2.out", immediateRender: false }, t0 + 0.6 + T * 0.85); }
+      };
+
+      // ---------- EP.2 ----------
+      // what a spotter sees from above: a lens (round, rimmed like a medal) over the rocky shore with one person / with the wreck
+      const lens = (id, kind, night) => { const r = 210;
+        let a = `<defs><clipPath id="${id}-cp"><circle r="${r}"/></clipPath></defs><circle cy="${r * 0.12}" r="${r}" fill="#2a3240" ${SO(5)}/><g clip-path="url(#${id}-cp)"><rect x="-${r}" y="-${r}" width="${r * 2}" height="${r * 2}" fill="#3a4a5a"/>
+          <path d="M-${r},${r * 0.2}Q-60,${r * 0.1} 40,${r * 0.3}T${r},${r * 0.1}V${r}H-${r}Z" fill="#2a5a7a"/>${Array.from({ length: 6 }, (_, k) => `<path d="M-${r},${f1(r * 0.3 + k * 26)}q40,-10 80,0t80,0t80,0t80,0t80,0" stroke="#fff" stroke-width="4" fill="none" opacity=".35"/>`).join("")}
+          ${Array.from({ length: 22 }, (_, k) => `<ellipse cx="${f1(-r + ((k * 97) % (r * 2)))}" cy="${f1(-r + ((k * 53) % (r * 1.2)))}" rx="${30 + (k % 3) * 14}" ry="${18 + (k % 2) * 10}" fill="${k % 3 ? "#2a2a32" : "#4a4a56"}"/>`).join("")}`;
+        if (kind === "man") a += `<g transform="translate(30,-40)"><circle r="7" fill="#d9a43a"/><circle cy="-2" r="4" fill="#e8b88a"/></g>`;
+        else a += `<g transform="translate(0,-10) rotate(-20) scale(.34)">${Plane.tail(`${id}-t`)}</g>`;
+        a += `</g><circle r="${r}" fill="none" stroke="#c8d0dc" stroke-width="14"/><circle r="${r}" fill="none" stroke="${SU.ink}" stroke-width="5"/><path d="M-${r * 0.6},-${r * 0.7}A${r * 0.92},${r * 0.92} 0 0 1 ${r * 0.3},-${r * 0.88}" stroke="#fff" stroke-width="10" fill="none" opacity=".6" stroke-linecap="round"/>
+          <path d="M-20,0H20M0,-20V20" stroke="#fff" stroke-width="3" opacity=".6"/>`;
+        return a; };
+      PlaneUI.spot = (tl, layer, t0, dur, o = {}) => {
+        SU.defs(layer); const id = `ps${puSeq++}`, two = o.phase === 2;
+        let g = `${dim(0.5)}<g id="${id}" opacity="0">${PUpanel(80, 330, 920, 1180, "มองจากเฮลิคอปเตอร์", PL.navy)}
+          <g transform="translate(300,820)"><g id="${id}-a">${lens(`${id}-la`, "man")}</g><g transform="translate(150,170)"><g id="${id}-x" opacity="${two ? 1 : 0}">${SU.medal(`${id}-xm`, 50, `<path d="M-20,-20L20,20M20,-20L-20,20" stroke="#fff" stroke-width="12" stroke-linecap="round"/>`, { hi: "#ff9a90", face: SU.red, face2: SU.redD, rim: "#6a1010", accent: "#fff", noGhost: true })}</g></g>
+            <text y="300" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="${SU.ink}">คน 1 คน</text></g>
+          <g transform="translate(780,1180)"><g id="${id}-b" opacity="${two ? 1 : 0}">${lens(`${id}-lb`, "wreck")}</g><g transform="translate(150,170)"><g id="${id}-ok" opacity="0">${SU.medal(`${id}-om`, 50, `<path id="${id}-ck" d="M-20,0l13,15l27,-30" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1"/>`, { hi: "#9af0bd", face: "#3fbf74", face2: SU.green, rim: SU.greenD, accent: "#fff", noGhost: true })}</g></g>
+            <text id="${id}-bt" y="300" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="${SU.ink}" opacity="${two ? 1 : 0}">ซากเครื่องบิน</text></g>
+          ${SU.fxMk(`${id}-fxa`, 450, 990, 10, SU.red)}${SU.fxMk(`${id}-fxb`, 930, 1350, 12)}</g>`;
+        put(layer, g); PUi(tl, id, t0, dur, { oy: 900, from: two ? 0 : 160 });
+        if (!two) { tl.fromTo(`#${id}-a`, { scale: 0.3, rotation: -20, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.6, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.2);
+          tl.fromTo(`#${id}-a`, { x: -8 }, { x: 8, duration: 0.9, yoyo: true, repeat: Math.ceil(dur / 0.9), ease: "sine.inOut", immediateRender: false }, t0 + 0.8);
+          tl.fromTo(`#${id}-x`, { opacity: 0, scale: 2.2, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.3, ease: "power4.in", immediateRender: false }, t0 + dur * 0.62);
+          SU.fxGo(tl, `${id}-fxa`, t0 + dur * 0.62 + 0.28, { r1: 120, n: 10 }); SU.flash(tl, layer, t0 + dur * 0.62 + 0.28); SU.shake(tl, `#${id}-a`, t0 + dur * 0.62 + 0.3); }
+        else { tl.fromTo(`#${id}-b`, { scale: 0.3, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.6, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.1);
+          tl.fromTo(`#${id}-bt`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.4);
+          tl.fromTo(`#${id}-ok`, { opacity: 0, scale: 0.2, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(3.2)", immediateRender: false }, t0 + dur * 0.45);
+          tl.fromTo(`#${id}-ck`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.35, immediateRender: false }, t0 + dur * 0.45 + 0.15);
+          SU.fxGo(tl, `${id}-fxb`, t0 + dur * 0.45 + 0.3, { r1: 150, n: 12 }); SU.sheen(tl, `${id}-om`, 50, t0 + dur * 0.45 + 0.6, dur * 0.5, 1.2);
+          tl.fromTo(`#${id}-b`, { scale: 1, svgOrigin: "0 0" }, { scale: 1.05, svgOrigin: "0 0", duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut", immediateRender: false }, t0 + 0.8); }
+      };
+      PlaneUI.route = (tl, layer, t0, dur) => {
+        PlaneUI.map(tl, layer, t0, dur + 0.01, { stop: 0.58, island: true });
+        const id = `pq${puSeq++}`;   // the search band along the planned route, sweeping out from the last known point
+        put(layer, `<g id="${id}" opacity="0"><path d="M880,700Q540,380 200,640L200,760Q540,500 880,820Z" fill="${SU.yellow}" opacity=".25" stroke="${SU.yellow}" stroke-width="5" stroke-dasharray="16 12"/>
+          <g transform="translate(540,1300)"><g id="${id}-lb"><rect x="-330" y="-56" width="660" height="112" rx="56" fill="${SU.paper}" ${SO(5)}/><text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="${SU.ink}">ค้นตาม<tspan fill="#c8302a">เส้นทางบิน</tspan>ก่อน</text></g></g></g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.4, immediateRender: false }, t0 + dur * 0.45);
+        tl.fromTo(`#${id}-lb`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(2.6)", immediateRender: false }, t0 + dur * 0.5);
+        tl.to(`#${id}`, { opacity: 0.6, duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut" }, t0 + dur * 0.5 + 0.5);
+      };
+      PlaneUI.bright = (tl, layer, t0, dur) => {
+        SU.defs(layer); const id = `pg${puSeq++}`;
+        let g = `${dim(0.45)}<g id="${id}" opacity="0">${PUpanel(80, 420, 920, 760, "ทำให้ซากเด่น", PL.navy)}
+          <g transform="translate(330,800)"><g id="${id}-a">${SU.medal(`${id}-am`, 140, `<path d="M-60,-70H60L52,70H-52Z" fill="#ff6a14" ${SO(5)}/><path d="M-14,-70V70M14,-70V70" stroke="#c84a08" stroke-width="8"/><rect x="-52" y="-6" width="104" height="18" fill="#fff4d0"/><path d="M-30,-70Q0,-40 30,-70" stroke="${SU.ink}" stroke-width="5" fill="none"/>`, { face2: "#ffe0c8", accent: "#ff6a14" })}</g>
+            <text y="210" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="${SU.ink}">ของสีสด</text></g>
+          <g transform="translate(750,800)"><g id="${id}-b">${SU.medal(`${id}-bm`, 140, `<rect x="-70" y="-50" width="140" height="100" rx="12" fill="#e8eef6" ${SO(5)}/><path d="M-50,-30L40,30M-20,-40L60,14" stroke="#fff" stroke-width="12"/><g id="${id}-gl"><path d="M50,-80L58,-56L82,-48L58,-40L50,-16L42,-40L18,-48L42,-56Z" fill="#fff8c0" ${SO(2)}/></g>`, { face2: "#dde8f4", accent: SU.blue })}</g>
+            <text y="210" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="${SU.ink}">ของสะท้อนแสง</text></g>
+          ${SU.fxMk(`${id}-fxa`, 330, 800, 10, "#ff9a3a")}${SU.fxMk(`${id}-fxb`, 750, 800, 12, "#fff8c0")}</g>`;
+        put(layer, g); PUi(tl, id, t0, dur, { oy: 800 });
+        tl.fromTo(`#${id}-a`, { scale: 0.2, rotation: -50, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.6, ease: "back.out(2.6)", immediateRender: false }, t0 + 0.3);
+        tl.fromTo(`#${id}-b`, { scale: 0.2, rotation: 50, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.6, ease: "back.out(2.6)", immediateRender: false }, t0 + 0.6);
+        SU.fxGo(tl, `${id}-fxa`, t0 + 0.7, { r0: 100, r1: 230 }); SU.fxGo(tl, `${id}-fxb`, t0 + 1.0, { r0: 100, r1: 250 });
+        tl.fromTo(`#${id}-gl`, { scale: 0.4, rotation: 0, svgOrigin: "50 -48" }, { scale: 1.5, rotation: 90, svgOrigin: "50 -48", duration: 0.45, yoyo: true, repeat: Math.ceil(dur / 0.45), ease: "sine.inOut", immediateRender: false }, t0 + 1.0);
+        tl.fromTo(`#${id}-a`, { y: -6 }, { y: 6, duration: 0.8, yoyo: true, repeat: Math.ceil(dur / 0.8), ease: "sine.inOut", immediateRender: false }, t0 + 1);
+        SU.sheen(tl, `${id}-am`, 140, t0 + 1.1, dur - 1.3, 1.6); SU.sheen(tl, `${id}-bm`, 140, t0 + 1.4, dur - 1.6, 1.1);
+      };
+      // the end card: a ฟ้าราม boarding pass on the rocks, wind-flapped, naming the next episode (or the end)
+      PlaneUI.next = (tl, layer, t0, dur, o = {}) => {
+        SU.defs(layer); const id = `px${puSeq++}`;
+        put(layer, `<g id="${id}" opacity="0"><rect width="1080" height="1920" fill="#0c1220"/><rect width="1080" height="1920" fill="url(#plSeaG2)"/><linearGradient id="plSeaG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3a5a"/><stop offset=".6" stop-color="#3a5a78"/><stop offset="1" stop-color="#14202e"/></linearGradient>
+          <path d="M0,1500Q300,1440 540,1480T1080,1460V1920H0Z" fill="#1a1a22"/>${Array.from({ length: 6 }, (_, k) => `<path d="M${100 + k * 170},${1470 - (k % 2) * 16}q16,-50 30,0" fill="#2a2a32"/>`).join("")}
+          <g transform="translate(540,880)"><g id="${id}-bp"><g id="${id}-bpr"><g filter="url(#muDrop)"><rect x="-400" y="-300" width="800" height="560" rx="28" fill="#fdfaf2" ${SO(6)}/></g>
+            <rect x="-400" y="-300" width="800" height="120" rx="28" fill="${PL.navy}" ${SO(6)}/><rect x="-400" y="-210" width="800" height="30" fill="${PL.navy}"/><path d="M-400,-180H400" stroke="${PL.gold}" stroke-width="8"/>
+            <text x="-350" y="-226" font-family="Kanit" font-weight="900" font-size="44" fill="${PL.gold}">ฟ้าราม แอร์</text><text x="350" y="-226" text-anchor="end" font-family="Kanit" font-weight="800" font-size="34" fill="#fff">BOARDING PASS</text>
+            <path d="M180,-170V250" stroke="${SU.ink}" stroke-width="4" stroke-dasharray="14 12"/>
+            <text x="-350" y="-100" font-family="Kanit" font-weight="800" font-size="34" fill="#7a7060">${o.l1 || "ตอนต่อไป · EP.2"}</text>
+            <text x="-350" y="10" font-family="Kanit" font-weight="900" font-size="${(o.l2 || "").length > 14 ? 52 : 64}" fill="${SU.red}">${o.l2 || ""}</text>
+            <text x="-350" y="100" font-family="Kanit" font-weight="800" font-size="40" fill="${SU.ink}">${o.l3 || ""}</text>
+            <text x="-350" y="200" font-family="Kanit" font-weight="700" font-size="32" fill="#5a5444">${o.cta || "กดติดตาม แล้วรอเฮลิคอปเตอร์ไปด้วยกัน"}</text>
+            <text x="290" y="-90" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#7a7060">SEAT</text><text x="290" y="-20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="72" fill="${SU.ink}">30A</text>
+            ${Array.from({ length: 22 }, (_, k) => `<rect x="${210 + k * 7}" y="80" width="${k % 3 ? 3 : 5}" height="120" fill="${SU.ink}"/>`).join("")}
+            ${o.end ? `<g transform="translate(-60,150) rotate(-14)"><g id="${id}-st"><rect x="-200" y="-70" width="400" height="140" rx="20" fill="none" stroke="${SU.red}" stroke-width="12"/><text y="30" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="90" fill="${SU.red}">ตอนจบ</text></g></g>` : ""}</g></g></g>
+          <text x="540" y="1680" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff" letter-spacing="10">ROD MAI CLUB</text>${SU.fxMk(`${id}-fx`, 540, 880, 12)}</g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0);
+        tl.fromTo(`#${id}-bp`, { y: -900 }, { y: 0, duration: 0.75, ease: "back.out(1.4)", immediateRender: false }, t0 + 0.1);
+        tl.fromTo(`#${id}-bpr`, { rotation: -25, svgOrigin: "0 0" }, { rotation: -3, svgOrigin: "0 0", duration: 0.75, ease: "back.out(1.4)", immediateRender: false }, t0 + 0.1);
+        SU.fxGo(tl, `${id}-fx`, t0 + 0.75, { r0: 200, r1: 520, n: 12 });
+        tl.to(`#${id}-bpr`, { rotation: 2, svgOrigin: "0 0", duration: 0.7, yoyo: true, repeat: Math.ceil(dur / 0.7), ease: "sine.inOut" }, t0 + 0.9);
+        if (o.end) { tl.fromTo(`#${id}-st`, { scale: 2.4, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.3, ease: "power4.in", immediateRender: false }, t0 + 1.1); SU.flash(tl, layer, t0 + 1.4, "#ffffff", 0.4); }
+      };
