@@ -37,8 +37,9 @@
         { ...CAR("ha", "alarm", { end: "zombies", crack: 2 }),
         cam: { keys: [{ t: 0, ...fr(760, 1210, 1.05, 540, 1000) }, { t: D("hook") - HX, glide: D("hook") - HX, ...fr(820, 1220, 1.15, 540, 1000) }] },
         shake: rattle(4),
-        actors: [ZEND(GX - 150, "zOffice"), ZEND(GX - 330, "zAuntie", "shamble"),
-          A("cherd", GX + 140, Y, S, [{ t: 0, mode: "shrink", eyes: "wide", mouth: "scream" }], { flip: true }), A("nat", GX + 255, Y, S, [{ t: 0, mode: "hugPole", eyes: "wide", mouth: "o" }]),
+        // depth, not a pile: the zombies stay behind the gangway glass; three clear people (นัท back at the pole, the suit at the lever, เมย์ front)
+        actors: [ZEND(GX - 170, "zOffice"), ZEND(GX - 360, "zAuntie", "shamble"),
+          A("nat", GX + 240, Y - 34, S * 0.9, [{ t: 0, mode: "hugPole", eyes: "wide", mouth: "o" }]),
           A("suit", LVX - 170, Y, S, [{ t: 0, mode: "reachLever", eyes: "wide", mouth: "scream" }]), A("may", DX - 120, Y, S, [{ t: 0, mode: "strapLook", eyes: "wide", mouth: "o" }], { flip: true })],
         captions: capsFrom("hook", HX),
         fx(tl, id, t0, L) { const d = D("hook") - HX; noSh(tl, id, 6); Sky.carLife(tl, "ha", t0, d, { flicker: true, knock: true }); Sky.fgPole(tl, L, t0, d, { x: 1000, red: true, drift: 30, strap: false }); Sky.redPulse(tl, L, t0, d, 0.16); SkyUI.title(tl, L.light, t0 + 0.05, d + 1.4, "ซอมบี้รถไฟฟ้า", "EP.1 กดกระดิ่ง"); } });
@@ -168,9 +169,11 @@
       add("push", { ...CAR("cp", "alarm", { end: "zombies", crack: 3, bent: true, progress: 0.85 }),
         cam: { keys: [{ t: 0, ...fr(GX + 280, 1220, 1.12, 540, 1000) }, { t: D("push"), glide: D("push"), ...fr(GX + 300, 1210, 1.3, 540, 1000) }] },
         shake: shk(6),
-        actors: [ZEND(GX - 150, "zOffice"), ZEND(GX - 320, "zStudent"), A("may", GX + 120, Y, S, [{ t: 0, mode: "hold", eyes: "angry", mouth: "scream" }], { talk: [TALK("push", 0, "scream")] }),
-          A("nat", GX + 300, Y, S, [{ t: 0, mode: "hold", eyes: "wide", mouth: "scream" }]), A("cherd", GX + 480, Y, S, [{ t: 0, mode: "hold", eyes: "angry", mouth: "flat" }]),
-          A("suit", GX + 660, Y, S, [{ t: 0, mode: "hold", eyes: "wide", mouth: "o" }])],
+        // three bodies you can read, staggered in depth (back → front), each pushing differently; the rest only as arms in from the edge
+        actors: [ZEND(GX - 170, "zOffice"),
+          A("cherd", GX + 560, Y - 52, S * 0.84, [{ t: 0, mode: "push", eyes: "angry", mouth: "flat" }], { flip: true }),
+          A("nat", GX + 340, Y - 14, S * 0.95, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "scream" }], { flip: true }),
+          A("may", GX + 130, Y + 46, S * 1.1, [{ t: 0, mode: "hold", eyes: "angry", mouth: "scream" }], { talk: [TALK("push", 0, "scream")] })],
         captions: caps("push", undefined, QUO),
         fx(tl, id, t0, L) { noSh(tl, id, 6); Sky.carLife(tl, "cp", t0, D("push"), { knock: true, flicker: true, progress: [0.85, 0.97] }); Sky.fgPole(tl, L, t0, D("push"), { x: 980, red: true, drift: 30 }); Sky.redPulse(tl, L, t0, D("push")); } });
       // ---------- 18. outside: the train slows into a dark station (silence before the doors) ----------
@@ -181,9 +184,9 @@
       add("out", { set: "platform", setOpts: { id: "po", closed: true, dim: true, signX: 1500 }, dark: 0.1, light: DEAD, grade: GDEAD,
         cam: { keys: [{ t: 0, ...fr(560, 1260, 1.0, 540, 1100) }, { t: D("out"), glide: D("out"), ...fr(540, 1300, 1.1, 540, 1100) }] },
         actors: [A("suit", 160, 1500 + 120, S, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: -300, y: 1500 + 160, dur: 1.4, ease: "power1.out" } }),
-          A("nat", 440, 1500 + 100, S, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.9, mode: "gasp", eyes: "closed", mouth: "o" }], { moveTo: { x: 360, y: 1500 + 170, dur: 0.9, ease: "power2.out" } }),
-          A("may", 640, 1500 + 100, S, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.8, mode: "gasp", eyes: "closed", mouth: "smile" }], { moveTo: { x: 600, y: 1500 + 200, dur: 0.8, ease: "power2.out" }, talk: [TALK("out", 0, "smile")] }),
-          A("cherd", 860, 1500 + 90, S, [{ t: 0, mode: "walk", eyes: "worry", mouth: "flat" }], { flip: true, moveTo: { x: 820, y: 1500 + 150, dur: 1.2, ease: "power1.out" } })],
+          A("nat", 440, 1500 + 100, S, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.9, mode: "gasp", eyes: "closed", mouth: "o" }], { moveTo: { x: 250, y: 1500 + 170, dur: 0.9, ease: "power2.out" } }),
+          A("may", 640, 1500 + 100, S, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 0.8, mode: "gasp", eyes: "closed", mouth: "smile" }], { moveTo: { x: 560, y: 1500 + 210, dur: 0.8, ease: "power2.out" }, talk: [TALK("out", 0, "smile")] }),
+          A("cherd", 980, 1500 + 70, S * 0.9, [{ t: 0, mode: "walk", eyes: "worry", mouth: "flat" }], { flip: true, moveTo: { x: 900, y: 1500 + 110, dur: 1.2, ease: "power1.out" } })],
         captions: caps("out", undefined, QUO),
         fx(tl, id, t0, L) { noSh(tl, id, 4); } });
       // ---------- 20. the platform: half the lights off, nobody ----------

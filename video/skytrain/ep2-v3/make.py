@@ -5,8 +5,8 @@ import shutil
 import subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-LIB = os.path.join(HERE, "..", "hf", "lib")
-PROJ = os.path.join(HERE, "..", "hf", "sky2")
+LIB = "/home/user/github-commit-quest-v2/video/skytrain-ep2/lib"
+PROJ = os.path.join(HERE, "..", "hf", "sky2v3")
 
 os.makedirs(os.path.join(PROJ, "assets"), exist_ok=True)
 for f in ("package.json", "hyperframes.json", "meta.json"):
