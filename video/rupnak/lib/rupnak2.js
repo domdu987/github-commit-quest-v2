@@ -305,6 +305,68 @@
     put(L.set, g);
   };
 
+  // rain: slanted streaks in the foreground layer, looped down (rain is drawn, never a noise bed in the mix)
+  Rup2.rain = (L, id, n = 140, o = {}) => { const r = rng(o.seed || 61); let g = `<g id="${id}-rain" opacity="${o.op ?? 0.55}">`;
+    for (let k = 0; k < n; k++) { const x = -200 + r() * 1500, y = -200 + r() * 2300, l = (o.len || 50) + r() * 60; g += `<path d="M${f(x)},${f(y)}l${f(-l * 0.25)},${f(l)}" stroke="#c8d8f0" stroke-width="${f((o.w || 1.4) + r() * 1.6)}" stroke-linecap="round"/>`; }
+    put(L.fg, g + `</g>`); };
+  Rup2.rainLife = (tl, id, t0, dur) => tl.fromTo(`#${id}-rain`, { x: 0, y: 0 }, { x: -120, y: 480, duration: 0.5, repeat: Math.ceil(dur / 0.5), ease: "none", immediateRender: false }, t0);
+  // a spirit house (ศาล) on a post with naga finials, garlands and incense
+  Rup2.shrine = (x, y, s = 1, t = (c) => c) => `<g transform="translate(${f(x)},${f(y)}) scale(${s})"><ellipse cx="0" cy="4" rx="90" ry="14" fill="#000" opacity=".3"/>
+    <path d="M-10,0V-170M10,0V-170" stroke="${t("#e8dcc4")}" stroke-width="12"/><rect x="-70" y="-180" width="140" height="14" fill="${t("#d8c8a8")}" ${ln(2)}/>
+    <rect x="-50" y="-270" width="100" height="90" fill="${t("#f2e6c8")}" ${ln(2.4)}/><rect x="-16" y="-250" width="32" height="70" fill="${t("#3a2414")}"/>
+    <path d="M-74,-268L0,-340L74,-268Z" fill="${t("#c8402a")}" ${ln(2.4)}/><path d="M-74,-268q-14,-6 -16,-24M74,-268q14,-6 16,-24" stroke="${t("#f0c040")}" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M0,-340q6,-20 -2,-34q14,8 12,22" stroke="${t("#f0c040")}" stroke-width="6" fill="none"/><path d="M-60,-180q60,30 120,0" stroke="#f09a20" stroke-width="10" fill="none" stroke-dasharray="2 8" stroke-linecap="round"/>
+    ${[-30, 30].map((dx) => `<path d="M${dx},-180v-30" stroke="#c8402a" stroke-width="3"/>`).join("")}</g>`;
+  // a distance marker on the bund
+  Rup2.marker = (x, y, s = 1, text = "100 ม.", t = (c) => c) => `<g transform="translate(${f(x)},${f(y)}) scale(${s})"><path d="M0,0V-130" stroke="${t("#5a3a1e")}" stroke-width="8"/>
+    <rect x="-56" y="-176" width="112" height="56" rx="6" fill="${t("#f2eee4")}" ${ln(2.4)}/><text x="0" y="-136" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="${t("#b8241e")}">${text}</text></g>`;
+  // the rice barn sinking upright into a new hole (EP.3): drawn over ยาย's yard where Rup.house puts the granary (granary:false there)
+  // a walk-in granary (เล้าข้าว) on stilts, scale S: the doorway (97×163 at S 2.2, sill at y-224) fits ยาย at s 0.23
+  Rup2.barn = (L, id, o = {}) => { const x = o.x ?? 916, y = o.y ?? 1240, t = o.tint || ((c) => c), r = rng(o.seed || 83), S = o.s ?? 2.2;
+    const cracks = Array.from({ length: 9 }, (_, k) => { const a = (k / 9) * Math.PI * 2 + r() * 0.3; let px = Math.cos(a) * 110, py = 6 + Math.sin(a) * 26, d = `M${f(px)},${f(py)}`;
+      for (let j = 0; j < 4; j++) { px += Math.cos(a) * (40 + r() * 30) + (r() - 0.5) * 30; py += Math.sin(a) * (12 + r() * 8) + (r() - 0.5) * 8; d += `L${f(px)},${f(py)}`; }
+      return `<path class="${id}-ck" d="${d}" stroke="${t("#1a0e08")}" stroke-width="${f(4 + r() * 3)}" fill="none" stroke-linecap="round" stroke-dasharray="400" stroke-dashoffset="400"/>`; }).join("");
+    put(L.set, `<g transform="translate(${x},${y})">
+      ${cracks}
+      <ellipse id="${id}-bh" cx="0" cy="6" rx="0" ry="0" fill="#0c0806"/>
+      <ellipse id="${id}-bw" cx="0" cy="10" rx="0" ry="0" fill="${t("#5a4430")}" opacity=".95"/>
+      ${[0, 1, 2].map((k) => `<ellipse class="${id}-rip" cx="0" cy="10" rx="20" ry="5" stroke="${t("#c8d0d8")}" stroke-width="3" fill="none" opacity="0"/>`).join("")}
+      <clipPath id="${id}-bc"><rect x="-320" y="-720" width="640" height="${o.clipY ?? 726}"/></clipPath>
+      <g clip-path="url(#${id}-bc)"><g id="${id}-barn"><g transform="scale(${S})"><rect x="-56" y="-90" width="10" height="90" fill="${t("#5a3a24")}"/><rect x="46" y="-90" width="10" height="90" fill="${t("#5a3a24")}"/>
+        <rect x="-64" y="-200" width="128" height="112" fill="${t("#a06a3a")}" ${ln(2.4)}/>${[0, 1, 2, 3, 4].map((k) => `<path d="M-64,${-190 + k * 22}H64" stroke="${t("#7a4a28")}" stroke-width="2"/>`).join("")}
+        <rect x="-22" y="-176" width="44" height="74" fill="${t("#1a0e08")}"/><path d="M-22,-102h44v-8l-44,-10z" fill="${t("#e8c060")}" opacity=".7"/>
+        <rect id="${id}-door" x="-22" y="-176" width="44" height="74" fill="${t("#6a3e22")}" ${ln(1.2)}/><circle cx="14" cy="-138" r="2.6" fill="${t("#2a1a10")}"/>
+        <path d="M-50,-90v-8M50,-90v-8" stroke="${t("#4a2c18")}" stroke-width="4"/><path d="M-30,-6L-20,-90M30,-6L20,-90M-24,-30H24M-26,-60H26" stroke="${t("#6a4a2c")}" stroke-width="4" opacity="${o.ladder === false ? 0 : 1}"/>
+        ${[0, 1, 2, 3, 4, 5].map((k) => `<path class="${id}-grain" d="M${-14 + k * 6},-104q2,6 0,12" stroke="${t("#e8c060")}" stroke-width="5" stroke-linecap="round" opacity="0"/>`).join("")}
+        <path id="${id}-roof" d="M-88,-196L0,-266L88,-196Z" fill="${t("#8a8a7a")}" ${ln(1.6)}/></g></g></g>
+      <path id="${id}-lip" d="M-250,8Q0,64 250,8" stroke="${t("#4a2c18")}" stroke-width="0" fill="none"/>
+      ${Array.from({ length: 14 }, (_, k) => `<circle class="${id}-clod" cx="${f(-200 + k * 30)}" cy="0" r="${f(6 + r() * 9)}" fill="${t(k % 2 ? "#4a3220" : "#6a4a30")}" opacity="0"/>`).join("")}
+      ${Array.from({ length: 14 }, (_, k) => `<circle class="${id}-dust" cx="${-230 + k * 36}" cy="${-10 - (k % 3) * 14}" r="${30 + (k % 4) * 14}" fill="${t("#9a8a70")}" opacity="0"/>`).join("")}</g>`); };
+  // lightning: one full-frame cold flash (in fg) — call Rup2.bolt(tl,id,t) per strike
+  Rup2.flashLayer = (L, id) => put(L.fg, `<rect id="${id}-fl" x="-600" y="-600" width="2400" height="3200" fill="#e8f0ff" opacity="0"/>`);
+  Rup2.bolt = (tl, id, t) => { tl.fromTo(`#${id}-fl`, { opacity: 0 }, { opacity: 0.75, duration: 0.04, immediateRender: false }, t);
+    tl.to(`#${id}-fl`, { opacity: 0.1, duration: 0.08 }, t + 0.06); tl.to(`#${id}-fl`, { opacity: 0.55, duration: 0.04 }, t + 0.16); tl.to(`#${id}-fl`, { opacity: 0, duration: 0.35, ease: "power2.out" }, t + 0.22); };
+  // the warning before the fall: cracks run out from the barn's feet, it creaks side to side, grain trickles from the door
+  Rup2.barnCreak = (tl, id, t0, dur) => {
+    document.querySelectorAll(`.${id}-ck`).forEach((el, k) => tl.fromTo(el, { attr: { "stroke-dashoffset": 400 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.9, ease: "power2.out", immediateRender: false }, t0 + (k % 5) * 0.12));
+    tl.fromTo(`#${id}-barn`, { rotation: 0, transformOrigin: "50% 100%" }, { rotation: 1.6, transformOrigin: "50% 100%", duration: 0.28, yoyo: true, repeat: Math.max(1, Math.floor(dur / 0.28) - 1), ease: "sine.inOut", immediateRender: false }, t0 + 0.2);
+    document.querySelectorAll(`.${id}-grain`).forEach((el, k) => tl.fromTo(el, { opacity: 0, y: 0 }, { opacity: 1, y: 70, duration: 0.5, repeat: Math.ceil(dur / 0.5), ease: "power1.in", immediateRender: false }, t0 + 0.4 + k * 0.08));
+  };
+  Rup2.barnSink = (tl, id, t0, dur, o = {}) => { const a = o.at ?? 0.4, d = o.sinkDur ?? 2.4;
+    document.querySelectorAll(`.${id}-ck`).forEach((el) => tl.set(el, { attr: { "stroke-dashoffset": 0 } }, t0));
+    tl.fromTo(`#${id}-bh`, { attr: { rx: 80, ry: 18 } }, { attr: { rx: 260, ry: 60 }, duration: 0.5, ease: "power3.out", immediateRender: false }, t0 + a);
+    tl.fromTo(`#${id}-barn`, { y: 0, rotation: 1.2, transformOrigin: "50% 100%" }, { y: 60, rotation: -3, transformOrigin: "50% 100%", duration: 0.35, ease: "power2.in", immediateRender: false }, t0 + a);
+    tl.to(`#${id}-barn`, { y: 760, rotation: -11, duration: d, ease: "power3.in" }, t0 + a + 0.45);
+    tl.fromTo(`#${id}-lip`, { attr: { "stroke-width": 0 } }, { attr: { "stroke-width": 20 }, duration: 0.3, immediateRender: false }, t0 + a + 0.2);
+    document.querySelectorAll(`.${id}-clod`).forEach((el, k) => { const dx = (k - 6.5) * 30, up = 200 + (k % 4) * 70;
+      tl.fromTo(el, { opacity: 1, x: 0, y: 0 }, { x: dx, y: -up, duration: 0.45, ease: "power2.out", immediateRender: false }, t0 + a + 0.15 + (k % 3) * 0.06);
+      tl.to(el, { y: 40, x: dx * 1.4, duration: 0.5, ease: "power2.in" }, t0 + a + 0.6 + (k % 3) * 0.06); tl.to(el, { opacity: 0, duration: 0.1 }, t0 + a + 1.05 + (k % 3) * 0.06); });
+    document.querySelectorAll(`.${id}-dust`).forEach((el, k) => tl.fromTo(el, { opacity: 0, y: 0, scale: 0.5, transformOrigin: "50% 50%" }, { opacity: 0.75, y: -220 - k * 12, scale: 2.2, transformOrigin: "50% 50%", duration: 1.8, ease: "power2.out", immediateRender: false }, t0 + a + 0.5 + k * 0.06));
+    const w = t0 + a + d + 0.2;
+    tl.fromTo(`#${id}-bw`, { attr: { rx: 0, ry: 0 } }, { attr: { rx: 244, ry: 54 }, duration: 0.6, ease: "power2.out", immediateRender: false }, w);
+    document.querySelectorAll(`.${id}-rip`).forEach((el, k) => tl.fromTo(el, { opacity: 0.8, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 0, scale: 6, transformOrigin: "50% 50%", duration: 0.9, repeat: 2, ease: "sine.out", immediateRender: false }, w + 0.2 + k * 0.3));
+  };
+
   Rup2.life2 = (tl, id, t0, dur) => {
     document.querySelectorAll(`.${id}-gw`).forEach((el, k) => tl.fromTo(el, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -64 }, duration: 0.4, repeat: Math.ceil(dur / 0.4), ease: "none", immediateRender: false }, t0 + k * 0.05));
     tl.fromTo(`#${id}-smoke`, { x: -60 }, { x: 80, duration: dur, ease: "sine.inOut", immediateRender: false }, t0);

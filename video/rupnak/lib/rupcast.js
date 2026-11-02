@@ -33,7 +33,7 @@
     <path d="M-48,-548C-54,-604 -24,-622 2,-622C30,-622 54,-604 49,-548Q44,-574 30,-584Q2,-594 -26,-584Q-42,-574 -48,-548Z" fill="${h.c}" ${ln()}/>
     <path d="M-36,-596Q2,-614 38,-596" stroke="${h.sh}" stroke-width="4" fill="none" stroke-linecap="round" opacity=".35"/>
     ${Array.from({ length: 12 }, (_, k) => `<circle cx="${-34 + k * 6}" cy="${-604 + Math.abs(k - 6) * 1.8}" r="1.2" fill="${h.s}" opacity=".6"/>`).join("")}`;
-  const nine = `<g transform="translate(0,-400)"><rect x="-40" y="-30" width="80" height="10" fill="#f4f2ee" opacity=".9"/><text x="0" y="28" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#f4f2ee" stroke="${LINE}" stroke-width="1.6">9</text></g>`;
+  const nine = `<g transform="translate(0,-400)"><rect x="-40" y="-30" width="80" height="10" fill="#f4f2ee" opacity=".9"/><g class="rk-txt"><text x="0" y="28" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#f4f2ee" stroke="${LINE}" stroke-width="1.6">9</text></g></g>`;
   C.tonkao = { v2: { fingers: true,
     skin: "#c88c5c", iris: "#2a1a10", blush: 0.6, headScale: 1.2, w: 0.92, limb: 0.92,
     hair: { c: "#17110d", s: "#060404", sh: "#5a4a40", front: (x) => buzz(x.hair) },
@@ -101,6 +101,10 @@
     <path d="M-40,40H40L32,110H-32Z" fill="#e8d050" ${ln(2.6)}/><ellipse cx="0" cy="40" rx="40" ry="10" fill="#7a4a24" ${ln(2)}/><ellipse cx="-10" cy="38" rx="14" ry="3" fill="#a8703a"/>
     <path d="M-34,44q-6,20 -2,40" stroke="#7a4a24" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
   const mega = () => `<g transform="translate(0,112) rotate(-90)"><path d="M-10,-14L70,-44V44L-10,14Z" fill="#e8e4dc" ${ln(2.4)}/><ellipse cx="70" cy="0" rx="10" ry="44" fill="#c83a2a" ${ln(2.2)}/><rect x="-26" y="-12" width="18" height="24" rx="4" fill="#3a3a40"/><path d="M-6,14v26" stroke="#3a3a40" stroke-width="8"/></g>`;
+  const note = () => `<g transform="translate(0,126) rotate(-14)"><rect x="-30" y="-6" width="60" height="44" fill="#fbf6ea" ${ln(2)}/><g class="rk-txt"><text x="0" y="26" text-anchor="middle" font-family="Mali, Kanit" font-weight="700" font-size="22" fill="#b8241e">427</text></g></g>`;
+  C.tonkaoNote = { v2: C.tonkao.v2, hand: note(), keep: "F" };
+  const leafProp = () => `<g transform="translate(0,124) rotate(-80)"><rect x="-6" y="-10" width="150" height="26" rx="6" fill="#dcbc82" ${ln(2)}/><rect x="-6" y="16" width="150" height="26" rx="6" fill="#d0ae6c" ${ln(2)}/><path d="M10,4h110M10,30h110" stroke="#3a2414" stroke-width="2"/></g>`;
+  C.yaiLeaf = { v2: C.yaiKham.v2, hand: leafProp(), keep: "F" };
   C.thongMega = { v2: C.thong.v2, hand: mega(), keep: "F" };
   C.mookPhone = { v2: C.mook.v2, hand: phoneLit(), keep: "F" };
   C.tonkaoPhone = { v2: C.tonkao.v2, hand: phoneLit(), keep: "F" };

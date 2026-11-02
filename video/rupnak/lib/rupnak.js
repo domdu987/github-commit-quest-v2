@@ -306,7 +306,7 @@
     const tint = (c) => night ? mix(c, "#1a2448", 0.62) : c;
     let g = `<rect x="-1600" y="1180" width="4400" height="1200" fill="${tint("#b89a6a")}"/>`;
     for (let k = 0; k < 160; k++) g += `<ellipse cx="${f(-400 + r() * 1900)}" cy="${f(1200 + r() * 800)}" rx="${f(4 + r() * 10)}" ry="${f(2 + r() * 4)}" fill="${tint(r() > 0.5 ? "#a88a5a" : "#cab088")}" opacity=".7"/>`;
-    g += Rup.house(560, 1240, 1.25, { w: 330, granary: true, wall: tint("#8a5a3a"), roof: tint("#7a8a96") });
+    g += Rup.house(560, 1240, 1.25, { w: 330, granary: o.granary !== false, wall: tint("#8a5a3a"), roof: tint("#7a8a96") });
     g += [[-120, 1300], [120, 1260], [1080, 1290]].map(([bx, by]) => `<g transform="translate(${bx},${by})"><path d="M0,0V-180" stroke="${tint("#6a8a3a")}" stroke-width="18"/>${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M0,${-170 + k * 8}q${(k % 2 ? 1 : -1) * 70},${-40 + k * 6} ${(k % 2 ? 1 : -1) * 150},${10 + k * 10}q${(k % 2 ? -1 : 1) * 70},-20 ${(k % 2 ? -1 : 1) * 150},${-10 - k * 10}Z" fill="${tint(k % 3 ? "#4a8a3a" : "#6aa84a")}" ${ln(2)}/>`).join("")}</g>`).join("");
     g += `<path d="M-200,1060Q240,1100 680,1062" stroke="${tint("#3a3028")}" stroke-width="2.4" fill="none"/>${[[-120, "#e8483a"], [20, "#3a8ad8"], [160, "#f0c040"], [320, "#fff"]].map(([x, c]) => `<path d="M${x},1074l-14,64h60l-14,-62" fill="${tint(c)}" ${ln(2)}/>`).join("")}`;
     // the cracks ring the house's posts

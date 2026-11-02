@@ -52,7 +52,7 @@
       <g clip-path="url(#${id}-cc${flip})" opacity=".9">${scales(-W / 2 - 10, -26, W + 20, 4, 30, "url(#ruGold)", "#c88a2a")}</g>
       <path d="M${-W / 2 - 10},-24H${W / 2 + 10}M${-W / 2 - 10},24H${W / 2 + 10}" stroke="#ffe9a0" stroke-width="2" opacity=".7"/>
       <path d="M${-W / 2 - 18},${flip ? 30 : -30}H${W / 2 + 18}" stroke="#fff" stroke-width="3" opacity=".22"/></g>`;
-    let g = `<g transform="translate(540,${y})"><g id="${id}">
+    let g = `<g transform="translate(${o.cx ?? 540},${y}) scale(${o.s ?? 1})"><g id="${id}">
       <path id="${id}-str" d="M-330,-360V-250M330,-360V-250" stroke="#c8302a" stroke-width="7"/>
       <path d="M-330,-250V${-128 + 3 * H - 22}M330,-250V${-128 + 3 * H - 22}" stroke="#a8241e" stroke-width="5"/>
       <g opacity=".3" transform="translate(14,22)"><rect x="${-W / 2 - 30}" y="-250" width="${W + 60}" height="${3 * H + 160}" rx="30" fill="#000" filter="url(#rpBlur16)"/></g>
