@@ -128,9 +128,17 @@
           <g transform="translate(540,520)"><path d="M-60,-140L60,-140L90,40L-90,40Z" fill="#b8c0cc" stroke="#1f1a17" stroke-width="6"/>
             <rect x="-330" y="20" width="700" height="250" rx="120" fill="#dfe4ec" stroke="#1f1a17" stroke-width="8"/><ellipse cx="370" cy="145" rx="60" ry="125" fill="#2a2e38" stroke="#1f1a17" stroke-width="8"/>
             <ellipse cx="370" cy="145" rx="36" ry="90" fill="#4a505c"/><rect x="-330" y="95" width="700" height="20" fill="#f4c430"/><ellipse cx="-330" cy="145" rx="40" ry="100" fill="#3a3f4c" stroke="#1f1a17" stroke-width="6"/></g>`);
-        if (o.fire) put(L.glow, `<g transform="translate(150,665)"><g transform="rotate(-90)">${Plane.flames(`${id}-ef`, 440, 1.4)}</g></g><circle cx="140" cy="665" r="360" fill="url(#plAmb)"/>
-          ${Plane.puffMk(`${id}-tr`, 80, 640, 14, "dark", 90)}`); };
-      Plane.underwingLife = (tl, id, t0, d) => { Plane.flicker(tl, `${id}-ef`, t0, d); Plane.puffs(tl, `${id}-tr`, t0, d, 14, { dx: -1300, dy: 160, per: 1.1, op: 0.9 }); };
+        // the intake's fan (seen through the lip, at an angle)
+        put(L.set, `<g transform="translate(910,665)">${Array.from({ length: 12 }, (_, k) => { const a = (k / 12) * Math.PI * 2; return `<path d="M0,0L${f1(Math.cos(a) * 28)},${f1(Math.sin(a) * 76)}" stroke="#8a929e" stroke-width="7"/>`; }).join("")}<circle r="14" fill="#c8ccd4" stroke="#1f1a17" stroke-width="3"/></g>`);
+        if (o.fire) { // jet fire: tongues streaming back from the exhaust (left), a tight glow, the black trail behind
+          const ex = 205, ey = 665, tongue = (k, L0, W0, c) => `<path class="${id}-jt" data-o="${ex} ${ey}" d="M${ex},${ey - W0}C${ex - L0 * 0.3},${ey - W0 * 1.3} ${ex - L0 * 0.7},${ey - W0 * 0.4 + k * 6} ${ex - L0},${ey + k * 8}C${ex - L0 * 0.7},${ey + W0 * 0.5 + k * 6} ${ex - L0 * 0.3},${ey + W0 * 1.2} ${ex},${ey + W0}Z" fill="url(#${c})"/>`;
+          put(L.glow, `<ellipse cx="${ex - 240}" cy="${ey}" rx="420" ry="150" fill="#ff6a1a" opacity=".42" filter="url(#plBlur24)"/>
+            <path d="M${ex - 300},${ey - 40}C${ex - 700},${ey - 90} ${ex - 1200},${ey - 30} ${ex - 1900},${ey + 120}L${ex - 1900},${ey + 330}C${ex - 1200},${ey + 170} ${ex - 700},${ey + 90} ${ex - 300},${ey + 50}Z" fill="#2a2628" opacity=".85" filter="url(#plBlur14)"/>
+            ${Plane.puffMk(`${id}-tr`, ex - 260, ey, 14, "dark", 80)}
+            <g id="${id}-jet">${tongue(-1, 980, 110, "plFlR")}${tongue(1, 880, 96, "plFlR")}${tongue(-1, 760, 80, "plFlO")}${tongue(1, 600, 62, "plFlO")}${tongue(0, 420, 44, "plFlY")}<ellipse cx="${ex - 20}" cy="${ey}" rx="60" ry="56" fill="#fff6d0"/></g>`); } };
+      Plane.underwingLife = (tl, id, t0, d) => { const n = Math.ceil(d / 0.09);
+        document.querySelectorAll(`.${id}-jt`).forEach((el, j) => { const o = el.getAttribute("data-o"); tl.fromTo(el, { scaleX: 0.86, scaleY: 1.1, svgOrigin: o }, { scaleX: 1.12, scaleY: 0.86, svgOrigin: o, duration: 0.08 + j * 0.02, yoyo: true, repeat: n, ease: "sine.inOut", immediateRender: false }, t0 + j * 0.015); });
+        Plane.puffs(tl, `${id}-tr`, t0, d, 14, { dx: -1500, dy: 180, per: 1.0, op: 0.95 }); };
       // the forward galley, fire reaching it from the break: stainless carts in their bays, ovens with little windows, the counter, a loose
       // trolley, the curtain to the cabin half drawn on the right
       Sets.galley = (L, o = {}) => { const id = o.id || "gl", top = PF - 700;
@@ -174,10 +182,10 @@
             Plane.flicker(tl, "h1wf", t0, d); Plane.puffs(tl, "h1ws", t0, d, 5, { dx: -60, dy: -60, per: 0.9, op: 0.9 }); tl.fromTo("#h1-wg", { opacity: 0.6 }, { opacity: 1, duration: 0.12, yoyo: true, repeat: 12, immediateRender: false }, t0);
             fireLight(tl, L, id, t0, d, 0.28); SU.flash(tl, L.light, t0 + 0.02, "#fff0c0", 0.35); } })],
         [C("hook", 0, 1), (d) => ({ set: "underwing", setOpts: { id: "h2", fire: true }, dark: 0, light: false, grade: { top: "#ffb080", bottom: "#1a1030", op: 0.1 },
-          cam: { keys: [{ t: 0, ...fr(380, 700, 0.62, 540, 900) }, { t: d, glide: d, ...fr(360, 720, 0.58, 540, 900) }] },
+          cam: { keys: [{ t: 0, ...fr(170, 700, 0.6, 540, 900) }, { t: d, glide: d, ...fr(140, 715, 0.56, 540, 900) }] },
           shake: (t) => ({ x: 10 * Math.sin(t * 61), y: 7 * Math.sin(t * 47), r: 0.8 * Math.sin(t * 33) }),
           fx(tl, id, t0, L) { Plane.underwingLife(tl, "h2", t0, d); fireFX(tl, L, id, t0, d, { ex0: -200, ex1: 500, ey0: 500, ey1: 900, embers: 30, haze: false });
-            SU.flash(tl, L.light, t0, "#fff4c0", 0.55); Plane.burst(tl, L.glow, 200, 660, t0 + 0.04, { n: 18, v: 380 }); } })],
+            SU.flash(tl, L.light, t0, "#fff4c0", 0.35); Plane.burst(tl, L.glow, 330, 600, t0 + 0.04, { n: 20, v: 620 }); Plane.burst(tl, L.glow, 260, 700, t0 + 0.35, { n: 10, v: 480 }); } })],
       ]);
       // ===== 2. the command: his hand closes on the camera-bag strap =====
       add("cmd", withDepth({ ...CAB("c1", "smoke", { smokeH: 260, noMasks: true }, 0.16), blur: { far: 3, set: 1.5, fg: 8 },
