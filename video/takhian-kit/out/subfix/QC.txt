@@ -1,0 +1,12 @@
+ต้นตะเคียนกลางนา EP.2 · ฉบับแก้ซับชนขอบ + เพลง m2 · lane C · 2 พ.ย. 2569
+picture: one full render (no TK_RANGE) of 965a8b6 with the caption fix (src/: lines.json + schedule.json n10/n14 split on spoken pauses, foot2.part fitCaps ≤980 px); libs md5 unchanged (takhian.js 877d2e98, hooks.js 1775e539 …)
+speak insert: frames 1591–1802 from 618743f spliced by stream copy at keyframes 1591/1803; the fixed render is pixel-identical to the old one in 1591–1802 (PSNR inf)
+edgecheck (0.25 s walk): EP.2 fixed → no edge problems · EP.1 full build of 618743f → no edge problems · old EP.2 build (only/again/speak) → 2 problems (52.16 s L-6,R1086; 88.14 s L5,R1075), fixed build same shots → none
+caption crops: caption-crops-52.0-53.6-88.5-89.8.png
+audio: AAC stream copied from takhian-ep2-HQ-m2.mp4 (6bc1663, sha bf4391fe…) · decoded PCM md5 identical to m2 (0353ec2e1b9a) · -14.2 LUFS · peak -3.0 dBFS
+HQ: EP2-takhian-tonkhian-klang-na-HQ-subfix.mp4 · 97,375,351 B · sha256 3e764932937a6bde16450dd382723cf3729d79aa976ac75314f5bc0852e1e1d5 · 7240 frames · High yuv420p 60/1 · v 120.666667 s · a 120.666 s (hq.sh 2-pass 6193 kbps)
+share: EP2-takhian-tonkhian-klang-na-share-subfix.mp4 · 66,045,711 B · sha256 1bcfd3eddf5a71546c8570eb7931ade1b1dfdaed4a2aa989362ddc1b2b785757 · 7240 frames
+hisscheck (skill version from 6bc1663) --vo ep2/vo_stem.wav: flatness 0.37 · pause HF -120.0 dBFS → PASS
+blackdetect: none · freezedetect (2 s): none
+musiccheck: NOT run here — the m2 music stem is not in the repo; the coordinator's README (takhian-music-v3) reports EP.2 PASS on full band and phone band; this file's audio is bit-identical to m2
+sheets: sheets/EP2-subfix-1fps-1..6.jpg (360x640 per frame)
