@@ -167,14 +167,17 @@
         fx: (tl, id, t0, L) => { const c = Tk.cab(), bt = Tk.backHead("ton", 250, 1150, 2.1, 1); put(L.light, `<g id="noo-g">${c.glass}</g>` + c.frame + `<g id="noo-f">${bt.g}<g transform="translate(470,820) rotate(-12)"><path d="M-40,60Q-46,0 -30,-20L-26,-80Q-20,-92 -12,-80L-8,-30L-4,-96Q4,-106 12,-94L12,-30L20,-90Q28,-98 34,-86L30,-24L44,-70Q52,-76 56,-66L44,10Q36,60 0,70Z" fill="#d39a6e" stroke="${INK}" stroke-width="5"/></g></g>`); Tk.slideDrops(tl, "#noo-g", t0, D("noo")); tl.fromTo("#noo-f", { x: -20 }, { x: 20, duration: 0.05, repeat: 9, yoyo: true, immediateRender: false }, t0 + vo("noo")); }, captions: caps("noo"),
         extra: (L, id) => {} });
       // 28 · the strike: light in the cloud, the bolt, the flash/silhouette; ลุง is thrown back, drops into the mud with a splash; the buffalo tears its rope and bolts; the shrine shakes
-      ADD("strike", { ...SC("st", { horizon: 1100, tree: { x: 640, y: 1500, s: 0.85 }, bolt: 1, ground: 1.2, flash: 1, buf: null, reflect: false }), light: FLASHL,
-        cam: push2("strike", fr(540, 1200, 0.85, 540, 960), fr(500, 1300, 0.95, 540, 960)), shake: kick(0.2, 1.2, 22),
-        actors: [P("lungPiak", 420, 1640, 0.85, "grab", "normal", "frown", { then: [{ t: 0.3, mode: "flinch", eyes: "wide", mouth: "scream" }, { t: 0.42, mode: "fallB", eyes: "closed", mouth: "o" }, { t: 0.97, mode: "supine", eyes: "closed", mouth: "flat" }] })],
+      ADD("strike", { ...SC("st", { horizon: 1100, tree: { x: 940, y: 1500, s: 0.85, shrine: false }, bolt: 1, ground: 1.2, flash: 1, buf: null, reflect: false }), light: FLASHL,
+        cam: push2("strike", fr(620, 1200, 0.82, 540, 960), fr(600, 1300, 0.9, 540, 960)), shake: kick(0.2, 1.2, 22),
+        // ลุง kneels at the buffalo's stake, three steps from the trunk (a clear gap of field between them); the bolt hits the tree and the
+        // current runs along the wet ground to his knees
+        actors: [P("lungPiak", 420, 1650, 0.85, "kReach", "normal", "frown", { then: [{ t: 0.3, mode: "flinch", eyes: "wide", mouth: "scream" }, { t: 0.42, mode: "fallB", eyes: "closed", mouth: "o" }, { t: 0.97, mode: "supine", eyes: "closed", mouth: "flat" }] })],
         captions: caps("strike"),
-        fx: (tl, id, t0, L) => { STRIKE(tl, L, t0, 0.25, { sil: 0.16, side: -1 });
-          put(L.set, `<g id="st-buf">${Tk.buffalo(840, 1520, 0.5, { flip: 1 })}</g><g id="st-spl" opacity="0">${SPLASH([[320, 1660], [420, 1650]])}</g>` + Tk.scorch(640, 1520, 0.8, 1));
-          tl.fromTo("#st-buf", { x: 0 }, { x: 900, duration: 1.6, ease: "power2.in", immediateRender: false }, t0 + 0.45); tl.fromTo("#st-spl", { opacity: 0 }, { opacity: 1, duration: 0.05, immediateRender: false }, t0 + 0.85); tl.to("#st-spl", { opacity: 0, duration: 0.6 }, t0 + 1.2);
-          tl.fromTo(`#${id} .tkSway`, { rotation: 0, svgOrigin: "640 1500" }, { rotation: 1.5, svgOrigin: "640 1500", duration: 0.06, yoyo: true, repeat: 7, immediateRender: false }, t0 + 0.27); } });
+        fx: (tl, id, t0, L) => { STRIKE(tl, L, t0, 0.25, { sil: 0.16, side: -1, to: [[430, 1652], [1160, 1700], [760, 1780]] });
+          put(L.set, `<path d="M525,1652v-120" stroke="${INK}" stroke-width="20" stroke-linecap="round"/><path d="M525,1652v-120" stroke="#8a6a4a" stroke-width="12" stroke-linecap="round"/><path d="M508,1560h34" stroke="#c8b070" stroke-width="10"/>
+            <g id="st-buf"><path d="M525,1560Q380,1640 230,1470" stroke="#c8b070" stroke-width="7" fill="none"/>${Tk.buffalo(130, 1520, 0.5, {})}</g><g id="st-spl" opacity="0">${SPLASH([[300, 1660], [420, 1650]])}</g>` + Tk.scorch(940, 1520, 0.8, 1));
+          tl.fromTo("#st-buf", { x: 0 }, { x: -900, duration: 1.6, ease: "power2.in", immediateRender: false }, t0 + 0.45); tl.fromTo("#st-spl", { opacity: 0 }, { opacity: 1, duration: 0.05, immediateRender: false }, t0 + 0.85); tl.to("#st-spl", { opacity: 0, duration: 0.6 }, t0 + 1.2);
+          tl.fromTo(`#${id} .tkSway`, { rotation: 0, svgOrigin: "940 1500" }, { rotation: 1.5, svgOrigin: "940 1500", duration: 0.06, yoyo: true, repeat: 7, immediateRender: false }, t0 + 0.27); } });
       // 29 · the family frozen at the field edge; ลุง small by the tree, scorched ground smoking
       ADD("taken", { ...SC("tk", { horizon: 950, tree: { x: 300, y: 1050, s: 0.45, burnt: 1 }, rain: 0.6 }),
         cam: push2("taken", fr(560, 1500, 1.1, 540, 1050), fr(560, 1500, 1.18, 540, 1050)),

@@ -47,8 +47,9 @@
             <g transform="translate(-40,330)">${handBack(SK.ploy, { curl: [0.6, 0.6, 0.6, 0.6], thumb: 0 }).split(INK).join(RLINE)}</g><g id="ph2t" transform="translate(-170,260) rotate(-40)"><rect x="-18" y="-80" width="36" height="110" rx="18" fill="#e0a880" stroke="#3a2622" stroke-width="3"/></g></g>`);
             tl.fromTo("#ph2t", { x: -30, y: 40 }, { x: 60, y: -110, duration: 0.5, ease: "power2.inOut", immediateRender: false }, t0 + 0.4); tl.fromTo("#ph2s", { opacity: 0 }, { opacity: 0.85, duration: 0.1, immediateRender: false }, t0 + 0.9); } }]);
       // 9 · top-down: the phone on speaker on the grass; her hands go to his chest
-      ADD("speak", { set: "tkCPR", setOpts: { id: "sp", phone: 1, rain: 0.5 }, dark: 0, light: TEAL, grade: GT,
-        cam: push2("speak", fr(900, 560, 1.6, 540, 700), fr(500, 1060, 0.92, 540, 980)), captions: caps("speak"), fx: (tl, id, t0, L) => TOPARMS(L, tl, t0 + 1.0, D("speak") - 1.0) });
+      // a close insert from above: the interlocked hands on the middle of his chest, the phone on speaker beside him on the grass, no body of the rescuer
+      ADD("speak", { set: "tkCPR", setOpts: { id: "sp", phone: 1, phoneAt: [840, 760, 12], rescuer: false, rain: 0.5 }, dark: 0, light: TEAL, grade: GT,
+        cam: push2("speak", fr(640, 1020, 1.9, 540, 900), fr(620, 1030, 2.1, 540, 900)), captions: caps("speak"), fx: (tl, id, t0, L) => TOPARMS(L, tl, t0 + 0.6, D("speak") - 0.6) });
       // 10 · side, medium: arms straight, perpendicular to his body — a thin glowing plumb line from her shoulders to the hands, a right-angle mark
       ADD("hands", { ...BUND("hd"), cam: CAMS("hands", 1.85, 1.95),
         actors: [PLOYCPR(), LUNGB("pressed")], captions: caps("hands"),
