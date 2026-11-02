@@ -51,4 +51,16 @@
         cam: { keys: [{ t: 0, ...fr(540, 1060, 1.0, 540, 1060) }] },
         actors: [A("yaiKham", 170, 600, 0.36, [{ t: 0, mode: "point", eyes: "normal", mouth: "o" }]), A("tonkao", 300, 610, 0.28, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
         fx(tl, id, t0, L) { Rup.cutLife(tl, "s3", t0, 3.2, { wt0: 940, wt1: 1240, at: { pump: 0, drop: 0.2, drain: 1.0, ravel: 1.6, fall: 9 } });
-          RupUI.palm(tl, L.light, t0 + 0.2, 3.0, { y: 290, active: 0 }); } });
+          RupUI.leaf(tl, L.light, t0 + 0.2, 3.0, { y: 420, active: 0 }); } });
+      // ---- F5 round 2: themed cards and icons (story-world objects) ----
+      add("r1", { set: "rupField", setOpts: { id: "r1", time: "night", hole: { x: 540, y: 1500, rx: 420, ry: 120 }, crowd: true, sign: false }, dark: 0.15, light: NIGHTL, grade: GNIGHT,
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 1.0, 540, 1300) }] }, actors: [],
+        fx(tl, id, t0, L) { RupUI.lotto(tl, L.light, t0 + 0.05, 3.1, { y: 760, nums: [9, 2, 7], text: "สามวันก่อน" }); } });
+      add("r2", { set: "rupYard", setOpts: { id: "r2", time: "dusk", muddy: 0.6 }, dark: 0.1, light: DAYL, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 1100) }] }, actors: [],
+        fx(tl, id, t0, L) { RupUI.leaf(tl, L.light, t0 + 0.05, 3.1, { y: 820, active: 1, done: [0], sign: true }); } });
+      add("r3", { set: "rupMural", setOpts: { id: "r3" }, dark: 0, light: false, grade: GDAY,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 560, 960) }] }, actors: [],
+        fx(tl, id, t0, L) { Rup.muralLife(tl, "r3", t0, 3.2);
+          L.light.insertAdjacentHTML("beforeend", RupUI.badge(220, 1640, "ring", 0.9, "r3b0") + RupUI.badge(540, 1640, "well", 0.9, "r3b1") + RupUI.badge(860, 1640, "far", 0.9, "r3b2"));
+          ["#r3b0", "#r3b1", "#r3b2"].forEach((b, k) => RupUI.badgeIn(tl, b, t0 + 0.1 + k * 0.15, 3)); } });
