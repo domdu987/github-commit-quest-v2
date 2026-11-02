@@ -13,6 +13,8 @@
       Rig.MODES.kneelPhone = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -30, faF: -150, uaB: 4, faB: -12, torso: 4, head: 6, bodyY: o.by ?? 150 });
       Rig.MODES.kneelReach = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -60 + 8 * Math.sin(u * 3), faF: -6, uaB: 6, faB: -10, torso: 10, head: 10, bodyY: o.by ?? 150 });
       Rig.MODES.cprF = (u, o) => { const k = push(u + (o.ph ?? 0)); return { ...Rig.MODES.crouch(u, o), uaF: -6, faF: 0, uaB: 6, faB: 0, torso: 14 + 4 * k, head: 20 + 3 * k, bodyY: (o.by ?? 190) + 14 * k }; };
+      // the right reaction in an open field: knees bent low, the head tucked, one forearm across the face, the other hand over the head, shaking
+      Rig.MODES.cower = (u, o) => ({ ...Rig.MODES.idle(u, o), thF: -48, shF: 78, thB: -30, shB: 70, bodyY: 92, torso: 10 + 1.5 * Math.sin(u * 40), head: 14, uaF: -96 + 3 * Math.sin(u * 37), faF: -118, uaB: -128, faB: -84 });
       Rig.MODES.flinch = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150 + 4 * Math.sin(u * 30), faF: -60, uaB: 140, faB: 70, torso: -8, head: -10 });
       Rig.MODES.pant = (u, o) => { const b = Math.sin(u * 8); return { ...Rig.MODES.idle(u, o), uaF: 20, faF: -20, uaB: -20, faB: 20, torso: 16 + 3 * b, head: 8 + 3 * b, bodyY: 10 + 3 * b }; };
       Rig.MODES.grab = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -80, faF: -4, uaB: 10, faB: -10, torso: 8, head: 4 });

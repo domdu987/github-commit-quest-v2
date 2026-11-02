@@ -73,18 +73,19 @@
         const x0 = cx + Math.cos(a0) * rr, y0 = cy + Math.sin(a0) * rr * 0.7, x1 = cx + Math.cos(a1) * rr, y1 = cy + Math.sin(a1) * rr * 0.7, am = (a0 + a1) / 2, xm = cx + Math.cos(am) * rj * 1.25, ym = cy + Math.sin(am) * rj * 0.9;
         d += (j ? "" : `M${f1(x0)},${f1(y0)}`) + `Q${f1(xm)},${f1(ym)} ${f1(x1)},${f1(y1)}`; } return `<path d="${d}Z" fill="${fill}"/>`; };
     // a leaf mass: lobes scattered inside a lumpy ellipse, dark under → lit top, rim light on the upper edge, sprays hanging below
-    const mass = (cx, cy, w, h, n) => { let m = ""; const pts = Array.from({ length: n }, () => { const a = r() * Math.PI * 2, d = Math.sqrt(r()); return [cx + Math.cos(a) * w * d, cy + Math.sin(a) * h * d * 0.85]; });
+    const mass = (cx, cy, w, h, n) => { let m = ""; const pts = Array.from({ length: n }, (_, k) => { const u = (k + 0.5) / n; return [cx - w + 2 * w * u + (r() - 0.5) * w * 0.12, cy - Math.sin(u * Math.PI) * h * 0.45 + (r() - 0.5) * h * 0.35]; });
+      m += `<path d="M${f1(cx - w - 30)},${f1(cy + h * 0.35)}Q${f1(cx - w * 0.3)},${f1(cy + h * 0.95)} ${f1(cx + w * 0.1)},${f1(cy + h * 0.7)}Q${f1(cx + w * 0.6)},${f1(cy + h * 0.95)} ${f1(cx + w + 30)},${f1(cy + h * 0.3)}Z" fill="${C0}"/>`;
       for (let k = 0; k < Math.round(n / 3); k++) { const sx = cx - w * 0.8 + r() * w * 1.6, sy = cy + h * (0.35 + r() * 0.3), len = 50 + r() * 110; m += `<path d="M${f1(sx)},${f1(sy)}q${f1(-10 + r() * 20)},${f1(len * 0.55)} ${f1(-14 + r() * 28)},${f1(len)}" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
         for (let q = 0; q < 4; q++) { const ly = sy + len * (0.35 + q * 0.2), lx = sx + (-6 + r() * 12); m += `<path d="M${f1(lx)},${f1(ly)}q${q % 2 ? 16 : -16},4 ${q % 2 ? 22 : -22},20q${q % 2 ? -14 : 14},-2 ${q % 2 ? -22 : 22},-20z" fill="${q % 2 ? C1 : C2}" stroke="${INK}" stroke-width="2"/>`; } }
-      pts.forEach(([x, y]) => { m += lobe(x, y + 26, 62 + r() * 30, C0); });
-      pts.forEach(([x, y]) => { m += lobe(x + (r() - 0.5) * 24, y, 52 + r() * 24, C1); });
-      pts.filter(([, y]) => y < cy + h * 0.3).forEach(([x, y]) => { m += lobe(x + (r() - 0.5) * 24, y - 28, 36 + r() * 16, C2); });
-      pts.filter(([, y]) => y < cy - h * 0.1).forEach(([x, y]) => { m += lobe(x + (r() - 0.5) * 20, y - 50, 20 + r() * 10, C3); m += `<path d="M${f1(x - 36)},${f1(y - 58)}Q${f1(x)},${f1(y - 92)} ${f1(x + 36)},${f1(y - 58)}" stroke="${rim}" stroke-width="5" fill="none" opacity=".55" stroke-linecap="round"/>`; });
+      const L0 = h * 0.8; pts.forEach(([x, y]) => { m += lobe(x, y + 20, L0 * (0.9 + r() * 0.4), C0); });
+      pts.forEach(([x, y]) => { m += lobe(x + (r() - 0.5) * 24, y, L0 * (0.75 + r() * 0.3), C1); });
+      pts.forEach(([x, y]) => { m += lobe(x + (r() - 0.5) * 24, y - L0 * 0.4, L0 * (0.5 + r() * 0.2), C2); });
+      pts.filter(() => r() < 0.75).forEach(([x, y]) => { m += lobe(x + (r() - 0.5) * 20, y - 50, 20 + r() * 10, C3); m += `<path d="M${f1(x - 36)},${f1(y - 58)}Q${f1(x)},${f1(y - 92)} ${f1(x + 36)},${f1(y - 58)}" stroke="${rim}" stroke-width="5" fill="none" opacity=".55" stroke-linecap="round"/>`; });
       for (let k = 0; k < n * 3; k++) { const lx = cx - w + r() * 2 * w, ly = cy - h * 0.6 + r() * h * 1.1; m += `<path d="M${f1(lx)},${f1(ly)}q6,-8 14,-4q-4,8 -14,4z" fill="${C3}" opacity=".7"/>`; }
       return m; };
     // big limbs first (they show in the gaps), then the masses, then two twigs crossing in front
     g += limb(-30, -1010, -300, -1000, -600, -1120, 42) + limb(30, -1090, 260, -1110, 500, -1290, 38) + limb(-10, -1180, -170, -1300, -270, -1480, 30) + limb(10, -1220, 60, -1420, 170, -1620, 26) + limb(40, -1150, 380, -1160, 640, -1160, 18);
-    [[-560, -1180, 330, 165, 22], [-300, -1090, 210, 110, 12], [480, -1330, 330, 175, 24], [250, -1220, 200, 100, 11], [700, -1200, 150, 95, 8], [-280, -1500, 290, 160, 18], [160, -1650, 320, 165, 20], [-60, -1560, 170, 110, 10]].forEach(([cx, cy, w, h, n]) => { g += mass(cx, cy, w, h, n); });
+    [[-430, -1150, 300, 120, 16], [330, -1185, 360, 125, 18], [-170, -1395, 300, 110, 15], [400, -1420, 170, 95, 9], [60, -1620, 300, 115, 15]].forEach(([cx, cy, w, h, n]) => { g += mass(cx, cy, w, h, n); });
     g += `<path d="M-300,-1000Q-420,-1060 -470,-1180" stroke="#4a3222" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M260,-1110Q330,-1170 330,-1260" stroke="#4a3222" stroke-width="9" fill="none" stroke-linecap="round"/>`;
     if (o.shrine !== false) g += Tk.shrine(-300, 10, 0.9);
     // fresh strike: a glowing split down the trunk + smoke + bark chips
@@ -582,11 +583,27 @@
     // her hair: pours from the head down the trunk and into the roots (black, with gold-line strands)
     g += `<path d="M-60,700Q-130,1000 -110,1300Q-160,1420 -250,1480H250Q160,1420 110,1300Q130,1000 60,700Z" fill="#120c0a"/>`;
     for (let k = 0; k < 9; k++) { const sx = -90 + k * 22; g += `<path d="M${sx},760Q${sx - 20 + k * 2},1100 ${sx * 2.2},1470" stroke="#3a2a22" stroke-width="3" fill="none"/>`; }
-    // her body: green สไบ with gold, pale arms
-    g += `<path d="M-56,820Q-80,960 -60,1060H60Q80,960 56,820Z" fill="#2a8a4a" stroke="#14100e" stroke-width="4"/><path d="M-56,840L56,980" stroke="#e8c048" stroke-width="12"/><path d="M-56,1040H60" stroke="#e8c048" stroke-width="8"/>`;
-    // the beckoning arm (her left), pivot at the shoulder (50,860)
-    g += `<g id="${id}-arm"><path d="M50,860Q150,880 230,980" stroke="#f4ece2" stroke-width="22" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M50,860Q150,880 230,980" stroke="#14100e" stroke-width="26" fill="none" opacity=".25"/>
-      <g transform="translate(232,984) rotate(30)"><ellipse rx="16" ry="12" fill="#f4ece2" stroke="#14100e" stroke-width="3"/>${[-10, -3, 4, 11].map((dx) => `<path d="M${dx},-6q4,-26 -6,-34" stroke="#f4ece2" stroke-width="6" stroke-linecap="round" fill="none"/>`).join("")}</g></g>`;
+    // her body in the Thai mural manner: pale skin (same as the face), shoulders and a narrow waist, a green สไบ across the chest from the left
+    // shoulder with gold edges and folds, a gold-patterned ผ้านุ่ง below; her right arm rests down her side
+    const SKC = "#f4ece2", INKC = "#14100e";
+    g += `<path d="M-14,826V852H14V826Z" fill="${SKC}" stroke="${INKC}" stroke-width="3"/>`;
+    g += `<path d="M-70,872Q-66,856 -16,850H16Q66,856 70,872Q64,920 44,958Q36,986 54,1010H-54Q-36,986 -44,958Q-64,920 -70,872Z" fill="${SKC}" stroke="${INKC}" stroke-width="4"/>`;
+    g += `<path d="M-54,1008Q-70,1060 -62,1110H62Q70,1060 54,1008Z" fill="#c8a040" stroke="${INKC}" stroke-width="4"/>${[0, 1, 2].map((k) => `<path d="M-56,${1030 + k * 26}H56" stroke="#8a2a1a" stroke-width="4" stroke-dasharray="8 6"/>`).join("")}<path d="M-6,1008V1110" stroke="#8a2a1a" stroke-width="5"/>`;
+    g += `<path d="M-72,866Q-30,850 2,870L62,990Q40,1006 20,1000L-60,900Z" fill="#2a8a4a" stroke="${INKC}" stroke-width="4"/><path d="M-70,870Q-30,856 4,874" stroke="#e8c048" stroke-width="6" fill="none"/><path d="M-58,902L22,1000" stroke="#e8c048" stroke-width="6"/>`;
+    g += `<path d="M-40,880Q-6,930 30,972M-22,872Q10,920 44,960" stroke="#1a6a3a" stroke-width="3" fill="none"/><path d="M-72,866Q-96,900 -88,960L-70,956Q-76,910 -60,880Z" fill="#2a8a4a" stroke="${INKC}" stroke-width="3"/>`;
+    g += `<path d="M-66,880Q-86,950 -74,1010" stroke="${INKC}" stroke-width="24" fill="none" stroke-linecap="round"/><path d="M-66,880Q-86,950 -74,1010" stroke="${SKC}" stroke-width="17" fill="none" stroke-linecap="round"/><path d="M-74,1008q-10,16 -2,30q8,-8 12,-22" fill="${SKC}" stroke="${INKC}" stroke-width="3"/>`;
+    g += `<path d="M-30,1000Q0,990 30,1000" stroke="#e8c048" stroke-width="6" fill="none"/>`;
+    // the beckoning arm (her left): shoulder #<id>-arm (svgOrigin 66 868) → elbow #<id>-fa (0 0 local) → wrist bent back #<id>-hd (0 0 local),
+    // fingers in จีบ: thumb and index nearly touching, the other three fanned and curled back
+    const seg = (x2, y2, w) => `<path d="M0,0L${x2},${y2}" stroke="${INKC}" stroke-width="${w + 6}" stroke-linecap="round"/><path d="M0,0L${x2},${y2}" stroke="${SKC}" stroke-width="${w}" stroke-linecap="round"/>`;
+    g += `<g id="${id}-arm"><g transform="translate(66,868)">${seg(78, 74, 18)}<g transform="translate(78,74)"><circle r="10" fill="${SKC}"/><g id="${id}-fa">${seg(52, -78, 15)}<g transform="translate(52,-78)"><g id="${id}-hd">
+      <path d="M0,0Q4,-14 16,-24Q30,-30 34,-20Q30,-6 14,4Z" fill="${SKC}" stroke="${INKC}" stroke-width="3"/>
+      <path d="M28,-24q14,-10 18,-26q-2,-8 -8,-4q-4,14 -16,22" fill="${SKC}" stroke="${INKC}" stroke-width="2.5"/>
+      <path d="M32,-18q18,-6 24,-22q-2,-8 -8,-3q-6,12 -20,17" fill="${SKC}" stroke="${INKC}" stroke-width="2.5"/>
+      <path d="M33,-11q18,0 26,-14q-2,-7 -8,-3q-8,9 -20,9" fill="${SKC}" stroke="${INKC}" stroke-width="2.5"/>
+      <path d="M18,-26q2,-14 12,-18q6,0 4,6q-6,4 -8,12" fill="${SKC}" stroke="${INKC}" stroke-width="2.5"/>
+      <path d="M8,-18q6,-16 18,-20q5,2 2,6q-8,4 -12,14" fill="${SKC}" stroke="${INKC}" stroke-width="2.5"/>
+      <path d="M-2,-2l6,-6" stroke="#e8c048" stroke-width="5"/></g></g></g></g></g></g>`;
     // the face: pale, almond eyes (closed lids → open), arched brows, red lips; ชฎา crown
     g += `<g transform="translate(0,770)"><path d="M-44,-10Q-46,46 0,62Q46,46 44,-10Q40,-56 0,-58Q-40,-56 -44,-10Z" fill="#f4ece2" stroke="#14100e" stroke-width="4"/>
       <path d="M-32,-14Q-20,-22 -8,-14M8,-14Q20,-22 32,-14" stroke="#14100e" stroke-width="3" fill="none"/>
@@ -595,8 +612,21 @@
       <path d="M-2,8q2,10 -4,14" stroke="#c8a890" stroke-width="2.5" fill="none"/><path d="M-10,32Q0,38 10,32Q0,28 -10,32Z" fill="#b8281a"/>
       <path d="M-46,-40Q-50,-80 -30,-96L-14,-150L0,-210L14,-150L30,-96Q50,-80 46,-40Q0,-64 -46,-40Z" fill="#e8c048" stroke="#5a3a14" stroke-width="4"/>${[-30, -14, 0, 14, 30].map((dx, k) => `<circle cx="${dx}" cy="${-60 - (2 - Math.abs(k - 2)) * 24}" r="5" fill="#a8281a"/>`).join("")}
       <path d="M-46,-40Q-60,-20 -56,20M46,-40Q60,-20 56,20" stroke="#e8c048" stroke-width="6" fill="none"/></g>`;
-    // mural villagers sheltering under her shade (the ones she takes fade into the hair)
-    [[-260, 1430, "#c84a2a"], [-200, 1450, "#2a4a8a"], [210, 1440, "#e8c048"], [270, 1430, "#3a7a3a"]].forEach(([px, py, c], k) => { g += `<g id="${id}-p${k}" transform="translate(${px},${py})"><circle cy="-74" r="15" fill="#e8c8a0" stroke="#14100e" stroke-width="3"/><path d="M-16,-90Q0,-104 16,-90" stroke="#14100e" stroke-width="6" fill="none"/><path d="M-18,-56L-24,0H24L18,-56Z" fill="${c}" stroke="#14100e" stroke-width="3"/><path d="M-12,0V22M12,0V22" stroke="#14100e" stroke-width="5"/></g>`; });
+    // mural villagers sheltering under her shade, in the mural manner: topknots, bare tan torsos, โจงกระเบน, one hand raised over the head
+    // against the rain; each has a hair tendril (#<id>-t<k>, dash-drawn) that reaches out from her hair and a loop (#<id>-w<k>) that wraps them
+    [[-262, 1440, "#a8281a", 1], [-196, 1452, "#2a4a8a", 1], [206, 1450, "#a8281a", -1], [268, 1440, "#3a6a3a", -1]].forEach(([px, py, c, d], k) => {
+      const TAN = "#e8c090", hx = d > 0 ? -104 : 104;
+      g += `<path id="${id}-t${k}" d="M${hx},${1300 + k * 8}Q${f1((hx + px) / 2 - d * 30)},${f1(1330 + k * 20)} ${px},${py - 52}" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" stroke="#120c0a" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+      g += `<g transform="translate(${px},${py})"><g id="${id}-p${k}">
+        <path d="M-6,-40L-12,-4M6,-40L12,-4" stroke="#14100e" stroke-width="9" stroke-linecap="round"/><path d="M-6,-40L-12,-4M6,-40L12,-4" stroke="${TAN}" stroke-width="5" stroke-linecap="round"/>
+        <path d="M-14,-66H14L16,-40Q0,-30 -16,-40Z" fill="${c}" stroke="#14100e" stroke-width="2.5"/><path d="M0,-62V-36" stroke="#e8c048" stroke-width="2"/>
+        <path d="M-12,-66Q-14,-90 0,-94Q14,-90 12,-66Z" fill="${TAN}" stroke="#14100e" stroke-width="2.5"/>
+        <path d="M${-d * 10},-88L${-d * 22},-70" stroke="#14100e" stroke-width="7" stroke-linecap="round"/><path d="M${-d * 10},-88L${-d * 22},-70" stroke="${TAN}" stroke-width="4" stroke-linecap="round"/>
+        <path d="M${d * 10},-88L${d * 20},-110L${d * 4},-124" stroke="#14100e" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M${d * 10},-88L${d * 20},-110L${d * 4},-124" stroke="${TAN}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <ellipse cx="${d * 2}" cy="-126" rx="12" ry="4" fill="${TAN}" stroke="#14100e" stroke-width="2"/>
+        <circle cy="-104" r="11" fill="${TAN}" stroke="#14100e" stroke-width="2.5"/><path d="M-6,-114Q0,-124 6,-114" fill="#14100e"/><circle cy="-117" r="4" fill="#14100e"/>
+        <path d="M${d * 3},-104h${d * 4}" stroke="#14100e" stroke-width="2"/>
+        <ellipse id="${id}-w${k}" cx="0" cy="-60" rx="20" ry="9" fill="none" stroke="#120c0a" stroke-width="7" opacity="0"/></g></g>`; });
     // mural ground line, age: cracks, water stains, worn fold lines
     g += `<path d="M-340,1480H340" stroke="#5a3a14" stroke-width="6"/>`;
     for (let k = 0; k < 18; k++) g += `<path d="M${f1(-330 + r() * 660)},${f1(70 + r() * 1400)}l${f1(-20 + r() * 40)},${f1(20 + r() * 50)}l${f1(-10 + r() * 20)},${f1(10 + r() * 30)}" stroke="#4a2a10" stroke-width="2" fill="none" opacity=".45"/>`;
@@ -681,14 +711,28 @@
     g += `<path d="M520,1920L540,1520" stroke="#0e1216" stroke-width="30"/><ellipse cx="542" cy="1510" rx="34" ry="28" fill="#2a2a2a" stroke="#0a0a0a" stroke-width="4"/>`;
     // ignition + hanging keys (pendulum about the ignition, #<id>-keys)
     g += `<circle cx="420" cy="1340" r="16" fill="#3a4650"/><g id="${id}-keys"><path d="M420,1340L424,1400" stroke="#b8bcc0" stroke-width="4"/><circle cx="424" cy="1412" r="14" fill="none" stroke="#c8ccd0" stroke-width="5"/><path d="M418,1424l-10,60l10,6l6,-14l-4,-6l6,-8Z" fill="#c8ccd0" stroke="#5a6068" stroke-width="2"/><path d="M432,1422l16,52l-10,4" fill="#d8b860" stroke="#7a6030" stroke-width="2"/><rect x="398" y="1420" width="22" height="40" rx="6" fill="#d8302a" transform="rotate(14 409 1440)"/></g>`;
-    // the two front seats: headrests and seatbacks, ยาย and พลอย turned toward each other; a cold lightning light over them (#<id>-lit, opacity 0)
-    const seat = (x) => `<path d="M${x - 170},1920L${x - 150},1600Q${x},1540 ${x + 150},1600L${x + 170},1920Z" fill="#0c1014"/>`;
-    g += seat(170) + seat(910);
-    g += `<path d="M0,1920Q20,1720 170,1705Q320,1720 340,1920Z" fill="#2a3a6a" stroke="#0a0e12" stroke-width="5"/><g>${Tk.winFace(170, 1620, 1.85, "#b98a64", "#d8d4cc", "yai", 1)}</g>`;
-    g += `<path d="M740,1920Q760,1720 910,1705Q1060,1720 1080,1920Z" fill="#e86a8a" stroke="#0a0e12" stroke-width="5"/><g>${Tk.winFace(910, 1625, 1.85, "#e0a880", "#1a120e", "ploy", -1)}</g>`;
-    g += `<g id="${id}-lit" opacity="0" style="mix-blend-mode:screen"><ellipse cx="170" cy="1640" rx="170" ry="190" fill="#9ab8ff" opacity=".55" filter="url(#skBlur24)"/><ellipse cx="910" cy="1645" rx="170" ry="190" fill="#9ab8ff" opacity=".55" filter="url(#skBlur24)"/><path d="M0,1160Q540,1110 1080,1160V1260H0Z" fill="#9ab8ff" opacity=".25"/></g>`;
-    g += `<rect width="1080" height="1920" fill="#000" opacity="0"/>`;
-    return { frame: g, glass: Tk.wetGlass(r, hole, [90, 1000, 300, 1160]), hole }; };
+    // seat backs (drawn over the actors, who sit in them seen from the back seat) and the lightning light: it comes in through the windshield,
+    // fades down the cab, and catches the top of the hat and the shoulders (#<id>-lit, opacity 0 → flash)
+    const seat = (x) => `<path d="M${x - 210},1920L${x - 190},1790Q${x},1740 ${x + 190},1790L${x + 210},1920Z" fill="#0c1014" stroke="#05070a" stroke-width="6"/><path d="M${x - 160},1800Q${x},1764 ${x + 160},1800" stroke="#1e262e" stroke-width="8" fill="none"/>`;
+    const seats = seat(200) + seat(880);
+    const lit = `<g id="${id}-lit" opacity="0" style="mix-blend-mode:screen"><defs><linearGradient id="${id}-lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8d8ff" stop-opacity=".9"/><stop offset=".35" stop-color="#9ab8ff" stop-opacity=".45"/><stop offset="1" stop-color="#9ab8ff" stop-opacity="0"/></linearGradient></defs><path d="M90,330Q540,270 990,330L1080,1920H0Z" fill="url(#${id}-lg)"/></g>`;
+    return { frame: g, glass: Tk.wetGlass(r, hole, [90, 1000, 300, 1160]), seats, lit, hole }; };
+  // a passenger seen from the back seat: shoulders, the back of the head, the face turned 3/4 toward `look` (±1: cheek, ear and an eye-corner show),
+  // kind "ploy" (black hair, long braid over the shoulder, pink shirt) | "yai" (white bun under the งอบ, indigo shirt). Returns { g, rim } — rim goes in the lightning group
+  Tk.backHead = (kind, x, y, s = 1, look = 1) => { const d = look, P = kind === "ploy", hair = P ? "#1a120e" : "#d8d4cc", shirt = P ? "#e86a8a" : "#2a3a6a", skin = P ? "#e0a880" : "#b98a64", O = `stroke="${INK}" stroke-width="4"`;
+    let g = `<g transform="translate(${x},${y}) scale(${s})">`;
+    g += `<path d="M-190,330L-176,190Q-150,110 -52,92L52,92Q150,110 176,190L190,330Z" fill="${shirt}" ${O}/>${P ? `<path d="M-52,92Q0,118 52,92" stroke="#d05a7a" stroke-width="10" fill="none"/>` : ""}`;
+    g += `<path d="M-30,96V54H30V96Z" fill="${skin}" ${O}/>`;
+    // the face edge on the turned side, then the ear, then the hair over the back of the head
+    g += `<path d="M${d * 20},-60Q${d * 82},-30 ${d * 70},34Q${d * 56},70 ${d * 20},74Z" fill="${skin}" ${O}/><path d="M${d * 72},-14l${d * 8},-4" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`;
+    g += `<ellipse cx="${d * 58}" cy="10" rx="13" ry="21" fill="${skin}" ${O}/>`;
+    g += `<path d="M${d * 40},-74Q${d * -10},-96 ${d * -62},-60Q${d * -84},-10 ${d * -60},50Q${d * -20},82 ${d * 30},70Q${d * 50},20 ${d * 44},-20Q${d * 56},-60 ${d * 40},-74Z" fill="${hair}" ${O}/>`;
+    g += `<path d="M${d * -40},-40Q${d * -50},10 ${d * -30},50M${d * -10},-60Q${d * -20},0 ${d * 0},60" stroke="${P ? "#3a2a22" : "#a8a49c"}" stroke-width="4" fill="none"/>`;
+    if (P) g += Array.from({ length: 6 }, (_, k) => `<ellipse cx="${d * (-20 - k * 6)}" cy="${70 + k * 30}" rx="17" ry="19" fill="${hair}" ${O}/>`).join("") + `<circle cx="${d * -56}" cy="236" r="9" fill="#e83a6a" ${O}/>`;
+    else g += `<ellipse cx="${d * -30}" cy="-20" rx="30" ry="24" fill="#ece8de" ${O}/><path d="M-170,-40Q0,-170 170,-40Q0,-16 -170,-40Z" fill="#c8a868" ${O}/><path d="M-110,-66Q0,-140 110,-66M-60,-96Q0,-138 60,-96" stroke="#a88a4a" stroke-width="5" fill="none"/><path d="M-170,-40Q0,-16 170,-40" stroke="#8a6a3a" stroke-width="6" fill="none"/>`;
+    g += `</g>`;
+    const rim = `<g transform="translate(${x},${y}) scale(${s})" fill="none" stroke="#e8f0ff" stroke-linecap="round">${P ? `<path d="M${d * -50},-62Q${d * 0},-92 ${d * 40},-74" stroke-width="8"/>` : `<path d="M-150,-52Q0,-160 150,-52" stroke-width="9"/>`}<path d="M-170,170Q-150,112 -60,96M60,96Q150,112 170,170" stroke-width="8"/></g>`;
+    return { g, rim }; };
   // ---------------------------------------------------------------- cast
   const { LINE } = Rig2;
   const C = Rig.CAST;

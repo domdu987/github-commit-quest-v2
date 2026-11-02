@@ -14,9 +14,9 @@
       // 2 · the command: the bolt hits the tree as they come under it — flash, silhouettes, they flinch apart
       ADD("cmd", { ...SC("c", { horizon: 1060, tree: { x: 300, y: 1210, s: 0.44 }, bolt: 1, ground: 0.5, rain: 0.8, bund: 760 }), light: FLASHL, grade: { top: "#bcd0ff", bottom: "#0a1a2a", op: 0.2 },
         cam: push2("cmd", fr(540, 1300, 1.0, 540, 960), fr(540, 1320, 1.04, 540, 960)), shake: kick(0.12, 0.9, 14),
-        actors: [P("lungPiak", 560, 1980, 1.05, "run", "wide", "scream", { flip: true, then: [{ t: 0.22, mode: "flinch", eyes: "wide", mouth: "scream" }] }),
-          P("ploy", 830, 2030, 1.1, "run", "wide", "scream", { flip: true, then: [{ t: 0.26, mode: "flinch", eyes: "wide", mouth: "scream" }] }),
-          P("ton", 1010, 1960, 0.82, "run", "wide", "scream", { flip: true, then: [{ t: 0.3, mode: "flinch", eyes: "wide", mouth: "scream" }] })],
+        actors: [P("lungPiak", 560, 1980, 1.05, "run", "wide", "scream", { flip: true, then: [{ t: 0.22, mode: "cower", eyes: "wide", mouth: "o" }] }),
+          P("ploy", 830, 2030, 1.1, "run", "wide", "scream", { flip: true, then: [{ t: 0.26, mode: "cower", eyes: "wide", mouth: "o" }] }),
+          P("ton", 1010, 1960, 0.82, "run", "wide", "scream", { flip: true, then: [{ t: 0.3, mode: "cower", eyes: "wide", mouth: "o" }] })],
         captions: caps("cmd"), fx: (tl, id, t0, L) => { STRIKE(tl, L, t0, 0.1, { to: [[130, 1270], [480, 1290], [300, 1340]] }); put(L.set, SPLASH([[560, 1986], [830, 2036], [1010, 1964]])); } });
       // 3 · ยายหอม grabs พลอย's wrist
       ADD("stop", { ...SC("s", { horizon: 1050, tree: { x: 920, y: 1150, s: 0.42, burnt: 0.6 } }),
@@ -57,9 +57,13 @@
           fx: (tl, id, t0) => { tl.set("#lc2-eyesC", { opacity: 1 }, t0); tl.set("#lc2-eyesC", { opacity: 0 }, t0 + 1.2); tl.fromTo("#lc2-eyesO", { opacity: 0 }, { opacity: 1, duration: 0.12, immediateRender: false }, t0 + 1.2); } }]);
       SPLITN("leg2", [2.4], [
         { ...CLOTHSET("ld", { open: 1 }), cam: push2("leg2", fr(700, 1400, 1.6, 540, 960), fr(660, 1520, 1.75, 540, 1000)),
-          fx: (tl, id, t0) => { tl.set("#ld-eyesO", { opacity: 1 }, t0); tl.fromTo("#ld-arm", { rotation: 0, svgOrigin: "50 860" }, { rotation: -16, svgOrigin: "50 860", duration: 0.6, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0); } },
+          fx: (tl, id, t0) => { tl.set("#ld-eyesO", { opacity: 1 }, t0); [0, 1].forEach((n) => { const a = t0 + 0.1 + n * 1.1; tl.to("#ld-fa", { rotation: -34, svgOrigin: "0 0", duration: 0.5, ease: "sine.inOut" }, a); tl.to("#ld-hd", { rotation: 46, svgOrigin: "0 0", duration: 0.45, ease: "sine.inOut" }, a + 0.08); tl.to("#ld-fa", { rotation: 0, svgOrigin: "0 0", duration: 0.55, ease: "sine.inOut" }, a + 0.52); tl.to("#ld-hd", { rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "sine.inOut" }, a + 0.55); }); } },
         { ...CLOTHSET("le", { open: 1 }), cam: push2("leg2", fr(540, 1700, 1.5, 540, 1100), fr(540, 1700, 1.65, 540, 1100)),
-          fx: (tl, id, t0) => { tl.set("#le-eyesO", { opacity: 1 }, t0); [0, 1, 2, 3].forEach((k) => tl.fromTo(`#le-p${k}`, { opacity: 1, y: 0 }, { opacity: 0, y: -60, duration: 0.6, ease: "power2.in", immediateRender: false }, t0 + 0.3 + k * 0.35)); } }]);
+          fx: (tl, id, t0) => { tl.set("#le-eyesO", { opacity: 1 }, t0); [0, 1, 2, 3].forEach((k) => { const a = t0 + 0.2 + k * 0.42, dx = k < 2 ? 70 + k * 20 : -70 - (3 - k) * 20;
+            tl.fromTo(`#le-t${k}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.22, ease: "power2.out", immediateRender: false }, a);
+            tl.fromTo(`#le-w${k}`, { opacity: 0 }, { opacity: 1, duration: 0.06, immediateRender: false }, a + 0.2);
+            tl.to(`#le-p${k}`, { x: dx, y: -110, scale: 0.55, opacity: 0, duration: 0.4, ease: "power2.in" }, a + 0.3);
+            tl.to(`#le-t${k}`, { attr: { "stroke-dashoffset": 1 }, duration: 0.4, ease: "power2.in" }, a + 0.3); }); } }]);
       // 11 · ลุงเปี๊ยก laughs it off — thunder booms on "ผมไม่หล่อ", he jumps
       ADD("joke", { ...SC("j", { horizon: 900, flash: 0.2 }), cam: push2("joke", fr(540, 1300, 1.9, 540, 1000), fr(540, 1300, 2.05, 540, 1000)), shake: kick(F("joke", 0, 1), F("joke", 0, 1) + 0.5, 10),
         actors: [P("lungPiak", 540, 1650, 1.0, "laugh", "closed", "laugh", { talk: TALK("joke", 0, "laugh"), then: [{ t: F("joke", 0, 1) + 0.05, mode: "jump", eyes: "wide", mouth: "scream" }] })], captions: caps("joke"),
@@ -132,11 +136,11 @@
           fx: (tl, id, t0, L) => put(L.set, `<rect x="-900" y="1500" width="2900" height="300" fill="#4a443a"/>` + Tk.pickup(560, 1640, 1.0, {}) + Tk.winFace(410, 1395, 0.95, "#b98a64", "#d8d4cc", "yai") + Tk.winFace(500, 1390, 0.95, "#e0a880", "#1a120e", "ploy") + Tk.winFace(590, 1405, 0.8, "#d39a6e", "#16100c", "ton") + Tk.dog(780, 1660, 0.6, {})) },
         { ...SC("tr2", { horizon: 1000, tree: { x: 360, y: 1080, s: 0.42 }, buf: { x: 520, y: 1090, s: 0.3, stake: [450, 1092], flip: 1 }, rain: 0.6, fgRice: false, _near: false, _mid: false }), cam: push2("truck", fr(540, 960, 1.0, 540, 900), fr(540, 960, 1.06, 540, 900)),
           actors: [P("lungPiak", 760, 1170, 0.36, "run", "normal", "laugh", { flip: true, moveTo: { x: 640, dur: D("truck") - 1.6 } })],
-          fx: (tl, id, t0, L) => { const c = Tk.cabIn({ id: "tr2c" }), d = D("truck") - 1.6; put(L.light, `<g id="tr2g">${c.glass}</g>` + c.frame);
+          fx: (tl, id, t0, L) => { const c = Tk.cabIn({ id: "tr2c" }), d = D("truck") - 1.6; put(L.set, `<g transform="translate(0,60)"><g id="tr2g">${c.glass}</g>${c.frame}</g>`); const by = Tk.backHead("yai", 200, 1470, 1.3, 1), bp = Tk.backHead("ploy", 880, 1490, 1.25, -1); put(L.light, `<g id="tr2c-ppl">${by.g}${bp.g}</g>` + c.seats + c.lit.replace("</g>", "") + `<g opacity=".9">${by.rim}${bp.rim}</g></g>`); tl.fromTo("#tr2c-ppl", { x: 0 }, { x: 6, duration: 0.5, yoyo: true, repeat: Math.ceil(d / 0.5), ease: "sine.inOut", immediateRender: false }, t0);
             tl.fromTo("#tr2c-wp", { rotation: 0, svgOrigin: "330 1170" }, { rotation: 62, svgOrigin: "330 1170", duration: 0.55, ease: "sine.inOut", yoyo: true, repeat: Math.ceil(d / 0.55), immediateRender: false }, t0);
             tl.fromTo("#tr2c-keys", { rotation: -9, svgOrigin: "420 1340" }, { rotation: 9, svgOrigin: "420 1340", duration: 0.42, ease: "sine.inOut", yoyo: true, repeat: Math.ceil(d / 0.42), immediateRender: false }, t0);
             Tk.slideDrops(tl, "#tr2g", t0, d);
-            [0.45, 1.5].forEach((t, k) => { StormFX.bolt(L, tl, t0 + t, { x0: 680 + k * 160, y0: 300, x1: 760 + k * 80, y1: 930, seed: 30 + k, w: 0.4, layer: "sky", flash: 0.3, cx: 760, cy: 380, cloudR: 0.6, leader: 0.06, lit: CUR.rain }); tl.set("#tr2c-lit", { opacity: 1 }, t0 + t + 0.06); tl.to("#tr2c-lit", { opacity: 0, duration: 0.4 }, t0 + t + 0.14); }); } }]);
+            [0.45, 1.5].forEach((t, k) => { StormFX.bolt(L, tl, t0 + t, { x0: 680 + k * 160, y0: 300, x1: 760 + k * 80, y1: 930, seed: 30 + k, w: 0.4, layer: "sky", flash: 0, cx: 760, cy: 380, cloudR: 0.6, leader: 0.06, lit: CUR.rain }); tl.set("#tr2c-lit", { opacity: 1 }, t0 + t + 0.06); tl.to("#tr2c-lit", { opacity: 0, duration: 0.4 }, t0 + t + 0.14); }); } }]);
       // 26 · ลุง jogs back toward the buffalo at the tree; the audience sees light crawling in the cloud above the crown first
       ADD("rope", { ...SC("rp", { horizon: 1000, tree: { x: 300, y: 1150, s: 0.55, burnt: 0.4 }, buf: { x: 520, y: 1160, s: 0.4, stake: [440, 1164], flip: 1 } }),
         cam: push2("rope", fr(560, 1350, 1.05, 540, 1000), fr(460, 1250, 1.12, 540, 1000)),
