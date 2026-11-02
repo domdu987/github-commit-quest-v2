@@ -6,6 +6,12 @@
       const rnd = (() => { let s = 99; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
       for (let i = 0; i * 0.083 < SCHED.total; i++) tl.set("#grain", { x: Math.round(-50 + rnd() * 50), y: Math.round(-50 + rnd() * 50) }, i * 0.083);
 
+      // captions never wider than 980 px (coordinator 2 พ.ย.: two lines ran to x≈1–1079): a fragment still too wide after the
+      // line breaks is set smaller; the box stays centred by the flex wrapper
+      const fitCaps = () => document.querySelectorAll(".capbox").forEach((c) => { c.style.fontSize = ""; const w = c.offsetWidth;
+        if (w > 980) c.style.fontSize = (parseFloat(getComputedStyle(c).fontSize) * 960 / w).toFixed(1) + "px"; });
+      fitCaps(); if (document.fonts) document.fonts.ready.then(fitCaps);
+
       // a render slice (RENDER-SPLIT.md): play only [a, b) of the episode — the clips are shifted by -a and the published timeline
       // scrubs the real one from a to b, so frame n of the slice is frame round(a*60)+n of the whole episode
       if (window.TK_RANGE) { const [a, b] = window.TK_RANGE;
