@@ -492,11 +492,12 @@
             // the over-the-shoulder insert: his hand on a seatback top in the foreground, sliding back seat by seat
             put(L.light, `<g transform="translate(0,1180)"><rect x="-40" y="0" width="1160" height="400" fill="#2d3f7c"/><path d="M-40,8H1120" stroke="#4a62a8" stroke-width="10"/><rect x="-40" y="-40" width="1160" height="60" rx="26" fill="#f4f0e6" stroke="${PL.ink}" stroke-width="5"/>${seatBackHand("k1-h", 700)}</g>`);
             tl.fromTo("#k1-h", { x: 760 }, { x: 360, duration: d, ease: "steps(3)", immediateRender: false }, t0); } })],
-        [C("count", 0, 1), (d) => ({ ...CAB("k2", "smoke", { noMasks: true, smokeH: 900 }, 0.16), blur: { far: 3, set: 1, fg: 10 },
-          cam: { keys: [{ t: 0, ...fr(ROW30 - 60, PF - 400, 2.2, 540, 960) }] },
+        [C("count", 0, 1), (d) => ({ ...CAB("k2", "smoke", { noMasks: true, noSheet: true, smokeH: 900 }, 0.12), blur: { far: 3, set: 1, fg: 10 }, smokeL: false, fgd: false,
+          light: { ...EMERG, rim: "#9dffc8", rimOp: 1 },
+          cam: { keys: [{ t: 0, ...fr(ROW30 + 20, PF - 230, 2.7, 540, 1000) }, { t: d, glide: d, ...fr(ROW30 + 20, PF - 230, 2.85, 540, 1000) }] },
           actors: [A("kiw", ROW30 + 60, PF - 30, KS, [{ t: 0, mode: "crouchLook", eyes: "normal", mouth: "flat" }], { flip: true })],
           fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "k2", t0, d, { chase: true }); SU.flash(tl, L.light, t0 + 0.05, "#9dffc8", 0.3);
-            exitBeam(L, DOORX - 6, PF - 572); } })],
+            exitBeam(L, DOORX - 6, PF - 572); smokeLayer(tl, L, t0, d, { y1: 380, y2: 460, top: -400, layer: L.light }); } })],
       ]);
       // ===== 18. the door opens (low angle) | down the slide | before the fire reaches him =====
       seg("out", [
