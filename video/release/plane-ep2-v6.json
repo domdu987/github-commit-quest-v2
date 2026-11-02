@@ -13,10 +13,10 @@
    "id": "plane-ep2-v6",
    "order": 2,
    "title": "เห็นควันอีกฝั่งอ่าวตอนติดเกาะ… อย่าเดินไปหามัน | รอดคนเดียว EP.2 ตอนจบ",
-   "status": "rendering",
+   "status": "rendered · waiting for coordinator full check + owner",
    "video_hq": "video/release/hq/plane-ep2-v6-HQ.mp4",
-   "video_hq_sha256": "",
-   "video_hq_bytes": 0,
+   "video_hq_sha256": "583785d46d52d5d280e1d67468affabf70c08f0bf400563ae3ec93b143de3ea5",
+   "video_hq_bytes": 90767932,
    "video_repo": "video/plane-ep2-v6/plane-ep2-v6-share.mp4",
    "cover": "video/plane-ep2-v6/cover.jpg",
    "caption": "ถ้าวันหนึ่ง… คุณเห็นควันอีกฝั่งอ่าว 🌫️🏝️ อย่าเดินไปหามัน\n\nน้ำหมดขวด หิวจนเกือบกินผลไม้ที่ไม่รู้จัก แล้วเฮลิคอปเตอร์ก็บินผ่านไป… ถ้าเป็นคุณจะทำยังไงให้มันเห็น? 🚁 ดูให้จบ แล้วคนท่อนหน้าหายไปไหน\n\nรอดคนเดียว EP.2/2 ตอนจบ\n#เอาตัวรอด #ติดเกาะ #เครื่องบินตก #รอดคนเดียว #RodMaiClub",
@@ -29,7 +29,18 @@
    ],
    "pinned_comment": "📚 แหล่งอ้างอิง (คำตรงจากคู่มือ)\n• \"by drinking seawater you deplete your body's water supply, which can cause death.\" — US Army FM 3-05.70 Survival (2002) Fig 6-2 หน้า 6-4\n• \"The milk from young, green (unripe) coconuts is a good thirst quencher. However, the milk from mature, brown, coconuts contains an oil that acts as a laxative.\" — FM 3-05.70 ข้อ 6-9 หน้า 6-7\n• \"Rainwater collected in clean containers or in plants is usually safe for drinking.\" / \"Keep the tarpaulin handy for catching water.\" — FM 21-76 Survival (1992) บทที่ 6 และ 16\n• \"Eat only those plants you can positively identify and you know are safe to eat.\" — FM 21-76 บทที่ 9\n• \"Do not eat shellfish that are not covered by water at high tide!\" / \"Steam, boil, or bake mollusks in the shell.\" — FM 21-76 บทที่ 8\n• \"On a sunny day, a mirror is your best signaling device. If you don't have a mirror, polish … a similar object that will reflect the sun's rays.\" — FM 21-76 บทที่ 19\n• \"If you practically smother a large fire with green leaves, moss, or a little water, the fire will produce white smoke.\" — FM 21-76 บทที่ 19\n• \"it's easier for search parties to find a downed aircraft than a person.\" — AOPA Safety Spotlight: Survival\nตัวละคร สายการบิน และเหตุการณ์เป็นเรื่องสมมติ",
    "duration_s": 119.99,
-   "audio_note": "เสียงเดียวกับ v5b (ไม่มีเสียงซ่า)"
+   "audio_note": "เสียงเดียวกับ v5b (ไม่มีเสียงซ่า)",
+   "qa": {
+    "size": "1080x1920",
+    "fps": 60,
+    "duration_s": 119.99,
+    "lufs": -14.2,
+    "peak_dbfs": -1.9,
+    "freezedetect": "none",
+    "hookcheck": "PASS (command at 2.2 s)",
+    "hook_matches": "EP.1 v5 last frame (lane D b1737cd)",
+    "seam": "frame 135 = 2.25 s, the hook→cmd cut"
+   }
   }
  ]
 }

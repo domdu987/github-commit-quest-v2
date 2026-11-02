@@ -1,0 +1,59 @@
+      // ---------- รอดคนเดียว EP.2 v5 (lane C): the survival props — water, food, fire, signals ----------
+      //   Isle.hand(W, deg, k, o)        คิว's hand + mustard sleeve as an insert (handAt from hands.part); o.hand curl options
+      //   Isle.bottle(id, level)         a clear water bottle; #id-w the water (scaleY from its bottom), #id-d a last drop
+      //   Isle.coconut(kind, o)          "green" | "brown" | "open" (green, the top cut off, white flesh, the water inside)
+      //   Isle.limpets(x, y, n, seed)    limpets and top-shells on wet rock (no mussels: FM 21-76 ch.8 warns of them in the tropics)
+      //   Isle.redBush(id, x, y, s)      a bush with glossy magenta-red fruit that is not a real, known fruit (a star calyx, a black eye)
+      //   Isle.sheet(id, x, y, w)        a plastic sheet from the wreck tied out between rocks, sagging with rain; drips into the bottle
+      //   Isle.firePit(id, x, y, s, o)   stones, sticks, flames (.isfl), embers; o.shells limpets on the embers; o.smoke "thin" | "white"
+      //   Isle.lighter(id)               a red disposable lighter with its flame (#id-f)
+      //   Isle.rainOver(L, id)           rain streaks over the frame (.israin)
+      (function () {
+        const { mk, crown } = Pop2, I = window.Isle, LN = "#241c22", ln = (w = 3) => `stroke="${LN}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+        const KSK = ["#e0b088", "#b88460", "#f4cca4"];
+        I.hand = (W, deg, k, o = {}) => { const len = 900, b = [W[0] - Math.sin((deg * Math.PI) / 180) * len, W[1] + Math.cos((deg * Math.PI) / 180) * len], m = [W[0] + (b[0] - W[0]) * 0.16, W[1] + (b[1] - W[1]) * 0.16];
+          return handAt(W, deg, k, KSK, { ...(o.hand || {}), mirror: o.mirror }) + `<path d="${limbD(b, m, 70 * k, 64 * k)}" fill="#d9a43a" stroke="${LN}" stroke-width="${f1(3 * k)}"/><path d="${limbD([m[0] + (b[0] - m[0]) * 0.02, m[1] + (b[1] - m[1]) * 0.02], [m[0] + (b[0] - m[0]) * 0.06, m[1] + (b[1] - m[1]) * 0.06], 72 * k, 72 * k)}" fill="#b8862a"/>`; };
+        I.bottle = (id, level = 0.5) => { const H = 300, top = -H;
+          return `<g id="${id}"><defs><clipPath id="${id}-cp"><path d="M-56,0V-210Q-56,-240 -30,-252V-290H30V-252Q56,-240 56,-210V0Z"/></clipPath></defs>
+            <path d="M-56,0V-210Q-56,-240 -30,-252V-290H30V-252Q56,-240 56,-210V0Z" fill="#dff2ff" opacity=".35"/>
+            <g clip-path="url(#${id}-cp)"><g id="${id}-w" transform="translate(0,0)"><rect x="-60" y="${f1(-H * 0.86 * level)}" width="120" height="${f1(H * 0.86 * level + 2)}" fill="#7ac8f0" opacity=".75"/><path d="M-60,${f1(-H * 0.86 * level)}h120" stroke="#fff" stroke-width="5" opacity=".8"/></g></g>
+            <path d="M-56,0V-210Q-56,-240 -30,-252V-290H30V-252Q56,-240 56,-210V0Z" fill="none" ${ln(4)}/>
+            <rect x="-34" y="-322" width="68" height="36" rx="6" fill="#2f6fd0" ${ln(3)}/><rect x="-57" y="-170" width="114" height="70" fill="#f4f4f0" ${ln(2)}/><text y="-124" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="26" fill="#2f6fd0">น้ำดื่ม</text>
+            <path d="M-40,-220V-30" stroke="#fff" stroke-width="8" opacity=".55" stroke-linecap="round"/><circle id="${id}-d" cx="0" cy="-330" r="9" fill="#7ac8f0" opacity="0"/></g>`; };
+        I.coconut = (kind, o = {}) => { const s = o.s ?? 1, green = kind !== "brown";
+          let g = `<g transform="scale(${s})"><ellipse cx="6" cy="64" rx="70" ry="14" fill="#000" opacity=".25"/><path d="M0,-70Q62,-66 66,0Q62,62 0,66Q-62,62 -66,0Q-62,-66 0,-70Z" fill="${green ? "#6aa83a" : "#8a5a2a"}" ${ln(4)}/>
+            <path d="M-40,-40Q-20,-58 10,-56" stroke="${green ? "#a8d870" : "#c08a50"}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M30,10Q20,50 -10,58" stroke="${green ? "#3a7a2a" : "#5a3a1a"}" stroke-width="10" fill="none" opacity=".6"/>`;
+          if (!green) g += Array.from({ length: 9 }, (_, k) => `<path d="M${-50 + k * 12},${-40 + (k % 3) * 30}l14,22" stroke="#5a3a1a" stroke-width="3"/>`).join("");
+          if (kind === "open") g += `<ellipse cx="0" cy="-58" rx="40" ry="14" fill="#fffaf0" ${ln(3)}/><ellipse cx="0" cy="-56" rx="28" ry="9" fill="#cfe8f0"/>`;
+          return g + `</g>`; };
+        I.limpets = (x, y, n = 9, seed = 5) => { const r = mk(seed); let g = "";
+          for (let k = 0; k < n; k++) { const px = x + (r() - 0.5) * 360, py = y + (r() - 0.5) * 90, w = 26 + r() * 18;
+            g += r() < 0.6 ? `<g transform="translate(${f1(px)},${f1(py)})"><ellipse cy="4" rx="${f1(w)}" ry="${f1(w * 0.3)}" fill="#000" opacity=".25"/><path d="M${f1(-w)},0Q0,${f1(-w * 1.1)} ${f1(w)},0Z" fill="#b8a890" ${ln(2.5)}/>${[-0.5, -0.2, 0.15, 0.45].map((u) => `<path d="M0,${f1(-w * 0.55)}L${f1(u * w * 1.8)},0" stroke="#7a6a58" stroke-width="2"/>`).join("")}<circle cy="${f1(-w * 0.55)}" r="3" fill="#e8dcc8"/></g>`
+              : `<g transform="translate(${f1(px)},${f1(py)}) rotate(${f1((r() - 0.5) * 40)})"><path d="M${f1(-w * 0.6)},0L0,${f1(-w * 1.3)}L${f1(w * 0.6)},0Z" fill="#8a7a90" ${ln(2.5)}/>${[0.3, 0.6, 0.9].map((u) => `<path d="M${f1(-w * 0.6 * (1 - u * 0.7))},${f1(-w * 1.3 * u * 0.75)}h${f1(w * 1.2 * (1 - u * 0.7))}" stroke="#5a4a62" stroke-width="2"/>`).join("")}</g>`; }
+          return g; };
+        I.redBush = (id, x, y, s = 1) => { const r = mk(77); let g = `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><ellipse cy="10" rx="230" ry="30" fill="#000" opacity=".25"/>`;
+          g += crown(0, -140, 190, r, ["#1e4a2a", "#2f6a34", "#6aa848"], 14);
+          for (let k = 0; k < 7; k++) { const cx = -130 + k * 44 + (r() - 0.5) * 30, cy = -150 + (r() - 0.5) * 140; g += `<g class="isfr" transform="translate(${f1(cx)},${f1(cy)})">${[[0, 0], [16, 10], [-14, 12], [4, 22]].map(([a, b]) => `<circle cx="${a}" cy="${b}" r="15" fill="#e2185a" ${ln(2.5)}/><circle cx="${a - 5}" cy="${b - 5}" r="5" fill="#fff" opacity=".75"/><circle cx="${a + 4}" cy="${b + 5}" r="2.6" fill="#1a0a10"/>`).join("")}<path d="M0,-14l5,-12l5,12l12,-2l-10,8" fill="#3a7a2a" ${ln(1.5)}/></g>`; }
+          return g + `</g>`; };
+        I.sheet = (id, x, y, w = 520) => `<g id="${id}" transform="translate(${x},${y})"><path d="M${-w / 2},-60L${w / 2},-80L${w / 2 - 30},40Q0,120 ${-w / 2 + 20},30Z" fill="#cfe4f4" opacity=".55" ${ln(3)}/>
+            <path d="M${-w / 2 + 40},-40Q0,60 ${w / 2 - 50},-56" stroke="#fff" stroke-width="6" opacity=".6" fill="none"/><ellipse id="${id}-pool" cx="0" cy="62" rx="${f1(w * 0.18)}" ry="18" fill="#7ac8f0" opacity=".8"/>
+            ${[[-w / 2, -60], [w / 2, -80], [w / 2 - 30, 40], [-w / 2 + 20, 30]].map(([a, b]) => `<path d="M${a},${b}l${a < 0 ? -40 : 40},${b < 0 ? -10 : 40}" stroke="#c8a870" stroke-width="5"/>`).join("")}
+            <g id="${id}-drip">${Array.from({ length: 4 }, (_, k) => `<circle class="isdrip" cx="0" cy="${92 + k * 30}" r="7" fill="#9ad8f8"/>`).join("")}</g></g>`;
+        I.firePit = (id, x, y, s = 1, o = {}) => { let g = `<g id="${id}" transform="translate(${x},${y}) scale(${s})"><ellipse rx="210" ry="52" fill="#000" opacity=".25"/>`;
+          for (let k = 0; k < 11; k++) { const a = (k / 11) * Math.PI * 2; g += `<ellipse cx="${f1(Math.cos(a) * 160)}" cy="${f1(Math.sin(a) * 40)}" rx="30" ry="20" fill="#5a5664" ${ln(3)}/>`; }
+          g += `<ellipse rx="130" ry="30" fill="#2a2420"/>` + Array.from({ length: 8 }, (_, k) => `<path d="M${-100 + k * 26},${-4 + (k % 3) * 6}l${46 - (k % 4) * 24},-${24 + (k % 3) * 8}" stroke="#4a3220" stroke-width="13" stroke-linecap="round"/>`).join("");
+          g += `<g class="isemb">${Array.from({ length: 9 }, (_, k) => `<circle cx="${-80 + k * 20}" cy="${-2 + (k % 2) * 6}" r="${4 + (k % 3)}" fill="#ff7a2a"/>`).join("")}</g>`;
+          if (o.shells) g += I.limpets(0, -6, 6, 9).replace(/#b8a890/g, "#d8b890");
+          if (o.flames !== false) g += `<g class="isfl" id="${id}-fl"><ellipse cy="-60" rx="120" ry="90" fill="url(#isFireG)" opacity=".8"/>${[[-40, 0, 1], [0, -6, 1.5], [40, 0, 1.1]].map(([dx, dy, q]) => `<path d="M${dx - 26 * q},${dy}q${26 * q},${-110 * q} ${26 * q},${-150 * q}q10,${60 * q} ${26 * q},${150 * q}z" fill="#ff9a30"/><path d="M${dx - 12 * q},${dy}q${12 * q},${-60 * q} ${12 * q},${-84 * q}q5,${34 * q} ${12 * q},${84 * q}z" fill="#fff0b0"/>`).join("")}</g>`;
+          if (o.smoke === "thin") g += Array.from({ length: 7 }, (_, k) => `<ellipse class="fssm" cx="${k * 10 + Math.sin(k) * 10}" cy="${-170 - k * 90}" rx="${16 + k * 6}" ry="${14 + k * 5}" fill="#c8c8cc" opacity="${f1(0.32 - k * 0.04)}"/>`).join("");
+          if (o.smoke === "white") g += `<g id="${id}-ws">${Array.from({ length: 16 }, (_, k) => { const u = k / 15, R = 50 + u * 230; return `<g class="isplm" data-o="${f1(u * 160)} ${f1(-180 - u * 1700)}"><circle cx="${f1(u * 160 + Math.sin(k * 1.3) * 30)}" cy="${f1(-180 - u * 1700)}" r="${f1(R)}" fill="#f4f6f8" opacity="${f1(0.92 - u * 0.25)}"/><circle cx="${f1(u * 160 - R * 0.25)}" cy="${f1(-200 - u * 1700)}" r="${f1(R * 0.6)}" fill="#fff" opacity=".7"/></g>`; }).join("")}</g>`;
+          return g + `</g>`; };
+        I.lighter = (id) => `<g id="${id}"><rect x="-26" y="-20" width="52" height="120" rx="10" fill="#d8312a" ${ln(3)}/><rect x="-28" y="-44" width="56" height="28" rx="4" fill="#c8ccd4" ${ln(3)}/><circle cx="12" cy="-30" r="10" fill="#7a7e88" ${ln(2)}/>
+          <rect x="-18" y="0" width="10" height="80" rx="4" fill="#fff" opacity=".35"/><g id="${id}-f" class="isfl"><path d="M-12,-46q12,-50 12,-70q4,24 12,70z" fill="#ffb040"/><path d="M-5,-46q5,-26 5,-36q2,12 5,36z" fill="#fff4c0"/><circle cy="-70" r="40" fill="url(#isFireG)" opacity=".7"/></g></g>`;
+        I.rainOver = (L, id) => put(L.light, `<g id="${id}-rain" style="mix-blend-mode:screen">${Array.from({ length: 140 }, (_, k) => `<path class="israin" d="M${(k * 137) % 1200 - 60},${(k * 211) % 2100 - 200}l-24,70" stroke="#cfe0ff" stroke-width="3" opacity=".45"/>`).join("")}</g>`);
+        const Q = (sel) => Array.from(document.querySelectorAll(sel)).filter((e) => { if (e.dataset.lf3) return false; e.dataset.lf3 = 1; return true; });
+        I.life3 = (tl, t0, dur) => { const R = (p) => Math.ceil(dur / p) + 1;
+          Q(".israin").forEach((e, k) => tl.fromTo(e, { y: -200, x: 70 }, { y: 0, x: 0, duration: 0.28, repeat: R(0.28), ease: "none", immediateRender: false }, t0 - (k % 9) * 0.03));
+          Q(".isdrip").forEach((e, k) => tl.fromTo(e, { y: 0, opacity: 1 }, { y: 120, opacity: 0, duration: 0.5, repeat: R(0.5), ease: "power1.in", immediateRender: false }, t0 + k * 0.12));
+          Q(".isfr").forEach((e, k) => tl.fromTo(e, { rotation: -4, transformOrigin: "50% 0%" }, { rotation: 4, transformOrigin: "50% 0%", duration: 1.1, repeat: R(1.1), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + k * 0.1)); };
+      })();
