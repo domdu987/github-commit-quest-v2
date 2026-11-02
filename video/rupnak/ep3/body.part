@@ -87,7 +87,7 @@
       // ---------- 11-12. cutaway: rain soaks the topsoil heavy; the cave roof sags ----------
       add("know1", { set: "rupCut2", setOpts: { id: "k1", stage: 1, wt0: 1240, pumpY: 1480 }, dark: 0, light: false, grade: GRAIN,
         cam: TWO("know1", 2.2, [30, 40, 1.15], [30, 40, 1.2], [-60, 0, 1.6], [-60, 0, 1.66]),
-        captions: caps("know1"), fx(tl, id, t0, L) { Rup2.rain(L, "k1", 120); Rup2.rainLife(tl, "k1", t0, D("know1"));
+        captions: caps("know1"), fx(tl, id, t0, L) { Rup2.rain(L, "k1", 40, { op: 0.25 }); Rup2.rainLife(tl, "k1", t0, D("know1"));
           put(L.set, `<rect id="k1-soak" x="40" y="640" width="960" height="290" fill="#1a0e06" opacity="0"/>`); tl.to("#k1-soak", { opacity: 0.45, duration: 2.6, ease: "power1.in", immediateRender: false }, t0 + 0.5); SRC(L, tl, t0 + 0.3, D("know1") - 0.4, "ที่มา: ไทยพีบีเอส · USGS"); } });
       add("know2", { set: "rupCut2", setOpts: { id: "k2", stage: 1, wt0: 1240, pumpY: 1480 }, dark: 0, light: false, grade: GRAIN, shake: SHAKE(2.0, 6, 0.6),
         cam: PUSH("know2", 1.5, 1.7, -60, 160),
@@ -95,20 +95,25 @@
       // ---------- 13. night: the first rain of the year ----------
       add("rain", { set: "rupYard", setOpts: { id: "ra", time: "night", muddy: 0.95, granary: false }, dark: 0.2, light: MOONL, grade: GNIGHT,
         cam: TWO("rain", 1.7, [0, 0, 1.0], [0, 40, 1.04], [370, 60, 1.8], [370, 60, 1.9]),
-        captions: caps("rain"), fx(tl, id, t0, L) { Rup2.barn(L, "rab"); Rup2.rain(L, "ra", 280, { op: 0.8, w: 2, len: 70 }); Rup2.rainLife(tl, "ra", t0, D("rain"));
-          Rup2.flashLayer(L, "ra"); Rup2.bolt(tl, "ra", t0 + 0.35); Rup2.bolt(tl, "ra", t0 + 2.55); Rup2.barnCreak(tl, "rab", t0 + 1.6, D("rain") - 1.6); } });
+        captions: caps("rain"), fx(tl, id, t0, L) { Rup2.barn(L, "rab"); Rup2.rain(L, "ra", 80, { op: 0.32 }); Rup2.rainLife(tl, "ra", t0, D("rain"));
+          Rup2.rainVeil(L, "ra"); Rup2.veilLife(tl, "ra", t0, D("rain")); Rup2.splashes(L, "ra", 16); Rup2.splashLife(tl, "ra", t0, D("rain"));
+          const dp = [[726, 812, 1236], [1104, 812, 1236], [800, 790, 1236]]; Rup2.drips(L, "ra", dp); Rup2.dripLife(tl, "ra", t0, D("rain"), dp);
+          Rup2.barnCreak(tl, "rab", t0 + 1.6, D("rain") - 1.6); } });
       // ---------- 14. the barn sinks upright into a new hole; everyone safe at the rope ----------
       add("sink", { set: "rupYard", setOpts: { id: "si", time: "night", muddy: 0.95, granary: false }, dark: 0.15, light: MOONL, grade: GNIGHT, shake: SHAKE(0.3, 14, 2.8),
         cam: TWO("sink", 2.2, [370, 40, 1.6], [370, 60, 1.65], [200, 120, 1.15], [180, 120, 1.2]),
         actors: [A("yaiKham", 340, 1560, 0.42, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "o" }]), A("mook", 450, 1580, 0.44, [{ t: 0, mode: "stopArm", eyes: "wide", mouth: "o" }, { t: 1.4, mode: "point", eyes: "wide", mouth: "o" }]), A("tonkao", 400, 1650, 0.4, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o" }])],
-        captions: caps("sink"), fx(tl, id, t0, L) { Rup2.barn(L, "sib"); Rup2.barnSink(tl, "sib", t0, D("sink"), { at: 0.15, sinkDur: 2.1 }); Rup2.rain(L, "si", 280, { op: 0.8, w: 2, len: 70 });
+        captions: caps("sink"), fx(tl, id, t0, L) { Rup2.barn(L, "sib"); Rup2.barnSink(tl, "sib", t0, D("sink"), { at: 0.15, sinkDur: 2.1 }); Rup2.rain(L, "si", 80, { op: 0.32 });
           Rup2.flashLayer(L, "si"); Rup2.bolt(tl, "si", t0 + 0.08); Rup2.rainLife(tl, "si", t0, D("sink"));
+          Rup2.rainVeil(L, "si"); Rup2.veilLife(tl, "si", t0, D("sink")); Rup2.splashes(L, "si", 16); Rup2.splashLife(tl, "si", t0, D("sink"));
           put(L.set, `<path d="M160,1500Q380,1520 600,1490" stroke="#d8241e" stroke-width="6" fill="none"/>${[160, 380, 600].map((x) => `<path d="M${x},1510v-80" stroke="#5a3a1e" stroke-width="9"/>`).join("")}`); } });
       // ---------- 15. ยาย's loss; ต้นข้าว takes her hand ----------
       add("loss", { set: "rupYard", setOpts: { id: "lo", time: "night", muddy: 0.95, granary: false }, dark: 0.2, light: MOONL, grade: GNIGHT, blur: { far: 3, mid: 3, set: 2 },
         cam: TWO("loss", vo("loss", 1) - 0.1, [0, 480, 2.1], [0, 480, 2.2], [80, 440, 1.6], [80, 440, 1.7]),
         actors: [A("yaiKham", 500, 1700, 0.7, [{ t: 0, mode: "holdHead", eyes: "worry", mouth: "o" }], { talk: [TALK("loss", 0, "o")] }), A("tonkao", 760, 1730, 0.58, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }, { t: vo("loss", 1) - 0.2, mode: "pullHand", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TALK("loss", 1, "o")] })],
-        captions: caps("loss", undefined, { quote: true }), fx(tl, id, t0, L) { Rup2.rain(L, "lo", 120, { op: 0.5 }); Rup2.rainLife(tl, "lo", t0, D("loss")); } });
+        captions: caps("loss", undefined, { quote: true }), fx(tl, id, t0, L) { Rup2.rainVeil(L, "lo", { op: 0.3 }); Rup2.veilLife(tl, "lo", t0, D("loss"));
+          const dp = [[400, 1014, 1236], [470, 1014, 1236], [650, 1014, 1236], [720, 1014, 1236]]; Rup2.drips(L, "lo", dp); Rup2.dripLife(tl, "lo", t0, D("loss"), dp);
+          Rup2.splashes(L, "lo", 8, { y0: 1260, y1: 1500 }); Rup2.splashLife(tl, "lo", t0, D("loss")); } });
       // ---------- 16. ยาย hands the palm-leaf to พ่อใหญ่สิน ----------
       add("leaf", { set: "rupWorld2", setOpts: { id: "le" }, dark: 0.05, light: DAWN, grade: GDAWN, blur: { far: 3, mid: 3, set: 2 },
         cam: PUSH("leaf", 1.6, 1.75, 0, 420),

@@ -305,11 +305,28 @@
     put(L.set, g);
   };
 
-  // rain: slanted streaks in the foreground layer, looped down (rain is drawn, never a noise bed in the mix)
-  Rup2.rain = (L, id, n = 140, o = {}) => { const r = rng(o.seed || 61); let g = `<g id="${id}-rain" opacity="${o.op ?? 0.55}">`;
-    for (let k = 0; k < n; k++) { const x = -200 + r() * 1500, y = -200 + r() * 2300, l = (o.len || 50) + r() * 60; g += `<path d="M${f(x)},${f(y)}l${f(-l * 0.25)},${f(l)}" stroke="#c8d8f0" stroke-width="${f((o.w || 1.4) + r() * 1.6)}" stroke-linecap="round"/>`; }
-    put(L.fg, g + `</g>`); };
-  Rup2.rainLife = (tl, id, t0, dur) => tl.fromTo(`#${id}-rain`, { x: 0, y: 0 }, { x: -120, y: 480, duration: 0.5, repeat: Math.ceil(dur / 0.5), ease: "none", immediateRender: false }, t0);
+  // rain (rule V1b, owner 2 Nov 2569: "ดูแล้วปวดตามาก ฝนมันเยอะไป"): at most ~90 thin, faint streaks, BEHIND the characters
+  // (set layer, never fg / over captions or cards), falling slowly (one loop >= 1.1 s). Show a heavy storm with other cues:
+  // Rup2.rainVeil (far curtains), Rup2.splashes (rings on the ground), Rup2.drips (eaves), thunder in the mix.
+  Rup2.rain = (L, id, n = 70, o = {}) => { const r = rng(o.seed || 61); n = Math.min(n, 90); let g = `<g id="${id}-rain" opacity="${Math.min(o.op ?? 0.3, 0.35)}">`;
+    for (let k = 0; k < n; k++) { const x = -200 + r() * 1500, y = -300 + r() * 2400, l = (o.len || 46) + r() * 30; g += `<path d="M${f(x)},${f(y)}l${f(-l * 0.25)},${f(l)}" stroke="#c8d8f0" stroke-width="${f((o.w || 1.1) + r() * 0.7)}" stroke-linecap="round"/>`; }
+    put(o.layer || L.set, g + `</g>`); };
+  Rup2.rainLife = (tl, id, t0, dur, per = 1.2) => tl.fromTo(`#${id}-rain`, { x: 0, y: 0 }, { x: -150, y: 600, duration: Math.max(1.1, per), repeat: Math.ceil(dur / Math.max(1.1, per)), ease: "none", immediateRender: false }, t0);
+  // far rain curtains: soft slanted grey bands over the horizon, drifting slowly (reads as a downpour without streaks near the eye)
+  Rup2.rainVeil = (L, id, o = {}) => { const top = o.top ?? 500, h = o.h ?? 600;
+    put(L.far, `<defs><linearGradient id="${id}-vg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9aa8bc" stop-opacity="0"/><stop offset=".35" stop-color="#9aa8bc" stop-opacity=".5"/><stop offset="1" stop-color="#9aa8bc" stop-opacity=".15"/></linearGradient></defs>
+      <g id="${id}-veil" opacity="${o.op ?? 0.45}">${[-300, 40, 380, 720, 1060].map((x, k) => `<path d="M${x},${top}l${180 + (k % 2) * 60},0l-120,${h}l-${180 + (k % 2) * 60},0z" fill="url(#${id}-vg)"/>`).join("")}</g>`); };
+  Rup2.veilLife = (tl, id, t0, dur) => tl.fromTo(`#${id}-veil`, { x: 0, opacity: 0.35 }, { x: -60, opacity: 0.55, duration: dur, ease: "sine.inOut", immediateRender: false }, t0);
+  // splash rings where the rain hits the yard / puddles (set layer, on the ground)
+  Rup2.splashes = (L, id, n = 14, o = {}) => { const r = rng(o.seed || 71), x0 = o.x0 ?? 60, x1 = o.x1 ?? 1040, y0 = o.y0 ?? 1260, y1 = o.y1 ?? 1800; let g = "";
+    for (let k = 0; k < n; k++) { const y = y0 + r() * (y1 - y0), s = 0.6 + (y - y0) / (y1 - y0) * 0.8; g += `<ellipse class="${id}-sp" cx="${f(x0 + r() * (x1 - x0))}" cy="${f(y)}" rx="${f(14 * s)}" ry="${f(4 * s)}" fill="none" stroke="#c8d4e4" stroke-width="2" opacity="0"/>`; }
+    put(L.set, g); };
+  Rup2.splashLife = (tl, id, t0, dur) => document.querySelectorAll(`.${id}-sp`).forEach((el, k) => { const per = 1.1 + (k % 4) * 0.15;
+    tl.fromTo(el, { scale: 0.3, opacity: 0.7, transformOrigin: "50% 50%" }, { scale: 2.2, opacity: 0, transformOrigin: "50% 50%", duration: per, ease: "power1.out", repeat: Math.ceil(dur / per), immediateRender: false }, t0 + (k * 0.37) % per); });
+  // water dripping from an eave or a floor edge: pts = [[x, yTop, yGround], ...]
+  Rup2.drips = (L, id, pts) => put(L.set, pts.map(([x, y]) => `<g class="${id}-dr"><path d="M${x},${y}q-5,10 0,14q5,-4 0,-14z" fill="#c8dcf0" opacity=".85"/></g>`).join(""));
+  Rup2.dripLife = (tl, id, t0, dur, pts) => document.querySelectorAll(`.${id}-dr`).forEach((el, k) => { const per = 1.0 + (k % 3) * 0.2, fall = pts[k][2] - pts[k][1];
+    tl.fromTo(el, { y: 0, opacity: 1 }, { y: fall, opacity: 0.6, duration: per * 0.7, ease: "power2.in", repeat: Math.ceil(dur / per), repeatDelay: per * 0.3, immediateRender: false }, t0 + (k * 0.29) % per); });
   // a spirit house (ศาล) on a post with naga finials, garlands and incense
   Rup2.shrine = (x, y, s = 1, t = (c) => c) => `<g transform="translate(${f(x)},${f(y)}) scale(${s})"><ellipse cx="0" cy="4" rx="90" ry="14" fill="#000" opacity=".3"/>
     <path d="M-10,0V-170M10,0V-170" stroke="${t("#e8dcc4")}" stroke-width="12"/><rect x="-70" y="-180" width="140" height="14" fill="${t("#d8c8a8")}" ${ln(2)}/>
@@ -342,10 +359,11 @@
       <path id="${id}-lip" d="M-250,8Q0,64 250,8" stroke="${t("#4a2c18")}" stroke-width="0" fill="none"/>
       ${Array.from({ length: 14 }, (_, k) => `<circle class="${id}-clod" cx="${f(-200 + k * 30)}" cy="0" r="${f(6 + r() * 9)}" fill="${t(k % 2 ? "#4a3220" : "#6a4a30")}" opacity="0"/>`).join("")}
       ${Array.from({ length: 14 }, (_, k) => `<circle class="${id}-dust" cx="${-230 + k * 36}" cy="${-10 - (k % 3) * 14}" r="${30 + (k % 4) * 14}" fill="${t("#9a8a70")}" opacity="0"/>`).join("")}</g>`); };
-  // lightning: one full-frame cold flash (in fg) — call Rup2.bolt(tl,id,t) per strike
-  Rup2.flashLayer = (L, id) => put(L.fg, `<rect id="${id}-fl" x="-600" y="-600" width="2400" height="3200" fill="#e8f0ff" opacity="0"/>`);
-  Rup2.bolt = (tl, id, t) => { tl.fromTo(`#${id}-fl`, { opacity: 0 }, { opacity: 0.75, duration: 0.04, immediateRender: false }, t);
-    tl.to(`#${id}-fl`, { opacity: 0.1, duration: 0.08 }, t + 0.06); tl.to(`#${id}-fl`, { opacity: 0.55, duration: 0.04 }, t + 0.16); tl.to(`#${id}-fl`, { opacity: 0, duration: 0.35, ease: "power2.out" }, t + 0.22); };
+  // lightning (V1b): the SKY lights up (sky layer, fading out above the horizon), never the whole frame white; one strike = 2 flickers
+  Rup2.flashLayer = (L, id) => put(L.sky, `<defs><linearGradient id="${id}-fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef3ff" stop-opacity="1"/><stop offset=".6" stop-color="#c8d6f8" stop-opacity=".7"/><stop offset="1" stop-color="#b8c8f0" stop-opacity="0"/></linearGradient></defs>
+    <rect id="${id}-fl" x="-600" y="-600" width="2400" height="1700" fill="url(#${id}-fg)" opacity="0"/>`);
+  Rup2.bolt = (tl, id, t) => { tl.fromTo(`#${id}-fl`, { opacity: 0 }, { opacity: 1, duration: 0.05, immediateRender: false }, t);
+    tl.to(`#${id}-fl`, { opacity: 0.2, duration: 0.1 }, t + 0.07); tl.to(`#${id}-fl`, { opacity: 0.75, duration: 0.05 }, t + 0.2); tl.to(`#${id}-fl`, { opacity: 0, duration: 0.5, ease: "power2.out" }, t + 0.27); };
   // the warning before the fall: cracks run out from the barn's feet, it creaks side to side, grain trickles from the door
   Rup2.barnCreak = (tl, id, t0, dur) => {
     document.querySelectorAll(`.${id}-ck`).forEach((el, k) => tl.fromTo(el, { attr: { "stroke-dashoffset": 400 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.9, ease: "power2.out", immediateRender: false }, t0 + (k % 5) * 0.12));
