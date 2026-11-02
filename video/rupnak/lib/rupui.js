@@ -202,7 +202,7 @@
   // ---------------- the end card: the headman's sign with a paper note ----------------
   RupUI.endCard = (tl, layer, t0, dur, o = {}) => {
     const id = `ren${Math.round(t0 * 100)}`;
-    put(layer, `<rect id="${id}-bg" x="-100" y="-100" width="1300" height="2200" fill="#0c0a10"/>
+    put(layer, `<rect id="${id}-bg" x="-100" y="-100" width="1300" height="2200" fill="#0c0a10" opacity=".5"/>
       <g transform="translate(540,1080)"><g id="${id}"><path d="M-14,0V-300M14,0V-300" stroke="#4a2c1a" stroke-width="22"/>
       <rect x="-330" y="-760" width="660" height="440" rx="16" fill="#e8d2a8" ${ln(5)}/>${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M-324,${-736 + k * 72}h648" stroke="#c8ae7a" stroke-width="3"/>`).join("")}
       <text x="0" y="-600" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="130" fill="#b8241e" transform="rotate(-2 0 -600)">รูพญานาค</text>
@@ -211,7 +211,7 @@
         <text x="0" y="-6" text-anchor="middle" font-family="Mali, Kanit" font-weight="700" font-size="50" fill="#2a1c16">${o.ep || "ตอนที่ 2"}</text>
         <text x="0" y="56" text-anchor="middle" font-family="Mali, Kanit" font-weight="700" font-size="46" fill="#b8241e">${o.title || "น้ำบ่อขุ่นแดง"}</text></g></g></g>`);
     tl.set([`#${id}`, `#${id}-bg`], { opacity: 0 }, 0);
-    tl.set(`#${id}-bg`, { opacity: 1 }, t0);
+    tl.set(`#${id}-bg`, { opacity: 0.5 }, t0);
     tl.fromTo(`#${id}`, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0 + 0.05);
     tl.fromTo(`#${id}-note`, { rotation: 4, transformOrigin: "50% 0%" }, { rotation: -3, transformOrigin: "50% 0%", duration: 0.9, yoyo: true, repeat: Math.ceil(dur / 0.9), ease: "sine.inOut", immediateRender: false }, t0 + 0.4);
   };

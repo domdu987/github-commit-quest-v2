@@ -320,8 +320,32 @@
       <ellipse cx="0" cy="-40" rx="140" ry="34" fill="${tint("#d8d4c8")}" ${ln(3)}/><ellipse id="${id}-wellw" cx="0" cy="-36" rx="118" ry="26" fill="${tint(wc)}"/>
       <ellipse cx="-30" cy="-42" rx="40" ry="6" fill="#fff" opacity=".25"/>
       <path d="M-120,-40V-260M120,-40V-260M-140,-250H140" stroke="${tint("#6a4228")}" stroke-width="12"/><circle cx="0" cy="-250" r="18" fill="${tint("#8a6a4a")}" ${ln(2)}/><path d="M0,-232V-120" stroke="#e8e0c8" stroke-width="3"/>
-      <g transform="translate(150,-46)"><path d="M-34,-40H34L26,20H-26Z" fill="${tint("#e8d050")}" ${ln(2.4)}/><ellipse cx="0" cy="-40" rx="34" ry="9" fill="${tint(wc)}" ${ln(2)}/></g></g>`;
+      <g transform="translate(150,-46)"><path d="M-34,-40H34L26,20H-26Z" fill="${tint("#e8d050")}" ${ln(2.4)}/><ellipse cx="0" cy="-40" rx="34" ry="9" fill="${tint(wc)}" ${ln(2)}/></g>`;
+    // the water-level notches พ่อใหญ่สิน cuts on the well post each night, each one lower (o.notches = how many; the last is fresh)
+    if (o.notches) for (let k = 0; k < o.notches; k++) { const yy = -236 + k * 26, fresh = k === o.notches - 1;
+      g += `<path id="${id}-n${k}" d="M-130,${yy}l20,4" stroke="${fresh ? "#f0e0c0" : tint("#2a160a")}" stroke-width="${fresh ? 5 : 4}" stroke-linecap="round"/>${fresh ? `<path d="M-130,${yy + 3}l20,4" stroke="#3a200e" stroke-width="2"/>` : ""}`; }
+    g += `</g>`;
+    // the door that will not shut: a skewed frame, the panel swings open on its own (#id-door)
+    g += `<g transform="translate(510,895)"><path d="M-6,-4L80,4L78,118L-8,112Z" fill="#140c08" ${ln(3)}/>
+      <g id="${id}-door"><path d="M0,0L74,6L72,112L-2,108Z" fill="${tint("#7a4a2a")}" ${ln(2.6)}/><path d="M10,16L64,20M8,56L62,60M6,94L60,98" stroke="${tint("#5a3418")}" stroke-width="3"/><circle cx="62" cy="62" r="4" fill="${tint("#c8a040")}"/></g>
+      <path d="M-8,112L80,118" stroke="${tint("#3a2414")}" stroke-width="5"/><path d="M80,4L84,-10" stroke="${tint("#3a2414")}" stroke-width="3"/></g>`;
+    if (o.leanPost) g += `<path id="${id}-lp" d="M370,1052L352,1240" stroke="#3a2414" stroke-width="22"/><path d="M370,1052L352,1240" stroke="${tint("#6a4228")}" stroke-width="16"/>`;
+    if (night) {
+      // a bulb under the house, its light pooled flat on the ground; the window lit with the family inside
+      g += `<path d="M560,1010V1050" stroke="#2a2a2a" stroke-width="2"/><ellipse cx="560" cy="1060" rx="8" ry="11" fill="#fff0b8" stroke="#8a7a40" stroke-width="1.6"/>
+        ${Rup2 && Rup2.pool ? Rup2.pool(560, 1236, 300, 70) : ""}<path d="M560,1066L380,1236H740Z" fill="#ffd890" opacity=".1" style="mix-blend-mode:screen"/>
+        <rect x="642" y="902" width="58" height="68" fill="#f8c870"/>
+        <rect x="642" y="902" width="58" height="68" fill="none" ${ln(2.4)}/>`;
+      for (let k = 0; k < 14; k++) g += `<circle class="${id}-dust" cx="${f(400 + r() * 320)}" cy="${f(1070 + r() * 40)}" r="${f(1.6 + r() * 2.4)}" fill="#c8a878" opacity="0"/>`;
+    }
     put(L.set, g);
+  };
+  Rup.yardLife = (tl, id, t0, dur, o = {}) => {
+    if (o.door != null) tl.fromTo(`#${id}-door`, { scaleX: 1, transformOrigin: "0% 50%" }, { scaleX: 0.35, skewY: -4, transformOrigin: "0% 50%", duration: o.doorDur ?? 1.6, ease: "power1.inOut", immediateRender: false }, t0 + o.door);
+    if (o.notch != null) { const el = document.querySelector(`#${id}-n${o.last}`); if (el) tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out", immediateRender: false }, t0 + o.notch); }
+    document.querySelectorAll(`.${id}-dust`).forEach((el, k) => { const per = 1.1 + (k % 4) * 0.25; if (!o.dust) return;
+      tl.fromTo(el, { y: 0, opacity: 0.9 }, { y: 120 + (k % 3) * 30, opacity: 0, duration: per, ease: "power1.in", repeat: Math.ceil(dur / per), immediateRender: false }, t0 + (k * 0.23) % per); });
+    if (o.lean != null) tl.fromTo(`#${id}-lp`, { rotation: 0, svgOrigin: "352 1240" }, { rotation: -5, svgOrigin: "352 1240", duration: 1.6, ease: "power2.inOut", immediateRender: false }, t0 + o.lean);
   };
 
   // ---------------- the rules: ยาย's palm-leaf manuscript (ใบลาน) on its string ----------------

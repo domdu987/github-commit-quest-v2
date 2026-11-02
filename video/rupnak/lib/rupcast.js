@@ -92,6 +92,18 @@
       <rect x="10" y="-420" width="30" height="34" fill="#a8905e" ${ln(1.8)}/><rect x="-40" y="-420" width="30" height="34" fill="#a8905e" ${ln(1.8)}/>`,
   } };
 
+  // ---------------- props in the hand (the palm is at (0,118) of the hand group) ----------------
+  const phoneLit = () => `<g transform="translate(0,124) rotate(10)"><rect x="-17" y="-6" width="34" height="62" rx="7" fill="#1a1c22" ${ln(2.2)}/><rect x="-13" y="-1" width="26" height="50" rx="4" fill="#dff0ff"/>
+    <path d="M-8,8h16M-8,16h10" stroke="#7aa8d8" stroke-width="3"/><circle cx="0" cy="40" r="5" fill="#ff4a3a"/></g>`;
+  const bar = () => `<g transform="translate(0,118) rotate(-70)"><path d="M0,-40V330" stroke="${LINE}" stroke-width="13" stroke-linecap="round"/><path d="M0,-40V330" stroke="#7a7e84" stroke-width="8" stroke-linecap="round"/>
+    <path d="M-2,-30V320" stroke="#c8ccd0" stroke-width="2" opacity=".6"/><path d="M-9,322L0,352L9,322Z" fill="#5a5e64" ${ln(2)}/></g>`;
+  const mudBucket = () => `<g transform="translate(0,118)"><path d="M-34,40Q0,-30 34,40" stroke="${LINE}" stroke-width="5" fill="none"/>
+    <path d="M-40,40H40L32,110H-32Z" fill="#e8d050" ${ln(2.6)}/><ellipse cx="0" cy="40" rx="40" ry="10" fill="#7a4a24" ${ln(2)}/><ellipse cx="-10" cy="38" rx="14" ry="3" fill="#a8703a"/>
+    <path d="M-34,44q-6,20 -2,40" stroke="#7a4a24" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
+  C.tonkaoPhone = { v2: C.tonkao.v2, hand: phoneLit(), keep: "F" };
+  C.phoSinBar = { v2: C.phoSin.v2, hand: bar(), keep: "F" };
+  C.yaiBucket = { v2: C.yaiKham.v2, hand: mudBucket(), keep: "F" };
+
   // ---------------- poses with weight, elbows and talking hands ----------------
   const M = Rig.MODES, Z = () => M.idle(0, {});
   M.talk = (u, o) => { const s = Math.sin(u * 2.3), s2 = Math.sin(u * 4.7 + 1), w = Math.sin(u * 0.9);
@@ -99,7 +111,11 @@
   M.talk2 = (u, o) => { const s = Math.sin(u * 2.1 + 2), s2 = Math.sin(u * 5.1);
     return { ...M.idle(u, o), uaF: -58 + 10 * s, faF: -54 + 18 * s2, uaB: -40 - 8 * s, faB: -62 + 10 * s2, torso: 2, head: -3 + 3 * s, thF: 10, shF: 8, thB: -6 }; };
   M.leanFilm = (u, o) => { const j = Math.sin(u * 1.4);
-    return { ...Z(), thF: -48, shF: 70, thB: 16, shB: 20, torso: 36 + 2 * j, head: 18, uaF: -40 + 3 * j, faF: -20, uaB: 40 + 4 * j, faB: -30, bodyY: 52 }; };
+    return { ...Z(), thF: -30, shF: 46, thB: 18, shB: 12, torso: 52 + 2 * j, head: 26, uaF: -12 + 3 * j, faF: -8, uaB: 30 + 3 * j, faB: -40, bodyY: 34, rootR: 4 }; };
+  M.notch = (u, o) => { const k = (u * 2.2) % 1, hit = k < 0.25 ? k / 0.25 : 1 - (k - 0.25) / 0.75;
+    return { ...Z(), uaF: -70 + 34 * hit, faF: -40 + 20 * hit, uaB: -40, faB: -70, torso: 14 + 6 * hit, head: 10, thF: -14, shF: 16, thB: 8, bodyY: 8 }; };
+  M.liftBucket = (u, o) => { const b = Math.sin(u * 1.2);
+    return { ...Z(), uaF: -54 + 2 * b, faF: -60, uaB: -20, faB: -30, torso: 6, head: 18, thF: -6, thB: 4 }; };
   M.wai = (u, o) => { const b = Math.sin(u * 1.6);
     return { ...Z(), uaF: -38, faF: -122 + 2 * b, uaB: -36, faB: -120 + 2 * b, torso: 8 + b, head: 10, thF: 4, thB: -4, bodyY: 2 }; };
   M.stopArm = (u, o) => { const b = Math.sin(u * 3.1);
