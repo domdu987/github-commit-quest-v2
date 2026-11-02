@@ -1,0 +1,55 @@
+{
+ "series": "รอดคนเดียว",
+ "made_by": "Claude (rodmai-club-video) · lane C",
+ "posted_by": "Hermes",
+ "rules": [
+  "ใช้ไฟล์ HQ (video_hq · ตรวจ sha256 ก่อนลง)",
+  "ปักหมุดคอมเมนต์แหล่งอ้างอิงทันทีหลังลง",
+  "IG: ซับไทยในคลิป · Facebook: ไทยอย่างเดียว · แฮชแท็กไม่เกิน 5",
+  "ฉบับ v6b แยกจาก v6 (v6 ไม่ถูกเขียนทับ): ห้ามลงจนกว่าเจ้าของจะผ่าน"
+ ],
+ "episodes": [
+  {
+   "id": "plane-ep2-v6b",
+   "order": 2,
+   "title": "เห็นควันอีกฝั่งอ่าวตอนติดเกาะ… อย่าเดินไปหามัน | รอดคนเดียว EP.2 ตอนจบ",
+   "status": "spliced v6b · coordinator full check pending, then owner",
+   "video_hq": "video/release/hq/plane-ep2-v6b-HQ.mp4",
+   "video_hq_sha256": "55599c004ad454bb5dd894113ba7a460de477691b704c3c5e53e2cf0c953986c",
+   "video_hq_bytes": 90983784,
+   "video_repo": "video/plane-ep2-v6b/plane-ep2-v6b-share.mp4",
+   "cover": "video/plane-ep2-v6b/cover.jpg",
+   "caption": "ถ้าวันหนึ่ง… คุณเห็นควันอีกฝั่งอ่าว 🌫️🏝️ อย่าเดินไปหามัน\n\nน้ำหมดขวด หิวจนเกือบกินผลไม้ที่ไม่รู้จัก แล้วเฮลิคอปเตอร์ก็บินผ่านไป… ถ้าเป็นคุณจะทำยังไงให้มันเห็น? 🚁 ดูให้จบ แล้วคนท่อนหน้าหายไปไหน\n\nรอดคนเดียว EP.2/2 ตอนจบ\n#เอาตัวรอด #ติดเกาะ #เครื่องบินตก #รอดคนเดียว #RodMaiClub",
+   "hashtags": [
+    "#เอาตัวรอด",
+    "#ติดเกาะ",
+    "#เครื่องบินตก",
+    "#รอดคนเดียว",
+    "#RodMaiClub"
+   ],
+   "pinned_comment": "📚 แหล่งอ้างอิง (คำตรงจากคู่มือ)\n• \"by drinking seawater you deplete your body's water supply, which can cause death.\" — US Army FM 3-05.70 Survival (2002) Fig 6-2 หน้า 6-4\n• \"The milk from young, green (unripe) coconuts is a good thirst quencher. However, the milk from mature, brown, coconuts contains an oil that acts as a laxative.\" — FM 3-05.70 ข้อ 6-9 หน้า 6-7\n• \"Rainwater collected in clean containers or in plants is usually safe for drinking.\" / \"Keep the tarpaulin handy for catching water.\" — FM 21-76 Survival (1992) บทที่ 6 และ 16\n• \"Eat only those plants you can positively identify and you know are safe to eat.\" — FM 21-76 บทที่ 9\n• \"Do not eat shellfish that are not covered by water at high tide!\" / \"Steam, boil, or bake mollusks in the shell.\" — FM 21-76 บทที่ 8\n• \"On a sunny day, a mirror is your best signaling device. If you don't have a mirror, polish … a similar object that will reflect the sun's rays.\" — FM 21-76 บทที่ 19\n• \"If you practically smother a large fire with green leaves, moss, or a little water, the fire will produce white smoke.\" — FM 21-76 บทที่ 19\n• \"it's easier for search parties to find a downed aircraft than a person.\" — AOPA Safety Spotlight: Survival\nตัวละคร สายการบิน และเหตุการณ์เป็นเรื่องสมมติ",
+   "duration_s": 119.99,
+   "audio_note": "มิกซ์ใหม่ทั้งเรื่อง (เพิ่มเสียงปากกา/แสงแวบ/ตัดเร็ว · ไม่มีเสียงซ่า: HF ช่วงไม่มีเสียงพูดต่ำกว่า v5 29.3 dB, ไม่มีช่วง noise แบน)",
+   "qa": {
+    "size": "1080x1920",
+    "fps": 60,
+    "duration_s": 119.99,
+    "lufs": -14.2,
+    "peak_dbfs": -1.9,
+    "freezedetect": "none",
+    "hookcheck": "PASS (command at 2.2 s)",
+    "hook_matches": "EP.1 v5 last frame (lane D b1737cd)",
+    "seam": "3 splice points checked frame by frame: every frame matches its source ≥52 dB PSNR, the only jump is the planned shot cut, no black or duplicate frames; hook 0–2.25 s = v6 (≥49.9 dB)",
+    "blackdetect": "none",
+    "frames": 7199
+   },
+   "splice": "v6[f0–2345] + new[f2346–2663] + v6[f2664–4333] + new[f4334–end] @60fps, cuts on shot boundaries 39.098 / 44.396 / 72.229 s; script video/plane-ep2-v6b/production/splice6b.sh",
+   "changes_from_v6": [
+    "39.1 s: Kiw puts the orange vest on under the jacket",
+    "72.2–83.7 s: q3/pass/under on the grey rocks; aerial grey wreck lost in the rock; the roasting fire's thin smoke; jacket opened on the vest",
+    "83.7–92.2 s: the card ticks one rule at a time between the action shots; the panel tilted in hand with a long glint; daylight throw with a real arm swing",
+    "92–117 s: helicopter visible, front section at real size, short phone glow, three fast action cuts, backlit far shore with a live flame, FR 623 on the cards, new end card"
+   ]
+  }
+ ]
+}

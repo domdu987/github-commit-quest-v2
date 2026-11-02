@@ -1,0 +1,105 @@
+      // ---------- รอดคนเดียว EP.2 v6 (lane C): the detail pass ----------
+      //   Rig.CAST.rescuer2 / fa2   the rescuer with a chin-strapped helmet, a red life vest with buckles, a radio with an antenna and
+      //                             reflective bands · the flight attendant with a red-gold neck scarf and a name badge
+      //   Isle.hand (v3)            grips with a soft hand shadow on the thing held; ids so the wrist turns and the sleeve folds move
+      //                             (Isle.handsLife); o.grip "bottle" | "round" | "pinch" | "open" picks the finger curl
+      //   Isle.tideRocks(id, o)     several real boulders: lit and shaded sides, wet sky-coloured sheen, barnacles and limpets in the
+      //                             cracks, a tide pool, foam where the swell hits their feet, the high-tide stain running across all of them
+      //   Isle.flames(id, x, y, s)  layered flames (red, orange, yellow, white core) that twist out of step, sparks rising
+      //   Isle.smokeStream(id, x, base, h, o)   puffs born at the fire and carried up without a gap (o.white for green-leaf smoke)
+      //   Isle.rainFX(L, id, o)     long slanted rain streaks over the frame, splash crowns on the sheet, a stream from its belly to the bottle
+      //   Isle.life6(tl, t0, dur)   runs all of the above once per element
+      (function () {
+        const { mk } = Pop2, I = window.Isle, C = Rig.CAST, LN = "#241c22", ln = (w = 3) => `stroke="${LN}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+        const Q = (sel) => Array.from(document.querySelectorAll(sel)).filter((e) => { if (e.dataset.lf6) return false; e.dataset.lf6 = 1; return true; });
+        // ---- cast ----
+        const r0 = C.rescuer.v2, f0 = C.fa.v2;
+        C.rescuer2 = { v2: { ...r0,
+          faceTop: r0.faceTop + `<path d="M-54,-562Q-52,-520 -26,-500Q0,-492 26,-500Q52,-520 54,-562" stroke="#2a2e38" stroke-width="5" fill="none"/><rect x="-8" y="-504" width="16" height="10" rx="2" fill="#c8ccd4" ${ln(1.5)}/>
+            <path d="M-40,-612l8,-18M40,-612l-8,-18" stroke="#c8302a" stroke-width="5"/><rect x="-14" y="-628" width="28" height="12" rx="3" fill="#ffd23a" ${ln(1.5)}/>`,
+          print: `<path d="M-58,-486L-62,-330Q-30,-318 -6,-330L-8,-478ZM58,-486L62,-330Q30,-318 6,-330L8,-478Z" fill="#d8312a" ${ln(2.4)}/>
+            ${[-440, -380].map((y) => `<rect x="-56" y="${y}" width="112" height="9" fill="#2a2e38"/><rect x="-10" y="${y - 3}" width="20" height="15" rx="3" fill="#c8ccd4" ${ln(1.5)}/>`).join("")}
+            <path d="M-60,-350H-8M8,-350H60" stroke="#e8eef4" stroke-width="11"/><path d="M-60,-350H-8M8,-350H60" stroke="#9aa6b2" stroke-width="2.5"/>
+            <g transform="translate(30,-470)"><rect x="-12" y="0" width="24" height="44" rx="5" fill="#2a2e38" ${ln(2)}/><path d="M6,0v-30" stroke="#2a2e38" stroke-width="4"/><circle cx="6" cy="-32" r="3" fill="#d8312a"/><rect x="-7" y="8" width="14" height="10" rx="2" fill="#7ad0a8"/><circle cx="0" cy="30" r="3" fill="#8a8e98"/><circle cx="0" cy="38" r="3" fill="#8a8e98"/></g>` } };
+        C.fa2 = { v2: { ...f0,
+          print: f0.print + `<path d="M-30,-498Q0,-470 30,-498L22,-482Q0,-462 -22,-482Z" fill="#d8312a" ${ln(2)}/><path d="M-6,-478l-16,40l14,-6zM6,-478l16,40l-14,-6z" fill="#f4c430" ${ln(1.8)}/><circle cx="0" cy="-478" r="7" fill="#d8312a" ${ln(1.8)}/>
+            <g transform="translate(-44,-430)"><rect x="-2" y="0" width="40" height="16" rx="3" fill="#f4c430" ${ln(1.4)}/><text x="18" y="12" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="10" fill="#1d2c5e">ฟ้าราม</text></g>` } };
+        // ---- the hand v3 ----
+        const GR = { bottle: { curl: [0.72, 0.8, 0.84, 0.9], thumb: 0.15 }, round: { curl: [0.45, 0.5, 0.55, 0.6], thumb: 0.35 }, pinch: { curl: [0.5, 0.85, 0.9, 0.92], thumb: 0.6 }, open: { curl: [0.05, 0.05, 0.08, 0.1], thumb: 0 } };
+        Sets.DEFS += `<filter id="isHandSh" x="-30%" y="-30%" width="160%" height="160%"><feColorMatrix type="matrix" values="0 0 0 0 0.08  0 0 0 0 0.06  0 0 0 0 0.1  0 0 0 0.32 0"/><feGaussianBlur stdDeviation="5"/></filter>`;
+        let hid = 0;
+        const hand2 = I.hand;
+        I.hand = (W, deg, k, o = {}) => { const id = o.id || `ih${hid++}`, oo = { ...o, hand: o.hand || GR[o.grip || "bottle"] };
+          const a = (deg * Math.PI) / 180, sh = o.shadow !== false ? `<g filter="url(#isHandSh)" transform="translate(${f1(14 * k)},${f1(18 * k)})"><g transform="translate(${P2s(W)}) rotate(${deg}) scale(${oo.mirror ? -k : k},${k})">${handBack(["#000", "#000", "#000"], oo.hand)}</g></g>` : "";
+          const full = hand2(W, deg, k, oo), cut = full.lastIndexOf(`<g transform="translate(${P2s(W)}) rotate(${deg})`);
+          return `<g class="ishd" id="${id}" data-w="${f1(W[0])} ${f1(W[1])}" data-a="${f1(deg)}"><g class="ishs">${full.slice(0, cut)}</g>${sh}<g class="ishw">${full.slice(cut)}</g></g>`; };
+        I.handsLife = (tl, t0, dur) => Q(".ishd").forEach((e, k) => { const w = e.dataset.w, hw = e.querySelector(".ishw"), sl = e.querySelector(".ishs");
+          tl.fromTo(hw, { rotation: -3, svgOrigin: w }, { rotation: 4, svgOrigin: w, duration: 0.9 + (k % 3) * 0.2, repeat: Math.ceil(dur / 0.9) + 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo(sl, { scaleX: 1, scaleY: 1, svgOrigin: w }, { scaleX: 1.015, scaleY: 0.99, svgOrigin: w, duration: 0.7, repeat: Math.ceil(dur / 0.7) + 1, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); });
+        // ---- the tide rocks ----
+        I.tideRocks = (id, o = {}) => { const r = mk(o.seed || 31), line = o.line ?? 980, sky = o.sky || "#f6c0a8";
+          const B = o.boulders || [[180, 1060, 330, 300], [700, 980, 380, 340], [420, 1500, 420, 330], [960, 1560, 300, 280], [-60, 1700, 300, 260]];
+          let g = `<g id="${id}"><rect x="-300" y="${line - 520}" width="1700" height="900" fill="#3a6a88"/>${Array.from({ length: 10 }, (_, k) => `<path d="M-300,${line - 480 + k * 50}q90,-10 180,0t180,0t180,0t180,0t180,0t180,0t180,0t180,0t180,0" stroke="#bfe0f0" stroke-width="${2 + k * 0.4}" fill="none" opacity="${f1(0.2 + k * 0.04)}" class="issw"/>`).join("")}
+            <rect x="-300" y="${line + 200}" width="1700" height="1400" fill="#24212c"/>`;
+          B.forEach(([cx, cy, rx, ry], b) => { const pts = Array.from({ length: 14 }, (_, i) => { const a = (i / 14) * Math.PI * 2, j = 0.86 + r() * 0.2; return [cx + Math.cos(a) * rx * j, cy + Math.sin(a) * ry * j * (Math.sin(a) > 0 ? 0.75 : 1)]; });
+            const d = Pop2.smoothClosed(pts), cid = `${id}-b${b}`;
+            g += `<defs><clipPath id="${cid}c"><path d="${d}"/></clipPath><radialGradient id="${cid}g" cx=".32" cy=".25" r=".9"><stop offset="0" stop-color="#b8b0c0"/><stop offset=".45" stroke="none" stop-color="#7a7286"/><stop offset="1" stop-color="#2e2a38"/></radialGradient></defs>
+              <ellipse cx="${cx + rx * 0.2}" cy="${cy + ry * 0.7}" rx="${f1(rx * 1.05)}" ry="${f1(ry * 0.22)}" fill="#000" opacity=".35"/><path d="${d}" fill="url(#${cid}g)" ${ln(5)}/><g clip-path="url(#${cid}c)">`;
+            // wet band below the high-tide stain, weed hanging under it, the white salt line
+            g += `<rect x="${cx - rx * 1.2}" y="${line + 10}" width="${rx * 2.4}" height="${ry * 3}" fill="#1e2228" opacity=".55"/>
+              <path d="M${cx - rx * 1.2},${line}q${rx * 0.6},-16 ${rx * 1.2},0t${rx * 1.2},0" stroke="#f4f2ea" stroke-width="9" fill="none" opacity=".9"/>`;
+            for (let k = 0; k < 14; k++) { const x = cx - rx + r() * rx * 2; g += `<path d="M${f1(x)},${line + 14}q${f1((r() - 0.5) * 18)},${f1(26 + r() * 30)} ${f1((r() - 0.5) * 14)},${f1(50 + r() * 50)}" stroke="${r() < 0.5 ? "#3a8a3a" : "#62a040"}" stroke-width="${f1(5 + r() * 5)}" fill="none" stroke-linecap="round"/>`; }
+            // the sky in the wet sheen, a lit rim upper left, cracks
+            for (let k = 0; k < 5; k++) { const y = cy - ry * 0.6 + k * ry * 0.3, x = cx - rx * 0.7 + r() * rx * 0.3; g += `<path d="M${f1(x)},${f1(y)}q${f1(rx * 0.3)},${f1(-ry * 0.06)} ${f1(rx * (0.5 + r() * 0.4))},${f1(-ry * 0.02)}" stroke="${k % 2 ? sky : "#ffffff"}" stroke-width="${f1(4 + r() * 6)}" fill="none" stroke-linecap="round" opacity="${f1(0.35 + r() * 0.3)}"/>`; }
+            g += `<path d="M${f1(cx - rx * 0.9)},${f1(cy - ry * 0.2)}Q${f1(cx - rx * 0.6)},${f1(cy - ry * 0.95)} ${f1(cx + rx * 0.2)},${f1(cy - ry * 0.9)}" stroke="#e8e0f0" stroke-width="10" fill="none" opacity=".6" stroke-linecap="round"/>`;
+            for (let k = 0; k < 3; k++) { const x = cx - rx * 0.5 + r() * rx, y = cy - ry * 0.3 + r() * ry * 0.5; g += `<path d="M${f1(x)},${f1(y)}l${f1(20 + r() * 30)},${f1(30 + r() * 30)}l${f1(-10 + r() * 30)},${f1(30 + r() * 40)}" stroke="#16141c" stroke-width="5" fill="none"/>`; }
+            // barnacles in a crack below the line, limpets on the wet face
+            const by = Math.max(line + 60, cy - ry * 0.1); for (let k = 0; k < 10; k++) { const x = cx - rx * 0.6 + r() * rx * 1.2, y = by + r() * ry * 0.5, w = 8 + r() * 7; g += `<path d="M${f1(x - w)},${f1(y)}L${f1(x - w * 0.4)},${f1(y - w)}H${f1(x + w * 0.4)}L${f1(x + w)},${f1(y)}Z" fill="#ece6d6" stroke="#6a6458" stroke-width="2"/><ellipse cx="${f1(x)}" cy="${f1(y - w)}" rx="${f1(w * 0.35)}" ry="${f1(w * 0.14)}" fill="#3a342e"/>`; }
+            if (cy + ry * 0.2 > line) g += `<g transform="translate(${f1(cx)},${f1(Math.max(line + 120, cy))}) scale(${f1(o.ls ?? 1.6)})">${I.limpets(0, 0, 6, 40 + b)}</g>`;
+            g += `</g>`;
+            // foam where the swell hits the foot of the boulder
+            g += `<g class="isfoam">${Array.from({ length: 5 }, (_, k) => `<ellipse cx="${f1(cx - rx * 0.8 + k * rx * 0.4)}" cy="${f1(cy + ry * 0.7)}" rx="${f1(rx * 0.22)}" ry="${f1(ry * 0.08)}" fill="#ffffff" opacity=".8"/>`).join("")}</g>`; });
+          // a tide pool between the boulders
+          const [px, py] = o.pool || [640, 1260];
+          g += `<ellipse cx="${px}" cy="${py}" rx="170" ry="44" fill="#16141c"/><ellipse cx="${px}" cy="${py + 3}" rx="152" ry="36" fill="${sky}" opacity=".85"/><path d="M${px - 100},${py - 6}h90M${px + 20},${py + 8}h60" stroke="#fff" stroke-width="5" opacity=".8"/>
+            <ellipse class="isfoam" cx="${px}" cy="${py}" rx="176" ry="48" fill="none" stroke="#fff" stroke-width="5" opacity=".55"/>`;
+          return g + `</g>`; };
+        // ---- flames, sparks ----
+        I.flames = (id, x, y, s = 1) => { const L = (c, w, h, k) => `<path class="isfl6" data-o="${x} ${y}" data-k="${k}" d="M${x - w},${y}C${x - w},${y - h * 0.4} ${x - w * 0.3},${y - h * 0.55} ${x - w * 0.15},${y - h}C${x + w * 0.1},${y - h * 0.62} ${x + w * 0.5},${y - h * 0.7} ${x + w * 0.35},${y - h * 0.9}C${x + w},${y - h * 0.45} ${x + w},${y - h * 0.2} ${x + w},${y}Z" fill="${c}"/>`;
+          return `<g id="${id}"><ellipse cx="${x}" cy="${y - 60 * s}" rx="${200 * s}" ry="${150 * s}" fill="url(#isFireG)" opacity=".8"/>${L("#d8402a", 80 * s, 210 * s, 0)}${L("#ff8a2a", 64 * s, 170 * s, 1)}${L("#ffc24a", 44 * s, 120 * s, 2)}${L("#fff4c8", 22 * s, 64 * s, 3)}
+            ${Array.from({ length: 12 }, (_, k) => `<circle class="isspk" data-x="${f1((k % 5 - 2) * 18 * s)}" cx="${f1(x + (k % 5 - 2) * 10 * s)}" cy="${f1(y - 40 * s)}" r="${f1(2.5 + (k % 3))}" fill="#ffd27a"/>`).join("")}</g>`; };
+        // ---- a smoke stream with no gap at its base ----
+        I.smokeStream = (id, x, base, h, o = {}) => { const n = o.n ?? 16, w = o.white, r = mk(o.seed || 5), R = o.r ?? 60;
+          let g = `<g id="${id}" class="issms" data-x="${x}" data-b="${base}" data-h="${h}" data-l="${o.lean ?? 0.3}" data-p="${o.period ?? 3.2}">`;
+          for (let k = 0; k < n; k++) { const sh = w ? ["#eceef2", "#dcdfe6", "#f8f8fa"][k % 3] : ["#2e2e32", "#3e3e44", "#504e56"][k % 3], lit = w ? "#ffffff" : "#a8a4a6";
+            g += `<g class="issp" data-k="${k}"><g transform="translate(${x},${base})">${[[0, 0, 1], [-0.7, 0.25, 0.75], [0.7, 0.2, 0.8], [-0.3, -0.55, 0.7], [0.35, -0.5, 0.65]].map(([ax, ay, q]) => `<circle cx="${f1(ax * R)}" cy="${f1(ay * R)}" r="${f1(R * q * (0.85 + r() * 0.3))}" fill="${sh}"/>`).join("")}
+              ${[[-0.3, -0.75, 0.42], [0.25, -0.7, 0.36]].map(([ax, ay, q]) => `<circle cx="${f1(ax * R)}" cy="${f1(ay * R)}" r="${f1(R * q)}" fill="${lit}" opacity=".6"/>`).join("")}</g></g>`; }
+          return g + `</g>`; };
+        // ---- rain ----
+        I.rainFX = (L, id, o = {}) => { const r = mk(77); let s = `<g id="${id}-rn" style="mix-blend-mode:screen">`;
+          for (let k = 0; k < 170; k++) { const x = r() * 1300 - 120, y = r() * 2100 - 200, len = 60 + r() * 70; s += `<path class="israin" d="M${f1(x)},${f1(y)}l${f1(-len * 0.28)},${f1(len)}" stroke="#d8e8ff" stroke-width="${f1(2 + r() * 2)}" opacity="${f1(0.35 + r() * 0.35)}" stroke-linecap="round"/>`; }
+          put(L.light, s + `</g>`);
+          if (o.sheet) { const [sx, sy, sw] = o.sheet; let p = "";
+            for (let k = 0; k < 16; k++) { const x = sx - sw * 0.4 + r() * sw * 0.8, y = sy - 50 + r() * 100; p += `<g class="isspl" data-o="${f1(x)} ${f1(y)}">${[-1, 0, 1].map((d) => `<path d="M${f1(x)},${f1(y)}l${d * 10},-14" stroke="#e8f4ff" stroke-width="3" stroke-linecap="round"/>`).join("")}<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="9" ry="3" fill="none" stroke="#e8f4ff" stroke-width="2"/></g>`; }
+            p += `<path class="isrun" d="M${sx},${sy + 70}Q${sx + 10},${sy + 170} ${sx},${o.bottleY ?? sy + 300}" stroke="#9ad8f8" stroke-width="7" fill="none" stroke-dasharray="18 14" opacity=".9"/>`;
+            put(L.act, p); } };
+        I.life6 = (tl, t0, dur) => { const R = (p) => Math.ceil(dur / p) + 2;
+          Q(".isfl6").forEach((e) => { const k = +e.dataset.k, og = e.dataset.o; tl.fromTo(e, { scaleY: 0.86, scaleX: 1.04, skewX: -6 + k * 2, svgOrigin: og }, { scaleY: 1.12, scaleX: 0.94, skewX: 6 - k * 2, svgOrigin: og, duration: 0.16 + k * 0.05, repeat: R(0.16), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - k * 0.07); });
+          Q(".isspk").forEach((e, k) => tl.fromTo(e, { y: 0, x: 0, opacity: 1 }, { y: -160 - (k % 4) * 50, x: +e.dataset.x * 2, opacity: 0, duration: 0.8 + (k % 3) * 0.25, repeat: R(0.8), ease: "power1.out", immediateRender: false }, t0 - (k % 6) * 0.13));
+          Q(".issms").forEach((s) => { const h = +s.dataset.h, lean = +s.dataset.l, P = +s.dataset.p, ps = s.querySelectorAll(".issp"), n = ps.length;
+            // the first cycle starts part-way up (the timeline clamps negative starts), then full cycles from the base: no gap ever
+            const at = (u) => ({ y: -h * u, x: lean * h * u, scale: 0.35 + 2.25 * u, opacity: 0.95 * (1 - u * u) });
+            ps.forEach((e, k) => { const u0 = k / n, first = P * (1 - u0);
+              tl.fromTo(e, { ...at(u0), transformOrigin: "50% 50%" }, { ...at(1), duration: first, ease: "none", immediateRender: false }, t0);
+              tl.fromTo(e, { ...at(0), transformOrigin: "50% 50%" }, { ...at(1), duration: P, repeat: R(P), ease: "none", immediateRender: false }, t0 + first); }); });
+          Q(".israin").forEach((e, k) => tl.fromTo(e, { y: -260, x: 72 }, { y: 0, x: 0, duration: 0.24, repeat: R(0.24), ease: "none", immediateRender: false }, t0 - (k % 11) * 0.022));
+          Q(".isspl").forEach((e, k) => { const og = e.dataset.o; tl.fromTo(e, { scale: 0.2, opacity: 1, svgOrigin: og }, { scale: 1.4, opacity: 0, svgOrigin: og, duration: 0.3, repeat: R(0.3 + (k % 4) * 0.06), repeatDelay: (k % 4) * 0.06, ease: "power2.out", immediateRender: false }, t0 + (k % 8) * 0.05); });
+          Q(".isrun").forEach((e) => tl.fromTo(e, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -64 }, duration: 0.25, repeat: R(0.25), ease: "none", immediateRender: false }, t0));
+          I.handsLife(tl, t0, dur); };
+        // the fire pit v2: the new flames instead of the old cones; o.smoke "white" → a white smoke stream with no gap
+        const pit0 = I.firePit;
+        I.firePit = (id, x, y, s = 1, o = {}) => { let g = pit0(id, x, y, s, { ...o, flames: false, smoke: o.smoke === "thin" ? "thin" : undefined });
+          const fl = o.flames === false ? "" : `<g transform="translate(${x},${y}) scale(${s})">${I.flames(`${id}-f6`, 0, -6, 0.9)}</g>`;
+          const sm = o.smoke === "white" ? I.smokeStream(`${id}-ws6`, x, y - 150 * s, 1700 * s, { white: true, r: 90 * s, lean: 0.12, period: 3.0, n: 18 }) : "";
+          return g.replace(/<\/g>$/, "") + `</g>${sm}${fl}`; };
+      })();
