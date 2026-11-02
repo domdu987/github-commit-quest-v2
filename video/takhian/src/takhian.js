@@ -60,11 +60,8 @@
     // trunk: tall and straight, slight taper, bark furrows
     g += `<path d="M-120,0L-96,-1180Q-60,-1230 0,-1232Q60,-1230 96,-1180L120,0Z" fill="url(#tkBark)" ${OUT(6)}/>`;
     for (let k = 0; k < 14; k++) { const bx = -90 + r() * 180, by = -60 - r() * 1080; g += `<path d="M${f1(bx)},${f1(by)}q${f1(-6 + r() * 12)},-80 ${f1(-4 + r() * 8)},-${f1(120 + r() * 120)}" stroke="#1e140e" stroke-width="5" fill="none" opacity=".75"/>`; }
-    // old lightning scars: long charred streaks, bark split (clue 1, visible from EP.1 frame 0)
-    if (o.scar !== false) {
-      g += `<path d="M18,-1220L-6,-980L26,-760L-10,-520L22,-300L0,-40" stroke="#120a06" stroke-width="22" fill="none" stroke-linejoin="round"/><path d="M18,-1220L-6,-980L26,-760L-10,-520L22,-300L0,-40" stroke="#6a5a4a" stroke-width="5" fill="none" stroke-dasharray="40 30" opacity=".6"/>`;
-      g += `<path d="M-60,-1150L-74,-900L-52,-700L-70,-560" stroke="#140c08" stroke-width="12" fill="none" opacity=".9"/><path d="M70,-1100L84,-880L62,-640" stroke="#140c08" stroke-width="10" fill="none" opacity=".85"/>`;
-    }
+    // old lightning scars: healed ridges, darker than the bark, pale callus edges (clue 1, visible from EP.1 frame 0)
+    if (o.scar !== false) g += Tk.oldScars();
     // the seven-colour cloths + garland
     CLOTH.forEach((c, k) => { const yy = -330 - k * 24; g += `<path d="M-114,${yy}Q0,${yy + 20} 114,${yy}V${yy + 22}Q0,${yy + 42} -114,${yy + 22}Z" fill="${c}" ${OUT(3)}/>`; });
     g += `<path d="M60,-322q30,60 10,150" stroke="#d8302a" stroke-width="16" fill="none"/><path d="M80,-320q40,70 30,160" stroke="#f2c230" stroke-width="12" fill="none"/><path d="M40,-316q10,60 -10,120" stroke="#3aa04a" stroke-width="10" fill="none"/>`;
@@ -243,7 +240,7 @@
 
   // under the hut roof looking out across the paddies at the tree
   Sets.tkHut = function (L, o = {}) {
-    Sets.tkField(L, { ...o, hut: null, bund: false });
+    Sets.tkScape(L, { fgRice: false, ...o, hut: null, bund: null, reflect: false });
     let f = `<path d="M-900,-800H2000V260L1300,180Q540,120 -220,180L-900,260Z" fill="#a8803e" ${OUT(6)}/>`;
     for (let k = 0; k < 40; k++) f += `<path d="M${-900 + k * 75},${200 - Math.abs(k - 19) * 2}l${-8},${80}" stroke="#7a5a2a" stroke-width="7"/>`;
     f += `<path d="M-900,240Q540,140 2000,240" stroke="#6a4a22" stroke-width="20" fill="none"/>`;
@@ -280,8 +277,10 @@
       <path d="M${X - 66},690q22,9 44,0M${X + 22},690q22,9 44,0" stroke="#3a2a22" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M${X - 24},730q24,-8 48,0" stroke="#2a2420" stroke-width="6" fill="none" stroke-linecap="round"/>
       <path d="M${X - 36},752q36,14 72,0" stroke="${skD}" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M${X - 50},758Q${X},810 ${X + 50},758" fill="#2a1a10" opacity=".14"/></g></g>`;
     // the rescuer from above at his left: her head (braid, parting) and pink shoulders
-    if (o.rescuer !== false) b += `<g transform="translate(${X - 300},1070) scale(.8)"><ellipse cx="0" cy="0" rx="120" ry="200" fill="#e86a8a" ${OUT(5)}/><path d="M-40,-190Q0,-210 40,-190" stroke="#d05a7a" stroke-width="10" fill="none"/>
-      <ellipse cx="-20" cy="0" rx="86" ry="96" fill="#2a1c14" ${OUT(4)}/><path d="M-96,-4Q-20,-14 56,-4" stroke="#6a5446" stroke-width="5" opacity=".9"/><path d="M-60,-60Q-20,-80 30,-56M-70,50Q-20,74 30,52" stroke="#5a4438" stroke-width="6" fill="none" opacity=".8"/><ellipse cx="-40" cy="-40" rx="24" ry="12" fill="#8a7464" opacity=".5"/><ellipse cx="60" cy="0" rx="22" ry="30" fill="#e0a880" ${OUT(3)}/>${Array.from({ length: 6 }, (_, k) => `<ellipse cx="${-120 - k * 22}" cy="${30 + k * 10}" rx="16" ry="14" fill="#1a120e" ${OUT(2)}/>`).join("")}</g>`;
+    if (o.rescuer !== false) b += `<g transform="translate(${X - 330},1080) scale(.85)"><ellipse cx="-30" cy="0" rx="78" ry="200" fill="#e86a8a" stroke="${INK}" stroke-width="5"/><path d="M-30,-190Q10,-196 20,-150M-30,190Q10,196 20,150" stroke="#c04a6a" stroke-width="8" fill="none"/>
+      <path d="M-120,10Q-170,30 -200,80Q-230,130 -220,190" stroke="#1a120e" stroke-width="30" fill="none" stroke-linecap="round"/>${Array.from({ length: 6 }, (_, k) => `<path d="M${-128 - k * 16},${20 + k * 26}q10,6 22,-2" stroke="#3a2a22" stroke-width="4" fill="none"/>`).join("")}<circle cx="-220" cy="196" r="10" fill="#e83a6a"/>
+      <ellipse cx="40" cy="0" rx="82" ry="72" fill="#1e1410" stroke="${INK}" stroke-width="4"/><path d="M-36,0H110" stroke="#5a463c" stroke-width="5"/><path d="M-20,-46Q40,-60 100,-30M-20,46Q40,60 100,30" stroke="#4a3a30" stroke-width="5" fill="none" opacity=".8"/>
+      <path d="M108,-28Q128,0 108,28" stroke="#e0a880" stroke-width="12" fill="none" stroke-linecap="round"/><ellipse cx="20" cy="-30" rx="26" ry="12" fill="#7a6458" opacity=".5"/></g>`;
     if (o.phone) b += `<g transform="translate(940,520) rotate(14)"><rect x="-70" y="-130" width="140" height="260" rx="22" fill="#1e1e24" ${OUT(4)}/><rect x="-58" y="-112" width="116" height="220" rx="10" fill="#2a6a4a"/><text x="0" y="-40" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="40" fill="#fff">1669</text><circle cx="0" cy="40" r="26" fill="#3ad06a"/><path d="M-10,30q10,20 20,20" stroke="#fff" stroke-width="6" fill="none"/>${[1, 2, 3].map((k) => `<path d="M${50 + k * 16},-20q10,20 0,40" stroke="#f2f0ea" stroke-width="5" fill="none" opacity="${f1(1 - k * 0.25)}"/>`).join("")}</g>`;
     put(L.set, b);
     rain(L, { rain: o.rain ?? 0.6 });
@@ -542,6 +541,103 @@
       <path d="M200,880Q240,876 250,900" stroke="#4a6070" stroke-width="5" fill="none" opacity=".7"/></g>
       <g transform="translate(330,820) rotate(-10)" opacity=".9"><ellipse rx="50" ry="62" fill="#3a2c24"/>${[-30, -10, 10, 30].map((dx) => `<rect x="${dx - 8}" y="-120" width="16" height="70" rx="8" fill="#3a2c24"/>`).join("")}</g>`;
     return g; };
+  // ================================================================ review fixes (2 พ.ย. gate review)
+  // ผ้าพระบฏ, Thai mural on old cloth: gold + red ground, a kanok border, นางตะเคียน inside the trunk — pale face, almond eyes, red lips, a ชฎา crown,
+  // a green สไบ with gold edging, black hair pouring down the trunk into the roots; mural villagers sheltering under the canopy.
+  // ids: #<id>-eyesO (open eyes, opacity 0 → 1), #<id>-arm (the beckoning hand, rotate about its shoulder), #<id>-p0..p3 (the villagers, fade into the hair)
+  Tk.cloth = (x, y, s = 1, o = {}) => {
+    const r = mk(44), id = o.id || "tkc"; let g = `<g transform="translate(${x},${y}) scale(${s})">`;
+    g += `<path d="M-430,-40H430" stroke="#4a2a14" stroke-width="34" stroke-linecap="round"/><circle cx="-430" cy="-40" r="24" fill="#c8a040" stroke="#2a1a0c" stroke-width="4"/><circle cx="430" cy="-40" r="24" fill="#c8a040" stroke="#2a1a0c" stroke-width="4"/>`;
+    g += `<path d="M-400,-20H400V1560L340,1600L280,1560L220,1600L160,1560L100,1600L40,1560L-20,1600L-80,1560L-140,1600L-200,1560L-260,1600L-320,1560L-400,1600Z" fill="#7a1e14" stroke="#2a1a0c" stroke-width="6"/>`;
+    // kanok border: gold flames on red
+    g += `<rect x="-370" y="10" width="740" height="1520" fill="#e8c068" stroke="#5a3a14" stroke-width="5"/>`;
+    for (let k = 0; k < 16; k++) { const bx = -350 + k * 46; g += `<path d="M${bx},34q14,-26 24,-6q8,-16 18,0q-10,16 -20,10q-10,10 -22,-4Z" fill="#a8281a" stroke="#5a3a14" stroke-width="2"/>`; g += `<path d="M${bx},1506q14,26 24,6q8,16 18,0q-10,-16 -20,-10q-10,-10 -22,4Z" fill="#a8281a" stroke="#5a3a14" stroke-width="2"/>`; }
+    g += `<rect x="-340" y="60" width="680" height="1420" fill="#d8b878" stroke="#5a3a14" stroke-width="4"/>`;
+    // night storm in the upper panel, gold lightning, painted clouds (mural swirls)
+    g += `<path d="M-340,60H340V470Q160,430 0,470Q-160,430 -340,470Z" fill="#2a2a4a"/>`;
+    for (let k = 0; k < 6; k++) { const cx = -280 + k * 110, cy = 120 + (k % 2) * 60; g += `<path d="M${cx},${cy}q30,-40 60,0q30,-30 50,10q-50,30 -110,-10Z" fill="#4a4a6a" stroke="#e8c068" stroke-width="3"/>`; }
+    g += `<path d="M130,90l-40,130h50l-70,150" stroke="#f2d070" stroke-width="12" fill="none" stroke-linejoin="round"/>`;
+    // the tree: trunk, seven cloths, a mural canopy of scalloped leaves
+    g += `<path d="M-120,1480Q-90,1000 -80,640Q-40,600 0,600Q40,600 80,640Q90,1000 120,1480Z" fill="#5a3418" stroke="#2a1a0c" stroke-width="5"/>`;
+    CLOTH.forEach((c, k) => { g += `<path d="M-100,${1060 + k * 18}Q0,${1070 + k * 18} 100,${1060 + k * 18}V${1074 + k * 18}Q0,${1084 + k * 18} -100,${1074 + k * 18}Z" fill="${c}"/>`; });
+    for (let k = 0; k < 40; k++) { const a = Math.PI * (1.02 + 0.96 * k / 39), rr = 260 + r() * 70, cx = Math.cos(a) * rr * 1.1, cy = 600 + Math.sin(a) * rr * 0.75; g += `<path d="M${f1(cx - 34)},${f1(cy)}q34,-44 68,0q-34,26 -68,0Z" fill="${k % 3 ? "#2a5a2a" : "#3e7a3a"}" stroke="#1a2a12" stroke-width="2.5"/>`; }
+    // her hair: pours from the head down the trunk and into the roots (black, with gold-line strands)
+    g += `<path d="M-60,700Q-130,1000 -110,1300Q-160,1420 -250,1480H250Q160,1420 110,1300Q130,1000 60,700Z" fill="#120c0a"/>`;
+    for (let k = 0; k < 9; k++) { const sx = -90 + k * 22; g += `<path d="M${sx},760Q${sx - 20 + k * 2},1100 ${sx * 2.2},1470" stroke="#3a2a22" stroke-width="3" fill="none"/>`; }
+    // her body: green สไบ with gold, pale arms
+    g += `<path d="M-56,820Q-80,960 -60,1060H60Q80,960 56,820Z" fill="#2a8a4a" stroke="#14100e" stroke-width="4"/><path d="M-56,840L56,980" stroke="#e8c048" stroke-width="12"/><path d="M-56,1040H60" stroke="#e8c048" stroke-width="8"/>`;
+    // the beckoning arm (her left), pivot at the shoulder (50,860)
+    g += `<g id="${id}-arm"><path d="M50,860Q150,880 230,980" stroke="#f4ece2" stroke-width="22" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M50,860Q150,880 230,980" stroke="#14100e" stroke-width="26" fill="none" opacity=".25"/>
+      <g transform="translate(232,984) rotate(30)"><ellipse rx="16" ry="12" fill="#f4ece2" stroke="#14100e" stroke-width="3"/>${[-10, -3, 4, 11].map((dx) => `<path d="M${dx},-6q4,-26 -6,-34" stroke="#f4ece2" stroke-width="6" stroke-linecap="round" fill="none"/>`).join("")}</g></g>`;
+    // the face: pale, almond eyes (closed lids → open), arched brows, red lips; ชฎา crown
+    g += `<g transform="translate(0,770)"><path d="M-44,-10Q-46,46 0,62Q46,46 44,-10Q40,-56 0,-58Q-40,-56 -44,-10Z" fill="#f4ece2" stroke="#14100e" stroke-width="4"/>
+      <path d="M-32,-14Q-20,-22 -8,-14M8,-14Q20,-22 32,-14" stroke="#14100e" stroke-width="3" fill="none"/>
+      <g id="${id}-eyesC"><path d="M-30,0q10,6 20,0M10,0q10,6 20,0" stroke="#14100e" stroke-width="3.5" fill="none"/></g>
+      <g id="${id}-eyesO" opacity="${o.open ? 1 : 0}"><path d="M-31,0Q-20,-9 -9,0Q-20,6 -31,0Z" fill="#fff" stroke="#14100e" stroke-width="2.5"/><circle cx="-19" cy="-1" r="4.5" fill="#14100e"/><path d="M9,0Q20,-9 31,0Q20,6 9,0Z" fill="#fff" stroke="#14100e" stroke-width="2.5"/><circle cx="21" cy="-1" r="4.5" fill="#14100e"/><circle cx="-18" cy="-2" r="1.5" fill="#d8302a"/><circle cx="22" cy="-2" r="1.5" fill="#d8302a"/></g>
+      <path d="M-2,8q2,10 -4,14" stroke="#c8a890" stroke-width="2.5" fill="none"/><path d="M-10,32Q0,38 10,32Q0,28 -10,32Z" fill="#b8281a"/>
+      <path d="M-46,-40Q-50,-80 -30,-96L-14,-150L0,-210L14,-150L30,-96Q50,-80 46,-40Q0,-64 -46,-40Z" fill="#e8c048" stroke="#5a3a14" stroke-width="4"/>${[-30, -14, 0, 14, 30].map((dx, k) => `<circle cx="${dx}" cy="${-60 - (2 - Math.abs(k - 2)) * 24}" r="5" fill="#a8281a"/>`).join("")}
+      <path d="M-46,-40Q-60,-20 -56,20M46,-40Q60,-20 56,20" stroke="#e8c048" stroke-width="6" fill="none"/></g>`;
+    // mural villagers sheltering under her shade (the ones she takes fade into the hair)
+    [[-260, 1430, "#c84a2a"], [-200, 1450, "#2a4a8a"], [210, 1440, "#e8c048"], [270, 1430, "#3a7a3a"]].forEach(([px, py, c], k) => { g += `<g id="${id}-p${k}" transform="translate(${px},${py})"><circle cy="-74" r="15" fill="#e8c8a0" stroke="#14100e" stroke-width="3"/><path d="M-16,-90Q0,-104 16,-90" stroke="#14100e" stroke-width="6" fill="none"/><path d="M-18,-56L-24,0H24L18,-56Z" fill="${c}" stroke="#14100e" stroke-width="3"/><path d="M-12,0V22M12,0V22" stroke="#14100e" stroke-width="5"/></g>`; });
+    // mural ground line, age: cracks, water stains, worn fold lines
+    g += `<path d="M-340,1480H340" stroke="#5a3a14" stroke-width="6"/>`;
+    for (let k = 0; k < 18; k++) g += `<path d="M${f1(-330 + r() * 660)},${f1(70 + r() * 1400)}l${f1(-20 + r() * 40)},${f1(20 + r() * 50)}l${f1(-10 + r() * 20)},${f1(10 + r() * 30)}" stroke="#4a2a10" stroke-width="2" fill="none" opacity=".45"/>`;
+    g += `<path d="M-340,520H340M-340,1000H340" stroke="#5a3a14" stroke-width="3" opacity=".25"/><ellipse cx="220" cy="1250" rx="140" ry="70" fill="#5a3a14" opacity=".14"/><ellipse cx="-240" cy="330" rx="90" ry="50" fill="#5a3a14" opacity=".12"/>`;
+    return g + `</g>`;
+  };
+  // old healed lightning scars (3–4 long dark ridges with paler callus edges) for the trunk, in tree units; drawn by Tk.tree when o.scar
+  Tk.oldScars = () => [[18, -1220, 0], [-62, -1150, 1], [70, -1100, 2], [-20, -900, 3]].map(([x0, y0, k]) => { const pts = [[x0, y0]]; let x = x0; for (let j = 1; j < 7; j++) { x += (j % 2 ? -1 : 1) * (10 + k * 3); pts.push([x, y0 + j * (150 - k * 12)]); } const d = "M" + pts.map((p) => p.join(",")).join("L");
+    return `<path d="${d}" stroke="#d8c0a0" stroke-width="${26 - k * 3}" fill="none" opacity=".55" stroke-linejoin="round"/><path d="${d}" stroke="#1a0e08" stroke-width="${16 - k * 2}" fill="none" stroke-linejoin="round"/><path d="${d}" stroke="#3a2618" stroke-width="${5}" fill="none" stroke-dasharray="20 14" opacity=".8"/>`; }).join("");
+  // the old photo: a young farmer in a งอบ standing under THE SAME tree (its trunk with cloths behind him), black-and-white, a crack in the glass
+  Tk.photo = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><rect x="-160" y="-210" width="320" height="420" fill="#6a4020" stroke="${INK}" stroke-width="8"/><rect x="-130" y="-180" width="260" height="360" fill="#d6d0c2"/>
+    <path d="M-130,-180H130V-40Q60,-80 0,-60Q-60,-80 -130,-40Z" fill="#8a867c"/>${[-90, -40, 10, 60, 100].map((cx) => `<ellipse cx="${cx}" cy="-120" rx="44" ry="30" fill="#6a665e"/>`).join("")}
+    <path d="M-34,180V-60H34V180Z" fill="#7a7468"/>${[0, 1, 2, 3, 4, 5, 6].map((k) => `<rect x="-34" y="${20 + k * 10}" width="68" height="9" fill="${["#9a948a", "#5a564e", "#8a8478", "#4a4640", "#aaa49a", "#6a665e", "#7a7468"][k]}"/>`).join("")}
+    <path d="M-130,150H130V180H-130Z" fill="#8a8478"/>
+    <g transform="translate(-70,40)"><path d="M-36,140Q-40,40 0,30Q40,40 36,140Z" fill="#4a4640"/><ellipse cx="0" cy="0" rx="26" ry="30" fill="#b0aa9e"/><path d="M-50,-14Q0,-60 50,-14Q0,-24 -50,-14Z" fill="#5a564e"/>
+      <path d="M-10,0q4,-3 8,0M4,0q4,-3 8,0" stroke="#2a2824" stroke-width="3" fill="none"/><path d="M-6,14q6,4 12,0" stroke="#2a2824" stroke-width="3" fill="none"/></g>
+    <rect x="-130" y="-180" width="260" height="360" fill="#7a6a50" opacity=".18"/><path d="M-130,-110L30,70L130,40" stroke="#ffffff" stroke-width="3" opacity=".6" fill="none"/><path d="M-80,-170L-30,-110" stroke="#fff" stroke-width="12" opacity=".2"/>
+    ${[-40, 0, 40].map((dx) => `<g transform="translate(${dx},236)"><path d="M0,0V-30" stroke="#f2f0ea" stroke-width="8"/><ellipse cy="-36" rx="5" ry="9" fill="#ffb84a"/></g>`).join("")}
+    <path d="M-160,216H160" stroke="#c83a2a" stroke-width="14"/><path d="M-140,210q30,-24 60,0q30,-24 60,0q30,-24 60,0q30,-24 60,0" stroke="#f2c230" stroke-width="7" fill="none"/></g>`;
+  // small cartoon faces for people seen through a car window: [x, skin, hair, kind] kind: "yai" (งอบ), "ploy" (braid), "ton"
+  Tk.winFace = (x, y, s, skin, hair, kind, look = 0) => `<g transform="translate(${x},${y}) scale(${s})"><ellipse rx="40" ry="46" fill="${skin}" stroke="${INK}" stroke-width="3"/>
+    ${kind === "yai" ? `<path d="M-74,-30Q0,-110 74,-30Q0,-44 -74,-30Z" fill="#c8a868" stroke="${INK}" stroke-width="3"/>` : kind === "ploy" ? `<path d="M-42,-6C-46,-56 42,-60 42,-6Q30,-30 0,-34Q-30,-30 -42,-6Z" fill="${hair}"/><ellipse cx="${-44 * (look || 1)}" cy="20" rx="12" ry="26" fill="${hair}"/>` : `<path d="M-40,-14C-40,-54 40,-54 40,-14Q20,-30 0,-30Q-20,-30 -40,-14Z" fill="${hair}"/>${[-20, 0, 20].map((dx) => `<path d="M${dx},-44l-4,-14" stroke="${hair}" stroke-width="6"/>`).join("")}`}
+    <ellipse cx="${-14 + look * 8}" cy="2" rx="6" ry="8" fill="#fff" stroke="${INK}" stroke-width="2"/><ellipse cx="${14 + look * 8}" cy="2" rx="6" ry="8" fill="#fff" stroke="${INK}" stroke-width="2"/><circle cx="${-14 + look * 10}" cy="3" r="3.5" fill="${INK}"/><circle cx="${14 + look * 10}" cy="3" r="3.5" fill="${INK}"/>
+    <ellipse cx="${look * 6}" cy="26" rx="8" ry="${kind === "ton" ? 9 : 5}" fill="#5a1a1a"/></g>`;
+  // the ambulance: white, a blue Star of Life (not the Red Cross emblem), 1669, a generic red-and-yellow stripe, light bar
+  Tk.ambulance = (x, y, s = 1, o = {}) => { const star = `<g>${[0, 60, 120].map((a) => `<rect x="-14" y="-56" width="28" height="112" rx="4" fill="#2a6ad0" transform="rotate(${a})"/>`).join("")}<path d="M0,-34V36" stroke="#fff" stroke-width="6"/><path d="M-10,-26q20,10 0,20q-20,10 0,20q20,10 0,20" stroke="#fff" stroke-width="4" fill="none"/></g>`;
+    return `<g transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="12" rx="480" ry="30" fill="#000" opacity=".3"/>
+    <path d="M-440,-60V-300Q-440,-330 -400,-330H200Q240,-330 270,-290L420,-160Q440,-140 440,-110V-60Z" fill="#f4f4f0" stroke="${INK}" stroke-width="6"/>
+    <path d="M220,-300L350,-180H220Z" fill="#2a3a4a" stroke="${INK}" stroke-width="5"/><rect x="-440" y="-170" width="880" height="26" fill="#e8402a"/><rect x="-440" y="-144" width="880" height="14" fill="#f2c230"/>
+    <g transform="translate(-170,-240)">${star}</g>
+    <rect x="-100" y="-360" width="200" height="34" rx="8" fill="#e8e8e8" stroke="${INK}" stroke-width="4"/><circle cx="-60" cy="-343" r="${f1(14 + 40 * (o.lit ?? 0))}" fill="#4a8aff" opacity="${f1(0.3 + 0.5 * (o.lit ?? 0))}"/><circle cx="60" cy="-343" r="${f1(14 + 40 * (1 - (o.lit ?? 0)))}" fill="#ff4a3a" opacity="${f1(0.3 + 0.5 * (1 - (o.lit ?? 0)))}"/>
+    ${[-260, 280].map((wx) => `<circle cx="${wx}" cy="-40" r="80" fill="#1a1a1e" stroke="${INK}" stroke-width="6"/><circle cx="${wx}" cy="-40" r="36" fill="#8a9096" stroke="${INK}" stroke-width="4"/>`).join("")}
+    <text x="-20" y="-200" font-family="sans-serif" font-weight="800" font-size="60" fill="#2a6ad0">1669</text>${o.open ? `<path d="M-440,-300H-560V-60H-440Z" fill="#e8e8e4" stroke="${INK}" stroke-width="5"/><rect x="-430" y="-290" width="260" height="220" fill="#2a3036"/>` : ""}</g>`; };
+  // a stretcher (side view) with a blanket: (x,y) = the middle of the mattress top
+  Tk.stretcher = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-300,40H300" stroke="#8a929a" stroke-width="16"/><path d="M-260,40L-280,150M260,40L280,150M-200,40L-180,150M200,40L180,150" stroke="#6a727a" stroke-width="10"/>${[-280, -180, 180, 280].map((wx) => `<circle cx="${wx}" cy="160" r="16" fill="#1a1a1e"/>`).join("")}<rect x="-310" y="0" width="620" height="44" rx="12" fill="#e8ecf0" stroke="${INK}" stroke-width="4"/></g>`;
+  // scorched ground at a strike (dark, cracked, with smoke wisps rising)
+  Tk.scorch = (x, y, s = 1, smoke = 1) => `<g transform="translate(${x},${y}) scale(${s})"><ellipse rx="260" ry="50" fill="#1a120c" opacity=".75"/><ellipse rx="160" ry="30" fill="#0a0806" opacity=".8"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M${-180 + k * 90},-10q-20,-60 0,-120t0,-120" stroke="#b8bcc0" stroke-width="${14 - k}" fill="none" opacity="${f1(0.35 * smoke)}" stroke-linecap="round"/>`).join("")}</g>`;
+  // the toy stopwatch, counting (o.label above the digits, o.ring 0..1 progress toward 30:00); returns html; Tk.watchRun animates the digits
+  Tk.watch = (x, y, s = 1, o = {}) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-70,-280H70V280H-70Z" fill="#2a8a4a" stroke="${INK}" stroke-width="6"/>${[-220, -160, 160, 220].map((yy) => `<path d="M-70,${yy}H70" stroke="#1e6a3a" stroke-width="5"/>`).join("")}
+    <rect x="-170" y="-170" width="340" height="340" rx="80" fill="#f2c230" stroke="${INK}" stroke-width="7"/>
+    ${o.ring != null ? `<circle r="150" fill="none" stroke="#c89a20" stroke-width="16"/><circle id="${o.id}-ring" r="150" fill="none" stroke="#d8302a" stroke-width="16" pathLength="1" stroke-dasharray="${f1(o.ring)} 1" transform="rotate(-90)" stroke-linecap="round"/>` : ""}
+    <rect x="-118" y="-84" width="236" height="150" rx="16" fill="#a8c890" stroke="${INK}" stroke-width="5"/>
+    <text id="${o.id}-d" x="0" y="20" text-anchor="middle" font-family="monospace" font-weight="700" font-size="78" fill="#1e2a14">${o.mm || "10"}:${o.ss || "00"}</text>
+    <text x="0" y="-104" text-anchor="middle" font-family="Sriracha" font-size="${o.labelSize || 30}" fill="#2a1a0c">${o.label || ""}</text>${o.sub ? `<text x="0" y="56" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="22" fill="#1e2a14">${o.sub}</text>` : ""}
+    <circle cx="-180" cy="-60" r="16" fill="#d8302a" stroke="${INK}" stroke-width="4"/><circle cx="180" cy="-60" r="16" fill="#2a6ad0" stroke="${INK}" stroke-width="4"/>
+    <path d="M-130,-140L-90,-148" stroke="#fff" stroke-width="8" opacity=".5" stroke-linecap="round"/></g>`;
+  Tk.watchRun = (tl, id, t0, dur, from, o = {}) => { const el = () => document.getElementById(`${id}-d`), c = { v: from };
+    tl.fromTo(c, { v: from }, { v: from + dur * (o.speed ?? 1), duration: dur, ease: "none", immediateRender: false, onUpdate: () => { const e = el(); if (e) { const v = Math.floor(c.v); e.textContent = `${String(Math.floor(v / 60)).padStart(2, "0")}:${String(v % 60).padStart(2, "0")}`; } } }, t0);
+    if (o.ring) tl.fromTo(`#${id}-ring`, { attr: { "stroke-dasharray": `${f1(from / 1800)} 1` } }, { attr: { "stroke-dasharray": `${f1((from + dur * (o.speed ?? 1)) / 1800)} 1` }, duration: dur, ease: "none", immediateRender: false }, t0); };
+  // inside the cab, looking out (o.view "side" | "windshield"): dark cab, the glass with rivulets and refracting drops; returns html (screen units)
+  Tk.cab = (o = {}) => { const r = mk(o.seed || 88), ws = o.view === "windshield"; let g = "";
+    const hole = ws ? "M60,520Q540,430 1020,520L1060,1340Q540,1300 20,1340Z" : "M70,420Q70,360 130,360H980Q1040,360 1040,420V1300H70Z";
+    g += `<path d="M0,0H1080V1920H0Z ${hole}" fill="#1a2026" fill-rule="evenodd"/><path d="${hole}" fill="none" stroke="#0a0e12" stroke-width="22"/>`;
+    if (ws) g += `<path d="M0,1320Q540,1270 1080,1320V1920H0Z" fill="#20262c"/><path d="M0,1420Q540,1370 1080,1420" stroke="#2e363e" stroke-width="10" fill="none"/><path d="M700,1520a140,140 0 1 1 1,0" fill="none" stroke="#0e1216" stroke-width="30"/><path d="M60,520L20,1340" stroke="#2a3036" stroke-width="40"/><path d="M1020,520L1060,1340" stroke="#2a3036" stroke-width="40"/><path d="M520,520V600" stroke="#0e1216" stroke-width="14"/><rect x="470" y="600" width="100" height="40" rx="8" fill="#0e1216"/>`;
+    else g += `<path d="M70,1300H1040" stroke="#2a3036" stroke-width="30"/><path d="M0,1330H1080V1920H0Z" fill="#20262c"/><path d="M0,1420Q540,1360 1080,1420" stroke="#2e363e" stroke-width="12" fill="none"/><rect x="760" y="1360" width="160" height="40" rx="10" fill="#2e363e"/>`;
+    let gl = `<path d="${hole}" fill="#a8c0d0" opacity=".07"/>`;
+    for (let k = 0; k < 14; k++) { const x = 110 + r() * 860; let d = `M${f1(x)},${f1(400 + r() * 200)}`; let y = 420; for (let j = 0; j < 8; j++) { y += 60 + r() * 60; d += `L${f1(x + (r() - 0.5) * 18)},${f1(y)}`; } gl += `<path d="${d}" stroke="#e8f4ff" stroke-width="${f1(2.5 + r() * 3)}" fill="none" opacity=".3" stroke-linecap="round"/>`; }
+    for (let k = 0; k < 110; k++) { const x = 90 + r() * 930, y = 440 + r() * 840, rr = 3 + r() * 9; gl += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(rr)}" ry="${f1(rr * 1.2)}" fill="#0e1820" opacity=".22"/><circle cx="${f1(x - rr * 0.3)}" cy="${f1(y - rr * 0.4)}" r="${f1(rr * 0.35)}" fill="#ffffff" opacity=".65"/>`; }
+    return { frame: g, glass: gl }; };
   // ---------------------------------------------------------------- cast
   const { LINE } = Rig2;
   const C = Rig.CAST;
@@ -559,5 +655,8 @@
   const flowers = `<g>${[[-40, -440], [30, -420], [-20, -380], [40, -360], [-36, -340], [10, -470]].map(([x, y]) => `<g transform="translate(${x},${y})">${[0, 72, 144, 216, 288].map((a) => `<ellipse rx="7" ry="3.6" fill="#f2c230" transform="rotate(${a}) translate(6,0)"/>`).join("")}<circle r="3" fill="#fff"/></g>`).join("")}</g>`;
   C.lungPiak = { v2: { ...base("taJun"), hair: { ...base("taJun").hair, c: "#3a3430", s: "#1e1a18", sh: "#6a625a" }, brow: "#2a2420", face: `<path d="M-40,-528Q0,-486 40,-528Q36,-500 0,-492Q-36,-500 -40,-528Z" fill="#2a1a10" opacity=".16"/><path d="M-20,-531q10,-6 20,-2q10,-4 20,2" stroke="#2a2420" stroke-width="5" fill="none" stroke-linecap="round"/>`, faceTop: headband, top: { kind: "shirt", c: "#d8582a", sleeve: "short", neck: "collar", collar: "#b8481e", button: "#f2e8d8" }, print: flowers, bottom: { kind: "shorts", c: "#a8946a" }, feet: { kind: "bare" }, extra: "" } };
   // ต้น: green tee with a big 9, blue shorts, a slingshot in the back pocket
+  const phoneP = `<g transform="translate(0,118) rotate(-10)"><rect x="-13" y="-26" width="26" height="46" rx="5" fill="#2a2a32" ${ln(2)}/><rect x="-10" y="-22" width="20" height="36" rx="2" fill="#3ad06a"/></g>`;
+  C.ployPhone = { ...C.ploy, hand: phoneP, keep: "F" };
+  C.medic = { v2: { ...base("keng"), top: { kind: "shirt", c: "#2a6ad0", sleeve: "short", neck: "collar", collar: "#1e5ab8", button: "#fff" }, print: `<path d="M-30,-440h20M-20,-450v20" stroke="#fff" stroke-width="6"/>`, bottom: { kind: "jeans", c: "#1e2a4a" }, feet: { kind: "boot", c: "#1a1a1a" }, extra: "" } };
   C.ton = { v2: { ...base("tang"), top: { kind: "tee", c: "#3a9a5a", sleeve: "short" }, print: `<text x="0" y="-380" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="56" fill="#f2f0ea" opacity=".9">9</text>`, bottom: { kind: "shorts", c: "#2a4a8a" }, feet: { kind: "bare" } } };
 })();
