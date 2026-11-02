@@ -1,0 +1,2 @@
+ep1/mix.wav: flatness 0.30 (ok) · pause HF median -78.6 dBFS (ok) → PASS
+ep2/mix.wav: flatness 0.29 (ok) · pause HF median -78.4 dBFS (ok) → PASS
