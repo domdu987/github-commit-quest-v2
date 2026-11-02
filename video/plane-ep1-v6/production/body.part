@@ -1,0 +1,602 @@
+      // ---------- รอดคนเดียว EP.1 v4b · S17 card rhythm + the owner's look ("ทำภาพให้สวย แบบที่ผมเคยบอก") ----------
+      // a cut on (or just before) every card; bright readable cabin (v3 level) with orange fire light, black smoke from the ceiling,
+      // glowing floor-path lights and rim light; several angles (side, down the aisle, inserts, low at the door); faces ≥ 1/3 of the
+      // frame on every emotional beat; layered fire, metal debris, a cabin that reacts (bins pop, masks swing, things roll, dust falls);
+      // the facts on real things (passengers with bags, the seat-pocket card with pictures, the EXIT sign). Twist echoes "ข้างหน้า".
+      Rig.MODES.crouchLook = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -72 + 8 * Math.sin(u * 3.1), faF: -8, uaB: 20, faB: -30, head: -8 });
+      Rig.MODES.reachBin = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -140 + 6 * Math.sin(u * 5), faF: -58, uaB: -120 + 6 * Math.sin(u * 5 + 1), faB: -64, head: -14, torso: -3 });
+      Rig.MODES.getUp = (u, o) => ({ ...Rig.MODES.sitChair(u, o), torso: 18, head: -6, uaF: 40, faF: -100, uaB: 20, faB: -90 });
+      Rig.MODES.hugBag = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: 20, faF: -110, uaB: 26, faB: -100, torso: 6 + 2 * Math.sin(u * 7), head: 6 });
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.7, 2.6, 4.4], ...extra }; };
+      const QUO = { quote: true };
+      const EMERG = { from: "right", rim: "#ffb060", rimOp: 0.85, shade: "#1a0c12", shadeOp: 0.32, cast: false, vol: false };
+      const BRIGHT = { from: "right", rim: "#ffd9a0", rimOp: 0.6, shade: "#1a1430", shadeOp: 0.25, cast: false, vol: false };
+      const CALM = { from: "right", rim: "#ffd9a0", rimOp: 0.5, shade: "#1a1430", shadeOp: 0.35, cast: false, vol: false };
+      const DUSKL = { from: "left", rim: "#ffc890", rimOp: 0.7, shade: "#141a2a", shadeOp: 0.35, cast: false, vol: false };
+      const GEMR = { top: "#ff5a40", bottom: "#101828", op: 0.12 }, GCAB = { top: "#fff0d0", bottom: "#2a2030", op: 0.08 }, GSEA = { top: "#ffb080", bottom: "#101828", op: 0.12 };
+      const KX = ROW30 + 40, KS = 0.8;
+      const sway = (amp = 1.2) => (t) => ({ x: 0, y: 0, r: amp * Math.sin(t * 1.3) });
+      const rumble = (a = 6) => (t) => ({ x: a * Math.sin(t * 37), y: a * 0.8 * Math.sin(t * 29), r: 0.3 * Math.sin(t * 17) });
+      const noSh = (tl, id, n = 2) => { for (let i = 0; i < n; i++) tl.set(`#${id}-a${i}-shadow`, { opacity: 0 }, 0); };
+      // the cabin: side cut (no hull section below), emergency light; dark is a light touch now (the owner wants it readable)
+      const CAB = (id, state, extra = {}, dark = 0.2) => ({ set: "cabinCut", setOpts: { id, state, noHull: true, ...extra }, dark: state === "calm" ? 0 : dark, light: state === "calm" ? CALM : EMERG, grade: state === "calm" ? GCAB : GEMR });
+      const AISLE = (id, state, extra = {}, dark = 0.18) => ({ set: "cabinAisle", setOpts: { id, state, ...extra }, dark, light: EMERG, grade: GEMR });
+      const SITE = (id, extra = {}) => ({ set: "crashSite", setOpts: { id, time: "dusk", ...extra }, dark: 0.04, light: DUSKL, grade: GSEA, blur: { far: 1.5, mid: 0.6, fg: 7 } });
+      let fgN = 0;
+      const fgDepth = (L, kind) => { const left = fgN++ % 2 === 0, x = left ? 0 : 1080, f = left ? 1 : -1;
+        const g = kind === "curtain" ? `<path d="M${x},-40H${x + f * 150}Q${x + f * 120},700 ${x + f * 170},1960H${x}Z" fill="#8a6a4a"/><path d="M${x + f * 40},-40Q${x + f * 30},900 ${x + f * 60},1960M${x + f * 90},-40Q${x + f * 80},900 ${x + f * 110},1960" stroke="#6a4a30" stroke-width="10" fill="none"/>`
+          : `<path d="M${x},1180Q${x + f * 120},1150 ${x + f * 190},1230L${x + f * 230},1960H${x}Z" fill="#24346a"/><path d="M${x},1220Q${x + f * 110},1196 ${x + f * 170},1256" stroke="#f4f0e6" stroke-width="40" fill="none"/><rect x="${left ? 0 : 1080 - 300}" y="1600" width="300" height="46" rx="20" fill="#5a6070"/>`;
+        put(L.light, `<g filter="url(#plBlur14)" opacity=".96">${g}</g>`); };
+      const withDepth = (spec) => { const set = spec.set || "", st = spec.setOpts && spec.setOpts.state, smoky = (st === "smoke" || st === "fire") && spec.smokeL !== false;
+        if (smoky && set === "cabinCut") spec = { ...spec, setOpts: { ...spec.setOpts, noSheet: true } };
+        if (smoky && set === "cabinAisle") spec = { ...spec, setOpts: { ...spec.setOpts, state: "alarm" } };
+        if (!/^cabin/.test(set)) return spec; const fx = spec.fx;
+        return { ...spec, fx(tl, id, t0, L) { fx && fx(tl, id, t0, L);
+          if (smoky) { const sh = shots[+id.slice(1)]; smokeLayer(tl, L, t0, (sh && sh.dur) || 1.5, set === "cabinAisle" ? { y1: 500 + (smokeAt(t0) - (PF - 880)) * 0.4, y2: 500 + (smokeAt(t0 + ((sh && sh.dur) || 1.5)) - (PF - 880)) * 0.4, top: -400 } : {}); }
+          if (spec.fgd !== false) fgDepth(L, spec.fgd || "seat"); } }; };
+      const SMOKE_KEYS = [[0, PF - 880], [8, PF - 800], [20, PF - 720], [30, PF - 650], [37, PF - 520], [45, PF - 470], [50, PF - 420], [53, PF - 200], [57, PF - 140]];
+      const smokeAt = (t) => { const K = SMOKE_KEYS; if (t <= K[0][0]) return K[0][1]; for (let i = 1; i < K.length; i++) if (t <= K[i][0]) { const [a, ya] = K[i - 1], [b, yb] = K[i]; return ya + (yb - ya) * (t - a) / (b - a); } return K[K.length - 1][1]; };
+      let smN = 0;
+      const smokeLayer = (tl, L, t0, d, o = {}) => { const id = `sl${smN++}`, y1 = o.y1 ?? smokeAt(t0), y2 = o.y2 ?? smokeAt(t0 + d), r = mk(31 + smN * 7);
+        let g = `<rect x="-1400" y="${o.top ?? PF - 1300}" width="4000" height="${y1 - (o.top ?? PF - 1300) - 90}" fill="#141214"/>`;
+        for (let k = 0; k < 34; k++) { const x = -1300 + k * 115 + r() * 60, rr = 120 + r() * 110, yy = y1 - 60 - r() * 120;
+          g += `<g class="smk" data-d="${f1((r() - 0.5) * 50)}"><ellipse cx="${f1(x)}" cy="${f1(yy)}" rx="${f1(rr)}" ry="${f1(rr * 0.62)}" fill="#1c1a1c"/><ellipse cx="${f1(x + 10)}" cy="${f1(yy + rr * 0.42)}" rx="${f1(rr * 0.8)}" ry="${f1(rr * 0.2)}" fill="#ff7a2a" opacity="${f1(0.12 + r() * 0.16)}"/></g>`; }
+        put(o.layer || L.fg, `<g id="${id}" filter="url(#plBlur6)">${g}</g>`);
+        tl.fromTo(`#${id}`, { y: 0 }, { y: y2 - y1, duration: d, ease: "none", immediateRender: false }, t0);
+        document.querySelectorAll(`#${id} .smk`).forEach((el) => { const dx = +el.dataset.d; tl.fromTo(el, { x: 0 }, { x: dx * d, duration: d, ease: "none", immediateRender: false }, t0); }); };
+      const seg = (k, segs) => segs.forEach(([at, mkSpec], i) => {
+        const end = i + 1 < segs.length ? segs[i + 1][0] : D(k), dur = end - at, spec = mkSpec(dur, at);
+        add(k, withDepth({ captions: capsFrom(k, at, undefined, spec.capO), ...spec })); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = dur; });
+      const C = (k, i = 0, j = 0) => Math.max(0, F(k, i, j) - 0.1);
+      const STRAPX = ROW30 + PP - 120, LEGX = ROW30 + PP - 150 + 20;
+      const snagStrap = (id) => `<g id="${id}"><path d="M${STRAPX - 40},${PF - 70}Q${STRAPX - 60},${PF - 140} ${LEGX + 10},${PF - 66}" stroke="#3a2a22" stroke-width="9" fill="none"/>
+        <ellipse cx="${LEGX + 4}" cy="${PF - 62}" rx="18" ry="10" fill="none" stroke="#3a2a22" stroke-width="8"/></g>`;
+      const flick = (tl, sel, t0, dur, lo = 0.6, hi = 1) => { const n = Math.max(1, Math.round(dur / 0.11)); for (let i = 0; i < n; i++) tl.set(sel, { opacity: i % 3 === 1 ? lo : hi - (i % 2) * 0.12 }, t0 + i * 0.11); };
+      // orange fire light flickering from one side (screen blend), not a brown wash over everything
+      const fireLight = (tl, L, id, t0, dur, op = 0.3, side = "right") => {
+        put(L.light, `<radialGradient id="${id}-flg" cx="${side === "right" ? 1 : 0}" cy=".55" r="1"><stop offset="0" stop-color="#ff7a2a" stop-opacity="1"/><stop offset=".6" stop-color="#ff5a1a" stop-opacity=".35"/><stop offset="1" stop-color="#ff5a1a" stop-opacity="0"/></radialGradient>
+          <rect id="${id}-fl" width="1080" height="1920" fill="url(#${id}-flg)" opacity="0" style="mix-blend-mode:screen"/>`); flick(tl, `#${id}-fl`, t0, dur, op * 0.45, op); };
+      const frontLight = (tl, L, id, t0, dur, op = 0.32) => {
+        put(L.light, `<radialGradient id="${id}-frg" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#ff7a2a" stop-opacity="1"/><stop offset=".45" stop-color="#ff5a1a" stop-opacity=".4"/><stop offset="1" stop-color="#ff5a1a" stop-opacity="0"/></radialGradient>
+          <rect id="${id}-fr" width="1080" height="1920" fill="url(#${id}-frg)" opacity="0" style="mix-blend-mode:screen"/>`); flick(tl, `#${id}-fr`, t0, dur, op * 0.5, op); };
+      const exitBeam = (L, x, y, s = 1, gid = "") => put(L.glow, `<g ${gid ? `id="${gid}" ` : ""}transform="translate(${x},${y}) scale(${s})"><linearGradient id="exb${x}${y}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7dffb8" stop-opacity=".55"/><stop offset="1" stop-color="#7dffb8" stop-opacity="0"/></linearGradient>
+        <path d="M-90,30L-260,520H260L90,30Z" fill="url(#exb${x}${y})" style="mix-blend-mode:screen"/><ellipse rx="130" ry="56" fill="#7dffb8" opacity=".5" filter="url(#plBlur14)"/>${Plane.exit(`exg${x}${y}`, 1)}</g>`);
+      const dropDark = (tl, id, at, to = 0.6, d = 0.25) => tl.to(`#${id}-dark`, { opacity: to, duration: d, ease: "power2.in" }, at);
+      // the cabin reacts: dust and grit falling from the ceiling, a bin door pops open, a bottle rolls along the floor
+      const react = (tl, L, id, t0, d, o = {}) => { const r = mk(Math.round(t0 * 100) + 7), x0 = o.x0 ?? 300, x1 = o.x1 ?? 1500;
+        let g = "";
+        for (let k = 0; k < 26; k++) g += `<circle id="${id}-du${k}" cx="${f1(x0 + r() * (x1 - x0))}" cy="${PF - 640 + r() * 40}" r="${f1(1.5 + r() * 3)}" fill="#d8ccb8" opacity="0"/>`;
+        if (o.bin !== false) { const bx = o.binX ?? 760; put(L.set, `<g transform="translate(${bx},${PF - 470})"><rect x="-90" y="-150" width="180" height="150" fill="#3a332a"/><rect x="-60" y="-70" width="90" height="66" rx="8" fill="#6a4ac8" stroke="${PL.ink}" stroke-width="3"/><g id="${id}-bd"><rect x="-90" y="-150" width="180" height="150" rx="8" fill="#ece6da" stroke="${PL.ink}" stroke-width="4"/><rect x="-24" y="-30" width="48" height="12" rx="5" fill="#bdb3a0"/></g></g>`); }
+        if (o.bottle !== false) g += `<g transform="translate(${o.botX ?? 900},${PF - 18})"><g id="${id}-bt"><rect x="-26" y="-11" width="52" height="22" rx="10" fill="#bfe4ff" opacity=".9" stroke="${PL.ink}" stroke-width="2.5"/><rect x="26" y="-6" width="10" height="12" rx="3" fill="#2f6fd0"/></g></g>`;
+        put(L.glow, g);
+        for (let k = 0; k < 26; k++) tl.fromTo(`#${id}-du${k}`, { y: 0, opacity: 0.9 }, { y: 520 + (k % 5) * 90, opacity: 0, duration: 1.1 + (k % 4) * 0.3, repeat: Math.ceil(d / 1.1), ease: "power1.in", immediateRender: false }, t0 + (k % 7) * 0.12);
+        if (o.bin !== false) tl.fromTo(`#${id}-bd`, { scaleY: 1, svgOrigin: "0 -150" }, { scaleY: -0.14, svgOrigin: "0 -150", duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, t0 + (o.binAt ?? 0.25));
+        if (o.bottle !== false) tl.fromTo(`#${id}-bt`, { x: 0, rotation: 0, svgOrigin: "0 0" }, { x: -260, rotation: -720, svgOrigin: "0 0", duration: d, ease: "power1.inOut", immediateRender: false }, t0); };
+      // passengers (real cast from the channel's library) — standing in the aisle, some with bags; in the side cut or down the aisle
+      const PAX = ["chan", "fon", "bua", "samarn", "tourist", "boss", "june", "yaiTide", "mint", "chan"];   // rig2 everyday people: office worker, auntie, student, older men, a grandmother
+      const pax = (i, x, y, s, mode, extra = {}) => A(PAX[i % PAX.length], x, y, s, [{ t: 0, mode, eyes: extra.eyes ?? "wide", mouth: extra.mouth ?? "o" }], extra);
+      const heldBag = (x, y, s, k) => `<g transform="translate(${f1(x)},${f1(y)}) scale(${f1(s)})">${k % 2 ? Plane.bag(0.9, { strap: true }) : `<rect x="-70" y="-110" width="140" height="110" rx="14" fill="${["#c8302a", "#2f6fd0", "#2fa864", "#6a4ac8"][k % 4]}" stroke="${PL.ink}" stroke-width="5"/><path d="M-30,-110v-24h60v24" stroke="${PL.ink}" stroke-width="7" fill="none"/>`}</g>`;
+      // down the aisle (one-point perspective): a person at depth Z (m), lateral X (m) → world point and rig scale
+      const AQ = (X, Z) => { const p = AP(X, 0, Z); return { x: p[0], y: p[1], s: 2.54 / Z }; };
+      // the seat-pocket safety card, a real printed card in hand (thick, glossy, thumb-marked): 4 live panels —
+      // p0 stay low under the smoke (a figure ducks under the band) · p1 no bags (the red ✗ strokes on) · p2 count the rows (seats go green, the arrow draws) · p3 90 s (the hand sweeps, "90" stamps on)
+      const safetyCard = (id, o = {}) => { const P = (k, x, y, inner) => `<g transform="translate(${x},${y})"><g id="${id}-p${k}"><rect x="-86" y="-80" width="172" height="160" rx="12" fill="#f3f6f9" stroke="${PL.ink}" stroke-width="4"/>${inner}<rect id="${id}-h${k}" x="-90" y="-84" width="180" height="168" rx="14" fill="none" stroke="#f4c430" stroke-width="8" opacity="0"/></g></g>`;
+        const man0 = `<g id="${id}-up" stroke="#2a2f3c" stroke-width="13" stroke-linecap="round" fill="none"><circle cx="-34" cy="-26" r="12" fill="#2a2f3c" stroke="none"/><path d="M-34,-10V30M-34,30L-46,66M-34,30L-22,66M-34,0L-50,24M-34,0L-18,22"/></g>`;
+        const man1 = `<g id="${id}-lo" opacity="0" stroke="#2a2f3c" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="-50" cy="22" r="12" fill="#2a2f3c" stroke="none"/><path d="M-36,32L14,36M-30,34L-40,64M14,36L34,60L58,64"/></g>`;
+        return `<g id="${id}"><g transform="skewY(-4)">
+        <rect x="-188" y="-262" width="400" height="560" rx="18" fill="#000" opacity=".35" filter="url(#plBlur14)"/>
+        <rect x="-196" y="-274" width="400" height="560" rx="18" fill="#c9c0aa" stroke="${PL.ink}" stroke-width="6"/>
+        <rect x="-200" y="-280" width="400" height="560" rx="18" fill="#fdfaf2" stroke="${PL.ink}" stroke-width="6"/>
+        <rect x="-200" y="-280" width="400" height="74" rx="18" fill="${PL.navy}"/><rect x="-200" y="-224" width="400" height="18" fill="${PL.navy}"/><path d="M-200,-206H200" stroke="${PL.gold}" stroke-width="6"/>
+        <text x="-176" y="-232" font-family="Kanit" font-weight="900" font-size="34" fill="${PL.gold}">ฟ้าราม แอร์ · SAFETY</text>
+        ${P(0, -100, -110, `<path d="M-80,66H80" stroke="#9aa4b0" stroke-width="4"/><g id="${id}-sm"><path d="M-110,-80H110V-44Q86,-30 62,-42T14,-40T-34,-36T-82,-42T-110,-38Z" fill="#4e4e5a"/><path d="M-110,-58Q-70,-48 -40,-56T20,-54T110,-58" stroke="#6e6e7c" stroke-width="6" fill="none"/></g>${man0}${man1}
+          <g id="${id}-ad"><path d="M58,-26V18" stroke="#2fa864" stroke-width="10" stroke-linecap="round"/><path d="M42,6L58,26L74,6" stroke="#2fa864" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`)}
+        ${P(1, 100, -110, `<g id="${id}-bg"><g transform="translate(0,40)">${Plane.bag(0.75, { strap: true })}</g></g>
+          <path id="${id}-x1" d="M-56,-56L56,56" stroke="${PL.red}" stroke-width="16" stroke-linecap="round" stroke-dasharray="160" stroke-dashoffset="${o.done ? 0 : 160}"/><path id="${id}-x2" d="M56,-56L-56,56" stroke="${PL.red}" stroke-width="16" stroke-linecap="round" stroke-dasharray="160" stroke-dashoffset="${o.done ? 0 : 160}"/>`)}
+        ${P(2, -100, 100, [-50, 0, 50].map((x, k) => `<g id="${id}-s${k}"><rect x="${x - 18}" y="-20" width="36" height="56" rx="8" fill="${PL.seat}" stroke="${PL.ink}" stroke-width="3"/><text x="${x}" y="-32" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="26" fill="${PL.ink}">${k + 1}</text></g>`).join("") +
+          `<path id="${id}-ar" d="M-70,58H60M44,44L60,58L44,72" stroke="#2fa864" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="190" stroke-dashoffset="${o.done ? 0 : 190}"/>`)}
+        ${P(3, 100, 100, `<circle cx="0" cy="-8" r="46" fill="#fff" stroke="${PL.ink}" stroke-width="6"/><circle id="${id}-pie" cx="0" cy="-8" r="21" fill="none" stroke="#f6c4bc" stroke-width="42" stroke-dasharray="132" stroke-dashoffset="${o.done ? 0 : 132}" transform="rotate(-90 0 -8)"/>
+          <circle cx="0" cy="-8" r="46" fill="none" stroke="${PL.ink}" stroke-width="6"/>${[0, 90, 180, 270].map((a) => `<path d="M0,-46V-39" stroke="${PL.ink}" stroke-width="5" transform="rotate(${a} 0 -8)"/>`).join("")}
+          <g transform="translate(0,-8)"><g id="${id}-hd"><path d="M0,0V-36" stroke="${PL.red}" stroke-width="7" stroke-linecap="round"/></g></g><circle cx="0" cy="-8" r="6" fill="${PL.ink}"/><rect x="-11" y="-68" width="22" height="12" rx="4" fill="${PL.ink}"/>
+          <text id="${id}-90" x="0" y="70" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="28" fill="${PL.red}" opacity="${o.show90 ? 1 : 0}">90 วินาที</text>`)}
+        <g opacity=".22" stroke="#8a7e66" stroke-width="2" fill="none">${[0, 1, 2, 3].map((k) => `<ellipse cx="-150" cy="236" rx="${10 + k * 6}" ry="${14 + k * 7}" transform="rotate(-24 -150 236)"/><ellipse cx="156" cy="226" rx="${9 + k * 6}" ry="${13 + k * 7}" transform="rotate(30 156 226)"/>`).join("")}</g>
+        <clipPath id="${id}-cc"><rect x="-200" y="-280" width="400" height="560" rx="18"/></clipPath>
+        <g clip-path="url(#${id}-cc)"><g id="${id}-gl" opacity=".0"><path d="M-120,-400L-40,-400L-260,400L-340,400Z" fill="#fff"/><path d="M-20,-400L0,-400L-220,400L-240,400Z" fill="#fff"/></g></g>
+        </g></g>`; };
+      // bring the card's panels to life (k: which, t: when). In: each panel pops on with an overshoot. Focus: that panel lifts and glows, the rest dim
+      const cardLive = (tl, id, t0, d, o = {}) => { const S = (s) => `#${id}-${s}`, ctr = "0 0";
+        if (o.popIn) [0, 1, 2, 3].forEach((k) => tl.fromTo(S(`p${k}`), { scale: 0.4, opacity: 0, svgOrigin: ctr }, { scale: 1, opacity: 1, svgOrigin: ctr, duration: 0.38, ease: "back.out(2.6)", immediateRender: false }, o.popIn + k * 0.09));
+        if (o.gloss != null) tl.fromTo(S("gl"), { x: -60, opacity: 0.55 }, { x: 640, opacity: 0.25, duration: 0.7, ease: "power2.out", immediateRender: false }, o.gloss);
+        // idle life: the smoke band drifts, the figure breathes, the bag rocks, the hand ticks
+        tl.fromTo(S("sm"), { x: -8 }, { x: 8, duration: 0.9, yoyo: true, repeat: Math.ceil(d / 0.9), ease: "sine.inOut", immediateRender: false }, t0);
+        tl.fromTo(S("bg"), { rotation: -3, svgOrigin: "0 70" }, { rotation: 3, svgOrigin: "0 70", duration: 0.45, yoyo: true, repeat: Math.ceil(d / 0.45), ease: "sine.inOut", immediateRender: false }, t0);
+        const focus = (k, t) => { [0, 1, 2, 3].forEach((j) => { tl.to(S(`p${j}`), { opacity: j === k ? 1 : 0.42, duration: 0.15, immediateRender: false }, t); tl.to(S(`h${j}`), { opacity: j === k ? 1 : 0, duration: 0.15, immediateRender: false }, t); });
+          tl.fromTo(S(`p${k}`), { scale: 1, svgOrigin: ctr }, { keyframes: [{ scale: 1.16, duration: 0.16, ease: "power2.out" }, { scale: 1.08, duration: 0.22, ease: "back.out(3)" }], svgOrigin: ctr, immediateRender: false }, t);
+          [0, 1, 2, 3].filter((j) => j !== k).forEach((j) => tl.to(S(`p${j}`), { scale: 0.96, svgOrigin: ctr, duration: 0.2, immediateRender: false }, t)); };
+        const F = o.focus || {};
+        if (F[0] != null) { const t = F[0]; focus(0, t);   // the figure ducks under the smoke, the arrow pushes down
+          tl.to(S("up"), { opacity: 0, y: 18, duration: 0.18, ease: "power2.in", immediateRender: false }, t + 0.08);
+          tl.fromTo(S("lo"), { opacity: 0, y: -22 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2.4)", immediateRender: false }, t + 0.18);
+          tl.fromTo(S("ad"), { y: -14 }, { y: 6, duration: 0.25, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, t); }
+        if (F[1] != null) { const t = F[1]; focus(1, t);   // the ✗, one stroke then the other
+          tl.to(S("x1"), { strokeDashoffset: 0, duration: 0.16, ease: "power2.out", immediateRender: false }, t + 0.08);
+          tl.to(S("x2"), { strokeDashoffset: 0, duration: 0.16, ease: "power2.out", immediateRender: false }, t + 0.28); }
+        if (F[2] != null) { const t = F[2]; focus(2, t);   // seats go green one by one, then the arrow draws
+          [0, 1, 2].forEach((k) => { tl.to(`${S(`s${k}`)} rect`, { fill: "#2fa864", duration: 0.08, immediateRender: false }, t + 0.06 + k * 0.12);
+            tl.fromTo(S(`s${k}`), { y: 0 }, { keyframes: [{ y: -10, duration: 0.07 }, { y: 0, duration: 0.12, ease: "bounce.out" }], immediateRender: false }, t + 0.06 + k * 0.12); });
+          tl.to(S("ar"), { strokeDashoffset: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, t + 0.42); }
+        if (F[3] != null) { const t = F[3], sw = o.sweep || 0.7; focus(3, t);   // the hand sweeps a full turn, the dial fills, "90" stamps on
+          tl.fromTo(S("hd"), { rotation: 0, svgOrigin: "0 0" }, { rotation: 360, svgOrigin: "0 0", duration: sw, ease: "power1.inOut", immediateRender: false }, t);
+          tl.to(S("pie"), { strokeDashoffset: 0, duration: sw, ease: "power1.inOut", immediateRender: false }, t);
+          tl.fromTo(S("90"), { opacity: 0, scale: 2.2, svgOrigin: "0 60" }, { opacity: 1, scale: 1, svgOrigin: "0 60", duration: 0.3, ease: "back.out(3)", immediateRender: false }, o.stamp ?? t + sw);
+          if (o.allBack) [0, 1, 2, 3].forEach((j) => { tl.to(S(`p${j}`), { opacity: 1, scale: 1, svgOrigin: ctr, duration: 0.25, immediateRender: false }, o.allBack); }); } };
+
+      // ---------- a new set: the over-wing exit (the side wall facing us: the plug hatch with its red pull bar and window, the lit EXIT sign
+      // above, a window either side; through the glass the wing reaching out over the sea at dusk — o.fire puts flames on the wing) ----------
+      Sets.overwing = (L, o = {}) => { const id = o.id || "ow", HX = 900, top = PF - 640;
+        const view = (cx, cy, w, h, k) => `<clipPath id="${id}-vc${k}"><rect x="${cx - w / 2}" y="${cy - h / 2}" width="${w}" height="${h}" rx="${Math.min(w, h) * 0.42}"/></clipPath>
+          <g clip-path="url(#${id}-vc${k})"><rect x="${cx - w}" y="${cy - h}" width="${w * 2}" height="${h * 2}" fill="url(#${id}-vsk)"/><rect x="${cx - w}" y="${cy + h * 0.12}" width="${w * 2}" height="${h}" fill="#3a5a78"/>
+            <path d="M${cx - w},${cy + h * 0.12}H${cx + w}" stroke="#ffe0c0" stroke-width="3" opacity=".7"/>
+            <path d="M${cx - w * 1.2},${cy + h * 0.55}L${cx + w * 1.4},${cy + h * 0.05}L${cx + w * 1.4},${cy + h * 0.2}L${cx - w * 1.2},${cy + h * 0.9}Z" fill="#c8d0dc" stroke="${PL.ink}" stroke-width="2"/>
+            <path d="M${cx - w * 1.2},${cy + h * 0.62}L${cx + w * 1.4},${cy + h * 0.12}" stroke="#9aa4b0" stroke-width="3"/>
+            ${o.fire ? `<g transform="translate(${cx + w * 0.1},${cy + h * 0.32}) scale(${w / 200})"><g class="${id}-wfire">${Plane.flames(`${id}-wf${k}`, 170, 1.3)}</g></g>` : ""}</g>`;
+        let s = `<linearGradient id="${id}-vsk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c86a6a"/><stop offset="1" stop-color="#f6b880"/></linearGradient>
+          <rect x="-1200" y="${top - 400}" width="3600" height="${PF - top + 400}" fill="url(#plWall)"/><rect x="-1200" y="${top - 60}" width="3600" height="62" fill="#d7d0c2"/>
+          <path d="M-1200,${PF - 470}H2400V${top}H-1200Z" fill="url(#plBin)"/><path d="M-1200,${PF - 470}H2400" stroke="${PL.ink}" stroke-width="4"/>
+          <rect x="-1200" y="${PF - 64}" width="3600" height="64" fill="${PL.floor}"/><rect x="-1200" y="${PF}" width="3600" height="1400" fill="#0a0b10"/>`;
+        [HX - 330, HX + 330].forEach((wx, k) => { s += `<rect x="${wx - 56}" y="${PF - 400}" width="112" height="150" rx="50" fill="#d8d1c3" stroke="${PL.ink}" stroke-width="4"/>` + view(wx, PF - 325, 76, 112, k); });
+        s += `<rect x="${HX - 170}" y="${PF - 590}" width="340" height="560" rx="46" fill="#e6e0d4" stroke="${PL.ink}" stroke-width="6"/><rect x="${HX - 150}" y="${PF - 570}" width="300" height="520" rx="36" fill="none" stroke="#bdb3a0" stroke-width="4"/>
+          <rect x="${HX - 70}" y="${PF - 500}" width="140" height="190" rx="60" fill="#d8d1c3" stroke="${PL.ink}" stroke-width="4"/>${view(HX, PF - 405, 104, 160, 2)}
+          <rect x="${HX - 120}" y="${PF - 280}" width="240" height="44" rx="14" fill="${PL.red}" stroke="${PL.ink}" stroke-width="4"/><text x="${HX}" y="${PF - 249}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="26" fill="#fff">ดึง · PULL</text>
+          <text x="${HX}" y="${PF - 140}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="22" fill="#7a7060">ทางออกฉุกเฉิน</text>
+          <g transform="translate(${HX},${PF - 660})"><g id="${id}-exit">${Plane.exit(`${id}-ex`, 1.1)}</g></g>`;
+        s += Array.from({ length: 14 }, (_, k) => `<rect x="${HX - 640 + k * 90}" y="${PF - 22}" width="40" height="10" rx="5" fill="#9dffc8"/>`).join("");
+        put(L.set, s);
+        put(L.glow, Array.from({ length: 14 }, (_, k) => `<ellipse cx="${HX - 620 + k * 90}" cy="${PF - 18}" rx="46" ry="14" fill="#7dffb8" opacity=".4" filter="url(#plBlur6)"/>`).join(""));
+        if (o.smoke) put(L.fg, `<g id="${id}-smoke" filter="url(#plBlur14)"><rect x="-1200" y="${top - 300}" width="3600" height="${(o.smokeH ?? 500) + 300}" fill="url(#plSmoke)"/>${Plane.puffMk(`${id}-sm`, HX, PF - 520, 10, "dark", 110)}</g>`); };
+      // the wreck washed up along a ทะเลลด beach (Sets.tideBeach view "sea"): panels with rivets and the airline stripe, a row of seats on its
+      // side, a suitcase, an orange life vest, a tray table, foam round them — scaled by distance with Tide.yAt
+      const wreckBits = (L, bid, items) => put(L.set, items.map(([x, d, kind, rot = 0]) => { const y = Tide.yAt(bid, d), k = 15 / d;
+        const art = kind === "panel" ? `<path d="M-120,-30L110,-44L124,22L-110,34Z" fill="url(#plMetal)" stroke="${PL.ink}" stroke-width="5"/><path d="M-110,-6L116,-18" stroke="${PL.navy}" stroke-width="12"/><path d="M-108,8L118,-4" stroke="${PL.gold}" stroke-width="6"/>${[-80, -30, 20, 70].map((rx) => `<circle cx="${rx}" cy="-30" r="4" fill="#5a6070"/>`).join("")}`
+          : kind === "seats" ? `<g transform="rotate(-80)"><rect x="-90" y="-40" width="180" height="70" rx="14" fill="${PL.seat}" stroke="${PL.ink}" stroke-width="5"/><rect x="-90" y="-110" width="60" height="80" rx="12" fill="${PL.seatD}" stroke="${PL.ink}" stroke-width="5"/><rect x="0" y="-110" width="60" height="80" rx="12" fill="${PL.seatD}" stroke="${PL.ink}" stroke-width="5"/></g>`
+          : kind === "case" ? `<rect x="-60" y="-90" width="120" height="90" rx="12" fill="#c8302a" stroke="${PL.ink}" stroke-width="5"/><path d="M-24,-90v-18h48v18" stroke="${PL.ink}" stroke-width="6" fill="none"/>`
+          : kind === "vest" ? `<path d="M-50,-60L-60,10H-8L-14,-56ZM50,-60L60,10H8L14,-56Z" fill="#ff6a14" stroke="${PL.ink}" stroke-width="4"/><path d="M-54,-20h40M14,-20h40" stroke="#fff4d0" stroke-width="6"/>`
+          : `<rect x="-70" y="-14" width="140" height="28" rx="6" fill="#cfc7b6" stroke="${PL.ink}" stroke-width="4"/>`;
+        return `<g transform="translate(${f1(x)},${f1(y)}) scale(${f1(k)}) rotate(${rot})"><ellipse cy="10" rx="150" ry="18" fill="#000" opacity=".22"/>${art}<ellipse cy="14" rx="170" ry="16" fill="#fff" opacity=".35"/></g>`; }).join(""));
+
+      // ================= v5 additions =================
+      // fire, the way ทะเลลด/ขวัญ do it: layered flames (Plane.flames v2) + rising embers (Pov.embers) + heat haze on the set behind
+      // (Pov's displacement filter) + a smoke ceiling that rolls along the roof (Pov.smoke) — all driven by Pov.life
+      const fireFX = (tl, L, id, t0, d, o = {}) => { const r = mk(Math.round(t0 * 100) + 3);
+        if (o.x != null) { put(L.glow, `<g transform="translate(${o.x},${o.y})">${Plane.flames(`${id}-ff`, o.h ?? 300, o.w ?? 1.2)}</g>`); Plane.flicker(tl, `${id}-ff`, t0, d); }
+        put(L.glow, Pov.embers(r, { x0: o.ex0 ?? (o.x ?? 540) - 300, x1: o.ex1 ?? (o.x ?? 540) + 300, y0: o.ey0 ?? PF - 500, y1: o.ey1 ?? PF, n: o.embers ?? 34, big: 7 }));
+        if (o.haze !== false) { L.set.setAttribute("filter", "url(#pvHaze)"); L.set.classList.add("haze"); }
+        Pov.life(tl, `#${id}`, t0, d); };
+      const smokeCeiling = (L, o = {}) => put(L.fg, `<g opacity="${o.op ?? 0.95}">${Pov.smoke(mk(o.seed ?? 11), { x0: -1200, x1: 2600, y0: PF - 1000, y1: o.y1 ?? PF - 560, lit: true, n: 30 })}</g>`);
+      // the under-wing exterior (a film angle): the wing's underside across the top of the frame, the engine pod hanging under it on its
+      // pylon, its exhaust on fire, the smoke trail streaming back, the sea far below at dusk
+      Sets.underwing = (L, o = {}) => { const id = o.id || "uw";
+        put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4a8a"/><stop offset=".5" stop-color="#d07a7a"/><stop offset="1" stop-color="#f6b880"/></linearGradient><rect x="-2000" y="-1400" width="5200" height="4800" fill="url(#${id}-sk)"/>`);
+        put(L.far, `<rect x="-2000" y="1250" width="5200" height="2400" fill="#2e4a6a"/><path d="M-2000,1250H3200" stroke="#ffe0c0" stroke-width="6" opacity=".7"/>
+          ${Array.from({ length: 26 }, (_, k) => `<path d="M${-1600 + (k * 397) % 4200},${1290 + (k % 9) * 70}h${60 + (k % 5) * 40}" stroke="#8ab0d0" stroke-width="${2 + (k % 3)}" opacity=".5"/>`).join("")}
+          ${Array.from({ length: 6 }, (_, k) => `<ellipse cx="${-1000 + k * 700}" cy="${1120 + (k % 2) * 60}" rx="${380 + (k % 3) * 120}" ry="50" fill="#ffe6d0" opacity=".55"/>`).join("")}`);
+        put(L.set, `<path d="M-1400,-400L2600,-400L2600,180L-1400,560Z" fill="#c8d0dc" stroke="#1f1a17" stroke-width="8"/><path d="M-1400,440L2600,90" stroke="#9aa4b0" stroke-width="10"/>
+          ${[-900, -400, 100, 600, 1100, 1600, 2100].map((x) => `<path d="M${x},${560 - (x + 1400) * 0.095}l60,70h220l40,-${70 - (x + 1400) * 0.002}" fill="#b8c0cc" stroke="#1f1a17" stroke-width="5"/>`).join("")}
+          ${Array.from({ length: 12 }, (_, k) => `<path d="M${-1300 + k * 330},${-400}L${-1300 + k * 330},${540 - k * 33}" stroke="#aeb6c2" stroke-width="3"/>`).join("")}
+          <g transform="translate(540,520)"><path d="M-60,-140L60,-140L90,40L-90,40Z" fill="#b8c0cc" stroke="#1f1a17" stroke-width="6"/>
+            <rect x="-330" y="20" width="700" height="250" rx="120" fill="#dfe4ec" stroke="#1f1a17" stroke-width="8"/><ellipse cx="370" cy="145" rx="60" ry="125" fill="#2a2e38" stroke="#1f1a17" stroke-width="8"/>
+            <ellipse cx="370" cy="145" rx="36" ry="90" fill="#4a505c"/><rect x="-330" y="95" width="700" height="20" fill="#f4c430"/><ellipse cx="-330" cy="145" rx="40" ry="100" fill="#3a3f4c" stroke="#1f1a17" stroke-width="6"/></g>`);
+        // the intake's fan (seen through the lip, at an angle)
+        put(L.set, `<g transform="translate(910,665)">${Array.from({ length: 12 }, (_, k) => { const a = (k / 12) * Math.PI * 2; return `<path d="M0,0L${f1(Math.cos(a) * 28)},${f1(Math.sin(a) * 76)}" stroke="#8a929e" stroke-width="7"/>`; }).join("")}<circle r="14" fill="#c8ccd4" stroke="#1f1a17" stroke-width="3"/></g>`);
+        if (o.fire) { // jet fire: tongues streaming back from the exhaust (left), a tight glow, the black trail behind
+          const ex = 205, ey = 665, tongue = (k, L0, W0, c) => `<path class="${id}-jt" data-o="${ex} ${ey}" d="M${ex},${ey - W0}C${ex - L0 * 0.3},${ey - W0 * 1.3} ${ex - L0 * 0.7},${ey - W0 * 0.4 + k * 6} ${ex - L0},${ey + k * 8}C${ex - L0 * 0.7},${ey + W0 * 0.5 + k * 6} ${ex - L0 * 0.3},${ey + W0 * 1.2} ${ex},${ey + W0}Z" fill="url(#${c})"/>`;
+          put(L.glow, `<ellipse cx="${ex - 240}" cy="${ey}" rx="420" ry="150" fill="#ff6a1a" opacity=".42" filter="url(#plBlur24)"/>
+            <path d="M${ex - 300},${ey - 40}C${ex - 700},${ey - 90} ${ex - 1200},${ey - 30} ${ex - 1900},${ey + 120}L${ex - 1900},${ey + 330}C${ex - 1200},${ey + 170} ${ex - 700},${ey + 90} ${ex - 300},${ey + 50}Z" fill="#2a2628" opacity=".85" filter="url(#plBlur14)"/>
+            ${Plane.puffMk(`${id}-tr`, ex - 260, ey, 14, "dark", 80)}
+            <g id="${id}-jet">${tongue(-1, 980, 110, "plFlR")}${tongue(1, 880, 96, "plFlR")}${tongue(-1, 760, 80, "plFlO")}${tongue(1, 600, 62, "plFlO")}${tongue(0, 420, 44, "plFlY")}<ellipse cx="${ex - 20}" cy="${ey}" rx="60" ry="56" fill="#fff6d0"/></g>`); } };
+      Plane.underwingLife = (tl, id, t0, d) => { const n = Math.ceil(d / 0.09);
+        document.querySelectorAll(`.${id}-jt`).forEach((el, j) => { const o = el.getAttribute("data-o"); tl.fromTo(el, { scaleX: 0.86, scaleY: 1.1, svgOrigin: o }, { scaleX: 1.12, scaleY: 0.86, svgOrigin: o, duration: 0.08 + j * 0.02, yoyo: true, repeat: n, ease: "sine.inOut", immediateRender: false }, t0 + j * 0.015); });
+        Plane.puffs(tl, `${id}-tr`, t0, d, 14, { dx: -1500, dy: 180, per: 1.0, op: 0.95 }); };
+      // the forward galley, fire reaching it from the break: stainless carts in their bays, ovens with little windows, the counter, a loose
+      // trolley, the curtain to the cabin half drawn on the right
+      Sets.galley = (L, o = {}) => { const id = o.id || "gl", top = PF - 700;
+        let s = `<rect x="-1200" y="${top - 300}" width="3600" height="${PF - top + 300}" fill="#c9ccd2"/><rect x="-1200" y="${PF - 64}" width="3600" height="64" fill="#5a6070"/><rect x="-1200" y="${PF}" width="3600" height="1400" fill="#0a0b10"/>`;
+        for (let k = 0; k < 6; k++) { const x = 60 + k * 150;
+          s += `<rect x="${x}" y="${PF - 380}" width="136" height="360" rx="8" fill="#dfe3e8" stroke="#1f1a17" stroke-width="5"/><rect x="${x + 14}" y="${PF - 360}" width="108" height="16" rx="5" fill="#9aa4b0"/><rect x="${x + 50}" y="${PF - 220}" width="36" height="12" rx="5" fill="#4a505c"/>
+            <rect x="${x}" y="${PF - 640}" width="136" height="110" rx="8" fill="#e8ebef" stroke="#1f1a17" stroke-width="5"/><rect x="${x + 22}" y="${PF - 620}" width="92" height="60" rx="8" fill="#2a2e38"/><circle cx="${x + 110}" cy="${PF - 548}" r="6" fill="${k % 2 ? "#ff6a3a" : "#7dffb8"}"/>`; }
+        s += `<rect x="40" y="${PF - 420}" width="940" height="34" fill="#b8bec8" stroke="#1f1a17" stroke-width="5"/>
+          <g id="${id}-cart" transform="translate(1180,${PF - 30})"><rect x="-80" y="-330" width="160" height="320" rx="10" fill="#dfe3e8" stroke="#1f1a17" stroke-width="6"/><rect x="-60" y="-300" width="120" height="14" rx="5" fill="${PL.navy}"/><rect x="-100" y="-350" width="200" height="22" rx="8" fill="#9aa4b0" stroke="#1f1a17" stroke-width="4"/><circle cx="-50" cy="0" r="14" fill="#2a2e38"/><circle cx="50" cy="0" r="14" fill="#2a2e38"/></g>
+          <g id="${id}-cur"><path d="M1420,${top - 20}V${PF - 20}Q1500,${PF - 200} 1560,${PF - 20}V${top - 20}Z" fill="${PL.navy}" stroke="#1f1a17" stroke-width="5"/>${[1450, 1490, 1530].map((x) => `<path d="M${x},${top}V${PF - 60}" stroke="#121c40" stroke-width="6"/>`).join("")}<path d="M1400,${top - 20}H1700" stroke="#9aa4b0" stroke-width="12"/></g>`;
+        put(L.set, s);
+        put(L.glow, `<rect x="-1200" y="${top - 300}" width="1260" height="${PF - top + 300}" fill="#1a0e0a"/><circle cx="-60" cy="${PF - 300}" r="560" fill="url(#plAmb)"/>`); };
+      // the overhead bin, close: lid up, the bags inside; a passenger's hand drags the camera bag's twin out and it tips over the edge
+      Sets.binClose = (L, o = {}) => {
+        put(L.set, `<rect x="-1200" y="-1400" width="3600" height="4800" fill="#d8d0c2"/><rect x="40" y="520" width="1000" height="520" rx="20" fill="#3a332a" stroke="#1f1a17" stroke-width="8"/>
+          <rect x="80" y="760" width="300" height="250" rx="20" fill="#2f6fd0" stroke="#1f1a17" stroke-width="6"/><path d="M160,760v-40h140v40" stroke="#1f1a17" stroke-width="10" fill="none"/>
+          <rect x="420" y="700" width="360" height="310" rx="24" fill="#c8302a" stroke="#1f1a17" stroke-width="6"/><path d="M820,880Q900,820 1000,900L1000,1010H820Z" fill="#6a8a4a" stroke="#1f1a17" stroke-width="5"/>
+          <path d="M20,1040H1060" stroke="#1f1a17" stroke-width="10"/><rect x="20" y="1040" width="1040" height="60" fill="#ece6da" stroke="#1f1a17" stroke-width="6"/>
+          <path d="M40,520L120,250H960L1040,520Z" fill="#ece6da" stroke="#1f1a17" stroke-width="8"/><rect x="460" y="280" width="160" height="30" rx="10" fill="#bdb3a0"/>
+          <rect x="-1200" y="1100" width="3600" height="1400" fill="#b8b0a2"/>`); };
+      // the seat-back screen (S12): the route over the sea, the airliner icon halfway, ฟ้าราม FR 623
+      const ifeScreen = (id) => `<g id="${id}"><rect x="-330" y="-470" width="660" height="940" rx="40" fill="#1e2b58" stroke="#121c40" stroke-width="10"/><rect x="-280" y="-380" width="560" height="380" rx="16" fill="#0a1226" stroke="#3a4a7a" stroke-width="6"/>
+        <clipPath id="${id}-c"><rect x="-272" y="-372" width="544" height="364" rx="12"/></clipPath><g clip-path="url(#${id}-c)"><rect x="-280" y="-380" width="560" height="380" fill="#1f4f7a"/>
+          <path d="M-280,-60Q-230,-120 -200,-80T-140,-130L-150,0H-280Z" fill="#4a7a4a"/><path d="M280,-300Q220,-260 240,-200T200,-120L280,-80Z" fill="#4a7a4a"/><circle cx="60" cy="-150" r="10" fill="#4a7a4a"/>
+          <path id="${id}-rt" d="M-200,-110Q20,-330 220,-230" stroke="#fff" stroke-width="6" stroke-dasharray="14 10" fill="none"/><path d="M-200,-110Q20,-330 220,-230" pathLength="100" stroke="#f4c430" stroke-width="22" stroke-linecap="round" fill="none" opacity=".35" filter="url(#plBlur6)" stroke-dasharray="100 100" stroke-dashoffset="95" class="${id}-rg"/><path d="M-200,-110Q20,-330 220,-230" pathLength="100" stroke="#ffe27a" stroke-width="8" stroke-linecap="round" fill="none" stroke-dasharray="100 100" stroke-dashoffset="95" class="${id}-rg"/><circle cx="-200" cy="-110" r="10" fill="#f4c430"/><circle cx="220" cy="-230" r="10" fill="#f4c430"/>
+          <g transform="translate(10,-218) rotate(-14)"><g id="${id}-pl"><circle r="34" fill="#f4c430" opacity=".35"/><path d="M-36,0H36M0,-30L10,0L0,30M-30,-12L-26,0L-30,12" stroke="#fff" stroke-width="11" stroke-linecap="round" fill="none"/></g></g></g>
+        <path d="M-272,-8V-360Q-272,-372 -260,-372H272" stroke="#000" stroke-width="10" opacity=".35" fill="none" clip-path="url(#${id}-c)"/>
+        <g clip-path="url(#${id}-c)"><path d="M-280,-380H40L-180,0H-280Z" fill="#fff" opacity=".08"/><g id="${id}-sh"><path d="M-60,-400H-20L-240,20H-280Z" fill="#fff" opacity=".12"/></g></g>
+        <path d="M-322,-440Q-322,-462 -300,-462H300Q322,-462 322,-440" stroke="#4a5c94" stroke-width="5" fill="none"/><rect x="-286" y="-386" width="572" height="392" rx="18" fill="none" stroke="#0a0f20" stroke-width="4"/><text x="-262" y="-404" font-family="Kanit" font-weight="800" font-size="26" fill="${PL.gold}">ฟ้าราม แอร์ · FR 623</text><text x="0" y="60" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="28" fill="#cfd8f0">เที่ยวบินของคุณ</text>
+        <rect x="-150" y="300" width="300" height="130" rx="18" fill="#121c40"/><path d="M-110,330h220M-110,365h170M-110,400h200" stroke="#4a62a8" stroke-width="10"/></g>`;
+
+      // ===== B0 · 1. hook — frame 0: คิว's shocked face AND the engine burning in the window behind him; then outside: the engine =====
+      seg("hook", [
+        [0, (d) => ({ ...CAB("h1", "alarm", { wingFire: true, wingX: 280, noMasks: true }, 0.05), light: BRIGHT, blur: { far: 0.6, set: 0.6, fg: 9 },
+          fgd: false, cam: { keys: [{ t: 0, ...fr(330, 1090, 3.9, 540, 800) }, { t: d, glide: d, ...fr(335, 1090, 4.15, 540, 800) }] },
+          shake: rumble(4),
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "brace", eyes: "wide", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "h1", t0, d);
+            put(L.glow, `<circle id="h1-wg" cx="280" cy="${PF - 330}" r="360" fill="url(#plAmb)"/><clipPath id="h1-wc"><rect x="246" y="${PF - 380}" width="68" height="100" rx="30"/></clipPath>
+              <g clip-path="url(#h1-wc)"><rect x="240" y="${PF - 390}" width="80" height="120" fill="#f0a070"/><rect x="240" y="${PF - 300}" width="80" height="40" fill="#5a6a9a"/>
+                <path d="M240,${PF - 318}L320,${PF - 330}L320,${PF - 318}L240,${PF - 306}Z" fill="#c8d0dc" stroke="#1f1a17" stroke-width="1.5"/><rect x="262" y="${PF - 316}" width="40" height="16" rx="7" fill="#dfe4ec" stroke="#1f1a17" stroke-width="1.5"/>
+                <g transform="translate(276,${PF - 304}) scale(.32)">${Plane.flames("h1wf", 160, 1.1)}</g>${Plane.puffMk("h1ws", 300, PF - 350, 5, "dark", 16)}</g>`);
+            Plane.flicker(tl, "h1wf", t0, d); Plane.puffs(tl, "h1ws", t0, d, 5, { dx: -60, dy: -60, per: 0.9, op: 0.9 }); tl.fromTo("#h1-wg", { opacity: 0.6 }, { opacity: 1, duration: 0.12, yoyo: true, repeat: 12, immediateRender: false }, t0);
+            fireLight(tl, L, id, t0, d, 0.28); SU.flash(tl, L.light, t0 + 0.02, "#fff0c0", 0.35); } })],
+        [C("hook", 0, 1), (d) => ({ set: "underwing", setOpts: { id: "h2", fire: true }, dark: 0, light: false, grade: { top: "#ffb080", bottom: "#1a1030", op: 0.1 },
+          cam: { keys: [{ t: 0, ...fr(170, 700, 0.6, 540, 900) }, { t: d, glide: d, ...fr(140, 715, 0.56, 540, 900) }] },
+          shake: (t) => ({ x: 10 * Math.sin(t * 61), y: 7 * Math.sin(t * 47), r: 0.8 * Math.sin(t * 33) }),
+          fx(tl, id, t0, L) { Plane.underwingLife(tl, "h2", t0, d); fireFX(tl, L, id, t0, d, { ex0: -200, ex1: 500, ey0: 500, ey1: 900, embers: 30, haze: false });
+            SU.flash(tl, L.light, t0, "#fff4c0", 0.35); Plane.burst(tl, L.glow, 330, 600, t0 + 0.04, { n: 20, v: 620 }); Plane.burst(tl, L.glow, 260, 700, t0 + 0.35, { n: 10, v: 480 }); } })],
+      ]);
+      // ===== 2. the command: his hand closes on the camera-bag strap =====
+      add("cmd", withDepth({ ...CAB("c1", "smoke", { smokeH: 260, noMasks: true }, 0.16), blur: { far: 3, set: 1.5, fg: 8 },
+        cam: { keys: [{ t: 0, ...fr(STRAPX - 10, PF - 120, 3.2, 540, 1000) }, { t: D("cmd"), glide: D("cmd"), ...fr(STRAPX - 10, PF - 120, 3.5, 540, 1000) }] },
+        shake: rumble(5),
+        actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "wide", mouth: "o" }])],
+        captions: caps("cmd"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "c1", t0, D("cmd")); fireLight(tl, L, id, t0, D("cmd"), 0.3); SU.flash(tl, L.light, t0 + vo("cmd") + 0.02, "#ff3b2e", 0.3); } }));
+      // ===== 3. why: smoke rolls under the ceiling (the cabin reacts) | down the aisle: passengers in smoke | the fire | คิว coughing, EXIT behind (plant) =====
+      seg("why", [
+        [0, (d) => ({ ...CAB("w1", "smoke", { smokeH: 300 }, 0.16), cam: { keys: [{ t: 0, ...fr(760, 1180, 1.15, 540, 980) }, { t: d, glide: d, ...fr(640, 1180, 1.22, 540, 980) }] }, shake: rumble(3),
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "brace", eyes: "wide", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "w1", t0, d, { chase: true, smokeFrom: -200, smokeTo: 20 }); react(tl, L, "w1r", t0, d, { binX: 990, botX: 1100 }); fireLight(tl, L, id, t0, d, 0.26); } })],
+        [C("why", 0, 1), (d) => ({ ...AISLE("w2", "smoke"), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 940, 1.06, 540, 960) }] }, shake: sway(1),
+          actors: [[-0.62, 1.9, 0, "cough"], [0.5, 2.5, 1, "holdHead"], [0.0, 4.0, 7, "cough"]].map(([X, Z, k, m]) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, m, { flip: X <= 0 && Z < 2 ? true : X > 0 }); }),
+          fx(tl, id, t0, L) { Plane.aisleLife(tl, "w2", t0, d); frontLight(tl, L, id, t0, d, 0.3); } })],
+        [C("why", 0, 2), (d) => ({ ...CAB("w3", "fire", { breakX: 900, smokeH: 360 }, 0.12), cam: { keys: [{ t: 0, ...fr(800, 1180, 1.18, 540, 960) }, { t: d, glide: d, ...fr(820, 1180, 1.25, 540, 960) }] }, shake: rumble(3),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "w3", t0, d); fireFX(tl, L, id, t0, d, { ex0: 800, ex1: 1300, haze: false }); put(L.glow, Plane.edgeFlames("w3e", 760, 1000, PF - 120, 70)); Plane.flicker(tl, "w3e", t0, d); put(L.glow, `<g transform="translate(1060,${PF - 10})">${Plane.flames("w3f", 340, 1.3)}</g>`); Plane.flicker(tl, "w3f", t0, d); fireLight(tl, L, id, t0, d, 0.4); Plane.burst(tl, L.glow, 980, 1250, t0 + 0.15, { n: 10, v: 300 }); } })],
+        [C("why", 0, 3), (d) => ({ ...CAB("w4", "smoke", { noMasks: true, noSheet: true, smokeH: 520 }, 0.32), blur: { far: 2, set: 0.8, fg: 8 }, smokeL: false,
+          cam: { keys: [{ t: 0, ...fr(300, PF - 500, 2.2, 540, 900) }, { t: d, glide: d, ...fr(300, PF - 500, 2.35, 540, 900) }] }, shake: sway(1),
+          actors: [A("kiw", KX + 20, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "w4", t0, d, { smokeFrom: 0, smokeTo: 120 });
+            // "แต่เพราะควัน": the smoke rolls down to his head as he coughs; the EXIT glows green through it
+            smokeLayer(tl, L, t0, d, { y1: 600, y2: 880, top: -400, layer: L.light });
+            put(L.light, `<g id="w4-ex"><ellipse cx="110" cy="740" rx="200" ry="110" fill="#7dffb8" opacity=".5" filter="url(#plBlur14)" style="mix-blend-mode:screen"/><path d="M60,790L-40,1300H320L200,790Z" fill="#7dffb8" opacity=".16" filter="url(#plBlur6)" style="mix-blend-mode:screen"/></g>`);
+            tl.fromTo("#w4-ex", { opacity: 0.55 }, { opacity: 1, duration: 0.35, yoyo: true, repeat: Math.ceil(d / 0.35), ease: "sine.inOut", immediateRender: false }, t0); } })],
+      ]);
+      // ===== B1 · 4. the first thing คิว grabs | the camera bag =====
+      seg("grab", [
+        [0, (d) => ({ ...CAB("g1", "smoke", { smokeH: 360, noMasks: true }, 0.16), cam: { keys: [{ t: 0, ...fr(KX + 40, PF - 380, 3.4, 540, 900) }, { t: d, glide: d, ...fr(KX + 40, PF - 360, 3.0, 540, 900) }] }, shake: sway(1),
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "sitDazed", eyes: "worry", mouth: "o" }, { t: 0.5, mode: "reachDown", eyes: "worry", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "g1", t0, d); fireLight(tl, L, id, t0, d, 0.26); } })],
+        [C("grab", 0, 1), (d) => ({ ...CAB("g2", "smoke", { smokeH: 360, noMasks: true }, 0.1), blur: { far: 3, set: 1.5, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(STRAPX, PF - 60, 3.6, 540, 1080) }, { t: d, glide: d, ...fr(STRAPX, PF - 60, 3.9, 540, 1080) }] },
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "worry", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "g2", t0, d); put(L.glow, `<circle cx="${STRAPX}" cy="${PF - 50}" r="140" fill="url(#plAmb)" opacity=".6"/>`); fireLight(tl, L, id, t0, d, 0.24); } })],
+      ]);
+      // ===== 5. คิว: "กล้องผม! งานทั้งปีอยู่ในนี้!" — face big =====
+      seg("q", [
+        [0, (d) => ({ ...CAB("q1", "smoke", { smokeH: 360, noMasks: true }, 0.12), blur: { far: 2, set: 1, fg: 9 },
+          fgd: "curtain", cam: { keys: [{ t: 0, ...fr(KX + 110, PF - 400, 4.4, 540, 760) }] }, shake: rumble(3), capO: QUO,
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "worry", mouth: "o" }], { talk: [[vo("q", 0), voEnd("q", 0), "o"]] })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "q1", t0, d); fireLight(tl, L, id, t0, d, 0.3); } })],
+        [C("q", 0, 1), (d, at) => ({ ...CAB("q2", "smoke", { smokeH: 400 }, 0.16), cam: { keys: [{ t: 0, ...fr(KX + 120, PF - 260, 2.0, 540, 1000) }, { t: d, glide: d, ...fr(KX + 120, PF - 260, 2.15, 540, 1000) }] }, shake: sway(1.2), capO: QUO,
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "tug", eyes: "worry", mouth: "o" }], { talk: [[0, voEnd("q", 0) - at, "o"]] })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "q2", t0, d); react(tl, L, "q2r", t0, d, { binX: 520, binAt: 0.4, bottle: false }); fireLight(tl, L, id, t0, d, 0.26); } })],
+      ]);
+      // ===== 6. อย่า (face, red) | the strap… | caught round the seat leg (insert) =====
+      seg("snag", [
+        [0, (d) => ({ ...CAB("sn1", "smoke", { smokeH: 360, noMasks: true }, 0.22), blur: { far: 3, set: 2, fg: 9 },
+          fgd: "curtain", cam: { keys: [{ t: 0, ...fr(KX + 110, PF - 400, 4.8, 540, 760) }] },
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "wide", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); SU.flash(tl, L.light, t0 + 0.06, "#ff3b2e", 0.4); } })],
+        [C("snag", 0, 1), (d) => ({ ...CAB("sn2", "smoke", { noMasks: true, smokeH: 360 }, 0.14), blur: { far: 3, set: 1.5, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(STRAPX - 20, PF - 110, 3.4, 540, 1000) }, { t: d, glide: d, ...fr(LEGX + 20, PF - 80, 3.6, 540, 1000) }] },
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "tug", eyes: "worry", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "sn2", t0, d); put(L.glow, snagStrap("sn2-st")); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("snag", 0, 2), (d) => ({ ...CAB("sn3", "smoke", { noMasks: true, smokeH: 360 }, 0.12), blur: { far: 3, set: 1.5, fg: 9 },
+          fgd: false, cam: { keys: [{ t: 0, ...fr(LEGX, PF - 70, 4.6, 540, 1000) }, { t: d, glide: d, ...fr(LEGX, PF - 70, 5.0, 540, 1000) }] }, shake: rumble(2),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "sn3", t0, d); put(L.glow, snagStrap("sn3-st"));
+            tl.fromTo("#sn3-st", { x: 0 }, { x: -6, duration: 0.08, yoyo: true, repeat: Math.ceil(d / 0.08), ease: "sine.inOut", immediateRender: false }, t0); fireLight(tl, L, id, t0, d, 0.24); } })],
+      ]);
+      // ===== 7. he pulls too long (face) | the fire runs along the bins toward him =====
+      seg("pull", [
+        [0, (d) => ({ ...CAB("p1", "smoke", { noMasks: true, smokeH: 400 }, 0.16), cam: { keys: [{ t: 0, ...fr(KX + 80, PF - 300, 2.4, 540, 900) }] }, shake: (t) => ({ x: 7 * Math.sin(t * 23), y: 0, r: 0 }),
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "tug", eyes: "pain", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "p1", t0, d); put(L.glow, snagStrap("p1-st")); fireLight(tl, L, id, t0, d, 0.3); } })],
+        [C("pull", 0, 1), (d) => ({ set: "galley", setOpts: { id: "p2" }, dark: 0.1, light: EMERG, grade: GEMR, blur: { far: 1, set: 0.6, fg: 8 },
+          cam: { keys: [{ t: 0, ...fr(640, PF - 380, 1.15, 540, 1060) }, { t: d, glide: d, ...fr(760, PF - 380, 1.25, 540, 1060) }] }, shake: rumble(4),
+          fx(tl, id, t0, L) { smokeCeiling(L, { y1: PF - 520 }); fireFX(tl, L, id, t0, d, { x: 120, y: PF - 10, h: 480, w: 1.5, ex0: 0, ex1: 900, ey0: PF - 700, ey1: PF });
+            put(L.glow, `<g id="p2-run">${Plane.flames("p2r", 200, 2.4).replace(/^/, "")}</g>`.replace('<g id="p2-run">', `<g transform="translate(300,${PF - 430})"><g id="p2-run">`) + "</g>"); Plane.flicker(tl, "p2r", t0, d);
+            tl.fromTo("#p2-run", { x: 0 }, { x: 520, duration: d, ease: "power1.in", immediateRender: false }, t0);
+            tl.fromTo("#p2-cart", { x: 0, rotation: 0, svgOrigin: "0 0" }, { x: 60, rotation: 4, svgOrigin: "0 0", duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.2);
+            tl.fromTo("#p2-cur", { skewX: 0, svgOrigin: `1490 ${PF - 700}` }, { skewX: -6, svgOrigin: `1490 ${PF - 700}`, duration: 0.4, yoyo: true, repeat: Math.ceil(d / 0.4), ease: "sine.inOut", immediateRender: false }, t0);
+            fireLight(tl, L, id, t0, d, 0.45, "left"); SU.flash(tl, L.light, t0 + 0.05, "#ff6a1a", 0.4); } })],
+      ]);
+      // ===== B2 · 8. the seat-pocket card (pictures) | the board: everyone out in 90 s =====
+      seg("ninety", [
+        [0, (d) => ({ ...CAB("n1", "smoke", { smokeH: 300, noMasks: true }, 0.1), blur: { far: 6, set: 6, fg: 9 },
+          fgd: false, cam: { keys: [{ t: 0, ...fr(560, 1200, 1.3, 540, 1000), drift: { s: 0.01 } }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "n1", t0, d); fireLight(tl, L, id, t0, d, 0.22);
+            const grip = { fore: 900, curl: [0.78, 0.82, 0.86, 0.9], thumb: 0.5 };
+            put(L.light, `<g transform="translate(540,1240)"><rect x="-300" y="80" width="600" height="400" rx="26" fill="#1e2b58" stroke="#121c40" stroke-width="8"/><g id="n1-cd">${safetyCard("n1-sc")}</g><rect x="-300" y="150" width="600" height="330" rx="26" fill="#2d3f7c" stroke="#121c40" stroke-width="8"/><path d="M-280,160H280" stroke="#4a62a8" stroke-width="6"/>
+              <g id="n1-hd">${arm([640, 520], [214, -250], 430, 400, -1, KSK, { w: [66, 56], coat: KCOAT, hs: 1.2, hand: { curl: [0.8, 0.85, 0.88, 0.9], thumb: 0.6 } })}</g></g>`);
+            // คิว's hand comes in, pinches the top edge in the pocket, and yanks the card out (fast, with a little overshoot and tilt); the gloss runs across as it tilts to the light
+            tl.fromTo("#n1-hd", { x: 260, y: 900 }, { x: 0, y: 160, duration: 0.28, ease: "power3.out", immediateRender: false }, t0);
+            tl.fromTo("#n1-cd", { y: 160, rotation: 0, svgOrigin: "0 0" }, { y: -330, rotation: -4, svgOrigin: "0 0", duration: 0.42, ease: "back.out(1.5)", immediateRender: false }, t0 + 0.3);
+            tl.fromTo("#n1-hd", { y: 160, rotation: 0, svgOrigin: "0 0" }, { y: -330, rotation: -4, svgOrigin: "0 0", duration: 0.42, ease: "back.out(1.5)", immediateRender: false }, t0 + 0.3);
+            tl.to(["#n1-cd", "#n1-hd"], { y: -318, rotation: -2.5, svgOrigin: "0 0", duration: 0.5, yoyo: true, repeat: Math.ceil(d / 0.5), ease: "sine.inOut", immediateRender: false }, t0 + 0.72);
+            cardLive(tl, "n1-sc", t0, d, { popIn: t0 + 0.42, gloss: t0 + 0.5 }); } })],
+        [C("ninety", 0, 1), (d, at) => ({ ...CAB("n2", "smoke", { smokeH: 300, noMasks: true }, 0.1), blur: { far: 8, set: 8, fg: 9 },
+          fgd: false, cam: { keys: [{ t: 0, ...fr(560, 1200, 1.3, 540, 1000), drift: { s: 0.01 } }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "n2", t0, d); fireLight(tl, L, id, t0, d, 0.2);
+            put(L.light, `<g id="n2-all"><g transform="translate(540,900) scale(1.9)"><g id="n2-cd">${safetyCard("n2-sc")}</g></g>${handAt([250, 1440], 28, 2.1, KSK, { coat: KCOAT,  fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2 })}${handAt([830, 1430], -24, 2.1, KSK, { coat: KCOAT,  fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2, mirror: true })}</g>`);
+            tl.fromTo("#n2-all", { y: 0 }, { y: 10, duration: 0.6, yoyo: true, repeat: Math.ceil(d / 0.6), ease: "sine.inOut", immediateRender: false }, t0);
+            tl.fromTo("#n2-cd", { scale: 0.92, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0);
+            const t90 = t0 + C("ninety", 0, 2) - at, gap = (t90 - 0.3 - (t0 + 0.12)) / 3;
+            // "ถูกออกแบบให้ทุกคนออกได้…": stay low → no bags → count the rows, one after the other; "ใน 90 วินาที": the stopwatch
+            cardLive(tl, "n2-sc", t0, d, { gloss: t0 + 0.05, focus: { 0: t0 + 0.12, 1: t0 + 0.12 + gap, 2: t0 + 0.12 + 2 * gap, 3: t90 - 0.3 }, sweep: 0.6, stamp: t90 + 0.1, allBack: Math.min(t0 + d - 0.3, t90 + 0.9) });
+            put(L.light, `<circle id="n2-ring" cx="${540 + 100 * 1.9}" cy="${900 + 106 * 1.9}" r="150" fill="none" stroke="${PL.red}" stroke-width="10" opacity="0"/>`);
+            tl.fromTo("#n2-ring", { opacity: 1, scale: 0.6, svgOrigin: `${540 + 190} ${900 + 201}` }, { opacity: 0, scale: 1.4, svgOrigin: `${540 + 190} ${900 + 201}`, duration: 0.6, immediateRender: false }, t90 + 0.15); } })],
+      ]);
+      // ===== 9. but in real crashes… (down the aisle, crowded, bags) | people with bags… | nearly half (reach up to the bins) | stop to grab it (close) =====
+      const binRow = (L, ids) => put(L.set, ids.map(([x, k]) => `<g transform="translate(${x},${PF - 470})"><rect x="-90" y="-150" width="180" height="150" fill="#3a332a"/><rect x="-80" y="-60" width="70" height="56" rx="8" fill="#2f6fd0" stroke="${PL.ink}" stroke-width="3"/>
+        <rect x="0" y="-74" width="78" height="70" rx="8" fill="#c8302a" stroke="${PL.ink}" stroke-width="3"/><path d="M-70,-110Q-20,-130 30,-108Q60,-96 78,-112" stroke="#6a8a4a" stroke-width="22" fill="none" stroke-linecap="round"/>
+        <g id="bn${k}"><rect x="-90" y="-150" width="180" height="150" rx="8" fill="#ece6da" stroke="${PL.ink}" stroke-width="4"/><rect x="-24" y="-30" width="48" height="12" rx="5" fill="#bdb3a0"/></g></g>`).join(""));
+      seg("half", [
+        [0, (d) => ({ ...AISLE("f1", "smoke"), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 950, 1.05, 540, 960) }] }, shake: sway(1),
+          actors: [[-0.5, 1.9, 3, "reachBin"], [0.44, 2.6, 4, "hugBag"], [0.0, 3.7, 6, "hugBag"]].map(([X, Z, k, m]) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, m, { flip: X > 0 }); }),
+          fx(tl, id, t0, L) { Plane.aisleLife(tl, "f1", t0, d); frontLight(tl, L, id, t0, d, 0.28);
+            put(L.act, [[0.44, 2.6, 1], [0.0, 3.7, 2]].map(([X, Z, k]) => { const q = AQ(X, Z); return heldBag(q.x + (X > 0 ? -20 : 20) * q.s, q.y - 250 * q.s, q.s * 0.8, k); }).join("")); } })],
+        [C("half", 0, 1), (d) => ({ ...CAB("f2", "smoke", { noMasks: true, smokeH: 300 }, 0.14), cam: { keys: [{ t: 0, ...fr(990, PF - 270, 2.0, 540, 1100) }, { t: d, glide: d, ...fr(1000, PF - 270, 2.1, 540, 1100) }] },
+          actors: [pax(0, 820, PF - 30, KS, "hugBag"), pax(2, 990, PF - 30, KS, "hugBag", { flip: true }), pax(4, 1160, PF - 30, KS, "cough")],
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "f2", t0, d); put(L.act, heldBag(840, PF - 250, 0.6, 1) + heldBag(990, PF - 250, 0.6, 2)); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("half", 0, 2), (d) => ({ ...CAB("f3", "smoke", { noMasks: true, smokeH: 300 }, 0.14), cam: { keys: [{ t: 0, ...fr(960, PF - 300, 1.6, 540, 1080) }] },
+          actors: [pax(6, 700, PF - 30, KS, "reachBin"), pax(7, 960, PF - 30, KS, "reachBin", { flip: true }), pax(0, 1220, PF - 30, KS, "hugBag")],
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "f3", t0, d); fireLight(tl, L, id, t0, d, 0.24);
+            binRow(L, [[720, "a"], [960, "b"], [1200, "c"]]); ["a", "b", "c"].forEach((k, i) => tl.fromTo(`#bn${k}`, { scaleY: 1, svgOrigin: "0 -150" }, { scaleY: -0.14, svgOrigin: "0 -150", duration: 0.3, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.08 + i * 0.1));
+            put(L.act, heldBag(975, PF - 610, 0.6, 0) + heldBag(1225, PF - 240, 0.6, 3)); } })],
+        [C("half", 0, 3), (d) => ({ set: "binClose", setOpts: {}, dark: 0.12, light: EMERG, grade: GEMR, blur: { set: 0, fg: 8 },
+          cam: { keys: [{ t: 0, ...fr(540, 860, 1.0, 540, 900) }, { t: d, glide: d, ...fr(560, 860, 1.08, 540, 900) }] }, shake: rumble(2),
+          fx(tl, id, t0, L) { smokeCeiling(L, { y1: 600, seed: 5 });
+            put(L.act, `<g id="f4-bag" transform="translate(600,1000)">${heldBag(0, 0, 2.0, 1)}</g><g id="f4-hand">${handAt([640, 980], 30, 2.2, ["#c99a74", "#a8784e", "#e0b896"], { fore: 260, curl: [0.75, 0.8, 0.8, 0.85], thumb: 0.6 })}<path d="${limbD([640 - Math.sin(30 * Math.PI / 180) * 200, 980 + Math.cos(30 * Math.PI / 180) * 200], [640 - Math.sin(30 * Math.PI / 180) * 700, 980 + Math.cos(30 * Math.PI / 180) * 700], 120, 130)}" fill="#2f6fd0" stroke="#1f1a17" stroke-width="5"/></g>`);
+            tl.fromTo("#f4-bag", { x: 0, y: 0, rotation: 0, svgOrigin: "600 1000" }, { keyframes: [{ x: 60, y: 30, rotation: 8, duration: 0.5, ease: "power1.inOut" }, { x: 140, y: 520, rotation: 40, duration: 0.45, ease: "power2.in" }], immediateRender: false }, t0 + 0.55); tl.to("#f4-hand", { x: 140, y: 40, duration: 0.5, ease: "power1.inOut" }, t0 + 0.55);
+            fireLight(tl, L, id, t0, d, 0.26); } })],
+      ]);
+      // ===== 10. and those bags… | block the aisle (down the aisle, jammed) =====
+      seg("block", [
+        [0, (d) => ({ ...CAB("b1", "smoke", { smokeH: 320 }, 0.12), blur: { far: 3, set: 1, fg: 9 }, cam: { keys: [{ t: 0, ...fr(900, PF - 80, 2.3, 540, 1080) }, { t: d, glide: d, ...fr(1000, PF - 80, 2.4, 540, 1080) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "b1", t0, d); put(L.act, [700, 820, 960, 1100, 1220].map((x, k) => `<g transform="translate(${x},${PF - 12}) rotate(${(k % 3 - 1) * 9})">${heldBag(0, 0, 0.62 + (k % 2) * 0.1, k)}</g>`).join("")); fireLight(tl, L, id, t0, d, 0.24);
+            [0, 1, 2].forEach((k) => Plane.burst(tl, L.glow, 760 + k * 200, PF - 30, t0 + 0.1 + k * 0.3, { n: 4, v: 120 })); } })],
+        [C("block", 0, 1), (d) => ({ ...AISLE("b2", "smoke"), cam: { keys: [{ t: 0, ...fr(540, 980, 1.0, 540, 960) }] }, shake: rumble(3),
+          actors: [[-0.6, 2.6, 5, "cough"], [0.52, 3.0, 8, "push"], [0.06, 4.6, 2, "holdHead"]].map(([X, Z, k, m]) => { const q = AQ(X, Z); return pax(k, q.x, q.y, q.s, m, { flip: X > 0 }); }),
+          fx(tl, id, t0, L) { Plane.aisleLife(tl, "b2", t0, d); frontLight(tl, L, id, t0, d, 0.28);
+            put(L.act, [[-0.14, 1.6, 0], [0.16, 1.8, 1], [0.0, 2.05, 2]].map(([X, Z, k]) => { const q = AQ(X, Z); return heldBag(q.x, q.y, q.s * 0.9, k); }).join(""));
+            SU.flash(tl, L.light, t0 + 0.06, "#ff3b2e", 0.25);  } })],
+      ]);
+      // ===== B3 · 11. คิว drops the bag | runs forward… | the only way he knows (the EXIT glows behind him) =====
+      seg("run", [
+        [0, (d) => ({ ...CAB("r1", "smoke", { noMasks: true, smokeH: 360 }, 0.12), blur: { far: 3, set: 1, fg: 9 }, cam: { keys: [{ t: 0, ...fr(STRAPX, PF - 80, 3.0, 540, 1050) }] },
+          actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "reachDown", eyes: "worry", mouth: "o" }, { t: 0.45, mode: "getUp", eyes: "wide", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "r1", t0, d); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("run", 0, 1), (d) => ({ ...CAB("r2", "smoke", { smokeH: 440 }, 0.16), cam: { keys: [{ t: 0, ...fr(KX + 120, PF - 270, 2.0, 540, 1100) }, { t: d, glide: d, ...fr(KX + 600, PF - 270, 2.0, 540, 1100) }] }, shake: sway(1.4),
+          actors: [A("kiw", KX + 60, PF - 30, KS, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: KX + 60 + 520, y: PF - 30, dur: d + 0.2, ease: "none" } })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "r2", t0, d, { chase: true }); fireLight(tl, L, id, t0, d, 0.24); } })],
+        [C("run", 0, 2), (d) => ({ ...CAB("r3", "smoke", { smokeH: 480 }, 0.18), cam: { keys: [{ t: 0, ...fr(700, 1160, 0.85, 540, 980) }, { t: d, glide: d, ...fr(760, 1160, 0.88, 540, 980) }] }, shake: sway(1.2),
+          actors: [A("kiw", 900, PF - 30, KS, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 1250, y: PF - 30, dur: d + 0.2, ease: "none" } })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "r3", t0, d, { chase: true }); exitBeam(L, DOORX - 6, PF - 572); } })],
+      ]);
+      // ===== 12. the smoke so thick… | he can't see his own hand (insert: his hand fading in smoke) =====
+      const KSK = ["#e0b088", "#b88a64", "#f0c8a0"];
+      const KCOAT = { c: "#d9a43a", d: "#b98a2a" };   // คิว's mustard coat sleeve + cuff on every POV arm
+      seg("blind", [
+        [0, (d) => ({ ...CAB("l1", "smoke", { noMasks: true, noSheet: true, smokeH: 900 }, 0.2), smokeL: false, cam: { keys: [{ t: 0, ...fr(1250, PF - 420, 3.6, 540, 820) }, { t: d, glide: d, ...fr(1250, PF - 420, 3.9, 540, 820) }] }, shake: sway(1.2),
+          actors: [A("kiw", 1230, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "closed", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "l1", t0, d, { smokeFrom: -200, smokeTo: 80 }); fireLight(tl, L, id, t0, d, 0.22); smokeLayer(tl, L, t0, d, { y1: 330, y2: 420, top: -400, layer: L.light }); fgDepth(L, "seat"); } })],
+        [C("blind", 0, 1), (d) => ({ ...CAB("l2", "smoke", { smokeH: 1100 }, 0.25), blur: { far: 6, set: 6, fg: 12 }, fgd: false, cam: { keys: [{ t: 0, ...fr(1270, PF - 420, 1.5, 540, 860) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "l2", t0, d);
+            // "มองไม่เห็นมือตัวเอง": the whole frame is thick smoke; his sleeved arm reaches up into it and is swallowed — fingers first, then the hand
+            const r = mk(77); let pf = "";
+            for (let k = 0; k < 26; k++) { const x = -100 + r() * 1280, y = 200 + r() * 1500, R = 140 + r() * 160; pf += `<circle class="l2-pf" data-d="${f1((r() - 0.5) * 80)}" cx="${f1(x)}" cy="${f1(y)}" r="${f1(R)}" fill="url(#l2-pg)"/>`; }
+            put(L.light, `<radialGradient id="l2-pg"><stop offset="0" stop-color="#3a3436" stop-opacity=".9"/><stop offset="1" stop-color="#3a3436" stop-opacity="0"/></radialGradient>
+              <linearGradient id="l2-sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#191617"/><stop offset=".36" stop-color="#191617"/><stop offset=".62" stop-color="#191617" stop-opacity=".55"/><stop offset=".85" stop-color="#191617" stop-opacity=".12"/><stop offset="1" stop-color="#191617" stop-opacity="0"/></linearGradient>
+              <rect x="-50" y="-50" width="1180" height="2020" fill="#1d191a"/><rect x="-50" y="1500" width="1180" height="470" fill="#4a1e0c" opacity=".35" filter="url(#plBlur14)"/>
+              <g id="l2-h">${handAt([560, 900], -8, 2.6, KSK, { coat: KCOAT, fore: 1400, curl: [0.1, 0, 0.1, 0.2], thumb: 0.2 })}</g>
+              <rect x="-50" y="-50" width="1180" height="2020" fill="url(#l2-sg)"/><g filter="url(#plBlur14)">${pf}</g>`);
+            tl.fromTo("#l2-h", { y: 520 }, { y: -260, duration: d, ease: "sine.inOut", immediateRender: false }, t0);
+            document.querySelectorAll(".l2-pf").forEach((el) => tl.fromTo(el, { x: 0, y: 0 }, { x: +el.dataset.d * d, y: -30 * d, duration: d, ease: "none", immediateRender: false }, t0));
+             } })],
+      ]);
+      // ===== 13. and ahead… | FIRE (big, layered, debris) — his face lit =====
+      seg("front", [
+        [0, (d) => ({ set: "overwing", setOpts: { id: "t1" }, dark: 0.22, light: EMERG, grade: GEMR, blur: { far: 1, set: 0.6, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(860, PF - 360, 1.55, 540, 1080) }, { t: d, glide: d, ...fr(880, PF - 360, 1.7, 540, 1080) }] }, shake: sway(1),
+          actors: [A("kiw", 1150, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }], { flip: true, moveTo: { x: 1040, y: PF - 30, dur: d, ease: "power1.out" } })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); smokeLayer(tl, L, t0, d); fgDepth(L, "seat"); } })],
+        [C("front", 0, 1), (d) => ({ set: "overwing", setOpts: { id: "t2", fire: true }, dark: 0.08, light: EMERG, grade: GEMR, blur: { far: 1, set: 0.6, fg: 9 },
+          cam: { keys: [{ t: 0, ...fr(930, PF - 420, 2.3, 540, 900) }, { t: d, glide: d, ...fr(930, PF - 420, 2.1, 540, 900) }] },
+          shake: (t) => (t < 0.6 ? { x: 20 * Math.sin(t * 61) * (0.6 - t), y: 16 * Math.sin(t * 47) * (0.6 - t), r: 0 } : 0),
+          actors: [A("kiw", 1090, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "wide", mouth: "o" }], { flip: true })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); smokeLayer(tl, L, t0, d); [0, 1, 2].forEach((k) => Plane.flicker(tl, `t2-wf${k}`, t0, d)); fireFX(tl, L, id, t0, d, { ex0: 500, ex1: 1300, ey0: PF - 600, ey1: PF - 200, haze: false });
+            tl.fromTo(".t2-wfire", { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.25, ease: "back.out(2)", immediateRender: false }, t0 + 0.02);
+            put(L.glow, `<circle cx="900" cy="${PF - 405}" r="260" fill="url(#plAmb)"/><circle cx="570" cy="${PF - 325}" r="180" fill="url(#plAmb)"/><circle cx="1230" cy="${PF - 325}" r="180" fill="url(#plAmb)"/>`);
+            fireLight(tl, L, id, t0, d, 0.5); SU.flash(tl, L.light, t0 + 0.02, "#ff8a2a", 0.6); } })],
+      ]);
+      // ===== B4 · 14. the nearest exit… (EXIT through smoke, low) | is behind him (down the aisle toward the rear door) | one row =====
+      seg("behind", [
+        [0, (d) => ({ ...CAB("e1", "smoke", { noMasks: true, smokeH: 520 }, 0.18), cam: { keys: [{ t: 0, ...fr(DOORX, PF - 560, 2.6, 540, 820) }, { t: d, glide: d, ...fr(DOORX, PF - 560, 2.8, 540, 820) }] }, shake: sway(1),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "e1", t0, d, { chase: true }); exitBeam(L, DOORX - 6, PF - 572); } })],
+        [C("behind", 0, 1), (d) => ({ ...AISLE("e2", "smoke", { exitBack: true }), cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 900, 1.25, 540, 900) }] }, shake: sway(1),
+          actors: [(() => { const q = AQ(0.05, 1.9); return A("kiw", q.x, q.y, q.s, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }], { flip: true }); })()],
+          fx(tl, id, t0, L) { Plane.aisleLife(tl, "e2", t0, d); frontLight(tl, L, id, t0, d, 0.22); } })],
+        [C("behind", 0, 2), (d) => ({ ...CAB("e3", "smoke", { noMasks: true, smokeH: 520 }, 0.16), cam: { keys: [{ t: 0, ...fr(DOORX + 200, PF - 270, 2.0, 540, 1150) }, { t: d, glide: d, ...fr(DOORX + 200, PF - 270, 2.1, 540, 1150) }] }, shake: sway(1),
+          actors: [A("kiw", KX + 20, PF - 30, KS, [{ t: 0, mode: "cough", eyes: "pain", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "e3", t0, d, { chase: true }); exitBeam(L, DOORX - 6, PF - 572); } })],
+      ]);
+      // ===== 15. (you) every flight… | count the rows to the exit | front and back — calm, bright cabin; the seat-back card =====
+      add("rule", { ...CAB("u1", "calm", { rows: [25, 30] }), blur: { far: 0, set: 0, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(700, 1250, 1.3, 540, 1020) }, { t: C("rule", 0, 1), ...fr(600, 1200, 1.3, 540, 1000) }, { t: D("rule"), glide: D("rule") - C("rule", 0, 1), ...fr(640, 1200, 1.36, 540, 1000) }] },
+        actors: [A("kiw", KX, PF - 6, KS, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "flat" }])],
+        captions: caps("rule"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "u1", t0, D("rule"));
+          put(L.light, `<g id="u1-ife"><rect width="1080" height="1920" fill="#2d3f7c"/><rect x="0" y="1500" width="1080" height="420" fill="#1e2b58"/><g transform="translate(540,880) scale(1.45)">${ifeScreen("u1-s")}</g></g>`);
+          tl.fromTo("#u1-s-pl", { x: -170, y: 90 }, { x: 0, y: 0, duration: C("rule", 0, 1), ease: "none", immediateRender: false }, t0);
+          tl.fromTo(".u1-s-rg", { strokeDashoffset: 95 }, { strokeDashoffset: 52, duration: C("rule", 0, 1), ease: "none", immediateRender: false }, t0);
+          tl.fromTo("#u1-s-rt", { strokeDashoffset: 0 }, { strokeDashoffset: -96, duration: C("rule", 0, 1), ease: "none", immediateRender: false }, t0);
+          tl.fromTo("#u1-s-pl", { scale: 1, svgOrigin: "0 0" }, { scale: 1.12, svgOrigin: "0 0", duration: 0.4, yoyo: true, repeat: Math.ceil(C("rule", 0, 1) / 0.4), ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#u1-s-sh", { x: -60 }, { x: 420, duration: C("rule", 0, 1), ease: "sine.inOut", immediateRender: false }, t0);
+          tl.set("#u1-ife", { opacity: 0 }, t0 + C("rule", 0, 1));
+
+          // the seat-back card in his hands (half the frame): the cabin plan, his seat, a finger counting the rows to the front exit, then back
+          const RW = 8, Y0 = -150, DY = 40, ME = 6;   // rows on the plan, top row y, row pitch, his row index (two from the rear door)
+          let plan = `<rect x="-78" y="${Y0 - 70}" width="156" height="${RW * DY + 120}" rx="70" fill="#eef2f6" stroke="#9aa4b0" stroke-width="4"/>`;
+          for (let r = 0; r < RW; r++) { const y = Y0 + r * DY;
+            plan += `<g id="u1-r${r}"><rect x="-64" y="${y - 14}" width="44" height="28" rx="6" fill="${r === ME ? PL.gold : PL.seat}"/><rect x="20" y="${y - 14}" width="44" height="28" rx="6" fill="${PL.seat}"/></g>
+              <text x="-92" y="${y + 9}" text-anchor="end" font-family="Kanit" font-weight="800" font-size="22" fill="#7a7060">${23 + r}</text>`; }
+          plan += `<g transform="translate(0,${Y0 - 52})"><path d="M-30,10L0,-12L30,10" stroke="#2fa864" stroke-width="10" fill="none" stroke-linecap="round"/><text x="0" y="-22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#2fa864">EXIT</text></g>
+            <g transform="translate(0,${Y0 + (RW - 1) * DY + 50})"><path d="M-30,-10L0,12L30,-10" stroke="#2fa864" stroke-width="10" fill="none" stroke-linecap="round"/><text x="0" y="40" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="24" fill="#2fa864">EXIT</text></g>
+            <text x="-42" y="${Y0 + ME * DY + 50}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="${PL.red}">คุณ</text>
+            <g id="u1-up" opacity="0"><path d="M100,${Y0 + ME * DY}V${Y0 - 30}" stroke="#2fa864" stroke-width="12" stroke-linecap="round"/><path d="M84,${Y0 - 14}L100,${Y0 - 36}L116,${Y0 - 14}" stroke="#2fa864" stroke-width="12" fill="none" stroke-linecap="round"/>
+              <circle cx="146" cy="${Y0 + 60}" r="34" fill="#2fa864"/><text x="146" y="${Y0 + 72}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#fff">${ME}</text></g>
+            <g id="u1-dn" opacity="0"><path d="M100,${Y0 + ME * DY}V${Y0 + (RW - 1) * DY + 36}" stroke="${PL.red}" stroke-width="12" stroke-linecap="round"/><path d="M84,${Y0 + (RW - 1) * DY + 20}L100,${Y0 + (RW - 1) * DY + 42}L116,${Y0 + (RW - 1) * DY + 20}" stroke="${PL.red}" stroke-width="12" fill="none" stroke-linecap="round"/>
+              <circle cx="146" cy="${Y0 + (RW - 1) * DY + 10}" r="34" fill="${PL.red}"/><text x="146" y="${Y0 + (RW - 1) * DY + 22}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#fff">1</text></g>`;
+          const card = `<g transform="skewY(-3)"><rect x="-200" y="-280" width="400" height="560" rx="18" fill="#fdfaf2" stroke="${PL.ink}" stroke-width="6"/><rect x="-200" y="-280" width="400" height="74" rx="18" fill="${PL.navy}"/><rect x="-200" y="-224" width="400" height="18" fill="${PL.navy}"/>
+            <path d="M-200,-206H200" stroke="${PL.gold}" stroke-width="6"/><text x="-176" y="-232" font-family="Kanit" font-weight="900" font-size="32" fill="${PL.gold}">นับแถวไปทางออก</text><g transform="translate(-30,30)">${plan}</g></g>`;
+          const tC = t0 + C("rule", 0, 1), tD = t0 + C("rule", 0, 2), Kc = 1.9, P = (x, y) => [540 + Kc * (x - 30), 860 + Kc * (y + 30)];
+          put(L.light, `<g id="u1-card" opacity="0"><rect width="1080" height="1920" fill="#000" opacity=".25"/><g transform="translate(540,860) scale(${Kc})">${card}</g>
+            ${handAt([250, 1420], 28, 2.1, KSK, { coat: KCOAT,  fore: 900, curl: [0.7, 0.75, 0.8, 0.85], thumb: 0.2 })}<g id="u1-f">${handAt([0, 0], -60, 1.7, KSK, { coat: KCOAT,  fore: 150, curl: [0, 1, 1, 1], thumb: 1, mirror: true })}<path d="${limbD([Math.sin(60 * Math.PI / 180) * 150 * 0.7, Math.cos(60 * Math.PI / 180) * 150 * 0.7], [Math.sin(60 * Math.PI / 180) * 210, Math.cos(60 * Math.PI / 180) * 210], 96, 104)}" fill="#d9a43a" stroke="#1f1a17" stroke-width="5"/></g></g>`);
+          tl.fromTo("#u1-card", { opacity: 0, y: 260 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.6)", immediateRender: false }, tC);
+          const fy = (r) => P(-64 + 22, Y0 + r * DY)[1] + 10, fx0 = P(-30, 0)[0] + 30;
+          tl.set("#u1-f", { x: fx0, y: fy(ME) }, tC);
+          for (let r = ME, k = 0; r >= 0; r--, k++) { const at = tC + 0.35 + k * ((tD - tC - 0.45) / (ME + 1));
+            tl.to("#u1-f", { y: fy(r), duration: 0.12, ease: "power2.out" }, at); tl.to(`#u1-r${r} rect:first-child`, { attr: { fill: r === ME ? PL.gold : "#7dd9a0" }, duration: 0.1 }, at); }
+          tl.fromTo("#u1-up", { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, tD - 0.15);
+          tl.to("#u1-f", { y: fy(RW - 1), duration: 0.3, ease: "power2.inOut" }, tD + 0.25); tl.to(`#u1-r${RW - 1} rect:first-child`, { attr: { fill: "#ff9a8a" }, duration: 0.1 }, tD + 0.5);
+          tl.fromTo("#u1-dn", { opacity: 0, scale: 1.4, svgOrigin: `100 ${Y0 + (RW - 1) * DY}` }, { opacity: 1, scale: 1, svgOrigin: `100 ${Y0 + (RW - 1) * DY}`, duration: 0.3, ease: "back.out(2.5)", immediateRender: false }, tD + 0.55); } });
+      // ===== 16. because in smoke… | the signs sink out of sight (close on the EXIT sign, smoke rolling over it) =====
+      seg("sign", [
+        [0, (d) => ({ ...CAB("x1", "smoke", { smokeH: 620 }, 0.2), cam: { keys: [{ t: 0, ...fr(600, 1200, 0.9, 540, 980) }, { t: d, glide: d, ...fr(560, 1200, 0.95, 540, 980) }] }, shake: sway(1),
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "x1", t0, d, { smokeFrom: -100, smokeTo: 60 }); react(tl, L, "x1r", t0, d, { binX: 1210, botX: 800 }); fireLight(tl, L, id, t0, d, 0.2); } })],
+        [C("sign", 0, 1), (d) => ({ ...CAB("x2", "smoke", { noMasks: true, smokeH: 620 }, 0.3), smokeL: false, fgd: false, cam: { keys: [{ t: 0, ...fr(DOORX, PF - 572, 3.4, 540, 860) }] },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "x2", t0, d); smokeLayer(tl, L, t0, d, { y1: PF - 700, y2: PF - 470 });
+            exitBeam(L, DOORX - 6, PF - 572, 1, "x2-eb");
+            // "…ป้ายจะจมหายไป": from the word, the smoke rolls down over the sign (~0.9 s) and its green light dies away slowly — a faint glow left inside
+            const tA = t0 + 0.38, tB = t0 + 1.28;
+            put(L.light, `<g id="x2-gw" opacity="0"><ellipse cx="530" cy="870" rx="260" ry="130" fill="#7dffb8" opacity=".35" filter="url(#plBlur14)" style="mix-blend-mode:screen"/></g><g id="x2-sw" opacity=".93"></g>`);
+            smokeLayer(tl, L, t0, d, { y1: -160, y2: -160, top: -1800, layer: document.getElementById("x2-sw") });
+            tl.fromTo("#x2-sw", { y: 0 }, { y: 1300, duration: tB - tA, ease: "power1.inOut", immediateRender: false }, tA);
+            tl.fromTo("#x2-eb", { opacity: 1 }, { opacity: 0.18, duration: tB - tA + 0.15, ease: "power1.in", immediateRender: false }, tA);
+            tl.fromTo("#x2-gw", { opacity: 0 }, { opacity: 0.7, duration: tB - tA, ease: "power1.in", immediateRender: false }, tA);
+            tl.to("#x2-gw", { opacity: 0.35, duration: 0.4, ease: "sine.inOut", immediateRender: false }, tB);
+            
+             } })],
+      ]);
+      // ===== B5 · 17. over his shoulder: his hand counts the seatbacks… (insert) | one =====
+      const seatBackHand = (id, x) => { const W = [0, -10], deg = -35, k = 2.3, back = [W[0] + Math.sin(35 * Math.PI / 180) * 900, W[1] + Math.cos(35 * Math.PI / 180) * 900], M = [W[0] + (back[0] - W[0]) * 0.22, W[1] + (back[1] - W[1]) * 0.22];
+        return `<g id="${id}" transform="translate(${x},0)">${handAt(W, deg, k, KSK, { coat: KCOAT,  fore: 900, curl: [0.55, 0.6, 0.65, 0.7], thumb: 0.4 })}<path d="${limbD(M, back, 130, 140)}" fill="#d9a43a" stroke="#1f1a17" stroke-width="5"/><path d="${limbD([M[0] + 6, M[1]], [M[0] + 30, M[1] + 30], 140, 136)}" fill="#b98a2a" opacity=".5"/></g>`; };
+      seg("count", [
+        [0, (d) => ({ ...CAB("k1", "smoke", { noMasks: true, smokeH: 900 }, 0.2), blur: { far: 3, set: 1.5, fg: 10 },
+          fgd: false, cam: { keys: [{ t: 0, ...fr(560, PF - 420, 2.2, 540, 900) }, { t: d, glide: d, ...fr(380, PF - 420, 2.2, 540, 900) }] },
+          light: { ...EMERG, rim: "#9dffc8", rimOp: 1 },
+          fx(tl, id, t0, L) { Plane.cabinLife(tl, "k1", t0, d, { chase: true });
+            put(L.glow, Array.from({ length: 14 }, (_, k) => `<ellipse id="k1-pg${k}" cx="${DOORX + 80 + k * 90}" cy="${PF - 16}" rx="60" ry="22" fill="#9dffc8" opacity=".75" filter="url(#plBlur14)"/>`).join(""));
+            for (let k = 0; k < 14; k++) tl.fromTo(`#k1-pg${k}`, { opacity: 0.4 }, { opacity: 1, duration: 0.18, yoyo: true, repeat: 1, repeatDelay: 0.7, immediateRender: false }, t0 + ((13 - k) % 14) * 0.06);
+            // the over-the-shoulder insert: his hand on a seatback top in the foreground, sliding back seat by seat
+            put(L.light, `<g transform="translate(0,1180)"><rect x="-40" y="0" width="1160" height="400" fill="#2d3f7c"/><path d="M-40,8H1120" stroke="#4a62a8" stroke-width="10"/><rect x="-40" y="-40" width="1160" height="60" rx="26" fill="#f4f0e6" stroke="${PL.ink}" stroke-width="5"/>${seatBackHand("k1-h", 700)}</g>`);
+            tl.fromTo("#k1-h", { x: 760 }, { x: 360, duration: d, ease: "steps(3)", immediateRender: false }, t0); } })],
+        [C("count", 0, 1), (d) => ({ ...CAB("k2", "smoke", { noMasks: true, noSheet: true, smokeH: 900 }, 0.12), blur: { far: 3, set: 1, fg: 10 }, smokeL: false, fgd: false,
+          light: { ...EMERG, rim: "#9dffc8", rimOp: 1 },
+          cam: { keys: [{ t: 0, ...fr(ROW30 + 20, PF - 165, 2.7, 540, 1000) }, { t: d, glide: d, ...fr(ROW30 + 20, PF - 165, 2.85, 540, 1000) }] },
+          actors: [A("kiw", ROW30 + 60, PF - 30, KS, [{ t: 0, mode: "crouchLook", eyes: "normal", mouth: "flat" }], { flip: true })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "k2", t0, d, { chase: true }); SU.flash(tl, L.light, t0 + 0.05, "#9dffc8", 0.3);
+            exitBeam(L, DOORX - 6, PF - 572); smokeLayer(tl, L, t0, d, { y1: 380, y2: 460, top: -400, layer: L.light }); } })],
+      ]);
+      // ===== 18. the door opens (low angle) | down the slide | before the fire reaches him =====
+      seg("out", [
+        [0, (d) => ({ ...CAB("o1", "alarm", { noMasks: true }, 0.06), cam: { keys: [{ t: 0, ...fr(DOORX + 30, PF - 260, 1.9, 540, 1000) }] },
+          actors: [A("kiw", DOORX + 260, PF - 30, KS, [{ t: 0, mode: "crouchLook", eyes: "wide", mouth: "o" }], { flip: true })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.cabinLife(tl, "o1", t0, d);
+            tl.fromTo("#o1-door", { x: 0, opacity: 1 }, { x: -260, opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, t0 + 0.25);
+            const X0 = DOORX - 120, Y0 = PF - 515;
+            put(L.glow, `<linearGradient id="o1-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a7ab8"/><stop offset=".55" stop-color="#f09a7a"/><stop offset="1" stop-color="#ffd9a0"/></linearGradient>
+              <linearGradient id="o1-sl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4c430"/><stop offset=".5" stop-color="#ffe070"/><stop offset="1" stop-color="#d9a020"/></linearGradient>
+              <linearGradient id="o1-bm" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".28"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></linearGradient>
+              <clipPath id="o1-dc"><rect x="${X0}" y="${Y0}" width="240" height="495" rx="40"/></clipPath>
+              <g id="o1-day" opacity="0"><g clip-path="url(#o1-dc)">
+                <rect x="${X0 - 10}" y="${Y0 - 10}" width="260" height="230" fill="url(#o1-sk)"/><circle cx="${X0 + 70}" cy="${Y0 + 205}" r="34" fill="#fff0c8"/>
+                <ellipse cx="${X0 + 170}" cy="${Y0 + 70}" rx="70" ry="18" fill="#fff" opacity=".7"/><ellipse cx="${X0 + 60}" cy="${Y0 + 120}" rx="55" ry="12" fill="#fff" opacity=".6"/>
+                <rect x="${X0 - 10}" y="${Y0 + 215}" width="260" height="300" fill="#2e5a7a"/><path d="M${X0 - 10},${Y0 + 216}h260" stroke="#ffe0c0" stroke-width="5"/>
+                ${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M${X0 - 10},${Y0 + 240 + k * 34}q20,-10 40,0t40,0t40,0t40,0t40,0t40,0t40,0" stroke="#8ac0dc" stroke-width="4" fill="none" opacity="${0.8 - k * 0.08}"/>`).join("")}
+                <path d="M${X0 + 120},${Y0 + 500}L${X0 + 10},${Y0 + 270}Q${X0 + 40},${Y0 + 250} ${X0 + 80},${Y0 + 262}L${X0 + 230},${Y0 + 500}Z" fill="url(#o1-sl)" stroke="#1f1a17" stroke-width="5"/>
+                ${[0, 1, 2, 3].map((k) => `<path d="M${X0 + 30 + k * 34},${Y0 + 300 + k * 52}L${X0 + 82 + k * 38},${Y0 + 292 + k * 54}" stroke="#c89020" stroke-width="7" stroke-linecap="round"/>`).join("")}</g>
+                <rect x="${X0 - 6}" y="${Y0 - 6}" width="252" height="507" rx="44" fill="none" stroke="#c9c1b2" stroke-width="16"/><rect x="${X0 - 14}" y="${Y0 - 14}" width="268" height="523" rx="50" fill="none" stroke="#1f1a17" stroke-width="5"/>
+                </g>
+              <rect id="o1-glow" x="${DOORX - 160}" y="${PF - 560}" width="320" height="580" rx="60" fill="#ffd9a0" opacity="0" filter="url(#plBlur24)" style="mix-blend-mode:screen"/>`);
+            tl.fromTo("#o1-day", { opacity: 0 }, { opacity: 1, duration: 0.35, immediateRender: false }, t0 + 0.3);  } })],
+        [C("out", 0, 1), (d) => ({ ...SITE("o2", { fire: 0.9, sand: true, noWheel: true }),
+          cam: { keys: [{ t: 0, ...fr(190, 1500, 3.2, 540, 1000) }, { t: d, glide: d, ...fr(130, 1540, 3.0, 540, 1000) }] },
+          actors: [A("kiw", 198, 1474, 0.19, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 0.7, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, path: [{ t: 0, x: 198, y: 1474 }, { t: 0.7, x: 127, y: 1574 }, { t: 1.6, x: 60, y: 1596, s: 0.21 }] })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "o2", t0, d); put(L.glow, `<g transform="translate(360,1440)">${Plane.flames("o2f", 150, 1.1)}</g>${Plane.puffMk("o2s", 360, 1300, 10, "dark", 70)}`); Plane.flicker(tl, "o2f", t0, d); Plane.puffs(tl, "o2s", t0, d, 10, { dx: 180, dy: -600, per: 1.8, op: 0.9 }); } })],
+        [C("out", 0, 2), (d) => ({ ...SITE("o3", { fire: 1, sand: true, noWheel: true }), cam: { keys: [{ t: 0, ...fr(200, 1470, 2.2, 540, 1050) }, { t: d, glide: d, ...fr(170, 1480, 2.0, 540, 1050) }] },
+          shake: (t) => (t < 0.5 ? { x: 14 * Math.sin(t * 61), y: 10 * Math.sin(t * 47), r: 0 } : 0),
+          actors: [A("kiw", 60, 1596, 0.21, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: -40, y: 1606, dur: d, ease: "none" } })],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "o3", t0, d); fireFX(tl, L, id, t0, d, { ex0: 200, ex1: 500, ey0: 1200, ey1: 1460, haze: false }); put(L.glow, `<g transform="translate(330,1450)">${Plane.flames("o3f", 220, 1.3)}</g>${Plane.puffMk("o3s", 330, 1280, 12, "dark", 80)}`); Plane.flicker(tl, "o3f", t0, d); Plane.puffs(tl, "o3s", t0, d, 12, { dx: 200, dy: -650, per: 1.7, op: 0.92 });
+            SU.flash(tl, L.light, t0 + 0.1, "#ff8a2a", 0.6); Plane.burst(tl, L.glow, 330, 1440, t0 + 0.12, { n: 20, v: 380 }); } })],
+      ]);
+      // ===== 19. he made it (face readable) =====
+      add("safe", { ...SITE("v1", { fire: 0.7 }), blur: { far: 4, mid: 4, set: 5, fg: 9 }, cam: { keys: [{ t: 0, ...fr(60, 1100, 2.1, 540, 820) }, { t: D("safe"), glide: D("safe"), ...fr(60, 1100, 2.25, 540, 820) }] },
+        actors: [A("kiw", 60, 1640, 0.95, [{ t: 0, mode: "crouch", eyes: "closed", mouth: "o" }])],
+        captions: caps("safe"),
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "v1", t0, D("safe")); } });
+      // ===== twist: pull out — 0.45 s near-black =====
+      add("hush", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1, 540, 960) }] },
+        fx(tl, id, t0, L) { put(L.light, `<rect width="1080" height="1920" fill="#030406"/>`); } });
+      // ===== B6 · 20. the smoke clears (his face, close) | no front section… (the torn end) | of the plane any more (wide) =====
+      const kiwCU = (key, mode, eyes, mouth, extra = {}) => (d) => ({ ...SITE(`${key}c`, { fire: 0.3, ...(extra.site || {}) }), dark: 0.08, blur: { far: 4, mid: 4, set: 5, fg: 9 },
+        cam: { keys: [{ t: 0, ...fr(60, 1100, 2.1, 540, 820) }, { t: d, glide: d, ...fr(60, 1100, 2.25, 540, 820) }] },
+        actors: [A("kiw", 60, 1640, 0.95, [{ t: 0, mode, eyes, mouth }], extra.flip ? { flip: true } : {})],
+        fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, `${key}c`, t0, d);
+          tl.fromTo(`#${id}-a0-hair`, { skewX: -4, svgOrigin: "0 -560" }, { skewX: 6, svgOrigin: "0 -560", duration: 0.35, yoyo: true, repeat: Math.ceil(d / 0.35), ease: "sine.inOut", immediateRender: false }, t0); if (extra.haze) { put(L.light, `<rect id="${key}-hz" width="1080" height="1920" fill="#8a8a92" opacity="0"/>`); tl.fromTo(`#${key}-hz`, { opacity: 0.7 }, { opacity: 0, duration: 1.1, ease: "power1.out", immediateRender: false }, t0); } } });
+      seg("twist", [
+        [0, kiwCU("tw", "idle", "wide", "o", { haze: true })],
+        [C("twist", 0, 1), (d, at) => ({ ...SITE("z1", { fire: 0.35 }), dark: 0.12,
+          cam: { keys: [{ t: 0, ...fr(620, 1400, 1.9, 540, 1050) }, { t: C("twist", 0, 2) - at, ...fr(400, 1300, 0.85, 540, 1050) }, { t: d, glide: d - (C("twist", 0, 2) - at), ...fr(420, 1300, 0.8, 540, 1050) }] },
+          actors: [A("kiw", 60, 1598, 0.16, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Plane.siteLife(tl, "z1", t0, d); } })],
+      ]);
+      // ===== 21. only คิว… (close) | and an island in the middle of the sea (wide) =====
+      seg("alone", [
+        [0, kiwCU("al", "holdHead", "worry", "frown")],
+        [C("alone", 0, 1), (d) => ({ set: "tideBeach", setOpts: { id: "y1", view: "sea", time: "eerie", sea: 0, boats: 0, fish: 0, people: 0, seed: 7 }, dark: 0.04, light: DUSKL, grade: { top: "#ff8a5a", bottom: "#2a2050", op: 0.3 }, blur: { fg: 5 },
+          cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: d, glide: d, ...fr(540, 980, 1.06, 540, 960) }] },
+          actors: [A("kiw", 330, 1540, 0.82, [{ t: 0, mode: "holdHead", eyes: "worry", mouth: "frown" }])],
+          fx(tl, id, t0, L) { noSh(tl, id, 1); Tide.sea(tl, "y1", t0, d, {}); put(L.sky, `<linearGradient id="y1-dk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4a6a"/><stop offset=".6" stop-color="#c87a6a"/><stop offset="1" stop-color="#f2b080"/></linearGradient><rect x="-2000" y="-1400" width="5200" height="2050" fill="url(#y1-dk)"/><circle cx="260" cy="640" r="260" fill="#fff0c8" opacity=".35"/><circle cx="260" cy="640" r="66" fill="#fff6e0"/>`);
+            put(L.light, `<rect width="1080" height="1920" fill="#ff8a4a" opacity=".22" style="mix-blend-mode:multiply"/><rect width="1080" height="1920" fill="#ffb070" opacity=".12" style="mix-blend-mode:screen"/>`);  wreckBits(L, "y1", [[150, 4.2, "panel", -8], [820, 5.5, "seats"], [640, 9, "case", 6], [960, 3.6, "vest", -14], [260, 11, "tray", 4], [760, 14, "panel", 10]]);
+            put(L.sky, `<g>${Plane.puffMk("y1p", 820, 640, 10, "dark", 50)}</g>`); Plane.puffs(tl, "y1p", t0, d + 0.5, 10, { dx: 60, dy: -420, per: 2.2, op: 0.85 }); } })],
+      ]);
+      // ===== 22. but across the bay… (his face, he turns) | a column of smoke rising (clear, dark against the dusk) =====
+      seg("smoke2", [
+        [0, kiwCU("sm", "idle", "wide", "o", { flip: true })],
+        [C("smoke2", 0, 1), (d) => ({ set: "tideBeach", setOpts: { id: "m1", view: "sea", time: "eerie", sea: 0, boats: 0, fish: 0, people: 0, seed: 7 }, dark: 0.04, light: DUSKL, grade: { top: "#ff8a5a", bottom: "#2a2050", op: 0.3 }, blur: { fg: 6 },
+          cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+          fx(tl, id, t0, L) { Tide.sea(tl, "m1", t0, d, {}); put(L.sky, `<linearGradient id="m1-dk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4a6a"/><stop offset=".6" stop-color="#c87a6a"/><stop offset="1" stop-color="#f2b080"/></linearGradient><rect x="-2000" y="-1400" width="5200" height="2050" fill="url(#m1-dk)"/><circle cx="260" cy="640" r="260" fill="#fff0c8" opacity=".35"/><circle cx="260" cy="640" r="66" fill="#fff6e0"/>`);
+            put(L.light, `<rect width="1080" height="1920" fill="#ff8a4a" opacity=".22" style="mix-blend-mode:multiply"/><rect width="1080" height="1920" fill="#ffb070" opacity=".12" style="mix-blend-mode:screen"/>`); 
+            tl.set(["#m1-palm0", "#m1-palm1"], { opacity: 0 }, t0);
+            // screen space (the camera holds still): a low headland across the bay between the two karsts, the column rising from behind it
+            put(L.light, `<g transform="translate(170,-385)"><g id="m1-colg"><path id="m1-col" d="M560,1000C540,880 500,760 540,640C580,520 500,400 560,260C600,160 700,90 800,50L880,80C780,140 690,220 670,330C650,460 700,580 660,720C640,840 650,930 660,1000Z" fill="#2a2420" opacity=".88"/>
+              ${Plane.puffMk("m1c", 600, 980, 18, "dark", 110)}<circle cx="610" cy="994" r="34" fill="#ff7a2a" opacity=".85"/><circle cx="610" cy="994" r="15" fill="#ffd27a"/></g>
+              <path d="M450,1003Q520,972 590,978Q650,966 710,982Q760,974 800,1003Z" fill="#4a5a5a"/></g>`);
+            Plane.puffs(tl, "m1c", t0, d + 0.5, 18, { dx: 130, dy: -820, per: 1.9, op: 1 }); tl.fromTo("#m1-col", { scaleX: 0.95, svgOrigin: "610 1000" }, { scaleX: 1.08, svgOrigin: "610 1000", duration: 0.8, yoyo: true, repeat: Math.ceil(d / 0.8), ease: "sine.inOut", immediateRender: false }, t0); } })],
+      ]);
+      // ===== 23. next: the boarding pass =====
+      add("next", { dark: 0, light: false, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.01 } }] },
+        fx(tl, id, t0, L) { PlaneUI.next(tl, L.light, t0, D("next"), { l1: "ตอนต่อไป · EP.2", l2: "ควันอีกฝั่งอ่าว", l3: "อย่าเดินไปหามัน" }); } });
