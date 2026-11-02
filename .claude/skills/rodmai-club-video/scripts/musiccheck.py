@@ -14,6 +14,11 @@ Targets (all must pass):
   4. music not missing: in voice-free time, music below -40 LUFS for <= 15 % (planned hush beats only)
 Old mixes (theme at -30/-33 with an 0.65-0.8 duck and a gate) sit around -45 under the voice and -30 between
 lines, which the owner heard as no music at all.
+
+Every target is checked twice: on the full band, and again on the "phone speaker" band (both stems high-passed
+at 300 Hz, 24 dB/oct). Both passes must hold. Owner 2 Nov 2569 ~19:15: "เพลงหาย ไม่ได้ยินเลย". Every theme
+then had 78-97 % of its energy below 300 Hz, because the music prompt asked to "keep the midrange sparse".
+Full band passed, but on a phone the music sat 22-24 dB under the voice.
 """
 import re
 import subprocess
@@ -22,9 +27,12 @@ import sys
 import numpy as np
 
 
-def momentary(path):
+PHONE = "highpass=f=300,highpass=f=300,"   # small phone speakers reproduce almost nothing below ~300 Hz
+
+
+def momentary(path, pre=""):
     cmd = ["ffmpeg", "-nostats", "-i", path, "-af",
-           "ebur128=metadata=1,ametadata=mode=print:key=lavfi.r128.M:file=-", "-f", "null", "-"]
+           pre + "ebur128=metadata=1,ametadata=mode=print:key=lavfi.r128.M:file=-", "-f", "null", "-"]
     out = subprocess.run(cmd, capture_output=True, text=True).stdout
     t, m, cur = [], [], None
     for line in out.splitlines():
@@ -54,9 +62,9 @@ def runs(mask, min_len):
     return out
 
 
-def main(vo_path, mus_path):
-    g1, vo = momentary(vo_path)
-    g2, mu = momentary(mus_path)
+def check(vo_path, mus_path, pre=""):
+    g1, vo = momentary(vo_path, pre)
+    g2, mu = momentary(mus_path, pre)
     n = min(len(vo), len(mu))
     vo, mu = vo[:n], mu[:n]
     speaking = vo > -35
@@ -78,6 +86,17 @@ def main(vo_path, mus_path):
     ok = all(c[1] for c in checks)
     for text, good in checks:
         print(("ok   " if good else "FAIL ") + text)
+    return ok
+
+
+def main(vo_path, mus_path):
+    print("[full band]")
+    a = check(vo_path, mus_path)
+    print("[phone speaker band: both stems high-passed at 300 Hz]")
+    b = check(vo_path, mus_path, PHONE)
+    if not b:
+        print("  -> the theme lives below 300 Hz: regenerate it with a mid-register lead melody (scripts/gen_theme.py)")
+    ok = a and b
     print("PASS" if ok else "FAIL")
     return ok
 
