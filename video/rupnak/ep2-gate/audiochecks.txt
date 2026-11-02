@@ -1,0 +1,14 @@
+[full band]
+ok   music under the voice -23.0 LUFS (target -27..-22)
+ok   music between lines -18.0 LUFS (target -22..-17)
+ok   voice over music 8.2 LU (target >= 8)
+ok   music missing in voice-free time 0% (target <= 15%)
+[phone speaker band: both stems high-passed at 300 Hz]
+ok   music under the voice -26.8 LUFS (target -27..-22)
+ok   music between lines -21.6 LUFS (target -22..-17)
+ok   voice over music 9.3 LU (target >= 8)
+ok   music missing in voice-free time 0% (target <= 15%)
+PASS
+video/rupnak/ep2/mix.wav: flatness 0.34 (ok) · pause HF median -120.0 dBFS (ok) → PASS
+    I:         -14.0 LUFS
+    Peak:       -1.3 dBFS

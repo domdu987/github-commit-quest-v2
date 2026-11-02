@@ -329,6 +329,8 @@
     g += `<g transform="translate(510,895)"><path d="M-6,-4L80,4L78,118L-8,112Z" fill="#140c08" ${ln(3)}/>
       <g id="${id}-door"><path d="M0,0L74,6L72,112L-2,108Z" fill="${tint("#7a4a2a")}" ${ln(2.6)}/><path d="M10,16L64,20M8,56L62,60M6,94L60,98" stroke="${tint("#5a3418")}" stroke-width="3"/><circle cx="62" cy="62" r="4" fill="${tint("#c8a040")}"/></g>
       <path d="M-8,112L80,118" stroke="${tint("#3a2414")}" stroke-width="5"/><path d="M80,4L84,-10" stroke="${tint("#3a2414")}" stroke-width="3"/></g>`;
+    if (o.snakeCrack) g += `<path id="${id}-snake" d="M-60,1900C120,1820 60,1700 220,1640S420,1560 330,1440S300,1300 370,1246" stroke="${tint("#1a0e06")}" stroke-width="9" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100 100" stroke-dashoffset="100"/>
+      <path id="${id}-snake2" d="M-60,1900C120,1820 60,1700 220,1640S420,1560 330,1440S300,1300 370,1246" stroke="${tint("#6a4a2a")}" stroke-width="3" fill="none" stroke-linecap="round" pathLength="100" stroke-dasharray="100 100" stroke-dashoffset="100" transform="translate(4,3)"/>`;
     if (o.leanPost) g += `<path id="${id}-lp" d="M370,1052L352,1240" stroke="#3a2414" stroke-width="22"/><path d="M370,1052L352,1240" stroke="${tint("#6a4228")}" stroke-width="16"/>`;
     if (night) {
       // a bulb under the house, its light pooled flat on the ground; the window lit with the family inside
@@ -345,6 +347,7 @@
     if (o.notch != null) { const el = document.querySelector(`#${id}-n${o.last}`); if (el) tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out", immediateRender: false }, t0 + o.notch); }
     document.querySelectorAll(`.${id}-dust`).forEach((el, k) => { const per = 1.1 + (k % 4) * 0.25; if (!o.dust) return;
       tl.fromTo(el, { y: 0, opacity: 0.9 }, { y: 120 + (k % 3) * 30, opacity: 0, duration: per, ease: "power1.in", repeat: Math.ceil(dur / per), immediateRender: false }, t0 + (k * 0.23) % per); });
+    if (o.snake != null) tl.fromTo([`#${id}-snake`, `#${id}-snake2`], { attr: { "stroke-dashoffset": 100 } }, { attr: { "stroke-dashoffset": 0 }, duration: o.snakeDur ?? 2.2, ease: "sine.inOut", immediateRender: false }, t0 + o.snake);
     if (o.lean != null) tl.fromTo(`#${id}-lp`, { rotation: 0, svgOrigin: "352 1240" }, { rotation: -5, svgOrigin: "352 1240", duration: 1.6, ease: "power2.inOut", immediateRender: false }, t0 + o.lean);
   };
 

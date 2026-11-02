@@ -100,6 +100,9 @@
   const mudBucket = () => `<g transform="translate(0,118)"><path d="M-34,40Q0,-30 34,40" stroke="${LINE}" stroke-width="5" fill="none"/>
     <path d="M-40,40H40L32,110H-32Z" fill="#e8d050" ${ln(2.6)}/><ellipse cx="0" cy="40" rx="40" ry="10" fill="#7a4a24" ${ln(2)}/><ellipse cx="-10" cy="38" rx="14" ry="3" fill="#a8703a"/>
     <path d="M-34,44q-6,20 -2,40" stroke="#7a4a24" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
+  const mega = () => `<g transform="translate(0,112) rotate(-90)"><path d="M-10,-14L70,-44V44L-10,14Z" fill="#e8e4dc" ${ln(2.4)}/><ellipse cx="70" cy="0" rx="10" ry="44" fill="#c83a2a" ${ln(2.2)}/><rect x="-26" y="-12" width="18" height="24" rx="4" fill="#3a3a40"/><path d="M-6,14v26" stroke="#3a3a40" stroke-width="8"/></g>`;
+  C.thongMega = { v2: C.thong.v2, hand: mega(), keep: "F" };
+  C.mookPhone = { v2: C.mook.v2, hand: phoneLit(), keep: "F" };
   C.tonkaoPhone = { v2: C.tonkao.v2, hand: phoneLit(), keep: "F" };
   C.phoSinBar = { v2: C.phoSin.v2, hand: bar(), keep: "F" };
   C.yaiBucket = { v2: C.yaiKham.v2, hand: mudBucket(), keep: "F" };

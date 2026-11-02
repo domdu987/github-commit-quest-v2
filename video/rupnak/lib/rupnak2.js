@@ -266,6 +266,14 @@
       s += Rup2.moto(1040, hy - 160, 0.6, { tint: t, c: "#c8302a", beam: night, flip: true });
     }
     put(L.set, s);
+    if (o.pumpAt) { const q = o.pumpAt;
+      put(L.set, `<g transform="translate(${q.x},${q.y}) scale(${q.s ?? 1})">${Rup2.pump(0, 0, 1, t)}
+        <g id="${id}-gush" transform="translate(420,-30)">${[0, 1, 2, 3, 4].map((k) => `<path class="${id}-gw" d="M0,0q${40 + k * 12},${-20 + k * 6} ${90 + k * 20},${60 + k * 14}" stroke="#cfe6f4" stroke-width="${10 - k}" fill="none" stroke-linecap="round" stroke-dasharray="18 14" opacity=".85"/>`).join("")}</g></g>`); }
+    if (o.rope) { const hx = o.holeX ?? 540, hr = o.rx ?? 400, hv = o.ry ?? 150; let r2 = "";
+      const pts = Array.from({ length: 10 }, (_, k) => { const a = (k / 10) * Math.PI * 2; return [hx + Math.cos(a) * hr * 1.55, hy + Math.sin(a) * hv * 1.75]; });
+      pts.forEach(([px, py]) => { r2 += `<path d="M${f(px)},${f(py)}v-90" stroke="#5a3a1e" stroke-width="8"/>`; });
+      r2 += `<path d="M${pts.concat([pts[0]]).map(([px, py]) => `${f(px)},${f(py - 76)}`).join("L")}" stroke="#d8241e" stroke-width="5" fill="none"/>`;
+      put(L.set, r2); }
     put(L.set, Rup2.hole({ id, x: o.holeX ?? 540, y: hy, rx: o.rx ?? 400, ry: o.ry ?? 150, tint: t, night, nc: 12 }));
     // offerings on the near-ish rim: incense pots and candles with ground light pools
     if (o.offer !== false) { let g = "";
@@ -298,6 +306,7 @@
   };
 
   Rup2.life2 = (tl, id, t0, dur) => {
+    document.querySelectorAll(`.${id}-gw`).forEach((el, k) => tl.fromTo(el, { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -64 }, duration: 0.4, repeat: Math.ceil(dur / 0.4), ease: "none", immediateRender: false }, t0 + k * 0.05));
     tl.fromTo(`#${id}-smoke`, { x: -60 }, { x: 80, duration: dur, ease: "sine.inOut", immediateRender: false }, t0);
     document.querySelectorAll(`.${id}-bulb`).forEach((el, k) => tl.fromTo(el, { opacity: 0.75 }, { opacity: 1, duration: 0.3 + (k % 3) * 0.1, yoyo: true, repeat: Math.ceil(dur / 0.3), ease: "sine.inOut", immediateRender: false }, t0));
     document.querySelectorAll(`.${id}-fl`).forEach((el, k) => tl.fromTo(el, { scaleY: 0.8, transformOrigin: "50% 100%" }, { scaleY: 1.2, transformOrigin: "50% 100%", duration: 0.13 + k * 0.02, yoyo: true, repeat: Math.ceil(dur / 0.13), ease: "sine.inOut", immediateRender: false }, t0));

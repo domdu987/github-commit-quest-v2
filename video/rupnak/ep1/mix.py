@@ -1,4 +1,4 @@
-"""ทะเลลด EP.1: build the episode soundtrack from schedule.json: per-line levelled voice, synthesized SFX (the wash pulling
+"""รูพญานาค EP.1: build the episode soundtrack from schedule.json: per-line levelled voice, synthesized SFX (the wash pulling
 back off the title, the flopping fish, the clock spinning back, the van on the map, the shallows under running feet, the live's pings,
 the tower's 08:00 test tone, the shadow screen's gong, the deep boom of the quake, the glass's faint ring, the seabed's mud and the
 shutter clicks, the conch, the run, the surge round the shop, heartbeats once ยาย is missing, the choice's ticks) and the Suno

@@ -199,6 +199,28 @@
     tl.to(`#${id}-a`, { scale: 1.08, transformOrigin: "50% 50%", duration: 0.3, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t0 + 2.6);
     tl.to(el, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2);
   };
+  // ---------------- มุก's phone, close: one bar of signal, she types 1-7-8-4 and calls (the number lives on the screen, not a floating icon) ----------------
+  RupUI.phoneCall = (tl, layer, t0, dur, o = {}) => {
+    const id = `rpc${Math.round(t0 * 100)}`, num = o.num || "1784";
+    put(layer, `<g transform="translate(${o.x ?? 600},${o.y ?? 980}) rotate(${o.rot ?? -6})"><g id="${id}">
+      <path d="M-150,330q-40,-120 30,-180" stroke="#e2b48c" stroke-width="90" stroke-linecap="round" fill="none"/>
+      <rect x="-170" y="-330" width="340" height="660" rx="44" fill="#1a1c22" ${ln(4)}/><rect x="-150" y="-300" width="300" height="600" rx="26" fill="#eef4fa"/>
+      <g transform="translate(-130,-276)"><rect x="0" y="10" width="8" height="10" fill="#2a2a2a"/>${[1, 2, 3].map((k) => `<rect x="${k * 12}" y="${10 - k * 5}" width="8" height="${10 + k * 5}" fill="#c8ccd0"/>`).join("")}</g>
+      <text x="0" y="-200" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#5a6470">สายด่วนนิรภัย</text>
+      ${num.split("").map((d, k) => `<text class="${id}-d" x="${-78 + k * 52}" y="-110" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="78" fill="#1a2a3a" opacity="0">${d}</text>`).join("")}
+      <g id="${id}-calling" opacity="0"><text x="0" y="-40" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="34" fill="#2a8a4a">กำลังโทร…</text>
+        ${[0, 1, 2].map((k) => `<path class="${id}-w" d="M${-40 - k * 22},40q${40 + k * 22},${-36 - k * 18} ${80 + k * 44},0" stroke="#2fa864" stroke-width="7" fill="none" stroke-linecap="round" opacity=".3"/>`).join("")}</g>
+      ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "*", 0, "#"].map((d, k) => `<g transform="translate(${-90 + (k % 3) * 90},${110 + Math.floor(k / 3) * 46})"><text text-anchor="middle" font-family="Kanit" font-weight="600" font-size="34" fill="#5a6470" y="12">${d}</text></g>`).join("")}
+      <circle id="${id}-btn" cx="0" cy="286" r="0" fill="#2fa864"/></g></g>`);
+    const el = document.getElementById(id);
+    tl.set(el, { opacity: 0 }, 0);
+    tl.fromTo(el, { opacity: 0, y: 260, rotation: 6, transformOrigin: "50% 100%" }, { opacity: 1, y: 0, rotation: 0, transformOrigin: "50% 100%", duration: 0.45, ease: "back.out(1.8)", immediateRender: false }, t0);
+    document.querySelectorAll(`.${id}-d`).forEach((d, k) => tl.fromTo(d, { opacity: 0, scale: 1.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.22, ease: "back.out(3)", immediateRender: false }, t0 + 0.5 + k * 0.32));
+    const tc = t0 + 0.5 + num.length * 0.32 + 0.2;
+    tl.to(`#${id}-calling`, { opacity: 1, duration: 0.2, immediateRender: false }, tc);
+    document.querySelectorAll(`.${id}-w`).forEach((w, k) => tl.fromTo(w, { opacity: 0.15 }, { opacity: 1, duration: 0.35, yoyo: true, repeat: Math.ceil((dur - (tc - t0)) / 0.35), ease: "sine.inOut", immediateRender: false }, tc + k * 0.12));
+    tl.to(el, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2);
+  };
   // ---------------- the end card: the headman's sign with a paper note ----------------
   RupUI.endCard = (tl, layer, t0, dur, o = {}) => {
     const id = `ren${Math.round(t0 * 100)}`;
@@ -258,6 +280,10 @@
     g += `<rect x="-600" y="-200" width="2300" height="300" fill="${red}" opacity=".85"/>` + RupUI.scales(-600, 80, 2300, 2, 40, "#e8c060", och) + `<path d="M-600,80H1700M-600,130H1700" stroke="${ink}" stroke-width="4"/>`;
     g += `<rect x="-600" y="1760" width="2300" height="400" fill="${ind}" opacity=".85"/>` + Array.from({ length: 30 }, (_, k) => `<path d="M${-560 + k * 80},1800q40,-50 80,0q-40,24 -80,0Z" fill="#e8dcc0" stroke="${ink}" stroke-width="3"/>`).join("");
     for (let k = 0; k < 3; k++) g += `<g transform="translate(${-80 + k * 120 + (k > 1 ? 800 : 0)},410)"><path d="M-20,0q0,-60 20,-80q20,20 20,80Z" fill="${k % 2 ? ind : och}" stroke="${ink}" stroke-width="3"/><circle cx="0" cy="-96" r="16" fill="#e8b88a" stroke="${ink}" stroke-width="3"/><path d="M14,-60l30,-40" stroke="${ink}" stroke-width="5"/><path d="M44,-100l4,-30" stroke="${red}" stroke-width="3"/></g>`;
+    // memory (EP.2): a folk-style buffalo at the edge of a hole in the ground, thirty years ago
+    if (o.buffalo) g += `<g transform="translate(860,400)"><ellipse cx="0" cy="18" rx="120" ry="22" fill="${ink}"/><path d="M-90,-10q10,-60 80,-58q70,-2 90,30l-6,40h-150Z" fill="#5a5a6a" stroke="${ink}" stroke-width="4"/>
+      <path d="M80,-38q40,-6 50,20q-10,20 -36,14" fill="#5a5a6a" stroke="${ink}" stroke-width="4"/><path d="M100,-50q-20,-30 -50,-30M110,-46q30,-26 20,-50" stroke="#e8dcc0" stroke-width="6" fill="none"/>
+      <path d="M-70,30v40M-30,30v40M30,30v30M60,30v26" stroke="${ink}" stroke-width="8"/><circle cx="104" cy="-28" r="4" fill="${ink}"/></g>`;
     // the ground above splitting in a ring where they drill
     g += `<path id="${id}-split" d="M300,430Q470,470 640,430" stroke="${ink}" stroke-width="8" fill="none" stroke-dasharray="20 10" pathLength="100"/>`;
     // the wall's age: cracks in the plaster, a water stain
@@ -265,7 +291,8 @@
     put(L.set, g);
   };
   Sets.rupMural = (L, o = {}) => Rup.mural(L, o);
-  Rup.muralLife = (tl, id, t0, dur) => {
+  Rup.muralLife = (tl, id, t0, dur, o = {}) => {
+    if (o.eyeGlow != null) tl.fromTo(`#${id}-eye`, { attr: { fill: "#f0d860" } }, { attr: { fill: "#fff6a0" }, duration: 0.5, ease: "power2.in", immediateRender: false }, t0 + o.eyeGlow);
     tl.fromTo(`#${id}-naga`, { x: -10 }, { x: 10, duration: 2.4, yoyo: true, repeat: Math.ceil(dur / 2.4), ease: "sine.inOut", immediateRender: false }, t0);
     tl.fromTo(`#${id}-eye`, { opacity: 0.2 }, { opacity: 1, duration: 0.6, yoyo: true, repeat: Math.ceil(dur / 0.6), ease: "sine.inOut", immediateRender: false }, t0);
   };
