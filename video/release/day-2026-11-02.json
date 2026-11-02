@@ -1,256 +1,258 @@
 {
- "date": "2026-11-02",
- "tz": "Asia/Bangkok",
- "made_by": "Claude (แชทประสานงาน)",
- "status": "รอดคนเดียว + ห้องสอบ + ทางกลับบ้าน v2: เสร็จ ส่งเจ้าของแล้ว · เจ้าของลงเองทั้งหมด (Moji ห้ามลง ห้ามตั้งเวลา) · ต้นตะเคียนกลางนา EP.1–2: เสร็จ ส่งเจ้าของแล้ว (เจ้าของลงเอง)",
- "rules": [
-  "ก่อนลงอ่าน video/release/MOJI-PLAYBOOK.md · เขียนสถานะลง video/release/posted/<วันที่>.json ทุกคลิปทุกแพลตฟอร์ม",
-  "เจ้าของสั่ง 1 พ.ย. (พิมพ์ในแชทเลน D): \"เราจะลงเช้า 1 เรื่อง เที่ยง 1 เรื่อง กลางคืน 1 เรื่อง\" · 1 เรื่อง = ทุกตอนของเรื่องนั้น ลงช่วงเดียวกันเรียง EP ห่างกัน 30 นาที",
-  "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
-  "แคปชัน แฮชแท็ก คอมเมนต์ปักหมุด และชื่อ YouTube อยู่ในไฟล์ package ของเรื่อง (commit เดียวกัน)",
-  "ลงได้เฉพาะ status final · EP.N+1 หลัง EP.N ลงแล้วเท่านั้น"
- ],
- "items": [
-  {
-   "order": 1,
-   "id": "plane-ep1",
-   "series": "รอดคนเดียว (เครื่องบินตก)",
-   "status": "hold",
-   "branch": "prod/lane-d",
-   "commit": "2055a00",
-   "package": "video/release/plane-v6m.json",
-   "video_hq": "video/release/hq/plane-ep1-v6m-HQ.mp4",
-   "video_hq_sha256": "f3ed4c51840872fd1cc0afc814220e626e1e768aed38c58be3871a5693c69662",
-   "video_hq_bytes": 85437949,
-   "suggested_time": "2026-11-02T08:00+07:00",
-   "slot": "เช้า",
-   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
-   "revision_note": "v6m 2 พ.ย. (เลน D 2055a00): ภาพเดียวกับ v6 (md5 ภาพตรงกัน) · เพลงดังขึ้นตามเจ้าของ \"เพลงเบาไม่ได้ยิน\" — musiccheck PASS (ใต้เสียงพูด −23.9 · ช่วงเว้น −19.1 LUFS · พูดดังกว่า 8.4 LU) · hisscheck PASS · −14.0 LUFS peak −1.5 · ส่งเจ้าของแล้ว",
-   "hold_note": "เจ้าของ 2 พ.ย. ~07:10 น.: \"ยกระดับ\" → รอตัวยกระดับภาพ (EP.1 v5 เลน D · EP.2 v6 เลน C) ผ่านการตรวจแผ่นภาพก่อนเรนเดอร์และเจ้าของอนุมัติ แล้วค่อยลงคู่กัน · ตอนนี้ห้ามลงทุกแพลตฟอร์ม",
-   "fallback_old_style": {
-    "commit": "bf55732",
-    "video_hq": "video/release/hq/plane-ep1-v3fix-HQ.mp4",
-    "video_hq_sha256": "d093a69edac8840068510d4f2fc4fdb12cf946559f705ba3708f3d6cede37e84",
-    "video_hq_bytes": 77843497
-   },
-   "previous_v5": {
-    "commit": "e55ee8e",
-    "video_hq": "video/release/hq/plane-ep1-v5-HQ.mp4",
-    "video_hq_sha256": "ea2615488e58b65709bf9bf7a3190cb379cf88c174cbb3f50e75f1c4d1dac14d",
-    "video_hq_bytes": 85985971
-   },
-   "owner_posting": "เจ้าของลงเองทุกแพลตฟอร์ม (2 พ.ย. ~11:20 น.: \"ผมลงเองก่อนดีกว่า\") — Moji ห้ามลง ห้ามตั้งเวลา และถ้าตั้งไว้แล้วให้ยกเลิก",
-   "previous_v6": {
-    "commit": "0885ba3",
-    "video_hq": "video/release/hq/plane-ep1-v6-HQ.mp4",
-    "video_hq_sha256": "d44c4aca648e6437d65b11d7eddd70226c74c702f5c4624ba25c135f269bef3f",
-    "video_hq_bytes": 85436271
-   }
-  },
-  {
-   "order": 2,
-   "id": "plane-ep2",
-   "series": "รอดคนเดียว (เครื่องบินตก)",
-   "status": "hold",
-   "branch": "prod/lane-c",
-   "commit": "6f67b2d",
-   "package": "video/release/plane-ep2-v6bm.json",
-   "video_hq": "video/release/hq/plane-ep2-v6bm-HQ.mp4",
-   "video_hq_sha256": "8f6aec5d9cda5e3fdeade7d4c8b173125e251e16d0d3a865d52974256141c6eb",
-   "video_hq_bytes": 90983981,
-   "suggested_time": "2026-11-02T08:30+07:00",
-   "slot": "เช้า",
-   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
-   "revision_note": "v6bm (เลน C 6f67b2d): ภาพตรงกับ v6b · เพลงดังขึ้น (เจ้าของ \"เพลงเบาไม่ได้ยิน\") · musiccheck PASS −25.2/−19.1 LUFS · 10.6 LU · 0% · hisscheck PASS · −14.3 LUFS · ส่งเจ้าของแล้ว",
-   "hold_note": "เจ้าของ 2 พ.ย. ~07:10 น.: \"ยกระดับ\" → รอตัวยกระดับภาพ (EP.1 v5 เลน D · EP.2 v6 เลน C) ผ่านการตรวจแผ่นภาพก่อนเรนเดอร์และเจ้าของอนุมัติ แล้วค่อยลงคู่กัน · ตอนนี้ห้ามลงทุกแพลตฟอร์ม",
-   "fallback_old_style": {
-    "branch": "prod/lane-d",
-    "commit": "a59271e",
-    "video_hq": "video/release/hq/plane-ep2-HQ.mp4",
-    "video_hq_sha256": "3baf38b728e312e02bed7db5da54ddae35bd49bdfd650df0adb97086d4df5311",
-    "video_hq_bytes": 67614831
-   },
-   "previous_v6": {
-    "commit": "718a090",
-    "video_hq": "video/release/hq/plane-ep2-v6-HQ.mp4",
-    "video_hq_sha256": "583785d46d52d5d280e1d67468affabf70c08f0bf400563ae3ec93b143de3ea5",
-    "video_hq_bytes": 90767932
-   },
-   "owner_posting": "เจ้าของลงเองทุกแพลตฟอร์ม (2 พ.ย. ~11:20 น.: \"ผมลงเองก่อนดีกว่า\") — Moji ห้ามลง ห้ามตั้งเวลา และถ้าตั้งไว้แล้วให้ยกเลิก",
-   "previous_v6b": {
-    "commit": "ed87d06",
-    "video_hq": "video/release/hq/plane-ep2-v6b-HQ.mp4",
-    "video_hq_sha256": "55599c004ad454bb5dd894113ba7a460de477691b704c3c5e53e2cf0c953986c",
-    "video_hq_bytes": 90983784
-   }
-  },
-  {
-   "order": 3,
-   "id": "war-ep1",
-   "series": "ทางกลับบ้าน (สงคราม)",
-   "status": "hold",
-   "branch": "prod/lane-d",
-   "commit": "2e4cf24",
-   "package": "video/release/war-v2.json",
-   "video_hq": "video/release/hq/war-ep1-v2-HQ.mp4",
-   "video_hq_sha256": "035ee5f86b41899f1c5dc88518e04f23ff67b74ab4203799f95a60592d78b5af",
-   "video_hq_bytes": 83843114,
-   "suggested_time": "2026-11-02T12:00+07:00",
-   "slot": "เที่ยง",
-   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
-   "revision_note": "v2 2 พ.ย. (เลน D 2e4cf24): แก้ภาพตามตรวจ 360×640 + ไม่มีซ่า + เพลงดังขึ้น · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 74.6 วิ 60fps · −14.0 LUFS peak −1.8 · ไม่มีภาพค้าง/จอดำ · musiccheck PASS (−24.9 / −21.6 LUFS · พูดดังกว่า 9.3 LU · เพลงหาย 7%) · hisscheck PASS (0.32) · ส่งเจ้าของแล้ว 15:30 น.",
-   "previous_v1": {
-    "branch": "prod/lane-a",
-    "commit": "390304b",
-    "package": "video/release/war.json",
-    "video_hq": "video/release/hq/war-ep1-HQ.mp4",
-    "video_hq_sha256": "26daa7ad0ba71cdc487e2885db903b5c62b8ebc3f3bffe3f356c9f18aa040baf",
-    "video_hq_bytes": 84282630,
-    "hold_note": "ผู้ประสานงาน 2 พ.ย. 12:00 น.: วัดเสียงตามกฎ A4 แล้วยังมี 'ซ่า' (เสียงพื้นจาก noise) ราวครึ่งเรื่อง (flatness 5–14 kHz ค่ากลาง 0.62–0.71 · หน้าต่าง noise 52–65% เทียบกับรอดคนเดียว v6 ที่ 0.32 / 3%) → พักไว้รอรีมิกซ์ไม่มีซ่า (ภาพเดิม) · Moji ห้ามลงหรือตั้งเวลาไฟล์ sha เดิม ถ้าตั้งไว้แล้วให้ยกเลิก · ตรวจภาพ 360×640 แล้วต้องแก้ภาพด้วย ดู video/release/review/yesterday-qa-2026-11-02.md"
-   },
-   "hold_note": "ไฟล์ v2 พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
-   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก"
-  },
-  {
-   "order": 4,
-   "id": "war-ep2",
-   "series": "ทางกลับบ้าน (สงคราม)",
-   "status": "hold",
-   "branch": "prod/lane-d",
-   "commit": "2e4cf24",
-   "package": "video/release/war-v2.json",
-   "video_hq": "video/release/hq/war-ep2-v2-HQ.mp4",
-   "video_hq_sha256": "099e97ae0fdd8a928693d384842f1ad4a2d7e7bc2bf330d680ad4d881d74210e",
-   "video_hq_bytes": 82691555,
-   "suggested_time": "2026-11-02T12:30+07:00",
-   "slot": "เที่ยง",
-   "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
-   "revision_note": "v2 2 พ.ย. (เลน D 2e4cf24): แก้ภาพตามตรวจ 360×640 + ไม่มีซ่า + เพลงดังขึ้น + จุดดำครึ่งวงกลมในช็อตพุ่มไม้ (4.4–6.7 วิ) เรนเดอร์ใหม่แล้วต่อที่รอยตัด · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 72.5 วิ 60fps · −14.0 LUFS peak −1.8 · ไม่มีภาพค้าง/จอดำ · musiccheck PASS (−25.7 / −17.8 LUFS · พูดดังกว่า 9.2 LU · เพลงหาย 8%) · hisscheck PASS (0.31) · ส่งเจ้าของแล้ว 15:30 น.",
-   "previous_v1": {
-    "branch": "prod/lane-a",
-    "commit": "390304b",
-    "package": "video/release/war.json",
-    "video_hq": "video/release/hq/war-ep2-HQ.mp4",
-    "video_hq_sha256": "35c929b3f9436cb4dc0f8fe2a772900391959384451e9ab001c5da2d44831f80",
-    "video_hq_bytes": 73761965,
-    "hold_note": "ผู้ประสานงาน 2 พ.ย. 12:00 น.: วัดเสียงตามกฎ A4 แล้วยังมี 'ซ่า' (เสียงพื้นจาก noise) ราวครึ่งเรื่อง (flatness 5–14 kHz ค่ากลาง 0.62–0.71 · หน้าต่าง noise 52–65% เทียบกับรอดคนเดียว v6 ที่ 0.32 / 3%) → พักไว้รอรีมิกซ์ไม่มีซ่า (ภาพเดิม) · Moji ห้ามลงหรือตั้งเวลาไฟล์ sha เดิม ถ้าตั้งไว้แล้วให้ยกเลิก · ตรวจภาพ 360×640 แล้วต้องแก้ภาพด้วย ดู video/release/review/yesterday-qa-2026-11-02.md"
-   },
-   "hold_note": "ไฟล์ v2 พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
-   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก"
-  },
-  {
-   "order": 5,
-   "id": "exam-ep1",
-   "series": "ห้องสอบ (ซอมบี้บุกตอนนั่งสอบ)",
-   "status": "hold",
-   "slot": "กลางคืน",
-   "branch": "prod/lane-c",
-   "commit": "6f67b2d",
-   "package": "video/release/exam-v3m.json",
-   "video_hq": "video/release/hq/exam-ep1-v3m-HQ.mp4",
-   "video_hq_sha256": "09c6d7a923b79bb89d909799f294b319687a1b47994166722761358709deb6a7",
-   "video_hq_bytes": 54807728,
-   "suggested_time": "2026-11-02T20:00+07:00",
-   "revision_note": "v3m รอบ 2 (เลน C 6f67b2d): ชุด f2f72d0 เพลงหายบนการ์ดจบ (ผู้ประสานงานตรวจพลาดเพราะ musiccheck อ่านค่า nan ไม่ได้) → แก้แล้ว · musiccheck PASS −24.6/−19.0 LUFS · 10.6 LU · เพลงหาย 0% · hisscheck PASS · ภาพตรงกับ v3 · ส่งเจ้าของแล้ว",
-   "previous_v1": {
-    "commit": "2c7fb2e",
-    "video_hq": "video/release/hq/exam-ep1-HQ.mp4",
-    "video_hq_sha256": "3d0d8da0a864ae9f8937f867c9d9d7b0925e7f70a30c702588acfc3c66bbadb6",
-    "video_hq_bytes": 55230690
-   },
-   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
-   "previous_v3": {
-    "commit": "632daf3",
-    "video_hq": "video/release/hq/exam-ep1-v3-HQ.mp4",
-    "video_hq_sha256": "21ad7fd79b16b2df25b8041bd0a649bbdf1d508e9b0947904dd6e21ad282e5f4",
-    "video_hq_bytes": 54747506
-   }
-  },
-  {
-   "order": 6,
-   "id": "exam-ep2",
-   "series": "ห้องสอบ (ซอมบี้บุกตอนนั่งสอบ)",
-   "status": "hold",
-   "slot": "กลางคืน",
-   "branch": "prod/lane-c",
-   "commit": "6f67b2d",
-   "package": "video/release/exam-v3m.json",
-   "video_hq": "video/release/hq/exam-ep2-v3m-HQ.mp4",
-   "video_hq_sha256": "658f48451f12df776411dccb4f91a1778c2084991f123d26baeb40aa2e2fe798",
-   "video_hq_bytes": 44825037,
-   "suggested_time": "2026-11-02T20:30+07:00",
-   "revision_note": "v3m รอบ 2 (เลน C 6f67b2d): เพลงต่อเนื่องถึงการ์ดจบ · musiccheck PASS −24.0/−19.2 LUFS · 10.2 LU · 0% · hisscheck PASS · ภาพตรงกับ v3 · ส่งเจ้าของแล้ว",
-   "previous_v1": {
-    "commit": "2c7fb2e",
-    "video_hq": "video/release/hq/exam-ep2-HQ.mp4",
-    "video_hq_sha256": "2f485abd2a0c44ac51922ee1a260f48cae5875aaf8473eb3ab75ad04362d572a",
-    "video_hq_bytes": 45467023
-   },
-   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
-   "previous_v3": {
-    "commit": "632daf3",
-    "video_hq": "video/release/hq/exam-ep2-v3-HQ.mp4",
-    "video_hq_sha256": "f95cda8b5a11f976e693fa2c905044b7baf831c871d91b63aa2aecbb525f42d8",
-    "video_hq_bytes": 44762264
-   }
-  },
-  {
-   "order": 7,
-   "id": "takhian-ep1",
-   "series": "ต้นตะเคียนกลางนา",
-   "status": "hold",
-   "slot": "เจ้าของเลือกเอง",
-   "branch": "ccr-fb88c4b3-kcqyid",
-   "package": "video/release/takhian.json",
-   "commit": "6bc1663",
-   "video_hq": "video/release/hq/takhian-ep1-HQ-m2.mp4",
-   "video_hq_sha256": "ab6ee40b83cd728775ec65aa8923be516912730771769937170befe2b8a2f2f8",
-   "video_hq_bytes": 97498437,
-   "revision_note": "2 พ.ย. ~19:40 น. (ผู้ประสานงาน 6bc1663): เพลงใหม่ที่ได้ยินบนลำโพงมือถือ (เดิมเพลงเป็นเสียงทุ้มต่ำกว่า 300 Hz ถึง 95% เจ้าของแจ้งว่า 'เพลงหาย') · ภาพเดิม copy ครบทุกเฟรม · musiccheck PASS ทั้งย่านปกติและย่านมือถือ · hisscheck PASS · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทนไฟล์เดิม · ก่อนหน้า: 2 พ.ย. (เลน B 6cd0766): เรนเดอร์ทั้งตอนจาก 618743f 7484 เฟรม · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 124.7 วิ 60fps · −14.2 LUFS peak −3.2 · ไม่มีภาพค้างกลางเรื่อง/จอดำ · musiccheck PASS · hisscheck PASS · ดูภาพครบที่ 360×640 · ส่งเจ้าของพร้อมแคปชันแล้ว",
-   "hold_note": "ไฟล์พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
-   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
-   "previous_v1": {
-    "branch": "prod/lane-b",
-    "commit": "6cd0766",
-    "video_hq": "video/release/hq/takhian-ep1-HQ.mp4",
-    "video_hq_sha256": "be5d6e8a4df2102982a8220e9288f40b7e29ff77ac9d55212e8d310f57a2ccc7",
-    "video_hq_bytes": 97536876
-   }
-  },
-  {
-   "order": 8,
-   "id": "takhian-ep2",
-   "series": "ต้นตะเคียนกลางนา",
-   "status": "hold",
-   "slot": "เจ้าของเลือกเอง (หลัง EP.1)",
-   "branch": "prod/lane-c",
-   "package": "video/release/takhian.json",
-   "commit": "41183c1",
-   "video_hq": "video/takhian-kit/out/EP2-takhian-tonkhian-klang-na-HQ-subfix.mp4",
-   "video_hq_sha256": "3e764932937a6bde16450dd382723cf3729d79aa976ac75314f5bc0852e1e1d5",
-   "video_hq_bytes": 97375351,
-   "revision_note": "2 พ.ย. ~20:20 น. (เลน C 41183c1): ฉบับแก้ซับ (แบ่งท่อนตามช่วงเงียบ + fitCaps ≤ 980 px · edgecheck EP.1/EP.2 no edge problems) + เสียง m2 (แทร็กเสียงเหมือน m2 ทุกไบต์) · ผู้ประสานงานตรวจ: sha ตรง · 7240 เฟรม · −14.2 LUFS · ไม่มีภาพค้างหรือจอดำ · hisscheck PASS · ครอปแถบซับ 52.0/53.6/88.5/89.8 วิห่างขอบชัด · เฟรมอื่นเทียบฉบับเดิม PSNR 40–46 dB · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทน EP.2 ทุกฉบับก่อนหน้า · ก่อนหน้า: 2 พ.ย. ~19:40 น. (ผู้ประสานงาน 6bc1663): เพลงใหม่ที่ได้ยินบนลำโพงมือถือ (เดิมเพลงเป็นเสียงทุ้มต่ำกว่า 300 Hz ถึง 95% เจ้าของแจ้งว่า 'เพลงหาย') · ภาพเดิม copy ครบทุกเฟรม · musiccheck PASS ทั้งย่านปกติและย่านมือถือ · hisscheck PASS · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทนไฟล์เดิม · ก่อนหน้า: 2 พ.ย. (เลน C c37d878): เรนเดอร์ทั้งตอนจาก a0bbecc + ต่อช็อต speak · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 120.7 วิ 60fps 7240 เฟรม · −14.2 LUFS peak −2.7 · ไม่มีภาพค้าง/จอดำ · musiccheck PASS · hisscheck PASS · ดูภาพครบที่ 360×640 · ส่งเจ้าของพร้อมแคปชันแล้ว · จุดเดียว: กล่องซับ 2 บรรทัดชนขอบจอ (ฉบับแก้กำลังทำ)",
-   "hold_note": "ไฟล์พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
-   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
-   "previous_v1": {
-    "branch": "prod/lane-c",
-    "commit": "c37d878",
-    "video_hq": "video/takhian-kit/out/EP2-takhian-tonkhian-klang-na-HQ.mp4",
-    "video_hq_sha256": "cf91b167f0f23d0d7a03e32c5b9d3fdf2ae1f74a1a00faa3c3ef2c874c8adeff",
-    "video_hq_bytes": 97423592
-   },
-   "previous_v2": {
-    "branch": "ccr-fb88c4b3-kcqyid",
-    "commit": "6bc1663",
-    "video_hq": "video/release/hq/takhian-ep2-HQ-m2.mp4",
-    "video_hq_sha256": "bf4391fe00684449829afdc04ef7825557f49e9e5402444849c2d641894543a0",
-    "video_hq_bytes": 97381981
-   }
+  "date": "2026-11-02",
+  "tz": "Asia/Bangkok",
+  "made_by": "Claude (แชทประสานงาน)",
+  "status": "รอดคนเดียว + ห้องสอบ + ทางกลับบ้าน v2: เสร็จ ส่งเจ้าของแล้ว · เจ้าของลงเองทั้งหมด (Moji ห้ามลง ห้ามตั้งเวลา) · ต้นตะเคียนกลางนา EP.1–2: เสร็จ ส่งเจ้าของแล้ว (เจ้าของลงเอง)",
+  "rules": [
+    "ก่อนลงอ่าน video/release/MOJI-PLAYBOOK.md · เขียนสถานะลง video/release/posted/<วันที่>.json ทุกคลิปทุกแพลตฟอร์ม",
+    "เจ้าของสั่ง 1 พ.ย. (พิมพ์ในแชทเลน D): \"เราจะลงเช้า 1 เรื่อง เที่ยง 1 เรื่อง กลางคืน 1 เรื่อง\" · 1 เรื่อง = ทุกตอนของเรื่องนั้น ลงช่วงเดียวกันเรียง EP ห่างกัน 30 นาที",
+    "ดึงไฟล์ตาม branch + commit ที่ระบุ แล้วตรวจ sha256 ก่อนลงทุกครั้ง",
+    "แคปชัน แฮชแท็ก คอมเมนต์ปักหมุด และชื่อ YouTube อยู่ในไฟล์ package ของเรื่อง (commit เดียวกัน)",
+    "ลงได้เฉพาะ status final · EP.N+1 หลัง EP.N ลงแล้วเท่านั้น"
+  ],
+  "items": [
+    {
+      "order": 1,
+      "id": "plane-ep1",
+      "series": "รอดคนเดียว (เครื่องบินตก)",
+      "status": "hold",
+      "branch": "prod/lane-d",
+      "commit": "2055a00",
+      "package": "video/release/plane-v6m.json",
+      "video_hq": "video/release/hq/plane-ep1-v6m-HQ.mp4",
+      "video_hq_sha256": "f3ed4c51840872fd1cc0afc814220e626e1e768aed38c58be3871a5693c69662",
+      "video_hq_bytes": 85437949,
+      "suggested_time": "2026-11-02T08:00+07:00",
+      "slot": "เช้า",
+      "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
+      "revision_note": "v6m 2 พ.ย. (เลน D 2055a00): ภาพเดียวกับ v6 (md5 ภาพตรงกัน) · เพลงดังขึ้นตามเจ้าของ \"เพลงเบาไม่ได้ยิน\" — musiccheck PASS (ใต้เสียงพูด −23.9 · ช่วงเว้น −19.1 LUFS · พูดดังกว่า 8.4 LU) · hisscheck PASS · −14.0 LUFS peak −1.5 · ส่งเจ้าของแล้ว",
+      "hold_note": "เจ้าของ 2 พ.ย. ~07:10 น.: \"ยกระดับ\" → รอตัวยกระดับภาพ (EP.1 v5 เลน D · EP.2 v6 เลน C) ผ่านการตรวจแผ่นภาพก่อนเรนเดอร์และเจ้าของอนุมัติ แล้วค่อยลงคู่กัน · ตอนนี้ห้ามลงทุกแพลตฟอร์ม",
+      "fallback_old_style": {
+        "commit": "bf55732",
+        "video_hq": "video/release/hq/plane-ep1-v3fix-HQ.mp4",
+        "video_hq_sha256": "d093a69edac8840068510d4f2fc4fdb12cf946559f705ba3708f3d6cede37e84",
+        "video_hq_bytes": 77843497
+      },
+      "previous_v5": {
+        "commit": "e55ee8e",
+        "video_hq": "video/release/hq/plane-ep1-v5-HQ.mp4",
+        "video_hq_sha256": "ea2615488e58b65709bf9bf7a3190cb379cf88c174cbb3f50e75f1c4d1dac14d",
+        "video_hq_bytes": 85985971
+      },
+      "owner_posting": "เจ้าของลงเองทุกแพลตฟอร์ม (2 พ.ย. ~11:20 น.: \"ผมลงเองก่อนดีกว่า\") — Moji ห้ามลง ห้ามตั้งเวลา และถ้าตั้งไว้แล้วให้ยกเลิก",
+      "previous_v6": {
+        "commit": "0885ba3",
+        "video_hq": "video/release/hq/plane-ep1-v6-HQ.mp4",
+        "video_hq_sha256": "d44c4aca648e6437d65b11d7eddd70226c74c702f5c4624ba25c135f269bef3f",
+        "video_hq_bytes": 85436271
+      }
+    },
+    {
+      "order": 2,
+      "id": "plane-ep2",
+      "series": "รอดคนเดียว (เครื่องบินตก)",
+      "status": "hold",
+      "branch": "prod/lane-c",
+      "commit": "6f67b2d",
+      "package": "video/release/plane-ep2-v6bm.json",
+      "video_hq": "video/release/hq/plane-ep2-v6bm-HQ.mp4",
+      "video_hq_sha256": "8f6aec5d9cda5e3fdeade7d4c8b173125e251e16d0d3a865d52974256141c6eb",
+      "video_hq_bytes": 90983981,
+      "suggested_time": "2026-11-02T08:30+07:00",
+      "slot": "เช้า",
+      "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
+      "revision_note": "v6bm (เลน C 6f67b2d): ภาพตรงกับ v6b · เพลงดังขึ้น (เจ้าของ \"เพลงเบาไม่ได้ยิน\") · musiccheck PASS −25.2/−19.1 LUFS · 10.6 LU · 0% · hisscheck PASS · −14.3 LUFS · ส่งเจ้าของแล้ว",
+      "hold_note": "เจ้าของ 2 พ.ย. ~07:10 น.: \"ยกระดับ\" → รอตัวยกระดับภาพ (EP.1 v5 เลน D · EP.2 v6 เลน C) ผ่านการตรวจแผ่นภาพก่อนเรนเดอร์และเจ้าของอนุมัติ แล้วค่อยลงคู่กัน · ตอนนี้ห้ามลงทุกแพลตฟอร์ม",
+      "fallback_old_style": {
+        "branch": "prod/lane-d",
+        "commit": "a59271e",
+        "video_hq": "video/release/hq/plane-ep2-HQ.mp4",
+        "video_hq_sha256": "3baf38b728e312e02bed7db5da54ddae35bd49bdfd650df0adb97086d4df5311",
+        "video_hq_bytes": 67614831
+      },
+      "previous_v6": {
+        "commit": "718a090",
+        "video_hq": "video/release/hq/plane-ep2-v6-HQ.mp4",
+        "video_hq_sha256": "583785d46d52d5d280e1d67468affabf70c08f0bf400563ae3ec93b143de3ea5",
+        "video_hq_bytes": 90767932
+      },
+      "owner_posting": "เจ้าของลงเองทุกแพลตฟอร์ม (2 พ.ย. ~11:20 น.: \"ผมลงเองก่อนดีกว่า\") — Moji ห้ามลง ห้ามตั้งเวลา และถ้าตั้งไว้แล้วให้ยกเลิก",
+      "previous_v6b": {
+        "commit": "ed87d06",
+        "video_hq": "video/release/hq/plane-ep2-v6b-HQ.mp4",
+        "video_hq_sha256": "55599c004ad454bb5dd894113ba7a460de477691b704c3c5e53e2cf0c953986c",
+        "video_hq_bytes": 90983784
+      }
+    },
+    {
+      "order": 3,
+      "id": "war-ep1",
+      "series": "ทางกลับบ้าน (สงคราม)",
+      "status": "hold",
+      "branch": "prod/lane-d",
+      "commit": "2e4cf24",
+      "package": "video/release/war-v2.json",
+      "video_hq": "video/release/hq/war-ep1-v2-HQ.mp4",
+      "video_hq_sha256": "035ee5f86b41899f1c5dc88518e04f23ff67b74ab4203799f95a60592d78b5af",
+      "video_hq_bytes": 83843114,
+      "suggested_time": "2026-11-02T12:00+07:00",
+      "slot": "เที่ยง",
+      "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
+      "revision_note": "v2 2 พ.ย. (เลน D 2e4cf24): แก้ภาพตามตรวจ 360×640 + ไม่มีซ่า + เพลงดังขึ้น · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 74.6 วิ 60fps · −14.0 LUFS peak −1.8 · ไม่มีภาพค้าง/จอดำ · musiccheck PASS (−24.9 / −21.6 LUFS · พูดดังกว่า 9.3 LU · เพลงหาย 7%) · hisscheck PASS (0.32) · ส่งเจ้าของแล้ว 15:30 น.",
+      "previous_v1": {
+        "branch": "prod/lane-a",
+        "commit": "390304b",
+        "package": "video/release/war.json",
+        "video_hq": "video/release/hq/war-ep1-HQ.mp4",
+        "video_hq_sha256": "26daa7ad0ba71cdc487e2885db903b5c62b8ebc3f3bffe3f356c9f18aa040baf",
+        "video_hq_bytes": 84282630,
+        "hold_note": "ผู้ประสานงาน 2 พ.ย. 12:00 น.: วัดเสียงตามกฎ A4 แล้วยังมี 'ซ่า' (เสียงพื้นจาก noise) ราวครึ่งเรื่อง (flatness 5–14 kHz ค่ากลาง 0.62–0.71 · หน้าต่าง noise 52–65% เทียบกับรอดคนเดียว v6 ที่ 0.32 / 3%) → พักไว้รอรีมิกซ์ไม่มีซ่า (ภาพเดิม) · Moji ห้ามลงหรือตั้งเวลาไฟล์ sha เดิม ถ้าตั้งไว้แล้วให้ยกเลิก · ตรวจภาพ 360×640 แล้วต้องแก้ภาพด้วย ดู video/release/review/yesterday-qa-2026-11-02.md"
+      },
+      "hold_note": "ไฟล์ v2 พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
+      "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก"
+    },
+    {
+      "order": 4,
+      "id": "war-ep2",
+      "series": "ทางกลับบ้าน (สงคราม)",
+      "status": "hold",
+      "branch": "prod/lane-d",
+      "commit": "2e4cf24",
+      "package": "video/release/war-v2.json",
+      "video_hq": "video/release/hq/war-ep2-v2-HQ.mp4",
+      "video_hq_sha256": "099e97ae0fdd8a928693d384842f1ad4a2d7e7bc2bf330d680ad4d881d74210e",
+      "video_hq_bytes": 82691555,
+      "suggested_time": "2026-11-02T12:30+07:00",
+      "slot": "เที่ยง",
+      "recut": "ตัดช่วงพลาดตั้งแต่วินาทีที่ X แล้ว (sha ใหม่)",
+      "revision_note": "v2 2 พ.ย. (เลน D 2e4cf24): แก้ภาพตามตรวจ 360×640 + ไม่มีซ่า + เพลงดังขึ้น + จุดดำครึ่งวงกลมในช็อตพุ่มไม้ (4.4–6.7 วิ) เรนเดอร์ใหม่แล้วต่อที่รอยตัด · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 72.5 วิ 60fps · −14.0 LUFS peak −1.8 · ไม่มีภาพค้าง/จอดำ · musiccheck PASS (−25.7 / −17.8 LUFS · พูดดังกว่า 9.2 LU · เพลงหาย 8%) · hisscheck PASS (0.31) · ส่งเจ้าของแล้ว 15:30 น.",
+      "previous_v1": {
+        "branch": "prod/lane-a",
+        "commit": "390304b",
+        "package": "video/release/war.json",
+        "video_hq": "video/release/hq/war-ep2-HQ.mp4",
+        "video_hq_sha256": "35c929b3f9436cb4dc0f8fe2a772900391959384451e9ab001c5da2d44831f80",
+        "video_hq_bytes": 73761965,
+        "hold_note": "ผู้ประสานงาน 2 พ.ย. 12:00 น.: วัดเสียงตามกฎ A4 แล้วยังมี 'ซ่า' (เสียงพื้นจาก noise) ราวครึ่งเรื่อง (flatness 5–14 kHz ค่ากลาง 0.62–0.71 · หน้าต่าง noise 52–65% เทียบกับรอดคนเดียว v6 ที่ 0.32 / 3%) → พักไว้รอรีมิกซ์ไม่มีซ่า (ภาพเดิม) · Moji ห้ามลงหรือตั้งเวลาไฟล์ sha เดิม ถ้าตั้งไว้แล้วให้ยกเลิก · ตรวจภาพ 360×640 แล้วต้องแก้ภาพด้วย ดู video/release/review/yesterday-qa-2026-11-02.md"
+      },
+      "hold_note": "ไฟล์ v2 พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
+      "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก"
+    },
+    {
+      "order": 5,
+      "id": "exam-ep1",
+      "series": "ห้องสอบ (ซอมบี้บุกตอนนั่งสอบ)",
+      "status": "hold",
+      "slot": "กลางคืน",
+      "branch": "prod/lane-c",
+      "commit": "6f67b2d",
+      "package": "video/release/exam-v3m.json",
+      "video_hq": "video/release/hq/exam-ep1-v3m-HQ.mp4",
+      "video_hq_sha256": "09c6d7a923b79bb89d909799f294b319687a1b47994166722761358709deb6a7",
+      "video_hq_bytes": 54807728,
+      "suggested_time": "2026-11-02T20:00+07:00",
+      "revision_note": "v3m รอบ 2 (เลน C 6f67b2d): ชุด f2f72d0 เพลงหายบนการ์ดจบ (ผู้ประสานงานตรวจพลาดเพราะ musiccheck อ่านค่า nan ไม่ได้) → แก้แล้ว · musiccheck PASS −24.6/−19.0 LUFS · 10.6 LU · เพลงหาย 0% · hisscheck PASS · ภาพตรงกับ v3 · ส่งเจ้าของแล้ว",
+      "previous_v1": {
+        "commit": "2c7fb2e",
+        "video_hq": "video/release/hq/exam-ep1-HQ.mp4",
+        "video_hq_sha256": "3d0d8da0a864ae9f8937f867c9d9d7b0925e7f70a30c702588acfc3c66bbadb6",
+        "video_hq_bytes": 55230690
+      },
+      "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
+      "previous_v3": {
+        "commit": "632daf3",
+        "video_hq": "video/release/hq/exam-ep1-v3-HQ.mp4",
+        "video_hq_sha256": "21ad7fd79b16b2df25b8041bd0a649bbdf1d508e9b0947904dd6e21ad282e5f4",
+        "video_hq_bytes": 54747506
+      }
+    },
+    {
+      "order": 6,
+      "id": "exam-ep2",
+      "series": "ห้องสอบ (ซอมบี้บุกตอนนั่งสอบ)",
+      "status": "hold",
+      "slot": "กลางคืน",
+      "branch": "prod/lane-c",
+      "commit": "6f67b2d",
+      "package": "video/release/exam-v3m.json",
+      "video_hq": "video/release/hq/exam-ep2-v3m-HQ.mp4",
+      "video_hq_sha256": "658f48451f12df776411dccb4f91a1778c2084991f123d26baeb40aa2e2fe798",
+      "video_hq_bytes": 44825037,
+      "suggested_time": "2026-11-02T20:30+07:00",
+      "revision_note": "v3m รอบ 2 (เลน C 6f67b2d): เพลงต่อเนื่องถึงการ์ดจบ · musiccheck PASS −24.0/−19.2 LUFS · 10.2 LU · 0% · hisscheck PASS · ภาพตรงกับ v3 · ส่งเจ้าของแล้ว",
+      "previous_v1": {
+        "commit": "2c7fb2e",
+        "video_hq": "video/release/hq/exam-ep2-HQ.mp4",
+        "video_hq_sha256": "2f485abd2a0c44ac51922ee1a260f48cae5875aaf8473eb3ab75ad04362d572a",
+        "video_hq_bytes": 45467023
+      },
+      "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
+      "previous_v3": {
+        "commit": "632daf3",
+        "video_hq": "video/release/hq/exam-ep2-v3-HQ.mp4",
+        "video_hq_sha256": "f95cda8b5a11f976e693fa2c905044b7baf831c871d91b63aa2aecbb525f42d8",
+        "video_hq_bytes": 44762264
+      }
+    },
+    {
+      "order": 7,
+      "id": "takhian-ep1",
+      "series": "ต้นตะเคียนกลางนา",
+      "status": "hold",
+      "slot": "เจ้าของเลือกเอง",
+      "branch": "ccr-fb88c4b3-kcqyid",
+      "package": "video/release/takhian.json",
+      "commit": "6bc1663",
+      "video_hq": "video/release/hq/takhian-ep1-HQ-m2.mp4",
+      "video_hq_sha256": "ab6ee40b83cd728775ec65aa8923be516912730771769937170befe2b8a2f2f8",
+      "video_hq_bytes": 97498437,
+      "revision_note": "2 พ.ย. ~19:40 น. (ผู้ประสานงาน 6bc1663): เพลงใหม่ที่ได้ยินบนลำโพงมือถือ (เดิมเพลงเป็นเสียงทุ้มต่ำกว่า 300 Hz ถึง 95% เจ้าของแจ้งว่า 'เพลงหาย') · ภาพเดิม copy ครบทุกเฟรม · musiccheck PASS ทั้งย่านปกติและย่านมือถือ · hisscheck PASS · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทนไฟล์เดิม · ก่อนหน้า: 2 พ.ย. (เลน B 6cd0766): เรนเดอร์ทั้งตอนจาก 618743f 7484 เฟรม · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 124.7 วิ 60fps · −14.2 LUFS peak −3.2 · ไม่มีภาพค้างกลางเรื่อง/จอดำ · musiccheck PASS · hisscheck PASS · ดูภาพครบที่ 360×640 · ส่งเจ้าของพร้อมแคปชันแล้ว",
+      "hold_note": "ไฟล์พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
+      "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
+      "previous_v1": {
+        "branch": "prod/lane-b",
+        "commit": "6cd0766",
+        "video_hq": "video/release/hq/takhian-ep1-HQ.mp4",
+        "video_hq_sha256": "be5d6e8a4df2102982a8220e9288f40b7e29ff77ac9d55212e8d310f57a2ccc7",
+        "video_hq_bytes": 97536876
+      },
+      "remake": "2 พ.ย. ~21:00 กำลังทำใหม่: เจ้าของบอกว่าต้นตะเคียนกับศาลตายาย 'โคตรแย่' ให้วาดใหม่ (เลน B) และเปลี่ยนเพลงเป็น suno1 สูตรทะเลลด (video/release/audio/takhian-tide-mix, 4bb07af) · ไฟล์ m2 ในคิวถูกแทนเมื่อไฟล์ใหม่ผ่านการตรวจ · Moji ห้ามลง ห้ามตั้งเวลา"
+    },
+    {
+      "order": 8,
+      "id": "takhian-ep2",
+      "series": "ต้นตะเคียนกลางนา",
+      "status": "hold",
+      "slot": "เจ้าของเลือกเอง (หลัง EP.1)",
+      "branch": "prod/lane-c",
+      "package": "video/release/takhian.json",
+      "commit": "41183c1",
+      "video_hq": "video/takhian-kit/out/EP2-takhian-tonkhian-klang-na-HQ-subfix.mp4",
+      "video_hq_sha256": "3e764932937a6bde16450dd382723cf3729d79aa976ac75314f5bc0852e1e1d5",
+      "video_hq_bytes": 97375351,
+      "revision_note": "2 พ.ย. ~20:20 น. (เลน C 41183c1): ฉบับแก้ซับ (แบ่งท่อนตามช่วงเงียบ + fitCaps ≤ 980 px · edgecheck EP.1/EP.2 no edge problems) + เสียง m2 (แทร็กเสียงเหมือน m2 ทุกไบต์) · ผู้ประสานงานตรวจ: sha ตรง · 7240 เฟรม · −14.2 LUFS · ไม่มีภาพค้างหรือจอดำ · hisscheck PASS · ครอปแถบซับ 52.0/53.6/88.5/89.8 วิห่างขอบชัด · เฟรมอื่นเทียบฉบับเดิม PSNR 40–46 dB · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทน EP.2 ทุกฉบับก่อนหน้า · ก่อนหน้า: 2 พ.ย. ~19:40 น. (ผู้ประสานงาน 6bc1663): เพลงใหม่ที่ได้ยินบนลำโพงมือถือ (เดิมเพลงเป็นเสียงทุ้มต่ำกว่า 300 Hz ถึง 95% เจ้าของแจ้งว่า 'เพลงหาย') · ภาพเดิม copy ครบทุกเฟรม · musiccheck PASS ทั้งย่านปกติและย่านมือถือ · hisscheck PASS · ส่งเจ้าของแล้ว · ใช้ไฟล์นี้แทนไฟล์เดิม · ก่อนหน้า: 2 พ.ย. (เลน C c37d878): เรนเดอร์ทั้งตอนจาก a0bbecc + ต่อช็อต speak · ผู้ประสานงานตรวจไฟล์จริง: sha ตรง · 120.7 วิ 60fps 7240 เฟรม · −14.2 LUFS peak −2.7 · ไม่มีภาพค้าง/จอดำ · musiccheck PASS · hisscheck PASS · ดูภาพครบที่ 360×640 · ส่งเจ้าของพร้อมแคปชันแล้ว · จุดเดียว: กล่องซับ 2 บรรทัดชนขอบจอ (ฉบับแก้กำลังทำ)",
+      "hold_note": "ไฟล์พร้อมแล้ว แต่เจ้าของลงเอง → Moji ห้ามลง ห้ามตั้งเวลา",
+      "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
+      "previous_v1": {
+        "branch": "prod/lane-c",
+        "commit": "c37d878",
+        "video_hq": "video/takhian-kit/out/EP2-takhian-tonkhian-klang-na-HQ.mp4",
+        "video_hq_sha256": "cf91b167f0f23d0d7a03e32c5b9d3fdf2ae1f74a1a00faa3c3ef2c874c8adeff",
+        "video_hq_bytes": 97423592
+      },
+      "previous_v2": {
+        "branch": "ccr-fb88c4b3-kcqyid",
+        "commit": "6bc1663",
+        "video_hq": "video/release/hq/takhian-ep2-HQ-m2.mp4",
+        "video_hq_sha256": "bf4391fe00684449829afdc04ef7825557f49e9e5402444849c2d641894543a0",
+        "video_hq_bytes": 97381981
+      },
+      "remake": "2 พ.ย. ~21:00 กำลังทำใหม่: เจ้าของบอกว่าต้นตะเคียนกับศาลตายาย 'โคตรแย่' ให้วาดใหม่ (เลน B) และเปลี่ยนเพลงเป็น suno1 สูตรทะเลลด (video/release/audio/takhian-tide-mix, 4bb07af) · ไฟล์ m2 ในคิวถูกแทนเมื่อไฟล์ใหม่ผ่านการตรวจ · Moji ห้ามลง ห้ามตั้งเวลา"
+    }
+  ],
+  "slots": {
+    "เช้า": "ราว 08:00–10:30",
+    "เที่ยง": "12:00–12:30",
+    "กลางคืน": "20:00–20:30"
   }
- ],
- "slots": {
-  "เช้า": "ราว 08:00–10:30",
-  "เที่ยง": "12:00–12:30",
-  "กลางคืน": "20:00–20:30"
- }
 }
