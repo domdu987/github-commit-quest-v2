@@ -1,0 +1,35 @@
+      Engine.look = { vignette: 0.55, grain: 0.1 };
+      const GOLD = { from: "right", rim: "#ffd890", rimOp: 0.95, shade: "#2a1a30", shadeOp: 0.35, cast: false, vol: false };
+      const TEAL = { from: "left", rim: "#9ad0e0", rimOp: 0.9, shade: "#06101a", shadeOp: 0.45, cast: false, vol: false };
+      const GG = { top: "#ffb860", bottom: "#3a2a5a", op: 0.22 }, GT = { top: "#1a4a5a", bottom: "#0a1a2a", op: 0.3 }, GC = { top: "#fff0c8", bottom: "#4a8ab0", op: 0.14 };
+      const SC = (id, o) => ({ set: "tkScape", setOpts: { id, ...o } });
+      // 1 · opening: late-afternoon gold, the lone giant ตะเคียน on its island, the black storm wall swallowing the sky from the left; the family planting rice, tiny
+      add("f1", { ...SC("f1", { mood: "gold", horizon: 1060, tree: { x: 640, y: 1260, s: 0.62 }, buf: { x: 860, y: 1270, s: 0.22, stake: [820, 1272], flip: 1 }, hut: { x: 160, y: 1180, s: 0.22 }, wallX: 420, sunX: 900, wind: 0.4 }), dark: 0, light: GOLD, grade: GG,
+        cam: { keys: [{ t: 0, ...fr(560, 1100, 0.86, 540, 960) }] },
+        actors: [P("ploy", 330, 1600, 0.34, "kneel", "normal", "smile"), P("yaiHom", 460, 1590, 0.32, "kneel", "normal", "flat", { flip: true }), P("ton", 250, 1580, 0.26, "point", "normal", "laugh"), P("lungPiak", 980, 1560, 0.33, "idle", "normal", "laugh", { flip: true })], captions: [] });
+      // 2 · the storm arrives: a rain curtain sweeping the paddies, the rice in waves; the family runs the bund at the camera's left
+      add("f2", { ...SC("f2", { mood: "storm", horizon: 1000, tree: { x: 170, y: 1100, s: 0.55 }, bund: 300, rain: 0.9, wind: 1, flash: 0.35, flashX: 900, distBolt: [820, 880] }), dark: 0, light: TEAL, grade: GT,
+        cam: { keys: [{ t: 0, ...fr(560, 1260, 1.0, 540, 1000) }] },
+        actors: [P("lungPiak", 380, 1640, 1.0, "run", "wide", "laugh", { flip: true }), P("ploy", 600, 1720, 1.04, "run", "wide", "scream", { flip: true }), P("ton", 800, 1660, 0.78, "run", "wide", "o", { flip: true }), P("yaiHom", 980, 1610, 0.92, "run", "worry", "frown", { flip: true })],
+        fx: (tl, id, t0, L) => put(L.set, Tk.dog(470, 1770, 0.8, { flip: 1, bark: 1 }) + `<g opacity=".7">${[[380, 1650], [600, 1730], [800, 1670], [980, 1620]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="90" ry="16" fill="#c8dce4"/><path d="M${x - 60},${y}l-30,-40M${x + 50},${y}l30,-36M${x},${y - 6}l-6,-50" stroke="#e8f4f8" stroke-width="6" stroke-linecap="round"/>`).join("")}</g>`), captions: [] });
+      // 3 · the strike on the tree, low angle: the peak of the story (temp FX until lane C's stormfx)
+      add("f3", { ...SC("f3", { mood: "storm", horizon: 1420, tree: { x: 540, y: 1780, s: 1.0 }, bolt: 1, ground: 0.9, rain: 0.8, flash: 1, flashX: 540, fgRice: true, wind: 1 }), dark: 0, light: { from: "right", rim: "#ffffff", rimOp: 1, shade: "#000814", shadeOp: 0.5, cast: false, vol: false }, grade: { top: "#bcd0ff", bottom: "#0a1a2a", op: 0.2 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 0.8, 540, 880) }] },
+        actors: [P("lungPiak", 170, 1880, 0.95, "flinch", "wide", "scream"), P("ploy", 880, 1900, 1.0, "flinch", "wide", "scream", { flip: true }), P("ton", 1040, 1830, 0.72, "flinch", "wide", "scream", { flip: true })], captions: [] });
+      // 4 · inside the pickup: rain running down the side window; out there ลุง jogs back to the tree and the buffalo (the audience sees it first)
+      add("f4", { ...SC("f4", { mood: "storm", horizon: 1000, tree: { x: 360, y: 1080, s: 0.42 }, buf: { x: 520, y: 1090, s: 0.3, stake: [450, 1092], flip: 1 }, rain: 0.6, wind: 1, flash: 0.25, fgRice: false }), dark: 0, light: TEAL, grade: GT,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 900) }] },
+        actors: [P("lungPiak", 760, 1170, 0.36, "run", "normal", "laugh", { flip: true })],
+        fx: (tl, id, t0, L) => put(L.light, Tk.cabWindow()), captions: [] });
+      // 5a · CPR on the bund in the rain, side view: arms straight, shoulders over the hands, real hands on the lower half of the breastbone
+      add("f5", { ...SC("f5", { mood: "storm", horizon: 980, tree: { x: 980, y: 1080, s: 0.42, burnt: 0.7 }, rain: 0.6, wind: 0.8, fgRice: false, reflect: false }), dark: 0, light: TEAL, grade: GT,
+        cam: { keys: [{ t: 0, ...fr(560, 1620, 1.25, 540, 1120) }] },
+        actors: [P("ploy", 512, 1780, 0.95, "cprF", "normal", "frown", { opts: { by: 200 } }), P("lungPiak", 900, 1860, 0.95, "pressed", "closed", "flat")],
+        fx: (tl, id, t0, L) => { put(L.set, `<rect x="-900" y="1700" width="2900" height="400" fill="#2a2620"/><path d="M-900,1700H2000" stroke="#4a443a" stroke-width="8"/>${[300, 700, 1000].map((x) => `<ellipse cx="${x}" cy="1820" rx="80" ry="12" fill="#6a8a94" opacity=".4"/>`).join("")}`); CPRARMS(L, tl, t0, 0.01, [574, 1680], [450, 1680], [528, 1774]); }, captions: [] });
+      // 5b · CPR from above
+      add("f5b", { set: "tkCPR", setOpts: { id: "f5b", phone: 1, rain: 0.5 }, dark: 0, light: TEAL, grade: GT, cam: { keys: [{ t: 0, ...fr(580, 1080, 1.0, 540, 960) }] },
+        fx: (tl, id, t0, L) => TOPARMS(L, tl, t0, 0.01), captions: [] });
+      // 6 · F6: after the rain — blue, low gold, a rainbow, the wet paddies mirroring the sky, the black cloud flickering silently on the horizon; ต้น runs back to the tree
+      add("f6", { ...SC("f6", { mood: "clear", horizon: 1080, tree: { x: 720, y: 1230, s: 0.55, burnt: 0.3 }, buf: { x: 530, y: 1240, s: 0.28, stake: [600, 1242] }, bund: 500, farStorm: 1, farStormX: 1350, farBolt: 1, sunX: 120, wind: 0.2 }), dark: 0, light: { from: "left", rim: "#ffe2a0", rimOp: 0.9, shade: "#2a3a5a", shadeOp: 0.25, cast: false, vol: false }, grade: GC,
+        cam: { keys: [{ t: 0, ...fr(560, 1200, 0.95, 540, 1000) }] },
+        actors: [P("ton", 470, 1560, 0.5, "run", "normal", "laugh", { flip: true })], captions: [] });
