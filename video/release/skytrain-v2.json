@@ -1,0 +1,84 @@
+{
+ "series": "ซอมบี้รถไฟฟ้า",
+ "made_by": "Claude (rodmai-club-video) · เลน D",
+ "posted_by": "Hermes",
+ "branch": "prod/lane-d",
+ "rules": [
+  "ลง 3 พ.ย. 2569 คืนเดียว: EP.1 20:00 → EP.2 20:30 (คิวจากแชทประสานงาน)",
+  "ใช้ไฟล์ HQ (video_hq · ตรวจ sha256 ก่อนลง) ถ้าดึงไม่ได้ให้ใช้ video_repo",
+  "ปักหมุดคอมเมนต์แหล่งอ้างอิงทุกตอนทันทีหลังลง",
+  "IG: ซับไทยในคลิป · Facebook: ไทยอย่างเดียว · แฮชแท็กไม่เกิน 5",
+  "EP.2 ลงหลัง EP.1 ลงแล้วเท่านั้น · บันทึก posted_at ต่อแพลตฟอร์ม"
+ ],
+ "episodes": [
+  {
+   "id": "skytrain-ep1-v2",
+   "order": 1,
+   "title": "ซอมบี้บุกรถไฟฟ้า ตอนคุณยืนอยู่ตู้กลาง… อย่าเปิดประตูฉุกเฉินหนี | ซอมบี้รถไฟฟ้า EP.1",
+   "status": "candidate v2 (coordinator-approved picture + audio)",
+   "video_hq": "video/release/hq/skytrain-ep1-v2-HQ.mp4",
+   "video_hq_sha256": "42ff8a955d4b7bb3a81ebed90c6e78ec6148aff744c057300ac6e1c2d70ee7a6",
+   "video_hq_bytes": 92887054,
+   "video_repo": "video/skytrain-ep1-v2/EP1-kot-krading-v2-share.mp4",
+   "cover": "video/skytrain-ep1-v2/cover.jpg",
+   "duration_s": 74.477,
+   "qa": {
+    "resolution": "1080x1920",
+    "fps": 60,
+    "lufs": -14.0,
+    "peak_db": -1.6,
+    "freezedetect": "none",
+    "hookcheck": "PASS (command 3.19 s)",
+    "edgecheck": "no edge problems",
+    "origin_check": "ok",
+    "whisper": "every line checked in the final mix (theme music + material sounds)",
+    "notes": "v2 (1 Nov): ลุงเชิด's rule card is his clipboard (IconFX.board), danger medals are IconFX icons, theme score skytrain-theme.mp3, material SFX",
+    "musiccheck": "PASS (−23.2 / −19.8 / 8.6 LU / 3%)",
+    "hisscheck": "PASS (flatness 0.30)"
+   },
+   "caption": "ถ้าวันหนึ่ง… ซอมบี้บุกรถไฟฟ้า ตอนคุณยืนอยู่ตู้กลาง 🚝🧟 อย่าเปิดประตูฉุกเฉินหนี\n\n\"กดกระดิ่ง อย่าวิ่งลงราง\"\nถ้าคนข้างคุณจะดึงคันโยกเปิดประตู… คุณจะห้ามเขาไหม? 👇\n\nซอมบี้รถไฟฟ้า EP.1/2\n#รถไฟฟ้า #ซอมบี้ #เอาตัวรอด #RodMaiClub",
+   "pinned_comment": "📚 แหล่งอ้างอิง\nในขบวนมีปุ่มกระดิ่งสีเหลืองข้างประตู กดแล้วคุยกับศูนย์ควบคุมได้: ผู้ให้บริการรถไฟฟ้าสายสีเหลือง/สีชมพู (Passenger Intercom Panel) · Thai PBS (22 พ.ค. 2567)\nแจ้งแล้ว เจ้าหน้าที่สถานีถัดไปจะเข้ามาแก้ไขสถานการณ์ · คันโยกแดงเปิดประตูฉุกเฉินใช้ได้เมื่อรถหยุดอยู่ที่สถานีเท่านั้น ใช้ผิดมีโทษปรับ: Thai PBS\nอย่าออกจากรถเอง รางอาจยังมีไฟฟ้า: MTA New York · TransLink Vancouver\nบนรถคือที่ปลอดภัยที่สุด: MBTA Boston\nรถไฟฟ้า สถานี ตัวละคร และเหตุการณ์ในเรื่องเป็นเรื่องสมมติ\n👉 EP.2 ถ้าชานชาลาที่คุณหนีลงมามีพวกมันรออยู่… อย่ากระโดดลงราง",
+   "youtube": {
+    "title": "ซอมบี้บุกรถไฟฟ้า ตอนคุณยืนอยู่ตู้กลาง… อย่าเปิดประตูฉุกเฉินหนี | ซอมบี้รถไฟฟ้า EP.1",
+    "description": "ถ้าวันหนึ่ง… ซอมบี้บุกรถไฟฟ้า ตอนคุณยืนอยู่ตู้กลาง 🚝🧟 อย่าเปิดประตูฉุกเฉินหนี\n\n\"กดกระดิ่ง อย่าวิ่งลงราง\"\nถ้าคนข้างคุณจะดึงคันโยกเปิดประตู… คุณจะห้ามเขาไหม? 👇\n\nซอมบี้รถไฟฟ้า EP.1/2\n#รถไฟฟ้า #ซอมบี้ #เอาตัวรอด #RodMaiClub"
+   },
+   "video_repo_sha256": "edfcd98ed534511831e4696e7e4a16d94750846f4050460d7bf389ba9b4afe64",
+   "video_repo_bytes": 40355198
+  },
+  {
+   "id": "skytrain-ep2-v2",
+   "order": 2,
+   "title": "ชานชาลามีซอมบี้รออยู่… อย่ากระโดดลงราง | ซอมบี้รถไฟฟ้า EP.2 ตอนจบ",
+   "status": "candidate v2 (coordinator-approved picture + audio)",
+   "video_hq": "video/release/hq/skytrain-ep2-v2-HQ.mp4",
+   "video_hq_sha256": "3e25f34455472bcee44f07e985b13557251a43a29921f85eb40b37ef61830d9d",
+   "video_hq_bytes": 83605630,
+   "video_repo": "video/skytrain-ep2-v2/EP2-kham-tu-v2-share.mp4",
+   "cover": "video/skytrain-ep2-v2/cover.jpg",
+   "duration_s": 75.616,
+   "qa": {
+    "resolution": "1080x1920",
+    "fps": 60,
+    "lufs": -14.1,
+    "peak_db": -1.6,
+    "freezedetect": "none",
+    "hookcheck": "PASS (command 3.09 s)",
+    "edgecheck": "no edge problems",
+    "origin_check": "ok",
+    "whisper": "every line checked in the final mix (theme music + material sounds)",
+    "notes": "v2 (1 Nov): ลุงเชิด's rule card is his clipboard (IconFX.board), danger medals are IconFX icons, theme score skytrain-theme.mp3, material SFX",
+    "musiccheck": "PASS (−23.4 / −20.9 / 8.6 LU / 0%)",
+    "hisscheck": "PASS (flatness 0.31)"
+   },
+   "caption": "ถ้าวันหนึ่ง… ชานชาลาที่คุณหนีลงมา มีพวกมันรออยู่ 🚝🧟 อย่ากระโดดลงราง\n\n\"กดกระดิ่ง อย่าวิ่งลงราง / ข้ามตู้ กั้นประตู รอคนนำทาง\"\nถ้าเป็นคุณ… จะรอเจ้าหน้าที่ หรือเดินตามรางไปเอง? 👇\n\nซอมบี้รถไฟฟ้า EP.2/2 ตอนจบ · แชร์ให้คนที่นั่งรถไฟฟ้าทุกวัน\n#รถไฟฟ้า #ซอมบี้ #เอาตัวรอด #RodMaiClub",
+   "pinned_comment": "📚 แหล่งอ้างอิง\nถ้าอยู่ตู้เดิมไม่ได้ ให้เดินไปตู้อื่นที่ไม่มีเหตุ: MTA New York · MBTA Boston\nขวางประตูด้วยของหนัก อยู่เงียบ พ้นสายตา: แนวทาง Run-Hide-Fight (UIC Police · UC Irvine Emergency Management)\nอย่าอพยพลงรางเอง รางอาจยังมีไฟฟ้า มีรถวิ่งรอบตัว · รอเจ้าหน้าที่ตัดไฟแล้วพาเดินทางเดินฉุกเฉิน: MTA · MBTA · TTC Toronto\nปุ่มกระดิ่งแจ้งเหตุในขบวน (EP.1): ผู้ให้บริการสายสีเหลือง/สีชมพู · Thai PBS\nรถไฟฟ้า สถานี ตัวละคร และเหตุการณ์ในเรื่องเป็นเรื่องสมมติ\n👉 ดูครบ 2 ตอน: EP.1 กดกระดิ่ง · EP.2 ข้ามตู้",
+   "youtube": {
+    "title": "ชานชาลามีซอมบี้รออยู่… อย่ากระโดดลงราง | ซอมบี้รถไฟฟ้า EP.2 ตอนจบ",
+    "description": "ถ้าวันหนึ่ง… ชานชาลาที่คุณหนีลงมา มีพวกมันรออยู่ 🚝🧟 อย่ากระโดดลงราง\n\n\"กดกระดิ่ง อย่าวิ่งลงราง / ข้ามตู้ กั้นประตู รอคนนำทาง\"\nถ้าเป็นคุณ… จะรอเจ้าหน้าที่ หรือเดินตามรางไปเอง? 👇\n\nซอมบี้รถไฟฟ้า EP.2/2 ตอนจบ · แชร์ให้คนที่นั่งรถไฟฟ้าทุกวัน\n#รถไฟฟ้า #ซอมบี้ #เอาตัวรอด #RodMaiClub"
+   },
+   "video_repo_sha256": "613e4dd63a8dc7328d2a4ae6b3efe56469725b467c2ad4e1039537b7e576d76b",
+   "video_repo_bytes": 36582094
+  }
+ ],
+ "note": "Candidate package for ซอมบี้รถไฟฟ้า v2: picture fixes (crowd staged in depth, torches, staff size, platform people) + A4 no-hiss + A5 audible-music mix. Does NOT replace skytrain.json."
+}
