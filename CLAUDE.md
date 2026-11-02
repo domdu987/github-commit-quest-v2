@@ -99,6 +99,13 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
 - A crane-up ending (camera rises and widens into the lanterns; the set extends above y = 0, so pass a negative
   `minY`) ends with the heads at screen y ≈ 1100, above the captions, never at the bottom edge.
 - Props that belong to one era go with it: a stool behind a standing child reads as the child standing on it.
+- Flowers and bouquets in a hand sit below the faces: hold a rose low and tip its bloom toward the gap between the two
+  heads (a stem held at the chest puts the bloom on the holder's chin); a bouquet's waist sits at y ≈ 1100 for standing
+  characters.
+- Close-ups beside a second character: frame the near head at screen x ≈ 300 or 800, never 400–680, or a sliver of the
+  other head shows at the edge.
+- A handwritten page (an album, a card) uses the Thai handwriting fonts in `demo/fonts/hand_local.css` (Charm for her,
+  Itim for him) and reveals line by line with a clip rect while the pen moves; keep the writing hand below the line.
 
 ## Graphics
 - Cards get the layered pro shadow, a top gloss and a shine sweep; they enter with `enter3d` / springs.
@@ -119,6 +126,9 @@ lives in `nabwan/` (copy it to the scratchpad to work; renders, voice and music 
     Cross-check those words with ElevenLabs Scribe on fal (`fal-ai/elevenlabs/speech-to-text`, the take as a data
     URI). Test the take **in context** (the narrator's previous line first): a line heard alone or repeated reads
     differently. If Scribe also misreads it, regenerate with a style note that names the word and its tone.
+- Old voices (`story16`): take the deepest Gemini male (Algenib) and a low female (Aoede) with an "in their seventies"
+  style note. They pause long, so shorten pauses over 0.42 s and add a little tempo (1.09–1.12×) if the clip runs over
+  60 s; rescale their Whisper timings by the same factor.
 - Music: fal `elevenlabs/music` composition plan with every section ≥ 3000 ms; use `extend.py` if it is short.
 - Sound effects: generate real ones with fal `fal-ai/elevenlabs/sound-effects/v2` (`{text, duration_seconds,
   prompt_influence}`; about 23 per story) into `storyN/sfx/`.

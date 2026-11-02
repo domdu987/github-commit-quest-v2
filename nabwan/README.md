@@ -17,6 +17,8 @@ request bodies (`req_*.json`) and placement scripts (`placeN.py`) are here, so t
 | `story13/sets13.js`, `story13/audio.py` | night bus cabin (cut-away, outside rushing past, lamp light sweeps, fireworks with set flash), the bus on the highway, the terminal, an Isan home; recorded SFX library (`sfx/req_*.json`) with `put` / `loop_bed` / `muffle`, a PA filter for in-world speech |
 | `story14/sets14.js`, `story14/scenes.js` | the old wooden classroom and today's on Teacher's Day (chalk/whiteboard with class label, tally and eraser wipe); bookend hook, sepia past, a memory ghost over a matched close-up, split-screen then/now ending |
 | `story15/sets15.js`, `story15/scenes.js` | a Chinese-Thai shophouse on ตรุษจีน in three eras, a Bangkok room at night; macro insert worlds (the cookie tin of envelopes with a sleeved hand, a desk with an empty envelope); a crane-up ending into the lanterns. `vo/scribe.py` cross-checks words Whisper mishears with ElevenLabs Scribe |
+| `story16/sets16.js`, `story16/scenes.js` | an old couple's teak house in two eras (then / now / night), a morning flower market; an album macro world with pressed roses, year odometer and a handwritten page (Charm / Itim fonts in `demo/fonts/hand_local.css`); old voices (Algenib / Aoede, trimmed pauses) |
+| `story17/sets17.js`, `story17/chars17.js` | a florist front at dawn and dusk, a street that scrolls (rain / sun / night) with a rider on a scooter, a small rented house with a door that opens; bouquets, helmet, delivery polaroids, the day's money, an order banner, a route map whose pin turns into home, a handwritten gift card |
 | `storyN/` | one reel: `charsN.js`, `setsN.js`, `iconsN.js`, `scenes.js`, `vo.js`, `index.html`, `audio.py` |
 | `cover/` | cover frame grabber + cover template + shooter |
 | `brand/brand.js` | end-card brand chip |
@@ -25,7 +27,8 @@ request bodies (`req_*.json`) and placement scripts (`placeN.py`) are here, so t
 
 Stories: 2 = 75 วันของพ่อ · 3 = 1,095 ข้อความของแม่ · 4 = 47 ครั้งที่ลบข้อความ · 5 = 127 ใบสมัคร ·
 6 = 4,380 วันที่รอ · 7 = 11 ปีที่เพื่อนไม่เคยลืม · 8 = 312 ชามที่ไม่มีผักชี · 9 = 39 บาทที่แม่ไม่กล้ากด ·
-10 = 52 ปีกับกระทงสองใบ · 11 = 12 ฤดูฝน ที่ไหล่ของพ่อเปียก · 12 = 9 ผ้าพันคอที่ไม่เคยได้ใช้ · 13 = 15 ปีใหม่ ที่แม่อยู่บนรถทัวร์ · 14 = 720 มื้อ ที่ครูซื้อเกิน · 15 = 8 ซอง ที่อาม่าไม่เคยแกะ.
+10 = 52 ปีกับกระทงสองใบ · 11 = 12 ฤดูฝน ที่ไหล่ของพ่อเปียก · 12 = 9 ผ้าพันคอที่ไม่เคยได้ใช้ · 13 = 15 ปีใหม่ ที่แม่อยู่บนรถทัวร์ · 14 = 720 มื้อ ที่ครูซื้อเกิน · 15 = 8 ซอง ที่อาม่าไม่เคยแกะ ·
+16 = 50 กุหลาบ ที่ยายจำไม่ได้ · 17 = 128 ช่อ ที่ไม่ใช่ของเรา.
 
 Render: `cd demo && PAGE=../storyN/index.html node render.js video ../storyN/out/video.mp4 30 [t0 tEnd]`
 (`tEnd` is an end time). Stills: `node render.js stills <dir> t1 t2 …`. Mix: `python storyN/audio.py storyN/segments.json storyN/music/<file> storyN/out/mix`.

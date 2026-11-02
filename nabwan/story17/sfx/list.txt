@@ -1,0 +1,22 @@
+flower_shop|inside a small flower shop at dawn, paper and cellophane rustling, a fridge humming, a radio faint, no music|8
+scooter_start|a small motor scooter starting and idling|3
+scooter_ride|a small motor scooter riding along a city street, steady engine, passing traffic|10
+rain_street|heavy tropical rain on a city street, rain on a motorbike rider's raincoat, splashes, no music|10
+street_day|a busy Bangkok street at midday, traffic, motorbikes, distant voices, no music|10
+street_night|a quiet Bangkok side street at night, a distant motorbike, crickets, a dog far away, no music|10
+cellophane|a bouquet wrapped in cellophane being handled, crinkle|1.5
+box_lid|the plastic lid of a motorbike delivery box opening and closing|1.5
+doorbell|a gentle two-tone house doorbell|1.5
+knock|three soft knocks on a wooden front door|1.5
+door_open|a wooden front door opening slowly|2
+phone_buzz|a smartphone vibrating twice|1.5
+notify|a short bright app notification chime|1
+kickstand|a scooter kickstand being put down|1
+footsteps_night|footsteps on a concrete yard at night|3
+helmet_off|a motorbike helmet being taken off, strap clicking|1.5
+thank_you_kid|a happy thankful laugh of a woman receiving flowers, short|1.5
+puddle_splash|a motor scooter tyre splashing through a puddle|1.5
+gate_open|a small metal front gate opening with a squeak|1.5
+hug|clothing rustle of a warm hug|1
+camera_shutter|a phone camera shutter sound|0.5
+cat_meow|a cat meowing softly at night|1

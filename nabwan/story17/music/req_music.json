@@ -1,0 +1,145 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "a young working couple's love on Valentine's Day",
+   "piano, nylon guitar, light pizzicato strings, soft glockenspiel",
+   "warm, hopeful, bittersweet",
+   "high quality studio recording",
+   "G major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer",
+   "Christmas bells"
+  ],
+  "sections": [
+   {
+    "section_name": "A question about flowers for everyone else",
+    "duration_ms": 5200,
+    "lines": [],
+    "positive_local_styles": [
+     "soft solo piano, sweet and a little sad",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Dawn pickup at the florist",
+    "duration_ms": 3200,
+    "lines": [],
+    "positive_local_styles": [
+     "light and busy",
+     "nylon guitar and pizzicato, morning bustle"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Riding through the rain",
+    "duration_ms": 3400,
+    "lines": [],
+    "positive_local_styles": [
+     "determined",
+     "tremolo strings and steady piano, rain",
+     "driving but gentle"
+    ],
+    "negative_local_styles": [
+     "drum kit",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "Everyone smiles",
+    "duration_ms": 3400,
+    "lines": [],
+    "positive_local_styles": [
+     "bright and happy",
+     "glockenspiel and pizzicato, joyful"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "He cannot afford one, then the title",
+    "duration_ms": 6800,
+    "lines": [],
+    "positive_local_styles": [
+     "the mood drops",
+     "sparse sad piano",
+     "a soft swell at the end"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "The last order at night",
+    "duration_ms": 5600,
+    "lines": [],
+    "positive_local_styles": [
+     "curious and quietly tense",
+     "ticking pizzicato, building mystery"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "At his own front door",
+    "duration_ms": 5200,
+    "lines": [],
+    "positive_local_styles": [
+     "tender, slow and warm",
+     "piano and soft strings"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Her words and his tears",
+    "duration_ms": 9000,
+    "lines": [],
+    "positive_local_styles": [
+     "emotional peak",
+     "warm strings swell with the piano melody",
+     "tears of joy"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "brass"
+    ]
+   },
+   {
+    "section_name": "Send love back",
+    "duration_ms": 7820,
+    "lines": [],
+    "positive_local_styles": [
+     "warm hopeful resolve",
+     "piano, guitar and strings",
+     "fades out gently"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   }
+  ]
+ }
+}

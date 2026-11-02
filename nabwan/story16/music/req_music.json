@@ -1,0 +1,158 @@
+{
+ "composition_plan": {
+  "positive_global_styles": [
+   "heartfelt Thai commercial short film score",
+   "a lifelong love between an old couple",
+   "felt piano, warm strings, a little celesta and nylon guitar",
+   "tender, nostalgic, bittersweet",
+   "high quality studio recording",
+   "E-flat major"
+  ],
+  "negative_global_styles": [
+   "vocals",
+   "choir",
+   "heavy drums",
+   "EDM",
+   "rock guitar",
+   "horror",
+   "epic trailer",
+   "Christmas bells"
+  ],
+  "sections": [
+   {
+    "section_name": "A question about love that is not remembered",
+    "duration_ms": 5900,
+    "lines": [],
+    "positive_local_styles": [
+     "solo felt piano, tender and curious",
+     "sparse"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "The young couple, 1978",
+    "duration_ms": 4300,
+    "lines": [],
+    "positive_local_styles": [
+     "music box and soft piano, sweet and shy",
+     "a gentle retro feel"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "An album of pressed roses",
+    "duration_ms": 3900,
+    "lines": [],
+    "positive_local_styles": [
+     "warm strings enter softly",
+     "pages of memories",
+     "nostalgic"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "She begins to forget",
+    "duration_ms": 6500,
+    "lines": [],
+    "positive_local_styles": [
+     "the music thins out",
+     "sparse piano in a minor key, hesitant",
+     "quiet"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Title and the grandchild",
+    "duration_ms": 4900,
+    "lines": [],
+    "positive_local_styles": [
+     "a soft swell, then quiet again",
+     "piano and low strings"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Dawn at the market",
+    "duration_ms": 4400,
+    "lines": [],
+    "positive_local_styles": [
+     "gentle and hopeful morning",
+     "nylon guitar and piano"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "He introduces himself again",
+    "duration_ms": 4900,
+    "lines": [],
+    "positive_local_styles": [
+     "tender and shy like a first date",
+     "a slow waltz feel with celesta"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "loud"
+    ]
+   },
+   {
+    "section_name": "The album and her words",
+    "duration_ms": 9700,
+    "lines": [],
+    "positive_local_styles": [
+     "slow emotional build",
+     "strings swell to a gentle peak",
+     "tears"
+    ],
+    "negative_local_styles": [
+     "drums",
+     "brass"
+    ]
+   },
+   {
+    "section_name": "His words at night",
+    "duration_ms": 7200,
+    "lines": [],
+    "positive_local_styles": [
+     "quiet night",
+     "solo piano, heartbreaking but warm"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   },
+   {
+    "section_name": "Love remembered",
+    "duration_ms": 8040,
+    "lines": [],
+    "positive_local_styles": [
+     "warm resolve",
+     "soft full strings and piano",
+     "fades out gently"
+    ],
+    "negative_local_styles": [
+     "loud",
+     "drums"
+    ]
+   }
+  ]
+ }
+}

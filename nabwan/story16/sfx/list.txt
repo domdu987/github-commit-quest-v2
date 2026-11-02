@@ -1,0 +1,22 @@
+living_morning|a quiet old house living room in the morning, birds singing in the garden outside, a ceiling fan turning, no music|10
+market_dawn|a Thai fresh market at dawn, vendors chatting softly far away, plastic bags rustling, a distant motorbike, no music|10
+night_crickets|a quiet night in an old Thai house, crickets outside, a ceiling fan turning slowly, no music|10
+paper_wrap|a single flower being wrapped in newspaper, paper rustle|1.5
+page_turn|a page of an old photo album being turned slowly|1
+pages_flip|pages of an old album flipped quickly one after another|2
+pen_write|writing slowly with a ballpoint pen on paper|3
+book_close|an old thick album being closed softly|1
+sticky_note|a paper sticky note being peeled and stuck on a wooden surface|1
+marker_circle|a marker pen drawing a circle on a paper wall calendar|1.5
+steps_old|slow footsteps of an old man in rubber sandals on a wooden floor|3
+door_wood|an old wooden door opening slowly with a soft creak|2
+chair_rattan|a rattan armchair creaking softly as someone shifts in it|1.5
+keys_drop|a bunch of house keys dropped on a wooden table|1
+rooster|a rooster crowing far away at dawn|3
+dog_tail|an old dog sighing and thumping its tail softly on a wooden floor|2
+coins_pay|a few coins put down on a wooden market counter|1
+blanket|a soft blanket being draped over someone|1.5
+lamp_click|an old table lamp switch clicking on|0.5
+cup_down|a ceramic cup set down gently on a wooden table|1
+steps_market|footsteps of an old man in sandals on a wet concrete market floor|3
+bicycle_bell|an old bicycle bell ringing twice far away|1.5
