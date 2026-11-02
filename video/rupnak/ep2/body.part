@@ -23,6 +23,7 @@
       // cutaway: pumping draws the water down, the roof gives → the mural naga's eye glows → พ่อใหญ่สิน shuts the valve → his story →
       // the notches → dawn: the red rope → ยาย slips back → rumble, dust under the bulb → the ring reaches the barn → cutaway under the
       // house → choice → end card. No angle held longer than ~3 s: long shots cut to a second angle mid-shot.
+      const CUTS = (k, list) => ({ keys: list.flatMap(([t, a, b], i) => { const e = i + 1 < list.length ? list[i + 1][0] - 0.05 : D(k); return [ID(t, ...a), { ...ID(e, ...b), glide: e - t }]; }) });
       const TWO = (k, at, a0, a1, b0, b1) => ({ keys: [ID(0, ...a0), { ...ID(at - 0.05, ...a1), glide: at - 0.05 }, ID(at, ...b0), { ...ID(D(k), ...b1), glide: D(k) - at }] });
       const RIM_N = { time: "night", holeY: 1180, rx: 430, ry: 160 };
       const DAWN = { from: "left", rim: "#ffd8a8", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.3, cast: { len: 1.6, op: 0.28 }, vol: false }, GDAWN = { top: "#ffd8b0", bottom: "#8a9ab8", op: 0.2 };
@@ -123,9 +124,23 @@
         captions: caps("mural"), fx(tl, id, t0, L) { Rup.muralLife(tl, "mu", t0, D("mural"), { eyeGlow: 1.6 }); } });
       // ---------- 19. twist: an old hand with an iron rod shuts the valve, the pump dies ----------
       add("valve", { set: "rupRim2", setOpts: { id: "va", time: "night", holeX: -600, holeY: 1900, rx: 200, ry: 80, props: false, offer: false, pumpAt: { x: 340, y: 1300, s: 1.1 } }, dark: 0.12, light: NIGHTL, grade: GNIGHT,
-        cam: TWO("valve", 1.6, [0, 240, 1.9], [0, 240, 2.0], [100, 160, 1.3], [100, 160, 1.36]),
-        actors: [A("phoSinBar", 560, 1420, 0.62, [{ t: 0, mode: "notch", eyes: "normal", mouth: "flat" }, { t: 1.4, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })],
-        captions: caps("valve"), fx(tl, id, t0, L) { Rup2.life2(tl, "va", t0, 1.4); tl.to("#va-gush", { opacity: 0, duration: 0.3, immediateRender: false }, t0 + 1.3); } });
+        cam: CUTS("valve", [[0, [-390, 160, 3.4], [-380, 170, 3.6]], [1.55, [20, 200, 5.2], [20, 190, 5.6]]]),
+        actors: [A("phoSinBar", 560, 1420, 0.62, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 2.3, mode: "idle", eyes: "angry", mouth: "flat" }], { flip: true, from: 1.5 })],
+        captions: caps("valve"), fx(tl, id, t0, L) { Rup2.life2(tl, "va", t0, 1.4); tl.to("#va-gush", { opacity: 0, duration: 0.3, immediateRender: false }, t0 + 1.3);
+          // insert: an old hand on the drill rod, cranking the gate valve on the pump's inlet shut
+          put(L.set, `<g transform="translate(150,1240)"><rect x="-12" y="-80" width="24" height="80" fill="#7a7e84" stroke="#1e1a18" stroke-width="2"/><rect x="-30" y="-10" width="60" height="20" rx="4" fill="#5a5e64" stroke="#1e1a18" stroke-width="2"/>
+            <g id="va-wh" transform="translate(0,-90)"><circle r="50" fill="none" stroke="#2a2a2a" stroke-width="16"/><circle r="50" fill="none" stroke="#b8302a" stroke-width="11"/>
+            ${[0, 60, 120].map((a) => `<path d="M0,0" transform="rotate(${a})"/><rect x="-50" y="-4" width="100" height="8" fill="#b8302a" stroke="#2a2a2a" stroke-width="1.6" transform="rotate(${a})"/>`).join("")}<circle r="12" fill="#5a5e64" stroke="#1e1a18" stroke-width="2"/>
+            <rect x="-4" y="-7" width="190" height="14" rx="6" fill="#6a6e74" stroke="#1e1a18" stroke-width="2"/><path d="M4,-4H180" stroke="#c8ccd2" stroke-width="2.5" opacity=".7"/>
+            <g transform="translate(160,0)"><rect x="18" y="-34" width="90" height="68" rx="12" fill="#26305a" stroke="#1e1a18" stroke-width="2.2"/><path d="M24,-30v60" stroke="#c8402a" stroke-width="5" opacity=".8"/>
+              <ellipse cx="4" cy="2" rx="28" ry="24" fill="#7a4a2e" stroke="#1e1a18" stroke-width="2"/>${[-15, -5, 5, 15].map((x, k) => `<rect x="${x - 5}" y="-26" width="11" height="${30 - Math.abs(k - 1.5) * 2}" rx="5" fill="#7a4a2e" stroke="#1e1a18" stroke-width="1.6"/><path d="M${x - 3},-14h6" stroke="#4a2a1a" stroke-width="1.4"/>`).join("")}
+              <path d="M-14,10q-12,6 -16,-4" stroke="#4a2a1a" stroke-width="2" fill="none"/><path d="M-6,14q6,4 14,0" stroke="#5a3420" stroke-width="1.4" fill="none" opacity=".7"/></g></g></g>`);
+          tl.fromTo("#va-wh", { rotation: 0, svgOrigin: "0 0" }, { rotation: -100, svgOrigin: "0 0", duration: 1.25, ease: "power2.inOut", immediateRender: false }, t0 + 0.1);
+          // torchlight on his face for the reveal (a warm pool from below-left)
+          put(L.fg, `<defs><radialGradient id="va-tg"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".55"/><stop offset="1" stop-color="#ffe2a0" stop-opacity="0"/></radialGradient></defs>
+            <ellipse id="va-torch" cx="530" cy="1090" rx="110" ry="130" fill="url(#va-tg)" opacity="0" style="mix-blend-mode:screen"/>`);
+          tl.fromTo("#va-torch", { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0 + 1.55);
+          tl.to("#va-torch", { opacity: 0.8, duration: 0.18, yoyo: true, repeat: 7, ease: "sine.inOut" }, t0 + 1.85); } });
       // ---------- 20-22. พ่อใหญ่สิน: the driller, the first hole, the notches ----------
       add("sin1", { set: "rupYard", setOpts: { id: "s1", time: "night", muddy: 0.95, notches: 8 }, dark: 0.2, light: MOONL, grade: GNIGHT, blur: { far: 3, mid: 3, set: 2 },
         cam: TWO("sin1", 2.4, [-160, 420, 1.7], [-160, 420, 1.8], [-180, 300, 2.3], [-180, 300, 2.4]),
@@ -150,13 +165,25 @@
         captions: caps("cordon"), fx(tl, id, t0, L) { SRC(L, tl, t0 + 0.3, D("cordon") - 0.4, "ที่มา: กรมทรัพยากรธรณี"); } });
       // ---------- 25. ยาย slips back toward the barn ----------
       add("sneak", { set: "rupYard", setOpts: { id: "sn", time: "dusk", muddy: 0.95 }, dark: 0.15, light: DAWN, grade: GDAWN,
-        cam: TWO("sneak", 1.9, [0, 100, 1.0], [40, 100, 1.04], [380, 220, 1.7], [400, 220, 1.76]),
-        actors: [A("yaiKham", 300, 1540, 0.44, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat" }], { flip: true, moveTo: { x: 740, y: 1300, dur: D("sneak"), ease: "none" } })],
+        cam: TWO("sneak", 1.9, [0, 100, 1.0], [40, 100, 1.04], [150, 250, 1.6], [200, 230, 1.66]),
+        actors: [A("yaiKham", 440, 1520, 0.44, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat" }], { flip: true, moveTo: { x: 780, y: 1300, s: 0.38, dur: D("sneak"), ease: "none" } })],
         captions: caps("sneak"), fx() {} });
       // ---------- 26. rumble: dust falls from under the house under the bulb ----------
       add("rumble", { set: "rupYard", setOpts: { id: "rb", time: "night", muddy: 0.95, leanPost: true }, dark: 0.2, light: MOONL, grade: GNIGHT, shake: SHAKE(0.3, 7, 1.6),
         cam: PUSH("rumble", 1.6, 1.75, 20, 120),
-        captions: caps("rumble"), fx(tl, id, t0, L) { Rup.yardLife(tl, "rb", t0, D("rumble"), { dust: true, lean: 0.4 }); } });
+        captions: caps("rumble"), fx(tl, id, t0, L) { Rup.yardLife(tl, "rb", t0, D("rumble"), { dust: true, lean: 0.4 });
+          // dust shaken out of the floorboards, big enough to read in a still, bright in the bulb's cone; clods dropping
+          const r = ((s) => () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296))(57); let g = "";
+          for (let k = 0; k < 34; k++) g += `<circle class="rb-dm" cx="${(430 + r() * 260).toFixed(1)}" cy="${(1056 + r() * 20).toFixed(1)}" r="${(3.5 + r() * 5).toFixed(1)}" fill="#ffe8b8" opacity="0"/>`;
+          for (let k = 0; k < 9; k++) { const x = 440 + r() * 240, w = 9 + r() * 9; g += `<path class="rb-cl" d="M${x.toFixed(1)},1054l${w.toFixed(1)},-3l3,${(w * 0.8).toFixed(1)}l${(-w * 0.7).toFixed(1)},5z" fill="#5a3c24" stroke="#2a1a10" stroke-width="2" opacity="0"/>`; }
+          g += `<path id="rb-haze" d="M560,1066L420,1236H700Z" fill="#e8c890" opacity="0" style="mix-blend-mode:screen"/>`;
+          put(L.set, g);
+          tl.fromTo("#rb-haze", { opacity: 0 }, { opacity: 0.22, duration: 0.5, immediateRender: false }, t0 + 0.3);
+          document.querySelectorAll(".rb-dm").forEach((el, k) => { const per = 1.0 + (k % 5) * 0.2;
+            tl.fromTo(el, { y: 0, x: 0, opacity: 0.95 }, { y: 150 + (k % 4) * 30, x: (k % 2 ? 1 : -1) * (6 + (k % 3) * 5), opacity: 0.15, duration: per, ease: "power1.in", repeat: Math.ceil(D("rumble") / per), immediateRender: false }, t0 + 0.2 + (k * 0.11) % per); });
+          document.querySelectorAll(".rb-cl").forEach((el, k) => { const at = t0 + 0.35 + k * 0.22;
+            tl.fromTo(el, { y: 0, rotation: 0, opacity: 1, transformOrigin: "50% 50%" }, { y: 178, rotation: 160 + k * 30, transformOrigin: "50% 50%", duration: 0.45, ease: "power2.in", immediateRender: false }, at);
+            tl.to(el, { y: 166, duration: 0.12, yoyo: true, repeat: 1, ease: "power1.out" }, at + 0.45); }); } });
       // ---------- 27. the ring reaches the barn post ----------
       add("ring", { set: "rupYard", setOpts: { id: "rg", time: "dusk", muddy: 0.95, crackDraw: true }, dark: 0.15, light: DAWN, grade: GDAWN,
         cam: PUSH("ring", 1.5, 1.65, 300, 180),
