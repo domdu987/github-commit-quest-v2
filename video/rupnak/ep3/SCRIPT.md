@@ -1,8 +1,8 @@
-# รูพญานาค EP.3 · รูยังกว้างได้ ไหว้ไกลร้อยเมตร (ตอนจบ) · บทและเสียง (รอผู้ประสานงานตรวจ)
+# รูพญานาค EP.3 · รูยังกว้างได้ ไหว้ไกลร้อยเมตร (ตอนจบ) · บทและเสียง (ผู้ประสานงานตรวจบทผ่าน 2 พ.ย. · แก้เสียง n02 g02 แล้ว)
 
-- **ความยาว:** 106.8 วิ (1:46.8) · 31 บรรทัด · เสียงชุดเดียวกับ EP.2 (พ่อใหญ่สิน Algenib ความเร็วไม่เกิน 1.1)
+- **ความยาว:** 107.5 วิ (1:47.5) · 31 บรรทัด · เสียงชุดเดียวกับ EP.2 (พ่อใหญ่สิน Algenib ความเร็วไม่เกิน 1.1)
 - **คำสั่ง {อย่ากลับเข้าไปเอาของ}:** เริ่ม 3.40 วิ · hookcheck PASS (`hookcheck.txt`)
-- **การ์ดกฎข้อ 3:** ช็อต rule เริ่ม 18.28 วิ · ใบลานขึ้น 1.9 วิ (ไม่เกิน 2 วิ) แล้วตัดไปภาพทุกคนวิ่งออกตามคันนา ระหว่างที่ยายยังท่องกฎ
+- **การ์ดกฎข้อ 3:** ช็อต rule เริ่ม 18.38 วิ · ใบลานขึ้น 1.9 วิ (ไม่เกิน 2 วิ) แล้วตัดไปภาพทุกคนวิ่งออกตามคันนา ระหว่างที่ยายยังท่องกฎ
 - **ไม่มีการ์ดให้เลือก:** ปิดด้วย "ไหว้ได้… / แต่ไหว้จากร้อยเมตร" แล้วขึ้นป้ายจบ 2.4 วิ
 - **เครื่องมือ:** `tools/voice.py` (Gemini TTS ผ่าน fal · เพิ่ม `trim_db` ต่อบรรทัด) · `tools/voice_qa.py` (Whisper large-v3-turbo) · `tools/pick_take.py` · `timing.py` → `schedule.json`
 - **ยังไม่ทำ:** ภาพ สตอรี่บอร์ด เรนเดอร์ มิกซ์ (รอตรวจบทก่อน)
@@ -13,36 +13,36 @@
 |---|---|---|---|---|
 | 0.1 | open | ผู้บรรยาย | ถ้าวันหนึ่ง… รูนาคข้างบ้านคุณกว้างขึ้นทุกวัน | hook: the hole at dawn, its lip crumbling outward, the red rope sagging into it |
 | 3.4 | hook | ผู้บรรยาย | อย่ากลับเข้าไปเอาของ | command at ~3 s: ยาย's silhouette inside the rice barn doorway, the ring of cracks at the barn post |
-| 5.3 | barn | มุก | ยาย! ทิ้งข้าวไว้ก่อน! | the kids at the rope shouting; inside, ยาย tugging the jammed door |
-| 7.3 | barn | ยายคำ | ประตูมันติด… ยายออกไม่ได้! |  |
-| 10.7 | pry | ผู้บรรยาย | พ่อใหญ่สินเอาท่อนเหล็กเจาะบาดาล… งัดประตูเล้า | พ่อใหญ่สิน wedges the old drill rod and levers the door; ยาย tumbles out into his arms |
-| 14.1 | pry | พ่อใหญ่สิน | ทิ้งข้าวเถอะ! คนสำคัญกว่า! |  |
-| 18.4 | rule | ยายคำ | รูยังกว้างได้ ไหว้ไกลร้อยเมตร | rules card for 1.9 s only (palm-leaf line 3 sooting in, the "ส." mark), then cut to everyone running down the bund |
-| 23.0 | far | ผู้บรรยาย | พบสิ่งบอกเหตุ… ให้อพยพออกไปอย่างน้อยหนึ่งร้อยเมตร | wide from high: the family running away from the barn; distance marks on the bund |
-| 27.0 | count | ต้นข้าว | ร้อยเมตร… ร้อยก้าวใหญ่ๆ ใช่ไหม! | joke: ต้นข้าว counting giant steps, มุก dragging him on |
-| 30.1 | count | มุก | ขาเธอสั้น! วิ่งต่อไป! |  |
-| 32.7 | grow1 | ผู้บรรยาย | ปากหลุมเดิม… ขยายกว้างขึ้นได้ | cutaway / top-down: the old hole's rim breaking away, wider (G3) |
-| 35.5 | grow2 | ผู้บรรยาย | และพื้นที่ใกล้ๆ… ก็ยุบได้อีก | a second ring of cracks opening in the field nearby (B1) |
-| 38.3 | myth | ผู้ใหญ่ทอง (โทรโข่ง) | หน้าแล้งไม่มีฝน ดินไม่ยุบหรอกจ้า! | ผู้ใหญ่ทอง on the megaphone under a blue sky: "dry season, no sinkholes" |
-| 42.1 | know1 | ผู้บรรยาย | แต่หลังหน้าแล้ง… พอฝนตกลงมา ดินชั้นบนอุ้มน้ำจนหนัก | cutaway: rain soaking the topsoil after the drought, the layer swelling dark (G4 U2) |
-| 46.7 | know2 | ผู้บรรยาย | จนเพดานโพรงรับน้ำหนักไม่ไหว | cutaway: the cave roof bending under the weight |
-| 49.6 | rain | ผู้บรรยาย | คืนนั้น… ฝนแรกของปีก็ตกลงมา | night: the first rain of the year arrives over the paddies |
-| 52.9 | sink | ผู้บรรยาย | เล้าข้าวของยาย… จมลงไปทั้งหลัง | the rice barn settles slowly into a new hole, upright, everyone safe at the rope 100 m away |
-| 56.4 | loss | ยายคำ | ข้าวทั้งปี… | ยาย's face, rain; ต้นข้าว takes her hand |
-| 57.6 | loss | ต้นข้าว | แต่ยายยังอยู่ครบนะ |  |
-| 59.6 | leaf | ยายคำ | ลายมือพี่… ยังอยู่ครบ | ยาย hands the palm-leaf bundle to พ่อใหญ่สิน |
-| 62.4 | hand | ผู้บรรยาย | ใบลานกฎของยาย… เป็นลายมือของพ่อใหญ่สิน | twist: close on the inscribed leaf and his hand, the same strokes |
-| 66.4 | hand | พ่อใหญ่สิน | พ่อจารให้ยาย… ตั้งแต่หลุมแรก |  |
-| 69.8 | ess | มุก | ตัว ส. ที่ปลายใบ… คือสิน! | insert: the "ส." at the tip of leaf 3; มุก's finger |
-| 73.4 | num | ต้นข้าว | เลขที่ผมขอได้… ตรงกับรอยบากสุดท้ายบนเสา! | ต้นข้าว holds his scrap of lucky numbers against the last notch on the well post |
-| 77.2 | low | ผู้บรรยาย | รอยบากสุดท้าย… คือวันที่น้ำในบ่อต่ำที่สุด | the notch column, the lowest cut glinting |
-| 81.0 | warn | ต้นข้าว | เลขนี้ไม่ได้ให้โชค… มันเตือน | ต้นข้าว, quiet |
-| 85.7 | week | ผู้บรรยาย | สัปดาห์ต่อมา… หมู่บ้านขึงเชือกแดง ห่างหลุมร้อยเมตร | a week later: the red rope ring with signs, wide |
-| 90.1 | shrine | ผู้บรรยาย | ศาลพญานาคย้ายไปตั้งไกลหลุม… ชาวบ้านไหว้จากตรงนั้น | the naga shrine rebuilt far back; villagers wai from there; ยาย and มุก wai together |
-| 95.5 | sell | ผู้ใหญ่ทอง (โทรโข่ง) | ขายเครื่องสูบมือสองจ้า! ใครสนใจบ้าง! | joke: ผู้ใหญ่ทอง with a "ขาย" sign on the pump |
-| 100.7 | close | ผู้บรรยาย | ไหว้ได้… | closing: the whole family wai-ing from the rope, the hole far behind at sunset |
-| 101.9 | close | ผู้บรรยาย | แต่ไหว้จากร้อยเมตร |  |
-| 104.4 | end | – | (ไม่มีเสียงพูด) | end card: the headman's sign with the note "ตอนจบ" |
+| 5.4 | barn | มุก | ยาย! ทิ้งข้าวไว้ก่อน! | the kids at the rope shouting; inside, ยาย tugging the jammed door |
+| 7.4 | barn | ยายคำ | ประตูมันติด… ยายออกไม่ได้! |  |
+| 10.8 | pry | ผู้บรรยาย | พ่อใหญ่สินเอาท่อนเหล็กเจาะบาดาล… งัดประตูเล้า | พ่อใหญ่สิน wedges the old drill rod and levers the door; ยาย tumbles out into his arms |
+| 14.2 | pry | พ่อใหญ่สิน | ทิ้งข้าวเถอะ! คนสำคัญกว่า! |  |
+| 18.5 | rule | ยายคำ | รูยังกว้างได้ ไหว้ไกลร้อยเมตร | rules card for 1.9 s only (palm-leaf line 3 sooting in, the "ส." mark), then cut to everyone running down the bund |
+| 23.1 | far | ผู้บรรยาย | พบสิ่งบอกเหตุ… ให้อพยพออกไปอย่างน้อยหนึ่งร้อยเมตร | wide from high: the family running away from the barn; distance marks on the bund |
+| 27.1 | count | ต้นข้าว | ร้อยเมตร… ร้อยก้าวใหญ่ๆ ใช่ไหม! | joke: ต้นข้าว counting giant steps, มุก dragging him on |
+| 30.2 | count | มุก | ขาเธอสั้น! วิ่งต่อไป! |  |
+| 32.8 | grow1 | ผู้บรรยาย | ปากหลุมเดิม… ขยายกว้างขึ้นได้ | cutaway / top-down: the old hole's rim breaking away, wider (G3) |
+| 35.6 | grow2 | ผู้บรรยาย | และพื้นที่ใกล้ๆ… ก็ยุบได้อีก | a second ring of cracks opening in the field nearby (B1) |
+| 38.4 | myth | ผู้ใหญ่ทอง (โทรโข่ง) | หน้าแล้งไม่มีฝน ดินไม่ยุบหรอกจ้า! | ผู้ใหญ่ทอง on the megaphone under a blue sky: "dry season, no sinkholes" |
+| 42.2 | know1 | ผู้บรรยาย | แต่หลังหน้าแล้ง… พอฝนตกลงมา ดินชั้นบนอุ้มน้ำจนหนัก | cutaway: rain soaking the topsoil after the drought, the layer swelling dark (G4 U2) |
+| 46.8 | know2 | ผู้บรรยาย | จนเพดานโพรงรับน้ำหนักไม่ไหว | cutaway: the cave roof bending under the weight |
+| 49.7 | rain | ผู้บรรยาย | คืนนั้น… ฝนแรกของปีก็ตกลงมา | night: the first rain of the year arrives over the paddies |
+| 53.0 | sink | ผู้บรรยาย | เล้าข้าวของยาย… จมลงไปทั้งหลัง | the rice barn settles slowly into a new hole, upright, everyone safe at the rope 100 m away |
+| 56.5 | loss | ยายคำ | ข้าวทั้งปี… | ยาย's face, rain; ต้นข้าว takes her hand |
+| 57.7 | loss | ต้นข้าว | แต่ยายยังอยู่ครบนะ |  |
+| 59.7 | leaf | ยายคำ | ลายมือพี่… ยังอยู่ครบ | ยาย hands the palm-leaf bundle to พ่อใหญ่สิน |
+| 62.5 | hand | ผู้บรรยาย | ใบลานกฎของยาย… เป็นลายมือของพ่อใหญ่สิน | twist: close on the inscribed leaf and his hand, the same strokes |
+| 66.5 | hand | พ่อใหญ่สิน | พ่อจารให้ยาย… ตั้งแต่หลุมแรก |  |
+| 69.9 | ess | มุก | ตัว ส. ที่ปลายใบ… คือสิน! | insert: the "ส." at the tip of leaf 3; มุก's finger |
+| 73.5 | num | ต้นข้าว | เลขที่ผมขอได้… ตรงกับรอยบากสุดท้ายบนเสา! | ต้นข้าว holds his scrap of lucky numbers against the last notch on the well post |
+| 77.3 | low | ผู้บรรยาย | รอยบากสุดท้าย… คือวันที่น้ำในบ่อต่ำที่สุด | the notch column, the lowest cut glinting |
+| 81.1 | warn | ต้นข้าว | เลขนี้ไม่ได้ให้โชค… มันเตือน | ต้นข้าว, quiet |
+| 85.8 | week | ผู้บรรยาย | สัปดาห์ต่อมา… หมู่บ้านขึงเชือกแดง ห่างหลุมร้อยเมตร | a week later: the red rope ring with signs, wide |
+| 90.2 | shrine | ผู้บรรยาย | ศาลพญานาคย้ายไปตั้งไกลหลุม… ชาวบ้านไหว้จากตรงนั้น | the naga shrine rebuilt far back; villagers wai from there; ยาย and มุก wai together |
+| 95.6 | sell | ผู้ใหญ่ทอง (โทรโข่ง) | ขายเครื่องสูบมือสองจ้า! ใครสนใจบ้าง! | joke: ผู้ใหญ่ทอง with a "ขาย" sign on the pump |
+| 101.4 | close | ผู้บรรยาย | ไหว้ได้… | closing: the whole family wai-ing from the rope, the hole far behind at sunset |
+| 102.6 | close | ผู้บรรยาย | แต่ไหว้จากร้อยเมตร |  |
+| 105.1 | end | – | (ไม่มีเสียงพูด) | end card: the headman's sign with the note "ตอนจบ" |
 
 ## ผล Whisper (`vo/qa.json`)
 
@@ -61,7 +61,7 @@
 | id | CER | Whisper ได้ยิน |
 |---|---|---|
 | n01 | 0.071 | ถ้าวันหนึ่ง รูหน้าข้างบ้านคุณ กว้างขึ้นทุกวัน |
-| n02 | 0.1 | อยากกลับเข้าไปเอาของ |
+| n02 | 0.0 | อย่ากลับเข้าไปเอาของ |
 | m01 | 0.0 | ยาย ทิ้งข้าวไว้ก่อน |
 | y01 | 0.0 | ประตูมันติด ยายออกไม่ได้ |
 | n03 | 0.093 | พ่อใหญ่สิน เอาท่อนเหล็กเจ่าบาดาน งัดประตูเหล้า |
@@ -88,7 +88,7 @@
 | t04 | 0.0 | เลขนี้ไม่ได้ให้โชค มันเตือน |
 | n13 | 0.085 | สัปดาห์ต่อมา มูบ้านขึงเชือกแดง ห่างหลุมมาร้อยเมตร |
 | n14 | 0.17 | สารพยานากย้ายไปตั้งไกลหลุม ชาวบ้านว่ายจากตรงนั้น |
-| g02 | 0.182 | ท้ายเครื่องซูปมือโสงจ้า ใครสนใจบ้าง |
+| g02 | 0.121 | ขายเครื่องซูปมือโสงจ้า ใครสนใจบ้าง |
 | n15 | 0.571 | ว่ายได้ |
 | n16 | 0.5 | แต่ว่ายจาก 100 เมตร |
 
@@ -122,9 +122,17 @@
   - เร่ง n01 เป็น 1.3 และลด pre-roll คำสั่งจึงกลับมาเริ่มที่ 3.40 วิ
 - **ผู้บรรยายปิดเรื่อง n15 n16:** ช้าลงเหลือ 1.05 ให้ประโยคปิดมีน้ำหนัก
 
+## แก้เสียงตามที่ผู้ประสานงานสั่ง (ไม่ได้อัดใหม่ เพราะบัญชี fal ถูกล็อก "TOP_UP")
+
+- **n02 {อย่ากลับเข้าไปเอาของ}:** take เดิม Whisper ถอดเป็น "อยากกลับ"
+  - ทดสอบแล้ว "อย่า" ของ take นี้ไม่ได้ออกเสียงผิด: ต่อเข้ากับ "รอจนบ้านยุบ" ของ EP.2 แล้ว Whisper ถอดได้ "อย่ารอ…"
+  - แต่ "อย่า" ที่ชัดของ EP.2 พอวางหน้า "กลับ" Whisper ก็ถอดเป็น "อยาก" เกือบทุกครั้ง เพราะ "อยากกลับ" เป็นวลีที่เจอบ่อยกว่า
+  - แก้ด้วยการยืดเฉพาะพยางค์ "อย่า" (0.195 วิแรก หลังปรับความเร็ว) ช้าลง 0.6 เท่า (`"stretch": [0.195, 0.6]` ใน voice.py) ให้สระ "า" ยาวชัด
+  - ยืด 0.55–0.65 เท่า Whisper ถอดได้ "อย่า" ทุกจุดตัดที่ลอง · ยืด 0.7–0.75 เท่ายังได้ "อยาก" · บรรทัดยาวขึ้น 0.1 วิ คำสั่งยังเริ่มที่ 3.40 วิ
+- **g02 "ขาย…":** take เดิมไม่ผิด ตอนตัดช่วงเงียบที่ −40 dB หัวคำ "ข" หายไป เหลือเสียงที่ Whisper ถอดเป็น "ท้าย"
+  - ตัดที่ −65 dB (`trim_db`) และความเร็ว 1.05 (เดิม 1.12) แล้ว Whisper ถอดได้ "ขาย"
+
 ## ข้อควรฟังด้วยหู
 
-- **n02 (คำสั่ง):** Whisper ได้ยิน "อยากกลับเข้าไปเอาของ" (CER 0.1 ไม่ติดธง) · ควรฟังว่า "อย่า" ชัด เพราะเป็นคำสั่งของ hook
-- **g02:** ได้ยิน "ท้ายเครื่องซูป…" (CER 0.18) · ควรฟังว่า "ขาย" ชัด
 - **s01 y02:** ตามที่อธิบายข้างบน
 - **ผู้ใหญ่ทอง g01 g02:** ใส่ "fx": "megaphone" ไว้ ให้ทำเสียงโทรโข่งตอนมิกซ์

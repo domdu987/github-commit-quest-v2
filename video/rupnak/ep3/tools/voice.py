@@ -57,6 +57,16 @@ def trim(mp3_path, wav_path, tempo, extra=None, db=-40):
                     "-ar", "44100", "-ac", "2", wav_path], check=True)
 
 
+def stretch(wav_path, cut, factor):
+    # slow only the first `cut` seconds (after tempo) by `factor` (<1 = longer): a clipped first syllable
+    # ("อย่า" read as "อยาก" before "กลับ") is heard right once its vowel is long
+    tmp = wav_path + ".tmp.wav"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", wav_path, "-filter_complex",
+                    f"[0]atrim=0:{cut},asetpts=N/SR/TB,atempo={factor}[a];[0]atrim={cut},asetpts=N/SR/TB[b];"
+                    "[a][b]concat=n=2:v=0:a=1", tmp], check=True)
+    os.replace(tmp, wav_path)
+
+
 def duration(path):
     return float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration",
                                           "-of", "csv=p=0", path]).decode().strip())
@@ -79,6 +89,8 @@ def main():
             synth(ln["text"], voice, style, mp3)
             time.sleep(1.5)
         trim(mp3, wav, ln.get("tempo", 1.0), ln.get("af"), ln.get("trim_db", -40))
+        if ln.get("stretch"):
+            stretch(wav, *ln["stretch"])
         durs[ln["id"]] = round(duration(wav), 3)
     json.dump(durs, open(os.path.join(out, "durations.json"), "w"), indent=1)
     print(json.dumps(durs, indent=1))
