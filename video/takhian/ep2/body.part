@@ -1,0 +1,124 @@
+      // ---------- ต้นตะเคียนกลางนา EP.2 อย่ากลัวจับตัวเขา ----------
+      // grammar: EP.1's last frame (he lies by the smoking tree) → the hand that won't touch → ต้น touches first (role flip) → rule 2 →
+      // the check and the call → top-down hands → side-view pumping (real hands) → ยาย wants the tree; พลอย says no → keep pumping → the swap →
+      // the gasp → the ambulance, the rain stops, a rainbow → ต้น runs back for the buffalo → the silent flicker far off → the stopwatch → rule 3
+      // → the bolt from the blue on the same tree → ต้น alive in the mud → old scars on the trunk → the photo in the shrine → ยาย → the rules all ticked
+      const LY = (L, x, y, s, o = {}) => put(L.set, Tk.lying(x, y, s, o));
+      const SIDE = (k, rescuer = "ploy", o = {}) => ({ ...STORM(o.id || k, { flash: 0.1, rain: o.rain ?? 0.55, horizon: 900, tree: { x: 980, y: 1080, s: 0.45, burnt: 0.6 } }),
+        cam: push2(k, fr(560, 1600, 1.25, 540, 1100), fr(560, 1610, 1.32, 540, 1100)),
+        actors: [P(rescuer, rescuer === "ton" ? 520 : 512, rescuer === "ton" ? 1760 : 1780, rescuer === "ton" ? 0.8 : 0.95, "cprF", "normal", "frown", { opts: { by: 200 }, talk: o.talk }), P("lungPiak", 900, 1860, 0.95, "pressed", "closed", "flat")],
+        fx: (tl, id, t0, L) => { rescuer === "ton" ? CPRARMS(L, tl, t0, D(k), [566, 1700], [466, 1700], [528, 1774], 0.8, ["#3a9a5a", "#2a7a4a"], SK.ton) : CPRARMS(L, tl, t0, D(k), [574, 1680], [450, 1680], [528, 1774]); if (o.fx) o.fx(tl, id, t0, L); } });
+
+      // 1 · from EP.1's last frame: ลุง lies by the smoking tree, the family frozen
+      add("hook", { ...STORM("h", { tree: { x: 640, y: 1400, s: 1.05, burnt: 1 }, flash: 0.25, rain: 0.6, horizon: 1050 }),
+        cam: push2("hook", fr(540, 1300, 1.0, 540, 1000), fr(520, 1420, 1.12, 540, 1000)), shake: rumble(1),
+        actors: [P("ploy", 860, 1700, 1.05, "idle", "wide", "scream", { flip: true }), P("ton", 1000, 1660, 0.78, "idle", "wide", "o", { flip: true })],
+        captions: caps("hook"), fx: (tl, id, t0, L) => { LY(L, 380, 1720, 1.0, { smoke: 1 }); FLICK(tl, t0 + 0.3, 0.3); } });
+      // 2 · the command: พลอย's hand hovers over him
+      add("cmd", { ...STORM("c", { horizon: 900, rain: 0.6, flash: 0.15 }),
+        cam: push2("cmd", fr(720, 1500, 1.35, 540, 1100), fr(720, 1520, 1.48, 540, 1100)),
+        actors: [P("ploy", 960, 1720, 1.1, "kneelReach", "worry", "frown", { flip: true })],
+        captions: caps("cmd"), fx: (tl, id, t0, L) => LY(L, 330, 1720, 1.0, { smoke: 1 }) });
+      // 3 · พลอย, close, shaking
+      add("fear", { ...STORM("f", { horizon: 900, rain: 0.5 }), cam: { keys: [{ t: 0, ...fr(540, 1260, 2.1, 540, 1000) }] }, shake: (t) => ({ x: 2 * Math.sin(t * 40), y: 0, r: 0 }),
+        actors: [P("ploy", 540, 1650, 1.0, "kneel", "worry", "frown", { talk: TALK("fear", 0, "o") })], captions: caps("fear") });
+      // 4 · ต้น's small hand lands on ลุง's arm: nothing happens
+      add("safe", { ...STORM("sf", { horizon: 900, rain: 0.45 }),
+        cam: push2("safe", fr(660, 1640, 1.6, 540, 1100), fr(650, 1640, 1.72, 540, 1100)),
+        actors: [P("ton", 880, 1740, 0.8, "kneelReach", "wide", "o", { flip: true, opts: { by: 120 } })],
+        captions: caps("safe"), fx: (tl, id, t0, L) => LY(L, 330, 1730, 1.0, {}) });
+      // 5 · ต้น raps rule 2; the bamboo rules drop in (rule 1 ticked, rule 2 lit)
+      add("rap", { ...STORM("rp", { horizon: 900, rain: 0.5 }),
+        cam: { keys: [{ t: 0, ...fr(560, 1500, 1.4, 540, 1100) }] },
+        actors: [P("ton", 880, 1740, 0.8, "kneel", "wide", "frown", { flip: true, talk: TALK("rap", 0, "scream") })],
+        captions: caps("rap"), fx: (tl, id, t0, L) => { LY(L, 330, 1730, 1.0, {}); Tk.rules(tl, L.light, t0 + 0.3, D("rap") - 0.3, { active: 1, done: [0], tickAt: voEnd("rap") - 0.35, y: 200 }); } });
+      // 6 · พลอย taps his shoulders, shouts
+      add("call", { ...STORM("cl", { horizon: 900, rain: 0.5 }), cam: { keys: [{ t: 0, ...fr(560, 1600, 1.45, 540, 1100) }] }, shake: kick(0, 0.6, 4),
+        actors: [P("ploy", 520, 1780, 0.95, "kneelReach", "wide", "scream", { opts: { by: 200 }, talk: TALK("call", 0, "scream") }), P("lungPiak", 900, 1860, 0.95, "supine", "closed", "flat")], captions: caps("call") });
+      // 7 · his face, his chest not moving, rain on him
+      add("still", { set: "tkCPR", setOpts: { id: "sl", rescuer: false, rain: 0.5 }, dark: 0, light: ST, grade: GS,
+        cam: push2("still", fr(600, 760, 2.2, 540, 900), fr(600, 900, 1.5, 540, 1000)), captions: caps("still") });
+      // 8 · พลอย on the phone, kneeling
+      add("phone", { ...STORM("ph", { horizon: 900, rain: 0.5 }), cam: push2("phone", fr(560, 1550, 1.5, 540, 1100), fr(560, 1550, 1.6, 540, 1100)),
+        actors: [P("ploy", 520, 1780, 0.95, "kneelPhone", "wide", "o", { opts: { by: 200 }, talk: TALK("phone", 0, "scream") }), P("lungPiak", 900, 1860, 0.95, "supine", "closed", "flat")], captions: caps("phone"),
+        fx: (tl, id, t0, L) => realHands(`${id}-a0`, SK.ploy, OPEN, RELAX, { under: true }) });
+      // 9 · top-down: the phone on the grass on speaker, her hands go to his chest
+      add("speak", { set: "tkCPR", setOpts: { id: "sp", phone: 1, rain: 0.5 }, dark: 0, light: ST, grade: GS,
+        cam: push2("speak", fr(900, 560, 1.6, 540, 700), fr(620, 1050, 0.95, 540, 980)), captions: caps("speak"),
+        fx: (tl, id, t0, L) => TOPARMS(L, tl, t0 + 1.0, D("speak") - 1.0) });
+      // 10 · top-down: hands stacked on the lower half of the breastbone, arms straight
+      add("hands", { set: "tkCPR", setOpts: { id: "hd", phone: 1, rain: 0.4 }, dark: 0, light: ST, grade: GS,
+        cam: push2("hands", fr(580, 1080, 1.05, 540, 960), fr(580, 1080, 1.3, 540, 960)), captions: caps("hands"),
+        fx: (tl, id, t0, L) => TOPARMS(L, tl, t0, D("hands")) });
+      // 11 · side view: she pumps
+      add("rate", { ...SIDE("rate"), captions: caps("rate") });
+      // 12 · ต้น counts beside her
+      add("count", { ...STORM("cn", { horizon: 900, rain: 0.5 }), cam: { keys: [{ t: 0, ...fr(560, 1560, 1.15, 540, 1100) }] },
+        actors: [P("ploy", 512, 1780, 0.95, "cprF", "normal", "frown", { opts: { by: 200 } }), P("lungPiak", 900, 1860, 0.95, "pressed", "closed", "flat"), P("ton", 180, 1760, 0.78, "kneel", "wide", "scream", { talk: TALK("count", 0, "scream") })],
+        captions: caps("count"), fx: (tl, id, t0, L) => CPRARMS(L, tl, t0, D("count"), [574, 1680], [450, 1680], [528, 1774]) });
+      // 13 · ยาย takes his ankles to drag him to the tree
+      add("drag", { ...STORM("dr", { horizon: 1000, rain: 0.6, tree: { x: 980, y: 1100, s: 0.5, burnt: 0.7 } }),
+        cam: push2("drag", fr(560, 1500, 1.1, 540, 1050), fr(600, 1500, 1.15, 540, 1050)),
+        actors: [P("lungPiak", 420, 1800, 0.9, "supine", "closed", "flat"), P("yaiHom", 700, 1760, 0.95, "drag", "worry", "frown", { flip: true, talk: TALK("drag", 0, "o") })], captions: caps("drag"),
+        fx: (tl, id, t0) => FLICK(tl, t0 + 0.4, 0.3) });
+      // 14 · พลอย: no! points at the burnt tree
+      add("no", { ...STORM("no", { horizon: 1000, rain: 0.6, tree: { x: 900, y: 1100, s: 0.5, burnt: 0.8 } }), cam: { keys: [{ t: 0, ...fr(540, 1400, 1.35, 540, 1050) }] }, shake: kick(0, 0.5, 6),
+        actors: [P("ploy", 380, 1720, 1.0, "point", "angry", "scream", { talk: TALK("no", 0, "scream") }), P("yaiHom", 700, 1720, 0.95, "idle", "wide", "o", { flip: true })], captions: caps("no") });
+      // 15 · keep pumping, hands never lift
+      add("only", { ...SIDE("only", "ploy", { id: "on", rain: 0.5 }), captions: caps("only") });
+      // 16 · พลอย spent
+      add("tired", { ...STORM("ti", { horizon: 900, rain: 0.4 }), cam: { keys: [{ t: 0, ...fr(540, 1300, 2.0, 540, 1000) }] },
+        actors: [P("ploy", 540, 1680, 1.0, "pant", "closed", "frown", { talk: TALK("tired", 0, "o") })], captions: caps("tired") });
+      // 17 · ต้น takes over
+      add("swap", { ...SIDE("swap", "ton", { id: "sw", talk: TALK("swap", 0, "scream") }), captions: caps("swap") });
+      // 18 · ลุง jolts and draws a breath
+      add("gasp", { ...STORM("gp", { horizon: 900, rain: 0.3 }), cam: push2("gasp", fr(700, 1700, 1.6, 540, 1100), fr(700, 1700, 1.75, 540, 1100)),
+        actors: [P("lungPiak", 900, 1860, 0.95, "jolt", "closed", "o"), P("ton", 300, 1760, 0.78, "kneel", "wide", "o")], captions: caps("gasp") });
+      // 19 · ลุง, groggy
+      add("joke", { set: "tkCPR", setOpts: { id: "jk", rescuer: false, rain: 0.2 }, dark: 0, light: ST, grade: GS, cam: { keys: [{ t: 0, ...fr(600, 720, 2.4, 540, 900) }] }, captions: caps("joke"),
+        fx: (tl, id, t0, L) => put(L.glow, `<g transform="translate(560,730)"><path d="M0,0q12,8 24,0" stroke="#3a2a22" stroke-width="7" fill="none"/></g>`) });
+      // 20 · the ambulance on the dirt road, the rain stops, a rainbow
+      add("clear", { set: "tkField", setOpts: { id: "cr", mood: "clear", farStorm: 1, tree: { x: 260, y: 1100, s: 0.5, burnt: 0.6 }, horizon: 1050 }, dark: 0, light: DAY, grade: GD,
+        cam: push2("clear", fr(540, 1300, 0.95, 540, 1000), fr(540, 1250, 0.9, 540, 1000)), captions: caps("clear"),
+        fx: (tl, id, t0, L) => { put(L.set, `<rect x="-900" y="1300" width="2900" height="160" fill="#8a7a5a"/>` + Tk.pickup(-60, 1420, 0.5, {}) + `<g id="cr-amb">${Tk.ambulance(1500, 1440, 0.55, { lit: 0.6 })}</g>`); tl.fromTo("#cr-amb", { x: 0 }, { x: -700, duration: D("clear") * 0.8, ease: "power2.out", immediateRender: false }, t0); } });
+      // 21 · ต้น runs off toward the tree for the buffalo
+      add("buff", { set: "tkField", setOpts: { id: "bf", mood: "clear", farStorm: 1, tree: { x: 700, y: 1140, s: 0.6, burnt: 0.6 }, buf: { x: 520, y: 1160, s: 0.3, stake: [600, 1160] }, horizon: 1050 }, dark: 0, light: DAY, grade: GD,
+        cam: push2("buff", fr(540, 1300, 1.0, 540, 1000), fr(560, 1260, 1.05, 540, 1000)),
+        actors: [P("ton", 520, 1720, 0.75, "run", "normal", "laugh", { flip: true, moveTo: { x: 640, y: 1500, dur: D("buff") }, talk: TALK("buff", 0, "laugh") })], captions: caps("buff") });
+      // 22 · far horizon: the black cloud flickers in silence
+      add("far", { set: "tkField", setOpts: { id: "fa", mood: "clear", farStorm: 1, farBolt: 1, horizon: 1050, bund: false }, dark: 0, light: DAY, grade: GD,
+        cam: push2("far", fr(60, 980, 1.05, 540, 1000), fr(40, 980, 1.15, 540, 1000)), captions: caps("far") });
+      // 23 · ยาย grabs ต้น's stopwatch: 12:04 since the last thunder
+      split("watch", 1.2,
+        { set: "tkField", setOpts: { id: "wa", mood: "clear", farStorm: 1, horizon: 1050 }, dark: 0, light: DAY, grade: GD, cam: { keys: [{ t: 0, ...fr(540, 1400, 1.5, 540, 1050) }] },
+          actors: [P("yaiHom", 540, 1720, 0.95, "yell", "wide", "scream", { talk: TALK("watch", 0, "scream") })], captions: caps("watch").filter((c) => c.t < 1.2) },
+        { set: "tkField", setOpts: { id: "wb", mood: "clear", horizon: 1050 }, dark: 0, light: DAY, grade: GD, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] }, captions: capsFrom("watch", 1.2),
+          fx: (tl, id, t0, L) => { put(L.glow, `<g id="wbw">${Tk.watch(540, 880, 1.6, { mm: "12", ss: "04", label: "ฟ้าร้องล่าสุด" })}</g>`); tl.fromTo("#wbw", { y: 30 }, { y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0); } });
+      // 24 · rule 3: the bamboo rules, rule 3 lit; พลอย shouts it
+      add("rule3", { set: "tkField", setOpts: { id: "r3", mood: "clear", farStorm: 1, horizon: 1050 }, dark: 0.25, light: DAY, grade: GD, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] }, captions: caps("rule3"),
+        fx: (tl, id, t0, L) => Tk.rules(tl, L.light, t0 + 0.2, D("rule3") - 0.2, { active: 2, done: [0, 1], tickAt: voEnd("rule3") - 0.3, y: 200 }) });
+      // 25 · the bolt from the blue hits the same tree again; ต้น stops mid-bund and sits down hard
+      add("again", { set: "tkField", setOpts: { id: "ag", mood: "clear", farStorm: 1, tree: { x: 640, y: 1450, s: 0.8, burnt: 0.4 }, bolt: 1, ground: 0.6, horizon: 1100, flash: 0.6 }, dark: 0, light: FL, grade: GD,
+        cam: push2("again", fr(540, 1250, 0.88, 540, 980), fr(540, 1350, 0.98, 540, 980)), shake: kick(0.2, 1.2, 20),
+        actors: [P("ton", 360, 1740, 0.72, "run", "normal", "laugh", { flip: true, then: [{ t: 0.3, mode: "sitDown", eyes: "wide", mouth: "scream" }] })], captions: caps("again"),
+        fx: (tl, id, t0, L) => STRIKE(tl, L, t0, 0.25, { after: 0.3, sil: 0.16 }) });
+      // 26 · ต้น in the mud, shaking
+      add("alive", { set: "tkField", setOpts: { id: "al", mood: "clear", horizon: 1000 }, dark: 0, light: DAY, grade: GD, cam: { keys: [{ t: 0, ...fr(540, 1450, 1.9, 540, 1050) }] },
+        shake: (t) => ({ x: 2 * Math.sin(t * 45), y: 0, r: 0 }), actors: [P("ton", 540, 1740, 0.85, "sitDown", "wide", "o", { talk: TALK("alive", 0, "o") })], captions: caps("alive") });
+      // 27 · the smoke clears: old burn scars down the trunk
+      add("scars", { set: "tkField", setOpts: { id: "sc", mood: "clear", tree: { x: 540, y: 2050, s: 1.55, burnt: 0.5 }, horizon: 1800, far: false, bund: false }, dark: 0, light: DAY, grade: GD,
+        cam: push2("scars", fr(540, 1300, 1.0, 540, 960), fr(540, 1150, 1.3, 540, 960)), captions: caps("scars") });
+      // 28 · the shrine photo
+      add("photo", { set: "tkShrine", setOpts: { id: "pc", y: -300, s: 1.0 }, dark: 0.02, light: { from: "right", rim: "#ffd890", rimOp: 0.6, shade: "#1a0e08", shadeOp: 0.3, cast: false, vol: false }, grade: { top: "#ffd090", bottom: "#3a1a0a", op: 0.18 },
+        cam: push2("photo", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.1, 540, 960)), captions: caps("photo"),
+        fx: (tl, id, t0, L) => put(L.set, Tk.photo(540, 1040, 1.6)) });
+      // 29 · ยาย, quiet
+      add("grand", { set: "tkField", setOpts: { id: "gr", mood: "clear", horizon: 1000 }, dark: 0, light: DAY, grade: GD, cam: push2("grand", fr(540, 1280, 2.0, 540, 1000), fr(540, 1280, 2.1, 540, 1000)),
+        actors: [P("yaiHom", 540, 1700, 0.95, "idle", "worry", "frown", { talk: TALK("grand", 0, "o") })], captions: caps("grand") });
+      // 30 · the family, the tree behind them
+      add("truth", { set: "tkField", setOpts: { id: "tr", mood: "clear", farStorm: 1, tree: { x: 540, y: 1150, s: 0.6, burnt: 0.4 }, horizon: 1050 }, dark: 0, light: DAY, grade: GD,
+        cam: push2("truth", fr(540, 1350, 1.0, 540, 1000), fr(540, 1350, 0.94, 540, 1000)),
+        actors: [P("yaiHom", 300, 1700, 0.95, "idle", "worry", "frown", { talk: TALK("truth", 0, "o") }), P("ploy", 520, 1720, 1.0, "idle", "normal", "flat", { flip: true }), P("ton", 700, 1710, 0.78, "idle", "normal", "flat", { flip: true }), P("lungPiak", 860, 1720, 0.95, "idle", "closed", "flat", { flip: true })], captions: caps("truth") });
+      // 31 · all three rules ticked
+      add("end", { set: "tkHut", setOpts: { id: "en", mood: "clear", tree: { x: 620, y: 1180, s: 0.5, burnt: 0.4 } }, dark: 0.2, light: DAY, grade: GD, cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] }, captions: caps("end"),
+        fx: (tl, id, t0, L) => Tk.rules(tl, L.light, t0 + 0.2, D("end") - 0.2, { active: -1, done: [0, 1, 2], y: 200 }) });

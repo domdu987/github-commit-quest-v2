@@ -1,0 +1,53 @@
+      // ---------- ต้นตะเคียนกลางนา: shared lights, poses and helpers (both episodes) ----------
+      SK.ploy = ["#e0a880", "#b07a52", "#f2c8a0"]; SK.ton = SK.ton || ["#d39a6e", "#a8704a", "#ecc09a"];
+      const ST = { from: "left", rim: "#b8c8ff", rimOp: 0.85, shade: "#0a0e18", shadeOp: 0.4, cast: false, vol: false };
+      const FL = { from: "right", rim: "#ffffff", rimOp: 1, shade: "#0a0e18", shadeOp: 0.35, cast: false, vol: false };
+      const DAY = { from: "right", rim: "#ffe2a0", rimOp: 0.8, shade: "#3a2a40", shadeOp: 0.25, cast: false, vol: false };
+      const GS = { top: "#2a3048", bottom: "#0a0e14", op: 0.16 }, GD = { top: "#ffe0a0", bottom: "#3a5a3a", op: 0.1 }, GW = { top: "#6a6a6a", bottom: "#1a1a1a", op: 0.2 };
+      const sm = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+      const PER = 60 / 110, push = (u) => { const ph = (u % PER) / PER; return ph < 0.42 ? Math.sin((ph / 0.42) * Math.PI / 2) : Math.cos(((ph - 0.42) / 0.58) * Math.PI / 2); };
+      Rig.MODES.supine = (u, o) => ({ ...Rig.MODES.lie(u, o), torso: 0, uaF: 2, faF: -2, uaB: -2, faB: -2, thF: -2, thB: 2, shF: 4, shB: 2, head: 4 });
+      Rig.MODES.pressed = (u, o) => ({ ...Rig.MODES.supine(u, o), rootY: -40 + (o.dy ?? 0) + 5 * push(u + (o.ph ?? 0)) });
+      Rig.MODES.jolt = (u, o) => ({ ...Rig.MODES.supine(u, o), rootY: -40 + (o.dy ?? 0) - 34 * Math.exp(-u * 9) * Math.abs(Math.sin(u * 30)), uaF: -20 * Math.exp(-u * 8), uaB: 20 * Math.exp(-u * 8) });
+      Rig.MODES.kneel = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 14, faF: -40, uaB: -14, faB: 40, torso: 0, head: 6 });
+      Rig.MODES.kneelPhone = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -30, faF: -150, uaB: 4, faB: -12, torso: 4, head: 6, bodyY: o.by ?? 150 });
+      Rig.MODES.kneelReach = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -60 + 8 * Math.sin(u * 3), faF: -6, uaB: 6, faB: -10, torso: 10, head: 10, bodyY: o.by ?? 150 });
+      Rig.MODES.cprF = (u, o) => { const k = push(u + (o.ph ?? 0)); return { ...Rig.MODES.crouch(u, o), uaF: -6, faF: 0, uaB: 6, faB: 0, torso: 14 + 4 * k, head: 20 + 3 * k, bodyY: (o.by ?? 190) + 14 * k }; };
+      Rig.MODES.flinch = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150 + 4 * Math.sin(u * 30), faF: -60, uaB: 140, faB: 70, torso: -8, head: -10 });
+      Rig.MODES.pant = (u, o) => { const b = Math.sin(u * 8); return { ...Rig.MODES.idle(u, o), uaF: 20, faF: -20, uaB: -20, faB: 20, torso: 16 + 3 * b, head: 8 + 3 * b, bodyY: 10 + 3 * b }; };
+      Rig.MODES.grab = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -80, faF: -4, uaB: 10, faB: -10, torso: 8, head: 4 });
+      Rig.MODES.drag = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -40, faF: -6, uaB: -34, faB: -8, torso: -14, head: -6, bodyY: o.by ?? 140 });
+      Rig.MODES.sitDown = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -40 + 10 * Math.sin(u * 30) * Math.exp(-u * 3), faF: -30, uaB: 40, faB: 30, torso: -14, head: -6, bodyY: o.by ?? 260 });
+      Rig.MODES.yell = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -100, faF: -10, uaB: 8, faB: -20, torso: -4, head: -8 + 2 * Math.sin(u * 14) });
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = Array.isArray(extra.talk[0]) ? extra.talk : [extra.talk]; return { who, x, y, s, track, blinks: [0.9, 2.7, 4.1], ...extra }; };
+      const TALK = (k, i = 0, m = "o") => [vo(k, i), voEnd(k, i), m];
+      const P = (who, x, y, s, mode, eyes = "normal", mouth = "flat", o = {}) => A(who, x, y, s, [{ t: 0, mode, eyes, mouth, opts: o.opts || {} }, ...(o.then || [])], o);
+      const STORM = (id, o = {}) => ({ set: "tkField", setOpts: { id, mood: "storm", dark: 0.8, rain: 0.8, ...o }, dark: 0.04, light: ST, grade: GS });
+      const push2 = (k, a, b) => ({ keys: [{ t: 0, ...a }, { t: D(k), glide: D(k), ...b }] });
+      const rumble = (amp = 2) => (t) => ({ x: amp * Math.sin(t * 23) + amp * 0.5 * Math.sin(t * 61), y: amp * 0.8 * Math.sin(t * 31), r: 0.1 * Math.sin(t * 7) });
+      const kick = (a, b, amp) => (t) => (t >= a && t < b ? { x: amp * Math.sin(t * 61) * (1 - (t - a) / (b - a)), y: amp * 0.8 * Math.sin(t * 47) * (1 - (t - a) / (b - a)), r: 0 } : 0);
+      // a strike on the tree in this shot: the bolt group (L.glow) hidden until t, then the flash / silhouette / relight; the bolt fades to an afterglow
+      const STRIKE = (tl, L, t0, at, o = {}) => { tl.set(L.glow, { opacity: 0 }, t0); tl.set(L.glow, { opacity: 1 }, t0 + at); Tk.strikeFX(tl, L, t0 + at, o); tl.to(L.glow, { opacity: o.after ?? 0, duration: 0.5, ease: "power2.in" }, t0 + at + 0.25); if (o.after) tl.to(L.glow, { opacity: 0, duration: 1.4, ease: "power1.in" }, t0 + at + 1.2); };
+      const FLICK = (tl, t, op = 0.35) => { tl.set("#flashw", { opacity: op }, t); tl.to("#flashw", { opacity: 0, duration: 0.18 }, t + 0.03); tl.set("#flashw", { opacity: op * 0.7 }, t + 0.12); tl.to("#flashw", { opacity: 0, duration: 0.3 }, t + 0.15); };
+      // the rescuer's forearms and stacked real hands over the patient's chest (side view; the rig arms end behind his body)
+      const CPRARMS = (L, tl, t0, dur, SF, SB, W, sc = 0.95, sl = ["#e86a8a", "#c04a6a"], skin = SK.ploy) => {
+        const gid = `cpa${Math.round(t0 * 100)}${Math.round(W[0])}`;
+        put(L.glow, `<g id="${gid}">${armSl(SB, [W[0] + 6, W[1] - 8], 80, 70, 1, skin, sl, { w: [30, 26], hs: 0.85, hand: OPEN })}${armSl(SF, W, 80, 70, -1, skin, sl, { w: [30, 26], hs: 0.85, hand: { curl: [0.5, 0.5, 0.55, 0.6], thumb: 0.3 } })}</g>`);
+        const n = Math.floor(dur / PER); if (n > 0) tl.fromTo(`#${gid}`, { y: 0 }, { y: 14 * sc, duration: PER * 0.42, ease: "sine.out", yoyo: true, repeat: n * 2 - 1, immediateRender: false }, t0);
+      };
+      const TOPARMS = (L, tl, t0, dur, X = 600) => { const gid = `cpt${Math.round(t0 * 100)}`; put(L.set, `<g id="${gid}">${armSl([X - 240, 1020], [X - 30, 1100], 130, 120, 1, SK.ploy, ["#e86a8a", "#c04a6a"], { w: [52, 44], hs: 1.5, hand: OPEN })}${armSl([X - 230, 1180], [X - 15, 1086], 130, 120, -1, SK.ploy, ["#e86a8a", "#c04a6a"], { w: [52, 44], hs: 1.5, hand: OPEN })}</g>`);
+        const n = Math.floor(dur / PER); if (n > 0) tl.fromTo(`#${gid}`, { scale: 1, svgOrigin: `${X} 1090` }, { scale: 0.965, svgOrigin: `${X} 1090`, duration: PER * 0.42, yoyo: true, repeat: n * 2 - 1, ease: "sine.out", immediateRender: false }, t0); };
+      // a what-if beat: grey grade + vignette, then the tear back at `back` (seconds into the shot)
+      const WHATIF = (L, tl, t0, back) => { whatIf(L, tl, t0); if (back != null) tear(L, tl, t0 + back); };
+      // the lone dirt sign with the title, staked in the paddy (EP.1 opening, in-world title)
+      const titleSign = (x, y, s, top, sub) => `<g transform="translate(${x},${y}) scale(${s}) rotate(-3)"><path d="M-10,0V-260M10,0V-260" stroke="#2a1a0c" stroke-width="22"/><path d="M-10,0V-260M10,0V-260" stroke="#6a4a2a" stroke-width="14"/>
+        <rect x="-330" y="-470" width="660" height="230" rx="14" fill="#8a6a3e" stroke="#2a1a0c" stroke-width="7"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M-316,${-450 + k * 44}H316" stroke="#6a4a2a" stroke-width="4" opacity=".6"/>`).join("")}
+        <text x="0" y="-360" text-anchor="middle" font-family="Sriracha" font-size="92" fill="#fff6dc" stroke="#2a1a0c" stroke-width="10" paint-order="stroke">${top}</text><text x="0" y="-275" text-anchor="middle" font-family="Sriracha" font-size="54" fill="#ffd84a" stroke="#2a1a0c" stroke-width="8" paint-order="stroke">${sub}</text>
+        ${[-260, -100, 120, 280].map((dx, k) => `<path d="M${dx},-240q4,${20 + k * 8} 0,${40 + k * 10}" stroke="#4a3220" stroke-width="6" opacity=".6"/>`).join("")}</g>`;
+      // the shrine and the painted cloth, a set of its own (dark wood shelter, candles)
+      Sets.tkShrine = (L, o = {}) => {
+        put(L.sky, `<rect x="-900" y="-800" width="2900" height="3600" fill="#1a1410"/>`);
+        put(L.far, `<rect x="-900" y="-800" width="2900" height="3600" fill="#2a1e16"/>${Array.from({ length: 16 }, (_, k) => `<path d="M${-900 + k * 180},-800V2800" stroke="#1e1610" stroke-width="10"/>`).join("")}`);
+        put(L.set, Tk.cloth(540, o.y ?? 260, o.s ?? 1, { id: o.id }) + `<rect x="-900" y="${(o.y ?? 260) + 1560 * (o.s ?? 1)}" width="2900" height="400" fill="#3a2a1e"/>`);
+        put(L.glow, [180, 900].map((cx) => `<g><path d="M${cx},1820V1700" stroke="#f2f0ea" stroke-width="18"/><ellipse cx="${cx}" cy="1684" rx="10" ry="20" fill="#ffd27a"/><circle cx="${cx}" cy="1684" r="220" fill="url(#tkSun)" opacity=".55"/></g>`).join(""));
+      };
