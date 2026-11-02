@@ -172,7 +172,7 @@ sfx = np.pad(sfx, (0, N - len(sfx)))
 
 # ---- music with horror dips ----
 mus = load(os.path.join(HERE, "..", "music", "skytrain-theme.mp3"))   # theme score (owner 1 Nov: "ซาวเพลงทำให้เข้าธีมด้วย")
-mus = mus[int(max(0.0, len(mus) / SR - TOTAL - 1.0) * SR):]   # start so the track's peak (its last ~20 s) lands on the cliffhanger
+mus = mus[int(max(0.0, len(mus) / SR - TOTAL - 4.0) * SR):]   # A5: the track fades from ~86 s; keep the end card before its fade ·   # start so the track's peak (its last ~20 s) lands on the cliffhanger
 while len(mus) < N:
     mus = np.concatenate([mus, mus])
 mus = mus[:N]
@@ -188,27 +188,20 @@ def dip(t0, t1, lvl, ramp=0.25):
 dip(T("here", D["here"] - 0.6), T("here", D["here"] - 0.2), 0.1, ramp=0.08)
 mus = mus * gain
 a, b = int(T("end2", 0) * SR), int(T("end2", -0.01) * SR)
-mus[a:b] *= np.linspace(1, 0, b - a)   # no cliffhanger: the bed fades out over the end card
+mus[a:b] *= np.linspace(0.6, 0.45, b - a)   # A5: the score eases down over the end card but stays audible
 mus[b:] = 0
 
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
-mus = level(mus, -33)
+MUS_DB = float(os.environ.get("MUS_DB", "-20.6"))   # A5 (owner 2 Nov "เพลงเบาไม่ได้ยิน"): the score up where you hear it
+mus = level(mus, MUS_DB)
 def lowpass(x, fc, w=600.0):   # zero-phase FFT low-pass with a soft knee: no sharp tails, nothing noisy left in 5–14 kHz
     X = np.fft.rfft(x.astype(np.float64)); f = np.fft.rfftfreq(len(x), 1 / SR)
     X *= np.clip((fc + w - f) / (2 * w), 0, 1); return np.fft.irfft(X, len(x)).astype(np.float32)
 mus = lowpass(mus, 6000)   # the score's cymbals / shimmer read as hiss
 _m2 = lowpass(mus, 4200); _w = np.clip((t - T("end2", 0)) / 0.3, 0, 1).astype(np.float32); mus = mus * (1 - _w) + _m2 * _w   # the end card has no voice: nothing of the score above ~4.8 kHz
 sfx = lowpass(level(sfx, -27) + SAMP, 4500)
-env = box(np.abs(vo), int(0.05 * SR))
-duck = 1 - 0.8 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
-duck = box(duck, int(0.25 * SR))
-mix = vo + mus * duck + sfx
-peak = np.max(np.abs(mix))
-if peak > 0.98:
-    mix = np.tanh(mix / peak * 1.2) * 0.95
-out = os.path.join(HERE, "mix_raw.wav")
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-ac", "2", out],
-               input=mix.astype(np.float32).tobytes(), check=True)
-# single-pass loudnorm lands ~0.8 dB under its target on this mix: aim at -13.2 to measure -14
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", out, "-af", "loudnorm=I=-13.5:TP=-1.5:LRA=11", "-ar", "48000", os.path.join(HERE, "mix.wav")], check=True)
+import sys; sys.path.insert(0, "/tmp/claude-0/-home-user-github-commit-quest-v2/0d2beef4-35e5-59ae-b226-665b332623b9/scratchpad/mw")
+from finalmix import duck_curve, finalize
+duck = duck_curve(vo, amount=float(os.environ.get("DUCK", "0.5")))   # ~6 dB under the voice, 80 ms in / 400 ms out, no gate
+finalize(HERE, vo + mus * duck + sfx, vo, mus * duck)
 print("mix written", TOTAL)
