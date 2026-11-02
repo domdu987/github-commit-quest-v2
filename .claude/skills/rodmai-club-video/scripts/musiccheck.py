@@ -9,7 +9,7 @@ Loudness is EBU R128 momentary (400 ms) from ffmpeg's ebur128 filter, on a 100 m
 
 Targets (all must pass):
   1. music under the voice (voice momentary > -35 LUFS): median -27 .. -22 LUFS
-  2. music between lines (voice < -50 LUFS for >= 1 s): median -22 .. -17 LUFS
+  2. music between lines (voice < -50 LUFS for >= 1 s, else >= 0.5 s; n/a if the narration never pauses): median -22 .. -17 LUFS
   3. voice stays clear: median (voice - music) while speaking >= 8 LU
   4. music not missing: in voice-free time, music below -40 LUFS for <= 15 % (planned hush beats only)
 Old mixes (theme at -30/-33 with an 0.65-0.8 duck and a gate) sit around -45 under the voice and -30 between
@@ -59,14 +59,18 @@ def main(vo_path, mus_path):
     n = min(len(vo), len(mu))
     vo, mu = vo[:n], mu[:n]
     speaking = vo > -35
-    free = runs(vo < -50, 10)
+    free = runs(vo < -50, 10)          # gaps between lines of >= 1 s
+    if not free.any():
+        free = runs(vo < -50, 5)       # narration with no 1 s gaps: fall back to >= 0.5 s
     under = float(np.median(mu[speaking])) if speaking.any() else float("nan")
     between = float(np.median(mu[free])) if free.any() else float("nan")
     margin = float(np.median((vo - mu)[speaking])) if speaking.any() else float("nan")
     missing = float(np.mean(mu[free] < -40) * 100) if free.any() else 0.0
+    gap_line = (f"music between lines {between:.1f} LUFS (target -22..-17)", -22 <= between <= -17) if free.any() else \
+        ("music between lines: n/a (no voice gap of 0.5 s or more; the narration runs end to end)", True)
     checks = [
         (f"music under the voice {under:.1f} LUFS (target -27..-22)", -27 <= under <= -22),
-        (f"music between lines {between:.1f} LUFS (target -22..-17)", -22 <= between <= -17),
+        gap_line,
         (f"voice over music {margin:.1f} LU (target >= 8)", margin >= 8),
         (f"music missing in voice-free time {missing:.0f}% (target <= 15%)", missing <= 15),
     ]

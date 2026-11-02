@@ -113,20 +113,26 @@
    "status": "hold",
    "slot": "กลางคืน",
    "branch": "prod/lane-c",
-   "commit": "632daf3",
-   "package": "video/release/exam-v3.json",
-   "video_hq": "video/release/hq/exam-ep1-v3-HQ.mp4",
-   "video_hq_sha256": "21ad7fd79b16b2df25b8041bd0a649bbdf1d508e9b0947904dd6e21ad282e5f4",
-   "video_hq_bytes": 54747506,
+   "commit": "f2f72d0",
+   "package": "video/release/exam-v3m.json",
+   "video_hq": "video/release/hq/exam-ep1-v3m-HQ.mp4",
+   "video_hq_sha256": "33b141d42e1fa7c72ce62b21efa4d64910fa96bfd4ae64d24dc935b9f3987377",
+   "video_hq_bytes": 54800442,
    "suggested_time": "2026-11-02T20:00+07:00",
-   "revision_note": "v3 2 พ.ย. (เลน C 632daf3): รีมิกซ์ไม่มีซ่า (hisscheck PASS 0.34 / −77 dBFS) + แก้ภาพ 4 จุด (นักเรียนซ้อน · ขอบฉากโหว่ · ตัวลอยตอนลากโต๊ะ · ป้าย ม.3/4) · ผู้ประสานงานตรวจไฟล์จริง: 1080×1920 60fps · −14.1 LUFS · ไม่มีภาพค้าง · sheet 360×640 ผ่าน · ส่งเจ้าของแล้ว",
+   "revision_note": "v3m 2 พ.ย. (เลน C f2f72d0): ภาพเดียวกับ v3 (md5 ภาพตรงกัน) · เพลงดังขึ้นตามเจ้าของ \"เพลงเบาไม่ได้ยิน\" — duck −6 dB · ไม่ gate เพลง · LP 6 kHz · musiccheck PASS (ใต้เสียงพูด −26.0/−25.4 LUFS · พูดดังกว่า 10.9/10.0 LU) · hisscheck PASS · −14.2 LUFS · ส่งเจ้าของแล้ว",
    "previous_v1": {
     "commit": "2c7fb2e",
     "video_hq": "video/release/hq/exam-ep1-HQ.mp4",
     "video_hq_sha256": "3d0d8da0a864ae9f8937f867c9d9d7b0925e7f70a30c702588acfc3c66bbadb6",
     "video_hq_bytes": 55230690
    },
-   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก"
+   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
+   "previous_v3": {
+    "commit": "632daf3",
+    "video_hq": "video/release/hq/exam-ep1-v3-HQ.mp4",
+    "video_hq_sha256": "21ad7fd79b16b2df25b8041bd0a649bbdf1d508e9b0947904dd6e21ad282e5f4",
+    "video_hq_bytes": 54747506
+   }
   },
   {
    "order": 6,
@@ -135,20 +141,26 @@
    "status": "hold",
    "slot": "กลางคืน",
    "branch": "prod/lane-c",
-   "commit": "632daf3",
-   "package": "video/release/exam-v3.json",
-   "video_hq": "video/release/hq/exam-ep2-v3-HQ.mp4",
-   "video_hq_sha256": "f95cda8b5a11f976e693fa2c905044b7baf831c871d91b63aa2aecbb525f42d8",
-   "video_hq_bytes": 44762264,
+   "commit": "f2f72d0",
+   "package": "video/release/exam-v3m.json",
+   "video_hq": "video/release/hq/exam-ep2-v3m-HQ.mp4",
+   "video_hq_sha256": "f15d745c4a8141f479832b0fd45db5d961898672e98ee038600d7b61796058ef",
+   "video_hq_bytes": 44822884,
    "suggested_time": "2026-11-02T20:30+07:00",
-   "revision_note": "v3 2 พ.ย. (เลน C 632daf3): รีมิกซ์ไม่มีซ่า (hisscheck PASS 0.34 / −77 dBFS) + แก้ภาพ 4 จุด (นักเรียนซ้อน · ขอบฉากโหว่ · ตัวลอยตอนลากโต๊ะ · ป้าย ม.3/4) · ผู้ประสานงานตรวจไฟล์จริง: 1080×1920 60fps · −14.1 LUFS · ไม่มีภาพค้าง · sheet 360×640 ผ่าน · ส่งเจ้าของแล้ว",
+   "revision_note": "v3m 2 พ.ย. (เลน C f2f72d0): ภาพเดียวกับ v3 (md5 ภาพตรงกัน) · เพลงดังขึ้นตามเจ้าของ \"เพลงเบาไม่ได้ยิน\" — duck −6 dB · ไม่ gate เพลง · LP 6 kHz · musiccheck PASS (ใต้เสียงพูด −26.0/−25.4 LUFS · พูดดังกว่า 10.9/10.0 LU) · hisscheck PASS · −14.2 LUFS · ส่งเจ้าของแล้ว",
    "previous_v1": {
     "commit": "2c7fb2e",
     "video_hq": "video/release/hq/exam-ep2-HQ.mp4",
     "video_hq_sha256": "2f485abd2a0c44ac51922ee1a260f48cae5875aaf8473eb3ab75ad04362d572a",
     "video_hq_bytes": 45467023
    },
-   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก"
+   "owner_posting": "เจ้าของลงเอง (2 พ.ย. ~13:20 น.: \"เอาอันที่เสร็จมา ผมจะลงเลย\") — Moji ห้ามลง ห้ามตั้งเวลา ถ้าตั้งไว้แล้วให้ยกเลิก",
+   "previous_v3": {
+    "commit": "632daf3",
+    "video_hq": "video/release/hq/exam-ep2-v3-HQ.mp4",
+    "video_hq_sha256": "f95cda8b5a11f976e693fa2c905044b7baf831c871d91b63aa2aecbb525f42d8",
+    "video_hq_bytes": 44762264
+   }
   }
  ],
  "slots": {
