@@ -93,6 +93,9 @@ const mark = (s) => s.split('/').map((ln) => ln.trim().replace(/\[([^\]]+)\]/g, 
       const cmd = document.querySelector('#cv .cmd');
       let s = c.cmdSize || 156; cmd.style.fontSize = s + 'px';
       while (cmd.getBoundingClientRect().width > 990 && s > 50) { s -= 4; cmd.style.fontSize = s + 'px'; }
+      // the EP pill + episode title row (a finale pill plus a long title can run off both edges)
+      const pill = document.querySelector('#cv .ep b'), title = document.querySelector('#cv .ep span'), rowW = () => pill.getBoundingClientRect().width + 18 + title.getBoundingClientRect().width;
+      let k = 1; while (rowW() > 1000 && k > 0.6) { k -= 0.04; pill.style.fontSize = (52 * k) + 'px'; title.style.fontSize = (58 * k) + 'px'; }
     }, { c });
     // heavy SVG frames repaint in tiles: shoot until two shots in a row are identical (a half-painted cover is never saved)
     fs.mkdirSync(path.dirname(c.out), { recursive: true });

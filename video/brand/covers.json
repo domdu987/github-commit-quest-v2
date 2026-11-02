@@ -505,5 +505,29 @@
    "y": 0
   },
   "bright": 1.2
+ },
+ {
+  "id": "rupnak-ep3",
+  "page": "rupnak-ep3/composition/index.html",
+  "out": "video/rupnak-ep3/cover.jpg",
+  "t": 4.2,
+  "series": "รูพญานาค",
+  "ep": 3,
+  "epTitle": "รูยังกว้างได้ ไหว้ไกลร้อยเมตร",
+  "finale": true,
+  "setup": "รูนาคข้างบ้าน/[กว้างขึ้นทุกวัน]…",
+  "cmd": "อย่ากลับเข้าไปเอาของ!",
+  "glow": "#e0a83a",
+  "hideLight": false,
+  "zoom": {
+   "s": 1.0,
+   "x": 540,
+   "y": 960
+  },
+  "shift": {
+   "x": 0,
+   "y": 0
+  },
+  "bright": 1.1
  }
 ]
