@@ -1,0 +1,13 @@
+ต้นตะเคียนกลางนา EP.2 · final · lane C · 2 พ.ย. 2569
+source: one full render (no TK_RANGE) of 965a8b6 (= a0bbecc picture code), hyperframes 0.8.185, -f 60 -w 4 → 7240 frames
+speak insert: frames 1591–1802 (212 frames; the shot really ends at 1802, hands starts at 1803) rendered from 618743f with TK_RANGE "26.516667 30.05", spliced by stream copy at keyframes 1591 / 1803
+raw: 7240 frames · 120.666667 s · h264 High yuv420p 1080x1920 60/1
+HQ (hq.sh from 6cd0766, 2-pass slow, 6193 kbps, audio apad + -t video length):
+  EP2-takhian-tonkhian-klang-na-HQ.mp4 · 97,423,592 B · sha256 cf91b167f0f23d0d7a03e32c5b9d3fdf2ae1f74a1a00faa3c3ef2c874c8adeff
+  7240 frames · video 120.666667 s · audio 120.666 s · I -14.2 LUFS · peak -2.7 dBFS (mix.wav: -14.2 / -2.6)
+share: EP2-takhian-tonkhian-klang-na-share.mp4 · 65,160,555 B · sha256 c5ca8b67a9d574aab62570f0419ccd3f3b8c418a79beb6e45b8453a7439800f5 · 7240 frames
+blackdetect (0.5 s, pix_th .06): none · freezedetect (2 s): none
+musiccheck: under voice -25.8 · between lines -19.4 · voice over music 10.4 LU · missing 0% → PASS
+hisscheck --vo vo_stem: flatness 0.36 · pause HF -87.5 dBFS → PASS
+HQ vs CRF16 full: SSIM All 0.9906 · worst frame 6305 (0.984, no rain) · heavy-rain hook frame 60 compared at full size: no visible blocking
+sheets: sheets/EP2-final-1fps-1..6.jpg (360x640 per frame) · review/EP2-again-strike-86-91s.mp4
