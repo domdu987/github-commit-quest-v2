@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+"""Is the theme music actually audible? (rule A5; owner 2 Nov 2569: "เพลงเบาไม่ได้ยินเหมือนไม่ได้ใส่")
+
+    python3 -I musiccheck.py <vo_stem.wav> <music_stem.wav>
+
+Both stems must be exactly what is summed into the final mix: after every gain, dip, duck and low-pass,
+and after the final loudness-normalisation gain (the delivered file is -14 LUFS integrated).
+Loudness is EBU R128 momentary (400 ms) from ffmpeg's ebur128 filter, on a 100 ms grid.
+
+Targets (all must pass):
+  1. music under the voice (voice momentary > -35 LUFS): median -27 .. -22 LUFS
+  2. music between lines (voice < -50 LUFS for >= 1 s): median -22 .. -17 LUFS
+  3. voice stays clear: median (voice - music) while speaking >= 8 LU
+  4. music not missing: in voice-free time, music below -40 LUFS for <= 15 % (planned hush beats only)
+Old mixes (theme at -30/-33 with an 0.65-0.8 duck and a gate) sit around -45 under the voice and -30 between
+lines, which the owner heard as no music at all.
+"""
+import re
+import subprocess
+import sys
+
+import numpy as np
+
+
+def momentary(path):
+    cmd = ["ffmpeg", "-nostats", "-i", path, "-af",
+           "ebur128=metadata=1,ametadata=mode=print:key=lavfi.r128.M:file=-", "-f", "null", "-"]
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    t, m, cur = [], [], None
+    for line in out.splitlines():
+        a = re.search(r"pts_time:([0-9.]+)", line)
+        if a:
+            cur = float(a.group(1))
+            continue
+        b = re.search(r"lavfi\.r128\.M=(-?[0-9.]+|-inf)", line)
+        if b and cur is not None:
+            t.append(cur)
+            m.append(-120.0 if b.group(1) == "-inf" else float(b.group(1)))
+    t, m = np.array(t), np.array(m)
+    grid = np.arange(0, t.max() if len(t) else 0, 0.1)
+    return grid, np.interp(grid, t, m) if len(t) else np.array([])
+
+
+def runs(mask, min_len):
+    out, start = np.zeros_like(mask), None
+    for i, v in enumerate(list(mask) + [False]):
+        if v and start is None:
+            start = i
+        if not v and start is not None:
+            if i - start >= min_len:
+                out[start:i] = True
+            start = None
+    return out
+
+
+def main(vo_path, mus_path):
+    g1, vo = momentary(vo_path)
+    g2, mu = momentary(mus_path)
+    n = min(len(vo), len(mu))
+    vo, mu = vo[:n], mu[:n]
+    speaking = vo > -35
+    free = runs(vo < -50, 10)
+    under = float(np.median(mu[speaking])) if speaking.any() else float("nan")
+    between = float(np.median(mu[free])) if free.any() else float("nan")
+    margin = float(np.median((vo - mu)[speaking])) if speaking.any() else float("nan")
+    missing = float(np.mean(mu[free] < -40) * 100) if free.any() else 0.0
+    checks = [
+        (f"music under the voice {under:.1f} LUFS (target -27..-22)", -27 <= under <= -22),
+        (f"music between lines {between:.1f} LUFS (target -22..-17)", -22 <= between <= -17),
+        (f"voice over music {margin:.1f} LU (target >= 8)", margin >= 8),
+        (f"music missing in voice-free time {missing:.0f}% (target <= 15%)", missing <= 15),
+    ]
+    ok = all(c[1] for c in checks)
+    for text, good in checks:
+        print(("ok   " if good else "FAIL ") + text)
+    print("PASS" if ok else "FAIL")
+    return ok
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        sys.exit(__doc__)
+    sys.exit(0 if main(sys.argv[1], sys.argv[2]) else 1)
