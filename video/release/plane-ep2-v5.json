@@ -14,10 +14,10 @@
    "order": 2,
    "title": "เห็นควันอีกฝั่งอ่าวตอนติดเกาะ… อย่าเดินไปหามัน | รอดคนเดียว EP.2 ตอนจบ",
    "status": "rendered · waiting for coordinator full check + owner story approval",
-   "video_hq": "video/release/hq/plane-ep2-v5-HQ.mp4",
-   "video_hq_sha256": "e7200f690d91ed08419d69205a30102d76d46a8db9641d74cdeaf6037ac4aa52",
-   "video_hq_bytes": 90971058,
-   "video_repo": "video/plane-ep2-v5/plane-ep2-v5-share.mp4",
+   "video_hq": "video/release/hq/plane-ep2-v5b-HQ.mp4",
+   "video_hq_sha256": "d380fe760e043e35506d08a71a826c0ad65a02a41641a827fc61c3434e239de2",
+   "video_hq_bytes": 90971924,
+   "video_repo": "video/plane-ep2-v5/plane-ep2-v5b-share.mp4",
    "cover": "video/plane-ep2-v5/cover.jpg",
    "caption": "ถ้าวันหนึ่ง… คุณเห็นควันอีกฝั่งอ่าว 🌫️🏝️ อย่าเดินไปหามัน\n\nน้ำหมดขวด หิวจนเกือบกินผลไม้ที่ไม่รู้จัก แล้วเฮลิคอปเตอร์ก็บินผ่านไป… ถ้าเป็นคุณจะทำยังไงให้มันเห็น? 🚁 ดูให้จบ แล้วคนท่อนหน้าหายไปไหน\n\nรอดคนเดียว EP.2/2 ตอนจบ\n#เอาตัวรอด #ติดเกาะ #เครื่องบินตก #รอดคนเดียว #RodMaiClub",
    "hashtags": [
@@ -34,10 +34,13 @@
     "fps": 60,
     "duration_s": 119.99,
     "lufs": -14.2,
-    "peak_dbfs": -1.7,
+    "peak_dbfs": -1.9,
     "freezedetect": "none",
-    "hookcheck": "PASS (command at 2.2 s)"
-   }
+    "hookcheck": "PASS (command at 2.2 s)",
+    "hf_5_14k_nonspeech_drop_db": 29.4,
+    "flat_noise_runs_over_0_5s": 0
+   },
+   "audio_note": "v5b: เสียงซ่าออกทั้งหมดตามเจ้าของ (ไม่มี surf/ฝน/ไฟปะทุ/ฉ่า/noise ในใบพัด) · ภาพเดิมของ v5 (stream copy)"
   }
  ]
 }
