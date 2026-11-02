@@ -1,0 +1,30 @@
+== raw
+stream|profile=High|width=1080|height=1920|pix_fmt=yuv420p|r_frame_rate=60/1|nb_read_frames=7484
+== HQ
+duration 124.733333s → video 5983 kbps
+-rw-r--r-- 1 root root 97536876 Nov  2 11:21 /tmp/claude-0/-home-user-github-commit-quest-v2/dadc119d-850b-549d-82c6-f1e8a1f13306/scratchpad/mw/out/EP1-takhian-tonkhian-klang-na-HQ.mp4
+stream|profile=High|width=1080|height=1920|pix_fmt=yuv420p|r_frame_rate=60/1|nb_read_frames=7484
+    I:         -14.2 LUFS
+    Peak:       -3.2 dBFS
+mix     I:         -14.2 LUFS
+mix     Peak:       -3.6 dBFS
+== sha256
+be5d6e8a4df2102982a8220e9288f40b7e29ff77ac9d55212e8d310f57a2ccc7  /tmp/claude-0/-home-user-github-commit-quest-v2/dadc119d-850b-549d-82c6-f1e8a1f13306/scratchpad/mw/out/EP1-takhian-tonkhian-klang-na-HQ.mp4
+== freezedetect (>=1.5 s)
+lavfi.freezedetect.freeze_start=123.017	
+== blackdetect (>=0.1 s)
+== audio checks
+ep1/mix.wav: flatness 0.36 (ok) · pause HF median -89.9 dBFS (ok) → PASS
+ok   music under the voice -25.3 LUFS (target -27..-22)
+ok   music between lines -20.5 LUFS (target -22..-17)
+ok   voice over music 9.8 LU (target >= 8)
+ok   music missing in voice-free time 0% (target <= 15%)
+PASS
+== heavy-rain frame HQ vs raw at full size (strike 106.2 s, why 7.5 s)
+t=7.5 PSNR 40.5 dB
+t=106.2 PSNR 38.4 dB
+== strike clip
+-rw-r--r-- 1 root root 6776627 Nov  2 11:22 /home/user/github-commit-quest-v2/video/takhian/gate2/ep1-final-strike.mp4
+== 1 fps sheets
+125 frames
+QC DONE
