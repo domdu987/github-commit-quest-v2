@@ -1,0 +1,93 @@
+      // ---------- ซอมบี้รถไฟฟ้า: on-screen cards (screen space) in the channel's 2.5D medal style (SU.* from sinkui.part) ----------
+      //   SkyUI.title(tl, layer, t0, dur, l1, l2)   a metro line sign (navy plate, orange stripe) drops into the top of the frame
+      //   SkyUI.rule(tl, layer, t0, dur, o)         ลุงเชิด's rhyme as a ticket card: the two rules, o.active, o.done (ticks), ≤ 2 s on screen
+      //   SkyUI.risk(tl, layer, t0, dur)            two medals over the drop: "สูงเท่าตึก" (tower) and "รางอาจมีไฟ" (bolt)
+      //   SkyUI.next(tl, layer, t0, dur, o)         the next-episode card: a metro ticket (o.l1, o.l2, o.l3, o.end)
+      let suSky = 0;
+      const SKS = (w = 5) => `stroke="${SU.ink}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+      const SkyUI = (window.SkyUI = {});
+      const bellIcon = (s = 1) => `<g transform="scale(${s})"><circle r="44" fill="${SKC.yellow}" ${SKS(4)}/><circle r="30" fill="#fff6c8" ${SKS(3)}/><path d="M-14,10Q-14,-18 0,-18Q14,-18 14,10L19,14H-19Z" fill="${SU.ink}"/><circle cy="20" r="5" fill="${SU.ink}"/></g>`;
+      const gangIcon = (s = 1) => `<g transform="scale(${s})"><rect x="-40" y="-56" width="80" height="112" rx="8" fill="#c8ced4" ${SKS(4)}/><rect x="-26" y="-42" width="52" height="54" rx="6" fill="#1a2030" ${SKS(3)}/>
+        <rect x="-60" y="20" width="120" height="30" rx="6" fill="#c8642c" ${SKS(3.5)}/><rect x="-50" y="-4" width="40" height="26" rx="4" fill="#2f6fd0" ${SKS(3)}/></g>`;
+      SkyUI.RULES = [["กดกระดิ่ง", "อย่าวิ่งลงราง"], ["ข้ามตู้ กั้นประตู", "รอคนนำทาง"]];
+      SkyUI.title = (tl, layer, t0, dur, l1, l2) => { SU.defs(layer); const id = `sxt${suSky++}`;
+        put(layer, `<g transform="translate(540,250)"><g id="${id}" opacity="0"><g id="${id}-w"><g filter="url(#muDrop)"><rect x="-380" y="-90" width="760" height="190" rx="22" fill="${SKC.navy}" ${SKS(6)}/></g>
+          <rect x="-380" y="44" width="760" height="22" fill="${SKC.stripe}"/><circle cx="-300" cy="-10" r="46" fill="#fff" ${SKS(4)}/><path d="M-326,-30h52v34h-52zM-320,10l-10,20M-280,10l10,20" stroke="${SKC.navy}" stroke-width="8" fill="none" stroke-linejoin="round"/>
+          <text x="-226" y="12" font-family="Kanit" font-weight="900" font-size="74" fill="#fff">${l1}</text><text x="350" y="-40" text-anchor="end" font-family="Kanit" font-weight="800" font-size="34" fill="${SKC.yellow}">${l2}</text></g></g></g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        tl.fromTo(`#${id}-w`, { y: -420, rotation: -6, svgOrigin: "0 -90" }, { y: 0, rotation: 0, svgOrigin: "0 -90", duration: 0.55, ease: "back.out(1.8)", immediateRender: false }, t0);
+        tl.to(`#${id}-w`, { rotation: 1.6, svgOrigin: "0 -90", duration: 0.6, yoyo: true, repeat: Math.ceil(dur / 0.6), ease: "sine.inOut" }, t0 + 0.55);
+        tl.to(`#${id}-w`, { y: -420, duration: 0.3, ease: "power2.in" }, t0 + dur - 0.3); };
+      SkyUI.rule = (tl, layer, t0, dur, o = {}) => { SU.defs(layer); const id = `sxr${suSky++}`, act = o.active ?? 0, done = o.done || [], Y = o.y ?? 560;
+        const icon = (k, mid) => SU.medal(mid, 60, k === 0 ? bellIcon(0.95) : gangIcon(0.85), { face2: k === 0 ? "#fff0b8" : "#d8e8f2", accent: k === 0 ? SKC.yellow : SU.green });
+        let g = `<rect width="1080" height="1920" fill="#060912" opacity=".42"/><g transform="translate(540,${Y})"><g id="${id}" opacity="0"><g id="${id}-w">
+          <g filter="url(#muDrop)"><rect x="-430" y="0" width="860" height="${170 + SkyUI.RULES.length * 200}" rx="30" fill="#fdfaf2" ${SKS(5)}/></g>
+          <rect x="-430" y="0" width="860" height="120" rx="30" fill="${SKC.navy}" ${SKS(5)}/><rect x="-430" y="92" width="860" height="28" fill="${SKC.navy}"/><rect x="-430" y="112" width="860" height="14" fill="${SKC.stripe}"/>
+          <text x="-380" y="76" font-family="Kanit" font-weight="900" font-size="46" fill="#fff">กฎของลุงเชิด</text><text x="380" y="74" text-anchor="end" font-family="Kanit" font-weight="700" font-size="28" fill="${SKC.yellow}">ช่างรถไฟฟ้า 30 ปี</text>
+          ${Array.from({ length: 14 }, (_, k) => `<circle cx="${-400 + k * 61.5}" cy="${170 + SkyUI.RULES.length * 200}" r="10" fill="#060912" opacity=".0"/>`).join("")}`;
+        SkyUI.RULES.forEach((r, k) => { const y = 230 + k * 200, st = done.includes(k) ? "done" : k === act ? "act" : "next";
+          g += `<g id="${id}-r${k}" opacity="${st === "next" ? 0.32 : 1}">${st === "act" ? `<rect id="${id}-hl" x="-270" y="${y - 70}" width="600" height="140" rx="24" fill="${SU.yellow}" opacity=".7"/>` : ""}
+            <g transform="translate(-340,${y})"><g id="${id}-i${k}">${icon(k, `${id}-m${k}`)}</g></g>
+            <text x="-250" y="${y - 6}" font-family="Kanit" font-weight="900" font-size="${r[0].length > 10 ? 56 : 64}" fill="${SU.ink}">${r[0]}</text><text x="-250" y="${y + 56}" font-family="Kanit" font-weight="800" font-size="50" fill="${SU.red}">${r[1]}</text>
+            ${st === "done" ? `<g transform="translate(360,${y})"><g id="${id}-c${k}">${SU.medal(`${id}-cm${k}`, 40, `<path id="${id}-ck${k}" d="M-16,0l11,13l22,-24" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1"/>`, { hi: "#9af0bd", face: "#3fbf74", face2: SU.green, rim: SU.greenD, accent: "#fff", noGhost: true })}</g></g>${SU.fxMk(`${id}-fx${k}`, 360, y, 9)}` : ""}</g>`; });
+        g += `</g></g></g>`;
+        put(layer, `<g id="${id}-all" opacity="0">${g}</g>`);
+        tl.set(`#${id}-all`, { opacity: 1 }, t0); tl.set(`#${id}`, { opacity: 1 }, t0);
+        tl.fromTo(`#${id}`, { y: 1300 }, { y: 0, duration: 0.45, ease: "power3.out", immediateRender: false }, t0);
+        tl.fromTo(`#${id}-w`, { rotation: 10, svgOrigin: "0 400" }, { rotation: 0, svgOrigin: "0 400", duration: 1.1, ease: "elastic.out(1,0.4)", immediateRender: false }, t0);
+        tl.to(`#${id}-w`, { y: -8, duration: 0.9, yoyo: true, repeat: Math.ceil(dur / 0.9), ease: "sine.inOut" }, t0 + 1.0);
+        SkyUI.RULES.forEach((_, k) => { tl.fromTo(`#${id}-r${k}`, { x: 80 }, { x: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, t0 + 0.3 + k * 0.12);
+          tl.fromTo(`#${id}-i${k}`, { scale: 0.2, rotation: -60, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0 + 0.4 + k * 0.12);
+          SU.sheen(tl, `${id}-m${k}`, 60, t0 + 0.9 + k * 0.25, dur - 1.2, 1.6); });
+        if (document.getElementById(`${id}-hl`)) { tl.fromTo(`#${id}-hl`, { scaleX: 0, svgOrigin: "-270 0" }, { scaleX: 1, svgOrigin: "-270 0", duration: 0.4, ease: "power2.inOut", immediateRender: false }, t0 + 0.6);
+          tl.to(`#${id}-i${act}`, { scale: 1.14, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: Math.ceil(dur / 0.35), ease: "sine.inOut" }, t0 + 1.0); }
+        done.forEach((k, j) => { tl.fromTo(`#${id}-c${k}`, { scale: 0.2, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(3.2)", immediateRender: false }, t0 + 0.6 + j * 0.25);
+          tl.fromTo(`#${id}-ck${k}`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + 0.75 + j * 0.25);
+          SU.fxGo(tl, `${id}-fx${k}`, t0 + 0.9 + j * 0.25, { r1: 90, n: 9 }); });
+        tl.to(`#${id}`, { y: 1300, duration: 0.3, ease: "power2.in" }, t0 + dur - 0.3);
+        tl.set(`#${id}-all`, { opacity: 0 }, t0 + dur);
+        return id; };
+      SkyUI.risk = (tl, layer, t0, dur) => { SU.defs(layer); const id = `sxk${suSky++}`;
+        const tower = `<g transform="translate(0,8)"><rect x="-26" y="-50" width="52" height="96" fill="#5a6a8a" ${SKS(3.5)}/>${Array.from({ length: 8 }, (_, k) => `<rect x="${-18 + (k % 2) * 22}" y="${-42 + Math.floor(k / 2) * 22}" width="14" height="12" fill="#ffe08a"/>`).join("")}<path d="M-46,46H46" stroke="${SU.ink}" stroke-width="5"/><path d="M34,-56v96" stroke="${SU.red}" stroke-width="5" stroke-dasharray="8 6"/><path d="M26,-48l8,-10l8,10M26,32l8,10l8,-10" stroke="${SU.red}" stroke-width="5" fill="none"/></g>`;
+        const bolt = `<path d="M8,-52L-26,6H-2L-12,52L28,-10H4Z" fill="${SKC.yellow}" ${SKS(4)}/>`;
+        const med = (k, art, label, x, c) => `<g transform="translate(${x},0)"><g id="${id}-m${k}w">${SU.medal(`${id}-m${k}`, 92, art, { face2: k ? "#fff0b8" : "#dfe6f2", accent: c })}</g>
+          <g transform="translate(0,150)"><rect x="-150" y="-40" width="300" height="72" rx="20" fill="#fdfaf2" ${SKS(4)}/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="${c}">${label}</text></g>${SU.fxMk(`${id}-fx${k}`, 0, 0, 9, c)}</g>`;
+        put(layer, `<g transform="translate(540,640)"><g id="${id}" opacity="0">${med(0, `<g transform="scale(1.3)">${tower}</g>`, "สูงเท่าตึก", -220, SKC.navy)}${med(1, `<g transform="scale(1.3)">${bolt}</g>`, "รางอาจมีไฟ", 220, SU.red)}</g></g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        [0, 1].forEach((k) => { tl.fromTo(`#${id}-m${k}w`, { scale: 0.1, rotation: -90, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "back.out(2.6)", immediateRender: false }, t0 + k * 0.5 + (k ? 0.9 : 0));
+          SU.fxGo(tl, `${id}-fx${k}`, t0 + 0.35 + k * 1.4, { r1: 150, n: 9 });
+          tl.to(`#${id}-m${k}w`, { y: -10, duration: 0.7, yoyo: true, repeat: Math.ceil(dur / 0.7), ease: "sine.inOut" }, t0 + 0.6 + k * 1.4);
+          SU.sheen(tl, `${id}-m${k}`, 92, t0 + 0.7 + k * 1.4, dur - 1, 1.4); });
+        tl.to(`#${id}`, { opacity: 0, duration: 0.25 }, t0 + dur - 0.25); };
+      SkyUI.risk2 = (tl, layer, t0, dur) => { SU.defs(layer); const id = `sxq${suSky++}`;
+        const bolt = `<path d="M8,-52L-26,6H-2L-12,52L28,-10H4Z" fill="${SKC.yellow}" ${SKS(4)}/>`;
+        const tr = `<g><rect x="-50" y="-40" width="100" height="74" rx="18" fill="#eef0f2" ${SKS(4)}/><rect x="-36" y="-28" width="72" height="30" rx="6" fill="#1a2a3a"/><circle cx="-26" cy="20" r="8" fill="#fff6c8" ${SKS(2)}/><circle cx="26" cy="20" r="8" fill="#fff6c8" ${SKS(2)}/><path d="M-60,46H60" stroke="${SU.ink}" stroke-width="6"/></g>`;
+        const med = (k, art, label, x, c) => `<g transform="translate(${x},0)"><g id="${id}-m${k}w">${SU.medal(`${id}-m${k}`, 92, art, { face2: k ? "#dfe6f2" : "#fff0b8", accent: c })}</g>
+          <g transform="translate(0,150)"><rect x="-160" y="-40" width="320" height="72" rx="20" fill="#fdfaf2" ${SKS(4)}/><text y="12" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="38" fill="${c}">${label}</text></g>${SU.fxMk(`${id}-fx${k}`, 0, 0, 9, c)}</g>`;
+        put(layer, `<g transform="translate(540,640)"><g id="${id}" opacity="0">${med(0, `<g transform="scale(1.3)">${bolt}</g>`, "รางอาจมีไฟ", -220, SU.red)}${med(1, `<g transform="scale(1.25)">${tr}</g>`, "รถขบวนอื่น", 220, SKC.navy)}</g></g>`);
+        tl.set(`#${id}`, { opacity: 1 }, t0);
+        [0, 1].forEach((k) => { tl.fromTo(`#${id}-m${k}w`, { scale: 0.1, rotation: -90, svgOrigin: "0 0" }, { scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "back.out(2.6)", immediateRender: false }, t0 + k * 0.7);
+          SU.fxGo(tl, `${id}-fx${k}`, t0 + 0.35 + k * 0.7, { r1: 150, n: 9 });
+          tl.to(`#${id}-m${k}w`, { y: -10, duration: 0.7, yoyo: true, repeat: Math.ceil(dur / 0.7), ease: "sine.inOut" }, t0 + 0.6 + k * 0.7);
+          SU.sheen(tl, `${id}-m${k}`, 92, t0 + 0.7 + k * 0.7, dur - 1, 1.4); });
+        tl.to(`#${id}`, { opacity: 0, duration: 0.25 }, t0 + dur - 0.25); };
+      SkyUI.next = (tl, layer, t0, dur, o = {}) => { SU.defs(layer); const id = `sxn${suSky++}`;
+        put(layer, `<g id="${id}" opacity="0"><rect width="1080" height="1920" fill="#0c1020"/><rect width="1080" height="1920" fill="url(#skNight)" opacity=".8"/>
+          ${towers(77, -100, 1300, 1560, 200, 620, ["#12162c", "#181c36"], "#ffe2a0", 30, { lit: 0.45 })}<rect y="1540" width="1080" height="70" fill="url(#skConc)"/><rect y="1610" width="1080" height="310" fill="#06080e"/>
+          <g transform="translate(540,860)"><g id="${id}-bp"><g id="${id}-bpr"><g filter="url(#muDrop)"><rect x="-400" y="-260" width="800" height="500" rx="28" fill="#fdfaf2" ${SKS(6)}/></g>
+            <rect x="-400" y="-260" width="800" height="110" rx="28" fill="${SKC.navy}" ${SKS(6)}/><rect x="-400" y="-180" width="800" height="30" fill="${SKC.navy}"/><rect x="-400" y="-150" width="800" height="16" fill="${SKC.stripe}"/>
+            <text x="-350" y="-192" font-family="Kanit" font-weight="900" font-size="44" fill="#fff">บัตรโดยสาร</text><text x="350" y="-192" text-anchor="end" font-family="Kanit" font-weight="800" font-size="32" fill="${SKC.yellow}">${o.tag || "ซอมบี้รถไฟฟ้า"}</text>
+            <path d="M190,-130V230" stroke="${SU.ink}" stroke-width="4" stroke-dasharray="14 12"/>
+            <text x="-350" y="-70" font-family="Kanit" font-weight="800" font-size="34" fill="#7a7060">${o.l1 || "ตอนต่อไป · EP.2"}</text>
+            <text x="-350" y="30" font-family="Kanit" font-weight="900" font-size="${(o.l2 || "").length > 15 ? 48 : 60}" fill="${SU.red}">${o.l2 || ""}</text>
+            <text x="-350" y="110" font-family="Kanit" font-weight="800" font-size="40" fill="${SU.ink}">${o.l3 || ""}</text>
+            <text x="-350" y="190" font-family="Kanit" font-weight="700" font-size="30" fill="#5a5444">${o.cta || "กดติดตาม ก่อนประตูจะเปิด"}</text>
+            <g transform="translate(296,-30)">${bellIcon(1.1)}</g>${Array.from({ length: 20 }, (_, k) => `<rect x="${220 + k * 7}" y="70" width="${k % 3 ? 3 : 5}" height="120" fill="${SU.ink}"/>`).join("")}
+            ${o.end ? `<g transform="translate(-60,160) rotate(-14)"><g id="${id}-st"><rect x="-200" y="-70" width="400" height="140" rx="20" fill="none" stroke="${SU.red}" stroke-width="12"/><text y="30" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="80" fill="${SU.red}">ตอนจบ</text></g></g>` : ""}</g></g></g>
+          <text x="540" y="1760" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#fff" letter-spacing="10">ROD MAI CLUB</text>${SU.fxMk(`${id}-fx`, 540, 860, 12)}</g>`);
+        tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+        tl.fromTo(`#${id}-bp`, { y: -900 }, { y: 0, duration: 0.7, ease: "back.out(1.4)", immediateRender: false }, t0 + 0.05);
+        tl.fromTo(`#${id}-bpr`, { rotation: -25, svgOrigin: "0 0" }, { rotation: -3, svgOrigin: "0 0", duration: 0.7, ease: "back.out(1.4)", immediateRender: false }, t0 + 0.05);
+        SU.fxGo(tl, `${id}-fx`, t0 + 0.7, { r0: 200, r1: 520, n: 12 });
+        tl.to(`#${id}-bpr`, { rotation: 2, svgOrigin: "0 0", duration: 0.7, yoyo: true, repeat: Math.ceil(dur / 0.7), ease: "sine.inOut" }, t0 + 0.85);
+        if (o.end) tl.fromTo(`#${id}-st`, { scale: 2.4, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.3, ease: "power4.in", immediateRender: false }, t0 + 1.1); };
