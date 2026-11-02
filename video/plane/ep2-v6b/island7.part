@@ -1,0 +1,52 @@
+      // ---------- รอดคนเดียว EP.2 v6b (lane C): the ending, redrawn (owner: "ep 2 ช่วงหลังๆ ภาพยังมั่วอยู่เลย") ----------
+      //   Sets.frontSite (v3)  the front section beached at the edge of a palm jungle (no cave, no dotted wallpaper): layered palms from
+      //                        the ทะเลลด kit over soft green masses; the fuselage reads at a glance — the nose, the cockpit windows, a row of
+      //                        windows, the airline stripe, an open door, the torn end with its ribs and wires. o.fire "dying" (default) |
+      //                        "signal" (a tall smoke stream) | false · o.prints (default true): real-size footprints from the door into the trees
+      //   Isle.wreckFront(x, y, s)  that fuselage on its own
+      //   Isle.tail: the metal panel now lies tilted on top of the tail section (it floated beside it before)
+      (function () {
+        const { mk, crown } = Pop2, I = window.Isle, LN = "#241c22", ln = (w = 3) => `stroke="${LN}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+        const tail0 = I.tail;
+        I.tail = (x, y, s, o = {}) => tail0(x, y, s, o).replace('translate(-300,-300) rotate(-24)', 'translate(-250,-286) rotate(-9) scale(.85)');
+        I.wreckFront = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})">
+          <ellipse cx="40" cy="26" rx="620" ry="46" fill="#000" opacity=".3"/>
+          <path d="M-470,10L-500,-40L-470,-90L-505,-150L-470,-200L-490,-246L380,-252Q520,-250 600,-190Q650,-140 640,-80Q630,-20 560,6Z" fill="url(#isFus)" ${ln(6)}/>
+          <path d="M-480,-160L600,-170" stroke="#f4c430" stroke-width="13"/><path d="M-480,-138L606,-148" stroke="#1d2c5e" stroke-width="9"/>
+          ${Array.from({ length: 10 }, (_, k) => `<rect x="${-400 + k * 72}" y="-222" width="24" height="34" rx="11" fill="#1a2440" ${ln(2)}/><rect x="${-396 + k * 72}" y="-218" width="9" height="13" rx="4" fill="#8ab0d8" opacity=".6"/>`).join("")}
+          <path d="M470,-226L540,-222L560,-186L478,-188Z" fill="#14203a" ${ln(3)}/><path d="M552,-220L600,-196L612,-170L566,-184Z" fill="#14203a" ${ln(3)}/><path d="M486,-220l20,0l-6,26" stroke="#8ab0d8" stroke-width="4" opacity=".7" fill="none"/>
+          <path d="M600,-118Q640,-110 642,-80" stroke="#c8ccd4" stroke-width="8" fill="none"/><text x="-10" y="-60" font-family="Kanit" font-weight="900" font-size="44" fill="#2aa898">ฟ้าราม</text>
+          <path d="M-150,-30L-150,-200L-60,-202L-60,-32Z" fill="#0e1424" ${ln(4)}/><path d="M-60,-32L60,90L-40,96L-150,-30Z" fill="#e8d8b8" opacity=".9" ${ln(3)}/>
+          <path d="M-470,10L-500,-40L-470,-90L-505,-150L-470,-200L-490,-246" stroke="#5a5e6a" stroke-width="24" fill="none"/>${[-220, -170, -120, -70, -20].map((d) => `<path d="M-492,${d}l-40,${(d % 40) - 8}" stroke="#7a7e8a" stroke-width="7"/>`).join("")}
+          <path d="M-500,-150l-30,16M-500,-40l-26,-10" stroke="#d8312a" stroke-width="4"/><path d="M-505,-150l-24,30" stroke="#3a8ad8" stroke-width="4"/></g>`;
+        const PAL = { dawn: { sky: ["#4a5aa6", "#9a8ac0", "#f6b0a0", "#fff0d0"], sun: [860, 640], sand: ["#f6dcb0", "#dcb488"], g: ["#1e4a32", "#2f6a3e", "#4a8a48"], leaf: ["#24503a", "#4a8048", "#8ac070"], haze: "#e8c0b0" },
+          dusk: { sky: ["#2a3f7a", "#6a5aa0", "#f08a6a", "#ffd890"], sun: [200, 700], sand: ["#f0c890", "#c89a6a"], g: ["#173a30", "#24503a", "#3a6a44"], leaf: ["#1f4a34", "#3a7040", "#6a9a50"], haze: "#d89a90" },
+          night: { sky: ["#060c22", "#122452", "#24407a", "#3a5a8e"], sun: [820, 300], sand: ["#6a7898", "#46546e"], g: ["#0a1a20", "#12303a", "#1e4048"], leaf: ["#0e2228", "#1a3a40", "#2a5060"], haze: "#2a3e66" } };
+        Sets.frontSite = (L, o = {}) => {
+          const id = o.id || "fs", tm = o.time || "dawn", P = PAL[tm], r = mk(o.seed || 19), G = 1300, night = tm === "night";
+          put(L.sky, `<linearGradient id="${id}-sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sky[0]}"/><stop offset=".5" stop-color="${P.sky[1]}"/><stop offset=".85" stop-color="${P.sky[2]}"/><stop offset="1" stop-color="${P.sky[3]}"/></linearGradient>
+            <rect x="-2400" y="-1600" width="6000" height="5200" fill="url(#${id}-sk)"/><circle cx="${P.sun[0]}" cy="${P.sun[1]}" r="${night ? 60 : 90}" fill="#fff6e0" opacity="${night ? 0.9 : 0.85}"/>
+            ${Array.from({ length: 5 }, (_, k) => `<g class="iscl">${Pop2.cloud2(-800 + k * 640, 260 + (k % 3) * 120, 420, 120, r, night ? "isClN" : "isClD", night ? "#5a6e9a" : "#fff0e0", night ? "#0e1834" : "#9a7a9a")}</g>`).join("")}`);
+          // the jungle: soft green masses at the back (one green family, no lit orange dots), then a line of real palms in front of it
+          let far = `<path d="M-2400,${G + 20}L-2400,${G - 700}Q-1200,${G - 860} -200,${G - 760}Q900,${G - 900} 3000,${G - 700}V${G + 20}Z" fill="${P.g[0]}"/>`;
+          for (let k = 0; k < 26; k++) far += crown(-2200 + k * 200 + r() * 60, G - 560 + Math.sin(k * 0.55) * 90, 190 + r() * 60, r, [P.g[0], P.g[1], P.g[2]], 10);
+          far += `<rect x="-2400" y="${G - 900}" width="6000" height="920" fill="${P.haze}" opacity="${night ? 0.1 : 0.16}"/>`;
+          [[-1400, 1.1, 0.12], [-950, 1.25, -0.08], [-560, 1.0, 0.2], [-160, 1.15, -0.1], [240, 1.3, 0.14], [640, 1.05, -0.18], [1040, 1.2, 0.08], [1460, 1.1, -0.12], [1880, 1.25, 0.1]].forEach(([x, s2, lean], k) => { far += I.cocoF(x, G + 10, s2, lean, 60 + k, P.leaf); });
+          for (let k = 0; k < 18; k++) { const x = -1600 + k * 260 + r() * 80; far += `<g transform="translate(${f1(x)},${G + 16})">${[-40, -15, 10, 35].map((a, j) => `<path d="M0,0Q${a},-60 ${a * 1.8},-${100 + (j % 2) * 30}" stroke="${P.g[1 + (j % 2)]}" stroke-width="14" fill="none" stroke-linecap="round"/>`).join("")}</g>`; }
+          put(L.far, far);
+          let s = `<linearGradient id="${id}-sd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sand[0]}"/><stop offset="1" stop-color="${P.sand[1]}"/></linearGradient>
+            <path d="M-2400,${G}Q0,${G - 50} 3000,${G}V3400H-2400Z" fill="url(#${id}-sd)"/>${Array.from({ length: 40 }, () => `<circle cx="${f1(-1600 + r() * 3800)}" cy="${f1(G + 60 + r() * 1100)}" r="${f1(2 + r() * 4)}" fill="${P.sand[1]}" opacity=".7"/>`).join("")}`;
+          s += I.wreckFront(o.wx ?? 120, G + 70, o.ws ?? 0.85);
+          const fire = o.fire === undefined ? "dying" : o.fire, fx = o.fireX ?? 900, fy = G + 300;
+          if (fire === "dying") s += I.firePit(`${id}-fp`, fx, fy, 0.8, { flames: false, smoke: "thin" });
+          if (fire === "signal") s += I.firePit(`${id}-fp`, fx, fy, 0.9, {}) + I.smokeStream(`${id}-sig`, fx, fy - 140, 1500, { r: 80, lean: 0.15, period: 3.2, n: 18 });
+          // footprints: a real stride from the open door into the trees; a print ≈ 15 % of a standing person
+          if (o.prints !== false) { const A0 = [70, G + 160], A1 = [880, G - 10], N = 14; for (let k = 0; k < N; k++) { const u = k / (N - 1), x = A0[0] + (A1[0] - A0[0]) * u + (k % 2 ? 22 : -22) * (1 - u * 0.7), y = A0[1] + (A1[1] - A0[1]) * u, sc = 1.05 - 0.6 * u, a = 70 + (k % 2 ? 6 : -6);
+            s += `<g transform="translate(${f1(x)},${f1(y)}) rotate(${a}) scale(${f1(sc)})"><path d="M-12,26Q-19,0 -14,-20Q-7,-38 5,-35Q17,-30 15,-9Q14,12 9,28Q0,38 -12,26Z" fill="${P.sand[1]}" stroke="${night ? "#2a3048" : "#9a7048"}" stroke-width="2.6"/>${[[-10, -44, 5], [-2, -47, 4.4], [6, -45, 4], [12, -40, 3.5], [16, -33, 3]].map(([a2, b, rr]) => `<circle cx="${a2}" cy="${b}" r="${rr}" fill="${P.sand[1]}" stroke="${night ? "#2a3048" : "#9a7048"}" stroke-width="1.8"/>`).join("")}</g>`; } }
+          put(L.set, s);
+          if (o.fg !== false) put(L.fg, `<g class="isfg"><g transform="translate(1420,1800) scale(-2.2,2.2)">${Tide.coco(0, 0, 1, 0, 29, { trunk: false, pal: P.leaf, q: 0.8 })}</g></g>`);
+          put(L.glow, night ? `<rect x="-2400" y="-1600" width="6000" height="5200" fill="#0a1430" opacity=".14"/>` : `<radialGradient id="${id}-kw"><stop offset="0" stop-color="#fff6e0" stop-opacity=".3"/><stop offset="1" stop-color="#fff6e0" stop-opacity="0"/></radialGradient><ellipse cx="${P.sun[0]}" cy="900" rx="1400" ry="1100" fill="url(#${id}-kw)"/>`);
+        };
+        Rig.MODES.pointBent = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 2, head: -4, uaF: -64 + 3 * Math.sin(u * 4), faF: -48, uaB: 10, faB: -20 });
+        Rig.MODES.kneelUp = (u, o) => ({ ...Rig.MODES.kneel(u, o), torso: 9, head: -6 + 2 * Math.sin(u * 1.2), uaF: 16, faF: -4, uaB: -26, faB: -64, bodyY: 122 });
+      })();
