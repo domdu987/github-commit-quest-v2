@@ -258,6 +258,11 @@ description: >-
     - บอกว่าฝนตกหนักด้วยวิธีอื่นแทน: ม่านฝนไกล น้ำกระเซ็นที่เท้า วงน้ำในนา เสื้อเปียก ผมลู่ เสียงฟ้า
     - ฟ้าแลบไม่เกิน 1 ครั้งต่อ 10 วิ · ห้ามจอขาวทั้งจอ ให้ใช้ฟ้าสว่างหรือขอบแสงแทน · ห้ามกะพริบเกิน 3 ครั้งต่อวินาที
   - ก่อนเรนเดอร์ เปิดคลิปตัวอย่างอย่างน้อย 10 วิของช็อตที่มีฝนบนจอมือถือ ถ้าดูแล้วล้าตาให้ลดอีก
+  - บังคับด้วยโค้ด ไม่ต้องจำเอง:
+    - แฟลชเต็มจอทุกจุดให้ส่งผ่านตัวคุมเดียว (`StormFX.flash` + `flashResolve()` ใน foot part) ซึ่งเลือกแฟลชไม่เกิน 1 ครั้งต่อ 10 วิ ให้ฟ้าผ่าก่อน และจำกัดความสว่างไว้ที่ .28
+    - ก่อนเรนเดอร์ อ่าน `window.__flashes` เพื่อดูเวลาแฟลชทั้งตอน
+    - ฝนให้ใช้ `Rup2.rain` (ไม่เกิน 80 เส้น อยู่ใต้ L.act) เป็นแบบ
+    - ตัวอย่างอยู่ใน `video/release/review/upgrade-2026-11-03/{takhian,rupnak}-kit`
 - **V2** มุมกล้องหลากหลายแบบภาษาหนัง:
   - เรียงแบบ establishing → กลาง → ใกล้ → insert → reaction
   - ใช้มุมต่ำ มุมสูง ข้ามไหล่ มองผ่านช่อง กล้องเลื่อนตามมีเหตุผล
@@ -480,7 +485,7 @@ style frames ของเรื่องใหม่ต้องส่งเป�
 | `sheet.py <dir> <out> [cols]` | ชีตรวมเฟรมสำหรับตรวจเอง |
 | `origin_check.cjs <port> body.part` | ตรวจจุดหมุน `svgOrigin` ทุกตัวว่าอยู่บน element จริง (กันของพุ่งมาจากนอกจอ) |
 | `edgecheck.cjs <port> schedule.json` | ไล่ทุก 0.25 วิ หาซับ/ป้าย/ปุ่ม/การ์ดที่หลุดขอบจอ |
-| `render.sh <hf proj> <ep dir> <name> [--mux]` | เรนเดอร์ 60fps + mux HQ/share (สั่งด้วย `run_in_background` + `timeout: 7200000`) · ยังไม่มี mix.wav ก็เริ่มได้ แล้วค่อยสั่ง `--mux` |
+| `render.sh <hf proj> <ep dir> <name> [--mux]` | เรนเดอร์ 60fps + mux HQ/share (สั่งด้วย `run_in_background` + `timeout: 7200000` · งาน background ถูกตัดที่ 2 ชม. ถ้าเรนเดอร์หลายตอนต่อกัน (ตอนละ ~65 นาทีที่ราว 105 เฟรม/นาที) ให้รัน chain ด้วย `setsid nohup` แล้วตั้งตัวรอ `until grep … log` แบบ run_in_background ทีละตอน) · ยังไม่มี mix.wav ก็เริ่มได้ แล้วค่อยสั่ง `--mux` |
 | `qa_video.sh <mp4> [mix.wav]` | ตรวจสตรีม ความยาว ความดัง และทำแถบภาพ `<mp4>.qa.jpg` |
 | `store.sh <ep dir> <hf proj> <repo dir> <name>` | เก็บตอนเข้า `video/<repo dir>/` (share, mix, production, composition, lib) |
 | `cover.cjs <base url> <covers.json> [id…]` | ปกคลิป 1080×1920 จาก composition ที่เก็บแล้ว (เสิร์ฟ `video/` ก่อน: `python3 -m http.server 8890`) ค่าอยู่ใน `video/brand/covers.json` |
