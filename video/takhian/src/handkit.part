@@ -106,9 +106,10 @@
       const wrap = (aid, wid) => { const g = document.getElementById(aid); const w = document.createElementNS("http://www.w3.org/2000/svg", "g"); w.setAttribute("id", wid); g.parentNode.insertBefore(w, g); w.appendChild(g); return w; };
       const rigArms = (tl, aid, on, t) => ["uaF", "uaB"].forEach((p) => tl.set(`#${aid}-${p}`, { display: on ? "inline" : "none" }, t));
       // the what-if grade: colour drains out, the edges close in (a blend over the whole shot; its own opacity, not a group's)
-      const whatIf = (L, tl, t0, at = 0, k = 0.85) => {
+      // (checklist 3, 3 พ.ย.: no grey-all-over shots) half the colour drains and a warm sepia wash marks the what-if instead of grey
+      const whatIf = (L, tl, t0, at = 0, k = 0.45) => {
         const id = `wf${Math.round(t0 * 100)}`;
-        put(L.light, `<rect id="${id}-s" width="1080" height="1920" fill="#808080" style="mix-blend-mode:saturation" opacity="0"/>
+        put(L.light, `<rect id="${id}-s" width="1080" height="1920" fill="#b08458" style="mix-blend-mode:color" opacity="0"/>
           <radialGradient id="${id}-vg" cx=".5" cy=".42" r=".78"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".75"/></radialGradient>
           <rect id="${id}-v" width="1080" height="1920" fill="url(#${id}-vg)" opacity="0"/>`);
         tl.fromTo([`#${id}-s`, `#${id}-v`], { opacity: at ? 0 : k }, { opacity: k, duration: at ? 0.4 : 0.01, immediateRender: false }, t0 + at);

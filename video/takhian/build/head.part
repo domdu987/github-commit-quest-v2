@@ -80,7 +80,7 @@
         background: rgba(5,8,10,.55); padding: 8px 14px 10px; border-radius: 10px; }
       #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 64% at 50% 48%, transparent 50%, rgba(3,6,8,.8) 100%); }
       #grain { z-index: 57; position: absolute; inset: -60px; opacity: .11; mix-blend-mode: overlay; pointer-events: none; }
-      #flashw { z-index: 60; position: absolute; inset: 0; background: #e8f0ff; opacity: 0; pointer-events: none; }
+      #flashw { z-index: 60; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(226,236,255,.42) 0%, rgba(206,220,255,.2) 32%, rgba(206,220,255,0) 62%); mix-blend-mode: screen; opacity: 0; pointer-events: none; }  /* V1b: a sky glow, never a white screen */
       #black { z-index: 61; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
       /*__UICSS__*/
       /*__GAMECSS__*/

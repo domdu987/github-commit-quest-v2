@@ -46,6 +46,8 @@
   // with hanging vines, offerings at the foot (dolls in Thai dress, an incense urn, unbranded red soda, wooden horses and an elephant).
   // Tree units: (0,0) = foot of the trunk, trunk top ≈ −1240, crown top ≈ −1720; the strike seam points are Tk.scarPts.
   Sets.DEFS += `
+    <linearGradient id="tkDusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a4a" stop-opacity="0"/><stop offset=".6" stop-color="#ffa858" stop-opacity=".55"/><stop offset="1" stop-color="#ffd28a" stop-opacity=".8"/></linearGradient>
+    <radialGradient id="tkLamp"><stop offset="0" stop-color="#fff0b8" stop-opacity=".95"/><stop offset=".3" stop-color="#ffb04a" stop-opacity=".55"/><stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/></radialGradient>
     <linearGradient id="tkTrW" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1a0e08"/><stop offset=".1" stop-color="#4a3424"/><stop offset=".32" stop-color="#9c7656"/><stop offset=".5" stop-color="#78583e"/><stop offset=".8" stop-color="#3a281a"/><stop offset="1" stop-color="#120a06"/></linearGradient>
     <linearGradient id="tkTrS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#14100e"/><stop offset=".1" stop-color="#3e352e"/><stop offset=".32" stop-color="#8e8070"/><stop offset=".5" stop-color="#6a5e52"/><stop offset=".8" stop-color="#2e2620"/><stop offset="1" stop-color="#0e0a08"/></linearGradient>
     <linearGradient id="tkTrAO" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".5"/><stop offset=".14" stop-color="#000" stop-opacity="0"/><stop offset=".8" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></linearGradient>
@@ -267,7 +269,7 @@
     <path d="M-340,-440Q0,-420 340,-440" stroke="#8a6a2a" stroke-width="8" fill="none"/>
     <path d="M-200,-560V-440M200,-560V-440" stroke="#5a4030" stroke-width="10"/>
     <g transform="translate(-140,-250)"><path d="M0,0L30,250M60,0L90,250" stroke="#6a4a32" stroke-width="8"/>${[50, 110, 170, 230].map((yy) => `<path d="M${yy * 0.12},${yy}H${60 + yy * 0.12}" stroke="#6a4a32" stroke-width="7"/>`).join("")}</g>
-    ${o.items !== false ? `<g transform="translate(120,-290)"><ellipse rx="40" ry="14" fill="#c84a2a" ${OUT(3)}/><path d="M-40,0q40,-40 80,0" fill="#a83a1a" ${OUT(3)}/></g><g transform="translate(40,-270)"><path d="M-30,0L-20,-60H20L30,0Z" fill="#e8e0c8" ${OUT(3)}/></g>` : ""}</g>`;
+    ${o.items !== false ? `<g transform="translate(120,-290)"><ellipse rx="40" ry="14" fill="#c84a2a" ${OUT(3)}/><path d="M-40,0q40,-40 80,0" fill="#a83a1a" ${OUT(3)}/></g><g transform="translate(40,-270)"><path d="M-30,0L-20,-60H20L30,0Z" fill="#e8e0c8" ${OUT(3)}/></g>` : ""}${o.lamp !== false ? `<g><circle cx="60" cy="-380" r="170" fill="url(#tkLamp)" opacity=".75"/><path d="M60,-440v26" stroke="${INK}" stroke-width="3"/><path d="M48,-414h24l-4,12h-16z" fill="#3a3a32" ${OUT(2)}/><path d="M50,-402q10,-8 20,0v22q-10,6 -20,0z" fill="#fff0b8" stroke="${INK}" stroke-width="2.5"/><path d="M46,-380h28l-4,10h-20z" fill="#3a3a32" ${OUT(2)}/></g>` : ""}</g>`;
   Tk.buffalo = (x, y, s = 1, o = {}) => `<g transform="translate(${x},${y}) scale(${o.flip ? -s : s},${s})">
     <ellipse cx="0" cy="6" rx="220" ry="26" fill="#000" opacity=".3"/>
     ${[-130, -70, 90, 150].map((dx) => `<path d="M${dx},-60V0" stroke="${INK}" stroke-width="34" stroke-linecap="round"/><path d="M${dx},-60V0" stroke="#3a3a40" stroke-width="24" stroke-linecap="round"/>`).join("")}
@@ -371,12 +373,13 @@
     put(L.mid, p);
     if (S) put(L.mid, `<rect x="-900" y="${hz - 200}" width="2900" height="400" fill="#7a7e8a" opacity="${f1(0.15 + 0.15 * d)}"/>`);
   };
+  // V1b: thin, faint streaks behind the actors (mid layer), ≈ 80 lines at most, + ripples in the near water
   const rain = (L, o) => {
     const k = o.rain ?? 0; if (!k) return; const r = mk(321), lit = (o.flash ?? 0) > 0.6;
-    let g = `<g opacity="${f1(0.5 + 0.4 * k)}">`;
-    for (let i = 0; i < Math.round(160 * k); i++) { const x = -200 + r() * 1500, y = -200 + r() * 2300, l = 40 + r() * 70; g += `<path d="M${f1(x)},${f1(y)}l${f1(-l * 0.22)},${f1(l)}" stroke="${lit ? "#ffffff" : "#cfd8ea"}" stroke-width="${f1((lit ? 2.6 : 1.6) + r() * 2)}" opacity="${f1((lit ? 0.6 : 0.35) + r() * 0.4)}" stroke-linecap="round"/>`; }
-    for (let i = 0; i < Math.round(30 * k); i++) g += `<ellipse cx="${f1(-100 + r() * 1300)}" cy="${f1(1300 + r() * 700)}" rx="${f1(10 + r() * 16)}" ry="${f1(3 + r() * 4)}" fill="none" stroke="#cfd8ea" stroke-width="2" opacity=".45"/>`;
-    put(L.light, g + `</g>`);
+    let d = ""; for (let i = 0; i < Math.round(80 * Math.min(1, k)); i++) { const x = -200 + r() * 1500, y = -200 + r() * 2100, l = 30 + r() * 26; d += `M${f1(x)},${f1(y)}l${f1(-l * 0.22)},${f1(l)}`; }
+    let g = `<path d="${d}" stroke="${lit ? "#ffffff" : "#cfd8ea"}" stroke-width="1.5" opacity="${lit ? 0.35 : 0.24}" stroke-linecap="round"/>`;
+    for (let i = 0; i < Math.round(30 * k); i++) g += `<ellipse cx="${f1(-100 + r() * 1300)}" cy="${f1(1300 + r() * 700)}" rx="${f1(10 + r() * 16)}" ry="${f1(3 + r() * 4)}" fill="none" stroke="#cfd8ea" stroke-width="2" opacity=".35"/>`;
+    put(L.mid, `<g>${g}</g>`);
   };
 
   Sets.tkField = function (L, o = {}) {
@@ -412,6 +415,9 @@
     (o.hutPosts || []).forEach((px) => { f += `<rect x="${px - 30}" y="160" width="60" height="1500" fill="#5a4030" ${OUT(5)}/><path d="M${px - 18},170V1650" stroke="#7a5a3a" stroke-width="6" opacity=".7"/>`; });
     f += `<rect x="-900" y="1640" width="2900" height="60" fill="#7a5a3a" ${OUT(5)}/><rect x="-900" y="1700" width="2900" height="500" fill="#5a4030"/>${Array.from({ length: 14 }, (_, k) => `<path d="M${-900 + k * 220},1700v500" stroke="#3a2a1e" stroke-width="6"/>`).join("")}`;
     put(L.fg, f);
+    // the oil lamp hanging under the roof edge: the warm source of this set (checklist 3)
+    if (o.lamp !== false) { put(L.fg, `<path d="M${o.lampX ?? 760},240v70" stroke="${INK}" stroke-width="4"/><path d="M${(o.lampX ?? 760) - 18},310h36l-6,16h-24z" fill="#3a3a32" ${OUT(2)}/><path d="M${(o.lampX ?? 760) - 15},326q15,-12 30,0v34q-15,8 -30,0z" fill="#fff0b8" stroke="${INK}" stroke-width="3"/>`);
+      put(L.glow, `<circle cx="${o.lampX ?? 760}" cy="345" r="420" fill="url(#tkLamp)" opacity=".55" style="mix-blend-mode:screen"/>`); }
   };
 
   // top-down on the bund: ลุงเปี๊ยก on his back, the rain; the rescuer's head and shoulders seen from above at the left, her arms
@@ -676,6 +682,9 @@
       s += softClouds(r, 10, -900, 2000, hz - 520, hz - 260, 120, 220, "#22384a", "#6a8a94", 1, 0.9);
       // rain curtains: grey-teal shafts sweeping from the cloud base to the horizon
       for (let k = 0; k < 14; k++) { const x = -1000 + k * 230 + r() * 120, w = 80 + r() * 160; s += `<path d="M${f1(x)},${hz - 420}L${f1(x - 90)},${hz + 10}L${f1(x - 90 + w)},${hz + 10}L${f1(x + w)},${hz - 420}Z" fill="url(#rCurtain)" opacity="${f1(0.5 + r() * 0.4)}"/>`; }
+      // warm light with a source (checklist 3): the last of the evening sun breaking under the storm's edge on the right — a gold band
+      // along the horizon and a low sun glow, so the storm shots are not grey all over (o.warm 0..1, default 1)
+      { const wk = o.warm ?? 1; if (wk > 0) s += `<rect x="-1400" y="${hz - 330}" width="3900" height="340" fill="url(#tkDusk)" opacity="${f1(0.9 * wk)}"/><ellipse cx="${o.sunX ?? 980}" cy="${hz - 40}" rx="520" ry="150" fill="url(#sunG)" opacity="${f1(0.55 * wk)}"/>`; }
       if (o.flash) s += `<rect x="-1400" y="-1200" width="3900" height="${hz + 1300}" fill="#dfe8ff" opacity="${f1(o.flash * 0.45)}"/><ellipse cx="${o.flashX ?? 700}" cy="${hz - 500}" rx="900" ry="500" fill="#eef4ff" opacity="${f1(o.flash * 0.5)}" filter="url(#skBlur24)"/>`;
       if (o.distBolt) s += `<g opacity=".9">${Tk.bolt(o.distBolt[0], hz - 520, o.distBolt[1], hz - 10, 41, 0.5)}</g>`;
     } else {
@@ -692,7 +701,7 @@
       let d = `M-1400,${hz + 10}`; for (let x = -1400; x <= 2600; x += 60) d += `L${x},${f1(hz + dy - 20 - Math.abs(Math.sin(x * 0.011 + li)) * 40 * k - r() * 18)}`; f += `<path d="${d}L2600,${hz + 10}Z" fill="${c}"/>`;
       for (let j = 0; j < 7; j++) f += palm(-1200 + r() * 3600, hz + dy, (0.35 + r() * 0.25) * k, c);
       if (li === 0) f += chedi(o.chediX ?? -260, hz + dy - 10, 0.9, c);
-      if (li === 1) for (let j = 0; j < 6; j++) { const x = 1200 + j * 70; f += `<path d="M${x},${hz + dy}V${hz + dy - 30}L${x + 30},${hz + dy - 54}L${x + 60},${hz + dy - 30}V${hz + dy}Z" fill="${c}"/>`; }
+      if (li === 1) for (let j = 0; j < 6; j++) { const x = 1200 + j * 70; f += `<path d="M${x},${hz + dy}V${hz + dy - 30}L${x + 30},${hz + dy - 54}L${x + 60},${hz + dy - 30}V${hz + dy}Z" fill="${c}"/>${m === "storm" && j % 2 === 0 ? `<rect x="${x + 22}" y="${hz + dy - 22}" width="14" height="12" fill="#ffc870"/><circle cx="${x + 29}" cy="${hz + dy - 16}" r="34" fill="url(#tkLamp)" opacity=".7"/>` : ""}`; }   // lit windows in the village (a warm source)
       f += `<rect x="-1400" y="${hz + dy - 60}" width="4000" height="70" fill="url(#mistB)" opacity="${m === "storm" ? 0.32 : 0.22}" style="fill:${P.mist}" filter="url(#skBlur10)"/>`;
     });
     put(L.far, o.dof ? `<g filter="url(#skBlur10)">${f}</g>` : f);
@@ -749,11 +758,9 @@
     // ---- fg: big blurred rice blades leaning with the wind
     if (o.fgRice !== false) { let g = ""; for (let k = 0; k < 12; k++) { const x = (k < 6 ? -160 + k * 45 : 900 + (k - 6) * 50) + r() * 30, h = 220 + r() * 300, lean = wind * (60 + r() * 80); g += `<path d="M${f1(x)},2050q${f1(lean * 0.3)},-${f1(h * 0.6)} ${f1(lean)},-${f1(h)}" stroke="${P.rice[k % 2 ? 1 : 0]}" stroke-width="${f1(12 + r() * 10)}" fill="none" stroke-linecap="round"/>`; } put(L.fg, `<g filter="url(#skBlur10)" opacity=".95">${g}</g>`); }
     // ---- rain in three depths (far fine, mid, near big blurred) + temp strike FX
-    if (o.rain) { const rk = o.rain, lit = (o.flash ?? 0) > 0.6, c = lit ? "#ffffff" : P.rain; let far = "", mid = "", near = "";
-      for (let i = 0; i < 260 * rk; i++) { const x = -200 + r() * 1500, y = -200 + r() * 2300, l = 26 + r() * 30; far += `M${f1(x)},${f1(y)}l${f1(-l * 0.25)},${f1(l)}`; }
-      for (let i = 0; i < 110 * rk; i++) { const x = -200 + r() * 1500, y = -200 + r() * 2300, l = 60 + r() * 60; mid += `M${f1(x)},${f1(y)}l${f1(-l * 0.25)},${f1(l)}`; }
-      for (let i = 0; i < 26 * rk; i++) { const x = -200 + r() * 1500, y = -200 + r() * 2300, l = 160 + r() * 140; near += `<path d="M${f1(x)},${f1(y)}l${f1(-l * 0.25)},${f1(l)}" stroke="${c}" stroke-width="${f1(5 + r() * 5)}" stroke-linecap="round" opacity=".35"/>`; }
-      put(L.light, `<g class="rainF"><path d="${far}" stroke="${c}" stroke-width="1.4" opacity="${lit ? 0.55 : 0.3}"/></g><g class="rainM"><path d="${mid}" stroke="${c}" stroke-width="2.6" opacity="${lit ? 0.7 : 0.42}" stroke-linecap="round"/></g><g class="rainN" filter="url(#skBlur4)">${near}</g>`); }
+    if (o.rain) { const rk = Math.min(1, o.rain), lit = (o.flash ?? 0) > 0.6, c = lit ? "#ffffff" : P.rain; let far = "";   // V1b: one faint layer behind the actors
+      for (let i = 0; i < 80 * rk; i++) { const x = -200 + r() * 1500, y = -200 + r() * 2100, l = 30 + r() * 26; far += `M${f1(x)},${f1(y)}l${f1(-l * 0.25)},${f1(l)}`; }
+      put(L.mid, `<g class="rainF"><path d="${far}" stroke="${c}" stroke-width="1.5" opacity="${lit ? 0.35 : 0.24}" stroke-linecap="round"/></g>`); }
     if (o.bolt && o.tree) { const t = o.tree, ts = t.s || 1, topX = t.x, topY = t.y - 1560 * ts;
       put(L.glow, `<g><circle cx="${topX}" cy="${topY}" r="${f1(700 * ts)}" fill="url(#tkBoltG)"/>${Tk.bolt(topX + 180, -900, topX, topY, o.boltSeed || 7, 1.4)}
         <path d="M${t.x + 10 * ts},${t.y - 1230 * ts}L${t.x - 20 * ts},${t.y - 980 * ts}L${t.x + 20 * ts},${t.y - 760 * ts}L${t.x - 14 * ts},${t.y - 520 * ts}L${t.x + 18 * ts},${t.y - 300 * ts}L${t.x - 4 * ts},${t.y - 60 * ts}" stroke="#ffffff" stroke-width="${f1(14 * ts)}" fill="none"/>
@@ -846,6 +853,52 @@
     g += `<path d="M-340,520H340M-340,1000H340" stroke="#5a3a14" stroke-width="3" opacity=".25"/><ellipse cx="220" cy="1250" rx="140" ry="70" fill="#5a3a14" opacity=".14"/><ellipse cx="-240" cy="330" rx="90" ry="50" fill="#5a3a14" opacity=".12"/>`;
     return g + `</g>`;
   };
+  // ================================================================ the legend on the channel's shadow screen (S5, owner 3 พ.ย.:
+  // "คุณเคยทำมาแล้ว น่าจะทำให้เหมือนได้นะ") — the หนังประโมทัย screen of ผีแม่ม่าย (Sets.legend3) with ตะเคียน puppets: the tree, นางตะเคียน
+  // as a black silhouette with hair to the ground (only her green eyes glow, #id-eyes), her beckoning forearm #id-fa, a farmer in a งอบ #id-vil
+  // walking in to shelter, a slit of lightning #id-bolt and the screen's own flare #id-flare (the screen only, never the whole frame).
+  // Puppets: #id-tree, #id-nang (slides in), #id-vil. Screen: x 80–1000, y (cy−560)–(cy+560), cy default 820.
+  const PK = "#120a08", SCR = "url(#mmScreen)";
+  const pHoles = (pts) => pts.map(([x, y, rr]) => `<circle cx="${x}" cy="${y}" r="${rr}" fill="${SCR}"/>`).join("");
+  const treePuppet = () => { const r = mk(91); let c = "";
+    [[-210, -630, 175, 115], [0, -700, 230, 150], [210, -630, 175, 115], [-120, -810, 160, 105], [120, -815, 160, 105], [0, -905, 140, 92], [-300, -560, 110, 70], [300, -560, 110, 70]].forEach(([x, y, rx, ry]) => { let d = ""; for (let k = 0; k <= 14; k++) { const a = Math.PI * 2 * k / 14, j = k % 2 ? 1.08 : 0.94; d += (k ? "L" : "M") + f1(x + Math.cos(a) * rx * j) + "," + f1(y + Math.sin(a) * ry * j); } c += `<path d="${d}Z" fill="${PK}"/>`; });
+    let lv = ""; for (let k = 0; k < 46; k++) { const x = -330 + r() * 660, y = -960 + r() * 440, a = r() * 180; if (Math.abs(x) > 340 - (y + 960) * 0.1) continue; lv += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="9" ry="3.6" transform="rotate(${f1(a)} ${f1(x)} ${f1(y)})" fill="${SCR}"/>`; }
+    const vines = [-260, -170, 150, 250, 320].map((x, k) => `<path d="M${x},-560q${k % 2 ? 8 : -8},90 ${k % 2 ? -4 : 4},${160 + k * 30}" stroke="${PK}" stroke-width="5" fill="none"/>`).join("");
+    return `<path d="M-50,0C-44,-200 -36,-420 -30,-600L30,-600C36,-420 44,-200 50,0Z" fill="${PK}"/><path d="M-50,0Q-100,-24 -170,8L-180,24H180L170,8Q100,-24 50,0Z" fill="${PK}"/>
+      <path d="M-30,-560Q-150,-600 -250,-640M30,-580Q150,-620 260,-660M0,-600Q-20,-720 -40,-800M0,-600Q30,-720 60,-820" stroke="${PK}" stroke-width="22" fill="none" stroke-linecap="round"/>${c}${lv}${vines}
+      ${[-200, -180, -160].map((y) => `<path d="M-40,${y}Q0,${y + 8} 40,${y}" stroke="${SCR}" stroke-width="5" fill="none"/>`).join("")}${pHoles([[0, -300, 6], [-14, -360, 5], [12, -420, 5], [-6, -480, 5], [0, -120, 6]])}
+      <path d="M0,24V460" stroke="#2a1a10" stroke-width="8"/>`; };
+  const nangPuppet = (id) => `<path d="M-14,-430C-80,-390 -96,-160 -120,0L-70,0C-66,-150 -44,-320 -2,-404Z" fill="${PK}"/>
+      <path d="M-26,-370Q-36,-180 -44,0H46Q38,-180 30,-370Z" fill="${PK}"/><path d="M-6,-380L12,-378L10,-360H-8Z" fill="${PK}"/>
+      <ellipse cx="4" cy="-406" rx="24" ry="30" fill="${PK}"/><path d="M-22,-420Q4,-446 28,-416L24,-400Q4,-430 -18,-404Z" fill="${PK}"/>
+      <path d="M-26,-346L30,-292M-28,-326L28,-272" stroke="${SCR}" stroke-width="3.5"/>${pHoles([[-12, -230, 4.5], [8, -230, 4.5], [-16, -170, 4.5], [4, -170, 4.5], [22, -170, 4.5], [-20, -110, 4.5], [0, -110, 4.5], [22, -110, 4.5], [-22, -50, 4.5], [0, -50, 4.5], [24, -50, 4.5]])}
+      <path d="M-90,-300q-6,60 -4,130M-100,-200q-6,70 -8,150" stroke="${SCR}" stroke-width="2.5" fill="none" opacity=".8"/>
+      <g id="${id}-arm"><path d="M24,-350L92,-300" stroke="${PK}" stroke-width="15" stroke-linecap="round"/><g id="${id}-fa" transform="translate(92,-300)"><path d="M0,0L74,-26" stroke="${PK}" stroke-width="12" stroke-linecap="round"/>${[-14, -5, 4, 13].map((d) => `<path d="M74,-26l${30 + d * 0.3},${-8 + d}" stroke="${PK}" stroke-width="4.5" stroke-linecap="round"/>`).join("")}<path d="M74,-26L74,140" stroke="#2a1a10" stroke-width="4"/></g></g>
+      <g id="${id}-eyes" opacity="0"><ellipse cx="20" cy="-410" rx="20" ry="11" fill="#7aff6a" opacity=".45" filter="url(#skBlur4)"/><path d="M12,-411q8,-6 16,0q-8,4 -16,0z" fill="#b8ff9a"/><circle cx="20" cy="-411" r="2.4" fill="#eaffd8"/></g>
+      <path d="M0,0V460" stroke="#2a1a10" stroke-width="7"/>`;
+  const vilPuppet = () => `<path d="M-74,-286L0,-326L74,-286Q0,-272 -74,-286Z" fill="${PK}"/><ellipse cx="0" cy="-262" rx="22" ry="26" fill="${PK}"/>
+      <path d="M-26,-238Q-34,-150 -26,-110H28Q34,-150 24,-238Z" fill="${PK}"/><path d="M-22,-110L-46,0M18,-110L40,0" stroke="${PK}" stroke-width="18" stroke-linecap="round"/>
+      <path d="M-20,-226L-50,-150M20,-226L48,-160" stroke="${PK}" stroke-width="12" stroke-linecap="round"/>${pHoles([[-8, -200, 4], [8, -200, 4], [0, -170, 4], [-8, -140, 4], [8, -140, 4]])}<path d="M-40,-300H40" stroke="${SCR}" stroke-width="3"/>
+      <path d="M0,-110V360" stroke="#2a1a10" stroke-width="6"/>`;
+  Sets.tkLegend = function (L, o = {}) {
+    const id = o.id || "tl", CY = o.cy ?? 820, CX = 540, W = 920, H = 1120;
+    Sets.legend3(L, { id, cy: CY, shirt: false, seed: 77 });
+    [`${id}-man`, `${id}-widow`].forEach((e) => { const n = document.getElementById(e); if (n) n.setAttribute("opacity", 0); });
+    const bolt = `M${CX - 60},${CY - H / 2}L${CX - 110},${CY - H / 2 + 60}L${CX - 70},${CY - H / 2 + 90}L${CX - 130},${CY - H / 2 + 150}L${CX - 96},${CY - H / 2 + 170}L${CX - 130},${CY - H / 2 + 220}`;
+    put(L.set, `<defs><clipPath id="${id}-tclip"><rect x="${CX - W / 2}" y="${CY - H / 2}" width="${W}" height="${H}"/></clipPath></defs><g clip-path="url(#${id}-tclip)">
+      <g transform="translate(${CX - 120},${CY + 430})"><g id="${id}-tree">${treePuppet()}</g></g>
+      <g transform="translate(${CX + 20},${CY + 430})"><g id="${id}-nang">${nangPuppet(id)}</g></g>
+      <g transform="translate(${CX + 330},${CY + 430}) scale(.92)"><g id="${id}-vil" opacity="${o.vil ? 1 : 0}">${vilPuppet()}</g></g>
+      <rect id="${id}-flare" x="${CX - W / 2}" y="${CY - H / 2}" width="${W}" height="${H}" fill="#fff6e0" opacity="0" style="mix-blend-mode:screen"/>
+      <g id="${id}-bolt" opacity="0"><path d="${bolt}" stroke="#ffe08a" stroke-width="26" fill="none" opacity=".45" stroke-linejoin="round" filter="url(#skBlur4)"/><path d="${bolt}" stroke="#fffbe8" stroke-width="8" fill="none" stroke-linejoin="round"/></g></g>`);
+  };
+  // traces of นางตะเคียน in the real shots (checklist 5): in tree units, drawn by the shot at the tree's place, opacity 0 until shown
+  //   Tk.traceEyes(): two green eyes in a dark hollow between the buttress fins · Tk.traceHair(): a curtain of long black hair hanging from the
+  //   left limb under the crown (−360, −1060), a darker oval where a face would be — seen only while the sky is lit
+  // (moved low, 3 พ.ย.: up in the crown they fell off the top of the frame) — in the dark gap between the left buttress fins at (−112, −150)
+  Tk.traceEyes = () => `<g transform="translate(-40,668)"><ellipse cx="-72" cy="-818" rx="26" ry="30" fill="#050302"/><ellipse cx="-72" cy="-822" rx="48" ry="22" fill="#7aff6a" opacity=".5" filter="url(#skBlur10)"/><path d="M-91,-822q8,-7 16,0q-8,4 -16,0zM-69,-822q8,-7 16,0q-8,4 -16,0z" fill="#d8ffb8"/></g>`;
+  Tk.traceHair = () => { const r = mk(404); let d = ""; for (let k = 0; k < 26; k++) { const x0 = -400 + k * 3.2 + (r() - 0.5) * 4, len = 330 + r() * 180; d += `M${f1(x0)},-1060q${f1(-8 + r() * 16)},${f1(len * 0.5)} ${f1(-14 + r() * 28)},${f1(len)}`; }
+    return `<path d="M-412,-1062Q-360,-1090 -306,-1062L-300,-760Q-360,-700 -420,-760Z" fill="#050302" opacity=".9"/><path d="${d}" stroke="#050302" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="-358" cy="-1010" rx="26" ry="34" fill="#0c0806"/>`; };
   // the old photo: a young farmer in a งอบ standing under THE SAME tree (its trunk with cloths behind him), black-and-white, a crack in the glass
   Tk.photo = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><rect x="-160" y="-210" width="320" height="420" fill="#6a4020" stroke="${INK}" stroke-width="8"/><rect x="-130" y="-180" width="260" height="360" fill="#d6d0c2"/>
     <path d="M-130,-180H130V-40Q60,-80 0,-60Q-60,-80 -130,-40Z" fill="#8a867c"/>${[-90, -40, 10, 60, 100].map((cx) => `<ellipse cx="${cx}" cy="-120" rx="44" ry="30" fill="#6a665e"/>`).join("")}

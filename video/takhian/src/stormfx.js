@@ -75,7 +75,7 @@
   };
 
   // ------------------------------------------------------------------ lighting things up for one flash pattern
-  const FLICK = [[0, 1], [0.045, 0.3], [0.085, 1], [0.13, 0.25], [0.19, 0.85], [0.25, 0.15], [0.31, 0.6], [0.4, 0]];
+  const FLICK = [[0, 1], [0.09, 0.35], [0.17, 0.85], [0.42, 0]];   // V1b: two pulses, not a strobe
   const lightUp = (tl, tR, lit, k = 1) => {
     [].concat(lit || []).forEach((h) => (h && h.els ? h.els : []).forEach((e) => {
       const base = e.style.filter && e.style.filter !== "none" ? e.style.filter + " " : "";
@@ -99,9 +99,8 @@
     tl.set(`#${id}-ld`, { opacity: 0 }, tR);
     // return stroke + flickers; the cloud follows; #flashw: 2–3 frames of white, a weaker re-flash on the second pulse
     FLICK.forEach(([dt, v]) => { tl.set(`#${id}-rs`, { opacity: v }, tR + dt); if (o.cloud !== false) tl.set(`#${id}-cl`, { opacity: v * 0.95 }, tR + dt); });
-    if (k > 0) { tl.set("#flashw", { opacity: k }, tR); tl.set("#flashw", { opacity: 0.8 * k }, tR + 1 / 60); tl.set("#flashw", { opacity: 0 }, tR + 2.6 / 60);
-      tl.set("#flashw", { opacity: 0.45 * k }, tR + 0.085); tl.set("#flashw", { opacity: 0 }, tR + 0.085 + 1 / 60);
-      tl.set("#flashw", { opacity: 0.25 * k }, tR + 0.19); tl.set("#flashw", { opacity: 0 }, tR + 0.19 + 1 / 60); }
+    // V1b: no full-screen white and no strobing — one soft pulse of sky light (#flashw is a top-down sky glow, see head.part)
+    if (k > 0) { tl.set("#flashw", { opacity: Math.min(1, k) }, tR); tl.to("#flashw", { opacity: 0, duration: 0.45, ease: "power2.out" }, tR + 0.03); }
     // afterimage: the channel burnt into the eye as a dark line, gone in a third of a second
     tl.set(`#${id}-ai`, { opacity: 0.6 }, tR + 0.4); tl.to(`#${id}-ai`, { opacity: 0, duration: 0.35, ease: "power1.out" }, tR + 0.42);
     // silhouette beat: the land goes black for a moment right after the first flash
@@ -211,16 +210,18 @@
       tl.fromTo(`#${id}-${name}m`, { x: 0, y: 0 }, { x: -H * wind, y: H, duration: period, ease: "none", repeat: rep, immediateRender: false }, t0);
       els.push(`#${id}-${name}`);
     };
-    // far: fine streaks behind the set (they sit in the mid layer, over the paddies, under the tree)
-    if (o.far !== false) layer(L.mid, "far", 260, [26, 46], [1.2, 2], [0.25, 0.45], 0.9, 0, -1200, 2300, 2400, "#c8d0e2");
+    // V1b (owner 2 พ.ย.: "ปวดตามาก ฝนมันเยอะไป"): one layer of thin, faint, slow streaks behind the set and the actors,
+    // ≈ o.lines visible per frame (default 80, never above 90): 2 tiles of n each, ~55 % of each tile on screen
+    if (o.far !== false) { const n = Math.min(90, o.lines ?? 80) / 1.1; layer(L.mid, "far", n / Math.max(k, 0.01), [30, 54], [1.1, 1.7], [0.16, 0.32], o.period ?? 1.25, 0, -300, 1500, 2000, "#c8d0e2"); }
     // the veils: wide pale curtains of rain crossing the far field
     if (o.curtain !== false) { const hz = o.horizon ?? 980; let v = "";
       for (let i = 0; i < 4; i++) { const x = -900 + i * 760 + r() * 200, w = 260 + r() * 260; v += `<path d="M${f1(x)},${hz - 520}L${f1(x + w)},${hz - 520}L${f1(x + w - 200)},${hz + 30}L${f1(x - 200)},${hz + 30}Z" fill="url(#sfVeil)"/>`; }
       put(L.far, `<g id="${id}-veil">${v}</g>`);
       tl.fromTo(`#${id}-veil`, { x: -150 }, { x: 650, duration: Math.max(dur, 6), ease: "none", immediateRender: false }, t0); }
     // mid and near in the screen layer: in front of everything
-    if (o.mid !== false) layer(L.light, "mid", 150, [70, 120], [2.2, 3.4], [0.32, 0.6], 0.55, 0);
-    if (o.near !== false) layer(L.light, "near", 26, [190, 320], [6, 10], [0.18, 0.32], 0.34, 3.5);
+    // (V1b: no rain in front of the actors or the captions — the old mid/near screen layers only on an explicit o.mid/o.near === "screen")
+    if (o.mid === "screen") layer(L.light, "mid", 150, [70, 120], [2.2, 3.4], [0.32, 0.6], 0.55, 0);
+    if (o.near === "screen") layer(L.light, "near", 26, [190, 320], [6, 10], [0.18, 0.32], 0.34, 3.5);
     // ripples popping in the paddies
     (o.ripples || []).forEach((z, zi) => { const lay = L[z.layer || "mid"]; let g = "";
       for (let i = 0; i < (z.n ?? 24); i++) g += `<ellipse id="${id}-rp${zi}-${i}" cx="${f1(z.x + r() * z.w)}" cy="${f1(z.y + r() * z.h)}" rx="${f1(z.r ?? 16)}" ry="${f1((z.r ?? 16) * 0.3)}" fill="none" stroke="#dfe6f4" stroke-width="${f1(z.sw ?? 2.4)}" opacity="0"/>`;

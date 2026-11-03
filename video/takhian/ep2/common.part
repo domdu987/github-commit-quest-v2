@@ -25,26 +25,41 @@
       const TALK = (k, i = 0, m = "o") => [vo(k, i), voEnd(k, i), m];
       const P = (who, x, y, s, mode, eyes = "normal", mouth = "flat", o = {}) => A(who, x, y, s, [{ t: 0, mode, eyes, mouth, opts: o.opts || {} }, ...(o.then || [])], o);
       const STORM = (id, o = {}) => ({ set: "tkField", setOpts: { id, mood: "storm", dark: 0.8, rain: 0.8, ...o }, dark: 0.04, light: ST, grade: GS });
-      const push2 = (k, a, b) => ({ keys: [{ t: 0, ...a }, { t: D(k), glide: D(k), ...b }] });
+      const HOLD = (a) => ({ keys: [{ t: 0, ...a }, { t: 4, glide: 4, ...a, s: a.s * 1.07 }] });   // a "static" framing still creeps in
+      // checklist 6 (3 พ.ย.): no shot stands still — every push is at least 7 % over the shot and drifts sideways a little if it doesn't already
+      const push2 = (k, a, b) => { const r = b.s / a.s, bb = { ...b }; if (Math.abs(r - 1) < 0.07) { const s2 = a.s * (r >= 1 ? 1.08 : 0.93); bb.x = b.x + (b.x === a.x ? 18 / s2 : 0); bb.s = s2; } return { keys: [{ t: 0, ...a }, { t: D(k), glide: D(k), ...bb }] }; };
       const rumble = (amp = 2) => (t) => ({ x: amp * Math.sin(t * 23) + amp * 0.5 * Math.sin(t * 61), y: amp * 0.8 * Math.sin(t * 31), r: 0.1 * Math.sin(t * 7) });
       const kick = (a, b, amp) => (t) => (t >= a && t < b ? { x: amp * Math.sin(t * 61) * (1 - (t - a) / (b - a)), y: amp * 0.8 * Math.sin(t * 47) * (1 - (t - a) / (b - a)), r: 0 } : 0);
       // a strike on the tree in this shot: the bolt group (L.glow) hidden until t, then the flash / silhouette / relight; the bolt fades to an afterglow
       // StormFX (lane C): every storm shot gets layered rain + wind + its far/in-cloud lightning; STRIKE = the bolt onto this shot's tree
       let CUR = {};
+      // V1b (owner 2 พ.ย.: "ปวดตามาก ฝนมันเยอะไป"): lightning at most once per 10 s, never a white screen. The story strikes are kept
+      // (their shots are listed here); an ambient flash/far bolt is dropped when it falls within 10 s of any other bolt, and a strike
+      // within 10 s of the previous strike keeps its bolt but loses its sky flash and silhouette beat
+      const STRIKE_KEYS = ['again'], STRIKE_T = STRIKE_KEYS.filter((k) => SH[k]).map((k) => SH[k].start), BOLTS = [];
+      const boltOK = (t) => !BOLTS.some((b) => Math.abs(b - t) < 10) && !STRIKE_T.some((b) => Math.abs(b - t) < 10);
       const STORMFX = (spec, tl, t0, L) => { const so = spec.setOpts || {}; CUR = { tree: so.tree, hz: so.horizon ?? 1000, ground: so._ground, rain: null };
         if (spec.set !== "tkScape" || so.mood !== "storm") return; const dur = spec._dur || 4, hz = CUR.hz, rk = so._rain ?? 0.8;
-        if (rk > 0) CUR.rain = StormFX.rain(L, tl, t0, dur, { wind: 0.22, horizon: hz, density: rk, seed: 101 + (t0 * 10 | 0), ripples: [{ x: -400, y: hz + 40, w: 1900, h: 300, n: Math.round(28 * rk), r: 12, layer: "mid" }], near: so._near ?? true, mid: so._mid ?? true });
+        // V1b: rain only where the storm/strike is the point of the shot (≈80 thin lines behind the actors); dialogue and knowledge
+        // shots keep a faint far rain (≈30) — the downpour reads from the far veils, the ripples, the wet clothes and the sound
+        const hard = !!(so._strike || so._dist || so._flash > 0.3);
+        if (rk > 0) CUR.rain = StormFX.rain(L, tl, t0, dur, { wind: 0.22, horizon: hz, density: 1, lines: hard ? 80 : 30, period: hard ? 1.15 : 1.4, seed: 101 + (t0 * 10 | 0), ripples: [{ x: -400, y: hz + 40, w: 1900, h: 300, n: Math.round(28 * rk), r: 12, layer: "mid" }] });
         StormFX.wind(L, tl, t0, dur, { leaves: so._leaves ?? Math.round(2 + 3 * rk), dir: -1, seed: 202 + (t0 * 10 | 0) });
-        if (so._dist) StormFX.bolt(L, tl, t0 + (so._distAt ?? 0.45), { x0: so._dist[0], y0: hz - 560, x1: so._dist[1], y1: hz - 8, seed: 41, w: 0.32, layer: "sky", flash: 0.28, cx: so._dist[0], cy: hz - 600, cloudR: 0.55, leader: 0.08, lit: CUR.rain });
-        else if (so._flash > 0 && !so._strike) { const fx0 = so.flashX ?? 760; StormFX.bolt(L, tl, t0 + (so._flashAt ?? 0.5), { x0: fx0 - 260, y0: hz - 760, x1: fx0 + 220, y1: hz - 600, seed: 53, w: 0.28, layer: "sky", flash: Math.min(0.4, so._flash * 0.6), cx: fx0, cy: hz - 680, cloudR: 0.7, leader: 0.1, depth: 2, lit: CUR.rain }); } };
-      const STRIKE = (tl, L, t0, at, o = {}) => { const T = o.tree || CUR.tree, s = T.s || 1, top = T.y - 1600 * s, lead = 0.14;
+        if (so._dist && boltOK(t0 + (so._distAt ?? 0.45)) && BOLTS.push(t0 + (so._distAt ?? 0.45))) StormFX.bolt(L, tl, t0 + (so._distAt ?? 0.45), { x0: so._dist[0], y0: hz - 560, x1: so._dist[1], y1: hz - 8, seed: 41, w: 0.32, layer: "sky", flash: 0.28, cx: so._dist[0], cy: hz - 600, cloudR: 0.55, leader: 0.08, lit: CUR.rain });
+        else if (so._flash > 0 && !so._strike && boltOK(t0 + (so._flashAt ?? 0.5)) && BOLTS.push(t0 + (so._flashAt ?? 0.5))) { const fx0 = so.flashX ?? 760; StormFX.bolt(L, tl, t0 + (so._flashAt ?? 0.5), { x0: fx0 - 260, y0: hz - 760, x1: fx0 + 220, y1: hz - 600, seed: 53, w: 0.28, layer: "sky", flash: Math.min(0.4, so._flash * 0.6), cx: fx0, cy: hz - 680, cloudR: 0.7, leader: 0.1, depth: 2, lit: CUR.rain }); } };
+      const STRIKE = (tl, L, t0, at, o = {}) => { const T = o.tree || CUR.tree, s = T.s || 1, top = T.y - 1600 * s, lead = 0.14, tt = t0 + at;
+        if (BOLTS.some((b) => tt - b < 10 && tt - b > -0.5)) o = { ...o, flash: 0, sil: 0 }; BOLTS.push(tt);
         const b = StormFX.bolt(L, tl, t0 + at - lead, { x0: T.x + (o.dx ?? 280) * s, y0: top - 1500, x1: T.x + 10 * s, y1: top, seed: o.seed ?? 7, w: Math.max(0.55, 1.25 * s), flash: o.flash ?? 1, sil: o.sil ?? 0.12, cx: T.x + 160 * s, cy: top - 380, leader: lead, lit: CUR.rain });
         StormFX.strikeTree(L, tl, b.tR, { x: T.x, y: T.y, s, seed: o.treeSeed ?? 19, side: o.side ?? 1, dur: o.dur ?? 6, branch: o.branch ?? true });
         const g = o.ground ?? CUR.ground; if (g) StormFX.ground(L, tl, b.tR + 0.03, { x: T.x, y: T.y + 10 * s, s: Math.max(0.45, s), to: o.to || [[T.x - 560 * s * g, T.y + 170 * s], [T.x + 520 * s * g, T.y + 250 * s], [T.x - 140 * s, T.y + 440 * s * g]] });
         return b; };
+      // a trace of นางตะเคียน on this shot's tree (checklist 5): kind "eyes" (in the knot-hollow) or "hair" (under the crown), shown at t for dur
+      const TRACE = (tl, L, t, kind, dur = 0.5, T = CUR.tree) => { if (!T) return; const gid = `tr${kind}${Math.round(t * 100)}`, s = T.s || 1;
+        put(L.set, `<g id="${gid}" opacity="0" transform="translate(${T.x},${T.y}) scale(${s})">${kind === "hair" ? Tk.traceHair() : Tk.traceEyes()}</g>`);
+        tl.set(`#${gid}`, { opacity: 1 }, t); tl.to(`#${gid}`, { opacity: 0, duration: kind === "hair" ? 0.08 : 0.3 }, t + dur); };
       // a side flash: the current jumping from the trunk into the people beside it, synced to a STRIKE handle
       const SIDE = (L, tl, b, x, y, pts) => pts.forEach(([px, py], k) => StormFX.bolt(L, tl, b.tR - 0.03 + 0.02 * k, { x0: x, y0: y, x1: px, y1: py, seed: 60 + k, w: 0.42, flash: 0, cloud: false, leader: 0.03, depth: 1 }));
-      const FLICK = (tl, t, op = 0.35) => { tl.set("#flashw", { opacity: op }, t); tl.to("#flashw", { opacity: 0, duration: 0.18 }, t + 0.03); tl.set("#flashw", { opacity: op * 0.7 }, t + 0.12); tl.to("#flashw", { opacity: 0, duration: 0.3 }, t + 0.15); };
+      const FLICK = (tl, t, op = 0.35) => { tl.set("#flashw", { opacity: op }, t); tl.to("#flashw", { opacity: 0, duration: 0.4, ease: "power2.out" }, t + 0.03); };   // V1b: one soft pulse
       // the rescuer's forearms and stacked real hands over the patient's chest (side view; the rig arms end behind his body)
       const CPRARMS = (L, tl, t0, dur, SF, SB, W, sc = 0.95, sl = ["#e86a8a", "#c04a6a"], skin = SK.ploy) => {
         const gid = `cpa${Math.round(t0 * 100)}${Math.round(W[0])}`;
@@ -102,10 +117,11 @@
       // a shot split into several cuts at times `cuts` (seconds into the shot); each spec gets captions from its own window
       const SPLITN = (k, cuts, specs) => { const b = [0, ...cuts, D(k)]; specs.forEach((sp, j) => { add(k, withHands({ ...sp, _dur: b[j + 1] - b[j], captions: sp.captions ?? capsFrom(k, b[j]).filter((c) => c.t < b[j + 1] - b[j]) })); const sh = shots[shots.length - 1]; sh.start = SH[k].start + b[j]; sh.dur = b[j + 1] - b[j]; }); };
       // back from a what-if: a full-screen white flash (no tear bands)
-      const WHATIF2 = (L, tl, t0, back) => { whatIf(L, tl, t0); if (back != null) { tl.set("#flashw", { opacity: 0.9 }, t0 + back); tl.to("#flashw", { opacity: 0, duration: 0.3 }, t0 + back + 0.04); } };
+      const WHATIF2 = (L, tl, t0, back) => { whatIf(L, tl, t0); if (back != null) { tl.set("#flashw", { opacity: 0.6 }, t0 + back); tl.to("#flashw", { opacity: 0, duration: 0.35 }, t0 + back + 0.04); } };
       const SC = (id, o = {}) => { const { rain = 0.8, flash = 0, ground, distBolt, ...rest } = o; return { set: "tkScape", setOpts: { id, mood: "storm", wind: 1, ...rest, rain: 0, flash: 0, bolt: 0, _rain: rain, _flash: flash, _dist: distBolt, _ground: ground, _strike: o.bolt }, dark: 0, light: TEAL, grade: GT }; };
       const TEAL = { from: "left", rim: "#9ad0e0", rimOp: 0.9, shade: "#06101a", shadeOp: 0.45, cast: false, vol: false };
-      const GT = { top: "#1a4a5a", bottom: "#0a1a2a", op: 0.3 }, GG = { top: "#ffb860", bottom: "#3a2a5a", op: 0.22 }, GC = { top: "#fff0c8", bottom: "#4a8ab0", op: 0.14 };
+      // checklist 3: a warm floor under the storm sky, not teal-grey all over
+      const GT = { top: "#1a3e5a", bottom: "#3a2412", op: 0.26 }, GG = { top: "#ffb860", bottom: "#3a2a5a", op: 0.22 }, GC = { top: "#fff0c8", bottom: "#4a8ab0", op: 0.14 };
       const GOLDL = { from: "right", rim: "#ffd890", rimOp: 0.95, shade: "#2a1a30", shadeOp: 0.35, cast: false, vol: false };
       const CLEARL = { from: "left", rim: "#ffe2a0", rimOp: 0.9, shade: "#2a3a5a", shadeOp: 0.25, cast: false, vol: false };
       const FLASHL = { from: "right", rim: "#ffffff", rimOp: 1, shade: "#000814", shadeOp: 0.5, cast: false, vol: false };
