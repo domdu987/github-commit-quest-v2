@@ -5,6 +5,7 @@
 //   depth-1 … depth-4        one continuous camera move: sky → rim → through the soil layers → into the limestone cave with groundwater
 (() => {
   const NS = "http://www.w3.org/2000/svg", cv = document.getElementById("cv");
+  if (!window.Sets) window.Sets = undefined;
   const q = new URLSearchParams(location.search), scene = q.get("s") || "drone-dusk";
   const f = (n) => (+n).toFixed(1);
   const rng = (seed) => () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
@@ -206,7 +207,7 @@
     for (let k = 0; k <= 4; k++) { const [x, y] = at(0, -W - 14 + k * ((2 * W + 28) / 4)); g += `<circle cx="${f(x)}" cy="${f(y)}" r="6" fill="#c8b890" stroke="${LINE}" stroke-width="1.6"/>`; }
     // wooden stakes with painted tags (numbers live only on stakes, the tape case and the notebook)
     const stake = (x, y, txt, dx, dy) => `<ellipse cx="${f(x + 10)}" cy="${f(y + 7)}" rx="10" ry="5" fill="${P.shadow}"/><rect x="${f(x - 7)}" y="${f(y - 7)}" width="14" height="14" fill="#8a5a32" stroke="${LINE}" stroke-width="2"/>
-      ${txt ? `<path d="M${f(x)},${f(y)}L${f(x + dx)},${f(y + dy)}" stroke="${LINE}" stroke-width="2.4"/><g transform="translate(${f(x + dx)},${f(y + dy)})"><rect x="-80" y="-26" width="160" height="52" rx="5" fill="#fbf6ea" stroke="${LINE}" stroke-width="2.6"/><text x="0" y="2" text-anchor="middle" dominant-baseline="middle" font-family="Mali" font-weight="700" font-size="30" fill="#1e1712">${txt}</text></g>` : ""}`;
+      ${txt ? `<path d="M${f(x)},${f(y)}L${f(x + dx)},${f(y + dy)}" stroke="${LINE}" stroke-width="2.4"/><g transform="translate(${f(x + dx)},${f(y + dy)})"><rect x="-82" y="-27" width="164" height="54" rx="3" fill="#c8945a" stroke="${LINE}" stroke-width="2.6"/><path d="M-76,-12H76M-76,4H76M-76,17H70" stroke="#a87440" stroke-width="2" opacity=".7"/><circle cx="-70" cy="-16" r="3" fill="#5a3a1e"/><circle cx="70" cy="-16" r="3" fill="#5a3a1e"/><text x="0" y="3" text-anchor="middle" dominant-baseline="middle" font-family="Mali" font-weight="700" font-size="30" fill="#2a1408">${txt}</text></g>` : ""}`;
     const ax = [c, s], pr = [-s, c], tg = (p0, v, d) => stake(p0[0], p0[1], v, d[0], d[1]);
     g += tg(e0, "ทิศเหนือ ↑", [-ax[0] * 120 + 60, -ax[1] * 120]) + tg(e1, "ยาว 10.2 ม.", [ax[0] * 120 + 90, ax[1] * 120]) + tg(w0, "กว้าง 4.1 ม.", [pr[0] * 330, pr[1] * 330 - 90]) + stake(w1[0], w1[1], "", 0, 0);
     // the officials (hard hats) holding the tape and the rope, one writing; villagers kept behind the rope
@@ -321,6 +322,9 @@
     for (let k = 0; k < 18; k++) { const side = k % 2 ? 1 : -1, y = SURF + 30 + r() * 900, x = HX + side * shaft(y); let d = `M${f(x)},${f(y)}`, px = x;
       for (let t = 0; t < 6; t++) { px += -side * (6 + r() * 10); d += `L${f(px)},${f(y + t * 26)}`; } g += `<path d="${d}" stroke="#2e1c10" stroke-width="${f(1.4 + r() * 2)}" fill="none"/>`; }
     for (let k = 0; k < 10; k++) { const y = SURF + 200 + r() * 2000, x = HX + (r() - 0.5) * shaft(y) * 1.2; g += `<path d="${blob(r, x, y, 6 + r() * 8, 5 + r() * 6, 7, 0.3)}" fill="#6a4228" stroke="rgba(0,0,0,.4)" stroke-width="1.2"/>`; }
+    { const PX = HX + 300; g += `<rect x="${PX - 14}" y="${SURF - 60}" width="28" height="${CAVE0 - SURF + 60}" fill="#2a6ab8" stroke="#10243a" stroke-width="4"/><rect x="${PX - 8}" y="${SURF - 60}" width="6" height="${CAVE0 - SURF + 60}" fill="#9ac4f0" opacity=".6"/>`;
+      for (let y = SURF + 200; y < CAVE0; y += 300) g += `<rect x="${PX - 18}" y="${y}" width="36" height="16" rx="3" fill="#1e4e8a" stroke="#10243a" stroke-width="3"/>`;
+      g += `<g transform="translate(${PX - 10},${SURF - 66})"><rect x="-60" y="-56" width="90" height="56" rx="8" fill="#c83a2a" stroke="#1e1712" stroke-width="3"/><rect x="-54" y="-70" width="56" height="16" rx="4" fill="#3a3a40"/><circle cx="44" cy="-30" r="22" fill="#2a2a30" stroke="#1e1712" stroke-width="3"/></g>`; }
     // ---- the cave: a wide chamber in the limestone, its roof hung with stalactites, the groundwater below
     const caveP = [[-60, CAVE0 + 300], [120, CAVE0 + 140], [330, CAVE0 + 60], [HX - 50, CAVE0], [HX + 60, CAVE0 + 4], [780, CAVE0 + 90], [1000, CAVE0 + 180], [1150, CAVE0 + 500], [1150, WT + 600], [880, CAVE1 + 80], [560, CAVE1 + 120], [240, CAVE1 + 60], [-70, WT + 500], [-80, CAVE0 + 900]];
     const rough = []; caveP.forEach((p, k) => { const q2 = caveP[(k + 1) % caveP.length]; for (let t = 0; t < 1; t += 0.2) rough.push([p[0] + (q2[0] - p[0]) * t + (r() - 0.5) * 50, p[1] + (q2[1] - p[1]) * t + (r() - 0.5) * 50]); });
@@ -341,6 +345,13 @@
       if (k % 4 === 0) cave += `<path d="M${f(x)},${f(y + h + 30)}q-4,10 0,14q4,-4 0,-14z" fill="#bfe6f0"/><path d="M${f(x)},${f(y + h + 70)}q-4,10 0,14q4,-4 0,-14z" fill="#bfe6f0" opacity=".7"/>`; }
     for (let k = 0; k < 14; k++) { const x = 100 + r() * 880, y = WT - 10, h = 40 + r() * 140, w = 14 + r() * 20;
       cave += `<path d="M${f(x - w)},${f(y)}Q${f(x - w * 0.3)},${f(y - h * 0.7)} ${f(x)},${f(y - h)}Q${f(x + w * 0.3)},${f(y - h * 0.7)} ${f(x + w)},${f(y)}Z" fill="#7a7466" stroke="#3a3630" stroke-width="2"/><path d="M${f(x - w * 0.4)},${f(y)}Q${f(x - w * 0.15)},${f(y - h * 0.6)} ${f(x)},${f(y - h * 0.95)}" stroke="#c8c0aa" stroke-width="2" fill="none" opacity=".5"/>`; }
+    // old water lines: pale stained bands on the cave walls where the groundwater used to stand (it has dropped)
+    for (let k = 1; k <= 4; k++) { const y = WT - k * 110 - (r() - 0.5) * 20; let d = `M-20,${f(y)}`; for (let x = 0; x <= 1100; x += 60) d += `L${x},${f(y + Math.sin(x / 90 + k) * 10 + (r() - 0.5) * 8)}`;
+      cave += `<path d="${d}" stroke="#d8d2bc" stroke-width="${9 - k}" fill="none" opacity="${f(0.42 - k * 0.07)}"/><path d="${d}" stroke="#5a5446" stroke-width="2" fill="none" opacity=".5" transform="translate(0,8)"/>`; }
+    // the irrigation pump's pipe: down through the rock from the field above into what is left of the water
+    const PX = HX + 300; cave += `<rect x="${PX - 14}" y="${CAVE0 - 40}" width="28" height="${WT + 120 - CAVE0}" fill="#2a6ab8" stroke="#10243a" stroke-width="4"/><rect x="${PX - 8}" y="${CAVE0 - 40}" width="6" height="${WT + 120 - CAVE0}" fill="#9ac4f0" opacity=".6"/>`;
+    for (let y = CAVE0 + 80; y < WT + 100; y += 260) cave += `<rect x="${PX - 18}" y="${y}" width="36" height="16" rx="3" fill="#1e4e8a" stroke="#10243a" stroke-width="3"/>`;
+    cave += `<path d="M${PX - 24},${WT + 120}h48l-6,20h-36z" fill="#3a3a40" stroke="#10243a" stroke-width="3"/>`;
     // the light falling through the mouth into the chamber, dust in it
     cave += `<path d="M${HX - 70},${CAVE0}L${HX + 70},${CAVE0}L${HX + 320},${WT + 40}L${HX - 260},${WT + 40}Z" fill="url(#beam)" style="mix-blend-mode:screen"/>`;
     for (let k = 0; k < 60; k++) { const t = r(), y = CAVE0 + t * (WT - CAVE0), x = HX - 60 - t * 200 + r() * (120 + t * 500); cave += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(1.4 + r() * 2.4)}" fill="#fff4d0" opacity="${f(0.3 + r() * 0.5)}"/>`; }
@@ -373,6 +384,22 @@
     return `<g transform="translate(540,960) scale(${c.s}) translate(${-540 - (c.x || 0)},${-960 - c.y})">${w.g}</g><rect width="1080" height="1920" fill="url(#vig)"/>` + grainDef("gr");
   }
 
+  // ---- library use from the episode engine: ids prefixed per shot so two scenes in one page never collide
+  const render = (name, pre) => { defs = ""; let b = "";
+    if (name === "drone-dusk") b = drone(PAL.dusk, false); else if (name === "drone-moon") b = drone(PAL.moon, true);
+    else if (name === "measure") b = measure(false); else if (name === "measure-note") b = measure(true);
+    else if (name === "depth") { const w = depthWorld(); b = w.g; }
+    const out = `<defs>${defs}</defs>${b}`; defs = "";
+    return pre ? out.replace(/id="([A-Za-z0-9_]+)"/g, `id="${pre}-$1"`).replace(/url\(#([A-Za-z0-9_]+)\)/g, `url(#${pre}-$1)`) : out; };
+  window.RupStills = { render, DEPTH: { SURF: 2300, CAVE0: 4800, WT: 6200, H: 7400 } };
+  if (window.Sets) {
+    // full-frame scenes drawn into the set layer (the engine's camera moves them like any set); no vignette/grain (the engine grades)
+    const strip = (svg) => svg.replace(/<rect width="1080" height="1920" fill="url\(#[a-z0-9-]*vig\)"\/>/g, "").replace(/<rect width="1080" height="1920" filter="url\(#[a-z0-9-]*gr\)"\/>/g, "");
+    Sets.rupDrone = (L, o = {}) => L.set.insertAdjacentHTML("beforeend", strip(render(o.time === "dusk" ? "drone-dusk" : "drone-moon", o.id || "dr")));
+    Sets.rupMeasure = (L, o = {}) => L.set.insertAdjacentHTML("beforeend", strip(render(o.note ? "measure-note" : "measure", o.id || "ms")));
+    Sets.rupDepth = (L, o = {}) => L.set.insertAdjacentHTML("beforeend", render("depth", o.id || "dp"));
+  }
+  if (!cv) return;
   let body = "";
   if (scene === "drone-dusk") body = drone(PAL.dusk, false);
   else if (scene === "drone-moon") body = drone(PAL.moon, true);
