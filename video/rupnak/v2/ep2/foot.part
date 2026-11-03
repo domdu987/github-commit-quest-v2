@@ -1,0 +1,20 @@
+      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">รูพญานาค · EP.2</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
+      Fx.setup(root);
+      Engine.build(root, tl, shots);
+      // numbers on shirts and notes stay readable on characters drawn facing left (flip = scale(-s,s))
+      document.querySelectorAll(".rk-txt").forEach((t) => { if (t.parentElement.closest("[transform*='scale(-']")) t.setAttribute("transform", "scale(-1,1)"); });
+
+      root.appendChild(document.getElementById("grain"));
+      const rnd = (() => { let s = 99; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+      for (let i = 0; i * 0.083 < SCHED.total; i++) tl.set("#grain", { x: Math.round(-50 + rnd() * 50), y: Math.round(-50 + rnd() * 50) }, i * 0.083);
+
+      // a render slice (TK_RANGE, same as video/takhian/RENDER-SPLIT.md): play only [a, b) of the episode — the clips are shifted by -a
+      // and the published timeline scrubs the real one from a to b, so frame n of the slice is frame round(a*60)+n of the whole episode
+      if (window.TK_RANGE) { const [a, b] = window.TK_RANGE;
+        document.querySelectorAll(".clip").forEach((c) => { c.dataset.start = (+c.dataset.start - a).toFixed(4); });
+        const outer = gsap.timeline({ paused: true }); outer.add(tl.tweenFromTo(a, b, { ease: "none", duration: b - a }), 0);
+        window.__timelines["main"] = outer; outer.seek(0);
+      } else { window.__timelines["main"] = tl; tl.seek(0); }
+    </script>
+  </body>
+</html>
