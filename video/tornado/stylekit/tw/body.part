@@ -1,0 +1,71 @@
+      // ---------- นาคเล่นน้ำ: style frames (owner 4 Nov 2569: "ทำภาพมาก่อน") ----------
+      SK.fon = ["#ebc19c", "#c8946e", "#f6d8b8"]; SK.pu = ["#d49c6c", "#a8704a", "#ecc09a"]; SK.bua = ["#c8946a", "#9a6a48", "#e0b48c"];
+      Object.assign(SKN, { fon: SK.fon, fonPhone: SK.fon, pu: SK.pu, puCam: SK.pu, yaiBua: SK.bua, taTian: SK.lung });
+      Rig.MODES.kWai = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 10, head: 14, uaF: -22, faF: -148, uaB: -16, faB: -150 });
+      Rig.MODES.film = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -112 + 2 * Math.sin(u * 2), faF: -28, uaB: 4, faB: -14, torso: -3, head: -10 });
+      Rig.MODES.camEye = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -64, faF: -118, uaB: -50, faB: -112, torso: 2, head: 0 });
+      const NSC = (id, o = {}) => ({ ...SC(id, o), set: "ngwScape" });
+      const HEARTS = (pts) => pts.map(([x, y, s, c]) => `<path transform="translate(${x},${y}) scale(${s})" d="M0,8C-14,-2 -18,-14 -9,-19C-4,-22 0,-17 0,-14C0,-17 4,-22 9,-19C18,-14 14,-2 0,8Z" fill="${c || "#ff4a6a"}" stroke="#fff" stroke-width="2"/>`).join("");
+      Rig.MODES.kCover = (u, o) => ({ ...Rig.MODES.cower(u, o), ...KNEE(o), torso: 24 + 1.5 * Math.sin(u * 40), head: 20, bodyY: o.by ?? 150 });
+      Rig.MODES.prone = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: -172, faF: -104, uaB: 172, faB: 104, head: 18, torso: 0, thF: -2, shF: 4, thB: 2, shB: 2 });
+      // ---------- ทอร์นาโดยักษ์ (owner 4 Nov: "ไม่ต้องเอาผี เอาแบบภัยพิบัติใหญ่ ธอนาโดไม่ใช่พายุงวงช้าง") ----------
+      // T1 · the monster on the horizon: a wedge tornado under its supercell coming across the plains toward the town; cars stopped on
+      // the highway, people out filming it (the mistake), ยายบัว yelling at them to get inside
+      ADD("t1", { ...NSC("t1", { horizon: 1200, rain: 0.4, vx: 540,
+          monster: { id: "mt1", x: 540, y: 1205, h: 650, wb: 270, wt: 560, p: 2.0, bend: 34, bend2: -14, tx: 600, seed: 41, slotDx: 480, flashes: [[-1.1, 0.03], [1.3, 0.05]] },
+          village: [{ x: 1110, y: 1210, s: 0.12 }, { x: 1240, y: 1212, s: 0.11, flip: 1 }, { kind: "wat", x: -130, y: 1208, s: 0.2 }],
+          road: { y: 1640, h: 160 },
+          poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1630, s: 0.8, tf: [3], sag: 46 },
+          props: () => Tk.pickup(880, 1735, 0.58) + Rup2.moto(250, 1755, 0.85) + Ngw.sign(1010, 1630, 0.5) }),
+        land: { y0: 190 },
+        cam: push2("t1", fr(540, 960, 1.0, 540, 960), fr(540, 950, 1.04, 540, 960)),
+        actors: [P("fonPhone", 300, 1900, 0.9, "film", "wide", "o"), P("puCam", 540, 1890, 0.7, "camEye", "wide", "o"), P("yaiBua", 830, 1905, 0.88, "yell", "angry", "scream", { flip: true })],
+        fx: (tl, id, t0) => Ngw.monsterLife(tl, "mt1", t0, D("t1")) });
+      // extras: two drivers who stopped on the highway
+      Rig.CAST.exA = { v2: { ...Rig.CAST.keng.v2, top: { kind: "shirt", c: "#3a6aa8", sleeve: "short", neck: "collar", collar: "#2e5a90", button: "#e8e4d8" }, print: "", bottom: { kind: "jeans", c: "#2a2e38" }, feet: { kind: "sneaker", c: "#e8e4d8" } } };
+      Rig.CAST.exB = { v2: { ...Rig.CAST.june.v2, top: { kind: "blouse", c: "#c83a4a", sleeve: "elbow", trim: "#a82a3a" }, print: "", bottom: { kind: "jeans", c: "#3a4a6a" }, feet: { kind: "sandal", c: "#3a2a1a" } } };
+      Object.assign(SKN, { exA: SK.medic, exB: SK.fon });
+      // T2 · it hits the village: roofs tear off and fly into the funnel, a pole snaps with a blue-green flash; ฝน and ปู run for it
+      ADD("t2", { ...NSC("t2", { horizon: 1060, rain: 0.8, vx: 540, fgRice: false,
+          monster: { id: "mt2", x: 400, y: 1240, h: 900, wb: 420, wt: 780, p: 1.8, tx: 460, bend: 40, seed: 43, slotDx: 660, ds: 3, bigScale: 1.6, flashes: [[1.05, 0.04]] },
+          ruins: [{ x: 840, y: 1236, s: 0.34, level: 1, dir: -1 }, { x: 1200, y: 1240, s: 0.3, level: 1, dir: -1, seed: 62 }, { x: 40, y: 1256, s: 0.36, level: 2 }, { x: -340, y: 1246, s: 0.3, level: 2, seed: 64 }],
+          road: { y: 1560, h: 220 }, poles: { xs: [-500, 40, 580, 1120, 1660], y: 1550, s: 0.95, tf: [2], lean: [0, 0, -14, 0, 0], sag: 60 },
+          props: () => Ngw.debris(-600, 1700, 1330, 1540, 40, 72, 0.8) }),
+        land: { y0: 200 },
+        cam: push2("t2", fr(540, 960, 1.0, 540, 960), fr(540, 980, 1.05, 540, 960)), shake: rumble(2.5),
+        actors: [P("fonPhone", 560, 1890, 1.0, "run", "wide", "o"), P("pu", 820, 1860, 0.78, "run", "wide", "o")],
+        fx: (tl, id, t0) => Ngw.monsterLife(tl, "mt2", t0, D("t2"), { flashAt: [0.4, 1.4] }) });
+      // T3 · the right move: the bathroom in the middle of the house, no window — down low, cover the head; dust falls, the door bulges
+      ADD("t3", { set: "ngwKuti", setOpts: { id: "ku", robeC: "#3a7ac8", robeS: "#2a5a98" }, dark: 0.2, light: GOLDL, grade: { top: "#3a2a1a", bottom: "#0a0806", op: 0.22 },
+        land: { y0: 520 },
+        cam: push2("t3", fr(540, 1300, 1.0, 540, 1100), fr(540, 1300, 1.04, 540, 1100)), shake: rumble(1.6),
+        actors: [P("yaiBua", 190, 1780, 0.95, "kCover", "closed", "frown"), P("fonPhone", 500, 1810, 0.95, "kCover", "wide", "o"), P("taTian", 900, 1760, 0.9, "kCover", "worry", "frown", { flip: true })],
+        fx: (tl, id, t0, L) => { Ngw.kutiLife(tl, "ku", t0, D("t3"), [1.2]); put(L.light, `<g opacity=".7">${Array.from({ length: 60 }, (_, k) => `<circle cx="${(k * 97) % 1100}" cy="${200 + (k * 211) % 1500}" r="${2 + (k % 3)}" fill="#c8bca0"/>`).join("")}</g>`); } });
+      // T4 · the deadly mistake: drivers crawl up under the highway overpass — the wind squeezes through the gap faster, with the debris in it
+      ADD("t4", { ...NSC("t4", { horizon: 1180, rain: 0.9, vx: 540, fgRice: false,
+          monster: { id: "mt4", x: 620, y: 1190, h: 760, wb: 380, wt: 700, p: 1.9, tx: 660, seed: 47, slotDx: -560, flashes: [], ds: 2.6 },
+          road: { y: 1560, h: 400 }, overpass: { y: 520, h: 150, ground: 1560, pier: 980, slopeX: 560 } }),
+        grade: GW,
+        land: { y0: 380 },
+        cam: push2("t4", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.05, 540, 960)), shake: rumble(2),
+        actors: [P("exA", 470, 900, 0.5, "kCover", "wide", "scream", { flip: true }), P("exB", 370, 1040, 0.5, "kCover", "wide", "scream", { flip: true }), P("taTian", 260, 1190, 0.5, "kCover", "worry", "scream", { flip: true })],
+        fx: (tl, id, t0, L) => { Ngw.monsterLife(tl, "mt4", t0, D("t4")); put(L.light, Ngw.streaks(300, 1300, 760, 1450, 30, 81) + `<g opacity=".95">${Ngw.debris(200, 1200, 800, 1350, 12, 83, 0.55)}</g>`); } });
+      // T5 · caught outside with nowhere to go: ปู flat in the roadside ditch, arms over his head, the monster tearing past
+      ADD("t5", { ...NSC("t5", { horizon: 840, rain: 0.9, fgRice: false, ditch: { y: 1450 },
+          monster: { id: "mt5", x: 600, y: 1240, h: 1060, wb: 400, wt: 820, p: 1.8, tx: 680, seed: 49, slotDx: -640, ds: 3, bigScale: 1.5, flashes: [[1.1, 0.03]] },
+          far: () => Rup.tree(110, 880, 220) + Tk.pickup(990, 872, 0.26) }),
+        land: { y0: 330 },
+        cam: push2("t5", fr(540, 1100, 1.0, 540, 960), fr(540, 1100, 1.04, 540, 960)), shake: rumble(2),
+        actors: [P("pu", 880, 1540, 0.9, "prone", "closed", "frown")],
+        fx: (tl, id, t0) => Ngw.monsterLife(tl, "mt5", t0, D("t5"), { dx: 60 }) });
+      // T6 · after: the village flattened — broken walls, roofs gone, a pole down, debris everywhere; the storm moving off, the sun
+      // breaking through; ยายบัว holds on to ปู, ฝน lowers her phone
+      ADD("t6", { set: "ngwScape", setOpts: { id: "t6", mood: "gold", wallX: 360, horizon: 1100, wind: 0.2, fgRice: false, sunX: 900,
+          spouts: [{ id: "rope6", kind: "land", x: 140, y: 1104, tx: 60, ty: 640, wb: 14, wt: 120, p: 3, bend: 60, bend2: -30, spray: 40, seed: 5, op: 0.6, rings: [] }],
+          ruins: [{ x: 120, y: 1260, s: 0.4, level: 2 }, { x: 560, y: 1250, s: 0.36, level: 2, seed: 66, flip: 1 }, { x: 940, y: 1262, s: 0.4, level: 1, dir: -1, seed: 67 }, { x: 1320, y: 1250, s: 0.34, level: 2, seed: 68 }, { x: -320, y: 1252, s: 0.34, level: 2, seed: 69 }],
+          poles: { xs: [-420, 300, 1020, 1740], y: 1420, s: 0.95, lean: [0, 62, 0, 0], sag: 120 },
+          props: () => Ngw.debris(-700, 1800, 1300, 1980, 70, 91, 1.1) + Tk.pickup(-120, 1500, 0.5) },
+        dark: 0, light: GOLDL, grade: GG,
+        land: { y0: 420 },
+        cam: push2("t6", fr(540, 960, 1.0, 540, 960), fr(540, 970, 1.04, 540, 960)),
+        actors: [P("yaiBua", 400, 1820, 0.95, "kneel", "worry", "frown"), P("pu", 560, 1800, 0.76, "idle", "worry", "frown", { flip: true }), P("fonPhone", 820, 1860, 1.0, "phoneLook", "worry", "frown", { flip: true })] });

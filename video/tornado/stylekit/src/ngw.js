@@ -21,6 +21,10 @@
   Sets.DEFS += `
     <linearGradient id="ngwSpoutW" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e6eeee"/><stop offset=".4" stop-color="#c2ccd0"/><stop offset=".82" stop-color="#8a98a0"/><stop offset="1" stop-color="#55636c"/></linearGradient>
     <linearGradient id="ngwSpoutL" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#b08e66"/><stop offset=".32" stop-color="#9a8a76"/><stop offset=".8" stop-color="#76808a"/><stop offset="1" stop-color="#4c5862"/></linearGradient>
+    <linearGradient id="ngwSpoutD" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#7a6650"/><stop offset=".25" stop-color="#5a5854"/><stop offset=".65" stop-color="#46505a"/><stop offset="1" stop-color="#36404a"/></linearGradient>
+    <radialGradient id="ngwBack"><stop offset="0" stop-color="#c4d0c4" stop-opacity=".95"/><stop offset=".55" stop-color="#94a8a0" stop-opacity=".6"/><stop offset="1" stop-color="#6a8080" stop-opacity="0"/></radialGradient>
+    <radialGradient id="ngwSlot"><stop offset="0" stop-color="#f2e6a8" stop-opacity=".95"/><stop offset=".5" stop-color="#a8b884" stop-opacity=".55"/><stop offset="1" stop-color="#5a6a5a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="ngwPF"><stop offset="0" stop-color="#f0fffa" stop-opacity="1"/><stop offset=".25" stop-color="#8affd8" stop-opacity=".85"/><stop offset=".6" stop-color="#3ad0c8" stop-opacity=".35"/><stop offset="1" stop-color="#2a9ab8" stop-opacity="0"/></radialGradient>
     <linearGradient id="ngwLake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a8e94"/><stop offset=".06" stop-color="#52666e"/><stop offset=".45" stop-color="#2e3e46"/><stop offset="1" stop-color="#1a262c"/></linearGradient>
     <radialGradient id="ngwMist"><stop offset="0" stop-color="#f2f6f6" stop-opacity=".95"/><stop offset=".55" stop-color="#d6e0e2" stop-opacity=".6"/><stop offset="1" stop-color="#c0ccd0" stop-opacity="0"/></radialGradient>
     <radialGradient id="ngwDust"><stop offset="0" stop-color="#ab8c66" stop-opacity=".95"/><stop offset=".6" stop-color="#8c7458" stop-opacity=".6"/><stop offset="1" stop-color="#6a5a48" stop-opacity="0"/></radialGradient>
@@ -35,7 +39,7 @@
   // kind "land": dusty brown base, a debris cloud, straw, leaves and bits of roof sheet in orbit.
   // ids: #id (whole, moves with o.dx in funnelLife), #id-sw (sways about the top), #id-hx (spiral bands), #id-base, .ngwOrb rings
   Ngw.funnel = (o = {}) => {
-    const id = o.id || "nf", r = mk(o.seed || 11), land = o.kind === "land", ds = o.ds ?? 1;
+    const id = o.id || "nf", r = mk(o.seed || 11), land = o.kind === "land", dark = o.tone === "dark", ds = o.ds ?? 1, slope = o.slope ?? 0.3;
     const x0 = o.x ?? 540, y0 = o.y ?? 1100, x1 = o.tx ?? x0 + 60, y1 = o.ty ?? 440, H = y0 - y1;
     const wb = o.wb ?? 44, wt = o.wt ?? 280, pw = o.p ?? 2.4, bend = o.bend ?? 40, bend2 = o.bend2 ?? -14, sp = o.spray ?? wb * 2.6;
     const cx = (t) => x0 + (x1 - x0) * t + bend * Math.sin(Math.PI * t) + bend2 * Math.sin(2 * Math.PI * t), cy = (t) => y0 - H * t;
@@ -44,15 +48,18 @@
     const band = (a, b) => smooth(T.map((t) => [cx(t) + a * hw(t), cy(t)]).concat(T.slice().reverse().map((t) => [cx(t) + b * hw(t), cy(t)])), true);
     const bd = band(-1, 1), op = o.op ?? 0.96;
     // spiral bands: slanted strokes slid sideways (front face moves left → right), clipped to the body
-    const S = 46, xs0 = Math.min(x0, x1) - wt - S * 2, xs1 = Math.max(x0, x1) + wt + S * 2 + H * 0.3; let hx = "";
-    for (let x = xs0, k = 0; x < xs1; x += S, k++) { const d = `M${f1(x)},${f1(y0 + 30)}L${f1(x + H * 0.3)},${f1(y1 - 60)}`;
-      hx += `<path d="${d}" stroke="${land ? "#3e3a34" : "#3a4a56"}" stroke-width="${k % 2 ? 6 : 11}" opacity="${land ? 0.32 : 0.26}"/><path d="M${f1(x + S * 0.5)},${f1(y0 + 30)}L${f1(x + S * 0.5 + H * 0.3)},${f1(y1 - 60)}" stroke="#f4f8f8" stroke-width="3" opacity=".2"/>`; }
+    const S = o.stripe ?? 46, xs0 = Math.min(x0, x1) - wt - S * 2 - H * slope, xs1 = Math.max(x0, x1) + wt + S * 2 + H * slope; let hx = "";
+    for (let x = xs0, k = 0; x < xs1; x += S, k++) { const d = `M${f1(x)},${f1(y0 + 30)}L${f1(x + H * slope)},${f1(y1 - 60)}`;
+      hx += `<path d="${d}" stroke="${dark ? "#14181c" : land ? "#3e3a34" : "#3a4a56"}" stroke-width="${f1((k % 2 ? 6 : 11) * (dark ? 2.2 : 1))}" opacity="${dark ? 0.2 : land ? 0.32 : 0.26}"/><path d="M${f1(x + S * 0.5)},${f1(y0 + 30)}L${f1(x + S * 0.5 + H * slope)},${f1(y1 - 60)}" stroke="${dark ? "#9aa6ae" : "#f4f8f8"}" stroke-width="${dark ? 5 : 3}" opacity="${dark ? 0.1 : 0.2}"/>`; }
     let g = `<g id="${id}" class="ngwF" data-sp="${S}" data-top="${f1(x1)} ${f1(y1)}" data-base="${f1(x0)} ${f1(y0)}" opacity="${op}"><g id="${id}-sw">
       <defs><clipPath id="${id}-clip"><path d="${bd}"/></clipPath></defs>
-      <path d="${bd}" fill="url(#${land ? "ngwSpoutL" : "ngwSpoutW"})"/>
-      <g clip-path="url(#${id}-clip)"><path d="${band(0.3, 1.25)}" fill="#18242e" opacity=".5" filter="url(#skBlur10)"/><path d="${band(-0.72, -0.08)}" fill="#f6faf8" opacity="${land ? 0.2 : 0.42}" filter="url(#skBlur10)"/>
+      <path d="${bd}" fill="url(#${dark ? "ngwSpoutD" : land ? "ngwSpoutL" : "ngwSpoutW"})"/>
+      <g clip-path="url(#${id}-clip)"><path d="${band(0.3, 1.25)}" fill="#18242e" opacity=".5" filter="url(#skBlur10)"/><path d="${band(-0.72, -0.08)}" fill="#f6faf8" opacity="${dark ? 0.12 : land ? 0.2 : 0.42}" filter="url(#skBlur10)"/>
         <g id="${id}-hx">${hx}</g></g>
       <path d="${bd}" fill="none" stroke="#26343e" stroke-width="2.6" opacity=".4"/>`;
+    if (dark) g += `<path d="${bd}" fill="none" stroke="#12181e" stroke-width="7" opacity=".6" filter="url(#skBlur4)"/>`;
+    if (dark) { let sc = ""; for (let k = 0; k < 26; k++) { const t = 0.05 + r() * 0.95, sd = k % 2 ? 1 : -1, rr = hw(t) * (0.12 + r() * 0.16); sc += `<ellipse cx="${f1(cx(t) + sd * hw(t) * (0.95 + r() * 0.1))}" cy="${f1(cy(t))}" rx="${f1(rr)}" ry="${f1(rr * 0.6)}" fill="${k % 3 ? "#2a3238" : "#3e4448"}"/>`; }
+      g += `<g filter="url(#skBlur10)" opacity=".9">${sc}</g>`; }
     // ---- the base
     let b = "";
     if (!land) {
@@ -67,10 +74,10 @@
       // the debris cloud: a dark skirt at the ground, a soft halo, puffy lumps lit on top, flecks of straw and mud
       b += `<ellipse cx="${f1(x0)}" cy="${f1(y0 + 8)}" rx="${f1(sp * 1.6)}" ry="${f1(sp * 0.24)}" fill="#1e1610" opacity=".55" filter="url(#skBlur4)"/>`;
       b += `<ellipse cx="${f1(x0)}" cy="${f1(y0 - sp * 0.5)}" rx="${f1(sp * 1.15)}" ry="${f1(sp * 0.55)}" fill="#8a7258" opacity=".55" filter="url(#skBlur10)"/>`;
-      let m = ""; for (let k = 0; k < 15; k++) { const a = (k / 15) * Math.PI * 2, rr = sp * (0.2 + r() * 0.2), px = x0 + Math.cos(a) * sp * 0.82, py = y0 - sp * 0.2 - Math.abs(Math.sin(a)) * sp * 0.36 - r() * sp * 0.22;
+      const dh = o.dustH ?? 1; let m = ""; for (let k = 0; k < 15; k++) { const a = (k / 15) * Math.PI * 2, rr = sp * (0.2 + r() * 0.2), px = x0 + Math.cos(a) * sp * 0.82, py = y0 - dh * (sp * 0.2 + Math.abs(Math.sin(a)) * sp * 0.36 + r() * sp * 0.22);
         m += `<circle cx="${f1(px)}" cy="${f1(py)}" r="${f1(rr)}" fill="${k % 3 ? "#6e5842" : "#836a4e"}"/><circle cx="${f1(px - rr * 0.22)}" cy="${f1(py - rr * 0.32)}" r="${f1(rr * 0.58)}" fill="#ad9068" opacity=".75"/>`; }
-      m += `<ellipse cx="${f1(x0)}" cy="${f1(y0 - sp * 0.42)}" rx="${f1(sp * 0.42)}" ry="${f1(sp * 0.5)}" fill="#7a6248"/>`;
-      b += `<g filter="url(#skBlur4)" opacity=".94">${m}</g>`;
+      m += `<ellipse cx="${f1(x0)}" cy="${f1(y0 - dh * sp * 0.42)}" rx="${f1(sp * 0.42)}" ry="${f1(dh * sp * 0.5)}" fill="#7a6248"/>`;
+      b += `<g filter="url(#skBlur4)" opacity="${o.dustOp ?? 0.94}">${m}</g>`;
       for (let k = 0; k < 34; k++) { const a = r() * Math.PI * 2, rr = sp * (0.7 + r() * 1.0); b += `<circle cx="${f1(x0 + Math.cos(a) * rr)}" cy="${f1(y0 - sp * 0.3 + Math.sin(a) * rr * 0.35 - r() * sp * 0.6)}" r="${f1(1.6 + r() * 2.6)}" fill="${k % 2 ? "#3a2a1a" : "#d8c070"}" opacity=".8"/>`; }
     }
     g += `<g id="${id}-base">${b}</g>`;
@@ -107,6 +114,101 @@
     if (o.dx) tl.fromTo(root, { x: 0 }, { x: o.dx, duration: dur, ease: "none", immediateRender: false }, t0);
   };
 
+
+  // ---------------------------------------------------------------- the big one: a supercell and its wedge tornado
+  // o: x, y (base on the ground), h (funnel height), wb / wt (widths), tx (top x), plates, slotDx, flashes [[dx, dy] in base widths]
+  // ids: the funnel's ids (id, id-sw, id-hx …) + #id-meso (turns), .id-pf power flashes, #id-big (big debris)
+  Ngw.monster = (o = {}) => {
+    const id = o.id || "mt", r = mk(o.seed || 41), x0 = o.x ?? 560, y0 = o.y ?? 1090, H = o.h ?? 470, wb = o.wb ?? 440, wt = o.wt ?? 640, x1 = o.tx ?? x0 + 30, y1 = y0 - H;
+    let g = `<g id="${id}-all"><ellipse cx="${f1(x0 + 30)}" cy="${f1(y0 - H * 0.5)}" rx="${f1(wt * 1.5)}" ry="${f1(H * 0.98)}" fill="url(#ngwBack)" opacity="${o.back ?? 0.95}"/>`;
+    // the clear slot: lit sky behind and to one side, so the tornado reads as a dark mass against it
+    if (o.slot !== false) g += `<ellipse cx="${f1(x0 + (o.slotDx ?? 560))}" cy="${f1(y0 - H * 0.45)}" rx="${f1(wt * 0.95)}" ry="${f1(H * 0.85)}" fill="url(#ngwSlot)" opacity="${o.slot ?? 0.8}"/>`;
+    // the mesocyclone: stacked plates, wider and paler up the stack, a lit rim along each underside
+    const n = o.plates ?? 7, ph = o.plateH ?? 54, pw = o.plateW ?? 130; let m = "";
+    for (let k = n - 1; k >= 0; k--) { const y = y1 - 40 - k * ph, rx = wt * 0.8 + k * pw, ry = 40 + k * 7, cx = x1 + k * 14 + (r() - 0.5) * 20;
+      m += `<ellipse cx="${f1(cx)}" cy="${f1(y)}" rx="${f1(rx)}" ry="${f1(ry)}" fill="${k % 2 ? "#26303a" : "#323e48"}"/><path d="M${f1(cx - rx * 0.97)},${f1(y + 4)}A${f1(rx)},${f1(ry)} 0 0 0 ${f1(cx + rx * 0.97)},${f1(y + 4)}" stroke="#b4c4c6" stroke-width="${f1(8 + k * 1.6)}" fill="none" opacity="${f1(0.3 + 0.04 * k)}"/><path d="M${f1(cx - rx * 0.9)},${f1(y + ry * 0.7)}A${f1(rx * 0.92)},${f1(ry * 0.6)} 0 0 0 ${f1(cx + rx * 0.9)},${f1(y + ry * 0.7)}" stroke="#141a20" stroke-width="10" fill="none" opacity=".35"/>`; }
+    g += `<g id="${id}-meso" filter="url(#skBlur4)">${m}</g>`;
+    // rain and hail curtains hanging off the back of the storm
+    for (let k = 0; k < 7; k++) { const x = x0 - wt * 2.2 - k * 90 + r() * 40, w = 70 + r() * 90; g += `<path d="M${f1(x)},${f1(y1 - 60)}L${f1(x - 60)},${f1(y0 + 10)}L${f1(x - 60 + w)},${f1(y0 + 10)}L${f1(x + w)},${f1(y1 - 60)}Z" fill="#8a9aa4" opacity="${f1(0.16 + r() * 0.14)}" filter="url(#skBlur10)"/>`; }
+    // the funnel itself
+    g += Ngw.funnel({ id, kind: "land", tone: "dark", x: x0, y: y0, tx: x1, ty: y1, wb, wt, p: o.p ?? 1.5, bend: o.bend ?? 18, bend2: o.bend2 ?? -10, spray: o.spray ?? wb * 0.62, dustH: o.dustH ?? 0.55, dustOp: o.dustOp ?? 0.86, seed: o.seed || 41, ds: o.ds ?? 2.4, wall: o.wall ?? wt * 1.35, slope: o.slope ?? 0.14, stripe: o.stripe ?? 70, rings: o.rings, op: 1 });
+    // big debris: a roof sheet, planks, a tumbling car, a tree, high in the debris cloud
+    let big = ""; (o.big || [[-0.55, 0.32, "sheet", 1], [0.62, 0.22, "car", 1], [0.4, 0.55, "plank", 1], [-0.35, 0.7, "sheet", 0.8], [0.15, 0.85, "plank", 0.7], [-0.75, 0.12, "tree", 1]]).forEach(([fx, fy, kind, s], k) => {
+      const x = x0 + fx * wb * 1.4, y = y0 - fy * H, a = Math.round(r() * 80 - 40), sc = s * (o.bigScale ?? 1);
+      const shape = kind === "car" ? `<path d="M-40,8V-6L-26,-20H18L34,-6H44V8Z" fill="#c8cfd4" stroke="${INK}" stroke-width="3"/><rect x="-20" y="-16" width="16" height="10" fill="#5a6a78"/><rect x="2" y="-16" width="16" height="10" fill="#5a6a78"/><circle cx="-24" cy="10" r="8" fill="#222" stroke="${INK}" stroke-width="2"/><circle cx="28" cy="10" r="8" fill="#222" stroke="${INK}" stroke-width="2"/>`
+        : kind === "plank" ? `<rect x="-34" y="-5" width="68" height="10" fill="#8a6a44" stroke="${INK}" stroke-width="2.4"/>`
+        : kind === "tree" ? `<path d="M0,30V-10" stroke="#4a3220" stroke-width="7"/><circle cx="0" cy="-22" r="22" fill="#2e4a2a" stroke="${INK}" stroke-width="2.4"/><circle cx="-14" cy="-10" r="14" fill="#2e4a2a"/><circle cx="14" cy="-12" r="15" fill="#2e4a2a"/>`
+        : `<path d="M-30,-14L28,-18L32,12L-26,16Z" fill="#a8b0b4" stroke="${INK}" stroke-width="2.6"/><path d="M-20,-14L-16,15M-6,-15L-2,14M8,-16L12,13M20,-17L24,12" stroke="#78848a" stroke-width="2"/>`;
+      big += `<g class="${id}-bd" transform="translate(${f1(x)},${f1(y)}) rotate(${a}) scale(${f1(sc)})">${shape}</g>`; });
+    g += `<g id="${id}-big" opacity=".92">${big}</g>`;
+    // power flashes: blue-green bursts where the lines and transformers go
+    (o.flashes || [[-0.75, 0.02], [0.85, 0.05]]).forEach(([fx, fy], k) => { const x = x0 + fx * wb, y = y0 - fy * H;
+      g += `<g class="${id}-pf" opacity="${o.flashOn === false ? 0 : 1}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(wb * 0.3)}" fill="url(#ngwPF)"/><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(wb * 0.04)}" fill="#f4fffc"/></g>`; });
+    return g + `</g>`;
+  };
+  Ngw.monsterLife = (tl, id, t0, dur, o = {}) => {
+    Ngw.funnelLife(tl, id, t0, dur, { spin: o.spin ?? 0.55, sway: o.sway ?? 0.8, dx: o.dx });
+    const n = (p) => Math.max(1, Math.ceil(dur / p)), all = document.getElementById(`${id}-all`); if (!all) return;
+    tl.fromTo(`#${id}-meso`, { x: -10 }, { x: 10, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: n(2.4), immediateRender: false }, t0);
+    all.querySelectorAll(`.${id}-bd`).forEach((e, k) => { tl.to(e, { rotation: `+=${k % 2 ? 360 : -360}`, x: `+=${k % 2 ? 60 : -60}`, y: `-=${30 + k * 10}`, duration: dur, ease: "none", immediateRender: false }, t0); });
+    all.querySelectorAll(`.${id}-pf`).forEach((e, k) => { const t = t0 + (o.flashAt || [0.6, 1.7])[k % 2] + k * 0.1; tl.fromTo(e, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.04 }, { opacity: 0.3, duration: 0.06 }, { opacity: 0.9, duration: 0.05 }, { opacity: 0, duration: 0.35 }], immediateRender: false }, t); });
+    if (o.dx) tl.fromTo(all, { x: 0 }, { x: o.dx, duration: dur, ease: "none", immediateRender: false }, t0);
+  };
+  // a Thai concrete power pole: crossarms, insulators, a transformer on some, a tangle of cables; wires run pole to pole
+  Ngw.pole = (x, y, s = 1, o = {}) => `<g transform="translate(${x},${y}) scale(${s}) rotate(${o.lean || 0})"><path d="M-9,0L-6,-440H6L9,0Z" fill="#a8a69c" ${OUT(3)}/><path d="M-60,-400H60M-46,-360H46" stroke="#5a5a56" stroke-width="8"/>
+    ${[-54, -20, 20, 54].map((dx) => `<rect x="${dx - 4}" y="-418" width="8" height="18" rx="3" fill="#e8e4d8" stroke="${INK}" stroke-width="1.6"/>`).join("")}${o.tf ? `<rect x="10" y="-330" width="40" height="56" rx="6" fill="#7a8288" ${OUT(2.4)}/><path d="M18,-330v-14M42,-330v-14" stroke="#555" stroke-width="3"/>` : ""}
+    <path d="M-6,-300q-30,20 -20,60q10,30 -12,50M6,-290q34,10 22,52q-10,30 14,44" stroke="#1a1a1a" stroke-width="3" fill="none"/><ellipse cx="-14" cy="-230" rx="16" ry="10" fill="none" stroke="#1a1a1a" stroke-width="3"/></g>`;
+  Ngw.wires = (xs, y, s = 1, sag = 40) => { let d = ""; for (let i = 0; i < xs.length - 1; i++) [-54, -20, 20, 54].forEach((dx, k) => { const a = xs[i] + dx * s, b = xs[i + 1] + dx * s, yy = y - 410 * s; d += `M${f1(a)},${f1(yy)}Q${f1((a + b) / 2)},${f1(yy + sag * (1 + k * 0.15))} ${f1(b)},${f1(yy)}`; });
+    return `<path d="${d}" stroke="#1a1a1a" stroke-width="${f1(2.4 * s + 0.6)}" fill="none"/>`; };
+  // a two-lane highway across the frame: shoulders, asphalt, the centre line, a green distance sign
+  Ngw.road = (o = {}) => { const y = o.y ?? 1560, h = o.h ?? 170;
+    return `<rect x="-1400" y="${y - 16}" width="4000" height="16" fill="#8a8470"/><rect x="-1400" y="${y}" width="4000" height="${h}" fill="#3a3c40"/><rect x="-1400" y="${y + h}" width="4000" height="20" fill="#8a8470"/>
+      <path d="M-1400,${y + h / 2}H2600" stroke="#f2c230" stroke-width="7" stroke-dasharray="70 50"/><path d="M-1400,${y + 10}H2600M-1400,${y + h - 10}H2600" stroke="#e8e4d8" stroke-width="5"/>
+      ${Array.from({ length: 30 }, (_, k) => `<path d="M${-1300 + k * 140},${y + 30 + (k * 37) % (h - 50)}l${30 + (k % 3) * 10},0" stroke="#9aa4ac" stroke-width="2" opacity=".35"/>`).join("")}`; };
+  Ngw.sign = (x, y, s = 1, t1 = "ตัวเมือง", t2 = "5 กม.") => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-70,0V-200M70,0V-200" stroke="#9a9a96" stroke-width="12"/><rect x="-150" y="-330" width="300" height="140" rx="12" fill="#1e7a4a" stroke="#f2f0ea" stroke-width="8"/>
+    <text x="0" y="-268" text-anchor="middle" font-family="Sriracha" font-size="52" fill="#f2f0ea">${t1}</text><text x="0" y="-212" text-anchor="middle" font-family="Sriracha" font-size="40" fill="#f2f0ea">${t2}</text></g>`;
+
+  // ---------------------------------------------------------------- damage: a house losing its roof, a ruined house, a debris field, an overpass
+  // level 1: Tk.house with a hole torn in the roof, rafters showing, tiles peeling off toward the storm (dir -1 = to the left)
+  // level 2: the walls broken off jagged, no roof, a heap of planks and tiles at the foot, a sheet of roofing leaning on it
+  Ngw.ruin = (x, y, s = 1, o = {}) => {
+    const r = mk(o.seed || 61), lv = o.level ?? 1, dir = o.dir ?? -1;
+    if (lv === 1) { let g = Tk.house(x, y, s, o) + `<g transform="translate(${x},${y}) scale(${s * (o.flip ? -1 : 1)},${s})">`;
+      g += `<path d="M-200,-470L-120,-560L-20,-610L60,-560L140,-520L200,-440L60,-430L-40,-450Z" fill="#1e1610" stroke="${INK}" stroke-width="6"/>`;
+      g += [-150, -80, -10, 60, 130].map((rx) => `<path d="M${rx},-450L${rx + 30},-590" stroke="#8a6a44" stroke-width="12"/><path d="M${rx},-450L${rx + 30},-590" stroke="${INK}" stroke-width="3" fill="none"/>`).join("");
+      for (let k = 0; k < 14; k++) { const tx = -60 + dir * (60 + k * 50) + r() * 60, ty = -620 - k * 34 - r() * 80; g += `<rect x="${f1(tx)}" y="${f1(ty)}" width="46" height="26" fill="#a8442e" stroke="${INK}" stroke-width="3" transform="rotate(${f1(r() * 120 - 60)} ${f1(tx + 23)} ${f1(ty + 13)})"/>`; }
+      return g + `</g>`; }
+    let g = `<g transform="translate(${x},${y}) scale(${s * (o.flip ? -1 : 1)},${s})"><ellipse cx="0" cy="12" rx="560" ry="40" fill="#000" opacity=".35"/>`;
+    let top = "M-380,0V-260"; for (let k = 1; k <= 12; k++) top += `L${-380 + k * 63},${f1(-200 - r() * 160 + (k % 3 === 0 ? 70 : 0))}`; top += "V0Z";
+    g += `<path d="${top}" fill="#d8c4a0" stroke="${INK}" stroke-width="7"/><rect x="-300" y="-180" width="120" height="110" fill="#2a2018" stroke="${INK}" stroke-width="5"/><rect x="140" y="-170" width="120" height="100" fill="#2a2018" stroke="${INK}" stroke-width="5"/>`;
+    g += `<path d="M-340,-240l60,30M200,-260l70,40" stroke="#5a4a38" stroke-width="5"/>`;
+    for (let k = 0; k < 22; k++) { const px = -420 + r() * 840, py = -10 - r() * 90, w = 60 + r() * 120, a = r() * 50 - 25; g += `<rect x="${f1(px)}" y="${f1(py)}" width="${f1(w)}" height="14" fill="${k % 4 === 0 ? "#a8442e" : "#8a6a44"}" stroke="${INK}" stroke-width="3" transform="rotate(${f1(a)} ${f1(px + w / 2)} ${f1(py + 7)})"/>`; }
+    g += `<path d="M120,-10L420,-300L460,-280L170,10Z" fill="#a8b0b4" stroke="${INK}" stroke-width="5"/><path d="M180,-60L430,-290M220,-30L445,-280" stroke="#78848a" stroke-width="4"/>`;
+    return g + `</g>`;
+  };
+  Ngw.debris = (x0, x1, y0, y1, n = 40, seed = 71, sc = 1) => { const r = mk(seed); let g = "";
+    for (let k = 0; k < n; k++) { const t = r(), x = x0 + r() * (x1 - x0), y = y0 + t * (y1 - y0), s = sc * (0.5 + t * 0.9), a = Math.round(r() * 160 - 80), q = r();
+      const sh = q < 0.35 ? `<rect x="-50" y="-7" width="100" height="14" fill="#8a6a44" stroke="${INK}" stroke-width="3"/>` : q < 0.55 ? `<path d="M-46,-16L42,-22L48,14L-40,20Z" fill="#a8b0b4" stroke="${INK}" stroke-width="3"/><path d="M-30,-16L-26,18M-10,-18L-6,17M10,-19L14,16M28,-20L32,15" stroke="#78848a" stroke-width="2.4"/>`
+        : q < 0.7 ? `<rect x="-22" y="-12" width="44" height="24" fill="#a8442e" stroke="${INK}" stroke-width="3"/>` : q < 0.85 ? `<path d="M-40,4L36,-4M-6,0l20,-24M10,-2l14,16" stroke="#4a3220" stroke-width="7" stroke-linecap="round"/><circle cx="20" cy="-26" r="10" fill="#2e4a2a"/>` : `<circle r="18" fill="#222" stroke="${INK}" stroke-width="3"/><circle r="8" fill="#555"/>`;
+      g += `<g transform="translate(${f1(x)},${f1(y)}) rotate(${a}) scale(${f1(s)},${f1(s * 0.75)})">${sh}</g>`; }
+    return g; };
+  // a concrete overpass across the frame: the deck (top ty), girders under it, two piers, the abutment slope on the left where people
+  // crawl up under the deck; returns { set (behind the actors), fg (the deck edge in front) }
+  Ngw.overpass = (o = {}) => { const ty = o.y ?? 560, dh = o.h ?? 150, gy = o.ground ?? 1560, sx = o.slopeX ?? 520, gb = ty + dh + 60;
+    // girders under the deck, the far pier, the embankment slope rising from the ground on the left up under the deck
+    let set = `<path d="M-1400,${ty + dh}H2600V${gb}H-1400Z" fill="#4e5052"/>${Array.from({ length: 40 }, (_, k) => `<path d="M${-1400 + k * 100},${ty + dh}V${gb}" stroke="#3a3c3e" stroke-width="10"/>`).join("")}`;
+    set += `<path d="M${(o.pier ?? 960) - 70},${gb}L${(o.pier ?? 960) - 60},${gy}H${(o.pier ?? 960) + 60}L${(o.pier ?? 960) + 70},${gb}Z" fill="#8a8a84" stroke="${INK}" stroke-width="6"/>`;
+    set += `<path d="M-1400,${gb}H${sx}L${sx - 560},${gy}H-1400Z" fill="#9a968a" stroke="${INK}" stroke-width="6"/>`;
+    for (let k = 1; k < 8; k++) { const t = k / 8; set += `<path d="M-1400,${f1(gb + t * (gy - gb))}H${f1(sx - 560 * t)}" stroke="#7a766a" stroke-width="4"/>`; }
+    set += `<path d="M${sx},${gb}L${sx - 560},${gy}" stroke="#c8c4b6" stroke-width="10"/>`;
+    const fg = `<rect x="-1400" y="${ty}" width="4000" height="${dh}" fill="#a8a69c" stroke="${INK}" stroke-width="7"/><rect x="-1400" y="${ty - 40}" width="4000" height="40" fill="#c8c6bc" stroke="${INK}" stroke-width="5"/>
+      ${Array.from({ length: 50 }, (_, k) => `<path d="M${-1400 + k * 80},${ty - 40}V${ty - 90}" stroke="#8a8a84" stroke-width="10"/>`).join("")}<path d="M-1400,${ty - 90}H2600" stroke="#8a8a84" stroke-width="12"/>
+      <path d="M-1400,${ty + dh - 24}H2600" stroke="#7a786e" stroke-width="10"/><rect x="560" y="${ty + 26}" width="320" height="70" rx="8" fill="#1e7a4a" stroke="#f2f0ea" stroke-width="6"/><text x="720" y="${ty + 74}" text-anchor="middle" font-family="Sriracha" font-size="40" fill="#f2f0ea">ทางหลวง</text>`;
+    return { set, fg }; };
+  // wind streaks rushing through a gap toward the camera (the overpass wind tunnel), with flying debris
+  Ngw.streaks = (x0, x1, y0, y1, n = 26, seed = 81) => { const r = mk(seed); let g = "";   // wind rushing right → left through the gap
+    for (let k = 0; k < n; k++) { const y = y0 + r() * (y1 - y0), x = x0 + r() * (x1 - x0), L0 = 160 + r() * 340; g += `<path d="M${f1(x)},${f1(y)}l${f1(-L0)},${f1(L0 * 0.06)}" stroke="#eef2f2" stroke-width="${f1(2 + r() * 4)}" stroke-linecap="round" opacity="${f1(0.22 + r() * 0.3)}"/>`; }
+    return g; };
   // ---------------------------------------------------------------- the lake, its bank, the shrine
   Ngw.lake = (o = {}) => {   // from the horizon hz down to the near shore y1, in perspective: swell bands, wind streaks, whitecaps
     const hz = o.hz ?? 900, y1 = o.y1 ?? 1480, r = mk(o.seed || 5), D = y1 - hz;
@@ -222,8 +324,8 @@
       <path d="M${dx + 20},${fy - 700}H${dx + 280}M${dx + 20},${fy - 260}H${dx + 280}" stroke="#4a3220" stroke-width="16"/><rect x="${dx + 30}" y="${fy - 470}" width="70" height="20" rx="4" fill="#9a9a9a" ${OUT(2.4)}/><circle cx="${dx + 104}" cy="${fy - 460}" r="9" fill="#9a9a9a" ${OUT(2)}/>
       <path d="M${dx - 4},${fy - 900}V${fy}" stroke="#d8e4f0" stroke-width="5" opacity=".5"/></g>`;
     // the robe on a line, the shelf with soap and a cup
-    w += `<path d="M-200,${ty - 160}Q300,${ty - 120} 760,${ty - 170}" stroke="#d8d0b8" stroke-width="4" fill="none"/><g transform="translate(-400,-30)"><path d="M380,${ty - 136}Q370,${ty + 40} 400,${ty + 160}L560,${ty + 150}Q540,${ty + 20} 560,${ty - 142}Z" fill="#d8781e" ${OUT(4)}/>
-      <path d="M420,${ty - 120}Q412,${ty + 40} 430,${ty + 140}M480,${ty - 130}Q474,${ty + 30} 490,${ty + 150}" stroke="#b85a14" stroke-width="5" fill="none"/></g>`;
+    w += `<path d="M-200,${ty - 160}Q300,${ty - 120} 760,${ty - 170}" stroke="#d8d0b8" stroke-width="4" fill="none"/><g transform="translate(-400,-30)"><path d="M380,${ty - 136}Q370,${ty + 40} 400,${ty + 160}L560,${ty + 150}Q540,${ty + 20} 560,${ty - 142}Z" fill="${o.robeC || "#d8781e"}" ${OUT(4)}/>
+      <path d="M420,${ty - 120}Q412,${ty + 40} 430,${ty + 140}M480,${ty - 130}Q474,${ty + 30} 490,${ty + 150}" stroke="${o.robeS || "#b85a14"}" stroke-width="5" fill="none"/></g>`;
     w += `<rect x="560" y="${ty + 120}" width="150" height="16" fill="#8a6a4a" ${OUT(3)}/><rect x="580" y="${ty + 92}" width="40" height="28" rx="6" fill="#e8e0d0" ${OUT(2.4)}/><path d="M650,${ty + 120}l8,-48h30l8,48Z" fill="#4a9ad0" ${OUT(2.4)}/><path d="M666,${ty + 74}l-6,-30" stroke="#e84a6a" stroke-width="5"/>`;
     put(L.far, w);
     // the floor: wet tiles in perspective
@@ -300,6 +402,7 @@
     const hz = o.horizon ?? 1000;
     if (o.lake) { put(L.mid, Ngw.lake({ hz, ...o.lake })); put(L.mid, `<rect x="-1400" y="${hz - 110}" width="4000" height="210" fill="#8a9aa0" opacity=".16" filter="url(#skBlur24)"/>`); }
     (o.spouts || []).forEach((sp) => put(L[sp.layer || "mid"], Ngw.funnel(sp)));
+    if (o.monster) put(L[o.monster.layer || "mid"], Ngw.monster(o.monster));
     if (o.lake && o.bank !== false) put(L.set, Ngw.bank({ y1: o.lake.y1, ...(o.bankOpts || {}) }));
     if (o.crowd) put(L.set, Ngw.crowd(o.crowd));
     if (o.shrine) put(L.set, Rup2.shrine(o.shrine.x, o.shrine.y, o.shrine.s || 1));
@@ -308,6 +411,10 @@
     if (o.village) put(L.mid, o.village.map((v) => v.kind === "wat" ? Ngw.wat(v.x, v.y, v.s) : v.kind === "school" ? Ngw.school(v.x, v.y, v.s) : Tk.house(v.x, v.y, v.s, v)).join(""));
     if (o.ditch) { const d = Ngw.ditch(o.ditch); put(L.set, d.set); put(L.fg, d.fg); }
     if (o.far) put(L.mid, typeof o.far === "function" ? o.far() : o.far);
+    if (o.road) put(L.set, Ngw.road(o.road));
+    if (o.ruins) put(L[o.ruinsLayer || "mid"], o.ruins.map((v) => Ngw.ruin(v.x, v.y, v.s, v)).join(""));
+    if (o.overpass) { const ov = Ngw.overpass(o.overpass); put(L.set, ov.set); put(L.fg, ov.fg); }
+    if (o.poles) { const { xs, y = 1540, s: ps = 1, tf = [] } = o.poles; put(L.set, xs.map((x, k) => Ngw.pole(x, y, ps, { tf: tf.includes(k), lean: (o.poles.lean || [])[k] || 0 })).join("") + Ngw.wires(xs, y, ps, o.poles.sag ?? 40)); }
     if (o.props) put(L.set, typeof o.props === "function" ? o.props() : o.props);
   };
 

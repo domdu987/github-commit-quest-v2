@@ -1,4 +1,4 @@
-      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">นาคเล่นน้ำ · EP.1</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
+      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">ทอร์นาโด · EP.1</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
       Fx.setup(root);
       Engine.build(root, tl, shots);
       window.__flashes = window.StormFX && StormFX.flashResolve ? StormFX.flashResolve() : [];   // V1b: ≤1 soft flash per 10 s

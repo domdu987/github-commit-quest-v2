@@ -1,13 +1,13 @@
 #!/bin/bash
-# Build the นาคเล่นน้ำ style frames: build.sh <hf dir with lib/> <project> [landscape]
+# Build the style frames: build.sh <hf dir with lib/> <project> [landscape|vertical] [parts dir: tw (big tornado, default) | sf (v1, rejected)]
 # lib/ must hold the shared engine libs (rig, sets, engine …); this copies in takhian.js + stormfx.js (takhian kit),
 # the rupnak libs (rupnak kit) and ngw.js, assembles the parts and runs make.py. "landscape" re-lays it out 1920×1080.
 set -euo pipefail
 B="$(cd "$(dirname "$0")" && pwd)"; T="$B/.."; R="$(cd "$T/../../.." && pwd)"; H="$(cd "$1" && pwd)"; P="$2"
 U="$R/video/release/review/upgrade-2026-11-03"
 cp "$U/takhian-kit/src/takhian.js" "$U/takhian-kit/src/stormfx.js" "$U/rupnak-kit/lib/rupnak.js" "$U/rupnak-kit/lib/rupnak2.js" "$U/rupnak-kit/lib/rupstill.js" "$U/rupnak-kit/lib/rupx.js" "$T/src/ngw.js" "$H/lib/"
-W="$(mktemp -d)"; cat "$B/head.part" "$B/sigcard.part" "$B/helpers.part" "$B/sinkkit.part" "$T/src/handkit.part" "$T/sf/common.part" "$T/sf/body.part" "$B/foot.part" > "$W/ep.tmpl.html"
-TK_LIB="$H/lib" TK_PROJ="$H/$P" TK_SCHED="$T/sf/schedule.json" TK_TMPL="$W/ep.tmpl.html" python3 "$B/make.py"
+W="$(mktemp -d)"; cat "$B/head.part" "$B/sigcard.part" "$B/helpers.part" "$B/sinkkit.part" "$T/src/handkit.part" "$T/${4:-tw}/common.part" "$T/${4:-tw}/body.part" "$B/foot.part" > "$W/ep.tmpl.html"
+TK_LIB="$H/lib" TK_PROJ="$H/$P" TK_SCHED="$T/${4:-tw}/schedule.json" TK_TMPL="$W/ep.tmpl.html" python3 "$B/make.py"
 rm -rf "$W"
 if [ "${3:-}" = "landscape" ]; then
   cp "$R/video/longform/landscape.js" "$H/$P/assets/"

@@ -1,4 +1,24 @@
-# นาคเล่นน้ำ: style frames kit (owner 4 Nov 2569: "ทำภาพมาก่อน")
+# ทอร์นาโด: style frames kit
+
+## Current: big tornado, no ghosts (`tw/`)
+Owner, 4 Nov 2569: "ไม่ต้องเอาผีนะ เอาแบบภัยพิบัติใหญ่ ธอนาโดไม่ใช่พายุงัวช้าง ทำมารูปมา"
+
+Six frames, each 3 s, in `../frames/`:
+1. **t1 · ทอร์นาโดมาแต่ไกล.** A wedge-cone tornado under its supercell (stacked plates, clear slot, power flashes) comes across the plains toward the town. Cars have stopped on the highway and people are filming it (the mistake) while ยายบัว yells.
+2. **t2 · ถล่มหมู่บ้าน.** Roofs tear off toward the funnel, a pole snaps, and big debris (a car, sheets, planks) flies. ฝน and ปู run.
+3. **t3 · หลบห้องน้ำกลางบ้าน.** The windowless inner room. They kneel and cover their heads while dust falls, the door bulges and the bulb swings.
+4. **t4 · ห้ามหลบใต้สะพาน.** A grey what-if. Drivers crawl up the embankment under the highway overpass, and the wind and debris rush through the gap.
+5. **t5 · หมอบในคูน้ำ.** No building in reach, so ปู lies flat in the roadside ditch with his arms over his head as the tornado passes. The tree and the pickup are far off.
+6. **t6 · หลังพายุผ่าน.** A gold after-storm light. The village is flattened and a pole is down; the tornado ropes out in the distance.
+
+New pieces in `src/ngw.js`:
+- `Ngw.monster` / `Ngw.monsterLife`
+- `Ngw.ruin` (level 1: roof torn; level 2: walls broken)
+- `Ngw.debris`, `Ngw.overpass`, `Ngw.streaks`
+- `Ngw.pole` / `Ngw.wires`, `Ngw.road`, `Ngw.sign`
+- `Ngw.funnel` gained the `tone: "dark"` option.
+
+## v1 นาคเล่นน้ำ (rejected: it had a legend and a small spout) — `sf/`, frames in `../frames/v1-นาคเล่นน้ำ-ไม่ใช้/`
 
 The five style frames in `../frames/` were built from this kit. Each one comes in two versions:
 - vertical 1080×1920 (IG/Facebook)
@@ -34,8 +54,8 @@ The five style frames in `../frames/` were built from this kit. Each one comes i
 
 ## Build
 ```bash
-bash video/tornado/stylekit/build/build.sh <hf dir with lib/> ngw1             # vertical
-bash video/tornado/stylekit/build/build.sh <hf dir with lib/> ngwL landscape   # 16:9
+bash video/tornado/stylekit/build/build.sh <hf dir with lib/> ngw1 vertical tw    # vertical
+bash video/tornado/stylekit/build/build.sh <hf dir with lib/> ngwL landscape tw   # 16:9
 ```
 - `sf/common.part` is the takhian common part with one change: its storm hook (rain, wind, wet actors, hands) also accepts `ngwScape`.
 - Snapshots:
