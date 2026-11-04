@@ -1,0 +1,48 @@
+      // ---------- นาคเล่นน้ำ: style frames (owner 4 Nov 2569: "ทำภาพมาก่อน") ----------
+      SK.fon = ["#ebc19c", "#c8946e", "#f6d8b8"]; SK.pu = ["#d49c6c", "#a8704a", "#ecc09a"]; SK.bua = ["#c8946a", "#9a6a48", "#e0b48c"];
+      Object.assign(SKN, { fon: SK.fon, fonPhone: SK.fon, pu: SK.pu, puCam: SK.pu, yaiBua: SK.bua, taTian: SK.lung });
+      Rig.MODES.kWai = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 10, head: 14, uaF: -22, faF: -148, uaB: -16, faB: -150 });
+      Rig.MODES.film = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -112 + 2 * Math.sin(u * 2), faF: -28, uaB: 4, faB: -14, torso: -3, head: -10 });
+      Rig.MODES.camEye = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -64, faF: -118, uaB: -50, faB: -112, torso: 2, head: 0 });
+      const NSC = (id, o = {}) => ({ ...SC(id, o), set: "ngwScape" });
+      const HEARTS = (pts) => pts.map(([x, y, s, c]) => `<path transform="translate(${x},${y}) scale(${s})" d="M0,8C-14,-2 -18,-14 -9,-19C-4,-22 0,-17 0,-14C0,-17 4,-22 9,-19C18,-14 14,-2 0,8Z" fill="${c || "#ff4a6a"}" stroke="#fff" stroke-width="2"/>`).join("");
+      // 1 · นาคเล่นน้ำกลางบึง: the waterspout over the lake; ตาเทียน wais the naga shrine, ฝน lives it, ปู films it, the bank crowd holds phones up
+      ADD("f1", { ...NSC("f1", { horizon: 900, lake: { y1: 1500 }, rain: 0.5,
+          spouts: [{ id: "sp1", kind: "water", x: 560, y: 1150, tx: 620, ty: 330, wb: 40, wt: 240, p: 2.8, bend: 40, bend2: -16, seed: 3 }],
+          shrine: { x: 120, y: 1640, s: 0.62 }, naga: { x: 330, y: 1660, s: 0.62 },
+          crowd: [[860, 1560, 0.55, "#4a6a9a"], [930, 1575, 0.5, "#a84a3a", 0], [-80, 1570, 0.55, "#6a8a4a"], [1300, 1565, 0.55, "#c8a040"], [1420, 1580, 0.5, "#5a4a8a", 0]] }),
+        land: { y0: 250 },
+        cam: push2("f1", fr(540, 960, 1.0, 540, 960), fr(540, 940, 1.04, 540, 960)),
+        actors: [P("taTian", 520, 1760, 0.8, "kWai", "closed", "flat", { flip: true }),
+          P("fonPhone", 760, 1900, 1.0, "film", "wide", "o", { flip: true }),
+          P("puCam", 960, 1850, 0.78, "camEye", "wide", "o", { flip: true })],
+        fx: (tl, id, t0, L) => { Ngw.funnelLife(tl, "sp1", t0, D("f1")); put(L.glow, HEARTS([[492, 1252, 1.2], [462, 1186, 1.0, "#ff7a9a"], [500, 1126, 0.8], [474, 1072, 0.6, "#ffb0c0"]])); } });
+      // 2 · งวงข้ามนาเข้าหมู่บ้าน: the landspout has come off the lake (the far strip, left) and crosses the paddies toward the temple and
+      // the houses; ปู alone in the field, filming it — the cliffhanger of EP.1
+      ADD("f2", { ...NSC("f2", { horizon: 960, rain: 0.8, vx: 540, bund: 700, farLake: [-1400, 260],
+          spouts: [{ id: "sp2", kind: "land", x: 380, y: 1210, tx: 330, ty: 330, wb: 70, wt: 240, p: 2.5, bend: -40, bend2: 18, spray: 190, seed: 7, ds: 1.3 }],
+          village: [{ x: 620, y: 1006, s: 0.16 }, { kind: "wat", x: 790, y: 1000, s: 0.36 }, { x: 1040, y: 1010, s: 0.2 }, { x: 1220, y: 1004, s: 0.18, flip: 1 }, { kind: "school", x: 1500, y: 1000, s: 0.24 }] }),
+        land: { y0: 280 },
+        cam: push2("f2", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.05, 540, 960)),
+        actors: [P("puCam", 760, 1800, 0.95, "camEye", "wide", "o", { flip: true })],
+        fx: (tl, id, t0) => Ngw.funnelLife(tl, "sp2", t0, D("f2"), { dx: 60 }) });
+      // หมอบต่ำ เอามือปิดหัว: down on the knees, one forearm across the face, the other hand over the head, trembling (takhian's cower, kneeling)
+      Rig.MODES.kCover = (u, o) => ({ ...Rig.MODES.cower(u, o), ...KNEE(o), torso: 24 + 1.5 * Math.sin(u * 40), head: 20, bodyY: o.by ?? 150 });
+      // 3 · ห้องน้ำกุฏิ: the inner room with no window — ยายบัว, ฝน, ตาเทียน crouched low, arms over their heads; bulb swings, door rattles
+      ADD("f3", { set: "ngwKuti", setOpts: { id: "ku" }, dark: 0.2, light: GOLDL, grade: { top: "#3a2a1a", bottom: "#0a0806", op: 0.22 },
+        land: { y0: 520 },
+        cam: push2("f3", fr(540, 1300, 1.0, 540, 1100), fr(540, 1300, 1.04, 540, 1100)),
+        actors: [P("yaiBua", 190, 1780, 0.95, "kCover", "closed", "frown"), P("fonPhone", 500, 1810, 0.95, "kCover", "wide", "o"), P("taTian", 900, 1760, 0.9, "kCover", "worry", "frown", { flip: true })],
+        fx: (tl, id, t0) => Ngw.kutiLife(tl, "ku", t0, D("f3"), [1.2]) });
+      // 4 · ตำนานนาคเล่นน้ำ on the shadow-puppet screen: the naga rising out of the lake into the cloud, the villagers waiing on the bank
+      ADD("f4", { set: "ngwLegend", setOpts: { id: "nl" }, dark: 0, light: false, land: { y0: 150 },
+        cam: push2("f4", fr(540, 880, 1.0, 540, 900), fr(540, 900, 1.06, 540, 900)) });
+      // 5 · ปูหมอบในคูน้ำ: face down in the ditch, arms over the back of his head; the landspout tearing past; a lone tree and a parked pickup far off
+      Rig.MODES.prone = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: -172, faF: -104, uaB: 172, faB: 104, head: 18, torso: 0, thF: -2, shF: 4, thB: 2, shB: 2 });
+      ADD("f5", { ...NSC("f5", { horizon: 840, rain: 0.9, fgRice: false, ditch: { y: 1450 },
+          spouts: [{ id: "sp5", kind: "land", x: 560, y: 1230, tx: 640, ty: 140, wb: 110, wt: 300, p: 2.2, bend: 30, bend2: -20, spray: 240, seed: 9, ds: 1.6 }],
+          far: () => Rup.tree(110, 880, 220) + Tk.pickup(990, 872, 0.26) }),
+        land: { y0: 330 },
+        cam: push2("f5", fr(540, 1100, 1.0, 540, 960), fr(540, 1100, 1.04, 540, 960)),
+        actors: [P("pu", 880, 1540, 0.9, "prone", "closed", "frown")],
+        fx: (tl, id, t0) => Ngw.funnelLife(tl, "sp5", t0, D("f5"), { dx: 80 }) });
