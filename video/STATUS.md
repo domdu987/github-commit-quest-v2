@@ -132,5 +132,10 @@
   - ผลตรวจ: 2:08.65 · 60fps · −14.2 LUFS · พีก −2.3 dBFS · edgecheck "no edge problems" · musiccheck PASS · hisscheck PASS · ไม่มีภาพค้างเกิน 3 วิ
   - ตรวจภาพจากไฟล์จริง 1 เฟรม/วิ ขนาด 360×640 ครบทั้งคลิป
   - เก็บใน `video/tornado-ep1/` (share, mix.wav, production, composition, lib, cover.jpg) · แคปชันใน `video/tornado/CAPTIONS.md`
-- **ต่อไป:** EP.2 (ตอนจบ) สำหรับเรื่องเต็มบน YouTube 16:9 ต่อจาก EP.1 โดยตัดป้ายท้ายและป้ายวิ 0:10 ออก
+- **ฉบับเต็ม 16:9 (เจ้าของ 4 พ.ย. "ทำรวมเป็นเรื่องเดียว ขนาด 16:9"):** ส่งสตอรี่บอร์ดตอนจบแล้ว รอเจ้าของอนุมัติก่อนมิกซ์และเรนเดอร์
+  - ตอนจบ `video/tornado/ep2/`: 23 ประโยค ตรวจถอดคำผ่านทุกบรรทัด ยาว 1:33
+  - รวมเรื่อง `video/tornado/full/combine.py` → 45 ช็อต ยาว 3:36 (EP.1 ไม่มีป้ายท้ายและป้ายวิ 0:10)
+  - ภาพ `stylekit/f1/` (EP.1 จัดเฟรมใหม่สำหรับ 16:9 + ตอนจบ 17 ช็อต) · build: `BADGE="เสียงรถไฟ" build.sh f1 <hf> <proj> landscape`
+  - หักมุม: สายไฟขาดพาดรถหลังพายุ (กรมอุตุฯ, Ready.gov, NWS ใน SOURCES.md) · กฎข้อ 4 "พายุไป สายไฟยังอยู่"
+  - build.sh 16:9: เหลือไว้ในเลย์เอาต์แค่ช็อตที่อยู่บนจอ ไม่งั้น Chrome วาดไม่ทันแล้วเป็นจอดำเป็นแผ่นๆ
 - **ชุดสร้างภาพ:** `video/tornado/stylekit/` (tw = ภาพหลัก, hk = ฮุก) · build ด้วย `stylekit/build/build.sh <hf> <proj> vertical|landscape tw|hk`

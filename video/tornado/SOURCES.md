@@ -72,6 +72,16 @@
   - ไม่มีแหล่งไทยที่ให้คำแนะนำเรื่องทอร์นาโดกลางทุ่งโดยเฉพาะ คำแนะนำนี้จึงอ้าง SPC/NWS
 - **เพิงและเต็นท์** (NWS): "Sheds and storage facilities are not safe. Neither is a mobile home or tent."
 
+## 3b. หลังพายุผ่าน: เสาไฟล้ม สายไฟขาด (หักมุมตอนจบ · ดึงหน้าเว็บ 4 พ.ย. 2569)
+- กรมอุตุนิยมวิทยา "วาตภัย (Storms)" https://tmd.go.th/info/%E0%B8%A7%E0%B8%B2%E0%B8%95%E0%B8%A0%E0%B8%A2
+  - อันตราย: "เสาไฟฟ้า เสาโทรเลข เสาโทรศัพท์ล้ม สายไฟฟ้าขาด ไฟฟ้าลัดวงจร เกิดเพลิงไหม้ ผู้คนเสียชีวิตจากไฟฟ้าดูดได้"
+  - หัวข้อ "เมื่อพายุสงบแล้ว" ข้อ 3: "ถ้ามีเสาไฟฟ้าล้ม สายไฟขาดอย่าเข้าใกล้หรือแตะต้องเป็นอันขาด ทำเครื่องหมายแสดงอันตราย"
+  - ข้อ 4: "แจ้งให้เจ้าหน้าที่หรือช่างไฟฟ้าจัดการด่วน อย่าแตะโลหะที่เป็นสื่อไฟฟ้า"
+- Ready.gov "Tornadoes" (Last Updated 06/02/2026) https://www.ready.gov/tornadoes : "Stay clear of fallen power lines or broken utility lines."
+- NWS "What to do After a Tornado" https://www.weather.gov/safety/tornado-after : "Contact local authorities if you see power lines down."
+- ไม่มีแหล่งไหนในชุดนี้พูดเรื่องน้ำขังนำไฟฟ้า จึงห้ามใช้ในเรื่อง ให้ใช้แค่ "อย่าเข้าใกล้ อย่าแตะ แม้แต่โลหะที่สายไฟพาด"
+- เบาะแสที่ฝังไว้แล้วใน EP.1: ไฟฟ้าแลบสีเขียวที่เสาไฟ (ช็อตงวงแตะพื้นและหลังคาปลิว) · ปูอยากได้ "ล้านวิว"
+
 ## 4. ความเชื่อที่แหล่งทางการหักล้าง
 - **เปิดหน้าต่าง**
   - SPC: "Opening the windows is absolutely useless, a waste of precious time, and can be very dangerous."

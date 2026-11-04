@@ -460,7 +460,7 @@
   // ---------------------------------------------------------------- EP.1 inserts and themed UI
   // the title painted on the highway, seen at a grazing angle in the side-view world (o.roadTitle on ngwScape)
   Ngw.roadTitle = (o = {}) => `<g transform="translate(${o.x ?? 540},${o.y ?? 1730}) scale(1,${o.k ?? 0.34})"><text text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${o.fs ?? 230}" fill="#f4f2ea" opacity=".92" letter-spacing="6">${o.text || "เสียงรถไฟ"}</text>
-    <text y="${o.fs ? o.fs * 0.62 : 150}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="${(o.fs ?? 230) * 0.42}" fill="#f2c230" opacity=".95">${o.sub || "ตอนที่ 1"}</text></g>`;
+    <text y="${o.fs ? o.fs * 0.62 : 150}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="${(o.fs ?? 230) * 0.42}" fill="#f2c230" opacity=".95">${o.sub ?? "ตอนที่ 1"}</text></g>`;
   // a round wall clock (the stall's), ids #id-h #id-m for the hands; Ngw.clockSpin turns it from one time to another
   Ngw.clock = (id, x, y, s = 1, h = 15, m = 0) => { let g = `<g transform="translate(${x},${y}) scale(${s})"><circle r="300" fill="#2a2420" opacity=".25" transform="translate(16,20)"/><circle r="300" fill="#f2ead8" stroke="#1e1a16" stroke-width="22"/><circle r="270" fill="none" stroke="#c8402a" stroke-width="8"/>`;
     for (let k = 0; k < 12; k++) { const a = (k / 12) * Math.PI * 2; g += `<path d="M${f1(Math.sin(a) * 240)},${f1(-Math.cos(a) * 240)}L${f1(Math.sin(a) * 210)},${f1(-Math.cos(a) * 210)}" stroke="#1e1a16" stroke-width="${k % 3 ? 8 : 16}" stroke-linecap="round"/>`; }
@@ -574,6 +574,106 @@
     tl.fromTo(`#${id}G`, { x: -w / 2 - 120 }, { x: w / 2 + 120, duration: 0.7, ease: "power2.inOut", immediateRender: false }, t0 + 1.3);
     tl.set(`#${id}G`, { opacity: 0 }, t0 + 2.0);
     tl.to(sel, { y: up, duration: 0.35, ease: "power2.in" }, t0 + dur - 0.35);
+  };
+  // ================= เสียงรถไฟ ตอนจบ (full 16:9 story, owner 4 Nov 2569: "ทำรวมเป็นเรื่องเดียว ขนาด 16:9") =================
+  // Diagrams are drawn in world space for the 16:9 window (x −660…1740 around the centre x 540), not in the vertical light layer.
+  const BP = (x0, y0, w, h) => { let g = `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="#0e1822"/>`;
+    for (let x = x0; x <= x0 + w; x += 120) g += `<path d="M${x},${y0}V${y0 + h}" stroke="#9ab8d0" stroke-width="2" opacity=".08"/>`;
+    for (let y = y0; y <= y0 + h; y += 120) g += `<path d="M${x0},${y}H${x0 + w}" stroke="#9ab8d0" stroke-width="2" opacity=".08"/>`;
+    return g; };
+  const TXT = (x, y, t, fs = 58, c = "#f2f0ea", o = "") => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="${fs}" fill="${c}" stroke="#0e1822" stroke-width="10" paint-order="stroke" ${o}>${t}</text>`;
+  const PERSON = (x, y, s = 1, c = "#cfe0ea") => `<g transform="translate(${x},${y}) scale(${s})"><circle cy="-150" r="22" fill="${c}"/><path d="M0,-126V-60M0,-110L-30,-80M0,-110L30,-84M0,-60L-24,0M0,-60L24,0" stroke="${c}" stroke-width="14" stroke-linecap="round"/></g>`;
+  // the overpass wind tunnel (NWS: "Overpasses can concentrate the tornado winds, causing them to be significantly stronger.")
+  Ngw.bridgeWind = (o = {}) => { const id = o.id || "bw", gy = 1320, dy = 760, dh = 90;
+    let g = BP(-1400, -800, 4000, 3600);
+    g += `<path d="M-1400,${gy}H2600" stroke="#6a8aa0" stroke-width="6"/>`;
+    // the overpass: deck, rails, embankments both sides, a pier
+    g += `<path d="M120,${gy}L330,${dy + dh}H1250L1460,${gy}Z" fill="none"/><path d="M80,${gy}L300,${dy + dh}V${dy}H1280V${dy + dh}L1500,${gy}" fill="none" stroke="#cfe0ea" stroke-width="8" stroke-linejoin="round"/>`;
+    g += `<rect x="300" y="${dy}" width="980" height="${dh}" fill="#2a3a48" stroke="#cfe0ea" stroke-width="8"/><path d="M300,${dy - 30}H1280" stroke="#cfe0ea" stroke-width="5" stroke-dasharray="14 18"/>`;
+    g += `<path d="M80,${gy}L300,${dy + dh}V${gy}Z M1500,${gy}L1280,${dy + dh}V${gy}Z" fill="#2a3a48" stroke="#cfe0ea" stroke-width="6"/>`;
+    g += `<rect id="${id}-zone" x="300" y="${dy + dh}" width="980" height="${gy - dy - dh}" fill="#ff4a3a" opacity="0"/>`;
+    // the tornado, stylized, on the left
+    g += `<g id="${id}-tor"><path d="M-620,420H-140L-250,700L-300,980L-340,${gy}H-400L-450,980L-500,700Z" fill="#3a4a58" stroke="#9ab4c8" stroke-width="6" stroke-linejoin="round"/>`;
+    for (let k = 0; k < 6; k++) { const y = 470 + k * 140, w = 230 - k * 30; g += `<path class="${id}-band" d="M${-380 - w},${y}Q-380,${y + 34} ${-380 + w},${y}" stroke="#cfe0ea" stroke-width="5" fill="none" opacity=".55"/>`; }
+    g += `</g>`;
+    // wind: wide and slow outside, squeezed into fast thin jets under the deck, people under it pushed
+    const arrow = (x0, x1, y, w, c, cls) => `<path class="${cls}" d="M${x0},${y}H${x1}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="70 46"/><path class="${cls}-hd" d="M${x1 - 10},${y - w * 1.4}L${x1 + w * 2},${y}L${x1 - 10},${y + w * 1.4}Z" fill="${c}"/>`;
+    [960, 1060, 1160, 1260].forEach((y) => { g += arrow(-260, 120, y, 20, "#7ab8e0", `${id}-out`); });
+    g += `<g id="${id}-jet" opacity="0">`; [930, 1010, 1090, 1170, 1250].forEach((y, k) => { g += arrow(340, 1220, y, 9, k % 2 ? "#ffd23a" : "#ff8a3a", `${id}-in`); });
+    for (let k = 0; k < 14; k++) g += `<path d="M${380 + (k * 67) % 800},${940 + (k * 53) % 300}h${-60 - (k % 4) * 30}" stroke="#ffd23a" stroke-width="4" opacity=".6"/>`;
+    g += `</g><g id="${id}-ppl">${PERSON(640, gy, 1.1)}${PERSON(800, gy, 1.0)}${PERSON(960, gy, 1.15)}</g>`;
+    g += `<g id="${id}-lbl1" opacity="0">${TXT(-70, 900, "ลมข้างนอก", 52, "#9ad0f0")}</g><g id="${id}-lbl2" opacity="0">${TXT(790, 690, "ใต้สะพาน: ลมถูกบีบ แรงขึ้น", 60, "#ffd23a")}</g>`;
+    return `<g id="${id}">${g}</g>`; };
+  Ngw.bridgeWindLife = (tl, id, t0, dur, at = []) => { const n = (p) => Math.max(1, Math.ceil(dur / p));
+    tl.fromTo(`.${id}-out`, { strokeDashoffset: 0 }, { strokeDashoffset: -232, duration: 1.2, ease: "none", repeat: n(1.2), immediateRender: false }, t0);
+    tl.fromTo(`.${id}-in`, { strokeDashoffset: 0 }, { strokeDashoffset: -232, duration: 0.35, ease: "none", repeat: n(0.35), immediateRender: false }, t0);
+    tl.fromTo(`.${id}-band`, { x: -30 }, { x: 30, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: n(0.5), immediateRender: false }, t0);
+    tl.fromTo(`#${id}-lbl1`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.3);
+    tl.fromTo(`#${id}-jet`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, at[0] ?? t0 + 1.2);
+    tl.fromTo(`#${id}-lbl2`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, immediateRender: false }, (at[0] ?? t0 + 1.2) + 0.2);
+    tl.fromTo(`#${id}-ppl`, { x: 0 }, { x: 60, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: n(0.5), immediateRender: false }, at[0] ?? t0 + 1.2);
+    tl.fromTo(`#${id}-zone`, { opacity: 0 }, { keyframes: [{ opacity: 0.38, duration: 0.3 }, { opacity: 0.2, duration: 0.4 }, { opacity: 0.38, duration: 0.4 }, { opacity: 0.26, duration: 0.5 }], immediateRender: false }, at[1] ?? t0 + 3.5);
+  };
+  // the downed line (กรมอุตุนิยมวิทยา: "ถ้ามีเสาไฟฟ้าล้ม สายไฟขาดอย่าเข้าใกล้หรือแตะต้องเป็นอันขาด" · "อย่าแตะโลหะที่เป็นสื่อไฟฟ้า" ·
+  // NWS: "Contact local authorities if you see power lines down.")
+  Ngw.lineDanger = (o = {}) => { const id = o.id || "ld", gy = 1320;
+    let g = BP(-1400, -800, 4000, 3600) + `<path d="M-1400,${gy}H2600" stroke="#6a8aa0" stroke-width="6"/>`;
+    g += `<g id="${id}-zone" opacity="0"><rect x="-120" y="760" width="1500" height="${gy - 760 + 40}" rx="60" fill="#ffb42a" opacity=".16"/><rect x="-120" y="760" width="1500" height="${gy - 760 + 40}" rx="60" fill="none" stroke="#ffb42a" stroke-width="8" stroke-dasharray="40 26"/></g>`;
+    // the fallen pole (base broken on the right, lying toward the left)
+    g += `<g id="${id}-pole"><g transform="translate(200,${gy}) rotate(-68)"><path d="M-14,0L-10,-560H10L14,0Z" fill="#8a9aa8" stroke="#cfe0ea" stroke-width="5"/><path d="M-80,-520H80M-60,-470H60" stroke="#cfe0ea" stroke-width="10"/></g></g>`;
+    // a truck the line lies across
+    g += `<g id="${id}-truck"><path d="M560,${gy - 40}V${gy - 190}H820L880,${gy - 270}H1040L1100,${gy - 170}H1180V${gy - 40}Z" fill="#3a4a58" stroke="#cfe0ea" stroke-width="7" stroke-linejoin="round"/>
+      <circle cx="680" cy="${gy - 36}" r="42" fill="#0e1822" stroke="#cfe0ea" stroke-width="7"/><circle cx="1070" cy="${gy - 36}" r="42" fill="#0e1822" stroke="#cfe0ea" stroke-width="7"/></g>`;
+    g += `<rect id="${id}-hot" x="556" y="${gy - 274}" width="630" height="240" rx="26" fill="#ffb42a" opacity="0"/>`;
+    g += `<path id="${id}-wire" d="M-318,${gy - 208}Q120,${gy - 330} 700,${gy - 196}Q900,${gy - 160} 1040,${gy - 268}Q1200,${gy - 120} 1300,${gy}" stroke="#1e1a16" stroke-width="12" fill="none"/><path d="M-318,${gy - 208}Q120,${gy - 330} 700,${gy - 196}Q900,${gy - 160} 1040,${gy - 268}Q1200,${gy - 120} 1300,${gy}" stroke="#cfe0ea" stroke-width="4" fill="none"/>`;
+    const spark = (x, y, k) => `<g class="${id}-sp" transform="translate(${x},${y})"><circle r="34" fill="#fff6a8" opacity=".55"/>${[0, 1, 2, 3, 4, 5].map((a) => `<path d="M0,0L${f1(54 * Math.cos(a + k))},${f1(54 * Math.sin(a + k))}" stroke="#ffe066" stroke-width="5"/>`).join("")}</g>`;
+    g += spark(1040, gy - 268, 0.3) + spark(1300, gy, 1.1);
+    g += `<g id="${id}-call" opacity="0">${PERSON(1460, gy, 1.25)}<rect x="1476" y="${gy - 214}" width="26" height="44" rx="6" fill="#ffd23a"/>${[0, 1, 2].map((k) => `<path class="${id}-wave" d="M${1516 + k * 22},${gy - 226}q${18 + k * 8},${22 + k * 6} 0,${46 + k * 14}" stroke="#ffd23a" stroke-width="5" fill="none"/>`).join("")}</g>`;
+    g += `<g id="${id}-l1" opacity="0">${TXT(640, 720, "อย่าเข้าใกล้", 64, "#ffb42a")}</g><g id="${id}-l2" opacity="0">${TXT(870, gy - 300, "อย่าแตะ", 60, "#ffd23a")}</g><g id="${id}-l3" opacity="0">${TXT(1460, gy - 300, "แจ้งเจ้าหน้าที่", 54, "#f2f0ea")}</g>`;
+    return `<g id="${id}">${g}</g>`; };
+  Ngw.lineDangerLife = (tl, id, t0, dur, at = []) => { const n = (p) => Math.max(1, Math.ceil(dur / p));
+    tl.fromTo(`#${id}-pole`, { rotation: 68, svgOrigin: `200 1320` }, { rotation: 0, svgOrigin: `200 1320`, duration: 0.5, ease: "bounce.out", immediateRender: false }, at[0] ?? t0);
+    tl.fromTo(`.${id}-sp`, { opacity: 0.2, scale: 0.7 }, { opacity: 1, scale: 1.15, duration: 0.09, ease: "steps(2)", yoyo: true, repeat: n(0.18), immediateRender: false }, (at[0] ?? t0) + 0.5);
+    tl.fromTo(`#${id}-zone`, { opacity: 0, scale: 0.85, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)", immediateRender: false }, at[1] ?? t0 + 1.5);
+    tl.fromTo(`#${id}-l1`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, (at[1] ?? t0 + 1.5) + 0.1);
+    tl.fromTo(`#${id}-hot`, { opacity: 0 }, { keyframes: [{ opacity: 0.4, duration: 0.25 }, { opacity: 0.2, duration: 0.35 }, { opacity: 0.4, duration: 0.35 }, { opacity: 0.28, duration: 0.4 }], immediateRender: false }, at[2] ?? t0 + 4);
+    tl.fromTo(`#${id}-l2`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, (at[2] ?? t0 + 4) + 0.1);
+    tl.fromTo(`#${id}-call`, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.35, immediateRender: false }, at[3] ?? t0 + 6);
+    tl.fromTo(`#${id}-l3`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, (at[3] ?? t0 + 6) + 0.15);
+    tl.fromTo(`.${id}-wave`, { opacity: 0.2 }, { opacity: 1, duration: 0.3, yoyo: true, repeat: n(0.6), stagger: 0.1, immediateRender: false }, at[3] ?? t0 + 6);
+  };
+  // a power pole knocked flat at (x, y), its line draped to (wx, wy) on whatever it fell across and on to the ground at (ex, ey)
+  Ngw.fallenPole = (x, y, s = 1, o = {}) => { const id = o.id || "fp", lean = o.lean ?? -70, a = (lean * Math.PI) / 180;
+    const tx = x + 440 * s * Math.sin(-a) * -1, ty = y - 440 * s * Math.cos(a);   // the pole top after the lean
+    const wx = o.wx ?? x + 500, wy = o.wy ?? y - 120, ex = o.ex ?? wx + 260, ey = o.ey ?? y;
+    let g = Ngw.pole(x, y, s, { lean });
+    g += `<path d="M${f1(x - 20 * s)},${y}l${f1(10 * s)},${f1(-30 * s)}l${f1(14 * s)},${f1(22 * s)}l${f1(12 * s)},${f1(-18 * s)}" stroke="#5a5a56" stroke-width="${f1(8 * s)}" fill="none"/>`;
+    const d = `M${f1(tx)},${f1(ty)}Q${f1((tx + wx) / 2)},${f1(Math.max(ty, wy) + 60)} ${f1(wx)},${f1(wy)}Q${f1((wx + ex) / 2)},${f1(wy + 20)} ${f1(ex)},${f1(ey)}`;
+    g += `<path d="${d}" stroke="#1e1a16" stroke-width="${f1(7 * s)}" fill="none"/>`;
+    g += `<g id="${id}-sp" transform="translate(${f1(wx)},${f1(wy)})"><circle r="${f1(26 * s)}" fill="#c8ffea" opacity=".5"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M0,0L${f1(40 * s * Math.cos(k * 1.3))},${f1(40 * s * Math.sin(k * 1.3))}" stroke="#eaffd8" stroke-width="${f1(4 * s)}"/>`).join("")}</g>`;
+    return g; };
+  Ngw.sparkLife = (tl, sel, t0, dur, period = 0.7) => { const n = Math.max(1, Math.ceil(dur / period));
+    tl.fromTo(sel, { opacity: 0, scale: 0.6 }, { keyframes: [{ opacity: 1, scale: 1.1, duration: 0.05 }, { opacity: 0.3, scale: 0.8, duration: 0.07 }, { opacity: 0.9, scale: 1, duration: 0.05 }, { opacity: 0, scale: 0.6, duration: 0.15 }, { opacity: 0, duration: period - 0.32 }], repeat: n, immediateRender: false }, t0); };
+  // ปู's little camera
+  Ngw.cam = (x, y, s = 1, rot = 0) => `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s})"><rect x="-44" y="-30" width="88" height="58" rx="10" fill="#2a2e34" stroke="#1e1a16" stroke-width="5"/><circle r="19" fill="#4a6a8a" stroke="#1e1a16" stroke-width="5"/><circle r="9" fill="#9ad0f0"/><rect x="18" y="-42" width="20" height="12" fill="#2a2e34" stroke="#1e1a16" stroke-width="3"/><circle cx="-28" cy="-16" r="5" fill="#d8312a"/></g>`;
+  // glass bursting out of a window rect toward the camera (one small flash on the pane, never a full-screen flash: V1b)
+  Ngw.shatter = (tl, layer, t0, o = {}) => { const id = o.id || `sh${Math.round(t0 * 100)}`, x = o.x ?? 360, y = o.y ?? 420, w = o.w ?? 560, h = o.h ?? 640, n = o.n ?? 46, r = mk(o.seed || 17);
+    const cx = x + w / 2, cy = y + h / 2; let g = `<g id="${id}"><rect id="${id}-fl" x="${x}" y="${y}" width="${w}" height="${h}" fill="#eaf6ff" opacity="0"/>`;
+    const sh = [];
+    for (let k = 0; k < n; k++) { const px = x + r() * w, py = y + r() * h, sz = 14 + r() * 34;
+      g += `<path id="${id}-s${k}" d="M${f1(px)},${f1(py - sz)}L${f1(px + sz * 0.7)},${f1(py + sz * 0.5)}L${f1(px - sz * 0.6)},${f1(py + sz * 0.3)}Z" fill="#d8eef8" stroke="#ffffff" stroke-width="2" opacity="0"/>`;
+      sh.push([k, px - cx, py - cy, r()]); }
+    if (o.hole) { let e = ""; const edge = (ax, ay, bx, by, k) => { const m = 5; for (let j = 0; j < m; j++) { const t0 = j / m, t1 = (j + 1) / m, d = 30 + r() * 70;
+        const p0 = [ax + (bx - ax) * t0, ay + (by - ay) * t0], p1 = [ax + (bx - ax) * t1, ay + (by - ay) * t1], nx = k[0] * d, ny = k[1] * d;
+        e += `<path d="M${f1(p0[0])},${f1(p0[1])}L${f1((p0[0] + p1[0]) / 2 + nx)},${f1((p0[1] + p1[1]) / 2 + ny)}L${f1(p1[0])},${f1(p1[1])}Z" fill="#d8eef8" stroke="#ffffff" stroke-width="2" opacity=".75"/>`; } };
+      edge(x, y, x + w, y, [0, 1]); edge(x, y + h, x + w, y + h, [0, -1]); edge(x, y, x, y + h, [1, 0]); edge(x + w, y, x + w, y + h, [-1, 0]);
+      for (let k = 0; k < 26; k++) { const px = x + r() * w, py = y + r() * h; e += `<path d="M${f1(px)},${f1(py)}l${f1(-60 - r() * 80)},${f1(90 + r() * 60)}" stroke="#cfe6f2" stroke-width="3" opacity=".55"/>`; }
+      g += `<g id="${id}-hole" opacity="0">${e}</g>`; }
+    put(layer, g + `</g>`);
+    if (o.hole) tl.set(`#${id}-hole`, { opacity: 1 }, t0 + 0.02);
+    tl.fromTo(`#${id}-fl`, { opacity: 0 }, { keyframes: [{ opacity: 0.7, duration: 0.04 }, { opacity: 0, duration: 0.2 }], immediateRender: false }, t0);
+    sh.forEach(([k, dx, dy, q]) => { const f = 1.6 + q * 1.8;
+      tl.fromTo(`#${id}-s${k}`, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, transformOrigin: "50% 50%" }, { opacity: 0, x: dx * f + (q - 0.5) * 300, y: dy * f + 260 + q * 300, rotation: (q - 0.5) * 720, scale: 2 + q * 2.5, duration: 0.7 + q * 0.5, ease: "power2.out", immediateRender: false }, t0 + q * 0.06); });
   };
   // the CTA sign lights row by row on the narrator's beats (at = ปูจะรอดไหม, กดติดตาม, แล้วไปดูเรื่องเต็ม, ได้ที่ช่อง YouTube);
   // the plate drops on "กดติดตาม" and swings to rest, a headlight glint sweeps the sign on "YouTube", the funnel drifts behind it
