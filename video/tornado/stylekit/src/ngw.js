@@ -550,6 +550,31 @@
           <rect x="-260" y="60" width="520" height="150" rx="18" fill="#f2c230" stroke="#1a1a1a" stroke-width="8"/>
           <text y="170" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="96" fill="#1a1a1a">${o.plate || "กดติดตาม"}</text></g></g></g>`;
   };
+  // the short's early follow tag (owner 4 Nov 2569: "หาจังหวะใส่ให้คนเห็น"): a small highway sign that drops on chains into the top of the
+  // frame at a calm beat soon after the hook, while most viewers are still watching (FB: avg watch 36–50 s, ~30% left at 1:00), swings,
+  // catches a glint and is pulled back up. Screen space (layer = L.light). Skipped in the 16:9 YouTube build: "the full story is on
+  // YouTube" makes no sense there.
+  Ngw.ctaTag = (tl, layer, t0, dur, o = {}) => {
+    if (window.LANDSCAPE) return;
+    const id = o.id || `ct${Math.round(t0 * 100)}`, y = o.y ?? 250, w = o.w ?? 700, h = 196, up = -(y + h + 80);
+    put(layer, `<defs><clipPath id="${id}C"><rect x="${-w / 2}" y="0" width="${w}" height="${h}" rx="24"/></clipPath>
+      <linearGradient id="${id}GG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+      <g transform="translate(540,${y})"><g id="${id}" opacity="0">
+        <path d="M${-w / 2 + 80},${-y - 40}V8M${w / 2 - 80},${-y - 40}V8" stroke="#a4a69e" stroke-width="8" stroke-dasharray="12 7"/>
+        <rect x="${-w / 2}" y="0" width="${w}" height="${h}" rx="24" fill="#1e7a4a" stroke="#f2f0ea" stroke-width="10"/>
+        <rect x="${-w / 2 + 18}" y="18" width="${w - 36}" height="${h - 36}" rx="14" fill="none" stroke="#f2f0ea" stroke-width="3" opacity=".3"/>
+        <text y="92" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="84" fill="#f2c230">${o.l1 || "กดติดตาม"}</text>
+        <text y="160" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="50" fill="#f2f0ea">${o.l2 || "ดูเรื่องเต็มที่ช่อง YouTube"}</text>
+        <g clip-path="url(#${id}C)"><g id="${id}G" opacity="0"><rect x="-70" y="-40" width="140" height="${h + 80}" fill="url(#${id}GG)" transform="skewX(-18)"/></g></g></g></g>`);
+    const sel = `#${id}`;
+    tl.set(sel, { opacity: 1 }, t0);
+    tl.fromTo(sel, { y: up, rotation: -4, transformOrigin: "50% 0%" }, { y: 0, rotation: 0, duration: 0.5, ease: "bounce.out", immediateRender: false }, t0);
+    tl.to(sel, { keyframes: [{ rotation: 3, duration: 0.3, ease: "sine.out" }, { rotation: -2, duration: 0.36, ease: "sine.inOut" }, { rotation: 1, duration: 0.36, ease: "sine.inOut" }, { rotation: 0, duration: 0.4, ease: "sine.in" }], transformOrigin: "50% 0%" }, t0 + 0.45);
+    tl.set(`#${id}G`, { opacity: 1 }, t0 + 1.3);
+    tl.fromTo(`#${id}G`, { x: -w / 2 - 120 }, { x: w / 2 + 120, duration: 0.7, ease: "power2.inOut", immediateRender: false }, t0 + 1.3);
+    tl.set(`#${id}G`, { opacity: 0 }, t0 + 2.0);
+    tl.to(sel, { y: up, duration: 0.35, ease: "power2.in" }, t0 + dur - 0.35);
+  };
   // the CTA sign lights row by row on the narrator's beats (at = ปูจะรอดไหม, กดติดตาม, แล้วไปดูเรื่องเต็ม, ได้ที่ช่อง YouTube);
   // the plate drops on "กดติดตาม" and swings to rest, a headlight glint sweeps the sign on "YouTube", the funnel drifts behind it
   Ngw.endCtaLife = (tl, id, t0, dur, at) => {

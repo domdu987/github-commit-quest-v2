@@ -68,6 +68,7 @@
       // 5 · bright afternoon: ยายบัว's grill stall by the highway
       ADD("stall", { ...STALLSET("st"), captions: caps("stall"), land: { y0: 470 },
         cam: push2("stall", fr(540, 1000, 0.92, 540, 960), fr(540, 1000, 1.0, 540, 960)),
+        fx: (tl, id, t0, L) => Ngw.ctaTag(tl, L.light, t0 + 0.2, D("stall") - 0.2),   // owner 4 Nov: the follow tag where most viewers still are (0:10)
         actors: [P("yaiBua", 880, 1860, 0.95, "idle", "normal", "smile", { flip: true }), P("fonPhone", 340, 1890, 1.0, "selfieUp", "normal", "smile"), P("puCam", 580, 1870, 0.78, "camEye", "normal", "laugh")] });
       // 6 · ฝน live, selling the chicken (her front camera: her face, the stall behind)
       ADD("live", { ...STALLSET("lv"), captions: caps("live"), land: { y0: 700 },
