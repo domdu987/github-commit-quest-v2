@@ -511,7 +511,7 @@
       <rect x="-170" y="0" width="340" height="26" fill="#a83a2a" ${OUT(4)}/><rect x="-170" y="0" width="340" height="7" fill="#e8b84a"/><path d="M-140,26L-110,26L-140,70ZM140,26L110,26L140,70Z" fill="#8a2a1e" ${OUT(3)}/>
       <path d="M-160,26Q-100,90 -40,26M40,26Q100,90 160,26" stroke="#f6f2e4" stroke-width="10" fill="none" stroke-dasharray="2 8" stroke-linecap="round"/></g>`;
     w += `<g transform="translate(1160,430)"><circle r="76" fill="#7a5232" ${OUT(6)}/><circle r="62" fill="#f6f2e8" ${OUT(3)}/>${Array.from({ length: 12 }, (_, k) => { const a = (k * Math.PI) / 6; return `<path d="M${f1(50 * Math.sin(a))},${f1(-50 * Math.cos(a))}L${f1(58 * Math.sin(a))},${f1(-58 * Math.cos(a))}" stroke="${I}" stroke-width="${k % 3 ? 3 : 6}"/>`; }).join("")}
-      <path d="M0,0L22,-26M0,0L-6,-44" stroke="${I}" stroke-width="6" stroke-linecap="round"/><path d="M0,8L0,-50" stroke="#d8312a" stroke-width="2.4"/><circle r="6" fill="${I}"/></g>`;
+      <path d="M0,0L24,9M0,0L-38,22" stroke="${I}" stroke-width="6" stroke-linecap="round"/><path d="M0,8L0,-50" stroke="#d8312a" stroke-width="2.4"/><circle r="6" fill="${I}"/></g>`;
     w += `<g transform="translate(1060,720)"><path d="M0,-80L-60,0M0,-80L60,0" stroke="#5a4630" stroke-width="3"/><circle cy="-80" r="6" fill="#8a8a8a" ${OUT(2)}/><rect x="-90" y="0" width="180" height="270" fill="#f6f2e8" ${OUT(5)}/>
       <rect x="-78" y="12" width="156" height="104" fill="#7ab0d8"/><path d="M-78,116V80Q-30,60 0,82Q40,58 78,76V116Z" fill="#4a9a4a"/><path d="M-20,82L0,46L20,82Z" fill="#e8b84a" ${OUT(2)}/><path d="M-12,82V64H12V82" fill="#f4f0e8"/>
       <rect x="-78" y="122" width="156" height="22" fill="#d8312a"/>${Array.from({ length: 5 }, (_, j) => Array.from({ length: 7 }, (_, i) => `<rect x="${-76 + i * 22}" y="${150 + j * 22}" width="18" height="16" fill="${i === 0 ? "#f4c8c0" : "#e8e4dc"}"/>`).join("")).join("")}
@@ -804,7 +804,8 @@
     pu += `<path d="${cap(W0, at(900), 112, 136)}" fill="${U.sk}" ${ln(3.2)}/><path d="M${P2(at(60))}L${P2(at(560))}" stroke="${U.skD}" stroke-width="22" opacity=".25" transform="translate(-22,26)" stroke-linecap="round"/>`;
     pu += `<path d="M${P2([at(80)[0] + 18, at(80)[1] - 28])}L${P2([at(520)[0] + 22, at(520)[1] - 36])}" stroke="${U.skL}" stroke-width="12" opacity=".45" stroke-linecap="round"/>`;
     const c0 = at(600);
-    pu += `<path d="${cap(c0, at(1500), 196, 236)}" fill="#d8382a" ${ln(3.2)}/>`;
+    { const e1 = at(1500), q = (P, w) => [[P[0] + nrm[0] * w, P[1] + nrm[1] * w], [P[0] - nrm[0] * w, P[1] - nrm[1] * w]], [a1, a2] = q(c0, 98), [b1, b2] = q(e1, 118);
+      pu += `<path d="M${P2(a1)}L${P2(b1)}L${P2(b2)}L${P2(a2)}Z" fill="#d8382a" ${ln(3.2)}/>`; }
     for (let k = 0; k < 6; k++) { const q = at(660 + k * 120); pu += `<path d="M${P2([q[0] + nrm[0] * 110, q[1] + nrm[1] * 110])}L${P2([q[0] - nrm[0] * 110, q[1] - nrm[1] * 110])}" stroke="#f6f2ea" stroke-width="30"/>`; }
     pu += `<path d="M${P2([c0[0] + nrm[0] * 92, c0[1] + nrm[1] * 92])}L${P2([c0[0] - nrm[0] * 92, c0[1] - nrm[1] * 92])}" stroke="#a82218" stroke-width="16" stroke-linecap="round"/><path d="M${P2([c0[0] - 90 * nrm[0], c0[1] - 90 * nrm[1]])}L${P2([at(1400)[0] - 90 * nrm[0], at(1400)[1] - 90 * nrm[1]])}" stroke="#8a1e18" stroke-width="10" opacity=".35"/>`;
     const back = `M-182,-44Q-160,-88 -72,-88Q-28,-86 -16,-70Q-8,-20 -12,60Q-20,84 -64,88Q-122,92 -170,60Q-196,10 -182,-44Z`;
@@ -839,6 +840,13 @@
     tl.fromTo(q("-ta"), { rotation: 0, svgOrigin: "0 1600" }, { rotation: -3, svgOrigin: "0 1600", duration: 0.34, ease: "power2.inOut", immediateRender: false }, t0 + tug);
     tl.fromTo(q("-tf"), { rotation: -2, svgOrigin: "0 -180" }, { rotation: 2, svgOrigin: "0 -180", duration: 0.06, yoyo: true, repeat: Math.max(1, Math.ceil(dur / 0.06)), immediateRender: false }, t0 + at + 0.4);
   };
+  // "ที่มา: …" chip (owner's standard, as in ทะเลลด): a pill with a small funnel badge, page-positioned at the bottom right of the clip
+  Ngw.srcChip = (tl, clipId, t0, text, o = {}) => { const clip = document.getElementById(clipId); if (!clip) return;
+    const d = document.createElement("div"); d.className = "srcchip";
+    Object.assign(d.style, { position: "absolute", right: (o.right ?? 36) + "px", bottom: (o.bottom ?? 40) + "px", zIndex: 57, display: "flex", alignItems: "center", gap: "10px", padding: "7px 18px 7px 7px",
+      borderRadius: "999px", background: "rgba(220,230,232,.94)", border: "3px solid #1e2a2c", boxShadow: "0 5px 0 #2d6a6e", font: "600 28px/1 Kanit", color: "#1e2a2c", opacity: 0, whiteSpace: "nowrap" });
+    d.innerHTML = `<span style="width:34px;height:34px;border-radius:50%;background:#2d8a8e;border:3px solid #1e2a2c;display:inline-flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M2,3H18L13,8L11,12L10,18L9,12L7,8Z" fill="#fff"/></svg></span>ที่มา: ${text}`;
+    clip.appendChild(d); tl.fromTo(d, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + (o.at ?? 0.4)); };
   // a power pole knocked flat at (x, y), its line draped to (wx, wy) on whatever it fell across and on to the ground at (ex, ey)
   Ngw.fallenPole = (x, y, s = 1, o = {}) => { const id = o.id || "fp", lean = o.lean ?? -70, a = (lean * Math.PI) / 180;
     const tx = x + 440 * s * Math.sin(-a) * -1, ty = y - 440 * s * Math.cos(a);   // the pole top after the lean
@@ -1134,6 +1142,8 @@
   const stripes = `<g>${[-470, -440, -410, -380, -350].map((y) => `<path d="M-50,${y}Q0,${y + 6} 50,${y}" stroke="#f6f2ea" stroke-width="12" fill="none"/>`).join("")}</g>
     <path d="M-34,-490L0,-414L34,-490" stroke="#2a2a2a" stroke-width="4" fill="none"/><rect x="-22" y="-426" width="44" height="30" rx="5" fill="#2e2e34" ${ln(2)}/><circle cx="4" cy="-411" r="10" fill="#4a5a6a" stroke="#111" stroke-width="2"/><circle cx="4" cy="-411" r="4" fill="#9ad0ff"/>`;
   C.pu = { v2: { ...base("tang"), top: { kind: "tee", c: "#d8382a", sleeve: "short" }, print: stripes, bottom: { kind: "shorts", c: "#b8a070" }, feet: { kind: "sandal", c: "#3a6ad0" }, faceTop: hat, face: "" } };
+  // ปู after he left his camera in ตาเทียน's truck bed (the ending): the stripes without the strap and the camera
+  C.puNoCam = { v2: { ...C.pu.v2, print: stripes.replace(/<path d="M-34,-490L0,-414L34,-490"[\s\S]*$/, "") } };
   const camera = `<g transform="translate(0,116)"><rect x="-22" y="-16" width="44" height="30" rx="5" fill="#2e2e34" ${ln(2)}/><circle cx="6" cy="-1" r="10" fill="#4a5a6a" stroke="#111" stroke-width="2"/><circle cx="6" cy="-1" r="4" fill="#9ad0ff"/><rect x="-18" y="-22" width="12" height="6" rx="2" fill="#2e2e34"/></g>`;
   C.puCam = { ...C.pu, hand: camera, keep: "F" };
   // ยายบัว: grey bun, pale lotus-pink lace blouse with small lotus prints, dark green sarong, no apron
