@@ -9,6 +9,7 @@
       Rig.MODES.kCover = (u, o) => ({ ...Rig.MODES.cower(u, o), ...KNEE(o), torso: 24 + 1.5 * Math.sin(u * 40), head: 20, bodyY: o.by ?? 150 });
       Rig.MODES.prone = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: -172, faF: -104, uaB: 172, faB: 104, head: 18, torso: 0, thF: -2, shF: 4, thB: 2, shB: 2 });
       // ---------- ทอร์นาโดยักษ์ (owner 4 Nov: "ไม่ต้องเอาผี เอาแบบภัยพิบัติใหญ่ ธอนาโดไม่ใช่พายุงวงช้าง") ----------
+      const SUNL = { from: "right", rim: "#ffd890", rimOp: 0.9, shade: "#0a0e14", shadeOp: 0.45, cast: false, vol: false }, GSUN = { top: "#16202a", bottom: "#3a2a18", op: 0.18 };
       // ---------- v3 (owner: "คิดว่าดีเท่าทะเลลดยัง"): a bright everyday opening, the warning sign (a freight-train roar with no railway
       // near), ยายบัว's rule board, the choice — the ทะเลลด grammar ----------
       const I = "#1e1a16";
@@ -40,16 +41,16 @@
         actors: [P("yaiBua", 880, 1860, 0.95, "idle", "normal", "smile", { flip: true }), P("fonPhone", 340, 1890, 1.0, "film", "normal", "smile"), P("puCam", 580, 1870, 0.78, "camEye", "normal", "laugh")] });
       // B · the sign: the sky has gone dark and a loud, continuous roar won't fade like thunder — "เสียงรถไฟ? แถวนี้ไม่มีรางนะ"
       ADD("b0", { ...NSC("b0", { horizon: 1160, rain: 0.25, ...HOME, fgRice: false,
-          monster: { id: "mb", x: 900, y: 1170, h: 460, wb: 160, wt: 360, p: 2.2, tx: 930, seed: 45, slotDx: -420, flashes: [], ds: 1.2, bigScale: 0.6, back: 0.7 },
+          epic: { id: "eb", x: 900, y: 1172, h: 520, wb: 170, wt: 400, tx: 930, sun: 1, seed: 53, tiers: 7, tierW: 90, bolts: [], flashes: [], bigScale: 0.55, subs: [], sunDx: 500 },
           props: () => Rup2.stall(800, 1700, 0.95) + Rup2.moto(200, 1722, 0.85) }),
         land: { y0: 380 },
         cam: push2("b0", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.05, 540, 960)), shake: rumble(1),
         actors: [P("yaiBua", 880, 1860, 0.95, "point", "wide", "o"), P("fonPhone", 340, 1890, 1.0, "idle", "wide", "o"), P("pu", 580, 1870, 0.78, "idle", "wide", "o")],
-        fx: (tl, id, t0, L) => { Ngw.monsterLife(tl, "mb", t0, D("b0")); put(L.light, SFXW(470, 470, "ครืนนนนนน…", 1) + BUBBLE(560, 1150, "เสียงรถไฟ? แถวนี้ไม่มีรางนะ", 0)); } });
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "eb", t0, D("b0")); put(L.light, SFXW(470, 470, "ครืนนนนนน…", 1) + BUBBLE(560, 1150, "เสียงรถไฟ? แถวนี้ไม่มีรางนะ", 0)); } });
       // T1 · the monster on the horizon: a wedge tornado under its supercell coming across the plains toward the town; cars stopped on
       // the highway, people out filming it (the mistake), ยายบัว yelling at them to get inside
       ADD("t1", { ...NSC("t1", { horizon: 1200, rain: 0.4, vx: 540,
-          monster: { id: "mt1", x: 540, y: 1205, h: 650, wb: 270, wt: 560, p: 2.0, bend: 34, bend2: -14, tx: 600, seed: 41, slotDx: 480, flashes: [[-1.1, 0.03], [1.3, 0.05]] },
+          epic: { id: "ep1", x: 540, h: 700, wb: 300, wt: 640, tx: 590, sun: 1, seed: 51 },
           village: [{ x: 1110, y: 1210, s: 0.12 }, { x: 1240, y: 1212, s: 0.11, flip: 1 }, { kind: "wat", x: -130, y: 1208, s: 0.2 }],
           road: { y: 1640, h: 160 },
           poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1630, s: 0.8, tf: [3], sag: 46 },
@@ -57,27 +58,29 @@
         land: { y0: 190 },
         cam: push2("t1", fr(540, 960, 1.0, 540, 960), fr(540, 950, 1.04, 540, 960)),
         actors: [P("fonPhone", 300, 1900, 0.9, "film", "wide", "o"), P("puCam", 540, 1890, 0.7, "camEye", "wide", "o"), P("yaiBua", 830, 1905, 0.88, "yell", "angry", "scream", { flip: true })],
-        fx: (tl, id, t0) => Ngw.monsterLife(tl, "mt1", t0, D("t1")) });
+        light: SUNL, grade: GSUN,
+        fx: (tl, id, t0) => Ngw.epicLife(tl, "ep1", t0, D("t1")) });
       // extras: two drivers who stopped on the highway
       Rig.CAST.exA = { v2: { ...Rig.CAST.keng.v2, top: { kind: "shirt", c: "#3a6aa8", sleeve: "short", neck: "collar", collar: "#2e5a90", button: "#e8e4d8" }, print: "", bottom: { kind: "jeans", c: "#2a2e38" }, feet: { kind: "sneaker", c: "#e8e4d8" } } };
       Rig.CAST.exB = { v2: { ...Rig.CAST.june.v2, top: { kind: "blouse", c: "#c83a4a", sleeve: "elbow", trim: "#a82a3a" }, print: "", bottom: { kind: "jeans", c: "#3a4a6a" }, feet: { kind: "sandal", c: "#3a2a1a" } } };
       Object.assign(SKN, { exA: SK.medic, exB: SK.fon });
       // C · ยายบัว's rule board over the highway shot, dimmed
-      ADD("c0", { ...NSC("c0", { horizon: 1200, rain: 0.3, monster: { id: "mc", x: 540, y: 1205, h: 650, wb: 270, wt: 560, p: 2.0, bend: 34, bend2: -14, tx: 600, seed: 41, slotDx: 480, flashes: [] },
+      ADD("c0", { ...NSC("c0", { horizon: 1200, rain: 0.3, epic: { id: "ec", x: 540, h: 700, wb: 300, wt: 640, tx: 590, sun: 1, seed: 51, flashes: [] },
           road: { y: 1640, h: 160 }, poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1630, s: 0.8, tf: [3], sag: 46 } }), dark: 0.4,
         land: { y0: 250 },
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
-        fx: (tl, id, t0, L) => { Ngw.monsterLife(tl, "mc", t0, D("c0")); TideUI.rule(tl, L.light, t0, D("c0"), { rules: TW_RULES, title: "กฎของยายบัว", seq: true, at: [0.2, 0.35, 0.5], y: 330 }); } });
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "ec", t0, D("c0")); TideUI.rule(tl, L.light, t0, D("c0"), { rules: TW_RULES, title: "กฎของยายบัว", seq: true, at: [0.2, 0.35, 0.5], y: 330 }); } });
       // T2 · it hits the village: roofs tear off and fly into the funnel, a pole snaps with a blue-green flash; ฝน and ปู run for it
       ADD("t2", { ...NSC("t2", { horizon: 1060, rain: 0.8, vx: 540, fgRice: false,
-          monster: { id: "mt2", x: 400, y: 1240, h: 900, wb: 420, wt: 780, p: 1.8, tx: 460, bend: 40, seed: 43, slotDx: 660, ds: 3, bigScale: 1.6, flashes: [[1.05, 0.04]] },
+          epic: { id: "e2", x: 400, y: 1240, h: 1000, wb: 470, wt: 860, tx: 470, sun: 1, seed: 55, tiers: 5, tierW: 140, bigScale: 1.7, sunDx: 900, flashes: [[2.2, 0.03]], bolts: [[-1.0, 0.5, 5]] },
           ruins: [{ x: 840, y: 1236, s: 0.34, level: 1, dir: -1 }, { x: 1200, y: 1240, s: 0.3, level: 1, dir: -1, seed: 62 }, { x: 40, y: 1256, s: 0.36, level: 2 }, { x: -340, y: 1246, s: 0.3, level: 2, seed: 64 }],
           road: { y: 1560, h: 220 }, poles: { xs: [-500, 40, 580, 1120, 1660], y: 1550, s: 0.95, tf: [2], lean: [0, 0, -14, 0, 0], sag: 60 },
           props: () => Ngw.debris(-600, 1700, 1330, 1540, 40, 72, 0.8) }),
         land: { y0: 200 },
         cam: push2("t2", fr(540, 960, 1.0, 540, 960), fr(540, 980, 1.05, 540, 960)), shake: rumble(2.5),
         actors: [P("fonPhone", 560, 1890, 1.0, "run", "wide", "o"), P("pu", 820, 1860, 0.78, "run", "wide", "o")],
-        fx: (tl, id, t0) => Ngw.monsterLife(tl, "mt2", t0, D("t2"), { flashAt: [0.4, 1.4] }) });
+        light: SUNL, grade: GSUN,
+        fx: (tl, id, t0) => Ngw.epicLife(tl, "e2", t0, D("t2"), { flashAt: [0.4, 1.4] }) });
       // T3 · the right move: the bathroom in the middle of the house, no window — down low, cover the head; dust falls, the door bulges
       ADD("t3", { set: "ngwKuti", setOpts: { id: "ku", robeC: "#3a7ac8", robeS: "#2a5a98" }, dark: 0.2, light: GOLDL, grade: { top: "#3a2a1a", bottom: "#0a0806", op: 0.22 },
         land: { y0: 520 },
@@ -86,30 +89,31 @@
         fx: (tl, id, t0, L) => { Ngw.kutiLife(tl, "ku", t0, D("t3"), [1.2]); put(L.light, `<g opacity=".7">${Array.from({ length: 60 }, (_, k) => `<circle cx="${(k * 97) % 1100}" cy="${200 + (k * 211) % 1500}" r="${2 + (k % 3)}" fill="#c8bca0"/>`).join("")}</g>`); } });
       // T4 · the deadly mistake: drivers crawl up under the highway overpass — the wind squeezes through the gap faster, with the debris in it
       ADD("t4", { ...NSC("t4", { horizon: 1180, rain: 0.9, vx: 540, fgRice: false,
-          monster: { id: "mt4", x: 620, y: 1190, h: 760, wb: 380, wt: 700, p: 1.9, tx: 660, seed: 47, slotDx: -560, flashes: [], ds: 2.6 },
+          epic: { id: "e4", x: 620, y: 1190, h: 800, wb: 420, wt: 760, tx: 660, sun: -1, seed: 57, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
           road: { y: 1560, h: 400 }, overpass: { y: 520, h: 150, ground: 1560, pier: 980, slopeX: 560 } }),
         grade: GW,
         land: { y0: 380 },
         cam: push2("t4", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.05, 540, 960)), shake: rumble(2),
         actors: [P("exA", 470, 900, 0.5, "kCover", "wide", "scream", { flip: true }), P("exB", 370, 1040, 0.5, "kCover", "wide", "scream", { flip: true }), P("taTian", 260, 1190, 0.5, "kCover", "worry", "scream", { flip: true })],
-        fx: (tl, id, t0, L) => { Ngw.monsterLife(tl, "mt4", t0, D("t4")); put(L.light, Ngw.streaks(300, 1300, 760, 1450, 30, 81) + `<g opacity=".95">${Ngw.debris(200, 1200, 800, 1350, 12, 83, 0.55)}</g>`); } });
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e4", t0, D("t4")); put(L.light, Ngw.streaks(300, 1300, 760, 1450, 30, 81) + `<g opacity=".95">${Ngw.debris(200, 1200, 800, 1350, 12, 83, 0.55)}</g>`); } });
       // D · the choice: caught on the highway, the tornado coming — under the overpass, or flat in the ditch?
-      ADD("d0", { ...NSC("d0", { horizon: 1180, rain: 0.8, monster: { id: "md", x: 620, y: 1190, h: 760, wb: 380, wt: 700, p: 1.9, tx: 660, seed: 47, slotDx: -560, flashes: [], ds: 2.6 },
+      ADD("d0", { ...NSC("d0", { horizon: 1180, rain: 0.8, epic: { id: "ed", x: 620, y: 1190, h: 800, wb: 420, wt: 760, tx: 660, sun: -1, seed: 57, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
           road: { y: 1560, h: 400 }, overpass: { y: 520, h: 150, ground: 1560, pier: 980, slopeX: 560 } }), dark: 0.35,
         land: { y0: 380 },
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
-        fx: (tl, id, t0, L) => { Ngw.monsterLife(tl, "md", t0, D("d0"));
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "ed", t0, D("d0"));
           const BR = `<g transform="translate(-60,-70) scale(1.1)">${coinT(PIC.win.split('<rect')[0])}</g>`, DI = `<g transform="translate(-60,-70) scale(1.1)">${coinT(PIC.ditch)}</g>`;
           TideUI.choice(tl, L.light, t0, D("d0"), { q: "จะหลบที่ไหน?", a: { text: "มุดใต้สะพานทางหลวง", icon: BR }, b: { text: "หมอบราบในคูน้ำ", icon: DI }, secs: 3 });
           [...L.light.querySelectorAll("text")].filter((e) => /^\d$/.test(e.textContent.trim())).forEach((e) => e.remove()); } });
       // T5 · caught outside with nowhere to go: ปู flat in the roadside ditch, arms over his head, the monster tearing past
       ADD("t5", { ...NSC("t5", { horizon: 840, rain: 0.9, fgRice: false, ditch: { y: 1450 },
-          monster: { id: "mt5", x: 600, y: 1240, h: 1060, wb: 400, wt: 820, p: 1.8, tx: 680, seed: 49, slotDx: -640, ds: 3, bigScale: 1.5, flashes: [[1.1, 0.03]] },
+          epic: { id: "e5", x: 600, y: 1236, h: 1120, wb: 500, wt: 940, tx: 680, sun: -1, seed: 59, tiers: 4, tierW: 160, bigScale: 1.6, sunDx: 900, flashes: [[2.0, 0.03]], bolts: [[-1.1, 0.5, 9]] },
           far: () => Rup.tree(110, 880, 220) + Tk.pickup(990, 872, 0.26) }),
         land: { y0: 330 },
         cam: push2("t5", fr(540, 1100, 1.0, 540, 960), fr(540, 1100, 1.04, 540, 960)), shake: rumble(2),
         actors: [P("pu", 880, 1540, 0.9, "prone", "closed", "frown")],
-        fx: (tl, id, t0) => Ngw.monsterLife(tl, "mt5", t0, D("t5"), { dx: 60 }) });
+        light: { ...SUNL, from: "left" }, grade: GSUN,
+        fx: (tl, id, t0) => Ngw.epicLife(tl, "e5", t0, D("t5")) });
       // T6 · after: the village flattened — broken walls, roofs gone, a pole down, debris everywhere; the storm moving off, the sun
       // breaking through; ยายบัว holds on to ปู, ฝน lowers her phone
       ADD("t6", { set: "ngwScape", setOpts: { id: "t6", mood: "gold", wallX: 360, horizon: 1100, wind: 0.2, fgRice: false, sunX: 900,

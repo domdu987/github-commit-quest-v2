@@ -28,6 +28,17 @@ Ten frames in story order: a0, b0, t1, c0, t2, t3, t4, d0, t5, t6. The new ones:
   - "หนีไม่ทันตึก หมอบลึกที่ต่ำ"
 - **d0 · จะหลบที่ไหน?** `TideUI.choice`: "มุดใต้สะพานทางหลวง" / "หมอบราบในคูน้ำ". The countdown digit is removed (no HUD numbers).
 
+### v4 the epic storm (owner: "ทำพายุให้อลังการกว่านี้")
+`Ngw.epic` / `Ngw.epicLife` replace `Ngw.monster` in every storm frame. It returns `{ sky, mid }`, and `Sets.ngwScape` takes it as `o.epic`.
+
+What it draws (`o.sun` sets the side the low sun is on):
+- **Sky:** a low sun glowing behind the storm's flank, rain and hail shafts lit gold at their feet, and a lumpy storm body.
+- **Mothership:** striated tiers corkscrewing up, each with a gold rim and a dark gap, plus the inflow band, the wall cloud and a cloud-to-ground bolt.
+- **Funnel:** horizontal shading so the silhouette stays whole, curved front-face spiral bands, a lit rim on the sun side, a dust sheath, and a collar that hides the join with the cloud.
+- **Base:** sub-vortices, a debris fountain with a plume, debris with motion streaks, ground inflow dust and power flashes.
+
+The frames are in `../frames/` as `01`–`10`, each in a vertical and a landscape version.
+
 ## v1 นาคเล่นน้ำ (rejected: it had a legend and a small spout) — `sf/`, frames in `../frames/v1-นาคเล่นน้ำ-ไม่ใช้/`
 
 The five style frames in `../frames/` were built from this kit. Each one comes in two versions:

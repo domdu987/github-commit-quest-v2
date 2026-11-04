@@ -25,6 +25,16 @@
     <radialGradient id="ngwBack"><stop offset="0" stop-color="#c4d0c4" stop-opacity=".95"/><stop offset=".55" stop-color="#94a8a0" stop-opacity=".6"/><stop offset="1" stop-color="#6a8080" stop-opacity="0"/></radialGradient>
     <radialGradient id="ngwSlot"><stop offset="0" stop-color="#f2e6a8" stop-opacity=".95"/><stop offset=".5" stop-color="#a8b884" stop-opacity=".55"/><stop offset="1" stop-color="#5a6a5a" stop-opacity="0"/></radialGradient>
     <radialGradient id="ngwPF"><stop offset="0" stop-color="#f0fffa" stop-opacity="1"/><stop offset=".25" stop-color="#8affd8" stop-opacity=".85"/><stop offset=".6" stop-color="#3ad0c8" stop-opacity=".35"/><stop offset="1" stop-color="#2a9ab8" stop-opacity="0"/></radialGradient>
+    <linearGradient id="ngwFunR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#141a20"/><stop offset=".3" stop-color="#2a3239"/><stop offset=".62" stop-color="#434a50"/><stop offset=".88" stop-color="#4c5054"/><stop offset="1" stop-color="#5e5a52"/></linearGradient>
+    <linearGradient id="ngwFunL" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#141a20"/><stop offset=".3" stop-color="#2a3239"/><stop offset=".62" stop-color="#434a50"/><stop offset=".88" stop-color="#4c5054"/><stop offset="1" stop-color="#5e5a52"/></linearGradient>
+    <linearGradient id="ngwFunV" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#8a6a48" stop-opacity=".95"/><stop offset=".3" stop-color="#5e5246" stop-opacity=".55"/><stop offset=".75" stop-color="#262e36" stop-opacity=".2"/><stop offset="1" stop-color="#121820" stop-opacity=".75"/></linearGradient>
+    <linearGradient id="ngwSheath" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#9a7a56" stop-opacity=".75"/><stop offset=".6" stop-color="#7a6650" stop-opacity=".35"/><stop offset="1" stop-color="#5a5048" stop-opacity="0"/></linearGradient>
+    <linearGradient id="ngwTierR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#121820"/><stop offset=".45" stop-color="#26323c"/><stop offset=".78" stop-color="#56626a"/><stop offset="1" stop-color="#c2b896"/></linearGradient>
+    <linearGradient id="ngwTierL" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#121820"/><stop offset=".45" stop-color="#26323c"/><stop offset=".78" stop-color="#56626a"/><stop offset="1" stop-color="#c2b896"/></linearGradient>
+    <radialGradient id="ngwSun"><stop offset="0" stop-color="#fff0c0" stop-opacity="1"/><stop offset=".25" stop-color="#ffd27a" stop-opacity=".75"/><stop offset=".6" stop-color="#d89a4a" stop-opacity=".3"/><stop offset="1" stop-color="#8a5a30" stop-opacity="0"/></radialGradient>
+    <linearGradient id="ngwShaft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a8a94" stop-opacity=".1"/><stop offset=".5" stop-color="#9aa6ac" stop-opacity=".45"/><stop offset="1" stop-color="#c8b890" stop-opacity=".55"/></linearGradient>
+    <radialGradient id="ngwBoltG"><stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset=".3" stop-color="#cfe0ff" stop-opacity=".45"/><stop offset="1" stop-color="#8aa8ff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="ngwLobeR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5e6c7a"/><stop offset=".55" stop-color="#c8ccd0"/><stop offset="1" stop-color="#fff6e0"/></linearGradient>
     <linearGradient id="ngwLake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a8e94"/><stop offset=".06" stop-color="#52666e"/><stop offset=".45" stop-color="#2e3e46"/><stop offset="1" stop-color="#1a262c"/></linearGradient>
     <radialGradient id="ngwMist"><stop offset="0" stop-color="#f2f6f6" stop-opacity=".95"/><stop offset=".55" stop-color="#d6e0e2" stop-opacity=".6"/><stop offset="1" stop-color="#c0ccd0" stop-opacity="0"/></radialGradient>
     <radialGradient id="ngwDust"><stop offset="0" stop-color="#ab8c66" stop-opacity=".95"/><stop offset=".6" stop-color="#8c7458" stop-opacity=".6"/><stop offset="1" stop-color="#6a5a48" stop-opacity="0"/></radialGradient>
@@ -209,6 +219,120 @@
   Ngw.streaks = (x0, x1, y0, y1, n = 26, seed = 81) => { const r = mk(seed); let g = "";   // wind rushing right → left through the gap
     for (let k = 0; k < n; k++) { const y = y0 + r() * (y1 - y0), x = x0 + r() * (x1 - x0), L0 = 160 + r() * 340; g += `<path d="M${f1(x)},${f1(y)}l${f1(-L0)},${f1(L0 * 0.06)}" stroke="#eef2f2" stroke-width="${f1(2 + r() * 4)}" stroke-linecap="round" opacity="${f1(0.22 + r() * 0.3)}"/>`; }
     return g; };
+
+  // ---------------------------------------------------------------- the epic storm (owner: "ทำพายุให้อลังการกว่านี้")
+  // A supercell and its tornado lit low from one side (o.sun: 1 = sun on the right, -1 = left). Returns { sky, mid }:
+  //   sky — the sun glow, the rain and hail shafts, the mothership (striated tiers corkscrewing up into the storm body), the inflow band,
+  //         the wall cloud, lightning
+  //   mid — the funnel (lit rim, curved spiral bands, a dust sheath), sub-vortices at its base, the debris fountain, debris with motion
+  //         streaks, ground inflow dust, power flashes
+  // ids: #id (funnel root, as Ngw.funnel), #id-meso, #id-subs, .id-pf, #id-big, #id-bolts
+  Ngw.epic = (o = {}) => {
+    const id = o.id || "ep", r = mk(o.seed || 51), sun = o.sun ?? 1, x0 = o.x ?? 540, y0 = o.y ?? 1200, H = o.h ?? 700, wb = o.wb ?? 300, wt = o.wt ?? 620;
+    const x1 = o.tx ?? x0 + 40, y1 = y0 - H, bend = o.bend ?? 30, bend2 = o.bend2 ?? -12, pw = o.p ?? 1.9;
+    const cx = (t) => x0 + (x1 - x0) * t + bend * Math.sin(Math.PI * t) + bend2 * Math.sin(2 * Math.PI * t), cy = (t) => y0 - H * t;
+    const ph = r() * 6, hw = (t) => (wb / 2 + (wt / 2 - wb / 2) * Math.pow(Math.max(0, t), pw)) * (1 + 0.05 * Math.sin(t * 17 + ph) + 0.03 * Math.sin(t * 39 + ph * 2));
+    const T = Array.from({ length: 41 }, (_, i) => -0.03 + 1.06 * i / 40);
+    const band = (a, b, t0 = -0.03, t1 = 1.03) => { const TT = T.filter((t) => t >= t0 && t <= t1); return smooth(TT.map((t) => [cx(t) + a * hw(t), cy(t)]).concat(TT.slice().reverse().map((t) => [cx(t) + b * hw(t), cy(t)])), true); };
+    const SKX = (x) => x0 + (x - x0);   // (kept for readability: everything is in world px)
+    // ======== sky
+    let sky = "";
+    // the low sun behind the storm's flank, and the lit band of sky under the storm on that side
+    sky += `<ellipse cx="${f1(x0 + sun * (o.sunDx ?? 820))}" cy="${f1(y0 - 120)}" rx="900" ry="520" fill="url(#ngwSun)" opacity="${o.sunOp ?? 0.85}"/>`;
+    sky += `<rect x="-1400" y="${f1(y0 - 260)}" width="4000" height="300" fill="#c8a868" opacity=".18" filter="url(#skBlur24)"/>`;
+    // rain and hail shafts hanging off the rear of the storm (the side away from the sun), lit gold at their feet
+    for (let k = 0; k < 9; k++) { const x = x0 - sun * (wt * 0.9 + k * 120 + r() * 60), w = 90 + r() * 120, top = y1 - 40 - r() * 80;
+      sky += `<path d="M${f1(x)},${f1(top)}L${f1(x - sun * 40 - w / 2)},${f1(y0 + 20)}L${f1(x - sun * 40 + w / 2)},${f1(y0 + 20)}L${f1(x + w)},${f1(top)}Z" fill="url(#ngwShaft)" opacity="${f1(0.45 + r() * 0.35)}" filter="url(#skBlur10)"/>`; }
+    // the storm body above everything, dark, its sun-side edge catching light
+    const top = y1 - (o.tiers ?? 8) * (o.tierH ?? 64) - 90;
+    let und = `M-1400,${f1(top + 70)}`; for (let k = 0; k <= 26; k++) { const x = -1400 + k * 155, yy = top + 40 + 50 * Math.exp(-Math.pow((x - x1) / 900, 2)) * -1 + 26 * Math.sin(k * 1.7 + ph) + Math.abs(x - x1) * 0.05; und += `Q${f1(x - 70)},${f1(yy + 46)} ${f1(x)},${f1(yy)}`; }
+    sky += `<path d="${und}V-900H-1400Z" fill="#141c24" filter="url(#skBlur4)"/>`;
+    sky += `<path d="M${f1(x1 + sun * 140)},${f1(top + 4)}Q${f1(x1 + sun * 800)},${f1(top + 30)} ${f1(x1 + sun * 1500)},${f1(top + 120)}" stroke="#e8d0a0" stroke-width="12" fill="none" opacity=".3" filter="url(#skBlur10)"/>`;
+    // the mothership: striated tiers, wider and paler going up, each shifted a little (the corkscrew), a lit rim on each underside
+    let ms = ""; const n = o.tiers ?? 8, th = o.tierH ?? 64, tg = o.tierW ?? 120;
+    for (let k = n - 1; k >= 0; k--) { const yk = y1 - 70 - k * th, rx = wt * 0.66 + k * tg, ry = 46 + k * 9, ck = x1 + (k % 2 ? 1 : -1) * 22 + sun * k * 12;
+      ms += `<ellipse cx="${f1(ck)}" cy="${f1(yk)}" rx="${f1(rx)}" ry="${f1(ry)}" fill="url(#${sun > 0 ? "ngwTierR" : "ngwTierL"})"/>`;
+      const a0 = sun > 0 ? 0 : Math.PI, a1 = sun > 0 ? 0.62 * Math.PI : 0.38 * Math.PI, p0 = [ck + rx * Math.cos(a0), yk + ry * Math.sin(a0)], p1 = [ck + rx * Math.cos(a1), yk + ry * Math.sin(a1)];
+      ms += `<path d="M${f1(p0[0])},${f1(p0[1])}A${f1(rx)},${f1(ry)} 0 0 ${sun > 0 ? 1 : 0} ${f1(p1[0])},${f1(p1[1])}" stroke="#f6e6bc" stroke-width="${f1(6 + k * 1.1)}" fill="none" opacity=".9"/>`;
+      ms += `<path d="M${f1(ck - rx * 0.92)},${f1(yk - ry * 0.15)}A${f1(rx * 0.92)},${f1(ry * 0.8)} 0 0 0 ${f1(ck + rx * 0.92)},${f1(yk - ry * 0.15)}" stroke="#080b0e" stroke-width="16" fill="none" opacity=".5"/>`;
+      ms += `<path d="M${f1(ck - rx * 0.7)},${f1(yk - ry * 0.3)}A${f1(rx * 0.7)},${f1(ry * 0.5)} 0 0 0 ${f1(ck + rx * 0.7)},${f1(yk - ry * 0.3)}" stroke="#9aa4a8" stroke-width="3" fill="none" opacity=".25"/>`; }
+    let wc = ""; for (let k = 0; k < 9; k++) { const u = (k + 0.5) / 9, rr = wt * (0.16 + r() * 0.1); wc += `<ellipse cx="${f1(x1 - wt * 0.62 + u * wt * 1.24)}" cy="${f1(y1 - 30 + Math.sin(u * Math.PI) * 18 + r() * 12)}" rx="${f1(rr * 1.4)}" ry="${f1(rr * 0.75)}" fill="${k % 3 ? "#161e26" : "#1e2830"}"/>`; }
+    wc += `<ellipse cx="${f1(x1)}" cy="${f1(y1 - 50)}" rx="${f1(wt * 0.7)}" ry="${f1(wt * 0.16)}" fill="#161e26"/>`;
+    sky += `<g filter="url(#skBlur4)">${wc}</g>`;
+    sky += `<g id="${id}-meso" filter="url(#skBlur4)">${ms}</g>`;
+    // the inflow band (beaver tail) feeding the storm low on the sun side, and the wall cloud the funnel hangs from
+    let ib = `M${f1(x1 + sun * wt * 0.45)},${f1(y1 - 36)}`; for (let k = 1; k <= 12; k++) ib += `L${f1(x1 + sun * (wt * 0.45 + k * 130))},${f1(y1 - 36 - k * 7 + (r() - 0.5) * 14)}`;
+    for (let k = 12; k >= 0; k--) ib += `L${f1(x1 + sun * (wt * 0.45 + k * 130))},${f1(y1 + 6 - k * 4 + r() * 22)}`;
+    sky += `<path d="${ib}Z" fill="#3e4a54" filter="url(#skBlur4)"/><path d="M${f1(x1 + sun * wt * 0.45)},${f1(y1 - 38)}L${f1(x1 + sun * (wt * 0.45 + 1560))},${f1(y1 - 122)}" stroke="#d8c8a0" stroke-width="5" opacity=".35" filter="url(#skBlur4)"/>`;
+    // lightning: cloud-to-ground in the rain on the rear side
+    let bolts = ""; (o.bolts ?? [[-1.35, 0.5, 3]]).forEach(([fx, fy, sd], k) => { const bx = x0 + sun * fx * wt, by = y1 - 20; bolts += `<g opacity="${o.boltOp ?? 0.85}"><circle cx="${f1(bx)}" cy="${f1(by + 80)}" r="200" fill="url(#ngwBoltG)" opacity=".55"/>${Tk.bolt(bx, by, bx - sun * 50, y0 + 10, 30 + sd, o.boltW ?? 0.32)}</g>`; });
+    sky += `<g id="${id}-bolts">${bolts}</g>`;
+    // ======== mid: the funnel
+    let mid = `<g id="${id}" class="ngwF" data-sp="70" data-top="${f1(x1)} ${f1(y1)}" data-base="${f1(x0)} ${f1(y0)}"><g id="${id}-sw">`;
+    const bd = band(-1, 1);
+    mid += `<defs><clipPath id="${id}-clip"><path d="${bd}"/></clipPath></defs>`;
+    // the dust sheath round the lower third, wider than the funnel, translucent
+    mid += `<path d="${band(-1.45, 1.45, -0.03, 0.42)}" fill="url(#ngwSheath)" filter="url(#skBlur10)"/>`;
+    mid += `<path d="${bd}" fill="url(#${sun > 0 ? "ngwFunR" : "ngwFunL"})"/><path d="${bd}" fill="url(#ngwFunV)"/>`;
+    // curved spiral bands, front half only (cos > 0), dark with a pale companion; a few straight streaks slid sideways (animated)
+    let hel = ""; const turns = o.turns ?? 3.2, NB = o.bands ?? 9;
+    for (let j = 0; j < NB; j++) { const phi = (2 * Math.PI * j) / NB; let seg = [], segs = [];
+      T.forEach((t) => { const th2 = phi + 2 * Math.PI * turns * t; if (Math.cos(th2) > 0.05) seg.push([cx(t) + hw(t) * Math.sin(th2), cy(t)]); else if (seg.length) { segs.push(seg); seg = []; } }); if (seg.length) segs.push(seg);
+      segs.filter((q) => q.length > 2).forEach((q) => { const d = smooth(q); hel += `<path d="${d}" stroke="#10161c" stroke-width="${f1(10 + wb * 0.03)}" fill="none" opacity=".34" stroke-linecap="round"/><path d="${d}" stroke="#c8c0a8" stroke-width="3" fill="none" opacity=".16" transform="translate(${sun * 8},0)"/>`; }); }
+    let st = ""; for (let x = Math.min(x0, x1) - wt, k = 0; x < Math.max(x0, x1) + wt + H * 0.12; x += 80, k++) st += `<path d="M${f1(x)},${f1(y0 + 30)}L${f1(x + H * 0.12)},${f1(y1 - 60)}" stroke="#0e1418" stroke-width="${k % 2 ? 10 : 22}" opacity=".14"/>`;
+    mid += `<g clip-path="url(#${id}-clip)">${hel}<g id="${id}-hx">${st}</g><path d="${band(-1, -0.55)}" fill="#0a0e12" opacity="${sun > 0 ? 0.35 : 0}" filter="url(#skBlur10)"/><path d="${band(0.55, 1)}" fill="#0a0e12" opacity="${sun > 0 ? 0 : 0.35}" filter="url(#skBlur10)"/></g>`;
+    // the lit rim on the sun side, the ragged scud on both edges
+    const rim = smooth(T.filter((t) => t > 0.05).map((t) => [cx(t) + sun * hw(t) * 0.97, cy(t)]));
+    mid += `<path d="${rim}" stroke="#f0d8a4" stroke-width="6" fill="none" opacity=".6" filter="url(#skBlur4)"/>`;
+    let sc = ""; for (let k = 0; k < 30; k++) { const t = 0.1 + r() * 0.95, sd = k % 2 ? 1 : -1, rr = hw(t) * (0.1 + r() * 0.12); sc += `<ellipse cx="${f1(cx(t) + sd * hw(t) * (1 + r() * 0.08))}" cy="${f1(cy(t))}" rx="${f1(rr)}" ry="${f1(rr * 0.55)}" fill="${sd === sun ? "#3a4046" : "#1e252c"}"/>`; }
+    mid += `<g filter="url(#skBlur10)" opacity=".85">${sc}</g>`;
+    // ---- the debris fountain at the base: skirt, plume, lit puffs, dark core
+    const sp = o.spray ?? wb * 0.75;
+    let b = `<ellipse cx="${f1(x0)}" cy="${f1(y0 + 10)}" rx="${f1(sp * 2.1)}" ry="${f1(sp * 0.26)}" fill="#120e0a" opacity=".6" filter="url(#skBlur10)"/>`;
+    b += `<path d="M${f1(x0 - sp * 1.5)},${f1(y0 + 6)}Q${f1(x0 - sp * 1.2)},${f1(y0 - sp * 1.5)} ${f1(x0)},${f1(y0 - sp * 1.9)}Q${f1(x0 + sp * 1.2)},${f1(y0 - sp * 1.5)} ${f1(x0 + sp * 1.5)},${f1(y0 + 6)}Z" fill="#6e5a44" opacity=".55" filter="url(#skBlur10)"/>`;
+    let pf = "", hl = ""; for (let k = 0; k < 22; k++) { const a = (k / 22) * Math.PI * 2, rr = sp * (0.18 + r() * 0.2), px = x0 + Math.cos(a) * sp * (0.7 + r() * 0.5), py = y0 - sp * 0.12 - Math.abs(Math.sin(a)) * sp * 0.5 - r() * sp * 0.5;
+      pf += `<circle cx="${f1(px)}" cy="${f1(py)}" r="${f1(rr)}" fill="${k % 3 ? "#5a4836" : "#6a5440"}"/>`; hl += `<circle cx="${f1(px + sun * rr * 0.35)}" cy="${f1(py - rr * 0.35)}" r="${f1(rr * 0.6)}" fill="#b08c62" opacity=".55"/>`; }
+    b += `<g filter="url(#skBlur4)">${pf}</g><g filter="url(#skBlur10)">${hl}</g>`;
+    for (let k = 0; k < 60; k++) { const a = r() * Math.PI * 2, rr = sp * (0.6 + r() * 1.6); b += `<circle cx="${f1(x0 + Math.cos(a) * rr)}" cy="${f1(y0 - sp * 0.3 + Math.sin(a) * rr * 0.3 - r() * sp * 1.2)}" r="${f1(1.6 + r() * 3)}" fill="${k % 3 ? "#2a1e14" : "#d8c070"}" opacity=".85"/>`; }
+    mid += `<g id="${id}-base">${b}</g>`;
+    mid += `</g>`;
+    let col = ""; for (let k = 0; k < 11; k++) { const u = (k + 0.5) / 11, rr = wt * (0.14 + r() * 0.08); col += `<ellipse cx="${f1(x1 - wt * 0.7 + u * wt * 1.4)}" cy="${f1(y1 - 6 + Math.sin(u * Math.PI) * 14 + r() * 10)}" rx="${f1(rr * 1.5)}" ry="${f1(rr * 0.7)}" fill="${k % 3 ? "#161e26" : "#222c34"}"/>`; }
+    mid += `<g filter="url(#skBlur10)">${col}<ellipse cx="${f1(x1)}" cy="${f1(y1 - 40)}" rx="${f1(wt * 0.74)}" ry="${f1(wt * 0.12)}" fill="#161e26"/></g>`;
+    mid += `<path d="M${f1(x1 + sun * wt * 0.3)},${f1(y1 + 2)}Q${f1(x1 + sun * wt * 0.6)},${f1(y1 + 8)} ${f1(x1 + sun * wt * 0.78)},${f1(y1 - 20)}" stroke="#e8d4a8" stroke-width="6" fill="none" opacity=".45" filter="url(#skBlur4)"/>`;
+    mid += `</g>`;
+    // ---- sub-vortices whipping round the base (multiple-vortex)
+    let subs = ""; (o.subs ?? [[-1.05, 0.22], [0.95, 0.18], [-0.35, 0.14]]).forEach(([fx, fh], k) => { const bx = x0 + fx * sp * 1.2, hh = H * fh, pts = []; for (let i = 0; i <= 10; i++) { const u = i / 10; pts.push([bx + Math.sin(u * 7 + k) * 10 + (x0 - bx) * u * 0.35, y0 - u * hh]); }
+      const d = smooth(pts); subs += `<g class="${id}-sub"><path d="${d}" stroke="#3e3830" stroke-width="${f1(22 - k * 4)}" fill="none" stroke-linecap="round" opacity=".85"/><path d="${d}" stroke="#a88c68" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6" transform="translate(${sun * 6},0)"/><circle cx="${f1(bx)}" cy="${f1(y0 - 10)}" r="${f1(36 - k * 6)}" fill="#7a6248" opacity=".75" filter="url(#skBlur4)"/></g>`; });
+    mid += `<g id="${id}-subs">${subs}</g>`;
+    // ---- debris with motion streaks (a curved tail behind each piece), big pieces high in the plume
+    let big = ""; (o.big || [[-0.9, 0.18, "sheet", 1], [0.85, 0.3, "car", 1.1], [0.5, 0.52, "plank", 1], [-0.55, 0.62, "sheet", 0.8], [0.15, 0.82, "plank", 0.7], [-1.2, 0.08, "tree", 1.1], [1.15, 0.12, "sheet", 0.9], [-0.2, 0.42, "plank", 0.8]]).forEach(([fx, fy, kind, s2], k) => {
+      const x = x0 + fx * (wb * 1.3 + 100), y = y0 - fy * H, a = Math.round(r() * 80 - 40), scl = s2 * (o.bigScale ?? 1);
+      const shape = kind === "car" ? `<path d="M-40,8V-6L-26,-20H18L34,-6H44V8Z" fill="#c8cfd4" stroke="${INK}" stroke-width="3"/><rect x="-20" y="-16" width="16" height="10" fill="#5a6a78"/><rect x="2" y="-16" width="16" height="10" fill="#5a6a78"/><circle cx="-24" cy="10" r="8" fill="#222" stroke="${INK}" stroke-width="2"/><circle cx="28" cy="10" r="8" fill="#222" stroke="${INK}" stroke-width="2"/>`
+        : kind === "plank" ? `<rect x="-34" y="-5" width="68" height="10" fill="#8a6a44" stroke="${INK}" stroke-width="2.4"/>`
+        : kind === "tree" ? `<path d="M0,30V-10" stroke="#4a3220" stroke-width="7"/><circle cx="0" cy="-22" r="22" fill="#2e4a2a" stroke="${INK}" stroke-width="2.4"/><circle cx="-14" cy="-10" r="14" fill="#2e4a2a"/><circle cx="14" cy="-12" r="15" fill="#2e4a2a"/>`
+        : `<path d="M-30,-14L28,-18L32,12L-26,16Z" fill="#a8b0b4" stroke="${INK}" stroke-width="2.6"/><path d="M-20,-14L-16,15M-6,-15L-2,14M8,-16L12,13M20,-17L24,12" stroke="#78848a" stroke-width="2"/>`;
+      const dir = fx < 0 ? 1 : -1;   // pieces left of the funnel swing right in front of it, and back
+      big += `<path d="M${f1(x - dir * 120 * scl)},${f1(y + 26 * scl)}Q${f1(x - dir * 60 * scl)},${f1(y + 4)} ${f1(x - dir * 20)},${f1(y)}" stroke="#d8d0c0" stroke-width="${f1(3 * scl + 1)}" fill="none" opacity=".35" stroke-linecap="round"/>`;
+      big += `<g class="${id}-bd" transform="translate(${f1(x)},${f1(y)}) rotate(${a}) scale(${f1(scl)})">${shape}</g>`; });
+    mid += `<g id="${id}-big">${big}</g>`;
+    // ---- inflow dust racing along the ground into the base from both sides
+    let fl = ""; for (let k = 0; k < 18; k++) { const sd = k % 2 ? 1 : -1, x = x0 + sd * (sp * 2 + 200 + r() * 1100), y = y0 + 6 + r() * 70; fl += `<path d="M${f1(x)},${f1(y)}Q${f1(x0 + sd * sp * 1.6)},${f1(y + 10)} ${f1(x0 + sd * sp * 0.9)},${f1(y0 - 6 - r() * 20)}" stroke="#9a8060" stroke-width="${f1(3 + r() * 7)}" fill="none" opacity="${f1(0.25 + r() * 0.25)}" stroke-linecap="round" filter="url(#skBlur4)"/>`; }
+    mid += `<g>${fl}</g>`;
+    (o.flashes || [[-1.6, 0.02], [1.8, 0.04]]).forEach(([fx, fy]) => { const x = x0 + fx * sp, y = y0 - fy * H; mid += `<g class="${id}-pf"><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(sp * 0.5)}" fill="url(#ngwPF)"/><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(sp * 0.06)}" fill="#f4fffc"/></g>`; });
+    return { sky, mid };
+  };
+  Ngw.epicLife = (tl, id, t0, dur, o = {}) => {
+    const root = document.getElementById(id); if (!root) return; const n = (p) => Math.max(1, Math.ceil(dur / p));
+    const top = root.dataset.top, base = root.dataset.base;
+    tl.fromTo(`#${id}-hx`, { x: 0 }, { x: 160, duration: o.spin ?? 0.7, ease: "none", repeat: n(o.spin ?? 0.7), immediateRender: false }, t0);
+    tl.fromTo(`#${id}-sw`, { skewX: -1.2, svgOrigin: top }, { skewX: 1.2, svgOrigin: top, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: n(1.6), immediateRender: false }, t0);
+    tl.fromTo(`#${id}-base`, { scale: 0.97, svgOrigin: base }, { scale: 1.04, svgOrigin: base, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: n(0.6), immediateRender: false }, t0);
+    tl.fromTo(`#${id}-meso`, { x: -12 }, { x: 12, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: n(2.6), immediateRender: false }, t0);
+    document.querySelectorAll(`.${id}-sub`).forEach((e, k) => tl.fromTo(e, { x: -30 + k * 20 }, { x: 40 - k * 20, duration: 0.5 + k * 0.15, ease: "sine.inOut", yoyo: true, repeat: n(0.5), immediateRender: false }, t0));
+    document.querySelectorAll(`.${id}-bd`).forEach((e, k) => tl.to(e, { rotation: `+=${k % 2 ? 300 : -300}`, x: `+=${k % 2 ? 70 : -70}`, y: `-=${40 + k * 8}`, duration: dur, ease: "none", immediateRender: false }, t0));
+    document.querySelectorAll(`.${id}-pf`).forEach((e, k) => tl.fromTo(e, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.04 }, { opacity: 0.3, duration: 0.06 }, { opacity: 0.9, duration: 0.05 }, { opacity: 0, duration: 0.35 }], immediateRender: false }, t0 + (o.flashAt || [0.6, 1.7])[k % 2]));
+    const bl = document.getElementById(`${id}-bolts`); if (bl && o.boltAt != null) { tl.set(bl, { opacity: 0 }, t0); tl.fromTo(bl, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.03 }, { opacity: 0.2, duration: 0.05 }, { opacity: 1, duration: 0.04 }, { opacity: 0, duration: 0.3 }], immediateRender: false }, t0 + o.boltAt); }
+  };
   // ---------------------------------------------------------------- the lake, its bank, the shrine
   Ngw.lake = (o = {}) => {   // from the horizon hz down to the near shore y1, in perspective: swell bands, wind streaks, whitecaps
     const hz = o.hz ?? 900, y1 = o.y1 ?? 1480, r = mk(o.seed || 5), D = y1 - hz;
@@ -403,6 +527,7 @@
     if (o.lake) { put(L.mid, Ngw.lake({ hz, ...o.lake })); put(L.mid, `<rect x="-1400" y="${hz - 110}" width="4000" height="210" fill="#8a9aa0" opacity=".16" filter="url(#skBlur24)"/>`); }
     (o.spouts || []).forEach((sp) => put(L[sp.layer || "mid"], Ngw.funnel(sp)));
     if (o.monster) put(L[o.monster.layer || "mid"], Ngw.monster(o.monster));
+    if (o.epic) { const e = Ngw.epic({ ...o.epic, y: o.epic.y ?? hz + 6 }); put(L.sky, e.sky); put(L.mid, e.mid); }
     if (o.lake && o.bank !== false) put(L.set, Ngw.bank({ y1: o.lake.y1, ...(o.bankOpts || {}) }));
     if (o.crowd) put(L.set, Ngw.crowd(o.crowd));
     if (o.shrine) put(L.set, Rup2.shrine(o.shrine.x, o.shrine.y, o.shrine.s || 1));
