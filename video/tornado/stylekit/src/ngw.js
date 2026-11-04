@@ -317,7 +317,12 @@
       const d = smooth(pts); subs += `<g class="${id}-sub"><path d="${d}" stroke="#3e3830" stroke-width="${f1(22 - k * 4)}" fill="none" stroke-linecap="round" opacity=".85"/><path d="${d}" stroke="#a88c68" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6" transform="translate(${sun * 6},0)"/><circle cx="${f1(bx)}" cy="${f1(y0 - 10)}" r="${f1(36 - k * 6)}" fill="#7a6248" opacity=".75" filter="url(#skBlur4)"/></g>`; });
     mid += `<g id="${id}-subs"${ng}>${subs}</g>`;
     // ---- debris with motion streaks (a curved tail behind each piece), big pieces high in the plume
-    let big = ""; (o.big || [[-0.9, 0.18, "sheet", 1], [0.85, 0.3, "car", 1.1], [0.5, 0.52, "plank", 1], [-0.55, 0.62, "sheet", 0.8], [0.15, 0.82, "plank", 0.7], [-1.2, 0.08, "tree", 1.1], [1.15, 0.12, "sheet", 0.9], [-0.2, 0.42, "plank", 0.8]]).forEach(([fx, fy, kind, s2], k) => {
+    // QA 5 ("the same upside-down car in the same spot in five shots"): without o.big the pieces are jittered and the car moved to
+    // another slot by the seed, so no two plates share their debris
+    const BIG0 = [[-0.9, 0.18, "sheet", 1], [0.85, 0.3, "car", 1.1], [0.5, 0.52, "plank", 1], [-0.55, 0.62, "sheet", 0.8], [0.15, 0.82, "plank", 0.7], [-1.2, 0.08, "tree", 1.1], [1.15, 0.12, "sheet", 0.9], [-0.2, 0.42, "plank", 0.8]];
+    const bigL = o.big || (() => { const rb = mk((o.seed || 41) * 13 + 7), L = BIG0.map(([fx, fy, kd, s2]) => [fx + (rb() - 0.5) * 0.45, Math.max(0.06, fy + (rb() - 0.5) * 0.18), kd, s2]);
+      const kc = Math.floor(rb() * L.length); [L[1][2], L[kc][2]] = [L[kc][2], L[1][2]]; return L; })();
+    let big = ""; bigL.forEach(([fx, fy, kind, s2], k) => {
       const x = x0 + fx * (wb * 1.3 + 100), y = y0 - fy * H, a = Math.round(r() * 80 - 40), scl = s2 * (o.bigScale ?? 1);
       const shape = kind === "car" ? `<path d="M-40,8V-6L-26,-20H18L34,-6H44V8Z" fill="#c8cfd4" stroke="${INK}" stroke-width="3"/><rect x="-20" y="-16" width="16" height="10" fill="#5a6a78"/><rect x="2" y="-16" width="16" height="10" fill="#5a6a78"/><circle cx="-24" cy="10" r="8" fill="#222" stroke="${INK}" stroke-width="2"/><circle cx="28" cy="10" r="8" fill="#222" stroke="${INK}" stroke-width="2"/>`
         : kind === "plank" ? `<rect x="-34" y="-5" width="68" height="10" fill="#8a6a44" stroke="${INK}" stroke-width="2.4"/>`
@@ -430,8 +435,10 @@
     const id = `rb${Math.round(t0 * 100)}`, I = "#1e1a16", Y0 = o.y ?? 330, X0 = 60, W = 960, rows = o.rules || [], n = rows.length, GAP = o.gap ?? 210, H = 290 + (n + (o.blank ? 1 : 0)) * GAP, act = o.active ?? 0;
     const r = mk(o.seed || 97);
     let g = `<g id="${id}"><g id="${id}-sw">`;
-    // posts
-    g += [X0 + 150, X0 + W - 150].map((x) => `<rect x="${x - 22}" y="${Y0 + 40}" width="44" height="${1920 - Y0}" fill="#6a4a2e" stroke="${I}" stroke-width="5"/><path d="M${x - 10},${Y0 + 60}V1920" stroke="#8a6a44" stroke-width="6" opacity=".6"/>`).join("");
+    // posts — or, with o.hang, two ropes up out of the frame: the sign recalled away from the stall (under the bridge, in the bathroom)
+    // hangs like ทะเลลด's rope-hung boards instead of standing on posts where it could not be (QA 5)
+    g += o.hang ? [X0 + 150, X0 + W - 150].map((x) => `<path d="M${x},${Y0 + 22}V${Y0 - 2600}" stroke="#3a2c1e" stroke-width="8"/><path d="M${x + 3},${Y0 + 20}V${Y0 - 2600}" stroke="#8a7050" stroke-width="2.6" stroke-dasharray="8 10" opacity=".8"/><circle cx="${x}" cy="${Y0 + 22}" r="14" fill="none" stroke="#3a2c1e" stroke-width="7"/>`).join("")
+      : [X0 + 150, X0 + W - 150].map((x) => `<rect x="${x - 22}" y="${Y0 + 40}" width="44" height="${1920 - Y0}" fill="#6a4a2e" stroke="${I}" stroke-width="5"/><path d="M${x - 10},${Y0 + 60}V1920" stroke="#8a6a44" stroke-width="6" opacity=".6"/>`).join("");
     // the zinc sheet: corrugation, a dented outline, rust streaks, a bent corner
     let ol = `M${X0},${Y0 + 8}`; for (let k = 1; k <= 12; k++) ol += `L${f1(X0 + (W * k) / 12)},${f1(Y0 + (r() - 0.5) * 10)}`;
     ol += `L${X0 + W - 6},${Y0 + H}`; for (let k = 11; k >= 0; k--) ol += `L${f1(X0 + (W * k) / 12)},${f1(Y0 + H + (r() - 0.5) * 12)}`; ol += "Z";
@@ -1011,7 +1018,8 @@
       open += `<path d="${cap([-30, y], [-30 + L0, y + sp], w, w * 0.84)}" fill="${U.sk}" ${ln(2.8)}/><ellipse cx="${f1(-30 + L0 - 9)}" cy="${f1(y + sp * 0.93)}" rx="${f1(w * 0.3)}" ry="${f1(w * 0.26)}" fill="${U.nail}" stroke="${U.skD}" stroke-width="1.4"/>`; });
     g += `<g id="${id}-pu">${pu}${thumb}<g id="${id}-popen" opacity="0">${open}</g><g id="${id}-pshut">${shut}</g></g>`;
     g += `<g id="${id}-hit" opacity="0">${[[-1, -0.5], [-0.3, -1], [0.5, -0.9], [1, -0.2], [0.9, 0.6], [-1, 0.5]].map(([dx, dy]) => `<path d="M${f1(dx * 170)},${f1(dy * 150)}l${f1(dx * 70)},${f1(dy * 70)}" stroke="#fff" stroke-width="10" stroke-linecap="round"/>`).join("")}</g>`;
-    return `<g transform="translate(${o.x ?? 640},${o.y ?? 1230}) scale(${(o.flip ? -1 : 1) * (o.s ?? 1)},${o.s ?? 1})"><g id="${id}">${g}</g></g>`; };
+    // o.rot turns the whole insert (QA 5: ตาเทียน's arm straight up from the bottom edge read as being pulled out of a hole)
+    return `<g transform="translate(${o.x ?? 640},${o.y ?? 1230}) rotate(${o.rot ?? 0}) scale(${(o.flip ? -1 : 1) * (o.s ?? 1)},${o.s ?? 1})"><g id="${id}">${g}</g></g>`; };
   // ปู's hand flies in along his arm and clamps at `at` (on "ตา!"): squash, ตาเทียน's fingers splay, the knuckles whiten as the grip
   // tightens; the tug at `tug` ("ลงคูเร็ว!") hauls both down and to the left, then a strained tremble to the end
   Ngw.wristGrabLife = (tl, id, t0, dur, at = 0.3, tug = 0.8) => { const q = (s) => `#${id}${s}`;
@@ -1033,6 +1041,8 @@
     Object.assign(d.style, { position: "absolute", right: (o.right ?? 36) + "px", bottom: (o.bottom ?? 40) + "px", zIndex: 57, display: "flex", alignItems: "center", gap: "10px", padding: "7px 18px 7px 7px",
       borderRadius: "999px", background: "rgba(220,230,232,.94)", border: "3px solid #1e2a2c", boxShadow: "0 5px 0 #2d6a6e", font: "600 28px/1 Kanit", color: "#1e2a2c", opacity: 0, whiteSpace: "nowrap" });
     d.innerHTML = `<span style="width:34px;height:34px;border-radius:50%;background:#2d8a8e;border:3px solid #1e2a2c;display:inline-flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M2,3H18L13,8L11,12L10,18L9,12L7,8Z" fill="#fff"/></svg></span>ที่มา: ${text}`;
+    // 16:9 (QA 5: the lowered captions covered it): page-positioned in the bottom-right corner, clear of the centred caption box
+    if (window.LANDSCAPE) { d.classList.add("pagepos"); Object.assign(d.style, { right: "44px", bottom: "36px", fontSize: "26px" }); }
     clip.appendChild(d); tl.fromTo(d, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + (o.at ?? 0.4)); };
   // a power pole knocked flat at (x, y), its line draped to (wx, wy) on whatever it fell across and on to the ground at (ex, ey)
   Ngw.fallenPole = (x, y, s = 1, o = {}) => { const id = o.id || "fp", lean = o.lean ?? -70, a = (lean * Math.PI) / 180;

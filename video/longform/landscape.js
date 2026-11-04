@@ -47,7 +47,7 @@
     clip.appendChild(vf); clip.appendChild(vui);
     kids.forEach((n) => {
       if (n === svg || n.classList.contains("bubble") || n.classList.contains("sfxw")) vf.appendChild(n);
-      else if (n.classList.contains("capwrap")) clip.appendChild(n); // stays on top, page-positioned
+      else if (n.classList.contains("capwrap") || n.classList.contains("pagepos")) clip.appendChild(n); // stays on top, page-positioned (.pagepos: opt-in for UI drawn in page pixels)
       else vui.appendChild(n);
     });
     clip.appendChild(clip.querySelector(".capwrap") || document.createElement("i"));
