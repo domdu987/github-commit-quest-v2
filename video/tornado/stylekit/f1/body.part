@@ -297,6 +297,17 @@
         { ...AFTER("xt2", { props: TWIST }), blur: { sky: 4, far: 4, mid: 4 }, land: { y0: 540 }, cam: PUSHD(D("xstop") - SH.xstop.vo[1].t + 0.15, fr(1100, 1580, 2.5, 540, 1215), fr(1120, 1580, 2.7, 540, 1215)),
           actors: [P("pu", 760, 1830, 0.82, "kReach", "wide", "o")],
           fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fpb-sp", t0, 3.2, 0.6) }]);
+      // 42b · the answer to EP.1's "ปูอยู่ไหน!": ยายบัว drops to her knees and holds ปู, in tears — "ปู… หลานยาย… ยายนึกว่าจะไม่ได้เจอแล้ว";
+      // ฝน behind them, her eyes shut with relief; the wrecked road and the pickup soft behind (owner 4 Nov: "เนื้อเรื่อง ภาพ เอฟเฟค ดีเท่ายัง")
+      // (the far arm hangs hidden behind the body: one arm round the other reads as a hug in this 2D rig)
+      Rig.MODES.hugK = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 14 + 1.2 * Math.sin(u * 2.2), head: 12, uaF: -78 + 2 * Math.sin(u * 3), faF: -96, uaB: 8, faB: -12 });
+      Rig.MODES.hugS = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 6, head: 12, uaF: -64, faF: -78, uaB: 8, faB: -10 });
+      ADD("xhug", { ...AFTER("xh", { props: TWIST }), blur: { sky: 4, far: 4, mid: 4, set: 3 }, captions: caps("xhug"), land: { y0: 540 },
+        cam: push2("xhug", fr(600, 1460, 1.75, 540, 1215), fr(600, 1460, 1.86, 540, 1215)),
+        actors: [P("fon", 900, 1660, 0.82, "idle", "closed", "smile", { flip: true }),
+          P("pu", 680, 1790, 0.86, "hugS", "closed", "flat", { flip: true }),
+          P("yaiBuaCry", 500, 1800, 1.0, "hugK", "closed", "frown", { talk: TALK("xhug", 0, "o") })],
+        fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fpb-sp", t0, D("xhug"), 0.9) });
       // 43 · the knowledge board: fallen pole, broken line — keep away, don't touch, not even the metal it lies on; call it in
       // (TMD · NWS · Ready.gov). Hung in the world on two ropes, the wrecked road with the pickup and the sparking pole blurred behind
       ADD("xknow4", { ...AFTER("xk4", { props: TWIST }), blur: { sky: 7, far: 7, mid: 7, set: 7 }, captions: caps("xknow4"), land: { y0: 300 },

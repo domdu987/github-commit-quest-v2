@@ -1156,4 +1156,5 @@
     <path d="M-25,-533c-4,9 -5,15 0,19c5,-4 4,-10 0,-19z" fill="#d4f0fa" stroke="${INK}" stroke-width="1.6"/><path d="M26,-531c-3,8 -4,13 0,16c4,-3 3,-8 0,-16z" fill="#d4f0fa" stroke="${INK}" stroke-width="1.6"/>
     <circle cx="-26" cy="-524" r="1.8" fill="#fff"/><circle cx="25" cy="-523" r="1.5" fill="#fff"/></g>`;
   C.taTianCry = { v2: { ...C.taTian.v2, face: C.taTian.v2.face + tears } };
+  C.yaiBuaCry = { v2: { ...C.yaiBua.v2, face: (C.yaiBua.v2.face || "") + tears } };
 })();

@@ -33,6 +33,7 @@ SHOTS = [
     ("xafter", ["t07"], 0.6, 0.6, 5.6),                  # aftermath: the wrecked village; ปู and ตาเทียน climb out, alive
     ("xcam", ["p08"], 0.2, 0.5, 3.0),                    # ปู sees his camera by the overturned pickup and runs (the twist set-up)
     ("xstop", ["f08", ("n28", 0.3)], 0.1, 0.6, 5.0),     # ฝน: stop! — the broken line lies across the pickup
+    ("xhug", ["b08"], 0.3, 0.7, 4.0),                    # ยายบัว kneels and holds ปู, in tears: the answer to EP.1's "ปูอยู่ไหน!"
     ("xknow4", ["n29", ("n30", 0.3)], 0.3, 0.7, 8.6),    # diagram: fallen pole, broken line — keep away, don't touch, call (TMD, NWS, Ready.gov)
     ("xrule4", ["b07"], 0.4, 0.8, 4.6),                  # ยายบัว sprays rule 4 on her zinc sign
     ("xfin", ["n31", ("n32", 0.4)], 0.5, 0.7, 7.6),      # bookend: ฝน puts the phone away; the family on the road

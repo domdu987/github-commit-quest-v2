@@ -72,6 +72,7 @@ for i in range(int((m.SH["xcam"]["dur"] - 0.2) / 0.8)): F("xcam", 0.2 + i * 0.8,
 for i in range(int(2.2 / 0.7)): F("xstop", i * 0.7, "zap", 0.3)
 c = m.SH["xstop"]["vo"][1]["t"] - 0.15
 for i in range(int(3.2 / 0.6)): F("xstop", c + i * 0.6, "zap", 0.45)
+for i in range(int((m.SH["xhug"]["dur"] - 0.2) / 0.9)): F("xhug", 0.2 + i * 0.9, "zap", 0.12)   # the line still crackles, soft behind the hug
 F("xknow4", 0.45, "signclank", 0.6); v = m.SH["xknow4"]["vo"]; F("xknow4", v[0]["t"] + 0.35, "thump", 0.7)
 for i in range(int((m.SH["xknow4"]["dur"] - v[0]["t"] - 0.6) / 0.8)): F("xknow4", v[0]["t"] + 0.6 + i * 0.8, "zap", 0.2)
 F("xrule4", 0.1, "zincflap", 0.7)
@@ -79,6 +80,7 @@ F("xend", 0.25, "zincflap", 0.6); F("xend", 0.45, "thump", 0.4)
 # music: the chapter break, the storm overhead, the calm after, the bookend
 m.boost(T("xpass", 0.0), T("xwin", 0.2), 1.35)
 m.dip(T("xquiet", 0.0), T("xafter", 0.4), 0.6)
+m.boost(T("xhug", 0.0), T("xhug", -0.1), 1.3)          # ยายบัว holds ปู: the theme swells
 m.boost(T("xfin", 0.0), T("xend", 0.0), 1.2)
 m.finish(holes=[(T("hit") - 0.4, T("hit"))], segments=[(0.0, T("choice", -0.12), 0.0), (T("xunder", 0.0), m.TOTAL, 0.0)],
          fade=(m.TOTAL - 3.0, m.TOTAL))   # the theme stays under the end screen and fades over its last 3 s
