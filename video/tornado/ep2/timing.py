@@ -20,6 +20,7 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
+    ("ditch", ["b09"], 0.3, 0.5, 4.0),                   # (moved by ../full/combine.py into EP.1, after "pu") ปู films from the roadside ditch; ยายบัว: rule 3 (the plant)
     ("xunder", ["n20", ("t05", 0.2)], 0.45, 0.4, 5.6),   # under the overpass: cars and people crowding in under the beams; ตาเทียน: climb up
     ("xwind", ["p05"], 0.3, 0.5, 3.8),                   # ปู looks up: the wind whips harder through the gap than outside
     ("xrule3", ["p06"], 0.2, 0.6, 4.4),                  # ปู remembers ยายบัว's rule 3 (the zinc sign, rule 3 lit)
@@ -30,12 +31,14 @@ SHOTS = [
     ("xwin", ["n24", ("n25", 0.15)], 0.3, 0.5, 4.8),     # at home: the window ตาเทียน said to open explodes inward (CDC)
     ("xsafe", ["n26"], 0.3, 0.6, 4.4),                   # the bathroom: ฝน and ยายบัว safe; opening windows is useless (SPC)
     ("xquiet", ["n27"], 0.6, 0.8, 3.2),                  # the roar stops
+    ("xbridge", [], 0, 0, 3.0),                          # the overpass after: debris jammed under the beams, a car crushed on the ledge (where they would have been)
     ("xafter", ["t07"], 0.6, 0.6, 5.6),                  # aftermath: the wrecked village; ปู and ตาเทียน climb out, alive
     ("xcam", ["p08"], 0.2, 0.5, 3.0),                    # ปู sees his camera by the overturned pickup and runs (the twist set-up)
     ("xstop", ["f08", ("n28", 0.3)], 0.1, 0.6, 5.0),     # ฝน: stop! — the broken line lies across the pickup
     ("xhug", ["b08"], 0.3, 0.7, 4.0),                    # ยายบัว kneels and holds ปู, in tears: the answer to EP.1's "ปูอยู่ไหน!"
     ("xknow4", ["n29", ("n30", 0.3)], 0.3, 0.7, 8.6),    # diagram: fallen pole, broken line — keep away, don't touch, call (TMD, NWS, Ready.gov)
     ("xrule4", ["b07"], 0.4, 0.8, 4.6),                  # ยายบัว sprays rule 4 on her zinc sign
+    ("xbye", ["f09"], 0.3, 1.4, 4.2),                    # ฝน ends her live (the payoff of EP.1's "ถ่ายต่อ" comments): the screen goes dark
     ("xfin", ["n31", ("n32", 0.4)], 0.5, 0.7, 7.6),      # bookend: ฝน puts the phone away; the family on the road
     ("xend", ["n33"], 0.5, 6.0, 12.0),                   # the end card: ยายบัว's 4 rules + follow (room for YouTube's end screen)
 ]

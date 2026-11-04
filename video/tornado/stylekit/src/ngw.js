@@ -295,7 +295,8 @@
       pf += `<circle cx="${f1(px)}" cy="${f1(py)}" r="${f1(rr)}" fill="${k % 3 ? "#5a4836" : "#6a5440"}"/>`; hl += `<circle cx="${f1(px + sun * rr * 0.35)}" cy="${f1(py - rr * 0.35)}" r="${f1(rr * 0.6)}" fill="#b08c62" opacity=".55"/>`; }
     b += `<g filter="url(#skBlur4)">${pf}</g><g filter="url(#skBlur10)">${hl}</g>`;
     for (let k = 0; k < 60; k++) { const a = r() * Math.PI * 2, rr = sp * (0.6 + r() * 1.6); b += `<circle cx="${f1(x0 + Math.cos(a) * rr)}" cy="${f1(y0 - sp * 0.3 + Math.sin(a) * rr * 0.3 - r() * sp * 1.2)}" r="${f1(1.6 + r() * 3)}" fill="${k % 3 ? "#2a1e14" : "#d8c070"}" opacity=".85"/>`; }
-    mid += `<g id="${id}-base">${b}</g>`;
+    const ng = o.noGround ? ' opacity="0"' : "";   // o.noGround (with noFunnel): nothing on the ground yet — no fountain, vortices, flying debris or inflow
+    mid += `<g id="${id}-base"${ng}>${b}</g>`;
     mid += `</g>`;
     let col = ""; for (let k = 0; k < 11; k++) { const u = (k + 0.5) / 11, rr = wt * (0.14 + r() * 0.08); col += `<ellipse cx="${f1(x1 - wt * 0.7 + u * wt * 1.4)}" cy="${f1(y1 - 6 + Math.sin(u * Math.PI) * 14 + r() * 10)}" rx="${f1(rr * 1.5)}" ry="${f1(rr * 0.7)}" fill="${k % 3 ? "#161e26" : "#222c34"}"/>`; }
     mid += `<g filter="url(#skBlur10)">${col}<ellipse cx="${f1(x1)}" cy="${f1(y1 - 40)}" rx="${f1(wt * 0.74)}" ry="${f1(wt * 0.12)}" fill="#161e26"/></g>`;
@@ -304,7 +305,7 @@
     // ---- sub-vortices whipping round the base (multiple-vortex)
     let subs = ""; (o.subs ?? [[-1.05, 0.22], [0.95, 0.18], [-0.35, 0.14]]).forEach(([fx, fh], k) => { const bx = x0 + fx * sp * 1.2, hh = H * fh, pts = []; for (let i = 0; i <= 10; i++) { const u = i / 10; pts.push([bx + Math.sin(u * 7 + k) * 10 + (x0 - bx) * u * 0.35, y0 - u * hh]); }
       const d = smooth(pts); subs += `<g class="${id}-sub"><path d="${d}" stroke="#3e3830" stroke-width="${f1(22 - k * 4)}" fill="none" stroke-linecap="round" opacity=".85"/><path d="${d}" stroke="#a88c68" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6" transform="translate(${sun * 6},0)"/><circle cx="${f1(bx)}" cy="${f1(y0 - 10)}" r="${f1(36 - k * 6)}" fill="#7a6248" opacity=".75" filter="url(#skBlur4)"/></g>`; });
-    mid += `<g id="${id}-subs">${subs}</g>`;
+    mid += `<g id="${id}-subs"${ng}>${subs}</g>`;
     // ---- debris with motion streaks (a curved tail behind each piece), big pieces high in the plume
     let big = ""; (o.big || [[-0.9, 0.18, "sheet", 1], [0.85, 0.3, "car", 1.1], [0.5, 0.52, "plank", 1], [-0.55, 0.62, "sheet", 0.8], [0.15, 0.82, "plank", 0.7], [-1.2, 0.08, "tree", 1.1], [1.15, 0.12, "sheet", 0.9], [-0.2, 0.42, "plank", 0.8]]).forEach(([fx, fy, kind, s2], k) => {
       const x = x0 + fx * (wb * 1.3 + 100), y = y0 - fy * H, a = Math.round(r() * 80 - 40), scl = s2 * (o.bigScale ?? 1);
@@ -315,10 +316,10 @@
       const dir = fx < 0 ? 1 : -1;   // pieces left of the funnel swing right in front of it, and back
       big += `<path d="M${f1(x - dir * 120 * scl)},${f1(y + 26 * scl)}Q${f1(x - dir * 60 * scl)},${f1(y + 4)} ${f1(x - dir * 20)},${f1(y)}" stroke="#d8d0c0" stroke-width="${f1(3 * scl + 1)}" fill="none" opacity=".35" stroke-linecap="round"/>`;
       big += `<g class="${id}-bd" transform="translate(${f1(x)},${f1(y)}) rotate(${a}) scale(${f1(scl)})">${shape}</g>`; });
-    mid += `<g id="${id}-big">${big}</g>`;
+    mid += `<g id="${id}-big"${ng}>${big}</g>`;
     // ---- inflow dust racing along the ground into the base from both sides
     let fl = ""; for (let k = 0; k < 18; k++) { const sd = k % 2 ? 1 : -1, x = x0 + sd * (sp * 2 + 200 + r() * 1100), y = y0 + 6 + r() * 70; fl += `<path d="M${f1(x)},${f1(y)}Q${f1(x0 + sd * sp * 1.6)},${f1(y + 10)} ${f1(x0 + sd * sp * 0.9)},${f1(y0 - 6 - r() * 20)}" stroke="#9a8060" stroke-width="${f1(3 + r() * 7)}" fill="none" opacity="${f1(0.25 + r() * 0.25)}" stroke-linecap="round" filter="url(#skBlur4)"/>`; }
-    mid += `<g>${fl}</g>`;
+    mid += `<g${ng}>${fl}</g>`;
     (o.flashes || [[-1.6, 0.02], [1.8, 0.04]]).forEach(([fx, fy]) => { const x = x0 + fx * sp, y = y0 - fy * H; mid += `<g class="${id}-pf"><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(sp * 0.5)}" fill="url(#ngwPF)"/><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(sp * 0.06)}" fill="#f4fffc"/></g>`; });
     return { sky, mid };
   };
@@ -479,10 +480,77 @@
     g += `<g clip-path="url(#${id}-c1)">${th}</g><g clip-path="url(#${id}-c2)">${ro}</g>`;
     g += `<text x="0" y="40" text-anchor="middle" font-family="Kanit" font-size="40" fill="#9ab8ff" opacity=".9">ดังแล้วเงียบ</text></g>`;
     return g; };
-  Ngw.phoneWaveLife = (tl, id, t0, dur) => { tl.fromTo(`#${id}-w1`, { attr: { width: 0 } }, { attr: { width: 660 }, duration: Math.min(1.2, dur * 0.4), ease: "none", immediateRender: false }, t0 + 0.2);
-    tl.fromTo(`#${id}-w2`, { attr: { width: 0 } }, { attr: { width: 660 }, duration: dur * 0.8, ease: "none", immediateRender: false }, t0 + 0.6); };
-  Sets.ngwPhone = (L, o = {}) => put(L.set, Ngw.phoneWave(o.id || "pw"));
-  Sets.ngwClock = (L, o = {}) => { put(L.sky, `<rect x="-1400" y="-800" width="4000" height="3600" fill="${o.bg || "#8a6a44"}"/>${Array.from({ length: 40 }, (_, k) => `<path d="M${-1400 + k * 100},-800V2800" stroke="#6a4a2e" stroke-width="8" opacity=".6"/>`).join("")}`); put(L.set, Ngw.clock(o.id || "ck", 540, 900, o.s ?? 1.2, o.h ?? 15, o.m ?? 0)); };
+  Ngw.phoneWaveLife = (tl, id, t0, dur, w = 660) => { tl.fromTo(`#${id}-w1`, { attr: { width: 0 } }, { attr: { width: w }, duration: Math.min(1.2, dur * 0.4), ease: "none", immediateRender: false }, t0 + 0.2);
+    tl.fromTo(`#${id}-w2`, { attr: { width: 0 } }, { attr: { width: w }, duration: dur * 0.8, ease: "none", immediateRender: false }, t0 + 0.6); };
+  Sets.ngwPhone = (L, o = {}) => put(L.set, o.wide ? Ngw.phoneWaveL(o.id || "pw") : Ngw.phoneWave(o.id || "pw"));
+  Sets.ngwClock = (L, o = {}) => { put(L.sky, `<rect x="-1400" y="-800" width="4000" height="3600" fill="${o.bg || "#8a6a44"}"/>${Array.from({ length: 40 }, (_, k) => `<path d="M${-1400 + k * 100},-800V2800" stroke="#6a4a2e" stroke-width="8" opacity=".6"/>`).join("")}`);
+    if (o.wall) put(L.set, Ngw.stallWall(o)); put(L.set, Ngw.clock(o.id || "ck", 540, 900, o.s ?? 1.2, o.h ?? 15, o.m ?? 0)); };
+  // ---------------------------------------------------------------- the 16:9 film's own layouts (QA: no portrait cards left in the wide frame)
+  // the stall's back wall round the clock (Sets.ngwClock o.wall): the string of bulbs, the April calendar, a marigold garland on a nail,
+  // the shelf with the radio and the thermos, ยายบัว's chalk price board. o.lit: the bulbs glow (the dark afternoon)
+  Ngw.stallWall = (o = {}) => { const I = "#1e1a16", lit = !!o.lit;
+    let g = `<path d="M-700,330Q-90,470 540,400T1760,330" stroke="#2a2420" stroke-width="5" fill="none"/>`;
+    for (let k = 0; k < 13; k++) { const x = -640 + k * 190, y = 360 + 46 * Math.sin((k / 12) * Math.PI * 2 + 0.6) * 0.6 + 40;
+      g += `<path d="M${x},${f1(y - 34)}v22" stroke="#2a2420" stroke-width="5"/><circle cx="${x}" cy="${f1(y)}" r="17" fill="${lit ? "#fff2c0" : "#e8dcc0"}" ${OUT(4)}/>${lit ? `<circle cx="${x}" cy="${f1(y)}" r="90" fill="url(#ngwBulb)"/>` : ""}`; }
+    // the calendar: April, the 13th ringed (สงกรานต์), the days crossed off up to today
+    g += `<g transform="translate(-250,860) rotate(-2)"><path d="M0,-200v-24" stroke="${I}" stroke-width="6"/><circle cy="-226" r="9" fill="#8a8a84" ${OUT(3)}/><rect x="-150" y="-200" width="300" height="400" fill="#f4f0e4" ${OUT(6)}/><rect x="-150" y="-200" width="300" height="96" fill="#c8302a" ${OUT(6)}/>
+      <text y="-138" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="54" fill="#fff6e0">เมษายน</text>`;
+    for (let r = 0; r < 5; r++) for (let c = 0; c < 7; c++) { const n = r * 7 + c + 1; if (n > 30) continue; const x = -126 + c * 40, y = -64 + r * 54;
+      g += `<text x="${x + 14}" y="${y + 20}" text-anchor="middle" font-family="Kanit" font-size="24" fill="${c === 0 ? "#c8302a" : "#3a3430"}">${n}</text>${n < 21 ? `<path d="M${x + 2},${y + 2}l24,24" stroke="#c8302a" stroke-width="3" opacity=".6"/>` : ""}${n === 13 ? `<circle cx="${x + 14}" cy="${y + 12}" r="20" fill="none" stroke="#c8302a" stroke-width="4"/>` : ""}`; }
+    g += `</g>`;
+    // a marigold garland on a nail beside the clock
+    g += `<g transform="translate(905,600)"><circle r="8" fill="#8a8a84" ${OUT(3)}/>${Array.from({ length: 15 }, (_, k) => { const a = -0.15 + (k / 14) * Math.PI * 1.3, x = 70 * Math.sin(a) * 0.8, y = 30 + 130 * (1 - Math.cos(a)) * 0.6; return `<circle cx="${f1(x)}" cy="${f1(y)}" r="17" fill="${k % 4 === 3 ? "#e8e0f0" : "#f2a020"}" ${OUT(3)}/>`; }).join("")}
+      <path d="M-4,190l-14,90M6,190l10,86" stroke="#e8c040" stroke-width="6"/><circle cx="0" cy="186" r="22" fill="#c8302a" ${OUT(3)}/></g>`;
+    // the shelf under the clock: the transistor radio and the thermos
+    g += `<rect x="190" y="1330" width="700" height="34" fill="#6a4a2e" ${OUT(6)}/><path d="M250,1364l40,80M830,1364l-40,80" stroke="${I}" stroke-width="10"/>
+      <g transform="translate(400,1330)"><path d="M70,-150L150,-290" stroke="#8a8a84" stroke-width="7"/><rect x="-130" y="-160" width="260" height="160" rx="22" fill="#b0302a" ${OUT(6)}/><circle cx="-55" cy="-80" r="50" fill="#3a3430" ${OUT(4)}/>
+        ${Array.from({ length: 5 }, (_, k) => `<path d="M-95,${-104 + k * 12}h80" stroke="#6a6460" stroke-width="4"/>`).join("")}<rect x="20" y="-130" width="84" height="36" rx="6" fill="#e8dcb0" ${OUT(3)}/><path d="M40,-130v36M60,-130v36M80,-130v36" stroke="#3a3430" stroke-width="2"/><circle cx="62" cy="-50" r="16" fill="#e8dcc0" ${OUT(3)}/></g>
+      <g transform="translate(690,1330)"><rect x="-48" y="-230" width="96" height="230" rx="20" fill="#2a7a6a" ${OUT(6)}/><rect x="-36" y="-262" width="72" height="40" rx="10" fill="#e8e4d8" ${OUT(5)}/><path d="M48,-190q44,10 44,60t-44,60" stroke="${I}" stroke-width="12" fill="none"/><path d="M-48,-120h96" stroke="#e8e4d8" stroke-width="10"/></g>`;
+    // ยายบัว's chalk price board
+    g += `<g transform="translate(1340,900) rotate(2)"><path d="M-120,-260L0,-330L120,-260" stroke="${I}" stroke-width="5" fill="none"/><circle cy="-332" r="9" fill="#8a8a84" ${OUT(3)}/><rect x="-190" y="-260" width="380" height="480" rx="14" fill="#8a5a32" ${OUT(6)}/><rect x="-168" y="-238" width="336" height="436" fill="#24382c"/>
+      <text y="-170" text-anchor="middle" font-family="Sriracha" font-size="50" fill="#f2c230">ไก่ย่างยายบัว</text><path d="M-140,-146h280" stroke="#e8e4d8" stroke-width="3" opacity=".6"/>
+      ${[["ไก่ย่าง", "ตัวละ 150"], ["ส้มตำ", "40"], ["ข้าวเหนียว", "10"], ["น้ำแข็งใส", "15"]].map(([a, b], k) => `<text x="-146" y="${-80 + k * 74}" font-family="Sriracha" font-size="40" fill="#f2efe6">${a}</text><text x="146" y="${-80 + k * 74}" text-anchor="end" font-family="Sriracha" font-size="40" fill="#f2efe6">${b}</text>`).join("")}
+      <path d="M-120,176q30,-16 60,0t60,0" stroke="#e86a6a" stroke-width="4" fill="none"/></g>`;
+    return g; };
+  // ฝน's recorder for the wide frame: the phone on its side filling the middle of the page, the two lanes stacked
+  // (same ids as Ngw.phoneWave, so Ngw.phoneWaveLife runs it with o.w = the lane width)
+  Ngw.phoneWaveL = (id) => { const I = "#1e1a16", W = 1210, X0 = -390;   // lanes in the phone's own coordinates (screen −900…900)
+    let g = `<rect x="-1400" y="-800" width="4000" height="3600" fill="#1a1e24"/><rect x="-1400" y="-800" width="4000" height="3600" fill="url(#ngwBulb)" opacity=".08"/>`;
+    g += `<g transform="translate(540,940)"><rect x="-960" y="-440" width="1920" height="880" rx="100" fill="#26262e" stroke="${I}" stroke-width="10"/><rect x="-900" y="-400" width="1800" height="800" rx="56" fill="#0e1218"/><circle cx="-930" cy="0" r="12" fill="#3a3a44"/>`;
+    g += `<circle cx="-820" cy="-330" r="15" fill="#ff3a4a"/><text x="-790" y="-314" font-family="Kanit" font-weight="700" font-size="46" fill="#e8eef2">บันทึกเสียง</text><text x="840" y="-314" text-anchor="end" font-family="Kanit" font-size="38" fill="#9aa4ac">00:47</text>`;
+    const lane = (y, label, sub, c) => `<text x="-840" y="${y + 6}" font-family="Kanit" font-weight="700" font-size="52" fill="${c}">${label}</text><text x="-840" y="${y + 56}" font-family="Kanit" font-size="34" fill="${c}" opacity=".85">${sub}</text><path d="M${X0},${y}H${X0 + W}" stroke="#3a4048" stroke-width="3"/>`;
+    g += lane(-120, "ฟ้าร้อง", "ดังแล้วเงียบ", "#9ab8ff") + lane(210, "เสียงนี้", "ดังไม่หยุด", "#ffb84a");
+    let th = "", ro = ""; for (let k = 0; k < 86; k++) { const x = X0 + 6 + k * 14;
+      const a = k > 10 && k < 34 ? 118 * Math.exp(-(k - 11) * 0.2) * (0.6 + 0.4 * Math.sin(k * 2.1)) : 4; th += `<path d="M${x},${f1(-120 - a)}V${f1(-120 + a)}" stroke="#9ab8ff" stroke-width="7" stroke-linecap="round"/>`;
+      const b = 76 + 30 * Math.sin(k * 0.9) + 16 * Math.sin(k * 2.3); ro += `<path d="M${x},${f1(210 - b)}V${f1(210 + b)}" stroke="#ffb84a" stroke-width="7" stroke-linecap="round"/>`; }
+    g += `<defs><clipPath id="${id}-c1"><rect id="${id}-w1" x="${X0}" y="-260" width="0" height="280"/></clipPath><clipPath id="${id}-c2"><rect id="${id}-w2" x="${X0}" y="80" width="0" height="260"/></clipPath></defs>`;
+    g += `<g clip-path="url(#${id}-c1)">${th}</g><g clip-path="url(#${id}-c2)">${ro}</g></g>`;
+    return g; };
+  // ฝน's live screen for the wide frame, drawn in page pixels (1920×1080) for a shot whose band starts at o.y0. It is one group as big as
+  // the frame, so landscape.js leaves it full size (the portrait version shrank to a phone-wide column). The header runs across the top,
+  // comments climb the left side above the captions, the hearts float up the right edge (#id-hN, Ngw.liveLifeL).
+  // o.end: the "ไลฟ์จบแล้ว" card (#id-end, hidden) for ฝน ending her live; #id-on holds everything that goes when it ends.
+  Ngw.liveUIL = (o = {}) => { const id = o.id || "lvl", y0 = Math.max(0, Math.min(570, o.y0 ?? 0)), name = o.name || "ฝนพาเที่ยว", cm = o.comments || [];   // landscape.js clamps the band top to 0…570
+    // the invisible rect spans the whole vertical frame (2400 × 1920 after the transform), which is what makes landscape.js keep the group unscaled
+    let g = `<rect x="0" y="${f1(-y0 / 1.25)}" width="1920" height="1536" fill="#000" opacity="0"/><g id="${id}-on"><rect x="0" y="0" width="1920" height="150" fill="#000" opacity=".3"/>`;
+    g += `<g transform="translate(84,76)"><circle r="48" fill="#f2be2a" stroke="#ff3a6a" stroke-width="7"/><circle cy="-6" r="23" fill="#ebc19c"/><path d="M-27,-14Q-25,-46 2,-46Q27,-44 27,-14Q15,-31 -4,-29Q-19,-31 -27,-14Z" fill="#1e1410"/><path d="M-31,31Q0,10 31,31" stroke="#f2be2a" stroke-width="14"/></g>`;
+    g += `<text x="152" y="68" font-family="Kanit" font-weight="700" font-size="42" fill="#fff">${name}</text><text x="152" y="112" font-family="Kanit" font-size="30" fill="#e8e8e8" opacity=".9">${o.title || "พายุมาแล้ววว"}</text>`;
+    g += `<g transform="translate(1560,74)"><rect x="-74" y="-32" width="148" height="60" rx="12" fill="#ff2a4a"/><circle cx="-44" cy="-2" r="10" fill="#fff"/><text x="12" y="13" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="36" fill="#fff">LIVE</text></g>`;
+    g += `<g transform="translate(1720,74)"><rect x="-66" y="-30" width="132" height="58" rx="12" fill="#000" opacity=".4"/><path d="M-46,-1q14,-16 28,0q-14,16 -28,0Z" fill="none" stroke="#fff" stroke-width="4"/><circle cx="-32" cy="-1" r="5" fill="#fff"/><text x="20" y="11" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="30" fill="#fff">${o.viewers || "2.4K"}</text></g>`;
+    g += `<g transform="translate(1852,74)"><circle r="32" fill="#000" opacity=".4"/><path d="M-12,-12L12,12M12,-12L-12,12" stroke="#fff" stroke-width="5" stroke-linecap="round"/></g>`;
+    cm.forEach(([nm, tx, c], k) => { const y = (o.cy ?? 860) - (cm.length - 1 - k) * 86;
+      g += `<g id="${id}-c${k}" transform="translate(40,${y})"><rect x="0" y="-44" width="${Math.min(900, 128 + tx.length * 27 + nm.length * 23)}" height="78" rx="39" fill="#000" opacity=".42"/><circle cx="40" cy="-5" r="25" fill="${c || "#6a8ac8"}"/><text x="80" y="6" font-family="Kanit" font-weight="700" font-size="31" fill="#ffd25a">${nm}</text><text x="${90 + nm.length * 20}" y="6" font-family="Kanit" font-size="33" fill="#fff">${tx}</text></g>`; });
+    g += `<g transform="translate(1840,880)"><circle r="46" fill="#ff3a6a"/><path d="M0,17C-25,-2 -29,-21 -15,-27C-6,-30 0,-23 0,-18C0,-23 6,-30 15,-27C29,-21 25,-2 0,17Z" fill="#fff"/></g>`;
+    [[1836, 790, 1.2, "#ff4a6a"], [1806, 690, 1, "#ff9ab0"], [1856, 590, 0.9, "#ff4a6a"], [1820, 490, 0.7, "#ffd0d8"], [1848, 400, 0.55, "#ff4a6a"]].forEach(([x, y, s2, c], k) => {
+      g += `<path id="${id}-h${k}" transform="translate(${x},${y}) scale(${s2 * 1.7})" d="M0,8C-14,-2 -18,-14 -9,-19C-4,-22 0,-17 0,-14C0,-17 4,-22 9,-19C18,-14 14,-2 0,8Z" fill="${c}" stroke="#fff" stroke-width="1.6"/>`; });
+    g += `</g>`;
+    if (o.end) g += `<g id="${id}-end" opacity="0"><rect x="0" y="0" width="1920" height="1080" fill="#000" opacity=".35"/><g transform="translate(960,420)"><rect x="-380" y="-170" width="760" height="320" rx="40" fill="#14181e" opacity=".92" stroke="#ff3a6a" stroke-width="5"/>
+      <text y="-62" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="70" fill="#fff">ไลฟ์จบแล้ว</text><text y="6" text-anchor="middle" font-family="Kanit" font-size="36" fill="#e8e8e8">ขอบคุณที่ห่วงกันนะคะ</text>
+      <g transform="translate(-120,84)"><path transform="scale(2.2)" d="M0,8C-14,-2 -18,-14 -9,-19C-4,-22 0,-17 0,-14C0,-17 4,-22 9,-19C18,-14 14,-2 0,8Z" fill="#ff3a6a"/><text x="40" y="14" font-family="Kanit" font-weight="700" font-size="40" fill="#fff">1.2 หมื่น</text></g></g></g>`;
+    return `<g transform="translate(-660,${y0}) scale(1.25)">${g}</g>`; };
+  // the hearts float up the right edge and fade, over and over (from t0 for dur)
+  Ngw.liveLifeL = (tl, id, t0, dur) => { for (let k = 0; k < 5; k++) { const el = `#${id}-h${k}`; if (!document.querySelector(el)) return;
+      tl.fromTo(el, { y: 0, opacity: 1 }, { y: -120, opacity: 0, duration: 1.4, ease: "power1.out", repeat: Math.max(0, Math.ceil(dur / 1.4) - 1), immediateRender: false }, t0 + k * 0.24); } };
   // the living room: plank walls, a family photo, the glass window with the storm outside (#id-win flashes), curtains blowing
   Sets.ngwRoom = (L, o = {}) => { const id = o.id || "rm", I = "#1e1a16", fy = 1560;
     put(L.sky, `<rect x="-1400" y="-800" width="4000" height="3600" fill="#3a2a1e"/>`);
@@ -775,16 +843,17 @@
       return `M${P2(a1)}L${P2(b1)}A${f1(wb / 2)},${f1(wb / 2)} 0 0 0 ${P2(b2)}L${P2(a2)}A${f1(wa / 2)},${f1(wa / 2)} 0 0 0 ${P2(a1)}Z`; };
     const r = mk(o.seed || 77);
     // ---- ตาเทียน (the forearm up from the bottom, the wrist at (0, 0), the hand up)
-    const T = { sk: "#8a5a3a", skD: "#5a3620", skL: "#b48460", vein: "#5e3420", nail: "#d8c2a8" };
-    let ta = `<path d="M-128,384Q0,356 134,386L196,1700H-176Z" fill="#b09a68" ${ln(3.2)}/>
-      <path d="M-96,470Q-84,900 -120,1500M36,450Q52,900 44,1600M110,470Q140,800 150,1300" stroke="#8e7a4c" stroke-width="6" fill="none" opacity=".6" stroke-linecap="round"/>
-      <path d="M-50,480Q-30,900 -40,1500" stroke="#e8dcc0" stroke-width="10" fill="none" opacity=".3" stroke-linecap="round"/><ellipse cx="4" cy="394" rx="122" ry="34" fill="#6e5e3a" ${ln(2.6)}/><ellipse cx="4" cy="402" rx="104" ry="22" fill="#4a3e26"/>`;
+    const T = { sk: "#8a5a3a", skD: "#5a3620", skL: "#b48460", vein: "#5e3420", nail: "#d8c2a8", ...(o.T || {}) },   // o.T / o.ST: the held arm's skin and sleeve
+      ST = { c: "#b09a68", d: "#8e7a4c", l: "#e8dcc0", e1: "#6e5e3a", e2: "#4a3e26", cuff: "#c8b484", cuffL: "#f0e6cc", ...(o.ST || {}) };
+    let ta = `<path d="M-128,384Q0,356 134,386L196,1700H-176Z" fill="${ST.c}" ${ln(3.2)}/>
+      <path d="M-96,470Q-84,900 -120,1500M36,450Q52,900 44,1600M110,470Q140,800 150,1300" stroke="${ST.d}" stroke-width="6" fill="none" opacity=".6" stroke-linecap="round"/>
+      <path d="M-50,480Q-30,900 -40,1500" stroke="${ST.l}" stroke-width="10" fill="none" opacity=".3" stroke-linecap="round"/><ellipse cx="4" cy="394" rx="122" ry="34" fill="${ST.e1}" ${ln(2.6)}/><ellipse cx="4" cy="402" rx="104" ry="22" fill="${ST.e2}"/>`;
     ta += `<path d="${cap([0, 0], [6, 352], 100, 128)}" fill="${T.sk}" ${ln(3)}/><path d="M26,40Q36,200 38,380" stroke="${T.skD}" stroke-width="14" fill="none" opacity=".4" stroke-linecap="round"/>
       <path d="M-24,60Q-30,220 -22,370" stroke="${T.skL}" stroke-width="10" fill="none" opacity=".45" stroke-linecap="round"/>
       <path d="M-10,40Q20,150 -6,240Q-20,300 6,370" stroke="${T.vein}" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M-12,38Q18,150 -8,240" stroke="${T.skL}" stroke-width="2.4" fill="none" opacity=".6"/>`;
     for (let k = 0; k < 22; k++) { const x = -40 + r() * 80, y = 60 + r() * 300; ta += `<path d="M${f1(x)},${f1(y)}l${f1(-6 - r() * 5)},${f1(-2 - r() * 3)}" stroke="#ece6dc" stroke-width="1.4" opacity=".55"/>`; }
     for (let k = 0; k < 6; k++) ta += `<ellipse cx="${f1(-36 + r() * 72)}" cy="${f1(60 + r() * 280)}" rx="${f1(3 + r() * 4)}" ry="${f1(2 + r() * 3)}" fill="${T.skD}" opacity=".5"/>`;
-    ta += `<path d="M-126,396Q4,446 132,396Q130,418 4,462Q-122,420 -126,396Z" fill="#c8b484" ${ln(2.8)}/><path d="M-100,412Q4,446 108,412" stroke="#f0e6cc" stroke-width="4" fill="none" opacity=".6" stroke-linecap="round"/>`;
+    ta += `<path d="M-126,396Q4,446 132,396Q130,418 4,462Q-122,420 -126,396Z" fill="${ST.cuff}" ${ln(2.8)}/><path d="M-100,412Q4,446 108,412" stroke="${ST.cuffL}" stroke-width="4" fill="none" opacity=".6" stroke-linecap="round"/>`;
     let th = `<path d="M-54,-40Q-66,-110 -64,-178Q-32,-198 8,-198Q50,-196 70,-172Q78,-110 58,-40Q32,-20 0,-22Q-32,-22 -54,-40Z" fill="${T.sk}" ${ln(3)}/>
       <path d="M-34,-56Q-36,-120 -40,-168M-10,-56Q-10,-120 -14,-176M14,-56Q16,-120 14,-178M36,-60Q42,-118 42,-168" stroke="${T.skD}" stroke-width="3.4" fill="none" opacity=".5" stroke-linecap="round"/>
       <path d="M-24,-60Q-24,-120 -28,-170" stroke="${T.skL}" stroke-width="7" fill="none" opacity=".45" stroke-linecap="round"/><path d="M20,-50Q30,-90 10,-130" stroke="${T.vein}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
@@ -798,16 +867,18 @@
     const beads = (pts) => pts.map(([x, y, rr]) => `<circle cx="${x}" cy="${y}" r="${rr}" fill="#fff" opacity=".5"/><circle cx="${f1(x - rr * 0.3)}" cy="${f1(y - rr * 0.3)}" r="${f1(rr * 0.35)}" fill="#fff"/>`).join("");
     let g = `<g id="${id}-ta">${ta}<g id="${id}-tf">${tf}</g>${th}${beads([[-30, 200, 5], [20, 260, 4], [-12, 320, 6], [30, -120, 4], [-30, -150, 3.5]])}</g>`;
     // ---- ปู (the grip at (0, 0): the back of his right hand over ตาเทียน's wrist, the forearm up to the top left, the red tee sleeve)
-    const U = { sk: "#d49c6c", skD: "#a8704a", skL: "#f2c89e", nail: "#f6d8c6" };
+    const U = { sk: "#d49c6c", skD: "#a8704a", skL: "#f2c89e", nail: "#f6d8c6", ...(o.U || {}) },   // o.U / o.SU: the gripping hand's skin and sleeve (SU.stripe "" = plain, SU.dots = a print)
+      SU = { c: "#d8382a", stripe: "#f6f2ea", cuff: "#a82218", dots: "", ...(o.SU || {}) };
     const W0 = [-140, -6], dir = [-0.8, -0.6], at = (d) => [W0[0] + dir[0] * d, W0[1] + dir[1] * d], nrm = [-dir[1], dir[0]];
     let pu = `<g id="${id}-spd" opacity="0">${[-120, -40, 40, 120].map((o2) => `<path d="M${P2([at(700)[0] + nrm[0] * o2, at(700)[1] + nrm[1] * o2])}L${P2([at(1300)[0] + nrm[0] * o2, at(1300)[1] + nrm[1] * o2])}" stroke="#f2f4f6" stroke-width="8" stroke-linecap="round" opacity=".7"/>`).join("")}</g>`;
     pu += `<path d="${cap(W0, at(900), 112, 136)}" fill="${U.sk}" ${ln(3.2)}/><path d="M${P2(at(60))}L${P2(at(560))}" stroke="${U.skD}" stroke-width="22" opacity=".25" transform="translate(-22,26)" stroke-linecap="round"/>`;
     pu += `<path d="M${P2([at(80)[0] + 18, at(80)[1] - 28])}L${P2([at(520)[0] + 22, at(520)[1] - 36])}" stroke="${U.skL}" stroke-width="12" opacity=".45" stroke-linecap="round"/>`;
     const c0 = at(600);
     { const e1 = at(1500), q = (P, w) => [[P[0] + nrm[0] * w, P[1] + nrm[1] * w], [P[0] - nrm[0] * w, P[1] - nrm[1] * w]], [a1, a2] = q(c0, 98), [b1, b2] = q(e1, 118);
-      pu += `<path d="M${P2(a1)}L${P2(b1)}L${P2(b2)}L${P2(a2)}Z" fill="#d8382a" ${ln(3.2)}/>`; }
-    for (let k = 0; k < 6; k++) { const q = at(660 + k * 120); pu += `<path d="M${P2([q[0] + nrm[0] * 110, q[1] + nrm[1] * 110])}L${P2([q[0] - nrm[0] * 110, q[1] - nrm[1] * 110])}" stroke="#f6f2ea" stroke-width="30"/>`; }
-    pu += `<path d="M${P2([c0[0] + nrm[0] * 92, c0[1] + nrm[1] * 92])}L${P2([c0[0] - nrm[0] * 92, c0[1] - nrm[1] * 92])}" stroke="#a82218" stroke-width="16" stroke-linecap="round"/><path d="M${P2([c0[0] - 90 * nrm[0], c0[1] - 90 * nrm[1]])}L${P2([at(1400)[0] - 90 * nrm[0], at(1400)[1] - 90 * nrm[1]])}" stroke="#8a1e18" stroke-width="10" opacity=".35"/>`;
+      pu += `<path d="M${P2(a1)}L${P2(b1)}L${P2(b2)}L${P2(a2)}Z" fill="${SU.c}" ${ln(3.2)}/>`; }
+    for (let k = 0; SU.stripe && k < 6; k++) { const q = at(660 + k * 120); pu += `<path d="M${P2([q[0] + nrm[0] * 110, q[1] + nrm[1] * 110])}L${P2([q[0] - nrm[0] * 110, q[1] - nrm[1] * 110])}" stroke="${SU.stripe}" stroke-width="30"/>`; }
+    for (let k = 0; SU.dots && k < 9; k++) { const q = at(680 + (k % 3) * 230 + (k > 5 ? 60 : 0)), w = [-58, 4, 62][Math.floor(k / 3)]; pu += `<g transform="translate(${f1(q[0] + nrm[0] * w)},${f1(q[1] + nrm[1] * w)})">${[0, 72, 144, 216, 288].map((d) => `<circle cx="${f1(9 * Math.cos((d * Math.PI) / 180))}" cy="${f1(9 * Math.sin((d * Math.PI) / 180))}" r="7" fill="${SU.dots}"/>`).join("")}<circle r="4" fill="#f2c230"/></g>`; }
+    pu += `<path d="M${P2([c0[0] + nrm[0] * 92, c0[1] + nrm[1] * 92])}L${P2([c0[0] - nrm[0] * 92, c0[1] - nrm[1] * 92])}" stroke="${SU.cuff}" stroke-width="16" stroke-linecap="round"/><path d="M${P2([c0[0] - 90 * nrm[0], c0[1] - 90 * nrm[1]])}L${P2([at(1400)[0] - 90 * nrm[0], at(1400)[1] - 90 * nrm[1]])}" stroke="#8a1e18" stroke-width="10" opacity=".35"/>`;
     const back = `M-182,-44Q-160,-88 -72,-88Q-28,-86 -16,-70Q-8,-20 -12,60Q-20,84 -64,88Q-122,92 -170,60Q-196,10 -182,-44Z`;
     pu += `<path d="${back}" fill="${U.sk}" ${ln(3)}/><path d="M-176,-40q10,-18 30,-14" stroke="${U.skL}" stroke-width="5" fill="none" opacity=".7" stroke-linecap="round"/>`;
     pu += `<path d="M-140,-20Q-80,-40 -30,-60M-140,-6Q-80,-14 -28,-22M-140,8Q-80,14 -28,16M-140,22Q-84,40 -32,54" stroke="${U.skL}" stroke-width="4" fill="none" opacity=".5" stroke-linecap="round"/>`;

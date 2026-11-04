@@ -90,6 +90,16 @@
       // 39 · the roar stops: the storm goes off over the fields, light comes back on the wrecked village
       ADD("xquiet", { ...AFTER("xq", { sunX: 300, farX: 1600 }), captions: caps("xquiet"), land: { y0: 420 },
         cam: push2("xquiet", fr(540, 1095, 1.0, 540, 1095), fr(540, 1095, 1.04, 540, 1095)) });
+      // 39b · the overpass after (QA: the bridge's danger was never seen): the same view as the crowded shot 30, now empty and silent — the
+      //       ledge under the beams scoured, branches and roofing rammed into the gap, the pickup that was parked there crushed up the slope,
+      //       the other one flipped against the pier, the moto on its side; low sun through the gap. No words: the theme alone
+      const WRECKU = () => `<g transform="rotate(-34 -60 780)">${Tk.pickup(-60, 780, 0.5)}</g>` + Ngw.debris(-700, 230, 640, 800, 46, 93, 0.95) + Ngw.debris(-420, 120, 900, 1200, 18, 94, 0.8)
+        + `<g>${[[1580, 1120, -18], [1700, 1260, 22], [1640, 1400, -8]].map(([x, y, r]) => `<g transform="rotate(${r} ${x} ${y})"><path d="M${x - 130},${y - 40}q60,-30 130,0t130,0v70q-60,-30 -130,0t-130,0Z" fill="url(#ngwZinc)" stroke="#1e1a16" stroke-width="5"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M${x - 110 + k * 52},${y - 44}v70" stroke="#7a8280" stroke-width="3"/>`).join("")}</g>`).join("")}</g>`
+        + FLIPTRUCK(1380, 1660, 0.62) + `<g transform="rotate(84 1080 1640)">${Rup2.moto(1080, 1640, 0.8)}</g>`
+        + `<path d="M1200,640L1760,640L1100,1960L380,1960Z" fill="#fff2c0" opacity=".1"/><path d="M1380,640L1600,640L1000,1960L700,1960Z" fill="#fff2c0" opacity=".08"/>`;
+      ADD("xbridge", { ...AFTER("xbr", { sunX: 1500, farX: 1750, road: { y: 1560, h: 400 }, poles: false, so: { overpass: { y: 430, h: 150, ground: 1560, pier: 1660, slopeX: 220 } }, props: WRECKU }),
+        dark: 0.1, blur: { sky: 2, far: 2 }, captions: [], land: { y0: 380 },
+        cam: push2("xbridge", fr(540, 1055, 1.0, 540, 1055), fr(300, 940, 1.22, 540, 1055)) });   // drifts in on the ledge where they would have been
       // 40 · aftermath: wide as they climb out (the overturned pickup and the fallen pole planted beyond), then close on ตาเทียน's wet eyes, ปู's shoulder in the foreground at the right
       SPLITN("xafter", [SH.xafter.vo[0].t + SH.xafter.vo[0].frags[1] - 0.15], [
         { ...AFTER("xa", { ditch: { y: 1660 }, props: () => FLIPTRUCK(1180, 1520, 0.55) + Ngw.fallenPole(1520, 1530, 0.7, { id: "fpa", lean: -64, wx: 1240, wy: 1440, ex: 1110, ey: 1528 }) }), land: { y0: 540 },
@@ -114,12 +124,15 @@
           fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fpb-sp", t0, 3.2, 0.6) }]);
       // 42b · the answer to EP.1's "ปูอยู่ไหน!": ยายบัว drops to her knees and holds ปู, in tears — "ปู… หลานยาย… ยายนึกว่าจะไม่ได้เจอแล้ว";
       // ฝน behind them, her eyes shut with relief; the wrecked road and the pickup soft behind (owner 4 Nov: "เนื้อเรื่อง ภาพ เอฟเฟค ดีเท่ายัง")
-      ADD("xhug", { ...AFTER("xh", { props: () => FLIPTRUCK(1600, 1470, 0.4) + Ngw.fallenPole(1840, 1474, 0.48, { id: "fph", lean: -64, wx: 1690, wy: 1412, ex: 1612, ey: 1472 }) }), blur: { sky: 4, far: 4, mid: 4, set: 3 }, captions: caps("xhug"), land: { y0: 540 },
-        cam: push2("xhug", fr(600, 1460, 1.75, 540, 1215), fr(600, 1460, 1.86, 540, 1215)),
-        actors: [P("fon", 900, 1660, 0.82, "idle", "closed", "smile", { flip: true }),
-          P("puNoCam", 680, 1790, 0.86, "hugS", "closed", "flat", { flip: true }),
-          P("yaiBuaCry", 500, 1800, 1.0, "hugK", "closed", "frown", { talk: TALK("xhug", 0, "o") })],
-        fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fph-sp", t0, D("xhug"), 0.9) });
+      { const v = SH.xhug.vo[0], c = v.t + v.frags[1] - 0.04, HUG = (id, fp) => ({ ...AFTER(id, { props: () => FLIPTRUCK(1600, 1470, 0.4) + Ngw.fallenPole(1840, 1474, 0.48, { id: fp, lean: -64, wx: 1690, wy: 1412, ex: 1612, ey: 1472 }) }) });
+        // QA: the medium, then close on the peak — ยายบัว's wet face over ปู's shoulder for "ยายนึกว่าจะไม่ได้เจอแล้ว"
+        SPLITN("xhug", [c], [
+          { ...HUG("xh", "fph"), blur: { sky: 4, far: 4, mid: 4, set: 3 }, land: { y0: 540 }, cam: PUSHD(c, fr(600, 1460, 1.75, 540, 1215), fr(600, 1460, 1.8, 540, 1215)),
+            actors: [P("fon", 900, 1660, 0.82, "idle", "closed", "smile", { flip: true }), P("puNoCam", 680, 1790, 0.86, "hugS", "closed", "flat", { flip: true }), P("yaiBuaCry", 500, 1800, 1.0, "hugK", "closed", "frown", { talk: [[v.t, c, "o"]] })],
+            fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fph-sp", t0, c, 0.9) },
+          { ...HUG("xh2", "fph2"), blur: { sky: 6, far: 6, mid: 6, set: 5 }, land: { y0: 540 }, cam: PUSHD(D("xhug") - c, fr(560, 1360, 2.6, 560, 1060), fr(560, 1360, 2.75, 560, 1060)),
+            actors: [P("puNoCam", 680, 1790, 0.86, "hugS", "closed", "flat", { flip: true }), P("yaiBuaCry", 500, 1800, 1.0, "hugK", "closed", "frown", { talk: [[0, v.t + v.dur - c, "o"]] })],
+            fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fph2-sp", t0, D("xhug") - c, 0.9) }]); }
       // 43 · the knowledge board: fallen pole, broken line — keep away, don't touch, not even the metal it lies on; call it in
       // (TMD · NWS · Ready.gov). Hung in the world on two ropes, the wrecked road with the pickup and the sparking pole blurred behind
       ADD("xknow4", { ...AFTER("xk4", { props: TWIST }), blur: { sky: 7, far: 7, mid: 7, set: 7 }, captions: caps("xknow4"), land: { y0: 300 },
@@ -131,6 +144,15 @@
         cam: STILL("xrule4", fr(540, 1175, 1.0, 540, 1175)),
         actors: [P("yaiBua", 1040, 1900, 1.3, "point", "normal", "o", { flip: true, talk: TALK("xrule4", 0, "o") })],
         fx: (tl, id, t0, L) => Ngw.srcChip(tl, id, t0, "กรมอุตุนิยมวิทยา", { at: 0.6 }) || Ngw.ruleBoard(tl, WB(L, -590, 360, 0.66), t0 + 0.05, D("xrule4") - 0.05, { rules: RULES4, active: 3, y: 330, gap: 190, at: [0.05, 0.08, 0.11, vo("xrule4", 0) - 0.05] }) });
+      // 44b · ฝน ends her live (QA: the live's payoff): her front camera again, as in shot 6 — the comments that said "keep filming" now say sorry;
+      //       "ไลฟ์วันนี้… พอแค่นี้นะคะ", then the screen goes to "ไลฟ์จบแล้ว"
+      ADD("xbye", { ...AFTER("xby", { sunX: 860 }), blur: { sky: 4, far: 4, mid: 4, set: 3 }, captions: caps("xbye"), land: { y0: 640 },
+        cam: push2("xbye", fr(470, 1450, 1.6, 540, 1250), fr(470, 1450, 1.68, 540, 1250)),
+        actors: [P("fon", 470, 1960, 1.2, "selfie", "normal", "smile", { talk: TALK("xbye", 0, "o"), then: [{ t: voEnd("xbye", 0) + 0.05, mode: "idle", eyes: "closed", mouth: "smile" }] })],
+        fx: (tl, id, t0, L) => { put(L.light, Ngw.liveUIL({ id: "lvb", y0: 640, title: "พายุผ่านไปแล้ว", viewers: "12K", end: true,
+            comments: [["ป้าแดง", "ดีใจด้วยลูก รอดแล้ว", "#e86a8a"], ["นนท์", "ขอโทษที่บอกให้ถ่ายต่อนะ", "#6a8ac8"], ["มายด์", "ปูปลอดภัยไหม", "#8ac86a"]] }));
+          Ngw.liveLifeL(tl, "lvb", t0, D("xbye")); const te = t0 + voEnd("xbye", 0) + 0.1;
+          tl.to("#lvb-on", { opacity: 0, duration: 0.3, immediateRender: false }, te); tl.fromTo("#lvb-end", { opacity: 0 }, { opacity: 1, duration: 0.35, immediateRender: false }, te + 0.1); } });
       // 45 · bookend: close on ฝน lowering the phone; then the four of them on the road, two in front, two a step behind
       SPLITN("xfin", [SH.xfin.vo[1].t - 0.2], [
         { ...AFTER("xn1", { sunX: 860 }), blur: { sky: 4, far: 4, mid: 4, set: 3 }, land: { y0: 600 }, cam: STILL("xfin", fr(420, 1500, 1.5, 540, 1275)),

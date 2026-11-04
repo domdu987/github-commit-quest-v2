@@ -26,7 +26,7 @@ F("know1", m.frag("know1") + 0.05, "rumble", 0.9)
 m.roar_level(T("know1", 0.1), T("know1", m.frag("know1", 0, 1) - 0.2), 0.3, 0.3)
 F("touch", 1.0, "boom", 1.0); F("touch", 1.3, "debris", 0.45)
 m.roar_level(T("touch", 1.0), T("lure", -0.5), 1.25, 0.4)
-F("rule", 0.75, "zincflap", 0.9)
+F("rule", m.frag("rule", 0, 1), "zincflap", 0.9)   # the sign drops on the cut after the close "ฝน!"
 m.roar_level(T("know2", 0.2), T("know2", -0.3), 0.6, 0.4)
 F("know2", m.vo_t("know2", 1) + 0.1, "rumble", 0.5)
 F("pickup", 1.2, "doorslam", 0.8); F("pickup", 1.55, "pickup", 0.65)
@@ -36,6 +36,7 @@ F("hit", 1.0, "zap", 0.5); F("hit", 2.0, "zap", 0.45); F("hit", 2.2, "crack", 0.
 m.roar_level(T("hit", 0.0), T("house", 0.2), 1.3, 0.15)
 F("house", 0.3, "windowrattle", 0.7); F("house", 1.4, "crack2", 0.8); F("house", 2.2, "windowrattle", 0.55)
 F("house", -0.35, "bathdoor", 0.9)
+F("house", m.vo_t("house", 1) + 0.1, "thump", 0.8)   # the insert: ยายบัว's hand clamps ฝน's wrist on "อย่า!"
 m.roar(T("count", 0.0), T("truck", 0.1), 0.75, lp=320, fade=0.3)
 beat = 0.75
 for i in range(int((T("truck", 0.0) - T("count", m.vo_t("count", 1))) / beat)):
@@ -65,6 +66,7 @@ F("xpass", 0.15, "boom", 0.9); F("xpass", 0.4, "roofrip", 0.8); F("xpass", 0.9, 
 m.roar(T("xwin", 0.0), T("xquiet", 0.25), 0.8, lp=420, fade=0.35)
 F("xwin", 0.4, "windowrattle", 0.6); F("xwin", m.vo_t("xwin", 1), "glassburst", 1.0)
 # the roar stops ("แล้ว… เสียงรถไฟก็หยุด"): nothing but the voice and the theme
+F("xbridge", 0.35, "debris", 0.22); F("xbridge", 1.7, "signclank", 0.25)   # the overpass after: things still settling, a loose sheet knocks
 # aftermath, the twist: the line crackles on every spark the picture shows
 for k in ("xafter",):
     for i in range(int(2.6 / 0.9)): F(k, 0.3 + i * 0.9, "zap", 0.18)
@@ -76,6 +78,7 @@ for i in range(int((m.SH["xhug"]["dur"] - 0.2) / 0.9)): F("xhug", 0.2 + i * 0.9,
 F("xknow4", 0.45, "signclank", 0.6); v = m.SH["xknow4"]["vo"]; F("xknow4", v[0]["t"] + 0.35, "thump", 0.7)
 for i in range(int((m.SH["xknow4"]["dur"] - v[0]["t"] - 0.6) / 0.8)): F("xknow4", v[0]["t"] + 0.6 + i * 0.8, "zap", 0.2)
 F("xrule4", 0.1, "zincflap", 0.7)
+F("xbye", m.vo_t("xbye") + m.SH["xbye"]["vo"][0]["dur"] + 0.1, "pop", 0.45)   # ฝน ends the live
 F("xend", 0.25, "zincflap", 0.6); F("xend", 0.45, "thump", 0.4)
 # music: the chapter break, the storm overhead, the calm after, the bookend
 m.boost(T("xpass", 0.0), T("xwin", 0.2), 1.35)
