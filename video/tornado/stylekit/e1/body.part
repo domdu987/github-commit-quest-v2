@@ -177,7 +177,10 @@
         cam: STILL("choice", fr(540, 960, 1.0, 540, 960)),
         fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e28", t0, D("choice")); Ngw.choice(tl, L.light, t0 + 0.2, D("choice") - 0.2, { q: "จะหลบที่ไหน?", a: { text: "มุดใต้สะพาน", pic: PIC.win.split("<rect")[0] }, b: { text: "หมอบในคูน้ำ", pic: PIC.ditch }, pull: "a", at: D("choice") - 1.6 });
           tl.fromTo("#black", { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0 + D("choice") - 0.3); } });
-      // 29 · the end card
-      ADD("end", { set: "ngwEndSign", setOpts: { id: "es", l1: "ตอนที่ 2", l2: "ใต้สะพาน" }, dark: 0, light: false, land: { fit: true },
-        cam: push2("end", fr(540, 900, 1.0, 540, 900), fr(540, 900, 1.05, 540, 900)), shake: rumble(0.8),
-        fx: (tl, id, t0) => tl.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0) });
+      // 29 · the end card (owner 4 Nov: the short carries EP.1 only → "กดติดตาม แล้วดูเรื่องเต็มได้ที่ช่อง YouTube"); the sign lights on n19's beats
+      ADD("end", { ...NSC("ens", { horizon: 1400, rain: 0.9, vx: 540, fgRice: false, _leaves: 0,
+          epic: { id: "e29", x: 880, y: 1406, h: 1060, wb: 380, wt: 860, tx: 760, sun: -1, seed: 57, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
+          props: () => Ngw.ctaSign({ id: "es", y: 1150 }) }), dark: 0.15, light: false, land: { fit: true },
+        cam: push2("end", fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.05, 540, 960)), shake: rumble(0.4),
+        fx: (tl, id, t0) => { tl.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0); Ngw.epicLife(tl, "e29", t0, D("end"));
+          const v = SH.end.vo[0]; Ngw.endCtaLife(tl, "es", t0, D("end"), v.frags.map((f) => t0 + v.t + f)); } });

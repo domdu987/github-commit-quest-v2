@@ -516,11 +516,55 @@
     tl.fromTo(`#${id}-cc${pk}`, { x: -6 }, { x: 6, duration: 0.05, yoyo: true, repeat: 15, ease: "none", immediateRender: false }, at);
     tl.to(`#${id}-c${1 - pk}`, { opacity: 0.35, duration: 0.3, immediateRender: false }, at); };
   // the end card: a green highway sign on its pole in the storm: o.l1 "ตอนที่ 2", o.l2 "ใต้สะพาน"
-  Sets.ngwEndSign = (L, o = {}) => { put(L.sky, `<rect x="-1400" y="-800" width="4000" height="3600" fill="#141a20"/><rect x="-1400" y="700" width="4000" height="700" fill="#3a4a50" opacity=".5" filter="url(#skBlur24)"/>
+  Sets.ngwEndSign = (L, o = {}) => { if (o.cta) return Sets.ngwEndCta(L, o); put(L.sky, `<rect x="-1400" y="-800" width="4000" height="3600" fill="#141a20"/><rect x="-1400" y="700" width="4000" height="700" fill="#3a4a50" opacity=".5" filter="url(#skBlur24)"/>
       <path d="M760,420H1000L930,560L950,700L900,860L880,1000L860,860L840,700L800,560Z" fill="#20282e" opacity=".9" filter="url(#skBlur4)"/><ellipse cx="880" cy="1010" rx="160" ry="40" fill="#3a3028" opacity=".8" filter="url(#skBlur10)"/>
       <rect x="-1400" y="1000" width="4000" height="1600" fill="#1a221c"/>${Array.from({ length: 60 }, (_, k) => `<path d="M${(k * 97) % 1400 - 160},${(k * 211) % 1900}l-24,90" stroke="#9aa8b0" stroke-width="3" opacity=".35"/>`).join("")}`);
     put(L.set, `<g transform="translate(540,1040)"><path d="M-14,0V880M14,0V880" stroke="#8a8a84" stroke-width="22"/><g id="${o.id || "es"}"><rect x="-430" y="-330" width="860" height="420" rx="26" fill="#1e7a4a" stroke="#f2f0ea" stroke-width="12"/>
       <text y="-150" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="110" fill="#f2f0ea">${o.l1 || "ตอนที่ 2"}</text><text y="10" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="96" fill="#f2c230">${o.l2 || "ใต้สะพาน"}</text></g></g>`); };
+  // the short's last card (owner 4 Nov 2569: the short carries EP.1 only, then "กดติดตาม แล้วดูเรื่องเต็มได้ที่ช่อง YouTube"):
+  // a highway guide sign in the storm with the tornado behind it; "YouTube" as plain lettering, never its logo (another app's mark cuts reach on IG)
+  Sets.ngwEndCta = (L, o = {}) => {
+    const id = o.id || "es", r = mk(o.seed || 31);
+    let wall = "";
+    for (let k = 0; k < 9; k++) wall += `<ellipse cx="${f1(-200 + k * 190 + r() * 80)}" cy="${f1(250 + r() * 120)}" rx="${f1(260 + r() * 160)}" ry="${f1(90 + r() * 60)}" fill="${k % 2 ? "#1b2329" : "#222b32"}" opacity=".95" filter="url(#skBlur24)"/>`;
+    put(L.sky, `<rect x="-1400" y="-800" width="4000" height="3600" fill="#141a20"/><rect x="-1400" y="880" width="4000" height="560" fill="#3a4a50" opacity=".45" filter="url(#skBlur24)"/>${wall}
+      <g id="${id}Fun"><path d="M620,300C700,340 990,340 1080,300L1000,520L966,760L934,990L914,1190L900,1262L884,1190L852,990L806,760L740,520Z" fill="#1c242a" filter="url(#skBlur4)"/>
+        <path d="M620,300L740,520L806,760L852,990L884,1190" fill="none" stroke="#4e5c66" stroke-width="7" opacity=".55" filter="url(#skBlur4)"/></g>
+      <rect x="-1400" y="1250" width="4000" height="1400" fill="#1a221c"/><ellipse id="${id}Dust" cx="900" cy="1262" rx="200" ry="48" fill="#3a3028" opacity=".85" filter="url(#skBlur10)"/>
+      ${Array.from({ length: 70 }, (_, k) => `<path d="M${(k * 97) % 1400 - 160},${(k * 211) % 1900}l-24,90" stroke="#9aa8b0" stroke-width="3" opacity=".3"/>`).join("")}`);
+    put(L.set, Ngw.ctaSign(o));
+  };
+  // the sign alone (any scene can carry it as props): o.y = where the board's posts meet its bottom edge minus 90 (default 1040)
+  Ngw.ctaSign = (o = {}) => {
+    const id = o.id || "es";
+    const T = (k, y, fs, fw, fill, txt, ls) => `<text id="${id}R${k}" y="${y}" text-anchor="middle" font-family="Kanit" font-weight="${fw}" font-size="${fs}" fill="${fill}"${ls ? ` letter-spacing="${ls}"` : ""} opacity=".14">${txt}</text>`;
+    return `<defs><clipPath id="${id}Clip"><rect x="-460" y="-480" width="920" height="570" rx="30"/></clipPath>
+      <linearGradient id="${id}GlintG" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+      <g transform="translate(540,${o.y ?? 1040})"><path d="M-300,60V900M300,60V900" stroke="#6e706c" stroke-width="28"/><path d="M-310,60V900M290,60V900" stroke="#a4a69e" stroke-width="6" opacity=".5"/>
+        <g id="${id}"><rect x="-460" y="-480" width="920" height="570" rx="30" fill="#1e7a4a" stroke="#f2f0ea" stroke-width="12"/>
+          <rect x="-436" y="-456" width="872" height="522" rx="20" fill="none" stroke="#f2f0ea" stroke-width="3" opacity=".3"/>
+          ${T(1, -352, 104, 800, "#f2c230", o.l1 || "ปูจะรอดไหม?")}<path id="${id}Rule" d="M-380,-304H380" stroke="#f2f0ea" stroke-width="4" opacity=".14"/>
+          ${T(2, -206, 84, 700, "#f2f0ea", o.l2 || "ดูเรื่องเต็มได้ที่")}${T(3, -78, 112, 800, "#f2f0ea", o.l3 || "ช่อง YouTube")}${T(4, 28, 60, 600, "#f2f0ea", o.l4 || "Rod Mai Club", 4)}
+          <g clip-path="url(#${id}Clip)"><g id="${id}Glint" opacity="0"><rect x="-90" y="-520" width="180" height="660" fill="url(#${id}GlintG)" transform="skewX(-18)"/></g></g></g>
+        <g transform="translate(0,90)"><g id="${id}Plate" opacity="0"><path d="M-200,0V60M200,0V60" stroke="#a4a69e" stroke-width="7" stroke-dasharray="10 6"/>
+          <rect x="-260" y="60" width="520" height="150" rx="18" fill="#f2c230" stroke="#1a1a1a" stroke-width="8"/>
+          <text y="170" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="96" fill="#1a1a1a">${o.plate || "กดติดตาม"}</text></g></g></g>`;
+  };
+  // the CTA sign lights row by row on the narrator's beats (at = ปูจะรอดไหม, กดติดตาม, แล้วไปดูเรื่องเต็ม, ได้ที่ช่อง YouTube);
+  // the plate drops on "กดติดตาม" and swings to rest, a headlight glint sweeps the sign on "YouTube", the funnel drifts behind it
+  Ngw.endCtaLife = (tl, id, t0, dur, at) => {
+    const lit = (sel, t) => tl.fromTo(sel, { opacity: 0.14 }, { opacity: 1, duration: 0.35, ease: "power2.out", immediateRender: false }, t);
+    lit(`#${id}R1`, at[0] - 0.05); lit(`#${id}Rule`, at[0] + 0.2); lit(`#${id}R2`, at[2] - 0.05); lit(`#${id}R3`, at[3] - 0.05); lit(`#${id}R4`, at[3] + 0.3);
+    tl.set(`#${id}Plate`, { opacity: 1 }, at[1] - 0.12);
+    tl.fromTo(`#${id}Plate`, { y: -150, rotation: -8, transformOrigin: "50% 0%" }, { y: 0, rotation: 0, duration: 0.4, ease: "bounce.out", immediateRender: false }, at[1] - 0.12);
+    tl.to(`#${id}Plate`, { keyframes: [{ rotation: 4.5, duration: 0.3, ease: "sine.out" }, { rotation: -3, duration: 0.36, ease: "sine.inOut" }, { rotation: 1.5, duration: 0.36, ease: "sine.inOut" }, { rotation: 0, duration: 0.4, ease: "sine.in" }], transformOrigin: "50% 0%" }, at[1] + 0.28);
+    tl.set(`#${id}Glint`, { opacity: 1 }, at[3] - 0.05);
+    tl.fromTo(`#${id}Glint`, { x: -640 }, { x: 640, duration: 0.8, ease: "power2.inOut", immediateRender: false }, at[3] - 0.05);
+    tl.set(`#${id}Glint`, { opacity: 0 }, at[3] + 0.78);
+    if (document.getElementById(`${id}Fun`)) {   // the plain night sky of Sets.ngwEndCta (a scene with Ngw.epic animates its own storm)
+      tl.fromTo(`#${id}Fun`, { x: -12 }, { x: 16, duration: dur, ease: "sine.inOut", immediateRender: false }, t0);
+      tl.fromTo(`#${id}Dust`, { scale: 0.9, transformOrigin: "50% 50%" }, { scale: 1.15, duration: dur, ease: "sine.inOut", immediateRender: false }, t0); }
+  };
   // ---------------------------------------------------------------- the lake, its bank, the shrine
   Ngw.lake = (o = {}) => {   // from the horizon hz down to the near shore y1, in perspective: swell bands, wind streaks, whitecaps
     const hz = o.hz ?? 900, y1 = o.y1 ?? 1480, r = mk(o.seed || 5), D = y1 - hz;

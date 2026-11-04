@@ -48,7 +48,7 @@ SHOTS = [
     ("gone", ["n17"], 0.2, 0.5, 3.0),          # cut: the pickup on the highway, ปู in the back, the tornado behind
     ("truck", ["t04", ("p04", 0.2)], 0.1, 0.5, 5.2),  # ตาเทียน drives at the overpass; ปู: "ใต้สะพานปลอดภัยจริงๆ ใช่ไหม"
     ("choice", ["n18"], 0.2, 0.5, 4.8),        # the choice: มุดใต้สะพาน / หมอบในคูน้ำ, pulled toward the bridge → black
-    ("end", [], 0, 0, 2.4),                    # the end card: a highway sign "ตอนที่ 2 · ใต้สะพาน"
+    ("end", ["n19"], 0.45, 0.7, 3.0),          # the end card (owner 4 Nov: shorts carry EP.1 only): a highway sign "ปูจะรอดไหม? · ดูเรื่องเต็มได้ที่ช่อง YouTube" + plate "กดติดตาม"
 ]
 GAP = 0.08
 
