@@ -211,6 +211,16 @@
     set += `<path d="M-1400,${gb}H${sx}L${sx - 560},${gy}H-1400Z" fill="#9a968a" stroke="${INK}" stroke-width="6"/>`;
     for (let k = 1; k < 8; k++) { const t = k / 8; set += `<path d="M-1400,${f1(gb + t * (gy - gb))}H${f1(sx - 560 * t)}" stroke="#7a766a" stroke-width="4"/>`; }
     set += `<path d="M${sx},${gb}L${sx - 560},${gy}" stroke="#c8c4b6" stroke-width="10"/>`;
+    // QA ("the bridge set is bare"): I-girder flanges and their shadow, the pier cap with bearing pads, a drain pipe down the pier,
+    // rain streaks staining the concrete, the abutment's ledge right under the girders where people climb to
+    { const px = o.pier ?? 960;
+      set += `<path d="M-1400,${gb - 6}H2600" stroke="#2e3032" stroke-width="12"/><path d="M-1400,${ty + dh + 8}H2600" stroke="#6a6c6e" stroke-width="6"/>`;
+      for (let x = -1400; x < 2600; x += 200) set += `<path d="M${x},${ty + dh}V${gb}" stroke="#2a2c2e" stroke-width="16"/><path d="M${x + 8},${ty + dh}V${gb}" stroke="#7a7c7e" stroke-width="3" opacity=".6"/>`;
+      set += `<rect x="${px - 120}" y="${gb}" width="240" height="40" fill="#9a9a94" stroke="${INK}" stroke-width="6"/>${[-80, 0, 80].map((dx) => `<rect x="${px + dx - 22}" y="${gb - 14}" width="44" height="14" fill="#3a3a3a"/>`).join("")}`;
+      set += `<path d="M${px + 44},${gb + 40}V${gy - 30}q0,22 -22,22" stroke="#5a5e60" stroke-width="12" fill="none" stroke-linecap="round"/>${[0.3, 0.6].map((t) => `<path d="M${px + 34},${f1(gb + 40 + (gy - gb - 70) * t)}h20" stroke="${INK}" stroke-width="4"/>`).join("")}`;
+      for (let k = 0; k < 7; k++) { const sx2 = px - 50 + k * 16 + (k % 3) * 3; set += `<path d="M${sx2},${gb + 42}V${f1(gb + 160 + (k * 53) % 260)}" stroke="#6a6a62" stroke-width="${3 + (k % 2) * 2}" opacity=".35"/>`; }
+      for (let k = 0; k < 9; k++) { const sx2 = -1300 + k * 160 + (k % 2) * 40; if (sx2 > sx - 60) break; set += `<path d="M${sx2},${gb + 4}V${f1(gb + 80 + (k * 37) % 140)}" stroke="#6e6a5e" stroke-width="4" opacity=".35"/>`; }
+      set += `<path d="M-1400,${gb + 30}H${sx - 20}" stroke="#bab6a8" stroke-width="10"/><path d="M-1400,${gb + 38}H${sx - 24}" stroke="#5a5648" stroke-width="5" opacity=".7"/>`; }
     const fg = `<rect x="-1400" y="${ty}" width="4000" height="${dh}" fill="#a8a69c" stroke="${INK}" stroke-width="7"/><rect x="-1400" y="${ty - 40}" width="4000" height="40" fill="#c8c6bc" stroke="${INK}" stroke-width="5"/>
       ${Array.from({ length: 50 }, (_, k) => `<path d="M${-1400 + k * 80},${ty - 40}V${ty - 90}" stroke="#8a8a84" stroke-width="10"/>`).join("")}<path d="M-1400,${ty - 90}H2600" stroke="#8a8a84" stroke-width="12"/>
       <path d="M-1400,${ty + dh - 24}H2600" stroke="#7a786e" stroke-width="10"/><rect x="560" y="${ty + 26}" width="320" height="70" rx="8" fill="#1e7a4a" stroke="#f2f0ea" stroke-width="6"/><text x="720" y="${ty + 74}" text-anchor="middle" font-family="Sriracha" font-size="40" fill="#f2f0ea">ทางหลวง</text>`;
@@ -272,7 +282,7 @@
     const bd = band(-1, 1);
     mid += `<defs><clipPath id="${id}-clip"><path d="${bd}"/></clipPath></defs>`;
     // the dust sheath round the lower third, wider than the funnel, translucent
-    mid += `<path d="${band(-1.45, 1.45, -0.03, 0.42)}" fill="url(#ngwSheath)" filter="url(#skBlur10)"/>`;
+    if (!o.noFunnel) mid += `<path d="${band(-1.45, 1.45, -0.03, 0.42)}" fill="url(#ngwSheath)" filter="url(#skBlur10)"/>`;   // the dust sheath (gone with the funnel)
     if (!o.noFunnel) mid += `<path d="${bd}" fill="url(#${sun > 0 ? "ngwFunR" : "ngwFunL"})"/><path d="${bd}" fill="url(#ngwFunV)"/>`;
     // curved spiral bands, front half only (cos > 0), dark with a pale companion; a few straight streaks slid sideways (animated)
     let hel = ""; const turns = o.turns ?? 3.2, NB = o.bands ?? 9;
@@ -281,7 +291,7 @@
       segs.filter((q) => q.length > 2).forEach((q) => { const d = smooth(q); hel += `<path d="${d}" stroke="#10161c" stroke-width="${f1(10 + wb * 0.03)}" fill="none" opacity=".34" stroke-linecap="round"/><path d="${d}" stroke="#c8c0a8" stroke-width="3" fill="none" opacity=".16" transform="translate(${sun * 8},0)"/>`; }); }
     let st = ""; for (let x = Math.min(x0, x1) - wt, k = 0; x < Math.max(x0, x1) + wt + H * 0.12; x += 80, k++) st += `<path d="M${f1(x)},${f1(y0 + 30)}L${f1(x + H * 0.12)},${f1(y1 - 60)}" stroke="#0e1418" stroke-width="${k % 2 ? 10 : 22}" opacity=".14"/>`;
     if (o.noFunnel) { hel = ""; st = ""; }
-    mid += `<g clip-path="url(#${id}-clip)">${hel}<g id="${id}-hx">${st}</g><path d="${band(-1, -0.55)}" fill="#0a0e12" opacity="${sun > 0 ? 0.35 : 0}" filter="url(#skBlur10)"/><path d="${band(0.55, 1)}" fill="#0a0e12" opacity="${sun > 0 ? 0 : 0.35}" filter="url(#skBlur10)"/></g>`;
+    if (!o.noFunnel) mid += `<g clip-path="url(#${id}-clip)">${hel}<g id="${id}-hx">${st}</g><path d="${band(-1, -0.55)}" fill="#0a0e12" opacity="${sun > 0 ? 0.35 : 0}" filter="url(#skBlur10)"/><path d="${band(0.55, 1)}" fill="#0a0e12" opacity="${sun > 0 ? 0 : 0.35}" filter="url(#skBlur10)"/></g>`;   // the funnel's shading bands (they drew a ghost of it under noFunnel)
     // the lit rim on the sun side, the ragged scud on both edges
     const rim = smooth(T.filter((t) => t > 0.05).map((t) => [cx(t) + sun * hw(t) * 0.97, cy(t)]));
     if (!o.noFunnel) mid += `<path d="${rim}" stroke="#f0d8a4" stroke-width="6" fill="none" opacity=".6" filter="url(#skBlur4)"/>`;
@@ -326,7 +336,7 @@
   Ngw.epicLife = (tl, id, t0, dur, o = {}) => {
     const root = document.getElementById(id); if (!root) return; const n = (p) => Math.max(1, Math.ceil(dur / p));
     const top = root.dataset.top, base = root.dataset.base;
-    tl.fromTo(`#${id}-hx`, { x: 0 }, { x: 160, duration: o.spin ?? 0.7, ease: "none", repeat: n(o.spin ?? 0.7), immediateRender: false }, t0);
+    if (document.getElementById(`${id}-hx`)) tl.fromTo(`#${id}-hx`, { x: 0 }, { x: 160, duration: o.spin ?? 0.7, ease: "none", repeat: n(o.spin ?? 0.7), immediateRender: false }, t0);   // (no helix under noFunnel)
     tl.fromTo(`#${id}-sw`, { skewX: -1.2, svgOrigin: top }, { skewX: 1.2, svgOrigin: top, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: n(1.6), immediateRender: false }, t0);
     tl.fromTo(`#${id}-base`, { scale: 0.97, svgOrigin: base }, { scale: 1.04, svgOrigin: base, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: n(0.6), immediateRender: false }, t0);
     tl.fromTo(`#${id}-meso`, { x: -12 }, { x: 12, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: n(2.6), immediateRender: false }, t0);
@@ -750,8 +760,14 @@
   // the downed line (กรมอุตุนิยมวิทยา: "ถ้ามีเสาไฟฟ้าล้ม สายไฟขาดอย่าเข้าใกล้หรือแตะต้องเป็นอันขาด" · "อย่าแตะโลหะที่เป็นสื่อไฟฟ้า" ·
   // NWS: "Contact local authorities if you see power lines down.")
   const ARC = (s, k) => [0, 1, 2, 3].map((j) => { const a = k + j * 1.6; return `<path d="M0,0l${f1(28 * s * Math.cos(a))},${f1(28 * s * Math.sin(a) - 8 * s)}l${f1(-12 * s)},${f1(12 * s)}l${f1(34 * s * Math.cos(a + 0.4))},${f1(34 * s * Math.sin(a + 0.4))}" stroke="#ffffff" stroke-width="${f1(4.6 * s)}" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`; }).join("");
-  Ngw.lineDanger = (o = {}) => { const id = o.id || "ld", X = -560, Y = 380, W = 2200, H = 1160, gy = 1380;
+  Ngw.LDGY = 1280;   // the board's ground line (QA "the top half is empty": raised from 1380, and the sky above dressed)
+  Ngw.lineDanger = (o = {}) => { const id = o.id || "ld", X = -560, Y = 380, W = 2200, H = 1160, gy = Ngw.LDGY;
     let g = CARDBG(id, X, Y, W, H, gy, o.world);
+    // the sky over the scene: the storm moving off to the right (rain still trailing under it), the sun back on the left
+    g += `<g opacity=".9"><circle cx="-330" cy="700" r="120" fill="#ffe08a" opacity=".55"/><circle cx="-330" cy="700" r="70" fill="#fff2c0"/>${[0, 1, 2, 3, 4, 5, 6, 7].map((k) => { const a = (k / 8) * Math.PI * 2; return `<path d="M${f1(-330 + Math.cos(a) * 96)},${f1(700 + Math.sin(a) * 96)}L${f1(-330 + Math.cos(a) * 150)},${f1(700 + Math.sin(a) * 150)}" stroke="#ffd25a" stroke-width="10" stroke-linecap="round"/>`; }).join("")}
+      ${[0, 1, 2, 3, 4, 5, 6].map((k) => `<path d="M${1080 + k * 70},880l-30,${150 + (k % 3) * 40}" stroke="#7a8a98" stroke-width="6" stroke-linecap="round" opacity=".5"/>`).join("")}
+      <path d="M940,880Q930,800 1010,780Q1040,700 1140,712Q1210,640 1320,690Q1420,650 1480,730Q1580,740 1570,830Q1600,880 1540,890H960Z" fill="#4a5664" ${OUT(5)}/><path d="M1000,850Q1100,830 1200,850T1420,846" stroke="#6a7888" stroke-width="8" fill="none" opacity=".7"/>
+      <path d="M1600,760l40,-6M1610,800l46,0" stroke="#4a5664" stroke-width="8" stroke-linecap="round"/></g>`;
     g += `<g id="${id}-zone" opacity="0"><ellipse cx="560" cy="${gy + 40}" rx="840" ry="120" fill="#ffb42a" opacity=".35"/><ellipse cx="560" cy="${gy + 40}" rx="840" ry="120" fill="none" stroke="#e08a10" stroke-width="8" stroke-dasharray="36 22"/></g>`;
     g += `<path d="M-330,${gy}V${gy - 90}L-312,${gy - 122}L-292,${gy - 94}L-274,${gy - 118}V${gy}Z" fill="url(#ngwPoleG)" ${OUT(5)}/>`;
     g += `<g id="${id}-pole"><g transform="translate(-302,${gy - 70}) rotate(-12)"><rect x="0" y="-22" width="760" height="44" rx="10" fill="url(#ngwPoleG)" ${OUT(5)}/><path d="M680,-92V92M630,-72V72" stroke="#5a5e60" stroke-width="12"/><circle cx="680" cy="-90" r="10" fill="#e8e4dc" ${OUT(3)}/></g></g>`;
@@ -767,7 +783,8 @@
   Ngw.lineDangerLife = (tl, id, t0, dur, at = []) => { const n = (p) => Math.max(1, Math.ceil(dur / p));
     const pop = (sel, t, d = 0.35) => tl.fromTo(sel, { opacity: 0, scale: 0.7, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: d, ease: "back.out(2)", immediateRender: false }, t);
     HANGLIFE(tl, id, t0, dur);
-    tl.fromTo(`#${id}-pole`, { rotation: -70, svgOrigin: "-302 1310" }, { rotation: 0, svgOrigin: "-302 1310", duration: 0.55, ease: "bounce.out", immediateRender: false }, (at[0] ?? t0) + 0.1);
+    const po = `-302 ${Ngw.LDGY - 70}`;
+    tl.fromTo(`#${id}-pole`, { rotation: -70, svgOrigin: po }, { rotation: 0, svgOrigin: po, duration: 0.55, ease: "bounce.out", immediateRender: false }, (at[0] ?? t0) + 0.1);
     pop(`#${id}-l0`, (at[0] ?? t0) + 0.25, 0.4);
     tl.fromTo(`.${id}-sp`, { opacity: 0.3, scale: 0.8 }, { keyframes: [{ opacity: 1, scale: 1.2, duration: 0.06 }, { opacity: 0.5, scale: 0.9, duration: 0.12 }, { opacity: 0.3, scale: 0.8, duration: 0.2 }, { opacity: 0.3, duration: 0.42 }], repeat: n(0.8), immediateRender: false }, (at[0] ?? t0) + 0.6);
     tl.fromTo(`#${id}-zone`, { opacity: 0, scale: 0.7, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)", immediateRender: false }, at[1] ?? t0 + 1.5);
@@ -926,10 +943,21 @@
     g += `<path d="M${f1(x - 20 * s)},${y}l${f1(10 * s)},${f1(-30 * s)}l${f1(14 * s)},${f1(22 * s)}l${f1(12 * s)},${f1(-18 * s)}" stroke="#5a5a56" stroke-width="${f1(8 * s)}" fill="none"/>`;
     const d = `M${f1(tx)},${f1(ty)}Q${f1((tx + wx) / 2)},${f1(Math.max(ty, wy) + 60)} ${f1(wx)},${f1(wy)}Q${f1((wx + ex) / 2)},${f1(wy + 20)} ${f1(ex)},${f1(ey)}`;
     g += `<path d="${d}" stroke="#1e1a16" stroke-width="${f1(7 * s)}" fill="none"/>`;
-    g += `<g id="${id}-sp" transform="translate(${f1(wx)},${f1(wy)})"><circle r="${f1(70 * s)}" fill="url(#ngwSparkG)"/>${ARC(s, 0.7)}</g>`;
+    // the live end (QA: "a thin live wire"): a scorch where it lies, a smoke wisp always rising (#id-sm, puffs .id-smp), and the arc (#id-sp):
+    // jagged bolts with a cyan glow and a white core, spark beads thrown up and out — popped by Ngw.sparkLife, one pop a period (V1b)
+    const rr = mk(Math.round(wx * 7 + wy * 3) % 997 + 11), bolt = (a, L0) => { let x = 0, y = 0, d = "M0,0"; for (let k = 0; k < 6; k++) { const aa = a + (rr() - 0.5) * 1.3, l = L0 * (0.14 + rr() * 0.1); x += Math.cos(aa) * l; y += Math.sin(aa) * l; d += `L${f1(x)},${f1(y)}`; } return d; };
+    const bl = [-2.2, -1.5, -0.9, -0.2, 0.5].map((a) => bolt(a + (rr() - 0.5) * 0.4, (110 + rr() * 70) * s));
+    g += `<ellipse cx="${f1(wx)}" cy="${f1(wy + 6 * s)}" rx="${f1(52 * s)}" ry="${f1(13 * s)}" fill="#14100c" opacity=".5"/>`;
+    g += `<g id="${id}-sm" transform="translate(${f1(wx)},${f1(wy)})">${[0, 1, 2].map((k) => `<circle class="${id}-smp" cx="${f1((k - 1) * 12 * s)}" cy="${f1(-16 * s)}" r="${f1((18 + k * 7) * s)}" fill="#9a9c9a" opacity="0" filter="url(#skBlur4)"/>`).join("")}</g>`;
+    g += `<g id="${id}-sp" transform="translate(${f1(wx)},${f1(wy)})"><circle r="${f1(96 * s)}" fill="url(#ngwSparkG)"/>`
+      + bl.map((d) => `<path d="${d}" stroke="#6ad0ff" stroke-width="${f1(11 * s)}" fill="none" stroke-linejoin="round" stroke-linecap="round" opacity=".55"/><path d="${d}" stroke="#ffffff" stroke-width="${f1(3.6 * s)}" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`).join("")
+      + Array.from({ length: 12 }, () => { const a = -Math.PI * (0.1 + rr() * 0.8), d = (40 + rr() * 90) * s; return `<circle cx="${f1(Math.cos(a) * d)}" cy="${f1(Math.sin(a) * d)}" r="${f1((2.4 + rr() * 2.6) * s)}" fill="${rr() > 0.4 ? "#fffbe8" : "#ffd25a"}"/>`; }).join("") + `</g>`;
     return g; };
   Ngw.sparkLife = (tl, sel, t0, dur, period = 0.8) => { const n = Math.max(1, Math.ceil(dur / period));   // one bright pop per period (V1b: ≤ 3 a second)
-    tl.fromTo(sel, { opacity: 0, scale: 0.6 }, { keyframes: [{ opacity: 1, scale: 1.25, duration: 0.06 }, { opacity: 0.5, scale: 0.95, duration: 0.12 }, { opacity: 0, scale: 0.6, duration: 0.2 }, { opacity: 0, duration: Math.max(0.05, period - 0.38) }], repeat: n, immediateRender: false }, t0); };
+    tl.fromTo(sel, { opacity: 0, scale: 0.6 }, { keyframes: [{ opacity: 1, scale: 1.25, duration: 0.06 }, { opacity: 0.5, scale: 0.95, duration: 0.12 }, { opacity: 0, scale: 0.6, duration: 0.2 }, { opacity: 0, duration: Math.max(0.05, period - 0.38) }], repeat: n, immediateRender: false }, t0);
+    // the smoke off a downed line's live end (#x-sm next to #x-sp): three puffs rising and spreading, one after another, the whole time
+    const sm = sel.replace(/-sp$/, "-sm"); if (sm !== sel && document.querySelector(sm)) document.querySelectorAll(`.${sm.slice(1)}p`).forEach((e, k) =>
+      tl.fromTo(e, { y: 0, x: 0, opacity: 0.5, scale: 0.6, transformOrigin: "50% 50%" }, { y: -150, x: 30, opacity: 0, scale: 1.9, duration: 1.8, ease: "sine.out", repeat: Math.ceil(dur / 1.8), immediateRender: false }, t0 + k * 0.6)); };
   // ปู's little camera
   Ngw.cam = (x, y, s = 1, rot = 0) => `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s})"><rect x="-44" y="-30" width="88" height="58" rx="10" fill="#2a2e34" stroke="#1e1a16" stroke-width="5"/><circle r="19" fill="#4a6a8a" stroke="#1e1a16" stroke-width="5"/><circle r="9" fill="#9ad0f0"/><rect x="18" y="-42" width="20" height="12" fill="#2a2e34" stroke="#1e1a16" stroke-width="3"/><circle cx="-28" cy="-16" r="5" fill="#d8312a"/></g>`;
   // glass bursting out of a window rect toward the camera (one small flash on the pane, never a full-screen flash: V1b)
@@ -951,6 +979,25 @@
     sh.forEach(([k, dx, dy, q]) => { const f = 1.6 + q * 1.8;
       tl.fromTo(`#${id}-s${k}`, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, transformOrigin: "50% 50%" }, { opacity: 0, x: dx * f + (q - 0.5) * 300, y: dy * f + 260 + q * 300, rotation: (q - 0.5) * 720, scale: 2 + q * 2.5, duration: 0.7 + q * 0.5, ease: "power2.out", immediateRender: false }, t0 + q * 0.06); });
   };
+  // QA ("a weak window blast"): what comes in behind the glass — wet leaves, twigs, a torn paper, then a sheet of rain spraying across the
+  // room; everything flies from the hole toward the camera and the floor, growing as it nears (one burst at t, the rain on to t + dur)
+  Ngw.blastIn = (tl, layer, t, o = {}) => { const id = o.id || "bi", x = o.x ?? 360, y = o.y ?? 420, w = o.w ?? 560, h = o.h ?? 640, r = mk(o.seed || 29), cx = x + w / 2, cy = y + h / 2, dur = o.dur ?? 1.6;
+    let g = `<g id="${id}">`; const P = [];
+    for (let k = 0; k < 34; k++) { const px = cx + (r() - 0.5) * w * 0.7, py = cy + (r() - 0.5) * h * 0.6, kind = k % 5, sz = 0.8 + r() * 0.9;
+      const shape = kind === 0 ? `<path d="M0,-16Q14,-4 0,16Q-14,-4 0,-16Z" fill="#4a7a34" stroke="#1e1a16" stroke-width="2.4"/><path d="M0,-14V14" stroke="#2e4a22" stroke-width="2"/>`
+        : kind === 1 ? `<path d="M-22,2L22,-2" stroke="#6a4a2a" stroke-width="5" stroke-linecap="round"/><path d="M4,0l10,-10" stroke="#6a4a2a" stroke-width="3" stroke-linecap="round"/>`
+        : kind === 2 ? `<path d="M-14,-12L16,-9L12,14L-16,10Z" fill="#e8e2d0" stroke="#1e1a16" stroke-width="2"/><path d="M-8,-4h16M-8,3h12" stroke="#8a8478" stroke-width="2"/>`
+        : kind === 3 ? `<path d="M0,-12Q12,0 0,12Q-12,0 0,-12Z" fill="#6a9a40" stroke="#1e1a16" stroke-width="2"/>`
+        : `<circle r="5" fill="#cfe6f2" opacity=".8"/>`;
+      g += `<g id="${id}-p${k}" transform="translate(${f1(px)},${f1(py)})" opacity="0"><g transform="scale(${f1(sz)})">${shape}</g></g>`; P.push([k, px - cx, py - cy, r()]); }
+    g += `<g id="${id}-rain" opacity="0">${Array.from({ length: 30 }, () => { const sx = cx + (r() - 0.5) * w * 0.8, sy = cy + (r() - 0.5) * h * 0.7, L0 = 260 + r() * 420, a = 0.25 + r() * 0.5;
+      return `<path d="M${f1(sx)},${f1(sy)}l${f1(Math.cos(a) * L0 * (r() > 0.5 ? 1 : -1))},${f1(Math.sin(a) * L0)}" stroke="#e6f2f8" stroke-width="${f1(2 + r() * 3)}" stroke-linecap="round" opacity="${f1(0.3 + r() * 0.4)}"/>`; }).join("")}</g>`;
+    put(layer, g + `</g>`);
+    P.forEach(([k, dx, dy, q]) => { const f = 2.2 + q * 2.4;
+      tl.fromTo(`#${id}-p${k}`, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 0.6 }, { opacity: 0.9, x: dx * f + (q - 0.5) * 900, y: dy * f + 420 + q * 520, rotation: (q - 0.5) * 900, scale: 2.6 + q * 3, duration: 0.6 + q * 0.7, ease: "power1.in", immediateRender: false }, t + 0.02 + q * 0.25);
+      tl.to(`#${id}-p${k}`, { opacity: 0, duration: 0.15, immediateRender: false }, t + 0.62 + q * 0.95); });
+    tl.fromTo(`#${id}-rain`, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.12 }, { opacity: 0.85, duration: Math.max(0.2, dur - 0.5) }, { opacity: 0, duration: 0.38 }], immediateRender: false }, t + 0.08);
+    tl.fromTo(`#${id}-rain`, { x: 0, y: 0 }, { x: -40, y: 120, duration: dur, ease: "none", immediateRender: false }, t + 0.08); };
   // the CTA sign lights row by row on the narrator's beats (at = ปูจะรอดไหม, กดติดตาม, แล้วไปดูเรื่องเต็ม, ได้ที่ช่อง YouTube);
   // the plate drops on "กดติดตาม" and swings to rest, a headlight glint sweeps the sign on "YouTube", the funnel drifts behind it
   Ngw.endCtaLife = (tl, id, t0, dur, at) => {

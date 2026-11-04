@@ -12,7 +12,7 @@ m.voices()
 F, T = m.fx, m.T
 # ================= EP.1 (as ../ep1/mix.py) =================
 m.roar(0.0, T("clock", 0.2), 0.8, fade=0.5)
-F("open", 0.8, "debris", 0.35)
+F("open", 0.8, "debris", 0.35); F("open", 1.3, "thunderfar", 0.45)   # the bolt strikes once (QA: no static lightning)
 F("hook", m.vo_t("hook") - 0.02, "thump", 0.9)
 F("clock", 0.1, "stopwatch", 0.7)
 F("pu", 3.0, "shutter", 0.45)
@@ -24,9 +24,9 @@ m.roar(T("roar", m.frag("roar", 0, 1) - 0.35), T("count", 0.3), 1.0, fade=1.0)
 m.roar(T("truck", 0.0), T("choice", -0.1), 1.0, fade=0.3)
 F("know1", m.frag("know1") + 0.05, "rumble", 0.9)
 m.roar_level(T("know1", 0.1), T("know1", m.frag("know1", 0, 1) - 0.2), 0.3, 0.3)
-F("touch", 1.0, "boom", 1.0); F("touch", 1.3, "debris", 0.45)
+F("touch", 1.0, "boom", 1.0); F("touch", 1.3, "debris", 0.45); F("lure", 2.4, "thunderfar", 0.4)
 m.roar_level(T("touch", 1.0), T("lure", -0.5), 1.25, 0.4)
-F("rule", m.frag("rule", 0, 1), "zincflap", 0.9)   # the sign drops on the cut after the close "ฝน!"
+F("rule", m.frag("rule", 0, 1), "zincflap", 0.9); F("rule", m.frag("rule", 0, 1) + 1.2, "thunderfar", 0.4)   # the sign drops on the cut after the close "ฝน!"
 m.roar_level(T("know2", 0.2), T("know2", -0.3), 0.6, 0.4)
 F("know2", m.vo_t("know2", 1) + 0.1, "rumble", 0.5)
 F("pickup", 1.2, "doorslam", 0.8); F("pickup", 1.55, "pickup", 0.65)

@@ -77,7 +77,11 @@
       // 37 · at home: the window ตาเทียน said to open bursts in (CDC: "An exploding window can injure or kill.")
       ADD("xwin", { set: "ngwRoom", setOpts: { id: "rw2" }, dark: 0.15, light: GOLDL, grade: { top: "#2a2018", bottom: "#0a0806", op: 0.2 }, captions: caps("xwin"), land: { y0: 300 },
         cam: push2("xwin", fr(640, 900, 1.0, 640, 975), fr(640, 820, 1.12, 640, 975)), shake: kick(vo("xwin", 1), vo("xwin", 1) + 0.6, 12),
-        fx: (tl, id, t0, L) => { Ngw.roomLife(tl, "rw2", t0, D("xwin"), []); Ngw.srcChip(tl, id, t0, "CDC · NWS", { at: 1.0 }); Ngw.shatter(tl, L.glow, t0 + vo("xwin", 1), { x: 360, y: 420, w: 560, h: 640, n: 54, seed: 21, hole: true }); } });
+        fx: (tl, id, t0, L) => { Ngw.roomLife(tl, "rw2", t0, D("xwin"), []); Ngw.srcChip(tl, id, t0, "CDC · NWS", { at: 1.0 }); Ngw.shatter(tl, L.glow, t0 + vo("xwin", 1), { x: 360, y: 420, w: 560, h: 640, n: 54, seed: 21, hole: true });
+          // QA "a weak blast": the storm comes in behind the glass — leaves, twigs, paper, a sheet of rain — and the curtains whip inward
+          Ngw.blastIn(tl, L.glow, t0 + vo("xwin", 1), { id: "xwb", x: 360, y: 420, w: 560, h: 640, dur: D("xwin") - vo("xwin", 1) - 0.1 });
+          tl.to("#rw2-cur", { skewX: -24, scaleY: 0.92, svgOrigin: "640 400", duration: 0.18, ease: "power3.out", immediateRender: false }, t0 + vo("xwin", 1));
+          tl.to("#rw2-cur", { skewX: -14, duration: 0.25, yoyo: true, repeat: Math.ceil((D("xwin") - vo("xwin", 1)) / 0.25), ease: "sine.inOut", immediateRender: false }, t0 + vo("xwin", 1) + 0.18); } });
       // 38 · the bathroom: ฝน and ยายบัว safe, facing each other, ยาย's hands out to her; opening windows is useless (SPC)
       SPLITN("xsafe", [1.7], [
         { set: "ngwKuti", setOpts: { id: "ku3b", robeC: "#3a7ac8", robeS: "#2a5a98" }, dark: 0.2, light: GOLDL, grade: { top: "#3a2a1a", bottom: "#0a0806", op: 0.22 }, blur: { sky: 7, far: 7, mid: 7, set: 7 }, land: { y0: 300 },

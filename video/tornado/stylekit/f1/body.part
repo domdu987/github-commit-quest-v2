@@ -36,6 +36,10 @@
       Object.assign(SKN, { exA: SK.medic, exB: SK.fon });
 
       // ================= เสียงรถไฟ EP.1 (owner 4 Nov 2569: "ทำเลย") — hook A "อย่ายกมือถือขึ้นถ่าย" =================
+      // QA ("plank arms"): the pointing / grabbing / yelling arms bend at the elbow and move with the words; the free hand rests on the hip
+      Rig.MODES.point = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -80 + 3 * Math.sin(u * 6), faF: -26 + 5 * Math.sin(u * 6 + 0.6), uaB: 28, faB: -96, torso: 3, head: -4 + 1.5 * Math.sin(u * 6) });
+      Rig.MODES.grab = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -76, faF: -20 + 3 * Math.sin(u * 9), uaB: 14, faB: -30, torso: 10, head: 4 });
+      Rig.MODES.yell = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -96 + 4 * Math.sin(u * 7), faF: -34 + 6 * Math.sin(u * 7 + 0.5), uaB: 10, faB: -26, torso: -4, head: -8 + 2 * Math.sin(u * 14) });
       Rig.MODES.selfieUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -60 + 2 * Math.sin(u * 1.7), faF: -40, uaB: 8, faB: -16, head: 2 + 2 * Math.sin(u * 2.3), torso: -2 });
       Rig.MODES.reachWin = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -130, faF: -20, uaB: -20, faB: -30, torso: -4, head: -8 });
       Rig.MODES.countF = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 8, head: 6, uaF: -70 + 10 * Math.sin(u * 6), faF: -60, uaB: -30, faB: -40 });
@@ -61,9 +65,9 @@
       // 1 · the title on the highway, ฝน's live on the giant tornado (the lure)
       ADD("open", { ...ROADV("op", { epic: EPF("e01", 560), road: { y: 1300, h: 170 }, poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1290, s: 0.7, tf: [3], sag: 40 }, roadTitle: { y: 1385, text: "เสียงรถไฟ", sub: "", k: 0.42, fs: 190 } }), light: SUNL, grade: GSUN, captions: caps("open"), land: { y0: 450 },
         cam: push2("open", fr(540, 960, 1.0, 540, 960), fr(540, 980, 1.06, 540, 960)), shake: rumble(1.2),
-        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e01", t0, D("open")); put(L.light, Ngw.liveUIL({ id: "lvo", y0: 450, title: "พายุมาแล้ววว", viewers: "9.8K" })); Ngw.liveLifeL(tl, "lvo", t0, D("open")); } });
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e01", t0, D("open"), { boltAt: 1.3 }); StormFX.flash(tl, t0 + 1.3, 0.24, 2); put(L.light, Ngw.liveUIL({ id: "lvo", y0: 450, title: "พายุมาแล้ววว", viewers: "9.8K" })); Ngw.liveLifeL(tl, "lvo", t0, D("open")); } });
       // 2 · cut: ฝน raising her phone, the tornado behind — "อย่ายกมือถือขึ้นถ่าย"
-      ADD("hook", { ...ROADV("hk", { epic: EPF("e02", 700) }), light: SUNL, grade: GSUN, captions: caps("hook"), land: { y0: 600 },
+      ADD("hook", { ...ROADV("hk", { epic: EPF("e02", 700, { bolts: [], seed: 67, h: 680, wb: 280, wt: 700 }) }), light: SUNL, grade: GSUN, captions: caps("hook"), land: { y0: 600 },
         cam: push2("hook", fr(540, 960, 1.0, 540, 960), fr(500, 1000, 1.08, 540, 960)), shake: kick(0, 0.35, 10),
         actors: [P("fonPhone", 380, 2020, 1.55, "film", "wide", "smile")], fx: (tl, id, t0) => Ngw.epicLife(tl, "e02", t0, D("hook")) });
       // 3 · wide: the plain, the highway, no railway anywhere — the roar
@@ -154,21 +158,21 @@
       ADD("touch", { ...ROADV("tc", { epic: EPF("e16", 540, { h: 700, wb: 300, wt: 640, tx: 590, seed: 51 }) }), light: SUNL, grade: GSUN, captions: caps("touch"), land: { y0: 570 },
         cam: push2("touch", fr(540, 900, 0.9, 540, 960), fr(540, 960, 1.0, 540, 960)), shake: rumble(1.5),
         actors: [P("fonPhone", 300, 1900, 0.9, "film", "wide", "o"), P("puCam", 540, 1890, 0.7, "camEye", "wide", "o"), P("yaiBua", 830, 1905, 0.88, "idle", "wide", "o", { flip: true })],
-        fx: (tl, id, t0) => Ngw.epicLife(tl, "e16", t0, D("touch")) });
+        fx: (tl, id, t0) => { Ngw.epicLife(tl, "e16", t0, D("touch"), { boltAt: 0.95 }); StormFX.flash(tl, t0 + 0.95, 0.24, 2); } });
       // 17 · ฝน's live: "ทุกคน! ทอร์นาโดของจริง!" — the comments say keep filming
-      ADD("lure", { ...ROADV("lu", { epic: EPF("e17", 560) }), light: SUNL, grade: GSUN, captions: caps("lure"), land: { y0: 250 },
+      ADD("lure", { ...ROADV("lu", { epic: EPF("e17", 560, { seed: 71, h: 760, wb: 330, wt: 620, tx: 640 }) }), light: SUNL, grade: GSUN, captions: caps("lure"), land: { y0: 250 },
         cam: push2("lure", fr(540, 960, 1.0, 540, 960), fr(560, 960, 1.08, 540, 960)), shake: rumble(1.4),
-        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e17", t0, D("lure")); put(L.light, Ngw.liveUIL({ id: "lvu", y0: 250, title: "ทอร์นาโดของจริง!!", viewers: "8.9K", comments: LIVE_BIG })); Ngw.liveLifeL(tl, "lvu", t0, D("lure")); } });
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e17", t0, D("lure"), { boltAt: 2.4 }); put(L.light, Ngw.liveUIL({ id: "lvu", y0: 250, title: "ทอร์นาโดของจริง!!", viewers: "8.9K", comments: LIVE_BIG })); Ngw.liveLifeL(tl, "lvu", t0, D("lure")); } });
       // 18 · ยายบัว shouts — QA: close on the peak: first her face on "ฝน!", then the wide with the zinc rule sign dropping in: rule 1
       { const v = SH.rule.vo[0], c = v.t + v.frags[1] - 0.04;
         SPLITN("rule", [c], [
-          { ...ROADV("ru0", { epic: EPF("e18a", 560) }), light: SUNL, grade: GSUN, dark: 0.15, blur: { sky: 5, far: 5, mid: 4, set: 3 }, land: { y0: 250 },
+          { ...ROADV("ru0", { epic: EPF("e18a", 560, { bolts: [], seed: 73, h: 740, wb: 360, wt: 680, tx: 520 }) }), light: SUNL, grade: GSUN, dark: 0.15, blur: { sky: 5, far: 5, mid: 4, set: 3 }, land: { y0: 250 },
             cam: PUSHD(c, fr(1180, 1270, 2.1, 680, 820), fr(1180, 1270, 2.25, 680, 820)), shake: kick(0, 0.3, 8),
             actors: [P("yaiBua", 1180, 1980, 1.3, "yell", "angry", "scream", { flip: true, talk: [[v.t, c, "scream"]] })], fx: (tl, id, t0) => Ngw.epicLife(tl, "e18a", t0, c) },
-          { ...ROADV("ru", { epic: EPF("e18", 560) }), light: SUNL, grade: GSUN, dark: 0.15, land: { y0: 250 },
+          { ...ROADV("ru", { epic: EPF("e18", 560, { seed: 73, h: 740, wb: 360, wt: 680, tx: 520 }) }), light: SUNL, grade: GSUN, dark: 0.15, land: { y0: 250 },
             cam: STILL("rule", fr(540, 960, 1.0, 540, 960)),
             actors: [P("yaiBua", 1180, 1980, 1.3, "yell", "angry", "scream", { flip: true, talk: [[0, v.t + v.dur - c, "scream"]] })],
-            fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e18", t0, D("rule") - c); Ngw.srcChip(tl, id, t0, "NOAA SPC · Ready.gov", { at: 0.3 }); Ngw.ruleBoard(tl, WB(L, -600, 230, 0.8), t0 + 0.02, D("rule") - c - 0.02, { rules: [[PIC.roar, "ได้ยิน<u>ครืน</u> อย่า<u>ยืน</u>ดู"], [PIC.win, "ห้อง<u>ใน</u> ไม่<u>ใกล้</u>หน้าต่าง"], [PIC.ditch, "หนีไม่ทัน<u>ตึก</u> หมอบ<u>ลึก</u>ที่ต่ำ"]], active: 0, y: 260, at: [0.25, 0.35, 0.45] }); } }]); }
+            fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e18", t0, D("rule") - c, { boltAt: 1.2 }); Ngw.srcChip(tl, id, t0, "NOAA SPC · Ready.gov", { at: 0.3 }); Ngw.ruleBoard(tl, WB(L, -600, 230, 0.8), t0 + 0.02, D("rule") - c - 0.02, { rules: [[PIC.roar, "ได้ยิน<u>ครืน</u> อย่า<u>ยืน</u>ดู"], [PIC.win, "ห้อง<u>ใน</u> ไม่<u>ใกล้</u>หน้าต่าง"], [PIC.ditch, "หนีไม่ทัน<u>ตึก</u> หมอบ<u>ลึก</u>ที่ต่ำ"]], active: 0, y: 260, at: [0.25, 0.35, 0.45] }); } }]); }
       // 19 · the roar means go now; some tornadoes have no funnel to see (dust whirling under the cloud base)
       SPLITN("know2", [voEnd("know2", 0) + 0.1], [
         { ...STALLDARK("k2a", { rain: 0.6, so: { epic: { id: "e19", x: 860, y: 1172, h: 560, wb: 200, wt: 440, tx: 900, sun: 1, seed: 55, tiers: 6, bolts: [], flashes: [], subs: [], sunDx: 500 }, crowd: [[300, 1560, 0.6, "#4a6a9a", 0], [380, 1570, 0.55, "#a84a3a", 0], [700, 1565, 0.6, "#6a8a4a", 0]] } }), land: { y0: 380 },
@@ -177,7 +181,7 @@
           // for ฝน — right of the stall, clear of the captions
           actors: [P("fonPhone", 1060, 1745, 0.6, "film", "wide", "o", { flip: true }), P("puCam", 1200, 1770, 0.5, "camEye", "wide", "o", { flip: true }), P("yaiBua", 1390, 1736, 0.58, "grab", "worry", "o", { flip: true })],
           fx: (tl, id, t0) => { Ngw.epicLife(tl, "e19", t0, 3); Ngw.srcChip(tl, id, t0, "NOAA SPC · Ready.gov"); } },
-        { ...ROADV("k2b", { rain: 0.8, epic: { ...EPF("e19b", 560), noFunnel: true, bolts: [] } }), light: SUNL, grade: GSUN, land: { y0: 250 },
+        { ...ROADV("k2b", { rain: 0.8, epic: { ...EPF("e19b", 560, { seed: 79, h: 700 }), noFunnel: true, bolts: [] } }), light: SUNL, grade: GSUN, land: { y0: 250 },
           cam: push2("know2", fr(540, 1050, 1.1, 540, 960), fr(540, 1050, 1.18, 540, 960)), fx: (tl, id, t0) => Ngw.epicLife(tl, "e19b", t0, 3) }]);
       // 20 · ตาเทียน: "ขึ้นรถ! ใต้สะพานทางหลวง ปลอดภัยที่สุด!" — behind him ปู climbs into the pickup bed (we see it; ฝน doesn't)
       ADD("pickup", { ...STALLDARK("pk", { rain: 0.8, props: () => PICK(560, 1735, 0.66, 0, 1) }), captions: caps("pickup"), land: { y0: 600 },
@@ -321,7 +325,11 @@
       // 37 · at home: the window ตาเทียน said to open bursts in (CDC: "An exploding window can injure or kill.")
       ADD("xwin", { set: "ngwRoom", setOpts: { id: "rw2" }, dark: 0.15, light: GOLDL, grade: { top: "#2a2018", bottom: "#0a0806", op: 0.2 }, captions: caps("xwin"), land: { y0: 300 },
         cam: push2("xwin", fr(640, 900, 1.0, 640, 975), fr(640, 820, 1.12, 640, 975)), shake: kick(vo("xwin", 1), vo("xwin", 1) + 0.6, 12),
-        fx: (tl, id, t0, L) => { Ngw.roomLife(tl, "rw2", t0, D("xwin"), []); Ngw.srcChip(tl, id, t0, "CDC · NWS", { at: 1.0 }); Ngw.shatter(tl, L.glow, t0 + vo("xwin", 1), { x: 360, y: 420, w: 560, h: 640, n: 54, seed: 21, hole: true }); } });
+        fx: (tl, id, t0, L) => { Ngw.roomLife(tl, "rw2", t0, D("xwin"), []); Ngw.srcChip(tl, id, t0, "CDC · NWS", { at: 1.0 }); Ngw.shatter(tl, L.glow, t0 + vo("xwin", 1), { x: 360, y: 420, w: 560, h: 640, n: 54, seed: 21, hole: true });
+          // QA "a weak blast": the storm comes in behind the glass — leaves, twigs, paper, a sheet of rain — and the curtains whip inward
+          Ngw.blastIn(tl, L.glow, t0 + vo("xwin", 1), { id: "xwb", x: 360, y: 420, w: 560, h: 640, dur: D("xwin") - vo("xwin", 1) - 0.1 });
+          tl.to("#rw2-cur", { skewX: -24, scaleY: 0.92, svgOrigin: "640 400", duration: 0.18, ease: "power3.out", immediateRender: false }, t0 + vo("xwin", 1));
+          tl.to("#rw2-cur", { skewX: -14, duration: 0.25, yoyo: true, repeat: Math.ceil((D("xwin") - vo("xwin", 1)) / 0.25), ease: "sine.inOut", immediateRender: false }, t0 + vo("xwin", 1) + 0.18); } });
       // 38 · the bathroom: ฝน and ยายบัว safe, facing each other, ยาย's hands out to her; opening windows is useless (SPC)
       SPLITN("xsafe", [1.7], [
         { set: "ngwKuti", setOpts: { id: "ku3b", robeC: "#3a7ac8", robeS: "#2a5a98" }, dark: 0.2, light: GOLDL, grade: { top: "#3a2a1a", bottom: "#0a0806", op: 0.22 }, blur: { sky: 7, far: 7, mid: 7, set: 7 }, land: { y0: 300 },
