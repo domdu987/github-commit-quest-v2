@@ -4,14 +4,17 @@
       // "ภาพ มุมกล้อง เอฟเฟค ไอคอน คิดว่าดียัง": close-ups on the key beats (ปู remembers, ฝน shouts, the hand at the wire, ตาเทียน's
       // thanks), a low angle up at the storm passing over, wind lines and debris behind the actors (V1b), less rain, staggered groups (V3).
       // hugs (the far arm hangs hidden behind the body: one arm round the other reads as a hug in this 2D rig)
-      Rig.MODES.hugK = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 14 + 1.2 * Math.sin(u * 2.2), head: 12, uaF: -78 + 2 * Math.sin(u * 3), faF: -96, uaB: 8, faB: -12 });
-      Rig.MODES.hugS = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 6, head: 12, uaF: -64, faF: -78, uaB: 8, faB: -10 });
+      Rig.MODES.hugK = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 14 + 1.2 * Math.sin(u * 2.2), head: 12, uaF: -84 + 2 * Math.sin(u * 3), faF: -124, uaB: -40, faB: -100 });
+      Rig.MODES.hugS = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 8, head: 14, uaF: -92 + 2 * Math.sin(u * 3), faF: -118, uaB: -46, faB: -96 });   // both arms round ยาย's neck and back
+      Rig.MODES.haul = (u, o) => ({ ...Rig.MODES.run(u, o), torso: -18, head: -12, uaB: 74 + 4 * Math.sin(u * 20), faB: 8 });   // running bent forward, the back arm hauling behind
+      Rig.MODES.resist = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 16 + 2 * Math.sin(u * 14), head: 10, uaF: -88, faF: -4, uaB: 34, faB: -44, thF: -12, shF: 14, thB: 20, shB: 10 });   // heels dug in, leaning back, the held arm pulled straight
       Sets.ngwDiagram = (L, o = {}) => put(L.set, typeof o.svg === "function" ? o.svg() : o.svg || "");
       PIC.wire = `<path d="M10,106H112" stroke="#6a5032" stroke-width="5"/><path d="M26,104L62,26" stroke="#6a6e70" stroke-width="9" stroke-linecap="round"/><path d="M46,44L78,56" stroke="#6a6e70" stroke-width="6"/>
         <path d="M62,28Q88,50 84,72L92,76L82,82L94,88" stroke="${I}" stroke-width="4.5" fill="none" stroke-linejoin="round"/>
         <path d="M96,92l6,-12l2,10l9,-4l-7,9l9,5l-11,0l-2,10l-4,-9z" fill="#ffd23a" stroke="${I}" stroke-width="2"/>`;
       const RULES3 = [[PIC.roar, "ได้ยิน<u>ครืน</u> อย่า<u>ยืน</u>ดู"], [PIC.win, "ห้อง<u>ใน</u> ไม่<u>ใกล้</u>หน้าต่าง"], [PIC.ditch, "หนีไม่ทัน<u>ตึก</u> หมอบ<u>ลึก</u>ที่ต่ำ"]];
       const RULES4 = [...RULES3, [PIC.wire, "พายุ<u>ไป</u> สาย<u>ไฟ</u>ยังอยู่"]];
+      const WBA = (L, tx, ty, sc) => { const g = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.setAttribute("transform", `translate(${tx},${ty}) scale(${sc})`); L.act.appendChild(g); return g; };   // a board in the sharp actor layer
       const FLIPTRUCK = (x, y, s) => `<g transform="rotate(178 ${x} ${y - 95 * s})">${Tk.pickup(x, y, s)}</g>`;
       const AFTER = (id, o = {}) => ({ set: "ngwScape", setOpts: { id, mood: "clear", horizon: 1160, wind: 0.15, sunX: o.sunX ?? 320, farStorm: true, farStormX: o.farX ?? 1650, fgRice: false, _leaves: 0,
           village: [{ x: -330, y: 1296, s: 0.38, flip: 1 }, { kind: "wat", x: 760, y: 1178, s: 0.24 }],
@@ -21,7 +24,7 @@
       const UNDER = (id, o = {}) => NSC(id, { horizon: 1180, rain: o.rain ?? 0.3, vx: 540, fgRice: false, _leaves: 0,
           epic: { id: o.eid || id + "e", x: 1250, y: 1186, h: 640, wb: 280, wt: 620, tx: 1290, sun: -1, seed: 63, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
           road: { y: 1560, h: 400 }, overpass: { y: 430, h: 150, ground: 1560, pier: 1660, slopeX: 220 },
-          props: () => PICK(900, 1700, 0.75, 1, 1) + PICK(-40, 1640, 0.62, 0, 1) + Rup2.moto(1260, 1690, 0.8) + (o.props ? o.props() : "") });
+          props: () => PICK(900, 1700, 0.75, 1, 1) + PICK(-40, 1640, 0.62, 0, 1, "#b0463a") + Rup2.moto(1260, 1690, 0.8) + (o.props ? o.props() : "") });
       const DITCHV = (id, o = {}) => NSC(id, { horizon: o.hz ?? 1180, rain: o.rain ?? 0.35, vx: 540, fgRice: false, _leaves: 0, ditch: { y: o.dy ?? 1720, near: o.near },
           epic: o.epic ?? { id: id + "e", x: 1350, y: (o.hz ?? 1180) + 6, h: 760, wb: 360, wt: 760, tx: 1380, sun: -1, seed: 65, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
           road: o.road ?? { y: 1440, h: 120 }, props: o.props });
@@ -41,8 +44,8 @@
       // 32 · ปู remembers ยายบัว's rule 3: the zinc sign (rule 3 lit) left, ปู big and low on the right
       ADD("xrule3", { ...UNDER("xr", { eid: "e42", rain: 0.2 }), dark: 0.12, blur: { sky: 3, far: 3, mid: 3 }, captions: caps("xrule3"), land: { y0: 500 },
         cam: STILL("xrule3", fr(540, 1175, 1.0, 540, 1175)), shake: rumble(0.8),
-        actors: [P("puNoCam", 1120, 2180, 1.7, "yell", "angry", "scream", { flip: true, talk: TALK("xrule3", 0, "scream") })],
-        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e42", t0, D("xrule3")); Ngw.srcChip(tl, id, t0, "NWS"); Ngw.ruleBoard(tl, WB(L, -600, 330, 0.78), t0 + 0.05, D("xrule3") - 0.05, { rules: RULES3, active: 2, y: 330, at: [0.05, 0.1, 0.15] }); } });
+        actors: [P("puNoCam", 1120, 2180, 1.7, "yell", "wide", "o", { flip: true, talk: TALK("xrule3", 0, "o") })],
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e42", t0, D("xrule3")); Ngw.srcChip(tl, id, t0, "NWS"); Ngw.ruleBoard(tl, WB(L, -600, 330, 0.78), t0 + 0.05, D("xrule3") - 0.05, { rules: RULES3, active: 2, y: 330, gap: 190, blank: true, at: [0.05, 0.1, 0.15] }); } });
       // 33 · "ตา! ลงคูเร็ว!": first the insert — ปู's hand shoots in and clamps ตาเทียน's wrist (after ทะเลลด EP.2's grab), the storm
       // blurred behind — then ปู drags him off the road toward the ditch, ตาเทียน stumbling after: "เฮ้ย! เดี๋ยวก่อนสิ!"
       SPLITN("xpull", [1.8], [
@@ -51,8 +54,8 @@
           fx: (tl, id, t0, L) => { put(L.act, Ngw.wristGrab({ id: "wg" })); Ngw.wristGrabLife(tl, "wg", t0, 1.8, SH.xpull.vo[0].t + 0.12, SH.xpull.vo[0].t + SH.xpull.vo[0].frags[1]); } },
         { ...DITCHV("xp", { dy: 1700 }), dark: 0.15, land: { y0: 640 },
           cam: PUSHD(D("xpull") - 1.8, fr(640, 1315, 1.0, 540, 1315), fr(380, 1315, 1.0, 540, 1315)), shake: rumble(2),
-          actors: [P("puNoCam", 700, 1530, 0.74, "pullHand", "angry", "scream", { flip: true, moveTo: { x: 90, y: 1690, s: 0.8, dur: 2.6, at: 0, ease: "power1.in" } }),
-            P("taTian", 880, 1530, 0.88, "stagger", "wide", "o", { flip: true, moveTo: { x: 270, y: 1696, s: 0.92, dur: 2.6, at: 0.05, ease: "power1.in" }, talk: [[SH.xpull.vo[1].t - 1.8, SH.xpull.vo[1].t - 1.8 + SH.xpull.vo[1].dur, "o"]] })] }]);
+          actors: [P("puNoCam", 700, 1530, 0.74, "pullHand", "wide", "o", { flip: true, then: [{ t: 0.7, mode: "haul", eyes: "wide", mouth: "o" }], moveTo: { x: 90, y: 1690, s: 0.8, dur: 2.0, at: 0.6, ease: "power1.in" } }),
+            P("taTian", 880, 1530, 0.88, "resist", "wide", "o", { flip: true, then: [{ t: 0.75, mode: "stagger", eyes: "wide", mouth: "o" }], moveTo: { x: 270, y: 1696, s: 0.92, dur: 1.95, at: 0.7, ease: "power1.in" }, talk: [[SH.xpull.vo[1].t - 1.8, SH.xpull.vo[1].t - 1.8 + SH.xpull.vo[1].dur, "o"]] })] }]);
       // 34 · the knowledge board: the wind squeezed under the deck, faster (NWS · SPC · CDC). Like ทะเลลด's boards it hangs in the world —
       // a zinc sheet on two ropes from the deck, the overpass and the storm blurred behind it
       // (the camera sits below the deck's front face — it is in the fg layer and would cover the top of the board)
@@ -86,7 +89,7 @@
       SPLITN("xsafe", [1.7], [
         { set: "ngwKuti", setOpts: { id: "ku3b", robeC: "#3a7ac8", robeS: "#2a5a98" }, dark: 0.2, light: GOLDL, grade: { top: "#3a2a1a", bottom: "#0a0806", op: 0.22 }, blur: { sky: 7, far: 7, mid: 7, set: 7 }, land: { y0: 300 },
           cam: STILL("xsafe", fr(540, 975, 1.0, 540, 975)),
-          fx: (tl, id, t0, L) => { Ngw.kutiLife(tl, "ku3b", t0, 1.7, []); Ngw.srcChip(tl, id, t0, "NOAA SPC · NWS", { at: 0.3 }); Ngw.ruleBoard(tl, WB(L, -20, 0, 1.0), t0, 1.7, { rules: RULES3, active: 1, y: 330, at: [0.08, 0.12, 0.16] }); } },
+          fx: (tl, id, t0, L) => { Ngw.kutiLife(tl, "ku3b", t0, 1.7, []); Ngw.srcChip(tl, id, t0, "NOAA SPC · NWS", { at: 0.3 }); Ngw.ruleBoard(tl, WBA(L, -20, 0, 1.0), t0, 1.7, { rules: RULES3, active: 1, y: 330, gap: 190, blank: true, at: [0.08, 0.12, 0.16] }); } },
         { set: "ngwKuti", setOpts: { id: "ku3", robeC: "#3a7ac8", robeS: "#2a5a98" }, dark: 0.2, light: GOLDL, grade: { top: "#3a2a1a", bottom: "#0a0806", op: 0.22 }, land: { y0: 520 },
           cam: PUSHD(D("xsafe") - 1.7, fr(560, 1400, 1.15, 540, 1195), fr(560, 1400, 1.22, 540, 1195)), shake: rumble(1.4),
           actors: [P("yaiBua", 470, 1800, 0.95, "hugK", "worry", "flat"), P("fon", 700, 1810, 0.95, "kCover", "wide", "flat", { flip: true })],
@@ -97,9 +100,9 @@
       // 39b · the overpass after (QA: the bridge's danger was never seen): the same view as the crowded shot 30, now empty and silent — the
       //       ledge under the beams scoured, branches and roofing rammed into the gap, the pickup that was parked there crushed up the slope,
       //       the other one flipped against the pier, the moto on its side; low sun through the gap. No words: the theme alone
-      const WRECKU = () => `<g transform="rotate(-34 -60 780)">${Tk.pickup(-60, 780, 0.5)}</g>` + Ngw.debris(-700, 230, 640, 800, 46, 93, 0.95) + Ngw.debris(-420, 120, 900, 1200, 18, 94, 0.8)
+      const WRECKU = () => `<g transform="rotate(-34 -60 780)">${Tk.pickup(-60, 780, 0.5, { c: "#b0463a" })}</g>` + Ngw.debris(-700, 230, 640, 800, 46, 93, 0.95) + Ngw.debris(-420, 120, 900, 1200, 18, 94, 0.8)
         + `<g>${[[1580, 1120, -18], [1700, 1260, 22], [1640, 1400, -8]].map(([x, y, r]) => `<g transform="rotate(${r} ${x} ${y})"><path d="M${x - 130},${y - 40}q60,-30 130,0t130,0v70q-60,-30 -130,0t-130,0Z" fill="url(#ngwZinc)" stroke="#1e1a16" stroke-width="5"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M${x - 110 + k * 52},${y - 44}v70" stroke="#7a8280" stroke-width="3"/>`).join("")}</g>`).join("")}</g>`
-        + FLIPTRUCK(1380, 1660, 0.62) + `<g transform="rotate(84 1080 1640)">${Rup2.moto(1080, 1640, 0.8)}</g>`
+        + `<g transform="rotate(84 1080 1640)">${Rup2.moto(1080, 1640, 0.8)}</g>`
         + `<path d="M1200,640L1760,640L1100,1960L380,1960Z" fill="#fff2c0" opacity=".1"/><path d="M1380,640L1600,640L1000,1960L700,1960Z" fill="#fff2c0" opacity=".08"/>`;
       ADD("xbridge", { ...AFTER("xbr", { sunX: 1500, farX: 1750, road: { y: 1560, h: 400 }, poles: false, so: { overpass: { y: 430, h: 150, ground: 1560, pier: 1660, slopeX: 220 } }, props: WRECKU }),
         dark: 0.1, blur: { sky: 2, far: 2 }, captions: [], land: { y0: 380 },
@@ -139,10 +142,16 @@
             fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fph2-sp", t0, D("xhug") - c, 0.9) }]); }
       // 43 · the knowledge board: fallen pole, broken line — keep away, don't touch, not even the metal it lies on; call it in
       // (TMD · NWS · Ready.gov). Hung in the world on two ropes, the wrecked road with the pickup and the sparking pole blurred behind
-      ADD("xknow4", { ...AFTER("xk4", { props: TWIST }), blur: { sky: 7, far: 7, mid: 7, set: 7 }, captions: caps("xknow4"), land: { y0: 300 },
-        cam: push2("xknow4", fr(540, 975, 1.0, 540, 975), fr(540, 975, 1.03, 540, 975)),
-        fx: (tl, id, t0, L) => { const v = SH.xknow4.vo; put(L.act, Ngw.lineDanger({ id: "ld", world: true })); Ngw.srcChip(tl, id, t0, "กรมอุตุนิยมวิทยา · NWS · Ready.gov", { at: 0.7 });
-          Ngw.lineDangerLife(tl, "ld", t0, D("xknow4"), [t0 + v[0].t, t0 + v[0].t + v[0].frags[1], t0 + v[1].t, t0 + v[1].t + v[1].frags[1]]); } });
+      { const v = SH.xknow4.vo, c = v[1].t - 0.1;
+        SPLITN("xknow4", [c], [
+          { ...AFTER("xk4", { props: TWIST }), blur: { sky: 7, far: 7, mid: 7, set: 7 }, land: { y0: 300 }, cam: PUSHD(c, fr(540, 975, 1.0, 540, 975), fr(540, 975, 1.03, 540, 975)),
+            fx: (tl, id, t0, L) => { put(L.act, Ngw.lineDanger({ id: "ld", world: true })); Ngw.srcChip(tl, id, t0, "กรมอุตุนิยมวิทยา · NWS · Ready.gov", { at: 0.7 });
+              Ngw.lineDangerLife(tl, "ld", t0, c, [t0 + v[0].t, t0 + v[0].t + v[0].frags[1], t0 + c - 1.0, t0 + c + 5]); } },
+          { ...AFTER("xk4b", { props: () => FLIPTRUCK(1600, 1470, 0.4) + Ngw.fallenPole(1840, 1474, 0.48, { id: "fpk", lean: -64, wx: 1690, wy: 1412, ex: 1612, ey: 1472 }) }), blur: { sky: 4, far: 4, mid: 4, set: 3 }, land: { y0: 540 },
+            cam: PUSHD(D("xknow4") - c, fr(860, 1440, 1.45, 540, 1215), fr(880, 1440, 1.52, 540, 1215)),
+            actors: [P("puNoCam", 680, 1790, 0.86, "hugS", "closed", "flat", { flip: true }), P("yaiBua", 500, 1800, 1.0, "kneelPhone", "normal", "o", { talk: [[v[1].frags[1] + 0.1, v[1].dur + 0.1, "o"]] }),
+              P("fon", 1180, 1700, 0.9, "grab", "wide", "o", { flip: true })],
+            fx: (tl, id, t0) => { Ngw.sparkLife(tl, "#fpk-sp", t0, D("xknow4") - c, 0.8); Ngw.srcChip(tl, id, t0, "กรมอุตุนิยมวิทยา", { at: 0.4 }); } }]); }
       // 44 · ยายบัว adds rule 4 to her zinc sign
       ADD("xrule4", { ...AFTER("xr4", { sunX: 200 }), blur: { sky: 3, far: 3, mid: 3 }, captions: caps("xrule4"), land: { y0: 500 },
         cam: STILL("xrule4", fr(540, 1175, 1.0, 540, 1175)),
@@ -160,7 +169,7 @@
       // 45 · bookend: close on ฝน lowering the phone; then the four of them on the road, two in front, two a step behind
       SPLITN("xfin", [SH.xfin.vo[1].t - 0.2], [
         { ...AFTER("xn1", { sunX: 860 }), blur: { sky: 4, far: 4, mid: 4, set: 3 }, land: { y0: 600 }, cam: STILL("xfin", fr(420, 1500, 1.5, 540, 1275)),
-          actors: [P("fonPhone", 420, 1880, 1.0, "phoneLook", "worry", "flat", { then: [{ t: 2.6, mode: "idle", eyes: "normal", mouth: "smile" }] })] },
+          actors: [P("fonPhone", 420, 1880, 1.0, "phoneLook", "normal", "flat")] },
         { ...AFTER("xn2", { sunX: 860 }), land: { y0: 480 }, cam: PUSHD(D("xfin") - SH.xfin.vo[1].t + 0.2, fr(540, 1155, 1.0, 540, 1155), fr(540, 1155, 1.05, 540, 1155)),
           actors: [P("yaiBua", 880, 1700, 0.74, "idle", "normal", "smile", { flip: true }), P("taTian", 1090, 1694, 0.76, "idle", "normal", "smile", { flip: true }), P("fon", 140, 1800, 1.0, "idle", "normal", "smile"), P("puNoCam", 400, 1812, 0.82, "idle", "normal", "smile")] }]);
       // 46 · the end card: ยายบัว's four rules, the title, follow; the family small at the lower right in two pairs (V3); the empty road in the lower middle leaves room for YouTube's end-screen elements

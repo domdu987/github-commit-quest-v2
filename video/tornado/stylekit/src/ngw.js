@@ -426,7 +426,8 @@
   // rows paint on one by one, the rule of this episode gets a yellow brush swipe, the others stay faint; the sheet sways and rattles
   // in the wind, rain streaks over it. o.rules [[pictogram SVG (120 box), text with <u>rhyme</u>]…] · o.active · o.y · o.title
   Ngw.ruleBoard = (tl, layer, t0, dur, o = {}) => {
-    const id = `rb${Math.round(t0 * 100)}`, I = "#1e1a16", Y0 = o.y ?? 330, X0 = 60, W = 960, rows = o.rules || [], n = rows.length, GAP = o.gap ?? 210, H = 290 + n * GAP, act = o.active ?? 0;
+    // o.blank: one more, empty line under the rules — "4. …" with a dashed disc (QA: rule 4 had no set-up; ยายบัว's sign keeps a slot for it)
+    const id = `rb${Math.round(t0 * 100)}`, I = "#1e1a16", Y0 = o.y ?? 330, X0 = 60, W = 960, rows = o.rules || [], n = rows.length, GAP = o.gap ?? 210, H = 290 + (n + (o.blank ? 1 : 0)) * GAP, act = o.active ?? 0;
     const r = mk(o.seed || 97);
     let g = `<g id="${id}"><g id="${id}-sw">`;
     // posts
@@ -454,6 +455,9 @@
       if (isA) g += `<path id="${id}-hl" d="M240,${y - 58}Q560,${y - 76} 1000,${y - 54}L1006,${y + 38}Q600,${y + 56} 236,${y + 34}Z" fill="#ffd23a" opacity=".85"/>`;
       g += `<g transform="translate(${X0 + 104},${y - 14})"><circle r="78" fill="#fff" stroke="#d8312a" stroke-width="14"/><circle r="78" fill="none" stroke="${I}" stroke-width="4"/><g transform="translate(-58,-62) scale(.97)">${pic}</g></g>`;
       g += `<text x="250" y="${y + 18}" font-family="Sriracha" font-size="62" fill="${I}">${t}</text></g>`; });
+    if (o.blank) { const y = Y0 + 300 + n * GAP;
+      g += `<g id="${id}-r${n}" opacity="0"><g transform="translate(${X0 + 104},${y - 14})"><circle r="78" fill="#fff" opacity=".55" stroke="#8a8e8c" stroke-width="8" stroke-dasharray="22 16"/><text y="30" text-anchor="middle" font-family="Sriracha" font-size="86" fill="#8a8e8c">?</text></g>
+        <text x="250" y="${y + 18}" font-family="Sriracha" font-size="62" fill="#6a6e6c">${n + 1}.</text><path d="M330,${y + 12}H${X0 + W - 70}" stroke="#6a6e6c" stroke-width="6" stroke-dasharray="16 18" stroke-linecap="round"/></g>`; }
     g += `</g></g>`;
     put(layer, g);
     // animation: drop in, rows paint on, the active row's swipe, wind sway, the flapping corner, the faint later rows
@@ -464,6 +468,7 @@
     tl.fromTo(q("-flap"), { rotation: 0, svgOrigin: `${X0 + W - 120} ${Y0}` }, { rotation: -14, svgOrigin: `${X0 + W - 120} ${Y0}`, duration: 0.12, ease: "sine.inOut", yoyo: true, repeat: n2(0.12), immediateRender: false }, t0);
     rows.forEach((_, k) => { const at = (o.at || [0.35, 0.5, 0.65])[k] ?? 0.35 + 0.15 * k, isA = k === act;
       tl.fromTo(q(`-r${k}`), { opacity: 0, x: -30 }, { opacity: isA ? 1 : (o.faint ?? 0.42), x: 0, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + at); });
+    if (o.blank) tl.fromTo(q(`-r${n}`), { opacity: 0 }, { opacity: 0.8, duration: 0.3, immediateRender: false }, t0 + ((o.at || [])[n] ?? 0.35 + 0.15 * n));
     if (q("-hl")) tl.fromTo(q("-hl"), { scaleX: 0, svgOrigin: `240 0` }, { scaleX: 1, svgOrigin: `240 0`, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + 0.75);
     if (o.out != null) tl.to(q(""), { y: -300, opacity: 0, duration: 0.35, ease: "power2.in", immediateRender: false }, t0 + o.out);
   };
@@ -627,6 +632,61 @@
     put(layer, g + `</g>`);
     tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
     [0, 1].forEach((k) => tl.fromTo(`#${id}-c${k}`, { x: k ? 700 : -700 }, { x: 0, duration: 0.4, ease: "back.out(1.4)", immediateRender: false }, t0 + 0.15 + k * 0.12));
+    const pk = o.pull === "b" ? 1 : 0, at = t0 + (o.at ?? dur - 1.4);
+    tl.fromTo(`#${id}-gl${pk}`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, at);
+    tl.fromTo(`#${id}-cc${pk}`, { x: -6 }, { x: 6, duration: 0.05, yoyo: true, repeat: 15, ease: "none", immediateRender: false }, at);
+    tl.to(`#${id}-c${1 - pk}`, { opacity: 0.35, duration: 0.3, immediateRender: false }, at); };
+  // ยายบัว's saying as an old ink-on-paper picture (QA: ทะเลลด gave its legend an illustrated card): the paddies, palms and stilt houses,
+  // a brush-drawn funnel, a ghost train of cloud running along the cloud base (the sound in the saying), "ครืนนน…" in brush letters,
+  // and three villagers dropping everything and running. Ids for Ngw.sayingLife (named apart from the naga story's Sets.ngwLegend): #id-fun, #id-train, .id-run, #id-dust
+  Sets.ngwSaying = (L, o = {}) => { const id = o.id || "lg", INKB = "#3a2614", r = mk(o.seed || 41), hz = 1180;
+    let bg = `<rect x="-1400" y="-800" width="4000" height="3600" fill="#e6d4a8"/><rect x="-1400" y="-800" width="4000" height="3600" fill="url(#ngwSun)" opacity=".12"/>`;
+    for (let k = 0; k < 70; k++) { const y = -200 + r() * 2400; bg += `<path d="M${f1(-900 + r() * 3000)},${f1(y)}l${f1(80 + r() * 260)},${f1((r() - 0.5) * 8)}" stroke="#b89c68" stroke-width="${f1(1 + r() * 2)}" opacity=".35"/>`; }
+    bg += `<rect x="-560" y="330" width="2200" height="1260" fill="none" stroke="${INKB}" stroke-width="10"/><rect x="-530" y="360" width="2140" height="1200" fill="none" stroke="${INKB}" stroke-width="3"/>`;
+    put(L.sky, bg);
+    // sky wash and the storm: ink clouds darkening toward the funnel
+    let sk = ""; for (let k = 0; k < 16; k++) { const cx = 300 + r() * 1300, cy = 520 + r() * 180, rx = 140 + r() * 220; sk += `<ellipse cx="${f1(cx)}" cy="${f1(cy)}" rx="${f1(rx)}" ry="${f1(rx * 0.38)}" fill="${INKB}" opacity="${f1(0.08 + (cx > 900 ? 0.12 : 0.03))}"/>`; }
+    sk += `<path d="M700,640Q1000,560 1400,600T1660,620" stroke="${INKB}" stroke-width="7" fill="none" opacity=".55"/>`;
+    // the ghost train in the cloud base: a steam engine and three cars drawn in pale strokes, smoke trailing
+    const car = (x0) => `<rect x="${x0}" y="-56" width="150" height="70" rx="8" fill="none" stroke="#f6ecd2" stroke-width="5"/>${[0, 1, 2].map((k) => `<rect x="${x0 + 18 + k * 44}" y="-44" width="30" height="24" fill="none" stroke="#f6ecd2" stroke-width="3"/>`).join("")}<circle cx="${x0 + 30}" cy="22" r="14" fill="none" stroke="#f6ecd2" stroke-width="4"/><circle cx="${x0 + 120}" cy="22" r="14" fill="none" stroke="#f6ecd2" stroke-width="4"/>`;
+    sk += `<g transform="translate(420,610)"><g id="${id}-train" opacity=".75"><path d="M200,-40h120v-50h50v50h40v54h-210Z" fill="none" stroke="#f6ecd2" stroke-width="5"/><path d="M330,-90v-40h26v40" stroke="#f6ecd2" stroke-width="5" fill="none"/>
+      ${[0, 1, 2].map((k) => `<circle cx="${f1(300 - k * 70)}" cy="${f1(-150 - k * 26)}" r="${26 + k * 10}" fill="none" stroke="#f6ecd2" stroke-width="4" opacity="${f1(0.8 - k * 0.2)}"/>`).join("")}<circle cx="240" cy="22" r="20" fill="none" stroke="#f6ecd2" stroke-width="5"/><circle cx="350" cy="22" r="20" fill="none" stroke="#f6ecd2" stroke-width="5"/>${car(30)}${car(-140)}${car(-310)}</g></g>`;
+    sk += `<text x="560" y="520" font-family="Sriracha" font-size="96" fill="${INKB}" opacity=".85" transform="rotate(-6 560 520)">ครืนนน…</text>`;
+    put(L.far, sk);
+    // the funnel: brush strokes from the cloud base to the ground, a dust skirt at its foot
+    let fu = `<g id="${id}-fun">`; for (let k = 0; k < 9; k++) { const t = k / 8, w0 = 150 - t * 40, x1 = 1240 + (r() - 0.5) * 30;
+      fu += `<path d="M${f1(x1 - w0 + k * 18)},620Q${f1(x1 - 40 + k * 6)},${f1(900)} ${f1(1180 + k * 5)},${hz}" stroke="${INKB}" stroke-width="${f1(8 + r() * 10)}" fill="none" stroke-linecap="round" opacity="${f1(0.35 + r() * 0.4)}"/>`; }
+    fu += `</g><g id="${id}-dust">${Array.from({ length: 9 }, (_, k) => `<ellipse cx="${f1(1190 + (k - 4) * 46)}" cy="${f1(hz - 10 - (k % 3) * 18)}" rx="${f1(60 + (k % 4) * 14)}" ry="26" fill="${INKB}" opacity=".18"/>`).join("")}</g>`;
+    // the land: horizon, paddy strokes, sugar palms, stilt houses
+    let ld = `<path d="M-560,${hz}H1640" stroke="${INKB}" stroke-width="6"/>`;
+    for (let k = 0; k < 140; k++) { const y = hz + 20 + r() * 300, x = -540 + r() * 2160; ld += `<path d="M${f1(x)},${f1(y)}q6,-${f1(10 + r() * 14)} 14,-${f1(18 + r() * 14)}" stroke="#6a5a2a" stroke-width="3" fill="none" opacity=".55"/>`; }
+    [[-300, 1.0], [-200, 0.8], [1500, 0.9]].forEach(([x, k]) => { ld += `<path d="M${x},${hz}Q${x + 6},${hz - 160 * k} ${x - 4},${hz - 300 * k}" stroke="${INKB}" stroke-width="${f1(8 * k)}" fill="none"/>${[-2, -1, 0, 1, 2].map((j) => `<path d="M${x - 4},${f1(hz - 300 * k)}q${j * 36},${f1(-30 - Math.abs(j) * 6)} ${j * 70},${f1(10 - Math.abs(j) * 4)}" stroke="${INKB}" stroke-width="5" fill="none"/>`).join("")}`; });
+    [[60, 0.9], [300, 0.7]].forEach(([x, k]) => { ld += `<g transform="translate(${x},${hz}) scale(${k})"><path d="M-90,0V-60M90,0V-60M-110,-60H110V-150H-110Z" stroke="${INKB}" stroke-width="6" fill="#d8c494"/><path d="M-140,-150L0,-240L140,-150Z" stroke="${INKB}" stroke-width="6" fill="#c8b07c"/><rect x="-30" y="-130" width="40" height="50" fill="none" stroke="${INKB}" stroke-width="4"/></g>`; });
+    // three villagers dropping everything and running away (to the left), staggered; a basket spilling rice where one dropped it
+    // (the moving group sits inside the placed one: GSAP's x/y on an SVG element replace its translate)
+    const man = (x, y, k, carry) => `<g transform="translate(${x},${y}) scale(${k})"><g class="${id}-run"><circle cx="0" cy="-150" r="22" fill="${INKB}"/><path d="M0,-128L-10,-60M-10,-60L-40,0M-10,-60L24,-8M-4,-110L-52,-150M-4,-110L40,-140" stroke="${INKB}" stroke-width="12" fill="none" stroke-linecap="round"/>${carry ? `<circle cx="-30" cy="-118" r="18" fill="${INKB}"/>` : ""}<path d="M-8,-176q12,-16 26,-6" stroke="${INKB}" stroke-width="5" fill="none"/></g></g>`;
+    ld += `<g transform="translate(860,1330)"><path d="M-40,0q40,-60 80,0Z" fill="#c8a868" stroke="${INKB}" stroke-width="5"/>${Array.from({ length: 14 }, (_, k) => `<circle cx="${f1(40 + k * 9 + (k % 3) * 4)}" cy="${f1(-4 + (k % 4) * 4)}" r="4" fill="#f6ecd2" stroke="${INKB}" stroke-width="1"/>`).join("")}</g>`;
+    ld += man(560, 1350, 1.15, false) + man(250, 1316, 1.0, true) + man(-40, 1290, 0.9, false);   // above the caption line
+    put(L.mid, fu); put(L.set, ld);
+  };
+  Ngw.sayingLife = (tl, id, t0, dur) => {
+    tl.fromTo(`#${id}-train`, { x: -120 }, { x: 260, duration: dur, ease: "none", immediateRender: false }, t0);
+    tl.fromTo(`#${id}-fun`, { skewX: -3, svgOrigin: "1200 1180" }, { skewX: 4, svgOrigin: "1200 1180", duration: 0.7, yoyo: true, repeat: Math.ceil(dur / 0.7), ease: "sine.inOut", immediateRender: false }, t0);
+    tl.fromTo(`#${id}-dust`, { scaleX: 0.9, svgOrigin: "1190 1170" }, { scaleX: 1.15, svgOrigin: "1190 1170", duration: 0.5, yoyo: true, repeat: Math.ceil(dur / 0.5), ease: "sine.inOut", immediateRender: false }, t0);
+    document.querySelectorAll(`.${id}-run`).forEach((e, k) => { tl.fromTo(e, { x: 0 }, { x: -260 - k * 40, duration: dur, ease: "none", immediateRender: false }, t0);
+      tl.fromTo(e, { y: 0 }, { y: -14, duration: 0.18, yoyo: true, repeat: Math.ceil(dur / 0.18), ease: "sine.inOut", immediateRender: false }, t0 + k * 0.06); }); };
+  // the choice for the wide frame (QA: the last phone-style stack): question plate on top, the two answers side by side, drawn in page pixels
+  // for a band starting at o.y0 (kept full size by the frame-tall invisible rect, like Ngw.liveUIL); the pull and the dimming as Ngw.choice
+  Ngw.choiceL = (tl, layer, t0, dur, o = {}) => { const id = `cl${Math.round(t0 * 100)}`, I = "#1e1a16", y0 = Math.max(0, Math.min(570, o.y0 ?? 0));
+    const plate = (x, y, w, h) => `<path d="M${x - w / 2},${y}L${x + w / 2},${y + 4}L${x + w / 2 - 6},${y + h}L${x - w / 2 + 4},${y + h - 4}Z" fill="#b4bab8" stroke="${I}" stroke-width="6"/>${Array.from({ length: Math.floor(w / 40) }, (_, k) => `<rect x="${x - w / 2 + 6 + k * 40}" y="${y + 6}" width="14" height="${h - 12}" fill="#e8ecea" opacity=".3"/>`).join("")}`;
+    let g = `<rect x="0" y="${f1(-y0 / 1.25)}" width="1920" height="1536" fill="#000" opacity="0"/><rect x="0" y="0" width="1920" height="1080" fill="#000" opacity=".35"/>`;
+    g += `<g id="${id}-q">${plate(960, 120, 760, 130)}<rect x="580" y="120" width="760" height="20" fill="#f2c230"/><text x="960" y="218" text-anchor="middle" font-family="Sriracha" font-size="76" fill="#d8312a" stroke="#fff8ec" stroke-width="9" paint-order="stroke">${o.q || "จะหลบที่ไหน?"}</text></g>`;
+    const X = [520, 1400];
+    [o.a, o.b].forEach((c, k) => { g += `<g id="${id}-c${k}"><g id="${id}-cc${k}">${plate(X[k], 330, 780, 300)}<g transform="translate(${X[k]},440)"><circle r="78" fill="#fff" stroke="#d8312a" stroke-width="13"/><g transform="translate(-57,-60) scale(.95)">${c.pic || ""}</g></g>
+      <text x="${X[k]}" y="590" text-anchor="middle" font-family="Sriracha" font-size="64" fill="${I}">${c.text}</text><rect id="${id}-gl${k}" x="${X[k] - 390}" y="330" width="780" height="300" fill="none" stroke="#ff3a3a" stroke-width="13" opacity="0" filter="url(#skBlur4)"/></g></g>`; });
+    put(layer, `<g id="${id}" transform="translate(-660,${y0}) scale(1.25)">${g}</g>`);
+    tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0);
+    [0, 1].forEach((k) => tl.fromTo(`#${id}-c${k}`, { y: 500 }, { y: 0, duration: 0.4, ease: "back.out(1.4)", immediateRender: false }, t0 + 0.15 + k * 0.12));
     const pk = o.pull === "b" ? 1 : 0, at = t0 + (o.at ?? dur - 1.4);
     tl.fromTo(`#${id}-gl${pk}`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, at);
     tl.fromTo(`#${id}-cc${pk}`, { x: -6 }, { x: 6, duration: 0.05, yoyo: true, repeat: 15, ease: "none", immediateRender: false }, at);
@@ -912,7 +972,7 @@
       open += `<path d="${cap([-30, y], [-30 + L0, y + sp], w, w * 0.84)}" fill="${U.sk}" ${ln(2.8)}/><ellipse cx="${f1(-30 + L0 - 9)}" cy="${f1(y + sp * 0.93)}" rx="${f1(w * 0.3)}" ry="${f1(w * 0.26)}" fill="${U.nail}" stroke="${U.skD}" stroke-width="1.4"/>`; });
     g += `<g id="${id}-pu">${pu}${thumb}<g id="${id}-popen" opacity="0">${open}</g><g id="${id}-pshut">${shut}</g></g>`;
     g += `<g id="${id}-hit" opacity="0">${[[-1, -0.5], [-0.3, -1], [0.5, -0.9], [1, -0.2], [0.9, 0.6], [-1, 0.5]].map(([dx, dy]) => `<path d="M${f1(dx * 170)},${f1(dy * 150)}l${f1(dx * 70)},${f1(dy * 70)}" stroke="#fff" stroke-width="10" stroke-linecap="round"/>`).join("")}</g>`;
-    return `<g transform="translate(${o.x ?? 640},${o.y ?? 1230}) scale(${o.s ?? 1})"><g id="${id}">${g}</g></g>`; };
+    return `<g transform="translate(${o.x ?? 640},${o.y ?? 1230}) scale(${(o.flip ? -1 : 1) * (o.s ?? 1)},${o.s ?? 1})"><g id="${id}">${g}</g></g>`; };
   // ปู's hand flies in along his arm and clamps at `at` (on "ตา!"): squash, ตาเทียน's fingers splay, the knuckles whiten as the grip
   // tightens; the tug at `tug` ("ลงคูเร็ว!") hauls both down and to the left, then a strained tremble to the end
   Ngw.wristGrabLife = (tl, id, t0, dur, at = 0.3, tug = 0.8) => { const q = (s) => `#${id}${s}`;
@@ -1214,9 +1274,44 @@
     return { set: s, fg };
   };
   // ---------------------------------------------------------------- the world: Sets.tkScape storm + the lake / spouts / bank / shrine
+  // QA ("one house design repeated"): five looks for the village — wall and roof colours, and one thing each house owns: water jars,
+  // a laundry line, a banana clump, a zinc porch, a mango tree (drawn in the house's own coordinates, so they scale with it)
+  Ngw.houseV = (x, y, s, o = {}) => { const k = ((o.k ?? 0) % 5 + 5) % 5, I = "#1e1a16";
+    const P = [["#d8c4a0", "#a8442e", "#5a2a1e"], ["#ece4cc", "#3a6a8a", "#24445a"], ["#c8d8c0", "#8a4a2e", "#4a2a1a"], ["#e8d0b0", "#5a7a4a", "#2e4a26"], ["#b08454", "#8a8e8c", "#4a4e4c"]][k];
+    let g = Tk.house(x, y, s, o).replace(/#d8c4a0/g, P[0]).replace(/#a8442e/g, P[1]).replace(/#5a2a1e/g, P[2]);
+    const ex = [
+      `<g transform="translate(-520,0)">${[0, 120].map((dx) => `<ellipse cx="${dx}" cy="-70" rx="58" ry="72" fill="#5a3422" stroke="${I}" stroke-width="5"/><ellipse cx="${dx}" cy="-138" rx="40" ry="10" fill="#3a2418" stroke="${I}" stroke-width="4"/><path d="M${dx - 40},-90q40,-14 80,0" stroke="#e8c070" stroke-width="5" fill="none"/>`).join("")}</g>`,
+      `<path d="M640,0V-300M1000,0V-300M640,-280Q820,-250 1000,-280" stroke="${I}" stroke-width="6" fill="none"/>${[[690, "#e85a4a"], [770, "#4a8ae0"], [850, "#f2c230"], [925, "#f4f0e8"]].map(([cx, c]) => `<path d="M${cx - 30},-266h60v90l-30,14l-30,-14Z" fill="${c}" stroke="${I}" stroke-width="4"/>`).join("")}`,
+      `<g transform="translate(-560,0)"><path d="M0,0V-360" stroke="#5a7a3a" stroke-width="26"/>${[[-1, -340], [1, -320], [-1, -260], [1, -230]].map(([d, yy]) => `<path d="M0,${yy}q${d * 120},-90 ${d * 230},-10q${d * -110},-20 ${d * -230},10Z" fill="#5a9a40" stroke="${I}" stroke-width="4"/>`).join("")}</g>`,
+      `<path d="M-160,-300L220,-300L260,-250H-200Z" fill="#a8b0b0" stroke="${I}" stroke-width="5"/>${[-150, 0, 150, 250].map((px) => `<path d="M${px},-250V0" stroke="#6a5a44" stroke-width="10"/>`).join("")}`,
+      `<g transform="translate(720,0)"><path d="M0,0V-260" stroke="#5a3a22" stroke-width="30"/><circle cx="-60" cy="-330" r="120" fill="#3e6a32" stroke="${I}" stroke-width="5"/><circle cx="70" cy="-360" r="130" fill="#4a7a3a" stroke="${I}" stroke-width="5"/><circle cx="10" cy="-450" r="110" fill="#558a42" stroke="${I}" stroke-width="5"/></g>`][k];
+    const i = g.lastIndexOf("</g>"); return g.slice(0, i) + ex + g.slice(i); };
+  // a towering storm cloud far off on the horizon (the hot afternoon's cumulonimbus): a cauliflower column lit from the sun's side, an anvil
+  // sheared to the right at the top, the dark base and (o.dark) a rain shaft under it; o.h grows shot by shot (QA: the old flat cloud read as a hill)
+  Ngw.cbTower = (o = {}) => { const x = o.x ?? 1350, hz = o.hz ?? 1160, h = o.h ?? 420, w = o.w ?? h * 0.62, d = o.dark ?? 0, r = mk(o.seed || 23), id = o.id || "cbt";
+    const mix = (a, b, t) => "#" + [0, 2, 4].map((j) => Math.round(parseInt(a.substr(1 + j, 2), 16) * (1 - t) + parseInt(b.substr(1 + j, 2), 16) * t).toString(16).padStart(2, "0")).join("");
+    const LIT = mix("#fff8ec", "#c8ccd4", d * 0.6), MID = mix("#dcdee4", "#7a8494", d), SH = mix("#9aa4b4", "#3a4452", d), BASE = mix("#6a7686", "#262e38", d);
+    let g = `<g id="${id}">`;
+    if (d > 0.2) g += `<path d="M${x - w * 0.42},${hz - 40}L${x - w * 0.52},${hz + 4}H${x + w * 0.38}L${x + w * 0.3},${hz - 40}Z" fill="${BASE}" opacity="${f1(0.3 + d * 0.4)}" filter="url(#skBlur10)"/>`;
+    // the column: many overlapping lobes of different sizes, jittered, wider and brighter toward the top; three passes (shade, body, sunlit
+    // tops) so lobes merge into one mass instead of a stack of balls; the whole tower softened with a light blur
+    const N = 16, L0 = []; for (let i = 0; i < N; i++) { const u = i / (N - 1), yy = hz - 60 - u * h * 0.8, rw = w * (0.3 + 0.16 * u) * (0.85 + r() * 0.3);
+      for (let j = 0; j < 3; j++) L0.push([x + (r() - 0.5) * rw * 1.1 + u * w * 0.1, yy + (r() - 0.5) * h * 0.05, rw * (0.34 + r() * 0.26)]); }
+    let lobes = L0.map(([cx, cy, R]) => `<circle cx="${f1(cx + R * 0.18)}" cy="${f1(cy + R * 0.22)}" r="${f1(R)}" fill="${SH}"/>`).join("")
+      + L0.map(([cx, cy, R]) => `<circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(R * 0.9)}" fill="${MID}"/>`).join("")
+      + L0.map(([cx, cy, R]) => `<circle cx="${f1(cx - R * 0.3)}" cy="${f1(cy - R * 0.34)}" r="${f1(R * 0.5)}" fill="${LIT}" opacity=".85"/>`).join("");
+    const top = hz - 50 - h * 0.86, aw = w * 2.3;   // the anvil: wide, flat, sheared downwind
+    g += `<path d="M${f1(x - aw * 0.32)},${f1(top + 30)}Q${f1(x - aw * 0.2)},${f1(top - 60)} ${f1(x + aw * 0.1)},${f1(top - 50)}Q${f1(x + aw * 0.5)},${f1(top - 46)} ${f1(x + aw * 0.78)},${f1(top + 6)}Q${f1(x + aw * 0.46)},${f1(top + 30)} ${f1(x + aw * 0.12)},${f1(top + 50)}Z" fill="${MID}"/><path d="M${f1(x - aw * 0.3)},${f1(top + 20)}Q${f1(x - aw * 0.18)},${f1(top - 58)} ${f1(x + aw * 0.1)},${f1(top - 48)}Q${f1(x + aw * 0.5)},${f1(top - 44)} ${f1(x + aw * 0.76)},${f1(top + 4)}" stroke="${LIT}" stroke-width="16" fill="none" stroke-linecap="round"/>`;
+    g += `<g filter="url(#skBlur4)">${lobes}</g><path d="M${f1(x - w * 0.5)},${hz - 50}Q${x},${hz - 74} ${f1(x + w * 0.5)},${hz - 50}L${f1(x + w * 0.46)},${hz - 30}H${f1(x - w * 0.46)}Z" fill="${BASE}" filter="url(#skBlur4)"/>`;
+    if (d > 0.3) g += `${[0, 1, 2, 3].map((k) => `<path d="M${f1(x - w * 0.3 + k * w * 0.16)},${hz - 34}l-26,${f1(40 + d * 30)}" stroke="${BASE}" stroke-width="10" opacity="${f1(0.25 + d * 0.3)}"/>`).join("")}`;
+    return g + `</g>`; };
   Sets.ngwScape = function (L, o = {}) {
     Sets.tkScape(L, { ...o, fgRice: o.lake ? false : o.fgRice });
     const hz = o.horizon ?? 1000;
+    // before the storm (QA: "a rainbow on the hottest day, one hour before"): no rainbow, a sun-bleached haze on the horizon, the growing tower
+    if (o.noRainbow) [...L.sky.querySelectorAll("g")].forEach((g) => { if (g.querySelector('path[stroke="#ff5a5a"]')) g.remove(); });
+    if (o.haze) put(L.sky, `<rect x="-1400" y="${hz - 340}" width="4000" height="360" fill="#fff2d8" opacity=".32" filter="url(#skBlur24)"/>`);
+    if (o.tower) put(L.sky, Ngw.cbTower({ hz, ...o.tower }));
     if (o.lake) { put(L.mid, Ngw.lake({ hz, ...o.lake })); put(L.mid, `<rect x="-1400" y="${hz - 110}" width="4000" height="210" fill="#8a9aa0" opacity=".16" filter="url(#skBlur24)"/>`); }
     (o.spouts || []).forEach((sp) => put(L[sp.layer || "mid"], Ngw.funnel(sp)));
     if (o.monster) put(L[o.monster.layer || "mid"], Ngw.monster(o.monster));
@@ -1226,7 +1321,7 @@
     if (o.shrine) put(L.set, Rup2.shrine(o.shrine.x, o.shrine.y, o.shrine.s || 1));
     if (o.naga) put(L.set, Ngw.naga(o.naga.x, o.naga.y, o.naga.s || 1, o.naga));
     if (o.farLake) { const [a, b] = o.farLake; put(L.mid, `<path d="M${a},${hz}H${b}L${b - 160},${hz + 34}H${a}Z" fill="url(#ngwLake)"/><path d="M${a},${hz + 1}H${b}" stroke="#b4c6c8" stroke-width="3" opacity=".6"/>`); }
-    if (o.village) put(L.mid, o.village.map((v) => v.kind === "wat" ? Ngw.wat(v.x, v.y, v.s) : v.kind === "school" ? Ngw.school(v.x, v.y, v.s) : Tk.house(v.x, v.y, v.s, v)).join(""));
+    if (o.village) put(L.mid, o.village.map((v, i) => v.kind === "wat" ? Ngw.wat(v.x, v.y, v.s) : v.kind === "school" ? Ngw.school(v.x, v.y, v.s) : Ngw.houseV(v.x, v.y, v.s, { ...v, k: v.k ?? i })).join(""));
     if (o.ditch) { const d = Ngw.ditch(o.ditch); put(L.set, d.set); put(L.fg, d.fg); }
     if (o.far) put(L.mid, typeof o.far === "function" ? o.far() : o.far);
     if (o.road) put(L.set, Ngw.road(o.road));

@@ -38,8 +38,8 @@ SHOTS = [
     ("xhug", ["b08"], 0.3, 0.7, 4.0),                    # ยายบัว kneels and holds ปู, in tears: the answer to EP.1's "ปูอยู่ไหน!"
     ("xknow4", ["n29", ("n30", 0.3)], 0.3, 0.7, 8.6),    # diagram: fallen pole, broken line — keep away, don't touch, call (TMD, NWS, Ready.gov)
     ("xrule4", ["b07"], 0.4, 0.8, 4.6),                  # ยายบัว sprays rule 4 on her zinc sign
-    ("xbye", ["f09"], 0.3, 1.4, 4.2),                    # ฝน ends her live (the payoff of EP.1's "ถ่ายต่อ" comments): the screen goes dark
-    ("xfin", ["n31", ("n32", 0.4)], 0.5, 0.7, 7.6),      # bookend: ฝน puts the phone away; the family on the road
+    ("xfin", ["n31", ("n32", 0.4)], 0.5, 0.7, 7.6),      # bookend: ฝน looks at her phone; the family on the road
+    ("xbye", ["f09"], 0.3, 1.4, 4.2),                    # the last character beat (QA): ฝน ends her live — the "ถ่ายต่อ" comments say sorry — "ไลฟ์จบแล้ว"
     ("xend", ["n33"], 0.5, 6.0, 12.0),                   # the end card: ยายบัว's 4 rules + follow (room for YouTube's end screen)
 ]
 GAP = 0.08
