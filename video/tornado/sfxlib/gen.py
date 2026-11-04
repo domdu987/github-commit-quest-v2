@@ -13,6 +13,7 @@ LIB = {
  "pop": ("A soft cute bubble pop of a phone live-stream heart reaction, very short, no music", 0.5),
  "pickup": ("An old diesel pickup truck engine starting and revving hard, tyres spinning on gravel, then pulling away fast", 3),
  "bathdoor": ("A small wooden bathroom door slammed shut hard and a bolt latch snapped closed, inside a house", 1.0),
+ "glassburst": ("A house window bursting inward from violent wind pressure: glass exploding and shards scattering across a wooden floor, short", 1.6),
  "boom": ("A massive deep impact boom as a tornado touches the ground in the distance, low and powerful, short", 2),
 }
 def gen(k):

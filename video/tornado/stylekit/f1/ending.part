@@ -1,8 +1,8 @@
 
       // ================= เสียงรถไฟ ตอนจบ — the full 16:9 story only (owner 4 Nov 2569: "ทำรวมเป็นเรื่องเดียว ขนาด 16:9") =================
-      // Composed for the 16:9 window: world x −660…1740 around the centre 540, rows y0…y0+1350 (land.y0), cameras near 1:1.
-      const PUSHD = (d, a, b) => ({ keys: [{ t: 0, ...a }, { t: d, glide: d, ...b }] });
-      const WB = (L, tx, ty, sc) => { const g = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.setAttribute("transform", `translate(${tx},${ty}) scale(${sc})`); L.set.appendChild(g); return g; };
+      // Composed for the 16:9 window: world x −660…1740 around the centre 540, rows y0…y0+1350 (land.y0). v2 after the owner's
+      // "ภาพ มุมกล้อง เอฟเฟค ไอคอน คิดว่าดียัง": close-ups on the key beats (ปู remembers, ฝน shouts, the hand at the wire, ตาเทียน's
+      // thanks), a low angle up at the storm passing over, wind lines and debris behind the actors (V1b), less rain, staggered groups (V3).
       Sets.ngwDiagram = (L, o = {}) => put(L.set, typeof o.svg === "function" ? o.svg() : o.svg || "");
       PIC.wire = `<path d="M10,106H112" stroke="#6a5032" stroke-width="5"/><path d="M26,104L62,26" stroke="#6a6e70" stroke-width="9" stroke-linecap="round"/><path d="M46,44L78,56" stroke="#6a6e70" stroke-width="6"/>
         <path d="M62,28Q88,50 84,72L92,76L82,82L94,88" stroke="${I}" stroke-width="4.5" fill="none" stroke-linejoin="round"/>
@@ -15,100 +15,107 @@
           ruins: [{ x: 150, y: 1300, s: 0.42, level: 1, dir: -1 }, { x: 1180, y: 1306, s: 0.4, level: 2, seed: 66 }, { x: 1560, y: 1290, s: 0.36, level: 1, seed: 67 }],
           road: o.road ?? { y: 1560, h: 170 }, poles: o.poles ?? { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1550, s: 0.85, tf: [3], sag: 46, lean: [0, 10, 0, -16, 0, 22, 0] },
           props: () => Ngw.debris(-640, 1720, 1560, 1760, 46, 75, 0.7) + (o.props ? o.props() : ""), glowProps: o.glowProps, ditch: o.ditch, ...(o.so || {}) }, dark: o.dark ?? 0.05, light: CLEARL, grade: GC });
-      const UNDER = (id, o = {}) => NSC(id, { horizon: 1180, rain: o.rain ?? 0.6, vx: 540, fgRice: false, _leaves: 0,
+      const UNDER = (id, o = {}) => NSC(id, { horizon: 1180, rain: o.rain ?? 0.3, vx: 540, fgRice: false, _leaves: 0,
           epic: { id: o.eid || id + "e", x: 1250, y: 1186, h: 640, wb: 280, wt: 620, tx: 1290, sun: -1, seed: 63, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
-          road: { y: 1560, h: 400 }, overpass: { y: 330, h: 150, ground: 1560, pier: 1660, slopeX: 220 },
-          props: () => PICK(900, 1700, 0.75, 1) + PICK(-40, 1640, 0.62) + Rup2.moto(1260, 1690, 0.8) + (o.props ? o.props() : ""), glowProps: o.glowProps, fgProps: o.fgProps });
-      const DITCHV = (id, o = {}) => NSC(id, { horizon: 1180, rain: o.rain ?? 0.7, vx: 540, fgRice: false, _leaves: 0, ditch: { y: o.dy ?? 1720 },
-          epic: o.epic ?? { id: id + "e", x: 1350, y: 1186, h: 760, wb: 360, wt: 760, tx: 1380, sun: -1, seed: 65, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
-          road: { y: 1440, h: 120 }, props: o.props, glowProps: o.glowProps, fgProps: o.fgProps });
+          road: { y: 1560, h: 400 }, overpass: { y: 430, h: 150, ground: 1560, pier: 1660, slopeX: 220 },
+          props: () => PICK(900, 1700, 0.75, 1) + PICK(-40, 1640, 0.62) + Rup2.moto(1260, 1690, 0.8) + (o.props ? o.props() : "") });
+      const DITCHV = (id, o = {}) => NSC(id, { horizon: o.hz ?? 1180, rain: o.rain ?? 0.35, vx: 540, fgRice: false, _leaves: 0, ditch: { y: o.dy ?? 1720, near: o.near },
+          epic: o.epic ?? { id: id + "e", x: 1350, y: (o.hz ?? 1180) + 6, h: 760, wb: 360, wt: 760, tx: 1380, sun: -1, seed: 65, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
+          road: o.road ?? { y: 1440, h: 120 }, props: o.props });
+      const TWIST = () => FLIPTRUCK(1180, 1700, 0.85) + Ngw.fallenPole(1640, 1710, 0.95, { id: "fpb", lean: -62, wx: 1150, wy: 1560, ex: 960, ey: 1712 }) + Ngw.cam(870, 1700, 0.9, -14);
 
       // 30 · under the overpass: cars stopped, people climbing up under the beams; ตาเทียน: climb up! (fades in from the choice's black)
-      ADD("xunder", { ...UNDER("xu", { eid: "e40" }), dark: 0.25, captions: caps("xunder"), land: { y0: 380 },
+      ADD("xunder", { ...UNDER("xu", { eid: "e40" }), dark: 0.22, captions: caps("xunder"), land: { y0: 380 },
         cam: push2("xunder", fr(540, 1055, 1.0, 540, 1055), fr(540, 1055, 1.05, 540, 1055)), shake: rumble(1.4),
-        actors: [P("exA", -90, 1050, 0.6, "hold", "wide", "o"), P("exB", -190, 1230, 0.64, "hold", "worry", "o", { flip: true }), P("exA", -280, 1400, 0.68, "jump", "wide", "o"),
+        actors: [P("exA", -60, 1060, 0.6, "hold", "wide", "o"), P("exB", -170, 1240, 0.64, "hold", "worry", "o", { flip: true }), P("exA", -270, 1405, 0.68, "jump", "wide", "o"),
           P("taTian", 640, 1720, 0.92, "point", "normal", "o", { flip: true, talk: TALK("xunder", 1, "o") }), P("pu", 420, 1720, 0.7, "idle", "worry", "flat")],
         fx: (tl, id, t0) => { tl.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: 0.35, immediateRender: false }, t0); Ngw.epicLife(tl, "e40", t0, D("xunder")); } });
-      // 31 · ปู looks up: the wind under the deck is stronger than outside
-      ADD("xwind", { ...UNDER("xw", { eid: "e41", rain: 0.4, glowProps: () => Ngw.streaks(-400, 1700, 980, 1500, 34, 83) }), dark: 0.3, captions: caps("xwind"), land: { y0: 570 },
-        cam: push2("xwind", fr(470, 1360, 1.55, 540, 1245), fr(470, 1360, 1.66, 540, 1245)), shake: rumble(2),
-        actors: [P("pu", 470, 1720, 0.72, "flinch", "wide", "o", { talk: TALK("xwind", 0, "o") })],
+      // 31 · close, low: ปู looks up into the gap — the wind under the deck is stronger than outside (streaks behind him)
+      ADD("xwind", { ...UNDER("xw", { eid: "e41", props: () => Ngw.streaks(-400, 1700, 700, 1400, 34, 83) }), dark: 0.25, captions: caps("xwind"), land: { y0: 470 },
+        cam: push2("xwind", fr(470, 1150, 1.25, 540, 1145), fr(470, 1150, 1.33, 540, 1145)), shake: rumble(2),
+        actors: [P("pu", 470, 1880, 1.15, "flinch", "wide", "o", { talk: TALK("xwind", 0, "o") })],
         fx: (tl, id, t0) => Ngw.epicLife(tl, "e41", t0, D("xwind")) });
-      // 32 · ปู remembers ยายบัว's rule 3: the zinc sign (rule 3 lit) on the left, ปู on the right
-      ADD("xrule3", { ...UNDER("xr", { eid: "e42", rain: 0.3 }), dark: 0.12, captions: caps("xrule3"), land: { y0: 500 },
-        cam: STILL("xrule3", fr(540, 1175, 1.0, 540, 1175)), shake: rumble(1),
-        actors: [P("pu", 1080, 1820, 1.1, "yell", "angry", "scream", { flip: true, talk: TALK("xrule3", 0, "scream") })],
+      // 32 · ปู remembers ยายบัว's rule 3: the zinc sign (rule 3 lit) left, ปู big and low on the right
+      ADD("xrule3", { ...UNDER("xr", { eid: "e42", rain: 0.2 }), dark: 0.12, captions: caps("xrule3"), land: { y0: 500 },
+        cam: STILL("xrule3", fr(540, 1175, 1.0, 540, 1175)), shake: rumble(0.8),
+        actors: [P("pu", 1120, 2180, 1.7, "yell", "angry", "scream", { flip: true, talk: TALK("xrule3", 0, "scream") })],
         fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e42", t0, D("xrule3")); Ngw.ruleBoard(tl, WB(L, -700, 330, 0.78), t0 + 0.05, D("xrule3") - 0.05, { rules: RULES3, active: 2, y: 330, at: [0.05, 0.1, 0.15] }); } });
-      // 33 · ปู drags ตาเทียน off the road and down into the ditch
-      ADD("xpull", { ...DITCHV("xp", { dy: 1830 }), dark: 0.2, captions: caps("xpull"), land: { y0: 520 },
-        cam: push2("xpull", fr(700, 1195, 1.0, 540, 1195), fr(420, 1195, 1.0, 540, 1195)), shake: rumble(2),
-        actors: [P("pu", 900, 1500, 0.7, "run", "angry", "scream", { moveTo: { x: 120, y: 1800, s: 0.78, dur: 3.4, at: 0.5, ease: "power1.in" }, talk: TALK("xpull", 0, "scream") }),
-          P("taTian", 1100, 1500, 0.86, "stagger", "wide", "o", { moveTo: { x: 330, y: 1810, s: 0.92, dur: 3.4, at: 0.65, ease: "power1.in" }, talk: TALK("xpull", 1, "o") })] });
-      // 34 · the diagram: the wind squeezed under the deck, faster (NWS · SPC · CDC)
+      // 33 · ปู drags ตาเทียน off the road and down into the ditch: ปู ahead pulling, his back hand to ตาเทียน stumbling after
+      ADD("xpull", { ...DITCHV("xp", { dy: 1700 }), dark: 0.15, captions: caps("xpull"), land: { y0: 640 },
+        cam: push2("xpull", fr(700, 1315, 1.0, 540, 1315), fr(420, 1315, 1.0, 540, 1315)), shake: rumble(2),
+        actors: [P("pu", 820, 1500, 0.72, "pullHand", "angry", "scream", { flip: true, moveTo: { x: 90, y: 1690, s: 0.8, dur: 3.4, at: 0.45, ease: "power1.in" }, talk: TALK("xpull", 0, "scream") }),
+          P("taTian", 1000, 1500, 0.86, "stagger", "wide", "o", { flip: true, moveTo: { x: 270, y: 1696, s: 0.92, dur: 3.4, at: 0.55, ease: "power1.in" }, talk: TALK("xpull", 1, "o") })] });
+      // 34 · the card: the wind squeezed under the deck, faster (NWS · SPC · CDC)
       ADD("xknow3", { set: "ngwDiagram", setOpts: { id: "dg1", svg: () => Ngw.bridgeWind({ id: "bw" }) }, dark: 0, light: false, captions: caps("xknow3"), land: { y0: 300 },
         cam: push2("xknow3", fr(540, 975, 1.0, 540, 975), fr(540, 975, 1.04, 540, 975)),
         fx: (tl, id, t0) => Ngw.bridgeWindLife(tl, "bw", t0, D("xknow3"), [t0 + vo("xknow3", 0) + SH.xknow3.vo[0].frags[1], t0 + vo("xknow3", 1)]) });
-      // 35 · in the ditch: flat, face down, arms over the back of the head (SPC)
-      ADD("xflat", { ...DITCHV("xf", { dy: 1720, glowProps: () => Ngw.streaks(-300, 1600, 1060, 1420, 30, 85) + Ngw.debris(-300, 1600, 1000, 1400, 26, 88, 0.6) }), dark: 0.3, captions: caps("xflat"), land: { y0: 560 },
-        cam: push2("xflat", fr(560, 1500, 1.4, 540, 1235), fr(560, 1500, 1.48, 540, 1235)), shake: rumble(2.4),
-        actors: [P("pu", 420, 1720, 0.8, "prone", "worry", "flat"), P("taTian", 700, 1728, 0.9, "prone", "worry", "flat", { flip: true })] });
-      // 36 · it passes over them: debris overhead, the pickup tumbling away
-      ADD("xpass", { ...DITCHV("xs", { dy: 1720, rain: 1, epic: { id: "e43", x: 520, y: 1186, h: 900, wb: 640, wt: 1100, tx: 560, sun: -1, seed: 69, tiers: 4, bolts: [], flashes: [], sunDx: 900 },
-          glowProps: () => `<g id="xs-tk">${FLIPTRUCK(-300, 1300, 0.6)}</g>` + Ngw.streaks(-500, 1800, 1000, 1500, 44, 87) + Ngw.debris(-500, 1800, 900, 1500, 40, 89, 0.8) }), dark: 0.45, captions: caps("xpass"), land: { y0: 560 },
-        cam: push2("xpass", fr(560, 1460, 1.25, 540, 1235), fr(560, 1460, 1.3, 540, 1235)), shake: rumble(4),
-        actors: [P("pu", 420, 1720, 0.8, "prone", "worry", "flat"), P("taTian", 700, 1728, 0.9, "prone", "worry", "flat", { flip: true })],
-        fx: (tl, id, t0) => { Ngw.epicLife(tl, "e43", t0, D("xpass"), { spin: 0.5 }); tl.fromTo("#xs-tk", { x: 0, y: 0, rotation: 0, transformOrigin: "50% 50%" }, { x: 2000, y: -260, rotation: 620, duration: 2.6, ease: "power1.in", immediateRender: false }, t0 + 0.2); } });
+      // 35 · at ground level, close: face down in the ditch, arms over the back of the head (SPC); debris skims over the bank, behind them.
+      // The camera is down in the ditch with them: the near bank (fg, parallax 1.5) starts 330 below the waterline so at 1.85× only its grass tips frame the bottom
+      // The two of them head to head in the mud, face down (Ngw.prone: the rig can only lie face-up), shivering in the wind
+      ADD("xflat", { ...DITCHV("xf", { dy: 1720, near: 330, props: () => Ngw.streaks(-300, 1600, 1250, 1560, 30, 85) + Ngw.debris(-300, 1600, 1260, 1560, 26, 88, 0.6)
+          + Ngw.prone(360, 1716, 1.0, "pu", { id: "xfp" }) + Ngw.prone(790, 1716, 1.0, "taTian", { id: "xft", flip: true }) }), dark: 0.12, captions: caps("xflat"), land: { y0: 560 },
+        cam: push2("xflat", fr(560, 1716, 1.85, 540, 1548), fr(560, 1716, 1.95, 540, 1548)), shake: rumble(2.4),
+        fx: (tl, id, t0) => { Ngw.proneLife(tl, "xfp", t0, D("xflat")); Ngw.proneLife(tl, "xft", t0, D("xflat")); } });
+      // 36 · low angle up from the ditch: the funnel fills the sky as it passes over; the pickup tumbles away high overhead
+      ADD("xpass", { ...DITCHV("xs", { hz: 1600, dy: 1790, near: 280, rain: 0.4, road: { y: 1650, h: 70 },
+          epic: { id: "e43", x: 560, y: 1606, h: 1500, wb: 1000, wt: 2200, tx: 600, sun: -1, seed: 69, tiers: 3, bolts: [], flashes: [], sunDx: 1000 },
+          props: () => `<g id="xs-tk">${FLIPTRUCK(-500, 900, 0.42)}</g>` + Ngw.streaks(-600, 1800, 700, 1500, 44, 87) + Ngw.debris(-600, 1800, 600, 1500, 40, 89, 0.8)
+            + Ngw.prone(330, 1784, 1.25, "pu", { id: "xsp" }) + Ngw.prone(840, 1784, 1.25, "taTian", { id: "xst", flip: true }) }), dark: 0.32, captions: caps("xpass"), land: { y0: 560 },
+        cam: push2("xpass", fr(560, 1235, 1.0, 540, 1235), fr(560, 1235, 1.06, 540, 1235)), shake: rumble(4),
+        fx: (tl, id, t0) => { Ngw.epicLife(tl, "e43", t0, D("xpass"), { spin: 0.45 }); Ngw.proneLife(tl, "xsp", t0, D("xpass")); Ngw.proneLife(tl, "xst", t0, D("xpass")); tl.fromTo("#xs-tk", { x: 0, y: 0, rotation: 0, transformOrigin: "50% 50%" }, { x: 2400, y: -120, rotation: 620, duration: 2.6, ease: "power1.in", immediateRender: false }, t0 + 0.2); } });
       // 37 · at home: the window ตาเทียน said to open bursts in (CDC: "An exploding window can injure or kill.")
       ADD("xwin", { set: "ngwRoom", setOpts: { id: "rw2" }, dark: 0.15, light: GOLDL, grade: { top: "#2a2018", bottom: "#0a0806", op: 0.2 }, captions: caps("xwin"), land: { y0: 300 },
         cam: push2("xwin", fr(640, 900, 1.0, 640, 975), fr(640, 820, 1.12, 640, 975)), shake: kick(vo("xwin", 1), vo("xwin", 1) + 0.6, 12),
-        fx: (tl, id, t0, L) => { Ngw.roomLife(tl, "rw2", t0, D("xwin"), []); Ngw.shatter(tl, L.glow, t0 + vo("xwin", 1), { x: 360, y: 420, w: 560, h: 640, n: 54, seed: 21 }); } });
-      // 38 · the bathroom: ฝน and ยายบัว safe; opening windows is useless (SPC)
+        fx: (tl, id, t0, L) => { Ngw.roomLife(tl, "rw2", t0, D("xwin"), []); Ngw.shatter(tl, L.glow, t0 + vo("xwin", 1), { x: 360, y: 420, w: 560, h: 640, n: 54, seed: 21, hole: true }); } });
+      // 38 · the bathroom: ฝน and ยายบัว safe, facing each other, ยาย's hands out to her; opening windows is useless (SPC)
       ADD("xsafe", { set: "ngwKuti", setOpts: { id: "ku3", robeC: "#3a7ac8", robeS: "#2a5a98" }, dark: 0.2, light: GOLDL, grade: { top: "#3a2a1a", bottom: "#0a0806", op: 0.22 }, captions: caps("xsafe"), land: { y0: 520 },
         cam: push2("xsafe", fr(560, 1400, 1.15, 540, 1195), fr(560, 1400, 1.22, 540, 1195)), shake: rumble(1.4),
-        actors: [P("yaiBua", 460, 1790, 0.95, "kCover", "worry", "flat"), P("fon", 700, 1810, 0.95, "kCover", "wide", "flat", { flip: true })],
+        actors: [P("yaiBua", 420, 1790, 0.95, "grab", "worry", "flat"), P("fon", 720, 1810, 0.95, "kCover", "wide", "flat", { flip: true })],
         fx: (tl, id, t0) => Ngw.kutiLife(tl, "ku3", t0, D("xsafe"), []) });
       // 39 · the roar stops: the storm goes off over the fields, light comes back on the wrecked village
       ADD("xquiet", { ...AFTER("xq", { sunX: 300, farX: 1600 }), captions: caps("xquiet"), land: { y0: 420 },
         cam: push2("xquiet", fr(540, 1095, 1.0, 540, 1095), fr(540, 1095, 1.04, 540, 1095)) });
-      // 40 · aftermath by the road: ปู and ตาเทียน climb out of the ditch alive; the overturned pickup and a fallen pole beyond (the twist, planted)
-      ADD("xafter", { ...AFTER("xa", { ditch: { y: 1800 }, props: () => FLIPTRUCK(1180, 1520, 0.55) + Ngw.fallenPole(1520, 1530, 0.7, { id: "fpa", lean: -64, wx: 1240, wy: 1440, ex: 1110, ey: 1528 }) }), captions: caps("xafter"), land: { y0: 540 },
-        cam: push2("xafter", fr(560, 1215, 1.0, 540, 1215), fr(560, 1215, 1.05, 540, 1215)),
-        actors: [P("taTian", 520, 1830, 0.95, "kneel", "worry", "flat", { talk: TALK("xafter", 0, "o") }), P("pu", 760, 1820, 0.78, "pant", "normal", "flat", { flip: true })],
-        fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fpa-sp", t0 + 0.4, D("xafter") - 0.4, 0.9) });
-      // 41 · ปู sees his camera by the pickup and runs for it
-      const TWIST = () => FLIPTRUCK(1180, 1700, 0.85) + Ngw.fallenPole(1640, 1710, 0.95, { id: "fpb", lean: -62, wx: 1150, wy: 1560, ex: 960, ey: 1712 }) + Ngw.cam(870, 1700, 0.9, -14);
+      // 40 · aftermath: wide as they climb out (the overturned pickup and the fallen pole planted beyond), then close in depth: ปู big in front, ตาเทียน behind him
+      SPLITN("xafter", [SH.xafter.vo[0].t + SH.xafter.vo[0].frags[1] - 0.15], [
+        { ...AFTER("xa", { ditch: { y: 1660 }, props: () => FLIPTRUCK(1180, 1520, 0.55) + Ngw.fallenPole(1520, 1530, 0.7, { id: "fpa", lean: -64, wx: 1240, wy: 1440, ex: 1110, ey: 1528 }) }), land: { y0: 540 },
+          cam: PUSHD(SH.xafter.vo[0].t + SH.xafter.vo[0].frags[1] - 0.15, fr(560, 1215, 1.0, 540, 1215), fr(560, 1215, 1.04, 540, 1215)),
+          actors: [P("taTian", 520, 1700, 0.95, "kneel", "worry", "flat", { talk: TALK("xafter", 0, "o") }), P("pu", 760, 1690, 0.78, "pant", "normal", "flat", { flip: true })],
+          fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fpa-sp", t0 + 0.3, 2.6, 0.9) },
+        { ...AFTER("xa2", { ditch: { y: 1660 }, props: () => FLIPTRUCK(1180, 1520, 0.55) + Ngw.fallenPole(1520, 1530, 0.7, { id: "fpa2", lean: -64, wx: 1240, wy: 1440, ex: 1110, ey: 1528 }) }), land: { y0: 540 },
+          cam: PUSHD(D("xafter") - SH.xafter.vo[0].t - SH.xafter.vo[0].frags[1] + 0.15, fr(500, 1420, 1.9, 540, 1215), fr(500, 1420, 2.0, 540, 1215)),
+          actors: [P("taTian", 520, 1700, 0.95, "kneel", "worry", "flat", { talk: [[0, SH.xafter.vo[0].dur - SH.xafter.vo[0].frags[1] + 0.15, "o"]] }), P("pu", 860, 1900, 1.25, "pant", "normal", "flat", { flip: true })] }]);
+      // 41 · ปู sees his camera by the pickup and runs for it, reaching at the end (the line sparks on the pickup)
       ADD("xcam", { ...AFTER("xc", { props: TWIST }), captions: caps("xcam"), land: { y0: 540 },
         cam: push2("xcam", fr(560, 1215, 1.0, 540, 1215), fr(700, 1215, 1.08, 540, 1215)),
-        actors: [P("pu", -200, 1830, 0.82, "run", "wide", "laugh", { moveTo: { x: 560, dur: 2.6, at: 0.2, ease: "power1.out" }, talk: TALK("xcam", 0, "laugh") })],
+        actors: [P("pu", -200, 1830, 0.82, "run", "wide", "laugh", { moveTo: { x: 640, dur: 2.4, at: 0.15, ease: "power1.out" }, talk: TALK("xcam", 0, "laugh"), then: [{ t: 2.55, mode: "kReach", eyes: "wide", mouth: "o" }] })],
         fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fpb-sp", t0 + 0.2, D("xcam") - 0.2, 0.8) });
-      // 42 · ฝน: stop! — ปู freezes a hand from the pickup; the broken line lies across it, sparking
+      // 42 · close on ฝน: "ปู! หยุดนะ! อย่าแตะรถ!" — then the insert: ปู's hand a hair from the pickup, the broken line sparking on it
       SPLITN("xstop", [SH.xstop.vo[1].t - 0.15], [
-        { ...AFTER("xt1", { props: TWIST }), land: { y0: 540 }, cam: STILL("xstop", fr(560, 1215, 1.0, 540, 1215)),
-          actors: [P("pu", 700, 1830, 0.82, "kReach", "wide", "o"), P("fon", -420, 1840, 1.0, "run", "wide", "scream", { moveTo: { x: 120, dur: 1.4, ease: "power2.out" }, talk: TALK("xstop", 0, "scream") }),
-            P("yaiBua", -640, 1830, 0.92, "run", "worry", "o", { moveTo: { x: -150, dur: 1.8, ease: "power2.out" } })],
-          fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fpb-sp", t0, 2.4, 0.7) },
-        { ...AFTER("xt2", { props: TWIST }), land: { y0: 540 }, cam: PUSHD(D("xstop") - SH.xstop.vo[1].t + 0.15, fr(1120, 1560, 2.2, 540, 1215), fr(1140, 1560, 2.4, 540, 1215)),
-          actors: [P("pu", 700, 1830, 0.82, "kReach", "wide", "o")],
+        { ...AFTER("xt1", { props: TWIST }), land: { y0: 540 }, cam: PUSHD(SH.xstop.vo[1].t - 0.15, fr(540, 1340, 1.5, 540, 1215), fr(540, 1340, 1.58, 540, 1215)),
+          actors: [P("yaiBua", 1000, 1760, 0.7, "run", "worry", "o", { flip: true, moveTo: { x: 760, dur: 2.0, ease: "power1.out" } }), P("fon", 470, 1960, 1.25, "yell", "wide", "scream", { talk: TALK("xstop", 0, "scream") })],
+          fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fpb-sp", t0, 2.2, 0.7) },
+        { ...AFTER("xt2", { props: TWIST }), land: { y0: 540 }, cam: PUSHD(D("xstop") - SH.xstop.vo[1].t + 0.15, fr(1100, 1580, 2.5, 540, 1215), fr(1120, 1580, 2.7, 540, 1215)),
+          actors: [P("pu", 760, 1830, 0.82, "kReach", "wide", "o")],
           fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fpb-sp", t0, 3.2, 0.6) }]);
-      // 43 · the diagram: fallen pole, broken line — keep away, don't touch, not even the metal it lies on; call it in (TMD · NWS · Ready.gov)
+      // 43 · the card: fallen pole, broken line — keep away, don't touch, not even the metal it lies on; call it in (TMD · NWS · Ready.gov)
       ADD("xknow4", { set: "ngwDiagram", setOpts: { id: "dg2", svg: () => Ngw.lineDanger({ id: "ld" }) }, dark: 0, light: false, captions: caps("xknow4"), land: { y0: 300 },
         cam: push2("xknow4", fr(540, 975, 1.0, 540, 975), fr(540, 975, 1.03, 540, 975)),
         fx: (tl, id, t0) => { const v = SH.xknow4.vo; Ngw.lineDangerLife(tl, "ld", t0, D("xknow4"), [t0 + v[0].t, t0 + v[0].t + v[0].frags[1], t0 + v[1].t, t0 + v[1].t + v[1].frags[1]]); } });
       // 44 · ยายบัว adds rule 4 to her zinc sign
       ADD("xrule4", { ...AFTER("xr4", { sunX: 200 }), captions: caps("xrule4"), land: { y0: 500 },
         cam: STILL("xrule4", fr(540, 1175, 1.0, 540, 1175)),
-        actors: [P("yaiBua", 1020, 1820, 1.12, "point", "normal", "o", { flip: true, talk: TALK("xrule4", 0, "o") })],
+        actors: [P("yaiBua", 1040, 1900, 1.3, "point", "normal", "o", { flip: true, talk: TALK("xrule4", 0, "o") })],
         fx: (tl, id, t0, L) => Ngw.ruleBoard(tl, WB(L, -690, 360, 0.66), t0 + 0.05, D("xrule4") - 0.05, { rules: RULES4, active: 3, y: 330, gap: 190, at: [0.05, 0.08, 0.11, vo("xrule4", 0) - 0.05] }) });
-      // 45 · bookend: ฝน puts the phone away; the four of them on the road
+      // 45 · bookend: close on ฝน lowering the phone; then the four of them on the road, two in front, two a step behind
       SPLITN("xfin", [SH.xfin.vo[1].t - 0.2], [
         { ...AFTER("xn1", { sunX: 860 }), land: { y0: 600 }, cam: STILL("xfin", fr(420, 1500, 1.5, 540, 1275)),
-          actors: [P("fonPhone", 420, 1880, 1.0, "phoneLook", "worry", "flat")] },
+          actors: [P("fonPhone", 420, 1880, 1.0, "phoneLook", "worry", "flat", { then: [{ t: 2.6, mode: "idle", eyes: "normal", mouth: "smile" }] })] },
         { ...AFTER("xn2", { sunX: 860 }), land: { y0: 480 }, cam: PUSHD(D("xfin") - SH.xfin.vo[1].t + 0.2, fr(540, 1155, 1.0, 540, 1155), fr(540, 1155, 1.05, 540, 1155)),
-          actors: [P("fon", 300, 1800, 0.95, "idle", "normal", "smile"), P("pu", 520, 1800, 0.74, "idle", "normal", "smile"), P("yaiBua", 760, 1800, 0.92, "idle", "normal", "smile", { flip: true }), P("taTian", 980, 1800, 0.95, "idle", "normal", "smile", { flip: true })] }]);
-      // 46 · the end card: ยายบัว's four rules, the title, follow (the lower right stays clear for YouTube's end screen)
+          actors: [P("yaiBua", 880, 1700, 0.74, "idle", "normal", "smile", { flip: true }), P("taTian", 1090, 1694, 0.76, "idle", "normal", "smile", { flip: true }), P("fon", 140, 1800, 1.0, "idle", "normal", "smile"), P("pu", 400, 1812, 0.82, "idle", "normal", "smile")] }]);
+      // 46 · the end card: ยายบัว's four rules, the title, follow; the family small at the lower right in two pairs (V3); the empty road in the lower middle leaves room for YouTube's end-screen elements
       ADD("xend", { ...AFTER("xe", { sunX: 1300, dark: 0.12 }), captions: caps("xend"), land: { y0: 480 },
         cam: push2("xend", fr(540, 1155, 1.0, 540, 1155), fr(540, 1155, 1.02, 540, 1155)),
-        actors: [P("fon", 1260, 1800, 0.5, "idle", "normal", "smile"), P("pu", 1340, 1800, 0.4, "idle", "normal", "smile"), P("yaiBua", 1420, 1800, 0.48, "idle", "normal", "smile", { flip: true }), P("taTian", 1500, 1800, 0.5, "idle", "normal", "smile", { flip: true })],
+        actors: [P("yaiBua", 1480, 1736, 0.42, "idle", "normal", "smile", { flip: true }), P("taTian", 1580, 1732, 0.43, "idle", "normal", "smile", { flip: true }), P("fon", 1180, 1800, 0.52, "idle", "normal", "smile"), P("pu", 1290, 1806, 0.43, "idle", "normal", "smile")],
         fx: (tl, id, t0, L) => { Ngw.ruleBoard(tl, WB(L, -690, 330, 0.66), t0 + 0.2, D("xend") - 0.2, { rules: RULES4, active: -1, y: 330, gap: 190, at: [0.3, 0.45, 0.6, 0.75] });
           put(L.set, `<g id="xe-ttl" opacity="0"><text x="1100" y="760" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="150" fill="#f6efe0" stroke="#1e1a16" stroke-width="18" paint-order="stroke">เสียงรถไฟ</text>
             <text x="1100" y="860" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="64" fill="#f2c230" stroke="#1e1a16" stroke-width="12" paint-order="stroke" letter-spacing="6">Rod Mai Club</text>

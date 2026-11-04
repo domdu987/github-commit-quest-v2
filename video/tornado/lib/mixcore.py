@@ -13,8 +13,9 @@ SFXLIB = os.path.join(VIDEO, "tornado", "sfxlib")
 
 
 class Mix:
-    def __init__(self, here, out=None):
+    def __init__(self, here, out=None, vo_dirs=None):
         self.here, self.out = here, out or here
+        self.vo_dirs = vo_dirs or [os.path.join(here, "vo")]   # the full story reads ep1/vo and ep2/vo
         self.SC = json.load(open(os.path.join(here, "schedule.json")))
         self.SH = {s["key"]: s for s in self.SC["shots"]}
         self.TOTAL = self.SC["total"]; self.N = int(self.TOTAL * SR)
@@ -49,7 +50,7 @@ class Mix:
     def voices(self, line_gain={}):
         for s in self.SC["shots"]:
             for v in s["vo"]:
-                x = self.load(os.path.join(self.here, "vo", f"{v['id']}.wav"))
+                x = self.load(next(p for p in (os.path.join(d, f"{v['id']}.wav") for d in self.vo_dirs) if os.path.exists(p)))
                 self.place(self.vo, self.level(x, -18 + line_gain.get(v["id"], 0)), s["start"] + v["t"])
 
     def filt(self, x, af):
@@ -117,9 +118,18 @@ class Mix:
         lo, hi = np.clip(i - n // 2, 0, len(x)), np.clip(i - n // 2 + n, 0, len(x))
         return ((c[hi] - c[lo]) / n).astype(np.float32)
 
-    def finish(self, cut=None, card=None, holes=(), amb_db=-31.0):
-        mus = self.load(os.path.join(VIDEO, "music", "suno1.mp3"))
-        mus = np.pad(mus, (0, max(0, self.N - len(mus))))[: self.N] * self.gain   # ทะเลลด recipe: suno1 from 0 s, no filter
+    def finish(self, cut=None, card=None, holes=(), amb_db=-31.0, segments=None, fade=None):
+        src = self.load(os.path.join(VIDEO, "music", "suno1.mp3"))
+        if segments is None:   # ทะเลลด recipe: suno1 from 0 s, no filter
+            mus = np.pad(src, (0, max(0, self.N - len(src))))[: self.N]
+        else:   # the full story: suno1 restarts at the chapter break; each segment (a, b, offset) gets 40 ms edges
+            mus = np.zeros(self.N, np.float32)
+            for a, b, off in segments:
+                i, j, o = int(a * SR), min(self.N, int(b * SR)), int(off * SR); seg = src[o: o + j - i].copy(); e = int(0.04 * SR)
+                seg[:e] *= np.linspace(0, 1, e); seg[-e:] *= np.linspace(1, 0, e); mus[i: i + len(seg)] += seg
+        if fade is not None:   # the final card: the theme fades out under it
+            a, b = int(fade[0] * SR), int(fade[1] * SR); mus[a:b] *= np.linspace(1, 0, b - a); mus[b:] = 0
+        mus = mus * self.gain
         if cut is not None: mus[int(cut * SR):] = 0   # cliffhanger: the music stops with the black after the choice
         mus = self.level(mus, -30)
         sfx = self.level(self.filt(self.sfx, "lowpass=f=4500,lowpass=f=4500,highpass=f=40"), -27)

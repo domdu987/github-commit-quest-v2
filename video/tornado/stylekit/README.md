@@ -73,7 +73,14 @@ The five style frames in `../frames/` were built from this kit. Each one comes i
   - `spouts`, `shrine`, `naga` (naga statue), `crowd`
   - `farLake`, `village` (`Ngw.wat` temple, `Ngw.school`, `Tk.house`)
   - `ditch`, `far`, `props`
+  - `ditch.near`: how far below the waterline the near bank (fg, parallax 1.5) starts. Raise it in close shots, or at 1.8× zoom the bank covers the actors.
 - `Sets.ngwKuti` + `Ngw.kutiLife`: the kuti bathroom.
+- The ending (full 16:9 film, `f1/ending.part`):
+  - `Ngw.bridgeWind` / `bridgeWindLife`: the overpass card (wind squeezed under the deck).
+  - `Ngw.lineDanger` / `lineDangerLife`: the downed-line card (title, keep-away zone, hot pickup, caller).
+  - `Ngw.fallenPole` + `Ngw.sparkLife`: a pole down with its line sparking, one pop per period (V1b).
+  - `Ngw.shatter(..., { hole: true })`: the burst window keeps its jagged hole.
+  - `Ngw.prone` / `proneLife`: someone lying face down in side view, arms over the back of the head. Use it instead of the rig's `prone` mode, which lies on its side with the chest and face to the camera and reads as lying on the back.
 - `Sets.ngwLegend`: the puppet legend, built on `Sets.legend3`.
 - Cast:
   - `fon`/`fonPhone`: yellow raincoat, ponytail
@@ -83,10 +90,13 @@ The five style frames in `../frames/` were built from this kit. Each one comes i
 
 ## Build
 ```bash
-bash video/tornado/stylekit/build/build.sh <hf dir with lib/> ngw1 vertical tw    # vertical
-bash video/tornado/stylekit/build/build.sh <hf dir with lib/> ngwL landscape tw   # 16:9
+S=<scratch dir>   # build.sh copies src/ngw.js and the takhian/rupnak libs into <hf dir>/lib
+bash video/tornado/stylekit/build/build.sh e1 <hf dir> ngwE1                          # EP.1, vertical
+BADGE="เสียงรถไฟ" bash video/tornado/stylekit/build/build.sh f1 <hf dir> ngwF1 landscape   # the full 16:9 film
 ```
+- `f1/body.part` is the EP.1 shots (without the end card) followed by `f1/ending.part`. After editing the ending, rebuild body.part from both.
 - `sf/common.part` is the takhian common part with one change: its storm hook (rain, wind, wet actors, hands) also accepts `ngwScape`.
 - Snapshots:
   - vertical: `snapV.cjs`
   - landscape: `snapL.cjs`, one browser at a time
+  - Since the 4 Nov container restart, headless Chrome crashes with its default flags. Launch it with `--no-sandbox --use-angle=swiftshader --enable-unsafe-swiftshader`.

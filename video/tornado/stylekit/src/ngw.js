@@ -576,71 +576,138 @@
     tl.to(sel, { y: up, duration: 0.35, ease: "power2.in" }, t0 + dur - 0.35);
   };
   // ================= เสียงรถไฟ ตอนจบ (full 16:9 story, owner 4 Nov 2569: "ทำรวมเป็นเรื่องเดียว ขนาด 16:9") =================
-  // Diagrams are drawn in world space for the 16:9 window (x −660…1740 around the centre x 540), not in the vertical light layer.
-  const BP = (x0, y0, w, h) => { let g = `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="#0e1822"/>`;
-    for (let x = x0; x <= x0 + w; x += 120) g += `<path d="M${x},${y0}V${y0 + h}" stroke="#9ab8d0" stroke-width="2" opacity=".08"/>`;
-    for (let y = y0; y <= y0 + h; y += 120) g += `<path d="M${x0},${y}H${x0 + w}" stroke="#9ab8d0" stroke-width="2" opacity=".08"/>`;
-    return g; };
-  const TXT = (x, y, t, fs = 58, c = "#f2f0ea", o = "") => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="${fs}" fill="${c}" stroke="#0e1822" stroke-width="10" paint-order="stroke" ${o}>${t}</text>`;
-  const PERSON = (x, y, s = 1, c = "#cfe0ea") => `<g transform="translate(${x},${y}) scale(${s})"><circle cy="-150" r="22" fill="${c}"/><path d="M0,-126V-60M0,-110L-30,-80M0,-110L30,-84M0,-60L-24,0M0,-60L24,0" stroke="${c}" stroke-width="14" stroke-linecap="round"/></g>`;
+  // Knowledge cards in the channel's graphic language (ผีแม่ม่าย mmui.js): an illustrated paper card, ink outlines, flat fills with one
+  // shade and one highlight, soft drop shadow, Kanit labels; everything enters eased and staggered, then keeps a small secondary motion.
+  // Drawn in world space for the 16:9 window (x −660…1740 around the centre 540), not in the vertical light layer.
+  Sets.DEFS += `<linearGradient id="ngwPaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#efe7d2"/></linearGradient>
+    <linearGradient id="ngwSkyCard" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcdcf2"/><stop offset="1" stop-color="#f4f0e2"/></linearGradient>
+    <linearGradient id="ngwConc" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8d6ce"/><stop offset="1" stop-color="#a4a29a"/></linearGradient>
+    <linearGradient id="ngwFunCard" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#46525c"/><stop offset=".45" stop-color="#76828c"/><stop offset="1" stop-color="#364048"/></linearGradient>
+    <radialGradient id="ngwSparkG"><stop offset="0" stop-color="#ffffff"/><stop offset=".3" stop-color="#e2f8ff" stop-opacity=".95"/><stop offset="1" stop-color="#6ad0ff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="ngwPoleG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7e7c74"/><stop offset=".4" stop-color="#dcdad2"/><stop offset="1" stop-color="#6e6c64"/></linearGradient>`;
+  const CARD = (x, y, w, h) => `<rect x="${x + 18}" y="${y + 22}" width="${w}" height="${h}" rx="44" fill="#000" opacity=".3"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="44" fill="url(#ngwPaper)" ${OUT(7)}/>`;
+  const LBL = (x, y, t, fs, c) => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="${fs}" fill="${c}" stroke="#fffdf6" stroke-width="14" paint-order="stroke">${t}</text>`;
+  const FIG = (x, y, s, shirt) => `<g transform="translate(${x},${y}) scale(${s})"><ellipse cy="4" rx="36" ry="9" fill="#000" opacity=".18"/><path d="M-16,0L-11,-70H11L16,0Z" fill="#3a4a6a" ${OUT(4)}/>
+    <path d="M-23,-70Q-25,-132 0,-136Q25,-132 23,-70Z" fill="${shirt}" ${OUT(4)}/><path d="M-12,-126Q-6,-110 -8,-76" stroke="#fff" stroke-width="5" opacity=".35" fill="none"/><circle cy="-160" r="25" fill="#e6ae80" ${OUT(4)}/><path d="M-25,-168Q-21,-190 0,-188Q23,-188 25,-166" fill="#2a221c"/></g>`;
+  const CARDBG = (id, X, Y, W, H, gy) => `<rect x="-1400" y="-800" width="4000" height="3600" fill="#26303a"/><g id="${id}-card">${CARD(X, Y, W, H)}
+    <clipPath id="${id}-cp"><rect x="${X + 14}" y="${Y + 14}" width="${W - 28}" height="${H - 28}" rx="34"/></clipPath><g clip-path="url(#${id}-cp)">
+    <rect x="${X}" y="${Y}" width="${W}" height="${gy - Y}" fill="url(#ngwSkyCard)"/><rect x="${X}" y="${gy}" width="${W}" height="${Y + H - gy}" fill="#7aa85a"/><rect x="${X}" y="${gy}" width="${W}" height="22" fill="#5a8a42"/>`;
   // the overpass wind tunnel (NWS: "Overpasses can concentrate the tornado winds, causing them to be significantly stronger.")
-  Ngw.bridgeWind = (o = {}) => { const id = o.id || "bw", gy = 1320, dy = 760, dh = 90;
-    let g = BP(-1400, -800, 4000, 3600);
-    g += `<path d="M-1400,${gy}H2600" stroke="#6a8aa0" stroke-width="6"/>`;
-    // the overpass: deck, rails, embankments both sides, a pier
-    g += `<path d="M120,${gy}L330,${dy + dh}H1250L1460,${gy}Z" fill="none"/><path d="M80,${gy}L300,${dy + dh}V${dy}H1280V${dy + dh}L1500,${gy}" fill="none" stroke="#cfe0ea" stroke-width="8" stroke-linejoin="round"/>`;
-    g += `<rect x="300" y="${dy}" width="980" height="${dh}" fill="#2a3a48" stroke="#cfe0ea" stroke-width="8"/><path d="M300,${dy - 30}H1280" stroke="#cfe0ea" stroke-width="5" stroke-dasharray="14 18"/>`;
-    g += `<path d="M80,${gy}L300,${dy + dh}V${gy}Z M1500,${gy}L1280,${dy + dh}V${gy}Z" fill="#2a3a48" stroke="#cfe0ea" stroke-width="6"/>`;
-    g += `<rect id="${id}-zone" x="300" y="${dy + dh}" width="980" height="${gy - dy - dh}" fill="#ff4a3a" opacity="0"/>`;
-    // the tornado, stylized, on the left
-    g += `<g id="${id}-tor"><path d="M-620,420H-140L-250,700L-300,980L-340,${gy}H-400L-450,980L-500,700Z" fill="#3a4a58" stroke="#9ab4c8" stroke-width="6" stroke-linejoin="round"/>`;
-    for (let k = 0; k < 6; k++) { const y = 470 + k * 140, w = 230 - k * 30; g += `<path class="${id}-band" d="M${-380 - w},${y}Q-380,${y + 34} ${-380 + w},${y}" stroke="#cfe0ea" stroke-width="5" fill="none" opacity=".55"/>`; }
-    g += `</g>`;
-    // wind: wide and slow outside, squeezed into fast thin jets under the deck, people under it pushed
-    const arrow = (x0, x1, y, w, c, cls) => `<path class="${cls}" d="M${x0},${y}H${x1}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="70 46"/><path class="${cls}-hd" d="M${x1 - 10},${y - w * 1.4}L${x1 + w * 2},${y}L${x1 - 10},${y + w * 1.4}Z" fill="${c}"/>`;
-    [960, 1060, 1160, 1260].forEach((y) => { g += arrow(-260, 120, y, 20, "#7ab8e0", `${id}-out`); });
-    g += `<g id="${id}-jet" opacity="0">`; [930, 1010, 1090, 1170, 1250].forEach((y, k) => { g += arrow(340, 1220, y, 9, k % 2 ? "#ffd23a" : "#ff8a3a", `${id}-in`); });
-    for (let k = 0; k < 14; k++) g += `<path d="M${380 + (k * 67) % 800},${940 + (k * 53) % 300}h${-60 - (k % 4) * 30}" stroke="#ffd23a" stroke-width="4" opacity=".6"/>`;
-    g += `</g><g id="${id}-ppl">${PERSON(640, gy, 1.1)}${PERSON(800, gy, 1.0)}${PERSON(960, gy, 1.15)}</g>`;
-    g += `<g id="${id}-lbl1" opacity="0">${TXT(-70, 900, "ลมข้างนอก", 52, "#9ad0f0")}</g><g id="${id}-lbl2" opacity="0">${TXT(790, 690, "ใต้สะพาน: ลมถูกบีบ แรงขึ้น", 60, "#ffd23a")}</g>`;
+  Ngw.bridgeWind = (o = {}) => { const id = o.id || "bw", X = -560, Y = 380, W = 2200, H = 1160, gy = 1380;
+    let g = CARDBG(id, X, Y, W, H, gy);
+    g += `<g id="${id}-tor"><path d="M-470,${Y + 70}H-40L-150,${Y + 360}L-210,${gy - 260}L-250,${gy}H-310L-360,${gy - 260}L-410,${Y + 360}Z" fill="url(#ngwFunCard)" ${OUT(6)}/>`;
+    for (let k = 0; k < 6; k++) { const y = Y + 120 + k * 150, w = 200 - k * 26; g += `<path class="${id}-band" d="M${-255 - w},${y}Q-255,${y + 30} ${-255 + w},${y}" stroke="#d4dce2" stroke-width="6" fill="none" opacity=".75"/>`; }
+    g += `<ellipse cx="-280" cy="${gy}" rx="160" ry="34" fill="#8a7a5a" opacity=".75"/></g>`;
+    const dx = 330, dw = 1000, dy = 830, dh = 80;
+    g += `<path d="M${dx - 260},${gy}L${dx},${dy + dh}H${dx + 40}V${gy}Z" fill="#b8b6ae" ${OUT(5)}/><path d="M${dx + dw + 260},${gy}L${dx + dw},${dy + dh}H${dx + dw - 40}V${gy}Z" fill="#a8a69e" ${OUT(5)}/>`;
+    g += `<rect x="${dx + 40}" y="${dy + dh}" width="${dw - 80}" height="${gy - dy - dh}" fill="#3a4450" opacity=".2"/>`;
+    g += `<path d="M${dx},${dy}L${dx + 40},${dy - 34}H${dx + dw + 40}L${dx + dw},${dy}Z" fill="#e6e4dc" ${OUT(5)}/><rect x="${dx}" y="${dy}" width="${dw}" height="${dh}" fill="url(#ngwConc)" ${OUT(6)}/><path d="M${dx + 14},${dy + 14}H${dx + dw - 14}" stroke="#fff" stroke-width="5" opacity=".45"/>`;
+    for (let x = dx + 20; x < dx + dw; x += 60) g += `<path d="M${x + 20},${dy - 34}V${dy - 72}" stroke="#7a786e" stroke-width="7"/>`;
+    g += `<path d="M${dx + 20},${dy - 72}H${dx + dw + 30}" stroke="#7a786e" stroke-width="8"/>`;
+    g += `<rect id="${id}-zone" x="${dx + 40}" y="${dy + dh}" width="${dw - 80}" height="${gy - dy - dh}" fill="#ff3a2a" opacity="0"/>`;
+    const rib = (x0, x1, y, w, c, cls) => `<path class="${cls}" d="M${x0},${y}H${x1}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${w * 3} ${w * 1.6}" opacity=".92"/><path d="M${x1 - 6},${y - w}L${x1 + w * 1.6},${y}L${x1 - 6},${y + w}Z" fill="${c}" ${OUT(3)}/>`;
+    g += `<g id="${id}-out">` + [1010, 1120, 1230, 1330].map((y) => rib(-150, 170, y, 30, "#3a8ad8", `${id}-o`)).join("") + `</g>`;
+    g += `<g id="${id}-jet" opacity="0">` + [970, 1050, 1130, 1210, 1290].map((y, k) => rib(380, 1250, y, 13, k % 2 ? "#ff6a2a" : "#e2382e", `${id}-i`)).join("");
+    for (let k = 0; k < 16; k++) g += `<path d="M${400 + (k * 61) % 820},${960 + (k * 47) % 330}h${-50 - (k % 4) * 26}" stroke="#ff8a3a" stroke-width="4" stroke-linecap="round" opacity=".7"/>`;
+    g += `</g><g id="${id}-ppl">${FIG(640, gy, 1.0, "#e2382e")}${FIG(800, gy, 0.95, "#2f6fd0")}${FIG(960, gy, 1.05, "#2fa864")}</g></g></g>`;
+    g += `<g id="${id}-lbl1" opacity="0">${LBL(10, 960, "ลมข้างนอก", 60, "#2f6fd0")}</g><g id="${id}-lbl2" opacity="0">${LBL(830, 700, "ใต้สะพาน: ลมถูกบีบ แรงขึ้น", 68, "#e2382e")}</g>`;
     return `<g id="${id}">${g}</g>`; };
-  Ngw.bridgeWindLife = (tl, id, t0, dur, at = []) => { const n = (p) => Math.max(1, Math.ceil(dur / p));
-    tl.fromTo(`.${id}-out`, { strokeDashoffset: 0 }, { strokeDashoffset: -232, duration: 1.2, ease: "none", repeat: n(1.2), immediateRender: false }, t0);
-    tl.fromTo(`.${id}-in`, { strokeDashoffset: 0 }, { strokeDashoffset: -232, duration: 0.35, ease: "none", repeat: n(0.35), immediateRender: false }, t0);
-    tl.fromTo(`.${id}-band`, { x: -30 }, { x: 30, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: n(0.5), immediateRender: false }, t0);
-    tl.fromTo(`#${id}-lbl1`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, t0 + 0.3);
-    tl.fromTo(`#${id}-jet`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, at[0] ?? t0 + 1.2);
-    tl.fromTo(`#${id}-lbl2`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, immediateRender: false }, (at[0] ?? t0 + 1.2) + 0.2);
-    tl.fromTo(`#${id}-ppl`, { x: 0 }, { x: 60, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: n(0.5), immediateRender: false }, at[0] ?? t0 + 1.2);
-    tl.fromTo(`#${id}-zone`, { opacity: 0 }, { keyframes: [{ opacity: 0.38, duration: 0.3 }, { opacity: 0.2, duration: 0.4 }, { opacity: 0.38, duration: 0.4 }, { opacity: 0.26, duration: 0.5 }], immediateRender: false }, at[1] ?? t0 + 3.5);
+  Ngw.bridgeWindLife = (tl, id, t0, dur, at = []) => { const n = (p) => Math.max(1, Math.ceil(dur / p)), a0 = at[0] ?? t0 + 1.2;
+    const pop = (sel, t, d = 0.35) => tl.fromTo(sel, { opacity: 0, scale: 0.7, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: d, ease: "back.out(2)", immediateRender: false }, t);
+    tl.fromTo(`#${id}-card`, { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.6)", immediateRender: false }, t0);
+    tl.fromTo(`#${id}-out`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + 0.35);
+    tl.fromTo(`.${id}-o`, { strokeDashoffset: 0 }, { strokeDashoffset: -138, duration: 1.0, ease: "none", repeat: n(1.0), immediateRender: false }, t0);
+    tl.fromTo(`.${id}-i`, { strokeDashoffset: 0 }, { strokeDashoffset: -60, duration: 0.25, ease: "none", repeat: n(0.25), immediateRender: false }, t0);
+    tl.fromTo(`.${id}-band`, { x: -24 }, { x: 24, duration: 0.45, ease: "sine.inOut", yoyo: true, repeat: n(0.45), immediateRender: false }, t0);
+    pop(`#${id}-lbl1`, t0 + 0.55);
+    tl.fromTo(`#${id}-jet`, { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, a0);
+    pop(`#${id}-lbl2`, a0 + 0.15, 0.4);
+    tl.fromTo(`#${id}-ppl`, { x: 0 }, { x: 46, duration: 0.2, ease: "sine.inOut", yoyo: true, repeat: n(0.4), immediateRender: false }, a0);
+    tl.fromTo(`#${id}-zone`, { opacity: 0 }, { keyframes: [{ opacity: 0.32, duration: 0.3 }, { opacity: 0.16, duration: 0.4 }, { opacity: 0.32, duration: 0.4 }, { opacity: 0.22, duration: 0.5 }], immediateRender: false }, at[1] ?? t0 + 3.5);
   };
   // the downed line (กรมอุตุนิยมวิทยา: "ถ้ามีเสาไฟฟ้าล้ม สายไฟขาดอย่าเข้าใกล้หรือแตะต้องเป็นอันขาด" · "อย่าแตะโลหะที่เป็นสื่อไฟฟ้า" ·
   // NWS: "Contact local authorities if you see power lines down.")
-  Ngw.lineDanger = (o = {}) => { const id = o.id || "ld", gy = 1320;
-    let g = BP(-1400, -800, 4000, 3600) + `<path d="M-1400,${gy}H2600" stroke="#6a8aa0" stroke-width="6"/>`;
-    g += `<g id="${id}-zone" opacity="0"><rect x="-120" y="760" width="1500" height="${gy - 760 + 40}" rx="60" fill="#ffb42a" opacity=".16"/><rect x="-120" y="760" width="1500" height="${gy - 760 + 40}" rx="60" fill="none" stroke="#ffb42a" stroke-width="8" stroke-dasharray="40 26"/></g>`;
-    // the fallen pole (base broken on the right, lying toward the left)
-    g += `<g id="${id}-pole"><g transform="translate(200,${gy}) rotate(-68)"><path d="M-14,0L-10,-560H10L14,0Z" fill="#8a9aa8" stroke="#cfe0ea" stroke-width="5"/><path d="M-80,-520H80M-60,-470H60" stroke="#cfe0ea" stroke-width="10"/></g></g>`;
-    // a truck the line lies across
-    g += `<g id="${id}-truck"><path d="M560,${gy - 40}V${gy - 190}H820L880,${gy - 270}H1040L1100,${gy - 170}H1180V${gy - 40}Z" fill="#3a4a58" stroke="#cfe0ea" stroke-width="7" stroke-linejoin="round"/>
-      <circle cx="680" cy="${gy - 36}" r="42" fill="#0e1822" stroke="#cfe0ea" stroke-width="7"/><circle cx="1070" cy="${gy - 36}" r="42" fill="#0e1822" stroke="#cfe0ea" stroke-width="7"/></g>`;
-    g += `<rect id="${id}-hot" x="556" y="${gy - 274}" width="630" height="240" rx="26" fill="#ffb42a" opacity="0"/>`;
-    g += `<path id="${id}-wire" d="M-318,${gy - 208}Q120,${gy - 330} 700,${gy - 196}Q900,${gy - 160} 1040,${gy - 268}Q1200,${gy - 120} 1300,${gy}" stroke="#1e1a16" stroke-width="12" fill="none"/><path d="M-318,${gy - 208}Q120,${gy - 330} 700,${gy - 196}Q900,${gy - 160} 1040,${gy - 268}Q1200,${gy - 120} 1300,${gy}" stroke="#cfe0ea" stroke-width="4" fill="none"/>`;
-    const spark = (x, y, k) => `<g class="${id}-sp" transform="translate(${x},${y})"><circle r="34" fill="#fff6a8" opacity=".55"/>${[0, 1, 2, 3, 4, 5].map((a) => `<path d="M0,0L${f1(54 * Math.cos(a + k))},${f1(54 * Math.sin(a + k))}" stroke="#ffe066" stroke-width="5"/>`).join("")}</g>`;
-    g += spark(1040, gy - 268, 0.3) + spark(1300, gy, 1.1);
-    g += `<g id="${id}-call" opacity="0">${PERSON(1460, gy, 1.25)}<rect x="1476" y="${gy - 214}" width="26" height="44" rx="6" fill="#ffd23a"/>${[0, 1, 2].map((k) => `<path class="${id}-wave" d="M${1516 + k * 22},${gy - 226}q${18 + k * 8},${22 + k * 6} 0,${46 + k * 14}" stroke="#ffd23a" stroke-width="5" fill="none"/>`).join("")}</g>`;
-    g += `<g id="${id}-l1" opacity="0">${TXT(640, 720, "อย่าเข้าใกล้", 64, "#ffb42a")}</g><g id="${id}-l2" opacity="0">${TXT(870, gy - 300, "อย่าแตะ", 60, "#ffd23a")}</g><g id="${id}-l3" opacity="0">${TXT(1460, gy - 300, "แจ้งเจ้าหน้าที่", 54, "#f2f0ea")}</g>`;
+  const ARC = (s, k) => [0, 1, 2, 3].map((j) => { const a = k + j * 1.6; return `<path d="M0,0l${f1(28 * s * Math.cos(a))},${f1(28 * s * Math.sin(a) - 8 * s)}l${f1(-12 * s)},${f1(12 * s)}l${f1(34 * s * Math.cos(a + 0.4))},${f1(34 * s * Math.sin(a + 0.4))}" stroke="#ffffff" stroke-width="${f1(4.6 * s)}" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`; }).join("");
+  Ngw.lineDanger = (o = {}) => { const id = o.id || "ld", X = -560, Y = 380, W = 2200, H = 1160, gy = 1380;
+    let g = CARDBG(id, X, Y, W, H, gy);
+    g += `<g id="${id}-zone" opacity="0"><ellipse cx="560" cy="${gy + 40}" rx="840" ry="120" fill="#ffb42a" opacity=".35"/><ellipse cx="560" cy="${gy + 40}" rx="840" ry="120" fill="none" stroke="#e08a10" stroke-width="8" stroke-dasharray="36 22"/></g>`;
+    g += `<path d="M-330,${gy}V${gy - 90}L-312,${gy - 122}L-292,${gy - 94}L-274,${gy - 118}V${gy}Z" fill="url(#ngwPoleG)" ${OUT(5)}/>`;
+    g += `<g id="${id}-pole"><g transform="translate(-302,${gy - 70}) rotate(-12)"><rect x="0" y="-22" width="760" height="44" rx="10" fill="url(#ngwPoleG)" ${OUT(5)}/><path d="M680,-92V92M630,-72V72" stroke="#5a5e60" stroke-width="12"/><circle cx="680" cy="-90" r="10" fill="#e8e4dc" ${OUT(3)}/></g></g>`;
+    g += `<g id="${id}-truck"><ellipse cx="760" cy="${gy + 6}" rx="300" ry="20" fill="#000" opacity=".2"/><path d="M500,${gy - 40}V${gy - 170}H700L760,${gy - 260}H900L960,${gy - 170}H1030V${gy - 40}Z" fill="#e8e4dc" ${OUT(6)}/><path d="M500,${gy - 110}H1030" stroke="#c8c2b4" stroke-width="10"/><path d="M712,${gy - 172}L762,${gy - 244}H888L930,${gy - 172}Z" fill="#9ad0f0" ${OUT(4)}/><path d="M520,${gy - 150}H690" stroke="#fff" stroke-width="6" opacity=".5"/>${[600, 940].map((x) => `<circle cx="${x}" cy="${gy - 34}" r="48" fill="#2a2e34" ${OUT(5)}/><circle cx="${x}" cy="${gy - 34}" r="20" fill="#8a8e94"/>`).join("")}</g>`;
+    g += `<path id="${id}-hot" d="M500,${gy - 40}V${gy - 170}H700L760,${gy - 260}H900L960,${gy - 170}H1030V${gy - 40}Z" fill="#ffb42a" opacity="0"/>`;
+    const wire = `M372,${gy - 240}Q600,${gy - 330} 830,${gy - 262}Q1010,${gy - 220} 1080,${gy - 120}Q1140,${gy - 20} 1220,${gy}`;
+    g += `<path d="${wire}" stroke="${INK}" stroke-width="12" fill="none" stroke-linecap="round"/><path d="${wire}" stroke="#5a5e64" stroke-width="5" fill="none"/>`;
+    const spark = (x, y, k) => `<g class="${id}-sp" opacity="0" transform="translate(${x},${y})"><circle r="78" fill="url(#ngwSparkG)"/>${ARC(1.3, k)}</g>`;
+    g += spark(830, gy - 262, 0.4) + spark(1220, gy, 1.3);
+    g += `<g id="${id}-call" opacity="0">${FIG(1440, gy, 1.25, "#2fa864")}<rect x="1454" y="${gy - 216}" width="24" height="42" rx="6" fill="#ffd23a" ${OUT(3)}/>${[0, 1, 2].map((k) => `<path class="${id}-wave" d="M${1494 + k * 22},${gy - 228}q${18 + k * 8},${22 + k * 6} 0,${46 + k * 14}" stroke="#1e7a48" stroke-width="6" fill="none" stroke-linecap="round"/>`).join("")}</g></g></g>`;
+    g += `<g id="${id}-l0" opacity="0">${LBL(540, 560, "เสาไฟล้ม สายไฟขาด", 84, "#2a2622")}</g><g id="${id}-l1" opacity="0">${LBL(-70, gy + 122, "อย่าเข้าใกล้", 68, "#d07a08")}</g><g id="${id}-l2" opacity="0">${LBL(760, gy - 330, "อย่าแตะ", 66, "#e2382e")}</g><g id="${id}-l3" opacity="0">${LBL(1420, gy - 300, "แจ้งเจ้าหน้าที่", 58, "#1e7a48")}</g>`;
     return `<g id="${id}">${g}</g>`; };
   Ngw.lineDangerLife = (tl, id, t0, dur, at = []) => { const n = (p) => Math.max(1, Math.ceil(dur / p));
-    tl.fromTo(`#${id}-pole`, { rotation: 68, svgOrigin: `200 1320` }, { rotation: 0, svgOrigin: `200 1320`, duration: 0.5, ease: "bounce.out", immediateRender: false }, at[0] ?? t0);
-    tl.fromTo(`.${id}-sp`, { opacity: 0.2, scale: 0.7 }, { opacity: 1, scale: 1.15, duration: 0.09, ease: "steps(2)", yoyo: true, repeat: n(0.18), immediateRender: false }, (at[0] ?? t0) + 0.5);
-    tl.fromTo(`#${id}-zone`, { opacity: 0, scale: 0.85, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)", immediateRender: false }, at[1] ?? t0 + 1.5);
-    tl.fromTo(`#${id}-l1`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, (at[1] ?? t0 + 1.5) + 0.1);
-    tl.fromTo(`#${id}-hot`, { opacity: 0 }, { keyframes: [{ opacity: 0.4, duration: 0.25 }, { opacity: 0.2, duration: 0.35 }, { opacity: 0.4, duration: 0.35 }, { opacity: 0.28, duration: 0.4 }], immediateRender: false }, at[2] ?? t0 + 4);
-    tl.fromTo(`#${id}-l2`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, (at[2] ?? t0 + 4) + 0.1);
-    tl.fromTo(`#${id}-call`, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.35, immediateRender: false }, at[3] ?? t0 + 6);
-    tl.fromTo(`#${id}-l3`, { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, (at[3] ?? t0 + 6) + 0.15);
+    const pop = (sel, t, d = 0.35) => tl.fromTo(sel, { opacity: 0, scale: 0.7, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: d, ease: "back.out(2)", immediateRender: false }, t);
+    tl.fromTo(`#${id}-card`, { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.6)", immediateRender: false }, t0);
+    tl.fromTo(`#${id}-pole`, { rotation: -70, svgOrigin: "-302 1310" }, { rotation: 0, svgOrigin: "-302 1310", duration: 0.55, ease: "bounce.out", immediateRender: false }, (at[0] ?? t0) + 0.1);
+    pop(`#${id}-l0`, (at[0] ?? t0) + 0.25, 0.4);
+    tl.fromTo(`.${id}-sp`, { opacity: 0.3, scale: 0.8 }, { keyframes: [{ opacity: 1, scale: 1.2, duration: 0.06 }, { opacity: 0.5, scale: 0.9, duration: 0.12 }, { opacity: 0.3, scale: 0.8, duration: 0.2 }, { opacity: 0.3, duration: 0.42 }], repeat: n(0.8), immediateRender: false }, (at[0] ?? t0) + 0.6);
+    tl.fromTo(`#${id}-zone`, { opacity: 0, scale: 0.7, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)", immediateRender: false }, at[1] ?? t0 + 1.5);
+    pop(`#${id}-l1`, (at[1] ?? t0 + 1.5) + 0.1);
+    tl.fromTo(`#${id}-hot`, { opacity: 0 }, { keyframes: [{ opacity: 0.45, duration: 0.25 }, { opacity: 0.22, duration: 0.35 }, { opacity: 0.45, duration: 0.35 }, { opacity: 0.3, duration: 0.4 }], immediateRender: false }, at[2] ?? t0 + 4);
+    pop(`#${id}-l2`, (at[2] ?? t0 + 4) + 0.1);
+    tl.fromTo(`#${id}-call`, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.4, ease: "back.out(1.6)", immediateRender: false }, at[3] ?? t0 + 6);
+    pop(`#${id}-l3`, (at[3] ?? t0 + 6) + 0.15);
     tl.fromTo(`.${id}-wave`, { opacity: 0.2 }, { opacity: 1, duration: 0.3, yoyo: true, repeat: n(0.6), stagger: 0.1, immediateRender: false }, at[3] ?? t0 + 6);
+  };
+  // lying face down, side view (SPC: lie flat face-down in a ditch, protect the back of your head with your arms): the rig can only
+  // lie on its side with the chest and face to the camera (reads as lying on the back), so the two ditch shots use this drawing —
+  // the back, the back of the head (ปู's hat, ตาเทียน's white fringe), the near forearm over the side of the head, hands locked
+  // on the nape, toes dug in. (x, y) = the shoulder on the ground; the head points right (o.flip: left). who "pu" | "taTian"
+  Ngw.prone = (x, y, s = 1, who = "pu", o = {}) => {
+    const K = who === "pu", id = o.id || "pr", dk = (c, a = 0.25) => { const n = parseInt(c.slice(1), 16); return "#" + [16, 8, 0].map((b) => Math.round(((n >> b) & 255) * (1 - a)).toString(16).padStart(2, "0")).join(""); };
+    const C = K ? { skin: "#d49c6c", top: "#d8382a", bot: "#b8a070", shin: "#d49c6c", foot: "#3a6ad0" } : { skin: "#8a5a3a", top: "#b09a68", bot: "#34363e", shin: "#34363e", foot: "#5a3a22" };
+    const hr = K ? 54 : 44, hx = K ? 136 : 128, hy = -hr - 2;   // ปู's head is bigger for his size
+    const limb = (pts, w, c) => `<path d="M${pts.map((q) => q.join(",")).join("L")}" stroke="${INK}" stroke-width="${w + 7}" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M${pts.map((q) => q.join(",")).join("L")}" stroke="${c}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+    const foot = (fx, c) => `<path d="M${fx + 6},-36L${fx - 30},-44L${fx - 40},-30L${fx - 16},0L${fx + 4},-2Z" fill="${c}" ${OUT(4)}/><path d="M${fx - 30},-40L${fx - 10},-6" stroke="${dk(c, 0.35)}" stroke-width="5"/>`;
+    let g = "";
+    // far leg and foot (behind, in shadow), then the near leg; ปู: khaki shorts to the knee, bare shins
+    g += limb([[-170, -30], [-440, -20]], 40, dk(K ? C.shin : C.bot, 0.3)) + foot(-446, dk(C.foot, 0.3));
+    if (K) g += limb([[-170, -36], [-262, -32]], 46, dk(C.bot, 0.3));
+    g += limb([[-160, -26], [-430, -14]], 42, C.shin) + foot(-434, C.foot);
+    if (K) g += limb([[-160, -30], [-268, -26]], 48, C.bot) + `<path d="M-268,-52V-2" stroke="${dk(C.bot, 0.35)}" stroke-width="5"/>`;
+    // seat and back: the shirt's back, a shade strip along the ground, ปู's stripes run across his back; ตาเทียน's shirt seam
+    g += `<path d="M-214,-4Q-218,-70 -160,-74Q-130,-74 -110,-66L-110,-4Z" fill="${C.bot}" ${OUT(5)}/>`;
+    g += `<path id="${id}-back" d="M-150,-66Q-60,-96 40,-88Q74,-84 84,-60L88,-4H-150Z" fill="${C.top}" ${OUT(5)}/>`;
+    if (K) g += [-120, -80, -40, 0, 40].map((sx) => `<path d="M${sx},${sx > 20 ? -84 : -86 + Math.abs(sx + 40) * 0.08}Q${sx - 6},-46 ${sx},-6" stroke="#f6f2ea" stroke-width="13" fill="none"/>`).join("");
+    else g += `<path d="M-60,-86Q-56,-46 -60,-6" stroke="${dk(C.top, 0.25)}" stroke-width="4" fill="none"/><path d="M60,-80Q76,-60 70,-36" stroke="${dk(C.top, 0.3)}" stroke-width="4" fill="none"/>`;
+    g += `<path d="M-150,-20H86" stroke="${dk(C.top, 0.35)}" stroke-width="16" opacity=".55"/>`;
+    // ตาเทียน's ผ้าขาวม้า over the shoulder, its end flapping in the wind
+    if (!K) g += `<path d="M30,-90Q58,-96 76,-74L64,-62Q46,-80 26,-76Z" fill="#c8483a" ${OUT(3)}/><g class="${id}-flap"><path d="M30,-88Q-10,-104 -46,-96L-40,-82Q-6,-90 28,-76Z" fill="#c8483a" ${OUT(3)}/><path d="M24,-84Q-8,-94 -40,-88" stroke="#f2e6d8" stroke-width="2.4" stroke-dasharray="5 5" fill="none"/></g>`;
+    // far arm behind the head (elbow forward by the ground, forearm up to the nape)
+    g += limb([[54, -72], [hx + 70, -34], [hx - 22, hy - hr * 0.62]], 24, dk(C.skin, 0.32));
+    // neck and head: the back of the head toward us, face pressed to the ground
+    g += `<path d="M70,-76Q90,-82 100,-66L102,-24L74,-22Z" fill="${dk(C.skin, 0.1)}" ${OUT(4)}/>`;
+    g += `<circle cx="${hx}" cy="${hy}" r="${hr}" fill="${C.skin}" ${OUT(5)}/>`;
+    if (K) {   // black hair at the back, the green bucket hat crown pointing ahead along the ground, the brim a ring round the head
+      g += `<path d="M${hx - hr * 0.9},${hy + hr * 0.4}Q${hx - hr * 1.02},${hy - hr * 0.7} ${hx - hr * 0.2},${hy - hr * 0.98}L${hx - hr * 0.1},${hy + hr * 0.7}Z" fill="#2a1e18"/>`;
+      g += `<g class="${id}-flap"><path d="M${hx - 12},${hy - hr - 14}Q${hx + hr + 30},${hy - hr - 16} ${hx + hr + 26},${hy}Q${hx + hr + 30},${hy + hr + 8} ${hx - 6},${hy + hr + 6}Z" fill="#4a8a5a" ${OUT(5)}/></g>`;
+      g += `<ellipse cx="${hx - 8}" cy="${hy}" rx="16" ry="${hr + 22}" fill="#3a7a4a" ${OUT(5)}/><path d="M${hx + 20},${hy - hr + 4}Q${hx + hr},${hy - hr * 0.4} ${hx + hr + 4},${hy + 6}" stroke="#6aa87a" stroke-width="6" fill="none" opacity=".7"/>`;
+    } else {   // bald crown with a shine, the white fringe round the back, an ear
+      g += `<path d="M${hx - hr * 0.86},${hy + hr * 0.5}Q${hx - hr * 1.05},${hy - hr * 0.1} ${hx - hr * 0.62},${hy - hr * 0.78}L${hx - hr * 0.42},${hy - hr * 0.5}Q${hx - hr * 0.7},${hy} ${hx - hr * 0.5},${hy + hr * 0.62}Z" fill="#f2f0ea" ${OUT(2.4)}/>`;
+      g += `<ellipse cx="${hx + 10}" cy="${hy - hr * 0.5}" rx="${hr * 0.42}" ry="${hr * 0.2}" fill="#fff" opacity=".22" transform="rotate(-30 ${hx + 10} ${hy - hr * 0.5})"/>`;
+    }
+    g += `<path d="M${hx - 4},${hy + 4}q-12,-2 -12,12q0,14 12,12" fill="${dk(C.skin, 0.12)}" ${OUT(3)}/>`;
+    // near arm: short sleeve on the upper arm, elbow down in front of the face, forearm over the side of the head, hands on the nape
+    const ex = hx + hr + 26, ey = -18, nx = hx - 26, ny = hy - hr * 0.55;
+    g += limb([[50, -60], [ex, ey]], 30, C.skin) + limb([[50, -60], [50 + (ex - 50) * 0.36, -60 + (ey + 60) * 0.36]], 40, C.top);
+    if (K) g += `<path d="M${50 + (ex - 50) * 0.2},-70v26" stroke="#f6f2ea" stroke-width="9"/>`;
+    g += limb([[ex, ey], [nx, ny]], 27, C.skin);
+    g += `<g transform="translate(${nx},${ny}) rotate(-34)"><ellipse rx="24" ry="17" fill="${C.skin}" ${OUT(4)}/><path d="M-12,-12v22M-2,-14v26M8,-12v22" stroke="${dk(C.skin, 0.4)}" stroke-width="3" stroke-linecap="round"/></g>`;
+    // the ground contact shadow
+    const sh = `<ellipse cx="-160" cy="2" rx="${K ? 330 : 360}" ry="12" fill="#000" opacity=".28"/>`;
+    return `<g id="${id}" transform="translate(${x},${y}) scale(${o.flip ? -s : s},${s})">${sh}<g class="${id}-body">${K ? `<g transform="scale(0.82)">${g}</g>` : g}</g></g>`;
+  };
+  // wind on someone lying flat: a shiver through the body, the hat brim / the scarf end flapping
+  Ngw.proneLife = (tl, id, t0, dur) => {
+    tl.fromTo(`#${id} .${id}-body`, { x: -1.2 }, { x: 1.2, duration: 0.09, ease: "sine.inOut", yoyo: true, repeat: Math.ceil(dur / 0.09), immediateRender: false }, t0);
+    tl.fromTo(`#${id} .${id}-flap`, { rotation: -3, transformOrigin: "20% 80%" }, { rotation: 6, duration: 0.13, ease: "sine.inOut", yoyo: true, repeat: Math.ceil(dur / 0.13), immediateRender: false }, t0);
   };
   // a power pole knocked flat at (x, y), its line draped to (wx, wy) on whatever it fell across and on to the ground at (ex, ey)
   Ngw.fallenPole = (x, y, s = 1, o = {}) => { const id = o.id || "fp", lean = o.lean ?? -70, a = (lean * Math.PI) / 180;
@@ -650,10 +717,10 @@
     g += `<path d="M${f1(x - 20 * s)},${y}l${f1(10 * s)},${f1(-30 * s)}l${f1(14 * s)},${f1(22 * s)}l${f1(12 * s)},${f1(-18 * s)}" stroke="#5a5a56" stroke-width="${f1(8 * s)}" fill="none"/>`;
     const d = `M${f1(tx)},${f1(ty)}Q${f1((tx + wx) / 2)},${f1(Math.max(ty, wy) + 60)} ${f1(wx)},${f1(wy)}Q${f1((wx + ex) / 2)},${f1(wy + 20)} ${f1(ex)},${f1(ey)}`;
     g += `<path d="${d}" stroke="#1e1a16" stroke-width="${f1(7 * s)}" fill="none"/>`;
-    g += `<g id="${id}-sp" transform="translate(${f1(wx)},${f1(wy)})"><circle r="${f1(26 * s)}" fill="#c8ffea" opacity=".5"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M0,0L${f1(40 * s * Math.cos(k * 1.3))},${f1(40 * s * Math.sin(k * 1.3))}" stroke="#eaffd8" stroke-width="${f1(4 * s)}"/>`).join("")}</g>`;
+    g += `<g id="${id}-sp" transform="translate(${f1(wx)},${f1(wy)})"><circle r="${f1(70 * s)}" fill="url(#ngwSparkG)"/>${ARC(s, 0.7)}</g>`;
     return g; };
-  Ngw.sparkLife = (tl, sel, t0, dur, period = 0.7) => { const n = Math.max(1, Math.ceil(dur / period));
-    tl.fromTo(sel, { opacity: 0, scale: 0.6 }, { keyframes: [{ opacity: 1, scale: 1.1, duration: 0.05 }, { opacity: 0.3, scale: 0.8, duration: 0.07 }, { opacity: 0.9, scale: 1, duration: 0.05 }, { opacity: 0, scale: 0.6, duration: 0.15 }, { opacity: 0, duration: period - 0.32 }], repeat: n, immediateRender: false }, t0); };
+  Ngw.sparkLife = (tl, sel, t0, dur, period = 0.8) => { const n = Math.max(1, Math.ceil(dur / period));   // one bright pop per period (V1b: ≤ 3 a second)
+    tl.fromTo(sel, { opacity: 0, scale: 0.6 }, { keyframes: [{ opacity: 1, scale: 1.25, duration: 0.06 }, { opacity: 0.5, scale: 0.95, duration: 0.12 }, { opacity: 0, scale: 0.6, duration: 0.2 }, { opacity: 0, duration: Math.max(0.05, period - 0.38) }], repeat: n, immediateRender: false }, t0); };
   // ปู's little camera
   Ngw.cam = (x, y, s = 1, rot = 0) => `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s})"><rect x="-44" y="-30" width="88" height="58" rx="10" fill="#2a2e34" stroke="#1e1a16" stroke-width="5"/><circle r="19" fill="#4a6a8a" stroke="#1e1a16" stroke-width="5"/><circle r="9" fill="#9ad0f0"/><rect x="18" y="-42" width="20" height="12" fill="#2a2e34" stroke="#1e1a16" stroke-width="3"/><circle cx="-28" cy="-16" r="5" fill="#d8312a"/></g>`;
   // glass bursting out of a window rect toward the camera (one small flash on the pane, never a full-screen flash: V1b)
@@ -864,7 +931,7 @@
   };
   // the ditch beside the paddy, low camera: the far bank, the muddy water, the near bank in the foreground (L.fg) over the actor's legs
   Ngw.ditch = (o = {}) => {
-    const y0 = o.y ?? 1420, r = mk(o.seed || 31);
+    const y0 = o.y ?? 1420, nb = o.near ?? 150, r = mk(o.seed || 31);   // o.near: how far below the waterline the near bank (fg) starts
     const edge = (y, amp, ph) => { let d = ""; for (let x = -1400; x <= 2600; x += 50) d += `${x === -1400 ? "M" : "L"}${x},${f1(y + amp * Math.sin(x * 0.007 + ph) + amp * 0.4 * Math.sin(x * 0.019 + ph))}`; return d; };
     let s = `<path d="${edge(y0 - 90, 10, 1)}V${y0 + 30}H-1400Z" fill="#4a3e2a"/><path d="${edge(y0 - 90, 10, 1)}" stroke="#2c3a22" stroke-width="10" fill="none"/>`;
     let gr = ""; for (let x = -1400; x < 2600; x += 8 + r() * 9) { const y = y0 - 92 + 10 * Math.sin(x * 0.007 + 1), h = 20 + r() * 40, l = 10 + r() * 20; gr += `M${f1(x)},${f1(y)}q${f1(l * 0.4)},${f1(-h * 0.6)} ${f1(l)},${f1(-h)}`; }
@@ -872,8 +939,8 @@
     s += `<path d="${edge(y0 - 30, 8, 1.5)}V${y0 + 4}H-1400Z" fill="#6a5638"/>`;
     s += `<path d="${edge(y0, 6, 2)}V${y0 + 260}H-1400Z" fill="#262c2a"/><path d="${edge(y0 + 18, 6, 2)}" stroke="#8a9a98" stroke-width="10" fill="none" opacity=".25"/><path d="${edge(y0, 6, 2)}" stroke="#a8b8b6" stroke-width="4" fill="none" opacity=".55"/>`;
     for (let k = 0; k < 40; k++) { const x = -1300 + r() * 3700, y = y0 + 10 + r() * 140; s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(8 + r() * 22)}" ry="${f1(2 + r() * 4)}" fill="none" stroke="#9aaab0" stroke-width="2" opacity=".4"/>`; }
-    let fg = `<path d="${edge(y0 + 150, 18, 3)}V2600H-1400Z" fill="#2e2a1e"/>`, g2 = "";
-    for (let x = -1400; x < 2600; x += 10 + r() * 12) { const y = y0 + 150 + 18 * Math.sin(x * 0.007 + 3), h = 40 + r() * 90, l = 16 + r() * 30; g2 += `M${f1(x)},${f1(y + 6)}q${f1(l * 0.4)},${f1(-h * 0.6)} ${f1(l)},${f1(-h)}`; }
+    let fg = `<path d="${edge(y0 + nb, 18, 3)}V2600H-1400Z" fill="#2e2a1e"/>`, g2 = "";
+    for (let x = -1400; x < 2600; x += 10 + r() * 12) { const y = y0 + nb + 18 * Math.sin(x * 0.007 + 3), h = 40 + r() * 90, l = 16 + r() * 30; g2 += `M${f1(x)},${f1(y + 6)}q${f1(l * 0.4)},${f1(-h * 0.6)} ${f1(l)},${f1(-h)}`; }
     fg += `<path d="${g2}" stroke="#2a3e22" stroke-width="7" fill="none" stroke-linecap="round"/>`;
     return { set: s, fg };
   };
