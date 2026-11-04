@@ -39,6 +39,14 @@ What it draws (`o.sun` sets the side the low sun is on):
 
 The frames are in `../frames/` as `01`–`10`, each in a vertical and a landscape version.
 
+### v5: the three things ทะเลลด has (owner asked again: "ดีเท่า ทะเลลดยัง")
+The story order is now 13 frames: e0, a0, b0, f0, t1, c0, t2, t3, g0, t4, d0, t5, t6. The new ones:
+- **e0 · the title.** "เสียงรถไฟ / ตอนที่ 1" in road paint, seen from above, the way ทะเลลด writes its title in the sand (`Sets.ngwRoadTop`).
+- **f0 · ฝน's live.** `Ngw.liveUI` over the storm: avatar, name, LIVE badge, comments split between "หนีเร็ว" and "ถ่ายต่อ", hearts. No viewer numbers.
+- **g0 · "หลบตรงไหนในบ้าน?".** `Sets.ngwHouseCut`, a cutaway house. The inner bathroom on the ground floor is lit green; the windows and the upper floor are lit red. Sources: SPC lowest floor and small centre room; CDC avoid windows.
+
+Snapshots need about 1.5 s per seek (snapV/snapL wait 1500 ms). Shorter waits leave black, unpainted tiles in the heavy storm frames.
+
 ## v1 นาคเล่นน้ำ (rejected: it had a legend and a small spout) — `sf/`, frames in `../frames/v1-นาคเล่นน้ำ-ไม่ใช้/`
 
 The five style frames in `../frames/` were built from this kit. Each one comes in two versions:

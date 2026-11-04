@@ -125,3 +125,16 @@
         land: { y0: 420 },
         cam: push2("t6", fr(540, 960, 1.0, 540, 960), fr(540, 970, 1.04, 540, 960)),
         actors: [P("yaiBua", 400, 1820, 0.95, "kneel", "worry", "frown"), P("pu", 560, 1800, 0.76, "idle", "worry", "frown", { flip: true }), P("fonPhone", 820, 1860, 1.0, "phoneLook", "worry", "frown", { flip: true })] });
+      // E · the title, painted on the highway, seen from above; the storm's dark swirl and its dust coming over the top
+      ADD("e0", { set: "ngwRoadTop", setOpts: { id: "rt", title: "เสียงรถไฟ", sub: "ตอนที่ 1" }, dark: 0.08, light: false, grade: GSUN, land: { y0: 470 },
+        cam: push2("e0", fr(540, 1000, 1.0, 540, 960), fr(540, 1000, 1.08, 540, 960)) });
+      // F · ฝน's live: the storm through her phone, the comments split between "หนีเร็ว" and "ถ่ายต่อ" (no viewer numbers)
+      ADD("f0", { ...NSC("f0", { horizon: 1200, rain: 0.4, vx: 540, epic: { id: "ef", x: 560, h: 720, wb: 300, wt: 660, tx: 610, sun: 1, seed: 61 },
+          village: [{ x: 1110, y: 1210, s: 0.12 }, { x: 1240, y: 1212, s: 0.11, flip: 1 }, { kind: "wat", x: -130, y: 1208, s: 0.2 }],
+          road: { y: 1640, h: 160 }, poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1630, s: 0.8, tf: [3], sag: 46 } }), light: SUNL, grade: GSUN,
+        land: { y0: 250 },
+        cam: push2("f0", fr(540, 960, 1.0, 540, 960), fr(560, 960, 1.06, 540, 960)), shake: rumble(1.2),
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "ef", t0, D("f0")); put(L.light, Ngw.liveUI({ name: "ฝนพาเที่ยว", title: "พายุมาแล้ววว", comments: [["ป้าแดง", "ฝน หนีเร็วลูก!!", "#e86a8a"], ["นนท์", "ถ่ายต่อๆ ซูมอีก", "#6a8ac8"], ["มายด์", "นั่นทอร์นาโดจริงเหรอ", "#8ac86a"], ["ลุงชัย", "เข้าบ้านเดี๋ยวนี้!", "#c8a040"]] })); } });
+      // G · the knowledge: the house cut open — where to shelter (SPC: lowest floor, small centre room, no windows; CDC: avoid windows)
+      ADD("g0", { set: "ngwHouseCut", setOpts: {}, dark: 0, light: false, land: { y0: 310 },
+        cam: push2("g0", fr(540, 960, 1.0, 540, 960), fr(540, 980, 1.03, 540, 960)) });

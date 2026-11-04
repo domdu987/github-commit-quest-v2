@@ -333,6 +333,80 @@
     document.querySelectorAll(`.${id}-pf`).forEach((e, k) => tl.fromTo(e, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.04 }, { opacity: 0.3, duration: 0.06 }, { opacity: 0.9, duration: 0.05 }, { opacity: 0, duration: 0.35 }], immediateRender: false }, t0 + (o.flashAt || [0.6, 1.7])[k % 2]));
     const bl = document.getElementById(`${id}-bolts`); if (bl && o.boltAt != null) { tl.set(bl, { opacity: 0 }, t0); tl.fromTo(bl, { opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.03 }, { opacity: 0.2, duration: 0.05 }, { opacity: 1, duration: 0.04 }, { opacity: 0, duration: 0.3 }], immediateRender: false }, t0 + o.boltAt); }
   };
+
+  // ---------------------------------------------------------------- title, live screen, house cutaway (the ทะเลลด extras)
+  // the title painted on the highway, seen from above: elongated road-marking letters, the storm's dark swirl and dust coming over the
+  // top of the frame, debris skidding across, ยายบัว's stall umbrella at the roadside
+  Sets.ngwRoadTop = (L, o = {}) => {
+    const r = mk(o.seed || 91), id = o.id || "rt";
+    let g = `<rect x="-1400" y="-800" width="4000" height="3600" fill="#3e6a2e"/>`;
+    for (let k = 0; k < 90; k++) g += `<path d="M-1400,${-800 + k * 40}H2600" stroke="${k % 2 ? "#36602a" : "#4a7a36"}" stroke-width="18" opacity=".7"/>`;
+    for (let k = 0; k < 26; k++) g += `<path d="M${-1300 + k * 160},-800V2800" stroke="#5a4a32" stroke-width="10" opacity=".55"/>`;
+    put(L.sky, g);
+    let m = `<rect x="200" y="-800" width="680" height="3600" fill="#8a8470"/><rect x="236" y="-800" width="608" height="3600" fill="#3a3c40"/>`;
+    m += `<path d="M262,-800V2800M818,-800V2800" stroke="#e8e4d8" stroke-width="10"/><path d="M540,-800V2800" stroke="#f2c230" stroke-width="12" stroke-dasharray="90 70"/>`;
+    for (let k = 0; k < 60; k++) m += `<path d="M${f1(250 + r() * 580)},${f1(-700 + r() * 3300)}l${f1(20 + r() * 40)},0" stroke="#9aa4ac" stroke-width="2" opacity=".3"/>`;
+    // the title in road paint, stretched along the lane like real markings
+    m += `<g transform="translate(540,${o.ty ?? 1160}) scale(1,2.1)"><text text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${o.fs ?? 150}" fill="#f4f2ea" opacity=".95" letter-spacing="4">${o.title || "เสียงรถไฟ"}</text></g>`;
+    m += `<g transform="translate(540,${(o.ty ?? 1160) + 260}) scale(1,1.6)"><text text-anchor="middle" font-family="Kanit" font-weight="800" font-size="58" fill="#f2c230" opacity=".95">${o.sub || "ตอนที่ 1"}</text></g>`;
+    put(L.mid, m);
+    // the stall umbrella from above, a motorbike, debris skidding, leaves
+    let st = `<g transform="translate(980,1460)"><circle r="120" fill="#f2f0ea" stroke="#1e1a16" stroke-width="6"/>${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M0,0L${f1(120 * Math.cos(k * Math.PI / 3))},${f1(120 * Math.sin(k * Math.PI / 3))}A120,120 0 0 1 ${f1(120 * Math.cos((k + 0.5) * Math.PI / 3))},${f1(120 * Math.sin((k + 0.5) * Math.PI / 3))}Z" fill="#2a6ad0"/>`).join("")}<circle r="10" fill="#1e1a16"/></g>`;
+    st += Ngw.debris(200, 1000, 300, 1900, 26, 92, 0.9);
+    put(L.set, st);
+    // the storm over the top: a dark spiral and the dust coming
+    let sw = `<defs><radialGradient id="${id}-dk" cx=".5" cy=".1" r=".75"><stop offset="0" stop-color="#0a0e12" stop-opacity=".95"/><stop offset=".5" stop-color="#141c22" stop-opacity=".7"/><stop offset="1" stop-color="#1a2228" stop-opacity="0"/></radialGradient></defs>`;
+    sw += `<rect x="-1400" y="-800" width="4000" height="1900" fill="url(#${id}-dk)"/>`;
+    for (let k = 0; k < 7; k++) sw += `<path d="M${540 + 120 * k},${-100 + 30 * k}A${300 + k * 110},${200 + k * 80} 0 0 1 ${540 - 260 - k * 90},${260 + k * 70}" stroke="#7a6a54" stroke-width="${30 - k * 3}" fill="none" opacity="${f1(0.4 - k * 0.04)}" filter="url(#skBlur10)"/>`;
+    put(L.light, sw + Ngw.streaks(-200, 1400, 200, 1500, 40, 93));
+  };
+  // ฝน's live screen over the shot (screen space, L.light): avatar + name + LIVE, a heart button with hearts rising, comments sliding
+  // up from the bottom, the comment box — no viewer numbers
+  Ngw.liveUI = (o = {}) => {
+    const name = o.name || "ฝนพาเที่ยว", cm = o.comments || [];
+    let g = `<rect x="0" y="0" width="1080" height="260" fill="#000" opacity=".28"/><rect x="0" y="1380" width="1080" height="540" fill="#000" opacity=".3"/>`;
+    g += `<g transform="translate(70,120)"><circle r="46" fill="#f2be2a" stroke="#ff3a6a" stroke-width="7"/><circle cy="-6" r="22" fill="#ebc19c"/><path d="M-26,-14Q-24,-44 2,-44Q26,-42 26,-14Q14,-30 -4,-28Q-18,-30 -26,-14Z" fill="#1e1410"/><path d="M-30,30Q0,10 30,30" stroke="#f2be2a" stroke-width="14"/></g>`;
+    g += `<text x="136" y="112" font-family="Kanit" font-weight="700" font-size="40" fill="#fff">${name}</text><text x="136" y="156" font-family="Kanit" font-size="30" fill="#e8e8e8" opacity=".85">${o.title || "พายุมาแล้ววว"}</text>`;
+    g += `<g transform="translate(860,104)"><rect x="-70" y="-30" width="140" height="56" rx="12" fill="#ff2a4a"/><circle cx="-42" cy="-2" r="9" fill="#fff"/><text x="12" y="12" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#fff">LIVE</text></g>`;
+    g += `<g transform="translate(990,104)"><circle r="30" fill="#000" opacity=".35"/><path d="M-12,-12L12,12M12,-12L-12,12" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0"/></g>`;
+    cm.forEach(([nm, tx, c], k) => { const y = 1340 + k * 92;
+      g += `<g transform="translate(40,${y})"><rect x="0" y="-44" width="${Math.min(880, 120 + tx.length * 26 + nm.length * 22)}" height="76" rx="38" fill="#000" opacity=".35"/><circle cx="38" cy="-6" r="24" fill="${c || "#6a8ac8"}"/><text x="76" y="4" font-family="Kanit" font-weight="700" font-size="30" fill="#ffd25a">${nm}</text><text x="${84 + nm.length * 19}" y="4" font-family="Kanit" font-size="32" fill="#fff">${tx}</text></g>`; });
+    g += `<g transform="translate(40,1840)"><rect x="0" y="-40" width="820" height="72" rx="36" fill="#fff" opacity=".18"/><text x="34" y="8" font-family="Kanit" font-size="30" fill="#fff" opacity=".8">แสดงความคิดเห็น...</text></g>`;
+    g += `<g transform="translate(960,1800)"><circle r="44" fill="#ff3a6a"/><path d="M0,16C-24,-2 -28,-20 -14,-26C-6,-29 0,-22 0,-17C0,-22 6,-29 14,-26C28,-20 24,-2 0,16Z" fill="#fff"/></g>`;
+    [[960, 1690, 1.2, "#ff4a6a"], [930, 1580, 1, "#ff9ab0"], [985, 1470, 0.9, "#ff4a6a"], [945, 1360, 0.7, "#ffd0d8"], [975, 1250, 0.55, "#ff4a6a"]].forEach(([x, y, s2, c]) => { g += `<path transform="translate(${x},${y}) scale(${s2 * 1.6})" d="M0,8C-14,-2 -18,-14 -9,-19C-4,-22 0,-17 0,-14C0,-17 4,-22 9,-19C18,-14 14,-2 0,8Z" fill="${c}" stroke="#fff" stroke-width="1.6"/>`; });
+    return g;
+  };
+  // the cutaway house on a board: "หลบตรงไหนในบ้าน?" — the inner bathroom on the ground floor glows green (the family crouched in it),
+  // the windows and the upper floor glow red, the wind and debris hit from the right
+  Sets.ngwHouseCut = (L, o = {}) => {
+    put(L.sky, `<rect x="-1400" y="-800" width="4000" height="3600" fill="#1a2028"/><rect x="-1400" y="-800" width="4000" height="3600" fill="url(#ngwSun)" opacity=".18"/>`);
+    const X = 540, Y = 1500, I = "#1e1a16";
+    let g = `<rect x="-1400" y="${Y}" width="4000" height="900" fill="#3a3226"/><path d="M-1400,${Y}H2600" stroke="#5a4a36" stroke-width="12"/>`;
+    // the house: two floors, cut open; walls, slab, roof
+    g += `<path d="M120,${Y}V${Y - 760}H960V${Y}Z" fill="#e8dcc0" stroke="${I}" stroke-width="8"/><path d="M120,${Y - 380}H960" stroke="${I}" stroke-width="14"/>`;
+    g += `<path d="M80,${Y - 760}L540,${Y - 1060}L1000,${Y - 760}Z" fill="#a8442e" stroke="${I}" stroke-width="8"/>${[1, 2, 3, 4, 5].map((k) => `<path d="M${80 + k * 76},${Y - 760}L540,${Y - 1060}" stroke="#7a2e1e" stroke-width="3" opacity=".5"/>`).join("")}`;
+    // rooms: ground floor — living room (window, left), the inner bathroom (no window, centre), kitchen (window, right); upper floor
+    g += `<path d="M380,${Y}V${Y - 380}M700,${Y}V${Y - 380}" stroke="${I}" stroke-width="10"/>`;
+    g += `<rect x="388" y="${Y - 372}" width="304" height="364" fill="#9ac0a8"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M388,${Y - 300 + k * 64}H692" stroke="#6a9a80" stroke-width="3"/>`).join("")}${[0, 1, 2, 3].map((k) => `<path d="M${450 + k * 64},${Y - 372}V${Y - 8}" stroke="#6a9a80" stroke-width="3"/>`).join("")}`;
+    const win = (x, y) => `<g><rect x="${x}" y="${y}" width="120" height="120" fill="#9ad0f0" stroke="${I}" stroke-width="6"/><path d="M${x + 60},${y}V${y + 120}M${x},${y + 60}H${x + 120}M${x + 14},${y + 20}l40,46M${x + 80},${y + 16}l-20,34" stroke="${I}" stroke-width="3"/></g>`;
+    g += win(180, Y - 300) + win(780, Y - 300) + win(220, Y - 680) + win(740, Y - 680);
+    g += `<path d="M380,${Y - 380}L240,${Y}" stroke="#8a6a44" stroke-width="10"/>${[1, 2, 3, 4, 5, 6].map((k) => `<path d="M${380 - k * 20},${Y - 380 + k * 54}h40" stroke="#8a6a44" stroke-width="6"/>`).join("")}`;
+    // the family crouched in the bathroom: three small figures, arms over heads
+    g += [[450, 1], [540, 0.9], [625, 0.75]].map(([x, s2]) => `<g transform="translate(${x},${Y - 10}) scale(${s2})"><path d="M-34,0Q-36,-44 -10,-70L22,-64Q30,-30 34,0Z" fill="#c8483a" stroke="${I}" stroke-width="4"/><circle cx="18" cy="-78" r="20" fill="#d49c6c" stroke="${I}" stroke-width="4"/><path d="M-6,-70Q10,-112 34,-90" stroke="#d49c6c" stroke-width="12" fill="none" stroke-linecap="round"/></g>`).join("");
+    // glows: green on the safe room, red on the windows and the upper floor
+    g += `<rect x="388" y="${Y - 372}" width="304" height="364" fill="none" stroke="#3aff8a" stroke-width="14" opacity=".9" filter="url(#skBlur4)"/><rect x="388" y="${Y - 372}" width="304" height="364" fill="none" stroke="#c8ffd8" stroke-width="5"/>`;
+    g += [[180, Y - 300], [780, Y - 300], [220, Y - 680], [740, Y - 680]].map(([x, y]) => `<rect x="${x}" y="${y}" width="120" height="120" fill="#ff3a3a" opacity=".25"/><rect x="${x - 4}" y="${y - 4}" width="128" height="128" fill="none" stroke="#ff4a4a" stroke-width="8" opacity=".85" filter="url(#skBlur4)"/>`).join("");
+    g += `<rect x="128" y="${Y - 752}" width="824" height="364" fill="#ff3a3a" opacity=".1"/>`;
+    // wind and debris from the right; a small tornado
+    g += `<g transform="translate(1120,${Y - 520}) scale(.9)"><path d="M-80,-200H80L40,-80L50,0L20,100L0,200L-14,100L-30,0L-50,-80Z" fill="#4a5258" stroke="${I}" stroke-width="4"/></g>`;
+    g += [Y - 640, Y - 500, Y - 360, Y - 220].map((y) => `<path d="M1060,${y}H990" stroke="#e8eef0" stroke-width="10" stroke-linecap="round"/><path d="M1000,${y - 16}L980,${y}L1000,${y + 16}" stroke="#e8eef0" stroke-width="8" fill="none" stroke-linecap="round"/>`).join("");
+    put(L.set, g);
+    // labels (in the world, on paper tags)
+    const tag = (x, y, t, c, w = 360) => `<g transform="translate(${x},${y})"><rect x="${-w / 2}" y="-40" width="${w}" height="72" rx="14" fill="#fff8e8" stroke="${c}" stroke-width="6"/><text y="10" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="${c}">${t}</text></g>`;
+    put(L.set, tag(540, Y + 80, "ห้องในสุด ชั้นล่าง ไม่มีหน้าต่าง", "#1a8a4a", 560) + tag(240, Y - 820, "ห่างหน้าต่าง", "#d8312a", 280) + tag(840, Y - 820, "ไม่ขึ้นชั้นบน", "#d8312a", 280));
+    let lb = `<g transform="translate(540,300)"><rect x="-440" y="-80" width="880" height="140" rx="24" fill="#8a6a3e" stroke="#2a1a0c" stroke-width="7"/><text y="20" text-anchor="middle" font-family="Sriracha" font-size="78" fill="#fff6dc" stroke="#2a1a0c" stroke-width="8" paint-order="stroke">หลบตรงไหนในบ้าน?</text></g>`;
+    put(L.light, lb);
+  };
   // ---------------------------------------------------------------- the lake, its bank, the shrine
   Ngw.lake = (o = {}) => {   // from the horizon hz down to the near shore y1, in perspective: swell bands, wind streaks, whitecaps
     const hz = o.hz ?? 900, y1 = o.y1 ?? 1480, r = mk(o.seed || 5), D = y1 - hz;

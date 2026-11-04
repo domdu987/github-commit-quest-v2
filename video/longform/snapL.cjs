@@ -9,6 +9,6 @@ const { chromium } = require('playwright'); const fs = require('fs');
     let info = ''; document.querySelectorAll('.clip').forEach((c) => { const s = +c.dataset.start, d = +c.dataset.duration, on = +t >= s && +t < s + d; c.style.visibility = on ? 'visible' : 'hidden'; if (on) info = c.id + ' ' + (c.dataset.land || ''); });
     return info; }, t);
   await seek(0.2); await p.waitForTimeout(1200); await seek(ts[0]); await p.waitForTimeout(1500);
-  for (const t of ts) { const info = await seek(t); await p.waitForTimeout(400); await p.screenshot({ path: `${out}/t${(+t).toFixed(2)}.png` }); console.log(t, info); }
+  for (const t of ts) { const info = await seek(t); await p.waitForTimeout(1500); await p.screenshot({ path: `${out}/t${(+t).toFixed(2)}.png` }); console.log(t, info); }
   if (ts.length > 1) { await seek(ts[0]); await p.waitForTimeout(800); await p.screenshot({ path: `${out}/t${(+ts[0]).toFixed(2)}.png` }); }
   await b.close(); })();
