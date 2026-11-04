@@ -17,7 +17,7 @@ for a,b in [('content="width=1080, height=1920"','content="width=1920, height=10
 # 16:9 paint fix: with every shot laid out (only visibility:hidden) Chrome runs out of raster memory on the widened, scaled stages
 # and paints black tiles. After every render of the published timeline, only the clip on screen stays in the layout.
 s=s.replace('</body>','<script>(() => { const tl = window.__timelines && window.__timelines.main; if (!tl) return;\n  const clips = [...document.querySelectorAll(".clip")].map((c) => [c, +c.dataset.start, +c.dataset.duration]);\n  const sync = () => { const t = tl.time(); for (const [c, a, d] of clips) { const v = t >= a - 1e-4 && t < a + d ? "" : "none"; if (c.style.display !== v) c.style.display = v; } };\n  const r0 = tl.render.bind(tl); tl.render = function (x, y, z) { const o = r0(x, y, z); sync(); return o; }; sync(); })();</script>\n  </body>',1)
-s=s.replace('</style>','\n      .clip > .capwrap .capbox { font-size: 50px; }\n      .clip > .capwrap { top: 984px !important; }\n      .clip.lfit { background: radial-gradient(ellipse 60% 80% at 50% 50%, #1a2226, #05080a); }\n      .badge { bottom: 40px; }\n    </style>',1)
+s=s.replace('</style>','\n      .clip > .capwrap .capbox { font-size: 50px; }\n      .clip > .capwrap { top: 955px !important; }\n      .clip.lfit { background: radial-gradient(ellipse 60% 80% at 50% 50%, #1a2226, #05080a); }\n      .badge { bottom: 40px; }\n    </style>',1)
 open(p,'w').write(s)
 PY
 fi
