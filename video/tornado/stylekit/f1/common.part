@@ -97,15 +97,17 @@
         [0, 1, 2, 3].forEach((k) => { const e = document.getElementById(`${aid}-wd${k}`); if (!e) return; const P = 0.55 + k * 0.08;
           tl.fromTo(e, { y: 0, opacity: 0.95 }, { y: 70, opacity: 0, duration: P, ease: "power2.in", repeat: Math.ceil(dur / P), immediateRender: false }, t0 + k * 0.17); }); };
       // add() with real hands on every standing/kneeling actor (lying ลุง keeps his relaxed hands too)
-      const withHands = (spec) => ({ ...spec, fx: (tl, id, t0, L) => { STORMFX(spec, tl, t0, L); if (/^(tkScape|ngwScape)$/.test(spec.set) && spec.setOpts && spec.setOpts.mood === "storm" && (spec.setOpts._rain ?? 0.8) > 0) (spec.actors || []).forEach((a, i) => WET(`${id}-a${i}`, a.who, tl, t0, spec._dur || 4)); (spec.actors || []).forEach((a, i) => { const sk = SKN[a.who]; if (sk && !a.noHands) realHands(`${id}-a${i}`, sk, a.hf || RELAX, a.hb || RELAX, { under: true }); }); if (spec.fx) spec.fx(tl, id, t0, L); } });
+      const withHands = (spec) => ({ ...spec, fx: (tl, id, t0, L) => { STORMFX(spec, tl, t0, L);
+          { const hz = document.querySelectorAll(`#${id} .ngw-hz`); if (hz.length) tl.fromTo(hz, { opacity: 1 }, { opacity: 0.12, duration: 0.33, ease: "steps(1)", yoyo: true, repeat: Math.ceil((spec._dur || 4) / 0.33), immediateRender: false }, t0); } if (/^(tkScape|ngwScape)$/.test(spec.set) && spec.setOpts && spec.setOpts.mood === "storm" && (spec.setOpts._rain ?? 0.8) > 0) (spec.actors || []).forEach((a, i) => WET(`${id}-a${i}`, a.who, tl, t0, spec._dur || 4)); (spec.actors || []).forEach((a, i) => { const sk = SKN[a.who]; if (sk && !a.noHands) realHands(`${id}-a${i}`, sk, a.hf || RELAX, a.hb || RELAX, { under: true }); }); if (spec.fx) spec.fx(tl, id, t0, L); } });
       const ADD = (k, spec) => add(k, withHands({ _dur: D(k), ...spec }));
       // a shot split into several cuts at times `cuts` (seconds into the shot); each spec gets captions from its own window
       const SPLITN = (k, cuts, specs) => { const b = [0, ...cuts, D(k)]; specs.forEach((sp, j) => { add(k, withHands({ ...sp, _dur: b[j + 1] - b[j], captions: sp.captions ?? capsFrom(k, b[j]).filter((c) => c.t < b[j + 1] - b[j]) })); const sh = shots[shots.length - 1]; sh.start = SH[k].start + b[j]; sh.dur = b[j + 1] - b[j]; }); };
       // back from a what-if: a full-screen white flash (no tear bands)
       const WHATIF2 = (L, tl, t0, back) => { whatIf(L, tl, t0); if (back != null) StormFX.flash(tl, t0 + back, 0.28, 1); };   // V1b gate
       const SC = (id, o = {}) => { const { rain = 0.8, flash = 0, ground, distBolt, ...rest } = o; return { set: "tkScape", setOpts: { id, mood: "storm", wind: 1, ...rest, rain: 0, flash: 0, bolt: 0, _rain: rain, _flash: flash, _dist: distBolt, _ground: ground, _strike: o.bolt }, dark: 0, light: TEAL, grade: GT }; };
-      const TEAL = { from: "left", rim: "#9ad0e0", rimOp: 0.9, shade: "#06101a", shadeOp: 0.45, cast: false, vol: false };
-      const GT = { top: "#1a4a5a", bottom: "#0a1a2a", op: 0.3 }, GG = { top: "#ffb860", bottom: "#3a2a5a", op: 0.22 }, GC = { top: "#fff0c8", bottom: "#4a8ab0", op: 0.14 };
+      // storm exteriors (full film, owner 4 Nov "ดีเท่าทะเลลดรึยัง"): the rim is the low gold sun under the storm's base, not cold teal
+      const TEAL = { from: "right", rim: "#ffc070", rimOp: 0.9, shade: "#06101a", shadeOp: 0.42, cast: false, vol: false };
+      const GT = { top: "#1a4a5a", bottom: "#4a2e14", op: 0.26 }, GG = { top: "#ffb860", bottom: "#3a2a5a", op: 0.22 }, GC = { top: "#fff0c8", bottom: "#4a8ab0", op: 0.14 };
       const GOLDL = { from: "right", rim: "#ffd890", rimOp: 0.95, shade: "#2a1a30", shadeOp: 0.35, cast: false, vol: false };
       const CLEARL = { from: "left", rim: "#ffe2a0", rimOp: 0.9, shade: "#2a3a5a", shadeOp: 0.25, cast: false, vol: false };
       const FLASHL = { from: "right", rim: "#ffffff", rimOp: 1, shade: "#000814", shadeOp: 0.5, cast: false, vol: false };

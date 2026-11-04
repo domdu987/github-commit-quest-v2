@@ -80,6 +80,14 @@ The five style frames in `../frames/` were built from this kit. Each one comes i
   - `Ngw.lineDanger` / `lineDangerLife`: the downed-line card (title, keep-away zone, hot pickup, caller).
   - `Ngw.fallenPole` + `Ngw.sparkLife`: a pole down with its line sparking, one pop per period (V1b).
   - `Ngw.shatter(..., { hole: true })`: the burst window keeps its jagged hole.
+  - `Ngw.bridgeWind({ world: true })` / `Ngw.lineDanger({ world: true })`: the cards hung as zinc boards on two ropes in the blurred scene (ทะเลลด's boards). Put them in `L.act` and blur the scene layers with the shot's `blur`.
+  - `Ngw.wristGrab` / `wristGrabLife`: the insert of ปู's hand clamping ตาเทียน's wrist. It is ported from tide2.js (herArm/hisArm) and recoloured.
+  - `taTianCry`: ตาเทียน with wet eyes and a tear on each cheek.
+  - `Sets.ngwRoom` and `Sets.ngwKuti` carry the family's things: the photo wall, the Buddha shelf, a clock, a calendar, the TV cabinet, a spinning fan, the mat, a triangle cushion and a warm swinging bulb; and in the bathroom a mirror, bottles, towels, a bucket with a dipper, a stool and a brush.
+  - Storm practical lights (in `f1/body.part` and `f1/common.part`):
+    - `PICK(..., lit)` draws headlights, tail lights and the `.ngw-hz` hazards. `withHands` blinks the hazards at 1.5 Hz.
+    - `STALLGLOW` adds the festoon bulbs on ยายบัว's umbrella.
+    - The storm rim (`TEAL`) is now the low gold sun under the storm base.
   - `Ngw.prone` / `proneLife`: someone lying face down in side view, arms over the back of the head. Use it instead of the rig's `prone` mode, which lies on its side with the chest and face to the camera and reads as lying on the back.
 - `Sets.ngwLegend`: the puppet legend, built on `Sets.legend3`.
 - Cast:
@@ -94,7 +102,7 @@ S=<scratch dir>   # build.sh copies src/ngw.js and the takhian/rupnak libs into 
 bash video/tornado/stylekit/build/build.sh e1 <hf dir> ngwE1                          # EP.1, vertical
 BADGE="เสียงรถไฟ" bash video/tornado/stylekit/build/build.sh f1 <hf dir> ngwF1 landscape   # the full 16:9 film
 ```
-- `f1/body.part` is the EP.1 shots (without the end card) followed by `f1/ending.part`. After editing the ending, rebuild body.part from both.
+- `f1/body.part` is the EP.1 shots (without the end card) followed by `f1/ending.part`. After editing the ending, run `python3 f1/syncbody.py` to rebuild body.part from both.
 - `sf/common.part` is the takhian common part with one change: its storm hook (rain, wind, wet actors, hands) also accepts `ngwScape`.
 - Snapshots:
   - vertical: `snapV.cjs`

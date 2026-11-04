@@ -55,9 +55,9 @@ F("xunder", 0.2, "doorslam", 0.6); F("xunder", 1.6, "debris", 0.45)
 m.roar_level(T("xwind", 0.0), T("xwind", -0.1), 1.3, 0.2)
 F("xwind", 0.6, "debris", 0.5)
 F("xrule3", 0.25, "zincflap", 0.8)
-F("xpull", 0.5, "debris", 0.5); F("xpull", 2.8, "thump", 0.6)
+F("xpull", 0.2, "thump", 0.85); F("xpull", 0.5, "debris", 0.5); F("xpull", 2.8, "thump", 0.6)   # ปู's hand clamps ตาเทียน's wrist (the insert)
 m.roar_level(T("xknow3", 0.0), T("xknow3", -0.1), 0.45, 0.3)       # the card: the roar held low under the explanation
-F("xknow3", 0.05, "thump", 0.45)
+F("xknow3", 0.45, "signclank", 0.6)                                   # the zinc board lands on its ropes
 F("xflat", 0.4, "debris", 0.6); F("xflat", 2.2, "debris", 0.5)
 m.roar_level(T("xpass", 0.0), T("xpass", -0.05), 1.45, 0.2)
 F("xpass", 0.15, "boom", 0.9); F("xpass", 0.4, "roofrip", 0.8); F("xpass", 0.9, "debris", 0.8); F("xpass", 1.9, "debris", 0.6)
@@ -72,7 +72,7 @@ for i in range(int((m.SH["xcam"]["dur"] - 0.2) / 0.8)): F("xcam", 0.2 + i * 0.8,
 for i in range(int(2.2 / 0.7)): F("xstop", i * 0.7, "zap", 0.3)
 c = m.SH["xstop"]["vo"][1]["t"] - 0.15
 for i in range(int(3.2 / 0.6)): F("xstop", c + i * 0.6, "zap", 0.45)
-F("xknow4", 0.05, "thump", 0.45); v = m.SH["xknow4"]["vo"]; F("xknow4", v[0]["t"] + 0.35, "thump", 0.7)
+F("xknow4", 0.45, "signclank", 0.6); v = m.SH["xknow4"]["vo"]; F("xknow4", v[0]["t"] + 0.35, "thump", 0.7)
 for i in range(int((m.SH["xknow4"]["dur"] - v[0]["t"] - 0.6) / 0.8)): F("xknow4", v[0]["t"] + 0.6 + i * 0.8, "zap", 0.2)
 F("xrule4", 0.1, "zincflap", 0.7)
 F("xend", 0.25, "zincflap", 0.6); F("xend", 0.45, "thump", 0.4)
