@@ -369,7 +369,7 @@
     g += `<text x="136" y="112" font-family="Kanit" font-weight="700" font-size="40" fill="#fff">${name}</text><text x="136" y="156" font-family="Kanit" font-size="30" fill="#e8e8e8" opacity=".85">${o.title || "พายุมาแล้ววว"}</text>`;
     g += `<g transform="translate(860,104)"><rect x="-70" y="-30" width="140" height="56" rx="12" fill="#ff2a4a"/><circle cx="-42" cy="-2" r="9" fill="#fff"/><text x="12" y="12" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#fff">LIVE</text></g>`;
     g += `<g transform="translate(990,104)"><circle r="30" fill="#000" opacity=".35"/><path d="M-12,-12L12,12M12,-12L-12,12" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0"/></g>`;
-    cm.forEach(([nm, tx, c], k) => { const y = 1340 + k * 92;
+    cm.forEach(([nm, tx, c], k) => { const y = (o.cy ?? 1340) + k * 92;
       g += `<g transform="translate(40,${y})"><rect x="0" y="-44" width="${Math.min(880, 120 + tx.length * 26 + nm.length * 22)}" height="76" rx="38" fill="#000" opacity=".35"/><circle cx="38" cy="-6" r="24" fill="${c || "#6a8ac8"}"/><text x="76" y="4" font-family="Kanit" font-weight="700" font-size="30" fill="#ffd25a">${nm}</text><text x="${84 + nm.length * 19}" y="4" font-family="Kanit" font-size="32" fill="#fff">${tx}</text></g>`; });
     g += `<g transform="translate(40,1840)"><rect x="0" y="-40" width="820" height="72" rx="36" fill="#fff" opacity=".18"/><text x="34" y="8" font-family="Kanit" font-size="30" fill="#fff" opacity=".8">แสดงความคิดเห็น...</text></g>`;
     g += `<g transform="translate(960,1800)"><circle r="44" fill="#ff3a6a"/><path d="M0,16C-24,-2 -28,-20 -14,-26C-6,-29 0,-22 0,-17C0,-22 6,-29 14,-26C28,-20 24,-2 0,16Z" fill="#fff"/></g>`;

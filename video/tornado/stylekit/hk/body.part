@@ -1,0 +1,61 @@
+      // ---------- นาคเล่นน้ำ: style frames (owner 4 Nov 2569: "ทำภาพมาก่อน") ----------
+      SK.fon = ["#ebc19c", "#c8946e", "#f6d8b8"]; SK.pu = ["#d49c6c", "#a8704a", "#ecc09a"]; SK.bua = ["#c8946a", "#9a6a48", "#e0b48c"];
+      Object.assign(SKN, { fon: SK.fon, fonPhone: SK.fon, pu: SK.pu, puCam: SK.pu, yaiBua: SK.bua, taTian: SK.lung });
+      Rig.MODES.kWai = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 10, head: 14, uaF: -22, faF: -148, uaB: -16, faB: -150 });
+      Rig.MODES.film = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -112 + 2 * Math.sin(u * 2), faF: -28, uaB: 4, faB: -14, torso: -3, head: -10 });
+      Rig.MODES.camEye = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -64, faF: -118, uaB: -50, faB: -112, torso: 2, head: 0 });
+      const NSC = (id, o = {}) => ({ ...SC(id, o), set: "ngwScape" });
+      const HEARTS = (pts) => pts.map(([x, y, s, c]) => `<path transform="translate(${x},${y}) scale(${s})" d="M0,8C-14,-2 -18,-14 -9,-19C-4,-22 0,-17 0,-14C0,-17 4,-22 9,-19C18,-14 14,-2 0,8Z" fill="${c || "#ff4a6a"}" stroke="#fff" stroke-width="2"/>`).join("");
+      Rig.MODES.kCover = (u, o) => ({ ...Rig.MODES.cower(u, o), ...KNEE(o), torso: 24 + 1.5 * Math.sin(u * 40), head: 20, bodyY: o.by ?? 150 });
+      Rig.MODES.prone = (u, o) => ({ ...Rig.MODES.lie(u, o), uaF: -172, faF: -104, uaB: 172, faB: 104, head: 18, torso: 0, thF: -2, shF: 4, thB: 2, shB: 2 });
+      const SUNL = { from: "right", rim: "#ffd890", rimOp: 0.9, shade: "#0a0e14", shadeOp: 0.45, cast: false, vol: false }, GSUN = { top: "#16202a", bottom: "#3a2a18", op: 0.18 };
+      // ---------- v3 (owner: "คิดว่าดีเท่าทะเลลดยัง"): a bright everyday opening, the warning sign (a freight-train roar with no railway
+      // near), ยายบัว's rule board, the choice — the ทะเลลด grammar ----------
+      const I = "#1e1a16";
+      const coinT = (pic, c = "#f4e8cc") => `<g><circle cx="60" cy="64" r="56" fill="#7a5a38" stroke="${I}" stroke-width="5"/><circle cx="60" cy="60" r="56" fill="${c}" stroke="${I}" stroke-width="5"/><circle cx="60" cy="60" r="46" fill="none" stroke="#c8b48a" stroke-width="3"/>${pic}</g>`;
+      const PIC = {
+        roar: `<path d="M34,26H86L70,48L74,60L64,74L66,84L60,98L56,84L54,72L46,58L50,46Z" fill="#5a636a" stroke="${I}" stroke-width="3.4" stroke-linejoin="round"/><path d="M40,34H80M48,50H72M52,64H66" stroke="#2e363c" stroke-width="3"/>
+          <path d="M84,56q8,8 0,16M90,50q14,14 0,28M96,44q20,20 0,40" stroke="#d8312a" stroke-width="4.5" fill="none" stroke-linecap="round"/>`,
+        win: `<path d="M18,74H102V84H18Z" fill="#a8a69c" stroke="${I}" stroke-width="3.4"/><path d="M28,84V100M92,84V100" stroke="${I}" stroke-width="7"/><path d="M22,96h80" stroke="#7a786e" stroke-width="3"/>
+          <rect x="32" y="22" width="38" height="40" fill="#9ad0f0" stroke="${I}" stroke-width="3.4"/><path d="M51,22V62M32,42H70M40,30l20,24M60,28l-8,16" stroke="${I}" stroke-width="2.4"/>
+          <path d="M76,90h-40M70,94h-30" stroke="#3a7ac8" stroke-width="3.4" stroke-linecap="round"/><path d="M40,86l-6,6l6,6" stroke="#3a7ac8" stroke-width="3.4" fill="none"/>`,
+        ditch: `<path d="M12,58H36L46,82H74L84,58H108" stroke="#6a5032" stroke-width="7" fill="none" stroke-linejoin="round"/><path d="M46,82H74" stroke="#4a8ac8" stroke-width="5"/>
+          <path d="M50,74H84" stroke="#d8382a" stroke-width="11" stroke-linecap="round"/><circle cx="44" cy="72" r="8" fill="#d49c6c" stroke="${I}" stroke-width="2.4"/><path d="M38,66q8,-12 20,-2M42,64q10,-6 18,4" stroke="#d49c6c" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M60,40q16,-16 32,0" stroke="#5a636a" stroke-width="5" fill="none"/><path d="M84,32l8,8l-10,4" stroke="#5a636a" stroke-width="4" fill="none"/>`,
+      };
+      TideUI.ICON.twRoar = () => coinT(PIC.roar); TideUI.ICON.twWin = () => coinT(PIC.win); TideUI.ICON.twDitch = () => coinT(PIC.ditch);
+      const TW_RULES = [["twRoar", "ได้ยิน<u>ครืน</u> อย่า<u>ยืน</u>ดู"], ["twWin", "ห้อง<u>ใน</u> ไม่<u>ใกล้</u>หน้าต่าง"], ["twDitch", "หนีไม่ทัน<u>ตึก</u> หมอบ<u>ลึก</u>ที่ต่ำ"]];
+      const SFXW = (x, y, txt, s = 1, rot = -6) => `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s})"><text text-anchor="middle" font-family="Sriracha" font-size="118" fill="#f6f2e8" stroke="#1e1a16" stroke-width="16" paint-order="stroke" letter-spacing="2">${txt}</text>
+        ${[0, 1, 2].map((k) => `<path d="M${330 + k * 34},-80q${30 + k * 10},40 0,${80 + k * 20}" stroke="#f6f2e8" stroke-width="10" fill="none" stroke-linecap="round" opacity="${0.9 - k * 0.25}"/>`).join("")}</g>`;
+      const BUBBLE = (x, y, txt, tx = -40, w = 640) => `<g transform="translate(${x},${y})"><rect x="${-w / 2}" y="-80" width="${w}" height="140" rx="44" fill="#fff" stroke="#1e1a16" stroke-width="6"/><path d="M${tx - 20},58L${tx - 44},126L${tx + 34},58Z" fill="#fff" stroke="#1e1a16" stroke-width="6" stroke-linejoin="round"/><path d="M${tx - 18},56H${tx + 32}" stroke="#fff" stroke-width="10"/>
+        <text y="16" text-anchor="middle" font-family="Sriracha" font-size="50" fill="#1e1a16">${txt}</text></g>`;
+      const HOME = { village: [{ x: 160, y: 1300, s: 0.42 }, { kind: "wat", x: 760, y: 1178, s: 0.24 }, { x: 1150, y: 1306, s: 0.4, flip: 1 }, { x: -320, y: 1296, s: 0.38, flip: 1 }, { x: 1560, y: 1290, s: 0.36 }],
+        road: { y: 1560, h: 170 }, poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1550, s: 0.85, tf: [3], sag: 46 } };
+
+      Rig.CAST.exA = { v2: { ...Rig.CAST.keng.v2, top: { kind: "shirt", c: "#3a6aa8", sleeve: "short", neck: "collar", collar: "#2e5a90", button: "#e8e4d8" }, print: "", bottom: { kind: "jeans", c: "#2a2e38" }, feet: { kind: "sneaker", c: "#e8e4d8" } } };
+      Rig.CAST.exB = { v2: { ...Rig.CAST.june.v2, top: { kind: "blouse", c: "#c83a4a", sleeve: "elbow", trim: "#a82a3a" }, print: "", bottom: { kind: "jeans", c: "#3a4a6a" }, feet: { kind: "sandal", c: "#3a2a1a" } } };
+      Object.assign(SKN, { exA: SK.medic, exB: SK.fon });
+      // ---------- hook options (pre-production gate: 3 hooks, phone size, first frame + the first 3 s line) ----------
+      const EPIC_ROAD = (id, ep) => NSC(id, { horizon: 1200, rain: 0.4, vx: 540, epic: ep, village: [{ x: 1110, y: 1210, s: 0.12 }, { x: 1240, y: 1212, s: 0.11, flip: 1 }, { kind: "wat", x: -130, y: 1208, s: 0.2 }],
+        road: { y: 1640, h: 160 }, poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1630, s: 0.8, tf: [3], sag: 46 } });
+      const LIVEC = [["ป้าแดง", "ฝน หนีเร็วลูก!!", "#e86a8a"], ["นนท์", "ถ่ายต่อๆ ซูมอีก", "#6a8ac8"], ["มายด์", "นั่นทอร์นาโดจริงเหรอ", "#8ac86a"], ["ลุงชัย", "เข้าบ้านเดี๋ยวนี้!", "#c8a040"]];
+      // A1/A2 · the lure: the tornado on ฝน's live → cut to her raising the phone
+      ADD("h1a", { ...EPIC_ROAD("h1a", { id: "eh1", x: 560, h: 720, wb: 300, wt: 660, tx: 610, sun: 1, seed: 61 }), light: SUNL, grade: GSUN, captions: caps("h1a"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] }, fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "eh1", t0, D("h1a")); put(L.light, Ngw.liveUI({ name: "ฝนพาเที่ยว", title: "พายุมาแล้ววว", comments: LIVEC.slice(0, 3), cy: 1120 })); } });
+      ADD("h1b", { ...EPIC_ROAD("h1b", { id: "eh2", x: 700, h: 720, wb: 300, wt: 660, tx: 750, sun: 1, seed: 61 }), light: SUNL, grade: GSUN, captions: caps("h1b"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] }, actors: [P("fonPhone", 380, 2020, 1.55, "film", "wide", "smile")], fx: (tl, id, t0) => Ngw.epicLife(tl, "eh2", t0, D("h1b")) });
+      // B1/B2 · the overpass
+      ADD("h2a", { ...NSC("h2a", { horizon: 1180, rain: 0.9, vx: 540, fgRice: false, epic: { id: "eh3", x: 620, y: 1190, h: 800, wb: 420, wt: 760, tx: 660, sun: -1, seed: 57, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
+          road: { y: 1560, h: 400 }, overpass: { y: 520, h: 150, ground: 1560, pier: 980, slopeX: 560 } }), captions: caps("h2a"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        actors: [P("exA", 470, 900, 0.5, "kCover", "wide", "scream", { flip: true }), P("exB", 370, 1040, 0.5, "kCover", "wide", "scream", { flip: true }), P("taTian", 260, 1190, 0.5, "kCover", "worry", "scream", { flip: true })],
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "eh3", t0, D("h2a")); put(L.light, Ngw.streaks(300, 1300, 760, 1450, 30, 81)); } });
+      ADD("h2b", { ...NSC("h2b", { horizon: 1180, rain: 0.9, vx: 540, fgRice: false, epic: { id: "eh4", x: 620, y: 1190, h: 800, wb: 420, wt: 760, tx: 660, sun: -1, seed: 57, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
+          road: { y: 1560, h: 400 }, overpass: { y: 520, h: 150, ground: 1560, pier: 980, slopeX: 560 } }), grade: GW, captions: caps("h2b"),
+        cam: { keys: [{ t: 0, ...fr(380, 1020, 1.7, 540, 900) }] },
+        actors: [P("exA", 470, 900, 0.5, "kCover", "wide", "scream", { flip: true }), P("exB", 370, 1040, 0.5, "kCover", "wide", "scream", { flip: true }), P("taTian", 260, 1190, 0.5, "kCover", "worry", "scream", { flip: true })],
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "eh4", t0, D("h2b")); put(L.light, Ngw.streaks(300, 1300, 760, 1450, 40, 82)); } });
+      // C1/C2 · the window myth
+      ADD("h3a", { ...NSC("h3a", { horizon: 1160, rain: 0.25, ...HOME, fgRice: false, epic: { id: "eh5", x: 900, y: 1172, h: 520, wb: 170, wt: 400, tx: 930, sun: 1, seed: 53, tiers: 7, tierW: 90, bolts: [], flashes: [], bigScale: 0.55, subs: [], sunDx: 500 } }), captions: caps("h3a"),
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] }, actors: [P("taTian", 760, 1880, 1.0, "point", "normal", "smile", { flip: true })], fx: (tl, id, t0) => Ngw.epicLife(tl, "eh5", t0, D("h3a")) });
+      ADD("h3b", { set: "ngwHouseCut", setOpts: {}, dark: 0, light: false, captions: caps("h3b"), cam: { keys: [{ t: 0, ...fr(540, 1090, 1.0, 540, 900) }] } });
