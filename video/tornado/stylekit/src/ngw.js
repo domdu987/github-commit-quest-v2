@@ -691,6 +691,45 @@
     tl.fromTo(`#${id}-gl${pk}`, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, at);
     tl.fromTo(`#${id}-cc${pk}`, { x: -6 }, { x: 6, duration: 0.05, yoyo: true, repeat: 15, ease: "none", immediateRender: false }, at);
     tl.to(`#${id}-c${1 - pk}`, { opacity: 0.35, duration: 0.3, immediateRender: false }, at); };
+  // QA (third review): the "scream" D-mouth with its top teeth read as laughing, the "worry" brows (inner ends down) as anger. Added to
+  // every actor after the build (call Ngw.addFaces(root) from Engine.build): mouth "shout" — wide open, corners pulled down, the lower
+  // teeth; mouth "fear" — a tall oval; eyes "fear" — the wide eyes with the inner ends of the brows lifted
+  Ngw.addFaces = (root) => { const LN = "#1e1a16", inner = "#5a1e1e", tongue = "#d86a6a", EY = -548;
+    const SHOUT = `<path d="M-11,-519Q4,-529 19,-519L17,-499Q4,-492 -9,-499Z" fill="${inner}" stroke="${LN}" stroke-width="2.6" stroke-linejoin="round"/><path d="M-7,-501Q4,-496 15,-501L14,-505Q4,-501 -6,-505Z" fill="#f4eee2"/><path d="M-3,-509q7,-5 14,0q-7,4 -14,0z" fill="${tongue}"/>`;
+    const FEAR = `<path d="M-3,-523Q4,-528 11,-523Q14,-507 4,-502Q-6,-507 -3,-523Z" fill="${inner}" stroke="${LN}" stroke-width="2.4"/><path d="M0,-507q4,-3 8,0q-4,3 -8,0z" fill="${tongue}"/>`;
+    root.querySelectorAll('g[id$="-mouth"]').forEach((m) => { if (!m.querySelector(".mouth-smile") || m.querySelector(".mouth-shout")) return;
+      m.insertAdjacentHTML("beforeend", `<g class="mouth-shout" display="none">${SHOUT}</g><g class="mouth-fear" display="none">${FEAR}</g>`); });
+    const B = [`M-28,${EY - 21}Q-17,${EY - 29} -6,${EY - 32}`, `M8,${EY - 32}Q19,${EY - 29} 30,${EY - 21}`];
+    root.querySelectorAll('g[id$="-eyes"]').forEach((e) => { const w = e.querySelector(":scope > .eye-wide"); if (!w || e.querySelector(":scope > .eye-fear")) return;
+      const f = w.cloneNode(true); f.setAttribute("class", "eye-fear"); f.setAttribute("display", "none");
+      [...f.querySelectorAll("path")].filter((q) => q.getAttribute("stroke-width") === "4.6").forEach((q, i) => q.setAttribute("d", B[i] || B[1]));
+      e.appendChild(f); }); };
+  // a hand holding a phone up in the foreground (over ฝน's shoulder): the screen shows o.screen = "funnel" (the live picture of the storm,
+  // LIVE badge, timer, hearts) or "comments" (the live's comment list, o.comments). Drawn for L.glow, sharp in front of everything
+  Ngw.phoneOTS = (o = {}) => { const I = "#1e1a16", x = o.x ?? 200, y = o.y ?? 1900, s = o.s ?? 1, rot = o.rot ?? -6, id = o.id || "ots";
+    let scr = `<rect x="-130" y="-520" width="260" height="470" rx="18" fill="#0e1218"/><clipPath id="${id}-sc"><rect x="-130" y="-520" width="260" height="470" rx="18"/></clipPath><g clip-path="url(#${id}-sc)">`;
+    if ((o.screen || "funnel") === "funnel") {
+      scr += `<rect x="-130" y="-520" width="260" height="470" fill="#3a4a52"/><rect x="-130" y="-300" width="260" height="120" fill="#c8a868" opacity=".35"/><rect x="-130" y="-180" width="260" height="130" fill="#3e5a32"/>
+        <path d="M-130,-330Q0,-380 130,-340V-520H-130Z" fill="#1e262c"/><path id="${id}-fn" d="M-40,-345Q20,-350 40,-340Q10,-300 18,-250Q8,-215 4,-180H-6Q-10,-220 -18,-252Q-26,-300 -40,-345Z" fill="#4a3e34"/>
+        <ellipse cx="0" cy="-182" rx="46" ry="12" fill="#8a7458" opacity=".7"/><path d="M-130,-180H130" stroke="#d8c8a0" stroke-width="2" opacity=".6"/>`;
+    } else {
+      scr += `<rect x="-130" y="-520" width="260" height="470" fill="#2a3640"/>` + (o.comments || []).map(([nm, tx, c], k) => `<g transform="translate(-118,${-330 + k * 62})"><rect width="236" height="50" rx="25" fill="#000" opacity=".45"/><circle cx="24" cy="25" r="15" fill="${c}"/><text x="46" y="21" font-family="Kanit" font-weight="700" font-size="15" fill="#ffd25a">${nm}</text><text x="46" y="40" font-family="Kanit" font-size="15" fill="#fff">${tx}</text></g>`).join("");
+    }
+    scr += `<rect x="-130" y="-520" width="260" height="56" fill="#000" opacity=".35"/><circle cx="-104" cy="-492" r="15" fill="#f2be2a" stroke="#ff3a6a" stroke-width="4"/><rect x="40" y="-506" width="56" height="26" rx="6" fill="#ff2a4a"/><text x="68" y="-487" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="17" fill="#fff">LIVE</text>
+      <text x="-82" y="-486" font-family="Kanit" font-weight="700" font-size="17" fill="#fff">ฝนพาเที่ยว</text><path d="M96,-110c-10,-8 -12,-16 -6,-19c3,-2 6,0 6,2c0,-2 3,-4 6,-2c6,3 4,11 -6,19z" fill="#ff4a6a" transform="scale(1.6) translate(-36,40)"/></g>`;
+    scr += `<path d="M-130,-520L-40,-520L-130,-300Z" fill="#fff" opacity=".07"/>`;
+    const arm = `<path d="M-60,40L-40,-80L60,-90L90,60Z" fill="#e8b830" stroke="${I}" stroke-width="6"/><path d="M-44,-70L56,-80" stroke="#c4931c" stroke-width="10"/>`;
+    const hand = `<path d="M-150,-170Q-170,-120 -150,-60Q-110,-30 -40,-60L60,-90Q90,-120 70,-160L-60,-150Z" fill="#ebbd95" stroke="${I}" stroke-width="5"/>${[0, 1, 2, 3].map((k) => `<path d="M${-146 + k * 6},${-170 + k * 30}q-40,0 -32,22q8,10 36,4" fill="#ebbd95" stroke="${I}" stroke-width="4"/>`).join("")}<path d="M150,-200q30,10 22,48q-10,26 -40,16" fill="#ebbd95" stroke="${I}" stroke-width="4"/>`;
+    return `<g transform="translate(${x},${y}) rotate(${rot}) scale(${s})">${arm}<rect x="-150" y="-545" width="300" height="520" rx="34" fill="#1a1a1e" stroke="${I}" stroke-width="7"/>${scr}${hand}</g>`; };
+  // ยายบัว's grill stall after the storm (the payoff of "ไก่ย่างทั้งร้าน… ทิ้งไว้ตรงนั้น"): the cart tipped on its side, the umbrella torn
+  // inside out, skewers and the price board in the mud, a stool upside down
+  Ngw.stallWreck = (x, y, s = 1) => { const I = "#1e1a16";
+    let g = `<g transform="rotate(-24 ${x} ${y})">${Rup2.stall(x, y, s)}</g>`;
+    g += `<g transform="translate(${x + 320 * s},${y - 10 * s}) rotate(28) scale(${s})"><path d="M0,0L-30,-220" stroke="#8a8a84" stroke-width="10"/><path d="M-30,-220L-200,-150L-150,-260L-40,-300L60,-250L120,-170Z" fill="#e8eef2" stroke="${I}" stroke-width="5"/><path d="M-30,-220L-150,-260M-30,-220L60,-250" stroke="#3a6ac8" stroke-width="12"/><path d="M-120,-200l40,-30" stroke="${I}" stroke-width="4"/></g>`;
+    for (let k = 0; k < 9; k++) g += `<path d="M${x - 260 * s + k * 52 * s},${y + (k % 3) * 8 * s}l${(30 + k * 7) * s},${-(6 + k % 4 * 4) * s}" stroke="#8a6a44" stroke-width="${5 * s}" stroke-linecap="round"/>`;
+    g += `<g transform="translate(${x - 420 * s},${y + 10 * s}) rotate(-78) scale(${0.55 * s})"><rect x="-190" y="-260" width="380" height="480" rx="14" fill="#8a5a32" stroke="${I}" stroke-width="8"/><rect x="-168" y="-238" width="336" height="436" fill="#24382c"/><text y="-170" text-anchor="middle" font-family="Sriracha" font-size="50" fill="#f2c230">ไก่ย่างยายบัว</text></g>`;
+    g += `<g transform="translate(${x + 520 * s},${y}) rotate(180) scale(${s})"><rect x="-60" y="0" width="120" height="20" fill="#3a6ac8" stroke="${I}" stroke-width="4"/><path d="M-50,20V90M50,20V90" stroke="#3a6ac8" stroke-width="10"/></g>`;
+    return `<g>${g}</g>`; };
   // the end card: a green highway sign on its pole in the storm: o.l1 "ตอนที่ 2", o.l2 "ใต้สะพาน"
   Sets.ngwEndSign = (L, o = {}) => { if (o.cta) return Sets.ngwEndCta(L, o); put(L.sky, `<rect x="-1400" y="-800" width="4000" height="3600" fill="#141a20"/><rect x="-1400" y="700" width="4000" height="700" fill="#3a4a50" opacity=".5" filter="url(#skBlur24)"/>
       <path d="M760,420H1000L930,560L950,700L900,860L880,1000L860,860L840,700L800,560Z" fill="#20282e" opacity=".9" filter="url(#skBlur4)"/><ellipse cx="880" cy="1010" rx="160" ry="40" fill="#3a3028" opacity=".8" filter="url(#skBlur10)"/>
@@ -1014,7 +1053,7 @@
       + Array.from({ length: 12 }, () => { const a = -Math.PI * (0.1 + rr() * 0.8), d = (40 + rr() * 90) * s; return `<circle cx="${f1(Math.cos(a) * d)}" cy="${f1(Math.sin(a) * d)}" r="${f1((2.4 + rr() * 2.6) * s)}" fill="${rr() > 0.4 ? "#fffbe8" : "#ffd25a"}"/>`; }).join("") + `</g>`;
     return g; };
   Ngw.sparkLife = (tl, sel, t0, dur, period = 0.8) => { const n = Math.max(1, Math.ceil(dur / period));   // one bright pop per period (V1b: ≤ 3 a second)
-    tl.fromTo(sel, { opacity: 0, scale: 0.6 }, { keyframes: [{ opacity: 1, scale: 1.25, duration: 0.06 }, { opacity: 0.5, scale: 0.95, duration: 0.12 }, { opacity: 0, scale: 0.6, duration: 0.2 }, { opacity: 0, duration: Math.max(0.05, period - 0.38) }], repeat: n, immediateRender: false }, t0);
+    tl.fromTo(sel, { opacity: 0.32, scale: 0.7 }, { keyframes: [{ opacity: 1, scale: 1.25, duration: 0.06 }, { opacity: 0.55, scale: 0.95, duration: 0.12 }, { opacity: 0.32, scale: 0.7, duration: 0.2 }, { opacity: 0.32, duration: Math.max(0.05, period - 0.38) }], repeat: n, immediateRender: false }, t0);   // a dim crackle stays on between pops
     // the smoke off a downed line's live end (#x-sm next to #x-sp): three puffs rising and spreading, one after another, the whole time
     const sm = sel.replace(/-sp$/, "-sm"); if (sm !== sel && document.querySelector(sm)) document.querySelectorAll(`.${sm.slice(1)}p`).forEach((e, k) =>
       tl.fromTo(e, { y: 0, x: 0, opacity: 0.5, scale: 0.6, transformOrigin: "50% 50%" }, { y: -150, x: 30, opacity: 0, scale: 1.9, duration: 1.8, ease: "sine.out", repeat: Math.ceil(dur / 1.8), immediateRender: false }, t0 + k * 0.6)); };
@@ -1326,7 +1365,8 @@
     if (o.far) put(L.mid, typeof o.far === "function" ? o.far() : o.far);
     if (o.road) put(L.set, Ngw.road(o.road));
     if (o.roadTitle) put(L.set, Ngw.roadTitle(o.roadTitle));
-    if (o.ruins) put(L[o.ruinsLayer || "mid"], o.ruins.map((v) => Ngw.ruin(v.x, v.y, v.s, v)).join(""));
+    if (o.ruins) { const PAL = [["#d8c4a0", "#a8442e"], ["#ece4cc", "#3a6a8a"], ["#c8d8c0", "#8a4a2e"], ["#e8d0b0", "#5a7a4a"], ["#b08454", "#8a8e8c"]];
+      put(L[o.ruinsLayer || "mid"], o.ruins.map((v, i) => { const P = PAL[(v.k ?? i + 1) % 5]; return Ngw.ruin(v.x, v.y, v.s, v).replace(/#d8c4a0/g, P[0]).replace(/#a8442e/g, P[1]); }).join("")); }
     if (o.overpass) { const ov = Ngw.overpass(o.overpass); put(L.set, ov.set); put(L.fg, ov.fg); }
     if (o.poles) { const { xs, y = 1540, s: ps = 1, tf = [] } = o.poles; put(L.set, xs.map((x, k) => Ngw.pole(x, y, ps, { tf: tf.includes(k), lean: (o.poles.lean || [])[k] || 0 })).join("") + Ngw.wires(xs, y, ps, o.poles.sag ?? 40)); }
     if (o.props) put(L.set, typeof o.props === "function" ? o.props() : o.props);
