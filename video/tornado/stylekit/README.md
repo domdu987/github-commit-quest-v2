@@ -18,6 +18,16 @@ New pieces in `src/ngw.js`:
 - `Ngw.pole` / `Ngw.wires`, `Ngw.road`, `Ngw.sign`
 - `Ngw.funnel` gained the `tone: "dark"` option.
 
+### v3 additions (owner: "คิดว่าดีเท่าทะเลลดยัง"), using the ทะเลลด grammar
+Ten frames in story order: a0, b0, t1, c0, t2, t3, t4, d0, t5, t6. The new ones:
+- **a0 · ชีวิตปกติ.** A bright afternoon at ยายบัว's roadside stall: ฝน is live and ปู has his camera. A thunderstorm is building far off.
+- **b0 · เสียงครืน.** The warning sign. A loud, continuous roar (Ready.gov: "a loud roar like a freight train"; SPC: "doesn't fade in a few seconds like thunder"). ปู: "เสียงรถไฟ? แถวนี้ไม่มีรางนะ".
+- **c0 · กฎของยายบัว.** `TideUI.rule` with three rhyming rules and new coin icons:
+  - "ได้ยินครืน อย่ายืนดู"
+  - "ห้องใน ไม่ใกล้หน้าต่าง"
+  - "หนีไม่ทันตึก หมอบลึกที่ต่ำ"
+- **d0 · จะหลบที่ไหน?** `TideUI.choice`: "มุดใต้สะพานทางหลวง" / "หมอบราบในคูน้ำ". The countdown digit is removed (no HUD numbers).
+
 ## v1 นาคเล่นน้ำ (rejected: it had a legend and a small spout) — `sf/`, frames in `../frames/v1-นาคเล่นน้ำ-ไม่ใช้/`
 
 The five style frames in `../frames/` were built from this kit. Each one comes in two versions:
