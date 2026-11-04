@@ -407,6 +407,54 @@
     let lb = `<g transform="translate(540,300)"><rect x="-440" y="-80" width="880" height="140" rx="24" fill="#8a6a3e" stroke="#2a1a0c" stroke-width="7"/><text y="20" text-anchor="middle" font-family="Sriracha" font-size="78" fill="#fff6dc" stroke="#2a1a0c" stroke-width="8" paint-order="stroke">หลบตรงไหนในบ้าน?</text></g>`;
     put(L.light, lb);
   };
+
+  // ---------------------------------------------------------------- ยายบัว's rule sign (owner: "ป้ายกฏ เอาให้เขาธีมสิ")
+  // a hand-painted corrugated zinc sheet nailed to two posts by the highway: hazard stripes top and bottom, rust running from the
+  // nails, a bent corner, round road-sign discs for the icons, the rules in brush lettering with the rhymes in red; it drops in,
+  // rows paint on one by one, the rule of this episode gets a yellow brush swipe, the others stay faint; the sheet sways and rattles
+  // in the wind, rain streaks over it. o.rules [[pictogram SVG (120 box), text with <u>rhyme</u>]…] · o.active · o.y · o.title
+  Ngw.ruleBoard = (tl, layer, t0, dur, o = {}) => {
+    const id = `rb${Math.round(t0 * 100)}`, I = "#1e1a16", Y0 = o.y ?? 330, X0 = 60, W = 960, rows = o.rules || [], n = rows.length, GAP = o.gap ?? 210, H = 290 + n * GAP, act = o.active ?? 0;
+    const r = mk(o.seed || 97);
+    let g = `<g id="${id}"><g id="${id}-sw">`;
+    // posts
+    g += [X0 + 150, X0 + W - 150].map((x) => `<rect x="${x - 22}" y="${Y0 + 40}" width="44" height="${1920 - Y0}" fill="#6a4a2e" stroke="${I}" stroke-width="5"/><path d="M${x - 10},${Y0 + 60}V1920" stroke="#8a6a44" stroke-width="6" opacity=".6"/>`).join("");
+    // the zinc sheet: corrugation, a dented outline, rust streaks, a bent corner
+    let ol = `M${X0},${Y0 + 8}`; for (let k = 1; k <= 12; k++) ol += `L${f1(X0 + (W * k) / 12)},${f1(Y0 + (r() - 0.5) * 10)}`;
+    ol += `L${X0 + W - 6},${Y0 + H}`; for (let k = 11; k >= 0; k--) ol += `L${f1(X0 + (W * k) / 12)},${f1(Y0 + H + (r() - 0.5) * 12)}`; ol += "Z";
+    g += `<defs><clipPath id="${id}-cp"><path d="${ol}"/></clipPath><linearGradient id="${id}-zn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8ccc8"/><stop offset=".5" stop-color="#aeb4b2"/><stop offset="1" stop-color="#8e9694"/></linearGradient></defs>`;
+    g += `<path d="${ol}" fill="#000" opacity=".35" transform="translate(10,14)"/><path d="${ol}" fill="url(#${id}-zn)" stroke="${I}" stroke-width="7" stroke-linejoin="round"/>`;
+    let cor = ""; for (let x = X0; x < X0 + W; x += 44) cor += `<rect x="${x}" y="${Y0 - 20}" width="18" height="${H + 40}" fill="#e8ecea" opacity=".35"/><rect x="${x + 24}" y="${Y0 - 20}" width="10" height="${H + 40}" fill="#5a6260" opacity=".25"/>`;
+    for (let k = 0; k < 14; k++) { const x = X0 + 30 + r() * (W - 60), y = Y0 + 30 + r() * (H - 120), L0 = 60 + r() * 200; cor += `<path d="M${f1(x)},${f1(y)}q${f1((r() - 0.5) * 12)},${f1(L0 / 2)} ${f1((r() - 0.5) * 10)},${f1(L0)}" stroke="#8a4a1e" stroke-width="${f1(4 + r() * 8)}" fill="none" opacity="${f1(0.15 + r() * 0.2)}" stroke-linecap="round"/>`; }
+    // hazard stripes top and bottom
+    const haz = (y) => { let h = `<rect x="${X0 - 10}" y="${y}" width="${W + 20}" height="46" fill="#f2c230"/>`; for (let x = X0 - 60; x < X0 + W + 40; x += 64) h += `<path d="M${x},${y + 46}L${x + 32},${y}H${x + 64}L${x + 32},${y + 46}Z" fill="#1e1a16"/>`; return h; };
+    g += `<g clip-path="url(#${id}-cp)">${cor}${haz(Y0 + 6)}${haz(Y0 + H - 52)}</g>`;
+    // nails with rust halos, a bent top-right corner, a leaf caught
+    g += [[X0 + 30, Y0 + 80], [X0 + W - 30, Y0 + 80], [X0 + 30, Y0 + H - 80], [X0 + W - 30, Y0 + H - 80], [X0 + 150, Y0 + H / 2], [X0 + W - 150, Y0 + H / 2]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="16" fill="#8a4a1e" opacity=".35"/><circle cx="${x}" cy="${y}" r="8" fill="#6a6e70" stroke="${I}" stroke-width="2.6"/>`).join("");
+    g += `<g id="${id}-flap"><path d="M${X0 + W - 120},${Y0 - 4}L${X0 + W + 4},${Y0 - 2}L${X0 + W - 2},${Y0 + 120}Z" fill="#7e8684" stroke="${I}" stroke-width="5" stroke-linejoin="round"/><path d="M${X0 + W - 110},${Y0 + 6}L${X0 + W - 10},${Y0 + 100}" stroke="#c8ccc8" stroke-width="4"/></g>`;
+    g += `<path d="M${X0 + 40},${Y0 + H - 30}q30,-40 70,-20q-20,30 -70,20z" fill="#3e6a2a" stroke="${I}" stroke-width="3" transform="rotate(-20 ${X0 + 70} ${Y0 + H - 40})"/>`;
+    // the title, brush-painted
+    g += `<g transform="translate(540,${Y0 + 160}) rotate(-2)"><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="#d8312a" stroke="#fff8ec" stroke-width="12" paint-order="stroke">${o.title || "กฎของยายบัว"}</text><path d="M-250,26Q0,46 250,22" stroke="#d8312a" stroke-width="7" fill="none" stroke-linecap="round"/></g>`;
+    // rows: a road-sign disc + brush lettering; the active one on a yellow swipe
+    rows.forEach(([pic, txt], k) => { const y = Y0 + 300 + k * GAP, isA = k === act;
+      const t = txt.replace(/<u>(.*?)<\/u>/g, `<tspan fill="#d8312a">$1</tspan>`);
+      g += `<g id="${id}-r${k}" opacity="${isA ? 0 : 0}">`;
+      if (isA) g += `<path id="${id}-hl" d="M240,${y - 58}Q560,${y - 76} 1000,${y - 54}L1006,${y + 38}Q600,${y + 56} 236,${y + 34}Z" fill="#ffd23a" opacity=".85"/>`;
+      g += `<g transform="translate(${X0 + 104},${y - 14})"><circle r="78" fill="#fff" stroke="#d8312a" stroke-width="14"/><circle r="78" fill="none" stroke="${I}" stroke-width="4"/><g transform="translate(-58,-62) scale(.97)">${pic}</g></g>`;
+      g += `<text x="250" y="${y + 18}" font-family="Sriracha" font-size="62" fill="${I}">${t}</text></g>`; });
+    g += `</g></g>`;
+    put(layer, g);
+    // animation: drop in, rows paint on, the active row's swipe, wind sway, the flapping corner, the faint later rows
+    const q = (s) => document.getElementById(`${id}${s}`), n2 = (p) => Math.max(1, Math.ceil(dur / p));
+    tl.fromTo(q(""), { y: -260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.6)", immediateRender: false }, t0);
+    tl.set(q(""), { opacity: 0 }, Math.max(0, t0 - 0.01));
+    tl.fromTo(q("-sw"), { rotation: -1.4, svgOrigin: `540 ${Y0}` }, { rotation: 1.4, svgOrigin: `540 ${Y0}`, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: n2(0.9), immediateRender: false }, t0);
+    tl.fromTo(q("-flap"), { rotation: 0, svgOrigin: `${X0 + W - 120} ${Y0}` }, { rotation: -14, svgOrigin: `${X0 + W - 120} ${Y0}`, duration: 0.12, ease: "sine.inOut", yoyo: true, repeat: n2(0.12), immediateRender: false }, t0);
+    rows.forEach((_, k) => { const at = (o.at || [0.35, 0.5, 0.65])[k] ?? 0.35 + 0.15 * k, isA = k === act;
+      tl.fromTo(q(`-r${k}`), { opacity: 0, x: -30 }, { opacity: isA ? 1 : (o.faint ?? 0.42), x: 0, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + at); });
+    if (q("-hl")) tl.fromTo(q("-hl"), { scaleX: 0, svgOrigin: `240 0` }, { scaleX: 1, svgOrigin: `240 0`, duration: 0.35, ease: "power2.out", immediateRender: false }, t0 + 0.75);
+    if (o.out != null) tl.to(q(""), { y: -300, opacity: 0, duration: 0.35, ease: "power2.in", immediateRender: false }, t0 + o.out);
+  };
   // ---------------------------------------------------------------- the lake, its bank, the shrine
   Ngw.lake = (o = {}) => {   // from the horizon hz down to the near shore y1, in perspective: swell bands, wind streaks, whitecaps
     const hz = o.hz ?? 900, y1 = o.y1 ?? 1480, r = mk(o.seed || 5), D = y1 - hz;

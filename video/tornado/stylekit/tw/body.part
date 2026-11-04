@@ -69,7 +69,7 @@
           road: { y: 1640, h: 160 }, poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1630, s: 0.8, tf: [3], sag: 46 } }), dark: 0.4,
         land: { y0: 250 },
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
-        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "ec", t0, D("c0")); TideUI.rule(tl, L.light, t0, D("c0"), { rules: TW_RULES, title: "กฎของยายบัว", seq: true, at: [0.2, 0.35, 0.5], y: 330 }); } });
+        fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "ec", t0, D("c0")); Ngw.ruleBoard(tl, L.light, t0, D("c0"), { rules: [[PIC.roar, "ได้ยิน<u>ครืน</u> อย่า<u>ยืน</u>ดู"], [PIC.win, "ห้อง<u>ใน</u> ไม่<u>ใกล้</u>หน้าต่าง"], [PIC.ditch, "หนีไม่ทัน<u>ตึก</u> หมอบ<u>ลึก</u>ที่ต่ำ"]], active: 0, y: 300 }); } });
       // T2 · it hits the village: roofs tear off and fly into the funnel, a pole snaps with a blue-green flash; ฝน and ปู run for it
       ADD("t2", { ...NSC("t2", { horizon: 1060, rain: 0.8, vx: 540, fgRice: false,
           epic: { id: "e2", x: 400, y: 1240, h: 1000, wb: 470, wt: 860, tx: 470, sun: 1, seed: 55, tiers: 5, tierW: 140, bigScale: 1.7, sunDx: 900, flashes: [[2.2, 0.03]], bolts: [[-1.0, 0.5, 5]] },
