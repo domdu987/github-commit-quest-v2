@@ -457,5 +457,27 @@
    "x": 0,
    "y": 0
   }
+ },
+ {
+  "id": "tornado-ep1",
+  "page": "tornado-ep1/composition/index.html",
+  "out": "video/tornado-ep1/cover.jpg",
+  "t": 3.6,
+  "series": "เสียงรถไฟ",
+  "ep": 1,
+  "epTitle": "ไม่มีรางรถไฟ",
+  "setup": "ได้ยิน[เสียงรถไฟ]/ทั้งที่แถวนั้นไม่มีราง…",
+  "cmd": "อย่ายกมือถือขึ้นถ่าย!",
+  "glow": "#e8a23a",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.0,
+   "x": 540,
+   "y": 960
+  },
+  "shift": {
+   "x": 0,
+   "y": -50
+  }
  }
 ]
