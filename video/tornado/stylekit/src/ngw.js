@@ -186,7 +186,9 @@
     if (lv === 1) { let g = Tk.house(x, y, s, o) + `<g transform="translate(${x},${y}) scale(${s * (o.flip ? -1 : 1)},${s})">`;
       g += `<path d="M-200,-470L-120,-560L-20,-610L60,-560L140,-520L200,-440L60,-430L-40,-450Z" fill="#1e1610" stroke="${INK}" stroke-width="6"/>`;
       g += [-150, -80, -10, 60, 130].map((rx) => `<path d="M${rx},-450L${rx + 30},-590" stroke="#8a6a44" stroke-width="12"/><path d="M${rx},-450L${rx + 30},-590" stroke="${INK}" stroke-width="3" fill="none"/>`).join("");
-      for (let k = 0; k < 14; k++) { const tx = -60 + dir * (60 + k * 50) + r() * 60, ty = -620 - k * 34 - r() * 80; g += `<rect x="${f1(tx)}" y="${f1(ty)}" width="46" height="26" fill="#a8442e" stroke="${INK}" stroke-width="3" transform="rotate(${f1(r() * 120 - 60)} ${f1(tx + 23)} ${f1(ty + 13)})"/>`; }
+      // o.calm (after the storm, QA 6: "the tile streams still arcing off the roofs after the storm"): the tiles lie on the ground instead
+      for (let k = 0; k < 14; k++) { if (o.calm) { const tx = -330 + r() * 660, ty = -8 - r() * 26; g += `<rect x="${f1(tx)}" y="${f1(ty)}" width="46" height="20" fill="#a8442e" stroke="${INK}" stroke-width="3" transform="rotate(${f1(r() * 50 - 25)} ${f1(tx + 23)} ${f1(ty + 10)})"/>`; continue; }
+        const tx = -60 + dir * (60 + k * 50) + r() * 60, ty = -620 - k * 34 - r() * 80; g += `<rect x="${f1(tx)}" y="${f1(ty)}" width="46" height="26" fill="#a8442e" stroke="${INK}" stroke-width="3" transform="rotate(${f1(r() * 120 - 60)} ${f1(tx + 23)} ${f1(ty + 13)})"/>`; }
       return g + `</g>`; }
     let g = `<g transform="translate(${x},${y}) scale(${s * (o.flip ? -1 : 1)},${s})"><ellipse cx="0" cy="12" rx="560" ry="40" fill="#000" opacity=".35"/>`;
     let top = "M-380,0V-260"; for (let k = 1; k <= 12; k++) top += `L${-380 + k * 63},${f1(-200 - r() * 160 + (k % 3 === 0 ? 70 : 0))}`; top += "V0Z";
