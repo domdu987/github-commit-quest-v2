@@ -1,0 +1,19 @@
+{{header
+| title = {{พห|ภ2}}
+| year = 2455
+| author = 
+| editor = 
+| translator = 
+| section = 
+| contributor = 
+| previous = [[../ภาค 1/]]
+| next = [[../ภาค 3/]]
+| notes = 
+| categories = หนังสืองานศพ
+| portal = 
+}}
+<pages index="Phongsawadan Phra Ratcha Hatthalekha 2455 (2).djvu" include="2"/>
+{{pb}}
+<pages index="Phongsawadan Phra Ratcha Hatthalekha 2455 (2).djvu" from="3" to="38"/>
+----
+{{reflist}}

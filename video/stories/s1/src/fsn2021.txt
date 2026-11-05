@@ -1,0 +1,293 @@
+FSA stresses ‘use by’ date importance after food waste campaign confusion | Food Safety News
+{socials = window.socials})"
+>
+Skip to content
+{ document.querySelector('[data-progress-bar]').setAttribute('value',getScrollPercent()) })"
+@scroll.window="document.querySelector('[data-progress-bar]').setAttribute('value',getScrollPercent())"
+>
+Sign Up for Free FSN Weekly Newsletter
+Trusted by 45,000+ food safety leaders, regulators, and professionals.
+Personal information
+Subscribe
+Great! Check your inbox and click the link.
+Sorry, something went wrong. Please try again.
+Close
+{ initDropdown($el, 'z-50 min-w-[calc(100%_+_16px)] text-sm absolute top-0 border-t-[2.5px] border-typ flex flex-col gap-0.25 shadow-lg rounded-theme py-1.5 px-2 -ml-2 mt-8.5 opacity-0 invisible bg-bgr') })">
+FSN
+Food Safety News
+Sign In
+Join
+Become a Member
+Menu
+Home
+Recalls
+Outbreaks
+Store
+Events
+About
+Media Kit
+Support Our Journalism
+Contact
+Facebook
+Twitter
+Bluesky
+Discord
+Github
+Instagram
+Linkedin
+Mastodon
+Pinterest
+Reddit
+Telegram
+Threads
+Tiktok
+Whatsapp
+YouTube
+RSS
+Search
+{ initDropdown($el, 'hidden opacity-0 invisible basis-full flex-col gap-0.5 border-t border-brd-soft') })"
+>
+Search
+Close
+Home
+Recalls
+Outbreaks
+Store
+Events
+About
+Media Kit
+Support Our Journalism
+Contact
+Consumer Education
+Enforcement
+Food Policy & Law
+Food Safety Guides
+Foodborne Illness Investigations
+Government Agencies
+Nutrition & Public Health
+Opinion & Contributed Articles
+outbreaks
+Recalls
+Science & Research
+World
+View All Categories
+Become a Member
+Follow us
+Facebook
+Twitter
+Bluesky
+Discord
+Github
+Instagram
+Linkedin
+Mastodon
+Pinterest
+Reddit
+Telegram
+Threads
+Tiktok
+Whatsapp
+YouTube
+RSS
+Government Agencies
+FSA stresses ‘use by’ date importance after food waste campaign confusion
+By
+News Desk
+Published:
+February 02, 2021, 12:03 am
+Last updated:
+February 01, 2021, 2:53 pm
+|
+Share
+{ copied = false; shareOpen = false; }, 2000)"
+title="Copy link"
+aria-label="Copy">
+{shareOpen = false}, 2000)">
+Share to X
+{shareOpen = false}, 2000)">
+Share to Bluesky
+{shareOpen = false}, 2000)">
+Share to Facebook
+{shareOpen = false}, 2000)">
+Share to LinkedIn
+{shareOpen = false}, 2000)">
+Share by email
+The Food Standards Agency (FSA) has taken to social media to tackle potential confusion caused by a food waste campaign that encourages consumers to smell, look and taste to determine whether food is spoiled.
+The FSA official account on several platforms
+directed people to information
+on how to understand the difference between “use by” and “best before” dates.
+Picture courtesy of FSA
+“The use-by date is there for a reason. Eating food that’s past its use-by date can make you ill. You can’t trust the sniff test with food past its use-by date. Why? Because you can’t always smell (or taste) the bacteria that cause food poisoning,” added the agency.
+Date label confusion
+Recently, Too Good To Go launched a campaign with some food brands to tackle date label confusion and help cut down on food waste that involves smelling and tasting food.
+Jamie Crummie, co-founder of Too Good To Go, said: “Date labeling has long caused confusion and unnecessary food waste in the UK. If we are to make significant strides to reducing food waste, we need to take action now.”
+The “Look, Smell, Taste, Don’t Waste” campaign has 25 brands signed up including Arla, Danone and Nestlé.
+It will see brands switching products from “use by” to “best before” labels on certain occasions, as well as on package reminders to consumers to use their senses to decide whether to eat food past its best before date.
+The European Food Safety Authority (EFSA)
+recently released a tool
+for food company staff to help them decide whether a “use by” or “best before” date should be used.
+Use by date is about safety
+A “use by” date on food is about safety and can often be found on food that has a short shelf life, such as meat products or ready-to-eat salads. After this date, don’t eat it, cook or freeze it.
+The “best before” date relates to quality. Food will be safe to eat after this date but flavor or texture may be affected. These dates appear on frozen, dried and canned foods. It will only be accurate if food is stored according to instructions on the packaging.
+Arla said it was the first in the milk category to make the switch from “use by” to “best before.”
+David Moon, head of business collaboration at WRAP, said food with a “best before” can be good to eat for days, weeks or months beyond the date on pack depending on the food type, and how it’s been stored.
+“It’s important though to remember that a ‘use by’ date is the safety marker, and there to protect us. Food with a ‘use by’ date should never be eaten after that date, so we should try to use or freeze these items before they expire.”
+WRAP estimated annual food waste in UK households, hospitality and food service, food manufacture, retail and wholesale sectors in 2018 at about 9.5 million tons.
+Ben Elliot, the food surplus and waste champion for Defra, said: “It is important that we help people better understand whether produce is safe to eat, and that information on food is clear, helping people make these decisions.”
+(To sign up for a free subscription to Food Safety News,
+click here
+.)
+News Desk
+The News Desk team at Food Safety News covers breaking developments, regulatory updates, recalls, and key topics shaping food safety today. These articles are produced collaboratively by our editorial staff.
+All articles
+Tags:
+Government Agencies
+World
+best before dates
+food poisoning
+Food Standards Agency (FSA)
+food waste
+Look Smell Taste Don't Waste
+Too Good To Go
+use by date
+More in Government Agencies
+See all
+World
+Members-only
+Salmonella risk from Swedish eggs rises from low levels
+The risk of exposure to Salmonella Enteritidis via eggs in Sweden has increased slightly but is still lower than the European average, according to a report.
+The analysis covers risks
+By
+Joe Whitworth
+/
+22 Oct 2026
+outbreaks
+Austrian tomato warning follows Salmonella infections
+Earlier this month, Italian authorities found monophasic Salmonella Typhimurium and Salmonella Strathcona in cherry tomatoes.
+By
+Joe Whitworth
+/
+20 Oct 2026
+Government Agencies
+Members-only
+Stricter Dutch rules planned as Salmonella battle continues
+The rate of Salmonella in laying hens was 5 percent. The EU target is 2 percent
+By
+Joe Whitworth
+/
+19 Oct 2026
+Government Agencies
+Members-only
+Irish strike action to disrupt U.S. meat exports
+Meat plants have been told not to make any products for export to the United States because of strike action in Ireland.
+Industrial action by public sector workers is planned
+By
+News Desk
+/
+13 Oct 2026
+More from News Desk
+See all
+Food Policy & Law
+Members-only
+FDA warns rice noodle maker about sanitation failures
+As part of its enforcement activities, the Food and Drug Administration sends warning letters to entities under its jurisdiction. Some letters are not posted for public view until weeks or
+By
+News Desk
+/
+2 Nov 2026
+Recalls
+Reports of infants choking result in FDA warning about Once Upon a Farm snacks
+Several reports of children choking have led to an FDA warning against Once Upon A Time snacks.
+The warning covers all flavors, quantities, lots and dates of Once Upon A
+By
+News Desk
+/
+30 Oct 2026
+World
+Members-only
+Caterer suspended after food poisoning link
+More than 50 people have suffered food poisoning from catered food in two kindergartens in Singapore.
+The Communicable Diseases Agency (CDA) and Singapore Food Agency (SFA) are investigating two incidents
+By
+News Desk
+/
+30 Oct 2026
+outbreaks
+Salmonella sickens 60 at hospital in Costa Rica
+In September, a Mexican hospital was also hit by a Salmonella outbreak
+By
+News Desk
+/
+29 Oct 2026
+Your Support Protects Public Health
+Food Safety News is nonprofit and reader-funded. Your
+TAX-FREE
+gift ensures ongoing coverage of outbreaks, recalls, and regulations for everyone.
+Donate Today
+About FSN
+FSN
+Food Safety News
+foodsafetynews.com
+180 Olympic Drive S.E.
+Bainbridge Island
+,
+Washington
+98110
+Sign up
+️✉️
+Email
+|
+🛜
+RSS Feed
+Follow Us on Social Media
+Facebook
+Twitter
+Bluesky
+Discord
+Github
+Instagram
+Linkedin
+Mastodon
+Pinterest
+Reddit
+Telegram
+Threads
+Tiktok
+Whatsapp
+YouTube
+RSS
+Top Categories
+Food Policy & Law
+Food Safety Guides
+Opinion & Contributed Articles
+outbreaks
+Recalls
+View All Categories
+Quick Tools
+Find Your Health Department
+Restaurant Inspections
+Events Calendar
+Letters to the Editor
+Submit a News Tip
+RSS Feed
+About FSN
+About Us
+Contact Us
+Privacy Policy
+AI Policy
+Media Kit
+Support Our Journalism
+Store
+{ Array.from($el.querySelectorAll('.is-subitem')).forEach(item => { const itemName = item.querySelector('a span'); itemName.textContent = itemName.textContent.trim().slice(1); }); })">
+Home
+Recalls
+Outbreaks
+Store
+Events
+About
+Media Kit
+Support Our Journalism
+Contact
+©2026
+Food Safety News
+.
