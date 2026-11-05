@@ -9,5 +9,9 @@
         // the empty shop: start closer, so the edges of the sand patch and the bare sky on the right stay outside
         clue: { cam: { keys: [{ t: 0, ...fr(540, 1000, 1.2, 540, 960) }, { t: D("clue"), glide: D("clue"), ...fr(470, 1200, 1.35, 540, 1060) }] } },
         fish: { land: { y0: 570 } },
+        // the siren test (หอเตือนภัยทดสอบเสียง): the tower stood above the band, so the shot opens on its speakers as it sounds and
+        // tilts down to ตาจุ่น and แพรว by 2 s (the band cannot hold the tower and the two of them at once)
+        test: { cam: { keys: [{ t: 0, ...fr(880, 634, 1.25, 540, 900) }, { t: 2.0, glide: 1.8, ease: "power2.inOut", ...fr(800, 1240, 1.25, 540, 960) },
+          { t: D("test"), glide: D("test") - 2.0, ...fr(700, 1380, 1.25, 540, 1050) }] } },
       });
       afterFx("fish", (tl, id, t0, L) => liveL(L.light, 570));
