@@ -19,8 +19,8 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 SHOTS_ALL = {
     "ep1": [
         ("open", ["n01"], 0.05, 0.0, 1.0),            # low at the waterline: the overloaded boat sliding at the bright pontoon, red stripe under water, knees rising
-        ("hook", ["n02"], 0.04, 0.4, 1.6),            # command: push in on the rising knees
-        ("card", ["n03"], 0.15, 0.7, 2.2),            # ยาย's thumb rolls the brass counter 0019 → 0000, "แกร๊ก"
+        ("hook", ["n02"], 0.04, 0.3, 1.6),            # command: push in on the rising knees
+        ("card", ["n03"], 0.15, 0.4, 2.0),            # ยาย's thumb rolls the brass counter 0019 → 0000, "แกร๊ก"
         ("est", ["y01"], 0.3, 0.5, 3.4),              # establishing ท่ายายหยิบ: temple across the river, krathong stall, the boat moored
         ("kids", ["k01", "m01", "l01"], 0.12, 0.3, 3.0),
         ("whistle", ["k02", "m02"], 0.1, 0.3, 2.4),   # the clue: the orange whistle on ข้าวปั้น's jacket
@@ -36,17 +36,17 @@ SHOTS_ALL = {
         ("sign", ["n06", "n07"], 0.15, 0.3, 3.0),     # the "12 คน" sign · the counter 0019 · the map on the chalkboard
         ("fire", ["x03", "m04", "l05"], 0.1, 0.3, 2.6),
         ("sit", ["k07", "l06", "n08", "n09"], 0.1, 0.3, 3.0),
-        ("float", ["m05"], 0.15, 0.6, 2.2),
+        ("float", ["m05"], 0.15, 0.4, 2.0),
         ("back", ["n10", "y13"], 0.15, 0.3, 3.0),
         ("hit", ["x04", "n11"], 0.1, 1.3, 3.0),       # the wake, the spray, the bump · three whistles (SFX) after n11 · everyone stands
         ("roll", [], 0.0, 0.0, 2.2),                  # 0.4 s silence, the crack, the boat rolls, the counter drops
         ("evid", ["n12", "k08"], 0.15, 0.5, 3.0),     # the counter 0019 by the tilting "12 คน" sign · ข้าวปั้น's face
-        ("choice", ["n13"], 0.1, 2.0, 3.2),           # Shorts only
+        ("choice", ["n13"], 0.1, 1.6, 3.0),           # Shorts only
         ("endb", ["n14"], 0.2, 0.6, 3.0),             # Shorts only
     ],
     "ep2": [
         ("open", ["n01"], 0.05, 0.0, 1.0),
-        ("hook", ["n02"], 0.04, 0.4, 1.6),
+        ("hook", ["n02"], 0.04, 0.3, 1.6),
         ("recap", ["n03"], 0.12, 0.3, 3.0),           # Shorts only
         ("climb", ["x01", "n04"], 0.1, 0.3, 3.0),
         ("rule", ["y01", "n05", "m01", "k01"], 0.12, 0.3, 3.0),
@@ -69,7 +69,7 @@ SHOTS_ALL = {
     ],
     "ep3": [
         ("open", ["n01"], 0.05, 0.0, 1.0),
-        ("hook", ["n02"], 0.04, 0.4, 1.6),
+        ("hook", ["n02"], 0.04, 0.3, 1.6),
         ("party", ["l01", "n03"], 0.12, 0.4, 3.0),    # she lets go to swim for the party boat · the wake throws her back · she grabs the second gallon
         ("rule", ["y01"], 0.15, 0.6, 2.4),            # rule 3 on the paddle
         ("floatb", ["n04", "n05", "m01"], 0.15, 0.4, 3.4),
@@ -141,12 +141,17 @@ def frag_starts(vid):
     return starts
 
 
-def main():
+def main(cut, fname):
     t = 0.0
     out = []
+    drop = {"shorts": "full", "full": "shorts"}[cut]
     for key, ids, pre, post, mn in SHOTS:
         cur = pre
         vo = []
+        kept = [it for it in ids if LINES[it if isinstance(it, str) else it[0]].get("only") != drop]
+        if ids and not kept:
+            continue  # every line of this shot belongs to the other cut
+        ids = kept
         for i, item in enumerate(ids):
             vid, gap, rel = (item, GAP, "end") if isinstance(item, str) else (*item, "end")[:3]
             if i:
@@ -157,11 +162,15 @@ def main():
         dur = max(mn, cur + post)
         out.append({"key": key, "start": round(t, 3), "dur": round(dur, 3), "vo": vo, "voEnd": round(cur, 3)})
         t += dur
-    json.dump({"total": round(t, 3), "shots": out}, open(os.path.join(HERE, "schedule.json"), "w"), ensure_ascii=False, indent=1)
+    json.dump({"cut": cut, "total": round(t, 3), "shots": out}, open(os.path.join(HERE, fname), "w"), ensure_ascii=False, indent=1)
     for s in out:
         print(f"{s['key']:9s} {s['start']:7.2f} {s['dur']:5.2f}  " + " ".join(f"{v['id']}@{v['t']:.2f}{v['frags'][1:] or ''}" for v in s["vo"]))
-    print("TOTAL", round(t, 2))
+    print("TOTAL", cut, round(t, 2))
 
 
 if __name__ == "__main__":
-    main()
+    if SEG == "bridges":
+        main("full", "schedule.json")
+    else:
+        main("shorts", "schedule.json")       # 9:16 Short
+        main("full", "schedule-full.json")    # this episode's part of the 16:9 long video
