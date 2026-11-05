@@ -1,0 +1,9 @@
+{
+ "out": "LONG-jom-kohok-16x9-A.mp4", "tmp": "longL_tmp", "xfade": 0.2,
+ "parts": [
+  { "video": "ep1AL/EP1AL-jom-kohok-HQ.mp4", "from": 0.0, "to": 75.055 },
+  { "video": "ep2L/EP2L-jom-kohok-HQ.mp4", "from": 2.4, "to": 69.96 },
+  { "video": "ep3L/EP3L-jom-kohok-HQ.mp4", "from": 2.6, "to": 63.22 },
+  { "video": "ep4L/EP4L-jom-kohok-HQ.mp4", "from": 2.74, "to": 69.58 }
+ ]
+}

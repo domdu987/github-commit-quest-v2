@@ -1,0 +1,23 @@
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .cv { position: absolute; left: 0; right: 0; z-index: 70; font-family: Kanit; text-align: center; pointer-events: none; }
+        .cv-top { top: 0; height: 700px; background: linear-gradient(180deg, rgba(10,8,14,.92) 0%, rgba(10,8,14,.78) 48%, rgba(10,8,14,0) 100%); padding-top: 150px; }
+        .cv-brand { font: 800 34px/1 Kanit; letter-spacing: 12px; color: #f2c55c; opacity: .9; }
+        .cv-title { margin-top: 18px; font: 900 168px/1.05 Kanit; color: #fff6d8; text-shadow: 0 0 18px rgba(255,214,74,.65), 0 0 60px rgba(255,214,74,.45), 0 10px 0 rgba(0,0,0,.35); letter-spacing: -2px; }
+        .cv-ep { margin-top: 26px; font: 800 52px/1 Kanit; color: #fff; }
+        .cv-ep .pill { display: inline-block; background: #e2382e; color: #fff; padding: 8px 26px 12px; border-radius: 18px; margin-right: 18px; box-shadow: 0 6px 0 rgba(0,0,0,.35); }
+        .cv-bot { bottom: 0; height: 600px; background: linear-gradient(0deg, rgba(10,8,14,.94) 0%, rgba(10,8,14,.8) 50%, rgba(10,8,14,0) 100%); padding-top: 150px; }
+        .cv-setup { font: 800 76px/1.25 Kanit; color: #fff; text-shadow: 0 5px 0 rgba(0,0,0,.5); }
+        .cv-setup b { background: #f2c55c; color: #2e2a26; padding: 0 20px 6px; border-radius: 18px; }
+        .cv-cmd { display: inline-block; margin-top: 30px; font: 900 112px/1 Kanit; color: #fff; background: #e2382e; padding: 18px 54px 30px; border-radius: 30px; transform: rotate(-2deg); box-shadow: 0 0 0 8px rgba(10,8,14,.9), 0 16px 0 rgba(0,0,0,.4); }
+      </style>`);
+      root.insertAdjacentHTML("beforeend", `<div id="vig"></div><div id="flashw"></div><div id="black"></div>
+        <div class="cv cv-top"><div class="cv-brand">ROD MAI CLUB</div><div class="cv-title">สกิลจอมโกหก</div><div class="cv-ep"><span class="pill">EP.1</span>การ์ดกากสุด</div></div>
+        <div class="cv cv-bot"><div class="cv-setup">ตายแล้วเกิดใหม่<br>ได้สกิล<b>กากสุด</b></div><div class="cv-cmd">โกหกจนได้ที่ 1</div></div>`);
+      Fx.setup(root);
+      Engine.build(root, tl, shots);
+      root.appendChild(document.getElementById("grain"));
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
