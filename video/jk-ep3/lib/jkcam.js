@@ -41,11 +41,11 @@
   // ---- viewpoints that are not just a framing: a mask, a look down from the sky, a look up the shaft, the back of a head ----
   const G = (layer, html) => { const g = document.createElementNS(NS, "g"); layer.appendChild(g); if (html) g.innerHTML = html; return g; };
   // through the two eye holes of the bucket (screen space); pair with shake: JKC.pov(...) for the head bob
-  const bucketPOV = (L, o = {}) => { const W = window.STAGE_W || 1080, H = window.STAGE_H || 1920, cy = o.cy ?? 900, rx = o.rx ?? 200, ry = o.ry ?? 250, x1 = o.x1 ?? 318, x2 = o.x2 ?? 762;
+  const bucketPOV = (L, o = {}) => { const W = window.STAGE_W || 1080, H = window.STAGE_H || 1920, m = Math.min(W, H), cy = o.cy ?? H * 0.47, rx = o.rx ?? m * 0.19, ry = o.ry ?? m * 0.24, x1 = o.x1 ?? W * 0.295, x2 = o.x2 ?? W * 0.705;   // eye holes placed relative to the frame (portrait or landscape)
     const hole = (cx) => `M${cx - rx},${cy}a${rx},${ry} 0 1,0 ${2 * rx},0a${rx},${ry} 0 1,0 ${-2 * rx},0`;
     return G((L.screen || L.light), `<g id="${o.id || "bpov"}"><path d="M-100,-100H${W + 100}V${H + 100}H-100Z ${hole(x1)} ${hole(x2)}" fill="#1c1308" fill-rule="evenodd"/>
       ${[x1, x2].map((cx) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx + 6}" ry="${ry + 6}" fill="none" stroke="#000" stroke-width="34" opacity=".55" filter="url(#jkiSoft)"/><ellipse cx="${cx}" cy="${cy}" rx="${rx - 2}" ry="${ry - 2}" fill="none" stroke="#6a4a26" stroke-width="5" opacity=".7"/>`).join("")}
-      ${[260, 420, 1380, 1560].map((y) => `<path d="M-100,${y}Q${W / 2},${y + 30} ${W + 100},${y}" stroke="#2a1c0c" stroke-width="3" fill="none" opacity=".6"/>`).join("")}</g>`); };
+      ${[0.135, 0.22, 0.72, 0.81].map((f) => f * H).map((y) => `<path d="M-100,${y}Q${W / 2},${y + 30} ${W + 100},${y}" stroke="#2a1c0c" stroke-width="3" fill="none" opacity=".6"/>`).join("")}</g>`); };
   // the back of the hero's head and shoulders, bottom centre: we are looking over him at whatever he is looking at
   const back = (L, o = {}) => { const W = window.STAGE_W || 1080, H = window.STAGE_H || 1920, c = o.color || "#202a44", s = o.s ?? 1;
     return G((L.screen || L.light), `<g transform="translate(${W / 2},${H}) scale(${s})" opacity="${o.op ?? 0.95}" filter="url(#jkiSoft)"><path d="M-560,0V-300Q-540,-440 -380,-470L-150,-500Q-60,-640 0,-650Q60,-640 150,-500L380,-470Q540,-440 560,-300V0Z" fill="${c}"/><circle cy="-760" r="${o.head ?? 250}" fill="${o.hair || "#1a1410"}"/><path d="M-250,-760Q-260,-900 -140,-990Q0,-1060 140,-990Q260,-900 250,-760Z" fill="${o.hair || "#1a1410"}"/></g>`); };

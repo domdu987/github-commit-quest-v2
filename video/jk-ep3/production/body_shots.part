@@ -81,8 +81,10 @@
         fx(tl, id, t0, L) { hudN(tl, id, t0, "9,999", [[0, "86%"]]); const ch = grp(L.act); ch.innerHTML = `<g transform="translate(180,1400) rotate(80)"><rect x="-34" y="-120" width="68" height="16" rx="5" fill="#7a5030"/><path d="M-26,-104L-30,0M26,-104L30,0" stroke="#4a2e1a" stroke-width="10"/></g>`;
           tl.set(ch, { opacity: 0 }, 0); tl.set(ch, { opacity: 1 }, t0 + 0.6); } });
       // the set-up for EP.4: faint grey numbers rise from every head that laughed at the demon-king joke
-      shot("c08", { ...inn("c08"), camAt: fr(640, 1000, 1.0, 540, 1000), push: 0.03, shake: JKC.hand(4, 0.4), dark: 0.12,
-        actors: [...PATRONS("laugh", "closed", "laugh").map((a, i) => (i === 4 ? { ...a, track: [{ t: 0, mode: "idle", eyes: "closed", mouth: "smile" }] } : a)), YOU([{ t: 0, mode: "sitChair", eyes: "closed", mouth: "smile" }])],
+      // his own eyes through the bucket's two holes: the laughing room, and the grey +1s nobody notices (head bobbing with the laugh)
+      shot("c08", { ...inn("c08"), camAt: fr(450, 1010, 1.05, 540, 1000), push: 0.03, shake: JKC.pov(7, 4.5), dark: 0.12,
+        actors: [...PATRONS("laugh", "closed", "laugh").map((a, i) => (i === 4 ? { ...a, track: [{ t: 0, mode: "idle", eyes: "closed", mouth: "smile" }] } : a))],
+        extra(L) { JKC.bucketPOV(L); },
         fx(tl, id, t0, L) { hudN(tl, id, t0, "9,999", [[0, "86%"]]); const heads = [[150, 1022], [440, 1022], [560, 1012], [1010, 880], [1250, 880]];
           heads.forEach(([x, y], k) => { const g = grp(L.act); g.innerHTML = `<text x="${x}" y="${y - 70}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="44" fill="#c8ccd4" opacity=".75">+1</text>`;
             tl.set(g, { opacity: 0 }, 0); tl.fromTo(g, { opacity: 0.85, y: 0 }, { opacity: 0, y: -160, duration: 1.8, ease: "sine.out", immediateRender: false }, t0 + F("c08", 0, 1) + k * 0.15);
