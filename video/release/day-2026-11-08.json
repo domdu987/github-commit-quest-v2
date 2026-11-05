@@ -40,7 +40,10 @@
    "video_bytes": 96999486,
    "cover": "video/rupnak-ep1/cover.jpg",
    "title_youtube": "นาข้างบ้านยุบเป็นหลุม… อย่าเข้าใกล้ขอบ",
-   "title_chars": 38
+   "title_chars": 38,
+   "cover_branch": "prod/lane-d",
+   "cover_commit": "e108014",
+   "note": "ปกอยู่บน prod/lane-d commit e108014 (ทำ 2 พ.ย. ตรงกับฮุกของตอนนี้)"
   },
   {
    "slot": "09:15",
@@ -59,7 +62,10 @@
    "video_bytes": 97435840,
    "cover": "video/rupnak-ep2/cover.jpg",
    "title_youtube": "น้ำบ่อขุ่นเป็นโคลน… อย่ารอจนบ้านยุบ",
-   "title_chars": 35
+   "title_chars": 35,
+   "cover_branch": "prod/lane-d",
+   "cover_commit": "64cddc8",
+   "note": "ปกอยู่บน prod/lane-d commit 64cddc8 (ทำ 2 พ.ย. ตรงกับฮุกของตอนนี้)"
   }
  ],
  "video_long": {

@@ -10,7 +10,8 @@
   "คลิปยาว 16:9 (EP.1–2 + บทเชื่อม)",
   "ปกคลิปยาว 16:9",
   "Shorts EP.2 ฉบับจบค้าง (ตัดก่อนตอนลุงฟื้น + การ์ดชี้คลิปยาว)",
-  "ตรวจปก EP.1–2"
+  "ตรวจปก EP.1–2",
+  "ปก Shorts EP.1–2 (ยังไม่มีบนทุก branch)"
  ],
  "status": "Shorts EP.1 พร้อม · EP.2 เดิมเป็นตอนจบ ต้องตัดให้จบค้างตามรูปแบบใหม่ · คลิปยาวยังไม่มี",
  "upload_sheet": "video/release/sheets/takhian-upload.md",
@@ -39,9 +40,11 @@
    "video": "video/release/hq/takhian-ep1-HQ.mp4",
    "video_sha256": "7f346bfeef2552318e7ed16b22963879c789c2e36788c46dfab50d8681af551e",
    "video_bytes": 97627648,
-   "cover": "video/takhian-ep1/cover.jpg",
+   "cover": null,
    "title_youtube": "ติดพายุกลางนา… อย่าหลบใต้ต้นไม้ใหญ่",
-   "title_chars": 35
+   "title_chars": 35,
+   "cover_status": "missing",
+   "note": "ยังไม่มีปกบนทุก branch · แชทประสานงานจะทำให้ก่อน 8 พ.ย. 22:00"
   },
   {
    "slot": "09:15",
@@ -58,11 +61,12 @@
    "video": "video/release/hq/takhian-ep2-cliff-HQ.mp4",
    "video_sha256": null,
    "video_bytes": null,
-   "cover": "video/takhian-ep2/cover.jpg",
+   "cover": null,
    "title_youtube": "คนข้างคุณโดนฟ้าผ่า… อย่ากลัวจับตัวเขา",
    "title_chars": 37,
-   "note": "ตัดจาก takhian-ep2-HQ.mp4 (5e0f8a5) ให้จบค้าง แล้วต่อการ์ดชี้คลิปยาว",
-   "due": "2026-11-08T22:00+07:00"
+   "note": "ตัดจาก takhian-ep2-HQ.mp4 (5e0f8a5) ให้จบค้าง แล้วต่อการ์ดชี้คลิปยาว · ยังไม่มีปกบนทุก branch · แชทประสานงานจะทำให้ก่อน 8 พ.ย. 22:00",
+   "due": "2026-11-08T22:00+07:00",
+   "cover_status": "missing"
   }
  ],
  "video_long": {
