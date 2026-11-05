@@ -4,14 +4,14 @@
  "made_by": "Claude (แชทประสานงาน) · 5 พ.ย. 2569",
  "format": "รูปแบบส่งมอบใหม่ (เจ้าของ 5 พ.ย. 2569): วันละ 1 เรื่อง · 09:00 Shorts EP.1 และ 09:15 Shorts EP.2 → YouTube Shorts + Facebook Reel + IG Reel · 09:30 คลิปยาว 16:9 ทั้งเรื่อง → YouTube เท่านั้น",
  "posted_by": "เจ้าของ/Moji ผ่าน Buffer",
- "story": "ต้นตะเคียนกลางนา",
+ "story": "ต้นตะเคียนกลางนา (คลิปยาว 16:9 เท่านั้น)",
  "complete": false,
  "missing": [
-  "คลิปยาว 16:9 (EP.1–2 + บทเชื่อม)",
+  "คลิปยาว 16:9 ต้นตะเคียนกลางนา (กำลังทำ · เลน C (โต๊ะภาพ 1) · เสร็จ 2026-11-08 22:00)",
   "ปกคลิปยาว 16:9",
-  "Shorts EP.2 ฉบับจบค้าง (ตัดก่อนตอนลุงฟื้น + การ์ดชี้คลิปยาว)"
+  "Shorts เรื่องใหม่ 09:00/09:15 (ถ้ามีเรื่องผ่านด่านทัน)"
  ],
- "status": "Shorts EP.1 พร้อม · EP.2 เดิมเป็นตอนจบ ต้องตัดให้จบค้างตามรูปแบบใหม่ · คลิปยาวยังไม่มี",
+ "status": "เจ้าของ 5 พ.ย. 23:00: Shorts ของเรื่องนี้ลง YouTube ไปแล้ว 3–4 พ.ย. (เจ้าของลงเอง) ห้ามลงซ้ำ → วันนี้ลงเฉพาะคลิปยาว 16:9 09:30 · Shorts 09:00/09:15 ว่างไว้สำหรับเรื่องใหม่ที่ผ่านด่านทะเลลด EP.2 (ถ้าไม่มีทัน ปล่อยว่าง)",
  "upload_sheet": "video/release/sheets/takhian-upload.md",
  "rules": [
   "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
@@ -22,58 +22,7 @@
   "EP.3 ไม่ลงเป็น Shorts แยก (อยู่ในคลิปยาว) ยกเว้นวาล์วโมเมนตัม: Shorts ตอนไหนวิว 24 ชม. ≥ 22K ให้แจ้งแชทประสานงาน เพื่อตัดช่วงหักมุมจากคลิปยาวเป็น Shorts เพิ่ม ลง 08:45 วันถัดไป",
   "หลังลงแต่ละไฟล์ เขียนสถานะลง video/release/posted/<วันที่>.json (1 แถวต่อไฟล์ต่อแพลตฟอร์ม) แล้ว push ขึ้น ccr-fb88c4b3-kcqyid"
  ],
- "items": [
-  {
-   "slot": "09:00",
-   "id": "takhian-ep1",
-   "kind": "shorts",
-   "platforms": [
-    "youtube_shorts",
-    "facebook_reel",
-    "instagram_reel"
-   ],
-   "status": "final",
-   "branch": "ccr-fb88c4b3-kcqyid",
-   "commit": "1b11397",
-   "video": "video/release/hq/takhian-ep1-HQ.mp4",
-   "video_sha256": "7f346bfeef2552318e7ed16b22963879c789c2e36788c46dfab50d8681af551e",
-   "video_bytes": 97627648,
-   "cover": "video/takhian-ep1/cover.jpg",
-   "title_youtube": "ติดพายุกลางนา… อย่าหลบใต้ต้นไม้ใหญ่",
-   "title_chars": 35,
-   "note": "ปกทำแล้ว 5 พ.ย.",
-   "cover_branch": "ccr-fb88c4b3-kcqyid"
-  },
-  {
-   "slot": "09:15",
-   "id": "takhian-ep2",
-   "kind": "shorts",
-   "platforms": [
-    "youtube_shorts",
-    "facebook_reel",
-    "instagram_reel"
-   ],
-   "status": "in_production",
-   "branch": "ccr-fb88c4b3-kcqyid",
-   "commit": null,
-   "video": "video/release/hq/takhian-ep2-cliff-HQ.mp4",
-   "video_sha256": null,
-   "video_bytes": null,
-   "cover": "video/takhian-ep2/cover.jpg",
-   "title_youtube": "คนข้างคุณโดนฟ้าผ่า… อย่ากลัวจับตัวเขา",
-   "title_chars": 37,
-   "note": "ตัดจาก takhian-ep2-HQ.mp4 (5e0f8a5) ให้จบค้าง แล้วต่อการ์ดชี้คลิปยาว · ปกทำแล้ว 5 พ.ย.",
-   "due": "2026-11-08T22:00+07:00",
-   "cover_branch": "ccr-fb88c4b3-kcqyid",
-   "plan_cliffhanger": {
-    "cut_after": "swap (\"ผมเอง! พี่พักก่อน!\")",
-    "cut_at_s": 59.54,
-    "before": "gasp (ลุงสะดุ้ง… หายใจเฮือกใหญ่)",
-    "card": "ลุงจะรอดไหม? · กดติดตาม แล้วไปดูเรื่องเต็ม ได้ที่ช่อง YouTube (เสียงใหม่ 1 ประโยค)",
-    "length_s": "≈ 65"
-   }
-  }
- ],
+ "items": [],
  "video_long": {
   "slot": "09:30",
   "id": "takhian-long",
@@ -81,15 +30,16 @@
   "platforms": [
    "youtube"
   ],
-  "status": "missing",
-  "branch": null,
+  "status": "in_production",
+  "branch": "prod/lane-c",
   "commit": null,
   "video": "video/takhian-long/LONG-takhian-16x9-share.mp4",
   "video_sha256": null,
   "video_bytes": null,
-  "thumb": "video/takhian-long/thumb.jpg",
-  "title_youtube": "ติดพายุกลางทุ่งนา… อย่าวิ่งไปหลบใต้ต้นตะเคียน | ต้นตะเคียนกลางนา ฉบับเต็ม",
-  "note": "ต้องทำฉบับ 16:9 ทั้งเรื่อง",
-  "due": "2026-11-08T22:00+07:00"
- }
+  "cover": "video/takhian-long/thumb.jpg",
+  "made_by": "เลน C (โต๊ะภาพ 1)",
+  "due": "2026-11-08T22:00+07:00",
+  "note": "ฉบับเต็มจาก EP.1–2 รุ่นภาพใหม่ (1b11397/5e0f8a5 · kit video/takhian/upgrade · composition video/takhian-ep1..2) + บทเชื่อมจริง · ไม่ต้องตัด EP.2 จบค้างแล้ว"
+ },
+ "team_charter": "video/release/TEAM-CHARTER.md"
 }

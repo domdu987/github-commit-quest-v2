@@ -1,0 +1,203 @@
+      // ---------- รูพญานาค EP.2 น้ำบ่อขุ่นแดง แจ้งแล้วถอย ----------
+      // camera grammar: night at the torn rim (hook A: incense, phones, bike light) → close on ต้นข้าว's sneaker at the lip → the board
+      // and the crowd → the board's drums roll back ("สามวันก่อน") → map Bangkok → Loei → ยาย's yard by day (mid shots) → the door,
+      // the leaning post → night, a far pump → the notch insert → the window → ยาย's palm-leaf → morning: the hole, the stall → the
+      // ฮูปแต้ม wall → the 3D block (limestone, the cave under ยาย's house) → night asking for numbers → side view: ต้นข้าว bends in →
+      // cracks round the headman's feet → silence → the rim drops → top-down rings → backing away (icons) → home: the well is mud →
+      // ต้นข้าว whispers → wide, a rumble → the choice chalked on the board → black → the sign end card
+      const DAYL = { from: "left", rim: "#fff2d0", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.4, op: 0.28 }, vol: false };
+      const NIGHTL = { from: "left", rim: "#ffcf8a", rimOp: 0.9, shade: "#0a0c20", shadeOp: 0.45, cast: { len: 0.8, op: 0.3 }, vol: false };
+      const MOONL = { from: "right", rim: "#b8ccff", rimOp: 0.8, shade: "#0a0c20", shadeOp: 0.5, cast: { len: 0.9, op: 0.3 }, vol: false };
+      const GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 }, GNIGHT = { top: "#1a2448", bottom: "#3a2414", op: 0.3 }, GDUSK = { top: "#ffd2a8", bottom: "#6a5a7a", op: 0.18 };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const SRC = (L, tl, t0, dur, text) => TideUI.source(tl, L.light, t0, dur, { text });
+      const ID = (t = 0, dx = 0, dy = 0, s = 1) => ({ t, ...fr(540 + dx, 960 + dy, s, 540, 960) });
+      const PUSH = (k, s0 = 1, s1 = 1.06, dx = 0, dy = 0) => ({ keys: [ID(0, dx, dy, s0), { ...ID(D(k), dx, dy, s1), glide: D(k) }] });
+      // camera shake through the engine's own hook (a tween on the layers would fight the camera transform)
+      const SHAKE = (a, amp, dur) => (t) => (t > a && t < a + dur ? amp * (1 - (t - a) / dur) * Math.sin(t * 63) : 0);
+      const NIGHT_RIM = { time: "night", holeY: 1180, rx: 430, ry: 160 };
+      // camera grammar (EP.2): night, ยาย's well → the crack crawling like a naga to the post → the kids drag ยาย out (ต้นข้าว grabs her other
+      // hand) → the palm-leaf, rule 2 → running to the headman → his megaphone on the tower → มุก's phone: 1-7-8-4 → holy water at the rim →
+      // ต้นข้าว stops them → cutaway: water widens the hole → the wai joke → the pump thumping like a heart → found: his pump, the hose →
+      // cutaway: pumping draws the water down, the roof gives → the mural naga's eye glows → พ่อใหญ่สิน shuts the valve → his story →
+      // the notches → dawn: the red rope → ยาย slips back → rumble, dust under the bulb → the ring reaches the barn → cutaway under the
+      // house → choice → end card. No angle held longer than ~3 s: long shots cut to a second angle mid-shot.
+      const CUTS = (k, list) => ({ keys: list.flatMap(([t, a, b], i) => { const e = i + 1 < list.length ? list[i + 1][0] - 0.05 : D(k); return [ID(t, ...a), { ...ID(e, ...b), glide: e - t }]; }) });
+      const TWO = (k, at, a0, a1, b0, b1) => ({ keys: [ID(0, ...a0), { ...ID(at - 0.05, ...a1), glide: at - 0.05 }, ID(at, ...b0), { ...ID(D(k), ...b1), glide: D(k) - at }] });
+      const RIM_N = { time: "night", holeY: 1180, rx: 430, ry: 160 };
+      const DAWN = { from: "left", rim: "#ffd8a8", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.3, cast: { len: 1.6, op: 0.28 }, vol: false }, GDAWN = { top: "#ffd8b0", bottom: "#8a9ab8", op: 0.2 };
+
+      // ---------- 1. hook: ยาย hauls up a bucket of mud ----------
+      add("open", { set: "rupYard", setOpts: { id: "op", time: "night", muddy: 0.95, wellX: 300, wellY: 1600, crackDraw: true }, dark: 0.15, light: MOONL, grade: GNIGHT,
+        cam: { keys: [ID(0, -230, 440, 2.4), { ...ID(D("open"), -200, 420, 2.2), glide: D("open") }] },
+        actors: [A("yaiBucket", 470, 1700, 0.62, [{ t: 0, mode: "liftBucket", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("open"), fx(tl, id, t0, L) { Rup.cracks(tl, "opy", t0 + 0.6, 2.4); } });
+      // ---------- 2. the command: the crack crawls like a naga to the house post, the post tilts ----------
+      add("hook", { set: "rupYard", setOpts: { id: "hk", time: "night", muddy: 0.95, leanPost: true, snakeCrack: true }, dark: 0.15, light: MOONL, grade: GNIGHT,
+        cam: { keys: [ID(0, -170, 420, 1.5), { ...ID(D("hook"), -170, 330, 1.7), glide: D("hook") }] },
+        captions: caps("hook"), fx(tl, id, t0, L) { Rup.yardLife(tl, "hk", t0, D("hook"), { snake: 0, snakeDur: 1.4, lean: 1.1, dust: true }); } });
+      // ---------- 3. the kids drag ยาย down the steps; she strains back toward the barn ----------
+      add("out", { set: "rupYard", setOpts: { id: "ou", time: "night", muddy: 0.95, leanPost: true }, dark: 0.15, light: MOONL, grade: GNIGHT,
+        cam: TWO("out", vo("out", 1) - 0.1, [-20, 300, 1.45], [0, 300, 1.55], [180, 330, 1.9], [200, 330, 2.0]),
+        actors: [A("mook", 380, 1700, 0.66, [{ t: 0, mode: "pullHand", eyes: "angry", mouth: "o" }], { talk: [TALK("out", 0, "o")] }),
+          A("yaiKham", 640, 1720, 0.64, [{ t: 0, mode: "stagger", eyes: "wide", mouth: "o" }, { t: vo("out", 1), mode: "point", eyes: "worry", mouth: "o" }], { talk: [TALK("out", 1, "o")] })],
+        captions: caps("out", undefined, { quote: true }), fx(tl, id, t0, L) { Rup.yardLife(tl, "ou", t0, D("out"), { dust: true }); } });
+      // ---------- 4. ต้นข้าว grabs her other hand ----------
+      add("rice", { set: "rupYard", setOpts: { id: "ri", time: "night", muddy: 0.95 }, dark: 0.15, light: MOONL, grade: GNIGHT,
+        cam: PUSH("rice", 1.8, 1.95, 160, 360),
+        actors: [A("yaiKham", 640, 1720, 0.64, [{ t: 0, mode: "stagger", eyes: "wide", mouth: "o" }]), A("tonkao", 830, 1730, 0.56, [{ t: 0, mode: "pullHand", eyes: "angry", mouth: "o" }], { flip: true, talk: [TALK("rice", 0, "o")] })],
+        captions: caps("rice", undefined, { quote: true }), fx() {} });
+      // ---------- 5. rule 2 on the palm-leaf, then the kids run with the bucket ----------
+      add("rule", { set: "rupYard", setOpts: { id: "ru", time: "night", muddy: 0.95 }, dark: 0.15, light: MOONL, grade: GNIGHT, blur: { far: 3, mid: 3, set: 2 },
+        cam: TWO("rule", 2.0, [0, 200, 1.2], [0, 200, 1.24], [-100, 420, 1.3], [100, 420, 1.35]),
+        actors: [A("mookPhone", 300, 1760, 0.6, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 2.0, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 980, y: 1740, at: 2.0, dur: D("rule") - 2.0, ease: "none" } }),
+          A("tonkao", 200, 1780, 0.52, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 2.1, mode: "run", eyes: "wide", mouth: "o" }], { moveTo: { x: 860, y: 1770, at: 2.1, dur: D("rule") - 2.1, ease: "none" } })],
+        captions: caps("rule", undefined, { quote: true }),
+        fx(tl, id, t0, L) { RupUI.leaf(tl, L.light, t0 + 0.05, 1.9, { y: 560, active: 1, done: [0], sign: true }); } });
+      // ---------- 6. running to the headman's ----------
+      add("tell", { set: "rupRim2", setOpts: { id: "te", ...RIM_N, offer: false }, dark: 0.08, light: NIGHTL, grade: GNIGHT,
+        cam: TWO("tell", 2.0, [0, 380, 1.15], [0, 380, 1.2], [260, 60, 1.6], [280, 60, 1.7]),
+        actors: [A("mook", 160, 1820, 0.62, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: 700, y: 1500, dur: 2.0, ease: "none" } }),
+          A("tonkao", 60, 1860, 0.52, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: 560, y: 1540, dur: 2.0, ease: "none" } }),
+          A("thong", 860, 1010, 0.38, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
+        captions: caps("tell"), fx(tl, id, t0, L) { Rup2.life2(tl, "te", t0, D("tell")); SRC(L, tl, t0 + 0.3, D("tell") - 0.4, "ที่มา: กรมทรัพยากรธรณี"); } });
+      // ---------- 7. the headman on his megaphone: "the naga's had enough" (the plan fails) ----------
+      add("nope", { set: "rupRim2", setOpts: { id: "no", ...RIM_N, offer: false }, dark: 0.08, light: NIGHTL, grade: GNIGHT,
+        cam: TWO("nope", 2.0, [330, 40, 2.2], [330, 30, 2.35], [200, 0, 1.5], [220, 10, 1.55]),
+        actors: [A("thongMega", 860, 1010, 0.42, [{ t: 0, mode: "whistle", eyes: "closed", mouth: "laugh" }], { flip: true, talk: [TALK("nope", 0, "o")] })],
+        captions: caps("nope", undefined, { quote: true }), fx(tl, id, t0, L) { Rup2.life2(tl, "no", t0, D("nope")); } });
+      // ---------- 8. มุก calls 1784 herself: the number on her screen ----------
+      add("call", { set: "rupYard", setOpts: { id: "ca", time: "night", muddy: 0.95 }, dark: 0.2, light: MOONL, grade: GNIGHT, blur: { far: 4, mid: 4, set: 3 },
+        cam: TWO("call", vo("call", 1) - 0.1, [0, 360, 1.7], [0, 360, 1.8], [0, 240, 1.3], [0, 240, 1.36]),
+        actors: [A("mookPhone", 520, 1800, 0.74, [{ t: 0, mode: "phoneLook", eyes: "angry", mouth: "o" }], { talk: [TALK("call", 0, "o")] })],
+        captions: caps("call", undefined, { quote: true }),
+        fx(tl, id, t0, L) { RupUI.phoneCall(tl, L.light, t0 + vo("call", 1) - 0.1, D("call") - vo("call", 1) + 0.1, { num: "1784" }); SRC(L, tl, t0 + vo("call", 1), D("call") - vo("call", 1) - 0.1, "ที่มา: กรมป้องกันและบรรเทาสาธารณภัย"); } });
+      // ---------- 9. holy water lined up at the rim ----------
+      add("water", { set: "rupRim2", setOpts: { id: "wa", ...RIM_N }, dark: 0.08, light: NIGHTL, grade: GNIGHT,
+        cam: TWO("water", 2.1, [0, 40, 1.05], [0, 60, 1.1], [-220, 40, 1.8], [-200, 40, 1.9]),
+        actors: [A("bua", 230, 1000, 0.3, [{ t: 0, mode: "wai", eyes: "closed", mouth: "flat" }]), A("samarn", 400, 985, 0.3, [{ t: 0, mode: "liftBucket", eyes: "normal", mouth: "flat" }]),
+          A("chan", 600, 990, 0.3, [{ t: 0, mode: "liftBucket", eyes: "normal", mouth: "flat" }], { flip: true }), A("thongMega", 840, 1010, 0.36, [{ t: 0, mode: "whistle", eyes: "normal", mouth: "laugh" }], { flip: true, talk: [TALK("water", 0, "o")] })],
+        captions: caps("water", undefined, { quote: true }), fx(tl, id, t0, L) { Rup2.life2(tl, "wa", t0, D("water")); } });
+      // ---------- 10. ต้นข้าว jumps in front, arms out ----------
+      add("stop", { set: "rupRim2", setOpts: { id: "st", ...RIM_N }, dark: 0.08, light: NIGHTL, grade: GNIGHT,
+        cam: PUSH("stop", 1.5, 1.65, -40, 380),
+        actors: [A("tonkao", 500, 1560, 0.68, [{ t: 0, mode: "stopArm", eyes: "angry", mouth: "o" }], { talk: [TALK("stop", 0, "o")] })],
+        captions: caps("stop", undefined, { quote: true }), fx(tl, id, t0, L) { Rup2.life2(tl, "st", t0, D("stop")); } });
+      // ---------- 11. cutaway: water poured in washes soil into the cave, the rim widens ----------
+      add("why", { set: "rupCut2", setOpts: { id: "wy", stage: 2, wt0: 940, pumpY: 1480 }, dark: 0, light: false, grade: GDAY,
+        cam: TWO("why", 1.9, [-60, 140, 1.2], [-60, 140, 1.26], [-60, -40, 1.7], [-60, -40, 1.8]),
+        captions: caps("why"),
+        fx(tl, id, t0, L) { Rup.cutLife(tl, "wy", t0, D("why"), { wt0: 940, wt1: 1040, at: { pump: 9, drop: 9, drain: 9, ravel: 0.3, fall: 1.4 } });
+          put(L.set, `<g id="wy-pour">${[0, 1, 2].map((k) => `<path class="wy-st" d="M${470 + k * 14},560V${690 + k * 6}" stroke="#7ac0e8" stroke-width="${8 - k * 2}" stroke-dasharray="14 10" opacity=".9"/>`).join("")}</g>`);
+          tl.fromTo(".wy-st", { attr: { "stroke-dashoffset": 0 } }, { attr: { "stroke-dashoffset": -96 }, duration: 0.4, repeat: Math.ceil(D("why") / 0.4), ease: "none", immediateRender: false }, t0);
+          SRC(L, tl, t0 + 0.3, D("why") - 0.4, "ที่มา: กรมทรัพยากรธรณี · Florida DEP"); } });
+      // ---------- 12. the wai joke ----------
+      add("wai", { set: "rupRim2", setOpts: { id: "wi", ...RIM_N }, dark: 0.08, light: NIGHTL, grade: GNIGHT,
+        cam: TWO("wai", vo("wai", 1) - 0.1, [150, 420, 1.7], [150, 420, 1.8], [-150, 420, 1.7], [-150, 420, 1.8]),
+        actors: [A("tonkao", 760, 1640, 0.56, [{ t: 0, mode: "point", eyes: "side", mouth: "laugh" }], { flip: true, talk: [TALK("wai", 0, "laugh")] }),
+          A("mook", 380, 1660, 0.62, [{ t: 0, mode: "wai", eyes: "closed", mouth: "flat" }, { t: vo("wai", 1), mode: "handsHip", eyes: "angry", mouth: "o" }], { talk: [TALK("wai", 1, "o")] })],
+        captions: caps("wai", undefined, { quote: true }), fx(tl, id, t0, L) { Rup2.life2(tl, "wi", t0, D("wai")); } });
+      // ---------- 13. the far pump thumps like a heartbeat; heads turn ----------
+      add("pump", { set: "rupYard", setOpts: { id: "pu", time: "night", muddy: 0.95 }, dark: 0.25, light: MOONL, grade: GNIGHT, shake: SHAKE(0.05, 3, 0.9),
+        cam: { keys: [ID(0, 100, 200, 1.25), { ...ID(0.3, 100, 200, 1.31), glide: 0.12 }, { ...ID(0.55, 100, 200, 1.25), glide: 0.2 }, { ...ID(0.8, 100, 200, 1.33), glide: 0.12 }, { ...ID(1.0, 100, 200, 1.27), glide: 0.18 }] },
+        actors: [A("yaiKham", 470, 1238, 0.36, [{ t: 0, mode: "idle", eyes: "side", mouth: "o" }]), A("mook", 600, 1238, 0.38, [{ t: 0, mode: "point", eyes: "side", mouth: "o" }], { flip: true }), A("tonkao", 690, 1240, 0.3, [{ t: 0, mode: "tremble", eyes: "side", mouth: "o" }], { flip: true })],
+        captions: [], fx() {} });
+      // ---------- 14. found: the headman's pump ----------
+      add("found", { set: "rupRim2", setOpts: { id: "fo", time: "night", holeX: -600, holeY: 1900, rx: 200, ry: 80, props: false, offer: false, pumpAt: { x: 340, y: 1300, s: 1.1 } }, dark: 0.08, light: NIGHTL, grade: GNIGHT,
+        cam: PUSH("found", 1.0, 1.08, 40, 120),
+        actors: [A("tonkao", 820, 1720, 0.62, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true, talk: [TALK("found", 0, "o")] }), A("mook", 960, 1760, 0.68, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("found", undefined, { quote: true }), fx(tl, id, t0, L) { Rup2.life2(tl, "fo", t0, D("found")); } });
+      // ---------- 15. the hose gushing on the dry-season field ----------
+      add("hose", { set: "rupRim2", setOpts: { id: "ho", time: "night", holeX: -600, holeY: 1900, rx: 200, ry: 80, props: false, offer: false, pumpAt: { x: 340, y: 1300, s: 1.1 } }, dark: 0.08, light: NIGHTL, grade: GNIGHT,
+        cam: PUSH("hose", 2.0, 2.15, 330, 300), captions: [], fx(tl, id, t0, L) { Rup2.life2(tl, "ho", t0, D("hose")); } });
+      // ---------- 16-17. cutaway: pumping draws the water down; the roof gives ----------
+      add("know1", { set: "rupCut2", setOpts: { id: "k1", stage: 0, wt0: 940, pumpY: 1480 }, dark: 0, light: false, grade: GDAY,
+        cam: TWO("know1", 2.2, [30, 140, 1.15], [30, 140, 1.2], [120, 300, 1.4], [120, 300, 1.46]),
+        captions: caps("know1"), fx(tl, id, t0, L) { Rup.cutLife(tl, "k1", t0, D("know1"), { wt0: 940, wt1: 1240, at: { pump: 0, drop: 0.3, drain: 2.4, ravel: 9, fall: 9 } }); SRC(L, tl, t0 + 0.3, D("know1") - 0.4, "ที่มา: กรมทรัพยากรธรณี"); } });
+      add("know2", { set: "rupCut2", setOpts: { id: "k2", stage: 1, wt0: 1240, pumpY: 1480 }, dark: 0, light: false, grade: GDAY, shake: SHAKE(2.4, 7, 0.6),
+        cam: TWO("know2", 1.8, [-60, 160, 1.5], [-60, 160, 1.56], [-60, -60, 1.25], [-60, -60, 1.3]),
+        captions: caps("know2"), fx(tl, id, t0, L) { Rup.cutLife(tl, "k2", t0, D("know2"), { wt0: 1240, wt1: 1240, at: { pump: 9, drop: 9, drain: 0, ravel: 0.2, fall: 2.3 } }); SRC(L, tl, t0 + 0.3, D("know2") - 0.4, "ที่มา: กรมทรัพยากรธรณี"); } });
+      // ---------- 18. the mural naga's eye glows ----------
+      add("mural", { set: "rupMural", setOpts: { id: "mu" }, dark: 0, light: false, grade: GDAY,
+        cam: { keys: [ID(0, 0, 200, 1.2), { ...ID(D("mural"), 330, -60, 2.6), glide: D("mural") - 0.2 }] },
+        captions: caps("mural"), fx(tl, id, t0, L) { Rup.muralLife(tl, "mu", t0, D("mural"), { eyeGlow: 1.6 }); } });
+      // ---------- 19. twist: an old hand with an iron rod shuts the valve, the pump dies ----------
+      add("valve", { set: "rupRim2", setOpts: { id: "va", time: "night", holeX: -600, holeY: 1900, rx: 200, ry: 80, props: false, offer: false, pumpAt: { x: 340, y: 1300, s: 1.1 } }, dark: 0.12, light: NIGHTL, grade: GNIGHT,
+        cam: CUTS("valve", [[0, [-390, 160, 3.4], [-380, 170, 3.6]], [1.55, [20, 200, 5.2], [20, 190, 5.6]]]),
+        actors: [A("phoSinBar", 560, 1420, 0.62, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 2.3, mode: "idle", eyes: "angry", mouth: "flat" }], { flip: true, from: 1.5 })],
+        captions: caps("valve"), fx(tl, id, t0, L) { Rup2.life2(tl, "va", t0, 1.4); tl.to("#va-gush", { opacity: 0, duration: 0.3, immediateRender: false }, t0 + 1.3);
+          // insert: an old hand on the drill rod, cranking the gate valve on the pump's inlet shut
+          put(L.set, `<g transform="translate(150,1240)"><rect x="-12" y="-80" width="24" height="80" fill="#7a7e84" stroke="#1e1a18" stroke-width="2"/><rect x="-30" y="-10" width="60" height="20" rx="4" fill="#5a5e64" stroke="#1e1a18" stroke-width="2"/>
+            <g id="va-wh" transform="translate(0,-90)"><circle r="50" fill="none" stroke="#2a2a2a" stroke-width="16"/><circle r="50" fill="none" stroke="#b8302a" stroke-width="11"/>
+            ${[0, 60, 120].map((a) => `<path d="M0,0" transform="rotate(${a})"/><rect x="-50" y="-4" width="100" height="8" fill="#b8302a" stroke="#2a2a2a" stroke-width="1.6" transform="rotate(${a})"/>`).join("")}<circle r="12" fill="#5a5e64" stroke="#1e1a18" stroke-width="2"/>
+            <rect x="-4" y="-7" width="190" height="14" rx="6" fill="#6a6e74" stroke="#1e1a18" stroke-width="2"/><path d="M4,-4H180" stroke="#c8ccd2" stroke-width="2.5" opacity=".7"/>
+            <g transform="translate(160,0)"><rect x="18" y="-34" width="90" height="68" rx="12" fill="#26305a" stroke="#1e1a18" stroke-width="2.2"/><path d="M24,-30v60" stroke="#c8402a" stroke-width="5" opacity=".8"/>
+              <ellipse cx="4" cy="2" rx="28" ry="24" fill="#7a4a2e" stroke="#1e1a18" stroke-width="2"/>${[-15, -5, 5, 15].map((x, k) => `<rect x="${x - 5}" y="-26" width="11" height="${30 - Math.abs(k - 1.5) * 2}" rx="5" fill="#7a4a2e" stroke="#1e1a18" stroke-width="1.6"/><path d="M${x - 3},-14h6" stroke="#4a2a1a" stroke-width="1.4"/>`).join("")}
+              <path d="M-14,10q-12,6 -16,-4" stroke="#4a2a1a" stroke-width="2" fill="none"/><path d="M-6,14q6,4 14,0" stroke="#5a3420" stroke-width="1.4" fill="none" opacity=".7"/></g></g></g>`);
+          tl.fromTo("#va-wh", { rotation: 0, svgOrigin: "0 0" }, { rotation: -100, svgOrigin: "0 0", duration: 1.25, ease: "power2.inOut", immediateRender: false }, t0 + 0.1);
+          // torchlight on his face for the reveal (a warm pool from below-left)
+          put(L.fg, `<defs><radialGradient id="va-tg"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".55"/><stop offset="1" stop-color="#ffe2a0" stop-opacity="0"/></radialGradient></defs>
+            <ellipse id="va-torch" cx="530" cy="1090" rx="110" ry="130" fill="url(#va-tg)" opacity="0" style="mix-blend-mode:screen"/>`);
+          tl.fromTo("#va-torch", { opacity: 0 }, { opacity: 1, duration: 0.25, immediateRender: false }, t0 + 1.55);
+          tl.to("#va-torch", { opacity: 0.8, duration: 0.18, yoyo: true, repeat: 7, ease: "sine.inOut" }, t0 + 1.85); } });
+      // ---------- 20-22. พ่อใหญ่สิน: the driller, the first hole, the notches ----------
+      add("sin1", { set: "rupYard", setOpts: { id: "s1", time: "night", muddy: 0.95, notches: 8 }, dark: 0.2, light: MOONL, grade: GNIGHT, blur: { far: 3, mid: 3, set: 2 },
+        cam: TWO("sin1", 2.4, [-160, 420, 1.7], [-160, 420, 1.8], [-180, 300, 2.3], [-180, 300, 2.4]),
+        actors: [A("phoSinBar", 380, 1700, 0.7, [{ t: 0, mode: "talk", eyes: "normal", mouth: "flat" }], { talk: [TALK("sin1", 0, "o")] })],
+        captions: caps("sin1", undefined, { quote: true }), fx() {} });
+      add("sin2", { set: "rupMural", setOpts: { id: "s2", buffalo: true }, dark: 0.1, light: false, grade: GDAWN,
+        cam: TWO("sin2", 3.0, [500, -520, 2.0], [520, -520, 2.1], [200, -380, 1.3], [200, -360, 1.4]),
+        captions: caps("sin2", undefined, { quote: true }), fx(tl, id, t0, L) { Rup.muralLife(tl, "s2", t0, D("sin2")); } });
+      add("sin3", { set: "rupYard", setOpts: { id: "s3", time: "night", muddy: 0.95, notches: 8 }, dark: 0.2, light: MOONL, grade: GNIGHT,
+        cam: TWO("sin3", 2.0, [-180, 470, 1.45], [-200, 470, 1.55], [-410, 442, 3.3], [-410, 470, 3.5]),
+        actors: [A("phoSinBar", 330, 1650, 0.62, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }], { flip: true, talk: [TALK("sin3", 0, "o")] })],
+        captions: caps("sin3", undefined, { quote: true }), fx() {} });
+      // ---------- 23. ต้นข้าว gets it ----------
+      add("ton", { set: "rupYard", setOpts: { id: "tn", time: "night", muddy: 0.95 }, dark: 0.2, light: MOONL, grade: GNIGHT, blur: { far: 3, mid: 3, set: 2 },
+        cam: TWO("ton", 2.0, [0, 500, 2.0], [0, 500, 2.1], [0, 380, 1.5], [0, 380, 1.56]),
+        actors: [A("tonkao", 540, 1700, 0.7, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }, { t: 2.0, mode: "talk", eyes: "wide", mouth: "smile" }], { talk: [TALK("ton", 0, "o")] })],
+        captions: caps("ton", undefined, { quote: true }), fx() {} });
+      // ---------- 24. dawn: the red rope round the hole ----------
+      add("cordon", { set: "rupRim2", setOpts: { id: "cd", time: "day", holeY: 1180, rx: 330, ry: 120, rope: true, offer: false }, dark: 0.05, light: DAWN, grade: GDAWN,
+        cam: TWO("cordon", 1.7, [0, 60, 1.0], [0, 60, 1.04], [-260, 160, 1.6], [-240, 160, 1.66]),
+        actors: [A("samarn", 200, 1700, 0.5, [{ t: 0, mode: "pullHand", eyes: "normal", mouth: "flat" }]), A("chan", 900, 1700, 0.5, [{ t: 0, mode: "point", eyes: "normal", mouth: "o" }], { flip: true })],
+        captions: caps("cordon"), fx(tl, id, t0, L) { SRC(L, tl, t0 + 0.3, D("cordon") - 0.4, "ที่มา: กรมทรัพยากรธรณี"); } });
+      // ---------- 25. ยาย slips back toward the barn ----------
+      add("sneak", { set: "rupYard", setOpts: { id: "sn", time: "dusk", muddy: 0.95 }, dark: 0.15, light: DAWN, grade: GDAWN,
+        cam: TWO("sneak", 1.9, [0, 100, 1.0], [40, 100, 1.04], [150, 250, 1.6], [200, 230, 1.66]),
+        actors: [A("yaiKham", 440, 1520, 0.44, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat" }], { flip: true, moveTo: { x: 780, y: 1300, s: 0.38, dur: D("sneak"), ease: "none" } })],
+        captions: caps("sneak"), fx() {} });
+      // ---------- 26. rumble: dust falls from under the house under the bulb ----------
+      add("rumble", { set: "rupYard", setOpts: { id: "rb", time: "night", muddy: 0.95, leanPost: true }, dark: 0.2, light: MOONL, grade: GNIGHT, shake: SHAKE(0.3, 7, 1.6),
+        cam: PUSH("rumble", 1.6, 1.75, 20, 120),
+        captions: caps("rumble"), fx(tl, id, t0, L) { Rup.yardLife(tl, "rb", t0, D("rumble"), { dust: true, lean: 0.4 });
+          // dust shaken out of the floorboards, big enough to read in a still, bright in the bulb's cone; clods dropping
+          const r = ((s) => () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296))(57); let g = "";
+          for (let k = 0; k < 34; k++) g += `<circle class="rb-dm" cx="${(430 + r() * 260).toFixed(1)}" cy="${(1056 + r() * 20).toFixed(1)}" r="${(3.5 + r() * 5).toFixed(1)}" fill="#ffe8b8" opacity="0"/>`;
+          for (let k = 0; k < 9; k++) { const x = 440 + r() * 240, w = 9 + r() * 9; g += `<path class="rb-cl" d="M${x.toFixed(1)},1054l${w.toFixed(1)},-3l3,${(w * 0.8).toFixed(1)}l${(-w * 0.7).toFixed(1)},5z" fill="#5a3c24" stroke="#2a1a10" stroke-width="2" opacity="0"/>`; }
+          g += `<path id="rb-haze" d="M560,1066L420,1236H700Z" fill="#e8c890" opacity="0" style="mix-blend-mode:screen"/>`;
+          put(L.set, g);
+          tl.fromTo("#rb-haze", { opacity: 0 }, { opacity: 0.22, duration: 0.5, immediateRender: false }, t0 + 0.3);
+          document.querySelectorAll(".rb-dm").forEach((el, k) => { const per = 1.0 + (k % 5) * 0.2;
+            tl.fromTo(el, { y: 0, x: 0, opacity: 0.95 }, { y: 150 + (k % 4) * 30, x: (k % 2 ? 1 : -1) * (6 + (k % 3) * 5), opacity: 0.15, duration: per, ease: "power1.in", repeat: Math.ceil(D("rumble") / per), immediateRender: false }, t0 + 0.2 + (k * 0.11) % per); });
+          document.querySelectorAll(".rb-cl").forEach((el, k) => { const at = t0 + 0.35 + k * 0.22;
+            tl.fromTo(el, { y: 0, rotation: 0, opacity: 1, transformOrigin: "50% 50%" }, { y: 178, rotation: 160 + k * 30, transformOrigin: "50% 50%", duration: 0.45, ease: "power2.in", immediateRender: false }, at);
+            tl.to(el, { y: 166, duration: 0.12, yoyo: true, repeat: 1, ease: "power1.out" }, at + 0.45); }); } });
+      // ---------- 27. the ring reaches the barn post ----------
+      add("ring", { set: "rupYard", setOpts: { id: "rg", time: "dusk", muddy: 0.95, crackDraw: true }, dark: 0.15, light: DAWN, grade: GDAWN,
+        cam: PUSH("ring", 1.5, 1.65, 300, 180),
+        actors: [A("mook", 600, 1500, 0.5, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { talk: [TALK("ring", 0, "o")] })],
+        captions: caps("ring", undefined, { quote: true }), fx(tl, id, t0, L) { Rup.cracks(tl, "rgy", t0, 1.8); } });
+      // ---------- 28. cutaway under ยาย's house: no water left ----------
+      add("close", { set: "rupCut2", setOpts: { id: "cl", stage: 1, wt0: 1240, pumpY: 1480 }, dark: 0, light: false, grade: GDAY, shake: SHAKE(2.9, 4, 1.0),
+        cam: TWO("close", 2.6, [-280, -60, 1.5], [-280, -60, 1.56], [-120, 200, 1.3], [-120, 200, 1.36]),
+        captions: caps("close"), fx(tl, id, t0, L) { Rup.cutLife(tl, "cl", t0, D("close"), { wt0: 1240, wt1: 1240, at: { pump: 9, drop: 9, drain: 0, ravel: 0.3, fall: 9 } }); } });
+      // ---------- 29. the choice ----------
+      add("choice", { set: "rupRim2", setOpts: { id: "ch", ...RIM_N, props: false }, dark: 0.5, light: false, grade: GNIGHT, blur: { sky: 4, far: 4, mid: 4, set: 4 },
+        cam: { keys: [ID(0)] }, captions: caps("choice"),
+        fx(tl, id, t0, L) { RupUI.choice(tl, L.light, t0 + 0.1, D("choice") - 0.1, { a: "ตามยายเข้าไป", b: "เรียกเจ้าหน้าที่" }); } });
+      // ---------- 30. end card ----------
+      add("end", { set: "rupRim2", setOpts: { id: "en", ...RIM_N, props: false }, dark: 0.3, light: false, grade: GNIGHT,
+        cam: { keys: [ID(0)] }, captions: [],
+        fx(tl, id, t0, L) { RupUI.endCard(tl, L.light, t0, D("end"), { ep: "ตอนที่ 3 (ตอนจบ)", title: "ไหว้ไกลร้อยเมตร" }); } });

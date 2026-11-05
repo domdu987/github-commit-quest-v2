@@ -1,0 +1,8 @@
+first lines:
+   0.10– 3.11s  [open] n01: ถ้าวันหนึ่ง… / น้ำบ่อบ้านคุณ[ขุ่นเป็นโคลน]
+   3.17– 4.54s  [hook] n02: {อย่ารอจนบ้านยุบ}
+   5.09– 7.56s  [out] m01: ยาย! / [ออกจากบ้าน]เดี๋ยวนี้!
+   7.66–10.89s  [out] y01: ข้าวในเล้า… / [ข้าวทั้งปี]ของยายนะ!
+command starts at 3.17s: {อย่ารอจนบ้านยุบ}
+PASS
+look at the snapshots at 0.0 / 1.0 / 2.0 / 3.0 s for H1 (the lure moving in frame 1) and H3 (one wrong detail)

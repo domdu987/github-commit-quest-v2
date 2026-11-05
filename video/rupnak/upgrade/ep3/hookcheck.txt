@@ -1,0 +1,8 @@
+first lines:
+   0.05– 3.36s  [open] n01: ถ้าวันหนึ่ง… / รูนาคข้างบ้านคุณ[กว้างขึ้นทุกวัน]
+   3.40– 4.90s  [hook] n02: {อย่ากลับเข้าไปเอาของ}
+   5.42– 7.31s  [barn] m01: ยาย! / [ทิ้งข้าว]ไว้ก่อน!
+   7.41–10.45s  [barn] y01: ประตูมันติด… / ยาย[ออกไม่ได้]!
+command starts at 3.40s: {อย่ากลับเข้าไปเอาของ}
+PASS
+look at the snapshots at 0.0 / 1.0 / 2.0 / 3.0 s for H1 (the lure moving in frame 1) and H3 (one wrong detail)

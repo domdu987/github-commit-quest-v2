@@ -1,0 +1,113 @@
+      // ---------- ต้นตะเคียนกลางนา: shared lights, poses and helpers (both episodes) ----------
+      SK.ploy = ["#e0a880", "#b07a52", "#f2c8a0"]; SK.ton = SK.ton || ["#d39a6e", "#a8704a", "#ecc09a"];
+      const ST = { from: "left", rim: "#b8c8ff", rimOp: 0.85, shade: "#0a0e18", shadeOp: 0.4, cast: false, vol: false };
+      const FL = { from: "right", rim: "#ffffff", rimOp: 1, shade: "#0a0e18", shadeOp: 0.35, cast: false, vol: false };
+      const DAY = { from: "right", rim: "#ffe2a0", rimOp: 0.8, shade: "#3a2a40", shadeOp: 0.25, cast: false, vol: false };
+      const GS = { top: "#2a3048", bottom: "#0a0e14", op: 0.16 }, GD = { top: "#ffe0a0", bottom: "#3a5a3a", op: 0.1 }, GW = { top: "#6a6a6a", bottom: "#1a1a1a", op: 0.2 };
+      const sm = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); };
+      const PER = 60 / 110, push = (u) => { const ph = (u % PER) / PER; return ph < 0.42 ? Math.sin((ph / 0.42) * Math.PI / 2) : Math.cos(((ph - 0.42) / 0.58) * Math.PI / 2); };
+      Rig.MODES.supine = (u, o) => ({ ...Rig.MODES.lie(u, o), torso: 0, uaF: 2, faF: -2, uaB: -2, faB: -2, thF: -2, thB: 2, shF: 4, shB: 2, head: 4 });
+      Rig.MODES.pressed = (u, o) => ({ ...Rig.MODES.supine(u, o), rootY: -40 + (o.dy ?? 0) + 5 * push(u + (o.ph ?? 0)) });
+      Rig.MODES.jolt = (u, o) => ({ ...Rig.MODES.supine(u, o), rootY: -40 + (o.dy ?? 0) - 34 * Math.exp(-u * 9) * Math.abs(Math.sin(u * 30)), uaF: -20 * Math.exp(-u * 8), uaB: 20 * Math.exp(-u * 8) });
+      Rig.MODES.kneel = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 14, faF: -40, uaB: -14, faB: 40, torso: 0, head: 6 });
+      Rig.MODES.kneelPhone = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -30, faF: -150, uaB: 4, faB: -12, torso: 4, head: 6, bodyY: o.by ?? 150 });
+      Rig.MODES.kneelReach = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -60 + 8 * Math.sin(u * 3), faF: -6, uaB: 6, faB: -10, torso: 10, head: 10, bodyY: o.by ?? 150 });
+      Rig.MODES.cprF = (u, o) => { const k = push(u + (o.ph ?? 0)); return { ...Rig.MODES.crouch(u, o), uaF: -6, faF: 0, uaB: 6, faB: 0, torso: 14 + 4 * k, head: 20 + 3 * k, bodyY: (o.by ?? 190) + 14 * k }; };
+      // the right reaction in an open field: knees bent low, the head tucked, one forearm across the face, the other hand over the head, shaking
+      Rig.MODES.cower = (u, o) => ({ ...Rig.MODES.idle(u, o), thF: -48, shF: 78, thB: -30, shB: 70, bodyY: 92, torso: 10 + 1.5 * Math.sin(u * 40), head: 14, uaF: -96 + 3 * Math.sin(u * 37), faF: -118, uaB: -128, faB: -84 });
+      Rig.MODES.flinch = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150 + 4 * Math.sin(u * 30), faF: -60, uaB: 140, faB: 70, torso: -8, head: -10 });
+      Rig.MODES.pant = (u, o) => { const b = Math.sin(u * 8); return { ...Rig.MODES.idle(u, o), uaF: 20, faF: -20, uaB: -20, faB: 20, torso: 16 + 3 * b, head: 8 + 3 * b, bodyY: 10 + 3 * b }; };
+      Rig.MODES.grab = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -80, faF: -4, uaB: 10, faB: -10, torso: 8, head: 4 });
+      Rig.MODES.drag = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -40, faF: -6, uaB: -34, faB: -8, torso: -14, head: -6, bodyY: o.by ?? 140 });
+      Rig.MODES.sitDown = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -40 + 10 * Math.sin(u * 30) * Math.exp(-u * 3), faF: -30, uaB: 40, faB: 30, torso: -14, head: -6, bodyY: o.by ?? 260 });
+      Rig.MODES.yell = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -100, faF: -10, uaB: 8, faB: -20, torso: -4, head: -8 + 2 * Math.sin(u * 14) });
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = Array.isArray(extra.talk[0]) ? extra.talk : [extra.talk]; return { who, x, y, s, track, blinks: [0.9, 2.7, 4.1], ...extra }; };
+      const TALK = (k, i = 0, m = "o") => [vo(k, i), voEnd(k, i), m];
+      const P = (who, x, y, s, mode, eyes = "normal", mouth = "flat", o = {}) => A(who, x, y, s, [{ t: 0, mode, eyes, mouth, opts: o.opts || {} }, ...(o.then || [])], o);
+      const STORM = (id, o = {}) => ({ set: "tkField", setOpts: { id, mood: "storm", dark: 0.8, rain: 0.8, ...o }, dark: 0.04, light: ST, grade: GS });
+      const push2 = (k, a, b) => ({ keys: [{ t: 0, ...a }, { t: D(k), glide: D(k), ...b }] });
+      const rumble = (amp = 2) => (t) => ({ x: amp * Math.sin(t * 23) + amp * 0.5 * Math.sin(t * 61), y: amp * 0.8 * Math.sin(t * 31), r: 0.1 * Math.sin(t * 7) });
+      const kick = (a, b, amp) => (t) => (t >= a && t < b ? { x: amp * Math.sin(t * 61) * (1 - (t - a) / (b - a)), y: amp * 0.8 * Math.sin(t * 47) * (1 - (t - a) / (b - a)), r: 0 } : 0);
+      // a strike on the tree in this shot: the bolt group (L.glow) hidden until t, then the flash / silhouette / relight; the bolt fades to an afterglow
+      // StormFX (lane C): every storm shot gets layered rain + wind + its far/in-cloud lightning; STRIKE = the bolt onto this shot's tree
+      let CUR = {};
+      const STORMFX = (spec, tl, t0, L) => { const so = spec.setOpts || {}; CUR = { tree: so.tree, hz: so.horizon ?? 1000, ground: so._ground, rain: null };
+        if (spec.set !== "tkScape" || so.mood !== "storm") return; const dur = spec._dur || 4, hz = CUR.hz, rk = so._rain ?? 0.8;
+        if (rk > 0) CUR.rain = StormFX.rain(L, tl, t0, dur, { wind: 0.22, horizon: hz, density: rk, seed: 101 + (t0 * 10 | 0), ripples: [{ x: -400, y: hz + 40, w: 1900, h: 300, n: Math.round(28 * rk), r: 12, layer: "mid" }], near: so._near ?? false, mid: so._mid ?? false });
+        StormFX.wind(L, tl, t0, dur, { leaves: so._leaves ?? Math.round(2 + 3 * rk), dir: -1, seed: 202 + (t0 * 10 | 0) });
+        if (so._dist) StormFX.bolt(L, tl, t0 + (so._distAt ?? 0.45), { x0: so._dist[0], y0: hz - 560, x1: so._dist[1], y1: hz - 8, seed: 41, w: 0.32, layer: "sky", flash: 0.28, cx: so._dist[0], cy: hz - 600, cloudR: 0.55, leader: 0.08, lit: CUR.rain });
+        else if (so._flash > 0 && !so._strike) { const fx0 = so.flashX ?? 760; StormFX.bolt(L, tl, t0 + (so._flashAt ?? 0.5), { x0: fx0 - 260, y0: hz - 760, x1: fx0 + 220, y1: hz - 600, seed: 53, w: 0.28, layer: "sky", flash: Math.min(0.4, so._flash * 0.6), cx: fx0, cy: hz - 680, cloudR: 0.7, leader: 0.1, depth: 2, lit: CUR.rain }); } };
+      const STRIKE = (tl, L, t0, at, o = {}) => { const T = o.tree || CUR.tree, s = T.s || 1, top = T.y - 1600 * s, lead = 0.14;
+        const b = StormFX.bolt(L, tl, t0 + at - lead, { x0: T.x + (o.dx ?? 280) * s, y0: top - 1500, x1: T.x + 10 * s, y1: top, seed: o.seed ?? 7, w: Math.max(0.55, 1.25 * s), flash: o.flash ?? 1, sil: o.sil ?? 0.12, cx: T.x + 160 * s, cy: top - 380, leader: lead, lit: CUR.rain });
+        StormFX.strikeTree(L, tl, b.tR, { x: T.x, y: T.y, s, seed: o.treeSeed ?? 19, side: o.side ?? 1, dur: o.dur ?? 6, branch: o.branch ?? true });
+        const g = o.ground ?? CUR.ground; if (g) StormFX.ground(L, tl, b.tR + 0.03, { x: T.x, y: T.y + 10 * s, s: Math.max(0.45, s), to: o.to || [[T.x - 560 * s * g, T.y + 170 * s], [T.x + 520 * s * g, T.y + 250 * s], [T.x - 140 * s, T.y + 440 * s * g]] });
+        return b; };
+      // a side flash: the current jumping from the trunk into the people beside it, synced to a STRIKE handle
+      const SIDE = (L, tl, b, x, y, pts) => pts.forEach(([px, py], k) => StormFX.bolt(L, tl, b.tR - 0.03 + 0.02 * k, { x0: x, y0: y, x1: px, y1: py, seed: 60 + k, w: 0.42, flash: 0, cloud: false, leader: 0.03, depth: 1 }));
+      const FLICK = (tl, t, op = 0.35) => StormFX.flash(tl, t, op, 1);   // V1b gate
+      // the rescuer's forearms and stacked real hands over the patient's chest (side view; the rig arms end behind his body)
+      const CPRARMS = (L, tl, t0, dur, SF, SB, W, sc = 0.95, sl = ["#e86a8a", "#c04a6a"], skin = SK.ploy) => {
+        const gid = `cpa${Math.round(t0 * 100)}${Math.round(W[0])}`;
+        put(L.glow, `<g id="${gid}">${armSl(SB, [W[0] + 6, W[1] - 8], 80, 70, 1, skin, sl, { w: [30, 26], hs: 0.85, hand: OPEN })}${armSl(SF, W, 80, 70, -1, skin, sl, { w: [30, 26], hs: 0.85, hand: { curl: [0.5, 0.5, 0.55, 0.6], thumb: 0.3 } })}</g>`);
+        const n = Math.floor(dur / PER); if (n > 0) tl.fromTo(`#${gid}`, { y: 0 }, { y: 14 * sc, duration: PER * 0.42, ease: "sine.out", yoyo: true, repeat: n * 2 - 1, immediateRender: false }, t0);
+      };
+      const TOPARMS = (L, tl, t0, dur, X = 600) => { const gid = `cpt${Math.round(t0 * 100)}`; put(L.set, `<g id="${gid}">${armSl([X - 240, 1020], [X - 30, 1100], 130, 120, 1, SK.ploy, ["#e86a8a", "#c04a6a"], { w: [52, 44], hs: 1.5, hand: OPEN })}${armSl([X - 230, 1180], [X - 15, 1086], 130, 120, -1, SK.ploy, ["#e86a8a", "#c04a6a"], { w: [52, 44], hs: 1.5, hand: OPEN })}</g>`);
+        const n = Math.floor(dur / PER); if (n > 0) tl.fromTo(`#${gid}`, { scale: 1, svgOrigin: `${X} 1090` }, { scale: 0.965, svgOrigin: `${X} 1090`, duration: PER * 0.42, yoyo: true, repeat: n * 2 - 1, ease: "sine.out", immediateRender: false }, t0); };
+      // a what-if beat: grey grade + vignette, then the tear back at `back` (seconds into the shot)
+      const WHATIF = (L, tl, t0, back) => { whatIf(L, tl, t0); if (back != null) tear(L, tl, t0 + back); };
+      // the lone dirt sign with the title, staked in the paddy (EP.1 opening, in-world title)
+      const titleSign = (x, y, s, top, sub) => `<g transform="translate(${x},${y}) scale(${s}) rotate(-3)"><path d="M-10,0V-260M10,0V-260" stroke="#2a1a0c" stroke-width="22"/><path d="M-10,0V-260M10,0V-260" stroke="#6a4a2a" stroke-width="14"/>
+        <rect x="-330" y="-470" width="660" height="230" rx="14" fill="#8a6a3e" stroke="#2a1a0c" stroke-width="7"/>${[0, 1, 2, 3, 4].map((k) => `<path d="M-316,${-450 + k * 44}H316" stroke="#6a4a2a" stroke-width="4" opacity=".6"/>`).join("")}
+        <text x="0" y="-360" text-anchor="middle" font-family="Sriracha" font-size="92" fill="#fff6dc" stroke="#2a1a0c" stroke-width="10" paint-order="stroke">${top}</text><text x="0" y="-275" text-anchor="middle" font-family="Sriracha" font-size="54" fill="#ffd84a" stroke="#2a1a0c" stroke-width="8" paint-order="stroke">${sub}</text>
+        ${[-260, -100, 120, 280].map((dx, k) => `<path d="M${dx},-240q4,${20 + k * 8} 0,${40 + k * 10}" stroke="#4a3220" stroke-width="6" opacity=".6"/>`).join("")}</g>`;
+      // the shrine and the painted cloth, a set of its own (dark wood shelter, candles)
+      Sets.tkShrine = (L, o = {}) => {
+        put(L.sky, `<rect x="-900" y="-800" width="2900" height="3600" fill="#1a1410"/>`);
+        put(L.far, `<rect x="-900" y="-800" width="2900" height="3600" fill="#2a1e16"/>${Array.from({ length: 16 }, (_, k) => `<path d="M${-900 + k * 180},-800V2800" stroke="#1e1610" stroke-width="10"/>`).join("")}`);
+        put(L.set, (o.noCloth ? `<rect x="-900" y="1500" width="2900" height="600" fill="#3a2a1e"/><rect x="180" y="1460" width="720" height="40" fill="#5a3a22" stroke="#1e1a16" stroke-width="5"/>` : Tk.cloth(540, o.y ?? 260, o.s ?? 1, { id: o.id, open: o.open }) + `<rect x="-900" y="${(o.y ?? 260) + 1560 * (o.s ?? 1)}" width="2900" height="400" fill="#3a2a1e"/>`));
+        put(L.glow, [180, 900].map((cx) => `<g><path d="M${cx},1820V1700" stroke="#f2f0ea" stroke-width="18"/><ellipse cx="${cx}" cy="1684" rx="10" ry="20" fill="#ffd27a"/><circle cx="${cx}" cy="1684" r="220" fill="url(#tkSun)" opacity=".55"/></g>`).join(""));
+      };
+      // ---------- review fixes: true kneeling (knees and shins on the ground), CPR from the knees, the fall, auto real hands, multi-splits ----------
+      SK.yai = ["#b98a64", "#8a5e40", "#d8ac86"]; SK.lung = ["#8a5a3a", "#6a4028", "#a8744e"]; SK.medic = ["#c99068", "#9c6844", "#e2b48c"];
+      const SKN = { ploy: SK.ploy, ployPhone: SK.ploy, ton: SK.ton, yaiHom: SK.yai, lungPiak: SK.lung, medic: SK.medic };
+      const KNEE = (o) => ({ thF: -12, shF: 98, thB: -6, shB: 96, bodyY: o.by ?? 130 });
+      Rig.MODES.kT = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 6, head: 4, uaF: 10, faF: -20, uaB: -10, faB: -20 });
+      Rig.MODES.kReach = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 16, head: 10, uaF: -62 + 6 * Math.sin(u * 3), faF: -8, uaB: 8, faB: -16 });
+      Rig.MODES.kTap = (u, o) => { const k = Math.abs(Math.sin(u * 9)); return { ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 18, head: 12, uaF: -52 - 10 * k, faF: -10, uaB: -48 - 10 * k, faB: -8 }; };
+      Rig.MODES.kLook = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 34, head: 26, uaF: -20, faF: -30, uaB: -16, faB: -24, bodyY: (o.by ?? 130) + 20 });
+      Rig.MODES.kPhone = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 6, head: 6, uaF: -30, faF: -150, uaB: 6, faB: -18 });
+      Rig.MODES.kCPR = (u, o) => { const k = push(u + (o.ph ?? 0)); return { ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 22 + 5 * k, head: 18 + 4 * k + (o.turn ?? 0), uaF: -6, faF: 0, uaB: 6, faB: 0, bodyY: (o.by ?? 130) + 12 * k }; };
+      Rig.MODES.kCPRtired = (u, o) => { const k = push(u + (o.ph ?? 0)), j = 3 * Math.sin(u * 40); return { ...Rig.MODES.kCPR(u, o), uaF: -6 + j, uaB: 6 - j, torso: 26 + 4 * k + j * 0.4, head: 28 + 4 * Math.sin(u * 7) }; };
+      Rig.MODES.kCPRshout = (u, o) => ({ ...Rig.MODES.kCPR(u, o), head: -28 + 3 * Math.sin(u * 12) });
+      Rig.MODES.fallB = (u, o) => { const k = sm(u / 0.55); return { ...Rig.MODES.idle(u, o), uaF: -120 * (1 - k) + 10 * k, faF: -40, uaB: 110 * (1 - k), faB: 30, thF: -10 * k, shF: 20 * (1 - k), torso: -10 - 10 * k, head: -14, rootR: -88 * k, rootY: -40 * k, rootX: -60 * k }; };
+      Rig.MODES.sitHard = (u, o) => { const j = Math.exp(-u * 5) * Math.sin(u * 40); return { ...Rig.MODES.sit(u, o), uaF: -30 + 20 * j, faF: -20, uaB: 50, faB: 30, torso: -18 + 4 * j, head: -10 + 6 * j }; };
+      Rig.MODES.jump = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -140, faF: -50, uaB: 130, faB: 60, torso: -10, head: -12, bodyY: -30 * Math.exp(-u * 6) });
+      // lying ลุง: one rig for the whole story, head always to screen-left; hx = where his head lies, s = scale
+      const LUNG = (hx, y, s, mode = "supine", eyes = "closed", mouth = "flat", o = {}) => P("lungPiak", hx + 760 * s, y, s, mode, eyes, mouth, o);
+      // wet look in the rain: clothes ~16% darker, strands of hair stuck to the face, drips from the hair and the hem; ลุง's headband tails and ยาย's sarong hem flap
+      const WETHAIR = { ploy: "#1a120e", ployPhone: "#1a120e", ton: "#16100c", yaiHom: "#d8d4cc" };
+      const WET = (aid, who, tl, t0, dur) => { const a = document.getElementById(aid); if (!a || !who) return; a.style.filter = "brightness(0.84) saturate(1.08)";
+        const hd = document.querySelector(`#${aid}-head > g`), to = document.getElementById(`${aid}-torso`), hc = WETHAIR[who], drop = (k, x, y) => `<circle id="${aid}-wd${k}" cx="${x}" cy="${y}" r="4.5" fill="#d8e8f4" stroke="#1e1a16" stroke-width="1.5" opacity="0"/>`;
+        if (hd && hc) hd.insertAdjacentHTML("beforeend", `<g opacity=".92"><path d="M-24,-590q-14,44 -16,92" stroke="${hc}" stroke-width="5.5" fill="none" stroke-linecap="round"/><path d="M4,-592q-10,26 -2,52" stroke="${hc}" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M26,-588q14,40 8,88" stroke="${hc}" stroke-width="5" fill="none" stroke-linecap="round"/></g>` + drop(0, 40, -520) + drop(1, -36, -524));
+        if (to) to.insertAdjacentHTML("beforeend", drop(2, -30, -296) + drop(3, 34, -300));
+        if (who === "lungPiak" && hd) { hd.insertAdjacentHTML("beforeend", `<g id="${aid}-hb"><path d="M56,-562q32,-8 62,2l-5,15q-28,-8 -52,-3Z" fill="#e8e4d8" stroke="#1e1a16" stroke-width="2.2"/><path d="M56,-554q28,4 50,24l-10,9q-20,-18 -40,-21Z" fill="#e8e4d8" stroke="#1e1a16" stroke-width="2.2"/><path d="M70,-556h34" stroke="#c83a2a" stroke-width="4" stroke-dasharray="8 6"/></g>`);
+          tl.fromTo(`#${aid}-hb`, { rotation: -14, svgOrigin: "56 -558" }, { rotation: 12, svgOrigin: "56 -558", duration: 0.16, ease: "sine.inOut", yoyo: true, repeat: Math.ceil(dur / 0.16), immediateRender: false }, t0); }
+        if (who === "yaiHom") ["F", "B"].forEach((sd) => { const kc = document.getElementById(`${aid}-kc${sd}`); if (!kc) return; kc.insertAdjacentHTML("beforeend", `<path id="${aid}-sf${sd}" d="M-24,96q-18,16 -38,22l4,12q24,-6 40,-26Z" fill="#7a3a2a" stroke="#1e1a16" stroke-width="2"/>`);
+          tl.fromTo(`#${aid}-sf${sd}`, { rotation: -10, svgOrigin: "-22 100" }, { rotation: 16, svgOrigin: "-22 100", duration: 0.22 + (sd === "B" ? 0.04 : 0), ease: "sine.inOut", yoyo: true, repeat: Math.ceil(dur / 0.22), immediateRender: false }, t0); });
+        [0, 1, 2, 3].forEach((k) => { const e = document.getElementById(`${aid}-wd${k}`); if (!e) return; const P = 0.55 + k * 0.08;
+          tl.fromTo(e, { y: 0, opacity: 0.95 }, { y: 70, opacity: 0, duration: P, ease: "power2.in", repeat: Math.ceil(dur / P), immediateRender: false }, t0 + k * 0.17); }); };
+      // add() with real hands on every standing/kneeling actor (lying ลุง keeps his relaxed hands too)
+      const withHands = (spec) => ({ ...spec, fx: (tl, id, t0, L) => { STORMFX(spec, tl, t0, L); if (spec.set === "tkScape" && spec.setOpts && spec.setOpts.mood === "storm" && (spec.setOpts._rain ?? 0.8) > 0) (spec.actors || []).forEach((a, i) => WET(`${id}-a${i}`, a.who, tl, t0, spec._dur || 4)); (spec.actors || []).forEach((a, i) => { const sk = SKN[a.who]; if (sk && !a.noHands) realHands(`${id}-a${i}`, sk, a.hf || RELAX, a.hb || RELAX, { under: true }); }); if (spec.fx) spec.fx(tl, id, t0, L); } });
+      const ADD = (k, spec) => add(k, withHands({ _dur: D(k), ...spec }));
+      // a shot split into several cuts at times `cuts` (seconds into the shot); each spec gets captions from its own window
+      const SPLITN = (k, cuts, specs) => { const b = [0, ...cuts, D(k)]; specs.forEach((sp, j) => { add(k, withHands({ ...sp, _dur: b[j + 1] - b[j], captions: sp.captions ?? capsFrom(k, b[j]).filter((c) => c.t < b[j + 1] - b[j]) })); const sh = shots[shots.length - 1]; sh.start = SH[k].start + b[j]; sh.dur = b[j + 1] - b[j]; }); };
+      // back from a what-if: a full-screen white flash (no tear bands)
+      const WHATIF2 = (L, tl, t0, back) => { whatIf(L, tl, t0); if (back != null) StormFX.flash(tl, t0 + back, 0.28, 1); };   // V1b gate
+      const SC = (id, o = {}) => { const { rain = 0.8, flash = 0, ground, distBolt, ...rest } = o; return { set: "tkScape", setOpts: { id, mood: "storm", wind: 1, ...rest, rain: 0, flash: 0, bolt: 0, _rain: rain, _flash: flash, _dist: distBolt, _ground: ground, _strike: o.bolt }, dark: 0, light: TEAL, grade: GT }; };
+      const TEAL = { from: "left", rim: "#9ad0e0", rimOp: 0.9, shade: "#06101a", shadeOp: 0.45, cast: false, vol: false };
+      const GT = { top: "#1a4a5a", bottom: "#0a1a2a", op: 0.3 }, GG = { top: "#ffb860", bottom: "#3a2a5a", op: 0.22 }, GC = { top: "#fff0c8", bottom: "#4a8ab0", op: 0.14 };
+      const GOLDL = { from: "right", rim: "#ffd890", rimOp: 0.95, shade: "#2a1a30", shadeOp: 0.35, cast: false, vol: false };
+      const CLEARL = { from: "left", rim: "#ffe2a0", rimOp: 0.9, shade: "#2a3a5a", shadeOp: 0.25, cast: false, vol: false };
+      const FLASHL = { from: "right", rim: "#ffffff", rimOp: 1, shade: "#000814", shadeOp: 0.5, cast: false, vol: false };
+      const CLR = (id, o = {}) => ({ set: "tkScape", setOpts: { id, mood: "clear", wind: 0.2, ...o }, dark: 0, light: CLEARL, grade: GC });
+      Engine.look = { vignette: 0.55, grain: 0.1 };
