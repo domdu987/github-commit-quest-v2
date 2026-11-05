@@ -7,9 +7,7 @@
  "story": "เสียงรถไฟ",
  "complete": false,
  "missing": [
-  "Shorts EP.1 ฉบับภาพใหม่ (กำลังทำ)",
-  "Shorts EP.2 (กำลังทำ)",
-  "ปก EP.2"
+  "Shorts EP.1 ฉบับภาพใหม่ (กำลังทำ)"
  ],
  "status": "คลิปยาว 16:9 + ปก พร้อม · Shorts EP.1–2 แชทประสานงานกำลังทำ กำหนดเสร็จ 6 พ.ย. 22:00 · ถ้าไม่ทัน สลับกับวันที่ 8 พ.ย.",
  "upload_sheet": "video/release/sheets/siang-rotfai-upload.md",
@@ -53,17 +51,18 @@
     "facebook_reel",
     "instagram_reel"
    ],
-   "status": "in_production",
+   "status": "final",
    "branch": "ccr-fb88c4b3-kcqyid",
-   "commit": null,
+   "commit": "a2613ff",
    "video": "video/release/hq/siang-rotfai-ep2-HQ.mp4",
-   "video_sha256": null,
-   "video_bytes": null,
+   "video_sha256": "991b9a6dc4febb5313568068fdd84225c292dec9ec097451bb9cb88558b1d4c7",
+   "video_bytes": 65303307,
    "cover": "video/tornado-ep2/cover.jpg",
    "title_youtube": "ใต้สะพาน หรือ หมอบในคูน้ำ? เลือกผิดตาย",
    "title_chars": 38,
-   "note": "ใต้สะพาน → ปูลากตาเทียนลงคู → หมอบราบ จบค้าง แล้วชี้ไปคลิปยาว",
-   "due": "2026-11-06T22:00+07:00"
+   "note": "ตัดจากเรื่องเต็มฉบับแก้ (ร้าน ความสูง กระบะ ใต้สะพานแบบใหม่): กระบะ → ใต้สะพาน → ลากลงคู → หมอบ → พายุผ่านหัว ตัดเข้าจอดำ แล้วการ์ด \"ปูจะรอดไหม? ดูเรื่องเต็มได้ที่ช่อง YouTube\"",
+   "duration_s": 49.397,
+   "cover_commit": "3b22d4c"
   }
  ],
  "video_long": {
