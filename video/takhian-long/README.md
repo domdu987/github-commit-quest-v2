@@ -21,3 +21,14 @@
 
 ## ตรวจก่อนเรนเดอร์
 - `precheck/cuts-01..11.jpg`: ทุกช็อต 2 จุด (ต้นช็อต + 70%) ภาพละ 480×270 จาก build แนวนอน
+
+## เสียง (`full/mix.py`)
+- สูตรทะเลลดของ `video/release/audio/takhian-tide-mix` (suno1 ไม่มี EQ · −30 dB RMS · duck 0.65) ทั้งเรื่อง
+- ต้องมีข้าง `full/`: `../lib/mixcore.py` (จาก takhian-tide-mix/lib) · `../sfxlib/` (prod/lane-b) · `../music/takhian-theme.mp3` = `video/music/suno1.mp3` · `vo/` (EP.1 ตาม id เดิม · EP.2 เป็น `e2_<id>` · x01–x03)
+- suno1 ยาว 133.6 วิ: เล่นจาก 0 สำหรับ EP.1 กับบทเชื่อม เฟดออก 0.6 วิเข้าการ์ดตอนที่ 2 แล้วเริ่มใหม่จาก 0 บนการ์ด
+- dip ทั้งหมดวางก่อน boost (dip ของ mixcore ใช้ค่าต่ำสุด จะยกเลิก boost ที่วางก่อนหน้า)
+- เพลงที่ยกหลังฟ้าผ่า 2 จุด ×1.2 (Shorts ใช้ ×1.6): รอบแรก musiccheck ข้อ "ระหว่างประโยค" ได้ −26.0 เพราะเรื่องเต็มมีช่วงไม่มีเสียงพูดยาวแค่ 3 ช่วง · เพลงเฟดใต้การ์ดจบ 2.5 วิ
+- ผล: musiccheck PASS (−34.2 · −28.7 · 19.5 LU · 4%) · hisscheck PASS · −14.2 LUFS · peak −2.4 dBFS
+
+## edgecheck แนวนอน
+- `full/edgecheckL.cjs` = edgecheck.cjs ของ skill ที่เปลี่ยน viewport เป็น 1920×1080 และขอบ 6 px ตามขนาดนั้น
