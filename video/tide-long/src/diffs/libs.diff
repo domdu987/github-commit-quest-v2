@@ -1,0 +1,69 @@
+--- video/tide-ep1/lib/tide.js
++++ tidelong/hf/lib1/tide.js
+@@ -1378,14 +1378,16 @@
+   // ======================== the opener: straight down onto wet sand as the sea pulls back off the title ========================
+   function tideSand(L, o) {
+     const id = o.id || "ts", r = mk(o.seed || 23), title = o.title || "ทะเลลด";
+-    put(L.sky, `<rect x="-600" y="-600" width="2300" height="3200" fill="#cbb084"/>`);
++    const XL = window.LANDSCAPE ? -900 : -400, XR = window.LANDSCAPE ? 2000 : 1500;   // long version 16:9: the sand runs to both new edges
++    put(L.sky, `<rect x="${XL - 200}" y="-600" width="${XR - XL + 400}" height="3200" fill="#cbb084"/>`);
+     let s = `<defs><radialGradient id="${id}-sandG" gradientUnits="userSpaceOnUse" cx="420" cy="760" r="1500"><stop offset="0" stop-color="#dcbd88"/><stop offset=".55" stop-color="#c49e68"/><stop offset="1" stop-color="#9a7a4c"/></radialGradient></defs>`;
+-    s += `<rect x="-600" y="-600" width="2300" height="3200" fill="url(#${id}-sandG)"/>`;
++    s += `<rect x="${XL - 200}" y="-600" width="${XR - XL + 400}" height="3200" fill="url(#${id}-sandG)"/>`;   // (vertical: -600…1700 as before)
+     // ripples running across, slightly diagonal, each a dark trough and a lit crest
+-    for (let k = 0; k < 44; k++) { const y0 = -300 + k * 56, ph = r() * 6; let p = ""; for (let x = -400; x <= 1500; x += 40) p += `${p ? "L" : "M"}${x},${f1(y0 + x * 0.12 + Math.sin(x * 0.009 + ph) * 16)}`; s += `<path d="${p}" stroke="#9a7e54" stroke-width="7" fill="none" opacity=".35"/><path d="${p}" stroke="#efe0c0" stroke-width="4" fill="none" opacity=".45" transform="translate(-3,-6)"/>`; }
++    for (let k = 0; k < 44; k++) { const y0 = -300 + k * 56, ph = r() * 6; let p = ""; for (let x = XL; x <= XR; x += 40) p += `${p ? "L" : "M"}${x},${f1(y0 + x * 0.12 + Math.sin(x * 0.009 + ph) * 16)}`; s += `<path d="${p}" stroke="#9a7e54" stroke-width="7" fill="none" opacity=".35"/><path d="${p}" stroke="#efe0c0" stroke-width="4" fill="none" opacity=".45" transform="translate(-3,-6)"/>`; }
+     for (let k = 0; k < 260; k++) s += `<circle cx="${f1(-200 + r() * 1500)}" cy="${f1(-200 + r() * 2400)}" r="${f1(0.8 + r() * 1.8)}" fill="${r() < 0.5 ? "#fff8e8" : "#7a6444"}" opacity="${f1(0.3 + r() * 0.5)}"/>`;
+     // the sheen of wet sand: soft bands of reflected sky and a scatter of glints
+-    for (let k = 0; k < 9; k++) { const y = -100 + k * 260 + r() * 80; s += `<path d="M-400,${f1(y)}Q540,${f1(y - 120)} 1500,${f1(y + 40)}V${f1(y + 110)}Q540,${f1(y - 20)} -400,${f1(y + 90)}Z" fill="#e8f2f4" opacity="${f1(0.05 + r() * 0.07)}"/>`; }
++    for (let k = 0; k < 9; k++) { const y = -100 + k * 260 + r() * 80; s += `<path d="M${XL},${f1(y)}Q540,${f1(y - 120)} ${XR},${f1(y + 40)}V${f1(y + 110)}Q540,${f1(y - 20)} ${XL},${f1(y + 90)}Z" fill="#e8f2f4" opacity="${f1(0.05 + r() * 0.07)}"/>`; }
++    if (window.LANDSCAPE) { const r2 = mk(97); for (let k = 0; k < 220; k++) s += `<circle cx="${f1(r2() < 0.5 ? -900 + r2() * 700 : 1300 + r2() * 700)}" cy="${f1(-200 + r2() * 2400)}" r="${f1(0.8 + r2() * 1.8)}" fill="${r2() < 0.5 ? "#fff8e8" : "#7a6444"}" opacity="${f1(0.3 + r2() * 0.5)}"/>`; }
+     for (let k = 0; k < 80; k++) s += `<circle cx="${f1(-100 + r() * 1300)}" cy="${f1(-100 + r() * 2200)}" r="${f1(1.2 + r() * 2.2)}" fill="#ffffff" opacity="${f1(0.4 + r() * 0.5)}"/>`;
+     // shells and pebbles with their shadows (the sun is low on the upper left)
+     const shell = (x, y, sz, rot, c) => `<g transform="translate(${f1(x)},${f1(y)}) rotate(${f1(rot)})"><path d="M${f1(-sz + 5)},${f1(5)}a${f1(sz)},${f1(sz * 0.8)} 0 0 1 ${f1(sz * 2)},0l${f1(-sz)},${f1(sz * 0.5)}z" fill="#000" opacity=".2"/><path d="M${f1(-sz)},0a${f1(sz)},${f1(sz * 0.8)} 0 0 1 ${f1(sz * 2)},0l${f1(-sz)},${f1(sz * 0.5)}z" fill="${c}" ${OUT2}/>${Array.from({ length: 6 }, (_, i) => `<path d="M0,${f1(sz * 0.5)}L${f1(-sz + i * sz * 0.4)},${f1(-sz * 0.3 - Math.sin(i / 5 * Math.PI) * sz * 0.4)}" stroke="#8a6a5a" stroke-width="1.5" opacity=".6"/>`).join("")}</g>`;
+@@ -1425,14 +1427,14 @@
+   }
+   // redraw the opener: u 0 (the sea covers the frame) … 1 (it has run off the top)
+   function sandDraw(id, t, u) {
+-    const S = ST[id], yE = lerp(2080, -260, u);
++    const S = ST[id], yE = lerp(2080, -260, u), XL = window.LANDSCAPE ? -900 : -400, XR = window.LANDSCAPE ? 2000 : 1500;
+     const edge = (x) => yE + 28 * Math.sin(x * 0.009 + t * 1.6) + 14 * Math.sin(x * 0.027 - t * 2.4);
+-    const E = []; for (let x = -400; x <= 1500; x += 30) E.push([x, edge(x)]);
+-    const wd = `M-400,-700H1500V${f1(edge(1500))}L${E.slice().reverse().map(P2).join("L")}Z`;
++    const E = []; for (let x = XL; x <= XR; x += 30) E.push([x, edge(x)]);
++    const wd = `M${XL},-700H${XR}V${f1(edge(XR))}L${E.slice().reverse().map(P2).join("L")}Z`;
+     el(`${id}-water`).setAttribute("d", wd); el(`${id}-wclipP`).setAttribute("d", wd);
+     el(`${id}-foam`).setAttribute("d", `M${E.map(P2).join("L")}`);
+     el(`${id}-foamB`).setAttribute("d", `M${E.map(([x, y]) => [x, y - 14]).map(P2).join("L")}`);
+-    el(`${id}-sheen`).setAttribute("d", `M${E.map(P2).join("L")}L1500,${f1(yE + 420)}L-400,${f1(yE + 420)}Z`);
++    el(`${id}-sheen`).setAttribute("d", `M${E.map(P2).join("L")}L${XR},${f1(yE + 420)}L${XL},${f1(yE + 420)}Z`);
+     el(`${id}-caus`).setAttribute("transform", `translate(${f1(Math.sin(t * 0.8) * 20)},${f1(Math.cos(t * 0.6) * 16)})`);
+     // the grooves still hold water just after the edge passes, then drain
+     const pass = clamp((S.TY - 60 - yE) / 380, 0, 1);
+--- video/tide-ep1/lib/tidemap.js
++++ tidelong/hf/lib1/tidemap.js
+@@ -708,10 +708,11 @@
+   const SEC = {};
+   function tideSection(L, o = {}) {
+     const id = o.id || "ts";
+-    put(L.sky, `<rect x="-600" y="-600" width="2400" height="3200" fill="url(#tmSecSky)"/>
++    const SX = window.LANDSCAPE ? -1200 : -600, SW = window.LANDSCAPE ? 3600 : 2400;   // long version 16:9: sky and floor to both edges
++    put(L.sky, `<rect x="${SX}" y="-600" width="${SW}" height="3200" fill="url(#tmSecSky)"/>
+       <circle cx="830" cy="300" r="260" fill="url(#tmSun)"/><circle cx="830" cy="300" r="46" fill="#fffbe8" opacity=".95"/>
+       ${[[180, 270, 1.1], [430, 190, 0.8], [700, 470, 0.7], [960, 430, 0.9], [300, 480, 0.6]].map(([x, y, s]) => `<g transform="translate(${x},${y}) scale(${s})" opacity=".9">${[[-60, 8, 58], [-10, -14, 70], [48, 4, 56], [96, 14, 40]].map(([cx, cy, r]) => `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r * 0.72}" fill="url(#tmCloud)"/>`).join("")}</g>`).join("")}
+-      <rect x="-600" y="1260" width="2400" height="1200" fill="url(#tmFloor)"/>`);
++      <rect x="${SX}" y="1260" width="${SW}" height="1200" fill="url(#tmFloor)"/>`);
+     put(L.far, `<g opacity=".45">${[[40, 1.0], [200, 0.75], [960, 1.1], [1060, 0.7]].map(([x, s]) => `<path d="M${x - 70 * s},640 C${x - 60 * s},500 ${x - 40 * s},460 ${x - 20 * s},440 C${x},410 ${x + 30 * s},420 ${x + 40 * s},480 C${x + 55 * s},540 ${x + 66 * s},600 ${x + 75 * s},640Z" fill="#8fb8b0"/>`).join("")}</g>`);
+     put(L.set, `<g id="${id}-sec"><defs><clipPath id="${id}-wclip"><path id="${id}-wclipP" d="M0,0"/></clipPath>
+         <linearGradient id="${id}-gW" gradientUnits="userSpaceOnUse" x1="0" y1="1000" x2="0" y2="1300"><stop offset="0" stop-color="#57d0dc"/><stop offset=".3" stop-color="#2496c0"/><stop offset="1" stop-color="#0b3a6c"/></linearGradient>
+--- video/tide-ep2/lib/tide.js
++++ tidelong/hf/lib2/tide.js
+@@ -1175,7 +1175,7 @@
+     const hY = (X, h) => base - Hp * h * crest(X);
+     const set = (k, a, v) => el(`${id}-${k}`).setAttribute(a, v);
+     // the body: a steep face up to a ragged crest line
+-    const X0 = -80, X1 = 1160, cols = [];
++    const X0 = window.LANDSCAPE ? -780 : -80, X1 = window.LANDSCAPE ? 1860 : 1160, cols = [];   // long version 16:9: the wall across the whole frame
+     for (let x = X0; x <= X1; x += 4) { const X = Xs(x); cols.push({ x, X, top: base - Hp * crest(X) }); }
+     const body = `M${X0},${f1(base + 6)}L${cols.map((c) => `${c.x},${f1(c.top)}`).join("L")}L${X1},${f1(base + 6)}Z`;
+     set("wall", "d", body); set("bodyCP", "d", body);

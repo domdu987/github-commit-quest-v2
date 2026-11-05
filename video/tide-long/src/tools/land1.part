@@ -1,0 +1,13 @@
+      // ---------- ทะเลลด EP.1 long version (YouTube 16:9): landscape-only shot fixes ----------
+      landFix({
+        // the photo insert: closer, so ยาย's arm runs off the frame (its cut end showed in mid-air) and the wall's ends stay outside
+        photo: { cam: { keys: [{ t: 0, ...fr(540, 1000, 1.6, 540, 960) }, { t: D("photo"), glide: D("photo"), ...fr(540, 1000, 1.68, 540, 960) }] }, land: { y0: 330 } },
+        // ยาย under her board: the band lower so her head is below the board (the fitted board covered it)
+        rule: { land: { y0: 340 } },
+        // the glass: closer, so the terrace rail's cut ends and the bare floor stay outside, and the glass sits above the caption
+        cup: { cam: { keys: [{ t: 0, ...fr(540, 1250, 1.5, 540, 960) }, { t: D("cup"), glide: D("cup"), ...fr(540, 1250, 1.58, 540, 960) }] }, land: { y0: 420 } },
+        // the empty shop: start closer, so the edges of the sand patch and the bare sky on the right stay outside
+        clue: { cam: { keys: [{ t: 0, ...fr(540, 1000, 1.2, 540, 960) }, { t: D("clue"), glide: D("clue"), ...fr(470, 1200, 1.35, 540, 1060) }] } },
+        fish: { land: { y0: 570 } },
+      });
+      afterFx("fish", (tl, id, t0, L) => liveL(L.light, 570));

@@ -1,0 +1,259 @@
+--- video/tide/ep2/body.part
++++ tidelong/ep2/body.part
+@@ -47,6 +47,17 @@
+       const PHONE1 = "translate(540 700) scale(1) translate(-540 -700)", PHONEZ = "translate(540 700) scale(2.2) translate(-520 -1030)";
+       const phoneZoom = (id) => document.getElementById(`${id}-world`).setAttribute("transform", PHONEZ);
+ 
++      // ---------- long version, bridge A: close on จูน on the hill (the framing of "how"); she makes up her mind and bolts ----------
++      // "จูนตัดสินใจ… วิ่งลงไปตามยาย": the choice EP.1 ended on, answered; the cut to "open" picks up her run
++      const HIb = TideCast.headPoint("idle"), faceB = [JUNE.x - HIb[0] * JUNE.s, JUNE.y + HIb[1] * JUNE.s];
++      add("brA", {
++        ...HILL("thA", { line: 1 }), blur: { sky: 5, far: 5, mid: 5, set: 3, fg: 8 },
++        cam: { keys: [{ t: 0, ...fr(faceB[0], faceB[1], 2.3, 560, 640) }, { t: D("brA"), glide: D("brA"), ...fr(faceB[0], faceB[1], 2.5, 560, 640) }] },
++        actors: [A("june", JUNE.x, JUNE.y, JUNE.s, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 1.0, mode: "idle", eyes: "sideAngry", mouth: "frown" },
++          { t: D("brA") - 0.42, mode: "run", eyes: "sideAngry", mouth: "frown" }], { flip: true, moveTo: { x: JUNE.x - 260, y: JUNE.y, dur: 0.42, at: D("brA") - 0.42, ease: "power2.in" } })],
++        captions: caps("brA"),
++        fx(tl, id, t0) { Tide.land(tl, "thA", t0, D("brA"), { siren: false }); },
++      });
+       // ---------- 1. hook: EP.1's last frame; จูน dashes for the steps down ----------
+       add("open", {
+         ...HILL("th0", { line: 1 }), blur: { sky: 1, far: 1, fg: 4 },
+@@ -61,7 +72,7 @@
+         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0.02 } }] },
+         shake: (t) => ({ x: (t < 0.4 ? 6 : 2) * Math.sin(t * 31), y: (t < 0.4 ? 4 : 1) * Math.sin(t * 27), r: 0 }),
+         captions: caps("grab"),
+-        fx(tl, id, t0) { Tide.grab(tl, "gb", t0, D("grab"), { at: vo("grab", 0) }); },
++        fx(tl, id, t0) { Tide.grab(tl, "gb", t0, D("grab"), { at: 0.3 }); },   // long version: no voice in this insert; the clamp at 0.3 s as before
+       });
+       // ---------- 3. two-shot on the steps: จูน yanks against the grip ----------
+       add("pull", {
+--- video/tide/ep2/timing.py
++++ tidelong/ep2/timing.py
+@@ -20,8 +20,10 @@
+ 
+ # key, [voice ids], pre-roll, post-roll, minimum length
+ SHOTS = [
+-    ("open", ["n01"], 0.15, -0.3, 2.6),            # EP.1's last frame on the hill (the bay drawn back, the white line); จูน dashes for the steps down
+-    ("grab", ["n02"], 0.3, 0.5, 1.8),             # insert: ตาจุ่น's old hand clamps จูน's wrist on "อย่า" (sting); her sandal skids
++    # long version (YouTube 16:9): bridge A (b01 b02, narrator) replaces the hook lines n01 n02
++    ("brA", ["b01"], 0.3, 0.35, 2.8),             # NEW จูน on the hill makes up her mind and bolts ("จูนตัดสินใจ… วิ่งลงไปตามยาย")
++    ("open", ["b02"], 0.1, 0.25, 2.6),            # EP.1's last frame on the hill (the bay drawn back, the white line); จูน dashes for the steps down
++    ("grab", [], 0, 0, 1.8),                      # insert: ตาจุ่น's old hand clamps จูน's wrist at 0.3 s (sting, no voice); her sandal skids
+     ("pull", ["j01"], 0.12, 0.4, 2.6),             # two-shot on the steps: จูน yanks against the grip
+     ("face", ["c01"], 0.3, 0.5, 2.8),              # close on ตาจุ่น: "ครั้งนี้… ตาไม่ปล่อย" (the rumour turned round)
+     ("rule", ["c02"], 0.3, 0.6, 3.6),              # two-shot + ยาย's board: rule 1 ticked, rule 2 painted on
+@@ -44,9 +46,8 @@
+     ("wave3", [], 0, 0, 4.4),                      # the next wave, bigger: the water climbs the hotel to the 3rd floor
+     ("comment", [], 0, 0, 3.2),                    # the live: "ยายพร❤️: น้ำถึงชั้นสามแล้ว", then the typing stops
+     ("tang", ["t02"], 0.3, 0.6, 2.6),              # close on ตังค์: "ยาย… ไม่พิมพ์แล้ว…"
+-    ("close", ["n13", ("n14", 0.25)], 0.3, 0.7, 3.8),   # the phone: the live freezes and ends
+-    ("choice", [], 0, 0, 3.2),                     # the choice, pulled toward going down to the hotel → black
+-    ("end", [], 0, 0, 2.4),                        # the end card: ตอนที่ 3 · หนีไม่ทัน (ตอนจบ)
++    ("close", ["n13", ("n14", 0.25)], 0.3, 1.2, 3.8),   # the phone: the live freezes and ends (long version: a held beat on the dead stream, then bridge B)
++    # long version: the choice and the end card are cut
+ ]
+ GAP = 0.08
+ 
+@@ -118,6 +119,10 @@
+         dur = max(mn, cur + post)
+         out.append({"key": key, "start": round(t, 3), "dur": round(dur, 3), "vo": vo, "voEnd": round(cur, 3)})
+         t += dur
++    # long version: hold the last shot so the part ends on a multiple of 0.25 s (15 frames at 60 fps, 12000 samples at 48 kHz)
++    end = -(-round(t, 3) // 0.25) * 0.25
++    out[-1]["dur"] = round(out[-1]["dur"] + end - t, 3)
++    t = end
+     json.dump({"total": round(t, 3), "shots": out}, open(os.path.join(HERE, "schedule.json"), "w"), ensure_ascii=False, indent=1)
+     for s in out:
+         print(f"{s['key']:9s} {s['start']:7.2f} {s['dur']:5.2f}  " + " ".join(f"{v['id']}@{v['t']:.2f}{v['frags'][1:] or ''}" for v in s["vo"]))
+--- video/tide/ep2/mix.py
++++ tidelong/ep2/mix.py
+@@ -7,6 +7,7 @@
+ Output -14 LUFS. No noise beds and no high hiss (user: "เสียงซ่าๆเอาออก")."""
+ import json
+ import os
++import re
+ import subprocess
+ 
+ import numpy as np
+@@ -113,10 +114,12 @@
+ 
+ 
+ CUES = [
+-    # the hook: a sound on frame 0 (the long breath of the sea still out), จูน's feet on the steps, her breath
+-    ("open", 0.0, "swell", 0.3), *[("open", 0.35 + i * 0.3, "steps", 0.09) for i in range(8)], ("open", 0.2, "pant", 0.14), *beats("open", 0.2, D["open"] - 0.2, 0.7, 0.2),
+-    # the old hand clamps her wrist on "อย่า": the sting, the grip, the sandal skids
+-    ("grab", vo_t("grab") - 0.02, "sting", 0.38), ("grab", vo_t("grab"), "snap", 0.3), ("grab", 0.3, "scrape", 0.2),
++    # long version, bridge A: a sound on frame 0 (the long breath of the sea still out), จูน's heart as she makes up her mind, then she bolts
++    ("brA", 0.0, "swell", 0.3), *beats("brA", 0.3, D["brA"] - 0.6, 0.7, 0.2), ("brA", D["brA"] - 0.4, "pant", 0.14), ("brA", D["brA"] - 0.3, "steps", 0.09),
++    # her feet on the steps, her breath
++    *[("open", 0.1 + i * 0.3, "steps", 0.09) for i in range(9)], ("open", 0.2, "pant", 0.14), *beats("open", 0.2, D["open"] - 0.2, 0.7, 0.2),
++    # the old hand clamps her wrist 0.3 s in (no voice now): the sting, the grip, the sandal skids
++    ("grab", 0.28, "sting", 0.38), ("grab", 0.3, "snap", 0.3), ("grab", 0.3, "scrape", 0.2),
+     # the struggle against the grip
+     ("pull", 0.1, "rustle", 0.24), ("pull", 0.9, "rustle", 0.2), ("pull", 1.5, "scrape", 0.14), *beats("pull", 0.2, D["pull"] - 0.2, 0.6, 0.26),
+     # ตาจุ่น: "ครั้งนี้… ตาไม่ปล่อย"
+@@ -168,10 +171,7 @@
+     *beats("tang", 0.2, D["tang"] - 0.2, 0.8, 0.3),
+     # the live cuts out on "ดับ", then nothing
+     ("close", 0.2, "swell", 0.2), ("close", vo_end("close", 1) - 0.22, "glitch", 0.4), ("close", vo_end("close", 1) - 0.18, "powerdown", 0.3),
+-    # the choice: ticks, the heartbeat quickens, the pull → black
+-    *tick3("choice", 0.0, 0.32), *beats("choice", 0.2, D["choice"] - 0.6, 0.55, 0.4), ("choice", D["choice"] - 1.3, "whoosh", 0.36), ("choice", D["choice"] - 1.2, "splash", 0.4),
+-    # the end card: the paper note flaps, the "ตอนจบ" sticker is stamped on
+-    ("end", 0.15, "whoosh", 0.32), ("end", 0.5, "flap", 0.2), ("end", 1.0, "thud", 0.26), ("end", 1.05, "ding", 0.24), ("end", 1.6, "flap", 0.16),
++    # long version: no choice and no end card; the film goes on into EP.3's bridge
+ ]
+ 
+ # no hiss: the noise-based wind bed reads as static under the voice (user: "ลบเสียงซ่าออก")
+@@ -200,27 +200,51 @@
+ 
+ dip(T("wall", 0), T("duck", 0), 0.5)             # under the roar of the second wave
+ dip(T("hush", 0), T("live", vo_t("live")), 0.12)  # the silence before the pinned comment
+-dip(T("wave3", 0), T("choice", 0), 0.4)
++dip(T("wave3", 0), TOTAL + 1, 0.4)   # long version: the dip runs to the end of the part
+ mus = mus * gain
+-end = int(T("choice", -0.12) * SR)
+-mus[end:] = 0  # hard cut to black and silence
++a = int(T("close", vo_end("close", 1) - 0.22) * SR)   # long version: the stream dies on "ดับ" and the music goes with it
++b = a + int(0.5 * SR)
++mus[a:b] *= np.linspace(1, 0, b - a)
++mus[b:] = 0
+ 
+ # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
+ mus = level(mus, -30)
+-sfx = level(sfx, -27)
++sfx = np.frombuffer(subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", "lowpass=f=4500,lowpass=f=4500,highpass=f=40",
++                                    "-f", "f32le", "-"], input=sfx.astype(np.float32).tobytes(), capture_output=True, check=True).stdout, np.float32).copy()
++sfx = level(np.pad(sfx, (0, max(0, N - len(sfx))))[:N], -27)   # long version: the effects bus low-passed at ~4.5 kHz (A4: no hiss)
+ env = box(np.abs(vo), int(0.05 * SR))
+ duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
+ duck = box(duck, int(0.25 * SR))
+ mix = vo + mus * duck + sfx
+-cut, card = int(T("choice", -0.12) * SR), int(T("end", 0.1) * SR)
+-mix[cut - 240:cut] *= np.linspace(1, 0, 240)
+-mix[cut:card] = 0  # a beat of black and silence after the cliffhanger, then only the end card's own sounds
+-peak = np.max(np.abs(mix))
+-if peak > 0.98:
+-    mix = np.tanh(mix / peak * 1.2) * 0.95
+-out = os.path.join(HERE, "mix_raw.wav")
+-subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-ac", "2", out],
+-               input=mix.astype(np.float32).tobytes(), check=True)
+-# single-pass loudnorm lands ~0.8 dB under its target on this mix: aim at -13.2 to measure -14
+-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", out, "-af", "loudnorm=I=-13.2:TP=-1.5:LRA=11", "-ar", "48000", os.path.join(HERE, "mix.wav")], check=True)
+-print("mix written", TOTAL)
++# ---- long version (YouTube 16:9): one static gain to -14 LUFS (measured twice) instead of single-pass loudnorm, so vo_stem.wav and
++# music_stem.wav are exactly what is in mix.wav (musiccheck); a soft knee above -3 dBFS keeps the peaks at or under -1 dBFS ----
++OUT = os.environ.get("MIXOUT", HERE)
++os.makedirs(OUT, exist_ok=True)
++mstem = mus * duck
++
++
++def wr(path, x, codec="pcm_s16le"):
++    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-ac", "2", "-c:a", codec, path],
++                   input=x.astype(np.float32).tobytes(), check=True)
++
++
++def integrated(path):
++    o = subprocess.run(["ffmpeg", "-nostats", "-i", path, "-af", "ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
++    return float(re.findall(r"I:\s+(-?[0-9.]+) LUFS", o)[-1])
++
++
++def knee(x):
++    ax = np.abs(x)
++    return np.where(ax > 0.7, np.sign(x) * (0.7 + 0.19 * np.tanh((ax - 0.7) / 0.19)), x).astype(np.float32)
++
++
++raw, g = os.path.join(OUT, "mix_raw.wav"), 1.0
++for _ in range(3):   # the gain is measured through the knee, so the part lands on -14.0 with its peaks held under -1 dBFS
++    wr(raw, knee(mix * g), "pcm_f32le"); g *= 10 ** ((-14.0 - integrated(raw)) / 20)
++os.remove(raw)
++mix, vo_s, mstem = knee(mix * g), vo * g, mstem * g
++wr(os.path.join(OUT, "mix.wav"), mix)
++wr(os.path.join(OUT, "vo_stem.wav"), vo_s, "pcm_f32le")
++wr(os.path.join(OUT, "music_stem.wav"), mstem, "pcm_f32le")
++print("mix written", TOTAL, "s · gain", round(20 * np.log10(g), 2), "dB · integrated", integrated(os.path.join(OUT, "mix.wav")), "LUFS · peak",
++      round(20 * np.log10(float(np.max(np.abs(mix)))), 2), "dBFS")
+--- video/tide/ep2/make.py
++++ tidelong/ep2/make.py
+@@ -5,8 +5,8 @@
+ import subprocess
+ 
+ HERE = os.path.dirname(os.path.abspath(__file__))
+-LIB = os.path.join(HERE, "..", "hf", "lib")
+-PROJ = os.path.join(HERE, "..", "hf", "tide2")
++LIB = os.path.join(HERE, "..", "hf", "lib2")
++PROJ = os.environ.get("PROJ") or os.path.join(HERE, "..", "build", "ep2")
+ 
+ os.makedirs(os.path.join(PROJ, "assets"), exist_ok=True)
+ for f in ("package.json", "hyperframes.json", "meta.json"):
+--- video/tide/ep2/lines.json
++++ tidelong/ep2/lines.json
+@@ -218,5 +218,21 @@
+   "tempo": 1.2,
+   "cap": "แล้ว{ไลฟ์ก็ดับ}",
+   "take": 2
++ },
++ {
++  "id": "b01",
++  "text": "จูนตัดสินใจ… วิ่งลงไปตามยาย",
++  "voice": "Puck",
++  "style": "อ่านแบบผู้บรรยายสารคดี น้ำเสียงเรียบ เป็นกลาง ไม่ใส่อารมณ์ ไม่ตื่นเต้น ไม่กระซิบ ชัดถ้อยชัดคำ จังหวะสม่ำเสมอ ไม่ลากเสียง พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ",
++  "tempo": 1.2,
++  "cap": "จูนตัดสินใจ… / วิ่งลงไป[ตามยาย]"
++ },
++ {
++  "id": "b02",
++  "text": "ลงไปหาทะเล… ที่กำลังจะกลับมา",
++  "voice": "Puck",
++  "style": "อ่านแบบผู้บรรยายสารคดี น้ำเสียงเรียบ เป็นกลาง ไม่ใส่อารมณ์ ไม่ตื่นเต้น ไม่กระซิบ ชัดถ้อยชัดคำ จังหวะสม่ำเสมอ ไม่ลากเสียง พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ",
++  "tempo": 1.2,
++  "cap": "ลงไปหาทะเล… / ที่{กำลังจะกลับมา}"
+  }
+ ]
+\ No newline at end of file
+--- /dev/null
++++ tidelong/ep2/landfix.part (new)
+@@ -0,0 +1,34 @@
++      // ---------- ทะเลลด long version (YouTube 16:9): landscape-only helpers; none of them acts without window.LANDSCAPE ----------
++      const LS = !!window.LANDSCAPE;
++      // per-shot landscape overrides (cam, land …), applied after body.part has added every shot
++      const landFix = (fix) => { if (LS) shots.forEach((sh) => { if (fix[sh.key]) Object.assign(sh, fix[sh.key]); }); };
++      // run f after a shot's own fx
++      const afterFx = (k, f) => { if (LS) shots.filter((s) => s.key === k).forEach((sh) => { const fx0 = sh.fx; sh.fx = (tl, id, t0, L) => { if (fx0) fx0(tl, id, t0, L); f(tl, id, t0, L); }; }); };
++      // จูน's live overlay (TideUI.live) as a landscape stream UI. landscape.js keeps the overlay as a full-frame wash at stage scale, so
++      // in the wide frame it sat as a phone-width column in the middle, its header cropped off above the band and its comment rows in
++      // the caption band. Here: the header to the top left; the comment stack, pinned comment and input bar down the left edge; the
++      // buttons, hearts and gift down the right edge; everything above the caption band. y0 = the shot's land.y0 (set for these shots).
++      const liveL = (layer, y0) => {
++        const NS = "http://www.w3.org/2000/svg";
++        const root = [...layer.children].find((g) => g.id && document.getElementById(`${g.id}-top`));
++        if (!root) return;
++        const lid = root.id, ui = document.getElementById(`${lid}-ui`) || root;
++        const grp = (dx, dy) => { const g = document.createElementNS(NS, "g"); g.setAttribute("transform", `translate(${dx},${dy})`); return g; };
++        const left = grp(-615, y0 - 668), right = grp(645, y0 - 656);   // ~60 px from the page edges
++        const isRow = new RegExp(`^${lid}-c\\d+$`), isHeart = new RegExp(`^${lid}-h\\d+$`), isBtn = new RegExp(`^${lid}-b\\d+$`);
++        [...ui.children].forEach((n) => {
++          const nid = n.id || "", kid = (n.firstElementChild && n.firstElementChild.id) || "", tr = (n.getAttribute("transform") || "").replace(/\s/g, "");
++          if (isRow.test(nid) || kid === `${lid}-pin` || tr === "translate(36,1618)") left.appendChild(n);
++          else if (isHeart.test(nid) || isBtn.test(kid) || tr === "translate(870,1656)" || tr === "translate(990,1656)") right.appendChild(n);   // (990,1656): EP.1's share button
++        });
++        ui.appendChild(left); ui.appendChild(right);
++        const top = document.getElementById(`${lid}-top`), tg = grp(-670, y0 - 70);
++        top.parentNode.insertBefore(tg, top); tg.appendChild(top);
++      };
++      // TideUI.endCard at full width (with land: { fit: false }): landscape.js widens its dusk sky and sea (rects); the hill it stands on
++      // is a path that stops at the old frame, so continue it to both new edges
++      const endWide = (layer) => {
++        const card = [...layer.children].find((g) => g.id && document.getElementById(`${g.id}-all`));
++        const hill = card && [...card.querySelectorAll("path")].find((p) => (p.getAttribute("d") || "").startsWith("M-40,1920V1380"));
++        if (hill) hill.insertAdjacentHTML("afterend", `<path d="M-780,1920V1440Q-420,1352 -36,1381V1920Z" fill="#1a1426"/><path d="M1096,1920V1640Q1440,1652 1860,1590V1920Z" fill="#1a1426"/>`);
++      };
+--- /dev/null
++++ tidelong/ep2/land.part (new)
+@@ -0,0 +1,7 @@
++      // ---------- ทะเลลด EP.2 long version (YouTube 16:9): landscape-only shot fixes ----------
++      landFix({
++        // ตาจุ่น and จูน under ยาย's board: the band lower so his face is below the fitted board
++        rule: { land: { y0: 430 } },
++        live: { land: { y0: 285 } }, comment: { land: { y0: 285 } }, close: { land: { y0: 285 } },
++      });
++      ["live", "comment", "close"].forEach((k) => afterFx(k, (tl, id, t0, L) => liveL(L.light, 285)));

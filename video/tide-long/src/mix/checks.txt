@@ -1,0 +1,27 @@
+===== part 1
+[full band]
+ok   music under the voice -33.3 LUFS (ทะเลลด -33.6; target -36.6..-30.6)
+ok   music between lines -31.0 LUFS (ทะเลลด -31.3; target -34.5..-28)
+ok   voice over music 18.9 LU (ทะเลลด 18.9; target >= 8)
+ok   music missing in voice-free time 0% (ทะเลลด 12%; target <= 15%)
+PASS
+/tmp/claude-0/-home-user-github-commit-quest-v2/4f94749f-8122-57a4-aa41-e38e84dcb96c/scratchpad/tidelong/mix/ep1/mix.wav: flatness 0.39 (ok) · pause HF median -85.1 dBFS (ok) → PASS
+/tmp/claude-0/-home-user-github-commit-quest-v2/4f94749f-8122-57a4-aa41-e38e84dcb96c/scratchpad/tidelong/mix/ep1/mix.wav: flatness 0.39 (ok) · pause HF median -89.0 dBFS (ok) → PASS
+===== part 2
+[full band]
+ok   music under the voice -31.8 LUFS (ทะเลลด -33.6; target -36.6..-30.6)
+ok   music between lines -32.6 LUFS (ทะเลลด -31.3; target -34.5..-28)
+ok   voice over music 17.8 LU (ทะเลลด 18.9; target >= 8)
+ok   music missing in voice-free time 15% (ทะเลลด 12%; target <= 15%)
+PASS
+/tmp/claude-0/-home-user-github-commit-quest-v2/4f94749f-8122-57a4-aa41-e38e84dcb96c/scratchpad/tidelong/mix/ep2/mix.wav: flatness 0.36 (ok) · pause HF median -84.5 dBFS (ok) → PASS
+/tmp/claude-0/-home-user-github-commit-quest-v2/4f94749f-8122-57a4-aa41-e38e84dcb96c/scratchpad/tidelong/mix/ep2/mix.wav: flatness 0.36 (ok) · pause HF median -120.0 dBFS (ok) → PASS
+===== part 3
+[full band]
+ok   music under the voice -33.8 LUFS (ทะเลลด -33.6; target -36.6..-30.6)
+ok   music between lines -29.2 LUFS (ทะเลลด -31.3; target -34.5..-28)
+ok   voice over music 19.3 LU (ทะเลลด 18.9; target >= 8)
+ok   music missing in voice-free time 4% (ทะเลลด 12%; target <= 15%)
+PASS
+/tmp/claude-0/-home-user-github-commit-quest-v2/4f94749f-8122-57a4-aa41-e38e84dcb96c/scratchpad/tidelong/mix/ep3/mix.wav: flatness 0.39 (ok) · pause HF median -81.2 dBFS (ok) → PASS
+/tmp/claude-0/-home-user-github-commit-quest-v2/4f94749f-8122-57a4-aa41-e38e84dcb96c/scratchpad/tidelong/mix/ep3/mix.wav: flatness 0.39 (ok) · pause HF median -83.3 dBFS (ok) → PASS

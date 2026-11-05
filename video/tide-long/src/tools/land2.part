@@ -1,0 +1,7 @@
+      // ---------- ทะเลลด EP.2 long version (YouTube 16:9): landscape-only shot fixes ----------
+      landFix({
+        // ตาจุ่น and จูน under ยาย's board: the band lower so his face is below the fitted board
+        rule: { land: { y0: 430 } },
+        live: { land: { y0: 285 } }, comment: { land: { y0: 285 } }, close: { land: { y0: 285 } },
+      });
+      ["live", "comment", "close"].forEach((k) => afterFx(k, (tl, id, t0, L) => liveL(L.light, 285)));

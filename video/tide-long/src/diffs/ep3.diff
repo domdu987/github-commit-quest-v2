@@ -1,0 +1,253 @@
+--- video/tide/ep3/body.part
++++ tidelong/ep3/body.part
+@@ -62,6 +62,29 @@
+       const HI = TideCast.headPoint("idle");   // the middle of the face in the idle pose (actor units; mirror x when flipped)
+       const ZOOM0 = "translate(540 700) scale(1) translate(-540 -700)", ZOOMR = "translate(540 640) scale(3.2) translate(-489 -975)";
+ 
++      // ---------- long version, bridge B: back before the second wave — EP.2's siren angle: the tower blaring over the hotel and
++      // ยาย's shop, still standing, the jam on the beach road below ("ย้อนกลับไป… ก่อนคลื่นลูกที่สองจะมาถึง") ----------
++      add("brB", {
++        ...LAND("lvB"), blur: { sky: 1, far: 1.5, mid: 1, fg: 4 },
++        cam: { keys: [{ t: 0, ...fr(860, 1150, 1.2, 540, 900) }, { t: D("brB"), glide: D("brB"), ...fr(860, 1110, 1.32, 540, 900) }] },
++        shake: (t) => ({ x: 1.0 * Math.sin(t * 23), y: 0, r: 0 }),
++        captions: caps("brB"),
++        fx(tl, id, t0, L) {
++          Tide.land(tl, "lvB", t0, D("brB"), { siren: true });
++          road(L, tl, t0, D("brB"), "lvB");
++          walkers(L, tl, t0, D("brB"), "lvB", [
++            { x0: 1200, y0: 1700, x1: 900, y1: 1650, s0: 0.75, s1: 0.72, step: 0.12, flip: true, at: 0.6 }, { x0: 40, y0: 1695, x1: 330, y1: 1648, s0: 0.75, s1: 0.72, step: 0.13, at: 1.2 },
++          ]);
++        },
++      });
++      // ---------- long version, bridge B: ยาย at her shop hugging the old photo, the moment the film left her (closer than EP.2's shop shot) ----------
++      add("yai0", {
++        ...LAND("lvY"), blur: { sky: 2, far: 2, mid: 1.5 },
++        cam: { keys: [{ t: 0, ...fr(YAI.x, 1450, 2.3, 540, 960) }, { t: D("yai0"), glide: D("yai0"), ...fr(YAI.x, 1440, 2.45, 540, 960) }] },
++        actors: [A("yaiTideHug", YAI.x, YAI.y, YAI.s, [{ t: 0, mode: "hugPhoto", eyes: "worry", mouth: "frown" }], { flip: true })],
++        captions: caps("yai0"),
++        fx(tl, id, t0, L) { Tide.land(tl, "lvY", t0, D("yai0"), { siren: true }); road(L, tl, t0, D("yai0"), "lvY"); },
++      });
+       // ---------- 1. hook: the second wave, ยาย's side: people run past her shop to the pickups on the beach road ----------
+       add("hook", {
+         ...LAND("lv0"), blur: { sky: 1, far: 1.5, mid: 1, fg: 4 },
+@@ -277,7 +300,7 @@
+         fx(tl, id, t0, L) {
+           Tide.land(tl, "lvb", t0, D("wed"), { siren: true });
+           chip(L, tl, t0 + 0.2, D("wed") - 0.2, "08:00 · วันพุธ");
+-          PopUI.sfx(tl, L.light, t0 + 0.5, 1.8, "ปู๊ด… ทดสอบ…", 780, 520, { rot: -4 });
++          PopUI.sfx(tl, L.light, t0 + 0.5, 1.8, "ปู๊ด… ทดสอบ…", 680, 520, { rot: -4 });
+           walkers(L, tl, t0, D("wed"), "lvb", [
+             { x0: 120, y0: 1600, s0: 0.75 }, { x0: 240, y0: 1612, s0: 0.75, flip: true }, { x0: 700, y0: 1606, s0: 0.75 }, { x0: 1000, y0: 1616, s0: 0.75, flip: true },
+             { x0: 1120, y0: 1600, s0: 0.72 }, { x0: 860, y0: 1598, s0: 0.7 },
+--- video/tide/ep3/timing.py
++++ tidelong/ep3/timing.py
+@@ -20,8 +20,11 @@
+ 
+ # key, [voice ids], pre-roll, post-roll, minimum length
+ SHOTS = [
+-    ("hook", ["n01"], 0.15, -0.3, 2.6),            # back to the second wave, ยาย's side: people run past the shop to the pickups on the beach road
+-    ("cars", ["n02"], 0.3, 0.5, 1.9),              # the jam: bumper to bumper, hazards blinking (the command at ~2.9 s)
++    # long version (YouTube 16:9): bridge B (b03 b04 b05, narrator) replaces the hook lines n01 n02
++    ("brB", ["b03"], 0.3, 0.4, 3.0),              # NEW back before the second wave: the tower blaring over the hotel and ยาย's shop (EP.2's siren angle)
++    ("yai0", ["b04"], 0.25, 0.4, 2.8),            # NEW ยาย at her shop hugging the old photo (the moment EP.2 left her)
++    ("hook", ["b05"], 0.15, 0.4, 2.6),            # back to the second wave, ยาย's side: people run past the shop to the pickups on the beach road
++    ("cars", [], 0, 0, 1.9),                      # the jam: bumper to bumper, hazards blinking, the horn (no voice)
+     ("jam", ["x01", ("n03", 0.2)], 0.1, 0.5, 5.5),  # a man in a pickup leans on the horn; the narrator: 2547, cars jammed and crashed
+     ("yai", ["y01"], 0.2, 0.4, 2.6),               # ยาย turns from the road to the hotel beside her shop
+     ("stair", ["y02"], 0.3, 0.6, 3.6),             # she climbs the hotel's outside stair, saying her own rule 3; the board
+@@ -112,6 +115,10 @@
+         dur = max(mn, cur + post)
+         out.append({"key": key, "start": round(t, 3), "dur": round(dur, 3), "vo": vo, "voEnd": round(cur, 3)})
+         t += dur
++    # long version: hold the last shot so the part ends on a multiple of 0.25 s (15 frames at 60 fps, 12000 samples at 48 kHz)
++    end = -(-round(t, 3) // 0.25) * 0.25
++    out[-1]["dur"] = round(out[-1]["dur"] + end - t, 3)
++    t = end
+     json.dump({"total": round(t, 3), "shots": out}, open(os.path.join(HERE, "schedule.json"), "w"), ensure_ascii=False, indent=1)
+     for s in out:
+         print(f"{s['key']:9s} {s['start']:7.2f} {s['dur']:5.2f}  " + " ".join(f"{v['id']}@{v['t']:.2f}{v['frags'][1:] or ''}" for v in s["vo"]))
+--- video/tide/ep3/mix.py
++++ tidelong/ep3/mix.py
+@@ -6,6 +6,7 @@
+ Output -14 LUFS. No noise beds and no high hiss (user: "เสียงซ่าๆเอาออก")."""
+ import json
+ import os
++import re
+ import subprocess
+ 
+ import numpy as np
+@@ -112,8 +113,12 @@
+ 
+ 
+ CUES = [
+-    # the hook: a sound on frame 0, the tower's siren, people running for the cars, an engine
+-    ("hook", 0.0, "swell", 0.3), ("hook", 0.05, "siren", 0.16), *[("hook", 0.3 + i * 0.28, "steps", 0.08) for i in range(7)], ("hook", 1.4, "engine", 0.12),
++    # long version, bridge B: back before the second wave — a sound on frame 0, the tower blaring, the hazards on the jammed road
++    ("brB", 0.0, "swell", 0.3), ("brB", 0.05, "siren", 0.2), ("brB", 1.8, "siren", 0.16), *[("brB", 0.6 + i * 0.42, "blinker", 0.06) for i in range(6)],
++    # ยาย at her shop with the old photo: the siren further off, a horn down the road
++    ("yai0", 0.05, "siren", 0.1), ("yai0", 0.4, "swell", 0.16), ("yai0", 1.6, "beep", 0.1),
++    # people running for the cars, an engine
++    ("hook", 0.05, "siren", 0.12), *[("hook", 0.3 + i * 0.28, "steps", 0.08) for i in range(7)], ("hook", 1.4, "engine", 0.12),
+     # the jam: the hazards ticking, a horn
+     *[("cars", 0.05 + i * 0.42, "blinker", 0.16) for i in range(4)], ("cars", 0.15, "beep", 0.22), ("cars", 0.5, "beep", 0.18),
+     # the man on the horn; the bump
+@@ -188,17 +193,42 @@
+ 
+ # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
+ mus = level(mus, -30)
+-sfx = level(sfx, -27)
++sfx = np.frombuffer(subprocess.run(["ffmpeg", "-v", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-af", "lowpass=f=4500,lowpass=f=4500,highpass=f=40",
++                                    "-f", "f32le", "-"], input=sfx.astype(np.float32).tobytes(), capture_output=True, check=True).stdout, np.float32).copy()
++sfx = level(np.pad(sfx, (0, max(0, N - len(sfx))))[:N], -27)   # long version: the effects bus low-passed at ~4.5 kHz (A4: no hiss)
+ env = box(np.abs(vo), int(0.05 * SR))
+ duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
+ duck = box(duck, int(0.25 * SR))
+ mix = vo + mus * duck + sfx
+-peak = np.max(np.abs(mix))
+-if peak > 0.98:
+-    mix = np.tanh(mix / peak * 1.2) * 0.95
+-out = os.path.join(HERE, "mix_raw.wav")
+-subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-ac", "2", out],
+-               input=mix.astype(np.float32).tobytes(), check=True)
+-# single-pass loudnorm lands ~0.8 dB under its target on this mix: aim at -13.2 to measure -14
+-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", out, "-af", "loudnorm=I=-13.2:TP=-1.5:LRA=11", "-ar", "48000", os.path.join(HERE, "mix.wav")], check=True)
+-print("mix written", TOTAL)
++# ---- long version (YouTube 16:9): one static gain to -14 LUFS (measured twice) instead of single-pass loudnorm, so vo_stem.wav and
++# music_stem.wav are exactly what is in mix.wav (musiccheck); a soft knee above -3 dBFS keeps the peaks at or under -1 dBFS ----
++OUT = os.environ.get("MIXOUT", HERE)
++os.makedirs(OUT, exist_ok=True)
++mstem = mus * duck
++
++
++def wr(path, x, codec="pcm_s16le"):
++    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "1", "-i", "-", "-ac", "2", "-c:a", codec, path],
++                   input=x.astype(np.float32).tobytes(), check=True)
++
++
++def integrated(path):
++    o = subprocess.run(["ffmpeg", "-nostats", "-i", path, "-af", "ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
++    return float(re.findall(r"I:\s+(-?[0-9.]+) LUFS", o)[-1])
++
++
++def knee(x):
++    ax = np.abs(x)
++    return np.where(ax > 0.7, np.sign(x) * (0.7 + 0.19 * np.tanh((ax - 0.7) / 0.19)), x).astype(np.float32)
++
++
++raw, g = os.path.join(OUT, "mix_raw.wav"), 1.0
++for _ in range(3):   # the gain is measured through the knee, so the part lands on -14.0 with its peaks held under -1 dBFS
++    wr(raw, knee(mix * g), "pcm_f32le"); g *= 10 ** ((-14.0 - integrated(raw)) / 20)
++os.remove(raw)
++mix, vo_s, mstem = knee(mix * g), vo * g, mstem * g
++wr(os.path.join(OUT, "mix.wav"), mix)
++wr(os.path.join(OUT, "vo_stem.wav"), vo_s, "pcm_f32le")
++wr(os.path.join(OUT, "music_stem.wav"), mstem, "pcm_f32le")
++print("mix written", TOTAL, "s · gain", round(20 * np.log10(g), 2), "dB · integrated", integrated(os.path.join(OUT, "mix.wav")), "LUFS · peak",
++      round(20 * np.log10(float(np.max(np.abs(mix)))), 2), "dBFS")
+--- video/tide/ep3/make.py
++++ tidelong/ep3/make.py
+@@ -5,8 +5,8 @@
+ import subprocess
+ 
+ HERE = os.path.dirname(os.path.abspath(__file__))
+-LIB = os.path.join(HERE, "..", "hf", "lib")
+-PROJ = os.path.join(HERE, "..", "hf", "tide3")
++LIB = os.path.join(HERE, "..", "hf", "lib3")
++PROJ = os.environ.get("PROJ") or os.path.join(HERE, "..", "build", "ep3")
+ 
+ os.makedirs(os.path.join(PROJ, "assets"), exist_ok=True)
+ for f in ("package.json", "hyperframes.json", "meta.json"):
+--- video/tide/ep3/lines.json
++++ tidelong/ep3/lines.json
+@@ -29,7 +29,7 @@
+   "voice": "Puck",
+   "tempo": 1.2,
+   "style": "อ่านแบบผู้บรรยายสารคดี น้ำเสียงเรียบ เป็นกลาง ไม่ใส่อารมณ์ ไม่ตื่นเต้น ไม่กระซิบ ชัดถ้อยชัดคำ จังหวะสม่ำเสมอ ไม่ลากเสียง พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ",
+-  "cap": "ปี 2547… / รถที่หนีคลื่น [ติดและชนกันเอง]บนถนน",
++  "cap": "ปี 2547… / รถที่หนีคลื่น / [ติดและชนกันเอง]บนถนน",
+   "take": 1
+  },
+  {
+@@ -227,5 +227,29 @@
+   "tempo": 1.12,
+   "style": "ชายชราอายุหกสิบแปด ชาวประมง เสียงแหบห้าว พูดน้อย ห้วน เสียงต่ำ อบอุ่น สงบ ยิ้มบางๆ มองทะเล ชัดทุกคำ ไม่กระซิบ พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ",
+   "cap": "ทะเลเตือนเราเสมอ… / อยู่ที่ว่าเรา[จะฟังไหม]"
++ },
++ {
++  "id": "b03",
++  "text": "ย้อนกลับไป… ก่อนคลื่นลูกที่สองจะมาถึง",
++  "voice": "Puck",
++  "style": "อ่านแบบผู้บรรยายสารคดี น้ำเสียงเรียบ เป็นกลาง ไม่ใส่อารมณ์ ไม่ตื่นเต้น ไม่กระซิบ ชัดถ้อยชัดคำ จังหวะสม่ำเสมอ ไม่ลากเสียง พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ",
++  "tempo": 1.2,
++  "cap": "ย้อนกลับไป… / ก่อน[คลื่นลูกที่สอง]จะมาถึง"
++ },
++ {
++  "id": "b04",
++  "text": "ยายยังอยู่ที่ร้าน… กอดรูปเก่าไว้",
++  "voice": "Puck",
++  "style": "อ่านแบบผู้บรรยายสารคดี น้ำเสียงเรียบ เป็นกลาง ไม่ใส่อารมณ์ ไม่ตื่นเต้น ไม่กระซิบ ชัดถ้อยชัดคำ จังหวะสม่ำเสมอ ไม่ลากเสียง พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ",
++  "tempo": 1.2,
++  "cap": "ยาย[ยังอยู่ที่ร้าน]… / กอด[รูปเก่า]ไว้"
++ },
++ {
++  "id": "b05",
++  "text": "คนแถวนั้น… วิ่งไปขึ้นรถ",
++  "voice": "Puck",
++  "style": "อ่านแบบผู้บรรยายสารคดี น้ำเสียงเรียบ เป็นกลาง ไม่ใส่อารมณ์ ไม่ตื่นเต้น ไม่กระซิบ ชัดถ้อยชัดคำ จังหวะสม่ำเสมอ ไม่ลากเสียง พูดประโยคนี้แค่ครั้งเดียว ไม่พูดซ้ำ",
++  "tempo": 1.2,
++  "cap": "คนแถวนั้น… / วิ่งไป{ขึ้นรถ}"
+  }
+ ]
+\ No newline at end of file
+--- /dev/null
++++ tidelong/ep3/landfix.part (new)
+@@ -0,0 +1,34 @@
++      // ---------- ทะเลลด long version (YouTube 16:9): landscape-only helpers; none of them acts without window.LANDSCAPE ----------
++      const LS = !!window.LANDSCAPE;
++      // per-shot landscape overrides (cam, land …), applied after body.part has added every shot
++      const landFix = (fix) => { if (LS) shots.forEach((sh) => { if (fix[sh.key]) Object.assign(sh, fix[sh.key]); }); };
++      // run f after a shot's own fx
++      const afterFx = (k, f) => { if (LS) shots.filter((s) => s.key === k).forEach((sh) => { const fx0 = sh.fx; sh.fx = (tl, id, t0, L) => { if (fx0) fx0(tl, id, t0, L); f(tl, id, t0, L); }; }); };
++      // จูน's live overlay (TideUI.live) as a landscape stream UI. landscape.js keeps the overlay as a full-frame wash at stage scale, so
++      // in the wide frame it sat as a phone-width column in the middle, its header cropped off above the band and its comment rows in
++      // the caption band. Here: the header to the top left; the comment stack, pinned comment and input bar down the left edge; the
++      // buttons, hearts and gift down the right edge; everything above the caption band. y0 = the shot's land.y0 (set for these shots).
++      const liveL = (layer, y0) => {
++        const NS = "http://www.w3.org/2000/svg";
++        const root = [...layer.children].find((g) => g.id && document.getElementById(`${g.id}-top`));
++        if (!root) return;
++        const lid = root.id, ui = document.getElementById(`${lid}-ui`) || root;
++        const grp = (dx, dy) => { const g = document.createElementNS(NS, "g"); g.setAttribute("transform", `translate(${dx},${dy})`); return g; };
++        const left = grp(-615, y0 - 668), right = grp(645, y0 - 656);   // ~60 px from the page edges
++        const isRow = new RegExp(`^${lid}-c\\d+$`), isHeart = new RegExp(`^${lid}-h\\d+$`), isBtn = new RegExp(`^${lid}-b\\d+$`);
++        [...ui.children].forEach((n) => {
++          const nid = n.id || "", kid = (n.firstElementChild && n.firstElementChild.id) || "", tr = (n.getAttribute("transform") || "").replace(/\s/g, "");
++          if (isRow.test(nid) || kid === `${lid}-pin` || tr === "translate(36,1618)") left.appendChild(n);
++          else if (isHeart.test(nid) || isBtn.test(kid) || tr === "translate(870,1656)" || tr === "translate(990,1656)") right.appendChild(n);   // (990,1656): EP.1's share button
++        });
++        ui.appendChild(left); ui.appendChild(right);
++        const top = document.getElementById(`${lid}-top`), tg = grp(-670, y0 - 70);
++        top.parentNode.insertBefore(tg, top); tg.appendChild(top);
++      };
++      // TideUI.endCard at full width (with land: { fit: false }): landscape.js widens its dusk sky and sea (rects); the hill it stands on
++      // is a path that stops at the old frame, so continue it to both new edges
++      const endWide = (layer) => {
++        const card = [...layer.children].find((g) => g.id && document.getElementById(`${g.id}-all`));
++        const hill = card && [...card.querySelectorAll("path")].find((p) => (p.getAttribute("d") || "").startsWith("M-40,1920V1380"));
++        if (hill) hill.insertAdjacentHTML("afterend", `<path d="M-780,1920V1440Q-420,1352 -36,1381V1920Z" fill="#1a1426"/><path d="M1096,1920V1640Q1440,1652 1860,1590V1920Z" fill="#1a1426"/>`);
++      };
+--- /dev/null
++++ tidelong/ep3/land.part (new)
+@@ -0,0 +1,12 @@
++      // ---------- ทะเลลด EP.3 long version (YouTube 16:9): landscape-only shot fixes ----------
++      landFix({
++        // bridge B: the band high enough for the tower blaring over the hotel and the shop; ยาย's face clear of the caption
++        brB: { land: { y0: 250 } }, yai0: { land: { y0: 430 } },
++        // ยาย on the hotel's outside stair: the camera a little left, so she climbs right of the fitted rule board (it hid her)
++        stair: { cam: { keys: [{ t: 0, ...fr(330, 1400, 2.5, 540, 1300) }, { t: D("stair"), glide: D("stair"), ...fr(330, 1300, 2.5, 540, 1300) }] } },
++        // the inserts: the band lower, so the old photo and the clipping (its own caption line too) sit above the caption
++        photo: { land: { y0: 120 } }, clip: { land: { y0: 150 } },
++        // the last card at full width: not fitted as a vertical strip; the hill continued to both edges
++        end: { land: { fit: false, y0: 300 } },
++      });
++      afterFx("end", (tl, id, t0, L) => endWide(L.light));

@@ -1,0 +1,12 @@
+      // ---------- ทะเลลด EP.3 long version (YouTube 16:9): landscape-only shot fixes ----------
+      landFix({
+        // bridge B: the band high enough for the tower blaring over the hotel and the shop; ยาย's face clear of the caption
+        brB: { land: { y0: 250 } }, yai0: { land: { y0: 430 } },
+        // ยาย on the hotel's outside stair: the camera a little left, so she climbs right of the fitted rule board (it hid her)
+        stair: { cam: { keys: [{ t: 0, ...fr(330, 1400, 2.5, 540, 1300) }, { t: D("stair"), glide: D("stair"), ...fr(330, 1300, 2.5, 540, 1300) }] } },
+        // the inserts: the band lower, so the old photo and the clipping (its own caption line too) sit above the caption
+        photo: { land: { y0: 120 } }, clip: { land: { y0: 150 } },
+        // the last card at full width: not fitted as a vertical strip; the hill continued to both edges
+        end: { land: { fit: false, y0: 300 } },
+      });
+      afterFx("end", (tl, id, t0, L) => endWide(L.light));

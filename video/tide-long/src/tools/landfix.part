@@ -1,0 +1,34 @@
+      // ---------- ทะเลลด long version (YouTube 16:9): landscape-only helpers; none of them acts without window.LANDSCAPE ----------
+      const LS = !!window.LANDSCAPE;
+      // per-shot landscape overrides (cam, land …), applied after body.part has added every shot
+      const landFix = (fix) => { if (LS) shots.forEach((sh) => { if (fix[sh.key]) Object.assign(sh, fix[sh.key]); }); };
+      // run f after a shot's own fx
+      const afterFx = (k, f) => { if (LS) shots.filter((s) => s.key === k).forEach((sh) => { const fx0 = sh.fx; sh.fx = (tl, id, t0, L) => { if (fx0) fx0(tl, id, t0, L); f(tl, id, t0, L); }; }); };
+      // จูน's live overlay (TideUI.live) as a landscape stream UI. landscape.js keeps the overlay as a full-frame wash at stage scale, so
+      // in the wide frame it sat as a phone-width column in the middle, its header cropped off above the band and its comment rows in
+      // the caption band. Here: the header to the top left; the comment stack, pinned comment and input bar down the left edge; the
+      // buttons, hearts and gift down the right edge; everything above the caption band. y0 = the shot's land.y0 (set for these shots).
+      const liveL = (layer, y0) => {
+        const NS = "http://www.w3.org/2000/svg";
+        const root = [...layer.children].find((g) => g.id && document.getElementById(`${g.id}-top`));
+        if (!root) return;
+        const lid = root.id, ui = document.getElementById(`${lid}-ui`) || root;
+        const grp = (dx, dy) => { const g = document.createElementNS(NS, "g"); g.setAttribute("transform", `translate(${dx},${dy})`); return g; };
+        const left = grp(-615, y0 - 668), right = grp(645, y0 - 656);   // ~60 px from the page edges
+        const isRow = new RegExp(`^${lid}-c\\d+$`), isHeart = new RegExp(`^${lid}-h\\d+$`), isBtn = new RegExp(`^${lid}-b\\d+$`);
+        [...ui.children].forEach((n) => {
+          const nid = n.id || "", kid = (n.firstElementChild && n.firstElementChild.id) || "", tr = (n.getAttribute("transform") || "").replace(/\s/g, "");
+          if (isRow.test(nid) || kid === `${lid}-pin` || tr === "translate(36,1618)") left.appendChild(n);
+          else if (isHeart.test(nid) || isBtn.test(kid) || tr === "translate(870,1656)" || tr === "translate(990,1656)") right.appendChild(n);   // (990,1656): EP.1's share button
+        });
+        ui.appendChild(left); ui.appendChild(right);
+        const top = document.getElementById(`${lid}-top`), tg = grp(-670, y0 - 70);
+        top.parentNode.insertBefore(tg, top); tg.appendChild(top);
+      };
+      // TideUI.endCard at full width (with land: { fit: false }): landscape.js widens its dusk sky and sea (rects); the hill it stands on
+      // is a path that stops at the old frame, so continue it to both new edges
+      const endWide = (layer) => {
+        const card = [...layer.children].find((g) => g.id && document.getElementById(`${g.id}-all`));
+        const hill = card && [...card.querySelectorAll("path")].find((p) => (p.getAttribute("d") || "").startsWith("M-40,1920V1380"));
+        if (hill) hill.insertAdjacentHTML("afterend", `<path d="M-780,1920V1440Q-420,1352 -36,1381V1920Z" fill="#1a1426"/><path d="M1096,1920V1640Q1440,1652 1860,1590V1920Z" fill="#1a1426"/>`);
+      };
