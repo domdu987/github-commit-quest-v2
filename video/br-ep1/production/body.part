@@ -1,0 +1,228 @@
+      // ---------- บางระจัน แบต 3% EP.1 · storytelling clip (lane A) · the channel look (slender cast, lit sets) ----------
+      Rig.FLAT = true;
+      Engine.look = { ...(Engine.look || {}), vignette: 0.5, grain: 0.05 };
+      const NS = "http://www.w3.org/2000/svg";
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const ID = fr(540, 960, 1.0, 540, 960);
+      const grp = (parent) => { const g = document.createElementNS(NS, "g"); parent.appendChild(g); return g; };
+      const pop = (tl, g, at, o = {}) => tl.fromTo(g, { opacity: 0, scale: o.from ?? 0.8, y: o.dy ?? -18, svgOrigin: o.origin || "540 960" },
+        { opacity: 1, scale: 1, y: 0, svgOrigin: o.origin || "540 960", duration: o.dur ?? 0.4, ease: o.ease || "back.out(2.2)" }, at);
+      const out = (tl, g, at, d = 0.18) => tl.to(g, { opacity: 0, duration: d }, at);
+      const swingG = (tl, sel, t0, dur, amp = 3, org = "0 0") => tl.fromTo(sel, { rotation: -amp, svgOrigin: org }, { rotation: amp, svgOrigin: org, duration: 1.2, repeat: Math.ceil(dur / 1.2), yoyo: true, ease: "sine.inOut" }, t0);
+      const shake = (tl, g, t0, dur, a = 3, p = 0.05) => tl.fromTo(g, { x: -a }, { x: a, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "none" }, t0);
+      const DAY = { dark: 0.02, light: { from: "right", rim: "#fff0d0", rimOp: 0.6, rimW: 4, shade: "#3a2440", shadeOp: 0.25, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#fff2d8", bottom: "#4a3a50", op: 0.16 } };
+      const NIGHT = { dark: 0.1, light: { from: "right", rim: "#ffd9a0", rimOp: 0.55, rimW: 4, shade: "#1a1430", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#ffe2b0", bottom: "#1a1428", op: 0.24 } };
+      const spec = (k, o) => ({ ...(o.night ? NIGHT : DAY), cam: o.cam || { keys: [{ t: 0, ...(o.camAt || ID), drift: { s: o.push ?? 0.012 } }] }, captions: o.captions ?? caps(k), ...o });
+      const shot = (k, o) => add(k, spec(k, o));
+      const talk = (k, i, m = "o") => [[vo(k, i), voEnd(k, i), m]];
+      const swap = (tl, id, t, a = 0, b = 1, d = 0.12) => { tl.set(`#${id}-a${b}`, { opacity: 0 }, 0); tl.to(`#${id}-a${a}`, { opacity: 0, duration: d }, t); tl.to(`#${id}-a${b}`, { opacity: 1, duration: d }, t); };
+      const tagAt = (tl, L, x, y, text, at, o = {}) => { const g = grp(L.act); g.innerHTML = Lot.tag(x, y, text, o); pop(tl, g, at, { origin: `${x} ${y}`, from: 0.5 }); return g; };
+      const capAt = (id, y) => { const c = document.getElementById(`${id}-caps`); if (c) c.style.setProperty("top", `${y}px`, "important"); };
+      const ink = Lot.INK;
+      // a counter chip in the corner (screen space): "1/5"
+      const chip = (tl, L, steps, o = {}) => { const x = o.x ?? 900, y = o.y ?? 250;
+        const g = grp(L.light); g.innerHTML = `<g transform="translate(${x},${y})"><circle r="78" fill="#fbf7ee" stroke="${ink}" stroke-width="7"/>
+          ${steps.map(([, txt], i) => `<text id="${o.id}-c${i}" x="0" y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="${ink}" opacity="0">${txt}</text>`).join("")}
+          <text x="0" y="-36" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="22" fill="#a8305a">${o.label || "ที่ซ่อน"}</text></g>`;
+        steps.forEach(([at], i) => { tl.set(`#${o.id}-c${i}`, { opacity: 1 }, at); if (i + 1 < steps.length) tl.set(`#${o.id}-c${i}`, { opacity: 0 }, steps[i + 1][0]);
+          tl.fromTo(g, { scale: 1.25, svgOrigin: `${x} ${y}` }, { scale: 1, svgOrigin: `${x} ${y}`, duration: 0.25, ease: "back.out(3)", immediateRender: false }, at); });
+        return g; };
+      const sparkle = (x, y, r = 22) => `<path d="M${x},${y - r}Q${x + 4},${y - 4} ${x + r},${y}Q${x + 4},${y + 4} ${x},${y + r}Q${x - 4},${y + 4} ${x - r},${y}Q${x - 4},${y - 4} ${x},${y - r}Z" fill="#fff6b0" stroke="${ink}" stroke-width="2.5"/>`;
+
+
+      // the status bar (top left), per shot: [[label, value, colour]]
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .sghud { position: absolute; z-index: 58; left: 44px; top: 120px; display: flex; flex-direction: row; white-space: nowrap; width: max-content; align-items: center; gap: 16px;
+          padding: 12px 22px; border-radius: 18px; background: rgba(18,20,30,.7); border: 1.5px solid rgba(244,236,216,.2); box-shadow: 0 8px 24px rgba(0,0,0,.35); font-family: Kanit; color: #f4ecd8; }
+        .sghud b { font: 800 34px/1 Kanit; } .sghud small { font: 600 19px/1 Kanit; opacity: .65; } .sghud i { width: 1.5px; height: 30px; background: rgba(244,236,216,.25); }
+        .capbox { font: 800 54px/1.25 Kanit !important; }
+      </style>`);
+      const hud = (id, items) => { const el = document.getElementById(id); if (!el) return;
+        el.insertAdjacentHTML("beforeend", `<div class="sghud">${items.map(([l, v, c], i) => `${i ? "<i></i>" : ""}<small>${l}</small><b style="color:${c || "#f4ecd8"}">${v}</b>`).join("")}</div>`); };
+      const ears = (tl, aid, at, on = true, d = 0.25) => tl.to(`#${aid} .jkEar`, { opacity: on ? 1 : 0, duration: d }, at);
+      // ---------- looks per world ----------
+      const act = (k) => (shots.find((x) => x.key === k) || {}).actors || [];
+      const DAWN = { dark: 0.04, light: { from: "right", rim: "#ffe0b0", rimOp: 0.7, rimW: 4, shade: "#3a2a50", shadeOp: 0.28, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ffd8b0", bottom: "#4a3a60", op: 0.18 } };
+      const DAYC = { dark: 0.02, light: { from: "left", rim: "#fff4d8", rimOp: 0.6, rimW: 4, shade: "#3a2a30", shadeOp: 0.24, shadeW: 26, soft: 9, vol: false }, grade: { top: "#fff6e0", bottom: "#5a4a40", op: 0.14 } };
+      const ROOMN = { dark: 0.52, light: { from: "right", rim: "#9ad8ff", rimOp: 0.7, rimW: 4, shade: "#101428", shadeOp: 0.4, shadeW: 26, soft: 9, vol: false }, grade: { top: "#1a2448", bottom: "#06080f", op: 0.5 } };
+      const field = (k, o = {}) => ({ ...DAWN, set: "brField", setOpts: { id: `bf${k}`, ...o } });
+      const camp = (k, o = {}) => ({ ...DAYC, set: "brCamp", setOpts: { id: `bc${k}`, pole: true, drum: true, ...o } });
+      const room = (k, o = {}) => ({ ...ROOMN, set: "brRoom", setOpts: { id: `br${k}`, ...o } });
+      const shadows = (L, id, actors, sh = -0.4) => NkL.cast(L, id, actors, { k: 0.3, sh, op: 0.35 });
+      const loop = NkV.loop;
+      const H_BAT = (pct = 3) => [["แบต", `${pct}%`, "#ff8a7a"], ["ปลุก", "07:00", "#f2c55c"]];
+      const H_NIGHT = [["เวลา", "03:00", "#9ad8ff"], ["แบต", "3%", "#ff8a7a"]];
+      const ME = (who, x, y, track, extra = {}) => A(who, x, y, 0.95, track, extra);
+      const face = (x, y = 1400, s = 3.2, flip = false, sx = 540, sy = 760, k = 0.95) => fr(x + (flip ? -2 : 2) * k, y - 546 * k, s, sx, sy);
+      const KENG = 760;   // the tying pole
+      const CHANNEL = "Rod Mai Club";   // ← เปลี่ยนเป็นชื่อช่องใหม่เมื่อเจ้าของตั้งชื่อแล้ว (จุดเดียว)
+      const BUSH = (L) => { const g = grp(L.act); g.innerHTML = BRS.bush(1300, 1400, 0.9, "#3e7e34"); return g; };   // a copy of bush 2 over the cast: the kids stand in it
+      // ไอ้ดำ: BR.buffalo faces right; left = true mirrors it. lick(): the tongue laps, the head bobs (down/tilt lower the muzzle to the face)
+      const buffalo = (L, x, y, s = 1, left = false) => { const g = grp(L.act); g.innerHTML = BR.buffalo(); g.setAttribute("transform", `translate(${x},${y}) scale(${left ? -s : s},${s})`); return g; };
+      const lick = (tl, g, t0, dur, o = {}) => { const tg = g.querySelector(".brTongue"), hd = g.querySelector(".brBufHead");
+        tl.fromTo(tg, { scaleY: 0.5, rotation: -10, transformOrigin: "50% 0%" }, { scaleY: 1.25, rotation: 12, transformOrigin: "50% 0%", duration: 0.26, repeat: Math.ceil(dur / 0.26), yoyo: true, ease: "sine.inOut" }, t0);
+        tl.fromTo(hd, { y: -176 + (o.down ?? 0), rotation: o.tilt ?? 0, transformOrigin: "0% 50%" }, { y: -176 + (o.down ?? 0) + 14, rotation: (o.tilt ?? 0) + 4, transformOrigin: "0% 50%", duration: 0.7, repeat: Math.ceil(dur / 0.7), yoyo: true, ease: "sine.inOut" }, t0); };
+      // rope loops around the torso of the one tied to the pole (drawn over the cast)
+      const rope = (L, x, s = 0.95, y0 = 1400, id = "rp") => { const g = grp(L.act);
+        g.innerHTML = [-448, -414, -380, -346].map((yy, k) => `<g id="${id}-rp${k}"><ellipse cx="${x}" cy="${(y0 + yy * s).toFixed(1)}" rx="${(60 * s).toFixed(1)}" ry="${(9 * s).toFixed(1)}" fill="none" stroke="#caa66a" stroke-width="11"/>
+          <ellipse cx="${x}" cy="${(y0 + yy * s).toFixed(1)}" rx="${(60 * s).toFixed(1)}" ry="${(9 * s).toFixed(1)}" fill="none" stroke="#8a6a3a" stroke-width="3" stroke-dasharray="8 10"/></g>`).join(""); return g; };
+      // the phone's lock screen (screen space): status bar, the big 3%, the alarm row, a new-message banner (its text blurred: nobody reads it yet)
+      const phoneUI = (L, id, o = {}) => { const g = grp(L.light), x = o.x ?? 540, y = o.y ?? 760, s = o.s ?? 0.72;
+        g.innerHTML = `<g transform="translate(${x},${y}) scale(${s})"><rect x="-300" y="-550" width="600" height="1100" rx="60" fill="#1a1a22"/><rect x="-272" y="-522" width="544" height="1044" rx="44" fill="#0b0d16"/>
+          <rect x="-90" y="-512" width="180" height="34" rx="17" fill="#1a1a22"/>
+          <g id="${id}-ui"><text x="-236" y="-452" font-family="Kanit" font-weight="700" font-size="30" fill="#f4ecd8" opacity=".85">${o.time || "06:21"}</text>
+            <g transform="translate(236,-466)"><rect x="-60" y="-14" width="54" height="28" rx="6" fill="none" stroke="#f4ecd8" stroke-width="3"/><rect x="-5" y="-6" width="5" height="12" rx="1.5" fill="#f4ecd8"/><rect x="-55" y="-9" width="4" height="18" rx="1" fill="#ff5a4a"/></g>
+            <text x="166" y="-456" text-anchor="end" font-family="Kanit" font-weight="800" font-size="30" fill="#ff8a7a">${o.pct ?? 3}%</text>
+            <g id="${id}-big"><text x="0" y="-130" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="230" fill="#ff5a4a">${o.pct ?? 3}%</text><text x="0" y="-50" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="42" fill="#f4ecd8" opacity=".85">แบตเตอรี่ใกล้หมด</text></g>
+            <g id="${id}-al"><rect x="-236" y="60" width="472" height="170" rx="30" fill="#1c2236"/><g transform="translate(-176,145) scale(1.1)"><path d="M-21,12Q-23,-24 0,-27Q23,-24 21,12Z" fill="#f2c55c"/><path d="M-28,12H28" stroke="#f2c55c" stroke-width="5" stroke-linecap="round"/><circle cy="21" r="5.5" fill="#f2c55c"/></g>
+              <text x="-120" y="120" font-family="Kanit" font-weight="800" font-size="36" fill="#f4ecd8">นาฬิกาปลุก</text><text x="-120" y="196" font-family="Kanit" font-weight="900" font-size="74" fill="#f2c55c">07:00</text><text x="214" y="122" text-anchor="end" font-family="Kanit" font-weight="700" font-size="32" fill="#9ad8ff">พรุ่งนี้</text></g>
+            <g id="${id}-msg"><rect x="-250" y="-400" width="500" height="150" rx="30" fill="#f4ecd8"/><rect x="-226" y="-376" width="80" height="80" rx="20" fill="#3a9c66"/><path d="M-206,-350h40v26h-22l-8,8v-8h-10z" fill="#fff"/>
+              <text x="-124" y="-352" font-family="Kanit" font-weight="800" font-size="30" fill="#2e2a26">ข้อความใหม่</text><text x="226" y="-352" text-anchor="end" font-family="Kanit" font-weight="600" font-size="24" fill="#8a8a8a">ตอนนี้</text>
+              <g filter="url(#brBlur)"><text x="-124" y="-300" font-family="Kanit" font-weight="700" font-size="34" fill="#2e2a26">ยายซ่อนมะนาวไว้ใต้ยุ้ง</text></g></g></g>
+          <rect id="${id}-off" x="-272" y="-522" width="544" height="1044" rx="44" fill="#07080c" opacity="0"/><rect id="${id}-flash" x="-272" y="-522" width="544" height="1044" rx="44" fill="#ffffff" opacity="0"/></g>`; return g; };
+      // the camp rules on a hanging wooden board (screen space); rows: [icon, tone, line 1, line 2]
+      const plank = (L, id, rows, title) => { const g = grp(L.light);
+        const row = (y, n, ic, tone, a, b) => `<g id="${id}-rr${n}">${JKI.coin(ic, -290, y, 0.66, `${id}-ic${n}`, tone)}<text x="-222" y="${y - 8}" font-family="Kanit" font-weight="900" font-size="48" fill="#fbefd4">${a}</text><text x="-222" y="${y + 46}" font-family="Kanit" font-weight="800" font-size="40" fill="#f6d36a">${b}</text></g>`;
+        g.innerHTML = `<g id="${id}-pl" transform="translate(540,736)"><path d="M-250,-640V-390M250,-640V-390" stroke="#caa66a" stroke-width="12"/><path d="M-250,-640V-390M250,-640V-390" stroke="#8a6a3a" stroke-width="3" stroke-dasharray="8 12"/>
+          <rect x="-390" y="-392" width="780" height="784" rx="14" fill="#5a3a1c"/><rect x="-376" y="-376" width="752" height="752" rx="10" fill="#a8743a"/>
+          ${[-300, -200, -100, 0, 100, 200, 300].map((yy, k) => `<path d="M-360,${yy}q180,${k % 2 ? 12 : -12} 720,0" stroke="#8a5a2e" stroke-width="3" fill="none" opacity=".55"/>`).join("")}
+          ${[[-352, -352], [352, -352], [-352, 352], [352, 352]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9" fill="#3a2a1a"/><circle cx="${x - 2}" cy="${y - 2}" r="4" fill="#9a9088"/>`).join("")}
+          <rect x="-300" y="-350" width="600" height="104" rx="12" fill="#5a3a1c"/><text x="0" y="-278" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#f6d36a">${title}</text>
+          ${rows.map(([ic, tone, a, b], n) => row(-150 + n * 200, n + 1, ic, tone, a, b)).join("")}</g>`; return g; };
+      const BLACK = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#000"/>`; return g; };
+
+      // ---------- b01 hook: tied to the pole, ไอ้ดำ wants the pocket, แบต 3% ----------
+      shot("b01", { ...camp("b01"), camAt: fr(840, 1060, 1.2, 540, 900), push: 0.03, shake: JKC.impact(F("b01", 0, 2), 0.4, 8),
+        actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "tiedStruggle", eyes: "wide", mouth: "scream", sweat: true }]), A("brManSpear", 560, 1400, 0.98, [{ t: 0, mode: "idle", eyes: "angry", mouth: "frown" }]),
+          A("brPhaeoLadle", 430, 1400, 0.9, [{ t: 0, mode: "stir", eyes: "normal", mouth: "flat" }], { flip: true })],
+        fx(tl, id, t0, L) { shadows(L, id, act("b01"), -0.5); rope(L, KENG, 0.95, 1400, id); const b = buffalo(L, 1190, 1400, 1, true); lick(tl, b, t0, D("b01"), { down: 30, tilt: 14 });
+          BRI.badge(tl, L.light, t0, D("b01"), { kind: "battery", x: 820, y: 470, tone: "red", label: "แบต 3%", at: F("b01", 0, 2) - 0.1 }); } });
+
+      // ---------- b02–b03 2569, 03:00: in bed with the phone, asleep, the phone drops ----------
+      shot("b02", { ...room("b02"), camAt: fr(640, 1120, 1.2, 540, 920), push: 0.015, blur: { far: 3 },
+        actors: [ME("brKengPhone", 930, 1205, [{ t: 0, mode: "liePhone", eyes: "tired", mouth: "flat" }, { t: D("b02") - 1.4, mode: "liePhone", eyes: "closed", mouth: "flat", ua: -96, fa: -22 }])],
+        sfxText: [{ text: "Zzz", x: 200, y: 740, size: 80, rot: -8, color: "#9ad8ff", t: D("b02") - 1.0, end: D("b02") - 0.05 }],
+        fx(tl, id, t0, L) { hud(id, H_NIGHT); const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="440" cy="1040" rx="260" ry="180" fill="url(#brPhoneGlow)"/></g>`;
+          tl.fromTo(gl, { opacity: 0.7 }, { opacity: 1, duration: 0.23, repeat: Math.ceil(D("b02") / 0.23), yoyo: true, ease: "none" }, t0); } });
+      shot("b03", { ...room("b03"), camAt: fr(440, 1100, 2.3, 540, 880), push: 0.02, blur: { far: 6, mid: 4 }, shake: JKC.impact(vo("b03") + 0.6, 0.3, 10),
+        actors: [ME("brKengPhone", 930, 1205, [{ t: 0, mode: "liePhone", eyes: "closed", mouth: "flat", ua: -96, fa: -22 }]),
+          ME("brKeng", 930, 1205, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }, { t: vo("b03") + 0.62, mode: "lie", eyes: "wide", mouth: "scream" }, { t: vo("b03") + 1.6, mode: "lie", eyes: "closed", mouth: "frown" }])],
+        sfxText: [{ text: "ปั้ก!", x: 580, y: 640, size: 150, rot: -8, color: "#f6d36a", t: vo("b03") + 0.6, end: vo("b03") + 1.7 }],
+        fx(tl, id, t0, L) { hud(id, H_NIGHT); swap(tl, id, t0 + vo("b03") + 0.25); const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="440" cy="1040" rx="220" ry="150" fill="url(#brPhoneGlow)"/></g>`; tl.to(gl, { opacity: 0.2, duration: 0.3 }, t0 + vo("b03") + 0.3);
+          const ph = grp(L.act); ph.innerHTML = `<rect x="-26" y="-50" width="52" height="100" rx="8" fill="#1a1a22"/><rect x="-21" y="-43" width="42" height="80" rx="5" fill="#243a66"/><rect x="-14" y="-36" width="28" height="56" rx="3" fill="#5a86c8" opacity=".7"/>`;
+          tl.set(ph, { opacity: 0 }, 0); tl.set(ph, { opacity: 1, x: 445, y: 960, rotation: -14 }, t0 + vo("b03") + 0.25);
+          tl.to(ph, { x: 418, y: 1128, rotation: 24, duration: 0.36, ease: "power2.in" }, t0 + vo("b03") + 0.25); tl.to(ph, { y: 1120, rotation: 30, duration: 0.12, ease: "power1.out" }, t0 + vo("b03") + 0.61);
+          const bk = BLACK(L); tl.set(bk, { opacity: 0 }, 0); tl.to(bk, { opacity: 1, duration: 0.45 }, t0 + D("b03") - 0.6); } });
+
+      // ---------- b04 dawn, the dike: eyes open, a black buffalo licking the face ----------
+      shot("b04", { ...field("b04"), cam: { keys: [{ t: 0, ...fr(581, 1310, 2.4, 540, 900), drift: { s: 0.01 } }, { t: F("b04", 0, 1) - 0.1, ...fr(640, 1140, 0.95, 540, 940), glide: 0.9 }, { t: F("b04", 0, 2) - 0.1, ...fr(760, 1120, 0.72, 540, 960), glide: 0.8 }] }, blur: { far: 2 },
+        actors: [ME("brKeng", 1100, 1400, [{ t: 0, mode: "lie", eyes: "closed", mouth: "flat" }, { t: vo("b04") + 0.5, mode: "lie", eyes: "wide", mouth: "o" }, { t: F("b04", 0, 1) + 0.3, mode: "lie", eyes: "wide", mouth: "scream", sweat: true }])],
+        sfxText: [{ text: "แจ๊ะ แจ๊ะ", x: 110, y: 560, size: 84, rot: -10, color: "#f6d36a", t: F("b04", 0, 1) + 0.2, end: F("b04", 0, 2) }],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); const b = buffalo(L, 330, 1400, 1.05); lick(tl, b, t0, D("b04"), { down: 70, tilt: 26 });
+          const bk = BLACK(L); tl.set(bk, { opacity: 1 }, 0); tl.to(bk, { opacity: 0, duration: 0.5 }, t0 + vo("b04") + 0.35); } });
+
+      // ---------- b05–b09 the kids in the bush ----------
+      shot("b05", { ...field("b05"), camAt: fr(1310, 1190, 1.3, 540, 960), push: 0.02,
+        actors: [A("brJukSword", 1250, 1400, 0.68, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true, path: [{ t: 0, x: 1250, y: 1760 }, { t: 0.3, x: 1250, y: 1760 }, { t: 0.55, x: 1250, y: 1400 }] }),
+          A("brTaeng", 1385, 1400, 0.82, [{ t: 0, mode: "foldX", eyes: "squint", mouth: "flat" }], { flip: true, path: [{ t: 0, x: 1385, y: 1780 }, { t: 0.45, x: 1385, y: 1780 }, { t: 0.72, x: 1385, y: 1400 }] })],
+        sfxText: [{ text: "โผล่!", x: 150, y: 620, size: 100, rot: -8, color: "#f6d36a", t: 0.5, end: D("b05") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); BUSH(L); Rig.squash(tl, `${id}-a0`, t0 + 0.56, 0.2); Rig.squash(tl, `${id}-a1`, t0 + 0.73, 0.2);
+          const lv = grp(L.act); lv.innerHTML = [0, 1, 2, 3, 4, 5].map((k) => `<ellipse cx="${1220 + k * 34}" cy="1215" rx="16" ry="9" fill="#5a9a46" transform="rotate(${-30 + k * 12} ${1220 + k * 34} 1215)"/>`).join("");
+          tl.set(lv, { opacity: 0 }, 0); tl.fromTo(lv, { opacity: 1, y: 0, scale: 0.6, svgOrigin: "1300 1215" }, { opacity: 0, y: -120, scale: 1.3, svgOrigin: "1300 1215", duration: 0.7, ease: "power2.out", immediateRender: false }, t0 + 0.5); } });
+      shot("b06", { ...field("b06"), cam: { keys: [{ t: 0, ...fr(1250, 1240, 1.9, 540, 980), drift: { s: 0.012 } }, { t: F("b06", 0, 1) - 0.12, ...fr(1236, 1012, 3.1, 540, 800), glide: 0.16 }] }, shake: JKC.impact(F("b06", 0, 1), 0.5, 12),
+        actors: [A("brJukSword", 1250, 1400, 0.68, [{ t: 0, mode: "pointSword", eyes: "wide", mouth: "o" }, { t: F("b06", 0, 1) - 0.05, mode: "pointSword", eyes: "wide", mouth: "scream" }], { flip: true, talk: [[F("b06", 0, 1), voEnd("b06", 0), "scream"]] }),
+          A("brTaeng", 1385, 1400, 0.82, [{ t: 0, mode: "foldX", eyes: "squint", mouth: "flat" }], { flip: true })],
+        sfxText: [{ text: "ผี! ผีเสื้อฟ้า!", x: 80, y: 520, size: 92, rot: -6, color: "#f6d36a", t: F("b06", 0, 1), end: D("b06") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); BUSH(L); } });   // the trembling is in the pointSword pose itself (a GSAP x-tween on a flipped actor group breaks its transform)
+      shot("b07", { ...field("b07"), cam: { keys: [{ t: 0, ...fr(1000, 1180, 1.5, 540, 960), drift: { s: 0.01 } }, { t: 0.35, ...fr(1012, 1262, 3.0, 540, 900), glide: 0.2 }] }, shake: JKC.impact(0.5, 0.3, 8),
+        actors: [ME("brKeng", 1000, 1400, [{ t: 0, mode: "sit", eyes: "worry", mouth: "o" }]), A("brJukSword", 1250, 1400, 0.68, [{ t: 0, mode: "pointSword", eyes: "wide", mouth: "scream" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); BUSH(L); tagAt(tl, L, 900, 1160, "เบอร์ 10", t0 + 0.6, { s: 0.8 });
+          BRI.badge(tl, L.light, t0, D("b07"), { kind: "butterfly", x: 800, y: 500, tone: "blue", label: "ผีเสื้อฟ้า?", at: vo("b07") + 0.8 }); } });
+      shot("b08", { ...field("b08"), camAt: fr(1383, 1400 - 546 * 0.82, 2.3, 600, 820), push: 0.02, blur: { far: 5, mid: 4 },
+        actors: [A("brJukSword", 1250, 1400, 0.68, [{ t: 0, mode: "pointSword", eyes: "wide", mouth: "o" }], { flip: true }),
+          A("brTaeng", 1385, 1400, 0.82, [{ t: 0, mode: "foldX", eyes: "squint", mouth: "flat" }, { t: F("b08", 0, 1) - 0.1, mode: "foldX", eyes: "side", mouth: "flat" }], { flip: true, talk: [[F("b08", 0, 1), voEnd("b08", 0), "o"]] })],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); BUSH(L); } });
+      shot("b09", { ...field("b09"), cam: { keys: [{ t: 0, ...fr(520, 1200, 1.3, 540, 960), drift: { s: 0.01 } }, { t: vo("b09") + 0.3, ...fr(520, 1190, 2.2, 540, 900), glide: 0.14 }] }, shake: JKC.impact(vo("b09") + 0.32, 0.35, 12),
+        actors: [ME("brKeng", 1000, 1400, [{ t: 0, mode: "sit", eyes: "worry", mouth: "o" }])],
+        sfxText: [{ text: "ขวับ!", x: 560, y: 560, size: 130, rot: 6, color: "#f6d36a", t: vo("b09") + 0.32, end: D("b09") - 0.05 }],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); const b = buffalo(L, 330, 1400, 1.05); const hd = b.querySelector(".brBufHead"), tg = b.querySelector(".brTongue");
+          hd.insertAdjacentHTML("beforeend", `<g class="brBrow" opacity="0"><path d="M22,-28L60,-16" stroke="#111" stroke-width="9" stroke-linecap="round"/></g>`);
+          tl.set(hd, { y: -176 + 70, rotation: 26, transformOrigin: "0% 50%" }, 0); tl.to(hd, { y: -176 - 30, rotation: -22, duration: 0.14, ease: "power3.out" }, t0 + vo("b09") + 0.18);
+          tl.set(tg, { scaleY: 1, transformOrigin: "50% 0%" }, 0); tl.to(tg, { scaleY: 0.1, duration: 0.1 }, t0 + vo("b09") + 0.18); tl.to(`#${id} .brBrow`, { opacity: 1, duration: 0.08 }, t0 + vo("b09") + 0.3); } });
+
+      // ---------- b10 dragged into the camp; ยายแผ้ว at the pot (p03_2 "ยายไม่หันมามอง" is kept for the long cut only if needed) ----------
+      const WALKIN = (who, x0, x1, s, track, extra = {}) => A(who, x0, 1400, s, track, { flip: true, moveTo: { x: x1, dur: 3.0, at: 0.1 }, ...extra });
+      shot("b10", { ...camp("b10"), cam: { keys: [{ t: 0, ...fr(1100, 820, 0.72, 540, 720), drift: { s: 0.004 } }, { t: F("b10", 0, 1) - 0.3, ...fr(560, 1120, 1.15, 540, 960), glide: 1.1 }] },
+        actors: [WALKIN("brManSpear", 1120, 600, 0.98, [{ t: 0, mode: "walk", eyes: "angry", mouth: "frown" }, { t: 3.1, mode: "idle", eyes: "angry", mouth: "frown" }]),
+          WALKIN("brKeng", 1240, 720, 0.95, [{ t: 0, mode: "yanked", eyes: "wide", mouth: "o" }, { t: 3.1, mode: "idle", eyes: "worry", mouth: "frown" }]),
+          WALKIN("brManDha", 1360, 840, 1.0, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: 3.1, mode: "idle", eyes: "normal", mouth: "flat" }]),
+          WALKIN("brJukSword", 1520, 1000, 0.68, [{ t: 0, mode: "walk", eyes: "wide", mouth: "o" }, { t: 3.1, mode: "idle", eyes: "wide", mouth: "o" }]),
+          WALKIN("brTaeng", 1640, 1120, 0.82, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }, { t: 3.1, mode: "foldX", eyes: "squint", mouth: "flat" }]),
+          A("brPhaeoLadle", 430, 1400, 0.9, [{ t: 0, mode: "stir", eyes: "normal", mouth: "flat" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); shadows(L, id, act("b10"), -0.5); } });
+
+      // ---------- b12 the three rules on the board · b13 tied, rule one ----------
+      shot("b12", { ...camp("b12"), camAt: fr(700, 1000, 1.25, 540, 960), push: 0.008, blur: { far: 10, mid: 10, set: 9, act: 8 }, dark: 0.3,
+        actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "tied", eyes: "worry", mouth: "flat" }])],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); const g = plank(L, id, [["rope", "red", "คนแปลกหน้า", "มัดไว้ก่อน"], ["phone", "yellow", "ของวาวรอน", "อย่าให้ควายเห็น"], ["lime", "green", "ตำน้ำพริกไม่เป็น", "ห้ามแตะมะนาว"]], "กฎของค่าย ๓ ข้อ");
+          pop(tl, g, t0 + 0.05, { origin: "540 736", from: 0.85, dur: 0.35 }); swingG(tl, `#${id}-pl`, t0 + 0.4, D("b12") - 0.4, 1.1, "540 96");
+          const ats = [F("b12", 0, 1), vo("b12", 1), vo("b12", 2)], kinds = ["rope", "phone", "lime"];
+          [1, 2, 3].forEach((n) => { tl.set(`#${id}-rr${n}`, { opacity: 0 }, 0); const a = t0 + ats[n - 1] + 0.05; tl.to(`#${id}-rr${n}`, { opacity: 1, duration: 0.25 }, a); JKI.enterC(tl, `${id}-ic${n}`, a); BRI.idle(tl, `${id}-ic${n}`, kinds[n - 1], a + 0.9, t0 + D("b12") - a - 0.9); }); } });
+      shot("b13", { ...camp("b13"), camAt: fr(790, 1070, 1.35, 540, 920), push: 0.012, shake: JKC.impact(vo("b13") + 0.25, 0.9, 5),
+        actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "tiedStruggle", eyes: "worry", mouth: "frown" }, { t: vo("b13") + 1.3, mode: "tied", eyes: "sad", mouth: "pout" }]), A("brMan1", 590, 1400, 0.98, [{ t: 0, mode: "foldX", eyes: "angry", mouth: "frown" }]),
+          A("brManDha", 950, 1400, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true }), A("brJukSword", 1090, 1400, 0.68, [{ t: 0, mode: "idle", eyes: "side", mouth: "o" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); shadows(L, id, act("b13"), -0.5); rope(L, KENG, 0.95, 1400, id);
+          [0, 1, 2, 3].forEach((k) => { const a = t0 + vo("b13") + 0.2 + k * 0.24; tl.set(`#${id}-rp${k}`, { opacity: 0 }, 0); tl.fromTo(`#${id}-rp${k}`, { opacity: 1, scaleX: 0.1, transformOrigin: "50% 50%" }, { scaleX: 1, transformOrigin: "50% 50%", duration: 0.14, ease: "power2.out", immediateRender: false }, a); });
+          BRI.badge(tl, L.light, t0, D("b13"), { kind: "rope", x: 300, y: 520, tone: "red", label: "กฎข้อ ๑", at: F("b13", 0, 1) }); } });
+
+      // ---------- b14–b15 the one thing from 2569: the phone, 3%, the alarm at 07:00 ----------
+      shot("b14", { ...camp("b14"), camAt: fr(KENG + 24 * 0.95, 1400 - 432 * 0.95, 3.0, 540, 900), push: 0.025, blur: { far: 8, mid: 7, set: 4 },
+        actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "tied", eyes: "side", mouth: "flat" }])],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); rope(L, KENG, 0.95, 1400, id); const px = KENG + 26 * 0.95, py = 1400 - 432 * 0.95;
+          const sp = grp(L.act); sp.innerHTML = sparkle(px + 6, py - 14, 26) + sparkle(px - 20, py + 10, 14); tl.set(sp, { opacity: 0 }, 0);
+          tl.fromTo(sp, { opacity: 0, scale: 0.3, svgOrigin: `${px} ${py}` }, { opacity: 1, scale: 1, svgOrigin: `${px} ${py}`, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + F("b14", 0, 1)); tl.to(sp, { opacity: 0, duration: 0.2 }, t0 + vo("b14", 1) - 0.1);
+          const ph = phoneUI(L, `${id}-ph`, { time: "06:21" }); tl.set(ph, { opacity: 0 }, 0); tl.set(`#${id}-ph-big, #${id}-ph-al, #${id}-ph-msg`, { opacity: 0 }, 0);
+          pop(tl, ph, t0 + vo("b14", 1) - 0.1, { origin: "540 760", from: 0.7, dur: 0.4 }); tl.to(`#${id}-dark`, { opacity: 0.5, duration: 0.4 }, t0 + vo("b14", 1) - 0.1);
+          tl.fromTo(`#${id}-ph-big`, { opacity: 0, scale: 1.6, svgOrigin: "0 -130" }, { opacity: 1, scale: 1, svgOrigin: "0 -130", duration: 0.35, ease: "back.out(2.5)", immediateRender: false }, t0 + F("b14", 1, 0) + 0.3);
+          tl.fromTo(`#${id}-ph-al`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t0 + F("b14", 1, 1));
+          loop(tl, `#${id}-ph-big text:first-child`, { opacity: 1 }, { opacity: 0.45 }, 0.5, t0 + F("b14", 1, 0) + 0.7, D("b14") - F("b14", 1, 0) - 0.7); } });
+      shot("b15", { ...camp("b15"), camAt: face(KENG, 1400, 2.7, false, 540, 820), push: 0.02, blur: { far: 7, mid: 6, set: 3 },
+        actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "tied", eyes: "worry", mouth: "flat" }, { t: vo("b15", 1), mode: "tied", eyes: "worry", mouth: "frown", sweat: true }, { t: F("b15", 1, 1), mode: "tied", eyes: "sad", mouth: "pout", sweat: true }])],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); rope(L, KENG, 0.95, 1400, id);
+          BRI.badge(tl, L.light, t0, D("b15"), { kind: "alarm", x: 300, y: 520, tone: "yellow", label: "07:00 = ทางกลับบ้าน", at: F("b15", 0, 1) + 0.2 });
+          JKI.ring(tl, L.light, t0, D("b15"), { x: 790, y: 520, from: 3, at: vo("b15", 1), steps: [[F("b15", 1, 0) + 0.3, 0]], count: 0.9, tone: "red", label: "แบตหมด", labelAt: F("b15", 1, 1) - 0.2, flashAt: F("b15", 1, 1) });
+          tl.to(`#${id}-dark`, { opacity: 0.5, duration: 0.7 }, t0 + F("b15", 1, 1) - 0.1); tl.to(`#${id}-grade`, { opacity: 0.45, duration: 0.7 }, t0 + F("b15", 1, 1) - 0.1); } });
+
+      // ---------- b16–b17 the chin, the screen, the message nobody reads ----------
+      shot("b16", { ...camp("b16"), camAt: fr(KENG + 30, 1400 - 470 * 0.95, 2.6, 540, 900), push: 0.02, blur: { far: 8, mid: 7, set: 4 },
+        actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "tied", eyes: "side", mouth: "flat" }, { t: 0.3, mode: "chin", eyes: "closed", mouth: "pout" }])],
+        sfxText: [{ text: "ดุ๊ก ดุ๊ก", x: 110, y: 1000, size: 72, rot: -8, color: "#f6d36a", t: vo("b16") + 0.5, end: D("b16") - 0.05 }],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); rope(L, KENG, 0.95, 1400, id); const px = KENG + 26 * 0.95, py = 1400 - 431 * 0.95; const ph = grp(L.act);
+          ph.innerHTML = `<g id="${id}-pho"><rect x="-13" y="-28" width="26" height="56" rx="5" fill="#1a1a22"/><rect x="-10" y="-23" width="20" height="44" rx="3" fill="#101016"/></g>`; ph.setAttribute("transform", `translate(${px.toFixed(1)},${py.toFixed(1)})`);
+          tl.fromTo(`#${id}-pho`, { y: 8, rotation: 0 }, { y: -52, rotation: -16, duration: 0.7, ease: "power1.inOut", immediateRender: false }, t0 + vo("b16") + 0.45); } });
+      shot("b17", { ...camp("b17"), camAt: fr(KENG + 30, 1400 - 480 * 0.95, 2.4, 540, 1000), push: 0.012, blur: { far: 9, mid: 8, set: 5 }, dark: 0.22,
+        actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "chin", eyes: "wide", mouth: "o" }, { t: F("b17", 1, 0), mode: "chin", eyes: "worry", mouth: "frown", sweat: true }])],
+        sfxText: [{ text: "กริ๊ก", x: 700, y: 1060, size: 70, rot: 6, color: "#f6d36a", t: F("b17", 1, 0) + 0.1, end: F("b17", 1, 0) + 0.9 }],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); rope(L, KENG, 0.95, 1400, id); const ph = phoneUI(L, `${id}-ph`, { time: "06:23" }); tl.set(`#${id}-ph-big, #${id}-ph-al, #${id}-ph-msg`, { opacity: 0 }, 0);
+          pop(tl, ph, t0 + 0.05, { origin: "540 760", from: 0.8, dur: 0.3 }); tl.set(`#${id}-ph-off`, { opacity: 1 }, 0);
+          const on = t0 + F("b17", 0, 0) + 0.3; tl.to(`#${id}-ph-off`, { opacity: 0, duration: 0.08 }, on); tl.fromTo(`#${id}-ph-flash`, { opacity: 0.9 }, { opacity: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, on);
+          tl.to(`#${id}-ph-big`, { opacity: 1, duration: 0.1 }, on + 0.1); const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="${KENG + 30}" cy="${1400 - 500 * 0.95}" rx="200" ry="150" fill="url(#brPhoneGlow)"/></g>`; tl.set(gl, { opacity: 0 }, 0); tl.to(gl, { opacity: 0.9, duration: 0.1 }, on);
+          tl.fromTo(`#${id}-ph-msg`, { opacity: 0, y: -140 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.6)", immediateRender: false }, t0 + F("b17", 0, 1) + 0.1);
+          const off = t0 + F("b17", 1, 0) + 0.15; tl.to(`#${id}-ph-off`, { opacity: 1, duration: 0.06 }, off); tl.to(gl, { opacity: 0, duration: 0.1 }, off); tl.to(`#${id}-ph-msg`, { opacity: 0, duration: 0.05 }, off); } });
+
+      // ---------- b18 a child's eyes between the grown-ups ----------
+      shot("b18", { ...camp("b18"), cam: { keys: [{ t: 0, ...fr(640, 1120, 1.1, 540, 960), drift: { s: 0.01 } }, { t: F("b18", 0, 1) - 0.25, ...fr(532, 1400 - 546 * 0.68 - 6, 3.4, 540, 820), glide: 1.0 }] }, blur: { far: 4 },
+        actors: [A("brJukSword", 532, 1400, 0.68, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: F("b18", 0, 1), mode: "idle", eyes: "wide", mouth: "o" }]), A("brMan1", 440, 1400, 0.98, [{ t: 0, mode: "foldX", eyes: "normal", mouth: "flat" }]),
+          A("brMan3", 626, 1400, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]), ME("brKeng", KENG, 1400, [{ t: 0, mode: "chin", eyes: "closed", mouth: "pout" }]), A("brWom1", 900, 1400, 0.96, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, H_BAT()); shadows(L, id, act("b18"), -0.5); rope(L, KENG, 0.95, 1400, id); const ey = 1400 - 548 * 0.68; const sp = grp(L.act); sp.innerHTML = sparkle(532 - 30, ey - 14, 8) + sparkle(532 + 30, ey - 14, 8);
+          tl.set(sp, { opacity: 0 }, 0); tl.fromTo(sp, { opacity: 0, scale: 0.2, svgOrigin: `532 ${ey}` }, { opacity: 1, scale: 1, svgOrigin: `532 ${ey}`, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + F("b18", 0, 1) + 0.5); } });
+
+      // ---------- b19 next: the full story on YouTube · b20 logo ----------
+      shot("b19", { ...camp("b19", { night: true, torches: true, fog: true }), camAt: fr(900, 1000, 0.8, 540, 900), push: 0.01, dark: 0.45, blur: { set: 12, mid: 10, far: 10, glow: 8 }, captions: [],
+        fx(tl, id, t0, L) { NkV.chalkEnd(tl, grp(L.light), t0, D("b19"), { big: "ดูเรื่องเต็ม", q: "ทาง YouTube", tag: "ดูต่อได้ที่", foot: "กดติดตาม แล้วดูเรื่องเต็มที่ YouTube" });
+          const yt = grp(L.light); yt.innerHTML = `<g transform="translate(540,1430)"><rect x="-150" y="-50" width="100" height="100" rx="26" fill="#e8302a"/><path d="M-112,-24L-112,24L-72,0Z" fill="#fff"/>
+            <text x="-30" y="-6" font-family="Kanit" font-weight="900" font-size="44" fill="#ffffff">${CHANNEL}</text><text x="-30" y="38" font-family="Kanit" font-weight="700" font-size="28" fill="#f2c55c">เรื่องเต็มทุกตอน</text></g>`;
+          tl.set(yt, { opacity: 0 }, 0); tl.fromTo(yt, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 1.3); } });
+      shot("b20", { light: false, captions: [], fx(tl, id, t0, L) { const g = grp(L.light); NkUI.logo(g); pop(tl, g, t0 + 0.05, { from: 0.9, dy: 0, origin: "540 880" }); } });
