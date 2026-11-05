@@ -701,6 +701,65 @@
     return g + `</g>`; };
   // the shop's warm light reaching the ground in front of it in the storm (screen blend, for L.light)
   Ngw.shopGlow = (x, y, s = 1) => `<ellipse cx="${f1(x)}" cy="${f1(y + 60 * s)}" rx="${f1(1000 * s)}" ry="${f1(170 * s)}" fill="url(#ngwGsWarm)" style="mix-blend-mode:screen"/>`;
+  // ---------------------------------------------------------------- under the overpass, from inside (owner 5 Nov: "มองแล้วมันเห็นใต้สะพานลอยป่ะ")
+  // Standing on the lower road under the deck, looking along it: one-point perspective toward the far opening. Overhead the concrete
+  // underside with its girders crossing (near faces in shadow, bottom flanges catching the light from the far end), the paved
+  // embankment slopes on both sides rising into the girders with the bridge seat ledge at the top, the lower road with its lines and a
+  // wet sheen, and the storm framed by the opening. Real proportions (metres): eye 1.5 m above the road, girders 5.5 m up (bottoms 4 m
+  // above the eye), road half-width 6 m, slopes rising at ~35° to 13.9 m, the deck 20 m deep. Ngw.upP(X, Y, Z) projects a point.
+  Ngw.upP = (X, Y, Z, o = {}) => [(o.vx ?? 540) + (o.f ?? 1600) * X / Z, (o.vy ?? 1180) - (o.f ?? 1600) * Y / Z];
+  Ngw.upScale = (Z, h = 1.65, o = {}) => ((o.f ?? 1600) * h / Z) / 650;   // a rig's scale for a person h m tall standing Z m away
+  Ngw.underpass = (o = {}) => { const I = INK, P = (X, Y, Z) => Ngw.upP(X, Y, Z, o), q = ([x, y]) => `${f1(x)},${f1(y)}`;
+    const Zf = o.depth ?? 20, Zn = 1.2, RH = 6, CH = 13.9, CY = 4, SY = 5.5, FY = -1.5, G = "up" + (Ngw._upN = (Ngw._upN || 0) + 1);
+    const poly = (pts, fill, extra = "") => `<path d="M${pts.map(q).join("L")}Z" fill="${fill}" ${extra}/>`;
+    let g = `<defs><linearGradient id="${G}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26292c"/><stop offset=".7" stop-color="#40454a"/><stop offset="1" stop-color="#62686c"/></linearGradient>
+      <linearGradient id="${G}wl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3e3b36"/><stop offset=".6" stop-color="#6a665e"/><stop offset="1" stop-color="#8e897e"/></linearGradient>
+      <linearGradient id="${G}wr" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#3e3b36"/><stop offset=".6" stop-color="#6a665e"/><stop offset="1" stop-color="#8e897e"/></linearGradient>
+      <linearGradient id="${G}f" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#16181a"/><stop offset=".75" stop-color="#2a2d30"/><stop offset="1" stop-color="#4a4e52"/></linearGradient>
+      <linearGradient id="${G}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8d4dc" stop-opacity=".5"/><stop offset="1" stop-color="#c8d4dc" stop-opacity="0"/></linearGradient></defs>`;
+    const TL = P(-CH, CY, Zf), TR = P(CH, CY, Zf), BL = P(-RH, FY, Zf), BR = P(RH, FY, Zf), nTL = P(-CH, CY, Zn), nTR = P(CH, CY, Zn), nBL = P(-RH, FY, Zn), nBR = P(RH, FY, Zn);
+    // the road: asphalt, darker toward us; the edge lines, the dashed centre line, the wet sheen of the opening's light
+    g += poly([nBL, BL, BR, nBR], `url(#${G}f)`);
+    for (const X of [-5.6, 5.6]) g += poly([P(X - 0.08, FY, Zn), P(X - 0.08, FY, Zf), P(X + 0.08, FY, Zf), P(X + 0.08, FY, Zn)], "#cfcfc8", `opacity=".55"`);
+    for (let z = Zn + 0.5; z < Zf; z += 4) g += poly([P(-0.07, FY, z), P(-0.07, FY, Math.min(Zf, z + 1.6)), P(0.07, FY, Math.min(Zf, z + 1.6)), P(0.07, FY, z)], "#e8b830", `opacity=".7"`);
+    g += poly([P(-2.6, FY, 2.5), P(-3.6, FY, Zf), P(3.6, FY, Zf), P(2.6, FY, 2.5)], `url(#${G}s)`, `opacity=".35"`);
+    // the slopes: paved concrete, joints along them and across them, the drain at the foot, the bridge seat ledge at the top
+    const wall = (sg) => { const a = P(sg * CH, CY, Zn), b = P(sg * CH, CY, Zf), c = P(sg * RH, FY, Zf), d = P(sg * RH, FY, Zn);
+      let w = poly([a, b, c, d], `url(#${G}${sg < 0 ? "wl" : "wr"})`);
+      for (let k = 1; k < 7; k++) { const s = k / 7, X = sg * (RH + (CH - RH) * s), Y = FY + (CY - FY) * s; w += `<path d="M${q(P(X, Y, Zn))}L${q(P(X, Y, Zf))}" stroke="#4a4740" stroke-width="3" opacity=".6"/>`; }
+      for (let z = 3; z <= Zf; z += 2.5) w += `<path d="M${q(P(sg * RH, FY, z))}L${q(P(sg * CH, CY, z))}" stroke="#4a4740" stroke-width="${f1(Math.max(1.5, 30 / z))}" opacity=".55"/>`;
+      w += `<path d="M${q(P(sg * (RH + 0.3), FY + 0.05, Zn))}L${q(P(sg * (RH + 0.3), FY + 0.05, Zf))}" stroke="#141618" stroke-width="10" opacity=".8"/>`;
+      w += poly([P(sg * CH, CY, Zn), P(sg * CH, CY, Zf), P(sg * (CH - 0.9), CY - 0.35, Zf), P(sg * (CH - 0.9), CY - 0.35, Zn)], "#a8a397");
+      w += poly([P(sg * (CH - 0.9), CY - 0.35, Zn), P(sg * (CH - 0.9), CY - 0.35, Zf), P(sg * (CH - 1.0), CY - 0.75, Zf), P(sg * (CH - 1.0), CY - 0.75, Zn)], "#57534b");
+      // the far end of the slope: its cut edge against the opening, lit
+      w += `<path d="M${q(P(sg * CH, CY, Zf))}L${q(P(sg * RH, FY, Zf))}" stroke="#d6d2c4" stroke-width="7"/>`;
+      return w; };
+    g += wall(-1) + wall(1);
+    // the underside: the slab, and girders crossing it every 2.5 m — the near face in shadow, the bottom flange lit from the far end
+    g += poly([nTL, TL, TR, nTR], `url(#${G}c)`);
+    const ZS = []; for (let z = 4.5; z < Zf - 0.4; z += 2.5) ZS.push(z);
+    for (const z of ZS.reverse()) { const a = P(-CH, SY, z), b = P(CH, SY, z), c = P(CH, CY, z), d = P(-CH, CY, z), e = P(CH, CY, z + 0.6), h = P(-CH, CY, z + 0.6);   // far to near: a nearer girder hides the farther one's face
+      g += poly([a, b, c, d], "#16181b") + poly([d, c, e, h], "#8c9296") + `<path d="M${q(h)}L${q(e)}" stroke="#c4cace" stroke-width="${f1(Math.max(1.5, 30 / z))}"/>`;
+      for (let k = 0; k < 9; k++) { const X = -9 + k * 2.3 + (k % 3) * 0.4, [sx0, sy0] = P(X, SY, z), [, sy1] = P(X, CY + 0.2 + (k % 4) * 0.25, z); g += `<path d="M${f1(sx0)},${f1(sy0)}V${f1(sy1)}" stroke="#2c3034" stroke-width="${f1(Math.max(1.5, 40 / z))}" opacity=".5"/>`; }
+      g += `<path d="M${q(d)}L${q(c)}" stroke="#08090a" stroke-width="${f1(Math.max(1, 14 / z))}"/>`; }
+    // the far deck edge over the opening: its girder and the fascia's bottom, catching the outside light
+    { const a = P(-CH, SY + 0.4, Zf - 0.4), b = P(CH, SY + 0.4, Zf - 0.4); g += poly([a, b, TR, TL], "#2e3236") + `<path d="M${q(TL)}L${q(TR)}" stroke="#b8bcbe" stroke-width="6"/>`; }
+    // a drain pipe down the left slope's far end and rain water pouring off the deck edge in the opening
+    g += `<path d="M${q(P(-CH + 0.6, CY - 0.2, Zf - 0.6))}L${q(P(-RH - 0.4, FY + 0.1, Zf - 0.6))}" stroke="#5a5e60" stroke-width="7" opacity=".9"/>`;
+    for (let k = 0; k < 18; k++) { const X = -RH + k * (2 * RH / 17) + (k % 3) * 0.2, [x0, y0] = P(X, CY, Zf + 0.2), [, y1] = P(X, FY + 1.2, Zf + 0.2);
+      g += `<path d="M${f1(x0)},${f1(y0 + 4)}V${f1(y0 + (y1 - y0) * (0.35 + (k % 5) * 0.12))}" stroke="#d8e4ea" stroke-width="2.5" opacity=".35"/>`; }
+    return g; };
+  // a pickup seen from behind (parked under the bridge, hazard lights on): (x, y) the middle of the ground under it; s = screen units
+  // per centimetre (Ngw.upP scale f/(100 Z)); c body colour; lit = tail and hazard lights glow (class ngw-hz blinks)
+  Ngw.pickupRear = (x, y, s, c = "#e8e8e4", lit = 1) => { const I = INK, d = (h) => `stroke="${I}" stroke-width="${f1(2.5 / Math.max(s, 0.25))}" stroke-linejoin="round"`;
+    let g = `<g transform="translate(${f1(x)},${f1(y)}) scale(${f1(s)})"><ellipse cx="0" cy="2" rx="104" ry="9" fill="#000" opacity=".45"/>`;
+    g += `<rect x="-88" y="-48" width="26" height="48" rx="6" fill="#1a1a1c" ${d()}/><rect x="62" y="-48" width="26" height="48" rx="6" fill="#1a1a1c" ${d()}/>`;
+    g += `<path d="M-75,-182H75L82,-112H-82Z" fill="${c}" ${d()}/><path d="M-60,-174H60L65,-128H-65Z" fill="#26323a" ${d()}/><path d="M-50,-170L-10,-130" stroke="#8aa0aa" stroke-width="4" opacity=".4"/>`;
+    g += `<path d="M-92,-114H92V-52H-92Z" fill="${c}" ${d()}/><path d="M-80,-104H80" stroke="#00000033" stroke-width="3"/><path d="M-92,-58H92" stroke="#00000044" stroke-width="2"/>`;
+    g += `<rect x="-90" y="-112" width="12" height="40" rx="3" fill="#c8241a" ${d()}/><rect x="78" y="-112" width="12" height="40" rx="3" fill="#c8241a" ${d()}/>`;
+    g += `<rect x="-96" y="-54" width="192" height="14" rx="4" fill="#3a3c3e" ${d()}/><rect x="-20" y="-86" width="40" height="18" rx="2" fill="#f4f2ea" ${d()}/><path d="M-13,-77h26" stroke="#3a3a3a" stroke-width="3"/>`;
+    if (lit) g += `<circle cx="-84" cy="-92" r="40" fill="url(#ngwBulb)" opacity=".5"/><circle cx="84" cy="-92" r="40" fill="url(#ngwBulb)" opacity=".5"/><g class="ngw-hz"><rect x="-90" y="-80" width="12" height="9" fill="#ffae3a"/><rect x="78" y="-80" width="12" height="9" fill="#ffae3a"/><circle cx="-84" cy="-76" r="34" fill="url(#ngwBulb)"/><circle cx="84" cy="-76" r="34" fill="url(#ngwBulb)"/></g>`;
+    return g + `</g>`; };
   // ฝน's recorder for the wide frame: the phone on its side filling the middle of the page, the two lanes stacked
   // (same ids as Ngw.phoneWave, so Ngw.phoneWaveLife runs it with o.w = the lane width)
   Ngw.phoneWaveL = (id) => { const I = "#1e1a16", W = 1210, X0 = -390;   // lanes in the phone's own coordinates (screen −900…900)
