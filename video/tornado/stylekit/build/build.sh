@@ -15,9 +15,9 @@ p=sys.argv[1]; s=open(p).read()
 for a,b in [('content="width=1080, height=1920"','content="width=1920, height=1080"'),('width: 1080px; height: 1920px;','width: 1920px; height: 1080px;'),('data-width="1080" data-height="1920"','data-width="1920" data-height="1080"'),('<script src="assets/engine.js"></script>','<script src="assets/engine.js"></script>\n    <script>window.LANDSCAPE = {};</script>\n    <script src="assets/landscape.js"></script>')]:
     s=s.replace(a,b)
 # 16:9 paint fix: with every shot laid out (only visibility:hidden) Chrome runs out of raster memory on the widened, scaled stages
-# and paints black tiles. After every render of the published timeline, only the clip on screen stays in the layout.
-s=s.replace('</body>','<script>(() => { const tl = window.__timelines && window.__timelines.main; if (!tl) return;\n  const clips = [...document.querySelectorAll(".clip")].map((c) => [c, +c.dataset.start, +c.dataset.duration]);\n  const sync = () => { const t = tl.time(); for (const [c, a, d] of clips) { const v = t >= a - 1e-4 && t < a + d ? "" : "none"; if (c.style.display !== v) c.style.display = v; } };\n  const r0 = tl.render.bind(tl); tl.render = function (x, y, z) { const o = r0(x, y, z); sync(); return o; }; sync(); })();</script>\n  </body>',1)
-s=s.replace('</style>','\n      .clip > .capwrap .capbox { font-size: 50px; }\n      .clip > .capwrap { top: 955px !important; }\n      .clip.lfit { background: radial-gradient(ellipse 60% 80% at 50% 50%, #1a2226, #05080a); }\n      .badge { bottom: 40px; }\n    </style>',1)
+# and paints black tiles, so a hidden clip leaves the layout. Done in CSS off the runtime's own inline visibility (a script hooked
+# on the timeline's render ran in snapshots but not inside the HyperFrames render: every clip after the first stayed black).
+s=s.replace('</style>','\n      .clip > .capwrap .capbox { font-size: 50px; }\n      .clip > .capwrap { top: 955px !important; }\n      .clip.lfit { background: radial-gradient(ellipse 60% 80% at 50% 50%, #1a2226, #05080a); }\n      .clip[style*="visibility: hidden"] { display: none !important; }\n      .badge { bottom: 40px; }\n    </style>',1)
 open(p,'w').write(s)
 PY
 fi
