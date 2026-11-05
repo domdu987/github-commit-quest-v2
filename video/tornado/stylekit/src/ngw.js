@@ -211,7 +211,7 @@
     // parapet, railing, lamp posts and the route sign in front; behind the actors the underside receding in perspective (girders
     // converging), the far deck edge and far piers, a thick near pier with its cap, and the paved abutment slope people climb.
     // Clearance is set by the shot (o.y + o.h above o.ground): about three people under the deck (≈ 5 m) at the shot's actor scale.
-    const ty = o.y ?? 560, dh = o.h ?? 150, gy = o.ground ?? 1560, sx = o.slopeX ?? 520, px = o.pier ?? 960, vx = o.vx ?? 540;
+    const ty = o.y ?? 560, dh = o.h ?? 150, gy = o.ground ?? 1560, sx = o.slopeX ?? 520, px = o.pier ?? 960, vx = o.vx ?? 540, rn = o.run ?? 640;   // rn: the slope's run (1200 ≈ a real 35° embankment)
     const db = ty + dh, sd = o.soffit ?? 170, fb = db + sd, X0 = -1500, X1 = 2700, r = mk(o.seed || 31), G = "ov" + (Ngw._ovN = (Ngw._ovN || 0) + 1);   // gradient ids unique per drawing (68 clips share the page)
     let set = `<defs><linearGradient id="${G}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e2022"/><stop offset="1" stop-color="#46494c"/></linearGradient>
       <linearGradient id="${G}p" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#bdbab0"/><stop offset=".5" stop-color="#a19e95"/><stop offset="1" stop-color="#6c6a64"/></linearGradient>
@@ -227,10 +227,10 @@
     // the shadow the deck throws on the road under it
     set += `<path d="M${X0},${gy - 50}H${X1}V${gy + 260}H${X0}Z" fill="#000" opacity=".2"/>`;
     // the abutment: a paved slope from the road up to the underside, its joints, its lit top edge, a ledge right under the girders
-    set += `<path d="M${X0},${db}H${sx}L${sx - 640},${gy}H${X0}Z" fill="url(#${G}l)" stroke="${INK}" stroke-width="6"/>`;
-    for (let k = 1; k < 10; k++) { const t = k / 10; set += `<path d="M${X0},${f1(db + t * (gy - db))}H${f1(sx - 640 * t)}" stroke="#776f62" stroke-width="4"/>`; }
-    for (let x = X0 + 150; x < sx - 640; x += 190) set += `<path d="M${x},${db}V${gy}" stroke="#776f62" stroke-width="3" opacity=".7"/>`;
-    set += `<path d="M${sx},${db}L${sx - 640},${gy}" stroke="#ddd8c8" stroke-width="12"/><path d="M${X0},${db + 34}H${sx - 22}" stroke="#c9c4b4" stroke-width="12"/><path d="M${X0},${db + 44}H${sx - 30}" stroke="#4e4a40" stroke-width="5" opacity=".7"/>`;
+    set += `<path d="M${X0},${db}H${sx}L${sx - rn},${gy}H${X0}Z" fill="url(#${G}l)" stroke="${INK}" stroke-width="6"/>`;
+    for (let k = 1; k < 10; k++) { const t = k / 10; set += `<path d="M${X0},${f1(db + t * (gy - db))}H${f1(sx - rn * t)}" stroke="#776f62" stroke-width="4"/>`; }
+    for (let x = X0 + 150; x < sx - rn; x += 190) set += `<path d="M${x},${db}V${gy}" stroke="#776f62" stroke-width="3" opacity=".7"/>`;
+    set += `<path d="M${sx},${db}L${sx - rn},${gy}" stroke="#ddd8c8" stroke-width="12"/><path d="M${X0},${db + 34}H${sx - 22}" stroke="#c9c4b4" stroke-width="12"/><path d="M${X0},${db + 44}H${sx - 30}" stroke="#4e4a40" stroke-width="5" opacity=".7"/>`;
     // the near pier: a thick column with its cap and bearing pads, lit from the left, a drain pipe, rain stains
     set += `<path d="M${px - 170},${db}H${px + 170}V${db + 80}H${px - 170}Z" fill="#aaa79e" stroke="${INK}" stroke-width="6"/>${[-110, 0, 110].map((dx) => `<rect x="${px + dx - 26}" y="${db - 14}" width="52" height="14" fill="#2e2e2e"/>`).join("")}`;
     set += `<path d="M${px - 105},${db + 80}H${px + 105}V${gy + 40}H${px - 105}Z" fill="url(#${G}p)" stroke="${INK}" stroke-width="6"/><path d="M${px - 70},${db + 84}V${gy + 30}" stroke="#d2cfc6" stroke-width="6" opacity=".55"/>`;
@@ -582,19 +582,25 @@
       <path d="M-30,-262q12,-14 30,-14" stroke="#f6c070" stroke-width="7" fill="none" stroke-linecap="round" opacity=".8"/><circle cx="-58" cy="-214" r="7" fill="#f6c070" opacity=".7"/></g>`; };
   // the charcoal grill: a long trough on legs, the coals glowing, five chickens in clamps leaning on its back rail, the smoke (class id-smk)
   Ngw.grill = (x, y, s = 1, o = {}) => { const I = INK, id = o.id || "gs";
+    // seen a little from above (owner 5 Nov "สมจริงป่ะ"): the coal bed and the grate on top, the chickens lying flat in their bamboo
+    // clamps across it, the clamp handles sticking out toward us over the front edge — not standing up in a row
     let g = `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><ellipse cx="0" cy="8" rx="250" ry="18" fill="#000" opacity=".25"/>`;
     g += `<path d="M-190,-200L-200,4M190,-200L200,4M-120,-200L-126,0M120,-200L126,0" stroke="#2a2a2c" stroke-width="12" stroke-linecap="round"/><path d="M-196,-80H196" stroke="#2a2a2c" stroke-width="7"/>`;
-    g += `<path d="M-190,-372H190" stroke="#4a4a4c" stroke-width="8"/><path d="M-190,-372V-290M190,-372V-290" stroke="#4a4a4c" stroke-width="8"/>`;
-    [-152, -76, 0, 76, 152].forEach((cx, k) => { g += Ngw.clampChicken(cx, -270, 0.56, [-5, 3, -2, 4, -4][k]); });
-    g += `<path d="M-224,-300H224L210,-196H-210Z" fill="#3e3e40" ${OUT(5)}/><path d="M-216,-286H216" stroke="#5e5e60" stroke-width="5"/><path d="M-212,-236H212" stroke="#2a2a2c" stroke-width="4"/>`;
-    g += `<path d="M-214,-300H214V-316H-214Z" fill="url(#ngwGsCoal)" ${OUT(3)}/>`;
-    for (let k = 0; k < 14; k++) g += `<circle cx="${-196 + k * 30}" cy="${-308 + (k % 3) * 3}" r="${5 + (k % 4)}" fill="#fff0b0" opacity=".85"/>`;
-    g += `<path d="M-224,-318H224" stroke="#8a8a84" stroke-width="5"/>${Array.from({ length: 15 }, (_, k) => `<path d="M${-210 + k * 30},-326v16" stroke="#8a8a84" stroke-width="3"/>`).join("")}`;
-    g += `<ellipse cx="0" cy="-318" rx="240" ry="40" fill="url(#ngwGsWarm)" style="mix-blend-mode:screen"/>`;
-    // the woven fan resting on the trough's end
-    g += `<g transform="translate(236,-292) rotate(24)"><path d="M0,0V-90" stroke="#8a6a3a" stroke-width="8"/><path d="M-50,-90Q0,-170 50,-90Q0,-100 -50,-90Z" fill="#d8b878" ${OUT(3)}/><path d="M-30,-104l60,-30M-36,-120l50,-26M-20,-140l36,-14" stroke="#a8884a" stroke-width="3"/></g>`;
+    // the top: the far rim, the coal bed glowing between the rims, the grate bars along it
+    g += `<path d="M-224,-300L-212,-356H212L224,-300Z" fill="#2e2e30" ${OUT(4)}/><path d="M-214,-306L-204,-348H204L214,-306Z" fill="url(#ngwGsCoal)"/>`;
+    for (let k = 0; k < 22; k++) g += `<circle cx="${-196 + k * 18.6}" cy="${-318 - (k * 7) % 22}" r="${4 + (k % 3) * 2}" fill="#fff0b0" opacity=".8"/>`;
+    for (let k = 0; k < 5; k++) { const yy = -306 - k * 10.5; g += `<path d="M${f1(-214 + k * 2.4)},${f1(yy)}H${f1(214 - k * 2.4)}" stroke="#7a7a76" stroke-width="2.6"/>`; }
+    g += `<ellipse cx="0" cy="-330" rx="260" ry="60" fill="url(#ngwGsWarm)" style="mix-blend-mode:screen"/>`;
+    // the chickens: split and pressed flat, lying on the grate (a squashed top view), each in its two bamboo sticks
+    const CH = "M0,-300C-40,-302 -66,-270 -70,-232C-96,-226 -104,-200 -92,-186C-84,-176 -70,-182 -66,-190C-66,-150 -58,-122 -40,-104C-58,-86 -66,-60 -52,-46C-40,-36 -26,-50 -22,-66L0,-80L22,-66C26,-50 40,-36 52,-46C66,-60 58,-86 40,-104C58,-122 66,-150 66,-190C70,-182 84,-176 92,-186C104,-200 96,-226 70,-232C66,-270 40,-302 0,-300Z";
+    [-164, -82, 0, 82, 164].forEach((cx, k) => { const tone = ["#b8642a", "#c8722a", "#a85a22", "#c27028", "#b46026"][k];
+      g += `<g transform="translate(${cx},-327) scale(.4,.19) translate(0,190)"><path d="${CH}" fill="${tone}" ${OUT(9)}/><path d="M-30,-250l58,-22M-38,-206l74,-26M-40,-164l78,-28M-30,-124l58,-22" stroke="#5a240c" stroke-width="16" stroke-linecap="round" opacity=".7"/><path d="M-34,-262q14,-16 34,-16" stroke="#f6c070" stroke-width="16" fill="none" stroke-linecap="round" opacity=".75"/></g>`;
+      g += `<path d="M${cx - 13},-356L${cx - 14},-300M${cx + 13},-356L${cx + 14},-300" stroke="#dcc08a" stroke-width="4" stroke-linecap="round" opacity=".9"/>`; });
+    // the front face of the trough over the handles' roots
+    g += `<path d="M-224,-300H224L210,-196H-210Z" fill="#3e3e40" ${OUT(5)}/><path d="M-216,-288H216" stroke="#5e5e60" stroke-width="5"/><path d="M-212,-236H212" stroke="#2a2a2c" stroke-width="4"/>`;
+    [-164, -82, 0, 82, 164].forEach((cx) => { g += `<path d="M${cx - 14},-300L${cx - 15},-274M${cx + 14},-300L${cx + 15},-274" stroke="#dcc08a" stroke-width="4" stroke-linecap="round"/>`; });
     // the smoke drifting up and away (Ngw.grillSmoke animates id-smk)
-    if (o.smoke !== false) { for (let k = 0; k < 6; k++) { const sx = -60 + k * 34 + (k % 2) * 30, sy = -470 - k * 120, sr = 70 + k * 22;
+    if (o.smoke !== false) { for (let k = 0; k < 6; k++) { const sx = -60 + k * 34 + (k % 2) * 30, sy = -440 - k * 120, sr = 70 + k * 22;
       g += `<circle class="${id}-smk" cx="${sx}" cy="${sy}" r="${sr}" fill="url(#ngwGsSmoke)" opacity="${f1(0.75 - k * 0.09)}"/>`; } }
     return g + `</g>`; };
   // the smoke rising: each puff drifts up and right and thins, looping
@@ -646,6 +652,8 @@
       for (let b = 0; b < 6; b++) { const bx = -84 + b * 33, h = 86 + ((b + sh) % 3) * 8; g += `<rect x="${bx}" y="${sy - h}" width="24" height="${h}" rx="8" fill="${bc[(b + sh * 2) % 6]}" ${OUT(2)}/><rect x="${bx + 7}" y="${sy - h - 10}" width="10" height="12" fill="#e8e4d8" ${OUT(1.5)}/>`; } }
     g += `<rect x="-100" y="-616" width="200" height="560" rx="6" fill="url(#ngwGsGlass)"/><path d="M-70,-600L60,-90" stroke="#fff" stroke-width="10" opacity=".25"/><rect x="84" y="-420" width="10" height="120" rx="5" fill="#8a8a84" ${OUT(2)}/></g>`;
     if (lit) g += `<ellipse cx="624" cy="-330" rx="200" ry="330" fill="#e8fcff" opacity=".2" style="mix-blend-mode:screen"/>`;
+    // the roof's shade over everything at the back of the shop (bright day: deep; storm with the lights on: light)
+    g += `<path d="M-770,-884H770V-112H-770Z" fill="#1c140c" opacity="${lit ? 0.12 : 0.3}" style="mix-blend-mode:multiply"/><path d="M-800,-112H800L824,0H-824Z" fill="#1c140c" opacity="${lit ? 0.1 : 0.22}" style="mix-blend-mode:multiply"/>`;
     // the counter (left bay): a mint-painted plank front, the glass chicken cabinet, the sticky-rice baskets, a plastic-bag stack
     g += `<rect x="-770" y="-318" width="490" height="22" fill="#7a5232" ${OUT(4)}/><path d="M-760,-296H-290V-36H-760Z" fill="#6aa88a" ${OUT(5)}/>${Array.from({ length: 4 }, (_, k) => `<path d="M-760,${-236 + k * 56}H-290" stroke="#4a8a6c" stroke-width="5"/>`).join("")}`;
     g += `<g transform="translate(-610,-318)"><rect x="-130" y="-300" width="260" height="300" fill="#d8dcdc" ${OUT(5)}/><rect x="-140" y="-332" width="280" height="40" rx="6" fill="#c8302a" ${OUT(4)}/><text y="-301" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#fff6e0">ไก่ย่าง · ข้าวเหนียว</text>
@@ -1589,4 +1597,8 @@
     <circle cx="-26" cy="-524" r="1.8" fill="#fff"/><circle cx="25" cy="-523" r="1.5" fill="#fff"/></g>`;
   C.taTianCry = { v2: { ...C.taTian.v2, face: C.taTian.v2.face + tears } };
   C.yaiBuaCry = { v2: { ...C.yaiBua.v2, face: (C.yaiBua.v2.face || "") + tears } };
+  const palmFan = `<g transform="translate(0,112) rotate(8)"><path d="M0,-6V58" stroke="#8a6a3a" stroke-width="9" stroke-linecap="round"/><path d="M-46,52Q-58,150 0,166Q58,150 46,52Q0,40 -46,52Z" fill="#d8b878" ${ln(2.6)}/>
+    <path d="M-44,80H44M-48,108H48M-42,136H42M-20,52V160M0,48V166M20,52V160" stroke="#a8884a" stroke-width="3" opacity=".8"/><path d="M-46,52Q0,40 46,52" stroke="#8a6a3a" stroke-width="6" fill="none"/></g>`;
+  C.yaiBuaFan = { ...C.yaiBua, hand: palmFan, keep: "F" };   // fanning the charcoal at the grill
+
 })();

@@ -109,7 +109,7 @@
       const TEAL = { from: "right", rim: "#ffc070", rimOp: 0.9, shade: "#06101a", shadeOp: 0.42, cast: false, vol: false };
       const GT = { top: "#1a4a5a", bottom: "#4a2e14", op: 0.26 }, GG = { top: "#ffb860", bottom: "#3a2a5a", op: 0.22 }, GC = { top: "#fff0c8", bottom: "#4a8ab0", op: 0.14 };
       const GOLDL = { from: "right", rim: "#ffd890", rimOp: 0.95, shade: "#2a1a30", shadeOp: 0.35, cast: false, vol: false };
-      const CLEARL = { from: "left", rim: "#ffe2a0", rimOp: 0.9, shade: "#2a3a5a", shadeOp: 0.25, cast: false, vol: false };
+      const CLEARL = { from: "left", rim: "#ffe2a0", rimOp: 0.9, shade: "#2a3a5a", shadeOp: 0.25, cast: { len: 1.8, op: 0.75 }, vol: false };   // owner 5 Nov "สมจริงป่ะ": people cast a shadow on a sunny day (15:00, long)
       const FLASHL = { from: "right", rim: "#ffffff", rimOp: 1, shade: "#000814", shadeOp: 0.5, cast: false, vol: false };
       const CLR = (id, o = {}) => ({ set: "tkScape", setOpts: { id, mood: "clear", wind: 0.2, ...o }, dark: 0, light: CLEARL, grade: GC });
       Engine.look = { vignette: 0.55, grain: 0.1 };
