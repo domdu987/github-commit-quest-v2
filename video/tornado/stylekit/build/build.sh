@@ -21,3 +21,13 @@ s=s.replace('</style>','\n      .clip > .capwrap .capbox { font-size: 50px; }\n 
 open(p,'w').write(s)
 PY
 fi
+if [ "${4:-}" != "landscape" ]; then
+  # 9:16 too (the shorts cut from the full story, 5 Nov): the story's 68 shots laid out at once (parked ones included) exhaust
+  # Chrome's raster memory the same way, painting black/white tiles, so a hidden clip leaves the layout here as well
+  python3 - "$H/$P/index.html" <<'PY'
+import sys
+p=sys.argv[1]; s=open(p).read()
+s=s.replace('</style>','\n      .clip[style*="visibility: hidden"] { display: none !important; }\n    </style>',1)
+open(p,'w').write(s)
+PY
+fi

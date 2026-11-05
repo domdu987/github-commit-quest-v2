@@ -104,6 +104,10 @@ class Mix:
         self.place(self.amb, y, a, g)
 
     def env(self, arr, t0, t1, lvl, ramp=0.25):
+        # NB a dip (lvl <= 1) is np.minimum against 1 outside its window too, so it also cancels every boost made before it,
+        # anywhere in the story; boosts made after it survive. The delivered mixes were made with this (full/mix.py's EP.1 lifts
+        # at the touchdown and the roof, and its xpass swell, are cancelled by the dips that follow them): kept for their re-runs.
+        # New mixes: make the dips first, then the boosts.
         a = np.clip((self.t - (t0 - ramp)) / ramp, 0, 1) * np.clip(((t1 + ramp) - self.t) / ramp, 0, 1)
         if lvl <= 1: np.minimum(arr, 1 - (1 - lvl) * a, out=arr)
         else: arr *= 1 + (lvl - 1) * a
