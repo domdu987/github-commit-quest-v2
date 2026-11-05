@@ -3,7 +3,7 @@
 # Run after the three renders (PLAN.md §3) have written /dev/shm/tidelong/ep1.mp4, ep2.mp4, ep3.mp4.
 #   bash assemble.sh [out.mp4]      default out: /dev/shm/tidelong/LONG-tide-16x9-HQ.mp4
 set -euo pipefail
-T="$(cd "$(dirname "$0")" && pwd)"; R=/dev/shm/tidelong; OUT="${1:-$R/LONG-tide-16x9-HQ.mp4}"
+T="$(cd "$(dirname "$0")" && pwd)"; R="${TIDE_R:-/dev/shm/tidelong}"; OUT="${1:-$R/LONG-tide-16x9-HQ.mp4}"
 want=(6780 6150 6795)   # frames at 60 fps: 113.000 s · 102.500 s · 113.250 s
 for i in 1 2 3; do
   n=$(ffprobe -v error -count_frames -select_streams v:0 -show_entries stream=nb_read_frames -of csv=p=0 "$R/ep$i.mp4")
