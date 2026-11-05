@@ -8,8 +8,8 @@
 
 | เวลา | ไฟล์ | สถานะ |
 |---|---|---|
-| 09:00 Shorts EP.1 | `video/release/hq/takhian-ep1-HQ.mp4` (commit `1b11397`) · ปก `video/takhian-ep1/cover.jpg` | ไฟล์พร้อม · **ปกยังไม่มี** (ไม่มีบนทุก branch) แชทประสานงานจะทำให้ |
-| 09:15 Shorts EP.2 | `video/release/hq/takhian-ep2-HQ.mp4` (commit `5e0f8a5`) · ปก `video/takhian-ep2/cover.jpg` | ต้องตัดใหม่ให้จบค้าง · **ปกยังไม่มี** แชทประสานงานจะทำให้ |
+| 09:00 Shorts EP.1 | `video/release/hq/takhian-ep1-HQ.mp4` (commit `1b11397`) · ปก `video/takhian-ep1/cover.jpg` | พร้อม (ปกทำแล้ว 5 พ.ย.) |
+| 09:15 Shorts EP.2 | `video/release/hq/takhian-ep2-HQ.mp4` (commit `5e0f8a5`) · ปก `video/takhian-ep2/cover.jpg` | ปกพร้อม · **ตัวคลิปต้องตัดใหม่ให้จบค้าง** |
 | 09:30 คลิปยาว 16:9 | `video/takhian-long/LONG-takhian-16x9-share.mp4` · ปก `video/takhian-long/thumb.jpg` | **ยังไม่มี** ต้องทำฉบับ 16:9 ทั้งเรื่องก่อน |
 
 **ลิงก์คลิปยาว:** ปักหมุดคอมเมนต์ของ Shorts หลังลงคลิปยาว โดยแทน `<ลิงก์คลิปยาว>` ด้วยลิงก์จริง
