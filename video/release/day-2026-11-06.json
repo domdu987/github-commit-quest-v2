@@ -1,0 +1,85 @@
+{
+ "date": "2026-11-06",
+ "tz": "Asia/Bangkok",
+ "made_by": "Claude (แชทประสานงาน) · 5 พ.ย. 2569",
+ "format": "รูปแบบส่งมอบใหม่ (เจ้าของ 5 พ.ย. 2569): วันละ 1 เรื่อง · 09:00 Shorts EP.1 และ 09:15 Shorts EP.2 → YouTube Shorts + Facebook Reel + IG Reel · 09:30 คลิปยาว 16:9 ทั้งเรื่อง → YouTube เท่านั้น",
+ "posted_by": "เจ้าของ/Moji ผ่าน Buffer",
+ "story": "สกิลจอมโกหก",
+ "complete": true,
+ "missing": [],
+ "status": "ครบ 3 ไฟล์ + ปก 3 ภาพ · ข้อความแก้ตามกฎใหม่แล้วในชีต (ชื่อ Shorts ≤ 40 ตัวอักษร ไม่มีแฮชแท็ก) · เลน A ทำ (ไฟล์บน prod/lane-a)",
+ "upload_sheet": "video/release/sheets/jk-upload.md",
+ "rules": [
+  "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
+  "ดึงไฟล์ตาม branch + commit + path แล้วตรวจ sha256 ก่อนอัปโหลดทุกไฟล์ ถ้าไม่ตรงห้ามลง ให้แจ้งเจ้าของ",
+  "ลงได้เฉพาะ item ที่ status = final · item ที่ status เป็น in_production หรือ missing ห้ามลง",
+  "ชื่อ ข้อความ แฮชแท็ก และคอมเมนต์ปักหมุด อยู่ใน upload_sheet ของวัน",
+  "Shorts ลงก่อนคลิปยาว: ปักหมุดคอมเมนต์ของ Shorts หลัง 09:30 เมื่อได้ลิงก์คลิปยาวแล้ว",
+  "EP.3 ไม่ลงเป็น Shorts แยก (อยู่ในคลิปยาว) ยกเว้นวาล์วโมเมนตัม: Shorts ตอนไหนวิว 24 ชม. ≥ 22K ให้แจ้งแชทประสานงาน เพื่อตัดช่วงหักมุมจากคลิปยาวเป็น Shorts เพิ่ม ลง 08:45 วันถัดไป",
+  "หลังลงแต่ละไฟล์ เขียนสถานะลง video/release/posted/<วันที่>.json (1 แถวต่อไฟล์ต่อแพลตฟอร์ม) แล้ว push ขึ้น ccr-fb88c4b3-kcqyid"
+ ],
+ "items": [
+  {
+   "slot": "09:00",
+   "id": "jk-ep1",
+   "kind": "shorts",
+   "platforms": [
+    "youtube_shorts",
+    "facebook_reel",
+    "instagram_reel"
+   ],
+   "status": "final",
+   "branch": "prod/lane-a",
+   "commit": "629e466",
+   "video": "video/release/hq/jk-ep1-HQ.mp4",
+   "video_sha256": "52a068af69228280cb3a84e2cc7d8c292f899c87d41d6788938b179bc33385b7",
+   "video_bytes": 69288258,
+   "cover": "video/jk-ep1/cover.jpg",
+   "title_youtube": "ตายแล้วเกิดใหม่ ได้สกิลกากที่สุดในโลก",
+   "title_chars": 37
+  },
+  {
+   "slot": "09:15",
+   "id": "jk-ep2",
+   "kind": "shorts",
+   "platforms": [
+    "youtube_shorts",
+    "facebook_reel",
+    "instagram_reel"
+   ],
+   "status": "final",
+   "branch": "prod/lane-a",
+   "commit": "629e466",
+   "video": "video/release/hq/jk-ep2-HQ.mp4",
+   "video_sha256": "057154bb712e8566d4efd17379ab202cbeddcf1dd36bee5dc7a7265c40cb2636",
+   "video_bytes": 59004505,
+   "cover": "video/jk-ep2/cover.jpg",
+   "title_youtube": "โม้ครั้งแรก ได้มังกรมา 1% (เป็นจิ้งจก)",
+   "title_chars": 38,
+   "note": "ในตัวคลิปยังไม่มีคำชี้ไปคลิปยาว ใส่ไว้ในแคปชันและคอมเมนต์ปักหมุดแทน"
+  }
+ ],
+ "video_long": {
+  "slot": "09:30",
+  "id": "jk-long",
+  "kind": "long_16x9",
+  "platforms": [
+   "youtube"
+  ],
+  "status": "final",
+  "branch": "prod/lane-a",
+  "commit": "629e466",
+  "video": "video/jk-long/LONG-jom-kohok-16x9-share.mp4",
+  "video_sha256": "7ea7b937ad4b0dbf9dc1fbbab0732e7f73f927fb5e0d0fd70cd6e8c108266433",
+  "video_bytes": 75192817,
+  "thumb": "video/jk-long/LONG-jom-kohok-thumb.jpg",
+  "title_youtube": "ได้สกิลจอมโกหกระดับ F… อย่าอ่านข้ามกฎข้อสาม | สกิลจอมโกหก ฉบับเต็ม",
+  "chapters": [
+   "0:00 ตอนที่ 1 · การ์ดกากสุด",
+   "1:15 ตอนที่ 2 · คนแรกที่เชื่อ",
+   "2:22 ตอนที่ 3 · มังกรเท่าตึก",
+   "3:23 ตอนที่ 4 · หูแดงช่วยชีวิต (จบภาคแรก)"
+  ],
+  "note": "ฉบับ crf 23 (75 MB) ลงได้เลย · ต้นฉบับ HQ 172 MB อยู่กับเจ้าของ"
+ }
+}

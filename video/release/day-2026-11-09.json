@@ -1,0 +1,86 @@
+{
+ "date": "2026-11-09",
+ "tz": "Asia/Bangkok",
+ "made_by": "Claude (แชทประสานงาน) · 5 พ.ย. 2569",
+ "format": "รูปแบบส่งมอบใหม่ (เจ้าของ 5 พ.ย. 2569): วันละ 1 เรื่อง · 09:00 Shorts EP.1 และ 09:15 Shorts EP.2 → YouTube Shorts + Facebook Reel + IG Reel · 09:30 คลิปยาว 16:9 ทั้งเรื่อง → YouTube เท่านั้น",
+ "posted_by": "เจ้าของ/Moji ผ่าน Buffer",
+ "story": "ต้นตะเคียนกลางนา",
+ "complete": false,
+ "missing": [
+  "คลิปยาว 16:9 (EP.1–2 + บทเชื่อม)",
+  "ปกคลิปยาว 16:9",
+  "Shorts EP.2 ฉบับจบค้าง (ตัดก่อนตอนลุงฟื้น + การ์ดชี้คลิปยาว)",
+  "ตรวจปก EP.1–2"
+ ],
+ "status": "Shorts EP.1 พร้อม · EP.2 เดิมเป็นตอนจบ ต้องตัดให้จบค้างตามรูปแบบใหม่ · คลิปยาวยังไม่มี",
+ "upload_sheet": "video/release/sheets/takhian-upload.md",
+ "rules": [
+  "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
+  "ดึงไฟล์ตาม branch + commit + path แล้วตรวจ sha256 ก่อนอัปโหลดทุกไฟล์ ถ้าไม่ตรงห้ามลง ให้แจ้งเจ้าของ",
+  "ลงได้เฉพาะ item ที่ status = final · item ที่ status เป็น in_production หรือ missing ห้ามลง",
+  "ชื่อ ข้อความ แฮชแท็ก และคอมเมนต์ปักหมุด อยู่ใน upload_sheet ของวัน",
+  "Shorts ลงก่อนคลิปยาว: ปักหมุดคอมเมนต์ของ Shorts หลัง 09:30 เมื่อได้ลิงก์คลิปยาวแล้ว",
+  "EP.3 ไม่ลงเป็น Shorts แยก (อยู่ในคลิปยาว) ยกเว้นวาล์วโมเมนตัม: Shorts ตอนไหนวิว 24 ชม. ≥ 22K ให้แจ้งแชทประสานงาน เพื่อตัดช่วงหักมุมจากคลิปยาวเป็น Shorts เพิ่ม ลง 08:45 วันถัดไป",
+  "หลังลงแต่ละไฟล์ เขียนสถานะลง video/release/posted/<วันที่>.json (1 แถวต่อไฟล์ต่อแพลตฟอร์ม) แล้ว push ขึ้น ccr-fb88c4b3-kcqyid"
+ ],
+ "items": [
+  {
+   "slot": "09:00",
+   "id": "takhian-ep1",
+   "kind": "shorts",
+   "platforms": [
+    "youtube_shorts",
+    "facebook_reel",
+    "instagram_reel"
+   ],
+   "status": "final",
+   "branch": "ccr-fb88c4b3-kcqyid",
+   "commit": "1b11397",
+   "video": "video/release/hq/takhian-ep1-HQ.mp4",
+   "video_sha256": "7f346bfeef2552318e7ed16b22963879c789c2e36788c46dfab50d8681af551e",
+   "video_bytes": 97627648,
+   "cover": "video/takhian-ep1/cover.jpg",
+   "title_youtube": "ติดพายุกลางนา… อย่าหลบใต้ต้นไม้ใหญ่",
+   "title_chars": 35
+  },
+  {
+   "slot": "09:15",
+   "id": "takhian-ep2",
+   "kind": "shorts",
+   "platforms": [
+    "youtube_shorts",
+    "facebook_reel",
+    "instagram_reel"
+   ],
+   "status": "in_production",
+   "branch": "ccr-fb88c4b3-kcqyid",
+   "commit": null,
+   "video": "video/release/hq/takhian-ep2-cliff-HQ.mp4",
+   "video_sha256": null,
+   "video_bytes": null,
+   "cover": "video/takhian-ep2/cover.jpg",
+   "title_youtube": "คนข้างคุณโดนฟ้าผ่า… อย่ากลัวจับตัวเขา",
+   "title_chars": 37,
+   "note": "ตัดจาก takhian-ep2-HQ.mp4 (5e0f8a5) ให้จบค้าง แล้วต่อการ์ดชี้คลิปยาว",
+   "due": "2026-11-08T22:00+07:00"
+  }
+ ],
+ "video_long": {
+  "slot": "09:30",
+  "id": "takhian-long",
+  "kind": "long_16x9",
+  "platforms": [
+   "youtube"
+  ],
+  "status": "missing",
+  "branch": null,
+  "commit": null,
+  "video": "video/takhian-long/LONG-takhian-16x9-share.mp4",
+  "video_sha256": null,
+  "video_bytes": null,
+  "thumb": "video/takhian-long/thumb.jpg",
+  "title_youtube": "ติดพายุกลางทุ่งนา… อย่าวิ่งไปหลบใต้ต้นตะเคียน | ต้นตะเคียนกลางนา ฉบับเต็ม",
+  "note": "ต้องทำฉบับ 16:9 ทั้งเรื่อง",
+  "due": "2026-11-08T22:00+07:00"
+ }
+}
