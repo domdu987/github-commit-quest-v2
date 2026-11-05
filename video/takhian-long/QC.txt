@@ -1,0 +1,14 @@
+ต้นตะเคียนกลางนา ฉบับเต็ม 16:9 · โต๊ะภาพ 1 (lane C) · 5 พ.ย. 2569
+picture: one full render (no TK_RANGE) of full/build_full.sh ... landscape · hyperframes 0.8.185 -f 60 -w 4 → 14872 frames · High yuv420p 1920x1080 60/1 (17:56–19:23Z)
+audio: full/mix.wav (ทะเลลด recipe, suno1) muxed with apad + -t video length
+share: video/takhian-long/LONG-takhian-16x9-share.mp4 · 94,634,945 B · sha256 149840b9e8cce65b29f860c8aba3a20adbc9484b244fdf360311926aa86b0d56
+  2-pass x264 slow 2848 kbps + AAC 192k · 14872 frames · v 247.866667 s · a 247.866 s · -14.3 LUFS · peak -2.7 dBFS · SSIM vs render 0.9897
+HQ (not in the repo: 295 MB > GitHub's 100 MB): LONG-takhian-16x9-HQ.mp4 · 294,990,988 B · sha256 7962913d4ad10db67fd499973233dc3ee2aab46a3136338026750794e0d1559f
+  video stream copied from the render + AAC 256k · 14872 frames · v 247.866667 s · a 247.866 s · -14.3 LUFS · peak -1.7 dBFS
+musiccheck (skill, ทะเลลด ±3 LU) on full/vo_stem + music_stem: under voice -34.2 · between lines -28.7 · voice over music 19.5 LU · missing 4% → PASS
+hisscheck --vo full/vo_stem.wav: share flatness 0.37 · pause HF -81.1 dBFS → PASS · HQ 0.37 / -81.0 → PASS
+blackdetect (0.3 s, pix_th .06): none · freezedetect (3 s): none (share and HQ)
+edgecheck 1920x1080 (full/edgecheckL.cjs, 6 px margins, 0.25 s walk, every shot): no edge problems
+V1b (full/flashcheck.py on the render): 10 flashes in 247.9 s · worst 10 s window 1 · at 2.7 26.0 50.0 70.5 88.7 105.9 118.8 171.8 213.5 224.7 s
+pre-render cut sheets: precheck/cuts-01..11.jpg (approved by the coordinator) · post-render: sheets/long-1fps-01..11.jpg (480x270 per second)
+thumbnail: thumb.jpg 1280x720 (thumb-src/) · upload sheet: UPLOAD.md
