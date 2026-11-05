@@ -3,7 +3,7 @@ whose scale ratio is off (ทะเลลด used kid ≈ 0.77 × teen/adult at 
 import re, sys
 KID = {"pu", "puCam", "puNoCam"}
 TEEN = {"fon", "fonPhone"}
-ADULT = {"yaiBua", "yaiBuaCry", "taTian", "taTianCry"}
+ADULT = {"yaiBua", "yaiBuaCry", "yaiBuaFan", "taTian", "taTianCry"}
 pat = re.compile(r'P\("(\w+)",\s*([-\d.]+|PULL\.[a-z]\[0\][^,]*),\s*([-\d.]+),\s*([\d.]+)')
 for path in sys.argv[1:]:
     s = open(path).read()

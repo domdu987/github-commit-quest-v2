@@ -760,6 +760,44 @@
     g += `<rect x="-96" y="-54" width="192" height="14" rx="4" fill="#3a3c3e" ${d()}/><rect x="-20" y="-86" width="40" height="18" rx="2" fill="#f4f2ea" ${d()}/><path d="M-13,-77h26" stroke="#3a3a3a" stroke-width="3"/>`;
     if (lit) g += `<circle cx="-84" cy="-92" r="40" fill="url(#ngwBulb)" opacity=".5"/><circle cx="84" cy="-92" r="40" fill="url(#ngwBulb)" opacity=".5"/><g class="ngw-hz"><rect x="-90" y="-80" width="12" height="9" fill="#ffae3a"/><rect x="78" y="-80" width="12" height="9" fill="#ffae3a"/><circle cx="-84" cy="-76" r="34" fill="url(#ngwBulb)"/><circle cx="84" cy="-76" r="34" fill="url(#ngwBulb)"/></g>`;
     return g + `</g>`; };
+  // ยายบัว's grill shop after the storm (the payoff of "ไก่ย่างทั้งร้าน… ทิ้งไว้ตรงนั้น"), at the shop's own place and scale
+  // (Ngw.grillShop's origin): the back wall torn down to a jagged left half, the zinc roof fallen in a slant from the right post to the
+  // floor, the painted sign face up and cracked on the ground, the grill tipped on its side with chickens in their clamps in the mud,
+  // the fridge on its face, the cooler and stools thrown, a flag snapped, planks and zinc scraps
+  Ngw.shopWreck = (x, y, s = 1) => { const I = INK, r = mk(77);
+    let g = `<g transform="translate(${f1(x)},${f1(y)}) scale(${s})"><ellipse cx="0" cy="16" rx="940" ry="38" fill="#000" opacity=".2"/>`;
+    g += `<path d="M-800,-112H800L824,0H-824Z" fill="#a8a194" ${OUT(4)}/><path d="M-824,0H824V22H-824Z" fill="#7e776a" ${OUT(4)}/>`;
+    for (let k = 0; k < 7; k++) g += `<ellipse cx="${f1(-700 + k * 230 + r() * 60)}" cy="${f1(-40 - r() * 50)}" rx="${f1(60 + r() * 70)}" ry="${f1(10 + r() * 8)}" fill="#5a4a36" opacity=".5"/>`;   // mud
+    // what is left of the back wall: the left half, its top torn, the calendar hanging askew on one nail
+    g += `<path d="M-770,-112V-640L-690,-700L-610,-610L-520,-720L-450,-600L-380,-650L-330,-112Z" fill="#8a5e38" ${OUT(5)}/>`;
+    for (let k = 0; k < 9; k++) { const yy = -170 - k * 60; g += `<path d="M-768,${yy}H${-332 - (k > 6 ? 40 : 0)}" stroke="#5e3c22" stroke-width="5"/>`; }
+    g += `<g transform="translate(-560,-470) rotate(18) scale(.5)"><rect x="-150" y="-200" width="300" height="400" fill="#e8e2d2" ${OUT(6)}/><rect x="-150" y="-200" width="300" height="96" fill="#b8302a" ${OUT(6)}/><text y="-138" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="54" fill="#fff6e0">เมษายน</text><path d="M-120,-60H120M-120,0H120M-120,60H90" stroke="#8a8480" stroke-width="10" opacity=".5"/></g>`;
+    // posts: the far-left one standing, the next snapped, the right two leaning in under the roof
+    g += `<rect x="-817" y="-904" width="34" height="918" fill="#7a5030" ${OUT(4)}/><path d="M-287,0V-430L-262,-470L-262,0Z" fill="#7a5030" ${OUT(4)}/><path d="M-250,-470L-170,-560L-196,-580L-270,-500Z" fill="#7a5030" ${OUT(3)}/>`;
+    g += `<g transform="rotate(-14 270 0)"><rect x="253" y="-820" width="34" height="834" fill="#7a5030" ${OUT(4)}/></g><g transform="rotate(-9 800 0)"><rect x="783" y="-880" width="34" height="894" fill="#7a5030" ${OUT(4)}/></g>`;
+    // the fallen zinc roof: one big sheet from the right post's top down to the floor at the left, corrugated, rusted, a corner torn up
+    const top = [930, -800], bot = [-420, -30], th = 150;
+    g += `<path d="M${bot[0]},${bot[1]}L${top[0]},${top[1]}L${top[0] - 40},${top[1] - th}L${bot[0] - 70},${bot[1] - th + 40}Z" fill="#a8b0b2" ${OUT(5)}/>`;
+    for (let k = 0; k <= 24; k++) { const t = k / 24, ax = bot[0] + (top[0] - bot[0]) * t, ay = bot[1] + (top[1] - bot[1]) * t; g += `<path d="M${f1(ax)},${f1(ay)}l${f1(-40 - 30 * (1 - t))},${f1(-th + 40 * (1 - t))}" stroke="${k % 2 ? "#c8d0d2" : "#7a8486"}" stroke-width="5"/>`; }
+    g += [[0.3, 50], [0.62, 40], [0.85, 34]].map(([t, w]) => `<ellipse cx="${f1(bot[0] + (top[0] - bot[0]) * t - 30)}" cy="${f1(bot[1] + (top[1] - bot[1]) * t - 70)}" rx="${w}" ry="${f1(w * 0.45)}" fill="#a8643a" opacity=".5" transform="rotate(-30 ${f1(bot[0] + (top[0] - bot[0]) * t - 30)} ${f1(bot[1] + (top[1] - bot[1]) * t - 70)})"/>`).join("");
+    g += `<path d="M${top[0] - 40},${top[1] - th}l70,-60l16,40Z" fill="#b8c0c2" ${OUT(3)}/>`;
+    // the fridge on its face in front of the right bay, bottles rolled out
+    g += `<g transform="translate(560,-10)"><rect x="-350" y="-120" width="700" height="120" rx="14" fill="#e2ded6" ${OUT(5)}/><rect x="-350" y="-120" width="70" height="120" rx="14" fill="#b8302a" ${OUT(4)}/><path d="M-260,-60H330" stroke="#c8c4bc" stroke-width="6"/></g>`;
+    g += ["#2a8a4a", "#e87a2a", "#c8302a", "#3a6ac8"].map((c, k) => `<rect x="${200 + k * 70 + (k % 2) * 20}" y="${-30 - (k % 3) * 8}" width="64" height="22" rx="10" fill="${c}" ${OUT(2)} transform="rotate(${-20 + k * 17} ${232 + k * 70} -20)"/>`).join("");
+    // the grill tipped on its side, legs up, the chickens in their clamps fallen in the mud in front
+    g += `<g transform="translate(-40,-30) rotate(-78)">${Ngw.grill(0, 0, 0.9, { id: "gw", smoke: false })}</g>`;
+    g += [[-250, 24, -14], [-120, 30, 22], [60, 20, -30]].map(([cx, cy, a]) => `<g transform="translate(${cx},${cy}) rotate(${90 + a})">${Ngw.clampChicken(0, 0, 0.5, 0)}</g>`).join("");
+    // the painted sign face up on the ground at the left, cracked across
+    g += `<g transform="translate(-560,28) scale(1,.42) rotate(-4)"><rect x="-470" y="-184" width="940" height="184" rx="14" fill="#ece4d2" ${OUT(8)}/><rect x="-454" y="-168" width="908" height="152" rx="8" fill="none" stroke="#b8302a" stroke-width="10"/>
+      <text x="0" y="-70" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="104" fill="#b8302a">ไก่ย่างยายบัว</text><path d="M60,-184L20,-110L80,-60L40,0" stroke="${I}" stroke-width="7" fill="none"/></g>`;
+    // the cooler on its side, a red stool upside down, a blue one on its side, a snapped flag with its cloth in the mud
+    g += `<g transform="translate(-880,0) rotate(-90)"><rect x="-60" y="-160" width="120" height="160" rx="12" fill="#c8302a" ${OUT(4)}/><rect x="-60" y="-178" width="120" height="30" rx="10" fill="#f2efe6" ${OUT(4)}/></g>`;
+    g += `<g transform="translate(980,-6) rotate(180)"><path d="M-46,-180H46L40,-164H-40Z" fill="#c8302a" ${OUT(3)}/><path d="M-40,-164L-48,0M40,-164L48,0" stroke="#c8302a" stroke-width="9"/></g><g transform="translate(1160,0) rotate(-80)"><path d="M-46,-180H46L40,-164H-40Z" fill="#3a6ac8" ${OUT(3)}/><path d="M-40,-164L-48,0M40,-164L48,0" stroke="#3a6ac8" stroke-width="9"/></g>`;
+    g += `<path d="M-1190,16V-520" stroke="#a8844a" stroke-width="12" stroke-linecap="round"/><path d="M-1190,-520L-1000,-610" stroke="#a8844a" stroke-width="12" stroke-linecap="round"/><path d="M-1120,10Q-1010,-30 -900,8Q-980,30 -1120,24Z" fill="#c8302a" ${OUT(3)}/>`;
+    // planks and zinc scraps
+    for (let k = 0; k < 10; k++) { const px = -1000 + r() * 2100, py = -20 + r() * 40, a = -40 + r() * 80, L = 90 + r() * 120;
+      g += k % 3 ? `<rect x="${f1(px)}" y="${f1(py)}" width="${f1(L)}" height="16" fill="#8a5e38" ${OUT(2.5)} transform="rotate(${f1(a)} ${f1(px)} ${f1(py)})"/>` : `<path d="M${f1(px)},${f1(py)}l${f1(L)},-10l10,24l${f1(-L)},10Z" fill="#a8b0b2" ${OUT(2.5)} transform="rotate(${f1(a)} ${f1(px)} ${f1(py)})"/>`; }
+    return g + `</g>`; };
   // ฝน's recorder for the wide frame: the phone on its side filling the middle of the page, the two lanes stacked
   // (same ids as Ngw.phoneWave, so Ngw.phoneWaveLife runs it with o.w = the lane width)
   Ngw.phoneWaveL = (id) => { const I = "#1e1a16", W = 1210, X0 = -390;   // lanes in the phone's own coordinates (screen −900…900)
