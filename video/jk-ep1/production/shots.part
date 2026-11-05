@@ -1,0 +1,198 @@
+      // ---------- แสงกระสือ: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      // ---------- สกิลจอมโกหก EP.1 · storytelling clip (lane A) · the channel look (slender cast, lit sets) ----------
+      Rig.FLAT = true;
+      Engine.look = { ...(Engine.look || {}), vignette: 0.5, grain: 0.05 };
+      const NS = "http://www.w3.org/2000/svg";
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const ID = fr(540, 960, 1.0, 540, 960);
+      const grp = (parent) => { const g = document.createElementNS(NS, "g"); parent.appendChild(g); return g; };
+      const pop = (tl, g, at, o = {}) => tl.fromTo(g, { opacity: 0, scale: o.from ?? 0.8, y: o.dy ?? -18, svgOrigin: o.origin || "540 960" },
+        { opacity: 1, scale: 1, y: 0, svgOrigin: o.origin || "540 960", duration: o.dur ?? 0.4, ease: o.ease || "back.out(2.2)" }, at);
+      const out = (tl, g, at, d = 0.18) => tl.to(g, { opacity: 0, duration: d }, at);
+      const swingG = (tl, sel, t0, dur, amp = 3, org = "0 0") => tl.fromTo(sel, { rotation: -amp, svgOrigin: org }, { rotation: amp, svgOrigin: org, duration: 1.2, repeat: Math.ceil(dur / 1.2), yoyo: true, ease: "sine.inOut" }, t0);
+      const shake = (tl, g, t0, dur, a = 3, p = 0.05) => tl.fromTo(g, { x: -a }, { x: a, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "none" }, t0);
+      const DAY = { dark: 0.02, light: { from: "right", rim: "#fff0d0", rimOp: 0.6, rimW: 4, shade: "#3a2440", shadeOp: 0.25, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#fff2d8", bottom: "#4a3a50", op: 0.16 } };
+      const NIGHT = { dark: 0.1, light: { from: "right", rim: "#ffd9a0", rimOp: 0.55, rimW: 4, shade: "#1a1430", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#ffe2b0", bottom: "#1a1428", op: 0.24 } };
+      const spec = (k, o) => ({ ...(o.night ? NIGHT : DAY), cam: o.cam || { keys: [{ t: 0, ...(o.camAt || ID), drift: { s: o.push ?? 0.012 } }] }, captions: o.captions ?? caps(k), ...o });
+      const shot = (k, o) => add(k, spec(k, o));
+      const talk = (k, i, m = "o") => [[vo(k, i), voEnd(k, i), m]];
+      const swap = (tl, id, t, a = 0, b = 1, d = 0.12) => { tl.set(`#${id}-a${b}`, { opacity: 0 }, 0); tl.to(`#${id}-a${a}`, { opacity: 0, duration: d }, t); tl.to(`#${id}-a${b}`, { opacity: 1, duration: d }, t); };
+      const tagAt = (tl, L, x, y, text, at, o = {}) => { const g = grp(L.act); g.innerHTML = Lot.tag(x, y, text, o); pop(tl, g, at, { origin: `${x} ${y}`, from: 0.5 }); return g; };
+      const capAt = (id, y) => { const c = document.getElementById(`${id}-caps`); if (c) c.style.setProperty("top", `${y}px`, "important"); };
+      const ink = Lot.INK;
+      // a counter chip in the corner (screen space): "1/5"
+      const chip = (tl, L, steps, o = {}) => { const x = o.x ?? 900, y = o.y ?? 250;
+        const g = grp(L.light); g.innerHTML = `<g transform="translate(${x},${y})"><circle r="78" fill="#fbf7ee" stroke="${ink}" stroke-width="7"/>
+          ${steps.map(([, txt], i) => `<text id="${o.id}-c${i}" x="0" y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="${ink}" opacity="0">${txt}</text>`).join("")}
+          <text x="0" y="-36" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="22" fill="#a8305a">${o.label || "ที่ซ่อน"}</text></g>`;
+        steps.forEach(([at], i) => { tl.set(`#${o.id}-c${i}`, { opacity: 1 }, at); if (i + 1 < steps.length) tl.set(`#${o.id}-c${i}`, { opacity: 0 }, steps[i + 1][0]);
+          tl.fromTo(g, { scale: 1.25, svgOrigin: `${x} ${y}` }, { scale: 1, svgOrigin: `${x} ${y}`, duration: 0.25, ease: "back.out(3)", immediateRender: false }, at); });
+        return g; };
+      const sparkle = (x, y, r = 22) => `<path d="M${x},${y - r}Q${x + 4},${y - 4} ${x + r},${y}Q${x + 4},${y + 4} ${x},${y + r}Q${x - 4},${y + 4} ${x - r},${y}Q${x - 4},${y - 4} ${x},${y - r}Z" fill="#fff6b0" stroke="${ink}" stroke-width="2.5"/>`;
+
+
+      // the status bar (top left), per shot: [[label, value, colour]]
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .sghud { position: absolute; z-index: 58; left: 44px; top: 120px; display: flex; flex-direction: row; white-space: nowrap; width: max-content; align-items: center; gap: 16px;
+          padding: 12px 22px; border-radius: 18px; background: rgba(18,20,30,.7); border: 1.5px solid rgba(244,236,216,.2); box-shadow: 0 8px 24px rgba(0,0,0,.35); font-family: Kanit; color: #f4ecd8; }
+        .sghud b { font: 800 34px/1 Kanit; } .sghud small { font: 600 19px/1 Kanit; opacity: .65; } .sghud i { width: 1.5px; height: 30px; background: rgba(244,236,216,.25); }
+        .capbox { font: 800 54px/1.25 Kanit !important; }
+      </style>`);
+      const hud = (id, items) => { const el = document.getElementById(id); if (!el) return;
+        el.insertAdjacentHTML("beforeend", `<div class="sghud">${items.map(([l, v, c], i) => `${i ? "<i></i>" : ""}<small>${l}</small><b style="color:${c || "#f4ecd8"}">${v}</b>`).join("")}</div>`); };
+      const ears = (tl, aid, at, on = true, d = 0.25) => tl.to(`#${aid} .jkEar`, { opacity: on ? 1 : 0, duration: d }, at);
+
+      const act = (k) => (shots.find((x) => x.key === k) || {}).actors || [];
+      // ---------- looks per world ----------
+      const DUSK = { dark: 0.06, light: { from: "right", rim: "#ffd0a0", rimOp: 0.7, rimW: 4, shade: "#2a1c40", shadeOp: 0.3, shadeW: 26, soft: 9, vol: false },
+        grade: { top: "#ffd8a8", bottom: "#3a2a50", op: 0.22 } };
+      const HEAVEN = { dark: 0, light: { from: "left", rim: "#fffbe8", rimOp: 0.6, rimW: 4, shade: "#8a90b8", shadeOp: 0.22, shadeW: 26, soft: 9, vol: false },
+        grade: { top: "#fff8e8", bottom: "#c8d8f0", op: 0.14 } };
+      const TOWN = { dark: 0.02, light: { from: "left", rim: "#fff0d0", rimOp: 0.6, rimW: 4, shade: "#3a2440", shadeOp: 0.25, shadeW: 26, soft: 9, vol: false },
+        grade: { top: "#fff2d8", bottom: "#4a3a50", op: 0.16 } };
+      const city = (k, o = {}) => ({ ...DUSK, set: "jkCity", setOpts: { id: `jc${k}`, ...o } });
+      const cloud = (k, o = {}) => ({ ...HEAVEN, set: "jkCloud", setOpts: { id: `jq${k}`, ...o } });
+      const town = (k, o = {}) => ({ ...TOWN, set: "jkTown", setOpts: { id: `jt${k}`, ...o } });
+      const shadows = (L, id, actors, sh = -0.4) => NkL.cast(L, id, actors, { k: 0.3, sh, op: 0.35 });
+      const H_EARTH = [["ยอดขาย", "0 กรมธรรม์", "#ff8a7a"], ["อาชีพ", "เซลส์ประกัน"]];
+      const H_DEAD = (sk = "?") => [["สถานะ", "ตายแล้ว", "#9ad8ff"], ["สกิล", sk, "#f2c55c"]];
+      const H_TOWN = [["อันดับ", "9,999", "#ff8a7a"], ["คนเชื่อ", "0%", "#f2c55c"]];
+      const ME = (who, x, y, track, extra = {}) => A(who, x, y, 0.95, track, extra);
+      const face = (x, y = 1400, s = 3.2, flip = false, sx = 540, sy = 760) => fr(x + (flip ? -2 : 2) * 0.95, y - 546 * 0.95, s, sx, sy);
+      const isCard = (txt, sub, col = "#9aa0a6") => `<g><rect x="-230" y="-330" width="460" height="660" rx="34" fill="${col}"/><rect x="-206" y="-306" width="412" height="612" rx="24" fill="#c3c8cd"/>
+        <rect x="-206" y="-306" width="412" height="120" rx="24" fill="#aab0b6"/><text x="0" y="-228" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#f4f6f8">การ์ดสกิล</text>
+        <text x="0" y="-20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="92" fill="#4a4f56">${txt}</text>
+        <text x="0" y="200" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="190" fill="#7a8088" id="cardF">${sub}</text>
+        <path d="M-150,-120L-60,-40L-110,40" stroke="#8a9096" stroke-width="5" fill="none" opacity=".7"/><circle cx="150" cy="250" r="20" fill="#f6a8c8" opacity=".85"/></g>`;
+
+      // ---------- a01 hook: the grey card, your ears ----------
+      shot("a01", { ...cloud("a01"), camAt: face(440, 1400, 2.4, false, 540, 980), push: 0.03, blur: { far: 6, mid: 5 },
+        actors: [ME("jkYouCard", 440, 1400, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }])],
+        fx(tl, id, t0, L) { ears(tl, `${id}-a0`, t0 + F("a01", 0, 1) - 0.1); const g = grp(L.light); g.innerHTML = `<g transform="translate(540,560) rotate(-8) scale(.62)">${isCard("จอมโกหก", "F")}</g>`;
+          pop(tl, g, t0 + 0.15, { origin: "540 560", from: 0.4, dy: -60, dur: 0.5 }); } });
+
+      // ---------- a02–a05 Earth: the salesman who cannot lie ----------
+      shot("a02", { ...city("a02"), cam: JKC.move(fr(820, 700, 0.9, 540, 700), fr(820, 1060, 0.95, 540, 1000), 2.0, 1.6),
+        actors: [A("jkAunt", 600, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }]), ME("jkYouBag", 860, 1400, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }], { flip: true, talk: [[0.2, 3.6, "o"]] })],
+        fx(tl, id, t0, L) { hud(id, H_EARTH); shadows(L, id, act("a02"), -0.5); } });
+      shot("a03", { ...city("a03"), camAt: face(860, 1400, 3.0, true), push: 0.03, blur: { mid: 6, far: 8 },
+        actors: [ME("jkYouBag", 860, 1400, [{ t: 0, mode: "shrug", eyes: "normal", mouth: "flat" }, { t: 1.3, mode: "idle", eyes: "sad", mouth: "flat" }], { flip: true })], fx(tl, id) { hud(id, H_EARTH); } });
+      shot("a04", { ...city("a04"), cam: { keys: [{ t: 0, ...face(860, 1400, 3.0, true), drift: { s: 0.01 } }, { t: F("a04", 0, 1) - 0.05, ...fr(860 - 33 * 0.95 * -1, 1400 - 540 * 0.95, 5.2, 600, 760), glide: 0.35 }] }, blur: { mid: 8, far: 8 },
+        actors: [ME("jkYouBag", 860, 1400, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat", sweat: true }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, H_EARTH); ears(tl, `${id}-a0`, t0 + F("a04", 0, 1)); JKI.badge(tl, L.light, t0, D("a04"), { kind: "ears", x: 860, y: 420, tone: "red", label: "โกหก = หูแดง", at: F("a04", 0, 1) + 0.1 }); tl.fromTo(`#jca04-brake`, { opacity: 0.3 }, { opacity: 1, duration: 0.3 }, t0 + F("a04", 0, 2)); } });
+      shot("a05", { ...city("a05"), cam: JKC.move(fr(760, 1060, 1.0, 540, 1000), fr(640, 1020, 1.5, 440, 980), F("a05", 0, 1) - 0.05, 0.14),
+        actors: [A("jkAunt", 600, 1400, 0.95, [{ t: 0, mode: "startle", eyes: "wide", mouth: "o" }, { t: F("a05", 0, 1) - 0.05, mode: "walk", eyes: "angry", mouth: "frown" }], { flip: true, moveTo: { x: -260, dur: 1.4, at: F("a05", 0, 1) } }),
+          ME("jkYouBag", 860, 1400, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }, { t: F("a05", 0, 1) + 0.35, mode: "facepalm", eyes: "closed", mouth: "frown" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, H_EARTH); tl.set(`#${id}-a1 .jkEar`, { opacity: 1 }, t0); } });
+
+      // ---------- a06–a07 the book, the manhole ----------
+      shot("a06", { ...city("a06", { dark: true }), grade: { top: "#c8a0c0", bottom: "#1a1430", op: 0.3 }, dark: 0.16,
+        cam: { keys: [{ t: 0, ...fr(260, 1050, 1.1, 540, 1000), drift: { x: 120, s: 0.004 } }] },
+        actors: [ME("jkYouBook", 120, 1400, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat" }], { moveTo: { x: 700, dur: D("a06") } })],
+        fx(tl, id, t0, L) { hud(id, H_EARTH); JKC.whipOut(tl, id, t0 + D("a06") - 0.16, 1); const g = grp(L.light); g.innerHTML = `<g transform="translate(760,520) rotate(4)"><rect x="-150" y="-200" width="300" height="400" rx="12" fill="#d8352a"/><rect x="-150" y="-200" width="40" height="400" fill="#a8241c"/>
+            <text x="20" y="-90" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#f6d36a">พูดให้</text><text x="20" y="-34" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#f6d36a">คนเชื่อ</text>
+            <text x="20" y="90" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="120" fill="#fff2c8">7</text><text x="20" y="150" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#fff2c8">วัน</text></g>`;
+          pop(tl, g, t0 + F("a06", 0, 2) - 0.05, { origin: "760 520", from: 0.6, dur: 0.35 }); } });
+      shot("a07", { ...city("a07", { manhole: true, dark: true }), grade: { top: "#c8a0c0", bottom: "#1a1430", op: 0.3 }, dark: 0.16, camAt: fr(1080, 1200, 1.05, 540, 1000), push: 0.01, shake: JKC.impact(1.6, 0.55, 16, JKC.dutch(5)),
+        actors: [ME("jkYouBook", 820, 1520, [{ t: 0, mode: "walk", eyes: "side", mouth: "flat" }, { t: 1.55, mode: "fall", eyes: "wide", mouth: "scream" }],
+          { path: [{ t: 0, x: 820, y: 1520 }, { t: 1.5, x: 1180, y: 1520 }, { t: 1.65, x: 1185, y: 1560 }, { t: 2.0, x: 1185, y: 2500 }] })],
+        sfxText: [{ text: "ตุ้บ!", x: 380, y: 760, size: 150, rot: -6, color: "#f6d36a", t: F("a07", 1, 0), end: D("a07") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_EARTH); JKC.whipIn(tl, id, t0, 1);
+          const lip = grp(L.act); lip.innerHTML = `<path d="M1088,1520A92,18 0 0,0 1272,1520H1340V2700H1020V1520Z" fill="#b8aca0"/><path d="M1068,1520A112,24 0 0,0 1292,1520" stroke="#3a3a40" stroke-width="10" fill="none"/>`;
+          const bk = grp(L.light); bk.innerHTML = `<rect x="-100" y="-100" width="1280" height="2200" fill="#000"/>`; tl.set(bk, { opacity: 0 }, 0); tl.to(bk, { opacity: 1, duration: 0.5 }, t0 + D("a07") - 0.55); } });
+
+      // ---------- a08–a14 the queue on the clouds ----------
+      const QUEUE = (k, me = [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], ken = [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]) => [
+        A("jkSoul3", -60, 1400, 0.92, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }]), A("jkSoul2", 120, 1400, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }]),
+        A("jkSoul1", 280, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "side", mouth: "smile" }]), ME("jkYou", 440, 1400, me), A("jkKen", 590, 1400, 0.92, ken)];
+      shot("a08", { ...cloud("a08"), cam: { keys: [{ t: 0, ...face(440, 1400, 2.8), drift: { s: 0.01 } }, { t: F("a08", 0, 1) - 0.1, ...fr(520, 1080, 0.9, 540, 1000), glide: 0.9 }] }, blur: { act: 9, far: 6, mid: 6 },
+        actors: QUEUE("a08", [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }, { t: 0.55, mode: "idle", eyes: "wide", mouth: "o" }, { t: 1.4, mode: "think", eyes: "side", mouth: "flat" }]),
+        fx(tl, id, t0, L) { hud(id, H_DEAD()); shadows(L, id, act("a08"), 0.3); JKC.rack(tl, L, t0 + 0.4, { act: 9, far: 6, mid: 6 }, { act: 0, far: 2, mid: 1 }, 0.8); } });
+      shot("a09", { ...cloud("a09"), cam: JKC.move(fr(1000, 620, 0.75, 540, 620), fr(1000, 1020, 0.85, 540, 960), 1.8, 1.5),
+        actors: [...QUEUE("a09"), A("jkGod", 1262, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }])],
+        fx(tl, id, t0, L) { hud(id, H_DEAD()); shadows(L, id, act("a09").slice(0, 5), 0.3);
+          const gum = `#${id}-a5 .jkGum`; tl.fromTo(gum, { opacity: 0.95, scale: 0.2, svgOrigin: "30 -512" }, { scale: 1.6, svgOrigin: "30 -512", duration: 1.4, ease: "sine.in" }, t0 + F("a09", 0, 1)); tl.to(gum, { opacity: 0, duration: 0.05 }, t0 + F("a09", 0, 1) + 1.45); } });
+      shot("a10", { ...cloud("a10"), camAt: face(1262, 1400, 2.9, false, 540, 780), push: 0.03, blur: { far: 6, mid: 5 },
+        actors: [A("jkGod", 1262, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }], { talk: talk("a10", 0) })], fx(tl, id) { hud(id, H_DEAD()); } });
+      shot("a11", { ...cloud("a11"), cam: JKC.move(fr(690, 1060, 1.35, 540, 980), fr(640, 1000, 1.7, 540, 960), F("a11", 0, 1) - 0.1, 0.14), shake: JKC.impact(F("a11", 0, 1) - 0.05, 0.4, 10),
+        actors: [...QUEUE("a11", [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 1.6, mode: "idle", eyes: "wide", mouth: "o" }], [{ t: 0, mode: "stir", eyes: "normal", mouth: "smile" }]),
+          A("jkKenSword", 590, 1400, 0.92, [{ t: 0, mode: "raise", eyes: "wide", mouth: "laugh" }], { from: vo("a11", 1) - 0.1 })],
+        fx(tl, id, t0, L) { hud(id, H_DEAD()); tl.set(`#${id}-a4`, { opacity: 0 }, t0 + vo("a11", 1) - 0.1); JKI.badge(tl, L.light, t0, D("a11"), { kind: "star", x: 880, y: 420, tone: "yellow", label: "SSR", at: F("a11", 0, 1) });
+          tl.fromTo(`#jqa11-burst`, { attr: { r: 0 } }, { attr: { r: 520 }, duration: 0.6, ease: "power2.out" }, t0 + F("a11", 0, 1) - 0.1);
+          tl.to(`#jqa11-crank`, { rotation: 720, svgOrigin: "650 1170", duration: 1.4, ease: "power1.inOut" }, t0 + 0.1); } });
+      shot("a12", { ...cloud("a12"), camAt: fr(800, 1300, 2.4, 540, 1000), push: 0.02, blur: { far: 8, mid: 6 }, extra(L) { JKC.ots(L, { side: "left", color: "#243052", hair: "#1a1410" }); },
+        fx(tl, id, t0, L) { hud(id, H_DEAD()); const w = grp(L.act), c = grp(w); c.innerHTML = `<circle r="26" fill="#9aa0a6"/><path d="M-26,0A26,26 0 0,0 26,0Z" fill="#c3c8cd"/><circle cx="-8" cy="-10" r="6" fill="#fff" opacity=".6"/>`;
+          w.setAttribute("transform", "translate(820,1286) scale(1.8)");
+          tl.fromTo(c, { x: 0, y: 0, rotation: 0 }, { x: -40, y: 60, rotation: -200, duration: D("a12") - 0.4, ease: "sine.inOut" }, t0 + 0.15); } });
+      shot("a13", { ...cloud("a13"), camAt: fr(800, 1100, 1.4, 540, 960), push: 0.01, blur: { far: 10, mid: 10, set: 8 }, dark: 0.2,
+        fx(tl, id, t0, L) { hud(id, H_DEAD("จอมโกหก · F")); const g = grp(L.light); g.innerHTML = `<g transform="translate(540,760) rotate(-4)">${isCard("จอมโกหก", "F")}</g>`;
+          pop(tl, g, t0 + 0.1, { origin: "540 760", from: 0.6, dur: 0.4 });
+          const st = grp(L.light); st.innerHTML = `<g transform="translate(700,960) rotate(-14)"><rect x="-150" y="-60" width="300" height="120" rx="16" fill="none" stroke="#d8352a" stroke-width="12"/><text x="0" y="28" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="72" fill="#d8352a">กากสุด</text></g>`;
+          pop(tl, st, t0 + F("a13", 0, 2), { origin: "700 960", from: 2.2, dur: 0.25, ease: "power3.in" }); } });
+      shot("a14", { ...cloud("a14"), cam: JKC.move(fr(400, 1060, 0.95, 540, 1000), face(440, 1400, 2.3, false, 540, 760), vo("a14", 0) + 1.0, 0.12),
+        actors: QUEUE("a14", [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }, { t: vo("a14", 0) + 0.9, mode: "cower", eyes: "sad", mouth: "pout" }], [{ t: 0, mode: "laugh", eyes: "happy", mouth: "laugh" }]).map((a, i) => (i < 3 ? { ...a, track: [{ t: 0, mode: "laugh", eyes: "happy", mouth: "laugh" }] } : a)),
+        sfxText: [{ text: "ฮ่าๆๆ", x: 120, y: 520, size: 110, rot: -8, color: "#f6d36a", t: 0.1, end: D("a14") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_DEAD("จอมโกหก · F")); ears(tl, `${id}-a3`, t0 + 0.3); } });
+
+      // ---------- a15–a17 the rules, the floor ----------
+      shot("a15", { ...cloud("a15"), camAt: face(1262, 1400, 2.6, false, 540, 820), push: 0.03, blur: { far: 6, mid: 5 },
+        actors: [A("jkGod", 1262, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }])],
+        fx(tl, id, t0, L) { hud(id, H_DEAD("จอมโกหก · F")); const g = grp(L.act); g.innerHTML = `<g transform="translate(1290,870)"><circle r="40" fill="#e8f4ff" opacity=".35"/><circle r="40" fill="none" stroke="#d8b84a" stroke-width="8"/><rect x="26" y="26" width="12" height="70" rx="6" fill="#8a5a32" transform="rotate(-40)"/><path d="M-24,-14q10,-14 26,-14" stroke="#fff" stroke-width="5" fill="none" opacity=".8"/></g>`;
+          pop(tl, g, t0 + F("a15", 0, 0) + 0.3, { origin: "1290 870", from: 0.3 }); } });
+      shot("a16", { ...cloud("a16"), camAt: fr(600, 900, 1.2, 540, 960), push: 0.008, blur: { far: 10, mid: 10, set: 9 }, dark: 0.25,
+        fx(tl, id, t0, L) { hud(id, H_DEAD("จอมโกหก · F")); const g = grp(L.light);
+          const row = (y, n, a, b) => `<g id="${id}-rr${n}">${JKI.coin(n === 1 ? "believer" : "percent", -300, y, 0.66, `${id}-ic${n}`, n === 1 ? "blue" : "green")}
+            <text x="-238" y="${y - 6}" font-family="Kanit" font-weight="900" font-size="46" fill="#2e2a26">${a}</text><text x="-238" y="${y + 44}" font-family="Kanit" font-weight="700" font-size="34" fill="#6a5a4a">${b}</text></g>`;
+          g.innerHTML = `<g transform="translate(540,720)"><rect x="-380" y="-360" width="760" height="760" rx="30" fill="#f6efdf"/><rect x="-380" y="-360" width="760" height="110" rx="30" fill="#d8b84a"/>
+            <text x="0" y="-285" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#3a2a10">กฎหลังการ์ด</text>
+            ${row(-150, 1, "เชื่อ 1 คน = จริง 1%", "เรื่องที่คุณโม้")}${row(60, 2, "เชื่อครบ 100 คน", "= จริงทั้งหมด")}
+            <g id="${id}-rr3">${JKI.coin("whisper", -300, 250, 0.4, `${id}-ic3`, "grey")}
+              <text x="-262" y="258" font-family="Kanit" font-weight="600" font-size="15" fill="#9a8a6a">พูดเล่น… ก็นับ</text></g></g>`;
+          pop(tl, g, t0 + 0.05, { origin: "540 720", from: 0.85, dur: 0.35 });
+          [1, 2, 3].forEach((n) => { tl.set(`#${id}-rr${n}`, { opacity: 0 }, 0); const a = t0 + vo("a16", n - 1) + (n === 3 ? 0.9 : 0.05); tl.to(`#${id}-rr${n}`, { opacity: 1, duration: 0.25 }, a); JKI.enterC(tl, `${id}-ic${n}`, a); JKI.idle(tl, `${id}-ic${n}`, n === 1 ? "believer" : n === 2 ? "percent" : "whisper", a + 0.8, t0 + D("a16") - a - 0.8); });
+          // rule 3 is the set-up for EP.4: the lens sweeps over the small print for one beat so a sharp viewer can read it
+          const lens = grp(L.light); lens.innerHTML = `<defs><clipPath id="${id}-lc"><circle r="118"/></clipPath></defs><g transform="translate(400,972)">
+            <circle r="118" fill="#fbf6ea"/><g clip-path="url(#${id}-lc)"><text x="0" y="-8" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="44" fill="#7a5a3a">พูดเล่น…</text><text x="0" y="50" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#a8241c">ก็นับ</text></g>
+            <circle r="118" fill="#e8f4ff" opacity=".18"/><circle r="118" fill="none" stroke="#d8b84a" stroke-width="14"/><path d="M-70,-70q30,-30 70,-34" stroke="#fff" stroke-width="8" fill="none" opacity=".8"/>
+            <rect x="80" y="80" width="26" height="130" rx="12" fill="#8a5a32" transform="rotate(-45)"/></g>`;
+          const at3 = t0 + vo("a16", 2) + 0.9;
+          tl.set(lens, { opacity: 0 }, 0); tl.fromTo(lens, { opacity: 0, x: 260, y: -60 }, { opacity: 1, x: 0, y: 0, duration: 0.3, ease: "power2.out" }, at3);
+          tl.to(lens, { x: 360, y: 120, opacity: 0, duration: 0.3, ease: "power2.in" }, Math.min(t0 + D("a16") - 0.35, at3 + 1.3)); } });
+      shot("a17", { ...cloud("a17"), camAt: fr(440, 1100, 1.5, 540, 900), push: 0.01, shake: JKC.impact(F("a17", 0, 1), 0.5, 12, JKC.dutch(6)),
+        actors: [ME("jkYou", 440, 1400, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("a17", 0, 1), mode: "fall", eyes: "wide", mouth: "scream" }],
+          { path: [{ t: 0, x: 440, y: 1400 }, { t: F("a17", 0, 1) + 0.15, x: 440, y: 1400 }, { t: F("a17", 0, 1) + 0.7, x: 440, y: 2600 }] })],
+        fx(tl, id, t0, L) { hud(id, H_DEAD("จอมโกหก · F")); tl.to(`#jqa17-hole`, { attr: { rx: 170, ry: 46 }, duration: 0.25, ease: "back.out(2)" }, t0 + F("a17", 0, 1) - 0.1);
+          const lip = grp(L.act); lip.innerHTML = `<rect x="200" y="1424" width="480" height="1400" fill="#f8f6fa"/>${[...Array(6)].map((_, i) => `<circle cx="${220 + i * 85}" cy="1440" r="46" fill="#ffffff"/>`).join("")}`;
+          tl.set(lip, { opacity: 0 }, 0); tl.set(lip, { opacity: 1 }, t0 + F("a17", 0, 1) - 0.1); } });
+
+      // ---------- a18–a20 the starting town ----------
+      shot("a18", { ...town("a18"), camAt: fr(820, 900, 0.55, 540, 900), push: 0.015, shake: JKC.impact(1.35, 0.5, 18),
+        actors: [ME("jkYou", 700, 1400, [{ t: 0, mode: "fall", eyes: "wide", mouth: "scream" }, { t: 1.4, mode: "crouch", eyes: "worry", mouth: "o" }],
+          { path: [{ t: 0, x: 600, y: -300 }, { t: 1.35, x: 700, y: 1400 }] })],
+        sfxText: [{ text: "ตึง!", x: 560, y: 1040, size: 100, rot: 6, color: "#f6d36a", t: 1.4, end: 2.6 }],
+        fx(tl, id, t0, L) { hud(id, H_TOWN); Rig.squash(tl, `${id}-a0`, t0 + 1.36, 0.2); JKC.bars(tl, L, t0, D("a18"), 150); const d = grp(L.act); d.innerHTML = [0, 1, 2, 3, 4].map((k) => `<circle cx="${640 + k * 30}" cy="1390" r="${26 + k * 4}" fill="#d8c8a8" opacity=".75"/>`).join("");
+          tl.set(d, { opacity: 0 }, 0); tl.fromTo(d, { opacity: 0.9, scale: 0.4, svgOrigin: "700 1395" }, { opacity: 0, scale: 1.6, svgOrigin: "700 1395", duration: 0.9 }, t0 + 1.35); } });
+      shot("a19", { ...town("a19"), camAt: fr(1000, 830, 1.25, 540, 760), push: 0.012, extra(L) { JKC.back(L, { color: "#243052", s: 0.9 }); },
+        fx(tl, id, t0, L) { hud(id, H_TOWN); const g = grp(L.act); g.innerHTML = `<rect x="765" y="884" width="470" height="66" rx="12" fill="none" stroke="#f6d36a" stroke-width="7"/>`;
+          tl.set(g, { opacity: 0 }, 0); tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: 0.2, repeat: 3, yoyo: true }, t0 + F("a19", 0, 1)); } });
+      shot("a20", { ...town("a20"), cam: { keys: [{ t: 0, ...fr(1000, 860, 1.25, 540, 760), drift: { s: 0.005 } }, { t: F("a20", 0, 1) - 0.25, ...fr(1000, 1010, 2.3, 540, 900), glide: 0.45 }] },
+        fx(tl, id, t0, L) { hud(id, H_TOWN); const g = grp(L.act); g.innerHTML = `<g transform="translate(1100,1012) rotate(-8)"><rect x="-80" y="-32" width="160" height="64" rx="10" fill="none" stroke="#d8352a" stroke-width="7"/><text x="0" y="15" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#d8352a">ท้ายสุด</text></g>`;
+          pop(tl, g, t0 + F("a20", 0, 1) + 0.35, { origin: "1100 1012", from: 2, dur: 0.22, ease: "power3.in" }); JKI.badge(tl, L.light, t0, D("a20"), { kind: "snail", x: 300, y: 520, tone: "red", label: "อันดับ 9,999", at: F("a20", 0, 1) + 0.6 }); } });
+
+      // ---------- a21 next episode · a22 logo ----------
+      shot("a21", { ...town("a21", { dusk: true }), camAt: fr(1000, 900, 0.8, 540, 900), push: 0.01, dark: 0.4, blur: { set: 12, mid: 10, far: 10, glow: 8 }, captions: [],
+        fx(tl, id, t0, L) { NkV.chalkEnd(tl, grp(L.light), t0, D("a21"), { big: "ดูเรื่องเต็ม", q: "ทาง YouTube", tag: "ดูต่อได้ที่", foot: "กดติดตาม แล้วดูเรื่องเต็มที่ YouTube" });
+          const yt = grp(L.light); yt.innerHTML = `<g transform="translate(540,1430)"><rect x="-150" y="-50" width="100" height="100" rx="26" fill="#e8302a"/><path d="M-112,-24L-112,24L-72,0Z" fill="#fff"/>
+            <text x="-30" y="-6" font-family="Kanit" font-weight="900" font-size="44" fill="#ffffff">Rod Mai Club</text><text x="-30" y="38" font-family="Kanit" font-weight="700" font-size="28" fill="#f2c55c">เรื่องเต็มทุกตอน</text></g>`;
+          tl.set(yt, { opacity: 0 }, 0); tl.fromTo(yt, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 1.5); } });
+      shot("a22", { light: false, captions: [], fx(tl, id, t0, L) { const g = grp(L.light); NkUI.logo(g); pop(tl, g, t0 + 0.05, { from: 0.9, dy: 0, origin: "540 880" }); } });
