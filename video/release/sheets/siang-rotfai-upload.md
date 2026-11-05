@@ -1,19 +1,27 @@
 # เสียงรถไฟ · upload sheet (รูปแบบส่งมอบใหม่ 5 พ.ย. 2569)
 
-ลง **7 พ.ย. 2569** ผ่าน Buffer โดยเจ้าของ/Moji
+ลงผ่าน Buffer โดยเจ้าของ/Moji
+- **6 พ.ย. 2569 เวลา 09:30:** คลิปยาว 16:9 (Autopilot ตั้งคิวแล้ว)
+- **7 พ.ย. 2569 เวลา 09:00 / 09:15:** Shorts EP.1 / EP.2
+
 ไฟล์อยู่บน branch `ccr-fb88c4b3-kcqyid` · แคปชันเดิมและแหล่งอ้างอิงเต็มอยู่ที่ `video/tornado/CAPTIONS.md`
+ช่อง 09:30 ของวันที่ 7 พ.ย. เป็นคลิปยาวทะเลลด ดูชีต `video/release/sheets/tide-upload.md`
 
-| เวลา | ไฟล์ | สถานะ |
+| วัน เวลา | ไฟล์ | สถานะ |
 |---|---|---|
-| 09:00 Shorts EP.1 | `video/release/hq/siang-rotfai-ep1-HQ.mp4` · ปก `video/tornado-ep1/cover.jpg` | **กำลังทำใหม่** เพื่อให้ใช้ร้าน ความสูง และกระบะแบบใหม่ กำหนดเสร็จ 6 พ.ย. 22:00 · ห้ามใช้ไฟล์เก่า `video/tornado-ep1/EP1-siang-rotfai-share.mp4` |
-| 09:15 Shorts EP.2 | `video/release/hq/siang-rotfai-ep2-HQ.mp4` · ปก `video/tornado-ep2/cover.jpg` | **กำลังทำ** (ใต้สะพาน → หมอบในคู จบค้าง แล้วชี้ไปคลิปยาว) กำหนดเสร็จ 6 พ.ย. 22:00 |
-| 09:30 คลิปยาว 16:9 | `video/tornado-full/FULL-siang-rotfai-share.mp4` (commit `90756ae`, 84 MB) · ปก `video/tornado-full/thumb.jpg` | **พร้อม** |
+| 6 พ.ย. 09:30 คลิปยาว 16:9 | `video/tornado-full/FULL-siang-rotfai-share.mp4` (commit `90756ae`, 84 MB) · ปก `video/tornado-full/thumb.jpg` | **พร้อม** |
+| 7 พ.ย. 09:00 Shorts EP.1 | `video/release/hq/siang-rotfai-ep1-HQ.mp4` (commit `2004974`, 91.2 MB) · ปก `video/tornado-ep1/cover.jpg` | **พร้อม** · ห้ามใช้ไฟล์เก่า `video/tornado-ep1/EP1-siang-rotfai-share.mp4` |
+| 7 พ.ย. 09:15 Shorts EP.2 | `video/release/hq/siang-rotfai-ep2-HQ.mp4` (commit `a2613ff`, 65.3 MB) · ปก `video/tornado-ep2/cover.jpg` (commit `3b22d4c`) | **พร้อม** |
 
-- sha256 คลิปยาว (share): `6ace778b5a9bb464f101a1d8674d48b34f38e4fc123f3cb866c7a6a856ac1154`
-- ต้นฉบับ HQ 320 MB (`6de3c3f55c0f09b12b15da918c5a2f1f4093b547a5de9fea30c06f3db5b36556`) ส่งเจ้าของทางแชท 5 พ.ย. ใช้ไฟล์ไหนลงก็ได้
-- ฉบับเช้า 5 พ.ย. ห้ามลง
+sha256 ของแต่ละไฟล์
+- คลิปยาว (share): `6ace778b5a9bb464f101a1d8674d48b34f38e4fc123f3cb866c7a6a856ac1154`
+  - ต้นฉบับ HQ 320 MB (`6de3c3f55c0f09b12b15da918c5a2f1f4093b547a5de9fea30c06f3db5b36556`) ส่งเจ้าของทางแชท 5 พ.ย. ใช้ไฟล์ไหนลงก็ได้
+  - ฉบับเช้า 5 พ.ย. ห้ามลง
+- Shorts EP.1: `3ef7316ffddd9dd3a3f6ad22b698cd6f9d9f4974df6504f84efd9ea3fec57042`
+  - ต้นฉบับ HQ 223 MB ส่งทางแชท (`022a0cc775edbc2a173ab250a86051b4b888ddb95bc82a1c298075f2cabf2b1f`)
+- Shorts EP.2: `991b9a6dc4febb5313568068fdd84225c292dec9ec097451bb9cb88558b1d4c7`
 
-**ลิงก์คลิปยาว:** Shorts ลงก่อนคลิปยาว ให้ปักหมุดคอมเมนต์ของ Shorts หลัง 09:30 โดยแทน `<ลิงก์คลิปยาว>` ด้วยลิงก์จริง
+**ลิงก์คลิปยาว:** คลิปยาวลงก่อน Shorts หนึ่งวัน ให้แทน `<ลิงก์คลิปยาว>` ในคอมเมนต์ปักหมุดของ Shorts ด้วยลิงก์จริง แล้วปักหมุดได้ตั้งแต่ลง
 
 ---
 
