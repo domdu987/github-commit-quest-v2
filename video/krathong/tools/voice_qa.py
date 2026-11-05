@@ -38,7 +38,19 @@ def norm(s):
     return re.sub(r"[\s\[\]{}…!?.,\"“”'ๆ-]", "", s)
 
 
+DIGITS = "ศูนย์ หนึ่ง สอง สาม สี่ ห้า หก เจ็ด แปด เก้า".split()
+
+
 def cer(ref, hyp):
+    """Character error rate; Whisper writes numbers as digits, so a hypothesis with digits is also scored
+    with each digit spelled out (1669 → หนึ่งหกหกเก้า) and the better score is kept."""
+    if any(ch.isdigit() for ch in hyp):
+        spelled = "".join(DIGITS[int(ch)] if ch.isdigit() else ch for ch in hyp)
+        return min(_cer(ref, hyp), _cer(ref, spelled))
+    return _cer(ref, hyp)
+
+
+def _cer(ref, hyp):
     a, b = norm(ref), norm(hyp)
     d = list(range(len(b) + 1))
     for i, ca in enumerate(a, 1):

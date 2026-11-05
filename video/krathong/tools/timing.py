@@ -32,7 +32,7 @@ SHOTS_ALL = {
         ("coin", ["y10", "n04", "n05"], 0.12, 0.3, 3.0),  # coins in a krathong · the chalkboard section
         ("board", ["y11", "y12", "x01"], 0.12, 0.3, 3.0),
         ("load", ["l02", "l03"], 0.12, 0.3, 2.6),     # ลุง counts on: the stripe sinks a step at each click
-        ("maan", ["l04", "h01", "k06", "x02", "y14"], 0.12, 0.3, 3.0),  # น้าหมาน on the land-side stairs, three gallons
+        ("maan", ["l04", "h01", "k06", "y14"], 0.12, 0.3, 3.0),  # น้าหมาน on the land-side stairs, three gallons
         ("sign", ["n06", "n07"], 0.15, 0.3, 3.0),     # the "12 คน" sign · the counter 0019 · the map on the chalkboard
         ("fire", ["x03", "m04", "l05"], 0.1, 0.3, 2.6),
         ("sit", ["k07", "l06", "n08", "n09"], 0.1, 0.3, 3.0),
@@ -49,7 +49,7 @@ SHOTS_ALL = {
         ("hook", ["n02"], 0.04, 0.3, 1.6),
         ("recap", ["n03"], 0.12, 0.3, 3.0),           # Shorts only
         ("climb", ["x01", "n04"], 0.1, 0.3, 3.0),
-        ("rule", ["y01", "n05", "m01", "k01"], 0.12, 0.3, 3.0),
+        ("rule", ["y01", "r01", "n05", "m01", "k01"], 0.12, 0.3, 3.0),
         ("fail", ["n06"], 0.1, 1.2, 3.0),             # they slide back, the boat rolls, the roof comes down · 0.4 s silence
         ("under", ["n07"], 0.3, 0.6, 3.4),            # under the hull, the propeller
         ("surf", ["l01", "n08", "m02"], 0.12, 0.4, 3.0),
@@ -65,7 +65,7 @@ SHOTS_ALL = {
         ("B1", ["b01"], 0.3, 0.4, 3.0),
         ("B2", ["b02", "b03"], 0.12, 0.3, 3.0),
         ("B3", ["b04", "b05"], 0.12, 0.3, 3.0),
-        ("B4", ["b06"], 0.15, 0.5, 3.0),
+        ("B4", ["b06", ("b07", 0.35)], 0.15, 0.5, 3.0),
     ],
     "ep3": [
         ("open", ["n01"], 0.05, 0.0, 1.0),
