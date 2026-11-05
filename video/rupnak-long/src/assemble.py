@@ -34,6 +34,9 @@ helpers = helpers.replace("const split = (k, at, A, B) => {", "const split = (k,
 blocks = ["      const _SH = SH, _add = add;\n"]
 for n in (1, 2, 3):
     body = prefix_ids(rd(f"{U}/ep{n}/body.part"), n)
+    if n == 2:  # 16:9 band: keep พ่อใหญ่สิน's face in the valve reveal (auto band crops his head)
+        assert body.count('add("valve", { ') == 1
+        body = body.replace('add("valve", { ', 'add("valve", { land: { y0: 0 }, ')
     blocks.append(f"      {{ // ======== EP.{n} ========\n        const P = \"e{n}_\";\n{SHIM}{helpers}{body}\n      }}\n")
 ep2 = rd(f"{U}/ep2/body.part"); hdr = ep2[:ep2.index("      add(")]
 hdr = hdr[: hdr.rfind("\n      //") + 1] if "\n      //" in hdr else hdr
