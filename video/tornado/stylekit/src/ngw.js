@@ -206,26 +206,47 @@
     return g; };
   // a concrete overpass across the frame: the deck (top ty), girders under it, two piers, the abutment slope on the left where people
   // crawl up under the deck; returns { set (behind the actors), fg (the deck edge in front) }
-  Ngw.overpass = (o = {}) => { const ty = o.y ?? 560, dh = o.h ?? 150, gy = o.ground ?? 1560, sx = o.slopeX ?? 520, gb = ty + dh + 60;
-    // girders under the deck, the far pier, the embankment slope rising from the ground on the left up under the deck
-    let set = `<path d="M-1400,${ty + dh}H2600V${gb}H-1400Z" fill="#4e5052"/>${Array.from({ length: 40 }, (_, k) => `<path d="M${-1400 + k * 100},${ty + dh}V${gb}" stroke="#3a3c3e" stroke-width="10"/>`).join("")}`;
-    set += `<path d="M${(o.pier ?? 960) - 70},${gb}L${(o.pier ?? 960) - 60},${gy}H${(o.pier ?? 960) + 60}L${(o.pier ?? 960) + 70},${gb}Z" fill="#8a8a84" stroke="${INK}" stroke-width="6"/>`;
-    set += `<path d="M-1400,${gb}H${sx}L${sx - 560},${gy}H-1400Z" fill="#9a968a" stroke="${INK}" stroke-width="6"/>`;
-    for (let k = 1; k < 8; k++) { const t = k / 8; set += `<path d="M-1400,${f1(gb + t * (gy - gb))}H${f1(sx - 560 * t)}" stroke="#7a766a" stroke-width="4"/>`; }
-    set += `<path d="M${sx},${gb}L${sx - 560},${gy}" stroke="#c8c4b6" stroke-width="10"/>`;
-    // QA ("the bridge set is bare"): I-girder flanges and their shadow, the pier cap with bearing pads, a drain pipe down the pier,
-    // rain streaks staining the concrete, the abutment's ledge right under the girders where people climb to
-    { const px = o.pier ?? 960;
-      set += `<path d="M-1400,${gb - 6}H2600" stroke="#2e3032" stroke-width="12"/><path d="M-1400,${ty + dh + 8}H2600" stroke="#6a6c6e" stroke-width="6"/>`;
-      for (let x = -1400; x < 2600; x += 200) set += `<path d="M${x},${ty + dh}V${gb}" stroke="#2a2c2e" stroke-width="16"/><path d="M${x + 8},${ty + dh}V${gb}" stroke="#7a7c7e" stroke-width="3" opacity=".6"/>`;
-      set += `<rect x="${px - 120}" y="${gb}" width="240" height="40" fill="#9a9a94" stroke="${INK}" stroke-width="6"/>${[-80, 0, 80].map((dx) => `<rect x="${px + dx - 22}" y="${gb - 14}" width="44" height="14" fill="#3a3a3a"/>`).join("")}`;
-      set += `<path d="M${px + 44},${gb + 40}V${gy - 30}q0,22 -22,22" stroke="#5a5e60" stroke-width="12" fill="none" stroke-linecap="round"/>${[0.3, 0.6].map((t) => `<path d="M${px + 34},${f1(gb + 40 + (gy - gb - 70) * t)}h20" stroke="${INK}" stroke-width="4"/>`).join("")}`;
-      for (let k = 0; k < 7; k++) { const sx2 = px - 50 + k * 16 + (k % 3) * 3; set += `<path d="M${sx2},${gb + 42}V${f1(gb + 160 + (k * 53) % 260)}" stroke="#6a6a62" stroke-width="${3 + (k % 2) * 2}" opacity=".35"/>`; }
-      for (let k = 0; k < 9; k++) { const sx2 = -1300 + k * 160 + (k % 2) * 40; if (sx2 > sx - 60) break; set += `<path d="M${sx2},${gb + 4}V${f1(gb + 80 + (k * 37) % 140)}" stroke="#6e6a5e" stroke-width="4" opacity=".35"/>`; }
-      set += `<path d="M-1400,${gb + 30}H${sx - 20}" stroke="#bab6a8" stroke-width="10"/><path d="M-1400,${gb + 38}H${sx - 24}" stroke="#5a5648" stroke-width="5" opacity=".7"/>`; }
-    const fg = `<rect x="-1400" y="${ty}" width="4000" height="${dh}" fill="#a8a69c" stroke="${INK}" stroke-width="7"/><rect x="-1400" y="${ty - 40}" width="4000" height="40" fill="#c8c6bc" stroke="${INK}" stroke-width="5"/>
-      ${Array.from({ length: 50 }, (_, k) => `<path d="M${-1400 + k * 80},${ty - 40}V${ty - 90}" stroke="#8a8a84" stroke-width="10"/>`).join("")}<path d="M-1400,${ty - 90}H2600" stroke="#8a8a84" stroke-width="12"/>
-      <path d="M-1400,${ty + dh - 24}H2600" stroke="#7a786e" stroke-width="10"/><rect x="560" y="${ty + 26}" width="320" height="70" rx="8" fill="#1e7a4a" stroke="#f2f0ea" stroke-width="6"/><text x="720" y="${ty + 74}" text-anchor="middle" font-family="Sriracha" font-size="40" fill="#f2f0ea">ทางหลวง</text>`;
+  Ngw.overpass = (o = {}) => {
+    // v2 (owner 5 Nov: "สะพาน… ยังไม่ดี"): a real highway overpass seen from the road — the near deck edge (fascia) with its concrete
+    // parapet, railing, lamp posts and the route sign in front; behind the actors the underside receding in perspective (girders
+    // converging), the far deck edge and far piers, a thick near pier with its cap, and the paved abutment slope people climb.
+    // Clearance is set by the shot (o.y + o.h above o.ground): about three people under the deck (≈ 5 m) at the shot's actor scale.
+    const ty = o.y ?? 560, dh = o.h ?? 150, gy = o.ground ?? 1560, sx = o.slopeX ?? 520, px = o.pier ?? 960, vx = o.vx ?? 540;
+    const db = ty + dh, sd = o.soffit ?? 170, fb = db + sd, X0 = -1500, X1 = 2700, r = mk(o.seed || 31), G = "ov" + (Ngw._ovN = (Ngw._ovN || 0) + 1);   // gradient ids unique per drawing (68 clips share the page)
+    let set = `<defs><linearGradient id="${G}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e2022"/><stop offset="1" stop-color="#46494c"/></linearGradient>
+      <linearGradient id="${G}p" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#bdbab0"/><stop offset=".5" stop-color="#a19e95"/><stop offset="1" stop-color="#6c6a64"/></linearGradient>
+      <linearGradient id="${G}l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8e897c"/><stop offset="1" stop-color="#b3ad9e"/></linearGradient></defs>`;
+    // the underside, receding: near edge db → far edge fb, the girders converging toward vx, cross-frames between them
+    set += `<path d="M${X0},${db}H${X1}V${fb}H${X0}Z" fill="url(#${G}s)"/>`;
+    for (let x = X0; x <= X1; x += 170) { const x2 = vx + (x - vx) * 0.8;
+      set += `<path d="M${x},${db}L${f1(x2)},${fb}" stroke="#141618" stroke-width="20"/><path d="M${x + 8},${db}L${f1(x2 + 6)},${fb}" stroke="#70747a" stroke-width="3" opacity=".75"/>`; }
+    for (const t of [0.35, 0.7]) { const y = f1(db + sd * t), k = 1 - 0.2 * t; set += `<path d="M${f1(vx + (X0 - vx) * k)},${y}H${f1(vx + (X1 - vx) * k)}" stroke="#2a2c2e" stroke-width="7" opacity=".8"/>`; }
+    // the far deck edge and the far row of piers (smaller, cooler: they are across the road)
+    set += `<path d="M${X0},${fb}H${X1}V${fb + 52}H${X0}Z" fill="#8f8d85" stroke="${INK}" stroke-width="4"/><path d="M${X0},${fb + 40}H${X1}" stroke="#6e6c66" stroke-width="5"/>`;
+    for (const fx of (o.farPiers ?? [px - 1500, px - 760, px + 760])) set += `<path d="M${fx - 48},${fb + 52}H${fx + 48}V${fb + 80}H${fx - 48}Z" fill="#7c7a73" stroke="${INK}" stroke-width="3"/><path d="M${fx - 30},${fb + 80}H${fx + 30}V${gy - 70}H${fx - 30}Z" fill="#6e6c66" stroke="${INK}" stroke-width="3"/><path d="M${fx + 12},${fb + 82}V${gy - 74}" stroke="#55534e" stroke-width="7" opacity=".6"/>`;
+    // the shadow the deck throws on the road under it
+    set += `<path d="M${X0},${gy - 50}H${X1}V${gy + 260}H${X0}Z" fill="#000" opacity=".2"/>`;
+    // the abutment: a paved slope from the road up to the underside, its joints, its lit top edge, a ledge right under the girders
+    set += `<path d="M${X0},${db}H${sx}L${sx - 640},${gy}H${X0}Z" fill="url(#${G}l)" stroke="${INK}" stroke-width="6"/>`;
+    for (let k = 1; k < 10; k++) { const t = k / 10; set += `<path d="M${X0},${f1(db + t * (gy - db))}H${f1(sx - 640 * t)}" stroke="#776f62" stroke-width="4"/>`; }
+    for (let x = X0 + 150; x < sx - 640; x += 190) set += `<path d="M${x},${db}V${gy}" stroke="#776f62" stroke-width="3" opacity=".7"/>`;
+    set += `<path d="M${sx},${db}L${sx - 640},${gy}" stroke="#ddd8c8" stroke-width="12"/><path d="M${X0},${db + 34}H${sx - 22}" stroke="#c9c4b4" stroke-width="12"/><path d="M${X0},${db + 44}H${sx - 30}" stroke="#4e4a40" stroke-width="5" opacity=".7"/>`;
+    // the near pier: a thick column with its cap and bearing pads, lit from the left, a drain pipe, rain stains
+    set += `<path d="M${px - 170},${db}H${px + 170}V${db + 80}H${px - 170}Z" fill="#aaa79e" stroke="${INK}" stroke-width="6"/>${[-110, 0, 110].map((dx) => `<rect x="${px + dx - 26}" y="${db - 14}" width="52" height="14" fill="#2e2e2e"/>`).join("")}`;
+    set += `<path d="M${px - 105},${db + 80}H${px + 105}V${gy + 40}H${px - 105}Z" fill="url(#${G}p)" stroke="${INK}" stroke-width="6"/><path d="M${px - 70},${db + 84}V${gy + 30}" stroke="#d2cfc6" stroke-width="6" opacity=".55"/>`;
+    set += `<path d="M${px + 70},${db + 84}V${gy - 10}q0,24 -24,24" stroke="#55595c" stroke-width="13" fill="none" stroke-linecap="round"/>`;
+    for (let k = 0; k < 8; k++) { const x = px - 90 + k * 24 + r() * 8; set += `<path d="M${f1(x)},${db + 84}V${f1(db + 180 + r() * 320)}" stroke="#5e5c54" stroke-width="${f1(3 + r() * 3)}" opacity=".3"/>`; }
+    // in front of the actors: the near deck edge (fascia) with its drip groove, joints and stains, the parapet, the railing, lamps, the sign
+    let fg = `<path d="M${X0},${ty}H${X1}V${db}H${X0}Z" fill="#b6b3a8" stroke="${INK}" stroke-width="7"/><path d="M${X0},${db - 28}H${X1}" stroke="#8c897e" stroke-width="11"/><path d="M${X0},${ty + 14}H${X1}" stroke="#d4d1c6" stroke-width="6"/>`;
+    for (let x = X0 + 350; x < X1; x += 700) fg += `<path d="M${x},${ty}V${db}" stroke="#7a776c" stroke-width="6"/>`;
+    for (let k = 0; k < 26; k++) { const x = X0 + 60 + k * 160 + r() * 60; fg += `<path d="M${f1(x)},${db - 22}V${f1(db - 22 + 20 + r() * 50)}" stroke="#6a675c" stroke-width="${f1(3 + r() * 4)}" opacity=".35"/>`; }
+    fg += `<path d="M${X0},${ty}H${X1}V${ty - 64}H${X0}Z" fill="#cbc8bd" stroke="${INK}" stroke-width="5"/><path d="M${X0},${ty - 22}H${X1}" stroke="#a9a69b" stroke-width="5"/>`;
+    for (let x = X0; x <= X1; x += 110) fg += `<path d="M${x},${ty - 64}V${ty - 118}" stroke="#6e7174" stroke-width="9"/>`;
+    fg += `<path d="M${X0},${ty - 118}H${X1}M${X0},${ty - 92}H${X1}" stroke="#6e7174" stroke-width="9"/>`;
+    for (let x = X0 + 300; x < X1; x += 1000) fg += `<path d="M${x},${ty - 64}V${ty - 420}q0,-26 30,-26H${x + 120}" stroke="#5e6266" stroke-width="13" fill="none"/><rect x="${x + 100}" y="${ty - 458}" width="70" height="20" rx="6" fill="#3e4246"/><path d="M${x + 106},${ty - 438}h58" stroke="#ffe9a8" stroke-width="5" opacity=".9"/>`;
+    const sgx = o.signX ?? 560;
+    fg += `<rect x="${sgx}" y="${ty + 22}" width="360" height="${Math.min(100, dh - 40)}" rx="10" fill="#1e7a4a" stroke="#f2f0ea" stroke-width="6"/><text x="${sgx + 205}" y="${ty + 22 + Math.min(100, dh - 40) / 2 + 15}" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="40" fill="#f2f0ea">ทางหลวง 32</text>
+      <path d="M${sgx + 28},${ty + 44}h44v34q-22,16 -44,0Z" fill="#f2f0ea"/><text x="${sgx + 50}" y="${ty + 72}" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="22" fill="#1e7a4a">32</text>`;
     return { set, fg }; };
   // wind streaks rushing through a gap toward the camera (the overpass wind tunnel), with flying debris
   Ngw.streaks = (x0, x1, y0, y1, n = 26, seed = 81) => { const r = mk(seed); let g = "";   // wind rushing right → left through the gap

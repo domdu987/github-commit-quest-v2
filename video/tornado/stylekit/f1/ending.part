@@ -39,7 +39,8 @@
       const UNDER = (id, o = {}) => NSC(id, { horizon: 1180, rain: o.rain ?? 0.3, vx: 540, fgRice: false, _leaves: 0,
           epic: { id: o.eid || id + "e", x: 1250, y: 1186, h: 640, wb: 280, wt: 620, tx: 1290, sun: -1, seed: 63, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
           road: { y: 1560, h: 400 }, overpass: { y: 430, h: 150, ground: 1560, pier: 1660, slopeX: 220 },
-          props: () => PICK(900, 1700, 0.75, 1, 1) + PICK(-40, 1640, 0.62, 0, 1, "#b0463a") + Rup2.moto(1260, 1690, 0.8) + (o.props ? o.props() : "") });
+          // owner 5 Nov ("ความสูง"): one world scale — adults ≈ 0.58 here, so a pickup is 1.78 × that and the deck clears about three people
+          props: () => PICK(1010, 1590, 0.78, 1, 1, "#b0463a") + PICK(1440, 1705, 1.05, 1, 1) + Rup2.moto(-250, 1748, 1.25) + (o.props ? o.props() : "") });
       const DITCHV = (id, o = {}) => NSC(id, { horizon: o.hz ?? 1180, rain: o.rain ?? 0.35, vx: 540, fgRice: false, _leaves: 0, ditch: { y: o.dy ?? 1720, near: o.near },
           epic: o.epic ?? { id: id + "e", x: 1350, y: (o.hz ?? 1180) + 6, h: 760, wb: 360, wt: 760, tx: 1380, sun: -1, seed: 65, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
           road: o.road ?? { y: 1440, h: 120 }, props: o.props });
@@ -48,8 +49,8 @@
       // 30 · under the overpass: cars stopped, people climbing up under the beams; ตาเทียน: climb up! (fades in from the choice's black)
       ADD("xunder", { ...UNDER("xu", { eid: "e40" }), dark: 0.22, captions: caps("xunder"), land: { y0: 380 },
         cam: push2("xunder", fr(540, 1055, 1.0, 540, 1055), fr(540, 1055, 1.05, 540, 1055)), shake: rumble(1.4),
-        actors: [P("exA", -60, 1060, 0.6, "hold", "wide", "o"), P("exB", -170, 1240, 0.64, "hold", "fear", "o", { flip: true }), P("exA", -270, 1405, 0.68, "jump", "wide", "o"),
-          P("taTian", 640, 1720, 0.92, "pointUp", "normal", "o", { flip: true, talk: TALK("xunder", 1, "o") })   /* QA 6: he points up at the girders ("climb up"), not at ปู's ear */, P("puNoCam", 420, 1720, 0.7, "idle", "fear", "flat")],
+        actors: [P("exA", -130, 1000, 0.46, "hold", "wide", "o"), P("exB", -280, 1180, 0.48, "hold", "fear", "o", { flip: true }), P("exA", -420, 1370, 0.5, "jump", "wide", "o"),
+          P("taTian", 200, 1745, 0.62, "pointUp", "normal", "o", { flip: true, talk: TALK("xunder", 1, "o") })   /* QA 6: he points up at the girders ("climb up"), not at ปู's ear */, P("puNoCam", 30, 1750, 0.46, "idle", "fear", "flat")],
         fx: (tl, id, t0) => { tl.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: 0.35, immediateRender: false }, t0); Ngw.epicLife(tl, "e40", t0, D("xunder")); } });
       // 31 · close, low: ปู looks up into the gap — the wind under the deck is stronger than outside (streaks behind him)
       ADD("xwind", { ...UNDER("xw", { eid: "e41", props: () => Ngw.streaks(-400, 1700, 700, 1400, 34, 83) }), dark: 0.25, blur: { sky: 3, far: 3, mid: 3 }, captions: caps("xwind"), land: { y0: 470 },

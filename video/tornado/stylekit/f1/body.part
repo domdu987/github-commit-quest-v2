@@ -54,8 +54,8 @@
       const VILL = [{ x: 1110, y: 1210, s: 0.12 }, { x: 1240, y: 1212, s: 0.11, flip: 1 }, { kind: "wat", x: -130, y: 1208, s: 0.2 }];
       const ROADV = (id, o = {}) => NSC(id, { horizon: 1200, rain: 0.4, vx: 540, village: VILL, road: { y: 1640, h: 160 }, poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1630, s: 0.8, tf: [3], sag: 46 }, ...o });
       const STALLSET = (id, o = {}) => ({ set: "ngwScape", setOpts: { id, mood: "clear", horizon: 1160, wind: 0.2, sunX: 860, farStorm: false, noRainbow: true, haze: true, tower: { x: o.fx ?? 1350, h: o.th ?? 380, dark: o.td ?? 0, id: id + "-cb" }, fgRice: false, ...HOME,
-          props: () => Rup2.stall(800, 1700, 0.95) + Rup2.moto(200, 1722, 0.85) + (o.props ? o.props() : ""), ...(o.so || {}) }, dark: 0, light: CLEARL, grade: GC });
-      const STALLDARK = (id, o = {}) => NSC(id, { horizon: 1160, rain: o.rain ?? 0.25, ...HOME, fgRice: false, props: () => (o.bulbs === false ? Rup2.stall(800, 1700, 0.95) : Rup2.stall(800, 1700, 0.95, { bulbs: true, id: `${id}st` }) + STALLGLOW(800, 1700, 0.95)) + Rup2.moto(200, 1722, 0.85) + (o.props ? o.props() : ""), ...(o.so || {}) });
+          props: () => Rup2.stall(800, 1700, 0.95) + Rup2.moto(1330, 1740, 1.7) + (o.props ? o.props() : ""), ...(o.so || {}) }, dark: 0, light: CLEARL, grade: GC });
+      const STALLDARK = (id, o = {}) => NSC(id, { horizon: 1160, rain: o.rain ?? 0.25, ...HOME, fgRice: false, props: () => (o.bulbs === false ? Rup2.stall(800, 1700, 0.95) : Rup2.stall(800, 1700, 0.95, { bulbs: true, id: `${id}st` }) + STALLGLOW(800, 1700, 0.95)) + Rup2.moto(1330, 1740, 1.7) + (o.props ? o.props() : ""), ...(o.so || {}) });
       const EPF = (id, x, o = {}) => ({ id, x, h: 720, wb: 300, wt: 660, tx: x + 50, sun: 1, seed: 61, ...o });
       const STILL = (k, f) => ({ keys: [{ t: 0, ...f }] });
       const LIVE_BIG = [["ป้าแดง", "ฝน หนีเร็วลูก!!", "#e86a8a"], ["นนท์", "ถ่ายต่อๆ ซูมอีก", "#6a8ac8"], ["มายด์", "นั่นทอร์นาโดจริงเหรอ", "#8ac86a"], ["ลุงชัย", "เข้าบ้านเดี๋ยวนี้!", "#c8a040"]];
@@ -64,6 +64,10 @@
         <circle cx="${x - 462 * s}" cy="${y - 118 * s}" r="${24 * s}" fill="#fff6d8"/><circle cx="${x - 462 * s}" cy="${y - 118 * s}" r="${90 * s}" fill="url(#ngwBulb)"/><rect x="${x + 482 * s}" y="${y - 130 * s}" width="${16 * s}" height="${44 * s}" fill="#ff3a2a"/>
         <g class="ngw-hz"><circle cx="${x - 452 * s}" cy="${y - 78 * s}" r="${15 * s}" fill="#ffae3a"/><circle cx="${x - 452 * s}" cy="${y - 78 * s}" r="${60 * s}" fill="url(#ngwBulb)"/><circle cx="${x + 488 * s}" cy="${y - 160 * s}" r="${15 * s}" fill="#ffae3a"/><circle cx="${x + 488 * s}" cy="${y - 160 * s}" r="${60 * s}" fill="url(#ngwBulb)"/></g></g>`;
       const DRIVER = (x, y, s) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-110,-200Q-60,-250 -10,-200Z" fill="#9a8458"/><circle cx="-60" cy="-262" r="30" fill="#6a4630"/><path d="M-88,-268q28,-30 56,0" stroke="#ece8de" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M-90,-246h22" stroke="#ece8de" stroke-width="6" stroke-linecap="round"/></g>`;   // ตาเทียน at the wheel, through the glass
+      // owner 5 Nov ("ความสูง… หลายอย่าง"): one world scale. An adult rig is 650 units tall (≈1.65 m) × its scale a; at the same depth a
+      // pickup (398 units ≈ 1.8 m) is 1.78 a, a motorbike (190 units ≈ 1.1 m) 2.28 a, a 9-year-old 0.72–0.76 a. ตาเทียน's truck by the stall is
+      // parked at the left edge, real size, its tailgate at x ≈ 50
+      const TRK = (lit) => PICK(-700, 1712, 1.45, 0, lit ? 1 : 0);
       const PICK = (x, y, s = 0.62, flip = 0, lit = 0, c, driver) => `<g transform="translate(${x},${y}) scale(${flip ? -1 : 1},1) translate(${-x},${-y})">${Tk.pickup(x, y, s, c ? { c } : {})}${driver ? DRIVER(x, y, s) : ""}${lit ? LAMPS(x, y, s) : ""}</g>`;   // c: another family's truck (ตาเทียน's stays white)
       const STALLGLOW = (x, y, s) => `<g>${Array.from({ length: 9 }, (_, k) => { const bx = -200 + k * 50, by = -284 + Math.sin(k * 0.9) * 10 + (k > 0 && k < 8 ? 16 : 0); return `<circle cx="${Math.round(x + bx * s)}" cy="${Math.round(y + (by + 16) * s)}" r="${Math.round(50 * s)}" fill="url(#ngwBulb)"/>`; }).join("")}<ellipse cx="${x}" cy="${Math.round(y - 230 * s)}" rx="${Math.round(320 * s)}" ry="${Math.round(160 * s)}" fill="url(#ngwBulb)" opacity=".4"/></g>`;
 
@@ -99,9 +103,9 @@
       { const c = SH.pu.vo[1].t - 0.12;   // QA pacing: close on ปู's boast, then the two-shot for ยายบัว's answer
         SPLITN("pu", [c], [
           { ...STALLSET("pu0", { th: 400 }), blur: { sky: 4, far: 4, mid: 3 }, land: { y0: 570 }, cam: PUSHD(c, fr(520, 1450, 2.0, 540, 1060), fr(520, 1450, 2.12, 540, 1060)),
-            actors: [P("puCam", 520, 1880, 0.95, "camEye", "wide", "laugh", { talk: TALK("pu", 0, "laugh") }), P("yaiBua", 850, 1880, 1.0, "laugh", "normal", "smile", { flip: true })] },
+            actors: [P("puCam", 520, 1880, 0.72, "camEye", "wide", "laugh", { talk: TALK("pu", 0, "laugh") }), P("yaiBua", 850, 1880, 1.0, "laugh", "normal", "smile", { flip: true })] },
           { ...STALLSET("pu", { th: 400 }), land: { y0: 640 }, cam: PUSHD(D("pu") - c, fr(640, 1500, 1.5, 540, 1000), fr(640, 1500, 1.58, 540, 1000)),
-            actors: [P("puCam", 520, 1880, 0.95, "camEye", "normal", "laugh"), P("yaiBua", 850, 1880, 1.0, "laugh", "normal", "smile", { flip: true, talk: [[0.12, 0.12 + SH.pu.vo[1].dur, "laugh"]] })] }]); }
+            actors: [P("puCam", 520, 1880, 0.72, "camEye", "normal", "laugh"), P("yaiBua", 850, 1880, 1.0, "laugh", "normal", "smile", { flip: true, talk: [[0.12, 0.12 + SH.pu.vo[1].dur, "laugh"]] })] }]); }
       // 7b · (the full story only) ปู films from the roadside ditch; ยายบัว: "เล่นในคูอีกแล้ว… จำไว้นะปู พายุมา หนีไม่ทันตึก หมอบลึกที่ต่ำ"
       //      — rule 3 planted for the ending's "ยายบอก…"; three cuts on the caption beats, and ปู ducks down into the ditch on "หมอบลึก"
       { const v = SH.ditch.vo[0], c1 = v.t + v.frags[1] - 0.04, c2 = v.t + v.frags[2] - 0.04;
@@ -125,40 +129,40 @@
         actors: [P("yaiBua", 880, 1860, 0.95, "idle", "normal", "smile", { flip: true }), P("fonPhone", 340, 1890, 1.0, "phoneLook", "normal", "smile"), P("puCam", 580, 1870, 0.78, "camEye", "normal", "laugh")] });
       // 9 · ตาเทียน pulls up in his pickup: "พายุฤดูร้อน มาเดี๋ยวก็ไป / เปิดหน้าต่างไว้ บ้านไม่พังหรอก" (planted)
       SPLITN("tian", [SH.tian.vo[1].t - 0.15], [
-        { ...STALLSET("ti", { th: 720, td: 0.3, props: () => PICK(300, 1735, 0.6) }), land: { y0: 600 }, cam: PUSHD(SH.tian.vo[1].t - 0.15, fr(560, 1450, 1.3, 540, 1000), fr(590, 1450, 1.38, 540, 1000)),
+        { ...STALLSET("ti", { th: 720, td: 0.3, props: () => TRK() }), land: { y0: 600 }, cam: PUSHD(SH.tian.vo[1].t - 0.15, fr(560, 1450, 1.3, 540, 1000), fr(590, 1450, 1.38, 540, 1000)),
           actors: [P("taTian", 600, 1880, 1.0, "point", "normal", "smile", { talk: TALK("tian", 0, "smile") }), P("yaiBua", 900, 1880, 0.95, "idle", "fear", "frown", { flip: true })] },
-        { ...STALLSET("ti2", { th: 720, td: 0.3, props: () => PICK(300, 1735, 0.6) }), land: { y0: 600 }, cam: PUSHD(D("tian") - SH.tian.vo[1].t + 0.15, fr(640, 1330, 2.0, 540, 1000), fr(640, 1330, 2.12, 540, 1000)),
+        { ...STALLSET("ti2", { th: 720, td: 0.3, props: () => TRK() }), land: { y0: 600 }, cam: PUSHD(D("tian") - SH.tian.vo[1].t + 0.15, fr(640, 1330, 2.0, 540, 1000), fr(640, 1330, 2.12, 540, 1000)),
           actors: [P("taTian", 600, 1880, 1.0, "point", "normal", "o", { talk: [[0.15, 0.15 + SH.tian.vo[1].dur, "o"]] }), P("yaiBua", 900, 1880, 0.95, "idle", "fear", "frown", { flip: true })] }]);
       // 10 · ยายบัว's old saying, close. QA 5: still afternoon light here (a cloud shadow creeping in, the tower growing over 0:45–0:59);
       //      the sky goes dark only on the 15:00 clock, "ฟ้ามืดเหมือนกลางคืน"
       { const v0 = SH.tale.vo[0], c = v0.t + v0.frags[1] - 0.04;   // ยายบัว close for "คนแก่บ้านเราว่า…", then the saying as an old ink picture
         SPLITN("tale", [c], [
-          { ...STALLSET("ta", { th: 760, td: 0.35, props: () => PICK(300, 1735, 0.6) }), dark: 0.08, land: { y0: 640 }, cam: PUSHD(c, fr(760, 1350, 1.8, 540, 1000), fr(760, 1350, 1.9, 540, 1000)),
+          { ...STALLSET("ta", { th: 760, td: 0.35, props: () => TRK() }), dark: 0.08, land: { y0: 640 }, cam: PUSHD(c, fr(760, 1350, 1.8, 540, 1000), fr(760, 1350, 1.9, 540, 1000)),
             actors: [P("yaiBua", 760, 1900, 1.1, "idle", "normal", "flat", { flip: true, talk: [[v0.t, c, "o"]] })] },
           { set: "ngwSaying", setOpts: { id: "lg" }, dark: 0, light: false, grade: { top: "#5a3a1a", bottom: "#2a1a0a", op: 0.1 }, land: { y0: 285 },
             cam: PUSHD(D("tale") - c, fr(540, 960, 1.0, 540, 960), fr(600, 940, 1.08, 540, 960)), fx: (tl, id, t0) => Ngw.sayingLife(tl, "lg", t0, D("tale") - c) }]); }
       // 11 · ฝน rolls her eyes
-      ADD("eyes", { ...STALLSET("ey", { th: 800, td: 0.4, props: () => PICK(300, 1735, 0.6) }), dark: 0.12, captions: caps("eyes"), land: { y0: 640 },
+      ADD("eyes", { ...STALLSET("ey", { th: 800, td: 0.4, props: () => TRK() }), dark: 0.12, captions: caps("eyes"), land: { y0: 640 },
         cam: push2("eyes", fr(400, 1350, 1.8, 540, 1000), fr(400, 1350, 1.9, 540, 1000)),
         actors: [P("fonPhone", 400, 1900, 1.1, "phoneLook", "normal", "smile", { talk: TALK("eyes", 0, "smile") })] });
       // 12 · ปู runs to the pickup: "ตาเทียน! ผมขอนั่งกระบะ…" (planted)
-      ADD("ride", { ...STALLSET("rd", { th: 840, td: 0.45, props: () => PICK(300, 1735, 0.6) }), dark: 0.16, captions: caps("ride"), land: { y0: 600 },
+      ADD("ride", { ...STALLSET("rd", { th: 840, td: 0.45, props: () => TRK() }), dark: 0.16, captions: caps("ride"), land: { y0: 600 },
         cam: push2("ride", fr(460, 1450, 1.3, 540, 1000), fr(420, 1450, 1.4, 540, 1000)),
-        actors: [P("puCam", 640, 1880, 0.9, "point", "wide", "laugh", { flip: true, talk: TALK("ride", 0, "laugh") }), P("taTian", 260, 1880, 1.0, "laugh", "normal", "smile")] });   // QA 5: he asks and points, he does not run off (he is still at the stall at 1:01)
+        actors: [P("puCam", 640, 1880, 0.75, "point", "wide", "laugh", { flip: true, talk: TALK("ride", 0, "laugh") }), P("taTian", 260, 1880, 1.0, "laugh", "normal", "smile")] });   // QA 5: he asks and points, he does not run off (he is still at the stall at 1:01)
       // 13 · 15:00 on the stall clock — then the sky over the stall, dark as night
       SPLITN("dark", [SH.dark.vo[0].t + SH.dark.vo[0].frags[1] - 0.1], [
         { set: "ngwClock", setOpts: { id: "ck2", h: 14, bg: "#3a2a1e", wall: true, lit: true }, dark: 0.25, light: false, land: { y0: 225 },
           cam: push2("dark", fr(540, 900, 1.0, 540, 900), fr(540, 900, 1.08, 540, 900)), fx: (tl, id, t0) => Ngw.clockSpin(tl, "ck2", t0, 1.0, 14, 15) },
-        { ...STALLDARK("dk", { rain: 0.2, props: () => PICK(300, 1735, 0.6, 0, 1) }), land: { y0: 560 }, cam: push2("dark", fr(540, 800, 0.85, 540, 900), fr(540, 820, 0.9, 540, 900)),
+        { ...STALLDARK("dk", { rain: 0.2, props: () => TRK(1) }), land: { y0: 560 }, cam: push2("dark", fr(540, 800, 0.85, 540, 900), fr(540, 820, 0.9, 540, 900)),
           actors: [P("yaiBua", 880, 1860, 0.95, "idle", "fear", "o", { flip: true }), P("fonPhone", 340, 1890, 1.0, "phoneLook", "normal", "flat"), P("puCam", 580, 1870, 0.78, "camEye", "normal", "o")] }]);
       // 14 · the roar: "ครืน…" — ปู: "เสียงรถไฟ? แถวนี้ไม่มีรางนะ". QA: no funnel yet (shot 16's touchdown is the reveal) — the black wall
       //      cloud and its rain only; then close on ปู for his question, the family soft behind him
       { const c = SH.roar.vo[1].t - 0.1, E14 = { id: "e14", x: 900, y: 1172, h: 520, wb: 170, wt: 400, tx: 930, sun: 1, seed: 53, tiers: 7, tierW: 90, bolts: [], flashes: [], bigScale: 0.55, subs: [], sunDx: 500, noFunnel: true, noGround: true };
         SPLITN("roar", [c], [
-          { ...STALLDARK("ro", { props: () => PICK(300, 1735, 0.6, 0, 1), so: { epic: E14 } }), land: { y0: 560 }, cam: PUSHD(c, fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.04, 540, 960)), shake: rumble(1),
+          { ...STALLDARK("ro", { props: () => TRK(1), so: { epic: E14 } }), land: { y0: 560 }, cam: PUSHD(c, fr(540, 960, 1.0, 540, 960), fr(540, 960, 1.04, 540, 960)), shake: rumble(1),
             actors: [P("yaiBua", 880, 1860, 0.95, "point", "side", "o"), P("fonPhone", 340, 1890, 1.0, "phoneLook", "side", "o"), P("pu", 580, 1870, 0.78, "idle", "side", "o")],
             fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e14", t0, c); put(L.light, SFXW(470, 470, "ครืนนนนนน…", 1)); } },
-          { ...STALLDARK("ro2", { props: () => PICK(300, 1735, 0.6, 0, 1), so: { epic: { ...E14, id: "e14b" } } }), blur: { sky: 5, far: 5, mid: 4, set: 3 }, land: { y0: 560 }, cam: PUSHD(D("roar") - c, fr(580, 1440, 2.0, 540, 1080), fr(580, 1440, 2.12, 540, 1080)), shake: rumble(1.4),
+          { ...STALLDARK("ro2", { props: () => TRK(1), so: { epic: { ...E14, id: "e14b" } } }), blur: { sky: 5, far: 5, mid: 4, set: 3 }, land: { y0: 560 }, cam: PUSHD(D("roar") - c, fr(580, 1440, 2.0, 540, 1080), fr(580, 1440, 2.12, 540, 1080)), shake: rumble(1.4),
             actors: [P("fonPhone", 340, 1890, 1.0, "phoneLook", "side", "o"), P("pu", 580, 1870, 0.78, "idle", "fear", "o", { talk: [[0.1, 0.1 + SH.roar.vo[1].dur, "o"]] }), P("yaiBua", 880, 1860, 0.95, "point", "side", "o")],
             fx: (tl, id, t0) => Ngw.epicLife(tl, "e14b", t0, D("roar") - c) }]); }
       // 15 · ฝน's phone: thunder spikes and fades; this sound never stops
@@ -185,22 +189,22 @@
             fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e18", t0, D("rule") - c, { boltAt: 1.2 }); Ngw.srcChip(tl, id, t0, "NOAA SPC · Ready.gov", { at: 0.3 }); Ngw.ruleBoard(tl, WB(L, -600, 230, 0.8), t0 + 0.02, D("rule") - c - 0.02, { rules: [[PIC.roar, "ได้ยิน<u>ครืน</u> อย่า<u>ยืน</u>ดู"], [PIC.win, "ห้อง<u>ใน</u> ไม่<u>ใกล้</u>หน้าต่าง"], [PIC.ditch, "หนีไม่ทัน<u>ตึก</u> หมอบ<u>ลึก</u>ที่ต่ำ"]], active: 0, y: 260, gap: 190, blank: true, at: [0.25, 0.35, 0.45] }); } }]); }
       // 19 · the roar means go now; some tornadoes have no funnel to see (dust whirling under the cloud base)
       SPLITN("know2", [voEnd("know2", 0) + 0.1], [
-        { ...STALLDARK("k2a", { rain: 0.6, so: { epic: { id: "e19", x: 860, y: 1172, h: 560, wb: 200, wt: 440, tx: 900, sun: 1, seed: 55, tiers: 6, bolts: [], flashes: [], subs: [], sunDx: 500 } }, props: () => PICK(300, 1735, 0.6, 0, 1) }), land: { y0: 380 },   // QA: the tiny far villagers were out of scale; ตาเทียน's truck still parked
+        { ...STALLDARK("k2a", { rain: 0.6, so: { epic: { id: "e19", x: 860, y: 1172, h: 560, wb: 200, wt: 440, tx: 900, sun: 1, seed: 55, tiers: 6, bolts: [], flashes: [], subs: [], sunDx: 500 } }, props: () => TRK(1) }), land: { y0: 380 },   // QA: the tiny far villagers were out of scale; ตาเทียน's truck still parked
           cam: push2("know2", fr(540, 1000, 0.95, 540, 960), fr(540, 1000, 1.0, 540, 960)),
           // QA 5: they act on ยาย's shout — ฝน lowers the phone on "คือสัญญาณ" (the film's own lesson), ปู drops his camera, ยาย reaches for
           // them, and all three break into a run on "ให้เข้าที่หลบทันที" (shot 21 picks the run up) — right of the stall, clear of the captions
           actors: (() => { const v = SH.know2.vo[0], tSig = v.t + v.frags[1] - 0.5, tGo = v.t + (v.frags[2] ?? v.frags[1] + 1), runD = Math.max(0.5, voEnd("know2", 0) + 0.1 - tGo);
             const go = (x) => ({ x: x - 280, dur: runD, at: tGo, ease: "power1.in" });
             return [P("fonPhone", 1060, 1745, 0.6, "film", "side", "o", { flip: true, then: [{ t: tSig, mode: "idle", eyes: "fear", mouth: "o" }, { t: tGo, mode: "run", eyes: "fear", mouth: "o" }], moveTo: go(1060) }),
-              P("puCam", 1200, 1770, 0.5, "camEye", "side", "o", { flip: true, then: [{ t: tSig + 0.15, mode: "idle", eyes: "wide", mouth: "o" }, { t: tGo, mode: "run", eyes: "fear", mouth: "o" }], moveTo: go(1200) }),
+              P("puCam", 1200, 1770, 0.44, "camEye", "side", "o", { flip: true, then: [{ t: tSig + 0.15, mode: "idle", eyes: "wide", mouth: "o" }, { t: tGo, mode: "run", eyes: "fear", mouth: "o" }], moveTo: go(1200) }),
               P("yaiBua", 1390, 1736, 0.58, "grab", "fear", "shout", { flip: true, then: [{ t: tGo, mode: "run", eyes: "fear", mouth: "o" }], moveTo: go(1390) })]; })(),
           fx: (tl, id, t0) => { Ngw.epicLife(tl, "e19", t0, 3); Ngw.srcChip(tl, id, t0, "NOAA SPC · Ready.gov"); } },
         { ...ROADV("k2b", { rain: 0.8, epic: { ...EPF("e19b", 560, { seed: 79, h: 700 }), noFunnel: true, bolts: [] } }), light: SUNL, grade: GSUN, land: { y0: 250 },
           cam: push2("know2", fr(540, 1050, 1.1, 540, 960), fr(540, 1050, 1.18, 540, 960)), fx: (tl, id, t0) => Ngw.epicLife(tl, "e19b", t0, 3) }]);
       // 20 · ตาเทียน: "ขึ้นรถ! ใต้สะพานทางหลวง ปลอดภัยที่สุด!" — behind him ปู climbs into the pickup bed (we see it; ฝน doesn't)
-      ADD("pickup", { ...STALLDARK("pk", { rain: 0.8, props: () => PICK(300, 1735, 0.6, 0, 1) }), captions: caps("pickup"), land: { y0: 600 },
+      ADD("pickup", { ...STALLDARK("pk", { rain: 0.8, props: () => TRK(1) }), captions: caps("pickup"), land: { y0: 600 },
         cam: push2("pickup", fr(540, 1450, 1.25, 540, 1000), fr(560, 1450, 1.32, 540, 1000)), shake: rumble(1.5),
-        actors: [P("pu", 610, 1716, 0.58, "rideHold", "wide", "o", { flip: true }), P("taTian", 170, 1900, 1.05, "yell", "angry", "shout", { talk: TALK("pickup", 0, "shout") })] });
+        actors: [P("pu", 30, 1704, 0.62, "rideHold", "wide", "o", { flip: true }), P("taTian", 170, 1900, 1.05, "yell", "angry", "shout", { talk: TALK("pickup", 0, "shout") })] });
       // 21 · ฝน and ยาย run; the grill left smoking — "ปู! วิ่ง!"
       ADD("run", { ...STALLDARK("rn", { rain: 0.9 }), captions: caps("run"), land: { y0: 600 },
         cam: push2("run", fr(600, 1400, 1.2, 540, 1000), fr(760, 1400, 1.2, 540, 1000)), shake: rumble(2),
@@ -303,7 +307,8 @@
       const UNDER = (id, o = {}) => NSC(id, { horizon: 1180, rain: o.rain ?? 0.3, vx: 540, fgRice: false, _leaves: 0,
           epic: { id: o.eid || id + "e", x: 1250, y: 1186, h: 640, wb: 280, wt: 620, tx: 1290, sun: -1, seed: 63, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
           road: { y: 1560, h: 400 }, overpass: { y: 430, h: 150, ground: 1560, pier: 1660, slopeX: 220 },
-          props: () => PICK(900, 1700, 0.75, 1, 1) + PICK(-40, 1640, 0.62, 0, 1, "#b0463a") + Rup2.moto(1260, 1690, 0.8) + (o.props ? o.props() : "") });
+          // owner 5 Nov ("ความสูง"): one world scale — adults ≈ 0.58 here, so a pickup is 1.78 × that and the deck clears about three people
+          props: () => PICK(1010, 1590, 0.78, 1, 1, "#b0463a") + PICK(1440, 1705, 1.05, 1, 1) + Rup2.moto(-250, 1748, 1.25) + (o.props ? o.props() : "") });
       const DITCHV = (id, o = {}) => NSC(id, { horizon: o.hz ?? 1180, rain: o.rain ?? 0.35, vx: 540, fgRice: false, _leaves: 0, ditch: { y: o.dy ?? 1720, near: o.near },
           epic: o.epic ?? { id: id + "e", x: 1350, y: (o.hz ?? 1180) + 6, h: 760, wb: 360, wt: 760, tx: 1380, sun: -1, seed: 65, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
           road: o.road ?? { y: 1440, h: 120 }, props: o.props });
@@ -312,8 +317,8 @@
       // 30 · under the overpass: cars stopped, people climbing up under the beams; ตาเทียน: climb up! (fades in from the choice's black)
       ADD("xunder", { ...UNDER("xu", { eid: "e40" }), dark: 0.22, captions: caps("xunder"), land: { y0: 380 },
         cam: push2("xunder", fr(540, 1055, 1.0, 540, 1055), fr(540, 1055, 1.05, 540, 1055)), shake: rumble(1.4),
-        actors: [P("exA", -60, 1060, 0.6, "hold", "wide", "o"), P("exB", -170, 1240, 0.64, "hold", "fear", "o", { flip: true }), P("exA", -270, 1405, 0.68, "jump", "wide", "o"),
-          P("taTian", 640, 1720, 0.92, "pointUp", "normal", "o", { flip: true, talk: TALK("xunder", 1, "o") })   /* QA 6: he points up at the girders ("climb up"), not at ปู's ear */, P("puNoCam", 420, 1720, 0.7, "idle", "fear", "flat")],
+        actors: [P("exA", -130, 1000, 0.46, "hold", "wide", "o"), P("exB", -280, 1180, 0.48, "hold", "fear", "o", { flip: true }), P("exA", -420, 1370, 0.5, "jump", "wide", "o"),
+          P("taTian", 200, 1745, 0.62, "pointUp", "normal", "o", { flip: true, talk: TALK("xunder", 1, "o") })   /* QA 6: he points up at the girders ("climb up"), not at ปู's ear */, P("puNoCam", 30, 1750, 0.46, "idle", "fear", "flat")],
         fx: (tl, id, t0) => { tl.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: 0.35, immediateRender: false }, t0); Ngw.epicLife(tl, "e40", t0, D("xunder")); } });
       // 31 · close, low: ปู looks up into the gap — the wind under the deck is stronger than outside (streaks behind him)
       ADD("xwind", { ...UNDER("xw", { eid: "e41", props: () => Ngw.streaks(-400, 1700, 700, 1400, 34, 83) }), dark: 0.25, blur: { sky: 3, far: 3, mid: 3 }, captions: caps("xwind"), land: { y0: 470 },
