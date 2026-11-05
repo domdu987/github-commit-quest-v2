@@ -50,12 +50,17 @@
       Rig.MODES.selfieUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -60 + 2 * Math.sin(u * 1.7), faF: -40, uaB: 8, faB: -16, head: 2 + 2 * Math.sin(u * 2.3), torso: -2 });
       Rig.MODES.reachWin = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -130, faF: -20, uaB: -20, faB: -30, torso: -4, head: -8 });
       Rig.MODES.countF = (u, o) => ({ ...Rig.MODES.idle(u, o), ...KNEE(o), torso: 8, head: 6, uaF: -70 + 10 * Math.sin(u * 6), faF: -60, uaB: -30, faB: -40 });
+      Rig.MODES.fanG = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -34 + 3 * Math.sin(u * 13), faF: -64 + 26 * Math.sin(u * 13), uaB: 18, faB: -70, torso: 8, head: 6 + 2 * Math.sin(u * 3) });   // ยายบัว fanning the grill
       Rig.MODES.hold = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150, faF: -10, uaB: -140, faB: -14, torso: 4, head: -6 + 3 * Math.sin(u * 9) });
       const VILL = [{ x: 1110, y: 1210, s: 0.12 }, { x: 1240, y: 1212, s: 0.11, flip: 1 }, { kind: "wat", x: -130, y: 1208, s: 0.2 }];
       const ROADV = (id, o = {}) => NSC(id, { horizon: 1200, rain: 0.4, vx: 540, village: VILL, road: { y: 1640, h: 160 }, poles: { xs: [-700, -260, 180, 620, 1060, 1500, 1940], y: 1630, s: 0.8, tf: [3], sag: 46 }, ...o });
-      const STALLSET = (id, o = {}) => ({ set: "ngwScape", setOpts: { id, mood: "clear", horizon: 1160, wind: 0.2, sunX: 860, farStorm: false, noRainbow: true, haze: true, tower: { x: o.fx ?? 1350, h: o.th ?? 380, dark: o.td ?? 0, id: id + "-cb" }, fgRice: false, ...HOME,
-          props: () => Rup2.stall(800, 1700, 0.95) + Rup2.moto(1330, 1740, 1.7) + (o.props ? o.props() : ""), ...(o.so || {}) }, dark: 0, light: CLEARL, grade: GC });
-      const STALLDARK = (id, o = {}) => NSC(id, { horizon: 1160, rain: o.rain ?? 0.25, ...HOME, fgRice: false, props: () => (o.bulbs === false ? Rup2.stall(800, 1700, 0.95) : Rup2.stall(800, 1700, 0.95, { bulbs: true, id: `${id}st` }) + STALLGLOW(800, 1700, 0.95)) + Rup2.moto(1330, 1740, 1.7) + (o.props ? o.props() : ""), ...(o.so || {}) });
+      // owner 5 Nov ("แย่กว่าทะเลลด"): ยายบัว's real roadside grill shop (Ngw.grillShop) replaces the re-dressed offering stall. Its floor's
+      // front edge at y 1770, s 0.95 (the adults' scale): posts at x 240 / 744 / 1256 / 1760, the grill at 787–1213, the counter 268–734,
+      // the fridge 1418–1646, the flags −7–250, the tables under the umbrella from x 1650 on. Farther props (the truck) are drawn first.
+      const SHOP = (id, o = {}) => Ngw.grillShop(1000, 1770, 0.95, { id: `${id}gs`, ...o });
+      const STALLSET = (id, o = {}) => ({ set: "ngwScape", setOpts: { id, mood: "clear", horizon: 1160, wind: 0.2, sunX: 860, farStorm: false, noRainbow: true, haze: true, tower: { x: o.fx ?? -300, h: o.th ?? 380, dark: o.td ?? 0, id: id + "-cb" }, fgRice: false, ...HOME,
+          props: () => (o.props ? o.props() : "") + SHOP(id, { h: 14 }), ...(o.so || {}) }, dark: 0, light: CLEARL, grade: GC });
+      const STALLDARK = (id, o = {}) => NSC(id, { horizon: 1160, rain: o.rain ?? 0.25, ...HOME, fgRice: false, props: () => (o.props ? o.props() : "") + SHOP(id, { h: 15, lit: o.bulbs !== false }) + (o.bulbs === false ? "" : Ngw.shopGlow(1000, 1770, 0.95)), ...(o.so || {}) });
       const EPF = (id, x, o = {}) => ({ id, x, h: 720, wb: 300, wt: 660, tx: x + 50, sun: 1, seed: 61, ...o });
       const STILL = (k, f) => ({ keys: [{ t: 0, ...f }] });
       const LIVE_BIG = [["ป้าแดง", "ฝน หนีเร็วลูก!!", "#e86a8a"], ["นนท์", "ถ่ายต่อๆ ซูมอีก", "#6a8ac8"], ["มายด์", "นั่นทอร์นาโดจริงเหรอ", "#8ac86a"], ["ลุงชัย", "เข้าบ้านเดี๋ยวนี้!", "#c8a040"]];
@@ -93,7 +98,7 @@
       ADD("stall", { ...STALLSET("st", { th: 340 }), captions: caps("stall"), land: { y0: 570 },
         cam: push2("stall", fr(540, 1000, 0.92, 540, 960), fr(540, 1000, 1.0, 540, 960)),
         fx: (tl, id, t0, L) => Ngw.ctaTag(tl, L.light, t0 + 0.2, D("stall") - 0.2),   // owner 4 Nov: the follow tag where most viewers still are (0:10)
-        actors: [P("yaiBua", 880, 1860, 0.95, "idle", "normal", "smile", { flip: true }), P("fonPhone", 340, 1890, 1.0, "selfieUp", "normal", "smile"), P("puCam", 580, 1870, 0.78, "camEye", "normal", "laugh")] });
+        actors: [P("yaiBua", 1330, 1800, 0.95, "fanG", "normal", "smile", { flip: true }), P("fonPhone", 120, 1890, 1.0, "selfieUp", "normal", "smile"), P("puCam", 600, 1880, 0.74, "camEye", "normal", "laugh")] });
       // 6 · ฝน live, selling the chicken (her front camera: her face, the stall behind)
       ADD("live", { ...STALLSET("lv", { th: 360 }), captions: caps("live"), land: { y0: 700 },
         cam: push2("live", fr(500, 1450, 1.6, 540, 1150), fr(500, 1450, 1.7, 540, 1150)),
@@ -102,7 +107,7 @@
       // 7 · ปู boasting with his little camera; ยายบัว laughs at him
       { const c = SH.pu.vo[1].t - 0.12;   // QA pacing: close on ปู's boast, then the two-shot for ยายบัว's answer
         SPLITN("pu", [c], [
-          { ...STALLSET("pu0", { th: 400 }), blur: { sky: 4, far: 4, mid: 3 }, land: { y0: 570 }, cam: PUSHD(c, fr(520, 1450, 2.0, 540, 1060), fr(520, 1450, 2.12, 540, 1060)),
+          { ...STALLSET("pu0", { th: 400 }), blur: { sky: 4, far: 4, mid: 3 }, land: { y0: 570 }, cam: PUSHD(c, fr(560, 1470, 1.8, 540, 1060), fr(560, 1470, 1.9, 540, 1060)),
             actors: [P("puCam", 520, 1880, 0.72, "camEye", "wide", "laugh", { talk: TALK("pu", 0, "laugh") }), P("yaiBua", 850, 1880, 1.0, "laugh", "normal", "smile", { flip: true })] },
           { ...STALLSET("pu", { th: 400 }), land: { y0: 640 }, cam: PUSHD(D("pu") - c, fr(640, 1500, 1.5, 540, 1000), fr(640, 1500, 1.58, 540, 1000)),
             actors: [P("puCam", 520, 1880, 0.72, "camEye", "normal", "laugh"), P("yaiBua", 850, 1880, 1.0, "laugh", "normal", "smile", { flip: true, talk: [[0.12, 0.12 + SH.pu.vo[1].dur, "laugh"]] })] }]); }
@@ -277,6 +282,8 @@
       // QA 5 (the hug: "a straight bar across her chest ending in a fist", "his far sleeve pokes up"): ปู is drawn under ยาย, his near arm
       // goes down behind her neck and the hand shows on her far shoulder; the far arm hangs behind his own body
       Rig.MODES.hugN = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 6, head: 14, uaF: -56 + 2 * Math.sin(u * 3), faF: -33, uaB: 4, faB: -10 });
+      Rig.MODES.climbUp = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 52 + 3 * Math.sin(u * 6), head: -30, uaF: -128 + 10 * Math.sin(u * 6), faF: 30, uaB: -104 - 10 * Math.sin(u * 6), faB: 24, thF: -78 + 8 * Math.sin(u * 6), shF: 96, thB: 6 - 8 * Math.sin(u * 6), shB: 70, bodyY: 96 });   // up the abutment slope on hands and feet
+      Rig.MODES.hugY = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: 20 + 1.2 * Math.sin(u * 2.2), head: 28, uaF: -26 + 2 * Math.sin(u * 3), faF: -40, uaB: -22, faB: -20 });   // standing, bowed over the kid: the near arm round his back, the far arm hidden
       Rig.MODES.pointUp = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -150 + 3 * Math.sin(u * 5), faF: -12, uaB: 10, faB: -20, torso: -4, head: -12 });
       Rig.MODES.haul = (u, o) => ({ ...Rig.MODES.run(u, o), torso: -32, head: -16, uaB: 78 + 4 * Math.sin(u * 20), faB: 6 });
       Rig.MODES.tug = (u, o) => ({ ...Rig.MODES.idle(u, o), torso: -28 + 2 * Math.sin(u * 12), head: -12, uaF: -50, faF: -34, uaB: 86, faB: 2, thF: -36, shF: 42, thB: 30, shB: 8, bodyY: 26 });   // lunging away, the back arm straight back, holding on
@@ -306,7 +313,7 @@
           props: () => Ngw.debris(-640, 1720, 1560, 1760, 46, 75, 0.7) + (o.props ? o.props() : ""), glowProps: o.glowProps, ditch: o.ditch, ...(o.so || {}) }, dark: o.dark ?? 0.05, light: CLEARL, grade: GC });
       const UNDER = (id, o = {}) => NSC(id, { horizon: 1180, rain: o.rain ?? 0.3, vx: 540, fgRice: false, _leaves: 0,
           epic: { id: o.eid || id + "e", x: 1250, y: 1186, h: 640, wb: 280, wt: 620, tx: 1290, sun: -1, seed: 63, tiers: 4, bolts: [], flashes: [], sunDx: 700 },
-          road: { y: 1560, h: 400 }, overpass: { y: 430, h: 150, ground: 1560, pier: 1660, slopeX: 220 },
+          road: { y: 1560, h: 400 }, overpass: { y: 430, h: 150, ground: 1560, pier: 1660, slopeX: 220, ...(o.ov || {}) },
           // owner 5 Nov ("ความสูง"): one world scale — adults ≈ 0.58 here, so a pickup is 1.78 × that and the deck clears about three people
           props: () => PICK(1010, 1590, 0.78, 1, 1, "#b0463a") + PICK(1440, 1705, 1.05, 1, 1) + Rup2.moto(-250, 1748, 1.25) + (o.props ? o.props() : "") });
       const DITCHV = (id, o = {}) => NSC(id, { horizon: o.hz ?? 1180, rain: o.rain ?? 0.35, vx: 540, fgRice: false, _leaves: 0, ditch: { y: o.dy ?? 1720, near: o.near },
@@ -315,11 +322,19 @@
       const TWIST = () => FLIPTRUCK(1180, 1700, 0.85) + Ngw.fallenPole(1640, 1710, 0.95, { id: "fpb", lean: -62, wx: 1150, wy: 1560, ex: 960, ey: 1712 }) + Ngw.cam(870, 1700, 0.9, -14);
 
       // 30 · under the overpass: cars stopped, people climbing up under the beams; ตาเทียน: climb up! (fades in from the choice's black)
-      ADD("xunder", { ...UNDER("xu", { eid: "e40" }), dark: 0.22, captions: caps("xunder"), land: { y0: 380 },
-        cam: push2("xunder", fr(540, 1055, 1.0, 540, 1055), fr(540, 1055, 1.05, 540, 1055)), shake: rumble(1.4),
-        actors: [P("exA", -130, 1000, 0.46, "hold", "wide", "o"), P("exB", -280, 1180, 0.48, "hold", "fear", "o", { flip: true }), P("exA", -420, 1370, 0.5, "jump", "wide", "o"),
-          P("taTian", 200, 1745, 0.62, "pointUp", "normal", "o", { flip: true, talk: TALK("xunder", 1, "o") })   /* QA 6: he points up at the girders ("climb up"), not at ปู's ear */, P("puNoCam", 30, 1750, 0.46, "idle", "fear", "flat")],
-        fx: (tl, id, t0) => { tl.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: 0.35, immediateRender: false }, t0); Ngw.epicLife(tl, "e40", t0, D("xunder")); } });
+      // owner 5 Nov ("สะพาน ตัวคน"): two cuts. The wide on the narration — cars stopped under the deck, people climbing the slope up
+      // under the girders (climbing, holding on, not waving) — then a medium under the beams for ตาเทียน's "ปีนขึ้นไปหลบใต้คาน!": the
+      // two of them big in the foreground, the underside and its girders overhead, the climbers soft behind (ปู ≈ 0.75 × ตาเทียน)
+      { const cU = SH.xunder.vo[1].t - 0.12;
+        SPLITN("xunder", [cU], [
+          { ...UNDER("xu", { eid: "e40" }), dark: 0.22, land: { y0: 380 }, cam: PUSHD(cU, fr(540, 1055, 1.0, 540, 1055), fr(540, 1055, 1.04, 540, 1055)), shake: rumble(1.4),
+            actors: [P("exA", -130, 1000, 0.46, "hold", "wide", "o"), P("exB", -300, 1190, 0.48, "climbUp", "fear", "o"), P("exA", -430, 1380, 0.5, "climbUp", "wide", "o"),
+],
+            fx: (tl, id, t0) => { tl.fromTo("#black", { opacity: 1 }, { opacity: 0, duration: 0.35, immediateRender: false }, t0); Ngw.epicLife(tl, "e40", t0, cU); } },
+          { ...UNDER("xu2", { eid: "e40b", ov: { y: 600 } }), dark: 0.2, blur: { sky: 4, far: 4, mid: 3, set: 2 }, land: { y0: 380 }, cam: PUSHD(D("xunder") - cU, fr(600, 1320, 1.3, 540, 1055), fr(600, 1330, 1.36, 540, 1055)), shake: rumble(1.2),
+            actors: [P("exB", -250, 1120, 0.5, "hold", "fear", "o"), P("exA", -400, 1330, 0.52, "climbUp", "wide", "o"),
+              P("puNoCam", 430, 1965, 0.82, "idle", "fear", "flat"), P("taTian", 740, 1955, 1.1, "pointUp", "normal", "o", { flip: true, talk: [[SH.xunder.vo[1].t - cU, SH.xunder.vo[1].t - cU + SH.xunder.vo[1].dur, "o"]] })],
+            fx: (tl, id, t0) => Ngw.epicLife(tl, "e40b", t0, D("xunder") - cU) }]); }
       // 31 · close, low: ปู looks up into the gap — the wind under the deck is stronger than outside (streaks behind him)
       ADD("xwind", { ...UNDER("xw", { eid: "e41", props: () => Ngw.streaks(-400, 1700, 700, 1400, 34, 83) }), dark: 0.25, blur: { sky: 3, far: 3, mid: 3 }, captions: caps("xwind"), land: { y0: 470 },
         cam: push2("xwind", fr(470, 1150, 1.25, 540, 1145), fr(470, 1150, 1.33, 540, 1145)), shake: rumble(2),
@@ -332,15 +347,15 @@
         fx: (tl, id, t0, L) => { Ngw.epicLife(tl, "e42", t0, D("xrule3")); Ngw.srcChip(tl, id, t0, "NWS"); Ngw.ruleBoard(tl, WB(L, -600, 330, 0.78), t0 + 0.05, D("xrule3") - 0.05, { rules: RULES3, active: 2, y: 330, gap: 190, blank: true, hang: true, at: [0.05, 0.1, 0.15] }); } });
       // 33 · "ตา! ลงคูเร็ว!": first the insert — ปู's hand shoots in and clamps ตาเทียน's wrist (after ทะเลลด EP.2's grab), the storm
       // blurred behind — then ปู drags him off the road toward the ditch, ตาเทียน stumbling after: "เฮ้ย! เดี๋ยวก่อนสิ!"
-      const PULL = { k: [470], a: [925], ko: { ua: 14, fa: 0 }, ao: { ua: -8, fa: 0 } };   // positions and arm offsets, tuned with probe_hands.cjs so the hands meet
+      const PULL = { k: [470], a: [910], ko: { ua: 3, fa: 0 }, ao: { ua: -2, fa: 0 } };   // positions and arm offsets, tuned with probe_hands.cjs so the hands meet
       SPLITN("xpull", [1.8], [
         { ...DITCHV("xg", { dy: 1700, props: () => Ngw.streaks(-600, 1800, 700, 1500, 30, 91) }), dark: 0.12, blur: { sky: 8, far: 8, mid: 8, set: 8 }, land: { y0: 560 },
           cam: PUSHD(1.8, fr(540, 1235, 1.0, 540, 1235), fr(540, 1235, 1.05, 540, 1235)), shake: rumble(1.4),
           fx: (tl, id, t0, L) => { put(L.act, Ngw.wristGrab({ id: "wg", rot: -35 })); Ngw.wristGrabLife(tl, "wg", t0, 1.8, SH.xpull.vo[0].t + 0.12, SH.xpull.vo[0].t + SH.xpull.vo[0].frags[1]); } },
         { ...DITCHV("xp", { dy: 1700 }), dark: 0.15, land: { y0: 640 },
-          cam: PUSHD(D("xpull") - 1.8, fr(640, 1315, 1.0, 540, 1315), fr(380, 1315, 1.0, 540, 1315)), shake: rumble(2),
-          actors: [P("puNoCam", PULL.k[0], 1530, 0.76, "pullK", "fear", "shout", { opts: PULL.ko, then: [{ t: 1.05, mode: "pullKw", eyes: "fear", mouth: "shout", opts: PULL.ko }], moveTo: { x: PULL.k[0] - 330, y: 1650, s: 0.76, dur: 1.7, at: 1.05, ease: "power1.in" } }),
-            P("taTian", PULL.a[0], 1530, 0.88, "heldA", "fear", "o", { flip: true, opts: PULL.ao, then: [{ t: 1.05, mode: "heldAw", eyes: "fear", mouth: "o", opts: PULL.ao }], moveTo: { x: PULL.a[0] - 330, y: 1650, s: 0.88, dur: 1.7, at: 1.05, ease: "power1.in" }, talk: [[SH.xpull.vo[1].t - 1.8, SH.xpull.vo[1].t - 1.8 + SH.xpull.vo[1].dur, "o"]] })] }]);
+          cam: PUSHD(D("xpull") - 1.8, fr(700, 1260, 1.25, 540, 1315), fr(420, 1360, 1.25, 540, 1315)), shake: rumble(2),
+          actors: [P("puNoCam", PULL.k[0], 1530, 0.68, "pullK", "fear", "shout", { opts: PULL.ko, then: [{ t: 1.05, mode: "pullKw", eyes: "fear", mouth: "shout", opts: PULL.ko }], moveTo: { x: PULL.k[0] - 330, y: 1650, s: 0.68, dur: 1.7, at: 1.05, ease: "power1.in" } }),
+            P("taTian", PULL.a[0], 1530, 0.9, "heldA", "fear", "o", { flip: true, opts: PULL.ao, then: [{ t: 1.05, mode: "heldAw", eyes: "fear", mouth: "o", opts: PULL.ao }], moveTo: { x: PULL.a[0] - 330, y: 1650, s: 0.9, dur: 1.7, at: 1.05, ease: "power1.in" }, talk: [[SH.xpull.vo[1].t - 1.8, SH.xpull.vo[1].t - 1.8 + SH.xpull.vo[1].dur, "o"]] })] }]);
       // 34 · the knowledge board: the wind squeezed under the deck, faster (NWS · SPC · CDC). Like ทะเลลด's boards it hangs in the world —
       // a zinc sheet on two ropes from the deck, the overpass and the storm blurred behind it
       // (the camera sits below the deck's front face — it is in the fg layer and would cover the top of the board)
@@ -421,10 +436,10 @@
         // QA: the medium, then close on the peak — ยายบัว's wet face over ปู's shoulder for "ยายนึกว่าจะไม่ได้เจอแล้ว"
         SPLITN("xhug", [c], [
           { ...HUG("xh", "fph"), blur: { sky: 4, far: 4, mid: 4, set: 3 }, land: { y0: 540 }, cam: PUSHD(c, fr(600, 1460, 1.75, 540, 1215), fr(600, 1460, 1.8, 540, 1215)),
-            actors: [P("fon", 900, 1660, 0.82, "idle", "closed", "smile", { flip: true }), P("puNoCam", 690, 1790, 0.86, "hugN", "closed", "flat", { flip: true }), P("yaiBuaCry", 470, 1800, 1.0, "hugK", "closed", "frown", { talk: [[v.t, c, "o"]] })],
+            actors: [P("fon", 900, 1660, 0.82, "idle", "closed", "smile", { flip: true }), P("puNoCam", 650, 1805, 0.74, "hugN", "closed", "flat", { flip: true }), P("yaiBuaCry", 500, 1800, 1.0, "hugY", "closed", "frown", { talk: [[v.t, c, "o"]] })],
             fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fph-sp", t0, c, 0.9) },
           { ...HUG("xh2", "fph2"), blur: { sky: 6, far: 6, mid: 6, set: 5 }, land: { y0: 540 }, cam: PUSHD(D("xhug") - c, fr(565, 1350, 2.5, 560, 1060), fr(565, 1350, 2.65, 560, 1060)),
-            actors: [P("puNoCam", 690, 1790, 0.86, "hugN", "closed", "flat", { flip: true }), P("yaiBuaCry", 470, 1800, 1.0, "hugK", "closed", "frown", { talk: [[0, v.t + v.dur - c, "o"]] })],
+            actors: [P("puNoCam", 650, 1805, 0.74, "hugN", "closed", "flat", { flip: true }), P("yaiBuaCry", 500, 1800, 1.0, "hugY", "closed", "frown", { talk: [[0, v.t + v.dur - c, "o"]] })],
             fx: (tl, id, t0) => Ngw.sparkLife(tl, "#fph2-sp", t0, D("xhug") - c, 0.9) }]); }
       // 43 · the knowledge board: fallen pole, broken line — keep away, don't touch, not even the metal it lies on; call it in
       // (TMD · NWS · Ready.gov). Hung in the world on two ropes, the wrecked road with the pickup and the sparking pole blurred behind
