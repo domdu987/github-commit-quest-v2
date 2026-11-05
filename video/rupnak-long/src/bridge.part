@@ -1,0 +1,32 @@
+      // ---------- bridge 1→2: the night after the first hole ----------
+      Mm.shirt = () => ""; Mm.scarecrow = () => ""; Mm.shirtPole = () => "";   // borrowed mm2 rooms without the widow story's red shirts
+      const RIM_D = { time: "day", holeY: 1180, rx: 430, ry: 160 };
+      // the chapter title, small at the top for 3 s, in screen space
+      const CHAPTER = (tl, L, id, t0, text) => { L.light.insertAdjacentHTML("beforeend", `<g id="${id}-ch" opacity="0"><rect x="160" y="200" width="760" height="86" rx="43" fill="#140e0a" opacity=".72"/>
+        <text x="540" y="256" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="40" fill="#f4e6c4">${text}</text></g>`);
+        tl.fromTo(`#${id}-ch`, { opacity: 0 }, { opacity: 1, duration: 0.4, immediateRender: false }, t0 + 0.2); tl.to(`#${id}-ch`, { opacity: 0, duration: 0.5 }, t0 + 3.2); };
+      add("b1win", { set: "sleep2", setOpts: { id: "bw", lamp: false, bed: 240 }, dark: 0.12, light: MOONL, grade: GNIGHT,
+        cam: { keys: [ID(0, 160, 240, 1.18), { ...ID(vo("b1win", 1) - 0.15, 190, 230, 1.28), glide: vo("b1win", 1) - 0.15 }, ID(vo("b1win", 1) - 0.1, 300, 60, 1.95), { ...ID(D("b1win"), 300, 70, 2.1), glide: D("b1win") - vo("b1win", 1) + 0.1 }] },
+        actors: [A("yaiKham", 860, 1470, 0.62, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: vo("b1win", 1), mode: "talk2", eyes: "worry", mouth: "o" }], { talk: [TALK("b1win", 1, "o")] })],
+        captions: [...caps("b1win", [0]), ...caps("b1win", [1], { quote: true })],
+        fx(tl, id, t0, L) { CHAPTER(tl, L, "bw", t0, "บทที่ 2 · น้ำบ่อขุ่นแดง แจ้งแล้วถอย"); } });
+      add("b1dust", { set: "rupYardRich", setOpts: { id: "bd", time: "night", muddy: 0.95, leanPost: true, snakeCrack: true }, dark: 0.15, light: MOONL, grade: GNIGHT, shake: SHAKE(1.6, 4, 1.2),
+        cam: { keys: [ID(0, 20, 100, 1.45), { ...ID(D("b1dust"), 0, 160, 1.65), glide: D("b1dust") }] },
+        captions: caps("b1dust"), fx(tl, id, t0, L) { Rup.yardLife(tl, "bd", t0, D("b1dust"), { dust: true, snake: 0.6, snakeDur: 2.0, lean: 1.4 }); } });
+      add("b1shake", { set: "sleep2", setOpts: { id: "bk", lamp: true, bed: 240 }, dark: 0.1, light: NIGHTL, grade: GNIGHT, shake: SHAKE(0.1, 7, 2.2),
+        cam: { keys: [ID(0, 200, 240, 1.3), { ...ID(D("b1shake"), 210, 230, 1.48), glide: D("b1shake") }] },
+        actors: [A("tonkao", 720, 1470, 0.6, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o" }, { t: 0.7, mode: "point", eyes: "wide", mouth: "o" }], { talk: [TALK("b1shake", 0, "o")] })],
+        captions: caps("b1shake", undefined, { quote: true }), fx() {} });
+      // ---------- bridge 2→3: มุก chooses to call for help; dawn; ยาย is back in the barn ----------
+      add("b2call", { set: "rupYardRich", setOpts: { id: "bc", time: "night", muddy: 0.95, granary: false, crackDraw: true }, dark: 0.15, light: MOONL, grade: GNIGHT,
+        cam: { keys: [ID(0, 0, 300, 1.3), { ...ID(D("b2call"), 20, 300, 1.42), glide: D("b2call") }] },
+        actors: [A("mookPhone", 560, 1780, 0.72, [{ t: 0, mode: "point", eyes: "angry", mouth: "o" }, { t: 2.2, mode: "phoneLook", eyes: "wide", mouth: "o" }], { talk: [TALK("b2call", 0, "o")] }),
+          A("tonkao", 360, 1800, 0.56, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: 1.2, mode: "run", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: -120, y: 1760, at: 1.2, dur: 2.0, ease: "power1.in" } })],
+        captions: caps("b2call", undefined, { quote: true }), fx(tl, id, t0, L) { Rup2.barn(L, "bcb"); Rup.cracks(tl, "bcy", t0, 1.6); CHAPTER(tl, L, "bc", t0, "บทที่ 3 · รูยังกว้างได้ ไหว้ไกลร้อยเมตร"); } });
+      add("b2dawn", { set: "rupRim2", setOpts: { id: "bn", ...RIM_D, rope: true, offer: false }, dark: 0.05, light: DAWN, grade: GDAWN, shake: SHAKE(2.0, 3, 0.8),
+        cam: { keys: [ID(0, 0, 60, 1.05), { ...ID(D("b2dawn"), 0, 170, 1.3), glide: D("b2dawn") }] },
+        captions: caps("b2dawn"), fx(tl, id, t0, L) { Rup2.life2(tl, "bn", t0, D("b2dawn")); Rup.cracks(tl, "bn", t0 + 0.3, 2.4); } });
+      add("b2barn", { set: "rupYardRich", setOpts: { id: "bb", time: "dusk", muddy: 0.95, granary: false, crackDraw: true, leanPost: true }, dark: 0.1, light: DAWN, grade: GDAWN,
+        cam: { keys: [ID(0, 250, 220, 1.4), { ...ID(D("b2barn"), 370, 90, 2.1), glide: D("b2barn") }] },
+        actors: [A("yaiKham", 916, 1016, 0.23, [{ t: 0, mode: "liftBucket", eyes: "side", mouth: "o" }])],
+        captions: caps("b2barn"), fx(tl, id, t0, L) { Rup2.barn(L, "bbb"); tl.set("#bbb-door", { scaleX: 0.15, transformOrigin: "0% 50%" }, t0); Rup.cracks(tl, "bby", t0, 1.6); } });
