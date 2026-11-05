@@ -1,0 +1,41 @@
+#!/bin/bash
+# Snapshot every shot of a built part at mid-shot (1920×1080) and tile them into labelled contact sheets.
+#   tools/snapmid.sh <1|2|3> <build dir> <out dir> <port> [where: mid|ends]
+set -euo pipefail
+W="$(cd "$(dirname "$0")/.." && pwd)"; E="$1"; B="$2"; O="$3"; P="$4"; WHERE="${5:-mid}"
+mkdir -p "$O"; rm -f "$O"/t*.png
+(cd "$B" && setsid nohup python3 -m http.server "$P" >/dev/null 2>&1 &) ; sleep 1
+TS=$(python3 - "$W/ep$E/schedule.json" "$WHERE" <<'PY'
+import json, sys
+s = json.load(open(sys.argv[1]))
+out = []
+for sh in s["shots"]:
+    if sys.argv[2] == "mid": out.append(sh["start"] + sh["dur"] / 2)
+    else: out += [sh["start"] + 0.05, sh["start"] + sh["dur"] - 0.05]
+print(" ".join(f"{t:.2f}" for t in out))
+PY
+)
+node "$W/tools/snapL.cjs" "$P" "$O" $TS > "$O/info.txt" 2>&1 || true
+pkill -f "http.server $P" || true
+python3 - "$W/ep$E/schedule.json" "$O" "$E" <<'PY'
+import json, sys, glob, os
+from PIL import Image, ImageDraw, ImageFont
+s = json.load(open(sys.argv[1])); O = sys.argv[2]; E = sys.argv[3]
+info = {}
+for ln in open(os.path.join(O, "info.txt")):
+    p = ln.split()
+    if len(p) >= 2 and p[0].replace(".", "").isdigit(): info[float(p[0])] = " ".join(p[1:])
+fs = sorted(glob.glob(os.path.join(O, "t*.png")), key=lambda f: float(os.path.basename(f)[1:-4]))
+W_, H_ = 640, 360; cols = 3
+font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18) if os.path.exists("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf") else None
+for k in range(0, len(fs), 12):
+    chunk = fs[k:k + 12]; rows = (len(chunk) + cols - 1) // cols
+    cs = Image.new("RGB", (W_ * cols, H_ * rows), (0, 0, 0))
+    for i, f in enumerate(chunk):
+        t = float(os.path.basename(f)[1:-4]); key = next((sh["key"] for sh in s["shots"] if sh["start"] <= t < sh["start"] + sh["dur"]), "?")
+        im = Image.open(f).convert("RGB").resize((W_, H_)); d = ImageDraw.Draw(im)
+        lab = f"ep{E} {t:.2f} {key} {info.get(round(t, 2), '')}"; d.rectangle((0, 0, 9 * len(lab) + 8, 24), fill=(0, 0, 0)); d.text((4, 2), lab, fill=(255, 255, 0), font=font)
+        cs.paste(im, ((i % cols) * W_, (i // cols) * H_))
+    cs.save(os.path.join(O, f"sheet_{k // 12:02d}.jpg"), quality=82)
+print(len(fs), "frames")
+PY
