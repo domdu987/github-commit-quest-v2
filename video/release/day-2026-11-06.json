@@ -4,11 +4,11 @@
  "made_by": "Claude (แชทประสานงาน) · 5 พ.ย. 2569",
  "format": "รูปแบบส่งมอบใหม่ (เจ้าของ 5 พ.ย. 2569): วันละ 1 เรื่อง · 09:00 Shorts EP.1 และ 09:15 Shorts EP.2 → YouTube Shorts + Facebook Reel + IG Reel · 09:30 คลิปยาว 16:9 ทั้งเรื่อง → YouTube เท่านั้น",
  "posted_by": "เจ้าของ/Moji ผ่าน Buffer",
- "story": "สกิลจอมโกหก",
+ "story": "เสียงรถไฟ (คลิปยาว 16:9 เท่านั้น)",
  "complete": true,
  "missing": [],
- "status": "ครบ 3 ไฟล์ + ปก 3 ภาพ · ข้อความแก้ตามกฎใหม่แล้วในชีต (ชื่อ Shorts ≤ 40 ตัวอักษร ไม่มีแฮชแท็ก) · เลน A ทำ (ไฟล์บน prod/lane-a)",
- "upload_sheet": "video/release/sheets/jk-upload.md",
+ "status": "เจ้าของ 5 พ.ย. 23:00: ถอดสกิลจอมโกหกออก (ห้ามลงช่องนี้) · ลงเฉพาะเสียงรถไฟ คลิปยาว 16:9 09:30 · Autopilot ตั้งคิว Buffer แล้ว",
+ "upload_sheet": "video/release/sheets/siang-rotfai-upload.md",
  "rules": [
   "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
   "ดึงไฟล์ตาม branch + commit + path แล้วตรวจ sha256 ก่อนอัปโหลดทุกไฟล์ ถ้าไม่ตรงห้ามลง ให้แจ้งเจ้าของ",
@@ -18,68 +18,37 @@
   "EP.3 ไม่ลงเป็น Shorts แยก (อยู่ในคลิปยาว) ยกเว้นวาล์วโมเมนตัม: Shorts ตอนไหนวิว 24 ชม. ≥ 22K ให้แจ้งแชทประสานงาน เพื่อตัดช่วงหักมุมจากคลิปยาวเป็น Shorts เพิ่ม ลง 08:45 วันถัดไป",
   "หลังลงแต่ละไฟล์ เขียนสถานะลง video/release/posted/<วันที่>.json (1 แถวต่อไฟล์ต่อแพลตฟอร์ม) แล้ว push ขึ้น ccr-fb88c4b3-kcqyid"
  ],
- "items": [
-  {
-   "slot": "09:00",
-   "id": "jk-ep1",
-   "kind": "shorts",
-   "platforms": [
-    "youtube_shorts",
-    "facebook_reel",
-    "instagram_reel"
-   ],
-   "status": "final",
-   "branch": "prod/lane-a",
-   "commit": "629e466",
-   "video": "video/release/hq/jk-ep1-HQ.mp4",
-   "video_sha256": "52a068af69228280cb3a84e2cc7d8c292f899c87d41d6788938b179bc33385b7",
-   "video_bytes": 69288258,
-   "cover": "video/jk-ep1/cover.jpg",
-   "title_youtube": "ตายแล้วเกิดใหม่ ได้สกิลกากที่สุดในโลก",
-   "title_chars": 37
-  },
-  {
-   "slot": "09:15",
-   "id": "jk-ep2",
-   "kind": "shorts",
-   "platforms": [
-    "youtube_shorts",
-    "facebook_reel",
-    "instagram_reel"
-   ],
-   "status": "final",
-   "branch": "prod/lane-a",
-   "commit": "629e466",
-   "video": "video/release/hq/jk-ep2-HQ.mp4",
-   "video_sha256": "057154bb712e8566d4efd17379ab202cbeddcf1dd36bee5dc7a7265c40cb2636",
-   "video_bytes": 59004505,
-   "cover": "video/jk-ep2/cover.jpg",
-   "title_youtube": "โม้ครั้งแรก ได้มังกรมา 1% (เป็นจิ้งจก)",
-   "title_chars": 38,
-   "note": "ในตัวคลิปยังไม่มีคำชี้ไปคลิปยาว ใส่ไว้ในแคปชันและคอมเมนต์ปักหมุดแทน"
-  }
- ],
+ "items": [],
  "video_long": {
   "slot": "09:30",
-  "id": "jk-long",
+  "id": "siang-rotfai-long",
   "kind": "long_16x9",
   "platforms": [
    "youtube"
   ],
   "status": "final",
-  "branch": "prod/lane-a",
-  "commit": "629e466",
-  "video": "video/jk-long/LONG-jom-kohok-16x9-share.mp4",
-  "video_sha256": "7ea7b937ad4b0dbf9dc1fbbab0732e7f73f927fb5e0d0fd70cd6e8c108266433",
-  "video_bytes": 75192817,
-  "thumb": "video/jk-long/LONG-jom-kohok-thumb.jpg",
-  "title_youtube": "ได้สกิลจอมโกหกระดับ F… อย่าอ่านข้ามกฎข้อสาม | สกิลจอมโกหก ฉบับเต็ม",
+  "branch": "ccr-fb88c4b3-kcqyid",
+  "commit": "90756ae",
+  "video": "video/tornado-full/FULL-siang-rotfai-share.mp4",
+  "video_sha256": "6ace778b5a9bb464f101a1d8674d48b34f38e4fc123f3cb866c7a6a856ac1154",
+  "video_bytes": 84231952,
+  "thumb": "video/tornado-full/thumb.jpg",
+  "title_youtube": "ได้ยินเสียงรถไฟ ทั้งที่ไม่มีราง… อย่ายกมือถือขึ้นถ่าย | เสียงรถไฟ ฉบับเต็ม",
   "chapters": [
-   "0:00 ตอนที่ 1 · การ์ดกากสุด",
-   "1:15 ตอนที่ 2 · คนแรกที่เชื่อ",
-   "2:22 ตอนที่ 3 · มังกรเท่าตึก",
-   "3:23 ตอนที่ 4 · หูแดงช่วยชีวิต (จบภาคแรก)"
+   "0:00 เสียงรถไฟ",
+   "0:09 ร้านไก่ย่างยายบัว",
+   "0:59 ฟ้ามืดตอนบ่ายสาม",
+   "1:34 ทิ้งทุกอย่าง แล้ววิ่ง",
+   "2:05 ใต้สะพาน หรือ หมอบในคูน้ำ?",
+   "2:52 เสียงรถไฟหยุด",
+   "3:18 พายุไป สายไฟยังอยู่"
   ],
-  "note": "ฉบับ crf 23 (75 MB) ลงได้เลย · ต้นฉบับ HQ 172 MB อยู่กับเจ้าของ"
- }
+  "note": "ฉบับแก้ 5 พ.ย. · ต้นฉบับ HQ 320 MB (sha256 6de3c3f5…6556) ส่งเจ้าของทางแชทแล้ว ใช้ไฟล์ไหนลงก็ได้ · ฉบับเช้า 5 พ.ย. ห้ามลง"
+ },
+ "removed": [
+  {
+   "story": "สกิลจอมโกหก (เลน A)",
+   "why": "เจ้าของ 5 พ.ย.: ช่องคนเก่งห้ามยุ่ง จะเอาไปทำอีกช่อง · ห้ามลง Rod Mai Club"
+  }
+ ]
 }
