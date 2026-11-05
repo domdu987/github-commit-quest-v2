@@ -20,6 +20,14 @@ G = "        const ADD = (k, spec) => (SH[k] && !SH[k].skip ? ADD_G(k, spec) : n
 open(out, "w").write("      const ADD_G = ADD;\n      { // ===== EP.1 =====\n" + G + e1 + "\n      }\n      { // ===== bridge =====\n" + br + "\n      }\n      { // ===== EP.2 =====\n" + G + e2 + "\n      }\n")
 PY
 sed 's/ต้นตะเคียนกลางนา · EP.2/ต้นตะเคียนกลางนา/' "$B/foot2.part" > "$W/foot.part"
+# 16:9 band per shot for the long version only (full/landfix.json: key -> y0): the tree, the bolt or the ghost the line speaks of stays in frame
+python3 - "$W/foot.part" "$F/landfix.json" <<'PY'
+import json, sys
+p, f = sys.argv[1], sys.argv[2]; s = open(p).read(); fix = json.load(open(f))
+a = "      Engine.build(root, tl, shots);"; assert s.count(a) == 1
+s = s.replace(a, f"      const LANDFIX = {json.dumps(fix)};\n      shots.forEach((sh) => {{ if (LANDFIX[sh.key] != null) sh.land = {{ y0: LANDFIX[sh.key] }}; }});\n" + a)
+open(p, "w").write(s)
+PY
 cat "$B/head.part" "$B/sigcard.part" "$B/helpers.part" "$B/sinkkit.part" "$T/src/handkit.part" "$T/ep1/common.part" "$W/body.part" "$W/foot.part" > "$W/ep.tmpl.html"
 TK_LIB="$H/lib" TK_PROJ="$H/$P" TK_SCHED="$F/schedule.json" TK_TMPL="$W/ep.tmpl.html" python3 "$B/make.py"
 rm -rf "$W"
