@@ -41,6 +41,8 @@ TAKES.update({k: 2 for k in [("ep1", "y01"), ("ep1", "k06"), ("ep2", "l01"),
 TAKES.update({("ep1", "k06"): 0, ("ep2", "m05"): 0, ("ep3", "x02"): 1})
 # coordinator 5 Nov: the EP.2 rule must be 100% clear — slower, word by word (fresh takes under the new style)
 OVR = {}
+# coordinator 5 Nov: EP.1 Short ≤ 2:30 — these lines play in the long video only (n10 stays: it starts the capsize chain)
+FULL_ONLY = {("ep1", i) for i in ("y01", "k01", "m02", "y04", "k05", "y08", "y10", "y11")}
 
 
 def mk(rows, seg=""):
@@ -54,6 +56,8 @@ def mk(rows, seg=""):
               "style": NARR if who == "n" else f"{persona} {emo} {TAIL}", "tempo": tempo, "cap": cap}
         if len(r) > 5:
             ln["only"] = r[5]
+        if (seg, lid) in FULL_ONLY:
+            ln["only"] = "full"
         if TAKES.get((seg, lid)):
             ln["take"] = TAKES[(seg, lid)]
         out.append(ln)
