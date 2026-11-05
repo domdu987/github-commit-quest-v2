@@ -479,5 +479,27 @@
    "x": 0,
    "y": -50
   }
+ },
+ {
+  "id": "tornado-ep2",
+  "page": "tornado-ep2/composition/index.html",
+  "out": "video/tornado-ep2/cover.jpg",
+  "t": 18.5,
+  "series": "เสียงรถไฟ",
+  "ep": 2,
+  "epTitle": "ใต้สะพานทางหลวง",
+  "setup": "พายุมา… ทุกคนแห่/ไปหลบ[ใต้สะพาน]",
+  "cmd": "อย่าหลบใต้สะพาน!",
+  "glow": "#e8a23a",
+  "hideLight": true,
+  "zoom": {
+   "s": 1.1,
+   "x": 500,
+   "y": 1300
+  },
+  "shift": {
+   "x": 0,
+   "y": -470
+  }
  }
 ]
