@@ -1,0 +1,15 @@
+      // ---------- ต้นตะเคียนกลางนา ฉบับเต็ม: the bridge between EP.1 and EP.2 (lane C, 5 Nov 2569) ----------
+      // 1 · wide: the storm goes on; ลุง lies still in the mud by the burnt tree, พลอย kneels frozen beside him, ยาย and ต้น stand at the field edge
+      ADD("xwait", { ...SC("xw", { horizon: 980, tree: { x: 40, y: 1120, s: 0.5, burnt: 1 }, rain: 0.6, flash: 0.15 }),
+        cam: push2("xwait", fr(560, 1560, 1.3, 540, 1050), fr(540, 1540, 1.4, 540, 1050)), land: { y0: 240 },
+        actors: [LUNG(170, 1430, 0.6), P("ploy", 470, 1440, 0.6, "kT", "worry", "frown", { flip: true }), P("yaiHom", 780, 1720, 0.85, "idle", "worry", "frown", { flip: true }), P("ton", 960, 1710, 0.68, "idle", "wide", "o", { flip: true })],
+        captions: caps("xwait"), fx: (tl, id, t0, L) => put(L.set, Tk.scorch(300, 1440, 0.5, 0.8)) });
+      // 2 · close: ต้น clings to ยาย, whispering
+      ADD("xkid", { ...SC("xk", { horizon: 900, rain: 0.6 }), cam: push2("xkid", fr(600, 1560, 1.3, 540, 1150), fr(600, 1540, 1.4, 540, 1150)),
+        actors: [P("yaiHom", 470, 1830, 1.15, "idle", "worry", "frown"), P("ton", 720, 1850, 0.95, "idle", "wide", "o", { flip: true, talk: TALK("xkid", 0, "o") })], captions: caps("xkid") });
+      // 3 · close on ลุง in the rain; one far, soft flicker
+      ADD("xnow", { ...SC("xn", { horizon: 900, rain: 0.6, flash: 0.15 }), cam: push2("xnow", fr(380, 1700, 1.7, 540, 1150), fr(380, 1700, 1.85, 540, 1150)),
+        actors: [LUNG(200, 1780, 1.0)], captions: caps("xnow"), fx: (tl, id, t0, L) => { put(L.set, Tk.scorch(720, 1830, 0.5, 0.6)); FLICK(tl, t0 + 0.2, 0.3); } });
+      // 4 · the chapter card: the title sign staked in the paddy, EP.2's command in the red box
+      ADD("xchap", { ...SC("xc", { horizon: 1000, tree: { x: 160, y: 1150, s: 0.55, burnt: 1 }, rain: 0.5 }), cam: push2("xchap", fr(560, 1300, 1.0, 540, 1000), fr(560, 1300, 1.05, 540, 1000)),
+        captions: caps("xchap"), fx: (tl, id, t0, L) => put(L.set, titleSign(600, 1320, 1.0, "ต้นตะเคียนกลางนา", "ตอนที่ 2 อย่ากลัวจับตัวเขา")) });
