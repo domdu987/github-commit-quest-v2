@@ -1,0 +1,26 @@
+{
+ "out": "LONG-bang-rachan-16x9.mp4",
+ "xfade": 0.2,
+ "parts": [
+  {
+   "video": "ep1L/EP1L-bang-rachan-HQ.mp4",
+   "from": 0.0,
+   "to": 79.138
+  },
+  {
+   "video": "ep2L/EP2L-bang-rachan-HQ.mp4",
+   "from": 4.083,
+   "to": 51.502
+  },
+  {
+   "video": "ep3L/EP3L-bang-rachan-HQ.mp4",
+   "from": 4.568,
+   "to": 82.743
+  },
+  {
+   "video": "ep4L/EP4L-bang-rachan-HQ.mp4",
+   "from": 3.2,
+   "to": 83.265
+  }
+ ]
+}

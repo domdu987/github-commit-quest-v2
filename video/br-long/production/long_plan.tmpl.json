@@ -1,0 +1,10 @@
+{
+ "out": "LONG-bang-rachan-16x9.mp4",
+ "xfade": 0.2,
+ "parts": [
+  { "video": "ep1L/EP1L-bang-rachan-HQ.mp4", "from": 0.0, "to": "START:b19" },
+  { "video": "ep2L/EP2L-bang-rachan-HQ.mp4", "from": "START:c02", "to": "START:c16" },
+  { "video": "ep3L/EP3L-bang-rachan-HQ.mp4", "from": "START:d02", "to": "START:d23" },
+  { "video": "ep4L/EP4L-bang-rachan-HQ.mp4", "from": "START:e02", "to": "START:e20" }
+ ]
+}

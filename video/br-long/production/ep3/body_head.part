@@ -1,0 +1,44 @@
+      // ---------- บางระจัน แบต 3% EP.1 · storytelling clip (lane A) · the channel look (slender cast, lit sets) ----------
+      Rig.FLAT = true;
+      Engine.look = { ...(Engine.look || {}), vignette: 0.5, grain: 0.05 };
+      const NS = "http://www.w3.org/2000/svg";
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const ID = fr(540, 960, 1.0, 540, 960);
+      const grp = (parent) => { const g = document.createElementNS(NS, "g"); parent.appendChild(g); return g; };
+      const pop = (tl, g, at, o = {}) => tl.fromTo(g, { opacity: 0, scale: o.from ?? 0.8, y: o.dy ?? -18, svgOrigin: o.origin || "540 960" },
+        { opacity: 1, scale: 1, y: 0, svgOrigin: o.origin || "540 960", duration: o.dur ?? 0.4, ease: o.ease || "back.out(2.2)" }, at);
+      const out = (tl, g, at, d = 0.18) => tl.to(g, { opacity: 0, duration: d }, at);
+      const swingG = (tl, sel, t0, dur, amp = 3, org = "0 0") => tl.fromTo(sel, { rotation: -amp, svgOrigin: org }, { rotation: amp, svgOrigin: org, duration: 1.2, repeat: Math.ceil(dur / 1.2), yoyo: true, ease: "sine.inOut" }, t0);
+      const shake = (tl, g, t0, dur, a = 3, p = 0.05) => tl.fromTo(g, { x: -a }, { x: a, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "none" }, t0);
+      const DAY = { dark: 0.02, light: { from: "right", rim: "#fff0d0", rimOp: 0.6, rimW: 4, shade: "#3a2440", shadeOp: 0.25, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#fff2d8", bottom: "#4a3a50", op: 0.16 } };
+      const NIGHT = { dark: 0.1, light: { from: "right", rim: "#ffd9a0", rimOp: 0.55, rimW: 4, shade: "#1a1430", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#ffe2b0", bottom: "#1a1428", op: 0.24 } };
+      const spec = (k, o) => ({ ...(o.night ? NIGHT : DAY), cam: o.cam || { keys: [{ t: 0, ...(o.camAt || ID), drift: { s: o.push ?? 0.012 } }] }, captions: o.captions ?? caps(k), ...o });
+      const shot = (k, o) => add(k, spec(k, o));
+      const talk = (k, i, m = "o") => [[vo(k, i), voEnd(k, i), m]];
+      const swap = (tl, id, t, a = 0, b = 1, d = 0.12) => { tl.set(`#${id}-a${b}`, { opacity: 0 }, 0); tl.to(`#${id}-a${a}`, { opacity: 0, duration: d }, t); tl.to(`#${id}-a${b}`, { opacity: 1, duration: d }, t); };
+      const tagAt = (tl, L, x, y, text, at, o = {}) => { const g = grp(L.act); g.innerHTML = Lot.tag(x, y, text, o); pop(tl, g, at, { origin: `${x} ${y}`, from: 0.5 }); return g; };
+      const capAt = (id, y) => { const c = document.getElementById(`${id}-caps`); if (c) c.style.setProperty("top", `${y}px`, "important"); };
+      const ink = Lot.INK;
+      // a counter chip in the corner (screen space): "1/5"
+      const chip = (tl, L, steps, o = {}) => { const x = o.x ?? 900, y = o.y ?? 250;
+        const g = grp(L.light); g.innerHTML = `<g transform="translate(${x},${y})"><circle r="78" fill="#fbf7ee" stroke="${ink}" stroke-width="7"/>
+          ${steps.map(([, txt], i) => `<text id="${o.id}-c${i}" x="0" y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="${ink}" opacity="0">${txt}</text>`).join("")}
+          <text x="0" y="-36" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="22" fill="#a8305a">${o.label || "ที่ซ่อน"}</text></g>`;
+        steps.forEach(([at], i) => { tl.set(`#${o.id}-c${i}`, { opacity: 1 }, at); if (i + 1 < steps.length) tl.set(`#${o.id}-c${i}`, { opacity: 0 }, steps[i + 1][0]);
+          tl.fromTo(g, { scale: 1.25, svgOrigin: `${x} ${y}` }, { scale: 1, svgOrigin: `${x} ${y}`, duration: 0.25, ease: "back.out(3)", immediateRender: false }, at); });
+        return g; };
+      const sparkle = (x, y, r = 22) => `<path d="M${x},${y - r}Q${x + 4},${y - 4} ${x + r},${y}Q${x + 4},${y + 4} ${x},${y + r}Q${x - 4},${y + 4} ${x - r},${y}Q${x - 4},${y - 4} ${x},${y - r}Z" fill="#fff6b0" stroke="${ink}" stroke-width="2.5"/>`;
+
+
+      // the status bar (top left), per shot: [[label, value, colour]]
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .sghud { position: absolute; z-index: 58; left: 44px; top: 120px; display: flex; flex-direction: row; white-space: nowrap; width: max-content; align-items: center; gap: 16px;
+          padding: 12px 22px; border-radius: 18px; background: rgba(18,20,30,.7); border: 1.5px solid rgba(244,236,216,.2); box-shadow: 0 8px 24px rgba(0,0,0,.35); font-family: Kanit; color: #f4ecd8; }
+        .sghud b { font: 800 34px/1 Kanit; } .sghud small { font: 600 19px/1 Kanit; opacity: .65; } .sghud i { width: 1.5px; height: 30px; background: rgba(244,236,216,.25); }
+        .capbox { font: 800 54px/1.25 Kanit !important; }
+      </style>`);
+      const hud = (id, items) => { const el = document.getElementById(id); if (!el) return;
+        el.insertAdjacentHTML("beforeend", `<div class="sghud">${items.map(([l, v, c], i) => `${i ? "<i></i>" : ""}<small>${l}</small><b style="color:${c || "#f4ecd8"}">${v}</b>`).join("")}</div>`); };
+      const ears = (tl, aid, at, on = true, d = 0.25) => tl.to(`#${aid} .jkEar`, { opacity: on ? 1 : 0, duration: d }, at);

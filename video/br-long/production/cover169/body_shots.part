@@ -1,0 +1,14 @@
+      // ---------- the covers: x01 = EP.1 (tied, the buffalo at the pocket, 3%) · x02 = EP.2 (the whole yard bows to the phone) ----------
+      const CAM = window.LAND ? fr(820, 1010, 1.8, 394, 995) : fr(820, 1060, 1.35, 540, 1060);   // the landscape head converts portrait camera values (s×0.75, sx×1.78, sy×0.56)
+      shot("x01", { ...camp("x01"), captions: [], camAt: CAM, push: 0, blur: { far: 6, mid: 4 },
+        actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "tiedStruggle", eyes: "wide", mouth: "scream", sweat: true }]), ...(window.LAND ? [] : [A("brManSpear", 560, 1400, 0.98, [{ t: 0, mode: "idle", eyes: "angry", mouth: "frown" }])]),
+          A("brJukSword", 1010, 1400, 0.68, [{ t: 0, mode: "pointSword", eyes: "wide", mouth: "scream" }], { flip: true }), ...(window.LAND ? [] : [A("brPhaeoLadle", 430, 1400, 0.9, [{ t: 0, mode: "stir", eyes: "squint", mouth: "flat" }], { flip: true })])],
+        fx(tl, id, t0, L) { shadows(L, id, act("x01"), -0.5); rope(L, KENG, 0.95, 1400, id); const b = window.LAND ? buffalo(L, 380, 1400, 1.05) : buffalo(L, 1250, 1400, 1.05, true); lick(tl, b, t0, 4, { down: 30, tilt: 14 });
+          BRI.badge(tl, L.light, t0, 4, { kind: "battery", x: window.LAND ? 1250 : 850, y: window.LAND ? 300 : 780, s: 1.5, tone: "red", label: "แบต 3%", labelSize: 40, at: 0.1 }); } });
+      shot("x02", { ...camp("x02"), captions: [], camAt: CAM, push: 0, blur: { far: 6, mid: 4 },
+        actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "chin", eyes: "wide", mouth: "o" }]), A("brMan1", 540, 1400, 0.98, [{ t: 0, mode: "kneelBow", eyes: "closed", mouth: "flat" }]), A("brMan2", 650, 1400, 1.0, [{ t: 0, mode: "kneelBow", eyes: "closed", mouth: "flat" }]),
+          A("brMan3", 960, 1400, 1.0, [{ t: 0, mode: "kneelBow", eyes: "closed", mouth: "flat" }], { flip: true }), A("brWom1", 1070, 1400, 0.96, [{ t: 0, mode: "kneelBow", eyes: "closed", mouth: "flat" }], { flip: true }), A("brJukSword", 1160, 1400, 0.68, [{ t: 0, mode: "kneelBow", eyes: "wide", mouth: "o" }], { flip: true })],
+        fx(tl, id, t0, L) { shadows(L, id, act("x02"), -0.5); rope(L, KENG, 0.95, 1400, id); const px = KENG + 26 * 0.95, py = 1400 - 431 * 0.95; const ph = grp(L.act);
+          ph.innerHTML = `<g transform="translate(0,-52) rotate(-16)"><rect x="-13" y="-28" width="26" height="56" rx="5" fill="#1a1a22"/><rect x="-10" y="-23" width="20" height="44" rx="3" fill="#8ab8ff"/></g>`; ph.setAttribute("transform", `translate(${px.toFixed(1)},${py.toFixed(1)})`);
+          const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="${px}" cy="${py - 60}" rx="220" ry="170" fill="url(#brPhoneGlow)"/></g>`;
+          BRI.badge(tl, L.light, t0, 4, { kind: "phone", x: window.LAND ? 1250 : 850, y: window.LAND ? 300 : 780, s: 1.5, tone: "yellow", label: "นางไม้ในกล่อง", labelSize: 40, at: 0.1 }); } });

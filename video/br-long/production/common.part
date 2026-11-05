@@ -1,0 +1,51 @@
+      // ---------- looks per world ----------
+      const act = (k) => (shots.find((x) => x.key === k) || {}).actors || [];
+      const DAWN = { dark: 0.04, light: { from: "right", rim: "#ffe0b0", rimOp: 0.7, rimW: 4, shade: "#3a2a50", shadeOp: 0.28, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ffd8b0", bottom: "#4a3a60", op: 0.18 } };
+      const DAYC = { dark: 0.02, light: { from: "left", rim: "#fff4d8", rimOp: 0.6, rimW: 4, shade: "#3a2a30", shadeOp: 0.24, shadeW: 26, soft: 9, vol: false }, grade: { top: "#fff6e0", bottom: "#5a4a40", op: 0.14 } };
+      const ROOMN = { dark: 0.52, light: { from: "right", rim: "#9ad8ff", rimOp: 0.7, rimW: 4, shade: "#101428", shadeOp: 0.4, shadeW: 26, soft: 9, vol: false }, grade: { top: "#1a2448", bottom: "#06080f", op: 0.5 } };
+      const field = (k, o = {}) => ({ ...DAWN, set: "brField", setOpts: { id: `bf${k}`, ...o } });
+      const camp = (k, o = {}) => ({ ...DAYC, set: "brCamp", setOpts: { id: `bc${k}`, pole: true, drum: true, ...o } });
+      const room = (k, o = {}) => ({ ...ROOMN, set: "brRoom", setOpts: { id: `br${k}`, ...o } });
+      const shadows = (L, id, actors, sh = -0.4) => NkL.cast(L, id, actors, { k: 0.3, sh, op: 0.35 });
+      const loop = NkV.loop;
+      const H_BAT = (pct = 3) => [["แบต", `${pct}%`, "#ff8a7a"], ["ปลุก", "07:00", "#f2c55c"]];
+      const H_NIGHT = [["เวลา", "03:00", "#9ad8ff"], ["แบต", "3%", "#ff8a7a"]];
+      const ME = (who, x, y, track, extra = {}) => A(who, x, y, 0.95, track, extra);
+      const face = (x, y = 1400, s = 3.2, flip = false, sx = 540, sy = 760, k = 0.95) => fr(x + (flip ? -2 : 2) * k, y - 546 * k, s, sx, sy);
+      const KENG = 760;   // the tying pole
+      const CHANNEL = "Rod Mai Club";   // ← เปลี่ยนเป็นชื่อช่องใหม่เมื่อเจ้าของตั้งชื่อแล้ว (จุดเดียว)
+      const BUSH = (L) => { const g = grp(L.act); g.innerHTML = BRS.bush(1300, 1400, 0.9, "#3e7e34"); return g; };   // a copy of bush 2 over the cast: the kids stand in it
+      // ไอ้ดำ: BR.buffalo faces right; left = true mirrors it. lick(): the tongue laps, the head bobs (down/tilt lower the muzzle to the face)
+      const buffalo = (L, x, y, s = 1, left = false) => { const g = grp(L.act); g.innerHTML = BR.buffalo(); g.setAttribute("transform", `translate(${x},${y}) scale(${left ? -s : s},${s})`); return g; };
+      const lick = (tl, g, t0, dur, o = {}) => { const tg = g.querySelector(".brTongue"), hd = g.querySelector(".brBufHead");
+        tl.fromTo(tg, { scaleY: 0.5, rotation: -10, transformOrigin: "50% 0%" }, { scaleY: 1.25, rotation: 12, transformOrigin: "50% 0%", duration: 0.26, repeat: Math.ceil(dur / 0.26), yoyo: true, ease: "sine.inOut" }, t0);
+        tl.fromTo(hd, { y: -176 + (o.down ?? 0), rotation: o.tilt ?? 0, transformOrigin: "0% 50%" }, { y: -176 + (o.down ?? 0) + 14, rotation: (o.tilt ?? 0) + 4, transformOrigin: "0% 50%", duration: 0.7, repeat: Math.ceil(dur / 0.7), yoyo: true, ease: "sine.inOut" }, t0); };
+      // rope loops around the torso of the one tied to the pole (drawn over the cast)
+      const rope = (L, x, s = 0.95, y0 = 1400, id = "rp") => { const g = grp(L.act);
+        g.innerHTML = [-448, -414, -380, -346].map((yy, k) => `<g id="${id}-rp${k}"><ellipse cx="${x}" cy="${(y0 + yy * s).toFixed(1)}" rx="${(60 * s).toFixed(1)}" ry="${(9 * s).toFixed(1)}" fill="none" stroke="#caa66a" stroke-width="11"/>
+          <ellipse cx="${x}" cy="${(y0 + yy * s).toFixed(1)}" rx="${(60 * s).toFixed(1)}" ry="${(9 * s).toFixed(1)}" fill="none" stroke="#8a6a3a" stroke-width="3" stroke-dasharray="8 10"/></g>`).join(""); return g; };
+      // the phone's lock screen (screen space): status bar, the big 3%, the alarm row, a new-message banner (its text blurred: nobody reads it yet)
+      const phoneUI = (L, id, o = {}) => { const g = grp(L.light), x = o.x ?? 540, y = o.y ?? 760, s = o.s ?? 0.72;
+        g.innerHTML = `<g transform="translate(${x},${y}) scale(${s})"><rect x="-300" y="-550" width="600" height="1100" rx="60" fill="#1a1a22"/><rect x="-272" y="-522" width="544" height="1044" rx="44" fill="#0b0d16"/>
+          <rect x="-90" y="-512" width="180" height="34" rx="17" fill="#1a1a22"/>
+          <g id="${id}-ui"><text x="-236" y="-452" font-family="Kanit" font-weight="700" font-size="30" fill="#f4ecd8" opacity=".85">${o.time || "06:21"}</text>
+            <g transform="translate(236,-466)"><rect x="-60" y="-14" width="54" height="28" rx="6" fill="none" stroke="#f4ecd8" stroke-width="3"/><rect x="-5" y="-6" width="5" height="12" rx="1.5" fill="#f4ecd8"/><rect x="-55" y="-9" width="4" height="18" rx="1" fill="#ff5a4a"/></g>
+            <text x="166" y="-456" text-anchor="end" font-family="Kanit" font-weight="800" font-size="30" fill="#ff8a7a">${o.pct ?? 3}%</text>
+            <g id="${id}-big"><text x="0" y="-130" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="230" fill="#ff5a4a">${o.pct ?? 3}%</text><text x="0" y="-50" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="42" fill="#f4ecd8" opacity=".85">แบตเตอรี่ใกล้หมด</text></g>
+            <g id="${id}-al"><rect x="-236" y="60" width="472" height="170" rx="30" fill="#1c2236"/><g transform="translate(-176,145) scale(1.1)"><path d="M-21,12Q-23,-24 0,-27Q23,-24 21,12Z" fill="#f2c55c"/><path d="M-28,12H28" stroke="#f2c55c" stroke-width="5" stroke-linecap="round"/><circle cy="21" r="5.5" fill="#f2c55c"/></g>
+              <text x="-120" y="120" font-family="Kanit" font-weight="800" font-size="36" fill="#f4ecd8">นาฬิกาปลุก</text><text x="-120" y="196" font-family="Kanit" font-weight="900" font-size="74" fill="#f2c55c">07:00</text><text x="214" y="122" text-anchor="end" font-family="Kanit" font-weight="700" font-size="32" fill="#9ad8ff">พรุ่งนี้</text></g>
+            <g id="${id}-msg"><rect x="-250" y="-400" width="500" height="150" rx="30" fill="#f4ecd8"/><rect x="-226" y="-376" width="80" height="80" rx="20" fill="#3a9c66"/><path d="M-206,-350h40v26h-22l-8,8v-8h-10z" fill="#fff"/>
+              <text x="-124" y="-352" font-family="Kanit" font-weight="800" font-size="30" fill="#2e2a26">ข้อความใหม่</text><text x="226" y="-352" text-anchor="end" font-family="Kanit" font-weight="600" font-size="24" fill="#8a8a8a">ตอนนี้</text>
+              <g filter="url(#brBlur)"><text x="-124" y="-300" font-family="Kanit" font-weight="700" font-size="34" fill="#2e2a26">ยายซ่อนมะนาวไว้ใต้ยุ้ง</text></g></g></g>
+          <rect id="${id}-off" x="-272" y="-522" width="544" height="1044" rx="44" fill="#07080c" opacity="0"/><rect id="${id}-flash" x="-272" y="-522" width="544" height="1044" rx="44" fill="#ffffff" opacity="0"/></g>`; return g; };
+      // the camp rules on a hanging wooden board (screen space); rows: [icon, tone, line 1, line 2]
+      const plank = (L, id, rows, title) => { const g = grp(L.light);
+        const row = (y, n, ic, tone, a, b) => `<g id="${id}-rr${n}">${JKI.coin(ic, -290, y, 0.66, `${id}-ic${n}`, tone)}<text x="-222" y="${y - 8}" font-family="Kanit" font-weight="900" font-size="48" fill="#fbefd4">${a}</text><text x="-222" y="${y + 46}" font-family="Kanit" font-weight="800" font-size="40" fill="#f6d36a">${b}</text></g>`;
+        g.innerHTML = `<g id="${id}-pl" transform="translate(540,736)"><path d="M-250,-640V-390M250,-640V-390" stroke="#caa66a" stroke-width="12"/><path d="M-250,-640V-390M250,-640V-390" stroke="#8a6a3a" stroke-width="3" stroke-dasharray="8 12"/>
+          <rect x="-390" y="-392" width="780" height="784" rx="14" fill="#5a3a1c"/><rect x="-376" y="-376" width="752" height="752" rx="10" fill="#a8743a"/>
+          ${[-300, -200, -100, 0, 100, 200, 300].map((yy, k) => `<path d="M-360,${yy}q180,${k % 2 ? 12 : -12} 720,0" stroke="#8a5a2e" stroke-width="3" fill="none" opacity=".55"/>`).join("")}
+          ${[[-352, -352], [352, -352], [-352, 352], [352, 352]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="9" fill="#3a2a1a"/><circle cx="${x - 2}" cy="${y - 2}" r="4" fill="#9a9088"/>`).join("")}
+          <rect x="-300" y="-350" width="600" height="104" rx="12" fill="#5a3a1c"/><text x="0" y="-278" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#f6d36a">${title}</text>
+          ${rows.map(([ic, tone, a, b], n) => row(-150 + n * 200, n + 1, ic, tone, a, b)).join("")}</g>`; return g; };
+      const BLACK = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#000"/>`; return g; };
+
