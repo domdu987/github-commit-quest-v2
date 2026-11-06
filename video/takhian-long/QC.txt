@@ -13,4 +13,4 @@ edgecheck 1920x1080 (full/edgecheckL.cjs, every shot): no edge problems
 16:9 band: snapFit every shot at 30%/75% on the round-3 build → round3/fit-00..07.jpg · fixed shots from the real HQ → round3/fixed-01..04.jpg
 V1b (flashcheck.py on the round-3 render): 9 flashes · worst 10 s window 1 · at 2.7 26.0 50.0 70.5 88.7 106.7 118.8 171.8 234.5 s
 post-render: round3/long-1fps-01..11.jpg (480x270 per second)
-thumbnail: thumb.jpg 1280x720 (unchanged) · upload sheet: UPLOAD.md (chapters: 4:01 folded into 3:47, 3:34 → 3:33)
+thumbnail: thumb.jpg 1280x720 round 3 (thumb-src/thumb3.html on the 1:46.85 strike frame; title clear of ลุงเปี๊ยก and the crown, reads at 320 px) · upload sheet: UPLOAD.md (chapters: 4:01 folded into 3:47, 3:34 → 3:33)
