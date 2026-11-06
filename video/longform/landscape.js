@@ -12,6 +12,7 @@
 // (used automatically when the set does not reach past the old frame, e.g. puppet screens, maps, notebooks).
 // sh.land.ui = { x, y, s }: the HTML UI column (cards, source chips) placed at page px x, y (default: centred, top 0) and scaled s,
 // e.g. { x: 24 } top left, when a card drawn above the heads in 9:16 would land on a face in the band.
+// sh.land.ui.sel (CSS selector): move only the matching UI items and leave the others where they were.
 (() => {
   const LS = window.LANDSCAPE;
   if (!LS || !window.Engine) return;
@@ -88,7 +89,15 @@
         light.setAttribute("transform", `translate(540 ${y0.toFixed(1)}) scale(${k.toFixed(4)}) translate(-540 0)`);
       }
     }
-    if (o.ui) vui.style.transform = `translate(${o.ui.x ?? (1920 - 1080 * FIT) / 2}px, ${o.ui.y ?? 0}px) scale(${FIT * (o.ui.s ?? 1)})`;
+    if (o.ui) {
+      const T = `translate(${o.ui.x ?? (1920 - 1080 * FIT) / 2}px, ${o.ui.y ?? 0}px) scale(${FIT * (o.ui.s ?? 1)})`;
+      if (o.ui.sel) { // only the matching UI items move (e.g. ".steps, .zsrc": a card and its source chip); the rest, such as a
+        // counter drawn over the action, stays in the centred column
+        const col = vui.cloneNode(false); col.classList.add("vui2"); col.style.transform = T;
+        vui.after(col);
+        [...vui.children].forEach((n) => { if (n.matches(o.ui.sel) || n.querySelector(o.ui.sel)) col.appendChild(n); });
+      } else vui.style.transform = T;
+    }
     clip.dataset.land = fit ? "fit" : `y0=${Math.round(y0)}`;
   }
 

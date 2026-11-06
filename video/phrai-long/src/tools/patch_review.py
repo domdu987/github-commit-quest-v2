@@ -70,12 +70,12 @@ sub("ep1/body.part",
     '         kick: "ROD MAI CLUB", at: 1.9, glide: 1.8,',
     '         kick: "ROD MAI CLUB", at: 1.7, glide: 1.0, tin: [0.1, 0.08, 0.4], epAt: 0.7, // long: a 3.0 s opener (was at 1.9, glide 1.8)')
 # its sound: OpenerWater.cues at 1.7 / 1.0 (riser at − 0.9, splash and glitch at − 0.2, whoosh at, boom and glitch at the landing),
-# the tag's boom at 0.7, the plops of the rising hands from 0.9
+# the tag's boom at 0.7; the plops and the sting stay with the rings and hands, which still rise at 1.15–1.63 s (review round 2, N1)
 sub("ep1/mix.py",
     '    ("open", 0.0, "swell", 0.5), ("open", 0.1, "bubbles", 0.8), ("open", 0.95, "boom", 0.35), *[("open", 1.15 + i * 0.12, "plop", 0.55) for i in range(5)], ("open", 1.15, "sting", 0.8),\n'
     '    ("open", 1.0, "riser", 0.5), ("open", 1.7, "splash", 0.9), ("open", 1.7, "glitch", 0.5), ("open", 1.9, "whoosh", 0.6), ("open", 3.68, "boom", 0.8), ("open", 3.7, "glitch", 0.4),\n',
     '    # long: the 3.0 s opener (at 1.7 / glide 1.0)\n'
-    '    ("open", 0.0, "swell", 0.5), ("open", 0.1, "bubbles", 0.8), ("open", 0.7, "boom", 0.35), *[("open", 0.9 + i * 0.1, "plop", 0.55) for i in range(5)], ("open", 0.9, "sting", 0.8),\n'
+    '    ("open", 0.0, "swell", 0.5), ("open", 0.1, "bubbles", 0.8), ("open", 0.7, "boom", 0.35), *[("open", 1.15 + i * 0.12, "plop", 0.55) for i in range(5)], ("open", 1.15, "sting", 0.8),\n'
     '    ("open", 0.8, "riser", 0.5), ("open", 1.5, "splash", 0.9), ("open", 1.5, "glitch", 0.5), ("open", 1.7, "whoosh", 0.6), ("open", 2.68, "boom", 0.8), ("open", 2.7, "glitch", 0.4),\n')
 
 # ---------- B2: shadow ----------
@@ -86,7 +86,7 @@ sub("ep1/body.part",
 # ---------- B3: the knowledge cards to the empty top left (cpr: left, mid height, above the caption) ----------
 TL = "{ x: 24 }"
 CARDS = {1: {"how": TL, "reach": TL},
-         2: {"srt": TL, "dont": TL, "call": TL, "check": TL, "air": TL, "cpr": "{ x: 24, y: -400 }", "recover": TL},
+         2: {"srt": TL, "dont": TL, "call": TL, "check": TL, "air": TL, "cpr": '{ x: 24, y: -400, sel: ".steps, .zsrc" }', "recover": TL},
          3: {"mouth": TL, "float": TL, "know": TL}}
 for e, shots in CARDS.items():
     for k, ui in shots.items():
@@ -122,5 +122,28 @@ sub("ep1/body.part",
 sub("ep2/body.part",
     'set: "pierDeck", setOpts: { id: "pd6" }, dark: 0.2,',
     'set: "pierDeck", setOpts: { id: "pd6" }, dark: 0.2, land: { y0: 430 }, // long: headroom after the push-in (auto 570)')
+
+# ---------- review round 2 (6 Nov): the last edges, and the "then" shot ----------
+# lure: โต้ง's legs hang from the surface above the band (auto y0 285); out: แพรว's head at the top edge (503);
+# grab: the พราย's hand left the bottom edge on "แล้วดึงลง" (0); then: the card sat on the gallon the caption names and the bank
+# (ทางขึ้น) was above the band (570)
+sub("ep2/body.part",
+    'set: "underRiver", setOpts: { id: "ur3", surface: 300 }, dark: 0.12,',
+    'set: "underRiver", setOpts: { id: "ur3", surface: 300 }, dark: 0.12, land: { y0: 150 }, // long: his legs from the surface in the band')
+sub("ep2/body.part",
+    'set: "pierDeck", setOpts: { id: "pd9" }, dark: 0.2,',
+    'set: "pierDeck", setOpts: { id: "pd9" }, dark: 0.2, land: { y0: 400 }, // long: headroom for แพรว (auto 503)')
+sub("ep3/body.part",
+    'set: "ankleGrab", setOpts: { id: "ag5" }, dark: 0.1,',
+    'set: "ankleGrab", setOpts: { id: "ag5" }, dark: 0.1, land: { y0: 570 }, // long: the hand stays in the band, above the caption, as it pulls down')
+sub("ep3/body.part",
+    '      add("then", {\n',
+    '      add("then", {\n        land: { y0: 300, ui: { x: 24 } }, // long: the bank (ทางขึ้น) and the gallon in frame, the card top left\n')
+
+# grab with the band at 570: the arm's fade-out box (phUnder, lighter teal at its top, hard edges) came into the band behind the
+# caption; in the long it fades from clear to the deep's colour instead, so it has no edge
+sub("hf/lib3/phrai3.js",
+    '<rect x="560" y="1500" width="300" height="480" fill="url(#phUnder)" opacity=".8"/></g>`;',
+    '${window.LANDSCAPE ? `<defs><linearGradient id="${id}-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1b1a" stop-opacity="0"/><stop offset=".5" stop-color="#0a1b1a" stop-opacity=".9"/><stop offset="1" stop-color="#030807"/></linearGradient></defs><rect x="520" y="1380" width="380" height="640" fill="url(#${id}-fade)"/>` : `<rect x="560" y="1500" width="300" height="480" fill="url(#phUnder)" opacity=".8"/>`}</g>`;')
 
 print("\n".join(done))
