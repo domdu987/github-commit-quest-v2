@@ -8,7 +8,6 @@
  "complete": false,
  "missing": [
   "คลิปยาว 16:9 นาทีก่อนจม (กำลังทำ · เลน D · เสร็จ 2026-11-10 22:00)",
-  "ปกคลิปยาว 16:9",
   "Shorts เรื่องใหม่ 09:00/09:15 (ถ้ามีเรื่องผ่านด่านทัน)"
  ],
  "status": "คลิปยาว: นาทีก่อนจม ฉบับเต็ม (เลน D) · Shorts: เรื่องใหม่จากด่านฮุกถ้าทัน ไม่ทันให้ลงเฉพาะคลิปยาว",
@@ -32,14 +31,17 @@
   ],
   "status": "in_production",
   "branch": "prod/lane-d",
-  "commit": null,
+  "commit": "f0006d3",
   "video": "video/sink-long/LONG-sink-16x9-share.mp4",
-  "video_sha256": null,
-  "video_bytes": null,
+  "video_sha256": "ced9d9cea2176c8ca13d8ce763c20a1ee72ffc4e9cb23f32131efc8af0a9d3ae",
+  "video_bytes": 93545171,
   "cover": "video/sink-long/thumb.jpg",
   "made_by": "เลน D (โต๊ะภาพ 2)",
   "due": "2026-11-10T22:00+07:00",
-  "note": "ฉบับเต็มจาก EP.1–3 (video/sink-ep1..3 · บทและความรู้ video/sink) + บทเชื่อมจริง · ทำหลังแก้รูพญานาคตามผลตรวจ (ถ้ามี) · EP.3 \"คนที่คุณรักยังอยู่ใต้น้ำ อย่ากระโดดลงไปช่วย\" 64K"
+  "note": "ฉบับเต็มจาก EP.1–3 (video/sink-ep1..3 · บทและความรู้ video/sink) + บทเชื่อมจริง · ทำหลังแก้รูพญานาคตามผลตรวจ (ถ้ามี) · EP.3 \"คนที่คุณรักยังอยู่ใต้น้ำ อย่ากระโดดลงไปช่วย\" 64K",
+  "duration_s": 192.75,
+  "upload_sheet": "video/sink-long/UPLOAD.md (branch prod/lane-d)",
+  "review": "ส่งแล้ว 6 พ.ย. 11:21 (cold open จากฮุก EP.3 · บทเชื่อม 2 ช่วง · HG7 · 11,565 เฟรม · share −14.6 LUFS / tp −1.3) · HQ อยู่ที่เลน D 160,667,377 B sha256 39ca1207… · รอโต๊ะตรวจ · ยังไม่ผ่าน"
  },
  "team_charter": "video/release/TEAM-CHARTER.md"
 }
