@@ -26,7 +26,7 @@
   - 4.533–4.933 วิ: ตัดดำหลัง cold open
   - 57.767–58.533 วิ: ไฟในรถดับ (e1_flicker)
 - **freezedetect** (−60 dB ≥ 3 วิ) บนไฟล์ r4: ไม่พบ
-- **edgecheck** ส่วนที่ 3 (composition r4): ดูหัวข้อท้ายไฟล์ · ส่วนที่ 1 และ 2 ไม่เปลี่ยนจาก r3 (no edge problems)
+- **edgecheck** (`edgecheck.cjs` ทุก 0.25 วิ) ส่วนที่ 3 บน composition r4 ที่ใช้เรนเดอร์: **no edge problems** · ส่วนที่ 1 และ 2 ไม่เปลี่ยนจาก r3 (no edge problems)
 
 ## ตามข้อในผลตรวจรอบ 3
 - **B7 · x3_hook 2:15.94–2:19.24 คนขี่ลอยข้างรถ:**
