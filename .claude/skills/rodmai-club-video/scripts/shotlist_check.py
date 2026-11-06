@@ -6,8 +6,9 @@ usage:
 
   schedule.json   the episode schedule (shots with key/start/dur, vo lines with id/t/dur/cap); commands are captions with "{อย่า"
   shotlist.json   {"total": s, "cuts": [{"n","key","t","dur","emotion","size","angle","move","lead_sound","fg","light",
-                   "face_w","hold","threat_first","note", optional "deg","silhouette","command","expect"}]}  · one entry per cut, absolute times
+                   "face_w","hold","threat_first","note", optional "deg","silhouette","command","command_t","expect"}]}  · one entry per cut, absolute times
                   commands = captions that start with "{อย่า" + the first line inside a cut marked "command": true
+                  + "command_t": <seconds> on a cut = the exact time of the word "อย่า" inside a longer line
   soundplan.json  {"drone_start": t, "silences": [[t0, t1], ...], "sting": t, "bpm": [[t, bpm], ...], "ambience": [...]}
   sfx_cues.json   the mix's cue list {"sfx": [{"t", "type", "gain"}]} (type "sting" is counted)
 
@@ -179,7 +180,13 @@ def main():
             R.ok(f"ช็อตค้างนานเกินคาด: คัต {c['n']} {c['dur']:.1f} วิ (คาด {exp:.1f} วิ)")
 
     # ---- commands: pause 0.3 s, silence 1 s, still shot ----
-    cmds, lines = commands(sched, [(c["t"], c["t"] + c["dur"]) for c in cuts if c.get("command")])
+    cmds, lines = commands(sched, [(c["t"], c["t"] + c["dur"]) for c in cuts if c.get("command") and not c.get("command_t")])
+    # a cut can name the exact time of the word "อย่า" (e.g. from Whisper word times) when it sits inside a longer line
+    for c in cuts:
+        if c.get("command_t") is not None:
+            ct = float(c["command_t"])
+            cmds = [x for x in cmds if abs(x[0] - ct) > 0.05] + [(ct, ct + 1.0, f"(คัต {c['n']} command_t)", c.get("key", ""))]
+    cmds.sort()
     if not cmds:
         R.warn("ไม่เจอคำสั่ง '{อย่า…}' ใน schedule")
     silences = (sp or {}).get("silences", [])
