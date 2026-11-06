@@ -272,7 +272,7 @@
         } });
       // 21 · high: ต้น pours on ภูมิ's leg without stopping; น้ำหวาน counts on her fingers; push-in
       add("c_count", { set: "jellyBeach", setOpts: BEACH2("jb11", { tower: false, umbrellas: [] }), dark: 0, light: SUN,
-        cam: { keys: [{ t: 0, ...fr(600, 1660, 1.7, 540, 1060) }, { t: D("c_count"), glide: D("c_count"), ...fr(590, 1680, 2.15, 540, 1060) }] },
+        cam: { keys: [{ t: 0, ...fr(560, 1660, 1.6, 540, 1060) }, { t: D("c_count"), glide: D("c_count"), ...fr(555, 1680, 1.9, 540, 1060) }] },
         actors: [
           A("jPhum", MAT[0] + 40, MAT[1] + 10, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "o" }]),
           A("jTon", 720, 1775, 1.0, [{ t: 0, mode: "pourKneel", eyes: "worry", mouth: "flat" }], { flip: true }),
