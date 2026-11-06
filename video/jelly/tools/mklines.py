@@ -38,7 +38,7 @@ TAKES.update({("ep1", "n01"): 0, ("ep2", "x2"): 0, ("bridges", "a02"): 3})
 TAKES.update({("ep1", "p03"): 2, ("ep2", "w01"): 0, ("bridges", "a02"): 4})
 FULL_ONLY = set()
 # CINEMA BIBLE (owner, 6 Nov): every "อย่า…" command is read 15 % slower (tempo × 0.87) and gets 0.3 s of silence before it (timing.py)
-TEMPO_OVR = {("ep1", "n02"): round(1.2 * 0.87, 3), ("ep2", "n02"): round(1.2 * 0.87, 3)}
+TEMPO_OVR = {("ep1", "n02"): round(1.2 * 0.87, 3), ("ep2", "n02"): round(1.2 * 0.87, 3), ("ep3", "n02"): round(1.2 * 0.87, 3)}
 
 # ============================== EP.1 หนวดใสพันขา อย่าราดน้ำท่า (Short ≤ 2:30)
 EP1 = [

@@ -9,11 +9,12 @@
  },
  "n02": {
   "text": "อย่าเอาผ้าเช็ด",
-  "heard": "อย่าเอาพาเจ็น",
-  "cer": 0.286,
-  "dur": 0.82,
+  "heard": "อย่าเอาพาเชียน",
+  "cer": 0.357,
+  "dur": 0.94,
   "bad": true,
-  "long": false
+  "long": false,
+  "decision": "kept by coordinator 6 Nov (0.00 on the mp3 takes; short line, Whisper unstable). CINEMA BIBLE 6 Nov: tempo 1.2×0.87, 0.3 s before; wav CER 0.36 (ผ้าเช็ด→พาเชียน); listen-check"
  },
  "x2": {
   "text": "เช็ดหนวดออกก่อน! เดี๋ยวพี่เช็ดให้!",

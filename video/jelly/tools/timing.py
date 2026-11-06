@@ -55,7 +55,7 @@ SHOTS_ALL = {
     ],
     "ep3": [
         ("open", ["n01"], 0.05, 0.0, 1.0),            # a towel reaching for the leg
-        ("hook", ["n02"], 0.04, 0.4, 1.6),
+        ("hook", ["n02"], 0.30, 0.4, 1.6),            # CINEMA BIBLE: 0.3 s before "อย่า"
         ("towel", ["x2", "d01"], 0.1, 0.3, 2.4),
         ("know", ["n03"], 0.15, 0.3, 3.0),
         ("yai", ["y01", "y02"], 0.1, 0.3, 3.0),  # ยาย runs in with the basket · lifeguard tweezes tentacles (picture only) · rule 3
