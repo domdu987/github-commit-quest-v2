@@ -16,11 +16,18 @@ os.makedirs(OUT, exist_ok=True)
 SR, FPS = 48000, 60
 # (name, mix, picture project, first frame, frame count) — frames of each part's own 60 fps render
 PARTS = [
-    ("ep1", "ep1c/mix.wav", "L1", 0, 6174),          # 0 … 102.900 (cut 29, the vote, starts at 102.90)
-    ("bridgeA", "brc/mix.wav", "Lbr", 0, 497),       # 0 … 8.283 (B1 starts at 8.284)
-    ("ep2", "ep2c/mix.wav", "L2", 476, 4803 - 476),  # 7.933 … 80.050 (stay … the vote at 80.06)
-    ("bridgeB", "brc/mix.wav", "Lbr", 497, 964 - 497),
-    ("ep3", "ep3c/mix.wav", "L3", 0, 5536),          # 0 … 92.267 (the end board)
+    ("cold", "brc/mix.wav", "Lbr", 964, 2045 - 964),      # bridges 16.067 … 34.083 (C1–C4: thirty years ago) → black
+    ("title", "endc/mix.wav", "Lend", 0, 180),            # "หนวดใส ฉบับเต็ม" 3 s
+    ("ep1", "ep1c/mix.wav", "L1", 0, 6174),               # 0 … 102.900 (cut 29, the vote, starts at 102.90)
+    ("bridgeA", "brc/mix.wav", "Lbr", 0, 497),            # 0 … 8.283 (B1 starts at 8.284)
+    ("ep2", "ep2c/mix.wav", "L2", 476, 4803 - 476),       # 7.933 … 80.050 (stay … the vote at 80.06)
+    ("bridgeB", "brc/mix.wav", "Lbr", 497, 964 - 497),    # 8.283 … 16.067 ("นั่นมัน… พ่อผม")
+    ("ep3a", "ep3c/mix.wav", "L3", 0, 2963),              # EP.3 0 … 49.383 (to y05 "แล้วเขาก็ไม่ได้กลับบ้านอีกเลย")
+    ("secret", "fbc/mix.wav", "Lfb", 0, 2534),            # the full secret (lane B fb_* + hush), 42.233 s
+    ("ep3b", "ep3c/mix.wav", "L3", 2963, 5357 - 2963),    # EP.3 49.383 … 89.283 (the twist … dawn; EP.3's own end board dropped)
+    ("epi", "brc/mix.wav", "Lbr", 2045, 3267 - 2045),     # bridges 34.083 … 54.450 (E1–E3: a year later)
+    ("credits", "endc/mix.wav", "Lend", 180, 300),        # 3 … 8: the sea held 5 s, then silence
+    ("card", "endc/mix.wav", "Lend", 480, 480),           # 8 … 16: เรื่องต่อไป · ติดตาม · นาทีก่อนจม ฉบับเต็ม
 ]
 XF = int(0.04 * SR)
 
