@@ -37,10 +37,16 @@
   "cover": "video/takhian-long/thumb.jpg",
   "made_by": "เลน C (โต๊ะภาพ 1)",
   "due": "2026-11-08T22:00+07:00",
-  "note": "ฉบับเต็มจาก EP.1–2 รุ่นภาพใหม่ (1b11397/5e0f8a5 · kit video/takhian/upgrade · composition video/takhian-ep1..2) + บทเชื่อมจริง · ไม่ต้องตัด EP.2 จบค้างแล้ว",
-  "review": "โต๊ะตรวจรอบ 3 (6 พ.ย.): พร้อมลง · ไม่มี BLOCKER · sha256 ขนาด และ 14,872 เฟรมตรง · −14.2 LUFS · true peak −2.8 dBFS · musiccheck/hisscheck/hookcheck PASS · V1b ผ่าน · ด่านคู่กับทะเลลด ฉบับเต็ม: 3 วิแรก ดีกว่า · พีค เท่า · หักมุม แย่กว่า (เล็กน้อย) ซึ่งไม่กันการลง ตามเกณฑ์ที่ใช้กับคลิปยาวของเรื่องเก่า (รอเจ้าของยืนยัน ถ้าเจ้าของจะใช้ด่านเต็ม ให้เปลี่ยนกลับเป็น in_production) · MINOR M-a–M-d ไม่กันการลง เก็บไว้แก้ถ้าเรนเดอร์ใหม่ · รายงาน video/release/reviews/2026-11-06-takhian-long-r3.md · ปกใน 4218660 คือไฟล์เดียวกับ 3efb88c (sha256 ตรง) · HQ อยู่ที่เลน C 307,137,443 B sha256 7969d424… · ห้ามใช้ c1ffffc, 995741b, 52f691e",
+  "note": "ฉบับเต็มจาก EP.1–2 รุ่นภาพใหม่ (1b11397/5e0f8a5 · kit video/takhian/upgrade · composition video/takhian-ep1..2) + บทเชื่อมจริง · ไม่ต้องตัด EP.2 จบค้างแล้ว · ไฟล์ใน repo เป็นไฟล์ share 94.6 MB · ต้นฉบับ HQ 307 MB เลน C ส่งทางแชทแล้ว ใช้ลงแทนได้ถ้า sha ตรง",
+  "review": "โต๊ะตรวจรอบ 3 (6 พ.ย.): พร้อมลง · ไม่มี BLOCKER · sha256 ขนาด และ 14,872 เฟรมตรง · −14.2 LUFS · true peak −2.8 dBFS · musiccheck/hisscheck/hookcheck PASS · V1b ผ่าน · ด่านคู่กับทะเลลด ฉบับเต็ม: 3 วิแรก ดีกว่า · พีค เท่า · หักมุม แย่กว่า (เล็กน้อย) ซึ่งไม่กันการลง ตามเกณฑ์ที่ใช้กับคลิปยาวของเรื่องเก่า (รอเจ้าของยืนยัน ถ้าเจ้าของจะใช้ด่านเต็ม ให้เปลี่ยนกลับเป็น in_production) · MINOR M-a–M-d ไม่กันการลง เก็บไว้แก้ถ้าเรนเดอร์ใหม่ · รายงาน video/release/reviews/2026-11-06-takhian-long-r3.md · ปกใน 4218660 คือไฟล์เดียวกับ 3efb88c (sha256 ตรง) · ห้ามใช้ c1ffffc, 995741b, 52f691e",
   "cover_commit": "4218660",
-  "cover_sha256": "b27adce86a340a4d3686c61168cd57299736204b260c876cb01b6fa6df0614e2"
+  "cover_sha256": "b27adce86a340a4d3686c61168cd57299736204b260c876cb01b6fa6df0614e2",
+  "hq_by_chat": {
+   "file": "LONG-takhian-16x9-HQ.mp4",
+   "bytes": 307137443,
+   "sha256": "7969d424d2240dd525d8778eddf47f91594ba31c127030874fdd0766312b08a8",
+   "sent_by": "เลน C (แชทของเลน C · 6 พ.ย.)"
+  }
  },
  "team_charter": "video/release/TEAM-CHARTER.md"
 }
