@@ -26,7 +26,7 @@ json.dump(L, open(d + "/lines.json", "w"), ensure_ascii=False, indent=1)
 s = open(d + "/body.part").read(); a = '"ปู๊ด… ทดสอบ…", 780, 520'; assert s.count(a) == 1
 open(d + "/body.part", "w").write(s.replace(a, '"ปู๊ด… ทดสอบ…", 680, 520'))
 PY
-python3 "$W/tools/patch_timing.py"; python3 "$W/tools/patch_bridges.py"; python3 "$W/tools/patch_scale.py"; python3 "$W/tools/patch_libs.py"
+python3 "$W/tools/patch_timing.py"; python3 "$W/tools/patch_bridges.py"; python3 "$W/tools/patch_scale.py"; python3 "$W/tools/patch_scale2.py"; python3 "$W/tools/patch_libs.py"
 [ -f "$W/tools/patch_mix.py" ] && python3 "$W/tools/patch_mix.py"
 for e in 1 2 3; do (cd "$W/ep$e" && python3 timing.py > timing.log); done
 echo "prepared: $(for e in 1 2 3; do tail -1 $W/ep$e/timing.log; done | tr '\n' ' ')"

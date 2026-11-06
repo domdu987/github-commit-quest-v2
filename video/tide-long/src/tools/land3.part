@@ -11,7 +11,7 @@
         end: { land: { fit: false, y0: 300 } },
         // the callback siren test (วันพุธถัดมา): as in EP.1's "test", open on the tower's speakers as they sound, then tilt down to
         // ตาจุ่น, ตั้ง and แพรว on the beach by 1.8 s and the original slow push-in
-        wed: { cam: { keys: [{ t: 0, ...fr(800, 726, 1.15, 540, 900) }, { t: 1.8, glide: 1.6, ease: "power2.inOut", ...fr(760, 1196, 1.17, 540, 900) },
-          { t: D("wed"), glide: D("wed") - 1.8, ...fr(760, 1180, 1.25, 540, 900) }] } },
+        wed: { cam: { keys: [{ t: 0, ...fr(800, 726, 1.15, 540, 900) }, { t: 2.2, glide: 1.3, ease: "power2.inOut", ...fr(760, 1196, 1.17, 540, 900) },
+          { t: D("wed"), glide: D("wed") - 2.2, ...fr(760, 1180, 1.25, 540, 900) }] } }, // holds on the tower to 0.9 s (review r2 N4)
       });
       afterFx("end", (tl, id, t0, L) => endWide(L.light));
