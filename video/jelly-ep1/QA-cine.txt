@@ -1,0 +1,23 @@
+หนวดใส EP.1 ฉบับ CINEMA BIBLE (Shorts 1080×1920) · ตรวจจากไฟล์จริง 6 พ.ย. 2569
+ภาพนิ่ง r3 ผ่าน ("ผ่าน เรนเดอร์ต่อได้เลย") · cine.js 18a68bb · เรนเดอร์รอบ 2 (แก้ซับชนกันที่ 1:41 ด้วย capsJ)
+
+ไฟล์
+- HQ (ลงช่อง): video/release/hq/jelly-ep1-cine-HQ.mp4
+  94,243,857 B · sha256 2484f68c4e210673c7ed24558e39ca6db79b2a933623d7b813971a9d2e1b09ac · x264 2-pass 6.3 Mbps + AAC 256k 48 kHz
+- share (repo): video/jelly-ep1/jelly-ep1-cine-share.mp4
+  26,346,138 B · sha256 1b7acc52c4a7b3d5d36f6872b5c3f3e1562b57f97758229b7b97e129fc3d34e6 · x264 crf 24 + AAC 192k
+- raw (อยู่ในเครื่องเลน C): 134,898,114 B · sha256 39d5a20f0d8ea736097f9628a185b1c6e98aad24ad9a5a9706623a6cc509ae6e · 6886 เฟรม 60 fps
+- mix.wav sha256 3825d118ec92a6e19cbd7c5c5e7b78b1f4176e233b60270eb4926c225106be89
+- ความยาว: ภาพ 114.750 วิ · เสียง 114.759 วิ (ต่างกันไม่ถึง 1 เฟรม)
+
+1. รูปแบบ: h264 1080×1920 60/1 · aac 48000 (HQ และ share)
+2. ความดัง: HQ −14.1 LUFS · true peak −2.3 dBFS · share −14.1 LUFS · true peak −2.6 dBFS
+3. hookcheck: PASS · คำสั่ง {อย่าเอาน้ำเปล่าราด} เริ่ม 2.86 วิ (หลังเงียบตามแผน 1.86–2.86)
+4. hisscheck HQ: PASS (flatness 0.34 · pause HF −83.1 dBFS)
+5. musiccheck.tide: PASS · ใต้เสียงพูด −35.2 LUFS · ระหว่างบรรทัด −30.9 · เสียงพูดเหนือเพลง 20.7 LU · เพลงหาย 0%
+6. edgecheck (ทุก 0.25 วิ บนหน้าที่ build): no edge problems
+7. shotlist_check --soundplan --cues: FAIL 0 · WARN 18 · sting 1 ครั้ง · เงียบสนิทก่อน sting 68.16 ผ่าน
+   WARN หลัก: คัต 28 (twist 4.81 วิ = n06+d10) และคัต 29 (choice 6.16 วิ ยาวตามบรรทัด n07) ตั้งใจไว้ตามแผน
+8. flashcheck: 0 flashes
+9. ซับ 1:39.5–1:41.3 (sheets-cine/cap-1m40-fix.jpg): ขึ้นทีละบรรทัด ไม่ซ้อนกันแล้ว
+10. ชีต 1 fps: sheets-cine/qa-1fps-1..6.jpg (115 เฟรม)
