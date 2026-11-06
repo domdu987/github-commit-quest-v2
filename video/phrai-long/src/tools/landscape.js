@@ -10,6 +10,8 @@
 //   it are kept full width
 // Per shot (optional): sh.land = { y0 }  top of the band in vertical px (0…570), or { fit: true } the whole vertical frame centred
 // (used automatically when the set does not reach past the old frame, e.g. puppet screens, maps, notebooks).
+// sh.land.ui = { x, y, s }: the HTML UI column (cards, source chips) placed at page px x, y (default: centred, top 0) and scaled s,
+// e.g. { x: 24 } top left, when a card drawn above the heads in 9:16 would land on a face in the band.
 (() => {
   const LS = window.LANDSCAPE;
   if (!LS || !window.Engine) return;
@@ -86,6 +88,7 @@
         light.setAttribute("transform", `translate(540 ${y0.toFixed(1)}) scale(${k.toFixed(4)}) translate(-540 0)`);
       }
     }
+    if (o.ui) vui.style.transform = `translate(${o.ui.x ?? (1920 - 1080 * FIT) / 2}px, ${o.ui.y ?? 0}px) scale(${FIT * (o.ui.s ?? 1)})`;
     clip.dataset.land = fit ? "fit" : `y0=${Math.round(y0)}`;
   }
 

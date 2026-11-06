@@ -7,6 +7,7 @@ mkdir -p "$W/music"; cp "$R/video/music/suno1.mp3" "$W/music/suno1.mp3"
 python3 "$W/tools/patch_long.py"
 python3 "$W/tools/patch_libs.py"
 python3 "$W/tools/patch_band.py"
+python3 "$W/tools/patch_review.py"
 for e in 1 2 3; do (cd "$W/ep$e" && python3 timing.py > timing.log); done
 python3 - "$W" <<'PY'
 import json, sys

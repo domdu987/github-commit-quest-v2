@@ -45,9 +45,10 @@ def synth(text, voice, style, mp3_path):
     raise RuntimeError(f"TTS failed for: {text}")
 
 
-def trim(mp3_path, wav_path, tempo, extra=None):
+def trim(mp3_path, wav_path, tempo, extra=None, pause=0.22):
+    # pause: the longest silence kept inside a line (the "…" beat); a hook line may tighten it to land the command by 3 s
     af = ("silenceremove=start_periods=1:start_threshold=-40dB:stop_periods=-1:stop_duration=0.3:"
-          "stop_threshold=-40dB:stop_silence=0.22,areverse,silenceremove=start_periods=1:start_threshold=-40dB,areverse")
+          f"stop_threshold=-40dB:stop_silence={pause},areverse,silenceremove=start_periods=1:start_threshold=-40dB,areverse")
     if abs(tempo - 1.0) > 1e-3:
         af += f",atempo={tempo}"
     if extra:  # per-line colour, e.g. an echo for a voice calling from the forest
@@ -77,7 +78,7 @@ def main():
             print(f"tts {ln['id']} [{voice}] {ln['text']}")
             synth(ln["text"], voice, style, mp3)
             time.sleep(1.5)
-        trim(mp3, wav, ln.get("tempo", 1.0), ln.get("af"))
+        trim(mp3, wav, ln.get("tempo", 1.0), ln.get("af"), ln.get("pause", 0.22))
         durs[ln["id"]] = round(duration(wav), 3)
     json.dump(durs, open(os.path.join(out, "durations.json"), "w"), indent=1)
     print(json.dumps(durs, indent=1))
