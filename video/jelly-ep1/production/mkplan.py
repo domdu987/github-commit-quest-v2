@@ -109,7 +109,8 @@ json.dump({"bands": bands, "keep": "yellow", "keep_note": "ห่วงเป็
 aya = [{"t": round(V(k, i) + o, 2), "what": w} for k, i, o, w in AYA]
 FULL = ("n02", "w04")   # the real commands (coordinator 6 Nov): full 1 s silence; the rhyme's three are short dips so the scene doesn't stall
 silences = [[round(a["t"] - 1.0, 2), round(a["t"], 2)] for a in aya if a["what"][:3] in FULL] + [[round(T_THREAT - 0.6, 2), round(T_THREAT, 2)]]   # + the dead silence before the sting
-silences += [[round(V("gone", 1) - 0.5, 2), round(V("gone", 1), 2)]]   # B2 (review 6 Nov): a beat of silence before "ตอนที่ทุกคนมองภูมิ…"
+_f1 = V("gone", 1) + SH["gone"]["vo"][1]["frags"][1]
+silences += [[round(_f1 - 0.5, 2), round(_f1, 2)]]   # B2 (coordinator 6 Nov): a beat of silence before "ไม่มีใครเห็นน้ำหวานเลย"
 dips = [[round(a["t"] - 0.45, 2), round(a["t"], 2)] for a in aya if a["what"][:3] not in FULL]
 blk = SH["endb"]["start"]
 T_DRONE = min(c["t"] for c in cuts if c["emotion"] == "uneasy")
