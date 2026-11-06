@@ -304,7 +304,7 @@
           FGB(L, tl, t0, 0, CT(23, "c_shame"), "fg22", `<path d="M960,1120Q1040,1060 1180,1090V1700H1000Q930,1400 960,1120Z" fill="#f06a9a"/><path d="M990,1000Q1050,900 1180,930V1110Q1060,1080 990,1000Z" fill="#2a1a10"/>`); } });
       // 24–26 · "หายใจ… ไม่ค่อยออก" ภูมิ close → high wide: four small people, the empty road → the hand on the chest, the phone on speaker (the hold)
       add("c_hang", { set: "jellyBeach", setOpts: BEACH2("jb13", { tower: [930, 1270, 0.82] }), dark: 0, light: SUN,
-        cam: { keys: [{ t: 0, ...fr(MAT[0] + 50, 1515, 2.6, 540, 900) }, { t: CT(25, "c_hang"), ...fr(540, 1300, 0.62, 540, 1180) }] },
+        cam: { keys: [{ t: 0, ...fr(MAT[0] + 50, 1515, 2.6, 540, 900) }, { t: CT(25, "c_hang"), ...(window.LANDSCAPE ? fr(560, 1600, 0.66, 540, 900) : fr(540, 1300, 0.62, 540, 1180)) }] },
         actors: [
           A("jPhum", MAT[0] + 40, MAT[1] + 10, 0.95, [{ t: 0, mode: "gasp", eyes: "wide", mouth: "o" }], { talk: [TALK("c_hang", 0, "o")] }),
           A("jTon", 560, 1760, 1.0, [{ t: 0, mode: "pressDown", eyes: "cry", mouth: "o" }], { flip: true }),
@@ -313,7 +313,7 @@
         captions: caps("c_hang", undefined, { quote: true }),
         fx(tl, id, t0, L) { put(L.act, shin(MAT[0] + 40, MAT[1] + 10, 0.95));
           // the coast road behind the dunes, empty (seen in the high wide), palm fronds framing the top
-          put(L.fg, `<g id="hg-road"><path d="M-1300,2050H2400V2400H-1300Z" fill="#5a5a5e"/><path d="M-1300,2210H2400" stroke="#f2f0e8" stroke-width="10" stroke-dasharray="60 50"/><path d="M-1300,2050H2400" stroke="#d8c69e" stroke-width="16"/></g>
+          put(window.LANDSCAPE ? L.set : L.fg, `<g id="hg-road"${window.LANDSCAPE ? ' transform="translate(0,-190)"' : ""}><path d="M-1300,2050H2400V2400H-1300Z" fill="#5a5a5e"/><path d="M-1300,2210H2400" stroke="#f2f0e8" stroke-width="10" stroke-dasharray="60 50"/><path d="M-1300,2050H2400" stroke="#d8c69e" stroke-width="16"/></g>
             <g id="hg-palm">${[[-500, -300, 30], [1500, -340, -30], [200, -420, 10]].map(([x, y, r]) => `<g transform="translate(${x},${y}) rotate(${r})">${[0, 1, 2, 3, 4].map((k) => `<path d="M0,0Q${-200 + k * 100},${180} ${-360 + k * 180},${300 + (k % 2) * 60}" stroke="#1e4a2a" stroke-width="44" fill="none" stroke-linecap="round"/>`).join("")}</g>`).join("")}</g>`);
           show(tl, "#hg-road", t0 + CT(25, "c_hang"), t0 + CT(26, "c_hang")); show(tl, "#hg-palm", t0 + CT(25, "c_hang"), t0 + CT(26, "c_hang"));
           const a = CT(26, "c_hang");
