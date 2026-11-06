@@ -37,7 +37,7 @@ SHOTS_ALL = {
         ("endb", ["n08"], 0.2, 0.6, 3.0),             # Shorts only
     ],
     "ep2": [
-        ("open", ["n01"], 0.05, 0.0, 1.0),            # ภูมิ pushing up to follow his father
+        ("open", ["n01"], 0.02, 0.0, 1.0),            # ภูมิ pushing up to follow his father (0.02 pre-roll keeps the command ≤ 3.1 s)
         ("hook", ["n02"], 0.04, 0.4, 1.6),
         ("recap", ["n03"], 0.12, 0.3, 2.6),           # Shorts only
         ("stay", ["p01", "d01"], 0.1, 0.3, 2.4),
@@ -58,7 +58,7 @@ SHOTS_ALL = {
         ("hook", ["n02"], 0.04, 0.4, 1.6),
         ("towel", ["x2", "d01"], 0.1, 0.3, 2.4),
         ("know", ["n03"], 0.15, 0.3, 3.0),
-        ("yai", ["y01", "d02", "y02"], 0.1, 0.3, 3.0),  # ยาย runs in with the basket · lifeguard tweezes tentacles (picture only) · rule 3
+        ("yai", ["y01", "y02"], 0.1, 0.3, 3.0),  # ยาย runs in with the basket · lifeguard tweezes tentacles (picture only) · rule 3
         ("amb", ["x1"], 0.1, 0.6, 2.2),
         ("hall", ["d03", "y03", "d04"], 0.15, 0.3, 3.0),
         ("secret", ["y04", "y05", "d05"], 0.15, 0.6, 3.0),  # shadow-puppet flashback: the young fisherman, the water bowl

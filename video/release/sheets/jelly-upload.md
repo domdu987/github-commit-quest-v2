@@ -8,8 +8,8 @@
 
 | เวลา | ไฟล์ | สถานะ |
 |---|---|---|
-| 09:00 Shorts EP.1 | `video/release/hq/jelly-ep1-HQ.mp4` · ปก `video/jelly-ep1/cover.jpg` | ยังไม่ทำ · บทพร้อม (`ep1/lines.json` 31 บรรทัด · ประเมิน ~1:55) |
-| 09:15 Shorts EP.2 | `video/release/hq/jelly-ep2-HQ.mp4` · ปก `video/jelly-ep2/cover.jpg` | ยังไม่ทำ · บทพร้อม (`ep2/lines.json` 24 บรรทัด · ~1:35) |
+| 09:00 Shorts EP.1 | `video/release/hq/jelly-ep1-HQ.mp4` · ปก `video/jelly-ep1/cover.jpg` | ยังไม่ทำ · เสียงพร้อม (`ep1/lines.json` 31 บรรทัด · 1:55.2) |
+| 09:15 Shorts EP.2 | `video/release/hq/jelly-ep2-HQ.mp4` · ปก `video/jelly-ep2/cover.jpg` | ยังไม่ทำ · เสียงพร้อม (`ep2/lines.json` 24 บรรทัด · 1:30.1) |
 | 09:30 คลิปยาว 16:9 | `video/jelly-full/FULL-jelly-share.mp4` · ปก `video/jelly-full/thumb.jpg` | ยังไม่ทำ · บท EP.1–3 + ฉากเชื่อม A/B พร้อม |
 
 **ลิงก์คลิปยาว:** ถ้า Shorts ลงก่อนคลิปยาว ให้แทน `<ลิงก์คลิปยาว>` ด้วยลิงก์จริงหลังคลิปยาวขึ้น
@@ -131,4 +131,4 @@
 - ชื่อ ≤ 40 ตัวอักษรก่อน `|` (Python `len`): EP.1 35 ✔ · EP.2 36 ✔ · ไม่มีแฮชแท็กในชื่อ ✔
 - ข้อความที่ยกมาทุกบรรทัดตรงกับข้อ ✔ ใน `video/jelly/SOURCES.md`
 - ไม่สอน CPR และไม่บอกว่าน้ำส้มสายชู "ถอนพิษ" (SOURCES หัวข้อ 3)
-- HG7: การ์ดกดติดตาม 1 วิ ที่ EP.1 ยายท่องกฎข้อ 2 (y02) · EP.2 น้ำหวานท่อง (w03) · เวลาจริงรออัดเสียง
+- HG7: การ์ดกดติดตาม 1 วิ ที่ EP.1 23.09 วิ (ยายท่องกฎข้อ 2) · EP.2 40.03 วิ (น้ำหวานท่อง)
