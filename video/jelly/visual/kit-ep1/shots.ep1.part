@@ -27,9 +27,10 @@
         pop(tl, `#${id}`, t0, { s0: 0.6, d: 0.35, origin: `${w} 0` }); tl.to(`#${id}`, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2); };
       // extra poses
       Rig.MODES.holdNose = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -118, faF: -150, uaB: 10, faB: -30, torso: -5, head: -10 + 2 * Math.sin(u * 7), bodyY: -2 });
-      Rig.MODES.grabShin = (u, o) => { const j = Math.sin(u * 47) * 1.6; return { ...Rig.MODES.crouch(u, o), thF: -84, shF: 120, thB: -20, shB: 70, torso: 34 + j * 0.5, head: -36 + j, uaF: -14 + j, faF: -18, uaB: -60 - j, faB: -50, bodyY: 90 }; };
+      Rig.MODES.grabShin = (u, o) => { const j = Math.sin(u * 47) * 1.6; return { ...Rig.MODES.idle(u, o), thF: -78, shF: 96, thB: 2, shB: 4, torso: 10 + j * 0.5, head: -14 + j, uaF: -24 + j, faF: -14, uaB: 40 - j, faB: -80, bodyY: 0 }; };
       Rig.MODES.reachBottle = (u, o) => { const j = (o.shake ?? 1) * (Math.sin(u * 31) * 2.2 + Math.sin(u * 53) * 1.2); return { ...Rig.MODES.crouch(u, o), uaF: -70 + j, faF: -30 + j, uaB: -30, faB: -40, torso: 24, head: -10 }; };
       Rig.MODES.setDown = (u, o) => { const k = Math.min(1, u / 0.9); return { ...Rig.MODES.crouch(u, o), uaF: -70 + 50 * k, faF: -30 + 20 * k, uaB: -30, faB: -40, torso: 24 + 6 * k, head: -10 - 8 * k }; };
+      Rig.MODES.basketDown = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -44, faF: -8, uaB: -38, faB: -12, torso: 26, head: -16 });
       Rig.MODES.crouchLow = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 8, faF: -30, uaB: -10, faB: -30, torso: 16, head: -4 });
       Rig.MODES.sing = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 0.7); return { ...Rig.MODES.idle(u, o), uaF: -130 + 18 * b, faF: -30, uaB: 120 - 18 * b, faB: 30, torso: 4 * b, head: 8 * b, bodyY: -10 * Math.abs(b) }; };
       Rig.MODES.recite = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.4); return { ...Rig.MODES.idle(u, o), uaF: -100 + 6 * b, faF: -60 + 10 * b, uaB: 4, faB: -12, torso: 1, head: 3 * b }; };
@@ -40,6 +41,7 @@
         actors: [A("jPhum", 400, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }])],
         captions: caps("open"),
         fx(tl, id, t0, L) {
+          const cw = document.getElementById(`${id}-caps`); cw.style.top = "640px"; cw.style.left = "250px";
           put(L.act, `<g>${Jelly.ladder([[546, 1688], [600, 1704], [664, 1720]], { w: 7 })}${Jelly.ladder([[556, 1716], [580, 1686], [612, 1716], [640, 1690], [660, 1714]], { w: 5 })}
             <path d="M664,1720Q700,1746 694,1776Q686,1806 724,1814" stroke="#f2feff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M664,1720Q700,1746 694,1776Q686,1806 724,1814" stroke="#a88ae8" stroke-width="1.4" fill="none" stroke-dasharray="2 5"/>
             <g transform="translate(760,1790) scale(.55)">${Jelly.box(0, 0, 1, { seed: 4, len: 120, lit: 1.5, glow: true })}</g></g>`);
@@ -62,15 +64,24 @@
           tl.fromTo("#ja-sw", { y: 70 }, { y: 0, duration: 1.2, ease: "power2.out", immediateRender: false }, t0);
           [0, 1, 2, 3, 4].forEach((k) => tl.fromTo(`#ja-gl${k}`, { opacity: 0 }, { opacity: 1, duration: 0.25, repeat: 3, yoyo: true, immediateRender: false }, t0 + 0.3 + k * 0.3));
         } });
+      // ต้น's arm from the top-left, the fist closed round the bottle's middle, its open neck aimed at the leg (rot: the neck's direction, deg)
+      const holdBottle = (gid, cx, cy, rot, s = 1.25) => { const a = rot * Math.PI / 180, mx = cx + Math.sin(a) * 92 * s, my = cy - Math.cos(a) * 92 * s;
+        return { mouth: [mx, my], svg: `<g id="${gid}"><path d="M${cx},${cy}L${cx - 330},${cy - 560}" stroke="#1e1a16" stroke-width="${92 * s}" stroke-linecap="round"/><path d="M${cx},${cy}L${cx - 330},${cy - 560}" stroke="#5aa8d8" stroke-width="${84 * s}" stroke-linecap="round"/>
+          <path d="M${cx - 40},${cy - 70}L${cx - 330},${cy - 560}" stroke="#4a90c0" stroke-width="${24 * s}" stroke-linecap="round" opacity=".6"/><circle cx="${cx}" cy="${cy}" r="${40 * s}" fill="#c08a5e" stroke="#1e1a16" stroke-width="4"/>
+          <g transform="translate(${cx},${cy}) rotate(${rot})"><g transform="scale(${s}) translate(0,100)">${Jelly.bottle(0, 0, 1, { cap: false })}</g>
+            <rect x="${-50 * s}" y="${-34 * s}" width="${100 * s}" height="${62 * s}" rx="${24 * s}" fill="#c08a5e" stroke="#1e1a16" stroke-width="4"/>
+            ${[-30, -10, 10, 30].map((x) => `<path d="M${x * s},${-30 * s}V${24 * s}" stroke="#8a5a3a" stroke-width="3"/>`).join("")}<path d="M${-48 * s},${-6 * s}Q${-62 * s},${-30 * s} ${-40 * s},${-40 * s}" stroke="#1e1a16" stroke-width="3" fill="#c08a5e"/></g></g>` }; };
       // ---------- 2. hook: the drop swelling on the bottle's lip over the tentacles (cut on {อย่า}) ----------
       add("hook", { set: "jellyHook", setOpts: { id: "jh", title: " ", sub: " ", seed: 9 }, dark: 0, blur: { fg: 0, set: 0, act: 0 }, light: false, grade: GBR,
         cam: { keys: [{ t: 0, ...fr(540, 840, 1.35, 540, 860) }, { t: D("hook"), glide: D("hook"), ...fr(570, 800, 1.6, 540, 860) }] },
         shake: (t) => (t < 0.45 ? { x: 14 * Math.sin(t * 70) * (1 - t / 0.45), y: 9 * Math.sin(t * 53) * (1 - t / 0.45), r: 0.6 * Math.sin(t * 41) * (1 - t / 0.45) } : { x: 1.6 * Math.sin(t * 23), y: 1.2 * Math.sin(t * 31), r: 0 }),
         captions: caps("hook"),
         fx(tl, id, t0, L) {
-          put(L.act, `<g id="hk-drop"><path d="M282,808q-14,26 0,40q14,-14 0,-40z" fill="#dff4fc" stroke="#5a9ac8" stroke-width="3"/><circle cx="278" cy="834" r="4" fill="#fff"/></g>`);
-          tl.fromTo("#hk-drop", { scale: 0.5, svgOrigin: "282 808" }, { scale: 1.6, svgOrigin: "282 808", duration: D("hook"), ease: "power1.in", immediateRender: false }, t0);
-          tl.fromTo("#jh-bt", { x: 0 }, { x: 3, duration: 0.05, repeat: Math.round(D("hook") / 0.05), yoyo: true, ease: "none", immediateRender: false }, t0);
+          document.getElementById("jh-bt").setAttribute("display", "none");
+          const hb = holdBottle("hk-bt", 380, 600, 155), [mx, my] = hb.mouth;
+          put(L.act, `<g id="hk-all">${hb.svg}<g id="hk-drop"><path d="M${mx},${my + 6}q-14,26 0,40q14,-14 0,-40z" fill="#dff4fc" stroke="#5a9ac8" stroke-width="3"/><circle cx="${mx - 4}" cy="${my + 32}" r="4" fill="#fff"/></g></g>`);
+          tl.fromTo("#hk-drop", { scale: 0.5, svgOrigin: `${mx} ${my + 6}` }, { scale: 1.6, svgOrigin: `${mx} ${my + 6}`, duration: D("hook"), ease: "power1.in", immediateRender: false }, t0);
+          tl.fromTo("#hk-all", { x: 0 }, { x: 3, duration: 0.05, repeat: Math.round(D("hook") / 0.05), yoyo: true, ease: "none", immediateRender: false }, t0);
         } });
       // ---------- 3. สามชั่วโมงก่อน: the nail's shadow on ยาย's house post swings back three hours ----------
       add("card", { dark: 0, light: false, grade: GDAWN,
@@ -183,10 +194,10 @@
           A("jPhum", 1040, 1700, 0.82, [{ t: 0, mode: "run", eyes: "normal", mouth: "laugh" }], { moveTo: { x: 1460, y: 1670, dur: 1.8, ease: "none" }, until: F("basket", 0, 2) - 0.1 }),
           A("jWan", 900, 1710, 0.7, [{ t: 0, mode: "run", eyes: "normal", mouth: "laugh" }], { moveTo: { x: 1400, y: 1680, dur: 2.3, ease: "none" }, until: F("basket", 0, 2) - 0.1 }),
           A("jLaorBasket", 760, 1690, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { until: F("basket", 0, 2) - 0.1 }),
-          A("jLaor", 1130, 1660, 1.0, [{ t: 0, mode: "crouch", eyes: "closed", mouth: "flat" }], { flip: true, from: F("basket", 0, 2) - 0.1 }),
+          A("jLaor", 1130, 1660, 1.0, [{ t: 0, mode: "basketDown", eyes: "closed", mouth: "flat" }], { flip: true, from: F("basket", 0, 2) - 0.1 }),
         ],
         captions: caps("basket"),
-        fx(tl, id, t0, L) { put(L.act, `<g id="bk-b">${Jelly.basket(960, 1668, 1.2)}</g>`); show(tl, "#bk-b", t0 + F("basket", 0, 2) - 0.1); } });
+        fx(tl, id, t0, L) { put(L.act, `<g id="bk-b">${Jelly.basket(925, 1668, 1.2)}</g>`); show(tl, "#bk-b", t0 + F("basket", 0, 2) - 0.1); } });
       // ---------- 8. the map: ยาย's house → along the shore → the beach by the tower ----------
       add("map", { dark: 0, light: false, grade: GBR,
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("map"), glide: D("map"), ...fr(620, 900, 1.25, 540, 960) }] },
@@ -219,7 +230,7 @@
           put2(0); tl.to(c, { k: 1, duration: D("map") - 0.6, ease: "power1.inOut", immediateRender: false, onUpdate: () => put2(c.k) }, t0 + 0.2);
         } });
       // the vinegar post with ยายลออ's rhyme board hung from a bamboo arm lashed across it (in the world) · ids `${pid}-on`, `${pid}-tick`
-      const postBoard = (x, y, s, pid, o = {}) => { const k = 0.45 * s, py = y - 330 * s, by = py + 122 * k;
+      const postBoard = (x, y, s, pid, o = {}) => { const k = 0.3 * s, py = y - 226 * s, by = py + 122 * k;
         return `<g>${Jelly.post(x, y, s, { full: o.full ?? 0 })}<path d="M${x - 300 * k},${py}H${x + 300 * k}" stroke="#1e1a16" stroke-width="${16 * s}" stroke-linecap="round"/><path d="M${x - 300 * k},${py - 2 * s}H${x + 300 * k}" stroke="#c8b070" stroke-width="${10 * s}" stroke-linecap="round"/>
           ${[-1, 1].map((d) => `<path d="M${x + d * 250 * k},${py - 6 * s}v${12 * s}" stroke="#8a6a3a" stroke-width="${6 * s}"/>`).join("")}<path d="M${x - 16 * s},${py - 10 * s}l${32 * s},${20 * s}M${x + 16 * s},${py - 10 * s}l${-32 * s},${20 * s}" stroke="#8a6a3a" stroke-width="${5 * s}"/>
           <g transform="translate(${x},${by}) scale(${k})">${Jelly.ruleBoard(0, 0, { active: -1 })}
@@ -240,8 +251,7 @@
         cam: { keys: [{ t: 0, ...fr(560, 1300, 1.0, 540, 960) }, { t: vo("beach", 1) - 0.14, glide: vo("beach", 1) - 0.14, ...fr(540, 1320, 1.08, 540, 960) },
           { t: vo("beach", 1) - 0.12, ...fr(250, 1330, 2.0, 540, 1100) }, { t: vo("beach", 2) - 0.14, glide: vo("beach", 2) - vo("beach", 1), ...fr(250, 1330, 2.08, 540, 1100) },
           { t: vo("beach", 2) - 0.12, ...fr(560, 1420, 1.5, 540, 1150) }, { t: vo("beach", 3) - 0.14, glide: vo("beach", 3) - vo("beach", 2), ...fr(580, 1400, 1.56, 540, 1150) },
-          { t: vo("beach", 3) - 0.12, ...fr(POST[0], POST[1] - 330, 3.0, 540, 820) }, { t: F("beach", 3, 1) - 0.14, glide: F("beach", 3, 1) - vo("beach", 3), ...fr(POST[0], POST[1] - 300, 3.15, 540, 820) },
-          { t: F("beach", 3, 1) - 0.12, ...fr(POST[0], POST[1] - 400, 4.4, 540, 760) }, { t: D("beach"), glide: D("beach") - F("beach", 3, 1), ...fr(POST[0], POST[1] - 400, 4.7, 540, 760) }] },
+          { t: vo("beach", 3) - 0.12, ...fr(POST[0], POST[1] - 0.62 * 240, 2.7, 540, 760) }, { t: D("beach"), glide: D("beach") - vo("beach", 3), ...fr(POST[0], POST[1] - 0.62 * 240, 3.15, 540, 740) }] },
         actors: [
           A("jTonPhone", 250, 1720, 0.92, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "smile" }, { t: vo("beach", 3) - 0.1, mode: "idle", eyes: "normal", mouth: "flat" }], { talk: [TALK("beach", 1, "o"), TALK("beach", 3, "o")] }),
           A("jWanBare", 470, 1750, 0.66, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("beach", 2), mode: "point", eyes: "wide", mouth: "o" }], { flip: false, talk: [TALK("beach", 0, "o"), TALK("beach", 2, "o")] }),
@@ -276,15 +286,18 @@
         } });
       // ---------- 11. the sting, half under: ภูมิ grabs his shin; then ต้น runs in shouting for 1669 ----------
       const SURF = 730;   // the waterline at 38 % of the frame
-      add("sting", { set: "jellySplit", setOpts: { id: "jsd", surf: SURF, floor: 1660, seed: 3 }, dark: 0, blur: { fg: 0, set: 0, mid: 0, far: 0 }, light: SUN, grade: GBR,
+      add("sting", { set: "jellySplit", setOpts: { id: "jsd", surf: SURF, floor: 1330, seed: 3 }, dark: 0, blur: { fg: 0, set: 0, mid: 0, far: 0 }, light: SUN, grade: GBR,
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("sting"), glide: D("sting"), ...fr(560, 1000, 1.08, 540, 960) }] },
         shake: (t) => (t < 0.6 ? { x: 10 * Math.sin(t * 60) * (1 - t / 0.6), y: 7 * Math.sin(t * 47) * (1 - t / 0.6), r: 0 } : { x: 0, y: 0, r: 0 }),
-        actors: [A("jPhum", 560, 1500, 1.1, [{ t: 0, mode: "grabShin", eyes: "cry", mouth: "scream" }])],
+        actors: [A("jPhum", 470, 1310, 1.3, [{ t: 0, mode: "grabShin", eyes: "cry", mouth: "scream" }])],
         captions: caps("sting", undefined, { quote: true }),
         fx(tl, id, t0, L) { UW(L, SURF);
-          put(L.fg, `<g>${Jelly.ladder([[600, 1360], [640, 1392], [680, 1380]], { w: 8 })}${Jelly.ladder([[592, 1410], [636, 1420], [690, 1440]], { w: 6 })}
-            ${Jelly.box(760, 1330, 1.0, { seed: 5, len: 260, lit: 1.4, glow: true, sway: -1.2 })}<path d="M728,1340Q690,1352 670,1380Q650,1404 612,1400" stroke="#f2feff" stroke-width="5" fill="none" stroke-linecap="round"/>
-            ${Jelly.box(220, 1080, 0.9, { seed: 6, len: 300, lit: 1.3, glow: true })}${Jelly.box(900, 1020, 0.75, { seed: 7, len: 240, lit: 1.2, glow: true })}${Jelly.box(330, 1400, 0.7, { seed: 8, len: 180, lit: 1.2, glow: true })}${Jelly.box(960, 1480, 0.6, { seed: 9, len: 150, lit: 1.1 })}</g>`);
+          put(L.fg, `<g id="st-j"><g id="st-w"></g>
+            ${Jelly.box(880, 900, 1.0, { seed: 5, len: 300, lit: 1.4, glow: true, sway: -1.2 })}
+            ${Jelly.box(170, 880, 0.85, { seed: 6, len: 300, lit: 1.3, glow: true })}${Jelly.box(980, 1250, 0.6, { seed: 7, len: 200, lit: 1.2, glow: true })}${Jelly.box(250, 1260, 0.6, { seed: 8, len: 160, lit: 1.2, glow: true })}</g>`);
+          // the welts and a tentacle wrapped on the raised shin (knee ≈ (687, 960), foot ≈ (631, 1131) from the pose), a jellyfish trailing from it
+          put(L.fg, `<g>${Jelly.ladder([[676, 990], [700, 1030], [660, 1060]], { w: 8 })}${Jelly.ladder([[650, 1050], [690, 1090], [640, 1112]], { w: 7 })}
+            <path d="M684,1000Q730,1040 690,1080Q650,1110 700,1130Q760,1160 790,1210" stroke="#f2feff" stroke-width="5" fill="none" stroke-linecap="round"/>${Jelly.box(820, 1250, 0.75, { seed: 15, len: 200, lit: 1.5, glow: true, sway: 1 })}</g>`);
           PopUI.sfx(tl, L.light, t0 + 0.12, 1.1, "แปลบ!", 820, 420, { rot: 8 });
         } });
       // ---------- 11b. ต้น splashes in, phone up, shouting for 1669 ----------
@@ -297,19 +310,29 @@
       const shin = (x, y, s) => `<g transform="translate(${x},${y}) scale(${s})">${Jelly.ladder([[146, -12], [200, 4], [264, 20]], { w: 7 })}${Jelly.ladder([[156, 16], [180, -14], [212, 16], [240, -10], [260, 14]], { w: 5 })}
         <path d="M264,20Q300,46 294,76Q286,106 324,114" stroke="#f2feff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M264,20Q300,46 294,76Q286,106 324,114" stroke="#a88ae8" stroke-width="1.4" fill="none" stroke-dasharray="2 5"/></g>`;
       // ---------- 12. the crowd: a woman pushes a bottle and says rub it; ภูมิ begs; น้ำหวาน recites the rhyme to her father ----------
+      // an arm reaching in from the edge with a water bottle held out (screen space · from (ex, ey) to the hand at (hx, hy))
+      const edgeArm = (ex, ey, hx, hy, sleeve, skin = "#c08a5e") => { const a = Math.atan2(hy - ey, hx - ex) * 180 / Math.PI;
+        return `<path d="M${ex},${ey}L${hx},${hy}" stroke="#1e1a16" stroke-width="64" stroke-linecap="round"/><path d="M${ex},${ey}L${hx},${hy}" stroke="${sleeve}" stroke-width="56" stroke-linecap="round"/>
+          <path d="M${(ex + hx * 2) / 3},${(ey + hy * 2) / 3}L${hx},${hy}" stroke="${skin}" stroke-width="44" stroke-linecap="round"/><g transform="translate(${hx},${hy}) rotate(${a + 90})"><g transform="translate(0,40) scale(.6)">${Jelly.bottle(0, 0, 1, { cap: false })}</g>
+          <rect x="-30" y="-24" width="60" height="44" rx="18" fill="${skin}" stroke="#1e1a16" stroke-width="3.4"/></g>`; };
       add("crowd", { set: "jellyBeach", setOpts: BEACH("jb3", { umbrellas: [[90, 1300, 0.8, "#f2c230"]], life: [["mat", 120, 1380, 0.8, "#e8482a"]] }), dark: 0, light: SUN, grade: GBR,
-        cam: { keys: [{ t: 0, ...fr(540, 1520, 1.3, 540, 1150) }, { t: vo("crowd", 1) - 0.14, glide: vo("crowd", 1) - 0.14, ...fr(560, 1520, 1.38, 540, 1150) },
-          { t: vo("crowd", 1) - 0.12, ...fr(500, 1540, 2.3, 540, 1000) }, { t: vo("crowd", 2) - 0.14, glide: vo("crowd", 2) - vo("crowd", 1), ...fr(500, 1540, 2.45, 540, 1000) },
-          { t: vo("crowd", 2) - 0.12, ...fr(560, 1440, 1.6, 540, 1000) }, { t: D("crowd"), glide: D("crowd") - vo("crowd", 2), ...fr(570, 1440, 1.72, 540, 1000) }] },
+        cam: { keys: [{ t: 0, ...fr(500, 1520, 1.3, 540, 1150) }, { t: vo("crowd", 1) - 0.14, glide: vo("crowd", 1) - 0.14, ...fr(520, 1520, 1.38, 540, 1150) },
+          { t: vo("crowd", 1) - 0.12, ...fr(470, 1540, 2.3, 540, 1000) }, { t: vo("crowd", 2) - 0.14, glide: vo("crowd", 2) - vo("crowd", 1), ...fr(470, 1540, 2.45, 540, 1000) },
+          { t: vo("crowd", 2) - 0.12, ...fr(430, 1440, 1.55, 540, 1000) }, { t: D("crowd"), glide: D("crowd") - vo("crowd", 2), ...fr(440, 1440, 1.66, 540, 1000) }] },
         actors: [
-          A("jManBottle", 980, 1700, 0.9, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true }),
-          A("jWomanBottle", 820, 1760, 0.95, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true, talk: [TALK("crowd", 0, "scream")] }),
+          // cut 1: the woman (standing, back right) · ภูมิ (sitting, middle) · ต้น (crouched, left) — three heights, no face covered
+          A("jWomanBottle", 800, 1700, 0.95, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true, until: vo("crowd", 1) - 0.12, talk: [TALK("crowd", 0, "scream")] }),
           A("jPhum", 450, 1780, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }], { talk: [TALK("crowd", 1, "scream")] }),
-          A("jTon", 250, 1800, 1.0, [{ t: 0, mode: "crouchLow", eyes: "wide", mouth: "o" }]),
-          A("jWanBare", 650, 1790, 0.74, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }, { t: vo("crowd", 2), mode: "idle", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("crowd", 2, "o")] }),
+          A("jTon", 230, 1800, 1.0, [{ t: 0, mode: "crouchLow", eyes: "wide", mouth: "o" }]),
+          // cut 3: น้ำหวาน comes in on the right and speaks to her father across ภูมิ
+          A("jWanBare", 680, 1800, 0.74, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { flip: true, from: vo("crowd", 2) - 0.12, talk: [TALK("crowd", 2, "o")] }),
         ],
         captions: caps("crowd", undefined, { quote: true }),
-        fx(tl, id, t0, L) { put(L.act, shin(450, 1780, 0.95)); put(L.set, Jelly.swimmers([[300, 930, 0.9]])); } });
+        fx(tl, id, t0, L) { put(L.act, shin(450, 1780, 0.95)); put(L.set, Jelly.swimmers([[300, 930, 0.9]]));
+          // the crowd as arms with bottles from the frame's edges (cut 1 from the right, cut 2 from both sides)
+          put(L.light, `<g id="cr-h1">${edgeArm(1150, 1290, 880, 1230, "#f2c230")}</g><g id="cr-h2">${edgeArm(1150, 640, 870, 840, "#e85a6a")}${edgeArm(1150, 1060, 880, 1020, "#3a8ac8", "#a8784a")}</g>`);
+          show(tl, "#cr-h1", t0, t0 + vo("crowd", 1) - 0.12); show(tl, "#cr-h2", t0 + vo("crowd", 1) - 0.12, t0 + vo("crowd", 2) - 0.12);
+        } });
       // ---------- 13. the skin cut open: fresh water and rubbing make the stingers still on it fire (K2) ----------
       add("know", { dark: 0, light: false, grade: GBR,
         cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("know"), glide: D("know"), ...fr(540, 1000, 1.08, 540, 960) }] },
@@ -360,12 +383,13 @@
       add("choice", { set: "jellyHook", setOpts: { id: "jc", title: " ", sub: " ", seed: 9 }, dark: 0, blur: { fg: 0, set: 0, act: 0 }, light: false, grade: GBR,
         cam: { keys: [{ t: 0, ...fr(520, 860, 1.3, 540, 880) }, { t: D("choice"), glide: D("choice"), ...fr(540, 860, 1.45, 540, 880) }] },
         captions: caps("choice", undefined, { quote: true }),
-        fx(tl, id, t0) { tl.fromTo("#jc-bt", { x: -4, y: 0 }, { x: 4, y: 2, duration: 0.045, repeat: Math.round(D("choice") / 0.045), yoyo: true, ease: "none", immediateRender: false }, t0); } });
+        fx(tl, id, t0, L) { document.getElementById("jc-bt").setAttribute("display", "none"); put(L.act, holdBottle("jc-hb", 380, 600, 155).svg);
+          tl.fromTo("#jc-hb", { x: -4, y: 0 }, { x: 4, y: 2, duration: 0.045, repeat: Math.round(D("choice") / 0.045), yoyo: true, ease: "none", immediateRender: false }, t0); } });
       // ---------- 14b. "ภูมิ… อยู่นิ่งๆ นะลูก" he sets the bottle down; the board on the post: rule 1 lit and ticked ----------
       const POST2 = [760, 1500, 1.0];
       add("choiceB", { set: "jellyBeach", setOpts: BEACH("jb5", { tower: [260, 1260, 0.7], umbrellas: [], life: [["mat", 120, 1420, 0.8, "#e8482a"]] }), dark: 0, light: SUN, grade: GBR,
         cam: { keys: [{ t: 0, ...fr(540, 1450, 1.15, 540, 1100) }, { t: F("choiceB", 0, 1) - 0.14, glide: F("choiceB", 0, 1) - 0.14, ...fr(540, 1450, 1.2, 540, 1100) },
-          { t: F("choiceB", 0, 1) - 0.12, ...fr(POST2[0], POST2[1] - 330 + 160, 2.1, 540, 700) }, { t: D("choiceB"), glide: D("choiceB") - F("choiceB", 0, 1), ...fr(POST2[0], POST2[1] - 330 + 160, 2.2, 540, 700) }] },
+          { t: F("choiceB", 0, 1) - 0.12, ...fr(POST2[0], POST2[1] - 200, 2.6, 540, 700) }, { t: D("choiceB"), glide: D("choiceB") - F("choiceB", 0, 1), ...fr(POST2[0], POST2[1] - 200, 2.75, 540, 700) }] },
         actors: [
           A("jPhum", 300, 1800, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }]),
           A("jTon", 560, 1780, 1.0, [{ t: 0, mode: "setDown", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("choiceB", 0, "o")] }),
