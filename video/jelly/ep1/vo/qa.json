@@ -109,7 +109,8 @@
   "cer": 0.286,
   "dur": 2.31,
   "bad": true,
-  "long": false
+  "long": false,
+  "decision": "accepted by coordinator 6 Nov; caption carries the words; listen-check on final mix"
  },
  "d04": {
   "text": "เสาน้ำส้มสายชู ไว้ราดแผลแมงกะพรุน… แต่ว่างนี่",
@@ -141,7 +142,8 @@
   "cer": 0.75,
   "dur": 2.17,
   "bad": true,
-  "long": true
+  "long": true,
+  "decision": "coordinator 6 Nov (ก): replaced by a boy scream SFX; caption \"โอ๊ย! ขาผม!\" carries the words"
  },
  "d06": {
   "text": "ใครก็ได้ โทรหนึ่งหกหกเก้า!",

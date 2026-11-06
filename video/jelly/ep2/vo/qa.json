@@ -61,7 +61,8 @@
   "cer": 0.304,
   "dur": 2.36,
   "bad": true,
-  "long": false
+  "long": false,
+  "decision": "accepted by coordinator 6 Nov; caption carries the words; listen-check on final mix"
  },
  "x1": {
   "text": "อย่าลงไป! ฝูงมันอยู่ตรงนั้น!",
@@ -93,7 +94,8 @@
   "cer": 0.333,
   "dur": 0.86,
   "bad": true,
-  "long": false
+  "long": false,
+  "decision": "accepted by coordinator 6 Nov; caption carries the words; listen-check on final mix"
  },
  "d04": {
   "text": "น้ำหวาน! ลูก!",

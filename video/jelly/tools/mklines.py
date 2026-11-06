@@ -180,6 +180,8 @@ def mk(rows, seg=""):
             ln["only"] = r[5]
         if (seg, lid) in FULL_ONLY:
             ln["only"] = "full"
+        if (seg, lid) == ("ep1", "p03"):
+            ln["sfx"] = "boy_scream"  # coordinator 6 Nov (ก): play a scream SFX here, caption "โอ๊ย! ขาผม!" carries the words; the TTS take is not used
         if TAKES.get((seg, lid)):
             ln["take"] = TAKES[(seg, lid)]
         # the caption must say exactly what is spoken
