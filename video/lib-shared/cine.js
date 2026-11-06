@@ -125,7 +125,8 @@
       const u = t - cut.lt, emo = cut.emotion, mv = cut.move;
       let { x, y, s, hx, hy, r } = c;
       const still = emo === "choice" || mv === "hold";
-      if (still || FROZEN[mv] || emo === "hook") ({ x, y, s } = camAt(cut.lt)); // no drift inside the cut
+      // no drift inside the cut: freeze on the cut's opening framing, read 2 frames in so a key set a hair late still counts
+      if (still || FROZEN[mv] || emo === "hook") ({ x, y, s } = camAt(cut.lt + Math.min(0.034, cut.dur * 0.25)));
       if (still || emo === "hook") { hx = 0; hy = 0; r = 0; } // the bible: the hook cuts, never shakes · the choice is dead still
       if (!still) {
         const n = handheld(t + cut.lt * 0.37, seed + cut.n, emo === "hook" ? 0.5 : 1);
