@@ -61,12 +61,22 @@ SHOTS_ALL = {
         ("endb", ["n13"], 0.2, 0.6, 3.0),             # Shorts only
     ],
     "bridges": [
+        # COLD OPEN (plays first in the long video, before the title) — CINEMA BIBLE §7
+        ("C1", ["c01"], 0.5, 0.4, 3.0),               # EWS: the same pier fifty years ago, oil lamps, an old wooden boat packed with people
+        ("C2", ["c02", "c03"], 0.1, 0.4, 3.0),        # the boatman shouts before it docks; everyone stands at once
+        ("C3", ["c04"], 0.1, 1.0, 2.6),               # the roll from the pier: young หยิบ screaming
+        ("C4", ["c05"], 0.3, 1.2, 3.0),               # a small boy floating on an empty can toward the stairs → black → title
         ("A1", ["a01"], 0.4, 3.0, 4.0),               # ยาย's angle: the hull rising, the counter bouncing
         ("A2", [], 0.0, 0.0, 4.0),                    # through the water surface into the tilting boat (no line)
         ("B1", ["b01"], 0.3, 0.4, 3.0),
         ("B2", ["b02", "b03"], 0.30, 0.3, 3.0),  # CINEMA BIBLE: 0.3 s before "อย่าโดด"
         ("B3", ["b04", "b05"], 0.12, 0.3, 3.0),
         ("B4", ["b06", ("b07", 0.35)], 0.15, 0.5, 3.0),
+        # EPILOGUE (after EP.3) — CINEMA BIBLE §7
+        ("E1", ["e01"], 0.5, 0.4, 2.6),               # EWS: next year's Loy Krathong, the pier lit, a boat with orange vests
+        ("E2", ["e02", "e03"], 0.1, 0.4, 3.0),        # ลุงหมึก stops at twelve; มะปราง in her vest
+        ("E3", ["e04", "e05"], 0.1, 0.4, 3.0),        # the whistle given back; น้าหมาน asks to ride
+        ("E4", ["e06", ("e07", 0.3)], 0.2, 5.0, 3.0), # ยาย starts the rule, the kids finish it (0.3 s before "อย่า") · 5 s of river after (credits ambience)
     ],
     "ep3": [
         ("open", ["n01"], 0.05, 0.0, 1.0),
@@ -80,6 +90,14 @@ SHOTS_ALL = {
         ("found", ["x03"], 0.1, 0.5, 2.0),
         ("count", ["y02", "y03"], 0.15, 0.4, 3.4),
         ("maan", ["m04", "h01"], 0.15, 0.5, 3.0),
+        # ---- long only: น้าหมาน's secret in full (CINEMA BIBLE §7)
+        ("why", ["s01"], 0.3, 0.5, 2.6),                      # มะปราง sits beside him on the land-side stairs
+        ("then", ["s02", "s03"], 0.4, 0.4, 3.0),              # cut to the cold-open boat: the mother pushing the boy onto a can
+        ("gone", ["s04"], 0.3, 0.8, 2.4),
+        ("hush", [], 0.0, 0.0, 4.0),                          # CINEMA BIBLE: 3–5 s silence the Shorts never have — candles on the water
+        ("cans", ["s05"], 0.3, 0.5, 3.0),                     # the last empty gallon on his knee
+        ("pier", ["s06", "s07"], 0.3, 0.5, 3.0),              # ยาย sits down: she was on the pier that night; the first rule
+        ("shame", ["s08", "s09"], 0.2, 0.8, 3.0),
         ("accuse", ["x04", "l02"], 0.12, 0.6, 3.0),
         ("reveal", ["n07", "k01"], 0.5, 0.5, 3.4),    # 0.5 s silence before, the camera slides down to the orange whistle
         ("hug", ["y04", "l03"], 0.15, 0.5, 3.4),
