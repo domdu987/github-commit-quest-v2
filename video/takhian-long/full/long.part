@@ -20,6 +20,14 @@
         put(L.set, `<rect x="-900" y="1500" width="2900" height="600" fill="#4a1a10"/><rect x="-900" y="1490" width="2900" height="16" fill="url(#tkShGold)"/><rect x="180" y="1460" width="720" height="40" fill="#6a2a16" stroke="${INK}" stroke-width="5"/>` + DOLL(230, 1460, 5.2, 1) + DOLL(850, 1460, 5.2, 0));
         put(L.glow, [120, 960].map((cx) => `<g><path d="M${cx},1820V1700" stroke="#f2f0ea" stroke-width="18"/><ellipse cx="${cx}" cy="1684" rx="10" ry="20" fill="#ffd27a"/><circle cx="${cx}" cy="1684" r="220" fill="url(#tkSun)" opacity=".55"/></g>`).join(""));
       };
+      const HALL = (L) => { const lay = L.set || L.far; let w = "";
+        [[-700, 20], [1060, 700]].forEach(([x, wd]) => { w += `<rect x="${x}" y="-200" width="${wd}" height="2400" fill="#0e0a07"/>`; for (let k = 0; k < 6; k++) w += `<path d="M${x + 40 + k * wd / 6},-200V2200" stroke="#1a120c" stroke-width="14"/>`; });
+        [30, 1050].forEach((x) => { w += `<rect x="${x - 26}" y="-200" width="52" height="2400" fill="#2a1a10" stroke="#05030a" stroke-width="5"/><path d="M${x - 14},-200V2200" stroke="#5a3a22" stroke-width="5" opacity=".6"/>`; });
+        [-360, 1420].forEach((x) => { w += `<path d="M${x},-200V380" stroke="#2a2420" stroke-width="5"/><circle cx="${x}" cy="440" r="220" fill="#ffb050" opacity=".14"/><circle cx="${x}" cy="440" r="90" fill="#ffc060" opacity=".22"/><path d="M${x - 30},400h60l-12,80h-36z" fill="#3a2a1a" stroke="#05030a" stroke-width="4"/><ellipse cx="${x}" cy="428" rx="12" ry="22" fill="#ffd27a"/>`; });
+        let a = ""; { let sd = 33; const rr = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+          for (let k = 0; k < 24; k++) { const x = -640 + k * 100 + rr() * 40, y = 1450 + rr() * 80, s = 0.85 + rr() * 0.4;
+            a += `<g transform="translate(${x.toFixed(0)},${y.toFixed(0)}) scale(${s.toFixed(2)})"><path d="M-70,300Q-70,120 -30,100H30Q70,120 70,300Z" fill="#050404"/><ellipse cy="40" rx="44" ry="52" fill="#050404"/><path d="M-30,0Q0,-20 30,0" stroke="#ffcf8a" stroke-width="4" fill="none" opacity=".35"/></g>`; } }
+        put(L.act || lay, `<g>${w}${a}</g>`); };
       const LONG = {
         // B5 · the command: the frame opens out (×0.85) so the crown, the bolt out of the cloud and the family all fit the 16:9 band
         cmd: (sp) => ADD_G("cmd", { ...sp, cam: LZ(sp.cam, 0.85), land: { y0: 150 } }),
@@ -73,6 +81,14 @@
             fx: (tl, id, t0, L) => { put(L.set, Tk.ambulance(1690, 1745 - 78, 1.95, { open: 1, lit: 0.3 }) + Tk.stretcher(320, ly + 4, 1.2));
               put(L.act, `<path d="M${hx + 150},${ly - 30}Q${hx + 400},${ly - 78} ${hx + 690},${ly - 30}L${hx + 690},${ly + 26}H${hx + 150}Z" fill="#e8d8b0" stroke="#1e1a16" stroke-width="4"/>`);
               TkX.ghostLife(tl, "trgh", t0 + 2.75, 1.25); } }); },
+        // note 4 · พลอย close: the frame slides so ลุงเปี๊ยก's head clears the left edge and the corner badge
+        fear: (sp) => ADD_G("fear", { ...sp, cam: push2("fear", fr(640, 1499, 2.1, 540, 760), fr(640, 1499, 2.24, 540, 760)) }),
+        // note 8 · the buffalo stands clear of the trunk, head up, at its stake
+        e2_buff: (sp) => ADD_G("e2_buff", { ...sp, setOpts: { ...sp.setOpts, buf: { ...sp.setOpts.buf, x: 990, stake: [905, 1182] } } }),
+        // note 7 · the shadow play fills the 16:9 page: the village hall around the screen — dark wooden walls and posts, two oil lamps,
+        // the audience's heads and shoulders in silhouette along the bottom, lit by the screen
+        leg1: (sp) => ADD_G("leg1", { ...sp, land: { y0: 285 }, fx: (tl, id, t0, L) => { sp.fx(tl, id, t0, L); HALL(L); } }),
+        leg2: (sp) => ADD_G("leg2", { ...sp, land: { y0: 285 }, fx: (tl, id, t0, L) => { sp.fx(tl, id, t0, L); HALL(L); } }),
       };
       const LADD = (k, sp) => (LONG[k] ? LONG[k](sp) : ADD_G(k, sp));
       const LONGS = {
