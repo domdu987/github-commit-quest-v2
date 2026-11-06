@@ -16,11 +16,23 @@ const fs = require('fs');
   await p.waitForTimeout(2500);
   // A duplicated DOM id makes GSAP animate every element that carries it ("#x" selects all of them).
   // krathong EP.1 cut 15: click labels named `${id}-c${c}` took the caption ids `${id}-c${k}` and hijacked the captions.
-  const dups = await p.evaluate(() => {
-    const c = {};
-    document.querySelectorAll('[id]').forEach((e) => { if (e.id) c[e.id] = (c[e.id] || 0) + 1; });
-    return Object.entries(c).filter(([, k]) => k > 1).map(([id, k]) => `${id}×${k}`);
+  // Paint servers repeated with identical markup (the same gradient or clipPath placed twice by a library) are harmless:
+  // url(#x) resolves to the first copy, which is the same. Different markup under one id, or any duplicated id outside
+  // <defs> (captions, labels, props), is a failure.
+  const { dups, same } = await p.evaluate(() => {
+    const by = {};
+    document.querySelectorAll('[id]').forEach((e) => { if (e.id) (by[e.id] = by[e.id] || []).push(e); });
+    const paint = /^(lineargradient|radialgradient|clippath|mask|filter|pattern|symbol|marker)$/i;
+    const dups = [], same = [];
+    for (const [id, els] of Object.entries(by)) {
+      if (els.length < 2) continue;
+      const defsOnly = els.every((e) => paint.test(e.tagName) || e.closest('defs'));
+      const identical = els.every((e) => e.outerHTML === els[0].outerHTML);
+      (defsOnly && identical ? same : dups).push(`${id}×${els.length}`);
+    }
+    return { dups, same };
   });
+  if (same.length) console.log(`note: ${same.length} identical defs repeated (harmless): ${same.slice(0, 12).join(' ')}${same.length > 12 ? ' …' : ''}`);
   if (dups.length) console.log(`DUPLICATE IDS ${dups.length}: ${dups.slice(0, 40).join(' ')}${dups.length > 40 ? ' …' : ''}`);
   const seen = new Set();
   let n = 0;
