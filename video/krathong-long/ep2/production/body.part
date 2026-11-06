@@ -40,9 +40,9 @@
         fx(tl, id, t0, L) {
           lean(tl, id, t0, 18);
           // the water first fills the frame (under the surface), then drains down as the camera rises into the cabin
-          put(L.light, `<g id="${id}-uw"><rect x="-900" y="-900" width="2900" height="3900" fill="#0a1c38"/>${Array.from({ length: 22 }, (_, i) => `<circle cx="${(i * 149) % 1080}" cy="${400 + (i * 263) % 1300}" r="${8 + (i % 4) * 6}" fill="none" stroke="#cfe8ff" stroke-width="3" opacity=".7"/>`).join("")}
-            <path d="M-900,-60${Array.from({ length: 70 }, () => "q20,-12 40,0").join("")}" stroke="#cfe8ff" stroke-width="10" fill="none"/></g>`);
-          tl.fromTo(`#${id}-uw`, { y: 0 }, { y: 2100, duration: 2.4, ease: "power2.in", immediateRender: false }, t0 + 0.9);
+          put(L.light, `<g id="${id}-uw"><rect x="-2600" y="-900" width="6400" height="3900" fill="#0a1c38"/>${Array.from({ length: 22 }, (_, i) => `<circle cx="${(i * 149) % 1080}" cy="${400 + (i * 263) % 1300}" r="${8 + (i % 4) * 6}" fill="none" stroke="#cfe8ff" stroke-width="3" opacity=".7"/>`).join("")}
+            <path d="M-2600,-60${Array.from({ length: 160 }, () => "q20,-12 40,0").join("")}" stroke="#cfe8ff" stroke-width="10" fill="none"/></g>`);
+          tl.fromTo(`#${id}-uw`, { y: 0 }, { y: 3200, duration: 2.4, ease: "power2.in", immediateRender: false }, t0 + 0.9);
         },
       });
       // ================= เรือล่มคืนลอยกระทง EP.2 (Shorts 9:16) · shots (helpers in common.part, plan in plan.py) =================
@@ -80,9 +80,6 @@
       const waterOver = (L, y, o = {}) => put(L.act, `<g transform="translate(540,${y})"><path d="M-2400,0${Array.from({ length: 120 }, () => `q20,-10 40,0`).join("")}V900H-2400Z" fill="url(#kWater)" opacity="${o.op ?? 1}"/>
         ${[1, 2, 3].map((i) => `<ellipse cx="${o.rx ?? 0}" cy="8" rx="${150 + i * 70}" ry="${20 + i * 12}" fill="none" stroke="#b8c8ff" stroke-width="3.5" opacity="${(0.6 - i * 0.15).toFixed(2)}"/>`).join("")}
         <path d="M-2400,0${Array.from({ length: 120 }, () => `q20,-10 40,0`).join("")}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/></g>`);
-      // the empty life jacket (open straps, no whistle), floating
-      const emptyVest = (x, y, s = 1, r = 0) => `<g transform="translate(${k1(x)},${k1(y)}) scale(${s}) rotate(${r})"><path d="M-90,-20Q-96,-90 -40,-100L-6,-96L-4,60Q-50,70 -92,56Z" fill="url(#kVest)" ${KOUT}/><path d="M90,-20Q96,-90 40,-100L6,-96L4,60Q50,70 92,56Z" fill="url(#kVest)" ${KOUT}/>
-        <path d="M-92,-40H-6M-92,0H-6M-92,40H-6" stroke="#e8e4d8" stroke-width="12"/>${[-40, 0, 40].map((y) => `<path d="M6,${y}q40,-6 70,14" stroke="#e8e4d8" stroke-width="12" fill="none"/><rect x="-14" y="${y - 9}" width="20" height="18" rx="4" fill="#2a2e34" ${KOUT2}/>`).join("")}</g>`;
 
       // ---------- 1–3 · open: the floor tilts, water pours over the low gunwale (ECU) → the whole boat leans at the pontoon (WS) → ข้าวปั้น on the low side (CU) ----------
       const O1 = D("open") / 3, O2 = 2 * D("open") / 3;

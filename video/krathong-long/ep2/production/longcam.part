@@ -5,18 +5,27 @@
       window.LONGCAM = {
         // ยาย calls her son from the pontoon edge: a slow push that keeps her whole head in frame
         A1: () => LCm([{ t: 0, ...frL(330, 1160, 1.8) }, { t: D("A1"), glide: D("A1"), ease: "power1.inOut", ...frL(380, 1170, 2.1) }]),
+        // under the surface (bubbles) → rising into the tilted cabin
+        A2: () => LCm([{ t: 0, ...frL(560, 1450, 1.4) }, { t: D("A2"), glide: D("A2"), ease: "power2.inOut", ...frL(560, 1250, 1.0) }]),
         // the bench tilting (feet and water, no faces) → the whole tilted cabin → ข้าวปั้น on the low side
-        open: () => LCm([{ t: 0, ...frL(880, 1700, 2.6) }, { t: O1, ...frL(540, 1250, 0.8) }, { t: O2, ...frL(860, 1300, 2.3) }]),
+        open: () => LCm([{ t: 0, ...frL(880, 1700, 2.6) }, { t: O1, ...frL(540, 1250, 0.8) }, { t: O2, ...frL(750, 1310, 2.3) }]),
         // มะปราง on the high side (CU, the passenger beside her out of frame) → the passenger about to run uphill
-        hook: () => LCm([{ t: 0, ...frL(180, 1297, 3.2) }, { t: 1.12, ...frL(620, 1450, 2.0) }]),
+        hook: () => LCm([{ t: 0, ...frL(325, 1330, 2.0) }, { t: 1.12, ...frL(522, 1330, 1.7) }]),
         // the climb: the whole cabin → the climbers with their heads in frame → the whip back
         climb: () => LCm([{ t: 0, ...frL(560, 1300, 1.0) }, { t: 1.15, ...frL(520, 1330, 1.25) }, { t: 2.55, ...frL(580, 1350, 1.3) }]),
         // พี่น้อง gripping the seat back (two-shot, heads in) → the rule card → the cabin → มะปรางshouts to her brother
-        rule: () => LCm([{ t: 0, ...frL(560, 1200, 2.2) }, { t: R1, ...frL(560, 1200, 2.2) }, { t: R2, ...frL(560, 1250, 1.25) },
-          { t: R2 + 0.01, glide: R3 - R2 - 0.05, ...frL(560, 1260, 1.35) }, { t: R3, ...frL(520, 1200, 2.0) }, { t: D("rule"), glide: D("rule") - R3, ...frL(530, 1200, 2.1) }]),
+        rule: () => LCm([{ t: 0, ...frL(640, 1180, 2.0) }, { t: R1, ...frL(640, 1180, 2.0) }, { t: R2, ...frL(640, 1230, 1.2) },
+          { t: R2 + 0.01, glide: R3 - R2 - 0.05, ...frL(640, 1240, 1.3) }, { t: R3, ...frL(620, 1180, 1.85) }, { t: D("rule"), glide: D("rule") - R3, ...frL(630, 1180, 1.95) }]),
         // under the hull: มะปราง → the screw still turning (she is out of this cut) → her swimming for the light at the edge
         under: () => LCm([{ t: 0, ...frL(420, 1000, 2.0) }, { t: U1, ...frL(1350, 700, 3.0) }, { t: U2, ...frL(640, 950, 1.1) },
           { t: D("under"), glide: D("under") - U2, ...frL(760, 900, 1.2) }]),
         // ลุง on the upturned hull shouting (his head above the caption) → มะปราง alone in the candle field
         surf: () => LCm([{ t: 0, ...frL(480, 1330, 2.2) }, { t: S1, ...frL(540, 1300, 1.0) }, { t: D("surf"), glide: D("surf") - S1, ease: "none", ...frL(560, 1340, 1.25) }]),
+        // ข้าวปั้น in the water by the hull (his head clear of the caption) → มะปราง with the vest
+        vest: () => LCm([{ t: 0, ...frL(520, 1180, 2.2) }, { t: V1, ...frL(680, 1240, 2.6) }, { t: D("vest"), glide: D("vest") - V1, ease: "none", ...frL(670, 1230, 2.9) }]),
+        // ยาย on the phone to 1669, น้าหมาน on the steps behind her
+        B4: () => LCm([{ t: 0, ...frL(-180, 1150, 2.8) }, { t: D("B4"), glide: D("B4"), ...frL(-200, 1150, 3.0) }]),
+        // น้าหมาน on the stairs with the passenger beside him (two-shot) → the throws arcing to the hull (wide) → him again: "I wait for the next boat… every year"
+        stairs: () => LCm([{ t: 0, ...frL(-430, 945, 3.3) }, { t: T1 - 0.05, glide: T1 - 0.05, ease: "power2.inOut", ...frL(-450, 960, 2.9) },
+          { t: T1, ...frL(-40, 1110, 1.25) }, { t: T2, ...frL(150, 1130, 1.35) }, { t: T3, ...frL(-430, 945, 3.3) }, { t: D("stairs"), glide: D("stairs") - T3, ...frL(-440, 950, 3.5) }]),
       };
