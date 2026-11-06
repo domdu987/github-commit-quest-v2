@@ -1,0 +1,38 @@
+{
+ "bands": [
+  {
+   "from": 0.0,
+   "to": 27.0,
+   "stage": "threat"
+  },
+  {
+   "from": 27.0,
+   "to": 31.47,
+   "stage": "uneasy"
+  },
+  {
+   "from": 31.47,
+   "to": 58.45,
+   "stage": "safe"
+  },
+  {
+   "from": 58.45,
+   "to": 65.97,
+   "stage": "uneasy"
+  },
+  {
+   "from": 65.97,
+   "to": 85.56,
+   "stage": "threat"
+  },
+  {
+   "from": 85.56,
+   "to": 92.332,
+   "stage": "uneasy"
+  }
+ ],
+ "keep": "yellow",
+ "keep_note": "ห่วงเป็ด ขวดและฉลากน้ำส้มสายชู แถบป้ายเสา — สีเดียวที่ไม่ถูกลด saturation ในช่วงภัย",
+ "overrides": {},
+ "note": "ค่า feColorMatrix มาตรฐานใน Cine.STAGES (cine.js 18a68bb) ไม่ปรับค่า · ช่วงย้อนเวลาเมื่อเช้า (คัต 14) ใช้ uneasy"
+}
