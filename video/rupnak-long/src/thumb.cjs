@@ -8,6 +8,8 @@ const { chromium } = require('playwright');
   const seek = (t) => p.evaluate((t) => { window.__timelines.main.seek(+t, false);
     document.querySelectorAll('.clip').forEach((c) => { const s = +c.dataset.start, d = +c.dataset.duration; c.style.visibility = (+t >= s && +t < s + d) ? 'visible' : 'hidden'; }); }, t);
   await seek(0.2); await p.waitForTimeout(1000); await seek(t); await p.waitForTimeout(1500); await seek(t); await p.waitForTimeout(800);
+  // the in-scene plank sign repeats the title and peeks out behind the badge
+  await p.evaluate(() => document.querySelectorAll('text').forEach((x) => { if (x.textContent.trim() === 'รูพญานาค') x.closest('g[transform^="translate"]').style.display = 'none'; }));
   await p.evaluate(() => {
     const st = document.createElement('style'); st.textContent = `
       @font-face { font-family: TK; font-weight: 900; src: url(assets/fonts/f3.ttf); }

@@ -1,0 +1,42 @@
+      // review r2 B2 (long only): the cold open, brighter and moving: ยาย pours the bucket and thick mud runs into the well (0–1.5 s),
+      // then a close cut on the mud hitting the water and spreading; a warm lantern pool; the title on a plank sign by the well
+      const CO_AT = 1.5;
+      const coMud = (L, tl, k, t0, dur, x0, y0, x1, y1, w) => {
+        const d = `M${x0},${y0}C${x0 - 4},${y0 + (y1 - y0) * 0.4} ${x1 + 6},${y0 + (y1 - y0) * 0.6} ${x1},${y1}`;
+        put(L.act, `<g id="${k}"><path d="${d}" stroke="#5a3a1e" stroke-width="${w}" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" class="${k}-s"/>
+          <path d="${d}" stroke="#a8743e" stroke-width="${w * 0.32}" fill="none" stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" class="${k}-s" transform="translate(${-w * 0.18},0)"/>
+          ${[0, 1, 2, 3].map((j) => `<circle class="${k}-g" cx="${x1 + (j - 1.5) * w * 0.9}" cy="${y1}" r="${w * 0.42}" fill="#6b4423" opacity="0"/>`).join("")}</g>`);
+        tl.fromTo(`.${k}-s`, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: 0.28, ease: "power2.in", immediateRender: false }, t0);
+        tl.fromTo(`#${k}`, { x: 0 }, { x: 2.5, duration: 0.09, yoyo: true, repeat: Math.ceil(dur / 0.09), ease: "sine.inOut", immediateRender: false }, t0 + 0.28);
+        tl.fromTo(`.${k}-g`, { y: 0, opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { y: (j) => -w * (0.9 + j * 0.3), x: (j) => (j - 1.5) * w * 0.8, opacity: 0.9, scale: 1, duration: 0.25, ease: "power2.out", stagger: 0.05, repeat: Math.ceil(dur / 0.4), repeatDelay: 0.15, yoyo: true, immediateRender: false }, t0 + 0.28);
+      };
+      const coWater = (L, tl, k, t0, dur, cx, cy, rx, ry) => {
+        put(L.act, `<g id="${k}"><ellipse id="${k}-b" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#7a5030" opacity="0"/>
+          ${[0, 1, 2].map((j) => `<ellipse class="${k}-r" cx="${cx}" cy="${cy}" rx="${rx * 0.3}" ry="${ry * 0.3}" fill="none" stroke="#d8b080" stroke-width="3" opacity="0"/>`).join("")}</g>`);
+        tl.fromTo(`#${k}-b`, { opacity: 0, scale: 0.25, svgOrigin: `${cx} ${cy}` }, { opacity: 0.85, scale: 1, svgOrigin: `${cx} ${cy}`, duration: Math.min(1.4, dur), ease: "power2.out", immediateRender: false }, t0);
+        tl.fromTo(`.${k}-r`, { opacity: 0.9, scale: 0.3, svgOrigin: `${cx} ${cy}` }, { opacity: 0, scale: 1.25, svgOrigin: `${cx} ${cy}`, duration: 0.7, stagger: 0.23, repeat: Math.ceil(dur / 0.7), ease: "power1.out", immediateRender: false }, t0);
+      };
+      const coGlow = (L, k, cx, cy, rx, ry, op) => put(L.set, `<radialGradient id="${k}g"><stop offset="0" stop-color="#ffd9a0" stop-opacity="${op}"/><stop offset=".55" stop-color="#ffc070" stop-opacity="${op * 0.45}"/><stop offset="1" stop-color="#ffc070" stop-opacity="0"/></radialGradient><ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${k}g)"/>`);
+      split("open", CO_AT, {
+        set: "rupYardRich", setOpts: { id: "op", time: "night", muddy: 0.95, wellX: 300, wellY: 1600, crackDraw: true }, dark: 0, light: DAWN, grade: GNIGHT,
+        cam: { keys: [ID(0, -230, 440, 2.4), { ...ID(CO_AT, -215, 430, 2.3), glide: CO_AT }] },
+        actors: [A("yaiBucket", 470, 1700, 0.62, [{ t: 0, mode: "liftBucket", eyes: "wide", mouth: "o" }], { flip: true })],
+        captions: caps("open"),
+        fx(tl, id, t0, L) {
+          coGlow(L, "opl", 330, 1480, 620, 420, 1.0);
+          put(L.set, `<g transform="translate(112,1452)"><rect x="-6" y="-10" width="12" height="170" fill="#4a3220"/><g transform="rotate(-3)"><rect x="-96" y="-78" width="192" height="68" rx="8" fill="#c89a5a" stroke="#3a2412" stroke-width="5"/>
+            <path d="M-88,-62H88M-88,-28H88" stroke="#a8783e" stroke-width="2"/><text y="-30" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="38" fill="#2a1608">รูพญานาค</text></g></g>`);
+          Rup.cracks(tl, "opy", t0 + 0.4, 1.0);
+          coMud(L, tl, "opm", t0 + 0.12, CO_AT, 279, 1437, 283, 1556, 16);
+          coWater(L, tl, "opw", t0 + 0.38, CO_AT, 300, 1561, 118, 30);
+        },
+      }, {
+        set: "rupYardRich", setOpts: { id: "oq", time: "night", muddy: 0.95, wellX: 300, wellY: 1600, crackDraw: false }, dark: 0, light: DAWN, grade: GNIGHT,
+        cam: { keys: [ID(0, -238, 585, 4.6), { ...ID(D("open") - CO_AT, -238, 590, 4.9), glide: D("open") - CO_AT }] },
+        captions: capsFrom("open", CO_AT),
+        fx(tl, id, t0, L) {
+          coGlow(L, "oql", 300, 1540, 360, 200, 1.0);
+          coMud(L, tl, "oqm", t0 - 0.2, D("open") - CO_AT + 0.2, 281, 1450, 283, 1556, 13);
+          coWater(L, tl, "oqw", t0, D("open") - CO_AT, 300, 1561, 118, 30);
+        },
+      });

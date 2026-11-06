@@ -91,7 +91,7 @@ mus = mus * gain
 f0 = int(T("e3_end", 0.0) * SR); mus[f0:] *= np.linspace(1, 0, N - f0)   # the theme fades out under the final card
 
 from finalmix import finalize
-mus = level(mus, -30)
+mus = level(mus, -31)   # review r2 M-c: 1 dB more room under "music between lines"
 sfx = level(ff(ff(sfx, "lowpass=f=3500:poles=2"), "lowpass=f=3500:poles=2"), -27)
 env = box(np.abs(vo), int(0.05 * SR)); duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1); duck = box(duck, int(0.25 * SR))
 mus_part = (mus * duck).astype(np.float32)

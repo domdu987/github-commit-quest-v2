@@ -42,6 +42,12 @@ for n in (1, 2, 3):
             pat = f'add("{key}", {{ '
             assert body.count(pat) == 1, key
             body = body.replace(pat, pat + f"land: {{ y0: {y0} }}, ")
+    if n == 3:   # review r2 M3: the barn-door cut has มุก's hand and ต้นข้าว's hair at the bottom left in 16:9: they leave from that cut on
+        a0 = 'captions: caps("barn", undefined, { quote: true }), fx(tl, id, t0, L) { Rup2.barn(L, "e3bab");'
+        assert body.count(a0) == 1; body = body.replace(a0, a0 + ' [0, 1].forEach((k) => tl.set(`#${id}-a${k}`, { opacity: 0 }, t0 + vo("barn", 1) - 0.1));')
+    if n == 2:   # review r2 B2: the cold open (EP.2 open) redone for the long: brighter, the bucket pours, a second cut at 1.5 s
+        a0 = body[body.index('      add("open", {'):body.index('      // ---------- 2. the command')]
+        body = body.replace(a0, prefix_ids(rd(os.path.join(HERE, "coldopen.part")), 2))
     blocks.append(f"      {{ // ======== EP.{n} ========\n        const P = \"e{n}_\";\n{SHIM}{helpers}{body}\n      }}\n")
 ep2 = rd(f"{U}/ep2/body.part"); hdr = ep2[:ep2.index("      add(")]
 hdr = hdr[: hdr.rfind("\n      //") + 1] if "\n      //" in hdr else hdr

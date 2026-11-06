@@ -37,17 +37,18 @@
         set: "rupYardRich", setOpts: { id: "hg7", time: "night", muddy: 0.95, leanPost: true }, dark: 0.45, light: false, grade: GNIGHT, blur: { sky: 8, far: 8, mid: 8, set: 8, fg: 10 },
         cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 960) }] },
         fx(tl, id, t0, L) {
-          const bell = `<g transform="translate(-150,-6)"><path d="M-26,18Q-28,-26 0,-30Q28,-26 26,18L34,28H-34Z" fill="#f2c84a" stroke="#2a1a0e" stroke-width="4" stroke-linejoin="round"/><circle cx="0" cy="34" r="8" fill="#f2c84a" stroke="#2a1a0e" stroke-width="4"/><path d="M-12,-14q-6,10 -6,24" stroke="#fff6d0" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
+          const bell = `<g transform="translate(-185,-6)"><path d="M-26,18Q-28,-26 0,-30Q28,-26 26,18L34,28H-34Z" fill="#f2c84a" stroke="#2a1a0e" stroke-width="4" stroke-linejoin="round"/><circle cx="0" cy="34" r="8" fill="#f2c84a" stroke="#2a1a0e" stroke-width="4"/><path d="M-12,-14q-6,10 -6,24" stroke="#fff6d0" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
           put(L.light, `<g transform="translate(540,960) scale(1.55)"><g id="${id}-hgc">
             <rect x="-330" y="-170" width="660" height="340" rx="34" fill="#0a0604" opacity=".5" transform="translate(8,12)"/>
             <rect x="-330" y="-170" width="660" height="340" rx="34" fill="#ecd9a4" stroke="#2a1a0e" stroke-width="6"/>
-            <path d="M-300,-60H300M-300,60H300" stroke="#c9b27a" stroke-width="3"/>
+            <path d="M-318,-150H318M-318,-30H318M-318,90H318M-318,150H318" stroke="#c4a868" stroke-width="2.5" opacity=".9"/><path d="M-318,-120H318M-318,0H318M-318,120H318" stroke="#d8c088" stroke-width="1.5" opacity=".8"/>
+            <circle cx="-262" cy="40" r="12" fill="#2a1a0e"/><circle cx="262" cy="40" r="12" fill="#2a1a0e"/><path d="M-262,40C-300,90 -320,150 -300,210M262,40C300,90 320,150 300,210" stroke="#b8322a" stroke-width="6" fill="none" stroke-linecap="round"/>
             <path d="M-330,-136Q-330,-170 -296,-170H296Q330,-170 330,-136V-90H-330Z" fill="#8a2a1a" stroke="#2a1a0e" stroke-width="6"/>
             <text x="0" y="-116" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#f8ecd0">กฎข้อต่อไป</text>
-            <g id="${id}-bell">${bell}</g><text x="40" y="22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="78" fill="#2a1a0e">กดติดตาม</text>
+            <g id="${id}-bell">${bell}</g><text x="50" y="22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="78" fill="#2a1a0e">กดติดตาม</text>
             <text x="0" y="104" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="38" fill="#4a3320">ไว้ดูกฎข้อต่อไป <tspan fill="#8a2a1a">ก่อนวันที่ต้องใช้</tspan></text></g></g>`);
           tl.fromTo(`#${id}-hgc`, { scale: 0.5, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.3, ease: "back.out(2.4)", immediateRender: false }, t0);
-          tl.fromTo(`#${id}-bell`, { rotation: -16, svgOrigin: "-150 -36" }, { rotation: 16, svgOrigin: "-150 -36", duration: 0.12, repeat: 5, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.25);
+          tl.fromTo(`#${id}-bell`, { rotation: -16, svgOrigin: "-185 -36" }, { rotation: 16, svgOrigin: "-185 -36", duration: 0.12, repeat: 5, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.25);
         },
       });
       // ---------- H6 time chip on EP.1's first shot: the cold open happens later the same night ----------
