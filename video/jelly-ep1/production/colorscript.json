@@ -2,27 +2,27 @@
  "bands": [
   {
    "from": 0.0,
-   "to": 4.21,
+   "to": 4.64,
    "stage": "threat"
   },
   {
-   "from": 4.21,
-   "to": 40.73,
+   "from": 4.64,
+   "to": 41.16,
    "stage": "safe"
   },
   {
-   "from": 40.73,
-   "to": 67.72,
+   "from": 41.16,
+   "to": 68.16,
    "stage": "uneasy"
   },
   {
-   "from": 67.72,
-   "to": 108.62,
+   "from": 68.16,
+   "to": 109.06,
    "stage": "threat"
   },
   {
-   "from": 108.62,
-   "to": 114.326,
+   "from": 109.06,
+   "to": 114.759,
    "stage": "uneasy"
   }
  ],

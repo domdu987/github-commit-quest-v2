@@ -1,5 +1,5 @@
 {
- "total": 114.326,
+ "total": 114.759,
  "source": "lane B ep1/schedule.json",
  "cuts": [
   {
@@ -42,7 +42,7 @@
    "n": 3,
    "key": "open",
    "t": 1.9,
-   "dur": 2.31,
+   "dur": 2.74,
    "emotion": "hook",
    "size": "WS",
    "angle": "eye",
@@ -59,7 +59,7 @@
   {
    "n": 4,
    "key": "card",
-   "t": 4.21,
+   "t": 4.64,
    "dur": 2.0,
    "emotion": "safe",
    "size": "MS",
@@ -77,7 +77,7 @@
   {
    "n": 5,
    "key": "door",
-   "t": 6.21,
+   "t": 6.64,
    "dur": 3.26,
    "emotion": "safe",
    "size": "MS",
@@ -95,7 +95,7 @@
   {
    "n": 6,
    "key": "door",
-   "t": 9.47,
+   "t": 9.91,
    "dur": 6.17,
    "emotion": "safe",
    "size": "MS",
@@ -113,7 +113,7 @@
   {
    "n": 7,
    "key": "rhyme",
-   "t": 15.64,
+   "t": 16.07,
    "dur": 7.33,
    "emotion": "safe",
    "size": "MS",
@@ -131,7 +131,7 @@
   {
    "n": 8,
    "key": "rhyme",
-   "t": 22.97,
+   "t": 23.4,
    "dur": 2.37,
    "emotion": "safe",
    "size": "MS",
@@ -149,7 +149,7 @@
   {
    "n": 9,
    "key": "rhyme",
-   "t": 25.34,
+   "t": 25.77,
    "dur": 7.24,
    "emotion": "uneasy",
    "size": "CU",
@@ -167,7 +167,7 @@
   {
    "n": 10,
    "key": "rhyme",
-   "t": 32.58,
+   "t": 33.01,
    "dur": 3.23,
    "emotion": "safe",
    "size": "MS",
@@ -185,7 +185,7 @@
   {
    "n": 11,
    "key": "mock",
-   "t": 35.81,
+   "t": 36.24,
    "dur": 4.8,
    "emotion": "safe",
    "size": "MS",
@@ -203,7 +203,7 @@
   {
    "n": 12,
    "key": "mock",
-   "t": 40.61,
+   "t": 41.04,
    "dur": 3.0,
    "emotion": "uneasy",
    "size": "CU",
@@ -221,7 +221,7 @@
   {
    "n": 13,
    "key": "basket",
-   "t": 43.61,
+   "t": 44.05,
    "dur": 6.87,
    "emotion": "uneasy",
    "size": "MS",
@@ -239,7 +239,7 @@
   {
    "n": 14,
    "key": "map",
-   "t": 50.48,
+   "t": 50.91,
    "dur": 2.4,
    "emotion": "safe",
    "size": "EWS",
@@ -257,7 +257,7 @@
   {
    "n": 15,
    "key": "beach",
-   "t": 52.88,
+   "t": 53.31,
    "dur": 3.58,
    "emotion": "safe",
    "size": "WS",
@@ -275,7 +275,7 @@
   {
    "n": 16,
    "key": "beach",
-   "t": 56.46,
+   "t": 56.89,
    "dur": 2.39,
    "emotion": "uneasy",
    "size": "MCU",
@@ -293,8 +293,8 @@
   {
    "n": 17,
    "key": "beach",
-   "t": 58.85,
-   "dur": 4.5,
+   "t": 59.28,
+   "dur": 4.49,
    "emotion": "uneasy",
    "size": "CU",
    "angle": "low",
@@ -311,7 +311,7 @@
   {
    "n": 18,
    "key": "rock",
-   "t": 63.34,
+   "t": 63.78,
    "dur": 4.38,
    "emotion": "uneasy",
    "size": "MS",
@@ -329,7 +329,7 @@
   {
    "n": 19,
    "key": "sting",
-   "t": 67.72,
+   "t": 68.16,
    "dur": 0.85,
    "emotion": "fear",
    "size": "ECU",
@@ -347,7 +347,7 @@
   {
    "n": 20,
    "key": "sting",
-   "t": 68.57,
+   "t": 69.0,
    "dur": 1.39,
    "emotion": "fear",
    "size": "EWS",
@@ -365,7 +365,7 @@
   {
    "n": 21,
    "key": "sting",
-   "t": 69.96,
+   "t": 70.39,
    "dur": 2.65,
    "emotion": "fear",
    "size": "MS",
@@ -383,7 +383,7 @@
   {
    "n": 22,
    "key": "crowd",
-   "t": 72.61,
+   "t": 73.04,
    "dur": 5.2,
    "emotion": "fear",
    "size": "CU",
@@ -401,7 +401,7 @@
   {
    "n": 23,
    "key": "crowd",
-   "t": 77.8,
+   "t": 78.23,
    "dur": 4.31,
    "emotion": "fear",
    "size": "MS",
@@ -419,7 +419,7 @@
   {
    "n": 24,
    "key": "know",
-   "t": 82.11,
+   "t": 82.55,
    "dur": 6.15,
    "emotion": "lesson",
    "size": "CU",
@@ -437,7 +437,7 @@
   {
    "n": 25,
    "key": "choice",
-   "t": 88.27,
+   "t": 88.7,
    "dur": 2.45,
    "emotion": "choice",
    "size": "ECU",
@@ -455,7 +455,7 @@
   {
    "n": 26,
    "key": "choice",
-   "t": 90.71,
+   "t": 91.15,
    "dur": 4.64,
    "emotion": "choice",
    "size": "CU",
@@ -473,7 +473,7 @@
   {
    "n": 27,
    "key": "gone",
-   "t": 95.35,
+   "t": 95.78,
    "dur": 2.3,
    "emotion": "twist",
    "size": "MS",
@@ -491,7 +491,7 @@
   {
    "n": 28,
    "key": "gone",
-   "t": 97.65,
+   "t": 98.08,
    "dur": 4.81,
    "emotion": "twist",
    "size": "EWS",
@@ -509,7 +509,7 @@
   {
    "n": 29,
    "key": "vote",
-   "t": 102.46,
+   "t": 102.9,
    "dur": 6.16,
    "emotion": "choice",
    "size": "EWS",
@@ -527,7 +527,7 @@
   {
    "n": 30,
    "key": "endb",
-   "t": 108.62,
+   "t": 109.06,
    "dur": 5.7,
    "emotion": "uneasy",
    "size": "MS",
