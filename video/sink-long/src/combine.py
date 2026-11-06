@@ -37,12 +37,25 @@ def bridge(k):
     end = t - 0.35
     return {"key": k, "dur": round(end + pad, 3), "vo": vo, "voEnd": round(end, 3)}
 
+# review 6 Nov (M6): three narrator lines re-recorded for the long only (DDC 2566 p.33, p.51): shot key -> long line id
+RELINE = {"e2_corner": "l2n08", "e2_headrest": "l2n09", "e3_shoe": "l3n10"}
+_L = {l["id"]: l for l in json.load(open(os.path.join(BR, "lines.json")))}
+
+def reline(s):
+    i = RELINE.get(s["key"])
+    if not i: return s
+    d = durs[i]; cap = _L[i]["cap"]; parts = cap.split(" / ")
+    L = [max(1, len(p.replace("[", "").replace("]", "").replace("{", "").replace("}", ""))) for p in parts]
+    v0 = s["vo"][0]; t = v0["t"]
+    vo = [{"id": i, "t": t, "dur": d, "frags": [round(d * sum(L[:j]) / sum(L), 3) for j in range(len(parts))], "cap": cap}]
+    return {**s, "vo": vo, "dur": round(max(s["dur"], t + d + 0.35), 3), "voEnd": round(t + d, 3)}
+
 def take(n, keys=None, skip=()):
     out = []
     for s in ep[n]["shots"]:
         if s["key"] in CUT[n] or s["key"] in skip or (keys and s["key"] not in keys):
             continue
-        out.append({**s, "key": f"e{n}_{s['key']}"})
+        out.append(reline({**s, "key": f"e{n}_{s['key']}"}))
     return out
 
 seq = [("cold", take(3, keys={"hook", "jump"}) + [bridge("cogap")]),

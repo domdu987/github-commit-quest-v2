@@ -21,6 +21,7 @@ AMB = [('put(L.act, `<g transform="translate(${x},${RY + 26})"><g id="${id}">',
        ('[1, 2].forEach((k, j) => tl.fromTo(`#${id}-f${k}`', '[2].forEach((k, j) => tl.fromTo(`#${id}-f${k}`')]
 for a, b in AMB:
     assert shared.count(a) == 1, a[:60]; shared = shared.replace(a, b)
+shared += rd(os.path.join(HERE, "pry.part"))   # M6: the headrest pry card and the float-and-shoe beat (long only)
 shared = "      const AMB_S = 2.6, AMB_DX = 420;\n" + shared
 foot = rd(f"{P3}/foot.part").replace("นาทีก่อนจม · EP.3", "นาทีก่อนจม")
 assert "นาทีก่อนจม</div>" in foot
@@ -77,6 +78,33 @@ for pre, label in (("e", "EP"), ("x", "bridge copy of EP")):
         if (pre, n) in SIGN:
             reps = SIGN[(pre, n)]; reps = [reps] if isinstance(reps[0], str) else reps
             for a0, b0 in reps: assert body.count(a0) == 1, a0; body = body.replace(a0, b0)
+        if n == 2:   # M6: the headrest shot teaches the DDC way (rod into the groove, pry) instead of "a bad choice"
+            i0 = body.index('      split("headrest", HS, {'); i1 = body.index("      // ---------- 11.")
+            body = body[:i0] + """      add("headrest", {
+        dark: 0, light: false,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960), drift: { s: 0 } }] },
+        captions: caps("headrest"),
+        fx(tl, id, t0, L) { SinkUI.pry(tl, L.light, t0, D("headrest"), { at: F("headrest", 0, 1) + 0.35 }); },
+      });
+""" + body[i1:]
+        if pre == "e" and n == 3:   # M6: the shoe beat: the foot slips out (picture only), then he floats and lets the other shoe go
+            a0 = """        fx(tl, id, t0, L) { shoeOff(L, tl, "fi0", t0 + 0.7); bubbles(L, tl, "fi0bb", t0, D("shoe"), 500, 1200, 16, 600); },
+      });"""
+            assert body.count(a0) == 1
+            i0 = body.index('      add("shoe", {')
+            body = body[:i0] + """      const SS = F("shoe", 0, 1) - 0.05;
+      split("shoe", SS, {
+        set: "footIns", setOpts: { id: "fi0" }, dark: 0.1, light: false, grade: GWATER,
+        cam: { keys: [{ t: 0, ...fr(560, 1000, 1.0, 540, 960) }, { t: SS, glide: SS, ...fr(560, 980, 1.08, 540, 960) }] },
+        captions: caps("shoe"),
+        fx(tl, id, t0, L) { shoeOff(L, tl, "fi0", t0 + 0.25); bubbles(L, tl, "fi0bb", t0, SS, 500, 1200, 16, 600); },
+      }, {
+        ...BANK("cnf"),
+        cam: { keys: [{ t: 0, ...fr(KW.x + 80, 1180, 1.9, 540, 900) }, { t: D("shoe") - SS, glide: D("shoe") - SS, ...fr(KW.x + 120, 1170, 2.05, 540, 900) }] },
+        actors: [A("tonJ", KW.x, KW.y - 70, KW.s, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }])],
+        captions: capsFrom("shoe", SS),
+        fx(tl, id, t0, L) { noShadows(tl, id, 1); Klong.life(tl, "cnf", t0, D("shoe") - SS); inWater(L, tl, t0, D("shoe") - SS, "fl0"); floatShoe(L, tl, "fs0", t0, D("shoe") - SS, KW.x + 60, WY - 10); },
+      });""" + body[body.index(a0) + len(a0):]
         if pre == "e" and n == 3:   # B4: the hospital shot pulls back so the full-size ambulance fits beside them
             a0 = 'cam: { keys: [{ t: 0, ...fr(600, 940, 1.35, 540, 960) }, { t: D("hosp"), glide: D("hosp"), ...fr(620, 930, 1.45, 540, 960) }] },'
             assert body.count(a0) == 1; body = body.replace(a0, 'cam: { keys: [{ t: 0, ...fr(700, 900, 1.0, 540, 960) }, { t: D("hosp"), glide: D("hosp"), ...fr(710, 895, 1.06, 540, 960) }] },')

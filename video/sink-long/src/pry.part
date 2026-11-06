@@ -1,0 +1,44 @@
+      // review 6 Nov (M6, long only): the headrest rod is driven into the groove between door and glass and pried toward you: the pane
+      // breaks in one go (DDC 2566 p.33 "ให้นำมากระแทกที่ร่องกระจก ตอกเข้าไปประมาณ 1 นิ้ว แล้วออกแรงงัดเข้าหาตัว กระจกก็จะแตกทั้งบาน")
+      SinkUI.pry = (tl, layer, t0, dur, o = {}) => {
+        const id = `pr${suSeq++}`;
+        suBg(layer);
+        const at = o.at ?? 1.2, GX = 120, GY = 170;   // the groove point (door top edge, lower front of the pane)
+        const shards = Array.from({ length: 16 }, (_, k) => { const x = -260 + (k % 4) * 140 + (k * 37) % 50, y = -180 + Math.floor(k / 4) * 85 + (k * 23) % 30;
+          return `<path class="${id}-sd" d="M${x},${y}l${40 + (k * 13) % 30},${-10 + (k * 7) % 20}l${-12 + (k * 5) % 20},${36 + (k * 11) % 20}z" fill="#bfe2f6" ${SO(3)}/>`; }).join("");
+        put(layer, suCard(id, 540, 300, 960, 1120, "ก้านหัวเบาะ · ตอกแล้วงัด", SU.blue) + `
+          <g transform="translate(0,560)"><path d="M-300,-230H310V230H-300Z" fill="#4a5060" ${SO(5)}/>
+            <g id="${id}-pane"><path d="M-280,-200L-150,-220H240L290,${GY}H-280Z" fill="#9fd0f0" ${SO(4)}/><path d="M-250,-170L-200,-60" stroke="#fff" stroke-width="10" opacity=".6"/></g>
+            <g id="${id}-sh" opacity="0">${shards}</g>
+            <path d="M-300,${GY}H310" stroke="${SU.ink}" stroke-width="10"/><path d="M-300,${GY + 8}H310" stroke="#2a2f3a" stroke-width="6"/>
+            <text x="-200" y="-250" font-family="Kanit" font-weight="700" font-size="32" fill="${SU.muted}">ท้ายรถ</text><text x="200" y="-250" text-anchor="end" font-family="Kanit" font-weight="700" font-size="32" fill="${SU.muted}">หน้ารถ</text>
+            <g transform="translate(${GX},${GY})"><g id="${id}-ring">${[46, 28].map((r, k) => `<circle r="${r}" fill="none" stroke="${k ? "#fff" : SU.yellow}" stroke-width="6"/>`).join("")}</g></g>
+            <g transform="translate(${GX},${GY})"><g id="${id}-rod"><g transform="rotate(28)">
+              <rect x="-14" y="0" width="12" height="120" rx="5" fill="#c8ccd4" ${SO(3)}/><rect x="40" y="0" width="12" height="120" rx="5" fill="#c8ccd4" ${SO(3)}/>
+              <rect x="-60" y="100" width="160" height="96" rx="30" fill="#3a3f4c" ${SO(4)}/><rect x="-48" y="110" width="136" height="28" rx="12" fill="#5a6070"/></g></g></g>
+            <g transform="translate(${GX + 150},${GY + 70})"><g id="${id}-arr" opacity="0"><path d="M0,0Q60,-10 80,-70" fill="none" stroke="${SU.red}" stroke-width="12" stroke-linecap="round"/><path d="M62,-80L84,-112L104,-74Z" fill="${SU.red}" ${SO(3)}/></g></g>
+          </g>
+          <g transform="translate(0,960)"><g id="${id}-st"><rect x="-330" y="-58" width="660" height="116" rx="58" fill="${SU.blue}" ${SO(5)}/><text y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff">ตอกเข้าร่อง แล้วงัด</text></g></g></g></g>`);
+        suIn(tl, id, t0, dur); suBreathe(tl, id, t0, dur, 1.03);
+        tl.fromTo(`#${id}-ring`, { scale: 0, svgOrigin: "0 0" }, { scale: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(3)", immediateRender: false }, t0 + 0.35);
+        tl.to(`#${id}-ring`, { scale: 1.18, svgOrigin: "0 0", duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, t0 + 0.75);
+        // the rod comes in, two taps drive it ~1 inch into the groove, then the pry toward you
+        tl.fromTo(`#${id}-rod`, { x: 140, y: 160, opacity: 0 }, { x: 22, y: 30, opacity: 1, duration: 0.45, ease: "power2.out", immediateRender: false }, t0 + at - 0.9);
+        tl.to(`#${id}-rod`, { x: 8, y: 12, duration: 0.12, ease: "power3.in" }, t0 + at - 0.4);
+        tl.to(`#${id}-rod`, { x: 0, y: 0, duration: 0.12, ease: "power3.in" }, t0 + at - 0.15);
+        tl.fromTo(`#${id}-arr`, { opacity: 0, scale: 0.4, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.3, ease: "back.out(2.6)", immediateRender: false }, t0 + at);
+        tl.to(`#${id}-rod`, { rotation: 14, svgOrigin: "0 0", duration: 0.35, ease: "power2.in" }, t0 + at + 0.15);
+        // the whole pane goes at once
+        tl.set(`#${id}-pane`, { opacity: 0 }, t0 + at + 0.5); tl.set(`#${id}-sh`, { opacity: 1 }, t0 + at + 0.5);
+        tl.fromTo(`.${id}-sd`, { x: 0, y: 0, rotation: 0 }, { x: (k) => -30 + (k % 5) * 15, y: (k) => 260 + (k % 4) * 40, rotation: (k) => -60 + k * 9, opacity: 0, svgOrigin: "0 0", duration: 0.9, ease: "power2.in", stagger: 0.015, immediateRender: false }, t0 + at + 0.5);
+        tl.fromTo(`#${id}-st`, { scale: 0.3, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.4, ease: "back.out(2.6)", immediateRender: false }, t0 + (o.label ?? at + 0.6));
+        SU.defs(layer); SU.fxAt(tl, layer, `#${id}-ring`, t0 + 0.5, { n: 10, c: SU.yellow, r1: 150 }); SU.fxAt(tl, layer, `#${id}-st`, t0 + (o.label ?? at + 0.6) + 0.22, { n: 10, c: SU.blue, r0: 60, r1: 200 });
+      };
+      // review 6 Nov (M6, long only): free of the shoe, ต้น floats with his head above water and lets the other shoe go (DDC 2566 p.51)
+      const floatShoe = (L, tl, id, t0, dur, x, y) => {
+        put(L.act, `<g id="${id}"><g transform="translate(${x},${y})"><g id="${id}-s"><path d="M-34,0Q-36,-22 -10,-26L20,-30Q34,-30 38,-16L40,0Z" fill="#f2f2ee" ${SO(4)}/><path d="M-36,0H40V8H-36Z" fill="#3a3f4c" ${SO(3)}/></g></g></g>`);
+        tl.fromTo(`#${id}-s`, { x: 0, y: 0, rotation: 0, opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0 + 0.5);
+        tl.to(`#${id}-s`, { keyframes: [{ x: 110, y: -70, rotation: 160, duration: 0.45, ease: "power2.out" }, { x: 240, y: 30, rotation: 320, duration: 0.5, ease: "power2.in" }] }, t0 + 0.65);
+        tl.to(`#${id}-s`, { y: 10, rotation: 340, duration: Math.max(0.3, dur - 1.7), ease: "sine.inOut" }, t0 + 1.6);
+        Canal.splash(L, tl, `${id}-sp`, x + 240, y + 30, t0 + 1.6);
+      };

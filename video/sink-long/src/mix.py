@@ -36,7 +36,9 @@ vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
         k = s["key"]
-        if k.startswith("e"):
+        if v["id"].startswith("l"):   # long-only re-recorded narrator lines (M6)
+            x = load(os.path.join(BRV, f"{v['id']}.wav")); g = 0
+        elif k.startswith("e"):
             n = int(k[1]); x = load(os.path.join(EPV(n), "vo", f"{v['id']}.wav")); g = GAIN[n].get(v["id"], 0)
         elif v["id"] == "x02":   # bridge B repeats EP.3's own rule line
             x = load(os.path.join(EPV(3), "vo", "n02.wav")); g = 0
@@ -71,6 +73,18 @@ for n in (1, 2, 3):
             at = sh[k]["start"] + (t0 if t0 >= 0 else sh[k]["dur"] + t0)
             if 0 <= at < TOTAL - 0.05: SAMPLES.append((at, name, g, mx[0] if mx else None, ns))
 CUES = [c for c in CUES if c[3] > 0]
+# review 6 Nov (M6): the two re-cut beats get their own sounds: the headrest card (two taps into the groove, the pane goes) and the
+# shoe beat (the tug under water, then the shoe lands in the canal)
+_ns = next(x[4] for x in SAMPLES if x[1] == "prongtap")
+def _win(k): s = SH[k]; return s["start"], s["start"] + s["dur"]
+_hr, _sh = _win("e2_headrest"), _win("e3_shoe")
+_out = lambda at: _hr[0] - 0.01 <= at < _hr[1] or _sh[0] - 0.01 <= at < _sh[1]
+CUES = [c for c in CUES if not _out(c[1])]; SAMPLES = [x for x in SAMPLES if not _out(x[0])]
+_v = SH["e2_headrest"]["vo"][0]; _at = _hr[0] + _v["t"] + _v["frags"][1] + 0.35
+SAMPLES += [(_at - 0.4, "prongtap", 1.0, 0.6, _ns), (_at - 0.15, "prongtap", 1.0, 0.6, _ns), (_at + 0.5, "glasscrack", 0.85, None, _ns)]
+_v = SH["e3_shoe"]["vo"][0]; _ss = _v["t"] + _v["frags"][1] - 0.05
+SAMPLES += [(_sh[0], "underwater", 0.3, _ss, _ns), (_sh[0] + 0.15, "shoetug", 0.9, None, _ns)]
+CUES.append((None, _sh[0] + _ss + 1.6, "splash", 0.5))
 json.dump({"duration": TOTAL, "sections": [{"start": 0, "end": TOTAL, "mood": "silence"}], "sfx": [{"t": round(t, 3), "type": typ, "gain": g} for _, t, typ, g in CUES]}, open(os.path.join(HERE, "sfx_cues.json"), "w"))
 subprocess.run(["python3", os.path.join(K, "synth.py"), os.path.join(HERE, "sfx_cues.json"), os.path.join(HERE, "sfx.wav")], check=True, env={**os.environ, "STEMS": "1"})
 sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]; sfx = np.pad(sfx, (0, N - len(sfx)))
