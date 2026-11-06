@@ -5,15 +5,17 @@
   "cer": 0.069,
   "dur": 2.51,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "kept by coordinator 6 Nov (แมงกระพรุ่น spelling)"
  },
  "n02": {
   "text": "อย่าเอาน้ำเปล่าราด",
-  "heard": "อย่าเอาน้ำเปล่าร่าย",
-  "cer": 0.111,
-  "dur": 1.21,
+  "heard": "อย่าเอาน้ำเปล่าราช",
+  "cer": 0.056,
+  "dur": 1.38,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "CINEMA BIBLE 6 Nov: tempo 1.2×0.87, 0.3 s before; CER 0.06 (ราด→ราช, same final consonant sound)"
  },
  "n03": {
   "text": "สามชั่วโมงก่อน",

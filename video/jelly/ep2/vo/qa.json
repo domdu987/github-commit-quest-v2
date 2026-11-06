@@ -1,19 +1,21 @@
 {
  "n01": {
-  "text": "ถ้าวันหนึ่ง… ลูกโดนพิษ จะวิ่งตามคุณ",
-  "heard": "ถ้าวันหนึ่ง ลูกโดนพิษจะวิ่งตามคุณ",
-  "cer": 0.0,
-  "dur": 3.02,
+  "text": "ถ้าวันหนึ่ง… ลูกคุณโดนพิษ",
+  "heard": "ท่าวันหนึ่ง ลูกคุณโดนผิด",
+  "cer": 0.174,
+  "dur": 2.09,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "CINEMA BIBLE 6 Nov: shortened opener so the command stays ≤ 3.0 s; CER 0.17 (พิษ→ผิด tone); listen-check"
  },
  "n02": {
   "text": "อย่าให้ลูกขยับ",
   "heard": "อย่าให้ลูกขยับ",
   "cer": 0.0,
-  "dur": 0.93,
+  "dur": 1.06,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "CINEMA BIBLE 6 Nov: tempo 1.2×0.87, 0.3 s before"
  },
  "n03": {
   "text": "ภูมิโดนแมงกะพรุน… และน้ำหวาน หายไป",

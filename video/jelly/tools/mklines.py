@@ -37,6 +37,8 @@ TAKES.update({("ep1", "n01"): 0, ("ep2", "x2"): 0, ("bridges", "a02"): 3})
 # extra round approved by the coordinator 6 Nov (lines whose audio said different words): p03 d04 w01 y01 reworded, a02 take 3
 TAKES.update({("ep1", "p03"): 2, ("ep2", "w01"): 0, ("bridges", "a02"): 4})
 FULL_ONLY = set()
+# CINEMA BIBLE (owner, 6 Nov): every "อย่า…" command is read 15 % slower (tempo × 0.87) and gets 0.3 s of silence before it (timing.py)
+TEMPO_OVR = {("ep1", "n02"): round(1.2 * 0.87, 3), ("ep2", "n02"): round(1.2 * 0.87, 3)}
 
 # ============================== EP.1 หนวดใสพันขา อย่าราดน้ำท่า (Short ≤ 2:30)
 EP1 = [
@@ -87,7 +89,7 @@ EP1 = [
 # ============================== EP.2 น้ำส้มราดไว้ นับสามสิบไป (Short ~1:40)
 EP2 = [
     # HG1: ใครรักใคร = ลูกชายกลัวพ่อทิ้ง พ่อรักลูกทั้งสองคน · คำสั่งขัดกับ = ลูกอยากวิ่งตามพ่อ พ่ออยากอุ้มลูกไปด้วย
-    ("n01", "n", "ถ้าวันหนึ่ง… ลูกโดนพิษ จะวิ่งตามคุณ", "ถ้าวันหนึ่ง… / ลูกโดนพิษ [จะวิ่งตามคุณ]", ""),
+    ("n01", "n", "ถ้าวันหนึ่ง… ลูกคุณโดนพิษ", "ถ้าวันหนึ่ง… / ลูกคุณ[โดนพิษ]", ""),  # CINEMA BIBLE 6 Nov: 0.3 s before the command needs a shorter opener (was 3.0 s)
     ("n02", "n", "อย่าให้ลูกขยับ", "{อย่าให้ลูกขยับ}", ""),
     ("n03", "n", "ภูมิโดนแมงกะพรุน… และน้ำหวาน หายไป", "ภูมิ[โดนแมงกะพรุน]… / และน้ำหวาน {หายไป}", "", "shorts"),
     ("p01", "p", "พ่ออย่าทิ้งผม! ผมไปด้วย!", "พ่อ{อย่าทิ้งผม}! / ผมไปด้วย!", "พยายามลุกขึ้น ร้องไห้"),
@@ -174,6 +176,7 @@ def mk(rows, seg=""):
     for r in rows:
         lid, who, text, cap, emo = r[:5]
         voice, tempo, persona = CAST[who]
+        tempo = TEMPO_OVR.get((seg, lid), tempo)
         ln = {"id": lid, "text": text, "voice": voice,
               "style": NARR if who == "n" else f"{persona} {emo} {TAIL}", "tempo": tempo, "cap": cap}
         if len(r) > 5:

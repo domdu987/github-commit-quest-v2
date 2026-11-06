@@ -19,7 +19,7 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 SHOTS_ALL = {
     "ep1": [
         ("open", ["n01"], 0.05, 0.0, 1.0),            # the open water bottle over the stung shin, father's hand shaking
-        ("hook", ["n02"], 0.04, 0.4, 1.6),            # command: push in on the bottle
+        ("hook", ["n02"], 0.30, 0.4, 1.6),            # command: push in on the bottle · CINEMA BIBLE: 0.3 s silence before "อย่า…"
         ("card", ["n03"], 0.15, 0.4, 2.0),            # sundial on ยาย's porch post
         ("door", ["y01", "d01", "p01"], 0.12, 0.3, 3.0),  # dawn: ยาย at the door with the vinegar basket
         ("rhyme", ["y02", "w01"], 0.12, 0.3, 3.0),    # the three rules as a shadow-puppet legend · HG7 card at rule 2
@@ -38,7 +38,7 @@ SHOTS_ALL = {
     ],
     "ep2": [
         ("open", ["n01"], 0.02, 0.0, 1.0),            # ภูมิ pushing up to follow his father (0.02 pre-roll keeps the command ≤ 3.1 s)
-        ("hook", ["n02"], 0.04, 0.4, 1.6),
+        ("hook", ["n02"], 0.30, 0.4, 1.6),            # CINEMA BIBLE: 0.3 s silence before "อย่า…"
         ("recap", ["n03"], 0.12, 0.3, 2.6),           # Shorts only
         ("stay", ["p01", "d01"], 0.1, 0.3, 2.4),
         ("know", ["n04"], 0.15, 0.3, 3.0),            # venom moving with movement
