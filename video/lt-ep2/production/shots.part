@@ -1,0 +1,217 @@
+      // ---------- แสงกระสือ: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      // ---------- บางระจัน แบต 3% EP.1 · storytelling clip (lane A) · the channel look (slender cast, lit sets) ----------
+      Rig.FLAT = true;
+      Engine.look = { ...(Engine.look || {}), vignette: 0.5, grain: 0.05 };
+      const NS = "http://www.w3.org/2000/svg";
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const ID = fr(540, 960, 1.0, 540, 960);
+      const grp = (parent) => { const g = document.createElementNS(NS, "g"); parent.appendChild(g); return g; };
+      const pop = (tl, g, at, o = {}) => tl.fromTo(g, { opacity: 0, scale: o.from ?? 0.8, y: o.dy ?? -18, svgOrigin: o.origin || "540 960" },
+        { opacity: 1, scale: 1, y: 0, svgOrigin: o.origin || "540 960", duration: o.dur ?? 0.4, ease: o.ease || "back.out(2.2)" }, at);
+      const out = (tl, g, at, d = 0.18) => tl.to(g, { opacity: 0, duration: d }, at);
+      const swingG = (tl, sel, t0, dur, amp = 3, org = "0 0") => tl.fromTo(sel, { rotation: -amp, svgOrigin: org }, { rotation: amp, svgOrigin: org, duration: 1.2, repeat: Math.ceil(dur / 1.2), yoyo: true, ease: "sine.inOut" }, t0);
+      const shake = (tl, g, t0, dur, a = 3, p = 0.05) => tl.fromTo(g, { x: -a }, { x: a, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "none" }, t0);
+      const DAY = { dark: 0.02, light: { from: "right", rim: "#fff0d0", rimOp: 0.6, rimW: 4, shade: "#3a2440", shadeOp: 0.25, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#fff2d8", bottom: "#4a3a50", op: 0.16 } };
+      const NIGHT = { dark: 0.1, light: { from: "right", rim: "#ffd9a0", rimOp: 0.55, rimW: 4, shade: "#1a1430", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#ffe2b0", bottom: "#1a1428", op: 0.24 } };
+      const spec = (k, o) => ({ ...(o.night ? NIGHT : DAY), cam: o.cam || { keys: [{ t: 0, ...(o.camAt || ID), drift: { s: o.push ?? 0.012 } }] }, captions: o.captions ?? caps(k), ...o });
+      const shot = (k, o) => add(k, spec(k, o));
+      const talk = (k, i, m = "o") => [[vo(k, i), voEnd(k, i), m]];
+      const swap = (tl, id, t, a = 0, b = 1, d = 0.12) => { tl.set(`#${id}-a${b}`, { opacity: 0 }, 0); tl.to(`#${id}-a${a}`, { opacity: 0, duration: d }, t); tl.to(`#${id}-a${b}`, { opacity: 1, duration: d }, t); };
+      const tagAt = (tl, L, x, y, text, at, o = {}) => { const g = grp(L.act); g.innerHTML = Lot.tag(x, y, text, o); pop(tl, g, at, { origin: `${x} ${y}`, from: 0.5 }); return g; };
+      const capAt = (id, y) => { const c = document.getElementById(`${id}-caps`); if (c) c.style.setProperty("top", `${y}px`, "important"); };
+      const ink = Lot.INK;
+      // a counter chip in the corner (screen space): "1/5"
+      const chip = (tl, L, steps, o = {}) => { const x = o.x ?? 900, y = o.y ?? 250;
+        const g = grp(L.light); g.innerHTML = `<g transform="translate(${x},${y})"><circle r="78" fill="#fbf7ee" stroke="${ink}" stroke-width="7"/>
+          ${steps.map(([, txt], i) => `<text id="${o.id}-c${i}" x="0" y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="${ink}" opacity="0">${txt}</text>`).join("")}
+          <text x="0" y="-36" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="22" fill="#a8305a">${o.label || "ที่ซ่อน"}</text></g>`;
+        steps.forEach(([at], i) => { tl.set(`#${o.id}-c${i}`, { opacity: 1 }, at); if (i + 1 < steps.length) tl.set(`#${o.id}-c${i}`, { opacity: 0 }, steps[i + 1][0]);
+          tl.fromTo(g, { scale: 1.25, svgOrigin: `${x} ${y}` }, { scale: 1, svgOrigin: `${x} ${y}`, duration: 0.25, ease: "back.out(3)", immediateRender: false }, at); });
+        return g; };
+      const sparkle = (x, y, r = 22) => `<path d="M${x},${y - r}Q${x + 4},${y - 4} ${x + r},${y}Q${x + 4},${y + 4} ${x},${y + r}Q${x - 4},${y + 4} ${x - r},${y}Q${x - 4},${y - 4} ${x},${y - r}Z" fill="#fff6b0" stroke="${ink}" stroke-width="2.5"/>`;
+
+
+      // the status bar (top left), per shot: [[label, value, colour]]
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .sghud { position: absolute; z-index: 58; left: 44px; top: 120px; display: flex; flex-direction: row; white-space: nowrap; width: max-content; align-items: center; gap: 16px;
+          padding: 12px 22px; border-radius: 18px; background: rgba(18,20,30,.7); border: 1.5px solid rgba(244,236,216,.2); box-shadow: 0 8px 24px rgba(0,0,0,.35); font-family: Kanit; color: #f4ecd8; }
+        .sghud b { font: 800 34px/1 Kanit; } .sghud small { font: 600 19px/1 Kanit; opacity: .65; } .sghud i { width: 1.5px; height: 30px; background: rgba(244,236,216,.25); }
+        .capbox { font: 800 54px/1.25 Kanit !important; }
+      </style>`);
+      const hud = (id, items) => { const el = document.getElementById(id); if (!el) return;
+        el.insertAdjacentHTML("beforeend", `<div class="sghud">${items.map(([l, v, c], i) => `${i ? "<i></i>" : ""}<small>${l}</small><b style="color:${c || "#f4ecd8"}">${v}</b>`).join("")}</div>`); };
+      const ears = (tl, aid, at, on = true, d = 0.25) => tl.to(`#${aid} .jkEar`, { opacity: on ? 1 : 0, duration: d }, at);
+      // ---------- looks per world (ช่างเชื่อมสายฟ้า) ----------
+      const act = (k) => (shots.find((x) => x.key === k) || {}).actors || [];
+      const DAYA = { dark: 0.03, light: { from: "left", rim: "#fff4d8", rimOp: 0.6, rimW: 4, shade: "#3a2a40", shadeOp: 0.24, shadeW: 26, soft: 9, vol: false }, grade: { top: "#fff2d8", bottom: "#4a4a60", op: 0.14 } };
+      const STORM = { dark: 0.3, light: { from: "right", rim: "#bfe8ff", rimOp: 0.7, rimW: 4, shade: "#0e1220", shadeOp: 0.38, shadeW: 26, soft: 9, vol: false }, grade: { top: "#1a2438", bottom: "#06080f", op: 0.42 } };
+      const NIGHTA = { dark: 0.4, light: { from: "right", rim: "#ffd9a0", rimOp: 0.6, rimW: 4, shade: "#101428", shadeOp: 0.4, shadeW: 26, soft: 9, vol: false }, grade: { top: "#1a2048", bottom: "#06080f", op: 0.46 } };
+      const DUSKA = { dark: 0.14, light: { from: "left", rim: "#ffc890", rimOp: 0.65, rimW: 4, shade: "#2a1a40", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ff9a60", bottom: "#2a1a40", op: 0.26 } };
+      const WARDL = { dark: 0.0, light: { from: "left", rim: "#ffffff", rimOp: 0.5, rimW: 3, shade: "#3a4a58", shadeOp: 0.2, shadeW: 24, soft: 9, vol: false }, grade: { top: "#eaf6ff", bottom: "#5a6a80", op: 0.1 } };
+      const WARDBO = { dark: 0.55, light: { from: "right", rim: "#9ad8ff", rimOp: 0.7, rimW: 4, shade: "#06080f", shadeOp: 0.45, shadeW: 26, soft: 9, vol: false }, grade: { top: "#101a30", bottom: "#000000", op: 0.5 } };
+      const shop = (k, o = {}) => ({ ...(o.time === "storm" ? STORM : o.time === "night" ? NIGHTA : o.time === "dusk" ? DUSKA : DAYA), set: "ltShop", setOpts: { id: `ls${k}`, ...o } });
+      const roof = (k, o = {}) => ({ ...(o.storm === false ? DAYA : STORM), set: "ltRoof", setOpts: { id: `lr${k}`, ...o } });
+      const ward = (k, o = {}) => ({ ...(o.blackout ? WARDBO : WARDL), set: "ltWard", setOpts: { id: `lw${k}`, ...o } });
+      const room = (k, o = {}) => ({ ...NIGHTA, set: "ltRoom", setOpts: { id: `lm${k}`, ...o } });
+      const sky = (k, o = {}) => ({ ...STORM, set: "ltSky", setOpts: { id: `lk${k}`, ...o } });
+      const SID = { shop: (k) => `ls${k}`, roof: (k) => `lr${k}`, ward: (k) => `lw${k}`, room: (k) => `lm${k}`, sky: (k) => `lk${k}` };
+      const shadows = (L, id, actors, sh = -0.4) => NkL.cast(L, id, actors, { k: 0.3, sh, op: 0.35 });
+      const loop = NkV.loop;
+      const H_WAGE = (pct, c = "#9ad8ff") => [["ค่าแรง", "450 ฿/วัน", "#f2c55c"], ["ไฟในตัว", `${pct}%`, c]];
+      const H_PLAIN = [["ค่าแรง", "450 ฿/วัน", "#f2c55c"], ["หนี้รถ", "14 งวด", "#ff8a7a"]];
+      const ME = (who, x, y, track, extra = {}) => A(who, x, y, 0.95, track, extra);
+      const face = (x, y = 1400, s = 3.2, flip = false, sx = 540, sy = 760, k = 0.95) => fr(x + (flip ? -2 : 2) * k, y - 546 * k, s, sx, sy);
+      const BENCH = 760, POST = 760;   // the trestles in the alley · the billboard's left post on the roof
+      const CHANNEL = "Rod Mai Club";   // ← เปลี่ยนเป็นชื่อช่องใหม่เมื่อเจ้าของตั้งชื่อแล้ว (จุดเดียว)
+      const BLACK = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#000"/>`; return g; };
+      const WHITE = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#ffffff"/>`; tl.set(g, { opacity: 0 }, 0); return g; };
+      // the welding arc at a point: a white core that flickers, a spray of sparks that keeps re-seeding, a blue glow in the glow layer (world space, drawn over the cast)
+      const arc = (tl, L, x, y, t0, dur, o = {}) => { const g = grp(L.act), s = o.s ?? 1;
+        g.innerHTML = `<g transform="translate(${x},${y}) scale(${s})"><g class="ltAg">${[0, 1, 2].map((k) => `<g class="ltAs${k}" opacity="${k ? 0 : 1}">${LT.sparks(12, 110, 3 + k * 7, k % 2 ? "#ffe24a" : "#ffb04a")}</g>`).join("")}<circle r="30" fill="url(#ltArcG)"/><circle class="ltAc" r="14" fill="#ffffff"/></g></g>`;
+        const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${x}" cy="${y}" r="${260 * s}" fill="url(#ltBlue)" opacity=".8"/></g>`;
+        tl.set([g, gl], { opacity: 0 }, 0); tl.set([g, gl], { opacity: 1 }, t0); if (o.end != null) tl.set([g, gl], { opacity: 0 }, o.end); else tl.set([g, gl], { opacity: 0 }, t0 + dur);
+        tl.fromTo(gl, { opacity: 1 }, { opacity: 0.55, duration: 0.07, repeat: Math.ceil(dur / 0.07), yoyo: true, ease: "none" }, t0);
+        tl.fromTo(g.querySelector(".ltAc"), { scale: 1, svgOrigin: `${x} ${y}` }, { scale: 1.8, svgOrigin: `${x} ${y}`, duration: 0.05, repeat: Math.ceil(dur / 0.05), yoyo: true, ease: "none" }, t0);
+        const sp = [0, 1, 2].map((k) => g.querySelector(`.ltAs${k}`)); for (let t = 0; t < dur; t += 0.09) { const k = Math.round(t / 0.09) % 3; sp.forEach((e, j) => tl.set(e, { opacity: j === k ? 1 : 0 }, t0 + t)); }
+        tl.fromTo(g.querySelector(".ltAg"), { rotation: 0, svgOrigin: `${x} ${y}` }, { rotation: 360, svgOrigin: `${x} ${y}`, duration: 1.7, repeat: Math.ceil(dur / 1.7), ease: "none" }, t0); return g; };
+      // the strike: a bolt from high above down to (x1,y1), a white sheet over the whole frame, a burst of sparks at the hit, a blue glow that lingers
+      const strike = (tl, L, at, o = {}) => { const x1 = o.x1, y1 = o.y1, x0 = o.x0 ?? x1 + 260, y0 = o.y0 ?? y1 - 2200; const g = grp(L.act);
+        g.innerHTML = [1, 2, 3].map((k) => `<g class="ltBv" opacity="0">${LT.bolt(x0, y0, x1, y1, (o.seed ?? 1) * 7 + k * 13, o.w ?? 16)}</g>`).join("") + `<g class="ltHit" opacity="0" transform="translate(${x1},${y1})">${LT.sparks(18, 200, 5, "#dff4ff")}${LT.sparks(10, 120, 9, "#ffe24a")}<circle r="46" fill="#ffffff"/></g>`;
+        const bs = [...g.querySelectorAll(".ltBv")], hit = g.querySelector(".ltHit");
+        [[0, 0.08], [0.08, 0.06], [0.14, 0.09], [0.23, 0.05], [0.28, 0.1], [0.4, 0.06]].forEach(([d, len], i) => { if (o.short && d > 0.15) return; tl.set(bs[i % 3], { opacity: 1 }, at + d); tl.set(bs[i % 3], { opacity: 0 }, at + d + len); });
+        tl.fromTo(hit, { opacity: 1, scale: 0.2, svgOrigin: `${x1} ${y1}` }, { opacity: 0, scale: 1.8, svgOrigin: `${x1} ${y1}`, duration: 0.55, ease: "power2.out", immediateRender: false }, at);
+        const fl = WHITE(L); tl.fromTo(fl, { opacity: o.flash ?? 1 }, { opacity: 0, duration: o.flashDur ?? 0.7, ease: "power2.out", immediateRender: false }, at);
+        const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${x1}" cy="${y1}" r="${o.r ?? 700}" fill="url(#ltBlue)"/></g>`; tl.set(gl, { opacity: 0 }, 0); tl.fromTo(gl, { opacity: 1 }, { opacity: 0, duration: o.linger ?? 1.2, ease: "power1.out", immediateRender: false }, at); return g; };
+      // a small bolt that keeps crackling between two points (the finger and the gate, the hand and the cable) for dur seconds
+      const zapLine = (tl, L, x0, y0, x1, y1, at, dur, o = {}) => { const g = grp(L.act);
+        g.innerHTML = [1, 2, 3, 4].map((k) => `<g class="ltZv" opacity="0">${LT.bolt(x0, y0, x1, y1, (o.seed ?? 3) * 5 + k * 11, o.w ?? 7)}</g>`).join("") + `<g class="ltZh" transform="translate(${x1},${y1})">${LT.sparks(12, 90, 4, "#ffe24a")}<circle r="18" fill="#ffffff"/></g><circle class="ltZt" cx="${x0}" cy="${y0}" r="12" fill="#ffffff"/>`;
+        const bs = [...g.querySelectorAll(".ltZv")]; tl.set(g, { opacity: 0 }, 0); tl.set(g, { opacity: 1 }, at); tl.set(g, { opacity: 0 }, at + dur);
+        for (let t = 0; t < dur; t += 0.06) { const k = Math.round(t / 0.06) % 4; bs.forEach((e, j) => tl.set(e, { opacity: j === k ? 1 : 0 }, at + t)); }
+        tl.fromTo(g.querySelector(".ltZh"), { scale: 0.6, svgOrigin: `${x1} ${y1}` }, { scale: 1.3, svgOrigin: `${x1} ${y1}`, duration: 0.09, repeat: Math.ceil(dur / 0.09), yoyo: true, ease: "none" }, at);
+        const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${x1}" cy="${y1}" r="${o.r ?? 240}" fill="url(#ltBlue)"/></g>`; tl.set(gl, { opacity: 0 }, 0); tl.set(gl, { opacity: 1 }, at); tl.set(gl, { opacity: 0 }, at + dur);
+        tl.fromTo(gl, { opacity: 1 }, { opacity: 0.5, duration: 0.07, repeat: Math.ceil(dur / 0.07), yoyo: true, ease: "none" }, at); return g; };
+      // the body's aura: a blue glow ring behind the one who holds the lightning (glow layer, world space), pulsing
+      const aura = (tl, L, x, y, at, dur, o = {}) => { const g = grp(L.glow); g.innerHTML = `<g transform="translate(${x},${y})">${LT.glowRing(o.r ?? 340, o.c)}</g>`;
+        tl.set(g, { opacity: 0 }, 0); tl.fromTo(g, { opacity: 0, scale: 0.4, svgOrigin: `${x} ${y}` }, { opacity: o.op ?? 0.9, scale: 1, svgOrigin: `${x} ${y}`, duration: 0.4, ease: "power2.out", immediateRender: false }, at);
+        tl.fromTo(g.firstChild, { scale: 1, svgOrigin: `${x} ${y}` }, { scale: 1.12, svgOrigin: `${x} ${y}`, duration: 0.5, repeat: Math.ceil(dur / 0.5), yoyo: true, ease: "sine.inOut" }, at + 0.4); if (o.end != null) tl.to(g, { opacity: 0, duration: 0.3 }, o.end); return g; };
+      // sparks in the standing hair (the .ltSpark group of a bolt-haired actor): on at `at`, flickering for dur
+      const hairSparks = (tl, aid, at, dur, lo = 0.2) => { const sel = `#${aid} .ltSpark`; tl.set(sel, { opacity: 0 }, 0); tl.set(sel, { opacity: 1 }, at); loop(tl, sel, { opacity: 1 }, { opacity: lo }, 0.14, at, dur); };
+      // a floating "100%" phone tag over a bed or a hand (world space, over the cast)
+      const phone100 = (tl, L, x, y, at, o = {}) => { const g = grp(L.act);
+        g.innerHTML = `<g transform="translate(${x},${y}) scale(${o.s ?? 1})"><rect x="-120" y="-44" width="240" height="88" rx="30" fill="#fbf7ee" stroke="${Lot.INK}" stroke-width="5"/><rect x="-96" y="-20" width="58" height="40" rx="8" fill="none" stroke="${Lot.INK}" stroke-width="5"/><rect x="-38" y="-10" width="8" height="20" rx="2" fill="${Lot.INK}"/><rect x="-90" y="-14" width="46" height="28" rx="4" fill="#3a9c66"/>
+          <text x="-22" y="16" font-family="Kanit" font-weight="900" font-size="46" fill="${Lot.INK}">100%</text><path d="M-16,-62l6,-14M8,-66l0,-16M30,-62l-6,-14" stroke="#f2c55c" stroke-width="5" stroke-linecap="round"/></g>`;
+        tl.set(g, { opacity: 0 }, 0); tl.fromTo(g, { opacity: 0, scale: 0.4, y: 30, svgOrigin: `${x} ${y}` }, { opacity: 1, scale: 1, y: 0, svgOrigin: `${x} ${y}`, duration: 0.35, ease: "back.out(2.4)", immediateRender: false }, at);
+        if (o.end != null) tl.to(g, { opacity: 0, duration: 0.2 }, o.end); return g; };
+      // the blackout of a shop / sky set: lamps and windows die, the frame darkens (sid = the set id, id = the shot id)
+      const blackout = (tl, sid, id, at, o = {}) => { tl.to(`#${sid}-lamps, #${sid}-lights`, { opacity: 0, duration: 0.06 }, at); tl.to(`#${id}-dark`, { opacity: o.dark ?? 0.62, duration: 0.1 }, at);
+        tl.to(`#${id}-mid .ltWin, #${id}-far .ltWin, #${id}-mid .ltLampOn`, { attr: { fill: "#1e2230" }, duration: 0.05 }, at); tl.to(`#${sid}-fluor rect`, { attr: { fill: "#5a5e66" }, duration: 0.05 }, at); };
+      const lightsBack = (tl, sid, id, at, o = {}) => { tl.to(`#${sid}-lamps, #${sid}-lights`, { opacity: 1, duration: 0.08 }, at); tl.to(`#${id}-dark`, { opacity: o.dark ?? 0.4, duration: 0.2 }, at);
+        tl.to(`#${id}-mid .ltWin, #${id}-far .ltWin`, { attr: { fill: "#ffd890" }, duration: 0.06 }, at); tl.to(`#${id}-mid .ltLampOn`, { attr: { fill: "#fff4c8" }, duration: 0.06 }, at); tl.to(`#${sid}-fluor rect`, { attr: { fill: "#f0fbff" }, duration: 0.06 }, at); };
+      // the rules written inside the fuse-box lid (screen space card, like the camp plank): rows [icon, tone, line 1, line 2]
+      const lidCard = (L, id, rows, title, o = {}) => { const g = grp(L.light);
+        const row = (y, n, ic, tone, a, b) => `<g id="${id}-rr${n}">${JKI.coin(ic, -290, y, 0.66, `${id}-ic${n}`, tone)}<text x="-222" y="${y - 8}" font-family="Kanit" font-weight="900" font-size="46" fill="#1a1a22">${a}</text><text x="-222" y="${y + 44}" font-family="Kanit" font-weight="800" font-size="36" fill="#c8302a">${b}</text></g>`;
+        g.innerHTML = `<g id="${id}-pl" transform="translate(540,${o.y ?? 760})"><rect x="-400" y="-${o.h ?? 420}" width="800" height="${(o.h ?? 420) * 2}" rx="14" fill="#8a8e96"/><rect x="-384" y="-${(o.h ?? 420) - 16}" width="768" height="${(o.h ?? 420) * 2 - 32}" rx="10" fill="#d8d4c8"/>
+          ${[...Array(6)].map((_, k) => `<path d="M-360,${-300 + k * 120}h720" stroke="#b8b4a8" stroke-width="2" opacity=".7"/>`).join("")}${[[-368, -(o.h ?? 420) + 32], [368, -(o.h ?? 420) + 32], [-368, (o.h ?? 420) - 32], [368, (o.h ?? 420) - 32]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="10" fill="#4a4e56"/><circle cx="${x - 2}" cy="${y - 2}" r="4" fill="#a8acb4"/>`).join("")}
+          <rect x="-300" y="-${(o.h ?? 420) - 50}" width="600" height="96" rx="12" fill="#1a1a22"/><text x="0" y="-${(o.h ?? 420) - 118}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#f6d36a">${title}</text>
+          ${rows.map(([ic, tone, a, b], n) => row((o.row0 ?? -150) + n * (o.gap ?? 190), n + 1, ic, tone, a, b)).join("")}</g>`; return g; };
+      // ---------- r01 hook: the queue in the alley at night, phones on the welder ----------
+      const QUEUE = (k, x0 = 1010) => [["ltMan1Phone", 1.0], ["ltWom1Phone", 0.96], ["ltMan2Phone", 1.0], ["ltWom2Phone", 0.94]].map(([who, s], i) => A(who, x0 + i * 150, 1400, s, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }));
+      shot("r01", { ...shop("r01", { time: "night", table: true, tableX: 1560 }), cam: { keys: [{ t: 0, ...fr(900, 1120, 1.15, 540, 980), drift: { s: 0.012 } }, { t: F("r01", 0, 1) - 0.1, ...fr(960, 1080, 1.4, 540, 960), glide: 0.5 }] },
+        actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }, { t: F("r01", 0, 1), mode: "idle", eyes: "worry", mouth: "frown" }]), ...QUEUE("r01"), A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("r01"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r01"), 0.4); aura(tl, L, 800, 1130, t0, D("r01"), { r: 300, op: 0.6 });
+          zapLine(tl, L, 880, 1000, 960, 1010, t0 + 0.3, D("r01") - 0.4, { w: 5, seed: 31, r: 160 }); phone100(tl, L, 1010, 760, t0 + 0.8, { s: 0.9 }); phone100(tl, L, 1160, 700, t0 + F("r01", 0, 1) + 0.3, { s: 0.8 }); phone100(tl, L, 1310, 760, t0 + F("r01", 0, 1) + 0.9, { s: 0.8 }); } });
+
+      // ---------- r02–r06 that night: เฮียกิม at the door ----------
+      shot("r02", { ...room("r02", { doorFront: true }), cam: { keys: [{ t: 0, ...fr(1100, 1000, 1.1, 540, 960), drift: { s: 0.01 } }, { t: F("r02", 0, 1), ...fr(1040, 900, 1.5, 540, 900), glide: 0.6 }] },
+        actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "knock", eyes: "normal", mouth: "flat" }])],
+        sfxText: [{ text: "ก๊อก ก๊อก", x: 120, y: 620, size: 80, rot: -8, color: "#f6d36a", t: F("r02", 0, 1) + 0.1, end: D("r02") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:40", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("r02"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r02"), 0.6);
+          tl.fromTo(`#${SID.room("r02")}-leaf`, { x: 0 }, { x: 3, duration: 0.06, repeat: 5, yoyo: true, ease: "none" }, t0 + F("r02", 0, 1) + 0.1); } });
+      shot("r03", { ...room("r03", { doorFront: true }), cam: { keys: [{ t: 0, ...fr(960, 1040, 1.2, 540, 960), drift: { s: 0.01 } }, { t: F("r03", 0, 1) - 0.2, ...fr(915, 870, 1.9, 540, 860), glide: 0.6 }] },
+        actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("r03", 0, 1), mode: "proud", eyes: "squint", mouth: "smile" }]),
+          ME("ltYouBolt", 1000, 1400, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }, { t: 0.9, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:41", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("r03"), -0.5); const sid = SID.room("r03");
+          tl.set(`#${id}-a1`, { opacity: 0 }, 0); tl.set(`#${id}-a1`, { opacity: 1 }, t0 + 0.35); tl.to(`#${sid}-leaf`, { scaleX: 0.12, transformOrigin: "100% 50%", duration: 0.5, ease: "power2.inOut" }, t0 + 0.3);
+          hairSparks(tl, `${id}-a0`, t0, D("r03"), 0.6); hairSparks(tl, `${id}-a1`, t0 + 0.35, D("r03"), 0.4); tagAt(tl, L, 830, 760, "เฮียกิม · ช่างไฟ 70 ปี", t0 + 0.7, { s: 0.9 });
+          LTI.badge(tl, L.light, t0, D("r03"), { kind: "hairup", x: 300, y: 500, tone: "blue", label: "ชี้ตั้งเหมือนกันเป๊ะ", at: F("r03", 0, 1) + 0.3 }); } });
+      shot("r04", { ...room("r04", { doorFront: true }), camAt: face(830, 1400, 2.6, false, 540, 820, 0.9), push: 0.02, blur: { far: 6, mid: 5 },
+        actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }, { t: F("r04", 0, 1), mode: "idle", eyes: "sad", mouth: "flat" }], { talk: [[vo("r04"), voEnd("r04"), "o"]] })],
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:41", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); hairSparks(tl, `${id}-a0`, t0, D("r04"), 0.6);
+          LTI.badge(tl, L.light, t0, D("r04"), { kind: "bolt", x: 300, y: 520, tone: "yellow", label: "40 ปีก่อน", at: F("r04", 0, 1) + 0.3 }); } });
+      shot("r05", { ...room("r05", { doorFront: true }), camAt: fr(915, 1000, 1.55, 540, 940), push: 0.015, blur: { far: 4 },
+        actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "payUp", eyes: "normal", mouth: "flat" }], { talk: [[vo("r05"), voEnd("r05"), "o"]] }), ME("ltYouBolt", 1000, 1400, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }, { t: F("r05", 0, 1), mode: "idle", eyes: "normal", mouth: "pout" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:42", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("r05"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r05"), 0.6); hairSparks(tl, `${id}-a1`, t0, D("r05"), 0.4); } });
+      shot("r06", { ...room("r06"), cam: { keys: [{ t: 0, ...fr(1400, 1060, 1.2, 540, 960), drift: { s: 0.01 } }, { t: F("r06", 0, 1) - 0.1, ...fr(1560, 1000, 2.0, 540, 900), glide: 0.5 }] },
+        actors: [A("ltKimDriver", 1380, 1400, 0.9, [{ t: 0, mode: "weldStand", eyes: "normal", mouth: "flat" }]), ME("ltYouBolt", 1180, 1400, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        sfxText: [{ text: "แอ๊ด…", x: 160, y: 700, size: 70, rot: -6, color: "#f6d36a", t: F("r06", 0, 1) - 0.2, end: F("r06", 0, 1) + 0.9 }],
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:45", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("r06"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r06"), 0.6); hairSparks(tl, `${id}-a1`, t0, D("r06"), 0.4); const sid = SID.room("r06"), at = t0 + F("r06", 0, 1) - 0.2;
+          tl.to(`#${sid}-box-lid`, { scaleX: -1, transformOrigin: "0% 50%", duration: 0.7, ease: "power2.inOut" }, at); tl.set(`#${sid}-box-lid .ltLidFront`, { opacity: 0 }, at + 0.35); tl.set(`#${sid}-box-lid .ltLidBack`, { opacity: 1 }, at + 0.35); } });
+
+      // ---------- r07 the three rules on the lid ----------
+      shot("r07", { ...room("r07"), camAt: fr(1500, 1040, 1.3, 540, 960), push: 0.006, blur: { far: 10, mid: 9, set: 8, act: 7 }, dark: 0.3,
+        actors: [A("ltKim", 1380, 1400, 0.9, [{ t: 0, mode: "pointZap", eyes: "normal", mouth: "flat" }]), ME("ltYouBolt", 1180, 1400, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:45", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); const g = lidCard(L, id, [["gate", "red", "ตกใจเมื่อไร ห้ามจับเหล็ก", "ไม่งั้นทั้งตึกจะสะดุ้งไปด้วย"], ["tree", "green", "โกรธเมื่อไร ให้จับต้นไม้", "ความโกรธจะไหลลงดิน"], ["batt100", "yellow", "ห้ามปล่อยไฟเต็มร้อย", "ถ้ายังไม่รู้วิธีปิด"]], "กฎของเฮียกิม ๓ ข้อ");
+          pop(tl, g, t0 + 0.05, { origin: "540 760", from: 0.85, dur: 0.35 }); swingG(tl, `#${id}-pl`, t0 + 0.4, D("r07") - 0.4, 0.6, "540 340");
+          const ats = [F("r07", 0, 1) - 0.3, F("r07", 1, 1) - 0.3, vo("r07", 2) + 0.6], kinds = ["gate", "tree", "batt100"];
+          [1, 2, 3].forEach((n) => { tl.set(`#${id}-rr${n}`, { opacity: 0 }, 0); const a = t0 + ats[n - 1]; tl.to(`#${id}-rr${n}`, { opacity: 1, duration: 0.25 }, a); JKI.enterC(tl, `${id}-ic${n}`, a); LTI.idle(tl, `${id}-ic${n}`, kinds[n - 1], a + 0.9, t0 + D("r07") - a - 0.9); }); } });
+
+      // ---------- r08 "I let it all out once… half of Thonburi went dark" ----------
+      shot("r08", { ...sky("r08", { storm: false }), grade: { top: "#c89a60", bottom: "#2a1a10", op: 0.4 }, cam: { keys: [{ t: 0, ...fr(900, 700, 0.6, 540, 900), drift: { s: 0.008 } }, { t: F("r08", 0, 1), ...fr(700, 700, 0.55, 540, 900), glide: 1.0 }] }, shake: JKC.impact(F("r08", 0, 1) + 0.1, 0.5, 8),
+        actors: [A("ltKim", 540, 1400, 0.9, [{ t: 0, mode: "zap", eyes: "closed", mouth: "scream" }, { t: F("r08", 0, 1) + 0.3, mode: "idle", eyes: "wide", mouth: "o" }])],
+        sfxText: [{ text: "ซ่าาา!!", x: 120, y: 500, size: 110, rot: -8, color: "#9ad8ff", t: 0.3, end: F("r08", 0, 1) }],
+        fx(tl, id, t0, L) { hud(id, [["เมื่อ", "40 ปีก่อน", "#f2c55c"], ["ไฟในตัว", "100%", "#ff8a7a"]]); hairSparks(tl, `${id}-a0`, t0, D("r08")); aura(tl, L, 540, 1130, t0, F("r08", 0, 1) + 0.2, { r: 420, op: 0.9, end: F("r08", 0, 1) + 0.2 });
+          const at = t0 + F("r08", 0, 1) + 0.1, sid = SID.sky("r08"); const wins = [...document.querySelectorAll(`#${id}-far .ltWin, #${id}-mid .ltWin`)].filter((e) => +e.getAttribute("x") < 1000);
+          tl.to(wins, { attr: { fill: "#1e2230" }, duration: 0.05 }, at); [...document.querySelectorAll(`#${sid}-lights > *`)].filter((e) => +e.getAttribute("cx") < 1000).forEach((e) => tl.to(e, { opacity: 0, duration: 0.05 }, at));
+          tl.to(`#${sid}-store, #${sid}-hosp`, { opacity: 0.25, duration: 0.05 }, at); const dk = grp(L.set); dk.innerHTML = `<rect x="-2600" y="-1600" width="3600" height="4200" fill="#05070c"/>`; tl.set(dk, { opacity: 0 }, 0); tl.to(dk, { opacity: 0.6, duration: 0.1 }, at);
+          tagAt(tl, L, 300, 300, "ครึ่งฝั่งธน", at + 0.4, { s: 2.6 }); } });
+
+      // ---------- r09–r10 the rumour: the queue, the table ----------
+      shot("r09", { ...shop("r09", { time: "night", table: true, tableX: 1560 }), cam: { keys: [{ t: 0, ...fr(1000, 1060, 0.9, 540, 960), drift: { s: 0.008 } }, { t: F("r09", 0, 1), ...fr(1000, 1100, 1.2, 540, 980), glide: 0.8 }, { t: F("r09", 0, 2) - 0.1, ...fr(900, 1060, 1.6, 540, 960), glide: 0.5 }] },
+        actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("r09", 0, 2), mode: "idle", eyes: "wide", mouth: "o" }]), ...QUEUE("r09", 2400).map((a, i) => ({ ...a, moveTo: { x: 1010 + i * 150, dur: 1.6, at: F("r09", 0, 1) - 0.3 } })), A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }], { flip: true })],
+        sfxText: [{ text: "ติ๊ง!", x: 640, y: 560, size: 90, rot: 6, color: "#9ad8ff", t: F("r09", 0, 3) + 0.4, end: D("r09") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("r09"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r09"), 0.4); const rumour = tagAt(tl, L, 800, 820, "ข่าวลือไปไวกว่าไฟ", t0 + 0.3, { s: 1.0 }); out(tl, rumour, t0 + F("r09", 0, 3) - 0.7);
+          zapLine(tl, L, 880, 1000, 960, 1010, t0 + F("r09", 0, 2) + 0.1, D("r09") - F("r09", 0, 2) - 0.2, { w: 5, seed: 33, r: 160 }); phone100(tl, L, 1010, 760, t0 + F("r09", 0, 3) + 0.4, { s: 0.9 });
+          LTI.counter(tl, L.light, t0, D("r09"), { icon: "bolt", x: 160, y: 420, w: 760, from: 3, to: 0, unit: "วินาที", at: F("r09", 0, 3) - 0.5, rollAt: F("r09", 0, 3) - 0.4, count: 0.8, tone: "blue" }); } });
+      shot("r10", { ...shop("r10", { time: "night", table: true, tableX: 1560 }), cam: { keys: [{ t: 0, ...fr(1560, 1180, 1.6, 540, 1000), drift: { s: 0.01 } }, { t: F("r10", 0, 2) - 0.2, ...face(800, 1400, 2.4, false, 540, 820), glide: 0.6 }] },
+        actors: [A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }, { t: 0.6, mode: "proud", eyes: "closed", mouth: "smile" }], { flip: true }), ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("r10", 0, 2), mode: "idle", eyes: "angry", mouth: "frown" }]), ...QUEUE("r10")],
+        sfxText: [{ text: "ฉิ่ง!", x: 160, y: 560, size: 80, rot: -8, color: "#f6d36a", t: F("r10", 0, 1) + 0.1, end: F("r10", 0, 2) }],
+        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("r10"), -0.5); hairSparks(tl, `${id}-a1`, t0, D("r10"), 0.4);
+          LTI.counter(tl, L.light, t0, D("r10"), { icon: "baht", x: 160, y: 420, w: 760, from: 0, to: 20, unit: "฿/ครั้ง", at: F("r10", 0, 1) - 0.2, rollAt: F("r10", 0, 1), count: 0.6, tone: "yellow" });
+          LTI.badge(tl, L.light, t0, D("r10"), { kind: "baht", x: 300, y: 620, tone: "red", label: "คุณได้ 0 บาท", at: F("r10", 0, 2) + 0.2 }); } });
+
+      // ---------- r11 angry → the banana tree · r12 the bunch ripens ----------
+      split("r11", F("r11", 0, 1),
+        spec("r11", { ...shop("r11", { time: "night", table: true, tableX: 1560, banana: true }), camAt: face(800, 1400, 2.8, false, 540, 800), push: 0.03, blur: { far: 6, mid: 5 }, shake: JKC.impact(0.6, 1.2, 4), captions: caps("r11").filter((c) => c.t < F("r11", 0, 1)),
+          actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "angry", mouth: "frown" }, { t: 0.8, mode: "idle", eyes: "angry", mouth: "scream" }])],
+          fx(tl, id, t0, L) { hud(id, H_WAGE(100, "#ff8a7a")); hairSparks(tl, `${id}-a0`, t0, D("r11")); tl.fromTo(`#${id}-a0 .ltSpark`, { scale: 1, svgOrigin: "0 -620" }, { scale: 1.5, svgOrigin: "0 -620", duration: 0.1, repeat: 30, yoyo: true, ease: "none", immediateRender: false }, t0 + 0.5);
+            const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="800" cy="900" r="360" fill="url(#jkRed)"/></g>`; tl.set(gl, { opacity: 0 }, 0); tl.to(gl, { opacity: 0.8, duration: 0.6 }, t0 + 0.4); } }),
+        spec("r11", { ...shop("r11", { time: "night", table: true, tableX: 1560, banana: true }), cam: { keys: [{ t: 0, ...fr(1300, 1100, 0.95, 540, 980), drift: { s: 0.01 } }, { t: 1.0, ...fr(1750, 1080, 1.25, 540, 960), glide: 1.2 }] }, captions: capsFrom("r11", F("r11", 0, 1)),
+          actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "run", eyes: "angry", mouth: "scream" }, { t: 1.05, mode: "hugTree", eyes: "closed", mouth: "pout" }], { moveTo: { x: 1700, dur: 1.0, at: 0.05 } }), A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+          fx(tl, id, t0, L) { hud(id, H_WAGE(100, "#ff8a7a")); shadows(L, id, act("r11"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r11")); const sid = SID.shop("r11");
+            zapLine(tl, L, 1760, 1100, 1836, 1400, t0 + 1.2, D("r11") - 1.4, { w: 5, seed: 41, r: 220 }); LTI.badge(tl, L.light, t0, D("r11"), { kind: "tree", x: 300, y: 520, tone: "green", label: "กฎข้อ ๒", at: F("r11", 0, 2) - F("r11", 0, 1) + 0.2 }); } }));
+      shot("r12", { ...shop("r12", { time: "night", table: true, tableX: 1560, banana: true }), cam: { keys: [{ t: 0, ...fr(1750, 1080, 1.25, 540, 960), drift: { s: 0.01 } }, { t: F("r12", 0, 1) - 0.1, ...fr(1890, 1070, 2.6, 540, 900), glide: 0.6 }] }, shake: JKC.impact(F("r12", 0, 2) + 0.1, 0.3, 6),
+        actors: [ME("ltYouBolt", 1700, 1400, [{ t: 0, mode: "hugTree", eyes: "closed", mouth: "pout" }, { t: F("r12", 0, 2) + 0.3, mode: "hugTree", eyes: "wide", mouth: "o" }])],
+        sfxText: [{ text: "ติ๊ง!", x: 120, y: 520, size: 100, rot: -8, color: "#f6d36a", t: F("r12", 0, 2) + 0.1, end: D("r12") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_WAGE(100, "#ff8a7a")); shadows(L, id, act("r12"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r12"), 0.5); const sid = SID.shop("r12"), at = t0 + F("r12", 0, 2) + 0.1;
+          zapLine(tl, L, 1760, 1100, 1836, 1400, t0, F("r12", 0, 2), { w: 5, seed: 43, r: 220 }); tl.to(`#${sid}-tree .ltBan`, { attr: { stroke: "#f6d36a" }, duration: 0.25 }, at);
+          const fl = grp(L.glow); fl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="1890" cy="1070" r="300" fill="url(#ltWarm)"/></g>`; tl.set(fl, { opacity: 0 }, 0); tl.fromTo(fl, { opacity: 1 }, { opacity: 0.3, duration: 0.8, ease: "power2.out", immediateRender: false }, at);
+          const sp = grp(L.act); sp.innerHTML = `<g transform="translate(1890,1070)">${LT.sparks(14, 150, 17, "#f6d36a")}</g>`; tl.set(sp, { opacity: 0 }, 0); tl.fromTo(sp, { opacity: 1, scale: 0.3, svgOrigin: "1890 1070" }, { opacity: 0, scale: 1.6, svgOrigin: "1890 1070", duration: 0.5, ease: "power2.out", immediateRender: false }, at);
+          tagAt(tl, L, 1890, 900, "สุกทั้งเครือ!", at + 0.3, { s: 0.45 }); } });
+
+      // ---------- r13 the full story on YouTube · r14 logo ----------
+      shot("r13", { ...shop("r13", { time: "night", table: true, tableX: 1560, banana: true }), camAt: fr(1000, 1000, 0.8, 540, 900), push: 0.01, dark: 0.45, blur: { set: 12, mid: 10, far: 10, glow: 8 }, captions: [],
+        fx(tl, id, t0, L) { NkV.chalkEnd(tl, grp(L.light), t0, D("r13"), { big: "ดูเรื่องเต็ม", q: "ทาง YouTube", tag: "ดูต่อได้ที่", foot: "กดติดตาม แล้วดูเรื่องเต็มที่ YouTube" });
+          const yt = grp(L.light); yt.innerHTML = `<g transform="translate(540,1430)"><rect x="-150" y="-50" width="100" height="100" rx="26" fill="#e8302a"/><path d="M-112,-24L-112,24L-72,0Z" fill="#fff"/>
+            <text x="-30" y="-6" font-family="Kanit" font-weight="900" font-size="44" fill="#ffffff">${CHANNEL}</text><text x="-30" y="38" font-family="Kanit" font-weight="700" font-size="28" fill="#f2c55c">เรื่องเต็มทุกตอน</text></g>`;
+          tl.set(yt, { opacity: 0 }, 0); tl.fromTo(yt, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 1.3); } });
+      shot("r14", { light: false, captions: [], fx(tl, id, t0, L) { const g = grp(L.light); NkUI.logo(g); pop(tl, g, t0 + 0.05, { from: 0.9, dy: 0, origin: "540 880" }); } });
