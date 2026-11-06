@@ -1,0 +1,22 @@
+# หนวดใส EP.1 · สตอรีบอร์ดรุ่น cine (CINEMA BIBLE · ก่อนเรนเดอร์)
+- **แผน:**
+  - `production/shotlist.json` 30 คัต · `colorscript.json` · `soundplan.json` · `PLAN.md`
+  - shotlist_check.py (dd27f16): FAIL 0
+- **เวลา:** schedule ใหม่ของเลน B (7970a9d4) · คำสั่ง 2.86 วิ · HG7 23.52 วิ · ยาว 114.76 วิ
+- **โค้ด:** `production/kit-cine/`
+  - `shots.cine.part` · `mksched2.py` (22 ชิ้นตามที่ตั้งฉากเปลี่ยน · คัตอื่นเป็นคัตกล้องภายในชิ้น)
+  - `head.part` / `foot.part`: `Cine.episode(shots, PLAN)` ก่อน `Engine.build` · `CT(n)` ให้คัตกล้องตรงกับเวลาคัตใน shot list
+  - cine.js + engine.js ของผู้ประสาน (ccr-fb88c4b3 @ 1491182)
+- **แผ่นรวม:**
+  - `sb-cine-1…4.jpg`: เฟรม 0/1/2/3 วิของฮุก + กลางทุกคัต
+  - `stills/t<วินาที>.jpg`
+- **แผ่นคู่ทะเลลด EP.2 (ส่งแล้ว) | หนวดใส EP.1 cine:** `pairs/tide-ep2-vs-jelly-cine-1…4.jpg` (16 คู่ตามจังหวะเรื่อง)
+- **ยังไม่ทำ (หลังภาพผ่าน):**
+  - มิกซ์ตาม soundplan:
+    - บรรยากาศจริง (ElevenLabs SFX)
+    - drone
+    - เงียบเต็ม 2.86 / 81.02
+    - dip 3 จุด
+    - sting 1 จุด 68.16
+    - หัวใจ 90→130
+  - เรนเดอร์ แล้ว QA จากไฟล์จริง

@@ -1,0 +1,626 @@
+      // ---------- หนวดใส EP.1 · หนวดใสพันขา อย่าราดน้ำท่า ----------
+      // camera grammar: frame 0 on the wet sand — the uncapped bottle over ภูมิ's stung leg, the title drifting in the swash (H1) → the
+      // insert: the drop swelling on the bottle's lip (cut on {อย่า}) → the sundial on ยาย's house post turns back three hours →
+      // dawn at the door: ยาย with her basket, ต้น says no, ภูมิ holds his nose → the rhyme on her driftwood board, hung from the beam
+      // (HG7 in the empty wall above the window at rule 2) → น้ำหวาน sings it → ต้น laughs; the photo face down → they leave; ยาย sets the
+      // basket down → the map along the shore → the beach wide (the ring slips) → the empty vinegar post (insert) → the far rock, ต้น films
+      // → half under: the sting, a hand on the shin → the crowd with bottles → the skin cross-section → the bottle over the leg, set down,
+      // the board on the post: rule 1 ticked → he turns: the duck ring floating empty over the swarm → the choice → black → the tower's end board
+      const SUN = { from: "right", rim: "#fff6dc", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.3, op: 0.28 }, vol: false };
+      const DAWN = { from: "right", rim: "#ffd8a0", rimOp: 0.85, shade: "#2a1a30", shadeOp: 0.3, cast: { len: 1.0, op: 0.25 }, vol: false };
+      const GBR = { top: "#fff4d8", bottom: "#c8eef8", op: 0.1 }, GDAWN = { top: "#ffe0b0", bottom: "#d89a7a", op: 0.12 };
+      const BRK = { "แล้วไปดูเรื่องเต็มได้ที่ช่องยูทูบของเรา": "แล้วไปดูเรื่องเต็ม\nได้ที่ช่องยูทูบของเรา" };
+      const brk = (t) => { if (BRK[t]) return BRK[t]; const plain = t.replace(/[\[\]{}“”]/g, ""); if (plain.length <= 24) return t; let d = 0, best = -1, bd = 1e9;
+        for (let i = 0; i < t.length; i++) { const ch = t[i]; if (ch === "[" || ch === "{") d++; else if (ch === "]" || ch === "}") d--; else if (ch === " " && d === 0) { const m = Math.abs(i - t.length / 2); if (m < bd) { bd = m; best = i; } } }
+        return best < 0 ? t : t.slice(0, best) + "\n" + t.slice(best + 1); };
+      const caps0 = caps; caps = (k, lines, o) => caps0(k, lines, o).filter((c) => c.end > 0.05).map((c) => ({ ...c, t: Math.max(0, c.t), text: brk(c.text) }));
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const UW = (L, sy) => put(L.fg, `<rect x="-900" y="${sy + 6}" width="2900" height="2000" fill="#2aa0bc" opacity=".3"/>`);
+      const show = (tl, sel, a, b) => { tl.set(sel, { opacity: 0 }, 0); tl.set(sel, { opacity: 1 }, a); if (b !== undefined) tl.set(sel, { opacity: 0 }, b); };
+      const pop = (tl, sel, t, o = {}) => { tl.set(sel, { opacity: 0 }, 0); tl.fromTo(sel, { opacity: 0, scale: o.s0 ?? 0.4, svgOrigin: o.origin || "0 0" }, { opacity: 1, scale: 1, svgOrigin: o.origin || "0 0", duration: o.d ?? 0.45, ease: o.ease || "back.out(2.6)", immediateRender: false }, t); };
+      // the source chip, bottom right (in-world tone: a foam-white slab with a red-cross badge); 16:9 moves it with the .ui layer
+      const SRC = (L, tl, t0, dur, text) => { const id = `src${Math.round(t0 * 100)}`, w = 19 * text.length + 70;
+        put(L.light, `<g transform="translate(${1050 - w},1790)"><g id="${id}" class="ui pagepos"><rect x="4" y="-24" width="${w}" height="52" rx="14" fill="#0a1a24" opacity=".28"/><rect x="0" y="-28" width="${w}" height="52" rx="14" fill="#fffaf0" stroke="#2a2420" stroke-width="3"/>
+          <g transform="translate(28,-2)"><circle r="15" fill="#d8312a" stroke="#2a2420" stroke-width="2.4"/><path d="M-7,0h14M0,-7v14" stroke="#fff" stroke-width="4.4" stroke-linecap="round"/></g>
+          <text x="54" y="6" font-family="Kanit" font-weight="700" font-size="25" fill="#1e2a3a">${text}</text></g></g>`);
+        pop(tl, `#${id}`, t0, { s0: 0.6, d: 0.35, origin: `${w} 0` }); tl.to(`#${id}`, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2); };
+      // extra poses
+      Rig.MODES.holdNose = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -118, faF: -150, uaB: 10, faB: -30, torso: -5, head: -10 + 2 * Math.sin(u * 7), bodyY: -2 });
+      Rig.MODES.grabShin = (u, o) => { const j = Math.sin(u * 47) * 1.6; return { ...Rig.MODES.idle(u, o), thF: -78, shF: 96, thB: 2, shB: 4, torso: 10 + j * 0.5, head: -14 + j, uaF: -24 + j, faF: -14, uaB: 40 - j, faB: -80, bodyY: 0 }; };
+      Rig.MODES.reachBottle = (u, o) => { const j = (o.shake ?? 1) * (Math.sin(u * 31) * 2.2 + Math.sin(u * 53) * 1.2); return { ...Rig.MODES.crouch(u, o), uaF: -70 + j, faF: -30 + j, uaB: -30, faB: -40, torso: 24, head: -10 }; };
+      Rig.MODES.setDown = (u, o) => { const k = Math.min(1, u / 0.9); return { ...Rig.MODES.crouch(u, o), uaF: -70 + 50 * k, faF: -30 + 20 * k, uaB: -30, faB: -40, torso: 24 + 6 * k, head: -10 - 8 * k }; };
+      Rig.MODES.basketDown = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -44, faF: -8, uaB: -38, faB: -12, torso: 26, head: -16 });
+      Rig.MODES.crouchLow = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 8, faF: -30, uaB: -10, faB: -30, torso: 16, head: -4 });
+      Rig.MODES.sing = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 0.7); return { ...Rig.MODES.idle(u, o), uaF: -130 + 18 * b, faF: -30, uaB: 120 - 18 * b, faB: 30, torso: 4 * b, head: 8 * b, bodyY: -10 * Math.abs(b) }; };
+      Rig.MODES.recite = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.4); return { ...Rig.MODES.idle(u, o), uaF: -100 + 6 * b, faF: -60 + 10 * b, uaB: 4, faB: -12, torso: 1, head: 3 * b }; };
+
+      // ===== the first cut's shots, captured (not built): their fx, actors and sets are reused by the cine pieces below =====
+      CAPTURE = {};
+      // ---------- 1. frame 0: the uncapped bottle tipping over ภูมิ's stung leg; the title drifts in on the swash ----------
+      add("open", { set: "jellyBeach", setOpts: { id: "ja", seed: 3, palms: false }, dark: 0, blur: { fg: 0, set: 0 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(560, 1600, 2.0, 540, 1100) }, { t: D("open"), glide: D("open"), ...fr(580, 1620, 2.3, 540, 1100) }] },
+        actors: [A("jPhum", 400, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }])],
+        captions: caps("open"),
+        fx(tl, id, t0, L) {
+          const cw = document.getElementById(`${id}-caps`); cw.style.top = "640px"; cw.style.left = "250px";
+          put(L.act, `<g>${Jelly.ladder([[546, 1688], [600, 1704], [664, 1720]], { w: 7 })}${Jelly.ladder([[556, 1716], [580, 1686], [612, 1716], [640, 1690], [660, 1714]], { w: 5 })}
+            <path d="M664,1720Q700,1746 694,1776Q686,1806 724,1814" stroke="#f2feff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M664,1720Q700,1746 694,1776Q686,1806 724,1814" stroke="#a88ae8" stroke-width="1.4" fill="none" stroke-dasharray="2 5"/>
+            <g transform="translate(760,1790) scale(.55)">${Jelly.box(0, 0, 1, { seed: 4, len: 120, lit: 1.5, glow: true })}</g></g>`);
+          // ต้น's hand comes in from the top right and tips the bottle (it turns over the leg while the line is spoken)
+          put(L.act, `<g transform="translate(730,1560)"><g id="ja-hand"><g transform="rotate(-123)">${Jelly.bottle(0, 0, 0.55, { cap: false })}</g>
+            <path d="M-16,-4L130,-140L170,-90L18,40Z" fill="#c08a5e" stroke="#2e2a26" stroke-width="2.6"/><path d="M130,-140L230,-230L280,-170L170,-90Z" fill="#5aa8d8" stroke="#2e2a26" stroke-width="2.6"/>
+            <path d="M-14,-6Q-40,0 -54,24Q-62,46 -44,58Q-26,68 -6,54L22,36Q34,18 22,2Z" fill="#c08a5e" stroke="#2e2a26" stroke-width="2.6"/><path d="M-46,30q10,6 24,2M-40,46q10,4 22,0" stroke="#8a5a3a" stroke-width="2" fill="none"/>
+            <g id="ja-drop"><path d="M-110,86q-4,9 0,14q4,-5 0,-14z" fill="#dff4fc" stroke="#7ab8d8" stroke-width="1.4"/></g></g></g>
+            <g transform="translate(660,1570) rotate(25)"><g id="ja-cap"><rect x="-8" y="-5" width="16" height="10" rx="2" fill="#2a6ad0" stroke="#2e2a26" stroke-width="1.6"/></g></g>`);
+          tl.fromTo("#ja-hand", { rotation: 14, x: 40, y: -40, svgOrigin: "0 0" }, { rotation: 0, x: 0, y: 0, svgOrigin: "0 0", duration: D("open"), ease: "power2.out", immediateRender: false }, t0);
+          tl.fromTo("#ja-drop", { scale: 0.3, svgOrigin: "-110 88" }, { scale: 1.3, svgOrigin: "-110 88", duration: D("open"), ease: "power1.in", immediateRender: false }, t0);
+          tl.fromTo("#ja-cap", { y: -120, rotation: -80, svgOrigin: "0 0" }, { y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "bounce.out", immediateRender: false }, t0);
+          // the swash slides in carrying the title written in floating tentacles
+          put(L.act, `<defs><linearGradient id="jaw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ad8e4" stop-opacity=".55"/><stop offset="1" stop-color="#4ab0c8" stop-opacity=".75"/></linearGradient><filter id="jag" x="-.2" y="-.5" width="1.4" height="2"><feGaussianBlur stdDeviation="2.2"/></filter></defs>
+            <g id="ja-sw"><path d="M140,1800Q380,1772 560,1790T1000,1780V2100H140Z" fill="url(#jaw)"/><path d="M140,1800Q380,1772 560,1790T1000,1780" stroke="#ffffff" stroke-width="4" fill="none" opacity=".9"/>
+            <g transform="translate(612,1880)"><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#1a6a8a" stroke-width="10" opacity=".55">หนวดใส</text><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#dffaff" stroke-width="12" opacity=".6" filter="url(#jag)">หนวดใส</text>
+              <text text-anchor="middle" font-family="Sriracha" font-size="96" fill="#ffffff" fill-opacity=".25" stroke="#ffffff" stroke-width="4.4">หนวดใส</text><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#a88ae8" stroke-width="1.8" stroke-dasharray="2 7">หนวดใส</text>
+              <text x="0" y="44" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#ffffff" stroke="#2a7a9a" stroke-width="1.4" paint-order="stroke">EP.1</text>
+              ${[[-120, -50], [-40, -66], [60, -58], [130, -40], [10, 20]].map(([x, y], k) => `<path id="ja-gl${k}" d="M${x},${y - 8}v16M${x - 8},${y}h16" stroke="#fff" stroke-width="2.4"/>`).join("")}</g></g>`);
+          tl.fromTo("#ja-sw", { y: 70 }, { y: 0, duration: 1.2, ease: "power2.out", immediateRender: false }, t0);
+          [0, 1, 2, 3, 4].forEach((k) => tl.fromTo(`#ja-gl${k}`, { opacity: 0 }, { opacity: 1, duration: 0.25, repeat: 3, yoyo: true, immediateRender: false }, t0 + 0.3 + k * 0.3));
+        } });
+      // ต้น's arm from the top-left, the fist closed round the bottle's middle, its open neck aimed at the leg (rot: the neck's direction, deg)
+      const holdBottle = (gid, cx, cy, rot, s = 1.25) => { const a = rot * Math.PI / 180, mx = cx + Math.sin(a) * 92 * s, my = cy - Math.cos(a) * 92 * s;
+        return { mouth: [mx, my], svg: `<g id="${gid}"><path d="M${cx},${cy}L${cx - 330},${cy - 560}" stroke="#1e1a16" stroke-width="${92 * s}" stroke-linecap="round"/><path d="M${cx},${cy}L${cx - 330},${cy - 560}" stroke="#5aa8d8" stroke-width="${84 * s}" stroke-linecap="round"/>
+          <path d="M${cx - 40},${cy - 70}L${cx - 330},${cy - 560}" stroke="#4a90c0" stroke-width="${24 * s}" stroke-linecap="round" opacity=".6"/><circle cx="${cx}" cy="${cy}" r="${40 * s}" fill="#c08a5e" stroke="#1e1a16" stroke-width="4"/>
+          <g transform="translate(${cx},${cy}) rotate(${rot})"><g transform="scale(${s}) translate(0,100)">${Jelly.bottle(0, 0, 1, { cap: false })}</g>
+            <rect x="${-50 * s}" y="${-34 * s}" width="${100 * s}" height="${62 * s}" rx="${24 * s}" fill="#c08a5e" stroke="#1e1a16" stroke-width="4"/>
+            ${[-30, -10, 10, 30].map((x) => `<path d="M${x * s},${-30 * s}V${24 * s}" stroke="#8a5a3a" stroke-width="3"/>`).join("")}<path d="M${-48 * s},${-6 * s}Q${-62 * s},${-30 * s} ${-40 * s},${-40 * s}" stroke="#1e1a16" stroke-width="3" fill="#c08a5e"/></g></g>` }; };
+      // ---------- 2. hook: the drop swelling on the bottle's lip over the tentacles (cut on {อย่า}) ----------
+      add("hook", { set: "jellyHook", setOpts: { id: "jh", title: " ", sub: " ", seed: 9 }, dark: 0, blur: { fg: 0, set: 0, act: 0 }, light: false, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 840, 1.35, 540, 860) }, { t: D("hook"), glide: D("hook"), ...fr(570, 800, 1.6, 540, 860) }] },
+        shake: (t) => (t < 0.45 ? { x: 14 * Math.sin(t * 70) * (1 - t / 0.45), y: 9 * Math.sin(t * 53) * (1 - t / 0.45), r: 0.6 * Math.sin(t * 41) * (1 - t / 0.45) } : { x: 1.6 * Math.sin(t * 23), y: 1.2 * Math.sin(t * 31), r: 0 }),
+        captions: caps("hook"),
+        fx(tl, id, t0, L) {
+          document.getElementById("jh-bt").setAttribute("display", "none");
+          const hb = holdBottle("hk-bt", 380, 600, 155), [mx, my] = hb.mouth;
+          put(L.act, `<g id="hk-all">${hb.svg}<g id="hk-drop"><path d="M${mx},${my + 6}q-14,26 0,40q14,-14 0,-40z" fill="#dff4fc" stroke="#5a9ac8" stroke-width="3"/><circle cx="${mx - 4}" cy="${my + 32}" r="4" fill="#fff"/></g></g>`);
+          tl.fromTo("#hk-drop", { scale: 0.5, svgOrigin: `${mx} ${my + 6}` }, { scale: 1.6, svgOrigin: `${mx} ${my + 6}`, duration: D("hook"), ease: "power1.in", immediateRender: false }, t0);
+          tl.fromTo("#hk-all", { x: 0 }, { x: 3, duration: 0.05, repeat: Math.round(D("hook") / 0.05), yoyo: true, ease: "none", immediateRender: false }, t0);
+        } });
+      // ---------- 3. สามชั่วโมงก่อน: the nail's shadow on ยาย's house post swings back three hours ----------
+      add("card", { dark: 0, light: false, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("card"), glide: D("card"), ...fr(540, 940, 1.06, 540, 960) }] },
+        captions: caps("card"),
+        fx(tl, id, t0, L) {
+          const H = [6, 7, 8, 9, 10, 11, 12], TH = ["๖", "๗", "๘", "๙", "๑๐", "๑๑", "๑๒"], cx = 540, cy = 900, R = 330;
+          let g = `<defs><linearGradient id="cdw" x1="0" x2="1"><stop offset="0" stop-color="#5a3418"/><stop offset=".45" stop-color="#8a5a32"/><stop offset=".8" stop-color="#9a6a3c"/><stop offset="1" stop-color="#6a4224"/></linearGradient>
+            <radialGradient id="cdl" cx=".7" cy=".3" r=".8"><stop offset="0" stop-color="#ffe2a8" stop-opacity=".55"/><stop offset="1" stop-color="#ffe2a8" stop-opacity="0"/></radialGradient></defs>
+            <rect x="-200" y="-200" width="1480" height="2400" fill="#3a2210"/><rect x="110" y="-200" width="860" height="2400" fill="url(#cdw)"/>`;
+          const rr = (() => { let s = 7; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+          for (let k = 0; k < 26; k++) { const x = 130 + rr() * 820; g += `<path d="M${x.toFixed(0)},-200Q${(x + 20 * (rr() - 0.5)).toFixed(0)},900 ${(x + 30 * (rr() - 0.5)).toFixed(0)},2200" stroke="${rr() > 0.5 ? "#4a2a12" : "#a8784a"}" stroke-width="${(2 + rr() * 5).toFixed(1)}" fill="none" opacity=".5"/>`; }
+          g += `<ellipse cx="760" cy="1300" rx="40" ry="90" fill="#3a2210" opacity=".6"/><path d="M110,-200V2200M970,-200V2200" stroke="#1e1208" stroke-width="10"/>
+            <path d="M${cx - R},${cy}A${R},${R} 0 0 1 ${cx + R},${cy}Z" fill="#f2e2b8" opacity=".9" stroke="#2a1a0e" stroke-width="6"/><path d="M${cx - R + 26},${cy}A${R - 26},${R - 26} 0 0 1 ${cx + R - 26},${cy}" stroke="#c8a870" stroke-width="3" fill="none"/>`;
+          H.forEach((h, k) => { const a = (-90 + k * 30) * Math.PI / 180, x1 = cx + Math.sin(a) * (R - 10), y1 = cy - Math.cos(a) * (R - 10), x2 = cx + Math.sin(a) * (R - 70), y2 = cy - Math.cos(a) * (R - 70), xt = cx + Math.sin(a) * (R - 112), yt = cy - Math.cos(a) * (R - 112);
+            g += `<path d="M${x1.toFixed(1)},${y1.toFixed(1)}L${x2.toFixed(1)},${y2.toFixed(1)}" stroke="#6a3a1a" stroke-width="6"/><text x="${xt.toFixed(1)}" y="${(yt + 16).toFixed(1)}" text-anchor="middle" font-family="Sriracha" font-size="46" fill="#4a2a12">${TH[k]}</text>`; });
+          g += `<text x="${cx}" y="${cy + 120}" text-anchor="middle" font-family="Sriracha" font-size="40" fill="#f2e2b8" opacity=".75">นาฬิกาแดด · บ้านยายลออ</text>
+            <g id="cd-sh"><path d="M${cx},${cy}L${cx},${cy - R + 40}" stroke="#2a1608" stroke-width="16" stroke-linecap="round" opacity=".55"/></g>
+            <circle cx="${cx}" cy="${cy}" r="18" fill="#3a3a3a" stroke="#111" stroke-width="4"/><circle cx="${cx - 5}" cy="${cy - 5}" r="5" fill="#9a9a9a"/>
+            <rect x="-200" y="-200" width="1480" height="2400" fill="url(#cdl)"/>`;
+          put(L.set, g);
+          // 10 o'clock → 7 o'clock: 3 hours = 90° back, with a little overshoot and settle
+          tl.fromTo("#cd-sh", { rotation: 30 * (10 - 6) - 90, svgOrigin: `${cx} ${cy}` }, { rotation: 30 * (7 - 6) - 90 - 4, svgOrigin: `${cx} ${cy}`, duration: D("card") - 0.55, ease: "power2.inOut", immediateRender: false }, t0 + 0.2);
+          tl.to("#cd-sh", { rotation: 30 * (7 - 6) - 90, svgOrigin: `${cx} ${cy}`, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + D("card") - 0.35);
+        } });
+      // ---------- 4. dawn at the door: ยาย with her basket asks; ต้น won't have it; ภูมิ holds his nose ----------
+      add("door", { set: "jellyPorch", setOpts: { id: "jp1", basket: false }, dark: 0, light: DAWN, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(1020, 1260, 1.5, 540, 1150) }, { t: vo("door", 1) - 0.15, glide: vo("door", 1) - 0.15, ...fr(1030, 1250, 1.6, 540, 1150) },
+          { t: vo("door", 1) - 0.12, ...fr(300, 1240, 1.45, 540, 1150) }, { t: vo("door", 2) - 0.15, glide: vo("door", 2) - vo("door", 1), ...fr(310, 1230, 1.55, 540, 1150) },
+          { t: vo("door", 2) - 0.12, ...fr(640, 1300, 1.25, 540, 1150) }, { t: D("door"), glide: D("door") - vo("door", 2), ...fr(640, 1300, 1.32, 540, 1150) }] },
+        actors: [
+          A("jLaorBasket", 1150, 1660, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }, { t: vo("door", 1) + 1.8, mode: "idle", eyes: "closed", mouth: "flat" }], { flip: true, talk: [TALK("door", 0, "o")] }),
+          A("jTon", 380, 1700, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("door", 1), mode: "point", eyes: "angry", mouth: "o" }, { t: voEnd("door", 1), mode: "idle", eyes: "normal", mouth: "flat" }], { talk: [TALK("door", 1, "o")] }),
+          A("jWan", 600, 1720, 0.72, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }),
+          A("jPhum", 800, 1710, 0.86, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("door", 2) - 0.1, mode: "holdNose", eyes: "closed", mouth: "laugh" }], { talk: [TALK("door", 2, "laugh")] }),
+        ],
+        captions: caps("door", undefined, { quote: true }),
+        });
+      // ---------- 5. the rhyme: ยาย recites from her driftwood board (hung from the house beam); HG7 at rule 2; น้ำหวาน sings it ----------
+      const RHY = [["หนวดใสพันขา", "อย่าราดน้ำท่า"], ["น้ำส้มราดไว้", "นับสามสิบไป"], ["อยู่นิ่งอย่าถู", "เรียกหมอมาดู"]];
+      add("rhyme", { set: "jellyPorch", setOpts: { id: "jp2", basket: false }, dark: 0, light: DAWN, grade: GDAWN,
+        cam: { keys: [
+          { t: 0, ...fr(-440, 1150, 0.95, 540, 1000) }, { t: F("rhyme", 0, 2) - 0.12, glide: F("rhyme", 0, 2) - 0.12, ...fr(-450, 1140, 1.0, 540, 1000) },
+          
+          // HG7: wide, the card hangs in the empty plank wall above the window, ยาย and the kids low in the frame
+          { t: F("rhyme", 0, 2) - 0.1, ...fr(380, 1000, 0.8, 540, 1000) }, { t: vo("rhyme", 1) - 0.12, glide: vo("rhyme", 1) - F("rhyme", 0, 2), ...fr(380, 1000, 0.84, 540, 1000) },
+          { t: vo("rhyme", 1) - 0.1, ...fr(-80, 1380, 1.35, 540, 1150) }, { t: D("rhyme"), glide: D("rhyme") - vo("rhyme", 1), ...fr(-60, 1380, 1.42, 540, 1150) }] },
+        actors: [
+          A("jLaor", -330, 1700, 1.0, [{ t: 0, mode: "recite", eyes: "normal", mouth: "o" }, { t: vo("rhyme", 1), mode: "idle", eyes: "closed", mouth: "smile" }], { flip: true, talk: [TALK("rhyme", 0, "o")] }),
+          A("jWan", 40, 1730, 0.72, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("rhyme", 1), mode: "sing", eyes: "closed", mouth: "laugh" }], { flip: true, talk: [TALK("rhyme", 1, "laugh")] }),
+          A("jPhum", 260, 1720, 0.86, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("rhyme", 1) + 0.6, mode: "idle", eyes: "closed", mouth: "smile" }], { flip: true }),
+        ],
+        captions: caps("rhyme", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          // the board close-ups: an insert of the plank wall by the door — the beam, two ropes, ยาย's driftwood board; each line brushed bright as she says it
+          const ins = [[F("rhyme", 0, 1) - 0.1, F("rhyme", 0, 2) - 0.1], [F("rhyme", 0, 2) + 1.27, vo("rhyme", 1) - 0.1]];
+          let w = `<rect x="-100" y="-100" width="1280" height="2200" fill="url(#jp2-pl)"/>`;
+          for (let k = 0; k < 14; k++) w += `<path d="M${-60 + k * 90},-100V2100" stroke="#5a3a1e" stroke-width="5" opacity=".55"/>`;
+          w += `<path d="M-100,190H1180" stroke="#2a1608" stroke-width="64"/><path d="M-100,176H1180" stroke="#7a4a28" stroke-width="34"/><circle cx="120" cy="190" r="12" fill="#9a9a9a"/><circle cx="960" cy="190" r="12" fill="#9a9a9a"/>
+            <rect x="-100" y="-100" width="1280" height="2200" fill="#ffd8a0" opacity=".1"/>`;
+          put(L.light, `<g id="rb-ins"><g id="rb-z">${w}<g transform="translate(540,350) scale(1.12)">${Jelly.ruleBoard(0, 0, { active: -1 }).replace(/opacity="0.38"/g, 'opacity="1"')}
+            ${RHY.map(([a, b], k) => `<g id="rb-on${k}"><g transform="translate(0,${136 + k * 146})"><rect x="-222" y="-6" width="572" height="124" rx="16" fill="#f2c230" stroke="#1e1a16" stroke-width="4"/>
+              <text x="-200" y="48" font-family="Sriracha" font-size="46" fill="#2a1a0a">${a}</text><text x="-200" y="102" font-family="Sriracha" font-size="46" fill="#b8241e">${b}</text></g></g>`).join("")}</g>
+            <ellipse cx="540" cy="1120" rx="420" ry="30" fill="#2a1608" opacity=".25"/></g></g>`);
+          tl.set("#rb-ins", { opacity: 0 }, 0);
+          ins.forEach(([a, b]) => { tl.set("#rb-ins", { opacity: 1 }, t0 + a); tl.set("#rb-ins", { opacity: 0 }, t0 + b);
+            tl.fromTo("#rb-z", { scale: 1, svgOrigin: "540 700" }, { scale: 1.06, svgOrigin: "540 700", duration: b - a, ease: "none", immediateRender: false }, t0 + a); });
+          [1, 2, 3].forEach((j, k) => { tl.set(`#rb-on${k}`, { opacity: 0 }, 0); tl.fromTo(`#rb-on${k}`, { opacity: 0, scaleX: 0, svgOrigin: "-222 0" }, { opacity: 1, scaleX: 1, svgOrigin: "-222 0", duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + F("rhyme", 0, j)); });
+          // HG7 hangs from a nail in the empty wall above the window for 1.2 s
+          put(L.far, `<g transform="translate(560,${-110})"><g id="hg7"><g transform="scale(1.0)">${Jelly.subCard(0, 120)}</g></g></g>`);
+          tl.set("#hg7", { opacity: 0 }, 0);
+          tl.fromTo("#hg7", { opacity: 0, y: -80, rotation: -8, svgOrigin: "0 0" }, { opacity: 1, y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.2)", immediateRender: false }, t0 + F("rhyme", 0, 2));
+          tl.to("#hg7", { rotation: 2.5, svgOrigin: "0 0", duration: 0.35, yoyo: true, repeat: 1, ease: "sine.inOut", immediateRender: false }, t0 + F("rhyme", 0, 2) + 0.45);
+          tl.set("#hg7", { opacity: 0 }, t0 + F("rhyme", 0, 2) + 1.27);
+        } });
+      // ---------- 6. ต้น laughs at the rhyme; ยาย: "พ่อแกก็พูดอย่างนี้" — the photo face down on the shelf ----------
+      add("mock", { set: "jellyPorch", setOpts: { id: "jp3", basket: false }, dark: 0, light: DAWN, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(380, 1220, 1.45, 540, 1150) }, { t: vo("mock", 1) - 0.15, glide: vo("mock", 1) - 0.15, ...fr(370, 1220, 1.52, 540, 1150) },
+          { t: vo("mock", 1) - 0.12, ...fr(140, 1150, 2.1, 540, 900) }, { t: vo("mock", 1) + 1.0, glide: 1.1, ...fr(140, 1150, 2.25, 540, 900) },
+          { t: D("mock"), glide: D("mock") - vo("mock", 1) - 1.0, ...fr(140, 1150, 2.3, 540, 900) }] },
+        actors: [
+          A("jTon", 420, 1700, 1.0, [{ t: 0, mode: "laugh", eyes: "closed", mouth: "laugh" }, { t: voEnd("mock", 0), mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TALK("mock", 0, "laugh")] }),
+          A("jLaor", 140, 1700, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { talk: [TALK("mock", 1, "o")] }),
+        ],
+        captions: caps("mock", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          // insert: the shelf, the frame lying face down (its stand up in the air), dust on its back, a corner of an old print showing under it
+          let w = `<rect x="-100" y="-100" width="1280" height="2200" fill="url(#jp3-pl)"/>`;
+          for (let k = 0; k < 14; k++) w += `<path d="M${-60 + k * 90},-100V2100" stroke="#5a3a1e" stroke-width="5" opacity=".55"/>`;
+          w += `<path d="M-100,1080H1180V1150H-100Z" fill="#5a3a1e" stroke="#2a1608" stroke-width="6"/><path d="M-100,1086H1180" stroke="#8a5a32" stroke-width="6"/><path d="M-100,1150H1180V1200H-100Z" fill="#2a1608" opacity=".5"/>
+            <g transform="translate(540,1080)"><path d="M-300,0L-290,-40H290L300,0Z" fill="#3a2412" stroke="#1e1208" stroke-width="5"/><path d="M-280,-40H280" stroke="#b8945a" stroke-width="6"/>
+              <path d="M-250,-40L-240,-34H240L250,-40" fill="#d8c8a8"/><path d="M-250,-40L250,-40L214,-150L-214,-150Z" fill="#4a2a14" stroke="#1e1208" stroke-width="5"/><path d="M-226,-50L226,-50L196,-140L-196,-140Z" fill="#b89a6a" stroke="#6a4a2a" stroke-width="3"/>
+              <path d="M-170,-60L170,-60M-180,-80L180,-80M-186,-100L186,-100M-192,-120L192,-120" stroke="#a88a5a" stroke-width="2" opacity=".6"/><path d="M-30,-95L30,-95L60,-260L34,-262Z" fill="#8a6a3a" stroke="#3a2412" stroke-width="4"/>
+              <rect x="-40" y="-104" width="80" height="16" rx="3" fill="#c8a040" stroke="#3a2412" stroke-width="3"/><path d="M-226,-50L226,-50L196,-140L-196,-140Z" fill="#e8dcc0" opacity=".18"/>
+              ${[0, 1, 2, 3, 4, 5, 6, 7, 8].map((k) => `<circle cx="${-220 + k * 52}" cy="${-46 - (k % 2) * 4}" r="3" fill="#e8dcc0" opacity=".6"/>`).join("")}
+              <g transform="translate(250,-8) rotate(-6)"><path d="M0,0H120V-60H0Z" fill="#d8c8a0" stroke="#5a4a30" stroke-width="3"/><path d="M8,-8H112V-52H8Z" fill="#7a8a8a"/><path d="M14,-20q30,-14 60,-6q20,6 34,-2V-10H14Z" fill="#3a4a5a"/></g></g>
+            ${[[300, 700], [520, 820], [760, 640], [640, 900], [420, 560]].map(([x, y], k) => `<circle id="mk-d${k}" cx="${x}" cy="${y}" r="${3 + (k % 3)}" fill="#fff2d0" opacity=".55"/>`).join("")}
+            <rect x="-100" y="-100" width="1280" height="2200" fill="#ffd8a0" opacity=".12"/>`;
+          put(L.light, `<g id="mk-ins"><g id="mk-z">${w}</g></g>`);
+          show(tl, "#mk-ins", t0 + vo("mock", 1) + 1.02);
+          tl.fromTo("#mk-z", { scale: 1, svgOrigin: "540 1040" }, { scale: 1.1, svgOrigin: "540 1040", duration: D("mock") - vo("mock", 1) - 1.0, ease: "none", immediateRender: false }, t0 + vo("mock", 1) + 1.02);
+          [0, 1, 2, 3, 4].forEach((k) => tl.fromTo(`#mk-d${k}`, { y: 0 }, { y: 80, duration: 3, ease: "none", immediateRender: false }, t0 + vo("mock", 1) + 1.02));
+        } });
+      // ---------- 7. n04: they go; ยาย sets the basket down by the door and stays ----------
+      add("basket", { set: "jellyPorch", setOpts: { id: "jp4", basket: false }, dark: 0, light: DAWN, grade: GDAWN,
+        cam: { keys: [{ t: 0, ...fr(980, 1250, 1.05, 540, 1100) }, { t: F("basket", 0, 2) - 0.12, glide: F("basket", 0, 2) - 0.12, ...fr(1000, 1260, 1.12, 540, 1100) },
+          { t: F("basket", 0, 2) - 0.1, ...fr(1060, 1520, 2.0, 540, 1200) }, { t: D("basket"), glide: D("basket") - F("basket", 0, 2), ...fr(1070, 1560, 2.25, 540, 1200) }] },
+        actors: [
+          A("jTon", 1160, 1680, 0.95, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: 1420, y: 1660, dur: 2.4, ease: "none" }, until: F("basket", 0, 2) - 0.1 }),
+          A("jPhum", 1040, 1700, 0.82, [{ t: 0, mode: "run", eyes: "normal", mouth: "laugh" }], { moveTo: { x: 1460, y: 1670, dur: 1.8, ease: "none" }, until: F("basket", 0, 2) - 0.1 }),
+          A("jWan", 900, 1710, 0.7, [{ t: 0, mode: "run", eyes: "normal", mouth: "laugh" }], { moveTo: { x: 1400, y: 1680, dur: 2.3, ease: "none" }, until: F("basket", 0, 2) - 0.1 }),
+          A("jLaorBasket", 760, 1690, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { until: F("basket", 0, 2) - 0.1 }),
+          A("jLaor", 1130, 1660, 1.0, [{ t: 0, mode: "basketDown", eyes: "closed", mouth: "flat" }], { flip: true, from: F("basket", 0, 2) - 0.1 }),
+        ],
+        captions: caps("basket"),
+        fx(tl, id, t0, L) { put(L.act, `<g id="bk-b">${Jelly.basket(925, 1668, 1.2)}</g>`); show(tl, "#bk-b", t0 + F("basket", 0, 2) - 0.1); } });
+      // ---------- 8. the map: ยาย's house → along the shore → the beach by the tower ----------
+      add("map", { dark: 0, light: false, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("map"), glide: D("map"), ...fr(620, 900, 1.25, 540, 960) }] },
+        fx(tl, id, t0, L) {
+          const coast = "M-200,1500Q60,1420 200,1300Q330,1180 420,1060Q520,930 650,860Q800,780 900,640Q980,520 1280,460";
+          const route = "M240,1390Q330,1250 420,1150Q520,1020 640,950Q760,880 840,760";
+          let g = `<defs><linearGradient id="mpS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7ad8e8"/><stop offset="1" stop-color="#1e88b0"/></linearGradient>
+            <linearGradient id="mpL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8d8a0"/><stop offset=".5" stop-color="#a8c878"/><stop offset="1" stop-color="#6a9a58"/></linearGradient></defs>
+            <rect x="-300" y="-300" width="1700" height="2600" fill="url(#mpS)"/>
+            ${[0, 1, 2, 3, 4, 5, 6, 7].map((k) => `<path d="M${-200 + k * 40},${1700 - k * 140}Q${300 + k * 60},${1500 - k * 160} ${1300},${700 - k * 130}" stroke="#bff0f8" stroke-width="3" fill="none" opacity=".35"/>`).join("")}
+            <path d="${coast}L1400,-300H-300V1500Z" transform="translate(14,22)" fill="#5a6a3a" opacity=".55"/>
+            <path d="${coast}L1400,-300H-300V1500Z" fill="#8aa868" stroke="#2a3a1a" stroke-width="5"/>
+            <path d="${coast}" stroke="#f2e2b0" stroke-width="44" fill="none"/><path d="${coast}" transform="translate(-20,-26)" stroke="#e8d8a0" stroke-width="12" fill="none" opacity=".6"/>
+            <path d="${coast}" transform="translate(26,30)" stroke="#ffffff" stroke-width="6" fill="none" opacity=".7" stroke-dasharray="30 20"/>`;
+          const rr = (() => { let s = 3; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+          for (let k = 0; k < 40; k++) { const x = -150 + rr() * 900, y = 100 + rr() * 900; if (y > 1300 - x * 0.8) continue; g += `<g transform="translate(${x.toFixed(0)},${y.toFixed(0)})"><ellipse cx="4" cy="8" rx="26" ry="10" fill="#3a5a2a" opacity=".4"/><circle r="22" fill="#4a8a4a" stroke="#2a3a1a" stroke-width="3"/><circle cx="-6" cy="-6" r="8" fill="#7ab868"/></g>`; }
+          g += `<path d="${route}" stroke="#ffffff" stroke-width="22" fill="none" stroke-linecap="round" opacity=".6"/><path id="mp-rt" d="${route}" stroke="#d8312a" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="1200" stroke-dashoffset="1200"/>`;
+          // the pins: ยาย's house (a stilt house) and the beach (the tower + umbrella), 3D with shadows
+          const pin = (x, y, pid, icon, lab, c) => `<g transform="translate(${x},${y})"><g id="${pid}"><ellipse cx="0" cy="6" rx="34" ry="12" fill="#0a1a24" opacity=".35"/><path d="M0,0C-30,-50 -56,-80 -56,-120A56,56 0 0 1 56,-120C56,-80 30,-50 0,0Z" fill="${c}" stroke="#1e1a16" stroke-width="5"/>
+            <circle cy="-122" r="40" fill="#fffaf0" stroke="#1e1a16" stroke-width="3"/>${icon}<g transform="translate(0,-200)"><rect x="${-14 * lab.length - 20}" y="-34" width="${28 * lab.length + 40}" height="56" rx="28" fill="#fffaf0" stroke="#1e1a16" stroke-width="4"/><text y="6" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="32" fill="#1e2a3a">${lab}</text></g></g></g>`;
+          const house = `<g transform="translate(0,-118)"><path d="M-26,-2L0,-26L26,-2Z" fill="#d8312a" stroke="#1e1a16" stroke-width="2.4"/><rect x="-18" y="-2" width="36" height="22" fill="#a8703e" stroke="#1e1a16" stroke-width="2.4"/><path d="M-14,20V30M14,20V30" stroke="#1e1a16" stroke-width="4"/></g>`;
+          const tower = `<g transform="translate(0,-104) scale(.075)">${Jelly.tower(0, 0, 1)}</g>`;
+          g += pin(240, 1390, "mp-p0", house, "บ้านยาย", "#e8823a") + pin(840, 760, "mp-p1", tower, "หาด", "#3a9ad8");
+          g += `<g id="mp-fam"><circle r="22" fill="#5aa8d8" stroke="#1e1a16" stroke-width="4"/><circle cx="-9" cy="-4" r="5" fill="#fff"/><circle cx="3" cy="-6" r="5" fill="#fff"/><circle cx="12" cy="-2" r="4" fill="#fff"/></g>`;
+          put(L.set, g);
+          pop(tl, "#mp-p0", t0 + 0.05); pop(tl, "#mp-p1", t0 + D("map") - 0.7);
+          tl.to("#mp-rt", { strokeDashoffset: 0, duration: D("map") - 0.6, ease: "power1.inOut", immediateRender: false }, t0 + 0.2);
+          const P = document.getElementById("mp-rt"), c = { k: 0 }, fam = document.getElementById("mp-fam");
+          const put2 = (k) => { const p = P.getPointAtLength(P.getTotalLength() * k); fam.setAttribute("transform", `translate(${p.x.toFixed(1)},${(p.y - 4).toFixed(1)})`); };
+          put2(0); tl.to(c, { k: 1, duration: D("map") - 0.6, ease: "power1.inOut", immediateRender: false, onUpdate: () => put2(c.k) }, t0 + 0.2);
+        } });
+      // the vinegar post with ยายลออ's rhyme board hung from a bamboo arm lashed across it (in the world) · ids `${pid}-on`, `${pid}-tick`
+      const postBoard = (x, y, s, pid, o = {}) => { const k = 0.3 * s, py = y - 226 * s, by = py + 122 * k;
+        return `<g>${Jelly.post(x, y, s, { full: o.full ?? 0 })}<path d="M${x - 300 * k},${py}H${x + 300 * k}" stroke="#1e1a16" stroke-width="${16 * s}" stroke-linecap="round"/><path d="M${x - 300 * k},${py - 2 * s}H${x + 300 * k}" stroke="#c8b070" stroke-width="${10 * s}" stroke-linecap="round"/>
+          ${[-1, 1].map((d) => `<path d="M${x + d * 250 * k},${py - 6 * s}v${12 * s}" stroke="#8a6a3a" stroke-width="${6 * s}"/>`).join("")}<path d="M${x - 16 * s},${py - 10 * s}l${32 * s},${20 * s}M${x + 16 * s},${py - 10 * s}l${-32 * s},${20 * s}" stroke="#8a6a3a" stroke-width="${5 * s}"/>
+          <g transform="translate(${x},${by}) scale(${k})">${Jelly.ruleBoard(0, 0, { active: -1 })}
+            <g id="${pid}-on" opacity="0"><g transform="translate(0,136)"><rect x="-350" y="-10" width="700" height="132" rx="16" fill="#f2c230" opacity=".6" stroke="#1e1a16" stroke-width="4"/></g></g>
+            <g transform="translate(300,192)"><g id="${pid}-tick" opacity="0"><circle r="34" fill="#3aa86a" stroke="#1e1a16" stroke-width="5"/><path d="M-16,0l10,12l21,-24" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g></g></g>`; };
+      const POST = [700, 1330, 0.62], TOWER = [900, 1270, 0.82];
+      const BEACH = (id, x = {}) => ({ id, seed: 5, boats: 2, tower: TOWER, rock: [160, 690, 0.5],
+        umbrellas: [[90, 1300, 0.8, "#f2c230"], [1040, 1360, 0.85, "#3a9ad8"], [430, 1240, 0.55, "#d8312a"]],
+        life: [["mat", 120, 1380, 0.8, "#e8482a"], ["cooler", 250, 1350, 0.6], ["towel", 1000, 1420, 0.8, "#3aa86a"], ["castle", 560, 1480, 0.7], ["flops", 860, 1560, 0.8]], ...x });
+      Rig.CAST.jWanBare = { v2: { ...Rig.CAST.jWan.v2, extra: "" } };
+      Rig.CAST.jWomanBottle = { v2: Rig.CAST.jWoman.v2, hand: `<g transform="translate(0,104) rotate(150)">${Jelly.bottle(0, 0, 0.5, { cap: false })}</g>`, keep: "F" };
+      Rig.CAST.jManBottle = { v2: { ...Rig.CAST.jGuard.v2, top: { kind: "tee", c: "#f2c230", sleeve: "short" }, print: "", bottom: { kind: "shorts", c: "#2a3a5a" } }, hand: `<g transform="translate(0,104) rotate(170)">${Jelly.bottle(0, 0, 0.5, { cap: false })}</g>`, keep: "F" };
+      // the duck ring lying at someone's feet (the ring has slipped)
+      const ringAt = (x, y, s, rid) => `<g id="${rid}">${TideCast.duckRing(x, y, s, {})}</g>`;
+
+      // ---------- 9. the beach: the ring slips again; ต้น on his phone; the post — "ว่างนี่" ----------
+      add("beach", { set: "jellyBeach", setOpts: BEACH("jb1"), dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.0, 540, 960) }, { t: vo("beach", 1) - 0.14, glide: vo("beach", 1) - 0.14, ...fr(540, 1320, 1.08, 540, 960) },
+          { t: vo("beach", 1) - 0.12, ...fr(250, 1330, 2.0, 540, 1100) }, { t: vo("beach", 2) - 0.14, glide: vo("beach", 2) - vo("beach", 1), ...fr(250, 1330, 2.08, 540, 1100) },
+          { t: vo("beach", 2) - 0.12, ...fr(560, 1420, 1.5, 540, 1150) }, { t: vo("beach", 3) - 0.14, glide: vo("beach", 3) - vo("beach", 2), ...fr(580, 1400, 1.56, 540, 1150) },
+          { t: vo("beach", 3) - 0.12, ...fr(POST[0], POST[1] - 0.62 * 240, 2.7, 540, 760) }, { t: D("beach"), glide: D("beach") - vo("beach", 3), ...fr(POST[0], POST[1] - 0.62 * 240, 3.15, 540, 740) }] },
+        actors: [
+          A("jTonPhone", 250, 1720, 0.92, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "smile" }, { t: vo("beach", 3) - 0.1, mode: "idle", eyes: "normal", mouth: "flat" }], { talk: [TALK("beach", 1, "o"), TALK("beach", 3, "o")] }),
+          A("jWanBare", 470, 1750, 0.66, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: vo("beach", 2), mode: "point", eyes: "wide", mouth: "o" }], { flip: false, talk: [TALK("beach", 0, "o"), TALK("beach", 2, "o")] }),
+          A("jPhum", 990, 1680, 0.74, [{ t: 0, mode: "cheer", eyes: "normal", mouth: "laugh" }], { flip: true }),
+        ],
+        captions: caps("beach", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.set, postBoard(POST[0], POST[1], POST[2], "pb1"));
+          put(L.act, ringAt(470, 1760, 0.36, "jb1-ring"));
+          // the ring slides down off her hips and drops to her feet as she says it
+          tl.fromTo("#jb1-ring", { y: -150 }, { y: 0, duration: 0.5, ease: "bounce.out", immediateRender: false }, t0 + 0.25);
+        } });
+      // ---------- 10. ภูมิ points at the far rock; ต้น films ("พ่อจับเวลา!") ----------
+      add("rock", { set: "jellyBeach", setOpts: BEACH("jb2", { rock: [980, 700, 0.6], umbrellas: [[40, 1330, 0.9, "#f2c230"]], life: [["mat", 120, 1400, 0.9, "#e8482a"], ["castle", 980, 1520, 0.8]], tower: false }), dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(560, 1500, 1.45, 540, 1150) }, { t: vo("rock", 1) - 0.14, glide: vo("rock", 1) - 0.14, ...fr(600, 1480, 1.55, 540, 1150) },
+          { t: vo("rock", 1) - 0.12, ...fr(560, 1380, 1.2, 540, 1000) }, { t: D("rock"), glide: D("rock") - vo("rock", 1), ...fr(600, 1300, 1.3, 540, 1000) }] },
+        actors: [
+          A("jTonPhone", 250, 1800, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("rock", 1), mode: "film", eyes: "normal", mouth: "laugh" }], { talk: [TALK("rock", 1, "laugh")] }),
+          A("jWan", 520, 1810, 0.74, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]),
+          A("jPhum", 790, 1790, 0.86, [{ t: 0, mode: "point", eyes: "wide", mouth: "laugh" }, { t: vo("rock", 1) + 0.3, mode: "run", eyes: "wide", mouth: "laugh" }], { flip: false, talk: [TALK("rock", 0, "laugh")], moveTo: { x: 900, y: 1330, s: 0.4, at: vo("rock", 1) + 0.3, dur: D("rock") - vo("rock", 1) - 0.3, ease: "power1.in" } }),
+        ],
+        captions: caps("rock", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.light, `<g transform="translate(250,1180) rotate(-6) scale(.72)"><g id="rk-ph"><rect x="-120" y="-200" width="240" height="420" rx="30" fill="#1e1e26" stroke="#0a0a0e" stroke-width="6"/><rect x="-104" y="-180" width="208" height="370" rx="14" fill="#5ab8ec"/>
+            <rect x="-104" y="-20" width="208" height="210" fill="#e8d8a8"/><rect x="-104" y="-60" width="208" height="50" fill="#2aa0c8"/><g transform="translate(60,-46)"><path d="M-30,0Q-20,-30 0,-34Q24,-30 30,0Z" fill="#6a6258"/></g>
+            <g id="rk-mini"><circle cx="0" cy="-30" r="12" fill="#c08a5e"/><rect x="-12" y="-18" width="24" height="40" rx="6" fill="#2a7ad0"/></g>
+            <circle cx="-70" cy="-152" r="9" fill="#e8312a"/><text x="-54" y="-144" font-family="Kanit" font-weight="800" font-size="22" fill="#fff">REC</text><text id="rk-tc" x="40" y="-144" font-family="Kanit" font-weight="700" font-size="20" fill="#fff">00:00</text></g></g>`);
+          show(tl, "#rk-ph", t0 + vo("rock", 1) - 0.12);
+          tl.fromTo("#rk-mini", { x: -30, y: 120 }, { x: 40, y: -20, duration: D("rock") - vo("rock", 1), ease: "none", immediateRender: false }, t0 + vo("rock", 1));
+          const tc = document.getElementById("rk-tc"), c = { s: 0 };
+          tl.to(c, { s: 2, duration: D("rock") - vo("rock", 1), ease: "none", immediateRender: false, onUpdate: () => (tc.textContent = `00:0${Math.floor(c.s)}`) }, t0 + vo("rock", 1));
+        } });
+      // ---------- 11. the sting, half under: ภูมิ grabs his shin; then ต้น runs in shouting for 1669 ----------
+      const SURF = 730;   // the waterline at 38 % of the frame
+      add("sting", { set: "jellySplit", setOpts: { id: "jsd", surf: SURF, floor: 1330, seed: 3 }, dark: 0, blur: { fg: 0, set: 0, mid: 0, far: 0 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("sting"), glide: D("sting"), ...fr(560, 1000, 1.08, 540, 960) }] },
+        shake: (t) => (t < 0.6 ? { x: 10 * Math.sin(t * 60) * (1 - t / 0.6), y: 7 * Math.sin(t * 47) * (1 - t / 0.6), r: 0 } : { x: 0, y: 0, r: 0 }),
+        actors: [A("jPhum", 470, 1310, 1.3, [{ t: 0, mode: "grabShin", eyes: "cry", mouth: "scream" }])],
+        captions: caps("sting", undefined, { quote: true }),
+        fx(tl, id, t0, L) { UW(L, SURF);
+          put(L.fg, `<g id="st-j"><g id="st-w"></g>
+            ${Jelly.box(880, 900, 1.0, { seed: 5, len: 300, lit: 1.4, glow: true, sway: -1.2 })}
+            ${Jelly.box(170, 880, 0.85, { seed: 6, len: 300, lit: 1.3, glow: true })}${Jelly.box(980, 1250, 0.6, { seed: 7, len: 200, lit: 1.2, glow: true })}${Jelly.box(250, 1260, 0.6, { seed: 8, len: 160, lit: 1.2, glow: true })}</g>`);
+          // the welts and a tentacle wrapped on the raised shin (knee ≈ (687, 960), foot ≈ (631, 1131) from the pose), a jellyfish trailing from it
+          put(L.fg, `<g>${Jelly.ladder([[676, 990], [700, 1030], [660, 1060]], { w: 8 })}${Jelly.ladder([[650, 1050], [690, 1090], [640, 1112]], { w: 7 })}
+            <path d="M684,1000Q730,1040 690,1080Q650,1110 700,1130Q760,1160 790,1210" stroke="#f2feff" stroke-width="5" fill="none" stroke-linecap="round"/>${Jelly.box(820, 1250, 0.75, { seed: 15, len: 200, lit: 1.5, glow: true, sway: 1 })}</g>`);
+          PopUI.sfx(tl, L.light, t0 + 0.12, 1.1, "แปลบ!", 820, 420, { rot: 8 });
+        } });
+      // ---------- 11b. ต้น splashes in, phone up, shouting for 1669 ----------
+      add("stingB", { set: "jellyBeach", setOpts: BEACH("jb4", { wade: [1640, 600], life: [], umbrellas: [[1040, 1360, 0.85, "#3a9ad8"]] }), dark: 0, blur: { fg: 0 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(520, 1350, 1.5, 540, 1050) }, { t: D("stingB"), glide: D("stingB"), ...fr(520, 1370, 1.62, 540, 1050) }] },
+        shake: (t) => ({ x: 4 * Math.sin(t * 9), y: 3 * Math.sin(t * 13), r: 0.3 * Math.sin(t * 5) }),
+        actors: [A("jTonPhone", 520, 1800, 1.05, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { talk: [TALK("stingB", 0, "scream")] })],
+        captions: caps("stingB", undefined, { quote: true }) });
+      // ภูมิ sitting on the sand, his stung shin across the front (welts + a tentacle still on it), in the world
+      const shin = (x, y, s) => `<g transform="translate(${x},${y}) scale(${s})">${Jelly.ladder([[146, -12], [200, 4], [264, 20]], { w: 7 })}${Jelly.ladder([[156, 16], [180, -14], [212, 16], [240, -10], [260, 14]], { w: 5 })}
+        <path d="M264,20Q300,46 294,76Q286,106 324,114" stroke="#f2feff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M264,20Q300,46 294,76Q286,106 324,114" stroke="#a88ae8" stroke-width="1.4" fill="none" stroke-dasharray="2 5"/></g>`;
+      // ---------- 12. the crowd: a woman pushes a bottle and says rub it; ภูมิ begs; น้ำหวาน recites the rhyme to her father ----------
+      // an arm reaching in from the edge with a water bottle held out (screen space · from (ex, ey) to the hand at (hx, hy))
+      const edgeArm = (ex, ey, hx, hy, sleeve, skin = "#c08a5e") => { const a = Math.atan2(hy - ey, hx - ex) * 180 / Math.PI;
+        return `<path d="M${ex},${ey}L${hx},${hy}" stroke="#1e1a16" stroke-width="64" stroke-linecap="round"/><path d="M${ex},${ey}L${hx},${hy}" stroke="${sleeve}" stroke-width="56" stroke-linecap="round"/>
+          <path d="M${(ex + hx * 2) / 3},${(ey + hy * 2) / 3}L${hx},${hy}" stroke="${skin}" stroke-width="44" stroke-linecap="round"/><g transform="translate(${hx},${hy}) rotate(${a + 90})"><g transform="translate(0,40) scale(.6)">${Jelly.bottle(0, 0, 1, { cap: false })}</g>
+          <rect x="-30" y="-24" width="60" height="44" rx="18" fill="${skin}" stroke="#1e1a16" stroke-width="3.4"/></g>`; };
+      add("crowd", { set: "jellyBeach", setOpts: BEACH("jb3", { umbrellas: [[90, 1300, 0.8, "#f2c230"]], life: [["mat", 120, 1380, 0.8, "#e8482a"]] }), dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(500, 1520, 1.3, 540, 1150) }, { t: vo("crowd", 1) - 0.14, glide: vo("crowd", 1) - 0.14, ...fr(520, 1520, 1.38, 540, 1150) },
+          { t: vo("crowd", 1) - 0.12, ...fr(470, 1540, 2.3, 540, 1000) }, { t: vo("crowd", 2) - 0.14, glide: vo("crowd", 2) - vo("crowd", 1), ...fr(470, 1540, 2.45, 540, 1000) },
+          { t: vo("crowd", 2) - 0.12, ...fr(430, 1440, 1.55, 540, 1000) }, { t: D("crowd"), glide: D("crowd") - vo("crowd", 2), ...fr(440, 1440, 1.66, 540, 1000) }] },
+        actors: [
+          // cut 1: the woman (standing, back right) · ภูมิ (sitting, middle) · ต้น (crouched, left) — three heights, no face covered
+          A("jWomanBottle", 800, 1700, 0.95, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true, until: vo("crowd", 1) - 0.12, talk: [TALK("crowd", 0, "scream")] }),
+          A("jPhum", 450, 1780, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }], { talk: [TALK("crowd", 1, "scream")] }),
+          A("jTon", 230, 1800, 1.0, [{ t: 0, mode: "crouchLow", eyes: "wide", mouth: "o" }]),
+          // cut 3: น้ำหวาน comes in on the right and speaks to her father across ภูมิ
+          A("jWanBare", 680, 1800, 0.74, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { flip: true, from: vo("crowd", 2) - 0.12, talk: [TALK("crowd", 2, "o")] }),
+        ],
+        captions: caps("crowd", undefined, { quote: true }),
+        fx(tl, id, t0, L) { put(L.act, shin(450, 1780, 0.95)); put(L.set, Jelly.swimmers([[300, 930, 0.9]]));
+          // the crowd as arms with bottles from the frame's edges (cut 1 from the right, cut 2 from both sides)
+          put(L.light, `<g id="cr-h1">${edgeArm(1150, 1290, 880, 1230, "#f2c230")}</g><g id="cr-h2">${edgeArm(1150, 640, 870, 840, "#e85a6a")}${edgeArm(1150, 1060, 880, 1020, "#3a8ac8", "#a8784a")}</g>`);
+          show(tl, "#cr-h1", t0, t0 + vo("crowd", 1) - 0.12); show(tl, "#cr-h2", t0 + vo("crowd", 1) - 0.12, t0 + vo("crowd", 2) - 0.12);
+        } });
+      // ---------- 13. the skin cut open: fresh water and rubbing make the stingers still on it fire (K2) ----------
+      add("know", { dark: 0, light: false, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("know"), glide: D("know"), ...fr(540, 1000, 1.08, 540, 960) }] },
+        captions: caps("know"),
+        fx(tl, id, t0, L) {
+          const T1 = F("know", 0, 1), T2 = F("know", 0, 2);
+          let g = `<defs><linearGradient id="kwS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8f6fa"/><stop offset="1" stop-color="#bfe4ee"/></linearGradient>
+            <linearGradient id="kwE" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8b08a"/><stop offset="1" stop-color="#d8966e"/></linearGradient>
+            <linearGradient id="kwD" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e88a7a"/><stop offset="1" stop-color="#c8665a"/></linearGradient>
+            <radialGradient id="kwV"><stop offset="0" stop-color="#8a3ad8" stop-opacity=".85"/><stop offset=".6" stop-color="#a85ae8" stop-opacity=".45"/><stop offset="1" stop-color="#a85ae8" stop-opacity="0"/></radialGradient></defs>
+            <rect x="-200" y="-200" width="1480" height="2400" fill="url(#kwS)"/>
+            <text x="540" y="250" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="50" fill="#1e2a3a">ผิวหนังตรงที่หนวดพัน</text>
+            <path d="M40,700H1040V1520H40Z" fill="#f6e2a8" stroke="#1e1a16" stroke-width="6"/>
+            <path d="M40,700H1040V1180H40Z" fill="url(#kwD)"/><path d="M40,700H1040V820H40Z" fill="url(#kwE)"/>
+            <path d="M40,700H1040" stroke="#1e1a16" stroke-width="6"/><path d="M40,820Q300,836 540,820T1040,820" stroke="#a8604a" stroke-width="4" fill="none"/><path d="M40,1180Q300,1196 540,1180T1040,1180" stroke="#c89a5a" stroke-width="4" fill="none"/>
+            ${[0, 1, 2, 3, 4, 5, 6, 7].map((k) => `<circle cx="${110 + k * 120}" cy="${1300 + (k % 2) * 80}" r="46" fill="#fbecc0" stroke="#d8b878" stroke-width="3"/>`).join("")}
+            <g id="kw-vein"><path d="M40,1060Q300,1020 540,1070T1040,1040" stroke="#b8241e" stroke-width="44" fill="none" stroke-linecap="round"/><path d="M40,1052Q300,1012 540,1062T1040,1032" stroke="#e8605a" stroke-width="12" fill="none" opacity=".7"/></g>
+            <g id="kw-vp" opacity="0"><path d="M40,1060Q300,1020 540,1070T1040,1040" stroke="#8a3ad8" stroke-width="30" fill="none" stroke-linecap="round" stroke-dasharray="40 50"/></g>
+            <text x="1020" y="780" text-anchor="end" font-family="Kanit" font-weight="700" font-size="30" fill="#5a2a1a">ผิวหนัง</text><text x="1020" y="1150" text-anchor="end" font-family="Kanit" font-weight="700" font-size="30" fill="#fff">เส้นเลือด</text>
+            <path d="M-40,640Q300,600 540,650T1120,630" stroke="#eafcff" stroke-width="58" fill="none" opacity=".75" stroke-linecap="round"/><path d="M-40,640Q300,600 540,650T1120,630" stroke="#ffffff" stroke-width="10" fill="none" opacity=".8" stroke-linecap="round" transform="translate(0,-14)"/>
+            <text x="80" y="560" font-family="Kanit" font-weight="800" font-size="36" fill="#1e5a7a">หนวดที่ยังติดอยู่</text>`;
+          // the stinging capsules along the tentacle, each with a coiled thread inside; when they fire, the thread shoots down into the skin
+          const CAP = [140, 260, 380, 500, 620, 740, 860, 980];
+          CAP.forEach((x, k) => { const y = 640 - 26 * Math.sin((x + 40) / 1160 * Math.PI * 2 + 0.4);
+            g += `<g transform="translate(${x},${y.toFixed(0)})"><ellipse rx="22" ry="15" fill="#c8b8f8" stroke="#5a3aa8" stroke-width="3"/><path d="M-12,0q4,-8 8,0t8,0t8,0" stroke="#5a3aa8" stroke-width="2.4" fill="none"/>
+              <path id="kw-th${k}" d="M0,12Q-10,60 6,110Q20,160 0,210" stroke="#5a3aa8" stroke-width="4" fill="none" stroke-dasharray="230" stroke-dashoffset="230"/>
+              <circle id="kw-v${k}" cx="0" cy="210" r="70" fill="url(#kwV)" opacity="0"/></g>`; });
+          g += `<g id="kw-tag" transform="translate(380,470)"><rect x="-120" y="-36" width="240" height="64" rx="32" fill="#fffaf0" stroke="#1e1a16" stroke-width="4"/><text y="10" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#5a3aa8">เข็มพิษ</text><path d="M0,28L0,130" stroke="#1e1a16" stroke-width="4"/></g>`;
+          // left: the water bottle pouring; right: a hand rubbing (both trigger it)
+          g += `<g id="kw-bt"><g transform="translate(250,330) rotate(-125)">${Jelly.bottle(0, 0, 0.9, { cap: false })}</g>${[0, 1, 2, 3, 4].map((k) => `<path id="kw-d${k}" d="M300,420q-6,12 0,18q6,-6 0,-18z" fill="#bfe8ff" stroke="#3a8ac8" stroke-width="2"/>`).join("")}
+            <circle cx="250" cy="330" r="110" fill="none" stroke="#d8312a" stroke-width="0" id="kw-x0"/></g>
+            <g transform="translate(800,520)"><g id="kw-hd">${[-54, -18, 18, 54].map((x, k) => `<rect x="${x - 15}" y="${-96 + (k === 0 || k === 3 ? 14 : 0)}" width="30" height="80" rx="15" fill="#c08a5e" stroke="#1e1a16" stroke-width="4"/>`).join("")}
+              <path d="M-74,-30H74Q86,-30 86,-14V30Q86,60 50,64H-50Q-86,60 -86,30V-14Q-86,-30 -74,-30Z" fill="#c08a5e" stroke="#1e1a16" stroke-width="4"/><path d="M-86,10Q-130,0 -136,-30Q-130,-50 -110,-40L-80,-14" fill="#c08a5e" stroke="#1e1a16" stroke-width="4"/>
+              <path d="M-40,40q40,10 80,0" stroke="#8a5a3a" stroke-width="3" fill="none"/>
+              <path d="M-150,0h-50M160,0h50" stroke="#d8312a" stroke-width="8" stroke-linecap="round"/><path d="M-200,0l20,-14v28zM210,0l-20,-14v28z" fill="#d8312a"/></g></g>`;
+          put(L.set, g);
+          [0, 1, 2, 3, 4].forEach((k) => tl.fromTo(`#kw-d${k}`, { y: 0, opacity: 1 }, { y: 180, opacity: 0.2, duration: 0.6, repeat: Math.ceil(T1 / 0.6), delay: k * 0.12, ease: "power1.in", immediateRender: false }, t0 + 0.1));
+          tl.fromTo("#kw-hd", { x: -60 }, { x: 60, duration: 0.25, repeat: Math.ceil(T1 / 0.25), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.3);
+          pop(tl, "#kw-tag", t0 + T1 + 0.05, { origin: "0 0" });
+          CAP.forEach((_, k) => { const t = t0 + T1 + 0.25 + k * 0.12;
+            tl.to(`#kw-th${k}`, { strokeDashoffset: 0, duration: 0.18, ease: "power3.in", immediateRender: false }, t);
+            tl.fromTo(`#kw-v${k}`, { opacity: 0, scale: 0.2, svgOrigin: "0 210" }, { opacity: 1, scale: 1.6, svgOrigin: "0 210", duration: 1.6, ease: "power2.out", immediateRender: false }, t0 + T2 + k * 0.08); });
+          tl.set("#kw-vp", { opacity: 1 }, t0 + T2 + 0.4);
+          tl.fromTo("#kw-vp path", { strokeDashoffset: 0 }, { strokeDashoffset: -540, duration: D("know") - T2, ease: "none", immediateRender: false }, t0 + T2 + 0.4);
+          SRC(L, tl, t0 + 0.4, D("know") - 0.4, "ที่มา: กรมควบคุมโรค · สคร.12");
+        } });
+      // ---------- 14. "แต่ลูกผมแสบ…!" the bottle over the leg, his hand shaking ----------
+      add("choice", { set: "jellyHook", setOpts: { id: "jc", title: " ", sub: " ", seed: 9 }, dark: 0, blur: { fg: 0, set: 0, act: 0 }, light: false, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(520, 860, 1.3, 540, 880) }, { t: D("choice"), glide: D("choice"), ...fr(540, 860, 1.45, 540, 880) }] },
+        captions: caps("choice", undefined, { quote: true }),
+        fx(tl, id, t0, L) { document.getElementById("jc-bt").setAttribute("display", "none"); put(L.act, holdBottle("jc-hb", 380, 600, 155).svg);
+          tl.fromTo("#jc-hb", { x: -4, y: 0 }, { x: 4, y: 2, duration: 0.045, repeat: Math.round(D("choice") / 0.045), yoyo: true, ease: "none", immediateRender: false }, t0); } });
+      // ---------- 14b. "ภูมิ… อยู่นิ่งๆ นะลูก" he sets the bottle down; the board on the post: rule 1 lit and ticked ----------
+      const POST2 = [760, 1500, 1.0];
+      add("choiceB", { set: "jellyBeach", setOpts: BEACH("jb5", { tower: [260, 1260, 0.7], umbrellas: [], life: [["mat", 120, 1420, 0.8, "#e8482a"]] }), dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 1450, 1.15, 540, 1100) }, { t: F("choiceB", 0, 1) - 0.14, glide: F("choiceB", 0, 1) - 0.14, ...fr(540, 1450, 1.2, 540, 1100) },
+          { t: F("choiceB", 0, 1) - 0.12, ...fr(POST2[0], POST2[1] - 200, 2.6, 540, 700) }, { t: D("choiceB"), glide: D("choiceB") - F("choiceB", 0, 1), ...fr(POST2[0], POST2[1] - 200, 2.75, 540, 700) }] },
+        actors: [
+          A("jPhum", 300, 1800, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }]),
+          A("jTon", 560, 1780, 1.0, [{ t: 0, mode: "setDown", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("choiceB", 0, "o")] }),
+        ],
+        captions: caps("choiceB", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.set, postBoard(POST2[0], POST2[1], POST2[2], "pb2"));
+          put(L.act, shin(300, 1800, 0.95) + `<g transform="translate(470,1790)"><g id="cb-bt"><g transform="rotate(-8)">${Jelly.bottle(0, 0, 0.5, { cap: false })}</g></g></g>`);
+          tl.fromTo("#cb-bt", { y: -150, x: 40, rotation: 40, svgOrigin: "0 0" }, { y: 0, x: 0, rotation: 0, svgOrigin: "0 0", duration: 0.9, ease: "power2.out", immediateRender: false }, t0);
+          const tB = t0 + F("choiceB", 0, 1);
+          tl.fromTo("#pb2-on", { opacity: 0 }, { opacity: 1, duration: 0.4, immediateRender: false }, tB);
+          tl.fromTo("#pb2-tick", { opacity: 0, scale: 0.2, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, tB + 0.45);
+          SRC(L, tl, tB + 0.1, D("choiceB") - F("choiceB", 0, 1) - 0.1, "ที่มา: กรมควบคุมโรค");
+        } });
+      // ---------- 14c. "พ่อไม่ช่วยผม…" ภูมิ close, crying ----------
+      add("choiceC", { set: "jellyBeach", setOpts: BEACH("jb6", { tower: false, umbrellas: [], life: [] }), dark: 0, blur: { set: 3, mid: 4, far: 4 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(400, 1520, 2.4, 540, 800) }, { t: D("choiceC"), glide: D("choiceC"), ...fr(400, 1520, 2.6, 540, 800) }] },
+        actors: [A("jPhum", 400, 1800, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "o" }], { talk: [TALK("choiceC", 0, "o")] })],
+        captions: caps("choiceC", undefined, { quote: true }) });
+      // ---------- 15. "น้ำหวาน! วิ่งไปหอกู้ภัย…" he turns to the water's edge ----------
+      add("gone", { set: "jellyBeach", setOpts: BEACH("jb7", { umbrellas: [[1040, 1360, 0.85, "#3a9ad8"]], life: [] }), dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(420, 1300, 1.6, 540, 1000) }, { t: D("gone"), glide: D("gone"), ...fr(440, 1290, 1.7, 540, 1000) }] },
+        actors: [A("jTon", 420, 1760, 1.0, [{ t: 0, mode: "point", eyes: "wide", mouth: "scream" }, { t: voEnd("gone", 0) - 0.3, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true, talk: [TALK("gone", 0, "scream")] })],
+        captions: caps("gone", undefined, { quote: true }) });
+      // ---------- 15b. the peak: the duck ring floating empty, the swarm under it (the waterline high, the jellyfish fill the frame) ----------
+      const SURF2 = 520;
+      add("goneB", { set: "jellySplit", setOpts: { id: "jsg", surf: SURF2, floor: 1800, seed: 9, towerX: 300 }, dark: 0, blur: { fg: 0, set: 0, mid: 0, far: 0 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("goneB"), glide: D("goneB"), ...fr(540, 900, 1.07, 540, 960) }] },
+        captions: caps("goneB"),
+        fx(tl, id, t0, L) {
+          put(L.fg, `<g>${[[200, 760, 0.8], [520, 720, 0.9], [860, 780, 0.8], [330, 1010, 1.0], [720, 1040, 1.05], [120, 1260, 0.9], [960, 1220, 0.9], [520, 1300, 1.1], [300, 1540, 0.95], [800, 1520, 1.0], [560, 1700, 0.8]].map(([x, y, s], k) =>
+            `<g id="pk-j${k}">${Jelly.box(x, y, s, { seed: 20 + k, len: 200 + 40 * (k % 3), lit: 1.4, glow: true, sway: k % 2 ? 0.8 : -0.8 })}</g>`).join("")}</g>
+            <ellipse cx="540" cy="${SURF2 + 4}" rx="230" ry="44" fill="#fff6c8" opacity=".5"/><g transform="translate(540,${SURF2 + 24})"><g id="pk-ring">${TideCast.duckRing(0, 0, 1.6, { water: true })}</g></g>`);
+          tl.fromTo("#pk-ring", { y: -6, rotation: -3, svgOrigin: "0 0" }, { y: 6, rotation: 3, svgOrigin: "0 0", duration: 0.9, repeat: 4, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((k) => tl.fromTo(`#pk-j${k}`, { y: 0 }, { y: -30 - (k % 3) * 10, duration: 1.4 + (k % 4) * 0.2, repeat: 2, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (k % 3) * 0.2));
+        } });
+      // ---------- 15c. "น้ำหวาน…?" ต้น close ----------
+      add("goneC", { set: "jellyBeach", setOpts: BEACH("jb8", { tower: false, umbrellas: [], life: [] }), dark: 0, blur: { set: 3, mid: 4, far: 4 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 1180, 2.5, 540, 900) }, { t: D("goneC"), glide: D("goneC"), ...fr(540, 1170, 2.8, 540, 900) }] },
+        actors: [A("jTon", 540, 1800, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true, talk: [TALK("goneC", 0, "o")] })],
+        captions: caps("goneC", undefined, { quote: true }) });
+      // ---------- 16. the choice over the peak, pulled toward going into the water → black ----------
+      add("vote", { set: "jellySplit", setOpts: { id: "jsv", surf: SURF2, floor: 1800, seed: 9, towerX: 300 }, dark: 0.2, blur: { sky: 6, far: 6, mid: 6, set: 6, fg: 10 }, light: false, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 900, 1.07, 540, 960) }] },
+        captions: caps("vote"),
+        fx(tl, id, t0, L) {
+          put(L.fg, `<g>${[[330, 1010, 1.0], [720, 1040, 1.05], [520, 1300, 1.1], [800, 1520, 1.0]].map(([x, y, s], k) => Jelly.box(x, y, s, { seed: 24 + k, len: 240, lit: 1.3, glow: true })).join("")}</g><g transform="translate(540,${SURF2 + 24})">${TideCast.duckRing(0, 0, 1.6, { water: true })}</g>`);
+          const sea = `<circle r="70" fill="#3a9ad8" stroke="#2a2420" stroke-width="5"/><g transform="translate(0,6) scale(.36)">${TideCast.duckRing(0, 0, 1, { water: true })}</g><path d="M-50,30q12,-10 25,0t25,0t25,0t25,0" stroke="#fff" stroke-width="6" fill="none"/>`;
+          const stay = `<circle r="70" fill="#e8823a" stroke="#2a2420" stroke-width="5"/><g transform="translate(-14,30) scale(.36)"><path d="M-60,0Q-60,-120 0,-130Q60,-120 60,0Z" fill="#5aa8d8" stroke="#2a2420" stroke-width="6"/><circle cy="-170" r="44" fill="#c08a5e" stroke="#2a2420" stroke-width="6"/></g><g transform="translate(26,40) scale(.26)"><path d="M-60,0Q-60,-120 0,-130Q60,-120 60,0Z" fill="#2a7ad0" stroke="#2a2420" stroke-width="8"/><circle cy="-170" r="44" fill="#c08a5e" stroke="#2a2420" stroke-width="8"/></g>`;
+          TideUI.choice(tl, L.light, t0, D("vote"), { q: "ถ้าคุณเป็นพ่อ?", a: { text: "ลงไปหาลูกในน้ำ", icon: sea }, b: { text: "อยู่กับลูกที่โดนพิษ", icon: stay }, secs: 3, pull: "a", at: D("vote") - 1.3 });
+          tl.set("#black", { opacity: 1 }, t0 + D("vote") - 0.12);
+        } });
+      // ---------- 17. the end board on the tower's stilt: "ตอนที่ 2 · น้ำหวานอยู่ไหน" + follow / full story ----------
+      add("endb", { set: "jellyBeach", setOpts: BEACH("jb9", { tower: false, umbrellas: [], life: [], time: "morning" }), dark: 0.1, blur: { sky: 3, far: 4, mid: 4, set: 4 }, light: false, grade: { top: "#ffd8a8", bottom: "#a8c8e0", op: 0.18 },
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("endb"), glide: D("endb"), ...fr(540, 940, 1.04, 540, 960) }] },
+        captions: caps("endb"),
+        fx(tl, id, t0, L) {
+          tl.set("#black", { opacity: 0 }, t0);
+          put(L.light, `<g transform="translate(540,0)"><path d="M-300,-40L-260,1500M300,-40L260,1500" stroke="#1e1a16" stroke-width="64"/><path d="M-300,-40L-260,1500M300,-40L260,1500" stroke="#e8d8b8" stroke-width="46"/>
+            <g transform="translate(0,560)"><g id="eb-b"><path d="M-280,-150L-280,-20M280,-150L280,-20" stroke="#8a6a3a" stroke-width="8"/><g transform="scale(1.25)"><path d="M-330,-20Q-340,-28 -318,-30L320,-34Q342,-26 336,-8L330,250Q330,268 312,270L-316,276Q-338,272 -334,254Z" fill="#a88454" stroke="#1e1a16" stroke-width="6"/>${[0, 1, 2, 3].map((k) => `<path d="M-320,${20 + k * 62}Q0,${10 + k * 62} 324,${22 + k * 62}" stroke="#8a6a3e" stroke-width="3" fill="none" opacity=".6"/>`).join("")}</g>
+              <g transform="translate(0,0)"><rect x="-300" y="40" width="600" height="96" rx="14" fill="#fffaf0" stroke="#1e1a16" stroke-width="5" transform="rotate(-2)"/><text x="0" y="108" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#d8312a" transform="rotate(-2)">ตอนที่ 2</text>
+              <text x="0" y="230" text-anchor="middle" font-family="Sriracha" font-size="76" fill="#2a1a0a">น้ำหวานอยู่ไหน</text></g></g></g>
+            <g id="eb-f" transform="translate(-130,1010)"><rect x="-150" y="-50" width="300" height="100" rx="50" fill="#d8312a" stroke="#1e1a16" stroke-width="5"/><text y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="48" fill="#fff">กดติดตาม</text></g>
+            <g id="eb-y" transform="translate(160,1010)"><rect x="-140" y="-50" width="280" height="100" rx="24" fill="#fffaf0" stroke="#1e1a16" stroke-width="5"/><path d="M-110,-22L-70,0L-110,22Z" fill="#d8312a"/><text x="20" y="16" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#1e2a3a">เรื่องเต็ม</text></g></g>`);
+          tl.fromTo("#eb-b", { y: -700, rotation: -6, svgOrigin: "0 0" }, { y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.8, ease: "back.out(1.6)", immediateRender: false }, t0 + 0.05);
+          tl.to("#eb-b", { rotation: 1.5, svgOrigin: "0 -200", duration: 1.2, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0 + 0.85);
+          pop(tl, "#eb-f", t0 + F("endb", 0, 1)); pop(tl, "#eb-y", t0 + F("endb", 0, 2));
+        } });
+
+      const O = CAPTURE; CAPTURE = null;
+      const G = (k) => SH[k].start;   // a ghost shot's start (lane B timing) — the base its fx was written against
+      // ===== หนวดใส EP.1 · CINEMA BIBLE cut (video/jelly-ep1/production/shotlist.json · 30 cuts) =====
+      // cine.js grades / vignettes / grains / freezes or breathes the camera per cut (Cine.episode in foot.part); the old
+      // gradient grades and the hook shake are gone. Pieces = a new set or place; camera cuts inside a piece follow the shot list.
+      const NOG = { grade: null, shake: null };
+      const hide = (tl, sel, at) => tl.set(sel, { opacity: 0 }, at);
+      // a screen-space insert (ECU) over a plain backdrop, shown [a, b) seconds into the piece
+      const insert = (L, tl, t0, iid, a, b, svg, z = 1.06) => {
+        put(L.light, `<g id="${iid}"><g id="${iid}-z">${svg}</g></g>`);
+        tl.set(`#${iid}`, { opacity: 0 }, 0); tl.set(`#${iid}`, { opacity: 1 }, t0 + a); tl.set(`#${iid}`, { opacity: 0 }, t0 + b);
+        tl.fromTo(`#${iid}-z`, { scale: 1, svgOrigin: "540 900" }, { scale: z, svgOrigin: "540 900", duration: b - a, ease: "none", immediateRender: false }, t0 + a);
+      };
+      const SAND = (sid) => `<defs><linearGradient id="${sid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8c69e"/><stop offset="1" stop-color="#bfa97e"/></linearGradient></defs><rect x="-100" y="-100" width="1280" height="2200" fill="url(#${sid})"/>
+        ${Array.from({ length: 40 }, (_, k) => `<ellipse cx="${(k * 137) % 1080}" cy="${(k * 263) % 1920}" rx="${4 + (k % 4)}" ry="${2 + (k % 3)}" fill="#a8946a" opacity=".5"/>`).join("")}`;
+
+      // 1–2 · hook: ECU the bottle in the fist (the drop swelling) · ECU ภูมิ's eye
+      add("c_hA", { ...O.hook, ...NOG, captions: caps("c_hA"), cam: { keys: [{ t: 0, ...fr(410, 660, 2.1, 540, 900) }] },
+        fx(tl, id, t0, L) { O.hook.fx(tl, id, t0, L); } });
+      add("c_hB", { set: "jellyBeach", setOpts: { id: "jb0", seed: 3, palms: false }, dark: 0, blur: { fg: 0, far: 3, mid: 3 }, light: SUN,
+        cam: { keys: [{ t: 0, ...fr(418, 1440, 5.0, 540, 820) }] },
+        actors: [A("jPhum", 400, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }])],
+        captions: caps("c_hB") });
+      // 3 · hook: the whole situation, still: ต้น crouched tipping the bottle over the leg, a woman with another bottle, the title in the swash
+      add("c_hC", { ...O.open, ...NOG, actors: [A("jPhum", 400, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }]),
+          A("jTonBottle", 760, 1730, 1.0, [{ t: 0, mode: "reachBottle", eyes: "worry", mouth: "o", shake: 0.4 }], { flip: true }),
+          A("jWomanBottle", 960, 1600, 0.78, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true })],
+        cam: { keys: [{ t: 0, ...fr(600, 1450, 1.12, 540, 1060) }] }, captions: caps("c_hC"),
+        fx(tl, id, t0, L) { O.open.fx(tl, id, t0, L); document.getElementById("ja-hand").setAttribute("display", "none"); document.getElementById("ja-cap").setAttribute("display", "none"); } });
+      // 4 · the sundial on ยาย's post turns back; the picture pulls back off it onto ยาย at the door with her basket
+      add("c_card", { set: "jellyPorch", setOpts: { id: "jp1", basket: false }, dark: 0, light: DAWN,
+        cam: { keys: [{ t: 0, ...fr(900, 1240, 1.3, 540, 1120) }, { t: D("c_card"), glide: D("c_card"), ...fr(880, 1240, 1.18, 540, 1120) }] },
+        actors: [A("jLaorBasket", 1110, 1660, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("c_card", 1, "o")] }),
+          A("jPhum", 780, 1720, 0.86, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
+        captions: [...caps("c_card", [0]), ...caps("c_card", [1], { quote: true })],
+        fx(tl, id, t0, L) {
+          put(L.light, `<g id="cd-ov"><g id="cd-ovz"></g></g>`);
+          O.card.fx(tl, id, t0, { ...L, set: document.getElementById("cd-ovz") });
+          const out = 1.9;   // the dial has turned back: the picture pulls back off the post onto the room
+          tl.fromTo("#cd-ovz", { scale: 1, svgOrigin: "120 700" }, { scale: 0.18, svgOrigin: "120 700", duration: 0.7, ease: "power2.in", immediateRender: false }, t0 + out);
+          tl.fromTo("#cd-ov", { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power1.in", immediateRender: false }, t0 + out + 0.2);
+        } });
+      // 5 · over ยาย's shoulder: ต้น says no; the kids behind; ภูมิ holds his nose
+      add("c_door", { set: "jellyPorch", setOpts: { id: "jp1b", basket: false }, dark: 0, light: DAWN,
+        cam: { keys: [{ t: 0, ...fr(520, 1250, 1.12, 540, 1150) }, { t: D("c_door"), glide: D("c_door"), ...fr(500, 1240, 1.22, 540, 1150) }] },
+        actors: [
+          A("jTon", 380, 1700, 1.0, [{ t: 0, mode: "point", eyes: "angry", mouth: "o" }, { t: voEnd("c_door", 0), mode: "idle", eyes: "normal", mouth: "flat" }], { talk: [TALK("c_door", 0, "o")] }),
+          A("jWan", 600, 1720, 0.72, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }),
+          A("jPhum", 790, 1710, 0.86, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("c_door", 1) - 0.1, mode: "holdNose", eyes: "closed", mouth: "laugh" }], { talk: [TALK("c_door", 1, "laugh")] }),
+          A("jLaorBasket", 1010, 1690, 1.15, [{ t: 0, mode: "idle", eyes: "closed", mouth: "flat" }], { flip: true })],
+        captions: caps("c_door", undefined, { quote: true }) });
+      // 6 · ยาย recites from her board hung on the beam beside her; the kids sit and listen; HG7 on the empty wall at rule 2
+      const RHY2 = [["หนวดใสพันขา", "อย่าราดน้ำท่า"], ["น้ำส้มราดไว้", "นับสามสิบไป"], ["อยู่นิ่งอย่าถู", "เรียกหมอมาดู"]];
+      const BRD = { x: 660, y: 660, s: 0.8 };
+      add("c_rhyme", { set: "jellyPorch", setOpts: { id: "jp2", basket: false }, dark: 0, light: DAWN,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 1.0, 540, 1000) }] },
+        actors: [A("jLaor", 330, 1700, 1.0, [{ t: 0, mode: "recite", eyes: "normal", mouth: "o" }], { talk: [TALK("c_rhyme", 0, "o")] }),
+          A("jWan", 520, 1820, 0.82, [{ t: 0, mode: "sit", eyes: "normal", mouth: "smile" }], { flip: true }),
+          A("jPhum", 760, 1810, 0.92, [{ t: 0, mode: "sit", eyes: "normal", mouth: "flat" }, { t: 5.0, mode: "sit", eyes: "closed", mouth: "flat" }], { flip: true })],
+        captions: caps("c_rhyme", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          put(L.set, `<g><path d="M-900,${BRD.y - 150}H2000" stroke="#2a1608" stroke-width="44"/><path d="M-900,${BRD.y - 160}H2000" stroke="#7a4a28" stroke-width="24"/>
+            <g transform="translate(${BRD.x},${BRD.y}) scale(${BRD.s})">${Jelly.ruleBoard(0, 0, { active: -1 }).replace(/opacity="0.38"/g, 'opacity="1"')}
+              ${RHY2.map(([p, q], k) => `<g id="rw-on${k}"><g transform="translate(0,${136 + k * 146})"><rect x="-222" y="-6" width="572" height="124" rx="16" fill="#f2c230" stroke="#1e1a16" stroke-width="4"/>
+                <text x="-200" y="48" font-family="Sriracha" font-size="46" fill="#2a1a0a">${p}</text><text x="-200" y="102" font-family="Sriracha" font-size="46" fill="#b8241e">${q}</text></g></g>`).join("")}</g></g>`);
+          [1, 2, 3].forEach((j, k) => { tl.set(`#rw-on${k}`, { opacity: 0 }, 0); tl.fromTo(`#rw-on${k}`, { opacity: 0, scaleX: 0, svgOrigin: `${-222} 0` }, { opacity: 1, scaleX: 1, svgOrigin: `${-222} 0`, duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + F("c_rhyme", 0, j)); });
+          put(L.light, `<g transform="translate(560,-150)"><g id="hg7b"><g transform="scale(.95)">${Jelly.subCard(0, 120)}</g></g></g>`);
+          const h = t0 + F("c_rhyme", 0, 2) + 0.07;   // = 23.52 s (lane B HG7)
+          tl.set("#hg7b", { opacity: 0 }, 0);
+          tl.fromTo("#hg7b", { opacity: 0, y: -80, rotation: -8, svgOrigin: "0 0" }, { opacity: 1, y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.2)", immediateRender: false }, h);
+          tl.set("#hg7b", { opacity: 0 }, h + 1.27);
+        } });
+      // 7 · ยาย's face as she says rule 3 (the one she will break): slow push-in, 2°
+      add("c_rhymeC", { set: "jellyPorch", setOpts: { id: "jp2c", basket: false }, dark: 0, light: DAWN, blur: { far: 3 },
+        cam: { keys: [{ t: 0, ...fr(330, 1150, 3.8, 540, 860) }, { t: D("c_rhymeC"), glide: D("c_rhymeC"), ...fr(335, 1150, 4.8, 540, 860) }] },
+        actors: [A("jLaor", 330, 1700, 1.0, [{ t: 0, mode: "recite", eyes: "normal", mouth: "o" }, { t: 6.8, mode: "idle", eyes: "closed", mouth: "flat" }], { talk: [TALK("c_rhymeC", 0, "o")] })],
+        captions: caps("c_rhymeC", undefined, { quote: true }) });
+      // 8 · น้ำหวาน sings the rhyme, low; ต้น laughs behind her
+      add("c_rhymeW", { set: "jellyPorch", setOpts: { id: "jp2w", basket: false }, dark: 0, light: DAWN,
+        cam: { keys: [{ t: 0, ...fr(600, 1420, 1.3, 540, 1080) }] },
+        actors: [A("jTon", 820, 1690, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("c_rhymeW", 1), mode: "laugh", eyes: "closed", mouth: "laugh" }], { flip: true, talk: [TALK("c_rhymeW", 1, "laugh")] }),
+          A("jWan", 470, 1800, 0.84, [{ t: 0, mode: "sing", eyes: "closed", mouth: "laugh" }, { t: voEnd("c_rhymeW", 0), mode: "idle", eyes: "normal", mouth: "smile" }], { talk: [TALK("c_rhymeW", 0, "laugh")] })],
+        captions: caps("c_rhymeW", undefined, { quote: true }) });
+      // 9 · "พ่อแกก็พูดอย่างนี้" → the photo face down (rack) → back at the door: they have gone, ยาย sets the basket down and stays
+      add("c_mock", { ...O.mock, ...NOG, setOpts: { id: "jp3", basket: false },
+        cam: { keys: [{ t: 0, ...fr(1110, 1140, 3.4, 540, 860) }, { t: F("c_mock", 1, 2) - 0.12, glide: F("c_mock", 1, 2) - 0.12, ...fr(1110, 1140, 3.9, 540, 860) },
+          { t: F("c_mock", 1, 2) - 0.1, ...fr(1060, 1520, 2.0, 540, 1200) }, { t: D("c_mock"), glide: D("c_mock") - F("c_mock", 1, 2), ...fr(1070, 1560, 2.3, 540, 1200) }] },
+        actors: [A("jLaor", 1130, 1660, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true, until: F("c_mock", 1, 2) - 0.1, talk: [TALK("c_mock", 0, "o")] }),
+          A("jLaor", 1130, 1660, 1.0, [{ t: 0, mode: "basketDown", eyes: "closed", mouth: "flat" }], { flip: true, from: F("c_mock", 1, 2) - 0.1 })],
+        captions: [...caps("c_mock", [0], { quote: true }), ...caps("c_mock", [1])],
+        fx(tl, id, t0, L) {
+          O.mock.fx(tl, id, G("mock"), L);
+          const r = t0 + 1.5;   // the rack: ยาย's face goes soft as the photo comes up sharp
+          tl.set("#mk-ins", { opacity: 0 }, 0); tl.fromTo("#mk-ins", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.inOut", immediateRender: false }, r);
+          tl.set("#mk-ins", { opacity: 0 }, t0 + F("c_mock", 1, 2) - 0.1);
+          put(L.act, `<g id="bk-b2">${Jelly.basket(925, 1668, 1.2)}</g>`); show(tl, "#bk-b2", t0 + F("c_mock", 1, 2) - 0.1);
+        } });
+      add("c_map", { ...O.map, ...NOG, captions: [], fx(tl, id, t0, L) { O.map.fx(tl, id, t0, L); } });
+      // 11–12 · the beach wide (the ring drops, ต้น on his phone, น้ำหวาน looks off right and points) → the empty post, held
+      add("c_beach", { ...O.beach, ...NOG,
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.0, 540, 960) }, { t: CT(12, "c_beach"), ...fr(POST[0], POST[1] - 0.62 * 240, 2.7, 540, 760) },
+          { t: D("c_beach"), glide: D("c_beach") - CT(12, "c_beach"), ...fr(POST[0], POST[1] - 0.62 * 240, 3.15, 540, 740) }] },
+        captions: caps("c_beach", undefined, { quote: true }), fx(tl, id, t0, L) { O.beach.fx(tl, id, G("beach"), L); } });
+      // 13 · ภูมิ points at the rock, ต้น lifts his phone; the low hum under the water starts (sound before picture)
+      add("c_rock", { ...O.rock, ...NOG, cam: { keys: [{ t: 0, ...fr(580, 1470, 1.4, 540, 1150) }] }, captions: caps("c_rock", undefined, { quote: true }),
+        fx(tl, id, t0, L) { O.rock.fx(tl, id, G("rock"), L); } });
+      // 14–15 · the danger: ECU the tentacle on the shin under water (dark shape against the light) → EWS half under, 10° dutch
+      add("c_sting", { ...O.sting, ...NOG,
+        cam: { keys: [{ t: 0, ...fr(690, 1060, 3.0, 540, 980) }, { t: CT(15, "c_sting"), ...fr(540, 960, 1.0, 540, 960) }] },
+        captions: caps("c_sting", undefined, { quote: true }), fx(tl, id, t0, L) { O.sting.fx(tl, id, G("sting"), L); } });
+      // 16–17 · whip onto ต้น splashing in → CU, phone at his ear: 1669
+      add("c_stingB", { ...O.stingB, ...NOG,
+        cam: { keys: [{ t: 0, ...fr(520, 1350, 1.5, 540, 1050) }, { t: CT(17, "c_stingB"), ...fr(520, 1215, 3.2, 540, 820) }] },
+        captions: caps("c_stingB", undefined, { quote: true }) });
+      // 18–23 · the crowd, cut fast on inserts: the cap twisted off → a hand about to rub → ภูมิ CU → the welts → น้ำหวาน → ต้น still (the command)
+      add("c_crowd", { ...O.crowd, ...NOG,
+        cam: { keys: [{ t: 0, ...fr(500, 1520, 1.3, 540, 1150) },
+          { t: CT(20, "c_crowd"), ...fr(450, 1530, 4.4, 540, 860) }, { t: CT(21, "c_crowd"), ...fr(645, 1785, 4.5, 540, 900) },
+          { t: CT(22, "c_crowd"), ...fr(640, 1400, 2.6, 540, 800) }, { t: CT(23, "c_crowd"), ...fr(300, 1372, 4.0, 540, 820) }] },
+        captions: caps("c_crowd", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          O.crowd.fx(tl, id, G("crowd"), L);
+          const cut2 = CT(19, "c_crowd");
+          insert(L, tl, t0, "ci-cap", 0, cut2, SAND("ci-s1") + `<g transform="translate(560,980)"><g id="ci-bt"><g transform="rotate(-20) scale(2.4) translate(0,110)">${Jelly.bottle(0, 0, 1, { cap: true })}</g></g>
+            <path d="M-120,-430Q-40,-520 60,-500Q120,-480 110,-420L60,-360Q-40,-330 -110,-370Z" fill="#c08a5e" stroke="#1e1a16" stroke-width="5"/><path d="M-60,-470q30,-10 60,0M-70,-430q40,-10 80,0" stroke="#8a5a3a" stroke-width="4" fill="none"/>
+            <path d="M110,-420L700,-640" stroke="#1e1a16" stroke-width="120" stroke-linecap="round"/><path d="M110,-420L700,-640" stroke="#f2f0e8" stroke-width="108" stroke-linecap="round"/></g>`);
+          tl.fromTo("#ci-bt", { rotation: 0, svgOrigin: "0 -380" }, { rotation: -14, svgOrigin: "0 -380", duration: cut2, ease: "power2.inOut", immediateRender: false }, t0);
+          insert(L, tl, t0, "ci-rub", cut2, CT(20, "c_crowd"), SAND("ci-s2") + `<g transform="translate(60,1180) scale(2.2)"><path d="M-120,0Q140,-50 420,-20Q560,0 640,40L640,180Q500,160 300,170Q60,180 -120,200Z" fill="#c8915f" stroke="#1e1a16" stroke-width="4"/>
+              ${Jelly.ladder([[60, 30], [180, 60], [300, 40]], { w: 10 })}${Jelly.ladder([[320, 70], [420, 40], [520, 80]], { w: 8 })}</g>
+            <g id="ci-hd" transform="translate(620,820)"><path d="M-160,-40Q-80,-120 60,-110Q160,-90 180,-20Q180,40 110,50L-130,40Q-190,20 -160,-40Z" fill="#e0b088" stroke="#1e1a16" stroke-width="6"/>
+              ${[-90, -30, 30, 90].map((x) => `<rect x="${x - 24}" y="-170" width="48" height="120" rx="24" fill="#e0b088" stroke="#1e1a16" stroke-width="5"/>`).join("")}
+              <path d="M-260,60h-90M280,60h90" stroke="#d8312a" stroke-width="14" stroke-linecap="round"/><path d="M-350,60l30,-22v44zM370,60l-30,-22v44z" fill="#d8312a"/></g>`, 1.04);
+          tl.fromTo("#ci-hd", { x: -50 }, { x: 50, duration: 0.18, repeat: 6, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + cut2);
+        } });
+      add("c_know", { ...O.know, ...NOG, captions: caps("c_know"), fx(tl, id, t0, L) { O.know.fx(tl, id, t0, L); } });
+      // 24 · the bottle over the leg, dead still, quiet
+      add("c_choice", { ...O.choice, ...NOG, captions: caps("c_choice", undefined, { quote: true }), fx(tl, id, t0, L) { O.choice.fx(tl, id, t0, L); } });
+      // 25 · ต้น's face; he sets the bottle down → (rack) the rhyme board on the post behind him, rule 1 ticks → ภูมิ's "พ่อไม่ช่วยผม…" over his face
+      add("c_choiceB", { ...O.choiceB, ...NOG,
+        cam: { keys: [{ t: 0, ...fr(560, 1345, 3.6, 540, 840) }] },
+        captions: caps("c_choiceB", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          O.choiceB.fx(tl, id, G("choiceB"), L);
+          const a = F("c_choiceB", 0, 1) - 0.1, b = vo("c_choiceB", 1) - 0.1;
+          put(L.light, `<g id="cb-rk"><rect x="-100" y="-100" width="1280" height="2200" fill="#cfe9f2"/><rect x="-100" y="1500" width="1280" height="700" fill="#e2cfa0"/>
+            <g transform="translate(540,1520) scale(2.6)">${postBoard(0, 0, 1, "pbr").replace(/opacity="0.38"/g, 'opacity="1"').replace('fill="#f2c230" opacity=".6"', 'fill="#f2c230" opacity=".45"')}</g></g>`);
+          tl.set("#cb-rk", { opacity: 0 }, 0); tl.fromTo("#cb-rk", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.inOut", immediateRender: false }, t0 + a);
+          tl.to("#cb-rk", { opacity: 0, duration: 0.4, ease: "power1.inOut", immediateRender: false }, t0 + b);
+          tl.fromTo("#pbr-on", { opacity: 0 }, { opacity: 1, duration: 0.4, immediateRender: false }, t0 + a + 0.4);
+          tl.fromTo("#pbr-tick", { opacity: 0, scale: 0.2, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0 + a + 0.8);
+          SRC(L, tl, t0 + a + 0.4, 1.5, "ที่มา: กรมควบคุมโรค");
+        } });
+      // 26 · two-shot: ต้น turns and shouts for น้ำหวาน (ภูมิ's shoulder in the foreground); slow pull-out
+      add("c_gone", { ...O.gone, ...NOG,
+        actors: [...O.gone.actors, A("jPhum", 230, 1810, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "o" }])],
+        cam: { keys: [{ t: 0, ...fr(450, 1250, 3.0, 540, 860) }, { t: D("c_gone"), glide: D("c_gone"), ...fr(440, 1260, 2.5, 540, 860) }] },
+        captions: caps("c_gone", undefined, { quote: true }) });
+      // 27 · the peak: from the empty duck ring, a slow pull-out to the swarm under it; ต้น's "น้ำหวาน…?" over it
+      add("c_goneB", { ...O.goneB, ...NOG,
+        cam: { keys: [{ t: 0, ...fr(540, 600, 2.3, 540, 760) }, { t: D("c_goneB"), glide: D("c_goneB"), ...fr(540, 960, 1.0, 540, 960) }] },
+        captions: [...caps("c_goneB", [0]), ...caps("c_goneB", [1], { quote: true })], fx(tl, id, t0, L) { O.goneB.fx(tl, id, G("goneB"), L); } });
+      add("c_vote", { ...O.vote, ...NOG, captions: caps("c_vote"), fx(tl, id, t0, L) { O.vote.fx(tl, id, t0, L); } });
+      add("c_endb", { ...O.endb, ...NOG, captions: caps("c_endb"), fx(tl, id, t0, L) { O.endb.fx(tl, id, t0, L); } });
