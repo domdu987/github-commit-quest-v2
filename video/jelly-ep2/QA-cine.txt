@@ -1,0 +1,21 @@
+หนวดใส EP.2 ฉบับ CINEMA BIBLE (Shorts 1080×1920) · ตรวจจากไฟล์จริง 6 พ.ย. 2569
+สตอรีบอร์ด r2 ผ่าน (f68131d9 · รีวิว 6111ef7) · มิกซ์ 42ef114d · cine.js 18a68bb · เสียงเลน B e8697550
+
+ไฟล์
+- HQ (ลงช่อง): video/release/hq/jelly-ep2-cine-HQ.mp4
+  75,837,276 B · sha256 cda568f363736bf61052c55a70635f601a3d017608ab23451d3a97452fea4f7d · x264 2-pass 6.3 Mbps + AAC 256k 48 kHz
+- share (repo): video/jelly-ep2/jelly-ep2-cine-share.mp4
+  22,131,757 B · sha256 dbf46a294d201fc3288f0cf060af1de8746e2b4a4d89d1047438ae070cd272e0 · x264 crf 24 + AAC 192k
+- raw (อยู่ในเครื่องเลน C): 97,384,821 B · sha256 9a7a000630e2f8b1b73ac1371291f4c192006c2ced86da0134a4b1c4f20a8ce6 · 5540 เฟรม 60 fps
+- mix.wav sha256 2a2a1210a93c90ccb2a436efc7f4f4fdf8de6aa3399df757e7a6f1b3dc9c86ac
+- ความยาว: ภาพ 92.317 วิ · เสียง 92.332 วิ (ต่างกันไม่ถึง 1 เฟรม)
+
+1. รูปแบบ: h264 1080×1920 60/1 · aac 48000 (HQ และ share)
+2. ความดัง: HQ −14.0 LUFS · true peak −1.9 dBFS · share −14.1 LUFS · true peak −3.0 dBFS
+3. hookcheck: PASS · คำสั่ง {อย่าให้ลูกขยับ} เริ่ม 2.29 วิ
+4. hisscheck HQ: PASS (flatness 0.40 · pause HF −79.6 dBFS)
+5. musiccheck.tide: PASS · ใต้เสียงพูด −35.5 LUFS · ระหว่างบรรทัด −28.5 · เสียงพูดเหนือเพลง 21.3 LU · เพลงหาย 0%
+6. edgecheck (ทุก 0.25 วิ บนหน้าที่ build): no edge problems
+7. shotlist_check --soundplan --cues: FAIL 0 · WARN 10 (เหตุผลอยู่ใน note ของแต่ละคัต) · sting 1 ครั้งที่ 23.52 · เงียบ 0.6 วิก่อน sting ผ่าน · เงียบ 1 วิก่อนคำสั่ง 2 จุด
+8. flashcheck: 0 flashes · freezedetect (3 วิ): ไม่มี · จอดำ: 85.45–85.57 วิ ตามแผน (หลังตัวเลือก) เท่านั้น
+9. ชีต 1 fps: sheets-cine/qa-1fps-1..5.jpg (93 เฟรม)
