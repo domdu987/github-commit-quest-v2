@@ -6,7 +6,7 @@
         set: "canal", setOpts: { id: "hg7" }, dark: 0.45, light: false, blur: { sky: 8, far: 8, mid: 8, set: 8, fg: 10 },
         cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 960) }] },
         fx(tl, id, t0, L) {
-          const bell = `<g transform="translate(-150,-6)"><path d="M-26,18Q-28,-26 0,-30Q28,-26 26,18L34,28H-34Z" fill="#f2c84a" stroke="#1c1a2a" stroke-width="4" stroke-linejoin="round"/><circle cx="0" cy="34" r="8" fill="#f2c84a" stroke="#1c1a2a" stroke-width="4"/><path d="M-12,-14q-6,10 -6,24" stroke="#fff6d0" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
+          const bell = `<g transform="translate(-200,-6)"><path d="M-26,18Q-28,-26 0,-30Q28,-26 26,18L34,28H-34Z" fill="#f2c84a" stroke="#1c1a2a" stroke-width="4" stroke-linejoin="round"/><circle cx="0" cy="34" r="8" fill="#f2c84a" stroke="#1c1a2a" stroke-width="4"/><path d="M-12,-14q-6,10 -6,24" stroke="#fff6d0" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
           put(L.light, `<g transform="translate(540,960) scale(1.55)"><g id="${id}-hgc">
             <rect x="-330" y="-170" width="660" height="340" rx="34" fill="#0a0a1a" opacity=".45" transform="translate(8,12)"/>
             <rect x="-330" y="-170" width="660" height="340" rx="34" fill="#fffaf0" stroke="#1c1a2a" stroke-width="6"/>
@@ -15,7 +15,7 @@
             <g id="${id}-bell">${bell}</g><text x="40" y="22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="78" fill="#1c1a2a">กดติดตาม</text>
             <text x="0" y="104" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="38" fill="#3a3a52">ไว้ดูกฎข้อต่อไป <tspan fill="#d8392e">ก่อนวันที่ต้องใช้</tspan></text></g></g>`);
           tl.fromTo(`#${id}-hgc`, { scale: 0.5, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.3, ease: "back.out(2.4)", immediateRender: false }, t0);
-          tl.fromTo(`#${id}-bell`, { rotation: -16, svgOrigin: "-150 -36" }, { rotation: 16, svgOrigin: "-150 -36", duration: 0.12, repeat: 5, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.25);
+          tl.fromTo(`#${id}-bell`, { rotation: -16, svgOrigin: "-200 -36" }, { rotation: 16, svgOrigin: "-200 -36", duration: 0.12, repeat: 5, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.25);
         },
       });
       // H6 time chip on EP.1's first shot ("3 นาทีก่อน": the cold open is three minutes later), and ขิม's choice in bridge B: she lunges
@@ -23,9 +23,9 @@
       {
         const wrap = (key, more) => { const s = shots.find((x) => x.key === key); if (!s) return; const f0 = s.fx; s.fx = (tl, id, t0, L) => { if (f0) f0(tl, id, t0, L); more(tl, id, t0, L, s); }; };
         wrap("e1_hook", (tl, id, t0, L) => {
-          put(L.light, `<g transform="translate(540,1330) scale(1.5) translate(-125,0)"><g id="${id}-tchip"><rect x="0" y="-36" width="250" height="72" rx="36" fill="#1c1a2a" opacity=".82" stroke="#f2c84a" stroke-width="4"/>
+          put(L.light, `<g data-page="260,90,64"><g transform="translate(540,1330) scale(1.5) translate(-125,0)"><g id="${id}-tchip"><rect x="0" y="-36" width="250" height="72" rx="36" fill="#1c1a2a" opacity=".82" stroke="#f2c84a" stroke-width="4"/>
             <circle cx="38" cy="0" r="20" fill="none" stroke="#f2c84a" stroke-width="4"/><path d="M38,-10V0L46,6" stroke="#f2c84a" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <text x="148" y="12" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#fff6ea">3 นาทีก่อน</text></g></g>`);
+            <text x="148" y="12" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#fff6ea">3 นาทีก่อน</text></g></g></g>`);
           tl.fromTo(`#${id}-tchip`, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.05);
           tl.to(`#${id}-tchip`, { opacity: 0, duration: 0.3, immediateRender: false }, t0 + 2.3);
         });
@@ -33,7 +33,23 @@
           const a = document.getElementById(`${id}-a0`); if (!a) return;
           const w = document.createElementNS("http://www.w3.org/2000/svg", "g"); a.parentNode.insertBefore(w, a); w.appendChild(a);
           const sv = _SH["x3_kim"].vo, v0 = sv[0].t, v1 = sv[1] ? sv[1].t : _SH["x3_kim"].dur - 0.6;
-          tl.fromTo(w, { x: 0, y: 0 }, { x: 34, y: -16, duration: 0.45, ease: "power2.out", immediateRender: false }, t0 + v0 + 0.3);
-          tl.to(w, { x: 22, y: -8, duration: 0.25, ease: "back.out(3)", immediateRender: false }, t0 + v1);
+          tl.fromTo(w, { x: 0, y: 0 }, { x: 96, y: -44, rotation: 8, svgOrigin: "330 1500", duration: 0.5, ease: "power2.out", immediateRender: false }, t0 + v0 + 0.3);
+          tl.to(w, { x: 40, y: -14, rotation: -3, svgOrigin: "330 1500", duration: 0.3, ease: "back.out(3)", immediateRender: false }, t0 + v1);
         });
       }
+      // B3 (review 6 Nov): bridge A's road beat is a far, wide look from the canal: on the canal road a motorbike stands still with a dark
+      // figure beside it, too far to see its lamp. No headlight close-up (that is the twist at 2:55).
+      add("brmoto", {
+        set: "canal", setOpts: { id: "bm" }, dark: 0.12, light: NIGHT, grade: GNIGHT, blur: { far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(640, 1000, 1.05, 540, 960) }, { t: D("brmoto"), glide: D("brmoto"), ...fr(860, 960, 1.55, 540, 960) }] },
+        captions: caps("brmoto"),
+        fx(tl, id, t0, L) {
+          Klong.life(tl, "bm", t0, D("brmoto"));
+          const X = 905, Y = RY + 4, s = 0.26;
+          put(L.act, `<g id="bmf"><ellipse cx="${X - 10}" cy="${Y + 2}" rx="${300 * s}" ry="${26 * s}" fill="#000" opacity=".35"/>
+            <g transform="translate(${X},${Y}) scale(${-s},${s})">${Mm.moto(0, 0, 1, { color: "#1c2a44" }).replace('fill="#fff6c8"', 'fill="#20201c"').replace('fill="#d8302a"', 'fill="#3a1414"')}</g>
+            <g transform="translate(${X - 92},${Y})" fill="#090b12"><ellipse cx="0" cy="-${560 * s}" rx="${36 * s}" ry="${42 * s}"/><path d="M-${44 * s},-${510 * s}Q0,-${540 * s} ${44 * s},-${510 * s}L${50 * s},-${270 * s}H-${50 * s}Z"/>
+            <path d="M-${40 * s},-${280 * s}L-${34 * s},0H-${8 * s}L0,-${200 * s}L${8 * s},0H${34 * s}L${40 * s},-${280 * s}Z"/></g></g>`);
+          tl.fromTo("#bmf", { opacity: 0.55 }, { opacity: 0.85, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 3, immediateRender: false }, t0);
+        },
+      });

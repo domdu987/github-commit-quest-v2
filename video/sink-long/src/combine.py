@@ -19,7 +19,7 @@ _e3 = {l["id"]: l for l in json.load(open(f"{V}/sink-ep3/production/lines.json")
 durs["x02"] = json.load(open(f"{V}/sink-ep3/production/vo/durations.json"))["n02"]; CAPS["x02"] = _e3["n02"]["cap"]
 BRIDGE = {  # bridge key = a copy of an episode shot under prefix xN_ (its visuals, re-timed to the bridge line)
     "cogap": ([], 0.4, 0), "hg7": ([], 1.0, 0),
-    "x1_kid": (["a1"], 2.6, 0.5), "x3_lamp": (["a2"], 3.6, 0.5), "x1_inrush": (["a3"], 2.8, 0.25),
+    "x1_flicker": (["a1"], 2.6, 0.5), "brmoto": (["a2"], 3.6, 0.5), "x2_fist": (["a3"], 2.8, 0.25),   # review 6 Nov: B1/B3/M5
     "x2_surface": (["b1"], 3.6, 0.5), "x3_kim": (["b2", "x02"], 3.8, 0.4), "x3_hook": (["b4"], 3.0, 0.5),
 }
 
@@ -47,7 +47,7 @@ def take(n, keys=None, skip=()):
 
 seq = [("cold", take(3, keys={"hook", "jump"}) + [bridge("cogap")]),
        ("ch1", take(1) + [bridge("hg7")]),
-       ("brA", [bridge(k) for k in ("x1_kid", "x3_lamp", "x1_inrush")]),
+       ("brA", [bridge(k) for k in ("x1_flicker", "brmoto", "x2_fist")]),
        ("ch2", take(2)),
        ("brB", [bridge(k) for k in ("x2_surface", "x3_kim", "x3_hook")]),
        ("ch3", take(3, skip={"hook", "jump"}))]
