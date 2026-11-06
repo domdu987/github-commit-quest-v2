@@ -1,0 +1,116 @@
+      // ---------- สกิลจอมโกหก EP.1 · AI-art version: every frame painted (fal nano-banana in the owner's reference style), moved as plates + cut-outs ----------
+      const H_EARTH = [["ยอดขาย", "0 กรมธรรม์", "#ff8a7a"], ["อาชีพ", "เซลส์ประกัน"]];
+      const H_DEAD = (sk = "?") => [["สถานะ", "ตายแล้ว", "#9ad8ff"], ["สกิล", sk, "#f2c55c"]];
+      const H_TOWN = [["อันดับ", "9,999", "#ff8a7a"], ["คนเชื่อ", "0%", "#f2c55c"]];
+      const isCard = (txt, sub, col = "#9aa0a6") => `<g><rect x="-230" y="-330" width="460" height="660" rx="34" fill="${col}"/><rect x="-206" y="-306" width="412" height="612" rx="24" fill="#c3c8cd"/>
+        <rect x="-206" y="-306" width="412" height="120" rx="24" fill="#aab0b6"/><text x="0" y="-228" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#f4f6f8">การ์ดสกิล</text>
+        <text x="0" y="-20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="92" fill="#4a4f56">${txt}</text>
+        <text x="0" y="200" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="190" fill="#7a8088" id="cardF">${sub}</text>
+        <path d="M-150,-120L-60,-40L-110,40" stroke="#8a9096" stroke-width="5" fill="none" opacity=".7"/><circle cx="150" cy="250" r="20" fill="#f6a8c8" opacity=".85"/></g>`;
+      // frame the painted plate: point (x,y) of the painting lands at screen (sx,sy); the window is clamped inside the 1080×1920 painting (no black edges)
+      const P = (x, y, s = 1, sx = 540, sy = 760) => { const c = fr(x, y, s, sx, sy); c.x = Math.max(-540 * (1 - 1 / s), Math.min(540 - 540 / s, c.x)); c.y = Math.max(-960 * (1 - 1 / s), Math.min(960 - 960 / s, c.y)); return c; };
+
+      // ---------- a01 hook: the grey card, your ears ----------
+      ai("a01", { plate: { src: "g01_hero_cu.jpg", vars: ["g01b_hero_cu_ears.jpg"] }, camAt: P(540, 900, 1.04, 540, 900), push: 0.02,
+        fx(tl, id, t0, L) { vari(tl, "a01", 0, t0 + F("a01", 0, 1) - 0.1, 0.2); const g = grp(L.light); g.innerHTML = `<g transform="translate(250,560) rotate(-8) scale(.55)">${isCard("จอมโกหก", "F")}</g>`;
+          pop(tl, g, t0 + 0.15, { origin: "250 560", from: 0.4, dy: -60, dur: 0.5 }); } });
+
+      // ---------- a02–a05 Earth: the salesman who cannot lie ----------
+      ai("a02", { plate: { src: "g02_cafe.jpg" }, cam: JKC.move(P(540, 1000, 1.0, 540, 960), P(880, 860, 1.45, 540, 800), 2.0, 1.6), fx(tl, id) { hud(id, H_EARTH); } });
+      ai("a03", { plate: { src: "g03_hero_shrug.jpg" }, camAt: P(540, 560, 1.25, 540, 700), push: 0.03, fx(tl, id) { hud(id, H_EARTH); } });
+      ai("a04", { plate: { src: "g03_hero_shrug.jpg", vars: ["g03b_shrug_ears.jpg"] }, cam: { keys: [{ t: 0, ...P(540, 560, 1.25, 540, 700), drift: { s: 0.01 } }, { t: F("a04", 0, 1) - 0.05, ...P(540, 520, 1.7, 540, 720), glide: 0.35 }] },
+        fx(tl, id, t0, L) { hud(id, H_EARTH); vari(tl, "a04", 0, t0 + F("a04", 0, 1), 0.2); JKI.badge(tl, L.light, t0, D("a04"), { kind: "ears", x: 840, y: 440, tone: "red", label: "โกหก = หูแดง", at: F("a04", 0, 1) + 0.1 }); } });
+      ai("a05", { plate: { src: "g04_cafe_leave.jpg" }, cam: JKC.move(P(540, 1000, 1.0, 540, 960), P(330, 980, 1.35, 440, 940), F("a05", 0, 1) - 0.05, 0.14), fx(tl, id) { hud(id, H_EARTH); } });
+
+      // ---------- a06–a07 the book, the manhole ----------
+      ai("a06", { plate: { mid: "g05p_street_plate.jpg" }, cam: { keys: [{ t: 0, ...P(500, 1000, 1.08, 540, 960), drift: { x: 70, s: 0.004 } }] },
+        fx(tl, id, t0, L) { hud(id, H_EARTH); const h = cut(L, `${id}-hero`, "g05c_hero_walk.png", 506, 1713); walk(tl, h, t0, D("a06"), -330, 150, -113); JKC.whipOut(tl, id, t0 + D("a06") - 0.16, 1);
+          const g = grp(L.light); g.innerHTML = `<g transform="translate(780,520) rotate(4)"><rect x="-150" y="-200" width="300" height="400" rx="12" fill="#d8352a"/><rect x="-150" y="-200" width="40" height="400" fill="#a8241c"/>
+            <text x="20" y="-90" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#f6d36a">พูดให้</text><text x="20" y="-34" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="46" fill="#f6d36a">คนเชื่อ</text>
+            <text x="20" y="90" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="120" fill="#fff2c8">7</text><text x="20" y="150" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#fff2c8">วัน</text></g>`;
+          pop(tl, g, t0 + F("a06", 0, 2) - 0.05, { origin: "780 520", from: 0.6, dur: 0.35 }); } });
+      ai("a07", { plate: { mid: "g06p_manhole_plate.jpg" }, camAt: P(540, 1000, 1.05, 540, 960), push: 0.01, shake: JKC.impact(1.6, 0.55, 16, JKC.dutch(5)),
+        sfxText: [{ text: "ตุ้บ!", x: 380, y: 760, size: 150, rot: -6, color: "#f6d36a", t: F("a07", 1, 0), end: D("a07") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_EARTH); JKC.whipIn(tl, id, t0, 1);
+          const w = grp(L.act); clipBelow(id, w, 1600); const h = cut(L, `${id}-hero`, "g05c_hero_walk.png", 506, 1713, w);
+          walk(tl, h, t0, 1.5, -220, -6, -113); tl.to(h, { y: 1320, rotation: 14, svgOrigin: h.dataset.o, duration: 0.42, ease: "power2.in" }, t0 + 1.55);
+          const bk = grp(L.light); bk.innerHTML = `<rect x="-100" y="-100" width="1280" height="2200" fill="#000"/>`; tl.set(bk, { opacity: 0 }, 0); tl.to(bk, { opacity: 1, duration: 0.5 }, t0 + D("a07") - 0.55); } });
+
+      // ---------- a08–a14 the queue on the clouds ----------
+      const cutA08 = F("a08", 0, 1) - 0.1;
+      split("a08", cutA08, aiSpec("a08", { plate: { src: "g07_wake_cu.jpg", vars: ["g07b_wake_open.jpg"] }, camAt: P(540, 760, 1.1, 540, 760), push: 0.02, captions: caps("a08").filter((c) => c.t < cutA08),
+          fx(tl, id, t0, L) { hud(id, H_DEAD()); vari(tl, "a08", 0, t0 + 0.55, 0.12); } }),
+        aiSpec("a08", { plate: { src: "g08_queue_wide.jpg" }, camAt: P(560, 1150, 1.0, 540, 1000), push: 0.015, captions: capsFrom("a08", cutA08), fx(tl, id) { hud(id, H_DEAD()); } }));
+      ai("a09", { plate: { src: "g09_gacha_god.jpg" }, cam: JKC.move(P(540, 760, 1.08, 540, 700), P(870, 1180, 1.5, 560, 900), 1.8, 1.5),
+        fx(tl, id, t0, L) { hud(id, H_DEAD()); const gum = grp(L.set); gum.innerHTML = `<circle cx="878" cy="1244" r="26" fill="#ff8ab8"/><circle cx="870" cy="1236" r="7" fill="#ffd0e4"/>`;
+          tl.fromTo(gum, { opacity: 0.95, scale: 0.2, svgOrigin: "878 1244" }, { scale: 1.7, svgOrigin: "878 1244", duration: 1.4, ease: "sine.in" }, t0 + F("a09", 0, 1)); tl.to(gum, { opacity: 0, duration: 0.05 }, t0 + F("a09", 0, 1) + 1.45); } });
+      ai("a10", { plate: { src: "g10_god_cu.jpg" }, camAt: P(540, 760, 1.08, 540, 760), push: 0.025, fx(tl, id) { hud(id, H_DEAD()); } });
+      ai("a11", { plate: { src: "g11_ken_crank.jpg", vars: ["g11b_ken_sword.jpg"] }, cam: JKC.move(P(620, 1100, 1.12, 540, 960), P(560, 900, 1.3, 540, 800), vo("a11", 1) - 0.1, 0.14), shake: JKC.impact(vo("a11", 1) - 0.05, 0.4, 10),
+        fx(tl, id, t0, L) { hud(id, H_DEAD()); vari(tl, "a11", 0, t0 + vo("a11", 1) - 0.1, 0.1); flashW(tl, L, t0 + vo("a11", 1) - 0.1, 0.9, 0.5);
+          JKI.badge(tl, L.light, t0, D("a11"), { kind: "star", x: 820, y: 400, tone: "yellow", label: "SSR", at: F("a11", 0, 1) }); } });
+      ai("a12", { plate: { src: "g12_chute.jpg" }, camAt: P(600, 1200, 1.12, 540, 1000), push: 0.02,
+        fx(tl, id, t0, L) { hud(id, H_DEAD()); const w = grp(L.act); w.setAttribute("transform", "translate(443.3,1110.3) scale(0.23)"); const c = cut(L, `${id}-cap`, "g12c_capsule.png", 551, 977, w);
+          tl.fromTo(c, { x: 0, y: 0, rotation: 0, svgOrigin: "551 977" }, { x: 420, y: 760, rotation: -230, svgOrigin: "551 977", duration: D("a12") - 0.5, ease: "sine.inOut" }, t0 + 0.15); } });
+      ai("a13", { plate: { src: "g13_open_capsule.jpg" }, camAt: P(540, 1000, 1.05, 540, 960), push: 0.01, blur: { set: 4 }, dark: 0.12,
+        fx(tl, id, t0, L) { hud(id, H_DEAD("จอมโกหก · F")); const g = grp(L.light); g.innerHTML = `<g transform="translate(540,760) rotate(-4)">${isCard("จอมโกหก", "F")}</g>`;
+          pop(tl, g, t0 + 0.1, { origin: "540 760", from: 0.6, dur: 0.4 });
+          const st = grp(L.light); st.innerHTML = `<g transform="translate(700,960) rotate(-14)"><rect x="-150" y="-60" width="300" height="120" rx="16" fill="none" stroke="#d8352a" stroke-width="12"/><text x="0" y="28" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="72" fill="#d8352a">กากสุด</text></g>`;
+          pop(tl, st, t0 + F("a13", 0, 2), { origin: "700 960", from: 2.2, dur: 0.25, ease: "power3.in" }); } });
+      ai("a14", { plate: { src: "g08b_queue_laugh.jpg" }, cam: JKC.move(P(540, 1100, 1.0, 540, 1000), P(505, 1040, 1.5, 540, 760), vo("a14", 0) + 1.0, 0.12),
+        sfxText: [{ text: "ฮ่าๆๆ", x: 120, y: 520, size: 110, rot: -8, color: "#f6d36a", t: 0.1, end: D("a14") - 0.1 }], fx(tl, id) { hud(id, H_DEAD("จอมโกหก · F")); } });
+
+      // ---------- a15–a17 the rules, the floor ----------
+      ai("a15", { plate: { src: "g10b_god_lens.jpg" }, camAt: P(540, 800, 1.06, 540, 780), push: 0.03, fx(tl, id) { hud(id, H_DEAD("จอมโกหก · F")); } });
+      ai("a16", { plate: { src: "g09_gacha_god.jpg" }, camAt: P(540, 900, 1.15, 540, 960), push: 0.006, blur: { set: 9 }, dark: 0.3,
+        fx(tl, id, t0, L) { hud(id, H_DEAD("จอมโกหก · F")); const g = grp(L.light);
+          const row = (y, n, a, b) => `<g id="${id}-rr${n}">${JKI.coin(n === 1 ? "believer" : "percent", -300, y, 0.66, `${id}-ic${n}`, n === 1 ? "blue" : "green")}
+            <text x="-238" y="${y - 6}" font-family="Kanit" font-weight="900" font-size="46" fill="#2e2a26">${a}</text><text x="-238" y="${y + 44}" font-family="Kanit" font-weight="700" font-size="34" fill="#6a5a4a">${b}</text></g>`;
+          g.innerHTML = `<g transform="translate(540,720)"><rect x="-380" y="-360" width="760" height="760" rx="30" fill="#f6efdf"/><rect x="-380" y="-360" width="760" height="110" rx="30" fill="#d8b84a"/>
+            <text x="0" y="-285" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#3a2a10">กฎหลังการ์ด</text>
+            ${row(-150, 1, "เชื่อ 1 คน = จริง 1%", "เรื่องที่คุณโม้")}${row(60, 2, "เชื่อครบ 100 คน", "= จริงทั้งหมด")}
+            <g id="${id}-rr3">${JKI.coin("whisper", -300, 250, 0.4, `${id}-ic3`, "grey")}
+              <text x="-262" y="258" font-family="Kanit" font-weight="600" font-size="15" fill="#9a8a6a">พูดเล่น… ก็นับ</text></g></g>`;
+          pop(tl, g, t0 + 0.05, { origin: "540 720", from: 0.85, dur: 0.35 });
+          [1, 2, 3].forEach((n) => { tl.set(`#${id}-rr${n}`, { opacity: 0 }, 0); const a = t0 + vo("a16", n - 1) + (n === 3 ? 0.9 : 0.05); tl.to(`#${id}-rr${n}`, { opacity: 1, duration: 0.25 }, a); JKI.enterC(tl, `${id}-ic${n}`, a); JKI.idle(tl, `${id}-ic${n}`, n === 1 ? "believer" : n === 2 ? "percent" : "whisper", a + 0.8, t0 + D("a16") - a - 0.8); });
+          const lens = grp(L.light); lens.innerHTML = `<defs><clipPath id="${id}-lc"><circle r="118"/></clipPath></defs><g transform="translate(400,972)">
+            <circle r="118" fill="#fbf6ea"/><g clip-path="url(#${id}-lc)"><text x="0" y="-8" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="44" fill="#7a5a3a">พูดเล่น…</text><text x="0" y="50" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#a8241c">ก็นับ</text></g>
+            <circle r="118" fill="#e8f4ff" opacity=".18"/><circle r="118" fill="none" stroke="#d8b84a" stroke-width="14"/><path d="M-70,-70q30,-30 70,-34" stroke="#fff" stroke-width="8" fill="none" opacity=".8"/>
+            <rect x="80" y="80" width="26" height="130" rx="12" fill="#8a5a32" transform="rotate(-45)"/></g>`;
+          const at3 = t0 + vo("a16", 2) + 0.9;
+          tl.set(lens, { opacity: 0 }, 0); tl.fromTo(lens, { opacity: 0, x: 260, y: -60 }, { opacity: 1, x: 0, y: 0, duration: 0.3, ease: "power2.out" }, at3);
+          tl.to(lens, { x: 360, y: 120, opacity: 0, duration: 0.3, ease: "power2.in" }, Math.min(t0 + D("a16") - 0.35, at3 + 1.3)); } });
+      ai("a17", { plate: { mid: "g15p_floor_plate.jpg" }, camAt: P(550, 1100, 1.08, 540, 960), push: 0.01, shake: JKC.impact(F("a17", 0, 1), 0.5, 12, JKC.dutch(6)),
+        fx(tl, id, t0, L) { hud(id, H_DEAD("จอมโกหก · F")); const hole = grp(L.act); hole.innerHTML = `<ellipse cx="550" cy="1652" rx="0" ry="0" fill="#2a2440"/>`;
+          tl.to(hole.firstElementChild, { attr: { rx: 190, ry: 46 }, duration: 0.25, ease: "back.out(2)" }, t0 + F("a17", 0, 1) - 0.1);
+          const w = grp(L.act); clipBelow(id, w, 1662); const h = cut(L, `${id}-hero`, "g15c_hero_stand.png", 550, 1658, w); breathe(tl, h, t0, F("a17", 0, 1)); sway(tl, h, t0, F("a17", 0, 1), 0.6);
+          tl.to(h, { y: 1500, rotation: 0, scaleX: 1, scaleY: 1, svgOrigin: h.dataset.o, duration: 0.55, ease: "power2.in" }, t0 + F("a17", 0, 1) + 0.12); } });
+
+      // ---------- a18–a20 the starting town ----------
+      ai("a18", { plate: { mid: "g16_town_wide.jpg", vars: ["g16b_town_land.jpg"] }, camAt: P(540, 1000, 1.0, 540, 960), push: 0.015, shake: JKC.impact(1.35, 0.5, 18),
+        sfxText: [{ text: "ตึง!", x: 560, y: 1040, size: 100, rot: 6, color: "#f6d36a", t: 1.4, end: 2.6 }],
+        fx(tl, id, t0, L) { hud(id, H_TOWN); JKC.bars(tl, L, t0, D("a18"), 150); const h = cut(L, `${id}-hero`, "g16c_hero_fall.png", 528, 870);
+          tl.fromTo(h, { y: -1300, rotation: 24, scale: 0.55, svgOrigin: "528 870" }, { y: 520, rotation: -8, scale: 0.8, svgOrigin: "528 870", duration: 1.35, ease: "power1.in" }, t0); tl.set(h, { opacity: 0 }, t0 + 1.35);
+          tl.set(`#ai${id.replace(/^s\d+$/, "a18")}-v0`, {}, 0); tl.set(`#aia18-v0`, { opacity: 1 }, t0 + 1.35);
+          const d = grp(L.act); d.innerHTML = [0, 1, 2, 3, 4].map((k) => `<circle cx="${440 + k * 50}" cy="1560" r="${26 + k * 4}" fill="#d8c8a8" opacity=".75"/>`).join("");
+          tl.set(d, { opacity: 0 }, 0); tl.fromTo(d, { opacity: 0.9, scale: 0.4, svgOrigin: "540 1565" }, { opacity: 0, scale: 1.8, svgOrigin: "540 1565", duration: 0.9 }, t0 + 1.35); } });
+      // the ranking list drawn over the painted parchment (x 330–620, y 440–1640): ten heroes, then a very long tail down to you
+      const BOARD = (id) => { const names = ["อัศวินแดง", "นักธนูเงา", "จอมเวทน้ำแข็ง", "หมอผีสายฟ้า", "นักดาบพายุ", "นางฟ้าไฟ", "จอมโจรเงา", "นักรบหมีทอง", "พ่อมดดาว", "เด็กดาบแสง"];
+        return `<g id="${id}-board"><polygon points="332,452 618,446 604,1636 346,1640" fill="#efe1c0" opacity=".9"/>
+          <text x="475" y="520" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="36" fill="#5a3a1a">อันดับผู้กล้า</text>
+          ${names.map((n, i) => `<text x="356" y="${586 + i * 46}" font-family="Kanit" font-weight="800" font-size="27" fill="#4a3014">${i + 1}.</text><text x="404" y="${586 + i * 46}" font-family="Kanit" font-weight="700" font-size="27" fill="${i === 9 ? "#a8241c" : "#4a3014"}">${n}</text>`).join("")}
+          ${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<text x="356" y="${1060 + i * 50}" font-family="Kanit" font-weight="700" font-size="22" fill="#7a6040" opacity=".7">${[11, 12, 50, 300, 1200, 5000, 8000, 9998][i]}. ……………</text>`).join("")}
+          <text x="356" y="1530" font-family="Kanit" font-weight="900" font-size="30" fill="#a8241c">9,999.</text><text x="470" y="1530" font-family="Kanit" font-weight="900" font-size="30" fill="#a8241c">คุณ (จอมโกหก F)</text></g>`; };
+      ai("a19", { plate: { src: "g17_board.jpg" }, camAt: P(480, 900, 1.2, 540, 820), push: 0.012,
+        fx(tl, id, t0, L) { hud(id, H_TOWN); const b = grp(L.set); b.innerHTML = BOARD(id); const g = grp(L.set); g.innerHTML = `<rect x="338" y="968" width="276" height="48" rx="10" fill="none" stroke="#f6d36a" stroke-width="7"/>`;
+          tl.set(g, { opacity: 0 }, 0); tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: 0.2, repeat: 3, yoyo: true }, t0 + F("a19", 0, 1)); } });
+      ai("a20", { plate: { src: "g17_board.jpg" }, cam: { keys: [{ t: 0, ...P(480, 940, 1.2, 540, 820), drift: { s: 0.005 } }, { t: F("a20", 0, 1) - 0.25, ...P(480, 1500, 2.0, 540, 900), glide: 0.45 }] },
+        fx(tl, id, t0, L) { hud(id, H_TOWN); const b = grp(L.set); b.innerHTML = BOARD(id); const g = grp(L.set); g.innerHTML = `<g transform="translate(560,1590) rotate(-8)"><rect x="-80" y="-32" width="160" height="64" rx="10" fill="none" stroke="#d8352a" stroke-width="7"/><text x="0" y="15" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#d8352a">ท้ายสุด</text></g>`;
+          pop(tl, g, t0 + F("a20", 0, 1) + 0.35, { origin: "560 1590", from: 2, dur: 0.22, ease: "power3.in" }); JKI.badge(tl, L.light, t0, D("a20"), { kind: "snail", x: 300, y: 520, tone: "red", label: "อันดับ 9,999", at: F("a20", 0, 1) + 0.6 }); } });
+
+      // ---------- a21 next episode · a22 logo ----------
+      ai("a21", { plate: { src: "g17_board.jpg" }, camAt: P(540, 900, 1.1, 540, 900), push: 0.01, dark: 0.45, blur: { set: 12 }, captions: [],
+        fx(tl, id, t0, L) { NkV.chalkEnd(tl, grp(L.light), t0, D("a21"), { big: "ดูเรื่องเต็ม", q: "ทาง YouTube", tag: "ดูต่อได้ที่", foot: "กดติดตาม แล้วดูเรื่องเต็มที่ YouTube" });
+          const yt = grp(L.light); yt.innerHTML = `<g transform="translate(540,1430)"><rect x="-150" y="-50" width="100" height="100" rx="26" fill="#e8302a"/><path d="M-112,-24L-112,24L-72,0Z" fill="#fff"/>
+            <text x="-30" y="-6" font-family="Kanit" font-weight="900" font-size="44" fill="#ffffff">Rod Mai Club</text><text x="-30" y="38" font-family="Kanit" font-weight="700" font-size="28" fill="#f2c55c">เรื่องเต็มทุกตอน</text></g>`;
+          tl.set(yt, { opacity: 0 }, 0); tl.fromTo(yt, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 1.5); } });
+      shot("a22", { light: false, captions: [], fx(tl, id, t0, L) { const g = grp(L.light); NkUI.logo(g); pop(tl, g, t0 + 0.05, { from: 0.9, dy: 0, origin: "540 880" }); } });

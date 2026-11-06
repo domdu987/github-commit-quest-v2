@@ -1,0 +1,98 @@
+[
+ {
+  "name": "g01b_hero_cu_ears",
+  "op": "edit",
+  "prompt": "Edit the FIRST image. Keep everything else exactly the same (same framing, same colours, same lighting, same character design). Change only: his ears glow bright red like brake lights, and a small sweat drop appears on his temple. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "ai/g01_hero_cu.jpg"
+  ]
+ },
+ {
+  "name": "g03b_shrug_ears",
+  "op": "edit",
+  "prompt": "Edit the FIRST image. Keep everything else exactly the same (same framing, same colours, same lighting, same character design). Change only: his ears glow bright red like brake lights, his eyes look worried, and a small sweat drop appears on his temple. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "ai/g03_hero_shrug.jpg"
+  ]
+ },
+ {
+  "name": "g05p_street_plate",
+  "op": "edit",
+  "prompt": "Edit the FIRST image. Keep everything else exactly the same (same framing, same colours, same lighting, same character design). Remove the walking man completely and fill in the sidewalk and street naturally. Nobody in the image. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "ai/g05_street_walk.jpg"
+  ]
+ },
+ {
+  "name": "g07b_wake_open",
+  "op": "edit",
+  "prompt": "Edit the FIRST image. Keep everything else exactly the same (same framing, same colours, same lighting, same character design). Change only: his eyes are now wide open in surprise and his mouth is a small open 'o'. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "ai/g07_wake_cu.jpg"
+  ]
+ },
+ {
+  "name": "g08b_queue_laugh",
+  "op": "edit",
+  "prompt": "Edit the FIRST image. Keep everything else exactly the same (same framing, same colours, same lighting, same character design). Change only: the three pale dead people and the blond boy are all laughing hard, pointing at the man in the navy suit, who shrinks shyly with a sad face and his ears glowing bright red. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "ai/g08_queue_wide.jpg"
+  ]
+ },
+ {
+  "name": "g10_god_cu",
+  "op": "edit",
+  "prompt": "Close-up bust shot of the GODDESS from the second image (same long lilac hair, thin gold halo, white toga): she sits behind her counter, bored half-closed eyes, chin resting on her hand, chewing gum, talking lazily; the golden gacha machine blurred behind her on the left. Her face fills the upper-middle of the frame. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "ai/g09_gacha_god.jpg"
+  ]
+ },
+ {
+  "name": "g11_ken_crank",
+  "op": "edit",
+  "prompt": "On the clouds in heaven: KEN (a confident teenage boy with spiky blond hair, a red scarf, a white tunic with a brown belt) (same boy as the blond boy with the red scarf in the second image) grips the big crank handle of a giant golden gacha capsule machine (a huge glass dome full of colorful capsules on a golden base with a big crank handle and a round metal chute mouth at the bottom) with both hands, excited grin, turning it; HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) (same man as in the third image) stands behind him watching nervously. Medium wide shot, both full bodies visible. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "ai/g08_queue_wide.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g15p_floor_plate",
+  "op": "edit",
+  "prompt": "Edit the FIRST image. Keep everything else exactly the same (same framing, same colours, same lighting, same character design). Remove the man completely and fill in the cloud floor naturally. Nobody in the image. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "ai/g15_floor.jpg"
+  ]
+ },
+ {
+  "name": "g16b_town_land",
+  "op": "edit",
+  "prompt": "Edit the FIRST image. Keep the town exactly the same. Add HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) (the man from the second image) crouching on his hands and knees in the centre foreground on the cobblestones, dizzy, mouth open, small dust puffs around him. Medium wide shot. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "ai/g16_town_wide.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g05c_hero_walk",
+  "op": "cut",
+  "src": "ai/g05_street_walk.jpg"
+ },
+ {
+  "name": "g12c_capsule",
+  "op": "cut",
+  "src": "ai/g12_capsule.jpg"
+ },
+ {
+  "name": "g15c_hero_stand",
+  "op": "cut",
+  "src": "ai/g15_floor.jpg"
+ },
+ {
+  "name": "g16c_hero_fall",
+  "op": "cut",
+  "src": "ai/g16_fall.jpg"
+ }
+]

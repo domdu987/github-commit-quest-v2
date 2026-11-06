@@ -1,0 +1,12 @@
+STYLE = ("Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. "
+         "Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.")
+HERO = "HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie)"
+AUNT = "AUNT (a plump Thai middle-aged woman with short permed dark hair, pink blouse, dark trousers, handbag)"
+KEN = "KEN (a confident teenage boy with spiky blond hair, a red scarf, a white tunic with a brown belt)"
+GOD = "GODDESS (a bored young goddess with long lilac hair, a thin gold halo floating above her head, a white toga with a gold belt)"
+SOULS = "three pale ghostly dead people in plain clothes, each holding a small paper queue ticket"
+GACHA = "a giant golden gacha capsule machine (a huge glass dome full of colorful capsules on a golden base with a big crank handle and a round metal chute mouth at the bottom)"
+CAFE = "inside a small cozy café at dusk, warm window light, a city street with purple evening sky outside"
+STREET = "an evening city street (Bangkok-like) with warm street lamps, shop fronts with blank signs, a purple-orange dusk sky"
+HEAVEN = "on top of fluffy white clouds in heaven under a soft golden glowing sky"
+TOWN = "a medieval fantasy starting town square at golden hour: cobblestones, half-timbered houses with wooden beams, a stone fountain, market stalls with blank banners, a few villagers far away"

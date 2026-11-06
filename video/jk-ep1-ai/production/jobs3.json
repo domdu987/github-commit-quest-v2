@@ -1,0 +1,26 @@
+[
+ {
+  "name": "g06p_manhole_plate",
+  "op": "edit",
+  "refs": [
+   "ai/g05p_street_plate.jpg"
+  ],
+  "prompt": "Edit the FIRST image. Keep everything else exactly the same (same framing, same colours, same lighting, same character design). Add an open manhole on the sidewalk in the right third of the image: a dark round hole with its round iron cover lying next to it. Nobody in the image. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image."
+ },
+ {
+  "name": "g10b_god_lens",
+  "op": "edit",
+  "refs": [
+   "ai/g10_god_cu.jpg"
+  ],
+  "prompt": "Edit the FIRST image. Keep everything else exactly the same (same framing, same colours, same lighting, same character design). Change only: she now holds up a large golden magnifying glass with a wooden handle in front of her, looking through it with one eye squinting, curious. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image."
+ },
+ {
+  "name": "g11b_ken_sword",
+  "op": "edit",
+  "refs": [
+   "ai/g11_ken_crank.jpg"
+  ],
+  "prompt": "Edit the FIRST image. Keep everything else exactly the same (same framing, same colours, same lighting, same character design). Change: a burst of golden light explodes from the gacha machine; the blond boy now raises a glowing white light sword high above his head with both hands, shouting with joy, eyes sparkling; the man in the navy suit behind him shields his eyes from the glare. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image."
+ }
+]

@@ -1,0 +1,64 @@
+      // ---------- สกิลจอมโกหก EP.1 · storytelling clip (lane A) · the channel look (slender cast, lit sets) ----------
+      Rig.FLAT = true;
+      Engine.look = { ...(Engine.look || {}), vignette: 0.5, grain: 0.05 };
+      const NS = "http://www.w3.org/2000/svg";
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const ID = fr(540, 960, 1.0, 540, 960);
+      const grp = (parent) => { const g = document.createElementNS(NS, "g"); parent.appendChild(g); return g; };
+      const pop = (tl, g, at, o = {}) => tl.fromTo(g, { opacity: 0, scale: o.from ?? 0.8, y: o.dy ?? -18, svgOrigin: o.origin || "540 960" },
+        { opacity: 1, scale: 1, y: 0, svgOrigin: o.origin || "540 960", duration: o.dur ?? 0.4, ease: o.ease || "back.out(2.2)" }, at);
+      const out = (tl, g, at, d = 0.18) => tl.to(g, { opacity: 0, duration: d }, at);
+      const swingG = (tl, sel, t0, dur, amp = 3, org = "0 0") => tl.fromTo(sel, { rotation: -amp, svgOrigin: org }, { rotation: amp, svgOrigin: org, duration: 1.2, repeat: Math.ceil(dur / 1.2), yoyo: true, ease: "sine.inOut" }, t0);
+      const shake = (tl, g, t0, dur, a = 3, p = 0.05) => tl.fromTo(g, { x: -a }, { x: a, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "none" }, t0);
+      const DAY = { dark: 0.02, light: { from: "right", rim: "#fff0d0", rimOp: 0.6, rimW: 4, shade: "#3a2440", shadeOp: 0.25, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#fff2d8", bottom: "#4a3a50", op: 0.16 } };
+      const NIGHT = { dark: 0.1, light: { from: "right", rim: "#ffd9a0", rimOp: 0.55, rimW: 4, shade: "#1a1430", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#ffe2b0", bottom: "#1a1428", op: 0.24 } };
+      const spec = (k, o) => ({ ...(o.night ? NIGHT : DAY), cam: o.cam || { keys: [{ t: 0, ...(o.camAt || ID), drift: { s: o.push ?? 0.012 } }] }, captions: o.captions ?? caps(k), ...o });
+      const shot = (k, o) => add(k, spec(k, o));
+      const talk = (k, i, m = "o") => [[vo(k, i), voEnd(k, i), m]];
+      const swap = (tl, id, t, a = 0, b = 1, d = 0.12) => { tl.set(`#${id}-a${b}`, { opacity: 0 }, 0); tl.to(`#${id}-a${a}`, { opacity: 0, duration: d }, t); tl.to(`#${id}-a${b}`, { opacity: 1, duration: d }, t); };
+      const tagAt = (tl, L, x, y, text, at, o = {}) => { const g = grp(L.act); g.innerHTML = Lot.tag(x, y, text, o); pop(tl, g, at, { origin: `${x} ${y}`, from: 0.5 }); return g; };
+      const capAt = (id, y) => { const c = document.getElementById(`${id}-caps`); if (c) c.style.setProperty("top", `${y}px`, "important"); };
+      const ink = Lot.INK;
+      // a counter chip in the corner (screen space): "1/5"
+      const chip = (tl, L, steps, o = {}) => { const x = o.x ?? 900, y = o.y ?? 250;
+        const g = grp(L.light); g.innerHTML = `<g transform="translate(${x},${y})"><circle r="78" fill="#fbf7ee" stroke="${ink}" stroke-width="7"/>
+          ${steps.map(([, txt], i) => `<text id="${o.id}-c${i}" x="0" y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="${ink}" opacity="0">${txt}</text>`).join("")}
+          <text x="0" y="-36" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="22" fill="#a8305a">${o.label || "ที่ซ่อน"}</text></g>`;
+        steps.forEach(([at], i) => { tl.set(`#${o.id}-c${i}`, { opacity: 1 }, at); if (i + 1 < steps.length) tl.set(`#${o.id}-c${i}`, { opacity: 0 }, steps[i + 1][0]);
+          tl.fromTo(g, { scale: 1.25, svgOrigin: `${x} ${y}` }, { scale: 1, svgOrigin: `${x} ${y}`, duration: 0.25, ease: "back.out(3)", immediateRender: false }, at); });
+        return g; };
+      const sparkle = (x, y, r = 22) => `<path d="M${x},${y - r}Q${x + 4},${y - 4} ${x + r},${y}Q${x + 4},${y + 4} ${x},${y + r}Q${x - 4},${y + 4} ${x - r},${y}Q${x - 4},${y - 4} ${x},${y - r}Z" fill="#fff6b0" stroke="${ink}" stroke-width="2.5"/>`;
+
+
+      // the status bar (top left), per shot: [[label, value, colour]]
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .sghud { position: absolute; z-index: 58; left: 44px; top: 120px; display: flex; flex-direction: row; white-space: nowrap; width: max-content; align-items: center; gap: 16px;
+          padding: 12px 22px; border-radius: 18px; background: rgba(18,20,30,.7); border: 1.5px solid rgba(244,236,216,.2); box-shadow: 0 8px 24px rgba(0,0,0,.35); font-family: Kanit; color: #f4ecd8; }
+        .sghud b { font: 800 34px/1 Kanit; } .sghud small { font: 600 19px/1 Kanit; opacity: .65; } .sghud i { width: 1.5px; height: 30px; background: rgba(244,236,216,.25); }
+        .capbox { font: 800 54px/1.25 Kanit !important; }
+      </style>`);
+      const hud = (id, items) => { const el = document.getElementById(id); if (!el) return;
+        el.insertAdjacentHTML("beforeend", `<div class="sghud">${items.map(([l, v, c], i) => `${i ? "<i></i>" : ""}<small>${l}</small><b style="color:${c || "#f4ecd8"}">${v}</b>`).join("")}</div>`); };
+      const ears = (tl, aid, at, on = true, d = 0.25) => tl.to(`#${aid} .jkEar`, { opacity: on ? 1 : 0, duration: d }, at);
+
+      // ---------- AI-art look (owner 6 Nov): painted plates + cut-outs from fal (768×1344 → 1080×1920), animated as 2.5D layers ----------
+      Engine.look = { ...(Engine.look || {}), vignette: 0.3, grain: 0.05 };
+      const AI = "assets/ai/";
+      const IMG = (src, o = {}) => `<image href="${AI}${src}" x="0" y="0" width="1080" height="1920" preserveAspectRatio="xMidYMid slice"${o.id ? ` id="${o.id}"` : ""}${o.op !== undefined ? ` opacity="${o.op}"` : ""}/>`;
+      // plate: o.src in the set layer (parallax 1) · o.mid behind cut-outs (parallax 0.6 → a little depth on pushes) · o.vars: variants of the plate (eyes open, ears red…) faded in with vari()
+      window.Sets.aiPlate = (L, o) => { if (o.mid) L.mid.insertAdjacentHTML("beforeend", IMG(o.mid, { id: `${o.id}-mid` })); if (o.src) L.set.insertAdjacentHTML("beforeend", IMG(o.src, { id: `${o.id}-plate` }));
+        (o.vars || []).forEach((v, i) => L.set.insertAdjacentHTML("beforeend", IMG(v, { id: `${o.id}-v${i}`, op: 0 }))); };
+      const aiSpec = (k, o) => spec(k, { light: false, depth: false, grade: null, dark: 0, set: "aiPlate", ...o, setOpts: { id: `ai${k}`, ...(o.plate || {}) } });
+      const ai = (k, o) => add(k, aiSpec(k, o));
+      const vari = (tl, k, i, at, d = 0.15) => tl.to(`#ai${k}-v${i}`, { opacity: 1, duration: d, ease: "none" }, at);
+      const flashW = (tl, L, at, op = 0.85, d = 0.35) => { const g = grp(L.light); g.innerHTML = `<rect x="-100" y="-100" width="1280" height="2200" fill="#fff8e0"/>`; tl.set(g, { opacity: 0 }, 0); tl.fromTo(g, { opacity: op }, { opacity: 0, duration: d, ease: "power2.out", immediateRender: false }, at); return g; };
+      // a painted character cut-out in the act layer; motion is about its feet (fx, fy in frame px)
+      const cut = (L, id, src, fx = 540, fy = 1700, parent) => { const g = grp(parent || L.act); g.id = id; g.dataset.o = `${fx} ${fy}`; g.innerHTML = IMG(src); return g; };
+      const breathe = (tl, g, t0, dur, amp = 0.012, p = 1.5) => tl.fromTo(g, { scaleX: 1, scaleY: 1, svgOrigin: g.dataset.o }, { scaleY: 1 + amp, scaleX: 1 - amp * 0.4, svgOrigin: g.dataset.o, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "sine.inOut" }, t0);
+      const sway = (tl, g, t0, dur, deg = 0.8, p = 2.2) => tl.fromTo(g, { rotation: -deg, svgOrigin: g.dataset.o }, { rotation: deg, svgOrigin: g.dataset.o, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "sine.inOut" }, t0);
+      const tremble = (tl, g, t0, dur, a = 2.5, p = 0.06) => tl.fromTo(g, { x: -a }, { x: a, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "none" }, t0);
+      const walk = (tl, g, t0, dur, x0, x1, y0 = 0, bob = 7, p = 0.24) => { tl.fromTo(g, { x: x0, y: y0 }, { x: x1, duration: dur, ease: "none" }, t0); tl.fromTo(g, { y: y0 }, { y: y0 - bob, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "sine.inOut" }, t0); };
+      // a clip that hides a cut-out below a line (falling into a hole)
+      const clipBelow = (id, g, y) => { document.getElementById(`${id}-defs`).insertAdjacentHTML("beforeend", `<clipPath id="${id}-cb" clipPathUnits="userSpaceOnUse"><rect x="-400" y="-400" width="1880" height="${y + 400}"/></clipPath>`); g.setAttribute("clip-path", `url(#${id}-cb)`); };

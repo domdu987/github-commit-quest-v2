@@ -10,7 +10,7 @@ skill นี้ **เสริม** `rodmai-club-video` (คู่มือส�
 
 ## 0. แชทใหม่เริ่มตรงนี้
 
-1. อ่านไฟล์นี้ให้จบ แล้วอ่าน `references/pipeline.md` (คำสั่งทุกขั้น) · `references/look-camera-icons.md` (ภาพ กล้อง ไอคอน และ API) · `references/landscape-and-longcut.md` (16:9)
+1. อ่านไฟล์นี้ให้จบ แล้วอ่าน `references/pipeline.md` (คำสั่งทุกขั้น) · `references/look-camera-icons.md` (ภาพ กล้อง ไอคอน และ API) · `references/landscape-and-longcut.md` (16:9) · `references/ai-art.md` (ลุคภาพ AI ที่เจ้าของเลือก 6 พ.ย.: วาดด้วย fal แล้วขยับในเอนจิน)
 2. **ต้นแบบทองคำ** = `video/jk-ep1/` … `video/jk-ep4/` (สกิลจอมโกหก) และ `video/jk-long/` (ตอนยาว)
    - โค้ดช็อต: `video/jk-ep1/production/body_shots.part` (EP.1 แบบ A ที่ผู้ใช้เลือก) · `video/jk-ep3/production/body_shots.part` (โรงเตี๊ยม หน้าต่าง มุมมองลอดถัง มังกร)
    - ไลบรารีเวอร์ชันที่เรนเดอร์จริง: `video/jk-ep1/lib/` (engine.js flat.js sig.js jkcast.js jkset.js jkdepth.js jkicons.js jkcam.js nkui3.js ui.js gameui.js …) **ใช้ชุดนี้เป็นฐานของเรื่องใหม่** (ชุดใน `video/jk-ep3/lib/` ใหม่กว่า 1 ขั้น: jkcam.js มีมุมมองลอดถังแบบ frame-relative — ใช้ชุด ep3 ถ้ามีทั้งสองให้เลือก)

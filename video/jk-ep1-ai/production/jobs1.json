@@ -1,0 +1,134 @@
+[
+ {
+  "name": "g01_hero_cu",
+  "op": "edit",
+  "prompt": "Close-up bust shot of HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie), worried face with a small frown, looking straight at the viewer, hands down out of frame, standing on top of fluffy white clouds in heaven under a soft golden glowing sky. His face fills the upper-middle of the frame. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g02_cafe",
+  "op": "edit",
+  "prompt": "Wide shot inside a small cozy café at dusk, warm window light, a city street with purple evening sky outside: AUNT (a plump Thai middle-aged woman with short permed dark hair, pink blouse, dark trousers, handbag) sits at a small round table with a coffee cup, looking sideways unimpressed; HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) stands beside the table holding a brown briefcase in one hand and presenting a blank brochure with the other, smiling nervously. Full bodies visible. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g03_hero_shrug",
+  "op": "edit",
+  "prompt": "Medium close-up of HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) shrugging with both palms up, awkward sad smile, inside a small cozy café at dusk, warm window light, a city street with purple evening sky outside blurred behind him. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g04_cafe_leave",
+  "op": "edit",
+  "prompt": "Wide shot inside a small cozy café at dusk, warm window light, a city street with purple evening sky outside: AUNT (a plump Thai middle-aged woman with short permed dark hair, pink blouse, dark trousers, handbag) has just stood up from the table, startled, grabbing her handbag and turning to leave toward the door on the left; HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) stands behind the table covering his face with one hand in embarrassment, his ears glowing bright red. Full bodies visible. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g05_street_walk",
+  "op": "edit",
+  "prompt": "Wide shot of an evening city street (Bangkok-like) with warm street lamps, shop fronts with blank signs, a purple-orange dusk sky: HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) walks along the sidewalk from left to right, holding a red book up in front of his face and reading it, not looking ahead. Full body side view, feet on the sidewalk, lots of street visible ahead of him on the right. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g07_wake_cu",
+  "op": "edit",
+  "prompt": "Extreme close-up of HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie)'s face, eyes closed, calm and still, his head surrounded by bright white clouds and a glowing golden sky. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g08_queue_wide",
+  "op": "edit",
+  "prompt": "Wide shot on top of fluffy white clouds in heaven under a soft golden glowing sky: a queue of people standing in a line from left to right: three pale ghostly dead people in plain clothes, each holding a small paper queue ticket, then HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) looking around confused, then KEN (a confident teenage boy with spiky blond hair, a red scarf, a white tunic with a brown belt) at the end of the line grinning. Far ahead on the right, a giant golden gacha capsule machine (a huge glass dome full of colorful capsules on a golden base with a big crank handle and a round metal chute mouth at the bottom) glows. Full bodies, feet on the clouds. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g09_gacha_god",
+  "op": "edit",
+  "prompt": "Wide shot on top of fluffy white clouds in heaven under a soft golden glowing sky: a giant golden gacha capsule machine (a huge glass dome full of colorful capsules on a golden base with a big crank handle and a round metal chute mouth at the bottom) stands in the center; beside it on the right a small counter where GODDESS (a bored young goddess with long lilac hair, a thin gold halo floating above her head, a white toga with a gold belt) sits bored, chin resting on her hand, chewing gum with a tiny pink bubble. Full scene visible. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g12_chute",
+  "op": "edit",
+  "prompt": "Close-up over the shoulder of HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) (the back of his head and his navy shoulder blurred in the left foreground): the round metal chute mouth at the bottom of a giant golden gacha capsule machine (a huge glass dome full of colorful capsules on a golden base with a big crank handle and a round metal chute mouth at the bottom), empty, waiting; cloud floor below; golden light. No capsule. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g12_capsule",
+  "op": "edit",
+  "prompt": "A single plain grey round gacha capsule (two matte grey halves with a thin seam) sitting on a pure white background, soft shadow under it, slightly glossy, product shot, centered. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg"
+  ]
+ },
+ {
+  "name": "g13_open_capsule",
+  "op": "edit",
+  "prompt": "Close-up: two halves of an opened plain grey gacha capsule lying on the fluffy cloud floor on top of fluffy white clouds in heaven under a soft golden glowing sky, soft glow between them, shallow depth of field, nothing inside, empty. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg"
+  ]
+ },
+ {
+  "name": "g15_floor",
+  "op": "edit",
+  "prompt": "Wide shot on top of fluffy white clouds in heaven under a soft golden glowing sky: HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) stands alone in the center of the cloud floor looking down nervously at the clouds under his feet; a lot of cloud floor visible around him; golden sky above. Full body. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g16_town_wide",
+  "op": "edit",
+  "prompt": "Wide shot of a medieval fantasy starting town square at golden hour: cobblestones, half-timbered houses with wooden beams, a stone fountain, market stalls with blank banners, a few villagers far away, big sky above, nobody in the foreground, the square open and empty in the center. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg"
+  ]
+ },
+ {
+  "name": "g16_fall",
+  "op": "edit",
+  "prompt": "HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) falling through the air, arms and legs flailing, panicked face with mouth open, seen from the side, full body, on a pure white background, nothing else. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ },
+ {
+  "name": "g17_board",
+  "op": "edit",
+  "prompt": "In front of a wooden guild hall in a medieval fantasy starting town square at golden hour: cobblestones, half-timbered houses with wooden beams, a stone fountain, market stalls with blank banners, a few villagers far away: a tall wooden notice board with a long parchment ranking list pinned on it (rows of blank lines, no letters), the list runs down very long to the bottom; HERO (the same man as in the reference images: skinny Thai man about 30, neat short black hair with one cowlick standing up, round glasses, cheap navy-blue suit, white shirt, mustard-yellow tie) stands with his back to the camera looking up at the board, small compared with the board; golden hour light. Keep EXACTLY the same art style as the reference image: smooth stylized cartoon with soft 3D-like shading, round heads, tiny dot eyes, small round mouths, clean simple shapes, soft gradients, cinematic key light with a gentle pink or warm rim light, subtle film grain, blurred background with depth of field. Vertical 9:16 portrait composition. No text, no letters, no logos, no watermark anywhere in the image.",
+  "refs": [
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/ref_gpt.jpg",
+   "/tmp/claude-0/-home-user-github-commit-quest-v2/9c3eda1a-2051-532f-961a-8e1f745caea6/scratchpad/mw/aitest/t1_same_hero.jpg"
+  ]
+ }
+]
