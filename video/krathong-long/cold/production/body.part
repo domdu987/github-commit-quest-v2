@@ -1,0 +1,103 @@
+      // ================= เรือล่มคืนลอยกระทง ฉบับเต็ม · cold open (fifty years ago, 18.75 s) + title (3 s) · 16:9 from the start =================
+      // the past wears pastWash (old-photo sepia); no more than three faces: the boatman, หยิบ at eighteen, the boy; everyone else is a round head
+
+      // ---------- C1 · 1 cut: the same landing fifty years ago, extreme wide, a slow push: the boat comes in heavy, หยิบ on the landing ----------
+      add("C1", {
+        extra(L) {
+          pier(L, { seed: 41, past: true });
+        },
+        ...NIGHT, light: { ...MOONL, from: "left" }, blur: { sky: 1, far: 1, fg: 3 },
+        cam: { keys: [{ t: 0, ...frL(420, 990, 1.0) }, { t: D("C1"), glide: D("C1"), ...frL(520, 1020, 1.12) }] },
+        land: { y0: LY0 },
+        actors: [A("yibYoung", -150, 1084, 0.4, [{ t: 0, mode: "wave", eyes: "normal", mouth: "smile" }])],
+        captions: capsQ("C1"),
+        fx(tl, id, t0, L) {
+          burstAt(tl, L, `${id}-b1`, 1300, 300, 200, t0 + 1.2, "#ffd24a", "#ff6aa8");
+          pastWash(L);
+        },
+      });
+      // ---------- C2 · 2 cuts: the boatman at the stern, arm up: "we're here! you can get up!" (MS) → everyone rises at once, the boat tips (WS) ----------
+      const C2C = 2.2;
+      add("C2", {
+        extra(L) { boatAtPier(L, { sink: 0.9, tilt: -2, seed: 42, noCrowd: true, past: true }); },
+        ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0a0", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(1000, 1060, 3.2) }, { t: C2C - 0.05, glide: C2C, ...frL(1000, 1070, 3.4) },
+          { t: C2C, ...frL(600, 1080, 1.35) }, { t: D("C2"), glide: D("C2") - C2C, ...frL(600, 1090, 1.42) }] },
+        land: { y0: LY0 },
+        actors: [A("driverOld", 1005, 1188, 0.36, [{ t: 0, mode: "raise", eyes: "normal", mouth: "laugh" }], { flip: true, talk: [TK("C2", 0, "laugh")] })],
+        captions: capsQ("C2"),
+        fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 230, 900, 1110, 8, 42, 0.8, t0 + C2C + 0.3, 44, -2);
+          put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.9, tilt: -2, water: true, wake: 1, past: true })));
+          lean(tl, id, t0, 0); leanTo(tl, id, t0 + C2C + 0.6, 4, 1.6, "power2.in");
+          pastWash(L);
+        },
+      });
+      // ---------- C3 · 2 cuts: the boat rolls over at the landing, a wall of water (WS) → หยิบ on the landing screaming "help! the boat's capsized!" (CU) ----------
+      const C3C = 1.2;
+      add("C3", {
+        extra(L) { boatAtPier(L, { sink: 0.95, tilt: 6, seed: 43, noCrowd: true, past: true }); },
+        ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...frL(600, 1110, 1.3) }, { t: C3C, ...frL(-150, 930, 3.2) }, { t: D("C3"), glide: D("C3") - C3C, ...frL(-150, 935, 3.4) }] },
+        land: { y0: LY0 },
+        actors: [A("yibYoung", -150, 1084, 0.4, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }], { talk: [TK("C3", 0, "scream")] })],
+        captions: capsQ("C3"),
+        fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 330, 900, 1064, 7, 43, 0.8, null, 0, 6);
+          put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.95, tilt: 6, water: true, past: true })));
+          lean(tl, id, t0, 4); leanTo(tl, id, t0, 12, C3C, "power2.in"); lean(tl, id, t0 + C3C, 0);
+          put(L.act, `<g id="${id}-fl" opacity="0"><path d="M-300,1250Q300,1040 1400,1170Q900,1290 -300,1330Z" fill="#9ac0f0" opacity=".85"/>${Array.from({ length: 14 }, (_, i) => `<path d="M${i * 90 - 200},1150q-20,-80 20,-140" stroke="#fff" stroke-width="8" fill="none" opacity=".8"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-fl`, { opacity: 0, y: 80 }, { opacity: 1, y: -40, duration: 0.7, ease: "power2.in", immediateRender: false }, t0 + 0.3);
+          tl.set(`#${id}-fl`, { opacity: 0 }, t0 + C3C);
+          put(L.act, `<g id="${id}-ld" opacity="0"><rect x="-1500" y="1044" width="1700" height="40" fill="#9a6a3e" ${KOUT}/><rect x="-1500" y="1084" width="1700" height="500" fill="#5a3a1e"/>${[-1100, -700, -300, 100].map((x) => `<rect x="${x}" y="1084" width="26" height="500" fill="#3a2410"/>`).join("")}</g>`);
+          tl.set(`#${id}-ld`, { opacity: 1 }, t0 + C3C);
+          tl.set(`#${id}-a0`, { opacity: 0 }, t0); tl.set(`#${id}-a0`, { opacity: 1 }, t0 + C3C);   // หยิบ only in the close-up (the wide roll would cut her at the edge)
+          pastWash(L);
+        },
+      });
+      // ---------- C4 · 2 cuts: หยิบ on the landing, frozen, the candles going out around her (MS) → the boy, alone in the dark water, clinging to an
+      // empty oil drum among the krathongs (WS, small in the big river) → fade to black ----------
+      const C4C = 2.9;
+      add("C4", {
+        extra(L) { waterLevel(L, { hz: 560, moon: [1300, 170], tx: 1200, n: 46, seed: 44 }); },
+        ...NIGHT, light: MOONL, blur: { sky: 1, far: 1, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(-140, 1150, 2.4) }, { t: C4C - 0.05, glide: C4C, ...frL(-140, 1140, 2.55) },
+          { t: C4C, ...frL(560, 1180, 1.25) }, { t: D("C4"), glide: D("C4") - C4C, ease: "power1.inOut", ...frL(560, 1220, 1.6) }] },
+        land: { y0: LY0 },
+        actors: [
+          A("yibYoung", -140, 1330, 0.46, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "o" }]),
+          A("manBoy", 540, 1500, 0.36, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }], { from: C4C }),
+        ],
+        captions: capsQ("C4"),
+        fx(tl, id, t0, L) {
+          // first cut: the landing's edge in front of the water (the shot of หยิบ), hidden at the cut
+          put(L.set, `<g id="${id}-pl"><rect x="-1500" y="1288" width="1900" height="60" fill="#9a6a3e" ${KOUT}/><rect x="-1500" y="1348" width="1900" height="700" fill="#5a3a1e"/>
+            ${[-1200, -800, -400, 0, 300].map((x) => `<rect x="${x}" y="1348" width="34" height="700" fill="#3a2410"/>`).join("")}</g>`);
+          tl.set([`#${id}-pl`, `#${id}-a0`], { opacity: 0 }, t0 + C4C);
+          // second cut: the drum and the boy, the water line over him, the krathongs drifting by
+          put(L.act, `<g id="${id}-dr" opacity="0">${oilDrum(560, 1450, 0.6, -6)}</g>`);
+          tl.set(`#${id}-dr`, { opacity: 1 }, t0 + C4C);
+          tl.fromTo(`#${id}-dr`, { y: -6 }, { y: 6, duration: 1.1, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0 + C4C);
+          put(L.act, `<g id="${id}-wl" opacity="0"><path d="M-1500,1480${Array.from({ length: 75 }, () => `q20,-10 40,0`).join("")}V2400H-1500Z" fill="url(#kWater)" opacity=".92"/></g>`);
+          tl.set(`#${id}-wl`, { opacity: 1 }, t0 + C4C);
+          pastWash(L);
+          // into black for the title
+          tl.to(`#black`, { opacity: 1, duration: 0.6, ease: "power1.in" }, t0 + D("C4") - 0.6);
+        },
+      });
+      // ---------- title · 3 s: the river tonight, the title written in candle light on the water (no EP: the long is one film) ----------
+      add("title", {
+        extra(L) { waterLevel(L, { hz: 520, moon: [900, 180], tx: 800, n: 50, seed: 45 }); },
+        ...NIGHT, light: false, blur: { sky: 2, far: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(540, 1000, 1.0) }, { t: D("title"), glide: D("title"), ...frL(540, 1010, 1.05) }] },
+        land: { y0: LY0 },
+        captions: [],
+        fx(tl, id, t0, L) {
+          tl.fromTo(`#black`, { opacity: 1 }, { opacity: 0, duration: 0.6, ease: "power1.out", immediateRender: false }, t0);
+          put(L.light, `<g id="${id}-ttl" transform="translate(540,830)" opacity="0"><text x="0" y="0" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="230" fill="#fff2c8" stroke="#2a1a10" stroke-width="14" paint-order="stroke">เรือล่ม</text>
+            <text x="0" y="190" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="150" fill="#ffd24a" stroke="#2a1a10" stroke-width="9" paint-order="stroke">คืนลอยกระทง</text>
+            <text x="0" y="300" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="60" letter-spacing="14" fill="#f6e2b0" opacity=".85">ฉบับเต็ม</text></g>`);
+          tl.fromTo(`#${id}-ttl`, { opacity: 0, scale: 0.94, svgOrigin: "540 960" }, { opacity: 1, scale: 1, svgOrigin: "540 960", duration: 0.8, ease: "power2.out", immediateRender: false }, t0 + 0.3);
+          put(L.glow, `<ellipse cx="540" cy="960" rx="700" ry="260" fill="url(#kBulb)" opacity=".35"/>`);
+        },
+      });

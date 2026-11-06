@@ -1,0 +1,38 @@
+      // ================= the long only: cast and props of fifty years ago (cold open, น้าหมาน's secret) and helpers for the wide page =================
+      // หยิบ at eighteen (ยายหยิบ fifty years younger): the same face, black hair in the same bun with the same hairpin, a light-blue blouse, the sarong
+      KC.yibYoung = { v2: { ...KC.yaiYib.v2, skin: "#d8a47a", bags: false, lash: true, blush: 0.75, lip: "#c85a64", face: "",
+        hair: { c: "#1e1414", s: "#0a0606", sh: "#6a5060", front: (x) => yyFront(x.hair), back: (x) => yyBun(x.hair) },
+        top: { kind: "blouse", c: "#b8dcf2", sleeve: "elbow" } } };
+      // the boatman of fifty years ago: a woven hat, a faded indigo shirt, rolled trousers
+      KC.driverOld = { v2: { ...PX({ skin: "#a8744c", w: 1.05, top: { kind: "shirt", c: "#3a4a7a", sleeve: "long", neck: "collar", collar: "#2e3c66", button: "#d8d2c0" },
+        bottom: { kind: "shorts", c: "#5a4a3a" }, feet: { kind: "bare" } }).v2, faceTop: nmHat } };
+      // the boy (น้าหมาน at five): a big head, short hair, a striped tee, no life jacket
+      KC.manBoy = { v2: { skin: "#a8744c", iris: "#2e1c12", blush: 0.7, headScale: 1.32, w: 0.86, limb: 0.82,
+        hair: { c: "#1a120e", s: "#060404", sh: "#5a4a40", front: (x) => kpHair(x.hair) },
+        top: { kind: "tee", c: "#e8e2d2", sleeve: "short" }, print: `<path d="M-60,-450H60M-62,-410H62M-62,-370H62M-62,-330H62" stroke="#c8402e" stroke-width="10" opacity=".8"/>`,
+        bottom: { kind: "shorts", c: "#3a5a8a" }, feet: { kind: "bare" } } };
+      // an empty oil drum floating on its side (rusted blue, two ribs, the bung), origin = its centre
+      const oilDrum = (x, y, s = 1, r = -8) => `<g transform="translate(${x},${y}) scale(${s}) rotate(${r})"><rect x="-150" y="-95" width="300" height="190" rx="26" fill="#2e5a8a" ${KOUT}/>
+        <path d="M-80,-95V95M80,-95V95" stroke="#1e3e64" stroke-width="12"/><path d="M-150,-40H150" stroke="#5a8ac0" stroke-width="10" opacity=".5"/>
+        <ellipse cx="150" cy="0" rx="26" ry="95" fill="#3a6a9a" ${KOUT2}/><circle cx="150" cy="-40" r="10" fill="#1e2a3a"/>
+        ${[[-120, -60], [-30, 50], [60, -70], [110, 40]].map(([a, b]) => `<ellipse cx="${a}" cy="${b}" rx="22" ry="12" fill="#a8582a" opacity=".55"/>`).join("")}</g>`;
+      // the water line across the WIDE frame: like waterOver, but 2900 wide
+      const waterW = (L, y, o = {}) => put(L.act, `<g transform="translate(540,${y})"><path d="M-1500,0${Array.from({ length: 75 }, () => `q20,-10 40,0`).join("")}V900H-1500Z" fill="url(#kWater)" opacity="${o.op ?? 1}"/>
+        ${[1, 2, 3].map((i) => `<ellipse cx="${o.rx ?? 0}" cy="8" rx="${150 + i * 70}" ry="${20 + i * 12}" fill="none" stroke="#b8c8ff" stroke-width="3.5" opacity="${(0.6 - i * 0.15).toFixed(2)}"/>`).join("")}
+        <path d="M-1500,0${Array.from({ length: 75 }, () => `q20,-10 40,0`).join("")}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/></g>`);
+      // fifty years ago: an old-photo wash over the whole wide stage (warm sepia, faded) — the past always looks like this in the long
+      const pastWash = (L, op = 0.3) => put(L.light, `<rect x="-1500" y="-900" width="4100" height="3900" fill="#8a5a2a" opacity="${op}" style="mix-blend-mode:color"/><rect x="-1500" y="-900" width="4100" height="3900" fill="#2a1a0a" opacity=".12"/>`);
+      // the 16:9 camera: the world point (wx, wy) at the centre of the wide page, 2400/s × 1350/s world units visible
+      const LY0 = 285;
+      const frL = (wx, wy, s, y0 = LY0) => fr(wx, wy, s, 540, y0 + 675);
+      // the night river at water level: candles everywhere, the moon on the water, the capsized hull floating in the back
+      function waterLevel(L, o = {}) {
+        riverNight(L, { hz: o.hz ?? 520, moon: o.moon || [860, 170], tx: o.tx ?? 160, fwx: o.fwx ?? 700 });
+        krathongField(L, { n: o.n ?? 34, y0: (o.hz ?? 520) + 20, y1: 1500, smax: 0.7, seed: o.seed || 31 });
+        if (o.hull) {
+          const [hx, hy, hs] = o.hull;
+          put(L.set, `<g transform="translate(${hx},${hy}) scale(${hs})"><path d="M-660,0Q-640,-60 -560,-120Q-300,-196 0,-200Q300,-196 560,-120Q640,-60 660,0Z" fill="url(#kHull)" ${KOUT}/>
+            <path d="M-560,-120Q-300,-196 0,-200Q300,-196 560,-120" stroke="#3a2010" stroke-width="12" fill="none"/><path d="M-650,-6Q0,8 650,-6" stroke="#e2302a" stroke-width="14" fill="none"/>
+            <rect x="-900" y="0" width="1800" height="300" fill="url(#kWater)"/><path d="M-900,2${Array.from({ length: 45 }, () => "q20,-9 40,0").join("")}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/></g>`);
+        }
+      }
