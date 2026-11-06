@@ -289,7 +289,7 @@
         ...NIGHT, light: { ...MOONL, from: "right", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(560, 1120, 1.15, 540, 1000) }, { t: vo("fire", 1) - 0.1, glide: 1.0, ...fr(380, 1110, 1.8, 540, 1000) }, { t: vo("fire", 2) - 0.1, glide: 0.8, ...fr(760, 1080, 1.7, 540, 1000) }] },
         actors: onBoat(560, 1240, 5, [["maprangPhone", -170, 0.36, "phoneLook", "normal", "smile"], ["khaopan", -320, 0.28, "idle", "worry", "o"],
-          ["lungMuek", 440, 0.38, "raise", "angry", "o", true]]).map((a, i) => i === 2 ? { ...a, talk: [TK("fire", 2)] } : i === 0 ? { ...a, talk: [TK("fire", 1)] } : a),
+          ["lungMuek", 330, 0.38, "raise", "angry", "o", true]]).map((a, i) => i === 2 ? { ...a, talk: [TK("fire", 2)] } : i === 0 ? { ...a, talk: [TK("fire", 1)] } : a),
         captions: capsQ("fire"),
         fx(tl, id, t0, L) {
           put(L.act, hullOver(boatSide(560, 1240, 0.92, { sink: 0.95, tilt: 5, water: true })));
