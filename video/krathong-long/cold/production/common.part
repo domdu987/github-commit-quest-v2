@@ -4,9 +4,11 @@
       // In-shot cuts are camera keys without a glide (a jump) at the times plan.py writes.
 
       // captions: the narrator plain, characters in quotes
+      // narrator lines whose id does not start with "n" (the long-only scenes: lane B c01 c03 c05 e01 b05)
+      const NARR_IDS = new Set(["c01", "c03", "c05", "e01", "b05"]);
       const capsQ = (k) => {
         const n = [], q = [];
-        SH[k].vo.forEach((v, i) => (v.id[0] === "n" ? n : q).push(i));
+        SH[k].vo.forEach((v, i) => (v.id[0] === "n" || NARR_IDS.has(v.id) ? n : q).push(i));
         return [...(n.length ? caps(k, n) : []), ...(q.length ? caps(k, q, { quote: true }) : [])].sort((a, b) => a.t - b.t);
       };
       const TK = (k, i, m = "o") => [vo(k, i), voEnd(k, i), m];
