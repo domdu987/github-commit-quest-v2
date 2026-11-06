@@ -32,14 +32,15 @@
   ],
   "status": "in_production",
   "branch": "prod/lane-d",
-  "commit": null,
+  "commit": "191bde9",
   "video": "video/rupnak-long/LONG-rupnak-16x9-share.mp4",
-  "video_sha256": null,
-  "video_bytes": null,
+  "video_sha256": "5f06364da98ad6550bcb9d5826902402b0f0d39f15efbccb8600b621b0bf4b3e",
+  "video_bytes": 93594968,
   "cover": "video/rupnak-long/thumb.jpg",
   "made_by": "เลน D (โต๊ะภาพ 2)",
   "due": "2026-11-07T22:00+07:00",
-  "note": "ฉบับเต็มจาก EP.1–3 รุ่นภาพใหม่ (ff2c113/0d552c5 · kit video/rupnak/upgrade · composition video/rupnak-ep1..3) + บทเชื่อมจริง"
+  "note": "ฉบับเต็มจาก EP.1–3 รุ่นภาพใหม่ (ff2c113/0d552c5 · kit video/rupnak/upgrade · composition video/rupnak-ep1..3) + บทเชื่อมจริง",
+  "review": "ส่งแล้ว 6 พ.ย. 09:12 (แก้กรอบ 16:9 ตาม fitcheck 3 ช็อต · 20,321 เฟรม · −14.1 LUFS) · โต๊ะตรวจเริ่ม 6 พ.ย. 09:31 · ยังไม่ผ่าน"
  },
  "team_charter": "video/release/TEAM-CHARTER.md"
 }
