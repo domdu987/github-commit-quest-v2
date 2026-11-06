@@ -28,6 +28,13 @@
         const inv = M.inverse(), p = new DOMPoint(RIGHT, BOTTOM).matrixTransform(inv);
         w.setAttribute("transform", `translate(${(p.x - (bb.x + bb.width) * k).toFixed(2)},${(p.y - (bb.y + bb.height) * k).toFixed(2)}) scale(${k.toFixed(4)})`);
         w.setAttribute("class", "srcchip");
+        // never under a caption: if the chip's page box meets any caption box of this shot, lift it to sit just above the captions
+        const cr = w.getBoundingClientRect(), caps = [...clip.querySelectorAll(".capbox")].map((c) => c.getBoundingClientRect()).filter((r) => r.width > 0);
+        const hit = caps.some((r) => cr.left < r.right + 24 && cr.right > r.left - 24 && cr.top < r.bottom && cr.bottom > r.top);
+        if (hit) {
+          const top = Math.min(...caps.map((r) => r.top)) - 14, q = new DOMPoint(RIGHT, top).matrixTransform(inv);
+          w.setAttribute("transform", `translate(${(q.x - (bb.x + bb.width) * k).toFixed(2)},${(q.y - (bb.y + bb.height) * k).toFixed(2)}) scale(${k.toFixed(4)})`);
+        }
       });
       marked.forEach((g) => {
         const [cx, cy, h] = g.getAttribute("data-page").split(",").map(Number);
