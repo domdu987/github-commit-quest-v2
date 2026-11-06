@@ -1,0 +1,20 @@
+หนวดใส EP.2 ฉบับ cine รอบ 4 (แก้ตามรีวิว 3e4a6c7 + รายการเพิ่มของ 7bec9fe) · ตรวจจากไฟล์จริง 6 พ.ย. 2569
+
+ไฟล์ (ชื่อใหม่ ไฟล์รอบ 1 ยังอยู่)
+- HQ: video/release/hq/jelly-ep2-cine-r4-HQ.mp4 · 75,809,228 B · sha256 3f2c69c27eb2798aea2734f9e92f33c6dd1a3d298bd8a6cb9d81e0c3e5ca6a11
+- share: video/jelly-ep2/jelly-ep2-cine-r4-share.mp4 · 21,341,662 B · sha256 f6053124a3d34278441d2d6586aba5cf2f710f88ae6f904b77b8eb82ff552255
+- raw (เครื่องเลน C): 95,190,317 B · sha256 c804a43db8a155209902878b5a70d8eab42fff4f7b3f5f5a38d65e0906839496 · 5540 เฟรม
+- mix.wav sha256 a3337832d497ae5250e24358cc337fa2307c7adb2045202bc63e71dfc2a4dbbc (ambience low-pass 2.0 kHz · SFX 3 kHz · เวลาไม่เปลี่ยน)
+- ความยาว: ภาพ 92.317 วิ · เสียง 92.332 วิ
+
+1. รูปแบบ h264 1080×1920 60 fps · aac 48 kHz
+2. ความดัง HQ −14.0 LUFS TP −1.9 · share −14.0 TP −2.9
+3. hisscheck HQ 0.40 (0.397) PASS · share PASS · ความถี่สูงที่ "แบน" มาจากเสียง ส/ช ของผู้บรรยาย (ผู้ประสานงานรับเหตุผลแล้ว)
+4. musiccheck PASS ครบ 4 ข้อ
+5. shotlist_check 730cdb7 --soundplan --cues: FAIL 0 · WARN 10 · sting 1
+6. flashcheck 0 · blackdetect เฉพาะ 85.45–85.57
+7. freezedetect −50 dB d=3 (ตัดแถบซับ): ไม่เจอ
+8. นับคัตจริง: 27 จุดเปลี่ยนรวมจอดำ = 27 ช็อต ≤ 30 · คัต 20 ไม่มีตัดแข็งที่ 48.43 และ 50.58 แล้ว
+9. B1 ตัวเลือก (vote-83.5-85.6-10fps.jpg): ไม่ดึงไป B · กรอบค้างที่ A "รอรถพยาบาล" จนตัดดำ · A ไม่เทา อ่านได้ทั้งสองข้อ
+10. M1–M4 ดูภาพจริงที่ 6.6 10.6 12.6 31.9 37.2 42.6 47.9 48.6 65.9 70.0 85.3 (fixed-points.jpg)
+11. ชีต 1 fps: sheets-cine-r4/qa-1fps-*.jpg

@@ -174,11 +174,11 @@ mus[end:] = 0  # hard cut to black and silence
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
 mus = level(mus, -30.8)   # EP.2: the knee lifts the static gain, so the bed sits 0.8 dB lower than EP.1
 sfx = level(sfx, -27)
-sfx = load_filt(sfx, "lowpass=f=4500,lowpass=f=4500,highpass=f=40")
+sfx = load_filt(sfx, "lowpass=f=3000,lowpass=f=3000,highpass=f=40")
 # ---- real ambience (production/ambience, ElevenLabs SFX, low-passed 2.4 kHz: structure, no hiss) ----
 AMB = "/home/user/github-commit-quest-v2/video/jelly-ep1/production/ambience"   # the same four recordings as EP.1
 def amb_file(name):
-    return load_filt(load(os.path.join(AMB, name + ".mp3")), "lowpass=f=2400,lowpass=f=2400,lowpass=f=2400,highpass=f=60")
+    return load_filt(load(os.path.join(AMB, name + ".mp3")), "lowpass=f=2000,lowpass=f=2000,lowpass=f=2000,highpass=f=60")
 def loop(x, a, b, xf=0.6):
     out = np.zeros(N, np.float32); n, step, i = len(x), len(x) - int(xf * SR), int(a * SR)
     ramp = np.linspace(0, 1, int(xf * SR), dtype=np.float32)
