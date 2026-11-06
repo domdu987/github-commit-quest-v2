@@ -1,12 +1,12 @@
 {
  "n01": {
-  "text": "ถ้าวันหนึ่ง… ลูกคุณโดนพิษ",
-  "heard": "ท่าวันหนึ่ง ลูกคุณโดนผิด",
-  "cer": 0.174,
-  "dur": 2.09,
+  "text": "ถ้าวันหนึ่ง… ลูกคุณถูกพิษ",
+  "heard": "ถ้าวันหนึ่งลูกคุณถูกผิด",
+  "cer": 0.087,
+  "dur": 1.97,
   "bad": false,
   "long": false,
-  "decision": "CINEMA BIBLE 6 Nov: shortened opener so the command stays ≤ 3.0 s; CER 0.17 (พิษ→ผิด tone); listen-check"
+  "decision": "CINEMA BIBLE: short opener to keep the command ≤ 3.0 s. \"โดนพิษ\" heard as โดนผิด (0.17) in 3 takes; 3 more tries (โดน… พิษ 0.09 but 3.13 s · โดนพิษ! 0.13 · ถูกพิษ 0.09) → ถูกพิษ kept (best, 1.97 s). พิษ→ผิด is a tone-only miss; caption [ถูกพิษ] carries the word (coordinator 6 Nov)"
  },
  "n02": {
   "text": "อย่าให้ลูกขยับ",
