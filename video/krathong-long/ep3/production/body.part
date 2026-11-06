@@ -2,10 +2,6 @@
       // Every set runs wide (x −660…1740) and the action sits in the vertical band y ~300…1650, so the 16:9 page shows the whole
       // world. In-shot cuts are camera keys without a glide (a jump) at the times plan.py writes.
 
-      // the water line across the WIDE frame (16:9): like waterOver in EP.2, but 2900 wide
-      const waterW = (L, y, o = {}) => put(L.act, `<g transform="translate(540,${y})"><path d="M-1500,0${Array.from({ length: 75 }, () => `q20,-10 40,0`).join("")}V900H-1500Z" fill="url(#kWater)" opacity="${o.op ?? 1}"/>
-        ${[1, 2, 3].map((i) => `<ellipse cx="${o.rx ?? 0}" cy="8" rx="${150 + i * 70}" ry="${20 + i * 12}" fill="none" stroke="#b8c8ff" stroke-width="3.5" opacity="${(0.6 - i * 0.15).toFixed(2)}"/>`).join("")}
-        <path d="M-1500,0${Array.from({ length: 75 }, () => `q20,-10 40,0`).join("")}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/></g>`);
       // the capsized บุญล้น: the hull upside down, the keel up, the half-sunk name; origin = waterline at mid-ship
       const hullUp = (x, y, s = 1, o = {}) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-620,0Q-600,-70 -520,-130Q-280,-200 0,-206Q280,-200 520,-130Q600,-70 620,0Z" fill="url(#kHull)" ${KOUT}/>
         <path d="M-520,-130Q-280,-200 0,-206Q280,-200 520,-130" stroke="#3a2010" stroke-width="12" fill="none"/><path d="M-600,-8Q0,6 600,-8" stroke="#e2302a" stroke-width="14" fill="none"/>
@@ -258,6 +254,127 @@
         ],
         captions: capsQ("maan"),
       });
+      // ================= long only · น้าหมาน's secret (46 s: why · then · gone · hush · cans · pier · shame) =================
+      // the present on the steps of the landing (warm string lights), the past in pastWash sepia; no more than three faces in any shot
+      const stepsSet = (L, o = {}) => { pier(L, { seed: o.seed || 60, noBoat: true });
+        put(L.set, `<g transform="translate(-560,1150)">${[0, 1, 2, 3].map((i) => `<rect x="${-200 + i * 40}" y="${i * 46}" width="${420 - i * 80}" height="46" fill="#9a6a3e" ${KOUT2}/>`).join("")}</g>`); };
+      // ---------- why · 1 cut: มะปราง in a blanket sits by น้าหมาน on the steps and asks why he waits for the next boat every year (two-shot) ----------
+      add("why", {
+        extra(L) { stepsSet(L, { seed: 61 }); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(-470, 1000, 2.1) }, { t: D("why"), glide: D("why"), ...frL(-480, 1000, 2.25) }] },
+        land: { y0: LY0 },
+        actors: [
+          A("maprangWet", -380, 1084, 0.4, [{ t: 0, mode: "sit", eyes: "worry", mouth: "flat" }], { flip: true, talk: [TK("why", 0)] }),
+          A("naMan", -580, 1080, 0.38, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }, { t: voEnd("why") - 0.4, mode: "sit", eyes: "normal", mouth: "flat" }]),
+        ],
+        captions: capsQ("why"),
+        fx(tl, id, t0, L) { put(L.act, `<path d="M-430,920Q-380,890 -330,930L-320,1090H-440Z" fill="#b84a2a" opacity=".9" ${KOUT2}/>`); },
+      });
+      // ---------- then · 3 cuts: น้าหมาน, quiet: "fifty years ago… I was five, on that boat" (CU) → the past: the capsized boat, a mother and her boy in the water (WS)
+      // → her hands pushing him up onto the empty oil drum: "hold on, son" (CU) ----------
+      const TH1 = vo("then", 1) - 0.4, TH2 = vo("then", 1) + 3.0;
+      add("then", {
+        extra(L) { waterLevel(L, { hz: 560, moon: [1300, 170], tx: 1200, n: 40, seed: 62, hull: [900, 1240, 0.8] }); },
+        ...NIGHT, light: MOONL, blur: { sky: 1, far: 1, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(-560, 905, 4.4) }, { t: TH1 - 0.05, glide: TH1, ...frL(-560, 910, 4.7) },
+          { t: TH1, ...frL(560, 1220, 1.3) }, { t: TH2, ...frL(470, 1330, 3.0) }, { t: D("then"), glide: D("then") - TH2, ...frL(470, 1330, 3.2) }] },
+        land: { y0: LY0 },
+        actors: [
+          A("naMan", -560, 1080, 0.38, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }], { talk: [TK("then", 0, "flat"), TK("then", 1, "flat")] }),
+          A("momOld", 420, 1560, 0.42, [{ t: 0, mode: "raise", eyes: "worry", mouth: "o" }], { from: TH1 }),
+          A("manBoy", 560, 1430, 0.3, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }], { from: TH1 }),
+        ],
+        captions: capsQ("then"),
+        fx(tl, id, t0, L) {
+          // the present (his CU) sits on the landing; the past (the river) only after the cut, in sepia
+          put(L.act, `<g id="${id}-past" opacity="0">${oilDrum(560, 1470, 0.5, -6)}</g>`);
+          tl.set(`#${id}-past`, { opacity: 1 }, t0 + TH1);
+          put(L.set, `<g id="${id}-st"><rect x="-1500" y="1080" width="1500" height="900" fill="#5a3a1e"/><rect x="-1500" y="1060" width="1500" height="30" fill="#9a6a3e" ${KOUT2}/></g>`);
+          tl.set([`#${id}-st`, `#${id}-a0`], { opacity: 0 }, t0 + TH1);
+          put(L.act, `<g id="${id}-wl" opacity="0"><path d="M-1500,1500${Array.from({ length: 75 }, () => `q20,-10 40,0`).join("")}V2400H-1500Z" fill="url(#kWater)" opacity=".92"/></g>`);
+          tl.set(`#${id}-wl`, { opacity: 1 }, t0 + TH1);
+          put(L.light, `<g id="${id}-pw" opacity="0"><rect x="-1500" y="-900" width="4100" height="3900" fill="#8a5a2a" opacity=".3" style="mix-blend-mode:color"/><rect x="-1500" y="-900" width="4100" height="3900" fill="#2a1a0a" opacity=".12"/></g>`);
+          tl.set(`#${id}-pw`, { opacity: 1 }, t0 + TH1);
+          // her push: the boy rises onto the drum
+          tl.fromTo(`#${id}-a2`, { y: 30 }, { y: -20, duration: 0.8, ease: "power2.out", immediateRender: false }, t0 + TH2 + 0.4);
+        },
+      });
+      // ---------- gone · 1 cut: the boy alone on the drum; where she was, only rings on the water (WS, the past) ----------
+      add("gone", {
+        extra(L) { waterLevel(L, { hz: 560, moon: [1300, 170], tx: 1200, n: 34, seed: 63 }); },
+        ...NIGHT, light: MOONL, blur: { sky: 1, far: 1, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(560, 1300, 1.8) }, { t: D("gone"), glide: D("gone"), ease: "power1.inOut", ...frL(560, 1300, 1.55) }] },
+        land: { y0: LY0 },
+        actors: [A("manBoy", 600, 1430, 0.3, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }])],
+        captions: capsQ("gone"),
+        fx(tl, id, t0, L) {
+          put(L.act, oilDrum(600, 1470, 0.5, -6));
+          put(L.act, `<g id="${id}-rg">${[1, 2, 3].map((i) => `<ellipse cx="380" cy="1500" rx="${40 * i}" ry="${10 * i}" fill="none" stroke="#cfe2ff" stroke-width="4" opacity="${(0.8 - i * 0.2).toFixed(2)}"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-rg`, { scale: 0.5, svgOrigin: "380 1500", opacity: 1 }, { scale: 2.2, svgOrigin: "380 1500", opacity: 0, duration: D("gone"), ease: "power1.out", immediateRender: false }, t0);
+          put(L.act, `<path d="M-1500,1500${Array.from({ length: 75 }, () => `q20,-10 40,0`).join("")}V2400H-1500Z" fill="url(#kWater)" opacity=".92"/>`);
+          pastWash(L);
+        },
+      });
+      // ---------- hush · 1 cut, 4 s of silence (the long silence of the film): น้าหมาน on the steps today, not looking at anyone (CU, held) ----------
+      add("hush", {
+        extra(L) { stepsSet(L, { seed: 64 }); },
+        ...NIGHT, light: { ...WARML, rim: "#9ab8ff", rimOp: 0.7 }, blur: { sky: 4, far: 4, mid: 3, fg: 6 },
+        cam: { keys: [{ t: 0, ...frL(-560, 915, 4.6) }, { t: D("hush"), glide: D("hush"), ...frL(-560, 918, 4.75) }] },
+        land: { y0: LY0 },
+        actors: [A("naMan", -560, 1080, 0.38, [{ t: 0, mode: "sit", eyes: "closed", mouth: "flat" }, { t: 2.2, mode: "sit", eyes: "side", mouth: "flat" }])],
+        captions: [],
+      });
+      // ---------- cans · 2 cuts: his three empty gallons by the steps, caps on, a little water in each (insert) → น้าหมาน: "in case someone needs them" (MS) ----------
+      const CA1 = 2.6;
+      add("cans", {
+        extra(L) { stepsSet(L, { seed: 65 }); put(L.set, gallon(-430, 1162, 0.62, { water: true }) + gallon(-380, 1170, 0.62, { rot: 4, water: true }) + gallon(-470, 1176, 0.62, { rot: -3, water: true })); },
+        ...NIGHT, light: WARML, blur: { sky: 4, far: 4, mid: 3, fg: 6 },
+        cam: { keys: [{ t: 0, ...frL(-430, 1130, 5.0) }, { t: CA1 - 0.05, glide: CA1, ...frL(-430, 1130, 5.3) },
+          { t: CA1, ...frL(-500, 1010, 2.4) }, { t: D("cans"), glide: D("cans") - CA1, ...frL(-500, 1010, 2.55) }] },
+        land: { y0: LY0 },
+        actors: [A("naMan", -560, 1080, 0.38, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }, { t: 4.0, mode: "sit", eyes: "normal", mouth: "smile" }], { talk: [TK("cans", 0, "flat")] })],
+        captions: capsQ("cans"),
+      });
+      // ---------- pier · 3 cuts: ยาย today: "that night I was on the landing… I saw Maan floating with the drum" (CU) → the past: หยิบ at eighteen on the landing,
+      // looking down at the boy on the drum (WS) → ยาย holds the rule paddle: "the first rhyme… I made it that very night" (the paddle, rule 1 lit) ----------
+      const PI1 = 1.9, PI2 = vo("pier", 1) - 0.1;
+      add("pier", {
+        extra(L) { pier(L, { seed: 66, noBoat: true }); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(-150, 905, 4.2) }, { t: PI1 - 0.05, glide: PI1, ...frL(-150, 908, 4.4) },
+          { t: PI1, ...frL(150, 1150, 1.4) }, { t: PI2, ...frL(-150, 905, 4.2) }, { t: D("pier"), glide: D("pier") - PI2, ...frL(-150, 908, 4.35) }] },
+        land: { y0: LY0 },
+        actors: [
+          A("yaiYib", -150, 1084, 0.4, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { talk: [TK("pier", 0), TK("pier", 1)] }),
+          A("yibYoung", -150, 1084, 0.4, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "o" }], { from: PI1 }),
+          A("manBoy", 520, 1430, 0.3, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }], { from: PI1 }),
+        ],
+        captions: capsQ("pier"),
+        fx(tl, id, t0, L) {
+          tl.set(`#${id}-a0`, { opacity: 0 }, t0 + PI1); tl.set(`#${id}-a0`, { opacity: 1 }, t0 + PI2);
+          tl.set([`#${id}-a1`, `#${id}-a2`], { opacity: 0 }, t0 + PI2);
+          put(L.act, `<g id="${id}-dr" opacity="0">${oilDrum(520, 1470, 0.5, -6)}<path d="M-1500,1490${Array.from({ length: 75 }, () => `q20,-10 40,0`).join("")}V2400H-1500Z" fill="url(#kWater)" opacity=".9"/></g>`);
+          tl.set(`#${id}-dr`, { opacity: 1 }, t0 + PI1); tl.set(`#${id}-dr`, { opacity: 0 }, t0 + PI2);
+          put(L.light, `<g id="${id}-pw" opacity="0"><rect x="-1500" y="-900" width="4100" height="3900" fill="#8a5a2a" opacity=".3" style="mix-blend-mode:color"/><rect x="-1500" y="-900" width="4100" height="3900" fill="#2a1a0a" opacity=".12"/></g>`);
+          tl.set(`#${id}-pw`, { opacity: 1 }, t0 + PI1); tl.set(`#${id}-pw`, { opacity: 0 }, t0 + PI2);
+          rulePaddle(L, `${id}-pd`, 0, []); paddleIn(tl, `${id}-pd`, t0 + PI2 + 1.0);
+        },
+      });
+      // ---------- shame · 2 cuts: มะปราง: "and everyone still calls you a drunk…" (CU) → น้าหมาน smiles: "it's fine… as long as everyone gets ashore" (CU) ----------
+      const SHC = vo("shame", 1) - 0.15;
+      add("shame", {
+        extra(L) { stepsSet(L, { seed: 67 }); },
+        ...NIGHT, light: WARML, blur: { sky: 4, far: 4, mid: 3, fg: 6 },
+        cam: { keys: [{ t: 0, ...frL(-380, 905, 4.2) }, { t: SHC - 0.05, glide: SHC, ...frL(-380, 905, 4.4) },
+          { t: SHC, ...frL(-570, 910, 4.0) }, { t: D("shame"), glide: D("shame") - SHC, ...frL(-570, 912, 4.2) }] },
+        land: { y0: LY0 },
+        actors: [
+          A("maprangWet", -380, 1084, 0.4, [{ t: 0, mode: "sit", eyes: "worry", mouth: "flat" }], { flip: true, talk: [TK("shame", 0)] }),
+          A("naMan", -580, 1080, 0.38, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }, { t: SHC + 1.0, mode: "sit", eyes: "normal", mouth: "smile" }], { talk: [TK("shame", 1, "smile")] }),
+        ],
+        captions: capsQ("shame"),
+      });
       // ---------- 21–22 · accuse: a blanket-wrapped passenger points at ลุง (MS, low) → ลุง pulls the brass whistle out of his shirt (CU) ----------
       const AC1 = 3.1;
       add("accuse", {
@@ -337,18 +454,5 @@
           put(L.act, `<g id="${id}-kt" opacity="0">${krathong(560, 1420, 0.5, { seed: 71 })}</g>`); put(L.glow, `<g id="${id}-kg" opacity="0">${kGlow(560, 1420, 0.5, 70)}</g>`);
           tl.set([`#${id}-kt`, `#${id}-kg`], { opacity: 1 }, t0 + CL1);
           tl.to([`#${id}-kt`, `#${id}-kg`], { x: 80, y: 120, duration: D("close") - CL1, ease: "sine.inOut" }, t0 + CL1);
-        },
-      });
-      // ---------- 29 · end: the rule paddle with all three white strokes + a paper note "ตอนจบ"; the music fades under it ----------
-      add("end", {
-        extra(L) { pier(L, { seed: 14 }); },
-        ...NIGHT, light: WARML, blur: { sky: 6, far: 6, mid: 5, set: 4, act: 4, fg: 6 },
-        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 960) }, { t: D("end"), glide: D("end"), ...fr(540, 1100, 1.04, 540, 960) }] },
-        actors: [],
-        captions: [],
-        fx(tl, id, t0, L) {
-          rulePaddle(L, `${id}-pd`, -1, [0, 1, 2]); paddleIn(tl, `${id}-pd`, t0);
-          put(L.light, `<g id="${id}-nt" opacity="0"><g transform="translate(760,1300) rotate(6)"><rect x="-150" y="-80" width="300" height="160" fill="#f6f0dc" ${KOUT2}/><rect x="-40" y="-96" width="80" height="26" fill="#d8c88a" opacity=".8"/><text x="0" y="22" text-anchor="middle" font-family="Sriracha" font-size="64" fill="#c8241e">ตอนจบ</text></g></g>`);
-          tl.fromTo(`#${id}-nt`, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.8);
         },
       });

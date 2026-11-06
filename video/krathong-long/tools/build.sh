@@ -4,7 +4,7 @@
 set -euo pipefail
 W="$(cd "$1" && pwd)"; H="$(cd "$(dirname "$0")" && pwd)"
 cd "$W"
-LP=""; [ -f long.part ] && LP=long.part
+LP=""; [ -f long.part ] && LP=long.part; [ -f longcam.part ] && LP="$LP longcam.part"
 cat helpers.part kit.part common.part $LP body.part > shots.part
 cat head.part sigcard.part shots.part foot.part > ep.tmpl.html
 OUT=$(python3 make.py); echo "$OUT"

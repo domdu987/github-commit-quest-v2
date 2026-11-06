@@ -1,0 +1,111 @@
+      // ================= เรือล่มคืนลอยกระทง ฉบับเต็ม · epilogue (the next Loy Krathong, 28 s) + end card (8 s) + credits ambience (5 s) =================
+      // the next story's name is a variable until the coordinator names it (end card "เรื่องต่อไป: … ทุกวัน 09:30"); the last 13 s keep the right
+      // third and the lower left clear for YouTube's end-screen elements (a video frame and the subscribe circle)
+      const NEXT_STORY = window.NEXT_STORY || "…";
+      KC.maprangVest = { v2: { ...KC.maprang.v2, extra: kpVest } };
+      // ---------- E1 · 1 cut: the next year, extreme wide: the same landing, the krathong field, บุญล้น coming in light (act 3's extreme wide) ----------
+      add("E1", {
+        extra(L) { pier(L, { seed: 71 }); },
+        ...NIGHT, light: WARML, blur: { sky: 1, far: 1, fg: 3 },
+        cam: { keys: [{ t: 0, ...frL(420, 985, 0.98) }, { t: D("E1"), glide: D("E1"), ...frL(400, 990, 1.05) }] },
+        land: { y0: LY0 },
+        actors: [A("yaiYib", -150, 1084, 0.4, [{ t: 0, mode: "wave", eyes: "normal", mouth: "smile" }])],
+        captions: capsQ("E1"),
+        fx(tl, id, t0, L) { burstAt(tl, L, `${id}-b1`, 1300, 280, 220, t0 + 0.4, "#ffd24a", "#7ad8ff"); burstAt(tl, L, `${id}-b2`, -300, 240, 180, t0 + 1.6, "#ff6aa8", "#ffd24a"); },
+      });
+      // ---------- E2 · 2 cuts: ลุงหมึก at the gangway clicking the counter, his arm across the gap at twelve: "that's enough! the rest, the next boat" (MS)
+      // → มะปราง in a life jacket of her own: "this year I'm wearing one, ยาย" (CU) ----------
+      const E2C = vo("E2", 1) - 0.15;
+      add("E2", {
+        extra(L) { pier(L, { seed: 72 }); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(420, 1150, 2.2) }, { t: E2C - 0.05, glide: E2C, ...frL(430, 1150, 2.35) },
+          { t: E2C, ...frL(140, 1010, 3.4) }, { t: D("E2"), glide: D("E2") - E2C, ...frL(140, 1012, 3.6) }] },
+        land: { y0: LY0 },
+        actors: [
+          A("lungMuek", 420, 1330, 0.45, [{ t: 0, mode: "point", eyes: "normal", mouth: "o" }, { t: 3.0, mode: "raise", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TK("E2", 0)] }),
+          A("maprangVest", 140, 1336, 0.44, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { talk: [TK("E2", 1, "laugh")] }),
+        ],
+        captions: capsQ("E2"),
+        fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 560, 1300, 1330, 6, 72, 0.62, null, 0, 0);
+          put(L.act, `<g transform="translate(470,1150) scale(.1)"><circle r="300" fill="#b8902a" ${KOUT}/><circle r="270" fill="#e2b84a"/><rect x="-200" y="-70" width="400" height="140" rx="14" fill="#2a1e10"/>
+            ${[0, 1, 2, 3].map((i) => `<rect x="${-192 + i * 100}" y="-58" width="84" height="116" rx="6" fill="#f6f2e4"/><text x="${-150 + i * 100}" y="34" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="92" fill="${i > 1 ? "#c8241e" : "#1e1a14"}">${"0012"[i]}</text>`).join("")}</g>`);
+        },
+      });
+      // ---------- E3 · 2 cuts: ข้าวปั้น hands the brass whistle back to ลุง: "I won't blow it before the boat's moored" (two-shot) → น้าหมาน with a gallon:
+      // "this year, may I ride this boat with the kids?" (MS) ----------
+      const E3C = vo("E3", 1) - 0.15;
+      add("E3", {
+        extra(L) { pier(L, { seed: 73 }); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(320, 1150, 2.4) }, { t: E3C - 0.05, glide: E3C, ...frL(320, 1150, 2.55) },
+          { t: E3C, ...frL(-480, 1010, 2.6) }, { t: D("E3"), glide: D("E3") - E3C, ...frL(-470, 1012, 2.75) }] },
+        land: { y0: LY0 },
+        actors: [
+          A("khaopan", 230, 1336, 0.34, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }], { talk: [TK("E3", 0)] }),
+          A("lungMuek", 430, 1330, 0.45, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }),
+          A("naMan", -480, 1084, 0.4, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TK("E3", 1, "smile")] }),
+        ],
+        captions: capsQ("E3"),
+        fx(tl, id, t0, L) {
+          put(L.act, `<g transform="translate(330,1150) scale(.3)"><rect x="-30" y="-24" width="130" height="48" rx="22" fill="#d8a83a" ${KOUT}/><circle cx="84" r="12" fill="#5a3a1e"/></g>`);
+          put(L.set, gallon(-400, 1084, 0.6, { water: true }));
+        },
+      });
+      // ---------- E4 · 2 cuts: ยาย: "of course, Maan… the boat's mooring" (MS) → inside บุญล้น, twelve people seated, nobody gets up; ข้าวปั้น: "don't all stand at once!"
+      // (the boat bumps the pontoon, everyone stays seated; the river holds on) ----------
+      const E4C = vo("E4", 1) - 0.35;
+      add("E4", {
+        extra(L) { boatAtPier(L, { sink: 0.3, tilt: 0, seed: 74, noCrowd: true }); },
+        ...NIGHT, light: { ...WARML, from: "left" }, blur: { sky: 1, far: 1.5, fg: 5 },
+        cam: { keys: [{ t: 0, ...frL(600, 1100, 1.6) }, { t: E4C - 0.05, glide: E4C, ...frL(600, 1100, 1.7) },
+          { t: E4C, ...frL(600, 1120, 1.25) }, { t: D("E4"), glide: D("E4") - E4C, ease: "power1.inOut", ...frL(600, 1080, 1.05) }] },
+        land: { y0: LY0 },
+        actors: [
+          ...onBoat(600, 1220, 0, [["maprangVest", -150, 0.32, "sitChair", "normal", "smile"], ["lungMuek", 405, 0.36, "idle", "normal", "smile", true]]),
+          A("khaopan", 470, 1180, 0.26, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "smile" }], { talk: [TK("E4", 1, "o")] }),
+        ],
+        captions: capsQ("E4"),
+        fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 300, 900, 1110, 6, 74, 0.8, null, 0, 0);
+          put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.3, tilt: 0, water: true, wake: 1 })));
+          // the gentle bump at the pontoon (nobody stands)
+          tl.to(`#${id}-world`, { x: -6, duration: 0.15, yoyo: true, repeat: 1, ease: "power1.out" }, t0 + E4C + 1.2);
+        },
+      });
+      // ---------- card · 8 s: the rule paddle, all three rules white-stroked, the paper note "ตอนจบ" (from EP.3) → "เรื่องต่อไป: … ทุกวัน 09:30" + subscribe,
+      // over the river blurred; the right third and the lower left stay clear for the end-screen elements from 0:28 of this section ----------
+      add("card", {
+        extra(L) { waterLevel(L, { hz: 520, moon: [900, 180], tx: 800, n: 44, seed: 75 }); },
+        ...NIGHT, light: false, blur: { sky: 6, far: 6, mid: 6, set: 6, act: 6, fg: 6 },
+        cam: { keys: [{ t: 0, ...frL(540, 1000, 1.0) }, { t: D("card"), glide: D("card"), ...frL(540, 1010, 1.03) }] },
+        land: { y0: LY0 },
+        captions: [],
+        fx(tl, id, t0, L) {
+          rulePaddle(L, `${id}-pd`, -1, [0, 1, 2]); paddleIn(tl, `${id}-pd`, t0);
+          put(L.light, `<g id="${id}-nt" opacity="0"><g transform="translate(760,1300) rotate(6)"><rect x="-150" y="-80" width="300" height="160" fill="#f6f0dc" ${KOUT2}/><rect x="-40" y="-96" width="80" height="26" fill="#d8c88a" opacity=".8"/><text x="0" y="22" text-anchor="middle" font-family="Sriracha" font-size="64" fill="#c8241e">ตอนจบ</text></g></g>`);
+          tl.fromTo(`#${id}-nt`, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.8);
+          tl.to([`#${id}-pd`, `#${id}-nt`], { opacity: 0, duration: 0.4 }, t0 + 3.0);
+          // the next story (top centre) and the subscribe pill (centre left); the right third and the lower left are left empty for YouTube
+          put(L.light, `<g id="${id}-nx" opacity="0"><text x="-170" y="400" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="56" fill="#f6e2b0">เรื่องต่อไป</text>
+            <text x="-170" y="520" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="96" fill="#fff2c8" stroke="#2a1a10" stroke-width="7" paint-order="stroke">${NEXT_STORY}</text>
+            <text x="-170" y="620" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="60" fill="#ffd24a">ทุกวัน 09:30</text>
+            <g transform="translate(-170,770)"><rect x="-200" y="-56" width="400" height="112" rx="56" fill="#c8241e" stroke="#2a1a10" stroke-width="5"/><text x="0" y="16" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="56" fill="#fff6ea">กดติดตาม</text></g></g>`);
+          tl.fromTo(`#${id}-nx`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + 3.3);
+        },
+      });
+      // ---------- credits · 5 s: the river keeps going under the credit line (ambience held), then quiet ----------
+      add("credits", {
+        extra(L) { waterLevel(L, { hz: 520, moon: [900, 180], tx: 800, n: 44, seed: 75 }); },
+        ...NIGHT, light: false, blur: { sky: 6, far: 6, mid: 6, set: 6, act: 6, fg: 6 },
+        cam: { keys: [{ t: 0, ...frL(540, 1010, 1.03) }, { t: D("credits"), glide: D("credits"), ...frL(540, 1015, 1.05) }] },
+        land: { y0: LY0 },
+        captions: [],
+        fx(tl, id, t0, L) {
+          put(L.light, `<g id="${id}-cr" opacity="0"><text x="-170" y="460" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="68" letter-spacing="14" fill="#f6e2b0">ROD MAI CLUB</text>
+            <text x="-170" y="550" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="46" fill="#d8c8a0">เรือล่มคืนลอยกระทง · ฉบับเต็ม</text></g>`);
+          tl.fromTo(`#${id}-cr`, { opacity: 0 }, { opacity: 1, duration: 0.8, immediateRender: false }, t0 + 0.2);
+          tl.to(`#black`, { opacity: 1, duration: 1.2, ease: "power1.in" }, t0 + D("credits") - 1.2);
+        },
+      });

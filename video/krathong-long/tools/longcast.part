@@ -33,6 +33,8 @@
           const [hx, hy, hs] = o.hull;
           put(L.set, `<g transform="translate(${hx},${hy}) scale(${hs})"><path d="M-660,0Q-640,-60 -560,-120Q-300,-196 0,-200Q300,-196 560,-120Q640,-60 660,0Z" fill="url(#kHull)" ${KOUT}/>
             <path d="M-560,-120Q-300,-196 0,-200Q300,-196 560,-120" stroke="#3a2010" stroke-width="12" fill="none"/><path d="M-650,-6Q0,8 650,-6" stroke="#e2302a" stroke-width="14" fill="none"/>
-            <rect x="-900" y="0" width="1800" height="300" fill="url(#kWater)"/><path d="M-900,2${Array.from({ length: 45 }, () => "q20,-9 40,0").join("")}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/></g>`);
+            <rect x="-3000" y="0" width="6000" height="300" fill="url(#kWater)"/><path d="M-3000,2${Array.from({ length: 150 }, () => "q20,-9 40,0").join("")}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/></g>`);
         }
       }
+      // น้าหมาน's mother, fifty years ago: hair in a low knot, a faded flowered blouse
+      KC.momOld = PX({ skin: "#b8845a", lash: true, bob: true, hc: "#1a1210", top: { kind: "blouse", c: "#c8a0b8", sleeve: "elbow" }, bottom: { kind: "sarong", c: "#5a4a7a", band: "#e8c84a", band2: "#3a2a4a" }, feet: { kind: "bare" } });
