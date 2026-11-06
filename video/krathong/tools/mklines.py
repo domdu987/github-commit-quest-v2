@@ -41,7 +41,7 @@ TAKES.update({k: 2 for k in [("ep1", "y01"), ("ep1", "k06"), ("ep2", "l01"),
 TAKES.update({("ep1", "k06"): 0, ("ep2", "m05"): 0, ("ep3", "x02"): 1})
 # coordinator 5 Nov: the EP.2 rule must be 100% clear — slower, word by word (fresh takes under the new style)
 # CINEMA BIBLE (owner 6 Nov) via coordinator: command lines read 15 % slower (tempo × 0.87), cut from the mp3 cache
-OVR = {("ep1", "n02"): {"tempo": 1.044}, ("ep1", "y16"): {"tempo": 0.957}}
+OVR = {("ep1", "n02"): {"tempo": 1.044}, ("ep1", "y16"): {"tempo": 0.957}, ("ep2", "n02"): {"tempo": 1.044}}
 # coordinator 5 Nov: EP.1 Short ≤ 2:30 — these lines play in the long video only (n10 stays: it starts the capsize chain)
 TAKES.update({("ep1", "m07"): 1, ("ep2", "n02"): 1})  # HG1 retakes: n02 takes 1-2 no better ("ตามหนอง", "และลูกตามนอน") so take 0 stays
 FULL_ONLY = {("ep1", i) for i in ("y01", "k01", "m02", "y04", "k05", "y08", "y10", "y11",
@@ -147,7 +147,7 @@ EP1 = [
 # he sits on the land-side stairs, never on the pontoon. The episode still ends unresolved on the empty life jacket ("ข้าวปั้น…?").
 EP2 = [
     # HG1 (coordinator 6 Nov): the boat tilts toward your little brother; love says run to him
-    ("n01", "n", "ถ้าวันหนึ่ง… เรือเอียงไปฝั่งที่น้องคุณนั่ง", "ถ้าวันหนึ่ง… / เรือเอียงไปฝั่งที่[น้องคุณนั่ง]", ""),
+    ("n01", "n", "ถ้าวันหนึ่ง… เรือเอียงไปทางน้องคุณ", "ถ้าวันหนึ่ง… / เรือเอียงไปทาง[น้องคุณ]", ""),  # CINEMA BIBLE: shorter so the command stays ≤ 3.0 s after the 0.3 s gap (best of 3 tries, CER 0.06)
     ("n02", "n", "อย่าวิ่งไปหาน้อง", "{อย่าวิ่งไปหาน้อง}", ""),
     ("n03", "n", "เรือบุญล้น… คนเกินป้าย… และทุกคน เพิ่งลุกขึ้นพร้อมกัน", "เรือบุญล้น… [คนเกินป้าย]… / และทุกคน / เพิ่ง{ลุกขึ้นพร้อมกัน}", "", "shorts"),
     ("x01", "x1", "ไปฝั่งนู้น! ถ่วงไว้!", "ไปฝั่งนู้น! / {ถ่วงไว้}!", "ตะโกน ตกใจ ตะกายขึ้นที่สูง"),
