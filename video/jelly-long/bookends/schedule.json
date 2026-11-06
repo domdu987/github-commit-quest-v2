@@ -1,0 +1,26 @@
+{
+ "total": 16.0,
+ "shots": [
+  {
+   "key": "title",
+   "start": 0,
+   "dur": 3.0,
+   "vo": [],
+   "voEnd": 0
+  },
+  {
+   "key": "credits",
+   "start": 3.0,
+   "dur": 5.0,
+   "vo": [],
+   "voEnd": 0
+  },
+  {
+   "key": "card",
+   "start": 8.0,
+   "dur": 8.0,
+   "vo": [],
+   "voEnd": 0
+  }
+ ]
+}

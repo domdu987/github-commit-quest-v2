@@ -1,0 +1,51 @@
+      // ===== หนวดใส ฉบับเต็ม · bookends drawn for 16:9 (the landscape build only): the title after the cold open, the credits over the held
+      // sea, the end card (next story at 09:30, subscribe, the previous long). Page text is HTML in page pixels (.pagepos), the world is the beach.
+      const PAGE = (id, html, css = "") => document.getElementById(id).insertAdjacentHTML("beforeend",
+        `<div class="pagepos" id="${id}-page" style="position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none;${css}">${html}</div>`);
+      const FADE = (tl, sel, t, d = 0.6, to = 1) => { tl.set(sel, { opacity: 0 }, 0); tl.to(sel, { opacity: to, duration: d, ease: "power1.out", immediateRender: false }, t); };
+      const BEACHE = (id, x = {}) => BEACH(id, { tower: [1250, 1290, 0.7], post: [980, 1340, 0.5, 1], umbrellas: [], life: [], ...x });
+
+      // title · the bay at morning from far back, the post small by the tower: "หนวดใส" written like the swash title, "ฉบับเต็ม" under it
+      add("title", { set: "jellyBeach", setOpts: BEACHE("jbT", { time: "morning" }), dark: 0, light: DAWN,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 0.82, 540, 1000) }, { t: D("title"), glide: D("title"), ...fr(560, 1250, 0.9, 540, 1000) }] },
+        captions: [],
+        fx(tl, id, t0) {
+          PAGE(id, `<div id="${id}-tt" style="position:absolute;left:0;right:0;top:300px;text-align:center">
+              <div style="font-family:Sriracha;font-size:190px;line-height:1;color:#fff;-webkit-text-stroke:6px #08384e;paint-order:stroke;text-shadow:0 8px 30px rgba(0,40,60,.55)">หนวดใส</div>
+              <div id="${id}-st" style="margin-top:18px;font-family:Kanit;font-weight:800;font-size:64px;letter-spacing:6px;color:#fff;-webkit-text-stroke:3px #08384e;paint-order:stroke">ฉบับเต็ม</div></div>`);
+          FADE(tl, `#${id}-tt`, t0 + 0.15, 0.7);
+          tl.fromTo(`#${id}-st`, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.7);
+          tl.to(`#${id}-tt`, { opacity: 0, duration: 0.4, immediateRender: false }, t0 + D("title") - 0.45);
+        } });
+      // credits · the same bay at dusk, empty; the sea keeps going under the names (the ambience holds 5 s, then silence)
+      add("credits", { set: "jellyBeach", setOpts: BEACHE("jbC", { time: "eerie", post: [980, 1340, 0.5, 1] }), dark: 0.25, light: false,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 0.82, 540, 1000) }, { t: D("credits"), glide: D("credits"), ...fr(560, 1240, 0.86, 540, 1000) }] },
+        captions: [],
+        fx(tl, id, t0) {
+          PAGE(id, `<div id="${id}-cr" style="position:absolute;left:0;right:0;top:330px;text-align:center;color:#f2f6f8;font-family:Kanit">
+              <div style="font-weight:800;font-size:64px">หนวดใส</div>
+              <div style="margin-top:10px;font-weight:500;font-size:34px;opacity:.85">อยู่นิ่งอย่าถู · เรียกหมอมาดู · โทร 1669</div>
+              <div style="margin-top:44px;font-weight:600;font-size:30px;opacity:.8">ข้อมูล: กรมควบคุมโรค · กรมทรัพยากรทางทะเลและชายฝั่ง</div>
+              <div style="margin-top:12px;font-weight:600;font-size:30px;opacity:.8">เรื่องและภาพ: Rod Mai Club</div></div>`);
+          FADE(tl, `#${id}-cr`, t0 + 0.3, 0.8, 1);
+          tl.to(`#${id}-cr`, { opacity: 0, duration: 0.6, immediateRender: false }, t0 + D("credits") - 0.7);
+        } });
+      // end card · the next story at 09:30, subscribe, and the previous long (the YouTube end screen sits on the two boxes)
+      add("card", { set: "jellyBeach", setOpts: BEACHE("jbE", { time: "eerie" }), dark: 0.55, light: false,
+        cam: { keys: [{ t: 0, ...fr(560, 1250, 0.86, 540, 1000) }] },
+        captions: [],
+        fx(tl, id, t0) {
+          PAGE(id, `<div id="${id}-nx" style="position:absolute;left:0;right:0;top:110px;text-align:center;font-family:Kanit;color:#fff">
+              <div style="font-weight:600;font-size:40px;opacity:.85">เรื่องต่อไป</div>
+              <div style="margin-top:6px;font-weight:900;font-size:84px;-webkit-text-stroke:3px #3a1a10;paint-order:stroke">เรือล่มคืนลอยกระทง</div>
+              <div style="display:inline-block;margin-top:14px;padding:8px 30px;border-radius:40px;background:#f2c230;color:#2a1a08;font-weight:800;font-size:40px">ทุกวัน 09:30</div></div>
+            <div id="${id}-vid" style="position:absolute;left:250px;top:520px;width:720px;height:405px;border-radius:18px;border:5px solid #fff;background:rgba(10,30,40,.55);box-shadow:0 10px 40px rgba(0,0,0,.5);font-family:Kanit;color:#fff;text-align:center">
+              <div style="margin-top:150px;font-weight:600;font-size:34px;opacity:.85">ดูต่อ</div><div style="font-weight:900;font-size:56px">นาทีก่อนจม ฉบับเต็ม</div></div>
+            <div id="${id}-sub" style="position:absolute;left:1130px;top:540px;width:540px;text-align:center;font-family:Kanit;color:#fff">
+              <div style="margin:0 auto;width:300px;height:300px;border-radius:50%;border:6px solid #fff;background:radial-gradient(circle at 40% 35%,#2a6a8a,#0a2a3a)"></div>
+              <div style="display:inline-block;margin-top:24px;padding:14px 44px;border-radius:14px;background:#d8312a;font-weight:900;font-size:48px">กดติดตาม</div></div>`);
+          FADE(tl, `#${id}-nx`, t0 + 0.1, 0.5);
+          tl.fromTo(`#${id}-vid`, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)", immediateRender: false }, t0 + 0.5);
+          tl.fromTo(`#${id}-sub`, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)", immediateRender: false }, t0 + 0.7);
+          tl.set(`#${id}-vid`, { opacity: 0 }, 0); tl.set(`#${id}-sub`, { opacity: 0 }, 0);
+        } });

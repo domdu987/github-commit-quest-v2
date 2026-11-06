@@ -1,0 +1,10 @@
+{
+ "bands": [
+  {
+   "from": 0,
+   "to": 16.0,
+   "stage": "safe"
+  }
+ ],
+ "keep": "yellow"
+}

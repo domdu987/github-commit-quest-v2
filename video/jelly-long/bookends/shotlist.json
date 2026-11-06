@@ -1,0 +1,56 @@
+{
+ "total": 16.0,
+ "cuts": [
+  {
+   "n": 1,
+   "piece": "title",
+   "key": "title",
+   "t": 0,
+   "dur": 3.0,
+   "emotion": "safe",
+   "size": "EWS",
+   "angle": "eye",
+   "move": "hold",
+   "dutch": 0,
+   "lead_sound": 0,
+   "face_w": 0,
+   "hold": false,
+   "threat_first": false,
+   "note": "title"
+  },
+  {
+   "n": 2,
+   "piece": "credits",
+   "key": "credits",
+   "t": 3.0,
+   "dur": 5.0,
+   "emotion": "safe",
+   "size": "EWS",
+   "angle": "eye",
+   "move": "hold",
+   "dutch": 0,
+   "lead_sound": 0,
+   "face_w": 0,
+   "hold": false,
+   "threat_first": false,
+   "note": "credits"
+  },
+  {
+   "n": 3,
+   "piece": "card",
+   "key": "card",
+   "t": 8.0,
+   "dur": 8.0,
+   "emotion": "safe",
+   "size": "MS",
+   "angle": "eye",
+   "move": "hold",
+   "dutch": 0,
+   "lead_sound": 0,
+   "face_w": 0,
+   "hold": false,
+   "threat_first": false,
+   "note": "card"
+  }
+ ]
+}
