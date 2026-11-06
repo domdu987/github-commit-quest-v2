@@ -75,7 +75,7 @@
       /*__GAMECSS__*/
       .capwrap { z-index: 56; top: 1480px; }
       .capbox { background: rgba(12,18,20,.86); color: #f4ecd8; border: 2px solid rgba(244,236,216,.4); border-radius: 22px;
-        box-shadow: 0 0 0 4px rgba(10,14,16,.45), 0 14px 30px rgba(0,0,0,.55); font: 900 64px/1.22 Kanit; padding: 12px 34px 18px; max-width: 1040px; box-sizing: border-box; white-space: normal; text-align: center; }
+        box-shadow: 0 0 0 4px rgba(10,14,16,.45), 0 14px 30px rgba(0,0,0,.55); font: 900 64px/1.22 Kanit; padding: 12px 34px 18px; max-width: 1040px; box-sizing: border-box; white-space: normal; text-align: center; text-wrap: balance; }
       .capbox .k { background: #f2c55c; color: #2e2a26; border: 0; border-radius: 10px; padding: 0 .16em; transform: rotate(-1.5deg); }
       .capbox .k.kr, .k.kr { background: #d8443a; color: #fff4ea; }
       .capbox.q { background: rgba(244,236,216,.94); color: #2e2a26; border-color: #2e2a26; }
