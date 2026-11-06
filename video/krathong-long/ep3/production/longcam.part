@@ -1,0 +1,40 @@
+      // ================= the long (16:9): EP.3 full + น้าหมาน's secret recomposed for the wide page (frL / LY0 from longcast.part) =================
+      // heads in world units: standing ≈ y − 570·scale, seated ≈ y − 285·scale; a head lands at page y ≈ 380 with wy = head + 160 / (0.8·s)
+      const LCm = (keys, y0 = LY0) => ({ cam: { keys }, land: { y0 } });
+      window.LONGCAM = {
+        // the raft bearing down on her (wide) → her face, water at the shoulders (MCU) → the raft and its bow wave over her
+        open: () => LCm([{ t: 0, ...frL(600, 1000, 0.95) }, { t: OP1, ...frL(470, 1190, 2.4) }, { t: OP2, ...frL(760, 1120, 1.5) }, { t: D("open"), glide: D("open") - OP2, ...frL(720, 1130, 1.6) }]),
+        hook: () => LCm([{ t: 0, ...frL(430, 1181, 2.0) }, { t: D("hook"), glide: D("hook"), ...frL(540, 1170, 2.1) }]),
+        // ลุง clinging to the hull, shouting (MS) → the raft going by (wide) → the gallon drifting off (insert)
+        party: () => LCm([{ t: 0, ...frL(420, 1235, 2.0) }, { t: PA1 - 0.1, glide: PA1 - 0.1, ...frL(430, 1235, 2.1) },
+          { t: PA1, ...frL(620, 1150, 0.85) }, { t: PA2 - 0.05, glide: PA2 - PA1, ...frL(640, 1160, 0.9) },
+          { t: PA2, ...frL(-220, 1300, 2.4) }, { t: D("party"), glide: D("party") - PA2, ...frL(-300, 1290, 2.5) }]),
+        rule: () => LCm([{ t: 0, ...frL(500, 1230, 2.2) }, { t: RU1, ...frL(540, 1250, 1.5) }, { t: D("rule"), glide: D("rule") - RU1, ...frL(540, 1250, 1.6) }]),
+        rescue: () => LCm([{ t: 0, ...frL(600, 1150, 0.9) }, { t: RS1 - 0.05, glide: RS1, ...frL(620, 1150, 0.95) },
+          { t: RS1, ...frL(830, 1005, 1.9) }, { t: D("rescue"), glide: D("rescue") - RS1, ...frL(820, 1005, 2.0) }]),
+        kp: () => LCm([{ t: 0, ...frL(320, 1120, 0.95) }, { t: D("kp"), glide: D("kp"), ease: "power2.inOut", ...frL(600, 1215, 1.8) }]),
+        blow: () => LCm([{ t: 0, ...frL(360, 1031, 2.0) }, { t: BL1 - 0.05, glide: BL1, ...frL(360, 1031, 2.1) },
+          { t: BL1, ...frL(-300, 1265, 2.6) }, { t: D("blow"), glide: D("blow") - BL1, ...frL(-300, 1260, 2.75) }]),
+        found: () => LCm([{ t: 0, ...frL(560, 1250, 1.9) }, { t: D("found"), glide: D("found"), ...frL(560, 1250, 2.0) }]),
+        count: () => LCm([{ t: 0, ...frL(180, 1162, 2.4) }, { t: CO1 - 0.05, glide: CO1, ...frL(190, 1162, 2.5) },
+          { t: CO1, ...frL(400, 1150, 1.0) }, { t: D("count"), glide: D("count") - CO1, ...frL(420, 1150, 1.05) }]),
+        maan: () => LCm([{ t: 0, ...frL(330, 1168, 2.6) }, { t: vo("maan", 1) - 0.3, glide: 1.6, ...frL(370, 1168, 2.6) }, { t: D("maan"), glide: D("maan") - vo("maan", 1) + 0.3, ...frL(380, 1168, 2.7) }]),
+        why: () => LCm([{ t: 0, ...frL(-480, 1049, 2.6) }, { t: D("why"), glide: D("why"), ...frL(-480, 1049, 2.75) }]),
+        then: () => LCm([{ t: 0, ...frL(-500, 1034, 3.2) }, { t: TH1 - 0.05, glide: TH1, ...frL(-500, 1034, 3.4) },
+          { t: TH1, ...frL(560, 1220, 1.3) }, { t: TH2, ...frL(470, 1330, 3.0) }, { t: D("then"), glide: D("then") - TH2, ...frL(470, 1330, 3.2) }]),
+        hush: () => LCm([{ t: 0, ...frL(-500, 1034, 3.2) }, { t: D("hush"), glide: D("hush"), ...frL(-500, 1030, 3.35) }]),
+        cans: () => LCm([{ t: 0, ...frL(-470, 1080, 3.6) }, { t: CA1 - 0.05, glide: CA1, ...frL(-470, 1080, 3.8) },
+          { t: CA1, ...frL(-500, 1050, 2.4) }, { t: D("cans"), glide: D("cans") - CA1, ...frL(-500, 1050, 2.55) }]),
+        pier: () => LCm([{ t: 0, ...frL(-150, 919, 3.2) }, { t: PI1 - 0.05, glide: PI1, ...frL(-150, 919, 3.35) },
+          { t: PI1, ...frL(150, 1150, 1.4) }, { t: PI2, ...frL(-150, 919, 3.2) }, { t: D("pier"), glide: D("pier") - PI2, ...frL(-150, 919, 3.35) }]),
+        shame: () => LCm([{ t: 0, ...frL(-470, 1040, 3.0) }, { t: SHC - 0.05, glide: SHC, ...frL(-470, 1040, 3.15) },
+          { t: SHC, ...frL(-540, 1034, 3.2) }, { t: D("shame"), glide: D("shame") - SHC, ...frL(-540, 1034, 3.4) }]),
+        accuse: () => LCm([{ t: 0, ...frL(300, 1151, 2.4) }, { t: AC1 - 0.05, glide: AC1, ...frL(300, 1151, 2.5) },
+          { t: AC1, ...frL(440, 1123, 3.6) }, { t: D("accuse"), glide: D("accuse") - AC1, ...frL(440, 1123, 3.8) }]),
+        reveal: () => LCm([{ t: 0, ...frL(210, 1192, 4.0) }, { t: RV1 - 0.05, glide: RV1, ease: "power1.inOut", ...frL(210, 1200, 3.3) },
+          { t: RV1, ...frL(210, 1192, 3.4) }, { t: D("reveal"), glide: D("reveal") - RV1, ...frL(210, 1195, 3.1) }]),
+        hug: () => LCm([{ t: 0, ...frL(180, 1211, 2.9) }, { t: HU1 - 0.05, glide: HU1, ...frL(180, 1211, 3.1) },
+          { t: HU1, ...frL(820, 1159, 2.2) }, { t: D("hug"), glide: D("hug") - HU1, ...frL(840, 1159, 2.3) }]),
+        close: () => LCm([{ t: 0, ...frL(600, 1100, 0.9) }, { t: CL1 - 0.05, glide: CL1, ...frL(620, 1100, 0.92) },
+          { t: CL1, ...frL(530, 1213, 2.4) }, { t: D("close"), glide: D("close") - CL1, ...frL(530, 1205, 2.3) }]),
+      };
