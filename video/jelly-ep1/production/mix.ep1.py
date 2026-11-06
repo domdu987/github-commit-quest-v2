@@ -65,12 +65,12 @@ def frag(k, i=0, j=0):
 
 
 # ---- voice: lane B's takes (vo/<id>.wav rebuilt from its cached mp3s, durations identical), each line levelled on its own;
-# p03 "โอ๊ย! ขาผม!" is the synthesized kid's scream (kidscream.py) instead of a TTS take ----
+# p03 "โอ๊ย! ขาผม!" is a real kid's pain scream (ElevenLabs SFX v2 take1, production/scream/) instead of a TTS take ----
 LINE_GAIN = {"p03": 1.5}
 vo = np.zeros(N, np.float32)
 for s in SC["shots"]:
     for v in s["vo"]:
-        f = os.path.join(HERE, "kidscream.wav") if v["id"] == "p03" else os.path.join(HERE, "lb", "vo", f"{v['id']}.wav")
+        f = os.path.join(HERE, "scream_take1.mp3") if v["id"] == "p03" else os.path.join(HERE, "lb", "vo", f"{v['id']}.wav")
         place(vo, level(load(f), -18 + LINE_GAIN.get(v["id"], 0)), s["start"] + v["t"])
 
 D = {k: SH[k]["dur"] for k in SH}
