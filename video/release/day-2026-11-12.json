@@ -7,7 +7,7 @@
  "story": "หนวดใส (แมงกะพรุน) เรื่องใหม่ตามด่านฮุก 6 พ.ย. · Shorts EP.1 09:00 + EP.2 09:15 + คลิปยาว 16:9 09:30",
  "complete": false,
  "missing": [
-  "Shorts EP.2 หนวดใส (กำลังทำ · เลน C)",
+  "Shorts EP.2 หนวดใส: เรนเดอร์แล้ว (1f091a8) รอโต๊ะตรวจ",
   "คลิปยาว 16:9 หนวดใส (กำลังทำ · เลน C)",
   "upload sheet video/release/sheets/jelly-upload.md (prod/lane-b)",
   "ปก 3 ภาพ",
@@ -44,6 +44,26 @@
    "due": "2026-11-11T22:00+07:00",
    "note": "v1 เรนเดอร์ 6 พ.ย. 14:13 (603bd95) · เสียงกรีดร้องจริง + HQ 94.35 MB sha a01f91dd… ที่ 93d22e0 (รุ่นสำรองหน้าตาเดิม) · รุ่นลงจริงคือรุ่น cine ที่กำลังทำ · รุ่น cine เรนเดอร์ 6 พ.ย. 16:24 (f4c9bcf · 1:54.75 · HQ 94,243,857 B · share video/jelly-ep1/jelly-ep1-cine-share.mp4 26,346,138 B sha 1b7acc52…) · ผู้ประสานงานตรวจ sha แล้ว · ห้ามใช้ไฟล์รอบแรกที่ซับซ้อนกันที่ 1:41 (ไม่ได้ส่งเข้า git)",
    "review": "สตอรีบอร์ดผ่านรอบ 2 · โต๊ะตรวจไฟล์ v1 (603bd95, 6 พ.ย.): ยังไม่พร้อม · BLOCKER 2 ข้อ (ช็อต 4 คนหน้าโดนบัง 43.6–46.0 วิ · พีกแพ้ทะเลลด EP.2 เล็กน้อย) · รายงาน video/release/reviews/2026-11-06-jelly-ep1-v1.md · ไฟล์ v1 ใช้เป็นภาพก่อนใช้ cine เท่านั้น · EP.1 ทำใหม่ด้วย cine.js ตาม CINEMA BIBLE (แผน prod/lane-c 3147320) · ภาพนิ่ง cine r3 ผ่าน (31bbfd5) · โต๊ะตรวจไฟล์ cine (f4c9bcf, 6 พ.ย. 17:30): ยังไม่พร้อม · BLOCKER 1 ข้อ: คัต 9 ภาพแทรกแฟลช 0.37 วิ แล้วภาพค้าง 3.8 วิ (41–51 วิ) · ด่านคู่ทะเลลด EP.2 เท่า/เท่า/เท่า · ทดสอบคู่มือ cine เทียบ v1: ดีกว่าเล็กน้อย · รายงาน video/release/reviews/2026-11-06-jelly-ep1-cine.md · เลน C แก้คัต 9 กับ M1–M5, M7, M11 แล้วเรนเดอร์ใหม่หลัง EP.2"
+  },
+  {
+   "slot": "09:15",
+   "id": "jelly-ep2",
+   "kind": "short_9x16",
+   "platforms": [
+    "youtube",
+    "facebook",
+    "instagram"
+   ],
+   "status": "in_production",
+   "branch": "prod/lane-c",
+   "commit": "1f091a8",
+   "video": "video/release/hq/jelly-ep2-cine-HQ.mp4",
+   "video_sha256": "cda568f363736bf61052c55a70635f601a3d017608ab23451d3a97452fea4f7d",
+   "video_bytes": 75837276,
+   "made_by": "เลน C (โต๊ะภาพ 1) · บทและเสียง เลน B",
+   "due": "2026-11-11T22:00+07:00",
+   "note": "รุ่น cine (CINEMA BIBLE) เรนเดอร์ 6 พ.ย. 17:25 (1f091a8 · 1:32.3 · share video/jelly-ep2/jelly-ep2-cine-share.mp4 22,131,757 B sha dbf46a29…) · ผู้ประสานงานตรวจ sha แล้ว · บทและเสียงตามตารางเลน B e869755",
+   "review": "สตอรีบอร์ด r1 ยังไม่ผ่าน 4 ข้อ (6111ef7) · r2 ผ่าน (438d8a3) · โต๊ะตรวจไฟล์ cine (1f091a8) กำลังตรวจ"
   }
  ],
  "video_long": null,
