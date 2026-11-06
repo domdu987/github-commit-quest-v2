@@ -1,0 +1,38 @@
+      const Q = new URLSearchParams(location.search), V = Q.get("v") || "mitr";
+      const FF = { kanit: "Kanit", mitr: "Mitr", prompt: "Prompt", chakra: "Chakra Petch", kod: "Kodchasan" }[V] || "Kanit";
+      const SC = { kanit: 1, mitr: 0.97, prompt: 0.95, chakra: 0.94, kod: 0.88 }[V] || 1;   // width differs per font; keep the title inside the frame
+      const px = (n) => Math.round(n * SC) + "px";
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        @font-face { font-family: 'Mitr'; font-weight: 700; src: url(assets/fonts/Mitr.ttf); }
+        @font-face { font-family: 'Prompt'; font-weight: 900; src: url(assets/fonts/Prompt.ttf); }
+        @font-face { font-family: 'Chakra Petch'; font-weight: 700; src: url(assets/fonts/ChakraPetch.ttf); }
+        @font-face { font-family: 'Kodchasan'; font-weight: 700; src: url(assets/fonts/Kodchasan.ttf); }
+        ${V === "kanit" || V === "old" ? "" : `#stage text { font-family: "${FF}" !important; }`}
+        .cv { position: absolute; left: 0; right: 0; z-index: 70; font-family: "${FF}", Kanit; font-weight: 900; text-align: center; pointer-events: none; }
+        .ol { position: relative; display: inline-block; z-index: 0; filter: drop-shadow(0 12px 0 rgba(0,0,0,.5)); }
+        .ol::before { content: attr(data-t); position: absolute; left: 0; top: 0; z-index: -1; color: transparent; -webkit-text-stroke: 18px #15101c; }
+        .cv-top { top: 0; height: 700px; background: linear-gradient(180deg, rgba(10,8,14,.9) 0%, rgba(10,8,14,.7) 48%, rgba(10,8,14,0) 100%); padding-top: 170px; }
+        .cv-title { font-size: ${px(124)}; line-height: 1.05; color: #ffd84a; letter-spacing: -2px; }
+        .cv-title .ol { text-shadow: 0 0 34px rgba(255,214,74,.55); }
+        .cv-ep { margin-top: 36px; font-size: 54px; line-height: 1; color: #fff; }
+        .cv-ep .pill { display: inline-block; background: #e2382e; color: #fff; padding: 8px 26px 12px; border-radius: 18px; margin-right: 18px; box-shadow: 0 0 0 6px #15101c, 0 8px 0 6px rgba(0,0,0,.4); }
+        .cv-ep .ol::before { -webkit-text-stroke-width: 12px; }
+        .cv-bot { bottom: 0; height: 620px; background: linear-gradient(0deg, rgba(10,8,14,.94) 0%, rgba(10,8,14,.8) 50%, rgba(10,8,14,0) 100%); padding-top: 170px; }
+        .cv-l1 { font-size: ${px(116)}; line-height: 1.1; color: #fff; }
+        .cv-cmd { display: inline-block; margin-top: 26px; font-size: ${px(132)}; line-height: 1; color: #fff; background: #e2382e; padding: 20px 56px 34px; border-radius: 30px; transform: rotate(-2deg); box-shadow: 0 0 0 10px #15101c, 0 18px 0 10px rgba(0,0,0,.45); text-shadow: 0 6px 0 rgba(0,0,0,.35); }
+      </style>`);
+      const OLD = `<div class="cv cv-top"><div class="cv-brand">ROD MAI CLUB</div><div class="cv-title">สกิลจอมโกหก</div><div class="cv-ep"><span class="pill">EP.1</span>การ์ดกากสุด</div></div>
+        <div class="cv cv-bot"><div class="cv-setup">ตายแล้วเกิดใหม่<br>ได้สกิล<b>กากสุด</b></div><div class="cv-cmd">โกหกจนได้ที่ 1</div></div>`;
+      const EP = Q.get("ep") || "1";
+      const T = EP === "2" ? { ep: "EP.2", sub: "ไฟในตัว 100%", l1: "คนทั้งซอยต่อคิว", cmd: "ขอชาร์จมือถือ !?" } : { ep: "EP.1", sub: "โดนฟ้าผ่า", l1: "ช่างเชื่อมโดนไฟช็อต", cmd: "เป็นเทพสายฟ้า !?" };
+      const LEAN = `<div class="cv cv-top"><div class="cv-title"><span class="ol" data-t="ช่างเชื่อมสายฟ้า">ช่างเชื่อมสายฟ้า</span></div><div class="cv-ep"><span class="pill">${T.ep}</span><span class="ol" data-t="${T.sub}">${T.sub}</span></div></div>
+        <div class="cv cv-bot"><div class="cv-l1"><span class="ol" data-t="${T.l1}">${T.l1}</span></div><div class="cv-cmd">${T.cmd}</div></div>`;
+      root.insertAdjacentHTML("beforeend", `<div id="vig"></div><div id="flashw"></div><div id="black"></div>` + (V === "old" ? OLD : LEAN));
+      Fx.setup(root);
+      Engine.build(root, tl, shots);
+      root.appendChild(document.getElementById("grain"));
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
