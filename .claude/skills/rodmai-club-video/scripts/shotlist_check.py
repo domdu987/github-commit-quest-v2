@@ -9,6 +9,7 @@ usage:
                    "face_w","hold","threat_first","note", optional "deg","silhouette","command","command_t","expect"}]}  · one entry per cut, absolute times
                   commands = captions that start with "{อย่า" + the first line inside a cut marked "command": true
                   + "command_t": <seconds> on a cut = the exact time of the word "อย่า" inside a longer line
+                  - "command": false on a cut = its red-box line is a mid-story rule, not a real command (no full silence needed)
   soundplan.json  {"drone_start": t, "silences": [[t0, t1], ...], "sting": t, "bpm": [[t, bpm], ...], "ambience": [...]}
   sfx_cues.json   the mix's cue list {"sfx": [{"t", "type", "gain"}]} (type "sting" is counted)
 
@@ -181,6 +182,15 @@ def main():
 
     # ---- commands: pause 0.3 s, silence 1 s, still shot ----
     cmds, lines = commands(sched, [(c["t"], c["t"] + c["dur"]) for c in cuts if c.get("command") and not c.get("command_t")])
+    # "command": false on a cut = its red-box "{อย่า…}" line is a mid-story rule, not a real command (hook/choice):
+    # the red box stays, a short dip is enough, no full 1 s silence / pause / slow-down is required
+    exempt = [(c["t"], c["t"] + c["dur"]) for c in cuts if c.get("command") is False]
+    if exempt:
+        keep = [x for x in cmds if not any(f0 - 1e-6 <= x[0] < f1 for f0, f1 in exempt)]
+        for x in cmds:
+            if x not in keep:
+                R.ok(f"กล่องแดง {x[2]} ที่ {x[0]:.2f} วิ อยู่ในคัตที่ตั้ง \"command\": false (กฎกลางเรื่อง ไม่ใช่คำสั่งจริง ใช้ dip สั้นๆ ได้)")
+        cmds = keep
     # a cut can name the exact time of the word "อย่า" (e.g. from Whisper word times) when it sits inside a longer line
     for c in cuts:
         if c.get("command_t") is not None:
