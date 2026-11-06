@@ -1,11 +1,11 @@
 {
- "total": 80.89,
+ "total": 80.426,
  "cuts": [
   {
    "n": 1,
    "key": "open",
    "t": 0.0,
-   "dur": 0.981,
+   "dur": 0.826,
    "emotion": "hook",
    "size": "ECU",
    "angle": "eye",
@@ -21,8 +21,8 @@
   {
    "n": 2,
    "key": "open",
-   "t": 0.981,
-   "dur": 0.981,
+   "t": 0.826,
+   "dur": 0.826,
    "emotion": "hook",
    "size": "WS",
    "angle": "low",
@@ -38,8 +38,8 @@
   {
    "n": 3,
    "key": "open",
-   "t": 1.962,
-   "dur": 0.981,
+   "t": 1.653,
+   "dur": 0.826,
    "emotion": "hook",
    "size": "CU",
    "angle": "eye",
@@ -55,7 +55,7 @@
   {
    "n": 4,
    "key": "hook",
-   "t": 2.943,
+   "t": 2.479,
    "dur": 1.12,
    "emotion": "hook",
    "size": "CU",
@@ -72,7 +72,7 @@
   {
    "n": 5,
    "key": "hook",
-   "t": 4.063,
+   "t": 3.599,
    "dur": 0.92,
    "emotion": "fear",
    "size": "MCU",
@@ -89,7 +89,7 @@
   {
    "n": 6,
    "key": "recap",
-   "t": 4.983,
+   "t": 4.519,
    "dur": 5.425,
    "emotion": "uneasy",
    "size": "CU",
@@ -106,7 +106,7 @@
   {
    "n": 7,
    "key": "climb",
-   "t": 10.408,
+   "t": 9.944,
    "dur": 1.15,
    "emotion": "fear",
    "size": "WS",
@@ -124,7 +124,7 @@
   {
    "n": 8,
    "key": "climb",
-   "t": 11.558,
+   "t": 11.094,
    "dur": 1.4,
    "emotion": "fear",
    "size": "MCU",
@@ -141,7 +141,7 @@
   {
    "n": 9,
    "key": "climb",
-   "t": 12.958,
+   "t": 12.494,
    "dur": 2.018,
    "emotion": "fear",
    "size": "MS",
@@ -158,7 +158,7 @@
   {
    "n": 10,
    "key": "rule",
-   "t": 14.976,
+   "t": 14.512,
    "dur": 2.33,
    "emotion": "choice",
    "size": "ECU",
@@ -175,7 +175,7 @@
   {
    "n": 11,
    "key": "rule",
-   "t": 17.306,
+   "t": 16.842,
    "dur": 2.0,
    "emotion": "lesson",
    "size": "CU",
@@ -192,7 +192,7 @@
   {
    "n": 12,
    "key": "rule",
-   "t": 19.306,
+   "t": 18.842,
    "dur": 3.939,
    "emotion": "uneasy",
    "size": "MS",
@@ -209,7 +209,7 @@
   {
    "n": 13,
    "key": "rule",
-   "t": 23.245,
+   "t": 22.781,
    "dur": 2.62,
    "emotion": "fear",
    "size": "CU",
@@ -226,7 +226,7 @@
   {
    "n": 14,
    "key": "fail",
-   "t": 25.865,
+   "t": 25.401,
    "dur": 2.85,
    "emotion": "fear",
    "size": "WS",
@@ -243,7 +243,7 @@
   {
    "n": 15,
    "key": "fail",
-   "t": 28.715,
+   "t": 28.251,
    "dur": 0.782,
    "emotion": "fear",
    "size": "WS",
@@ -262,7 +262,7 @@
   {
    "n": 16,
    "key": "under",
-   "t": 29.497,
+   "t": 29.033,
    "dur": 1.45,
    "emotion": "fear",
    "size": "MCU",
@@ -279,7 +279,7 @@
   {
    "n": 17,
    "key": "under",
-   "t": 30.947,
+   "t": 30.483,
    "dur": 1.45,
    "emotion": "fear",
    "size": "ECU",
@@ -296,7 +296,7 @@
   {
    "n": 18,
    "key": "under",
-   "t": 32.397,
+   "t": 31.933,
    "dur": 2.427,
    "emotion": "fear",
    "size": "MS",
@@ -313,7 +313,7 @@
   {
    "n": 19,
    "key": "surf",
-   "t": 34.824,
+   "t": 34.36,
    "dur": 2.298,
    "emotion": "fear",
    "size": "MS",
@@ -330,7 +330,7 @@
   {
    "n": 20,
    "key": "surf",
-   "t": 37.122,
+   "t": 36.658,
    "dur": 6.898,
    "emotion": "uneasy",
    "size": "WS",
@@ -348,7 +348,7 @@
   {
    "n": 21,
    "key": "jug",
-   "t": 44.02,
+   "t": 43.556,
    "dur": 2.696,
    "emotion": "twist",
    "size": "CU",
@@ -365,7 +365,7 @@
   {
    "n": 22,
    "key": "stairs",
-   "t": 46.716,
+   "t": 46.252,
    "dur": 5.323,
    "emotion": "twist",
    "size": "CU",
@@ -382,7 +382,7 @@
   {
    "n": 23,
    "key": "stairs",
-   "t": 52.039,
+   "t": 51.575,
    "dur": 6.409,
    "emotion": "uneasy",
    "size": "WS",
@@ -399,7 +399,7 @@
   {
    "n": 24,
    "key": "stairs",
-   "t": 58.448,
+   "t": 57.984,
    "dur": 2.753,
    "emotion": "uneasy",
    "size": "MS",
@@ -416,7 +416,7 @@
   {
    "n": 25,
    "key": "stairs",
-   "t": 61.201,
+   "t": 60.737,
    "dur": 3.618,
    "emotion": "twist",
    "size": "CU",
@@ -433,7 +433,7 @@
   {
    "n": 26,
    "key": "vest",
-   "t": 64.819,
+   "t": 64.355,
    "dur": 2.154,
    "emotion": "fear",
    "size": "CU",
@@ -450,7 +450,7 @@
   {
    "n": 27,
    "key": "vest",
-   "t": 66.973,
+   "t": 66.509,
    "dur": 4.964,
    "emotion": "uneasy",
    "size": "ECU",
@@ -467,7 +467,7 @@
   {
    "n": 28,
    "key": "choice",
-   "t": 71.937,
+   "t": 71.473,
    "dur": 3.725,
    "emotion": "choice",
    "size": "MS",
@@ -484,7 +484,7 @@
   {
    "n": 29,
    "key": "endb",
-   "t": 75.662,
+   "t": 75.198,
    "dur": 5.228,
    "emotion": "lesson",
    "size": "MS",

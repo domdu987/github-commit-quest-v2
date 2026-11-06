@@ -2,11 +2,14 @@
       // ---------- 1–2 · open: ข้าวปั้น's sandals step up onto the bench (ECU) → the overloaded boat sliding at the pontoon (WS) ----------
       add("open", {
         extra(L) { boatAtPier(L, { noCrowd: true }); }, ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.75 }, blur: { sky: 1, far: 1.5, fg: 6 },
-        cam: { keys: [{ t: 0, ...fr(700, 1150, 7, 540, 900) }, { t: 1.16, ...fr(600, 1110, 1.42, 540, 1000) }] },
-        actors: hookCast(-3.5, false),
+        cam: { keys: [{ t: 0, ...fr(KX, 1040, 6.2, 540, 860) }, { t: 1.16, ...fr(600, 1110, 1.42, 540, 1000) }] },
+        actors: hookCast(-3.5),
         captions: capsQ("open"),
         fx(tl, id, t0, L) {
-          hookBench(L, -3.5);
+          L.id = id; L.riseAt = t0 + 1.85; hookBench(L, tl, -3.5);
+          // the boat rocks from the first frame; ข้าวปั้น sways on the bench with it
+          lean(tl, id, t0, 0); for (let k = 0; k < 4; k++) leanTo(tl, id, t0 + k * 0.6, k % 2 ? -2.5 : 2.5, 0.6, "sine.inOut");
+          tl.fromTo(`#${id}-a2`, { rotation: -4, svgOrigin: `${KX} ${KY}` }, { rotation: 5, svgOrigin: `${KX} ${KY}`, duration: 0.55, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0);
           burstAt(tl, L, `${id}-b1`, 250, 330, 200, t0 + 0.9);
           // the title, in the world of the story: candle letters on the banana-trunk arch behind the pontoon (screen space in the WS)
           put(L.light, `<g id="${id}-ttl" transform="translate(540,470)" opacity="0"><text x="0" y="0" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="104" fill="#fff2c8" stroke="#2a1a10" stroke-width="9" paint-order="stroke">เรือล่ม</text>
@@ -30,7 +33,7 @@
         cam: { keys: [{ t: 0, ...fr(526, 1297, 2.7, 540, 820) }, { t: 1.04, ...fr(560, 1560, 1.5, 540, 1000) }] },
         actors: [
           A("maprang", 520, 1800, 1.15, [{ t: 0, mode: "reachSit", eyes: "wide", mouth: "o" }, { t: 0.5, mode: "crouch", eyes: "wide", mouth: "scream" }]),
-          A("pxB", 180, 1800, 1.0, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 1.04, mode: "crouch", eyes: "wide", mouth: "o" }]),
+          A("pxB", 330, 1800, 1.0, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 1.04, mode: "crouch", eyes: "wide", mouth: "o" }]),
           A("pxE", 900, 1800, 1.05, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "o" }, { t: 1.1, mode: "crouch", eyes: "wide", mouth: "o" }], { flip: true }),
         ],
         captions: capsQ("hook"),
@@ -86,6 +89,7 @@
           put(L.act, `<g transform="translate(60,800)">${krathong(0, 0, 0.75, { seed: 101 })}</g>`);
           put(L.glow, kGlow(60, 800, 0.75, 90));
           put(L.set, kRefl(-60, 1660, 1.1, 200) + kRefl(820, 1800, 1.4, 240));
+          hangSign(L, tl, `${id}-f3`, t0 + 3.88, 3.0, ["กดติดตาม", "ดูเรื่องเต็มที่ช่อง YouTube"]);   // F3 (Shorts only)
         },
       });
       // ---------- 7 · whistle: ข้าวปั้น in the life jacket finds the orange whistle on it and blows (the clue, MCU) ----------
@@ -153,7 +157,10 @@
           A("khaopan", -420, 1084, 0.32, [{ t: 0, mode: "idle", eyes: "wide", mouth: "laugh" }], { flip: true }),
         ],
         captions: capsQ("rap"),
-        fx(tl, id, t0, L) { rulePaddle(L, `${id}-pd`, 0, []); paddleIn(tl, `${id}-pd`, t0 + RAP_CARD); },
+        fx(tl, id, t0, L) {
+          rulePaddle(L, `${id}-pd`, 0, []); paddleIn(tl, `${id}-pd`, t0 + RAP_CARD);
+          hangSign(L, tl, `${id}-hg7`, t0 + 2.91, 1.0, ["กดติดตาม", "ไว้ดูกฎข้อต่อไป ก่อนวันที่ต้องใช้"], { bell: true });   // HG7
+        },
       });
       // ---------- 12 · line: the red stripe ยาย painted at twelve people, one finger's width above the water — the long hold, pushing in ----------
       add("line", {
@@ -281,10 +288,8 @@
         },
         ...NIGHT, light: { ...MOONL, from: "right", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(560, 1120, 1.15, 540, 1000) }, { t: vo("fire", 1) - 0.1, glide: 1.0, ...fr(380, 1110, 1.8, 540, 1000) }, { t: vo("fire", 2) - 0.1, glide: 0.8, ...fr(760, 1080, 1.7, 540, 1000) }] },
-        actors: onBoat(560, 1240, 5, [
-          ["pxB", 120, 0.36, "point", "wide", "o"], ["pxC", 220, 0.34, "raise", "wide", "laugh"], ["pxE", 300, 0.37, "point", "normal", "o", true],
-          ["maprangPhone", -170, 0.36, "phoneLook", "normal", "smile"], ["khaopan", -320, 0.28, "idle", "worry", "o"],
-          ["lungMuek", 440, 0.38, "raise", "angry", "o", true]]).map((a, i) => i === 5 ? { ...a, talk: [TK("fire", 2)] } : i === 3 ? { ...a, talk: [TK("fire", 1)] } : a),
+        actors: onBoat(560, 1240, 5, [["maprangPhone", -170, 0.36, "phoneLook", "normal", "smile"], ["khaopan", -320, 0.28, "idle", "worry", "o"],
+          ["lungMuek", 440, 0.38, "raise", "angry", "o", true]]).map((a, i) => i === 2 ? { ...a, talk: [TK("fire", 2)] } : i === 0 ? { ...a, talk: [TK("fire", 1)] } : a),
         captions: capsQ("fire"),
         fx(tl, id, t0, L) {
           put(L.act, hullOver(boatSide(560, 1240, 0.92, { sink: 0.95, tilt: 5, water: true })));
@@ -358,15 +363,14 @@
       });
       // ---------- 22 · hit: the wake slaps the gunwale — spray in laps — people jump up to escape it; the boat hits the pontoon "ตึง" ----------
       add("hit", {
-        extra(L) { boatAtPier(L, { sink: 0.92, tilt: -2, seed: 22 }); },
+        extra(L) { boatAtPier(L, { sink: 0.92, tilt: -2, seed: 22, noCrowd: true }); },
         ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(560, 1130, 1.6, 540, 1000) }, { t: D("hit"), glide: D("hit"), ...fr(600, 1120, 1.8, 540, 1000) }] },
-        actors: [...onBoat(600, 1220, -2, [
-          ["pxB", -300, 0.33, "sitChair", "wide", "o"], ["pxA", -180, 0.32, "sitChair", "pain", "scream"], ["maprang", -30, 0.32, "sitChair", "wide", "o"],
-          ["pxC", 250, 0.3, "sitChair", "wide", "o"], ["pxE", 340, 0.34, "sitChair", "wide", "o", true], ["lungMuek", 405, 0.36, "idle", "angry", "o", true]]).map((a, i) => i < 5 && i !== 2 ? { ...a, track: [a.track[0], { t: 0.5 + i * 0.12, mode: "raise", eyes: "wide", mouth: "scream" }] } : a),
-          A("khaopan", 700, 1220 + 22 + 100 * Math.sin(-2 / 57.3), 0.26, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        actors: [...onBoat(600, 1220, -2, [["maprang", -150, 0.32, "sitChair", "wide", "o"], ["lungMuek", 405, 0.36, "idle", "angry", "o", true]]),
+          A("khaopan", KX, KY, 0.26, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
         captions: capsQ("hit"),
         fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 330, 900, 1110, 6, 22, 0.8, t0 + 0.55, 46, -2);
           put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.92, tilt: -2, water: true })));
           // spray over the gunwale
           put(L.act, `<g id="${id}-sp" opacity="0">${Array.from({ length: 14 }, (_, i) => `<path d="M${260 + i * 50},1190q${-10 + (i % 3) * 10},-${60 + (i * 17) % 50} ${10 + (i % 2) * 10},-${100 + (i * 23) % 60}" stroke="#e8f2ff" stroke-width="${6 + (i % 3) * 3}" fill="none" stroke-linecap="round"/>`).join("")}</g>`);
@@ -403,15 +407,15 @@
       });
       // ---------- 26–27 · roll: the hook's moment comes true — the boat rolls into the gap against the pontoon (WS, dutch) → water floods over the gunwale (ECU) ----------
       add("roll", {
-        extra(L) { boatAtPier(L, { sink: 0.95, tilt: -6, seed: 26 }); },
+        extra(L) { boatAtPier(L, { sink: 0.95, tilt: -6, seed: 26, noCrowd: true }); },
         ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(600, 1110, 1.3, 540, 1000) }, { t: 1.0, ...fr(330, 1180, 4.6, 540, 900) }] },
-        actors: onBoat(600, 1220, -6, [["pxB", -300, 0.33, "raise", "wide", "scream"], ["pxA", -180, 0.32, "raise", "pain", "scream"], ["maprang", -30, 0.32, "sitChair", "wide", "scream"],
-          ["pxC", 250, 0.3, "raise", "wide", "scream"], ["pxE", 340, 0.34, "raise", "wide", "scream", true], ["lungMuek", 405, 0.36, "raise", "angry", "scream", true]]),
+        actors: onBoat(600, 1220, -6, [["maprang", -150, 0.32, "sitChair", "wide", "scream"], ["lungMuek", 405, 0.36, "raise", "angry", "scream", true]]),
         fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 330, 900, 1064, 6, 26, 0.8, null, 0, -6);
           put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.95, tilt: -6, water: true })));
           // the whole boat rolls toward the low (left) side; a wall of water comes over the gunwale
-          tl.fromTo(`#${id}-world`, { rotation: 0, svgOrigin: "540 1250" }, { rotation: -9, svgOrigin: "540 1250", duration: 1.0, ease: "power2.in", immediateRender: false }, t0);
+          lean(tl, id, t0, 0); leanTo(tl, id, t0, -9, 1.0, "power2.in"); lean(tl, id, t0 + 1.0, -12);
           put(L.act, `<g id="${id}-fl" opacity="0"><path d="M-200,1250Q200,1060 700,1170Q500,1260 -200,1330Z" fill="#9ac0f0" opacity=".85"/>${Array.from({ length: 10 }, (_, i) => `<path d="M${i * 70},1150q-20,-80 20,-140" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".8"/>`).join("")}</g>`);
           tl.fromTo(`#${id}-fl`, { opacity: 0, y: 80 }, { opacity: 1, y: -40, duration: 0.7, ease: "power2.in", immediateRender: false }, t0 + 0.3);
           put(L.fg, `<rect x="40" y="200" width="70" height="1800" fill="url(#kWood)" ${KOUT}/>`);

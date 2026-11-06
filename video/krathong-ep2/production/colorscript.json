@@ -2,32 +2,32 @@
  "bands": [
   {
    "from": 0,
-   "to": 19.306,
+   "to": 18.842,
    "stage": "threat"
   },
   {
-   "from": 19.306,
-   "to": 25.865,
+   "from": 18.842,
+   "to": 25.401,
    "stage": "uneasy"
   },
   {
-   "from": 25.865,
-   "to": 34.824,
+   "from": 25.401,
+   "to": 34.36,
    "stage": "threat"
   },
   {
-   "from": 34.824,
-   "to": 64.819,
+   "from": 34.36,
+   "to": 64.355,
    "stage": "uneasy"
   },
   {
-   "from": 64.819,
-   "to": 71.937,
+   "from": 64.355,
+   "to": 71.473,
    "stage": "threat"
   },
   {
-   "from": 71.937,
-   "to": 80.89,
+   "from": 71.473,
+   "to": 80.426,
    "stage": "safe"
   }
  ],

@@ -9,11 +9,6 @@
           <rect x="-300" y="1500" width="1700" height="70" rx="10" fill="#a8763e" ${KOUT}/><rect x="-280" y="1460" width="1660" height="48" rx="18" fill="#ff7a2a" ${KOUT2}/><path d="M-400,1800H1500V2300H-400Z" fill="#4a2c16"/>`);
         if (o.flood) put(L.act, `<g class="flood"><path d="M-400,${o.flood}Q540,${o.flood - 30} 1500,${o.flood}V2300H-400Z" fill="#6a8ac8" opacity=".55"/><path d="M-400,${o.flood}Q540,${o.flood - 30} 1500,${o.flood}" stroke="#e8f2ff" stroke-width="8" fill="none" opacity=".8"/></g>`);
       }
-      // the boat leaning: rotate the whole shot (sky and pontoon lights included: the camera rides the boat)
-      // the zoom that keeps a 1080×1920 frame covered when it is turned by deg
-      const coverS = (deg) => { const a = Math.abs(deg) / 57.3; return Math.cos(a) + (1920 / 1080) * Math.sin(a) + 0.02; };
-      const lean = (tl, id, t0, deg, at = 0) => tl.set(`#${id}-world`, { rotation: deg, scale: coverS(deg), svgOrigin: "540 960" }, t0 + at);
-      const leanTo = (tl, id, t, deg, dur, ease = "power2.inOut") => tl.to(`#${id}-world`, { rotation: deg, scale: coverS(deg), svgOrigin: "540 960", duration: dur, ease }, t);
       // under the capsized boat: the dark hull overhead, the canopy frame hanging down, candle light shimmering on the surface beyond its edge
       function underBoat(L) {
         put(L.sky, `<rect x="-900" y="-900" width="2900" height="3900" fill="#06101e"/><rect x="-900" y="-900" width="2900" height="1500" fill="#0e2240"/>`);

@@ -19,7 +19,7 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 SHOTS_ALL = {
     "ep1": [
         ("open", ["n01"], 0.05, 0.0, 1.0),            # low at the waterline: the overloaded boat sliding at the bright pontoon, red stripe under water, knees rising
-        ("hook", ["n02"], 0.30, 0.3, 1.6),            # command: push in on the rising knees
+        ("hook", ["n02"], 0.30, 0.3, 1.6),            # CINEMA BIBLE: 0.3 s before "อย่า" · command: push in on the rising knees
         ("card", ["n03"], 0.15, 0.4, 2.0),            # ยาย's thumb rolls the brass counter 0019 → 0000, "แกร๊ก"
         ("est", ["y01"], 0.3, 0.5, 3.4),              # establishing ท่ายายหยิบ: temple across the river, krathong stall, the boat moored
         ("kids", ["k01", "m01", "m06", "y15", "l01"], 0.12, 0.3, 3.0),
@@ -47,7 +47,7 @@ SHOTS_ALL = {
     ],
     "ep2": [
         ("open", ["n01"], 0.05, 0.0, 1.0),
-        ("hook", ["n02"], 0.04, 0.3, 1.6),
+        ("hook", ["n02"], 0.30, 0.3, 1.6),            # CINEMA BIBLE: 0.3 s before "อย่า"
         ("recap", ["n03"], 0.12, 0.3, 3.0),           # Shorts only
         ("climb", ["x01", "n04"], 0.1, 0.3, 3.0),
         ("rule", ["y01", "r01", "n05", "m01", "k01"], 0.12, 0.3, 3.0),
