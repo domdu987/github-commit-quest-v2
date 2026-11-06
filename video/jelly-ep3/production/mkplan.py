@@ -4,11 +4,7 @@ usage: python3 -I mkplan.py <lane B ep3 schedule.json> [out dir]
 Anchor ("key", s) = s seconds into lane B shot `key`; ("key", "vo", i, j) = fragment j of line i of that shot, minus 0.12 s."""
 import json, os, sys
 
-SC = json.load(open(sys.argv[1]))
-for _s in SC["shots"]:
-    for _v in _s["vo"]:
-        if _v["id"] == "w02" and _v["cap"].startswith("{อย่าราดน้ำท่า}"): _v["cap"] = "[อย่าราดน้ำท่า]!"
-json.dump(SC, open(os.path.join(sys.argv[2] if len(sys.argv) > 2 else os.path.dirname(os.path.abspath(__file__)), "schedule.local.json"), "w"), ensure_ascii=False, indent=1); OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.dirname(os.path.abspath(__file__))
+SC = json.load(open(sys.argv[1])); OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.dirname(os.path.abspath(__file__))
 SH = {s["key"]: s for s in SC["shots"]}
 def at(a):
     s = SH[a[0]]
@@ -82,8 +78,8 @@ CUTS = [
     note="บอร์ดหน้าห้องฉุกเฉิน: ขั้นที่ 1 โทร 1669 → ขั้นที่ 2 อยู่นิ่ง ห้ามถู ติดขึ้นทีละใบตามเสียง · 3.6 วิ"),
   C(p="c_rules", a=("rules", "vo", 0, 3), emotion="lesson", size="MS", angle="eye", move="hold", fg="ขอบบอร์ดประกาศ (ในโลก)", light="ไฟนีออนเพดาน",
     note="ขั้นที่ 3 ราดน้ำส้มสายชู → ขั้นที่ 4 ส่งโรงพยาบาล · 2.9 วิ"),
-  C(p="c_dawn", a=("dawn", 0.0), emotion="safe", size="WS", angle="low", move="hold", fg="ขาหอกู้ภัย (ขอบขวา)", light="แดดรุ่งเช้าย้อนจากทะเล",
-    note="รุ่งเช้า สามรุ่น (ยาย ต้น น้ำหวาน · ภูมิยืนพิงไม้ค้ำ) เติมเสาน้ำส้มด้วยกัน ท่องกลอนคนละท่อน · ยาวตามบรรทัด d07 w02 y08"),
+  C(p="c_dawn", a=("dawn", 0.0), command=False, emotion="safe", size="WS", angle="low", move="hold", fg="ขาหอกู้ภัย (ขอบขวา)", light="แดดรุ่งเช้าย้อนจากทะเล",
+    note="รุ่งเช้า สามรุ่น (ยาย ต้น น้ำหวาน · ภูมิยืนพิงไม้ค้ำ) เติมเสาน้ำส้มด้วยกัน ท่องกลอนคนละท่อน · {อย่าราดน้ำท่า} ของน้ำหวานเป็นกลอนท่อง ไม่ใช่คำสั่ง (command: false · dip สั้นแทนเงียบเต็ม) · ยาวตามบรรทัด d07 w02 y08"),
   C(p="c_end", a=("end", 0.0), emotion="safe", size="MS", angle="eye", move="hold", fg="ขาหอกู้ภัยสองข้าง (กรอบซ้ายขวา)", light="แดดรุ่งเช้า",
     note="การ์ดท้าย: ป้าย 1669 + 'ตอนจบ' · 3 วิ"),
 ]
@@ -93,7 +89,7 @@ for n, c in enumerate(CUTS):
     cuts.append({"n": n + 1, "piece": c["p"], "key": c["a"][0], "t": round(t, 2), "dur": round(t1 - t, 2), "emotion": c["emotion"], "size": c["size"], "angle": c["angle"],
                  "move": c["move"], "dutch": 0, "lead_sound": c.get("lead_sound", 0), "fg": c["fg"], "light": c["light"], "face_w": c.get("face_w", 0),
                  "hold": c.get("hold", False), "threat_first": c.get("threat_first", False), **({"silhouette": True} if c.get("silhouette") else {}),
-                 "note": c["note"], **({"expect": c["expect"]} if "expect" in c else {}), **({"command": True} if c.get("command") else {}),
+                 "note": c["note"], **({"expect": c["expect"]} if "expect" in c else {}), **({"command": c["command"]} if "command" in c else {}),
                  **({"command_t": c["command_t"]} if "command_t" in c else {})})
 json.dump({"total": SC["total"], "source": "lane B video/jelly/ep3/schedule.json", "cuts": cuts}, open(os.path.join(OUT, "shotlist.json"), "w"), ensure_ascii=False, indent=1)
 
