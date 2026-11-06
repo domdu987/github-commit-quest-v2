@@ -20,7 +20,7 @@
         extra(L) { pier(L, { seed: 72 }); },
         ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
         cam: { keys: [{ t: 0, ...frL(420, 1150, 2.2) }, { t: E2C - 0.05, glide: E2C, ...frL(430, 1150, 2.35) },
-          { t: E2C, ...frL(140, 1010, 3.4) }, { t: D("E2"), glide: D("E2") - E2C, ...frL(140, 1012, 3.6) }] },
+          { t: E2C, ...frL(0, 1144, 3.4) }, { t: D("E2"), glide: D("E2") - E2C, ...frL(0, 1140, 3.6) }] },
         land: { y0: LY0 },
         actors: [
           A("lungMuek", 420, 1330, 0.45, [{ t: 0, mode: "point", eyes: "normal", mouth: "o" }, { t: 3.0, mode: "raise", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TK("E2", 0)] }),
@@ -40,7 +40,7 @@
         extra(L) { pier(L, { seed: 73 }); },
         ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
         cam: { keys: [{ t: 0, ...frL(320, 1150, 2.4) }, { t: E3C - 0.05, glide: E3C, ...frL(320, 1150, 2.55) },
-          { t: E3C, ...frL(-480, 1010, 2.6) }, { t: D("E3"), glide: D("E3") - E3C, ...frL(-470, 1012, 2.75) }] },
+          { t: E3C, ...frL(-480, 970, 2.6) }, { t: D("E3"), glide: D("E3") - E3C, ...frL(-470, 972, 2.75) }] },
         land: { y0: LY0 },
         actors: [
           A("khaopan", 230, 1336, 0.34, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }], { talk: [TK("E3", 0)] }),
@@ -88,10 +88,10 @@
           tl.fromTo(`#${id}-nt`, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(2)", immediateRender: false }, t0 + 0.8);
           tl.to([`#${id}-pd`, `#${id}-nt`], { opacity: 0, duration: 0.4 }, t0 + 3.0);
           // the next story (top centre) and the subscribe pill (centre left); the right third and the lower left are left empty for YouTube
-          put(L.light, `<g id="${id}-nx" opacity="0"><text x="-170" y="400" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="56" fill="#f6e2b0">เรื่องต่อไป</text>
+          put(L.light, `<g id="${id}-nx" opacity="0"><g transform="translate(-170,300) scale(1.8) translate(170,-300)"><text x="-170" y="400" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="56" fill="#f6e2b0">เรื่องต่อไป</text>
             <text x="-170" y="520" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="96" fill="#fff2c8" stroke="#2a1a10" stroke-width="7" paint-order="stroke">${NEXT_STORY}</text>
             <text x="-170" y="620" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="60" fill="#ffd24a">ทุกวัน 09:30</text>
-            <g transform="translate(-170,770)"><rect x="-200" y="-56" width="400" height="112" rx="56" fill="#c8241e" stroke="#2a1a10" stroke-width="5"/><text x="0" y="16" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="56" fill="#fff6ea">กดติดตาม</text></g></g>`);
+            <g transform="translate(-170,770)"><rect x="-200" y="-56" width="400" height="112" rx="56" fill="#c8241e" stroke="#2a1a10" stroke-width="5"/><text x="0" y="16" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="56" fill="#fff6ea">กดติดตาม</text></g></g></g>`);
           tl.fromTo(`#${id}-nx`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", immediateRender: false }, t0 + 3.3);
         },
       });
@@ -103,8 +103,8 @@
         land: { y0: LY0 },
         captions: [],
         fx(tl, id, t0, L) {
-          put(L.light, `<g id="${id}-cr" opacity="0"><text x="-170" y="460" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="68" letter-spacing="14" fill="#f6e2b0">ROD MAI CLUB</text>
-            <text x="-170" y="550" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="46" fill="#d8c8a0">เรือล่มคืนลอยกระทง · ฉบับเต็ม</text></g>`);
+          put(L.light, `<g id="${id}-cr" opacity="0"><g transform="translate(-170,480) scale(1.6) translate(170,-480)"><text x="-170" y="460" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="68" letter-spacing="14" fill="#f6e2b0">ROD MAI CLUB</text>
+            <text x="-170" y="550" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="46" fill="#d8c8a0">เรือล่มคืนลอยกระทง · ฉบับเต็ม</text></g></g>`);
           tl.fromTo(`#${id}-cr`, { opacity: 0 }, { opacity: 1, duration: 0.8, immediateRender: false }, t0 + 0.2);
           tl.to(`#black`, { opacity: 1, duration: 1.2, ease: "power1.in" }, t0 + D("credits") - 1.2);
         },
