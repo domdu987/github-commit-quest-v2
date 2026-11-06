@@ -93,6 +93,24 @@ for n, c in enumerate(CUTS):
                  "move": c["move"], "dutch": c.get("dutch", 0), "lead_sound": c.get("lead_sound", 0), "fg": c["fg"], "light": c["light"], "face_w": c.get("face_w", 0),
                  "hold": c.get("hold", False), "threat_first": c.get("threat_first", False), "note": c["note"],
                  **({"expect": c["expect"]} if "expect" in c else {}), **({"command": True} if c.get("command") else {})})
+# review 7bec9fe M7: the shot list says what is in the rendered frame (foreground, light, the rack of cut 9, the music under cut 25,
+# the command time inside w04)
+OVR = {
+  3: {"fg": "ชื่อเรื่องในฟองคลื่น (ขอบล่าง)"},
+  5: {"fg": "หิ้งวิทยุบนฝา (มุมซ้ายบน)", "note_sub": [("ข้ามไหล่ยาย: ", "")]},
+  7: {"fg": "หิ้งวิทยุบนฝา (มุมซ้ายบน)", "light": "แสงรุ่งเช้าจากหน้าต่าง"},
+  8: {"fg": "ถังไม้ (ขอบซ้าย)"},
+  9: {"fg": "ปฏิทินบนฝา (มุมซ้ายบน)", "note": "ยาย 'พ่อแกก็พูดอย่างนี้' push-in ช้าไม่หยุด → rack (เบลอไขว้ 0.4 วิ) ไปภาพแทรกกรอบรูปคว่ำหน้าบนหิ้ง (เบาะแส) push-in ต่อเนื่อง 2.4 วิ → rack กลับหน้ายาย push-in ต่อ → ตัดไปยายวางตะกร้าคนเดียว (y03+n04) · 9.9 วิ: รวมคัตช่วงบ้านยาย"},
+  14: {"note_sub": [("หนวดใสพันหน้าแข้งเป็นเงาโครง (silhouette)", "ขาเป็นเงาทึบย้อนแสง หนวดใสยังสว่าง (silhouette บางส่วน)")]},
+  22: {"fg": "หัวภูมิ (ขอบซ้าย)"},
+  23: {"light": "แดดสายจากขวา", "command_t": 81.02},
+  25: {"note_sub": [("เงียบ (ไม่มีเพลง)", "เพลงลดลง 6 dB เหลือหัวใจกับ drone (เงียบเต็มบังคับเฉพาะก่อนคำสั่ง)")]},
+  26: {"light": "แดดสายจากขวา", "fg": "ป้ายเสาน้ำส้ม (มุมขวาบน)"},
+}
+for c in cuts:
+    o = OVR.get(c["n"], {})
+    for a_, b_ in o.get("note_sub", []): c["note"] = c["note"].replace(a_, b_)
+    c.update({k: v for k, v in o.items() if k != "note_sub"})
 json.dump({"total": SC["total"], "source": "lane B ep1/schedule.json", "cuts": cuts}, open(os.path.join(OUT, "shotlist.json"), "w"), ensure_ascii=False, indent=1)
 
 # colour script: the hook is a flash-forward into the danger (threat), the house at dawn is safe, uneasy from "พ่อแกก็พูดอย่างนี้" to the sting,

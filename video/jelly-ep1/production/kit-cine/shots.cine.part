@@ -442,7 +442,8 @@
           put(L.fg, `<g>${[[330, 1010, 1.0], [720, 1040, 1.05], [520, 1300, 1.1], [800, 1520, 1.0]].map(([x, y, s], k) => Jelly.box(x, y, s, { seed: 24 + k, len: 240, lit: 1.3, glow: true })).join("")}</g><g transform="translate(540,${SURF2 + 24})">${TideCast.duckRing(0, 0, 1.6, { water: true })}</g>`);
           const sea = `<circle r="70" fill="#3a9ad8" stroke="#2a2420" stroke-width="5"/><g transform="translate(0,6) scale(.36)">${TideCast.duckRing(0, 0, 1, { water: true })}</g><path d="M-50,30q12,-10 25,0t25,0t25,0t25,0" stroke="#fff" stroke-width="6" fill="none"/>`;
           const stay = `<circle r="70" fill="#e8823a" stroke="#2a2420" stroke-width="5"/><g transform="translate(-14,30) scale(.36)"><path d="M-60,0Q-60,-120 0,-130Q60,-120 60,0Z" fill="#5aa8d8" stroke="#2a2420" stroke-width="6"/><circle cy="-170" r="44" fill="#c08a5e" stroke="#2a2420" stroke-width="6"/></g><g transform="translate(26,40) scale(.26)"><path d="M-60,0Q-60,-120 0,-130Q60,-120 60,0Z" fill="#2a7ad0" stroke="#2a2420" stroke-width="8"/><circle cy="-170" r="44" fill="#c08a5e" stroke="#2a2420" stroke-width="8"/></g>`;
-          TideUI.choice(tl, L.light, t0, D("vote"), { q: "ถ้าคุณเป็นพ่อ?", a: { text: "ลงไปหาลูกในน้ำ", icon: sea }, b: { text: "อยู่กับลูกที่โดนพิษ", icon: stay }, secs: 3, pull: "a", at: D("vote") - 1.3 });
+          TideUI.choice(tl, L.light, t0, D("vote"), { q: "ถ้าคุณเป็นพ่อ?", a: { text: "ลงไปหาลูกในน้ำ", icon: sea }, b: { text: "อยู่กับลูกที่โดนพิษ", icon: stay }, secs: 3, pull: "a", at: D("vote") - 1.3,
+            hover: SH.c_vote ? [[F("c_vote", 0, 1) - 0.05, 0], [F("c_vote", 0, 2) - 0.05, 1]] : undefined });
           tl.set("#black", { opacity: 1 }, t0 + D("vote") - 0.12);
         } });
       // ---------- 17. the end board on the tower's stilt: "ตอนที่ 2 · น้ำหวานอยู่ไหน" + follow / full story ----------
@@ -490,7 +491,7 @@
       // 3 · hook: the whole situation, still: ต้น crouched tipping the bottle over the leg, a woman with another bottle, the title in the swash
       add("c_hC", { ...O.open, ...NOG, actors: [A("jPhum", 400, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }]),
           A("jTonBottle", 790, 1730, 1.0, [{ t: 0, mode: "pourLow", eyes: "worry", mouth: "o" }], { flip: true }),
-          A("jWomanBottle", 960, 1600, 0.78, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true })],
+          A("jWomanBottle", 990, 1730, 0.78, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true })],
         cam: { keys: [{ t: 0, ...fr(600, 1450, 1.12, 540, 1060) }] }, captions: caps("c_hC"),
         fx(tl, id, t0, L) { O.open.fx(tl, id, t0, L); document.getElementById("ja-hand").setAttribute("display", "none"); document.getElementById("ja-cap").setAttribute("display", "none");
           document.getElementById("ja-sw").insertAdjacentHTML("beforeend", `<g transform="translate(612,1880)"><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#dffaff" stroke-width="16" opacity=".55" filter="url(#jag)">หนวดใส</text>
@@ -570,10 +571,18 @@
           A("jLaor", 1130, 1660, 1.0, [{ t: 0, mode: "basketDown", eyes: "closed", mouth: "flat" }], { flip: true, from: F("c_mock", 1, 2) - 0.1 })],
         captions: capsJ(caps("c_mock", [0], { quote: true }), caps("c_mock", [1])),
         fx(tl, id, t0, L) {
-          O.mock.fx(tl, id, G("mock"), L);
-          const r = t0 + 1.5;   // the rack: ยาย's face goes soft as the photo comes up sharp
-          tl.set("#mk-ins", { opacity: 0 }, 0); tl.fromTo("#mk-ins", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.inOut", immediateRender: false }, r);
-          tl.set("#mk-ins", { opacity: 0 }, t0 + F("c_mock", 1, 2) - 0.1);
+          const skipIns = new Proxy(tl, { get: (o, k) => (["set", "to", "fromTo"].includes(k) ? (sel, ...a) => (/mk-(ins|z)/.test(String(sel)) ? skipIns : o[k](sel, ...a)) : typeof o[k] === "function" ? o[k].bind(o) : o[k]) });
+          O.mock.fx(skipIns, id, G("mock"), L);
+          const r = t0 + 1.5, hold = 2.4;   // the rack: ยาย's face goes soft as the photo comes up sharp, and back
+          document.getElementById("mk-ins").insertAdjacentHTML("afterbegin", `<defs><filter id="mk-rb"><feGaussianBlur stdDeviation="0"/></filter></defs>`);
+          const zf = document.querySelector("#mk-rb feGaussianBlur"), bz = { b: 14 };
+          tl.set("#mk-ins", { opacity: 0 }, 0);
+          tl.fromTo("#mk-ins", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.inOut", immediateRender: false }, r);
+          document.getElementById("mk-z").setAttribute("filter", "url(#mk-rb)");
+          tl.fromTo(bz, { b: 14 }, { b: 0, duration: 0.4, ease: "power1.out", immediateRender: false, onUpdate: () => zf.setAttribute("stdDeviation", bz.b.toFixed(1)) }, r);
+          tl.fromTo("#mk-z", { scale: 1, svgOrigin: "540 1040" }, { scale: 1.16, svgOrigin: "540 1040", duration: hold + 0.4, ease: "none", immediateRender: false }, r);
+          tl.to(bz, { b: 14, duration: 0.4, ease: "power1.in", immediateRender: false, onUpdate: () => zf.setAttribute("stdDeviation", bz.b.toFixed(1)) }, r + hold);
+          tl.to("#mk-ins", { opacity: 0, duration: 0.4, ease: "power1.inOut", immediateRender: false }, r + hold);
           put(L.act, `<g id="bk-b2">${Jelly.basket(925, 1668, 1.2)}</g>`); show(tl, "#bk-b2", t0 + F("c_mock", 1, 2) - 0.1);
         } });
       add("c_map", { ...O.map, ...NOG, captions: [], fx(tl, id, t0, L) { O.map.fx(tl, id, t0, L); } });
@@ -584,8 +593,12 @@
         captions: caps("c_beach", undefined, { quote: true }), fx(tl, id, t0, L) { O.beach.fx(tl, id, G("beach"), L); } });
       // 13 · ภูมิ points at the rock, ต้น lifts his phone; the low hum under the water starts (sound before picture)
       add("c_rock", { ...O.rock, ...NOG, cam: { keys: [{ t: 0, ...fr(580, 1470, 1.4, 540, 1150) }] }, captions: caps("c_rock", undefined, { quote: true }),
-        actors: O.rock.actors.map((a) => (a.who === "jTonPhone" ? { ...a, who: "jTon" } : a)),
+        actors: O.rock.actors.map((a) => (a.who === "jTonPhone" ? { ...a, who: "jTon", x: 330, until: G("rock") + vo("rock", 1) - 0.12 - SH["c_rock"].start } : a)),
         fx(tl, id, t0, L) { O.rock.fx(tl, id, G("rock"), L);
+          const ph = document.getElementById("rk-ph"); ph.parentNode.setAttribute("transform", "translate(400,1060) rotate(-6) scale(1.05)");
+          ph.insertAdjacentHTML("afterbegin", `<defs><filter id="rk-sb"><feGaussianBlur stdDeviation="10"/></filter></defs><g filter="url(#rk-sb)"><path d="M-620,700Q-560,380 -330,330Q-180,320 -140,420L-80,900H-620Z" fill="#5aa8d8"/><path d="M-430,330Q-420,170 -300,160Q-200,170 -200,300Q-230,380 -330,380Z" fill="#a8784a"/></g>
+            <path d="M-300,720L-30,190" stroke="#1e1a16" stroke-width="96" stroke-linecap="round"/><path d="M-300,720L-30,190" stroke="#c08a5e" stroke-width="84" stroke-linecap="round"/><path d="M-330,780L-180,500" stroke="#5aa8d8" stroke-width="120" stroke-linecap="round"/>`);
+          ph.insertAdjacentHTML("beforeend", `<path d="M-120,120Q-160,170 -120,220Q-60,240 -20,200L-10,130Z" fill="#c08a5e" stroke="#1e1a16" stroke-width="5"/><path d="M120,40Q160,80 140,140Q120,170 100,160" fill="#c08a5e" stroke="#1e1a16" stroke-width="5"/>${[60, 100, 140].map((y) => `<path d="M118,${y}q22,6 20,24" stroke="#1e1a16" stroke-width="4" fill="#c08a5e"/>`).join("")}`);
           put(L.set, `<g transform="translate(860,1120) scale(.5)"><ellipse cx="0" cy="6" rx="150" ry="18" fill="#1a6a8a" opacity=".4"/><path d="M-130,0Q-118,-80 -40,-110Q30,-126 84,-88Q134,-44 140,0Z" fill="#6a6258" stroke="#1e1a16" stroke-width="5"/>
             <path d="M-80,-56Q-30,-96 34,-94" stroke="#9a9288" stroke-width="9" fill="none"/><path d="M-130,0Q0,14 140,0" stroke="#eafcff" stroke-width="8" fill="none" opacity=".85"/></g>`); } });
       // 14–15 · the danger: ECU the tentacle on the shin under water (dark shape against the light) → EWS half under, 10° dutch
@@ -595,21 +608,26 @@
       // 16–17 · whip onto ต้น splashing in → CU, phone at his ear: 1669
       add("c_stingB", { ...O.stingB, ...NOG,
         cam: { keys: [{ t: 0, ...fr(520, 1350, 1.5, 540, 1050) }, { t: CT(17, "c_stingB"), ...fr(520, 1215, 3.2, 540, 820) }] },
+        actors: [A("jTonPhone", 520, 1800, 1.05, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }, { t: CT(17, "c_stingB"), mode: "phoneEar", eyes: "wide", mouth: "scream" }], { talk: [TALK("c_stingB", 0, "scream")] })],
         captions: caps("c_stingB", undefined, { quote: true }) });
       // 18–23 · the crowd, cut fast on inserts: the cap twisted off → a hand about to rub → ภูมิ CU → the welts → น้ำหวาน → ต้น still (the command)
       add("c_crowd", { ...O.crowd, ...NOG,
         cam: { keys: [{ t: 0, ...fr(500, 1520, 1.3, 540, 1150) },
           { t: CT(20, "c_crowd"), ...fr(450, 1530, 4.4, 540, 860) }, { t: CT(21, "c_crowd"), ...fr(645, 1785, 4.5, 540, 900) },
-          { t: CT(22, "c_crowd"), ...fr(640, 1400, 2.6, 540, 800) }, { t: CT(23, "c_crowd"), ...fr(300, 1372, 4.0, 540, 820) }] },
+          { t: CT(22, "c_crowd"), ...fr(600, 1400, 2.6, 540, 800) }, { t: CT(23, "c_crowd"), ...fr(300, 1372, 4.0, 540, 820) }] },
         captions: caps("c_crowd", undefined, { quote: true }),
         fx(tl, id, t0, L) {
           O.crowd.fx(tl, id, G("crowd"), L);
           const cw = document.getElementById(`${id}-caps`); tl.set(cw, { top: 1480 }, 0); tl.set(cw, { top: 1180 }, t0 + CT(22, "c_crowd"));
           const cut2 = CT(19, "c_crowd");
-          insert(L, tl, t0, "ci-cap", 0, cut2, SAND("ci-s1") + `<g transform="translate(560,980)"><g id="ci-bt"><g transform="rotate(-20) scale(2.4) translate(0,110)">${Jelly.bottle(0, 0, 1, { cap: true })}</g></g>
-            <path d="M-120,-430Q-40,-520 60,-500Q120,-480 110,-420L60,-360Q-40,-330 -110,-370Z" fill="#c08a5e" stroke="#1e1a16" stroke-width="5"/><path d="M-60,-470q30,-10 60,0M-70,-430q40,-10 80,0" stroke="#8a5a3a" stroke-width="4" fill="none"/>
-            <path d="M110,-420L700,-640" stroke="#1e1a16" stroke-width="120" stroke-linecap="round"/><path d="M110,-420L700,-640" stroke="#f2f0e8" stroke-width="108" stroke-linecap="round"/></g>`);
-          tl.fromTo("#ci-bt", { rotation: 0, svgOrigin: "0 -380" }, { rotation: -14, svgOrigin: "0 -380", duration: cut2, ease: "power2.inOut", immediateRender: false }, t0);
+          insert(L, tl, t0, "ci-cap", 0, cut2, SAND("ci-s1") + `<g transform="translate(540,1420) rotate(-8)"><g id="ci-bt">${Jelly.bottle(0, 0, 2.4, { cap: true })}
+              <path d="M-700,-140L-60,-250" stroke="#1e1a16" stroke-width="120" stroke-linecap="round"/><path d="M-700,-140L-60,-250" stroke="#f2f0e8" stroke-width="108" stroke-linecap="round"/>
+              <rect x="-120" y="-320" width="210" height="150" rx="60" fill="#c08a5e" stroke="#1e1a16" stroke-width="6"/>${[0, 1, 2, 3].map((k) => `<rect x="40" y="${-312 + k * 36}" width="96" height="32" rx="16" fill="#c08a5e" stroke="#1e1a16" stroke-width="5"/>`).join("")}
+              <g transform="translate(0,-470)"><g id="ci-tw"><path d="M640,-560L60,-40" stroke="#1e1a16" stroke-width="120" stroke-linecap="round"/><path d="M640,-560L60,-40" stroke="#e85a6a" stroke-width="108" stroke-linecap="round"/>
+                <path d="M-80,-40Q-90,-110 0,-118Q90,-110 84,-40L70,40Q0,62 -70,40Z" fill="#c08a5e" stroke="#1e1a16" stroke-width="6"/>${[-44, -14, 16, 46].map((x) => `<path d="M${x},-100V30" stroke="#8a5a3a" stroke-width="4"/>`).join("")}
+                <path d="M-80,-20Q-130,-10 -126,40Q-110,70 -70,50" fill="#c08a5e" stroke="#1e1a16" stroke-width="6"/></g></g></g></g>`);
+          tl.fromTo("#ci-tw", { rotation: -14, svgOrigin: "0 0" }, { rotation: 14, svgOrigin: "0 0", duration: 0.22, repeat: Math.floor(cut2 / 0.22), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);
+          tl.fromTo("#ci-bt", { x: -3 }, { x: 3, duration: 0.07, repeat: Math.floor(cut2 / 0.07), yoyo: true, ease: "none", immediateRender: false }, t0);
           insert(L, tl, t0, "ci-rub", cut2, CT(20, "c_crowd"), SAND("ci-s2") + `<g transform="translate(60,1180) scale(2.2)"><path d="M-120,0Q140,-50 420,-20Q560,0 640,40L640,180Q500,160 300,170Q60,180 -120,200Z" fill="#c8915f" stroke="#1e1a16" stroke-width="4"/>
               ${Jelly.ladder([[60, 30], [180, 60], [300, 40]], { w: 10 })}${Jelly.ladder([[320, 70], [420, 40], [520, 80]], { w: 8 })}</g>
             <g id="ci-hd" transform="translate(620,820)"><path d="M-160,-40Q-80,-120 60,-110Q160,-90 180,-20Q180,40 110,50L-130,40Q-190,20 -160,-40Z" fill="#e0b088" stroke="#1e1a16" stroke-width="6"/>
@@ -637,8 +655,8 @@
         } });
       // 26 · two-shot: ต้น turns and shouts for น้ำหวาน (ภูมิ's shoulder in the foreground); slow pull-out
       add("c_gone", { ...O.gone, ...NOG,
-        actors: [...O.gone.actors, A("jPhum", 230, 1810, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "o" }])],
-        cam: { keys: [{ t: 0, ...fr(450, 1250, 3.0, 540, 860) }, { t: D("c_gone"), glide: D("c_gone"), ...fr(440, 1260, 2.5, 540, 860) }] },
+        actors: [...O.gone.actors, A("jPhum", 290, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "o" }])],
+        cam: { keys: [{ t: 0, ...fr(370, 1300, 3.4, 540, 860) }, { t: D("c_gone"), glide: D("c_gone"), ...fr(375, 1310, 3.0, 540, 860) }] },
         captions: caps("c_gone", undefined, { quote: true }) });
       // 27 · the peak: from the empty duck ring, a slow pull-out to the swarm under it; ต้น's "น้ำหวาน…?" over it
       const PEAK = [
