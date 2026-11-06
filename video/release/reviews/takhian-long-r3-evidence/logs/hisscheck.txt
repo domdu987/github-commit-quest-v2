@@ -1,0 +1,1 @@
+lane/LONG-takhian-16x9-share.mp4: flatness 0.37 (ok) · pause HF median -83.2 dBFS (ok) → PASS

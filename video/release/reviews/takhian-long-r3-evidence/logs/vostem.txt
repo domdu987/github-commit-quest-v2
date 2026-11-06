@@ -1,0 +1,4 @@
+x01: residual vs git take corr 0.961 · lag +0 ms · residual -16.9 dB vs fitted take -17.3 dB (diff +0.35 dB)
+x02: residual vs git take corr 0.997 · lag +0 ms · residual -16.9 dB vs fitted take -16.9 dB (diff +0.03 dB)
+x03: residual vs git take corr 0.923 · lag +0 ms · residual -16.6 dB vs fitted take -17.3 dB (diff +0.70 dB)
+lines 63 · mix -17.1 · music est -29.4 · voice est -17.3 dBFS rms

@@ -1,0 +1,18 @@
+NEW re-stroke (cut2 tail)
+106.950-107.420s · tree-region swings >= 6: 6 bright beats in 0.47s = 12.9/s · region range 81.0-101.6 · pulsing area (|dY|>=15 between beats) median 13.9% max 19.0% of frame
+   union box of pulsing pixels: x 0-1919 y 0-1079 · beats at 107.000 107.033 107.117 107.233 107.317 107.367
+NEW cut3 crown close
+107.433-108.420s · tree-region swings >= 6: 5 bright beats in 0.98s = 5.1/s · region range 69.2-82.0 · pulsing area (|dY|>=15 between beats) median 9.3% max 14.8% of frame
+   union box of pulsing pixels: x 0-1919 y 0-1079 · beats at 107.550 107.667 107.800 107.867 107.967
+OLD cut3 crown close
+107.433-108.270s · tree-region swings >= 6: 2 bright beats in 0.83s = 2.4/s · region range 68.8-78.0 · pulsing area (|dY|>=15 between beats) median 11.1% max 13.2% of frame
+   union box of pulsing pixels: x 0-1919 y 0-1079 · beats at 107.550 107.667
+OLD cut2 tail
+106.950-107.420s · tree-region swings >= 6: 0 bright beats in 0.47s = 0.0/s · region range 65.1-68.5 · pulsing area (|dY|>=15 between beats) median 0.0% max 0.0% of frame
+again cut1 (accepted r2, unchanged)
+213.500-214.370s · tree-region swings >= 6: 0 bright beats in 0.87s = 0.0/s · region range 136.2-161.8 · pulsing area (|dY|>=15 between beats) median 0.0% max 0.0% of frame
+again cut2
+214.383-215.120s · tree-region swings >= 6: 3 bright beats in 0.73s = 4.1/s · region range 104.4-119.9 · pulsing area (|dY|>=15 between beats) median 13.5% max 15.0% of frame
+   union box of pulsing pixels: x 0-1919 y 0-1079 · beats at 214.500 214.617 214.700
+hook cmd 2.75-4.6
+2.750-4.600s · tree-region swings >= 6: 0 bright beats in 1.85s = 0.0/s · region range 74.2-118.0 · pulsing area (|dY|>=15 between beats) median 0.0% max 0.0% of frame

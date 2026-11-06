@@ -1,0 +1,77 @@
+frames old 14872 new 14872
+== per shot: mean |dY| old vs new (80x45), max, share of frames > 2 ==
+     0.000 hook      mean  0.24 max   0.3 at    2.617  >2:   0.0%  
+     2.627 cmd       mean  0.22 max   0.5 at    2.833  >2:   0.0%  
+     4.677 stop      mean  0.20 max   0.2 at    6.083  >2:   0.0%  
+     6.948 why       mean  0.17 max   0.2 at    8.717  >2:   0.0%  
+    11.062 nosafe    mean  0.21 max   0.2 at   14.333  >2:   0.0%  
+    14.389 chabu     mean  0.18 max   0.3 at   14.383  >2:   0.0%  
+    18.783 timer     mean  0.17 max   0.2 at   19.767  >2:   0.0%  
+    22.694 buff      mean  0.19 max   0.4 at   26.167  >2:   0.0%  
+    27.996 leg1      mean  2.82 max   3.2 at   31.133  >2: 100.0%  CHANGED
+    35.615 leg2      mean  2.21 max   2.6 at   35.617  >2:  87.5%  CHANGED
+    40.816 joke      mean  0.19 max   0.3 at   43.550  >2:   0.0%  
+    44.556 sci1      mean  0.15 max   0.2 at   47.650  >2:   0.0%  
+    49.778 sci2      mean  0.17 max   0.4 at   50.000  >2:   0.0%  
+    54.890 rule1     mean  0.16 max   0.2 at   61.467  >2:   0.0%  
+    61.489 hut       mean  0.18 max   0.2 at   61.483  >2:   0.0%  
+    63.636 relief    mean  0.15 max   0.2 at   63.633  >2:   0.0%  
+    65.391 nohut     mean  0.17 max   0.2 at   66.683  >2:   0.0%  
+    69.986 shelter   mean  0.15 max   0.3 at   70.683  >2:   0.0%  
+    77.083 go        mean  0.17 max   0.2 at   78.367  >2:   0.0%  
+    80.597 spread    mean  0.16 max   0.2 at   83.200  >2:   0.0%  
+    85.355 flat      mean  0.17 max   0.2 at   87.200  >2:   0.0%  
+    88.471 wflat     mean  0.17 max   0.4 at   88.683  >2:   0.0%  
+    92.887 crouch    mean  0.18 max   0.2 at   94.900  >2:   0.0%  
+    97.091 up        mean  0.18 max   0.2 at   97.217  >2:   0.0%  
+    98.451 truck     mean  0.48 max   4.8 at  100.617  >2:   7.0%  CHANGED
+   101.554 rope      mean  0.18 max   0.2 at  101.550  >2:   0.0%  
+   103.928 noo       mean  0.13 max   0.1 at  104.150  >2:   0.0%  
+   105.680 strike    mean  9.03 max  27.3 at  108.433  >2:  71.7%  CHANGED
+   111.338 taken     mean  0.17 max   2.4 at  111.333  >2:   0.7%  small
+   113.778 none      mean  0.17 max   0.2 at  115.933  >2:   0.0%  
+   118.134 xwait     mean  0.17 max   0.3 at  118.800  >2:   0.0%  
+   122.962 xkid      mean  0.18 max   0.2 at  124.483  >2:   0.0%  
+   126.023 xnow      mean  0.17 max   0.2 at  127.767  >2:   0.0%  
+   129.184 xchap     mean  0.17 max   0.2 at  130.333  >2:   0.0%  
+   131.668 fear      mean  6.31 max   6.7 at  134.083  >2:  99.3%  CHANGED
+   134.093 safe      mean  0.16 max   0.2 at  140.000  >2:   0.0%  
+   140.020 rap       mean  0.15 max   0.2 at  140.017  >2:   0.0%  
+   144.266 call      mean  0.19 max   0.2 at  144.417  >2:   0.0%  
+   146.109 still     mean 12.41 max  13.0 at  146.133  >2: 100.0%  CHANGED
+   149.722 phone     mean  0.21 max  12.8 at  149.717  >2:   0.4%  small
+   153.707 speak     mean  0.15 max   0.2 at  155.583  >2:   0.0%  
+   157.235 hands     mean  0.17 max   0.2 at  163.117  >2:   0.0%  
+   163.144 rate      mean  0.17 max   0.2 at  165.567  >2:   0.0%  
+   168.515 count     mean  0.17 max   0.2 at  170.083  >2:   0.0%  
+   171.403 drag      mean 17.78 max  18.6 at  171.417  >2:  99.5%  CHANGED
+   174.970 no        mean  0.28 max  18.1 at  174.967  >2:   0.6%  small
+   177.759 only      mean  0.17 max   0.2 at  181.917  >2:   0.0%  
+   183.347 tired     mean  9.33 max   9.6 at  183.350  >2: 100.0%  CHANGED
+   185.032 swap      mean  0.16 max   0.2 at  186.717  >2:   0.0%  
+   186.732 gasp      mean  0.16 max   0.2 at  188.150  >2:   0.0%  
+   189.701 e2_joke   mean  0.16 max   0.2 at  191.633  >2:   0.0%  
+   193.035 clear     mean  0.16 max   0.2 at  196.267  >2:   0.0%  
+   198.166 e2_buff   mean  0.39 max   0.5 at  199.983  >2:   0.0%  
+   200.032 far       mean  0.16 max   0.2 at  201.750  >2:   0.0%  
+   203.198 watch     mean  0.13 max   0.2 at  207.783  >2:   0.0%  
+   207.840 rule3     mean  0.12 max   0.2 at  207.833  >2:   0.0%  
+   213.233 again     mean  0.18 max   0.5 at  214.800  >2:   0.0%  
+   219.998 alive     mean  0.20 max   0.3 at  221.683  >2:   0.0%  
+   221.698 scars     mean  0.18 max   0.3 at  226.533  >2:   0.0%  
+   226.546 photo     mean  0.19 max   0.2 at  229.083  >2:   0.0%  
+   230.265 grand     mean  0.18 max   0.4 at  234.850  >2:   0.0%  
+   236.135 truth     mean 15.76 max  16.1 at  237.767  >2:  99.6%  CHANGED
+   240.301 end       mean  7.18 max  31.2 at  246.433  >2:  24.9%  CHANGED
+== spans with |dY| > 2 (merged over 0.2 s gaps) ==
+    28.000-  39.600 (11.60s) [leg1..leg2] peak   3.2
+    40.133-  40.817 ( 0.68s) [leg2..leg2] peak   2.1
+   100.567- 100.783 ( 0.22s) [truck..truck] peak   4.8
+   106.683- 107.433 ( 0.75s) [strike..strike] peak  13.5
+   107.850- 111.350 ( 3.50s) [strike..strike] peak  27.3
+   131.683- 134.100 ( 2.42s) [fear..fear] peak   6.7
+   146.117- 149.733 ( 3.62s) [still..still] peak  13.0
+   171.417- 174.983 ( 3.57s) [drag..drag] peak  18.6
+   183.350- 185.033 ( 1.68s) [tired..tired] peak   9.6
+   236.150- 240.317 ( 4.17s) [truth..truth] peak  16.1
+   245.983- 247.867 ( 1.88s) [end..end] peak  31.2
