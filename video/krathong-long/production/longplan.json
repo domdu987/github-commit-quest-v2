@@ -1,0 +1,224 @@
+{
+ "title": "เรือล่มคืนลอยกระทง ฉบับเต็ม",
+ "total": 493.524,
+ "segments": [
+  {
+   "id": "cold",
+   "kind": "cold_open",
+   "start": 0.0,
+   "end": 18.75,
+   "long_only": true,
+   "src": "bridges C1–C4"
+  },
+  {
+   "id": "title",
+   "kind": "title",
+   "start": 18.75,
+   "end": 21.75
+  },
+  {
+   "id": "ep1",
+   "kind": "episode",
+   "start": 21.75,
+   "end": 207.711,
+   "from": "EP.1 full"
+  },
+  {
+   "id": "A",
+   "kind": "bridge",
+   "start": 207.711,
+   "end": 217.293,
+   "long_only": true,
+   "src": "bridges A1–A2"
+  },
+  {
+   "id": "ep2",
+   "kind": "episode",
+   "start": 217.293,
+   "end": 283.341,
+   "from": "EP.2 full"
+  },
+  {
+   "id": "B",
+   "kind": "bridge",
+   "start": 283.341,
+   "end": 304.582,
+   "long_only": true,
+   "src": "bridges B1–B4"
+  },
+  {
+   "id": "ep3a",
+   "kind": "episode",
+   "start": 304.582,
+   "end": 370.358,
+   "from": "EP.3 full open–maan"
+  },
+  {
+   "id": "secret",
+   "kind": "secret",
+   "start": 370.358,
+   "end": 416.349,
+   "long_only": true,
+   "src": "EP.3 full why–shame (s01–s09, hush 4 s)"
+  },
+  {
+   "id": "ep3b",
+   "kind": "threat",
+   "start": 416.349,
+   "end": 434.281,
+   "from": "EP.3 full accuse–reveal (the twist)"
+  },
+  {
+   "id": "lesson",
+   "kind": "lesson",
+   "start": 434.281,
+   "end": 452.535,
+   "from": "EP.3 full hug–close"
+  },
+  {
+   "id": "epi",
+   "kind": "epilogue",
+   "start": 452.535,
+   "end": 480.524,
+   "long_only": true,
+   "src": "bridges E1–E4"
+  },
+  {
+   "id": "card",
+   "kind": "end_card",
+   "start": 480.524,
+   "end": 488.524,
+   "src": "EP.3 paddle 'ตอนจบ' + next story card"
+  },
+  {
+   "id": "credits",
+   "kind": "credits",
+   "start": 488.524,
+   "end": 493.524
+  }
+ ],
+ "acts": [
+  {
+   "n": 1,
+   "start": 0,
+   "end": 125.933
+  },
+  {
+   "n": 2,
+   "start": 125.933,
+   "end": 394.723
+  },
+  {
+   "n": 3,
+   "start": 394.723,
+   "end": 493.524
+  }
+ ],
+ "chapters": [
+  {
+   "t": 0,
+   "title": "ห้าสิบปีก่อน ที่ท่าน้ำเดียวกัน"
+  },
+  {
+   "t": 22,
+   "title": "ท่ายายหยิบ กับกฎสามข้อ"
+  },
+  {
+   "t": 126,
+   "title": "เรือบุญล้น คนล้นเรือ"
+  },
+  {
+   "t": 179,
+   "title": "ขากลับ ห่างท่าก้าวเดียว"
+  },
+  {
+   "t": 208,
+   "title": "เรือเอียง อย่าเถียงเรือ"
+  },
+  {
+   "t": 283,
+   "title": "โป๊ะก็คือเรือ"
+  },
+  {
+   "t": 305,
+   "title": "คว้าของลอย นอนคอยเรือ"
+  },
+  {
+   "t": 370,
+   "title": "ทำไมน้าหมานรอลำหน้า"
+  },
+  {
+   "t": 395,
+   "title": "กลอนข้อแรก"
+  },
+  {
+   "t": 453,
+   "title": "ลอยกระทงปีถัดมา"
+  }
+ ],
+ "hook_t": 24.409,
+ "silences": [
+  {
+   "start": 390.723,
+   "end": 394.723
+  }
+ ],
+ "theme": [
+  {
+   "t": 18.75,
+   "label": "open"
+  },
+  {
+   "t": 192.662,
+   "label": "choice"
+  },
+  {
+   "t": 452.535,
+   "label": "epilogue",
+   "key": "+2"
+  }
+ ],
+ "choices": [
+  {
+   "t": 194.132,
+   "what": "EP.1 ยายคว้ามะปรางไว้ {อย่าลุกไปหาน้อง}"
+  },
+  {
+   "t": 226.38,
+   "what": "EP.2 มะปรางจับพนักไว้แทนวิ่งไปหาน้อง"
+  },
+  {
+   "t": 286.641,
+   "what": "ฉากเชื่อม B ยายคว้าข้อมือ {อย่าโดด}!"
+  }
+ ],
+ "biggest_threat": {
+  "t": 309.877,
+  "long_only": true,
+  "what": "EP.3 เรือแพปาร์ตี้แล่นผ่าน ใบจักรดูดเข้าใต้ท้อง (ไม่มีใน Shorts)"
+ },
+ "extreme_wide": [
+  {
+   "t": 28.166,
+   "act": 1,
+   "what": "ท่ายายหยิบเต็มความกว้าง ทุ่งแสงเทียน ไฟวัดฝั่งตรงข้าม"
+  },
+  {
+   "t": 313.877,
+   "act": 2,
+   "what": "มะปรางตัวเล็กกลางแม่น้ำ เรือแพสองชั้นแล่นผ่าน"
+  },
+  {
+   "t": 452.535,
+   "act": 3,
+   "what": "ลอยกระทงปีถัดมา แม่น้ำทั้งสาย"
+  }
+ ],
+ "credits_ambience": 5.0,
+ "end_card": {
+  "next": "เรื่องต่อไป: … ทุกวัน 09:30",
+  "subscribe": true,
+  "prev_long_link": true,
+  "prev": "หนวดใส ฉบับเต็ม"
+ }
+}
