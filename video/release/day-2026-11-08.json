@@ -42,7 +42,13 @@
   "title_youtube": "น้ำบ่อขุ่นเป็นโคลน… อย่ารอจนบ้านยุบ | รูพญานาค ฉบับเต็ม",
   "thumb": "video/rupnak-long/thumb.jpg",
   "thumb_commit": "950a8fb",
-  "upload_sheet": "video/release/sheets/rupnak-upload.md"
+  "upload_sheet": "video/release/sheets/rupnak-upload.md",
+  "hq_by_chat": {
+   "file": "LONG-rupnak-16x9-HQ.mp4",
+   "bytes": 369587739,
+   "sha256": "0f12304dc3cb602ff49a3c8331767322cfd468d977d8783af09af9174a370ed1",
+   "sent_by": "เลน D ส่งเข้าแชทเจ้าของ 6 พ.ย. 18:34 (SendUserFile)"
+  }
  },
  "team_charter": "video/release/TEAM-CHARTER.md"
 }
