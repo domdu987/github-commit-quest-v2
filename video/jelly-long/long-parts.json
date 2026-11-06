@@ -1,0 +1,46 @@
+{
+ "fps": 60,
+ "total": 283.35,
+ "parts": [
+  {
+   "part": "ep1",
+   "proj": "L1",
+   "frame0": 0,
+   "frames": 6174,
+   "start": 0.0,
+   "end": 102.9
+  },
+  {
+   "part": "bridgeA",
+   "proj": "Lbr",
+   "frame0": 0,
+   "frames": 497,
+   "start": 102.9,
+   "end": 111.1833
+  },
+  {
+   "part": "ep2",
+   "proj": "L2",
+   "frame0": 476,
+   "frames": 4327,
+   "start": 111.1833,
+   "end": 183.3
+  },
+  {
+   "part": "bridgeB",
+   "proj": "Lbr",
+   "frame0": 497,
+   "frames": 467,
+   "start": 183.3,
+   "end": 191.0833
+  },
+  {
+   "part": "ep3",
+   "proj": "L3",
+   "frame0": 0,
+   "frames": 5536,
+   "start": 191.0833,
+   "end": 283.35
+  }
+ ]
+}
