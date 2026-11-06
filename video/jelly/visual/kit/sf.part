@@ -1,0 +1,40 @@
+      const GBR = { top: "#fff4d8", bottom: "#c8eef8", op: 0.1 };
+      const SANDTITLE = (L, x, y, t1, t2) => put(L.set, `<g transform="translate(${x},${y}) rotate(-3)"><text x="0" y="0" text-anchor="middle" font-family="Sriracha" font-size="120" fill="#9a8458" opacity=".8">${t1}</text><text x="3" y="-3" text-anchor="middle" font-family="Sriracha" font-size="120" fill="none" stroke="#fff4dc" stroke-width="3" opacity=".7">${t1}</text><text x="0" y="78" text-anchor="middle" font-family="Sriracha" font-size="60" fill="#9a8458" opacity=".8">${t2}</text></g>`);
+      // a: frame 0 — ภูมิ on the wet sand crying, the tentacles on his shin, ต้น crouched over it uncapping the bottle; the title in the sand
+      add("sfa", { set: "jellyBeach", setOpts: { id: "ja", seed: 3, palms: false }, dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(560, 1600, 2.1, 540, 1100) }] },
+        actors: [A("jPhum", 400, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "worry", mouth: "scream" }])],
+        fx(tl, id, t0, L) { SANDTITLE(L, 560, 1830, "หนวดใส", "EP.1");
+          put(L.act, `<g>${Jelly.welts([[548, 1690], [600, 1706], [662, 1720]], { w: 9 })}${Jelly.welts([[560, 1712], [585, 1684], [618, 1716], [640, 1690]], { w: 6 })}
+            <path d="M662,1720Q700,1740 690,1770Q680,1800 730,1810" stroke="#eafcff" stroke-width="3" fill="none" opacity=".7" stroke-linecap="round"/><g transform="translate(735,1795) scale(.12)">${Jelly.box(0, 0, 1, { seed: 4, len: 140 })}</g>
+            
+            <g transform="translate(712,1590) rotate(-123)">${Jelly.bottle(0, 0, 0.55, { cap: false })}</g>
+            <path d="M714,1556L860,1420L900,1470L748,1600Z" fill="#c08a5e" stroke="#2e2a26" stroke-width="2.6"/><path d="M730,1560L850,1450" stroke="#a87048" stroke-width="5" opacity=".5"/><path d="M860,1420L960,1330L1010,1390L900,1470Z" fill="#5aa8d8" stroke="#2e2a26" stroke-width="2.6"/><path d="M880,1430L970,1350" stroke="#8ac8ec" stroke-width="6" opacity=".7"/><path d="M716,1554Q690,1560 676,1584Q668,1606 686,1618Q704,1628 724,1614L752,1596Q764,1578 752,1562Z" fill="#c08a5e" stroke="#2e2a26" stroke-width="2.6"/><path d="M684,1590q10,6 24,2M690,1606q10,4 22,0" stroke="#8a5a3a" stroke-width="2" fill="none"/>
+            <path d="M600,1700q2,8 0,12" stroke="#dff4fc" stroke-width="3" fill="none"/><g transform="translate(660,1570) rotate(25)"><rect x="-8" y="-5" width="16" height="10" rx="2" fill="#2a6ad0" stroke="#2e2a26" stroke-width="1.6"/></g>
+            <path d="M380,1474q-4,14 -2,26M418,1474q4,14 2,26" stroke="#bfe8f8" stroke-width="3" fill="none" opacity=".9"/></g>`); } });
+      // b: the beach wide — the Gulf, bright morning; the lifeguard tower and the vinegar post (empty), umbrellas, the family arriving
+      add("sfb", { set: "jellyBeach", setOpts: { id: "jbw", seed: 5, boats: 2, people: 6, tower: [880, 1130, 0.78], post: [650, 1150, 0.55, 0], rock: [160, 690, 0.5], umbrellas: [[90, 1260, 0.8, "#f2c230"], [1010, 1300, 0.85, "#3a9ad8"], [420, 1190, 0.55, "#d8312a"]], life: [["mat", 120, 1320, 0.8, "#e8482a"], ["cooler", 250, 1300, 0.6], ["towel", 980, 1360, 0.8, "#3aa86a"], ["castle", 560, 1420, 0.7], ["flops", 860, 1500, 0.8]] }, dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 1250, 1.0, 540, 960) }] }, land: { y0: 140 },
+        actors: [A("jTonPhone", 330, 1720, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }]), A("jWan", 520, 1760, 0.66, [{ t: 0, mode: "run", eyes: "wide", mouth: "laugh" }]),
+          A("jPhum", 760, 1640, 0.74, [{ t: 0, mode: "point", eyes: "wide", mouth: "laugh" }])] });
+      // c: the family close — ต้น films, ภูมิ points at the far rock, น้ำหวาน in her duck ring
+      add("sfc", { set: "jellyBeach", setOpts: { id: "jfc", seed: 6, boats: 2, people: 4, rock: [820, 700, 0.6], umbrellas: [[60, 1330, 0.9, "#f2c230"]], life: [["mat", 140, 1400, 0.9, "#e8482a"], ["castle", 900, 1500, 0.8], ["flops", 640, 1900, 0.9]] }, dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 1500, 1.45, 540, 1150) }] },
+        actors: [A("jTonPhone", 300, 1760, 0.98, [{ t: 0, mode: "film", eyes: "normal", mouth: "smile" }]), A("jWan", 520, 1790, 0.72, [{ t: 0, mode: "idle", eyes: "normal", mouth: "laugh" }]),
+          A("jPhum", 760, 1740, 0.84, [{ t: 0, mode: "point", eyes: "wide", mouth: "laugh" }], { flip: true })] });
+      // d: the jellyfish moment — ภูมิ waist-deep in the shallows, screaming; the clear bells around his legs under the surface
+      add("sfd", { set: "jellyBeach", setOpts: { id: "jjm", seed: 8, palms: false, wade: [992, 400], under: [[470, 1030, 0.16], [650, 1040, 0.15], [420, 1090, 0.2], [700, 1100, 0.2], [560, 1130, 0.22]] }, dark: 0, blur: { fg: 0, set: 0 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(560, 1010, 2.7, 540, 1000) }] },
+        actors: [A("jPhum", 560, 1100, 0.38, [{ t: 0, mode: "holdHead", eyes: "wide", mouth: "scream" }])] });
+      // e: the plant — the vinegar post by the lifeguard tower, its rack empty; ต้น walks past it
+      add("sfe", { set: "jellyBeach", setOpts: { id: "jpo", seed: 9, tower: [800, 1180, 0.95], post: [420, 1300, 1.0, 0] }, dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(480, 1050, 1.35, 540, 900) }] },
+        actors: [A("jTon", 760, 1500, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { flip: true })] });
+      // f: ยายลออ at her door at dawn, the basket of vinegar bottles set down, the sea in the window
+      add("sff", { set: "jellyPorch", setOpts: { id: "jyp" }, dark: 0, light: { from: "right", rim: "#ffd8a0", rimOp: 0.85, shade: "#2a1a30", shadeOp: 0.3, cast: { len: 1.0, op: 0.25 }, vol: false }, grade: { top: "#ffe0b0", bottom: "#d89a7a", op: 0.12 },
+        cam: { keys: [{ t: 0, ...fr(700, 1150, 1.0, 540, 960) }] },
+        actors: [A("jLaor", 900, 1700, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })] });
+      // g: the peak — the duck ring floating empty among the jellyfish
+      const RINGF = (L) => put(L.fg, `<g transform="translate(560,1004)">${TideCast.duckRing(0, 0, 0.32, { water: true })}</g>`);
+      add("sfg", { set: "jellyBeach", setOpts: { id: "jrg", seed: 12, palms: false, wade: [1000, 400], under: [[430, 1020, 0.14], [700, 1015, 0.14], [470, 1060, 0.18], [650, 1070, 0.18], [380, 1110, 0.22], [740, 1120, 0.22], [560, 1140, 0.25]] }, dark: 0, blur: { fg: 0, set: 0 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(560, 1030, 2.6, 540, 1000) }] }, fx(tl, id, t0, L) { RINGF(L); } });

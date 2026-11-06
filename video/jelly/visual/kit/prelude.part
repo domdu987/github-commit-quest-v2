@@ -1,0 +1,41 @@
+      // ---------- ทะเลลด EP.1 ทะเลถอย อย่าคอยดู ----------
+      // camera grammar: straight down on the wet sand as the sea pulls off the title (opener) → a fish and a child's hand (hook) →
+      // ยาย's shop clock spins back → the map, Bangkok to the Andaman coast → the village from the shallows (arrival, จูน live) →
+      // ตังค์ runs along the water → inside the shop (the account, the photo insert) → 08:00 the tower test, only ตาจุ่น listens →
+      // from the shop's eave the kids whisper about him → ยาย's board → the shadow screen (ละบูน) → the 3D map: the quake far out →
+      // a glass barely trembles → the sea draws back → the live on the seabed → wide eerie → the cross-section → ตาจุ่น's conch →
+      // the run up the steps → from the hill: the first wave is only a surge → the sea goes out again, farther → ยาย is missing →
+      // her slipper on the shop steps → the bay emptied, a white line → the choice → black → the evacuation-sign end card
+      const SUN = { from: "right", rim: "#fff6dc", rimOp: 0.8, shade: "#2a2440", shadeOp: 0.26, cast: { len: 1.3, op: 0.28 }, vol: false };
+      const SHOPL = { from: "right", rim: "#fff2d8", rimOp: 0.7, shade: "#2a2440", shadeOp: 0.3, cast: { len: 1.0, op: 0.26 }, vol: false };
+      const EERIE = { from: "right", rim: "#f4ecd0", rimOp: 0.6, shade: "#2a2a38", shadeOp: 0.34, cast: { len: 1.4, op: 0.24 }, vol: false };
+      const GMORN = { top: "#fff2d6", bottom: "#d6eef4", op: 0.14 }, GEERIE = { top: "#f2e2b4", bottom: "#7e9294", op: 0.24 };
+      const GSHOP = { top: "#fff1d8", bottom: "#e8dcc8", op: 0.1 }, GDAY = { top: "#fff3d6", bottom: "#cfe6f4", op: 0.1 };
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
+      const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
+      const SRC = (L, tl, t0, dur, text) => TideUI.source(tl, L.light, t0, dur, { text });
+      // where people stand inside ยาย's shop (Tide.SHOP.spots → feet and rig scale in the room's perspective)
+      const SPOT = (k, kid = 1) => { const p = Tide.shopPos(...Tide.SHOP.spots[k]); return { x: p.x, y: p.y, s: p.s * kid }; };
+      // a small screen-space chip (time, place) in the beach-world look
+      const chip = (L, tl, t0, dur, text, o = {}) => {
+        const x = o.x ?? 540, y = o.y ?? 190, w = 24 * text.length + 70, id = `chip${Math.round(t0 * 100)}`;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}"><rect x="${-w / 2 + 5}" y="-30" width="${w}" height="66" rx="33" fill="#0a1a24" opacity=".3"/>
+          <rect x="${-w / 2}" y="-36" width="${w}" height="66" rx="33" fill="#fffaf0" stroke="#2a2420" stroke-width="4"/>
+          <circle cx="${-w / 2 + 36}" cy="-3" r="17" fill="#e8823a" stroke="#2a2420" stroke-width="3"/><path d="M${-w / 2 + 36},-13v10l7,5" stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <text x="${-w / 2 + 64}" y="9" font-family="Kanit" font-weight="800" font-size="32" fill="#1e2a3a">${text}</text></g></g>`);
+        const g = document.getElementById(id);
+        tl.set(g, { opacity: 0 }, 0);
+        tl.fromTo(g, { opacity: 0, scale: 0.4, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.6)", immediateRender: false }, t0);
+        tl.to(g, { opacity: 0, duration: 0.25, immediateRender: false }, t0 + dur - 0.25);
+      };
+      // a name tag that pops near someone (screen space)
+      const tag = (L, tl, t0, dur, x, y, text, c = "#e8823a") => {
+        const id = `tag${Math.round(t0 * 100)}`, w = 26 * text.length + 64;
+        put(L.light, `<g transform="translate(${x},${y})"><g id="${id}"><rect x="${-w / 2 + 4}" y="-26" width="${w}" height="58" rx="29" fill="#0a1a24" opacity=".3"/>
+          <rect x="${-w / 2}" y="-32" width="${w}" height="58" rx="29" fill="#fffaf0" stroke="#2a2420" stroke-width="3"/><circle cx="${-w / 2 + 30}" cy="-3" r="14" fill="${c}" stroke="#2a2420" stroke-width="2.4"/>
+          <text x="${-w / 2 + 54}" y="8" font-family="Kanit" font-weight="800" font-size="30" fill="#1e2a3a">${text}</text></g></g>`);
+        const g = document.getElementById(id);
+        tl.set(g, { opacity: 0 }, 0);
+        tl.fromTo(g, { opacity: 0, scale: 0.3, rotation: -8, svgOrigin: "0 0" }, { opacity: 1, scale: 1, rotation: 0, svgOrigin: "0 0", duration: 0.5, ease: "back.out(3)", immediateRender: false }, t0);
+        tl.to(g, { opacity: 0, duration: 0.2, immediateRender: false }, t0 + dur - 0.2);
+      };
