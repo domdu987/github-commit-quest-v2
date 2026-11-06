@@ -364,29 +364,41 @@
           riverNight(L, { hz: 420, moon: [860, 160], tx: 160 });
           krathongField(L, { n: 30, y0: 440, y1: 900, smax: 0.5, seed: 13 });
           // the capsized hull, keel up, close behind her: people's arms over it, heads beside it
-          // people clinging: a head at the waterline, both forearms laid over the hull with the hands on top
-          const heads = [[-380, 0], [-180, -4], [200, -4], [400, 2]].map(([x, y], i) => { const sk = ["#c8946a", "#e2b088", "#b07a52", "#d49c6c"][i];
-            return `<g transform="translate(${x},${y})"><path d="M-34,-40L-40,-120M34,-40L42,-118" stroke="${sk}" stroke-width="22" stroke-linecap="round"/><path d="M-34,-40L-40,-120M34,-40L42,-118" stroke="${KINK}" stroke-width="1.5" opacity=".0"/>
-              <circle cx="-40" cy="-124" r="14" fill="${sk}" ${KOUT2}/><circle cx="42" cy="-122" r="14" fill="${sk}" ${KOUT2}/>
-              <circle cx="0" cy="-30" r="36" fill="${sk}" ${KOUT2}/><path d="M-36,-40Q-32,-76 0,-76Q32,-76 36,-40Q14,-58 -36,-40Z" fill="#1e1612"/><circle cx="-12" cy="-30" r="4" fill="#1e1612"/><circle cx="12" cy="-30" r="4" fill="#1e1612"/><ellipse cx="0" cy="-12" rx="6" ry="5" fill="#5a1e1e"/>
-              <ellipse cx="0" cy="2" rx="64" ry="11" fill="none" stroke="#a8b8f0" stroke-width="3" opacity=".6"/></g>`; }).join("");
-          put(L.set, `<g transform="translate(560,1090) scale(.85)"><path d="M-620,0Q-560,-170 0,-184Q560,-170 620,0Z" fill="url(#kHull)" ${KOUT}/><path d="M-600,-24Q0,-6 600,-24" stroke="#e2302a" stroke-width="13" fill="none"/>
-              <path d="M-540,-90Q0,-200 540,-90" stroke="#5a3418" stroke-width="3" fill="none"/><path d="M0,-184V-150" stroke="#3a2010" stroke-width="10"/>
-              <rect x="-800" y="-10" width="1600" height="300" fill="url(#kWater)"/><path d="M-800,-8${Array.from({ length: 40 }, () => "q20,-8 40,0").join("")}" stroke="#a8b8f0" stroke-width="4" fill="none" opacity=".7"/>
-              <g transform="translate(0,-10)">${heads}</g>
+          // the capsized hull, keel up, close behind her: a curved bottom with the keel line and planks, the gunwale and ยาย's red stripe
+          // at the waterline, water lapping along it (the people clinging to it are rig characters, see actors)
+          const planks = Array.from({ length: 6 }, (_, k) => { const f = 0.25 + k * 0.13; return `<path d="M${k1(-600 * (1 - f * 0.25))},${k1(-14 - 10 * k)}Q0,${k1(-184 * (1 - f * 0.9) - 12)} ${k1(600 * (1 - f * 0.25))},${k1(-14 - 10 * k)}" stroke="#5a3418" stroke-width="3" fill="none" opacity=".6"/>`; }).join("");
+          put(L.set, `<g transform="translate(560,1090) scale(.85)">
+              <path d="M-660,0Q-640,-60 -560,-120Q-300,-196 0,-200Q300,-196 560,-120Q640,-60 660,0Z" fill="url(#kHull)" ${KOUT}/>
+              <path d="M-660,0Q-640,-60 -560,-120Q-300,-196 0,-200Q300,-196 560,-120Q640,-60 660,0Z" fill="url(#r2Cyl)" opacity=".8"/>
+              ${planks}<path d="M-560,-120Q-300,-196 0,-200Q300,-196 560,-120" stroke="#3a2010" stroke-width="12" fill="none"/><path d="M-540,-128Q-300,-202 0,-206Q300,-202 540,-128" stroke="#e8b880" stroke-width="4" fill="none" opacity=".7"/>
+              <path d="M-660,0Q-670,-40 -700,-60L-650,-16Z" fill="#8e5a30" ${KOUT2}/><path d="M600,-90L640,-160L660,-150L630,-80Z" fill="#3a3e44" ${KOUT2}/>
+              <path d="M-650,-6Q0,8 650,-6" stroke="#e2302a" stroke-width="14" fill="none"/><path d="M-650,-14Q0,0 650,-14" stroke="#f2e2c0" stroke-width="5" fill="none" opacity=".7"/>
+              <rect x="-900" y="0" width="1800" height="300" fill="url(#kWater)"/>
+              <path d="M-900,2${Array.from({ length: 45 }, () => "q20,-9 40,0").join("")}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/>
+              ${[-520, -260, 40, 300, 540].map((x) => `<path d="M${x - 50},4q25,-18 50,-8t50,8" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/>`).join("")}
               <path d="M-700,60h160M300,90h220M-200,140h120" stroke="#ffc45a" stroke-width="4" opacity=".35"/></g>`);
         },
         dark: 0, light: { ...WARML, rim: "#ffc46a", rimOp: 0.95 }, grade: GNIGHT, blur: { sky: 3, far: 3, mid: 2, set: 1.2, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(540, 1230, 2.0, 540, 960), drift: { s: 0.008 } }] },
-        actors: [A("maprangWet", 520, 1640, 0.92, [{ t: 0, mode: "cling", eyes: "wide", mouth: "scream" }])],
+        // the people clinging to the hull: heads at its waterline (y 1090), faces half under, arms up over the keel
+        actors: [
+          A("lungMuek", 338, 1352, 0.5, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "o" }]),
+          A("pxB", 712, 1350, 0.48, [{ t: 0, mode: "cheer", eyes: "pain", mouth: "o" }], { flip: true }),
+          A("maprangWet", 520, 1640, 0.92, [{ t: 0, mode: "cling", eyes: "wide", mouth: "scream" }]),
+        ],
         fx(tl, id, t0, L) {
           const WL = 1300;
+          // the hull's water again over the clingers (same band as the set's), left and right of มะปราง so she stays in front
+          const band = (x0, x1) => `<rect x="${x0}" y="1090" width="${x1 - x0}" height="255" fill="url(#kWater)"/><path d="M${x0},1092${Array.from({ length: Math.round((x1 - x0) / 34) }, () => "q17,-8 34,0").join("")}" stroke="#c8d8ff" stroke-width="3.4" fill="none" opacity=".8"/>`;
+          put(L.act, band(-300, 405) + band(640, 1400));
+          // move มะปราง above the far water band: re-append her group last
+          const mp = document.getElementById(`${id}-a2`); if (mp) mp.parentNode.appendChild(mp);
           // the water over her below the shoulders, the gallon hugged in front, splashes and drops, rings round her
           const wv = (n, a) => Array.from({ length: n }, () => `q20,${-a} 40,0`).join("");
           put(L.act, `<g transform="translate(540,${WL})"><path d="M-900,0${wv(45, 10)}V700H-900Z" fill="url(#kWater)"/>
             ${[1, 2, 3].map((i) => `<ellipse cx="0" cy="8" rx="${150 + i * 70}" ry="${20 + i * 12}" fill="none" stroke="#b8c8ff" stroke-width="3.5" opacity="${(0.6 - i * 0.15).toFixed(2)}"/>`).join("")}
             <path d="M-900,0${wv(45, 10)}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/>
-            ${gallon(-120, -34, 1.3, { rot: 84, water: true })}
+            ${gallon(-70, -26, 0.98, { rot: 84, water: true })}
             ${[[-170, -40, -30], [-120, -90, -10], [150, -70, 20], [200, -30, 35], [-60, -120, 0], [90, -130, 10]].map(([x, y, r]) => `<path d="M${x},${y}q-6,-26 4,-44q8,16 -4,44z" fill="#e8f2ff" opacity=".85" transform="rotate(${r} ${x} ${y})"/>`).join("")}
             ${Array.from({ length: 22 }, (_, i) => `<circle cx="${k1(-240 + (i * 37) % 480)}" cy="${k1(-20 - ((i * 53) % 160))}" r="${k1(3 + (i % 4) * 2)}" fill="#e8f2ff" opacity=".8"/>`).join("")}
             <path d="M-260,6q60,-40 120,-6M140,0q60,-40 130,0" stroke="#fff" stroke-width="6" fill="none" opacity=".75" stroke-linecap="round"/></g>`);
