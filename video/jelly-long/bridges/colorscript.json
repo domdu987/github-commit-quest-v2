@@ -9,6 +9,18 @@
    "from": 13.281,
    "to": 16.073,
    "stage": "threat"
+  },
+  {
+   "from": 16.073,
+   "to": 34.086,
+   "stage": "uneasy",
+   "note": "cold open: thirty years ago (memory grade on top)"
+  },
+  {
+   "from": 34.086,
+   "to": 54.449,
+   "stage": "safe",
+   "note": "epilogue: a year later, morning"
   }
  ],
  "keep": "yellow"

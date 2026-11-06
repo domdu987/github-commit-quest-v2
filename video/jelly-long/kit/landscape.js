@@ -88,11 +88,13 @@
     }
     clip.dataset.land = fit ? "fit" : `y0=${Math.round(y0)}`;
     // source chips (K3, SVG groups id src<N>) go to the page's bottom-right corner, clear of the captions and the badge (review M6)
+    // at their 9:16 size (one unit = one page pixel), not shrunk with a fitted card (review r2 item 5)
     clip.querySelectorAll('g[id^="src"]').forEach((g) => {
-      const r = g.getBoundingClientRect(), bb = g.getBBox(); if (!r.width || !bb.width) return;
-      const k = r.width / bb.width, dx = (1890 - r.right) / k, dy = (1052 - r.bottom) / k;
-      const w = document.createElementNS("http://www.w3.org/2000/svg", "g"); w.setAttribute("transform", `translate(${dx.toFixed(1)} ${dy.toFixed(1)})`);
-      g.parentNode.insertBefore(w, g); w.appendChild(g);
+      const w = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.parentNode.insertBefore(w, g); w.appendChild(g);
+      const r = w.getBoundingClientRect(), bb = w.getBBox(); if (!r.width || !bb.width) return;
+      const k = r.width / bb.width, m = 1 / k, bx = bb.x + bb.width, by = bb.y + bb.height;
+      const dx = (1890 - r.right) / k, dy = (1052 - r.bottom) / k;
+      w.setAttribute("transform", `translate(${(bx + dx).toFixed(1)} ${(by + dy).toFixed(1)}) scale(${m.toFixed(4)}) translate(${(-bx).toFixed(1)} ${(-by).toFixed(1)})`);
     });
     clip.dataset.world = world ? world.map((v) => Math.round(v)).join(",") : "";
     // a set drawn only for the 9:16 frame (a card, a diagram, the shadow screen, a map) leaves the widened sides empty: fill them with a

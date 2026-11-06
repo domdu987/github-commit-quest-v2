@@ -152,7 +152,7 @@
   },
   {
    "t": 277.283,
-   "title": "คำโกหกของแม่"
+   "title": "คืนนั้นที่บ้าน"
   },
   {
    "t": 343.567,
@@ -171,18 +171,18 @@
   {
    "t": 0.483,
    "label": "open",
-   "src": "suno1 60 s (cold open)"
+   "src": "suno1 from 88.7 s (cold open): the same phrase EP.1 plays under the bottle choice"
   },
   {
    "t": 109.703,
    "label": "choice",
-   "src": "EP.1 mix (suno1 under the bottle choice)"
+   "src": "EP.1 mix: suno1 at 88.7 s under the bottle choice (the theme phrase)"
   },
   {
    "t": 344.57,
    "label": "epilogue",
    "key": "+2",
-   "src": "suno1 60 s, rubberband +2 semitones"
+   "src": "suno1 from 88.7 s, rubberband +2 semitones"
   }
  ],
  "choices": [

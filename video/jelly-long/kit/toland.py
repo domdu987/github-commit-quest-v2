@@ -11,6 +11,8 @@ for a, b in [('content="width=1080, height=1920"', 'content="width=1920, height=
 a = "Engine.build(root, tl, shots);"; assert s.count(a) == 1, s.count(a)
 s = s.replace(a, f"const LANDFIX = {json.dumps(fix)};\n      shots.forEach((sh) => {{ if (LANDFIX[sh.key] != null) sh.land = typeof LANDFIX[sh.key] === 'object' ? LANDFIX[sh.key] : {{ y0: LANDFIX[sh.key] }}; }});\n      " + a)
 s = s.replace('</style>', '\n      .clip > .capwrap .capbox { font-size: 50px; }\n      .clip > .capwrap { top: 872px !important; }\n      .clip.lfit { background: radial-gradient(ellipse 60% 80% at 50% 50%, #2a3438, #12181b); }\n      .clip[style*="visibility: hidden"] { display: none !important; }\n      .badge { bottom: auto !important; top: 34px !important; }\n    </style>', 1)
+import re
+s = re.sub(r"<div class=\"badge\" id=\"badge\">[^<]*</div>", "<div class=\"badge\" id=\"badge\">หนวดใส</div>", s)   # the long is one film: the badge is the title only, no "ตอน N" (review r2 S9)
 open(p, "w").write(s)
 c = os.path.join(dst, "assets", "cine.js"); t = open(c).read()
 for a, b in [('x="0" y="0" width="${W}" height="${H}" color-interpolation-filters', 'x="-2400" y="-600" width="5880" height="3120" color-interpolation-filters'),

@@ -202,7 +202,7 @@
         } });
       // 15–16 · "พ่อ!" — ต้น turns (same side) and the pull-out shows น้ำหวาน walking down from the tower with the yellow bottle → the hug
       add("c_back", { set: "jellyBeach", setOpts: BEACH2("jb8", { tower: [900, 1270, 0.82], life: [], umbrellas: [[90, 1300, 0.8, "#f2c230"]] }), dark: 0, light: SUN,
-        cam: { keys: [{ t: 0, ...fr(380, 1310, 3.0, 540, 720) }, { t: CT(16, "c_back") - 0.01, glide: CT(16, "c_back") - 0.01, ...fr(450, 1330, 2.6, 540, 880) }, { t: CT(16, "c_back"), ...fr(520, 1420, 2.2, 540, 960) }] },
+        cam: { keys: [{ t: 0, ...(window.LANDSCAPE ? fr(380, 1310, 2.34, 540, 720) : fr(380, 1310, 3.0, 540, 720)) }, { t: CT(16, "c_back") - 0.01, glide: CT(16, "c_back") - 0.01, ...(window.LANDSCAPE ? fr(450, 1330, 2.03, 540, 880) : fr(450, 1330, 2.6, 540, 880)) }, { t: CT(16, "c_back"), ...(window.LANDSCAPE ? fr(520, 1420, 1.72, 540, 960) : fr(520, 1420, 2.2, 540, 960)) }] },
         actors: [
           A("jTon", 380, 1740, 1.0, [{ t: 0, mode: "kneel", eyes: "cry", mouth: "flat" }], { flip: false, until: vo("c_back", 0) + 0.25 }),
           A("jTon", 380, 1740, 1.0, [{ t: 0, mode: "kneel", eyes: "wide", mouth: "o" }], { flip: true, from: vo("c_back", 0) + 0.25, until: CT(16, "c_back"), talk: [TALK("c_back", 1, "scream")] }),
@@ -214,8 +214,8 @@
       // 17–18 · her arm (welts wet with vinegar), the pull-out shows the tower and the empty post behind → she sings rule 2 holding the bottle up
       const POSTT = [700, 1330, 0.62];
       add("c_twist", { set: "jellyBeach", setOpts: BEACH2("jb9", { tower: [900, 1270, 0.82], life: [], umbrellas: [] }), dark: 0, light: SUN,
-        cam: { keys: [{ t: 0, ...fr(520, 1420, 3.2, 540, 820) }, { t: CT(18, "c_twist") - 0.01, glide: CT(18, "c_twist") - 0.01, ...fr(560, 1320, 2.75, 540, 880) },
-          { t: CT(18, "c_twist"), ...fr(530, 1330, 3.0, 540, 980) }] },
+        cam: { keys: [{ t: 0, ...(window.LANDSCAPE ? fr(520, 1420, 2.5, 540, 820) : fr(520, 1420, 3.2, 540, 820)) }, { t: CT(18, "c_twist") - 0.01, glide: CT(18, "c_twist") - 0.01, ...(window.LANDSCAPE ? fr(560, 1320, 2.15, 540, 880) : fr(560, 1320, 2.75, 540, 880)) },
+          { t: CT(18, "c_twist"), ...(window.LANDSCAPE ? fr(530, 1330, 2.34, 540, 980) : fr(530, 1330, 3.0, 540, 980)) }] },
         actors: [
           A("jWanVin", 520, 1760, 0.74, [{ t: 0, mode: "armUp", eyes: "worry", mouth: "o" }, { t: CT(18, "c_twist"), mode: "sing", eyes: "closed", mouth: "laugh" }], { talk: [TALK("c_twist", 0, "o"), TALK("c_twist", 1, "laugh")] }),
           A("jTon", 200, 1760, 1.0, [{ t: 0, mode: "kneel", eyes: "wide", mouth: "o" }], { until: CT(18, "c_twist") }),

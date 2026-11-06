@@ -76,7 +76,7 @@ place(amb, level(gulls, -40), C(9) + 0.5); place(amb, level(gulls, -42), C(11) +
 SUNO = os.path.join(HERE, "..", "music", "suno1.mp3")
 src = load(SUNO)
 # the main theme = the phrase of suno1 that plays under EP.1's painful choice (bible §7: open / choice / epilogue with a key change)
-THEME0 = 60.0   # EP.1 cut 25 (the choice) starts at 88.7 s, where suno1 is at the same second
+THEME0 = 88.7   # the theme = suno1 at 88.7 s, the phrase under EP.1's choice (cut 25)
 t = np.arange(N) / SR
 mus = np.zeros(N, np.float32)
 def sect(a, b, x, fin=0.3, fout=0.4, lvl=-30):

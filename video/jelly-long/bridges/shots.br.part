@@ -79,9 +79,9 @@
       const MEM = (id) => { const c = document.getElementById(id); if (c) c.style.filter = "sepia(.5) saturate(.75) contrast(1.04)"; };
       const bv = (k) => (Rig.CAST[k] && Rig.CAST[k].v2) || {};
       const BOWL = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-60,0Q-54,46 0,50Q54,46 60,0Z" fill="#c8a24a" stroke="#2e2a26" stroke-width="4"/><path d="M-66,0H66" stroke="#2e2a26" stroke-width="7" stroke-linecap="round"/><path d="M-50,-2Q0,-12 50,-2" stroke="#bfe8ff" stroke-width="6" fill="none"/></g>`;
-      Rig.CAST.jLaorY = { v2: { ...bv("june"), wristband: null, blush: 0.4, top: { kind: "blouse", c: "#f4e2a8", sleeve: "elbow", trim: "#d8c080" }, print: "", bottom: { kind: "sarong", c: "#2a5a7a", band: "#e8c050", band2: "#d8312a" }, feet: { kind: "bare" }, extra: "" } };
+      Rig.CAST.jLaorY = { v2: { ...bv("june"), hair: { ...bv("yai").hair, c: "#2a2420", s: "#1a1612", sh: "#4a4440" }, wristband: null,   /* a village mother of about 40, hair in a bun (review r2 S3) */ blush: 0.4, top: { kind: "blouse", c: "#f4e2a8", sleeve: "elbow", trim: "#d8c080" }, print: "", bottom: { kind: "sarong", c: "#2a5a7a", band: "#e8c050", band2: "#d8312a" }, feet: { kind: "bare" }, extra: "" } };
       Rig.CAST.jPherm = { v2: { ...bv("keng"), skin: "#a8724a", top: { kind: "tank", c: "#e8e0c8", sleeve: "none" }, print: "", bottom: { kind: "shorts", c: "#3a4a6a" }, feet: { kind: "bare" }, extra: "" } };
-      Rig.CAST.jFisher = { v2: { ...bv("boon"), skin: "#9a6a44", top: { kind: "singlet", c: "#c8a878" }, print: "", bottom: { kind: "shorts", c: "#5a3a2a" }, feet: { kind: "bare" }, extra: "" }, hand: `<g transform="translate(0,110) rotate(160)">${BOWL(0, 0, 0.62)}</g>`, keep: "F" };
+      Rig.CAST.jFisher = { v2: { ...bv("boon"), hair: { ...bv("khem").hair, c: "#2a2420", sh: "#4a4440" }, skin: "#9a6a44", top: { kind: "singlet", c: "#c8a878" }, print: "", bottom: { kind: "shorts", c: "#5a3a2a" }, feet: { kind: "bare" }, extra: "" }, hand: `<g transform="translate(0,110) rotate(160)">${BOWL(0, 0, 0.62)}</g>`, keep: "F" };
       Rig.CAST.jKidTour = { v2: { ...bv("tang"), top: { kind: "tee", c: "#3aa86a", sleeve: "short" }, print: "", bottom: { kind: "shorts", c: "#2a3a5a" }, feet: { kind: "sandal", c: "#e85a2a" }, extra: "" }, hand: `<g transform="translate(0,104) rotate(170)">${Jelly.bottle(0, 0, 0.5, { cap: false })}</g>`, keep: "F" };
       Rig.CAST.jPhumBasket = { v2: Rig.CAST.jPhum.v2, hand: `<g transform="translate(0,112)">${Jelly.basket(0, 110, 0.55)}</g>`, keep: "F" };
       Rig.MODES.waveBig = Rig.MODES.waveBig || ((u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -160 + 20 * Math.sin(u * 9), faF: -20, uaB: 10, faB: -20, head: -8 }));
@@ -101,11 +101,36 @@
       const LBOAT = (x, y, s, id) => `<g transform="translate(${x},${y}) scale(${s})"><g id="${id}"><path d="M-300,-10Q-240,70 0,74Q240,70 330,-30L300,-40Q0,0 -280,-26Z" fill="#7a4a2a" stroke="#2e2a26" stroke-width="6"/>
         <path d="M-280,-26Q0,0 300,-40" stroke="#c8a24a" stroke-width="10" fill="none"/><path d="M-250,20Q0,44 280,8" stroke="#3a6a9a" stroke-width="8" fill="none"/><path d="M300,-40Q350,-90 360,-120" stroke="#2e2a26" stroke-width="10" fill="none"/>
         ${[0, 1, 2].map((k) => `<path d="M${330 + k * 6},-118l${8 - k * 8},-30" stroke="${["#d8312a", "#f2c230", "#3aa86a"][k]}" stroke-width="6"/>`).join("")}</g></g>`;
+      // 9a · C1p · the cold open starts mid-event: a bowl of plain water tipped over the welts on เพิ่ม's calf (the danger first), the welts flare
+      const MEMLITE = (id) => { const c = document.getElementById(id); if (c) c.style.filter = "sepia(.35) saturate(.85) contrast(1.04)"; };
+      add("C1p", { set: "jellyBeach", setOpts: PAST("jbC1p"), dark: 0, light: SUN, blur: { set: 5, mid: 6, far: 6 },
+        cam: { keys: [{ t: 0, ...fr(820, 1640, 2.3, 540, 1180) }, { t: D("C1p"), glide: D("C1p"), ...fr(820, 1650, 2.55, 540, 1180) }] },
+        actors: [], captions: caps("C1p"),
+        fx(tl, id, t0, L) { MEMLITE(id);
+          put(L.act, `<g><path d="M300,1704Q760,1690 1040,1712L1320,1720" stroke="#2e2a26" stroke-width="66" stroke-linecap="round"/><path d="M300,1704Q760,1690 1040,1712L1320,1720" stroke="#a8724a" stroke-width="54" stroke-linecap="round"/>
+            ${[0, 1, 2, 3].map((k) => `<path d="M${650 + k * 70},1688l22,26l22,-26" stroke="#e8495a" stroke-width="9" fill="none"/>`).join("")}
+            <g id="c1p-f" opacity="0">${[0, 1, 2, 3].map((k) => `<path d="M${650 + k * 70},1688l22,26l22,-26" stroke="#ff2a3a" stroke-width="12" fill="none"/>`).join("")}</g>
+            <path d="M180,1650Q240,1640 330,1660L340,1748Q250,1762 175,1752Z" fill="#2c3e5a" stroke="#2e2a26" stroke-width="6"/><path d="M1300,1690Q1360,1660 1400,1690Q1440,1720 1420,1744Q1360,1752 1310,1742Z" fill="#a8724a" stroke="#2e2a26" stroke-width="6"/><path d="M180,1756Q760,1790 1430,1760" stroke="#bfe0e8" stroke-width="10" fill="none" opacity=".55"/>
+            <g transform="translate(800,1560) scale(.75)"><g id="c1p-bowl"><path d="M-90,0Q-80,70 0,74Q80,70 90,0Z" fill="#c8a24a" stroke="#2e2a26" stroke-width="6"/><path d="M-98,0H98" stroke="#2e2a26" stroke-width="9"/><path d="M-60,22Q0,34 60,22" stroke="#e8c870" stroke-width="5" fill="none" opacity=".8"/></g></g>
+            <g id="c1p-wat" opacity="0">${[0, 1, 2, 3, 4, 5].map((k) => `<path d="M${750 + k * 12},1590q-5,60 0,110" stroke="#bfe8ff" stroke-width="9" fill="none" opacity=".9"/>`).join("")}</g>
+            ${[0, 1, 2, 3, 4, 5, 6].map((k) => `<circle class="c1p-sp" cx="${700 + k * 40}" cy="${1694 - (k % 3) * 14}" r="7" fill="#dff4ff" opacity="0"/>`).join("")}</g>`);
+          tl.fromTo("#c1p-bowl", { rotation: 8, svgOrigin: "0 0" }, { rotation: 52, svgOrigin: "0 0", duration: 0.35, ease: "power2.in", immediateRender: false }, t0);
+          tl.fromTo("#c1p-wat", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 0.2, ease: "power1.in", immediateRender: false }, t0 + 0.22);
+          tl.fromTo(".c1p-sp", { opacity: 0, y: 0 }, { opacity: 0.9, y: -26, duration: 0.3, stagger: 0.04, repeat: 1, yoyo: true, ease: "power1.out", immediateRender: false }, t0 + 0.38);
+          tl.fromTo("#c1p-f", { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "power2.in", immediateRender: false }, t0 + 0.45); } });
+      // 9b · C1f · เพิ่ม's face as the water lands: the pain (he will smile it off later in C3)
+      add("C1f", { set: "jellyBeach", setOpts: PAST("jbC1f"), dark: 0, light: SUN, blur: { set: 3, mid: 4, far: 4 },
+        cam: { keys: [{ t: 0, ...fr(740, 1450, 2.7, 540, 860) }, { t: D("C1f"), glide: D("C1f"), ...fr(740, 1450, 3.0, 540, 860) }] },
+        actors: [A("jPherm", 740, 1720, 1.0, [{ t: 0, mode: "sitShallow", eyes: "cry", mouth: "scream" }])],
+        captions: caps("C1f"),
+        fx(tl, id, t0, L) { MEMLITE(id);
+          put(L.light, `<g id="c1f-dr">${[0, 1, 2, 3].map((k) => `<path d="M${640 + k * 60},1380q-3,30 0,60" stroke="#dff4ff" stroke-width="6" fill="none" opacity=".8"/>`).join("")}</g>`);
+          tl.fromTo("#c1f-dr", { y: -40 }, { y: 80, duration: 0.5, repeat: 1, ease: "power1.in", immediateRender: false }, t0); } });
       add("C1", { set: "jellyBeach", setOpts: PAST("jbC1"), dark: 0, light: SUN,
         cam: { keys: [{ t: 0, ...fr(420, 1500, 1.15, 540, 1000) }, { t: D("C1"), glide: D("C1"), ...fr(620, 1500, 1.22, 540, 1000) }] },
         actors: [A("jPhermHat", 640, 1720, 0.95, [{ t: 0, mode: "haul", eyes: "normal", mouth: "smile" }], { moveTo: { x: 860, y: 1730, dur: D("C1"), ease: "none" } })],
         captions: caps("C1"),
-        fx(tl, id, t0, L) { const c = document.getElementById(id); if (c) c.style.filter = "sepia(.3) saturate(.9) brightness(1.06)";
+        fx(tl, id, t0, L) { const c = document.getElementById(id); if (c) c.style.filter = "sepia(.3) saturate(.92) brightness(1.04)";
           put(L.act, `<g id="c1-bt">${LBOAT(260, 1700, 0.9, "c1-bb")}</g><path id="c1-rope" d="M560,1680Q600,1700 640,1600" stroke="#c8a878" stroke-width="5" fill="none"/>`);
           tl.fromTo("#c1-bt", { x: 0 }, { x: 220, duration: D("C1"), ease: "none", immediateRender: false }, t0);
           tl.fromTo("#c1-rope", { x: 0 }, { x: 220, duration: D("C1"), ease: "none", immediateRender: false }, t0);
@@ -114,19 +139,19 @@
           tl.fromTo("#c1-g", { x: -60, y: 10 }, { x: 160, y: -30, duration: D("C1"), ease: "none", immediateRender: false }, t0); } });
       // 10–11 · C2 · the fisherman runs with a bowl of water to เพิ่ม sitting in the shallows → young ลออ runs in: "พี่เพิ่ม! พี่!"
       add("C2", { set: "jellyBeach", setOpts: PAST("jbC2", { jellies: [[860, 1640, 0.55, 0.5], [960, 1610, 0.45, 0.6]] }), dark: 0, light: SUN,
-        cam: { keys: [{ t: 0, ...fr(640, 1560, 1.25, 540, 1080) }, { t: CT(11, "C2"), ...fr(420, 1560, 1.9, 540, 1080) }] },
+        cam: { keys: [{ t: 0, ...fr(640, 1560, 1.25, 540, 1080) }, { t: CT(13, "C2"), ...fr(420, 1560, 1.9, 540, 1080) }] },
         actors: [A("jPherm", 740, 1720, 1.0, [{ t: 0, mode: "sitShallow", eyes: "wide", mouth: "scream" }]),
-          A("jFisher", 300, 1760, 1.0, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { until: CT(11, "C2"), talk: [TALK("C2", 0, "scream")], moveTo: { x: 560, y: 1760, dur: CT(11, "C2"), ease: "power1.out" } }),
-          A("jLaorY", 120, 1780, 1.0, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { from: CT(11, "C2"), talk: [TALK("C2", 1, "scream")], moveTo: { x: 320, y: 1780, dur: D("C2") - CT(11, "C2"), ease: "power1.out" } })],
+          A("jFisher", 300, 1760, 1.0, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { until: CT(13, "C2"), talk: [TALK("C2", 0, "scream")], moveTo: { x: 560, y: 1760, dur: CT(13, "C2"), ease: "power1.out" } }),
+          A("jLaorY", 120, 1780, 1.0, [{ t: 0, mode: "run", eyes: "wide", mouth: "scream" }], { from: CT(13, "C2"), talk: [TALK("C2", 1, "scream")], moveTo: { x: 320, y: 1780, dur: D("C2") - CT(13, "C2"), ease: "power1.out" } })],
         captions: capsJ(caps("C2", [0], { quote: true }), caps("C2", [1], { quote: true })),
         fx(tl, id) { MEM(id); } });
       // 12–13 · C3 · เพิ่ม CU, smiling it off: "ไม่เป็นไร ลออ แค่แสบนิดเดียว" → insert: the bowl of plain water poured over the welts
       add("C3", { set: "jellyBeach", setOpts: PAST("jbC3"), dark: 0, light: SUN, blur: { set: 3, mid: 4, far: 4 },
-        cam: { keys: [{ t: 0, ...fr(740, 1470, 2.6, 540, 880) }, { t: CT(13, "C3"), ...fr(820, 1700, 3.2, 540, 960) }] },
-        actors: [A("jPherm", 740, 1720, 1.0, [{ t: 0, mode: "calmDown", eyes: "normal", mouth: "smile" }], { until: CT(13, "C3"), talk: [TALK("C3", 0, "smile")] }),
-          A("jFisher", 940, 1740, 1.0, [{ t: 0, mode: "pourStand", eyes: "worry", mouth: "o" }], { flip: true, from: CT(13, "C3") - 0.01 })],
+        cam: { keys: [{ t: 0, ...fr(740, 1470, 2.6, 540, 880) }, { t: CT(15, "C3"), ...fr(820, 1700, 3.2, 540, 960) }] },
+        actors: [A("jPherm", 740, 1720, 1.0, [{ t: 0, mode: "calmDown", eyes: "normal", mouth: "smile" }], { until: CT(15, "C3"), talk: [TALK("C3", 0, "smile")] }),
+          A("jFisher", 940, 1740, 1.0, [{ t: 0, mode: "pourStand", eyes: "worry", mouth: "o" }], { flip: true, from: CT(15, "C3") - 0.01 })],
         captions: caps("C3", undefined, { quote: true }),
-        fx(tl, id, t0, L) { MEM(id); const b = CT(13, "C3");
+        fx(tl, id, t0, L) { MEM(id); const b = CT(15, "C3");
           put(L.act, `<g id="c3-leg" opacity="0"><path d="M380,1704Q760,1690 900,1712L1260,1722" stroke="#2e2a26" stroke-width="66" stroke-linecap="round"/><path d="M380,1704Q760,1690 900,1712L1260,1722" stroke="#a8724a" stroke-width="54" stroke-linecap="round"/>
             ${[0, 1, 2].map((k) => `<path d="M${690 + k * 55},1690l18,22l18,-22" stroke="#e85a6a" stroke-width="6" fill="none"/>`).join("")}<g id="c3-wat">${[0, 1, 2, 3, 4].map((k) => `<path d="M${760 + k * 12},1560q-4,60 0,120" stroke="#bfe8ff" stroke-width="7" fill="none" opacity=".85"/>`).join("")}</g></g>`);
           show(tl, "#c3-leg", t0 + b); tl.fromTo("#c3-wat", { y: -80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power1.in", immediateRender: false }, t0 + b + 0.1); } });
@@ -145,25 +170,32 @@
 
       // 15 · E1 · a year later: dawn, the bay, ภูมิ carries the basket to the post by the tower ("หนึ่งปีต่อมา")
       const NOW = (id, x = {}) => BEACH(id, { tower: [1000, 1270, 0.82], post: [700, 1360, 0.7, 0.25], umbrellas: [], life: [], time: "morning", ...x });
+      // the epilogue is dawn (the plan): a low warm sun off right and a blush on the sky, as EP.3 cut 28 (review r2 S6)
+      const DAWNWASH = (L, id) => put(L.light, `<defs><radialGradient id="${id}-sun" cx="0.85" cy="0.42" r="0.75"><stop offset="0" stop-color="#ffc070" stop-opacity=".6"/><stop offset=".45" stop-color="#ff9a6a" stop-opacity=".2"/><stop offset="1" stop-color="#ff9a6a" stop-opacity="0"/></radialGradient>
+        <linearGradient id="${id}-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a7a" stop-opacity=".4"/><stop offset=".5" stop-color="#ffd0a0" stop-opacity=".15"/><stop offset="1" stop-color="#ffb070" stop-opacity=".12"/></linearGradient></defs>
+        <rect x="-2400" y="-600" width="6000" height="3200" fill="url(#${id}-sky)" style="mix-blend-mode:multiply"/><rect x="-2400" y="-600" width="6000" height="3200" fill="url(#${id}-sun)" style="mix-blend-mode:screen"/>`);
       add("E1", { set: "jellyBeach", setOpts: NOPOST(NOW("jbE1"))[0], dark: 0, light: DAWN,
         cam: { keys: [{ t: 0, ...fr(600, 1300, 0.8, 540, 960) }, { t: D("E1"), glide: D("E1"), ...fr(620, 1320, 0.86, 540, 960) }] },
         actors: [A("jPhumBasket", 260, 1700, 0.6, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { moveTo: { x: 520, y: 1690, dur: D("E1"), ease: "none" } })],
-        captions: caps("E1"), fx(tl, id, t0, L) { PB(L, NOPOST(NOW("jbE1"))[1], "pbE1"); } });
+        captions: caps("E1"), fx(tl, id, t0, L) { DAWNWASH(L, "dwE1"); PB(L, NOPOST(NOW("jbE1"))[1], "pbE1"); } });
       // 16–17 · E2 · ภูมิ fills the post himself: "ปีนี้ผมเติมเสาเองครับยาย!" → a tourist kid with an open bottle; ภูมิ: "อย่าเอาน้ำเปล่าราด"
       add("E2", { set: "jellyBeach", setOpts: NOPOST(NOW("jbE2", { post: [640, 1640, 1.0, 0.75] }))[0], dark: 0, light: DAWN,
-        cam: { keys: [{ t: 0, ...fr(560, 1360, 1.5, 540, 980) }, { t: CT(17, "E2"), ...fr(620, 1400, 1.45, 540, 980) }] },
-        actors: [A("jPhum", 430, 1760, 0.95, [{ t: 0, mode: "fillPost", eyes: "normal", mouth: "laugh" }, { t: CT(17, "E2"), mode: "point", eyes: "normal", mouth: "o" }], { talk: [TALK("E2", 0, "laugh"), TALK("E2", 1, "o")] }),
-          A("jKidTour", 820, 1770, 0.78, [{ t: 0, mode: "idle", eyes: "normal", mouth: "o" }], { flip: true, from: CT(17, "E2") - 0.01 })],
-        captions: capsJ(caps("E2", [0], { quote: true }), caps("E2", [1], { quote: true })), fx(tl, id, t0, L) { PB(L, NOPOST(NOW("jbE2", { post: [640, 1640, 1.0, 0.75] }))[1], "pbE2"); } });
+        cam: { keys: [{ t: 0, ...fr(560, 1360, 1.5, 540, 980) }, { t: CT(19, "E2"), ...fr(620, 1400, 1.45, 540, 980) }] },
+        actors: [A("jPhum", 430, 1760, 0.95, [{ t: 0, mode: "fillPost", eyes: "normal", mouth: "laugh" }, { t: CT(19, "E2"), mode: "point", eyes: "normal", mouth: "o" }], { talk: [TALK("E2", 0, "laugh"), TALK("E2", 1, "o")] }),
+          A("jKidTour", 820, 1770, 0.78, [{ t: 0, mode: "idle", eyes: "normal", mouth: "o" }], { flip: true, from: CT(19, "E2") - 0.01 })],   // the basket he carried in E1 is on the sand by his feet
+        captions: capsJ(caps("E2", [0], { quote: true }), caps("E2", [1], { quote: true })), fx(tl, id, t0, L) { DAWNWASH(L, "dwE2"); put(L.act, Jelly.basket(290, 1772, 0.9)); PB(L, NOPOST(NOW("jbE2", { post: [640, 1640, 1.0, 0.75] }))[1], "pbE2"); } });
       // 18 · E2b · the two of them shout the rhyme at the post: น้ำหวาน "หนวดใสพันขา!" ภูมิ "อย่าราดน้ำท่า!"
       add("E2b", { set: "jellyBeach", setOpts: NOPOST(NOW("jbE2b", { post: [560, 1600, 0.95, 1] }))[0], dark: 0, light: DAWN,
         cam: { keys: [{ t: 0, ...fr(560, 1400, 1.25, 540, 1000) }] },
         actors: [A("jPhum", 380, 1760, 0.95, [{ t: 0, mode: "waveBig", eyes: "normal", mouth: "laugh" }], { talk: [TALK("E2b", 1, "laugh")] }),
           A("jWanBare", 760, 1780, 0.74, [{ t: 0, mode: "point", eyes: "normal", mouth: "laugh" }], { flip: true, talk: [TALK("E2b", 0, "laugh")] })],
-        captions: capsJ(caps("E2b", [0], { quote: true }), caps("E2b", [1], { quote: true })), fx(tl, id, t0, L) { PB(L, NOPOST(NOW("jbE2b", { post: [560, 1600, 0.95, 1] }))[1], "pbE2b"); } });
+        captions: capsJ(caps("E2b", [0], { quote: true }), caps("E2b", [1], { quote: true })), fx(tl, id, t0, L) { DAWNWASH(L, "dwE2b"); PB(L, NOPOST(NOW("jbE2b", { post: [560, 1600, 0.95, 1] }))[1], "pbE2b"); } });
       // 19–20 · E3 · ยาย and ต้น watching from behind: "พ่อแกคงยิ้มอยู่" — "ครับแม่" → the wide: the sea, the full post, held (the credits follow)
       add("E3", { set: "jellyBeach", setOpts: NOPOST(NOW("jbE3", { post: [700, 1360, 0.7, 1] }))[0], dark: 0, light: DAWN,
-        cam: { keys: [{ t: 0, ...fr(560, 1420, 1.6, 540, 980) }, { t: CT(20, "E3"), ...fr(600, 1300, 0.78, 540, 940) }, { t: D("E3"), glide: D("E3") - CT(20, "E3"), ...fr(620, 1260, 0.72, 540, 940) }] },
-        actors: [A("jLaor", 420, 1760, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { talk: [TALK("E3", 0, "o")] }),
-          A("jTon", 700, 1770, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TALK("E3", 1, "o")] })],
-        captions: capsJ(caps("E3", [0], { quote: true }), caps("E3", [1], { quote: true })), fx(tl, id, t0, L) { PB(L, NOPOST(NOW("jbE3", { post: [700, 1360, 0.7, 1] }))[1], "pbE3"); } });
+        cam: { keys: [{ t: 0, ...fr(560, 1420, 1.6, 540, 980) }, { t: CT(22, "E3"), ...fr(600, 1300, 0.78, 540, 940) }, { t: D("E3"), glide: D("E3") - CT(22, "E3"), ...fr(620, 1260, 0.72, 540, 940) }] },
+        actors: [A("jLaor", 380, 1760, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { talk: [TALK("E3", 0, "o")] }),
+          A("jTon", 540, 1770, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { talk: [TALK("E3", 1, "o")] }),   // both turned toward the post (right), not to the lens
+          // what they are watching: ภูมิ and น้ำหวาน small at the post (the last wide is the whole family, ≤ 3 readable faces)
+          A("jPhum", 660, 1372, 0.4, [{ t: 0, mode: "fillPost", eyes: "normal", mouth: "smile" }], { from: CT(22, "E3") - 0.01 }),
+          A("jWanBare", 770, 1376, 0.31, [{ t: 0, mode: "point", eyes: "normal", mouth: "laugh" }], { flip: true, from: CT(22, "E3") - 0.01 })],
+        captions: capsJ(caps("E3", [0], { quote: true }), caps("E3", [1], { quote: true })), fx(tl, id, t0, L) { DAWNWASH(L, "dwE3"); PB(L, NOPOST(NOW("jbE3", { post: [700, 1360, 0.7, 1] }))[1], "pbE3"); } });

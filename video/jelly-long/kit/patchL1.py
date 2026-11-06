@@ -2,6 +2,6 @@
 import sys
 p = sys.argv[1]; s = open(p).read()
 for a, b, n in [                                ('paint-order="stroke">EP.1</text>', 'paint-order="stroke">ตอน 1</text>', 1),
-                                                ('<div class="badge" id="badge">หนวดใส · EP.1</div>', '<div class="badge" id="badge">หนวดใส · ตอน 1</div>', 1)]:
+                                                ]:   # the badge is set to "หนวดใส" by toland.py
     assert s.count(a) == n, (a, s.count(a)); s = s.replace(a, b)
 open(p, "w").write(s); print("patched", p)
