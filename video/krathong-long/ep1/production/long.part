@@ -1,0 +1,28 @@
+      // ================= the long (16:9 film): EP.1 shots recomposed for the wide page (CINEMA BIBLE §7, coordinator 6 Nov) =================
+      // The page shows the stage x −660…1740 and a 1350-tall band from land.y0, so a 16:9 camera puts the world point (wx, wy) at the
+      // page centre (540, y0 + 675) and shows 2400/s × 1350/s world units. Every override keeps the shot's own cut times (in-shot cuts are
+      // camera keys without a glide). Shots not listed keep their vertical camera, which already reads wide on the widened sets.
+      const LY0 = 285;
+      const frL = (wx, wy, s, y0 = LY0) => fr(wx, wy, s, 540, y0 + 675);
+      const LC = (keys, y0 = LY0) => ({ cam: { keys }, land: { y0 } });
+      window.LONGCAM = {
+        // ECU on ข้าวปั้น's sandals on the bench (tighter than 9:16 so มะปราง stays out) → the whole overloaded boat at the pontoon
+        open: () => LC([{ t: 0, ...frL(KX + 60, 1170, 9.0) }, { t: 1.16, ...frL(600, 1060, 1.3) }]),
+        // CU มะปราง half-rising (the passenger on the right kept out of frame) → the knees of the whole bench pushing up, heads out of frame
+        hook: () => LC([{ t: 0, ...frL(450, 1297, 3.4) }, { t: 1.04, ...frL(560, 1800, 2.4) }]),
+        // ท่ายายหยิบ wide: น้าหมาน, ยาย, มะปราง, ข้าวปั้น and ลุง all in one frame, then a slow drift toward ลุง on the pontoon
+        kids: () => LC([{ t: 0, ...frL(-60, 950, 1.15) }, { t: D("kids"), glide: D("kids"), ...frL(160, 980, 1.25) }]),
+        // ยาย explains the code with ลุง beside her (the brass whistle glows on his chest): one slow push, everyone in frame
+        code: () => LC([{ t: 0, ...frL(250, 1150, 1.8) }, { t: D("code"), glide: D("code"), ...frL(230, 1150, 1.95) }]),
+        // the whole stall group in one wide frame, a slow drift toward น้าหมาน and ยาย as they speak, back out at the end
+        maan: () => LC([{ t: 0, ...frL(150, 1000, 1.3) }, { t: vo("maan", 1) - 0.3, glide: 1.4, ease: "power2.inOut", ...frL(-200, 990, 1.45) },
+          { t: D("maan"), glide: D("maan") - vo("maan", 1) + 0.3, ease: "power2.inOut", ...frL(100, 1000, 1.35) }]),
+        // CU ข้าวปั้น with the whistle (ลุง out of frame) → the boat mid-river
+        sit: () => LC([{ t: 0, ...frL(360, 1060, 2.8) }, { t: vo("sit", 2) - 0.2, glide: 2.0, ease: "power2.inOut", ...frL(560, 1120, 1.05) },
+          { t: D("sit"), glide: D("sit") - vo("sit", 2) - 2, ...frL(560, 1120, 1.1) }]),
+        // the grab: CU → the choice ECU (both passengers out of frame) → the bench rising
+        grab: () => LC([{ t: 0, ...frL(526, 1270, 1.9) }, { t: GA, ...frL(526, 1297, 4.0) }, { t: GC, ...frL(540, 1260, 1.85) }]),
+        // the counter on the boards → pull up to ข้าวปั้น standing on the tilted bench, his whole head in frame
+        evid: () => LC([{ t: 0, ...frL(420, 1640, 3.0) }, { t: vo("evid", 1) - 0.6, glide: vo("evid", 1) - 0.6, ...frL(420, 1610, 2.9) },
+          { t: D("evid"), glide: D("evid") - vo("evid", 1) + 0.6, ease: "power2.inOut", ...frL(640, 820, 1.6) }]),
+      };

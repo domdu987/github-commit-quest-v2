@@ -1,0 +1,470 @@
+      // ================= เรือล่มคืนลอยกระทง EP.1 (Shorts 9:16) · shots (helpers in common.part) =================
+      // ---------- 1–2 · open: ข้าวปั้น's sandals step up onto the bench (ECU) → the overloaded boat sliding at the pontoon (WS) ----------
+      add("open", {
+        extra(L) { boatAtPier(L, { noCrowd: true }); }, ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.75 }, blur: { sky: 1, far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(KX, 1040, 6.2, 540, 860) }, { t: 1.16, ...fr(600, 1110, 1.42, 540, 1000) }] },
+        actors: hookCast(-3.5),
+        captions: capsQ("open"),
+        fx(tl, id, t0, L) {
+          L.id = id; L.riseAt = t0 + 1.85; hookBench(L, tl, -3.5);
+          // the boat rocks from the first frame; ข้าวปั้น sways on the bench with it
+          lean(tl, id, t0, 0); for (let k = 0; k < 4; k++) leanTo(tl, id, t0 + k * 0.6, k % 2 ? -2.5 : 2.5, 0.6, "sine.inOut");
+          tl.fromTo(`#${id}-a2`, { rotation: -4, svgOrigin: `${KX} ${KY}` }, { rotation: 5, svgOrigin: `${KX} ${KY}`, duration: 0.55, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, t0);
+          burstAt(tl, L, `${id}-b1`, 250, 330, 200, t0 + 0.9);
+          // the title, in the world of the story: candle letters on the banana-trunk arch behind the pontoon (screen space in the WS)
+          put(L.light, `<g id="${id}-ttl" transform="translate(540,470)" opacity="0"><text x="0" y="0" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="104" fill="#fff2c8" stroke="#2a1a10" stroke-width="9" paint-order="stroke">เรือล่ม</text>
+            <text x="0" y="96" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="70" fill="#ffd24a" stroke="#2a1a10" stroke-width="8" paint-order="stroke">คืนลอยกระทง</text>
+            <g transform="translate(0,160)"><rect x="-90" y="-30" width="180" height="48" rx="24" fill="#c8241e" stroke="#2a1a10" stroke-width="4"/><text x="0" y="5" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#fff6ea">EP.1</text></g></g>`);
+          // (long: the title has its own segment after the cold open, so the in-shot title stays hidden)
+        },
+      });
+      // ---------- 3–4 · hook: มะปราง half-rises toward him (CU, still) · the command · the knees of the whole boat push up (MCU, shake) ----------
+      add("hook", {
+        extra(L) {
+          // a close set inside the boat: the canopy posts, the bench and its orange cushion, the pontoon lights behind
+          riverNight(L, { hz: 520, moon: [900, 160], tx: 300, fwx: 2400 });
+          put(L.far, `<rect x="-900" y="560" width="2900" height="90" fill="#9a6a3e"/><path d="M-900,560H2000" stroke="#d8d2c0" stroke-width="8"/>`);
+          put(L.glow, `<ellipse cx="540" cy="560" rx="900" ry="120" fill="url(#kBulb)" opacity=".5"/>`);
+          put(L.set, `<path d="M-200,300V1500M1280,300V1500" stroke="#7a4a24" stroke-width="44"/><path d="M-400,330Q540,250 1500,330L1480,390H-380Z" fill="url(#kRoof)" ${KOUT}/>
+            <rect x="-300" y="1500" width="1700" height="70" rx="10" fill="#a8763e" ${KOUT}/><rect x="-280" y="1460" width="1660" height="48" rx="18" fill="#ff7a2a" ${KOUT2}/>
+            <path d="M-400,1800H1500V2300H-400Z" fill="#4a2c16"/>`);
+        },
+        ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd0e8", rimOp: 0.85 }, blur: { sky: 4, far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(526, 1297, 2.7, 540, 820) }, { t: 1.04, ...fr(560, 1560, 1.5, 540, 1000) }] },
+        actors: [
+          A("maprang", 520, 1800, 1.15, [{ t: 0, mode: "reachSit", eyes: "wide", mouth: "o" }, { t: 0.5, mode: "crouch", eyes: "wide", mouth: "scream" }]),
+          A("pxB", 330, 1800, 1.0, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 1.04, mode: "crouch", eyes: "wide", mouth: "o" }]),
+          A("pxE", 900, 1800, 1.05, [{ t: 0, mode: "sitChair", eyes: "normal", mouth: "o" }, { t: 1.1, mode: "crouch", eyes: "wide", mouth: "o" }], { flip: true }),
+        ],
+        captions: capsQ("hook"),
+        fx(tl, id, t0, L) {
+          put(L.act, `<ellipse cx="300" cy="1440" rx="120" ry="150" fill="#1a1020" opacity=".92"/><ellipse cx="300" cy="1300" rx="62" ry="70" fill="#1a1020" opacity=".92"/>`);
+          burstAt(tl, L, `${id}-b1`, 820, 260, 160, t0 + 0.2, "#7ad8ff", "#ffd24a");
+        },
+      });
+      // ---------- 5 · card "สองชั่วโมงก่อน": ยาย's thumb rolls the brass counter 0019 back to 0000 (ECU) ----------
+      add("card", {
+        extra(L) {
+          put(L.sky, `<rect x="-900" y="-900" width="2900" height="3900" fill="#1a1020"/><circle cx="540" cy="900" r="900" fill="url(#kBulb)" opacity=".18"/>`);
+          // the counter in ยาย's palm: brass body, the four-wheel window, the push button on top and the reset knob on the side
+          put(L.set, `<g transform="translate(540,1000)">
+            <path d="M-420,330Q-300,120 -60,110Q260,100 430,240Q520,330 470,520L-470,560Z" fill="#c8946a" ${KOUT}/><path d="M-300,240Q-100,180 160,200" stroke="#a8744a" stroke-width="6" fill="none" opacity=".6"/>
+            <circle cx="0" cy="0" r="300" fill="#b8902a" ${KOUT}/><circle cx="0" cy="0" r="270" fill="#e2b84a"/><circle cx="-60" cy="-80" r="200" fill="#f2d07a" opacity=".55"/>
+            <rect x="-200" y="-70" width="400" height="140" rx="14" fill="#2a1e10" ${KOUT2}/>
+            <clipPath id="cntClip"><rect x="-42" y="-58" width="84" height="116" rx="6"/></clipPath>
+            ${[0, 1, 2, 3].map((i) => `<g transform="translate(${-150 + i * 100},0)"><rect x="-42" y="-58" width="84" height="116" rx="6" fill="#f6f2e4"/><g clip-path="url(#cntClip)"><g id="cntW${i}"><text x="0" y="34" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="92" fill="#1e1a14">${"0019"[i]}</text><text x="0" y="-106" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="92" fill="#1e1a14">0</text></g></g><path d="M-42,-8H42" stroke="#000" stroke-width="2" opacity=".15"/></g>`).join("")}
+            <rect x="-30" y="-380" width="60" height="90" rx="12" fill="#b8902a" ${KOUT2}/><rect x="-46" y="-400" width="92" height="30" rx="12" fill="#e2b84a" ${KOUT2}/>
+            <g id="cntKnob" transform="translate(320,0)"><circle r="54" fill="#b8902a" ${KOUT2}/>${Array.from({ length: 12 }, (_, i) => `<path d="M0,-52V-40" stroke="#6a4a10" stroke-width="5" transform="rotate(${i * 30})"/>`).join("")}<circle r="20" fill="#f2d07a"/></g>
+            <path d="M280,-240Q380,-140 440,40" stroke="#8a6a2a" stroke-width="8" fill="none"/></g>`);
+          put(L.fg, `<g transform="translate(860,1020)"><path d="M0,0Q120,-60 240,-20L260,180Q120,220 0,160Z" fill="#c8946a" ${KOUT}/><ellipse cx="40" cy="20" rx="60" ry="46" fill="#d8a47a" ${KOUT2}/></g>`);
+        },
+        ...NIGHT, light: false, blur: { sky: 0 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }, { t: D("card"), glide: D("card"), ...fr(560, 1000, 1.08, 540, 960) }] },
+        captions: capsQ("card"),
+        fx(tl, id, t0, L) {
+          // the knob turns; the wheels roll back one after another to 0000 (the counter itself is the clock: no other UI)
+          tl.to(`#${id} #cntKnob`, { rotation: -540, transformOrigin: "50% 50%", duration: 1.0, ease: "power2.inOut" }, t0 + 0.2);
+          // wheels 3 and 2 roll down to 0 one after the other, each with a click
+          [3, 2].forEach((w, j) => tl.fromTo(`#${id} #cntW${w}`, { y: 0 }, { y: 140, duration: 0.22, ease: "back.out(1.6)", immediateRender: false }, t0 + 0.55 + j * 0.28));
+        },
+      });
+      // ---------- long only · est: ท่ายายหยิบ, extreme wide (act 1): the stall's string lights, the krathong field, the fair across the river;
+      // ยาย calls the kids from the stall, they come running down the landing (the 16:9 "small people, big night" frame) ----------
+      add("est", {
+        extra(L) { pier(L, { seed: 3 }); put(L.set, gallon(-610, 1162, 0.62) + gallon(-560, 1170, 0.62, { rot: 4 }) + gallon(-650, 1176, 0.62, { rot: -3 })); },
+        ...NIGHT, light: WARML, blur: { sky: 1, far: 1, fg: 3 },
+        cam: { keys: [{ t: 0, ...fr(400, 975, 1.0, 540, 960) }, { t: D("est"), glide: D("est"), ...fr(330, 990, 1.08, 540, 960) }] },
+        land: { y0: 285 },
+        actors: [
+          A("naMan", -560, 1080, 0.36, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }]),
+          A("yaiYib", -150, 1084, 0.4, [{ t: 0, mode: "wave", eyes: "normal", mouth: "smile" }], { talk: [TK("est", 0, "o")] }),
+          A("maprang", 520, 1084, 0.42, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 90, dur: D("est"), ease: "none" } }),
+          A("khaopan", 680, 1086, 0.32, [{ t: 0, mode: "run", eyes: "wide", mouth: "laugh" }], { flip: true, moveTo: { x: 240, dur: D("est"), ease: "none" } }),
+          A("lungMuek", 520, 1330, 0.43, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true }),
+        ],
+        captions: capsQ("est"),
+        fx(tl, id, t0, L) {
+          burstAt(tl, L, `${id}-b1`, 1300, 300, 220, t0 + 0.6, "#ffd24a", "#ff6aa8"); burstAt(tl, L, `${id}-b2`, -300, 260, 180, t0 + 2.2, "#7ad8ff", "#ffd24a");
+          put(L.set, kRefl(-60, 1660, 1.1, 200) + kRefl(820, 1800, 1.4, 240));
+        },
+      });
+      // ---------- 6 · kids: ท่ายายหยิบ — มะปราง hauls the giant krathong past ยาย's stall; ยาย answers; ลุงหมึก calls from the pontoon ----------
+      add("kids", {
+        extra(L) { pier(L); put(L.set, gallon(-610, 1162, 0.62) + gallon(-560, 1170, 0.62, { rot: 4 }) + gallon(-650, 1176, 0.62, { rot: -3 })); },
+        ...NIGHT, light: WARML, blur: { sky: 2, far: 2, mid: 1, fg: 3 },
+        land: { y0: 330 },
+        // establishing, then a slow pan with the speakers: มะปราง (m06) → ยาย (y15) → ลุง on the pontoon (l01)
+        cam: { keys: [{ t: 0, ...fr(120, 1180, 1.0, 540, 1100) }, { t: vo("kids", 3) - 0.2, glide: vo("kids", 3) - 0.2, ...fr(-80, 1130, 1.35, 540, 1050) },
+          { t: vo("kids", 4) - 0.2, glide: 1.4, ...fr(-80, 1130, 1.35, 540, 1050) }, { t: D("kids"), glide: D("kids") - vo("kids", 4) + 0.2, ...fr(460, 1250, 1.3, 540, 1050) }] },
+        actors: [
+          A("naMan", -560, 1080, 0.36, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }]),
+          A("yaiYib", -150, 1084, 0.4, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { talk: [TK("kids", 3, "o")] }),
+          A("maprang", 60, 1084, 0.42, [{ t: 0, mode: "holdHead", eyes: "normal", mouth: "flat" }], { flip: true, talk: [TK("kids", 1, "o"), TK("kids", 2, "o")] }),
+          A("khaopan", 210, 1086, 0.32, [{ t: 0, mode: "wave", eyes: "wide", mouth: "laugh" }], { talk: [TK("kids", 0, "laugh")] }),
+          A("lungMuek", 520, 1330, 0.43, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("kids", 4) - 0.1, mode: "wave", eyes: "normal", mouth: "laugh" }], { flip: true, talk: [TK("kids", 4, "laugh")] }),
+        ],
+        captions: capsQ("kids"),
+        fx(tl, id, t0, L) {
+          // the giant krathong มะปราง carries (her contest entry): held over her head
+          put(L.act, `<g transform="translate(60,800)">${krathong(0, 0, 0.75, { seed: 101 })}</g>`);
+          put(L.glow, kGlow(60, 800, 0.75, 90));
+          put(L.set, kRefl(-60, 1660, 1.1, 200) + kRefl(820, 1800, 1.4, 240));
+        },
+      });
+      // ---------- 7 · whistle: ข้าวปั้น in the life jacket finds the orange whistle on it and blows (the clue, MCU) ----------
+      add("whistle", {
+        extra(L) { pier(L, { seed: 5 }); },
+        ...NIGHT, light: WARML, blur: { sky: 5, far: 5, mid: 4, set: 3, fg: 7 },
+        cam: { keys: [{ t: 0, ...fr(300, 1180, 2.4, 540, 1050) }, { t: D("whistle"), glide: D("whistle"), ...fr(300, 1170, 2.6, 540, 1050) }] },
+        actors: [
+          A("khaopan", 300, 1330, 0.5, [{ t: 0, mode: "idle", eyes: "wide", mouth: "smile" }, { t: 0.1, mode: "whistle", eyes: "wide", mouth: "o" }], { talk: [TK("whistle", 0, "laugh")] }),
+          A("maprang", 120, 1336, 0.52, [{ t: 0, mode: "holdHead", eyes: "pain", mouth: "flat" }], { talk: [TK("whistle", 1, "o")] }),
+        ],
+        captions: capsQ("whistle"),
+        fx(tl, id, t0, L) {
+          // the whistle's blast: three little sound arcs off the whistle
+          put(L.light, `<g id="${id}-ws" opacity="0">${[0, 1, 2].map((k) => `<path d="M${640 + k * 36},${870 - k * 20}q30,40 0,80" stroke="#fff6d0" stroke-width="7" fill="none" stroke-linecap="round"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-ws`, { opacity: 0 }, { opacity: 1, duration: 0.08, repeat: 5, yoyo: true, immediateRender: false }, t0 + 0.15);
+        },
+      });
+      // ---------- 8 · code: ยาย explains the whistle code: three blasts = ลุงหมึก's brass whistle = moored; ข้าวปั้น must not blow three ----------
+      // the camera goes ยาย → the brass whistle on ลุง's chest (the clue: it lives inside his shirt) → back to ยาย and ข้าวปั้น
+      const WH_Y = 1330 - 454 * 0.43;
+      add("code", {
+        extra(L) { pier(L, { seed: 6 }); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...fr(200, 1200, 1.7, 540, 1050) }, { t: 2.6, glide: 2.4, ...fr(200, 1200, 1.75, 540, 1050) },
+          { t: 4.6, glide: 1.8, ...fr(420, WH_Y, 4.2, 540, 900) }, { t: vo("code", 1) - 0.4, glide: 1.6, ...fr(150, 1190, 2.1, 540, 1050) }, { t: D("code"), glide: D("code") - vo("code", 1) + 0.4, ...fr(150, 1185, 2.2, 540, 1050) }] },
+        actors: [
+          A("yaiYib", 80, 1330, 0.42, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }, { t: vo("code", 1), mode: "point", eyes: "angry", mouth: "o" }], { talk: [TK("code", 0), TK("code", 1)] }),
+          A("khaopan", 220, 1334, 0.32, [{ t: 0, mode: "idle", eyes: "wide", mouth: "smile" }, { t: vo("code", 1) + 1.2, mode: "whistle", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TK("code", 2, "o")] }),
+          A("lungMuek", 420, 1330, 0.43, [{ t: 0, mode: "idle", eyes: "normal", mouth: "laugh" }], { flip: true }),
+        ],
+        captions: capsQ("code"),
+        fx(tl, id, t0, L) {
+          // the brass whistle catches the light while the camera is on it, and is tucked back into the shirt by ลุง's hand
+          put(L.glow, `<circle id="${id}-wg" cx="420" cy="${k1(WH_Y)}" r="40" fill="url(#kBulb)" opacity="0"/>`);
+          tl.fromTo(`#${id}-wg`, { opacity: 0 }, { opacity: 0.9, duration: 0.3, yoyo: true, repeat: 3, immediateRender: false }, t0 + 4.8);
+        },
+      });
+      // ---------- 9 · vest: ยาย buckles ข้าวปั้น's three straps; มะปราง holds hers away ("ใส่แล้วรูปไม่สวย") and ยาย sets it beside her ----------
+      add("vest", {
+        extra(L) { pier(L, { seed: 7 }); },
+        ...NIGHT, light: WARML, blur: { sky: 4, far: 4, mid: 3, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(130, 1200, 2.0, 540, 1080) }, { t: D("vest"), glide: D("vest"), ...fr(140, 1195, 2.15, 540, 1080) }] },
+        actors: [
+          A("yaiYib", 230, 1330, 0.42, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "smile" }], { flip: true, talk: [TK("vest", 0), TK("vest", 2)] }),
+          A("khaopan", 150, 1334, 0.32, [{ t: 0, mode: "raise", eyes: "wide", mouth: "laugh" }]),
+          A("maprangPhone", -10, 1334, 0.42, [{ t: 0, mode: "phoneLook", eyes: "side", mouth: "flat" }], { talk: [TK("vest", 1)] }),
+        ],
+        captions: capsQ("vest"),
+        fx(tl, id, t0, L) {
+          put(L.act, `<g id="${id}-v">${vestProp(-60, 1260, 0.62, -20)}</g>`);
+          // at "วางไว้ใกล้ตัว" the vest goes down on the bench next to her (open straps: the clue for EP.2)
+          tl.to(`#${id}-v`, { x: 30, y: 50, rotation: 25, svgOrigin: "-60 1260", duration: 0.6, ease: "power2.inOut" }, t0 + vo("vest", 2) + 0.8);
+          put(L.fg, `<g transform="translate(560,1560)">${vestProp(0, 0, 1.8, 12)}</g>`);
+        },
+      });
+      // ---------- 10–11 · rap: ยาย in front of the rule paddle raps the three rules → the rule card (the paddle itself, rule 1 in red) ----------
+      const RAP_CARD = 5.84;
+      add("rap", {
+        extra(L) { pier(L, { seed: 8 }); },
+        ...NIGHT, light: WARML, blur: { sky: 4, far: 4, mid: 3, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(-620, 1000, 2.0, 540, 1060) }, { t: RAP_CARD - 0.05, glide: RAP_CARD - 0.05, ...fr(-610, 1000, 2.15, 540, 1060) }] },
+        actors: [
+          A("yaiYib", -560, 1080, 0.42, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }, { t: 2.4, mode: "raise", eyes: "normal", mouth: "laugh" }, { t: 4.6, mode: "wave", eyes: "normal", mouth: "smile" }], { talk: [TK("rap", 0)] }),
+          A("khaopan", -420, 1084, 0.32, [{ t: 0, mode: "idle", eyes: "wide", mouth: "laugh" }], { flip: true }),
+        ],
+        captions: capsQ("rap"),
+        fx(tl, id, t0, L) {
+          rulePaddle(L, `${id}-pd`, 0, []); paddleIn(tl, `${id}-pd`, t0 + RAP_CARD);
+        },
+      });
+      // ---------- long only · swim: ข้าวปั้น in his vest asks ยาย if she can swim; ยาย: "can't swim… but I can float" (the clue EP.3 pays off) ----------
+      add("swim", {
+        extra(L) { pier(L, { seed: 8 }); },
+        ...NIGHT, light: WARML, blur: { sky: 4, far: 4, mid: 3, set: 2, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(170, 1120, 2.1, 540, 960) }, { t: vo("swim", 1) - 0.2, glide: 1.4, ease: "power2.inOut", ...fr(130, 1120, 2.25, 540, 960) },
+          { t: D("swim"), glide: D("swim") - vo("swim", 1) - 1.2, ...fr(130, 1120, 2.3, 540, 960) }] },
+        land: { y0: 285 },
+        actors: [
+          A("yaiYib", 40, 1330, 0.5, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("swim", 1) + 1.4, mode: "raise", eyes: "normal", mouth: "smile" }], { talk: [TK("swim", 1)] }),
+          A("khaopan", 260, 1334, 0.4, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true, talk: [TK("swim", 0, "o")] }),
+        ],
+        captions: capsQ("swim"),
+      });
+      // ---------- 12 · line: the red stripe ยาย painted at twelve people, one finger's width above the water — the long hold, pushing in ----------
+      add("line", {
+        extra(L) {
+          riverNight(L, { hz: 420, moon: [860, 180], tx: 200, fwx: 2400 });
+          krathongField(L, { n: 16, y0: 440, y1: 700, smax: 0.3, seed: 12 });
+          put(L.set, boatSide(560, 1230, 2.3, { sink: 0.42, water: true }));
+        },
+        ...NIGHT, light: false, blur: { sky: 4, far: 4, mid: 3, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(420, 1200, 1.0, 540, 1000) }, { t: D("line"), glide: D("line"), ease: "none", ...fr(380, 1215, 1.45, 540, 1000) }] },
+        captions: capsQ("line"),
+        fx(tl, id, t0, L) {
+          // the mooring rope across the frame and ยาย's finger tracing the stripe
+          put(L.fg, `<path d="M-200,520Q300,700 1300,560" stroke="#c8a870" stroke-width="22" fill="none"/><path d="M-200,520Q300,700 1300,560" stroke="#8a6a3a" stroke-width="22" fill="none" stroke-dasharray="6 18"/>`);
+          put(L.act, `<g id="${id}-f"><g transform="translate(-60,1290)"><path d="M-400,60Q-200,10 -20,0Q20,-4 30,12Q20,26 -20,30Q-200,60 -400,140Z" fill="#c8946a" ${KOUT}/><path d="M-12,4Q6,6 14,14" stroke="#a8744a" stroke-width="3" fill="none"/></g></g>`);
+          tl.fromTo(`#${id}-f`, { x: 0 }, { x: 300, duration: 3.4, ease: "sine.inOut", immediateRender: false }, t0 + 0.5);
+          // ripples lap at the stripe (a little higher each time)
+          put(L.act, `<g id="${id}-lap">${[0, 1, 2].map((k) => `<path d="M${-400 + k * 500},1258q40,-14 80,0t80,0t80,0" stroke="#e8f0ff" stroke-width="5" fill="none" opacity=".8"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-lap`, { y: 6 }, { y: -6, duration: 0.9, yoyo: true, repeat: 8, ease: "sine.inOut", immediateRender: false }, t0);
+        },
+      });
+      // ---------- 13 · coin: the chalkboard (flipped over): a boat in section; the chalk man stands up, the centre of gravity rises, the boat tips ----------
+      add("coin", {
+        extra(L) {
+          put(L.sky, `<rect x="-900" y="-900" width="2900" height="3900" fill="#140e0a"/>`);
+          put(L.set, `<g transform="translate(540,960)"><rect x="-470" y="-560" width="940" height="1120" rx="24" fill="#6a4426" ${KOUT}/><rect x="-430" y="-520" width="860" height="1040" rx="10" fill="#1e2a22"/>
+            <path d="M-400,-470q200,-30 420,10M-380,400q300,30 700,-20" stroke="#f2f2e0" stroke-width="6" opacity=".08" fill="none"/>
+            <path d="M-420,160Q0,190 420,160" stroke="#9ac8e0" stroke-width="7" fill="none" stroke-dasharray="16 12" opacity=".8"/>
+            <text x="0" y="-430" text-anchor="middle" font-family="Mali" font-weight="700" font-size="44" fill="#f2f2e0">คนลุกขึ้นยืน… จุดศูนย์ถ่วงสูงขึ้น</text>
+            <g id="cgBoat"><path d="M-300,40Q-300,220 0,240Q300,220 300,40Z" fill="none" stroke="#f2f2e0" stroke-width="9"/><path d="M-300,40H300" stroke="#f2f2e0" stroke-width="7"/>
+              <g id="cgMan"><circle cx="0" cy="-30" r="26" fill="none" stroke="#ffd24a" stroke-width="8"/><path d="M0,-4V70M0,70L-34,40M0,70L34,40M-30,24H30" stroke="#ffd24a" stroke-width="8" stroke-linecap="round" fill="none"/></g>
+              <g id="cgDot"><circle cx="0" cy="110" r="22" fill="#ff6a5a"/><path d="M-22,110H22M0,88V132" stroke="#140e0a" stroke-width="5"/></g></g></g>`);
+        },
+        ...NIGHT, light: false, blur: {},
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("coin"), glide: D("coin"), ...fr(540, 980, 1.1, 540, 960) }] },
+        captions: capsQ("coin"),
+        fx(tl, id, t0, L) {
+          // the chalk man stands up (from crouching to a tall figure), the dot climbs, and at "เรือเล็ก… คว่ำง่ายขึ้น" the boat rolls
+          tl.fromTo(`#${id} #cgMan`, { scaleY: 0.55, transformOrigin: "50% 100%" }, { scaleY: 1.5, transformOrigin: "50% 100%", duration: 0.7, ease: "back.out(1.6)", immediateRender: false }, t0 + 0.9);
+          tl.fromTo(`#${id} #cgDot`, { y: 0 }, { y: -170, duration: 1.0, ease: "power2.inOut", immediateRender: false }, t0 + 1.3);
+          tl.fromTo(`#${id} #cgBoat`, { rotation: 0, transformOrigin: "50% 50%" }, { rotation: 24, transformOrigin: "50% 50%", duration: 1.1, ease: "power3.in", immediateRender: false }, t0 + vo("coin", 2) + 0.3);
+          put(L.fg, `<g transform="translate(980,1700) rotate(-30)"><rect x="-14" y="-120" width="28" height="160" rx="8" fill="#f2f2e0" ${KOUT2}/></g>`);
+        },
+      });
+      // ---------- 14 · board: ยาย clicks the counter for each passenger, eleven, twelve — "พอ! เต็มแล้ว" (hand up) ----------
+      add("board", {
+        extra(L) { pier(L, { seed: 9 }); },
+        ...NIGHT, light: WARML, blur: { sky: 4, far: 4, mid: 3, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(120, 1200, 2.0, 540, 1080) }, { t: D("board"), glide: D("board"), ...fr(110, 1195, 2.2, 540, 1080) }] },
+        actors: [
+          A("yaiYib", 60, 1330, 0.45, [{ t: 0, mode: "point", eyes: "normal", mouth: "flat" }, { t: 2.6, mode: "raise", eyes: "angry", mouth: "o" }], { talk: [TK("board", 0), TK("board", 1)] }),
+          A("pxA", 250, 1334, 0.42, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 330, dur: 2.4 } }),
+          A("pxD", 330, 1334, 0.42, [{ t: 0, mode: "idle", eyes: "normal", mouth: "o" }], { flip: true }),
+        ],
+        captions: capsQ("board"),
+        fx(tl, id, t0, L) {
+          // the click: the counter in her hand flashes on each count
+          put(L.light, `<g id="${id}-ck" opacity="0"><circle cx="300" cy="760" r="60" fill="url(#kBulb)"/></g>`);
+          [0.4, 1.4].forEach((t) => tl.fromTo(`#${id}-ck`, { opacity: 0.9 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0 + t));
+        },
+      });
+      // ---------- 15 · load: ลุง takes the counter and clicks people on: the red stripe sinks a step at every click (the viewer sees, nobody aboard does) ----------
+      add("load", {
+        extra(L) {
+          riverNight(L, { hz: 520, moon: [880, 170], tx: 260, fwx: 2400 });
+          krathongField(L, { n: 20, y0: 540, y1: 860, smax: 0.34, seed: 15 });
+          put(L.set, `<g id="ldBoat">${boatSide(600, 1260, 1.25, { sink: 0.55, load: crowd(-380, 380, -150, 7, 15, 1) })}</g>`);
+        },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...fr(520, 1180, 1.05, 540, 1000) }, { t: D("load"), glide: D("load"), ...fr(560, 1220, 1.22, 540, 1000) }] },
+        actors: [A("lungMuek", 190, 1920, 0.78, [{ t: 0, mode: "point", eyes: "normal", mouth: "laugh" }], { talk: [TK("load", 0, "laugh"), TK("load", 1, "laugh")] })],
+        captions: capsQ("load"),
+        fx(tl, id, t0, L) {
+          // the water in front of the hull (the hull sinks into it), the pontoon edge in the foreground
+          const wv = (n, a) => Array.from({ length: n }, () => `q20,${-a} 40,0`).join("");
+          put(L.set, `<g transform="translate(0,1262)"><path d="M-2400,0${wv(150, 7)}V900H-2400Z" fill="url(#kWater)"/><path d="M-2400,0${wv(150, 9)}" stroke="#a8b8f0" stroke-width="5" fill="none" opacity=".75"/></g>`);
+          put(L.fg, `<path d="M-2400,1900H3400V2200H-2400Z" fill="#9a6a3e" ${KOUT}/><path d="M-2400,1900H3400" stroke="#ffd89a" stroke-width="6" opacity=".6"/>`);
+          // seven clicks: the hull drops ~1/7 of the stripe's freeboard each time
+          for (let c = 0; c < 7; c++) {
+            const t = t0 + 0.5 + c * 0.95;
+            tl.to(`#${id} #ldBoat`, { y: (c + 1) * 3.4, duration: 0.25, ease: "back.out(2)" }, t);
+            put(L.light, `<g id="${id}-c${c}" opacity="0"><text x="220" y="1290" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffd24a" stroke="#2a1a10" stroke-width="6" paint-order="stroke">แกร๊ก</text></g>`);
+            tl.fromTo(`#${id}-c${c}`, { opacity: 1, y: 0 }, { opacity: 0, y: -40, duration: 0.5, immediateRender: false }, t);
+          }
+        },
+      });
+      // ---------- 16 · maan: "น้าหมาน ขึ้นมาเลย" · "ผมรอลำหน้า" (on the land-side steps with his gallons) · ข้าวปั้น's joke · ยาย hushes him ----------
+      add("maan", {
+        extra(L) { pier(L, { seed: 10 }); put(L.set, gallon(-610, 1162, 0.62) + gallon(-560, 1170, 0.62, { rot: 4 }) + gallon(-650, 1176, 0.62, { rot: -3 })); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...fr(420, 1220, 1.9, 540, 1080) }, { t: vo("maan", 1) - 0.3, glide: 1.2, ease: "power2.inOut", ...fr(-560, 1010, 2.4, 540, 1050) },
+          { t: vo("maan", 2) - 0.3, glide: 1.1, ease: "power2.inOut", ...fr(-120, 1000, 2.2, 540, 1050) }, { t: D("maan"), glide: D("maan") - vo("maan", 2) + 0.3, ...fr(-110, 995, 2.35, 540, 1050) }] },
+        actors: [
+          A("naMan", -560, 1080, 0.36, [{ t: 0, mode: "sit", eyes: "side", mouth: "flat" }], { talk: [TK("maan", 1, "flat")] }),
+          A("yaiYib", -200, 1084, 0.4, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: vo("maan", 3), mode: "point", eyes: "angry", mouth: "o" }], { talk: [TK("maan", 3)] }),
+          A("khaopan", -60, 1086, 0.32, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }, { t: vo("maan", 2), mode: "point", eyes: "wide", mouth: "laugh" }], { flip: true, talk: [TK("maan", 2, "laugh")] }),
+          A("lungMuek", 420, 1330, 0.43, [{ t: 0, mode: "wave", eyes: "normal", mouth: "laugh" }], { flip: true, talk: [TK("maan", 0, "laugh")] }),
+        ],
+        captions: capsQ("maan"),
+        fx(tl, id, t0, L) { put(L.fg, gallon(-760, 1240, 1.0, { rot: -6 })); },
+      });
+      // ---------- 17 · sign: "ผู้โดยสาร 12 คน" on the stern · the counter left on the post reads 0019 · the boat pulls out deep in the water ----------
+      add("sign", {
+        extra(L) {
+          riverNight(L, { hz: 560, moon: [180, 190], tx: 820, fwx: 760 });
+          krathongField(L, { n: 30, y0: 580, y1: 1060, smax: 0.42, seed: 17 });
+          put(L.set, boatSide(560, 1250, 1.0, { sink: 1.0, tilt: -1, water: true, wake: 1, load: crowd(-400, 420, -150, 7, 6, 1) }));
+        },
+        ...NIGHT, light: MOONL, blur: { sky: 1.5, far: 1.5, fg: 4 },
+        cam: { keys: [{ t: 0, ...fr(890, 1136, 3.4, 540, 900) }, { t: 2.2, glide: 2.0, ...fr(890, 1136, 3.6, 540, 900) },
+          { t: 2.3, ...fr(160, 1420, 3.0, 540, 900) }, { t: vo("sign", 1) - 0.1, glide: 2.0, ...fr(160, 1420, 3.1, 540, 900) },
+          { t: D("sign"), glide: D("sign") - vo("sign", 1) - 0.2, ease: "power2.inOut", ...fr(540, 1180, 0.95, 540, 1000) }] },
+        captions: capsQ("sign"),
+        fx(tl, id, t0, L) {
+          // the counter left on the pontoon post (foreground left), 0019
+          put(L.act, `<g transform="translate(160,1480)"><rect x="-40" y="-60" width="80" height="460" fill="url(#kWood)" ${KOUT}/><g transform="translate(0,-80) scale(.42)"><circle r="300" fill="#b8902a" ${KOUT}/><circle r="270" fill="#e2b84a"/><rect x="-200" y="-70" width="400" height="140" rx="14" fill="#2a1e10"/>${[0, 1, 2, 3].map((i) => `<rect x="${-192 + i * 100}" y="-58" width="84" height="116" rx="6" fill="#f6f2e4"/><text x="${-150 + i * 100}" y="34" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="92" fill="${i > 1 ? "#c8241e" : "#1e1a14"}">${"0019"[i]}</text>`).join("")}</g></g>`);
+        },
+      });
+      // ---------- 18 · fire: mid-river, fireworks on the right; everyone crowds the right side, the gunwale dips, water slops in; มะปราง on the gunwale with her phone ----------
+      add("fire", {
+        extra(L) {
+          riverNight(L, { hz: 600, moon: [200, 200], tx: -300, fwx: 900 });
+          krathongField(L, { n: 34, y0: 620, y1: 1800, smax: 0.8, seed: 18, skip: (x, y) => y > 980 && y < 1340 && x > -120 && x < 1180 });
+          put(L.set, boatSide(560, 1240, 0.92, { sink: 0.95, tilt: 5, water: true, load: crowd(-100, 460, -170, 6, 18, 1.05) }));
+        },
+        ...NIGHT, light: { ...MOONL, from: "right", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(560, 1120, 1.15, 540, 1000) }, { t: vo("fire", 1) - 0.1, glide: 1.0, ...fr(380, 1110, 1.8, 540, 1000) }, { t: vo("fire", 2) - 0.1, glide: 0.8, ...fr(760, 1080, 1.7, 540, 1000) }] },
+        actors: onBoat(560, 1240, 5, [["maprangPhone", -170, 0.36, "phoneLook", "normal", "smile"], ["khaopan", -320, 0.28, "idle", "worry", "o"],
+          ["lungMuek", 330, 0.38, "raise", "angry", "o", true]]).map((a, i) => i === 2 ? { ...a, talk: [TK("fire", 2)] } : i === 0 ? { ...a, talk: [TK("fire", 1)] } : a),
+        captions: capsQ("fire"),
+        fx(tl, id, t0, L) {
+          put(L.act, hullOver(boatSide(560, 1240, 0.92, { sink: 0.95, tilt: 5, water: true })));
+          burstAt(tl, L, `${id}-b1`, 840, 300, 220, t0 + 0.05); burstAt(tl, L, `${id}-b2`, 640, 420, 150, t0 + 2.6, "#7ad8ff", "#ffd24a"); burstAt(tl, L, `${id}-b3`, 900, 520, 180, t0 + 5.4);
+          // water slopping over the low (right) gunwale
+          put(L.act, `<g id="${id}-sl" opacity="0"><path d="M880,1250q-30,-60 10,-110q20,40 -10,110z" fill="#cfe0ff" opacity=".85"/><path d="M940,1260q-20,-50 20,-90q10,40 -20,90z" fill="#cfe0ff" opacity=".75"/></g>`);
+          tl.fromTo(`#${id}-sl`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, repeat: 5, yoyo: true, immediateRender: false }, t0 + 1.0);
+          put(L.fg, `<path d="M-300,240Q540,170 1400,250L1380,330H-280Z" fill="url(#kRoof)" ${KOUT}/>`);
+        },
+      });
+      // ---------- 19 · sit: ข้าวปั้น up on the bench blows "ปี๊ด! ปี๊ด! นั่งลงครับ!" — people sit, the boat comes level; the narrator teaches ----------
+      add("sit", {
+        extra(L) {
+          riverNight(L, { hz: 600, moon: [200, 200], tx: -300, fwx: 900 });
+          krathongField(L, { n: 30, y0: 620, y1: 1800, smax: 0.7, seed: 19, skip: (x, y) => y > 980 && y < 1340 && x > -120 && x < 1180 });
+          put(L.set, `<g id="stBoat">${boatSide(560, 1240, 0.92, { sink: 0.9, water: true, load: crowd(-380, 420, -150, 7, 19, 1.0) })}</g>`);
+        },
+        ...NIGHT, light: { ...MOONL, from: "right" }, blur: { sky: 1, far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(380, 1060, 2.4, 540, 1000) }, { t: vo("sit", 2) - 0.2, glide: 2.0, ease: "power2.inOut", ...fr(560, 1150, 1.1, 540, 1000) }, { t: D("sit"), glide: D("sit") - vo("sit", 2) - 2, ...fr(560, 1150, 1.16, 540, 1000) }] },
+        actors: [A("khaopan", 380, 1170, 0.3, [{ t: 0, mode: "whistle", eyes: "wide", mouth: "o" }], { talk: [TK("sit", 0)] }),
+          A("lungMuek", 860, 1236, 0.38, [{ t: 0, mode: "wave", eyes: "normal", mouth: "laugh" }], { flip: true, talk: [TK("sit", 1, "laugh")] })],
+        captions: capsQ("sit"),
+        fx(tl, id, t0, L) {
+          tl.fromTo(`#${id} #stBoat`, { rotation: 5, svgOrigin: "560 1240" }, { rotation: 0, svgOrigin: "560 1240", duration: 1.6, ease: "power2.out", immediateRender: false }, t0 + 1.2);
+          put(L.act, `<g transform="translate(380,1172)"><rect x="-46" y="-2" width="92" height="16" rx="3" fill="#a8763e" ${KOUT2}/><rect x="-40" y="-8" width="80" height="10" rx="4" fill="#ff7a2a" ${KOUT2}/></g>`);
+          put(L.fg, `<path d="M-300,240Q540,170 1400,250L1380,330H-280Z" fill="url(#kRoof)" ${KOUT}/>`);
+        },
+      });
+      // ---------- 20 · float: มะปราง lowers the giant krathong onto the water; its candle drifts off downstream (MCU, candlelight on her face) ----------
+      add("float", {
+        extra(L) {
+          riverNight(L, { hz: 480, moon: [860, 170], tx: 200, fwx: 2400 });
+          krathongField(L, { n: 26, y0: 500, y1: 1300, smax: 0.6, seed: 20 });
+          put(L.mid, `<path d="M-900,1470${Array.from({ length: 70 }, () => "q20,-8 40,0").join("")}" stroke="#a8b8f0" stroke-width="5" fill="none" opacity=".7"/>`);
+        },
+        ...NIGHT, light: { ...WARML, from: "right", rim: "#ffc46a", rimOp: 0.95 }, blur: { sky: 4, far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(520, 1440, 1.7, 540, 980) }, { t: D("float"), glide: D("float"), ...fr(560, 1450, 1.8, 540, 980) }] },
+        actors: [A("maprang", 380, 1700, 0.95, [{ t: 0, mode: "reachSit", eyes: "normal", mouth: "smile" }], { talk: [TK("float", 0, "laugh")] })],
+        captions: capsQ("float"),
+        fx(tl, id, t0, L) {
+          put(L.act, `<g id="${id}-k"><g transform="translate(800,1470)">${kRefl(0, 0, 1.0, 180)}${krathong(0, 0, 1.0, { seed: 101 })}</g></g>`);
+          put(L.glow, `<g id="${id}-kg">${kGlow(800, 1470, 1.0, 180)}</g>`);
+          tl.fromTo([`#${id}-k`, `#${id}-kg`], { x: 0, y: 0 }, { x: 260, y: -120, duration: D("float"), ease: "power1.in", immediateRender: false }, t0 + 0.4);
+          put(L.fg, `<path d="M-300,1720Q540,1750 1400,1720V2200H-300Z" fill="url(#kHull)" ${KOUT}/><path d="M-300,1770Q540,1800 1400,1770" stroke="#e2302a" stroke-width="16" fill="none"/>`);
+        },
+      });
+      // ---------- 21 · back: the way back — the party raft's bass comes first, then the raft itself, backlit, crossing; its wake rolls at us ----------
+      add("back", {
+        extra(L) {
+          riverNight(L, { hz: 760, moon: [880, 220], tx: 300, fwx: 130 });
+          krathongField(L, { n: 36, y0: 780, y1: 1880, smax: 0.8, seed: 21 });
+          // the lit pontoon ahead (far), ยาย a small figure at its edge
+          put(L.far, `<g transform="translate(300,770)"><path d="M-260,0H260V16H-260Z" fill="#9a6a3e"/><path d="M-260,0V-40H260V0" stroke="#d8d2c0" stroke-width="4" fill="none"/></g>`);
+          put(L.glow, `<ellipse cx="300" cy="760" rx="320" ry="60" fill="url(#kBulb)" opacity=".7"/>`);
+        },
+        ...NIGHT, light: false, blur: { sky: 1, far: 1.2, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(540, 1000, 1.0, 540, 960) }, { t: D("back"), glide: D("back"), ...fr(560, 1040, 1.12, 540, 960) }] },
+        captions: capsQ("back"),
+        fx(tl, id, t0, L) {
+          // the party raft: two decks of coloured bulbs, a black silhouette against them (the threat's first appearance)
+          put(L.set, `<g id="${id}-pr"><g transform="translate(1300,930) scale(1.7)"><path d="M-300,0H300L280,40H-280Z" fill="#05060c"/><path d="M-260,0V-120H260V0M-220,-120V-200H220V-120" fill="#0a0c18" stroke="#05060c" stroke-width="6"/>
+            ${Array.from({ length: 16 }, (_, i) => `<circle cx="${-240 + i * 32}" cy="-124" r="6" fill="${["#ff6aa8", "#7ad8ff", "#ffd24a", "#8aff9a"][i % 4]}"/><circle cx="${-200 + i * 26}" cy="-204" r="5" fill="${["#ffd24a", "#ff6aa8", "#7ad8ff"][i % 3]}"/>`).join("")}
+            ${Array.from({ length: 7 }, (_, i) => `<g transform="translate(${-180 + i * 60},-10)"><path d="M-12,0Q-12,-40 0,-44Q12,-40 12,0Z" fill="#05060c"/><circle cy="-54" r="12" fill="#05060c"/></g>`).join("")}</g></g>`);
+          put(L.far, `<g id="${id}-prg"><ellipse cx="1300" cy="760" rx="520" ry="200" fill="#ff6aa8" opacity=".55"/><ellipse cx="1300" cy="720" rx="320" ry="120" fill="#ffe0f0" opacity=".7"/></g>`);
+          tl.fromTo([`#${id}-pr`, `#${id}-prg`], { x: 0 }, { x: -1500, duration: D("back") + 3, ease: "none", immediateRender: false }, t0);
+          // its wake: long rolling ridges coming toward the camera
+          put(L.act, `<g id="${id}-wk">${[0, 1, 2].map((k) => `<path d="M-500,${1000 + k * 120}Q300,${960 + k * 120} 1600,${1040 + k * 140}" stroke="#cfe0ff" stroke-width="${8 + k * 5}" fill="none" opacity=".7"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-wk`, { y: -120, scale: 0.6, svgOrigin: "540 1000", opacity: 0 }, { y: 420, scale: 1.6, svgOrigin: "540 1000", opacity: 1, duration: D("back") - 1, ease: "power1.in", immediateRender: false }, t0 + 1.0);
+          put(L.fg, krathong(120, 1760, 1.4, { seed: 210 }) + kRefl(120, 1760, 1.4, 200));
+        },
+      });
+      // ---------- 22 · hit: the wake slaps the gunwale — spray in laps — people jump up to escape it; the boat hits the pontoon "ตึง" ----------
+      add("hit", {
+        extra(L) { boatAtPier(L, { sink: 0.92, tilt: -2, seed: 22, noCrowd: true }); },
+        ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(560, 1130, 1.6, 540, 1000) }, { t: D("hit"), glide: D("hit"), ...fr(600, 1120, 1.8, 540, 1000) }] },
+        actors: [...onBoat(600, 1220, -2, [["maprang", -150, 0.32, "sitChair", "wide", "o"], ["lungMuek", 405, 0.36, "idle", "angry", "o", true]]),
+          A("khaopan", KX, KY, 0.26, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        captions: capsQ("hit"),
+        fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 330, 900, 1110, 6, 22, 0.8, t0 + 0.55, 46, -2);
+          put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.92, tilt: -2, water: true })));
+          // spray over the gunwale
+          put(L.act, `<g id="${id}-sp" opacity="0">${Array.from({ length: 14 }, (_, i) => `<path d="M${260 + i * 50},1190q${-10 + (i % 3) * 10},-${60 + (i * 17) % 50} ${10 + (i % 2) * 10},-${100 + (i * 23) % 60}" stroke="#e8f2ff" stroke-width="${6 + (i % 3) * 3}" fill="none" stroke-linecap="round"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-sp`, { opacity: 1, y: 30, scaleY: 0.3, svgOrigin: "540 1200" }, { opacity: 0, y: -20, scaleY: 1.2, svgOrigin: "540 1200", duration: 0.8, ease: "power2.out", immediateRender: false }, t0 + 0.2);
+          // the bump against the pontoon (the frame jolts with it: cine's shake on this cut)
+          tl.to(`#${id}-world`, { x: 14, duration: 0.06, yoyo: true, repeat: 3 }, t0 + 3.2);
+          put(L.fg, `<rect x="980" y="300" width="70" height="1700" fill="url(#kWood)" ${KOUT}/>`);
+        },
+      });
+      // ---------- 23–25 · grab: มะปราง springs up "ข้าวปั้น! ลงมา!" (CU) → ยาย's hand pins her wrist: "ปราง! นั่ง! อย่าลุกไปหาน้อง!" — still, close on her eyes →
+      // the rest of the boat stands anyway (CU) ----------
+      const GA = 1.47, GC = vo("grab", 1) + 1.79 + 0.26;
+      add("grab", {
+        extra(L) {
+          riverNight(L, { hz: 520, moon: [900, 160], tx: 300, fwx: 2400 });
+          put(L.far, `<rect x="-900" y="560" width="2900" height="90" fill="#9a6a3e"/><path d="M-900,560H2000" stroke="#d8d2c0" stroke-width="8"/>`);
+          put(L.glow, `<ellipse cx="540" cy="560" rx="900" ry="120" fill="url(#kBulb)" opacity=".55"/>`);
+          put(L.set, `<path d="M-200,300V1500M1280,300V1500" stroke="#7a4a24" stroke-width="44"/><path d="M-400,330Q540,250 1500,330L1480,390H-380Z" fill="url(#kRoof)" ${KOUT}/>
+            <rect x="-300" y="1500" width="1700" height="70" rx="10" fill="#a8763e" ${KOUT}/><rect x="-280" y="1460" width="1660" height="48" rx="18" fill="#ff7a2a" ${KOUT2}/><path d="M-400,1800H1500V2300H-400Z" fill="#4a2c16"/>`);
+        },
+        ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd89a", rimOp: 0.9 }, blur: { sky: 4, far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(526, 1270, 1.9, 540, 900) }, { t: GA, ...fr(526, 1297, 3.0, 540, 820) }, { t: GC, ...fr(540, 1260, 1.85, 540, 1000) }] },
+        actors: [
+          A("maprang", 500, 1800, 1.15, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "scream" }, { t: 0.4, mode: "reachSit", eyes: "wide", mouth: "scream" }, { t: GA, mode: "sitChair", eyes: "wide", mouth: "o" }], { talk: [TK("grab", 0, "scream")] }),
+          A("pxB", 140, 1800, 1.0, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: GC - 0.1, mode: "raise", eyes: "wide", mouth: "scream" }]),
+          A("pxE", 920, 1800, 1.05, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: GC, mode: "raise", eyes: "wide", mouth: "o" }], { flip: true }),
+        ],
+        captions: capsQ("grab"),
+        fx(tl, id, t0, L) {
+          // ยาย's hand from the left (from the pontoon) closes on มะปราง's wrist
+          put(L.act, `<g id="${id}-yh"><g transform="translate(470,1440) scale(.4)"><path d="M-500,40Q-200,-10 0,-20Q60,-22 80,10Q90,40 40,56Q-200,70 -500,140Z" fill="#c8946a" ${KOUT}/><path d="M20,-14Q60,0 66,30M0,-18Q40,10 40,44M-24,-16Q10,16 8,50" stroke="#8a6448" stroke-width="5" fill="none"/></g></g>`);
+          tl.set(`#${id}-yh`, { opacity: 0 }, t0); tl.fromTo(`#${id}-yh`, { x: -420, opacity: 1 }, { x: 0, opacity: 1, duration: 0.3, ease: "power3.out", immediateRender: false }, t0 + GA - 0.05);
+        },
+      });
+      // ---------- 26–27 · roll: the hook's moment comes true — the boat rolls into the gap against the pontoon (WS, dutch) → water floods over the gunwale (ECU) ----------
+      add("roll", {
+        extra(L) { boatAtPier(L, { sink: 0.95, tilt: -6, seed: 26, noCrowd: true }); },
+        ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(600, 1110, 1.3, 540, 1000) }, { t: 1.0, ...fr(330, 1180, 4.6, 540, 900) }] },
+        actors: onBoat(600, 1220, -6, [["maprang", -150, 0.32, "sitChair", "wide", "scream"], ["lungMuek", 405, 0.36, "raise", "angry", "scream", true]]),
+        fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 330, 900, 1064, 6, 26, 0.8, null, 0, -6);
+          put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.95, tilt: -6, water: true })));
+          // the whole boat rolls toward the low (left) side; a wall of water comes over the gunwale
+          lean(tl, id, t0, 0); leanTo(tl, id, t0, -9, 1.0, "power2.in"); lean(tl, id, t0 + 1.0, -12);
+          put(L.act, `<g id="${id}-fl" opacity="0"><path d="M-200,1250Q200,1060 700,1170Q500,1260 -200,1330Z" fill="#9ac0f0" opacity=".85"/>${Array.from({ length: 10 }, (_, i) => `<path d="M${i * 70},1150q-20,-80 20,-140" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" opacity=".8"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-fl`, { opacity: 0, y: 80 }, { opacity: 1, y: -40, duration: 0.7, ease: "power2.in", immediateRender: false }, t0 + 0.3);
+          put(L.fg, `<rect x="40" y="200" width="70" height="1800" fill="url(#kWood)" ${KOUT}/>`);
+        },
+      });
+      // ---------- 28 · evid: the counter, 0019, lies on the pontoon planks by the edge; the camera rises from it to ข้าวปั้น's face, holding on to the tilted boat ----------
+      add("evid", {
+        extra(L) {
+          riverNight(L, { hz: 420, moon: [860, 160], tx: 200, fwx: 2400 });
+          put(L.set, boatSide(640, 1060, 1.4, { sink: 1.0, tilt: -16, water: true }));
+          put(L.set, `<path d="M-900,1500H2000V2300H-900Z" fill="#9a6a3e" ${KOUT}/>${Array.from({ length: 12 }, (_, i) => `<path d="M-900,${1540 + i * 64}H2000" stroke="#6a4424" stroke-width="3"/>`).join("")}<path d="M-900,1500H2000" stroke="#ffd89a" stroke-width="6" opacity=".7"/>`);
+        },
+        ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 3, far: 3, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(420, 1640, 3.2, 540, 1100) }, { t: vo("evid", 1) - 0.6, glide: vo("evid", 1) - 0.6, ...fr(420, 1600, 3.0, 540, 1100) }, { t: D("evid"), glide: D("evid") - vo("evid", 1) + 0.6, ease: "power2.inOut", ...fr(640, 760, 2.3, 540, 1000) }] },
+        actors: [A("khaopan", 640, 1010, 0.5, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }], { talk: [TK("evid", 1, "o")] })],
+        captions: capsQ("evid"),
+        fx(tl, id, t0, L) {
+          put(L.act, `<g transform="translate(420,1650) rotate(-18) scale(.36)"><circle r="300" fill="#b8902a" ${KOUT}/><circle r="270" fill="#e2b84a"/><rect x="-200" y="-70" width="400" height="140" rx="14" fill="#2a1e10"/>${[0, 1, 2, 3].map((i) => `<rect x="${-192 + i * 100}" y="-58" width="84" height="116" rx="6" fill="#f6f2e4"/><text x="${-150 + i * 100}" y="34" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="92" fill="${i > 1 ? "#c8241e" : "#1e1a14"}">${"0019"[i]}</text>`).join("")}</g>`);
+          put(L.fg, `<path d="M-200,1960H1300" stroke="#5a3a1e" stroke-width="40"/>`);
+        },
+      });
