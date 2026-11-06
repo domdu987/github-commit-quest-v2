@@ -30,10 +30,10 @@
   ],
   "status": "in_production",
   "branch": "ccr-fb88c4b3-kcqyid",
-  "commit": "0c65aee",
+  "commit": "723b05b",
   "video": "video/phrai-long/LONG-phrai-16x9-share.mp4",
-  "video_sha256": "d5efbaa14b6b20675dfb345ee26af1d656fccf57c81a9f99223c509c04792a52",
-  "video_bytes": 92545616,
+  "video_sha256": "005198abef3a26a4b3015d61c29983d8f42696623797881d7ce9bd6117e2c314",
+  "video_bytes": 92524664,
   "thumb": "video/phrai-long/thumb.jpg",
   "made_by": "ผู้ประสานงาน",
   "due": "2026-11-09T22:00+07:00",
@@ -62,11 +62,11 @@
    "5:59 ปีหน้า… เขาจะมาอีก"
   ],
   "upload_sheet": "video/release/sheets/phrai-upload.md",
-  "review": "รอบ 1 (6 พ.ย.): ยังไม่พร้อม · B1 ฮุก (คำสั่งที่ 5.8 วิ) · B2 ช็อต shadow · B3 การ์ดบังหน้า 12 ช็อต · แก้แล้วใน d07fd77 (คำสั่งที่ 3.05 วิ · การ์ดมุมซ้ายบน · M1 M3 M5 ด้วย) · เรนเดอร์ครบ 3 ส่วน กำลังประกอบไฟล์ใหม่ 6:21 · chapters ในไฟล์นี้เป็นของไฟล์ใหม่ (commit/sha ด้านบนยังเป็นไฟล์เก่า 0c65aee ห้ามลง) · ผ่านโต๊ะตรวจรอบ 2 แล้วจะเปลี่ยนเป็น final",
+  "review": "รอบ 1 (6 พ.ย.): ยังไม่พร้อม · B1 ฮุก (คำสั่งที่ 5.8 วิ) · B2 ช็อต shadow · B3 การ์ดบังหน้า 12 ช็อต · แก้แล้ว (723b05b: คำสั่งที่ 3.05 วิ · การ์ดมุมซ้ายบน · M1 M3 M5 ด้วย · chapters ตรวจกับไฟล์ใหม่แล้ว) · รอโต๊ะตรวจรอบ 2 · ผ่านแล้วจะเปลี่ยน status เป็น final",
   "hq_by_chat": {
    "file": "LONG-phrai-16x9-HQ.mp4",
-   "bytes": 270916511,
-   "sha256": "e31faf5af80cc5139226b2c671f0ec8721c4950e60443f59fbcc864799a88ff5"
+   "bytes": 269718668,
+   "sha256": "6f2e1121cd69ad0dfed4afb33d5c5ad2fef59636753f5293018b63d7823e74f9"
   }
  },
  "team_charter": "video/release/TEAM-CHARTER.md"
