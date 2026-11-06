@@ -1,0 +1,97 @@
+      // ===== ต้นตะเคียนกลางนา ฉบับเต็ม only (full/long.part, review c47e401 round 3) =====
+      // build_full.sh turns ADD("cmd"|"strike"|"taken"|"photo"|"again"|"truth") into LADD(…) and SPLITN("grand"|"end") into LSPLITN(…);
+      // each handler gets the episode's own spec and re-stages it for the 16:9 page. The Shorts never see this file.
+      const LZ = (cam, z, n = 99) => ({ ...cam, keys: cam.keys.slice(0, n).map((k) => ({ ...k, s: k.s * z })) });   // zoom out about the frame centre
+      const KEYS = (d, a, b) => ({ keys: [{ t: 0, ...a }, { t: d, glide: d, ...b }] });
+      const noCaps = (sp) => { const o = { ...sp }; delete o.captions; return o; };
+      // the tail of a return stroke seen from close: the channel already lit as the cut lands, flickering out (no full-screen flash)
+      const CLOSEBOLT = (L, tl, t0, T, o = {}) => { const s = T.s, top = T.y - 1600 * s;
+        return StormFX.bolt(L, tl, t0 - 0.05, { x0: T.x + (o.dx ?? 280) * s, y0: top - 1500, x1: T.x + 10 * s, y1: top, seed: o.seed ?? 7, w: o.w ?? 0.9, flash: 0, sil: 0, cloud: true, cx: T.x + 160 * s, cy: top - 380, cloudR: 0.6, leader: 0.05, lit: CUR.rain }); };
+      // the inside of the shrine (photo/grand): the red walls, gold pilasters and arch, ตา and ยาย on the deck, candles — the spirit house
+      // seen in every wide shot, not a dark wooden room (review note 9)
+      const DOLL = (x, y, s, ta) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-13,0Q-15,-26 0,-30Q15,-26 13,0Z" fill="${ta ? "#e8e4d8" : "#6a2a5a"}" stroke="${INK}" stroke-width="1.8"/>${ta ? "" : `<path d="M-10,-24L10,-6" stroke="#d8a43a" stroke-width="4"/>`}<circle cy="-38" r="9" fill="#d8b490" stroke="${INK}" stroke-width="1.8"/>${ta ? `<path d="M-8,-44q8,-6 16,0" stroke="#e8e8e8" stroke-width="4" fill="none"/><path d="M-4,-34q4,4 8,0" stroke="#e8e8e8" stroke-width="3" fill="none"/>` : `<path d="M-9,-40q9,-14 18,0q-9,-5 -18,0z" fill="#d8d8d8"/><circle cy="-48" r="4" fill="#d8d8d8"/>`}</g>`;
+      Sets.tkShrineL = (L, o = {}) => {
+        put(L.sky, `<rect x="-900" y="-800" width="2900" height="3600" fill="#2a0806"/>`);
+        let w = `<rect x="-900" y="-800" width="2900" height="3600" fill="url(#tkShRed)"/><rect x="-900" y="-800" width="2900" height="3600" fill="#3a0804" opacity=".35"/>`;
+        [-500, -60, 1140, 1580].forEach((x) => { w += `<rect x="${x - 40}" y="-800" width="80" height="3600" fill="url(#tkShGold)" stroke="${INK}" stroke-width="5"/><path d="M${x - 26},-800V2800" stroke="#fff2b0" stroke-width="5" opacity=".35"/>`; });
+        w += `<rect x="-900" y="420" width="2900" height="60" fill="url(#tkShGold)" stroke="${INK}" stroke-width="5"/>${Array.from({ length: 40 }, (_, k) => `<path d="M${-900 + k * 74},480l37,46l37,-46" fill="url(#tkShGold)" stroke="${INK}" stroke-width="3"/>`).join("")}`;
+        w += `<path d="M150,1460V760Q150,600 540,560Q930,600 930,760V1460" stroke="url(#tkShGold)" stroke-width="34" fill="none"/><path d="M150,1460V760Q150,600 540,560Q930,600 930,760V1460" stroke="${INK}" stroke-width="5" fill="none" opacity=".6"/>`;
+        put(L.far, w);
+        put(L.set, `<rect x="-900" y="1500" width="2900" height="600" fill="#4a1a10"/><rect x="-900" y="1490" width="2900" height="16" fill="url(#tkShGold)"/><rect x="180" y="1460" width="720" height="40" fill="#6a2a16" stroke="${INK}" stroke-width="5"/>` + DOLL(230, 1460, 5.2, 1) + DOLL(850, 1460, 5.2, 0));
+        put(L.glow, [120, 960].map((cx) => `<g><path d="M${cx},1820V1700" stroke="#f2f0ea" stroke-width="18"/><ellipse cx="${cx}" cy="1684" rx="10" ry="20" fill="#ffd27a"/><circle cx="${cx}" cy="1684" r="220" fill="url(#tkSun)" opacity=".55"/></g>`).join(""));
+      };
+      const LONG = {
+        // B5 · the command: the frame opens out (×0.85) so the crown, the bolt out of the cloud and the family all fit the 16:9 band
+        cmd: (sp) => ADD_G("cmd", { ...sp, cam: LZ(sp.cam, 0.85), land: { y0: 150 } }),
+        // B5/B7 peak · EP.1's strike in four cuts, same 5.66 s and the same narration window:
+        //   0–0.75 the build: ลุง at the stake, his hair lifting off his scalp, a crackle (mix: zap) · 0.75–1.75 the wide: the bolt into the
+        //   whole tree, crown to roots, ลุง thrown · 1.75–2.6 the crown from close: the channel still lit, the trunk split and glowing, the limb
+        //   going · 2.6– back wide: ลุง in the mud, the tree smoking, the rope snapped
+        strike: (sp) => { const so = sp.setOpts, T = so.tree, s = T.s;
+          const stake = (rope) => `<path d="M525,1652v-120" stroke="${INK}" stroke-width="20" stroke-linecap="round"/><path d="M525,1652v-120" stroke="#8a6a4a" stroke-width="12" stroke-linecap="round"/><path d="M508,1560h34" stroke="#c8b070" stroke-width="10"/>` + (rope ? `<path d="M525,1560Q380,1640 230,1470" stroke="#c8b070" stroke-width="7" fill="none"/>${Tk.buffalo(130, 1520, 0.5, {})}` : `<path d="M525,1560q-40,30 -70,20" stroke="#c8b070" stroke-width="7" fill="none"/>`);
+          SPLITN("strike", [0.75, 1.75, 2.6], [
+            { ...SC("st0", { horizon: 1100, tree: { ...T }, buf: null, reflect: false, rain: 0.7 }), cam: KEYS(0.75, fr(470, 1300, 2.0, 540, 820), fr(470, 1300, 2.15, 540, 820)),
+              actors: [P("lungPiak", 420, 1650, 0.85, "kReach", "wide", "o")],
+              fx: (tl, id, t0, L) => { put(L.set, stake(1));
+                const hd = document.querySelector(`#${id}-a0-head > g`); if (!hd) return;
+                const H = Array.from({ length: 13 }, (_, k) => { const x = -54 + k * 9, y = -590 - 18 * Math.cos((x / 60) * 1.4); return `<path class="lhair" d="M${x},${y.toFixed(0)}q${(k % 2 ? 3 : -3)},-26 ${(x / 12).toFixed(1)},-52" stroke="#3a3430" stroke-width="4" fill="none" stroke-linecap="round"/>`; }).join("");
+                hd.insertAdjacentHTML("beforeend", `<g id="${id}-hr">${H}</g>`);
+                document.querySelectorAll(`#${id}-hr .lhair`).forEach((e, k) => { const b = e.getBBox(); const o = `${(b.x + b.width / 2).toFixed(1)} ${(b.y + b.height).toFixed(1)}`;
+                  tl.fromTo(e, { scaleY: 0.15, svgOrigin: o }, { scaleY: 1, svgOrigin: o, duration: 0.32, ease: "power2.out", immediateRender: false }, t0 + 0.12 + (k % 5) * 0.04);
+                  tl.fromTo(e, { rotation: -6, svgOrigin: o }, { rotation: 6, svgOrigin: o, duration: 0.05, yoyo: true, repeat: 7, immediateRender: false }, t0 + 0.4); });
+                tl.fromTo(`#${id}-a0-hb`, { rotation: 0, svgOrigin: "56 -558" }, { rotation: -38, svgOrigin: "56 -558", duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + 0.15); } },
+            { ...noCaps(sp), cam: { keys: [{ t: 0, ...sp.cam.keys[0] }] }, land: { y0: 0 } },
+            { ...SC("st2", { horizon: 1100, tree: { ...T }, buf: null, reflect: false, rain: 0.6 }), light: FLASHL, grade: { top: "#6a6a7a", bottom: "#0a0a14", op: 0.25 },
+              cam: KEYS(0.85, fr(T.x, T.y - 1060 * s, 1.15, 540, 900), fr(T.x, T.y - 1080 * s, 1.22, 540, 900)), shake: kick(0, 0.5, 9),
+              fx: (tl, id, t0, L) => { CLOSEBOLT(L, tl, t0, T, { w: 1.1 }); StormFX.strikeTree(L, tl, t0 - 0.75, { x: T.x, y: T.y, s, seed: 19, side: 1, dur: 6, branch: true }); } },
+            { ...SC("st3", { horizon: 1100, tree: { ...T }, buf: null, reflect: false, rain: 0.8 }), light: FLASHL,
+              cam: KEYS(3.06, fr(610, 1250, 0.86, 540, 960), fr(600, 1300, 0.9, 540, 960)),
+              actors: [P("lungPiak", 420, 1650, 0.85, "supine", "closed", "flat")],
+              land: { y0: 80 }, fx: (tl, id, t0, L) => { put(L.set, stake(0) + Tk.scorch(940, 1520, 0.8, 1)); StormFX.strikeTree(L, tl, t0 - 1.6, { x: T.x, y: T.y, s, seed: 19, side: -1, dur: 6, branch: false }); } }]); },
+        // B5 · the family frozen: opened out ×0.8 so the scorched crown and the shape in it stay in the band
+        taken: (sp) => ADD_G("taken", { ...sp, cam: LZ(sp.cam, 0.8), land: { y0: 0 } }),
+        // note 9 · the photo in the shrine's own red-and-gold
+        photo: (sp) => ADD_G("photo", { ...sp, set: "tkShrineL" }),
+        // B5/B7 · EP.2's bolt from the blue in three cuts (same 6.77 s, narration from 1.9 s): the wide opened out ×0.85 with the crown and
+        // the bolt's way out of the cloud in the band · the crown from close, the channel lit, the old scar splitting again · back to ต้น
+        again: (sp) => { const so = sp.setOpts, T = so.tree, s = T.s, o2 = { ...so }; delete o2.id;
+          SPLITN("again", [1.15, 1.9], [
+            { ...noCaps(sp), cam: LZ({ keys: [sp.cam.keys[0]] }, 0.85), land: { y0: 120 } },
+            { ...CLR("ag2", { ...o2, buf: null }), light: FLASHL, cam: KEYS(0.75, fr(T.x, T.y - 1000 * s, 1.9, 540, 900), fr(T.x, T.y - 1020 * s, 2.0, 540, 900)), shake: kick(0, 0.45, 8),
+              fx: (tl, id, t0, L) => { CLOSEBOLT(L, tl, t0, T, { dx: 400, w: 0.8 }); StormFX.strikeTree(L, tl, t0 - 0.9, { x: T.x, y: T.y, s, seed: 19, side: 1, dur: 6, branch: true }); } },
+            { ...noCaps(sp), setOpts: { ...so, id: "ag3" }, cam: { keys: [{ t: 0, ...sp.cam.keys[0] }, { t: 4.87, glide: 4.87, ...sp.cam.keys[1] }] }, shake: undefined, land: { y0: 230 },
+              actors: [P("ton", 520, 1740, 0.85, "sitHard", "wide", "scream")],
+              fx: (tl, id, t0, L) => StormFX.strikeTree(L, tl, t0 - 1.65, { x: T.x, y: T.y, s, seed: 19, side: 1, dur: 6, branch: false }) }]); },
+        // B2 · the ambulance at true scale (×2.6: its wheels on the family's ground, the roof over their heads), its open back to the left;
+        // ลุงเปี๊ยก at adult size on an adult-length stretcher under a blanket, the medic at his side; the tree moved left so the shape in
+        // it still shows above them
+        truth: (sp) => { const so = { ...sp.setOpts, tree: { ...sp.setOpts.tree, x: 220, y: 1066, s: 0.24 } };
+          const hx = -40, ly = 1540, ls = 0.92;
+          ADD_G("truth", { ...sp, setOpts: so, land: { y0: 150 },
+            actors: [P("yaiHom", -330, 1740, 0.92, "idle", "worry", "frown", { talk: TALK("truth", 0, "o") }), P("medic", 520, 1700, 0.95, "idle", "normal", "flat", { flip: true }),
+              LUNG(hx, ly, ls, "supine", "normal", "smile"), P("ploy", 1060, 1780, 0.98, "idle", "normal", "flat", { flip: true }), P("ton", 1240, 1770, 0.76, "idle", "normal", "smile", { flip: true })],
+            fx: (tl, id, t0, L) => { put(L.set, Tk.ambulance(1690, 1745 - 78, 1.95, { open: 1, lit: 0.3 }) + Tk.stretcher(320, ly + 4, 1.2));
+              put(L.act, `<path d="M${hx + 150},${ly - 30}Q${hx + 400},${ly - 78} ${hx + 690},${ly - 30}L${hx + 690},${ly + 26}H${hx + 150}Z" fill="#e8d8b0" stroke="#1e1a16" stroke-width="4"/>`);
+              TkX.ghostLife(tl, "trgh", t0 + 2.75, 1.25); } }); },
+      };
+      const LADD = (k, sp) => (LONG[k] ? LONG[k](sp) : ADD_G(k, sp));
+      const LONGS = {
+        // B7 twist · the photo comes alive: 3.0 s of sepia flashback in place of the static close-up — the young farmer runs in out of the
+        // storm and shelters under this same tree ("สามสิบปีก่อน / เขาหลบฝนใต้ต้นนี้"), the bolt; then ยาย's face, eyes red
+        grand: (cuts, specs) => { const fb = { x: 600, y: 1240, s: 0.62 };
+          SPLITN("grand", [2.0, 5.0], [{ ...specs[0], set: "tkShrineL" },
+            { ...SC("fb", { horizon: 1000, tree: { ...fb }, rain: 0.8, bolt: 1, ground: 0.8, reflect: false }), light: TEAL, grade: { top: "#d8b070", bottom: "#2a1808", op: 0.35 },
+              cam: KEYS(3.0, fr(620, 1250, 0.95, 540, 960), fr(600, 1300, 1.05, 540, 960)), land: { y0: 120 },
+              actors: [P("taYoung", 1380, 1700, 0.86, "run", "wide", "o", { flip: true, moveTo: { x: 820, dur: 1.4, ease: "power1.out" }, then: [{ t: 1.4, mode: "idle", eyes: "normal", mouth: "flat" }, { t: 2.32, mode: "flinch", eyes: "wide", mouth: "scream" }] })],
+              fx: (tl, id, t0, L) => { const c = document.getElementById(id); if (c) c.style.filter = "sepia(.9) saturate(.75) contrast(1.06)";
+                put(L.light, `<rect id="${id}-wh" x="-900" y="-800" width="2900" height="3600" fill="#f2ecd8" opacity="0"/>`);
+                STRIKE(tl, L, t0, 2.25, { tree: fb, sil: 0.12, ground: 0.8, to: [[820, 1702], [380, 1600], [1100, 1680]] });
+                tl.fromTo(`#${id}-wh`, { opacity: 0 }, { opacity: 0.55, duration: 0.5, ease: "power1.in", immediateRender: false }, t0 + 2.5); } },
+            { ...specs[1], actors: [P("yaiHom", 540, 1700, 0.95, "idle", "worry", "frown", { talk: [0, Math.max(0.1, voEnd("grand") - 5.0), "o"] })] }]); },
+        // note 11 · an end title over the last 1.9 s of the walk home
+        end: (cuts, specs) => SPLITN("end", cuts, [specs[0], { ...specs[1], fx: (tl, id, t0, L) => { if (specs[1].fx) specs[1].fx(tl, id, t0, L);
+          const d = D("end") - cuts[0], a = d - 1.9;
+          put(L.light, `<g id="${id}-et" opacity="0"><rect width="1080" height="1920" fill="#06080a" opacity=".5"/><text x="540" y="930" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="190" fill="#f2ecd8" stroke="#1e1a16" stroke-width="10" paint-order="stroke">ต้นตะเคียนกลางนา</text><text x="540" y="1110" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="110" fill="#f2c230" stroke="#1e1a16" stroke-width="8" paint-order="stroke">— จบ —</text></g>`);
+          tl.fromTo(`#${id}-et`, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out", immediateRender: false }, t0 + a); } }]),
+      };
+      const LSPLITN = (k, cuts, specs) => (LONGS[k] ? LONGS[k](cuts, specs) : SPLITN(k, cuts, specs));

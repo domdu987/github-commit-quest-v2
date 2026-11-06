@@ -30,7 +30,8 @@ F("crouch", 0.28, "crack2", 0.65)
 F("up", 0.0, "splash", 0.4*0.6)
 F("truck", 0.1, "doorslam", 0.8); F("truck", 0.6, "bark", 0.5); F("truck", 2.2, "rumble", 0.5); F("truck", 3.25, "rumble", 0.45)
 F("rope", 0.1, "splash", 0.4*0.6); F("rope", 0.6, "rumble", 0.45); F("rope", 0.9, "buffalo", 0.6)
-F("strike", 0.22, "crack", 1.1); F("strike", 0.75, "fall", 0.9); F("strike", 1.0, "buffalo", 0.5)
+F("strike", 0.15, "zap", 0.3)                       # long cut: the build (hair lifting) before the bolt
+F("strike", 0.97, "crack", 1.1); F("strike", 1.5, "fall", 0.9); F("strike", 1.75, "buffalo", 0.5)   # the bolt moved 0.75 s later (long cut)
 F("taken", 0.3, "rumble", 0.5)
 # ================= the bridge =================
 F("xwait", 0.3, "splash", 0.4*0.5); F("xwait", 1.6, "rumble", 0.45)
@@ -49,11 +50,12 @@ F("far", 0.6, "rumble", 0.35)
 F("watch", 0.3, "stopwatch", 0.9)
 F("rule3", 0.3, "plankdrop", 0.9); F("rule3", m.vo_end("rule3") - 0.25, "bambootick", 0.8)
 F("again", 0.22, "crack", 1.1); F("again", 0.45, "fall", 0.7)
+F("grand", 4.22, "crack2", 0.6)                     # long cut: the flashback's bolt (sepia, 30 years ago)
 F("end", 0.3, "plankdrop", 0.7); F("end", 2.0, "bambootick", 0.7); F("end", 2.3, "bambootick", 0.7)
 # ================= music: all dips first, then the boosts =================
 m.dip(T("cmd") - 0.1, T("cmd", 0.15), 0.15)
 m.dip(T("leg1"), T("leg2", -0.01), 0.7)
-m.dip(T("strike") - 0.3, T("strike", 0.15), 0.25)
+m.dip(T("strike") - 0.3, T("strike", 0.9), 0.25)     # the held breath runs through the build
 m.dip(T("none"), T("xnow", -0.01), 0.55)            # EP.1's held breath carries through the bridge until "ลุงรอไม่ได้แล้ว" is over
 m.dip(T("still"), T("still", -0.01), 0.4)
 m.dip(T("gasp"), T("gasp", 0.8), 0.2)
@@ -61,7 +63,7 @@ m.dip(T("clear"), T("far", -0.01), 0.55)
 m.dip(T("again") - 0.3, T("again", 0.15), 0.25)
 m.dip(T("photo"), T("truth", -0.01), 0.5)
 m.boost(T("hook"), T("cmd", 0.1), 1.6)
-m.boost(T("strike", 0.3), T("taken", -0.01), 1.2)   # 1.6 in the shorts; the full story has only three long voice-free stretches, so the swell after each strike sat ~5 LU over ทะเลลด
+m.boost(T("strike", 1.05), T("taken", -0.01), 1.2)   # 1.6 in the shorts; the full story has only three long voice-free stretches, so the swell after each strike sat ~5 LU over ทะเลลด
 m.boost(T("xchap"), T("xchap", -0.01), 1.4)        # the chapter card
 m.boost(T("hands"), T("count", -0.01), 1.3)
 m.boost(T("again", 0.3), T("alive", -0.01), 1.2)
