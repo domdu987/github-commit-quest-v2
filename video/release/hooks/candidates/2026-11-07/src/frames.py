@@ -21,27 +21,32 @@ html,body{{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000}}
 def ln(w=4): return f'stroke="{INK}" stroke-width="{w}" stroke-linejoin="round" stroke-linecap="round"'
 
 
-# ---------------- hook 1: car into a canal — mother's hand reaching back to her son's buckle, water at the window line
-h1 = f"""<defs><linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a7a6a"/><stop offset="1" stop-color="#1e3a34"/></linearGradient>
-<linearGradient id="in" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a40"/><stop offset="1" stop-color="#1a1a20"/></linearGradient></defs>
-<rect width="1080" height="1920" fill="url(#in)"/>
-<!-- side window: water rising outside, bubbles -->
-<rect x="80" y="260" width="920" height="560" rx="60" fill="url(#w)" {ln(8)}/>
-<path d="M80,520Q300,490 540,520T1000,515V820H80Z" fill="#2a5a50" opacity=".9"/>
-{''.join(f'<circle cx="{150+k*110}" cy="{560+(k*53)%220}" r="{8+k%3*5}" fill="none" stroke="#bfe8de" stroke-width="3" opacity=".7"/>' for k in range(8))}
-<path d="M80,520Q300,490 540,520T1000,515" stroke="#dff4ee" stroke-width="6" fill="none"/>
-<!-- rear seat: the boy in his seat, belt across -->
-<rect x="140" y="860" width="800" height="520" rx="50" fill="#4a4048" {ln(6)}/>
-<g transform="translate(560,1040)"><circle r="110" fill="#c98a5e" {ln(6)}/><path d="M-110,-20Q-100,-130 0,-140Q100,-130 110,-20Q50,-80 0,-70Q-50,-80 -110,-20Z" fill="#1e1612"/>
-<path d="M-50,-5l30,12M50,-5l-30,12" {ln(7)}/><ellipse cy="60" rx="30" ry="22" fill="#5a1a1a" {ln(4)}/><path d="M-80,20q-10,30 6,40M80,20q10,30 -6,40" stroke="#bfe8ff" stroke-width="9" fill="none"/></g>
-<path d="M380,940L720,1360" stroke="#2a2a2a" stroke-width="44"/><path d="M380,940L720,1360" stroke="#5a5a5a" stroke-width="30"/>
-<rect x="650" y="1280" width="110" height="70" rx="12" fill="#c8c8cc" {ln(5)}/><rect x="676" y="1300" width="58" height="30" rx="6" fill="#d8241e"/>
-<!-- mother's arm reaching from the front seat to the buckle (the lure) -->
-<path d="M1080,1500Q900,1420 780,1330" stroke="#b97c52" stroke-width="70" stroke-linecap="round" fill="none"/>
-<path d="M1080,1500Q900,1420 780,1330" stroke="{INK}" stroke-width="6" fill="none" opacity=".4"/>
-<circle cx="770" cy="1320" r="46" fill="#b97c52" {ln(5)}/>
-<!-- her own belt still locked, in the foreground -->
-<path d="M1000,1560L1080,1760" stroke="#2a2a2a" stroke-width="40"/>
+# ---------------- hook 1 (v2, 6 Nov): DAYTIME flash flood on a road — brown water at the windscreen, toddler in a rear-facing car seat,
+# the mother at the wheel twisting back to the car-seat buckle while her own belt is still locked (different from นาทีก่อนจม: night canal)
+h1 = f"""<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd2dc"/><stop offset="1" stop-color="#e8e2c8"/></linearGradient>
+<linearGradient id="mud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8804a"/><stop offset="1" stop-color="#6a4a26"/></linearGradient>
+<linearGradient id="cab" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a5a62"/><stop offset="1" stop-color="#2e2e34"/></linearGradient></defs>
+<rect width="1080" height="1920" fill="url(#cab)"/>
+<!-- windscreen: daylight, a flooded road, brown current, a road sign half under water -->
+<path d="M90,180H990L940,700H140Z" fill="url(#sky)" {ln(8)}/>
+<path d="M140,520Q540,470 940,520L940,700H140Z" fill="url(#mud)"/>
+{''.join(f'<path d="M{160+k*70},{540+(k%3)*40}q30,-14 60,0" stroke="#e8d2a8" stroke-width="5" fill="none" opacity=".8"/>' for k in range(11))}
+<g transform="translate(760,470)"><path d="M0,80V-40" stroke="#6a6a6a" stroke-width="10"/><rect x="-50" y="-110" width="100" height="70" rx="8" fill="#f2c230" {ln(4)}/><path d="M-30,-60l60,-30" stroke="{INK}" stroke-width="8"/></g>
+<path d="M140,520Q540,470 940,520" stroke="#f2e6c8" stroke-width="6" fill="none"/>
+<!-- dashboard + steering wheel (driver = mother, right-hand drive) -->
+<path d="M60,700H1020V860H60Z" fill="#26262c" {ln(6)}/>
+<circle cx="780" cy="820" r="150" fill="none" stroke="#1a1a1e" stroke-width="34"/><circle cx="780" cy="820" r="40" fill="#1a1a1e"/>
+<!-- rear-facing toddler car seat (between the front seats, seen from the driver) -->
+<g transform="translate(400,1220)"><path d="M-200,-260Q-210,120 -120,200H140Q220,120 210,-260Q0,-330 -200,-260Z" fill="#d8302a" {ln(7)}/>
+<path d="M-150,-200Q0,-250 150,-200V120H-150Z" fill="#f2a0a0" opacity=".35"/>
+<circle cy="-100" r="92" fill="#c98a5e" {ln(6)}/><path d="M-92,-120Q-80,-200 0,-206Q80,-200 92,-120Q40,-160 0,-150Q-40,-160 -92,-120Z" fill="#2a1e16"/>
+<path d="M-40,-110l26,10M40,-110l-26,10" {ln(6)}/><ellipse cy="-50" rx="26" ry="18" fill="#5a1a1a" {ln(4)}/><path d="M-66,-80q-8,24 4,32" stroke="#bfe8ff" stroke-width="8" fill="none"/>
+<path d="M-90,-10L0,60L90,-10" stroke="#2a2a2a" stroke-width="26" fill="none"/><rect x="-30" y="40" width="60" height="50" rx="10" fill="#c8c8cc" {ln(4)}/><rect x="-16" y="54" width="32" height="22" rx="4" fill="#d8241e"/></g>
+<!-- water already on the cabin floor -->
+<path d="M0,1560Q540,1520 1080,1560V1920H0Z" fill="#8a6a3a" opacity=".85"/>
+<!-- the mother's arm twisting back to the car-seat buckle (the lure) · her own belt locked across her shoulder, foreground right -->
+<path d="M1100,1200Q760,1250 430,1290" stroke="#b97c52" stroke-width="70" stroke-linecap="round" fill="none"/><circle cx="420" cy="1290" r="44" fill="#b97c52" {ln(5)}/>
+<path d="M880,1000L1080,1500" stroke="#2a2a2a" stroke-width="48"/><rect x="1000" y="1360" width="80" height="60" rx="8" fill="#c8c8cc" {ln(4)}/>
 """
 
 # ---------------- hook 2: dark kitchen, gas smell, mother on the floor, a child's hand on the light switch
@@ -64,33 +69,32 @@ h2 = f"""<defs><radialGradient id="dk" cx=".5" cy=".55" r=".7"><stop offset="0" 
 <circle cx="205" cy="835" r="70" fill="none" stroke="#ffd84a" stroke-width="4" stroke-dasharray="12 10" opacity=".7"/>
 """
 
-# ---------------- hook 3: storm over the rice field, father waving from under the lone tree
-h3 = f"""<defs><linearGradient id="st" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2e3a"/><stop offset=".6" stop-color="#4a5260"/><stop offset="1" stop-color="#6a7a5a"/></linearGradient>
-<linearGradient id="rf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a8a3a"/><stop offset="1" stop-color="#3a5a22"/></linearGradient></defs>
-<rect width="1080" height="1920" fill="url(#st)"/>
-<!-- clouds -->
-{''.join(f'<ellipse cx="{k*170}" cy="{180+(k%3)*40}" rx="190" ry="90" fill="#1e222c" opacity=".9"/>' for k in range(8))}
-<!-- the bolt far left -->
-<path d="M160,240L120,520L190,520L130,820" stroke="#f4f8ff" stroke-width="12" fill="none" stroke-linejoin="round"/>
-<path d="M160,240L120,520L190,520L130,820" stroke="#9ac0ff" stroke-width="30" fill="none" opacity=".35"/>
-<!-- rain -->
-{''.join(f'<path d="M{(k*53)%1080},{(k*97)%1500}l-18,60" stroke="#c8d2e0" stroke-width="3" opacity=".5"/>' for k in range(70))}
-<!-- the field -->
-<path d="M0,1040Q540,1000 1080,1040V1920H0Z" fill="url(#rf)"/>
-{''.join(f'<path d="M0,{1100+k*90}Q540,{1060+k*90} 1080,{1100+k*90}" stroke="#8aaa4a" stroke-width="4" fill="none" opacity=".5"/>' for k in range(9))}
-<!-- the lone tree on the ridge, father under it waving -->
-<g transform="translate(720,1060)"><path d="M-20,0V-260M20,0V-260" stroke="#3a2a1a" stroke-width="22"/>
-<ellipse cy="-340" rx="230" ry="150" fill="#22381a" {ln(6)}/><ellipse cx="-80" cy="-390" rx="120" ry="80" fill="#2a4a20"/>
-<g transform="translate(70,-10)"><circle cy="-120" r="28" fill="#b97c52" {ln(4)}/><path d="M-24,-90h48l10,90h-68z" fill="#3a5a8a" {ln(4)}/><path d="M20,-80L70,-170" stroke="#b97c52" stroke-width="16" stroke-linecap="round"/></g></g>
-<!-- foreground: the child's back and muddy feet, mid-step toward the tree (the lure) -->
-<g transform="translate(380,1640)"><path d="M-90,-300Q0,-340 90,-300L110,0H-110Z" fill="#c84a3a" {ln(6)}/><circle cy="-360" r="80" fill="#1e1612" {ln(6)}/>
-<path d="M-60,0L-90,200M60,0L100,180" stroke="#c98a5e" stroke-width="44" stroke-linecap="round"/></g>
-<!-- grandpa crouched far right, small, feet together (the clue) -->
-<g transform="translate(960,1260)" opacity=".85"><ellipse cy="10" rx="40" ry="8" fill="#000" opacity=".3"/><path d="M-26,0Q-30,-50 0,-60Q30,-50 26,0Z" fill="#6a6a5a" {ln(3)}/><circle cy="-70" r="16" fill="#b97c52" {ln(3)}/></g>
+# ---------------- hook 3 (v2, 6 Nov · replaces lightning): flooded house — father under the brown water by the gate, daughter on the stairs,
+# one foot already in the water (the lure: going in after him)
+h3 = f"""<defs><linearGradient id="fw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a7a48"/><stop offset="1" stop-color="#5a4224"/></linearGradient>
+<linearGradient id="wl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8cdb4"/><stop offset="1" stop-color="#b8aa8a"/></linearGradient></defs>
+<rect width="1080" height="1920" fill="url(#wl)"/>
+<!-- the open doorway to the street: gate, a floating plastic chair, rain-grey daylight -->
+<rect x="420" y="240" width="560" height="760" fill="#c8d4d8" {ln(8)}/>
+<path d="M440,620H960" stroke="#5a5a5a" stroke-width="10"/>{''.join(f'<path d="M{460+k*50},620V880" stroke="#5a5a5a" stroke-width="8"/>' for k in range(10))}
+<!-- the water: inside and outside, one level -->
+<path d="M0,860Q540,830 1080,860V1920H0Z" fill="url(#fw)"/>
+{''.join(f'<path d="M{40+k*90},{900+(k%4)*60}q30,-12 60,0" stroke="#d8c09a" stroke-width="5" fill="none" opacity=".7"/>' for k in range(12))}
+<g transform="translate(860,880) rotate(-12)"><path d="M-50,0h100v-20h-100z" fill="#2a8ad0" {ln(4)}/><path d="M-40,-20v-60h80v60" fill="none" stroke="#2a8ad0" stroke-width="12"/></g>
+<!-- the father: only a hand and the top of his head above the water near the gate -->
+<g transform="translate(640,900)"><ellipse rx="120" ry="20" fill="#e8d6b0" opacity=".5"/><path d="M-40,0Q0,-46 40,0" fill="#2a1e16" {ln(4)}/>
+<path d="M90,10L130,-130" stroke="#b97c52" stroke-width="26" stroke-linecap="round"/><circle cx="134" cy="-140" r="20" fill="#b97c52" {ln(4)}/></g>
+<!-- the stairs down into the water, the daughter halfway, one foot in -->
+{''.join(f'<path d="M{0+k*40},{1880-k*110}h300v110h-300z" fill="#9a8a72" {ln(4)}/>' for k in range(8))}
+<g transform="translate(300,1300)"><path d="M-70,-260Q0,-290 70,-260L90,40H-90Z" fill="#3a6ac8" {ln(6)}/><circle cy="-320" r="66" fill="#1e1612" {ln(6)}/>
+<path d="M-40,40L-60,240M40,40L90,330" stroke="#c98a5e" stroke-width="38" stroke-linecap="round"/>
+<path d="M60,-200L250,-330" stroke="#c98a5e" stroke-width="30" stroke-linecap="round"/></g>
+<!-- the clue: empty gallons tied with a rope on the stair rail (ยาย's habit) -->
+<g transform="translate(140,1080)">{''.join(f'<rect x="{k*70}" y="0" width="56" height="80" rx="12" fill="#e8eef0" {ln(3)}/>' for k in range(3))}<path d="M-20,0Q100,-40 220,0" stroke="#c8a040" stroke-width="6" fill="none"/></g>
 """
 
-for i, (body, c1, cmd) in enumerate([(h1, "ถ้าวันหนึ่ง… รถคุณตกน้ำกับลูก", "อย่าปลดเข็มขัดลูกก่อน"),
+for i, (body, c1, cmd) in enumerate([(h1, "ถ้าวันหนึ่ง… น้ำพัดรถคุณกับลูก", "อย่าปลดเข็มขัดลูกก่อน"),
                                       (h2, "ถ้าวันหนึ่ง… แม่คุณล้มกลางกลิ่นแก๊ส", "อย่าเปิดไฟ"),
-                                      (h3, "ถ้าวันหนึ่ง… พ่อเรียกคุณไปใต้ต้นไม้", "อย่าวิ่งไปหาพ่อ")], 1):
+                                      (h3, "ถ้าวันหนึ่ง… พ่อคุณจมน้ำหน้าบ้าน", "อย่าลงไปช่วยพ่อ")], 1):
     open(os.path.join(OUT, f"hook{i}.html"), "w").write(page(body, c1, cmd, "ฮุก " + str(i)))
 print("ok")
