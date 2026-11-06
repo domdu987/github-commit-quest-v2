@@ -69,12 +69,13 @@
       });
       // ---------- 6 · recap (Shorts only): the "12 คน" sign · the counter 0019 · the two of them in the middle of the boat ----------
       add("recap", {
-        extra(L) { boatAtPier(L, { sink: 0.98, tilt: -14, seed: 33 }); },
+        extra(L) { boatAtPier(L, { sink: 0.98, tilt: -14, seed: 33, noCrowd: true }); },
         ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(870, 1080, 3.6, 540, 820) }, { t: 2.6, glide: 2.4, ...fr(870, 1080, 3.8, 540, 820) }, { t: 2.65, ...fr(600, 1150, 1.6, 540, 1000) }, { t: D("recap"), glide: D("recap") - 2.65, ...fr(560, 1150, 1.9, 540, 1000) }] },
-        actors: onBoat(600, 1220, -14, [["maprang", -30, 0.32, "cling", "wide", "o"], ["khaopan", 120, 0.26, "cling", "wide", "o"], ["pxC", 250, 0.3, "raise", "wide", "scream"], ["pxE", 340, 0.34, "raise", "wide", "o", true]]),
+        actors: onBoat(600, 1220, -14, [["maprang", -30, 0.32, "cling", "wide", "o"], ["khaopan", 120, 0.26, "cling", "wide", "o"]]),
         captions: capsQ("recap"),
         fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 330, 900, 1050, 6, 33, 0.8, null, 0, -14);
           put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.98, tilt: -14, water: true })));
           put(L.light, `<g id="${id}-ct" opacity="0" transform="translate(860,1500) rotate(-12) scale(.4)"><circle r="300" fill="#b8902a" ${KOUT}/><circle r="270" fill="#e2b84a"/><rect x="-200" y="-70" width="400" height="140" rx="14" fill="#2a1e10"/>${[0, 1, 2, 3].map((i) => `<rect x="${-192 + i * 100}" y="-58" width="84" height="116" rx="6" fill="#f6f2e4"/><text x="${-150 + i * 100}" y="34" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="92" fill="${i > 1 ? "#c8241e" : "#1e1a14"}">${"0019"[i]}</text>`).join("")}</g>`);
           tl.fromTo(`#${id}-ct`, { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 0.4, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 1.2);
@@ -85,17 +86,18 @@
       add("climb", {
         extra(L) { cabin(L, { flood: 1680 }); },
         ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd89a", rimOp: 0.9 }, blur: { sky: 4, far: 4, mid: 3 },
-        cam: { keys: [{ t: 0, ...fr(540, 1300, 1.0, 540, 960) }, { t: 1.15, ...fr(360, 1600, 1.9, 540, 1100) }, { t: 2.55, ...fr(540, 1350, 1.3, 540, 1000) }] },
+        cam: { keys: [{ t: 0, ...fr(560, 1300, 1.0, 540, 960) }, { t: 1.15, ...fr(520, 1560, 1.6, 540, 1100) }, { t: 2.55, ...fr(580, 1350, 1.3, 540, 1000) }] },
         actors: [
-          A("pxB", 760, 1800, 1.0, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 200, dur: 1.4, ease: "power1.in" }, talk: [TK("climb", 0, "scream")] }),
-          A("pxE", 960, 1800, 1.05, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: 360, dur: 1.6, ease: "power1.in" } }),
-          A("maprang", 300, 1800, 1.1, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 1.2, mode: "fall", eyes: "wide", mouth: "scream" }], { moveTo: { x: 520, dur: 1.8, ease: "power2.in", at: 1.15 } }),
+          A("pxB", 760, 1800, 1.0, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 60, dur: 1.4, ease: "power1.in" }, talk: [TK("climb", 0, "scream")] }),
+          A("pxE", 960, 1800, 1.05, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: 120, dur: 1.6, ease: "power1.in" } }),
+          A("maprang", 440, 1800, 1.1, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 1.2, mode: "fall", eyes: "wide", mouth: "scream" }], { moveTo: { x: 600, dur: 1.8, ease: "power2.in", at: 1.15 } }),
         ],
         captions: capsQ("climb"),
         fx(tl, id, t0, L) {
           lean(tl, id, t0, 18);
           // the whip back: the lean swings from +18 to -14 as their weight lands on the high side
           leanTo(tl, id, t0 + 2.55, -14, 0.6, "power3.in");
+          hangSign(L, tl, `${id}-f3`, t0 + 10.3 - SH.climb.start, 3.0, ["กดติดตาม", "ดูเรื่องเต็มที่ช่อง YouTube"]);   // F3 (Shorts only)
         },
       });
       // ---------- 10–13 · rule: มะปราง grabs the seat back instead of running to him (ECU, still) → the rule paddle on its rope, rule 2 →
@@ -104,11 +106,11 @@
       add("rule", {
         extra(L) { cabin(L, { flood: 1690 }); },
         ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd89a", rimOp: 0.9 }, blur: { sky: 4, far: 4, mid: 3 },
-        cam: { keys: [{ t: 0, ...fr(300, 1297, 2.8, 540, 820) }, { t: R1, ...fr(300, 1297, 2.8, 540, 820) }, { t: R2, ...fr(540, 1400, 1.25, 540, 1000) }, { t: R2 + 0.01, glide: R3 - R2 - 0.05, ...fr(540, 1420, 1.35, 540, 1000) }, { t: R3, ...fr(560, 1330, 1.9, 540, 900) }] },
+        cam: { keys: [{ t: 0, ...fr(430, 1297, 2.8, 540, 820) }, { t: R1, ...fr(430, 1297, 2.8, 540, 820) }, { t: R2, ...fr(560, 1400, 1.25, 540, 1000) }, { t: R2 + 0.01, glide: R3 - R2 - 0.05, ...fr(560, 1420, 1.35, 540, 1000) }, { t: R3, ...fr(560, 1330, 1.55, 540, 900) }] },
         actors: [
-          A("maprang", 300, 1800, 1.1, [{ t: 0, mode: "cling", eyes: "worry", mouth: "flat" }, { t: R3, mode: "cling", eyes: "wide", mouth: "scream" }], { talk: [TK("rule", 3, "scream")] }),
-          A("khaopan", 820, 1800, 0.95, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }], { talk: [TK("rule", 4, "o")] }),
-          A("pxC", 560, 1800, 1.0, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }]),
+          A("maprang", 430, 1800, 1.1, [{ t: 0, mode: "cling", eyes: "worry", mouth: "flat" }, { t: R3, mode: "cling", eyes: "wide", mouth: "scream" }], { talk: [TK("rule", 3, "scream")] }),
+          A("khaopan", 700, 1800, 0.95, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }], { talk: [TK("rule", 4, "o")] }),
+          A("pxC", 960, 1800, 1.0, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }]),
         ],
         captions: capsQ("rule"),
         fx(tl, id, t0, L) {
@@ -120,13 +122,14 @@
       // ---------- 14–15 · fail: the two climbers slide back down to the same side (WS, shake) → the boat rolls, the canopy comes down over them (WS low, dutch, the sting) ----------
       const F1 = 2.85;
       add("fail", {
-        extra(L) { boatAtPier(L, { sink: 1.0, tilt: -10, seed: 35 }); },
+        extra(L) { boatAtPier(L, { sink: 1.0, tilt: -10, seed: 35, noCrowd: true }); },
         ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
         cam: { keys: [{ t: 0, ...fr(600, 1120, 1.5, 540, 1000) }, { t: F1, ...fr(600, 1180, 1.2, 540, 1150) }] },
-        actors: onBoat(600, 1220, -10, [["pxB", 300, 0.33, "fall", "wide", "scream"], ["pxE", 340, 0.34, "fall", "wide", "scream", true], ["maprang", -30, 0.32, "cling", "wide", "o"], ["khaopan", 120, 0.26, "cling", "wide", "o"], ["lungMuek", 405, 0.36, "raise", "angry", "scream", true]])
-          .map((a, i) => i < 2 ? { ...a, moveTo: { x: a.x - 420, dur: 1.4, ease: "power2.in", at: 0.6 } } : a),
+        actors: onBoat(600, 1220, -10, [["maprang", -30, 0.32, "cling", "wide", "o"], ["khaopan", 120, 0.26, "cling", "wide", "o"], ["lungMuek", 405, 0.36, "raise", "angry", "scream", true]]),
         captions: capsQ("fail"),
         fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 560, 900, 1040, 4, 35, 0.8, null, 0, -10);
+          tl.fromTo(`#${id}-rc`, { x: 0 }, { x: -330, duration: 1.4, ease: "power2.in", immediateRender: false }, t0 + 0.6);
           put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 1.0, tilt: -10, water: true })));
           lean(tl, id, t0, 0); leanTo(tl, id, t0 + 0.8, -6, 1.6, "power2.in");
           // the roll: the world goes over, the canopy (a black shape against the pontoon lights) falls across the frame, water closes
@@ -207,6 +210,7 @@
             tl.set(`#${id}-t${k}`, { opacity: 0 }, t0);
             tl.fromTo(p, { u: 0 }, { u: 1, duration: 1.3, ease: "none", immediateRender: false, onUpdate: () => { const u = p.u, x = -520 + (x1 + 520) * u, y = 940 + (y1 - 940) * u - 520 * 4 * u * (1 - u); const e = g(); if (e) { e.setAttribute("transform", `translate(${k1(x)},${k1(y)}) rotate(${k1(u * 540)})`); e.style.opacity = u > 0 && u < 1 ? 1 : u >= 1 ? 1 : 0; } } }, t0 + at);
           };
+          hangSign(L, tl, `${id}-hg7`, t0 + 51.68 - SH.stairs.start, 1.0, ["กดติดตาม", "ไว้ดูกฎข้อต่อไป ก่อนวันที่ต้องใช้"], { bell: true });   // HG7
           arc(1, 520, 1320, T1 + 0.5, gallon(0, 0, 0.4, { water: true }));
           arc(2, 380, 1340, T2 + 0.2, gallon(0, 0, 0.4, { rot: 20 }));
           arc(3, 680, 1330, T2 + 0.9, `<rect x="-40" y="-14" width="80" height="28" rx="12" fill="#ff7a2a" ${KOUT2}/>`);

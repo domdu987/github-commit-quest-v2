@@ -22,7 +22,7 @@ AMB = [('put(L.act, `<g transform="translate(${x},${RY + 26})"><g id="${id}">',
 for a, b in AMB:
     assert shared.count(a) == 1, a[:60]; shared = shared.replace(a, b)
 shared += rd(os.path.join(HERE, "pry.part"))   # M6: the headrest pry card and the float-and-shoe beat (long only)
-shared = "      const AMB_S = 2.6, AMB_DX = 270;\n" + shared
+shared = "      const AMB_S = 2.6, AMB_DX = 130;\n" + shared   # review r3 m1: 140 px further left, the cab front clear of the edge
 foot = rd(f"{P3}/foot.part").replace("นาทีก่อนจม · EP.3", "นาทีก่อนจม")
 assert "นาทีก่อนจม</div>" in foot
 CAPS = re.search(r"      function caps\(k, lines, o = \{\}\) \{.*?\n      \}\n", head, re.S).group(0).replace("function caps(k, lines, o = {}) {", "const caps = function (k, lines, o = {}) {", 1).rstrip() + ";\n"
@@ -126,6 +126,9 @@ for pre, label in (("e", "EP"), ("x", "bridge copy of EP")):
                            ('parkedBike(L, "bk8", BIKE.x + 120, BIKE.y, BIKE.s)', 'parkedBike(L, "bk8", BIKE.x + 120, BIKE.y, 0.58)')):
                 assert body.count(a0) == 1, a0; body = body.replace(a0, b0)
         body = prefix_ids(body, f"{pre}{n}")
+        # review r3 B7: the hook's bike tween targets "#bk0" by a selector string prefix_ids does not rename, so in the long copies the bike
+        # stayed parked at the right edge while the rider rode on to BIKE.x — point the tween at the copy's own bike
+        body = body.replace('tl.fromTo("#bk0",', f'tl.fromTo("#{pre}{n}bk0",')
         blocks.append(f"      {{ // ======== {label}.{n} ========\n        const P = \"{pre}{n}_\";\n{SHIM}{hl}{body}\n      }}\n")
 blocks.append("      { // ======== cold-open gap ========\n        const P = \"\";\n" + SHIM + hl + rd(os.path.join(HERE, "bridge.part")) + "\n      }\n")
 html = head + sig + helpers + shared + "".join(blocks) + foot
