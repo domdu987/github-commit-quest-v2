@@ -1,0 +1,15 @@
+{
+ "bands": [
+  {
+   "from": 0,
+   "to": 13.281,
+   "stage": "uneasy"
+  },
+  {
+   "from": 13.281,
+   "to": 16.073,
+   "stage": "threat"
+  }
+ ],
+ "keep": "yellow"
+}

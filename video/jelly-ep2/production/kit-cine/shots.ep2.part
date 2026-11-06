@@ -30,7 +30,7 @@
       Rig.MODES.heldBack = (u, o) => { const j = Math.sin(u * 23) * 3; return { ...Rig.MODES.idle(u, o), uaF: -120 + j, faF: -30, uaB: -110 - j, faB: -40, torso: -14 + j * 0.3, head: -10 }; };
       Rig.MODES.waveBig = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -160 + 20 * Math.sin(u * 9), faF: -20, uaB: 10, faB: -20, head: -8 });
 
-      const FGB = (L, tl, t0, a, b, fid, svg) => { put(L.light, `<defs><filter id="${fid}-f" x="-.3" y="-.3" width="1.6" height="1.6"><feGaussianBlur stdDeviation="14"/></filter></defs><g id="${fid}" filter="url(#${fid}-f)">${svg}</g>`);
+      const FGB = (L, tl, t0, a, b, fid, svg) => { put(L.light, `<defs><filter id="${fid}-f" x="-.3" y="-.3" width="1.6" height="1.6"><feGaussianBlur stdDeviation="14"/></filter></defs><g id="${fid}" filter="url(#${fid}-f)">${window.LANDSCAPE ? `<g transform="translate(-660,0) scale(2.2222,1)"><rect width="1080" height="1920" opacity="0"/>${svg}</g>` : svg}</g>`);
         tl.set(`#${fid}`, { opacity: 0 }, 0); tl.set(`#${fid}`, { opacity: 1 }, t0 + a); if (b !== undefined) tl.set(`#${fid}`, { opacity: 0 }, t0 + b); };
       const RING_FAR = [880, 690, 0.24];
       // the beach of the episode: the tower on the right, the vinegar post next to it, the mat where ภูมิ sits
@@ -80,7 +80,7 @@
           tl.fromTo(`#jb3-ring`, { y: -4, rotation: -3, svgOrigin: `${RING_FAR[0]} ${RING_FAR[1]}` }, { y: 4, rotation: 3, svgOrigin: `${RING_FAR[0]} ${RING_FAR[1]}`, duration: 0.9, repeat: 6, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); } });
       // 5–7 · "พ่อ อย่าทิ้งผม!" ภูมิ close (high) → ต้น close, still (the choice) → the hands press him down: "ห้ามลุก!"
       add("c_stay", { set: "jellyBeach", setOpts: BEACH2("jb4", { tower: false, umbrellas: [[1040, 1360, 0.85, "#3a9ad8"]] }), dark: 0, blur: { set: 3, mid: 4, far: 4 }, light: SUN,
-        cam: { keys: [{ t: 0, ...fr(MAT[0] + 58, 1515, 2.6, 540, 880) }, { t: CT(6, "c_stay"), ...fr(605, 1300, 3.3, 540, 1020) }] },
+        cam: { keys: [{ t: 0, ...fr(MAT[0] + 58, 1515, window.LANDSCAPE ? 1.6 : 2.6, 540, window.LANDSCAPE ? 880 : 880) }, { t: CT(6, "c_stay"), ...fr(605, 1300, 3.3, 540, 1020) }] },
         actors: [
           A("jPhum", MAT[0] + 40, MAT[1] + 10, 0.95, [{ t: 0, mode: "reach", eyes: "cry", mouth: "scream" }], { talk: [TALK("c_stay", 0, "scream")] }),
           A("jTon", 720, 1740, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true, until: CT(6, "c_stay") }),

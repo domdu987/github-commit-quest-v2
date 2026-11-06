@@ -21,7 +21,7 @@
       Rig.MODES.benchSit = (u, o) => ({ ...Rig.MODES.sit(u, o), thF: -84, shF: 86, thB: -82, shB: 84, uaF: -20, faF: -50, uaB: 10, faB: -40, torso: 4, head: 6 + 2 * Math.sin(u * 1.1), bodyY: 150 });
       Rig.MODES.waveBig = Rig.MODES.waveBig || ((u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -160 + 20 * Math.sin(u * 9), faF: -20, uaB: 10, faB: -20, head: -8 }));
       Rig.MODES.fillPost = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -120, faF: -40, uaB: -100, faB: -50, head: -12 });
-      const FGB = (L, tl, t0, a, b, fid, svg) => { put(L.light, `<defs><filter id="${fid}-f" x="-.3" y="-.3" width="1.6" height="1.6"><feGaussianBlur stdDeviation="14"/></filter></defs><g id="${fid}" filter="url(#${fid}-f)">${svg}</g>`);
+      const FGB = (L, tl, t0, a, b, fid, svg) => { if (window.LANDSCAPE && (window.LANDSCAPE.noFg || ["fg21"]).includes(fid)) return; put(L.light, `<defs><filter id="${fid}-f" x="-.3" y="-.3" width="1.6" height="1.6"><feGaussianBlur stdDeviation="14"/></filter></defs><g id="${fid}" filter="url(#${fid}-f)">${window.LANDSCAPE ? `<g transform="translate(-660,0) scale(2.2222,1)"><rect width="1080" height="1920" opacity="0"/>${svg}</g>` : svg}</g>`);
         tl.set(`#${fid}`, { opacity: 0 }, 0); tl.set(`#${fid}`, { opacity: 1 }, t0 + a); if (b !== undefined) tl.set(`#${fid}`, { opacity: 0 }, t0 + b); };
       const BEACH3 = (id, x = {}) => BEACH(id, { tower: [930, 1270, 0.82], umbrellas: [[90, 1300, 0.8, "#f2c230"], [1040, 1360, 0.85, "#3a9ad8"]], life: [["mat", 330, 1760, 0.95, "#e8482a"], ["cooler", 120, 1350, 0.6]], ...x });
       const MAT = [330, 1760];

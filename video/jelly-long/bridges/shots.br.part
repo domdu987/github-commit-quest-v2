@@ -1,0 +1,66 @@
+      // ===== หนวดใส คลิปยาว · ฉากเชื่อม A (EP.1 → EP.2) และ B (EP.2 → EP.3) · 8 cuts (brc/plan/shotlist.json) =====
+      // A: the lifeguard rings ยาย from the tower, the post empty in front of him → ยาย at her door, the receiver at her ear → "ผู้ชายพาลูกมาสองคน
+      //    ใช่ไหม" (push-in) → her hand takes the basket off the floor, the doorway empty.
+      // B: the tower: the lifeguard taps the empty rack, ต้น beside him; the old notice board with a faded photo (the clue) → "ป้าคนหนึ่งเติมเอง
+      //    มาสามสิบปี" → the photo: a young man by a fishing boat → ต้น: "พ่อผม".
+      const PHONE = `<g transform="translate(0,118) rotate(-8)"><rect x="-18" y="-32" width="36" height="64" rx="7" fill="#2a2a32" stroke="#2e2a26" stroke-width="2.2"/><rect x="-14" y="-27" width="28" height="52" rx="4" fill="#5ab8e8"/></g>`;
+      Rig.CAST.jGuardPhone = { v2: Rig.CAST.jGuard.v2, hand: PHONE, keep: "F" };
+      Rig.CAST.jLaorPhone = { v2: Rig.CAST.jLaor.v2, hand: PHONE.replace("#5ab8e8", "#9ac8a0"), keep: "F" };
+      Rig.MODES.phoneEar2 = (u, o) => ({ ...Rig.MODES.phoneEar(u, o), uaF: -95, faF: -130, head: 10 + Math.sin(u * 1.1) * 2 });
+      Rig.MODES.tapRack = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -120 + 8 * Math.sin(u * 14), faF: -30, head: -6 });
+      // the old notice board by the tower: lost-and-found notes and one faded photo of a young man by a fishing boat
+      const PHOTO = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><rect x="-120" y="-150" width="240" height="190" fill="#efe2c0" stroke="#2e2a26" stroke-width="5" transform="rotate(-4)"/>
+        <g transform="rotate(-4)"><rect x="-104" y="-136" width="208" height="150" fill="#c8b48a"/><rect x="-104" y="-56" width="208" height="70" fill="#9aa08a"/>
+          <path d="M-96,-6Q-30,12 60,6L96,-20L70,-26Q0,-10 -80,-18Z" fill="#6a5a44"/><path d="M10,-26V-110L60,-30Z" fill="#8a7a60"/>
+          <g transform="translate(-50,-6)"><circle cx="0" cy="-92" r="15" fill="#7a6248"/><path d="M-22,-112Q0,-130 22,-112Z" fill="#5a4a3a"/><path d="M-16,-76Q0,-80 16,-76L20,-20H-20Z" fill="#b0a080"/><path d="M-12,-20V8M12,-20V8" stroke="#5a4a3a" stroke-width="9"/><path d="M16,-70L40,-96" stroke="#7a6248" stroke-width="9" stroke-linecap="round"/></g>
+          <rect x="-104" y="-136" width="208" height="150" fill="#f2e6c8" opacity=".28"/></g>
+        <circle cx="-4" cy="-150" r="9" fill="#d8312a" stroke="#2e2a26" stroke-width="2.4"/></g>`;
+      const BOARD = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-170,0V-560M170,0V-560" stroke="#6a4a2a" stroke-width="22"/>
+        <rect x="-210" y="-560" width="420" height="320" fill="#a8703e" stroke="#4a2a14" stroke-width="8"/>${[0, 1, 2, 3].map((k) => `<path d="M-206,${-480 + k * 80}H206" stroke="#7a4a2a" stroke-width="4" opacity=".6"/>`).join("")}
+        <rect x="-180" y="-530" width="110" height="80" fill="#f6f0dc" transform="rotate(5,-125,-490)"/><rect x="70" y="-520" width="110" height="130" fill="#e8f0f6" transform="rotate(-6,125,-455)"/>
+        ${PHOTO(-10, -300, 0.62)}</g>`;
+      const BEACHB = (id, x = {}) => BEACH(id, { tower: [900, 1270, 0.82], post: [640, 1330, 0.62, 0], umbrellas: [[90, 1300, 0.8, "#f2c230"]], life: [], ...x });
+
+      const FGB = (L, tl, t0, a, b, fid, svg) => { if (window.LANDSCAPE && (window.LANDSCAPE.noFg || []).includes(fid)) return; put(L.light, `<defs><filter id="${fid}-f" x="-.3" y="-.3" width="1.6" height="1.6"><feGaussianBlur stdDeviation="14"/></filter></defs><g id="${fid}" filter="url(#${fid}-f)">${window.LANDSCAPE ? `<g transform="translate(-660,0) scale(2.2222,1)"><rect width="1080" height="1920" opacity="0"/>${svg}</g>` : svg}</g>`);
+        tl.set(`#${fid}`, { opacity: 0 }, 0); tl.set(`#${fid}`, { opacity: 1 }, t0 + a); if (b !== undefined) tl.set(`#${fid}`, { opacity: 0 }, t0 + b); };
+      // 1–2 · the lifeguard on his phone at the tower, the empty post in front → ยาย at her door, the receiver at her ear
+      add("A1", { set: "jellyBeach", setOpts: BEACHB("jbA1"), dark: 0, light: SUN,
+        cam: { keys: [{ t: 0, ...fr(760, 1380, 1.5, 540, 1100) }, { t: D("A1"), glide: D("A1"), ...fr(770, 1390, 1.62, 540, 1100) }] },
+        actors: [A("jGuardPhone", 860, 1640, 0.9, [{ t: 0, mode: "phoneEar2", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("A1", 0, "o")] })],
+        captions: caps("A1", undefined, { quote: true }),
+        fx(tl, id, t0, L) { FGB(L, tl, t0, 0, D("A1"), "fgA1", `<path d="M-60,1980L-60,1500Q120,1440 260,1520L300,1980Z" fill="#c8a870"/>`); } });
+      // 2 · ยาย at her door, the receiver at her ear, the basket on the floor by the door
+      add("A1b", { set: "jellyPorch", setOpts: { id: "jpA1b", basket: false }, dark: 0, light: DAWN,
+        cam: { keys: [{ t: 0, ...fr(1150, 1400, 1.5, 540, 1060) }] },
+        actors: [A("jLaorPhone", 1130, 1660, 1.0, [{ t: 0, mode: "phoneEar2", eyes: "worry", mouth: "flat" }], { flip: true })],
+        captions: caps("A1b", undefined, { quote: true }),
+        fx(tl, id, t0, L) { put(L.act, `<g transform="translate(1250,1668)">${Jelly.basket(0, 0, 1.2)}</g>`); } });
+      // 3–4 · ยาย MCU: "ผู้ชายพาลูกมาสองคน ใช่ไหม" → the basket insert: her hand takes it, the doorway empty
+      add("A2", { set: "jellyPorch", setOpts: { id: "jpA2", basket: false }, dark: 0, light: DAWN,
+        cam: { keys: [{ t: 0, ...fr(1120, 1140, 2.4, 540, 820) }, { t: CT(4, "A2") - 0.01, glide: CT(4, "A2") - 0.01, ...fr(1120, 1130, 2.9, 540, 820) },
+          { t: CT(4, "A2"), ...fr(1250, 1560, 2.6, 540, 1000) }] },
+        actors: [A("jLaorPhone", 1130, 1660, 1.0, [{ t: 0, mode: "phoneEar2", eyes: "worry", mouth: "o" }, { t: F("A2", 0, 1) - 0.05, mode: "phoneEar2", eyes: "wide", mouth: "o" }], { flip: true, until: CT(4, "A2"), talk: [TALK("A2", 0, "o")] })],
+        captions: caps("A2", undefined, { quote: true }),
+        fx(tl, id, t0, L) {
+          const b = CT(4, "A2");
+          put(L.act, `<g transform="translate(1250,1668)"><g id="a2-bk">${Jelly.basket(0, 0, 1.2)}<g id="a2-arm" opacity="0"><path d="M560,-1100L40,-170" stroke="#2e2a26" stroke-width="96" stroke-linecap="round"/><path d="M560,-1100L40,-170" stroke="#f4e2a8" stroke-width="84" stroke-linecap="round"/><path d="M150,-360L40,-170" stroke="#2e2a26" stroke-width="64" stroke-linecap="round"/><path d="M150,-360L40,-170" stroke="#c8946a" stroke-width="52" stroke-linecap="round"/><path d="M170,-395L130,-325" stroke="#d8c080" stroke-width="16" stroke-linecap="round"/><ellipse cx="22" cy="-140" rx="44" ry="34" fill="#c8946a" stroke="#2e2a26" stroke-width="6"/><path d="M-14,-150Q-30,-120 0,-104M10,-112Q30,-96 54,-118" stroke="#2e2a26" stroke-width="6" fill="none" stroke-linecap="round"/></g></g></g></g>`);
+          tl.set("#a2-bk", { opacity: 0 }, 0); tl.set("#a2-bk", { opacity: 1 }, t0 + b);
+          tl.set("#a2-arm", { opacity: 1 }, t0 + b + 0.25);
+          tl.fromTo("#a2-arm", { x: 300, y: -500 }, { x: 0, y: 0, duration: 0.3, ease: "power2.out", immediateRender: false }, t0 + b + 0.25);
+          tl.to("#a2-bk", { y: -900, duration: 0.45, ease: "power3.in", immediateRender: false }, t0 + b + 0.7);
+        } });
+      // 5–6 · the tower: the lifeguard taps the empty rack, ต้น beside him, the notice board with the photo → "ป้าคนหนึ่งเติมเองมาสามสิบปี"
+      add("B1", { set: "jellyBeach", setOpts: BEACHB("jbB1", { post: [560, 1500, 0.95, 0] }), dark: 0, light: SUN,
+        cam: { keys: [{ t: 0, ...fr(640, 1460, 1.05, 540, 1040) }, { t: CT(6, "B1") - 0.01, glide: CT(6, "B1") - 0.01, ...fr(640, 1450, 1.15, 540, 1040) },
+          { t: CT(6, "B1"), ...fr(470, 1130, 2.7, 540, 820) }] },
+        actors: [A("jGuard", 470, 1760, 0.95, [{ t: 0, mode: "tapRack", eyes: "worry", mouth: "o" }, { t: CT(6, "B1"), mode: "idle", eyes: "worry", mouth: "o" }], { talk: [TALK("B1", 0, "o")] }),
+          A("jTon", 230, 1790, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }])],
+        captions: caps("B1", undefined, { quote: true }),
+        fx(tl, id, t0, L) { put(L.set, `<g id="b1-board">${BOARD(1000, 1560, 0.9)}</g>`); } });
+      // 7–8 · the photo on the board (push-in) → ต้น CU: "พ่อผม"
+      add("B2", { set: "jellyBeach", setOpts: BEACHB("jbB2", { post: [560, 1500, 0.95, 0] }), dark: 0, light: SUN,
+        cam: { keys: [{ t: 0, ...fr(991, 1269, 3.2, 540, 900) }, { t: CT(8, "B2") - 0.01, glide: CT(8, "B2") - 0.01, ...fr(991, 1269, 3.7, 540, 900) },
+          { t: CT(8, "B2"), ...fr(300, 1180, 3.0, 540, 900) }, { t: D("B2"), glide: D("B2") - CT(8, "B2"), ...fr(300, 1180, 3.3, 540, 900) }] },
+        actors: [A("jTon", 300, 1790, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true, talk: [TALK("B2", 0, "o")] })],
+        captions: caps("B2", undefined, { quote: true }),
+        fx(tl, id, t0, L) { put(L.set, `<g id="b2-board">${BOARD(1000, 1560, 0.9)}</g>`); } });
