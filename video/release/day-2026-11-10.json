@@ -9,7 +9,7 @@
  "missing": [
   "Shorts เรื่องใหม่ 09:00/09:15 (ถ้ามีเรื่องผ่านด่านฮุกทัน)"
  ],
- "status": "คลิปยาวมือพราย ฉบับเต็ม ผ่านโต๊ะตรวจรอบ 2 (723b05b · พร้อมลง ไม่มี BLOCKER) · กำลังแก้ข้อเล็กที่เหลือ (เสียงฉากเปิด · ตัวนับ CPR · ช็อต then · ขอบ 3 ช็อต) แล้วจะเปลี่ยน video_long.status เป็น final · Shorts 09:00/09:15 ว่างไว้สำหรับเรื่องใหม่",
+ "status": "คลิปยาวมือพราย ฉบับเต็ม final (bec1410 · sha c0066719…) ลง 09:30 ได้ · Shorts 09:00/09:15 ว่างไว้สำหรับเรื่องใหม่ (หนวดใส ถ้าผ่านตรวจทัน)",
  "upload_sheet": "video/release/sheets/phrai-upload.md",
  "rules": [
   "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
@@ -28,12 +28,12 @@
   "platforms": [
    "youtube"
   ],
-  "status": "in_production",
+  "status": "final",
   "branch": "ccr-fb88c4b3-kcqyid",
-  "commit": "723b05b",
+  "commit": "bec1410",
   "video": "video/phrai-long/LONG-phrai-16x9-share.mp4",
-  "video_sha256": "005198abef3a26a4b3015d61c29983d8f42696623797881d7ce9bd6117e2c314",
-  "video_bytes": 92524664,
+  "video_sha256": "c006671991cbf28977a2b90083f604736dcee7670c89a63d0c8e483d78b9a82e",
+  "video_bytes": 92518593,
   "thumb": "video/phrai-long/thumb.jpg",
   "made_by": "ผู้ประสานงาน",
   "due": "2026-11-09T22:00+07:00",
@@ -62,11 +62,11 @@
    "5:59 ปีหน้า… เขาจะมาอีก"
   ],
   "upload_sheet": "video/release/sheets/phrai-upload.md",
-  "review": "รอบ 1 (6 พ.ย.): ยังไม่พร้อม (B1 ฮุก · B2 shadow · B3 การ์ดบังหน้า) · รอบ 2 (6 พ.ย. 12:00, 723b05b): **พร้อมลง** ไม่มี BLOCKER · รายงาน video/release/reviews/2026-11-06-phrai-long-r2.md · ด่านคู่ แย่กว่า (เล็กน้อย) / แย่กว่า (เล็กน้อย) / แย่กว่า (เรื่องเก่า รอเจ้าของตัดสินเกณฑ์) · กำลังแก้ MINOR N1–N3 + M5 ในส่วนที่ 2–3 แล้วจะตั้ง final",
+  "review": "รอบ 1 (6 พ.ย.): ยังไม่พร้อม (B1 ฮุก · B2 shadow · B3 การ์ดบังหน้า) · รอบ 2 (6 พ.ย. 12:00, 723b05b): พร้อมลง ไม่มี BLOCKER (video/release/reviews/2026-11-06-phrai-long-r2.md) · แก้ MINOR ของรอบ 2 ใน bec1410 (เสียงฉากเปิด · ตัวนับ CPR · ช็อต then · lure/out/grab) ผู้ประสานงานตรวจจุดที่แก้บนไฟล์ลงจริงแล้ว · ด่านคู่ แย่กว่า (เล็กน้อย) / แย่กว่า (เล็กน้อย) / แย่กว่า: เรื่องเก่า ใช้เกณฑ์ที่เสนอเจ้าของ 6 พ.ย. (ผ่านเทคนิค กรอบภาพ และฮุก 3 วิ · พีค/หักมุมไม่บล็อก) ถ้าเจ้าของสั่งเข้มกว่านี้ให้เปลี่ยนกลับเป็น in_production",
   "hq_by_chat": {
    "file": "LONG-phrai-16x9-HQ.mp4",
-   "bytes": 269718668,
-   "sha256": "6f2e1121cd69ad0dfed4afb33d5c5ad2fef59636753f5293018b63d7823e74f9"
+   "bytes": 270035696,
+   "sha256": "d8a6876158d0ab700896f02e3a6efaac1223ee0c792169f0a796b0328066a986"
   }
  },
  "team_charter": "video/release/TEAM-CHARTER.md"
