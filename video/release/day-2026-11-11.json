@@ -1,47 +1,47 @@
 {
- "date": "2026-11-11",
- "tz": "Asia/Bangkok",
- "made_by": "Claude (แชทประสานงาน) · 5 พ.ย. 2569",
- "format": "รูปแบบส่งมอบใหม่ (เจ้าของ 5 พ.ย. 2569): วันละ 1 เรื่อง · 09:00 Shorts EP.1 และ 09:15 Shorts EP.2 → YouTube Shorts + Facebook Reel + IG Reel · 09:30 คลิปยาว 16:9 ทั้งเรื่อง → YouTube เท่านั้น",
- "posted_by": "เจ้าของ/Moji ผ่าน Buffer",
- "story": "นาทีก่อนจม ฉบับเต็ม 16:9 (เรื่องเก่า ตามกฎ \"ห้ามมีวันว่าง\" ของ Autopilot 6 พ.ย.) · Shorts เรื่องใหม่ 09:00/09:15 ถ้าผ่านด่านทัน",
- "complete": false,
- "missing": [
-  "คลิปยาว 16:9 นาทีก่อนจม (กำลังทำ · เลน D · เสร็จ 2026-11-10 22:00)",
-  "Shorts เรื่องใหม่ 09:00/09:15 (ถ้ามีเรื่องผ่านด่านทัน)"
- ],
- "status": "คลิปยาว: นาทีก่อนจม ฉบับเต็ม (เลน D) · Shorts: เรื่องใหม่จากด่านฮุกถ้าทัน ไม่ทันให้ลงเฉพาะคลิปยาว",
- "upload_sheet": null,
- "rules": [
-  "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
-  "ดึงไฟล์ตาม branch + commit + path แล้วตรวจ sha256 ก่อนอัปโหลดทุกไฟล์ ถ้าไม่ตรงห้ามลง ให้แจ้งเจ้าของ",
-  "ลงได้เฉพาะ item ที่ status = final · item ที่ status เป็น in_production หรือ missing ห้ามลง",
-  "ชื่อ ข้อความ แฮชแท็ก และคอมเมนต์ปักหมุด อยู่ใน upload_sheet ของวัน",
-  "Shorts ลงก่อนคลิปยาว: ปักหมุดคอมเมนต์ของ Shorts หลัง 09:30 เมื่อได้ลิงก์คลิปยาวแล้ว",
-  "EP.3 ไม่ลงเป็น Shorts แยก (อยู่ในคลิปยาว) ยกเว้นวาล์วโมเมนตัม: Shorts ตอนไหนวิว 24 ชม. ≥ 22K ให้แจ้งแชทประสานงาน เพื่อตัดช่วงหักมุมจากคลิปยาวเป็น Shorts เพิ่ม ลง 08:45 วันถัดไป",
-  "หลังลงแต่ละไฟล์ เขียนสถานะลง video/release/posted/<วันที่>.json (1 แถวต่อไฟล์ต่อแพลตฟอร์ม) แล้ว push ขึ้น ccr-fb88c4b3-kcqyid"
- ],
- "items": [],
- "video_long": {
-  "slot": "09:30",
-  "id": "sink-long",
-  "kind": "long_16x9",
-  "platforms": [
-   "youtube"
+  "date": "2026-11-11",
+  "tz": "Asia/Bangkok",
+  "made_by": "Claude (แชทประสานงาน) · 5 พ.ย. 2569",
+  "format": "รูปแบบส่งมอบใหม่ (เจ้าของ 5 พ.ย. 2569): วันละ 1 เรื่อง · 09:00 Shorts EP.1 และ 09:15 Shorts EP.2 → YouTube Shorts + Facebook Reel + IG Reel · 09:30 คลิปยาว 16:9 ทั้งเรื่อง → YouTube เท่านั้น",
+  "posted_by": "เจ้าของ/Moji ผ่าน Buffer",
+  "story": "นาทีก่อนจม ฉบับเต็ม 16:9 (เรื่องเก่า ตามกฎ \"ห้ามมีวันว่าง\" ของ Autopilot 6 พ.ย.) · Shorts เรื่องใหม่ 09:00/09:15 ถ้าผ่านด่านทัน",
+  "complete": false,
+  "missing": [
+    "คลิปยาว 16:9 นาทีก่อนจม (กำลังทำ · เลน D · เสร็จ 2026-11-10 22:00)",
+    "Shorts เรื่องใหม่ 09:00/09:15 (ถ้ามีเรื่องผ่านด่านทัน)"
   ],
-  "status": "in_production",
-  "branch": "prod/lane-d",
-  "commit": "f0006d3",
-  "video": "video/sink-long/LONG-sink-16x9-share.mp4",
-  "video_sha256": "ced9d9cea2176c8ca13d8ce763c20a1ee72ffc4e9cb23f32131efc8af0a9d3ae",
-  "video_bytes": 93545171,
-  "cover": "video/sink-long/thumb.jpg",
-  "made_by": "เลน D (โต๊ะภาพ 2)",
-  "due": "2026-11-10T22:00+07:00",
-  "note": "ฉบับเต็มจาก EP.1–3 (video/sink-ep1..3 · บทและความรู้ video/sink) + บทเชื่อมจริง · ทำหลังแก้รูพญานาคตามผลตรวจ (ถ้ามี) · EP.3 \"คนที่คุณรักยังอยู่ใต้น้ำ อย่ากระโดดลงไปช่วย\" 64K",
-  "duration_s": 192.75,
-  "upload_sheet": "video/sink-long/UPLOAD.md (branch prod/lane-d)",
-  "review": "โต๊ะตรวจรอบ 1 (6 พ.ย. 12:30, f0006d3): ยังไม่พร้อม · BLOCKER 4 ข้อ (บทเชื่อม A ไม่มีซับ/ภาพไม่ตรง · ซับทับหน้าขิม 4 ช็อต · บทเชื่อม A เฉลยหักมุมก่อน · สเกลรถพยาบาล/มอเตอร์ไซค์ฉากจบ) · ด่านคู่ แย่กว่า (เล็กน้อย) / แย่กว่า / แย่กว่า · รายงาน video/release/reviews/2026-11-06-sink-long.md · ส่งเลน D แก้หลังรูพญานาค · HQ อยู่ที่เลน D 160,667,377 B sha256 39ca1207… · ดึงเข้า branch หลักเฉพาะ video/sink-long/ (video/sink และ sink-ep1..3 บน prod/lane-d เป็นรุ่นเก่า)"
- },
- "team_charter": "video/release/TEAM-CHARTER.md"
+  "status": "คลิปยาว: นาทีก่อนจม ฉบับเต็ม (เลน D) · Shorts: เรื่องใหม่จากด่านฮุกถ้าทัน ไม่ทันให้ลงเฉพาะคลิปยาว",
+  "upload_sheet": null,
+  "rules": [
+    "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
+    "ดึงไฟล์ตาม branch + commit + path แล้วตรวจ sha256 ก่อนอัปโหลดทุกไฟล์ ถ้าไม่ตรงห้ามลง ให้แจ้งเจ้าของ",
+    "ลงได้เฉพาะ item ที่ status = final · item ที่ status เป็น in_production หรือ missing ห้ามลง",
+    "ชื่อ ข้อความ แฮชแท็ก และคอมเมนต์ปักหมุด อยู่ใน upload_sheet ของวัน",
+    "Shorts ลงก่อนคลิปยาว: ปักหมุดคอมเมนต์ของ Shorts หลัง 09:30 เมื่อได้ลิงก์คลิปยาวแล้ว",
+    "EP.3 ไม่ลงเป็น Shorts แยก (อยู่ในคลิปยาว) ยกเว้นวาล์วโมเมนตัม: Shorts ตอนไหนวิว 24 ชม. ≥ 22K ให้แจ้งแชทประสานงาน เพื่อตัดช่วงหักมุมจากคลิปยาวเป็น Shorts เพิ่ม ลง 08:45 วันถัดไป",
+    "หลังลงแต่ละไฟล์ เขียนสถานะลง video/release/posted/<วันที่>.json (1 แถวต่อไฟล์ต่อแพลตฟอร์ม) แล้ว push ขึ้น ccr-fb88c4b3-kcqyid"
+  ],
+  "items": [],
+  "video_long": {
+    "slot": "09:30",
+    "id": "sink-long",
+    "kind": "long_16x9",
+    "platforms": [
+      "youtube"
+    ],
+    "status": "in_production",
+    "branch": "prod/lane-d",
+    "commit": "944e7b0",
+    "video": "video/sink-long/LONG-sink-16x9-share.mp4",
+    "video_sha256": "229eebd712c390461edf0f9cde8d6d024970d7492faa44068e5aadd5941449d4",
+    "video_bytes": 93566098,
+    "cover": "video/sink-long/thumb.jpg",
+    "made_by": "เลน D (โต๊ะภาพ 2)",
+    "due": "2026-11-10T22:00+07:00",
+    "note": "ฉบับเต็มจาก EP.1–3 (video/sink-ep1..3 · บทและความรู้ video/sink) + บทเชื่อมจริง · ทำหลังแก้รูพญานาคตามผลตรวจ (ถ้ามี) · EP.3 \"คนที่คุณรักยังอยู่ใต้น้ำ อย่ากระโดดลงไปช่วย\" 64K",
+    "duration_s": 193.367,
+    "upload_sheet": "video/sink-long/UPLOAD.md (branch prod/lane-d)",
+    "review": "โต๊ะตรวจรอบ 1 (6 พ.ย. 12:30, f0006d3): ยังไม่พร้อม · BLOCKER 4 ข้อ (บทเชื่อม A ไม่มีซับ/ภาพไม่ตรง · ซับทับหน้าขิม 4 ช็อต · บทเชื่อม A เฉลยหักมุมก่อน · สเกลรถพยาบาล/มอเตอร์ไซค์ฉากจบ) · ด่านคู่ แย่กว่า (เล็กน้อย) / แย่กว่า / แย่กว่า · รายงาน video/release/reviews/2026-11-06-sink-long.md · ส่งเลน D แก้หลังรูพญานาค · HQ อยู่ที่เลน D 160,667,377 B sha256 39ca1207… · ดึงเข้า branch หลักเฉพาะ video/sink-long/ (video/sink และ sink-ep1..3 บน prod/lane-d เป็นรุ่นเก่า) · เลน D ส่งไฟล์ใหม่ 6 พ.ย. 15:13 (944e7b0 · sha 229eebd7… · 93,566,098 B · 3:13.4 · share AAC 192k −14.6 LUFS / tp −1.4 · แก้ B1–B4 M1–M11 · บรรทัด a2 n08–n10 ตามที่ผู้ประสานงานอนุมัติ อ้าง กรมควบคุมโรค 2566 น.33, 51) · HQ อยู่ที่เลน D 164,995,468 B sha256 7399c358… · เลน D ยังไม่ได้รัน edgecheck (ขอแล้ว) · โต๊ะตรวจรอบ 2 กำลังตรวจ · ห้ามใช้ f0006d3 (sha ced9d9ce…)"
+  },
+  "team_charter": "video/release/TEAM-CHARTER.md"
 }
