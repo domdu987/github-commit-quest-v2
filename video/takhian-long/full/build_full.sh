@@ -16,10 +16,10 @@ e1 = open(T + "/ep1/body.part").read(); e2 = open(T + "/ep2/body.part").read(); 
 for k in col:
     n = e2.count(f'"{k}"'); assert n > 0, k; e2 = e2.replace(f'"{k}"', f'"e2_{k}"')
 # long-only staging (full/long.part): these calls go through the LADD/LSPLITN handlers; and two in-place fixes
-for a, b in [('ADD("cmd", ', 'LADD("cmd", '), ('ADD("strike", ', 'LADD("strike", '), ('ADD("taken", ', 'LADD("taken", '), ('ADD("leg1", ', 'LADD("leg1", '), ('ADD("leg2", ', 'LADD("leg2", '),
+for a, b in [('ADD("cmd", ', 'LADD("cmd", '), ('ADD("strike", ', 'LADD("strike", '), ('ADD("taken", ', 'LADD("taken", '), ('ADD("leg1", ', 'LADD("leg1", '), ('ADD("leg2", ', 'LADD("leg2", '), ('"EP.1 อย่าวิ่งไปหลบใต้ต้นตะเคียน"', '"ฉบับเต็ม อย่าวิ่งไปหลบใต้ต้นตะเคียน"'),
              ('put(L.light, `<g id="noo-g">', 'put(L.light, `<g id="noo-all"><g id="noo-g">'), ('</g></g>`); Tk.slideDrops(tl, "#noo-g"', '</g></g></g>`); Tk.slideDrops(tl, "#noo-g"')]:
     assert e1.count(a) == 1, a; e1 = e1.replace(a, b)
-for a, b in [('ADD("photo", ', 'LADD("photo", '), ('ADD("again", ', 'LADD("again", '), ('ADD("truth", ', 'LADD("truth", '), ('SPLITN("grand", ', 'LSPLITN("grand", '), ('SPLITN("end", ', 'LSPLITN("end", '), ('ADD("fear", ', 'LADD("fear", '), ('ADD("e2_buff", ', 'LADD("e2_buff", '),
+for a, b in [('ADD("photo", ', 'LADD("photo", '), ('ADD("again", ', 'LADD("again", '), ('ADD("truth", ', 'LADD("truth", '), ('SPLITN("grand", ', 'LSPLITN("grand", '), ('SPLITN("end", ', 'LSPLITN("end", '), ('ADD("fear", ', 'LADD("fear", '), ('ADD("e2_buff", ', 'LADD("e2_buff", '), ('SPLITN("still", ', 'LSPLITN("still", '), ('ADD("tired", ', 'LADD("tired", '),
              ('Tk.watch(0, 60, 0.32, { mm: "12", ss: "40" })', 'Tk.watch(0, 60, 0.32, { mm: "12", ss: "10" })')]:   # the cab timer follows the watch insert 3 s before it (12:04–12:07)
     assert e2.count(a) == 1, a; e2 = e2.replace(a, b)
 for a, b in [('CLR("cr"', 'CLR("qcr"'), ('"cr-amb"', '"qcr-amb"'), ('"#cr-amb"', '"#qcr-amb"'), ('BUND("no"', 'BUND("qno"'), ('BUND("rp"', 'BUND("qrp"'), ('id: "sp"', 'id: "qsp"'), ('CLR("tr"', 'CLR("qtr"')]:

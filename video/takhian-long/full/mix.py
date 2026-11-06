@@ -31,12 +31,13 @@ F("up", 0.0, "splash", 0.4*0.6)
 F("truck", 0.1, "doorslam", 0.8); F("truck", 0.6, "bark", 0.5); F("truck", 2.2, "rumble", 0.5); F("truck", 3.25, "rumble", 0.45)
 F("rope", 0.1, "splash", 0.4*0.6); F("rope", 0.6, "rumble", 0.45); F("rope", 0.9, "buffalo", 0.6)
 F("strike", 0.15, "zap", 0.3)                       # long cut: the build (hair lifting) before the bolt
-F("strike", 0.97, "crack", 1.1); F("strike", 1.5, "fall", 0.9); F("strike", 1.75, "buffalo", 0.5)   # the bolt moved 0.75 s later (long cut)
+F("strike", 0.97, "crack", 1.1); F("strike", 1.29, "crack2", 0.45); F("strike", 1.5, "fall", 0.9); F("strike", 1.75, "buffalo", 0.5)   # + the re-stroke
+F("strike", 1.8, "zap", 0.3); F("strike", 2.8, "splash", 0.4*0.4)   # the crown sizzling (close) · ลุง in the mud (close)   # the bolt moved 0.75 s later (long cut)
 F("taken", 0.3, "rumble", 0.5)
 # ================= the bridge =================
 F("xwait", 0.3, "splash", 0.4*0.5); F("xwait", 1.6, "rumble", 0.45)
 F("xnow", 0.2, "rumble", 0.55)                      # the soft far flicker at 0.2 s
-F("xchap", 0.3, "plankdrop", 0.8)                   # the title sign staked in the paddy
+F("xchap", 0.3, "plankdrop", 0.62)                   # the title sign staked in the paddy
 # ================= EP.2 (fear → end) =================
 F("rap", 0.3, "splash", 0.4*0.6); F("rap", 0.6, "plankdrop", 0.8)
 F("phone", 0.3, "phonedial", 0.8)

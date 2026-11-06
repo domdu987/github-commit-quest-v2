@@ -36,7 +36,10 @@
       x += `<path d="M${X(-460)},300Q${X(-380)},250 ${X(-300)},280" stroke="#0e1216" stroke-width="18" fill="none" stroke-linecap="round"/>`; });
     // the side glass: tinted (so the eye stays on the windshield), its own rivulets and drops
     const glassS = (hole, box) => `<path d="${hole}" fill="#0a1622" opacity=".32"/>` + Tk.wetGlass(r, hole, box);
-    return { ...c, frame: frame + x, glass: c.glass + glassS(sideL, [-600, 0, 460, 1160]) + glassS(sideR, [1080, 1680, 460, 1160]) };
+    // N4 · the lightning light: a soft glow from the windshield that fades out before any edge (no hard panel through the dashboard)
+    const id = o.id || "ci";
+    const lit = `<g id="${id}-lit" opacity="0" style="mix-blend-mode:screen"><defs><radialGradient id="${id}-lg" cx=".5" cy=".18" r=".62"><stop offset="0" stop-color="#c8d8ff" stop-opacity=".75"/><stop offset=".45" stop-color="#9ab8ff" stop-opacity=".3"/><stop offset="1" stop-color="#9ab8ff" stop-opacity="0"/></radialGradient></defs><path d="M90,330Q540,270 990,330L1080,1920H0Z" fill="url(#${id}-lg)"/></g>`;
+    return { ...c, lit, frame: frame + x, glass: c.glass + glassS(sideL, [-600, 0, 460, 1160]) + glassS(sideR, [1080, 1680, 460, 1160]) };
   };
 
   // B1 · the side window (ต้น watches ลุง run to the tree): the window wall runs the full width — front-door window on the left,
