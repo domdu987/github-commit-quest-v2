@@ -22,7 +22,7 @@ AMB = [('put(L.act, `<g transform="translate(${x},${RY + 26})"><g id="${id}">',
 for a, b in AMB:
     assert shared.count(a) == 1, a[:60]; shared = shared.replace(a, b)
 shared += rd(os.path.join(HERE, "pry.part"))   # M6: the headrest pry card and the float-and-shoe beat (long only)
-shared = "      const AMB_S = 2.6, AMB_DX = 420;\n" + shared
+shared = "      const AMB_S = 2.6, AMB_DX = 270;\n" + shared
 foot = rd(f"{P3}/foot.part").replace("นาทีก่อนจม · EP.3", "นาทีก่อนจม")
 assert "นาทีก่อนจม</div>" in foot
 CAPS = re.search(r"      function caps\(k, lines, o = \{\}\) \{.*?\n      \}\n", head, re.S).group(0).replace("function caps(k, lines, o = {}) {", "const caps = function (k, lines, o = {}) {", 1).rstrip() + ";\n"
@@ -61,7 +61,13 @@ hl = helpers.replace("const split = (k, at, A, B) => {", "const split = (k, at, 
 assert hl != helpers
 blocks = ["      const _SH = SH, _add = add, LAND = " + json.dumps(LAND, ensure_ascii=False) + ";\n"]
 # the road signs in the hook shots: the cold open (EP.3 hook) names the full story, EP.1's names its chapter, the bridge copy has none
-SIGN = {("e", 3): ('sub: "EP.3 ช่วยจากบนฝั่ง · ตอนจบ"', 'sub: "ฉบับเต็ม"'), ("e", 1): ('sub: "EP.1 อย่าเพิ่งโทรหาใคร"', 'sub: "บทที่ 1 · อย่าเพิ่งโทรหาใคร"'),
+SIGN = {("e", 3): [('sub: "EP.3 ช่วยจากบนฝั่ง · ตอนจบ"', 'sub: "ฉบับเต็ม"'),
+                   # r2 B5: the cold open pushes in on ขิม (head ~1/4 of the frame), a warm street-lamp pool lifts it, and under the water the
+                   # sunken car's cabin glows with a column of bubbles where ต้น still is; the bike still rolls in on the road behind her
+                   ('cam: { keys: [{ t: 0, ...fr(460, 1060, 1.25, 540, 960) }, { t: D("hook"), glide: D("hook"), ...fr(480, 1075, 1.32, 540, 960) }] },',
+                    'cam: { keys: [{ t: 0, ...fr(316, 1270, 3.9, 290, 1100) }, { t: D("hook"), glide: D("hook"), ...fr(316, 1268, 4.25, 290, 1100) }] },'),
+                   ('inWater(L, tl, t0, D("hook"), "h0");',
+                    'inWater(L, tl, t0, D("hook"), "h0"); put(L.set, `<radialGradient id="coWarm"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".9"/><stop offset=".6" stop-color="#ffc070" stop-opacity=".35"/><stop offset="1" stop-color="#ffc070" stop-opacity="0"/></radialGradient><ellipse cx="380" cy="1240" rx="230" ry="120" fill="url(#coWarm)" opacity=".45"/>`); put(L.act, `<radialGradient id="coCabG"><stop offset="0" stop-color="#bff4ff" stop-opacity=".95"/><stop offset="1" stop-color="#9fe8ff" stop-opacity="0"/></radialGradient><ellipse id="coCab" cx="470" cy="${WY + 46}" rx="120" ry="44" fill="url(#coCabG)" style="mix-blend-mode:screen"/><ellipse cx="316" cy="${WY + 4}" rx="300" ry="46" fill="url(#coWarm)" opacity=".55" style="mix-blend-mode:screen"/>`); tl.fromTo("#coCab", { opacity: 1 }, { opacity: 0.75, duration: 0.2, yoyo: true, repeat: Math.ceil(D("hook") / 0.2), ease: "steps(1)", immediateRender: false }, t0 + 0.6); bubbles(L, tl, "h0cb", t0, D("hook"), 480, WY + 10, 22, 50); { const ck = L.set.closest(".clip"); if (ck) ck.style.filter = "brightness(1.5) saturate(1.08)"; }')], ("e", 1): ('sub: "EP.1 อย่าเพิ่งโทรหาใคร"', 'sub: "บทที่ 1 · อย่าเพิ่งโทรหาใคร"'),
         ("x", 3): [('title: { x: 300, sub: "EP.3 ช่วยจากบนฝั่ง · ตอนจบ" }', "title: false"),
                    ('captions: caps("kim", undefined, QUO),', 'captions: [...caps("kim", [0], QUO), ...caps("kim", [1])],')],   # M4: the narrator's x02 line without quote marks
         ("x", 2): [('captions: caps("surface", undefined, QUO),', 'captions: caps("surface"),'),
@@ -101,7 +107,7 @@ for pre, label in (("e", "EP"), ("x", "bridge copy of EP")):
       }, {
         ...BANK("cnf"),
         cam: { keys: [{ t: 0, ...fr(KW.x + 80, 1180, 1.9, 540, 900) }, { t: D("shoe") - SS, glide: D("shoe") - SS, ...fr(KW.x + 120, 1170, 2.05, 540, 900) }] },
-        actors: [A("tonJ", KW.x, KW.y - 70, KW.s, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }])],
+        actors: [A("tonJ", KW.x, KW.y - 10, KW.s, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }])],
         captions: capsFrom("shoe", SS),
         fx(tl, id, t0, L) { noShadows(tl, id, 1); Klong.life(tl, "cnf", t0, D("shoe") - SS); inWater(L, tl, t0, D("shoe") - SS, "fl0"); floatShoe(L, tl, "fs0", t0, D("shoe") - SS, KW.x + 60, WY - 10); },
       });""" + body[body.index(a0) + len(a0):]
@@ -111,8 +117,14 @@ for pre, label in (("e", "EP"), ("x", "bridge copy of EP")):
         if n == 3:   # B4: the twist push-in was framed for the old bike size: keep the same framing on the dark headlight
             a0 = "fr(BIKE.x - 0.3 * 283, BIKE.y - 0.3 * 430, 3.4, 540, 900)"; assert body.count(a0) == 1
             body = body.replace(a0, "fr(BIKE.x - BIKE.s * 283, BIKE.y - BIKE.s * 430, 3.4 * 0.3 / BIKE.s, 540, 900)")
-        if n == 3:   # B4: the parked motorbike ~1.1 m (it read ~0.56 m beside the 1.65 m rider)
-            a0 = "BIKE = { x: 860, y: RY + 26, s: 0.3 }"; assert body.count(a0) == 1; body = body.replace(a0, "BIKE = { x: 860, y: RY + 26, s: 0.58 }")
+        if n == 3:   # B4 (r2): the bike's scale per shot: ~1.1 m beside the rider in the close bank shots (and moved clear of him), the wide
+            # shots keep the old 0.3 (there the rider rides far up the road)
+            for a0, b0 in (('parkedBike(L, "bk2", BIKE.x, BIKE.y, BIKE.s)', 'parkedBike(L, "bk2", BIKE.x, BIKE.y, 0.58)'),
+                           ('parkedBike(L, "bk4", BIKE.x, BIKE.y, BIKE.s)', 'parkedBike(L, "bk4", BIKE.x + 280, BIKE.y, 0.58)'),
+                           ('parkedBike(L, "bk5", BIKE.x, BIKE.y, BIKE.s)', 'parkedBike(L, "bk5", BIKE.x + 280, BIKE.y, 0.58)'),
+                           ('parkedBike(L, "bk6", BIKE.x, BIKE.y, BIKE.s)', 'parkedBike(L, "bk6", BIKE.x + 280, BIKE.y, 0.58)'),
+                           ('parkedBike(L, "bk8", BIKE.x + 120, BIKE.y, BIKE.s)', 'parkedBike(L, "bk8", BIKE.x + 120, BIKE.y, 0.58)')):
+                assert body.count(a0) == 1, a0; body = body.replace(a0, b0)
         body = prefix_ids(body, f"{pre}{n}")
         blocks.append(f"      {{ // ======== {label}.{n} ========\n        const P = \"{pre}{n}_\";\n{SHIM}{hl}{body}\n      }}\n")
 blocks.append("      { // ======== cold-open gap ========\n        const P = \"\";\n" + SHIM + hl + rd(os.path.join(HERE, "bridge.part")) + "\n      }\n")

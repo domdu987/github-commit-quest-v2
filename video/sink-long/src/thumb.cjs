@@ -12,7 +12,7 @@ const { chromium } = require('playwright');
     const st = document.createElement('style'); st.textContent = `
       @font-face { font-family: TK; font-weight: 900; src: url(assets/fonts/f3.ttf); }
       .capwrap, .bubble, .sfxw, .badge, #grain { display: none !important; }
-      .clip { transform-origin: 960px 540px; transform: translate(440px, 60px) scale(1.5); filter: brightness(1.12) saturate(1.1); }
+      .clip { transform-origin: 960px 540px; transform: translate(640px, -150px) scale(1.35); filter: brightness(1.12) saturate(1.1); }
       #th { position: absolute; inset: 0; z-index: 9999; font-family: TK; pointer-events: none; }
       #th .sh { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(4,5,7,.92) 0%, rgba(4,5,7,.7) 34%, rgba(4,5,7,0) 58%); }
       #th .sb { position: absolute; left: 0; right: 0; bottom: 0; height: 330px; background: linear-gradient(0deg, rgba(4,5,7,.85), rgba(4,5,7,0)); }
@@ -26,7 +26,7 @@ const { chromium } = require('playwright');
     document.head.appendChild(st);
     document.getElementById('root').insertAdjacentHTML('beforeend', `<div id="th"><div class="sh"></div><div class="sb"></div>
       <div class="logo">นาทีก่อนจม</div><div class="full">ฉบับเต็ม · ครบ 3 ตอน</div>
-      <div class="setup">คนที่คุณรักยังอยู่ใต้น้ำ…</div><div class="cmd">อย่ากระโดดลงไปช่วย!</div></div>`);
+      <div class="setup">คนที่คุณรักจมน้ำ…</div><div class="cmd">อย่ากระโดดลงไปช่วย</div></div>`);
   });
   await p.evaluate(() => document.fonts.ready);
   let prev = null;
