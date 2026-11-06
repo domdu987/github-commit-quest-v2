@@ -27,6 +27,8 @@ longplan.json (absolute times in the long, seconds):
   "credits_ambience": 5.0,           # seconds of held ambience over the credits before silence
   "end_card": {"next": "เรื่องต่อไป: <ชื่อ> ทุกวัน 09:30", "subscribe": true, "prev_long_link": true}
 }
+Long-only share counts only kinds cold_open, bridge, secret, epilogue and threat; a long_only flag on a title,
+episode, lesson, end card or credits segment is reported (WARN) and not counted.
 The end card's next-story name may stay a placeholder ("…") while planning (WARN); with --rendered-total
 (the check of the finished file) a placeholder is a FAIL.
 Exit code 1 on any FAIL.
@@ -81,10 +83,18 @@ def main():
         return [s for s in segs if s.get("kind") == k]
 
     # ---- long-only scenes ≥ 25 % ----
-    lo = [s for s in segs if s.get("long_only")]
+    # Only scenes made for the film count: cold open, bridges, the secret, the epilogue and a film-only threat scene.
+    # The title, end card and credits are not scenes, and EP.3 / lesson stay episode material (the momentum valve
+    # may still cut EP.3 into a Short), so they never count even when flagged long_only.
+    counted_kinds = {"cold_open", "bridge", "secret", "epilogue", "threat"}
+    lo = [s for s in segs if s.get("long_only") and s.get("kind") in counted_kinds]
+    skipped = [s for s in segs if s.get("long_only") and s.get("kind") not in counted_kinds]
+    if skipped:
+        R.warn("long_only ที่ไม่นับ (ไตเติล การ์ด เครดิต ตอน บทเรียน ไม่ใช่ฉากที่ทำเพื่อหนัง): "
+               + ", ".join(f"{s['id']} ({s.get('kind')})" for s in skipped) + " · แก้ในแผนให้เป็น false")
     lo_len = sum(s["end"] - s["start"] for s in lo)
     R.check(lo_len >= 0.25 * total - 1e-6,
-            f"ฉากเฉพาะฉบับยาวรวม {lo_len:.1f} วิ = {100 * lo_len / total:.0f}% (ต้อง ≥ 25%) · {', '.join(s['id'] for s in lo) or '-'}")
+            f"ฉากเฉพาะฉบับยาวรวม {lo_len:.1f} วิ = {100 * lo_len / total:.1f}% (ต้อง ≥ 25%) · {', '.join(s['id'] for s in lo) or '-'}")
     R.check(len(lo) >= 3, f"ฉากเฉพาะฉบับยาว {len(lo)} ฉาก (ต้อง ≥ 3)")
 
     cold = kind("cold_open")
