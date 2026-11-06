@@ -88,8 +88,8 @@
         ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd89a", rimOp: 0.9 }, blur: { sky: 4, far: 4, mid: 3 },
         cam: { keys: [{ t: 0, ...fr(560, 1300, 1.0, 540, 960) }, { t: 1.15, ...fr(520, 1560, 1.6, 540, 1100) }, { t: 2.55, ...fr(580, 1350, 1.3, 540, 1000) }] },
         actors: [
-          A("pxB", 760, 1800, 1.0, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 60, dur: 1.4, ease: "power1.in" }, talk: [TK("climb", 0, "scream")] }),
-          A("pxE", 960, 1800, 1.05, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: 120, dur: 1.6, ease: "power1.in" } }),
+          A("pxB", 640, 1800, 1.0, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 420, dur: 1.4, ease: "power1.out" }, talk: [TK("climb", 0, "scream")] }),
+          A("pxE", 840, 1800, 1.05, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: 600, dur: 1.6, ease: "power1.out" } }),
           A("maprang", 440, 1800, 1.1, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 1.2, mode: "fall", eyes: "wide", mouth: "scream" }], { moveTo: { x: 600, dur: 1.8, ease: "power2.in", at: 1.15 } }),
         ],
         captions: capsQ("climb"),
