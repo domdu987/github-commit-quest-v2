@@ -1,116 +1,114 @@
 {
-  "date": "2026-11-07",
-  "tz": "Asia/Bangkok",
-  "made_by": "Claude (แชทประสานงาน) · 5 พ.ย. 2569",
-  "format": "รูปแบบส่งมอบใหม่ (เจ้าของ 5 พ.ย. 2569): วันละ 1 เรื่อง · 09:00 Shorts EP.1 และ 09:15 Shorts EP.2 → YouTube Shorts + Facebook Reel + IG Reel · 09:30 คลิปยาว 16:9 ทั้งเรื่อง → YouTube เท่านั้น",
-  "posted_by": "เจ้าของ/Moji ผ่าน Buffer",
-  "story": "เสียงรถไฟ Shorts EP.1–2 (คลิปยาวลงไปแล้ว 6 พ.ย. 09:30) + ทะเลลด คลิปยาว 16:9 09:30 (ย้ายมาจาก 10 พ.ย.)",
-  "complete": false,
-  "missing": [
-    "คลิปยาวทะเลลด: ไฟล์อยู่ใน repo แล้ว (f22ec60) กำลังให้โต๊ะตรวจตรวจ · ถ้าไม่ผ่านภายใน 6 พ.ย. 22:00 วันนี้ลงเฉพาะ Shorts"
-  ],
-  "status": "Shorts EP.1 + EP.2 ของเสียงรถไฟพร้อม (2004974 · a2613ff) · คลิปยาวเสียงรถไฟลงไปแล้ว 6 พ.ย. 09:30 จึงปักหมุดลิงก์คลิปยาวในคอมเมนต์ของ Shorts ได้ตั้งแต่ลง · 09:30 ลงทะเลลด ฉบับเต็ม 16:9 (เสร็จก่อนกำหนด จึงย้ายมาจาก 10 พ.ย. เพราะคลิปยาวต้องลงทุกวัน) ลงเมื่อ status = final เท่านั้น",
-  "upload_sheet": "video/release/sheets/siang-rotfai-upload.md",
-  "upload_sheet_long": "video/release/sheets/tide-upload.md",
-  "rules": [
-    "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
-    "ดึงไฟล์ตาม branch + commit + path แล้วตรวจ sha256 ก่อนอัปโหลดทุกไฟล์ ถ้าไม่ตรงห้ามลง ให้แจ้งเจ้าของ",
-    "ลงได้เฉพาะ item ที่ status = final · item ที่ status เป็น in_production หรือ missing ห้ามลง",
-    "ชื่อ ข้อความ แฮชแท็ก และคอมเมนต์ปักหมุด อยู่ใน upload_sheet ของวัน",
-    "Shorts ลงก่อนคลิปยาว: ปักหมุดคอมเมนต์ของ Shorts หลัง 09:30 เมื่อได้ลิงก์คลิปยาวแล้ว",
-    "EP.3 ไม่ลงเป็น Shorts แยก (อยู่ในคลิปยาว) ยกเว้นวาล์วโมเมนตัม: Shorts ตอนไหนวิว 24 ชม. ≥ 22K ให้แจ้งแชทประสานงาน เพื่อตัดช่วงหักมุมจากคลิปยาวเป็น Shorts เพิ่ม ลง 08:45 วันถัดไป",
-    "หลังลงแต่ละไฟล์ เขียนสถานะลง video/release/posted/<วันที่>.json (1 แถวต่อไฟล์ต่อแพลตฟอร์ม) แล้ว push ขึ้น ccr-fb88c4b3-kcqyid"
-  ],
-  "items": [
-    {
-      "slot": "09:00",
-      "id": "siang-rotfai-ep1",
-      "kind": "shorts",
-      "platforms": [
-        "youtube_shorts",
-        "facebook_reel",
-        "instagram_reel"
-      ],
-      "status": "final",
-      "branch": "ccr-fb88c4b3-kcqyid",
-      "commit": "2004974",
-      "video": "video/release/hq/siang-rotfai-ep1-HQ.mp4",
-      "video_sha256": "3ef7316ffddd9dd3a3f6ad22b698cd6f9d9f4974df6504f84efd9ea3fec57042",
-      "video_bytes": 91205498,
-      "cover": "video/tornado-ep1/cover.jpg",
-      "title_youtube": "ได้ยินเสียงรถไฟ ทั้งที่แถวนั้นไม่มีราง",
-      "title_chars": 38,
-      "note": "ตัดจากเรื่องเต็มฉบับแก้ (ร้าน ความสูง กระบะใหม่) จบที่ตัวเลือก \"มุดใต้สะพาน หรือหมอบในคูน้ำ?\" แล้วการ์ด \"ปูจะรอดไหม? กดติดตาม\" · ไฟล์ใน repo เข้ารหัส 2 รอบ 5.4 Mbps · ต้นฉบับ HQ 223 MB ส่งทางแชท (ใช้ได้ ถ้า sha ตรง)",
-      "duration_s": 135.573,
-      "hq_by_chat": {
-        "file": "EP1-siang-rotfai-HQ.mp4",
-        "bytes": 222744330,
-        "sha256": "022a0cc775edbc2a173ab250a86051b4b888ddb95bc82a1c298075f2cabf2b1f"
-      }
-    },
-    {
-      "slot": "09:15",
-      "id": "siang-rotfai-ep2",
-      "kind": "shorts",
-      "platforms": [
-        "youtube_shorts",
-        "facebook_reel",
-        "instagram_reel"
-      ],
-      "status": "final",
-      "branch": "ccr-fb88c4b3-kcqyid",
-      "commit": "a2613ff",
-      "video": "video/release/hq/siang-rotfai-ep2-HQ.mp4",
-      "video_sha256": "991b9a6dc4febb5313568068fdd84225c292dec9ec097451bb9cb88558b1d4c7",
-      "video_bytes": 65303307,
-      "cover": "video/tornado-ep2/cover.jpg",
-      "title_youtube": "ใต้สะพาน หรือ หมอบในคูน้ำ? เลือกผิดตาย",
-      "title_chars": 38,
-      "note": "ตัดจากเรื่องเต็มฉบับแก้ (ร้าน ความสูง กระบะ ใต้สะพานแบบใหม่): กระบะ → ใต้สะพาน → ลากลงคู → หมอบ → พายุผ่านหัว ตัดเข้าจอดำ แล้วการ์ด \"ปูจะรอดไหม? ดูเรื่องเต็มได้ที่ช่อง YouTube\"",
-      "duration_s": 49.397,
-      "cover_commit": "3b22d4c"
-    }
-  ],
-  "video_long": {
-    "slot": "09:30",
-    "id": "tide-long",
-    "kind": "long_16x9",
-    "platforms": [
-      "youtube"
-    ],
-    "status": "in_production",
-    "branch": "ccr-fb88c4b3-kcqyid",
-    "commit": "a06f878",
-    "video": "video/tide-long/LONG-tide-16x9-share.mp4",
-    "video_sha256": "1c2d3a07adbdd1bffb1b2c1534f7d6a7c048e1df8f4e936f705efa055914bf6e",
-    "video_bytes": 90529323,
-    "duration_s": 328.75,
-    "thumb": "video/tide-long/thumb.jpg",
-    "title_youtube": "ทะเลลดลงไปไกล ปลาดิ้นเต็มหาด… อย่าลงไปเก็บ | ทะเลลด ฉบับเต็ม",
-    "chapters": [
-      "0:00 ทะเลลดลงไปไกล… อย่าลงไปเก็บ",
-      "0:42 ตำนานละบูน คลื่นยักษ์เจ็ดชั้น",
-      "1:09 ทำไมทะเลถึงลดก่อนคลื่นมา",
-      "1:23 ตาจุ่นเป่าหอยสังข์",
-      "1:34 คลื่นลูกแรก",
-      "1:53 คลื่นแรกไป อย่าไว้ใจ",
-      "2:17 สึนามิไม่ได้มาลูกเดียว",
-      "2:52 คลื่นลูกที่สอง",
-      "3:06 ไลฟ์ของจูน",
-      "3:35 หนีไม่ทัน ขึ้นชั้นสูง",
-      "4:01 ขึ้นที่สูงไม่ทัน ต้องไปที่ไหน",
-      "4:14 หลายชั่วโมงต่อมา",
-      "4:36 ความลับ 22 ปีของตาจุ่น",
-      "5:12 วันพุธถัดมา"
-    ],
-    "upload_sheet": "video/release/sheets/tide-upload.md",
-    "review": "รอบ 1 (5 พ.ย.): B1 สเกลยาย · รอบ 2 (6 พ.ย.): B1′ คนวิ่งเตี้ยกว่ารถ · แก้แล้วทั้งคู่ (a06f878) · รอโต๊ะตรวจรอบ 3 · ผ่านแล้วจะเปลี่ยน status เป็น final",
-    "made_by": "ผู้ประสานงาน",
-    "hq_by_chat": {
-      "file": "LONG-tide-16x9-HQ.mp4",
-      "bytes": 398035268,
-      "sha256": "8b5238be1468d41fa6ced57dbaf459ddb750f75423584fcd49389fd2baeaf154"
-    },
-    "note": "EP.1–3 + บทเชื่อม 2 ช่วง · 5:28 · 1920×1080 60 fps · −14 LUFS · ไฟล์ใน repo เข้ารหัส 2 รอบ 90.5 MB · ต้นฉบับ HQ 398 MB ส่งทางแชท ใช้ลงแทนได้ถ้า sha ตรง (ไฟล์ HQ ฉบับก่อนหน้าทั้งหมดห้ามใช้)"
+ "date": "2026-11-07",
+ "tz": "Asia/Bangkok",
+ "made_by": "Claude (แชทประสานงาน) · 5 พ.ย. 2569",
+ "format": "รูปแบบส่งมอบใหม่ (เจ้าของ 5 พ.ย. 2569): วันละ 1 เรื่อง · 09:00 Shorts EP.1 และ 09:15 Shorts EP.2 → YouTube Shorts + Facebook Reel + IG Reel · 09:30 คลิปยาว 16:9 ทั้งเรื่อง → YouTube เท่านั้น",
+ "posted_by": "เจ้าของ/Moji ผ่าน Buffer",
+ "story": "เสียงรถไฟ Shorts EP.1–2 (คลิปยาวลงไปแล้ว 6 พ.ย. 09:30) + ทะเลลด คลิปยาว 16:9 09:30 (ย้ายมาจาก 10 พ.ย.)",
+ "complete": true,
+ "missing": [],
+ "status": "ครบ final ทั้ง 3 ช่วง: 09:00/09:15 Shorts EP.1–2 เสียงรถไฟ (2004974 · a2613ff) · 09:30 ทะเลลด ฉบับเต็ม 16:9 (a06f878 · ผ่านโต๊ะตรวจรอบ 3) · คลิปยาวเสียงรถไฟลงไปแล้ว 6 พ.ย. 09:30 จึงปักหมุดลิงก์คลิปยาวในคอมเมนต์ของ Shorts ได้ตั้งแต่ลง",
+ "upload_sheet": "video/release/sheets/siang-rotfai-upload.md",
+ "upload_sheet_long": "video/release/sheets/tide-upload.md",
+ "rules": [
+  "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
+  "ดึงไฟล์ตาม branch + commit + path แล้วตรวจ sha256 ก่อนอัปโหลดทุกไฟล์ ถ้าไม่ตรงห้ามลง ให้แจ้งเจ้าของ",
+  "ลงได้เฉพาะ item ที่ status = final · item ที่ status เป็น in_production หรือ missing ห้ามลง",
+  "ชื่อ ข้อความ แฮชแท็ก และคอมเมนต์ปักหมุด อยู่ใน upload_sheet ของวัน",
+  "Shorts ลงก่อนคลิปยาว: ปักหมุดคอมเมนต์ของ Shorts หลัง 09:30 เมื่อได้ลิงก์คลิปยาวแล้ว",
+  "EP.3 ไม่ลงเป็น Shorts แยก (อยู่ในคลิปยาว) ยกเว้นวาล์วโมเมนตัม: Shorts ตอนไหนวิว 24 ชม. ≥ 22K ให้แจ้งแชทประสานงาน เพื่อตัดช่วงหักมุมจากคลิปยาวเป็น Shorts เพิ่ม ลง 08:45 วันถัดไป",
+  "หลังลงแต่ละไฟล์ เขียนสถานะลง video/release/posted/<วันที่>.json (1 แถวต่อไฟล์ต่อแพลตฟอร์ม) แล้ว push ขึ้น ccr-fb88c4b3-kcqyid"
+ ],
+ "items": [
+  {
+   "slot": "09:00",
+   "id": "siang-rotfai-ep1",
+   "kind": "shorts",
+   "platforms": [
+    "youtube_shorts",
+    "facebook_reel",
+    "instagram_reel"
+   ],
+   "status": "final",
+   "branch": "ccr-fb88c4b3-kcqyid",
+   "commit": "2004974",
+   "video": "video/release/hq/siang-rotfai-ep1-HQ.mp4",
+   "video_sha256": "3ef7316ffddd9dd3a3f6ad22b698cd6f9d9f4974df6504f84efd9ea3fec57042",
+   "video_bytes": 91205498,
+   "cover": "video/tornado-ep1/cover.jpg",
+   "title_youtube": "ได้ยินเสียงรถไฟ ทั้งที่แถวนั้นไม่มีราง",
+   "title_chars": 38,
+   "note": "ตัดจากเรื่องเต็มฉบับแก้ (ร้าน ความสูง กระบะใหม่) จบที่ตัวเลือก \"มุดใต้สะพาน หรือหมอบในคูน้ำ?\" แล้วการ์ด \"ปูจะรอดไหม? กดติดตาม\" · ไฟล์ใน repo เข้ารหัส 2 รอบ 5.4 Mbps · ต้นฉบับ HQ 223 MB ส่งทางแชท (ใช้ได้ ถ้า sha ตรง)",
+   "duration_s": 135.573,
+   "hq_by_chat": {
+    "file": "EP1-siang-rotfai-HQ.mp4",
+    "bytes": 222744330,
+    "sha256": "022a0cc775edbc2a173ab250a86051b4b888ddb95bc82a1c298075f2cabf2b1f"
+   }
+  },
+  {
+   "slot": "09:15",
+   "id": "siang-rotfai-ep2",
+   "kind": "shorts",
+   "platforms": [
+    "youtube_shorts",
+    "facebook_reel",
+    "instagram_reel"
+   ],
+   "status": "final",
+   "branch": "ccr-fb88c4b3-kcqyid",
+   "commit": "a2613ff",
+   "video": "video/release/hq/siang-rotfai-ep2-HQ.mp4",
+   "video_sha256": "991b9a6dc4febb5313568068fdd84225c292dec9ec097451bb9cb88558b1d4c7",
+   "video_bytes": 65303307,
+   "cover": "video/tornado-ep2/cover.jpg",
+   "title_youtube": "ใต้สะพาน หรือ หมอบในคูน้ำ? เลือกผิดตาย",
+   "title_chars": 38,
+   "note": "ตัดจากเรื่องเต็มฉบับแก้ (ร้าน ความสูง กระบะ ใต้สะพานแบบใหม่): กระบะ → ใต้สะพาน → ลากลงคู → หมอบ → พายุผ่านหัว ตัดเข้าจอดำ แล้วการ์ด \"ปูจะรอดไหม? ดูเรื่องเต็มได้ที่ช่อง YouTube\"",
+   "duration_s": 49.397,
+   "cover_commit": "3b22d4c"
   }
+ ],
+ "video_long": {
+  "slot": "09:30",
+  "id": "tide-long",
+  "kind": "long_16x9",
+  "platforms": [
+   "youtube"
+  ],
+  "status": "final",
+  "branch": "ccr-fb88c4b3-kcqyid",
+  "commit": "a06f878",
+  "video": "video/tide-long/LONG-tide-16x9-share.mp4",
+  "video_sha256": "1c2d3a07adbdd1bffb1b2c1534f7d6a7c048e1df8f4e936f705efa055914bf6e",
+  "video_bytes": 90529323,
+  "duration_s": 328.75,
+  "thumb": "video/tide-long/thumb.jpg",
+  "title_youtube": "ทะเลลดลงไปไกล ปลาดิ้นเต็มหาด… อย่าลงไปเก็บ | ทะเลลด ฉบับเต็ม",
+  "chapters": [
+   "0:00 ทะเลลดลงไปไกล… อย่าลงไปเก็บ",
+   "0:42 ตำนานละบูน คลื่นยักษ์เจ็ดชั้น",
+   "1:09 ทำไมทะเลถึงลดก่อนคลื่นมา",
+   "1:23 ตาจุ่นเป่าหอยสังข์",
+   "1:34 คลื่นลูกแรก",
+   "1:53 คลื่นแรกไป อย่าไว้ใจ",
+   "2:17 สึนามิไม่ได้มาลูกเดียว",
+   "2:52 คลื่นลูกที่สอง",
+   "3:06 ไลฟ์ของจูน",
+   "3:35 หนีไม่ทัน ขึ้นชั้นสูง",
+   "4:01 ขึ้นที่สูงไม่ทัน ต้องไปที่ไหน",
+   "4:14 หลายชั่วโมงต่อมา",
+   "4:36 ความลับ 22 ปีของตาจุ่น",
+   "5:12 วันพุธถัดมา"
+  ],
+  "upload_sheet": "video/release/sheets/tide-upload.md",
+  "review": "ผ่านโต๊ะตรวจรอบ 3 (6 พ.ย. 10:00): พร้อมลง ไม่มี BLOCKER (video/release/reviews/2026-11-06-tide-long-r3.md) · รอบ 1 B1 สเกลยาย และรอบ 2 B1′ คนวิ่งเตี้ยกว่ารถ แก้แล้ว (a06f878) · MINOR ไม่ห้ามลง: N6 ข้อความ \"ปี๊น!\" ทับเท้ายาย ~1 วิ, N7–N9 ข้อสังเกต",
+  "made_by": "ผู้ประสานงาน",
+  "hq_by_chat": {
+   "file": "LONG-tide-16x9-HQ.mp4",
+   "bytes": 398035268,
+   "sha256": "8b5238be1468d41fa6ced57dbaf459ddb750f75423584fcd49389fd2baeaf154"
+  },
+  "note": "EP.1–3 + บทเชื่อม 2 ช่วง · 5:28 · 1920×1080 60 fps · −14 LUFS · ไฟล์ใน repo เข้ารหัส 2 รอบ 90.5 MB · ต้นฉบับ HQ 398 MB ส่งทางแชท ใช้ลงแทนได้ถ้า sha ตรง (ไฟล์ HQ ฉบับก่อนหน้าทั้งหมดห้ามใช้)"
+ }
 }
