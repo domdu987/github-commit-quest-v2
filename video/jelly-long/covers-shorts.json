@@ -1,0 +1,4 @@
+[
+ {"id":"jelly-ep1","page":"(lane C scratch hf/ep1c = r2 build)","out":"video/jelly-ep1/cover-cine-r2.jpg","t":2.4,"series":"หนวดใส","ep":1,"epTitle":"หนวดใสพันขา","finale":false,"setup":"ลูกโดน[แมงกะพรุน]…","cmd":"อย่าเอาน้ำเปล่าราด","glow":"#3fb8d8"},
+ {"id":"jelly-ep2","page":"(lane C scratch hf/ep2c = r4 build)","out":"video/jelly-ep2/cover-cine-r4.jpg","t":8.6,"series":"หนวดใส","ep":2,"epTitle":"น้ำส้มราดไว้","finale":false,"setup":"ลูกโดนพิษ/[ร้องวิ่งตาม]…","cmd":"อย่าให้ลูกขยับ","glow":"#3fb8d8"}
+]
