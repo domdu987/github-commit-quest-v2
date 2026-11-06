@@ -24,3 +24,13 @@
 - p03 "โอ๊ย! ขาผม!": ไม่ใช้ TTS · เสียงกรีดร้องเด็กสังเคราะห์ (production/kidscream.py · 2.175 วิ เท่าช่องของบรรทัด) ซับบอกคำ · ยังไม่มีคนฟังจริง ขอให้ฟังจุดนี้ (67.8–70.0 วิ)
 - เพลง suno1 ตามสูตรทะเลลด (−30 dB RMS, ducking 0.65, dip ช่วงโดน/ช่วงตัดสินใจ) · SFX −27 dB low-pass 4.5 kHz · ไม่มี noise bed · gain คงที่ไปที่ −14 LUFS (ไม่มี loudnorm แบบ dynamic)
 - ตัดเงียบ + ดำ 0.12 วิ หลังตัวเลือก แล้วป้ายท้าย
+
+รอบเสียงกรีดร้อง + HQ ≤ 95 MB (ผู้ประสาน 6 พ.ย.) · ภาพไม่เปลี่ยน
+- p03: เสียงกรีดร้องเด็กจริง ElevenLabs SFX v2 (production/scream/take1 · Whisper ได้ยินแค่ "อาาาา!" ไม่มีคำ · pitch median 667 Hz) แทน kidscream.py
+- มิกซ์ใหม่: musiccheck.tide PASS (−34.5 / −31.5 / 20.2 LU / 0%) · hisscheck mix.wav PASS (0.34 · −83.4 dBFS)
+- HQ ใหม่ (repo): video/release/hq/jelly-ep1-HQ.mp4 · 94,351,703 B · sha256 a01f91dd7d914f79f0c341afac2bc086674343c764cc0f9e1ccbc192e2c697ab
+  x264 2-pass 6.3 Mbps (วัดได้ 6.34) จาก raw เดิม + AAC 256k · ภาพ 6,859 เฟรม 114.317 วิ (เท่า HQ เดิม) · เสียง 114.326 วิ
+  −14.1 LUFS · true peak −2.6 dBFS · hisscheck PASS (0.34 · −84.7 dBFS)
+- share ใหม่: video/jelly-ep1/jelly-ep1-share-v2.mp4 · 28,715,612 B · sha256 1229d05c261f87798256e76af033c02e90210ed38f1d13a42904b837c3a30a76
+  6,859 เฟรม · −14.1 LUFS · true peak −2.7 dBFS · hisscheck PASS (0.35 · −84.6 dBFS)
+- ไฟล์รอบแรก (jelly-ep1-share.mp4 9bf861da…, HQ 119 MB fc2307b4…) เก็บไว้ตามเดิม ไม่ได้เขียนทับ · ตัวที่ใช้ลงคือ HQ ใหม่ด้านบน
