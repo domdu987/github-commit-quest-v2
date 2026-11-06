@@ -242,8 +242,8 @@
           for (let c = 0; c < 7; c++) {
             const t = t0 + 0.5 + c * 0.95;
             tl.to(`#${id} #ldBoat`, { y: (c + 1) * 3.4, duration: 0.25, ease: "back.out(2)" }, t);
-            put(L.light, `<g id="${id}-c${c}" opacity="0"><text x="220" y="1290" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffd24a" stroke="#2a1a10" stroke-width="6" paint-order="stroke">แกร๊ก</text></g>`);
-            tl.fromTo(`#${id}-c${c}`, { opacity: 1, y: 0 }, { opacity: 0, y: -40, duration: 0.5, immediateRender: false }, t);
+            put(L.light, `<g id="${id}-ck${c}" opacity="0"><text x="220" y="1290" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffd24a" stroke="#2a1a10" stroke-width="6" paint-order="stroke">แกร๊ก</text></g>`);
+            tl.fromTo(`#${id}-ck${c}`, { opacity: 1, y: 0 }, { opacity: 0, y: -40, duration: 0.5, immediateRender: false }, t);
           }
         },
       });
