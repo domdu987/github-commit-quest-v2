@@ -1,0 +1,121 @@
+# n09 'ตอกเข้าร่องกระจกแล้ว งัด' — ตรวจพยัญชนะท้ายและระดับเสียงของคำสุดท้าย (ไฟล์ share 944e7b0)
+# low = พลังงาน 80-450 Hz (เสียงขึ้นจมูก/การสั่นของเส้นเสียง) · mid = 600-3500 Hz (ฟอร์แมนต์สระ) · หน้าต่าง 25 ms ทุก 10 ms
+# ถ้าลงท้าย /n/ (งั้น) low จะยังดังต่อ 50-150 ms หลังสระจบ · ถ้าลงท้าย /t/ ไม่ปล่อยลม (งัด) ทั้ง low และ mid จะตกพร้อมกันทันที
+== share mix 100.85-101.50
+ 100.862  low   34.3  mid   39.6  high   17.1  f0     0  v 0.27
+ 100.882  low   36.2  mid   38.6  high   13.6  f0     0  v 0.22
+ 100.902  low   36.9  mid   35.4  high    4.9  f0     0  v 0.21
+ 100.922  low   39.1  mid   23.3  high   -1.9  f0     0  v 0.32
+ 100.942  low   35.5  mid   16.9  high    3.9  f0     0  v 0.37
+ 100.962  low   33.6  mid   17.5  high    0.1  f0     0  v 0.45
+ 100.982  low   34.6  mid   20.6  high    9.4  f0   124  v 0.48
+ 101.002  low   34.6  mid   20.6  high    2.2  f0   121  v 0.45
+ 101.022  low   33.6  mid   26.0  high    9.1  f0     0  v 0.35
+ 101.042  low   34.3  mid   28.7  high   15.6  f0     0  v 0.38
+ 101.062  low   34.4  mid   34.6  high   14.3  f0     0  v 0.35
+ 101.082  low   32.1  mid   36.7  high   17.2  f0     0  v 0.29
+ 101.102  low   32.4  mid   37.1  high   12.3  f0     0  v 0.26
+ 101.122  low   32.5  mid   35.2  high   10.9  f0     0  v 0.30
+ 101.142  low    7.9  mid   23.7  high    9.5  f0     0  v 0.32
+ 101.162  low    6.8  mid   22.1  high    9.4  f0   364  v 0.46
+ 101.182  low   11.6  mid   38.6  high   16.7  f0     0  v 0.38
+ 101.203  low    6.8  mid   22.3  high    2.6  f0   302  v 0.46
+ 101.222  low    9.9  mid   23.1  high   12.2  f0     0  v 0.33
+ 101.242  low   11.3  mid   23.9  high    4.3  f0   348  v 0.79
+ 101.262  low   10.9  mid   27.5  high   12.2  f0     0  v 0.25
+ 101.282  low    8.9  mid   21.3  high   -1.8  f0   356  v 0.69
+ 101.302  low   10.2  mid   19.2  high   -9.1  f0   348  v 0.77
+ 101.322  low   11.6  mid   28.8  high   16.3  f0     0  v 0.27
+ 101.343  low   13.1  mid   24.9  high   11.2  f0     0  v 0.31
+ 101.362  low   13.2  mid   17.6  high    7.6  f0   232  v 0.55
+ 101.382  low   11.5  mid   17.0  high    3.6  f0   356  v 0.59
+ 101.402  low   14.2  mid   16.0  high   -0.4  f0   235  v 0.59
+ 101.422  low   13.4  mid   19.6  high    9.9  f0     0  v 0.42
+ 101.442  low   15.1  mid   17.6  high    2.7  f0     0  v 0.39
+ 101.462  low   17.3  mid   33.6  high   20.8  f0     0  v 0.29
+ 101.482  low   14.7  mid   16.4  high    1.3  f0     0  v 0.37
+
+# take ดิบใน git (bridges/vo/l2n09.7bc5038204.mp3) ช่วงท้าย
+== raw take 3.80-4.40
+   3.812  low  -57.9  mid  -73.4  high  -90.8  f0     0  v 0.27
+   3.833  low   20.6  mid   -5.0  high   -9.4  f0     0  v 0.30
+   3.853  low   32.1  mid    8.6  high    4.9  f0     0  v 0.29
+   3.872  low   36.8  mid   15.5  high   11.6  f0   356  v 0.52
+   3.892  low   38.6  mid   15.2  high   11.9  f0   180  v 0.50
+   3.912  low   35.1  mid   35.9  high   18.2  f0     0  v 0.23
+   3.932  low   32.3  mid   37.1  high   15.1  f0     0  v 0.29
+   3.952  low   33.2  mid   37.0  high   15.6  f0     0  v 0.30
+   3.972  low   34.5  mid   35.9  high    9.1  f0     0  v 0.29
+   3.992  low   35.7  mid   29.9  high    0.8  f0     0  v 0.27
+   4.013  low   37.6  mid   20.6  high   -7.2  f0     0  v 0.38
+   4.032  low   34.9  mid   13.2  high  -11.6  f0     0  v 0.35
+   4.053  low   31.5  mid   13.0  high   -9.4  f0     0  v 0.44
+   4.072  low   32.3  mid   16.4  high   -9.0  f0   121  v 0.46
+   4.092  low   32.9  mid   16.0  high   -8.6  f0   125  v 0.49
+   4.112  low   32.5  mid   16.5  high  -10.8  f0   122  v 0.47
+   4.133  low   31.6  mid   13.4  high   -2.0  f0     0  v 0.42
+   4.152  low   32.0  mid   22.5  high    9.3  f0     0  v 0.44
+   4.172  low   32.9  mid   31.3  high   13.7  f0     0  v 0.38
+   4.192  low   31.0  mid   33.7  high   10.9  f0     0  v 0.38
+   4.212  low   29.9  mid   34.3  high   10.5  f0     0  v 0.40
+   4.232  low   30.6  mid   34.1  high    9.6  f0     0  v 0.35
+   4.252  low   29.8  mid   30.6  high    3.4  f0     0  v 0.37
+   4.272  low    1.2  mid   -6.2  high  -11.4  f0     0  v 0.37
+   4.292  low  -21.3  mid  -23.7  high  -19.9  f0     0  v 0.34
+   4.312  low  -30.3  mid  -22.7  high  -25.7  f0     0  v 0.41
+   4.332  low  -32.8  mid  -37.7  high  -38.2  f0   400  v 0.61
+   4.353  low  -34.6  mid  -38.6  high  -41.7  f0   400  v 0.74
+   4.372  low  -40.0  mid  -39.0  high  -41.5  f0   400  v 0.60
+
+# YIN F0 ของ 'แล้ว งัด' ในไฟล์ share (* = ช่วงที่มีคาบชัด)
+ 100.850  f0   97.4 Hz  aperiodicity 0.26  level  -14.4 dB 
+ 100.860  f0   97.9 Hz  aperiodicity 0.18  level  -14.5 dB *
+ 100.870  f0   99.0 Hz  aperiodicity 0.15  level  -14.9 dB *
+ 100.880  f0  100.1 Hz  aperiodicity 0.17  level  -14.8 dB *
+ 100.890  f0  101.2 Hz  aperiodicity 0.20  level  -14.8 dB *
+ 100.900  f0  102.8 Hz  aperiodicity 0.27  level  -14.6 dB 
+ 100.910  f0  105.3 Hz  aperiodicity 0.34  level  -14.7 dB 
+ 100.920  f0  107.8 Hz  aperiodicity 0.29  level  -14.8 dB 
+ 100.930  f0  109.9 Hz  aperiodicity 0.17  level  -15.6 dB *
+ 100.940  f0  111.7 Hz  aperiodicity 0.11  level  -16.9 dB *
+ 100.950  f0  113.9 Hz  aperiodicity 0.16  level  -18.4 dB *
+ 100.960  f0  117.6 Hz  aperiodicity 0.15  level  -20.7 dB *
+ 100.970  f0  121.1 Hz  aperiodicity 0.10  level  -20.8 dB *
+ 100.980  f0  122.3 Hz  aperiodicity 0.04  level  -20.3 dB *
+ 100.990  f0  121.7 Hz  aperiodicity 0.09  level  -20.2 dB *
+ 101.000  f0  120.0 Hz  aperiodicity 0.17  level  -20.3 dB *
+ 101.010  f0  116.6 Hz  aperiodicity 0.15  level  -20.9 dB *
+ 101.020  f0  113.3 Hz  aperiodicity 0.10  level  -21.0 dB *
+ 101.030  f0  110.4 Hz  aperiodicity 0.13  level  -20.1 dB *
+ 101.040  f0  106.8 Hz  aperiodicity 0.30  level  -18.9 dB 
+ 101.050  f0  104.0 Hz  aperiodicity 0.35  level  -18.0 dB 
+ 101.060  f0  102.5 Hz  aperiodicity 0.38  level  -17.7 dB 
+ 101.070  f0  100.5 Hz  aperiodicity 0.24  level  -18.0 dB *
+ 101.080  f0  100.3 Hz  aperiodicity 0.17  level  -18.5 dB *
+ 101.090  f0  100.8 Hz  aperiodicity 0.26  level  -18.9 dB 
+ 101.100  f0  101.8 Hz  aperiodicity 0.25  level  -19.1 dB 
+ 101.110  f0  102.8 Hz  aperiodicity 0.26  level  -19.4 dB 
+ 101.120  f0  103.7 Hz  aperiodicity 0.22  level  -20.8 dB *
+ 101.130  f0  105.1 Hz  aperiodicity 0.26  level  -22.9 dB 
+ 101.140  f0  113.5 Hz  aperiodicity 0.52  level  -26.8 dB 
+ 101.150  f0  114.3 Hz  aperiodicity 0.70  level  -39.6 dB 
+ 101.160  f0  231.0 Hz  aperiodicity 0.95  level  -38.5 dB 
+ 101.170  f0  302.5 Hz  aperiodicity 0.61  level  -30.4 dB 
+ 101.180  f0  302.7 Hz  aperiodicity 0.61  level  -30.4 dB 
+ 101.190  f0  302.6 Hz  aperiodicity 0.61  level  -30.4 dB 
+ 101.200  f0  302.0 Hz  aperiodicity 0.56  level  -30.7 dB 
+ 101.210  f0  303.4 Hz  aperiodicity 0.78  level  -40.8 dB 
+
+# Whisper medium 4 แบบ
+== line 97.6-101.6, no prompt, beam 5
+   ถ้าใช้ก้านหัวบ่อ ต่อเข้าร่องกระจกแล้วงั้น | avg_logprob -0.29
+     ถ(0.85) ้(1.00) า(1.00) ใช(0.96) ้(0.98) ก(0.99) ้(0.36) าน(0.81) ห(0.97) ั(0.99) ว(0.99) บ(0.88) ่(0.73) อ(0.48) ต(0.99) ่(0.97) อ(0.59) เข(0.99) ้(0.94) า(0.41) ร(0.95) ่(0.52) อง(0.98) ก(0.86) ระ(1.00) จ(0.96) ก(0.93) แล(0.49) ้(0.97) ว(0.97) ง(0.51) ั้(0.43) น(0.57)
+== line 97.6-101.6, no prompt, greedy
+   ถ้าใช้ก้านหัวบ่อ ต่อเข้าร้องกระจกแล้วงั้น | avg_logprob -0.27
+     ถ(0.85) ้(1.00) า(1.00) ใช(0.96) ้(0.98) ก(0.99) ้(0.36) าน(0.81) ห(0.97) ั(0.99) ว(0.99) บ(0.88) ่(0.73) อ(0.48) ต(0.99) ่(0.97) อ(0.59) เข(0.99) ้(0.94) าร(0.56) ้(0.59) อง(0.99) ก(0.81) ระ(1.00) จ(0.95) ก(0.93) แล(0.52) ้(0.97) ว(0.98) ง(0.53) ั้(0.47) น(0.55)
+== tail 99.3-101.6, no prompt, beam 5
+   ต่อเข้าร้องกระจก แล้วง่ะ | avg_logprob -0.30
+     ต(0.97) ่(0.94) อ(0.80) เข(0.98) ้(0.88) าร(0.67) ้(0.58) อง(0.98) ก(0.82) ระ(0.99) จ(0.98) ก(0.78) แล(0.96) ้(0.97) ว(0.98) ง(0.50) ่(0.35) ะ(0.96)
+== tail 99.3-101.6, prompt 'ก้านหัวเบาะ ร่องกระจก'
+   ต่อเข้าร่องกระจก แล้วง่ะ | avg_logprob -0.22
+     ต(0.97) ่(0.94) อ(0.80) เข(0.98) ้(0.88) าร(0.67) ่(0.19) อง(0.97) ก(0.83) ระ(0.99) จ(0.98) ก(0.77) แล(0.97) ้(0.98) ว(0.98) ง(0.49) ่(0.26) ะ(0.96)
