@@ -7,11 +7,11 @@
  "story": "หนวดใส (แมงกะพรุน) เรื่องใหม่ตามด่านฮุก 6 พ.ย. · Shorts EP.1 09:00 + EP.2 09:15 + คลิปยาว 16:9 09:30",
  "complete": false,
  "missing": [
-  "Shorts EP.1 หนวดใส (กำลังทำ · เลน C)",
   "Shorts EP.2 หนวดใส (กำลังทำ · เลน C)",
   "คลิปยาว 16:9 หนวดใส (กำลังทำ · เลน C)",
   "upload sheet video/release/sheets/jelly-upload.md (prod/lane-b)",
-  "ปก 3 ภาพ"
+  "ปก 3 ภาพ",
+  "Shorts EP.1 หนวดใส: รอโต๊ะตรวจ และไฟล์ HQ ที่เปลี่ยนเสียงกรีดร้องแล้ว (เลน C)"
  ],
  "status": "กำลังผลิต: บทและเสียงเลน B (prod/lane-b video/jelly) · ภาพเลน C · เป้าเสร็จ 11 พ.ย. 22:00 · ต้องผ่านโต๊ะตรวจครบ 3 ไฟล์ก่อนลง",
  "upload_sheet": null,
@@ -24,7 +24,28 @@
   "EP.3 ไม่ลงเป็น Shorts แยก (อยู่ในคลิปยาว) ยกเว้นวาล์วโมเมนตัม: Shorts ตอนไหนวิว 24 ชม. ≥ 22K ให้แจ้งแชทประสานงาน เพื่อตัดช่วงหักมุมจากคลิปยาวเป็น Shorts เพิ่ม ลง 08:45 วันถัดไป",
   "หลังลงแต่ละไฟล์ เขียนสถานะลง video/release/posted/<วันที่>.json (1 แถวต่อไฟล์ต่อแพลตฟอร์ม) แล้ว push ขึ้น ccr-fb88c4b3-kcqyid"
  ],
- "items": [],
+ "items": [
+  {
+   "slot": "09:00",
+   "id": "jelly-ep1",
+   "kind": "short_9x16",
+   "platforms": [
+    "youtube",
+    "facebook",
+    "instagram"
+   ],
+   "status": "in_production",
+   "branch": "prod/lane-c",
+   "commit": "603bd95",
+   "video": "video/release/hq/jelly-ep1-HQ.mp4 (ยังไม่มี · เลน C กำลังทำ HQ ≤ 95 MB)",
+   "video_sha256": null,
+   "video_bytes": null,
+   "made_by": "เลน C (โต๊ะภาพ 1) · บทและเสียง เลน B",
+   "due": "2026-11-11T22:00+07:00",
+   "note": "เรนเดอร์ 6 พ.ย. 14:13 (603bd95) · 1:54.3 · share ใน repo video/jelly-ep1/jelly-ep1-share.mp4 sha 9bf861da… 28,715,958 B (ใช้ตรวจ ไม่ใช่ไฟล์ลง) · กำลังเปลี่ยนเสียงกรีดร้อง p03 เป็นเสียงจริงและทำ HQ ≤ 95 MB",
+   "review": "สตอรีบอร์ดผ่านรอบ 2 (video/release/reviews/2026-11-06-jelly-ep1-storyboard.md) · โต๊ะตรวจกำลังตรวจไฟล์จริงเทียบกับทะเลลด EP.2"
+  }
+ ],
  "video_long": null,
  "team_charter": "video/release/TEAM-CHARTER.md"
 }
