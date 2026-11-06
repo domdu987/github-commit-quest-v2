@@ -27,10 +27,13 @@ longplan.json (absolute times in the long, seconds):
   "credits_ambience": 5.0,           # seconds of held ambience over the credits before silence
   "end_card": {"next": "เรื่องต่อไป: <ชื่อ> ทุกวัน 09:30", "subscribe": true, "prev_long_link": true}
 }
+The end card's next-story name may stay a placeholder ("…") while planning (WARN); with --rendered-total
+(the check of the finished file) a placeholder is a FAIL.
 Exit code 1 on any FAIL.
 """
 import argparse
 import json
+import re
 import sys
 
 
@@ -157,8 +160,17 @@ def main():
 
     # ---- end card ----
     ec = P.get("end_card", {})
-    R.check("ทุกวัน 09:30" in ec.get("next", "") and "เรื่องต่อไป" in ec.get("next", ""),
-            f"การ์ดท้าย \"เรื่องต่อไป: … ทุกวัน 09:30\": {ec.get('next', '-')}")
+    nxt = ec.get("next", "")
+    R.check("ทุกวัน 09:30" in nxt and "เรื่องต่อไป" in nxt,
+            f"การ์ดท้าย \"เรื่องต่อไป: … ทุกวัน 09:30\": {nxt or '-'}")
+    m = re.search(r"เรื่องต่อไป\s*:?\s*(.*?)\s*ทุกวัน", nxt)
+    name = m.group(1).strip() if m else ""
+    if re.sub(r"[….<>\s]", "", name) in ("", "ชื่อ"):
+        # a placeholder is fine while planning; the rendered long must carry the real name
+        (R.fail if a.rendered_total else R.warn)(
+            f"การ์ดท้ายยังไม่มีชื่อเรื่องต่อไป ({nxt or '-'}) · ต้องใส่ชื่อจริงก่อนเรนเดอร์")
+    else:
+        R.ok(f"การ์ดท้ายบอกชื่อเรื่องต่อไป: {name}")
     R.check(bool(ec.get("subscribe")), "การ์ดท้ายมีปุ่มติดตาม")
     R.check(bool(ec.get("prev_long_link")), "การ์ดท้ายลิงก์ไปคลิปยาวเรื่องก่อนหน้า")
 
