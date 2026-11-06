@@ -6,7 +6,7 @@ usage:
 
   schedule.json   the episode schedule (shots with key/start/dur, vo lines with id/t/dur/cap); commands are captions with "{อย่า"
   shotlist.json   {"total": s, "cuts": [{"n","key","t","dur","emotion","size","angle","move","lead_sound","fg","light",
-                   "face_w","hold","threat_first","note", optional "deg","silhouette","command"}]}  · one entry per cut, absolute times
+                   "face_w","hold","threat_first","note", optional "deg","silhouette","command","expect"}]}  · one entry per cut, absolute times
                   commands = captions that start with "{อย่า" + the first line inside a cut marked "command": true
   soundplan.json  {"drone_start": t, "silences": [[t0, t1], ...], "sting": t, "bpm": [[t, bpm], ...], "ambience": [...]}
   sfx_cues.json   the mix's cue list {"sfx": [{"t", "type", "gain"}]} (type "sting" is counted)
@@ -168,10 +168,15 @@ def main():
     if len(holds) != 1:
         R.warn(f"ช็อตค้างนานเกินคาด (hold: true) มี {len(holds)} คัต · ต้องมี 1 คัตต่อตอน")
     for c in holds:
-        if c.get("emotion") != "uneasy" or c["dur"] < 7.5 - TOL:
-            R.warn(f"คัต {c['n']} hold: ควรเป็นช็อตผิดปกติที่ยาว ≥ 7.5 วิ (1.5 เท่าของ 5 วิ) · ตอนนี้ {c.get('emotion')} {c['dur']:.2f} วิ")
+        # "expect" = how long the viewer expects this kind of shot to stay (e.g. 3.0 for an insert); default = the middle of its range
+        lo_, hi_ = RANGE.get(c.get("emotion"), (2.0, 3.0))
+        exp = float(c.get("expect") or (lo_ + hi_) / 2)
+        if c.get("emotion") != "uneasy":
+            R.warn(f"คัต {c['n']} hold: ช็อตที่ค้างนานเกินคาดควรเป็นช่วงผิดปกติ (uneasy) · ตอนนี้ {c.get('emotion')}")
+        if c["dur"] < 1.5 * exp - TOL:
+            R.warn(f"คัต {c['n']} hold ยาว {c['dur']:.2f} วิ ต้อง ≥ 1.5 × ที่คนดูคาด ({exp:.1f} วิ) = {1.5 * exp:.2f} วิ")
         else:
-            R.ok(f"ช็อตค้างนานเกินคาด: คัต {c['n']} {c['dur']:.1f} วิ")
+            R.ok(f"ช็อตค้างนานเกินคาด: คัต {c['n']} {c['dur']:.1f} วิ (คาด {exp:.1f} วิ)")
 
     # ---- commands: pause 0.3 s, silence 1 s, still shot ----
     cmds, lines = commands(sched, [(c["t"], c["t"] + c["dur"]) for c in cuts if c.get("command")])
