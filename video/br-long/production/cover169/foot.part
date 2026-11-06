@@ -2,30 +2,28 @@
       const FF = { kanit: "Kanit", mitr: "Mitr", prompt: "Prompt", chakra: "Chakra Petch", kod: "Kodchasan" }[V] || "Kanit";
       const SC = { kanit: 1, mitr: 0.97, prompt: 0.95, chakra: 0.94, kod: 0.88 }[V] || 1;   // width differs per font; keep the title inside the frame
       const px = (n) => Math.round(n * SC) + "px";
+      // ---------- PRO cover overlay (6 พ.ย. 2569): one big close-up, one hook in two lines, small series badge; portrait and landscape ----------
+      const LANDC = !!window.LAND;
       document.head.insertAdjacentHTML("beforeend", `<style>
         @font-face { font-family: 'Mitr'; font-weight: 700; src: url(assets/fonts/Mitr.ttf); }
-        @font-face { font-family: 'Prompt'; font-weight: 900; src: url(assets/fonts/Prompt.ttf); }
-        @font-face { font-family: 'Chakra Petch'; font-weight: 700; src: url(assets/fonts/ChakraPetch.ttf); }
-        @font-face { font-family: 'Kodchasan'; font-weight: 700; src: url(assets/fonts/Kodchasan.ttf); }
-        ${V === "kanit" || V === "old" ? "" : `#stage text { font-family: "${FF}" !important; }`}
-        .cv { position: absolute; z-index: 70; font-family: "${FF}", Kanit; font-weight: 900; text-align: center; pointer-events: none; }
-        .ol { position: relative; display: inline-block; z-index: 0; filter: drop-shadow(0 10px 0 rgba(0,0,0,.5)); }
-        .ol::before { content: attr(data-t); position: absolute; left: 0; top: 0; z-index: -1; color: transparent; -webkit-text-stroke: 16px #15101c; }
-        .cv-shade { position: absolute; z-index: 69; top: 0; bottom: 0; right: 0; width: 980px; background: linear-gradient(90deg, rgba(10,8,14,0) 0%, rgba(10,8,14,.55) 28%, rgba(10,8,14,.9) 60%); pointer-events: none; }
-        .cv-col { top: 0; bottom: 0; right: 40px; width: 760px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0; }
-        .cv-title { font-size: ${px(102)}; line-height: 1.05; color: #ffd84a; letter-spacing: -2px; }
-        .cv-title .ol { text-shadow: 0 0 30px rgba(255,214,74,.55); }
-        .cv-ep { margin-top: 26px; font-size: 46px; line-height: 1; color: #fff; }
-        .cv-ep .pill { display: inline-block; background: #e2382e; color: #fff; padding: 6px 22px 10px; border-radius: 16px; margin-right: 16px; box-shadow: 0 0 0 6px #15101c, 0 8px 0 6px rgba(0,0,0,.4); }
-        .cv-ep .ol::before { -webkit-text-stroke-width: 11px; }
-        .cv-l1 { margin-top: 78px; font-size: ${px(100)}; line-height: 1.1; color: #fff; }
-        .cv-cmd { display: inline-block; margin-top: 22px; font-size: ${px(96)}; line-height: 1; color: #fff; background: #e2382e; padding: 18px 50px 30px; border-radius: 28px; transform: rotate(-2deg); box-shadow: 0 0 0 10px #15101c, 0 16px 0 10px rgba(0,0,0,.45); text-shadow: 0 6px 0 rgba(0,0,0,.35); }
+        .cv2 { position: absolute; inset: 0; z-index: 70; font-family: Kanit; font-weight: 900; pointer-events: none; }
+        .ol { position: relative; display: inline-block; z-index: 0; }
+        .ol::before { content: attr(data-t); position: absolute; left: 0; top: 0; z-index: -1; color: transparent; -webkit-text-stroke: 22px #15101c; }
+        .cv2-shade { position: absolute; left: 0; right: 0; bottom: 0; height: ${LANDC ? "100%" : "900px"}; background: ${LANDC ? "linear-gradient(90deg, rgba(8,6,12,0) 42%, rgba(8,6,12,.72) 62%, rgba(8,6,12,.92) 100%)" : "linear-gradient(0deg, rgba(8,6,12,.96) 0%, rgba(8,6,12,.82) 38%, rgba(8,6,12,0) 100%)"}; }
+        .cv2-top { position: absolute; left: ${LANDC ? "56px" : "60px"}; top: ${LANDC ? "44px" : "150px"}; display: flex; align-items: center; gap: 18px; }
+        .cv2-series { background: #15101c; color: #9dff6a; font: 800 ${LANDC ? "40px" : "46px"}/1 Kanit; padding: 16px 30px 20px; border-radius: 22px; border: 4px solid #9dff6a; letter-spacing: 1px; }
+        .cv2-ep { background: #e2382e; color: #fff; font: 900 ${LANDC ? "40px" : "46px"}/1 Kanit; padding: 16px 26px 20px; border-radius: 22px; box-shadow: 0 0 0 4px #15101c; }
+        .cv2-hook { position: absolute; ${LANDC ? "right: 70px; top: 50%; transform: translateY(-50%); width: 900px; text-align: center;" : "left: 0; right: 0; bottom: 150px; text-align: center;"} }
+        .cv2-l1 { font-size: ${LANDC ? "84px" : "104px"}; line-height: 1.1; color: #ffffff; text-shadow: 0 10px 0 rgba(0,0,0,.45); }
+        .cv2-l2 { margin-top: ${LANDC ? "10px" : "6px"}; font-size: ${LANDC ? "140px" : "170px"}; line-height: 1.05; color: #9dff6a; transform: rotate(-2deg); text-shadow: 0 14px 0 rgba(0,0,0,.5), 0 0 40px rgba(157,255,106,.45); letter-spacing: -2px; }
+        .cv2-l2 .ol::before { -webkit-text-stroke-width: 28px; }
+        .cv2-l1 .ol::before { -webkit-text-stroke-width: 18px; }
       </style>`);
-      const OLD = `<div class="cv cv-top"><div class="cv-brand">ROD MAI CLUB</div><div class="cv-title">สกิลจอมโกหก</div><div class="cv-ep"><span class="pill">EP.1</span>การ์ดกากสุด</div></div>
-        <div class="cv cv-bot"><div class="cv-setup">ตายแล้วเกิดใหม่<br>ได้สกิล<b>กากสุด</b></div><div class="cv-cmd">โกหกจนได้ที่ 1</div></div>`;
-      const LEAN = `<div class="cv-shade"></div><div class="cv cv-col"><div class="cv-title"><span class="ol" data-t="บางระจัน แบต 3%">บางระจัน แบต 3%</span></div><div class="cv-ep"><span class="pill">เรื่องเต็ม</span><span class="ol" data-t="4 ตอนจบ">4 ตอนจบ</span></div>
-        <div class="cv-l1"><span class="ol" data-t="ตื่นมาปี 2309">ตื่นมาปี 2309</span></div><div class="cv-cmd">แบตเหลือ 3% !?</div></div>`;
-      root.insertAdjacentHTML("beforeend", `<div id="vig"></div><div id="flashw"></div><div id="black"></div>` + (V === "old" ? OLD : LEAN));
+      const EP = new URLSearchParams(location.search).get("ep") || "1";
+      const TX = {"1": {"tag": "ตื่นมาปี 2309", "l1": "มือถือแบต 3%", "l2": "ติดอยู่|ปี 2309!?"}, "2": {"tag": "นางไม้ในกล่อง", "l1": "ทั้งค่ายกราบมือถือ", "l2": "ขอไก่ย่าง|ด้วย!?"}}[EP];
+      root.insertAdjacentHTML("beforeend", `<div id="vig"></div><div id="flashw"></div><div id="black"></div><div class="cv2"><div class="cv2-shade"></div>
+        <div class="cv2-top"><span class="cv2-series">บางระจัน แบต 3%</span><span class="cv2-ep">EP.${EP}</span></div>
+        <div class="cv2-hook"><div class="cv2-l1"><span class="ol" data-t="${TX.l1}">${TX.l1}</span></div><div class="cv2-l2">${TX.l2.split("|").map((t) => `<div><span class="ol" data-t="${t}">${t}</span></div>`).join("")}</div></div></div>`);
       Fx.setup(root);
       Engine.build(root, tl, shots);
       root.appendChild(document.getElementById("grain"));

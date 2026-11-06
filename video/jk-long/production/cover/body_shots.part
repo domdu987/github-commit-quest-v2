@@ -1,0 +1,20 @@
+      const HEAVEN = { dark: 0.08, light: { from: "left", rim: "#fffbe8", rimOp: 0.7, rimW: 5, shade: "#6a6a98", shadeOp: 0.3, shadeW: 28, soft: 9, vol: false },
+        grade: { top: "#2a2040", bottom: "#ffd890", op: 0.3 } };
+      const CAM = fr(610, 838, 2.4, 470, 820);
+      shot("x01", { ...HEAVEN, set: "jkCloud", setOpts: { id: "jqcov" }, captions: [], camAt: CAM, push: 0, blur: { far: 8, mid: 5 },
+        actors: [A("jkYouCard", 610, 1400, 1.04, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o", sweat: true }])],
+        extra(L, id) { // a dark dragon looming in the mid layer, placed by screen position (mid parallax 0.6)
+          const ls = 1 + (CAM.s - 1) * 0.6, W = (sx) => (sx - 540) / ls + 540 + 0.6 * CAM.x, Wy = (sy) => (sy - 960) / ls + 960 + 0.6 * CAM.y;
+          L.mid.insertAdjacentHTML("beforeend", `<g transform="translate(${W(700)},${Wy(760)}) scale(${(1.9 / ls).toFixed(3)},${(1.9 / ls).toFixed(3)}) rotate(-8)" opacity=".62">${JK.dragon("#1c1a30")}</g>`);
+          L.glow.insertAdjacentHTML("beforeend", `<circle cx="${W(300)}" cy="${Wy(700)}" r="${(380 / ls).toFixed(0)}" fill="url(#jkRed)" opacity=".35" style="mix-blend-mode:screen"/>`); },
+        fx(tl, id, t0, L) { tl.set(`#${id}-a0 .jkEar`, { opacity: 1 }, 0);
+          const ex = 610 - 33 * 1.04, ey = 1400 - 540 * 1.04, gl = grp(L.act);
+          gl.innerHTML = `<circle cx="${ex}" cy="${ey}" r="70" fill="url(#jkRed)"/><circle cx="${ex}" cy="${ey}" r="34" fill="url(#jkRed)"/>`;
+          const card = grp(L.light); card.innerHTML = `<g transform="translate(790,1010) rotate(9)"><rect x="-190" y="-270" width="380" height="540" rx="30" fill="#000" opacity=".35" transform="translate(10,14)"/>
+            <rect x="-190" y="-270" width="380" height="540" rx="30" fill="#9aa0a6"/><rect x="-168" y="-248" width="336" height="496" rx="22" fill="#c8cdd2"/><rect x="-168" y="-248" width="336" height="96" rx="22" fill="#aab0b6"/>
+            <text x="0" y="-184" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="36" fill="#f4f6f8">การ์ดสกิล</text>
+            <text x="0" y="-40" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="74" fill="#4a4f56">จอมโกหก</text>
+            <text x="0" y="150" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="190" fill="#6a7078">F</text>
+            <g transform="translate(30,222) rotate(-12)"><rect x="-118" y="-40" width="236" height="80" rx="14" fill="none" stroke="#e2382e" stroke-width="10"/><text x="0" y="21" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#e2382e">กากสุด</text></g></g>`;
+          JKI.badge(tl, L.light, t0, 4, { kind: "crown", x: 880, y: 720, s: 1.5, tone: "yellow", label: "อันดับ 1 !?", labelSize: 40, at: 0.1 });
+          JKI.badge(tl, L.light, t0, 4, { kind: "ears", x: 150, y: 1250, s: 1.15, tone: "red", label: new URLSearchParams(location.search).get("v") === "old" ? "หูแดง = โม้" : undefined, at: 0.25 }); } });

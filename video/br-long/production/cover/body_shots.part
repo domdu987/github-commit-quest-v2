@@ -1,5 +1,5 @@
       // ---------- the covers: x01 = EP.1 (tied, the buffalo at the pocket, 3%) · x02 = EP.2 (the whole yard bows to the phone) ----------
-      const CAM = window.LAND ? fr(820, 1010, 1.8, 394, 995) : fr(820, 1060, 1.35, 540, 1060);   // the landscape head converts portrait camera values (s×0.75, sx×1.78, sy×0.56)
+      const CAM = window.LAND ? fr(880, 1040, 2.3, 270, 950) : fr(880, 1050, 1.8, 540, 900);   // the landscape head converts portrait camera values (s×0.75, sx×1.78, sy×0.56)
       shot("x01", { ...camp("x01"), captions: [], camAt: CAM, push: 0, blur: { far: 6, mid: 4 },
         actors: [ME("brKeng", KENG, 1400, [{ t: 0, mode: "tiedStruggle", eyes: "wide", mouth: "scream", sweat: true }]), ...(window.LAND ? [] : [A("brManSpear", 560, 1400, 0.98, [{ t: 0, mode: "idle", eyes: "angry", mouth: "frown" }])]),
           A("brJukSword", 1010, 1400, 0.68, [{ t: 0, mode: "pointSword", eyes: "wide", mouth: "scream" }], { flip: true }), ...(window.LAND ? [] : [A("brPhaeoLadle", 430, 1400, 0.9, [{ t: 0, mode: "stir", eyes: "squint", mouth: "flat" }], { flip: true })])],

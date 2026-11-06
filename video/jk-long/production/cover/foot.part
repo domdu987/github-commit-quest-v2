@@ -1,0 +1,34 @@
+      const Q = new URLSearchParams(location.search), V = Q.get("v") || "mitr";
+      const FF = { kanit: "Kanit", mitr: "Mitr", prompt: "Prompt", chakra: "Chakra Petch", kod: "Kodchasan" }[V] || "Kanit";
+      const SC = { kanit: 1, mitr: 0.97, prompt: 0.95, chakra: 0.94, kod: 0.88 }[V] || 1;   // width differs per font; keep the title inside the frame
+      const px = (n) => Math.round(n * SC) + "px";
+      // ---------- PRO cover overlay (6 พ.ย. 2569): one big close-up, one hook in two lines, small series badge; portrait and landscape ----------
+      const LANDC = !!window.LAND;
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        @font-face { font-family: 'Mitr'; font-weight: 700; src: url(assets/fonts/Mitr.ttf); }
+        .cv2 { position: absolute; inset: 0; z-index: 70; font-family: Kanit; font-weight: 900; pointer-events: none; }
+        .ol { position: relative; display: inline-block; z-index: 0; }
+        .ol::before { content: attr(data-t); position: absolute; left: 0; top: 0; z-index: -1; color: transparent; -webkit-text-stroke: 22px #15101c; }
+        .cv2-shade { position: absolute; left: 0; right: 0; bottom: 0; height: ${LANDC ? "100%" : "900px"}; background: ${LANDC ? "linear-gradient(90deg, rgba(8,6,12,0) 42%, rgba(8,6,12,.72) 62%, rgba(8,6,12,.92) 100%)" : "linear-gradient(0deg, rgba(8,6,12,.96) 0%, rgba(8,6,12,.82) 38%, rgba(8,6,12,0) 100%)"}; }
+        .cv2-top { position: absolute; left: ${LANDC ? "56px" : "60px"}; top: ${LANDC ? "44px" : "150px"}; display: flex; align-items: center; gap: 18px; }
+        .cv2-series { background: #15101c; color: #ffd84a; font: 800 ${LANDC ? "40px" : "46px"}/1 Kanit; padding: 16px 30px 20px; border-radius: 22px; border: 4px solid #ffd84a; letter-spacing: 1px; }
+        .cv2-ep { background: #e2382e; color: #fff; font: 900 ${LANDC ? "40px" : "46px"}/1 Kanit; padding: 16px 26px 20px; border-radius: 22px; box-shadow: 0 0 0 4px #15101c; }
+        .cv2-hook { position: absolute; ${LANDC ? "right: 70px; top: 50%; transform: translateY(-50%); width: 900px; text-align: center;" : "left: 0; right: 0; bottom: 150px; text-align: center;"} }
+        .cv2-l1 { font-size: ${LANDC ? "84px" : "104px"}; line-height: 1.1; color: #ffffff; text-shadow: 0 10px 0 rgba(0,0,0,.45); }
+        .cv2-l2 { margin-top: ${LANDC ? "10px" : "6px"}; font-size: ${LANDC ? "140px" : "170px"}; line-height: 1.05; color: #ffd84a; transform: rotate(-2deg); text-shadow: 0 14px 0 rgba(0,0,0,.5), 0 0 40px rgba(255,216,74,.45); letter-spacing: -2px; }
+        .cv2-l2 .ol::before { -webkit-text-stroke-width: 28px; }
+        .cv2-l1 .ol::before { -webkit-text-stroke-width: 18px; }
+      </style>`);
+      const EP = new URLSearchParams(location.search).get("ep") || "1";
+      const TX = {"1": {"tag": "การ์ดกากสุด", "l1": "ได้สกิลกากสุด", "l2": "แต่ได้ที่ 1!?"}, "2": {"tag": "หนูเชื่อ!", "l1": "มีคนเชื่อแค่คนเดียว", "l2": "ได้มังกร 1%!?"}}[EP];
+      root.insertAdjacentHTML("beforeend", `<div id="vig"></div><div id="flashw"></div><div id="black"></div><div class="cv2"><div class="cv2-shade"></div>
+        <div class="cv2-top"><span class="cv2-series">สกิลจอมโกหก</span><span class="cv2-ep">EP.${EP}</span></div>
+        <div class="cv2-hook"><div class="cv2-l1"><span class="ol" data-t="${TX.l1}">${TX.l1}</span></div><div class="cv2-l2">${TX.l2.split("|").map((t) => `<div><span class="ol" data-t="${t}">${t}</span></div>`).join("")}</div></div></div>`);
+      Fx.setup(root);
+      Engine.build(root, tl, shots);
+      root.appendChild(document.getElementById("grain"));
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

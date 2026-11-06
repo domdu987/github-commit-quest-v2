@@ -1,0 +1,26 @@
+{
+ "out": "LONG-welder-lightning-16x9.mp4",
+ "xfade": 0.2,
+ "parts": [
+  {
+   "video": "ep1L/EP1L-welder-lightning-HQ.mp4",
+   "from": 0.0,
+   "to": 79.89
+  },
+  {
+   "video": "ep2L/EP2L-welder-lightning-HQ.mp4",
+   "from": 5.096,
+   "to": 68.097
+  },
+  {
+   "video": "ep3L/EP3L-welder-lightning-HQ.mp4",
+   "from": 4.195,
+   "to": 53.627
+  },
+  {
+   "video": "ep4L/EP4L-welder-lightning-HQ.mp4",
+   "from": 4.185,
+   "to": 61.952
+  }
+ ]
+}

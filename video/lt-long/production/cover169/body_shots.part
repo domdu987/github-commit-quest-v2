@@ -1,11 +1,11 @@
       // ---------- the covers: x01 = EP.1 (the strike on the roof, hair up) · x02 = EP.2 (the queue in the alley, phones on the welder) ----------
-      const CAM = window.LAND ? fr(700, 1120, 1.35, 300, 1000) : fr(720, 1060, 1.2, 540, 1000);   // the landscape head converts portrait camera values (s×0.75, sx×1.78, sy×0.56)
+      const CAM = window.LAND ? fr(650, 900, 2.4, 300, 940) : fr(660, 900, 1.8, 540, 840);   // the landscape head converts portrait camera values (s×0.75, sx×1.78, sy×0.56)
       shot("x01", { ...roof("x01", { rain: true, bolts: [] }), captions: [], camAt: CAM, push: 0, blur: { far: 4 }, dark: window.LAND ? 0.1 : 0.22,
         actors: [ME("ltYouBolt", 640, 1400, [{ t: 0, mode: "zap", eyes: "wide", mouth: "scream" }])],
         fx(tl, id, t0, L) { shadows(L, id, act("x01"), -0.5); hairSparks(tl, `${id}-a0`, t0, 4); const b = grp(L.act); b.innerHTML = LT.bolt(POST + 420, -900, POST, 290, 5, 22) + LT.bolt(POST, 290, POST + 8, 1330, 7, 14) + `<g transform="translate(${POST},1330)">${LT.sparks(20, 220, 9, "#dff4ff")}${LT.sparks(12, 140, 11, "#ffe24a")}<circle r="40" fill="#ffffff"/></g>`;
           const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${POST}" cy="1300" r="600" fill="url(#ltBlue)" opacity=".8"/></g>`; aura(tl, L, 640, 1130, t0, 4, { r: 360, op: 0.8 });
           LTI.badge(tl, L.light, t0, 4, { kind: "bolt", x: window.LAND ? 1250 : 850, y: window.LAND ? 300 : 780, s: 1.5, tone: "yellow", label: "เปรี้ยง!!", labelSize: 40, at: 0.1 }); } });
-      shot("x02", { ...shop("x02", { time: "night", table: true, tableX: 1560 }), captions: [], camAt: window.LAND ? fr(1050, 1040, 0.85, 394, 995) : fr(1000, 1080, 1.1, 540, 1000), push: 0, blur: { far: 4, mid: 2 },
+      shot("x02", { ...shop("x02", { time: "night", table: true, tableX: 1560 }), captions: [], camAt: window.LAND ? fr(900, 1000, 2.0, 300, 940) : fr(900, 1020, 1.5, 480, 880), push: 0, blur: { far: 4, mid: 2 },
         actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "worry", mouth: "frown" }]), ...[["ltMan1Phone", 1.0], ["ltWom1Phone", 0.96], ["ltMan2Phone", 1.0], ["ltWom2Phone", 0.94]].map(([who, s], i) => A(who, 1010 + i * 150, 1400, s, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }))],
         fx(tl, id, t0, L) { shadows(L, id, act("x02"), -0.5); hairSparks(tl, `${id}-a0`, t0, 4, 0.5); aura(tl, L, 800, 1130, t0, 4, { r: 320, op: 0.7 }); zapLine(tl, L, 880, 1000, 960, 1010, t0, 4, { w: 5, seed: 31, r: 160 });
           phone100(tl, L, 1010, 760, t0 + 0.1, { s: 0.9 }); phone100(tl, L, 1160, 700, t0 + 0.1, { s: 0.8 }); phone100(tl, L, 1310, 760, t0 + 0.1, { s: 0.8 });

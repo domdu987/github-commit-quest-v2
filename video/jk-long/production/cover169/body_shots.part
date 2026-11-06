@@ -1,6 +1,6 @@
       const HEAVEN = { dark: 0.08, light: { from: "left", rim: "#fffbe8", rimOp: 0.7, rimW: 5, shade: "#6a6a98", shadeOp: 0.3, shadeW: 28, soft: 9, vol: false },
         grade: { top: "#2a2040", bottom: "#ffd890", op: 0.3 } };
-      const CAM = fr(610, 838, 2.8, 420, 500);
+      const CAM = fr(610, 838, 2.0, 560, 520);
       shot("x01", { ...HEAVEN, set: "jkCloud", setOpts: { id: "jqcov" }, captions: [], camAt: CAM, push: 0, blur: { far: 8, mid: 5 },
         actors: [A("jkYouCard", 610, 1400, 1.04, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o", sweat: true }])],
         extra(L, id) { // a dark dragon looming in the mid layer, placed by screen position (mid parallax 0.6)
