@@ -169,6 +169,25 @@
    - ต้องไม่มี FAIL ก่อนเรนเดอร์
    - WARN ต้องมีเหตุผลเขียนไว้ใน note ของคัตนั้น
 
+### ใส่ cine.js ในตอนที่ทำอยู่ (ทำครั้งเดียวต่อ workspace)
+1. คัดลอก `video/lib-shared/cine.js` และ `video/lib-shared/engine.js` ไปที่ `hf/lib/`
+   - `engine.js` ตัวใหม่รับ `sh.parallax` กับ `sh.camMod` ได้ ถ้าไม่ใส่สองค่านี้ ผลเหมือนเดิมทุกอย่าง
+   - workspace ที่สร้างใหม่ด้วย `setup_workspace.sh` ได้สองไฟล์นี้อัตโนมัติ
+2. ใน `make.py` เพิ่ม `"cine.js"` ในรายการไฟล์ที่คัดลอก
+3. ใน `head.part` เพิ่ม `<script src="assets/cine.js"></script>` ต่อจาก lib ของเรื่อง
+4. ใส่แผนเข้า template แบบเดียวกับ schedule
+   - เช่น `html = html.replace("/*__CINE__*/", json.dumps({"shotlist": shotlist, "colorscript": colorscript}, ensure_ascii=False))`
+5. ใน `foot.part` เรียก `Cine.episode(shots, /*__CINE__*/);` บรรทัดก่อน `Engine.build(root, tl, shots);`
+6. ลบสิ่งที่ขัดกับคู่มือออกจาก shots
+   - ภาพสั่นในช็อตฮุก
+   - `grade` แบบ gradient เดิม (cine ทำให้แล้ว)
+   - sting ที่เกิน 1
+7. snapshot ตามจุดในสตอรีบอร์ด แล้วทำแผ่นคู่กับทะเลลด EP.2 ก่อนเรนเดอร์
+
+ผลทดสอบ 6 พ.ย.: ใส่ cine.js ให้ทะเลลด EP.2 ตัวจริงแบบไม่แก้ช็อตเลย หน้าไม่มี error
+- ช่วงปลอดภัยอุ่นและสดเหมือนเดิม · ช่วงผิดปกติสีจางลง
+- ช่วงภัยเย็น มืดลง มี low-key · dutch 10° กินเต็มเฟรม · flicker กับ whip ทำงาน
+
 ### เครื่องมือ
 - **`video/lib-shared/cine.js`:**
   - API อยู่ในหัวไฟล์

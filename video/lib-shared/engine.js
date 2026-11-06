@@ -130,11 +130,17 @@
     // depth of field: blur per layer, e.g. blur: { far: 3, fg: 10 }
     Object.entries(sh.blur || {}).forEach(([layer, px]) => { L[layer].style.filter = px ? `blur(${px}px)` : "none"; });
     // shake(t) returns px of sideways shake, or { x, y, r } for a first-person head (bob up and down, roll in degrees)
+    // sh.parallax overrides the layer ratios for this shot (e.g. { far: 0.3 }) · sh.camMod(t, cam, camAt) may change
+    // { x, y, s, hx, hy, r } after the move and the shake are worked out (cine.js: handheld noise, hold still, dutch, whip)
+    const PX = sh.parallax ? { ...PARALLAX, ...sh.parallax } : PARALLAX;
     const applyCam = (k0) => {
-      const { x, y, s } = camAt(k0 * sh.dur, k0);
-      const sk = sh.shake ? sh.shake(k0 * sh.dur) : 0, hx = typeof sk === "number" ? sk : sk.x || 0, hy = typeof sk === "number" ? 0 : sk.y || 0;
-      const roll = typeof sk === "number" || !sk.r ? "" : ` rotate(${sk.r.toFixed(3)})`;
-      Object.entries(PARALLAX).forEach(([layer, p]) => {
+      const t = k0 * sh.dur;
+      let { x, y, s } = camAt(t, k0);
+      const sk = sh.shake ? sh.shake(t) : 0;
+      let hx = typeof sk === "number" ? sk : sk.x || 0, hy = typeof sk === "number" ? 0 : sk.y || 0, r = typeof sk === "number" ? 0 : sk.r || 0;
+      if (sh.camMod) ({ x, y, s, hx, hy, r } = sh.camMod(t, { x, y, s, hx, hy, r }, (tt) => camAt(tt, sh.dur ? tt / sh.dur : 0)));
+      const roll = r ? ` rotate(${r.toFixed(3)})` : "";
+      Object.entries(PX).forEach(([layer, p]) => {
         const ls = 1 + (s - 1) * p;
         L[layer].setAttribute("transform", `translate(540 960)${roll} scale(${ls}) translate(${-540 - x * p + hx} ${-960 - y * p + hy})`);
       });
