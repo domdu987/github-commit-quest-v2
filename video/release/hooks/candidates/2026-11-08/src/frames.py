@@ -76,8 +76,28 @@ h3 = f"""<defs><linearGradient id="s3" x1="0" y1="0" x2="0" y2="1"><stop offset=
 <g transform="translate(900,1250)" opacity=".9"><path d="M-70,-140Q0,-170 70,-140L80,60H-80Z" fill="#6a8a5a" {ln(4)}/><path d="M-60,-60h120" stroke="#f07a1a" stroke-width="10" opacity=".8"/><circle cy="-190" r="46" fill="#d8d0c4" {ln(4)}/></g>
 """
 
-for i, (body, c1, cmd) in enumerate([(h1, "ถ้าวันหนึ่ง… ลูกคุณเพิ่งถูกช่วยขึ้นจากน้ำ", "อย่าอุ้มพาดบ่า"),
-                                      (h2, "ถ้าวันหนึ่ง… น้องคุณแกล้งจมน้ำอีกแล้ว", "อย่าคิดว่าน้องแกล้ง"),
+
+# ---------------- hook 4 (v2): canal bridge — big brother mid-air, little brother on the railing about to follow; murky water, a stump under the surface
+h4 = f"""<defs><linearGradient id="s4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6d8a0"/><stop offset="1" stop-color="#d8e0c0"/></linearGradient>
+<linearGradient id="w4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a7a4a"/><stop offset="1" stop-color="#4a4228"/></linearGradient></defs>
+<rect width="1080" height="1920" fill="url(#s4)"/>
+<rect y="1020" width="1080" height="900" fill="url(#w4)"/>
+{''.join(f'<path d="M{k*120},{1080+(k%3)*60}q40,-14 80,0" stroke="#c8b88a" stroke-width="5" fill="none" opacity=".6"/>' for k in range(9))}
+<!-- the hidden stump under the murky surface (the viewer sees it, the boys do not) -->
+<path d="M560,1380l-30,-160l40,20l20,-60l30,70l40,-40l-10,170z" fill="#2a2216" opacity=".55"/>
+<!-- the concrete bridge from the left, railing -->
+<path d="M-20,700H560V780H-20Z" fill="#b8b0a0" {ln(6)}/><path d="M-20,600H560" stroke="#8a8478" stroke-width="12"/>{''.join(f'<path d="M{20+k*60},600V700" stroke="#8a8478" stroke-width="10"/>' for k in range(10))}
+<!-- big brother in mid-air, arms up -->
+<g transform="translate(700,760) rotate(18)"><path d="M-50,-120h100v150h-100z" fill="#2a8ad0" {ln(5)}/><circle cy="-160" r="44" fill="#b97c52" {ln(5)}/><path d="M-50,-110L-110,-220M50,-110L110,-220" stroke="#b97c52" stroke-width="22" stroke-linecap="round"/><path d="M-30,30L-50,140M30,30L60,140" stroke="#b97c52" stroke-width="24" stroke-linecap="round"/></g>
+<!-- little brother climbing onto the railing, one leg over (the lure: follow him) -->
+<g transform="translate(420,600)"><path d="M-60,-160Q0,-180 60,-160L70,40H-70Z" fill="#f2c230" {ln(6)}/><circle cy="-220" r="58" fill="#c98a5e" {ln(6)}/><path d="M-58,-236Q-50,-290 0,-292Q50,-290 58,-236Q20,-260 -58,-236Z" fill="#1e1612"/>
+<path d="M-20,40L-30,110M30,40L130,60" stroke="#c98a5e" stroke-width="30" stroke-linecap="round"/><path d="M60,-120L150,-200" stroke="#c98a5e" stroke-width="22" stroke-linecap="round"/></g>
+<!-- a hand-painted sign on the bridge post (the clue): ห้ามกระโดด -->
+<g transform="translate(120,520)"><rect x="-90" y="-60" width="180" height="80" rx="8" fill="#f2f2e8" {ln(4)}/><text x="0" y="-8" font-family="F3" font-size="28" text-anchor="middle" fill="#c8241e">ห้ามกระโดด</text></g>
+"""
+
+for i, (body, c1, cmd) in enumerate([(h2, "ถ้าวันหนึ่ง… น้องคุณแกล้งจมน้ำอีกแล้ว", "อย่าคิดว่าน้องแกล้ง"),
+                                      (h4, "ถ้าวันหนึ่ง… พี่คุณกระโดดลงคลอง", "อย่ากระโดดตามพี่"),
                                       (h3, "ถ้าวันหนึ่ง… ลูกขอถอดชูชีพบนเรือ", "อย่ายอมให้ถอด")], 1):
     open(os.path.join(OUT, f"hook{i}.html"), "w").write(page(body, c1, cmd, "ฮุก " + str(i)))
 print("ok")
