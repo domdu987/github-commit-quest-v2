@@ -108,6 +108,9 @@ for pre, label in (("e", "EP"), ("x", "bridge copy of EP")):
         if pre == "e" and n == 3:   # B4: the hospital shot pulls back so the full-size ambulance fits beside them
             a0 = 'cam: { keys: [{ t: 0, ...fr(600, 940, 1.35, 540, 960) }, { t: D("hosp"), glide: D("hosp"), ...fr(620, 930, 1.45, 540, 960) }] },'
             assert body.count(a0) == 1; body = body.replace(a0, 'cam: { keys: [{ t: 0, ...fr(700, 900, 1.0, 540, 960) }, { t: D("hosp"), glide: D("hosp"), ...fr(710, 895, 1.06, 540, 960) }] },')
+        if n == 3:   # B4: the twist push-in was framed for the old bike size: keep the same framing on the dark headlight
+            a0 = "fr(BIKE.x - 0.3 * 283, BIKE.y - 0.3 * 430, 3.4, 540, 900)"; assert body.count(a0) == 1
+            body = body.replace(a0, "fr(BIKE.x - BIKE.s * 283, BIKE.y - BIKE.s * 430, 3.4 * 0.3 / BIKE.s, 540, 900)")
         if n == 3:   # B4: the parked motorbike ~1.1 m (it read ~0.56 m beside the 1.65 m rider)
             a0 = "BIKE = { x: 860, y: RY + 26, s: 0.3 }"; assert body.count(a0) == 1; body = body.replace(a0, "BIKE = { x: 860, y: RY + 26, s: 0.58 }")
         body = prefix_ids(body, f"{pre}{n}")
