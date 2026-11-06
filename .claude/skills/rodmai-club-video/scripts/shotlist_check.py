@@ -87,6 +87,8 @@ def main():
     ap.add_argument("--shotlist", required=True)
     ap.add_argument("--soundplan")
     ap.add_argument("--cues")
+    ap.add_argument("--part", choices=["episode", "bridge", "scene"], default="episode",
+                    help="episode (default) · bridge / scene = a long-only part of the 16:9 long: no hook, no per-part cut count, 0–1 sting")
     ap.add_argument("--long", action="store_true",
                     help="a part of the 16:9 long (bible §7): setup shots may run 3–5 s instead of 2–3 s")
     a = ap.parse_args()
@@ -130,11 +132,16 @@ def main():
         lo, hi = 18, 30
     else:
         lo, hi = round(total * 0.15), round(total * 0.25)
-    (R.ok if lo <= len(cuts) <= hi else R.fail)(f"จำนวนคัต {len(cuts)} (เกณฑ์ {lo}–{hi} สำหรับ {total:.0f} วิ)")
+    if a.part == "episode":
+        (R.ok if lo <= len(cuts) <= hi else R.fail)(f"จำนวนคัต {len(cuts)} (เกณฑ์ {lo}–{hi} สำหรับ {total:.0f} วิ)")
+    else:
+        R.ok(f"ส่วน {a.part}: {len(cuts)} คัต (ไม่ตรวจจำนวนรายส่วน · นับรวมทั้งคลิปยาวตอนตรวจไฟล์จริง)")
 
     # ---- the hook: 3 cuts in 3 s, cut, no move ----
-    hook = [c for c in cuts if c["t"] < 3.0 - 1e-6]
-    if len(hook) < 3:
+    hook = [c for c in cuts if c["t"] < 3.0 - 1e-6] if a.part == "episode" else []
+    if a.part != "episode":
+        R.ok(f"ส่วน {a.part}: ไม่มีฮุกของตอน")
+    elif len(hook) < 3:
         R.fail(f"ฮุก 0–3 วิมี {len(hook)} คัต (ต้อง 3 คัต ช็อตละ 0.8–1.2 วิ)")
     else:
         R.ok(f"ฮุก 0–3 วิมี {len(hook)} คัต")
@@ -209,7 +216,7 @@ def main():
         gap = ca - max((l[1] for l in prev), default=-9)
         if prev:
             (R.ok if gap >= 0.3 - 0.02 else R.fail)(f"คำสั่ง {cap} ที่ {ca:.2f} วิ: เว้นก่อน 'อย่า' {gap:.2f} วิ (ต้อง ≥ 0.3)")
-        if ca < 3.6:
+        if a.part == "episode" and ca < 3.6:
             if ca > 3.5:
                 R.fail(f"คำสั่งในฮุกขึ้นที่ {ca:.2f} วิ (เกิน 3.5)")
             elif ca > 3.0:
@@ -229,11 +236,14 @@ def main():
     # ---- sting: once per episode ----
     stings = [x for x in (cues or {}).get("sfx", []) if x.get("type") == "sting" and x.get("gain", 1) > 0]
     if cues is not None:
-        (R.ok if len(stings) == 1 else R.fail)(f"sting ใน cue ของมิกซ์ {len(stings)} ครั้ง (ต้อง 1 ครั้งต่อตอน ตอนภัยเผยตัวจริง)")
+        if a.part == "episode":
+            (R.ok if len(stings) == 1 else R.fail)(f"sting ใน cue ของมิกซ์ {len(stings)} ครั้ง (ต้อง 1 ครั้งต่อตอน ตอนภัยเผยตัวจริง)")
+        else:
+            (R.ok if len(stings) <= 1 else R.fail)(f"ส่วน {a.part}: sting {len(stings)} ครั้ง (0–1)")
     if sp is not None:
         st = sp.get("sting")
         if st is None:
-            R.fail("soundplan ไม่มีจุด sting")
+            (R.fail if a.part == "episode" else R.ok)("soundplan ไม่มีจุด sting" + ("" if a.part == "episode" else f" (ส่วน {a.part} ไม่บังคับ)"))
         else:
             if stings and all(abs(x["t"] - st) > 0.3 for x in stings):
                 at = ", ".join("%.2f" % x["t"] for x in stings)
