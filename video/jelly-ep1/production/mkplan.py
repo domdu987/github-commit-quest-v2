@@ -32,8 +32,8 @@ CUTS = [
     note="เปิดที่นาฬิกาแดดบนเสาเรือน เงาตะปูหมุนย้อน ๑๐ → ๗ แล้วกล้องถอยลงช้าๆ เห็นยายลออยืนที่ประตูถือตะกร้าขวดน้ำส้ม (y01) · รวม 2 ช็อตเป็น take เดียว 5.3 วิ เพื่อเอาคัตไปใช้ช่วงภัย"),
   C(a=("door", "vo", 1, 0), emotion="safe", size="MS", angle="eye", move="pushIn", fg="ไหล่ยาย (ขอบซ้าย เบลอ)", light="แสงรุ่งเช้าจากประตู",
     note="ข้ามไหล่ยาย: ต้นปฏิเสธ ลูกสองคนข้างหลัง ภูมิบีบจมูก (d01+p01 คัตเดียว ดอลลี่ช้ามาก) · 6.2 วิ: รวมคัตช่วงบ้านยายตามผู้ประสาน"),
-  C(a=("rhyme", "vo", 0, 0), emotion="safe", size="MS", angle="eye", move="hold", fg="คานบ้าน (ขอบบน)", light="แสงรุ่งเช้าจากหน้าต่าง",
-    note="ยายท่องกลอน ป้ายไม้กลอนยายลออแขวนจากคานข้างตัวยาย บรรทัดสว่างทีละบรรทัดตามเสียง · เด็กสองคนนั่งฟังที่ขอบล่าง · HG7 ห้อยบนฝาว่างด้านบน ≤ 1.3 วิ · 9.8 วิ: take เดียวทั้งสองบรรทัดแรก รวมคัตช่วงบ้านยาย · dip เพลงสั้นๆ ก่อน 'อย่าราด' (ไม่เงียบเต็ม ตามผู้ประสาน)"),
+  C(a=("rhyme", "vo", 0, 0), emotion="safe", size="MS", angle="eye", move="pushIn", fg="คานบ้าน (ขอบบน)", light="แสงรุ่งเช้าจากหน้าต่าง",
+    note="ยายท่องกลอน ป้ายไม้กลอนยายลออแขวนจากคานข้างตัวยาย บรรทัดสว่างทีละบรรทัดตามเสียง · เด็กสองคนนั่งฟังที่ขอบล่าง · HG7 ห้อยบนฝาว่างด้านบน ≤ 1.3 วิ · 9.8 วิ: take เดียวทั้งสองบรรทัดแรก รวมคัตช่วงบ้านยาย · กล้อง push-in ช้าตลอด + ยายขยับมือชี้ป้าย ไม่ให้ภาพนิ่ง (M4) · dip เพลงสั้นๆ ก่อน 'อย่าราด' (ไม่เงียบเต็ม ตามผู้ประสาน)"),
   C(a=("rhyme", 9.70), emotion="uneasy", size="CU", angle="eye", move="pushIn", fg="ไหล่น้ำหวาน (ขอบขวา เบลอ)", light="แสงหน้าต่างครึ่งหน้า อีกครึ่งเงา", face_w=420, dutch=2,
     note="หน้ายายตอนท่อง 'อยู่นิ่งอย่าถู เรียกหมอมาดู' push-in ช้าไม่หยุด เอียง 2° · 7 วิ ทั้งท่อน (กฎข้อที่ยายจะพลาดเองตอน 3) · dip สั้นก่อน 'อย่าถู'"),
   C(a=("rhyme", "vo", 1, 0), emotion="safe", size="MS", angle="low", move="hold", fg="ห่วงเป็ด (ขอบล่าง)", light="แสงรุ่งเช้าจากหน้าต่าง",
@@ -109,6 +109,7 @@ json.dump({"bands": bands, "keep": "yellow", "keep_note": "ห่วงเป็
 aya = [{"t": round(V(k, i) + o, 2), "what": w} for k, i, o, w in AYA]
 FULL = ("n02", "w04")   # the real commands (coordinator 6 Nov): full 1 s silence; the rhyme's three are short dips so the scene doesn't stall
 silences = [[round(a["t"] - 1.0, 2), round(a["t"], 2)] for a in aya if a["what"][:3] in FULL] + [[round(T_THREAT - 0.6, 2), round(T_THREAT, 2)]]   # + the dead silence before the sting
+silences += [[round(V("gone", 1) - 0.5, 2), round(V("gone", 1), 2)]]   # B2 (review 6 Nov): a beat of silence before "ตอนที่ทุกคนมองภูมิ…"
 dips = [[round(a["t"] - 0.45, 2), round(a["t"], 2)] for a in aya if a["what"][:3] not in FULL]
 blk = SH["endb"]["start"]
 T_DRONE = min(c["t"] for c in cuts if c["emotion"] == "uneasy")

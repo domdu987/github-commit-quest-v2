@@ -9,6 +9,9 @@ PIECES = [("c_hA", 1), ("c_hB", 2), ("c_hC", 3), ("c_card", 4), ("c_door", 5), (
           ("c_beach", 11), ("c_rock", 13), ("c_sting", 14), ("c_stingB", 16), ("c_crowd", 18), ("c_know", 24), ("c_choice", 25), ("c_choiceB", 26),
           ("c_gone", 27), ("c_goneB", 28), ("c_vote", 29), ("c_endb", 30)]
 lines = [dict(v, t=s["start"] + v["t"]) for s in src["shots"] for v in s["vo"]]
+# M9 (review 6 Nov): y02's second fragment "หนวดใสพันขา อย่าราดน้ำท่า" starts at 2.52 s in the recording (Whisper word time), not 2.86
+for v in lines:
+    if v["id"] == "y02": v["frags"] = [0.0, 2.48, 7.40, 12.24]
 out = []
 for i, (k, n) in enumerate(PIECES):
     a = T[n]; b = T[PIECES[i + 1][1]] if i + 1 < len(PIECES) else src["total"]

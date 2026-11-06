@@ -29,9 +29,9 @@
   // box jellyfish: a rounded cube bell (nearly clear, a cool rim light, faint inner organs), four pedalia at the corners, each with a
   // bundle of long thin tentacles (beaded with stinging cells). (x, y) = the bell's lower rim; ~110 wide, tentacles ~ o.len (360)
   J.box = (x, y, s = 1, o = {}) => { const r = mk(o.seed || 7), g = nid("jb"), len = o.len ?? 360, sw = o.sway ?? 0, lit = o.lit ?? 1;
-    // four corners: two front (±56, 4) and two back (±30, -14); each trails a bundle of 4–5 tentacles beaded with stinging cells
+    // four corners: two front (±56, 4) and two back (±30, -14); each trails a bundle of o.per (5) tentacles beaded with stinging cells (o.per 1: the single-tentacle kind)
     let t = "";
-    [[-56, 4, 1], [-30, -12, 0.75], [30, -12, 0.75], [56, 4, 1]].forEach(([cx, cy, fr], c) => { for (let k = 0; k < 5; k++) { let d = `M${cx},${cy}`, xx = cx + (k - 2) * 3; const L0 = len * fr * (0.75 + 0.25 * r());
+    [[-56, 4, 1], [-30, -12, 0.75], [30, -12, 0.75], [56, 4, 1]].forEach(([cx, cy, fr], c) => { for (let k = 0; k < (o.per ?? 5); k++) { let d = `M${cx},${cy}`, xx = cx + (k - 2) * 3; const L0 = len * fr * (0.75 + 0.25 * r());
       for (let j = 1; j <= 9; j++) { const yy = cy + (L0 * j) / 9; xx += (r() - 0.5) * 18 + sw * j * 2.4 + (cx < 0 ? -1.2 : 1.2); d += `Q${f1(xx + (j % 2 ? 10 : -10))},${f1(yy - L0 / 18)} ${f1(xx)},${f1(yy)}`; }
       t += `<path d="${d}" stroke="#ffffff" stroke-width="${f1(4.2 - k * 0.5)}" fill="none" opacity="${f1((0.75 - k * 0.08) * fr * lit)}" stroke-linecap="round"/>`;
       t += `<path d="${d}" stroke="#a88ae8" stroke-width="2" fill="none" opacity="${f1(0.6 * lit)}" stroke-dasharray="3 8" stroke-linecap="round"/>`; } });
@@ -73,7 +73,7 @@
       <g transform="translate(0,-290)"><rect x="-104" y="-62" width="208" height="124" rx="12" fill="#fff" ${OUT(3)}/><rect x="-96" y="-54" width="192" height="38" rx="6" fill="#2a7ad0"/>
         <text x="0" y="-26" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="26" fill="#fff">น้ำส้มสายชู</text>
         <circle cx="-58" cy="20" r="34" fill="#e8f6fc" stroke="${INK}" stroke-width="2.4"/><g transform="translate(-58,30) scale(.42)">${J.box(0, 0, 1, { len: 70, seed: 3, lit: 1.4 })}</g>
-        <text x="30" y="14" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="17" fill="#1e2a3a">สำหรับแมงกะพรุน</text><text x="30" y="42" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="18" fill="#d8312a">ราด 30 วินาที</text></g></g>`; };
+        <text x="30" y="14" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="17" fill="#1e2a3a">สำหรับแมงกะพรุน</text><text x="30" y="42" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="15" fill="#d8312a" textLength="128" lengthAdjust="spacingAndGlyphs">ราดอย่างน้อย 30 วินาที</text></g></g>`; };
 
   // the lifeguard tower: a red-and-yellow hut on four stilts with a ladder, a red-yellow flag, a rescue tube and the board "หอกู้ภัย"
   // · (x, y) = the foot of the front stilts; ~900 tall
