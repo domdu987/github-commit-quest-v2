@@ -1,0 +1,264 @@
+      // ================= เรือล่มคืนลอยกระทง EP.2 (Shorts 9:16) · shots (helpers in common.part, plan in plan.py) =================
+      // the cabin close set (inside บุญล้น, the pontoon lights behind), tilted by `deg` round the frame centre: posts, canopy, the bench with its
+      // orange cushion, the floor, water flooding along the low side (right when deg > 0)
+      function cabin(L, o = {}) {
+        riverNight(L, { hz: 520, moon: [900, 160], tx: 300, fwx: 2400 });
+        put(L.far, `<rect x="-900" y="560" width="2900" height="90" fill="#9a6a3e"/><path d="M-900,560H2000" stroke="#d8d2c0" stroke-width="8"/>`);
+        put(L.glow, `<ellipse cx="540" cy="560" rx="900" ry="120" fill="url(#kBulb)" opacity=".55"/>`);
+        put(L.set, `<path d="M-200,300V1500M1280,300V1500" stroke="#7a4a24" stroke-width="44"/><path d="M-400,330Q540,250 1500,330L1480,390H-380Z" fill="url(#kRoof)" ${KOUT}/>
+          <rect x="-300" y="1500" width="1700" height="70" rx="10" fill="#a8763e" ${KOUT}/><rect x="-280" y="1460" width="1660" height="48" rx="18" fill="#ff7a2a" ${KOUT2}/><path d="M-400,1800H1500V2300H-400Z" fill="#4a2c16"/>`);
+        if (o.flood) put(L.act, `<g class="flood"><path d="M-400,${o.flood}Q540,${o.flood - 30} 1500,${o.flood}V2300H-400Z" fill="#6a8ac8" opacity=".55"/><path d="M-400,${o.flood}Q540,${o.flood - 30} 1500,${o.flood}" stroke="#e8f2ff" stroke-width="8" fill="none" opacity=".8"/></g>`);
+      }
+      // the boat leaning: rotate the whole shot (sky and pontoon lights included: the camera rides the boat)
+      // the zoom that keeps a 1080×1920 frame covered when it is turned by deg
+      const coverS = (deg) => { const a = Math.abs(deg) / 57.3; return Math.cos(a) + (1920 / 1080) * Math.sin(a) + 0.02; };
+      const lean = (tl, id, t0, deg, at = 0) => tl.set(`#${id}-world`, { rotation: deg, scale: coverS(deg), svgOrigin: "540 960" }, t0 + at);
+      const leanTo = (tl, id, t, deg, dur, ease = "power2.inOut") => tl.to(`#${id}-world`, { rotation: deg, scale: coverS(deg), svgOrigin: "540 960", duration: dur, ease }, t);
+      // under the capsized boat: the dark hull overhead, the canopy frame hanging down, candle light shimmering on the surface beyond its edge
+      function underBoat(L) {
+        put(L.sky, `<rect x="-900" y="-900" width="2900" height="3900" fill="#06101e"/><rect x="-900" y="-900" width="2900" height="1500" fill="#0e2240"/>`);
+        put(L.far, Array.from({ length: 30 }, (_, i) => `<ellipse cx="${-700 + i * 100}" cy="${520 + (i % 3) * 10}" rx="${30 + (i * 13) % 30}" ry="5" fill="#ffc45a" opacity="${(0.25 + (i % 4) * 0.12).toFixed(2)}"/>`).join(""));
+        put(L.set, `<path d="M-900,-900H1400Q1400,300 1100,420Q540,520 -900,460Z" fill="#2a1a10"/><path d="M-900,440Q540,500 1100,400" stroke="#4a2c16" stroke-width="30" fill="none"/>
+          <path d="M-200,460V1100M400,480V1180M900,430V1000" stroke="#3a2412" stroke-width="30"/><path d="M-300,1090Q300,1180 1000,990" stroke="#1e4a84" stroke-width="40" fill="none" opacity=".8"/>`);
+        put(L.glow, `<ellipse cx="1250" cy="560" rx="380" ry="160" fill="url(#kBulb)" opacity=".5"/>`);
+        put(L.fg, Array.from({ length: 16 }, (_, i) => `<circle cx="${(i * 137) % 1100}" cy="${1900 - (i * 211) % 1500}" r="${6 + (i % 4) * 4}" fill="none" stroke="#cfe8ff" stroke-width="3" opacity=".6"/>`).join(""));
+      }
+      // the night river at water level: candles everywhere, the moon on the water, the capsized hull floating in the back
+      function waterLevel(L, o = {}) {
+        riverNight(L, { hz: o.hz ?? 520, moon: o.moon || [860, 170], tx: o.tx ?? 160, fwx: o.fwx ?? 700 });
+        krathongField(L, { n: o.n ?? 34, y0: (o.hz ?? 520) + 20, y1: 1500, smax: 0.7, seed: o.seed || 31 });
+        if (o.hull) {
+          const [hx, hy, hs] = o.hull;
+          put(L.set, `<g transform="translate(${hx},${hy}) scale(${hs})"><path d="M-660,0Q-640,-60 -560,-120Q-300,-196 0,-200Q300,-196 560,-120Q640,-60 660,0Z" fill="url(#kHull)" ${KOUT}/>
+            <path d="M-560,-120Q-300,-196 0,-200Q300,-196 560,-120" stroke="#3a2010" stroke-width="12" fill="none"/><path d="M-650,-6Q0,8 650,-6" stroke="#e2302a" stroke-width="14" fill="none"/>
+            <rect x="-900" y="0" width="1800" height="300" fill="url(#kWater)"/><path d="M-900,2${Array.from({ length: 45 }, () => "q20,-9 40,0").join("")}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/></g>`);
+        }
+      }
+      // the water line across the frame at y (over everything behind it: actors in front stand in it)
+      const waterOver = (L, y, o = {}) => put(L.act, `<g transform="translate(540,${y})"><path d="M-900,0${Array.from({ length: 45 }, () => `q20,-10 40,0`).join("")}V900H-900Z" fill="url(#kWater)" opacity="${o.op ?? 1}"/>
+        ${[1, 2, 3].map((i) => `<ellipse cx="${o.rx ?? 0}" cy="8" rx="${150 + i * 70}" ry="${20 + i * 12}" fill="none" stroke="#b8c8ff" stroke-width="3.5" opacity="${(0.6 - i * 0.15).toFixed(2)}"/>`).join("")}
+        <path d="M-900,0${Array.from({ length: 45 }, () => `q20,-10 40,0`).join("")}" stroke="#c8d8ff" stroke-width="4" fill="none" opacity=".8"/></g>`);
+      // the empty life jacket (open straps, no whistle), floating
+      const emptyVest = (x, y, s = 1, r = 0) => `<g transform="translate(${k1(x)},${k1(y)}) scale(${s}) rotate(${r})"><path d="M-90,-20Q-96,-90 -40,-100L-6,-96L-4,60Q-50,70 -92,56Z" fill="url(#kVest)" ${KOUT}/><path d="M90,-20Q96,-90 40,-100L6,-96L4,60Q50,70 92,56Z" fill="url(#kVest)" ${KOUT}/>
+        <path d="M-92,-40H-6M-92,0H-6M-92,40H-6" stroke="#e8e4d8" stroke-width="12"/>${[-40, 0, 40].map((y) => `<path d="M6,${y}q40,-6 70,14" stroke="#e8e4d8" stroke-width="12" fill="none"/><rect x="-14" y="${y - 9}" width="20" height="18" rx="4" fill="#2a2e34" ${KOUT2}/>`).join("")}</g>`;
+
+      // ---------- 1–3 · open: the floor tilts, water pours over the low gunwale (ECU) → the whole boat leans at the pontoon (WS) → ข้าวปั้น on the low side (CU) ----------
+      const O1 = D("open") / 3, O2 = 2 * D("open") / 3;
+      add("open", {
+        extra(L) { cabin(L, { flood: 1700 }); },
+        ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd89a", rimOp: 0.9 }, blur: { sky: 4, far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(900, 1640, 2.4, 540, 960) }, { t: O1, ...fr(540, 1100, 0.62, 540, 960) }, { t: O2, ...fr(860, 1300, 2.3, 540, 900) }] },
+        actors: [
+          A("khaopan", 860, 1800, 0.95, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: O2, mode: "cling", eyes: "wide", mouth: "scream" }]),
+          A("maprang", 200, 1800, 1.1, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }], { flip: false }),
+          A("pxB", 520, 1800, 1.0, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "scream" }]),
+        ],
+        captions: capsQ("open"),
+        fx(tl, id, t0, L) {
+          lean(tl, id, t0, 18);
+          put(L.act, `<g id="${id}-pour">${Array.from({ length: 8 }, (_, i) => `<path d="M${1000 + i * 30},1440q-20,90 -60,170" stroke="#e8f2ff" stroke-width="${10 + (i % 3) * 4}" fill="none" stroke-linecap="round" opacity=".85"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-pour`, { y: -40 }, { y: 30, duration: 0.35, repeat: 8, ease: "none", immediateRender: false }, t0);
+        },
+      });
+      // ---------- 4–5 · hook: มะปราง on the high side looks down at him — the command — the hands of a man about to run uphill (MCU) ----------
+      add("hook", {
+        extra(L) { cabin(L, { flood: 1700 }); },
+        ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd89a", rimOp: 0.9 }, blur: { sky: 4, far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(200, 1297, 2.7, 540, 820) }, { t: 1.12, ...fr(620, 1450, 2.0, 540, 1000) }] },
+        actors: [
+          A("maprang", 200, 1800, 1.1, [{ t: 0, mode: "sitChair", eyes: "worry", mouth: "o" }]),
+          A("pxB", 640, 1800, 1.0, [{ t: 0, mode: "crouch", eyes: "wide", mouth: "o" }, { t: 1.12, mode: "lunge", eyes: "wide", mouth: "scream" }], { flip: true }),
+        ],
+        captions: capsQ("hook"),
+        fx(tl, id, t0, L) { lean(tl, id, t0, 18); },
+      });
+      // ---------- 6 · recap (Shorts only): the "12 คน" sign · the counter 0019 · the two of them in the middle of the boat ----------
+      add("recap", {
+        extra(L) { boatAtPier(L, { sink: 0.98, tilt: -14, seed: 33 }); },
+        ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(870, 1080, 3.6, 540, 820) }, { t: 2.6, glide: 2.4, ...fr(870, 1080, 3.8, 540, 820) }, { t: 2.65, ...fr(600, 1150, 1.6, 540, 1000) }, { t: D("recap"), glide: D("recap") - 2.65, ...fr(560, 1150, 1.9, 540, 1000) }] },
+        actors: onBoat(600, 1220, -14, [["maprang", -30, 0.32, "cling", "wide", "o"], ["khaopan", 120, 0.26, "cling", "wide", "o"], ["pxC", 250, 0.3, "raise", "wide", "scream"], ["pxE", 340, 0.34, "raise", "wide", "o", true]]),
+        captions: capsQ("recap"),
+        fx(tl, id, t0, L) {
+          put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.98, tilt: -14, water: true })));
+          put(L.light, `<g id="${id}-ct" opacity="0" transform="translate(860,1500) rotate(-12) scale(.4)"><circle r="300" fill="#b8902a" ${KOUT}/><circle r="270" fill="#e2b84a"/><rect x="-200" y="-70" width="400" height="140" rx="14" fill="#2a1e10"/>${[0, 1, 2, 3].map((i) => `<rect x="${-192 + i * 100}" y="-58" width="84" height="116" rx="6" fill="#f6f2e4"/><text x="${-150 + i * 100}" y="34" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="92" fill="${i > 1 ? "#c8241e" : "#1e1a14"}">${"0019"[i]}</text>`).join("")}</g>`);
+          tl.fromTo(`#${id}-ct`, { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 0.4, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 1.2);
+          tl.to(`#${id}-ct`, { opacity: 0, duration: 0.2 }, t0 + 2.6);
+        },
+      });
+      // ---------- 7–9 · climb: two men scramble up to the high side (WS, dutch) → มะปราง slides toward the low gunwale (MCU low) → the boat whips back (MS) ----------
+      add("climb", {
+        extra(L) { cabin(L, { flood: 1680 }); },
+        ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd89a", rimOp: 0.9 }, blur: { sky: 4, far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 1.0, 540, 960) }, { t: 1.15, ...fr(360, 1600, 1.9, 540, 1100) }, { t: 2.55, ...fr(540, 1350, 1.3, 540, 1000) }] },
+        actors: [
+          A("pxB", 760, 1800, 1.0, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 200, dur: 1.4, ease: "power1.in" }, talk: [TK("climb", 0, "scream")] }),
+          A("pxE", 960, 1800, 1.05, [{ t: 0, mode: "lunge", eyes: "wide", mouth: "o" }], { flip: true, moveTo: { x: 360, dur: 1.6, ease: "power1.in" } }),
+          A("maprang", 300, 1800, 1.1, [{ t: 0, mode: "sitChair", eyes: "wide", mouth: "o" }, { t: 1.2, mode: "fall", eyes: "wide", mouth: "scream" }], { moveTo: { x: 520, dur: 1.8, ease: "power2.in", at: 1.15 } }),
+        ],
+        captions: capsQ("climb"),
+        fx(tl, id, t0, L) {
+          lean(tl, id, t0, 18);
+          // the whip back: the lean swings from +18 to -14 as their weight lands on the high side
+          leanTo(tl, id, t0 + 2.55, -14, 0.6, "power3.in");
+        },
+      });
+      // ---------- 10–13 · rule: มะปราง grabs the seat back instead of running to him (ECU, still) → the rule paddle on its rope, rule 2 →
+      // everyone's hands on the seat backs (MS) → "ข้าวปั้น! จับไว้!" "ผมจับอยู่!" (CU, the two of them) ----------
+      const R1 = 2.33, R2 = 4.33, R3 = vo("rule", 3) - 0.2;
+      add("rule", {
+        extra(L) { cabin(L, { flood: 1690 }); },
+        ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd89a", rimOp: 0.9 }, blur: { sky: 4, far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(300, 1297, 2.8, 540, 820) }, { t: R1, ...fr(300, 1297, 2.8, 540, 820) }, { t: R2, ...fr(540, 1400, 1.25, 540, 1000) }, { t: R2 + 0.01, glide: R3 - R2 - 0.05, ...fr(540, 1420, 1.35, 540, 1000) }, { t: R3, ...fr(560, 1330, 1.9, 540, 900) }] },
+        actors: [
+          A("maprang", 300, 1800, 1.1, [{ t: 0, mode: "cling", eyes: "worry", mouth: "flat" }, { t: R3, mode: "cling", eyes: "wide", mouth: "scream" }], { talk: [TK("rule", 3, "scream")] }),
+          A("khaopan", 820, 1800, 0.95, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }], { talk: [TK("rule", 4, "o")] }),
+          A("pxC", 560, 1800, 1.0, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }]),
+        ],
+        captions: capsQ("rule"),
+        fx(tl, id, t0, L) {
+          lean(tl, id, t0, -8); for (let k = 0; k < 8; k++) leanTo(tl, id, t0 + 0.2 + k * 1.2, k % 2 ? -8 : -5, 1.2, "sine.inOut");
+          // the knuckles on the seat back (foreground) while she holds on
+          rulePaddle(L, `${id}-pd`, 1, [0]); paddleIn(tl, `${id}-pd`, t0 + R1); tl.set(`#${id}-pd`, { opacity: 0 }, t0 + R2);
+        },
+      });
+      // ---------- 14–15 · fail: the two climbers slide back down to the same side (WS, shake) → the boat rolls, the canopy comes down over them (WS low, dutch, the sting) ----------
+      const F1 = 2.85;
+      add("fail", {
+        extra(L) { boatAtPier(L, { sink: 1.0, tilt: -10, seed: 35 }); },
+        ...NIGHT, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.8 }, blur: { sky: 1, far: 1.5, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(600, 1120, 1.5, 540, 1000) }, { t: F1, ...fr(600, 1180, 1.2, 540, 1150) }] },
+        actors: onBoat(600, 1220, -10, [["pxB", 300, 0.33, "fall", "wide", "scream"], ["pxE", 340, 0.34, "fall", "wide", "scream", true], ["maprang", -30, 0.32, "cling", "wide", "o"], ["khaopan", 120, 0.26, "cling", "wide", "o"], ["lungMuek", 405, 0.36, "raise", "angry", "scream", true]])
+          .map((a, i) => i < 2 ? { ...a, moveTo: { x: a.x - 420, dur: 1.4, ease: "power2.in", at: 0.6 } } : a),
+        captions: capsQ("fail"),
+        fx(tl, id, t0, L) {
+          put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 1.0, tilt: -10, water: true })));
+          lean(tl, id, t0, 0); leanTo(tl, id, t0 + 0.8, -6, 1.6, "power2.in");
+          // the roll: the world goes over, the canopy (a black shape against the pontoon lights) falls across the frame, water closes
+          leanTo(tl, id, t0 + F1, -32, 0.5, "power3.in");
+          put(L.light, `<g id="${id}-cv" opacity="0"><path d="M-200,-200H1300V900Q540,1100 -200,900Z" fill="#05060c"/><path d="M-200,880Q540,1080 1300,880" stroke="#1e4a84" stroke-width="40" fill="none"/></g>`);
+          tl.fromTo(`#${id}-cv`, { opacity: 1, y: -1100 }, { opacity: 1, y: 300, duration: 0.45, ease: "power3.in", immediateRender: false }, t0 + F1 + 0.1);
+        },
+      });
+      // ---------- 16–18 · under: under the hull, มะปราง swims for the lit edge (MCU) → the propeller still turning (ECU) → she kicks away from it (MS) ----------
+      const U1 = 1.45, U2 = 2.9;
+      add("under", {
+        extra(L) { underBoat(L); },
+        ...NIGHT, light: { ...MOONL, from: "right", rim: "#ffc46a", rimOp: 0.7 }, blur: { sky: 2, far: 3, fg: 3 },
+        cam: { keys: [{ t: 0, ...fr(420, 1000, 2.0, 540, 900) }, { t: U1, ...fr(1150, 720, 2.6, 540, 960) }, { t: U2, ...fr(640, 950, 1.1, 540, 1000) }, { t: D("under"), glide: D("under") - U2, ...fr(760, 900, 1.2, 540, 1000) }] },
+        actors: [A("maprangWet", 420, 1500, 0.9, [{ t: 0, mode: "raise", eyes: "wide", mouth: "flat" }], { moveTo: { x: 980, y: 1200, dur: D("under"), ease: "power1.inOut" } })],
+        captions: capsQ("under"),
+        fx(tl, id, t0, L) {
+          // the propeller at the stern (top right): three blades turning slowly, a stream of bubbles
+          put(L.set, `<g transform="translate(1150,720)"><path d="M-150,-180L-20,-10" stroke="#4a4e54" stroke-width="22" stroke-linecap="round"/><g id="${id}-pp">${[0, 120, 240].map((a) => `<path d="M0,0Q60,-30 110,0Q60,24 0,0Z" fill="#8a8e94" ${KOUT2} transform="rotate(${a})"/>`).join("")}<circle r="16" fill="#6a6e74" ${KOUT2}/></g></g>`);
+          tl.fromTo(`#${id}-pp`, { rotation: 0 }, { rotation: 720, svgOrigin: "0 0", duration: D("under"), ease: "none", immediateRender: false }, t0);
+          put(L.act, `<g id="${id}-bb">${Array.from({ length: 12 }, (_, i) => `<circle cx="${1150 + ((i * 47) % 120) - 60}" cy="${720 - i * 40}" r="${5 + (i % 3) * 3}" fill="none" stroke="#cfe8ff" stroke-width="3" opacity=".7"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-bb`, { y: 0 }, { y: -300, duration: 2.5, repeat: 1, ease: "none", immediateRender: false }, t0);
+        },
+      });
+      // ---------- 19–20 · surf: ลุง clings to the upturned hull "เกาะเรือไว้!" (MS) → มะปราง alone, thrashing among the candles, no life jacket — the long hold (WS) ----------
+      const S1 = vo("surf", 1) - 0.1;
+      add("surf", {
+        extra(L) { waterLevel(L, { hull: [560, 1060, 0.85], seed: 36 }); },
+        ...NIGHT, light: { ...WARML, rim: "#ffc46a", rimOp: 0.9 }, blur: { sky: 3, far: 3, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(520, 1000, 2.2, 540, 1000) }, { t: S1, ...fr(540, 1300, 1.0, 540, 1000) }, { t: D("surf"), glide: D("surf") - S1, ease: "none", ...fr(560, 1340, 1.25, 540, 1000) }] },
+        actors: [
+          A("lungMuek", 470, 1640, 0.5, [{ t: 0, mode: "cheer", eyes: "wide", mouth: "o" }], { talk: [TK("surf", 0, "scream")] }),
+          A("maprangWet", 620, 1700, 0.62, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }], { talk: [TK("surf", 2, "scream")] }),
+        ],
+        captions: capsQ("surf"),
+        fx(tl, id, t0, L) {
+          waterOver(L, 1380, { rx: 80 });
+          tl.fromTo(`#${id}-a1`, { y: 0 }, { y: 26, duration: 0.45, yoyo: true, repeat: 16, ease: "sine.inOut", immediateRender: false }, t0);
+          put(L.fg, krathong(120, 1760, 1.4, { seed: 361 }) + kRefl(120, 1760, 1.4, 200));
+          put(L.glow, kGlow(120, 1760, 1.4, 120));
+        },
+      });
+      // ---------- 21 · jug (twist 1): "ตุ้บ" — a gallon lands beside her; she grabs it: "แกลลอน… เหล้า?" (CU, pull-out) ----------
+      add("jug", {
+        extra(L) { waterLevel(L, { hz: 420, moon: [860, 160], seed: 37 }); },
+        ...NIGHT, light: { ...WARML, rim: "#ffc46a", rimOp: 0.95 }, blur: { sky: 3, far: 3, mid: 2, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(520, 1120, 2.5, 540, 900) }, { t: D("jug"), glide: D("jug"), ease: "power2.inOut", ...fr(530, 1150, 2.15, 540, 930) }] },
+        actors: [A("maprangWet", 520, 1640, 0.92, [{ t: 0, mode: "raise", eyes: "wide", mouth: "o" }, { t: 0.6, mode: "cling", eyes: "wide", mouth: "o" }], { talk: [TK("jug", 0, "o")] })],
+        captions: capsQ("jug"),
+        fx(tl, id, t0, L) {
+          waterOver(L, 1300);
+          put(L.act, `<g id="${id}-g">${gallon(0, 0, 0.98, { rot: 84, water: true })}</g>`);
+          tl.fromTo(`#${id}-g`, { x: 300, y: 700 }, { x: 470, y: 1274, duration: 0.45, ease: "power2.in", immediateRender: false }, t0);
+          put(L.act, `<g id="${id}-sp" opacity="0">${[[-120, -40], [-60, -90], [60, -100], [130, -50]].map(([x, y]) => `<path d="M${470 + x},${1290 + y}q-6,-30 4,-50q8,16 -4,50z" fill="#e8f2ff" opacity=".9"/>`).join("")}</g>`);
+          tl.fromTo(`#${id}-sp`, { opacity: 1, y: 30 }, { opacity: 0, y: -40, duration: 0.5, immediateRender: false }, t0 + 0.45);
+        },
+      });
+      // ---------- 22–25 · stairs (twist 2): น้าหมาน on the land-side stairs: "น้ำเปล่า… ใส่ไว้นิดเดียว โยนจะได้แม่น" (CU → pull-out to his gallons) →
+      // the teaching: throw something that floats, many pieces (gallons and seat cushions arcing to the hull) → "ผมรอลำหน้า… ทุกปี" (CU) ----------
+      const T1 = vo("stairs", 2) - 0.1, T2 = vo("stairs", 3) - 0.1, T3 = vo("stairs", 4) - 0.25;
+      add("stairs", {
+        extra(L) { pier(L, { seed: 38 }); put(L.set, gallon(-610, 1162, 0.62) + gallon(-650, 1176, 0.62, { rot: -3 })); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...fr(-560, 885, 7.2, 540, 820) }, { t: T1 - 0.05, glide: T1 - 0.05, ease: "power2.inOut", ...fr(-540, 960, 3.6, 540, 900) },
+          { t: T1, ...fr(100, 1220, 0.95, 540, 1000) }, { t: T2, ...fr(300, 1260, 1.25, 540, 1000) }, { t: T3, ...fr(-560, 885, 7.2, 540, 820) }, { t: D("stairs"), glide: D("stairs") - T3, ...fr(-550, 920, 5.0, 540, 860) }] },
+        actors: [
+          A("naMan", -560, 1080, 0.36, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: T1 + 0.2, mode: "swing", eyes: "angry", mouth: "o" }, { t: T3, mode: "idle", eyes: "side", mouth: "flat" }], { talk: [TK("stairs", 1, "flat"), TK("stairs", 4, "flat")] }),
+          A("pxD", -300, 1084, 0.4, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { talk: [TK("stairs", 0, "o")] }),
+        ],
+        captions: capsQ("stairs"),
+        fx(tl, id, t0, L) {
+          // the gallon in his hands; then gallons and cushions arc out to the hull in the river (several, so one gets there)
+          put(L.act, `<g id="${id}-hg">${gallon(-510, 940, 0.5, { water: true })}</g>`);
+          tl.to(`#${id}-hg`, { opacity: 0, duration: 0.1 }, t0 + T1 + 0.4);
+          const arc = (k, x1, y1, at, what) => {
+            put(L.act, `<g id="${id}-t${k}">${what}</g>`);
+            const p = { u: 0 }, g = () => document.getElementById(`${id}-t${k}`);
+            tl.set(`#${id}-t${k}`, { opacity: 0 }, t0);
+            tl.fromTo(p, { u: 0 }, { u: 1, duration: 1.3, ease: "none", immediateRender: false, onUpdate: () => { const u = p.u, x = -520 + (x1 + 520) * u, y = 940 + (y1 - 940) * u - 520 * 4 * u * (1 - u); const e = g(); if (e) { e.setAttribute("transform", `translate(${k1(x)},${k1(y)}) rotate(${k1(u * 540)})`); e.style.opacity = u > 0 && u < 1 ? 1 : u >= 1 ? 1 : 0; } } }, t0 + at);
+          };
+          arc(1, 520, 1320, T1 + 0.5, gallon(0, 0, 0.4, { water: true }));
+          arc(2, 380, 1340, T2 + 0.2, gallon(0, 0, 0.4, { rot: 20 }));
+          arc(3, 680, 1330, T2 + 0.9, `<rect x="-40" y="-14" width="80" height="28" rx="12" fill="#ff7a2a" ${KOUT2}/>`);
+          arc(4, 260, 1350, T2 + 1.5, `<rect x="-40" y="-14" width="80" height="28" rx="12" fill="#ff7a2a" ${KOUT2}/>`);
+        },
+      });
+      // ---------- 26–27 · vest: "ข้าวปั้น…? ข้าวปั้น!!" (CU, she turns, shouting) → the hang: an orange life jacket bumps her hand — open straps, empty, no whistle (ECU) ----------
+      const V1 = vo("vest", 2) - 0.25;
+      add("vest", {
+        extra(L) { waterLevel(L, { hz: 420, moon: [860, 160], seed: 39, hull: [700, 900, 0.6] }); },
+        ...NIGHT, light: { ...WARML, rim: "#ffc46a", rimOp: 0.95 }, blur: { sky: 3, far: 3, mid: 2, fg: 6 },
+        cam: { keys: [{ t: 0, ...fr(520, 1080, 2.2, 540, 860) }, { t: V1, ...fr(680, 1360, 2.6, 540, 1000) }, { t: D("vest"), glide: D("vest") - V1, ease: "none", ...fr(670, 1350, 2.9, 540, 1000) }] },
+        actors: [A("maprangWet", 520, 1640, 0.92, [{ t: 0, mode: "cling", eyes: "wide", mouth: "o" }, { t: 1.1, mode: "raise", eyes: "wide", mouth: "scream" }, { t: V1, mode: "cling", eyes: "wide", mouth: "o" }], { talk: [TK("vest", 0, "o"), TK("vest", 1, "scream")] })],
+        captions: capsQ("vest"),
+        fx(tl, id, t0, L) {
+          waterOver(L, 1300);
+          put(L.act, `<g id="${id}-v">${emptyVest(0, 0, 0.62, -14)}</g>`);
+          tl.fromTo(`#${id}-v`, { x: 980, y: 1330 }, { x: 700, y: 1330, duration: 2.2, ease: "power1.out", immediateRender: false }, t0 + 0.6);
+          tl.to(`#${id}-v`, { y: 1342, duration: 0.6, yoyo: true, repeat: 6, ease: "sine.inOut" }, t0 + 2.8);
+          put(L.fg, krathong(980, 1820, 1.3, { seed: 391 }) + kRefl(980, 1820, 1.3, 180));
+          put(L.glow, kGlow(980, 1820, 1.3, 130));
+        },
+      });
+      // ---------- 28 · choice (Shorts only) · 29 · endb (Shorts only) ----------
+      add("choice", {
+        extra(L) { put(L.sky, `<rect x="-900" y="-900" width="2900" height="3900" fill="#0e0a14"/><circle cx="540" cy="960" r="900" fill="url(#kBulb)" opacity=".12"/>`); },
+        ...NIGHT, light: false, blur: {},
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        captions: capsQ("choice"),
+        fx(tl, id, t0, L) {
+          const bd = (y, k, txt, c) => `<g id="${id}-o${k}" transform="translate(540,${y})"><rect x="-400" y="-110" width="800" height="220" rx="22" fill="${c}" ${KOUT}/><circle cx="-300" cy="0" r="56" fill="#fff6e0" ${KOUT2}/><text x="-300" y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="${c}">${k ? "ข" : "ก"}</text><text x="60" y="22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="#fff6e0">${txt}</text></g>`;
+          put(L.light, `<text x="540" y="560" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="64" fill="#fff2c8">ถ้าคุณเป็นมะปราง…</text>` + bd(820, 0, "ว่ายเข้าท่า ไปตามคน", "#c8241e") + bd(1120, 1, "เกาะของลอย รอเรือ", "#2e6a4a"));
+          tl.fromTo(`#${id}-o0`, { scale: 0.4, opacity: 0, svgOrigin: "540 820" }, { scale: 1.06, opacity: 1, svgOrigin: "540 820", duration: 0.4, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.4);
+          tl.fromTo(`#${id}-o1`, { scale: 0.4, opacity: 0, svgOrigin: "540 1120" }, { scale: 0.94, opacity: 1, svgOrigin: "540 1120", duration: 0.4, ease: "back.out(2.2)", immediateRender: false }, t0 + 0.7);
+          tl.to(`#${id}-o0`, { scale: 1.1, svgOrigin: "540 820", duration: 0.5, yoyo: true, repeat: 4, ease: "sine.inOut" }, t0 + 1.2);
+        },
+      });
+      add("endb", {
+        extra(L) { pier(L, { seed: 40 }); },
+        ...NIGHT, light: WARML, blur: { sky: 8, far: 8, mid: 7, set: 6, fg: 9 },
+        cam: { keys: [{ t: 0, ...fr(100, 1100, 1.4, 540, 1000) }] },
+        captions: capsQ("endb"),
+        fx(tl, id, t0, L) {
+          const v = SH.endb.vo[0], at = (j) => t0 + v.t + (v.frags[j] ?? 0);
+          put(L.light, `<g transform="translate(540,880)"><rect x="-420" y="-420" width="840" height="140" rx="16" fill="#a8763e" ${KOUT}/><text x="0" y="-322" text-anchor="middle" font-family="Mali" font-weight="700" font-size="74" fill="#3a1e10">ท่ายายหยิบ</text>
+            <g transform="rotate(-2)"><rect x="-380" y="-250" width="760" height="560" rx="8" fill="#fff8e6" ${KOUT}/><rect x="-36" y="-290" width="72" height="90" rx="10" fill="#d8a83a" ${KOUT2}/>
+              ${[["ข้าวปั้นอยู่ไหน?", "#c8241e"], ["ตอนจบอยู่ในเรื่องเต็ม", "#1e2a4a"], ["ช่อง YouTube Rod Mai Club", "#1e2a4a"]].map(([t, c], i) => `<g id="${id}-l${i}" opacity=".18"><text x="0" y="${-110 + i * 150}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${i === 2 ? 46 : 56}" fill="${c}">${t}</text></g>`).join("")}</g></g>`);
+          [0, 1, 2].forEach((i) => tl.to(`#${id}-l${i}`, { opacity: 1, duration: 0.25 }, at(i)));
+        },
+      });
