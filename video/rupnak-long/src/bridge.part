@@ -30,3 +30,33 @@
         cam: { keys: [ID(0, 250, 220, 1.4), { ...ID(D("b2barn"), 370, 90, 2.1), glide: D("b2barn") }] },
         actors: [A("yaiKham", 916, 1016, 0.23, [{ t: 0, mode: "liftBucket", eyes: "side", mouth: "o" }])],
         captions: caps("b2barn"), fx(tl, id, t0, L) { Rup2.barn(L, "bbb"); tl.set("#bbb-door", { scaleX: 0.15, transformOrigin: "0% 50%" }, t0); Rup.cracks(tl, "bby", t0, 1.6); } });
+      // ---------- cold open seam: 0.4 s black between EP.2's hook and EP.1 (intended) ----------
+      add("cogap", { extra(L) { put(L.sky, `<rect x="-1400" y="-1200" width="3900" height="4400" fill="#000"/>`); }, dark: 0, light: false, cam: { keys: [{ t: 0, x: 0, y: 0, s: 1 }] } });
+      // ---------- HG7: a 1 s subscribe card after EP.1's twist, a palm-leaf card like ยาย's rule leaf, over the dark yard ----------
+      add("hg7", {
+        set: "rupYardRich", setOpts: { id: "hg7", time: "night", muddy: 0.95, leanPost: true }, dark: 0.45, light: false, grade: GNIGHT, blur: { sky: 8, far: 8, mid: 8, set: 8, fg: 10 },
+        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) {
+          const bell = `<g transform="translate(-150,-6)"><path d="M-26,18Q-28,-26 0,-30Q28,-26 26,18L34,28H-34Z" fill="#f2c84a" stroke="#2a1a0e" stroke-width="4" stroke-linejoin="round"/><circle cx="0" cy="34" r="8" fill="#f2c84a" stroke="#2a1a0e" stroke-width="4"/><path d="M-12,-14q-6,10 -6,24" stroke="#fff6d0" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
+          put(L.light, `<g transform="translate(540,960) scale(1.55)"><g id="${id}-hgc">
+            <rect x="-330" y="-170" width="660" height="340" rx="34" fill="#0a0604" opacity=".5" transform="translate(8,12)"/>
+            <rect x="-330" y="-170" width="660" height="340" rx="34" fill="#ecd9a4" stroke="#2a1a0e" stroke-width="6"/>
+            <path d="M-300,-60H300M-300,60H300" stroke="#c9b27a" stroke-width="3"/>
+            <path d="M-330,-136Q-330,-170 -296,-170H296Q330,-170 330,-136V-90H-330Z" fill="#8a2a1a" stroke="#2a1a0e" stroke-width="6"/>
+            <text x="0" y="-116" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#f8ecd0">กฎข้อต่อไป</text>
+            <g id="${id}-bell">${bell}</g><text x="40" y="22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="78" fill="#2a1a0e">กดติดตาม</text>
+            <text x="0" y="104" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="38" fill="#4a3320">ไว้ดูกฎข้อต่อไป <tspan fill="#8a2a1a">ก่อนวันที่ต้องใช้</tspan></text></g></g>`);
+          tl.fromTo(`#${id}-hgc`, { scale: 0.5, opacity: 0, svgOrigin: "0 0" }, { scale: 1, opacity: 1, svgOrigin: "0 0", duration: 0.3, ease: "back.out(2.4)", immediateRender: false }, t0);
+          tl.fromTo(`#${id}-bell`, { rotation: -16, svgOrigin: "-150 -36" }, { rotation: 16, svgOrigin: "-150 -36", duration: 0.12, repeat: 5, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.25);
+        },
+      });
+      // ---------- H6 time chip on EP.1's first shot: the cold open happens later the same night ----------
+      {
+        const s = shots.find((x) => x.key === "e1_open");
+        if (s) { const f0 = s.fx; s.fx = (tl, id, t0, L) => { if (f0) f0(tl, id, t0, L);
+          put(L.light, `<g data-page="300,80,64"><g transform="translate(540,330) scale(1.5) translate(-185,0)"><g id="${id}-tchip"><rect x="0" y="-36" width="370" height="72" rx="36" fill="#140e0a" opacity=".82" stroke="#f2c84a" stroke-width="4"/>
+            <circle cx="38" cy="0" r="20" fill="none" stroke="#f2c84a" stroke-width="4"/><path d="M38,-10V0L46,6" stroke="#f2c84a" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <text x="208" y="12" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#fff6ea">หัวค่ำคืนเดียวกัน</text></g></g></g>`);
+          tl.fromTo(`#${id}-tchip`, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.05);
+          tl.to(`#${id}-tchip`, { opacity: 0, duration: 0.3, immediateRender: false }, t0 + 2.6); }; }
+      }

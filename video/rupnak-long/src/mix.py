@@ -1,4 +1,4 @@
-"""รูพญานาค ฉบับเต็ม (YouTube 16:9) soundtrack, from long/schedule.json (combine.py).
+"""รูพญานาค ฉบับเต็ม (cold open: EP.2 open+hook with c01 = n01 trimmed, then 0.4 s black) (YouTube 16:9) soundtrack, from long/schedule.json (combine.py).
 Voice: every line levelled on its own (-18), the headman's megaphone band-passed, as in the episode mixes; the bridge lines (b01–b07).
 SFX: each episode's own cue list (its mix.py, evaluated against that episode's shots in the full schedule; cues of the cut shots
 — EP.1/2 choice+end, EP.2/3 hook — fall away) plus cues for the bridges. Music: the channel song suno1 with the ทะเลลด recipe
@@ -71,7 +71,7 @@ sfx = load(os.path.join(HERE, "sfx_sfx.wav"))[:N]; sfx = np.pad(sfx, (0, N - len
 # ---- music: suno1 from 0 at each chapter, the ทะเลลด recipe ----
 song = load(os.path.join(WS, "music", "suno1.mp3"))
 mus = np.zeros(N, np.float32); t = np.arange(N) / SR
-ch = [c[1] for c in SC["chapters"]] + [TOTAL]
+ch = [0.0, T("b1win", 0), T("b2call", 0), TOTAL]   # restart on the three rule chapters only (the other chapter marks run through)
 for a, b in zip(ch, ch[1:]):
     i, j = int(a * SR), int(b * SR); seg = song[: j - i].copy()
     if len(seg) < j - i: seg = np.pad(seg, (0, j - i - len(seg)))
@@ -80,6 +80,7 @@ for a, b in zip(ch, ch[1:]):
 gain = np.ones(N, np.float32)
 def dip(t0, t1, lvl, ramp=0.25):
     a = np.clip((t - (t0 - ramp)) / ramp, 0, 1) * np.clip(((t1 + ramp) - t) / ramp, 0, 1); np.minimum(gain, 1 - (1 - lvl) * a, out=gain)
+dip(T("e2_hook", 0.0), T("cogap", -0.01), 0.55)                   # cold open: the command, then the black
 dip(T("e1_collapse", 0.0), T("e1_collapse", 0.55), 0.4, 0.08)      # breath held on the collapse
 dip(T("b1shake", 0.0), T("b1shake", -0.1), 0.55)                    # the floor shakes
 dip(T("e2_pump", 0.0), T("e2_pump", 1.0), 0.4, 0.08)               # the far pump in the dark
@@ -94,5 +95,5 @@ mus = level(mus, -30)
 sfx = level(ff(ff(sfx, "lowpass=f=3500:poles=2"), "lowpass=f=3500:poles=2"), -27)
 env = box(np.abs(vo), int(0.05 * SR)); duck = 1 - 0.65 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1); duck = box(duck, int(0.25 * SR))
 mus_part = (mus * duck).astype(np.float32)
-finalize(HERE, (vo + mus_part + sfx).astype(np.float32), vo.copy(), mus_part, tp=-3.2)
+finalize(HERE, (vo + mus_part + sfx).astype(np.float32), vo.copy(), mus_part, tp=-2.8)   # tp -1.5 keeps the soft limiter out (its tanh knee reads as hiss, M8)
 print("cues", len(CUES), "total", TOTAL)

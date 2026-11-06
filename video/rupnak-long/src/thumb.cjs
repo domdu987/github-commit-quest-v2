@@ -26,7 +26,7 @@ const { chromium } = require('playwright');
     document.head.appendChild(st);
     document.getElementById('root').insertAdjacentHTML('beforeend', `<div id="th"><div class="sh"></div><div class="sb"></div>
       <div class="logo">รูพญานาค</div><div class="full">ฉบับเต็ม · ครบ 3 ตอน</div>
-      <div class="setup">นาข้างบ้านยุบเป็นหลุม…</div><div class="cmd">อย่าเข้าใกล้ขอบ!</div></div>`);
+      <div class="setup">น้ำบ่อขุ่นเป็นโคลน…</div><div class="cmd">อย่ารอจนบ้านยุบ</div></div>`);
   });
   await p.evaluate(() => document.fonts.ready);
   let prev = null;

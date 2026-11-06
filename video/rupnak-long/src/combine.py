@@ -6,9 +6,10 @@ import json, os, re, subprocess
 HERE = os.path.dirname(os.path.abspath(__file__))
 EP = os.environ.get("EPDIR", "/home/user/github-commit-quest-v2/video/rupnak")
 BR = os.path.join(HERE, "..", "bridge")
-CUT = {1: {"choice", "end"}, 2: {"open", "hook", "choice", "end"}, 3: {"open", "hook"}}
+CUT = {1: {"choice", "end"}, 2: {"open", "hook", "choice", "end"}, 3: {"open", "hook"}}   # EP.2 open/hook run once, as the cold open
 lines = {l["id"]: l for l in json.load(open(os.path.join(BR, "lines.json")))}
 dur = json.load(open(os.path.join(BR, "vo", "durations.json")))
+dur["c01"] = 2.794   # EP.2 n01 with 0.2 s of its pause after "ถ้าวันหนึ่ง…" cut (bridge/vo/c01.wav)
 
 def frags(i):
     """caption fragment starts: letter share of the line, snapped to the nearest pause in the recording"""
@@ -41,13 +42,35 @@ def ep(n):
 
 B1 = [bshot("b1win", ["b01", "b02"], gap=0.45, extra=0.3), bshot("b1dust", ["b03"]), bshot("b1shake", ["b04"], tail=0.3)]
 B2 = [bshot("b2call", ["b05"]), bshot("b2dawn", ["b06"], extra=0.3), bshot("b2barn", ["b07"], tail=0.35)]
-seq = ep(1) + B1 + ep(2) + B2 + ep(3)
+def cold():
+    """cold open: EP.2's open + hook (its command lands at ~2.90 s), then a 0.4 s black, then EP.1 with a time chip"""
+    s = {x["key"]: x for x in json.load(open(os.path.join(EP, "ep2", "schedule.json")))["shots"]}
+    o, h = s["open"], s["hook"]; v = o["vo"][0]
+    o = {**o, "key": "e2_open", "dur": round(0.05 + dur["c01"], 3), "voEnd": round(0.05 + dur["c01"], 3),
+         "vo": [{**v, "id": "b/c01", "t": 0.05, "dur": dur["c01"], "frags": [0.0, 0.73]}]}
+    h = {**h, "key": "e2_hook", "vo": [{**x, "id": f"e2/{x['id']}"} for x in h["vo"]]}
+    return [o, h, {"key": "cogap", "dur": 0.4, "vo": [], "voEnd": 0}]
+
+E1 = ep(1); i = [x["key"] for x in E1].index("e1_close") + 1
+E1 = E1[:i] + [{"key": "hg7", "dur": 1.0, "vo": [], "voEnd": 0}] + E1[i:]   # HG7: a 1 s subscribe card after EP.1's twist
+seq = cold() + E1 + B1 + ep(2) + B2 + ep(3)
 t = 0.0
 for i, x in enumerate(seq):
     seq[i] = {**x, "start": round(t, 3)}; t += x["dur"]
 keys = [x["key"] for x in seq]; assert len(keys) == len(set(keys))
 start = {x["key"]: x["start"] for x in seq}
-chapters = [["บทที่ 1 · ดินแยกเป็นวง อย่าหลงเข้าใกล้", 0.0], ["บทที่ 2 · น้ำบ่อขุ่นแดง แจ้งแล้วถอย", start["b1win"]], ["บทที่ 3 · รูยังกว้างได้ ไหว้ไกลร้อยเมตร", start["b2call"]]]
+# chapters on real cuts (review M9): the three rule chapters plus seven inside them
+chapters = [["บทที่ 1 · ดินแยกเป็นวง อย่าหลงเข้าใกล้", 0.0], ["นาผู้ใหญ่ทองยุบ", start["e1_morning"]], ["ใต้ดินจริงๆ คือหินปูน", start["e1_know0"]],
+            ["บทที่ 2 · น้ำบ่อขุ่นแดง แจ้งแล้วถอย", start["b1win"]], ["สายด่วน 1784", start["e2_call"]], ["เครื่องสูบของใคร", start["e2_found"]],
+            ["ความลับของพ่อใหญ่สิน", start["e2_valve"]], ["บทที่ 3 · รูยังกว้างได้ ไหว้ไกลร้อยเมตร", start["b2call"]],
+            ["ฝนแรกของปี", start["e3_rain"]], ["ลายมือบนใบลาน", start["e3_hand"]]]
 json.dump({"total": round(t, 3), "shots": seq, "chapters": chapters}, open(os.path.join(HERE, "schedule.json"), "w"), ensure_ascii=False, indent=1)
 print(len(seq), "shots · total", round(t, 3), "· chapters", [(c[0][:7], round(c[1], 1)) for c in chapters])
 for x in B1 + B2: print(x["key"], x["dur"], [(v["id"], v["t"], v["frags"]) for v in x["vo"]])
+# render parts: 1 = cold open + EP.1 · 2 = bridge 1 + EP.2 · 3 = bridge 2 + EP.3, each re-timed to start at 0 (cut on whole frames)
+bounds = [0.0, start["b1win"], start["b2call"], round(t, 3)]
+for c in range(3):
+    a, b = bounds[c], bounds[c + 1]
+    sub = [{**x, "start": round(x["start"] - a, 4)} for x in seq if a - 1e-6 <= x["start"] < b - 1e-6]
+    json.dump({"total": round(b - a, 4), "shots": sub}, open(os.path.join(HERE, f"ch{c + 1}.json"), "w"), ensure_ascii=False)
+    print(f"ch{c + 1}", len(sub), "shots", round(a, 3), "→", round(b, 3), "frames", round(b * 60) - round(a * 60))

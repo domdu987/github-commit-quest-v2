@@ -36,7 +36,8 @@ for n in (1, 2, 3):
     body = prefix_ids(rd(f"{U}/ep{n}/body.part"), n)
     # 16:9 band (sh.land y0) for shots whose subject the automatic band cuts: พ่อใหญ่สิน's face and the valve wheel,
     # the naga in the mural, the fenced hole the family bows to from 100 m
-    for ep, key, y0 in ((2, "valve", 190), (2, "sin2", 420), (3, "close", 130)):
+    # review 6 Nov (B1–B3, M3, M4): the rule card off the heads, ต้นข้าว's whole head, the shrine in frame, the stray head out of the barn shot
+    for ep, key, y0 in ((2, "valve", 190), (2, "sin2", 420), (3, "close", 130), (3, "rule", 220), (3, "num", 380), (3, "shrine", 250), (3, "barn", 450), (1, "rule", 450), (1, "notch", 480), (2, "sin3", 350)):
         if n == ep:
             pat = f'add("{key}", {{ '
             assert body.count(pat) == 1, key
