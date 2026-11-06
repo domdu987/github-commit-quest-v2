@@ -15,14 +15,15 @@
    "kind": "title",
    "start": 18.0,
    "end": 21.0,
-   "long_only": true
+   "long_only": false
   },
   {
    "id": "ep1",
    "kind": "episode",
    "start": 21.0,
    "end": 123.9,
-   "from": "EP.1 Short r2 0–102.9"
+   "from": "EP.1 Short r2 0–102.9",
+   "long_only": false
   },
   {
    "id": "bridgeA",
@@ -36,7 +37,8 @@
    "kind": "episode",
    "start": 132.1833,
    "end": 204.3,
-   "from": "EP.2 Short r4 7.933–80.05"
+   "from": "EP.2 Short r4 7.933–80.05",
+   "long_only": false
   },
   {
    "id": "bridgeB",
@@ -50,8 +52,8 @@
    "kind": "episode",
    "start": 212.0833,
    "end": 261.4667,
-   "long_only": true,
-   "from": "EP.3 0–49.383 (towel → the shadow screen)"
+   "long_only": false,
+   "from": "EP.3 0–49.383 (towel → the real past in the same world (memory grade))"
   },
   {
    "id": "secret",
@@ -66,7 +68,7 @@
    "kind": "episode",
    "start": 303.7,
    "end": 326.751,
-   "long_only": true,
+   "long_only": false,
    "from": "EP.3 49.383–72.45 (the twist, why, guilt, ภูมิ wakes)"
   },
   {
@@ -74,7 +76,7 @@
    "kind": "lesson",
    "start": 326.751,
    "end": 335.251,
-   "long_only": true,
+   "long_only": false,
    "from": "EP.3 72.45–80.95 (the four steps)"
   },
   {
@@ -82,7 +84,7 @@
    "kind": "episode",
    "start": 335.251,
    "end": 343.5833,
-   "long_only": true,
+   "long_only": false,
    "from": "EP.3 80.95–89.283 (three generations fill the post)"
   },
   {
@@ -98,14 +100,14 @@
    "kind": "credits",
    "start": 363.933,
    "end": 368.933,
-   "long_only": true
+   "long_only": false
   },
   {
    "id": "card",
    "kind": "end_card",
    "start": 368.933,
    "end": 376.933,
-   "long_only": true
+   "long_only": false
   }
  ],
  "acts": [
@@ -207,9 +209,9 @@
  },
  "extreme_wide": [
   {
-   "t": 0.483,
+   "t": 2.5,
    "act": 1,
-   "what": "cold open: อ่าวสามสิบปีก่อน เรือไม้ ยังไม่มีหอ"
+   "what": "cold open C1: อ่าวสามสิบปีก่อนทั้งอ่าว เรือไม้สองลำกลางทะเล ชาวประมงลากเรือตัวเล็ก ยังไม่มีหอ (2.0–3.1 วิ)"
   },
   {
    "t": 191.673,
@@ -224,9 +226,10 @@
  ],
  "credits_ambience": 5.0,
  "end_card": {
-  "next": "เรื่องต่อไป: เรือล่มคืนลอยกระทง · ทุกวัน 09:30",
+  "next": "เรื่องต่อไป: <ชื่อ> ทุกวัน 09:30",
+  "next_title": "ตัวแปร NEXT_TITLE ใน bookends/shots.end.part · ผู้ประสานแจ้งชื่อเรื่อง 13 พ.ย. ก่อนเรนเดอร์",
   "subscribe": true,
   "prev_long_link": true,
-  "prev": "นาทีก่อนจม ฉบับเต็ม"
+  "end_screen": "กรอบวิดีโอ 1 + วงกลมติดตาม 1 เป็นช่องว่าง (ไม่เขียนชื่อในภาพ) ขึ้นตั้งแต่เฟรมแรกของการ์ดถึงจบ 8.0 วิ · ผู้ลงคลิปตั้งค่าใน Studio"
  }
 }

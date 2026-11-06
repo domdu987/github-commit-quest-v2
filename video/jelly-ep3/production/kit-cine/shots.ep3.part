@@ -107,17 +107,17 @@
         } });
       // 10–11 · ยาย runs in with her basket (low, the tower's leg in front) → she kneels and pours; the lifeguard lifts the tentacle off with tweezers
       add("c_yai", { set: "jellyBeach", setOpts: BEACH3("jb33", { tower: [1060, 1280, 0.82] }), dark: 0, light: SUN,
-        cam: { keys: [{ t: 0, ...fr(520, 1500, 1.25, 540, 1100) }, { t: CT(11, "c_yai"), ...fr(470, 1500, 2.0, 540, 980) }] },
+        cam: { keys: [{ t: 0, ...fr(520, 1500, 1.25, 540, 1100) }, { t: CT(11, "c_yai"), ...(window.LANDSCAPE ? fr(600, 1610, 1.7, 540, 980) : fr(470, 1500, 2.0, 540, 980)) }] },
         actors: [
           A("jLaorBasket", 1200, 1690, 0.95, [{ t: 0, mode: "runBasket", eyes: "wide", mouth: "scream" }], { flip: true, until: CT(11, "c_yai"), talk: [TALK("c_yai", 0, "scream")], moveTo: { x: 640, y: 1760, dur: CT(11, "c_yai"), ease: "power1.out" } }),
           A("jPhum", MAT[0] + 40, MAT[1] + 10, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "o" }]),
-          A("jLaorVin", 600, 1775, 0.95, [{ t: 0, mode: "pourLow2", eyes: "worry", mouth: "o" }], { flip: true, from: CT(11, "c_yai"), talk: [TALK("c_yai", 1, "o")] }),
+          A("jLaorVin", window.LANDSCAPE ? 900 : 790, 1775, 0.95, [{ t: 0, mode: "pourLow2", eyes: "worry", mouth: "o" }], { flip: true, from: CT(11, "c_yai"), talk: [TALK("c_yai", 1, "o")] }),
         ],
         captions: caps("c_yai", undefined, { quote: true }),
         fx(tl, id, t0, L) { put(L.act, shin(MAT[0] + 40, MAT[1] + 10, 0.95));
           const b = CT(11, "c_yai");
           put(L.act, `<g id="ya-st"><path d="M520,1690Q515,1720 512,1760" stroke="#f6eccc" stroke-width="9" fill="none" stroke-linecap="round" opacity=".9"/></g>
-            <g id="ya-tz" transform="translate(300,1660)"><path d="M-400,-120L-10,-6" stroke="#1e1a16" stroke-width="70" stroke-linecap="round"/><path d="M-400,-120L-10,-6" stroke="#a8784a" stroke-width="58" stroke-linecap="round"/><path d="M-500,-150L-260,-80" stroke="#d8312a" stroke-width="90" stroke-linecap="round"/><path d="M0,0L160,100M8,-8L168,92" stroke="#9aa4ac" stroke-width="7" stroke-linecap="round"/><path d="M160,100Q200,130 240,110" stroke="#f2feff" stroke-width="6" fill="none"/></g>`);
+            <g transform="${window.LANDSCAPE ? "translate(400,1868) scale(1,-1)" : "translate(300,1660)"}"><g id="ya-tz"><path d="M-400,-120L-10,-6" stroke="#1e1a16" stroke-width="70" stroke-linecap="round"/><path d="M-400,-120L-10,-6" stroke="#a8784a" stroke-width="58" stroke-linecap="round"/><path d="M-500,-150L-260,-80" stroke="#d8312a" stroke-width="90" stroke-linecap="round"/><path d="M0,0L160,100M8,-8L168,92" stroke="#9aa4ac" stroke-width="7" stroke-linecap="round"/><path d="M160,100Q200,130 240,110" stroke="#f2feff" stroke-width="6" fill="none"/></g></g>`);
           show(tl, "#ya-st", t0 + b); show(tl, "#ya-tz", t0 + b + 0.8);
           tl.fromTo("#ya-tz", { y: 0, rotation: 0, svgOrigin: "0 0" }, { y: -40, rotation: -10, svgOrigin: "0 0", duration: 1.2, ease: "power1.inOut", immediateRender: false }, t0 + b + 0.9);
           FGB(L, tl, t0, 0, b, "fg10", `<path d="M-60,-60H120L180,1980H-60Z" fill="#e8d8b8"/><path d="M60,-60L120,1980" stroke="#8a6a3a" stroke-width="20"/>`);

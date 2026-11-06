@@ -11,8 +11,8 @@
       // the old notice board by the tower: lost-and-found notes and one faded photo of a young man by a fishing boat
       const PHOTO = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><rect x="-120" y="-150" width="240" height="190" fill="#efe2c0" stroke="#2e2a26" stroke-width="5" transform="rotate(-4)"/>
         <g transform="rotate(-4)"><rect x="-104" y="-136" width="208" height="150" fill="#c8b48a"/><rect x="-104" y="-56" width="208" height="70" fill="#9aa08a"/>
-          <path d="M-96,-6Q-30,12 60,6L96,-20L70,-26Q0,-10 -80,-18Z" fill="#6a5a44"/><path d="M10,-26V-110L60,-30Z" fill="#8a7a60"/>
-          <g transform="translate(-50,-6)"><circle cx="0" cy="-92" r="15" fill="#7a6248"/><path d="M-22,-112Q0,-130 22,-112Z" fill="#5a4a3a"/><path d="M-16,-76Q0,-80 16,-76L20,-20H-20Z" fill="#b0a080"/><path d="M-12,-20V8M12,-20V8" stroke="#5a4a3a" stroke-width="9"/><path d="M16,-70L40,-96" stroke="#7a6248" stroke-width="9" stroke-linecap="round"/></g>
+          <path d="M-96,-6Q-30,12 60,6L96,-20L70,-26Q0,-10 -80,-18Z" fill="#6a5a44"/><path d="M60,-22L104,-40" stroke="#6a5a44" stroke-width="5"/>
+          <g transform="translate(-50,-6)"><circle cx="0" cy="-92" r="15" fill="#7a6248"/><path d="M-40,-103L0,-132L40,-103Q0,-98 -40,-103Z" fill="#9a8a68" stroke="#4a3a2a" stroke-width="3"/><path d="M-16,-76Q0,-80 16,-76L20,-20H-20Z" fill="#b0a080"/><path d="M-12,-20V8M12,-20V8" stroke="#5a4a3a" stroke-width="9"/><path d="M16,-70L40,-96" stroke="#7a6248" stroke-width="9" stroke-linecap="round"/></g>
           <rect x="-104" y="-136" width="208" height="150" fill="#f2e6c8" opacity=".28"/></g>
         <circle cx="-4" cy="-150" r="9" fill="#d8312a" stroke="#2e2a26" stroke-width="2.4"/></g>`;
       const BOARD = (x, y, s = 1) => `<g transform="translate(${x},${y}) scale(${s})"><path d="M-170,0V-560M170,0V-560" stroke="#6a4a2a" stroke-width="22"/>
@@ -59,7 +59,7 @@
       // 5–6 · the tower: the lifeguard taps the empty rack, ต้น beside him, the notice board with the photo → "ป้าคนหนึ่งเติมเองมาสามสิบปี"
       add("B1", { set: "jellyBeach", setOpts: NOPOST(BEACHB("jbB1", { post: [560, 1500, 0.95, 0] }))[0], dark: 0, light: SUN,
         cam: { keys: [{ t: 0, ...fr(640, 1460, 1.05, 540, 1040) }, { t: CT(6, "B1") - 0.01, glide: CT(6, "B1") - 0.01, ...fr(640, 1450, 1.15, 540, 1040) },
-          { t: CT(6, "B1"), ...fr(470, 1130, 2.7, 540, 820) }] },
+          { t: CT(6, "B1"), ...(window.LANDSCAPE ? fr(380, 1360, 1.6, 540, 900) : fr(470, 1130, 2.7, 540, 820)) }] },
         actors: [A("jGuard", 470, 1760, 0.95, [{ t: 0, mode: "tapRack", eyes: "worry", mouth: "o" }, { t: CT(6, "B1"), mode: "idle", eyes: "worry", mouth: "o" }], { talk: [TALK("B1", 0, "o")] }),
           A("jTon", 250, 1790, 1.0, [{ t: 0, mode: "kneel", eyes: "worry", mouth: "flat" }]),
           A("jPhum", 120, 1795, 0.95, [{ t: 0, mode: "gasp", eyes: "closed", mouth: "o" }])],   // ภูมิ in his father's arms, waiting for the ambulance (review M9)
@@ -127,11 +127,11 @@
           put(L.light, `<g id="c1f-dr">${[0, 1, 2, 3].map((k) => `<path d="M${640 + k * 60},1380q-3,30 0,60" stroke="#dff4ff" stroke-width="6" fill="none" opacity=".8"/>`).join("")}</g>`);
           tl.fromTo("#c1f-dr", { y: -40 }, { y: 80, duration: 0.5, repeat: 1, ease: "power1.in", immediateRender: false }, t0); } });
       add("C1", { set: "jellyBeach", setOpts: PAST("jbC1"), dark: 0, light: SUN,
-        cam: { keys: [{ t: 0, ...fr(420, 1500, 1.15, 540, 1000) }, { t: D("C1"), glide: D("C1"), ...fr(620, 1500, 1.22, 540, 1000) }] },
+        cam: { keys: [{ t: 0, ...(window.LANDSCAPE ? fr(580, 1340, 0.7, 540, 960) : fr(420, 1500, 1.15, 540, 1000)) }, { t: D("C1"), glide: D("C1"), ...(window.LANDSCAPE ? fr(610, 1350, 0.74, 540, 960) : fr(620, 1500, 1.22, 540, 1000)) }] },   // the long: an extreme wide of the old bay (act 1 EWS)
         actors: [A("jPhermHat", 640, 1720, 0.95, [{ t: 0, mode: "haul", eyes: "normal", mouth: "smile" }], { moveTo: { x: 860, y: 1730, dur: D("C1"), ease: "none" } })],
         captions: caps("C1"),
         fx(tl, id, t0, L) { const c = document.getElementById(id); if (c) c.style.filter = "sepia(.3) saturate(.92) brightness(1.04)";
-          put(L.act, `<g id="c1-bt">${LBOAT(260, 1700, 0.9, "c1-bb")}</g><path id="c1-rope" d="M560,1680Q600,1700 640,1600" stroke="#c8a878" stroke-width="5" fill="none"/>`);
+          put(L.act, `<g id="c1-bt">${LBOAT(260, 1700, 0.9, "c1-bb")}</g><path id="c1-rope" d="M560,1680Q610,1520 548,1356" stroke="#c8a878" stroke-width="5" fill="none"/>`);
           tl.fromTo("#c1-bt", { x: 0 }, { x: 220, duration: D("C1"), ease: "none", immediateRender: false }, t0);
           tl.fromTo("#c1-rope", { x: 0 }, { x: 220, duration: D("C1"), ease: "none", immediateRender: false }, t0);
           tl.fromTo("#c1-bb", { rotation: -1.5, svgOrigin: "0 0" }, { rotation: 1.5, svgOrigin: "0 0", duration: 0.5, yoyo: true, repeat: 6, ease: "sine.inOut", immediateRender: false }, t0);

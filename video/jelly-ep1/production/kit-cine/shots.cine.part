@@ -319,7 +319,7 @@
         return `<path d="M${ex},${ey}L${sx},${sy}" stroke="#1e1a16" stroke-width="${66 * W}" stroke-linecap="round"/><path d="M${ex},${ey}L${sx},${sy}" stroke="${sleeve}" stroke-width="${58 * W}" stroke-linecap="round"/>
           <path d="M${sx},${sy}L${hx},${hy}" stroke="#1e1a16" stroke-width="${54 * W}" stroke-linecap="round"/><path d="M${sx},${sy}L${hx},${hy}" stroke="${skin}" stroke-width="${46 * W}" stroke-linecap="round"/>
           <g transform="translate(${sx},${sy}) rotate(${a + 90}) scale(${W})"><rect x="-33" y="-10" width="66" height="20" rx="8" fill="${sleeve}" stroke="#1e1a16" stroke-width="4" filter="brightness(.9)"/></g>
-          <g transform="translate(${hx},${hy}) rotate(${a + 90}) scale(${W})"><g transform="translate(0,46) scale(.6)">${Jelly.bottle(0, 0, 1, { cap: false })}</g>
+          <g transform="translate(${hx},${hy}) rotate(${a + 90}) scale(${W})"><g transform="translate(0,60) scale(.9)">${Jelly.bottle(0, 0, 1, { cap: false })}</g>
           <rect x="-36" y="-30" width="72" height="58" rx="24" fill="${skin}" stroke="#1e1a16" stroke-width="4"/>
           ${[-21, -7, 7, 21].map((x) => `<path d="M${x},-28q-6,14 0,24" stroke="#1e1a16" stroke-width="3" fill="none" opacity=".55"/>`).join("")}
           <path d="M-36,-2q-16,10 -6,26q10,8 22,-2" fill="${skin}" stroke="#1e1a16" stroke-width="4"/></g>`; };

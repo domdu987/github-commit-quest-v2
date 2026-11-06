@@ -1,0 +1,7 @@
+edge-L1: no edge problems
+edge-L2: no edge problems
+edge-L3: no edge problems
+edge-Lbr: no edge problems
+edge-Lend: no edge problems
+edge-Lfb: no edge problems
+(16:9 port of the skill edgecheck @ c9e4240: edges + duplicate DOM ids)

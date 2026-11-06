@@ -1,6 +1,7 @@
 // Walk a built episode every 0.25 s and report captions, bubbles, choice buttons, UI cards and screen-space graphics that are
 // visible but leave the screen (cut by an edge) — the user notices half-cut labels at once.
-// 16:9 variant (viewport 1920×1080) of the skill edgecheck.cjs · usage: node edgecheckL.cjs <port> <schedule.json>
+// It also fails on duplicated DOM ids, which make GSAP animate the wrong element (captions vanish or jump order).
+// usage: node edgecheck.cjs <port> <schedule.json>   (exit 1 on any problem)
 let playwright;
 try { playwright = require('playwright'); } catch (e) { playwright = require('/opt/node22/lib/node_modules/playwright'); }
 const fs = require('fs');
@@ -13,6 +14,14 @@ const fs = require('fs');
   p.on('pageerror', (e) => console.log('PAGEERROR', e.message));
   await p.goto(`http://localhost:${port}/index.html`);
   await p.waitForTimeout(2500);
+  // A duplicated DOM id makes GSAP animate every element that carries it ("#x" selects all of them).
+  // krathong EP.1 cut 15: click labels named `${id}-c${c}` took the caption ids `${id}-c${k}` and hijacked the captions.
+  const dups = await p.evaluate(() => {
+    const c = {};
+    document.querySelectorAll('[id]').forEach((e) => { if (e.id) c[e.id] = (c[e.id] || 0) + 1; });
+    return Object.entries(c).filter(([, k]) => k > 1).map(([id, k]) => `${id}×${k}`);
+  });
+  if (dups.length) console.log(`DUPLICATE IDS ${dups.length}: ${dups.slice(0, 40).join(' ')}${dups.length > 40 ? ' …' : ''}`);
   const seen = new Set();
   let n = 0;
   for (const x of sc.shots) {
@@ -37,6 +46,8 @@ const fs = require('fs');
       for (const m of r) { const k = x.key + '|' + m.slice(0, 40); if (!seen.has(k)) { seen.add(k); n++; console.log(x.key, t.toFixed(2), m); } }
     }
   }
-  console.log(n ? `${n} edge problems` : 'no edge problems');
+  if (dups.length) console.log(`${dups.length} duplicate ids · rename them (e.g. a prop label "-clk<n>", never "-c<n>", which the engine uses for captions)`);
+  console.log(n ? `${n} edge problems` : (dups.length ? 'edges ok but duplicate ids' : 'no edge problems'));
+  if (n || dups.length) process.exitCode = 1;
   await b.close();
 })();

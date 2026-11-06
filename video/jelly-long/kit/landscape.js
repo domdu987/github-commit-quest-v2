@@ -108,6 +108,14 @@
     [...root.querySelectorAll(".clip")].forEach((clip) => { const i = +clip.id.slice(1); if (shots[i]) reflow(clip, shots[i]); });
     // things made for the Shorts only (the "watch the full story" sign, the repeated HG7 card): never in the long
     (LS.hide || []).forEach((sel) => root.querySelectorAll(sel).forEach((e) => { e.style.display = "none"; }));
+    // one id, one element (edgecheck fails on duplicates): a def string reused in two clips (a cast hand, a boat seeded alike, two set
+    // libraries) gets its later copies renamed per clip, with the url(#…)/href references inside that clip pointed at the new name
+    const seen = new Map();
+    root.querySelectorAll("[id]").forEach((e) => { const id = e.id; if (!seen.has(id)) { seen.set(id, 0); return; }
+      const k = seen.get(id) + 1; seen.set(id, k); const nu = `${id}_d${k}`, scope = e.closest(".clip") || root; e.id = nu;
+      scope.querySelectorAll("*").forEach((n) => { for (const a of n.attributes) {
+        if (a.value.includes(`url(#${id})`)) n.setAttribute(a.name, a.value.split(`url(#${id})`).join(`url(#${nu})`));
+        else if ((a.name === "href" || a.name === "xlink:href") && a.value === `#${id}`) n.setAttribute(a.name, `#${nu}`); } }); });
   };
   window.Landscape = { reflow, SC, EXTRA, FIT };
 })();

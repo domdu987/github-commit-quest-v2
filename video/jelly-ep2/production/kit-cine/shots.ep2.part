@@ -188,7 +188,7 @@
         } });
       // 14 · this morning: the loose ring slides off น้ำหวาน's waist while ต้น looks at his phone; push-in on the ring
       add("c_ring", { set: "jellyBeach", setOpts: BEACH2("jb7", { post: [760, 1300, 0.62, 0], life: [["mat", 330, 1760, 0.95, "#e8482a"]] }), dark: 0, light: DAWN,
-        cam: { keys: [{ t: 0, ...fr(420, 1460, 1.15, 540, 1060) }, { t: D("c_ring"), glide: D("c_ring"), ...fr(560, 1700, 2.2, 540, 1160) }] },
+        cam: { keys: [{ t: 0, ...(window.LANDSCAPE ? fr(460, 1300, 0.9, 540, 1060) : fr(420, 1460, 1.15, 540, 1060)) }, { t: D("c_ring"), glide: D("c_ring"), ...(window.LANDSCAPE ? fr(560, 1470, 1.4, 540, 1060) : fr(560, 1700, 2.2, 540, 1160)) }] },
         actors: [
           A("jTonPhone", 230, 1740, 0.95, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "smile" }]),
           A("jWanBare", 470, 1760, 0.68, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 640, y: 1760, dur: 2.6, ease: "none" } }),
