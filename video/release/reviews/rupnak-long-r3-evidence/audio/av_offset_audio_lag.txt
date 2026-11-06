@@ -1,0 +1,4 @@
+voice blocks of the round-3 share vs the episodes' vo stems placed at the schedule times (cross-correlation, +-50 ms)
+EP.1 voice block 5.067-116.945: audio lag vs schedule -0.00 ms (corr 0.963)
+EP.2 voice block 131.983-231.899: audio lag vs schedule -0.02 ms (corr 0.945)
+EP.3 voice block 242.406-344.578: audio lag vs schedule +0.00 ms (corr 0.938)

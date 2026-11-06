@@ -1,0 +1,20 @@
+A/V sync, part 3 (b2call 3:51.9 to the end) — round 3 (950a8fb) against round 2 (3fdbb69)
+
+1. Sound did not move: round-3 audio vs round-2 audio, cross-correlation at 10 / 130 / 240 / 300 s: lag 0 samples
+   (corr 0.9994, gain 0.98-0.99 = the music -1 dB). Voice blocks vs schedule: EP.1 -0.00 ms, EP.2 -0.02 ms, EP.3 +0.00 ms
+   (audio/av_offset_audio_lag.txt). SFX onsets measured on the SFX residual (mix - music - voice) land on their cue times
+   within 2 ms (know2 boom 285.743/285.744, rain thunder 286.957/286.957, sink thunder 289.988/289.986,
+   sink boom 290.546/290.546, grow2 boom 274.186/274.187, pry clang 251.404/251.405, b1shake boom 129.294/129.295).
+2. Picture moved one frame earlier in part 3 only: every part-3 frame of round 3 = round-2 frame + 1 (tech/joins_vs_r2.txt);
+   cuts vs schedule: part 3 = 26 x +0 and 1 x +1 (e3_hand opens on a dissolve, so its biggest change is one frame in) — round 2 was 26 x +1 and 1 x +2.
+3. Hard sync points (designed together in EP.3's body/mix; first frame that shows the picture event):
+
+   point                       sound (measured)   designed picture   round 3 first frame      round 2 first frame      sound->picture r3 / r2
+   e3_count  Mook's line m02    267.293 voice     267.290 talk+pose  f16038 = 267.300 s       f16039 = 267.317 s       +7 ms / +24 ms
+   e3_know2  boom + shake       285.743 boom      285.744 shake      f17145 = 285.750 s       f17146 = 285.767 s       +7 ms / +24 ms
+   e3_rain   thunder + bolt     286.957 thunder   286.977 bolt       f17219 = 286.983 s       f17220 = 287.000 s       +26 ms (20 by design) / +43 ms
+   e3_sink   cut, thunder +60ms 289.988 thunder   289.926 cut        f17396 = 289.933 s       f17397 = 289.950 s       cut on the schedule frame / 1 frame late
+   control, part 2 (unchanged): b1shake cut 129.245 -> f7755 in both rounds; boom 129.294.
+
+   Round 3: each picture event is on the first frame at or after its designed time (0-7 ms after the sound, i.e. inside one frame).
+   Round 2: one frame (17 ms) later at every point, as round 2 reported.

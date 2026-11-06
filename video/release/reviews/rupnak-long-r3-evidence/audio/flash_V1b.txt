@@ -1,0 +1,50 @@
+luma YAVG min 17.1 (t=5.07) max 179.0 (t=20.63) median 67.1
+
+== rises >= 8 over prev 0.3 s median: 23 (1 not at a cut) ==
+     5.083s 0:05.08  Y  17.1 ->  61.5 (+ 44.4)  est.opacity 0.20  above-half 4.00s STAYS  CUT [e1_open]  YHIGH 84
+    16.383s 0:16.38  Y  47.4 -> 178.8 (+131.4)  est.opacity 0.70  above-half 4.00s STAYS  CUT [e1_map]  YHIGH 222
+    26.950s 0:26.95  Y 121.6 -> 145.1 (+ 23.5)  est.opacity 0.21  above-half 3.42s returns  CUT [e1_ton]  YHIGH 184
+    45.633s 0:45.63  Y  55.8 -> 113.3 (+ 57.5)  est.opacity 0.32  above-half 4.00s STAYS  CUT [e1_rule]  YHIGH 142
+    68.083s 1:08.08  Y  61.7 ->  73.2 (+ 11.4)  est.opacity 0.07  above-half 0.97s returns  CUT [e1_know0]  YHIGH 149
+    73.850s 1:13.85  Y  39.9 -> 141.8 (+101.9)  est.opacity 0.52  above-half 4.00s STAYS  CUT [e1_cave]  YHIGH 188
+    92.533s 1:32.53  Y  60.5 -> 105.9 (+ 45.4)  est.opacity 0.26  above-half 4.00s STAYS  CUT [e1_know1]  YHIGH 130
+   125.700s 2:05.70  Y  44.7 ->  59.6 (+ 14.8)  est.opacity 0.08  above-half 4.00s STAYS  CUT [b1dust]  YHIGH 90
+   167.883s 2:47.88  Y  59.6 -> 139.7 (+ 80.1)  est.opacity 0.46  above-half 3.83s returns  CUT [e2_why]  YHIGH 189
+   181.050s 3:01.05  Y  61.8 -> 143.7 (+ 81.9)  est.opacity 0.47  above-half 4.00s STAYS  CUT [e2_know1]  YHIGH 190
+   200.067s 3:20.07  Y  60.3 -> 140.7 (+ 80.4)  est.opacity 0.46  above-half 4.00s STAYS  CUT [e2_sin2]  YHIGH 181
+   215.267s 3:35.27  Y  58.9 -> 115.6 (+ 56.7)  est.opacity 0.32  above-half 4.00s STAYS  CUT [e2_cordon]  YHIGH 171
+   224.883s 3:44.88  Y  55.7 -> 139.4 (+ 83.7)  est.opacity 0.47  above-half 4.00s STAYS  CUT [e2_ring]  YHIGH 194
+   236.133s 3:56.13  Y  61.7 -> 110.7 (+ 48.9)  est.opacity 0.28  above-half 4.00s STAYS  CUT [b2dawn]  YHIGH 143
+   242.417s 4:02.42  Y 100.6 -> 113.3 (+ 12.8)  est.opacity 0.09  above-half 2.00s returns  CUT [e3_barn]  YHIGH 144
+   247.817s 4:07.82  Y  86.6 -> 108.3 (+ 21.7)  est.opacity 0.15  above-half 4.00s STAYS  CUT [e3_pry]  YHIGH 142
+   255.500s 4:15.50  Y 107.7 -> 151.3 (+ 43.5)  est.opacity 0.34  above-half 4.00s STAYS  CUT [e3_rule]  YHIGH 190
+   279.183s 4:39.18  Y 106.8 -> 136.2 (+ 29.4)  est.opacity 0.23  above-half 4.00s STAYS  CUT [e3_know1]  YHIGH 186
+   283.750s 4:43.75  Y 111.3 -> 126.4 (+ 15.1)  est.opacity 0.12  above-half 2.88s returns  CUT [e3_know2]  YHIGH 186
+   287.000s 4:47.00  Y  53.4 ->  76.7 (+ 23.2)  est.opacity 0.13  above-half 0.40s returns      [e3_rain]  YHIGH 98
+   296.683s 4:56.68  Y  61.3 -> 139.7 (+ 78.4)  est.opacity 0.45  above-half 4.00s STAYS  CUT [e3_leaf]  YHIGH 179
+   310.500s 5:10.50  Y 111.7 -> 126.7 (+ 15.1)  est.opacity 0.12  above-half 4.00s STAYS  CUT [e3_num]  YHIGH 156
+   327.200s 5:27.20  Y  69.1 -> 149.0 (+ 79.9)  est.opacity 0.48  above-half 4.00s STAYS  CUT [e3_shrine]  YHIGH 189
+  worst 10 s window (returning, not at cut): 1 events from 287.0s
+
+== rises >= 15 over prev 0.3 s median: 20 (2 not at a cut) ==
+     5.083s 0:05.08  Y  17.1 ->  61.5 (+ 44.4)  est.opacity 0.20  above-half 4.00s STAYS  CUT [e1_open]  YHIGH 84
+    16.383s 0:16.38  Y  47.4 -> 178.8 (+131.4)  est.opacity 0.70  above-half 4.00s STAYS  CUT [e1_map]  YHIGH 222
+    26.950s 0:26.95  Y 121.6 -> 145.1 (+ 23.5)  est.opacity 0.21  above-half 3.42s returns  CUT [e1_ton]  YHIGH 184
+    45.633s 0:45.63  Y  55.8 -> 113.3 (+ 57.5)  est.opacity 0.32  above-half 4.00s STAYS  CUT [e1_rule]  YHIGH 142
+    73.850s 1:13.85  Y  39.9 -> 141.8 (+101.9)  est.opacity 0.52  above-half 4.00s STAYS  CUT [e1_cave]  YHIGH 188
+    92.533s 1:32.53  Y  60.5 -> 105.9 (+ 45.4)  est.opacity 0.26  above-half 4.00s STAYS  CUT [e1_know1]  YHIGH 130
+   167.883s 2:47.88  Y  59.6 -> 139.7 (+ 80.1)  est.opacity 0.46  above-half 3.83s returns  CUT [e2_why]  YHIGH 189
+   181.050s 3:01.05  Y  61.8 -> 143.7 (+ 81.9)  est.opacity 0.47  above-half 4.00s STAYS  CUT [e2_know1]  YHIGH 190
+   200.067s 3:20.07  Y  60.3 -> 140.7 (+ 80.4)  est.opacity 0.46  above-half 4.00s STAYS  CUT [e2_sin2]  YHIGH 181
+   215.267s 3:35.27  Y  58.9 -> 115.6 (+ 56.7)  est.opacity 0.32  above-half 4.00s STAYS  CUT [e2_cordon]  YHIGH 171
+   224.883s 3:44.88  Y  55.7 -> 139.4 (+ 83.7)  est.opacity 0.47  above-half 4.00s STAYS  CUT [e2_ring]  YHIGH 194
+   236.133s 3:56.13  Y  61.7 -> 110.7 (+ 48.9)  est.opacity 0.28  above-half 4.00s STAYS  CUT [b2dawn]  YHIGH 143
+   247.817s 4:07.82  Y  86.6 -> 104.0 (+ 17.4)  est.opacity 0.12  above-half 2.80s returns  CUT [e3_pry]  YHIGH 142
+   251.267s 4:11.27  Y  93.3 -> 108.3 (+ 15.0)  est.opacity 0.11  above-half 4.00s STAYS      [e3_pry]  YHIGH 142
+   255.500s 4:15.50  Y 107.7 -> 151.3 (+ 43.5)  est.opacity 0.34  above-half 4.00s STAYS  CUT [e3_rule]  YHIGH 190
+   279.183s 4:39.18  Y 106.8 -> 136.2 (+ 29.4)  est.opacity 0.23  above-half 2.95s returns  CUT [e3_know1]  YHIGH 186
+   283.750s 4:43.75  Y 111.3 -> 126.4 (+ 15.1)  est.opacity 0.12  above-half 1.97s returns  CUT [e3_know2]  YHIGH 186
+   287.000s 4:47.00  Y  53.4 ->  76.7 (+ 23.2)  est.opacity 0.13  above-half 0.13s returns      [e3_rain]  YHIGH 98
+   296.683s 4:56.68  Y  61.3 -> 139.7 (+ 78.4)  est.opacity 0.45  above-half 4.00s STAYS  CUT [e3_leaf]  YHIGH 179
+   327.200s 5:27.20  Y  69.1 -> 149.0 (+ 79.9)  est.opacity 0.48  above-half 4.00s STAYS  CUT [e3_shrine]  YHIGH 189
+  worst 10 s window (returning, not at cut): 1 events from 287.0s

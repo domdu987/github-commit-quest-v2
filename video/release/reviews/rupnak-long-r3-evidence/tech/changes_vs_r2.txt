@@ -1,0 +1,10 @@
+What changed between round 2 (3fdbb69) and round 3 (950a8fb), frame by frame
+Method: both files decoded in full; every frame scaled to 64x36 grey and compared with the round-2 frame at the same position
+(parts 1-2) or one frame later (part 3, see joins_vs_r2.txt). Spans where some pixel differs by > 25 (encoding noise stays < 25):
+     0-   170    0.000-   2.833 s  e2_open (cold open first shot, redone)        max 148
+  7020-  7076  117.000- 117.933 s  hg7 (bell moved, palm-leaf card)              max 77, area x 660-1260 y 510-690
+ 14665- 14702  244.417- 245.033 s  e3_barn (Mook's hand / Ton Khao's hair gone)  max 40, bottom-left corner
+ 19500- 19621  325.000- 327.017 s  e3_week (source chip moved inside the panel)  max 177, area x 1110-1650 y 870-1050
+Second pass on the caption/chip band (y 780-1080) at 480x75, every 0.25 s (1,378 frames): differences > 30 only at
+  0.117-2.617 s (e2_open) · 244.617-246.117 s (e3_barn bottom-left) · 325.117-326.867 s (e3_week chip).
+Everything else (all other captions, the 12 other source-chip spans, cards, chapter pills, part 2 entirely) is the same picture as round 2.

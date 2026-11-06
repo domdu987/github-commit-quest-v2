@@ -1,0 +1,14 @@
+decoded frames (signalstats lines): 20674 · decode errors: none
+blackdetect d=0.3 pix_th=0.10:
+lavfi.black_start=4.68333
+lavfi.black_end=5.08333
+freezedetect n=-60dB d=3: none
+freezedetect n=-50dB d=1 (information only; both inside e2_call, part 2 = same frames as round 2):
+  155.083-156.083 = Mook holding the phone, saying 'งั้นหนูโทรเอง!' (low motion: YDIF mean 0.037 here, round 2 0.036 at the same frames; round 2's encode fell just under the detector)
+  159.150-160.317 = the phone dial screen 1784 (intended; round 2 found 158.77-160.30)
+lavfi.freezedetect.freeze_start=155.083
+lavfi.freezedetect.freeze_duration=1
+lavfi.freezedetect.freeze_end=156.083
+lavfi.freezedetect.freeze_start=159.15
+lavfi.freezedetect.freeze_duration=1.16667
+lavfi.freezedetect.freeze_end=160.317

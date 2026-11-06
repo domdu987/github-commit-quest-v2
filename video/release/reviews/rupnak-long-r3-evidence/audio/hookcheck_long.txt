@@ -1,0 +1,8 @@
+first lines:
+   0.05– 2.84s  [e2_open] e2_open:b/c01: ถ้าวันหนึ่ง… / น้ำบ่อบ้านคุณ[ขุ่นเป็นโคลน]
+   2.90– 4.27s  [e2_hook] e2_hook:e2/n02: {อย่ารอจนบ้านยุบ}
+   5.19– 8.31s  [e1_open] e1_open:e1/n01: ถ้าวันหนึ่ง… / นาข้างบ้านคุณ[ยุบเป็นหลุม]
+   8.46– 9.59s  [e1_hook] e1_hook:e1/n02: {อย่าเข้าไปใกล้ขอบ}
+command starts at 2.90s: {อย่ารอจนบ้านยุบ}
+PASS
+look at the snapshots at 0.0 / 1.0 / 2.0 / 3.0 s for H1 (the lure moving in frame 1) and H3 (one wrong detail)

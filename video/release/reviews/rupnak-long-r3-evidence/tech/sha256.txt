@@ -1,0 +1,8 @@
+sha256 / bytes (git show 950a8fb:video/rupnak-long/LONG-rupnak-16x9-share.mp4; tide = a06f878:video/tide-long/LONG-tide-16x9-share.mp4; round 2 = 3fdbb69)
+8a121d0df0c6211a81ef610ab57f3ef7b9b1062fea799dc4e669a0a19b479620  rupnak-r3.mp4
+1c2d3a07adbdd1bffb1b2c1534f7d6a7c048e1df8f4e936f705efa055914bf6e  tide.mp4
+ca545f23d64d95fab54b30cdd8fd6ff649836a1768c3c64feef59fb73255ff37  rupnak-r2.mp4
+rupnak-r3.mp4 93640761 B
+tide.mp4 90529323 B
+rupnak-r2.mp4 93650840 B
+git blob 950a8fb:video/rupnak-long/LONG-rupnak-16x9-share.mp4 = f25041348434c7180bc689377a96658a23318c64
