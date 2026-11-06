@@ -87,6 +87,11 @@
       }
     }
     clip.dataset.land = fit ? "fit" : `y0=${Math.round(y0)}`;
+    clip.dataset.world = world ? world.map((v) => Math.round(v)).join(",") : "";
+    // a set drawn only for the 9:16 frame (a card, a diagram, the shadow screen, a map) leaves the widened sides empty: fill them with a
+    // blurred, dimmed blow-up of the shot itself (window.LANDBG: shot key -> image, made by fitbg.cjs), never plain black
+    const bg = (window.LANDBG || {})[sh.key];
+    if (bg) Object.assign(clip.style, { backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" });
   }
 
   Engine.build = (root, tl, shots) => {
