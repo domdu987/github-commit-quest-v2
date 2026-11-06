@@ -47,7 +47,7 @@
    "lead_sound": 0,
    "fg": "ไหล่คนข้างหน้า",
    "light": "ไฟพลุ",
-   "face_w": 0,
+   "face_w": 476,
    "hold": false,
    "threat_first": false,
    "note": "มะปรางลุกครึ่งตัว คำสั่งขึ้น 2.66 วิ"
@@ -390,7 +390,7 @@
    "lead_sound": 0,
    "fg": "ไหล่คนที่ลุก",
    "light": "ไฟโป๊ะ",
-   "face_w": 0,
+   "face_w": 299,
    "hold": false,
    "threat_first": false,
    "note": ""
@@ -407,7 +407,7 @@
    "lead_sound": 0,
    "fg": "มือยาย",
    "light": "ไฟโป๊ะ",
-   "face_w": 0,
+   "face_w": 478,
    "hold": false,
    "threat_first": false,
    "note": "",
@@ -425,7 +425,7 @@
    "lead_sound": 0,
    "fg": "ม้านั่ง",
    "light": "ไฟโป๊ะ",
-   "face_w": 0,
+   "face_w": 291,
    "hold": false,
    "threat_first": false,
    "note": ""
