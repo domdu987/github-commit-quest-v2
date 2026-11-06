@@ -4,7 +4,7 @@
 
 ลง **11 พ.ย. 2569 เวลา 09:30** ผ่าน Buffer โดยเจ้าของหรือ Moji · **วันนี้ลงเฉพาะคลิปยาว 16:9 บน YouTube**
 - ไฟล์ สถานะ commit และ sha256 อยู่ใน `video/release/day-2026-11-11.json` · ลงได้เมื่อ `status` = `final` เท่านั้น
-- คลิปยาวกับปกอยู่บน branch `prod/lane-d` commit `944e7b0`
+- คลิปยาวกับปกอยู่บน branch `prod/lane-d` commit `5dacb51` (ปก `thumb.jpg` เดียวกับ 3539cf4)
 - ไม่มีหัวข้อ 1–2 (ข้อความ Shorts) เพราะ Shorts ลงไปแล้ว
 
 | เวลา | ไฟล์ | สถานะ |
@@ -12,7 +12,7 @@
 | Shorts EP.1 | `video/release/hq/sink-ep1-HQ.mp4` | **ลงแล้ว 1 พ.ย. ห้ามลงซ้ำ** |
 | Shorts EP.2 | `video/release/hq/sink-ep2-HQ.mp4` | **ลงแล้ว 1 พ.ย. ห้ามลงซ้ำ** |
 | Shorts EP.3 | `video/release/hq/sink-ep3-HQ.mp4` | **ลงแล้ว 1 พ.ย. ห้ามลงซ้ำ** |
-| 09:30 คลิปยาว 16:9 | `video/sink-long/LONG-sink-16x9-share.mp4` · ปก `video/sink-long/thumb.jpg` (`prod/lane-d` @ `944e7b0`) | ดู `day-2026-11-11.json` |
+| 09:30 คลิปยาว 16:9 | `video/sink-long/LONG-sink-16x9-share.mp4` · ปก `video/sink-long/thumb.jpg` (`prod/lane-d` @ `5dacb51`) | ดู `day-2026-11-11.json` |
 
 - ความยาว 3:13.4 · 1920×1080 · 60 fps · 3 ตอนต่อกันพร้อมบทเชื่อม · ไฟล์ share −14.6 LUFS (AAC 192k)
 - **ลิงก์คลิปยาว:** หลังลงคลิปยาวแล้ว เพิ่มบรรทัด `▶️ เรื่องเต็ม: <ลิงก์คลิปยาว>` ท้ายคอมเมนต์ปักหมุดของ Shorts เก่าทั้ง 3 ตอน โดยใส่ลิงก์จริง
@@ -21,7 +21,7 @@
 
 ## 3. คลิปยาว 16:9 · 09:30 · YouTube เท่านั้น
 
-ที่มา: `video/sink-long/UPLOAD.md` (`prod/lane-d` @ `944e7b0`) คัดลอกคำต่อคำ ยกเว้น 2 จุดที่ผู้ประสานงานแก้ตามผลตรวจรอบ 2 (`video/release/reviews/2026-11-06-sink-long-r2.md`): ชื่อ (B6) และบรรทัดหมายเหตุหัวเบาะในคอมเมนต์ปักหมุด (m3) · ถ้า UPLOAD.md กับแผ่นนี้ต่างกัน ให้ใช้แผ่นนี้
+ที่มา: `video/sink-long/UPLOAD.md` (`prod/lane-d` @ `5dacb51`) คัดลอกคำต่อคำ (ชื่อ 36 ตัวอักษรตามผลตรวจรอบ 2 B6 และบรรทัดหมายเหตุหัวเบาะ m3 ตรงกับ UPLOAD.md แล้วทั้ง 3 ส่วน) · ผ่านโต๊ะตรวจรอบ 4 (`video/release/reviews/2026-11-06-sink-long-r4.md`)
 
 ชื่อ YouTube (ส่วนก่อน `|` 36 ตัวอักษร · ผู้ประสานงานเปลี่ยนตามผลตรวจรอบ 2 B6 ชื่อเดิมยาว 44)
 ```
