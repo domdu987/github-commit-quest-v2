@@ -1,0 +1,26 @@
+หนวดใส EP.1 (Shorts 1080×1920) · ตรวจจากไฟล์จริง 6 พ.ย. 2569 · สตอรี่บอร์ดรอบ 2 ผ่าน (1202e67b)
+
+ไฟล์
+- HQ (ลงช่อง · อยู่ในเครื่องเลน C ไม่เก็บ repo): scratchpad/jw/ep1/out/jelly-ep1-HQ.mp4
+  119,176,896 B · sha256 fc2307b49d8e051d7bf452012a0523fe750a1b7663f6d9de2f326dcece8031d1 · ภาพ copy จาก raw (ไม่บีบซ้ำ) + AAC 320k 48 kHz
+- share (repo): video/jelly-ep1/jelly-ep1-share.mp4
+  28,715,958 B · sha256 9bf861dab51c35c0a44b5f3eb4c9c61856e55d588808c48b8f48af81183dcbee · x264 crf 24 + AAC 192k
+- raw: 115,509,438 B · sha256 d29b7d3d103a873e9c9cf6a78263ce2df6d2c02fd117ee93e72bca14e99aa5bf · h264 1080×1920 60 fps
+- ความยาว: ภาพ 114.317 วิ · เสียง 114.326 วิ · schedule 114.326 วิ (ต่างกันไม่ถึง 1 เฟรม)
+
+1. hookcheck (สคริปต์ skill): PASS · ผู้บรรยายเริ่ม 0.05 วิ · คำสั่ง {อย่าเอาน้ำเปล่าราด} เริ่ม 2.60 วิ ในกล่องแดง + คัต + ภาพสั่น + sting
+2. hisscheck: mix.wav PASS (flatness 0.34 · pause HF −83.9 dBFS) · HQ PASS (flatness 0.35 · pause HF −85.4 dBFS)
+   musiccheck.tide (stems หลัง gain สุดท้าย): PASS · ใต้เสียงพูด −34.5 LUFS · ระหว่างบรรทัด −31.5 · เสียงพูดเหนือเพลง 20.2 LU · เพลงหาย 0%
+3. edgecheck (ทุก 0.25 วิ บนหน้าที่ build): no edge problems
+4. ความดัง: HQ −14.1 LUFS · true peak −2.6 dBFS · LRA 3.0 LU · share −14.1 LUFS · true peak −2.9 dBFS
+5. blackdetect (d 0.1, pix 0.1): 1 ช่วง 108.517–108.633 (0.117 วิ) = ตัดดำหลังตัวเลือกตามบท ก่อนป้ายตอนที่ 2
+   freezedetect (n 0.001, d 1 วิ): ไม่พบ
+6. แฟลช V1b (flashcheck.py บน HQ): 0 ครั้ง · หน้าต่าง 10 วิที่แย่สุด 0
+7. แผ่นตรวจ 1 เฟรม/วิ ช่องละ 360×640: video/jelly-ep1/sheets/qa-1fps-1…5.jpg (114 เฟรม) · เปิดดูแล้ว ตรงกับสตอรี่บอร์ดรอบ 2
+8. sha256 และขนาด: ด้านบน
+
+เสียง
+- เสียงพากย์: take ที่เลน B ปักไว้ (prod/lane-b มี 9eb3559) สร้าง wav ใหม่จาก mp3 cache ด้วย voice.py ของเลน B ไม่ได้เรียก TTS ใหม่ ความยาวทุกบรรทัดตรงกับ durations.json ของเลน B
+- p03 "โอ๊ย! ขาผม!": ไม่ใช้ TTS · เสียงกรีดร้องเด็กสังเคราะห์ (production/kidscream.py · 2.175 วิ เท่าช่องของบรรทัด) ซับบอกคำ · ยังไม่มีคนฟังจริง ขอให้ฟังจุดนี้ (67.8–70.0 วิ)
+- เพลง suno1 ตามสูตรทะเลลด (−30 dB RMS, ducking 0.65, dip ช่วงโดน/ช่วงตัดสินใจ) · SFX −27 dB low-pass 4.5 kHz · ไม่มี noise bed · gain คงที่ไปที่ −14 LUFS (ไม่มี loudnorm แบบ dynamic)
+- ตัดเงียบ + ดำ 0.12 วิ หลังตัวเลือก แล้วป้ายท้าย
