@@ -41,7 +41,8 @@ TAKES.update({k: 2 for k in [("ep1", "y01"), ("ep1", "k06"), ("ep2", "l01"),
 TAKES.update({("ep1", "k06"): 0, ("ep2", "m05"): 0, ("ep3", "x02"): 1})
 # coordinator 5 Nov: the EP.2 rule must be 100% clear — slower, word by word (fresh takes under the new style)
 # CINEMA BIBLE (owner 6 Nov) via coordinator: command lines read 15 % slower (tempo × 0.87), cut from the mp3 cache
-OVR = {("ep1", "n02"): {"tempo": 1.044}, ("ep1", "y16"): {"tempo": 0.957}, ("ep2", "n02"): {"tempo": 1.044}}
+OVR = {("ep1", "n02"): {"tempo": 1.044}, ("ep1", "y16"): {"tempo": 0.957}, ("ep2", "n02"): {"tempo": 1.044},
+       ("ep3", "n02"): {"tempo": 1.044}, ("bridges", "b02"): {"tempo": round(1.1 * 0.87, 3)}}
 # coordinator 5 Nov: EP.1 Short ≤ 2:30 — these lines play in the long video only (n10 stays: it starts the capsize chain)
 TAKES.update({("ep1", "m07"): 1, ("ep2", "n02"): 1})  # HG1 retakes: n02 takes 1-2 no better ("ตามหนอง", "และลูกตามนอน") so take 0 stays
 FULL_ONLY = {("ep1", i) for i in ("y01", "k01", "m02", "y04", "k05", "y08", "y10", "y11",

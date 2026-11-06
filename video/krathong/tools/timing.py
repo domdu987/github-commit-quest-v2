@@ -64,13 +64,13 @@ SHOTS_ALL = {
         ("A1", ["a01"], 0.4, 3.0, 4.0),               # ยาย's angle: the hull rising, the counter bouncing
         ("A2", [], 0.0, 0.0, 4.0),                    # through the water surface into the tilting boat (no line)
         ("B1", ["b01"], 0.3, 0.4, 3.0),
-        ("B2", ["b02", "b03"], 0.12, 0.3, 3.0),
+        ("B2", ["b02", "b03"], 0.30, 0.3, 3.0),  # CINEMA BIBLE: 0.3 s before "อย่าโดด"
         ("B3", ["b04", "b05"], 0.12, 0.3, 3.0),
         ("B4", ["b06", ("b07", 0.35)], 0.15, 0.5, 3.0),
     ],
     "ep3": [
         ("open", ["n01"], 0.05, 0.0, 1.0),
-        ("hook", ["n02"], 0.04, 0.3, 1.6),
+        ("hook", ["n02"], 0.30, 0.3, 1.6),            # CINEMA BIBLE: 0.3 s before "อย่า"
         ("party", ["l01", "n03"], 0.12, 0.4, 3.0),    # she lets go to swim for the party boat · the wake throws her back · she grabs the second gallon
         ("rule", ["y01"], 0.15, 0.6, 2.4),            # rule 3 on the paddle
         ("floatb", ["n04", "n05", "m01"], 0.15, 0.4, 3.4),
