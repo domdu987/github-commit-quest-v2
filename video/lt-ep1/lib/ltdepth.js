@@ -12,9 +12,9 @@
 
   dress.ltShop = (L, tl, sh, id, o) => {
     const night = o.time === "night" || o.time === "storm", lit = night && !o.blackout;
-    put(L.set, `${band(1250, 60, 0.55)}${ao(760, 1404, 200, 16, 0.3)}${ao(230, 1404, 80, 10, 0.3)}${ao(420, 1404, 80, 10, 0.3)}${o.bike === false ? "" : ao(1450, 1404, 210, 16, 0.3)}${o.table ? ao(1200, 1404, 160, 12, 0.28) : ""}${o.banana ? ao(1850, 1404, 90, 12, 0.3) : ""}${cast(360, 1040, 1250, 110, -60, night ? 0.3 : 0.14, 14)}`);
+    put(L.set, `${band(1250, 60, 0.55)}${ao(760, 1404, 200, 16, 0.3)}${ao(230, 1404, 80, 10, 0.3)}${ao(420, 1404, 80, 10, 0.3)}${o.bike === false ? "" : ao(1450, 1404, 210, 16, 0.3)}${o.table ? ao(o.tableX ?? 1200, 1404, 160, 12, 0.28) : ""}${o.banana ? ao(1850, 1404, 90, 12, 0.3) : ""}${cast(360, 1040, 1250, 110, -60, night ? 0.3 : 0.14, 14)}`);
     if (o.rain || o.puddle) wetShine(L, 1400, 0.12);
-    if (lit) { put(L.glow, `<g style="mix-blend-mode:screen">${cone(1488, 600, 40, 800, 0.7, "jkdCone")}</g>`); hum(tl, sh, `#${id}-lamps`, 0.9, 0.13); motes(L.glow, tl, sh, { n: 8, color: "#fff2c0", x: 1200, y: 500, w: 600, h: 800, seed: 5, r: 2.6 }); }
+    if (lit) { put(document.getElementById(`${id}-lamps`) || L.glow, `<g style="mix-blend-mode:screen">${cone(1488, 600, 40, 800, 0.7, "jkdCone")}</g>`); hum(tl, sh, `#${id}-lamps`, 0.9, 0.13); motes(L.glow, tl, sh, { n: 8, color: "#fff2c0", x: 1200, y: 500, w: 600, h: 800, seed: 5, r: 2.6 }); }
     else if (!night) { motes(L.glow, tl, sh, { n: 12, color: "#fff6c8", x: -200, y: 500, w: 1600, h: 900, seed: 3 }); birds(L.far, tl, sh, 300, 500, 3, "#3a3a4a"); }
     if (o.time === "storm") { drift(tl, sh, `#${id}-sky .ltCloud, .ltCloud`, 70, 8); farBolts(tl, sh, id, o.bolts); }
     rain(tl, sh, id);
@@ -37,7 +37,7 @@
   };
   dress.ltSky = (L, tl, sh, id, o) => {
     put(L.set, `${band(1260, 60, 0.6)}${ao(-150, 1404, 70, 10, 0.3)}`); wetShine(L, 1400, 0.1);
-    if (!o.blackout) { put(L.glow, `<g style="mix-blend-mode:screen">${cone(1338, 600, 40, 800, 0.6, "jkdCone")}</g>`); hum(tl, sh, `#${id}-lights`, 0.9, 0.12); hum(tl, sh, `#${id}-far .ltWin`, 0.6, 0.7); }
+    if (!o.blackout) { put(document.getElementById(`${id}-lights`) || L.glow, `<g style="mix-blend-mode:screen">${cone(1338, 600, 40, 800, 0.6, "jkdCone")}</g>`); hum(tl, sh, `#${id}-lights`, 0.9, 0.12); hum(tl, sh, `#${id}-far .ltWin`, 0.6, 0.7); }
     if (o.storm !== false) { drift(tl, sh, `#${id}-clouds .ltCloud`, 90, 7); farBolts(tl, sh, id, o.bolts); }
     rain(tl, sh, id);
   };

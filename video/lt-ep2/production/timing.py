@@ -20,20 +20,19 @@ LINES = {ln["id"]: ln for ln in json.load(open(os.path.join(HERE, "lines.json"))
 
 # key, [voice ids], pre-roll, post-roll, minimum length
 SHOTS = [
-    ("r01", ["h2"], 0.05, 0.3, 3.2),                  # hook: the queue in the alley at night, phones touching the welder, 100% popping
-    ("r02", ["p05_1"], 0.05, 0.3, 3.2),               # that night: a knock on the rental-room door
-    ("r03", ["p05_2"], 0.05, 0.3, 5.0),               # เฮียกิม: the old electrician, the same hair
-    ("r04", ["p05_3"], 0.05, 0.3, 4.4),               # "you got struck too… me, forty years ago"
-    ("r05", ["p05_4"], 0.05, 0.3, 4.0),               # "the lightning never leaves; you learn to live with it"
-    ("r06", ["p05_5"], 0.05, 0.3, 4.2),               # the old fuse box opens: three rules on the lid
-    ("r07", ["p06_1", "p06_2", "p06_3"], 0.05, 0.4, 14.0),   # the three rules, one row per line
-    ("r08", ["p06_4"], 0.05, 0.4, 4.6),               # "I let it all out once… half of Thonburi went dark"
-    ("r09", ["p07_1"], 0.05, 0.35, 8.0),              # the rumour: the queue, phones on the welder, full in three seconds
-    ("r10", ["p07_2"], 0.05, 0.35, 5.6),              # เจ๊หงส์'s table: 20 baht each · you get nothing
-    ("r11", ["p07_3"], 0.05, 0.3, 6.0),               # angry: the hair sparks · run to hug the banana tree (rule two)
-    ("r12", ["p07_4"], 0.05, 0.5, 5.6),               # the tree is fine… the whole bunch ripens in one second
-    ("r13", [], 0, 0, 2.8),                           # the full story on YouTube
-    ("r14", [], 0, 0, 2.2),                           # the channel logo
+    ("q01", ["h2"], 0.05, 0.3, 3.2),                  # hook: the queue in the alley at night, phones on the welder
+    ("q02", ["p07_1"], 0.05, 0.35, 8.0),              # the rumour: the queue arrives, a phone on the welder, full in three seconds
+    ("q03", ["p07_2"], 0.05, 0.35, 5.6),              # เจ๊หงส์'s table: 20 baht each · you get nothing
+    ("q04", ["p05_1"], 0.05, 0.3, 3.2),               # that night: a knock on the rental-room door
+    ("q05", ["p05_2"], 0.05, 0.3, 5.0),               # เฮียกิม: the old electrician, the same hair
+    ("q06", ["p05_3"], 0.05, 0.3, 4.4),               # "you got struck too… me, forty years ago"
+    ("q07", ["p05_5"], 0.05, 0.3, 4.2),               # the old fuse box opens: rules on the lid
+    ("q08", ["p06_2", "p06_3"], 0.05, 0.4, 10.0),     # rule two (anger → hold a tree) · rule three (never 100% until you can switch off)
+    ("q09", ["p07_2b"], 0.05, 0.35, 7.0),             # next day: a longer queue, 30 baht now, you still get nothing
+    ("q10", ["p07_3"], 0.05, 0.3, 6.0),               # angry: the hair sparks · run to hug the banana tree (rule two)
+    ("q11", ["p07_4"], 0.05, 0.5, 5.6),               # the tree is fine… the whole bunch ripens in one second
+    ("q12", [], 0, 0, 2.8),                           # the full story on YouTube
+    ("q13", [], 0, 0, 2.2),                           # the channel logo
 ]
 GAP = 0.08
 

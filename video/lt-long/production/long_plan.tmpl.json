@@ -3,7 +3,7 @@
  "xfade": 0.2,
  "parts": [
   { "video": "ep1L/EP1L-welder-lightning-HQ.mp4", "from": 0.0, "to": "START:w18" },
-  { "video": "ep2L/EP2L-welder-lightning-HQ.mp4", "from": "START:r02", "to": "START:r13" },
+  { "video": "ep2L/EP2L-welder-lightning-HQ.mp4", "from": "START:q02", "to": "START:q12" },
   { "video": "ep3L/EP3L-welder-lightning-HQ.mp4", "from": "START:t02", "to": "START:t13" },
   { "video": "ep4L/EP4L-welder-lightning-HQ.mp4", "from": "START:f02", "to": "START:f15" }
  ]

@@ -547,97 +547,97 @@
           ${[...Array(6)].map((_, k) => `<path d="M-360,${-300 + k * 120}h720" stroke="#b8b4a8" stroke-width="2" opacity=".7"/>`).join("")}${[[-368, -(o.h ?? 420) + 32], [368, -(o.h ?? 420) + 32], [-368, (o.h ?? 420) - 32], [368, (o.h ?? 420) - 32]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="10" fill="#4a4e56"/><circle cx="${x - 2}" cy="${y - 2}" r="4" fill="#a8acb4"/>`).join("")}
           <rect x="-300" y="-${(o.h ?? 420) - 50}" width="600" height="96" rx="12" fill="#1a1a22"/><text x="0" y="-${(o.h ?? 420) - 118}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#f6d36a">${title}</text>
           ${rows.map(([ic, tone, a, b], n) => row((o.row0 ?? -150) + n * (o.gap ?? 190), n + 1, ic, tone, a, b)).join("")}</g>`; return g; };
-      // ---------- r01 hook: the queue in the alley at night, phones on the welder ----------
       const QUEUE = (k, x0 = 1010) => [["ltMan1Phone", 1.0], ["ltWom1Phone", 0.96], ["ltMan2Phone", 1.0], ["ltWom2Phone", 0.94]].map(([who, s], i) => A(who, x0 + i * 150, 1400, s, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }));
-      shot("r01", { ...shop("r01", { time: "night", table: true, tableX: 1560 }), cam: { keys: [{ t: 0, ...fr(900, 1120, 1.15, 540, 980), drift: { s: 0.012 } }, { t: F("r01", 0, 1) - 0.1, ...fr(960, 1080, 1.4, 540, 960), glide: 0.5 }] },
-        actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }, { t: F("r01", 0, 1), mode: "idle", eyes: "worry", mouth: "frown" }]), ...QUEUE("r01"), A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }], { flip: true })],
-        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("r01"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r01"), 0.4); aura(tl, L, 800, 1130, t0, D("r01"), { r: 300, op: 0.6 });
-          zapLine(tl, L, 880, 1000, 960, 1010, t0 + 0.3, D("r01") - 0.4, { w: 5, seed: 31, r: 160 }); phone100(tl, L, 1010, 760, t0 + 0.8, { s: 0.9 }); phone100(tl, L, 1160, 700, t0 + F("r01", 0, 1) + 0.3, { s: 0.8 }); phone100(tl, L, 1310, 760, t0 + F("r01", 0, 1) + 0.9, { s: 0.8 }); } });
+      // ---------- q01 (was r01) ----------
+      shot("q01", { ...shop("q01", { time: "night", table: true, tableX: 1560 }), cam: { keys: [{ t: 0, ...fr(900, 1120, 1.15, 540, 980), drift: { s: 0.012 } }, { t: F("q01", 0, 1) - 0.1, ...fr(960, 1080, 1.4, 540, 960), glide: 0.5 }] },
+        actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }, { t: F("q01", 0, 1), mode: "idle", eyes: "worry", mouth: "frown" }]), ...QUEUE("q01"), A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("q01"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("q01"), 0.4); aura(tl, L, 800, 1130, t0, D("q01"), { r: 300, op: 0.6 });
+          zapLine(tl, L, 880, 1000, 960, 1010, t0 + 0.3, D("q01") - 0.4, { w: 5, seed: 31, r: 160 }); phone100(tl, L, 1010, 760, t0 + 0.8, { s: 0.9 }); phone100(tl, L, 1160, 700, t0 + F("q01", 0, 1) + 0.3, { s: 0.8 }); phone100(tl, L, 1310, 760, t0 + F("q01", 0, 1) + 0.9, { s: 0.8 }); } });
 
-      // ---------- r02–r06 that night: เฮียกิม at the door ----------
-      shot("r02", { ...room("r02", { doorFront: true }), cam: { keys: [{ t: 0, ...fr(1100, 1000, 1.1, 540, 960), drift: { s: 0.01 } }, { t: F("r02", 0, 1), ...fr(1040, 900, 1.5, 540, 900), glide: 0.6 }] },
+      // ---------- q02 (was r09) ----------
+      shot("q02", { ...shop("q02", { time: "night", table: true, tableX: 1560 }), cam: { keys: [{ t: 0, ...fr(1000, 1060, 0.9, 540, 960), drift: { s: 0.008 } }, { t: F("q02", 0, 1), ...fr(1000, 1100, 1.2, 540, 980), glide: 0.8 }, { t: F("q02", 0, 2) - 0.1, ...fr(900, 1060, 1.6, 540, 960), glide: 0.5 }] },
+        actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("q02", 0, 2), mode: "idle", eyes: "wide", mouth: "o" }]), ...QUEUE("q02", 2400).map((a, i) => ({ ...a, moveTo: { x: 1010 + i * 150, dur: 1.6, at: F("q02", 0, 1) - 0.3 } })), A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }], { flip: true })],
+        sfxText: [{ text: "ติ๊ง!", x: 640, y: 560, size: 90, rot: 6, color: "#9ad8ff", t: F("q02", 0, 3) + 0.4, end: D("q02") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("q02"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("q02"), 0.4); const rumour = tagAt(tl, L, 800, 820, "ข่าวลือไปไวกว่าไฟ", t0 + 0.3, { s: 1.0 }); out(tl, rumour, t0 + F("q02", 0, 3) - 0.7);
+          zapLine(tl, L, 880, 1000, 960, 1010, t0 + F("q02", 0, 2) + 0.1, D("q02") - F("q02", 0, 2) - 0.2, { w: 5, seed: 33, r: 160 }); phone100(tl, L, 1010, 760, t0 + F("q02", 0, 3) + 0.4, { s: 0.9 });
+          LTI.counter(tl, L.light, t0, D("q02"), { icon: "bolt", x: 160, y: 420, w: 760, from: 3, to: 0, unit: "วินาที", at: F("q02", 0, 3) - 0.5, rollAt: F("q02", 0, 3) - 0.4, count: 0.8, tone: "blue" }); } });
+      // ---------- q03 (was r10) ----------
+      shot("q03", { ...shop("q03", { time: "night", table: true, tableX: 1560 }), cam: { keys: [{ t: 0, ...fr(1560, 1180, 1.6, 540, 1000), drift: { s: 0.01 } }, { t: F("q03", 0, 2) - 0.2, ...face(800, 1400, 2.4, false, 540, 820), glide: 0.6 }] },
+        actors: [A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }, { t: 0.6, mode: "proud", eyes: "closed", mouth: "smile" }], { flip: true }), ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("q03", 0, 2), mode: "idle", eyes: "angry", mouth: "frown" }]), ...QUEUE("q03")],
+        sfxText: [{ text: "ฉิ่ง!", x: 160, y: 560, size: 80, rot: -8, color: "#f6d36a", t: F("q03", 0, 1) + 0.1, end: F("q03", 0, 2) }],
+        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("q03"), -0.5); hairSparks(tl, `${id}-a1`, t0, D("q03"), 0.4);
+          LTI.counter(tl, L.light, t0, D("q03"), { icon: "baht", x: 160, y: 420, w: 760, from: 0, to: 20, unit: "฿/ครั้ง", at: F("q03", 0, 1) - 0.2, rollAt: F("q03", 0, 1), count: 0.6, tone: "yellow" });
+          LTI.badge(tl, L.light, t0, D("q03"), { kind: "baht", x: 300, y: 620, tone: "red", label: "คุณได้ 0 บาท", at: F("q03", 0, 2) + 0.2 }); } });
+
+      // ---------- q09 next day: a longer queue, 30 baht, you still get nothing ----------
+      const QUEUE6 = (k) => [["ltMan1Phone", 1.0], ["ltWom1Phone", 0.96], ["ltMan2Phone", 1.0], ["ltWom2Phone", 0.94], ["ltMan1Phone", 0.98], ["ltWom1Phone", 0.95]].map(([who, s], i) => A(who, 960 + i * 140, 1400, s, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }));
+      shot("q09", { ...shop("q09", { table: true, tableX: 1900, price: "30 ฿" }), cam: { keys: [{ t: 0, ...fr(1350, 1100, 0.72, 540, 960), drift: { s: 0.008 } }, { t: F("q09", 0, 1) - 0.2, ...fr(1850, 1160, 1.5, 540, 980), glide: 0.6 }, { t: F("q09", 0, 2) - 0.2, ...face(800, 1400, 2.4, false, 540, 820), glide: 0.6 }] },
+        actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }, { t: F("q09", 0, 2), mode: "idle", eyes: "angry", mouth: "frown" }]), ...QUEUE6("q09"), A("ltHongCash", 1940, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }, { t: F("q09", 0, 1), mode: "proud", eyes: "closed", mouth: "smile" }], { flip: true })],
+        sfxText: [{ text: "ฉิ่ง! ฉิ่ง!", x: 120, y: 560, size: 80, rot: -8, color: "#f6d36a", t: F("q09", 0, 1) + 0.2, end: F("q09", 0, 2) }],
+        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("q09"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("q09"), 0.4); tagAt(tl, L, 1300, 760, "วันต่อมา", t0 + 0.3, { s: 1.4 }); zapLine(tl, L, 880, 1000, 910, 1010, t0 + 0.3, D("q09") - 0.5, { w: 4, seed: 35, r: 140 });
+          LTI.counter(tl, L.light, t0, D("q09"), { icon: "baht", x: 160, y: 420, w: 760, from: 20, to: 30, unit: "฿/ครั้ง", at: F("q09", 0, 1), rollAt: F("q09", 0, 1) + 0.2, count: 0.6, tone: "yellow" });
+          LTI.badge(tl, L.light, t0, D("q09"), { kind: "baht", x: 300, y: 620, tone: "red", label: "คุณได้ 0 บาท", at: F("q09", 0, 2) + 0.3 }); } });
+      // ---------- q04 (was r02) ----------
+      shot("q04", { ...room("q04", { doorFront: true }), cam: { keys: [{ t: 0, ...fr(1100, 1000, 1.1, 540, 960), drift: { s: 0.01 } }, { t: F("q04", 0, 1), ...fr(1040, 900, 1.5, 540, 900), glide: 0.6 }] },
         actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "knock", eyes: "normal", mouth: "flat" }])],
-        sfxText: [{ text: "ก๊อก ก๊อก", x: 120, y: 620, size: 80, rot: -8, color: "#f6d36a", t: F("r02", 0, 1) + 0.1, end: D("r02") - 0.1 }],
-        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:40", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("r02"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r02"), 0.6);
-          tl.fromTo(`#${SID.room("r02")}-leaf`, { x: 0 }, { x: 3, duration: 0.06, repeat: 5, yoyo: true, ease: "none" }, t0 + F("r02", 0, 1) + 0.1); } });
-      shot("r03", { ...room("r03", { doorFront: true }), cam: { keys: [{ t: 0, ...fr(960, 1040, 1.2, 540, 960), drift: { s: 0.01 } }, { t: F("r03", 0, 1) - 0.2, ...fr(915, 870, 1.9, 540, 860), glide: 0.6 }] },
-        actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("r03", 0, 1), mode: "proud", eyes: "squint", mouth: "smile" }]),
+        sfxText: [{ text: "ก๊อก ก๊อก", x: 120, y: 620, size: 80, rot: -8, color: "#f6d36a", t: F("q04", 0, 1) + 0.1, end: D("q04") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:40", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("q04"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("q04"), 0.6);
+          tl.fromTo(`#${SID.room("q04")}-leaf`, { x: 0 }, { x: 3, duration: 0.06, repeat: 5, yoyo: true, ease: "none" }, t0 + F("q04", 0, 1) + 0.1); } });
+      // ---------- q05 (was r03) ----------
+      shot("q05", { ...room("q05", { doorFront: true }), cam: { keys: [{ t: 0, ...fr(960, 1040, 1.2, 540, 960), drift: { s: 0.01 } }, { t: F("q05", 0, 1) - 0.2, ...fr(915, 870, 1.9, 540, 860), glide: 0.6 }] },
+        actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("q05", 0, 1), mode: "proud", eyes: "squint", mouth: "smile" }]),
           ME("ltYouBolt", 1000, 1400, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }, { t: 0.9, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
-        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:41", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("r03"), -0.5); const sid = SID.room("r03");
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:41", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("q05"), -0.5); const sid = SID.room("q05");
           tl.set(`#${id}-a1`, { opacity: 0 }, 0); tl.set(`#${id}-a1`, { opacity: 1 }, t0 + 0.35); tl.to(`#${sid}-leaf`, { scaleX: 0.12, transformOrigin: "100% 50%", duration: 0.5, ease: "power2.inOut" }, t0 + 0.3);
-          hairSparks(tl, `${id}-a0`, t0, D("r03"), 0.6); hairSparks(tl, `${id}-a1`, t0 + 0.35, D("r03"), 0.4); tagAt(tl, L, 830, 760, "เฮียกิม · ช่างไฟ 70 ปี", t0 + 0.7, { s: 0.9 });
-          LTI.badge(tl, L.light, t0, D("r03"), { kind: "hairup", x: 300, y: 500, tone: "blue", label: "ชี้ตั้งเหมือนกันเป๊ะ", at: F("r03", 0, 1) + 0.3 }); } });
-      shot("r04", { ...room("r04", { doorFront: true }), camAt: face(830, 1400, 2.6, false, 540, 820, 0.9), push: 0.02, blur: { far: 6, mid: 5 },
-        actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }, { t: F("r04", 0, 1), mode: "idle", eyes: "sad", mouth: "flat" }], { talk: [[vo("r04"), voEnd("r04"), "o"]] })],
-        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:41", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); hairSparks(tl, `${id}-a0`, t0, D("r04"), 0.6);
-          LTI.badge(tl, L.light, t0, D("r04"), { kind: "bolt", x: 300, y: 520, tone: "yellow", label: "40 ปีก่อน", at: F("r04", 0, 1) + 0.3 }); } });
-      shot("r05", { ...room("r05", { doorFront: true }), camAt: fr(915, 1000, 1.55, 540, 940), push: 0.015, blur: { far: 4 },
-        actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "payUp", eyes: "normal", mouth: "flat" }], { talk: [[vo("r05"), voEnd("r05"), "o"]] }), ME("ltYouBolt", 1000, 1400, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }, { t: F("r05", 0, 1), mode: "idle", eyes: "normal", mouth: "pout" }], { flip: true })],
-        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:42", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("r05"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r05"), 0.6); hairSparks(tl, `${id}-a1`, t0, D("r05"), 0.4); } });
-      shot("r06", { ...room("r06"), cam: { keys: [{ t: 0, ...fr(1400, 1060, 1.2, 540, 960), drift: { s: 0.01 } }, { t: F("r06", 0, 1) - 0.1, ...fr(1560, 1000, 2.0, 540, 900), glide: 0.5 }] },
+          hairSparks(tl, `${id}-a0`, t0, D("q05"), 0.6); hairSparks(tl, `${id}-a1`, t0 + 0.35, D("q05"), 0.4); tagAt(tl, L, 830, 760, "เฮียกิม · ช่างไฟ 70 ปี", t0 + 0.7, { s: 0.9 });
+          LTI.badge(tl, L.light, t0, D("q05"), { kind: "hairup", x: 300, y: 500, tone: "blue", label: "ชี้ตั้งเหมือนกันเป๊ะ", at: F("q05", 0, 1) + 0.3 }); } });
+      // ---------- q06 (was r04) ----------
+      shot("q06", { ...room("q06", { doorFront: true }), camAt: face(830, 1400, 2.6, false, 540, 820, 0.9), push: 0.02, blur: { far: 6, mid: 5 },
+        actors: [A("ltKim", 830, 1400, 0.9, [{ t: 0, mode: "idle", eyes: "squint", mouth: "flat" }, { t: F("q06", 0, 1), mode: "idle", eyes: "sad", mouth: "flat" }], { talk: [[vo("q06"), voEnd("q06"), "o"]] })],
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:41", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); hairSparks(tl, `${id}-a0`, t0, D("q06"), 0.6);
+          LTI.badge(tl, L.light, t0, D("q06"), { kind: "bolt", x: 300, y: 520, tone: "yellow", label: "40 ปีก่อน", at: F("q06", 0, 1) + 0.3 }); } });
+      // ---------- q07 (was r06) ----------
+      shot("q07", { ...room("q07"), cam: { keys: [{ t: 0, ...fr(1400, 1060, 1.2, 540, 960), drift: { s: 0.01 } }, { t: F("q07", 0, 1) - 0.1, ...fr(1560, 1000, 2.0, 540, 900), glide: 0.5 }] },
         actors: [A("ltKimDriver", 1380, 1400, 0.9, [{ t: 0, mode: "weldStand", eyes: "normal", mouth: "flat" }]), ME("ltYouBolt", 1180, 1400, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
-        sfxText: [{ text: "แอ๊ด…", x: 160, y: 700, size: 70, rot: -6, color: "#f6d36a", t: F("r06", 0, 1) - 0.2, end: F("r06", 0, 1) + 0.9 }],
-        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:45", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("r06"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r06"), 0.6); hairSparks(tl, `${id}-a1`, t0, D("r06"), 0.4); const sid = SID.room("r06"), at = t0 + F("r06", 0, 1) - 0.2;
+        sfxText: [{ text: "แอ๊ด…", x: 160, y: 700, size: 70, rot: -6, color: "#f6d36a", t: F("q07", 0, 1) - 0.2, end: F("q07", 0, 1) + 0.9 }],
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:45", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); shadows(L, id, act("q07"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("q07"), 0.6); hairSparks(tl, `${id}-a1`, t0, D("q07"), 0.4); const sid = SID.room("q07"), at = t0 + F("q07", 0, 1) - 0.2;
           tl.to(`#${sid}-box-lid`, { scaleX: -1, transformOrigin: "0% 50%", duration: 0.7, ease: "power2.inOut" }, at); tl.set(`#${sid}-box-lid .ltLidFront`, { opacity: 0 }, at + 0.35); tl.set(`#${sid}-box-lid .ltLidBack`, { opacity: 1 }, at + 0.35); } });
 
-      // ---------- r07 the three rules on the lid ----------
-      shot("r07", { ...room("r07"), camAt: fr(1500, 1040, 1.3, 540, 960), push: 0.006, blur: { far: 10, mid: 9, set: 8, act: 7 }, dark: 0.3,
+      // ---------- q08 rule two and rule three on the lid ----------
+      shot("q08", { ...room("q08"), camAt: fr(1500, 1040, 1.3, 540, 960), push: 0.006, blur: { far: 10, mid: 9, set: 8, act: 7 }, dark: 0.3,
         actors: [A("ltKim", 1380, 1400, 0.9, [{ t: 0, mode: "pointZap", eyes: "normal", mouth: "flat" }]), ME("ltYouBolt", 1180, 1400, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
-        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:45", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); const g = lidCard(L, id, [["gate", "red", "ตกใจเมื่อไร ห้ามจับเหล็ก", "ไม่งั้นทั้งตึกจะสะดุ้งไปด้วย"], ["tree", "green", "โกรธเมื่อไร ให้จับต้นไม้", "ความโกรธจะไหลลงดิน"], ["batt100", "yellow", "ห้ามปล่อยไฟเต็มร้อย", "ถ้ายังไม่รู้วิธีปิด"]], "กฎของเฮียกิม ๓ ข้อ");
-          pop(tl, g, t0 + 0.05, { origin: "540 760", from: 0.85, dur: 0.35 }); swingG(tl, `#${id}-pl`, t0 + 0.4, D("r07") - 0.4, 0.6, "540 340");
-          const ats = [F("r07", 0, 1) - 0.3, F("r07", 1, 1) - 0.3, vo("r07", 2) + 0.6], kinds = ["gate", "tree", "batt100"];
-          [1, 2, 3].forEach((n) => { tl.set(`#${id}-rr${n}`, { opacity: 0 }, 0); const a = t0 + ats[n - 1]; tl.to(`#${id}-rr${n}`, { opacity: 1, duration: 0.25 }, a); JKI.enterC(tl, `${id}-ic${n}`, a); LTI.idle(tl, `${id}-ic${n}`, kinds[n - 1], a + 0.9, t0 + D("r07") - a - 0.9); }); } });
-
-      // ---------- r08 "I let it all out once… half of Thonburi went dark" ----------
-      shot("r08", { ...sky("r08", { storm: false }), grade: { top: "#c89a60", bottom: "#2a1a10", op: 0.4 }, cam: { keys: [{ t: 0, ...fr(900, 700, 0.6, 540, 900), drift: { s: 0.008 } }, { t: F("r08", 0, 1), ...fr(700, 700, 0.55, 540, 900), glide: 1.0 }] }, shake: JKC.impact(F("r08", 0, 1) + 0.1, 0.5, 8),
-        actors: [A("ltKim", 540, 1400, 0.9, [{ t: 0, mode: "zap", eyes: "closed", mouth: "scream" }, { t: F("r08", 0, 1) + 0.3, mode: "idle", eyes: "wide", mouth: "o" }])],
-        sfxText: [{ text: "ซ่าาา!!", x: 120, y: 500, size: 110, rot: -8, color: "#9ad8ff", t: 0.3, end: F("r08", 0, 1) }],
-        fx(tl, id, t0, L) { hud(id, [["เมื่อ", "40 ปีก่อน", "#f2c55c"], ["ไฟในตัว", "100%", "#ff8a7a"]]); hairSparks(tl, `${id}-a0`, t0, D("r08")); aura(tl, L, 540, 1130, t0, F("r08", 0, 1) + 0.2, { r: 420, op: 0.9, end: F("r08", 0, 1) + 0.2 });
-          const at = t0 + F("r08", 0, 1) + 0.1, sid = SID.sky("r08"); const wins = [...document.querySelectorAll(`#${id}-far .ltWin, #${id}-mid .ltWin`)].filter((e) => +e.getAttribute("x") < 1000);
-          tl.to(wins, { attr: { fill: "#1e2230" }, duration: 0.05 }, at); [...document.querySelectorAll(`#${sid}-lights > *`)].filter((e) => +e.getAttribute("cx") < 1000).forEach((e) => tl.to(e, { opacity: 0, duration: 0.05 }, at));
-          tl.to(`#${sid}-store, #${sid}-hosp`, { opacity: 0.25, duration: 0.05 }, at); const dk = grp(L.set); dk.innerHTML = `<rect x="-2600" y="-1600" width="3600" height="4200" fill="#05070c"/>`; tl.set(dk, { opacity: 0 }, 0); tl.to(dk, { opacity: 0.6, duration: 0.1 }, at);
-          tagAt(tl, L, 300, 300, "ครึ่งฝั่งธน", at + 0.4, { s: 2.6 }); } });
-
-      // ---------- r09–r10 the rumour: the queue, the table ----------
-      shot("r09", { ...shop("r09", { time: "night", table: true, tableX: 1560 }), cam: { keys: [{ t: 0, ...fr(1000, 1060, 0.9, 540, 960), drift: { s: 0.008 } }, { t: F("r09", 0, 1), ...fr(1000, 1100, 1.2, 540, 980), glide: 0.8 }, { t: F("r09", 0, 2) - 0.1, ...fr(900, 1060, 1.6, 540, 960), glide: 0.5 }] },
-        actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("r09", 0, 2), mode: "idle", eyes: "wide", mouth: "o" }]), ...QUEUE("r09", 2400).map((a, i) => ({ ...a, moveTo: { x: 1010 + i * 150, dur: 1.6, at: F("r09", 0, 1) - 0.3 } })), A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }], { flip: true })],
-        sfxText: [{ text: "ติ๊ง!", x: 640, y: 560, size: 90, rot: 6, color: "#9ad8ff", t: F("r09", 0, 3) + 0.4, end: D("r09") - 0.1 }],
-        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("r09"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r09"), 0.4); const rumour = tagAt(tl, L, 800, 820, "ข่าวลือไปไวกว่าไฟ", t0 + 0.3, { s: 1.0 }); out(tl, rumour, t0 + F("r09", 0, 3) - 0.7);
-          zapLine(tl, L, 880, 1000, 960, 1010, t0 + F("r09", 0, 2) + 0.1, D("r09") - F("r09", 0, 2) - 0.2, { w: 5, seed: 33, r: 160 }); phone100(tl, L, 1010, 760, t0 + F("r09", 0, 3) + 0.4, { s: 0.9 });
-          LTI.counter(tl, L.light, t0, D("r09"), { icon: "bolt", x: 160, y: 420, w: 760, from: 3, to: 0, unit: "วินาที", at: F("r09", 0, 3) - 0.5, rollAt: F("r09", 0, 3) - 0.4, count: 0.8, tone: "blue" }); } });
-      shot("r10", { ...shop("r10", { time: "night", table: true, tableX: 1560 }), cam: { keys: [{ t: 0, ...fr(1560, 1180, 1.6, 540, 1000), drift: { s: 0.01 } }, { t: F("r10", 0, 2) - 0.2, ...face(800, 1400, 2.4, false, 540, 820), glide: 0.6 }] },
-        actors: [A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "payUp", eyes: "squint", mouth: "smile" }, { t: 0.6, mode: "proud", eyes: "closed", mouth: "smile" }], { flip: true }), ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("r10", 0, 2), mode: "idle", eyes: "angry", mouth: "frown" }]), ...QUEUE("r10")],
-        sfxText: [{ text: "ฉิ่ง!", x: 160, y: 560, size: 80, rot: -8, color: "#f6d36a", t: F("r10", 0, 1) + 0.1, end: F("r10", 0, 2) }],
-        fx(tl, id, t0, L) { hud(id, H_WAGE(100)); shadows(L, id, act("r10"), -0.5); hairSparks(tl, `${id}-a1`, t0, D("r10"), 0.4);
-          LTI.counter(tl, L.light, t0, D("r10"), { icon: "baht", x: 160, y: 420, w: 760, from: 0, to: 20, unit: "฿/ครั้ง", at: F("r10", 0, 1) - 0.2, rollAt: F("r10", 0, 1), count: 0.6, tone: "yellow" });
-          LTI.badge(tl, L.light, t0, D("r10"), { kind: "baht", x: 300, y: 620, tone: "red", label: "คุณได้ 0 บาท", at: F("r10", 0, 2) + 0.2 }); } });
-
-      // ---------- r11 angry → the banana tree · r12 the bunch ripens ----------
-      split("r11", F("r11", 0, 1),
-        spec("r11", { ...shop("r11", { time: "night", table: true, tableX: 1560, banana: true }), camAt: face(800, 1400, 2.8, false, 540, 800), push: 0.03, blur: { far: 6, mid: 5 }, shake: JKC.impact(0.6, 1.2, 4), captions: caps("r11").filter((c) => c.t < F("r11", 0, 1)),
+        fx(tl, id, t0, L) { hud(id, [["เวลา", "22:45", "#9ad8ff"], ["ไฟในตัว", "100%", "#9ad8ff"]]); const g = lidCard(L, id, [["tree", "green", "ข้อ ๒ · โกรธเมื่อไร ให้จับต้นไม้", "ความโกรธจะไหลลงดิน ไม่ไหลเข้าคน"], ["batt100", "yellow", "ข้อ ๓ · ห้ามปล่อยไฟเต็มร้อย", "ถ้ายังไม่รู้วิธีปิด"]], "กฎของเฮียกิม", { y: 760, h: 330, row0: -60, gap: 200 });
+          pop(tl, g, t0 + 0.05, { origin: "540 760", from: 0.85, dur: 0.35 }); swingG(tl, `#${id}-pl`, t0 + 0.4, D("q08") - 0.4, 0.6, "540 430");
+          const rows = [[vo("q08", 0) + 0.1, F("q08", 0, 1), "tree"], [F("q08", 1, 1) - 0.1, F("q08", 1, 2), "batt100"]];
+          rows.forEach(([a, b, kind], i) => { const n = i + 1; tl.set(`#${id}-rr${n}`, { opacity: 0 }, 0); tl.set(`#${id}-rr${n} text:nth-of-type(2)`, { opacity: 0 }, 0); tl.to(`#${id}-rr${n}`, { opacity: 1, duration: 0.25 }, t0 + a); JKI.enterC(tl, `${id}-ic${n}`, t0 + a); LTI.idle(tl, `${id}-ic${n}`, kind, t0 + a + 0.9, D("q08") - a - 0.9); tl.to(`#${id}-rr${n} text:nth-of-type(2)`, { opacity: 1, duration: 0.25 }, t0 + b); }); } });
+      // ---------- q10 (was r11) ----------
+      split("q10", F("q10", 0, 1),
+        spec("q10", { ...shop("q10", { time: "night", table: true, tableX: 1560, banana: true }), camAt: face(800, 1400, 2.8, false, 540, 800), push: 0.03, blur: { far: 6, mid: 5 }, shake: JKC.impact(0.6, 1.2, 4), captions: caps("q10").filter((c) => c.t < F("q10", 0, 1)),
           actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "idle", eyes: "angry", mouth: "frown" }, { t: 0.8, mode: "idle", eyes: "angry", mouth: "scream" }])],
-          fx(tl, id, t0, L) { hud(id, H_WAGE(100, "#ff8a7a")); hairSparks(tl, `${id}-a0`, t0, D("r11")); tl.fromTo(`#${id}-a0 .ltSpark`, { scale: 1, svgOrigin: "0 -620" }, { scale: 1.5, svgOrigin: "0 -620", duration: 0.1, repeat: 30, yoyo: true, ease: "none", immediateRender: false }, t0 + 0.5);
+          fx(tl, id, t0, L) { hud(id, H_WAGE(100, "#ff8a7a")); hairSparks(tl, `${id}-a0`, t0, D("q10")); tl.fromTo(`#${id}-a0 .ltSpark`, { scale: 1, svgOrigin: "0 -620" }, { scale: 1.5, svgOrigin: "0 -620", duration: 0.1, repeat: 30, yoyo: true, ease: "none", immediateRender: false }, t0 + 0.5);
             const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="800" cy="900" r="360" fill="url(#jkRed)"/></g>`; tl.set(gl, { opacity: 0 }, 0); tl.to(gl, { opacity: 0.8, duration: 0.6 }, t0 + 0.4); } }),
-        spec("r11", { ...shop("r11", { time: "night", table: true, tableX: 1560, banana: true }), cam: { keys: [{ t: 0, ...fr(1300, 1100, 0.95, 540, 980), drift: { s: 0.01 } }, { t: 1.0, ...fr(1750, 1080, 1.25, 540, 960), glide: 1.2 }] }, captions: capsFrom("r11", F("r11", 0, 1)),
+        spec("q10", { ...shop("q10", { time: "night", table: true, tableX: 1560, banana: true }), cam: { keys: [{ t: 0, ...fr(1300, 1100, 0.95, 540, 980), drift: { s: 0.01 } }, { t: 1.0, ...fr(1750, 1080, 1.25, 540, 960), glide: 1.2 }] }, captions: capsFrom("q10", F("q10", 0, 1)),
           actors: [ME("ltYouBolt", 800, 1400, [{ t: 0, mode: "run", eyes: "angry", mouth: "scream" }, { t: 1.05, mode: "hugTree", eyes: "closed", mouth: "pout" }], { moveTo: { x: 1700, dur: 1.0, at: 0.05 } }), A("ltHongCash", 1600, 1400, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
-          fx(tl, id, t0, L) { hud(id, H_WAGE(100, "#ff8a7a")); shadows(L, id, act("r11"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r11")); const sid = SID.shop("r11");
-            zapLine(tl, L, 1760, 1100, 1836, 1400, t0 + 1.2, D("r11") - 1.4, { w: 5, seed: 41, r: 220 }); LTI.badge(tl, L.light, t0, D("r11"), { kind: "tree", x: 300, y: 520, tone: "green", label: "กฎข้อ ๒", at: F("r11", 0, 2) - F("r11", 0, 1) + 0.2 }); } }));
-      shot("r12", { ...shop("r12", { time: "night", table: true, tableX: 1560, banana: true }), cam: { keys: [{ t: 0, ...fr(1750, 1080, 1.25, 540, 960), drift: { s: 0.01 } }, { t: F("r12", 0, 1) - 0.1, ...fr(1890, 1070, 2.6, 540, 900), glide: 0.6 }] }, shake: JKC.impact(F("r12", 0, 2) + 0.1, 0.3, 6),
-        actors: [ME("ltYouBolt", 1700, 1400, [{ t: 0, mode: "hugTree", eyes: "closed", mouth: "pout" }, { t: F("r12", 0, 2) + 0.3, mode: "hugTree", eyes: "wide", mouth: "o" }])],
-        sfxText: [{ text: "ติ๊ง!", x: 120, y: 520, size: 100, rot: -8, color: "#f6d36a", t: F("r12", 0, 2) + 0.1, end: D("r12") - 0.1 }],
-        fx(tl, id, t0, L) { hud(id, H_WAGE(100, "#ff8a7a")); shadows(L, id, act("r12"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("r12"), 0.5); const sid = SID.shop("r12"), at = t0 + F("r12", 0, 2) + 0.1;
-          zapLine(tl, L, 1760, 1100, 1836, 1400, t0, F("r12", 0, 2), { w: 5, seed: 43, r: 220 }); tl.to(`#${sid}-tree .ltBan`, { attr: { stroke: "#f6d36a" }, duration: 0.25 }, at);
+          fx(tl, id, t0, L) { hud(id, H_WAGE(100, "#ff8a7a")); shadows(L, id, act("q10"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("q10")); const sid = SID.shop("q10");
+            zapLine(tl, L, 1760, 1100, 1836, 1400, t0 + 1.2, D("q10") - 1.4, { w: 5, seed: 41, r: 220 }); LTI.badge(tl, L.light, t0, D("q10"), { kind: "tree", x: 300, y: 520, tone: "green", label: "กฎข้อ ๒", at: F("q10", 0, 2) - F("q10", 0, 1) + 0.2 }); } }));
+      // ---------- q11 (was r12) ----------
+      shot("q11", { ...shop("q11", { time: "night", table: true, tableX: 1560, banana: true }), cam: { keys: [{ t: 0, ...fr(1750, 1080, 1.25, 540, 960), drift: { s: 0.01 } }, { t: F("q11", 0, 1) - 0.1, ...fr(1890, 1070, 2.6, 540, 900), glide: 0.6 }] }, shake: JKC.impact(F("q11", 0, 2) + 0.1, 0.3, 6),
+        actors: [ME("ltYouBolt", 1700, 1400, [{ t: 0, mode: "hugTree", eyes: "closed", mouth: "pout" }, { t: F("q11", 0, 2) + 0.3, mode: "hugTree", eyes: "wide", mouth: "o" }])],
+        sfxText: [{ text: "ติ๊ง!", x: 120, y: 520, size: 100, rot: -8, color: "#f6d36a", t: F("q11", 0, 2) + 0.1, end: D("q11") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_WAGE(100, "#ff8a7a")); shadows(L, id, act("q11"), -0.5); hairSparks(tl, `${id}-a0`, t0, D("q11"), 0.5); const sid = SID.shop("q11"), at = t0 + F("q11", 0, 2) + 0.1;
+          zapLine(tl, L, 1760, 1100, 1836, 1400, t0, F("q11", 0, 2), { w: 5, seed: 43, r: 220 }); tl.to(`#${sid}-tree .ltBan`, { attr: { stroke: "#f6d36a" }, duration: 0.25 }, at);
           const fl = grp(L.glow); fl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="1890" cy="1070" r="300" fill="url(#ltWarm)"/></g>`; tl.set(fl, { opacity: 0 }, 0); tl.fromTo(fl, { opacity: 1 }, { opacity: 0.3, duration: 0.8, ease: "power2.out", immediateRender: false }, at);
           const sp = grp(L.act); sp.innerHTML = `<g transform="translate(1890,1070)">${LT.sparks(14, 150, 17, "#f6d36a")}</g>`; tl.set(sp, { opacity: 0 }, 0); tl.fromTo(sp, { opacity: 1, scale: 0.3, svgOrigin: "1890 1070" }, { opacity: 0, scale: 1.6, svgOrigin: "1890 1070", duration: 0.5, ease: "power2.out", immediateRender: false }, at);
           tagAt(tl, L, 1890, 900, "สุกทั้งเครือ!", at + 0.3, { s: 0.45 }); } });
 
-      // ---------- r13 the full story on YouTube · r14 logo ----------
-      shot("r13", { ...shop("r13", { time: "night", table: true, tableX: 1560, banana: true }), camAt: fr(1000, 1000, 0.8, 540, 900), push: 0.01, dark: 0.45, blur: { set: 12, mid: 10, far: 10, glow: 8 }, captions: [],
-        fx(tl, id, t0, L) { NkV.chalkEnd(tl, grp(L.light), t0, D("r13"), { big: "ดูเรื่องเต็ม", q: "ทาง YouTube", tag: "ดูต่อได้ที่", foot: "กดติดตาม แล้วดูเรื่องเต็มที่ YouTube" });
+      // ---------- q12 (was r13) ----------
+      shot("q12", { ...shop("q12", { time: "night", table: true, tableX: 1560, banana: true }), camAt: fr(1000, 1000, 0.8, 540, 900), push: 0.01, dark: 0.45, blur: { set: 12, mid: 10, far: 10, glow: 8 }, captions: [],
+        fx(tl, id, t0, L) { NkV.chalkEnd(tl, grp(L.light), t0, D("q12"), { big: "ดูเรื่องเต็ม", q: "ทาง YouTube", tag: "ดูต่อได้ที่", foot: "กดติดตาม แล้วดูเรื่องเต็มที่ YouTube" });
           const yt = grp(L.light); yt.innerHTML = `<g transform="translate(540,1430)"><rect x="-150" y="-50" width="100" height="100" rx="26" fill="#e8302a"/><path d="M-112,-24L-112,24L-72,0Z" fill="#fff"/>
             <text x="-30" y="-6" font-family="Kanit" font-weight="900" font-size="44" fill="#ffffff">${CHANNEL}</text><text x="-30" y="38" font-family="Kanit" font-weight="700" font-size="28" fill="#f2c55c">เรื่องเต็มทุกตอน</text></g>`;
           tl.set(yt, { opacity: 0 }, 0); tl.fromTo(yt, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 1.3); } });
-      shot("r14", { light: false, captions: [], fx(tl, id, t0, L) { const g = grp(L.light); NkUI.logo(g); pop(tl, g, t0 + 0.05, { from: 0.9, dy: 0, origin: "540 880" }); } });
+      // ---------- q13 (was r14) ----------
+      shot("q13", { light: false, captions: [], fx(tl, id, t0, L) { const g = grp(L.light); NkUI.logo(g); pop(tl, g, t0 + 0.05, { from: 0.9, dy: 0, origin: "540 880" }); } });
       root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">ช่างเชื่อมสายฟ้า · EP.2</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
       Fx.setup(root);
       Engine.build(root, tl, shots);
