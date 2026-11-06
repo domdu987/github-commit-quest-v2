@@ -296,6 +296,8 @@
       KC.maprangWet = { v2: { ...KC.maprang.v2, faceTop: mpWet, top: { kind: "blouse", c: "#d8ccb4", sleeve: "long", trim: "#b8a88a" } } };
 
       // ---------------- the frames ----------------
+      // seated, one arm reaching out (มะปราง reaching for ข้าวปั้น's hand from the bench)
+      Rig.MODES.reachSit = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -70 + 3 * Math.sin(u * 2.3), faF: -18, torso: 6, head: -8 });
       // passengers on a tilted boat: feet inside the hull at (bx + dx, by + 20 + dx·sin(tilt)), the hull drawn again over them (act layer)
       const onBoat = (bx, by, tilt, list) => list.map(([who, dx, s, mode, eyes, mouth, flip, extra]) => A(who, bx + dx, by + 22 + dx * Math.sin(tilt / 57.3), s, [{ t: 0, mode, eyes, mouth, ...(extra || {}) }], flip ? { flip: true } : {}));
       const hullOver = (svg) => svg.replace(/<path d="M-430[^>]*\/>/, "");
@@ -306,20 +308,29 @@
           krathongField(L, { n: 44, y0: 660, y1: 1880, smax: 0.9, seed: 5, skip: (x, y) => (y > 1000 && y < 1300 && x > -60 && x < 1100) || (y > 1380 && y < 1700 && x > 60 && x < 1020) });
           // the big burst over the water on the left, its light on the river
           const R = 230, burst = Array.from({ length: 36 }, (_, i) => { const a = i / 36 * Math.PI * 2; return `<path d="M${k1(Math.cos(a) * R * 0.2)},${k1(Math.sin(a) * R * 0.2)}Q${k1(Math.cos(a) * R * 0.7)},${k1(Math.sin(a) * R * 0.7)} ${k1(Math.cos(a) * R)},${k1(Math.sin(a) * R + 30)}" stroke="${i % 2 ? "#ffd24a" : "#ff6aa8"}" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="${k1(Math.cos(a) * R)}" cy="${k1(Math.sin(a) * R + 30)}" r="6" fill="#fff"/>`; }).join("");
-          put(L.sky, `<g transform="translate(130,420)">${burst}<circle r="60" fill="#fff6d0" opacity=".9"/></g>`);
-          put(L.glow, `<circle cx="130" cy="420" r="420" fill="url(#kBulb)" opacity=".55"/><ellipse cx="160" cy="900" rx="520" ry="90" fill="#ff8ab8" opacity=".12"/>`);
+          put(L.sky, ``);
+          put(L.glow, `<circle cx="330" cy="640" r="320" fill="url(#kBulb)" opacity=".55"/><ellipse cx="160" cy="900" rx="520" ry="90" fill="#ff8ab8" opacity=".12"/>`);
           put(L.set, boatSide(600, 1220, 0.8, { sink: 0.8, tilt: -3.5, water: true, wake: 1, load: crowd(-300, 420, -150, 5, 3, 0.9) }));
         },
         dark: 0, light: { ...MOONL, from: "left", rim: "#ffd0e8", rimOp: 0.75 }, grade: GNIGHT, blur: { sky: 1, far: 1.5, fg: 6 },
-        cam: { keys: [{ t: 0, ...fr(540, 1100, 1.0, 540, 980), drift: { s: 0.01 } }] },
-        actors: onBoat(600, 1220, -3.5, [
-          ["pxB", -300, 0.33, "point", "wide", "o"], ["pxA", -170, 0.32, "phoneLook", "normal", "smile"], ["pxC", -40, 0.3, "cheer", "wide", "laugh"],
-          ["maprangPhone", 90, 0.32, "phoneLook", "normal", "smile"], ["khaopan", 200, 0.25, "whistle", "wide", "o"], ["pxE", 300, 0.34, "raise", "normal", "o"],
-          ["lungMuek", 470, 0.36, "idle", "normal", "laugh", true]]),
+        cam: { keys: [{ t: 0, ...fr(620, 1110, 1.45, 540, 1000), drift: { s: 0.01 } }] },
+        // the hook (EP.1 v3): ข้าวปั้น has climbed onto the bench, whistle up at the fireworks; มะปราง stays seated, reaching for his
+        // hand; around them the others are starting to rise
+        actors: [...onBoat(600, 1220, -3.5, [
+          ["pxB", -300, 0.33, "point", "wide", "o"], ["pxA", -180, 0.32, "phoneLook", "normal", "smile"], ["maprang", -30, 0.32, "reachSit", "worry", "o"],
+          ["pxC", 250, 0.3, "raise", "wide", "laugh"], ["pxE", 340, 0.34, "raise", "normal", "o", true],
+          ["lungMuek", 405, 0.36, "idle", "normal", "laugh", true]]),
+          A("khaopan", 600 + 100, 1220 + 22 + 100 * Math.sin(-3.5 / 57.3) - 62, 0.26, [{ t: 0, mode: "whistle", eyes: "wide", mouth: "o" }])],
         fx(tl, id, t0, L) {
           put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.8, tilt: -3.5, water: true, wake: 1 })));
+          // the bench ข้าวปั้น stands on, drawn over his feet line
+          const ky = 1220 + 22 + 100 * Math.sin(-3.5 / 57.3) - 62;
+          put(L.act, `<g transform="translate(700,${k1(ky)}) rotate(-3.5)"><rect x="-46" y="-2" width="92" height="16" rx="3" fill="#a8763e" ${KOUT2}/><rect x="-40" y="-8" width="80" height="10" rx="4" fill="#ff7a2a" ${KOUT2}/></g>`);
           put(L.set, krathong(150, 1300, 0.6, { seed: 31 }) + krathong(980, 1360, 0.7, { seed: 32 }) + kRefl(150, 1300, 0.6, 160) + kRefl(980, 1360, 0.7, 160));
           put(L.glow, kGlow(150, 1300, 0.6, 80) + kGlow(980, 1360, 0.7, 90));
+          // the burst the passengers stand up for, top left of the frame (screen space: the sky's parallax would carry it out)
+          { const R = 200, burst = Array.from({ length: 36 }, (_, i) => { const a = i / 36 * Math.PI * 2; return `<path d="M${k1(Math.cos(a) * R * 0.2)},${k1(Math.sin(a) * R * 0.2)}Q${k1(Math.cos(a) * R * 0.7)},${k1(Math.sin(a) * R * 0.7)} ${k1(Math.cos(a) * R)},${k1(Math.sin(a) * R + 30)}" stroke="${i % 2 ? "#ffd24a" : "#ff6aa8"}" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="${k1(Math.cos(a) * R)}" cy="${k1(Math.sin(a) * R + 30)}" r="6" fill="#fff"/>`; }).join("");
+            put(L.light, `<circle cx="250" cy="300" r="330" fill="url(#kBulb)" opacity=".5"/><g transform="translate(250,300)">${burst}<circle r="50" fill="#fff6d0" opacity=".9"/></g>`); }
           put(L.light, `<g transform="translate(540,1520)"><text x="0" y="0" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="140" fill="#fff2c8" stroke="#2a1a10" stroke-width="10" paint-order="stroke">เรือล่ม</text>
             <text x="0" y="132" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="96" fill="#ffd24a" stroke="#2a1a10" stroke-width="9" paint-order="stroke">คืนลอยกระทง</text>
             <g transform="translate(0,214)"><rect x="-130" y="-40" width="260" height="62" rx="31" fill="#c8241e" stroke="#2a1a10" stroke-width="5"/><text x="0" y="5" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#fff6ea">EP.1</text></g></g>`);
