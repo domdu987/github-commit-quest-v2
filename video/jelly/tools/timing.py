@@ -61,7 +61,14 @@ SHOTS_ALL = {
         ("yai", ["y01", "y02"], 0.1, 0.3, 3.0),  # ยาย runs in with the basket · lifeguard tweezes tentacles (picture only) · rule 3
         ("amb", ["x1"], 0.1, 0.6, 2.2),
         ("hall", ["d03", "y03", "d04"], 0.15, 0.3, 3.0),
-        ("secret", ["y04", "y05", "d05"], 0.15, 0.6, 3.0),  # shadow-puppet flashback: the young fisherman, the water bowl
+        ("secret", ["y04", "y05"], 0.15, 0.6, 3.0),   # ยาย starts telling it
+        # ---- long only: the secret in full (CINEMA BIBLE §7) — flashback in the house style of the cold open
+        ("fb_hosp", ["s01", "s02", "s03"], 0.4, 0.3, 3.0),   # district hospital corridor 30 years ago, young ลออ in wet clothes
+        ("fb_sorry", ["s04"], 0.2, 0.6, 2.4),
+        ("hush", [], 0.0, 0.0, 4.0),                         # CINEMA BIBLE: a 3–5 s silence the Shorts never have — ลออ alone on the bench
+        ("fb_home", ["s05", "s06", "s07"], 0.3, 0.6, 3.0),   # the boy ต้น wakes; the lie
+        ("fb_post", ["s08", "s09", "s10"], 0.3, 0.8, 3.0),   # dawn: the first vinegar post, the first rhyme in chalk
+        ("back", ["d05"], 0.3, 0.6, 2.4),                    # back to the hospital corridor today
         ("why", ["y06", "y07", "d06"], 0.15, 0.5, 3.0),
         ("wake", ["w01", "p01"], 0.15, 0.4, 3.0),
         ("rules", ["n04"], 0.15, 0.4, 3.0),
@@ -73,6 +80,15 @@ SHOTS_ALL = {
         ("A2", ["a02"], 0.1, 0.6, 2.4),
         ("B1", ["b01"], 0.2, 0.3, 3.0),               # the lifeguard tower
         ("B2", ["b02"], 0.1, 0.8, 2.4),               # the old photo
+        # COLD OPEN (plays first in the long video, before the title) and EPILOGUE (after EP.3) — CINEMA BIBLE §7
+        ("C1", ["c01"], 0.4, 0.4, 2.6),               # EWS: the same beach thirty years ago, a wooden boat, dawn
+        ("C2", ["c02", "c03"], 0.1, 0.3, 3.0),        # the young fisherman dragged out; ลออ running
+        ("C3", ["c04"], 0.1, 0.4, 2.4),               # CU: เพิ่ม forcing a smile; a bowl of fresh water tipped over his leg
+        ("C4", ["c05"], 0.2, 1.2, 3.0),               # the water hits the skin (cut-away like EP.1 n05) → black → title
+        ("E1", ["e01"], 0.5, 0.4, 2.4),               # EWS: the beach at dawn a year later
+        ("E2", ["e02", "e03"], 0.1, 0.4, 3.0),        # ภูมิ carries the basket, teaches a tourist kid at the post
+        ("E2b", ["e06", "e07"], 0.2, 0.6, 3.0),      # น้ำหวาน and ภูมิ shout the rhyme running round the post
+        ("E3", ["e04", "e05"], 0.2, 5.0, 3.0),        # ยาย and ต้น at the waterline · 5 s of sea after the last word (credits ambience)
     ],
 }
 SHOTS = SHOTS_ALL[SEG]
