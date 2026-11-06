@@ -32,15 +32,15 @@
   ],
   "status": "in_production",
   "branch": "prod/lane-d",
-  "commit": "191bde9",
+  "commit": "3fdbb69",
   "video": "video/rupnak-long/LONG-rupnak-16x9-share.mp4",
-  "video_sha256": "5f06364da98ad6550bcb9d5826902402b0f0d39f15efbccb8600b621b0bf4b3e",
-  "video_bytes": 93594968,
+  "video_sha256": "ca545f23d64d95fab54b30cdd8fd6ff649836a1768c3c64feef59fb73255ff37",
+  "video_bytes": 93650840,
   "cover": "video/rupnak-long/thumb.jpg",
   "made_by": "เลน D (โต๊ะภาพ 2)",
   "due": "2026-11-07T22:00+07:00",
   "note": "ฉบับเต็มจาก EP.1–3 รุ่นภาพใหม่ (ff2c113/0d552c5 · kit video/rupnak/upgrade · composition video/rupnak-ep1..3) + บทเชื่อมจริง",
-  "review": "โต๊ะตรวจรอบ 1 (6 พ.ย. 10:50): ยังไม่พร้อม · BLOCKER 3 ข้อในส่วนที่ 3 (e3_rule การ์ดทับหัว · e3_num หัวต้นข้าวหลุดขอบบน · e3_shrine ศาลหลุดกรอบ) · ด่านคู่ แย่กว่า / แย่กว่า (เล็กน้อย) / แย่กว่า (เล็กน้อย) · รายงาน video/release/reviews/2026-11-06-rupnak-long.md · ส่งเลน D แก้แล้ว"
+  "review": "รอบ 1 (6 พ.ย. 10:50): ยังไม่พร้อม · BLOCKER 3 ข้อในส่วนที่ 3 · รายงาน video/release/reviews/2026-11-06-rupnak-long.md · เลน D ส่งไฟล์ใหม่ 6 พ.ย. 13:41 (3fdbb69 · sha ca545f23… · 93,650,840 B · 5:44.6): cold open จาก EP.2 {อย่ารอจนบ้านยุบ} 2.90 วิ · HG7 · B1–B3 · M2–M10 · เลน D แจ้งเองว่ายังเหลือ M3 มุมประตูเล้า 4:04.4–4:07.6 และส่วนที่ 3 ภาพช้ากว่าเสียง 1 เฟรม · โต๊ะตรวจรอบ 2 กำลังตรวจ · ห้ามใช้ 191bde9 (sha 5f06364d…)"
  },
  "team_charter": "video/release/TEAM-CHARTER.md"
 }
