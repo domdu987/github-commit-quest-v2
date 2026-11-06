@@ -468,6 +468,8 @@
       // cine.js grades / vignettes / grains / freezes or breathes the camera per cut (Cine.episode in foot.part); the old
       // gradient grades and the hook shake are gone. Pieces = a new set or place; camera cuts inside a piece follow the shot list.
       const NOG = { grade: null, shake: null };
+      // captions from several caps() calls, sorted and trimmed so one never overlaps the next (the real-file sheet caught 1:41)
+      const capsJ = (...lists) => { const out = lists.flat().sort((a, b) => a.t - b.t); for (let n = 0; n + 1 < out.length; n++) out[n].end = Math.min(out[n].end, out[n + 1].t - 0.03); return out; };
       const hide = (tl, sel, at) => tl.set(sel, { opacity: 0 }, at);
       // a screen-space insert (ECU) over a plain backdrop, shown [a, b) seconds into the piece
       const insert = (L, tl, t0, iid, a, b, svg, z = 1.06) => {
@@ -499,7 +501,7 @@
         cam: { keys: [{ t: 0, ...fr(900, 1240, 1.3, 540, 1120) }, { t: D("c_card"), glide: D("c_card"), ...fr(880, 1240, 1.18, 540, 1120) }] },
         actors: [A("jLaorBasket", 1110, 1660, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("c_card", 1, "o")] }),
           A("jPhum", 780, 1720, 0.86, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }])],
-        captions: [...caps("c_card", [0]), ...caps("c_card", [1], { quote: true })],
+        captions: capsJ(caps("c_card", [0]), caps("c_card", [1], { quote: true })),
         fx(tl, id, t0, L) {
           put(L.light, `<g id="cd-ov"><g id="cd-ovz"></g></g>`);
           O.card.fx(tl, id, t0, { ...L, set: document.getElementById("cd-ovz") });
@@ -566,7 +568,7 @@
           { t: F("c_mock", 1, 2) - 0.1, ...fr(1060, 1520, 2.0, 540, 1200) }, { t: D("c_mock"), glide: D("c_mock") - F("c_mock", 1, 2), ...fr(1070, 1560, 2.3, 540, 1200) }] },
         actors: [A("jLaor", 1130, 1660, 1.0, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true, until: F("c_mock", 1, 2) - 0.1, talk: [TALK("c_mock", 0, "o")] }),
           A("jLaor", 1130, 1660, 1.0, [{ t: 0, mode: "basketDown", eyes: "closed", mouth: "flat" }], { flip: true, from: F("c_mock", 1, 2) - 0.1 })],
-        captions: [...caps("c_mock", [0], { quote: true }), ...caps("c_mock", [1])],
+        captions: capsJ(caps("c_mock", [0], { quote: true }), caps("c_mock", [1])),
         fx(tl, id, t0, L) {
           O.mock.fx(tl, id, G("mock"), L);
           const r = t0 + 1.5;   // the rack: ยาย's face goes soft as the photo comes up sharp
@@ -646,7 +648,7 @@
         [80, 1180, 1.5, 5, 2], [1010, 1720, 1.6, 1, 2], [620, 1900, 1.4, 5, 2]];
       add("c_goneB", { set: "jellySplit", setOpts: { id: "jsg2", surf: 520, floor: 2100, seed: 9, towerX: 300 }, dark: 0, blur: { fg: 0, set: 0, mid: 0, far: 0 }, light: SUN,
         cam: { keys: [{ t: 0, ...fr(540, 900, 1.55, 540, 760) }, { t: D("c_goneB"), glide: D("c_goneB"), ...fr(540, 1060, 0.95, 540, 960) }] },
-        captions: [...caps("c_goneB", [0]), ...caps("c_goneB", [1], { quote: true })],
+        captions: capsJ(caps("c_goneB", [0]), caps("c_goneB", [1], { quote: true })),
         fx(tl, id, t0, L) {
           const lay = { 0: L.mid, 1: L.set, 2: L.fg };
           put(L.set, `<defs><linearGradient id="pk2-deep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a2a30" stop-opacity="0"/><stop offset=".18" stop-color="#0a2a30" stop-opacity=".15"/>
