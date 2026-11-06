@@ -8,8 +8,8 @@
 
 | เวลา | ไฟล์ | สถานะ |
 |---|---|---|
-| 09:00 Shorts EP.1 | `video/release/hq/jelly-ep1-cine-r2-HQ.mp4` (`prod/lane-c` @ `1d1a9fc`) · ปก: รอเลน C | ดู `day-2026-11-12.json` |
-| 09:15 Shorts EP.2 | `video/release/hq/jelly-ep2-cine-r4-HQ.mp4` (`prod/lane-c` @ `f8f8526`) · ปก: รอเลน C | ดู `day-2026-11-12.json` |
+| 09:00 Shorts EP.1 | `video/release/hq/jelly-ep1-cine-r2-HQ.mp4` (`prod/lane-c` @ `1d1a9fc`) · ปก `video/jelly-ep1/cover-cine-r2.jpg` (`prod/lane-c` @ `d5127b2`) | ดู `day-2026-11-12.json` |
+| 09:15 Shorts EP.2 | `video/release/hq/jelly-ep2-cine-r4-HQ.mp4` (`prod/lane-c` @ `f8f8526`) · ปก `video/jelly-ep2/cover-cine-r4.jpg` (`prod/lane-c` @ `d5127b2`) | ดู `day-2026-11-12.json` |
 | 09:30 คลิปยาว 16:9 | กำลังทำตามคู่มือข้อ 7 (เลน C · กำหนด 11 พ.ย. 22:00) | ยังไม่มี |
 
 - **ลิงก์คลิปยาว:** หลังลงคลิปยาว ให้แทน `<ลิงก์คลิปยาว>` ในคอมเมนต์ปักหมุดของ Shorts ด้วยลิงก์จริง
