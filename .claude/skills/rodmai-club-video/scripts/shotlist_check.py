@@ -87,7 +87,11 @@ def main():
     ap.add_argument("--shotlist", required=True)
     ap.add_argument("--soundplan")
     ap.add_argument("--cues")
+    ap.add_argument("--long", action="store_true",
+                    help="a part of the 16:9 long (bible §7): setup shots may run 3–5 s instead of 2–3 s")
     a = ap.parse_args()
+    if a.long:
+        RANGE["safe"] = (3.0, 5.0)
     R = Report()
     sched = load(a.schedule)
     sl = load(a.shotlist)
