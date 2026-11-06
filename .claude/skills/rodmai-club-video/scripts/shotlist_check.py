@@ -255,7 +255,7 @@ def main():
             fw = c.get("face_w") or 0
             if fw and fw < FACE_MIN:
                 R.fail(f"คัต {c['n']} ({emo}): หน้ากว้าง {fw} px ต่ำกว่า {FACE_MIN} (1/4 ของเฟรม)")
-            elif not fw and not (emo == "fear" and "ไม่มีหน้า" in (c.get("note") or "")):
+            elif not fw and "ไม่มีหน้า" not in (c.get("note") or ""):  # a cut of a bottle, an empty ring or a choice board says so in its note
                 R.warn(f"คัต {c['n']} ({emo}): ยังไม่ได้วัดความกว้างหน้า (face_w)")
         if emo != "lesson" and not c.get("fg"):
             R.warn(f"คัต {c['n']}: ไม่มี foreground ขวางมุมเฟรม")
