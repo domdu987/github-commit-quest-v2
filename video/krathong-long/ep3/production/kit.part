@@ -1,0 +1,304 @@
+      // ---------- เรือล่มคืนลอยกระทง — style frames (gate F5): the river on Loy Krathong night, ท่ายายหยิบ and its pontoon, the boat บุญล้น,
+      // the cast, and the danger (มะปราง in the water among the candles, holding น้าหมาน's gallon). All sets and the cast are new for this
+      // story (V1c): no piece of มือพราย's pier or นาทีก่อนจม's canal is reused. Full moon, clear sky, no rain (V1b).
+      const KC = Rig.CAST;
+      const kln = (w = 2.6) => `stroke="${Rig2.LINE}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+      const { dk: kdk, hi: khi } = Rig2;
+      const kr = (seed) => () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+      const k1 = (v) => (+v).toFixed(1);
+      const KINK = "#2a2230", KOUT = `stroke="${KINK}" stroke-width="3" stroke-linejoin="round"`, KOUT2 = `stroke="${KINK}" stroke-width="2" stroke-linejoin="round"`;
+      const MOONL = { from: "left", rim: "#cfe0ff", rimOp: 0.55, shade: "#0c1230", shadeOp: 0.42, cast: { len: 0.9, op: 0.3 }, vol: false };
+      const WARML = { from: "right", rim: "#ffcf8a", rimOp: 0.85, shade: "#141030", shadeOp: 0.38, cast: { len: 1.0, op: 0.3 }, vol: false };
+      const GNIGHT = { top: "#5a5aa0", bottom: "#140c28", op: 0.16 };
+      const A = (who, x, y, s, track, extra = {}) => ({ who, x, y, s, track, blinks: [0.8, 2.9], ...extra });
+
+      Sets.DEFS += `
+        <linearGradient id="kSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#080c26"/><stop offset=".55" stop-color="#1a2050"/><stop offset=".85" stop-color="#3a3466"/><stop offset="1" stop-color="#6a4a6a"/></linearGradient>
+        <radialGradient id="kMoon"><stop offset="0" stop-color="#fffbe8"/><stop offset=".2" stop-color="#fff2c8" stop-opacity=".55"/><stop offset=".55" stop-color="#c8c8ff" stop-opacity=".12"/><stop offset="1" stop-color="#c8c8ff" stop-opacity="0"/></radialGradient>
+        <linearGradient id="kRiver" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a5a"/><stop offset=".35" stop-color="#14183c"/><stop offset="1" stop-color="#070a1c"/></linearGradient>
+        <radialGradient id="kFlame"><stop offset="0" stop-color="#fff6c8"/><stop offset=".25" stop-color="#ffc24a" stop-opacity=".75"/><stop offset=".6" stop-color="#ff7a1a" stop-opacity=".22"/><stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/></radialGradient>
+        <linearGradient id="kStreak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf6a" stop-opacity=".55"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></linearGradient>
+        <linearGradient id="kWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2250"/><stop offset=".25" stop-color="#121842"/><stop offset="1" stop-color="#080c22"/></linearGradient>
+        <radialGradient id="kBulb"><stop offset="0" stop-color="#fffbe0"/><stop offset=".3" stop-color="#ffd884" stop-opacity=".6"/><stop offset="1" stop-color="#ffb04a" stop-opacity="0"/></radialGradient>
+        <linearGradient id="kTrunk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8f2c8"/><stop offset=".5" stop-color="#b8d08a"/><stop offset="1" stop-color="#6a8a4a"/></linearGradient>
+        <linearGradient id="kLeaf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ab04a"/><stop offset="1" stop-color="#1e6a2e"/></linearGradient>
+        <linearGradient id="kWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a5a34"/><stop offset="1" stop-color="#4e2e18"/></linearGradient>
+        <linearGradient id="kWoodL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b07a48"/><stop offset="1" stop-color="#6e4424"/></linearGradient>
+        <linearGradient id="kHull" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c88a52"/><stop offset=".55" stop-color="#8e5a30"/><stop offset="1" stop-color="#4a2c16"/></linearGradient>
+        <linearGradient id="kRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a7ac0"/><stop offset="1" stop-color="#1e4a84"/></linearGradient>
+        <linearGradient id="kJug" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8ccc4"/><stop offset=".35" stop-color="#f6f6ee"/><stop offset=".7" stop-color="#e6e8e0"/><stop offset="1" stop-color="#a8aca4"/></linearGradient>
+        <linearGradient id="kVest" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff8a2a"/><stop offset=".5" stop-color="#ff6a14"/><stop offset="1" stop-color="#d84a0a"/></linearGradient>
+        <linearGradient id="kDrum" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a8ad0"/><stop offset="1" stop-color="#1a3a70"/></linearGradient>
+        <linearGradient id="kTemple" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8b84a"/><stop offset="1" stop-color="#8a4a1a"/></linearGradient>
+        <pattern id="kPlaid" width="26" height="26" patternUnits="userSpaceOnUse"><rect width="26" height="26" fill="#2e6a4a"/><rect width="13" height="26" fill="#1e4a8a" opacity=".55"/><rect width="26" height="13" fill="#c8402e" opacity=".35"/><path d="M0,6H26M6,0V26" stroke="#f2e6c8" stroke-width="1.5" opacity=".5"/></pattern>
+        <pattern id="kFlowerM" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#6a3a8e"/>${[[10, 10], [30, 28]].map(([x, y]) => `<g transform="translate(${x},${y})">${[0, 72, 144, 216, 288].map((a) => `<ellipse cy="-4" rx="2.6" ry="4" fill="#f2c4ea" transform="rotate(${a})"/>`).join("")}<circle r="1.8" fill="#ffd23a"/></g>`).join("")}<path d="M20,4q4,6 0,10M4,26q6,4 4,10" stroke="#4a9a6a" stroke-width="2" fill="none"/></pattern>
+        <pattern id="kPha" width="34" height="34" patternUnits="userSpaceOnUse"><rect width="34" height="34" fill="#7a3a8a"/><path d="M0,17L17,0L34,17L17,34Z" fill="none" stroke="#f2c84a" stroke-width="1.6" opacity=".7"/><circle cx="17" cy="17" r="3" fill="#f2c84a" opacity=".8"/></pattern>`;
+
+      // ---------------- pieces of the world ----------------
+      // a krathong from a slice of banana trunk: folded leaf points in two tiers, marigolds, a candle and three incense sticks
+      // (its flame and halo go to the glow layer with kGlow)
+      function krathong(x, y, s = 1, o = {}) {
+        const r = kr(o.seed || Math.round(x * 7 + y * 3)), pts = 10, R = 74;
+        let g = `<g transform="translate(${k1(x)},${k1(y)}) scale(${s})">`;
+        g += `<ellipse cx="0" cy="18" rx="${R + 26}" ry="22" fill="#000" opacity=".35"/>`;
+        g += `<path d="M${-R},0Q${-R},26 0,30Q${R},26 ${R},0Z" fill="url(#kTrunk)" ${KOUT2}/><ellipse cx="0" cy="0" rx="${R}" ry="20" fill="#e2eec4" ${KOUT2}/>`;
+        g += `<ellipse cx="0" cy="0" rx="${R - 14}" ry="14" fill="none" stroke="#b8cc8a" stroke-width="2"/>`;
+        for (let t = 0; t < 2; t++) {
+          const rr = t ? R - 30 : R - 6, h = t ? 46 : 38;
+          for (let k = 0; k < pts; k++) {
+            const a = (k + t * 0.5) / pts * Math.PI * 2, px = Math.cos(a) * rr, py = Math.sin(a) * rr * 0.27 - 4, back = Math.sin(a) < 0;
+            if (back !== (t === 0 || true) && false) continue;
+            g += `<path d="M${k1(px - 13)},${k1(py)}L${k1(px)},${k1(py - h)}L${k1(px + 13)},${k1(py)}Z" fill="${back ? "#2e7a36" : "url(#kLeaf)"}" ${KOUT2}/><path d="M${k1(px)},${k1(py - h + 6)}V${k1(py - 3)}" stroke="#9ad07a" stroke-width="1.6" opacity=".7"/>`;
+          }
+        }
+        const mg = (mx, my, ms) => `<g transform="translate(${k1(mx)},${k1(my)}) scale(${ms})"><circle r="10" fill="#f2961a" ${KOUT2}/>${[0, 60, 120, 180, 240, 300].map((a) => `<circle cx="${k1(Math.cos(a / 57.3) * 5)}" cy="${k1(Math.sin(a / 57.3) * 5)}" r="4" fill="#ffb43a"/>`).join("")}<circle r="3" fill="#ffd86a"/></g>`;
+        for (let k = 0; k < 7; k++) { const a = k / 7 * Math.PI * 2; g += mg(Math.cos(a) * 30, Math.sin(a) * 9 - 22, 0.9 + r() * 0.3); }
+        g += mg(0, -30, 1.2);
+        g += `<rect x="-5" y="-78" width="10" height="44" rx="2" fill="#fff6e0" ${KOUT2}/><path d="M0,-78v-6" stroke="#2a1a10" stroke-width="2"/>`;
+        g += `<path d="M14,-34L22,-96M18,-34L30,-92M22,-34L38,-90" stroke="#7a3a1a" stroke-width="2.2"/><circle cx="22" cy="-96" r="2.4" fill="#ff5a2a"/><circle cx="30" cy="-92" r="2.4" fill="#ff5a2a"/><circle cx="38" cy="-90" r="2.4" fill="#ff5a2a"/>`;
+        g += `<path d="M0,-84C-6,-92 -4,-102 0,-112C4,-102 6,-92 0,-84Z" fill="#ffd24a"/><path d="M0,-86C-3,-92 -2,-98 0,-104C2,-98 3,-92 0,-86Z" fill="#fff6d0"/>`;
+        return g + `</g>`;
+      }
+      const kGlow = (x, y, s = 1, R = 70) => `<circle cx="${k1(x)}" cy="${k1(y - 96 * s)}" r="${k1(R * s)}" fill="url(#kFlame)"/>`;
+      // the flame's reflection: a broken orange streak under it on the water
+      const kRefl = (x, y, s = 1, len = 120) => `` + Array.from({ length: 8 }, (_, i) => `<rect x="${k1(x - (18 - i * 1.6) * s + (i % 2 ? 4 : -4) * s)}" y="${k1(y + 26 * s + i * len * s / 5)}" width="${k1((36 - i * 3.2) * s)}" height="${k1(4.5 * s)}" rx="2" fill="#ffc45a" opacity="${(0.7 - i * 0.08).toFixed(2)}"/>`).join("");
+
+      // the river at night: sky with the full moon, the far bank with the temple fair (lit chedi, string lights, fireworks), the water
+      // with the moon's glitter column; o.hz the horizon (far bank waterline), o.moon [x, y]
+      function riverNight(L, o = {}) {
+        const r = kr(o.seed || 11), HZ = o.hz ?? 760, [MX, MY] = o.moon || [800, 250];
+        let sky = `<rect x="-900" y="-900" width="2900" height="${HZ + 920}" fill="url(#kSky)"/>`;
+        for (let k = 0; k < 120; k++) sky += `<circle cx="${k1(-700 + r() * 2500)}" cy="${k1(-200 + r() * (HZ - 100))}" r="${k1(0.8 + r() * 1.8)}" fill="#fff" opacity="${(0.3 + r() * 0.6).toFixed(2)}"/>`;
+        sky += `<circle cx="${MX}" cy="${MY}" r="330" fill="url(#kMoon)"/><circle cx="${MX}" cy="${MY}" r="74" fill="#fff8e2"/><circle cx="${MX - 20}" cy="${MY - 14}" r="16" fill="#e8e0c4" opacity=".55"/><circle cx="${MX + 22}" cy="${MY + 18}" r="11" fill="#e8e0c4" opacity=".5"/><circle cx="${MX + 8}" cy="${MY - 30}" r="7" fill="#e8e0c4" opacity=".5"/>`;
+        // thin clouds lit by the moon
+        for (let k = 0; k < 4; k++) { const x = -500 + k * 650 + r() * 200, y = 120 + r() * 300; sky += `<path d="M${k1(x)},${k1(y)}q120,-30 260,-6t260,4" stroke="#7a7ab8" stroke-width="${k1(10 + r() * 14)}" fill="none" opacity=".35" stroke-linecap="round"/>`; }
+        // fireworks over the temple
+        const fw = (x, y, R, c) => `<g transform="translate(${x},${y})">${Array.from({ length: 22 }, (_, i) => { const a = i / 22 * Math.PI * 2; return `<path d="M${k1(Math.cos(a) * R * 0.25)},${k1(Math.sin(a) * R * 0.25)}L${k1(Math.cos(a) * R)},${k1(Math.sin(a) * R + R * 0.12)}" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity=".85"/><circle cx="${k1(Math.cos(a) * R)}" cy="${k1(Math.sin(a) * R + R * 0.12)}" r="3.4" fill="#fff"/>`; }).join("")}<circle r="${R * 1.3}" fill="${c}" opacity=".08"/></g>`;
+        sky += fw(o.fwx ?? 160, HZ - 420, 110, "#ff7ab8") + fw((o.fwx ?? 160) + 330, HZ - 520, 80, "#7ad8ff") + fw((o.fwx ?? 160) - 260, HZ - 330, 60, "#ffd24a");
+        put(L.sky, sky);
+        // far bank: tree line, the temple (ubosot with tiered roof, a chedi), string lights, little stalls
+        let far = `<path d="M-900,${HZ}V${HZ - 70}${Array.from({ length: 40 }, (_, i) => `Q${-880 + i * 72},${HZ - 120 - r() * 50} ${-844 + i * 72},${HZ - 70 - r() * 20}`).join("")}V${HZ}Z" fill="#0e1430"/>`;
+        const TX = o.tx ?? 240;
+        far += `<g transform="translate(${TX},${HZ})"><path d="M-150,0V-90H150V0Z" fill="#3a1e2a"/><path d="M-170,-90L0,-210L170,-90Z" fill="#8a2a2a" ${KOUT2}/><path d="M-120,-140L0,-250L120,-140Z" fill="#a83a2a" ${KOUT2}/><path d="M0,-250V-300" stroke="#e8b84a" stroke-width="5"/>
+          <path d="M-170,-90L0,-210L170,-90" stroke="#ffd86a" stroke-width="4" fill="none" opacity=".9"/><path d="M-120,-140L0,-250L120,-140" stroke="#ffd86a" stroke-width="4" fill="none" opacity=".9"/>
+          ${[-110, -55, 0, 55, 110].map((x) => `<rect x="${x - 12}" y="-70" width="24" height="44" rx="10" fill="#ffcf6a" opacity=".85"/>`).join("")}
+          <g transform="translate(260,0)"><path d="M-60,0Q-56,-80 0,-110Q56,-80 60,0Z" fill="url(#kTemple)" ${KOUT2}/><path d="M0,-110V-260" stroke="#e8b84a" stroke-width="10"/><path d="M-12,-150h24M-10,-180h20M-8,-210h16" stroke="#ffd86a" stroke-width="4"/><circle cx="0" cy="-264" r="7" fill="#ffe8a0"/></g></g>`;
+        // string lights along the bank
+        let bulbs = "";
+        for (let x = -880; x < 1980; x += 34) { const y = HZ - 34 + Math.sin(x * 0.02) * 10; bulbs += `<circle cx="${x}" cy="${k1(y)}" r="4" fill="${["#ffd86a", "#ff8ab8", "#8ae0ff", "#b8ff8a"][(x / 34 | 0) & 3]}"/>`; }
+        far += `<path d="M-900,${HZ - 34}${Array.from({ length: 90 }, (_, i) => `L${-880 + i * 34},${k1(HZ - 34 + Math.sin((-880 + i * 34) * 0.02) * 10)}`).join("")}" stroke="#1a1a2a" stroke-width="1.5" fill="none"/>` + bulbs;
+        put(L.far, far);
+        put(L.glow, Array.from({ length: 40 }, (_, i) => `<circle cx="${-860 + i * 72}" cy="${k1(HZ - 34 + Math.sin((-860 + i * 72) * 0.02) * 10)}" r="22" fill="url(#kBulb)" opacity=".5"/>`).join("") +
+          `<g transform="translate(${TX},${HZ})"><ellipse cx="0" cy="-60" rx="260" ry="120" fill="url(#kBulb)" opacity=".35"/></g>`);
+        // the water: the moon's glitter column, ripples, the far lights reflected as vertical streaks
+        let w = `<rect x="-900" y="${HZ}" width="2900" height="${2100 - HZ}" fill="url(#kRiver)"/>`;
+        for (let k = 0; k < 70; k++) { const y = HZ + 8 + Math.pow(r(), 1.6) * (1900 - HZ), ww = 20 + (y - HZ) * 0.12 * r(); w += `<rect x="${k1(MX - ww / 2 + (r() - 0.5) * (40 + (y - HZ) * 0.25))}" y="${k1(y)}" width="${k1(ww)}" height="${k1(2 + (y - HZ) * 0.006)}" rx="2" fill="#fff4d0" opacity="${(0.35 + r() * 0.5).toFixed(2)}"/>`; }
+        for (let k = 0; k < 30; k++) { const y = HZ + 20 + k * 40 + r() * 20; w += `<path d="M${k1(-900 + r() * 300)},${k1(y)}${Array.from({ length: 12 }, () => `q${k1(60 + r() * 40)},${k1(-5 - r() * 4)} ${k1(120 + r() * 80)},0`).join("")}" stroke="#4a5a9a" stroke-width="${k1(1.5 + k * 0.08)}" fill="none" opacity=".35"/>`; }
+        for (let x = -880; x < 1980; x += 68) w += `<rect x="${x - 3}" y="${HZ + 6}" width="6" height="${k1(40 + r() * 70)}" fill="${["#ffd86a", "#ff8ab8", "#8ae0ff", "#b8ff8a"][(x / 68 | 0) & 3]}" opacity=".28"/>`;
+        w += `<rect x="${TX - 160}" y="${HZ + 4}" width="320" height="120" fill="#ffcf6a" opacity=".12"/>`;
+        put(L.mid, w);
+      }
+      // a field of krathongs drifting on the water between yTop and yBot (perspective: smaller and fainter toward the horizon)
+      function krathongField(L, o = {}) {
+        const r = kr(o.seed || 7), n = o.n ?? 40, y0 = o.y0 ?? 800, y1 = o.y1 ?? 1500, skip = o.skip || (() => false);
+        const K = [];
+        for (let k = 0; k < n; k++) { const v = Math.pow(r(), 1.4), y = y0 + v * (y1 - y0), s = 0.12 + v * (o.smax ?? 0.62), x = -700 + r() * 2500; if (!skip(x, y)) K.push([x, y, s]); }
+        K.sort((a, b) => a[1] - b[1]);
+        put(L.mid, K.map(([x, y, s]) => kRefl(x, y, s, 90 + s * 150)).join("") + K.map(([x, y, s], i) => krathong(x, y, s, { seed: i + 3 })).join(""));
+        put(L.glow, K.map(([x, y, s]) => kGlow(x, y, s, 70)).join(""));
+        return K;
+      }
+      // the boat บุญล้น seen from the side: wooden hull with ยาย's red line round it, a blue canopy on posts, benches with orange
+      // cushion-floats, the outboard at the stern, a sign "ผู้โดยสาร 12 คน", the name on the bow. Origin = waterline at mid-ship,
+      // length ~1000 units at s 1. o.sink 0…1 how far the hull sits down (1 = the red line at the water), o.load the passengers'
+      // heads behind the near gunwale (screen-space small figures), o.tilt degrees
+      function boatSide(x, y, s = 1, o = {}) {
+        const sink = o.sink ?? 0.4, dy = -40 + 34 * sink;
+        let g = `<g transform="translate(${k1(x)},${k1(y)}) scale(${s}) rotate(${o.tilt || 0})">`;
+        // the far canopy posts and the passengers behind the gunwale
+        g += `<path d="M-430,${dy - 60}V${dy - 330}M-130,${dy - 60}V${dy - 340}M170,${dy - 60}V${dy - 340}M420,${dy - 60}V${dy - 330}" stroke="#5a3a1e" stroke-width="12"/>`;
+        g += o.load || "";
+        // the hull
+        const hull = `M-560,${dy - 92}Q-520,${dy - 70} -470,${dy - 60}H430Q500,${dy - 64} 540,${dy - 100}L520,${dy - 40}Q470,${dy + 60} 380,${dy + 70}H-380Q-470,${dy + 60} -520,${dy - 10}Z`;
+        g += `<path d="${hull}" fill="url(#kHull)" ${KOUT}/>`;
+        g += `<path d="M-520,${dy - 60}H520" stroke="#e8c088" stroke-width="7" opacity=".7"/><path d="M-470,${dy - 60}H430" stroke="${KINK}" stroke-width="2"/>`;
+        for (let k = 0; k < 4; k++) g += `<path d="M-500,${dy - 30 + k * 22}Q0,${dy - 24 + k * 22} 500,${dy - 34 + k * 22}" stroke="#5a3418" stroke-width="2" fill="none" opacity=".55"/>`;
+        // ยาย's red line (a painted stripe round the hull)
+        g += `<path d="M-506,${dy + 2}Q0,${dy + 14} 504,${dy - 6}" stroke="#e2302a" stroke-width="11" fill="none"/><path d="M-506,${dy - 3}Q0,${dy + 9} 504,${dy - 11}" stroke="#ff7a6a" stroke-width="3" fill="none" opacity=".7"/>`;
+        // name and sign
+        g += `<text x="-360" y="${dy - 12}" font-family="Kanit" font-weight="900" font-size="38" fill="#fff2d0" stroke="${KINK}" stroke-width="1.5">บุญล้น</text>`;
+        g += `<g transform="translate(330,${dy - 120})"><rect x="-74" y="-30" width="148" height="56" rx="6" fill="#f6f2e4" ${KOUT2}/><text x="0" y="-6" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="17" fill="#1e2a4a">ผู้โดยสาร</text><text x="0" y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="22" fill="#c8241e">12 คน</text></g>`;
+        // near canopy posts, the canopy with a scalloped trim and a string of little bulbs
+        g += `<path d="M-450,${dy - 60}V${dy - 330}M-150,${dy - 60}V${dy - 340}M150,${dy - 60}V${dy - 340}M440,${dy - 60}V${dy - 330}" stroke="#7a4a24" stroke-width="14"/>`;
+        g += `<path d="M-500,${dy - 330}Q0,${dy - 380} 490,${dy - 330}L470,${dy - 300}H-480Z" fill="url(#kRoof)" ${KOUT}/>`;
+        g += `<path d="M-480,${dy - 300}${Array.from({ length: 19 }, (_, i) => `q25,18 50,0`).join("")}" stroke="#f2e2c0" stroke-width="5" fill="none"/>`;
+        g += Array.from({ length: 16 }, (_, i) => `<circle cx="${-450 + i * 58}" cy="${dy - 290}" r="5" fill="${["#ffd86a", "#ff8ab8", "#8ae0ff"][i % 3]}"/>`).join("");
+        // the outboard and the long tail
+        g += `<g transform="translate(560,${dy - 70})"><rect x="-10" y="-60" width="70" height="56" rx="10" fill="#3a3e44" ${KOUT2}/><rect x="0" y="-52" width="40" height="10" rx="4" fill="#6a7078"/><path d="M40,-6L130,${80 - dy}" stroke="#4a4e54" stroke-width="10" stroke-linecap="round"/></g>`;
+        // a garland on the bow
+        g += `<path d="M-556,${dy - 90}q-6,30 6,50" stroke="#f2961a" stroke-width="10" fill="none" stroke-dasharray="2 8" stroke-linecap="round"/>`;
+        g += `</g>`;
+        if (o.water) {
+          const wv = (y0, n, a = 7) => Array.from({ length: n }, () => `q20,${-a} 40,0`).join("");
+          g += `<g transform="translate(${k1(x)},${k1(y)}) scale(${s})"><path d="M-760,0${wv(0, 38)}V300H-760Z" fill="url(#kWater)"/>
+            <path d="M-640,2${wv(0, 32, 9)}" stroke="#a8b8f0" stroke-width="4" fill="none" opacity=".75"/><path d="M-600,26${wv(0, 30, 6)}" stroke="#6a7ac0" stroke-width="3" fill="none" opacity=".5"/><path d="M-560,60${wv(0, 28, 5)}" stroke="#5a6ab0" stroke-width="2.4" fill="none" opacity=".4"/>
+            ${[-520, -300, -60, 180, 420].map((xx) => `<path d="M${xx - 40},4q20,-14 40,-6t40,6" stroke="#e8f0ff" stroke-width="4" fill="none" opacity=".8"/>`).join("")}
+            ${o.wake ? `<path d="M560,8Q760,40 980,120M560,8Q740,90 900,200" stroke="#cfe0ff" stroke-width="6" fill="none" opacity=".6"/><path d="M600,16Q760,46 940,110M600,16Q740,84 880,180" stroke="#fff" stroke-width="2.5" fill="none" opacity=".7" stroke-dasharray="14 10"/>` : ""}</g>`;
+        }
+        return g;
+      }
+      // passengers' heads and shoulders (simple figures for the crowd)
+      function crowd(x0, x1, y, n, seed, sc = 1) {
+        const r = kr(seed); let g = "";
+        for (let k = 0; k < n; k++) {
+          const x = x0 + (x1 - x0) * (k + 0.5) / n + (r() - 0.5) * 20, h = r(), c = ["#d84a4a", "#3a7ac0", "#f2c84a", "#7ac04a", "#e8e0d0", "#a85ac8", "#f28a3a"][k % 7], sk = ["#e6b48e", "#c8946a", "#a8744a"][k % 3];
+          g += `<g transform="translate(${k1(x)},${k1(y - h * 10)}) scale(${sc})"><path d="M-30,0Q-30,-46 0,-50Q30,-46 30,0Z" fill="${c}" ${KOUT2}/><circle cx="0" cy="-72" r="22" fill="${sk}" ${KOUT2}/><path d="M-22,-78Q-20,-100 0,-100Q22,-100 22,-78Q10,-90 -22,-78Z" fill="#1e1612"/>${r() < 0.3 ? `<rect x="10" y="-62" width="12" height="20" rx="3" fill="#2a2a3a"/><rect x="12" y="-60" width="8" height="14" fill="#8ad0ff"/>` : ""}</g>`;
+        }
+        return g;
+      }
+      // a white gallon with a red cap (น้าหมาน's): o.water shows a little water sloshing inside (the twist); origin = its base
+      function gallon(x, y, s = 1, o = {}) {
+        return `<g transform="translate(${k1(x)},${k1(y)}) scale(${s}) rotate(${o.rot || 0})"><ellipse cx="0" cy="4" rx="46" ry="10" fill="#000" opacity=".3"/>
+          <path d="M-40,0V-96Q-40,-112 -24,-114H10L18,-132H34L36,-114Q40,-112 40,-96V0Q0,8 -40,0Z" fill="url(#kJug)" ${KOUT2}/>
+          <path d="M-24,-114Q-30,-136 -6,-138Q12,-138 10,-114" fill="none" stroke="#d8dad2" stroke-width="10"/><path d="M-24,-114Q-30,-136 -6,-138Q12,-138 10,-114" fill="none" ${KOUT2}/>
+          <rect x="14" y="-146" width="24" height="16" rx="3" fill="#d8241e" ${KOUT2}/><path d="M18,-146v16M24,-146v16M30,-146v16" stroke="#8a1010" stroke-width="1.5"/>
+          ${o.water ? `<path d="M-38,-18Q0,-24 38,-16V-2Q0,6 -38,-2Z" fill="#9ac8e0" opacity=".7"/>` : ""}
+          <path d="M-30,-96V-14" stroke="#fff" stroke-width="7" opacity=".6" stroke-linecap="round"/><path d="M-40,-60H40" stroke="#b8bcb4" stroke-width="2"/></g>`;
+      }
+
+      // ---------------- the pier: ท่ายายหยิบ ----------------
+      // a timber landing on piles (top at y ~1060) with string lights, ยาย's krathong stall, a chalkboard, the horn speaker on a pole,
+      // the paddle with the three rules, steps down (the land side) to the floating pontoon with blue drum floats and the sign
+      // "โป๊ะรับได้ 20 คน", the life-jacket crate at its head; บุญล้น moored along it
+      function pier(L, o = {}) {
+        const r = kr(o.seed || 21), DK = o.deck ?? 1080, PW = o.pw ?? 1240;
+        riverNight(L, { hz: 640, moon: [880, 200], tx: 300, fwx: 130 });
+        krathongField(L, { n: 34, y0: 660, y1: 1000, smax: 0.32, seed: 4 });
+        let s = "";
+        // the moored boat behind the pontoon (on the river side)
+        s += boatSide(520, 1230, 0.86, { sink: 0.25, load: crowd(-420, 380, -120, 5, 9, 0.9) });
+        // pontoon (right): drums, deck, rail, sign
+        const PX = 280, PY = 1330;
+        s += `<g transform="translate(${PX},${PY})">${[-260, -120, 20, 160, 300, 440].map((x) => `<ellipse cx="${x}" cy="38" rx="62" ry="26" fill="url(#kDrum)" ${KOUT2}/><path d="M${x - 50},30h100" stroke="#8ab8f0" stroke-width="3" opacity=".6"/>`).join("")}
+          <path d="M-340,0H520L540,24H-360Z" fill="#9a6a3e" ${KOUT}/><path d="M-360,24H540V40H-360Z" fill="#5a3a1e" ${KOUT2}/>${Array.from({ length: 18 }, (_, i) => `<path d="M${-336 + i * 50},2L${-354 + i * 50},22" stroke="#6a4424" stroke-width="2"/>`).join("")}
+          <path d="M-330,0V-80H500V0" stroke="#d8d2c0" stroke-width="7" fill="none"/>${[-330, -150, 30, 210, 390].map((x) => `<path d="M${x},0V-80" stroke="#d8d2c0" stroke-width="7"/>`).join("")}<path d="M-330,-40H500" stroke="#d8d2c0" stroke-width="4"/>
+          <g transform="translate(420,-150)"><path d="M0,0V150" stroke="#5a3a1e" stroke-width="8"/><rect x="-96" y="-66" width="192" height="76" rx="8" fill="#f6f2e4" ${KOUT}/><text x="0" y="-32" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="22" fill="#1e2a4a">โป๊ะรับได้</text><text x="0" y="-2" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="30" fill="#c8241e">20 คน</text></g>
+          <g transform="translate(-250,-6)"><path d="M-66,0V-64H66V0Z" fill="#6a4a2a" ${KOUT2}/>${[-46, -16, 14, 44].map((x, i) => `<path d="M${x - 14},-58h28l-4,48h-20z" fill="url(#kVest)" ${KOUT2}/><path d="M${x - 12},-40h24M${x - 12},-26h24" stroke="#f2f2e0" stroke-width="3"/>`).join("")}<text x="0" y="-70" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="18" fill="#fff2d0">เสื้อชูชีพ</text></g></g>`;
+        // the landing (left), steps down to the pontoon
+        s += `<path d="M-700,${DK}H${PX - 300}V${DK + 30}H-700Z" fill="url(#kWoodL)" ${KOUT}/>${Array.from({ length: 9 }, (_, i) => `<rect x="${-660 + i * 110}" y="${DK + 30}" width="22" height="${PY + 80 - DK}" fill="url(#kWood)" ${KOUT2}/>`).join("")}`;
+        s += Array.from({ length: 5 }, (_, i) => `<path d="M${PX - 330 + i * 26},${DK + 30 + i * 46}h72v14h-72z" fill="#a8763e" ${KOUT2}/>`).join("") + `<path d="M${PX - 330},${DK - 50}L${PX - 200},${PY - 70}" stroke="#d8d2c0" stroke-width="6"/>`;
+        // ยาย's stall on the landing: table, krathongs for sale, chalkboard, a lamp
+        s += `<g transform="translate(-300,${DK}) scale(1.3)"><path d="M-170,-110H170V-100H-170Z" fill="#8a5a30" ${KOUT2}/><path d="M-160,-100V0M160,-100V0" stroke="#5a3a1e" stroke-width="10"/><path d="M-170,-110H170L150,-80H-150Z" fill="#c8402e" opacity=".9"/>
+          <path d="M-190,-270H190L170,-230H-170Z" fill="#e8402e" ${KOUT2}/><path d="M-170,-230${Array.from({ length: 7 }, () => "q24,20 48,0").join("")}" stroke="#fff2d0" stroke-width="4" fill="none"/><path d="M-160,-230V-110M160,-230V-110" stroke="#5a3a1e" stroke-width="8"/>
+          <g transform="translate(230,-60)"><rect x="-60" y="-110" width="120" height="110" rx="6" fill="#1e2a22" stroke="#8a5a30" stroke-width="8"/><text x="0" y="-74" text-anchor="middle" font-family="Mali" font-weight="700" font-size="20" fill="#f2f2e0">กระทง</text><text x="0" y="-44" text-anchor="middle" font-family="Mali" font-weight="700" font-size="26" fill="#ffd24a">20.-</text><text x="0" y="-16" text-anchor="middle" font-family="Mali" font-weight="700" font-size="16" fill="#f2f2e0">หยิบได้เลย</text></g></g>`;
+        s += [[-470, DK - 150, 0.42], [-360, DK - 152, 0.44], [-250, DK - 150, 0.42], [-150, DK - 148, 0.38]].map(([x, y, sc], i) => krathong(x, y, sc, { seed: 40 + i })).join("");
+        // the horn speaker pole and the rule paddle
+        s += `<g transform="translate(${PX - 360},${DK})"><path d="M0,0V-430" stroke="#6a6e74" stroke-width="10"/><g transform="translate(0,-420) rotate(-12)"><path d="M0,-14L80,-44V44L0,14Z" fill="#d8dcd4" ${KOUT2}/><ellipse cx="80" cy="0" rx="10" ry="44" fill="#a8aca4" ${KOUT2}/></g></g>`;
+        s += `<g transform="translate(-680,${DK - 40}) rotate(-6)"><rect x="-10" y="-320" width="20" height="220" rx="6" fill="#a8763e" ${KOUT2}/><path d="M-60,-120Q-66,0 0,20Q66,0 60,-120Z" fill="#c89a5a" ${KOUT2}/><text x="0" y="-80" text-anchor="middle" font-family="Mali" font-weight="700" font-size="15" fill="#3a1e10">ลุกทีละคน</text><text x="0" y="-56" text-anchor="middle" font-family="Mali" font-weight="700" font-size="15" fill="#3a1e10">เรือเอียง</text><text x="0" y="-36" text-anchor="middle" font-family="Mali" font-weight="700" font-size="15" fill="#3a1e10">อย่าวิ่งหนี</text><text x="0" y="-16" text-anchor="middle" font-family="Mali" font-weight="700" font-size="13" fill="#3a1e10">ตกน้ำ…</text></g>`;
+        // string lights over the landing
+        let sl = `<path d="M-700,${DK - 300}Q-300,${DK - 230} ${PX - 360},${DK - 380}" stroke="#2a2018" stroke-width="2" fill="none"/>`, slg = "";
+        for (let i = 0; i <= 18; i++) { const t = i / 18, x = -700 + (PX - 360 + 700) * t, y = (1 - t) * (1 - t) * (DK - 300) + 2 * (1 - t) * t * (DK - 230) + t * t * (DK - 380); sl += `<circle cx="${k1(x)}" cy="${k1(y + 6)}" r="6" fill="${["#ffd86a", "#ff8ab8", "#8ae0ff", "#b8ff8a"][i & 3]}" ${KOUT2}/>`; slg += `<circle cx="${k1(x)}" cy="${k1(y + 6)}" r="40" fill="url(#kBulb)" opacity=".55"/>`; }
+        s += sl + `<path d="M-700,${DK}H${PX - 300}" stroke="#ffd89a" stroke-width="5" opacity=".7"/><ellipse cx="-250" cy="${DK + 4}" rx="330" ry="22" fill="#ffcf8a" opacity=".22"/>`;
+        put(L.set, s);
+        put(L.glow, slg + `<ellipse cx="-300" cy="${DK - 120}" rx="260" ry="120" fill="url(#kBulb)" opacity=".35"/>` + [[-470, DK - 150, 0.42], [-360, DK - 152, 0.44], [-250, DK - 150, 0.42], [-150, DK - 148, 0.38]].map(([x, y, sc]) => kGlow(x, y, sc, 70)).join(""));
+        // foreground water lapping at the bottom
+        put(L.fg, `<path d="M-900,${PY + 70}${Array.from({ length: 40 }, () => "q36,-10 72,0").join("")}" stroke="#4a5a9a" stroke-width="3" fill="none" opacity=".6"/>` +
+          kRefl(-60, PY + 330, 1.1, 200) + kRefl(820, PY + 470, 1.4, 240) + kRefl(330, PY + 600, 1.6, 240) + krathong(-60, PY + 330, 1.1, { seed: 77 }) + krathong(820, PY + 470, 1.4, { seed: 78 }) + krathong(330, PY + 610, 1.6, { seed: 79 }));
+        put(L.glow, kGlow(-60, PY + 330, 1.1, 90) + kGlow(820, PY + 470, 1.4, 100) + kGlow(330, PY + 610, 1.6, 110));
+      }
+
+      // ---------------- the cast (rig v2) ----------------
+      // มะปราง 16: one braid over her left shoulder with a marigold tucked in, a cream แขนกระบอก blouse, purple flowered trousers, sandals
+      const mpFront = (h) => `
+        <path d="M-48,-552C-58,-606 -22,-628 4,-628C34,-627 58,-606 50,-552Q42,-578 26,-584Q6,-596 -14,-584Q-34,-578 -48,-552Z" fill="${h.c}" ${kln()}/>
+        <path d="M4,-628Q-6,-604 -14,-584M20,-624Q30,-604 26,-584M-24,-616Q-36,-598 -42,-574" stroke="${h.s}" stroke-width="2.2" fill="none" opacity=".7"/>
+        <path d="M-30,-612Q4,-628 36,-610" stroke="${h.sh}" stroke-width="6" fill="none" stroke-linecap="round" opacity=".5"/>
+        <g transform="translate(-40,-600)">${[0, 60, 120, 180, 240, 300].map((a) => `<circle cx="${k1(Math.cos(a / 57.3) * 9)}" cy="${k1(Math.sin(a / 57.3) * 9)}" r="8" fill="#ff9a1a" stroke="${Rig2.LINE}" stroke-width="1.4"/>`).join("")}<circle r="8" fill="#ffc23a" stroke="${Rig2.LINE}" stroke-width="1.4"/><circle r="3.4" fill="#e86a0a"/></g>`;
+      const mpBraid = (h) => `<path d="M-46,-560Q-62,-520 -54,-470Q-50,-440 -58,-410" stroke="${h.c}" stroke-width="26" fill="none" stroke-linecap="round"/>
+        ${[-540, -510, -480, -450, -424].map((y, i) => `<path d="M${-60 + (i % 2) * 6},${y}q8,10 18,4" stroke="${h.s}" stroke-width="2.4" fill="none"/>`).join("")}
+        <path d="M-58,-410l-8,22l14,-6l6,14l4,-22z" fill="${h.c}" ${kln(2)}/><rect x="-66" y="-418" width="18" height="8" rx="3" fill="#f2961a"/>`;
+      KC.maprang = { v2: { skin: "#e8b892", iris: "#3a2016", lash: true, blush: 0.8, lip: "#c85a64", w: 1.02,
+        hair: { c: "#1e1414", s: "#0a0606", sh: "#6a5060", front: (x) => mpFront(x.hair), back: (x) => mpBraid(x.hair) },
+        top: { kind: "blouse", c: "#f6ead2", sleeve: "long", trim: "#d8c49a" },
+        print: `<path d="M-6,-486V-300" stroke="#d8c49a" stroke-width="2.4"/>${[-462, -428, -394, -360, -326].map((y) => `<circle cx="4" cy="${y}" r="4" fill="#e8c86a" stroke="${Rig2.LINE}" stroke-width="1.4"/>`).join("")}`,
+        bottom: { kind: "jeans", c: "#6a3a8e" }, feet: { kind: "sandal", c: "#c8402e" },
+        legs: (side) => ({ thigh: `<path d="M-20,30q10,10 4,24M8,70q8,8 2,20" stroke="#f2c4ea" stroke-width="3" fill="none" opacity=".8"/><circle cx="-6" cy="50" r="4" fill="#ffd23a"/><circle cx="10" cy="100" r="4" fill="#f2c4ea"/>`, shin: `<circle cx="0" cy="40" r="4" fill="#f2c4ea"/><circle cx="-8" cy="80" r="3.4" fill="#ffd23a"/>` }),
+      } };
+      KC.maprangPhone = { v2: KC.maprang.v2, hand: `<g transform="translate(0,118) rotate(-10)"><rect x="-14" y="-30" width="28" height="52" rx="5" fill="#2a2a3a" stroke="${Rig2.LINE}" stroke-width="2"/><rect x="-10" y="-25" width="20" height="40" rx="2" fill="#8ad0ff"/></g>`, keep: "F" };
+
+      // ข้าวปั้น 10: buzz cut, a folded-paper captain's hat, a blue whale tee, the orange life jacket with all three straps, the whistle
+      const kpHair = (h) => `<path d="M-46,-556C-50,-604 -20,-620 3,-620C28,-620 52,-604 48,-556Q44,-582 30,-592Q4,-600 -22,-592Q-40,-582 -46,-556Z" fill="${h.c}" ${kln()}/>
+        ${Array.from({ length: 14 }, (_, i) => `<circle cx="${-36 + i * 6}" cy="${-596 + Math.abs(i - 7) * 2}" r="1.4" fill="${h.s}"/>`).join("")}`;
+      const kpHat = `<g transform="translate(2,-612)"><path d="M-70,10L0,-58L70,10Z" fill="#f6f4ec" ${kln()}/><path d="M-76,10H76L70,24H-70Z" fill="#e8e4d4" ${kln(2)}/><path d="M-6,-30l6,-12l6,12l-12,-7h12z" fill="#e2b83a"/><path d="M0,-58V10" stroke="#d8d2c0" stroke-width="2"/><text x="0" y="2" text-anchor="middle" font-family="Mali" font-weight="700" font-size="14" fill="#1e4a8a">กัปตัน</text></g>`;
+      const whale = `<g transform="translate(0,-400)"><path d="M-34,0Q-30,-22 0,-22Q30,-22 36,-2Q20,14 -10,12Q-30,10 -34,0Z" fill="#cfe8ff" stroke="${Rig2.LINE}" stroke-width="2"/><path d="M36,-2l14,-12v20z" fill="#cfe8ff" stroke="${Rig2.LINE}" stroke-width="2"/><circle cx="-18" cy="-8" r="2.6" fill="${Rig2.LINE}"/><path d="M-10,-24q-4,-12 -12,-14M-10,-24q4,-14 10,-14" stroke="#cfe8ff" stroke-width="2.4" fill="none"/></g>`;
+      const kpVest = `<path d="M-60,-488L-20,-484L-14,-430L-18,-300Q-46,-294 -72,-302L-70,-450Q-68,-478 -60,-488Z" fill="url(#kVest)" ${kln(2.8)}/>
+        <path d="M60,-488L20,-484L14,-430L18,-300Q46,-294 72,-302L70,-450Q68,-478 60,-488Z" fill="url(#kVest)" ${kln(2.8)}/>
+        <path d="M-70,-440H-16M16,-440H70M-70,-388H-16M16,-388H70M-72,-336H-17M17,-336H72" stroke="#d8d4c8" stroke-width="8" opacity=".85"/>
+        <path d="M-17,-426H17M-17,-374H17M-17,-322H17" stroke="#1e2228" stroke-width="5"/>${[-433, -381, -329].map((y) => `<rect x="-8" y="${y}" width="16" height="13" rx="3" fill="#2a2e34" stroke="${Rig2.LINE}" stroke-width="1.6"/>`).join("")}
+        <path d="M-52,-468Q-42,-472 -30,-468" stroke="#ffd0a0" stroke-width="4" fill="none" opacity=".6" stroke-linecap="round"/>
+        <path d="M26,-480Q34,-450 40,-430" stroke="#ff8a1a" stroke-width="2.4" fill="none"/><g transform="translate(42,-424)"><path d="M-10,-6H12Q18,-6 18,2Q18,10 10,10H-10Z" fill="#ff8a1a" stroke="${Rig2.LINE}" stroke-width="2"/><circle cx="8" cy="2" r="4" fill="#2a1a10"/></g>`;
+      const kpV2 = { skin: "#d8a074", iris: "#2e1c12", blush: 0.65, headScale: 1.2, w: 0.92, limb: 0.92,
+        hair: { c: "#1a120e", s: "#060404", sh: "#5a4a40", front: (x) => kpHair(x.hair) }, faceTop: kpHat,
+        top: { kind: "tee", c: "#2e5aa8", sleeve: "short" }, print: whale,
+        bottom: { kind: "shorts", c: "#e8d8b0" }, feet: { kind: "sandal", c: "#2e5aa8" }, extra: kpVest };
+      KC.khaopan = { v2: kpV2 };
+
+      // ยายหยิบ 68: a bun with a hairpin, a light-blue คอกระเช้า blouse, a purple flowered sarong, ผ้าขาวม้า over the shoulder, the brass counter on a cord
+      const yyFront = (h) => `<path d="M-47,-550C-51,-606 -16,-624 4,-624C30,-623 54,-604 49,-550Q46,-572 34,-586Q18,-594 4,-588Q-12,-596 -28,-588Q-42,-576 -47,-550Z" fill="${h.c}" ${kln()}/>
+        <path d="M4,-622Q2,-606 4,-590M-12,-618Q-22,-600 -34,-584M18,-618Q30,-602 40,-584" stroke="${h.s}" stroke-width="2.2" fill="none" opacity=".7"/>`;
+      const yyBun = (h) => `<circle cx="-4" cy="-636" r="26" fill="${kdk(h.c, 0.06)}" ${kln()}/><path d="M-20,-644q14,-12 30,-4M-22,-630q18,-6 36,0" stroke="${h.s}" stroke-width="2.4" fill="none"/><path d="M-46,-650L40,-626" stroke="#c8a040" stroke-width="5" stroke-linecap="round"/><circle cx="40" cy="-626" r="5" fill="#f2c84a"/>`;
+      const yyExtra = `<path d="M-44,-490Q-20,-462 0,-460Q20,-462 44,-490" stroke="#f2f2ea" stroke-width="5" fill="none"/>${Array.from({ length: 7 }, (_, i) => `<circle cx="${-36 + i * 12}" cy="${-478 + Math.abs(i - 3) * -3 + 6}" r="2.6" fill="#f2f2ea"/>`).join("")}
+        <path d="M-50,-490Q-10,-470 40,-300L60,-306Q16,-470 -36,-496Z" fill="url(#kPlaid)" stroke="${Rig2.LINE}" stroke-width="2.2"/>
+        <path d="M20,-484Q40,-430 30,-380" stroke="#8a6a2a" stroke-width="2" fill="none"/><g transform="translate(30,-372)"><circle r="16" fill="#d8a83a" stroke="${Rig2.LINE}" stroke-width="2"/><circle r="10" fill="#f2d07a"/><rect x="-5" y="-6" width="10" height="7" fill="#3a2a10"/><path d="M8,-14l6,-6" stroke="${Rig2.LINE}" stroke-width="3"/></g>`;
+      KC.yaiYib = { v2: { skin: "#c8946a", iris: "#3e2a1e", blush: 0.4, lip: "#a8443a", bags: true,
+        hair: { c: "#d4cfc6", s: "#8f8a84", sh: "#f2eee6", front: (x) => yyFront(x.hair), back: (x) => yyBun(x.hair) },
+        top: { kind: "blouse", c: "#9ac8e8", sleeve: "none" }, bottom: { kind: "sarong", c: "#6a3a8e", band: "#f2c84a", band2: "#3a1e5a" }, feet: { kind: "sandal", c: "#5a3a22" },
+        legs: () => ({ thigh: `<rect x="-30" y="0" width="60" height="150" fill="url(#kFlowerM)" opacity=".85"/>`, shin: `<rect x="-26" y="0" width="52" height="110" fill="url(#kFlowerM)" opacity=".85"/>` }),
+        extra: yyExtra,
+        face: `<path d="M-22,-596q10,-3 20,0M-34,-552l-7,-3M-34,-546l-7,1M38,-552l7,-3M38,-546l7,1M-14,-532q-7,10 -3,19M24,-532q7,10 3,19" stroke="#8a6448" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>` } };
+
+      // ลุงหมึก 46: big, a faded cap, a plaid shirt with the sleeves rolled, ผ้าขาวม้า round the waist, a brass whistle on a cord
+      const lmCap = `<g transform="translate(0,-600)"><path d="M-52,6C-54,-40 -20,-56 4,-56C30,-56 54,-40 52,6Z" fill="#7a8a6a" ${kln()}/><path d="M30,0Q70,-2 92,10Q66,18 30,12Z" fill="#6a7a5a" ${kln(2.2)}/><path d="M-40,-20Q0,-36 40,-22" stroke="#a8b894" stroke-width="5" fill="none" opacity=".6"/><circle cx="4" cy="-54" r="5" fill="#6a7a5a"/></g>`;
+      KC.lungMuek = { v2: { skin: "#b07a52", iris: "#2a1a12", blush: 0.15, w: 1.18, limb: 1.08, brow: "#2a1a10",
+        hair: { c: "#2a1e18", s: "#120c08", sh: "#5a4a3a", front: () => `<path d="M-46,-560Q-50,-590 -40,-604L-34,-570ZM48,-560Q52,-590 42,-604L36,-570Z" fill="#2a1e18"/>` }, faceTop: lmCap,
+        top: { kind: "shirt", c: "#2e6a4a", sleeve: "elbow", neck: "collar", collar: "#245a3c", button: "#f2e6c8" },
+        print: `<path d="M-60,-480V-300M-30,-480V-300M30,-480V-300M60,-480V-300" stroke="#c8402e" stroke-width="4" opacity=".55"/><path d="M-70,-440H70M-70,-380H70M-70,-320H70" stroke="#f2e6c8" stroke-width="3" opacity=".45"/>`,
+        bottom: { kind: "jeans", c: "#3a3e4a" }, feet: { kind: "sandal", c: "#3a2a1a" },
+        extra: `<path d="M-70,-312Q0,-296 70,-312L72,-290Q0,-276 -72,-290Z" fill="url(#kPlaid)" stroke="${Rig2.LINE}" stroke-width="2.2"/><path d="M-16,-490Q0,-456 16,-490" stroke="#8a6a2a" stroke-width="2" fill="none"/><g transform="translate(0,-454)"><rect x="-10" y="-5" width="22" height="11" rx="4" fill="#d8a83a" stroke="${Rig2.LINE}" stroke-width="1.6"/></g>`,
+        face: `<path d="M-30,-520q34,16 66,0" stroke="#3a2a1a" stroke-width="4" fill="none" opacity=".45"/>` } };
+
+      // น้าหมาน 55: thin, white stubble, a faded mustard tee, กางเกงเล, a flat woven hat; sits on the land-side steps with three gallons
+      const nmHat = `<g transform="translate(0,-598)"><ellipse cx="0" cy="4" rx="96" ry="16" fill="#d8b878" ${kln(2.4)}/><path d="M-48,4Q-46,-34 0,-36Q46,-34 48,4Z" fill="#e2c488" ${kln(2.4)}/><path d="M-44,-6Q0,2 44,-6" stroke="#8a5a2a" stroke-width="6" fill="none"/>${Array.from({ length: 10 }, (_, i) => `<path d="M${-84 + i * 18},2l8,8" stroke="#b8945a" stroke-width="1.6"/>`).join("")}</g>`;
+      const nmStubble = `<g fill="#f2f0e8" opacity=".9">${Array.from({ length: 30 }, (_, i) => { const a = Math.PI * (0.15 + 0.7 * (i / 29)); return `<circle cx="${k1(4 + Math.cos(a) * 40)}" cy="${k1(-528 + Math.sin(a) * 30)}" r="1.8"/>`; }).join("")}</g><path d="M-10,-514q14,6 28,0" stroke="#f2f0e8" stroke-width="4" fill="none"/>`;
+      KC.naMan = { v2: { skin: "#9a6a44", iris: "#2a1a12", blush: 0.1, bags: true, w: 0.9, limb: 0.94, brow: "#e8e4dc",
+        hair: { c: "#e8e4dc", s: "#a8a49c", sh: "#fff", front: () => `` }, faceTop: nmHat,
+        top: { kind: "tee", c: "#c8a03a", sleeve: "short" }, print: `<path d="M-40,-420q10,6 0,14M30,-360q-8,8 4,12" stroke="#a8842a" stroke-width="3" fill="none" opacity=".6"/>`,
+        bottom: { kind: "jeans", c: "#2e3a5a" }, feet: { kind: "bare" },
+        legs: () => ({ thigh: `<path d="M-24,40H24M-26,90H26" stroke="#f2e6c8" stroke-width="2" opacity=".5"/>`, shin: `<path d="M-24,40H24" stroke="#f2e6c8" stroke-width="2" opacity=".5"/>` }),
+        face: nmStubble } };
+
+      // ---------------- passengers (rig v2, nobody named) ----------------
+      const pxShort = (h) => `<path d="M-46,-556C-50,-604 -20,-622 3,-622C28,-622 52,-604 48,-556Q44,-580 30,-590Q4,-598 -22,-590Q-40,-580 -46,-556Z" fill="${h.c}" ${kln()}/><path d="M-30,-608Q4,-622 34,-606" stroke="${h.sh}" stroke-width="5" fill="none" opacity=".45" stroke-linecap="round"/>`;
+      const pxBob = (h) => `<path d="M-50,-546C-60,-610 -22,-632 4,-630C38,-629 62,-606 54,-546Q46,-574 26,-578Q6,-586 -14,-578Q-36,-572 -50,-546Z" fill="${h.c}" ${kln()}/>`;
+      const pxBobB = (h) => `<path d="M-58,-584C-70,-540 -72,-500 -64,-470Q-30,-460 0,-462Q30,-460 66,-470C74,-500 72,-540 62,-584C52,-634 -48,-634 -58,-584Z" fill="${kdk(h.c, 0.1)}" ${kln()}/>`;
+      const pxPony = (h) => `<path d="M40,-600Q90,-590 84,-520Q80,-490 92,-470" stroke="${h.c}" stroke-width="22" fill="none" stroke-linecap="round"/><circle cx="44" cy="-600" r="9" fill="#e8402e"/>`;
+      const PX = (o) => ({ v2: { iris: "#2e1c12", blush: 0.5, ...o, hair: { c: o.hc || "#1e1612", s: "#080606", sh: "#6a5a50", front: (x) => (o.bob || o.pony ? pxBob : pxShort)(x.hair), back: o.bob ? (x) => pxBobB(x.hair) : o.pony ? (x) => pxPony(x.hair) : undefined } } });
+      KC.pxA = PX({ skin: "#e8b892", lash: true, bob: true, top: { kind: "tee", c: "#f27ab0", sleeve: "short" }, bottom: { kind: "jeans", c: "#3a5a8a" }, feet: { kind: "sneaker", c: "#f2f2ee" } });
+      KC.pxA.hand = KC.maprangPhone.hand; KC.pxA.keep = "F";
+      KC.pxB = PX({ skin: "#b07a52", w: 1.1, top: { kind: "shirt", c: "#c8302a", sleeve: "short", neck: "collar", collar: "#a8241e" }, bottom: { kind: "shorts", c: "#3a3e4a" }, feet: { kind: "sandal", c: "#2a2a2a" } });
+      KC.pxC = PX({ skin: "#d49c6c", w: 0.95, top: { kind: "tank", c: "#f2c83a", sleeve: "none" }, bottom: { kind: "shorts", c: "#2e7ab0" }, feet: { kind: "sandal", c: "#f2f2ee" } });
+      KC.pxD = PX({ skin: "#c8946a", bags: true, hc: "#b8b2a8", pony: true, top: { kind: "blouse", c: "#4a9a6a", sleeve: "elbow" }, bottom: { kind: "sarong", c: "#8a3a2a", band: "#f2c84a", band2: "#3a1a10" }, feet: { kind: "sandal", c: "#5a3a22" } });
+      KC.pxE = PX({ skin: "#e2b088", w: 1.05, top: { kind: "shirt", c: "#f2f0e8", sleeve: "long", neck: "collar", collar: "#e2e0d8", button: "#c8c4b8" }, bottom: { kind: "jeans", c: "#2a2e3a" }, feet: { kind: "sneaker", c: "#3a3a3a" } });
+      KC.pxF = PX({ skin: "#e8b892", lash: true, pony: true, top: { kind: "tee", c: "#7ac0f2", sleeve: "short" }, bottom: { kind: "shorts", c: "#f2e2c0" }, feet: { kind: "sandal", c: "#e86a9a" } });
+      // มะปราง soaked: wet strands stuck across her forehead and cheek, drops running down
+      const mpWet = `<path d="M-30,-600Q-36,-566 -26,-540M-12,-604Q-16,-570 -6,-548M14,-600Q8,-576 18,-552M-44,-580Q-50,-540 -40,-512" stroke="#1e1414" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <g fill="#dfeeff" stroke="${Rig2.LINE}" stroke-width="1">${[[-34, -522], [28, -560], [40, -520], [-8, -506], [12, -590]].map(([x, y]) => `<path d="M${x},${y}q4,7 0,11q-4,-4 0,-11z"/>`).join("")}</g>`;
+      KC.maprangWet = { v2: { ...KC.maprang.v2, faceTop: mpWet, top: { kind: "blouse", c: "#d8ccb4", sleeve: "long", trim: "#b8a88a" } } };
+
+      // ---------------- the frames ----------------
+      // seated, one arm reaching out (มะปราง reaching for ข้าวปั้น's hand from the bench)
+      Rig.MODES.reachSit = (u, o) => ({ ...Rig.MODES.sitChair(u, o), uaF: -70 + 3 * Math.sin(u * 2.3), faF: -18, torso: 6, head: -8 });
+      // passengers on a tilted boat: feet inside the hull at (bx + dx, by + 20 + dx·sin(tilt)), the hull drawn again over them (act layer)
+      const onBoat = (bx, by, tilt, list) => list.map(([who, dx, s, mode, eyes, mouth, flip, extra]) => A(who, bx + dx, by + 22 + dx * Math.sin(tilt / 57.3), s, [{ t: 0, mode, eyes, mouth, ...(extra || {}) }], flip ? { flip: true } : {}));
+      const hullOver = (svg) => svg.replace(/<path d="M-430[^>]*\/>/, "");
+

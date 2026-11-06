@@ -1,0 +1,8 @@
+      function cabin(L, o = {}) {
+        riverNight(L, { hz: 520, moon: [900, 160], tx: 300, fwx: 2400 });
+        put(L.far, `<rect x="-900" y="560" width="2900" height="90" fill="#9a6a3e"/><path d="M-900,560H2000" stroke="#d8d2c0" stroke-width="8"/>`);
+        put(L.glow, `<ellipse cx="540" cy="560" rx="900" ry="120" fill="url(#kBulb)" opacity=".55"/>`);
+        put(L.set, `<path d="M-200,300V1500M1280,300V1500" stroke="#7a4a24" stroke-width="44"/><path d="M-400,330Q540,250 1500,330L1480,390H-380Z" fill="url(#kRoof)" ${KOUT}/>
+          <rect x="-300" y="1500" width="1700" height="70" rx="10" fill="#a8763e" ${KOUT}/><rect x="-280" y="1460" width="1660" height="48" rx="18" fill="#ff7a2a" ${KOUT2}/><path d="M-400,1800H1500V2300H-400Z" fill="#4a2c16"/>`);
+        if (o.flood) put(L.act, `<g class="flood"><path d="M-400,${o.flood}Q540,${o.flood - 30} 1500,${o.flood}V2300H-400Z" fill="#6a8ac8" opacity=".55"/><path d="M-400,${o.flood}Q540,${o.flood - 30} 1500,${o.flood}" stroke="#e8f2ff" stroke-width="8" fill="none" opacity=".8"/></g>`);
+      }

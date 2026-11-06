@@ -1,0 +1,105 @@
+      // ================= เรือล่มคืนลอยกระทง ฉากเชื่อม A และ B (คลิปยาวเท่านั้น · 16:9 ผ่าน landscape.js) =================
+      // A: from EP.1's capsize into EP.2 (ยาย's angle from the pontoon, then the camera dips through the surface into the tilted cabin)
+      // B: from EP.2's freeze into EP.3 (meanwhile on the pontoon: the man who would jump, ยาย's grip, the horn, the call to 1669)
+      // cabin() is EP.2's cabin set (cabin.part, copied unchanged)
+
+      // ---------- A1 · 1 cut (the camera pushes down from her to the boards): ยาย at the pontoon edge, the hull's roof edge rising toward her as the boat rolls, she reaches but does not jump (MS) · the counter bouncing on the boards, the krathongs by the pontoon going out one by one ----------
+      const A1C = 2.9;
+      add("A1", {
+        extra(L) {
+          pier(L, { seed: 21 });
+          // the rolling boat beyond the pontoon edge: the roof edge lifting toward the camera
+          put(L.set, `<g id="a1-rf"><g transform="translate(700,1420) rotate(-28)"><path d="M-700,0Q0,-60 700,0L680,60H-680Z" fill="url(#kRoof)" ${KOUT}/><path d="M-640,60V300M640,60V300" stroke="#7a4a24" stroke-width="34"/></g></g>`);
+        },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...fr(300, 1230, 2.0, 540, 1000) }, { t: D("A1"), glide: D("A1"), ease: "power1.inOut", ...fr(380, 1280, 2.5, 540, 1000) }] },
+        actors: [A("yaiYib", 200, 1330, 0.44, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }, { t: 1.6, mode: "point", eyes: "wide", mouth: "o" }], { talk: [TK("A1", 0, "scream")] })],
+        captions: capsQ("A1"),
+        fx(tl, id, t0, L) {
+          tl.fromTo(`#a1-rf`, { rotation: 0, svgOrigin: "700 1500" }, { rotation: -14, svgOrigin: "700 1500", duration: A1C, ease: "power2.in", immediateRender: false }, t0);
+          // the counter dropped from her hand, bouncing on the boards
+          put(L.act, `<g id="${id}-ct"><g transform="translate(360,1320) scale(.09)"><circle r="300" fill="#b8902a" ${KOUT}/><circle r="270" fill="#e2b84a"/><rect x="-200" y="-70" width="400" height="140" rx="14" fill="#2a1e10"/>${[0, 1, 2, 3].map((i) => `<rect x="${-192 + i * 100}" y="-58" width="84" height="116" rx="6" fill="#f6f2e4"/><text x="${-150 + i * 100}" y="34" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="92" fill="${i > 1 ? "#c8241e" : "#1e1a14"}">${"0019"[i]}</text>`).join("")}</g></g>`);
+          tl.fromTo(`#${id}-ct`, { y: -60 }, { keyframes: [{ y: 0, duration: 0.25, ease: "power2.in" }, { y: -24, duration: 0.18, ease: "power2.out" }, { y: 0, duration: 0.18, ease: "power2.in" }, { y: -8, duration: 0.1 }, { y: 0, duration: 0.1 }], immediateRender: false }, t0 + A1C);
+          // krathongs along the pontoon: the wash puts their candles out one by one
+          [0, 1, 2, 3].forEach((k) => {
+            put(L.act, krathong(440 + k * 70, 1372, 0.3, { seed: 80 + k }));
+            put(L.glow, `<g id="${id}-k${k}">${kGlow(440 + k * 70, 1372, 0.3, 40)}</g>`);
+            tl.to(`#${id}-k${k}`, { opacity: 0, duration: 0.12 }, t0 + A1C + 0.8 + k * 0.45);
+          });
+        },
+      });
+      // ---------- A2 · 1 cut: the camera sinks through the surface (bubbles, dark) and comes up inside the tilted cabin — EP.2's "climb" follows ----------
+      add("A2", {
+        extra(L) { cabin(L, { flood: 1700 }); },
+        ...NIGHT, light: { ...WARML, from: "left", rim: "#ffd89a", rimOp: 0.9 }, blur: { sky: 4, far: 4, mid: 3 },
+        cam: { keys: [{ t: 0, ...fr(560, 1500, 1.4, 540, 960) }, { t: D("A2"), glide: D("A2"), ease: "power2.inOut", ...fr(560, 1300, 1.0, 540, 960) }] },
+        actors: [],
+        captions: [],
+        fx(tl, id, t0, L) {
+          lean(tl, id, t0, 18);
+          // the water first fills the frame (under the surface), then drains down as the camera rises into the cabin
+          put(L.light, `<g id="${id}-uw"><rect x="-900" y="-900" width="2900" height="3900" fill="#0a1c38"/>${Array.from({ length: 22 }, (_, i) => `<circle cx="${(i * 149) % 1080}" cy="${400 + (i * 263) % 1300}" r="${8 + (i % 4) * 6}" fill="none" stroke="#cfe8ff" stroke-width="3" opacity=".7"/>`).join("")}
+            <path d="M-900,-60${Array.from({ length: 70 }, () => "q20,-12 40,0").join("")}" stroke="#cfe8ff" stroke-width="10" fill="none"/></g>`);
+          tl.fromTo(`#${id}-uw`, { y: 0 }, { y: 2100, duration: 2.4, ease: "power2.in", immediateRender: false }, t0 + 0.9);
+        },
+      });
+      // ---------- B1 · 1 cut (tilt up from the feet): feet running onto the pontoon edge, its corner dipping, the "20 คน" sign tilting → a man pulling off his shirt to jump (MS) ----------
+      const B1C = 1.3;
+      add("B1", {
+        extra(L) { pier(L, { seed: 22 }); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...fr(560, 1280, 2.4, 540, 1050) }, { t: D("B1"), glide: D("B1"), ...fr(560, 1220, 2.1, 540, 1000) }] },
+        actors: [A("pxB", 600, 1330, 0.44, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: B1C, mode: "raise", eyes: "wide", mouth: "scream" }], { talk: [TK("B1", 0, "scream")] })],
+        captions: capsQ("B1"),
+        fx(tl, id, t0, L) {
+          riseCrowd(L, tl, `${id}-rc`, 300, 900, 1330, 4, 23, 0.6, t0, 0, 0);
+          leanTo(tl, id, t0 + 0.2, -6, 1.0);
+        },
+      });
+      // ---------- B2 · 2 cuts: the painful choice — dead still: ยาย's hand locked on his wrist, both faces (CU, held, 1 s of quiet before her line) → she points him to the cushion crate (MS) ----------
+      const B2C = 4.0;
+      add("B2", {
+        extra(L) { pier(L, { seed: 23 }); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...fr(470, 1150, 3.3, 540, 960) }, { t: B2C - 0.05, ...fr(470, 1150, 3.3, 540, 960) },
+          { t: B2C, ...fr(400, 1210, 1.9, 540, 1000) }, { t: D("B2"), glide: D("B2") - B2C, ...fr(380, 1210, 2.0, 540, 1000) }] },
+        actors: [
+          A("yaiYib", 400, 1332, 0.46, [{ t: 0, mode: "lunge", eyes: "angry", mouth: "o" }, { t: B2C, mode: "point", eyes: "angry", mouth: "o" }], { talk: [TK("B2", 0), TK("B2", 1, "scream")] }),
+          A("pxB", 560, 1330, 0.46, [{ t: 0, mode: "raise", eyes: "wide", mouth: "o" }, { t: B2C + 0.4, mode: "crouch", eyes: "wide", mouth: "flat" }], { flip: true }),
+        ],
+        captions: capsQ("B2"),
+        fx(tl, id, t0, L) {
+          // her grip on his wrist (the still frame's centre)
+          put(L.act, `<g id="${id}-gr"><path d="M430,1176Q480,1160 520,1172" stroke="#c8946a" stroke-width="14" stroke-linecap="round" fill="none"/><circle cx="520" cy="1172" r="12" fill="#c8946a" ${KOUT2}/></g>`);
+          tl.set(`#${id}-gr`, { opacity: 0 }, t0 + B2C);
+        },
+      });
+      // ---------- B3 · 1 cut (pull out): ยาย grabs the horn's mic at the stall → feet backing up the steps, the pontoon settling flat, cushions thrown (WS) ----------
+      const B3C = 2.4;
+      add("B3", {
+        extra(L) { pier(L, { seed: 24 }); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...fr(160, 1160, 1.3, 540, 1000) }, { t: D("B3"), glide: D("B3"), ease: "power1.inOut", ...fr(420, 1150, 0.95, 540, 960) }] },
+        actors: [A("yaiYib", -120, 1330, 0.46, [{ t: 0, mode: "phoneEar", eyes: "angry", mouth: "scream" }], { talk: [TK("B3", 0, "scream")] })],
+        captions: capsQ("B3"),
+        fx(tl, id, t0, L) {
+          lean(tl, id, t0, -5); leanTo(tl, id, t0 + B3C, 0, 2.0);
+          riseCrowd(L, tl, `${id}-rc`, 360, 1100, 1330, 6, 25, 0.6, t0, 0, 0);
+          tl.to(`#${id}-rc`, { x: -260, duration: D("B3") - B3C, ease: "power1.inOut" }, t0 + B3C);
+          [0, 1, 2].forEach((k) => {
+            put(L.act, `<g id="${id}-c${k}"><g transform="translate(700,1240)"><rect x="-50" y="-22" width="100" height="44" rx="14" fill="#ff7a2a" ${KOUT2}/></g></g>`);
+            tl.fromTo(`#${id}-c${k}`, { x: 0, y: 0, opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.01 }, { x: 220 + k * 120, y: -160, duration: 0.35, ease: "power1.out" }, { x: 420 + k * 160, y: 200, duration: 0.45, ease: "power2.in" }], immediateRender: false }, t0 + B3C + 0.4 + k * 0.6);
+          });
+        },
+      });
+      // ---------- B4 · 1 cut: ยาย on the phone to 1669; behind her น้าหมาน on the land-side steps, his gallons gone (MS) → cut to EP.3 ----------
+      add("B4", {
+        extra(L) { pier(L, { seed: 25 }); },
+        ...NIGHT, light: WARML, blur: { sky: 3, far: 3, mid: 2, fg: 5 },
+        cam: { keys: [{ t: 0, ...fr(0, 1180, 2.0, 540, 1000) }, { t: D("B4"), glide: D("B4"), ...fr(-40, 1180, 2.15, 540, 1000) }] },
+        actors: [
+          A("yaiYib", 60, 1330, 0.46, [{ t: 0, mode: "phoneEar", eyes: "worry", mouth: "o" }], { talk: [TK("B4", 0), TK("B4", 1)] }),
+          A("naMan", -420, 1262, 0.36, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }], { flip: true }),
+        ],
+        captions: capsQ("B4"),
+      });
