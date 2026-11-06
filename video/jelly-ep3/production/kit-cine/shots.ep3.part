@@ -59,7 +59,7 @@
           A("jWomanTowel", 640, 1775, 0.95, [{ t: 0, mode: "wipe", eyes: "worry", mouth: "o" }], { flip: true }),
           A("jTon", 860, 1740, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }),
         ],
-        captions: capsJ(caps("c_h2", [0]), caps("c_h2", [1])),
+        captions: caps("c_h2"),
         fx(tl, id, t0, L) { put(L.act, shin(MAT[0] + 40, MAT[1] + 10, 0.95)); } });
       // 4–6 · "เช็ดหนวดออกก่อน!" → the towel inches from the tentacle → ต้น's hand on her wrist, still (the choice)
       add("c_towel", { set: "jellyBeach", setOpts: BEACH3("jb32", { tower: false }), dark: 0, blur: { set: 3, mid: 4, far: 4 }, light: SUN,
