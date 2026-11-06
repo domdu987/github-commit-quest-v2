@@ -42,6 +42,7 @@ TAKES.update({("ep1", "k06"): 0, ("ep2", "m05"): 0, ("ep3", "x02"): 1})
 # coordinator 5 Nov: the EP.2 rule must be 100% clear — slower, word by word (fresh takes under the new style)
 OVR = {}
 # coordinator 5 Nov: EP.1 Short ≤ 2:30 — these lines play in the long video only (n10 stays: it starts the capsize chain)
+TAKES.update({("ep1", "n02"): 0, ("ep1", "m07"): 1})  # HG1 retakes: n02 takes 1-2 no better ("ตามหนอง", "และลูกตามนอน") so take 0 stays
 FULL_ONLY = {("ep1", i) for i in ("y01", "k01", "m02", "y04", "k05", "y08", "y10", "y11")}
 
 
