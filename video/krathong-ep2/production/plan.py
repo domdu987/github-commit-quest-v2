@@ -7,14 +7,15 @@ st = lambda k: SH[k]["start"]
 vo = lambda k, i=0: SH[k]["vo"][i]["t"] + st(k)
 D = lambda k: SH[k]["dur"]
 STING = st("fail") + 2.9      # the roof comes down as the boat rolls, after n06 and a 0.4 s hush
-FACE = {10: 525, 13: 300, 21: 288, 22: 280, 25: 395, 26: 276}   # the smallest head width in each cut (facew.cjs, 1080 wide)                      # face_w per cut number, measured with facew.cjs after the build
+FACE = {11: 525, 14: 300, 22: 288, 23: 280, 26: 395, 27: 276}   # +1 after the recap split (real-file cut count)   # the smallest head width in each cut (facew.cjs, 1080 wide)                      # face_w per cut number, measured with facew.cjs after the build
 C = [
  ("open", 0.0, "hook", "ECU", "eye", "cut", "ขอบม้านั่ง", "ไฟโป๊ะ", {"note": "พื้นเรือเอียง 25° น้ำทะลักข้ามกราบ (ต่อจากภาพสุดท้ายของ EP.1)"}),
  ("open", D("open") / 3, "hook", "WS", "low", "cut", "เสาหลังคา", "ไฟโป๊ะ", {"note": "ทั้งลำเอียง ไฟโป๊ะด้านหลังเอียงตาม"}),
  ("open", 2 * D("open") / 3, "hook", "CU", "eye", "cut", "มือคนข้างหน้า", "ไฟโป๊ะ", {"note": "ข้าวปั้นที่ฝั่งต่ำ มะปรางอยู่ฝั่งสูง"}),
  ("hook", st("hook"), "hook", "CU", "eye", "hold", "พนักที่นั่ง", "ไฟโป๊ะ", {"note": "หน้ามะปราง คำสั่งขึ้น 3.24 วิ"}),
  ("hook", st("hook") + 1.12, "fear", "MCU", "eye", "cut", "พนักที่นั่ง", "ไฟโป๊ะ", {"note": "มือคนที่จะวิ่งขึ้นฝั่งสูง"}),
- ("recap", st("recap"), "uneasy", "CU", "eye", "pushIn", "ป้าย 12 คน", "ไฟโป๊ะ", {"note": "ทวนเรื่อง (Shorts เท่านั้น): ป้าย 12 คน ตัวนับ 0019 แล้วดันเข้าหาพี่น้องกลางเรือ"}),
+ ("recap", st("recap"), "uneasy", "CU", "eye", "pushIn", "ป้าย 12 คน", "ไฟโป๊ะ", {"note": "ทวนเรื่อง (Shorts เท่านั้น): ป้าย 12 คน 2.65 วิ"}),
+ ("recap", st("recap") + 2.65, "uneasy", "WS", "eye", "pushIn", "หลังคาเรือ", "ไฟโป๊ะ", {"note": "ทั้งลำ แล้วดันเข้าหาพี่น้องกลางเรือ · คัตในช็อตเดียวกัน (กล้องกระโดดที่ 2.65 วิ) พบจากการนับคัตในไฟล์จริง"}),
  ("climb", st("climb"), "fear", "WS", "eye", "dutch", "เสาหลังคา", "ไฟโป๊ะ", {"deg": 10}),
  ("climb", st("climb") + 1.15, "fear", "MCU", "low", "cut", "ขอบกราบ", "ไฟโป๊ะ", {}),
  ("climb", st("climb") + 2.55, "fear", "MS", "eye", "shake", "พนักที่นั่ง", "ไฟโป๊ะ", {"note": "เรือสะบัดกลับ มะปรางไถลไปทางกราบต่ำ บรรยาย n04 ต่อเนื่อง"}),
