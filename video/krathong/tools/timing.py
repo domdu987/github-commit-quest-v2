@@ -22,7 +22,7 @@ SHOTS_ALL = {
         ("hook", ["n02"], 0.04, 0.3, 1.6),            # command: push in on the rising knees
         ("card", ["n03"], 0.15, 0.4, 2.0),            # ยาย's thumb rolls the brass counter 0019 → 0000, "แกร๊ก"
         ("est", ["y01"], 0.3, 0.5, 3.4),              # establishing ท่ายายหยิบ: temple across the river, krathong stall, the boat moored
-        ("kids", ["k01", "m01", "l01"], 0.12, 0.3, 3.0),
+        ("kids", ["k01", "m01", "m06", "y15", "l01"], 0.12, 0.3, 3.0),
         ("whistle", ["k02", "m02"], 0.1, 0.3, 2.4),   # the clue: the orange whistle on ข้าวปั้น's jacket
         ("code", ["y02", "y03", "k03"], 0.12, 0.3, 3.0),
         ("vest", ["y04", "m03", "y05"], 0.12, 0.3, 3.0),
@@ -39,6 +39,7 @@ SHOTS_ALL = {
         ("float", ["m05"], 0.15, 0.4, 2.0),
         ("back", ["n10", "y13"], 0.15, 0.3, 3.0),
         ("hit", ["x04", "n11"], 0.1, 1.3, 3.0),       # the wake, the spray, the bump · three whistles (SFX) after n11 · everyone stands
+        ("grab", ["m07", "y16"], 0.1, 0.2, 2.0),      # HG1 choice: ข้าวปั้น up on the bench, มะปราง half-rises, ยาย pins her wrist
         ("roll", [], 0.0, 0.0, 2.2),                  # 0.4 s silence, the crack, the boat rolls, the counter drops
         ("evid", ["n12", "k08"], 0.15, 0.5, 3.0),     # the counter 0019 by the tilting "12 คน" sign · ข้าวปั้น's face
         ("choice", ["n13"], 0.1, 1.6, 3.0),           # Shorts only
