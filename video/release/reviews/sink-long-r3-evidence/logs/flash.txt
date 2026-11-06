@@ -1,0 +1,41 @@
+luma YAVG min 17.1 (t=4.92) max 93.7 (t=1.08) median 56.7
+
+== rises >= 8 over prev 0.3 s median: 22 (12 not at a cut) ==
+     4.933s 0:04.93  Y  17.1 ->  69.9 (+ 52.8)  est.opacity 0.24  above-half 4.00s STAYS  CUT [e1_hook]  YHIGH 121
+    16.483s 0:16.48  Y  50.5 ->  67.5 (+ 17.0)  est.opacity 0.09  above-half 4.00s STAYS  CUT [e1_drive]  YHIGH 115
+    25.133s 0:25.13  Y  40.6 ->  65.2 (+ 24.5)  est.opacity 0.13  above-half 1.60s returns  CUT [e1_plunge]  YHIGH 118
+    29.483s 0:29.48  Y  43.6 ->  52.8 (+  9.2)  est.opacity 0.05  above-half 0.07s returns      [e1_belt]  YHIGH 61
+    31.733s 0:31.73  Y  39.8 ->  53.5 (+ 13.7)  est.opacity 0.07  above-half 3.93s returns      [e1_door]  YHIGH 104
+    38.083s 0:38.08  Y  46.6 ->  56.7 (+ 10.1)  est.opacity 0.05  above-half 1.15s returns      [e1_window]  YHIGH 128
+    52.067s 0:52.07  Y  30.2 ->  50.7 (+ 20.5)  est.opacity 0.10  above-half 3.90s returns      [e1_panel]  YHIGH 113
+    56.167s 0:56.17  Y  25.4 ->  45.6 (+ 20.2)  est.opacity 0.10  above-half 0.40s returns      [e1_flicker]  YHIGH 75
+    56.717s 0:56.72  Y  34.2 ->  43.3 (+  9.1)  est.opacity 0.05  above-half 0.45s returns      [e1_flicker]  YHIGH 72
+    58.533s 0:58.53  Y  19.8 ->  60.4 (+ 40.6)  est.opacity 0.19  above-half 4.00s STAYS  CUT [hg7]  YHIGH 98
+    62.633s 1:02.63  Y  47.7 ->  59.8 (+ 12.1)  est.opacity 0.06  above-half 3.98s returns      [brmoto]  YHIGH 98
+    72.333s 1:12.33  Y  48.1 ->  65.9 (+ 17.8)  est.opacity 0.10  above-half 4.00s STAYS      [e2_lami]  YHIGH 226
+    77.017s 1:17.02  Y  45.5 ->  68.8 (+ 23.3)  est.opacity 0.12  above-half 3.13s returns      [e2_tease]  YHIGH 214
+    86.367s 1:26.37  Y  32.1 ->  60.8 (+ 28.7)  est.opacity 0.14  above-half 4.00s STAYS  CUT [e2_kim]  YHIGH 86
+    93.733s 1:33.73  Y  50.8 ->  62.6 (+ 11.9)  est.opacity 0.06  above-half 3.75s returns      [e2_corner]  YHIGH 220
+    97.733s 1:37.73  Y  44.8 ->  60.9 (+ 16.1)  est.opacity 0.08  above-half 3.65s returns      [e2_headrest]  YHIGH 190
+   120.483s 2:00.48  Y  44.2 ->  74.0 (+ 29.8)  est.opacity 0.16  above-half 2.45s returns  CUT [e2_surface]  YHIGH 144
+   126.400s 2:06.40  Y  37.5 ->  69.5 (+ 32.0)  est.opacity 0.16  above-half 4.00s STAYS  CUT [x2_surface]  YHIGH 123
+   139.267s 2:19.27  Y  61.7 ->  79.7 (+ 18.0)  est.opacity 0.10  above-half 4.00s STAYS  CUT [e3_grab]  YHIGH 107
+   148.067s 2:28.07  Y  54.0 ->  66.4 (+ 12.4)  est.opacity 0.07  above-half 4.00s STAYS  CUT [e3_kim]  YHIGH 118
+   171.533s 2:51.53  Y  38.7 ->  66.6 (+ 27.9)  est.opacity 0.14  above-half 4.00s STAYS      [e3_shoe]  YHIGH 106
+   181.917s 3:01.92  Y  37.5 ->  76.2 (+ 38.7)  est.opacity 0.20  above-half 4.00s STAYS  CUT [e3_sorry]  YHIGH 193
+  worst 10 s window (returning, not at cut): 3 events from 56.1s
+
+== rises >= 15 over prev 0.3 s median: 12 (4 not at a cut) ==
+     4.933s 0:04.93  Y  17.1 ->  69.9 (+ 52.8)  est.opacity 0.24  above-half 4.00s STAYS  CUT [e1_hook]  YHIGH 121
+    25.133s 0:25.13  Y  40.6 ->  65.2 (+ 24.5)  est.opacity 0.13  above-half 1.60s returns  CUT [e1_plunge]  YHIGH 118
+    52.167s 0:52.17  Y  30.3 ->  50.7 (+ 20.5)  est.opacity 0.10  above-half 3.80s returns      [e1_panel]  YHIGH 113
+    56.167s 0:56.17  Y  25.4 ->  45.6 (+ 20.2)  est.opacity 0.10  above-half 0.40s returns      [e1_flicker]  YHIGH 75
+    58.533s 0:58.53  Y  19.8 ->  60.4 (+ 40.6)  est.opacity 0.19  above-half 4.00s STAYS  CUT [hg7]  YHIGH 98
+    77.083s 1:17.08  Y  45.5 ->  68.8 (+ 23.3)  est.opacity 0.12  above-half 3.05s returns      [e2_tease]  YHIGH 214
+    86.367s 1:26.37  Y  32.1 ->  60.8 (+ 28.7)  est.opacity 0.14  above-half 4.00s STAYS  CUT [e2_kim]  YHIGH 86
+   120.483s 2:00.48  Y  44.2 ->  74.0 (+ 29.8)  est.opacity 0.16  above-half 2.45s returns  CUT [e2_surface]  YHIGH 144
+   126.400s 2:06.40  Y  37.5 ->  69.5 (+ 32.0)  est.opacity 0.16  above-half 4.00s STAYS  CUT [x2_surface]  YHIGH 123
+   139.267s 2:19.27  Y  61.7 ->  79.7 (+ 18.0)  est.opacity 0.10  above-half 4.00s STAYS  CUT [e3_grab]  YHIGH 107
+   171.533s 2:51.53  Y  38.7 ->  66.6 (+ 27.9)  est.opacity 0.14  above-half 4.00s STAYS      [e3_shoe]  YHIGH 106
+   181.917s 3:01.92  Y  37.5 ->  76.2 (+ 38.7)  est.opacity 0.20  above-half 4.00s STAYS  CUT [e3_sorry]  YHIGH 193
+  worst 10 s window (returning, not at cut): 2 events from 52.1s

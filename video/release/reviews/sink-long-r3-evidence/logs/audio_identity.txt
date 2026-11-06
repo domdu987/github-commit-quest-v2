@@ -1,0 +1,6 @@
+เสียงรอบ 3 (3539cf4) เทียบรอบ 2 (944e7b0)
+- แพ็กเก็ต AAC (ffmpeg -map 0:a -c copy -f data | md5): 4baa759cf7c7f8312f26c900f3c90855 ทั้งสองไฟล์
+- PCM ที่ถอดแล้ว (s16le | md5):                         e27490cd625ef53479a51d69d1ba30f2 ทั้งสองไฟล์
+- AAC LC 48 kHz stereo 192 kbps · 193.377 วิ · 9,066 เฟรม AAC เท่ากัน
+=> เสียงเหมือนรอบ 2 ทุกไบต์ ตามที่เลน D แจ้ง · ความดัง / true peak / hisscheck / musiccheck / ผลฟังของรอบ 2 (Whisper, "งัด") ใช้ได้ต่อ
+- src/mix.py, combine.py, finish.sh, finalmix.py, make.py, ch1-3.json, bridge.part, pry.part, schedule.json ที่ 3539cf4 = รอบ 2 ทุกไบต์

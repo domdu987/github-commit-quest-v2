@@ -1,0 +1,1 @@
+frames with >=3 near-white px within ~12 px of an edge: 0

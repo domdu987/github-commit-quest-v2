@@ -1,0 +1,14 @@
+# B6 ชื่อ · Python len · UPLOAD.md @3539cf4 · sheets/sink-upload.md @ HEAD ccr-fb88c4b3-kcqyid · day-2026-11-11.json title_youtube
+UPLOAD.md = target: True · len before | (rstrip) 36 · whole 58 · '#' in title: False
+sheet     = target: True · len before | (rstrip) 36 · whole 58 · '#' in title: False
+day json  = target: True · len before | (rstrip) 36 · whole 58 · '#' in title: False
+thumb.jpg 1280x720 · ข้อความ (thumb.cjs): 'นาทีก่อนจม' · 'ฉบับเต็ม · ครบ 3 ตอน' · 'คนที่คุณรักจมน้ำ…' · กล่องแดง 'อย่ากระโดดลงไปช่วย' (OCR อ่านได้ตรง)
+
+# m3 คอมเมนต์ปักหมุด · UPLOAD.md 17 บรรทัด · sheet 17 บรรทัด · เหมือนกันทั้งหมด: False
+--- sheet
++++ UPLOAD.md
+@@ -10 +10 @@
+-หมายเหตุ: Short EP.2 อ้าง IAED (2023) ว่าหัวเบาะเป็นตัวเลือกที่แย่ · ฉบับเต็มเพิ่มวิธีของกรมควบคุมโรค (2566) น.33 คือใช้ก้านหัวเบาะตอกเข้าร่องกระจกแล้วงัด · ถ้ามีค้อนทุบกระจก ให้ใช้ค้อนก่อน
++หมายเหตุ: ใช้หัวเบาะทุบกลางบานได้ผลน้อย (IAED 2023 · ที่ Short EP.2 พูดถึง) ให้ตอกก้านหัวเบาะเข้าร่องกระจกแล้วงัดตามกรมควบคุมโรค (2566) น.33 · ถ้ามีค้อนทุบกระจก ให้ใช้ค้อนก่อน
+คำอธิบาย (description) เหมือนกันทุกตัวอักษร: True
+IAED Journal 'Vehicle Escape' (2023) ต้นฉบับ: "a vehicle headrest is a poor choice for a tool to break a vehicle side window" (research/2026-11-06-sink-sources.md @8815a8f)

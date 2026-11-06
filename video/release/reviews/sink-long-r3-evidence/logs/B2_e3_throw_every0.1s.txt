@@ -1,0 +1,46 @@
+# B2 e3_throw (2:33.71-2:37.96) ทุก 0.1 วิ บนเฟรมเต็ม 3539cf4
+# face_bottom = แถวล่างสุดของผิวหน้าขิม (สีผิว) ในช่วง x 600-900 · cap_top = ขอบบนกล่องซับ (แถวแรกที่พื้นมืดของกล่องกว้าง >150 px ใน x 600-1300, y 780-960)
+# hand_top = ปลายนิ้วคนขี่ (ตรวจสีผิว · ประเมินต่ำไป ~30 px ดูไม้บรรทัดใน B2 image: ปลายนิ้วสูงสุด ~y 62 ที่ 2:37.9)
+ 153.80s f9228  face_bottom y  675  cap_top y none  gap    -  hand_top(skin) y 171
+ 153.90s f9234  face_bottom y  672  cap_top y  915  gap  243  hand_top(skin) y 179
+ 154.00s f9240  face_bottom y  680  cap_top y  833  gap  153  hand_top(skin) y 144
+ 154.10s f9246  face_bottom y  674  cap_top y  835  gap  161  hand_top(skin) y 161
+ 154.20s f9252  face_bottom y  676  cap_top y  835  gap  159  hand_top(skin) y 139
+ 154.30s f9258  face_bottom y  672  cap_top y  835  gap  163  hand_top(skin) y 138
+ 154.40s f9264  face_bottom y  673  cap_top y  835  gap  162  hand_top(skin) y 158
+ 154.50s f9270  face_bottom y  677  cap_top y  835  gap  158  hand_top(skin) y 156
+ 154.60s f9276  face_bottom y  672  cap_top y  835  gap  163  hand_top(skin) y 173
+ 154.70s f9282  face_bottom y  671  cap_top y  839  gap  168  hand_top(skin) y 135
+ 154.80s f9288  face_bottom y  668  cap_top y  833  gap  165  hand_top(skin) y 170
+ 154.90s f9294  face_bottom y  671  cap_top y  835  gap  164  hand_top(skin) y 152
+ 155.00s f9300  face_bottom y  673  cap_top y  835  gap  162  hand_top(skin) y 168
+ 155.10s f9306  face_bottom y  668  cap_top y  835  gap  167  hand_top(skin) y 148
+ 155.20s f9312  face_bottom y  678  cap_top y  835  gap  157  hand_top(skin) y 164
+ 155.30s f9318  face_bottom y  674  cap_top y  835  gap  161  hand_top(skin) y 161
+ 155.40s f9324  face_bottom y  670  cap_top y  835  gap  165  hand_top(skin) y 158
+ 155.50s f9330  face_bottom y  665  cap_top y  835  gap  170  hand_top(skin) y 138
+ 155.60s f9336  face_bottom y  671  cap_top y  835  gap  164  hand_top(skin) y 135
+ 155.70s f9342  face_bottom y  669  cap_top y  835  gap  166  hand_top(skin) y 132
+ 155.80s f9348  face_bottom y  666  cap_top y  835  gap  169  hand_top(skin) y 129
+ 155.90s f9354  face_bottom y  663  cap_top y  835  gap  172  hand_top(skin) y 146
+ 156.00s f9360  face_bottom y  665  cap_top y  835  gap  170  hand_top(skin) y 143
+ 156.10s f9366  face_bottom y  665  cap_top y  835  gap  170  hand_top(skin) y 139
+ 156.20s f9372  face_bottom y  663  cap_top y none  gap    -  hand_top(skin) y 137
+ 156.30s f9378  face_bottom y  669  cap_top y  832  gap  163  hand_top(skin) y 115
+ 156.40s f9384  face_bottom y  669  cap_top y  835  gap  166  hand_top(skin) y 132
+ 156.50s f9390  face_bottom y  669  cap_top y  835  gap  166  hand_top(skin) y 129
+ 156.60s f9396  face_bottom y  661  cap_top y  835  gap  174  hand_top(skin) y 127
+ 156.70s f9402  face_bottom y  665  cap_top y  835  gap  170  hand_top(skin) y 127
+ 156.80s f9408  face_bottom y  663  cap_top y  835  gap  172  hand_top(skin) y 124
+ 156.90s f9414  face_bottom y  662  cap_top y  835  gap  173  hand_top(skin) y 120
+ 157.00s f9420  face_bottom y  659  cap_top y  835  gap  176  hand_top(skin) y 120
+ 157.10s f9426  face_bottom y  656  cap_top y  835  gap  179  hand_top(skin) y 119
+ 157.20s f9432  face_bottom y  668  cap_top y  835  gap  167  hand_top(skin) y 118
+ 157.30s f9438  face_bottom y  659  cap_top y  835  gap  176  hand_top(skin) y 117
+ 157.40s f9444  face_bottom y  666  cap_top y  835  gap  169  hand_top(skin) y 116
+ 157.50s f9450  face_bottom y  667  cap_top y  835  gap  168  hand_top(skin) y 95
+ 157.60s f9456  face_bottom y  666  cap_top y  835  gap  169  hand_top(skin) y 116
+ 157.70s f9462  face_bottom y  665  cap_top y  835  gap  170  hand_top(skin) y 116
+ 157.80s f9468  face_bottom y  658  cap_top y  835  gap  177  hand_top(skin) y 115
+ 157.90s f9474  face_bottom y  662  cap_top y  835  gap  173  hand_top(skin) y 92
+frames 42 · with caption 40 · min gap face->caption 153 px · face always above caption: True

@@ -1,0 +1,11 @@
+[full band]
+ok   music under the voice -33.5 LUFS (ทะเลลด -33.6; target -36.6..-30.6)
+ok   music between lines -32.4 LUFS (ทะเลลด -31.3; target -34.5..-28)
+ok   voice over music 18.1 LU (ทะเลลด 18.9; target >= 8)
+ok   music missing in voice-free time 12% (ทะเลลด 12%; target <= 15%)
+[phone speaker band, info only: both stems high-passed at 300 Hz; ทะเลลด reads -39.0 under the voice, -35.4 between lines]
+info music under the voice -39.5 LUFS
+info music between lines -39.5 LUFS
+info voice over music 21.5 LU
+info music missing in voice-free time 46%
+PASS

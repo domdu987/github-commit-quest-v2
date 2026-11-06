@@ -1,0 +1,59 @@
+   0.10 e3_hook:n01        take n01.wav                    corr 0.908 lag    +0 ms
+   3.03 e3_jump:n02        take n02.wav                    corr 0.879 lag    +0 ms
+   5.08 e1_hook:n01        take n01.wav                    corr 0.989 lag    +0 ms
+   7.83 e1_lock:n02        take n02.wav                    corr 0.997 lag    +0 ms
+   9.63 e1_float:n03       take n03.wav                    corr 0.992 lag    -0 ms
+  13.73 e1_all:n04         take n04.wav                    corr 0.904 lag    +0 ms
+  16.67 e1_drive:n05       take n05.wav                    corr 0.982 lag    +0 ms
+  21.73 e1_swerve:n06      take n06.wav                    corr 0.983 lag    +0 ms
+  28.92 e1_belt:n07        take n07.wav                    corr 0.982 lag    +0 ms
+  31.80 e1_door:n08        take n08.wav                    corr 0.975 lag    +0 ms
+  35.85 e1_window:n09      take n09.wav                    corr 0.978 lag    +0 ms
+  39.42 e1_kid:n10         take n10.wav                    corr 0.989 lag    +0 ms
+  42.51 e1_phone:n11       take n11.wav                    corr 0.996 lag    +0 ms
+  47.08 e1_kim:k01         take k01.wav                    corr 0.997 lag    +0 ms
+  49.82 e1_led:n13         take n13.wav                    corr 0.881 lag    +0 ms
+  52.22 e1_panel:n14       take n14.wav                    corr 0.991 lag    +0 ms
+  55.86 e1_flicker:n15     take n15.wav                    corr 0.775 lag    +0 ms
+  59.83 x1_flicker:a1      RESIDUAL (best take corr 0.116 a1.969da0997c.mp3)
+  62.89 brmoto:a2          RESIDUAL (best take corr 0.042 a2.c2dd62df5b.mp3)
+  66.91 x2_fist:a3         RESIDUAL (best take corr 0.038 a3.c6c3e56a7f.mp3)
+  70.71 e2_fist:n02        take n02.wav                    corr 0.881 lag    -0 ms
+  72.41 e2_lami:n03        take n03.wav                    corr 0.964 lag    +0 ms
+  77.02 e2_tease:n04       take n04.wav                    corr 0.990 lag    -0 ms
+  80.46 e2_dark:n05        take n05.wav                    corr 0.954 lag    +0 ms
+  83.41 e2_lock:n06        take n06.wav                    corr 0.874 lag    +0 ms
+  86.45 e2_kim:k01         take k01.wav                    corr 0.986 lag    -0 ms
+  89.71 e2_smash:n07       take n07.wav                    corr 0.960 lag    +0 ms
+  93.77 e2_corner:l2n08    RESIDUAL (best take corr 0.032 l2n08.7d003b0ed7.mp3)
+  97.84 e2_headrest:l2n09  RESIDUAL (best take corr 0.044 l2n09.7bc5038204.mp3)
+ 101.72 e2_third:n10       take n10.wav                    corr 0.977 lag    +0 ms
+ 105.79 e2_switch:n11      take n11.wav                    corr 0.838 lag    +0 ms
+ 108.42 e2_fill:n12        take n12.wav                    corr 0.803 lag    +0 ms
+ 113.34 e2_open:n14        take n14.wav                    corr 0.960 lag    +0 ms
+ 116.45 e2_push:n15        take n15.wav                    corr 0.974 lag    +0 ms
+ 121.02 e2_surface:k02     take k02.wav                    corr 0.999 lag    +0 ms
+ 123.12 e2_foot:n16        take n16.wav                    corr 0.908 lag    +0 ms
+ 126.69 x2_surface:b1      RESIDUAL (best take corr 0.038 b1.68519533c4.mp3)
+ 131.24 x3_kim:b2          RESIDUAL (best take corr 0.016 b2.7c6a26e902.mp3)
+ 134.33 x3_kim:x02         take n02.wav                    corr 0.999 lag    +0 ms
+ 136.24 x3_hook:b4         RESIDUAL (best take corr 0.034 b4.585ab5800c.mp3)
+ 139.44 e3_grab:n03        take n03.wav                    corr 0.862 lag    +0 ms
+ 144.55 e3_three:n04       take n04.wav                    corr 0.992 lag    +0 ms
+ 148.16 e3_kim:k01         take k01.wav                    corr 1.000 lag    +0 ms
+ 150.44 e3_shout:n05       take e3_n05.wav                 corr 0.997 lag    -0 ms
+ 153.91 e3_throw:n06       take n06.wav                    corr 0.978 lag    -0 ms
+ 158.16 e3_reach:n07       take n07.wav                    corr 0.989 lag    -0 ms
+ 163.67 e3_full:n08        take n08.wav                    corr 0.851 lag    -0 ms
+ 166.24 e3_door:n09        take n09.wav                    corr 0.963 lag    -0 ms
+ 170.32 e3_shoe:l3n10      RESIDUAL (best take corr 0.043 l3n10.9edb20d00e.mp3)
+ 175.84 e3_lamp:n12        take n12.wav                    corr 0.996 lag    +0 ms
+ 178.44 e3_same:n13        take n13.wav                    corr 0.978 lag    +0 ms
+ 182.10 e3_sorry:r01       take r01.wav                    corr 0.998 lag    -0 ms
+ 184.37 e3_hosp:n14        take n14.wav                    corr 0.972 lag    +0 ms
+global gain 1.1029
+  check e1_flicker:n15: corr 0.77 gain dev -0.0 dB
+  check e2_switch:n11: corr 0.84 gain dev -0.2 dB
+  check e2_fill:n12: corr 0.80 gain dev +0.0 dB
+take lines 44 · residual lines 9 · median corr 0.978 · min 0.775
+mix -17.5 · music est -32.3 · voice est -18.1 · residual -27.8 dBFS rms

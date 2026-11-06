@@ -1,0 +1,2 @@
+lag samples 0 = 0.0 ms
+ref-energy windows ok 99.9% median gain 0.1087
