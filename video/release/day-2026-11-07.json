@@ -80,10 +80,10 @@
     ],
     "status": "in_production",
     "branch": "ccr-fb88c4b3-kcqyid",
-    "commit": "200b2b3",
+    "commit": "a06f878",
     "video": "video/tide-long/LONG-tide-16x9-share.mp4",
-    "video_sha256": "bc6ccdefba4b1552679848bf18b7fa825afb0766302595186197d8a921295f1a",
-    "video_bytes": 90537368,
+    "video_sha256": "1c2d3a07adbdd1bffb1b2c1534f7d6a7c048e1df8f4e936f705efa055914bf6e",
+    "video_bytes": 90529323,
     "duration_s": 328.75,
     "thumb": "video/tide-long/thumb.jpg",
     "title_youtube": "ทะเลลดลงไปไกล ปลาดิ้นเต็มหาด… อย่าลงไปเก็บ | ทะเลลด ฉบับเต็ม",
@@ -104,13 +104,13 @@
       "5:12 วันพุธถัดมา"
     ],
     "upload_sheet": "video/release/sheets/tide-upload.md",
-    "review": "รอบ 1 (5 พ.ย.): ไม่ผ่าน 1 ข้อ (B1 สเกลยายใน EP.3) · แก้ B1, M4 และหอเตือนภัยหลุดกรอบ 16:9 แล้ว (200b2b3) · รอโต๊ะตรวจรอบ 2 · ผ่านแล้วจะเปลี่ยน status เป็น final",
+    "review": "รอบ 1 (5 พ.ย.): B1 สเกลยาย · รอบ 2 (6 พ.ย.): B1′ คนวิ่งเตี้ยกว่ารถ · แก้แล้วทั้งคู่ (a06f878) · รอโต๊ะตรวจรอบ 3 · ผ่านแล้วจะเปลี่ยน status เป็น final",
     "made_by": "ผู้ประสานงาน",
     "hq_by_chat": {
       "file": "LONG-tide-16x9-HQ.mp4",
-      "bytes": 398161826,
-      "sha256": "71999d45fcf33e8134124c27b0298eb5b57f1a1a13ce2d505db02ead120635cb"
+      "bytes": 398035268,
+      "sha256": "8b5238be1468d41fa6ced57dbaf459ddb750f75423584fcd49389fd2baeaf154"
     },
-    "note": "EP.1–3 + บทเชื่อม 2 ช่วง · 5:28 · 1920×1080 60 fps · −14 LUFS · ไฟล์ใน repo เข้ารหัส 2 รอบ 90.5 MB · ต้นฉบับ HQ 398 MB ส่งทางแชท ใช้ลงแทนได้ถ้า sha ตรง (ไฟล์ HQ 396 MB ฉบับก่อนห้ามใช้)"
+    "note": "EP.1–3 + บทเชื่อม 2 ช่วง · 5:28 · 1920×1080 60 fps · −14 LUFS · ไฟล์ใน repo เข้ารหัส 2 รอบ 90.5 MB · ต้นฉบับ HQ 398 MB ส่งทางแชท ใช้ลงแทนได้ถ้า sha ตรง (ไฟล์ HQ ฉบับก่อนหน้าทั้งหมดห้ามใช้)"
   }
 }
