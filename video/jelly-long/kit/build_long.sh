@@ -4,7 +4,7 @@
 set -euo pipefail
 J="$(cd "$(dirname "$0")/.." && pwd)"; cd "$J/hf"
 python3 "$J/land/toland.py" ep1c L1 "$J/land/fix1.json" && python3 "$J/land/patchL1.py" L1/index.html
-python3 "$J/land/toland.py" ep2c L2 && sed -i 's|<div class="badge" id="badge">หนวดใส · EP.2</div>|<div class="badge" id="badge">หนวดใส · ตอน 2</div>|' L2/index.html
+python3 "$J/land/toland.py" ep2c L2 "$J/land/fix2.json" && sed -i 's|<div class="badge" id="badge">หนวดใส · EP.2</div>|<div class="badge" id="badge">หนวดใส · ตอน 2</div>|' L2/index.html
 python3 "$J/land/toland.py" brc Lbr "$J/land/fixbr.json"
 python3 "$J/land/toland.py" fbc Lfb "$J/land/fixfb.json"
 python3 "$J/land/toland.py" endc Lend

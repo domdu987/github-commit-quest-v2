@@ -236,7 +236,7 @@
       const postBoard = (x, y, s, pid, o = {}) => { const k = 0.3 * s, py = y - 226 * s, by = py + 122 * k;
         return `<g>${Jelly.post(x, y, s, { full: o.full ?? 0 })}<path d="M${x - 300 * k},${py}H${x + 300 * k}" stroke="#1e1a16" stroke-width="${16 * s}" stroke-linecap="round"/><path d="M${x - 300 * k},${py - 2 * s}H${x + 300 * k}" stroke="#c8b070" stroke-width="${10 * s}" stroke-linecap="round"/>
           ${[-1, 1].map((d) => `<path d="M${x + d * 250 * k},${py - 6 * s}v${12 * s}" stroke="#8a6a3a" stroke-width="${6 * s}"/>`).join("")}<path d="M${x - 16 * s},${py - 10 * s}l${32 * s},${20 * s}M${x + 16 * s},${py - 10 * s}l${-32 * s},${20 * s}" stroke="#8a6a3a" stroke-width="${5 * s}"/>
-          <g transform="translate(${x},${by}) scale(${k})">${Jelly.ruleBoard(0, 0, { active: -1 })}
+          <g transform="translate(${x},${by}) scale(${k})">${Jelly.ruleBoard(0, 0, { active: -1, title: window.LANDSCAPE ? "กลอนหนวดใส" : undefined })}
             <g id="${pid}-on" opacity="0"><g transform="translate(0,136)"><rect x="-350" y="-10" width="700" height="132" rx="16" fill="#f2c230" opacity=".6" stroke="#1e1a16" stroke-width="4"/></g></g>
             <g transform="translate(300,192)"><g id="${pid}-tick" opacity="0"><circle r="34" fill="#3aa86a" stroke="#1e1a16" stroke-width="5"/><path d="M-16,0l10,12l21,-24" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g></g></g>`; };
       const POST = [700, 1330, 0.62], TOWER = [900, 1270, 0.82];
@@ -314,9 +314,9 @@
         <path d="M264,20Q300,46 294,76Q286,106 324,114" stroke="#f2feff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M264,20Q300,46 294,76Q286,106 324,114" stroke="#a88ae8" stroke-width="1.4" fill="none" stroke-dasharray="2 5"/></g>`;
       // ---------- 12. the crowd: a woman pushes a bottle and says rub it; ภูมิ begs; น้ำหวาน recites the rhyme to her father ----------
       // an arm reaching in from the edge with a water bottle held out (screen space · from (ex, ey) to the hand at (hx, hy))
-      const edgeArm = (ex, ey, hx, hy, sleeve, skin = "#c08a5e") => { const a = Math.atan2(hy - ey, hx - ex) * 180 / Math.PI;
+      const edgeArm = (ex, ey, hx, hy, sleeve, skin = "#c08a5e") => { const sx = (ex + hx * 2) / 3, sy = (ey + hy * 2) / 3; if (window.LANDSCAPE) { ex += (ex - hx) * 2.6; ey += (ey - hy) * 2.6; } /* the long: the arm reaches past the wider frame's edge */ const a = Math.atan2(hy - ey, hx - ex) * 180 / Math.PI;
         return `<path d="M${ex},${ey}L${hx},${hy}" stroke="#1e1a16" stroke-width="64" stroke-linecap="round"/><path d="M${ex},${ey}L${hx},${hy}" stroke="${sleeve}" stroke-width="56" stroke-linecap="round"/>
-          <path d="M${(ex + hx * 2) / 3},${(ey + hy * 2) / 3}L${hx},${hy}" stroke="${skin}" stroke-width="44" stroke-linecap="round"/><g transform="translate(${hx},${hy}) rotate(${a + 90})"><g transform="translate(0,40) scale(.6)">${Jelly.bottle(0, 0, 1, { cap: false })}</g>
+          <path d="M${sx},${sy}L${hx},${hy}" stroke="${skin}" stroke-width="44" stroke-linecap="round"/><g transform="translate(${hx},${hy}) rotate(${a + 90})"><g transform="translate(0,40) scale(.6)">${Jelly.bottle(0, 0, 1, { cap: false })}</g>
           <rect x="-30" y="-24" width="60" height="44" rx="18" fill="${skin}" stroke="#1e1a16" stroke-width="3.4"/></g>`; };
       add("crowd", { set: "jellyBeach", setOpts: BEACH("jb3", { umbrellas: [[90, 1300, 0.8, "#f2c230"]], life: [["mat", 120, 1380, 0.8, "#e8482a"]] }), dark: 0, light: SUN, grade: GBR,
         cam: { keys: [{ t: 0, ...fr(500, 1520, 1.3, 540, 1150) }, { t: vo("crowd", 1) - 0.14, glide: vo("crowd", 1) - 0.14, ...fr(520, 1520, 1.38, 540, 1150) },
@@ -492,8 +492,14 @@
       add("c_hC", { ...O.open, ...NOG, actors: [A("jPhum", 400, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }]),
           A("jTonBottle", 790, 1730, 1.0, [{ t: 0, mode: "pourLow", eyes: "worry", mouth: "o" }], { flip: true }),
           A("jWomanBottle", 990, 1730, 0.78, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true })],
-        cam: { keys: [{ t: 0, ...fr(600, 1450, 1.12, 540, 1060) }] }, captions: caps("c_hC"),
+        cam: { keys: [{ t: 0, ...(window.LANDSCAPE ? fr(780, 1460, 1.25, 1000, 1000) : fr(600, 1450, 1.12, 540, 1060)) }] }, captions: caps("c_hC"),
         fx(tl, id, t0, L) { O.open.fx(tl, id, t0, L); document.getElementById("ja-hand").setAttribute("display", "none"); document.getElementById("ja-cap").setAttribute("display", "none");
+          if (window.LANDSCAPE) { // the long (16:9): the title pressed big into the wet sand on the empty left, like ทะเลลด; the people fill the right half
+            document.getElementById("ja-sw").setAttribute("display", "none");
+            const T = (dx, dy, fill, extra = "") => `<text x="${dx}" y="${dy}" text-anchor="middle" font-family="Sriracha" font-size="230" fill="${fill}" ${extra}>หนวดใส</text>`;
+            put(L.set, `<g transform="translate(-150,1300) rotate(-3)">${T(6, 10, "#f2e2c0", 'opacity=".55"')}${T(0, 0, "#6a4a2c", 'stroke="#4a301a" stroke-width="4"')}${T(-3, -4, "#8a6a44", 'opacity=".35"')}
+              <text x="0" y="110" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="64" fill="#6a4a2c" letter-spacing="8">ตอน 1</text></g>`);
+          }
           document.getElementById("ja-sw").insertAdjacentHTML("beforeend", `<g transform="translate(612,1880)"><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#dffaff" stroke-width="16" opacity=".55" filter="url(#jag)">หนวดใส</text>
             <text x="4" y="6" text-anchor="middle" font-family="Sriracha" font-size="96" fill="#06222e" opacity=".55" filter="url(#jag)">หนวดใส</text><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="#ffffff" stroke="#08384e" stroke-width="9" paint-order="stroke" stroke-linejoin="round">หนวดใส</text><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#a88ae8" stroke-width="1.6" stroke-dasharray="2 7">หนวดใส</text>
             <text x="0" y="66" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffffff" stroke="#08384e" stroke-width="8" paint-order="stroke" stroke-linejoin="round">EP.1</text></g>`); } });
@@ -621,9 +627,9 @@
           const cw = document.getElementById(`${id}-caps`); tl.set(cw, { top: 1480 }, 0); tl.set(cw, { top: 1180 }, t0 + CT(22, "c_crowd"));
           const cut2 = CT(19, "c_crowd");
           insert(L, tl, t0, "ci-cap", 0, cut2, SAND("ci-s1") + `<g transform="translate(540,1420) rotate(-8)"><g id="ci-bt">${Jelly.bottle(0, 0, 2.4, { cap: true })}
-              <path d="M-700,-140L-60,-250" stroke="#1e1a16" stroke-width="120" stroke-linecap="round"/><path d="M-700,-140L-60,-250" stroke="#f2f0e8" stroke-width="108" stroke-linecap="round"/>
+              <path d="M${window.LANDSCAPE ? -2300 : -700},${window.LANDSCAPE ? 140 : -140}L-60,-250" stroke="#1e1a16" stroke-width="120" stroke-linecap="round"/><path d="M${window.LANDSCAPE ? -2300 : -700},${window.LANDSCAPE ? 140 : -140}L-60,-250" stroke="#f2f0e8" stroke-width="108" stroke-linecap="round"/>
               <rect x="-120" y="-320" width="210" height="150" rx="60" fill="#c08a5e" stroke="#1e1a16" stroke-width="6"/>${[0, 1, 2, 3].map((k) => `<rect x="40" y="${-312 + k * 36}" width="96" height="32" rx="16" fill="#c08a5e" stroke="#1e1a16" stroke-width="5"/>`).join("")}
-              <g transform="translate(0,-470)"><g id="ci-tw"><path d="M640,-560L60,-40" stroke="#1e1a16" stroke-width="120" stroke-linecap="round"/><path d="M640,-560L60,-40" stroke="#e85a6a" stroke-width="108" stroke-linecap="round"/>
+              <g transform="translate(0,-470)"><g id="ci-tw"><path d="M${window.LANDSCAPE ? 1800 : 640},${window.LANDSCAPE ? -1600 : -560}L60,-40" stroke="#1e1a16" stroke-width="120" stroke-linecap="round"/><path d="M${window.LANDSCAPE ? 1800 : 640},${window.LANDSCAPE ? -1600 : -560}L60,-40" stroke="#e85a6a" stroke-width="108" stroke-linecap="round"/>
                 <path d="M-80,-40Q-90,-110 0,-118Q90,-110 84,-40L70,40Q0,62 -70,40Z" fill="#c08a5e" stroke="#1e1a16" stroke-width="6"/>${[-44, -14, 16, 46].map((x) => `<path d="M${x},-100V30" stroke="#8a5a3a" stroke-width="4"/>`).join("")}
                 <path d="M-80,-20Q-130,-10 -126,40Q-110,70 -70,50" fill="#c08a5e" stroke="#1e1a16" stroke-width="6"/></g></g></g></g>`);
           tl.fromTo("#ci-tw", { rotation: -14, svgOrigin: "0 0" }, { rotation: 14, svgOrigin: "0 0", duration: 0.22, repeat: Math.floor(cut2 / 0.22), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0);

@@ -1,102 +1,102 @@
 {
  "fps": 60,
- "total": 376.9833,
+ "total": 376.9333,
  "parts": [
   {
    "part": "cold",
    "proj": "Lbr",
-   "frame0": 964,
-   "frames": 1081,
+   "frame0": 965,
+   "frames": 1080,
    "start": 0.0,
-   "end": 18.0167
+   "end": 18.0
   },
   {
    "part": "title",
    "proj": "Lend",
    "frame0": 0,
    "frames": 180,
-   "start": 18.0167,
-   "end": 21.0167
+   "start": 18.0,
+   "end": 21.0
   },
   {
    "part": "ep1",
    "proj": "L1",
    "frame0": 0,
    "frames": 6174,
-   "start": 21.0167,
-   "end": 123.9167
+   "start": 21.0,
+   "end": 123.9
   },
   {
    "part": "bridgeA",
    "proj": "Lbr",
    "frame0": 0,
    "frames": 497,
-   "start": 123.9167,
-   "end": 132.2
+   "start": 123.9,
+   "end": 132.1833
   },
   {
    "part": "ep2",
    "proj": "L2",
    "frame0": 476,
    "frames": 4327,
-   "start": 132.2,
-   "end": 204.3167
+   "start": 132.1833,
+   "end": 204.3
   },
   {
    "part": "bridgeB",
    "proj": "Lbr",
-   "frame0": 497,
+   "frame0": 498,
    "frames": 467,
-   "start": 204.3167,
-   "end": 212.1
+   "start": 204.3,
+   "end": 212.0833
   },
   {
    "part": "ep3a",
    "proj": "L3",
    "frame0": 0,
    "frames": 2963,
-   "start": 212.1,
-   "end": 261.4833
+   "start": 212.0833,
+   "end": 261.4667
   },
   {
    "part": "secret",
    "proj": "Lfb",
    "frame0": 0,
    "frames": 2534,
-   "start": 261.4833,
-   "end": 303.7167
+   "start": 261.4667,
+   "end": 303.7
   },
   {
    "part": "ep3b",
    "proj": "L3",
-   "frame0": 2963,
-   "frames": 2394,
-   "start": 303.7167,
-   "end": 343.6167
+   "frame0": 2964,
+   "frames": 2393,
+   "start": 303.7,
+   "end": 343.5833
   },
   {
    "part": "epi",
    "proj": "Lbr",
-   "frame0": 2045,
-   "frames": 1222,
-   "start": 343.6167,
-   "end": 363.9833
+   "frame0": 2046,
+   "frames": 1221,
+   "start": 343.5833,
+   "end": 363.9333
   },
   {
    "part": "credits",
    "proj": "Lend",
    "frame0": 180,
    "frames": 300,
-   "start": 363.9833,
-   "end": 368.9833
+   "start": 363.9333,
+   "end": 368.9333
   },
   {
    "part": "card",
    "proj": "Lend",
    "frame0": 480,
    "frames": 480,
-   "start": 368.9833,
-   "end": 376.9833
+   "start": 368.9333,
+   "end": 376.9333
   }
  ]
 }

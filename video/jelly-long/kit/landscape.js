@@ -87,6 +87,13 @@
       }
     }
     clip.dataset.land = fit ? "fit" : `y0=${Math.round(y0)}`;
+    // source chips (K3, SVG groups id src<N>) go to the page's bottom-right corner, clear of the captions and the badge (review M6)
+    clip.querySelectorAll('g[id^="src"]').forEach((g) => {
+      const r = g.getBoundingClientRect(), bb = g.getBBox(); if (!r.width || !bb.width) return;
+      const k = r.width / bb.width, dx = (1890 - r.right) / k, dy = (1052 - r.bottom) / k;
+      const w = document.createElementNS("http://www.w3.org/2000/svg", "g"); w.setAttribute("transform", `translate(${dx.toFixed(1)} ${dy.toFixed(1)})`);
+      g.parentNode.insertBefore(w, g); w.appendChild(g);
+    });
     clip.dataset.world = world ? world.map((v) => Math.round(v)).join(",") : "";
     // a set drawn only for the 9:16 frame (a card, a diagram, the shadow screen, a map) leaves the widened sides empty: fill them with a
     // blurred, dimmed blow-up of the shot itself (window.LANDBG: shot key -> image, made by fitbg.cjs), never plain black
@@ -97,6 +104,8 @@
   Engine.build = (root, tl, shots) => {
     build0(root, tl, shots);
     [...root.querySelectorAll(".clip")].forEach((clip) => { const i = +clip.id.slice(1); if (shots[i]) reflow(clip, shots[i]); });
+    // things made for the Shorts only (the "watch the full story" sign, the repeated HG7 card): never in the long
+    (LS.hide || []).forEach((sel) => root.querySelectorAll(sel).forEach((e) => { e.style.display = "none"; }));
   };
   window.Landscape = { reflow, SC, EXTRA, FIT };
 })();

@@ -1,110 +1,110 @@
 {
  "title": "หนวดใส ฉบับเต็ม",
- "total": 376.983,
+ "total": 376.933,
  "segments": [
   {
    "id": "cold",
    "kind": "cold_open",
-   "start": 0,
-   "end": 18.017,
+   "start": 0.0,
+   "end": 18.0,
    "long_only": true,
    "note": "lane B c01–c05: สามสิบปีก่อน หาดเดียวกัน เพิ่มโดนแมงกะพรุน คนบนหาดราดน้ำเปล่า"
   },
   {
    "id": "title",
    "kind": "title",
-   "start": 18.017,
-   "end": 21.017,
+   "start": 18.0,
+   "end": 21.0,
    "long_only": true
   },
   {
    "id": "ep1",
    "kind": "episode",
-   "start": 21.017,
-   "end": 123.917,
+   "start": 21.0,
+   "end": 123.9,
    "from": "EP.1 Short r2 0–102.9"
   },
   {
    "id": "bridgeA",
    "kind": "bridge",
-   "start": 123.917,
-   "end": 132.2,
+   "start": 123.9,
+   "end": 132.1833,
    "long_only": true
   },
   {
    "id": "ep2",
    "kind": "episode",
-   "start": 132.2,
-   "end": 204.317,
+   "start": 132.1833,
+   "end": 204.3,
    "from": "EP.2 Short r4 7.933–80.05"
   },
   {
    "id": "bridgeB",
    "kind": "bridge",
-   "start": 204.317,
-   "end": 212.1,
+   "start": 204.3,
+   "end": 212.0833,
    "long_only": true
   },
   {
    "id": "ep3a",
    "kind": "episode",
-   "start": 212.1,
-   "end": 261.483,
+   "start": 212.0833,
+   "end": 261.4667,
    "long_only": true,
    "from": "EP.3 0–49.383 (towel → the shadow screen)"
   },
   {
    "id": "secret",
    "kind": "secret",
-   "start": 261.483,
-   "end": 303.717,
+   "start": 261.4667,
+   "end": 303.7,
    "long_only": true,
    "note": "lane B s01–s10 + hush 4 s: คืนนั้นที่โรงพยาบาล · คำโกหก 'พ่อทิ้งเราไป' · เช้าแรกของเสา"
   },
   {
    "id": "ep3b",
    "kind": "episode",
-   "start": 303.717,
-   "end": 326.784,
+   "start": 303.7,
+   "end": 326.751,
    "long_only": true,
    "from": "EP.3 49.383–72.45 (the twist, why, guilt, ภูมิ wakes)"
   },
   {
    "id": "lesson",
    "kind": "lesson",
-   "start": 326.784,
-   "end": 335.284,
+   "start": 326.751,
+   "end": 335.251,
    "long_only": true,
    "from": "EP.3 72.45–80.95 (the four steps)"
   },
   {
    "id": "dawn",
    "kind": "episode",
-   "start": 335.284,
-   "end": 343.617,
+   "start": 335.251,
+   "end": 343.5833,
    "long_only": true,
    "from": "EP.3 80.95–89.283 (three generations fill the post)"
   },
   {
    "id": "epi",
    "kind": "epilogue",
-   "start": 343.617,
-   "end": 363.983,
+   "start": 343.5833,
+   "end": 363.933,
    "long_only": true,
    "note": "lane B e01–e07: หนึ่งปีต่อมา ภูมิเติมเสาเอง สอนเด็ก"
   },
   {
    "id": "credits",
    "kind": "credits",
-   "start": 363.983,
-   "end": 368.983,
+   "start": 363.933,
+   "end": 368.933,
    "long_only": true
   },
   {
    "id": "card",
    "kind": "end_card",
-   "start": 368.983,
-   "end": 376.983,
+   "start": 368.933,
+   "end": 376.933,
    "long_only": true
   }
  ],
@@ -112,17 +112,17 @@
   {
    "n": 1,
    "start": 0,
-   "end": 94.0
+   "end": 93.983
   },
   {
    "n": 2,
-   "start": 94.0,
-   "end": 277.342
+   "start": 93.983,
+   "end": 277.325
   },
   {
    "n": 3,
-   "start": 277.342,
-   "end": 376.983
+   "start": 277.325,
+   "end": 376.933
   }
  ],
  "chapters": [
@@ -131,55 +131,55 @@
    "title": "สามสิบปีก่อน"
   },
   {
-   "t": 21,
+   "t": 20.983,
    "title": "หาดของยาย"
   },
   {
-   "t": 94,
+   "t": 93.983,
    "title": "หนวดใสพันขา"
   },
   {
-   "t": 132.2,
+   "t": 132.183,
    "title": "รถยังไม่มา"
   },
   {
-   "t": 212.1,
+   "t": 212.083,
    "title": "อย่าถู"
   },
   {
-   "t": 261.5,
+   "t": 261.483,
    "title": "คืนนั้นที่โรงพยาบาล"
   },
   {
-   "t": 277.3,
+   "t": 277.283,
    "title": "คำโกหกของแม่"
   },
   {
-   "t": 343.6,
+   "t": 343.567,
    "title": "หนึ่งปีต่อมา"
   }
  ],
- "hook_t": 23.88,
+ "hook_t": 23.863,
  "silences": [
   {
-   "start": 273.342,
-   "end": 277.342,
+   "start": 273.325,
+   "end": 277.325,
    "note": "lane B hush: ลออนั่งคนเดียวหน้าห้องฉุกเฉินคืนนั้น"
   }
  ],
  "theme": [
   {
-   "t": 0.5,
+   "t": 0.483,
    "label": "open",
    "src": "suno1 60 s (cold open)"
   },
   {
-   "t": 109.72,
+   "t": 109.703,
    "label": "choice",
    "src": "EP.1 mix (suno1 under the bottle choice)"
   },
   {
-   "t": 344.62,
+   "t": 344.57,
    "label": "epilogue",
    "key": "+2",
    "src": "suno1 60 s, rubberband +2 semitones"
@@ -187,36 +187,37 @@
  ],
  "choices": [
   {
-   "t": 109.72,
+   "t": 109.703,
    "what": "EP.1 วางขวดน้ำ"
   },
   {
-   "t": 133.67,
+   "t": 133.653,
    "what": "EP.2 ทิ้งภูมิไว้กับคนแปลกหน้า"
   },
   {
-   "t": 218.49,
+   "t": 218.473,
    "what": "EP.3 จับข้อมือผู้หญิง"
   }
  ],
  "biggest_threat": {
-  "t": 270.43,
+  "t": 3.083,
+  "end": 12.403,
   "long_only": true,
-  "what": "เพิ่มเสียชีวิต: หมอ 'ขอโทษจริงๆ ครับ' (ฉากความลับ ไม่มีใน Shorts)"
+  "what": "cold open สามสิบปีก่อน: เพิ่มโดนแมงกะพรุน 'เอาน้ำมาล้างเร็ว!' คนบนหาดเอาน้ำเปล่าราด (ขันเทที่ 10.65) แล้วรอยแผลแดงจัดขึ้นตามน้ำ (12.40) · ไม่มีใน Shorts"
  },
  "extreme_wide": [
   {
-   "t": 0.5,
+   "t": 0.483,
    "act": 1,
    "what": "cold open: อ่าวสามสิบปีก่อน เรือไม้ ยังไม่มีหอ"
   },
   {
-   "t": 191.69,
+   "t": 191.673,
    "act": 2,
    "what": "มุมสูง ครอบครัวตัวเล็ก ถนนว่างทั้งเฟรม"
   },
   {
-   "t": 337.28,
+   "t": 337.247,
    "act": 3,
    "what": "รุ่งเช้า สามรุ่นที่เสา ทั้งอ่าว"
   }

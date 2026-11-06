@@ -247,7 +247,7 @@
     let g = `<g transform="translate(${x},${y})" ${o.gid ? `id="${o.gid}"` : ""}><path d="M-240,-120L-300,0M240,-120L300,0" stroke="#8a6a3a" stroke-width="7"/><circle cx="-240" cy="-122" r="9" fill="#5a4a30"/><circle cx="240" cy="-122" r="9" fill="#5a4a30"/>
       <path d="M-380,0Q-390,-8 -370,-12L370,-16Q392,-8 384,8L378,560Q380,580 360,584L-362,590Q-386,586 -382,566Z" fill="#a88454" stroke="${INK}" stroke-width="6"/>`;
     for (let k = 0; k < 9; k++) g += `<path d="M-370,${30 + k * 62}Q0,${20 + k * 62 + rr() * 16} 372,${32 + k * 62}" stroke="#8a6a3e" stroke-width="3" fill="none" opacity=".6"/>`;
-    g += `<text x="0" y="66" text-anchor="middle" font-family="Sriracha" font-size="44" fill="#3a2410">กลอนยายลออ</text><path d="M-150,84q150,-12 300,0" stroke="#3a2410" stroke-width="3" fill="none"/>`;
+    g += `<text x="0" y="66" text-anchor="middle" font-family="Sriracha" font-size="44" fill="#3a2410">${o.title || "กลอนยายลออ"}</text><path d="M-150,84q150,-12 300,0" stroke="#3a2410" stroke-width="3" fill="none"/>`;
     L3.forEach(([a, b], k) => { const yy = 136 + k * 146, on = k === A, done = k < A, op = k > A ? 0.38 : 1;
       g += `<g opacity="${op}" transform="translate(0,${yy})">${on ? `<rect x="-350" y="-10" width="700" height="132" rx="16" fill="#f2c230" opacity=".85" stroke="${INK}" stroke-width="4"/>` : ""}
         <g transform="translate(-282,56)"><circle r="52" fill="#fbf4e2" stroke="${INK}" stroke-width="4"/>${icon(k)}</g>

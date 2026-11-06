@@ -21,7 +21,7 @@ const pw = require('playwright'); const fs = require('fs'); const { execFileSync
     await p.evaluate((t) => { const tl = window.__timelines.main; tl.seek(+t - 0.02, false); tl.seek(+t, false); }, t); await p.waitForTimeout(600);
     const raw = `${dir}/assets/bgraw-${c.i}.png`; await p.screenshot({ path: raw, clip: !own ? { x: 0, y: 0, width: 1920, height: 1080 } : c.land === 'fit' ? { x: 656, y: 0, width: 608, height: 1080 } : { x: Math.max(0, Math.round(528 + 0.8 * Math.max(w[0], -660))) + 40, y: 0, width: Math.min(1920, Math.round(0.8 * (Math.min(w[2], 1740) - Math.max(w[0], -660)))) - 80, height: 1080 } });
     const out = `assets/bg-${c.i}.jpg`;
-    execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', raw, '-vf', 'scale=1920:-2,crop=1920:1080,gblur=sigma=38,eq=brightness=-0.16:saturation=0.75', '-q:v', '4', `${dir}/${out}`]);
+    execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', raw, '-vf', 'scale=1920:-2,crop=1920:1080,gblur=sigma=34,lutrgb=r=val*0.42:g=val*0.42:b=val*0.42,eq=saturation=0.8', '-q:v', '4', `${dir}/${out}`]);
     fs.unlinkSync(raw); map[sh.key] = out; console.log('bg', c.i, sh.key, t.toFixed(2));
   }
   fs.writeFileSync(`${dir}/assets/landbg.js`, `window.LANDBG = ${JSON.stringify(map)};\n`);

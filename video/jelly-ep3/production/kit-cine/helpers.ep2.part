@@ -38,7 +38,7 @@
       const postBoard = (x, y, s, pid, o = {}) => { const k = 0.3 * s, py = y - 226 * s, by = py + 122 * k;
         return `<g>${Jelly.post(x, y, s, { full: o.full ?? 0 })}<path d="M${x - 300 * k},${py}H${x + 300 * k}" stroke="#1e1a16" stroke-width="${16 * s}" stroke-linecap="round"/><path d="M${x - 300 * k},${py - 2 * s}H${x + 300 * k}" stroke="#c8b070" stroke-width="${10 * s}" stroke-linecap="round"/>
           ${[-1, 1].map((d) => `<path d="M${x + d * 250 * k},${py - 6 * s}v${12 * s}" stroke="#8a6a3a" stroke-width="${6 * s}"/>`).join("")}<path d="M${x - 16 * s},${py - 10 * s}l${32 * s},${20 * s}M${x + 16 * s},${py - 10 * s}l${-32 * s},${20 * s}" stroke="#8a6a3a" stroke-width="${5 * s}"/>
-          <g transform="translate(${x},${by}) scale(${k})">${Jelly.ruleBoard(0, 0, { active: -1 })}
+          <g transform="translate(${x},${by}) scale(${k})">${Jelly.ruleBoard(0, 0, { active: -1, title: window.LANDSCAPE ? "กลอนหนวดใส" : undefined })}
             <g id="${pid}-on" opacity="0"><g transform="translate(0,136)"><rect x="-350" y="-10" width="700" height="132" rx="16" fill="#f2c230" opacity=".6" stroke="#1e1a16" stroke-width="4"/></g></g>
             <g transform="translate(300,192)"><g id="${pid}-tick" opacity="0"><circle r="34" fill="#3aa86a" stroke="#1e1a16" stroke-width="5"/><path d="M-16,0l10,12l21,-24" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g></g></g>`; };
       const POST = [700, 1330, 0.62], TOWER = [900, 1270, 0.82];

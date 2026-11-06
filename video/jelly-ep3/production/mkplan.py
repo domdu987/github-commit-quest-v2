@@ -51,14 +51,14 @@ CUTS = [
     note="หน้าห้องฉุกเฉิน: ต้นกับยายนั่งม้านั่ง 'แม่รู้ได้ไง ว่าเกิดเรื่อง' / 'ไลฟ์การ์ดโทรมา…' push-in ช้า · drone เริ่ม"),
   C(p="c_hall", a=("hall", "vo", 1, 1), emotion="uneasy", size="CU", angle="eye", move="pushIn", fg="ไหล่ต้น (ขอบซ้าย เบลอ)", light="ไฟนีออนเพดาน", face_w=420,
     note="หน้ายาย 'เสาของแม่ว่าง เขาเลยโทรถาม' / ต้น 'เสาของแม่…?' (เสียงนอกเฟรม) push-in ช้า · 5.1 วิ"),
-  # ---- the flashback, shadow-puppet style: thirty years ago
-  C(p="c_past", a=("secret", 0.0), emotion="uneasy", size="WS", angle="eye", move="pushIn", fg="ขอบจอผ้าหนังตะลุง (ขอบล่าง)", light="ตะเกียงหลังจอผ้า", hold=True, expect=3.0,
-    note="HOLD ช็อตเดียวของตอน: ภาพย้อนอดีตแบบหนังตะลุง ชายหนุ่มบนเรือประมงหน้าหาด 'สามสิบปีก่อน… พ่อแกโดนแมงกะพรุนที่หาดนี้…' คนดูคาด ~3 วิ ค้าง 5.8 วิ (≥ 1.5 เท่า) push-in ช้า แล้วตัดแรงไปเงาแมงกะพรุน"),
-  C(p="c_past", a=("secret", "vo", 0, 2), emotion="fear", size="CU", angle="low", move="cut", fg="ขอบจอผ้า (ขอบล่าง)", light="ตะเกียงหลังจอผ้า", threat_first=True, lead_sound=1.2, silhouette=True,
-    note="ภัยเผยตัวในภาพอดีต: แมงกะพรุนกล่องเป็นเงาโครงบนจอผ้า รอบขาชายหนุ่ม · sting จุดเดียวของตอน · เสียงคลื่นและฮึมใต้น้ำมาก่อนภาพ 1.2 วิ แล้วเงียบ 0.6 วิก่อน sting · ไม่มีหน้า (เงาหนัง)"),
-  C(p="c_past", a=("secret", "vo", 0, 3), emotion="fear", size="ECU", angle="high", move="cut", fg="ขอบจอผ้า (ขอบล่าง)", light="ตะเกียงหลังจอผ้า",
-    note="ภาพแทรก: ขันน้ำเปล่าเทลงบนขา 'เขาเลยล้างด้วยน้ำเปล่า' (หักล้างความเชื่อ) · ไม่มีหน้า (เงาหนัง)"),
-  C(p="c_past", a=("secret", "vo", 1, 0), emotion="uneasy", size="WS", angle="eye", move="pushIn", fg="ขอบจอผ้า (ขอบล่าง)", light="ตะเกียงหลังจอผ้าที่หรี่ลง",
+  # ---- the flashback, in the world of the story (memory grade; no shadow screen, S5): thirty years ago
+  C(p="c_past", a=("secret", 0.0), emotion="uneasy", size="WS", angle="eye", move="pushIn", fg="ขอบเรือ (ขอบซ้าย)", light="แดดสาย (ภาพความจำ สีซีด)", hold=True, expect=3.0,
+    note="HOLD ช็อตเดียวของตอน: ภาพย้อนอดีตในโลกเดียวกัน (สีซีดแบบความจำ ไม่ใช้จอหนังตะลุงตามกฎ S5) ชายหนุ่มบนเรือประมงหน้าหาด 'สามสิบปีก่อน… พ่อแกโดนแมงกะพรุนที่หาดนี้…' คนดูคาด ~3 วิ ค้าง 5.8 วิ (≥ 1.5 เท่า) push-in ช้า แล้วตัดแรงไปเงาแมงกะพรุน"),
+  C(p="c_past", a=("secret", "vo", 0, 2), emotion="fear", size="CU", angle="low", move="cut", fg="ผิวน้ำ (ขอบบน)", light="แดดสาย (ภาพความจำ สีซีด)", threat_first=True, lead_sound=1.2, silhouette=True,
+    note="ภัยเผยตัวในภาพอดีต: แมงกะพรุนกล่องตัวใสใต้ผิวน้ำ รอบขาชายหนุ่ม · sting จุดเดียวของตอน · เสียงคลื่นและฮึมใต้น้ำมาก่อนภาพ 1.2 วิ แล้วเงียบ 0.6 วิก่อน sting · ไม่มีหน้า "),
+  C(p="c_past", a=("secret", "vo", 0, 3), emotion="fear", size="ECU", angle="high", move="cut", fg="ผิวน้ำ (ขอบบน)", light="แดดสาย (ภาพความจำ สีซีด)",
+    note="ภาพแทรก: ขันน้ำเปล่าเทลงบนขา 'เขาเลยล้างด้วยน้ำเปล่า' (หักล้างความเชื่อ) · ไม่มีหน้า "),
+  C(p="c_past", a=("secret", "vo", 1, 0), emotion="uneasy", size="WS", angle="eye", move="pushIn", fg="ผิวน้ำ (ขอบบน)", light="แดดเย็นที่หรี่ลง (ภาพความจำ)",
     note="เรือลำเดิมลอยเปล่าที่ฝั่ง ตะเกียงหรี่ลงช้าๆ 'แล้วเขาก็ไม่ได้กลับบ้านอีกเลย' push-in ช้า · 2.7 วิ ตามบรรทัด y05"),
   C(p="c_secret", a=("secret", "vo", 2, 0), emotion="twist", size="CU", angle="eye", move="pullOut", fg="ไหล่ยาย (ขอบขวา เบลอ)", light="ไฟนีออนเพดาน", face_w=430,
     note="หักมุมจากคน: หน้าต้น 'แม่บอกผมว่าพ่อทิ้งเราไป…' กล้องถอยช้า (3.2 → 2.6 หน้าท้ายช็อต ≥ 270 px) เป็นสองคนกับยายข้างๆ · พ่อไม่ได้ทิ้ง · 4.2 วิ"),
@@ -98,7 +98,7 @@ bands = [{"from": 0.0, "to": T(10), "stage": "threat"}, {"from": T(10), "to": T(
          {"from": T(16), "to": T(20), "stage": "threat"}, {"from": T(20), "to": T(22), "stage": "uneasy"}, {"from": T(22), "to": T(23), "stage": "safe"},
          {"from": T(23), "to": T(24), "stage": "uneasy"}, {"from": T(24), "to": SC["total"], "stage": "safe"}]
 json.dump({"bands": bands, "keep": "yellow", "keep_note": "ขวดและฉลากน้ำส้มสายชู แถบป้ายเสา ห่วงเป็ด", "overrides": {},
-           "note": "ภาพย้อนอดีตหนังตะลุง (คัต 16–19) อยู่ในช่วง threat/uneasy ตามเรื่อง · จบด้วย safe (รุ่งเช้า)"},
+           "note": "ภาพย้อนอดีตสีซีด (คัต 16–19) อยู่ในช่วง threat/uneasy ตามเรื่อง · จบด้วย safe (รุ่งเช้า)"},
           open(os.path.join(OUT, "colorscript.json"), "w"), ensure_ascii=False, indent=1)
 
 CMD = [(round(F("hook"), 2), "n02 {อย่าเอาผ้าเช็ด}"), (cuts[5]["command_t"], "d01 {อย่าถู} (command_t)")]
@@ -108,7 +108,7 @@ json.dump({"drone_start": T(14), "drone_note": "40–60 Hz เริ่มที
            "drone_cut": [round(T_STING - 0.6, 2), round(T_STING, 2)], "drone_end": T(24),
            "silences": silences, "dips": [],
            "silence_note": "เงียบเต็ม 1 วิก่อนคำสั่ง 2 จุด เหลือลมหายใจ เสียงพูดอยู่ต่อ + เงียบสนิท 0.6 วิก่อน sting · 'อย่า': " + " · ".join(f"{t} {w}" for t, w in CMD),
-           "sting": round(T_STING, 2), "sting_note": "ครั้งเดียว: เงาแมงกะพรุนรอบขาชายหนุ่มบนจอหนังตะลุง (คัต 17)",
+           "sting": round(T_STING, 2), "sting_note": "ครั้งเดียว: แมงกะพรุนกล่องรอบขาชายหนุ่มบนจอหนังตะลุง (คัต 17)",
            "lead_sounds": [{"t": round(T_STING - 1.2, 2), "what": "คลื่นซัดแรงขึ้น + ฮึมใต้น้ำ 1.2 วิก่อนเห็นเงาแมงกะพรุน (เงียบ 0.6 วิสุดท้าย)"}],
            "bpm": [[round(T_STING, 2), 90], [T(19), 110], [T(20), 130]], "heart_off": [[T(21), SC["total"]]],
            "bpm_note": "หัวใจ 90 ตอนภัยในอดีต · 110 น้ำเปล่า · 130 เรือเปล่า · หยุดตอนต้นรู้ความจริง",
