@@ -1,0 +1,70 @@
+      const GBR = { top: "#fff4d8", bottom: "#c8eef8", op: 0.1 };
+      const UW = (L, sy) => put(L.fg, `<rect x="-900" y="${sy + 6}" width="2900" height="2000" fill="#2aa0bc" opacity=".3"/>`);
+      // a: frame 0 — ภูมิ crying on the wet sand, ladder welts round his shin, a tentacle still on it, the box jellyfish by his foot,
+      // ต้น's hand tipping the uncapped bottle over it; the swash coming in carries the title written by floating tentacles
+      add("sfa", { set: "jellyBeach", setOpts: { id: "ja", seed: 3, palms: false }, dark: 0, blur: { fg: 0, set: 0 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(560, 1600, 2.1, 540, 1100) }] },
+        actors: [A("jPhum", 400, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }])],
+        fx(tl, id, t0, L) {
+          put(L.act, `<g>${Jelly.ladder([[546, 1688], [600, 1704], [664, 1720]], { w: 7 })}${Jelly.ladder([[556, 1716], [580, 1686], [612, 1716], [640, 1690], [660, 1714]], { w: 5 })}
+            <path d="M664,1720Q700,1746 694,1776Q686,1806 724,1814" stroke="#f2feff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M664,1720Q700,1746 694,1776Q686,1806 724,1814" stroke="#a88ae8" stroke-width="1.4" fill="none" stroke-dasharray="2 5"/>
+            <g transform="translate(760,1790) scale(.55)">${Jelly.box(0, 0, 1, { seed: 4, len: 120, lit: 1.5, glow: true })}</g>
+            <g transform="translate(712,1590) rotate(-123)">${Jelly.bottle(0, 0, 0.55, { cap: false })}</g>
+            <path d="M714,1556L860,1420L900,1470L748,1600Z" fill="#c08a5e" stroke="#2e2a26" stroke-width="2.6"/><path d="M730,1560L850,1450" stroke="#a87048" stroke-width="5" opacity=".5"/><path d="M860,1420L960,1330L1010,1390L900,1470Z" fill="#5aa8d8" stroke="#2e2a26" stroke-width="2.6"/><path d="M880,1430L970,1350" stroke="#8ac8ec" stroke-width="6" opacity=".7"/>
+            <path d="M716,1554Q690,1560 676,1584Q668,1606 686,1618Q704,1628 724,1614L752,1596Q764,1578 752,1562Z" fill="#c08a5e" stroke="#2e2a26" stroke-width="2.6"/><path d="M684,1590q10,6 24,2M690,1606q10,4 22,0" stroke="#8a5a3a" stroke-width="2" fill="none"/>
+            <path d="M622,1646q-3,10 0,16" stroke="#dff4fc" stroke-width="3.4" fill="none" stroke-linecap="round"/><circle cx="622" cy="1668" r="2.6" fill="#dff4fc"/><g transform="translate(660,1570) rotate(25)"><rect x="-8" y="-5" width="16" height="10" rx="2" fill="#2a6ad0" stroke="#2e2a26" stroke-width="1.6"/></g></g>`);
+          // the swash: a thin sheet of sea sliding in at the bottom, the title spelled by clear tentacles drifting in it, glinting
+          put(L.act, `<defs><linearGradient id="jaw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ad8e4" stop-opacity=".55"/><stop offset="1" stop-color="#4ab0c8" stop-opacity=".75"/></linearGradient><filter id="jag" x="-.2" y="-.5" width="1.4" height="2"><feGaussianBlur stdDeviation="2.2"/></filter></defs>
+            <path d="M200,1800Q380,1772 560,1790T940,1780V2100H200Z" fill="url(#jaw)"/><path d="M200,1800Q380,1772 560,1790T940,1780" stroke="#ffffff" stroke-width="4" fill="none" opacity=".9"/>
+            <g transform="translate(612,1880)"><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#1a6a8a" stroke-width="10" opacity=".55">หนวดใส</text><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#dffaff" stroke-width="12" opacity=".6" filter="url(#jag)">หนวดใส</text>
+              <text text-anchor="middle" font-family="Sriracha" font-size="96" fill="#ffffff" fill-opacity=".25" stroke="#ffffff" stroke-width="4.4">หนวดใส</text><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#a88ae8" stroke-width="1.8" stroke-dasharray="2 7">หนวดใส</text>
+              <text x="0" y="44" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#ffffff" stroke="#2a7a9a" stroke-width="1.4" paint-order="stroke">EP.1</text>
+              ${[[-120, -50], [-40, -66], [60, -58], [130, -40], [10, 20]].map(([x, y]) => `<path d="M${x},${y - 8}v16M${x - 8},${y}h16" stroke="#fff" stroke-width="2.4"/>`).join("")}</g>`); } });
+      // b: the beach wide — the tower and the post up on dry sand, swimmers far out
+      add("sfb", { set: "jellyBeach", setOpts: { id: "jbw", seed: 5, boats: 2, tower: [880, 1250, 0.82], post: [640, 1270, 0.6, 0], rock: [160, 690, 0.5], umbrellas: [[90, 1300, 0.8, "#f2c230"], [1010, 1340, 0.85, "#3a9ad8"], [420, 1240, 0.55, "#d8312a"]], life: [["mat", 120, 1360, 0.8, "#e8482a"], ["cooler", 250, 1340, 0.6], ["towel", 980, 1400, 0.8, "#3aa86a"], ["castle", 560, 1460, 0.7], ["flops", 860, 1540, 0.8]] }, dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 1250, 1.0, 540, 960) }] }, land: { y0: 140 },
+        actors: [A("jTonPhone", 330, 1720, 0.9, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }]), A("jWan", 520, 1760, 0.66, [{ t: 0, mode: "run", eyes: "wide", mouth: "laugh" }]),
+          A("jPhum", 760, 1640, 0.74, [{ t: 0, mode: "point", eyes: "wide", mouth: "laugh" }])],
+        fx(tl, id, t0, L) { put(L.set, Jelly.swimmers([[300, 930, 0.9], [760, 980, 1.0]])); } });
+      // c: the family close — ต้น films the kids (his phone's screen toward us), ภูมิ points out to the far rock, น้ำหวาน hugs her duck ring
+      add("sfc", { set: "jellyBeach", setOpts: { id: "jfc", seed: 6, boats: 2, rock: [980, 700, 0.6], umbrellas: [[40, 1330, 0.9, "#f2c230"]], life: [["mat", 120, 1400, 0.9, "#e8482a"], ["castle", 980, 1520, 0.8]] }, dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(520, 1600, 1.45, 540, 1200) }] },
+        actors: [A("jTonPhone", 250, 1800, 1.0, [{ t: 0, mode: "film", eyes: "normal", mouth: "smile" }]), A("jWan", 560, 1810, 0.74, [{ t: 0, mode: "idle", eyes: "normal", mouth: "laugh" }]),
+          A("jPhum", 790, 1790, 0.86, [{ t: 0, mode: "point", eyes: "wide", mouth: "laugh" }])],
+        fx(tl, id, t0, L) { put(L.light, `<g transform="translate(250,1300) rotate(-6) scale(.72)"><rect x="-120" y="-200" width="240" height="420" rx="30" fill="#1e1e26" stroke="#0a0a0e" stroke-width="6"/><rect x="-104" y="-180" width="208" height="370" rx="14" fill="#5ab8ec"/>
+          <rect x="-104" y="-20" width="208" height="210" fill="#e8d8a8"/><rect x="-104" y="-60" width="208" height="50" fill="#2aa0c8"/><circle cx="-20" cy="40" r="18" fill="#c08a5e"/><rect x="-36" y="58" width="32" height="60" rx="8" fill="#f06a9a"/><ellipse cx="-20" cy="96" rx="30" ry="12" fill="#f2c230"/>
+          <circle cx="50" cy="20" r="18" fill="#c08a5e"/><rect x="34" y="38" width="32" height="70" rx="8" fill="#2a7ad0"/><path d="M66,50L104,24" stroke="#c08a5e" stroke-width="10" stroke-linecap="round"/>
+          <circle cx="-70" cy="-152" r="9" fill="#e8312a"/><text x="-54" y="-144" font-family="Kanit" font-weight="800" font-size="22" fill="#fff">REC</text><text x="60" y="-144" font-family="Kanit" font-weight="700" font-size="20" fill="#fff">00:14</text></g>`); } });
+      // d: the sting, half over and half under the surface — the beach far behind, ภูมิ chest-deep crying and reaching for his leg, box
+      // jellyfish lit in the water round him, one wrapped on his shin, the welts rising
+      add("sfd", { set: "jellySplit", setOpts: { id: "jsd", surf: 980, floor: 1560, seed: 3 }, dark: 0, blur: { fg: 0, set: 0, mid: 0, far: 0 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        actors: [A("jPhum", 560, 1500, 1.1, [{ t: 0, mode: "tremble", eyes: "cry", mouth: "scream" }])],
+        fx(tl, id, t0, L) { UW(L, 980);
+          put(L.fg, `<g>${Jelly.ladder([[520, 1400], [570, 1420], [620, 1404]], { w: 9 })}${Jelly.ladder([[530, 1440], [580, 1424], [640, 1446]], { w: 7 })}
+            ${Jelly.box(700, 1360, 1.0, { seed: 5, len: 260, lit: 1.4, glow: true, sway: -1.2 })}<path d="M668,1370Q620,1380 600,1410Q580,1440 540,1436" stroke="#f2feff" stroke-width="5" fill="none" stroke-linecap="round"/>
+            ${Jelly.box(250, 1180, 0.9, { seed: 6, len: 300, lit: 1.3, glow: true })}${Jelly.box(880, 1140, 0.75, { seed: 7, len: 240, lit: 1.2, glow: true })}${Jelly.box(360, 1420, 0.7, { seed: 8, len: 180, lit: 1.2, glow: true })}${Jelly.box(930, 1460, 0.6, { seed: 9, len: 150, lit: 1.1 })}</g>`); } });
+      // e: the plant — the post's open box: four painted bottle outlines and four empty clips; ต้น walks past
+      add("sfe", { set: "jellyBeach", setOpts: { id: "jpo", seed: 9, tower: [820, 1250, 0.95], post: [420, 1330, 1.0, 0] }, dark: 0, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(470, 1000, 1.8, 540, 900) }] },
+        actors: [A("jTon", 700, 1520, 0.92, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { flip: true })] });
+      // f: ยายลออ at her door at dawn, bending to set the basket of vinegar down; the lived-in room behind her
+      add("sff", { set: "jellyPorch", setOpts: { id: "jyp", basket: false }, dark: 0, light: { from: "right", rim: "#ffd8a0", rimOp: 0.85, shade: "#2a1a30", shadeOp: 0.3, cast: { len: 1.0, op: 0.25 }, vol: false }, grade: { top: "#ffe0b0", bottom: "#d89a7a", op: 0.12 },
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 0.78, 540, 960) }] },
+        actors: [A("jLaor", 1130, 1660, 1.0, [{ t: 0, mode: "crouch", eyes: "normal", mouth: "flat" }], { flip: true })],
+        fx(tl, id, t0, L) { put(L.act, Jelly.basket(960, 1668, 1.2)); } });
+      // g: the peak — the duck ring floating empty on the surface, the box jellyfish swarm below it, the beach far off with the tower
+      add("sfg", { set: "jellySplit", setOpts: { id: "jsg", surf: 880, floor: 1760, seed: 9, towerX: 300 }, dark: 0, blur: { fg: 0, set: 0, mid: 0, far: 0 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }] },
+        fx(tl, id, t0, L) { put(L.fg, `<g>${[[220, 1120, 0.8], [520, 1080, 0.9], [820, 1130, 0.8], [360, 1340, 1.0], [700, 1360, 1.05], [140, 1520, 0.9], [940, 1500, 0.9], [540, 1560, 1.1]].map(([x, y, s], k) => Jelly.box(x, y, s, { seed: 20 + k, len: 200 + 40 * (k % 3), lit: 1.4, glow: true, sway: k % 2 ? 0.8 : -0.8 })).join("")}</g>
+          <ellipse cx="540" cy="884" rx="230" ry="44" fill="#fff6c8" opacity=".5"/><g transform="translate(540,904)">${TideCast.duckRing(0, 0, 1.7, { water: true })}</g>`); } });
+      // h: HG7 — the subscribe card, the rule boards' driftwood, over ยายลออ's morning (as at EP.1 23.09 s)
+      add("sfh", { set: "jellyPorch", setOpts: { id: "jyh" }, dark: 0.15, light: false, grade: { top: "#ffe0b0", bottom: "#d89a7a", op: 0.12 },
+        cam: { keys: [{ t: 0, ...fr(560, 1150, 0.78, 540, 960) }] },
+        actors: [A("jLaor", 760, 1700, 1.0, [{ t: 0, mode: "idle", eyes: "normal", mouth: "o" }])],
+        fx(tl, id, t0, L) { put(L.light, Jelly.subCard(540, 760)); } });
+      // i: the rule board — ยายลออ's painted plank hung from the post's crossbar, rule 1 lit (EP.1 at d08, ต้น sets the bottle down)
+      add("sfi", { set: "jellyBeach", setOpts: { id: "jri", seed: 4, tower: [880, 1250, 0.82], post: [620, 1270, 0.6, 0] }, dark: 0.12, blur: { set: 3, act: 3 }, light: SUN, grade: GBR,
+        cam: { keys: [{ t: 0, ...fr(540, 1300, 1.2, 540, 960) }] },
+        actors: [A("jTon", 420, 1720, 0.95, [{ t: 0, mode: "crouch", eyes: "worry", mouth: "flat" }]), A("jPhum", 700, 1740, 0.85, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }], { flip: true })],
+        fx(tl, id, t0, L) { put(L.light, Jelly.ruleBoard(540, 420, { active: 0 })); } });
