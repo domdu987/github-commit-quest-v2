@@ -31,6 +31,7 @@
       Rig.MODES.reachBottle = (u, o) => { const j = (o.shake ?? 1) * (Math.sin(u * 31) * 2.2 + Math.sin(u * 53) * 1.2); return { ...Rig.MODES.crouch(u, o), uaF: -70 + j, faF: -30 + j, uaB: -30, faB: -40, torso: 24, head: -10 }; };
       Rig.MODES.setDown = (u, o) => { const k = Math.min(1, u / 0.9); return { ...Rig.MODES.crouch(u, o), uaF: -70 + 50 * k, faF: -30 + 20 * k, uaB: -30, faB: -40, torso: 24 + 6 * k, head: -10 - 8 * k }; };
       Rig.MODES.basketDown = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -44, faF: -8, uaB: -38, faB: -12, torso: 26, head: -16 });
+      Rig.MODES.pourLow = (u, o) => { const j = Math.sin(u * 31) * 1.2; return { ...Rig.MODES.crouch(u, o), uaF: -34 + j, faF: -22 + j, uaB: -20, faB: -40, torso: 34, head: 26 }; };
       Rig.MODES.crouchLow = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: 8, faF: -30, uaB: -10, faB: -30, torso: 16, head: -4 });
       Rig.MODES.sing = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 0.7); return { ...Rig.MODES.idle(u, o), uaF: -130 + 18 * b, faF: -30, uaB: 120 - 18 * b, faB: 30, torso: 4 * b, head: 8 * b, bodyY: -10 * Math.abs(b) }; };
       Rig.MODES.recite = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.4); return { ...Rig.MODES.idle(u, o), uaF: -100 + 6 * b, faF: -60 + 10 * b, uaB: 4, faB: -12, torso: 1, head: 3 * b }; };
@@ -486,13 +487,13 @@
         captions: caps("c_hB") });
       // 3 · hook: the whole situation, still: ต้น crouched tipping the bottle over the leg, a woman with another bottle, the title in the swash
       add("c_hC", { ...O.open, ...NOG, actors: [A("jPhum", 400, 1700, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "scream" }]),
-          A("jTonBottle", 760, 1730, 1.0, [{ t: 0, mode: "reachBottle", eyes: "worry", mouth: "o", shake: 0.4 }], { flip: true }),
+          A("jTonBottle", 790, 1730, 1.0, [{ t: 0, mode: "pourLow", eyes: "worry", mouth: "o" }], { flip: true }),
           A("jWomanBottle", 960, 1600, 0.78, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true })],
         cam: { keys: [{ t: 0, ...fr(600, 1450, 1.12, 540, 1060) }] }, captions: caps("c_hC"),
         fx(tl, id, t0, L) { O.open.fx(tl, id, t0, L); document.getElementById("ja-hand").setAttribute("display", "none"); document.getElementById("ja-cap").setAttribute("display", "none");
           document.getElementById("ja-sw").insertAdjacentHTML("beforeend", `<g transform="translate(612,1880)"><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#dffaff" stroke-width="16" opacity=".55" filter="url(#jag)">หนวดใส</text>
-            <text text-anchor="middle" font-family="Sriracha" font-size="96" fill="#ffffff" stroke="#0e4a66" stroke-width="5" paint-order="stroke">หนวดใส</text><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#a88ae8" stroke-width="1.6" stroke-dasharray="2 7">หนวดใส</text>
-            <text x="0" y="46" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="36" fill="#ffffff" stroke="#0e4a66" stroke-width="5" paint-order="stroke">EP.1</text></g>`); } });
+            <text x="4" y="6" text-anchor="middle" font-family="Sriracha" font-size="96" fill="#06222e" opacity=".55" filter="url(#jag)">หนวดใส</text><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="#ffffff" stroke="#08384e" stroke-width="9" paint-order="stroke" stroke-linejoin="round">หนวดใส</text><text text-anchor="middle" font-family="Sriracha" font-size="96" fill="none" stroke="#a88ae8" stroke-width="1.6" stroke-dasharray="2 7">หนวดใส</text>
+            <text x="0" y="66" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#ffffff" stroke="#08384e" stroke-width="8" paint-order="stroke" stroke-linejoin="round">EP.1</text></g>`); } });
       // 4 · the sundial on ยาย's post turns back; the picture pulls back off it onto ยาย at the door with her basket
       add("c_card", { set: "jellyPorch", setOpts: { id: "jp1", basket: false }, dark: 0, light: DAWN,
         cam: { keys: [{ t: 0, ...fr(900, 1240, 1.3, 540, 1120) }, { t: D("c_card"), glide: D("c_card"), ...fr(880, 1240, 1.18, 540, 1120) }] },
@@ -648,6 +649,9 @@
         captions: [...caps("c_goneB", [0]), ...caps("c_goneB", [1], { quote: true })],
         fx(tl, id, t0, L) {
           const lay = { 0: L.mid, 1: L.set, 2: L.fg };
+          put(L.set, `<defs><linearGradient id="pk2-deep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a2a30" stop-opacity="0"/><stop offset=".18" stop-color="#0a2a30" stop-opacity=".15"/>
+            <stop offset=".55" stop-color="#0c2a2c" stop-opacity=".55"/><stop offset="1" stop-color="#081c1e" stop-opacity=".82"/></linearGradient></defs>
+            <rect x="-900" y="530" width="2900" height="2200" fill="url(#pk2-deep)"/>`);
           PEAK.forEach(([x, y, sc, per, dp], k) => {
             put(lay[dp], `<g id="pk2-${k}" opacity="${[0.45, 0.85, 0.95][dp]}"${dp === 0 ? ' filter="url(#pk2-blur)"' : ""}>${Jelly.box(x, y, sc, { seed: 40 + k, per, len: [260, 300, 340][dp] + 30 * (k % 3), lit: [1.0, 1.3, 1.5][dp], glow: dp > 0, sway: k % 2 ? 0.9 : -0.9 })}</g>`);
             tl.fromTo(`#pk2-${k}`, { y: 0 }, { y: -(20 + 14 * dp) - (k % 4) * 6, duration: 1.1 + (k % 5) * 0.27, repeat: 4, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + (k % 7) * 0.13);
