@@ -118,3 +118,13 @@ commit ทีละก้อนที่สมบูรณ์ (ตอนที�
 
 ## ลุคภาพ AI (6 พ.ย. 2569)
 เจ้าของดูเทสต์ฟิลเตอร์แสงเงาแล้วบอก "มันไม่เหมือนในภาพ" → ทางที่ผ่านคือวาดทุกเฟรมด้วย fal (สไตล์รูปต้นแบบ) แล้วขยับในเอนจินเดิม ดู `ai-art.md` ทั้งไฟล์ก่อนเริ่มเรื่องใหม่ในลุคนี้ · งานแรก `video/jk-ep1-ai/`
+
+## บทเรียนจากเรื่องที่ 4 · คนเดินดิน EP.1 (6 พ.ย. 2569 · สูตร B ลุ้น)
+- โค้ดเรื่อง: `video/fl-ep1/production` (`common.part` looks/wrappers city/room/klass + helpers FLY/trailAt/ringDim/dogLife/card/arc) · ไลบรารี `flset.js` (flCity: เมืองตึกสูง วงแหวนทอง รังบิน บันไดเหล็ก จอยักษ์ เวที · flRoom · flClass) · `flcast.js` (ตัวละคร + ท่าบิน fly/hover/hang/pulley/dangle/clap/spray/scope/floatPoint + FL.DOG) · `flicons.js` (ring zero stairs scope graph days7 dog captain nofeet tea)
+- **บทยาวเกิน:** Enceladus อ่านช้ากว่าที่คิด 21 บรรทัด = 126 วิ → ตัดเหลือ 15 บรรทัด + `tempo: 1.08` ได้ 83.6 วิ → ตอน 95.8 วิ (ยังยาวกว่า 90) ครั้งหน้าเขียนบท ≤ 14 บรรทัด ≈ 75 วิ
+- **ห้าม tween `x/y` ด้วย GSAP บนกลุ่มนักแสดง `#id-aN`** (เอนจินตั้ง transform attribute เอง → GSAP ทับ y เป็นค่า tween ตัวละครหายไปข้างบน) ให้ใช้ mode ที่มี bodyY (เช่น `floatPoint`) หรือ `path`
+- ท่าบิน: `rootR` หมุนรอบเท้า (+74 = หัวไปทางที่หัน) · บินขึ้นใช้ `ang: 0` ใน track · ห้อยหัว `hang` = rootR 180 วาง y ของนักแสดง = y หัวที่ต้องการ − 520·s
+- ตัวละครในจอยักษ์: `Rig.build(groupในฉาก, id, Rig.CAST.x)` แล้ว `Rig.drive(tl, id, t0, dur, track, blinks)` ใน fx ได้ (ไม่ต้องอยู่ใน actors)
+- ของที่ครอบด้วย `grp(L.act)` ก่อน actors จะอยู่ใต้ตัวละคร (หมา ป้าย) · ป้าย badge อย่าวางทับตัวละครเล็ก (หมาโดน badge บัง → ย้าย badge ไปมุมซ้าย)
+- ฉากเมืองตึกสูง: ตึกไกลอย่าสูงเต็มจอ (top −300…−1700) ไม่งั้นฮุกไม่มีท้องฟ้า · ช่องบินวงกลมใส่น้อย (r()>0.95) สีน้ำเงินเข้มขอบทอง ไม่ใช่จุดดำ · วงแหวนที่ต้องเห็นในช็อตใส่ `ringNear` ในชั้น set (ของในชั้น far เฟรมไม่ได้)
+- สคริปต์ตรวจ error ต้องซ่อน clip ที่ไม่ active (`pageerr2.cjs` ใน scratchpad) · ปก: โปรเจกต์ `cover/` ใช้ overlay PRO สี #ffa33c (ส้ม) ของเรื่องนี้

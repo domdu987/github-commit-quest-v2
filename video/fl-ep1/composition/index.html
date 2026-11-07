@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="th" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="assets/rig.js"></script>
+    <script src="assets/sets.js"></script>
+    <script src="assets/camp.js"></script>
+    <script src="assets/koi.js"></script>
+    <script src="assets/zom.js"></script>
+    <script src="assets/hands.js"></script>
+    <script src="assets/mok.js"></script>
+    <script src="assets/pov.js"></script>
+    <script src="assets/phrai.js"></script>
+    <script src="assets/ui.js"></script>
+    <script src="assets/gameui.js"></script>
+    <script src="assets/mokui.js"></script>
+    <script src="assets/phraiui.js"></script>
+    <script src="assets/pop.js"></script>
+    <script src="assets/grain.js"></script>
+    <script src="assets/pop2.js"></script>
+    <script src="assets/pop2kok.js"></script>
+    <script src="assets/pop2kitchen.js"></script>
+    <script src="assets/pop2room.js"></script>
+    <script src="assets/pop2ui.js"></script>
+    <script src="assets/pop2more.js"></script>
+    <script src="assets/pop2hosp.js"></script>
+    <script src="assets/pop2end.js"></script>
+    <script src="assets/mm.js"></script>
+    <script src="assets/mm2.js"></script>
+    <script src="assets/mapsdata.js"></script>
+    <script src="assets/maps.js"></script>
+    <script src="assets/mmui.js"></script>
+    <script src="assets/mmui2.js"></script>
+    <script src="assets/mmui3.js"></script>
+    <script src="assets/qkmat.js"></script>
+    <script src="assets/quake.js"></script>
+    <script src="assets/quake2.js"></script>
+    <script src="assets/quakeui.js"></script>
+    <script src="assets/quakemap.js"></script>
+  <script src="assets/tide.js"></script>
+  <script src="assets/tide2.js"></script>
+  <script src="assets/tidemap.js"></script>
+    <script src="assets/tideui.js"></script>
+    <script src="assets/rig2.js"></script>
+    <script src="assets/popcast.js"></script>
+    <script src="assets/mmcast.js"></script>
+    <script src="assets/quakecast.js"></script>
+    <script src="assets/tidecast.js"></script>
+    <script src="assets/fx.js"></script>
+    <script src="assets/engine.js"></script>
+    <script src="assets/opener.js"></script>
+    <script src="assets/openers.js"></script>
+    <script src="assets/rabdog.js"></script>
+    <script src="assets/rabcast.js"></script>
+    <script src="assets/rabui.js"></script>
+    <script src="assets/rabfx.js"></script>
+    <script src="assets/war.js"></script>
+    <script src="assets/war2.js"></script>
+    <script src="assets/war3.js"></script>
+    <script src="assets/war4.js"></script>
+    <script src="assets/twister.js"></script>
+    <script src="assets/nuke.js"></script>
+    <script src="assets/nuke2.js"></script>
+    <script src="assets/flat.js"></script>
+    <script>window.NK_PALETTE = { red: "#d8463c", redD: "#a3271f", redL: "#f6d6cf", green: "#3a9c66", greenD: "#23704a", greenL: "#dcefdf", yellow: "#f4c64a", yellowD: "#cf9d1c",
+      yellowL: "#fbecb4", paper: "#f6efdf", paperD: "#e3d8c0", blue: "#3f6fb6", blueL: "#d5e2f2", sky: "#a6cbe0", ray: "#c2e24a" };   // v3: cards muted to sit in the world
+      window.NK_GLYPHS = true;   // v4: line glyphs on cream tiles instead of the little-scene coins</script>
+    <script src="assets/nkui3.js"></script>
+    <script src="assets/nklight.js"></script>
+    <script src="assets/nkmap.js"></script>
+    <script src="assets/nkboom.js"></script>
+    <script src="assets/nkep.js"></script>
+    <script src="assets/lotcast.js"></script>
+    <script src="assets/lotset.js"></script>
+    <script src="assets/kdcast.js"></script>
+    <script src="assets/kdset.js"></script>
+    <script src="assets/sig.js"></script>
+    <script src="assets/sgset.js"></script>
+    <script src="assets/jkcast.js"></script>
+    <script src="assets/jkset.js"></script>
+    <script src="assets/jkicons.js"></script>
+    <script src="assets/jkdepth.js"></script>
+    <script src="assets/jkcam.js"></script>
+    <script src="assets/brcast.js"></script>
+    <script src="assets/brset.js"></script>
+    <script src="assets/brdepth.js"></script>
+    <script src="assets/bricons.js"></script>
+    <script src="assets/ltcast.js"></script>
+    <script src="assets/ltset.js"></script>
+    <script src="assets/ltdepth.js"></script>
+    <script src="assets/lticons.js"></script>
+    <script src="assets/flcast.js"></script>
+    <script src="assets/flset.js"></script>
+    <script src="assets/flicons.js"></script>
+    <style>
+      @font-face { font-family: 'Kanit'; font-weight: 400; src: url(assets/fonts/f1.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 700; src: url(assets/fonts/f2.ttf); }
+      @font-face { font-family: 'Kanit'; font-weight: 900; src: url(assets/fonts/f3.ttf); }
+      @font-face { font-family: 'Mali'; font-weight: 600; src: url(assets/fonts/mali6.ttf); }
+      @font-face { font-family: 'Mali'; font-weight: 700; src: url(assets/fonts/mali7.ttf); }
+      @font-face { font-family: 'Sriracha'; font-weight: 400; src: url(assets/fonts/sriracha.ttf); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05080a; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Kanit, sans-serif; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .stage { position: absolute; inset: 0; }
+      .fgblur { filter: blur(7px); }
+      .badge { z-index: 56; position: absolute; left: 36px; bottom: 150px; font: 700 26px/1 Kanit; color: #f4ecd8; opacity: .75; letter-spacing: 2px;
+        background: rgba(5,8,10,.55); padding: 8px 14px 10px; border-radius: 10px; }
+      #vig { z-index: 55; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 95% 75% at 50% 50%, rgba(3,6,8,0) 30%, rgba(3,6,8,.12) 55%, rgba(3,6,8,.38) 80%, rgba(3,6,8,.7) 100%); }
+      #grain { z-index: 57; position: absolute; inset: -60px; opacity: .11; mix-blend-mode: overlay; pointer-events: none; }
+      #flashw { z-index: 60; position: absolute; inset: 0; background: #e8f0ff; opacity: 0; pointer-events: none; }
+      #black { z-index: 61; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+      
+    .uicard { position:absolute; display:flex; gap:14px; align-items:center; max-width:640px; background:rgba(244,236,216,.95);
+      border:4px solid #2e2a26; border-radius:16px; box-shadow:5px 5px 0 rgba(46,42,38,.7); padding:12px 20px 14px 14px; opacity:0; }
+    .uicard .lbl { font:700 22px/1.1 Kanit; color:#7a6c5d; letter-spacing:2px; }
+    .uicard .txt { font:900 38px/1.15 Kanit; color:#2e2a26; white-space:nowrap; }
+    .uicard .val { margin-left:6px; font:900 46px/1 Kanit; color:#b0553a; }
+    .uicard .k, .capbox .k { display:inline-block; padding:0 .14em; margin:0 .04em; background:#e07a4f; border:3px solid #2e2a26; border-radius:7px; transform:rotate(-2deg); }
+    .capwrap { position:absolute; left:0; right:0; top:1630px; display:flex; justify-content:center; pointer-events:none; }
+    .capbox { position:absolute; background:#f4ecd8; color:#2e2a26; border:5px solid #2e2a26; border-radius:6px; box-shadow:8px 8px 0 rgba(46,42,38,.85);
+      padding:14px 30px 18px; font:900 58px/1.25 Kanit; white-space:nowrap; opacity:0; }
+    .bubble { position:absolute; background:#f4ecd8; border:5px solid #2e2a26; border-radius:26px; padding:16px 26px 20px; font:900 46px/1.2 Kanit; color:#2e2a26;
+      box-shadow:6px 6px 0 rgba(46,42,38,.8); white-space:nowrap; opacity:0; }
+    .bubble:after { content:""; position:absolute; bottom:-30px; left:var(--tail, 40px); width:40px; height:32px; background:#f4ecd8; border:5px solid #2e2a26; border-top:0;
+      clip-path:polygon(0 0,100% 0,30% 100%); }
+      
+    .gui { position:absolute; z-index:58; opacity:0; color:#f4ecd8; font-family:Kanit; }
+    .gui .k { display:inline-block; padding:0 .16em; margin:0 .05em; background:#f2c55c; color:#2e2a26; border-radius:8px; transform:rotate(-2deg); }
+    .gui .chip { display:inline-block; font:700 22px/1 Kanit; letter-spacing:2px; color:#10171a; background:#7fd1b9; padding:6px 12px 7px; border-radius:20px; }
+    .gui .fm { width:76px; height:76px; border-radius:50%; overflow:hidden; background:radial-gradient(circle at 40% 35%, #3b4a50, #1a2226); border:3px solid #f4ecd8; flex:none; }
+    .gui .fm .face { width:100%; height:100%; }
+    .tip { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; display:flex; gap:20px; align-items:center; padding:16px 30px 22px 16px; max-width:1010px; }
+    .tip.warn .chip { background:#f0a070; } .tip.danger .chip { background:#e8705a; } .tip.rule .chip { background:#f2c55c; }
+    .tip .med, .steps .ic { width:124px; height:124px; flex:none; border-radius:50%; background:radial-gradient(circle at 38% 32%, #fffaf0, #e6d6b4 75%); border:4px solid #2e2a26; box-shadow:0 0 0 4px #f4ecd8, 0 6px 14px rgba(0,0,0,.4); display:grid; place-items:center; }
+    .tip .med svg { width:104px; height:104px; overflow:visible; }
+    .tip .txt { font:900 40px/1.22 Kanit; margin-top:8px; white-space:nowrap; }
+    .gui .bar { position:absolute; left:26px; right:26px; bottom:9px; height:5px; border-radius:3px; background:rgba(244,236,216,.15); overflow:hidden; }
+    .gui .bar i { position:absolute; inset:0; background:#7fd1b9; }
+    .steps { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; padding:16px 22px 26px; text-align:center; }
+    .steps .row { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:12px; }
+    .steps .st { display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .steps .ic { width:132px; height:132px; } .steps .ic svg { width:108px; height:108px; overflow:visible; }
+    .steps .st b { font:900 38px/1 Kanit; } .steps .st:first-child b { color:#f2c55c; }
+    .steps .arr { font:900 56px/1 Kanit; color:rgba(244,236,216,.45); margin-top:-40px; }
+    .choice { text-align:center; }
+    .choice .q { display:inline-block; font:700 34px/1 Kanit; letter-spacing:1px; padding:10px 24px 12px; border-radius:24px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); }
+    .choice .opts { display:flex; align-items:center; justify-content:center; gap:22px; margin-top:16px; }
+    .choice .opt { display:flex; align-items:center; gap:14px; font:900 44px/1 Kanit; padding:18px 26px 22px; border-radius:22px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); white-space:nowrap; }
+    .choice .key { display:grid; place-items:center; width:50px; height:50px; border-radius:12px; background:#f4ecd8; color:#2e2a26; font-size:26px; box-shadow:0 4px 0 #9c8e76; }
+    .choice .timer { position:relative; width:120px; height:120px; flex:none; } .choice .timer svg { width:120px; height:120px; }
+    .choice .n { position:absolute; inset:0; display:grid; place-items:center; font:900 54px/1 Kanit; opacity:0; }
+    .choice .who2 { position:absolute; left:0; right:0; color:#7fd1b9; } .choice .who { margin-top:14px; font:700 30px/1 Kanit; color:#f2c55c; opacity:0; text-shadow:0 2px 8px #000; }
+    .qte { text-align:center; }
+    .qte .lbl { display:inline-block; font:900 44px/1 Kanit; letter-spacing:2px; padding:12px 30px 16px; border-radius:26px; background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); }
+    .qte .btnwrap { position:relative; width:220px; height:220px; margin:10px auto 0; }
+    .qte .btnwrap svg { position:absolute; inset:0; width:220px; height:220px; overflow:visible; }
+    .qte .key { position:absolute; inset:0; display:grid; place-items:center; font:900 38px/1 Kanit; }
+    .qte .ok { position:absolute; inset:0; display:grid; place-items:center; font:900 96px/1 Kanit; color:#7fd1b9; opacity:0; }
+    .qte .ecg { display:block; width:520px; height:56px; margin:4px auto 0; }
+    .qte .res { font:900 40px/1 Kanit; color:#7fd1b9; opacity:0; text-shadow:0 2px 8px #000; }
+    .rel { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:26px; display:flex; align-items:center; gap:16px; padding:14px 22px 16px 14px; }
+    .rel .faces { display:flex; align-items:center; gap:2px; } .rel .link { width:44px; height:24px; }
+    .rel .chip { background:#f2c55c; } .rel .txt { font:900 32px/1.2 Kanit; margin-top:6px; white-space:nowrap; } .rel .up { color:#7fd1b9; display:inline-block; }
+    .rel .hearts { display:flex; gap:6px; margin-top:6px; } .rel .hearts svg { width:30px; height:27px; overflow:visible; }
+    .intro { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:60px 26px 26px 60px; display:flex; align-items:center; gap:18px; padding:10px 30px 12px 10px; }
+    .intro .fm.big { width:104px; height:104px; } .intro .name { font:900 52px/1 Kanit; }
+    .intro .trait { display:inline-block; margin-top:6px; font:700 26px/1 Kanit; color:#2e2a26; padding:5px 12px 7px; border-radius:14px; }
+    .intro .brush { display:block; width:220px; height:14px; margin-top:4px; }
+    .status { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:44px 22px 22px 44px; display:flex; align-items:center; gap:14px; padding:8px 26px 10px 8px; }
+    .status .nm { font:900 34px/1 Kanit; } .status .st { display:flex; align-items:center; gap:8px; margin-top:6px; font:700 28px/1 Kanit; color:#e8705a; }
+    .status.unknown .st { color:#b9a8e8; } .status.safe .st { color:#7fd1b9; } .status .st svg { width:28px; height:26px; overflow:visible; }
+    .polaroid { background:#f7f1e2; padding:16px 16px 18px; border-radius:6px; box-shadow:0 18px 40px rgba(0,0,0,.6); }
+    .polaroid svg { display:block; } .polaroid .pc { font:900 34px/1 Kanit; color:#2e2a26; text-align:center; margin-top:12px; }
+    .polaroid .tag { position:absolute; left:-30px; top:-24px; font:700 24px/1 Kanit; color:#10171a; background:#b9a8e8; padding:6px 14px 8px; border-radius:16px; transform:rotate(-4deg); white-space:nowrap; }
+    .phone { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:34px; padding:18px 26px 24px; }
+    .phone .hdr { display:flex; align-items:center; gap:14px; } .phone .nm { font:900 36px/1 Kanit; }
+    .phone .sig { display:flex; align-items:flex-end; gap:4px; margin-top:6px; } .phone .sig i { display:block; width:8px; background:#7fd1b9; border-radius:2px; }
+    .phone .sig i:nth-child(1) { height:8px; } .phone .sig i:nth-child(2) { height:14px; } .phone .sig i:nth-child(3) { height:20px; } .phone .sig i:nth-child(4) { height:26px; }
+    .phone .sig span { margin-left:10px; font:700 22px/1 Kanit; color:#7fd1b9; }
+    .phone .typing { display:flex; gap:8px; margin:18px 0 0 6px; padding:16px 22px; background:#e9e1cf; border-radius:22px 22px 22px 6px; width:max-content; }
+    .phone .typing i { display:block; width:14px; height:14px; border-radius:50%; background:#7a6c5d; }
+    .phone .msg { margin-top:16px; background:#f4ecd8; color:#2e2a26; font:900 38px/1.25 Kanit; padding:16px 22px 14px; border-radius:24px 24px 24px 6px; opacity:0; }
+    .phone .msg .k { background:#e8705a; color:#fff; }
+    .phone .time { font:700 22px/1 Kanit; color:#7a6c5d; margin-top:10px; } .phone .time b { font-weight:900; }
+    .hud { display:flex; flex-direction:column; align-items:flex-end; gap:10px; opacity:1; }
+    .hud .c { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:22px; display:flex; align-items:center; gap:10px; padding:8px 18px 10px 10px; font:700 26px/1 Kanit; opacity:0; }
+    .hud .c b { font:900 34px/1 Kanit; } .hud .ci { width:46px; height:46px; } .hud .bat { width:64px; height:32px; } .hud .bars { width:48px; height:36px; }
+    .hud .lb { color:rgba(244,236,216,.7); font-size:22px; } .hud .sig.none span { color:#e8705a; }
+    .chapter { text-align:center; text-shadow:0 3px 14px rgba(0,0,0,.8); }
+    .chapter .sm { font:700 30px/1 Kanit; letter-spacing:10px; color:#f2c55c; } .chapter .big { font:900 92px/1.1 Kanit; margin-top:6px; }
+    .chapter svg { width:800px; height:20px; margin-top:6px; }
+    .qte .meter { display:flex; align-items:center; gap:12px; justify-content:center; margin-top:6px; font:700 26px/1 Kanit; }
+    .qte .mbar { position:relative; width:300px; height:22px; border-radius:11px; background:rgba(16,22,26,.9); border:2px solid rgba(244,236,216,.5); overflow:hidden; }
+    .qte .mbar i { position:absolute; left:0; top:0; bottom:0; width:100%; background:linear-gradient(90deg,#7fd1b9,#f2c55c 70%,#e8705a); transform-origin:0 50%; transform:scaleX(.3); }
+    .qte .mbar b { position:absolute; left:72%; top:-2px; bottom:-2px; width:5px; background:#e8705a; }
+    .choice .opt { position:relative; } .choice .opt .lbg { position:absolute; left:90px; opacity:0; color:#ff9a9a; } .choice .opt.B .lbg { left:auto; right:90px; }
+    .gui .fm.sm { width:54px; height:54px; display:inline-block; vertical-align:middle; }
+    .clockw { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; align-items:center; gap:18px; padding:14px 26px 14px 14px; }
+    .clockw .dial { width:190px; height:190px; flex:none; }
+    .clockw .dig { font:900 74px/1 Kanit; margin-top:6px; letter-spacing:2px; transform-origin:0 50%; }
+    .clockw .sub { display:flex; align-items:center; gap:10px; margin-top:8px; font:900 30px/1.1 Kanit; color:#f2c55c; opacity:0; }
+    .clockw .dots { display:inline-flex; gap:5px; } .clockw .dots i { width:9px; height:9px; border-radius:50%; background:#f2c55c; display:block; }
+    .fig { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; align-items:center; gap:20px; padding:14px 28px 16px 14px; }
+    .fig .art { flex:none; background:radial-gradient(circle at 40% 35%, #fffaf0, #e6d6b4 80%); border:4px solid #2e2a26; border-radius:24px; padding:8px; box-shadow:0 0 0 4px #f4ecd8; }
+    .fig .art svg { display:block; width:100%; height:auto; overflow:visible; }
+    .fig.dark .art { background:#0d1418; }
+    .fig .txt { font:900 40px/1.2 Kanit; margin-top:8px; white-space:nowrap; } .fig .txt2 { opacity:.15; }
+    .fig.warn .chip { background:#f0a070; } .fig.danger .chip { background:#e8705a; } .fig.rule .chip { background:#f2c55c; }
+    .radar { display:flex; align-items:center; gap:14px; } .radar svg { width:200px; height:200px; }
+    .radar .rl { display:flex; flex-direction:column; gap:8px; font:900 40px/1.1 Kanit; text-shadow:0 2px 10px #000; } .radar .chip { background:#e8705a; width:max-content; }
+    .memo { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:40px; display:flex; align-items:center; gap:12px; padding:8px 26px 8px 8px; font:900 32px/1 Kanit; overflow:hidden; }
+    .memo .shine { position:absolute; top:0; bottom:0; left:0; width:30%; background:linear-gradient(90deg,transparent,rgba(242,197,92,.45),transparent); }
+    .pov { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:30px; display:flex; }
+    .pov .lb { font:700 24px/1 Kanit; color:rgba(244,236,216,.7); } .pov .rec { width:16px; height:16px; border-radius:50%; background:#e8705a; display:block; }
+    .pov .bpm { display:flex; align-items:center; gap:6px; margin-left:10px; color:#e8705a; } .pov .bpm svg { width:30px; height:27px; overflow:visible; }
+    .mm { display:flex; flex-direction:column; align-items:center; gap:8px; } .mm svg { width:230px; height:230px; filter:drop-shadow(0 10px 20px rgba(0,0,0,.6)); }
+
+    .gui { --tone: #7fd1b9; --glow: .3; }
+    .tip, .fig, .clockw, .steps, .rel, .intro, .status, .phone, .memo, .pov { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(127,209,185,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.warn, .fig.warn { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(240,160,112,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.danger, .fig.danger, .status.danger { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(232,112,90,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .tip.rule, .fig.rule { box-shadow: 0 0 0 4px rgba(10,14,16,.55), 0 0 34px rgba(242,197,92,calc(var(--glow) * .9)), 0 16px 34px rgba(0,0,0,.5); }
+    .fx-ring { position: absolute; inset: -4px; border-radius: inherit; padding: 4px; pointer-events: none; --a: 0deg;
+      background: conic-gradient(from var(--a), transparent 0deg 210deg, var(--tone) 290deg, #fffbe8 312deg, var(--tone) 330deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+    .fx-shw { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
+    .fx-sheen { position: absolute; top: -10%; bottom: -10%; left: 0; width: 30%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.2), transparent); transform: translateX(-160%); }
+    .fx-flash { position: absolute; inset: 0; border-radius: inherit; background: var(--tone); opacity: 0; pointer-events: none; }
+    .fx-shock { position: absolute; inset: -6px; border-radius: 50%; border: 4px solid var(--tone); opacity: 0; pointer-events: none; }
+    .fig .fx-shock, .clockw .fx-shock { border-radius: 26px; }
+    .fx-spk { position: absolute; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: #fff3c8; box-shadow: 0 0 10px var(--tone); opacity: 0; pointer-events: none; }
+    .tip .txt, .fig .txt { font-size: 44px; } .gui .chip { font-size: 24px; }
+    .pov { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 22px 14px; }
+    .pov .top { display: flex; align-items: center; gap: 10px; font: 900 32px/1 Kanit; }
+    .pov .row { display: flex; align-items: center; gap: 14px; }
+    .pov .bpmh { width: 74px; height: 70px; display: grid; place-items: center; } .pov .bpmh .hb { width: 70px; height: 64px; overflow: visible; filter: drop-shadow(0 0 12px rgba(232,112,90,.8)); }
+    .pov .bpmh .fx-shock { border-color: #e8705a; }
+    .pov .ecg2 { width: 170px; height: 54px; }
+    .pov .bnum { display: flex; align-items: baseline; gap: 6px; } .pov .bnum b { font: 900 60px/1 Kanit; } .pov .bnum span { font: 700 22px/1 Kanit; color: rgba(244,236,216,.7); }
+
+    .call { opacity:0; } .call .dev { position:relative; margin:0 auto; width:420px; height:760px; border-radius:56px; background:#1a1d20; border:6px solid #2e2a26; box-shadow:0 30px 60px rgba(0,0,0,.6), 0 0 40px rgba(127,209,185,.25); padding:22px; }
+    .call .scr { width:100%; height:100%; border-radius:40px; background:linear-gradient(180deg,#24343c,#0f171b); display:flex; flex-direction:column; align-items:center; padding-top:60px; }
+    .call .lbl { font:700 28px/1 Kanit; color:rgba(244,236,216,.75); } .call .av { position:relative; width:180px; height:180px; margin-top:40px; }
+    .call .av .fm { position:absolute; inset:0; width:180px; height:180px; border-width:5px; } .call .rg { position:absolute; inset:0; border-radius:50%; border:4px solid #7fd1b9; }
+    .call .nm { font:900 76px/1 Kanit; margin-top:36px; } .call .sub { font:700 26px/1 Kanit; color:rgba(244,236,216,.6); margin-top:12px; }
+    .call .bt { margin-top:auto; margin-bottom:70px; display:flex; gap:120px; } .call .bt span { width:110px; height:110px; border-radius:50%; display:grid; place-items:center; font:900 54px/1 Kanit; color:#fff; }
+    .call .no { background:#e8705a; } .call .yes { background:#4fb37a; } .call .hand { position:absolute; left:0; right:0; bottom:-170px; width:520px; height:520px; }
+
+    .stealth { background:linear-gradient(180deg,rgba(30,40,44,.93),rgba(15,21,24,.93)); border:2px solid rgba(244,236,216,.42); box-shadow:0 0 0 4px rgba(10,14,16,.55), 0 16px 34px rgba(0,0,0,.5); border-radius:28px; display:flex; align-items:center; gap:18px; padding:14px 26px 16px 16px; }
+    .stealth .seye { width:130px; height:88px; flex:none; } .stealth .rows { display:flex; flex-direction:column; gap:8px; }
+    .stealth .row { display:flex; align-items:center; gap:12px; font:700 26px/1 Kanit; } .stealth .row span { width:130px; }
+    .stealth .sbar { position:relative; width:260px; height:20px; border-radius:10px; background:rgba(244,236,216,.15); overflow:hidden; border:2px solid rgba(244,236,216,.4); }
+    .stealth .sbar i { position:absolute; inset:0; transform-origin:0 50%; transform:scaleX(0); }
+    .stealth .det i { background:linear-gradient(90deg,#f2c55c,#e8705a); } .stealth .noi i { background:linear-gradient(90deg,#7fd1b9,#f2c55c 60%,#e8705a); }
+    .stealth .pct { font:900 30px/1 Kanit; color:#e8705a; width:70px; }
+    .stealth .found { position:absolute; right:-30px; top:-30px; font:900 54px/1 Kanit; color:#fff; background:#d8463a; padding:8px 22px 12px; border-radius:14px; border:4px solid #2e2a26; opacity:0; box-shadow:0 0 30px rgba(232,80,80,.8); }
+    .mm .ml { display:flex; flex-direction:column; align-items:center; gap:6px; font:900 32px/1 Kanit; text-shadow:0 2px 10px #000; }
+      .capwrap { z-index: 56; top: 1480px; }
+      /* นิวเคลียร์ลงกรุงเทพ: captions in the formula's style (white words, yellow keywords, red box for commands) */
+      .capwrap { top: 1185px !important; }
+      .capbox { background: none !important; border: 0 !important; box-shadow: none !important; color: #ffffff !important; font: 800 60px/1.25 Kanit !important;
+        text-shadow: 0 4px 0 rgba(0,0,0,.55), 0 0 22px rgba(0,0,0,.6) !important; padding: 0 !important; }
+      .capbox .k { background: none !important; color: #ffd24a !important; transform: none !important; padding: 0 !important; }
+      .capbox .k.kr, .k.kr { background: #d8443a !important; color: #ffffff !important; border-radius: 12px !important; padding: .02em .24em .06em !important; text-shadow: none !important; box-shadow: 0 8px 18px rgba(0,0,0,.45) !important; }
+      .capbox { background: rgba(12,18,20,.86); color: #f4ecd8; border: 2px solid rgba(244,236,216,.4); border-radius: 22px;
+        box-shadow: 0 0 0 4px rgba(10,14,16,.45), 0 14px 30px rgba(0,0,0,.55); font: 900 64px/1.22 Kanit; padding: 12px 34px 18px; }
+      .capbox .k { background: #f2c55c; color: #2e2a26; border: 0; border-radius: 10px; padding: 0 .16em; transform: rotate(-1.5deg); }
+      .capbox .k.kr, .k.kr { background: #d8443a; color: #fff4ea; }
+      .capbox.q { background: rgba(244,236,216,.94); color: #2e2a26; border-color: #2e2a26; }
+      .bubble { z-index: 57; white-space: normal !important; max-width: 640px; text-align: center; }
+      .sfxw { position: absolute; z-index: 55; font-family: Kanit; font-weight: 900; letter-spacing: -1px; opacity: 0; white-space: nowrap;
+        text-shadow: -4px -4px 0 #2e2a26, 4px -4px 0 #2e2a26, -4px 4px 0 #2e2a26, 4px 4px 0 #2e2a26, 8px 8px 0 #2e2a26; }
+      /* phone camera overlay (REC) */
+      .rec { position: absolute; inset: 0; z-index: 52; pointer-events: none; font-family: Kanit; color: #f4ecd8; }
+      .rec .br { position: absolute; width: 90px; height: 90px; border: 6px solid rgba(244,236,216,.85); }
+      .rec .tl { left: 40px; top: 120px; border-right: 0; border-bottom: 0; } .rec .tr { right: 40px; top: 120px; border-left: 0; border-bottom: 0; }
+      .rec .bl { left: 40px; bottom: 120px; border-right: 0; border-top: 0; } .rec .brr { right: 40px; bottom: 120px; border-left: 0; border-top: 0; }
+      .rec .top { position: absolute; left: 70px; right: 70px; top: 150px; display: flex; justify-content: space-between; align-items: center; font: 900 40px/1 Kanit; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+      .rec .dot { display: inline-block; width: 26px; height: 26px; border-radius: 50%; background: #e8443a; margin-right: 12px; vertical-align: -2px; box-shadow: 0 0 14px #e8443a; }
+      .rec .tc { font-family: 'Kanit'; letter-spacing: 2px; }
+      .rec .bat { display: inline-block; width: 56px; height: 28px; border: 4px solid #f4ecd8; border-radius: 6px; position: relative; margin-left: 14px; vertical-align: -4px; }
+      .rec .bat:after { content: ""; position: absolute; left: 3px; top: 3px; bottom: 3px; width: 34%; background: #e8705a; }
+      .rec .mode { position: absolute; left: 70px; top: 220px; font: 700 30px/1 Kanit; letter-spacing: 3px; padding: 6px 12px; border-radius: 8px; background: rgba(0,0,0,.4); }
+      .rec .af { position: absolute; width: 170px; height: 190px; border: 5px solid #f2c55c; border-radius: 10px; opacity: 0; box-shadow: 0 0 18px rgba(242,197,92,.6); }
+      .rec .af b { position: absolute; left: -5px; top: -50px; font: 900 28px/1 Kanit; color: #2e2a26; background: #f2c55c; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+      /* channel signature: "ทุกอย่าง… ถูกทาง / พลาดแค่… เรื่องเดียว" checklist */
+      .chk { position: absolute; left: 110px; width: 860px; top: 520px; z-index: 52; padding: 30px 38px 34px; border-radius: 30px; opacity: 0;
+        background: rgba(10,15,17,.9); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 0 0 6px rgba(10,14,16,.4), 0 24px 60px rgba(0,0,0,.6); font-family: Kanit; }
+      .chk .chk-t { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; margin-bottom: 22px; }
+      .chk .chk-r { display: flex; align-items: center; gap: 26px; padding: 14px 0; border-top: 2px solid rgba(244,236,216,.12); opacity: 0; }
+      .chk .box { width: 84px; height: 84px; border-radius: 18px; border: 5px solid rgba(244,236,216,.6); display: flex; align-items: center; justify-content: center; flex: none; }
+      .chk .box b { font: 900 64px/1 Kanit; opacity: 0; }
+      .chk .ok b { color: #7fd1b9; } .chk .bad b { color: #ff5a4a; }
+      .chk .tx { font: 900 60px/1.1 Kanit; color: #f4ecd8; }
+      .chk .bad .tx { color: #ff8a7a; letter-spacing: 8px; }
+      .rec .scrub { position: absolute; left: 70px; right: 70px; bottom: 170px; height: 12px; border-radius: 6px; background: rgba(244,236,216,.3); }
+      .rec .scrub i { display: block; height: 100%; border-radius: 6px; background: #e8443a; }
+      /* body temperature card */
+      .thermo { position: absolute; z-index: 52; display: flex; align-items: center; gap: 22px; padding: 18px 28px 18px 20px; border-radius: 26px; opacity: 0;
+        background: rgba(10,15,17,.88); border: 3px solid rgba(244,236,216,.35); box-shadow: 0 14px 40px rgba(0,0,0,.55); font-family: Kanit; color: #f4ecd8; }
+      .thermo .val { font: 900 92px/1 Kanit; letter-spacing: -2px; } .thermo .val small { font-size: 44px; }
+      .thermo .lbl { font: 700 28px/1.1 Kanit; letter-spacing: 3px; color: #f2c55c; margin-bottom: 6px; }
+      .thermo .note { font: 900 34px/1.1 Kanit; color: #ff8a7a; height: 38px; }
+      .rec.nv:before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 3px, transparent 3px 6px); }
+
+      /* the guide's rule: a lacquer-and-gold card, one rhyming line per row (กอย / ถอย / คอย) */
+      .krule { position: absolute; left: 60px; width: 960px; z-index: 52; opacity: 0; padding: 22px 34px 30px; border-radius: 28px; box-sizing: border-box;
+        background: linear-gradient(180deg, #1d1611 0%, #120d0a 100%); border: 4px solid #c9a55a; overflow: hidden;
+        box-shadow: 0 0 0 10px rgba(18,13,10,.92), 0 0 0 13px #7a5f2e, 0 26px 60px rgba(0,0,0,.65), inset 0 0 60px rgba(201,165,90,.12); font-family: Kanit; }
+      .krule::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(201,165,90,.05) 0 2px, transparent 2px 46px); pointer-events: none; }
+      .krule .cn { position: absolute; width: 46px; height: 46px; border: 5px solid #e2c27a; }
+      .krule .cn::after { content: ""; position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #e2c27a; }
+      .krule .cn.tl { left: 12px; top: 12px; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; } .krule .cn.tl::after { left: 10px; top: 10px; }
+      .krule .cn.tr { right: 12px; top: 12px; border-left: 0; border-bottom: 0; border-top-right-radius: 14px; } .krule .cn.tr::after { right: 10px; top: 10px; }
+      .krule .cn.bl { left: 12px; bottom: 12px; border-right: 0; border-top: 0; border-bottom-left-radius: 14px; } .krule .cn.bl::after { left: 10px; bottom: 10px; }
+      .krule .cn.br { right: 12px; bottom: 12px; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; } .krule .cn.br::after { right: 10px; bottom: 10px; }
+      .krule .kr-h { text-align: center; margin: 4px 0 14px; }
+      .krule .kr-h span { display: inline-block; padding: 6px 34px 8px; border-radius: 40px; background: linear-gradient(180deg, #b8322a, #8e2018); color: #ffe7b0;
+        font-weight: 900; font-size: 38px; letter-spacing: 1px; border: 3px solid #e2c27a; box-shadow: 0 6px 16px rgba(0,0,0,.5); }
+      .krule .kr-r { display: flex; align-items: center; gap: 26px; padding: 12px 10px; opacity: 0; }
+      .krule .kr-r + .kr-r { border-top: 2px dashed rgba(201,165,90,.35); }
+      .krule .kr-i { flex: none; width: 118px; height: 118px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fbf3df, #e6d3a8); border: 5px solid #c9a55a; box-shadow: 0 6px 14px rgba(0,0,0,.5); }
+      .krule .kr-i svg { width: 100%; height: 100%; }
+      .krule .kr-t { color: #f4ecd8; font-weight: 900; font-size: 60px; line-height: 1.15; text-shadow: 0 4px 0 rgba(0,0,0,.55); white-space: nowrap; }
+      .krule .kr-t strong { color: #f2c55c; font-weight: 900; }
+      .krule .kr-t em { font-style: normal; background: #c8392b; color: #fff; padding: 0 14px 4px; border-radius: 14px; margin-right: 8px; box-shadow: 0 4px 0 rgba(0,0,0,.4); }
+      .krule .kr-t u { text-decoration: none; position: relative; }
+      .krule .kr-t u::after { content: ""; position: absolute; left: -4px; right: -4px; bottom: -6px; height: 8px; border-radius: 4px; background: #e2c27a; box-shadow: 0 0 14px #e2c27a; transform: scaleX(var(--k, 0)); transform-origin: 0 50%; }
+      .krule .sheen { position: absolute; top: -40%; left: -40%; width: 26%; height: 180%; background: linear-gradient(90deg, transparent, rgba(255,236,190,.22), transparent); transform: rotate(18deg); pointer-events: none; }
+      .capbox { font: 800 58px/1.25 Kanit !important; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="95.806" data-width="1080" data-height="1920">
+      <svg id="grain" width="1200" height="2040"><filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5" /></filter><rect width="1200" height="2040" filter="url(#nz)" /></svg>
+    </div>
+    <script>
+      const SCHED = {"total": 95.806, "shots": [{"key": "f01", "start": 0.0, "dur": 3.315, "vo": [{"id": "h1", "t": 0.05, "dur": 2.965, "cap": "ถ้า[ทุกคนบินได้]… / ยกเว้น{คนฉลาดที่สุดในโลก}", "frags": [0.0, 1.36]}], "voEnd": 3.015}, {"key": "f02", "start": 3.315, "dur": 4.401, "vo": [{"id": "p01_2", "t": 0.05, "dur": 4.051, "cap": "ทุกคนได้พลังตอน[ห้าขวบ] / จาก[วงแหวนสีทอง]ที่ลอยอยู่บนฟ้า", "frags": [0.0, 1.76]}], "voEnd": 4.101}, {"key": "f03", "start": 7.716, "dur": 5.597, "vo": [{"id": "p01_3", "t": 0.05, "dur": 5.197, "cap": "พ่อแม่ปล่อยมือลูกจาก[รังบิน] / เด็กร่วงไปหนึ่งเมตร… / แล้ว{พุ่งขึ้นฟ้า}", "frags": [0.0, 2.27, 3.92]}], "voEnd": 5.247}, {"key": "f04", "start": 13.313, "dur": 6.102, "vo": [{"id": "p02_1", "t": 0.05, "dur": 5.602, "cap": "วันบินแรกของคุณ คุณกระโดด… / แล้ว{ร่วง} ตุ้บ / ลงกองฟูกที่[ยายแย้ม]ปูรอไว้", "frags": [0.0, 2.36, 3.6]}], "voEnd": 5.652}, {"key": "f05", "start": 19.415, "dur": 3.99, "vo": [{"id": "p02_2", "t": 0.05, "dur": 3.44, "cap": "เครื่องวัดพลังขึ้นเลขเดียว… / {ศูนย์เปอร์เซ็นต์}", "frags": [0.0, 2.45]}], "voEnd": 3.49}, {"key": "f06", "start": 23.405, "dur": 5.985, "vo": [{"id": "p03_2", "t": 0.05, "dur": 5.585, "cap": "เมืองนี้[ไม่มีบันได] / ยายแย้มเลยเชื่อม[บันไดเหล็ก]เกาะข้างตึกให้ / {สี่สิบชั้น}", "frags": [0.0, 1.87, 4.5]}], "voEnd": 5.635}, {"key": "f07", "start": 29.39, "dur": 4.192, "vo": [{"id": "p03_3", "t": 0.05, "dur": 3.742, "cap": "ขั้นแรก มีคนพ่นสีไว้ว่า… / {คนเดินดิน}", "frags": [0.0, 2.61]}], "voEnd": 3.792}, {"key": "f08", "start": 33.582, "dur": 8.735, "vo": [{"id": "p04_2", "t": 0.05, "dur": 8.285, "cap": "[แปดร้อยสิบสองขั้น]ทุกเช้า / [ฟ้า] เพื่อนสนิท ลอยกลับหัวมาถาม “ให้อุ้มไหม” / “ไม่ต้อง… เหลืออีก{แปดร้อยสิบสองขั้น}”", "frags": [0.0, 1.92, 5.94]}], "voEnd": 8.335}, {"key": "f09", "start": 42.317, "dur": 6.678, "vo": [{"id": "p06_1", "t": 0.05, "dur": 6.278, "cap": "คืนหนึ่ง คุณส่องวงแหวนด้วย[กล้องดูดาว]ที่ประกอบเอง / แล้วพบว่า… / มัน{หรี่ลงวันละหนึ่งเปอร์เซ็นต์}", "frags": [0.0, 3.19, 4.13]}], "voEnd": 6.328}, {"key": "f10", "start": 48.995, "dur": 5.895, "vo": [{"id": "p06_2", "t": 0.05, "dur": 5.495, "cap": "กราฟเริ่มตก / ตั้งแต่วันที่ {กัปตันสุริยา} / ฮีโร่อันดับหนึ่งของโลก เปิดตัว", "frags": [0.0, 1.29, 3.07]}], "voEnd": 5.545}, {"key": "f11", "start": 54.89, "dur": 6.6, "vo": [{"id": "p06_3", "t": 0.05, "dur": 5.637, "cap": "อีก[เจ็ดวัน] พลังของทุกคนจะ{ดับ}… / วันเดียวกับที่คนทั้งเมือง / จะบินขึ้นไป[สามพันเมตร]พร้อมกัน", "frags": [0.0, 2.21, 3.619]}], "voEnd": 5.687}, {"key": "f12", "start": 61.49, "dur": 7.75, "vo": [{"id": "p07_1", "t": 0.05, "dur": 7.3, "cap": "คุณเอากราฟไปให้ครูดู / ครูตาเลเซอร์ขีดฆ่าจน{กระดานไหม้} / “คนไม่มีพลัง จะรู้เรื่องพลังได้ไง”", "frags": [0.0, 1.7, 4.83]}], "voEnd": 7.35}, {"key": "f13", "start": 69.24, "dur": 9.907, "vo": [{"id": "p07_2", "t": 0.05, "dur": 9.457, "cap": "ค่ำนั้น [กัปตันสุริยา]ไลฟ์สดกลางเมือง / “ตราบใดที่ผมอยู่ ฟ้าไม่มีวันดับ” / ทั้งเมืองโห่ร้อง / มีแค่{หมาของคุณ}ที่เห่าใส่จอ", "frags": [0.0, 3.15, 5.82, 7.29]}], "voEnd": 9.507}, {"key": "f14", "start": 79.147, "dur": 6.635, "vo": [{"id": "p07_3", "t": 0.05, "dur": 6.085, "cap": "มีแค่คุณที่สังเกตว่า… / ไม่เคยมีใครเห็น[เท้าของเขา] / {แตะพื้น}เลย", "frags": [0.0, 2.74, 4.9]}], "voEnd": 6.135}, {"key": "f15", "start": 85.782, "dur": 5.024, "vo": [{"id": "p07_4", "t": 0.05, "dur": 4.474, "cap": "ทั้งโลกเชื่อเขา / ไม่มีใครเชื่อคุณ… / เหลือเวลา{เจ็ดวัน}", "frags": [0.0, 1.44, 3.07]}], "voEnd": 4.524}, {"key": "f16", "start": 90.806, "dur": 2.8, "vo": [], "voEnd": 0}, {"key": "f17", "start": 93.606, "dur": 2.2, "vo": [], "voEnd": 0}]};
+      const SH = Object.fromEntries(SCHED.shots.map((s) => [s.key, s]));
+      const vo = (k, i = 0) => SH[k].vo[i].t;                       // voice start, relative to the shot
+      const voEnd = (k, i = 0) => SH[k].vo[i].t + SH[k].vo[i].dur;
+      const F = (k, i = 0, j = 0) => { const v = SH[k].vo[i]; return v.t + v.frags[Math.min(j, v.frags.length - 1)]; }; // start of caption fragment j (clamped to the last one)
+      const D = (k) => SH[k].dur;
+      const fr = (wx, wy, s, sx = 540, sy = 760, extra = {}) => ({ x: wx - 540 - (sx - 540) / s, y: wy - 960 - (sy - 960) / s, s, ...extra });
+      const root = document.getElementById("root");
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // one caption per fragment of the spoken line, on the beat of the voice
+      function caps(k, lines, o = {}) {
+        const out = [];
+        (lines ?? SH[k].vo.map((_, i) => i)).forEach((i) => {
+          const v = SH[k].vo[i], fr = v.cap.split(" / ");
+          fr.forEach((txt, j) => out.push({ text: o.quote ? `“${txt}”` : txt, t: v.t + v.frags[j] - 0.06,
+            end: j + 1 < fr.length ? v.t + v.frags[j + 1] - 0.08 : Math.min(D(k) - 0.06, v.t + v.dur + (o.hold ?? 0.35)) }));
+        });
+        out.sort((a, b) => a.t - b.t);
+        for (let n = 0; n + 1 < out.length; n++) out[n].end = Math.min(out[n].end, out[n + 1].t - 0.03);
+        return out;
+      }
+      const bub = (k, i, x, y, tail, o = {}) => ({ text: `“${SH[k].vo[i].cap.replace(/ \/ /g, " ")}”`, x, y, tail, t: vo(k, i) - 0.05, end: o.end ?? Math.min(D(k) - 0.05, voEnd(k, i) + 0.35) });
+
+      // extra poses
+      Rig.MODES.selfie = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -42 + 2 * Math.sin(u * 1.7), faF: -16, uaB: 8, faB: -16, head: 4 + 2 * Math.sin(u * 2.3), torso: -1 });
+      Rig.MODES.laugh = (u, o) => { const b = Math.abs(Math.sin(u * 9)); return { ...Rig.MODES.idle(u, o), uaF: 14, faF: -110, uaB: -18, faB: -20, torso: -6 - 3 * b, head: -14 - 5 * b, bodyY: -3 * b }; };
+      Rig.MODES.shiver = (u, o) => { const j = Math.sin(u * 47) * 1.6; return { ...Rig.MODES.tremble(u, o), uaF: -110 + j, faF: -120, uaB: 110 - j, faB: 120, torso: 8 + j * 0.5, head: -4 + j }; };
+      Rig.MODES.stick = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -12, faF: -24 });
+      Rig.MODES.crouchTorch = (u, o) => ({ ...Rig.MODES.crouch(u, o), uaF: -70 + 4 * Math.sin(u * 1.3), faF: -10 });
+      const shakeH = (t) => 7 * Math.sin(t * 2.3) + 3 * Math.sin(t * 7.1);
+
+      // phone camera overlay: REC dot, running timecode, battery, optional face box that locks onto something
+      GameUI.C.rec = {
+        html: (id, o) => `<div id="${id}" class="rec${o.nv ? " nv" : ""}"><i class="br tl"></i><i class="br tr"></i><i class="br bl"></i><i class="br brr"></i>
+          <div class="top">${o.play ? `<span>▶ คลิปเมื่อคืน</span>` : `<span><i class="dot"></i>REC</span>`}<span class="tc">00:00:00</span><span>${o.nv ? "IR" : "4K"}<i class="bat"></i></span></div>
+          ${o.mode ? `<div class="mode">${o.mode}</div>` : ""}${o.play ? `<div class="scrub"><i></i></div>` : ""}${o.af ? `<div class="af" style="left:${o.af.x}px;top:${o.af.y}px;${o.af.w ? `width:${o.af.w}px;height:${o.af.h}px` : ""}"><b>${o.af.label}</b></div>` : ""}</div>`,
+        anim(tl, id, t0, o) {
+          const el = document.getElementById(id), tc = el.querySelector(".tc"), c = { t: 0 }, base = o.tc0 || 0;
+          tl.fromTo(`#${id}`, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, t0);
+          tl.to(c, { t: o.dur, duration: o.dur, ease: "none", immediateRender: false, onUpdate: () => {
+            const s = base + c.t, f = Math.floor((s % 1) * 30), p2 = (v) => String(Math.floor(v)).padStart(2, "0");
+            tc.textContent = s >= 3600 ? `${Math.floor(s / 3600)}:${p2((s % 3600) / 60)}:${p2(s % 60)}` : `${p2(s / 60)}:${p2(s % 60)}:${p2(f)}`;
+          } }, t0);
+          if (o.play) tl.fromTo(`#${id} .scrub i`, { width: `${o.play[0]}%` }, { width: `${o.play[1]}%`, duration: o.dur, ease: "none", immediateRender: false }, t0);
+          if (!o.play) tl.fromTo(`#${id} .dot`, { opacity: 1 }, { opacity: 0.15, duration: 0.5, repeat: Math.ceil(o.dur / 0.5), yoyo: true, immediateRender: false }, t0);
+          if (o.af) {
+            const a = o.t0abs + o.af.at;
+            tl.fromTo(`#${id} .af`, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.18, ease: "back.out(2)", immediateRender: false }, a);
+            tl.to(`#${id} .af`, { opacity: 0.2, duration: 0.08, repeat: 5, yoyo: true }, a + 0.25);
+          }
+        },
+      };
+      // channel signature: a checklist ticked on "ทุกอย่าง… ถูกทาง", then one red cross on "เรื่องเดียว"
+      // the guide's rule card: rows stamp in at o.at[i] (seconds into the shot); the rhyming syllables get a gold underline
+      GameUI.C.koiRule = {
+        html: (id, o) => {
+          const IK = "#2e2a26", rows = o.rows || [
+            [`<path d="M74,20C46,16 28,38 30,62C32,78 44,82 46,94C48,106 60,112 68,102C74,94 68,86 74,78C84,66 94,58 92,44C90,30 84,22 74,20Z" fill="#e9bc93" stroke="${IK}" stroke-width="4"/>
+              <path d="M76,40C66,34 52,40 54,54C56,62 64,62 64,70" stroke="${IK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+              ${[0, 1, 2].map((i) => `<path class="kw" d="M${22 - i * 9},${44 - i * 6}q-${10 + i * 3},${18 + i * 6} 0,${36 + i * 12}" stroke="#7a3fb0" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+              `ได้ยิน<strong>เสียง<u>กอย</u></strong>`],
+            [`<g class="krun"><circle cx="66" cy="28" r="10" fill="${IK}"/><path d="M62,40L52,66M52,66L70,78L66,98M52,66L36,82L24,80M60,46L78,56L90,50M60,46L44,52L36,64" stroke="${IK}" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+              <g class="kno"><circle cx="60" cy="60" r="46" fill="none" stroke="#d8322a" stroke-width="9"/><path d="M28,28L92,92" stroke="#d8322a" stroke-width="9" stroke-linecap="round"/></g>`,
+              `<em>อย่าวิ่ง</em><em>อย่า<u>ถอย</u></em>`],
+            [`<path d="M40,112C44,80 42,40 46,8H64C66,40 66,80 72,112Z" fill="#6a4a2e" stroke="${IK}" stroke-width="4"/><path d="M60,52Q84,46 108,38" stroke="#6a4a2e" stroke-width="10" stroke-linecap="round"/><circle cx="96" cy="24" r="16" fill="#4f8a55" stroke="${IK}" stroke-width="3"/><circle cx="30" cy="20" r="14" fill="#4f8a55" stroke="${IK}" stroke-width="3"/>
+              <g class="kclimb"><circle cx="84" cy="32" r="7" fill="#e8b830" stroke="${IK}" stroke-width="3"/><path d="M84,40v12M84,52l-6,10M84,52l7,9" stroke="${IK}" stroke-width="4" stroke-linecap="round"/></g>
+              <g transform="translate(18,78)"><path d="M0,0h22M0,30h22M3,0q8,15 0,30M19,0q-8,15 0,30" stroke="${IK}" stroke-width="3.5" fill="#f2c55c" stroke-linejoin="round"/><path class="ksand" d="M7,22h8l-4,-6z" fill="#c9a55a"/></g>`,
+              `<strong>ปีนต้นไม้</strong> แล้ว<u>คอย</u>`],
+          ];
+          return `<div id="${id}" class="krule" style="top:${o.top ?? 170}px"><i class="cn tl"></i><i class="cn tr"></i><i class="cn bl"></i><i class="cn br"></i><i class="sheen"></i>
+            <div class="kr-h"><span>${o.label || "กฎของบังหมาด"}</span></div>
+            ${rows.map(([ill, txt], i) => `<div class="kr-r" id="${id}-r${i}"><div class="kr-i"><svg viewBox="0 0 120 120">${ill}</svg></div><div class="kr-t">${txt}</div></div>`).join("")}</div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id);
+          tl.fromTo(`#${id}`, { opacity: 0, y: -40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.7)", immediateRender: false }, t0);
+          tl.fromTo(`#${id} .kr-h span`, { scaleX: 0.2, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + 0.08);
+          tl.fromTo(`#${id} .sheen`, { x: 0 }, { x: 1500, duration: 0.9, ease: "power1.inOut", immediateRender: false }, t0 + 0.25);
+          o.at.forEach((at, i) => {
+            const r = el.querySelector(`#${id}-r${i}`);
+            tl.fromTo(r, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.28, ease: "power2.out", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector(".kr-i"), { scale: 0, rotation: -30 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2.4)", immediateRender: false }, A(at));
+            tl.fromTo(r.querySelector("u"), { "--k": 0 }, { "--k": 1, duration: 0.35, ease: "power2.out", immediateRender: false }, A(at) + 0.3);
+          });
+          el.querySelectorAll(".kw").forEach((w, i) => tl.fromTo(w, { opacity: 0.1 }, { opacity: 1, duration: 0.28, repeat: 9, yoyo: true, immediateRender: false }, A(o.at[0]) + i * 0.1));
+          tl.fromTo(el.querySelector(".kno"), { opacity: 0, scale: 1.9 }, { opacity: 1, scale: 1, svgOrigin: "60 60", duration: 0.22, ease: "power3.in", immediateRender: false }, A(o.at[1]) + 0.2);
+          tl.fromTo(el.querySelector(".kclimb"), { y: 46 }, { y: 0, duration: 0.8, ease: "power1.out", immediateRender: false }, A(o.at[2]));
+          tl.fromTo(el.querySelector(".ksand"), { scaleY: 1 }, { scaleY: 0.2, svgOrigin: "11 22", duration: 1.6, ease: "none", immediateRender: false }, A(o.at[2]) + 0.4);
+          if (o.end !== undefined) tl.to(`#${id}`, { opacity: 0, y: -30, duration: 0.25 }, A(o.end));
+        },
+      };
+      GameUI.C.checklist = {
+        html: (id, o) => `<div id="${id}" class="chk"><div class="chk-t">${o.title}</div>${o.items.map(([txt, ok], i) => `<div class="chk-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="box"><b>${ok ? "✓" : "✗"}</b></span><span class="tx">${txt}</span></div>`).join("")}</div>`,
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t;
+          tl.fromTo(`#${id}`, { opacity: 0, y: 40, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.8)", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, A(o.show[i]));
+            tl.fromTo(`#${id}-r${i} .box b`, { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(3)", immediateRender: false }, A(o.mark[i]));
+            if (ok) tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)" }, { borderColor: "#7fd1b9", duration: 0.2, immediateRender: false }, A(o.mark[i]));
+            else {
+              tl.fromTo(`#${id}-r${i} .box`, { opacity: 1 }, { opacity: 0.25, duration: 0.18, repeat: 5, yoyo: true, immediateRender: false }, A(o.show[i]));
+              tl.fromTo(`#${id}-r${i} .box`, { borderColor: "rgba(244,236,216,.6)", boxShadow: "0 0 0 0 rgba(255,90,74,.9)" }, { borderColor: "#ff5a4a", boxShadow: "0 0 0 26px rgba(255,90,74,0)", duration: 0.5, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}`, { x: 0 }, { x: 10, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}`, { borderColor: "rgba(255,90,74,.8)", duration: 0.2 }, A(o.mark[i]));
+            }
+          });
+        },
+      };
+
+      // extra illustrations for the knowledge cards
+      Object.assign(GameUI.ILL, {
+        muddy: `<path d="M10,70q25,-14 50,0t50,0V110H10Z" fill="#9c7d55" stroke="#2e2a26" stroke-width="4"/><path class="a-bob" d="M30,40q30,-20 60,0" stroke="#7fb3ab" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M30,84q8,-4 16,0M64,92q8,-4 16,0" stroke="#5a4636" stroke-width="4" fill="none"/>`,
+        rise: `<rect x="20" y="20" width="16" height="90" rx="4" fill="#e9dcc0" stroke="#2e2a26" stroke-width="4"/>${[0, 1, 2, 3].map((k) => `<path d="M36,${34 + k * 20}h10" stroke="#2e2a26" stroke-width="4"/>`).join("")}<path class="a-pulse" d="M60,104V40M44,58l16,-20 16,20" stroke="#e8705a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M10,96q20,-10 40,0t40,0t30,0" stroke="#7fb3ab" stroke-width="7" fill="none"/>`,
+        roar: `<path d="M14,96L46,40L60,62L76,34L106,96Z" fill="#3e5a44" stroke="#2e2a26" stroke-width="4" stroke-linejoin="round"/>${[0, 1, 2].map((k) => `<path class="a-wave" data-i="${k}" d="M${70 + k * 12},${20 + k * 4}q${12 + k * 4},${14} 0,${28 + k * 4}" stroke="#f2c55c" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("")}`,
+        leech: `<path d="M24,86C10,60 30,30 60,26C92,22 104,44 96,62C88,80 66,70 58,82C50,94 34,100 24,86Z" fill="#3b3a22" stroke="#2e2a26" stroke-width="4"/><path d="M40,48q8,8 0,18M56,38q8,10 0,22M72,40q8,10 2,22" stroke="#6d6a3a" stroke-width="3" fill="none"/>`,
+        drop: `<path class="a-bob" d="M60,16C40,46 30,62 30,78a30,30 0 0 0 60,0C90,62 80,46 60,16Z" fill="#c0392b" stroke="#2e2a26" stroke-width="4"/><path d="M46,78a14,14 0 0 0 10,14" stroke="#f4ecd8" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/>`,
+      });
+
+      const shots = [];
+      const add = (k, spec) => { if (SH[k]) shots.push({ start: SH[k].start, dur: SH[k].dur, key: k, ...spec }); };
+      const FA_ARM = { sleeve: "#e8b830", skin: "#ebbd95", cuff: "#c4931c" };
+
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .zchk { position: absolute; left: 80px; width: 920px; z-index: 52; opacity: 0; font-family: Kanit; }
+        .zchk .zc-in { position: relative; padding: 26px 36px 30px; border-radius: 28px; overflow: hidden;
+          background: linear-gradient(180deg, rgba(16,20,22,.95), rgba(7,9,11,.97)); border: 4px solid rgba(244,236,216,.3); box-shadow: 0 24px 60px rgba(0,0,0,.7); }
+        .zchk .zc-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 2px, transparent 2px 6px); pointer-events: none; }
+        .zchk .zc-bar { position: absolute; left: 0; right: 0; top: 0; height: 110px; background: linear-gradient(180deg, transparent, rgba(255,60,50,.32), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-h { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+        .zchk .zc-dot { width: 20px; height: 20px; border-radius: 50%; background: #ff4a3a; box-shadow: 0 0 14px #ff4a3a; flex: none; }
+        .zchk .zc-h b { font: 700 30px/1 Kanit; letter-spacing: 4px; color: #f2c55c; flex: 1; }
+        .zchk .zc-tally { font: 900 46px/1 Kanit; color: #7fd1b9; min-width: 120px; text-align: right; }
+        .zchk .zc-r { position: relative; display: flex; align-items: center; gap: 26px; padding: 14px 14px; margin: 0 -14px; border-top: 2px solid rgba(244,236,216,.1); opacity: 0; border-radius: 16px; }
+        .zchk .zc-sw { position: absolute; inset: 0; overflow: hidden; border-radius: 16px; pointer-events: none; }
+        .zchk .zc-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(127,209,185,.45), transparent); opacity: 0; pointer-events: none; }
+        .zchk .zc-box { width: 86px; height: 86px; border-radius: 18px; border: 5px solid rgba(244,236,216,.55); flex: none; position: relative; box-sizing: border-box; }
+        .zchk .zc-box svg { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; overflow: visible; }
+        .zchk .ck { fill: none; stroke: #7fd1b9; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 90; stroke-dashoffset: 90; }
+        .zchk .xx { position: absolute; left: -5px; top: -5px; width: 86px; height: 86px; opacity: 0; } .zchk .xx svg { left: 0; top: 0; }
+        .zchk .xx path { stroke: #fff; stroke-width: 12; stroke-linecap: round; }
+        .zchk .zc-t { font: 900 60px/1.1 Kanit; color: #f4ecd8; position: relative; }
+        .zchk .bad .zc-t { color: #ff8a7a; letter-spacing: 8px; }
+        .zchk .zc-box svg.zc-crack { left: 38px; top: 38px; width: 2px; height: 2px; overflow: visible; pointer-events: none; }
+        .zchk .zc-crack path { fill: none; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .zchk .zc-crack .c1 { stroke: rgba(0,0,0,.6); stroke-width: 7; } .zchk .zc-crack .c2 { stroke: rgba(255,240,230,.92); stroke-width: 2.6; }
+      </style>`);
+      GameUI.C.sigCard = {
+        html: (id, o) => {
+          const r = (() => { let q = 23; return () => ((q = (q * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+          let cracks = "";
+          for (let k = 0; k < 7; k++) {
+            let x = 0, y = 0, d = "M0,0", br = "";
+            const ang = -1.7 + k * 0.29;
+            for (let j = 0; j < 8; j++) {
+              const a2 = ang + (r() - 0.5) * 0.8, L = 45 + r() * 75;
+              x += Math.cos(a2) * L; y += Math.sin(a2) * L; d += `L${x.toFixed(0)},${y.toFixed(0)}`;
+              if (j === 2 || j === 5) { const ba = a2 + (r() > 0.5 ? 0.9 : -0.9); br += `M${x.toFixed(0)},${y.toFixed(0)}l${(Math.cos(ba) * 70).toFixed(0)},${(Math.sin(ba) * 70).toFixed(0)}l${(Math.cos(ba + 0.4) * 40).toFixed(0)},${(Math.sin(ba + 0.4) * 40).toFixed(0)}`; }
+            }
+            cracks += `<path class="c1" d="${d}${br}"/><path class="c2" d="${d}${br}"/>`;
+          }
+          return `<div id="${id}" class="zchk" style="top:${o.top ?? 470}px"><div class="zc-in" id="${id}-in"><div class="zc-scan"></div><div class="zc-bar" id="${id}-bar"></div>
+            <div class="zc-h"><span class="zc-dot" id="${id}-dot"></span><b>${o.title}</b><span class="zc-tally" id="${id}-tally">✓ 0</span></div>
+            ${o.items.map(([txt, ok], i) => `<div class="zc-r ${ok ? "ok" : "bad"}" id="${id}-r${i}"><span class="zc-sw"><i class="zc-sweep"></i></span><span class="zc-box">${ok
+              ? `<svg viewBox="0 0 86 86"><path class="ck" d="M20,45 L37,61 L67,25"/></svg>`
+              : `<span class="xx"><svg viewBox="0 0 86 86"><path d="M22,22L64,64M64,22L22,64"/></svg></span><svg class="zc-crack" id="${id}-crack">${cracks}</svg>`}</span><span class="zc-t">${txt}</span></div>`).join("")}
+            </div></div>`;
+        },
+        anim(tl, id, t0, o) {
+          const A = (t) => o.t0abs + t, el = document.getElementById(id), inner = document.getElementById(`${id}-in`);
+          const bar = document.getElementById(`${id}-bar`), tally = document.getElementById(`${id}-tally`), dot = document.getElementById(`${id}-dot`);
+          const qtx = el.querySelector(`#${id}-r${o.items.length - 1} .zc-t`), S3 = o.show[o.items.length - 1], X = o.mark[o.items.length - 1];
+          const GL = ["???", "?▓?", "▒?░", "??▓", "░▒▓", "?!?", "▓?▒", "?░?"];
+          const h = (n) => { const v = Math.sin(n * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+          // entrance: flicker on like a failing screen, with a colour split that settles
+          tl.fromTo(`#${id}`, { opacity: 0, scale: 1.08, filter: "drop-shadow(14px 0 0 rgba(255,40,60,.8)) drop-shadow(-14px 0 0 rgba(40,220,255,.8))" },
+            { opacity: 1, scale: 1, filter: "drop-shadow(0px 0 0 rgba(255,40,60,0)) drop-shadow(0px 0 0 rgba(40,220,255,0))", duration: 0.32, ease: "power3.out", immediateRender: false }, t0);
+          o.items.forEach(([, ok], i) => {
+            tl.fromTo(`#${id}-r${i}`, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.2, ease: "power3.out", immediateRender: false }, A(o.show[i]));
+            if (ok) {
+              tl.fromTo(`#${id}-r${i} .ck`, { strokeDashoffset: 90 }, { strokeDashoffset: 0, duration: 0.18, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)", boxShadow: "0 0 0 0 rgba(127,209,185,.9)" }, { borderColor: "#7fd1b9", boxShadow: "0 0 0 22px rgba(127,209,185,0)", duration: 0.4, immediateRender: false }, A(o.mark[i]));
+              tl.fromTo(`#${id}-r${i} .zc-sweep`, { opacity: 1, x: -380 }, { opacity: 0, x: 1100, duration: 0.45, ease: "power2.out", immediateRender: false }, A(o.mark[i]));
+              tl.to(`#${id}-r${i}`, { opacity: 0.42, filter: "saturate(.3)", duration: 0.3 }, A(S3) + 0.05);   // the good news fades while ??? takes over
+            } else {
+              tl.fromTo(`#${id}-r${i} .zc-box`, { borderColor: "rgba(244,236,216,.55)" }, { borderColor: "#ff5a4a", duration: 0.12, repeat: 7, yoyo: true, immediateRender: false }, A(S3));
+              tl.fromTo(`#${id}-r${i} .xx`, { opacity: 0, scale: 3.2 }, { opacity: 1, scale: 1, transformOrigin: "50% 50%", duration: 0.14, ease: "power4.in", immediateRender: false }, A(X));
+              tl.fromTo(`#${id}-r${i} .zc-box`, { backgroundColor: "rgba(216,50,42,0)", borderColor: "#ff5a4a", boxShadow: "0 0 0 0 rgba(255,90,74,.95)" },
+                { backgroundColor: "rgba(216,50,42,1)", borderColor: "#ff5a4a", boxShadow: "0 0 0 40px rgba(255,90,74,0)", duration: 0.45, immediateRender: false }, A(X) + 0.12);
+              tl.fromTo(`#${id}-r${i}`, { backgroundColor: "rgba(216,50,42,0)" }, { backgroundColor: "rgba(216,50,42,.35)", duration: 0.2, immediateRender: false }, A(X) + 0.12);
+            }
+          });
+          tl.fromTo(`#${id}-crack path`, { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.015, ease: "power3.out", immediateRender: false }, A(X) + 0.12);
+          // per-frame state: tally, scrambling ???, heartbeat border, scan bar, shake, dying-screen flicker
+          const clock = { t: 0 }, Dsh = D("sig");
+          const render = () => {
+            const t = clock.t, sus = Math.min(1, Math.max(0, (t - S3) / (X - S3))), after = t >= X + 0.12;
+            const n = o.mark.filter((m, i) => o.items[i][1] && t >= m).length;
+            tally.textContent = after ? "✗ 1" : `✓ ${n}`; tally.style.color = after ? "#ff5a4a" : "#7fd1b9";
+            qtx.textContent = t >= S3 && t < X + 0.12 ? GL[Math.floor(t * 18) % GL.length] : "???";
+            const beat = Math.pow(Math.max(0, Math.sin((2 * Math.PI * (t - S3)) / 0.38)), 4) * (t >= S3 && !after ? 0.35 + 0.65 * sus : 0);
+            inner.style.borderColor = after ? "#ff4a3a" : `rgba(255,${Math.round(236 - 170 * beat)},${Math.round(216 - 160 * beat)},${(0.3 + 0.7 * beat).toFixed(2)})`;
+            inner.style.boxShadow = after ? "0 0 46px rgba(255,60,50,.55), 0 24px 60px rgba(0,0,0,.7)" : `0 0 ${Math.round(50 * beat)}px rgba(255,60,50,${(0.8 * beat).toFixed(2)}), 0 24px 60px rgba(0,0,0,.7)`;
+            bar.style.opacity = t >= S3 && !after ? (0.4 + 0.5 * sus).toFixed(2) : 0;
+            bar.style.transform = `translateY(${Math.round((((t - S3) * 1.7) % 1) * 560 - 110)}px)`;
+            dot.style.opacity = Math.floor(t * (after ? 8 : 2.5)) % 2 ? 0.25 : 1;
+            const amp = after ? 2 + 20 * Math.exp(-(t - X) * 5) : t >= S3 ? 1 + 6 * sus * sus : 0, k = Math.floor(t * 30);
+            const fl = after && t > X + 0.4 && h(k * 3.1) > 0.82 ? 0.45 : 1;
+            inner.style.transform = `translate(${((h(k) - 0.5) * 2 * amp).toFixed(1)}px,${((h(k + 0.5) - 0.5) * 2 * amp).toFixed(1)}px) rotate(${((h(k + 0.25) - 0.5) * amp * 0.12 + (after ? -1.6 : 0)).toFixed(2)}deg)`;
+            inner.style.opacity = fl;
+          };
+          tl.to(clock, { t: Dsh, duration: Dsh, ease: "none", immediateRender: false, onUpdate: render }, o.t0abs);
+          render();
+        },
+      };
+      const SF = (j) => F("sig", 0, j);
+      // ---------- แสงกระสือ: helpers ----------
+      const tf = (tl, sel, t, dur, to, ease = "power2.inOut") => tl.to(sel, { attr: { transform: to }, duration: dur, ease, immediateRender: false }, t);
+      const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+      const split = (k, at, A, B) => {
+        add(k, A); shots[shots.length - 1].dur = at;
+        add(k, B); const sh = shots[shots.length - 1]; sh.start = SH[k].start + at; sh.dur = D(k) - at;
+      };
+      const capsFrom = (k, at, lines, o) => caps(k, lines, o).filter((c) => c.end > at + 0.05).map((c) => ({ ...c, t: Math.max(0, c.t - at), end: c.end - at }));
+      const steps = (k, label, items, at, endAt, o = {}) => ({ type: "steps", t: at, label, items, gap: o.gap ?? 0.5, top: o.top ?? 210, end: endAt ?? D(k) - 0.2 });
+      // ---------- คนเดินดิน EP.1 · storytelling clip (lane A) · the channel look (slender cast, lit sets) ----------
+      Rig.FLAT = true;
+      Engine.look = { ...(Engine.look || {}), vignette: 0.5, grain: 0.05 };
+      const NS = "http://www.w3.org/2000/svg";
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const ID = fr(540, 960, 1.0, 540, 960);
+      const grp = (parent) => { const g = document.createElementNS(NS, "g"); parent.appendChild(g); return g; };
+      const pop = (tl, g, at, o = {}) => tl.fromTo(g, { opacity: 0, scale: o.from ?? 0.8, y: o.dy ?? -18, svgOrigin: o.origin || "540 960" },
+        { opacity: 1, scale: 1, y: 0, svgOrigin: o.origin || "540 960", duration: o.dur ?? 0.4, ease: o.ease || "back.out(2.2)" }, at);
+      const out = (tl, g, at, d = 0.18) => tl.to(g, { opacity: 0, duration: d }, at);
+      const swingG = (tl, sel, t0, dur, amp = 3, org = "0 0") => tl.fromTo(sel, { rotation: -amp, svgOrigin: org }, { rotation: amp, svgOrigin: org, duration: 1.2, repeat: Math.ceil(dur / 1.2), yoyo: true, ease: "sine.inOut" }, t0);
+      const shake = (tl, g, t0, dur, a = 3, p = 0.05) => tl.fromTo(g, { x: -a }, { x: a, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "none" }, t0);
+      const DAY = { dark: 0.02, light: { from: "right", rim: "#fff0d0", rimOp: 0.6, rimW: 4, shade: "#3a2440", shadeOp: 0.25, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#fff2d8", bottom: "#4a3a50", op: 0.16 } };
+      const NIGHT = { dark: 0.1, light: { from: "right", rim: "#ffd9a0", rimOp: 0.55, rimW: 4, shade: "#1a1430", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#ffe2b0", bottom: "#1a1428", op: 0.24 } };
+      const spec = (k, o) => ({ ...(o.night ? NIGHT : DAY), cam: o.cam || { keys: [{ t: 0, ...(o.camAt || ID), drift: { s: o.push ?? 0.012 } }] }, captions: o.captions ?? caps(k), ...o });
+      const shot = (k, o) => add(k, spec(k, o));
+      const talk = (k, i, m = "o") => [[vo(k, i), voEnd(k, i), m]];
+      const swap = (tl, id, t, a = 0, b = 1, d = 0.12) => { tl.set(`#${id}-a${b}`, { opacity: 0 }, 0); tl.to(`#${id}-a${a}`, { opacity: 0, duration: d }, t); tl.to(`#${id}-a${b}`, { opacity: 1, duration: d }, t); };
+      const tagAt = (tl, L, x, y, text, at, o = {}) => { const g = grp(L.act); g.innerHTML = Lot.tag(x, y, text, o); pop(tl, g, at, { origin: `${x} ${y}`, from: 0.5 }); return g; };
+      const capAt = (id, y) => { const c = document.getElementById(`${id}-caps`); if (c) c.style.setProperty("top", `${y}px`, "important"); };
+      const ink = Lot.INK;
+      // a counter chip in the corner (screen space): "1/5"
+      const chip = (tl, L, steps, o = {}) => { const x = o.x ?? 900, y = o.y ?? 250;
+        const g = grp(L.light); g.innerHTML = `<g transform="translate(${x},${y})"><circle r="78" fill="#fbf7ee" stroke="${ink}" stroke-width="7"/>
+          ${steps.map(([, txt], i) => `<text id="${o.id}-c${i}" x="0" y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="${ink}" opacity="0">${txt}</text>`).join("")}
+          <text x="0" y="-36" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="22" fill="#a8305a">${o.label || "ที่ซ่อน"}</text></g>`;
+        steps.forEach(([at], i) => { tl.set(`#${o.id}-c${i}`, { opacity: 1 }, at); if (i + 1 < steps.length) tl.set(`#${o.id}-c${i}`, { opacity: 0 }, steps[i + 1][0]);
+          tl.fromTo(g, { scale: 1.25, svgOrigin: `${x} ${y}` }, { scale: 1, svgOrigin: `${x} ${y}`, duration: 0.25, ease: "back.out(3)", immediateRender: false }, at); });
+        return g; };
+      const sparkle = (x, y, r = 22) => `<path d="M${x},${y - r}Q${x + 4},${y - 4} ${x + r},${y}Q${x + 4},${y + 4} ${x},${y + r}Q${x - 4},${y + 4} ${x - r},${y}Q${x - 4},${y - 4} ${x},${y - r}Z" fill="#fff6b0" stroke="${ink}" stroke-width="2.5"/>`;
+
+
+      // the status bar (top left), per shot: [[label, value, colour]]
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .sghud { position: absolute; z-index: 58; left: 44px; top: 120px; display: flex; flex-direction: row; white-space: nowrap; width: max-content; align-items: center; gap: 16px;
+          padding: 12px 22px; border-radius: 18px; background: rgba(18,20,30,.7); border: 1.5px solid rgba(244,236,216,.2); box-shadow: 0 8px 24px rgba(0,0,0,.35); font-family: Kanit; color: #f4ecd8; }
+        .sghud b { font: 800 34px/1 Kanit; } .sghud small { font: 600 19px/1 Kanit; opacity: .65; } .sghud i { width: 1.5px; height: 30px; background: rgba(244,236,216,.25); }
+        .capbox { font: 800 54px/1.25 Kanit !important; }
+      </style>`);
+      const hud = (id, items) => { const el = document.getElementById(id); if (!el) return;
+        el.insertAdjacentHTML("beforeend", `<div class="sghud">${items.map(([l, v, c], i) => `${i ? "<i></i>" : ""}<small>${l}</small><b style="color:${c || "#f4ecd8"}">${v}</b>`).join("")}</div>`); };
+      const ears = (tl, aid, at, on = true, d = 0.25) => tl.to(`#${aid} .jkEar`, { opacity: on ? 1 : 0, duration: d }, at);
+      // ---------- looks per world (คนเดินดิน) ----------
+      const act = (k) => (shots.find((x) => x.key === k) || {}).actors || [];
+      const DAYF = { dark: 0.02, light: { from: "left", rim: "#fff4d8", rimOp: 0.6, rimW: 4, shade: "#3a3a5a", shadeOp: 0.22, shadeW: 26, soft: 9, vol: false }, grade: { top: "#e8f0ff", bottom: "#4a4a60", op: 0.12 } };
+      const DUSKF = { dark: 0.12, light: { from: "left", rim: "#ffc890", rimOp: 0.65, rimW: 4, shade: "#2a1a40", shadeOp: 0.3, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ff9a60", bottom: "#2a1a40", op: 0.22 } };
+      const NIGHTF = { dark: 0.38, light: { from: "right", rim: "#ffd9a0", rimOp: 0.6, rimW: 4, shade: "#101428", shadeOp: 0.4, shadeW: 26, soft: 9, vol: false }, grade: { top: "#1a2048", bottom: "#06080f", op: 0.42 } };
+      const ROOMF = { dark: 0.3, light: { from: "right", rim: "#ffe0a0", rimOp: 0.55, rimW: 4, shade: "#140f20", shadeOp: 0.4, shadeW: 26, soft: 9, vol: false }, grade: { top: "#2a2048", bottom: "#100a14", op: 0.4 } };
+      const CLASSF = { dark: 0.02, light: { from: "right", rim: "#ffffff", rimOp: 0.5, rimW: 3, shade: "#3a3a4a", shadeOp: 0.2, shadeW: 24, soft: 9, vol: false }, grade: { top: "#fff6e0", bottom: "#6a6a70", op: 0.1 } };
+      const city = (k, o = {}) => ({ ...(o.time === "night" ? NIGHTF : o.time === "dusk" ? DUSKF : DAYF), set: "flCity", setOpts: { id: `fc${k}`, ...o } });
+      const room = (k, o = {}) => ({ ...ROOMF, set: "flRoom", setOpts: { id: `fr${k}`, ...o } });
+      const klass = (k, o = {}) => ({ ...CLASSF, set: "flClass", setOpts: { id: `fk${k}`, ...o } });
+      const SID = { city: (k) => `fc${k}`, room: (k) => `fr${k}`, klass: (k) => `fk${k}` };
+      const shadows = (L, id, actors, sh = -0.4) => NkL.cast(L, id, actors, { k: 0.3, sh, op: 0.35 });
+      const loop = NkV.loop;
+      const H_ZERO = (c = "#ff8a7a") => [["พลัง", "0%", c], ["บินได้", "ไม่"]];
+      const H_STEPS = (n) => [["พลัง", "0%", "#ff8a7a"], ["บันได", `${n} ขั้น`, "#f2c55c"]];
+      const H_DAYS = (d) => [["พลัง", "0%", "#ff8a7a"], ["ฟ้าดับใน", `${d} วัน`, "#9ad8ff"]];
+      const ME = (who, x, y, track, extra = {}) => A(who, x, y, 0.95, track, extra);
+      const face = (x, y = 1400, s = 3.2, flip = false, sx = 540, sy = 760, k = 0.95) => fr(x + (flip ? -2 : 2) * k, y - 546 * k, s, sx, sy);
+      const CHANNEL = "Rod Mai Club";   // ← เปลี่ยนเป็นชื่อช่องใหม่เมื่อเจ้าของตั้งชื่อแล้ว (จุดเดียว)
+      const BLACK = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#000"/>`; return g; };
+      const WHITE = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#ffffff"/>`; tl.set(g, { opacity: 0 }, 0); return g; };
+      // the welding arc (from ช่างเชื่อม): a white core that flickers, sparks that re-seed, a blue glow in the glow layer
+      const arc = (tl, L, x, y, t0, dur, o = {}) => { const g = grp(L.act), s = o.s ?? 1;
+        g.innerHTML = `<g transform="translate(${x},${y}) scale(${s})"><g class="ltAg">${[0, 1, 2].map((k) => `<g class="ltAs${k}" opacity="${k ? 0 : 1}">${LT.sparks(12, 110, 3 + k * 7, k % 2 ? "#ffe24a" : "#ffb04a")}</g>`).join("")}<circle r="30" fill="url(#ltArcG)"/><circle class="ltAc" r="14" fill="#ffffff"/></g></g>`;
+        const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${x}" cy="${y}" r="${260 * s}" fill="url(#ltBlue)" opacity=".8"/></g>`;
+        tl.set([g, gl], { opacity: 0 }, 0); tl.set([g, gl], { opacity: 1 }, t0); if (o.end != null) tl.set([g, gl], { opacity: 0 }, o.end); else tl.set([g, gl], { opacity: 0 }, t0 + dur);
+        tl.fromTo(gl, { opacity: 1 }, { opacity: 0.55, duration: 0.07, repeat: Math.ceil(dur / 0.07), yoyo: true, ease: "none" }, t0);
+        tl.fromTo(g.querySelector(".ltAc"), { scale: 1, svgOrigin: `${x} ${y}` }, { scale: 1.8, svgOrigin: `${x} ${y}`, duration: 0.05, repeat: Math.ceil(dur / 0.05), yoyo: true, ease: "none" }, t0);
+        const sp = [0, 1, 2].map((k) => g.querySelector(`.ltAs${k}`)); for (let t = 0; t < dur; t += 0.09) { const k = Math.round(t / 0.09) % 3; sp.forEach((e, j) => tl.set(e, { opacity: j === k ? 1 : 0 }, t0 + t)); }
+        tl.fromTo(g.querySelector(".ltAg"), { rotation: 0, svgOrigin: `${x} ${y}` }, { rotation: 360, svgOrigin: `${x} ${y}`, duration: 1.7, repeat: Math.ceil(dur / 1.7), ease: "none" }, t0); return g; };
+      // a flyer crossing the frame: an actor in mode fly along a path, with a speed trail behind it (trail drawn in the act layer under the actor)
+      const FLY = (who, x0, y0, x1, y1, dur, o = {}) => A(who, x0, y0, o.s ?? 0.8, [{ t: 0, mode: "fly", eyes: o.eyes || "happy", mouth: o.mouth || "smile", ang: o.ang }], { flip: o.flip ?? (x1 < x0), path: [{ t: 0, x: x0, y: y0 }, { t: dur, x: x1, y: y1 }], ...(o.extra || {}) });
+      const trailAt = (tl, L, x0, y0, x1, y1, at, dur, c = "#ffffff") => { const g = grp(L.act); const ang = Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI; g.innerHTML = `<g transform="translate(${x0},${y0}) rotate(${ang})">${FL.trail(220, c)}</g>`;
+        tl.set(g, { opacity: 0 }, 0); tl.set(g, { opacity: 0.7 }, at); tl.fromTo(g, { x: 0, y: 0 }, { x: x1 - x0, y: y1 - y0, duration: dur, ease: "none" }, at); tl.set(g, { opacity: 0 }, at + dur); return g; };
+      // the golden ring going dim: lower the glow + stroke of every .flRing in a set
+      const ringDim = (tl, id, at, k = 0.4, d = 1.0) => tl.to(`#${id}-far .flRing, #${id}-set .flRing`, { opacity: k, duration: d }, at);
+      // the dog: wag the tail for dur; bark (mouth open) at the given times
+      const dogLife = (tl, sel, t0, dur, barks = []) => { loop(tl, `${sel} .flTail`, { rotation: -16, svgOrigin: "-50 -66" }, { rotation: 16, svgOrigin: "-50 -66" }, 0.18, t0, dur);
+        barks.forEach((b) => { tl.set(`${sel} .flBark`, { opacity: 1 }, b); tl.set(`${sel} .flBark`, { opacity: 0 }, b + 0.18); tl.fromTo(`${sel} .flHead`, { rotation: -10, svgOrigin: "52 -82" }, { rotation: 0, svgOrigin: "52 -82", duration: 0.18, ease: "power2.out", immediateRender: false }, b); }); };
+      // the big card in screen space: a titled paper with inner svg (used for the meter, the graph, the poster)
+      const card = (L, x, y, w, h, title, inner, o = {}) => { const g = grp(L.light); g.innerHTML = `<g transform="translate(${x},${y})"><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="28" fill="${o.paper || "#f6efdf"}"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="100" rx="28" fill="${o.band || "#2a3a6a"}"/>
+          <text x="0" y="${-h / 2 + 68}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="50" fill="${o.titleC || "#f4ecd8"}">${title}</text><g transform="translate(0,${-h / 2 + 100})">${inner}</g></g>`; return g; };
+      // ---------- คนเดินดิน EP.1 · the vertical city, the boy with 0%, the iron stairs, the dimming ring ----------
+      const KID_TEA = (() => { Rig.CAST.flKidTea = { v2: Rig.CAST.flKid2.v2, hand: FL.TEA, keep: "F" }; Flat.SPEC.flKidTea = Flat.SPEC.flKid2; Rig.CAST.flKidSpray = { v2: Rig.CAST.flKid3.v2, hand: FL.SPRAY, keep: "F" }; Flat.SPEC.flKidSpray = Flat.SPEC.flKid3; return 1; })();
+      const gauge = (pct, c = "#d8352a") => `<g transform="translate(0,230)"><path d="M-220,0A220,220 0 0,1 220,0" stroke="#d8d4c8" stroke-width="44" fill="none"/><path d="M-220,0A220,220 0 0,1 220,0" stroke="url(#flGold)" stroke-width="44" fill="none" stroke-dasharray="${(pct / 100) * 691} 691"/>
+        ${[0, 25, 50, 75, 100].map((p) => { const a = Math.PI * (1 - p / 100); return `<text x="${(Math.cos(a) * 270).toFixed(0)}" y="${(-Math.sin(a) * 270 + 10).toFixed(0)}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="28" fill="#6a5a4a">${p}</text>`; }).join("")}
+        <g class="flNeedle" transform="rotate(${-90 + pct * 1.8})"><path d="M0,10L0,-200" stroke="${c}" stroke-width="12" stroke-linecap="round"/></g><circle r="22" fill="#2e2a26"/><text y="110" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="120" fill="${c}">${pct}%</text></g>`;
+      const GRAPH = (id, o = {}) => `<g transform="translate(0,40)"><rect x="-300" y="0" width="600" height="340" fill="#fbf7ee"/>${[0, 1, 2, 3].map((k) => `<path d="M-280,${60 + k * 80}H280" stroke="#e0d8c8" stroke-width="2"/>`).join("")}<path d="M-280,320V20M-280,320H280" stroke="#2e2a26" stroke-width="5" stroke-linecap="round"/>
+        <text x="-250" y="-6" font-family="Kanit" font-weight="800" font-size="26" fill="#6a5a4a">แสงวงแหวน (%)</text><text x="250" y="350" text-anchor="end" font-family="Kanit" font-weight="800" font-size="24" fill="#6a5a4a">วัน →</text>
+        <path id="${id}-gl" d="M-260,60H-60L-20,70L20,90L70,120L120,160L170,200L220,250L260,300" stroke="#d8352a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        ${o.marker ? `<g id="${id}-mk"><path d="M-60,30V320" stroke="#2a3a6a" stroke-width="4" stroke-dasharray="10 8"/><rect x="-70" y="-2" width="20" height="20" fill="#e8b830"/><text x="-40" y="16" font-family="Kanit" font-weight="900" font-size="26" fill="#2a3a6a">กัปตันสุริยา เปิดตัว</text></g>` : ""}
+        ${o.rate ? `<g id="${id}-rt"><rect x="60" y="180" width="200" height="60" rx="12" fill="#d8352a"/><text x="160" y="222" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="40" fill="#fff"">−1% / วัน</text></g>` : ""}</g>`;
+      const drawPath = (tl, sel, at, dur) => { const el = document.querySelector(sel); if (!el) return; const len = el.getTotalLength(); tl.fromTo(el, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: dur, ease: "power1.inOut", immediateRender: false }, at); };
+
+      // ---------- f01 hook: the vertical city ----------
+      shot("f01", { ...city("f01", { flyers: 10, ringNear: { x: 540, y: -420, r: 240 } }), cam: JKC.move(fr(540, -120, 0.62, 540, 520), fr(760, 1000, 0.92, 540, 1000), 2.85, 2.5),
+        actors: [ME("flYou", 760, 1400, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), FLY("flKid1", -300, 700, 1500, 400, 2.4, { s: 0.75 }), FLY("flKidTea", 1700, 300, -200, 650, 2.8, { s: 0.7, extra: { from: 0.4 } }), FLY("flDad", 200, -300, 1500, -500, 2.6, { s: 0.6, extra: { from: 0.9 } })],
+        fx(tl, id, t0, L) { trailAt(tl, L, -300, 700, 1500, 400, t0, 2.4); trailAt(tl, L, 1700, 300, -200, 650, t0 + 0.4, 2.8); trailAt(tl, L, 200, -300, 1500, -500, t0 + 0.9, 2.6);
+          const g = grp(L.light); g.innerHTML = `<g transform="translate(540,1560)"><rect x="-260" y="-56" width="520" height="112" rx="26" fill="#2e2a26" opacity=".85"/><text x="0" y="18" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="54" fill="#f4ecd8">คนคนนั้น… คือ<tspan fill="#f2c55c">คุณ</tspan></text></g>`;
+          pop(tl, g, t0 + F("f01", 0, 1) + 0.6, { origin: "540 1560", from: 0.6 }); } });
+
+      // ---------- f02 the ring, five-year-olds rising ----------
+      shot("f02", { ...city("f02", { flyers: 6, ringNear: { x: 540, y: 330, r: 190 } }), camAt: fr(540, 760, 0.95, 540, 760), push: 0.012,
+        actors: [FLY("flKid1", 300, 1400, 360, -300, 1.8, { s: 0.7, ang: 0, flip: false, extra: { from: 1.0 } }), FLY("flKid2", 620, 1400, 700, -300, 1.8, { s: 0.7, ang: 0, flip: false, extra: { from: 1.5 } }), FLY("flTot", 860, 1400, 900, -300, 1.6, { s: 0.55, ang: 0, flip: false, extra: { from: 2.1 } }),
+          A("flMum", 460, 1400, 0.9, [{ t: 0, mode: "idle", eyes: "happy", mouth: "smile" }, { t: 1.0, mode: "cheer", eyes: "happy", mouth: "laugh" }])],
+        fx(tl, id, t0, L) { hud(id, [["พลัง", "ตอน 5 ขวบ", "#f2c55c"], ["ต้นทาง", "วงแหวน"]]); shadows(L, id, act("f02").slice(3)); [[300, 1.0], [620, 1.5], [860, 2.1]].forEach(([x, a]) => trailAt(tl, L, x, 1400, x + 50, -300, t0 + a, 1.8, "#ffe8a0"));
+          FLI.badge(tl, L.light, t0, D("f02"), { kind: "ring", x: 840, y: 560, tone: "yellow", label: "วงแหวนให้พลัง", at: F("f02", 0, 1) + 0.1 });
+          loop(tl, `#${SID.city("f02")}-set .flRing`, { scale: 1, svgOrigin: "540 330" }, { scale: 1.04, svgOrigin: "540 330" }, 1.2, t0, D("f02")); } });
+
+      // ---------- f03 the nest: the toddler drops a metre, then shoots up ----------
+      shot("f03", { ...city("f03", { nest: true, flyers: 5 }), camAt: fr(180, 980, 1.25, 540, 860), push: 0.01, shake: JKC.impact(F("f03", 0, 2), 0.3, 6),
+        actors: [A("flDad", -40, 980, 0.92, [{ t: 0, mode: "idle", eyes: "happy", mouth: "smile" }, { t: F("f03", 0, 1), mode: "startle", eyes: "wide", mouth: "o" }, { t: F("f03", 0, 2) + 0.2, mode: "cheer", eyes: "happy", mouth: "laugh" }]),
+          A("flMum", 160, 980, 0.9, [{ t: 0, mode: "point", eyes: "happy", mouth: "smile" }, { t: F("f03", 0, 1), mode: "startle", eyes: "wide", mouth: "o" }, { t: F("f03", 0, 2) + 0.2, mode: "cheer", eyes: "happy", mouth: "laugh" }]),
+          A("flTot", 440, 980, 0.55, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("f03", 0, 1), mode: "fall", eyes: "wide", mouth: "scream" }, { t: F("f03", 0, 2), mode: "fly", eyes: "happy", mouth: "laugh", ang: 0 }],
+            { path: [{ t: 0, x: 440, y: 980 }, { t: F("f03", 0, 1), x: 440, y: 980 }, { t: F("f03", 0, 1) + 0.4, x: 470, y: 1090 }, { t: F("f03", 0, 2), x: 470, y: 1090 }, { t: F("f03", 0, 2) + 0.5, x: 520, y: -500 }] })],
+        fx(tl, id, t0, L) { hud(id, [["พลัง", "ตอน 5 ขวบ", "#f2c55c"], ["วิธี", "ปล่อยมือ"]]); trailAt(tl, L, 470, 1090, 520, -500, t0 + F("f03", 0, 2), 0.5, "#ffe8a0");
+          const fl = grp(L.glow); fl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="470" cy="1060" r="260" fill="url(#flRingG)"/></g>`; tl.set(fl, { opacity: 0 }, 0); tl.fromTo(fl, { opacity: 1, scale: 0.3, svgOrigin: "470 1060" }, { opacity: 0, scale: 1.6, svgOrigin: "470 1060", duration: 0.6, immediateRender: false }, t0 + F("f03", 0, 2));
+          const g = grp(L.act); g.innerHTML = `<g transform="translate(560,1000)"><path d="M0,0V100" stroke="#f2c55c" stroke-width="4" stroke-dasharray="8 6"/><text x="12" y="60" font-family="Kanit" font-weight="800" font-size="30" fill="#f2c55c">1 ม.</text></g>`; tl.set(g, { opacity: 0 }, 0); tl.set(g, { opacity: 1 }, t0 + F("f03", 0, 1) + 0.3); tl.set(g, { opacity: 0 }, t0 + F("f03", 0, 2)); } });
+
+      // ---------- f04 your first flight day ----------
+      shot("f04", { ...city("f04", { nest: true, mattress: { x: 300 }, flyers: 4 }), cam: { keys: [{ t: 0, ...fr(300, 1000, 1.15, 540, 820), drift: { s: 0.01 } }, { t: F("f04", 0, 1) + 0.55, ...fr(320, 1150, 1.3, 540, 960), glide: 0.5 }] },
+        shake: JKC.impact(F("f04", 0, 1) + 0.6, 0.45, 14), sfxText: [{ text: "ตุ้บ!", x: 600, y: 760, size: 140, rot: -6, color: "#f6d36a", t: F("f04", 0, 1) + 0.62, end: F("f04", 0, 1) + 1.7 }],
+        actors: [ME("flYou", 440, 980, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }, { t: F("f04", 0, 0) + 1.0, mode: "raise", eyes: "squint", mouth: "grit" }, { t: F("f04", 0, 1), mode: "fall", eyes: "wide", mouth: "scream" }, { t: F("f04", 0, 1) + 0.62, mode: "sit", eyes: "closed", mouth: "pout" }],
+            { path: [{ t: 0, x: 440, y: 980 }, { t: F("f04", 0, 1), x: 440, y: 980 }, { t: F("f04", 0, 1) + 0.15, x: 400, y: 940 }, { t: F("f04", 0, 1) + 0.62, x: 330, y: 1224 }] }),
+          A("flGran", 90, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("f04", 0, 1) + 0.7, mode: "nod", eyes: "closed", mouth: "smile" }], { flip: false })],
+        fx(tl, id, t0, L) { hud(id, H_ZERO()); shadows(L, id, act("f04").slice(1)); Rig.squash(tl, `${id}-a0`, t0 + F("f04", 0, 1) + 0.63, 0.22);
+          const d = grp(L.act); d.innerHTML = [0, 1, 2, 3].map((k) => `<circle cx="${260 + k * 50}" cy="1230" r="${20 + k * 4}" fill="#e8d8c8" opacity=".7"/>`).join(""); tl.set(d, { opacity: 0 }, 0); tl.fromTo(d, { opacity: 0.9, scale: 0.4, svgOrigin: "330 1230" }, { opacity: 0, scale: 1.7, svgOrigin: "330 1230", duration: 0.7, immediateRender: false }, t0 + F("f04", 0, 1) + 0.62);
+          FLI.badge(tl, L.light, t0, D("f04"), { kind: "zero", x: 840, y: 440, tone: "red", label: "บินไม่ได้", at: F("f04", 0, 1) + 0.9 }); } });
+
+      // ---------- f05 the meter ----------
+      shot("f05", { ...city("f05", { nest: true, mattress: { x: 300 }, flyers: 3 }), camAt: fr(330, 1120, 2.0, 300, 1100), push: 0.02, blur: { far: 6, mid: 5 },
+        actors: [ME("flYou", 330, 1224, [{ t: 0, mode: "sit", eyes: "sad", mouth: "pout" }, { t: F("f05", 0, 1), mode: "sit", eyes: "wide", mouth: "o" }]), A("flGran", 90, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        fx(tl, id, t0, L) { hud(id, H_ZERO()); const g = card(L, 640, 620, 640, 620, "เครื่องวัดพลัง", gauge(0), { band: "#2e2a26" }); pop(tl, g, t0 + 0.1, { origin: "640 620", from: 0.7 });
+          tl.fromTo(g.querySelector(".flNeedle"), { rotation: 40, svgOrigin: "0 0" }, { rotation: -90, svgOrigin: "0 0", duration: 0.6, ease: "elastic.out(1,0.4)", immediateRender: false }, t0 + F("f05", 0, 1) - 0.1); } });
+
+      // ---------- f06 no stairs anywhere · ยายแย้ม welds the iron stairs ----------
+      shot("f06", { ...city("f06", { stairs: true, step1: true, school: true, flyers: 6 }), cam: { keys: [{ t: 0, ...fr(1040, 1240, 1.0, 540, 1000), drift: { s: 0.008 } }, { t: F("f06", 0, 1) + 2.4, ...fr(1150, -700, 0.36, 540, 760), glide: 2.2 }] },
+        actors: [A("flGranWeld", 900, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("f06", 0, 1) - 0.1, mode: "weld", eyes: "squint", mouth: "grit" }]), ME("flYou", 700, 1400, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }, { t: F("f06", 0, 1), mode: "think", eyes: "wide", mouth: "o" }])],
+        fx(tl, id, t0, L) { hud(id, H_ZERO()); shadows(L, id, act("f06"));
+          const sid = SID.city("f06"); tl.set(`#${sid}-stairs`, { scaleY: 0.02, svgOrigin: "1065 1400" }, 0); tl.to(`#${sid}-stairs`, { scaleY: 1, duration: 2.8, ease: "power1.in" }, t0 + F("f06", 0, 1));
+          arc(tl, L, 1022, 1312, t0 + F("f06", 0, 1) - 0.05, 2.2, { s: 0.9 });
+          FLI.badge(tl, L.light, t0, D("f06"), { kind: "stairs", x: 300, y: 520, tone: "yellow", label: "บันไดอันเดียวในโลก", at: F("f06", 0, 2) }); } });
+
+      // ---------- f07 the first step: the graffiti ----------
+      shot("f07", { ...city("f07", { stairs: true, step1: true, flyers: 2 }), camAt: fr(1065, 1330, 2.0, 620, 980), push: 0.02, blur: { far: 8, mid: 6 },
+        actors: [A("flKidSpray", 850, 1400, 0.9, [{ t: 0, mode: "spray", eyes: "squint", mouth: "smirk" }, { t: F("f07", 0, 1) + 1.2, mode: "run", eyes: "happy", mouth: "laugh" }], { flip: false, moveTo: { x: -400, dur: 1.2, at: F("f07", 0, 1) + 1.2 } })],
+        fx(tl, id, t0, L) { hud(id, H_ZERO()); const sid = SID.city("f07"); tl.to(`#${sid}-graf`, { opacity: 1, duration: 0.5 }, t0 + F("f07", 0, 1) - 0.2);
+          const sp = grp(L.act); sp.innerHTML = `<g transform="translate(1040,1360)">${LT.sparks(14, 70, 21, "#ff5a2a")}</g>`; tl.set(sp, { opacity: 0 }, 0); loop(tl, sp, { opacity: 1, scale: 0.6, svgOrigin: "1040 1360" }, { opacity: 0.2, scale: 1.1, svgOrigin: "1040 1360" }, 0.12, t0 + 0.2, F("f07", 0, 1) + 0.6); tl.set(sp, { opacity: 0 }, t0 + F("f07", 0, 1) + 0.9); } });
+
+      // ---------- f08 812 steps every morning · ฟ้า upside down ----------
+      shot("f08", { ...city("f08", { stairs: true, step1: true, flyers: 8 }), camAt: fr(1120, 1040, 1.25, 540, 900), push: 0.01,
+        actors: [ME("flYou", 1000, 1390, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat", period: 1.1, stride: 10 }, { t: F("f08", 0, 2), mode: "idle", eyes: "side", mouth: "flat" }, { t: F("f08", 0, 2) + 1.2, mode: "walk", eyes: "normal", mouth: "pout", period: 1.1, stride: 10 }],
+            { path: [{ t: 0, x: 1000, y: 1390 }, { t: F("f08", 0, 2), x: 1080, y: 1300 }, { t: F("f08", 0, 2) + 1.2, x: 1080, y: 1300 }, { t: D("f08"), x: 1130, y: 1240 }] }),
+          A("flFa", 1290, 270, 0.9, [{ t: 0, mode: "hang", eyes: "happy", mouth: "smile" }, { t: F("f08", 0, 2) + 1.0, mode: "hang", eyes: "normal", mouth: "flat" }], { from: F("f08", 0, 1) - 0.3, flip: true }),
+          FLY("flKidTea", -300, 500, 2000, 300, 2.6, { s: 0.7, extra: { from: 0.2 } }), FLY("flKid1", 2100, 200, -300, 700, 3.0, { s: 0.65, extra: { from: 1.4 } })],
+        fx(tl, id, t0, L) { hud(id, H_STEPS(812)); trailAt(tl, L, -300, 500, 2000, 300, t0 + 0.2, 2.6); trailAt(tl, L, 2100, 200, -300, 700, t0 + 1.4, 3.0);
+          const fa = `#${id}-a1`; tl.fromTo(fa, { y: -30 }, { y: 30, duration: 1.3, repeat: Math.ceil(D("f08") / 1.3), yoyo: true, ease: "sine.inOut" }, t0);
+          const wh = grp(L.glow); wh.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="1290" cy="280" r="120" fill="url(#flRingG)" opacity=".5"/></g>`; tl.set(wh, { opacity: 0 }, 0); tl.set(wh, { opacity: 1 }, t0 + F("f08", 0, 1) - 0.3);
+          FLI.counter(tl, L.light, t0, D("f08"), { icon: "stairs", x: 44, y: 250, from: 812, unit: "ขั้น", at: F("f08", 0, 0) + 0.2, tone: "yellow", steps: [[F("f08", 0, 0) + 1.2, 811], [F("f08", 0, 0) + 2.0, 810], [F("f08", 0, 3), 812]] }); } });
+
+      // ---------- f09 the room at night: the homemade telescope ----------
+      shot("f09", { ...room("f09"), cam: { keys: [{ t: 0, ...fr(560, 980, 1.15, 540, 900), drift: { s: 0.01 } }, { t: F("f09", 0, 1) + 0.3, ...fr(700, 900, 1.3, 540, 880), glide: 0.6 }] },
+        actors: [ME("flYou", 640, 1400, [{ t: 0, mode: "scope", eyes: "closed", mouth: "flat" }, { t: F("f09", 0, 1), mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })],
+        fx(tl, id, t0, L) { hud(id, H_ZERO()); const g = card(L, 540, 620, 680, 520, "สมุดวัดแสง", GRAPH(id, { rate: true }), { band: "#2a3a6a" }); tl.set(g, { opacity: 0 }, 0); pop(tl, g, t0 + F("f09", 0, 1) + 0.1, { origin: "540 620", from: 0.7 });
+          drawPath(tl, `#${id}-gl`, t0 + F("f09", 0, 1) + 0.4, 1.6); tl.set(`#${id}-rt`, { opacity: 0 }, 0); tl.fromTo(`#${id}-rt`, { opacity: 0, scale: 1.8, svgOrigin: "160 210" }, { opacity: 1, scale: 1, svgOrigin: "160 210", duration: 0.25, ease: "power3.in", immediateRender: false }, t0 + F("f09", 0, 2) + 0.1); } });
+
+      // ---------- f10 the graph: the drop began the day the captain appeared ----------
+      shot("f10", { ...room("f10"), camAt: fr(560, 900, 1.1, 540, 900), push: 0.01, blur: { set: 6 }, dark: 0.45,
+        fx(tl, id, t0, L) { hud(id, H_ZERO()); const g = card(L, 540, 700, 700, 560, "สมุดวัดแสง", GRAPH(id, { marker: true }), { band: "#2a3a6a" }); pop(tl, g, t0 + 0.05, { origin: "540 700", from: 0.85 });
+          tl.set(`#${id}-mk`, { opacity: 0 }, 0); tl.fromTo(`#${id}-mk`, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, immediateRender: false }, t0 + F("f10", 0, 1));
+          FLI.badge(tl, L.light, t0, D("f10"), { kind: "captain", x: 840, y: 1180, tone: "yellow", label: "กัปตันสุริยา", at: F("f10", 0, 1) + 0.2 }); } });
+
+      // ---------- f11 seven days · the festival poster ----------
+      shot("f11", { ...city("f11", { flyers: 12 }), camAt: fr(540, 760, 0.9, 540, 760), push: 0.01,
+        actors: [FLY("flKid1", 200, 1400, 260, -300, 2.2, { s: 0.7, ang: 0, flip: false, extra: { from: F("f11", 0, 2) } }), FLY("flDad", 520, 1400, 560, -300, 2.2, { s: 0.8, ang: 0, flip: false, extra: { from: F("f11", 0, 2) + 0.2 } }), FLY("flMum", 820, 1400, 860, -300, 2.2, { s: 0.75, ang: 0, flip: false, extra: { from: F("f11", 0, 2) + 0.4 } })],
+        fx(tl, id, t0, L) { hud(id, H_DAYS(7)); ringDim(tl, id, t0 + F("f11", 0, 1), 0.35, 0.8); tl.to(`#${id}-dark`, { opacity: 0.35, duration: 0.8 }, t0 + F("f11", 0, 1));
+          chip(tl, L, [[t0 + F("f11", 0, 0) + 0.2, "7"]], { id: `${id}-ch`, x: 900, y: 420, label: "อีกกี่วัน" });
+          const g = card(L, 540, 1000, 700, 460, "เทศกาลเหนือเมฆ", `<g transform="translate(0,60)"><text y="60" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="110" fill="#2a3a6a">3,000 ม.</text><text y="130" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#6a5a4a">ทั้งเมืองบินขึ้นพร้อมกัน</text><text y="200" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#d8352a">ทำลายสถิติโลก · อีก 7 วัน</text></g>`, { band: "#e8b830", titleC: "#2a2a34" });
+          tl.set(g, { opacity: 0 }, 0); pop(tl, g, t0 + F("f11", 0, 2) - 0.2, { origin: "540 1000", from: 0.7 }); [[200, 0], [520, 0.2], [820, 0.4]].forEach(([x, d]) => trailAt(tl, L, x, 1400, x + 40, -300, t0 + F("f11", 0, 2) + d, 2.2, "#ffe8a0")); } });
+
+      // ---------- f12 the classroom: the laser-eyed teacher burns the graph ----------
+      shot("f12", { ...klass("f12"), camAt: fr(660, 940, 1.0, 540, 880), push: 0.01,
+        actors: [A("flTeacher", 1000, 1400, 0.98, [{ t: 0, mode: "idle", eyes: "angry", mouth: "frown" }, { t: F("f12", 0, 1), mode: "point", eyes: "angry", mouth: "frown" }, { t: F("f12", 0, 2), mode: "idle", eyes: "angry", mouth: "o" }], { flip: true, talk: [[F("f12", 0, 2), D("f12") - 0.2, "o"]] }),
+          ME("flYouBook", 560, 1400, [{ t: 0, mode: "raise", eyes: "normal", mouth: "flat" }, { t: F("f12", 0, 1) + 0.3, mode: "cower", eyes: "worry", mouth: "frown" }]),
+          A("flKid1", 300, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("f12", 0, 2), mode: "laugh", eyes: "happy", mouth: "laugh" }]), A("flKid2", 780, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("f12", 0, 2) + 0.1, mode: "laugh", eyes: "happy", mouth: "laugh" }])],
+        sfxText: [{ text: "ฮ่าๆๆ", x: 140, y: 560, size: 100, rot: -8, color: "#f6d36a", t: F("f12", 0, 2) + 0.2, end: D("f12") - 0.1 }],
+        fx(tl, id, t0, L) { hud(id, H_DAYS(7)); const sid = SID.klass("f12"); const bg = document.getElementById(`${sid}-boardG`);
+          bg.innerHTML = `<g transform="translate(380,250)"><path d="M-300,200V-180M-300,200H300" stroke="#f4f0e8" stroke-width="5" stroke-linecap="round"/><path id="${id}-ch" d="M-280,-100H-80L-40,-90L0,-70L50,-40L100,0L150,50L200,110L260,180" stroke="#f4f0e8" stroke-width="7" fill="none" stroke-linecap="round"/><text x="-280" y="-150" font-family="Kanit" font-weight="800" font-size="30" fill="#f4f0e8">แสงวงแหวน</text>
+            <g id="${id}-x" opacity="0"><path d="M-260,-160L260,170M260,-160L-260,170" stroke="#ff5a2a" stroke-width="18" stroke-linecap="round"/><path d="M-260,-160L260,170M260,-160L-260,170" stroke="#ffd0a0" stroke-width="6" stroke-linecap="round"/></g>
+            <g id="${id}-sm" opacity="0">${[-120, 0, 120].map((x) => `<path d="M${x},-120q-30,-60 0,-120q30,-60 0,-120" stroke="#8a8a90" stroke-width="12" fill="none" stroke-linecap="round" opacity=".7"/>`).join("")}</g></g>`;
+          tl.to(`#${id}-a0 .flLaser`, { opacity: 1, duration: 0.1 }, t0 + F("f12", 0, 1)); tl.to(`#${id}-a0 .flLaser`, { opacity: 0, duration: 0.2 }, t0 + F("f12", 0, 1) + 1.1);
+          tl.fromTo(`#${id}-x`, { opacity: 0, scale: 0.3, svgOrigin: "0 0" }, { opacity: 1, scale: 1, svgOrigin: "0 0", duration: 0.5, ease: "power3.out", immediateRender: false }, t0 + F("f12", 0, 1) + 0.15);
+          tl.fromTo(`#${id}-sm`, { opacity: 0, y: 40 }, { opacity: 1, y: -60, duration: 1.4, ease: "power1.out", immediateRender: false }, t0 + F("f12", 0, 1) + 0.6);
+          const fl = WHITE(L); tl.fromTo(fl, { opacity: 0.5 }, { opacity: 0, duration: 0.3, immediateRender: false }, t0 + F("f12", 0, 1) + 0.1); } });
+
+      // ---------- f13 the night square: the captain live · only the dog barks ----------
+      shot("f13", { ...city("f13", { time: "night", screen: true, crowd: true, flyers: 3 }), cam: { keys: [{ t: 0, ...fr(230, 600, 0.95, 540, 640), drift: { s: 0.01 } }, { t: F("f13", 0, 2) + 0.2, ...fr(620, 1120, 0.95, 540, 1000), glide: 0.7 }] },
+        actors: [ME("flYou", 760, 1400, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("f13", 0, 3), mode: "idle", eyes: "side", mouth: "flat" }], { flip: false }), A("flFa", 580, 1400, 0.9, [{ t: 0, mode: "cheer", eyes: "happy", mouth: "laugh" }], { from: F("f13", 0, 2) })],
+        extra(L, id) { const sc = document.getElementById(`${SID.city("f13")}-screen`); const w = document.createElementNS("http://www.w3.org/2000/svg", "g"); w.setAttribute("transform", "translate(240,850) scale(1.08)"); sc.appendChild(w); Rig.build(w, `${id}-cap`, Rig.CAST.flCaptain);
+          const dg = grp(L.act); dg.innerHTML = `<g transform="translate(900,1400) scale(1.1)">${FL.DOG(`${id}-dog`)}</g>`; },
+        fx(tl, id, t0, L) { hud(id, H_DAYS(7)); shadows(L, id, act("f13").slice(0, 1)); Rig.drive(tl, `${id}-cap`, t0, D("f13"), [{ t: 0, mode: "point", eyes: "normal", mouth: "smile", talk: [[F("f13", 0, 1), F("f13", 0, 2), "o"]] }], [1.1, 3.0, 5.2]);
+          tl.fromTo(`#${id}-cap`, { y: -8 }, { y: 8, duration: 1.4, repeat: Math.ceil(D("f13") / 1.4), yoyo: true, ease: "sine.inOut" }, t0);
+          const barks = [0.3, 0.75, 1.2, 1.9].map((d) => t0 + F("f13", 0, 3) + d); dogLife(tl, `#${id}-dog`, t0, D("f13"), barks);
+          const cheer = grp(L.light); cheer.innerHTML = `<g transform="translate(560,1180)">${[[-300, -40], [-120, 20], [80, -30], [260, 10]].map(([x, y]) => `<text x="${x}" y="${y}" font-family="Kanit" font-weight="900" font-size="54" fill="#f6d36a" transform="rotate(${(x / 40).toFixed(0)} ${x} ${y})">เย้!</text>`).join("")}</g>`;
+          tl.set(cheer, { opacity: 0 }, 0); tl.fromTo(cheer, { opacity: 0, y: 30 }, { opacity: 1, y: -30, duration: 0.5, immediateRender: false }, t0 + F("f13", 0, 2)); tl.to(cheer, { opacity: 0, duration: 0.3 }, t0 + F("f13", 0, 3) - 0.1);
+          FLI.badge(tl, L.light, t0, D("f13"), { kind: "dog", x: 300, y: 560, tone: "yellow", label: "โฮ่ง!", at: F("f13", 0, 3) + 0.3 }); } });
+
+      // ---------- f14 the stage: his feet never touch the ground ----------
+      shot("f14", { ...city("f14", { time: "night", stage: true, flyers: 2 }), cam: { keys: [{ t: 0, ...fr(540, 860, 1.3, 540, 800), drift: { s: 0.01 } }, { t: F("f14", 0, 1) + 0.2, ...fr(540, 1290, 2.6, 540, 980), glide: 0.9 }] }, blur: { far: 6 },
+        actors: [A("flCaptain", 540, 1300, 1.0, [{ t: 0, mode: "floatPoint", eyes: "normal", mouth: "smile" }])],
+        fx(tl, id, t0, L) { hud(id, H_DAYS(7));
+          const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="540" cy="1292" rx="90" ry="14" fill="url(#flRingG)" opacity=".9"/></g>`;
+          const g = grp(L.act); g.innerHTML = `<g transform="translate(540,1292)"><path d="M-120,-4H-60M60,-4H120" stroke="#f2c55c" stroke-width="5"/><path d="M-60,-16V8M60,-16V8" stroke="#f2c55c" stroke-width="5"/><text x="150" y="4" font-family="Kanit" font-weight="900" font-size="34" fill="#f2c55c">1 ซม.</text></g>`; tl.set(g, { opacity: 0 }, 0); tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0 + F("f14", 0, 2));
+          FLI.badge(tl, L.light, t0, D("f14"), { kind: "nofeet", x: 300, y: 520, tone: "red", label: "ไม่เคยแตะพื้น", at: F("f14", 0, 2) + 0.2 }); } });
+
+      // ---------- f15 alone on the stairs at night: seven days ----------
+      shot("f15", { ...city("f15", { time: "night", stairs: true, step1: true, flyers: 2 }), camAt: fr(1060, 1060, 1.2, 540, 860), push: 0.012, dark: 0.5,
+        actors: [ME("flYou", 1060, 1220, [{ t: 0, mode: "sitChair", eyes: "sad", mouth: "flat" }], { flip: true })],
+        extra(L, id) { const dg = grp(L.act); dg.innerHTML = `<g transform="translate(940,1400) scale(0.9) scale(-1,1)">${FL.DOG(`${id}-dog`)}</g>`; },
+        fx(tl, id, t0, L) { hud(id, H_DAYS(7)); ringDim(tl, id, t0, 0.35, 0.1); dogLife(tl, `#${id}-dog`, t0, D("f15"), []);
+          const g = grp(L.light); g.innerHTML = `<g transform="translate(540,620)"><circle r="150" fill="#fbf7ee" stroke="#2e2a26" stroke-width="9"/><text y="30" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="150" fill="#d8352a">7</text><text y="-80" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#a8305a">เหลือเวลา (วัน)</text><text y="110" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#2e2a26">ก่อนฟ้าดับ</text></g>`;
+          tl.set(g, { opacity: 0 }, 0); pop(tl, g, t0 + F("f15", 0, 2), { origin: "540 620", from: 1.6, dur: 0.3, ease: "power3.in" }); } });
+
+      // ---------- f16 next episode · f17 logo ----------
+      shot("f16", { ...city("f16", { time: "night", stairs: true, flyers: 2 }), camAt: fr(1000, 900, 0.8, 540, 900), push: 0.01, dark: 0.55, blur: { set: 12, mid: 10, far: 10, glow: 8 }, captions: [],
+        fx(tl, id, t0, L) { NkV.chalkEnd(tl, grp(L.light), t0, D("f16"), { big: "ตอนต่อไป", q: "หกวันของคนที่ไม่มีใครเชื่อ", tag: "คนเดินดิน EP.2", foot: "กดติดตาม แล้วดูเรื่องเต็มที่ YouTube" });
+          const yt = grp(L.light); yt.innerHTML = `<g transform="translate(540,1430)"><rect x="-150" y="-50" width="100" height="100" rx="26" fill="#e8302a"/><path d="M-112,-24L-112,24L-72,0Z" fill="#fff"/><text x="-30" y="-6" font-family="Kanit" font-weight="900" font-size="44" fill="#ffffff">${CHANNEL}</text><text x="-30" y="38" font-family="Kanit" font-weight="700" font-size="28" fill="#f2c55c">เรื่องเต็มทุกตอน</text></g>`;
+          tl.set(yt, { opacity: 0 }, 0); tl.fromTo(yt, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 1.4); } });
+      shot("f17", { light: false, captions: [], fx(tl, id, t0, L) { const g = grp(L.light); NkUI.logo(g); pop(tl, g, t0 + 0.05, { from: 0.9, dy: 0, origin: "540 880" }); } });
+      root.insertAdjacentHTML("beforeend", `<div class="badge" id="badge">คนเดินดิน · EP.1</div><div id="vig"></div><div id="flashw"></div><div id="black"></div>`);
+      Fx.setup(root);
+      Engine.build(root, tl, shots);
+
+      root.appendChild(document.getElementById("grain"));
+      const rnd = (() => { let s = 99; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
+      for (let i = 0; i * 0.083 < SCHED.total; i++) tl.set("#grain", { x: Math.round(-50 + rnd() * 50), y: Math.round(-50 + rnd() * 50) }, i * 0.083);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+      // ---------- looks per world (คนเดินดิน) ----------
+      const act = (k) => (shots.find((x) => x.key === k) || {}).actors || [];
+      const DAYF = { dark: 0.02, light: { from: "left", rim: "#fff4d8", rimOp: 0.6, rimW: 4, shade: "#3a3a5a", shadeOp: 0.22, shadeW: 26, soft: 9, vol: false }, grade: { top: "#e8f0ff", bottom: "#4a4a60", op: 0.12 } };
+      const DUSKF = { dark: 0.12, light: { from: "left", rim: "#ffc890", rimOp: 0.65, rimW: 4, shade: "#2a1a40", shadeOp: 0.3, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ff9a60", bottom: "#2a1a40", op: 0.22 } };
+      const NIGHTF = { dark: 0.38, light: { from: "right", rim: "#ffd9a0", rimOp: 0.6, rimW: 4, shade: "#101428", shadeOp: 0.4, shadeW: 26, soft: 9, vol: false }, grade: { top: "#1a2048", bottom: "#06080f", op: 0.42 } };
+      const ROOMF = { dark: 0.3, light: { from: "right", rim: "#ffe0a0", rimOp: 0.55, rimW: 4, shade: "#140f20", shadeOp: 0.4, shadeW: 26, soft: 9, vol: false }, grade: { top: "#2a2048", bottom: "#100a14", op: 0.4 } };
+      const CLASSF = { dark: 0.02, light: { from: "right", rim: "#ffffff", rimOp: 0.5, rimW: 3, shade: "#3a3a4a", shadeOp: 0.2, shadeW: 24, soft: 9, vol: false }, grade: { top: "#fff6e0", bottom: "#6a6a70", op: 0.1 } };
+      const city = (k, o = {}) => ({ ...(o.time === "night" ? NIGHTF : o.time === "dusk" ? DUSKF : DAYF), set: "flCity", setOpts: { id: `fc${k}`, ...o } });
+      const room = (k, o = {}) => ({ ...ROOMF, set: "flRoom", setOpts: { id: `fr${k}`, ...o } });
+      const klass = (k, o = {}) => ({ ...CLASSF, set: "flClass", setOpts: { id: `fk${k}`, ...o } });
+      const SID = { city: (k) => `fc${k}`, room: (k) => `fr${k}`, klass: (k) => `fk${k}` };
+      const shadows = (L, id, actors, sh = -0.4) => NkL.cast(L, id, actors, { k: 0.3, sh, op: 0.35 });
+      const loop = NkV.loop;
+      const H_ZERO = (c = "#ff8a7a") => [["พลัง", "0%", c], ["บินได้", "ไม่"]];
+      const H_STEPS = (n) => [["พลัง", "0%", "#ff8a7a"], ["บันได", `${n} ขั้น`, "#f2c55c"]];
+      const H_DAYS = (d) => [["พลัง", "0%", "#ff8a7a"], ["ฟ้าดับใน", `${d} วัน`, "#9ad8ff"]];
+      const ME = (who, x, y, track, extra = {}) => A(who, x, y, 0.95, track, extra);
+      const face = (x, y = 1400, s = 3.2, flip = false, sx = 540, sy = 760, k = 0.95) => fr(x + (flip ? -2 : 2) * k, y - 546 * k, s, sx, sy);
+      const CHANNEL = "Rod Mai Club";   // ← เปลี่ยนเป็นชื่อช่องใหม่เมื่อเจ้าของตั้งชื่อแล้ว (จุดเดียว)
+      const BLACK = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#000"/>`; return g; };
+      const WHITE = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#ffffff"/>`; tl.set(g, { opacity: 0 }, 0); return g; };
+      // the welding arc (from ช่างเชื่อม): a white core that flickers, sparks that re-seed, a blue glow in the glow layer
+      const arc = (tl, L, x, y, t0, dur, o = {}) => { const g = grp(L.act), s = o.s ?? 1;
+        g.innerHTML = `<g transform="translate(${x},${y}) scale(${s})"><g class="ltAg">${[0, 1, 2].map((k) => `<g class="ltAs${k}" opacity="${k ? 0 : 1}">${LT.sparks(12, 110, 3 + k * 7, k % 2 ? "#ffe24a" : "#ffb04a")}</g>`).join("")}<circle r="30" fill="url(#ltArcG)"/><circle class="ltAc" r="14" fill="#ffffff"/></g></g>`;
+        const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${x}" cy="${y}" r="${260 * s}" fill="url(#ltBlue)" opacity=".8"/></g>`;
+        tl.set([g, gl], { opacity: 0 }, 0); tl.set([g, gl], { opacity: 1 }, t0); if (o.end != null) tl.set([g, gl], { opacity: 0 }, o.end); else tl.set([g, gl], { opacity: 0 }, t0 + dur);
+        tl.fromTo(gl, { opacity: 1 }, { opacity: 0.55, duration: 0.07, repeat: Math.ceil(dur / 0.07), yoyo: true, ease: "none" }, t0);
+        tl.fromTo(g.querySelector(".ltAc"), { scale: 1, svgOrigin: `${x} ${y}` }, { scale: 1.8, svgOrigin: `${x} ${y}`, duration: 0.05, repeat: Math.ceil(dur / 0.05), yoyo: true, ease: "none" }, t0);
+        const sp = [0, 1, 2].map((k) => g.querySelector(`.ltAs${k}`)); for (let t = 0; t < dur; t += 0.09) { const k = Math.round(t / 0.09) % 3; sp.forEach((e, j) => tl.set(e, { opacity: j === k ? 1 : 0 }, t0 + t)); }
+        tl.fromTo(g.querySelector(".ltAg"), { rotation: 0, svgOrigin: `${x} ${y}` }, { rotation: 360, svgOrigin: `${x} ${y}`, duration: 1.7, repeat: Math.ceil(dur / 1.7), ease: "none" }, t0); return g; };
+      // a flyer crossing the frame: an actor in mode fly along a path, with a speed trail behind it (trail drawn in the act layer under the actor)
+      const FLY = (who, x0, y0, x1, y1, dur, o = {}) => A(who, x0, y0, o.s ?? 0.8, [{ t: 0, mode: "fly", eyes: o.eyes || "happy", mouth: o.mouth || "smile", ang: o.ang }], { flip: o.flip ?? (x1 < x0), path: [{ t: 0, x: x0, y: y0 }, { t: dur, x: x1, y: y1 }], ...(o.extra || {}) });
+      const trailAt = (tl, L, x0, y0, x1, y1, at, dur, c = "#ffffff") => { const g = grp(L.act); const ang = Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI; g.innerHTML = `<g transform="translate(${x0},${y0}) rotate(${ang})">${FL.trail(220, c)}</g>`;
+        tl.set(g, { opacity: 0 }, 0); tl.set(g, { opacity: 0.7 }, at); tl.fromTo(g, { x: 0, y: 0 }, { x: x1 - x0, y: y1 - y0, duration: dur, ease: "none" }, at); tl.set(g, { opacity: 0 }, at + dur); return g; };
+      // the golden ring going dim: lower the glow + stroke of every .flRing in a set
+      const ringDim = (tl, id, at, k = 0.4, d = 1.0) => tl.to(`#${id}-far .flRing, #${id}-set .flRing`, { opacity: k, duration: d }, at);
+      // the dog: wag the tail for dur; bark (mouth open) at the given times
+      const dogLife = (tl, sel, t0, dur, barks = []) => { loop(tl, `${sel} .flTail`, { rotation: -16, svgOrigin: "-50 -66" }, { rotation: 16, svgOrigin: "-50 -66" }, 0.18, t0, dur);
+        barks.forEach((b) => { tl.set(`${sel} .flBark`, { opacity: 1 }, b); tl.set(`${sel} .flBark`, { opacity: 0 }, b + 0.18); tl.fromTo(`${sel} .flHead`, { rotation: -10, svgOrigin: "52 -82" }, { rotation: 0, svgOrigin: "52 -82", duration: 0.18, ease: "power2.out", immediateRender: false }, b); }); };
+      // the big card in screen space: a titled paper with inner svg (used for the meter, the graph, the poster)
+      const card = (L, x, y, w, h, title, inner, o = {}) => { const g = grp(L.light); g.innerHTML = `<g transform="translate(${x},${y})"><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="28" fill="${o.paper || "#f6efdf"}"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="100" rx="28" fill="${o.band || "#2a3a6a"}"/>
+          <text x="0" y="${-h / 2 + 68}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="50" fill="${o.titleC || "#f4ecd8"}">${title}</text><g transform="translate(0,${-h / 2 + 100})">${inner}</g></g>`; return g; };
+      // hand-prop variants shared by every project of the story
+      Rig.CAST.flKidTea = { v2: Rig.CAST.flKid2.v2, hand: FL.TEA, keep: "F" }; Flat.SPEC.flKidTea = Flat.SPEC.flKid2; Rig.CAST.flKidSpray = { v2: Rig.CAST.flKid3.v2, hand: FL.SPRAY, keep: "F" }; Flat.SPEC.flKidSpray = Flat.SPEC.flKid3;

@@ -1,0 +1,6 @@
+      // ---------- the cover: x01 = EP.1 (the boy at the foot of the iron stairs, everyone flying above) ----------
+      const CAM = window.LAND ? fr(1000, 900, 2.4, 300, 940) : fr(1004, 940, 1.9, 540, 830);
+      shot("x01", { ...city("x01", { stairs: true, step1: true, flyers: 9, ringNear: { x: 520, y: 380, r: 170 } }), captions: [], camAt: CAM, push: 0, blur: { far: 4 }, dark: 0.08,
+        actors: [ME("flYou", 1000, 1400, [{ t: 0, mode: "idle", eyes: "sad", mouth: "pout" }]), FLY("flKidTea", 200, 520, 1700, 380, 4, { s: 0.8 }), FLY("flFa", 1800, 330, 100, 700, 4, { s: 0.85 }), FLY("flDad", 300, 640, 1500, 560, 4, { s: 0.6 })],
+        fx(tl, id, t0, L) { shadows(L, id, act("x01").slice(0, 1), -0.5); trailAt(tl, L, 200, 520, 1700, 380, t0, 4); trailAt(tl, L, 1800, 330, 100, 700, t0, 4); trailAt(tl, L, 300, 640, 1500, 560, t0, 4);
+          FLI.badge(tl, L.light, t0, 4, { kind: "zero", x: window.LAND ? 1250 : 850, y: window.LAND ? 300 : 740, s: 1.5, tone: "red", label: "บินไม่ได้", labelSize: 40, at: 0.1 }); } });
