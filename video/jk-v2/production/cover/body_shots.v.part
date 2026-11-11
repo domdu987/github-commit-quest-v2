@@ -1,0 +1,11 @@
+      // ---------- the cover in the old-clip look (V, owner 11 Nov): the dusk plaza in front of the guild, the light sword at the kneeling hero's throat, the ear red ----------
+      const TOWN_DUSK = { dark: 0.1, light: { from: "left", rim: "#ffc080", rimOp: 0.95, rimW: 5, shade: "#241a44", shadeOp: 0.42, shadeW: 30, soft: 9, vol: false, cast: { len: 2.6, op: 0.42, ao: 0.4 } }, grade: { top: "#ff9a60", bottom: "#1e1438", op: 0.3 } };
+      Sets.DEFS += `<radialGradient id="vSpill"><stop offset="0" stop-color="#ff5a3a" stop-opacity=".7"/><stop offset=".5" stop-color="#ff3a2a" stop-opacity=".25"/><stop offset="1" stop-color="#ff2a1a" stop-opacity="0"/></radialGradient>`;
+      const HX = 700, HY = 1400, KX = 400;
+      const ROWS = [[1, "เซอร์อาเธอร์ผู้ไม่เคยแพ้", 0], [2, "แม่มดดอกไม้เหล็ก", 0], [3, "ยักษ์ใจดีแห่งภูเขา", 0], [10, "เคน · ดาบแสง", 1], [9999, "คุณ · จอมโกหก (F)", 2]];
+      shot("x01", { ...TOWN_DUSK, set: "jkTown", setOpts: { id: "jtx01", dusk: true, rows: ROWS }, captions: [], camAt: fr(HX + 10 * 0.95, HY - 330 * 0.95, 2.6, 560, 760), push: 0, blur: { far: 9, mid: 6, set: 3 },
+        actors: [A("jkMan2", -20, 1300, 0.72, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }]), A("jkAunt", 40, 1330, 0.78, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), A("jkWom1", 1290, 1310, 0.74, [{ t: 0, mode: "coverEars", eyes: "wide", mouth: "o" }], { flip: true }), A("jkMan1", 1230, 1340, 0.8, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }),
+          ME("jkYou", HX, HY, [{ t: 0, mode: "kneelUp", eyes: "wide", mouth: "scream" }], { flip: true }), A("jkKenLS", KX, HY, 0.95, [{ t: 0, mode: "lunge", eyes: "angry", mouth: "frown" }])],
+        fx(tl, id, t0, L) { NkL.cast(L, id, act("x01"), { k: 0.5, sh: 0.55, op: 0.3 }); NkL.pool(L.set, 688, 1160, 170, 80, "#bfe8ff", 0.55); NkL.pool(L.glow, 700, 1060, 110, 100, "#bfe8ff", 0.22);
+          const g = grp(L.set); g.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="720" cy="1406" rx="200" ry="56" fill="url(#vSpill)" opacity=".7"/></g>`;
+          const eg = earBlink(tl, L, `${id}-a4`, HX, HY, 0.95, true, t0, 4, 0.28, 216); eg.querySelector("circle").setAttribute("r", "57"); L.set.appendChild(eg); tl.set(`#${id}-a4 .jkEar`, { opacity: 1 }, t0 + 1.4); tl.set(eg, { opacity: 1 }, t0 + 1.4); } });
