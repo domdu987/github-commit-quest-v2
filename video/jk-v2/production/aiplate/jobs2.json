@@ -1,0 +1,34 @@
+[
+ {
+  "name": "plaza_cu",
+  "op": "edit",
+  "refs": [
+   "refs/jar_hall.jpg"
+  ],
+  "prompt": "Paint a completely NEW scene in the same painterly 3D-rendered style, lighting quality and colour richness as the reference image (do not copy its content): a close-up background plate for a medieval fantasy town plaza at dusk, portrait 9:16: the camera is low, at the eye height of a kneeling man, looking across the cobblestones toward a stone guild hall; everything is out of focus with soft bokeh (torch flames as warm bokeh discs, blurred red banners, blurred market stall awnings, blurred cobbles in the lower half), pink-mauve dusk sky, warm torch light from the left, long soft shadows, rich saturated colours. Completely EMPTY of people, animals and characters. No text, no letters, no writing anywhere."
+ },
+ {
+  "name": "street_main",
+  "op": "edit",
+  "refs": [
+   "refs/rail_station.jpg"
+  ],
+  "prompt": "Paint a completely NEW scene in the same painterly 3D-rendered style, lighting quality and colour richness as the reference image (do not copy its content): a small Thai town street at dusk in a 3D-rendered cartoon style, portrait 9:16, strict one-point perspective from a standing eye height, the road and sidewalk converge to the vanishing point about 40 percent from the top; on the RIGHT side in the near-middle a small insurance shop with a blue signboard and a big glass window glowing warm; two- and three-storey shophouses with cloth awnings, folded steel shutters, air-conditioning units and balconies recede on both sides; concrete power poles with tangled wires; a food cart with a string of light bulbs on the left; a parked motorcycle; a zebra crossing; street lamps lit; the evening sky orange to purple with the low sun on the left; long warm shadows to the right; IMPORTANT: in the lower-right quarter of the frame, on the near road surface, an OPEN round manhole with its iron cover lying beside it, clearly visible; highly detailed, rich colours. Completely EMPTY of people, animals and characters. No text, no letters, no writing anywhere."
+ },
+ {
+  "name": "heaven_queue",
+  "op": "edit",
+  "refs": [
+   "refs/jar_hall.jpg"
+  ],
+  "prompt": "Paint a completely NEW scene in the same painterly 3D-rendered style, lighting quality and colour richness as the reference image (do not copy its content): heaven as a grand celestial bureau on the clouds, portrait 9:16, one-point perspective from a standing eye height, a wide soft cloud floor converging to a glowing golden gate far away, light shafts from the upper left, a pastel gold and lilac palette; on the RIGHT in the middle distance a giant red capsule-toy gacha machine with a glass dome full of colourful capsules and a crank on its left side; on the FAR RIGHT a white marble reception counter with gold trim and a small golden bell; golden rope posts with a red velvet rope run along the left side toward the machine; fluffy cloud banks with top-light and lilac shade, tiny sparkles, a huge faint halo ring in the sky; highly detailed, soft dreamy light. Completely EMPTY of people, animals and characters. No text, no letters, no writing anywhere."
+ },
+ {
+  "name": "plaza_high",
+  "op": "edit",
+  "refs": [
+   "refs/rail_station.jpg"
+  ],
+  "prompt": "Paint a completely NEW scene in the same painterly 3D-rendered style, lighting quality and colour richness as the reference image (do not copy its content): the same medieval fantasy town plaza in front of a stone guild hall with two towers, portrait 9:16, but seen from a HIGH angle looking down from a rooftop: the cobblestone square fills most of the frame, the guild hall door and towers at the top third, market stalls with striped awnings and torches on stone pillars along both sides, bunting flags across the square, long shadows across the cobbles from a low sun on the left, pink-mauve dusk sky at the very top, warm torch pools on the ground, highly detailed, rich colours. Completely EMPTY of people, animals and characters. No text, no letters, no writing anywhere."
+ }
+]

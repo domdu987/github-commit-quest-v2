@@ -1,0 +1,26 @@
+[
+ {
+  "name": "plate_A",
+  "op": "edit",
+  "refs": [
+   "refs/jar_hall.jpg"
+  ],
+  "prompt": "Paint a completely NEW scene in the same painterly 3D-rendered style, lighting quality and colour richness as the reference image (do not copy its content): a medieval fantasy town plaza in front of a grand stone adventurers' guild hall at dusk, portrait 9:16, strict one-point perspective with the vanishing point about 40 percent from the top, a wide cobblestone square converging to the hall's big arched wooden double door, the hall has two round stone towers with red conical roofs and red banners with gold trim, tall stone pillars with burning torches line both sides of the square, market stalls with striped cloth awnings, wooden crates and barrels on both sides, strings of small triangle bunting flags across the square, timber-frame houses with warm glowing windows behind the pillars, long shadows across the cobbles from a low sun on the left, a pink-mauve dusk sky with a peach glow, warm torch light pools on the ground, soft atmospheric haze toward the hall, highly detailed stone and cobble textures, rich saturated colours, cinematic depth of field with the near cobbles sharp. The plaza is completely EMPTY: no people, no animals, no characters, no text, no letters, no writing on anything."
+ },
+ {
+  "name": "plate_B",
+  "op": "edit",
+  "refs": [
+   "refs/rail_station.jpg"
+  ],
+  "prompt": "Paint a completely NEW scene in the same bold 3D-rendered style, strong colour contrast and crisp detail as the reference image (do not copy its content): a medieval fantasy town plaza in front of a grand stone adventurers' guild hall at dusk, portrait 9:16, strict one-point perspective with the vanishing point about 40 percent from the top, a wide cobblestone square converging to the hall's big arched wooden double door, the hall has two round stone towers with red conical roofs and red banners with gold trim, tall stone pillars with burning torches line both sides of the square, market stalls with striped cloth awnings, wooden crates and barrels on both sides, strings of small triangle bunting flags across the square, timber-frame houses with warm glowing windows behind the pillars, long shadows across the cobbles from a low sun on the left, a pink-mauve dusk sky with a peach glow, warm torch light pools on the ground, soft atmospheric haze toward the hall, highly detailed stone and cobble textures, rich saturated colours, cinematic depth of field with the near cobbles sharp. The plaza is completely EMPTY: no people, no animals, no characters, no text, no letters, no writing on anything. Wide-angle lens, camera at standing eye height."
+ },
+ {
+  "name": "plate_C",
+  "op": "edit",
+  "refs": [
+   "refs/jar_gate.jpg"
+  ],
+  "prompt": "Paint a completely NEW scene in the same painterly 3D-rendered style and lighting as the reference image (do not copy its content): a medieval fantasy town plaza in front of a grand stone adventurers' guild hall at golden hour with volumetric light shafts from the upper left, portrait 9:16, strict one-point perspective with the vanishing point about 40 percent from the top, a wide cobblestone square converging to the hall's big arched wooden double door, the hall has two round stone towers with red conical roofs and red banners with gold trim, tall stone pillars with burning torches line both sides of the square, market stalls with striped cloth awnings, wooden crates and barrels on both sides, strings of small triangle bunting flags across the square, timber-frame houses with warm glowing windows behind the pillars, long shadows across the cobbles from a low sun on the left, a pink-mauve dusk sky with a peach glow, warm torch light pools on the ground, soft atmospheric haze toward the hall, highly detailed stone and cobble textures, rich saturated colours, cinematic depth of field with the near cobbles sharp. The plaza is completely EMPTY: no people, no animals, no characters, no text, no letters, no writing on anything."
+ }
+]

@@ -1,7 +1,6 @@
-      // ---------- the cover: x01 = EP.1 (the light sword at the kneeling hero's throat, the ear red) ----------
-      const HERO_Z = 0.25, HERO_X = 700, KEN_X = 400;
-      VPY(900); const [hx, hy, hk] = PJ(HERO_X, HERO_Z);
-      shot("x01", { ...square("x01", { crowd: true, time: "mauve", fgHeads: true }), captions: [], camAt: fr(hx + 10 * hk, hy - 330 * hk, 2.6, 560, 760), push: 0, blur: { set: 2, mid: 6, far: 9 },
-        actors: [AT("jkYou", HERO_X, HERO_Z, [{ t: 0, mode: "kneelUp", eyes: "wide", mouth: "scream" }], { flip: true }), AT("jkKenLS", KEN_X, HERO_Z, [{ t: 0, mode: "lunge", eyes: "angry", mouth: "grit" }]),
-          AT("jkMan1", 1500, 1.6, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }), AT("jkWom1", 1750, 2.0, [{ t: 0, mode: "coverEars", eyes: "wide", mouth: "o" }], { flip: true }), AT("jkAunt", -380, 1.8, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), AT("jkMan2", -620, 2.4, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }])],
-        fx(tl, id, t0, L) { shadows(L, id, act("x01"), 0.6, 0.3); earBlink(tl, L, `${id}-a0`, hx, hy, 0.95 * hk, true, t0, 4, 0.28, 216); } });
+      // ---------- the cover on the AI-painted plaza (A): the light sword at the kneeling hero's throat, the ear red ----------
+      const HX = 700, HY = 1500, KX = 400;
+      shot("x01", { ...MAUVE, grade: { ...MAUVE.grade, op: 0.1 }, dark: 0.03, set: "aiPlate", setOpts: { id: "aix01", src: "plate_B.jpg" }, captions: [], camAt: P(HX + 10, HY - 330, 2.6, 560, 760), push: 0,
+        actors: [A("jkYou", HX, HY, 0.95, [{ t: 0, mode: "kneelUp", eyes: "wide", mouth: "scream" }], { flip: true }), A("jkKenLS", KX, HY, 0.95, [{ t: 0, mode: "lunge", eyes: "angry", mouth: "grit" }]),
+          A("jkMan1", 1000, 1215, 0.5, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }), A("jkAunt", 110, 1225, 0.5, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }])],
+        fx(tl, id, t0, L) { shadows(L, id, act("x01"), 0.6, 0.3); earBlink(tl, L, `${id}-a0`, HX, HY, 0.95, true, t0, 4, 0.28, 216); } });

@@ -1,0 +1,11 @@
+      // ---------- x01: the opening on an AI-painted plaza (plate B), SVG cast, same camera plan as k01 ----------
+      const PL = window.PLATE || "plate_B.jpg";
+      const HX = 700, HY = 1500, KX = 400;
+      shot("x01", { ...MAUVE, grade: { top: "#e0a0b0", bottom: "#24142c", op: 0.1 }, dark: 0.03, set: "aiPlate", setOpts: { id: "aix01", src: PL }, blur: { set: 0 },
+        captions: [{ text: "ถ้าคุณเกิดใหม่พร้อม{สกิลที่กากที่สุด}…", t: 0.2, end: 2.6 }, { text: "แล้วกำลังจะโดนผู้กล้า{ฟันคอขาด}อยู่ตรงหน้า", t: 2.7, end: 5.9 }],
+        cam: { keys: [{ t: 0, ...P(560, 1230, 1.75, 540, 860), drift: { s: 0.03 } }, { t: 2.2, ...P(HX + 10, HY - 330, 3.0, 560, 780), drift: { s: 0.03 } }, { t: 3.4, ...P(540, 800, 1.06, 540, 720), drift: { s: 0.01 } }, { t: 5.4, ...P(540, 1000, 1.2, 540, 960), glide: 1.8 }] },
+        actors: [A("jkYou", HX, HY, 0.95, [{ t: 0, mode: "kneelUp", eyes: "wide", mouth: "scream" }], { flip: true }), A("jkKenLS", KX, HY, 0.95, [{ t: 0, mode: "lunge", eyes: "angry", mouth: "grit" }]),
+          A("jkMan1", 1000, 1215, 0.5, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }), A("jkWom1", 1060, 1190, 0.44, [{ t: 0, mode: "coverEars", eyes: "wide", mouth: "o" }], { flip: true }), A("jkAunt", 110, 1225, 0.5, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), A("jkMan2", 30, 1195, 0.44, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }])],
+        fx(tl, id, t0, L) { hud(id, [["คนเชื่อ", "0/100", "#ff8a7a"], ["สกิล", "จอมโกหก · F", "#f2c55c"]]); shadows(L, id, act("x01"), 0.6, 0.3); earBlink(tl, L, `${id}-a0`, HX, HY, 0.95, true, t0, D("x01"), 0.28, 216); beliefBar(tl, L, t0, [[0.3, 0]], { id: `${id}-bb`, y: 330 });
+          L.fg.insertAdjacentHTML("beforeend", `<g filter="url(#j3Soft)" opacity=".92">${[[60, 0], [330, 30], [640, -10], [930, 40], [1180, 10]].map(([x, dy]) => `<circle cx="${x}" cy="${1700 + dy}" r="96" fill="#1a0e1c"/><ellipse cx="${x}" cy="${1900 + dy}" rx="190" ry="130" fill="#1a0e1c"/>`).join("")}</g>`);
+          L.fg.insertAdjacentHTML("beforeend", `<g class="j3Dust">${[...Array(26)].map((_, i) => `<circle cx="${(i * 173) % 1080}" cy="${300 + (i * 311) % 1400}" r="${2 + (i % 4)}" fill="#fff2c8" opacity="${0.3 + (i % 5) * 0.1}"/>`).join("")}</g>`); } });
