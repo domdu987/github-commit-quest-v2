@@ -39,7 +39,7 @@
       // ---------- k01 · the plaza in front of the guild at dusk: the sword at the throat (two-shot at neck height → the hero's face → wide over the crowd) ----------
       const HX = 700, HY = 1400, KX = 400;
       // the briefcase in the BACK hand so the front hand can point at the customer without shoving the bag in her face; a reading gait for the book walk
-      Rig.CAST.jkYouBagB = { ...Rig.CAST.jkYouBag, keep: "B" }; Flat.SPEC.jkYouBagB = Flat.SPEC.jkYouBag;
+      Rig.CAST.jkYouBagB = { ...Rig.CAST.jkYouBag, keep: "B" }; Flat.SPEC.jkYouBagB = Flat.SPEC.jkYou;   // the hero's own spec (glasses, hair, the red ear) — a missing spec gave him a stranger's face (owner 11 Nov "หน้าไม่เหมือน")
       Rig.MODES.readWalk = (u, o) => ({ ...Rig.MODES.walk(u, o), uaF: -52 + Math.sin(u * 1.1), faF: -92, uaB: 4, faB: -12, head: 12 });
       // plaza bystanders: not the insurance customer (she belongs to the old world); the pointing man looks up in the fall, stays idle at the sword scene
       const CROWD = (up = false) => [A("jkMan2", -20, 1300, 0.72, [{ t: 0, mode: up ? "raise" : "idle", eyes: "wide", mouth: "o" }]), A("jkMan3", 40, 1330, 0.78, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]),

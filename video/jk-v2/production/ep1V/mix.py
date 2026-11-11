@@ -98,6 +98,10 @@ mus = bed(N, SR, [(0, T("k03", 0), "tension"), (T("k03", 0), T("k06", 0), "music
 
 # ---- levels + ducking (the bed sits well under the voice) ----
 mus = level(mus, -31)
+# the hook (sword at the throat, 0 → the rewind) wants the tension track up front: +6 dB until k03, eased down over 0.6 s (owner 11 Nov asked about the opening music)
+_hb = np.ones(N, np.float32); _n3 = int(T("k03", 0) * SR); _r = int(0.6 * SR)
+_hb[:_n3 - _r] = 10 ** (6 / 20); _hb[_n3 - _r:_n3] = np.linspace(10 ** (6 / 20), 1, _r, dtype=np.float32)
+mus = mus * _hb
 sfx = level(sfx, -27)
 env = box(np.abs(vo), int(0.05 * SR))
 duck = 1 - 0.6 * np.clip(env / (np.percentile(env[env > 1e-4], 50) + 1e-9), 0, 1)
