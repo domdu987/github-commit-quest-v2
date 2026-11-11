@@ -11,6 +11,7 @@
   const f = (v) => (+v).toFixed(1);
   const mk = (s) => () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
   const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+  const BEFORE = (layer, selector, html) => { const e = layer.querySelector(selector); if (e) e.insertAdjacentHTML("beforebegin", html); else put(layer, html); };   // insert dressing behind an existing element (e.g. ".j3CrowdLayer", "#<id>-gacha", ".act-front")
   const T = (x, y, size, text, o = {}) => `<text x="${f(x)}" y="${f(y)}" text-anchor="${o.anchor || "middle"}" font-family="${o.font || "Kanit"}" font-weight="${o.w || 800}" font-size="${size}" fill="${o.fill || "#222"}"${o.op ? ` opacity="${o.op}"` : ""}${o.rot ? ` transform="rotate(${o.rot} ${f(x)} ${f(y)})"` : ""}>${text}</text>`;
   const VP = { x: 540, y: 740 }, GROUND = 1400, D = 2.2;
   const K = (z) => 1 / (1 + z / D);
@@ -106,7 +107,7 @@
     [0.6, 1.6, 3.0, 5.0].forEach((z, i) => { [-1500 - i * 80, 2580 + i * 80].forEach((x) => { const [bx, by, k] = proj(x, GROUND, z), w = 110 * k, len = 1900 * k; s += `<polygon points="${f(bx - w * 0.7)},${f(by)} ${f(bx + w * 0.7)},${f(by)} ${f(bx + w * 0.7 + len)},${f(by + len * 0.18)} ${f(bx - w * 0.7 + len)},${f(by + len * 0.18)}" fill="${lit ? "#05030a" : "#2a1030"}" opacity="${lit ? 0.35 : 0.3}"/>`; }); });
     s += `<g style="mix-blend-mode:screen">${[0.6, 1.6, 3.0, 5.0].map((z, i) => [-1500 - i * 80, 2580 + i * 80].map((x) => { const [bx, by, k] = proj(x, GROUND, z); return `<ellipse cx="${f(bx)}" cy="${f(by)}" rx="${f(300 * k)}" ry="${f(80 * k)}" fill="url(#j3Torch)" opacity=".45"/>`; }).join("")).join("")}</g>`;
     [0.6, 1.6, 3.0, 5.0].forEach((z, i) => { s += pillar(-1500 - i * 80, z, 900, true, id, { banner: true, w: 110 }) + pillar(2580 + i * 80, z, 900, true, id, { banner: true, w: 110 }); });
-    if (o.crowd) { const zs = []; for (let i = 0; i < 26; i++) zs.push([-1700 + r() * 1300, 1.2 + r() * 3.5]); for (let i = 0; i < 26; i++) zs.push([1100 + r() * 1500, 1.2 + r() * 3.5]); s += silhouettes(r, zs, lit ? "#0e0c1c" : "#2a2440"); }
+    if (o.crowd) { const zs = []; for (let i = 0; i < 26; i++) zs.push([-1700 + r() * 1300, 1.2 + r() * 3.5]); for (let i = 0; i < 26; i++) zs.push([1100 + r() * 1500, 1.2 + r() * 3.5]); s += `<g class="j3CrowdLayer">${silhouettes(r, zs, lit ? "#0e0c1c" : "#2a2440")}</g>`; } else s += `<g class="j3CrowdLayer"></g>`;
     if (time === "mauve") s += `<rect x="-3000" y="700" width="8000" height="1800" fill="#8a4a70" opacity=".2" style="mix-blend-mode:multiply"/>`;
     put(L.set, s);
     // glow: torches, the sun bloom, rays, dust (screen blend over the darkness)
@@ -117,6 +118,7 @@
     if (!lit) put(L.fg, rays(r, 6, 760, 0.42));
     if (o.fgHeads) put(L.fg, `<g filter="url(#j3Soft)" opacity=".92">${[[60, 0], [330, 30], [640, -10], [930, 40], [1180, 10]].map(([x, dy]) => `<circle cx="${x}" cy="${1700 + dy}" r="96" fill="#1a0e1c"/><ellipse cx="${x}" cy="${1900 + dy}" rx="190" ry="130" fill="#1a0e1c"/>`).join("")}</g>`);
     if (o.nearPillar !== false) put(L.fg, `<g filter="url(#j3Soft)" opacity=".95"><rect x="-600" y="-900" width="420" height="3400" fill="#3a2a2c"/><rect x="-600" y="-900" width="420" height="3400" fill="url(#j3Side)"/><rect x="-640" y="-940" width="500" height="60" fill="#4a3a3c"/><rect x="-520" y="-600" width="260" height="900" fill="url(#j3Red)" opacity=".9"/><rect x="-520" y="-600" width="260" height="30" fill="#f2b632"/></g>`);
+    if (window.J3D && J3D.square) J3D.square(L, o, { proj, K, T, put, GROUND, VP, r, lit: typeof lit !== "undefined" ? lit : false, time: typeof time !== "undefined" ? time : "", id, f, floorY, mk, before: BEFORE });
   };
   // ======================= inside the guild hall =======================
   Sets.j3Hall = (L, o = {}) => {
@@ -139,6 +141,7 @@
     put(L.set, s);
     put(L.glow, `<g style="mix-blend-mode:screen">${[1.4, 3.4].map((z) => { const [x, y, kk] = proj(540, GROUND - 1500, z); return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(420 * kk + 60)}" fill="url(#j3Torch)" opacity=".7"/>`; }).join("")}<circle cx="${f(cx)}" cy="${f(by - 900 * k)}" r="${f(900 * k + 120)}" fill="url(#j3Sun)" opacity=".5" filter="url(#j3Bloom)"/></g>`);
     put(L.fg, dust(r, 34) + rays(r, 5, 540, 0.3));
+    if (window.J3D && J3D.hall) J3D.hall(L, o, { proj, K, T, put, GROUND, VP, r, lit: typeof lit !== "undefined" ? lit : false, time: typeof time !== "undefined" ? time : "", id, f, floorY, mk, before: BEFORE });
   };
   // ======================= heaven =======================
   Sets.j3Cloud = (L, o = {}) => {
@@ -165,6 +168,7 @@
     if (o.hole) { const [hx2, hy2] = proj(o.hole[0], GROUND, o.hole[1]); put(L.set, `<ellipse id="${id}-hole" cx="${f(hx2)}" cy="${f(hy2 + 4)}" rx="0" ry="0" fill="#6a9ad8"/>`); }
     put(L.glow, `<g style="mix-blend-mode:screen"><circle cx="700" cy="300" r="700" fill="url(#j3Sun)" opacity=".3" filter="url(#j3Bloom)"/></g>`);
     put(L.fg, rays(r, 7, 700, 0.35) + dust(r, 30, "#ffffff") + `<g filter="url(#j3Soft)" opacity=".9">${[[-150, 1960, 620, 200], [760, 2000, 700, 230], [1300, 1940, 520, 170]].map(([x, y, rx, ry]) => `<g class="j3Puff"><ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#ffffff"/><ellipse cx="${x - rx * 0.35}" cy="${y - ry * 0.5}" rx="${rx * 0.5}" ry="${ry * 0.9}" fill="#ffffff"/></g>`).join("")}</g>`);
+    if (window.J3D && J3D.cloud) J3D.cloud(L, o, { proj, K, T, put, GROUND, VP, r, lit: typeof lit !== "undefined" ? lit : false, time: typeof time !== "undefined" ? time : "", id, f, floorY, mk, before: BEFORE });
   };
   // ======================= the old world street at dusk =======================
   Sets.j3Street = (L, o = {}) => {
@@ -186,6 +190,7 @@
     put(L.glow, `<g style="mix-blend-mode:screen">${[[-900, 0.4], [-900, 2.2], [1100, 1.2], [1100, 3.4]].map(([x, z]) => { const [bx, by, kk] = proj(x, GROUND, z); return `<circle class="j3TorchGlow" cx="${f(bx)}" cy="${f(by - 920 * kk)}" r="${f(300 * kk + 40)}" fill="url(#j3Torch)" opacity=".7"/>`; }).join("")}</g>`);
     if (o.fgLamp) put(L.fg, `<g filter="url(#j3Soft)" opacity=".92"><rect x="-260" y="-600" width="64" height="3200" fill="#120c16"/><rect x="-330" y="-660" width="204" height="120" rx="30" fill="#120c16"/></g>`);
     put(L.fg, dust(r, 24, "#ffd9a0"));
+    if (window.J3D && J3D.street) J3D.street(L, o, { proj, K, T, put, GROUND, VP, r, lit: typeof lit !== "undefined" ? lit : false, time: typeof time !== "undefined" ? time : "", id, f, floorY, mk, before: BEFORE });
   };
   const projAt = (x, y, z, vpY) => { const v = VP.y; if (vpY) VP.y = vpY; const r = proj(x, y, z); VP.y = v; return r; };
   ["j3Square", "j3Hall", "j3Cloud", "j3Street"].forEach((n) => { const fn = Sets[n]; Sets[n] = (L, o = {}) => { const v = VP.y; if (o.vpY) VP.y = o.vpY; try { return fn(L, o); } finally { VP.y = v; } }; });
