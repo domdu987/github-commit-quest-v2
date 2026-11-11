@@ -1,0 +1,164 @@
+// สกิลจอมโกหก v2 (11 พ.ย. 2569) · pseudo-3D painted stages in the owner's reference look: one-point perspective, vivid light, bloom, rays, dust.
+//   J3.proj(x, y, z) → screen point of a world point at depth z (z 0 = the actors' ground line y 1400, VP at (540, 740), D = 2.2)
+//   J3.floorY(z) · J3.scale(z): where a character standing at depth z puts its feet, and its scale
+//   Sets.j3Square(L, o)  the square in front of the Hero Guild at golden hour: cobbles converging to the guild hall (big door, banners, the ranking board #id-board),
+//                        pillars with torches down both sides, a crowd of silhouettes (o.crowd), a dark sky variant (o.doom: the sky goes black, the ears glow),
+//                        o.time: "gold" (default) | "dusk" | "night" | "doom"
+//   Sets.j3Hall(L, o)    inside the guild hall: red carpet, stone pillars and arches, red drapes with gold trims, chandeliers, the podium at the back (o.vip: the VIP room table)
+//   Sets.j3Cloud(L, o)   heaven: a cloud floor to the horizon, the gacha machine and the counter from jkset drawn at depth
+//   Sets.j3Street(L, o)  the old world at dusk: a perspective street, the insurance shop "ประกันชีวิต มั่นใจ สาขา 112", a manhole (o.manhole)
+(function () {
+  const f = (v) => (+v).toFixed(1);
+  const mk = (s) => () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  const put = (el, html) => el.insertAdjacentHTML("beforeend", html);
+  const T = (x, y, size, text, o = {}) => `<text x="${f(x)}" y="${f(y)}" text-anchor="${o.anchor || "middle"}" font-family="${o.font || "Kanit"}" font-weight="${o.w || 800}" font-size="${size}" fill="${o.fill || "#222"}"${o.op ? ` opacity="${o.op}"` : ""}${o.rot ? ` transform="rotate(${o.rot} ${f(x)} ${f(y)})"` : ""}>${text}</text>`;
+  const VP = { x: 540, y: 740 }, GROUND = 1400, D = 2.2;
+  const K = (z) => 1 / (1 + z / D);
+  const proj = (x, y, z) => { const k = K(z); return [VP.x + (x - VP.x) * k, VP.y + (y - VP.y) * k, k]; };
+  const floorY = (z) => VP.y + (GROUND - VP.y) * K(z);
+  const scale = (z) => K(z);
+  Sets.DEFS += `
+    <linearGradient id="j3SkyGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3f9c"/><stop offset=".35" stop-color="#7a6fd0"/><stop offset=".62" stop-color="#ff9a5a"/><stop offset=".8" stop-color="#ffd27a"/><stop offset="1" stop-color="#fff0c0"/></linearGradient>
+    <linearGradient id="j3SkyDusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1f5a"/><stop offset=".45" stop-color="#6a3a8a"/><stop offset=".75" stop-color="#e86a5a"/><stop offset="1" stop-color="#ffc07a"/></linearGradient>
+    <linearGradient id="j3SkyNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05071c"/><stop offset=".5" stop-color="#141c48"/><stop offset=".85" stop-color="#2a3468"/><stop offset="1" stop-color="#3a4478"/></linearGradient>
+    <linearGradient id="j3SkyDoom" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050308"/><stop offset=".5" stop-color="#2a0a24"/><stop offset=".8" stop-color="#6a1030"/><stop offset="1" stop-color="#a8302a"/></linearGradient>
+    <linearGradient id="j3Cobble" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9b08a"/><stop offset=".45" stop-color="#9a7f5c"/><stop offset="1" stop-color="#4e3a2a"/></linearGradient>
+    <linearGradient id="j3CobbleN" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4a62"/><stop offset="1" stop-color="#1e1e30"/></linearGradient>
+    <linearGradient id="j3Stone" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3e4056"/><stop offset=".3" stop-color="#b0b4c8"/><stop offset=".7" stop-color="#8a8ea6"/><stop offset="1" stop-color="#2e3044"/></linearGradient>
+    <linearGradient id="j3StoneW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0d8a8"/><stop offset=".5" stop-color="#c89a64"/><stop offset="1" stop-color="#6a4a30"/></linearGradient>
+    <linearGradient id="j3Side" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient>
+    <linearGradient id="j3Red" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a1c22"/><stop offset=".4" stop-color="#d9342e"/><stop offset="1" stop-color="#7a161c"/></linearGradient>
+    <linearGradient id="j3Gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a8"/><stop offset=".5" stop-color="#f2b632"/><stop offset="1" stop-color="#9c6a14"/></linearGradient>
+    <linearGradient id="j3Carpet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3f9c"/><stop offset="1" stop-color="#1f2360"/></linearGradient>
+    <linearGradient id="j3Haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".55"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></linearGradient>
+    <linearGradient id="j3Ray" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c8" stop-opacity=".55"/><stop offset="1" stop-color="#fff2c8" stop-opacity="0"/></linearGradient>
+    <radialGradient id="j3Sun"><stop offset="0" stop-color="#fff6d8" stop-opacity="1"/><stop offset=".25" stop-color="#ffd27a" stop-opacity=".7"/><stop offset="1" stop-color="#ff9a5a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="j3Torch"><stop offset="0" stop-color="#fff0b0" stop-opacity=".95"/><stop offset=".4" stop-color="#ffb050" stop-opacity=".45"/><stop offset="1" stop-color="#ff7a30" stop-opacity="0"/></radialGradient>
+    <radialGradient id="j3RedGlow"><stop offset="0" stop-color="#ff6a5a" stop-opacity=".9"/><stop offset=".5" stop-color="#ff3a2a" stop-opacity=".35"/><stop offset="1" stop-color="#ff2a1a" stop-opacity="0"/></radialGradient>
+    <filter id="j3Soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="j3Bloom" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="j3Far" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="2.2"/></filter>`;
+  const SKY = { gold: "j3SkyGold", dusk: "j3SkyDusk", night: "j3SkyNight", doom: "j3SkyDoom" };
+  const dark = (t) => t === "night" || t === "doom";
+  // ---- floor: a plane from z=0 (near) to z=zFar with converging lines and depth bands ----
+  const floor = (r, o = {}) => { const zFar = o.zFar ?? 14, fill = o.fill || "url(#j3Cobble)"; const [x0, y0] = proj(-2400, GROUND, 0), [x1] = proj(4000, GROUND, 0), [hx0, hy] = proj(-2400, GROUND, zFar), [hx1] = proj(4000, GROUND, zFar);
+    let s = `<polygon points="${f(x0)},${f(y0 + 900)} ${f(x1)},${f(y0 + 900)} ${f(x1)},${f(y0)} ${f(hx1)},${f(hy)} ${f(hx0)},${f(hy)} ${f(x0)},${f(y0)}" fill="${fill}"/>`;
+    if (o.carpet) { const w = o.carpet; const [a] = proj(-w, GROUND, 0), [b] = proj(w, GROUND, 0), [c] = proj(-w, GROUND, zFar), [d] = proj(w, GROUND, zFar); s += `<polygon points="${f(a)},${f(y0 + 900)} ${f(b)},${f(y0 + 900)} ${f(b)},${f(y0)} ${f(d)},${f(hy)} ${f(c)},${f(hy)} ${f(a)},${f(y0)}" fill="url(#j3Carpet)"/><polygon points="${f(a + 40)},${f(y0 + 900)} ${f(b - 40)},${f(y0 + 900)} ${f(b - 40)},${f(y0)} ${f(d - 6)},${f(hy)} ${f(c + 6)},${f(hy)} ${f(a + 40)},${f(y0)}" fill="none" stroke="#f2b632" stroke-width="6" opacity=".8"/>`; }
+    // converging joints and depth bands (every 0.5 z)
+    for (let x = -2400; x <= 4000; x += 200) { const [ax] = proj(x, GROUND, 0), [bx, by] = proj(x, GROUND, zFar); s += `<path d="M${f(ax)},${f(y0 + 900)}L${f(ax)},${f(y0)}L${f(bx)},${f(by)}" stroke="#000" stroke-width="1.5" fill="none" opacity=".14"/>`; }
+    for (let z = 0; z < zFar; z += 0.5) { const [, yy] = proj(0, GROUND, z), [xa] = proj(-2400, GROUND, z), [xb] = proj(4000, GROUND, z); s += `<path d="M${f(xa)},${f(yy)}H${f(xb)}" stroke="#000" stroke-width="${f(1.2 * K(z) + 0.4)}" opacity=".16"/>`; }
+    // near cobblestones (rows from z 0 to 3.5), lit from the upper-left
+    if (o.cobbles !== false) { for (let z = 0; z < 3.6; z += 0.35) { const [, ya] = proj(0, GROUND, z), [, yb] = proj(0, GROUND, z + 0.3); const off = (Math.round(z / 0.35) % 2) * 110;
+        for (let x = -2400 + off; x < 4000; x += 220) { const [ax] = proj(x, GROUND, z), [bx] = proj(x + 200, GROUND, z), [cx2] = proj(x + 200, GROUND, z + 0.3), [dx] = proj(x, GROUND, z + 0.3); const kk = K(z);
+          s += `<polygon points="${f(ax)},${f(ya)} ${f(bx)},${f(ya)} ${f(cx2)},${f(yb)} ${f(dx)},${f(yb)}" fill="#000" opacity=".10"/><polygon points="${f(ax + 6 * kk)},${f(ya - 4 * kk)} ${f(bx - 6 * kk)},${f(ya - 4 * kk)} ${f(cx2 - 4 * kk)},${f(yb + 3 * kk)} ${f(dx + 4 * kk)},${f(yb + 3 * kk)}" fill="#fff" opacity="${f(0.05 + 0.06 * kk)}"/>`; } } }
+    // depth haze over the floor (brighter far away) + a dark edge vignette on the near floor
+    s += `<polygon points="${f(x0)},${f(y0)} ${f(x1)},${f(y0)} ${f(hx1)},${f(hy)} ${f(hx0)},${f(hy)}" fill="url(#j3Haze)" opacity="${o.hazeOp ?? 0.5}"/><rect x="${f(x0)}" y="${f(hy)}" width="${f(x1 - x0)}" height="${f(y0 + 900 - hy)}" fill="url(#j3Side)" opacity=".5"/>`;
+    return s; };
+  // ---- a stone pillar standing at (x, z) with height h, torch on top (lit) ----
+  const pillar = (x, z, h, lit, id, o = {}) => { const [bx, by, k] = proj(x, GROUND, z), w = (o.w ?? 90) * k, hh = h * k; const [tx, ty] = proj(x, GROUND - h, z);
+    let s = `<g class="j3Pil"><rect x="${f(bx - w / 2)}" y="${f(ty)}" width="${f(w)}" height="${f(by - ty)}" fill="url(#j3Stone)"/><rect x="${f(bx - w * 0.7)}" y="${f(by - 24 * k)}" width="${f(w * 1.4)}" height="${f(24 * k)}" fill="#7a7e96"/><rect x="${f(bx - w * 0.75)}" y="${f(ty - 30 * k)}" width="${f(w * 1.5)}" height="${f(30 * k)}" fill="#8a8ea6"/>`;
+    if (o.banner) s += `<path d="M${f(bx - w * 0.9)},${f(ty + 40 * k)}h${f(w * 1.8)}v${f(hh * 0.5)}l${f(-w * 0.9)},${f(60 * k)}l${f(-w * 0.9)},${f(-60 * k)}Z" fill="url(#j3Red)"/><path d="M${f(bx - w * 0.9)},${f(ty + 40 * k)}h${f(w * 1.8)}v${f(16 * k)}h${f(-w * 1.8)}Z" fill="#f2b632"/><circle cx="${f(bx)}" cy="${f(ty + 40 * k + hh * 0.22)}" r="${f(w * 0.42)}" fill="#f2b632" opacity=".9"/>`;
+    if (lit) s += `<g class="j3Torch"><rect x="${f(bx - 8 * k)}" y="${f(ty - 90 * k)}" width="${f(16 * k)}" height="${f(70 * k)}" fill="#3a2a20"/><path d="M${f(bx)},${f(ty - 90 * k)}q${f(-22 * k)},${f(-40 * k)} 0,${f(-70 * k)}q${f(22 * k)},${f(30 * k)} 0,${f(70 * k)}Z" fill="#ffb040"/><path d="M${f(bx)},${f(ty - 94 * k)}q${f(-10 * k)},${f(-22 * k)} 0,${f(-40 * k)}q${f(10 * k)},${f(18 * k)} 0,${f(40 * k)}Z" fill="#fff0b0"/></g>`;
+    return s + `</g>`; };
+  const torchGlow = (x, z, h) => { const [tx, ty, k] = proj(x, GROUND - h - 120, z); return `<circle cx="${f(tx)}" cy="${f(ty)}" r="${f(260 * k + 40)}" fill="url(#j3Torch)" opacity=".8"/>`; };
+  // ---- god rays from the top (screen blend, in the glow layer) ----
+  const rays = (r, n = 6, x0 = 700, op = 0.5) => `<g class="j3Rays" opacity="${op}">${[...Array(n)].map((_, i) => { const a = -22 + i * 9 + r() * 4, w = 60 + r() * 120; return `<polygon points="${f(x0 - w / 2)},-400 ${f(x0 + w / 2)},-400 ${f(x0 + w * 2.6)},2200 ${f(x0 - w * 2.6)},2200" fill="url(#j3Ray)" transform="rotate(${f(a)} ${x0} -400)"/>`; }).join("")}</g>`;
+  const dust = (r, n = 40, c = "#fff2c8") => `<g class="j3Dust">${[...Array(n)].map(() => `<circle cx="${f(-200 + r() * 1500)}" cy="${f(200 + r() * 1500)}" r="${f(2 + r() * 5)}" fill="${c}" opacity="${f(0.25 + r() * 0.5)}"/>`).join("")}</g>`;
+  const silhouettes = (r, zs, c = "#1a1428") => zs.map(([x, z]) => { const [bx, by, k] = proj(x, GROUND, z), s = k * (0.9 + r() * 0.25); return `<g transform="translate(${f(bx)},${f(by)}) scale(${f(s)})"><rect x="-26" y="-330" width="52" height="330" rx="22" fill="${c}"/><circle cy="-372" r="38" fill="${c}"/>${r() > 0.5 ? `<path d="M-34,-280L-70,-420" stroke="${c}" stroke-width="16" stroke-linecap="round"/>` : ""}${r() > 0.5 ? `<path d="M34,-280L70,-420" stroke="${c}" stroke-width="16" stroke-linecap="round"/>` : ""}</g>`; }).join("");
+  // ---- the guild hall facade at depth zb: a big arched door, towers, banners, the ranking board on the left wall ----
+  const facade = (id, zb, lit, o = {}) => { const k = K(zb), [cx, by] = proj(540, GROUND, zb), W = 3000 * k, H = 2200 * k; let s = `<g id="${id}-facade">`;
+    s += `<rect x="${f(cx - W / 2)}" y="${f(by - H)}" width="${f(W)}" height="${f(H)}" fill="url(#j3StoneW)"/><rect x="${f(cx - W / 2)}" y="${f(by - H)}" width="${f(W)}" height="${f(H)}" fill="url(#j3Side)" opacity=".8"/><rect x="${f(cx - W / 2)}" y="${f(by - H)}" width="${f(W)}" height="${f(140 * k)}" fill="#000" opacity=".28"/>
+      ${[...Array(9)].map((_, i) => `<path d="M${f(cx - W / 2)},${f(by - H + (i + 1) * (H / 10))}h${f(W)}" stroke="#000" stroke-width="${f(3 * k)}" opacity=".12"/>`).join("")}`;
+    // towers
+    [-1100, 1100].forEach((dx) => { const tx = cx + dx * k, tw = 420 * k; s += `<rect x="${f(tx - tw / 2)}" y="${f(by - H - 500 * k)}" width="${f(tw)}" height="${f(H + 500 * k)}" fill="url(#j3Stone)"/><path d="M${f(tx - tw / 2 - 30 * k)},${f(by - H - 500 * k)}L${f(tx)},${f(by - H - 900 * k)}L${f(tx + tw / 2 + 30 * k)},${f(by - H - 500 * k)}Z" fill="#8a2a2e"/><path d="M${f(tx)},${f(by - H - 900 * k)}v${f(-120 * k)}" stroke="#5a3a20" stroke-width="${f(8 * k)}"/><path d="M${f(tx)},${f(by - H - 1020 * k)}h${f(90 * k)}l${f(-20 * k)},${f(30 * k)}l${f(20 * k)},${f(30 * k)}h${f(-90 * k)}Z" fill="#d9342e"/>`;
+      for (let yy = by - H - 380 * k; yy < by - 200 * k; yy += 220 * k) s += `<path d="M${f(tx - 50 * k)},${f(yy + 90 * k)}v${f(-90 * k)}a${f(50 * k)},${f(50 * k)} 0 0 1 ${f(100 * k)},0v${f(90 * k)}Z" fill="${lit ? "#ffd27a" : "#2a2a44"}" opacity=".9"/>`; });
+    // roof line + battlements
+    s += `<rect x="${f(cx - W / 2)}" y="${f(by - H - 40 * k)}" width="${f(W)}" height="${f(50 * k)}" fill="#7a7e96"/>${[...Array(14)].map((_, i) => `<rect x="${f(cx - W / 2 + i * (W / 14) + 20 * k)}" y="${f(by - H - 110 * k)}" width="${f(W / 28)}" height="${f(70 * k)}" fill="#8a8ea6"/>`).join("")}`;
+    // the big door
+    const dw = 620 * k, dh = 980 * k; s += `<path d="M${f(cx - dw / 2 - 40 * k)},${f(by)}v${f(-dh + dw / 2)}a${f(dw / 2 + 40 * k)},${f(dw / 2 + 40 * k)} 0 0 1 ${f(dw + 80 * k)},0v${f(dh - dw / 2)}Z" fill="#5c5f78"/><path d="M${f(cx - dw / 2)},${f(by)}v${f(-dh + dw / 2)}a${f(dw / 2)},${f(dw / 2)} 0 0 1 ${f(dw)},0v${f(dh - dw / 2)}Z" fill="#3a2418"/><path d="M${f(cx - dw / 2)},${f(by)}v${f(-dh + dw / 2)}a${f(dw / 2)},${f(dw / 2)} 0 0 1 ${f(dw)},0v${f(dh - dw / 2)}Z" fill="url(#flV)" opacity=".5"/>${[0.25, 0.5, 0.75].map((t) => `<path d="M${f(cx - dw / 2)},${f(by - dh * t)}h${f(dw)}" stroke="#f2b632" stroke-width="${f(10 * k)}" opacity=".8"/>`).join("")}<circle cx="${f(cx)}" cy="${f(by - dh * 0.5)}" r="${f(26 * k)}" fill="#f2b632"/>`;
+    // the sign over the door + crossed-swords crest
+    s += `<rect x="${f(cx - 520 * k)}" y="${f(by - dh - 260 * k)}" width="${f(1040 * k)}" height="${f(170 * k)}" rx="${f(18 * k)}" fill="#2a1e38"/><rect x="${f(cx - 520 * k)}" y="${f(by - dh - 260 * k)}" width="${f(1040 * k)}" height="${f(170 * k)}" rx="${f(18 * k)}" fill="none" stroke="#f2b632" stroke-width="${f(8 * k)}"/>${T(cx, by - dh - 140 * k, 112 * k, "กิลด์ผู้กล้า", { fill: "#f2b632", w: 900 })}`;
+    s += `<g transform="translate(${f(cx)},${f(by - dh - 430 * k)}) scale(${f(k)})"><path d="M-110,90L110,-90M110,90L-110,-90" stroke="#e8e0d0" stroke-width="22" stroke-linecap="round"/><path d="M-110,90L110,-90M110,90L-110,-90" stroke="#f2b632" stroke-width="10" stroke-linecap="round"/><circle r="52" fill="#d9342e" stroke="#f2b632" stroke-width="10"/></g>`;
+    // the ranking board on the left of the door
+    if (o.board !== false) { const bx = cx - 980 * k, bw = 520 * k, bh = 760 * k, by2 = by - 80 * k; s += `<g id="${id}-board"><rect x="${f(bx - bw / 2 - 20 * k)}" y="${f(by2 - bh - 20 * k)}" width="${f(bw + 40 * k)}" height="${f(bh + 40 * k)}" rx="${f(12 * k)}" fill="#4a3220"/><rect x="${f(bx - bw / 2)}" y="${f(by2 - bh)}" width="${f(bw)}" height="${f(bh)}" fill="#f1e5c6"/>${T(bx, by2 - bh + 84 * k, 60 * k, "อันดับผู้กล้า", { fill: "#3a2a10", w: 900 })}
+      ${(o.rows || [["1", "เซอร์อาเธอร์", "#2a2a2a"], ["2", "แม่มดดอกไม้เหล็ก", "#2a2a2a"], ["3", "ยักษ์ใจดี", "#2a2a2a"], ["10", "เคน · ดาบแสง", "#2a2a2a"], ["…", "", "#2a2a2a"], ["9,999", "คุณ · จอมโกหก F", "#c8302a"]]).map(([n, nm, c], i) => `${T(bx - bw / 2 + 30 * k, by2 - bh + 170 * k + i * 92 * k, 44 * k, n + ".", { fill: c, w: 900, anchor: "start" })}${T(bx - bw / 2 + 150 * k, by2 - bh + 170 * k + i * 92 * k, 44 * k, nm, { fill: c, w: 800, anchor: "start" })}`).join("")}</g>`; }
+    return s + `</g>`; };
+  // ======================= the square in front of the guild =======================
+  Sets.j3Square = (L, o = {}) => {
+    const id = o.id || "j3q", r = mk(o.seed || 7), time = o.time || "gold", lit = dark(time);
+    put(L.sky, `<rect x="-3000" y="-3000" width="8000" height="8000" fill="${time === "night" ? "#05071c" : time === "doom" ? "#050308" : "#2b3f9c"}"/><rect x="-3000" y="-2200" width="8000" height="3300" fill="url(#${SKY[time]})"/>
+      ${time === "gold" || time === "dusk" ? `<circle cx="${o.sunX ?? 760}" cy="${o.sunY ?? 640}" r="520" fill="url(#j3Sun)" opacity=".9"/>` : ""}${time === "night" ? [...Array(60)].map(() => `<circle cx="${f(-1500 + r() * 4200)}" cy="${f(-1400 + r() * 1800)}" r="${f(1 + r() * 2)}" fill="#e8ecff" opacity="${f(0.3 + r() * 0.6)}"/>`).join("") : ""}`);
+    // far: distant town roofs + mountains silhouettes, hazy
+    let far = `<g filter="url(#j3Far)">${[[-1400, 420], [-700, 300], [100, 520], [900, 360], [1700, 480], [2400, 300]].map(([x, h]) => `<path d="M${x - 500},${760}L${x},${760 - h}L${x + 500},${760}Z" fill="${lit ? "#1a2048" : "#8a7fb8"}" opacity=".8"/>`).join("")}
+      ${[...Array(18)].map((_, i) => { const x = -1600 + i * 240 + r() * 80, h = 120 + r() * 160; return `<rect x="${f(x)}" y="${f(770 - h)}" width="${f(140 + r() * 80)}" height="${f(h)}" fill="${lit ? "#2a2a52" : "#b8a0a0"}" opacity=".9"/><path d="M${f(x - 10)},${f(770 - h)}L${f(x + 100)},${f(770 - h - 70)}L${f(x + 230)},${f(770 - h)}Z" fill="${lit ? "#3a2a4a" : "#c8584a"}"/>`; }).join("")}</g>`;
+    put(L.far, far);
+    // mid: the facade at depth, with its haze
+    put(L.mid, facade(id, o.zBack ?? 7, lit, o) + `<rect x="-3000" y="400" width="8000" height="900" fill="url(#j3Haze)" opacity="${lit ? 0.12 : 0.3}"/>`);
+    // set: the floor, pillars with banners down both sides, the crowd, a wagon
+    let s = floor(r, { fill: lit ? "url(#j3CobbleN)" : "url(#j3Cobble)", hazeOp: lit ? 0.15 : 0.38, zFar: 7 });
+    [0.6, 1.6, 3.0, 5.0].forEach((z, i) => { s += pillar(-1500 - i * 80, z, 900, true, id, { banner: true, w: 110 }) + pillar(2580 + i * 80, z, 900, true, id, { banner: true, w: 110 }); });
+    if (o.crowd) { const zs = []; for (let i = 0; i < 26; i++) zs.push([-1700 + r() * 1300, 1.2 + r() * 3.5]); for (let i = 0; i < 26; i++) zs.push([1100 + r() * 1500, 1.2 + r() * 3.5]); s += silhouettes(r, zs, lit ? "#0e0c1c" : "#2a2440"); }
+    put(L.set, s);
+    // glow: torches, the sun bloom, rays, dust (screen blend over the darkness)
+    let g = `<g style="mix-blend-mode:screen">${[0.6, 1.6, 3.0, 5.0].map((z, i) => torchGlow(-1500 - i * 80, z, 900) + torchGlow(2580 + i * 80, z, 900)).join("")}${time === "gold" ? `<circle cx="${o.sunX ?? 760}" cy="${o.sunY ?? 640}" r="700" fill="url(#j3Sun)" opacity=".45" filter="url(#j3Bloom)"/>` : ""}${time === "doom" ? `<circle cx="540" cy="900" r="900" fill="url(#j3RedGlow)" opacity=".35"/>` : ""}</g>`;
+    put(L.glow, g);
+    put(L.light ? L.light : L.glow, ``);
+    put(L.fg, dust(r, time === "doom" ? 60 : 36, time === "doom" ? "#ff7a5a" : "#fff2c8"));
+    if (!lit) put(L.fg, rays(r, 6, 760, 0.42));
+    if (o.nearPillar !== false) put(L.fg, `<g filter="url(#j3Soft)" opacity=".95"><rect x="-600" y="-900" width="420" height="3400" fill="#3a2a2c"/><rect x="-600" y="-900" width="420" height="3400" fill="url(#j3Side)"/><rect x="-640" y="-940" width="500" height="60" fill="#4a3a3c"/><rect x="-520" y="-600" width="260" height="900" fill="url(#j3Red)" opacity=".9"/><rect x="-520" y="-600" width="260" height="30" fill="#f2b632"/></g>`);
+  };
+  // ======================= inside the guild hall =======================
+  Sets.j3Hall = (L, o = {}) => {
+    const id = o.id || "j3h", r = mk(o.seed || 11), lit = !!o.night;
+    put(L.sky, `<rect x="-3000" y="-3000" width="8000" height="8000" fill="#2a1e2e"/>`);
+    // far: the back wall with the big arched window and drapes
+    const zb = o.zBack ?? 6, k = K(zb), [cx, by] = proj(540, GROUND, zb), W = 3200 * k, H = 2400 * k;
+    let far = `<rect x="${f(cx - W / 2)}" y="${f(by - H)}" width="${f(W)}" height="${f(H)}" fill="#7a6f8a"/><rect x="${f(cx - W / 2)}" y="${f(by - H)}" width="${f(W)}" height="${f(H)}" fill="url(#flV)" opacity=".5"/>
+      <path d="M${f(cx - 420 * k)},${f(by - 300 * k)}v${f(-1100 * k)}a${f(420 * k)},${f(420 * k)} 0 0 1 ${f(840 * k)},0v${f(1100 * k)}Z" fill="#ffd27a" opacity=".9"/><path d="M${f(cx - 420 * k)},${f(by - 300 * k)}v${f(-1100 * k)}a${f(420 * k)},${f(420 * k)} 0 0 1 ${f(840 * k)},0v${f(1100 * k)}Z" fill="url(#j3Sun)" opacity=".8"/>
+      ${[-700, 700].map((dx) => `<path d="M${f(cx + dx * k - 260 * k)},${f(by - H + 80 * k)}h${f(520 * k)}v${f(1500 * k)}q${f(-260 * k)},${f(120 * k)} ${f(-520 * k)},0Z" fill="url(#j3Red)"/><rect x="${f(cx + dx * k - 300 * k)}" y="${f(by - H + 60 * k)}" width="${f(600 * k)}" height="${f(50 * k)}" fill="#f2b632"/>`).join("")}
+      <g transform="translate(${f(cx)},${f(by - 60 * k)}) scale(${f(k)})"><rect x="-700" y="-160" width="1400" height="160" fill="#5c5f78"/><rect x="-700" y="-180" width="1400" height="30" fill="#f2b632"/><rect x="-260" y="-620" width="520" height="460" rx="40" fill="url(#j3Red)"/><path d="M-260,-620q260,-260 520,0" fill="#8a1c22"/><rect x="-300" y="-170" width="600" height="20" fill="#f2b632"/></g>`;
+    put(L.far, far);
+    let mid = "";
+    [0.6, 1.6, 3.0, 4.6].forEach((z, i) => { mid += pillar(-760 - i * 40, z, 1900, false, id, { w: 170 }) + pillar(1840 + i * 40, z, 1900, false, id, { w: 170 }); const [ax, ay, kk] = proj(-760 - i * 40, GROUND - 1900, z), [bx] = proj(1840 + i * 40, GROUND - 1900, z); mid += `<path d="M${f(ax)},${f(ay)}Q${f((ax + bx) / 2)},${f(ay - 500 * kk)} ${f(bx)},${f(ay)}" stroke="#6c6f86" stroke-width="${f(60 * kk)}" fill="none"/>`; });
+    put(L.mid, mid);
+    let s = floor(r, { fill: "#8a8ea6", carpet: 420, hazeOp: 0.22, zFar: 6 });
+    // chandeliers
+    [1.4, 3.4].forEach((z) => { const [x, y, kk] = proj(540, GROUND - 1500, z); s += `<g transform="translate(${f(x)},${f(y)}) scale(${f(kk)})"><path d="M0,-700V0" stroke="#5a4a30" stroke-width="8"/><ellipse rx="220" ry="70" fill="none" stroke="#f2b632" stroke-width="26"/><ellipse rx="220" ry="70" fill="none" stroke="#9c6a14" stroke-width="6"/>${[0, 40, 80, 120, 160, 200, 240, 280, 320].map((a) => { const x = Math.cos(a * Math.PI / 180) * 220, y = Math.sin(a * Math.PI / 180) * 70; return `<rect x="${x.toFixed(0) - 9}" y="${(y - 70).toFixed(0)}" width="18" height="70" rx="4" fill="#fff0b0"/><circle cx="${x.toFixed(0)}" cy="${(y - 84).toFixed(0)}" r="16" fill="#ffd27a"/>`; }).join("")}<path d="M-220,0Q0,120 220,0" stroke="#f2b632" stroke-width="10" fill="none"/></g>`; });
+    if (o.vip) { const [tx, ty, kk] = proj(540, GROUND, 1.2); s += `<g transform="translate(${f(tx)},${f(ty)}) scale(${f(kk)})"><rect x="-420" y="-300" width="840" height="40" rx="8" fill="#6a4a30"/><path d="M-380,-260V0M380,-260V0" stroke="#4a3020" stroke-width="26"/>${[-260, -100, 60, 220].map((x) => `<g transform="translate(${x},-300)"><path d="M-50,0q0,-90 50,-90q50,0 50,90Z" fill="#c8a040"/><path d="M-30,-20q30,-50 60,0" stroke="#f2b632" stroke-width="10" fill="none"/><circle cy="-30" r="14" fill="#fff0a8"/></g>`).join("")}</g>`; }
+    put(L.set, s);
+    put(L.glow, `<g style="mix-blend-mode:screen">${[1.4, 3.4].map((z) => { const [x, y, kk] = proj(540, GROUND - 1500, z); return `<circle cx="${f(x)}" cy="${f(y)}" r="${f(420 * kk + 60)}" fill="url(#j3Torch)" opacity=".7"/>`; }).join("")}<circle cx="${f(cx)}" cy="${f(by - 900 * k)}" r="${f(900 * k + 120)}" fill="url(#j3Sun)" opacity=".5" filter="url(#j3Bloom)"/></g>`);
+    put(L.fg, dust(r, 34) + rays(r, 5, 540, 0.3));
+  };
+  // ======================= heaven =======================
+  Sets.j3Cloud = (L, o = {}) => {
+    const id = o.id || "j3c", r = mk(o.seed || 9);
+    put(L.sky, `<rect x="-3000" y="-3000" width="8000" height="8000" fill="#ffd9a8"/><rect x="-3000" y="-2200" width="8000" height="3300" fill="url(#jkHeaven)"/><circle cx="700" cy="300" r="600" fill="url(#j3Sun)" opacity=".9"/>`);
+    const puffs = (z0, z1, n, c1, c2) => [...Array(n)].map(() => { const z = z0 + r() * (z1 - z0), [x, y, k] = proj(-2400 + r() * 6400, GROUND + 40, z); return `<g transform="translate(${f(x)},${f(y)}) scale(${f(k * (1.2 + r() * 0.8))})"><ellipse rx="420" ry="110" fill="${c1}"/><ellipse cx="-160" cy="-60" rx="220" ry="120" fill="${c2}"/><ellipse cx="150" cy="-70" rx="260" ry="130" fill="${c2}"/></g>`; }).join("");
+    put(L.far, `<rect x="-3000" y="720" width="8000" height="1400" fill="#fbf2ff"/>` + puffs(8, 14, 22, "#f4ecf8", "#ffffff") + `<g transform="translate(${f(proj(540, GROUND - 900, 10)[0])},${f(proj(540, GROUND - 900, 10)[1])}) scale(${f(K(10) * 9)})"><rect x="-120" y="-300" width="30" height="320" fill="#e8c86a"/><rect x="90" y="-300" width="30" height="320" fill="#e8c86a"/><path d="M-130,-300Q0,-420 130,-300" stroke="#e8c86a" stroke-width="30" fill="none"/></g>`);
+    put(L.mid, puffs(3, 8, 20, "#f0eaf8", "#ffffff"));
+    put(L.set, `<rect x="-3000" y="${f(GROUND)}" width="8000" height="1400" fill="#e9e2f2"/>` + puffs(0, 3, 30, "#ffffff", "#e4dcf0") + `<rect x="-3000" y="${f(GROUND - 10)}" width="8000" height="1500" fill="url(#j3Side)" opacity=".25"/>`);
+    put(L.glow, `<g style="mix-blend-mode:screen"><circle cx="700" cy="300" r="700" fill="url(#j3Sun)" opacity=".3" filter="url(#j3Bloom)"/></g>`);
+    put(L.fg, rays(r, 7, 700, 0.35) + dust(r, 30, "#ffffff"));
+  };
+  // ======================= the old world street at dusk =======================
+  Sets.j3Street = (L, o = {}) => {
+    const id = o.id || "j3s", r = mk(o.seed || 13);
+    put(L.sky, `<rect x="-3000" y="-3000" width="8000" height="8000" fill="#1c1f5a"/><rect x="-3000" y="-2200" width="8000" height="3300" fill="url(#j3SkyDusk)"/><circle cx="300" cy="700" r="420" fill="url(#j3Sun)" opacity=".7"/>`);
+    const zb = 9, k = K(zb); put(L.far, `<g filter="url(#j3Far)">${[...Array(12)].map((_, i) => { const x = -1800 + i * 330, h = 300 + r() * 500, [px, py, kk] = proj(x, GROUND, zb); return `<rect x="${f(px)}" y="${f(py - h * kk)}" width="${f(240 * kk)}" height="${f(h * kk)}" fill="#2a2a52"/>`; }).join("")}</g>`);
+    // mid: shophouses receding on both sides, the insurance shop near on the right
+    let mid = "";
+    [[-1700, 0.8], [-1700, 2.0], [-1700, 3.6], [-1700, 5.6], [1500, 1.2], [1500, 2.6], [1500, 4.4], [1500, 6.4]].forEach(([x, z], i) => { const [bx, by, kk] = proj(x, GROUND, z), w = 900 * kk, h = 1500 * kk; mid += `<rect x="${f(bx - w / 2)}" y="${f(by - h)}" width="${f(w)}" height="${f(h)}" fill="${["#c8a080", "#a8b8c8", "#d8c0a0", "#b8a0c0"][i % 4]}"/><rect x="${f(bx - w / 2)}" y="${f(by - h)}" width="${f(w)}" height="${f(h)}" fill="url(#flV)" opacity=".55"/>${[0, 1, 2].map((row) => [0, 1].map((col) => `<rect x="${f(bx - w / 2 + (120 + col * 400) * kk)}" y="${f(by - h + (160 + row * 420) * kk)}" width="${f(220 * kk)}" height="${f(260 * kk)}" fill="#ffd27a" opacity=".85"/>`).join("")).join("")}`; });
+    put(L.mid, mid);
+    let s = floor(r, { fill: "#4a4a62", hazeOp: 0.3, zFar: 9 });
+    // the shop front on the right at z 0.5
+    { const z = 0.5, [bx, by, kk] = proj(1550, GROUND, z), w = 1000 * kk, h = 1100 * kk; s += `<g id="${id}-shop"><rect x="${f(bx - w / 2)}" y="${f(by - h)}" width="${f(w)}" height="${f(h)}" fill="#e8e0d0"/><rect x="${f(bx - w / 2)}" y="${f(by - h)}" width="${f(w)}" height="${f(h)}" fill="url(#flV)" opacity=".4"/><rect x="${f(bx - w / 2 + 60 * kk)}" y="${f(by - 760 * kk)}" width="${f(w - 120 * kk)}" height="${f(560 * kk)}" fill="#8ad0f0" opacity=".9"/>
+      <rect x="${f(bx - w / 2 - 20 * kk)}" y="${f(by - h - 20 * kk)}" width="${f(w + 40 * kk)}" height="${f(200 * kk)}" rx="${f(14 * kk)}" fill="#1e3a7a"/>${T(bx, by - h + 70 * kk, 64 * kk, "ประกันชีวิต มั่นใจ", { fill: "#ffffff", w: 900 })}${T(bx, by - h + 140 * kk, 40 * kk, "สาขา 112 · เปิดทุกวัน", { fill: "#f2c55c", w: 700 })}</g>`; }
+    if (o.manhole) { const [mx, my, kk] = proj(o.manholeX ?? 1180, GROUND, 0.1); s += `<ellipse id="${id}-hole" cx="${f(mx)}" cy="${f(my)}" rx="${f(140 * kk)}" ry="${f(34 * kk)}" fill="#0a0a12"/><ellipse cx="${f(mx + 200 * kk)}" cy="${f(my - 6)}" rx="${f(130 * kk)}" ry="${f(30 * kk)}" fill="#5a5a66"/>`; }
+    // street lamps
+    [[-900, 0.4], [-900, 2.2], [1100, 1.2], [1100, 3.4]].forEach(([x, z]) => { const [bx, by, kk] = proj(x, GROUND, z); s += `<path d="M${f(bx)},${f(by)}v${f(-900 * kk)}" stroke="#2a2a34" stroke-width="${f(16 * kk)}"/><circle cx="${f(bx)}" cy="${f(by - 920 * kk)}" r="${f(26 * kk)}" fill="#fff4c8"/>`; });
+    put(L.set, s);
+    put(L.glow, `<g style="mix-blend-mode:screen">${[[-900, 0.4], [-900, 2.2], [1100, 1.2], [1100, 3.4]].map(([x, z]) => { const [bx, by, kk] = proj(x, GROUND, z); return `<circle cx="${f(bx)}" cy="${f(by - 920 * kk)}" r="${f(300 * kk + 40)}" fill="url(#j3Torch)" opacity=".7"/>`; }).join("")}</g>`);
+    put(L.fg, dust(r, 24, "#ffd9a0"));
+  };
+  window.J3 = { proj, floorY, scale, K, VP, GROUND };
+})();

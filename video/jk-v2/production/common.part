@@ -1,0 +1,35 @@
+      // ---------- looks per world (สกิลจอมโกหก v2 · vivid, pseudo-3D stages) ----------
+      const act = (k) => (shots.find((x) => x.key === k) || {}).actors || [];
+      const GOLD = { dark: 0.04, light: { from: "left", rim: "#ffd27a", rimOp: 0.85, rimW: 5, shade: "#3a1a2a", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ffb070", bottom: "#2a1a40", op: 0.16 } };
+      const DOOM = { dark: 0.3, light: { from: "right", rim: "#ff6a5a", rimOp: 0.9, rimW: 5, shade: "#0a0410", shadeOp: 0.45, shadeW: 26, soft: 9, vol: false }, grade: { top: "#6a1030", bottom: "#05030a", op: 0.4 } };
+      const NIGHT2 = { dark: 0.3, light: { from: "right", rim: "#ffd9a0", rimOp: 0.7, rimW: 4, shade: "#0a0c20", shadeOp: 0.42, shadeW: 26, soft: 9, vol: false }, grade: { top: "#1a2048", bottom: "#06080f", op: 0.42 } };
+      const HALL = { dark: 0.08, light: { from: "left", rim: "#ffe0a0", rimOp: 0.8, rimW: 5, shade: "#2a1030", shadeOp: 0.34, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ffd0a0", bottom: "#2a1a40", op: 0.18 } };
+      const HEAVEN2 = { dark: 0, light: { from: "left", rim: "#fffbe8", rimOp: 0.7, rimW: 4, shade: "#8a90b8", shadeOp: 0.24, shadeW: 26, soft: 9, vol: false }, grade: { top: "#fff8e8", bottom: "#c8d8f0", op: 0.14 } };
+      const DUSK2 = { dark: 0.1, light: { from: "left", rim: "#ffc890", rimOp: 0.75, rimW: 4, shade: "#2a1a40", shadeOp: 0.34, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ff9a60", bottom: "#2a1a40", op: 0.24 } };
+      const square = (k, o = {}) => ({ ...(o.time === "doom" ? DOOM : o.time === "night" ? NIGHT2 : GOLD), set: "j3Square", setOpts: { id: `q${k}`, ...o } });
+      const hall = (k, o = {}) => ({ ...HALL, set: "j3Hall", setOpts: { id: `h${k}`, ...o } });
+      const heaven = (k, o = {}) => ({ ...HEAVEN2, set: "j3Cloud", setOpts: { id: `c${k}`, ...o } });
+      const street = (k, o = {}) => ({ ...DUSK2, set: "j3Street", setOpts: { id: `s${k}`, ...o } });
+      const SID = { square: (k) => `q${k}`, hall: (k) => `h${k}`, heaven: (k) => `c${k}`, street: (k) => `s${k}` };
+      const shadows = (L, id, actors, sh = -0.4, op = 0.28) => NkL.cast(L, id, actors, { k: 0.3, sh, op });
+      const loop = NkV.loop;
+      const ME = (who, x, y, track, extra = {}) => A(who, x, y, 0.95, track, extra);
+      // place a character on the perspective floor at depth z: y and scale follow the stage projection
+      const AT = (who, x, z, track, extra = {}) => { const [px, py, k] = J3.proj(x, J3.GROUND, z); return A(who, px, py, 0.95 * k, track, extra); };
+      const face = (x, y = 1400, s = 3.2, flip = false, sx = 540, sy = 760, k = 0.95) => fr(x + (flip ? -2 : 2) * k, y - 546 * k, s, sx, sy);
+      // kneeling (one knee down, hands on the ground), trembling · used for the sword at the throat
+      Rig.MODES.kneel = (u, o) => { const j = Math.sin(u * 41) * 1.2; return { ...Rig.MODES.idle(u, o), thF: -84, shF: 96, thB: -14, shB: 92, torso: 14 + j * 0.4, head: -18 + j, uaF: -40 + j, faF: -30, uaB: -32 - j, faB: -26, bodyY: 236 }; };
+      const CHANNEL = "Rod Mai Club";
+      const BLACK = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#000"/>`; return g; };
+      const WHITE = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#ffffff"/>`; tl.set(g, { opacity: 0 }, 0); return g; };
+      // the ear: on, then blinking like a brake light (period p) for dur; plus a red bloom in the glow layer at the ear's world position
+      const earBlink = (tl, L, aid, ax, ay, s, flip, at, dur, p = 0.28) => { tl.set(`#${aid} .jkEar`, { opacity: 0 }, 0); tl.set(`#${aid} .jkEar`, { opacity: 1 }, at); loop(tl, `#${aid} .jkEar`, { opacity: 1 }, { opacity: 0.15 }, p, at, dur);
+        const ex = ax + (flip ? 33 : -33) * s, ey = ay - 540 * s; const g = grp(L.glow); g.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${ex}" cy="${ey}" r="${(170 * s).toFixed(0)}" fill="url(#j3RedGlow)"/></g>`; tl.set(g, { opacity: 0 }, 0); tl.set(g, { opacity: 1 }, at); loop(tl, g, { opacity: 1 }, { opacity: 0.2 }, p, at, dur); return g; };
+      // the belief bar HUD (screen space): a labelled bar that fills to pct at the given times [[t, pct], …]
+      const beliefBar = (tl, L, t0, steps, o = {}) => { const x = o.x ?? 540, y = o.y ?? 250, w = o.w ?? 640; const g = grp(L.light);
+        g.innerHTML = `<g transform="translate(${x},${y})"><rect x="${-w / 2 - 24}" y="-62" width="${w + 48}" height="124" rx="26" fill="rgba(18,20,30,.78)" stroke="rgba(244,236,216,.25)" stroke-width="2"/><text x="${-w / 2}" y="-20" font-family="Kanit" font-weight="700" font-size="30" fill="#f4ecd8" opacity=".8">คนเชื่อ</text><text id="${o.id}-bt" x="${w / 2}" y="-20" text-anchor="end" font-family="Kanit" font-weight="900" font-size="36" fill="#f2c55c">0/100</text>
+          <rect x="${-w / 2}" y="4" width="${w}" height="34" rx="17" fill="#2a2a3a"/><rect id="${o.id}-bf" x="${-w / 2}" y="4" width="0" height="34" rx="17" fill="url(#j3Gold)"/></g>`;
+        steps.forEach(([t, pct], i) => { tl.to(`#${o.id}-bf`, { attr: { width: (w * pct) / 100 }, duration: o.dur ?? 0.5, ease: "power2.out" }, t0 + t); tl.call(() => { const e = document.getElementById(`${o.id}-bt`); if (e) e.textContent = `${pct}/100`; }, null, t0 + t + (o.dur ?? 0.5) * 0.6); }); return g; };
+      // the sword blade glow (a light sword held at the throat): a white-blue bloom along a segment in the glow layer
+      const bladeGlow = (L, x0, y0, x1, y1, w = 70) => { const g = grp(L.glow); g.innerHTML = `<g style="mix-blend-mode:screen"><path d="M${x0},${y0}L${x1},${y1}" stroke="#bfe8ff" stroke-width="${w}" stroke-linecap="round" opacity=".55" filter="url(#j3Bloom)"/><path d="M${x0},${y0}L${x1},${y1}" stroke="#ffffff" stroke-width="${w * 0.25}" stroke-linecap="round" opacity=".9"/></g>`; return g; };
+      document.head.insertAdjacentHTML("beforeend", `<style>.clip svg.stage { filter: saturate(1.18) contrast(1.04); }</style>`);
