@@ -1,22 +1,24 @@
       // ---------- looks per world (สกิลจอมโกหก v2 · vivid, pseudo-3D stages) ----------
       const act = (k) => (shots.find((x) => x.key === k) || {}).actors || [];
-      const GOLD = { dark: 0.04, light: { from: "left", rim: "#ffd27a", rimOp: 0.85, rimW: 5, shade: "#3a1a2a", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ffb070", bottom: "#2a1a40", op: 0.16 } };
+      const GOLD = { dark: 0.06, light: { from: "left", rim: "#ffd27a", rimOp: 0.95, rimW: 6, shade: "#2a1848", shadeOp: 0.4, shadeW: 30, soft: 9, vol: false }, grade: { top: "#ffb070", bottom: "#2a1a40", op: 0.22 } };
       const DOOM = { dark: 0.3, light: { from: "right", rim: "#ff6a5a", rimOp: 0.9, rimW: 5, shade: "#0a0410", shadeOp: 0.45, shadeW: 26, soft: 9, vol: false }, grade: { top: "#6a1030", bottom: "#05030a", op: 0.4 } };
       const NIGHT2 = { dark: 0.3, light: { from: "right", rim: "#ffd9a0", rimOp: 0.7, rimW: 4, shade: "#0a0c20", shadeOp: 0.42, shadeW: 26, soft: 9, vol: false }, grade: { top: "#1a2048", bottom: "#06080f", op: 0.42 } };
       const HALL = { dark: 0.08, light: { from: "left", rim: "#ffe0a0", rimOp: 0.8, rimW: 5, shade: "#2a1030", shadeOp: 0.34, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ffd0a0", bottom: "#2a1a40", op: 0.18 } };
-      const HEAVEN2 = { dark: 0, light: { from: "left", rim: "#fffbe8", rimOp: 0.7, rimW: 4, shade: "#8a90b8", shadeOp: 0.24, shadeW: 26, soft: 9, vol: false }, grade: { top: "#fff8e8", bottom: "#c8d8f0", op: 0.14 } };
-      const DUSK2 = { dark: 0.1, light: { from: "left", rim: "#ffc890", rimOp: 0.75, rimW: 4, shade: "#2a1a40", shadeOp: 0.34, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ff9a60", bottom: "#2a1a40", op: 0.24 } };
-      const MAUVE = { dark: 0.05, light: { from: "left", rim: "#ffd0b0", rimOp: 0.85, rimW: 5, shade: "#3a1a3a", shadeOp: 0.34, shadeW: 26, soft: 9, vol: false }, grade: { top: "#e0a0b0", bottom: "#2a1a30", op: 0.2 } };
-      const square = (k, o = {}) => ({ ...(o.time === "doom" ? DOOM : o.time === "night" ? NIGHT2 : o.time === "mauve" ? MAUVE : GOLD), set: "j3Square", setOpts: { id: `q${k}`, ...o } });
-      const hall = (k, o = {}) => ({ ...HALL, set: "j3Hall", setOpts: { id: `h${k}`, ...o } });
-      const heaven = (k, o = {}) => ({ ...HEAVEN2, set: "j3Cloud", setOpts: { id: `c${k}`, ...o } });
-      const street = (k, o = {}) => ({ ...DUSK2, set: "j3Street", setOpts: { id: `s${k}`, ...o } });
+      const HEAVEN2 = { dark: 0.02, light: { from: "left", rim: "#fffbe8", rimOp: 0.9, rimW: 6, shade: "#7a80b8", shadeOp: 0.34, shadeW: 30, soft: 9, vol: false }, grade: { top: "#fff8e8", bottom: "#b8c8ec", op: 0.2 } };
+      const DUSK2 = { dark: 0.12, light: { from: "left", rim: "#ffc890", rimOp: 0.95, rimW: 6, shade: "#221a48", shadeOp: 0.42, shadeW: 30, soft: 9, vol: false }, grade: { top: "#ff9a60", bottom: "#1e1438", op: 0.3 } };
+      const MAUVE = { dark: 0.08, light: { from: "left", rim: "#ffdcc0", rimOp: 0.95, rimW: 6, shade: "#2a1848", shadeOp: 0.42, shadeW: 30, soft: 9, vol: false }, grade: { top: "#e0a0b0", bottom: "#24142c", op: 0.26 } };
+      const square = (k, o = {}) => ({ ...(o.time === "doom" ? DOOM : o.time === "night" ? NIGHT2 : o.time === "mauve" ? MAUVE : GOLD), set: "j3Square", setOpts: { id: `q${k}`, vpY: CUR_VP, ...o } });
+      const hall = (k, o = {}) => ({ ...HALL, set: "j3Hall", setOpts: { id: `h${k}`, vpY: CUR_VP, ...o } });
+      const heaven = (k, o = {}) => ({ ...HEAVEN2, set: "j3Cloud", setOpts: { id: `c${k}`, vpY: CUR_VP, ...o } });
+      const street = (k, o = {}) => ({ ...DUSK2, set: "j3Street", setOpts: { id: `s${k}`, vpY: CUR_VP, ...o } });
       const SID = { square: (k) => `q${k}`, hall: (k) => `h${k}`, heaven: (k) => `c${k}`, street: (k) => `s${k}` };
-      const shadows = (L, id, actors, sh = -0.4, op = 0.28) => NkL.cast(L, id, actors, { k: 0.3, sh, op });
+      const shadows = (L, id, actors, sh = -0.4, op = 0.32) => NkL.cast(L, id, actors, { k: 0.5, sh, op });
       const loop = NkV.loop;
       const ME = (who, x, y, track, extra = {}) => A(who, x, y, 0.95, track, extra);
       // place a character on the perspective floor at depth z: y and scale follow the stage projection
-      const AT = (who, x, z, track, extra = {}) => { const [px, py, k] = J3.proj(x, J3.GROUND, z); return A(who, px, py, 0.95 * k, track, extra); };
+      // the shot's horizon: VPY(y) before a shot's definition moves the vanishing point for its stage (square/hall/heaven/street add vpY) and its actors (AT) — low horizon = low angle, high = looking down
+      let CUR_VP = 0; const VPY = (y) => { CUR_VP = y || 0; }; const PJ = (x, z, y = J3.GROUND) => J3.projAt(x, y, z, CUR_VP);
+      const AT = (who, x, z, track, extra = {}) => { const [px, py, k] = PJ(x, z); return A(who, px, py, 0.95 * k, track, extra); };
       const face = (x, y = 1400, s = 3.2, flip = false, sx = 540, sy = 760, k = 0.95) => fr(x + (flip ? -2 : 2) * k, y - 546 * k, s, sx, sy);
       // kneeling (one knee down, hands on the ground), trembling · used for the sword at the throat
       Rig.MODES.kneel = (u, o) => { const j = Math.sin(u * 41) * 1.2; return { ...Rig.MODES.idle(u, o), thF: -84, shF: 96, thB: -14, shB: 92, torso: 14 + j * 0.4, head: -18 + j, uaF: -40 + j, faF: -30, uaB: -32 - j, faB: -26, bodyY: 236 }; };
@@ -54,6 +56,17 @@
       { const earSvg = Flat.SPEC.jkYou.headTop ? Flat.SPEC.jkYou.headTop() : ""; Flat.SPEC.jkYou.glasses = false;
         Flat.SPEC.jkYou.headTop = () => earSvg + `<g fill="none" stroke="#1e1a1c" stroke-width="3.4"><circle cx="-8" cy="-549" r="11.6"/><circle cx="21" cy="-549" r="11.6"/><path d="M3.6,-549H9.4"/><path d="M-19.6,-551l-7,-3"/></g><path d="M-15,-556q4,-5 9,-5M14,-556q4,-5 9,-5" stroke="#fff" stroke-width="2" fill="none" opacity=".45" stroke-linecap="round"/>`;
         Rig.CAST.jkYou.v2.skin = "#e8a070"; Flat.SPEC.jkYou.blush = 0.3; }
+
+      // ---------- the stages live: dust drifts, god rays breathe, banners sway, flames flicker, the crowd bobs, clouds drift (the engine calls JKD.dress[set] after the set is built) ----------
+      const j3Life = (L, tl, sh, id, o) => { const t0 = sh.start, dur = sh.dur, reps = (p) => Math.ceil(dur / p) + 1;
+        [...L.fg.querySelectorAll(".j3Dust circle")].forEach((el, i) => { const p = 5 + (i % 5) * 0.9; tl.fromTo(el, { y: 0, x: 0 }, { y: -70 - (i % 4) * 20, x: (i % 2 ? 1 : -1) * (14 + (i % 3) * 8), duration: p, repeat: reps(p), yoyo: true, ease: "sine.inOut", immediateRender: false }, Math.max(0, t0 - (i * 0.37) % p)); });
+        [...L.fg.querySelectorAll(".j3Rays")].forEach((el) => { const op = +el.getAttribute("opacity") || 0.4; tl.fromTo(el, { opacity: op }, { opacity: op * 0.5, duration: 2.4, repeat: reps(2.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); });
+        [...L.set.querySelectorAll(".j3Banner")].forEach((el, i) => tl.fromTo(el, { skewX: -3, transformOrigin: "50% 0%" }, { skewX: 3, transformOrigin: "50% 0%", duration: 1.4 + (i % 3) * 0.3, repeat: reps(1.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, Math.max(0, t0 - (i % 4) * 0.3)));
+        [...L.set.querySelectorAll(".j3Flame")].forEach((el, i) => tl.fromTo(el, { scaleY: 0.9, scaleX: 1.06, transformOrigin: "50% 100%" }, { scaleY: 1.14, scaleX: 0.9, transformOrigin: "50% 100%", duration: 0.17 + (i % 3) * 0.05, repeat: reps(0.17), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
+        [...L.glow.querySelectorAll(".j3TorchGlow")].forEach((el, i) => { const op = +el.getAttribute("opacity") || 0.8; tl.fromTo(el, { opacity: op }, { opacity: op * 0.65, duration: 0.3 + (i % 3) * 0.07, repeat: reps(0.3), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); });
+        [...L.set.querySelectorAll(".j3Crowd")].forEach((el, i) => tl.fromTo(el, { y: 0 }, { y: -5 - (i % 3) * 2, duration: 0.9 + (i % 5) * 0.15, repeat: reps(0.9), yoyo: true, ease: "sine.inOut", immediateRender: false }, Math.max(0, t0 - (i % 7) * 0.13)));
+        ["set", "mid", "fg"].forEach((n) => [...L[n].querySelectorAll(".j3Puff")].forEach((el, i) => tl.fromTo(el, { x: 0 }, { x: (i % 2 ? 1 : -1) * (24 + (i % 4) * 8), duration: 6 + (i % 4), repeat: reps(6), yoyo: true, ease: "sine.inOut", immediateRender: false }, Math.max(0, t0 - (i % 5) * 0.7)))); };
+      window.JKD = window.JKD || { dress: {} }; JKD.dress = JKD.dress || {}; ["j3Square", "j3Hall", "j3Cloud", "j3Street"].forEach((n) => { JKD.dress[n] = j3Life; });
       const CHANNEL = "Rod Mai Club";
       const BLACK = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#000"/>`; return g; };
       const WHITE = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#ffffff"/>`; tl.set(g, { opacity: 0 }, 0); return g; };

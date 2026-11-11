@@ -60,14 +60,14 @@
   // ---- a stone pillar standing at (x, z) with height h, torch on top (lit) ----
   const pillar = (x, z, h, lit, id, o = {}) => { const [bx, by, k] = proj(x, GROUND, z), w = (o.w ?? 90) * k, hh = h * k; const [tx, ty] = proj(x, GROUND - h, z);
     let s = `<g class="j3Pil"><rect x="${f(bx - w / 2)}" y="${f(ty)}" width="${f(w)}" height="${f(by - ty)}" fill="url(#j3Stone)"/><rect x="${f(bx - w * 0.7)}" y="${f(by - 24 * k)}" width="${f(w * 1.4)}" height="${f(24 * k)}" fill="#7a7e96"/><rect x="${f(bx - w * 0.75)}" y="${f(ty - 30 * k)}" width="${f(w * 1.5)}" height="${f(30 * k)}" fill="#8a8ea6"/>`;
-    if (o.banner) s += `<path d="M${f(bx - w * 0.9)},${f(ty + 40 * k)}h${f(w * 1.8)}v${f(hh * 0.5)}l${f(-w * 0.9)},${f(60 * k)}l${f(-w * 0.9)},${f(-60 * k)}Z" fill="url(#j3Red)"/><path d="M${f(bx - w * 0.9)},${f(ty + 40 * k)}h${f(w * 1.8)}v${f(16 * k)}h${f(-w * 1.8)}Z" fill="#f2b632"/><circle cx="${f(bx)}" cy="${f(ty + 40 * k + hh * 0.22)}" r="${f(w * 0.42)}" fill="#f2b632" opacity=".9"/>`;
-    if (lit) s += `<g class="j3Torch"><rect x="${f(bx - 8 * k)}" y="${f(ty - 90 * k)}" width="${f(16 * k)}" height="${f(70 * k)}" fill="#3a2a20"/><path d="M${f(bx)},${f(ty - 90 * k)}q${f(-22 * k)},${f(-40 * k)} 0,${f(-70 * k)}q${f(22 * k)},${f(30 * k)} 0,${f(70 * k)}Z" fill="#ffb040"/><path d="M${f(bx)},${f(ty - 94 * k)}q${f(-10 * k)},${f(-22 * k)} 0,${f(-40 * k)}q${f(10 * k)},${f(18 * k)} 0,${f(40 * k)}Z" fill="#fff0b0"/></g>`;
+    if (o.banner) s += `<path class="j3Banner" d="M${f(bx - w * 0.9)},${f(ty + 40 * k)}h${f(w * 1.8)}v${f(hh * 0.5)}l${f(-w * 0.9)},${f(60 * k)}l${f(-w * 0.9)},${f(-60 * k)}Z" fill="url(#j3Red)"/><path d="M${f(bx - w * 0.9)},${f(ty + 40 * k)}h${f(w * 1.8)}v${f(16 * k)}h${f(-w * 1.8)}Z" fill="#f2b632"/><circle cx="${f(bx)}" cy="${f(ty + 40 * k + hh * 0.22)}" r="${f(w * 0.42)}" fill="#f2b632" opacity=".9"/>`;
+    if (lit) s += `<g class="j3Torch"><rect x="${f(bx - 8 * k)}" y="${f(ty - 90 * k)}" width="${f(16 * k)}" height="${f(70 * k)}" fill="#3a2a20"/><path class="j3Flame" d="M${f(bx)},${f(ty - 90 * k)}q${f(-22 * k)},${f(-40 * k)} 0,${f(-70 * k)}q${f(22 * k)},${f(30 * k)} 0,${f(70 * k)}Z" fill="#ffb040"/><path d="M${f(bx)},${f(ty - 94 * k)}q${f(-10 * k)},${f(-22 * k)} 0,${f(-40 * k)}q${f(10 * k)},${f(18 * k)} 0,${f(40 * k)}Z" fill="#fff0b0"/></g>`;
     return s + `</g>`; };
-  const torchGlow = (x, z, h) => { const [tx, ty, k] = proj(x, GROUND - h - 120, z); return `<circle cx="${f(tx)}" cy="${f(ty)}" r="${f(260 * k + 40)}" fill="url(#j3Torch)" opacity=".8"/>`; };
+  const torchGlow = (x, z, h) => { const [tx, ty, k] = proj(x, GROUND - h - 120, z); return `<circle class="j3TorchGlow" cx="${f(tx)}" cy="${f(ty)}" r="${f(260 * k + 40)}" fill="url(#j3Torch)" opacity=".8"/>`; };
   // ---- god rays from the top (screen blend, in the glow layer) ----
   const rays = (r, n = 6, x0 = 700, op = 0.5) => `<g class="j3Rays" opacity="${op}">${[...Array(n)].map((_, i) => { const a = -22 + i * 9 + r() * 4, w = 60 + r() * 120; return `<polygon points="${f(x0 - w / 2)},-400 ${f(x0 + w / 2)},-400 ${f(x0 + w * 2.6)},2200 ${f(x0 - w * 2.6)},2200" fill="url(#j3Ray)" transform="rotate(${f(a)} ${x0} -400)"/>`; }).join("")}</g>`;
   const dust = (r, n = 40, c = "#fff2c8") => `<g class="j3Dust">${[...Array(n)].map(() => `<circle cx="${f(-200 + r() * 1500)}" cy="${f(200 + r() * 1500)}" r="${f(2 + r() * 5)}" fill="${c}" opacity="${f(0.25 + r() * 0.5)}"/>`).join("")}</g>`;
-  const silhouettes = (r, zs, c = "#1a1428") => zs.map(([x, z]) => { const [bx, by, k] = proj(x, GROUND, z), s = k * (0.9 + r() * 0.25); return `<g transform="translate(${f(bx)},${f(by)}) scale(${f(s)})"><rect x="-26" y="-330" width="52" height="330" rx="22" fill="${c}"/><circle cy="-372" r="38" fill="${c}"/>${r() > 0.5 ? `<path d="M-34,-280L-70,-420" stroke="${c}" stroke-width="16" stroke-linecap="round"/>` : ""}${r() > 0.5 ? `<path d="M34,-280L70,-420" stroke="${c}" stroke-width="16" stroke-linecap="round"/>` : ""}</g>`; }).join("");
+  const silhouettes = (r, zs, c = "#1a1428") => zs.map(([x, z]) => { const [bx, by, k] = proj(x, GROUND, z), s = k * (0.9 + r() * 0.25); return `<g class="j3Crowd"><g transform="translate(${f(bx)},${f(by)}) scale(${f(s)})"><g transform="skewX(52) scale(1,-0.34)" opacity=".22"><rect x="-26" y="-330" width="52" height="330" rx="22" fill="#1a0a20"/><circle cy="-372" r="38" fill="#1a0a20"/></g><rect x="-26" y="-330" width="52" height="330" rx="22" fill="${c}"/><circle cy="-372" r="38" fill="${c}"/>${r() > 0.5 ? `<path d="M-34,-280L-70,-420" stroke="${c}" stroke-width="16" stroke-linecap="round"/>` : ""}${r() > 0.5 ? `<path d="M34,-280L70,-420" stroke="${c}" stroke-width="16" stroke-linecap="round"/>` : ""}</g></g>`; }).join("");
   // ---- the guild hall facade at depth zb: a big arched door, towers, banners, the ranking board on the left wall ----
   const facade = (id, zb, lit, o = {}) => { const k = K(zb), [cx, by] = proj(540, GROUND, zb), W = 3000 * k, H = 2200 * k; let s = `<g id="${id}-facade">`;
     s += `<rect x="${f(cx - W / 2)}" y="${f(by - H)}" width="${f(W)}" height="${f(H)}" fill="url(#j3StoneW)"/><rect x="${f(cx - W / 2)}" y="${f(by - H)}" width="${f(W)}" height="${f(H)}" fill="url(#j3Side)" opacity=".8"/><rect x="${f(cx - W / 2)}" y="${f(by - H)}" width="${f(W)}" height="${f(140 * k)}" fill="#000" opacity=".28"/>
@@ -102,6 +102,9 @@
     put(L.mid, facade(id, o.zBack ?? 7, lit, o) + `<rect x="-3000" y="400" width="8000" height="900" fill="url(#${time === "mauve" ? "j3HazeM" : "j3Haze"})" opacity="${lit ? 0.12 : time === "mauve" ? 0.42 : 0.3}"/>`);
     // set: the floor, pillars with banners down both sides, the crowd, a wagon
     let s = floor(r, { fill: lit ? "url(#j3CobbleN)" : "url(#j3Cobble)", hazeOp: lit ? 0.15 : 0.38, zFar: 7 });
+    // long shadows of the pillars across the cobbles (the sun is low on the left) and warm pools under the torches, under everything that stands on the floor
+    [0.6, 1.6, 3.0, 5.0].forEach((z, i) => { [-1500 - i * 80, 2580 + i * 80].forEach((x) => { const [bx, by, k] = proj(x, GROUND, z), w = 110 * k, len = 1900 * k; s += `<polygon points="${f(bx - w * 0.7)},${f(by)} ${f(bx + w * 0.7)},${f(by)} ${f(bx + w * 0.7 + len)},${f(by + len * 0.18)} ${f(bx - w * 0.7 + len)},${f(by + len * 0.18)}" fill="${lit ? "#05030a" : "#2a1030"}" opacity="${lit ? 0.35 : 0.3}"/>`; }); });
+    s += `<g style="mix-blend-mode:screen">${[0.6, 1.6, 3.0, 5.0].map((z, i) => [-1500 - i * 80, 2580 + i * 80].map((x) => { const [bx, by, k] = proj(x, GROUND, z); return `<ellipse cx="${f(bx)}" cy="${f(by)}" rx="${f(300 * k)}" ry="${f(80 * k)}" fill="url(#j3Torch)" opacity=".45"/>`; }).join("")).join("")}</g>`;
     [0.6, 1.6, 3.0, 5.0].forEach((z, i) => { s += pillar(-1500 - i * 80, z, 900, true, id, { banner: true, w: 110 }) + pillar(2580 + i * 80, z, 900, true, id, { banner: true, w: 110 }); });
     if (o.crowd) { const zs = []; for (let i = 0; i < 26; i++) zs.push([-1700 + r() * 1300, 1.2 + r() * 3.5]); for (let i = 0; i < 26; i++) zs.push([1100 + r() * 1500, 1.2 + r() * 3.5]); s += silhouettes(r, zs, lit ? "#0e0c1c" : "#2a2440"); }
     if (time === "mauve") s += `<rect x="-3000" y="700" width="8000" height="1800" fill="#8a4a70" opacity=".2" style="mix-blend-mode:multiply"/>`;
@@ -112,6 +115,7 @@
     put(L.light ? L.light : L.glow, ``);
     put(L.fg, dust(r, time === "doom" ? 60 : 36, time === "doom" ? "#ff7a5a" : "#fff2c8"));
     if (!lit) put(L.fg, rays(r, 6, 760, 0.42));
+    if (o.fgHeads) put(L.fg, `<g filter="url(#j3Soft)" opacity=".92">${[[60, 0], [330, 30], [640, -10], [930, 40], [1180, 10]].map(([x, dy]) => `<circle cx="${x}" cy="${1700 + dy}" r="96" fill="#1a0e1c"/><ellipse cx="${x}" cy="${1900 + dy}" rx="190" ry="130" fill="#1a0e1c"/>`).join("")}</g>`);
     if (o.nearPillar !== false) put(L.fg, `<g filter="url(#j3Soft)" opacity=".95"><rect x="-600" y="-900" width="420" height="3400" fill="#3a2a2c"/><rect x="-600" y="-900" width="420" height="3400" fill="url(#j3Side)"/><rect x="-640" y="-940" width="500" height="60" fill="#4a3a3c"/><rect x="-520" y="-600" width="260" height="900" fill="url(#j3Red)" opacity=".9"/><rect x="-520" y="-600" width="260" height="30" fill="#f2b632"/></g>`);
   };
   // ======================= inside the guild hall =======================
@@ -140,7 +144,7 @@
   Sets.j3Cloud = (L, o = {}) => {
     const id = o.id || "j3c", r = mk(o.seed || 9);
     put(L.sky, `<rect x="-3000" y="-3000" width="8000" height="8000" fill="#ffd9a8"/><rect x="-3000" y="-2200" width="8000" height="3300" fill="url(#jkHeaven)"/><circle cx="700" cy="300" r="600" fill="url(#j3Sun)" opacity=".9"/>`);
-    const puffs = (z0, z1, n, c1, c2) => [...Array(n)].map(() => { const z = z0 + r() * (z1 - z0), [x, y, k] = proj(-2400 + r() * 6400, GROUND + 40, z); return `<g transform="translate(${f(x)},${f(y)}) scale(${f(k * (1.2 + r() * 0.8))})"><ellipse rx="420" ry="110" fill="${c1}"/><ellipse cx="-160" cy="-60" rx="220" ry="120" fill="${c2}"/><ellipse cx="150" cy="-70" rx="260" ry="130" fill="${c2}"/></g>`; }).join("");
+    const puffs = (z0, z1, n, c1, c2) => [...Array(n)].map(() => { const z = z0 + r() * (z1 - z0), [x, y, k] = proj(-2400 + r() * 6400, GROUND + 40, z); return `<g class="j3Puff"><g transform="translate(${f(x)},${f(y)}) scale(${f(k * (1.2 + r() * 0.8))})"><ellipse rx="420" ry="110" fill="${c1}"/><ellipse cx="-160" cy="-60" rx="220" ry="120" fill="${c2}"/><ellipse cx="150" cy="-70" rx="260" ry="130" fill="${c2}"/></g></g>`; }).join("");
     put(L.far, `<rect x="-3000" y="720" width="8000" height="1400" fill="#fbf2ff"/>` + puffs(8, 14, 22, "#f4ecf8", "#ffffff") + `<g transform="translate(${f(proj(540, GROUND - 900, 10)[0])},${f(proj(540, GROUND - 900, 10)[1])}) scale(${f(K(10) * 9)})"><rect x="-120" y="-300" width="30" height="320" fill="#e8c86a"/><rect x="90" y="-300" width="30" height="320" fill="#e8c86a"/><path d="M-130,-300Q0,-420 130,-300" stroke="#e8c86a" stroke-width="30" fill="none"/></g>`);
     put(L.mid, puffs(3, 8, 20, "#f0eaf8", "#ffffff"));
     put(L.set, `<rect x="-3000" y="${f(GROUND)}" width="8000" height="1400" fill="#e9e2f2"/>` + puffs(0, 3, 30, "#ffffff", "#e4dcf0") + `<rect x="-3000" y="${f(GROUND - 10)}" width="8000" height="1500" fill="url(#j3Side)" opacity=".25"/>`);
@@ -160,7 +164,7 @@
     }
     if (o.hole) { const [hx2, hy2] = proj(o.hole[0], GROUND, o.hole[1]); put(L.set, `<ellipse id="${id}-hole" cx="${f(hx2)}" cy="${f(hy2 + 4)}" rx="0" ry="0" fill="#6a9ad8"/>`); }
     put(L.glow, `<g style="mix-blend-mode:screen"><circle cx="700" cy="300" r="700" fill="url(#j3Sun)" opacity=".3" filter="url(#j3Bloom)"/></g>`);
-    put(L.fg, rays(r, 7, 700, 0.35) + dust(r, 30, "#ffffff"));
+    put(L.fg, rays(r, 7, 700, 0.35) + dust(r, 30, "#ffffff") + `<g filter="url(#j3Soft)" opacity=".9">${[[-150, 1960, 620, 200], [760, 2000, 700, 230], [1300, 1940, 520, 170]].map(([x, y, rx, ry]) => `<g class="j3Puff"><ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#ffffff"/><ellipse cx="${x - rx * 0.35}" cy="${y - ry * 0.5}" rx="${rx * 0.5}" ry="${ry * 0.9}" fill="#ffffff"/></g>`).join("")}</g>`);
   };
   // ======================= the old world street at dusk =======================
   Sets.j3Street = (L, o = {}) => {
@@ -179,8 +183,11 @@
     // street lamps
     [[-900, 0.4], [-900, 2.2], [1100, 1.2], [1100, 3.4]].forEach(([x, z]) => { const [bx, by, kk] = proj(x, GROUND, z); s += `<path d="M${f(bx)},${f(by)}v${f(-900 * kk)}" stroke="#2a2a34" stroke-width="${f(16 * kk)}"/><circle cx="${f(bx)}" cy="${f(by - 920 * kk)}" r="${f(26 * kk)}" fill="#fff4c8"/>`; });
     put(L.set, s);
-    put(L.glow, `<g style="mix-blend-mode:screen">${[[-900, 0.4], [-900, 2.2], [1100, 1.2], [1100, 3.4]].map(([x, z]) => { const [bx, by, kk] = proj(x, GROUND, z); return `<circle cx="${f(bx)}" cy="${f(by - 920 * kk)}" r="${f(300 * kk + 40)}" fill="url(#j3Torch)" opacity=".7"/>`; }).join("")}</g>`);
+    put(L.glow, `<g style="mix-blend-mode:screen">${[[-900, 0.4], [-900, 2.2], [1100, 1.2], [1100, 3.4]].map(([x, z]) => { const [bx, by, kk] = proj(x, GROUND, z); return `<circle class="j3TorchGlow" cx="${f(bx)}" cy="${f(by - 920 * kk)}" r="${f(300 * kk + 40)}" fill="url(#j3Torch)" opacity=".7"/>`; }).join("")}</g>`);
+    if (o.fgLamp) put(L.fg, `<g filter="url(#j3Soft)" opacity=".92"><rect x="-260" y="-600" width="64" height="3200" fill="#120c16"/><rect x="-330" y="-660" width="204" height="120" rx="30" fill="#120c16"/></g>`);
     put(L.fg, dust(r, 24, "#ffd9a0"));
   };
-  window.J3 = { proj, floorY, scale, K, VP, GROUND };
+  const projAt = (x, y, z, vpY) => { const v = VP.y; if (vpY) VP.y = vpY; const r = proj(x, y, z); VP.y = v; return r; };
+  ["j3Square", "j3Hall", "j3Cloud", "j3Street"].forEach((n) => { const fn = Sets[n]; Sets[n] = (L, o = {}) => { const v = VP.y; if (o.vpY) VP.y = o.vpY; try { return fn(L, o); } finally { VP.y = v; } }; });
+  window.J3 = { proj, projAt, floorY, scale, K, VP, GROUND };
 })();
