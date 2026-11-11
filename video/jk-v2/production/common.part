@@ -22,7 +22,8 @@
       Rig.MODES.kneel = (u, o) => { const j = Math.sin(u * 41) * 1.2; return { ...Rig.MODES.idle(u, o), thF: -84, shF: 96, thB: -14, shB: 92, torso: 14 + j * 0.4, head: -18 + j, uaF: -40 + j, faF: -30, uaB: -32 - j, faB: -26, bodyY: 236 }; };
       // the sword at the throat: Ken lunges (front leg bent, torso forward, arm straight out); the hero kneels with both hands up
       Rig.MODES.lunge = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 2.0); return { ...Rig.MODES.idle(u, o), thF: -48, shF: 56, thB: 26, shB: 8, torso: 14 + b * 0.5, head: 2, uaF: (o.arm ?? -48) + b, faF: -4, uaB: 34, faB: -46, bodyY: 46 }; };
-      Rig.MODES.kneelUp = (u, o) => { const j = Math.sin(u * 37) * 1.4; return { ...Rig.MODES.idle(u, o), thF: -84, shF: 96, thB: -14, shB: 92, torso: 10 + j * 0.4, head: -22 + j, uaF: -124 + j, faF: -30, uaB: -118 - j, faB: -26, bodyY: 216 }; };
+      // hands up (owner 11 Nov: "the arm must not come off the body"): the near arm forward from the shoulder with the forearm bent up, the far arm mirrored (+ = forward for the back arm) tucked behind it
+      Rig.MODES.kneelUp = (u, o) => { const j = Math.sin(u * 37) * 1.4; return { ...Rig.MODES.idle(u, o), thF: -84, shF: 96, thB: -14, shB: 92, torso: 10 + j * 0.4, head: -22 + j, uaF: -95 + j, faF: -75, uaB: 85 - j, faB: 80, bodyY: 216 }; };
       // a long light sword with a glow halo, pointing along the forearm; variants by blade angle for staging tests
       const LSWORD = (rot) => `<g transform="translate(0,112) rotate(${rot})"><rect x="-6" y="-8" width="12" height="40" rx="5" fill="#5a3a24"/><rect x="-26" y="30" width="52" height="10" rx="4" fill="#d8b84a"/>
         <path d="M-9,40L-9,330L0,372L9,330L9,40Z" fill="#fff6c8"/><path d="M-30,40L-30,336L0,400L30,336L30,40Z" fill="#9ad8ff" opacity=".45"/><path d="M-60,40L-60,346L0,440L60,346L60,40Z" fill="#9ad8ff" opacity=".16"/><path d="M-3,46V320" stroke="#ffffff" stroke-width="3" opacity=".9"/></g>`;

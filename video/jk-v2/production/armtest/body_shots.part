@@ -1,0 +1,6 @@
+      // ---------- arm test: one close pair per shot — the kneeling hero with hands up, four arm settings; the arms must read as attached at the shoulder ----------
+      const V = { x01: { uaF: -95, faF: -75, uaB: 85, faB: 80 }, x02: { uaF: -100, faF: -70, uaB: 70, faB: 95 }, x03: { uaF: -90, faF: -85, uaB: 95, faB: 60 }, x04: { uaF: -95, faF: -75, uaB: 60, faB: 110 } };
+      Object.entries(V).forEach(([k, v]) => { Rig.MODES["ku" + k] = (u, o) => ({ ...Rig.MODES.kneelUp(u, o), ...v });
+        shot(k, { ...square(k, { crowd: false, nearPillar: false, time: "mauve" }), captions: [], camAt: fr(560, 1130, 1.7, 540, 1000), push: 0,
+          actors: [A("jkKenLS", 380, 1400, 0.95, [{ t: 0, mode: "lunge", eyes: "angry", mouth: "grit" }]), A("jkYou", 680, 1400, 0.95, [{ t: 0, mode: "ku" + k, eyes: "wide", mouth: "scream" }], { flip: true })],
+          fx(tl, id, t0, L) { const g = grp(L.light); g.innerHTML = `<text x="80" y="300" font-family="Kanit" font-weight="900" font-size="70" fill="#fff">${k} uaF ${v.uaF} faF ${v.faF}</text>`; } }); });
