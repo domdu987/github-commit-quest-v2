@@ -6,7 +6,8 @@
       const HALL = { dark: 0.08, light: { from: "left", rim: "#ffe0a0", rimOp: 0.8, rimW: 5, shade: "#2a1030", shadeOp: 0.34, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ffd0a0", bottom: "#2a1a40", op: 0.18 } };
       const HEAVEN2 = { dark: 0, light: { from: "left", rim: "#fffbe8", rimOp: 0.7, rimW: 4, shade: "#8a90b8", shadeOp: 0.24, shadeW: 26, soft: 9, vol: false }, grade: { top: "#fff8e8", bottom: "#c8d8f0", op: 0.14 } };
       const DUSK2 = { dark: 0.1, light: { from: "left", rim: "#ffc890", rimOp: 0.75, rimW: 4, shade: "#2a1a40", shadeOp: 0.34, shadeW: 26, soft: 9, vol: false }, grade: { top: "#ff9a60", bottom: "#2a1a40", op: 0.24 } };
-      const square = (k, o = {}) => ({ ...(o.time === "doom" ? DOOM : o.time === "night" ? NIGHT2 : GOLD), set: "j3Square", setOpts: { id: `q${k}`, ...o } });
+      const MAUVE = { dark: 0.05, light: { from: "left", rim: "#ffd0b0", rimOp: 0.85, rimW: 5, shade: "#3a1a3a", shadeOp: 0.34, shadeW: 26, soft: 9, vol: false }, grade: { top: "#e0a0b0", bottom: "#2a1a30", op: 0.2 } };
+      const square = (k, o = {}) => ({ ...(o.time === "doom" ? DOOM : o.time === "night" ? NIGHT2 : o.time === "mauve" ? MAUVE : GOLD), set: "j3Square", setOpts: { id: `q${k}`, ...o } });
       const hall = (k, o = {}) => ({ ...HALL, set: "j3Hall", setOpts: { id: `h${k}`, ...o } });
       const heaven = (k, o = {}) => ({ ...HEAVEN2, set: "j3Cloud", setOpts: { id: `c${k}`, ...o } });
       const street = (k, o = {}) => ({ ...DUSK2, set: "j3Street", setOpts: { id: `s${k}`, ...o } });
@@ -19,12 +20,45 @@
       const face = (x, y = 1400, s = 3.2, flip = false, sx = 540, sy = 760, k = 0.95) => fr(x + (flip ? -2 : 2) * k, y - 546 * k, s, sx, sy);
       // kneeling (one knee down, hands on the ground), trembling · used for the sword at the throat
       Rig.MODES.kneel = (u, o) => { const j = Math.sin(u * 41) * 1.2; return { ...Rig.MODES.idle(u, o), thF: -84, shF: 96, thB: -14, shB: 92, torso: 14 + j * 0.4, head: -18 + j, uaF: -40 + j, faF: -30, uaB: -32 - j, faB: -26, bodyY: 236 }; };
+      // the sword at the throat: Ken lunges (front leg bent, torso forward, arm straight out); the hero kneels with both hands up
+      Rig.MODES.lunge = (u, o) => { const b = Math.sin(u * 2 * Math.PI / 2.0); return { ...Rig.MODES.idle(u, o), thF: -48, shF: 56, thB: 26, shB: 8, torso: 14 + b * 0.5, head: 2, uaF: (o.arm ?? -48) + b, faF: -4, uaB: 34, faB: -46, bodyY: 46 }; };
+      Rig.MODES.kneelUp = (u, o) => { const j = Math.sin(u * 37) * 1.4; return { ...Rig.MODES.idle(u, o), thF: -84, shF: 96, thB: -14, shB: 92, torso: 10 + j * 0.4, head: -22 + j, uaF: -124 + j, faF: -30, uaB: -118 - j, faB: -26, bodyY: 216 }; };
+      // a long light sword with a glow halo, pointing along the forearm; variants by blade angle for staging tests
+      const LSWORD = (rot) => `<g transform="translate(0,112) rotate(${rot})"><rect x="-6" y="-8" width="12" height="40" rx="5" fill="#5a3a24"/><rect x="-26" y="30" width="52" height="10" rx="4" fill="#d8b84a"/>
+        <path d="M-9,40L-9,330L0,372L9,330L9,40Z" fill="#fff6c8"/><path d="M-30,40L-30,336L0,400L30,336L30,40Z" fill="#9ad8ff" opacity=".45"/><path d="M-60,40L-60,346L0,440L60,346L60,40Z" fill="#9ad8ff" opacity=".16"/><path d="M-3,46V320" stroke="#ffffff" stroke-width="3" opacity=".9"/></g>`;
+      [[0, "A"], [-18, "B"], [18, "C"], [180, "D"]].forEach(([rot, k]) => { Rig.CAST["jkKenLS" + k] = { v2: Rig.CAST.jkKen.v2, hand: LSWORD(rot), keep: "F" }; Flat.SPEC["jkKenLS" + k] = Flat.SPEC.jkKen; });
+      Rig.CAST.jkKenLS = { v2: Rig.CAST.jkKen.v2, hand: LSWORD(-22), keep: "F" }; Flat.SPEC.jkKenLS = Flat.SPEC.jkKen;   // the chosen blade angle (staging test B)
+
+      // ---------- v3 faces (owner, 11 Nov): big round whites with round pupils and a catch-light, thick curved brows, open mouths with a dark red inside ----------
+      const EX = [-8, 21], EY = -549, INK3 = "#211714";
+      Sets.DEFS += `<radialGradient id="v3Shade" cx=".34" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset=".8" stop-color="#5a2038" stop-opacity=".16"/><stop offset="1" stop-color="#3a1028" stop-opacity=".38"/></radialGradient>`;
+      const SHADE = `<ellipse cx="5" cy="-547" rx="39.5" ry="43.6" fill="url(#v3Shade)"/><path d="M40,-578Q50,-547 38,-512" stroke="#ffd8b8" stroke-width="3.5" fill="none" opacity=".55" stroke-linecap="round"/><ellipse cx="-14" cy="-560" rx="12" ry="18" fill="#fff" opacity=".10" transform="rotate(-20 -14 -560)"/>`;
+      const bigFaces = (o = {}) => (x, browC, base) => {
+        const b = base(browC), bw = o.browW ?? 5.2, R = o.r ?? 9.4;
+        const white = (cx, cy, r = R, ry) => `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${ry ?? r}" fill="#fffaf4"/><ellipse cx="${cx}" cy="${(cy + (ry ?? r) * 0.35).toFixed(1)}" rx="${(r * 0.9).toFixed(1)}" ry="${((ry ?? r) * 0.55).toFixed(1)}" fill="#e8d4cc" opacity=".35"/>`;
+        const pupil = (cx, cy, pr = 4.4) => `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${pr}" fill="${INK3}"/><circle cx="${(cx + pr * 0.4).toFixed(1)}" cy="${(cy - pr * 0.45).toFixed(1)}" r="${Math.max(1.2, pr * 0.36).toFixed(1)}" fill="#fff" opacity=".95"/>`;
+        const brows = (dy = 0, tilt = 0) => EX.map((ex, i) => { const inner = ex + (i ? -8 : 8), outer = ex + (i ? 9.5 : -9.5);
+          return `<path d="M${outer},${EY - 17 + dy}Q${(inner + outer) / 2},${EY - 21 + dy + tilt / 2} ${inner},${EY - 17 + dy + tilt}" stroke="${browC}" stroke-width="${bw}" fill="none" stroke-linecap="round"/>`; }).join("");
+        const eyes = (q = {}) => EX.map((ex, i) => white(ex, EY, q.r ?? R, q.ry) + pupil(ex + (q.dx ?? 0) + (q.inward ? (i ? -1 : 1) * q.inward : 0), EY + (q.dy ?? 0), q.pr ?? 4.4)).join("") + brows(q.bdy ?? 0, q.tilt ?? 0);
+        const closed = EX.map((ex) => `<path d="M${ex - 8},${EY - 0.5}q8,7 16,0" stroke="${INK3}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`).join("") + brows(2);
+        const happy = EX.map((ex) => `<path d="M${ex - 8.5},${EY + 2}q8.5,-11 17,0" stroke="${INK3}" stroke-width="3.6" fill="none" stroke-linecap="round"/>`).join("") + brows(-2);
+        const tired = EX.map((ex) => white(ex, EY) + pupil(ex, EY + 1.5, 4.2) + `<path d="M${ex - 9.6},${EY}A9.6,9.6 0 0,1 ${ex + 9.6},${EY}Z" fill="${x.skin}"/><path d="M${ex - 9.6},${EY}H${ex + 9.6}" stroke="${INK3}" stroke-width="2.6" stroke-linecap="round"/>`).join("") + brows(3, 2);
+        const squint = EX.map((ex) => white(ex, EY, R, 4.6) + `<ellipse cx="${ex}" cy="${EY}" rx="4.2" ry="3" fill="${INK3}"/>`).join("") + brows(1, 3);
+        const E = { ...b.eyes, normal: eyes({ pr: 4.6 }), side: eyes({ dx: 4.2, pr: 4.4 }), worry: eyes({ pr: 4.2, bdy: -4, tilt: -6 }), angry: eyes({ pr: 4.8, bdy: 4, tilt: 9 }), wide: eyes({ r: R + 1, pr: 3.9, inward: 0.8, bdy: -8, tilt: -1 }), sad: eyes({ pr: 4.4, dy: 1.5, bdy: -1, tilt: 7 }), squint, happy, tired, closed };
+        return { eyes: Object.fromEntries(Object.entries(E).map(([k, v]) => [k, SHADE + v])),
+          mouths: { ...b.mouths, o: `<ellipse cx="9" cy="-519" rx="6.2" ry="8" fill="#5a2622"/><ellipse cx="9" cy="-515" rx="4" ry="3.2" fill="#c8605a"/>`, scream: `<ellipse cx="9" cy="-516" rx="9" ry="12.5" fill="#5a2622"/><ellipse cx="9" cy="-508" rx="5.5" ry="4" fill="#c8605a"/><path d="M2,-526h14" stroke="#f4ecd8" stroke-width="2.6" stroke-linecap="round"/>` } };
+      };
+      Object.keys(Flat.SPEC).filter((k) => /^jk/.test(k) && Flat.SPEC[k].faces).forEach((k) => { Flat.SPEC[k].faces = bigFaces({ browW: k === "jkYou" || k === "jkKen" ? 5.4 : 5.0 }); });
+      // the hero: thick round glasses drawn over the big eyes (with a lens glint), a warmer peach skin like the owner's picture
+      { const earSvg = Flat.SPEC.jkYou.headTop ? Flat.SPEC.jkYou.headTop() : ""; Flat.SPEC.jkYou.glasses = false;
+        Flat.SPEC.jkYou.headTop = () => earSvg + `<g fill="none" stroke="#1e1a1c" stroke-width="3.4"><circle cx="-8" cy="-549" r="11.6"/><circle cx="21" cy="-549" r="11.6"/><path d="M3.6,-549H9.4"/><path d="M-19.6,-551l-7,-3"/></g><path d="M-15,-556q4,-5 9,-5M14,-556q4,-5 9,-5" stroke="#fff" stroke-width="2" fill="none" opacity=".45" stroke-linecap="round"/>`;
+        Rig.CAST.jkYou.v2.skin = "#e8a070"; Flat.SPEC.jkYou.blush = 0.3; }
       const CHANNEL = "Rod Mai Club";
       const BLACK = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#000"/>`; return g; };
       const WHITE = (L) => { const g = grp(L.light); g.innerHTML = `<rect x="-200" y="-200" width="1480" height="2320" fill="#ffffff"/>`; tl.set(g, { opacity: 0 }, 0); return g; };
       // the ear: on, then blinking like a brake light (period p) for dur; plus a red bloom in the glow layer at the ear's world position
-      const earBlink = (tl, L, aid, ax, ay, s, flip, at, dur, p = 0.28) => { tl.set(`#${aid} .jkEar`, { opacity: 0 }, 0); tl.set(`#${aid} .jkEar`, { opacity: 1 }, at); loop(tl, `#${aid} .jkEar`, { opacity: 1 }, { opacity: 0.15 }, p, at, dur);
-        const ex = ax + (flip ? 33 : -33) * s, ey = ay - 540 * s; const g = grp(L.glow); g.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${ex}" cy="${ey}" r="${(170 * s).toFixed(0)}" fill="url(#j3RedGlow)"/></g>`; tl.set(g, { opacity: 0 }, 0); tl.set(g, { opacity: 1 }, at); loop(tl, g, { opacity: 1 }, { opacity: 0.2 }, p, at, dur); return g; };
+      const earBlink = (tl, L, aid, ax, ay, s, flip, at, dur, p = 0.28, dy = 0) => { tl.set(`#${aid} .jkEar`, { opacity: 0 }, 0); tl.set(`#${aid} .jkEar`, { opacity: 1 }, at); loop(tl, `#${aid} .jkEar`, { opacity: 1 }, { opacity: 0.15 }, p, at, dur);
+        const ex = ax + (flip ? 33 : -33) * s, ey = ay - (540 - dy) * s; const g = grp(L.glow); g.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${ex}" cy="${ey}" r="${(170 * s).toFixed(0)}" fill="url(#j3RedGlow)"/></g>`; tl.set(g, { opacity: 0 }, 0); tl.set(g, { opacity: 1 }, at); loop(tl, g, { opacity: 1 }, { opacity: 0.2 }, p, at, dur); return g; };
       // the belief bar HUD (screen space): a labelled bar that fills to pct at the given times [[t, pct], …]
       const beliefBar = (tl, L, t0, steps, o = {}) => { const x = o.x ?? 540, y = o.y ?? 250, w = o.w ?? 640; const g = grp(L.light);
         g.innerHTML = `<g transform="translate(${x},${y})"><rect x="${-w / 2 - 24}" y="-62" width="${w + 48}" height="124" rx="26" fill="rgba(18,20,30,.78)" stroke="rgba(244,236,216,.25)" stroke-width="2"/><text x="${-w / 2}" y="-20" font-family="Kanit" font-weight="700" font-size="30" fill="#f4ecd8" opacity=".8">คนเชื่อ</text><text id="${o.id}-bt" x="${w / 2}" y="-20" text-anchor="end" font-family="Kanit" font-weight="900" font-size="36" fill="#f2c55c">0/100</text>

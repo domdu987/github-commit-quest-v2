@@ -1,0 +1,22 @@
+      // ---------- LOOK TEST · o01 the opening (sword at the throat) · o02 the hall · o03 heaven · o04 the old street ----------
+      const HERO_Z = 0.25, HERO_X = 700, KEN_X = 400;
+      const [hx, hy, hk] = J3.proj(HERO_X, J3.GROUND, HERO_Z), [kx, ky, kk] = J3.proj(KEN_X, J3.GROUND, HERO_Z);
+      shot("o01", { ...square("o01", { crowd: true, time: "gold" }), blur: { set: 2, mid: 6, far: 9 }, captions: [{ text: "ถ้าคุณเกิดใหม่พร้อม{สกิลที่กากที่สุด}…", t: 0.2, end: 2.6 }, { text: "แล้วกำลังจะโดนผู้กล้า{ฟันคอขาด}อยู่ตรงหน้า", t: 2.7, end: 5.8 }],
+        cam: { keys: [{ t: 0, ...fr((hx + kx) / 2, hy - 300 * hk, 1.75, 540, 860), drift: { s: 0.03 } }, { t: 2.2, ...fr(hx + 10 * hk, hy - 330 * hk, 3.0, 560, 780), drift: { s: 0.03 } }, { t: 3.4, ...fr(560, 1120, 0.95, 540, 980), drift: { s: 0.01 } }, { t: 5.0, ...fr(540, 1180, 1.2, 540, 1000), glide: 1.2 }] },
+        actors: [AT("jkYou", HERO_X, HERO_Z, [{ t: 0, mode: "kneelUp", eyes: "wide", mouth: "scream" }], { flip: true }), AT("jkKenLS", KEN_X, HERO_Z, [{ t: 0, mode: "lunge", eyes: "angry", mouth: "grit" }]),
+          AT("jkMan1", 1500, 1.6, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }), AT("jkWom1", 1750, 2.0, [{ t: 0, mode: "coverEars", eyes: "wide", mouth: "o" }], { flip: true }), AT("jkAunt", -380, 1.8, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), AT("jkMan2", -620, 2.4, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }])],
+        fx(tl, id, t0, L) { hud(id, [["คนเชื่อ", "0/100", "#ff8a7a"], ["สกิล", "จอมโกหก · F", "#f2c55c"]]); shadows(L, id, act("o01"), -0.5, 0.22); earBlink(tl, L, `${id}-a0`, hx, hy, 0.95 * hk, true, t0, D("o01"));
+          beliefBar(tl, L, t0, [[0.3, 0]], { id: `${id}-bb`, y: 330 }); } });
+      shot("o02", { ...hall("o02", {}), captions: [{ text: "ภายใน[กิลด์ผู้กล้า]", t: 0.2, end: 2.8 }], camAt: fr(540, 1000, 0.95, 540, 940), push: 0.02,
+        actors: [AT("jkYou", 540, 0.3, [{ t: 0, mode: "idle", eyes: "worry", mouth: "flat" }]), AT("jkKen", 900, 1.2, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true })],
+        fx(tl, id, t0, L) { shadows(L, id, act("o02"), -0.4); } });
+      shot("o03", { ...heaven("o03", {}), captions: [{ text: "ต่อคิวบน[ก้อนเมฆ]", t: 0.2, end: 2.8 }], camAt: fr(540, 1000, 0.95, 540, 940), push: 0.02,
+        actors: [AT("jkYou", 480, 0.2, [{ t: 0, mode: "think", eyes: "side", mouth: "flat" }]), AT("jkKen", 720, 0.9, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }]), AT("jkSoul1", 300, 1.6, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }]), AT("jkSoul2", 160, 2.4, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }])],
+        fx(tl, id, t0, L) { shadows(L, id, act("o03"), 0.3); } });
+      shot("o04", { ...street("o04", { manhole: true }), captions: [{ text: "ชาติก่อน คุณเป็น[เซลส์ขายประกัน]", t: 0.2, end: 2.8 }], camAt: fr(620, 1040, 0.95, 540, 960), push: 0.02,
+        actors: [AT("jkYouBag", 760, 0.3, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }], { flip: true }), AT("jkAunt", 420, 0.4, [{ t: 0, mode: "idle", eyes: "side", mouth: "flat" }])],
+        fx(tl, id, t0, L) { shadows(L, id, act("o04"), -0.5); } });
+      // ---------- o05 staging test: four blade angles (A −150 · B −120 · C −95 · D −70), Ken lunging at the kneeling hero ----------
+      shot("o05", { ...square("o05", { crowd: false, nearPillar: false }), captions: [], camAt: fr(640, 1150, 0.6, 540, 1000), push: 0,
+        actors: [].concat(...["A", "B", "C", "D"].map((k, i) => { const x = -200 + i * 460; return [A("jkKenLS" + k, x, 1400, 0.95, [{ t: 0, mode: "lunge", eyes: "angry", mouth: "grit" }]), A("jkYou", x + 300, 1400, 0.95, [{ t: 0, mode: "kneelUp", eyes: "wide", mouth: "scream" }], { flip: true })]; })),
+        fx(tl, id, t0, L) { const g = grp(L.light); g.innerHTML = ["A", "B", "C", "D"].map((k, i) => `<text x="${120 + i * 276}" y="640" font-family="Kanit" font-weight="900" font-size="60" fill="#fff">${k}</text>`).join(""); } });
