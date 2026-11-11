@@ -94,10 +94,9 @@ sfx = np.pad(sfx, (0, N - len(sfx)))
 import sys
 sys.path.insert(0, os.path.join(HERE, ".."))
 from musicbed import bed
-mus = bed(N, SR, [(0, T("k03", 0), "tension"), (T("k03", 0), T("k06", 0), "musicbox"), (T("k06", 0), T("k11", 0), "quest"), (T("k11", 0), T("k12", 0), "tension"), (T("k12", 0), T("k13", 0), "quest")], load)   # the owner's Suno tracks (4 Nov) instead of the synth bed
-
+mus = bed(N, SR, [(0, T("k03", 0), "tension"), (T("k03", 0), T("k13", 0), "cartoon")], load)   # owner 11 Nov: from 0:12 (the rewind) the "Cartoon Quest" track carries the whole episode; silence on the logo
 # ---- levels + ducking (the bed sits well under the voice) ----
-mus = level(mus, -31)
+mus = level(mus, -29)
 # the hook (sword at the throat, 0 → the rewind) wants the tension track up front: +6 dB until k03, eased down over 0.6 s (owner 11 Nov asked about the opening music)
 _hb = np.ones(N, np.float32); _n3 = int(T("k03", 0) * SR); _r = int(0.6 * SR)
 _hb[:_n3 - _r] = 10 ** (6 / 20); _hb[_n3 - _r:_n3] = np.linspace(10 ** (6 / 20), 1, _r, dtype=np.float32)

@@ -4,7 +4,7 @@ track from its top (looped if the segment is longer), fading in over 1 s and out
 import os
 import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
-TRACKS = {"quest": "quest.mp3", "tension": "tension.mp3", "musicbox": "musicbox.mp3"}
+TRACKS = {"quest": "quest.mp3", "tension": "tension.mp3", "musicbox": "musicbox.mp3", "cartoon": "Cartoon_Quest.mp3"}   # cartoon = the owner's "Cartoon Quest" (11 Nov) for everything after the hook
 _cache = {}
 
 
