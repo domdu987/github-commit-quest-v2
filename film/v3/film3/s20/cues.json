@@ -1,0 +1,76 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 61.567,
+   "duration": 4.033,
+   "frame": 1847,
+   "end_frame": 1968,
+   "kind": "ambience",
+   "label": "quiet after: far-off shouts and a bell, gulls, the slow seep of molasses; no music sting until the end"
+  },
+  {
+   "time": 62.233,
+   "duration": 0.0,
+   "frame": 1867,
+   "end_frame": 1867,
+   "kind": "drip",
+   "label": "a heavy drop falls into the brim-full bucket (thick 'plop', ring on the surface)",
+   "impact_frame": 1867
+  },
+  {
+   "time": 63.233,
+   "duration": 0.0,
+   "frame": 1897,
+   "end_frame": 1897,
+   "kind": "drip",
+   "label": "a heavy drop falls into the brim-full bucket (thick 'plop', ring on the surface)",
+   "impact_frame": 1897
+  },
+  {
+   "time": 64.2,
+   "duration": 0.0,
+   "frame": 1926,
+   "end_frame": 1926,
+   "kind": "drip",
+   "label": "a heavy drop falls into the brim-full bucket (thick 'plop', ring on the surface)",
+   "impact_frame": 1926
+  },
+  {
+   "time": 65.167,
+   "duration": 0.0,
+   "frame": 1955,
+   "end_frame": 1955,
+   "kind": "drip",
+   "label": "a heavy drop falls into the brim-full bucket (thick 'plop', ring on the surface)",
+   "impact_frame": 1955
+  },
+  {
+   "time": 61.567,
+   "duration": 0.3,
+   "frame": 1847,
+   "end_frame": 1856,
+   "kind": "dissolve",
+   "label": "dissolve in from the flood"
+  },
+  {
+   "time": 63.3,
+   "duration": 0.0,
+   "frame": 1899,
+   "end_frame": 1899,
+   "kind": "accent",
+   "label": "'yang wang yu' (still in its place): optional soft note",
+   "impact_frame": 1899
+  },
+  {
+   "time": 64.233,
+   "duration": 1.333,
+   "frame": 1927,
+   "end_frame": 1967,
+   "kind": "overflow",
+   "label": "slow overflow trickling down the bucket's sides ('tem jon lon')"
+  }
+ ]
+}
