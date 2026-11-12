@@ -1,0 +1,55 @@
+{
+ "take": "s17",
+ "shots": [
+  17
+ ],
+ "g0": 1337,
+ "g1": 1447,
+ "handle_in": 7,
+ "handle_out": 7,
+ "first_g": 1330,
+ "n_frames": 124,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "handle g 1330..1336 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "handle g 1447..1453 rendered in 3D"
+ },
+ "shot_ranges": {
+  "17": [
+   1337,
+   1446
+  ]
+ },
+ "set": "v3/set3d2/tower.py",
+ "light": "DAY",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 7.85,
+ "s_per_frame_cpu_mean": 15.02,
+ "file": "take.mkv (libx264rgb crf 6), frames/ not in git",
+ "rod": "set_rod(2) throughout (rod + wire); wire bevel 0.028 -> 0.07 D at runtime",
+ "events": {
+  "glint": 1362,
+  "pullback": [
+   1366,
+   1394
+  ],
+  "pulse_travel": [
+   1405,
+   1430
+  ],
+  "ground_rings": [
+   1429,
+   1453
+  ]
+ }
+}
