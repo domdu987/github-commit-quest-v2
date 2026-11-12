@@ -2,6 +2,14 @@
       Fx.setup(root);
       Cine.episode(shots, PLAN);
       Engine.build(root, tl, shots);
+      // one id, one element (edgecheck): a def string reused across clips or two set libraries defining the same id gets its later
+      // copies renamed per clip, with the url(#…)/href references inside that clip pointed at the new name (as landscape.js in the long)
+      { const seen = new Map();
+        root.querySelectorAll("[id]").forEach((e) => { const id = e.id; if (!seen.has(id)) { seen.set(id, 0); return; }
+          const k = seen.get(id) + 1; seen.set(id, k); const nu = `${id}_d${k}`, scope = e.closest(".clip") || root; e.id = nu;
+          scope.querySelectorAll("*").forEach((n) => { for (const at of n.attributes) {
+            if (at.value.includes(`url(#${id})`)) n.setAttribute(at.name, at.value.split(`url(#${id})`).join(`url(#${nu})`));
+            else if ((at.name === "href" || at.name === "xlink:href") && at.value === `#${id}`) n.setAttribute(at.name, `#${nu}`); } }); }); }
 
       root.appendChild(document.getElementById("grain"));
       const rnd = (() => { let s = 99; return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296); })();
