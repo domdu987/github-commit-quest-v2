@@ -1,0 +1,127 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 23.767,
+   "duration": 3.1,
+   "frame": 713,
+   "end_frame": 806,
+   "kind": "ambience",
+   "label": "high wind on the spire"
+  },
+  {
+   "time": 23.8,
+   "duration": 0.3,
+   "frame": 714,
+   "end_frame": 723,
+   "kind": "dissolve",
+   "label": "dissolve in from the chamber"
+  },
+  {
+   "time": 23.967,
+   "duration": 0.233,
+   "frame": 719,
+   "end_frame": 726,
+   "kind": "gesture",
+   "label": "padre's hand swings in from frame-right and grabs the rod"
+  },
+  {
+   "time": 24.2,
+   "duration": 0.2,
+   "frame": 726,
+   "end_frame": 732,
+   "kind": "pull",
+   "label": "rod yanked out of the finial (iron scrape + whoosh as it flies off)"
+  },
+  {
+   "time": 24.667,
+   "duration": 0.133,
+   "frame": 740,
+   "end_frame": 744,
+   "kind": "camera_snap",
+   "label": "snap to nico on the spire (whoosh)"
+  },
+  {
+   "time": 24.867,
+   "duration": 0.0,
+   "frame": 746,
+   "end_frame": 746,
+   "kind": "hammer_hit",
+   "label": "hammer hit (iron clank)"
+  },
+  {
+   "time": 25.2,
+   "duration": 0.0,
+   "frame": 756,
+   "end_frame": 756,
+   "kind": "hammer_hit",
+   "label": "hammer hit (iron clank)"
+  },
+  {
+   "time": 25.567,
+   "duration": 0.0,
+   "frame": 767,
+   "end_frame": 767,
+   "kind": "hammer_hit",
+   "label": "hammer hit (iron clank) on 'mai'"
+  },
+  {
+   "time": 25.733,
+   "duration": 0.133,
+   "frame": 772,
+   "end_frame": 776,
+   "kind": "camera_snap",
+   "label": "snap low up the spire (whoosh)"
+  },
+  {
+   "time": 25.733,
+   "duration": 0.2,
+   "frame": 772,
+   "end_frame": 778,
+   "kind": "gesture",
+   "label": "padre's hand comes in from frame-left and grabs the rod"
+  },
+  {
+   "time": 25.933,
+   "duration": 0.2,
+   "frame": 778,
+   "end_frame": 784,
+   "kind": "pull",
+   "label": "rod yanked out again (scrape + whoosh) on 'thon ik'"
+  },
+  {
+   "time": 26.2,
+   "duration": 0.133,
+   "frame": 786,
+   "end_frame": 790,
+   "kind": "camera_snap",
+   "label": "snap to the wider view of nico (whoosh)"
+  },
+  {
+   "time": 26.333,
+   "duration": 0.0,
+   "frame": 790,
+   "end_frame": 790,
+   "kind": "hammer_hit",
+   "label": "hammer hit (iron clank) on 'tok ik'"
+  },
+  {
+   "time": 26.7,
+   "duration": 0.0,
+   "frame": 801,
+   "end_frame": 801,
+   "kind": "hammer_hit",
+   "label": "hammer hit (iron clank)"
+  },
+  {
+   "time": 26.467,
+   "duration": 0.3,
+   "frame": 794,
+   "end_frame": 803,
+   "kind": "dissolve",
+   "label": "dissolve to the square"
+  }
+ ]
+}

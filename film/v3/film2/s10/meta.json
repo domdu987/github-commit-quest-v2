@@ -1,0 +1,39 @@
+{
+ "take": "s10",
+ "shots": [
+  10
+ ],
+ "g0": 719,
+ "g1": 799,
+ "handle_in": 6,
+ "handle_out": 7,
+ "first_g": 713,
+ "n_frames": 93,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 9,
+  "note": "in-handle g 713..718 rendered in 3D (set-up A drifting, rod in)"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "out-handle g 799..805 rendered in 3D (set-up D, nico hammering)"
+ },
+ "shot_ranges": {
+  "10": [
+   719,
+   798
+  ]
+ },
+ "set": "v3/set3d2/tower.py",
+ "light": "DAY",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 8.05,
+ "s_per_frame_cpu_mean": 15.46,
+ "notes": "4 beats OUT/IN/OUT/IN on set-ups A/B/C/D with 4-frame quint snaps; padre's hand is 3D (ink arm + violet-grey edge + black cassock cuff)"
+}
