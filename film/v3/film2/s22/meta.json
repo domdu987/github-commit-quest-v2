@@ -28,8 +28,8 @@
   1280
  ],
  "threads": 2,
- "s_per_frame_wall_mean": 8.69,
- "s_per_frame_cpu_mean": 17.12,
+ "s_per_frame_wall_mean": 8.4,
+ "s_per_frame_cpu_mean": 16.48,
  "events": {
   "push_segment_lean": 1880,
   "push_segment_put": 1914
