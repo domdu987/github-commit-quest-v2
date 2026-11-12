@@ -287,7 +287,7 @@
       // 26–27 · the ER notice board: the four steps appear one by one with the voice
       const STEPS = [["1", "โทร 1669", "#d8312a"], ["2", "อยู่นิ่ง ห้ามถู", "#2a7ad0", "ห้ามราดน้ำจืด"], ["3", "ราดน้ำส้มสายชู 4–6%", "#c89a1a", "อย่างน้อย 30 วินาที"], ["4", "ส่งโรงพยาบาล", "#3aa86a"]];
       add("c_rules", { dark: 0, light: false,
-        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("c_rules"), glide: D("c_rules"), ...fr(540, 1040, 1.1, 540, 960) }] },   // one held cut, a slow push down the board as the steps go up
+        cam: { keys: [{ t: 0, ...fr(540, 960, 1.0, 540, 960) }, { t: D("c_rules"), glide: D("c_rules"), ...fr(540, 1080, 1.18, 540, 960) }] },   // one held cut, a slow push down the board as the steps go up
         captions: caps("c_rules"),
         fx(tl, id, t0, L) {
           put(L.set, `<rect x="-200" y="-200" width="1480" height="2400" fill="#dfe6e0"/><rect x="60" y="300" width="960" height="1280" rx="24" fill="#c8a060" stroke="#5a3a1a" stroke-width="10"/><rect x="90" y="330" width="900" height="1220" rx="12" fill="#e8c890"/>
@@ -296,6 +296,8 @@
               <text x="-310" y="22" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="66" fill="#fff">${n}</text>${sub ? `<text x="-220" y="-2" font-family="Kanit" font-weight="900" font-size="58" fill="#1e2a3a">${t}</text><text id="rs-${k}s" x="-220" y="56" font-family="Kanit" font-weight="800" font-size="40" fill="#7a1a10">${sub}</text>` : `<text x="-220" y="24" font-family="Kanit" font-weight="900" font-size="66" fill="#1e2a3a">${t}</text>`}<circle cx="0" cy="-96" r="12" fill="#d8312a" stroke="#1e1a16" stroke-width="3"/></g></g>`).join("")}`);
           // n04 (11.1 s, 6 parts): 1669 · อยู่นิ่ง ห้ามถู · ห้ามราดน้ำจืด · ราดน้ำส้มสายชูอย่างน้อย 30 วินาที · ส่งโรงพยาบาล
           [1, 2, 4, 5].forEach((j, k) => pop(tl, `#rs-${k}`, t0 + F("c_rules", 0, j) - 0.05, { origin: "0 0", s0: 1.6, d: 0.3, ease: "back.out(2)" }));
+          // the vinegar step pulses while the voice says "อย่างน้อยสามสิบวินาที" up to step 4 (no still stretch > 3 s on the board)
+          { const a4 = F("c_rules", 0, 4) + 0.4, b4 = F("c_rules", 0, 5) - 0.1; tl.fromTo("#rs-2", { scale: 1, svgOrigin: "0 0" }, { scale: 1.06, svgOrigin: "0 0", duration: 0.45, yoyo: true, repeat: Math.max(1, Math.floor((b4 - a4) / 0.45) - 1), ease: "sine.inOut", immediateRender: false }, t0 + a4); }
           tl.set("#rs-1s", { opacity: 0 }, 0); tl.fromTo("#rs-1s", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, t0 + F("c_rules", 0, 3) - 0.05);
           SRC(L, tl, t0 + 0.4, D("c_rules") - 0.5, "ที่มา: กรมควบคุมโรค");
         } });
