@@ -1,10 +1,10 @@
 
       // ---------- ภาค 2 "อัศวินถังไม้" · shared looks, cast props and helpers (both halves) ----------
       const LT2 = (from, rim, rimOp, shade, shadeOp, cast) => ({ from, rim, rimOp, rimW: 5, shade, shadeOp, shadeW: 28, soft: 9, vol: false, cast });
-      const MORN = { dark: 0.02, light: LT2("left", "#fff2d8", 0.8, "#3a2a48", 0.3, { len: 2.4, op: 0.38 }), grade: { top: "#fff4dc", bottom: "#4a3a50", op: 0.14 } };
-      const FOREST = { dark: 0.05, light: LT2("left", "#fff4c0", 0.85, "#1a3020", 0.34, { len: 2.4, op: 0.4 }), grade: { top: "#eef4c8", bottom: "#1a2a1a", op: 0.18 } };
-      const FORESTD = { dark: 0.12, light: LT2("left", "#ffd890", 0.85, "#0e1a14", 0.4, { len: 2.4, op: 0.42 }), grade: { top: "#b8d4a8", bottom: "#0a140e", op: 0.26 } };
-      const PEAK = { dark: 0.03, light: LT2("left", "#fff0d0", 0.9, "#3a2a40", 0.34, { len: 2.6, op: 0.42 }), grade: { top: "#ffe8c8", bottom: "#3a3050", op: 0.16 } };
+      const MORN = { dark: 0.02, light: LT2("left", "#fff2d8", 0.9, "#2a2c6e", 0.36, { len: 2.9, op: 0.52 }), grade: { top: "#fff4dc", bottom: "#4a3a50", op: 0.14 } };
+      const FOREST = { dark: 0.05, light: LT2("left", "#fff4c0", 0.9, "#1c2458", 0.38, { len: 2.9, op: 0.52 }), grade: { top: "#eef4c8", bottom: "#1a2a1a", op: 0.18 } };
+      const FORESTD = { dark: 0.12, light: LT2("left", "#ffd890", 0.9, "#141a48", 0.42, { len: 2.9, op: 0.5 }), grade: { top: "#b8d4a8", bottom: "#0a140e", op: 0.26 } };
+      const PEAK = { dark: 0.03, light: LT2("left", "#fff0d0", 0.95, "#2a2a66", 0.38, { len: 3.0, op: 0.54 }), grade: { top: "#ffe8c8", bottom: "#3a3050", op: 0.16 } };
       const PEAKD = { dark: 0.08, light: LT2("left", "#ffc890", 0.95, "#2a1a3a", 0.4, { len: 2.6, op: 0.42 }), grade: { top: "#ffb080", bottom: "#2a1a40", op: 0.24 } };
       const NITE = { dark: 0.16, light: LT2("right", "#c8d4ff", 0.75, "#0a0c22", 0.42, { len: 2.4, op: 0.4 }), grade: { top: "#3a4880", bottom: "#0a0814", op: 0.3 } };
       const ROWS2 = [[1, "เซอร์อาเธอร์ผู้ไม่เคยแพ้", 0], [2, "แม่มดดอกไม้เหล็ก", 0], [3, "ยักษ์ใจดีแห่งภูเขา", 0], [10, "เคน · ดาบแสง (SSR)", 0], [9999, "คุณ · จอมโกหก (F)", 2]];
@@ -90,3 +90,67 @@
         M.pointZap = M.pointZap || ((u, o) => { const j = Math.sin(u * 41) * 1.5; return { ...Z(u, o), uaF: -92 + j, faF: 4, uaB: 24, faB: 30, head: -2, torso: -4 }; });
         M.pocket = (u, o) => ({ ...Z(u, o), uaF: -6, faF: -96, head: 10, torso: 3 });
         M.clap = M.clap || ((u, o) => { const b = Math.abs(Math.sin(u * 11)); return { ...Z(u, o), uaF: -70 - 20 * b, faF: -60 + 30 * b, uaB: -60 + 20 * b, faB: -70 - 30 * b, head: -4, torso: -2 }; }); }
+
+      // ======================= look pass (owner 12 Nov: "สีปรับให้ดีกว่านี้ มุมกล้องด้วย … ป้ายบอร์ดอย่าบังหน้ากิล") =======================
+      // targets from the reference-style skill: saturation .38–.48, value .45–.63, 8–15 % deep darks, one hard key light with whole-figure
+      // shadows on the ground, shade turning blue-violet, a framing change every 1.2–1.5 s with eased drifts between snap reframes
+      document.head.insertAdjacentHTML("beforeend", `<style>.clip svg.stage { filter: saturate(1.38) contrast(1.09) brightness(.98); }</style>`);
+      Sets.DEFS += `<linearGradient id="lpFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14123a" stop-opacity="0"/><stop offset="1" stop-color="#14123a" stop-opacity=".62"/></linearGradient>
+        <linearGradient id="lpKey" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe2a8" stop-opacity=".34"/><stop offset=".45" stop-color="#ffe2a8" stop-opacity="0"/><stop offset="1" stop-color="#2a2a78" stop-opacity=".26"/></linearGradient>
+        <radialGradient id="lpVig" cx=".5" cy=".46" r=".75"><stop offset=".55" stop-color="#0c0a24" stop-opacity="0"/><stop offset="1" stop-color="#0c0a24" stop-opacity=".55"/></radialGradient>`;
+      // the key light from the upper left over the whole set, cool blue-violet fall-off, a darker floor toward the camera, dark framing silhouettes
+      const LOOKPASS = (L, set) => { const night = set === "jkTownNight";
+        L.set.insertAdjacentHTML("beforeend", `<rect class="lpFloor" x="-3000" y="1460" width="8000" height="1400" fill="url(#lpFloor)"/>`);
+        L.glow.insertAdjacentHTML("beforeend", `<rect x="-3000" y="-1600" width="8000" height="4400" fill="url(#lpKey)" opacity="${night ? 0.35 : 1}" style="mix-blend-mode:soft-light"/>`);
+        if (set === "jkForest") L.fg.insertAdjacentHTML("afterbegin", `<g opacity=".92"><path d="M-1900,-900H-1640Q-1610,400 -1670,1500L-1900,2600Z" fill="#0f1a14"/><path d="M3000,-900H2760Q2730,500 2800,1600L3000,2600Z" fill="#0f1a14"/></g>`);
+        if (set === "jkTown") { L.set.insertAdjacentHTML("beforeend", `<path d="M-1600,1330L420,1330L-200,2600H-2400Z" fill="#2a2a6a" opacity=".3" style="mix-blend-mode:multiply"/><rect x="-3000" y="1380" width="8000" height="1400" fill="url(#lpFloor)" opacity=".8"/>`);
+          L.glow.insertAdjacentHTML("beforeend", `<rect x="-3000" y="-1600" width="8000" height="4400" fill="#d89a68" opacity=".28" style="mix-blend-mode:multiply"/>`); }
+      };
+      window.JKD = window.JKD || { dress: {} };
+      ["jkTown", "jkForest", "jkCave", "jkTownNight", "jkCity"].forEach((n) => { const d = JKD.dress[n]; JKD.dress[n] = (L, tl, sh, id, o) => { if (d) d(L, tl, sh, id, o); LOOKPASS(L, n); }; });
+      // the ranking board stands to the right of the guild instead of covering its face
+      const MOVEBOARD = (L) => { const b = L.set.querySelector('[id$="-board"]'); if (b) b.setAttribute("transform", "translate(1720,1180) scale(0.7)"); };
+      { const d = JKD.dress.jkTown, dn = JKD.dress.jkTownNight; JKD.dress.jkTown = (L, tl, sh, id, o) => { MOVEBOARD(L); d(L, tl, sh, id, o); }; JKD.dress.jkTownNight = (L, tl, sh, id, o) => { MOVEBOARD(L); dn(L, tl, sh, id, o); }; }
+      // camera grammar: no hold longer than ~1.5 s — insert eased reframes (a push-in, then a lower, wider look) and keep every hold drifting
+      const CAMGRAM = (sh) => { const ks = sh.cam && sh.cam.keys; if (!ks || sh.noGram) return; const out = [];
+        ks.forEach((k, i) => { const k2 = { ...k, drift: { s: 0.03, ...(k.drift || {}), ...(k.drift && k.drift.s < 0.03 ? { s: 0.03 } : {}) } }; out.push(k2);
+          const end = i + 1 < ks.length ? ks[i + 1].t - (ks[i + 1].glide || 0) : sh.dur; let t = k.t + 1.45, n = 0;
+          while (end - t > 0.9) { const pushIn = n % 2 === 0, f = pushIn ? 1.09 : 0.95, s = k.s * f;
+            out.push({ t: t + 0.3, x: k.x + (pushIn ? 6 : -10), y: k.y + (pushIn ? -6 : 22), s, glide: 0.32, drift: { s: pushIn ? 0.02 : 0.035 } }); t += 1.45; n++; } });
+        sh.cam = { ...sh.cam, keys: out }; };
+
+      // ---- the opening title: a carved wooden sign hung on ropes, gold lettering, the bucket-helmet crest with crossed wooden swords, light rays, sparkles
+      const TITLE = (tl, L, t0, dur) => { const g = grp(L.light), id = "ttl";
+        const star = (x, y, r) => `<path class="ttlSp" d="M${x},${y - r}Q${x + r * .18},${y - r * .18} ${x + r},${y}Q${x + r * .18},${y + r * .18} ${x},${y + r}Q${x - r * .18},${y + r * .18} ${x - r},${y}Q${x - r * .18},${y - r * .18} ${x},${y - r}Z" fill="#fff4c0"/>`;
+        g.innerHTML = `<g transform="${LS(540, 930)}"><defs>
+            <linearGradient id="${id}Gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2b0"/><stop offset=".45" stop-color="#f6c84a"/><stop offset=".55" stop-color="#d89a1e"/><stop offset="1" stop-color="#ffe08a"/></linearGradient>
+            <linearGradient id="${id}Wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a6a3a"/><stop offset=".5" stop-color="#7a4e28"/><stop offset="1" stop-color="#4e3018"/></linearGradient>
+            <radialGradient id="${id}Glow"><stop offset="0" stop-color="#fff0b0" stop-opacity=".9"/><stop offset="1" stop-color="#fff0b0" stop-opacity="0"/></radialGradient>
+            <clipPath id="${id}Clip"><path d="M-470,-80H470L500,0L470,120H-470L-500,0Z" transform="translate(0,140)"/></clipPath></defs>
+          <g id="${id}Rays" opacity=".55">${[...Array(16)].map((_, k) => `<path d="M0,-120L${(Math.cos(k * 0.3927) * 900).toFixed(0)},${(-120 + Math.sin(k * 0.3927) * 900).toFixed(0)}L${(Math.cos(k * 0.3927 + 0.09) * 900).toFixed(0)},${(-120 + Math.sin(k * 0.3927 + 0.09) * 900).toFixed(0)}Z" fill="#fff4c8" opacity="${k % 2 ? 0.18 : 0.32}"/>`).join("")}</g>
+          <circle cx="0" cy="-120" r="330" fill="url(#${id}Glow)"/>
+          <path d="M-380,-560L-380,60M380,-560L380,60" stroke="#c8a46a" stroke-width="9"/><path d="M-380,-560L-380,60M380,-560L380,60" stroke="#8a6a3a" stroke-width="3" stroke-dasharray="8 10"/>
+          <g id="${id}Crest"><g transform="translate(0,-130)">
+            <path d="M-210,90L170,-170" stroke="#6a4424" stroke-width="30" stroke-linecap="round"/><path d="M210,90L-170,-170" stroke="#6a4424" stroke-width="30" stroke-linecap="round"/>
+            <path d="M-210,90L170,-170M210,90L-170,-170" stroke="#b88a52" stroke-width="10" stroke-linecap="round" opacity=".7"/>
+            <path d="M-130,40l50,-6l-6,50ZM130,40l-50,-6l6,50Z" fill="#e8c048"/>
+            <path d="M-150,40Q-220,-60 -150,-160Q-180,-60 -120,30Z M150,40Q220,-60 150,-160Q180,-60 120,30Z" fill="#5a9a4a"/>
+            <g transform="scale(1.55)">${BUCKET}</g><path d="M-92,-40H92" stroke="#fff" stroke-width="6" opacity=".25"/>
+            <circle cx="0" cy="-118" r="16" fill="#d8443a" stroke="#fff4c0" stroke-width="5"/></g></g>
+          <g id="${id}Board"><path d="M-470,-80H470L500,0L470,120H-470L-500,0Z" transform="translate(0,140)" fill="url(#${id}Wood)" stroke="#2e1a0c" stroke-width="10" stroke-linejoin="round"/>
+            <path d="M-450,-62H450" transform="translate(0,140)" stroke="#c8925a" stroke-width="4" opacity=".6"/>
+            ${[-430, 430].map((x) => `<circle cx="${x}" cy="140" r="12" fill="#e8c048" stroke="#5a3a1a" stroke-width="4"/>`).join("")}
+            <text x="0" y="196" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="150" fill="#2a1406" opacity=".55" transform="translate(6,8)">อัศวินถังไม้</text>
+            <text x="0" y="196" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="150" fill="url(#${id}Gold)" stroke="#3a1e08" stroke-width="6" paint-order="stroke">อัศวินถังไม้</text>
+            <g clip-path="url(#${id}Clip)"><rect id="${id}Sheen" x="-700" y="40" width="90" height="240" fill="#fffbe0" opacity=".45" transform="rotate(16)"/></g></g>
+          <g id="${id}Sub" transform="translate(0,320)"><path d="M-300,-40H300L330,0L300,40H-300L-330,0Z" fill="#c8392b" stroke="#5a1410" stroke-width="6"/><path d="M-330,0L-380,-30L-370,0L-380,30Z M330,0L380,-30L370,0L380,30Z" fill="#8e2018"/>
+            <text x="0" y="16" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="44" fill="#fff4e0">สกิลจอมโกหก · ภาค 2</text></g>
+          <g id="${id}Stars">${star(-520, -200, 26)}${star(470, -300, 34)}${star(560, 120, 22)}${star(-560, 220, 30)}${star(-240, -420, 20)}${star(260, 400, 24)}</g></g>`;
+        const q = (s) => g.querySelector(`#${id}${s}`); g.style.opacity = 0; tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: 0.2, immediateRender: false }, t0 + 0.05);
+        tl.fromTo(q("Board"), { y: -500, rotation: -6, svgOrigin: "0 140" }, { y: 0, rotation: 0, svgOrigin: "0 140", duration: 0.7, ease: "bounce.out", immediateRender: false }, t0 + 0.05);
+        tl.fromTo(q("Crest"), { scale: 0, svgOrigin: "0 -130" }, { scale: 1, svgOrigin: "0 -130", duration: 0.5, ease: "back.out(2.4)", immediateRender: false }, t0 + 0.55);
+        tl.fromTo(q("Sub"), { scaleX: 0, svgOrigin: "0 320" }, { scaleX: 1, svgOrigin: "0 320", duration: 0.4, ease: "back.out(2)", immediateRender: false }, t0 + 0.85);
+        tl.fromTo(q("Rays"), { rotation: 0, svgOrigin: "0 -120" }, { rotation: 30, svgOrigin: "0 -120", duration: dur, ease: "none", immediateRender: false }, t0);
+        tl.fromTo(q("Sheen"), { x: 0 }, { x: 1300, duration: 0.8, ease: "power2.inOut", immediateRender: false }, t0 + 1.0);
+        [...g.querySelectorAll(".ttlSp")].forEach((e, k) => tl.fromTo(e, { scale: 0, transformOrigin: "50% 50%" }, { scale: 1.2, transformOrigin: "50% 50%", duration: 0.35, repeat: Math.ceil(dur / 0.7), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.6 + k * 0.12));
+        tl.to(g, { opacity: 0, duration: 0.25 }, t0 + dur - 0.28); return g; };

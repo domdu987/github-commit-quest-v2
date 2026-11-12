@@ -229,3 +229,5 @@
             <rect x="-470" y="-30" width="940" height="110" rx="55" fill="#c8392b"/><text x="0" y="44" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="56" fill="#fff">ภาคต่อไป: ขายประกันให้มังกร 100 ตัว</text>
             <text x="0" y="190" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="48" fill="#f2c55c">กดติดตาม รอภาคต่อ</text></g>`; pop(tl, g, t0 + 0.2, { origin: "540 960", from: 0.85 }); } });
       shot("b24", { light: false, captions: [], fx(tl, id, t0, L) { const bg = grp(L.light); bg.innerHTML = `<rect x="-400" y="-400" width="1880" height="2720" fill="#0e1214"/><rect x="-400" y="-400" width="1880" height="2720" fill="url(#n2EndBg)"/>`; const g = grp(L.light), c = grp(g); c.setAttribute("transform", "translate(540,960)"); const c2 = grp(c); c2.setAttribute("transform", "translate(-540,-960)"); NkUI.logo(c2); const r0 = c2.querySelector("rect"); if (r0) r0.remove(); pop(tl, g, t0 + 0.05, { from: 0.9, dy: 0, origin: "540 880" }); } });
+
+      shots.forEach(CAMGRAM);

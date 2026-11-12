@@ -17,8 +17,8 @@
         const g = grp(L.set); g.innerHTML = h; return g; };
 
       // ---------- a00 · title ----------
-      shot("a00", { ...forest("a00"), camAt: fr(700, 900, 0.85, 540, 960), push: 0.02, captions: [], blur: { set: 3, mid: 4, far: 6 },
-        fx(tl, id, t0, L) { plate(tl, L, t0 + 0.25, D("a00") - 0.3 + t0, "สกิลจอมโกหก · ภาค 2", "อัศวินถังไม้"); JKI.badge(tl, L.light, t0, D("a00") - 0.3, { kind: "bucket", x: 540, y: 700, s: 1.5, tone: "yellow", at: 0.5 }); } });
+      shot("a00", { ...forest("a00"), cam: JKC.move(fr(700, 1150, 0.75, 540, 1000), fr(700, 1000, 0.9, 540, 960), 0.1, 2.6), captions: [], blur: { set: 2, mid: 3, far: 5 }, noGram: true,
+        fx(tl, id, t0, L) { TITLE(tl, L, t0, D("a00")); } });
 
       // ---------- a01 · the morning after: the dragon is gone ----------
       const A1 = [...TOWNFOLK("idle", "wide", "o").map((a, i) => ({ ...a, x: [1100, 1230, 2050, 2190][i], flip: i < 2 ? false : true, track: [{ t: 0, mode: i % 2 ? "startle" : "point", eyes: "wide", mouth: "o" }] }))];
@@ -188,3 +188,5 @@
                } }; }]);
       // a little wobble of the treetop after the giant lands in it
       function shake2(tl, L, at) { const c = L.fg.querySelector('[id$="-canopy"]'); if (c) tl.fromTo(c, { rotation: -2, svgOrigin: "900 600" }, { rotation: 2, svgOrigin: "900 600", duration: 0.12, repeat: 7, yoyo: true, ease: "sine.inOut", immediateRender: false }, at); }
+
+      shots.forEach(CAMGRAM);

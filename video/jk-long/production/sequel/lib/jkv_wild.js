@@ -85,11 +85,11 @@
       <circle cx="700" cy="120" r="420" fill="#fffbe0" opacity="${dim ? 0.18 : 0.55}"/>`);
     // far: two rows of misty trunks with crowns, haze between
     let far = "";
-    for (let row = 0; row < 2; row++) { const col = row ? (dim ? "#4e6e60" : "#9ab8a0") : (dim ? "#5e7e6c" : "#b8ccb0"), cc = row ? (dim ? "#3e5e50" : "#86a68c") : (dim ? "#4e6e5e" : "#a8c0a2");
+    for (let row = 0; row < 2; row++) { const col = row ? (dim ? "#3a5e52" : "#6e9a7e") : (dim ? "#4a6e62" : "#8eb494"), cc = row ? (dim ? "#2e5246" : "#5e8e6a") : (dim ? "#3e6252" : "#7eaa82");
       for (let x = -2600 + row * 90; x < 3800; x += 150 + r() * 120) { const w = 26 + r() * 30 + row * 14;
         far += `<rect x="${f(x)}" y="-400" width="${f(w)}" height="${f(1600 + row * 40)}" fill="${col}"/>`;
         far += `<ellipse cx="${f(x + w / 2)}" cy="${f(-120 + r() * 260)}" rx="${f(150 + r() * 90)}" ry="${f(120 + r() * 70)}" fill="${cc}"/>`; }
-      far += `<rect x="-3000" y="${row ? 700 : 500}" width="8000" height="${row ? 700 : 900}" fill="url(#jw_hazeF)" opacity="${dim ? 0.35 : 0.85}"/>`; }
+      far += `<rect x="-3000" y="${row ? 700 : 500}" width="8000" height="${row ? 700 : 900}" fill="url(#jw_hazeF)" opacity="${dim ? 0.22 : 0.45}"/>`; }
     put(L.far, far + `<rect x="-3000" y="1150" width="8000" height="300" fill="${dim ? "#4e6a48" : "#9aae78"}"/>`);
     // mid: trunks with crowns, ferns and a fallen log
     let mid = "";
