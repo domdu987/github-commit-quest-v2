@@ -1,0 +1,141 @@
+{
+ "take": "s13",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 37.433,
+   "duration": 3.567,
+   "frame": 1123,
+   "end_frame": 1230,
+   "kind": "ambience",
+   "label": "warm morning: birdsong, gulls, harbour water lapping, distant ship horn (soft)"
+  },
+  {
+   "time": 37.5,
+   "duration": 0.4,
+   "frame": 1125,
+   "end_frame": 1137,
+   "kind": "dissolve",
+   "label": "dissolve in from shot 12"
+  },
+  {
+   "time": 37.7,
+   "duration": 3.3,
+   "frame": 1131,
+   "end_frame": 1230,
+   "kind": "water",
+   "label": "meltwater trickling and dripping from eaves and kerb heaps"
+  },
+  {
+   "time": 38.667,
+   "duration": 2.333,
+   "frame": 1160,
+   "end_frame": 1230,
+   "kind": "footsteps",
+   "label": "two dock workers in shirt sleeves walking toward the camera (footsteps on wet cobbles)"
+  },
+  {
+   "time": 38.333,
+   "duration": 2.667,
+   "frame": 1150,
+   "end_frame": 1230,
+   "kind": "voices",
+   "label": "kids playing by the kerb (laughter)"
+  },
+  {
+   "time": 40.833,
+   "duration": 0.333,
+   "frame": 1225,
+   "end_frame": 1235,
+   "kind": "dissolve",
+   "label": "dissolve to shot 14 (tank foot)"
+  },
+  {
+   "time": 40.767,
+   "duration": 3.8,
+   "frame": 1223,
+   "end_frame": 1337,
+   "kind": "ambience",
+   "label": "close to the tank: low steel hum, birds further away"
+  },
+  {
+   "time": 41.5,
+   "duration": 1.833,
+   "frame": 1245,
+   "end_frame": 1300,
+   "kind": "groan",
+   "label": "low groan of the tank (steel creak, long)"
+  },
+  {
+   "time": 43.333,
+   "duration": 1.233,
+   "frame": 1300,
+   "end_frame": 1337,
+   "kind": "groan",
+   "label": "second, lower groan building"
+  },
+  {
+   "time": 40.8,
+   "duration": 0.0,
+   "frame": 1224,
+   "end_frame": 1224,
+   "kind": "drip",
+   "label": "drip: molasses drop plinks into the tin bucket",
+   "impact_frame": 1224
+  },
+  {
+   "time": 41.467,
+   "duration": 0.0,
+   "frame": 1244,
+   "end_frame": 1244,
+   "kind": "drip",
+   "label": "drip: molasses drop plinks into the tin bucket",
+   "impact_frame": 1244
+  },
+  {
+   "time": 42.133,
+   "duration": 0.0,
+   "frame": 1264,
+   "end_frame": 1264,
+   "kind": "drip",
+   "label": "drip: molasses drop plinks into the tin bucket",
+   "impact_frame": 1264
+  },
+  {
+   "time": 42.8,
+   "duration": 0.0,
+   "frame": 1284,
+   "end_frame": 1284,
+   "kind": "drip",
+   "label": "drip: molasses drop plinks into the tin bucket",
+   "impact_frame": 1284
+  },
+  {
+   "time": 43.467,
+   "duration": 0.0,
+   "frame": 1304,
+   "end_frame": 1304,
+   "kind": "drip",
+   "label": "drip: molasses drop plinks into the tin bucket",
+   "impact_frame": 1304
+  },
+  {
+   "time": 44.133,
+   "duration": 0.0,
+   "frame": 1324,
+   "end_frame": 1324,
+   "kind": "drip",
+   "label": "drip: molasses drop plinks into the tin bucket",
+   "impact_frame": 1324
+  },
+  {
+   "time": 44.167,
+   "duration": 0.333,
+   "frame": 1325,
+   "end_frame": 1335,
+   "kind": "dissolve",
+   "label": "dissolve out to shot 15"
+  }
+ ]
+}
