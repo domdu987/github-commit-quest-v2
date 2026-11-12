@@ -1,0 +1,47 @@
+{
+ "take": "s19",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 52.6,
+   "duration": 2.733,
+   "frame": 1578,
+   "end_frame": 1660,
+   "kind": "ambience",
+   "label": "steady heavy rain on the spire tiles and copper (bed, carries on under s20)"
+  },
+  {
+   "time": 52.6,
+   "duration": 2.733,
+   "frame": 1578,
+   "end_frame": 1660,
+   "kind": "ambience",
+   "label": "wind gusting round the spire top"
+  },
+  {
+   "time": 53.567,
+   "duration": 0.1,
+   "frame": 1607,
+   "end_frame": 1610,
+   "kind": "flash",
+   "label": "faint far flicker in the clouds"
+  },
+  {
+   "time": 54.033,
+   "duration": 1.533,
+   "frame": 1621,
+   "end_frame": 1667,
+   "kind": "thunder",
+   "label": "low distant thunder roll (after the far flicker)"
+  },
+  {
+   "time": 54.167,
+   "duration": 0.467,
+   "frame": 1625,
+   "end_frame": 1639,
+   "kind": "camera_move",
+   "label": "push quickens onto the empty spike ('mai mi mai chim fa laeo'): soft low whoosh, optional"
+  }
+ ]
+}

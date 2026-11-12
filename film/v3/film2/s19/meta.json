@@ -1,0 +1,37 @@
+{
+ "take": "s19",
+ "shots": [
+  19
+ ],
+ "g0": 1585,
+ "g1": 1660,
+ "handle_in": 7,
+ "handle_out": 0,
+ "first_g": 1578,
+ "n_frames": 82,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "in-handle g 1578..1584 rendered in 3D (camera continues backward)"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "set": "v3/set3d2/tower.py",
+ "light": "NIGHT_STORM",
+ "camera": "spire_insert (custom push)",
+ "rod": "set_rod(0) throughout",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 6.55,
+ "s_per_frame_cpu_mean": 13.26,
+ "events": {
+  "far_flicker": 1607,
+  "push_quickens_norod": 1629
+ }
+}
