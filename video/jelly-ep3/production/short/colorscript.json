@@ -1,0 +1,58 @@
+{
+ "bands": [
+  {
+   "from": 0.0,
+   "to": 16.24,
+   "stage": "threat"
+  },
+  {
+   "from": 16.24,
+   "to": 25.4,
+   "stage": "safe"
+  },
+  {
+   "from": 25.4,
+   "to": 35.74,
+   "stage": "uneasy"
+  },
+  {
+   "from": 35.74,
+   "to": 50.37,
+   "stage": "threat"
+  },
+  {
+   "from": 50.37,
+   "to": 58.97,
+   "stage": "uneasy"
+  },
+  {
+   "from": 58.97,
+   "to": 61.29,
+   "stage": "safe"
+  },
+  {
+   "from": 61.29,
+   "to": 66.45,
+   "stage": "uneasy"
+  },
+  {
+   "from": 66.45,
+   "to": 96.7,
+   "stage": "safe"
+  },
+  {
+   "from": 96.7,
+   "to": 98.6,
+   "stage": "uneasy"
+  },
+  {
+   "from": 98.6,
+   "to": 104.75,
+   "stage": "safe"
+  }
+ ],
+ "keep": "yellow",
+ "keep_note": "ขวดและฉลากน้ำส้มสายชู แถบป้ายเสา ห่วงเป็ด",
+ "overrides": {},
+ "note": "ภาพย้อนอดีตสีซีด (คัต 16–19) อยู่ในช่วง threat/uneasy ตามเรื่อง · จบด้วย safe (รุ่งเช้า)"
+}
