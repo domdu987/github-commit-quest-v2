@@ -95,7 +95,7 @@
         for (let k = 0; k < 70; k++) { const y = HZ + 8 + Math.pow(r(), 1.6) * (1900 - HZ), ww = 20 + (y - HZ) * 0.12 * r(); w += `<rect x="${k1(MX - ww / 2 + (r() - 0.5) * (40 + (y - HZ) * 0.25))}" y="${k1(y)}" width="${k1(ww)}" height="${k1(2 + (y - HZ) * 0.006)}" rx="2" fill="#fff4d0" opacity="${(0.35 + r() * 0.5).toFixed(2)}"/>`; }
         for (let k = 0; k < 30; k++) { const y = HZ + 20 + k * 40 + r() * 20; w += `<path d="M${k1(-900 + r() * 300)},${k1(y)}${Array.from({ length: 12 }, () => `q${k1(60 + r() * 40)},${k1(-5 - r() * 4)} ${k1(120 + r() * 80)},0`).join("")}" stroke="#4a5a9a" stroke-width="${k1(1.5 + k * 0.08)}" fill="none" opacity=".35"/>`; }
         for (let x = -880; x < 1980; x += 68) w += `<rect x="${x - 3}" y="${HZ + 6}" width="6" height="${k1(40 + r() * 70)}" fill="${["#ffd86a", "#ff8ab8", "#8ae0ff", "#b8ff8a"][(x / 68 | 0) & 3]}" opacity=".28"/>`;
-        w += `<rect x="${TX - 160}" y="${HZ + 4}" width="320" height="120" fill="#ffcf6a" opacity=".12"/>`;
+        w += `<ellipse cx="${TX}" cy="${HZ + 64}" rx="200" ry="80" fill="url(#kBulb)" opacity=".22"/>`;
         put(L.mid, w);
       }
       // a field of krathongs drifting on the water between yTop and yBot (perspective: smaller and fainter toward the horizon)
@@ -176,7 +176,7 @@
         krathongField(L, { n: 34, y0: 660, y1: 1000, smax: 0.32, seed: 4 });
         let s = "";
         // the moored boat behind the pontoon (on the river side)
-        s += boatSide(520, 1230, 0.86, { sink: o.past ? 0.8 : 0.25, past: o.past, load: crowd(-420, 380, -120, o.past ? 8 : 5, 9, 0.9) });
+        if (!o.noBoat) s += boatSide(520, 1230, 0.86, { sink: o.past ? 0.8 : 0.25, past: o.past, load: crowd(-420, 380, -120, o.past ? 8 : 5, 9, 0.9) });
         // pontoon (right): drums, deck, rail, sign
         const PX = 280, PY = 1330;
         s += `<g transform="translate(${PX},${PY})">${[-260, -120, 20, 160, 300, 440].map((x) => `<ellipse cx="${x}" cy="38" rx="62" ry="26" fill="url(#kDrum)" ${KOUT2}/><path d="M${x - 50},30h100" stroke="#8ab8f0" stroke-width="3" opacity=".6"/>`).join("")}
@@ -194,7 +194,7 @@
         s += [[-470, DK - 150, 0.42], [-360, DK - 152, 0.44], [-250, DK - 150, 0.42], [-150, DK - 148, 0.38]].map(([x, y, sc], i) => krathong(x, y, sc, { seed: 40 + i })).join("");
         // the horn speaker pole and the rule paddle
         s += `<g transform="translate(${PX - 360},${DK})"><path d="M0,0V-430" stroke="#6a6e74" stroke-width="10"/><g transform="translate(0,-420) rotate(-12)"><path d="M0,-14L80,-44V44L0,14Z" fill="#d8dcd4" ${KOUT2}/><ellipse cx="80" cy="0" rx="10" ry="44" fill="#a8aca4" ${KOUT2}/></g></g>`;
-        s += `<g transform="translate(-680,${DK - 40}) rotate(-6)"><rect x="-10" y="-320" width="20" height="220" rx="6" fill="#a8763e" ${KOUT2}/><path d="M-60,-120Q-66,0 0,20Q66,0 60,-120Z" fill="#c89a5a" ${KOUT2}/><text x="0" y="-80" text-anchor="middle" font-family="Mali" font-weight="700" font-size="15" fill="#3a1e10">ลุกทีละคน</text><text x="0" y="-56" text-anchor="middle" font-family="Mali" font-weight="700" font-size="15" fill="#3a1e10">เรือเอียง</text><text x="0" y="-36" text-anchor="middle" font-family="Mali" font-weight="700" font-size="15" fill="#3a1e10">อย่าวิ่งหนี</text><text x="0" y="-16" text-anchor="middle" font-family="Mali" font-weight="700" font-size="13" fill="#3a1e10">ตกน้ำ…</text></g>`;
+        s += `<g transform="translate(-680,${DK - 40}) rotate(-6)"><rect x="-10" y="-320" width="20" height="220" rx="6" fill="#a8763e" ${KOUT2}/><path d="M-60,-120Q-66,0 0,20Q66,0 60,-120Z" fill="#c89a5a" ${KOUT2}/><text x="0" y="-98" text-anchor="middle" font-family="Mali" font-weight="700" font-size="12" fill="#3a1e10">เรือเทียบท่า</text><text x="0" y="-81" text-anchor="middle" font-family="Mali" font-weight="700" font-size="11" fill="#8a2a1a">อย่าลุกพร้อมกัน</text><text x="0" y="-61" text-anchor="middle" font-family="Mali" font-weight="700" font-size="12" fill="#3a1e10">เรือเอียง</text><text x="0" y="-44" text-anchor="middle" font-family="Mali" font-weight="700" font-size="11" fill="#8a2a1a">อย่าเถียงเรือ</text><text x="0" y="-24" text-anchor="middle" font-family="Mali" font-weight="700" font-size="12" fill="#3a1e10">คว้าของลอย</text><text x="0" y="-7" text-anchor="middle" font-family="Mali" font-weight="700" font-size="11" fill="#8a2a1a">นอนคอยเรือ</text></g>`;
         // string lights over the landing
         let sl = `<path d="M-700,${DK - 300}Q-300,${DK - 230} ${PX - 360},${DK - 380}" stroke="#2a2018" stroke-width="2" fill="none"/>`, slg = "";
         for (let i = 0; i <= 18; i++) { const t = i / 18, x = -700 + (PX - 360 + 700) * t, y = (1 - t) * (1 - t) * (DK - 300) + 2 * (1 - t) * t * (DK - 230) + t * t * (DK - 380); sl += `<circle cx="${k1(x)}" cy="${k1(y + 6)}" r="6" fill="${["#ffd86a", "#ff8ab8", "#8ae0ff", "#b8ff8a"][i & 3]}" ${KOUT2}/>`; slg += `<circle cx="${k1(x)}" cy="${k1(y + 6)}" r="40" fill="url(#kBulb)" opacity=".55"/>`; }

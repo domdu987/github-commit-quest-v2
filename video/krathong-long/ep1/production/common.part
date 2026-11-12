@@ -9,7 +9,11 @@
       const capsQ = (k) => {
         const n = [], q = [];
         SH[k].vo.forEach((v, i) => (v.id[0] === "n" || NARR_IDS.has(v.id) ? n : q).push(i));
-        return [...(n.length ? caps(k, n) : []), ...(q.length ? caps(k, q, { quote: true }) : [])].sort((a, b) => a.t - b.t);
+        // narrator and character lines come from two caps() lists: trim across the merged list too, or a character line still on screen
+        // overlaps the narrator line after it and the boxes stack down off the frame
+        const out = [...(n.length ? caps(k, n) : []), ...(q.length ? caps(k, q, { quote: true }) : [])].sort((a, b) => a.t - b.t);
+        for (let i = 0; i + 1 < out.length; i++) out[i].end = Math.min(out[i].end, out[i + 1].t - 0.03);
+        return out;
       };
       const TK = (k, i, m = "o") => [vo(k, i), voEnd(k, i), m];
       const NIGHT = { dark: 0 };
@@ -24,13 +28,13 @@
           <path d="M-760,0V-70H760V0" stroke="#d8d2c0" stroke-width="6" fill="none"/>${Array.from({ length: 9 }, (_, i) => `<path d="M${-760 + i * 190},0V-70" stroke="#d8d2c0" stroke-width="6"/>`).join("")}
           <g transform="translate(-520,-130)"><path d="M0,0V130" stroke="#5a3a1e" stroke-width="7"/><rect x="-80" y="-56" width="160" height="64" rx="7" fill="#f6f2e4" ${KOUT2}/><text x="0" y="-28" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="19" fill="#1e2a4a">โป๊ะรับได้</text><text x="0" y="-2" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="25" fill="#c8241e">20 คน</text></g></g>`);
         put(L.glow, `<ellipse cx="540" cy="990" rx="820" ry="90" fill="url(#kBulb)" opacity=".45"/>` + Array.from({ length: 24 }, (_, i) => `<circle cx="${-120 + i * 56}" cy="${930 + Math.sin(i) * 8}" r="16" fill="url(#kBulb)" opacity=".7"/>`).join(""));
-        put(L.set, boatSide(600, 1220, 0.8, { sink: o.sink ?? 0.85, tilt: o.tilt ?? -3.5, water: true, wake: 1, load: o.noCrowd ? "" : crowd(-300, 420, -150, 5, 3, 0.9) }));
+        if (!o.noBoat) put(L.set, boatSide(600, 1220, 0.8, { sink: o.sink ?? 0.85, tilt: o.tilt ?? -3.5, water: true, wake: 1, load: o.noCrowd ? "" : crowd(-300, 420, -150, 5, 3, 0.9) }));
       }
       // the people on the boat in the hook: ข้าวปั้น up on the bench (whistle), มะปราง seated reaching for him, others rising
       // no more than three faces on the boat (V3): มะปราง, ลุงหมึก and ข้าวปั้น; everyone else is a round-head passenger (riseCrowd)
       const KX = 600, KY = 1220 + 22 - 62;
       const hookCast = (tilt) => [...onBoat(600, 1220, tilt, [["maprang", -150, 0.32, "reachSit", "worry", "o"], ["lungMuek", 405, 0.36, "idle", "normal", "o", true]]),
-        A("khaopan", KX, KY, 0.26, [{ t: 0, mode: "whistle", eyes: "wide", mouth: "o" }])];
+        A("khaopanW", KX, KY, 0.26, [{ t: 0, mode: "whistle", eyes: "wide", mouth: "o" }])];
       const hookBench = (L, tl, tilt) => {
         riseCrowd(L, tl, `${L.id}-rc`, 330, 900, 1110, 6, 3, 0.8, L.riseAt, 40, tilt);
         put(L.act, hullOver(boatSide(600, 1220, 0.8, { sink: 0.85, tilt, water: true, wake: 1 })));

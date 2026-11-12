@@ -198,6 +198,9 @@ for a, b in PLAN["silences"]:
     dip(a, b, 0.0, ramp=0.2)          # music out under the commands and before the sting (only breath and voice remain)
 dip(T("line", 0), T("fire", 0), 0.85)  # uneasy: the bed thins out a little
 dip(T("evid", 0), T("choice", 0), 0.7)
+# n09 {อย่านั่งบนกราบเรือ}: not a command (no full silence) but a short dip so the red-box line stands clear of the bed (review M12)
+N09 = T("sit", 6.514)
+dip(N09 - 0.3, N09 + 0.7, 0.4, ramp=0.15)
 mus = mus * gain
 # ---- levels + ducking (music sits ~16-20 dB under the voice while it speaks) ----
 mus = level(mus, -29.2)
