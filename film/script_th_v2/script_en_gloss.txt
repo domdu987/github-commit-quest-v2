@@ -1,0 +1,23 @@
+English gloss, line by line. Nickname: ทางด่วนพายุ = "the Storm Expressway". Tags: [beat | formula elements]
+
+1. [hook | elements 1] He drew a line on the weather map, pointing straight into New York, and his boss just rubbed it out.
+2. [pivot | elements 2] You see: September 1938. A hurricane was sitting off the coast of Florida.
+3. [setup | elements 2] The old hands at the U.S. Weather Bureau called it flat out: it will curve out to sea. They all curve.
+4. [setup | elements 2] The New England region had not been hit by a major hurricane in more than 120 years.
+5. [hero | elements 3] He was the youngest in the room. But his line did not curve. Dead straight, heading north.
+6. [boss_quote | elements 4] The boss teased him: "Kid, hurricanes don't take the expressway."
+7. [persist | elements 5] The boss rubs it out. He draws it again. Rubbed out again. Drawn again. Just as straight.
+8. [nickname | elements 6] Until the whole building was calling that line "the Storm Expressway".
+9. [forecast_out | elements 7] Then the official forecast went out: rain, gusty winds.
+10. [false_defeat | elements 7] The next morning, in New York, Long Island woke up to nothing but a grey sky and a drizzle.
+11. [boss_quote_2 | elements 8,6] The boss strolled over whistling: "So where is that Storm Expressway of yours? Stuck in traffic?"
+12. [meanwhile | elements 9,11] Meanwhile, out at sea, two masses of high pressure were squeezing the storm, like walls on both sides.
+13. [mechanism | elements 11] One corridor was left, running straight north.
+14. [mechanism | elements 11] Inside that corridor, there is no turning.
+15. [mechanism | elements 11] The wind in the corridor flung the storm north at almost 100 kilometres per hour.
+16. [mechanism | elements 11] Hardly any hurricane had ever moved this fast.
+17. [mechanism | elements 11,6] The Storm Expressway was exactly this corridor.
+18. [disaster | elements 10] And at the end of his line, people on the beach saw a fog bank drifting in.
+19. [disaster | elements 10] It was a wall of water, taller than a whole house.
+20. [ending | elements 10,12,6] That hurricane took the Storm Expressway, straight into New York.
+21. [ending | elements 12] And the forecast on the kitchen table still said: rain.

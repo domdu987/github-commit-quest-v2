@@ -1,0 +1,377 @@
+{
+ "language": "th",
+ "title": "The 1938 New England hurricane (Thai voice-over, v2: reference-formula structure)",
+ "nickname": "ทางด่วนพายุ",
+ "nickname_gloss_en": "the Storm Expressway",
+ "nickname_uses": 4,
+ "syllables_total": 313,
+ "hook_syllables": 21,
+ "caption_number_readings": {
+  "1938": "หนึ่งเก้าสามแปด",
+  "120": "ร้อยยี่สิบ",
+  "100": "ร้อย"
+ },
+ "sentences": [
+  {
+   "beat": "hook",
+   "element": [
+    1
+   ],
+   "tts": "เขาลากเส้นบนแผนที่อากาศ ชี้ตรงเข้านิวยอร์ก แล้วหัวหน้าก็ลบทิ้งเฉยเลย",
+   "captions": [
+    "เขาลากเส้น",
+    "บนแผนที่อากาศ",
+    "ชี้ตรงเข้า",
+    "นิวยอร์ก",
+    "แล้วหัวหน้า",
+    "ก็ลบทิ้ง",
+    "เฉยเลย"
+   ],
+   "syllables": 21,
+   "syl": "เขา ลาก เส้น บน แผน ที่ อา กาศ ชี้ ตรง เข้า นิว ยอร์ก แล้ว หัว หน้า ก็ ลบ ทิ้ง เฉย เลย",
+   "gloss_en": "He drew a line on the weather map, pointing straight into New York, and his boss just rubbed it out."
+  },
+  {
+   "beat": "pivot",
+   "element": [
+    2
+   ],
+   "tts": "คืออย่างนี้ กันยายน ปีหนึ่งเก้าสามแปด เฮอริเคนลูกหนึ่ง จ่ออยู่นอกฝั่งฟลอริดา",
+   "captions": [
+    "คืออย่างนี้",
+    "กันยายน",
+    "ปี 1938",
+    "เฮอริเคน",
+    "ลูกหนึ่ง",
+    "จ่ออยู่",
+    "นอกฝั่ง",
+    "ฟลอริดา"
+   ],
+   "syllables": 23,
+   "syl": "คือ อย่าง นี้ กัน ยา ยน ปี หนึ่ง เก้า สาม แปด เฮอ ริ เคน ลูก หนึ่ง จ่อ อยู่ นอก ฝั่ง ฟลอ ริ ดา",
+   "gloss_en": "You see: September 1938. A hurricane was sitting off the coast of Florida."
+  },
+  {
+   "beat": "setup",
+   "element": [
+    2
+   ],
+   "tts": "รุ่นใหญ่ในกรมอุตุสหรัฐ ฟันธงว่า เดี๋ยวก็เลี้ยวออกทะเล ลูกไหนก็เลี้ยวทั้งนั้น",
+   "captions": [
+    "รุ่นใหญ่",
+    "ในกรมอุตุสหรัฐ",
+    "ฟันธงว่า",
+    "เดี๋ยวก็เลี้ยว",
+    "ออกทะเล",
+    "ลูกไหนก็เลี้ยว",
+    "ทั้งนั้น"
+   ],
+   "syllables": 24,
+   "syl": "รุ่น ใหญ่ ใน กรม อุ ตุ สะ หะ รัด ฟัน ธง ว่า เดี๋ยว ก็ เลี้ยว ออก ทะ เล ลูก ไหน ก็ เลี้ยว ทั้ง นั้น",
+   "gloss_en": "The old hands at the U.S. Weather Bureau called it flat out: it will curve out to sea. They all curve."
+  },
+  {
+   "beat": "setup",
+   "element": [
+    2
+   ],
+   "tts": "แถบนิวอิงแลนด์ ไม่โดนเฮอริเคนลูกใหญ่มาแล้ว ร้อยยี่สิบกว่าปี",
+   "captions": [
+    "แถบนิวอิงแลนด์",
+    "ไม่โดนเฮอริเคน",
+    "ลูกใหญ่",
+    "มาแล้ว",
+    "120 กว่าปี"
+   ],
+   "syllables": 18,
+   "syl": "แถบ นิว อิง แลนด์ ไม่ โดน เฮอ ริ เคน ลูก ใหญ่ มา แล้ว ร้อย ยี่ สิบ กว่า ปี",
+   "gloss_en": "The New England region had not been hit by a major hurricane in more than 120 years."
+  },
+  {
+   "beat": "hero",
+   "element": [
+    3
+   ],
+   "tts": "เขาเด็กที่สุดในห้อง แต่เส้นของเขาไม่เลี้ยว ตรงเป๊ะ ขึ้นเหนือ",
+   "captions": [
+    "เขาเด็กที่สุด",
+    "ในห้อง",
+    "แต่เส้นของเขา",
+    "ไม่เลี้ยว",
+    "ตรงเป๊ะ",
+    "ขึ้นเหนือ"
+   ],
+   "syllables": 16,
+   "syl": "เขา เด็ก ที่ สุด ใน ห้อง แต่ เส้น ของ เขา ไม่ เลี้ยว ตรง เป๊ะ ขึ้น เหนือ",
+   "gloss_en": "He was the youngest in the room. But his line did not curve. Dead straight, heading north."
+  },
+  {
+   "beat": "boss_quote",
+   "element": [
+    4
+   ],
+   "tts": "หัวหน้าแซว “ไอ้หนู เฮอริเคนมันไม่ขึ้นทางด่วนหรอก”",
+   "captions": [
+    "หัวหน้าแซว",
+    "“ไอ้หนู",
+    "เฮอริเคน",
+    "มันไม่ขึ้น",
+    "ทางด่วนหรอก”"
+   ],
+   "syllables": 14,
+   "syl": "หัว หน้า แซว ไอ้ หนู เฮอ ริ เคน มัน ไม่ ขึ้น ทาง ด่วน หรอก",
+   "gloss_en": "The boss teased him: \"Kid, hurricanes don't take the expressway.\""
+  },
+  {
+   "beat": "persist",
+   "element": [
+    5
+   ],
+   "tts": "หัวหน้าลบ เขาลากใหม่ ลบอีก ลากอีก ตรงเท่าเดิม",
+   "captions": [
+    "หัวหน้าลบ",
+    "เขาลากใหม่",
+    "ลบอีก",
+    "ลากอีก",
+    "ตรงเท่าเดิม"
+   ],
+   "syllables": 13,
+   "syl": "หัว หน้า ลบ เขา ลาก ใหม่ ลบ อีก ลาก อีก ตรง เท่า เดิม",
+   "gloss_en": "The boss rubs it out. He draws it again. Rubbed out again. Drawn again. Just as straight."
+  },
+  {
+   "beat": "nickname",
+   "element": [
+    6
+   ],
+   "tts": "จนทั้งตึกเรียกเส้นนั้นว่า “ทางด่วนพายุ”",
+   "captions": [
+    "จนทั้งตึกเรียก",
+    "เส้นนั้นว่า",
+    "“ทางด่วนพายุ”"
+   ],
+   "syllables": 11,
+   "syl": "จน ทั้ง ตึก เรียก เส้น นั้น ว่า ทาง ด่วน พา ยุ",
+   "gloss_en": "Until the whole building was calling that line \"the Storm Expressway\"."
+  },
+  {
+   "beat": "forecast_out",
+   "element": [
+    7
+   ],
+   "tts": "แล้วคำพยากรณ์ทางการก็ออกไป ฝนตก ลมกระโชก",
+   "captions": [
+    "แล้วคำพยากรณ์",
+    "ทางการ",
+    "ก็ออกไป",
+    "ฝนตก",
+    "ลมกระโชก"
+   ],
+   "syllables": 15,
+   "syl": "แล้ว คำ พะ ยา กรณ์ ทาง การ ก็ ออก ไป ฝน ตก ลม กระ โชก",
+   "gloss_en": "Then the official forecast went out: rain, gusty winds."
+  },
+  {
+   "beat": "false_defeat",
+   "element": [
+    7
+   ],
+   "tts": "เช้าวันต่อมา ที่นิวยอร์ก ลองไอแลนด์ตื่นมาเจอแค่ฟ้าเทาๆ ฝนปรอยๆ",
+   "captions": [
+    "เช้าวันต่อมา",
+    "ที่นิวยอร์ก",
+    "ลองไอแลนด์",
+    "ตื่นมาเจอแค่",
+    "ฟ้าเทาๆ",
+    "ฝนปรอยๆ"
+   ],
+   "syllables": 20,
+   "syl": "เช้า วัน ต่อ มา ที่ นิว ยอร์ก ลอง ไอ แลนด์ ตื่น มา เจอ แค่ ฟ้า เทา เทา ฝน ปรอย ปรอย",
+   "gloss_en": "The next morning, in New York, Long Island woke up to nothing but a grey sky and a drizzle."
+  },
+  {
+   "beat": "boss_quote_2",
+   "element": [
+    8,
+    6
+   ],
+   "tts": "หัวหน้าเดินผิวปากมา “ไหนล่ะ ทางด่วนพายุของแก รถติดเหรอ”",
+   "captions": [
+    "หัวหน้า",
+    "เดินผิวปากมา",
+    "“ไหนล่ะ",
+    "ทางด่วนพายุ",
+    "ของแก",
+    "รถติดเหรอ”"
+   ],
+   "syllables": 17,
+   "syl": "หัว หน้า เดิน ผิว ปาก มา ไหน ล่ะ ทาง ด่วน พา ยุ ของ แก รถ ติด เหรอ",
+   "gloss_en": "The boss strolled over whistling: \"So where is that Storm Expressway of yours? Stuck in traffic?\""
+  },
+  {
+   "beat": "meanwhile",
+   "element": [
+    9,
+    11
+   ],
+   "tts": "ระหว่างนั้น กลางทะเล ความกดอากาศสูงสองก้อน บีบพายุไว้ เหมือนกำแพงสองฝั่ง",
+   "captions": [
+    "ระหว่างนั้น",
+    "กลางทะเล",
+    "ความกดอากาศสูง",
+    "สองก้อน",
+    "บีบพายุไว้",
+    "เหมือนกำแพง",
+    "สองฝั่ง"
+   ],
+   "syllables": 22,
+   "syl": "ระ หว่าง นั้น กลาง ทะ เล ความ กด อา กาศ สูง สอง ก้อน บีบ พา ยุ ไว้ เหมือน กำ แพง สอง ฝั่ง",
+   "gloss_en": "Meanwhile, out at sea, two masses of high pressure were squeezing the storm, like walls on both sides."
+  },
+  {
+   "beat": "mechanism",
+   "element": [
+    11
+   ],
+   "tts": "เหลือช่องเดียว ตรงขึ้นเหนือ",
+   "captions": [
+    "เหลือช่องเดียว",
+    "ตรงขึ้นเหนือ"
+   ],
+   "syllables": 6,
+   "syl": "เหลือ ช่อง เดียว ตรง ขึ้น เหนือ",
+   "gloss_en": "One corridor was left, running straight north."
+  },
+  {
+   "beat": "mechanism",
+   "element": [
+    11
+   ],
+   "tts": "ในช่องนั้น เลี้ยวไม่ได้",
+   "captions": [
+    "ในช่องนั้น",
+    "เลี้ยวไม่ได้"
+   ],
+   "syllables": 6,
+   "syl": "ใน ช่อง นั้น เลี้ยว ไม่ ได้",
+   "gloss_en": "Inside that corridor, there is no turning."
+  },
+  {
+   "beat": "mechanism",
+   "element": [
+    11
+   ],
+   "tts": "ลมในช่องซัดพายุขึ้นเหนือ เกือบร้อยกิโลเมตรต่อชั่วโมง",
+   "captions": [
+    "ลมในช่อง",
+    "ซัดพายุ",
+    "ขึ้นเหนือ",
+    "เกือบ 100",
+    "กิโลเมตร",
+    "ต่อชั่วโมง"
+   ],
+   "syllables": 16,
+   "syl": "ลม ใน ช่อง ซัด พา ยุ ขึ้น เหนือ เกือบ ร้อย กิ โล เมตร ต่อ ชั่ว โมง",
+   "gloss_en": "The wind in the corridor flung the storm north at almost 100 kilometres per hour."
+  },
+  {
+   "beat": "mechanism",
+   "element": [
+    11
+   ],
+   "tts": "แทบไม่เคยมีลูกไหนเร็วเท่านี้",
+   "captions": [
+    "แทบไม่เคย",
+    "มีลูกไหน",
+    "เร็วเท่านี้"
+   ],
+   "syllables": 9,
+   "syl": "แทบ ไม่ เคย มี ลูก ไหน เร็ว เท่า นี้",
+   "gloss_en": "Hardly any hurricane had ever moved this fast."
+  },
+  {
+   "beat": "mechanism",
+   "element": [
+    11,
+    6
+   ],
+   "tts": "ทางด่วนพายุ ก็คือช่องนี้แหละ",
+   "captions": [
+    "ทางด่วนพายุ",
+    "ก็คือช่อง",
+    "นี้แหละ"
+   ],
+   "syllables": 9,
+   "syl": "ทาง ด่วน พา ยุ ก็ คือ ช่อง นี้ แหละ",
+   "gloss_en": "The Storm Expressway was exactly this corridor."
+  },
+  {
+   "beat": "disaster",
+   "element": [
+    10
+   ],
+   "tts": "แล้วที่ปลายเส้นของเขา คนบนหาดเห็นม่านหมอก ลอยเข้ามา",
+   "captions": [
+    "แล้วที่ปลาย",
+    "เส้นของเขา",
+    "คนบนหาดเห็น",
+    "ม่านหมอก",
+    "ลอยเข้ามา"
+   ],
+   "syllables": 15,
+   "syl": "แล้ว ที่ ปลาย เส้น ของ เขา คน บน หาด เห็น ม่าน หมอก ลอย เข้า มา",
+   "gloss_en": "And at the end of his line, people on the beach saw a fog bank drifting in."
+  },
+  {
+   "beat": "disaster",
+   "element": [
+    10
+   ],
+   "tts": "มันคือกำแพงน้ำ สูงกว่าบ้านทั้งหลัง",
+   "captions": [
+    "มันคือ",
+    "กำแพงน้ำ",
+    "สูงกว่า",
+    "บ้านทั้งหลัง"
+   ],
+   "syllables": 10,
+   "syl": "มัน คือ กำ แพง น้ำ สูง กว่า บ้าน ทั้ง หลัง",
+   "gloss_en": "It was a wall of water, taller than a whole house."
+  },
+  {
+   "beat": "ending",
+   "element": [
+    10,
+    12,
+    6
+   ],
+   "tts": "เฮอริเคนลูกนั้นขึ้นทางด่วนพายุ ตรงเข้านิวยอร์ก",
+   "captions": [
+    "เฮอริเคน",
+    "ลูกนั้นขึ้น",
+    "ทางด่วนพายุ",
+    "ตรงเข้า",
+    "นิวยอร์ก"
+   ],
+   "syllables": 14,
+   "syl": "เฮอ ริ เคน ลูก นั้น ขึ้น ทาง ด่วน พา ยุ ตรง เข้า นิว ยอร์ก",
+   "gloss_en": "That hurricane took the Storm Expressway, straight into New York."
+  },
+  {
+   "beat": "ending",
+   "element": [
+    12
+   ],
+   "tts": "ส่วนคำพยากรณ์บนโต๊ะกินข้าว ยังเขียนว่า ฝนตก",
+   "captions": [
+    "ส่วนคำพยากรณ์",
+    "บนโต๊ะกินข้าว",
+    "ยังเขียนว่า",
+    "ฝนตก"
+   ],
+   "syllables": 14,
+   "syl": "ส่วน คำ พะ ยา กรณ์ บน โต๊ะ กิน ข้าว ยัง เขียน ว่า ฝน ตก",
+   "gloss_en": "And the forecast on the kitchen table still said: rain."
+  }
+ ]
+}
