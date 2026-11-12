@@ -1,0 +1,65 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 33.933,
+   "duration": 4.7,
+   "frame": 1018,
+   "end_frame": 1159,
+   "kind": "ambience",
+   "label": "fresh morning in the square after the storm: birds, dripping gutters, a far cart"
+  },
+  {
+   "time": 34.2,
+   "duration": 0.4,
+   "frame": 1026,
+   "end_frame": 1038,
+   "kind": "gesture",
+   "label": "padre thrusts the iron rod out (cassock rustle)"
+  },
+  {
+   "time": 35.1,
+   "duration": 0.0,
+   "frame": 1053,
+   "end_frame": 1053,
+   "kind": "metal_clink",
+   "label": "nico's hand closes on the iron rod: soft metal clink",
+   "impact_frame": 1053
+  },
+  {
+   "time": 35.867,
+   "duration": 0.267,
+   "frame": 1076,
+   "end_frame": 1084,
+   "kind": "camera_snap",
+   "label": "reframe onto padre (soft whoosh)"
+  },
+  {
+   "time": 35.7,
+   "duration": 2.8,
+   "frame": 1071,
+   "end_frame": 1155,
+   "kind": "dialogue",
+   "label": "padre speaks the quoted line (the narration carries the words; mouth moves here only)"
+  },
+  {
+   "time": 37.067,
+   "duration": 0.267,
+   "frame": 1112,
+   "end_frame": 1120,
+   "kind": "camera_snap",
+   "label": "reframe onto nico with the rod (whoosh); padre lets go at g 1116, the rod shifts in nico's grip (small iron tick)"
+  },
+  {
+   "time": 37.2,
+   "duration": 0.0,
+   "frame": 1116,
+   "end_frame": 1116,
+   "kind": "metal_clink",
+   "label": "rod changes hands (iron tick)",
+   "impact_frame": 1116
+  }
+ ]
+}
