@@ -1,0 +1,56 @@
+{
+ "take": "s06",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 11.7,
+   "duration": 3.467,
+   "frame": 351,
+   "end_frame": 455,
+   "kind": "ambience",
+   "label": "gunpowder vault: low drone, the hanging lantern creaks, a drip far off"
+  },
+  {
+   "time": 11.7,
+   "duration": 1.1,
+   "frame": 351,
+   "end_frame": 384,
+   "kind": "camera_move",
+   "label": "slow dolly along the barrel rows (soft camera creak / air)"
+  },
+  {
+   "time": 12.8,
+   "duration": 0.7,
+   "frame": 384,
+   "end_frame": 405,
+   "kind": "gesture",
+   "label": "reframe onto the soldier on guard; he shifts his weight (leather creak, boot scuff)"
+  },
+  {
+   "time": 13.5,
+   "duration": 0.333,
+   "frame": 405,
+   "end_frame": 415,
+   "kind": "camera_snap",
+   "label": "snap in onto the crossed-cannon stencil (short whoosh)",
+   "peak_frame": 410
+  },
+  {
+   "time": 14.133,
+   "duration": 0.0,
+   "frame": 424,
+   "end_frame": 424,
+   "kind": "accent",
+   "label": "'kueap 90 tan' lands on the stencil insert (low boom / sting, optional)"
+  },
+  {
+   "time": 14.767,
+   "duration": 0.4,
+   "frame": 443,
+   "end_frame": 455,
+   "kind": "dissolve",
+   "label": "dissolve out to the bell chamber (shot 7)"
+  }
+ ]
+}
