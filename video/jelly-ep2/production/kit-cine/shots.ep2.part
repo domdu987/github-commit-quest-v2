@@ -187,14 +187,14 @@
           tl.fromTo("#sh-ten", { x: -300, opacity: 0 }, { x: 0, opacity: 0.9, duration: 1.8, ease: "power1.out", immediateRender: false }, t0 + b + 0.4);
         } });
       // 14 · this morning: the loose ring slides off น้ำหวาน's waist while ต้น looks at his phone; push-in on the ring
-      add("c_ring", { set: "jellyBeach", setOpts: BEACH2("jb7", { post: [760, 1300, 0.62, 0], life: [["mat", 330, 1760, 0.95, "#e8482a"]] }), dark: 0, light: DAWN,
+      add("c_ring", { set: "jellyBeach", setOpts: BEACH2("jb7", { post: window.LANDSCAPE ? false : [760, 1300, 0.62, 0], life: [["mat", 330, 1760, 0.95, "#e8482a"]] }), dark: 0, light: DAWN,
         cam: { keys: [{ t: 0, ...(window.LANDSCAPE ? fr(460, 1300, 0.9, 540, 1060) : fr(420, 1460, 1.15, 540, 1060)) }, { t: D("c_ring"), glide: D("c_ring"), ...(window.LANDSCAPE ? fr(560, 1470, 1.4, 540, 1060) : fr(560, 1700, 2.2, 540, 1160)) }] },
         actors: [
           A("jTonPhone", 230, 1740, 0.95, [{ t: 0, mode: "phoneLook", eyes: "normal", mouth: "smile" }]),
           A("jWanBare", 470, 1760, 0.68, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 640, y: 1760, dur: 2.6, ease: "none" } }),
         ],
         captions: caps("c_ring"),
-        fx(tl, id, t0, L) {
+        fx(tl, id, t0, L) { if (window.LANDSCAPE) put(L.set, postBoard(760, 1300, 0.62, "pbRing", { full: 0 }));   // the long: the same post with the rhyme board, empty this morning (review r3c)
           put(L.act, `<g transform="translate(470,1660)"><g id="rg-ring">${TideCast.duckRing(0, 0, 0.36, {})}</g></g>`);
           tl.fromTo("#rg-ring", { y: -60, x: 0 }, { y: 100, x: 20, duration: 0.6, ease: "bounce.out", immediateRender: false }, t0 + 1.4);
           put(L.light, `<g transform="translate(60,170)"><g id="rg-tag"><rect width="330" height="64" rx="32" fill="#fffaf0" stroke="#1e1a16" stroke-width="4"/><text x="165" y="44" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="34" fill="#1e2a3a">เมื่อเช้านี้</text></g></g>`);

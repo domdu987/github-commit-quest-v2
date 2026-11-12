@@ -1,7 +1,7 @@
 // Walk a built episode every 0.25 s and report captions, bubbles, choice buttons, UI cards and screen-space graphics that are
 // visible but leave the screen (cut by an edge) — the user notices half-cut labels at once.
 // It also fails on duplicated DOM ids, which make GSAP animate the wrong element (captions vanish or jump order).
-// usage: node edgecheck.cjs <port> <schedule.json>   (exit 1 on any problem)
+// 16:9 port (1920×1080, + source chips inside their svg) · usage: node edgecheckL.cjs <port> <schedule.json>   (exit 1 on any problem)
 let playwright;
 try { playwright = require('playwright'); } catch (e) { playwright = require('/opt/node22/lib/node_modules/playwright'); }
 const fs = require('fs');
@@ -40,6 +40,15 @@ const fs = require('fs');
           if (rc.left < 6) bad.push('L' + Math.round(rc.left)); if (rc.right > 1914) bad.push('R' + Math.round(rc.right));
           if (rc.top < 6) bad.push('T' + Math.round(rc.top)); if (rc.bottom > 1074) bad.push('B' + Math.round(rc.bottom));
           if (bad.length) out.push(`${g.className && g.className.baseVal === undefined ? g.className : (g.id || g.tagName)} "${(g.textContent || '').trim().slice(0, 28)}" ${bad.join(',')}`);
+        });
+        // source chips (K3, SVG g#src<N>) must sit inside their own svg stage too: a fitted card's svg ends before the page edge
+        document.querySelectorAll('g[id^="src"]').forEach((g) => {
+          if (vis(g) < 0.35) return; const rc = g.getBoundingClientRect(); if (rc.width < 2) return;
+          const sv = (g.closest("svg") || {}).getBoundingClientRect ? g.closest("svg").getBoundingClientRect() : null; if (!sv) return;
+          const bad = [];
+          if (rc.left < Math.max(6, sv.left + 4)) bad.push('L' + Math.round(rc.left)); if (rc.right > Math.min(1914, sv.right - 4)) bad.push('R' + Math.round(rc.right) + '/svg' + Math.round(sv.right));
+          if (rc.top < Math.max(6, sv.top + 4)) bad.push('T' + Math.round(rc.top)); if (rc.bottom > Math.min(1074, sv.bottom - 4)) bad.push('B' + Math.round(rc.bottom) + '/svg' + Math.round(sv.bottom));
+          if (bad.length) out.push(`chip ${g.id} "${(g.textContent || '').trim().slice(0, 28)}" ${bad.join(',')}`);
         });
         return out;
       }, t);

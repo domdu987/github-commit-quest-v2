@@ -5,7 +5,9 @@
       const brk = (t) => { if (BRK[t]) return BRK[t]; const plain = t.replace(/[\[\]{}“”]/g, ""); if (plain.length <= 24) return t; let d = 0, best = -1, bd = 1e9;
         for (let i = 0; i < t.length; i++) { const ch = t[i]; if (ch === "[" || ch === "{") d++; else if (ch === "]" || ch === "}") d--; else if (ch === " " && d === 0) { const m = Math.abs(i - t.length / 2); if (m < bd) { bd = m; best = i; } } }
         return best < 0 ? t : t.slice(0, best) + "\n" + t.slice(best + 1); };
-      const caps0 = caps; caps = (k, lines, o) => caps0(k, lines, o).filter((c) => c.end > 0.05).map((c) => ({ ...c, t: Math.max(0, c.t), text: brk(c.text) }));
+      const caps0 = caps; caps = (k, lines, o) => caps0(k, lines, o).filter((c) => c.end > 0.05).map((c) => ({ ...c, text: brk(c.text),
+        // a line carried across a cut is already on screen: its pop runs before the piece shows, and it stays up to the cut (no re-pop)
+        t: c.t < 0 ? -0.25 : c.t, ...(c.end > D(k) - 0.05 ? { end: D(k) } : {}) }));
       const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.9], ...extra }; };
       const TALK = (k, i, m) => [vo(k, i), voEnd(k, i), m];
       const UW = (L, sy) => put(L.fg, `<rect x="-900" y="${sy + 6}" width="2900" height="2000" fill="#2aa0bc" opacity=".3"/>`);

@@ -93,7 +93,11 @@
       const w = document.createElementNS("http://www.w3.org/2000/svg", "g"); g.parentNode.insertBefore(w, g); w.appendChild(g);
       const r = w.getBoundingClientRect(), bb = w.getBBox(); if (!r.width || !bb.width) return;
       const k = r.width / bb.width, m = 1 / k, bx = bb.x + bb.width, by = bb.y + bb.height;
-      const dx = (1890 - r.right) / k, dy = (1052 - r.bottom) / k;
+      // inside the visible stage: a fitted 9:16 card's svg ends at ~1635 px, so the chip's corner is the smaller of the page corner
+      // and the stage's corner less 16 px (review r3c item 1)
+      const st = (g.closest("svg.stage") || g.ownerSVGElement).getBoundingClientRect();
+      const rx = Math.min(1890, st.right - 16), ry = Math.min(1052, st.bottom - 16);
+      const dx = (rx - r.right) / k, dy = (ry - r.bottom) / k;
       w.setAttribute("transform", `translate(${(bx + dx).toFixed(1)} ${(by + dy).toFixed(1)}) scale(${m.toFixed(4)}) translate(${(-bx).toFixed(1)} ${(-by).toFixed(1)})`);
     });
     clip.dataset.world = world ? world.map((v) => Math.round(v)).join(",") : "";
