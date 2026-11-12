@@ -1,7 +1,7 @@
 """usage: python3 conform_full.py <takes_root> <out_basename>  -> <out>_frames/f_%04d.png (N=1968), dissolves centred on each take's g0"""
 import sys,os,json,glob,subprocess,numpy as np
 from PIL import Image
-root,out=sys.argv[1],sys.argv[2]; N=1968
+root,out=sys.argv[1],sys.argv[2]; N=int(os.environ.get("N","1968"))
 T=[]
 for d in sorted(glob.glob(root+"/s*/meta.json")):
     m=json.load(open(d)); td=os.path.dirname(d); fr=td+"/frames"
