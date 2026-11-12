@@ -1,0 +1,126 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 4.333,
+   "frame": 0,
+   "end_frame": 130,
+   "kind": "ambience",
+   "label": "harbour winter ambience at the tank foot: light wind, distant gulls, far harbour bell (bed under shots 1-2)"
+  },
+  {
+   "time": 0.0,
+   "duration": 0.633,
+   "frame": 0,
+   "end_frame": 19,
+   "kind": "bucket_scrape",
+   "label": "tin bucket scraped across the frozen yard into place under the seam (short metallic scrape, stops g 19)"
+  },
+  {
+   "time": 0.0,
+   "duration": 0.733,
+   "frame": 0,
+   "end_frame": 22,
+   "kind": "drip_slide",
+   "label": "the glossy molasses bead creeps down the seep strip (tiny wet slide, optional)"
+  },
+  {
+   "time": 1.0,
+   "duration": 0.0,
+   "frame": 30,
+   "end_frame": 30,
+   "kind": "drip",
+   "label": "DRIP lands in the empty tin bucket: hollow 'tink-plip' (t 0.9)",
+   "impact_frame": 30
+  },
+  {
+   "time": 1.1,
+   "duration": 0.6,
+   "frame": 33,
+   "end_frame": 51,
+   "kind": "camera_snap",
+   "label": "snap pull-up away from the bucket: whoosh out; the tank groans low, long and metallic as it towers over him",
+   "peak_frame": 41,
+   "peak_time": 1.367
+  },
+  {
+   "time": 1.2,
+   "duration": 1.0,
+   "frame": 36,
+   "end_frame": 66,
+   "kind": "groan",
+   "label": "tank groan: deep riveted-steel creak under the pull-up (swells to g 46, decays past the cut)"
+  },
+  {
+   "time": 2.0,
+   "duration": 0.0,
+   "frame": 60,
+   "end_frame": 60,
+   "kind": "drip",
+   "label": "second drip lands in the bucket (far, soft plip; under shot 2)",
+   "impact_frame": 60
+  },
+  {
+   "time": 1.733,
+   "duration": 0.0,
+   "frame": 52,
+   "end_frame": 52,
+   "kind": "cut",
+   "label": "hard cut to the foreman at the tank base"
+  },
+  {
+   "time": 2.1,
+   "duration": 0.0,
+   "frame": 63,
+   "end_frame": 63,
+   "kind": "gesture",
+   "label": "foreman jabs the brush up at the tank (cloth rustle, small whoosh)"
+  },
+  {
+   "time": 2.367,
+   "duration": 0.0,
+   "frame": 71,
+   "end_frame": 71,
+   "kind": "gesture",
+   "label": "second jab (cloth rustle, small whoosh)"
+  },
+  {
+   "time": 2.6,
+   "duration": 0.267,
+   "frame": 78,
+   "end_frame": 86,
+   "kind": "whoosh",
+   "label": "foreman shoves the brush and the paint pot at tommy: whoosh; the pot's wire bail clanks against the tin"
+  },
+  {
+   "time": 2.8,
+   "duration": 0.0,
+   "frame": 84,
+   "end_frame": 84,
+   "kind": "clank",
+   "label": "paint pot clank (bail on tin, short)",
+   "impact_frame": 84
+  },
+  {
+   "time": 2.767,
+   "duration": 0.2,
+   "frame": 83,
+   "end_frame": 89,
+   "kind": "camera_snap",
+   "label": "snap punch-in on the brush (short whoosh in), lands g 87 on '\u0e2a\u0e35\u0e21\u0e32\u0e17\u0e32\u0e17\u0e31\u0e1a\u0e41\u0e17\u0e19'",
+   "peak_frame": 86,
+   "peak_time": 2.867
+  },
+  {
+   "time": 3.867,
+   "duration": 0.4,
+   "frame": 116,
+   "end_frame": 128,
+   "kind": "dissolve",
+   "label": "dissolve to the Boston establishing (s03)"
+  }
+ ]
+}

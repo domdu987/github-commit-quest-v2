@@ -207,7 +207,8 @@ def cam2(g):
     look = head + (W(-1, 0, 0) - W(0, 0, 0)) * 0.70 + Vector((0, 0, -0.70))
     pc = look + (W(0.85, 9.6, 2.4) - look).normalized() * 2.75
     c = kv(pc, look)
-    d = kv(pc + (W(0, 1, 0) - W(0, 0, 0)) * -0.08 + Vector((0, 0, 0.03)), look + Vector((0, 0, 0.04)))
+    sd = W(1, 0, 0) - W(0, 0, 0)
+    d = kv(pc + sd * 0.42 + (W(0, 1, 0) - W(0, 0, 0)) * -0.05 + Vector((0, 0, 0.08)), look + sd * 0.22 + Vector((0, 0, 0.06)))
     ks = [(G_S2, a, "cubic_out"), (PUNCH[0], b, "quint"), (PUNCH[1], c, "sine"), (G_S3 + H_OUT, d, "hold")]
     k = lerp(keys(g, ks), keys(g, [(f, v, "lin") for f, v, _ in ks]), 0.3)
     return Vector(k[:3]), Vector(k[3:])
