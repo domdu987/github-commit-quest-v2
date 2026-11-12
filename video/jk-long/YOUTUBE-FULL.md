@@ -1,6 +1,7 @@
 # สกิลจอมโกหก · ภาค 1 + ภาค 2 (เรื่องเต็มต่อกัน) — YouTube
 
-- ไฟล์: `FULL-jom-kohok-part1-2-share.mp4` · 1920×1080 60fps · ยาว 8:12 · เสียงเล่า Enceladus · เพลงจาก Suno
+- ไฟล์ลง: `FULL-jom-kohok-part1-2.mp4` (ส่งในแชท 170 MB ใหญ่เกิน GitHub) · 1920×1080 60fps · ยาว 8:13 · −13.8 LUFS
+- ใน repo เก็บเป็น 3 ไฟล์ต่อกัน: `LONG-jom-kohok-16x9-share.mp4` (0–4:30) + `SEQ-A-asawin-thangmai-share.mp4` (1:47) + `SEQ-B-asawin-thangmai-share.mp4` (1:56) ต่อด้วย crossfade 0.2 วิ · เสียงเล่า Enceladus · เพลงจาก Suno
 - ภาค 1 (0:00–4:29) คือคลิปสกิลจอมโกหก 4:30 เดิม ไม่แก้ · ภาค 2 "อัศวินถังไม้" (4:29–8:12) ทำใหม่ ฉากละเอียดขึ้น ตาแบบคลิปล่าสุด
 - ปกใช้ `LONG-jom-kohok-thumb.jpg` ได้ หรือรอปกใหม่ของภาค 2
 
