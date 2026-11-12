@@ -63,6 +63,7 @@
             ${[0, 1, 2, 3].map((k) => `<circle class="h1-gl" cx="${560 + k * 90}" cy="${1040 + (k % 2) * 30}" r="6" fill="#fff"/>`).join("")}`);
           // the tentacle twitches on the skin and the welts under it flare red as the towel nears
           put(L.act, `<path id="h1-red" d="M520,1000Q600,1060 660,1040Q720,1020 760,1080Q800,1140 860,1120" stroke="#ff2a3a" stroke-width="30" fill="none" stroke-linecap="round" opacity="0" style="filter:blur(6px)"/>`);
+          { const tw = document.getElementById("h1-tw"); if (tw) tw.parentNode.appendChild(tw); }   // the towel and hand in front of the tentacle and the welts
           tl.fromTo("#h1-red", { opacity: 0 }, { opacity: 0.8, duration: D("c_h1"), ease: "power2.out", immediateRender: false }, t0);
           tl.fromTo("#h1-ten", { x: 0, y: 0 }, { x: 12, y: -14, duration: 0.175, repeat: Math.floor(D("c_h1") / 0.175), yoyo: true, ease: "power2.inOut", immediateRender: false }, t0 + 0.1);   // an 18 px jerk every 0.35 s
           tl.fromTo(".h1-gl", { opacity: 0.2 }, { opacity: 1, duration: 0.25, stagger: 0.1, repeat: 9, yoyo: true, immediateRender: false }, t0 + 0.2);
