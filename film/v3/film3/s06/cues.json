@@ -1,0 +1,110 @@
+{
+ "take": "s06",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 13.833,
+   "duration": 4.433,
+   "frame": 415,
+   "end_frame": 548,
+   "kind": "ambience",
+   "label": "dock ambience at the tank foot: harbour gulls far, a distant steam winch, the filling pipe hums"
+  },
+  {
+   "time": 13.833,
+   "duration": 4.433,
+   "frame": 415,
+   "end_frame": 548,
+   "kind": "pipe",
+   "label": "molasses pumping through the filling pipe (low gurgle inside the tank, bed under shot 6)"
+  },
+  {
+   "time": 15.7,
+   "duration": 0.4,
+   "frame": 471,
+   "end_frame": 483,
+   "kind": "camera_snap",
+   "label": "snap reframe onto tommy (short whoosh in)",
+   "peak_frame": 477,
+   "peak_time": 15.9
+  },
+  {
+   "time": 15.933,
+   "duration": 0.267,
+   "frame": 478,
+   "end_frame": 486,
+   "kind": "gesture",
+   "label": "tommy cups his hand behind his ear (cloth rustle)"
+  },
+  {
+   "time": 16.4,
+   "duration": 0.8,
+   "frame": 492,
+   "end_frame": 516,
+   "kind": "groan",
+   "label": "the tank groans: deep metallic creak of the riveted plates (camera jolts)",
+   "impact_frame": 492
+  },
+  {
+   "time": 17.3,
+   "duration": 0.8,
+   "frame": 519,
+   "end_frame": 543,
+   "kind": "groan",
+   "label": "the tank groans: deep metallic creak of the riveted plates (camera jolts)",
+   "impact_frame": 519
+  },
+  {
+   "time": 17.867,
+   "duration": 2.767,
+   "frame": 536,
+   "end_frame": 619,
+   "kind": "ambience",
+   "label": "drip: molasses drops forming and falling into the bucket"
+  },
+  {
+   "time": 18.3,
+   "duration": 0.0,
+   "frame": 549,
+   "end_frame": 549,
+   "kind": "drip",
+   "label": "drip: a thick drop lands in the molasses in the bucket (soft heavy plop)",
+   "impact_frame": 549
+  },
+  {
+   "time": 19.1,
+   "duration": 0.0,
+   "frame": 573,
+   "end_frame": 573,
+   "kind": "drip",
+   "label": "drip: a thick drop lands in the molasses in the bucket (soft heavy plop)",
+   "impact_frame": 573
+  },
+  {
+   "time": 19.9,
+   "duration": 0.0,
+   "frame": 597,
+   "end_frame": 597,
+   "kind": "drip",
+   "label": "drip: a thick drop lands in the molasses in the bucket (soft heavy plop)",
+   "impact_frame": 597
+  },
+  {
+   "time": 17.933,
+   "duration": 0.267,
+   "frame": 538,
+   "end_frame": 546,
+   "kind": "dissolve",
+   "label": "dissolve to the seam insert"
+  },
+  {
+   "time": 18.333,
+   "duration": 2.3,
+   "frame": 550,
+   "end_frame": 619,
+   "kind": "seep",
+   "label": "slow viscous seeping (wet creak, very soft)"
+  }
+ ]
+}
