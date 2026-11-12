@@ -1,0 +1,92 @@
+
+      // ---------- ภาค 2 "อัศวินถังไม้" · shared looks, cast props and helpers (both halves) ----------
+      const LT2 = (from, rim, rimOp, shade, shadeOp, cast) => ({ from, rim, rimOp, rimW: 5, shade, shadeOp, shadeW: 28, soft: 9, vol: false, cast });
+      const MORN = { dark: 0.02, light: LT2("left", "#fff2d8", 0.8, "#3a2a48", 0.3, { len: 2.4, op: 0.38 }), grade: { top: "#fff4dc", bottom: "#4a3a50", op: 0.14 } };
+      const FOREST = { dark: 0.05, light: LT2("left", "#fff4c0", 0.85, "#1a3020", 0.34, { len: 2.4, op: 0.4 }), grade: { top: "#eef4c8", bottom: "#1a2a1a", op: 0.18 } };
+      const FORESTD = { dark: 0.12, light: LT2("left", "#ffd890", 0.85, "#0e1a14", 0.4, { len: 2.4, op: 0.42 }), grade: { top: "#b8d4a8", bottom: "#0a140e", op: 0.26 } };
+      const PEAK = { dark: 0.03, light: LT2("left", "#fff0d0", 0.9, "#3a2a40", 0.34, { len: 2.6, op: 0.42 }), grade: { top: "#ffe8c8", bottom: "#3a3050", op: 0.16 } };
+      const PEAKD = { dark: 0.08, light: LT2("left", "#ffc890", 0.95, "#2a1a3a", 0.4, { len: 2.6, op: 0.42 }), grade: { top: "#ffb080", bottom: "#2a1a40", op: 0.24 } };
+      const NITE = { dark: 0.16, light: LT2("right", "#c8d4ff", 0.75, "#0a0c22", 0.42, { len: 2.4, op: 0.4 }), grade: { top: "#3a4880", bottom: "#0a0814", op: 0.3 } };
+      const ROWS2 = [[1, "เซอร์อาเธอร์ผู้ไม่เคยแพ้", 0], [2, "แม่มดดอกไม้เหล็ก", 0], [3, "ยักษ์ใจดีแห่งภูเขา", 0], [10, "เคน · ดาบแสง (SSR)", 0], [9999, "คุณ · จอมโกหก (F)", 2]];
+      const town2 = (k, o = {}) => ({ ...MORN, set: "jkTown", setOpts: { id: `jt${k}`, rows: ROWS2, ...o } });
+      const forest = (k, o = {}) => ({ ...(o.dim ? FORESTD : FOREST), set: "jkForest", setOpts: { id: `jf${k}`, ...o } });
+      const cave = (k, o = {}) => ({ ...(o.dusk ? PEAKD : PEAK), set: "jkCave", setOpts: { id: `jc${k}`, ...o } });
+      const night = (k, o = {}) => ({ ...NITE, set: "jkTownNight", setOpts: { id: `jn${k}`, rows: ROWS2, ...o } });
+      // the portrait set's foreground bush lands in the middle of a wide frame: drop it
+      const NOBUSH = (L) => L.fg.querySelectorAll('g[transform^="translate(-260,1880)"], g[transform^="translate(-180,1900)"], g[transform^="translate(1700,1900)"]').forEach((e) => e.remove());
+      // the overlay layer is stretched (1080×1920 design space over 1920×1080): LS(x, y) places content drawn in real screen pixels, centred at design point (x, y)
+      const LS = (x, y) => `translate(${x},${y})`;   // the landscape head counter-scales any overlay group whose transform starts with translate(): content is drawn in uniform units (×0.75 on screen)
+      const shotT = (k, o) => shot(k, { ...o, fx(tl, id, t0, L) { NOBUSH(L); if (o.fx) o.fx(tl, id, t0, L); } });
+      // one voice line cut into several camera set-ups: ats are cut times (s into the shot); each spec's times are relative to its own start (off = its cut time)
+      const splitN = (k, ats, specs) => { const ts = [0, ...ats, D(k)];
+        specs.forEach((mkSpec, i) => { const off = ts[i], sp = mkSpec(off); const fx = sp.fx;
+          add(k, spec(k, { captions: i ? capsFrom(k, off) : caps(k), ...sp, fx(tl, id, t0, L) { if (/^jkTown/.test(sp.set || "")) NOBUSH(L); if (fx) fx(tl, id, t0, L); } }));
+          const sh = shots[shots.length - 1]; sh.start = SH[k].start + off; sh.dur = ts[i + 1] - off; }); };
+      const loop = (tl, sel, a, b, p, at, dur) => tl.fromTo(sel, a, { ...b, duration: p, repeat: Math.max(1, Math.ceil(dur / p)), yoyo: true, ease: "sine.inOut", immediateRender: false }, at);
+      const earsBlink = (tl, aid, at, dur, p = 0.26) => { tl.set(`#${aid} .jkEar`, { opacity: 0 }, 0); tl.set(`#${aid} .jkEar`, { opacity: 1 }, at); loop(tl, `#${aid} .jkEar`, { opacity: 1 }, { opacity: 0.15 }, p, at, dur); };
+      const flash = (tl, at, op = 0.85, d = 0.45) => tl.fromTo("#flashw", { opacity: op }, { opacity: 0, duration: d, ease: "power2.out", immediateRender: false }, at);
+      const HUD2 = (pct) => [["สกิล", "จอมโกหก · F", "#f2c55c"], ["คนเชื่อ", pct, "#ff8a7a"]];
+      const hudPct = (tl, id, t0, steps) => { const el = document.getElementById(id); if (!el) return;
+        el.insertAdjacentHTML("beforeend", `<div class="sghud"><small>สกิล</small><b style="color:#f2c55c">จอมโกหก · F</b><i></i><small>คนเชื่อ</small><b style="color:#ff8a7a" id="${id}-hv">${steps[0][1]}</b></div>`);
+        const o = { u: 0 }; tl.fromTo(o, { u: 0 }, { u: 100, duration: 100, ease: "none", immediateRender: false, onUpdate: () => { let v = steps[0][1]; steps.forEach(([t, s]) => { if (o.u >= t) v = s; }); const e = document.getElementById(`${id}-hv`); if (e && e.textContent !== v) e.textContent = v; } }, t0); };
+
+      // ---- cast props for part two
+      const C2 = Rig.CAST, S2 = Flat.SPEC;
+      const TORCH = `<g transform="translate(0,112) rotate(174)"><rect x="-7" y="-92" width="14" height="128" rx="5" fill="#6a4a2c"/><path d="M-3,-88V30" stroke="#9a7044" stroke-width="3" opacity=".6"/><path d="M-14,-92h28l-4,-16h-20z" fill="#3a2a1a"/>
+        <g class="kTorchF"><path d="M0,-184Q-32,-132 -17,-110Q0,-98 17,-110Q32,-132 0,-184Z" fill="#ff7a22"/><path d="M0,-158Q-15,-128 -8,-114Q0,-108 8,-114Q15,-128 0,-158Z" fill="#ffe08a"/></g></g>`;
+      C2.jkKidTorch = { v2: C2.jkKid.v2, hand: TORCH, keep: "F" }; S2.jkKidTorch = S2.jkKid;
+      C2.jkYouBucketPaper = { v2: C2.jkYou.v2, hand: JK.PAPER(false), keep: "F" }; S2.jkYouBucketPaper = S2.jkYouBucket;
+      C2.jkYouBucketPaperGold = { v2: C2.jkYou.v2, hand: JK.PAPER(true), keep: "F" }; S2.jkYouBucketPaperGold = S2.jkYouBucket;
+      const PEN = `<g transform="translate(0,112) rotate(-20)"><rect x="-5" y="-70" width="10" height="70" rx="4" fill="#2a3a6a"/><path d="M-5,0L0,16L5,0Z" fill="#e8c048"/><rect x="-6" y="-74" width="12" height="10" rx="3" fill="#e8c048"/></g>`;
+      C2.jkYouBucketPen = { v2: C2.jkYou.v2, hand: PEN, keep: "F" }; S2.jkYouBucketPen = S2.jkYouBucket;
+      // the flames lick (torch)
+      const torchLife = (tl, t0, dur) => { tl.fromTo(".kTorchF", { scaleY: 0.9, scaleX: 1.08, transformOrigin: "50% 100%" }, { scaleY: 1.12, scaleX: 0.9, transformOrigin: "50% 100%", duration: 0.16, repeat: Math.ceil(dur / 0.16), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0); };
+      const torchGlow = (L, x, y, r = 420, op = 0.4) => { const g = grp(L.glow); g.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="${x}" cy="${y}" r="${r}" fill="url(#jkWarm)" opacity="${op}"/></g>`; return g; };
+
+      // the thorn chain: a beam from the wand to the hero, then three coils around the torso (world coords of the hero x, ground y, scale s)
+      const chainLinks = (x0, y0, x1, y1) => { const n = Math.max(4, Math.round(Math.hypot(x1 - x0, y1 - y0) / 26)); let h = "";
+        for (let i = 0; i <= n; i++) { const u = i / n, x = x0 + (x1 - x0) * u, y = y0 + (y1 - y0) * u, a = Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI;
+          h += `<g transform="translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${(a + (i % 2 ? 0 : 0)).toFixed(1)})"><ellipse rx="16" ry="${i % 2 ? 5 : 10}" fill="none" stroke="#5a5e68" stroke-width="6"/><ellipse rx="16" ry="${i % 2 ? 5 : 10}" fill="none" stroke="#c8ccd8" stroke-width="2" opacity=".7"/>${i % 3 === 0 ? `<path d="M-4,-10l4,-12l4,12" fill="#8a3a4a"/>` : ""}</g>`; }
+        return h; };
+      const coils = (x, gy, s = 0.95) => { const cy = [gy - 300 * s, gy - 360 * s, gy - 420 * s]; return cy.map((y, k) => `<g class="chCoil"><path d="M${x - 64 * s},${y}Q${x},${y + 30 * s} ${x + 64 * s},${y}" fill="none" stroke="#3a3e48" stroke-width="${16 * s}"/>
+        ${chainLinks(x - 60 * s, y + 4, x + 60 * s, y + 4)}${[-40, 0, 40].map((dx) => `<path d="M${x + dx * s - 6},${y + 14 * s}l6,${16 * s}l6,${-16 * s}Z" fill="#8a2a3a"/>`).join("")}</g>`).join(""); };
+      const chainOn = (tl, L, x, gy, s, at, o = {}) => { const g = grp(L.act); g.innerHTML = `<g class="chainAll">${coils(x, gy, s)}</g>`; g.style.opacity = 0;
+        tl.fromTo(g, { opacity: 1, scale: o.from ?? 1.5, svgOrigin: `${x} ${gy - 360 * s}` }, { opacity: 1, scale: 1, svgOrigin: `${x} ${gy - 360 * s}`, duration: 0.28, ease: "back.out(2)", immediateRender: false }, at);
+        if (o.off !== undefined) { tl.to(g, { y: 260, opacity: 0, duration: 0.7, ease: "power2.in" }, o.off); } return g; };
+      const chainBeam = (tl, L, x0, y0, x1, y1, at, d = 0.3) => { const g = grp(L.act); g.innerHTML = chainLinks(x0, y0, x1, y1);
+        g.style.opacity = 0; tl.fromTo(g, { opacity: 1, scaleX: 0.02, scaleY: 0.02, svgOrigin: `${x0} ${y0}` }, { opacity: 1, scaleX: 1, scaleY: 1, svgOrigin: `${x0} ${y0}`, duration: d, ease: "power2.out", immediateRender: false }, at);
+        tl.to(g, { opacity: 0, duration: 0.15 }, at + d + 0.1); return g; };
+      // a gold shimmer dome over someone (the reflect armour / the insurance shield)
+      const dome = (tl, L, x, gy, at, end, o = {}) => { const r = o.r ?? 330, cy = gy - (o.h ?? 300); const g = grp(L.act);
+        g.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="${x}" cy="${cy}" rx="${r}" ry="${r * 1.12}" fill="${o.fill || "#ffe08a"}" opacity=".16"/><ellipse cx="${x}" cy="${cy}" rx="${r}" ry="${r * 1.12}" fill="none" stroke="${o.fill || "#ffe08a"}" stroke-width="10" opacity=".75"/>
+          ${[...Array(10)].map((_, k) => { const a = k * 0.62; return `<path d="M${(x + Math.cos(a) * r * 0.7).toFixed(0)},${(cy + Math.sin(a) * r * 0.78).toFixed(0)}l18,-30l18,30z" fill="#fff6c0" opacity=".55"/>`; }).join("")}
+          <path d="M${x - r * 0.6},${cy - r * 0.7}Q${x},${cy - r * 1.05} ${x + r * 0.5},${cy - r * 0.8}" stroke="#ffffff" stroke-width="8" fill="none" opacity=".7" stroke-linecap="round"/></g>`;
+        g.style.opacity = 0; tl.fromTo(g, { opacity: 1, scale: 0.3, svgOrigin: `${x} ${gy}` }, { opacity: 1, scale: 1, svgOrigin: `${x} ${gy}`, duration: 0.35, ease: "back.out(2)", immediateRender: false }, at);
+        loop(tl, g, { opacity: 1 }, { opacity: 0.55 }, 0.4, at + 0.35, (end ?? at + 3) - at - 0.35); if (end !== undefined) tl.to(g, { opacity: 0, duration: 0.25 }, end); return g; };
+      const tagW = (tl, L, x, y, text, at, o = {}) => tagAt(tl, L, x, y, text, at, { s: o.s ?? 1.5, ...o });
+      // a plate with a title (screen space), sheen sweep
+      const plate = (tl, L, at, end, small, big, o = {}) => { const g = grp(L.light), x = o.x ?? 540, y = o.y ?? 960, w = o.w ?? 1060, h = small ? 250 : 190, id = `pl${Math.round(at * 100)}`;
+        g.innerHTML = `<g transform="${LS(x, y)}"><defs><clipPath id="${id}"><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="34"/></clipPath></defs>
+          <rect x="${-w / 2}" y="${-h / 2 + 10}" width="${w}" height="${h}" rx="34" fill="#000" opacity=".35"/><rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="34" fill="rgba(20,14,10,.9)" stroke="#e2c27a" stroke-width="5"/>
+          <rect x="${-w / 2 + 12}" y="${-h / 2 + 12}" width="${w - 24}" height="${h - 24}" rx="26" fill="none" stroke="#e2c27a" stroke-width="2" opacity=".5"/>
+          ${small ? `<text x="0" y="${-h / 2 + 70}" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="44" fill="#f2c55c">${small}</text>` : ""}
+          <text x="0" y="${small ? h / 2 - 44 : 40}" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="${o.size ?? 116}" fill="#fff4e0" stroke="#2a1a10" stroke-width="3" paint-order="stroke">${big}</text>
+          <g clip-path="url(#${id})"><rect class="plSheen" x="${-w / 2 - 220}" y="${-h}" width="110" height="${h * 2}" fill="#fff6d8" opacity=".28" transform="rotate(18)"/></g></g>`;
+        pop(tl, g, at, { origin: `${x} ${y}`, from: 0.7, dur: 0.45 }); tl.fromTo(g.querySelector(".plSheen"), { x: 0 }, { x: w + 400, duration: 0.9, ease: "power2.inOut", immediateRender: false }, at + 0.35);
+        if (end !== undefined) out(tl, g, end, 0.25); return g; };
+      const gecko = (x, y, s = 1.2) => `<g transform="translate(${x},${y}) scale(${s})" class="gkAll"><path d="M-30,0Q0,-14 30,0Q0,12 -30,0Z" fill="#8ab06a"/><circle cx="34" cy="0" r="11" fill="#8ab06a"/><path class="gkTail" d="M-30,0Q-56,6 -62,-10" stroke="#8ab06a" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M-14,4l-8,12M14,4l8,12M-14,-4l-8,-12M14,-4l8,-12" stroke="#7a9e5a" stroke-width="5" stroke-linecap="round"/><circle cx="38" cy="-5" r="3" fill="#1a1410"/><path d="M-20,-2Q0,-10 22,-2" stroke="#b8d498" stroke-width="3" fill="none" opacity=".7"/></g>`;
+      const BUCKET = `<path d="M-58,-62L58,-62L66,46L-66,46Z" fill="#a8743e"/>${[-40, -14, 12, 38].map((x) => `<path d="M${x},-62L${x * 1.12},46" stroke="#8a5a2c" stroke-width="3"/>`).join("")}<rect x="-62" y="-40" width="124" height="9" fill="#5a5e66"/><rect x="-66" y="20" width="132" height="9" fill="#5a5e66"/><path d="M-66,46H66" stroke="#6a4424" stroke-width="7"/>`;
+      // the hero's head top in world coords (standing, scale s): the bucket sits at (x + 4s, gy - 560s)
+      const headTop = (x, gy, s = 0.95) => [x + 4 * s, gy - 620 * s];
+      const faceAt = (x, gy = 1400, s = 0.95, zoom = 3.0, flip = false, sx = 540, sy = 760) => fr(x + (flip ? -2 : 2) * s, gy - 546 * s, zoom, sx, sy);
+      // poses from the other stories that this file needs (not loaded here)
+      { const M = Rig.MODES, Z = M.idle;
+        M.proud = M.proud || ((u, o) => ({ ...Z(u, o), uaF: -26, faF: 128, uaB: 30, faB: -128, head: -6, torso: -4 }));
+        M.tied = M.tied || ((u, o) => { const b = Math.sin(u * 2 * Math.PI / 2.4); return { ...Z(u, o), uaF: 6, faF: 4, uaB: 6, faB: 4, head: 6 + 2 * b, torso: 2, bodyY: 0 }; });
+        M.tiedStruggle = M.tiedStruggle || ((u, o) => { const j = Math.sin(u * 29) * 2; return { ...Z(u, o), uaF: 8 + j, faF: 6, uaB: 8 - j, faB: 6, head: -4 + j, torso: 3 - j, bodyY: 0 }; });
+        M.dangle = M.dangle || ((u, o) => { const b = Math.sin(u * 2 * Math.PI / 1.4); return { ...Z(u, o), uaF: -160, faF: -6, uaB: -4, faB: -20, thF: 8 + 6 * b, shF: 16, thB: -8 - 6 * b, shB: 12, torso: 2 * b, head: -6, rootR: 6 * b }; });
+        M.shout = M.shout || ((u, o) => { const b = Math.sin(u * 2 * Math.PI / 0.5); return { ...Z(u, o), uaF: -150, faF: -24, uaB: 8, faB: -20, head: -12 + 3 * b, torso: -8 }; });
+        M.pointZap = M.pointZap || ((u, o) => { const j = Math.sin(u * 41) * 1.5; return { ...Z(u, o), uaF: -92 + j, faF: 4, uaB: 24, faB: 30, head: -2, torso: -4 }; });
+        M.pocket = (u, o) => ({ ...Z(u, o), uaF: -6, faF: -96, head: 10, torso: 3 });
+        M.clap = M.clap || ((u, o) => { const b = Math.abs(Math.sin(u * 11)); return { ...Z(u, o), uaF: -70 - 20 * b, faF: -60 + 30 * b, uaB: -60 + 20 * b, faB: -70 - 30 * b, head: -4, torso: -2 }; }); }

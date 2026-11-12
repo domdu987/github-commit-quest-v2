@@ -1,0 +1,190 @@
+
+      // ======================= ภาค 2 · ครึ่งแรก: ลานเมือง → ป่า =======================
+      const HX = 600, KX = 860, AX = 1080, WX = 1340, GX = 1640;   // you, ถั่วงอก, Arthur, the witch, the giant (town)
+      const TOWNFOLK = (mode = "idle", eyes = "wide", mouth = "o") => [A("jkMan1", 120, 1400, 0.95, [{ t: 0, mode, eyes, mouth }]), A("jkWom1", 270, 1400, 0.92, [{ t: 0, mode, eyes, mouth }]),
+        A("jkMan3", 1900, 1400, 0.95, [{ t: 0, mode, eyes, mouth }], { flip: true }), A("jkMan2", 2060, 1400, 0.95, [{ t: 0, mode, eyes, mouth }], { flip: true })];
+      // the empty spot where the dragon lay: a crushed dent in the cobbles, broken crates, shed scales, scorch
+      const dent = (L) => { const g = grp(L.set); g.innerHTML = `<g transform="translate(1560,1330)"><ellipse rx="460" ry="80" fill="#5a4632" opacity=".45"/><ellipse rx="400" ry="60" fill="#7a6248" opacity=".55"/>
+        ${[[-300, 10, 60], [-120, -20, 90], [80, 12, 70], [260, -8, 80], [-200, 30, 50]].map(([x, y, w]) => `<path d="M${x},${y}l${w * 0.4},${-14}l${w * 0.3},18l${w * 0.3},-10" stroke="#3a2a1c" stroke-width="5" fill="none"/>`).join("")}
+        ${[[-260, -6], [-90, 18], [40, -14], [170, 20], [300, 4], [-30, 34]].map(([x, y], k) => `<path d="M${x},${y}q12,-16 24,0q-12,10 -24,0Z" fill="${k % 2 ? "#4f8a5e" : "#6aa878"}" stroke="#2a4a34" stroke-width="2"/>`).join("")}
+        <g transform="translate(420,-10) rotate(14)"><rect x="-60" y="-50" width="120" height="50" fill="#8a6a42"/><path d="M-60,-50l40,-30M20,-50l50,-40" stroke="#6a4a2a" stroke-width="10"/><path d="M-60,-50H60" stroke="#5a3a1e" stroke-width="6"/></g>
+        <ellipse cx="-380" cy="20" rx="60" ry="14" fill="#2a1a10" opacity=".4"/></g>`; };
+      const ghostDragon = (tl, L, at, end) => { const g = grp(L.act); g.innerHTML = `<g transform="translate(1560,1320) scale(1.55) rotate(-3)">${JK.dragon("#000", { stroke: "#ffffff", sw: 6, dash: "16 12", ko: true })}</g>`;
+        g.style.opacity = 0; tl.to(g, { opacity: 0.85, duration: 0.3 }, at); loop(tl, g, { opacity: 0.85 }, { opacity: 0.35 }, 0.3, at + 0.3, end - at - 0.3); tl.to(g, { opacity: 0, duration: 0.25 }, end); return g; };
+      // the dragon's tracks across the plaza toward the mountains
+      const tracks = (L, x0 = 1900, n = 7) => { let h = ""; for (let k = 0; k < n; k++) { const x = x0 + k * 260, y = 1330 - k * 22, sc = 1.1 - k * 0.1;
+          h += `<g transform="translate(${x},${y}) scale(${sc.toFixed(2)},${(sc * 0.42).toFixed(2)}) rotate(${k % 2 ? -78 : -102})"><ellipse rx="70" ry="92" fill="#5a4632" opacity=".7"/><ellipse rx="54" ry="74" fill="#4a3826" opacity=".6"/>${[-46, 0, 46].map((dx) => `<path d="M${dx},-86l${dx / 4},-56l14,48Z" fill="#3a2a18" opacity=".8"/>`).join("")}</g>`; }
+        const g = grp(L.set); g.innerHTML = h; return g; };
+
+      // ---------- a00 · title ----------
+      shot("a00", { ...forest("a00"), camAt: fr(700, 900, 0.85, 540, 960), push: 0.02, captions: [], blur: { set: 3, mid: 4, far: 6 },
+        fx(tl, id, t0, L) { plate(tl, L, t0 + 0.25, D("a00") - 0.3 + t0, "สกิลจอมโกหก · ภาค 2", "อัศวินถังไม้"); JKI.badge(tl, L.light, t0, D("a00") - 0.3, { kind: "bucket", x: 540, y: 700, s: 1.5, tone: "yellow", at: 0.5 }); } });
+
+      // ---------- a01 · the morning after: the dragon is gone ----------
+      const A1 = [...TOWNFOLK("idle", "wide", "o").map((a, i) => ({ ...a, x: [1100, 1230, 2050, 2190][i], flip: i < 2 ? false : true, track: [{ t: 0, mode: i % 2 ? "startle" : "point", eyes: "wide", mouth: "o" }] }))];
+      shotT("a01", { ...town2("a01"), blur: { far: 4, mid: 2 }, cam: { keys: [{ t: 0, ...fr(1000, 960, 0.78, 540, 960), drift: { s: 0.01 } }, { t: F("a01", 0, 2) - 0.1, ...fr(1600, 1180, 1.25, 540, 1000), glide: 0.9 }] }, actors: A1,
+        fx(tl, id, t0, L) { dent(L); shadows(L, id, A1, 0.5); ghostDragon(tl, L, t0 + F("a01", 0, 2), t0 + F("a01", 0, 3) + 0.2);
+          JKI.badge(tl, L.light, t0, D("a01"), { kind: "dragon", x: 860, y: 520, s: 1.5, tone: "red", label: "หายไปแล้ว!", at: F("a01", 0, 3) }); } });
+
+      // ---------- a02 · the tracks to the mountain · the gecko still on your head ----------
+      splitN("a02", [F("a02", 0, 2) - 0.05], [
+        () => ({ ...town2("a02"), blur: { far: 3, mid: 2 }, cam: JKC.move(fr(1900, 1260, 1.3, 540, 1100), fr(2700, 1020, 0.95, 540, 1000), 0.2, 2.6),
+          fx(tl, id, t0, L) { dent(L); tracks(L); const g = grp(L.light); g.innerHTML = `<g transform="${LS(860, 760)}"><path d="M-120,0H90" stroke="#fff4e0" stroke-width="14" stroke-linecap="round"/><path d="M70,-34L120,0L70,34" fill="none" stroke="#fff4e0" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+            pop(tl, g, t0 + 0.6, { origin: "860 760" }); JKI.badge(tl, L.light, t0, F("a02", 0, 2), { kind: "dragon", x: 640, y: 520, s: 1.3, tone: "red", label: "ไปทางภูเขา", at: F("a02", 0, 1) }); } }),
+        (off) => { const B = [ME("jkYou", HX, 1400, [{ t: 0, mode: "idle", eyes: "tired", mouth: "flat" }, { t: F("a02", 0, 3) - off, mode: "idle", eyes: "side", mouth: "pout" }])];
+          return { ...town2("a02b"), blur: { far: 8, mid: 6, set: 3 }, cam: { keys: [{ t: 0, ...faceAt(HX, 1400, 0.95, 2.4, false, 540, 860), drift: { s: 0.02 } }] }, actors: B,
+            fx(tl, id, t0, L) { shadows(L, id, B, 0.5); const [hx, hy] = headTop(HX, 1400); const gk = grp(L.act); gk.innerHTML = gecko(hx - 6, hy + 8, 1.2);
+              loop(tl, gk.querySelector(".gkTail"), { rotation: -14, svgOrigin: "-30 0" }, { rotation: 14, svgOrigin: "-30 0" }, 0.45, t0, D("a02") - off);
+              JKI.badge(tl, L.light, t0, D("a02") - off, { kind: "gecko", x: 860, y: 520, s: 1.3, tone: "green", label: "ยังไม่ลง", at: F("a02", 0, 3) - off }); } }; }]);
+
+      // ---------- a03 · the guild doors bang open: the top three walk out ----------
+      const T3 = F("a03", 0, 1) - 0.2;
+      const A3 = [A("jkGiantClub", 1000, 1240, 1.0, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: T3 + 1.6, mode: "idle", eyes: "normal", mouth: "smile" }], { flip: true, from: T3, moveTo: { x: GX, y: 1400, s: 1.45, dur: 1.6, at: T3 } }),
+        A("jkWitchWand", 1000, 1240, 0.68, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }, { t: T3 + 2.0, mode: "idle", eyes: "squint", mouth: "smirk" }], { flip: true, from: T3 + 0.4, moveTo: { x: WX, y: 1400, s: 0.95, dur: 1.6, at: T3 + 0.4 } }),
+        A("jkArthur", 1000, 1240, 0.68, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }, { t: T3 + 2.4, mode: "proud", eyes: "normal", mouth: "smile" }], { flip: true, from: T3 + 0.8, moveTo: { x: AX, y: 1400, s: 0.98, dur: 1.6, at: T3 + 0.8 } })];
+      shotT("a03", { ...town2("a03"), blur: { far: 4, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(1000, 1000, 1.15, 540, 900), drift: { s: 0.01 } }, { t: T3 + 0.3, ...fr(1320, 1040, 0.85, 540, 980), glide: 1.2 },
+          { t: F("a03", 0, 2) - 0.1, ...fr(GX, 1400 - 520 * 1.45, 1.35, 540, 760), glide: 0.4 }, { t: F("a03", 0, 3) - 0.1, ...faceAt(WX, 1400, 0.95, 2.0, true, 540, 820), glide: 0.4 }, { t: F("a03", 0, 4) - 0.1, ...faceAt(AX, 1400, 0.98, 2.0, true, 540, 820), glide: 0.4 }] },
+        actors: A3, shake: JKC.impact(0.35, 0.4, 8), sfxText: [{ text: "ผาง!", x: 540, y: 560, size: 130, rot: -6, color: "#f6d36a", t: 0.3, end: 1.4 }],
+        fx(tl, id, t0, L) { shadows(L, id, A3, 0.5); const d = grp(L.act); d.innerHTML = [0, 1, 2, 3, 4, 5].map((k) => `<circle cx="${1000 + (k - 2.5) * 70}" cy="${1180 - (k % 2) * 30}" r="${50 + (k % 3) * 18}" fill="#e8dcc4" opacity=".8"/>`).join("");
+          d.style.opacity = 0; tl.fromTo(d, { opacity: 0.9, scale: 0.4, svgOrigin: "1000 1180" }, { opacity: 0, scale: 1.6, svgOrigin: "1000 1180", duration: 1.0, ease: "power2.out", immediateRender: false }, t0 + 0.3);
+          tagW(tl, L, GX - 260, 1400 - 1050, "ยักษ์ใจดีแห่งภูเขา", t0 + F("a03", 0, 2)); tagW(tl, L, WX - 230, 1400 - 700, "แม่มดดอกไม้เหล็ก", t0 + F("a03", 0, 3)); tagW(tl, L, AX - 300, 1400 - 700, "เซอร์อาเธอร์ · ไม่เคยแพ้", t0 + F("a03", 0, 4)); } });
+
+      // ---------- a04 · Arthur points at you ----------
+      const A4 = [ME("jkYou", HX, 1400, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o", sweat: true }]),
+        A("jkArthur", AX, 1400, 0.98, [{ t: 0, mode: "pointAt", eyes: "angry", mouth: "frown" }], { flip: true, talk: [[F("a04", 0, 1), voEnd("a04"), "scream"]] }),
+        A("jkWitchWand", WX, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "squint", mouth: "smirk" }], { flip: true }), A("jkGiantClub", GX, 1400, 1.45, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }], { flip: true })];
+      shotT("a04", { ...town2("a04"), blur: { far: 5, mid: 3 }, cam: { keys: [{ t: 0, ...fr(860, 1040, 1.2, 540, 1000), drift: { s: 0.012 } }, { t: F("a04", 0, 2) - 0.1, ...faceAt(AX, 1400, 0.98, 2.7, true, 520, 800), glide: 0.25 }] }, actors: A4,
+        shake: JKC.impact(F("a04", 0, 2), 0.3, 5), fx(tl, id, t0, L) { shadows(L, id, A4, 0.5); JKI.badge(tl, L.light, t0, D("a04"), { kind: "dragon", x: 860, y: 520, s: 1.3, tone: "red", label: "ไปจับมา!", at: F("a04", 0, 2) + 0.2 }); } });
+
+      // ---------- a05 · the whole town turns to look at you · 1% ----------
+      const A5 = [...TOWNFOLK("idle", "side", "flat").map((a, i) => ({ ...a, x: [200, 360, 1240, 1400][i], flip: i >= 2 })), ME("jkYou", 800, 1400, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o", sweat: true }, { t: F("a05", 0, 1), mode: "tremble", eyes: "worry", mouth: "pout", sweat: true }])];
+      shotT("a05", { ...town2("a05"), blur: { far: 5, mid: 3 }, cam: { keys: [{ t: 0, ...fr(800, 1060, 0.95, 540, 1000), drift: { s: 0.01 } }, { t: F("a05", 0, 1) - 0.1, ...faceAt(800, 1400, 0.95, 2.4, false, 540, 860), glide: 1.4 }] }, actors: A5,
+        fx(tl, id, t0, L) { shadows(L, id, A5, 0.5); hudPct(tl, id, t0, [[0, "1%"]]); bigChip(tl, L, 802, 1400 - 700, "1%", t0 + F("a05", 0, 2), undefined, "#ff8a7a"); } });
+
+      // ---------- a06 · can't tell the truth, can't lie: the ear would glow ----------
+      const A6 = [ME("jkYou", 800, 1400, [{ t: 0, mode: "think", eyes: "worry", mouth: "pout", sweat: true }, { t: F("a06", 0, 2), mode: "facepalm", eyes: "closed", mouth: "frown", sweat: true }])];
+      shotT("a06", { ...town2("a06"), blur: { far: 8, mid: 6, set: 3 }, dark: 0.12, cam: { keys: [{ t: 0, ...faceAt(800, 1400, 0.95, 2.6, false, 560, 840), drift: { s: 0.03 } }] }, actors: A6,
+        fx(tl, id, t0, L) { hudPct(tl, id, t0, [[0, "1%"]]); JKI.badge(tl, L.light, t0, F("a06", 0, 1), { kind: "whisper", x: 260, y: 520, s: 1.3, tone: "white", label: "พูดจริง?", at: 0.1 });
+          JKI.badge(tl, L.light, t0, D("a06"), { kind: "ears", x: 820, y: 520, s: 1.3, tone: "red", label: "หูแดง!", at: F("a06", 0, 2) }); earsBlink(tl, `${id}-a0`, t0 + F("a06", 0, 2), D("a06") - F("a06", 0, 2)); } });
+
+      // ---------- a07 · ถั่วงอก claps the bucket on: ป๊อก! ----------
+      const TB = F("a07", 0, 1) + 0.45;   // the bucket lands
+      const A7 = [ME("jkYou", HX, 1400, [{ t: 0, mode: "idle", eyes: "worry", mouth: "o" }], { until: TB }), ME("jkYouBucket", HX, 1400, [{ t: 0, mode: "startle", eyes: "wide", mouth: "o" }, { t: TB + 0.6, mode: "idle", eyes: "normal", mouth: "flat" }], { from: TB }),
+        A("jkKid", 1240, 1400, 0.64, [{ t: 0, mode: "run", eyes: "wide", mouth: "o" }, { t: 1.3, mode: "raise", eyes: "happy", mouth: "laugh" }, { t: F("a07", 0, 2), mode: "point", eyes: "normal", mouth: "smile" }], { flip: true, moveTo: { x: 860, dur: 1.3 }, talk: [[F("a07", 0, 2), voEnd("a07"), "o"]] })];
+      shotT("a07", { ...town2("a07"), blur: { far: 5, mid: 3 }, cam: { keys: [{ t: 0, ...fr(760, 1040, 1.25, 540, 1000), drift: { s: 0.012 } }, { t: TB - 0.15, ...faceAt(HX, 1400, 0.95, 2.4, false, 560, 880), glide: 0.18 }, { t: F("a07", 0, 2) - 0.1, ...fr(760, 1080, 1.5, 540, 1000), glide: 0.5 }] }, actors: A7,
+        shake: JKC.impact(TB, 0.3, 9), sfxText: [{ text: "ป๊อก!", x: 760, y: 520, size: 130, rot: 8, color: "#f6d36a", t: TB, end: TB + 1.1 }],
+        fx(tl, id, t0, L) { shadows(L, id, A7, 0.5); const [hx, hy] = headTop(HX, 1400); const b = grp(L.act); b.innerHTML = `<g transform="translate(${hx},${1400 - 560 * 0.95}) scale(0.95)">${BUCKET}</g>`;
+          b.style.opacity = 0; tl.fromTo(b, { opacity: 1, y: -700, rotation: -30, svgOrigin: `${hx} ${hy}` }, { opacity: 1, y: 0, rotation: 0, svgOrigin: `${hx} ${hy}`, duration: TB - F("a07", 0, 1), ease: "power2.in", immediateRender: false }, t0 + F("a07", 0, 1)); tl.set(b, { opacity: 0 }, t0 + TB + 0.02);
+          JKI.badge(tl, L.light, t0, D("a07"), { kind: "ears", x: 860, y: 520, s: 1.3, tone: "green", label: "ไม่มีใครเห็นหู", at: F("a07", 0, 3) }); } });
+
+      // ---------- a08 · the town gets a new hero: อัศวินถังไม้ ----------
+      const A8 = [...TOWNFOLK("clap", "happy", "laugh").map((a, i) => ({ ...a, x: [180, 330, 1260, 1410][i], flip: i >= 2 })), ME("jkYouBucket", 800, 1400, [{ t: 0, mode: "proud", eyes: "normal", mouth: "smile" }]),
+        A("jkKid", 1040, 1400, 0.64, [{ t: 0, mode: "cheer", eyes: "happy", mouth: "laugh" }], { flip: true })];
+      shotT("a08", { ...town2("a08"), blur: { far: 4, mid: 2 }, cam: { keys: [{ t: 0, ...fr(800, 1200, 1.3, 540, 1100), drift: { s: 0.012 } }, { t: F("a08", 0, 1) - 0.2, ...fr(800, 1060, 0.95, 540, 1060), glide: 0.9 }] }, actors: A8,
+        fx(tl, id, t0, L) { shadows(L, id, A8, 0.5); plate(tl, L, t0 + F("a08", 0, 1), undefined, "ผู้กล้าคนใหม่", "อัศวินถังไม้", { y: 600, size: 104, w: 820 }); stars(tl, L.act, 806, 1400 - 640, t0 + F("a08", 0, 1), D("a08"), 1.1); } });
+
+      // ---------- a09 · into the forest: the bucket knight, ถั่วงอก with a torch, three heroes behind ----------
+      const DW = D("a09");
+      const A9 = [A("jkGiantClub", -1000, 1400, 1.4, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: -380, dur: DW } }),
+        A("jkWitchWand", -620, 1400, 0.95, [{ t: 0, mode: "walk", eyes: "squint", mouth: "smirk" }], { moveTo: { x: 0, dur: DW } }),
+        A("jkArthur", -360, 1400, 0.98, [{ t: 0, mode: "walk", eyes: "squint", mouth: "flat" }], { moveTo: { x: 260, dur: DW } }),
+        ME("jkYouBucket", 0, 1400, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }], { moveTo: { x: 620, dur: DW } }),
+        A("jkKidTorch", 240, 1400, 0.64, [{ t: 0, mode: "walk", eyes: "normal", mouth: "smile" }], { moveTo: { x: 860, dur: DW } })];
+      shot("a09", { ...forest("a09", { dim: true, prints: true }), blur: { far: 4, mid: 2 }, cam: JKC.move(fr(-100, 1060, 0.8, 540, 1000), fr(420, 1060, 0.8, 540, 1000), 0.05, DW - 0.1, "none"), actors: A9,
+        fx(tl, id, t0, L) { shadows(L, id, A9, 0.5); torchLife(tl, t0, DW);
+          JKI.badge(tl, L.light, t0, DW, { kind: "bucket", x: 180, y: 520, s: 1.2, tone: "yellow", label: "อัศวินถังไม้", at: 0.4 }); JKI.badge(tl, L.light, t0, DW, { kind: "whisper", x: 860, y: 520, s: 1.2, tone: "red", label: "จับผิด", at: F("a09", 0, 2) }); } });
+
+      // ---------- a10 · the witch flicks her hand: a magic thorn chain wraps you ----------
+      const TC = F("a10", 0, 1) + 0.5, WX2 = 1240, YX2 = 640;
+      const A10 = [ME("jkYouBucket", YX2, 1400, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: TC + 0.3, mode: "tiedStruggle", eyes: "wide", mouth: "o", sweat: true }]),
+        A("jkWitchWand", WX2, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "squint", mouth: "smirk" }, { t: TC - 0.35, mode: "pointZap", eyes: "angry", mouth: "frown" }], { flip: true }),
+        A("jkKidTorch", 380, 1400, 0.64, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: TC + 0.3, mode: "startle", eyes: "wide", mouth: "o" }])];
+      shot("a10", { ...forest("a10", { dim: true, seed: 29 }), blur: { far: 5, mid: 3 }, cam: { keys: [{ t: 0, ...fr(920, 1040, 1.15, 540, 1000), drift: { s: 0.012 } }, { t: TC + 0.2, ...fr(YX2 + 60, 1100, 1.7, 540, 960), glide: 0.3 }] }, actors: A10,
+        shake: JKC.impact(TC + 0.3, 0.35, 8), sfxText: [{ text: "ฟึ่บ!", x: 760, y: 520, size: 120, rot: -6, color: "#d8dce8", t: TC, end: TC + 1.0 }],
+        fx(tl, id, t0, L) { shadows(L, id, A10, 0.5); torchLife(tl, t0, D("a10")); chainBeam(tl, L, WX2 - 150, 1400 - 520, YX2 + 40, 1400 - 360 * 0.95, t0 + TC, 0.28); chainOn(tl, L, YX2, 1400, 0.95, t0 + TC + 0.3);
+          JKI.badge(tl, L.light, t0, D("a10"), { kind: "chain", x: 860, y: 520, s: 1.3, tone: "red", label: "โซ่หนามวิเศษ", at: F("a10", 0, 2) }); } });
+
+      // ---------- a11 · "this chain catches liars" · it tightens ----------
+      const A11w = [A("jkWitchWand", WX2, 1400, 0.95, [{ t: 0, mode: "wagFinger", eyes: "squint", mouth: "smirk" }], { flip: true, talk: [[0.06, voEnd("a11"), "o"]] })];
+      splitN("a11", [F("a11", 0, 2) - 0.05], [
+        () => ({ ...forest("a11", { dim: true, seed: 29 }), blur: { far: 8, mid: 6, set: 3 }, cam: { keys: [{ t: 0, ...faceAt(WX2, 1400, 0.95, 2.5, true, 540, 820), drift: { s: 0.02 } }] }, actors: A11w,
+          fx(tl, id, t0, L) { JKI.badge(tl, L.light, t0, F("a11", 0, 2), { kind: "chain", x: 260, y: 520, s: 1.3, tone: "red", label: "จับคนโกหก", at: 0.3 }); } }),
+        (off) => { const B = [ME("jkYouBucket", YX2, 1400, [{ t: 0, mode: "tiedStruggle", eyes: "wide", mouth: "scream", sweat: true }])];
+          return { ...forest("a11b", { dim: true, seed: 29 }), blur: { far: 6, mid: 4 }, cam: { keys: [{ t: 0, ...fr(YX2, 1400 - 420, 2.0, 540, 900), drift: { s: 0.02 } }] }, actors: B,
+            shake: JKC.impact(F("a11", 0, 2) - off + 0.2, 0.4, 7), sfxText: [{ text: "กรึ๊บ!", x: 800, y: 560, size: 110, rot: 6, color: "#d8dce8", t: F("a11", 0, 2) - off + 0.2, end: D("a11") - off }],
+            fx(tl, id, t0, L) { const c = chainOn(tl, L, YX2, 1400, 0.95, t0, { from: 1 }); tl.fromTo(c, { scaleX: 1, svgOrigin: `${YX2} ${1400 - 360 * 0.95}` }, { scaleX: 0.86, svgOrigin: `${YX2} ${1400 - 360 * 0.95}`, duration: 0.25, ease: "power3.in", immediateRender: false }, t0 + F("a11", 0, 2) - off + 0.15);
+              JKI.badge(tl, L.light, t0, D("a11") - off, { kind: "chain", x: 860, y: 520, s: 1.3, tone: "red", label: "รัดแน่น!", at: F("a11", 0, 2) - off + 0.2 }); } }; }]);
+
+      // ---------- a12 · the bucket hides the ears, not the chain: no lying now ----------
+      const A12 = [ME("jkYouBucket", YX2, 1400, [{ t: 0, mode: "tied", eyes: "worry", mouth: "pout", sweat: true }])];
+      shot("a12", { ...forest("a12", { dim: true, seed: 29 }), blur: { far: 6, mid: 4 }, cam: { keys: [{ t: 0, ...fr(YX2 + 40, 1060, 1.6, 540, 960), drift: { s: 0.015 } }] }, actors: A12,
+        fx(tl, id, t0, L) { shadows(L, id, A12, 0.5); chainOn(tl, L, YX2, 1400, 0.95, t0, { from: 1 });
+          JKI.badge(tl, L.light, t0, D("a12"), { kind: "bucket", x: 200, y: 520, s: 1.3, tone: "green", label: "บังหูได้", at: 0.15 });
+          JKI.badge(tl, L.light, t0, D("a12"), { kind: "chain", x: 880, y: 520, s: 1.3, tone: "red", label: "บังไม่ได้", at: F("a12", 0, 1) });
+          bigChip(tl, L, YX2 + 300, 1400 - 820, "ห้ามโม้", t0 + F("a12", 0, 2), undefined, "#ff8a7a"); } });
+
+      // ---------- a13 · the giant steps in a trap, blames you, raises a club as big as a house ----------
+      const GT = 1380, TS = F("a13", 0, 1) + 0.15, TT = F("a13", 0, 2);
+      const A13 = [ME("jkYouBucket", YX2, 1400, [{ t: 0, mode: "tied", eyes: "wide", mouth: "o", sweat: true }]), A("jkKidTorch", 380, 1400, 0.64, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]),
+        A("jkGiantClub", GT - 260, 1400, 1.45, [{ t: 0, mode: "walk", eyes: "normal", mouth: "flat" }, { t: TS, mode: "stagger", eyes: "wide", mouth: "scream" }], { moveTo: { x: GT, dur: TS }, until: TT }),
+        A("jkGiantClub", GT, 1400, 1.45, [{ t: 0, mode: "idle", eyes: "angry", mouth: "frown" }, { t: F("a13", 0, 3) - TT, mode: "swing", eyes: "angry", mouth: "scream" }], { flip: true, from: TT })];
+      A13[3].track = [{ t: 0, mode: "idle", eyes: "angry", mouth: "frown" }, { t: F("a13", 0, 3), mode: "raise", eyes: "angry", mouth: "scream" }];
+      shot("a13", { ...forest("a13", { trap: GT, seed: 41 }), blur: { far: 4, mid: 2 },
+        cam: { keys: [{ t: 0, ...fr(1000, 1060, 0.9, 540, 1000), drift: { s: 0.01 } }, { t: TS - 0.1, ...fr(GT, 1340, 2.0, 540, 1100), glide: 0.25 }, { t: TT - 0.05, ...faceAt(GT, 1400, 1.45, 1.6, true, 540, 760), glide: 0.3 }, { t: F("a13", 0, 3) - 0.1, ...fr(1000, 900, 0.75, 540, 1000), glide: 0.5 }] },
+        actors: A13, shake: JKC.impact(TS, 0.35, 10), sfxText: [{ text: "แป๊ะ!", x: 760, y: 600, size: 120, rot: -8, color: "#f6d36a", t: TS, end: TS + 1.0 }],
+        fx(tl, id, t0, L) { shadows(L, id, A13, 0.5); chainOn(tl, L, YX2, 1400, 0.95, t0, { from: 1 }); const trap = document.getElementById(`jfa13-trap`);
+          if (trap) { tl.to(trap.querySelector("ellipse"), { attr: { rx: 46, ry: 14 }, duration: 0.15, ease: "power3.in" }, t0 + TS); tl.to(trap.querySelectorAll("ellipse")[1], { attr: { rx: 46, ry: 14 }, duration: 0.15, ease: "power3.in" }, t0 + TS); }
+          JKI.badge(tl, L.light, t0, D("a13"), { kind: "club", x: 860, y: 520, s: 1.4, tone: "red", label: "เท่าตึก!", at: F("a13", 0, 3) + 0.2 }); } });
+
+      // ---------- a14 · chapter two of the book: "let someone else say it" ----------
+      const A14 = [ME("jkYouBucket", YX2, 1400, [{ t: 0, mode: "tied", eyes: "worry", mouth: "flat", sweat: true }, { t: F("a14", 0, 2), mode: "tied", eyes: "squint", mouth: "smirk" }])];
+      shot("a14", { ...forest("a14", { dim: true, seed: 29 }), dark: 0.35, blur: { far: 10, mid: 8, set: 5 }, cam: { keys: [{ t: 0, ...faceAt(YX2, 1400, 0.95, 2.6, false, 760, 860), drift: { s: 0.02 } }] }, actors: A14,
+        fx(tl, id, t0, L) { chainOn(tl, L, YX2, 1400, 0.95, t0, { from: 1 }); const g = grp(L.light);
+          g.innerHTML = `<g transform="${LS(300, 960)} scale(0.82) rotate(-3)"><rect x="-250" y="-300" width="500" height="600" rx="18" fill="#f6efdf"/><rect x="-250" y="-300" width="500" height="96" rx="18" fill="#c83a2e"/><rect x="-250" y="-220" width="500" height="16" fill="#c83a2e"/>
+            <text x="0" y="-232" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="52" fill="#fff4e0">บทที่ 2</text>
+            <text x="0" y="-110" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="40" fill="#5a4a3a">ถ้าเราโกหกเองไม่ได้</text>
+            <path d="M0,-80V-20" stroke="#c83a2e" stroke-width="10"/><path d="M-22,-40L0,-8L22,-40" fill="none" stroke="#c83a2e" stroke-width="10" stroke-linejoin="round"/>
+            <rect id="${id}-hl" x="-220" y="20" width="440" height="84" rx="14" fill="#f2c55c" opacity="0"/><text x="0" y="78" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="48" fill="#2e2a26">ให้คนอื่นโกหกแทน</text>
+            <path d="M-200,160h400M-200,200h340M-200,240h380" stroke="#c8bca4" stroke-width="8" stroke-linecap="round"/></g>`;
+          pop(tl, g, t0 + 0.2, { origin: "300 960", from: 0.85 }); tl.to(`#${id}-hl`, { opacity: 1, duration: 0.25 }, t0 + F("a14", 0, 2)); JKI.badge(tl, L.light, t0, D("a14"), { kind: "book", x: 330, y: 470, s: 1.2, tone: "red", at: 0.4 }); } });
+
+      // ---------- a15 · one question to ถั่วงอก ----------
+      const A15 = [ME("jkYouBucket", YX2, 1400, [{ t: 0, mode: "tied", eyes: "normal", mouth: "flat" }], { talk: [[F("a15", 0, 1), voEnd("a15"), "o"]] }), A("jkKidTorch", 900, 1400, 0.64, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })];
+      shot("a15", { ...forest("a15", { dim: true, seed: 29 }), blur: { far: 6, mid: 4 }, cam: { keys: [{ t: 0, ...fr(770, 1080, 1.6, 540, 960), drift: { s: 0.015 } }, { t: F("a15", 0, 1) - 0.1, ...fr(780, 1060, 1.9, 540, 940), glide: 0.8 }] }, actors: A15,
+        fx(tl, id, t0, L) { shadows(L, id, A15, 0.5); chainOn(tl, L, YX2, 1400, 0.95, t0, { from: 1 }); torchLife(tl, t0, D("a15")); torchGlow(L, 900, 1050, 380, 0.35); } });
+
+      // ---------- a16 · ถั่วงอก yells: "I saw it! a 100× reflect armour!" ----------
+      const A16 = [A("jkKidTorch", 900, 1400, 0.64, [{ t: 0, mode: "idle", eyes: "normal", mouth: "flat" }, { t: F("a16", 0, 1) - 0.1, mode: "shout", eyes: "angry", mouth: "scream" }, { t: F("a16", 0, 2), mode: "raise", eyes: "wide", mouth: "scream" }], { flip: true, talk: [[F("a16", 0, 1), voEnd("a16"), "scream"]] })];
+      shot("a16", { ...forest("a16", { dim: true, seed: 29 }), blur: { far: 8, mid: 6, set: 3 }, cam: { keys: [{ t: 0, ...fr(900, 1400 - 360, 2.2, 540, 860), drift: { s: 0.02 } }, { t: F("a16", 0, 1) - 0.08, ...fr(900, 1400 - 380, 2.9, 540, 860), glide: 0.12 }] }, actors: A16,
+        shake: JKC.impact(F("a16", 0, 1), 0.3, 6), sfxText: [{ text: "หนูเห็น!", x: 300, y: 560, size: 110, rot: -8, color: "#ffffff", t: F("a16", 0, 1), end: F("a16", 0, 2) }],
+        fx(tl, id, t0, L) { torchLife(tl, t0, D("a16")); torchGlow(L, 900, 1050, 380, 0.4);
+          JKI.badge(tl, L.light, t0, D("a16"), { kind: "shield", x: 220, y: 560, s: 1.5, tone: "yellow", label: "สะท้อน ×100", at: F("a16", 0, 2) });
+          JKI.badge(tl, L.light, t0, D("a16"), { kind: "club", x: 860, y: 560, s: 1.5, tone: "red", label: "ตีกลับ ×100", at: F("a16", 0, 3) }); } });
+
+      // ---------- a17 · the kid said it, not you: the chain stays loose, everyone believes the child ----------
+      const A17 = [ME("jkYouBucket", YX2, 1400, [{ t: 0, mode: "tied", eyes: "normal", mouth: "flat" }]), A("jkKidTorch", 400, 1400, 0.64, [{ t: 0, mode: "point", eyes: "normal", mouth: "smile" }]),
+        A("jkWitchWand", 1140, 1400, 0.95, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }), A("jkGiantClub", 1520, 1400, 1.45, [{ t: 0, mode: "raise", eyes: "wide", mouth: "o" }], { flip: true })];
+      shot("a17", { ...forest("a17", { trap: 1700, seed: 41 }), blur: { far: 4, mid: 2 }, cam: { keys: [{ t: 0, ...fr(900, 1040, 0.85, 540, 1000), drift: { s: 0.012 } }] }, actors: A17,
+        fx(tl, id, t0, L) { shadows(L, id, A17, 0.5); chainOn(tl, L, YX2, 1400, 0.95, t0, { from: 1 }); torchLife(tl, t0, D("a17"));
+          tagW(tl, L, 60, 690, "คนพูด: ถั่วงอก", t0 + 0.2); JKI.badge(tl, L.light, t0, D("a17"), { kind: "chain", x: 540, y: 520, s: 1.3, tone: "green", label: "ไม่รัด", at: F("a17", 0, 1) });
+          JKI.badge(tl, L.light, t0, D("a17"), { kind: "believer", x: 860, y: 520, s: 1.3, tone: "blue", label: "เชื่อเด็ก", at: F("a17", 0, 2) }); dome(tl, L, YX2, 1400, t0 + F("a17", 0, 2) + 0.2, t0 + D("a17")); } });
+
+      // ---------- a18 · BOOM: the club bounces, the giant flies into a treetop, the witch lets go ----------
+      splitN("a18", [F("a18", 0, 1) - 0.05, F("a18", 0, 2) - 0.05], [
+        () => { const B = [ME("jkYouBucket", YX2, 1400, [{ t: 0, mode: "tied", eyes: "closed", mouth: "o" }]), A("jkGiantClub", 1100, 1400, 1.45, [{ t: 0, mode: "raise", eyes: "angry", mouth: "scream" }, { t: 0.35, mode: "swing", eyes: "angry", mouth: "scream" }, { t: 0.75, mode: "recoil", eyes: "wide", mouth: "scream" }], { flip: true })];
+          return { ...forest("a18", { seed: 41 }), blur: { far: 4, mid: 2 }, cam: { keys: [{ t: 0, ...fr(880, 1020, 1.0, 540, 1000), drift: { s: 0.02 } }] }, actors: B, shake: JKC.impact(0.6, 0.6, 18),
+            sfxText: [{ text: "ตูม!", x: 540, y: 520, size: 170, rot: -6, color: "#ffb03a", t: 0.6, end: F("a18", 0, 1) }],
+            fx(tl, id, t0, L) { shadows(L, id, B, 0.5); chainOn(tl, L, YX2, 1400, 0.95, t0, { from: 1 }); dome(tl, L, YX2, 1400, t0, t0 + F("a18", 0, 1), { fill: "#fff0a0" }); flash(tl, t0 + 0.6, 0.85, 0.5);
+              JKI.badge(tl, L.light, t0, F("a18", 0, 1), { kind: "shield", x: 860, y: 520, s: 1.3, tone: "yellow", label: "เด้งกลับ!", at: 0.7 }); } }; },
+        (off) => { const B = [A("jkGiant", 900, 1800, 1.25, [{ t: 0, mode: "dangle", eyes: "wide", mouth: "scream" }], { flip: true, moveTo: { x: 900, y: 760, dur: 0.5, ease: "power3.out" } })];
+          return { ...forest("a18b", { canopy: 900, seed: 43 }), blur: { far: 3, mid: 2 }, cam: JKC.move(fr(900, 1100, 0.9, 540, 1100), fr(900, 640, 1.05, 540, 900), 0.1, 1.0), actors: B,
+            fx(tl, id, t0, L) { stars(tl, L.act, 900, 760 - 700, t0 + 0.5, D("a18") - off, 1.2);
+              shake2(tl, L, t0 + 0.5); } }; },
+        (off) => { const B = [ME("jkYouBucket", YX2, 1400, [{ t: 0, mode: "tied", eyes: "normal", mouth: "flat" }, { t: F("a18", 0, 3) - off + 0.6, mode: "idle", eyes: "happy", mouth: "smile" }]),
+            A("jkWitchWand", 1100, 1400, 0.95, [{ t: 0, mode: "tremble", eyes: "wide", mouth: "o", sweat: true }], { flip: true })];
+          return { ...forest("a18c", { dim: true, seed: 29 }), blur: { far: 5, mid: 3 }, cam: { keys: [{ t: 0, ...faceAt(1100, 1400, 0.95, 2.4, true, 540, 820), drift: { s: 0.015 } }, { t: F("a18", 0, 3) - off - 0.1, ...fr(870, 1060, 1.3, 540, 980), glide: 0.6 }] }, actors: B,
+            fx(tl, id, t0, L) { shadows(L, id, B, 0.5); chainOn(tl, L, YX2, 1400, 0.95, t0, { from: 1, off: t0 + F("a18", 0, 3) - off + 0.3 });
+               } }; }]);
+      // a little wobble of the treetop after the giant lands in it
+      function shake2(tl, L, at) { const c = L.fg.querySelector('[id$="-canopy"]'); if (c) tl.fromTo(c, { rotation: -2, svgOrigin: "900 600" }, { rotation: 2, svgOrigin: "900 600", duration: 0.12, repeat: 7, yoyo: true, ease: "sine.inOut", immediateRender: false }, at); }
