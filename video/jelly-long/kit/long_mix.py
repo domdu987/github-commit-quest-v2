@@ -21,7 +21,7 @@ PARTS = [
     ("title", "endc/mix.wav", "Lend", 0, 180),            # "หนวดใส ฉบับเต็ม" 3 s
     ("ep1", "ep1c/mix.wav", "L1", 0, 6174),               # 0 … 102.900 (cut 29, the vote, starts at 102.90)
     ("bridgeA", "brc/mix.wav", "Lbr", 0, 497),            # 0 … 8.283 (B1 starts at 8.284)
-    ("ep2", "ep2c/mix.wav", "L2", 476, 4803 - 476),       # 7.933 … 80.050 (stay … the vote at 80.06)
+    ("ep2", "ep2L/mix.wav", "L2", 476, 4803 - 476),       # ep2L = the EP.2 mix without the HG7 bell (the card is hidden in the long)       # 7.933 … 80.050 (stay … the vote at 80.06)
     ("bridgeB", "brc/mix.wav", "Lbr", 498, 965 - 498),    # 8.300 … 16.067 ("นั่นมัน… พ่อผม")
     ("ep3a", "ep3c/mix.wav", "L3", 0, 2963),              # EP.3 0 … 49.383 (to y05 "แล้วเขาก็ไม่ได้กลับบ้านอีกเลย")
     ("secret", "fbc/mix.wav", "Lfb", 0, 2534),            # the full secret (lane B fb_* + hush), 42.233 s
