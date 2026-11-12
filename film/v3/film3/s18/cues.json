@@ -1,0 +1,445 @@
+{
+ "take": "s18",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 55.867,
+   "duration": 2.267,
+   "frame": 1676,
+   "end_frame": 1744,
+   "kind": "drone",
+   "label": "the wall at breaking point: deep strained groan, metal creaks, a rising whine"
+  },
+  {
+   "time": 56.567,
+   "duration": 0.0,
+   "frame": 1697,
+   "end_frame": 1697,
+   "kind": "accent",
+   "label": "first rivet goes: a sharp crack like a rifle shot ('mut lek diit')",
+   "impact_frame": 1697
+  },
+  {
+   "time": 56.667,
+   "duration": 0.0,
+   "frame": 1700,
+   "end_frame": 1700,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1700,
+   "count": 1
+  },
+  {
+   "time": 56.7,
+   "duration": 0.0,
+   "frame": 1701,
+   "end_frame": 1701,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1701,
+   "count": 1
+  },
+  {
+   "time": 56.767,
+   "duration": 0.0,
+   "frame": 1703,
+   "end_frame": 1703,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1703,
+   "count": 1
+  },
+  {
+   "time": 56.8,
+   "duration": 0.0,
+   "frame": 1704,
+   "end_frame": 1704,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1704,
+   "count": 1
+  },
+  {
+   "time": 56.833,
+   "duration": 0.0,
+   "frame": 1705,
+   "end_frame": 1705,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1705,
+   "count": 1
+  },
+  {
+   "time": 56.867,
+   "duration": 0.0,
+   "frame": 1706,
+   "end_frame": 1706,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1706,
+   "count": 2
+  },
+  {
+   "time": 56.9,
+   "duration": 0.0,
+   "frame": 1707,
+   "end_frame": 1707,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1707,
+   "count": 1
+  },
+  {
+   "time": 56.933,
+   "duration": 0.0,
+   "frame": 1708,
+   "end_frame": 1708,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1708,
+   "count": 1
+  },
+  {
+   "time": 56.967,
+   "duration": 0.0,
+   "frame": 1709,
+   "end_frame": 1709,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1709,
+   "count": 1
+  },
+  {
+   "time": 57.0,
+   "duration": 0.0,
+   "frame": 1710,
+   "end_frame": 1710,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1710,
+   "count": 2
+  },
+  {
+   "time": 57.033,
+   "duration": 0.0,
+   "frame": 1711,
+   "end_frame": 1711,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1711,
+   "count": 1
+  },
+  {
+   "time": 57.067,
+   "duration": 0.0,
+   "frame": 1712,
+   "end_frame": 1712,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1712,
+   "count": 2
+  },
+  {
+   "time": 57.1,
+   "duration": 0.0,
+   "frame": 1713,
+   "end_frame": 1713,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1713,
+   "count": 2
+  },
+  {
+   "time": 57.133,
+   "duration": 0.0,
+   "frame": 1714,
+   "end_frame": 1714,
+   "kind": "rivet_shot",
+   "label": "rivet shoots out like bullets: crack + ricochet whizz past the lens (1)",
+   "impact_frame": 1714,
+   "count": 1
+  },
+  {
+   "time": 57.167,
+   "duration": 0.0,
+   "frame": 1715,
+   "end_frame": 1715,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1715,
+   "count": 2
+  },
+  {
+   "time": 57.2,
+   "duration": 0.0,
+   "frame": 1716,
+   "end_frame": 1716,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1716,
+   "count": 2
+  },
+  {
+   "time": 57.233,
+   "duration": 0.0,
+   "frame": 1717,
+   "end_frame": 1717,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1717,
+   "count": 2
+  },
+  {
+   "time": 57.267,
+   "duration": 0.0,
+   "frame": 1718,
+   "end_frame": 1718,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1718,
+   "count": 2
+  },
+  {
+   "time": 57.3,
+   "duration": 0.0,
+   "frame": 1719,
+   "end_frame": 1719,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1719,
+   "count": 2
+  },
+  {
+   "time": 57.333,
+   "duration": 0.0,
+   "frame": 1720,
+   "end_frame": 1720,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1720,
+   "count": 2
+  },
+  {
+   "time": 57.367,
+   "duration": 0.0,
+   "frame": 1721,
+   "end_frame": 1721,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1721,
+   "count": 2
+  },
+  {
+   "time": 57.4,
+   "duration": 0.0,
+   "frame": 1722,
+   "end_frame": 1722,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1722,
+   "count": 2
+  },
+  {
+   "time": 57.433,
+   "duration": 0.0,
+   "frame": 1723,
+   "end_frame": 1723,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1723,
+   "count": 2
+  },
+  {
+   "time": 57.467,
+   "duration": 0.0,
+   "frame": 1724,
+   "end_frame": 1724,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (3)",
+   "impact_frame": 1724,
+   "count": 3
+  },
+  {
+   "time": 57.5,
+   "duration": 0.0,
+   "frame": 1725,
+   "end_frame": 1725,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1725,
+   "count": 2
+  },
+  {
+   "time": 57.533,
+   "duration": 0.0,
+   "frame": 1726,
+   "end_frame": 1726,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1726,
+   "count": 2
+  },
+  {
+   "time": 57.567,
+   "duration": 0.0,
+   "frame": 1727,
+   "end_frame": 1727,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (3)",
+   "impact_frame": 1727,
+   "count": 3
+  },
+  {
+   "time": 57.6,
+   "duration": 0.0,
+   "frame": 1728,
+   "end_frame": 1728,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1728,
+   "count": 2
+  },
+  {
+   "time": 57.633,
+   "duration": 0.0,
+   "frame": 1729,
+   "end_frame": 1729,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (3)",
+   "impact_frame": 1729,
+   "count": 3
+  },
+  {
+   "time": 57.667,
+   "duration": 0.0,
+   "frame": 1730,
+   "end_frame": 1730,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1730,
+   "count": 2
+  },
+  {
+   "time": 57.7,
+   "duration": 0.0,
+   "frame": 1731,
+   "end_frame": 1731,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (3)",
+   "impact_frame": 1731,
+   "count": 3
+  },
+  {
+   "time": 57.733,
+   "duration": 0.0,
+   "frame": 1732,
+   "end_frame": 1732,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1732,
+   "count": 2
+  },
+  {
+   "time": 57.767,
+   "duration": 0.0,
+   "frame": 1733,
+   "end_frame": 1733,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (3)",
+   "impact_frame": 1733,
+   "count": 3
+  },
+  {
+   "time": 57.8,
+   "duration": 0.0,
+   "frame": 1734,
+   "end_frame": 1734,
+   "kind": "rivet_shot",
+   "label": "rivets shoot out like bullets: crack + ricochet whizz past the lens (2)",
+   "impact_frame": 1734,
+   "count": 2
+  },
+  {
+   "time": 56.567,
+   "duration": 1.533,
+   "frame": 1697,
+   "end_frame": 1743,
+   "kind": "squirts",
+   "label": "molasses squirting from the empty rivet holes (wet hiss, splatter)"
+  },
+  {
+   "time": 57.167,
+   "duration": 0.3,
+   "frame": 1715,
+   "end_frame": 1724,
+   "kind": "camera_snap",
+   "label": "punch-in on 'ok muean' (short whoosh)"
+  },
+  {
+   "time": 57.633,
+   "duration": 0.0,
+   "frame": 1729,
+   "end_frame": 1729,
+   "kind": "accent",
+   "label": "the volley peaks on 'krasun' (several cracks at once)",
+   "impact_frame": 1729
+  },
+  {
+   "time": 57.8,
+   "duration": 0.333,
+   "frame": 1734,
+   "end_frame": 1744,
+   "kind": "burst",
+   "label": "the seam tears open: shrieking steel rip + a heavy gush, violent camera shake"
+  },
+  {
+   "time": 58.133,
+   "duration": 0.0,
+   "frame": 1744,
+   "end_frame": 1744,
+   "kind": "cut",
+   "label": "hard cut to Commercial Street"
+  },
+  {
+   "time": 58.133,
+   "duration": 4.033,
+   "frame": 1744,
+   "end_frame": 1865,
+   "kind": "wave",
+   "label": "the molasses wave: a deep rolling roar and slosh, louder as it nears; wood and iron creak in its way"
+  },
+  {
+   "time": 58.267,
+   "duration": 3.067,
+   "frame": 1748,
+   "end_frame": 1840,
+   "kind": "people",
+   "label": "panicked shouts and running footsteps of two workers and two kids sprinting toward camera (no screams of pain)"
+  },
+  {
+   "time": 58.5,
+   "duration": 1.5,
+   "frame": 1755,
+   "end_frame": 1800,
+   "kind": "rumble",
+   "label": "ground rumble under the low camera (tremor)"
+  },
+  {
+   "time": 59.667,
+   "duration": 1.333,
+   "frame": 1790,
+   "end_frame": 1830,
+   "kind": "camera_move",
+   "label": "camera cranes up and back to the wide view (big whoosh)"
+  },
+  {
+   "time": 61.867,
+   "duration": 0.3,
+   "frame": 1856,
+   "end_frame": 1865,
+   "kind": "dissolve",
+   "label": "dissolve to the bucket (sound of the wave fades into a drip)"
+  }
+ ]
+}
