@@ -1,0 +1,118 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 14.7,
+   "duration": 3.367,
+   "frame": 441,
+   "end_frame": 542,
+   "kind": "ambience",
+   "label": "bell chamber by day: wind through the arches, pigeons, slow single bell swings"
+  },
+  {
+   "time": 14.7,
+   "duration": 0.6,
+   "frame": 441,
+   "end_frame": 459,
+   "kind": "rope",
+   "label": "three ropes hauled (rope creak, wooden lever)"
+  },
+  {
+   "time": 15.1,
+   "duration": 0.0,
+   "frame": 453,
+   "end_frame": 453,
+   "kind": "bell",
+   "label": "single bell strike (big bronze bell, close)",
+   "impact_frame": 453
+  },
+  {
+   "time": 15.3,
+   "duration": 0.233,
+   "frame": 459,
+   "end_frame": 466,
+   "kind": "rope",
+   "label": "nico hauls hard on his rope (strained grunt, rope creak)"
+  },
+  {
+   "time": 15.633,
+   "duration": 0.433,
+   "frame": 469,
+   "end_frame": 482,
+   "kind": "gag",
+   "label": "the rope shoots up and lifts nico off his feet (rope zing / comic whoosh up)",
+   "impact_frame": 469
+  },
+  {
+   "time": 15.733,
+   "duration": 0.333,
+   "frame": 472,
+   "end_frame": 482,
+   "kind": "camera_snap",
+   "label": "snap tilt / push onto nico in the air (short whoosh)",
+   "peak_frame": 477
+  },
+  {
+   "time": 15.9,
+   "duration": 0.0,
+   "frame": 477,
+   "end_frame": 477,
+   "kind": "bell",
+   "label": "single bell strike (big bronze bell, close)",
+   "impact_frame": 477
+  },
+  {
+   "time": 16.0,
+   "duration": 0.867,
+   "frame": 480,
+   "end_frame": 506,
+   "kind": "gag",
+   "label": "nico dangles and kicks on the rope (rope creak while bobbing)"
+  },
+  {
+   "time": 16.7,
+   "duration": 0.0,
+   "frame": 501,
+   "end_frame": 501,
+   "kind": "bell",
+   "label": "single bell strike (big bronze bell, close)",
+   "impact_frame": 501
+  },
+  {
+   "time": 17.0,
+   "duration": 0.033,
+   "frame": 510,
+   "end_frame": 511,
+   "kind": "impact",
+   "label": "nico drops back onto the planks (small thump)",
+   "impact_frame": 511
+  },
+  {
+   "time": 17.467,
+   "duration": 0.433,
+   "frame": 524,
+   "end_frame": 537,
+   "kind": "rope",
+   "label": "hauled up again (rope creak)"
+  },
+  {
+   "time": 17.5,
+   "duration": 0.0,
+   "frame": 525,
+   "end_frame": 525,
+   "kind": "bell",
+   "label": "single bell strike (big bronze bell, close)",
+   "impact_frame": 525
+  },
+  {
+   "time": 17.667,
+   "duration": 0.4,
+   "frame": 530,
+   "end_frame": 542,
+   "kind": "dissolve",
+   "label": "dissolve out to the book insert (shot 8)"
+  }
+ ]
+}
