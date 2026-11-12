@@ -1,0 +1,37 @@
+{
+ "take": "s22",
+ "shots": [
+  22
+ ],
+ "g0": 1844,
+ "g1": 1968,
+ "handle_in": 9,
+ "handle_out": 0,
+ "first_g": 1835,
+ "n_frames": 133,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 15,
+  "note": "in-handle g 1835..1843 rendered in 3D (the push continues backward)"
+ },
+ "transition_out": {
+  "type": "end",
+  "frames": 0,
+  "note": "last frame of the film g 1967"
+ },
+ "set": "v3/set3d2/room.py",
+ "light": "DAWN",
+ "camera": "push_rod (custom three-segment push)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 8.69,
+ "s_per_frame_cpu_mean": 17.12,
+ "events": {
+  "push_segment_lean": 1880,
+  "push_segment_put": 1914
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "take": "s22",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 61.167,
+   "duration": 4.433,
+   "frame": 1835,
+   "end_frame": 1968,
+   "kind": "ambience",
+   "label": "quiet dawn attic: early birds outside the window, soft room tone (after the explosion: silence first, birds fade in)"
+  },
+  {
+   "time": 62.133,
+   "duration": 1.333,
+   "frame": 1864,
+   "end_frame": 1904,
+   "kind": "birds",
+   "label": "a single bird call close to the window"
+  },
+  {
+   "time": 63.8,
+   "duration": 1.8,
+   "frame": 1914,
+   "end_frame": 1968,
+   "kind": "ambience",
+   "label": "very soft wind on the roof tiles, a beam creaks once (optional); hold to the end"
+  }
+ ]
+}
