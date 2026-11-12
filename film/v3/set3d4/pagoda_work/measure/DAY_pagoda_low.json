@@ -1,0 +1,90 @@
+{
+ "preset": "DAY",
+ "cam": "pagoda_low",
+ "surfaces": {
+  "banners": {
+   "n": 613,
+   "ratio_lin_median": 0.167,
+   "lit": [
+    354,
+    0.7,
+    0.83
+   ],
+   "shade": [
+    266,
+    0.46,
+    0.3
+   ]
+  },
+  "platform": {
+   "n": 339,
+   "ratio_lin_median": 0.187,
+   "lit": [
+    32,
+    0.25,
+    0.77
+   ],
+   "shade": [
+    238,
+    0.42,
+    0.5
+   ]
+  },
+  "storey_0_front": {
+   "n": 327,
+   "ratio_lin_median": 0.171,
+   "lit": [
+    12,
+    0.53,
+    0.91
+   ],
+   "shade": [
+    250,
+    0.38,
+    0.41
+   ]
+  },
+  "storey_1_front": {
+   "n": 114,
+   "ratio_lin_median": 0.173,
+   "lit": [
+    28,
+    0.47,
+    0.96
+   ],
+   "shade": [
+    242,
+    0.34,
+    0.49
+   ]
+  },
+  "storey_2_front": {
+   "n": 64,
+   "ratio_lin_median": 0.172,
+   "lit": [
+    28,
+    0.46,
+    0.97
+   ],
+   "shade": [
+    242,
+    0.34,
+    0.5
+   ]
+  },
+  "storey_3_front": {
+   "n": 36,
+   "ratio_lin_median": 0.172,
+   "lit": [
+    28,
+    0.46,
+    0.97
+   ],
+   "shade": [
+    242,
+    0.33,
+    0.5
+   ]
+  }
+ }
+}

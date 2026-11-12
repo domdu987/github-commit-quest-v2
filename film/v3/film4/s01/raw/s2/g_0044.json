@@ -1,0 +1,1 @@
+{"shot": 2, "g": 44, "cam": [0.632, -1.635, 1.405], "pitch": 2.4, "yaw": -24.6, "heads": {}, "pts": {"pillar_foot": [407.5, 630.3], "door": [1317.1, 1506.0], "corner_eave": [7946.3, 4046.0], "pagoda_top": [391.3, -5745.0], "tower_top": [-2708.9, 5315.1], "gate": [740.4, 747.4]}, "wall": 11.98, "cpu": 24.23, "scale": 1.0, "samples": 12, "retried": null}
