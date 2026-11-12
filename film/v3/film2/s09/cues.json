@@ -1,0 +1,79 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 20.167,
+   "duration": 4.0,
+   "frame": 605,
+   "end_frame": 725,
+   "kind": "ambience",
+   "label": "high wind through the bell-chamber arches, faint pigeons"
+  },
+  {
+   "time": 20.167,
+   "duration": 0.0,
+   "frame": 605,
+   "end_frame": 605,
+   "kind": "cut",
+   "label": "hard cut in from the book insert"
+  },
+  {
+   "time": 20.3,
+   "duration": 1.233,
+   "frame": 609,
+   "end_frame": 646,
+   "kind": "laugh",
+   "label": "padre's big belly laugh (body bouncing, tears)"
+  },
+  {
+   "time": 21.067,
+   "duration": 0.333,
+   "frame": 632,
+   "end_frame": 642,
+   "kind": "camera_snap",
+   "label": "snap reframe onto padre (whoosh), lands g 639"
+  },
+  {
+   "time": 21.567,
+   "duration": 2.5,
+   "frame": 647,
+   "end_frame": 722,
+   "kind": "dialogue",
+   "label": "padre speaks the quoted line (narration carries the voice; mouth moves)"
+  },
+  {
+   "time": 22.333,
+   "duration": 0.267,
+   "frame": 670,
+   "end_frame": 678,
+   "kind": "camera_snap",
+   "label": "small push-in step on 'cha pai su fa' (short whoosh)"
+  },
+  {
+   "time": 23.2,
+   "duration": 0.3,
+   "frame": 696,
+   "end_frame": 705,
+   "kind": "camera_snap",
+   "label": "snap past padre's shoulder onto nico on 'ai nu' (whoosh)"
+  },
+  {
+   "time": 23.333,
+   "duration": 0.2,
+   "frame": 700,
+   "end_frame": 706,
+   "kind": "accent",
+   "label": "nico's look hardens (tiny sting, optional)"
+  },
+  {
+   "time": 23.833,
+   "duration": 0.3,
+   "frame": 715,
+   "end_frame": 724,
+   "kind": "dissolve",
+   "label": "dissolve to the spire montage"
+  }
+ ]
+}

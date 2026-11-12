@@ -1,0 +1,71 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 26.4,
+   "duration": 3.233,
+   "frame": 792,
+   "end_frame": 889,
+   "kind": "ambience",
+   "label": "square ambience: pigeons, distant voices, wind"
+  },
+  {
+   "time": 26.467,
+   "duration": 0.3,
+   "frame": 794,
+   "end_frame": 803,
+   "kind": "dissolve",
+   "label": "dissolve in from the spire montage"
+  },
+  {
+   "time": 26.633,
+   "duration": 1.9,
+   "frame": 799,
+   "end_frame": 856,
+   "kind": "crowd_laugh",
+   "label": "townspeople point up and laugh (three voices, rolling)"
+  },
+  {
+   "time": 27.533,
+   "duration": 0.267,
+   "frame": 826,
+   "end_frame": 834,
+   "kind": "camera_snap",
+   "label": "snap reframe closer on the laughing three (short whoosh)"
+  },
+  {
+   "time": 28.2,
+   "duration": 0.333,
+   "frame": 846,
+   "end_frame": 856,
+   "kind": "camera_snap",
+   "label": "tilt up + snap zoom onto the rod (big whoosh), lands g 856"
+  },
+  {
+   "time": 28.533,
+   "duration": 0.0,
+   "frame": 856,
+   "end_frame": 856,
+   "kind": "accent",
+   "label": "'mai chim fa' lands on the rod against the sky (comic sting)"
+  },
+  {
+   "time": 28.533,
+   "duration": 1.1,
+   "frame": 856,
+   "end_frame": 889,
+   "kind": "ambience",
+   "label": "high wind around the spire, crowd laughter far below"
+  },
+  {
+   "time": 29.3,
+   "duration": 0.3,
+   "frame": 879,
+   "end_frame": 888,
+   "kind": "dissolve",
+   "label": "dissolve to the storm chamber"
+  }
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 17.6,
+   "duration": 2.567,
+   "frame": 528,
+   "end_frame": 605,
+   "kind": "ambience",
+   "label": "quiet attic at night: candle flame flutter, faint wind at the window"
+  },
+  {
+   "time": 17.667,
+   "duration": 0.333,
+   "frame": 530,
+   "end_frame": 540,
+   "kind": "dissolve",
+   "label": "dissolve in from shot 7"
+  },
+  {
+   "time": 17.833,
+   "duration": 0.333,
+   "frame": 535,
+   "end_frame": 545,
+   "kind": "page",
+   "label": "book pages settle under nico's left hand (soft paper rustle / page flip)"
+  },
+  {
+   "time": 18.4,
+   "duration": 0.467,
+   "frame": 552,
+   "end_frame": 566,
+   "kind": "gesture",
+   "label": "nico's right hand lifts off the right page and crosses to the diagram (paper brush)"
+  },
+  {
+   "time": 18.533,
+   "duration": 0.333,
+   "frame": 556,
+   "end_frame": 566,
+   "kind": "camera_snap",
+   "label": "snap push-in on the diagram (soft whoosh), lands g 562 'fa pha chop'"
+  },
+  {
+   "time": 18.867,
+   "duration": 0.0,
+   "frame": 566,
+   "end_frame": 566,
+   "kind": "tap",
+   "label": "fingertip taps the drawn lightning bolt"
+  },
+  {
+   "time": 19.2,
+   "duration": 0.767,
+   "frame": 576,
+   "end_frame": 599,
+   "kind": "slide",
+   "label": "fingertip slides down the drawn rod and along the wire to the ground stake (paper scratch), on 'wing long lek' g 590"
+  },
+  {
+   "time": 20.167,
+   "duration": 0.0,
+   "frame": 605,
+   "end_frame": 605,
+   "kind": "cut",
+   "label": "hard cut to the bell chamber (shot 9)"
+  }
+ ]
+}

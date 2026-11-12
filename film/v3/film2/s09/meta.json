@@ -1,0 +1,38 @@
+{
+ "take": "s09",
+ "shots": [
+  9
+ ],
+ "g0": 605,
+ "g1": 719,
+ "handle_in": 0,
+ "handle_out": 6,
+ "first_g": 605,
+ "n_frames": 120,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 9,
+  "note": "out-handle g 719..724 rendered in 3D (camera keeps drifting on nico)"
+ },
+ "shot_ranges": {
+  "9": [
+   605,
+   718
+  ]
+ },
+ "set": "v3/set3d2/tower.py",
+ "light": "DAY",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 12.29,
+ "s_per_frame_cpu_mean": 23.67,
+ "notes": "padre lip-sync g 647..721 from the narration RMS envelope (flat/talk_a/talk_b/talk_o, 2-frame holds); laugh mouth held open g 605..646"
+}
