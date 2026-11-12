@@ -78,7 +78,8 @@ def build_after(M):
     mb = H.MB(); mb.oface(pts, M['sheet'], [(0, 0)] * len(pts), (0, 0, 1)); sh = mb.obj('s20_sheet', fx._coll()); fx.T.no_bounce(sh)
     # the concrete foot ring of the tank drowned in molasses (a glossy collar over it)
     mb = H.MB(); cc = H.TANK_C
-    mb.frustum((cc[0], cc[1], -0.02), (cc[0], cc[1], 0.40), fx.R + 0.62, fx.R + 0.50, M['sheet'], seg=160, cap0=False, cap1=True)
+    M['collar'] = fx.mat_glossy('S20_collar', '#52200a', gloss=0.0, rough=0.3, rim=0.35)
+    mb.frustum((cc[0], cc[1], -0.02), (cc[0], cc[1], 0.40), fx.R + 0.62, fx.R + 0.50, M['collar'], seg=160, cap0=False, cap1=True)
     o = mb.obj('s20_collar', fx._coll(), smooth=True); fx.T.no_bounce(o)
     # puddle blobs on the sheet (slightly raised rims catch the light)
     for k in range(10):
@@ -96,8 +97,10 @@ def build_after(M):
     me.materials.append(M['crack']); o = bpy.data.objects.new('s20_crack', me); fx._coll().objects.link(o); fx.T.no_bounce(o)
     # the bucket's molasses (fill, dribbles, its puddle) in the same brown as the sheet (the set's reads magenta here)
     B = H.STATE['bucket']
+    M['brim'] = fx.mat_glossy('S20_brim', '#3c1406', gloss=0.03, rough=0.2, rim=0.45)
     for ob in (B['fill'], B['over']):
-        for i in range(len(ob.data.materials)): ob.data.materials[i] = M['sheet']
+        for i in range(len(ob.data.materials)): ob.data.materials[i] = M['brim']
+    B['over'].scale = (1.06, 1.06, 1.0)                 # dribbles stand just proud of the bucket wall (no z-fight)
     return S
 
 
