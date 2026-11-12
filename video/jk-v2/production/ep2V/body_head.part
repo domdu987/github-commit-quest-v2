@@ -1,0 +1,96 @@
+      // ---------- สกิลจอมโกหก EP.1 · storytelling clip (lane A) · the channel look (slender cast, lit sets) ----------
+      Rig.FLAT = true;
+      Engine.look = { ...(Engine.look || {}), vignette: 0.5, grain: 0.05 };
+      const NS = "http://www.w3.org/2000/svg";
+      const A = (who, x, y, s, track, extra = {}) => { if (extra.talk) track.talk = extra.talk; return { who, x, y, s, track, blinks: [0.8, 2.4, 4.1], ...extra }; };
+      const ID = fr(540, 960, 1.0, 540, 960);
+      const grp = (parent) => { const g = document.createElementNS(NS, "g"); parent.appendChild(g); return g; };
+      const pop = (tl, g, at, o = {}) => tl.fromTo(g, { opacity: 0, scale: o.from ?? 0.8, y: o.dy ?? -18, svgOrigin: o.origin || "540 960" },
+        { opacity: 1, scale: 1, y: 0, svgOrigin: o.origin || "540 960", duration: o.dur ?? 0.4, ease: o.ease || "back.out(2.2)" }, at);
+      const out = (tl, g, at, d = 0.18) => tl.to(g, { opacity: 0, duration: d }, at);
+      const swingG = (tl, sel, t0, dur, amp = 3, org = "0 0") => tl.fromTo(sel, { rotation: -amp, svgOrigin: org }, { rotation: amp, svgOrigin: org, duration: 1.2, repeat: Math.ceil(dur / 1.2), yoyo: true, ease: "sine.inOut" }, t0);
+      const shake = (tl, g, t0, dur, a = 3, p = 0.05) => tl.fromTo(g, { x: -a }, { x: a, duration: p, repeat: Math.ceil(dur / p), yoyo: true, ease: "none" }, t0);
+      const DAY = { dark: 0.02, light: { from: "right", rim: "#fff0d0", rimOp: 0.6, rimW: 4, shade: "#3a2440", shadeOp: 0.25, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#fff2d8", bottom: "#4a3a50", op: 0.16 } };
+      const NIGHT = { dark: 0.1, light: { from: "right", rim: "#ffd9a0", rimOp: 0.55, rimW: 4, shade: "#1a1430", shadeOp: 0.32, shadeW: 26, soft: 9, vol: false }, blur: { fg: 0 },
+        grade: { top: "#ffe2b0", bottom: "#1a1428", op: 0.24 } };
+      const spec = (k, o) => ({ ...(o.night ? NIGHT : DAY), cam: o.cam || { keys: [{ t: 0, ...(o.camAt || ID), drift: { s: o.push ?? 0.012 } }] }, captions: o.captions ?? caps(k), ...o });
+      const shot = (k, o) => add(k, spec(k, o));
+      const talk = (k, i, m = "o") => [[vo(k, i), voEnd(k, i), m]];
+      const swap = (tl, id, t, a = 0, b = 1, d = 0.12) => { tl.set(`#${id}-a${b}`, { opacity: 0 }, 0); tl.to(`#${id}-a${a}`, { opacity: 0, duration: d }, t); tl.to(`#${id}-a${b}`, { opacity: 1, duration: d }, t); };
+      const tagAt = (tl, L, x, y, text, at, o = {}) => { const g = grp(L.act); g.innerHTML = Lot.tag(x, y, text, o); pop(tl, g, at, { origin: `${x} ${y}`, from: 0.5 }); return g; };
+      const capAt = (id, y) => { const c = document.getElementById(`${id}-caps`); if (c) c.style.setProperty("top", `${y}px`, "important"); };
+      const ink = Lot.INK;
+      // a counter chip in the corner (screen space): "1/5"
+      const chip = (tl, L, steps, o = {}) => { const x = o.x ?? 900, y = o.y ?? 250;
+        const g = grp(L.light); g.innerHTML = `<g transform="translate(${x},${y})"><circle r="78" fill="#fbf7ee" stroke="${ink}" stroke-width="7"/>
+          ${steps.map(([, txt], i) => `<text id="${o.id}-c${i}" x="0" y="20" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="58" fill="${ink}" opacity="0">${txt}</text>`).join("")}
+          <text x="0" y="-36" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="22" fill="#a8305a">${o.label || "ที่ซ่อน"}</text></g>`;
+        steps.forEach(([at], i) => { tl.set(`#${o.id}-c${i}`, { opacity: 1 }, at); if (i + 1 < steps.length) tl.set(`#${o.id}-c${i}`, { opacity: 0 }, steps[i + 1][0]);
+          tl.fromTo(g, { scale: 1.25, svgOrigin: `${x} ${y}` }, { scale: 1, svgOrigin: `${x} ${y}`, duration: 0.25, ease: "back.out(3)", immediateRender: false }, at); });
+        return g; };
+      const sparkle = (x, y, r = 22) => `<path d="M${x},${y - r}Q${x + 4},${y - 4} ${x + r},${y}Q${x + 4},${y + 4} ${x},${y + r}Q${x - 4},${y + 4} ${x - r},${y}Q${x - 4},${y - 4} ${x},${y - r}Z" fill="#fff6b0" stroke="${ink}" stroke-width="2.5"/>`;
+
+
+      // the status bar (top left), per shot: [[label, value, colour]]
+      document.head.insertAdjacentHTML("beforeend", `<style>
+        .sghud { position: absolute; z-index: 58; left: 44px; top: 120px; display: flex; flex-direction: row; white-space: nowrap; width: max-content; align-items: center; gap: 16px;
+          padding: 12px 22px; border-radius: 18px; background: rgba(18,20,30,.7); border: 1.5px solid rgba(244,236,216,.2); box-shadow: 0 8px 24px rgba(0,0,0,.35); font-family: Kanit; color: #f4ecd8; }
+        .sghud b { font: 800 34px/1 Kanit; } .sghud small { font: 600 19px/1 Kanit; opacity: .65; } .sghud i { width: 1.5px; height: 30px; background: rgba(244,236,216,.25); }
+        .capbox { font: 800 54px/1.25 Kanit !important; }
+      </style>`);
+      const hud = (id, items) => { const el = document.getElementById(id); if (!el) return;
+        el.insertAdjacentHTML("beforeend", `<div class="sghud">${items.map(([l, v, c], i) => `${i ? "<i></i>" : ""}<small>${l}</small><b style="color:${c || "#f4ecd8"}">${v}</b>`).join("")}</div>`); };
+      const ears = (tl, aid, at, on = true, d = 0.25) => tl.to(`#${aid} .jkEar`, { opacity: on ? 1 : 0, duration: d }, at);
+
+      // ---------- look V helpers (shared with EP.1: looks, depth/light pass, HUDs, crowd, leads) ----------
+      // ---------- EP.1 in the look of the clip the owner picked (the 5 Nov sets jkTown / jkCity / jkCloud), with a depth-and-light pass (owner 11 Nov: "ทำแสงให้มีมิติ") ----------
+      const VOL = new URLSearchParams(location.search).get("vol") === "1";   // ?vol=1: the engine's sculpted (diffuse-lit) shading on the cast, for the look test
+      const LT = (from, rim, rimOp, shade, shadeOp, cast) => ({ from, rim, rimOp, rimW: 5, shade, shadeOp, shadeW: 30, soft: 9, vol: VOL ? undefined : false, cast });
+      const DUSK_V = { dark: 0.08, light: LT("right", "#ffd0a0", 0.9, "#2a1c40", 0.38, { len: 2.6, op: 0.42, ao: 0.4 }), grade: { top: "#ffd8a8", bottom: "#3a2a50", op: 0.24 } };
+      const HEAVEN_V = { dark: 0.02, light: LT("left", "#fffbe8", 0.85, "#7a84b8", 0.3, { len: 2.4, op: 0.36, ao: 0.36 }), grade: { top: "#fff8e8", bottom: "#c0d0ee", op: 0.16 } };
+      const TOWN_V = { dark: 0.03, light: LT("left", "#fff0d0", 0.85, "#3a2440", 0.34, { len: 2.8, op: 0.42, ao: 0.4 }), grade: { top: "#fff2d8", bottom: "#4a3a50", op: 0.18 } };
+      const TOWN_DUSK = { dark: 0.1, light: LT("left", "#ffc080", 0.95, "#241a44", 0.42, { len: 2.6, op: 0.42, ao: 0.4 }), grade: { top: "#ff9a60", bottom: "#1e1438", op: 0.3 } };
+      const city = (k, o = {}) => ({ ...DUSK_V, set: "jkCity", setOpts: { id: `jc${k}`, ...o } });
+      const cloud = (k, o = {}) => ({ ...HEAVEN_V, set: "jkCloud", setOpts: { id: `jq${k}`, ...o } });
+      const ROWS = [[1, "เซอร์อาเธอร์ผู้ไม่เคยแพ้", 0], [2, "แม่มดดอกไม้เหล็ก", 0], [3, "ยักษ์ใจดีแห่งภูเขา", 0], [10, "เคน · ดาบแสง", 1], [9999, "คุณ · จอมโกหก (F)", 2]];
+      const town = (k, o = {}) => ({ ...(o.dusk ? TOWN_DUSK : TOWN_V), set: "jkTown", setOpts: { id: `jt${k}`, rows: ROWS, ...o } });
+      const shadowsV = (L, id, actors, sh = -0.4, op = 0.32) => NkL.cast(L, id, actors, { k: 0.5, sh, op });
+      // ----- the depth-and-light pass -----
+      Sets.DEFS += `<radialGradient id="vSpill"><stop offset="0" stop-color="#ff5a3a" stop-opacity=".7"/><stop offset=".5" stop-color="#ff3a2a" stop-opacity=".25"/><stop offset="1" stop-color="#ff2a1a" stop-opacity="0"/></radialGradient>
+        <linearGradient id="vFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></linearGradient>
+        <filter id="vSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="18"/></filter><filter id="vSoft2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>`;
+      // atmospheric depth: the far layer fades toward the sky, the mid layer a little, the floor darkens toward the camera, soft bokeh in front
+      const DEPTH = (L, o = {}) => {
+        put(L.far, `<rect x="-3000" y="-1400" width="8000" height="3000" fill="${o.haze || "#ffe8d0"}" opacity="${o.far ?? 0.22}"/>`);
+        put(L.mid, `<rect x="-3000" y="-1400" width="8000" height="3000" fill="${o.haze || "#ffe8d0"}" opacity="${o.mid ?? 0.1}"/>`);
+        put(L.set, `<rect x="-3000" y="${o.floorY ?? 1500}" width="8000" height="1400" fill="url(#vFloor)" opacity="${o.floor ?? 0.5}"/>`);
+        if (o.bokeh) put(L.fg, `<g filter="url(#vSoft2)" opacity="${o.bokehOp ?? 0.5}">${[[120, 260, 40], [300, 180, 56], [880, 330, 64], [1000, 620, 44], [160, 1420, 58], [960, 1560, 48], [60, 900, 36]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${o.bokehCol || "#fff2c8"}"/>`).join("")}</g>`);
+      };
+      // the backs of heads in the front row (soft, dark) for the wide shots of the plaza
+      const vHeads = (L, op = 0.9) => put(L.fg, `<g filter="url(#j3Soft)" opacity="${op}">${[[60, 0], [330, 30], [640, -10], [930, 40], [1180, 10]].map(([x, dy]) => `<circle cx="${x}" cy="${1700 + dy}" r="96" fill="#1a0e1c"/><ellipse cx="${x}" cy="${1900 + dy}" rx="190" ry="130" fill="#1a0e1c"/>`).join("")}</g>`);
+      // the red ear: the ear itself blinks (rig .jkEar); a SMALL glow sits behind the head (L.set, not over the face) and the ground beside the hero catches a little red (owner 11 Nov: "หูแดงไปปิดหน้าตัวละคร")
+      const earBlinkV = (tl, L, aid, ax, ay, s, flip, at, dur, p = 0.28, dy = 0) => { const g = earBlink(tl, L, aid, ax, ay, s, flip, at, dur, p, dy); const c = g.querySelector("circle"); if (c) c.setAttribute("r", (60 * s).toFixed(0)); L.set.appendChild(g); return g; };
+      const earSpill = (tl, L, x, y, at, dur, p = 0.28, s = 1, earDy = 513) => { const g = grp(L.set); g.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="${x}" cy="${y}" rx="${(220 * s).toFixed(0)}" ry="${(60 * s).toFixed(0)}" fill="url(#vSpill)" opacity=".7"/></g>`;   // behind the cast (L.set): it lights the wall and the ground, not the face
+        tl.set(g, { opacity: 0 }, 0); tl.set(g, { opacity: 1 }, at); loop(tl, g, { opacity: 1 }, { opacity: 0.08 }, p, at, dur); return g; };
+      // sun shafts through the scene (screen), breathing
+      const RAYS = (tl, L, t0, dur, o = {}) => NkL.beams(tl, L.glow, t0, dur, { src: o.src || [500, -200, 1100, -200], dst: o.dst || [-300, 1500, 900, 1500], n: o.n ?? 5, op: o.op ?? 0.2, col: o.col || "#fff4d0", blur: 16, seed: o.seed || 7 });
+      // ----- HUDs (plain words) -----
+      const HUD_SQ = [["คนเชื่อ", "0/100", "#ff8a7a"], ["สกิล", "จอมโกหก · F", "#f2c55c"]], HUD_OLD = [["โลกเก่า", "เซลส์ประกัน", "#9ad0ff"], ["ยอดขาย", "0 ใบ", "#ff8a7a"]];
+      const HUD_HV = [["สถานะ", "ตายแล้ว", "#c8d0ff"], ["สกิล", "ยังไม่สุ่ม", "#f2c55c"]], HUD_F = [["สถานะ", "ตายแล้ว", "#c8d0ff"], ["สกิล", "จอมโกหก · F", "#f2c55c"]];
+      // the brake-light badge (screen space), blinking in sync with the ear
+      const brakeBadge = (tl, L, id, at, dur, x = 800, y = 600) => { const bl = grp(L.light); bl.innerHTML = `<g transform="translate(${x},${y})"><rect x="-170" y="-80" width="340" height="160" rx="34" fill="rgba(18,20,30,.78)" stroke="rgba(244,236,216,.25)" stroke-width="2"/><rect x="-140" y="-52" width="160" height="74" rx="18" fill="#4a0c0c"/><rect id="${id}-lamp" x="-140" y="-52" width="160" height="74" rx="18" fill="#ff2e2e"/><path d="M-122,-32h124" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".55"/><text x="100" y="-4" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="32" fill="#f4ecd8">ไฟ</text><text x="100" y="38" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="32" fill="#ff8a7a">เบรก</text></g>`;
+        tl.set(bl, { opacity: 0 }, 0); pop(tl, bl, at, { origin: `${x} ${y}`, from: 0.5, dur: 0.3 }); loop(tl, `#${id}-lamp`, { opacity: 1 }, { opacity: 0.12 }, 0.28, at, dur); return bl; };
+
+      // ---------- k01 · the plaza in front of the guild at dusk: the sword at the throat (two-shot at neck height → the hero's face → wide over the crowd) ----------
+      const HX = 700, HY = 1400, KX = 400;
+      // the briefcase in the BACK hand so the front hand can point at the customer without shoving the bag in her face; a reading gait for the book walk
+      Rig.CAST.jkYouBagB = { ...Rig.CAST.jkYouBag, keep: "B" }; Flat.SPEC.jkYouBagB = Flat.SPEC.jkYou;   // the hero's own spec (glasses, hair, the red ear) — a missing spec gave him a stranger's face (owner 11 Nov "หน้าไม่เหมือน")
+      Rig.MODES.readWalk = (u, o) => ({ ...Rig.MODES.walk(u, o), uaF: -52 + Math.sin(u * 1.1), faF: -92, uaB: 4, faB: -12, head: 12 });
+      // plaza bystanders: not the insurance customer (she belongs to the old world); the pointing man looks up in the fall, stays idle at the sword scene
+      const CROWD = (up = false) => [A("jkMan2", -20, 1300, 0.72, [{ t: 0, mode: up ? "raise" : "idle", eyes: "wide", mouth: "o" }]), A("jkMan3", 40, 1330, 0.78, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]),
+        A("jkWom1", 1290, 1310, 0.74, [{ t: 0, mode: "coverEars", eyes: "wide", mouth: "o" }], { flip: true }), A("jkMan1", 1230, 1340, 0.8, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true })];
+      const LEADS = (you, ken) => [ME("jkYou", HX, HY, you, { flip: true }), A("jkKenLS", KX, HY, 0.95, ken)];
+      const BLADE = (L) => { NkL.pool(L.set, 688, 1160, 170, 80, "#bfe8ff", 0.55); NkL.pool(L.glow, 700, 1060, 110, 100, "#bfe8ff", 0.22); };   // the light sword lights the hero's neck and face
+      const LANTERNS = (L) => { NkL.pool(L.set, 670, 1196, 280, 60, "#ffd9a0", 0.34); NkL.pool(L.set, 1330, 1196, 280, 60, "#ffd9a0", 0.34); };   // the guild lanterns pool on the plaza
+      

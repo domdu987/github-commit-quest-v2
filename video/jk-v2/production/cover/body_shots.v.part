@@ -3,9 +3,21 @@
       Sets.DEFS += `<radialGradient id="vSpill"><stop offset="0" stop-color="#ff5a3a" stop-opacity=".7"/><stop offset=".5" stop-color="#ff3a2a" stop-opacity=".25"/><stop offset="1" stop-color="#ff2a1a" stop-opacity="0"/></radialGradient>`;
       const HX = 700, HY = 1400, KX = 400;
       const ROWS = [[1, "เซอร์อาเธอร์ผู้ไม่เคยแพ้", 0], [2, "แม่มดดอกไม้เหล็ก", 0], [3, "ยักษ์ใจดีแห่งภูเขา", 0], [10, "เคน · ดาบแสง", 1], [9999, "คุณ · จอมโกหก (F)", 2]];
-      shot("x01", { ...TOWN_DUSK, set: "jkTown", setOpts: { id: "jtx01", dusk: true, rows: ROWS }, captions: [], camAt: fr(HX + 10 * 0.95, HY - 330 * 0.95, 2.6, 560, 760), push: 0, blur: { far: 9, mid: 6, set: 3 },
+      const EPC = new URLSearchParams(location.search).get("ep") || "1";
+      if (EPC === "1") shot("x01", { ...TOWN_DUSK, set: "jkTown", setOpts: { id: "jtx01", dusk: true, rows: ROWS }, captions: [], camAt: fr(HX + 10 * 0.95, HY - 330 * 0.95, 2.6, 560, 760), push: 0, blur: { far: 9, mid: 6, set: 3 },
         actors: [A("jkMan2", -20, 1300, 0.72, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }]), A("jkAunt", 40, 1330, 0.78, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }]), A("jkWom1", 1290, 1310, 0.74, [{ t: 0, mode: "coverEars", eyes: "wide", mouth: "o" }], { flip: true }), A("jkMan1", 1230, 1340, 0.8, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }),
           ME("jkYou", HX, HY, [{ t: 0, mode: "kneelUp", eyes: "wide", mouth: "scream" }], { flip: true }), A("jkKenLS", KX, HY, 0.95, [{ t: 0, mode: "lunge", eyes: "angry", mouth: "frown" }])],
         fx(tl, id, t0, L) { NkL.cast(L, id, act("x01"), { k: 0.5, sh: 0.55, op: 0.3 }); NkL.pool(L.set, 688, 1160, 170, 80, "#bfe8ff", 0.55); NkL.pool(L.glow, 700, 1060, 110, 100, "#bfe8ff", 0.22);
+          const g = grp(L.set); g.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="720" cy="1406" rx="200" ry="56" fill="url(#vSpill)" opacity=".7"/></g>`;
+          const eg = earBlink(tl, L, `${id}-a4`, HX, HY, 0.95, true, t0, 4, 0.28, 216); eg.querySelector("circle").setAttribute("r", "57"); L.set.appendChild(eg); tl.set(`#${id}-a4 .jkEar`, { opacity: 1 }, t0 + 1.4); tl.set(eg, { opacity: 1 }, t0 + 1.4); } });
+
+      // ---------- EP.2 cover: the hero holds the stone-filled bag high, it glows gold, the right ear flashes red, Ken points and laughs ----------
+      Sets.DEFS += `<radialGradient id="cvGold"><stop offset="0" stop-color="#fff2b0" stop-opacity=".95"/><stop offset=".45" stop-color="#ffcc55" stop-opacity=".55"/><stop offset="1" stop-color="#ff9a20" stop-opacity="0"/></radialGradient>`;
+      if (EPC === "2") shot("x02", { ...TOWN_DUSK, set: "jkTown", setOpts: { id: "jtx02", dusk: true, rows: ROWS }, captions: [], camAt: fr(640, 1040, 1.5, 620, 880), push: 0, blur: { far: 9, mid: 6, set: 3 },
+        actors: [A("jkMan2", -40, 1300, 0.72, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }]), A("jkAunt", 60, 1330, 0.78, [{ t: 0, mode: "raise", eyes: "wide", mouth: "o" }]), A("jkWom1", 1290, 1310, 0.74, [{ t: 0, mode: "coverEars", eyes: "wide", mouth: "o" }], { flip: true }), A("jkMan1", 1230, 1340, 0.8, [{ t: 0, mode: "point", eyes: "wide", mouth: "o" }], { flip: true }),
+          ME("jkYouBag", HX, HY, [{ t: 0, mode: "raise", eyes: "wide", mouth: "scream" }], { flip: true }), A("jkKen", KX + 20, HY, 0.95, [{ t: 0, mode: "point", eyes: "happy", mouth: "laugh" }])],
+        fx(tl, id, t0, L) { NkL.cast(L, id, act("x02"), { k: 0.5, sh: 0.55, op: 0.3 });
+          const gl = grp(L.glow); gl.innerHTML = `<g style="mix-blend-mode:screen"><circle cx="580" cy="717" r="210" fill="url(#cvGold)" opacity=".95"/><circle cx="580" cy="717" r="100" fill="#ffd060" opacity=".5" style="filter:blur(18px)"/></g>`;
+          const sp = grp(L.glow); sp.innerHTML = [[470, 620], [700, 640], [500, 810], [680, 800], [590, 570], [760, 720]].map(([x, y]) => sparkle(x, y, 18)).join("");
           const g = grp(L.set); g.innerHTML = `<g style="mix-blend-mode:screen"><ellipse cx="720" cy="1406" rx="200" ry="56" fill="url(#vSpill)" opacity=".7"/></g>`;
           const eg = earBlink(tl, L, `${id}-a4`, HX, HY, 0.95, true, t0, 4, 0.28, 216); eg.querySelector("circle").setAttribute("r", "57"); L.set.appendChild(eg); tl.set(`#${id}-a4 .jkEar`, { opacity: 1 }, t0 + 1.4); tl.set(eg, { opacity: 1 }, t0 + 1.4); } });
