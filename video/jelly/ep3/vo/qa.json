@@ -9,12 +9,12 @@
  },
  "n02": {
   "text": "อย่าเอาผ้าเช็ด",
-  "heard": "อย่าเอาพาเจ็น",
-  "cer": 0.286,
-  "dur": 0.82,
-  "bad": true,
+  "heard": "อย่าเอาผ้าเช็ด",
+  "cer": 0.0,
+  "dur": 1.22,
+  "bad": false,
   "long": false,
-  "decision": "CINEMA BIBLE 6 Nov: 0.3 s before; tempo 1.2 (×0.87/×0.93/1.0 all worse); wav CER ~0.29 (ผ้าเช็ด→พาเจ็น); listen-check"
+  "decision": "final pass 12 Nov: take 1 of the clear-ผ้า/เช็ด style, tempo 1.044 (×0.87); CER 0.00"
  },
  "x2": {
   "text": "เช็ดหนวดออกก่อน! เดี๋ยวพี่เช็ดให้!",
@@ -42,12 +42,12 @@
  },
  "y01": {
   "text": "ต้น! ลูกแม่!",
-  "heard": "โตน ลูกแม่",
-  "cer": 0.222,
-  "dur": 2.17,
-  "bad": true,
-  "long": true,
-  "decision": "accepted by coordinator 6 Nov; caption carries the words; listen-check on final mix"
+  "heard": "ตอน ลูกแม่",
+  "cer": 0.111,
+  "dur": 2.0,
+  "bad": false,
+  "long": false,
+  "decision": "final pass 12 Nov: take 2 (was 0.22 + LONG)"
  },
  "y02": {
   "text": "ราดต่อ… อย่าเพิ่งถู ให้หลานอยู่นิ่งๆ",
@@ -55,7 +55,8 @@
   "cer": 0.25,
   "dur": 4.48,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "12 Nov: 2 more takes tried where useful, none better; southern accent / เสา~สาว homophone; caption carries the words; listen-check in final mix"
  },
  "x1": {
   "text": "รถมาแล้ว! ทางนี้ครับ!",
@@ -79,7 +80,8 @@
   "cer": 0.231,
   "dur": 5.22,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "12 Nov: 2 more takes tried where useful, none better; southern accent / เสา~สาว homophone; caption carries the words; listen-check in final mix"
  },
  "d04": {
   "text": "เสาของแม่…?",
@@ -87,7 +89,8 @@
   "cer": 0.222,
   "dur": 1.57,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "12 Nov: 2 more takes tried where useful, none better; southern accent / เสา~สาว homophone; caption carries the words; listen-check in final mix"
  },
  "y04": {
   "text": "สามสิบปีก่อน… พ่อแกโดนแมงกะพรุนที่หาดนี้… ตอนนั้นไม่มีใครรู้ เขาเลยล้างด้วยน้ำเปล่า",
@@ -95,7 +98,8 @@
   "cer": 0.192,
   "dur": 10.95,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "12 Nov: 2 more takes tried where useful, none better; southern accent / เสา~สาว homophone; caption carries the words; listen-check in final mix"
  },
  "y05": {
   "text": "แล้วเขาก็ไม่ได้กลับบ้านอีกเลย",
@@ -119,7 +123,8 @@
   "cer": 0.227,
   "dur": 1.71,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "12 Nov: 2 more takes tried where useful, none better; southern accent / เสา~สาว homophone; caption carries the words; listen-check in final mix"
  },
  "s03": {
   "text": "พี่เพิ่มเป็นไงบ้างคะ",
@@ -175,7 +180,8 @@
   "cer": 0.25,
   "dur": 3.45,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "12 Nov: 2 more takes tried where useful, none better; southern accent / เสา~สาว homophone; caption carries the words; listen-check in final mix"
  },
  "s10": {
   "text": "เช้านั้น คือเช้าแรก… จากหมื่นกว่าเช้า ที่เสาไม่เคยว่าง",
@@ -203,11 +209,12 @@
  },
  "y07": {
   "text": "เช้านี้… แม่ไม่ได้ไป",
-  "heard": "ชาวนี่แม่ไม่ได้ไป",
-  "cer": 0.222,
-  "dur": 2.63,
+  "heard": "เช่านี้แม่ไม่ได้ไป",
+  "cer": 0.056,
+  "dur": 2.93,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "final pass 12 Nov: take 2"
  },
  "d06": {
   "text": "เพราะผมไล่แม่เอง…",
@@ -234,12 +241,13 @@
   "long": false
  },
  "n04": {
-  "text": "เห็นคนโดนแมงกะพรุน… โทรหนึ่งหกหกเก้า อยู่นิ่ง ห้ามถู ราดน้ำส้มสายชู แล้วส่งโรงพยาบาล",
-  "heard": "เห็นคนโดนแมงกระพรุ่น โทร 1669 อยู่นิ่ง ห้ามถู ราดน้ำส้มสายชู แล้วส่งรงพยาบาล",
-  "cer": 0.038,
-  "dur": 7.95,
+  "text": "เห็นคนโดนแมงกะพรุน… โทรหนึ่งหกหกเก้า ให้อยู่นิ่ง ห้ามถู ห้ามราดน้ำจืด ราดน้ำส้มสายชูอย่างน้อยสามสิบวินาที แล้วส่งโรงพยาบาล",
+  "heard": "เห็นคนโดนแมงกระพรุ่น โทร 1669 ให้อยู่นิ่ง ห้ามถู ห้ามราดน้ำจืด ราดน้ำส้มสายชูอย่างน้อย 30 วินาที แล้วส่งโรงพยาบาล",
+  "cer": 0.061,
+  "dur": 11.11,
   "bad": false,
-  "long": false
+  "long": false,
+  "decision": "final pass 12 Nov: new wording with every ✔ step (SOURCES 1.1 ข้อ 1–4)"
  },
  "d07": {
   "text": "หนวดใสพันขา…",
@@ -264,5 +272,14 @@
   "dur": 4.14,
   "bad": false,
   "long": false
+ },
+ "n05": {
+  "text": "คืนที่ยายต้องโกหกลูก… กดติดตาม แล้วไปดูได้ใน หนวดใส ฉบับเต็ม ที่ช่องยูทูบของเรา",
+  "heard": "คืนที่ยายต้องโกหกลูก กดติดตาม แล้วไปดูได้ใน หนวดสัย ฉบับเต็ม ที่ช่อง YouTube ของเรา",
+  "cer": 0.137,
+  "dur": 7.05,
+  "bad": false,
+  "long": false,
+  "decision": "final pass 12 Nov: Shorts-only end line → หนวดใส ฉบับเต็ม; หนวดสัย/YouTube are spelling only"
  }
 }

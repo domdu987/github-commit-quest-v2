@@ -1,6 +1,6 @@
 """หนวดใส: shot timing from the recorded voice, per segment, so picture and sound share one schedule.
 usage: python3 tools/timing.py ep1|ep2|ep3|bridges   → <segment>/schedule.json (Short) + schedule-full.json (long video part)
-Each shot: (key, [voice ids | (id, gap) | (id, offset, "start")], pre-roll, post-roll, minimum length). Shots follow the beat tables of
+Each shot: (key, [voice ids | (id, gap) | (id, offset, "start")], pre-roll, post-roll, minimum length[, "shorts"|"full"]). Shots follow the beat tables of
 ARC.md v1. Lines marked only="shorts"/"full" in lines.json are dropped from the other cut.
 """
 import json
@@ -65,7 +65,7 @@ SHOTS_ALL = {
         # ---- long only: the secret in full (CINEMA BIBLE §7) — flashback in the house style of the cold open
         ("fb_hosp", ["s01", "s02", "s03"], 0.4, 0.3, 3.0),   # district hospital corridor 30 years ago, young ลออ in wet clothes
         ("fb_sorry", ["s04"], 0.2, 0.6, 2.4),
-        ("hush", [], 0.0, 0.0, 4.0),                         # CINEMA BIBLE: a 3–5 s silence the Shorts never have — ลออ alone on the bench
+        ("hush", [], 0.0, 0.0, 4.0, "full"),                 # CINEMA BIBLE: a 3–5 s silence the Shorts never have — ลออ alone on the bench (long only)
         ("fb_home", ["s05", "s06", "s07"], 0.3, 0.6, 3.0),   # the boy ต้น wakes; the lie
         ("fb_post", ["s08", "s09", "s10"], 0.3, 0.8, 3.0),   # dawn: the first vinegar post, the first rhyme in chalk
         ("back", ["d05"], 0.3, 0.6, 2.4),                    # back to the hospital corridor today
@@ -74,6 +74,7 @@ SHOTS_ALL = {
         ("rules", ["n04"], 0.15, 0.4, 3.0),
         ("dawn", ["d07", "w02", "y08"], 0.15, 0.6, 3.0),
         ("end", [], 0.0, 0.0, 3.0),                   # 1669 card · "ตอนจบ"
+        ("endb", ["n05"], 0.2, 0.8, 3.0),             # Shorts only: end card → "หนวดใส ฉบับเต็ม"
     ],
     "bridges": [
         ("A1", ["a01"], 0.4, 0.3, 3.0),               # ยาย's house, the basket by the door, the phone
@@ -150,7 +151,9 @@ def main(cut, fname):
     t = 0.0
     out = []
     drop = {"shorts": "full", "full": "shorts"}[cut]
-    for key, ids, pre, post, mn in SHOTS:
+    for key, ids, pre, post, mn, *only in SHOTS:
+        if only and only[0] == drop:
+            continue  # a shot that belongs to the other cut only (e.g. a silence)
         cur = pre
         vo = []
         kept = [it for it in ids if LINES[it if isinstance(it, str) else it[0]].get("only") != drop]

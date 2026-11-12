@@ -44,9 +44,12 @@ TAKES.update({("ep1", "n01"): 0, ("ep2", "x2"): 0, ("bridges", "a02"): 3})
 TAKES.update({("ep1", "p03"): 2, ("ep2", "w01"): 0, ("bridges", "a02"): 4})
 # long-only scenes (CINEMA BIBLE §7): first retake round
 TAKES.update({("ep3", "s03"): 1, ("ep3", "s09"): 1, ("bridges", "e04"): 1, ("bridges", "e07"): 1})  # e04 take 1 = best of 3 (0.33)
+# final pass 12 Nov (coordinator: n02 must reach CER ≤ 0.15): ep3 n02 take 1 of a narrator style that spells out ผ้า/เช็ด → CER 0.00 at every tempo; y07 take 2 (0.06)
+TAKES.update({("ep3", "n02"): 1, ("ep3", "y07"): 2, ("ep3", "y01"): 2})  # y01 take 2: 0.11 (was 0.22, LONG)
+STYLE_OVR = {("ep3", "n02"): NARR.replace("พูดประโยคนี้แค่ครั้งเดียว", "ออกเสียงคำว่า ผ้า เป็นเสียงโท ชัดเจน และคำว่า เช็ด ลงท้ายด้วยเสียง ด ชัดเจน พูดประโยคนี้แค่ครั้งเดียว")}
 FULL_ONLY = set()
 # CINEMA BIBLE (owner, 6 Nov): every "อย่า…" command is read 15 % slower (tempo × 0.87) and gets 0.3 s of silence before it (timing.py)
-TEMPO_OVR = {("ep1", "n02"): round(1.2 * 0.87, 3), ("ep2", "n02"): round(1.2 * 0.87, 3)}  # ep3 n02 stays at 1.2: ×0.87 and ×0.93 both gave CER 0.36 (coordinator 6 Nov rule)
+TEMPO_OVR = {("ep1", "n02"): round(1.2 * 0.87, 3), ("ep2", "n02"): round(1.2 * 0.87, 3), ("ep3", "n02"): round(1.2 * 0.87, 3)}  # ep3 n02: the 12 Nov take holds CER 0.00 at ×0.87
 
 # ============================== EP.1 หนวดใสพันขา อย่าราดน้ำท่า (Short ≤ 2:30)
 EP1 = [
@@ -168,12 +171,15 @@ EP3 = [
     ("d06", "d", "เพราะผมไล่แม่เอง…", "เพราะ{ผมไล่แม่เอง}…", "ก้มหน้า กุมมือแม่"),
     ("w01", "w", "ยาย… หนูนับครบสามสิบนะ", "ยาย… / หนูนับ[ครบสามสิบ]นะ", "ซบตักยาย ภูมิใจ ง่วง"),
     ("p01", "p", "พ่อ… ผมไม่โกรธแล้ว ที่พ่อไม่ล้างให้", "พ่อ… / ผมไม่โกรธแล้ว / ที่พ่อ[ไม่ล้างให้]", "นอนบนเตียง เสียงอ่อนแรง ยิ้มบางๆ"),
-    ("n04", "n", "เห็นคนโดนแมงกะพรุน… โทรหนึ่งหกหกเก้า อยู่นิ่ง ห้ามถู ราดน้ำส้มสายชู แล้วส่งโรงพยาบาล",
-     "เห็นคนโดนแมงกะพรุน… / โทร[หนึ่งหกหกเก้า] / อยู่นิ่ง {ห้ามถู} / ราด[น้ำส้มสายชู] / แล้วส่งโรงพยาบาล", ""),
-    # dawn, the next day: the family refills the post together
+    # final pass 12 Nov: the summary now names every ✔ step (SOURCES 1.1 ข้อ 1–4 · "ห้ามราดด้วยน้ำจืด" · "อย่างน้อย 30 วินาที")
+    ("n04", "n", "เห็นคนโดนแมงกะพรุน… โทรหนึ่งหกหกเก้า ให้อยู่นิ่ง ห้ามถู ห้ามราดน้ำจืด ราดน้ำส้มสายชูอย่างน้อยสามสิบวินาที แล้วส่งโรงพยาบาล",
+     "เห็นคนโดนแมงกะพรุน… / โทร[หนึ่งหกหกเก้า] / ให้อยู่นิ่ง {ห้ามถู} / {ห้ามราดน้ำจืด} / ราด[น้ำส้มสายชู][อย่างน้อยสามสิบวินาที] / แล้วส่งโรงพยาบาล", ""),
     ("d07", "d", "หนวดใสพันขา…", "หนวดใสพันขา…", "ยืนเติมขวดลงเสาน้ำส้มกับแม่ ยิ้ม"),
     ("w02", "w", "อย่าราดน้ำท่า!", "{อย่าราดน้ำท่า}!", "ตะโกนต่อ ร่าเริง"),
     ("y08", "y", "อยู่นิ่งอย่าถู… เรียกหมอมาดู", "[อยู่นิ่งอย่าถู]… / [เรียกหมอมาดู]", "ยิ้ม ลูบหัวลูกชาย อบอุ่น"),
+    # Shorts only (final pass 12 Nov): the end points to the full film and teases the long-only scene (the night ยาย lied)
+    ("n05", "n", "คืนที่ยายต้องโกหกลูก… กดติดตาม แล้วไปดูได้ใน หนวดใส ฉบับเต็ม ที่ช่องยูทูบของเรา",
+     "คืนที่ยาย{ต้องโกหกลูก}… / กด[ติดตาม] / แล้วไปดูได้ใน [หนวดใส ฉบับเต็ม] / ที่ช่องยูทูบของเรา", "", "shorts"),
 ]
 
 # ============================== bridges (16:9 long video only) — each reveals one more layer
@@ -211,7 +217,7 @@ def mk(rows, seg=""):
         voice, tempo, persona = CAST[who]
         tempo = TEMPO_OVR.get((seg, lid), tempo)
         ln = {"id": lid, "text": text, "voice": voice,
-              "style": NARR if who == "n" else f"{persona} {emo} {TAIL}", "tempo": tempo, "cap": cap}
+              "style": STYLE_OVR.get((seg, lid)) or (NARR if who == "n" else f"{persona} {emo} {TAIL}"), "tempo": tempo, "cap": cap}
         if len(r) > 5:
             ln["only"] = r[5]
         if (seg, lid) in FULL_ONLY:
