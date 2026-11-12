@@ -99,11 +99,20 @@
         <linearGradient id="lpKey" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe2a8" stop-opacity=".34"/><stop offset=".45" stop-color="#ffe2a8" stop-opacity="0"/><stop offset="1" stop-color="#2a2a78" stop-opacity=".26"/></linearGradient>
         <radialGradient id="lpVig" cx=".5" cy=".46" r=".75"><stop offset=".55" stop-color="#0c0a24" stop-opacity="0"/><stop offset="1" stop-color="#0c0a24" stop-opacity=".55"/></radialGradient>`;
       // the key light from the upper left over the whole set, cool blue-violet fall-off, a darker floor toward the camera, dark framing silhouettes
-      const LOOKPASS = (L, set) => { const night = set === "jkTownNight";
+      // ink every set object like a storybook illustration (skill: silhouettes 2–5 px dark warm brown, night navy; mid layer thinner and lighter; sky/ground/haze never)
+      const INKPASS = (layer, col, wpx, op) => layer.querySelectorAll("path,rect,ellipse,circle,polygon").forEach((el) => {
+        const fl = el.getAttribute("fill"); if (!fl || fl === "none" || fl.startsWith("url")) return; const st = el.getAttribute("stroke"); if (st && st !== "none") return;
+        let o = 1; for (let n = el; n && n !== layer; n = n.parentNode) { if (n.getAttribute) { o *= +(n.getAttribute("opacity") ?? 1); if (/blend/.test(n.getAttribute("style") || "")) return; } } if (o * +(el.getAttribute("fill-opacity") ?? 1) < 0.7) return;
+        let bb; try { bb = el.getBBox(); } catch (e) { return; } if (bb.width > 2400 || bb.height > 1500 || bb.width * bb.height < 40) return;
+        el.setAttribute("stroke", col); el.setAttribute("stroke-width", wpx); el.setAttribute("stroke-opacity", op); el.setAttribute("vector-effect", "non-scaling-stroke"); el.setAttribute("stroke-linejoin", "round"); el.setAttribute("paint-order", "stroke"); });
+      const LOOKPASS = (L, set) => { const night = set === "jkTownNight"; INKPASS(L.set, night ? "#1d1449" : "#2a1712", 3.2, 0.9); INKPASS(L.mid, night ? "#1d1449" : "#3a2420", 2, 0.55);
+        if (set === "jkTown" || set === "jkTownNight") { L.fg.insertAdjacentHTML("beforeend", `<g class="lpTop"><path d="M-2600,-1300H-500Q-560,0 -900,160Q-1300,300 -1700,260Q-2100,220 -2600,400Z" fill="${night ? "#0a0c1e" : "#1e2a18"}"/>
+            ${[...Array(16)].map((_, k) => `<ellipse cx="${-2500 + k * 130}" cy="${200 - (k % 3) * 40 - k * 10}" rx="90" ry="60" fill="${night ? "#10142a" : (k % 2 ? "#2a4024" : "#24381e")}"/>`).join("")}</g>`);
+          L.glow.insertAdjacentHTML("beforeend", `<rect x="-3000" y="-1600" width="8000" height="1900" fill="#1a1838" opacity=".22" style="mix-blend-mode:multiply"/>`); }
         L.set.insertAdjacentHTML("beforeend", `<rect class="lpFloor" x="-3000" y="1460" width="8000" height="1400" fill="url(#lpFloor)"/>`);
         L.glow.insertAdjacentHTML("beforeend", `<rect x="-3000" y="-1600" width="8000" height="4400" fill="url(#lpKey)" opacity="${night ? 0.35 : 1}" style="mix-blend-mode:soft-light"/>`);
         if (set === "jkForest") L.fg.insertAdjacentHTML("afterbegin", `<g opacity=".92"><path d="M-1900,-900H-1640Q-1610,400 -1670,1500L-1900,2600Z" fill="#0f1a14"/><path d="M3000,-900H2760Q2730,500 2800,1600L3000,2600Z" fill="#0f1a14"/></g>`);
-        if (set === "jkTown") { L.set.insertAdjacentHTML("beforeend", `<path d="M-1600,1330L420,1330L-200,2600H-2400Z" fill="#2a2a6a" opacity=".3" style="mix-blend-mode:multiply"/><rect x="-3000" y="1380" width="8000" height="1400" fill="url(#lpFloor)" opacity=".8"/>`);
+        if (set === "jkTown") { L.set.insertAdjacentHTML("beforeend", `<path d="M-1600,1330L420,1330L-200,2600H-2400Z" fill="#2a2a6a" opacity=".3" style="mix-blend-mode:multiply"/><rect x="-3000" y="1380" width="8000" height="1400" fill="url(#lpFloor)"/>`);
           L.glow.insertAdjacentHTML("beforeend", `<rect x="-3000" y="-1600" width="8000" height="4400" fill="#d89a68" opacity=".28" style="mix-blend-mode:multiply"/>`); }
       };
       window.JKD = window.JKD || { dress: {} };

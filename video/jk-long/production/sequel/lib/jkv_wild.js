@@ -76,7 +76,7 @@
       ${o.vine ? `<path d="M${f(-w * 0.3)},${top}Q${f(w * 0.4)},${top + 300} ${f(-w * 0.2)},${top + 620}T${f(w * 0.1)},${b - 200}" stroke="#4a7a30" stroke-width="7" fill="none"/>${[0.2, 0.35, 0.5, 0.65, 0.8].map((u, k) => `<ellipse cx="${f(-w * 0.2 + (k % 2 ? 26 : -20))}" cy="${f(top + (b - 200 - top) * u)}" rx="14" ry="8" fill="#6aa040" transform="rotate(${k % 2 ? 30 : -30} ${f(-w * 0.2 + (k % 2 ? 26 : -20))} ${f(top + (b - 200 - top) * u)})"/>`).join("")}` : ""}</g>`; };
   // a crown of leaves (clusters with lit tops and shaded bellies)
   const crown = (cx, cy, rx, ry, r, dark = false) => { let h = ""; for (let k = 0; k < 16; k++) { const a = r() * Math.PI * 2, d = Math.sqrt(r()), x = cx + Math.cos(a) * rx * d, y = cy + Math.sin(a) * ry * d * 0.8, s = 70 + r() * 70;
-      h += `<g transform="translate(${f(x)},${f(y)})"><ellipse rx="${f(s)}" ry="${f(s * 0.72)}" fill="${dark ? "#1e3a22" : "#2e5a2e"}"/><ellipse cy="${f(-s * 0.2)}" rx="${f(s * 0.82)}" ry="${f(s * 0.5)}" fill="${dark ? "#2a4a2a" : "#4a7e3a"}"/><ellipse cx="${f(-s * 0.2)}" cy="${f(-s * 0.36)}" rx="${f(s * 0.45)}" ry="${f(s * 0.24)}" fill="${dark ? "#3a5a34" : "#7aae4e"}" opacity=".8"/></g>`; }
+      h += `<g transform="translate(${f(x)},${f(y)})"><ellipse rx="${f(s)}" ry="${f(s * 0.72)}" fill="${dark ? "#1e3a22" : "#2e5a2e"}"/><ellipse cy="${f(-s * 0.2)}" rx="${f(s * 0.82)}" ry="${f(s * 0.5)}" fill="${dark ? "#2a4a2a" : "#4a7e3a"}"/><ellipse cx="${f(-s * 0.2)}" cy="${f(-s * 0.36)}" rx="${f(s * 0.45)}" ry="${f(s * 0.24)}" fill="${dark ? "#3a5a34" : "#7aae4e"}" opacity=".8"/>${[...Array(9)].map((_, j) => { const a2 = j * 0.7 + r(), d2 = 0.35 + r() * 0.55; return `<path d="M${f(Math.cos(a2) * s * d2)},${f(Math.sin(a2) * s * d2 * 0.7)}q8,-12 18,-2q-8,10 -18,2Z" fill="${j % 2 ? (dark ? "#2a4a2a" : "#5a9a42") : (dark ? "#16301c" : "#24502a")}"/>`; }).join("")}</g>`; }
     return h; };
 
   Sets.jkForest = (L, o = {}) => {
@@ -87,7 +87,7 @@
     let far = "";
     for (let row = 0; row < 2; row++) { const col = row ? (dim ? "#3a5e52" : "#6e9a7e") : (dim ? "#4a6e62" : "#8eb494"), cc = row ? (dim ? "#2e5246" : "#5e8e6a") : (dim ? "#3e6252" : "#7eaa82");
       for (let x = -2600 + row * 90; x < 3800; x += 150 + r() * 120) { const w = 26 + r() * 30 + row * 14;
-        far += `<rect x="${f(x)}" y="-400" width="${f(w)}" height="${f(1600 + row * 40)}" fill="${col}"/>`;
+        far += `<rect x="${f(x)}" y="-400" width="${f(w)}" height="${f(1600 + row * 40)}" fill="${col}"/><path d="M${f(x + w * .3)},-300V1150M${f(x + w * .7)},-200V1120" stroke="${cc}" stroke-width="3" opacity=".6"/>`;
         far += `<ellipse cx="${f(x + w / 2)}" cy="${f(-120 + r() * 260)}" rx="${f(150 + r() * 90)}" ry="${f(120 + r() * 70)}" fill="${cc}"/>`; }
       far += `<rect x="-3000" y="${row ? 700 : 500}" width="8000" height="${row ? 700 : 900}" fill="url(#jw_hazeF)" opacity="${dim ? 0.22 : 0.45}"/>`; }
     put(L.far, far + `<rect x="-3000" y="1150" width="8000" height="300" fill="${dim ? "#4e6a48" : "#9aae78"}"/>`);
@@ -122,11 +122,25 @@
       s += `<g transform="translate(${f(x)},${f(y)}) scale(${f(sc)},${f(sc * 0.45)}) rotate(${k % 2 ? -12 : 12})"><ellipse rx="70" ry="90" fill="#6a5434" opacity=".7"/><ellipse rx="56" ry="74" fill="#5a4428" opacity=".6"/>${[-46, 0, 46].map((dx) => `<path d="M${dx},-86l${dx / 4},-56l14,48Z" fill="#4a3620" opacity=".8"/>`).join("")}</g>`; }
     if (o.trap !== undefined) s += `<g id="${id}-trap" transform="translate(${o.trap},1420)"><ellipse rx="150" ry="26" fill="none" stroke="#c8a46a" stroke-width="9"/><ellipse rx="150" ry="26" fill="none" stroke="#8a6a3a" stroke-width="3" stroke-dasharray="8 10"/>
       <path d="M150,0Q260,-120 300,-420" stroke="#c8a46a" stroke-width="8" fill="none"/><path d="M300,-420Q330,-560 260,-700" stroke="#6a4a2c" stroke-width="16" fill="none" stroke-linecap="round"/>${[[-60, 4], [40, -6], [100, 8]].map(([lx, ly]) => `<path d="M${lx},${ly}q10,-14 22,0q-12,8 -22,0Z" fill="#b8843a"/>`).join("")}</g>`;
+    // undergrowth band at the foot of the trees (bushes with berries), stumps with rings, a log, more mushrooms and stones
+    const bush = (x, y, sc, c1, c2, berry) => { let h = `<g transform="translate(${f(x)},${f(y)}) scale(${f(sc)})">`; for (let k = 0; k < 6; k++) { const bx = -90 + k * 36 + r() * 20, by = -40 - r() * 50, rr = 42 + r() * 26;
+        h += `<circle cx="${f(bx)}" cy="${f(by)}" r="${f(rr)}" fill="${c1}"/><circle cx="${f(bx - rr * .25)}" cy="${f(by - rr * .3)}" r="${f(rr * .55)}" fill="${c2}"/>`; }
+      if (berry) for (let k = 0; k < 7; k++) h += `<circle cx="${f(-80 + r() * 170)}" cy="${f(-30 - r() * 80)}" r="7" fill="${berry}"/>`; return h + `</g>`; };
+    for (let x = -2300; x < 3500; x += 170 + r() * 120) { if (x > 380 && x < 1150) continue; s = bush(x, 1215, 0.8 + r() * 0.5, dim ? "#1e4a2a" : "#2e6a34", dim ? "#2e6a3a" : "#5a9a44", r() > 0.6 ? "#d8443a" : (r() > 0.7 ? "#7a4ac8" : null)) + s; }
+    const stump = (x, y, sc) => `<g transform="translate(${f(x)},${f(y)}) scale(${f(sc)})"><path d="M-70,0L-60,-120H60L70,0Z" fill="url(#jw_bark)"/><path d="M-90,0Q-70,-20 -60,-30M90,0Q70,-20 60,-30" stroke="#4a3424" stroke-width="16" fill="none"/>
+      <ellipse cy="-120" rx="60" ry="18" fill="#c89a62"/>${[44, 30, 16].map((rr) => `<ellipse cy="-120" rx="${rr}" ry="${rr * .3}" fill="none" stroke="#9a6a3a" stroke-width="3"/>`).join("")}<ellipse cx="-30" cy="-60" rx="30" ry="40" fill="url(#jw_moss)"/>${shroom(40, -4, 0.5, "#e8b040")}</g>`;
+    s += stump(-640, 1330, 1) + stump(1880, 1300, 0.85) + stump(2480, 1350, 1.1);
+    s += `<g transform="translate(1340,1520) rotate(-4)"><path d="M-300,0Q-290,-70 -220,-74L260,-64Q320,-56 318,0Z" fill="url(#jw_bark)"/><path d="M-300,0Q-290,-70 -220,-74L260,-64Q320,-56 318,0Z" fill="url(#jw_barkT)"/><ellipse cx="290" cy="-32" rx="30" ry="34" fill="#c8a478"/>
+      ${[24, 14].map((rr) => `<ellipse cx="290" cy="-32" rx="${rr}" ry="${rr * 1.1}" fill="none" stroke="#8a6a44" stroke-width="3"/>`).join("")}<ellipse cx="-20" cy="-72" rx="220" ry="16" fill="#5a9a3a"/>${shroom(-150, -70, 0.6)}${shroom(-100, -72, 0.45)}${fern(120, -64, 0.5)}</g>`;
+    for (let k = 0; k < 14; k++) { const x = -1400 + r() * 4200, y = 1250 + r() * 600; if (x > 300 && x < 1500 && y > 1300) continue; s += shroom(x, y, 0.35 + r() * 0.4, ["#d83a2e", "#e8b040", "#c86ab0"][k % 3]); }
     put(L.set, `<g id="${id}-world">${s}</g>`);
     // fg: hanging leaves at the top corners, dark ferns low at the edges (outside the wide frame's centre)
     let fg = "";
     [[-900, -60, 1], [1950, -40, -1]].forEach(([x, y, d]) => { for (let k = 0; k < 9; k++) fg += `<path d="M${f(x + k * 50 * d)},${f(y)}q${f(10 * d)},${f(140 + k * 22)} ${f(-6 * d)},${f(240 + (k % 3) * 70)}" stroke="#1e3a1e" stroke-width="5" fill="none"/><ellipse cx="${f(x + k * 50 * d - 6 * d)}" cy="${f(y + 240 + (k % 3) * 70)}" rx="16" ry="28" fill="#2a4a24"/>`; });
     fg += fern(-760, 1760, 2.2, "#14281a", "#20402a") + fern(1880, 1780, 2.4, "#14281a", "#20402a", -1);
+    let top = `<rect x="-3000" y="-1400" width="8000" height="1560" fill="${dim ? "#0a1610" : "#13261a"}"/>`; for (let x = -2600; x < 3800; x += 120 + r() * 80) { const y = 120 + r() * 160, rr = 110 + r() * 90; top += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rr)}" ry="${f(rr * .7)}" fill="${dim ? "#0a1610" : "#13261a"}"/><ellipse cx="${f(x - 20)}" cy="${f(y + rr * .45)}" rx="${f(rr * .5)}" ry="${f(rr * .25)}" fill="${dim ? "#14261a" : "#1f3a24"}"/>`; }
+    for (let k = 0; k < 26; k++) { const x = -2400 + r() * 6000, l = 120 + r() * 260; top += `<path d="M${f(x)},${f(160)}q${f(-10 + r() * 20)},${f(l / 2)} ${f(-6 + r() * 12)},${f(l)}" stroke="${dim ? "#14261a" : "#1f3a24"}" stroke-width="6" fill="none"/><ellipse cx="${f(x)}" cy="${f(160 + l)}" rx="10" ry="16" fill="${dim ? "#1e3a24" : "#2e5a30"}"/>`; }
+    fg += `<g class="jwTop">${top}</g>`;
     put(L.fg, `<g class="jwFg">${fg}</g>`);
     // glow: god rays and sun flecks
     const rays = [[260, 0.5], [520, 0.35], [860, 0.45], [1180, 0.3], [-200, 0.3], [1600, 0.25]].map(([x, op], k) => `<path class="jwRay" d="M${x},-300H${x + 110}L${x + 520},1500H${x + 230}Z" fill="url(#jw_ray)" opacity="${f(op * (dim ? 0.5 : 1))}"/>`).join("");
@@ -147,7 +161,8 @@
     const id = o.id || "jc", r = mk(o.seed || 31), dusk = !!o.dusk, mx = o.mx ?? 1250;
     put(L.sky, `<rect x="-3000" y="-3000" width="8000" height="8000" fill="${dusk ? "#ff9a6a" : "#ffe6c4"}"/><rect x="-3000" y="-1400" width="8000" height="2700" fill="url(#${dusk ? "jw_skyMd" : "jw_skyM"})"/>
       <circle cx="-300" cy="${dusk ? 980 : 260}" r="${dusk ? 150 : 110}" fill="#fff4d0"/><circle cx="-300" cy="${dusk ? 980 : 260}" r="420" fill="#fff0c0" opacity=".3"/>
-      ${[[-1200, 120, 520], [400, 40, 700], [1900, 180, 600]].map(([x, y, w]) => `<path d="M${x - w / 2},${y}q${w / 4},-26 ${w / 2},-6t${w / 2},4" stroke="#fff" stroke-width="16" fill="none" opacity=".5" stroke-linecap="round"/>`).join("")}`);
+      ${[[-1200, 120, 520], [400, 40, 700], [1900, 180, 600]].map(([x, y, w]) => `<path d="M${x - w / 2},${y}q${w / 4},-26 ${w / 2},-6t${w / 2},4" stroke="#fff" stroke-width="16" fill="none" opacity=".5" stroke-linecap="round"/>`).join("")}
+      ${[[-900, 360, 1.3], [700, 240, 1.0], [2300, 380, 1.4], [-2200, 280, 1.1]].map(([x, y, sc]) => `<g transform="translate(${x},${y}) scale(${sc})"><ellipse cx="0" cy="0" rx="260" ry="80" fill="#b8a8d8"/><ellipse cx="-90" cy="-40" rx="130" ry="80" fill="#c8b8e4"/><ellipse cx="80" cy="-30" rx="150" ry="90" fill="#c4b4e0"/><ellipse cx="0" cy="30" rx="250" ry="40" fill="#fff0d8"/><ellipse cx="-60" cy="22" rx="120" ry="24" fill="#ffe4c0"/></g>`).join("")}`);
     let far = peak(-1600, 1120, 1300, 560, "#8a9ac8") + peak(-500, 1120, 1100, 470, "#7e90c0") + peak(2600, 1120, 1500, 600, "#8a98c4") + peak(3600, 1120, 1100, 420, "#90a0ca");
     far += `<g opacity=".85">${puffRow(1080, -2600, 4000, 160, r)}</g><g transform="translate(-900,1010)" opacity=".55"><path d="M-80,0V-60H-50V-90H-30V-60H30V-100H50V-60H80V0Z" fill="#6a78a8"/><path d="M-50,-90l10,-20l10,20ZM30,-100l10,-24l10,24Z" fill="#6a78a8"/></g>`;
     far += `<g opacity=".95">${puffRow(1180, -2800, 4200, 200, r, "#fffaf6", "#e8dce8")}</g>`;
@@ -162,6 +177,10 @@
     put(L.mid, mid);
     // set: the cliff face and the arch, the ledge floor
     let s = `<path d="M${mx - 980},1420L${mx - 900},700Q${mx - 860},300 ${mx - 600},120Q${mx - 300},-160 ${mx + 100},-260Q${mx + 600},-300 ${mx + 1100},-140Q${mx + 1700},20 ${mx + 2600},-80V1420Z" fill="url(#jw_rock)"/>`;
+    s += `<defs><clipPath id="${id}-cliff"><path d="M${mx - 980},1420L${mx - 900},700Q${mx - 860},300 ${mx - 600},120Q${mx - 300},-160 ${mx + 100},-260Q${mx + 600},-300 ${mx + 1100},-140Q${mx + 1700},20 ${mx + 2600},-80V1420Z"/></clipPath></defs><g clip-path="url(#${id}-cliff)">`;
+    for (let gy = -320; gy < 1420; gy += 90) for (let gx = mx - 1000; gx < mx + 2620; gx += 110) { const jx = gx + (r() - 0.5) * 50, jy = gy + (r() - 0.5) * 40, t = r();
+      s += `<path d="M${f(jx)},${f(jy)}l${f(110 + r() * 30)},${f(-10 + r() * 20)}l${f(-40 + r() * 30)},${f(90 + r() * 20)}Z" fill="${t < 0.35 ? "#c4b098" : t < 0.7 ? "#9e8a74" : "#7a6858"}" opacity=".55"/>`; }
+    s += `</g>`;
     for (let k = 0; k < 9; k++) { const y = -100 + k * 160; s += `<path d="M${f(mx - 920 + k * 20)},${f(y + 200)}Q${f(mx + 300)},${f(y + 150 - r() * 60)} ${f(mx + 2600)},${f(y + 120)}" stroke="#5a4a3c" stroke-width="${f(4 + r() * 4)}" fill="none" opacity=".4"/><path d="M${f(mx - 900 + k * 20)},${f(y + 190)}Q${f(mx + 300)},${f(y + 140 - r() * 60)} ${f(mx + 2600)},${f(y + 112)}" stroke="#d8c8ae" stroke-width="2.5" fill="none" opacity=".35"/>`; }
     for (let k = 0; k < 7; k++) { const x = mx - 800 + r() * 2800, y = -100 + r() * 1100; s += `<path d="M${f(x)},${f(y)}l${f(-20 + r() * 40)},${f(60 + r() * 40)}l${f(-16 + r() * 32)},${f(50 + r() * 40)}" stroke="#3a2e26" stroke-width="4" fill="none" opacity=".6"/>`; }
     for (let k = 0; k < 6; k++) { const x = mx - 850 + r() * 2600, y = 0 + r() * 900; s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(50 + r() * 60)}" ry="${f(14 + r() * 10)}" fill="#6a8a44" opacity=".6"/>`; }
@@ -179,14 +198,28 @@
     // the ledge floor: rock with cracks and pebbles, bones, boulders
     s += `<path d="M-3000,1380Q-1200,1350 0,1370Q1200,1390 3600,1360V2600H-3000Z" fill="url(#jw_ledge)"/>`;
     for (let k = 0; k < 9; k++) { const x = -1500 + r() * 4200, y = 1420 + r() * 500; s += `<path d="M${f(x)},${f(y)}l${f(60 + r() * 60)},${f(10 + r() * 20)}l${f(40 + r() * 50)},${f(-14 + r() * 20)}l${f(30 + r() * 40)},${f(16)}" stroke="#4a3c30" stroke-width="4" fill="none" opacity=".6"/>`; }
+    for (let k = 0; k < 260; k++) { const x = -1600 + r() * 4800, y = 1400 + r() * 700, rr = 3 + r() * 7; s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rr * 1.4)}" ry="${f(rr)}" fill="${r() > 0.5 ? "#6a5a4a" : "#c8b498"}"/>`; }
     for (let k = 0; k < 34; k++) s += stone(-1600 + r() * 4600, 1400 + r() * 600, 16 + r() * 28, 9 + r() * 14).replace("#6a9a3a", "#8a7a5a");
     s += `<g transform="translate(${mx - 640},1460)"><ellipse cx="0" cy="8" rx="80" ry="12" fill="#000" opacity=".25"/><path d="M-50,0Q-60,-46 -14,-56Q30,-60 46,-30Q56,-6 40,0Z" fill="#efe6d2"/><circle cx="-12" cy="-30" r="10" fill="#3a2e26"/><circle cx="18" cy="-30" r="10" fill="#3a2e26"/><path d="M-56,-40q-40,-30 -30,-70M42,-44q40,-30 34,-70" stroke="#efe6d2" stroke-width="12" fill="none" stroke-linecap="round"/></g>
       <g transform="translate(${mx + 760},1500) rotate(-8)">${[0, 1, 2, 3, 4].map((k) => `<path d="M${k * 34},0q-30,-50 6,-96" stroke="#efe6d2" stroke-width="11" fill="none" stroke-linecap="round"/>`).join("")}<path d="M-10,-4H150" stroke="#e2d8c2" stroke-width="12" stroke-linecap="round"/></g>`;
     s += `<g transform="translate(${mx - 1150},1420)"><path d="M-140,0Q-150,-130 -40,-160Q90,-170 130,-70Q150,-20 140,0Z" fill="url(#jw_rock)"/><path d="M-120,-60Q-100,-140 -30,-150" stroke="#e8dcc4" stroke-width="6" fill="none" opacity=".6"/><ellipse cx="-20" cy="-150" rx="70" ry="14" fill="#7a9a4a" opacity=".7"/></g>
       <g transform="translate(${mx + 1300},1440)"><path d="M-180,0Q-170,-170 -20,-200Q140,-200 180,-60L170,0Z" fill="url(#jw_rock)"/><path d="M-150,-80Q-130,-170 -30,-188" stroke="#e8dcc4" stroke-width="6" fill="none" opacity=".6"/></g>`;
+    const torchPole = (x) => `<g transform="translate(${x},1420)"><rect x="-8" y="-300" width="16" height="300" fill="url(#jw_bark)"/><path d="M-22,-300h44l-8,-30h-28z" fill="#4a3a2a"/><g class="jwFlame"><path d="M0,-420Q-34,-360 -18,-332Q0,-318 18,-332Q34,-360 0,-420Z" fill="#ff7a22"/><path d="M0,-392Q-16,-358 -8,-340Q0,-334 8,-340Q16,-358 0,-392Z" fill="#ffe08a"/></g></g>`;
+    s += torchPole(mx - 560) + torchPole(mx + 560);
+    s += `<g transform="translate(${mx - 860},1470)"><path d="M-70,0Q-60,-40 -10,-44Q40,-46 60,-10L56,0Z" fill="#9aa2ac"/><path d="M-40,-30h60" stroke="#5a626c" stroke-width="5"/><path d="M-14,-44v-24l10,-8l10,8v24" fill="#8a929c"/>
+        <ellipse cx="90" cy="-20" rx="50" ry="40" fill="#a8302a"/><ellipse cx="90" cy="-20" rx="36" ry="28" fill="none" stroke="#e8c048" stroke-width="6"/><path d="M90,-46v52M64,-20h52" stroke="#e8c048" stroke-width="5"/>
+        <path d="M-150,0L-120,-160" stroke="#c8ccd4" stroke-width="10"/><path d="M-132,-60h-34" stroke="#8a6a3a" stroke-width="9"/><path d="M180,0L196,-120" stroke="#c8ccd4" stroke-width="9"/><path d="M178,-40h30" stroke="#8a6a3a" stroke-width="8"/></g>`;
+    const crystal = (x, y, sc, c) => `<g transform="translate(${x},${y}) scale(${sc})">${[[-30, 60, -14], [0, 100, 4], [26, 70, 16], [50, 40, 26]].map(([dx, h, a]) => `<path d="M${dx - 12},0L${dx - 8},${-h}L${dx},${-h - 18}L${dx + 8},${-h}L${dx + 12},0Z" fill="${c}" transform="rotate(${a} ${dx} 0)"/><path d="M${dx - 4},-6L${dx - 2},${-h + 4}" stroke="#fff" stroke-width="3" opacity=".6" transform="rotate(${a} ${dx} 0)"/>`).join("")}</g>`;
+    s += crystal(mx - 380, 1400, 1, "#7ac8e8") + crystal(mx + 420, 1395, 0.8, "#b88ae8") + crystal(mx + 1040, 1440, 1.1, "#7ac8e8");
+    s += `<g transform="translate(${mx - 1250},1420)"><rect x="-8" y="-260" width="16" height="260" fill="url(#jw_bark)"/><g transform="rotate(-6 0 -200)"><rect x="-150" y="-280" width="300" height="130" rx="8" fill="#c8a06a"/><rect x="-150" y="-280" width="300" height="130" rx="8" fill="url(#jkv_wood)" opacity=".5"/>
+        ${T(0, -230, 40, "ระวังมังกร!", { fill: "#a8241c", w: 900 })}${T(0, -180, 28, "ห้ามโม้ใกล้ถ้ำ", { fill: "#3a2410", w: 800 })}<path d="M120,-268l14,10M-132,-268l14,10" stroke="#5a3a1a" stroke-width="5"/></g></g>`;
+    for (let k = 0; k < 18; k++) { const x = mx - 420 + r() * 900, y = 1430 + r() * 160; s += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="13" ry="6" fill="${k % 3 ? "#f6c84a" : "#ffe48a"}" stroke="#8a5a10" stroke-width="2"/>`; }
+    s += `<g transform="translate(${mx + 300},1480)"><path d="M-24,0L-30,-46H30L24,0Z" fill="#e8b830"/><ellipse cy="-46" rx="30" ry="8" fill="#ffe48a"/><path d="M-30,-40q-20,6 -18,24" stroke="#e8b830" stroke-width="6" fill="none"/></g>`;
     if (o.dragon) { const d = o.dragon; s += `<g id="${id}-dragon" transform="translate(${d.x ?? mx},${d.y ?? 1380}) scale(${d.flip ? -(d.s ?? 3) : (d.s ?? 3)},${d.s ?? 3})">${JK.dragon(d.fill || "#4f8a5e", { heads: `${id}-dg` })}</g>`; }
     put(L.set, `<g id="${id}-world">${s}</g>`);
-    put(L.fg, `<g class="jwFg"><path d="M-1400,2000Q-1300,1640 -900,1600Q-640,1590 -560,2000Z" fill="#3a2e26"/><path d="M1900,2000Q2000,1660 2300,1630Q2600,1640 2700,2000Z" fill="#3a2e26"/></g>`);
+    put(L.fg, `<g class="jwTop"><path d="M-2600,-1200H700Q600,-100 200,80Q-200,240 -700,200Q-1200,160 -1500,380Q-1900,560 -2600,500Z" fill="#241c26"/><path d="M-1500,-300Q-1300,-380 -1000,-420" stroke="#4a3a40" stroke-width="10" fill="none"/>
+      ${[-1300, -900, -500, -100].map((x, k) => `<path d="M${x},${300 - k * 40}l18,${90 + k * 14}l18,${-90 - k * 14}Z" fill="#241c26"/>`).join("")}</g>`);
+    
     let wisps = ""; for (let k = 0; k < 4; k++) wisps += `<g class="jwWisp" opacity=".35"><ellipse cx="${-1200 + k * 1100}" cy="${1500 + (k % 2) * 160}" rx="420" ry="60" fill="#ffffff"/></g>`;
     
     put(L.glow, `<g style="mix-blend-mode:screen"><ellipse class="jwHoardGlow" cx="${mx + 40}" cy="1250" rx="420" ry="160" fill="url(#jw_hoard)" opacity=".6"/><circle cx="-300" cy="${dusk ? 980 : 260}" r="700" fill="#fff0c0" opacity=".18"/></g>`);
@@ -225,6 +258,7 @@
   JKD.dress.jkCave = (L, tl, sh, id) => { const t0 = sh.start, dur = sh.dur;
     ["far", "fg"].forEach((n) => [...L[n].querySelectorAll(".jwPuff, .jwWisp")].forEach((el, i) => tl.fromTo(el, { x: 0 }, { x: (i % 2 ? 1 : -1) * (40 + (i % 4) * 14), duration: 7 + (i % 4), repeat: reps(dur, 7), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 - (i % 5) * 0.7)));
     [...L.set.querySelectorAll(".jwGlint")].forEach((el, i) => tl.fromTo(el, { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1.4, transformOrigin: "50% 50%", duration: 0.5, repeat: reps(dur, 1.3), repeatDelay: 0.8, yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + i * 0.6));
+    [...L.set.querySelectorAll(".jwFlame")].forEach((el, i) => tl.fromTo(el, { scaleY: 0.9, scaleX: 1.08, transformOrigin: "50% 100%" }, { scaleY: 1.14, scaleX: 0.9, transformOrigin: "50% 100%", duration: 0.16 + i * 0.03, repeat: reps(dur, 0.16), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0));
     [...L.glow.querySelectorAll(".jwHoardGlow")].forEach((el) => tl.fromTo(el, { opacity: 0.6 }, { opacity: 0.35, duration: 1.4, repeat: reps(dur, 1.4), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0)); };
   JKD.dress.jkTownNight = (L, tl, sh, id, o) => { if (JKD.dress.jkTown) JKD.dress.jkTown(L, tl, sh, id, { ...o, dusk: true });
     [...L.sky.querySelectorAll(".jwStar")].forEach((el, i) => { if (i % 3) return; tl.fromTo(el, { opacity: 1 }, { opacity: 0.25, duration: 0.8 + (i % 5) * 0.3, repeat: reps(sh.dur, 0.8), yoyo: true, ease: "sine.inOut", immediateRender: false }, sh.start); }); };
