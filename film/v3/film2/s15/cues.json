@@ -1,0 +1,79 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 38.1,
+   "duration": 1.567,
+   "frame": 1143,
+   "end_frame": 1190,
+   "kind": "ambience",
+   "label": "calm summer dusk over the town: swifts, a far dog, evening voices"
+  },
+  {
+   "time": 39.0,
+   "duration": 2.4,
+   "frame": 1170,
+   "end_frame": 1242,
+   "kind": "thunder_rumble",
+   "label": "the storm front rolls in: low wind rising, a long low thunder rumble under it"
+  },
+  {
+   "time": 39.867,
+   "duration": 0.167,
+   "frame": 1196,
+   "end_frame": 1201,
+   "kind": "windows",
+   "label": "window group 1 lights up (warm; optional tiny shutter creak)"
+  },
+  {
+   "time": 40.3,
+   "duration": 0.167,
+   "frame": 1209,
+   "end_frame": 1214,
+   "kind": "windows",
+   "label": "window group 2 lights up (warm; optional tiny shutter creak)"
+  },
+  {
+   "time": 40.733,
+   "duration": 0.167,
+   "frame": 1222,
+   "end_frame": 1227,
+   "kind": "windows",
+   "label": "window group 3 lights up (warm; optional tiny shutter creak)"
+  },
+  {
+   "time": 41.133,
+   "duration": 0.167,
+   "frame": 1234,
+   "end_frame": 1239,
+   "kind": "windows",
+   "label": "window group 4 lights up (warm; optional tiny shutter creak)"
+  },
+  {
+   "time": 41.267,
+   "duration": 0.133,
+   "frame": 1238,
+   "end_frame": 1242,
+   "kind": "flash",
+   "label": "far sheet lightning flickers in the clouds"
+  },
+  {
+   "time": 41.533,
+   "duration": 0.3,
+   "frame": 1246,
+   "end_frame": 1255,
+   "kind": "thunder_far",
+   "label": "distant thunder"
+  },
+  {
+   "time": 40.467,
+   "duration": 0.333,
+   "frame": 1214,
+   "end_frame": 1224,
+   "kind": "camera_move",
+   "label": "camera tilts up to the sky over the tower (no whoosh, slow)"
+  }
+ ]
+}
