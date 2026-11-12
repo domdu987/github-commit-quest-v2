@@ -5,12 +5,9 @@
  "format": "รูปแบบส่งมอบใหม่ (เจ้าของ 5 พ.ย. 2569): วันละ 1 เรื่อง · 09:00 Shorts EP.1 และ 09:15 Shorts EP.2 → YouTube Shorts + Facebook Reel + IG Reel · 09:30 คลิปยาว 16:9 ทั้งเรื่อง → YouTube เท่านั้น",
  "posted_by": "เจ้าของ/Moji ผ่าน Buffer",
  "story": "หนวดใส ฉบับเต็ม (คลิปยาว 16:9) ย้ายจากช่อง 12 พ.ย. ที่ไฟล์ไม่ทัน · เจ้าของอนุมัติ 12 พ.ย. (\"ใช่ ทำให้เสร็จ\") · ไม่มี Shorts วันนี้ (EP.1/EP.2 ลงแล้ว 12 พ.ย.)",
- "complete": false,
- "missing": [
-  "คลิปยาว 16:9 หนวดใส (เลน C เริ่มต่อ 12 พ.ย. 16:00 · แก้ 3 ข้อจาก e00e916 → อนุมัติ → เรนเดอร์ → โต๊ะตรวจไฟล์)",
-  "ปกคลิปยาว (เลน C)"
- ],
- "status": "กำลังผลิต · ต้อง final ก่อน 13 พ.ย. 09:00",
+ "complete": true,
+ "missing": [],
+ "status": "พร้อมลง · คลิปยาวหนวดใส final 12 พ.ย.",
  "upload_sheet": "video/release/sheets/jelly-upload.md",
  "rules": [
   "ลงผ่าน Buffer โดยเจ้าของหรือ Moji เท่านั้น (ไม่ใช้ YouTube/Graph API เพราะคลิปที่อัปผ่าน API ของโปรเจกต์ที่ยังไม่ผ่าน audit จะถูกบังคับ private) · Claude ไม่ลงและไม่ตั้งเวลา",
@@ -29,10 +26,21 @@
   "platforms": [
    "youtube"
   ],
-  "status": "in_production",
+  "status": "final",
   "branch": "prod/lane-c",
   "made_by": "เลน C · บทและเสียง เลน B",
-  "review": "สตอรีบอร์ด r3c (15a58d11): ด่านคู่จุด 1 เท่า · เหลือแก้ 3 ข้อ (e00e916)"
+  "review": "โต๊ะตรวจไฟล์ r1 (1685b55): BLOCKER 2 (HG7 ในคลิปยาว · คีมไม่อยู่ในมือ) · r2 (1a1f9e8) ผู้ประสานงานตรวจเอง: sha ตรง · 376.933 วิ · −14.0 LUFS / −3.0 · ภาพ 166.7/167.3/199.5/231–233 วิ แก้ครบ · ห้ามใช้ r1 (59f7c9cf…)",
+  "commit": "1a1f9e8",
+  "video": "video/jelly-long/LONG-jelly-16x9-share-r2.mp4",
+  "video_sha256": "bd8ed78663181d183fd979b4ed226cbf856b743e3686236134cf92d22fb9e6bd",
+  "video_bytes": 77685335,
+  "cover": "video/jelly-long/cover-16x9.jpg",
+  "title": "ลูกโดนแมงกะพรุน… อย่าเอาน้ำเปล่าราด | หนวดใส ฉบับเต็ม",
+  "hq_by_chat": {
+   "file": "LONG-jelly-16x9-HQ-r2.mp4",
+   "sha256": "ad0baa16c6c3b59a56f17a8c90d06424e86115c790c4da46d0a1d24ae1382678",
+   "sent_by": "เลน C (SendUserFile) หลังผู้ประสานงานอนุมัติ 12 พ.ย."
+  }
  },
  "team_charter": "video/release/TEAM-CHARTER.md"
 }
