@@ -9,3 +9,8 @@ deliver/
 *_work/*
 !small_work/*.py
 *.tmp.wav
+v3/film*/*/raw/
+v3/film*/*/frames/
+v3/film*/*/work/
+v3/set3d*/*_work/*
+!v3/set3d*/*_work/*.py
