@@ -35,7 +35,7 @@
       // end card · the next story at 09:30, subscribe, and the previous long (the YouTube end screen sits on the two boxes)
       // end card · the next story (its title is set before the render: NEXT_TITLE), and two empty frames where YouTube's end screen
       // goes (one video, one subscribe circle), on screen from the card's first frame to the last (8 s) · no title written into them
-      const NEXT_TITLE = window.NEXT_TITLE || "ชื่อเรื่องต่อไป";   // set by the coordinator before the render (the story of 13 Nov)
+      const NEXT_TITLE = window.NEXT_TITLE || "เรือล่มคืนลอยกระทง";   // the next long, named by the coordinator 12 Nov
       add("card", { set: "jellyBeach", setOpts: BEACHE("jbE", { time: "eerie" }), dark: 0.55, light: false,
         cam: { keys: [{ t: 0, ...fr(560, 1250, 0.86, 540, 1000) }] },
         captions: [],
