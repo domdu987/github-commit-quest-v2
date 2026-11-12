@@ -1,0 +1,161 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 33.6,
+   "duration": 4.367,
+   "frame": 1008,
+   "end_frame": 1139,
+   "kind": "ambience",
+   "label": "harbour winter ambience at the tank foot (gulls far, wind, low tank hum)"
+  },
+  {
+   "time": 33.6,
+   "duration": 0.0,
+   "frame": 1008,
+   "end_frame": 1008,
+   "kind": "cut",
+   "label": "hard cut from shot 11"
+  },
+  {
+   "time": 33.8,
+   "duration": 0.0,
+   "frame": 1014,
+   "end_frame": 1014,
+   "kind": "drip",
+   "label": "drip: molasses drop plinks into the tin bucket",
+   "impact_frame": 1014
+  },
+  {
+   "time": 34.533,
+   "duration": 0.0,
+   "frame": 1036,
+   "end_frame": 1036,
+   "kind": "drip",
+   "label": "drip: molasses drop pats onto the frozen yard (soft)",
+   "impact_frame": 1036
+  },
+  {
+   "time": 35.267,
+   "duration": 0.0,
+   "frame": 1058,
+   "end_frame": 1058,
+   "kind": "drip",
+   "label": "drip: molasses drop pats onto the frozen yard (soft)",
+   "impact_frame": 1058
+  },
+  {
+   "time": 36.0,
+   "duration": 0.0,
+   "frame": 1080,
+   "end_frame": 1080,
+   "kind": "drip",
+   "label": "drip: molasses drop pats onto the frozen yard (soft)",
+   "impact_frame": 1080
+  },
+  {
+   "time": 36.733,
+   "duration": 0.0,
+   "frame": 1102,
+   "end_frame": 1102,
+   "kind": "drip",
+   "label": "drip: molasses drop pats onto the frozen yard (soft)",
+   "impact_frame": 1102
+  },
+  {
+   "time": 37.467,
+   "duration": 0.0,
+   "frame": 1124,
+   "end_frame": 1124,
+   "kind": "drip",
+   "label": "drip: molasses drop pats onto the frozen yard (soft)",
+   "impact_frame": 1124
+  },
+  {
+   "time": 34.233,
+   "duration": 0.2,
+   "frame": 1027,
+   "end_frame": 1033,
+   "kind": "foley",
+   "label": "foreman winds up (cloth rustle, boot scrape)"
+  },
+  {
+   "time": 34.5,
+   "duration": 0.0,
+   "frame": 1035,
+   "end_frame": 1035,
+   "kind": "kick",
+   "label": "KICK: boot hits the tin bucket (hollow metal clang), molasses sloshes out; small camera jolt",
+   "impact_frame": 1035
+  },
+  {
+   "time": 34.533,
+   "duration": 0.2,
+   "frame": 1036,
+   "end_frame": 1042,
+   "kind": "splash",
+   "label": "molasses splash on the ground where the bucket stood"
+  },
+  {
+   "time": 34.9,
+   "duration": 0.0,
+   "frame": 1047,
+   "end_frame": 1047,
+   "kind": "clatter",
+   "label": "bucket lands on its side (tin clatter)",
+   "impact_frame": 1047
+  },
+  {
+   "time": 35.1,
+   "duration": 0.267,
+   "frame": 1053,
+   "end_frame": 1061,
+   "kind": "clatter",
+   "label": "small bounce and roll of the bucket (tin rattle dying away)",
+   "impact_frame": 1053
+  },
+  {
+   "time": 34.767,
+   "duration": 0.233,
+   "frame": 1043,
+   "end_frame": 1050,
+   "kind": "laugh",
+   "label": "foreman's smug closed-mouth chuckle ('hmph', mouth closed, cigar)"
+  },
+  {
+   "time": 35.0,
+   "duration": 0.267,
+   "frame": 1050,
+   "end_frame": 1058,
+   "kind": "camera_snap",
+   "label": "snap punch-in on the foreman (short whoosh in), peak about g 1054",
+   "peak_frame": 1054
+  },
+  {
+   "time": 35.4,
+   "duration": 2.0,
+   "frame": 1062,
+   "end_frame": 1122,
+   "kind": "dialogue",
+   "label": "the foreman's quoted line (in the narration track): mouth moves"
+  },
+  {
+   "time": 36.4,
+   "duration": 0.4,
+   "frame": 1092,
+   "end_frame": 1104,
+   "kind": "camera_move",
+   "label": "reframe left onto tommy (soft whoosh)"
+  },
+  {
+   "time": 37.5,
+   "duration": 0.4,
+   "frame": 1125,
+   "end_frame": 1137,
+   "kind": "dissolve",
+   "label": "dissolve out to shot 13"
+  }
+ ]
+}

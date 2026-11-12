@@ -1,0 +1,71 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 44.1,
+   "duration": 4.867,
+   "frame": 1323,
+   "end_frame": 1469,
+   "kind": "ambience",
+   "label": "warm morning ambience, muted (diagram moment)"
+  },
+  {
+   "time": 44.167,
+   "duration": 0.333,
+   "frame": 1325,
+   "end_frame": 1335,
+   "kind": "dissolve",
+   "label": "dissolve in from shot 14"
+  },
+  {
+   "time": 44.267,
+   "duration": 0.467,
+   "frame": 1328,
+   "end_frame": 1342,
+   "kind": "diagram",
+   "label": "the tank turns x-ray: soft shimmer / glassy whoosh"
+  },
+  {
+   "time": 44.667,
+   "duration": 1.467,
+   "frame": 1340,
+   "end_frame": 1384,
+   "kind": "pour_water",
+   "label": "clean water rushing in, the level rising (pitch rising)"
+  },
+  {
+   "time": 46.133,
+   "duration": 0.467,
+   "frame": 1384,
+   "end_frame": 1398,
+   "kind": "water",
+   "label": "water settles, small slosh (test: no leaks)"
+  },
+  {
+   "time": 46.6,
+   "duration": 0.4,
+   "frame": 1398,
+   "end_frame": 1410,
+   "kind": "diagram",
+   "label": "the blue ghost drains away (reverse shimmer)"
+  },
+  {
+   "time": 46.8,
+   "duration": 2.167,
+   "frame": 1404,
+   "end_frame": 1469,
+   "kind": "pour",
+   "label": "thick molasses pouring from the pipe at the rim (heavy glugging pour, low)"
+  },
+  {
+   "time": 48.567,
+   "duration": 0.333,
+   "frame": 1457,
+   "end_frame": 1467,
+   "kind": "dissolve",
+   "label": "dissolve out to shot 16"
+  }
+ ]
+}
