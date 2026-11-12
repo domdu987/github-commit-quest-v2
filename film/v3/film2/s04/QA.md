@@ -26,11 +26,11 @@ Whip frames g 204-213 and the punch g 271-272 carry a horizontal streak (box blu
 ## Staging (from raw/*/g_*.json, on-screen frames g >= 214)
 | shot | head | width px | centre y (H) | notes |
 |---|---|---|---|---|
-| 4 | padre (main) | 220 -> 300 after the punch | 0.45-0.52 | near, screen-left |
-| 4 | baker | 200-290 | 0.51-0.57 | right; pushed half out of frame by the punch |
-| 4 | woman | 145-190 | 0.53-0.63 | far, between them |
+| 4 | padre (main) | 220 -> 301 after the punch | 0.46-0.52 | near, screen-left |
+| 4 | baker | 227-253 | 0.52-0.56 | right; pushed half out of frame by the punch |
+| 4 | woman | 145-184 | 0.53-0.58 | far, between them |
 | 5 | (wide, no actors) | | | |
-No head bottom below y 880 on screen. head_flip False (moon key from screen-left). Mouths: clenched (padre) / story-pose mouths, held, no talking.
+No head bottom below y 880 on screen (lowest: 843 px, baker). head_flip False (moon key from screen-left). Mouths: clenched (padre) / story-pose mouths, held, no talking.
 Ropes: three 3D ropes with striped sallies hang from the ceiling 0.10 D behind each card and move with the haul (0.36 D); both hands pinned on them: solve error 0.000-0.034 D on every on-screen frame (the large errors in work/qa.txt are whip-handle frames where the cards are off-screen behind the wall).
 Popcheck: jumps only at lightning flashes (311->312, 314->315, 338->339): intended. No black / magenta cards, no retried frames.
 
