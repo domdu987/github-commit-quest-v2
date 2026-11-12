@@ -1,0 +1,231 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 29.233,
+   "duration": 2.9,
+   "frame": 877,
+   "end_frame": 964,
+   "kind": "ambience",
+   "label": "heavy rain on the tower and the stone sills, wind through the open arches (bed under shot 12)"
+  },
+  {
+   "time": 29.733,
+   "duration": 0.0,
+   "frame": 892,
+   "end_frame": 892,
+   "kind": "bell",
+   "label": "big bronze bell strike (clapper at the end of the swing), loud and close, long ring tail",
+   "impact_frame": 892
+  },
+  {
+   "time": 30.267,
+   "duration": 0.0,
+   "frame": 908,
+   "end_frame": 908,
+   "kind": "bell",
+   "label": "big bronze bell strike (clapper at the end of the swing), loud and close, long ring tail",
+   "impact_frame": 908
+  },
+  {
+   "time": 30.867,
+   "duration": 0.0,
+   "frame": 926,
+   "end_frame": 926,
+   "kind": "bell",
+   "label": "big bronze bell strike (clapper at the end of the swing), loud and close, long ring tail",
+   "impact_frame": 926
+  },
+  {
+   "time": 31.433,
+   "duration": 0.0,
+   "frame": 943,
+   "end_frame": 943,
+   "kind": "bell",
+   "label": "big bronze bell strike (clapper at the end of the swing), loud and close, long ring tail",
+   "impact_frame": 943
+  },
+  {
+   "time": 29.833,
+   "duration": 0.133,
+   "frame": 895,
+   "end_frame": 899,
+   "kind": "rope",
+   "label": "ropes creak and snap taut as the four ringers haul (rope creak, grunt-free)",
+   "peak_frame": 899
+  },
+  {
+   "time": 29.867,
+   "duration": 0.133,
+   "frame": 896,
+   "end_frame": 900,
+   "kind": "rope",
+   "label": "ropes creak and snap taut as the four ringers haul (rope creak, grunt-free)",
+   "peak_frame": 900
+  },
+  {
+   "time": 30.967,
+   "duration": 0.133,
+   "frame": 929,
+   "end_frame": 933,
+   "kind": "rope",
+   "label": "ropes creak and snap taut as the four ringers haul (rope creak, grunt-free)",
+   "peak_frame": 933
+  },
+  {
+   "time": 31.0,
+   "duration": 0.133,
+   "frame": 930,
+   "end_frame": 934,
+   "kind": "rope",
+   "label": "ropes creak and snap taut as the four ringers haul (rope creak, grunt-free)",
+   "peak_frame": 934
+  },
+  {
+   "time": 29.867,
+   "duration": 0.167,
+   "frame": 896,
+   "end_frame": 901,
+   "kind": "flash",
+   "label": "lightning flash outside the arches (white light through the openings)"
+  },
+  {
+   "time": 30.067,
+   "duration": 1.467,
+   "frame": 902,
+   "end_frame": 946,
+   "kind": "thunder",
+   "label": "thunder, close and rolling"
+  },
+  {
+   "time": 31.467,
+   "duration": 0.1,
+   "frame": 944,
+   "end_frame": 947,
+   "kind": "flash",
+   "label": "lightning flash outside the arches (white light through the openings)"
+  },
+  {
+   "time": 31.667,
+   "duration": 1.467,
+   "frame": 950,
+   "end_frame": 994,
+   "kind": "thunder",
+   "label": "thunder, close and rolling"
+  },
+  {
+   "time": 31.0,
+   "duration": 0.267,
+   "frame": 930,
+   "end_frame": 938,
+   "kind": "camera_snap",
+   "label": "snap reframe onto nico lifted by his rope (short whoosh)"
+  },
+  {
+   "time": 31.8,
+   "duration": 0.333,
+   "frame": 954,
+   "end_frame": 964,
+   "kind": "dissolve",
+   "label": "dissolve to the town in the storm"
+  },
+  {
+   "time": 31.8,
+   "duration": 2.667,
+   "frame": 954,
+   "end_frame": 1034,
+   "kind": "ambience",
+   "label": "rain over the whole town, distant bells still ringing (soft), wind"
+  },
+  {
+   "time": 32.033,
+   "duration": 0.1,
+   "frame": 961,
+   "end_frame": 964,
+   "kind": "flash",
+   "label": "lightning flash lights the clouds over the town"
+  },
+  {
+   "time": 32.367,
+   "duration": 1.667,
+   "frame": 971,
+   "end_frame": 1021,
+   "kind": "thunder_far",
+   "label": "thunder far away (no strike nearby)"
+  },
+  {
+   "time": 32.6,
+   "duration": 0.2,
+   "frame": 978,
+   "end_frame": 984,
+   "kind": "flash",
+   "label": "lightning flash lights the clouds over the town"
+  },
+  {
+   "time": 32.933,
+   "duration": 1.667,
+   "frame": 988,
+   "end_frame": 1038,
+   "kind": "thunder_far",
+   "label": "thunder far away (no strike nearby)"
+  },
+  {
+   "time": 33.467,
+   "duration": 0.1,
+   "frame": 1004,
+   "end_frame": 1007,
+   "kind": "flash",
+   "label": "lightning flash lights the clouds over the town"
+  },
+  {
+   "time": 33.8,
+   "duration": 1.667,
+   "frame": 1014,
+   "end_frame": 1064,
+   "kind": "thunder_far",
+   "label": "thunder far away (no strike nearby)"
+  },
+  {
+   "time": 33.967,
+   "duration": 0.167,
+   "frame": 1019,
+   "end_frame": 1024,
+   "kind": "flash",
+   "label": "lightning flash lights the clouds over the town"
+  },
+  {
+   "time": 34.3,
+   "duration": 1.667,
+   "frame": 1029,
+   "end_frame": 1079,
+   "kind": "thunder_far",
+   "label": "thunder far away (no strike nearby)"
+  },
+  {
+   "time": 32.6,
+   "duration": 0.133,
+   "frame": 978,
+   "end_frame": 982,
+   "kind": "bolt_far",
+   "label": "forked bolt far over the hills (right), far crack"
+  },
+  {
+   "time": 33.967,
+   "duration": 0.1,
+   "frame": 1019,
+   "end_frame": 1022,
+   "kind": "bolt_far",
+   "label": "forked bolt far over the hills (left), far crack"
+  },
+  {
+   "time": 32.967,
+   "duration": 0.333,
+   "frame": 989,
+   "end_frame": 999,
+   "kind": "camera_move",
+   "label": "eased reframe up to the tower top: the rod, untouched"
+  }
+ ]
+}
