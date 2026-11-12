@@ -1,0 +1,55 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 30.333,
+   "duration": 3.267,
+   "frame": 910,
+   "end_frame": 1008,
+   "kind": "ambience",
+   "label": "winter wind over the rooftops, soft hush of falling snow (bed for the whole shot)"
+  },
+  {
+   "time": 30.4,
+   "duration": 0.4,
+   "frame": 912,
+   "end_frame": 924,
+   "kind": "dissolve",
+   "label": "dissolve in from shot 10"
+  },
+  {
+   "time": 30.6,
+   "duration": 3.0,
+   "frame": 918,
+   "end_frame": 1008,
+   "kind": "footsteps_far",
+   "label": "two workers trudging up the snowy street (muffled crunching footsteps, very far, optional)"
+  },
+  {
+   "time": 31.767,
+   "duration": 0.0,
+   "frame": 953,
+   "end_frame": 953,
+   "kind": "camera",
+   "label": "push speeds up slightly on 'thang ko yang' (no sound needed)"
+  },
+  {
+   "time": 31.667,
+   "duration": 1.667,
+   "frame": 950,
+   "end_frame": 1000,
+   "kind": "voices_far",
+   "label": "kids playing far down the street (faint laughter, optional)"
+  },
+  {
+   "time": 33.6,
+   "duration": 0.0,
+   "frame": 1008,
+   "end_frame": 1008,
+   "kind": "cut",
+   "label": "hard cut to shot 12"
+  }
+ ]
+}
