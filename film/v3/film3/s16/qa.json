@@ -1,0 +1,114 @@
+{
+ "cam": {
+  "16": {
+   "min": 0.627,
+   "median": 5.77,
+   "peak": [
+    1540,
+    254.7
+   ],
+   "static_runs_ge6": [],
+   "constant_speed_runs_ge4": []
+  },
+  "17": {
+   "min": 0.393,
+   "median": 3.57,
+   "peak": [
+    1608,
+    133.2
+   ],
+   "static_runs_ge6": [],
+   "constant_speed_runs_ge4": []
+  }
+ },
+ "pops": [
+  [
+   1496,
+   7.72,
+   1.76
+  ],
+  [
+   1497,
+   11.06,
+   1.76
+  ],
+  [
+   1498,
+   8.3,
+   1.79
+  ],
+  [
+   1610,
+   34.68,
+   8.84
+  ],
+  [
+   1611,
+   34.16,
+   8.84
+  ]
+ ],
+ "hue": {
+  "s16 shot 16 (g 1462-1581)": {
+   "red": 62.7,
+   "orange": 0.8,
+   "yellow": 0.0,
+   "green": 0.0,
+   "cyan": 0.0,
+   "blue": 34.2,
+   "violet": 1.2,
+   "magenta": 1.2,
+   "sat": 0.5,
+   "val": 0.53,
+   "dark": 0.06
+  },
+  "s16 shot 17 (g 1582-1675)": {
+   "red": 73.0,
+   "orange": 16.5,
+   "yellow": 0.0,
+   "green": 0.0,
+   "cyan": 0.0,
+   "blue": 5.7,
+   "violet": 0.5,
+   "magenta": 4.3,
+   "sat": 0.46,
+   "val": 0.53,
+   "dark": 0.1
+  },
+  "s16 all (g 1455-1675)": {
+   "red": 66.7,
+   "orange": 7.0,
+   "yellow": 0.0,
+   "green": 0.0,
+   "cyan": 0.0,
+   "blue": 22.8,
+   "violet": 1.0,
+   "magenta": 2.4,
+   "sat": 0.48,
+   "val": 0.53,
+   "dark": 0.08
+  }
+ },
+ "diff_median": 2.1,
+ "near_still_runs_ge6": [],
+ "heads": {
+  "17:tommy": {
+   "w": [
+    376.6,
+    4052.4
+   ],
+   "y": [
+    582.4,
+    4504.5
+   ],
+   "x": [
+    -3555.1,
+    213.8
+   ],
+   "below_880": 1,
+   "n": 74
+  }
+ },
+ "s_per_frame_wall": 12.24,
+ "s_per_frame_cpu": 23.99
+}

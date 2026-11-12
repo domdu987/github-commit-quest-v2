@@ -1,0 +1,169 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 48.5,
+   "duration": 7.367,
+   "frame": 1455,
+   "end_frame": 1676,
+   "kind": "ambience",
+   "label": "noon waterfront bed: distant harbour, gulls, a steady low creak of loaded steel under it"
+  },
+  {
+   "time": 48.733,
+   "duration": 7.133,
+   "frame": 1462,
+   "end_frame": 1676,
+   "kind": "drone",
+   "label": "the tank's groan grows: a low sustained metal moan rising in pitch and volume to the cut (x2 layers)"
+  },
+  {
+   "time": 49.733,
+   "duration": 0.833,
+   "frame": 1492,
+   "end_frame": 1517,
+   "kind": "groan",
+   "label": "deep metal groan of the swelling wall (camera tremor peaks)",
+   "peak_frame": 1497
+  },
+  {
+   "time": 51.233,
+   "duration": 0.833,
+   "frame": 1537,
+   "end_frame": 1562,
+   "kind": "groan",
+   "label": "deep metal groan of the swelling wall (camera tremor peaks)",
+   "peak_frame": 1542
+  },
+  {
+   "time": 52.233,
+   "duration": 0.833,
+   "frame": 1567,
+   "end_frame": 1592,
+   "kind": "groan",
+   "label": "deep metal groan of the swelling wall (camera tremor peaks)",
+   "peak_frame": 1572
+  },
+  {
+   "time": 53.567,
+   "duration": 0.833,
+   "frame": 1607,
+   "end_frame": 1632,
+   "kind": "groan",
+   "label": "deep metal groan of the swelling wall (camera tremor peaks)",
+   "peak_frame": 1612
+  },
+  {
+   "time": 54.9,
+   "duration": 0.833,
+   "frame": 1647,
+   "end_frame": 1672,
+   "kind": "groan",
+   "label": "deep metal groan of the swelling wall (camera tremor peaks)",
+   "peak_frame": 1652
+  },
+  {
+   "time": 49.767,
+   "duration": 0.0,
+   "frame": 1493,
+   "end_frame": 1493,
+   "kind": "drip",
+   "label": "thick drop of molasses plops into the half-full bucket (soft, viscous)",
+   "impact_frame": 1493
+  },
+  {
+   "time": 51.367,
+   "duration": 0.0,
+   "frame": 1541,
+   "end_frame": 1541,
+   "kind": "drip",
+   "label": "thick drop of molasses plops into the half-full bucket (soft, viscous)",
+   "impact_frame": 1541
+  },
+  {
+   "time": 52.833,
+   "duration": 0.0,
+   "frame": 1585,
+   "end_frame": 1585,
+   "kind": "drip",
+   "label": "thick drop of molasses plops into the half-full bucket (soft, viscous)",
+   "impact_frame": 1585
+  },
+  {
+   "time": 54.3,
+   "duration": 0.0,
+   "frame": 1629,
+   "end_frame": 1629,
+   "kind": "drip",
+   "label": "thick drop of molasses plops into the half-full bucket (soft, viscous)",
+   "impact_frame": 1629
+  },
+  {
+   "time": 55.767,
+   "duration": 0.0,
+   "frame": 1673,
+   "end_frame": 1673,
+   "kind": "drip",
+   "label": "thick drop of molasses plops into the half-full bucket (soft, viscous)",
+   "impact_frame": 1673
+  },
+  {
+   "time": 49.667,
+   "duration": 0.433,
+   "frame": 1490,
+   "end_frame": 1503,
+   "kind": "camera_snap",
+   "label": "small reframe on the first groan (soft whoosh)"
+  },
+  {
+   "time": 51.0,
+   "duration": 0.733,
+   "frame": 1530,
+   "end_frame": 1552,
+   "kind": "camera_move",
+   "label": "camera cranes back and down to the low angle up the wall (whoosh, low)"
+  },
+  {
+   "time": 52.6,
+   "duration": 0.3,
+   "frame": 1578,
+   "end_frame": 1587,
+   "kind": "dissolve",
+   "label": "dissolve to the rivet close-up"
+  },
+  {
+   "time": 53.0,
+   "duration": 2.867,
+   "frame": 1590,
+   "end_frame": 1676,
+   "kind": "rattle",
+   "label": "tiny metallic chatter of one rivet trembling in its hole (grows)"
+  },
+  {
+   "time": 53.367,
+   "duration": 0.533,
+   "frame": 1601,
+   "end_frame": 1617,
+   "kind": "camera_move",
+   "label": "pull back: tommy's worried face rises into the near foreground (soft whoosh)"
+  },
+  {
+   "time": 54.433,
+   "duration": 0.4,
+   "frame": 1633,
+   "end_frame": 1645,
+   "kind": "creak",
+   "label": "sharp steel creak on 'khue siang mut' (the rivets are the groan)"
+  },
+  {
+   "time": 54.7,
+   "duration": 0.067,
+   "frame": 1641,
+   "end_frame": 1643,
+   "kind": "accent",
+   "label": "tommy's eyes go wide (ring eyes) behind a blink: tiny gulp, optional"
+  }
+ ]
+}
