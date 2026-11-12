@@ -18,19 +18,20 @@
         <path d="M-40,-30Q0,-22 40,-30" stroke="#1e1a16" stroke-width="3" fill="none" opacity=".45"/></g>`;
       Rig.CAST.jWomanHat = { v2: { ...Rig.CAST.jWoman.v2, faceTop: `<g transform="translate(0,22)"><path d="M-150,-596Q0,-690 150,-596Q0,-612 -150,-596Z" fill="#d8b878" stroke="#2e2a26" stroke-width="2.6"/><path d="M-80,-620Q0,-700 80,-620" fill="#c8a868" stroke="#2e2a26" stroke-width="2.6"/><path d="M-82,-622Q0,-634 82,-622" stroke="#d8312a" stroke-width="7" fill="none"/></g>` } };
       Rig.CAST.jWomanTowel = { v2: Rig.CAST.jWomanHat.v2, hand: `<g transform="translate(0,104) rotate(10)">${TOWEL(0, 30, 0.55)}<g transform="translate(-6,8) scale(.42)">${GRIP((Rig.CAST.jWoman.v2 || {}).skin || "#e0b088")}</g></g>`, keep: "F" };
-      Rig.CAST.jLaorVinUp = { v2: Rig.CAST.jLaor.v2, hand: `<g transform="translate(0,104) rotate(180)">${VB(0, 0, 0.5)}<g transform="translate(0,-50) rotate(-180) scale(.58)">${GRIP((Rig.CAST.jLaor.v2 || {}).skin || "#c89870")}</g></g>`, keep: "F" };
+      Rig.CAST.jLaorVinUp = { v2: Rig.CAST.jLaor.v2, hand: `<g transform="translate(0,104) rotate(180)">${VB(0, 0, 0.5)}<g transform="translate(0,-50) rotate(-180) scale(.58)">${GRIP((Rig.CAST.jLaor.v2 || {}).skin || "#c89870", { sleeve: "#f4ecd6" })}</g></g>`, keep: "F" };
       Rig.CAST.jLaorVin = { v2: Rig.CAST.jLaor.v2, hand: `<g transform="translate(0,104) rotate(150)">${VB(0, 0, 0.5, { cap: false })}<g transform="translate(0,-46) rotate(-150) scale(.58)">${GRIP((Rig.CAST.jLaor.v2 || {}).skin || "#c89870")}</g></g>`, keep: "F" };
       Rig.CAST.jWanBare2 = Rig.CAST.jWanBare;
+      Rig.CAST.jTonVinUp = { v2: Rig.CAST.jTon.v2, hand: `<g transform="translate(0,104) rotate(180)">${VB(0, 0, 0.5)}<g transform="translate(0,-50) rotate(-180) scale(.58)">${GRIP((Rig.CAST.jTon.v2 || {}).skin || "#a8724a", { sleeve: "#7ab8d8" })}</g></g>`, keep: "F" };
       Rig.MODES.kneel = Rig.MODES.kneel || ((u, o) => ({ ...Rig.MODES.idle(u, o), thF: -86, shF: 86, thB: 0, shB: 90, uaF: -10, faF: -30, uaB: 6, faB: -20, torso: 6, head: 4, bodyY: 286 }));
       Rig.MODES.wipe = (u, o) => { const w = 10 * Math.sin(u * 9); return { ...Rig.MODES.kneel(u, o), uaF: -64 + w, faF: -30, uaB: -30, faB: -50, torso: 18, head: 14 }; };
-      Rig.MODES.wipeLow = (u, o) => { const w = 8 * Math.sin(u * 9); return { ...Rig.MODES.kneel(u, o), uaF: -10 + w, faF: -40, uaB: -30, faB: -50, torso: 30, head: 22 }; };   // the towel down at the calf
+      Rig.MODES.wipeLow = (u, o) => { const w = 6 * Math.sin(u * 9); return { ...Rig.MODES.kneel(u, o), uaF: -24 + w, faF: -36, uaB: 6, faB: -8, torso: 12, head: 6 }; };   // upright, torso ≤ 20°   // the towel down at the calf
       Rig.MODES.pourLow2 = (u, o) => ({ ...Rig.MODES.kneel(u, o), uaF: -20, faF: -50, uaB: -40, faB: -50, torso: 30, head: 26 });   // the bottle tipped over the shin
       Rig.MODES.grabWrist = (u, o) => ({ ...Rig.MODES.kneel(u, o), uaF: -84, faF: -6, uaB: 10, faB: -30, torso: 10, head: 4 });
       Rig.MODES.runBasket = (u, o) => ({ ...Rig.MODES.run(u, o), uaF: -40, faF: -60 });
       Rig.MODES.pourKneel = (u, o) => ({ ...Rig.MODES.kneel(u, o), uaF: -66, faF: -24, uaB: -40, faB: -50, torso: 16, head: 18 });
       Rig.MODES.benchSit = (u, o) => ({ ...Rig.MODES.sit(u, o), thF: -84, shF: 86, thB: -82, shB: 84, uaF: -20, faF: -50, uaB: 10, faB: -40, torso: 4, head: 6 + 2 * Math.sin(u * 1.1), bodyY: 150 });
       Rig.MODES.waveBig = Rig.MODES.waveBig || ((u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -160 + 20 * Math.sin(u * 9), faF: -20, uaB: 10, faB: -20, head: -8 }));
-      Rig.MODES.fillPost = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -120, faF: -40, uaB: -100, faB: -50, head: -12 });
+      Rig.MODES.fillPost = (u, o) => ({ ...Rig.MODES.idle(u, o), uaF: -120, faF: -40, uaB: 6, faB: -8, head: -12 });   // one arm up with the bottle, the other hangs by the side
       const FGB = (L, tl, t0, a, b, fid, svg) => { if (window.LANDSCAPE && (window.LANDSCAPE.noFg || ["fg21", "fg28"]).includes(fid)) return; put(L.light, `<defs><filter id="${fid}-f" x="-.3" y="-.3" width="1.6" height="1.6"><feGaussianBlur stdDeviation="14"/></filter></defs><g id="${fid}" filter="url(#${fid}-f)">${window.LANDSCAPE ? `<g transform="translate(-660,0) scale(2.2222,1)"><rect width="1080" height="1920" opacity="0"/>${svg}</g>` : svg}</g>`);
         tl.set(`#${fid}`, { opacity: 0 }, 0); tl.set(`#${fid}`, { opacity: 1 }, t0 + a); if (b !== undefined) tl.set(`#${fid}`, { opacity: 0 }, t0 + b); };
       const BEACH3 = (id, x = {}) => BEACH(id, { tower: [930, 1270, 0.82], umbrellas: [[90, 1300, 0.8, "#f2c230"], [1040, 1360, 0.85, "#3a9ad8"]], life: [["mat", 330, 1760, 0.95, "#e8482a"], ["cooler", 120, 1350, 0.6]], ...x });
@@ -62,8 +63,8 @@
             ${[0, 1, 2, 3].map((k) => `<circle class="h1-gl" cx="${560 + k * 90}" cy="${1040 + (k % 2) * 30}" r="6" fill="#fff"/>`).join("")}`);
           // the tentacle twitches on the skin and the welts under it flare red as the towel nears
           put(L.act, `<path id="h1-red" d="M520,1000Q600,1060 660,1040Q720,1020 760,1080Q800,1140 860,1120" stroke="#ff2a3a" stroke-width="30" fill="none" stroke-linecap="round" opacity="0" style="filter:blur(6px)"/>`);
-          tl.fromTo("#h1-red", { opacity: 0 }, { opacity: 0.75, duration: D("c_h1"), ease: "power1.in", immediateRender: false }, t0);
-          tl.fromTo("#h1-ten", { x: 0, y: 0 }, { x: 5, y: -4, duration: 0.12, repeat: Math.floor(D("c_h1") / 0.12), yoyo: true, ease: "sine.inOut", immediateRender: false }, t0 + 0.3);
+          tl.fromTo("#h1-red", { opacity: 0 }, { opacity: 0.8, duration: D("c_h1"), ease: "power2.out", immediateRender: false }, t0);
+          tl.fromTo("#h1-ten", { x: 0, y: 0 }, { x: 12, y: -14, duration: 0.175, repeat: Math.floor(D("c_h1") / 0.175), yoyo: true, ease: "power2.inOut", immediateRender: false }, t0 + 0.1);   // an 18 px jerk every 0.35 s
           tl.fromTo(".h1-gl", { opacity: 0.2 }, { opacity: 1, duration: 0.25, stagger: 0.1, repeat: 9, yoyo: true, immediateRender: false }, t0 + 0.2);
         } });
       // 3 · the wide: the stranger kneels with her towel at ภูมิ's leg; ต้น turns
@@ -71,18 +72,18 @@
         cam: { keys: [{ t: 0, ...fr(560, 1380, 1.0, 540, 1000) }] },
         actors: [
           A("jPhum", MAT[0] + 40, MAT[1] + 10, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "o" }]),
-          A("jWomanTowel", 640, 1775, 0.95, [{ t: 0, mode: "wipeLow", eyes: "worry", mouth: "o" }], { flip: true }),
+          A("jWomanTowel", 690, 1775, 0.95, [{ t: 0, mode: "wipeLow", eyes: "worry", mouth: "o" }], { flip: true }),
           A("jTon", 860, 1740, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }], { flip: true }),
         ],
         captions: caps("c_h2"),
         fx(tl, id, t0, L) { put(L.act, shin(MAT[0] + 40, MAT[1] + 10, 0.95)); } });
       // 4–6 · "เช็ดหนวดออกก่อน!" → the towel inches from the tentacle → ต้น's hand on her wrist, still (the choice)
       add("c_towel", { set: "jellyBeach", setOpts: BEACH3("jb32", { tower: false }), dark: 0, blur: { set: 3, mid: 4, far: 4 }, light: SUN,
-        cam: { keys: [{ t: 0, ...fr(680, 1440, 2.8, 540, 900) }, { t: CT(6, "c_towel"), ...fr(830, 1450, 3.0, 540, 840) }] },
+        cam: { keys: [{ t: 0, ...fr(720, 1560, 1.75, 540, 860) }, { t: CT(6, "c_towel"), ...fr(830, 1450, 3.0, 540, 840) }] },
         actors: [
           A("jPhum", MAT[0] + 40, MAT[1] + 10, 0.95, [{ t: 0, mode: "sit", eyes: "cry", mouth: "o" }]),
-          A("jWomanTowel", 640, 1775, 0.95, [{ t: 0, mode: "wipeLow", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("c_towel", 0, "o")] }),
-          A("jTon", 860, 1770, 1.0, [{ t: 0, mode: "grabWrist", eyes: "angry", mouth: "o" }], { flip: true, talk: [TALK("c_towel", 1, "scream")] }),
+          A("jWomanTowel", 690, 1775, 0.95, [{ t: 0, mode: "wipeLow", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("c_towel", 0, "o")] }),
+          A("jTon", 860, 1770, 1.0, [{ t: 0, mode: "idle", eyes: "wide", mouth: "o" }, { t: F("c_towel", 1, 0) - 0.12, mode: "grabWrist", eyes: "angry", mouth: "o" }], { flip: true, talk: [TALK("c_towel", 1, "scream")] }),   // he reaches on "อย่า!", not before
         ],
         captions: caps("c_towel", undefined, { quote: true }),
         fx(tl, id, t0, L) { put(L.act, shin(MAT[0] + 40, MAT[1] + 10, 0.95));
@@ -101,7 +102,7 @@
           put(L.light, `<g transform="translate(540,1236)"><g id="fsg3"><path d="M-150,-10V70M150,-10V70" stroke="#8a6a3a" stroke-width="6"/>
             <path d="M-260,70Q-266,64 -250,62H250Q266,64 262,76L258,190Q258,204 244,204H-246Q-262,202 -260,188Z" fill="#a88454" stroke="#1e1a16" stroke-width="5"/>
             <rect x="-238" y="88" width="220" height="62" rx="31" fill="#d8312a" stroke="#1e1a16" stroke-width="4"/><text x="-128" y="130" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="34" fill="#fff">กดติดตาม</text>
-            <rect x="0" y="88" width="238" height="62" rx="14" fill="#fffaf0" stroke="#1e1a16" stroke-width="4"/><path d="M20,100L50,119L20,138Z" fill="#d8312a"/><text x="140" y="130" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#1e2a3a">เรื่องเต็ม</text>
+            <rect x="0" y="88" width="238" height="62" rx="14" fill="#fffaf0" stroke="#1e1a16" stroke-width="4"/><g transform="translate(36,121)"><rect x="-20" y="-14" width="40" height="28" rx="5" fill="#3a4a6a" stroke="#1e1a16" stroke-width="3"/><path d="M-8,-14L-14,-24M8,-14L14,-24" stroke="#1e1a16" stroke-width="3"/></g><text x="140" y="130" text-anchor="middle" font-family="Kanit" font-weight="800" font-size="30" fill="#1e2a3a">เรื่องเต็ม</text>
             <text x="0" y="186" text-anchor="middle" font-family="Kanit" font-weight="700" font-size="24" fill="#2a1a0a">ดูเรื่องเต็มที่ช่อง YouTube</text></g></g>`);
           { const f3 = 10.3 - SH["c_know"].start; tl.set("#fsg3", { opacity: 0 }, 0);
             tl.fromTo("#fsg3", { opacity: 0, y: 90 }, { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.8)", immediateRender: false }, t0 + f3);
@@ -140,8 +141,8 @@
           const b = CT(11, "c_yai");
           put(L.act, `<g id="ya-st"><path d="M520,1690Q515,1720 512,1760" stroke="#f6eccc" stroke-width="9" fill="none" stroke-linecap="round" opacity=".9"/></g>
             <g transform="translate(400,1868) scale(1,-1)"><g id="ya-tz"><path d="M-400,-120L-10,-6" stroke="#1e1a16" stroke-width="70" stroke-linecap="round"/><path d="M-400,-120L-10,-6" stroke="#a8784a" stroke-width="58" stroke-linecap="round"/><path d="M-500,-150L-260,-80" stroke="#d8312a" stroke-width="90" stroke-linecap="round"/><path d="M0,0L160,100M8,-8L168,92" stroke="#9aa4ac" stroke-width="7" stroke-linecap="round"/><path d="M160,100Q200,130 240,110" stroke="#f2feff" stroke-width="6" fill="none"/><g transform="translate(6,2) rotate(30)"><path d="M-46,-30Q-50,-58 -18,-62L30,-60Q56,-56 56,-30L56,22Q52,48 22,50L-24,50Q-50,46 -48,18Z" fill="#a8784a" stroke="#1e1a16" stroke-width="6"/><path d="M56,-28Q74,-28 74,-10Q74,8 56,8M56,8Q76,10 74,28Q72,44 54,42" fill="#a8784a" stroke="#1e1a16" stroke-width="5"/><path d="M-16,-60Q-30,-24 -10,4" stroke="#1e1a16" stroke-width="4" fill="none" opacity=".6"/><path d="M8,-60Q-4,-24 14,2" stroke="#1e1a16" stroke-width="4" fill="none" opacity=".6"/><path d="M-40,-8Q-22,-2 -6,-14" stroke="#8a5e3a" stroke-width="5" fill="none"/></g></g></g>`);   // a fist round the tweezers (review 12 Nov)
-          show(tl, "#ya-st", t0 + b); show(tl, "#ya-tz", t0 + b + 0.8);
-          tl.fromTo("#ya-tz", { y: 0, rotation: 0, svgOrigin: "0 0" }, { y: -40, rotation: -10, svgOrigin: "0 0", duration: 1.2, ease: "power1.inOut", immediateRender: false }, t0 + b + 0.9);
+          show(tl, "#ya-st", t0 + b); tl.set("#ya-tz", { opacity: 0 }, 0);   // Short: no tweezers (SOURCES 2.1: vinegar ≥ 30 s first)
+          // (the long lifts it later; the Short ends this shot on the pour)
           FGB(L, tl, t0, 0, b, "fg10", `<path d="M-60,-60H120L180,1980H-60Z" fill="#e8d8b8"/><path d="M60,-60L120,1980" stroke="#8a6a3a" stroke-width="20"/>`);
         } });
       // 12 · the rhyme board on the post: rules 1–2 ticked, rule 3 lights
@@ -202,7 +203,7 @@
           tl.fromTo("#pr-bt", { y: -6, rotation: -1, svgOrigin: "0 0" }, { y: 6, rotation: 1, svgOrigin: "0 0", duration: 1.4, yoyo: true, repeat: 9, ease: "sine.inOut", immediateRender: false }, t0);
           // the sting: his legs in the water, the clear box jellyfish drifting in round them (sound first: the lead sound is in the mix)
           put(L.act, `<g id="pr-uw" opacity="0"><rect x="-1400" y="1720" width="3800" height="900" fill="#4a8aa8" opacity=".55"/><path d="M-1400,1720H2400" stroke="#dff4ff" stroke-width="8" opacity=".8"/>
-            <g><path d="M531,1480Q517,1640 529,1720Q541,1820 545,1930L585,1930Q593,1820 605,1700Q615,1600 599,1480Z" fill="#a8724a" stroke="#2e2a26" stroke-width="6"/><path d="M595,1600Q603,1680 589,1760" stroke="#8a5a36" stroke-width="8" fill="none" opacity=".6"/><path d="M545,1922Q495,1918 487,1950Q525,1970 543,1960Z" fill="#a8724a" stroke="#2e2a26" stroke-width="6"/><path d="M656,1480Q642,1640 654,1720Q666,1820 670,1930L710,1930Q718,1820 730,1700Q740,1600 724,1480Z" fill="#a8724a" stroke="#2e2a26" stroke-width="6"/><path d="M720,1600Q728,1680 714,1760" stroke="#8a5a36" stroke-width="8" fill="none" opacity=".6"/><path d="M670,1922Q760,1918 768,1950Q730,1970 668,1960Z" fill="#a8724a" stroke="#2e2a26" stroke-width="6"/><path d="M500,1380H760L770,1530Q700,1550 640,1520Q580,1550 506,1530Z" fill="#3a4a6a" stroke="#2e2a26" stroke-width="6"/><path d="M506,1500Q580,1520 640,1500Q700,1520 768,1500" stroke="#2a3450" stroke-width="5" fill="none"/><g id="pr-welt" opacity="0"><path d="M536,1640l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M542,1760l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M666,1620l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M672,1740l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M660,1850l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/></g><rect x="-1400" y="1720" width="3800" height="900" fill="#7ac0d8" opacity=".28"/></g>
+            <g><path d="M531,1480Q517,1640 529,1720Q541,1820 545,1930L585,1930Q593,1820 605,1700Q615,1600 599,1480Z" fill="#a8724a" stroke="#2e2a26" stroke-width="6"/><path d="M595,1600Q603,1680 589,1760" stroke="#8a5a36" stroke-width="8" fill="none" opacity=".6"/><path d="M545,1922Q495,1918 487,1950Q525,1970 543,1960Z" fill="#a8724a" stroke="#2e2a26" stroke-width="6"/><path d="M656,1480Q642,1640 654,1720Q666,1820 670,1930L710,1930Q718,1820 730,1700Q740,1600 724,1480Z" fill="#a8724a" stroke="#2e2a26" stroke-width="6"/><path d="M720,1600Q728,1680 714,1760" stroke="#8a5a36" stroke-width="8" fill="none" opacity=".6"/><path d="M670,1922Q760,1918 768,1950Q730,1970 668,1960Z" fill="#a8724a" stroke="#2e2a26" stroke-width="6"/><path d="M500,1380H760L770,1530Q700,1550 640,1520Q580,1550 506,1530Z" fill="#3a4a6a" stroke="#2e2a26" stroke-width="6"/><path d="M506,1500Q580,1520 640,1500Q700,1520 768,1500" stroke="#2a3450" stroke-width="5" fill="none"/><path d="M430,1880Q480,1760 540,1700Q590,1650 600,1580" stroke="#f2feff" stroke-width="7" fill="none" stroke-linecap="round" opacity=".9"/><path d="M430,1880Q480,1760 540,1700Q590,1650 600,1580" stroke="#a88ae8" stroke-width="3" fill="none" stroke-dasharray="3 8"/><g id="pr-welt" opacity="0"><path d="M536,1640l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M542,1760l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M666,1620l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M672,1740l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M660,1850l12,14l12,-14l12,14l12,-14" stroke="#ff2a3a" stroke-width="8" fill="none" stroke-linecap="round"/></g><rect x="-1400" y="1720" width="3800" height="900" fill="#7ac0d8" opacity=".28"/></g>
             <g id="pr-jel">${[[420, 1880, 0.9], [820, 1900, 0.8], [620, 2010, 0.7]].map(([x, y, k], i) => Jelly.box(x, y, k, { seed: 3 + i, len: 300, glow: true })).join("")}</g></g>`);
           show(tl, "#pr-uw", t0 + a, t0 + b); tl.fromTo("#pr-welt", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.in", immediateRender: false }, t0 + a + 0.5);   // the stings land: welts flare on his calves tl.fromTo("#pr-jel", { x: -60, y: 40 }, { x: 0, y: -20, duration: b - a, ease: "sine.out", immediateRender: false }, t0 + a);
           // plain water on the welts (the old belief)
@@ -249,7 +250,7 @@
       add("c_secret", { dark: 0, light: { from: "top", rim: "#f6fbff", rimOp: 0.5, shade: "#2a3440", shadeOp: 0.2, cast: { len: 0.6, op: 0.2 }, vol: false },
         cam: { keys: [{ t: 0, ...fr(260, 1300, 3.2, 540, 860) }, { t: D("c_secret"), glide: D("c_secret"), ...fr(330, 1320, 2.6, 540, 880) }] },
         actors: [A("jTon", 250, 1760, 1.0, [{ t: 0, mode: "benchSit", eyes: "cry", mouth: "o" }], { talk: [TALK("c_secret", 0, "o")] }),
-          A("jLaor", 500, 1760, 0.95, [{ t: 0, mode: "benchSit", eyes: "closed", mouth: "flat" }], { flip: true })],
+          A("jLaor", 440, 1760, 0.95, [{ t: 0, mode: "benchSit", eyes: "closed", mouth: "flat" }], { flip: true })],
         captions: caps("c_secret", undefined, { quote: true }),
         fx(tl, id, t0, L) { HALL(L, id, { bench: 380, door: 1000 }); } });
       // 21 · ยาย close: why — she didn't want him to hate the sea; the rhyme
@@ -271,7 +272,7 @@
       add("c_guilt", { dark: 0, light: { from: "top", rim: "#f6fbff", rimOp: 0.5, shade: "#2a3440", shadeOp: 0.2, cast: { len: 0.6, op: 0.2 }, vol: false },
         cam: { keys: [{ t: 0, ...fr(380, 1360, 2.0, 540, 940) }, { t: D("c_guilt"), glide: D("c_guilt"), ...fr(280, 1320, 2.9, 540, 900) }] },
         actors: [A("jTon", 250, 1760, 1.0, [{ t: 0, mode: "benchSit", eyes: "cry", mouth: "flat" }], { talk: [TALK("c_guilt", 1, "o")] }),
-          A("jLaor", 500, 1760, 0.95, [{ t: 0, mode: "benchSit", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("c_guilt", 0, "o")] })],
+          A("jLaor", 440, 1760, 0.95, [{ t: 0, mode: "benchSit", eyes: "worry", mouth: "o" }], { flip: true, talk: [TALK("c_guilt", 0, "o")] })],
         captions: caps("c_guilt", undefined, { quote: true }),
         fx(tl, id, t0, L) { HALL(L, id, { bench: 380, door: 1000 }); } });
       // 24–25 · the ward: ภูมิ wakes, his leg bandaged; น้ำหวาน by the bed → ภูมิ smiles at his father
@@ -302,14 +303,14 @@
         cam: { keys: window.LANDSCAPE ? [{ t: 0, ...fr(600, 1500, 0.74, 540, 720) }, { t: D("c_dawn"), glide: D("c_dawn"), ...fr(590, 1530, 0.9, 540, 730) }]
           : [{ t: 0, ...fr(560, 1500, 1.15, 540, 1060) }, { t: D("c_dawn"), glide: D("c_dawn"), ...fr(560, 1480, 1.3, 540, 1060) }] },
         actors: [A("jLaorBasket", 320, 1760, 0.95, [{ t: 0, mode: "idle", eyes: "normal", mouth: "smile" }], { talk: [TALK("c_dawn", 2, "o")] }),
-          A("jTon", 540, 1770, 1.0, [{ t: 0, mode: "fillPost", eyes: "normal", mouth: "smile" }], { talk: [TALK("c_dawn", 0, "o")] }),
+          A("jTonVinUp", 540, 1770, 1.0, [{ t: 0, mode: "fillPost", eyes: "normal", mouth: "smile" }], { talk: [TALK("c_dawn", 0, "o")] }),
           A("jWanBare", 800, 1780, 0.74, [{ t: 0, mode: "point", eyes: "normal", mouth: "laugh" }], { flip: true, talk: [TALK("c_dawn", 1, "laugh")] })],
         captions: caps("c_dawn", undefined, { quote: true }),
         fx(tl, id, t0, L) { put(L.set, postBoard(660, 1760, 0.9, "pd2", { full: 1 }));
           if (!window.LANDSCAPE) { put(L.light, `<g transform="translate(560,60)"><g id="dw-hg7"><g transform="scale(.9)">${Jelly.subCard(0, 120)}</g></g></g>`);   // HG7: the follow card, Short only
             const h = t0 + F("c_dawn", 2, 0); tl.set("#dw-hg7", { opacity: 0 }, 0);
             tl.fromTo("#dw-hg7", { opacity: 0, y: -80, rotation: -8, svgOrigin: "0 0" }, { opacity: 1, y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.45, ease: "back.out(2.2)", immediateRender: false }, h);
-            tl.set("#dw-hg7", { opacity: 0 }, h + 1.27); }
+            tl.to("#dw-hg7", { opacity: 0, y: -60, duration: 0.3, ease: "power2.in", immediateRender: false }, h + 1.0); }
           // dawn: a low warm sun off right, the sky blushed, long gold over the sand (it is not noon)
           put(L.light, `<defs><radialGradient id="dw-sun" cx="0.85" cy="0.42" r="0.75"><stop offset="0" stop-color="#ffc070" stop-opacity=".7"/><stop offset=".45" stop-color="#ff9a6a" stop-opacity=".22"/><stop offset="1" stop-color="#ff9a6a" stop-opacity="0"/></radialGradient>
             <linearGradient id="dw-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a7a" stop-opacity=".45"/><stop offset=".5" stop-color="#ffd0a0" stop-opacity=".16"/><stop offset="1" stop-color="#ffb070" stop-opacity=".14"/></linearGradient></defs>
@@ -341,7 +342,7 @@
           // her husband's hat on the bench beside her: the clue to the story she will not tell her son
           put(L.act, `<g transform="translate(700,1462) scale(.8)"><path d="M-120,10L0,-60L120,10Q0,-6 -120,10Z" fill="#d8b878" stroke="#2e2a26" stroke-width="4"/><path d="M-90,-2L0,-50L90,-2" stroke="#b8985a" stroke-width="3" fill="none"/><ellipse cy="14" rx="130" ry="10" fill="#2e2a26" opacity=".25"/></g>`);
           // night: the windows dark, the corridor bluer, one tube flickering
-          put(L.light, `<rect x="-2400" y="-600" width="6000" height="3200" fill="#1a2a50" opacity=".34" style="mix-blend-mode:multiply"/><g id="eb-fl"><ellipse cx="500" cy="-10" rx="420" ry="160" fill="#f6fbff" opacity=".18"/></g>`);
+          put(L.light, `<rect x="-2400" y="-600" width="6000" height="3200" fill="#142048" opacity=".58" style="mix-blend-mode:multiply"/><g id="eb-fl"><ellipse cx="500" cy="-10" rx="420" ry="160" fill="#f6fbff" opacity=".18"/></g>`);
           tl.fromTo("#eb-fl", { opacity: 1 }, { opacity: 0.35, duration: 0.09, yoyo: true, repeat: 3, ease: "none", immediateRender: false }, t0 + 0.7);
         } });
       add("c_endb2", { set: "jellyBeach", setOpts: BEACH("jb39", { tower: false, umbrellas: [], life: [], time: "morning" }), dark: 0.1, blur: { sky: 3, far: 4, mid: 4, set: 4 }, light: false,
@@ -355,7 +356,7 @@
               <text y="-10" text-anchor="middle" font-family="Sriracha" font-size="170" fill="#fff" stroke="#08384e" stroke-width="12" paint-order="stroke">หนวดใส</text>
               <text y="120" text-anchor="middle" font-family="Kanit" font-weight="900" font-size="78" letter-spacing="6" fill="#d8312a" stroke="#fbf4e2" stroke-width="6" paint-order="stroke">ฉบับเต็ม</text></g></g>
             <g transform="translate(0,800)"><g id="eb2-yt"><rect x="-370" y="-62" width="740" height="124" rx="62" fill="#fffaf0" stroke="#1e1a16" stroke-width="6"/>
-              <rect x="-340" y="-40" width="112" height="80" rx="20" fill="#d8312a" stroke="#1e1a16" stroke-width="4"/><path d="M-298,-20L-258,0L-298,20Z" fill="#fff"/>
+              <g transform="translate(-284,6)"><rect x="-50" y="-34" width="100" height="70" rx="12" fill="#3a4a6a" stroke="#1e1a16" stroke-width="4"/><rect x="-38" y="-24" width="76" height="50" rx="6" fill="#9ad0e8"/><path d="M-18,-34L-32,-56M18,-34L32,-56" stroke="#1e1a16" stroke-width="5" stroke-linecap="round"/></g>
               <text x="-205" y="20" font-family="Kanit" font-weight="800" font-size="52" fill="#2a1a0a">ดูได้แล้ว บน YouTube</text></g></g></g>`);
           tl.fromTo("#eb2-b", { y: -760, rotation: -5, svgOrigin: "0 0" }, { y: 0, rotation: 0, svgOrigin: "0 0", duration: 0.8, ease: "back.out(1.6)", immediateRender: false }, t0 + 0.02);
           tl.set("#eb2-yt", { opacity: 0 }, 0); pop(tl, "#eb2-yt", t0 + F("c_endb2", 0, 2) - 0.1);
