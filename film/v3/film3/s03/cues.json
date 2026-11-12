@@ -1,0 +1,115 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 3.8,
+   "duration": 3.167,
+   "frame": 114,
+   "end_frame": 209,
+   "kind": "ambience",
+   "label": "Boston harbour 1919 from above: wind, gulls, a far steamer horn (one long blast around g 150), city murmur"
+  },
+  {
+   "time": 3.8,
+   "duration": 3.167,
+   "frame": 114,
+   "end_frame": 209,
+   "kind": "train",
+   "label": "El train on the steel trestle: rolling clatter of wheels on rail joints, steel girders humming; passes under the camera at the start and runs away toward the tank (fades by g 205)"
+  },
+  {
+   "time": 5.0,
+   "duration": 0.0,
+   "frame": 150,
+   "end_frame": 150,
+   "kind": "horn",
+   "label": "far steamer horn (the freighter, optional)",
+   "impact_frame": 150
+  },
+  {
+   "time": 6.633,
+   "duration": 0.333,
+   "frame": 199,
+   "end_frame": 209,
+   "kind": "dissolve",
+   "label": "dissolve to the tank wall"
+  },
+  {
+   "time": 6.633,
+   "duration": 4.4,
+   "frame": 199,
+   "end_frame": 331,
+   "kind": "groan",
+   "label": "tank: low metallic groan under the tilt (swells toward the rim g 255), wind higher up"
+  },
+  {
+   "time": 6.667,
+   "duration": 4.0,
+   "frame": 200,
+   "end_frame": 320,
+   "kind": "ladder",
+   "label": "worker climbing the caged ladder: boots on iron rungs, one clank every 18 frames (soft, high up)"
+  },
+  {
+   "time": 8.5,
+   "duration": 0.0,
+   "frame": 255,
+   "end_frame": 255,
+   "kind": "accent",
+   "label": "the rim lands against the sky ('\u0e2a\u0e39\u0e07\u0e01\u0e27\u0e48\u0e32\u0e15\u0e36\u0e01\u0e2b\u0e49\u0e32\u0e0a\u0e31\u0e49\u0e19'): wind gust"
+  },
+  {
+   "time": 8.667,
+   "duration": 0.7,
+   "frame": 260,
+   "end_frame": 281,
+   "kind": "pipe",
+   "label": "reframe right onto the filling pipe: short whoosh; a gurgle of molasses inside the pipe from g 279 ('\u0e01\u0e32\u0e01\u0e19\u0e49\u0e33\u0e15\u0e32\u0e25')",
+   "peak_frame": 279
+  },
+  {
+   "time": 10.7,
+   "duration": 0.333,
+   "frame": 321,
+   "end_frame": 331,
+   "kind": "dissolve",
+   "label": "dissolve to the street"
+  },
+  {
+   "time": 10.7,
+   "duration": 3.6,
+   "frame": 321,
+   "end_frame": 429,
+   "kind": "ambience",
+   "label": "street ambience: kids laughing and shouting in the snow, a horse snorting and stamping in the stable (off screen right), harness jingle, distant El rumble"
+  },
+  {
+   "time": 11.333,
+   "duration": 2.667,
+   "frame": 340,
+   "end_frame": 420,
+   "kind": "footsteps",
+   "label": "worker walking across the cobbles behind the kids (boot steps every 7 frames)"
+  },
+  {
+   "time": 12.2,
+   "duration": 0.2,
+   "frame": 366,
+   "end_frame": 372,
+   "kind": "throw",
+   "label": "kid winds up and throws a snowball (whoosh at g 372)",
+   "impact_frame": 372
+  },
+  {
+   "time": 12.8,
+   "duration": 0.0,
+   "frame": 384,
+   "end_frame": 384,
+   "kind": "snow_puff",
+   "label": "snowball puffs past the girl's hat; she squeals and ducks (laugh)",
+   "impact_frame": 384
+  }
+ ]
+}
