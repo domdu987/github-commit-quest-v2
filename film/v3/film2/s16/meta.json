@@ -1,0 +1,52 @@
+{
+ "take": "s16",
+ "shots": [
+  16
+ ],
+ "g0": 1248,
+ "g1": 1337,
+ "handle_in": 7,
+ "handle_out": 7,
+ "first_g": 1241,
+ "n_frames": 103,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "handle g 1241..1247 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "handle g 1337..1343 rendered in 3D"
+ },
+ "shot_ranges": {
+  "16": [
+   1248,
+   1336
+  ]
+ },
+ "set": "v3/set3d2/tower.py",
+ "light": "NIGHT_STORM",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 5.48,
+ "s_per_frame_cpu_mean": 10.0,
+ "file": "take.mkv (libx264rgb crf 6), frames/ not in git",
+ "rod": "set_rod(0) throughout (empty spire)",
+ "events": {
+  "leader_start": 1283,
+  "punch_in": [
+   1299,
+   1308
+  ],
+  "strike": 1317,
+  "flash_flicker": [
+   1317,
+   1328
+  ]
+ }
+}
