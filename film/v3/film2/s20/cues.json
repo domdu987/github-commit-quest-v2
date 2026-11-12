@@ -1,0 +1,132 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 55.333,
+   "duration": 2.8,
+   "frame": 1660,
+   "end_frame": 1744,
+   "kind": "ambience",
+   "label": "heavy rain (bed, continues from s19) under the strike and the wall"
+  },
+  {
+   "time": 55.333,
+   "duration": 0.067,
+   "frame": 1660,
+   "end_frame": 1662,
+   "kind": "strike",
+   "label": "LIGHTNING STRIKE on the bare finial: white flash, huge crack of thunder right on top (hard cut)",
+   "impact_frame": 1660
+  },
+  {
+   "time": 55.433,
+   "duration": 0.133,
+   "frame": 1663,
+   "end_frame": 1667,
+   "kind": "strike",
+   "label": "re-strike flicker on 'fa pha long yot' (electric crackle, sizzle on copper)",
+   "impact_frame": 1663
+  },
+  {
+   "time": 55.433,
+   "duration": 1.5,
+   "frame": 1663,
+   "end_frame": 1708,
+   "kind": "crackle",
+   "label": "hot copper hiss / sizzle of the glowing finial, crackle as the glow starts down the spire"
+  },
+  {
+   "time": 56.167,
+   "duration": 0.1,
+   "frame": 1685,
+   "end_frame": 1688,
+   "kind": "camera_snap",
+   "label": "second flicker + snap punch-in (short whoosh, crackle)",
+   "peak_frame": 1685
+  },
+  {
+   "time": 56.933,
+   "duration": 0.967,
+   "frame": 1708,
+   "end_frame": 1737,
+   "kind": "crackle",
+   "label": "glow runs down the tower wall: fizzing electric crackle travelling downward, stone cracking ticks"
+  },
+  {
+   "time": 56.933,
+   "duration": 0.067,
+   "frame": 1708,
+   "end_frame": 1710,
+   "kind": "cut",
+   "label": "hard cut (thunder tail)"
+  },
+  {
+   "time": 57.9,
+   "duration": 0.067,
+   "frame": 1737,
+   "end_frame": 1739,
+   "kind": "impact",
+   "label": "glow hits the ground (low thump)"
+  },
+  {
+   "time": 58.133,
+   "duration": 0.0,
+   "frame": 1744,
+   "end_frame": 1744,
+   "kind": "cut",
+   "label": "hard cut into the vault: rain gone, muffled; low rumble"
+  },
+  {
+   "time": 58.133,
+   "duration": 0.9,
+   "frame": 1744,
+   "end_frame": 1771,
+   "kind": "crackle",
+   "label": "glow fizzes along the vault crack overhead toward the barrels (crackle, trickling grit)"
+  },
+  {
+   "time": 59.033,
+   "duration": 0.233,
+   "frame": 1771,
+   "end_frame": 1778,
+   "kind": "riser",
+   "label": "barrels flare: rising roar / suck-in before the blast"
+  },
+  {
+   "time": 59.267,
+   "duration": 0.0,
+   "frame": 1778,
+   "end_frame": 1778,
+   "kind": "explosion",
+   "label": "EXPLOSION: hard cut, white flash, huge deep boom",
+   "impact_frame": 1778
+  },
+  {
+   "time": 59.267,
+   "duration": 2.5,
+   "frame": 1778,
+   "end_frame": 1853,
+   "kind": "ambience",
+   "label": "fire roar of the column, rumble, falling debris patter, bell clangs once as the tower lifts"
+  },
+  {
+   "time": 59.9,
+   "duration": 0.1,
+   "frame": 1797,
+   "end_frame": 1800,
+   "kind": "impact",
+   "label": "second jolt as the tower tears free ('thang ho'): stone crack, bell clang",
+   "impact_frame": 1797
+  },
+  {
+   "time": 59.467,
+   "duration": 1.467,
+   "frame": 1784,
+   "end_frame": 1828,
+   "kind": "debris",
+   "label": "debris pieces whistling out, bricks landing on the square"
+  }
+ ]
+}
