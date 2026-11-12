@@ -1,0 +1,63 @@
+{
+ "take": "s17",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "frame": 1330,
+   "duration": 4.133333333333334,
+   "kind": "ambience",
+   "label": "calm day at the tower top: light wind, a few far birds (diagram moment, quiet)",
+   "time": 44.333,
+   "end_frame": 1454
+  },
+  {
+   "frame": 1359,
+   "duration": 0.3333333333333333,
+   "kind": "glint",
+   "label": "tiny bright 'ting' glint on the pointed rod tip (on 'แหลม' g 1362)",
+   "time": 45.3,
+   "end_frame": 1369
+  },
+  {
+   "frame": 1366,
+   "duration": 0.9333333333333333,
+   "kind": "camera_move",
+   "label": "eased pull-back down the wire to the full-height view (soft air whoosh)",
+   "time": 45.533,
+   "end_frame": 1394
+  },
+  {
+   "frame": 1405,
+   "duration": 0.8666666666666667,
+   "kind": "crackle_soft",
+   "label": "glowing pulse runs down the wire: soft electric hum/fizz travelling top to bottom, falling pitch",
+   "time": 46.833,
+   "end_frame": 1431
+  },
+  {
+   "frame": 1430,
+   "duration": 0.9,
+   "kind": "ground",
+   "label": "pulse sinks into the ground plate: low soft thump, rings spread and fade quietly ('เงียบ ๆ')",
+   "time": 47.667,
+   "end_frame": 1457
+  },
+  {
+   "frame": 1329,
+   "duration": 0.3333333333333333,
+   "kind": "dissolve",
+   "label": "10-frame dissolve in from shot 16",
+   "time": 44.3,
+   "end_frame": 1339
+  },
+  {
+   "frame": 1442,
+   "duration": 0.3333333333333333,
+   "kind": "dissolve",
+   "label": "10-frame dissolve out to shot 18",
+   "time": 48.067,
+   "end_frame": 1452
+  }
+ ]
+}

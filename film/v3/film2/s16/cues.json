@@ -1,0 +1,102 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "frame": 1241,
+   "duration": 3.433333333333333,
+   "kind": "ambience",
+   "label": "night storm bed: wind round the tower top, distant rain, low rumble",
+   "time": 41.367,
+   "end_frame": 1344
+  },
+  {
+   "frame": 1262,
+   "duration": 0.6,
+   "kind": "thunder_far",
+   "label": "cloud flicker in the storm masses, soft far rumble",
+   "time": 42.067,
+   "end_frame": 1280
+  },
+  {
+   "frame": 1283,
+   "duration": 1.1333333333333333,
+   "kind": "crackle",
+   "label": "stepped leader: dry electric crackle building, one sizzle tick per step",
+   "steps": [
+    1283,
+    1286,
+    1289,
+    1292,
+    1295,
+    1298,
+    1302,
+    1304,
+    1307,
+    1310,
+    1313,
+    1315
+   ],
+   "time": 42.767,
+   "end_frame": 1317
+  },
+  {
+   "frame": 1293,
+   "duration": 0.5,
+   "kind": "crackle_branch",
+   "label": "side branches fork off into empty sky and die (thin sizzles)",
+   "time": 43.1,
+   "end_frame": 1308
+  },
+  {
+   "frame": 1299,
+   "duration": 0.3,
+   "kind": "camera_snap",
+   "label": "snap punch-in on the spire (short whoosh), lands g 1308 after 'จุดที่สูง'",
+   "peak_frame": 1303,
+   "time": 43.3,
+   "end_frame": 1308
+  },
+  {
+   "frame": 1312,
+   "duration": 0.16666666666666666,
+   "kind": "crackle_up",
+   "label": "upward streamer hisses off the empty finial",
+   "time": 43.733,
+   "end_frame": 1317
+  },
+  {
+   "frame": 1317,
+   "duration": 0.4,
+   "kind": "strike",
+   "label": "contact on the finial + return stroke: sharp crack, flash (on 'ที่สุดเสมอ')",
+   "time": 43.9,
+   "end_frame": 1329
+  },
+  {
+   "frame": 1317,
+   "duration": 1.0,
+   "kind": "thunder",
+   "label": "thunder clap right on top of the crack, rolling off; flash flicker to g 1328",
+   "time": 43.9,
+   "end_frame": 1347
+  },
+  {
+   "frame": 1240,
+   "duration": 0.3333333333333333,
+   "kind": "dissolve",
+   "label": "10-frame dissolve in from shot 15",
+   "time": 41.333,
+   "end_frame": 1250
+  },
+  {
+   "frame": 1332,
+   "duration": 0.3333333333333333,
+   "kind": "dissolve",
+   "label": "10-frame dissolve out to shot 17 (day diagram)",
+   "time": 44.4,
+   "end_frame": 1342
+  }
+ ]
+}

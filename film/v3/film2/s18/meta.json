@@ -1,0 +1,58 @@
+{
+ "take": "s18",
+ "shots": [
+  18
+ ],
+ "g0": 1447,
+ "g1": 1585,
+ "handle_in": 7,
+ "handle_out": 7,
+ "first_g": 1440,
+ "n_frames": 152,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "handle g 1440..1446 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "handle g 1585..1591 rendered in 3D"
+ },
+ "shot_ranges": {
+  "18": [
+   1447,
+   1584
+  ]
+ },
+ "set": "v3/set3d2/tower.py",
+ "light": "NIGHT_STORM",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 10.76,
+ "s_per_frame_cpu_mean": 21.32,
+ "file": "take.mkv (libx264rgb crf 6), frames/ not in git",
+ "rod": "set_rod(0) throughout",
+ "events": {
+  "stone": [
+   1501,
+   1516
+  ],
+  "wood": [
+   1521,
+   1537
+  ],
+  "rope": [
+   1542,
+   1560
+  ],
+  "flash_outside": [
+   1462,
+   1465
+  ]
+ }
+}

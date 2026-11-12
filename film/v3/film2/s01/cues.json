@@ -1,0 +1,192 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 7.267,
+   "frame": 0,
+   "end_frame": 218,
+   "kind": "ambience",
+   "label": "high wind on the top of the bell tower (bed under shots 1-3, louder in shot 1, softer in the square)"
+  },
+  {
+   "time": 0.4,
+   "duration": 0.0,
+   "frame": 12,
+   "end_frame": 12,
+   "kind": "hammer_hit",
+   "label": "hammer hit 1: iron hammer on the iron strap of the rod (sharp metal clank, ring tail); camera jolts",
+   "impact_frame": 12
+  },
+  {
+   "time": 0.9,
+   "duration": 0.0,
+   "frame": 27,
+   "end_frame": 27,
+   "kind": "hammer_hit",
+   "label": "hammer hit 2: iron hammer on the iron strap of the rod (sharp metal clank, ring tail); camera jolts",
+   "impact_frame": 27
+  },
+  {
+   "time": 1.4,
+   "duration": 0.0,
+   "frame": 42,
+   "end_frame": 42,
+   "kind": "hammer_hit",
+   "label": "hammer hit 3: iron hammer on the iron strap of the rod (sharp metal clank, ring tail); camera jolts",
+   "impact_frame": 42
+  },
+  {
+   "time": 1.933,
+   "duration": 0.0,
+   "frame": 58,
+   "end_frame": 58,
+   "kind": "hammer_hit_far",
+   "label": "hammer hit during the pull-out (clank, already distant)",
+   "impact_frame": 58
+  },
+  {
+   "time": 2.467,
+   "duration": 0.0,
+   "frame": 74,
+   "end_frame": 74,
+   "kind": "hammer_hit_far",
+   "label": "tiny far clank: nico still hammering on the tower top (very soft, optional)",
+   "impact_frame": 74
+  },
+  {
+   "time": 3.0,
+   "duration": 0.0,
+   "frame": 90,
+   "end_frame": 90,
+   "kind": "hammer_hit_far",
+   "label": "tiny far clank: nico still hammering on the tower top (very soft, optional)",
+   "impact_frame": 90
+  },
+  {
+   "time": 3.533,
+   "duration": 0.0,
+   "frame": 106,
+   "end_frame": 106,
+   "kind": "hammer_hit_far",
+   "label": "tiny far clank: nico still hammering on the tower top (very soft, optional)",
+   "impact_frame": 106
+  },
+  {
+   "time": 4.067,
+   "duration": 0.0,
+   "frame": 122,
+   "end_frame": 122,
+   "kind": "hammer_hit_far",
+   "label": "tiny far clank: nico still hammering on the tower top (very soft, optional)",
+   "impact_frame": 122
+  },
+  {
+   "time": 4.6,
+   "duration": 0.0,
+   "frame": 138,
+   "end_frame": 138,
+   "kind": "hammer_hit_far",
+   "label": "tiny far clank: nico still hammering on the tower top (very soft, optional)",
+   "impact_frame": 138
+  },
+  {
+   "time": 5.133,
+   "duration": 0.0,
+   "frame": 154,
+   "end_frame": 154,
+   "kind": "hammer_hit_far",
+   "label": "tiny far clank: nico still hammering on the tower top (very soft, optional)",
+   "impact_frame": 154
+  },
+  {
+   "time": 5.667,
+   "duration": 0.0,
+   "frame": 170,
+   "end_frame": 170,
+   "kind": "hammer_hit_far",
+   "label": "tiny far clank: nico still hammering on the tower top (very soft, optional)",
+   "impact_frame": 170
+  },
+  {
+   "time": 6.2,
+   "duration": 0.0,
+   "frame": 186,
+   "end_frame": 186,
+   "kind": "hammer_hit_far",
+   "label": "tiny far clank: nico still hammering on the tower top (very soft, optional)",
+   "impact_frame": 186
+  },
+  {
+   "time": 6.733,
+   "duration": 0.0,
+   "frame": 202,
+   "end_frame": 202,
+   "kind": "hammer_hit_far",
+   "label": "tiny far clank: nico still hammering on the tower top (very soft, optional)",
+   "impact_frame": 202
+  },
+  {
+   "time": 1.467,
+   "duration": 0.533,
+   "frame": 44,
+   "end_frame": 60,
+   "kind": "camera_snap",
+   "label": "snap pull-out up and away from the spire (big whoosh out), peak about g 51",
+   "peak_frame": 51,
+   "peak_time": 1.7
+  },
+  {
+   "time": 2.233,
+   "duration": 0.0,
+   "frame": 67,
+   "end_frame": 67,
+   "kind": "cut",
+   "label": "hard cut to the square: padre, furious, pointing up at the tower"
+  },
+  {
+   "time": 3.333,
+   "duration": 0.267,
+   "frame": 100,
+   "end_frame": 108,
+   "kind": "camera_snap",
+   "label": "snap punch-in on padre (short whoosh in), lands g 105 on 'thing choei loei'",
+   "peak_frame": 104,
+   "peak_time": 3.467
+  },
+  {
+   "time": 3.333,
+   "duration": 0.433,
+   "frame": 100,
+   "end_frame": 113,
+   "kind": "gesture",
+   "label": "padre's pointing finger jabs harder (cloth rustle of the cassock sleeve)"
+  },
+  {
+   "time": 3.867,
+   "duration": 0.4,
+   "frame": 116,
+   "end_frame": 128,
+   "kind": "dissolve",
+   "label": "dissolve to the town establishing"
+  },
+  {
+   "time": 4.067,
+   "duration": 3.2,
+   "frame": 122,
+   "end_frame": 218,
+   "kind": "ambience",
+   "label": "town ambience: pigeons flutter, distant voices in the square, wind"
+  },
+  {
+   "time": 4.6,
+   "duration": 0.0,
+   "frame": 138,
+   "end_frame": 138,
+   "kind": "accent",
+   "label": "'pi 1769' lands (title moment, optional soft sting)"
+  }
+ ]
+}
