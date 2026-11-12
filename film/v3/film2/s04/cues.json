@@ -1,0 +1,222 @@
+{
+ "take": "s04",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 6.8,
+   "duration": 0.533,
+   "frame": 204,
+   "end_frame": 220,
+   "kind": "whip",
+   "label": "whip pan in from the town (whoosh, braking), lands in the bell chamber",
+   "peak_frame": 204
+  },
+  {
+   "time": 7.033,
+   "duration": 3.3,
+   "frame": 211,
+   "end_frame": 310,
+   "kind": "ambience",
+   "label": "bell chamber: three ringers haul the ropes; bell swinging hard (bells loop, rope creak on every haul)"
+  },
+  {
+   "time": 7.667,
+   "duration": 0.0,
+   "frame": 230,
+   "end_frame": 230,
+   "kind": "bell",
+   "label": "bell strike (big bronze bell, close, in the chamber)",
+   "impact_frame": 230
+  },
+  {
+   "time": 7.733,
+   "duration": 0.133,
+   "frame": 232,
+   "end_frame": 236,
+   "kind": "lightning",
+   "label": "lightning flash (seen through the north arch, the chamber lights up cold white)",
+   "impact_frame": 232
+  },
+  {
+   "time": 7.933,
+   "duration": 1.133,
+   "frame": 238,
+   "end_frame": 272,
+   "kind": "thunder",
+   "label": "thunder (rolling, close crack)"
+  },
+  {
+   "time": 8.333,
+   "duration": 0.0,
+   "frame": 250,
+   "end_frame": 250,
+   "kind": "bell",
+   "label": "bell strike (big bronze bell, close, in the chamber)",
+   "impact_frame": 250
+  },
+  {
+   "time": 8.6,
+   "duration": 0.067,
+   "frame": 258,
+   "end_frame": 260,
+   "kind": "lightning",
+   "label": "lightning flash (seen through the north arch, the chamber lights up cold white)",
+   "impact_frame": 258
+  },
+  {
+   "time": 8.8,
+   "duration": 1.133,
+   "frame": 264,
+   "end_frame": 298,
+   "kind": "thunder",
+   "label": "thunder (rolling, close crack)"
+  },
+  {
+   "time": 8.933,
+   "duration": 0.267,
+   "frame": 268,
+   "end_frame": 276,
+   "kind": "camera_snap",
+   "label": "snap punch-in on padre hauling his rope, lands on 'tong ti rakhang rua rua' (g 274)",
+   "peak_frame": 272
+  },
+  {
+   "time": 9.0,
+   "duration": 0.0,
+   "frame": 270,
+   "end_frame": 270,
+   "kind": "bell",
+   "label": "bell strike (big bronze bell, close, in the chamber)",
+   "impact_frame": 270
+  },
+  {
+   "time": 9.367,
+   "duration": 0.167,
+   "frame": 281,
+   "end_frame": 286,
+   "kind": "lightning",
+   "label": "lightning flash (seen through the north arch, the chamber lights up cold white)",
+   "impact_frame": 281
+  },
+  {
+   "time": 9.567,
+   "duration": 1.133,
+   "frame": 287,
+   "end_frame": 321,
+   "kind": "thunder",
+   "label": "thunder (rolling, close crack)"
+  },
+  {
+   "time": 9.667,
+   "duration": 0.0,
+   "frame": 290,
+   "end_frame": 290,
+   "kind": "bell",
+   "label": "bell strike (big bronze bell, close, in the chamber)",
+   "impact_frame": 290
+  },
+  {
+   "time": 10.0,
+   "duration": 0.333,
+   "frame": 300,
+   "end_frame": 310,
+   "kind": "dissolve",
+   "label": "dissolve to the town in the storm"
+  },
+  {
+   "time": 10.167,
+   "duration": 2.067,
+   "frame": 305,
+   "end_frame": 367,
+   "kind": "ambience",
+   "label": "storm over the town: wind, distant bells still ringing from the campanile"
+  },
+  {
+   "time": 10.333,
+   "duration": 0.0,
+   "frame": 310,
+   "end_frame": 310,
+   "kind": "bell",
+   "label": "bell strike (big bronze bell, far, across the town)",
+   "impact_frame": 310
+  },
+  {
+   "time": 10.4,
+   "duration": 0.133,
+   "frame": 312,
+   "end_frame": 316,
+   "kind": "lightning",
+   "label": "lightning flash (forked bolt over the hills, far from town)",
+   "impact_frame": 312
+  },
+  {
+   "time": 10.6,
+   "duration": 1.133,
+   "frame": 318,
+   "end_frame": 352,
+   "kind": "thunder",
+   "label": "thunder (rolling, far rumble)"
+  },
+  {
+   "time": 11.0,
+   "duration": 0.0,
+   "frame": 330,
+   "end_frame": 330,
+   "kind": "bell",
+   "label": "bell strike (big bronze bell, far, across the town)",
+   "impact_frame": 330
+  },
+  {
+   "time": 11.3,
+   "duration": 0.167,
+   "frame": 339,
+   "end_frame": 344,
+   "kind": "lightning",
+   "label": "lightning flash (forked bolt over the hills, far from town)",
+   "impact_frame": 339
+  },
+  {
+   "time": 11.5,
+   "duration": 1.133,
+   "frame": 345,
+   "end_frame": 379,
+   "kind": "thunder",
+   "label": "thunder (rolling, far rumble)"
+  },
+  {
+   "time": 11.667,
+   "duration": 0.0,
+   "frame": 350,
+   "end_frame": 350,
+   "kind": "bell",
+   "label": "bell strike (big bronze bell, far, across the town)",
+   "impact_frame": 350
+  },
+  {
+   "time": 11.733,
+   "duration": 0.067,
+   "frame": 352,
+   "end_frame": 354,
+   "kind": "lightning",
+   "label": "lightning flash (forked bolt over the hills, far from town)",
+   "impact_frame": 352
+  },
+  {
+   "time": 11.767,
+   "duration": 0.467,
+   "frame": 353,
+   "end_frame": 367,
+   "kind": "dissolve",
+   "label": "dissolve out to the vault (shot 6)"
+  },
+  {
+   "time": 11.933,
+   "duration": 1.133,
+   "frame": 358,
+   "end_frame": 392,
+   "kind": "thunder",
+   "label": "thunder (rolling, far rumble)"
+  }
+ ]
+}
