@@ -1,0 +1,100 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 24.7,
+   "duration": 1.267,
+   "frame": 741,
+   "end_frame": 779,
+   "kind": "brush",
+   "label": "brushes slapping paint on the steel (wet strokes, three brushes out of step)"
+  },
+  {
+   "time": 24.7,
+   "duration": 1.267,
+   "frame": 741,
+   "end_frame": 779,
+   "kind": "ambience",
+   "label": "dock ambience at the tank foot"
+  },
+  {
+   "time": 26.0,
+   "duration": 0.0,
+   "frame": 780,
+   "end_frame": 780,
+   "kind": "cut",
+   "label": "hard cut-in: tommy sneaks the bucket back"
+  },
+  {
+   "time": 26.0,
+   "duration": 0.467,
+   "frame": 780,
+   "end_frame": 794,
+   "kind": "bucket",
+   "label": "tin bucket set down on the cobbles (soft clank of the bail)",
+   "impact_frame": 794
+  },
+  {
+   "time": 26.667,
+   "duration": 1.0,
+   "frame": 800,
+   "end_frame": 830,
+   "kind": "gesture",
+   "label": "tommy glances left, then right (tiny sneaky rustles)"
+  },
+  {
+   "time": 26.9,
+   "duration": 0.0,
+   "frame": 807,
+   "end_frame": 807,
+   "kind": "drip",
+   "label": "drip: a drop lands in the bucket (plop)",
+   "impact_frame": 807
+  },
+  {
+   "time": 27.633,
+   "duration": 0.0,
+   "frame": 829,
+   "end_frame": 829,
+   "kind": "drip",
+   "label": "drip: a drop lands in the bucket (plop)",
+   "impact_frame": 829
+  },
+  {
+   "time": 27.733,
+   "duration": 0.3,
+   "frame": 832,
+   "end_frame": 841,
+   "kind": "dissolve",
+   "label": "dissolve to Commercial Street"
+  },
+  {
+   "time": 27.667,
+   "duration": 3.167,
+   "frame": 830,
+   "end_frame": 925,
+   "kind": "laugh",
+   "label": "dock workers laughing and pointing at the tank, street ambience"
+  },
+  {
+   "time": 29.567,
+   "duration": 0.2,
+   "frame": 887,
+   "end_frame": 893,
+   "kind": "camera_snap",
+   "label": "crash zoom onto the sweating seam (fast whoosh), lands g 891 on the nickname",
+   "peak_frame": 891,
+   "peak_time": 29.7
+  },
+  {
+   "time": 29.767,
+   "duration": 1.067,
+   "frame": 893,
+   "end_frame": 925,
+   "kind": "drip",
+   "label": "drips on the sweating seam (soft plops), laughter fades under"
+  }
+ ]
+}

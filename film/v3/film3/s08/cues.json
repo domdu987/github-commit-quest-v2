@@ -1,0 +1,57 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 20.667,
+   "duration": 0.0,
+   "frame": 620,
+   "end_frame": 620,
+   "kind": "cut",
+   "label": "hard cut to the foreman laughing"
+  },
+  {
+   "time": 20.667,
+   "duration": 1.533,
+   "frame": 620,
+   "end_frame": 666,
+   "kind": "laugh",
+   "label": "the foreman's big belly laugh (no words: 'ha ha ha'); the workers behind laugh too"
+  },
+  {
+   "time": 20.667,
+   "duration": 4.4,
+   "frame": 620,
+   "end_frame": 752,
+   "kind": "ambience",
+   "label": "dock workers laughing in the background, dock ambience"
+  },
+  {
+   "time": 21.9,
+   "duration": 0.333,
+   "frame": 657,
+   "end_frame": 667,
+   "kind": "camera_snap",
+   "label": "snap reframe onto the foreman (whoosh in), lands g 663",
+   "peak_frame": 663,
+   "peak_time": 22.1
+  },
+  {
+   "time": 22.2,
+   "duration": 2.5,
+   "frame": 666,
+   "end_frame": 741,
+   "kind": "dialogue",
+   "label": "the foreman's quoted line (mouth moves g 666..741)"
+  },
+  {
+   "time": 23.533,
+   "duration": 0.267,
+   "frame": 706,
+   "end_frame": 714,
+   "kind": "gesture",
+   "label": "he points at the tank (sleeve whip)"
+  }
+ ]
+}
