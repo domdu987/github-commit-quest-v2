@@ -1,0 +1,103 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 26.133,
+   "duration": 5.167,
+   "frame": 784,
+   "end_frame": 939,
+   "kind": "ambience",
+   "label": "bakery morning interior: oven fire crackle, soft street murmur through the counter opening"
+  },
+  {
+   "time": 26.6,
+   "duration": 0.267,
+   "frame": 798,
+   "end_frame": 806,
+   "kind": "accent",
+   "label": "henry sees the 13th loaf: comic double-take sting",
+   "peak_frame": 800
+  },
+  {
+   "time": 26.667,
+   "duration": 2.933,
+   "frame": 800,
+   "end_frame": 888,
+   "kind": "fx",
+   "label": "steam puffs out of henry's ears: kettle whistle, rising",
+   "peak_frame": 812
+  },
+  {
+   "time": 27.067,
+   "duration": 0.133,
+   "frame": 812,
+   "end_frame": 816,
+   "kind": "gesture",
+   "label": "henry jabs a finger at the 13th loaf (whoosh)",
+   "peak_frame": 813
+  },
+  {
+   "time": 27.6,
+   "duration": 0.333,
+   "frame": 828,
+   "end_frame": 838,
+   "kind": "accent",
+   "label": "kit shrinks: descending slide-whistle",
+   "peak_frame": 832
+  },
+  {
+   "time": 29.6,
+   "duration": 0.0,
+   "frame": 888,
+   "end_frame": 888,
+   "kind": "cut",
+   "label": "cut to henry at his hand balance"
+  },
+  {
+   "time": 29.867,
+   "duration": 0.067,
+   "frame": 896,
+   "end_frame": 898,
+   "kind": "prop",
+   "label": "finger tap on the brass beam: bright metal tick + pans jingle",
+   "peak_frame": 896
+  },
+  {
+   "time": 30.233,
+   "duration": 0.067,
+   "frame": 907,
+   "end_frame": 909,
+   "kind": "prop",
+   "label": "tap 2 on the brass beam",
+   "peak_frame": 907
+  },
+  {
+   "time": 30.6,
+   "duration": 0.067,
+   "frame": 918,
+   "end_frame": 920,
+   "kind": "prop",
+   "label": "tap 3 on the brass beam",
+   "peak_frame": 918
+  },
+  {
+   "time": 30.967,
+   "duration": 0.067,
+   "frame": 929,
+   "end_frame": 931,
+   "kind": "prop",
+   "label": "tap 4 on the brass beam",
+   "peak_frame": 929
+  },
+  {
+   "time": 31.1,
+   "duration": 0.0,
+   "frame": 933,
+   "end_frame": 933,
+   "kind": "cut",
+   "label": "plan: shot 12, the market (square_eye)"
+  }
+ ]
+}

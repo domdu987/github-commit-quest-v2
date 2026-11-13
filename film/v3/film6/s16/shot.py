@@ -99,6 +99,20 @@ def small_scale_angle(g):
     return lerp(1.0, -8.0, u) + 0.35 * math.sin(d * 0.25) * math.exp(-d / 30.0)
 
 
+def hide_obj(name, hidden, f):
+    """keyed (constant) hide_render of a set object -- the opening's hanging bundles come within ~1 D of the low / near cameras,
+    where their painted texture is magnified into a soft smear (reads as blur: client rule 'sharp image')."""
+    ob = C.bpy.data.objects.get(name)
+    if ob is None:
+        return
+    ob.hide_render = bool(hidden)
+    ob.keyframe_insert("hide_render", frame=f)
+    fc = C._fcurve(ob, "hide_render")
+    if fc is not None:
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
+
+
 # ----------------------------------------------------------------------------- poses
 def henry16(g):
     talk = Q0 <= g <= Q1
@@ -211,6 +225,7 @@ class Take(C.Take):
             self.key_cam(f, loc, look, lens=lens)
             steam = 0.3 if shot in (16, 17) else 0.0
             self.key_set(f, steam=steam, oven=1.0 if shot <= 17 else 0.7)
+            hide_obj("opening_bundles", shot == 16 and g >= CUT[16], f)
             if shot in (16, 17):
                 self.basket.show(None if shot == 16 else (0 if g <= G_SNATCH else 1), frame=f)
                 if shot == 17:

@@ -77,6 +77,20 @@ def scale_angle(g):
     return a
 
 
+def hide_obj(name, hidden, f):
+    """keyed (constant) hide_render of a set object -- the opening's hanging bundles come within ~1 D of the low / near cameras,
+    where their painted texture is magnified into a soft smear (reads as blur: client rule 'sharp image')."""
+    ob = C.bpy.data.objects.get(name)
+    if ob is None:
+        return
+    ob.hide_render = bool(hidden)
+    ob.keyframe_insert("hide_render", frame=f)
+    fc = C._fcurve(ob, "hide_render")
+    if fc is not None:
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
+
+
 # ----------------------------------------------------------------------------- poses
 def anger(g):
     return clamp((g - 794) / 24.0) * 0.6 + 0.3 * clamp((g - 826) / 10.0)
@@ -171,6 +185,7 @@ class Take(C.Take):
             C.place(henry, f, HENRY4 if framing(g) == 4 else HENRY, HENRY_Z)
             self.key_set(f, steam=STEAM, oven=1.0)
             B.set_scale(scale_angle(g), frame=f)
+            hide_obj("opening_bundles", framing(g) == 4, f)
         for g in gs:
             f = bf(shot, g)
             self.scene.frame_set(f)
