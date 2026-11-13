@@ -184,6 +184,20 @@ class Take(C.Take):
             dist = (Vector((m["p"].x, m["p"].y, 1.5)) - cam_of(shot, gs[0])[0]).length
             jobs.append((m["a"], 224 if dist < 7 else (160 if dist < 12 else 112)))
         self.sprites_for(jobs, fr)
+        # exact caption-band cull: anyone whose real head (sprite head anchor, 1 D) dips below y 875 on ANY frame of the set-up
+        # is hidden for the whole set-up (pose() gets every frame of the set-up before the first render: final renders the set-up
+        # in one call of pose)
+        self.culled = getattr(self, "culled", set())
+        for g in gs:
+            for k, h in C.head_report(self, bf(shot, g)).items():
+                if 0 <= h["x"] <= 720 and h["y"] + h["w"] / 2 > 875:
+                    self.culled.add(k)
+        for k in self.culled:
+            a = self.actors[k]
+            for ob in (a.card, a.proxy, a.contact):
+                if ob is not None:
+                    ob.hide_render = True
+        print("s30: culled for the caption band: %s" % sorted(self.culled), flush=True)
 
     def report(self, shot, g):
         f = bf(shot, g)
