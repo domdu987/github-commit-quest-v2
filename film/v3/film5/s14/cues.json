@@ -1,0 +1,81 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 45.233,
+   "duration": 1.6,
+   "frame": 1357,
+   "end_frame": 1405,
+   "kind": "lamp",
+   "label": "close lamp: the flame hisses louder and climbs, turning blue (firedamp)"
+  },
+  {
+   "time": 45.5,
+   "duration": 0.0,
+   "frame": 1365,
+   "end_frame": 1365,
+   "kind": "cut",
+   "label": "cut: the lamp"
+  },
+  {
+   "time": 46.833,
+   "duration": 0.0,
+   "frame": 1405,
+   "end_frame": 1405,
+   "kind": "cut",
+   "label": "cut: low under the lamp, the gaffer looks up"
+  },
+  {
+   "time": 47.4,
+   "duration": 0.467,
+   "frame": 1422,
+   "end_frame": 1436,
+   "kind": "impact",
+   "label": "the gas ignites: deep WHUMP, orange flash",
+   "peak_frame": 1424
+  },
+  {
+   "time": 47.533,
+   "duration": 0.5,
+   "frame": 1426,
+   "end_frame": 1441,
+   "kind": "foley",
+   "label": "the gaffer runs: boots"
+  },
+  {
+   "time": 48.033,
+   "duration": 0.0,
+   "frame": 1441,
+   "end_frame": 1441,
+   "kind": "cut",
+   "label": "cut: from the pit bottom down the roadway"
+  },
+  {
+   "time": 48.033,
+   "duration": 2.3,
+   "frame": 1441,
+   "end_frame": 1510,
+   "kind": "fx",
+   "label": "fireball roar rushing closer, timbers crack, debris rattle, running boots"
+  },
+  {
+   "time": 48.8,
+   "duration": 0.2,
+   "frame": 1464,
+   "end_frame": 1470,
+   "kind": "impact",
+   "label": "explosion accent on '\u0e23\u0e30\u0e40\u0e1a\u0e34\u0e14'",
+   "peak_frame": 1464
+  },
+  {
+   "time": 49.2,
+   "duration": 0.0,
+   "frame": 1476,
+   "end_frame": 1476,
+   "kind": "cut",
+   "label": "cut: low and close, the runners ahead of the fire"
+  }
+ ]
+}
