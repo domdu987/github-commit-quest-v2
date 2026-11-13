@@ -1,0 +1,117 @@
+{
+ "take": "s04",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 7.6,
+   "duration": 3.6,
+   "frame": 228,
+   "end_frame": 336,
+   "kind": "ambience",
+   "label": "the Salon Carre busy: footsteps on parquet, rustling skirts, murmured French chatter, a cane tapping"
+  },
+  {
+   "time": 7.6,
+   "duration": 0.4,
+   "frame": 228,
+   "end_frame": 240,
+   "kind": "transition",
+   "label": "dissolve in from the kiosk: street noise crossfades into the gallery murmur",
+   "peak_frame": 234
+  },
+  {
+   "time": 9.533,
+   "duration": 0.0,
+   "frame": 286,
+   "end_frame": 286,
+   "kind": "cut",
+   "label": "framing change: toward the back wall"
+  },
+  {
+   "time": 11.2,
+   "duration": 0.0,
+   "frame": 336,
+   "end_frame": 336,
+   "kind": "cut",
+   "label": "cut to the Mona Lisa close (shot 5)"
+  },
+  {
+   "time": 11.2,
+   "duration": 1.767,
+   "frame": 336,
+   "end_frame": 389,
+   "kind": "accent",
+   "label": "a small music-box motif for 'just a small picture'",
+   "peak_frame": 340
+  },
+  {
+   "time": 13.0,
+   "duration": 1.667,
+   "frame": 390,
+   "end_frame": 440,
+   "kind": "foley",
+   "label": "the lady's heels on parquet, skirt rustle; she pauses ('hm') and walks on",
+   "peak_frame": 412
+  },
+  {
+   "time": 14.7,
+   "duration": 0.0,
+   "frame": 441,
+   "end_frame": 441,
+   "kind": "cut",
+   "label": "cut to the director, low angle (shot 6)"
+  },
+  {
+   "time": 14.7,
+   "duration": 1.933,
+   "frame": 441,
+   "end_frame": 499,
+   "kind": "accent",
+   "label": "pompous brass fanfare under the director's entrance",
+   "peak_frame": 445
+  },
+  {
+   "time": 16.667,
+   "duration": 3.4,
+   "frame": 500,
+   "end_frame": 602,
+   "kind": "voice",
+   "label": "the director's quote (narration) -- his mouth is lip-synced to it",
+   "peak_frame": 500
+  },
+  {
+   "time": 18.0,
+   "duration": 0.0,
+   "frame": 540,
+   "end_frame": 540,
+   "kind": "cut",
+   "label": "cut-in ECU of the painting at 18.0 s"
+  },
+  {
+   "time": 19.0,
+   "duration": 0.0,
+   "frame": 570,
+   "end_frame": 570,
+   "kind": "cut",
+   "label": "back to the director, extreme low angle"
+  },
+  {
+   "time": 19.667,
+   "duration": 0.4,
+   "frame": 590,
+   "end_frame": 602,
+   "kind": "accent",
+   "label": "a smug 'ta-da' cymbal on 'Notre-Dame'",
+   "peak_frame": 592
+  },
+  {
+   "time": 19.967,
+   "duration": 0.0,
+   "frame": 599,
+   "end_frame": 599,
+   "kind": "cut",
+   "label": "plan: cut to shot 7 (vincenzo fitting the glass)"
+  }
+ ]
+}
