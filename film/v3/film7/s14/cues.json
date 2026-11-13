@@ -1,0 +1,140 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 44.333,
+   "duration": 7.067,
+   "frame": 1330,
+   "end_frame": 1542,
+   "kind": "ambience",
+   "label": "service corridor: stone echo, gas jet hiss, muffled courtyard birds behind the door"
+  },
+  {
+   "time": 44.6,
+   "duration": 0.267,
+   "frame": 1338,
+   "end_frame": 1346,
+   "kind": "prop",
+   "label": "he yanks the locked door: heavy rattle of the bolt in the frame",
+   "peak_frame": 1340
+  },
+  {
+   "time": 45.0,
+   "duration": 0.267,
+   "frame": 1350,
+   "end_frame": 1358,
+   "kind": "prop",
+   "label": "he yanks the locked door: heavy rattle of the bolt in the frame",
+   "peak_frame": 1352
+  },
+  {
+   "time": 45.4,
+   "duration": 0.267,
+   "frame": 1362,
+   "end_frame": 1370,
+   "kind": "prop",
+   "label": "he yanks the locked door: heavy rattle of the bolt in the frame",
+   "peak_frame": 1364
+  },
+  {
+   "time": 46.033,
+   "duration": 0.0,
+   "frame": 1381,
+   "end_frame": 1381,
+   "kind": "accent",
+   "label": "cut close: a nervous heartbeat under the sound"
+  },
+  {
+   "time": 46.533,
+   "duration": 0.267,
+   "frame": 1396,
+   "end_frame": 1404,
+   "kind": "prop",
+   "label": "a weak last rattle",
+   "peak_frame": 1398
+  },
+  {
+   "time": 47.0,
+   "duration": 0.233,
+   "frame": 1410,
+   "end_frame": 1417,
+   "kind": "gesture",
+   "label": "audible gulp",
+   "peak_frame": 1412
+  },
+  {
+   "time": 47.133,
+   "duration": 0.033,
+   "frame": 1414,
+   "end_frame": 1415,
+   "kind": "foley",
+   "label": "the plumber's footsteps approaching (and a cheerful hummed tune)",
+   "peak_frame": 1414
+  },
+  {
+   "time": 47.533,
+   "duration": 0.033,
+   "frame": 1426,
+   "end_frame": 1427,
+   "kind": "foley",
+   "label": "the plumber's footsteps approaching (and a cheerful hummed tune)",
+   "peak_frame": 1426
+  },
+  {
+   "time": 47.933,
+   "duration": 0.033,
+   "frame": 1438,
+   "end_frame": 1439,
+   "kind": "foley",
+   "label": "the plumber's footsteps approaching (and a cheerful hummed tune)",
+   "peak_frame": 1438
+  },
+  {
+   "time": 48.333,
+   "duration": 0.033,
+   "frame": 1450,
+   "end_frame": 1451,
+   "kind": "foley",
+   "label": "the plumber's footsteps approaching (and a cheerful hummed tune)",
+   "peak_frame": 1450
+  },
+  {
+   "time": 48.6,
+   "duration": 0.067,
+   "frame": 1458,
+   "end_frame": 1460,
+   "kind": "prop",
+   "label": "key slides into the lock",
+   "peak_frame": 1458
+  },
+  {
+   "time": 48.767,
+   "duration": 0.433,
+   "frame": 1463,
+   "end_frame": 1476,
+   "kind": "prop",
+   "label": "the key turns: two-stage clack of the old lock",
+   "peak_frame": 1474
+  },
+  {
+   "time": 49.467,
+   "duration": 1.2,
+   "frame": 1484,
+   "end_frame": 1520,
+   "kind": "prop",
+   "label": "the oak door creaks open; daylight whoosh, courtyard birds and city murmur swell in",
+   "peak_frame": 1488
+  },
+  {
+   "time": 49.833,
+   "duration": 1.567,
+   "frame": 1495,
+   "end_frame": 1542,
+   "kind": "gesture",
+   "label": "the plumber's friendly greeting (a warm 'hm-hm!' hum, no words) and a tiny nervous laugh-breath from vincenzo",
+   "peak_frame": 1497
+  }
+ ]
+}

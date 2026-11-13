@@ -58,8 +58,8 @@ HINGE = Vector((-1.1, 9.88, 0.0))
 LOCK0 = Vector((0.70, 9.70, 2.49))                 # the lock box / keyhole on the shut door (knob missing)
 TUGS = [1340, 1352, 1364, 1398]
 G_KEY_IN, G_TURN = 1458, (1463, 1475)
-G_OPEN = (1479, 1515)                              # door 0 -> 92
-G_LET_GO = 1487
+G_OPEN = (1484, 1520)                              # door 0 -> 92 (about 20 deg at the C4 -> C5 cut)
+G_LET_GO = 1495                                    # key pose -> greeting exactly on the C4 -> C5 cut
 
 
 def door_at(g):

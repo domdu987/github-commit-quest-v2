@@ -34,14 +34,14 @@ mean = lambda k, sel=None: round(float(np.mean([r[k] for r in rows if sel is Non
 events = {
     "s14_tugs_locked_door": [1338, 1369], "s14_door_rattles": [1340, 1370], "s14_sweat_close": [1381, 1433], "s14_weak_tug": [1396, 1403],
     "s14_gulp": [1410, 1417], "s14_eyes_flick_to_steps": 1422, "s15_plumber_walks_in": [1410, 1457], "s15_vincenzo_backs_off_grin": [1440, 1456],
-    "s15_key_in_lock": 1458, "s15_key_turns": [1463, 1475], "s15_door_swings_open": [1479, 1515], "s15_plumber_greets_wave_smile": [1487, 1541]}
+    "s15_key_in_lock": 1458, "s15_key_turns": [1463, 1475], "s15_door_swings_open": [1484, 1520], "s15_plumber_greets_wave_smile": [1495, 1541]}
 meta = {"take": TAKE, "film": 7, "shots": SHOTS, "first_g": FIRST, "n_frames": N, "g0": G0, "g1": G1, "handle_in": G0 - FIRST,
         "handle_out": LAST + 1 - G1, "transition_in": "cut", "transition_out": "cut",
         "transition_note": "plan lists no dissolve between shots 13/14 and 15/16 (all louvre); 6-frame handles rendered in 3D on both ends",
         "shot_ranges": SHOT_RANGES, "cuts_inside": [{"at": g, "what": w} for g, w in CUTS],
         "setups": {"1": {"g": [FIRST, LAST], "set": SETUP_NAMES[1]}},
         "events": events,
-        "set": "v3/set3d7/louvre.py exit_door + s01's dress_corridor() (imported from ../s01/shot.py, read-only), the fanlight shaft sheet hidden, the corridor's two framed notices (news[2] / news[3] theft headlines) re-textured at runtime with the neutral choc / opera posters, set_door keyed every frame (0..0.9 deg rattle on the tugs, 0 -> 92 deg g 1479-1515), set_flames keyed every frame; custom cameras 20-28 mm.", "_x": ": wall_eye area, set_mona True + set_mona_lift 0 -> 0.32 keyed per frame (the real 3D painting "
+        "set": "v3/set3d7/louvre.py exit_door + s01's dress_corridor() (imported from ../s01/shot.py, read-only), the fanlight shaft sheet hidden, the corridor's two framed notices (news[2] / news[3] theft headlines) re-textured at runtime with the neutral choc / opera posters, set_door keyed every frame (0..0.9 deg rattle on the tugs, 0 -> 92 deg g 1484-1520), set_flames keyed every frame; custom cameras 20-28 mm.", "_x": ": wall_eye area, set_mona True + set_mona_lift 0 -> 0.32 keyed per frame (the real 3D painting "
                "comes off its four hooks; his hands are pinned to the frame's side edges), the two velvet-rope spans in front of her removed "
                "at runtime (Monday, rope unhooked: it crossed his face in the low angles), a dust sheet + bucket added. Staircase: "
                "set_frame_on_stairs False (B1, he carries it) -> True (B2-B3, the empty frame and glass box on the steps), bucket / rag / "
@@ -71,8 +71,8 @@ for g in range(1414, 1458, 12):
     add(g, g + 1, "the plumber's footsteps approaching (and a cheerful hummed tune)", "foley", peak_frame=g)
 add(1458, 1460, "key slides into the lock", "prop", peak_frame=1458)
 add(1463, 1476, "the key turns: two-stage clack of the old lock", "prop", peak_frame=1474)
-add(1479, 1515, "the oak door creaks open; daylight whoosh, courtyard birds and city murmur swell in", "prop", peak_frame=1483)
-add(1487, LAST + 1, "the plumber's friendly greeting (a warm 'hm-hm!' hum, no words) and a tiny nervous laugh-breath from vincenzo", "gesture", peak_frame=1494)
+add(1484, 1520, "the oak door creaks open; daylight whoosh, courtyard birds and city murmur swell in", "prop", peak_frame=1488)
+add(1495, LAST + 1, "the plumber's friendly greeting (a warm 'hm-hm!' hum, no words) and a tiny nervous laugh-breath from vincenzo", "gesture", peak_frame=1497)
 json.dump(dict(take=TAKE, fps=30, note="time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s", cues=ev),
           open(os.path.join(HERE, "cues.json"), "w"), indent=1)
 
