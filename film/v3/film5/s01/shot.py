@@ -77,16 +77,16 @@ def _lerpv(a, b, u):
 TP = M.TP
 ALFIE_1 = TP(6.6, -0.95, 0)
 MINERS_1 = {"miner1": TP(10.0, 1.05, 0), "miner2": TP(12.4, 1.45, 0), "miner3": TP(18.5, -0.2, 0)}
-ALFIE_3 = TP(10.7, 0.30, 0)
+ALFIE_3 = TP(10.7, -0.10, 0)
 
 # shot 1: eye level just below alfie's eyes, alfie screen-left, cage beside his face screen-right, miners in depth; slow push
 CAM1_A = (TP(3.55, 0.05, 1.82), TP(7.6, -0.58, 2.02))
 CAM1_B = (TP(3.90, 0.0, 1.85), TP(7.6, -0.60, 2.04))
 # shot 3: low, between the tub train and the left wall, looking outbye; exit (bright pit bottom) right of alfie; punch-in
-CAM3_A = (TP(14.4, -1.15, 0.95), TP(9.0, 0.35, 2.05))
-CAM3_B = (TP(14.25, -1.12, 0.95), TP(9.0, 0.35, 2.07))
-CAM3_C = (TP(13.55, -0.92, 1.05), TP(9.0, 0.50, 2.12))
-CAM3_D = (TP(13.45, -0.90, 1.05), TP(9.0, 0.50, 2.13))
+CAM3_A = (TP(14.4, -1.15, 0.95), TP(9.0, 0.60, 2.05))
+CAM3_B = (TP(14.25, -1.12, 0.95), TP(9.0, 0.60, 2.07))
+CAM3_C = (TP(13.55, -0.92, 1.05), TP(9.0, 0.78, 2.12))
+CAM3_D = (TP(13.45, -0.90, 1.05), TP(9.0, 0.78, 2.13))
 # shot 4b: tunnel wide at eye level, slow push inbye
 CAM5_A = (TP(1.3, -0.35, 2.45), TP(19.0, 0.25, 2.25))
 CAM5_B = (TP(3.3, -0.30, 2.40), TP(19.0, 0.20, 2.25))
@@ -139,16 +139,35 @@ def alfie_s1(g, ring_screen_ok=True):
     return p
 
 
+CAGE_SCALE = 1.45                # held 2D cage (cast5 prop "cage"): bird head ~0.26 D -> 65-80 px in shots 1 / 3
+
+
+def held_cage(g, shot):
+    """the cast's 2D held cage: prop dict + the canary inside (pose key 'bird'), front bars drawn over the bird."""
+    return dict(type="cage", scale=CAGE_SCALE), dict(state="perch_sing", notes=3, beak=0.7 + 0.2 * math.sin(g * 0.9), t=g / 30.0,
+                                                    swing=2.5 * math.sin(g * 0.21))
+
+
+def alfie_s1_held(g):
+    """shot 1: the 2D cage in his screen-right hand, raised from the hip to beside his face (g 0..14)."""
+    p = alfie_s1(g)
+    u = _ez((g - G_RAISE[0]) / float(G_RAISE[1] - G_RAISE[0]), "cubic_out")
+    hand = (lerp(0.52, 0.78, u), lerp(0.55, -0.40, u) + 0.015 * math.sin(g * 0.21))
+    p["arm_r"] = dict(hand=hand, bend=lerp(0.3, -0.9, u), stretch=1.3)
+    p["prop_r"], p["bird"] = held_cage(g, 1)
+    return p
+
+
 def alfie_s3(g):
     p = dict(yaw=-0.25, pitch=-0.25, expr="determined", mouth="frown", legs="wide", head_roll=-3)
     ub = _ez((g - (G_PBIRD - 3)) / 4.0, "back_out") if g >= G_PBIRD - 3 else 0.0       # arm across to the bird
     ue = _ez((g - (G_PEXIT - 7)) / 8.0, "back_out") if g >= G_PEXIT - 7 else 0.0        # arm out to the exit
     rest = (0.40, 0.95)
-    bird = (-0.30, 0.05)
+    bird = (-0.38, 0.62)
     ex = (0.95, 0.22)
     hand = (lerp(lerp(rest[0], bird[0], ub), ex[0], ue), lerp(lerp(rest[1], bird[1], ub), ex[1], ue))
     p["arm_r"] = dict(hand=hand, shape="point" if (ub > 0.3 or ue > 0.3) else "fist", bend=lerp(lerp(0.6, -0.3, clamp(ub)), -0.5, clamp(ue)),
-                      stretch=1.3)
+                      stretch=1.3, layer="front")
     turn_e = _ez((g - (G_PEXIT - 7)) / 6.0) if g >= G_PEXIT - 7 else 0.0
     turn_c = _ez((g - G_LOOK) / 6.0) if g >= G_LOOK else 0.0
     yaw = lerp(lerp(-0.35, 0.55, turn_e), 0.2, turn_c)
@@ -159,6 +178,8 @@ def alfie_s3(g):
     p["lean"] = 2 + 4 * jab + 3 * ub * (1 - ue)
     p["head_roll"] = -4 + 3 * jab - 2 * math.sin(g * 0.13)
     p["blink"] = blink(g, [104, 148])
+    p["arm_l"] = dict(hand=(-0.74, -0.40 + 0.015 * math.sin(g * 0.21)), bend=-0.8, stretch=1.3)      # 2D cage held up, screen-left
+    p["prop_l"], p["bird"] = held_cage(g, 3)
     return p
 
 
@@ -318,7 +339,10 @@ class Take(object):
         A["alfie"].set_hidden(shot not in (1, 2, 3))
         for n in ("miner1", "miner2", "miner3"):
             A[n].set_hidden(shot != 1)
-        A["bird"].set_hidden(shot not in (1, 2, 3))
+        A["bird"].set_hidden(shot != 2)
+        cg = bpy.data.objects.get("canary_cage")
+        if cg is not None:
+            cg.hide_render = shot in (1, 3)                       # held 2D cage in shots 1 / 3 (client note); 3D cage only in the ECU
 
     def pose(self, shot, gs):
         self.visible(shot)
@@ -353,22 +377,24 @@ class Take(object):
             f = bf(shot, g)
             self.scene.frame_set(f)
             ring = self.ring_at(shot, g)
-            if shot in (1, 2):
-                self.actors["alfie"].pose(f, alfie_s1(g), hands={"r": {"hand": tuple(ring + GRIP)}}, camera=self.cam)
+            if shot == 1:
+                self.actors["alfie"].pose(f, alfie_s1_held(g), camera=self.cam)
                 for n in ("miner1", "miner2", "miner3"):
                     self.actors[n].pose(f, miner_pose(n, g), camera=self.cam)
+            elif shot == 2:
+                self.actors["alfie"].pose(f, alfie_s1(g), hands={"r": {"hand": tuple(ring + GRIP)}}, camera=self.cam)
             elif shot == 3:
-                self.actors["alfie"].pose(f, alfie_s3(g), hands={"l": {"hand": tuple(ring + GRIP), "bend": -0.8, "stretch": 1.3}}, camera=self.cam)
-            if shot in (1, 2, 3):
+                self.actors["alfie"].pose(f, alfie_s3(g), camera=self.cam)
+            if shot == 2:
                 self.actors["bird"].pose(f, bird_pose(shot, g), camera=self.cam)
         fr = [bf(shot, g) for g in gs]
         jobs = []
         if shot == 1:
-            jobs = [(self.actors["alfie"], 384), (self.actors["bird"], 384)] + [(self.actors[n], 160) for n in ("miner1", "miner2", "miner3")]
+            jobs = [(self.actors["alfie"], 384)] + [(self.actors[n], 160) for n in ("miner1", "miner2", "miner3")]
         elif shot == 2:
             jobs = [(self.actors["bird"], 2048), (self.actors["alfie"], 768)]
         elif shot == 3:
-            jobs = [(self.actors["alfie"], 448), (self.actors["bird"], 448)]
+            jobs = [(self.actors["alfie"], 448)]
         for a, ppd in jobs:
             for f, r in zip(fr, a.render_sprites(ppd, frames=fr)):
                 self.anch[(a.name, f)] = r["anchors"]
@@ -429,12 +455,16 @@ class Take(object):
         if self.loc == "tunnel":
             pts = {"exit": (0.0, -2.0, 1.5), "pit_bottom_far": (0.0, -8.0, 2.0)}
             ring = self.ring_at(shot, g) if self.actors else None
-            if ring is not None:
+            if ring is not None and shot == 2:
                 pts["ring"] = tuple(ring + GRIP); pts["perch"] = tuple(ring + self.perch_off)
-                if shot in (1, 3):
-                    a = self.actors["alfie"]; side = "r" if shot == 1 else "l"
-                    hp = actors.local_to_screen(a, self.cam, self.anch[("alfie", f)]["hand_" + side], f, a.feet.get(f))
-                    out["hand_px"] = [round(hp[0], 1), round(hp[1], 1)]
+            if shot in (1, 3):                                   # held 2D cage: ring = the fist; bird head ~0.18 D x CAGE_SCALE
+                a = self.actors["alfie"]; side = "r" if shot == 1 else "l"; res = a.feet.get(f)
+                hx, hy = self.anch[("alfie", f)]["hand_" + side]
+                hp = actors.local_to_screen(a, self.cam, (hx, hy), f, res)
+                hq = actors.local_to_screen(a, self.cam, (hx + 0.18 * CAGE_SCALE, hy), f, res)
+                bq = actors.local_to_screen(a, self.cam, (hx, hy + 0.45 * CAGE_SCALE), f, res)
+                out["hand_px"] = [round(hp[0], 1), round(hp[1], 1)]
+                out["heads"]["bird_in_held_cage"] = dict(x=round(bq[0], 1), y=round(bq[1], 1), w=round(math.hypot(hq[0] - hp[0], hq[1] - hp[1]), 1))
         else:
             pts = {"wheel": (0, 12, 23.6), "gate": (0, 10.1, 1.4), "chimney_top": (-23, 27, 36), "hut": (11.5, -4, 2)}
         out["pts"] = {k: [round(x, 1) for x in render.world_to_screen(self.cam, p, f)[:2]] for k, p in pts.items()}
