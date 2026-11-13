@@ -1,0 +1,29 @@
+{
+ "take": "s11",
+ "shots": [11],
+ "first_g": 784, "last_g": 938, "g0": 790, "g1": 933,
+ "shot_frames": {"11": [784, 938]},
+ "shot_ranges": {"11": [790, 932]},
+ "transition_in": {"type": "cut", "frames": 0, "note": "plan: shot 10 (table_insert, kit dreamy at the steam) -> hard cut on henry's outburst; in-handle g 784..789 rendered in 3D (henry still squinting at his scale, kit smirking)"},
+ "transition_out": {"type": "cut", "frames": 0, "note": "plan: shot 12 is the market (square_eye); a location change -- if the conform dissolves 9-12 f, out-handle g 933..938 is rendered in 3D (henry keeps tapping / talking; his last quote syllable 'แล้ว' ends g 935)"},
+ "cuts_inside": [{"at": 826, "what": "F1 two-shot -> F2 tighter low two-shot"}, {"at": 858, "what": "F2 -> F3 low-angle punch-in on henry"}, {"at": 888, "what": "F3 -> F4 henry tapping his hand balance (plan 29.5 s + 0.1)"}],
+ "events": {"henry_turns_and_sees": [792, 806], "anger_steam_from": 800, "henry_points_at_13th": 812, "quote_lipsync": [825, 935], "kit_shrinks": [828, 838], "cut_to_scale": 888, "taps": [896, 907, 918, 929]},
+ "set": "v3/set3d6/bakery.py: bakery MORNING, steam 0.3, oven 1.0 flicker keyed per frame, small balance set_scale keyed (damped wobble after each tap); 4 custom street-side cameras (24 mm) over the counter",
+ "light": "MORNING",
+ "cast": "v3/cast6: kit (hidden stool behind the counter, z 0.80 -> 0.62 and scale 1.0 -> 0.88 as he shrinks), henry (hidden step z 0.40 behind the counter; F4 moved right behind his balance); the customer's basket of 13 (pale 13th on top) = cast6.basket_svg on a common.PropCard x1.3",
+ "mouths": "henry lip-syncs (cast6.talk_mouth, new drawing every 2 frames) ONLY in g 825..935 = the quote 'เอ็งจะแจกขนมปังฟรีให้ข้าเจ๊งเหรอ ก้อนของข้าชั่งมาเป๊ะแล้ว' (captions 27.41-31.06 s); before that (narration 'ลุงเห็นก็โวยลั่นร้าน') static expression mouths (unimpressed -> shocked -> furious). kit never talks.",
+ "cues": [
+  {"g": [784, 939], "kind": "ambience", "label": "bakery morning interior: oven fire crackle, soft street murmur through the counter opening"},
+  {"g": [798, 806], "kind": "accent", "label": "henry sees the 13th loaf: comic double-take sting", "peak": 800},
+  {"g": [800, 888], "kind": "fx", "label": "steam puffs out of henry's ears: kettle whistle, rising", "peak": 812},
+  {"g": [812, 816], "kind": "gesture", "label": "henry jabs a finger at the 13th loaf (whoosh)", "peak": 813},
+  {"g": [828, 838], "kind": "accent", "label": "kit shrinks: descending slide-whistle", "peak": 832},
+  {"g": [888, 888], "kind": "cut", "label": "cut to henry at his hand balance"},
+  {"g": [896, 898], "kind": "prop", "label": "finger tap on the brass beam: bright metal tick + pans jingle", "peak": 896},
+  {"g": [907, 909], "kind": "prop", "label": "tap 2 on the brass beam", "peak": 907},
+  {"g": [918, 920], "kind": "prop", "label": "tap 3 on the brass beam", "peak": 918},
+  {"g": [929, 931], "kind": "prop", "label": "tap 4 on the brass beam", "peak": 929},
+  {"g": [933, 933], "kind": "cut", "label": "plan: shot 12, the market (square_eye)"}
+ ],
+ "compare": [[840, "a/t0046.jpg"], [905, "a/t0001.jpg"]]
+}
