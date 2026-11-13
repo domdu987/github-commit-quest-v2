@@ -1,0 +1,66 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 56.633,
+   "duration": 4.1,
+   "frame": 1699,
+   "end_frame": 1822,
+   "kind": "ambience",
+   "label": "tunnel room tone, a low gas hiss growing a little with each beat"
+  },
+  {
+   "time": 56.9,
+   "duration": 1.2,
+   "frame": 1707,
+   "end_frame": 1743,
+   "kind": "bird_song",
+   "label": "replay, day 1: a quick bright trill of 5 notes (slightly sped up, a soft 'rewind' whoosh on the cut in)",
+   "notes": 5
+  },
+  {
+   "time": 58.1,
+   "duration": 0.0,
+   "frame": 1743,
+   "end_frame": 1743,
+   "kind": "cut",
+   "label": "hard cut + soft whoosh: day 5"
+  },
+  {
+   "time": 58.1,
+   "duration": 1.2,
+   "frame": 1743,
+   "end_frame": 1779,
+   "kind": "bird_song",
+   "label": "replay, day 5: 3 notes, thinner",
+   "notes": 3
+  },
+  {
+   "time": 59.3,
+   "duration": 0.0,
+   "frame": 1779,
+   "end_frame": 1779,
+   "kind": "cut",
+   "label": "hard cut + soft whoosh: day 10"
+  },
+  {
+   "time": 59.3,
+   "duration": 0.6,
+   "frame": 1779,
+   "end_frame": 1797,
+   "kind": "bird_song",
+   "label": "replay, day 10: one weak note",
+   "notes": 1
+  },
+  {
+   "time": 59.9,
+   "duration": 0.567,
+   "frame": 1797,
+   "end_frame": 1814,
+   "kind": "silence",
+   "label": "the song stops: only the hiss; the bird's eyes grow heavy (gentle)"
+  }
+ ]
+}
