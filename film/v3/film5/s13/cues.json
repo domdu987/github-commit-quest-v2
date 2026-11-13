@@ -1,0 +1,72 @@
+{
+ "take": "s13",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 39.867,
+   "duration": 5.9,
+   "frame": 1196,
+   "end_frame": 1373,
+   "kind": "ambience",
+   "label": "tunnel room tone; footsteps on coal and ballast build to a run"
+  },
+  {
+   "time": 40.133,
+   "duration": 0.0,
+   "frame": 1204,
+   "end_frame": 1204,
+   "kind": "cut",
+   "label": "hard cut: alfie at the nail"
+  },
+  {
+   "time": 40.167,
+   "duration": 0.233,
+   "frame": 1205,
+   "end_frame": 1212,
+   "kind": "prop",
+   "label": "alfie snatches the cage off the nail: wire jangle, nail scrape",
+   "peak_frame": 1208
+  },
+  {
+   "time": 40.867,
+   "duration": 4.9,
+   "frame": 1226,
+   "end_frame": 1373,
+   "kind": "foley",
+   "label": "running boots on coal, the cage rattling at each stride"
+  },
+  {
+   "time": 41.533,
+   "duration": 0.0,
+   "frame": 1246,
+   "end_frame": 1246,
+   "kind": "cut",
+   "label": "cut: low, they run at the camera; miner1 dragged by the hand (grunt-free)"
+  },
+  {
+   "time": 42.933,
+   "duration": 0.0,
+   "frame": 1288,
+   "end_frame": 1288,
+   "kind": "cut",
+   "label": "cut: miner3 mocking"
+  },
+  {
+   "time": 43.467,
+   "duration": 2.1,
+   "frame": 1304,
+   "end_frame": 1367,
+   "kind": "dialogue",
+   "label": "miner3 mocks: '\u0e44\u0e2d\u0e49\u0e40\u0e14\u0e47\u0e01\u0e40\u0e25\u0e35\u0e49\u0e22\u0e07\u0e19\u0e01 \u0e15\u0e37\u0e48\u0e19\u0e15\u0e39\u0e21\u0e2d\u0e35\u0e01\u0e41\u0e25\u0e49\u0e27' (mouth moving, narration line)"
+  },
+  {
+   "time": 44.333,
+   "duration": 0.0,
+   "frame": 1330,
+   "end_frame": 1330,
+   "kind": "cut",
+   "label": "cut: high wide, they pass the gaffer who stays under his hanging lamp"
+  }
+ ]
+}
