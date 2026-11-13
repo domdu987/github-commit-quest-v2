@@ -1,0 +1,79 @@
+{
+ "take": "s25",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film7/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 81.267,
+   "duration": 4.7,
+   "frame": 2438,
+   "end_frame": 2579,
+   "kind": "ambience",
+   "label": "attic at dusk: candle flame flutter, distant church bell, rooftop pigeons"
+  },
+  {
+   "time": 81.467,
+   "duration": 0.0,
+   "frame": 2444,
+   "end_frame": 2444,
+   "kind": "cut",
+   "label": "dissolve in from the street"
+  },
+  {
+   "time": 81.667,
+   "duration": 1.067,
+   "frame": 2450,
+   "end_frame": 2482,
+   "kind": "foley",
+   "label": "wooden trunk scraping out over floorboards"
+  },
+  {
+   "time": 82.833,
+   "duration": 0.0,
+   "frame": 2485,
+   "end_frame": 2485,
+   "kind": "cut",
+   "label": "cut to the room"
+  },
+  {
+   "time": 82.833,
+   "duration": 0.3,
+   "frame": 2485,
+   "end_frame": 2494,
+   "kind": "foley",
+   "label": "last scrape of the trunk"
+  },
+  {
+   "time": 83.133,
+   "duration": 0.667,
+   "frame": 2494,
+   "end_frame": 2514,
+   "kind": "foley",
+   "label": "lid creaks open on old hinges"
+  },
+  {
+   "time": 83.733,
+   "duration": 0.333,
+   "frame": 2512,
+   "end_frame": 2522,
+   "kind": "accent",
+   "label": "his glance at the window: a tiny tense pluck"
+  },
+  {
+   "time": 84.367,
+   "duration": 0.0,
+   "frame": 2531,
+   "end_frame": 2531,
+   "kind": "cut",
+   "label": "cut into the trunk"
+  },
+  {
+   "time": 84.367,
+   "duration": 1.6,
+   "frame": 2531,
+   "end_frame": 2579,
+   "kind": "music",
+   "label": "warm music swell on her smile, 'two whole years' (84.95 s)"
+  }
+ ]
+}

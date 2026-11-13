@@ -1,0 +1,83 @@
+{
+ "take": "s25",
+ "film": 7,
+ "shots": [
+  25
+ ],
+ "first_g": 2438,
+ "n_frames": 141,
+ "g0": 2444,
+ "g1": 2573,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "plan/task: dissolve in (paris street -> attic); in-handle g 2438-2443 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "next is shot 26 (dealer's shop, a location change); out-handle g 2573-2578 rendered in 3D"
+ },
+ "shot_ranges": {
+  "25": [
+   2444,
+   2572
+  ]
+ },
+ "setups": {
+  "1": {
+   "g": [
+    2438,
+    2484
+   ],
+   "what": "A floor level: the trunk slides out from under the bed by the candle"
+  },
+  "2": {
+   "g": [
+    2485,
+    2530
+   ],
+   "what": "B attic: vincenzo crouched peeking, trunk out, lid opens"
+  },
+  "3": {
+   "g": [
+    2531,
+    2578
+   ],
+   "what": "C down into the open trunk: the panel, her smile, push in (out-handle 2573-2578)"
+  }
+ },
+ "events": {
+  "trunk_slides": [
+   2450,
+   2494
+  ],
+  "cut_room": 2485,
+  "lid_opens": [
+   2494,
+   2514
+  ],
+  "glance_window": [
+   2512,
+   2521
+  ],
+  "cut_trunk_insert": 2531
+ },
+ "set": "v3/set3d7/louvre.py room (under_bed_insert build, ATTIC_DUSK): set_trunk keyed per frame, set_flames keyed; runtime: sun-shaft haze sheet hidden, the trunk panel raised 0.13 D once the lid is past 35 deg and turned 180 deg (it sat under the trunk's inner top face and read upside down), a small warm no-shadow fill over the trunk; 3 custom cameras 20-24 mm",
+ "light": "ATTIC_DUSK",
+ "cast": "v3/cast7 vincenzo (normal clothes, vincenzo_peek_bed, mirrored to face the trunk)",
+ "dof": "none (client rule: cam.data.dof.use_dof False + L.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film7/audio/narration_bankky.wav at +0.10 s; captions film7/script/captions.json",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 8.93,
+ "s_per_frame_cpu_mean": 17.45
+}
