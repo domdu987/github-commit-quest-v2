@@ -1,0 +1,84 @@
+{
+ "take": "s34",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 98.633,
+   "duration": 4.067,
+   "frame": 2959,
+   "end_frame": 3081,
+   "kind": "ambience",
+   "label": "bakery at dawn: oven fire crackling low, a rooster far off through the counter opening, birds"
+  },
+  {
+   "time": 98.633,
+   "duration": 4.067,
+   "frame": 2959,
+   "end_frame": 3081,
+   "kind": "music",
+   "label": "warm, gentle resolving music (strings), building slightly to the nod"
+  },
+  {
+   "time": 98.7,
+   "duration": 1.3,
+   "frame": 2961,
+   "end_frame": 3000,
+   "kind": "prop",
+   "label": "soft wooden taps / ticks as Henry's finger counts along the loaves (12)",
+   "peak_frame": 2999
+  },
+  {
+   "time": 100.1,
+   "duration": 0.0,
+   "frame": 3003,
+   "end_frame": 3003,
+   "kind": "cut",
+   "label": "framing change (cut): punch-in on Henry and the basket"
+  },
+  {
+   "time": 100.467,
+   "duration": 0.333,
+   "frame": 3014,
+   "end_frame": 3024,
+   "kind": "prop",
+   "label": "a loaf is lifted from under the counter: soft crusty rustle",
+   "peak_frame": 3020
+  },
+  {
+   "time": 101.067,
+   "duration": 0.333,
+   "frame": 3032,
+   "end_frame": 3042,
+   "kind": "prop",
+   "label": "the 13th loaf set on top of the pile: soft thump + wicker creak",
+   "peak_frame": 3042
+  },
+  {
+   "time": 101.533,
+   "duration": 0.0,
+   "frame": 3046,
+   "end_frame": 3046,
+   "kind": "cut",
+   "label": "framing change (cut): two-shot, push toward kit"
+  },
+  {
+   "time": 101.733,
+   "duration": 0.667,
+   "frame": 3052,
+   "end_frame": 3072,
+   "kind": "vocal-nonverbal",
+   "label": "Henry's slow nod (warm low 'mm' hum, no words)",
+   "peak_frame": 3060
+  },
+  {
+   "time": 101.867,
+   "duration": 0.5,
+   "frame": 3056,
+   "end_frame": 3071,
+   "kind": "accent",
+   "label": "kit beams: bright happy sparkle sting + tiny hop",
+   "peak_frame": 3060
+  }
+ ]
+}

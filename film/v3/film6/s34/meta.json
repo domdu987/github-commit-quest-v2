@@ -1,0 +1,89 @@
+{
+ "take": "s34",
+ "film": 6,
+ "shots": [
+  34
+ ],
+ "first_g": 2959,
+ "n_frames": 122,
+ "g0": 2965,
+ "g1": 3075,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": "dissolve",
+ "transition_in_detail": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "plan: dissolve in from shot 33 (market); in-handle g 2959..2964 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "note": "plan: shot 35 (market MORNING) follows; out-handle g 3075..3080 rendered in 3D (push + kit's grin continue)"
+ },
+ "shot_ranges": {
+  "34": [
+   2965,
+   3074
+  ]
+ },
+ "framings": {
+  "A": [
+   2959,
+   3002
+  ],
+  "B": [
+   3003,
+   3045
+  ],
+  "C": [
+   3046,
+   3080
+  ]
+ },
+ "events": {
+  "henry_counts_12_finger_taps": [
+   2961,
+   3000
+  ],
+  "pale_loaf_up_from_under_counter": [
+   3014,
+   3024
+  ],
+  "henry_looks_at_pale_loaf": [
+   3024,
+   3032
+  ],
+  "loaf_carried_to_basket": [
+   3032,
+   3041
+  ],
+  "loaf_13_lands": 3042,
+  "henry_turns_to_kit": [
+   3043,
+   3051
+  ],
+  "henry_nods": [
+   3052,
+   3072
+  ],
+  "kit_beams_and_hops": [
+   3056,
+   3071
+  ]
+ },
+ "set": "v3/set3d6/bakery.py: bakery MORNING, steam 0.35, oven 1.0 flicker keyed per frame; the hand balance (small_*) hidden at runtime (it stood in front of Henry); custom street-side cameras of the s01 family; basket = cast6.basket_svg 12 / 13 (13th drawn pale) on a PropCard; Henry's held loaf drawn with a pale crust (cast6.BREAD patched only while his sprites render)",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film6/audio/narration_bankky.wav at +0.10 s; captions film6/script/captions.json",
+ "mouths": "no quoted line in this shot: static expression mouths only",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 21.02,
+ "s_per_frame_cpu_mean": 40.55,
+ "blender_frame": "g - 2700"
+}
