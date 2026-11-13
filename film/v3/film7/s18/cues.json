@@ -1,0 +1,57 @@
+{
+ "take": "s18",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s; captions film7/script/captions.json",
+ "cues": [
+  {
+   "time": 58.6,
+   "duration": 2.567,
+   "frame": 1758,
+   "end_frame": 1835,
+   "kind": "ambience",
+   "label": "the Seine quai at dusk: water lapping, a distant church bell, a horse cab far off, gas lamps hissing"
+  },
+  {
+   "time": 58.8,
+   "duration": 2.367,
+   "frame": 1764,
+   "end_frame": 1835,
+   "kind": "music",
+   "label": "a proud, warm brass motif of the towers (callback to the director's boast), held"
+  },
+  {
+   "time": 60.067,
+   "duration": 0.0,
+   "frame": 1802,
+   "end_frame": 1802,
+   "kind": "cut",
+   "label": "cut: low angle on the towers"
+  },
+  {
+   "time": 61.2,
+   "duration": 0.0,
+   "frame": 1836,
+   "end_frame": 1836,
+   "kind": "cut",
+   "label": "HARD CUT: the music stops dead, a high violin stab",
+   "peak_frame": 1836
+  },
+  {
+   "time": 61.567,
+   "duration": 0.167,
+   "frame": 1847,
+   "end_frame": 1852,
+   "kind": "accent",
+   "label": "the director whips round: whoosh + a comic gasp (no words)",
+   "peak_frame": 1848
+  },
+  {
+   "time": 61.733,
+   "duration": 1.067,
+   "frame": 1852,
+   "end_frame": 1884,
+   "kind": "music",
+   "label": "trembling: a shaky timpani roll"
+  }
+ ]
+}

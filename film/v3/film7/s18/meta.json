@@ -1,0 +1,254 @@
+{
+ "take": "s18",
+ "film": 7,
+ "shots": [
+  18
+ ],
+ "first_g": 1758,
+ "n_frames": 127,
+ "g0": 1764,
+ "g1": 1879,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": "cut",
+ "transition_out": "cut",
+ "transitions": [
+  {
+   "at": 1758,
+   "type": "in",
+   "handle": [
+    1758,
+    1763
+   ]
+  },
+  {
+   "at": 1764,
+   "type": "cut",
+   "note": "plan: from shot 17 (louvre) to paris; a dissolve can use the in-handle"
+  },
+  {
+   "at": 1802,
+   "type": "cut",
+   "note": "inside the shot: tilt-up set-up"
+  },
+  {
+   "at": 1836,
+   "type": "cut",
+   "note": "HARD CUT on '\u0e41\u0e15\u0e48\u0e42\u0e21\u0e19\u0e32\u0e25\u0e34\u0e0b\u0e48\u0e32' (61.11)"
+  },
+  {
+   "at": 1879,
+   "type": "out",
+   "handle": [
+    1879,
+    1884
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "18": [
+   1764,
+   1878
+  ]
+ },
+ "setups": {
+  "1": {
+   "g": [
+    1758,
+    1801
+   ],
+   "set": "paris notre_dame_view area, STREET_DUSK, papers 24",
+   "what": "the quai at dusk, Notre-Dame's two towers, strollers, slow push"
+  },
+  "2": {
+   "g": [
+    1802,
+    1835
+   ],
+   "set": "same",
+   "what": "low angle 48 mm tilt up the west front to the towers"
+  },
+  "3": {
+   "g": [
+    1836,
+    1884
+   ],
+   "set": "louvre wall_eye area, GALLERY_DAY, set_mona(False)",
+   "what": "hard cut: the director at the empty wall whips round, shocked; low angle, punch-in"
+  }
+ },
+ "events": {
+  "notre_dame_dusk": [
+   1758,
+   1801
+  ],
+  "tilt_up_towers": [
+   1802,
+   1835
+  ],
+  "hard_cut_director": 1836,
+  "director_whips_round_shocked": [
+   1847,
+   1851
+  ]
+ },
+ "set": "v3/set3d7/louvre.py: (1-2) paris street area at dusk (notre_dame_view), set_papers(24) + set_flames keyed every frame; (3) louvre gallery, set_mona(False) keyed every frame; custom cameras 22-48 mm",
+ "dof": "none (client rule: cam.data.dof.use_dof False + L.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film7/audio/narration_bankky.wav at +0.10 s; captions film7/script/captions.json",
+ "light": "STREET_DUSK | GALLERY_DAY",
+ "cast": "v3/cast7: lady + gentleman strolling (walk cycles); director (director_proud stunned at the wall -> director_shocked, trembling); mouths static",
+ "mouths": "static expression mouths only (no quoted line in these shots)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 14.86,
+ "s_per_frame_cpu_mean": 24.0,
+ "s_per_frame_by_setup": {
+  "1": {
+   "wall": 11.54,
+   "cpu": 23.08
+  },
+  "2": {
+   "wall": 10.89,
+   "cpu": 22.1
+  },
+  "3": {
+   "wall": 20.6,
+   "cpu": 26.14
+  }
+ },
+ "frame_source": {
+  "1758": "1",
+  "1759": "1",
+  "1760": "1",
+  "1761": "1",
+  "1762": "1",
+  "1763": "1",
+  "1764": "1",
+  "1765": "1",
+  "1766": "1",
+  "1767": "1",
+  "1768": "1",
+  "1769": "1",
+  "1770": "1",
+  "1771": "1",
+  "1772": "1",
+  "1773": "1",
+  "1774": "1",
+  "1775": "1",
+  "1776": "1",
+  "1777": "1",
+  "1778": "1",
+  "1779": "1",
+  "1780": "1",
+  "1781": "1",
+  "1782": "1",
+  "1783": "1",
+  "1784": "1",
+  "1785": "1",
+  "1786": "1",
+  "1787": "1",
+  "1788": "1",
+  "1789": "1",
+  "1790": "1",
+  "1791": "1",
+  "1792": "1",
+  "1793": "1",
+  "1794": "1",
+  "1795": "1",
+  "1796": "1",
+  "1797": "1",
+  "1798": "1",
+  "1799": "1",
+  "1800": "1",
+  "1801": "1",
+  "1802": "2",
+  "1803": "2",
+  "1804": "2",
+  "1805": "2",
+  "1806": "2",
+  "1807": "2",
+  "1808": "2",
+  "1809": "2",
+  "1810": "2",
+  "1811": "2",
+  "1812": "2",
+  "1813": "2",
+  "1814": "2",
+  "1815": "2",
+  "1816": "2",
+  "1817": "2",
+  "1818": "2",
+  "1819": "2",
+  "1820": "2",
+  "1821": "2",
+  "1822": "2",
+  "1823": "2",
+  "1824": "2",
+  "1825": "2",
+  "1826": "2",
+  "1827": "2",
+  "1828": "2",
+  "1829": "2",
+  "1830": "2",
+  "1831": "2",
+  "1832": "2",
+  "1833": "2",
+  "1834": "2",
+  "1835": "2",
+  "1836": "3",
+  "1837": "3",
+  "1838": "3",
+  "1839": "3",
+  "1840": "3",
+  "1841": "3",
+  "1842": "3",
+  "1843": "3",
+  "1844": "3",
+  "1845": "3",
+  "1846": "3",
+  "1847": "3",
+  "1848": "3",
+  "1849": "3",
+  "1850": "3",
+  "1851": "3",
+  "1852": "3",
+  "1853": "3",
+  "1854": "3",
+  "1855": "3",
+  "1856": "3",
+  "1857": "3",
+  "1858": "3",
+  "1859": "3",
+  "1860": "3",
+  "1861": "3",
+  "1862": "3",
+  "1863": "3",
+  "1864": "3",
+  "1865": "3",
+  "1866": "3",
+  "1867": "3",
+  "1868": "3",
+  "1869": "3",
+  "1870": "3",
+  "1871": "3",
+  "1872": "3",
+  "1873": "3",
+  "1874": "3",
+  "1875": "3",
+  "1876": "3",
+  "1877": "3",
+  "1878": "3",
+  "1879": "3",
+  "1880": "3",
+  "1881": "3",
+  "1882": "3",
+  "1883": "3",
+  "1884": "3"
+ }
+}
