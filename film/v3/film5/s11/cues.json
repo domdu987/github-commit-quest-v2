@@ -1,0 +1,65 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 32.1,
+   "duration": 4.6,
+   "frame": 963,
+   "end_frame": 1101,
+   "kind": "ambience",
+   "label": "tunnel room tone: drips, timber creak, lamp hiss"
+  },
+  {
+   "time": 32.6,
+   "duration": 0.467,
+   "frame": 978,
+   "end_frame": 992,
+   "kind": "prop",
+   "label": "the gaffer swings his safety lamp up high: brass handle squeak, flame whoosh as it brightens",
+   "peak_frame": 990
+  },
+  {
+   "time": 33.0,
+   "duration": 3.7,
+   "frame": 990,
+   "end_frame": 1101,
+   "kind": "lamp",
+   "label": "the raised flame burns bright: steady soft roar of the wick"
+  },
+  {
+   "time": 33.7,
+   "duration": 0.0,
+   "frame": 1011,
+   "end_frame": 1011,
+   "kind": "cut",
+   "label": "cut: closer, low on the gaffer and the lamp"
+  },
+  {
+   "time": 34.2,
+   "duration": 2.3,
+   "frame": 1026,
+   "end_frame": 1095,
+   "kind": "dialogue",
+   "label": "the gaffer's quoted line (narration voice carries it; his mouth moves g 1026..1095)"
+  },
+  {
+   "time": 35.033,
+   "duration": 0.0,
+   "frame": 1051,
+   "end_frame": 1051,
+   "kind": "cut",
+   "label": "cut: the miners in front, the gaffer behind them"
+  },
+  {
+   "time": 35.133,
+   "duration": 0.6,
+   "frame": 1054,
+   "end_frame": 1072,
+   "kind": "gesture",
+   "label": "the three miners shrug: cloth rustle, a dismissive snort",
+   "peak_frame": 1061
+  }
+ ]
+}
