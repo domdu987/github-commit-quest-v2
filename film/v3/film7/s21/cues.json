@@ -1,0 +1,87 @@
+{
+ "take": "s21",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film7/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 67.933,
+   "duration": 3.267,
+   "frame": 2038,
+   "end_frame": 2136,
+   "kind": "ambience",
+   "label": "the Salon Carre reopened: a big murmuring crowd, shuffling feet on parquet, echo under the skylight"
+  },
+  {
+   "time": 68.133,
+   "duration": 0.0,
+   "frame": 2044,
+   "end_frame": 2044,
+   "kind": "cut",
+   "label": "dissolve in from shot 20 (the closet office)"
+  },
+  {
+   "time": 69.733,
+   "duration": 0.0,
+   "frame": 2092,
+   "end_frame": 2092,
+   "kind": "cut",
+   "label": "cut: reverse on the faces of the queue"
+  },
+  {
+   "time": 71.2,
+   "duration": 0.0,
+   "frame": 2136,
+   "end_frame": 2136,
+   "kind": "cut",
+   "label": "cut to the four hooks: the murmur drops to a hush (one cough)"
+  },
+  {
+   "time": 71.2,
+   "duration": 1.133,
+   "frame": 2136,
+   "end_frame": 2170,
+   "kind": "accent",
+   "label": "a single held low note on the bare wall"
+  },
+  {
+   "time": 72.333,
+   "duration": 2.4,
+   "frame": 2170,
+   "end_frame": 2242,
+   "kind": "ambience",
+   "label": "hushed crowd, a few whispers"
+  },
+  {
+   "time": 72.467,
+   "duration": 0.2,
+   "frame": 2174,
+   "end_frame": 2180,
+   "kind": "gesture",
+   "label": "the lady gasps behind her gloved hand"
+  },
+  {
+   "time": 72.733,
+   "duration": 0.6,
+   "frame": 2182,
+   "end_frame": 2200,
+   "kind": "gesture",
+   "label": "the gentleman lifts his bowler off (cloth brush), holds it to his chest"
+  },
+  {
+   "time": 73.6,
+   "duration": 0.0,
+   "frame": 2208,
+   "end_frame": 2208,
+   "kind": "cut",
+   "label": "cut back to the hooks"
+  },
+  {
+   "time": 74.167,
+   "duration": 0.1,
+   "frame": 2225,
+   "end_frame": 2228,
+   "kind": "accent",
+   "label": "soft 'ting' on 'four hooks' (74.07 s)"
+  }
+ ]
+}

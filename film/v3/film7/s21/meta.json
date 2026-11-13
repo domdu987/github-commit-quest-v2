@@ -1,0 +1,99 @@
+{
+ "take": "s21",
+ "film": 7,
+ "shots": [
+  21,
+  22
+ ],
+ "first_g": 2038,
+ "n_frames": 204,
+ "g0": 2044,
+ "g1": 2236,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "plan: dissolves 9-12 f between locations (closet office -> gallery); in-handle g 2038-2043 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "next take s23 is paris (kiosk); out-handle g 2236-2241 rendered in 3D"
+ },
+ "shot_ranges": {
+  "21": [
+   2044,
+   2135
+  ],
+  "22": [
+   2136,
+   2235
+  ]
+ },
+ "setups": {
+  "1": {
+   "g": [
+    2038,
+    2091
+   ],
+   "what": "A high wide over the reopening-day queue, the empty wall"
+  },
+  "2": {
+   "g": [
+    2092,
+    2135
+   ],
+   "what": "B reverse from the wall: faces of the queue"
+  },
+  "3": {
+   "g": [
+    2136,
+    2169
+   ],
+   "what": "C ECU the four hooks, push in"
+  },
+  "4": {
+   "g": [
+    2170,
+    2207
+   ],
+   "what": "D two-shot at the rope: lady gasps, gentleman doffs his bowler"
+  },
+  "5": {
+   "g": [
+    2208,
+    2241
+   ],
+   "what": "E the hooks again, low and wider, push in (out-handle 2236-2241)"
+  }
+ },
+ "events": {
+  "cut_B": 2092,
+  "shot22_hooks": 2136,
+  "lady_gasp": [
+   2174,
+   2178
+  ],
+  "bowler_doff": [
+   2182,
+   2200
+  ],
+  "four_hooks_word": 2225
+ },
+ "set": "v3/set3d7/louvre.py louvre empty_wall_queue (Mona gone + queue ropes keyed per frame, set_flames keyed per frame), 5 custom cameras 18-30 mm",
+ "light": "GALLERY_DAY",
+ "cast": "v3/cast7 crowd: lady, gentleman, newsboy, guard + runtime colour variants lady_b/c/d, gentleman_b/c (s21/t5lib.py, cast files untouched); gentleman's bowler taken off via a runtime hat_off pose key + the derby drawn in his hand as a sprite overlay",
+ "dof": "none (client rule: cam.data.dof.use_dof False + L.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film7/audio/narration_bankky.wav at +0.10 s; captions film7/script/captions.json",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.4,
+ "s_per_frame_cpu_mean": 20.49
+}
