@@ -1,0 +1,82 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 17.4,
+   "duration": 5.867,
+   "frame": 522,
+   "end_frame": 698,
+   "kind": "ambience",
+   "label": "tunnel room tone"
+  },
+  {
+   "time": 18.1,
+   "duration": 0.6,
+   "frame": 543,
+   "end_frame": 561,
+   "kind": "laugh",
+   "label": "the gaffer bursts out laughing (big belly laugh, under the narration)",
+   "peak_frame": 547
+  },
+  {
+   "time": 18.7,
+   "duration": 4.4,
+   "frame": 561,
+   "end_frame": 693,
+   "kind": "dialogue",
+   "label": "QUOTED LINE (narrator voices the gaffer): mouth lip-synced to the narration"
+  },
+  {
+   "time": 19.033,
+   "duration": 0.0,
+   "frame": 571,
+   "end_frame": 571,
+   "kind": "cut",
+   "label": "hard cut: closer on the laughing gaffer"
+  },
+  {
+   "time": 20.267,
+   "duration": 0.0,
+   "frame": 608,
+   "end_frame": 608,
+   "kind": "cut",
+   "label": "hard cut: the gaffer looms over alfie"
+  },
+  {
+   "time": 20.6,
+   "duration": 0.4,
+   "frame": 618,
+   "end_frame": 630,
+   "kind": "foley",
+   "label": "the gaffer leans down: coat rustle, boots creak",
+   "peak_frame": 626
+  },
+  {
+   "time": 21.133,
+   "duration": 0.333,
+   "frame": 634,
+   "end_frame": 644,
+   "kind": "prop",
+   "label": "he lifts his lamp: brass ring creak",
+   "peak_frame": 639
+  },
+  {
+   "time": 21.5,
+   "duration": 0.0,
+   "frame": 645,
+   "end_frame": 645,
+   "kind": "cut",
+   "label": "hard cut (plan t 21.5): the miners laughing"
+  },
+  {
+   "time": 21.5,
+   "duration": 1.767,
+   "frame": 645,
+   "end_frame": 698,
+   "kind": "laugh",
+   "label": "the miners roar with laughter (three voices, wheezy, under the gaffer's line)"
+  }
+ ]
+}
