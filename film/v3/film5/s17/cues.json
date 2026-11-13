@@ -1,0 +1,64 @@
+{
+ "take": "s17",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 60.2,
+   "duration": 5.4,
+   "frame": 1806,
+   "end_frame": 1968,
+   "kind": "ambience",
+   "label": "pithead at dusk: distant winding engine, the sheave wheels creaking, a far train, evening birds very soft"
+  },
+  {
+   "time": 61.3,
+   "duration": 1.333,
+   "frame": 1839,
+   "end_frame": 1879,
+   "kind": "prop",
+   "label": "the oxygen box: a gentle steady hiss through the rubber tube"
+  },
+  {
+   "time": 62.4,
+   "duration": 0.0,
+   "frame": 1872,
+   "end_frame": 1872,
+   "kind": "cut",
+   "label": "cut: closer on the cage and the mask"
+  },
+  {
+   "time": 62.633,
+   "duration": 0.4,
+   "frame": 1879,
+   "end_frame": 1891,
+   "kind": "bird",
+   "label": "the bird opens its eyes: a tiny soft rustle"
+  },
+  {
+   "time": 63.133,
+   "duration": 0.167,
+   "frame": 1894,
+   "end_frame": 1899,
+   "kind": "bird",
+   "label": "a little hop up to the perch: wing flutter"
+  },
+  {
+   "time": 63.3,
+   "duration": 1.167,
+   "frame": 1899,
+   "end_frame": 1934,
+   "kind": "bird_song",
+   "label": "one clear, sweet note",
+   "notes": 1
+  },
+  {
+   "time": 64.467,
+   "duration": 1.133,
+   "frame": 1934,
+   "end_frame": 1968,
+   "kind": "music",
+   "label": "warm resolving chord under the hold to the end"
+  }
+ ]
+}
