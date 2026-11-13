@@ -1,0 +1,65 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 19.533,
+   "duration": 0.567,
+   "frame": 586,
+   "end_frame": 603,
+   "kind": "ambience",
+   "label": "calm courtyard: birds, wind in the banners"
+  },
+  {
+   "time": 20.1,
+   "duration": 3.233,
+   "frame": 603,
+   "end_frame": 700,
+   "kind": "quake",
+   "label": "quake 1 (small): low ground rumble, lanterns and wind bells clatter, wooden creak of the pagoda's storeys"
+  },
+  {
+   "time": 20.967,
+   "duration": 0.0,
+   "frame": 629,
+   "end_frame": 629,
+   "kind": "cut",
+   "label": "hard cut to the tea cup on the tower sill: rumble drops to a muffled hum, the tea does not ripple"
+  },
+  {
+   "time": 21.333,
+   "duration": 0.4,
+   "frame": 640,
+   "end_frame": 652,
+   "kind": "accent",
+   "label": "a single clear 'tink' accent as the cup sits perfectly still ('\u0e43\u0e2b\u0e0d\u0e48\u0e19\u0e34\u0e48\u0e07\u0e2a\u0e19\u0e34\u0e17')",
+   "peak_frame": 644
+  },
+  {
+   "time": 22.067,
+   "duration": 0.0,
+   "frame": 662,
+   "end_frame": 662,
+   "kind": "cut",
+   "label": "hard cut: up the pagoda, rumble back up, wooden creaks left / right as the storeys sway opposite ways"
+  },
+  {
+   "time": 22.933,
+   "duration": 0.267,
+   "frame": 688,
+   "end_frame": 696,
+   "kind": "camera_snap",
+   "label": "snap punch-in to the upper storeys (whoosh), lands on '\u0e2b\u0e19\u0e36\u0e48\u0e07\u0e04\u0e37\u0e1a'",
+   "peak_frame": 692
+  },
+  {
+   "time": 23.2,
+   "duration": 0.667,
+   "frame": 696,
+   "end_frame": 716,
+   "kind": "quake",
+   "label": "quake fades: creaks slow down"
+  }
+ ]
+}
