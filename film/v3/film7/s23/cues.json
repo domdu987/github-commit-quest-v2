@@ -1,0 +1,79 @@
+{
+ "take": "s23",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film7/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 74.333,
+   "duration": 3.667,
+   "frame": 2230,
+   "end_frame": 2340,
+   "kind": "ambience",
+   "label": "Paris street by the kiosk: hooves, cafe chatter, rustle of newspapers"
+  },
+  {
+   "time": 74.533,
+   "duration": 0.0,
+   "frame": 2236,
+   "end_frame": 2236,
+   "kind": "cut",
+   "label": "dissolve in from the louvre hooks"
+  },
+  {
+   "time": 76.0,
+   "duration": 0.0,
+   "frame": 2280,
+   "end_frame": 2280,
+   "kind": "cut",
+   "label": "cut to the gentleman reading"
+  },
+  {
+   "time": 76.0,
+   "duration": 2.0,
+   "frame": 2280,
+   "end_frame": 2340,
+   "kind": "foley",
+   "label": "newspaper rustle / page shake, a shocked 'hmph!'"
+  },
+  {
+   "time": 78.0,
+   "duration": 0.0,
+   "frame": 2340,
+   "end_frame": 2340,
+   "kind": "cut",
+   "label": "cut to the street"
+  },
+  {
+   "time": 78.0,
+   "duration": 1.767,
+   "frame": 2340,
+   "end_frame": 2393,
+   "kind": "voice_walla",
+   "label": "newsboy: 'Extra! Extra! La Joconde!' shouted (walla, not lip-synced), barrel-organ tune in the distance"
+  },
+  {
+   "time": 78.0,
+   "duration": 1.767,
+   "frame": 2340,
+   "end_frame": 2393,
+   "kind": "foley",
+   "label": "footsteps of passers on cobbles"
+  },
+  {
+   "time": 79.767,
+   "duration": 1.9,
+   "frame": 2393,
+   "end_frame": 2450,
+   "kind": "music",
+   "label": "the lady hums the popular Mona Lisa song (hummed melody, closed mouth)"
+  },
+  {
+   "time": 80.067,
+   "duration": 0.0,
+   "frame": 2402,
+   "end_frame": 2402,
+   "kind": "accent",
+   "label": "her smile on the poster: soft chime on 'จำรอยยิ้ม' (79.97 s)"
+  }
+ ]
+}

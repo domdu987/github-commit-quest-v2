@@ -114,12 +114,21 @@ def pose_of(n, g, sid):
     elif n == "hum" and g >= G_HUMWALK:            # strolls off to screen-left, still humming
         d = g - G_HUMWALK
         u = ez(min(1.0, d / 6.0))
-        base = dict(expr="happy", mouth="smile", yaw=lerp(0.35, 0.55, u), head_roll=6.0 * math.sin(d * 0.21), gaze=(0.6, -0.2))
+        base = dict(expr="happy", mouth="smile", yaw=lerp(0.30, 0.55, u), head_roll=6.0 * math.sin(d * 0.21), gaze=(lerp(0.8, 0.6, u), -0.2))
         p = cast7.cycle("lady_d", d / 28.0, "walk", facing=-1, base=base, speed=lerp(0.3, 0.85, u))
         p["blink"] = 2 if d % 30 in range(12, 22) else 0
+        if u < 1.0:                                   # hands leave the waist gradually (no pop at the first step)
+            for side, h0 in (("arm_r", (0.10, 0.80)), ("arm_l", (-0.12, 0.80))):
+                a = p.get(side)
+                if isinstance(a, dict) and "hand" in a:
+                    hx, hy = a["hand"]
+                    p[side] = dict(a, hand=(lerp(h0[0], hx, u), lerp(h0[1], hy, u)), bend=lerp(0.6, a.get("bend", 0.5), u))
+            if isinstance(p.get("legs"), dict):
+                p["legs"] = dict(p["legs"], stride=p["legs"].get("stride", 0) * u, lift_r=p["legs"].get("lift_r", 0) * u, lift_l=p["legs"].get("lift_l", 0) * u)
     elif n == "hum":
         p = dict(cast7.STORY7["crowd_stare"][1])
-        p.update(expr="happy", mouth="smile", yaw=0.35, pitch=-0.25, gaze=(0.8, -0.3), legs="narrow")
+        # mirrored the whole time (faces screen-left, the way she will stroll off), glancing back at the poster: no flip at the walk
+        p.update(expr="happy", mouth="smile", yaw=0.30, pitch=-0.25, gaze=(-0.8, -0.3), legs="narrow", mirror=True)
         s = math.sin((g - 2393) * 0.21)
         p["head_roll"] = 9.0 * s                                          # humming, swaying to a tune
         p["lean"] = 2.5 * s
