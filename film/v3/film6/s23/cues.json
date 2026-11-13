@@ -1,0 +1,65 @@
+{
+ "take": "s23",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 61.367,
+   "duration": 3.333,
+   "frame": 1841,
+   "end_frame": 1941,
+   "kind": "ambience",
+   "label": "market square: crowd murmur that drops to a hush as he passes"
+  },
+  {
+   "time": 61.367,
+   "duration": 1.633,
+   "frame": 1841,
+   "end_frame": 1890,
+   "kind": "foley",
+   "label": "the stranger's measured footsteps on cobbles, cloak swish"
+  },
+  {
+   "time": 61.533,
+   "duration": 1.067,
+   "frame": 1846,
+   "end_frame": 1878,
+   "kind": "foley",
+   "label": "townsfolk shuffle aside (4 quick step-scuffles + a gasp)"
+  },
+  {
+   "time": 62.9,
+   "duration": 0.0,
+   "frame": 1887,
+   "end_frame": 1887,
+   "kind": "cut",
+   "label": "cut: low angle (drum hit)"
+  },
+  {
+   "time": 63.267,
+   "duration": 0.433,
+   "frame": 1898,
+   "end_frame": 1911,
+   "kind": "gesture",
+   "label": "he throws back the hood: big cloth whoosh",
+   "peak_frame": 1904
+  },
+  {
+   "time": 63.867,
+   "duration": 0.8,
+   "frame": 1916,
+   "end_frame": 1940,
+   "kind": "accent",
+   "label": "HARD CUT reveal: royal fanfare stab + chain jingle; crowd gasp",
+   "peak_frame": 1916
+  },
+  {
+   "time": 64.5,
+   "duration": 0.0,
+   "frame": 1935,
+   "end_frame": 1935,
+   "kind": "cut",
+   "label": "plan: shot 24 (big scale insert)"
+  }
+ ]
+}

@@ -67,7 +67,7 @@ def insp_xy(g):
     return lerp(INSP0[0], INSP1[0], u), lerp(INSP0[1], INSP1[1], u)
 
 
-def insp_pose(g):
+def _insp_pose(g):
     if g < G_STOP:
         p = cast6.cycle("inspector", (g - RANGES[23][0]) / 18.0, "walk", facing=1, base=dict(expr="neutral", hood=1.0))
         p["yaw"] = 0.12
@@ -93,6 +93,18 @@ def insp_pose(g):
         p["blink"] = blink(g, [1934])
     p["t"] = g / 30.0
     return p
+
+
+def insp_pose(g):
+    """the walk settles into the planted hood-drop stance over 5 frames (g 1886..1890) instead of snapping on g 1890."""
+    if G_STOP - 4 <= g < G_STOP + 1:
+        import puppet
+        u = ez((g - (G_STOP - 4)) / 5.0)
+        p = puppet.lerp_pose("inspector", _insp_pose(min(g, G_STOP - 1)), _insp_pose(G_STOP), u)
+        p["hood"] = 1.0
+        p["t"] = g / 30.0
+        return p
+    return _insp_pose(g)
 
 
 def crowd_xy(n, g):

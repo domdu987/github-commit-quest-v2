@@ -1,0 +1,70 @@
+{
+ "take": "s23",
+ "film": 6,
+ "shots": [
+  23
+ ],
+ "first_g": 1841,
+ "n_frames": 100,
+ "g0": 1847,
+ "g1": 1935,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: cut from shot 22 (bakery); 6 in-handle frames g 1841..1846 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: shot 24 (big_scale_insert) follows at g 1935; 6 out-handle frames g 1935..1940 (royal reveal continues)"
+ },
+ "cuts_inside": [
+  1887,
+  1916
+ ],
+ "shot_ranges": {
+  "23": [
+   1847,
+   1934
+  ]
+ },
+ "events": {
+  "23a_walk_crowd_parts": [
+   1841,
+   1886
+  ],
+  "parting": {
+   "man1b": 1846,
+   "man1": 1853,
+   "woman1": 1856,
+   "woman1b": 1866
+  },
+  "stops_centre": 1890,
+  "hood_back_1_to_0.15": [
+   1898,
+   1911
+  ],
+  "blink": [
+   1913,
+   1915
+  ],
+  "hard_cut_to_inspector_royal": 1916
+ },
+ "set": "v3/set3d6/bakery.py: market AFTERNOON; 3 custom cameras (eye level 24 mm in the square looking north, low 24 mm medium, lower/closer 26 mm for the reveal); braziers flicker keyed per frame",
+ "light": "AFTERNOON",
+ "cast": "v3/cast6: inspector (hooded walk cycle -> inspector_hood_drop, hood 1 -> 0.15), inspector_royal (inspector_reveal: tabard with three lions, chain of office) after the hard cut; townsfolk woman1 x2, man1 x2 (part with walk cycles, then stunned)",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film6/audio/narration_bankky.wav at +0.10 s; captions film6/script/captions.json",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 12.98,
+ "s_per_frame_cpu_mean": 24.27
+}
