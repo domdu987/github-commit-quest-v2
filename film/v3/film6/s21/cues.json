@@ -1,0 +1,188 @@
+{
+ "take": "s21",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 54.433,
+   "duration": 7.333,
+   "frame": 1633,
+   "end_frame": 1853,
+   "kind": "ambience",
+   "label": "bakery in the afternoon: low oven crackle, street murmur through the counter opening"
+  },
+  {
+   "time": 54.433,
+   "duration": 1.833,
+   "frame": 1633,
+   "end_frame": 1688,
+   "kind": "foley",
+   "label": "the stranger's slow footsteps on the cobbles + long cloak rustle"
+  },
+  {
+   "time": 56.267,
+   "duration": 0.067,
+   "frame": 1688,
+   "end_frame": 1690,
+   "kind": "foley",
+   "label": "he stops at the shutter board (one heavier step)",
+   "peak_frame": 1688
+  },
+  {
+   "time": 56.467,
+   "duration": 0.0,
+   "frame": 1694,
+   "end_frame": 1694,
+   "kind": "accent",
+   "label": "cut inside: low ominous cello note under the hooded face"
+  },
+  {
+   "time": 57.067,
+   "duration": 0.2,
+   "frame": 1712,
+   "end_frame": 1718,
+   "kind": "gesture",
+   "label": "gloved hand comes up (cloth rustle)",
+   "peak_frame": 1714
+  },
+  {
+   "time": 58.0,
+   "duration": 0.0,
+   "frame": 1740,
+   "end_frame": 1740,
+   "kind": "cut",
+   "label": "cut: henry low angle"
+  },
+  {
+   "time": 58.433,
+   "duration": 0.067,
+   "frame": 1753,
+   "end_frame": 1755,
+   "kind": "accent",
+   "label": "henry counts finger 1 (tiny wooden 'tock')"
+  },
+  {
+   "time": 58.567,
+   "duration": 0.067,
+   "frame": 1757,
+   "end_frame": 1759,
+   "kind": "accent",
+   "label": "henry counts finger 2 (tiny wooden 'tock')"
+  },
+  {
+   "time": 58.7,
+   "duration": 0.067,
+   "frame": 1761,
+   "end_frame": 1763,
+   "kind": "accent",
+   "label": "henry counts finger 3 (tiny wooden 'tock')"
+  },
+  {
+   "time": 58.833,
+   "duration": 0.067,
+   "frame": 1765,
+   "end_frame": 1767,
+   "kind": "accent",
+   "label": "henry counts finger 4 (tiny wooden 'tock')"
+  },
+  {
+   "time": 58.967,
+   "duration": 0.067,
+   "frame": 1769,
+   "end_frame": 1771,
+   "kind": "accent",
+   "label": "henry counts finger 5 (tiny wooden 'tock')"
+  },
+  {
+   "time": 59.1,
+   "duration": 0.067,
+   "frame": 1773,
+   "end_frame": 1775,
+   "kind": "accent",
+   "label": "henry counts finger 6 (tiny wooden 'tock')"
+  },
+  {
+   "time": 59.233,
+   "duration": 0.067,
+   "frame": 1777,
+   "end_frame": 1779,
+   "kind": "accent",
+   "label": "henry counts finger 7 (tiny wooden 'tock')"
+  },
+  {
+   "time": 59.367,
+   "duration": 0.067,
+   "frame": 1781,
+   "end_frame": 1783,
+   "kind": "accent",
+   "label": "henry counts finger 8 (tiny wooden 'tock')"
+  },
+  {
+   "time": 59.5,
+   "duration": 0.067,
+   "frame": 1785,
+   "end_frame": 1787,
+   "kind": "accent",
+   "label": "henry counts finger 9 (tiny wooden 'tock')"
+  },
+  {
+   "time": 59.633,
+   "duration": 0.067,
+   "frame": 1789,
+   "end_frame": 1791,
+   "kind": "accent",
+   "label": "henry counts finger 10 (tiny wooden 'tock')"
+  },
+  {
+   "time": 59.767,
+   "duration": 0.067,
+   "frame": 1793,
+   "end_frame": 1795,
+   "kind": "accent",
+   "label": "henry counts finger 11 (tiny wooden 'tock')"
+  },
+  {
+   "time": 59.9,
+   "duration": 0.067,
+   "frame": 1797,
+   "end_frame": 1799,
+   "kind": "accent",
+   "label": "henry counts finger 12 (tiny wooden 'tock')"
+  },
+  {
+   "time": 60.2,
+   "duration": 0.733,
+   "frame": 1806,
+   "end_frame": 1828,
+   "kind": "gesture",
+   "label": "henry shoos kit: flapping hand whooshes x3, kit's scared squeak-free gulp",
+   "peak_frame": 1808
+  },
+  {
+   "time": 60.4,
+   "duration": 0.2,
+   "frame": 1812,
+   "end_frame": 1818,
+   "kind": "foley",
+   "label": "kit hops off the stool (small thump)",
+   "peak_frame": 1816
+  },
+  {
+   "time": 61.267,
+   "duration": 0.167,
+   "frame": 1838,
+   "end_frame": 1843,
+   "kind": "accent",
+   "label": "kit glances at the spare loaf: soft 'idea' twinkle",
+   "peak_frame": 1840
+  },
+  {
+   "time": 61.567,
+   "duration": 0.0,
+   "frame": 1847,
+   "end_frame": 1847,
+   "kind": "cut",
+   "label": "plan: cut to shot 23 (market)"
+  }
+ ]
+}

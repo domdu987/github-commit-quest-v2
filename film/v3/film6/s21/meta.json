@@ -1,0 +1,83 @@
+{
+ "take": "s21",
+ "film": 6,
+ "shots": [
+  21,
+  22
+ ],
+ "first_g": 1633,
+ "n_frames": 220,
+ "g0": 1639,
+ "g1": 1847,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: cut from shot 20 (market); 6 in-handle frames g 1633..1638 rendered in 3D (the stranger already walking)"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: cut to shot 23 (market square_eye) at g 1847; 6 out-handle frames g 1847..1852 (kit by the racks)"
+ },
+ "cuts_inside": [
+  1694,
+  1740,
+  1802,
+  1830
+ ],
+ "shot_ranges": {
+  "21": [
+   1639,
+   1739
+  ],
+  "22": [
+   1740,
+   1846
+  ]
+ },
+ "events": {
+  "21a_stranger_walks_in": [
+   1633,
+   1687
+  ],
+  "arrives_at_counter": 1688,
+  "21b_hooded_face_low": [
+   1694,
+   1739
+  ],
+  "hand_up_a_dozen": [
+   1712,
+   1740
+  ],
+  "22a_henry_counts_12_on_fingers": [
+   1753,
+   1797
+  ],
+  "22b_shoo": [
+   1802,
+   1829
+  ],
+  "kit_off_the_stool": [
+   1810,
+   1826
+  ],
+  "22c_kit_glances_at_spare_loaf": 1838
+ },
+ "set": "v3/set3d6/bakery.py: bakery AFTERNOON, steam 0.35 (0 in 21b: no ribbons across the hooded face), oven flicker keyed per frame; 5 custom cameras (street side 24 mm, inside low 22 mm, street low 30 mm on henry, street two-shot 24 mm, inside by the right-wall racks 24 mm); a paler loaf card (cast6.loaf_svg, crust blended to cream) added on the right-wall shelf at (6.2, 3.4, 2.7)",
+ "light": "AFTERNOON",
+ "cast": "v3/cast6: inspector (hooded, hood 1, walk cycle -> inspector_hooded), henry (henry_count with fingers_r 1..5 x2 + 1..2, henry_shoo with mouth closed), kit (stool z 0.98 -> hops off; kit_scared; sad -> determined glance)",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film6/audio/narration_bankky.wav at +0.10 s; captions film6/script/captions.json",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 18.17,
+ "s_per_frame_cpu_mean": 34.04
+}
