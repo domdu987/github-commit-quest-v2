@@ -1,0 +1,74 @@
+{
+ "take": "s05",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 10.267,
+   "duration": 4.333,
+   "frame": 308,
+   "end_frame": 438,
+   "kind": "ambience",
+   "label": "tunnel room tone: drips, timber creak, faint hiss of the lamps"
+  },
+  {
+   "time": 11.3,
+   "duration": 0.433,
+   "frame": 339,
+   "end_frame": 352,
+   "kind": "prop",
+   "label": "the gaffer hoists his lamp: brass ring creak, a little swing of the lamp",
+   "peak_frame": 345
+  },
+  {
+   "time": 11.833,
+   "duration": 0.0,
+   "frame": 355,
+   "end_frame": 355,
+   "kind": "cut",
+   "label": "hard cut to the ECU of the lamp"
+  },
+  {
+   "time": 12.4,
+   "duration": 0.333,
+   "frame": 372,
+   "end_frame": 382,
+   "kind": "lamp",
+   "label": "the flame flares up bright: a soft whoomp and a rising hiss of the flame",
+   "peak_frame": 377
+  },
+  {
+   "time": 12.733,
+   "duration": 0.533,
+   "frame": 382,
+   "end_frame": 398,
+   "kind": "lamp",
+   "label": "the bright flame purrs steadily"
+  },
+  {
+   "time": 13.267,
+   "duration": 0.0,
+   "frame": 398,
+   "end_frame": 398,
+   "kind": "cut",
+   "label": "hard cut: low reverse angle, the gaffer with the lamp held high"
+  },
+  {
+   "time": 13.267,
+   "duration": 1.333,
+   "frame": 398,
+   "end_frame": 438,
+   "kind": "work",
+   "label": "miner2 digs in the background: shovel scrapes"
+  },
+  {
+   "time": 13.667,
+   "duration": 0.333,
+   "frame": 410,
+   "end_frame": 420,
+   "kind": "accent",
+   "label": "the gaffer's smug nod: a satisfied 'hm' (no words, mouth closed)",
+   "peak_frame": 413
+  }
+ ]
+}

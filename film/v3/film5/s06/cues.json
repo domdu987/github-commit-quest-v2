@@ -1,0 +1,56 @@
+{
+ "take": "s06",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 14.133,
+   "duration": 3.733,
+   "frame": 424,
+   "end_frame": 536,
+   "kind": "ambience",
+   "label": "tunnel room tone; the canary keeps chirping softly in the cage"
+  },
+  {
+   "time": 14.667,
+   "duration": 0.533,
+   "frame": 440,
+   "end_frame": 456,
+   "kind": "accent",
+   "label": "alfie glances up at the big men: a small gulp"
+  },
+  {
+   "time": 15.533,
+   "duration": 0.0,
+   "frame": 466,
+   "end_frame": 466,
+   "kind": "cut",
+   "label": "hard cut: tilt down from the tall miner to the boy"
+  },
+  {
+   "time": 15.667,
+   "duration": 0.667,
+   "frame": 470,
+   "end_frame": 490,
+   "kind": "camera",
+   "label": "camera tilts down the tall miner (a descending comic slide whistle, soft)"
+  },
+  {
+   "time": 16.6,
+   "duration": 0.0,
+   "frame": 498,
+   "end_frame": 498,
+   "kind": "cut",
+   "label": "hard cut: medium on alfie and his cage"
+  },
+  {
+   "time": 17.0,
+   "duration": 0.467,
+   "frame": 510,
+   "end_frame": 524,
+   "kind": "prop",
+   "label": "alfie lifts the cage beside his torso: cage ring jingle, the bird chirps brightly",
+   "peak_frame": 516
+  }
+ ]
+}

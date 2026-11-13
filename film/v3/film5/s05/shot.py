@@ -31,7 +31,7 @@ class S(object):
     G_NOD = g_of(13.77)                                         # 413 "ปลอดภัย"
 
     GAFFER = TP(12.2, -0.85, 0)
-    MINER2 = TP(6.4, -1.35, 0)
+    MINER2 = TP(10.1, -1.6, 0)
     FLAME = None                                                # world flame point in 5b (prepare)
 
     # ------------------------------------------------------------------ cameras
@@ -108,7 +108,7 @@ class S(object):
         p = dict(cast5.STORY5["miners_work_miner2"][1])
         d = 0.5 - 0.5 * math.cos(2 * math.pi * g / 34.0)
         p["arm_r"] = dict(p["arm_r"], hand=(0.55, 0.72 - 0.12 * d))
-        p["lean"] = 14 + 5 * d
+        p["lean"] = 2 + 3 * d
         p["yaw"] = -0.4
         p["blink"] = blink(g, [409, 431])
         return p

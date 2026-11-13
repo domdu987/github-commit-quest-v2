@@ -36,11 +36,11 @@ for sid in S.RANGES:
             rows[(sid, m["g"])] = m
 walls = [m["wall"] for m in rows.values()]; cpus = [m["cpu"] for m in rows.values()]
 
-trans = [dict(at=first, type="in", **S.TRANS_IN)]
+trans = [dict(dict(S.TRANS_IN, kind=S.TRANS_IN["type"]), at=first, type="in")]
 sids = sorted(S.RANGES)
 for a, b in zip(sids[:-1], sids[1:]):
     trans.append(dict(at=S.RANGES[b][0], type="cut", from_shot=S.SUB[a], to_shot=S.SUB[b]))
-trans.append(dict(at=S.G1, type="out", handle=[S.G1, last], **S.TRANS_OUT))
+trans.append(dict(dict(S.TRANS_OUT, kind=S.TRANS_OUT["type"]), at=S.G1, type="out", handle=[S.G1, last]))
 meta = {"take": S.NAME, "film": 5, "shots": [S.SHOT], "first_g": first, "n_frames": N, "g0": S.G0, "g1": S.G1,
         "handle_in": S.G0 - first, "handle_out": last + 1 - S.G1,
         "transition_in": S.TRANS_IN, "transition_out": S.TRANS_OUT, "transitions": trans,
