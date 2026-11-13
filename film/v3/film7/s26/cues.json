@@ -1,0 +1,96 @@
+{
+ "take": "s26",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 85.567,
+   "duration": 6.133,
+   "frame": 2567,
+   "end_frame": 2751,
+   "kind": "ambience",
+   "label": "Florence antique shop, 1913: a mantel clock ticking, street murmur and a church bell far off through the window"
+  },
+  {
+   "time": 86.2,
+   "duration": 0.367,
+   "frame": 2586,
+   "end_frame": 2597,
+   "kind": "prop",
+   "label": "wrapping cloth whisked off the panel (cloth swish)",
+   "peak_frame": 2590
+  },
+  {
+   "time": 86.567,
+   "duration": 0.5,
+   "frame": 2597,
+   "end_frame": 2612,
+   "kind": "accent",
+   "label": "a soft magical shimmer as the panel is revealed",
+   "peak_frame": 2598
+  },
+  {
+   "time": 87.067,
+   "duration": 0.267,
+   "frame": 2612,
+   "end_frame": 2620,
+   "kind": "prop",
+   "label": "wooden panel lifted off the desk (light wood knock)",
+   "peak_frame": 2615
+  },
+  {
+   "time": 87.333,
+   "duration": 1.167,
+   "frame": 2620,
+   "end_frame": 2655,
+   "kind": "gesture",
+   "label": "the dealer's thoughtful 'hmmm' (no lip-sync, under the narration)",
+   "peak_frame": 2630
+  },
+  {
+   "time": 89.2,
+   "duration": 0.667,
+   "frame": 2676,
+   "end_frame": 2696,
+   "kind": "accent",
+   "label": "wink 'ting' + sly pizzicato as he beckons",
+   "peak_frame": 2677
+  },
+  {
+   "time": 89.933,
+   "duration": 0.133,
+   "frame": 2698,
+   "end_frame": 2702,
+   "kind": "foley",
+   "label": "door bursts open, two whistles, boots running on the parquet",
+   "peak_frame": 2698
+  },
+  {
+   "time": 90.067,
+   "duration": 0.433,
+   "frame": 2702,
+   "end_frame": 2715,
+   "kind": "accent",
+   "label": "comic gasp sting (vincenzo startled)",
+   "peak_frame": 2703
+  },
+  {
+   "time": 90.533,
+   "duration": 0.067,
+   "frame": 2716,
+   "end_frame": 2718,
+   "kind": "foley",
+   "label": "grab: cloth thump, handcuff click",
+   "peak_frame": 2717
+  },
+  {
+   "time": 90.6,
+   "duration": 1.1,
+   "frame": 2718,
+   "end_frame": 2751,
+   "kind": "accent",
+   "label": "sad trombone 'wah-wah'",
+   "peak_frame": 2720
+  }
+ ]
+}
