@@ -1,0 +1,123 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 25.833,
+   "duration": 0.367,
+   "frame": 775,
+   "end_frame": 786,
+   "kind": "ambience",
+   "label": "calm courtyard"
+  },
+  {
+   "time": 26.2,
+   "duration": 3.467,
+   "frame": 786,
+   "end_frame": 890,
+   "kind": "quake",
+   "label": "quake 2: stronger rumble, lantern and bell clatter, tile rattle, deep creaks of the swaying storeys"
+  },
+  {
+   "time": 27.2,
+   "duration": 0.267,
+   "frame": 816,
+   "end_frame": 824,
+   "kind": "camera_snap",
+   "label": "snap toward the pagoda (whoosh), lands on '\u0e2a\u0e2d\u0e07\u0e04\u0e37\u0e1a'",
+   "peak_frame": 820
+  },
+  {
+   "time": 27.867,
+   "duration": 0.0,
+   "frame": 836,
+   "end_frame": 836,
+   "kind": "cut",
+   "label": "hard cut to the tower joint: muffled rumble"
+  },
+  {
+   "time": 28.533,
+   "duration": 0.267,
+   "frame": 856,
+   "end_frame": 864,
+   "kind": "crack",
+   "label": "sharp dry crack of plaster: the hairline crack appears (small camera jolt)",
+   "peak_frame": 856
+  },
+  {
+   "time": 29.233,
+   "duration": 0.0,
+   "frame": 877,
+   "end_frame": 877,
+   "kind": "cut",
+   "label": "hard cut: the master on the scaffold"
+  },
+  {
+   "time": 29.333,
+   "duration": 1.167,
+   "frame": 880,
+   "end_frame": 915,
+   "kind": "foley",
+   "label": "trowel scrapes on plaster, a wet slap every 12 frames; patch done g 897"
+  },
+  {
+   "time": 30.5,
+   "duration": 0.333,
+   "frame": 915,
+   "end_frame": 925,
+   "kind": "dissolve",
+   "label": "dissolve to sunset, year 3"
+  },
+  {
+   "time": 30.733,
+   "duration": 2.6,
+   "frame": 922,
+   "end_frame": 1000,
+   "kind": "quake",
+   "label": "quake 3 (biggest yet): heavy rumble, everything rattles, groaning timber"
+  },
+  {
+   "time": 31.733,
+   "duration": 0.233,
+   "frame": 952,
+   "end_frame": 959,
+   "kind": "camera_snap",
+   "label": "snap toward the pagoda (whoosh), lands on '\u0e2a\u0e32\u0e21\u0e04\u0e37\u0e1a'",
+   "peak_frame": 956
+  },
+  {
+   "time": 32.4,
+   "duration": 0.0,
+   "frame": 972,
+   "end_frame": 972,
+   "kind": "cut",
+   "label": "hard cut to the joint: the crack is wide through the old patch"
+  },
+  {
+   "time": 33.0,
+   "duration": 0.533,
+   "frame": 990,
+   "end_frame": 1006,
+   "kind": "gesture",
+   "label": "the master's finger pokes into the crack (soft gritty scratch), sweat",
+   "peak_frame": 996
+  },
+  {
+   "time": 33.867,
+   "duration": 0.0,
+   "frame": 1016,
+   "end_frame": 1016,
+   "kind": "cut",
+   "label": "hard cut: plastering again"
+  },
+  {
+   "time": 33.933,
+   "duration": 1.433,
+   "frame": 1018,
+   "end_frame": 1061,
+   "kind": "foley",
+   "label": "trowel scrapes, wet slaps; second patch lands g 1036 ('\u0e2d\u0e35\u0e01\u0e0a\u0e31\u0e49\u0e19' g 1041); evening birds"
+  }
+ ]
+}
