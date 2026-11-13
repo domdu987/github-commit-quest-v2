@@ -1,0 +1,108 @@
+{
+ "take": "s06",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 8.3,
+   "duration": 1.7,
+   "frame": 249,
+   "end_frame": 300,
+   "kind": "ambience",
+   "label": "high on the tower scaffold: wind, creak of bamboo poles and rope lashings"
+  },
+  {
+   "time": 8.533,
+   "duration": 0.0,
+   "frame": 256,
+   "end_frame": 256,
+   "kind": "dissolve",
+   "label": "dissolve in from the town wide (s01)"
+  },
+  {
+   "time": 8.9,
+   "duration": 0.133,
+   "frame": 267,
+   "end_frame": 271,
+   "kind": "impact",
+   "label": "mallet blow on iron: heavy wooden 'tok' on the nail plate",
+   "peak_frame": 270
+  },
+  {
+   "time": 9.433,
+   "duration": 0.133,
+   "frame": 283,
+   "end_frame": 287,
+   "kind": "impact",
+   "label": "mallet blow on iron (on 'sang ho thi')",
+   "peak_frame": 286
+  },
+  {
+   "time": 10.0,
+   "duration": 0.933,
+   "frame": 300,
+   "end_frame": 328,
+   "kind": "ambience",
+   "label": "close: quiet wood room tone, the mallet's whoosh before each blow"
+  },
+  {
+   "time": 10.0,
+   "duration": 0.0,
+   "frame": 300,
+   "end_frame": 300,
+   "kind": "cut",
+   "label": "hard cut to the ECU of the iron joint plate"
+  },
+  {
+   "time": 10.1,
+   "duration": 0.133,
+   "frame": 303,
+   "end_frame": 307,
+   "kind": "impact",
+   "label": "the long nail is driven: metallic CLANG + wood crunch (plan 10.1 s)",
+   "peak_frame": 306
+  },
+  {
+   "time": 10.6,
+   "duration": 0.133,
+   "frame": 318,
+   "end_frame": 322,
+   "kind": "impact",
+   "label": "second blow on 'naen' (tight): nail goes flush, a ringing clank",
+   "peak_frame": 321
+  },
+  {
+   "time": 10.933,
+   "duration": 1.1,
+   "frame": 328,
+   "end_frame": 361,
+   "kind": "ambience",
+   "label": "courtyard ambience, wind; a deep wooden boom accent under 'khaeng muean kon hin' (hard as rock)"
+  },
+  {
+   "time": 10.933,
+   "duration": 0.0,
+   "frame": 328,
+   "end_frame": 328,
+   "kind": "cut",
+   "label": "hard cut to the low wide of the rigid tower"
+  },
+  {
+   "time": 11.333,
+   "duration": 0.133,
+   "frame": 340,
+   "end_frame": 344,
+   "kind": "impact",
+   "label": "distant mallet blow from up the scaffold",
+   "peak_frame": 343
+  },
+  {
+   "time": 11.633,
+   "duration": 0.3,
+   "frame": 349,
+   "end_frame": 358,
+   "kind": "dissolve",
+   "label": "dissolve to kenta and the pagoda (s07)"
+  }
+ ]
+}

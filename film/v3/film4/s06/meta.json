@@ -1,0 +1,225 @@
+{
+ "take": "s06",
+ "shots": [
+  6
+ ],
+ "first_g": 249,
+ "n_frames": 112,
+ "g0": 256,
+ "g1": 354,
+ "handle_in": 7,
+ "handle_out": 7,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 10,
+  "from": "s01",
+  "mixed": [
+   251,
+   260
+  ],
+  "note": "in-handle g 249..255 rendered in 3D (6A camera); s01 has its out-handle g 256..262; smoothstep mix by the editor"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 10,
+  "to": "s07",
+  "mixed": [
+   349,
+   358
+  ],
+  "note": "out-handle g 354..360 rendered in 3D (6C crane continues); s07 has its in-handle g 347..353"
+ },
+ "transitions": [
+  {
+   "at": 256,
+   "type": "dissolve_in",
+   "frames": 10,
+   "handle": [
+    249,
+    255
+   ]
+  },
+  {
+   "at": 300,
+   "type": "cut",
+   "from_part": 1,
+   "to_part": 2
+  },
+  {
+   "at": 328,
+   "type": "cut",
+   "from_part": 2,
+   "to_part": 3
+  },
+  {
+   "at": 354,
+   "type": "dissolve_out",
+   "frames": 10,
+   "handle": [
+    354,
+    360
+   ]
+  }
+ ],
+ "parts": {
+  "1": {
+   "range": [
+    249,
+    299
+   ],
+   "what": "6A low angle: the master on his tower's scaffold hammering the big joint (strikes g 270, 286)"
+  },
+  "2": {
+   "range": [
+    300,
+    327
+   ],
+   "what": "6B ECU insert: the iron joint plate, a 3D mallet drives the long nail home (strikes g 306, 321)"
+  },
+  "3": {
+   "range": [
+    328,
+    360
+   ],
+   "what": "6C low wide from the courtyard up the rigid tower + scaffold, crane up; strike g 343; out-handle g 354..360"
+  }
+ },
+ "shot_ranges": {
+  "6": [
+   256,
+   353
+  ]
+ },
+ "set": "v3/set3d4/pagoda.py v2 DAY; shot.py adds a scaffold on the tower's south face (decks z 4.6 / 9.0), an iron joint plate with nails at G.JOINT, the keyed hero nail and a 3D mallet (insert only)",
+ "dof": {
+  "6A": "master card, f 3.5",
+  "6B": "(13.7, -2.8, 11.3), f 4.0",
+  "6C": "off"
+ },
+ "narration": "film4/audio/narration_bankky.wav",
+ "light": "DAY",
+ "cast": "v3/cast4: master (6A, 6C; master_plaster pose with a mallet, mallet head pinned to the nail on each blow)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 10.64,
+ "s_per_frame_cpu_mean": 20.77,
+ "encode": "ffmpeg -framerate 30 -start_number 249 -i frames/g_%04d.png -c:v libx264rgb -crf 6 -preset slow take.mkv",
+ "frame_source": {
+  "249": "p1",
+  "250": "p1",
+  "251": "p1",
+  "252": "p1",
+  "253": "p1",
+  "254": "p1",
+  "255": "p1",
+  "256": "p1",
+  "257": "p1",
+  "258": "p1",
+  "259": "p1",
+  "260": "p1",
+  "261": "p1",
+  "262": "p1",
+  "263": "p1",
+  "264": "p1",
+  "265": "p1",
+  "266": "p1",
+  "267": "p1",
+  "268": "p1",
+  "269": "p1",
+  "270": "p1",
+  "271": "p1",
+  "272": "p1",
+  "273": "p1",
+  "274": "p1",
+  "275": "p1",
+  "276": "p1",
+  "277": "p1",
+  "278": "p1",
+  "279": "p1",
+  "280": "p1",
+  "281": "p1",
+  "282": "p1",
+  "283": "p1",
+  "284": "p1",
+  "285": "p1",
+  "286": "p1",
+  "287": "p1",
+  "288": "p1",
+  "289": "p1",
+  "290": "p1",
+  "291": "p1",
+  "292": "p1",
+  "293": "p1",
+  "294": "p1",
+  "295": "p1",
+  "296": "p1",
+  "297": "p1",
+  "298": "p1",
+  "299": "p1",
+  "300": "p2",
+  "301": "p2",
+  "302": "p2",
+  "303": "p2",
+  "304": "p2",
+  "305": "p2",
+  "306": "p2",
+  "307": "p2",
+  "308": "p2",
+  "309": "p2",
+  "310": "p2",
+  "311": "p2",
+  "312": "p2",
+  "313": "p2",
+  "314": "p2",
+  "315": "p2",
+  "316": "p2",
+  "317": "p2",
+  "318": "p2",
+  "319": "p2",
+  "320": "p2",
+  "321": "p2",
+  "322": "p2",
+  "323": "p2",
+  "324": "p2",
+  "325": "p2",
+  "326": "p2",
+  "327": "p2",
+  "328": "p3",
+  "329": "p3",
+  "330": "p3",
+  "331": "p3",
+  "332": "p3",
+  "333": "p3",
+  "334": "p3",
+  "335": "p3",
+  "336": "p3",
+  "337": "p3",
+  "338": "p3",
+  "339": "p3",
+  "340": "p3",
+  "341": "p3",
+  "342": "p3",
+  "343": "p3",
+  "344": "p3",
+  "345": "p3",
+  "346": "p3",
+  "347": "p3",
+  "348": "p3",
+  "349": "p3",
+  "350": "p3",
+  "351": "p3",
+  "352": "p3",
+  "353": "p3",
+  "354": "p3",
+  "355": "p3",
+  "356": "p3",
+  "357": "p3",
+  "358": "p3",
+  "359": "p3",
+  "360": "p3"
+ }
+}
