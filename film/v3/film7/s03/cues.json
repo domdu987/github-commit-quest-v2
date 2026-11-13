@@ -1,0 +1,66 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 4.4,
+   "duration": 3.6,
+   "frame": 132,
+   "end_frame": 240,
+   "kind": "ambience",
+   "label": "Paris street 1911, busy: hooves, wheels on cobbles, cafe chatter, pigeons"
+  },
+  {
+   "time": 4.6,
+   "duration": 0.0,
+   "frame": 138,
+   "end_frame": 138,
+   "kind": "cut",
+   "label": "cut in from shot 2 (the guard)"
+  },
+  {
+   "time": 4.733,
+   "duration": 1.8,
+   "frame": 142,
+   "end_frame": 196,
+   "kind": "prop",
+   "label": "papers slapped up on the kiosk one after another: a quickening run of paper 'flap / slap' hits",
+   "peak_frame": 150
+  },
+  {
+   "time": 5.0,
+   "duration": 2.667,
+   "frame": 150,
+   "end_frame": 230,
+   "kind": "voice",
+   "label": "the newsboy's shout, NOT lip-synced, as wordless crowd walla: 'Extra! Extra!' (French: 'Edition speciale !')",
+   "peak_frame": 186
+  },
+  {
+   "time": 6.2,
+   "duration": 0.0,
+   "frame": 186,
+   "end_frame": 186,
+   "kind": "cut",
+   "label": "cut closer on the newsboy (framing change)"
+  },
+  {
+   "time": 6.533,
+   "duration": 1.267,
+   "frame": 196,
+   "end_frame": 234,
+   "kind": "accent",
+   "label": "the 'famous all over the world' swell: brass hit + bell",
+   "peak_frame": 200
+  },
+  {
+   "time": 7.8,
+   "duration": 0.0,
+   "frame": 234,
+   "end_frame": 234,
+   "kind": "cut",
+   "label": "plan: dissolve to shot 4 (the salon)"
+  }
+ ]
+}
