@@ -1,0 +1,117 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 41.1,
+   "duration": 3.4,
+   "frame": 1233,
+   "end_frame": 1335,
+   "kind": "ambience",
+   "label": "bakery morning interior: oven crackle"
+  },
+  {
+   "time": 41.1,
+   "duration": 1.267,
+   "frame": 1233,
+   "end_frame": 1271,
+   "kind": "voice_fx",
+   "label": "henry's belly laugh (non-verbal, under the narration '\u0e25\u0e38\u0e07\u0e40\u0e2e\u0e19\u0e23\u0e35\u0e48\u0e2b\u0e31\u0e27\u0e40\u0e23\u0e32\u0e30')",
+   "peak_frame": 1245
+  },
+  {
+   "time": 42.833,
+   "duration": 0.0,
+   "frame": 1285,
+   "end_frame": 1285,
+   "kind": "cut",
+   "label": "punch-in, henry crosses his arms (cloth rustle)"
+  },
+  {
+   "time": 44.5,
+   "duration": 2.867,
+   "frame": 1335,
+   "end_frame": 1421,
+   "kind": "ambience",
+   "label": "at the cooling table: soft steam hiss"
+  },
+  {
+   "time": 44.867,
+   "duration": 0.133,
+   "frame": 1346,
+   "end_frame": 1350,
+   "kind": "prop",
+   "label": "henry snatches the 13th loaf: quick swipe + crusty scrape",
+   "peak_frame": 1347
+  },
+  {
+   "time": 45.967,
+   "duration": 1.367,
+   "frame": 1379,
+   "end_frame": 1420,
+   "kind": "gesture",
+   "label": "finger wag: 'tsk tsk' tick-tock pizzicato",
+   "peak_frame": 1385
+  },
+  {
+   "time": 47.367,
+   "duration": 3.133,
+   "frame": 1421,
+   "end_frame": 1515,
+   "kind": "ambience",
+   "label": "afternoon, empty shop: quiet, a fly buzzes, low oven embers, distant market"
+  },
+  {
+   "time": 47.367,
+   "duration": 1.5,
+   "frame": 1421,
+   "end_frame": 1466,
+   "kind": "foley",
+   "label": "kit tiptoes: soft sneaky pizzicato steps"
+  },
+  {
+   "time": 49.6,
+   "duration": 0.1,
+   "frame": 1488,
+   "end_frame": 1491,
+   "kind": "prop",
+   "label": "loaf set on the brass pan: soft thump + pans clink",
+   "peak_frame": 1489
+  },
+  {
+   "time": 49.633,
+   "duration": 0.833,
+   "frame": 1489,
+   "end_frame": 1514,
+   "kind": "prop",
+   "label": "balance beam swings and settles: faint creak"
+  },
+  {
+   "time": 50.633,
+   "duration": 1.367,
+   "frame": 1519,
+   "end_frame": 1560,
+   "kind": "accent",
+   "label": "the loaf side rises: slow rising tone (lighter!)",
+   "peak_frame": 1559
+  },
+  {
+   "time": 51.867,
+   "duration": 0.133,
+   "frame": 1556,
+   "end_frame": 1560,
+   "kind": "accent",
+   "label": "kit's eyes go wide: 'ding' of realisation",
+   "peak_frame": 1556
+  },
+  {
+   "time": 52.6,
+   "duration": 0.0,
+   "frame": 1578,
+   "end_frame": 1578,
+   "kind": "cut",
+   "label": "plan: shot 20, market pillory under the afternoon sun"
+  }
+ ]
+}

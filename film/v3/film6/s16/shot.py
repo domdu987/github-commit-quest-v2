@@ -235,7 +235,7 @@ class Take(C.Take):
                     C.place(henry, f, HENRY16, HENRY_Z); C.place(kit, f, KIT16 if g < CUT[16] else (-0.9, 1.9), KIT16_Z)   # B: kit off frame left
                 else:
                     if g < CUT[17]:
-                        C.place(henry, f, HENRY17A, 0.40); C.place(kit, f, KIT17, 0.10)      # hidden steps: the basket rim at henry's belly
+                        C.place(henry, f, HENRY17A, 0.40); C.place(kit, f, KIT17, 0.16)      # hidden steps: the basket rim at henry's belly
                     else:
                         C.place(henry, f, HENRY17, 0.0); C.place(kit, f, KIT17B, 0.0)
             else:
