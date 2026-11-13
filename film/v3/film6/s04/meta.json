@@ -1,0 +1,172 @@
+{
+ "take": "s04",
+ "film": 6,
+ "shots": [
+  4
+ ],
+ "g0": 180,
+ "g1": 259,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": "dissolve",
+ "transition_in_note": "shot 3 before is the market (another team): the plan's location change = dissolve 9-12 f; 6 in-handle frames g 174..179 rendered in 3D. If the conform cuts instead, start at g 180.",
+ "transition_out": {
+  "type": "dissolve",
+  "note": "shot 5 is the market wide (location change): 6 out-handle frames g 259..264 rendered in 3D"
+ },
+ "transitions": [
+  {
+   "at": 180,
+   "type": "in",
+   "handle": [
+    174,
+    179
+   ]
+  },
+  {
+   "at": 219,
+   "type": "framing change (camera preset switch inside the take, hard cut)"
+  },
+  {
+   "at": 259,
+   "type": "out",
+   "handle": [
+    259,
+    264
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "4": [
+   180,
+   258
+  ]
+ },
+ "events": {
+  "dusting_hands": [
+   174,
+   185
+  ],
+  "thumb_at_henry": [
+   186,
+   204
+  ],
+  "framing_B": 219,
+  "clap": 232,
+  "flour_cloud": [
+   232,
+   264
+  ],
+  "grin": 234
+ },
+ "set": "v3/set3d6/bakery.py: bakery MORNING, steam 0.3, oven 1.0 flicker keyed per frame; custom street-side cameras: A 24 mm (s01-like medium, drift), B 26 mm punch-in on kit",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "light": "MORNING",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "cast": "v3/cast6: kit (hidden stool behind the counter as s01, 512 px/D), henry (background by the oven weighing two loaves, 192 px/D; not rendered in B where he would be cut by the left edge); flour cloud = drawn PropCard (crisp puffs + specks)",
+ "first_g": 174,
+ "n_frames": 91,
+ "last_g": 264,
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 18.32,
+ "s_per_frame_cpu_mean": 35.83,
+ "frame_source": {
+  "174": "4",
+  "175": "4",
+  "176": "4",
+  "177": "4",
+  "178": "4",
+  "179": "4",
+  "180": "4",
+  "181": "4",
+  "182": "4",
+  "183": "4",
+  "184": "4",
+  "185": "4",
+  "186": "4",
+  "187": "4",
+  "188": "4",
+  "189": "4",
+  "190": "4",
+  "191": "4",
+  "192": "4",
+  "193": "4",
+  "194": "4",
+  "195": "4",
+  "196": "4",
+  "197": "4",
+  "198": "4",
+  "199": "4",
+  "200": "4",
+  "201": "4",
+  "202": "4",
+  "203": "4",
+  "204": "4",
+  "205": "4",
+  "206": "4",
+  "207": "4",
+  "208": "4",
+  "209": "4",
+  "210": "4",
+  "211": "4",
+  "212": "4",
+  "213": "4",
+  "214": "4",
+  "215": "4",
+  "216": "4",
+  "217": "4",
+  "218": "4",
+  "219": "4",
+  "220": "4",
+  "221": "4",
+  "222": "4",
+  "223": "4",
+  "224": "4",
+  "225": "4",
+  "226": "4",
+  "227": "4",
+  "228": "4",
+  "229": "4",
+  "230": "4",
+  "231": "4",
+  "232": "4",
+  "233": "4",
+  "234": "4",
+  "235": "4",
+  "236": "4",
+  "237": "4",
+  "238": "4",
+  "239": "4",
+  "240": "4",
+  "241": "4",
+  "242": "4",
+  "243": "4",
+  "244": "4",
+  "245": "4",
+  "246": "4",
+  "247": "4",
+  "248": "4",
+  "249": "4",
+  "250": "4",
+  "251": "4",
+  "252": "4",
+  "253": "4",
+  "254": "4",
+  "255": "4",
+  "256": "4",
+  "257": "4",
+  "258": "4",
+  "259": "4",
+  "260": "4",
+  "261": "4",
+  "262": "4",
+  "263": "4",
+  "264": "4"
+ }
+}

@@ -1,0 +1,67 @@
+{
+ "take": "s04",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 5.8,
+   "duration": 3.0,
+   "frame": 174,
+   "end_frame": 264,
+   "kind": "ambience",
+   "label": "bakery interior: oven crackle, street murmur"
+  },
+  {
+   "time": 5.8,
+   "duration": 0.367,
+   "frame": 174,
+   "end_frame": 185,
+   "kind": "gesture",
+   "label": "kit pats the flour off his hands (soft pats)",
+   "peak_frame": 178
+  },
+  {
+   "time": 6.2,
+   "duration": 0.6,
+   "frame": 186,
+   "end_frame": 204,
+   "kind": "accent",
+   "label": "kit jerks a thumb back at Henry (cheeky little 'bwip')",
+   "peak_frame": 190
+  },
+  {
+   "time": 5.8,
+   "duration": 1.467,
+   "frame": 174,
+   "end_frame": 218,
+   "kind": "gesture",
+   "label": "Henry in the background bobs two loaves in his hands, weighing (quiet)"
+  },
+  {
+   "time": 7.3,
+   "duration": 0.0,
+   "frame": 219,
+   "end_frame": 219,
+   "kind": "cut",
+   "label": "framing change: punch-in on kit"
+  },
+  {
+   "time": 7.733,
+   "duration": 0.133,
+   "frame": 232,
+   "end_frame": 236,
+   "kind": "fx",
+   "label": "kit claps his floury hands: soft clap + 'poof'",
+   "peak_frame": 232
+  },
+  {
+   "time": 7.733,
+   "duration": 1.067,
+   "frame": 232,
+   "end_frame": 264,
+   "kind": "fx",
+   "label": "flour cloud drifts, kit grins at us (sparkle)",
+   "peak_frame": 236
+  }
+ ]
+}
