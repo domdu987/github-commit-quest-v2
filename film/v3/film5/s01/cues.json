@@ -1,0 +1,165 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 2.7,
+   "frame": 0,
+   "end_frame": 81,
+   "kind": "ambience",
+   "label": "deep mine tunnel room tone: distant drips, creak of timber props, faint hiss of the lamps"
+  },
+  {
+   "time": 0.0,
+   "duration": 0.467,
+   "frame": 0,
+   "end_frame": 14,
+   "kind": "prop",
+   "label": "alfie lifts the brass cage: cage ring and wires jingle, a little swing"
+  },
+  {
+   "time": 0.133,
+   "duration": 2.567,
+   "frame": 4,
+   "end_frame": 81,
+   "kind": "bird_song",
+   "label": "the canary sings (bright chirping trills, continuous)"
+  },
+  {
+   "time": 0.667,
+   "duration": 0.667,
+   "frame": 20,
+   "end_frame": 40,
+   "kind": "work",
+   "label": "miner2 digs: two soft shovel scrapes in coal"
+  },
+  {
+   "time": 1.4,
+   "duration": 0.0,
+   "frame": 42,
+   "end_frame": 42,
+   "kind": "cut",
+   "label": "hard cut to the ECU of the singing canary"
+  },
+  {
+   "time": 1.4,
+   "duration": 1.3,
+   "frame": 42,
+   "end_frame": 81,
+   "kind": "bird_song",
+   "label": "canary song up close: a long trill of 5 notes (one per floating note)",
+   "notes": 5
+  },
+  {
+   "time": 2.7,
+   "duration": 0.0,
+   "frame": 81,
+   "end_frame": 81,
+   "kind": "cut",
+   "label": "hard cut: low angle, alfie by the tub"
+  },
+  {
+   "time": 2.7,
+   "duration": 2.533,
+   "frame": 81,
+   "end_frame": 157,
+   "kind": "bird_song",
+   "label": "the canary keeps singing softer in the background"
+  },
+  {
+   "time": 2.767,
+   "duration": 0.3,
+   "frame": 83,
+   "end_frame": 92,
+   "kind": "gesture",
+   "label": "alfie points at the bird (sleeve swish)",
+   "peak_frame": 86
+  },
+  {
+   "time": 3.967,
+   "duration": 0.267,
+   "frame": 119,
+   "end_frame": 127,
+   "kind": "camera_snap",
+   "label": "snap punch-in on alfie (short whoosh in), middle g 123",
+   "peak_frame": 123,
+   "peak_time": 4.1
+  },
+  {
+   "time": 4.267,
+   "duration": 0.4,
+   "frame": 128,
+   "end_frame": 140,
+   "kind": "gesture",
+   "label": "alfie flings his arm to point at the exit on 'hai wing' (cloth whip, small accent)",
+   "peak_frame": 135,
+   "peak_time": 4.5
+  },
+  {
+   "time": 5.233,
+   "duration": 0.0,
+   "frame": 157,
+   "end_frame": 157,
+   "kind": "cut",
+   "label": "cut to the pithead at dusk"
+  },
+  {
+   "time": 5.233,
+   "duration": 1.833,
+   "frame": 157,
+   "end_frame": 212,
+   "kind": "ambience",
+   "label": "pithead dusk ambience: wind, the winding wheels turning, far colliery hooter, crows"
+  },
+  {
+   "time": 6.667,
+   "duration": 0.4,
+   "frame": 200,
+   "end_frame": 212,
+   "kind": "dissolve",
+   "label": "dissolve down into the tunnel (low whoosh / descending rumble of the cage)"
+  },
+  {
+   "time": 6.667,
+   "duration": 4.067,
+   "frame": 200,
+   "end_frame": 322,
+   "kind": "ambience",
+   "label": "tunnel room tone, deeper, with a faint airy hiss (the gas)"
+  },
+  {
+   "time": 8.367,
+   "duration": 0.0,
+   "frame": 251,
+   "end_frame": 251,
+   "kind": "cut",
+   "label": "cut: the hanging lamp in the haze"
+  },
+  {
+   "time": 8.367,
+   "duration": 1.233,
+   "frame": 251,
+   "end_frame": 288,
+   "kind": "lamp",
+   "label": "lamp flame flutter close up, a soft gassy hiss"
+  },
+  {
+   "time": 9.6,
+   "duration": 0.0,
+   "frame": 288,
+   "end_frame": 288,
+   "kind": "cut",
+   "label": "cut: low under the roof lamps"
+  },
+  {
+   "time": 9.6,
+   "duration": 1.133,
+   "frame": 288,
+   "end_frame": 322,
+   "kind": "accent",
+   "label": "low ominous drone under the haze (the invisible gas)"
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+wrote /tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast5/lineup.png
+/tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast5/lineup.png (1780x732) rc=0
+wrote /tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast5/canary.png
+/tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast5/canary.png (4712x1883) rc=0
+wrote /tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast5/poses.png
+/tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast5/poses.png (2030x3200) rc=0
+alfie          range (-1.435, -3.507, 1.794, 0.100)  canvas (-1.875, -3.875, 1.875, 0.1875)  head room 0.37 D  ok
+gaffer         range (-1.641, -4.422, 2.051, 0.046)  canvas (-2.125, -4.75, 2.125, 0.125)  head room 0.33 D  ok
+miner1         range (-1.524, -4.524, 1.905, 0.046)  canvas (-1.9375, -4.875, 1.9375, 0.125)  head room 0.35 D  ok
+miner2         range (-1.581, -3.950, 1.976, 0.046)  canvas (-2.0, -4.3125, 2.0, 0.125)  head room 0.36 D  ok
+miner3         range (-1.496, -4.576, 1.870, 0.046)  canvas (-1.9375, -4.9375, 1.9375, 0.125)  head room 0.36 D  ok
+canary         range (-0.667, -0.786, 0.667, 0.065)  canvas (-0.75, -1.125, 0.75, 0.125)  head room 0.34 D  ok
+canary_in_cage range (-1.035, -1.029, 1.035, 0.180)  canvas (-1.0625, -1.3125, 1.0625, 0.25)  head room 0.28 D  ok
+sprites.DEFAULT_CANVAS has the new members: yes
+head_flip: 44 poses checked (STORY5 + creatures), 0 problems
+creature + new pose keys: 13209 checks, 0 failed, slowest creature figure 0.90 ms, 3.3 s
+presets, expressions, props, effects                     66000 checks  ok
+numeric key sweeps (40 and 240 steps)                   172550 checks  ok
+arm targets: circles and lines through the shoulder     955390 checks  ok
+foot targets                                            271590 checks  ok
+garbage input                                           196827 checks  ok
+random poses                                             18000 checks  ok
+determinism, ids, mirror, resolve / lerp                   140 checks  ok
+    slowest pose: 1.27 ms per call
+speed                                                        6 checks  ok
+1680503 checks, 0 failed, 150.7 s
+rc=0
