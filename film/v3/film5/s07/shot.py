@@ -65,7 +65,7 @@ class S(object):
         p["arm_r"] = dict(p["arm_r"]); p["arm_l"] = dict(p["arm_l"]); p["prop_l"] = dict(p["prop_l"])
         p["t"] = g / 30.0
         laugh = ez((g - (S.G_LAUGH - 4)) / 6.0, "back_out") if sid == 1 else 1.0
-        shake = math.sin(g * 1.7)
+        shake = math.sin(g * 0.9)
         if sid == 1 and laugh < 0.5:                             # before the laugh: smug, looking across at the boy
             p.update(expr="smug", mouth="flat", head_roll=4, lean=-1, squash=(1.0, 1.0), head_dy=0.0, fx=[], blink=blink(g, [530]))
             p["yaw"] = -0.25; p["gaze"] = (-0.8, 0.1)
@@ -73,10 +73,10 @@ class S(object):
             return p
         p["expr"] = "laughing"
         p["blink"] = 0
-        p["head_roll"] = 12 + 4 * shake
-        p["head_dy"] = 0.03 + 0.015 * shake
-        p["lean"] = -6 - 2 * shake
-        p["squash"] = (1.0 + 0.02 * shake, 1.0 - 0.02 * shake)
+        p["head_roll"] = 12 + 2.5 * shake
+        p["head_dy"] = 0.03 + 0.01 * shake
+        p["lean"] = -6 - 0.8 * shake
+        p["squash"] = (1.0 + 0.015 * shake, 1.0 - 0.015 * shake)
         m = L.lip(g, S.Q0, S.Q1, silent="grin")
         p["mouth"] = m if m is not None else "grin"             # outside the quote: a held laughing grin (no lip motion)
         p["yaw"] = -0.1 if sid == 1 else 0.1
@@ -84,11 +84,11 @@ class S(object):
             p["expr"] = "smug" if g >= S.G_NOO - 4 else "laughing"
             p["fx"] = [] if g >= S.G_NOO - 4 else ["tears"]
             bend = ez((g - (S.G_NOO - 8)) / 10.0)
-            p["lean"] = lerp(-6, 10, bend) - 1.5 * shake
+            p["lean"] = lerp(-6, 10, bend) - 0.6 * shake
             p["pitch"] = lerp(-0.2, 0.55, bend)
             p["yaw"] = -0.45
             p["gaze"] = (-0.8, 0.6 * bend)
-            p["head_roll"] = lerp(12, -4, bend) + 2 * shake
+            p["head_roll"] = lerp(12, -4, bend) + 1.5 * shake
             lift = ez((g - (S.G_LAMP - 5)) / 8.0, "back_out")
             p["arm_l"] = dict(hand=(lerp(-0.72, -0.95, lift), lerp(0.9, -0.2, lift)), bend=lerp(0.4, 0.9, lift), stretch=1.3)
             p["arm_r"] = dict(hand=(0.45, 0.95), bend=0.6)
