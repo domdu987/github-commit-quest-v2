@@ -1,0 +1,48 @@
+{
+ "take": "s17",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 50.5,
+   "duration": 3.067,
+   "frame": 1515,
+   "end_frame": 1607,
+   "kind": "ambience",
+   "label": "night quake rumbling on (lower than shot 16), the pagoda's timbers creak and groan rhythmically with the sway"
+  },
+  {
+   "time": 50.5,
+   "duration": 3.067,
+   "frame": 1515,
+   "end_frame": 1607,
+   "kind": "ambience",
+   "label": "wind bells on all five eaves jangle, paper lanterns rattle on their hooks"
+  },
+  {
+   "time": 51.533,
+   "duration": 0.333,
+   "frame": 1546,
+   "end_frame": 1556,
+   "kind": "accent",
+   "label": "'swaying like a snake': a long woody creak per swing",
+   "peak_frame": 1546
+  },
+  {
+   "time": 51.8,
+   "duration": 0.0,
+   "frame": 1554,
+   "end_frame": 1554,
+   "kind": "cut",
+   "label": "cut to the open base: townspeople whimpering, huddled"
+  },
+  {
+   "time": 52.3,
+   "duration": 0.0,
+   "frame": 1569,
+   "end_frame": 1569,
+   "kind": "accent",
+   "label": "'but not one storey fell': the creak settles into the rhythm (no crash)"
+  }
+ ]
+}
