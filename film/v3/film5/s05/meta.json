@@ -92,8 +92,8 @@
   1280
  ],
  "threads": 2,
- "s_per_frame_wall_mean": 16.17,
- "s_per_frame_cpu_mean": 31.6,
+ "s_per_frame_wall_mean": 16.51,
+ "s_per_frame_cpu_mean": 31.8,
  "frame_source": {
   "308": "5a",
   "309": "5a",
