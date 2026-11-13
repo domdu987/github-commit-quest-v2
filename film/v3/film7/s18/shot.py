@@ -29,7 +29,7 @@ def keys_paris(g):
 # ----------------------------------------------------------------------------- id 1: the quai at dusk
 def cam1(g):
     u = ez((g - R[1][0]) / float(R[1][1] - R[1][0]))
-    return (lerp(1.6, 1.9, u), lerp(38.5, 42.5, u), lerp(3.7, 3.55, u)), (lerp(3.0, 3.4, u), 108.0, lerp(12.0, 13.5, u)), 22.0
+    return (lerp(1.6, 1.9, u), lerp(40.8, 43.6, u), lerp(3.7, 3.55, u)), (lerp(3.0, 3.4, u), 108.0, lerp(12.0, 13.5, u)), 22.0
 
 
 lady_pos, lady_pose = walker("lady", (-2.4, 55.5, 0), (0.055, 0.0, 0), R[1][0], 1, base=dict(expr="happy", yaw=0.7), period=30, speed=0.7)
@@ -39,7 +39,7 @@ gent_pos, gent_pose = walker("gentleman", (6.2, 57.5, 0), (-0.07, 0.0, 0), R[1][
 # ----------------------------------------------------------------------------- id 2: tilt up the towers
 def cam2(g):
     u = ez((g - R[2][0]) / float(R[2][1] - R[2][0]))
-    return (lerp(1.2, 1.4, u), lerp(46.0, 47.0, u), 1.0), (lerp(4.6, 4.8, u), 108.0, lerp(12.0, 28.0, u)), 48.0
+    return (lerp(1.2, 1.4, u), lerp(46.0, 47.0, u), 1.0), (lerp(4.6, 4.8, u), 108.0, lerp(14.0, 33.0, u)), 40.0
 
 
 # ----------------------------------------------------------------------------- id 3: the director at the empty wall
@@ -81,7 +81,7 @@ SETUPS = {
     1: Setup("paris", "notre_dame_view", R[1], cam1, [
         Cast("lady", "lady", lady_pos, lady_pose, ppd=256),
         Cast("gent", "gentleman", gent_pos, gent_pose, ppd=256)], keys=keys_paris, lens=22.0),
-    2: Setup("paris", "notre_dame_view", R[2], cam2, [], keys=keys_paris, lens=48.0),
+    2: Setup("paris", "notre_dame_view", R[2], cam2, [], keys=keys_paris, lens=40.0),
     3: Setup("louvre", "wall_eye", R[3], cam3, [Cast("dir", "director", lambda g: DIR, dir_pose, ppd=320)],
              keys=lambda g: dict(mona=False, flames=1.0), lens=22.0),
 }
