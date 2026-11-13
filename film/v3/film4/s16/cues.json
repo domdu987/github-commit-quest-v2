@@ -1,0 +1,76 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film4/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 47.5,
+   "duration": 3.467,
+   "frame": 1425,
+   "end_frame": 1529,
+   "kind": "quake",
+   "label": "strongest quake: deep roar, lanterns and bells rattling, the pagoda creaking as it sways"
+  },
+  {
+   "time": 48.4,
+   "duration": 0.133,
+   "frame": 1452,
+   "end_frame": 1456,
+   "kind": "crack",
+   "label": "the plastered joint splits: sharp crack, plaster crumbles",
+   "peak_frame": 1452
+  },
+  {
+   "time": 48.867,
+   "duration": 0.2,
+   "frame": 1466,
+   "end_frame": 1472,
+   "kind": "camera_snap",
+   "label": "snap punch-in toward the break (whoosh)",
+   "peak_frame": 1469
+  },
+  {
+   "time": 49.133,
+   "duration": 0.133,
+   "frame": 1474,
+   "end_frame": 1478,
+   "kind": "snap",
+   "label": "the tower snaps in the middle like a ruler: huge timber crack",
+   "peak_frame": 1476
+  },
+  {
+   "time": 49.267,
+   "duration": 0.733,
+   "frame": 1478,
+   "end_frame": 1500,
+   "kind": "fall",
+   "label": "the top half topples: groaning timber, a rising whoosh"
+  },
+  {
+   "time": 50.0,
+   "duration": 0.4,
+   "frame": 1500,
+   "end_frame": 1512,
+   "kind": "impact",
+   "label": "the top half slams into the courtyard: massive crash, debris rain, camera jolt",
+   "peak_frame": 1500
+  },
+  {
+   "time": 49.933,
+   "duration": 0.267,
+   "frame": 1498,
+   "end_frame": 1506,
+   "kind": "camera_snap",
+   "label": "snap pull-back (whoosh) with the dust",
+   "peak_frame": 1502
+  },
+  {
+   "time": 50.0,
+   "duration": 0.967,
+   "frame": 1500,
+   "end_frame": 1529,
+   "kind": "dust",
+   "label": "dust column billowing up, small debris pattering down"
+  }
+ ]
+}

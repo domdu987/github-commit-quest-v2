@@ -1,0 +1,52 @@
+{
+ "take": "s16",
+ "shots": [
+  16
+ ],
+ "first_g": 1425,
+ "n_frames": 104,
+ "g0": 1432,
+ "g1": 1522,
+ "handle_in": 7,
+ "handle_out": 7,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "handle g 1425..1431 rendered in 3D anyway (shot 16 camera before its start)"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "handle g 1522..1528 rendered in 3D (dust column keeps rising)"
+ },
+ "shot_ranges": {
+  "16": [
+   1432,
+   1521
+  ]
+ },
+ "render_ranges": {
+  "16": [
+   1425,
+   1528
+  ]
+ },
+ "internal_cuts": [],
+ "set": "v3/set3d4/pagoda.py v2 (nothing added; set controls keyed per frame from shot.py)",
+ "light": "NIGHT",
+ "cast": "none (no people)",
+ "dof": {
+  "16": "off"
+ },
+ "sway": 1.15,
+ "narration": "film4/audio/narration_bankky.wav (+0.10 s), captions film4/script/captions_bankky.json",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 5.97,
+ "s_per_frame_cpu_mean": 11.23,
+ "encode": "ffmpeg -framerate 30 -start_number 1425 -i frames/g_%04d.png -c:v libx264rgb -crf 6 -preset slow take.mkv"
+}
