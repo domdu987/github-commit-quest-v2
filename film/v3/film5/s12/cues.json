@@ -1,0 +1,74 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 36.167,
+   "duration": 4.233,
+   "frame": 1085,
+   "end_frame": 1212,
+   "kind": "ambience",
+   "label": "deep tunnel room tone, quieter than before; a faint airy hiss (the gas)"
+  },
+  {
+   "time": 36.433,
+   "duration": 0.0,
+   "frame": 1093,
+   "end_frame": 1093,
+   "kind": "cut",
+   "label": "dissolve / cut: next day, the cage on its nail"
+  },
+  {
+   "time": 37.733,
+   "duration": 0.0,
+   "frame": 1132,
+   "end_frame": 1132,
+   "kind": "cut",
+   "label": "cut: closer, inbye side"
+  },
+  {
+   "time": 38.167,
+   "duration": 0.467,
+   "frame": 1145,
+   "end_frame": 1159,
+   "kind": "bird_song",
+   "label": "the canary sings ONE thin note (one floating note), then silence",
+   "notes": 1,
+   "peak_frame": 1145
+  },
+  {
+   "time": 38.633,
+   "duration": 0.4,
+   "frame": 1159,
+   "end_frame": 1171,
+   "kind": "foley",
+   "label": "soft feather ruffle as it droops; eyes close"
+  },
+  {
+   "time": 38.933,
+   "duration": 0.0,
+   "frame": 1168,
+   "end_frame": 1168,
+   "kind": "cut",
+   "label": "cut: low, level with the cage floor"
+  },
+  {
+   "time": 39.067,
+   "duration": 0.3,
+   "frame": 1172,
+   "end_frame": 1181,
+   "kind": "foley",
+   "label": "the bird tips off the perch and drops to the cage floor: tiny soft thump, faint wire ring",
+   "peak_frame": 1181
+  },
+  {
+   "time": 39.367,
+   "duration": 1.033,
+   "frame": 1181,
+   "end_frame": 1212,
+   "kind": "accent",
+   "label": "silence over the still bird (low sad drone)"
+  }
+ ]
+}
