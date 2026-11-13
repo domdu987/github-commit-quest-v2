@@ -1,0 +1,111 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 49.8,
+   "duration": 7.367,
+   "frame": 1494,
+   "end_frame": 1715,
+   "kind": "ambience",
+   "label": "quiet mine tunnel room tone after the blast: settling dust, a slow creak of the timber sets"
+  },
+  {
+   "time": 50.067,
+   "duration": 3.867,
+   "frame": 1502,
+   "end_frame": 1618,
+   "kind": "music",
+   "label": "soft explanatory pulse: a slow low note on each of the man's breaths, a quick high tick on each of the bird's pumps"
+  },
+  {
+   "time": 50.067,
+   "duration": 3.867,
+   "frame": 1502,
+   "end_frame": 1618,
+   "kind": "breath",
+   "label": "the man: one slow audible breath in / out every 3.2 s"
+  },
+  {
+   "time": 50.067,
+   "duration": 3.867,
+   "frame": 1502,
+   "end_frame": 1618,
+   "kind": "breath",
+   "label": "the bird: tiny fast chirp-breaths, about 4 per second (under the narration)"
+  },
+  {
+   "time": 51.333,
+   "duration": 0.0,
+   "frame": 1540,
+   "end_frame": 1540,
+   "kind": "cut",
+   "label": "cut: tighter on the bird and the man side by side"
+  },
+  {
+   "time": 52.633,
+   "duration": 0.0,
+   "frame": 1579,
+   "end_frame": 1579,
+   "kind": "cut",
+   "label": "cut: low wide, the three heights"
+  },
+  {
+   "time": 52.4,
+   "duration": 0.667,
+   "frame": 1572,
+   "end_frame": 1592,
+   "kind": "gas",
+   "label": "a faint airy hiss: the gas layer sinks from the roof and reaches the cage first"
+  },
+  {
+   "time": 53.533,
+   "duration": 0.667,
+   "frame": 1606,
+   "end_frame": 1626,
+   "kind": "gas",
+   "label": "the hiss passes the man's head"
+  },
+  {
+   "time": 53.933,
+   "duration": 0.0,
+   "frame": 1618,
+   "end_frame": 1618,
+   "kind": "cut",
+   "label": "cut: the man and his lamp, the flame still steady"
+  },
+  {
+   "time": 55.133,
+   "duration": 0.0,
+   "frame": 1654,
+   "end_frame": 1654,
+   "kind": "cut",
+   "label": "cut: ECU of the lamp"
+  },
+  {
+   "time": 55.2,
+   "duration": 0.333,
+   "frame": 1656,
+   "end_frame": 1666,
+   "kind": "flame",
+   "label": "whump: the flame flares tall and blue (soft, not an explosion)"
+  },
+  {
+   "time": 55.9,
+   "duration": 0.0,
+   "frame": 1677,
+   "end_frame": 1677,
+   "kind": "cut",
+   "label": "cut: ECU of the bird inside the bars, breathing fast"
+  },
+  {
+   "time": 55.9,
+   "duration": 1.0,
+   "frame": 1677,
+   "end_frame": 1707,
+   "kind": "breath",
+   "label": "the bird's quick breaths, a little heavier in the haze"
+  }
+ ]
+}
