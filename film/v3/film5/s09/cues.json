@@ -1,0 +1,106 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 24.967,
+   "duration": 7.4,
+   "frame": 749,
+   "end_frame": 971,
+   "kind": "ambience",
+   "label": "tunnel room tone, close and quiet around the cage"
+  },
+  {
+   "time": 25.233,
+   "duration": 1.833,
+   "frame": 757,
+   "end_frame": 812,
+   "kind": "bird_song",
+   "label": "day 1: the canary sings a long bright song, 5 notes (one per floating note)",
+   "notes": 5
+  },
+  {
+   "time": 26.233,
+   "duration": 0.0,
+   "frame": 787,
+   "end_frame": 787,
+   "kind": "cut",
+   "label": "cut: ECU of the singing bird"
+  },
+  {
+   "time": 26.9,
+   "duration": 0.333,
+   "frame": 807,
+   "end_frame": 817,
+   "kind": "dissolve",
+   "label": "dissolve: days pass (soft whoosh)"
+  },
+  {
+   "time": 27.067,
+   "duration": 1.967,
+   "frame": 812,
+   "end_frame": 871,
+   "kind": "bird_song",
+   "label": "day 5: a shorter song, 3 notes",
+   "notes": 3
+  },
+  {
+   "time": 27.133,
+   "duration": 0.133,
+   "frame": 814,
+   "end_frame": 818,
+   "kind": "prop",
+   "label": "chalk scratch: the tally reads 5"
+  },
+  {
+   "time": 28.867,
+   "duration": 0.333,
+   "frame": 866,
+   "end_frame": 876,
+   "kind": "dissolve",
+   "label": "dissolve: days pass"
+  },
+  {
+   "time": 29.033,
+   "duration": 1.4,
+   "frame": 871,
+   "end_frame": 913,
+   "kind": "bird_song",
+   "label": "day 10: only 3 thin notes, weaker",
+   "notes": 3
+  },
+  {
+   "time": 30.433,
+   "duration": 0.767,
+   "frame": 913,
+   "end_frame": 936,
+   "kind": "silence",
+   "label": "silence: the beak closes, the room tone drops away, one drip"
+  },
+  {
+   "time": 31.2,
+   "duration": 0.0,
+   "frame": 936,
+   "end_frame": 936,
+   "kind": "cut",
+   "label": "HARD CUT: alfie"
+  },
+  {
+   "time": 31.2,
+   "duration": 1.433,
+   "frame": 936,
+   "end_frame": 979,
+   "kind": "shout",
+   "label": "alfie shouts 'run!' (narration carries the line; his mouth is a held shout, not lip-synced); cage wires rattle"
+  },
+  {
+   "time": 31.467,
+   "duration": 0.333,
+   "frame": 944,
+   "end_frame": 954,
+   "kind": "gesture",
+   "label": "the men in the depth turn round"
+  }
+ ]
+}
