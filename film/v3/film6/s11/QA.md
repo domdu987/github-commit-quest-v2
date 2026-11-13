@@ -47,7 +47,7 @@ See `work/qa.txt`. Warm interior as the set measures it (bakery_API 7): red / or
 set look as s01; not graded per take.
 
 ## Seconds per frame
-See meta.json (F1-F3 first pass: 19.9 s wall / 35.6 s CPU mean, two 2-thread processes on 4 cores; kit sprite 448 px/D, henry 384 px/D).
+21.4 s wall / 37.3 s CPU per frame mean (two 2-thread processes on 4 cores, denoise FAST, 12 samples; kit sprite 448 px/D, henry 384 px/D).
 
 ## Differences from the plan
 - The plan's "two-shot" is split into three framings (two-shot -> tighter two-shot -> low punch-in) to keep a framing change every 1-2 s.
