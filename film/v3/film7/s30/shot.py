@@ -4,7 +4,7 @@ Plan: louvre / empty_wall_queue, 'modern feel: bigger crowd' -- tens of thousand
 Dissolve in from shot 29.  Narration: "ทุกวันนี้ มีคนต่อแถวดู โมนาลิซ่าวัน ละหลายหมื่นคน และเธอยัง ยิ้มอยู่หลัง..."
 Here she is BACK on the wall (set_mona True), the queue ropes up (set_queue True), and the Salon Carre is packed.
 
-    id 1  g 2974..3038  side angle from the right of the room (camera crane x 5.6 -> 5.0, slow push): the packed queue lane pressing
+    id 1  g 2974..3038  side angle from the right of the room, 32 mm from 13 D back (crane-in): the packed queue lane pressing
                         toward the small painting (screen-left, above the crowd), more people waiting outside the ropes, everyone
                         staring up at her.  "มีคนต่อแถวดู โมนาลิซ่า" (99.80 / 100.59 s).
     id 2  g 3039..3101  CUT just before "ละหลายหมื่นคน" (101.27 s = g 3041): the reverse from beside her frame, high, looking back
@@ -34,7 +34,7 @@ G_CUT = C.g_of(101.27) - 2                                # 3039: cut just befor
 RANGES = {1: (G0 - H, G_CUT - 1), 2: (G_CUT, G1 + H - 1)}
 MONA = Vector((0.0, 21.80, 3.55))
 FACE = Vector((0.0, 21.80, 3.90))
-LENS = {1: 22.0, 2: 20.0}
+LENS = {1: 32.0, 2: 20.0}
 
 
 def bf(shot, g):
@@ -45,8 +45,8 @@ def cam_of(shot, g):
     a, b = RANGES[shot]
     u = ez((g - a) / float(b - a), "sine")
     if shot == 1:      # side angle, slow crane-in toward the wall
-        loc = Vector(lerp((4.7, 13.4, 5.1), (4.0, 14.9, 4.9), u))
-        look = Vector(lerp((-0.6, 21.6, 3.1), (-0.4, 21.6, 3.3), u))
+        loc = Vector(lerp((7.0, 9.8, 5.9), (6.3, 10.9, 5.7), u))
+        look = Vector(lerp((-0.7, 21.6, 2.9), (-0.5, 21.6, 3.1), u))
     else:              # reverse from beside her, crane up + back
         loc = Vector(lerp((2.3, 21.3, 4.9), (2.6, 21.0, 5.7), u))
         look = Vector(lerp((-1.0, 6.0, 3.0), (-0.9, 6.0, 2.9), u))
@@ -80,8 +80,8 @@ def crowd_spots(shot, seed):
 
     fill(-2.25, 2.25, 14.8, 19.4 if shot == 1 else 20.0, 26, 0.62)   # inside the lane (shot 1: keep her sight line)
     if shot == 1:
-        fill(-8.5, -2.95, 11.0, 20.6, 34, 0.72)        # left of the lane (beyond it from this camera)
-        fill(-2.25, 2.25, 8.0, 14.6, 14, 0.72)           # the tail of the lane
+        fill(-8.5, -2.95, 11.0, 20.6, 40, 0.66)        # left of the lane (beyond it from this camera)
+        fill(-2.25, 2.25, 8.0, 14.6, 18, 0.66)           # the tail of the lane
         fill(2.95, 6.5, 15.5, 20.6, 12, 0.72)           # right of the lane, near side
         fill(-12.0, 3.0, 2.5, 11.0, 24, 0.85)          # deep back-left
     else:
