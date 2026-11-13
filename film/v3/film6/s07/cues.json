@@ -1,0 +1,144 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 15.133,
+   "duration": 11.367,
+   "frame": 454,
+   "end_frame": 795,
+   "kind": "ambience",
+   "label": "bakery interior: oven roar (louder in shot 9), crackle"
+  },
+  {
+   "time": 15.867,
+   "duration": 0.333,
+   "frame": 476,
+   "end_frame": 486,
+   "kind": "prop",
+   "label": "Henry lowers a crumb: tiny tick as it lands on the brass pan",
+   "peak_frame": 486
+  },
+  {
+   "time": 16.2,
+   "duration": 0.467,
+   "frame": 486,
+   "end_frame": 500,
+   "kind": "prop",
+   "label": "beam swings over: brass creak + 'clink'",
+   "peak_frame": 492
+  },
+  {
+   "time": 17.067,
+   "duration": 0.733,
+   "frame": 512,
+   "end_frame": 534,
+   "kind": "prop",
+   "label": "Henry plucks the crumb back, beam swings back (creak)",
+   "peak_frame": 524
+  },
+  {
+   "time": 17.867,
+   "duration": 0.133,
+   "frame": 536,
+   "end_frame": 540,
+   "kind": "prop",
+   "label": "crumb snapped in half: tiny crack",
+   "peak_frame": 538
+  },
+  {
+   "time": 18.3,
+   "duration": 0.0,
+   "frame": 549,
+   "end_frame": 549,
+   "kind": "cut",
+   "label": "cut: shot 8 ECU"
+  },
+  {
+   "time": 18.667,
+   "duration": 0.4,
+   "frame": 560,
+   "end_frame": 572,
+   "kind": "prop",
+   "label": "half crumb lowered (held breath)",
+   "peak_frame": 572
+  },
+  {
+   "time": 19.067,
+   "duration": 1.133,
+   "frame": 572,
+   "end_frame": 606,
+   "kind": "prop",
+   "label": "beam wobbles, settles exactly level: soft brass 'ting' at level",
+   "peak_frame": 606
+  },
+  {
+   "time": 19.9,
+   "duration": 0.0,
+   "frame": 597,
+   "end_frame": 597,
+   "kind": "cut",
+   "label": "framing change: tight on the pivot"
+  },
+  {
+   "time": 20.667,
+   "duration": 0.433,
+   "frame": 620,
+   "end_frame": 633,
+   "kind": "gesture",
+   "label": "Henry's smug little nod (satisfied hum, closed mouth)",
+   "peak_frame": 625
+  },
+  {
+   "time": 21.4,
+   "duration": 0.0,
+   "frame": 642,
+   "end_frame": 642,
+   "kind": "cut",
+   "label": "cut: shot 9 wide"
+  },
+  {
+   "time": 21.4,
+   "duration": 2.567,
+   "frame": 642,
+   "end_frame": 719,
+   "kind": "prop",
+   "label": "kit scrubs a tray: scrub-scrub, water slosh, tray clank"
+  },
+  {
+   "time": 23.467,
+   "duration": 0.267,
+   "frame": 704,
+   "end_frame": 712,
+   "kind": "gesture",
+   "label": "kit looks round toward the steaming table",
+   "peak_frame": 708
+  },
+  {
+   "time": 24.0,
+   "duration": 0.0,
+   "frame": 720,
+   "end_frame": 720,
+   "kind": "cut",
+   "label": "cut: shot 10 table insert"
+  },
+  {
+   "time": 24.0,
+   "duration": 2.5,
+   "frame": 720,
+   "end_frame": 795,
+   "kind": "fx",
+   "label": "steam rising: soft airy shimmer / dreamy music sting",
+   "peak_frame": 726
+  },
+  {
+   "time": 25.1,
+   "duration": 0.0,
+   "frame": 753,
+   "end_frame": 753,
+   "kind": "cut",
+   "label": "framing change: ECU loaves + steam, tilt up"
+  }
+ ]
+}
