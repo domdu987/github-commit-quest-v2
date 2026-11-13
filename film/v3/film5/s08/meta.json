@@ -1,0 +1,170 @@
+{
+ "take": "s08",
+ "film": 5,
+ "shots": [
+  8
+ ],
+ "first_g": 683,
+ "n_frames": 82,
+ "g0": 691,
+ "g1": 757,
+ "handle_in": 8,
+ "handle_out": 8,
+ "transition_in": {
+  "type": "cut_or_dissolve",
+  "frames": 0,
+  "handle": [
+   683,
+   690
+  ],
+  "note": "8-frame in-handle g 683..690 rendered in 3D (8a camera already drifting): enough for a dissolve of up to 12 frames"
+ },
+ "transition_out": {
+  "type": "cut_or_dissolve",
+  "frames": 0,
+  "handle": [
+   757,
+   764
+  ],
+  "note": "8-frame out-handle g 757..764 rendered in 3D (8b push continues); shot 9 opens on the cage insert"
+ },
+ "transitions": [
+  {
+   "at": 691,
+   "type": "in",
+   "handle": [
+    683,
+    690
+   ]
+  },
+  {
+   "at": 729,
+   "type": "cut",
+   "from_shot": "8a",
+   "to_shot": "8b",
+   "note": "cut on '\u0e44\u0e2d\u0e49\u0e40\u0e14\u0e47\u0e01' (24.25 s, g 730)"
+  },
+  {
+   "at": 757,
+   "type": "out",
+   "handle": [
+    757,
+    764
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "8": [
+   691,
+   756
+  ],
+  "8a": [
+   691,
+   728
+  ],
+  "8b": [
+   729,
+   756
+  ]
+ },
+ "set": "v3/set3d5/mine.py tunnel LAMP; the set's 3D cage hidden (alfie carries the cast's 2D held cage)",
+ "dof": "none (client rule: no depth of field anywhere; M.setup_dof(scene, None, None, cam=...) before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film5/audio/narration_bankky.wav at +0.10 s; captions film5/script/captions.json",
+ "light": "LAMP (tunnel)",
+ "cast": "v3/cast5: miner1/2/3 (miners_laugh poses, bouncing), alfie with prop 'cage' + pose key 'bird' (canary inside the bars, 3 notes)",
+ "cage": "2D held cage (cast5 prop 'cage', bird drawn inside the bars); set cage hidden",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "raw_frames_rendered": 82,
+ "s_per_frame_wall_mean": 15.19,
+ "s_per_frame_cpu_mean": 29.53,
+ "frame_source": {
+  "683": "8a",
+  "684": "8a",
+  "685": "8a",
+  "686": "8a",
+  "687": "8a",
+  "688": "8a",
+  "689": "8a",
+  "690": "8a",
+  "691": "8a",
+  "692": "8a",
+  "693": "8a",
+  "694": "8a",
+  "695": "8a",
+  "696": "8a",
+  "697": "8a",
+  "698": "8a",
+  "699": "8a",
+  "700": "8a",
+  "701": "8a",
+  "702": "8a",
+  "703": "8a",
+  "704": "8a",
+  "705": "8a",
+  "706": "8a",
+  "707": "8a",
+  "708": "8a",
+  "709": "8a",
+  "710": "8a",
+  "711": "8a",
+  "712": "8a",
+  "713": "8a",
+  "714": "8a",
+  "715": "8a",
+  "716": "8a",
+  "717": "8a",
+  "718": "8a",
+  "719": "8a",
+  "720": "8a",
+  "721": "8a",
+  "722": "8a",
+  "723": "8a",
+  "724": "8a",
+  "725": "8a",
+  "726": "8a",
+  "727": "8a",
+  "728": "8a",
+  "729": "8b",
+  "730": "8b",
+  "731": "8b",
+  "732": "8b",
+  "733": "8b",
+  "734": "8b",
+  "735": "8b",
+  "736": "8b",
+  "737": "8b",
+  "738": "8b",
+  "739": "8b",
+  "740": "8b",
+  "741": "8b",
+  "742": "8b",
+  "743": "8b",
+  "744": "8b",
+  "745": "8b",
+  "746": "8b",
+  "747": "8b",
+  "748": "8b",
+  "749": "8b",
+  "750": "8b",
+  "751": "8b",
+  "752": "8b",
+  "753": "8b",
+  "754": "8b",
+  "755": "8b",
+  "756": "8b",
+  "757": "8b",
+  "758": "8b",
+  "759": "8b",
+  "760": "8b",
+  "761": "8b",
+  "762": "8b",
+  "763": "8b",
+  "764": "8b"
+ }
+}

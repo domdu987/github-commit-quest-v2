@@ -1,0 +1,57 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film5/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 22.767,
+   "duration": 2.733,
+   "frame": 683,
+   "end_frame": 765,
+   "kind": "ambience",
+   "label": "tunnel room tone: drips, timber creak, lamp hiss"
+  },
+  {
+   "time": 23.033,
+   "duration": 2.2,
+   "frame": 691,
+   "end_frame": 757,
+   "kind": "laughter",
+   "label": "the miners roar with laughter: belly laughs, a wheeze, a knee slap (no words)"
+  },
+  {
+   "time": 23.167,
+   "duration": 0.333,
+   "frame": 695,
+   "end_frame": 705,
+   "kind": "gesture",
+   "label": "miner1 jabs his finger at the boy (sleeve swish)",
+   "peak_frame": 699
+  },
+  {
+   "time": 24.3,
+   "duration": 0.0,
+   "frame": 729,
+   "end_frame": 729,
+   "kind": "cut",
+   "label": "cut to alfie, the laughter continues behind him"
+  },
+  {
+   "time": 24.3,
+   "duration": 1.2,
+   "frame": 729,
+   "end_frame": 765,
+   "kind": "bird_song",
+   "label": "the canary sings 3 small notes, thin and sweet under the laughter",
+   "notes": 3
+  },
+  {
+   "time": 24.5,
+   "duration": 0.467,
+   "frame": 735,
+   "end_frame": 749,
+   "kind": "prop",
+   "label": "alfie hugs the cage closer: soft wire jingle"
+  }
+ ]
+}
