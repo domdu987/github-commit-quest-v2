@@ -293,7 +293,7 @@ def build_cup():
     """Tea cup on a wooden sill on the tower's south face near its west corner (shot 9b)."""
     coll = _ensure_coll("S09_CUP"); C = G.STATE["C"]
     mb = G.MB()
-    wood = C("#6a4228"); wood_d = C("#3e2618")
+    wood = C("#a8823e"); wood_d = C("#6e5430")              # ochre: brown read mauve in the violet shade
     sx0, sx1 = 11.62, 12.36
     mb.box((sx0, -3.42, CUP.z - 0.14), (sx1, -2.6, CUP.z), wood)                 # sill board
     mb.box((sx0, -3.44, CUP.z - 0.30), (sx1, -2.6, CUP.z - 0.14), wood_d)        # its bracket band
