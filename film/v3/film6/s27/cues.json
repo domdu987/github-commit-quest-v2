@@ -1,0 +1,86 @@
+{
+ "take": "s27",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 73.667,
+   "duration": 8.1,
+   "frame": 2210,
+   "end_frame": 2453,
+   "kind": "ambience",
+   "label": "market square, afternoon: crowd roar, jeering, braziers crackle"
+  },
+  {
+   "time": 73.667,
+   "duration": 0.2,
+   "frame": 2210,
+   "end_frame": 2216,
+   "kind": "foley",
+   "label": "bakery half-door bangs open; kit's bare feet slap the cobbles running",
+   "peak_frame": 2212
+  },
+  {
+   "time": 73.867,
+   "duration": 5.067,
+   "frame": 2216,
+   "end_frame": 2368,
+   "kind": "foley",
+   "label": "kit running through the crowd: fast footfalls, cloth flap, bodies brushing past",
+   "peak_frame": 2220
+  },
+  {
+   "time": 77.367,
+   "duration": 2.933,
+   "frame": 2321,
+   "end_frame": 2409,
+   "kind": "vocal",
+   "label": "kit shouts (child voice): 'the weight evaporated by itself! I'll make up the shortfall!' (lip-sync, Thai)",
+   "peak_frame": 2360
+  },
+  {
+   "time": 78.967,
+   "duration": 0.067,
+   "frame": 2369,
+   "end_frame": 2371,
+   "kind": "accent",
+   "label": "hard cut to the balance: a bright determined stinger",
+   "peak_frame": 2369
+  },
+  {
+   "time": 78.967,
+   "duration": 1.367,
+   "frame": 2369,
+   "end_frame": 2410,
+   "kind": "foley",
+   "label": "kit skids to a stop on the crate, panting",
+   "peak_frame": 2372
+  },
+  {
+   "time": 80.8,
+   "duration": 0.133,
+   "frame": 2424,
+   "end_frame": 2428,
+   "kind": "prop",
+   "label": "the pale 13th loaf set on the pile: a soft decisive crusty thump",
+   "peak_frame": 2424
+  },
+  {
+   "time": 81.0,
+   "duration": 0.533,
+   "frame": 2430,
+   "end_frame": 2446,
+   "kind": "accent",
+   "label": "kit pats the loaf and grins: a hopeful rising cue (the beam has not moved yet)",
+   "peak_frame": 2432
+  },
+  {
+   "time": 81.567,
+   "duration": 0.0,
+   "frame": 2447,
+   "end_frame": 2447,
+   "kind": "cut",
+   "label": "plan: cut to shot 29, the beam slowly tips and passes"
+  }
+ ]
+}

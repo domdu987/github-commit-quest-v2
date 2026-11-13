@@ -33,9 +33,22 @@ out-handle g 2447-2452. `meta.json`, `cues.json` (9 cues), `contact.jpg`, `compa
   world path that brings the loaf from his side, over the pile, and down onto the 13th-loaf spot at g 2424 (where `set_loaves` flips 12->13),
   then pats and withdraws. IK reach error <= ~0.25 D on the approach, 0 at the plant.
 
-## Checks (qa.py): see work/qa.txt
-Frame-change median, the internal cuts (a->b g 2263, b->c g 2317, the HARD CUT to shot 28 g 2369, d->e g 2411), popcheck, magenta/black,
-hue row vs ref a market. Heads table. s_per_frame.
+## Checks (qa.py -> work/qa.txt)
+| actor | head w px | centre x | centre y (H) |
+|---|---|---|---|
+| kit | 106-297 | 22-517 | 0.46-0.59 |
+| inspector (d) | 176-187 | 116-130 | 0.39-0.40 |
+| crowd (woman1 / man1 / baker2) | 68-285 | edges..757 | 0.38-0.49 |
+Every in-frame head ends above y 880 on every frame ("below 880: none" for all 8 actors). cw2 is the foreground woman passing the lens in b
+(head up to 627 px, partly out of frame at the top/left edge, centre y >= 38): she is a wipe past the camera, not a caption-band intrusion.
+- Frame-change median 5.41 levels (running + tracking camera). Internal cuts: a->b g 2263 (58.6), b->c g 2317 (43.4), HARD CUT to shot 28
+  g 2369 (64.0), d->e g 2411 (69.9).
+- Popcheck (excluding the planned cuts): one flag at g 2424 (4.0 levels) = the plant itself: the held loaf becomes the set's pale loaf 13 on
+  the pile, kit's face switches determined -> grin. Intended.
+- Near-still: g 2452 only (last handle frame). No magenta/black frames, no retried frames.
+- Hue (s27 all): red 26.3 orange 26.7 blue 21.6 violet 14.7 magenta 9.6, sat 0.46 val 0.57 dark 0.07. The west house row (Henry's bakery
+  front) is in the afternoon shade, so the lane shots a-c carry the set's blue-violet shade; d-e are sunlit warm. Set look, not graded.
+- s_per_frame: 12.14 s wall / 23.70 s cpu mean (2 threads, two processes on 4 cores).
 
 ## Differences from the plan
 - Plan shot 27 is one run; split into a (burst out + run) / b (through the crowd) / c (the shout) for the pacing grammar. Shot 28 split into
