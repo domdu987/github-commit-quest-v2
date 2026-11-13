@@ -1,0 +1,86 @@
+{
+ "take": "s28",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 91.3,
+   "duration": 4.2,
+   "frame": 2739,
+   "end_frame": 2865,
+   "kind": "ambience",
+   "label": "the Salon Carre 1914: a swelling murmur of a crowd, shoes on parquet, rustling skirts"
+  },
+  {
+   "time": 91.3,
+   "duration": 0.533,
+   "frame": 2739,
+   "end_frame": 2755,
+   "kind": "accent",
+   "label": "quiet: a lone footstep echo, she hangs alone (the 'nobody looked' beat)",
+   "peak_frame": 2745
+  },
+  {
+   "time": 91.7,
+   "duration": 0.833,
+   "frame": 2751,
+   "end_frame": 2776,
+   "kind": "foley",
+   "label": "the crowd rushes in: many footsteps, excited 'ooh!' voices (walla, no lip-sync)",
+   "peak_frame": 2758
+  },
+  {
+   "time": 92.7,
+   "duration": 1.633,
+   "frame": 2781,
+   "end_frame": 2830,
+   "kind": "foley",
+   "label": "awed gasps, a lady's 'oh!', the rope creaking as they press",
+   "peak_frame": 2784
+  },
+  {
+   "time": 94.333,
+   "duration": 1.167,
+   "frame": 2830,
+   "end_frame": 2865,
+   "kind": "foley",
+   "label": "crowd pressing, shuffling, a guard's 'reculez !' off screen",
+   "peak_frame": 2835
+  },
+  {
+   "time": 95.5,
+   "duration": 1.167,
+   "frame": 2865,
+   "end_frame": 2900,
+   "kind": "ambience",
+   "label": "the reopening day: hushed queue murmur before the empty wall"
+  },
+  {
+   "time": 96.667,
+   "duration": 0.4,
+   "frame": 2900,
+   "end_frame": 2912,
+   "kind": "accent",
+   "label": "match-dissolve: a shimmering harp gliss, the murmur swells into a crowd roar",
+   "peak_frame": 2906
+  },
+  {
+   "time": 97.033,
+   "duration": 1.167,
+   "frame": 2911,
+   "end_frame": 2946,
+   "kind": "music",
+   "label": "push in: the crowd sound fades under a rising string swell",
+   "peak_frame": 2941
+  },
+  {
+   "time": 98.2,
+   "duration": 1.333,
+   "frame": 2946,
+   "end_frame": 2986,
+   "kind": "music",
+   "label": "her smile: a soft music-box / celesta motif, the room falls quiet",
+   "peak_frame": 2946
+  }
+ ]
+}
