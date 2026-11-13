@@ -21,6 +21,7 @@ Q0, Q1 = g_of(36.25), g_of(39.29)                   # 1090..1182 the quote (mout
 G_B = (1092, 1099)                                   # punch-in on the master
 G_C = (1131, 1139)                                   # snap to the kenta-favoured two-shot ("เจดีย์เมาของเจ้า" g 1130)
 PATS = [G_PAT, 1091, 1104]
+HAZE_R = 36.6
 
 MASTER = (-0.85, -40.70, 0.0)                        # nearer to the camera by 0.12 D: his hand lies over kenta's shoulder
 KENTA = (0.30, -40.50, 0.0)
@@ -41,6 +42,10 @@ class Take13(B.Take):
               (G_C[1], V(1.05, -43.70, 2.15), V(0.10, -40.5, 2.25), "sine"),
               (G_OUT + 1, V(0.92, -43.25, 2.15), V(0.06, -40.5, 2.22), "hold")]
         loc, look = path(g, ks)
+        # the SUNSET haze veil is a camera-only cylinder R 36 about (6, -8): keep the camera outside it (else it flickers)
+        rad = Vector((loc.x - 6.0, loc.y + 8.0, 0.0))
+        if rad.length < HAZE_R:
+            d = rad.normalized() * (HAZE_R - rad.length); loc = loc + d; look = look + d
         loc, look, roll = apply_shake(loc, look, g, 0.06, seed=3)
         return loc, look, roll
 
