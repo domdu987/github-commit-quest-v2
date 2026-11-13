@@ -1,0 +1,84 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 3.4,
+   "duration": 2.8,
+   "frame": 102,
+   "end_frame": 186,
+   "kind": "ambience",
+   "label": "market square in the afternoon, near-empty: distant market murmur, wind flapping the bunting, wooden creak of the pillory"
+  },
+  {
+   "time": 3.4,
+   "duration": 1.4,
+   "frame": 102,
+   "end_frame": 144,
+   "kind": "sfx",
+   "label": "a crow flaps across the sky behind the pillory (wing beats)"
+  },
+  {
+   "time": 3.933,
+   "duration": 0.233,
+   "frame": 118,
+   "end_frame": 125,
+   "kind": "sfx",
+   "label": "crow on the right end of the board: CAW! (short, comic)",
+   "peak_frame": 118
+  },
+  {
+   "time": 4.8,
+   "duration": 0.0,
+   "frame": 144,
+   "end_frame": 144,
+   "kind": "cut",
+   "label": "framing change (punch-in), same sound"
+  },
+  {
+   "time": 5.0,
+   "duration": 0.233,
+   "frame": 150,
+   "end_frame": 157,
+   "kind": "sfx",
+   "label": "crow hops along the board: two little wooden taps",
+   "peak_frame": 157
+  },
+  {
+   "time": 5.267,
+   "duration": 0.733,
+   "frame": 158,
+   "end_frame": 180,
+   "kind": "sfx",
+   "label": "pecking at a dried splat: tock-tock-tock",
+   "peak_frame": 160
+  },
+  {
+   "time": 5.333,
+   "duration": 0.2,
+   "frame": 160,
+   "end_frame": 166,
+   "kind": "sfx",
+   "label": "second CAW",
+   "peak_frame": 160
+  },
+  {
+   "time": 5.6,
+   "duration": 0.467,
+   "frame": 168,
+   "end_frame": 182,
+   "kind": "sfx",
+   "label": "crow takes off from the post top: wing flaps whoosh",
+   "peak_frame": 168
+  },
+  {
+   "time": 6.0,
+   "duration": 0.0,
+   "frame": 180,
+   "end_frame": 180,
+   "kind": "cut",
+   "label": "plan: cut to shot 4 (bakery counter)"
+  }
+ ]
+}

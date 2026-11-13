@@ -1,0 +1,162 @@
+{
+ "take": "s03",
+ "film": 6,
+ "shots": [
+  3
+ ],
+ "first_g": 102,
+ "n_frames": 84,
+ "g0": 108,
+ "g1": 180,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: hard cut from shot 2 (bakery table_insert); in-handle g 102..107 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: cut to shot 4 (bakery counter) at g 180; out-handle g 180..185 rendered in 3D"
+ },
+ "shot_ranges": {
+  "3": [
+   108,
+   179
+  ]
+ },
+ "framings": {
+  "sid1": {
+   "g": [
+    102,
+    143
+   ],
+   "note": "low, up at the empty pillory (pillory_low family, 24 mm), slow push; crows on the post / board ends, one crosses the sky"
+  },
+  "sid2": {
+   "g": [
+    144,
+    185
+   ],
+   "note": "punch-in at g 144 (1.2 s into the shot): closer along the board from the right (26 mm), slow push; crow hops to the neck hole, crow on the post takes off"
+  }
+ },
+ "events": {
+  "crow_C_caws": [
+   118,
+   125
+  ],
+  "punch_in": 144,
+  "crow_B_hops_to_neck_hole": [
+   150,
+   157
+  ],
+  "crow_C_caws_again": [
+   160,
+   166
+  ],
+  "crow_A_takes_off": 168
+ },
+ "set": "v3/set3d6/bakery.py: market AFTERNOON (sun from the WSW, long shadows); the set's 3D pillory kept whole (empty); oven / brazier flicker keyed per frame; sky redrawn sharp",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "sky": "the set's sky dome texture (blurred SVG clouds, 11 px/deg) is replaced at runtime by the same sky redrawn without the blur at 34 px/deg (mk.sharp_sky)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film6/audio/narration_bankky.wav at +0.10 s; captions film6/script/captions.json",
+ "cast": "no people (empty pillory). 3-4 cartoon crows = mk.crow_svg drawings on common.PropCard cards (x1.15, cast shadows), the pose variant switched per frame",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 15.55,
+ "s_per_frame_cpu_mean": 26.99,
+ "frame_source": {
+  "102": "sid1",
+  "103": "sid1",
+  "104": "sid1",
+  "105": "sid1",
+  "106": "sid1",
+  "107": "sid1",
+  "108": "sid1",
+  "109": "sid1",
+  "110": "sid1",
+  "111": "sid1",
+  "112": "sid1",
+  "113": "sid1",
+  "114": "sid1",
+  "115": "sid1",
+  "116": "sid1",
+  "117": "sid1",
+  "118": "sid1",
+  "119": "sid1",
+  "120": "sid1",
+  "121": "sid1",
+  "122": "sid1",
+  "123": "sid1",
+  "124": "sid1",
+  "125": "sid1",
+  "126": "sid1",
+  "127": "sid1",
+  "128": "sid1",
+  "129": "sid1",
+  "130": "sid1",
+  "131": "sid1",
+  "132": "sid1",
+  "133": "sid1",
+  "134": "sid1",
+  "135": "sid1",
+  "136": "sid1",
+  "137": "sid1",
+  "138": "sid1",
+  "139": "sid1",
+  "140": "sid1",
+  "141": "sid1",
+  "142": "sid1",
+  "143": "sid1",
+  "144": "sid2",
+  "145": "sid2",
+  "146": "sid2",
+  "147": "sid2",
+  "148": "sid2",
+  "149": "sid2",
+  "150": "sid2",
+  "151": "sid2",
+  "152": "sid2",
+  "153": "sid2",
+  "154": "sid2",
+  "155": "sid2",
+  "156": "sid2",
+  "157": "sid2",
+  "158": "sid2",
+  "159": "sid2",
+  "160": "sid2",
+  "161": "sid2",
+  "162": "sid2",
+  "163": "sid2",
+  "164": "sid2",
+  "165": "sid2",
+  "166": "sid2",
+  "167": "sid2",
+  "168": "sid2",
+  "169": "sid2",
+  "170": "sid2",
+  "171": "sid2",
+  "172": "sid2",
+  "173": "sid2",
+  "174": "sid2",
+  "175": "sid2",
+  "176": "sid2",
+  "177": "sid2",
+  "178": "sid2",
+  "179": "sid2",
+  "180": "sid2",
+  "181": "sid2",
+  "182": "sid2",
+  "183": "sid2",
+  "184": "sid2",
+  "185": "sid2"
+ }
+}
