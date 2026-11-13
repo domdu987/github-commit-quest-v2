@@ -1,0 +1,221 @@
+{
+ "take": "s08",
+ "shots": [
+  8
+ ],
+ "first_g": 480,
+ "n_frames": 120,
+ "g0": 480,
+ "g1": 593,
+ "handle_in": 0,
+ "handle_out": 7,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "from": "s07",
+  "note": "hard cut on the new sentence (16.0 s)"
+ },
+ "transition_out": {
+  "type": "cut_or_dissolve",
+  "frames": 10,
+  "to": "s09",
+  "note": "out-handle g 593..599 rendered in 3D (8C camera keeps moving): usable for a 10-frame dissolve into s09; for a cut use up to g 592"
+ },
+ "transitions": [
+  {
+   "at": 480,
+   "type": "cut_in"
+  },
+  {
+   "at": 508,
+   "type": "snap_punch_in",
+   "frames": [
+    508,
+    514
+   ]
+  },
+  {
+   "at": 564,
+   "type": "cut",
+   "from_part": 2,
+   "to_part": 3
+  },
+  {
+   "at": 593,
+   "type": "out_handle",
+   "handle": [
+    593,
+    599
+   ]
+  }
+ ],
+ "parts": {
+  "1": {
+   "range": [
+    480,
+    510
+   ],
+   "what": "8A eye-level two-shot: master near (right) points at the pagoda, smug; kenta far (left); bursts out laughing on 'hua ro' g 495 (static grin)"
+  },
+  "2": {
+   "range": [
+    511,
+    563
+   ],
+   "what": "8B snap punch-in g 508..514 to a low angle on the master: lip-sync ONLY here, on the quote (g 511 ->); points at kenta on 'ai nu' g 547"
+  },
+  "3": {
+   "range": [
+    564,
+    599
+   ],
+   "what": "8C cut (plan 18.7 s): three townspeople laughing and pointing at the pagoda, the rigid tower behind them; mouths static; out-handle g 593..599"
+  }
+ },
+ "shot_ranges": {
+  "8": [
+   480,
+   592
+  ]
+ },
+ "set": "v3/set3d4/pagoda.py v2 DAY, nothing added",
+ "dof": {
+  "8A": "master head (8.0, -15.6, 2.8), f 3.0",
+  "8B": "same point, f 3.5",
+  "8C": "woman2 head (4.45, -17.45, 2.7), f 3.0"
+ },
+ "narration": "film4/audio/narration_bankky.wav",
+ "light": "DAY",
+ "cast": "v3/cast4: master (master_point_tower -> master_laugh + lip-sync), kenta far (worried), merchant / woman2 / farmer (town_laugh_point)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 9.51,
+ "s_per_frame_cpu_mean": 18.63,
+ "encode": "ffmpeg -framerate 30 -start_number 480 -i frames/g_%04d.png -c:v libx264rgb -crf 6 -preset slow take.mkv",
+ "frame_source": {
+  "480": "p1",
+  "481": "p1",
+  "482": "p1",
+  "483": "p1",
+  "484": "p1",
+  "485": "p1",
+  "486": "p1",
+  "487": "p1",
+  "488": "p1",
+  "489": "p1",
+  "490": "p1",
+  "491": "p1",
+  "492": "p1",
+  "493": "p1",
+  "494": "p1",
+  "495": "p1",
+  "496": "p1",
+  "497": "p1",
+  "498": "p1",
+  "499": "p1",
+  "500": "p1",
+  "501": "p1",
+  "502": "p1",
+  "503": "p1",
+  "504": "p1",
+  "505": "p1",
+  "506": "p1",
+  "507": "p1",
+  "508": "p1",
+  "509": "p1",
+  "510": "p1",
+  "511": "p2",
+  "512": "p2",
+  "513": "p2",
+  "514": "p2",
+  "515": "p2",
+  "516": "p2",
+  "517": "p2",
+  "518": "p2",
+  "519": "p2",
+  "520": "p2",
+  "521": "p2",
+  "522": "p2",
+  "523": "p2",
+  "524": "p2",
+  "525": "p2",
+  "526": "p2",
+  "527": "p2",
+  "528": "p2",
+  "529": "p2",
+  "530": "p2",
+  "531": "p2",
+  "532": "p2",
+  "533": "p2",
+  "534": "p2",
+  "535": "p2",
+  "536": "p2",
+  "537": "p2",
+  "538": "p2",
+  "539": "p2",
+  "540": "p2",
+  "541": "p2",
+  "542": "p2",
+  "543": "p2",
+  "544": "p2",
+  "545": "p2",
+  "546": "p2",
+  "547": "p2",
+  "548": "p2",
+  "549": "p2",
+  "550": "p2",
+  "551": "p2",
+  "552": "p2",
+  "553": "p2",
+  "554": "p2",
+  "555": "p2",
+  "556": "p2",
+  "557": "p2",
+  "558": "p2",
+  "559": "p2",
+  "560": "p2",
+  "561": "p2",
+  "562": "p2",
+  "563": "p2",
+  "564": "p3",
+  "565": "p3",
+  "566": "p3",
+  "567": "p3",
+  "568": "p3",
+  "569": "p3",
+  "570": "p3",
+  "571": "p3",
+  "572": "p3",
+  "573": "p3",
+  "574": "p3",
+  "575": "p3",
+  "576": "p3",
+  "577": "p3",
+  "578": "p3",
+  "579": "p3",
+  "580": "p3",
+  "581": "p3",
+  "582": "p3",
+  "583": "p3",
+  "584": "p3",
+  "585": "p3",
+  "586": "p3",
+  "587": "p3",
+  "588": "p3",
+  "589": "p3",
+  "590": "p3",
+  "591": "p3",
+  "592": "p3",
+  "593": "p3",
+  "594": "p3",
+  "595": "p3",
+  "596": "p3",
+  "597": "p3",
+  "598": "p3",
+  "599": "p3"
+ }
+}

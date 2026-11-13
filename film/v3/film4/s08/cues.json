@@ -1,0 +1,74 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 16.0,
+   "duration": 4.0,
+   "frame": 480,
+   "end_frame": 600,
+   "kind": "ambience",
+   "label": "courtyard ambience: birds, distant hammering from the tower, light chatter"
+  },
+  {
+   "time": 16.0,
+   "duration": 0.0,
+   "frame": 480,
+   "end_frame": 480,
+   "kind": "cut",
+   "label": "hard cut to the courtyard two-shot"
+  },
+  {
+   "time": 16.433,
+   "duration": 0.233,
+   "frame": 493,
+   "end_frame": 500,
+   "kind": "laugh",
+   "label": "the master bursts out laughing (big belly laugh starts) on 'hua ro'",
+   "peak_frame": 495
+  },
+  {
+   "time": 16.933,
+   "duration": 0.2,
+   "frame": 508,
+   "end_frame": 514,
+   "kind": "camera_snap",
+   "label": "snap punch-in on the master (short whoosh), middle g 511",
+   "peak_frame": 511
+  },
+  {
+   "time": 17.033,
+   "duration": 2.833,
+   "frame": 511,
+   "end_frame": 596,
+   "kind": "dialogue",
+   "label": "QUOTED LINE, the master's voice (lip-sync g 511..563 on screen): 'sao thi mai kham arai nia na, ai nu, phaendin wai thi diao ko lom'"
+  },
+  {
+   "time": 18.167,
+   "duration": 0.233,
+   "frame": 545,
+   "end_frame": 552,
+   "kind": "gesture",
+   "label": "finger jab toward kenta on 'ai nu' (kid)",
+   "peak_frame": 547
+  },
+  {
+   "time": 18.8,
+   "duration": 0.0,
+   "frame": 564,
+   "end_frame": 564,
+   "kind": "cut",
+   "label": "hard cut to the laughing townspeople (plan 18.7 s)"
+  },
+  {
+   "time": 18.8,
+   "duration": 1.2,
+   "frame": 564,
+   "end_frame": 600,
+   "kind": "laugh",
+   "label": "townspeople laughing: three overlapping laughs (merchant chuckle, woman's giggle, farmer's guffaw)"
+  }
+ ]
+}
