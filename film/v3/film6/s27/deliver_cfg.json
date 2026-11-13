@@ -1,0 +1,185 @@
+{
+ "take": "s27",
+ "g0": 2216,
+ "g1": 2447,
+ "shot_ranges": {
+  "27": [
+   2210,
+   2368
+  ],
+  "28": [
+   2369,
+   2452
+  ]
+ },
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: cut from shot 26 (pillory_low) to kit bursting out of the bakery front down the lane; in-handle g 2210..2215 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: cut to shot 29 (beam slowly tips, pass); out-handle g 2447..2452 rendered in 3D (kit pats the loaf and withdraws); beam still at -7 (it tips in the next take)"
+ },
+ "transitions": [
+  {
+   "at": 2216,
+   "type": "cut",
+   "handle": [
+    2210,
+    2215
+   ]
+  },
+  {
+   "at": 2263,
+   "type": "cut",
+   "note": "inside shot 27: a -> b"
+  },
+  {
+   "at": 2317,
+   "type": "cut",
+   "note": "inside shot 27: b -> c"
+  },
+  {
+   "at": 2369,
+   "type": "cut",
+   "note": "shot 28 (hard cut): kit at the big balance"
+  },
+  {
+   "at": 2411,
+   "type": "cut",
+   "note": "inside shot 28: d -> e (ECU on the pan)"
+  },
+  {
+   "at": 2447,
+   "type": "out",
+   "handle": [
+    2447,
+    2452
+   ]
+  }
+ ],
+ "framings": {
+  "a": [
+   2210,
+   2262,
+   "down the lane to Henry's glowing bakery front: kit bursts out with the pale 13th loaf held high, runs at camera (run cycle)"
+  ],
+  "b": [
+   2263,
+   2316,
+   "low tracking ahead of kit: through the crowd, townsfolk with rotten veg turn to look"
+  ],
+  "c": [
+   2317,
+   2368,
+   "medium tracking: kit SHOUTS the quoted line (lip-sync from g 2321)"
+  ],
+  "d": [
+   2369,
+   2410,
+   "hard cut to the big balance: kit skids in beside the bread pan on a crate, still shouting up at the inspector, loaf high"
+  ],
+  "e": [
+   2411,
+   2452,
+   "ECU on the bread pan: kit's hand brings the pale loaf over the pile and plants it on top (set_loaves 13 at g 2424), pats it, withdraws; beam stays -7"
+  ]
+ },
+ "events": {
+  "burst_out": 2210,
+  "quoted_line": [
+   2321,
+   2409
+  ],
+  "cut_to_scale": 2369,
+  "plant_13th": 2424,
+  "set_loaves_13": 2424,
+  "beam": "set_big_scale(-7) every frame (tips in the next take)"
+ },
+ "set": "v3/set3d6/bakery.py: market AFTERNOON; big balance -7 the whole take, set_loaves 12 (->13 at g 2424); braziers flicker keyed per frame; runtime props in shot.py: the same cream dial + iron needle as take s24 (continuity) and a slatted market crate kit stands on in the ECU",
+ "light": "AFTERNOON",
+ "cast": "v3/cast6: kit (run cycle, held prop loaf = THE PALER 13th loaf via a BREAD palette swap on his sprites only; lip-sync cast6.talk_mouth on the quoted line; hand pinned onto the pile for the plant), inspector_royal (basket emptied), crowd woman1 / man1 / baker2 flanking the run_lane with rotten veg",
+ "cues": [
+  {
+   "frame": 2210,
+   "end_frame": 2453,
+   "kind": "ambience",
+   "label": "market square, afternoon: crowd roar, jeering, braziers crackle"
+  },
+  {
+   "frame": 2210,
+   "end_frame": 2216,
+   "kind": "foley",
+   "label": "bakery half-door bangs open; kit's bare feet slap the cobbles running",
+   "peak_frame": 2212
+  },
+  {
+   "frame": 2216,
+   "end_frame": 2368,
+   "kind": "foley",
+   "label": "kit running through the crowd: fast footfalls, cloth flap, bodies brushing past",
+   "peak_frame": 2220
+  },
+  {
+   "frame": 2321,
+   "end_frame": 2409,
+   "kind": "vocal",
+   "label": "kit shouts (child voice): 'the weight evaporated by itself! I'll make up the shortfall!' (lip-sync, Thai)",
+   "peak_frame": 2360
+  },
+  {
+   "frame": 2369,
+   "end_frame": 2371,
+   "kind": "accent",
+   "label": "hard cut to the balance: a bright determined stinger",
+   "peak_frame": 2369
+  },
+  {
+   "frame": 2369,
+   "end_frame": 2410,
+   "kind": "foley",
+   "label": "kit skids to a stop on the crate, panting",
+   "peak_frame": 2372
+  },
+  {
+   "frame": 2424,
+   "end_frame": 2428,
+   "kind": "prop",
+   "label": "the pale 13th loaf set on the pile: a soft decisive crusty thump",
+   "peak_frame": 2424
+  },
+  {
+   "frame": 2430,
+   "end_frame": 2446,
+   "kind": "accent",
+   "label": "kit pats the loaf and grins: a hopeful rising cue (the beam has not moved yet)",
+   "peak_frame": 2432
+  },
+  {
+   "frame": 2447,
+   "end_frame": 2447,
+   "kind": "cut",
+   "label": "plan: cut to shot 29, the beam slowly tips and passes"
+  }
+ ],
+ "compare": [
+  [
+   2240,
+   75
+  ],
+  [
+   2345,
+   75
+  ],
+  [
+   2400,
+   55
+  ],
+  [
+   2426,
+   46
+  ]
+ ]
+}
