@@ -1,0 +1,59 @@
+{
+ "take": "s31",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 103.0,
+   "duration": 4.3,
+   "frame": 3090,
+   "end_frame": 3219,
+   "kind": "ambience",
+   "label": "the gallery hush close to her: the crowd murmur far behind, falling away as we push in"
+  },
+  {
+   "time": 103.2,
+   "duration": 4.1,
+   "frame": 3096,
+   "end_frame": 3219,
+   "kind": "music",
+   "label": "a gentle closing theme (music box / soft strings) carrying to the end"
+  },
+  {
+   "time": 104.467,
+   "duration": 0.4,
+   "frame": 3134,
+   "end_frame": 3146,
+   "kind": "accent",
+   "label": "the reflection appears: a faint glassy shimmer / chime",
+   "peak_frame": 3140
+  },
+  {
+   "time": 105.0,
+   "duration": 0.333,
+   "frame": 3150,
+   "end_frame": 3160,
+   "kind": "accent",
+   "label": "his small proud smile: a tiny warm pizzicato",
+   "peak_frame": 3150
+  },
+  {
+   "time": 105.867,
+   "duration": 0.533,
+   "frame": 3176,
+   "end_frame": 3192,
+   "kind": "accent",
+   "label": "the reflection fades: the chime decays",
+   "peak_frame": 3184
+  },
+  {
+   "time": 106.667,
+   "duration": 0.633,
+   "frame": 3200,
+   "end_frame": 3219,
+   "kind": "music",
+   "label": "final note held to the end of the film",
+   "peak_frame": 3218
+  }
+ ]
+}
