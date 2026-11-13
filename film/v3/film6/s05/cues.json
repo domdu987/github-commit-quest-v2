@@ -1,0 +1,92 @@
+{
+ "take": "s05",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 8.433,
+   "duration": 3.567,
+   "frame": 253,
+   "end_frame": 360,
+   "kind": "ambience",
+   "label": "busy medieval market square in the morning: crowd murmur, footsteps on cobbles, a hawker's call, bunting flapping, a cart wheel"
+  },
+  {
+   "time": 10.433,
+   "duration": 0.0,
+   "frame": 313,
+   "end_frame": 313,
+   "kind": "cut",
+   "label": "framing change (cut to eye level), same ambience"
+  },
+  {
+   "time": 12.0,
+   "duration": 3.533,
+   "frame": 360,
+   "end_frame": 466,
+   "kind": "ambience",
+   "label": "the pillory in the afternoon: crowd jeering and laughing, wood creak"
+  },
+  {
+   "time": 12.767,
+   "duration": 0.3,
+   "frame": 383,
+   "end_frame": 392,
+   "kind": "sfx",
+   "label": "tomato whoosh then a wet cartoon SPLAT on the board",
+   "peak_frame": 392
+  },
+  {
+   "time": 13.067,
+   "duration": 0.3,
+   "frame": 392,
+   "end_frame": 401,
+   "kind": "accent",
+   "label": "baker2 flinches: comic 'oof' squeak / wobble sting",
+   "peak_frame": 393
+  },
+  {
+   "time": 13.833,
+   "duration": 0.0,
+   "frame": 415,
+   "end_frame": 415,
+   "kind": "cut",
+   "label": "cut to the throwers"
+  },
+  {
+   "time": 14.433,
+   "duration": 0.433,
+   "frame": 433,
+   "end_frame": 446,
+   "kind": "sfx",
+   "label": "cabbage throw: arm swish + whoosh",
+   "peak_frame": 434
+  },
+  {
+   "time": 14.867,
+   "duration": 0.067,
+   "frame": 446,
+   "end_frame": 448,
+   "kind": "sfx",
+   "label": "cabbage hits: soft cartoon SPLOTCH",
+   "peak_frame": 446
+  },
+  {
+   "time": 14.567,
+   "duration": 0.967,
+   "frame": 437,
+   "end_frame": 466,
+   "kind": "accent",
+   "label": "townsfolk laughter (the crowd laughs; no lip-sync)",
+   "peak_frame": 437
+  },
+  {
+   "time": 15.333,
+   "duration": 0.0,
+   "frame": 460,
+   "end_frame": 460,
+   "kind": "cut",
+   "label": "plan: cut to shot 7 (bakery)"
+  }
+ ]
+}
