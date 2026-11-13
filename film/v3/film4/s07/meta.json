@@ -1,0 +1,237 @@
+{
+ "take": "s07",
+ "shots": [
+  7
+ ],
+ "first_g": 347,
+ "n_frames": 133,
+ "g0": 354,
+ "g1": 480,
+ "handle_in": 7,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 10,
+  "from": "s06",
+  "mixed": [
+   349,
+   358
+  ],
+  "note": "in-handle g 347..353 rendered in 3D (7A camera already orbiting); s06 has its out-handle g 354..360"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "to": "s08",
+  "note": "hard cut on the new sentence (master laughs, 16.0 s); no out-handle"
+ },
+ "transitions": [
+  {
+   "at": 354,
+   "type": "dissolve_in",
+   "frames": 10,
+   "handle": [
+    347,
+    353
+   ]
+  },
+  {
+   "at": 402,
+   "type": "cut",
+   "from_part": 1,
+   "to_part": 2
+  },
+  {
+   "at": 442,
+   "type": "cut",
+   "from_part": 2,
+   "to_part": 3
+  },
+  {
+   "at": 480,
+   "type": "cut_out"
+  }
+ ],
+ "parts": {
+  "1": {
+   "range": [
+    347,
+    401
+   ],
+   "what": "7A medium: kenta on a scaffold deck at the top storey's level pays out the hoist chain; the top storey hangs on four ropes and comes down 1.6 -> 0.2 D; orbit"
+  },
+  "2": {
+   "range": [
+    402,
+    441
+   ],
+   "what": "7B insert raking over the third roof: a bare dowel peg, the top storey's deck settles over it, touch-down g 417 + loose wobble, no nail"
+  },
+  "3": {
+   "range": [
+    442,
+    479
+   ],
+   "what": "7C medium from the other side: ropes gone, storey sits loose and wobbles; kenta shows both open hands on 'mai tok loei' (g 460)"
+  }
+ },
+ "shot_ranges": {
+  "7": [
+   354,
+   479
+  ]
+ },
+ "set": "v3/set3d4/pagoda.py v2 DAY; shot.py adds a scaffold on the pagoda's south side (deck z 13.95), dowel pegs on storey 3's roof ring, peg holes under storey 4 and four hoist ropes on storey 4 (7A/7B); storey_4 pivot keyed (lowering 1.6 D, touch g 417, wobble)",
+ "dof": {
+  "7A": "kenta card, f 3.5",
+  "7B": "(-1.0, -2.08, 14.6), f 4.5",
+  "7C": "kenta card, f 3.5"
+ },
+ "narration": "film4/audio/narration_bankky.wav",
+ "light": "DAY",
+ "cast": "v3/cast4: kenta (7A kenta_hang_chain paying out; 7C kenta_determined -> open palms)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 11.19,
+ "s_per_frame_cpu_mean": 22.14,
+ "encode": "ffmpeg -framerate 30 -start_number 347 -i frames/g_%04d.png -c:v libx264rgb -crf 6 -preset slow take.mkv",
+ "frame_source": {
+  "347": "p1",
+  "348": "p1",
+  "349": "p1",
+  "350": "p1",
+  "351": "p1",
+  "352": "p1",
+  "353": "p1",
+  "354": "p1",
+  "355": "p1",
+  "356": "p1",
+  "357": "p1",
+  "358": "p1",
+  "359": "p1",
+  "360": "p1",
+  "361": "p1",
+  "362": "p1",
+  "363": "p1",
+  "364": "p1",
+  "365": "p1",
+  "366": "p1",
+  "367": "p1",
+  "368": "p1",
+  "369": "p1",
+  "370": "p1",
+  "371": "p1",
+  "372": "p1",
+  "373": "p1",
+  "374": "p1",
+  "375": "p1",
+  "376": "p1",
+  "377": "p1",
+  "378": "p1",
+  "379": "p1",
+  "380": "p1",
+  "381": "p1",
+  "382": "p1",
+  "383": "p1",
+  "384": "p1",
+  "385": "p1",
+  "386": "p1",
+  "387": "p1",
+  "388": "p1",
+  "389": "p1",
+  "390": "p1",
+  "391": "p1",
+  "392": "p1",
+  "393": "p1",
+  "394": "p1",
+  "395": "p1",
+  "396": "p1",
+  "397": "p1",
+  "398": "p1",
+  "399": "p1",
+  "400": "p1",
+  "401": "p1",
+  "402": "p2",
+  "403": "p2",
+  "404": "p2",
+  "405": "p2",
+  "406": "p2",
+  "407": "p2",
+  "408": "p2",
+  "409": "p2",
+  "410": "p2",
+  "411": "p2",
+  "412": "p2",
+  "413": "p2",
+  "414": "p2",
+  "415": "p2",
+  "416": "p2",
+  "417": "p2",
+  "418": "p2",
+  "419": "p2",
+  "420": "p2",
+  "421": "p2",
+  "422": "p2",
+  "423": "p2",
+  "424": "p2",
+  "425": "p2",
+  "426": "p2",
+  "427": "p2",
+  "428": "p2",
+  "429": "p2",
+  "430": "p2",
+  "431": "p2",
+  "432": "p2",
+  "433": "p2",
+  "434": "p2",
+  "435": "p2",
+  "436": "p2",
+  "437": "p2",
+  "438": "p2",
+  "439": "p2",
+  "440": "p2",
+  "441": "p2",
+  "442": "p3",
+  "443": "p3",
+  "444": "p3",
+  "445": "p3",
+  "446": "p3",
+  "447": "p3",
+  "448": "p3",
+  "449": "p3",
+  "450": "p3",
+  "451": "p3",
+  "452": "p3",
+  "453": "p3",
+  "454": "p3",
+  "455": "p3",
+  "456": "p3",
+  "457": "p3",
+  "458": "p3",
+  "459": "p3",
+  "460": "p3",
+  "461": "p3",
+  "462": "p3",
+  "463": "p3",
+  "464": "p3",
+  "465": "p3",
+  "466": "p3",
+  "467": "p3",
+  "468": "p3",
+  "469": "p3",
+  "470": "p3",
+  "471": "p3",
+  "472": "p3",
+  "473": "p3",
+  "474": "p3",
+  "475": "p3",
+  "476": "p3",
+  "477": "p3",
+  "478": "p3",
+  "479": "p3"
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 11.567,
+   "duration": 1.833,
+   "frame": 347,
+   "end_frame": 402,
+   "kind": "ambience",
+   "label": "high on the pagoda scaffold: wind, the hoist chain rattling link by link through kenta's hands, rope creak"
+  },
+  {
+   "time": 11.633,
+   "duration": 0.3,
+   "frame": 349,
+   "end_frame": 358,
+   "kind": "dissolve",
+   "label": "dissolve in from the tower (s06)"
+  },
+  {
+   "time": 11.8,
+   "duration": 1.533,
+   "frame": 354,
+   "end_frame": 400,
+   "kind": "foley",
+   "label": "the hanging top storey: slow wooden creaks as it sways on its ropes"
+  },
+  {
+   "time": 13.4,
+   "duration": 1.333,
+   "frame": 402,
+   "end_frame": 442,
+   "kind": "ambience",
+   "label": "close: wind over the tiles, wooden creak"
+  },
+  {
+   "time": 13.4,
+   "duration": 0.0,
+   "frame": 402,
+   "end_frame": 402,
+   "kind": "cut",
+   "label": "hard cut to the dowel on the roof ring"
+  },
+  {
+   "time": 13.8,
+   "duration": 0.167,
+   "frame": 414,
+   "end_frame": 419,
+   "kind": "impact",
+   "label": "soft wooden 'thunk' as the storey settles over the peg (plan 13.8 s), no nail, no hammer",
+   "peak_frame": 417
+  },
+  {
+   "time": 13.967,
+   "duration": 0.7,
+   "frame": 419,
+   "end_frame": 440,
+   "kind": "foley",
+   "label": "loose joint: a gentle knocking wobble, wood on wood (tok... tok)"
+  },
+  {
+   "time": 14.733,
+   "duration": 1.267,
+   "frame": 442,
+   "end_frame": 480,
+   "kind": "ambience",
+   "label": "wind, distant town; the storey's faint creak as it rocks"
+  },
+  {
+   "time": 14.733,
+   "duration": 0.0,
+   "frame": 442,
+   "end_frame": 442,
+   "kind": "cut",
+   "label": "hard cut to kenta, the storey sitting loose behind him"
+  },
+  {
+   "time": 15.133,
+   "duration": 0.267,
+   "frame": 454,
+   "end_frame": 462,
+   "kind": "gesture",
+   "label": "kenta lifts both open hands (cloth whip of the happi sleeves) on 'mai tok loei'",
+   "peak_frame": 460
+  }
+ ]
+}
