@@ -1,0 +1,42 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 23.433,
+   "duration": 2.833,
+   "frame": 703,
+   "end_frame": 788,
+   "kind": "ambience",
+   "label": "courtyard after the quake: residual creak of the rocking pagoda, wind bells"
+  },
+  {
+   "time": 23.867,
+   "duration": 2.167,
+   "frame": 716,
+   "end_frame": 781,
+   "kind": "laugh",
+   "label": "the townspeople burst out laughing (crowd laugh, three voices), belly-laugh rhythm",
+   "peak_frame": 726
+  },
+  {
+   "time": 25.067,
+   "duration": 0.233,
+   "frame": 752,
+   "end_frame": 759,
+   "kind": "camera_snap",
+   "label": "snap punch-in onto the merchant and woman2 (short whoosh)",
+   "peak_frame": 756
+  },
+  {
+   "time": 25.4,
+   "duration": 0.4,
+   "frame": 762,
+   "end_frame": 774,
+   "kind": "gesture",
+   "label": "pointing jab on '\u0e40\u0e08\u0e14\u0e35\u0e22\u0e4c\u0e40\u0e21\u0e32' (laugh peak)",
+   "peak_frame": 766
+  }
+ ]
+}
