@@ -1,0 +1,187 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 19.767,
+   "duration": 3.433,
+   "frame": 593,
+   "end_frame": 696,
+   "kind": "ambience",
+   "label": "Salon Carre on a working day: big quiet room tone, distant footsteps on parquet, a far door, skylight hum"
+  },
+  {
+   "time": 20.0,
+   "duration": 1.6,
+   "frame": 600,
+   "end_frame": 648,
+   "kind": "prop",
+   "label": "a large glass pane flexing (soft wobbly 'wub'), careful breathing, a creak of the step-stool",
+   "peak_frame": 620
+  },
+  {
+   "time": 21.633,
+   "duration": 0.0,
+   "frame": 649,
+   "end_frame": 649,
+   "kind": "cut",
+   "label": "cut to the insert"
+  },
+  {
+   "time": 22.267,
+   "duration": 0.533,
+   "frame": 668,
+   "end_frame": 684,
+   "kind": "prop",
+   "label": "glass slides on the gilt frame and seats with a soft 'tock'; a bright glint 'ting' as the light sweeps",
+   "peak_frame": 684
+  },
+  {
+   "time": 23.2,
+   "duration": 0.0,
+   "frame": 696,
+   "end_frame": 696,
+   "kind": "cut",
+   "label": "cut to the wide: the three glaziers"
+  },
+  {
+   "time": 23.333,
+   "duration": 0.033,
+   "frame": 700,
+   "end_frame": 701,
+   "kind": "foley",
+   "label": "footsteps on the parquet (one small light pair, two heavy pairs), panes wobbling",
+   "peak_frame": 700
+  },
+  {
+   "time": 23.8,
+   "duration": 0.033,
+   "frame": 714,
+   "end_frame": 715,
+   "kind": "foley",
+   "label": "footsteps on the parquet (one small light pair, two heavy pairs), panes wobbling",
+   "peak_frame": 714
+  },
+  {
+   "time": 24.267,
+   "duration": 0.033,
+   "frame": 728,
+   "end_frame": 729,
+   "kind": "foley",
+   "label": "footsteps on the parquet (one small light pair, two heavy pairs), panes wobbling",
+   "peak_frame": 728
+  },
+  {
+   "time": 24.733,
+   "duration": 0.033,
+   "frame": 742,
+   "end_frame": 743,
+   "kind": "foley",
+   "label": "footsteps on the parquet (one small light pair, two heavy pairs), panes wobbling",
+   "peak_frame": 742
+  },
+  {
+   "time": 25.2,
+   "duration": 0.033,
+   "frame": 756,
+   "end_frame": 757,
+   "kind": "foley",
+   "label": "footsteps on the parquet (one small light pair, two heavy pairs), panes wobbling",
+   "peak_frame": 756
+  },
+  {
+   "time": 25.667,
+   "duration": 0.033,
+   "frame": 770,
+   "end_frame": 771,
+   "kind": "foley",
+   "label": "footsteps on the parquet (one small light pair, two heavy pairs), panes wobbling",
+   "peak_frame": 770
+  },
+  {
+   "time": 24.7,
+   "duration": 0.0,
+   "frame": 741,
+   "end_frame": 741,
+   "kind": "cut",
+   "label": "cut closer, tracking"
+  },
+  {
+   "time": 25.0,
+   "duration": 0.733,
+   "frame": 750,
+   "end_frame": 772,
+   "kind": "accent",
+   "label": "vincenzo glances up at them: tiny comic 'small man' bassoon blip",
+   "peak_frame": 752
+  },
+  {
+   "time": 26.067,
+   "duration": 0.0,
+   "frame": 782,
+   "end_frame": 782,
+   "kind": "cut",
+   "label": "cut: the coworkers stop and turn on him"
+  },
+  {
+   "time": 26.333,
+   "duration": 2.267,
+   "frame": 790,
+   "end_frame": 858,
+   "kind": "voice",
+   "label": "laughter of two French workers (wheezing tall one, booming stout one), knee slaps",
+   "peak_frame": 823
+  },
+  {
+   "time": 27.867,
+   "duration": 0.0,
+   "frame": 836,
+   "end_frame": 836,
+   "kind": "cut",
+   "label": "cut to the low two-shot"
+  },
+  {
+   "time": 28.633,
+   "duration": 0.7,
+   "frame": 859,
+   "end_frame": 880,
+   "kind": "voice",
+   "label": "the jeer 'ไอ้มักกะโรนี!' (their mouths are lip-synced to the narration's quote, caption 28.53-29.23 s)",
+   "peak_frame": 860
+  },
+  {
+   "time": 29.433,
+   "duration": 0.0,
+   "frame": 883,
+   "end_frame": 883,
+   "kind": "cut",
+   "label": "cut to vincenzo"
+  },
+  {
+   "time": 29.667,
+   "duration": 0.2,
+   "frame": 890,
+   "end_frame": 896,
+   "kind": "accent",
+   "label": "the hurt glare: a low sour string sting / cello note",
+   "peak_frame": 890
+  },
+  {
+   "time": 29.867,
+   "duration": 1.0,
+   "frame": 896,
+   "end_frame": 926,
+   "kind": "voice",
+   "label": "laughter fading off-screen, his tense breath through the nose"
+  },
+  {
+   "time": 30.667,
+   "duration": 0.0,
+   "frame": 920,
+   "end_frame": 920,
+   "kind": "cut",
+   "label": "plan: shot 10 (dusk street, new location) starts at g 920 -- dissolve in the conform; handle 920-925 rendered in 3D"
+  }
+ ]
+}
