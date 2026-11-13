@@ -1,0 +1,84 @@
+{
+ "take": "s13",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film4/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 34.933,
+   "duration": 4.633,
+   "frame": 1048,
+   "end_frame": 1187,
+   "kind": "ambience",
+   "label": "sunset street in front of the gate: evening wind, distant crows, a temple bell far off, low murmur of the street"
+  },
+  {
+   "time": 35.533,
+   "duration": 0.2,
+   "frame": 1066,
+   "end_frame": 1072,
+   "kind": "gesture",
+   "label": "the master's heavy coat sleeve swings as he reaches for kenta (cloth rustle)"
+  },
+  {
+   "time": 35.9,
+   "duration": 0.067,
+   "frame": 1077,
+   "end_frame": 1079,
+   "kind": "impact",
+   "label": "pat: the master's big hand claps kenta's shoulder (soft thump)",
+   "peak_frame": 1077
+  },
+  {
+   "time": 36.367,
+   "duration": 0.067,
+   "frame": 1091,
+   "end_frame": 1093,
+   "kind": "impact",
+   "label": "pat: the master's big hand claps kenta's shoulder (soft thump)",
+   "peak_frame": 1091
+  },
+  {
+   "time": 36.8,
+   "duration": 0.067,
+   "frame": 1104,
+   "end_frame": 1106,
+   "kind": "impact",
+   "label": "pat: the master's big hand claps kenta's shoulder (soft thump)",
+   "peak_frame": 1104
+  },
+  {
+   "time": 36.333,
+   "duration": 3.067,
+   "frame": 1090,
+   "end_frame": 1182,
+   "kind": "dialogue",
+   "label": "the master speaks the quote (voice is the narration; mouth lip-synced to narration_bankky.wav)"
+  },
+  {
+   "time": 36.4,
+   "duration": 0.233,
+   "frame": 1092,
+   "end_frame": 1099,
+   "kind": "camera_snap",
+   "label": "snap punch-in on the master (short whoosh)",
+   "peak_frame": 1096
+  },
+  {
+   "time": 37.7,
+   "duration": 0.267,
+   "frame": 1131,
+   "end_frame": 1139,
+   "kind": "camera_snap",
+   "label": "snap to the two-shot on kenta (short whoosh)",
+   "peak_frame": 1135
+  },
+  {
+   "time": 38.333,
+   "duration": 0.733,
+   "frame": 1150,
+   "end_frame": 1172,
+   "kind": "gesture",
+   "label": "kenta's worried glance toward the pagoda (small nervous swallow)"
+  }
+ ]
+}

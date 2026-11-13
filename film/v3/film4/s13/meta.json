@@ -1,0 +1,52 @@
+{
+ "take": "s13",
+ "shots": [
+  13
+ ],
+ "first_g": 1048,
+ "n_frames": 139,
+ "g0": 1055,
+ "g1": 1180,
+ "handle_in": 7,
+ "handle_out": 7,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "handle g 1048..1054 rendered in 3D (shot 13 camera before its start)"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "SUNSET -> NIGHT; handle g 1180..1186 rendered in 3D (camera keeps drifting)"
+ },
+ "shot_ranges": {
+  "13": [
+   1055,
+   1179
+  ]
+ },
+ "render_ranges": {
+  "13": [
+   1048,
+   1186
+  ]
+ },
+ "internal_cuts": [],
+ "set": "v3/set3d4/pagoda.py v2 (nothing added; set controls keyed per frame from shot.py)",
+ "light": "SUNSET",
+ "cast": "v3/cast4: master (left, nearer; pat pinned to kenta's shoulder), kenta (worried)",
+ "dof": {
+  "13": "g 1048-1094 master card f 3.5; g 1095-1134 master card f 3.0; g 1135- kenta card f 3.0"
+ },
+ "sway": 0.0,
+ "narration": "film4/audio/narration_bankky.wav (+0.10 s), captions film4/script/captions_bankky.json",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "s_per_frame_wall_mean": 11.46,
+ "s_per_frame_cpu_mean": 22.7,
+ "encode": "ffmpeg -framerate 30 -start_number 1048 -i frames/g_%04d.png -c:v libx264rgb -crf 6 -preset slow take.mkv"
+}
