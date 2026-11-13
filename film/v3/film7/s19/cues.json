@@ -1,0 +1,109 @@
+{
+ "take": "s19",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s; captions film7/script/captions.json",
+ "cues": [
+  {
+   "time": 62.433,
+   "duration": 3.033,
+   "frame": 1873,
+   "end_frame": 1964,
+   "kind": "ambience",
+   "label": "chaos in the salon: running boots on parquet, whistles, doors slamming, echoes under the skylight"
+  },
+  {
+   "time": 62.433,
+   "duration": 3.033,
+   "frame": 1873,
+   "end_frame": 1964,
+   "kind": "music",
+   "label": "busy comic chase music (pizzicato strings + snare)"
+  },
+  {
+   "time": 62.667,
+   "duration": 0.667,
+   "frame": 1880,
+   "end_frame": 1900,
+   "kind": "accent",
+   "label": "police whistle blasts",
+   "peak_frame": 1885
+  },
+  {
+   "time": 63.967,
+   "duration": 0.0,
+   "frame": 1919,
+   "end_frame": 1919,
+   "kind": "cut",
+   "label": "cut"
+  },
+  {
+   "time": 64.167,
+   "duration": 1.3,
+   "frame": 1925,
+   "end_frame": 1964,
+   "kind": "foley",
+   "label": "lantern creak, a magnifier tap on the wall by the hooks",
+   "peak_frame": 1940
+  },
+  {
+   "time": 65.5,
+   "duration": 0.0,
+   "frame": 1965,
+   "end_frame": 1965,
+   "kind": "cut",
+   "label": "cut: the make-shift office"
+  },
+  {
+   "time": 65.5,
+   "duration": 2.8,
+   "frame": 1965,
+   "end_frame": 2049,
+   "kind": "ambience",
+   "label": "quieter room tone, the lantern hissing, papers shuffled"
+  },
+  {
+   "time": 65.667,
+   "duration": 0.5,
+   "frame": 1970,
+   "end_frame": 1985,
+   "kind": "accent",
+   "label": "the inspector's finger stab: a low staccato 'dun-dun'",
+   "peak_frame": 1972
+  },
+  {
+   "time": 66.2,
+   "duration": 0.2,
+   "frame": 1986,
+   "end_frame": 1992,
+   "kind": "accent",
+   "label": "the painter flares up: an indignant comic 'pfff!' brass blat (no words)",
+   "peak_frame": 1988
+  },
+  {
+   "time": 66.833,
+   "duration": 0.0,
+   "frame": 2005,
+   "end_frame": 2005,
+   "kind": "cut",
+   "label": "punch-in"
+  },
+  {
+   "time": 66.5,
+   "duration": 1.8,
+   "frame": 1995,
+   "end_frame": 2049,
+   "kind": "foley",
+   "label": "vincenzo's casual footsteps far behind, a carefree whistled tune (diegetic, tiny)",
+   "peak_frame": 2010
+  },
+  {
+   "time": 67.5,
+   "duration": 0.8,
+   "frame": 2025,
+   "end_frame": 2049,
+   "kind": "accent",
+   "label": "his smug glance: a sly clarinet trill",
+   "peak_frame": 2026
+  }
+ ]
+}

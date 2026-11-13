@@ -1,0 +1,333 @@
+{
+ "take": "s19",
+ "film": 7,
+ "shots": [
+  19,
+  20
+ ],
+ "first_g": 1873,
+ "n_frames": 177,
+ "g0": 1879,
+ "g1": 2044,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": "cut",
+ "transition_out": "cut",
+ "transitions": [
+  {
+   "at": 1873,
+   "type": "in",
+   "handle": [
+    1873,
+    1878
+   ]
+  },
+  {
+   "at": 1879,
+   "type": "cut",
+   "note": "plan: hard cut from shot 18 (director) to the police chaos"
+  },
+  {
+   "at": 1919,
+   "type": "cut",
+   "note": "on '\u0e15\u0e33\u0e23\u0e27\u0e08\u0e04\u0e49\u0e19\u0e17\u0e31\u0e49\u0e07\u0e15\u0e36\u0e01' (63.85)"
+  },
+  {
+   "at": 1965,
+   "type": "cut",
+   "note": "shot 20 (65.50)"
+  },
+  {
+   "at": 2005,
+   "type": "cut",
+   "note": "punch-in on '\u0e41\u0e15\u0e48\u0e44\u0e21\u0e48\u0e21\u0e35\u0e43\u0e04\u0e23' (66.38)"
+  },
+  {
+   "at": 2044,
+   "type": "out",
+   "handle": [
+    2044,
+    2049
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "19": [
+   1879,
+   1964
+  ],
+  "20": [
+   1965,
+   2043
+  ]
+ },
+ "setups": {
+  "1": {
+   "g": [
+    1873,
+    1918
+   ],
+   "set": "louvre gallery_wide area, GALLERY_DAY, set_mona(False)",
+   "what": "wide: police run across the salon, one searches with a lantern, the guard waves"
+  },
+  "2": {
+   "g": [
+    1919,
+    1964
+   ],
+   "set": "louvre wall_eye area",
+   "what": "at the empty wall: inspector with lantern at the hooks, guard shrugs, a policeman runs through"
+  },
+  "3": {
+   "g": [
+    1965,
+    2004
+   ],
+   "set": "louvre gallery (service-door corner) + runtime table, lantern, papers",
+   "what": "the inspector questions the generic young painter (striped shirt)"
+  },
+  "4": {
+   "g": [
+    2005,
+    2049
+   ],
+   "set": "same",
+   "what": "punch-in: the painter indignant; vincenzo strolls by unnoticed in the background, a smug glance"
+  }
+ },
+ "events": {
+  "police_chaos": [
+   1873,
+   1964
+  ],
+  "questioning": [
+   1965,
+   2049
+  ],
+  "painter_indignant": [
+   1986,
+   2049
+  ],
+  "vincenzo_walks_by": [
+   1990,
+   2049
+  ],
+  "vincenzo_smug_glance": [
+   2025,
+   2049
+  ]
+ },
+ "set": "v3/set3d7/louvre.py gallery, set_mona(False) + set_flames keyed every frame; runtime office dressing in shot 20 (table, papers, ink pot, lit lantern); custom cameras 22-24 mm",
+ "dof": "none (client rule: cam.data.dof.use_dof False + L.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film7/audio/narration_bankky.wav at +0.10 s; captions film7/script/captions.json",
+ "light": "GALLERY_DAY",
+ "cast": "v3/cast7: police x5 (run cycles, police_search with lantern, police_question), guard (wave / shrug), young_painter (generic, striped shirt: questioned -> indignant, anger_fill fx dropped: it renders magenta), vincenzo (normal clothes, walk, hands in pockets, smug); mouths static",
+ "mouths": "static expression mouths only (no quoted line in these shots)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 16.91,
+ "s_per_frame_cpu_mean": 32.99,
+ "s_per_frame_by_setup": {
+  "1": {
+   "wall": 17.13,
+   "cpu": 33.68
+  },
+  "2": {
+   "wall": 15.18,
+   "cpu": 30.34
+  },
+  "3": {
+   "wall": 18.08,
+   "cpu": 33.84
+  },
+  "4": {
+   "wall": 17.42,
+   "cpu": 34.26
+  }
+ },
+ "frame_source": {
+  "1873": "1",
+  "1874": "1",
+  "1875": "1",
+  "1876": "1",
+  "1877": "1",
+  "1878": "1",
+  "1879": "1",
+  "1880": "1",
+  "1881": "1",
+  "1882": "1",
+  "1883": "1",
+  "1884": "1",
+  "1885": "1",
+  "1886": "1",
+  "1887": "1",
+  "1888": "1",
+  "1889": "1",
+  "1890": "1",
+  "1891": "1",
+  "1892": "1",
+  "1893": "1",
+  "1894": "1",
+  "1895": "1",
+  "1896": "1",
+  "1897": "1",
+  "1898": "1",
+  "1899": "1",
+  "1900": "1",
+  "1901": "1",
+  "1902": "1",
+  "1903": "1",
+  "1904": "1",
+  "1905": "1",
+  "1906": "1",
+  "1907": "1",
+  "1908": "1",
+  "1909": "1",
+  "1910": "1",
+  "1911": "1",
+  "1912": "1",
+  "1913": "1",
+  "1914": "1",
+  "1915": "1",
+  "1916": "1",
+  "1917": "1",
+  "1918": "1",
+  "1919": "2",
+  "1920": "2",
+  "1921": "2",
+  "1922": "2",
+  "1923": "2",
+  "1924": "2",
+  "1925": "2",
+  "1926": "2",
+  "1927": "2",
+  "1928": "2",
+  "1929": "2",
+  "1930": "2",
+  "1931": "2",
+  "1932": "2",
+  "1933": "2",
+  "1934": "2",
+  "1935": "2",
+  "1936": "2",
+  "1937": "2",
+  "1938": "2",
+  "1939": "2",
+  "1940": "2",
+  "1941": "2",
+  "1942": "2",
+  "1943": "2",
+  "1944": "2",
+  "1945": "2",
+  "1946": "2",
+  "1947": "2",
+  "1948": "2",
+  "1949": "2",
+  "1950": "2",
+  "1951": "2",
+  "1952": "2",
+  "1953": "2",
+  "1954": "2",
+  "1955": "2",
+  "1956": "2",
+  "1957": "2",
+  "1958": "2",
+  "1959": "2",
+  "1960": "2",
+  "1961": "2",
+  "1962": "2",
+  "1963": "2",
+  "1964": "2",
+  "1965": "3",
+  "1966": "3",
+  "1967": "3",
+  "1968": "3",
+  "1969": "3",
+  "1970": "3",
+  "1971": "3",
+  "1972": "3",
+  "1973": "3",
+  "1974": "3",
+  "1975": "3",
+  "1976": "3",
+  "1977": "3",
+  "1978": "3",
+  "1979": "3",
+  "1980": "3",
+  "1981": "3",
+  "1982": "3",
+  "1983": "3",
+  "1984": "3",
+  "1985": "3",
+  "1986": "3",
+  "1987": "3",
+  "1988": "3",
+  "1989": "3",
+  "1990": "3",
+  "1991": "3",
+  "1992": "3",
+  "1993": "3",
+  "1994": "3",
+  "1995": "3",
+  "1996": "3",
+  "1997": "3",
+  "1998": "3",
+  "1999": "3",
+  "2000": "3",
+  "2001": "3",
+  "2002": "3",
+  "2003": "3",
+  "2004": "3",
+  "2005": "4",
+  "2006": "4",
+  "2007": "4",
+  "2008": "4",
+  "2009": "4",
+  "2010": "4",
+  "2011": "4",
+  "2012": "4",
+  "2013": "4",
+  "2014": "4",
+  "2015": "4",
+  "2016": "4",
+  "2017": "4",
+  "2018": "4",
+  "2019": "4",
+  "2020": "4",
+  "2021": "4",
+  "2022": "4",
+  "2023": "4",
+  "2024": "4",
+  "2025": "4",
+  "2026": "4",
+  "2027": "4",
+  "2028": "4",
+  "2029": "4",
+  "2030": "4",
+  "2031": "4",
+  "2032": "4",
+  "2033": "4",
+  "2034": "4",
+  "2035": "4",
+  "2036": "4",
+  "2037": "4",
+  "2038": "4",
+  "2039": "4",
+  "2040": "4",
+  "2041": "4",
+  "2042": "4",
+  "2043": "4",
+  "2044": "4",
+  "2045": "4",
+  "2046": "4",
+  "2047": "4",
+  "2048": "4",
+  "2049": "4"
+ }
+}
