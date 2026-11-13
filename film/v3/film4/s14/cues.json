@@ -1,0 +1,193 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film4/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 39.1,
+   "duration": 1.633,
+   "frame": 1173,
+   "end_frame": 1222,
+   "kind": "ambience",
+   "label": "night town from above: crickets, wind, a dog far off"
+  },
+  {
+   "time": 40.0,
+   "duration": 2.067,
+   "frame": 1200,
+   "end_frame": 1262,
+   "kind": "quake",
+   "label": "deep rumble of the earthquake rising to a roar; wooden houses creak",
+   "peak_frame": 1222
+  },
+  {
+   "time": 40.167,
+   "duration": 1.9,
+   "frame": 1205,
+   "end_frame": 1262,
+   "kind": "rattle",
+   "label": "lanterns and wind bells swing and rattle, the pagoda's bells jangle"
+  },
+  {
+   "time": 40.733,
+   "duration": 0.0,
+   "frame": 1222,
+   "end_frame": 1222,
+   "kind": "cut",
+   "label": "hard cut to the street, low: rumble loud"
+  },
+  {
+   "time": 40.867,
+   "duration": 1.2,
+   "frame": 1226,
+   "end_frame": 1262,
+   "kind": "rattle",
+   "label": "loose roof tiles clatter and hop on the eaves"
+  },
+  {
+   "time": 42.067,
+   "duration": 0.0,
+   "frame": 1262,
+   "end_frame": 1262,
+   "kind": "cut",
+   "label": "hard cut: kenta sprinting"
+  },
+  {
+   "time": 42.067,
+   "duration": 5.867,
+   "frame": 1262,
+   "end_frame": 1438,
+   "kind": "quake",
+   "label": "continuous quake rumble under everything (a little lower than the peak)"
+  },
+  {
+   "time": 42.067,
+   "duration": 0.033,
+   "frame": 1262,
+   "end_frame": 1263,
+   "kind": "footstep",
+   "label": "running footsteps (straw sandals on packed earth)"
+  },
+  {
+   "time": 42.233,
+   "duration": 0.033,
+   "frame": 1267,
+   "end_frame": 1268,
+   "kind": "footstep",
+   "label": "running footsteps (straw sandals on packed earth)"
+  },
+  {
+   "time": 42.4,
+   "duration": 0.033,
+   "frame": 1272,
+   "end_frame": 1273,
+   "kind": "footstep",
+   "label": "running footsteps (straw sandals on packed earth)"
+  },
+  {
+   "time": 42.567,
+   "duration": 0.033,
+   "frame": 1277,
+   "end_frame": 1278,
+   "kind": "footstep",
+   "label": "running footsteps (straw sandals on packed earth)"
+  },
+  {
+   "time": 42.733,
+   "duration": 0.033,
+   "frame": 1282,
+   "end_frame": 1283,
+   "kind": "footstep",
+   "label": "running footsteps (straw sandals on packed earth)"
+  },
+  {
+   "time": 42.9,
+   "duration": 0.033,
+   "frame": 1287,
+   "end_frame": 1288,
+   "kind": "footstep",
+   "label": "running footsteps (straw sandals on packed earth)"
+  },
+  {
+   "time": 43.067,
+   "duration": 0.033,
+   "frame": 1292,
+   "end_frame": 1293,
+   "kind": "footstep",
+   "label": "running footsteps (straw sandals on packed earth)"
+  },
+  {
+   "time": 43.233,
+   "duration": 0.033,
+   "frame": 1297,
+   "end_frame": 1298,
+   "kind": "footstep",
+   "label": "running footsteps (straw sandals on packed earth)"
+  },
+  {
+   "time": 43.4,
+   "duration": 0.033,
+   "frame": 1302,
+   "end_frame": 1303,
+   "kind": "footstep",
+   "label": "running footsteps (straw sandals on packed earth)"
+  },
+  {
+   "time": 42.067,
+   "duration": 2.767,
+   "frame": 1262,
+   "end_frame": 1345,
+   "kind": "voice",
+   "label": "kenta shouting (his voice is the narration; his mouth is a fixed shout drawing)"
+  },
+  {
+   "time": 43.433,
+   "duration": 0.0,
+   "frame": 1303,
+   "end_frame": 1303,
+   "kind": "cut",
+   "label": "hard cut: kenta stops and shouts at the doorways"
+  },
+  {
+   "time": 43.433,
+   "duration": 1.4,
+   "frame": 1303,
+   "end_frame": 1345,
+   "kind": "voice",
+   "label": "woman in the street laughing (background)"
+  },
+  {
+   "time": 44.833,
+   "duration": 0.0,
+   "frame": 1345,
+   "end_frame": 1345,
+   "kind": "cut",
+   "label": "hard cut: low angle on the merchant in his doorway"
+  },
+  {
+   "time": 45.8,
+   "duration": 0.233,
+   "frame": 1374,
+   "end_frame": 1381,
+   "kind": "gesture",
+   "label": "the merchant cups his hands to his mouth (sleeve swish)"
+  },
+  {
+   "time": 46.1,
+   "duration": 1.733,
+   "frame": 1383,
+   "end_frame": 1435,
+   "kind": "dialogue",
+   "label": "the merchant mock-shouts the quote (voice is the narration; mouth lip-synced)"
+  },
+  {
+   "time": 46.233,
+   "duration": 0.2,
+   "frame": 1387,
+   "end_frame": 1393,
+   "kind": "camera_snap",
+   "label": "snap closer, lower on the merchant (whoosh)",
+   "peak_frame": 1390
+  }
+ ]
+}
