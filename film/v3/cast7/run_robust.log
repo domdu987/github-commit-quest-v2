@@ -1,0 +1,12 @@
+cast7 pose keys + garbage: 5600 ok, 0 failed, deterministic True, 7.0 s
+presets, expressions, props, effects                    226716 checks  ok
+numeric key sweeps (40 and 240 steps)                   483140 checks  ok
+arm targets: circles and lines through the shoulder     2675092 checks  ok
+foot targets                                            760452 checks  ok
+garbage input                                           551112 checks  ok
+random poses                                             18060 checks  ok
+determinism, ids, mirror, resolve / lerp                   392 checks  ok
+    slowest pose: 1.15 ms per call
+speed                                                        6 checks  ok
+4714970 checks, 0 failed, 467.8 s
+rc=0
