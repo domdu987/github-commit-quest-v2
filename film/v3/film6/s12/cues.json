@@ -1,0 +1,101 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 30.9,
+   "duration": 2.6,
+   "frame": 927,
+   "end_frame": 1005,
+   "kind": "ambience",
+   "label": "morning market, townsfolk laughing out loud ('ha-ha-ha', mouths on screen g 927-1004)"
+  },
+  {
+   "time": 32.3,
+   "duration": 1.167,
+   "frame": 969,
+   "end_frame": 1004,
+   "kind": "sfx",
+   "label": "kit's light footsteps, basket creak"
+  },
+  {
+   "time": 33.5,
+   "duration": 8.0,
+   "frame": 1005,
+   "end_frame": 1245,
+   "kind": "ambience",
+   "label": "afternoon square around the pillory: murmur, wood creak"
+  },
+  {
+   "time": 33.5,
+   "duration": 0.0,
+   "frame": 1005,
+   "end_frame": 1005,
+   "kind": "accent",
+   "label": "week 1: a single low 'dong' sting",
+   "peak_frame": 1005
+  },
+  {
+   "time": 35.0,
+   "duration": 0.733,
+   "frame": 1050,
+   "end_frame": 1072,
+   "kind": "accent",
+   "label": "baker2 sighs (breathy, no lip-sync)",
+   "peak_frame": 1058
+  },
+  {
+   "time": 36.0,
+   "duration": 0.0,
+   "frame": 1080,
+   "end_frame": 1080,
+   "kind": "accent",
+   "label": "week 2: 'dong dong'",
+   "peak_frame": 1080
+  },
+  {
+   "time": 38.4,
+   "duration": 0.0,
+   "frame": 1152,
+   "end_frame": 1152,
+   "kind": "accent",
+   "label": "week 3: 'dong dong dong dong'",
+   "peak_frame": 1152
+  },
+  {
+   "time": 38.4,
+   "duration": 3.067,
+   "frame": 1152,
+   "end_frame": 1244,
+   "kind": "sfx",
+   "label": "four heads shaking: rattling pillory boards, mumbled protests (no lip-sync)"
+  },
+  {
+   "time": 40.4,
+   "duration": 0.233,
+   "frame": 1212,
+   "end_frame": 1219,
+   "kind": "sfx",
+   "label": "crow CAW",
+   "peak_frame": 1212
+  },
+  {
+   "time": 41.067,
+   "duration": 0.2,
+   "frame": 1232,
+   "end_frame": 1238,
+   "kind": "sfx",
+   "label": "crow CAW",
+   "peak_frame": 1232
+  },
+  {
+   "time": 41.3,
+   "duration": 0.0,
+   "frame": 1239,
+   "end_frame": 1239,
+   "kind": "cut",
+   "label": "plan: cut to shot 16 (bakery, Henry laughs)"
+  }
+ ]
+}
