@@ -1,0 +1,157 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 36.933,
+   "duration": 3.567,
+   "frame": 1108,
+   "end_frame": 1215,
+   "kind": "ambience",
+   "label": "the Salon Carre on a closed Monday: big empty room tone, a far door, a clock ticking, his soft footsteps echoing"
+  },
+  {
+   "time": 37.067,
+   "duration": 0.033,
+   "frame": 1112,
+   "end_frame": 1113,
+   "kind": "foley",
+   "label": "soft hobnail footstep on parquet, smock rustle",
+   "peak_frame": 1112
+  },
+  {
+   "time": 37.533,
+   "duration": 0.033,
+   "frame": 1126,
+   "end_frame": 1127,
+   "kind": "foley",
+   "label": "soft hobnail footstep on parquet, smock rustle",
+   "peak_frame": 1126
+  },
+  {
+   "time": 38.0,
+   "duration": 0.033,
+   "frame": 1140,
+   "end_frame": 1141,
+   "kind": "foley",
+   "label": "soft hobnail footstep on parquet, smock rustle",
+   "peak_frame": 1140
+  },
+  {
+   "time": 38.733,
+   "duration": 0.533,
+   "frame": 1162,
+   "end_frame": 1178,
+   "kind": "accent",
+   "label": "eyes dart left / right: two tiny tick accents",
+   "peak_frame": 1162
+  },
+  {
+   "time": 39.267,
+   "duration": 0.433,
+   "frame": 1178,
+   "end_frame": 1191,
+   "kind": "foley",
+   "label": "hands slide up onto the gilt frame (wood creak)",
+   "peak_frame": 1188
+  },
+  {
+   "time": 39.9,
+   "duration": 0.467,
+   "frame": 1197,
+   "end_frame": 1211,
+   "kind": "prop",
+   "label": "the frame lifts off the four iron hooks: metallic scrape + clink, a held breath",
+   "peak_frame": 1199
+  },
+  {
+   "time": 40.5,
+   "duration": 0.0,
+   "frame": 1215,
+   "end_frame": 1215,
+   "kind": "cut",
+   "label": "hard cut to the service staircase: the sound narrows to stone"
+  },
+  {
+   "time": 40.5,
+   "duration": 4.233,
+   "frame": 1215,
+   "end_frame": 1342,
+   "kind": "ambience",
+   "label": "service staircase: stone echo, gas jet hiss, morning birds through the landing window"
+  },
+  {
+   "time": 40.6,
+   "duration": 0.033,
+   "frame": 1218,
+   "end_frame": 1219,
+   "kind": "foley",
+   "label": "quick footstep down a stone step, the frame bumping",
+   "peak_frame": 1218
+  },
+  {
+   "time": 40.933,
+   "duration": 0.033,
+   "frame": 1228,
+   "end_frame": 1229,
+   "kind": "foley",
+   "label": "quick footstep down a stone step, the frame bumping",
+   "peak_frame": 1228
+  },
+  {
+   "time": 41.267,
+   "duration": 0.033,
+   "frame": 1238,
+   "end_frame": 1239,
+   "kind": "foley",
+   "label": "quick footstep down a stone step, the frame bumping",
+   "peak_frame": 1238
+  },
+  {
+   "time": 41.6,
+   "duration": 0.033,
+   "frame": 1248,
+   "end_frame": 1249,
+   "kind": "foley",
+   "label": "quick footstep down a stone step, the frame bumping",
+   "peak_frame": 1248
+  },
+  {
+   "time": 41.867,
+   "duration": 0.4,
+   "frame": 1256,
+   "end_frame": 1268,
+   "kind": "prop",
+   "label": "the panel slides out of the frame: wood on wood, the empty frame clatters onto the steps",
+   "peak_frame": 1258
+  },
+  {
+   "time": 42.533,
+   "duration": 0.433,
+   "frame": 1276,
+   "end_frame": 1289,
+   "kind": "accent",
+   "label": "he freezes and glances up the stairs: tense string hold",
+   "peak_frame": 1276
+  },
+  {
+   "time": 43.333,
+   "duration": 0.333,
+   "frame": 1300,
+   "end_frame": 1310,
+   "kind": "prop",
+   "label": "the panel slides under the smock: cloth rustle, a soft thump against his belly",
+   "peak_frame": 1302
+  },
+  {
+   "time": 43.733,
+   "duration": 1.0,
+   "frame": 1312,
+   "end_frame": 1342,
+   "kind": "accent",
+   "label": "a sly smirk: cheeky pizzicato",
+   "peak_frame": 1313
+  }
+ ]
+}

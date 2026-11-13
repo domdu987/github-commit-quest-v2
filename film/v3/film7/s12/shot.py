@@ -206,9 +206,10 @@ def vin_pose_b(g):
                  panel_grip="bottom", panel_side=0)
         if g < G_BULGE[0] + 3:
             p["prop_r"] = dict(type="mona_panel", scale=2.0)
-            hy = lerp(0.98, 1.30, k) + 0.12 * ez((g - G_BULGE[0]) / 3.0)
-            p["arm_r"] = dict(hand=(0.18, hy), bend=-0.3, stretch=1.2, layer="front")
-            p["arm_l"] = dict(hand=(-0.36, hy + 0.02), bend=0.4, layer="front")
+            hy = lerp(0.98, 1.30, k) + 0.30 * ez((g - G_BULGE[0] + 1) / 3.0)
+            lay = "front" if g < G_BULGE[0] else "back"       # the panel slides down BEHIND the smock front: the tuck
+            p["arm_r"] = dict(hand=(0.18, hy), bend=-0.3, stretch=1.2, layer=lay)
+            p["arm_l"] = dict(hand=(-0.36, hy + 0.02), bend=0.4, layer=lay)
         else:
             p["arm_r"] = dict(hand=(0.22, 0.95), bend=0.7, shape="open", layer="front")
             p["arm_l"] = dict(hand=(-0.20, 1.02), bend=0.7, shape="open", layer="front")
