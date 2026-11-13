@@ -1,0 +1,49 @@
+{
+ "take": "s30",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 99.133,
+   "duration": 4.267,
+   "frame": 2974,
+   "end_frame": 3102,
+   "kind": "ambience",
+   "label": "a packed gallery: the murmur of a huge crowd, shuffling feet on parquet, a guard's low 'avancez, s'il vous plait', echo under the skylight"
+  },
+  {
+   "time": 99.333,
+   "duration": 0.3,
+   "frame": 2980,
+   "end_frame": 2989,
+   "kind": "transition",
+   "label": "dissolve in from shot 29: the crowd murmur swells"
+  },
+  {
+   "time": 101.3,
+   "duration": 0.0,
+   "frame": 3039,
+   "end_frame": 3039,
+   "kind": "cut",
+   "label": "hard cut to the reverse: the crowd sound opens wide (bigger room tone)",
+   "peak_frame": 3039
+  },
+  {
+   "time": 101.367,
+   "duration": 0.933,
+   "frame": 3041,
+   "end_frame": 3069,
+   "kind": "music",
+   "label": "a soft rising string swell under '\u0e25\u0e30\u0e2b\u0e25\u0e32\u0e22\u0e2b\u0e21\u0e37\u0e48\u0e19\u0e04\u0e19' (tens of thousands)",
+   "peak_frame": 3059
+  },
+  {
+   "time": 103.2,
+   "duration": 0.0,
+   "frame": 3096,
+   "end_frame": 3096,
+   "kind": "cut",
+   "label": "cut to shot 31: her face behind glass, the crowd sound drops away"
+  }
+ ]
+}
