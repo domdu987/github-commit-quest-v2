@@ -34,7 +34,7 @@ Scripts: `shot.py` (16,17 = one MORNING build, 18,19 = one AFTERNOON build: `fin
 |---|---|---|---|---|
 | 16A | kit / henry | 210-224 / 194-205 | 148-161 / 496-509 | 0.54 / 0.50-0.53 |
 | 16B | henry | 240-250 | 340 | 0.49 |
-| 17A | henry / kit | 306-324 / 308-328 | 188-198 / 635-652 | 0.36-0.37 / 0.53-0.55 |
+| 17A | henry / kit | 306-324 / 308-327 | 188-198 / 635-652 | 0.36-0.37 / 0.54-0.55 |
 | 17B | henry / kit | 322-341 / 261-273 | 612-627 / 127-138 | 0.43 / 0.53 |
 | 18A | kit (walking) | 172-203 | 213-460 | 0.55-0.58 |
 | 18B | kit | 288-305 | 190-200 | 0.49 |
@@ -58,10 +58,10 @@ s16 shot 19 (g 1515-1583)                      40.5   45.0    2.8    0.0    0.0 
 ref a t0001 t0046 t0047                        32.1   44.2    4.9    0.3    0.0    7.0    6.1    5.4  0.34 0.47 0.12
 ```
 The bakery set's warm look (bakery_API 7). Shot 17's "magenta" 10.9 is the pink-cream plaster of the back wall / window light
-behind the table (warm pink, not a magenta cast on the shade). Shot 17 (first pass) is listed; 17A was re-rendered with kit raised 0.06 D.
+behind the table (warm pink, not a magenta cast on the shade). 17A was re-rendered with kit raised 0.06 D (first pass: his head bottom crossed y 880 by ~12 px in g 1351-1378).
 
 ## Seconds per frame
-17.6 (16) / 21.1 (17) / 16.3 (18) / 19.2 (19) s wall, 34-42 s CPU per frame (two 2-thread processes on 4 cores); exact means in meta.json.
+17.6 (16) / 21.8 (17) / 16.3 (18) / 19.2 (19) s wall per frame; take mean 18.6 s wall / 36.2 s CPU (two 2-thread processes on 4 cores).
 
 ## Differences from the plan
 - Shot 16 "counter low": two framings (two-shot with kit, then henry solo).
