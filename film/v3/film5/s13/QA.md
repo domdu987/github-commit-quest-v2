@@ -26,7 +26,7 @@ Framing changes 1204, 1246, 1288, 1330: 1.40 / 1.40 / 1.40 / 1.17 s (+ handle).
 ## Staging (`work/qa.txt`)
 | framing | heads (width px, centre y H) |
 |---|---|
-| 13a | alfie 2xx px 0.4x-0.5x (see qa.txt); miner1 100-105 / miner3 82-86 in depth; bird in the 3D cage 31-34 px (until 1207) |
+| 13a | alfie 189-284 (0.51-0.53); miner1 100-105 / miner3 82-86 in depth; bird in the 3D cage 31-34 px (until 1207) |
 | 13b | alfie 155 -> 248 (0.46-0.53), miner1 124-176, miner2 101-133, miner3 95-123 |
 | 13c | miner3 278 (0.45), miner2 177 |
 | 13d | alfie 119 -> 196, miner1 106-163, miner3 94-103, miner2 80-86, gaffer 99-103 (0.40) |
