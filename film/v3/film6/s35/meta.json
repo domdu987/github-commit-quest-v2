@@ -1,0 +1,74 @@
+{
+ "take": "s35",
+ "film": 6,
+ "shots": [
+  35
+ ],
+ "first_g": 3069,
+ "n_frames": 125,
+ "g0": 3075,
+ "g1": 3194,
+ "handle_in": 6,
+ "handle_out": 0,
+ "transition_in": "dissolve",
+ "transition_in_detail": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "plan: dissolve in from shot 34 (bakery counter); in-handle g 3069..3074 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "end",
+  "note": "end of film: last frame g 3193 (N = 3194); no out-handle"
+ },
+ "shot_ranges": {
+  "35": [
+   3075,
+   3193
+  ]
+ },
+ "framings": {
+  "close_on_shop": [
+   3069,
+   3109
+  ],
+  "crane_pull_back": [
+   3109,
+   3183
+  ],
+  "wide_drift_to_end": [
+   3183,
+   3193
+  ]
+ },
+ "events": {
+  "kit_glances_up_at_henry": [
+   3077,
+   3113
+  ],
+  "henry_nods": [
+   3083,
+   3101
+  ],
+  "kit_hop": [
+   3115,
+   3127
+  ],
+  "pull_back_starts": 3109,
+  "pull_back_lands": 3183
+ },
+ "set": "v3/set3d6/bakery.py: market MORNING; Henry's bakery front (west row); basket of 13 (13th drawn pale) = cast6.basket_svg PropCard x1.7 on the shutter board, three local camera-only steam cards (set's steam material, set_steam 1.5); the bread sign on its bracket",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film6/audio/narration_bankky.wav at +0.10 s; captions film6/script/captions.json",
+ "mouths": "no quoted line in this shot: static expression mouths only",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 16.66,
+ "s_per_frame_cpu_mean": 30.77,
+ "blender_frame": "g - 2700"
+}

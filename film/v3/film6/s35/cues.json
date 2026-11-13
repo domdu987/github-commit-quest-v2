@@ -1,0 +1,49 @@
+{
+ "take": "s35",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 102.3,
+   "duration": 4.167,
+   "frame": 3069,
+   "end_frame": 3194,
+   "kind": "ambience",
+   "label": "market square waking up in the morning: birdsong, a distant church bell, a cart rolling, soft chatter"
+  },
+  {
+   "time": 102.3,
+   "duration": 4.167,
+   "frame": 3069,
+   "end_frame": 3194,
+   "kind": "music",
+   "label": "closing theme: warm full statement of the music, swelling with the pull-back, resolving on the last frame"
+  },
+  {
+   "time": 102.767,
+   "duration": 0.6,
+   "frame": 3083,
+   "end_frame": 3101,
+   "kind": "vocal-nonverbal",
+   "label": "Henry's contented nod, kit's happy giggle (no words)",
+   "peak_frame": 3090
+  },
+  {
+   "time": 103.633,
+   "duration": 2.467,
+   "frame": 3109,
+   "end_frame": 3183,
+   "kind": "accent",
+   "label": "the camera rises: airy swell, bunting flutter",
+   "peak_frame": 3150
+  },
+  {
+   "time": 106.433,
+   "duration": 0.0,
+   "frame": 3193,
+   "end_frame": 3193,
+   "kind": "end",
+   "label": "end of film"
+  }
+ ]
+}
