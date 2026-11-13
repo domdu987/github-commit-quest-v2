@@ -1,0 +1,84 @@
+{
+ "take": "s31",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); frame = film frame g; narration at +0.10 s",
+ "cues": [
+  {
+   "time": 86.033,
+   "duration": 4.467,
+   "frame": 2581,
+   "end_frame": 2715,
+   "kind": "ambience",
+   "label": "bakery morning: soft oven crackle, warm hush; the reveal music bed can start here"
+  },
+  {
+   "time": 86.033,
+   "duration": 1.967,
+   "frame": 2581,
+   "end_frame": 2640,
+   "kind": "fx",
+   "label": "gentle airy steam hiss off the fresh loaves"
+  },
+  {
+   "time": 88.0,
+   "duration": 0.833,
+   "frame": 2640,
+   "end_frame": 2665,
+   "kind": "fx",
+   "label": "the steam turns into droplets: shimmering 'sparkle' transition",
+   "peak_frame": 2652
+  },
+  {
+   "time": 88.167,
+   "duration": 2.333,
+   "frame": 2645,
+   "end_frame": 2715,
+   "kind": "fx",
+   "label": "tiny water-drop 'plip' pops as drops leave the crust, getting denser",
+   "peak_frame": 2690
+  },
+  {
+   "time": 89.167,
+   "duration": 1.3,
+   "frame": 2675,
+   "end_frame": 2714,
+   "kind": "accent",
+   "label": "dashed arrows pulse up: soft rising 'blip' x2"
+  },
+  {
+   "time": 90.5,
+   "duration": 0.767,
+   "frame": 2715,
+   "end_frame": 2738,
+   "kind": "prop",
+   "label": "loaf set on the brass hand balance: small clink, beam wobbles and settles (tiny ringing)",
+   "peak_frame": 2716
+  },
+  {
+   "time": 90.5,
+   "duration": 4.233,
+   "frame": 2715,
+   "end_frame": 2842,
+   "kind": "ambience",
+   "label": "quiet bakery; distant street through the opening"
+  },
+  {
+   "time": 92.7,
+   "duration": 0.367,
+   "frame": 2781,
+   "end_frame": 2792,
+   "kind": "transition",
+   "label": "dissolve morning -> afternoon: soft whoosh / time-passing chime",
+   "peak_frame": 2786
+  },
+  {
+   "time": 93.2,
+   "duration": 1.0,
+   "frame": 2796,
+   "end_frame": 2826,
+   "kind": "prop",
+   "label": "the loaf pan rises: slow brass creak, a hollow 'whoop' up-sweep as the weight floats away",
+   "peak_frame": 2810
+  }
+ ]
+}

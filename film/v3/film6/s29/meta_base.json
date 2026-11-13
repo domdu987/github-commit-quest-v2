@@ -1,0 +1,115 @@
+{
+ "take": "s29",
+ "film": 6,
+ "shots": [
+  29,
+  30
+ ],
+ "g0": 2447,
+ "g1": 2587,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": "cut",
+ "transition_out": {
+  "type": "cut",
+  "note": "shot 31 (bakery table_insert) follows; plan grammar allows a 9-12 f dissolve between locations: out-handle g 2587..2592 rendered in 3D (inspector nod hold + push)"
+ },
+ "transitions": [
+  {
+   "at": 2441,
+   "type": "in-handle",
+   "handle": [
+    2441,
+    2446
+   ]
+  },
+  {
+   "at": 2485,
+   "type": "cut (inside shot 29: 29a insert -> 29b low wide)"
+  },
+  {
+   "at": 2526,
+   "type": "cut (shot 30)"
+  },
+  {
+   "at": 2557,
+   "type": "cut (inside shot 30: 30a henry + guards -> 30b inspector)"
+  },
+  {
+   "at": 2587,
+   "type": "out-handle",
+   "handle": [
+    2587,
+    2592
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "29": [
+   2447,
+   2525
+  ],
+  "30": [
+   2526,
+   2586
+  ]
+ },
+ "framings": {
+  "29a": [
+   2441,
+   2484
+  ],
+  "29b": [
+   2485,
+   2525
+  ],
+  "30a": [
+   2526,
+   2556
+  ],
+  "30b": [
+   2557,
+   2592
+  ]
+ },
+ "events": {
+  "beam_hold_minus7": [
+   2441,
+   2455
+  ],
+  "beam_tips_to_plus6": [
+   2455,
+   2492
+  ],
+  "beam_overshoot_settle": [
+   2492,
+   2506
+  ],
+  "kit_springs_proud": 2497,
+  "henry_pales": [
+   2529,
+   2541
+  ],
+  "crowd_lowers_veg": [
+   2532,
+   2555
+  ],
+  "inspector_nod": [
+   2563,
+   2588
+  ]
+ },
+ "set": "v3/set3d6/bakery.py: market AFTERNOON; set_big_scale keyed per frame (-7 -> +6, overshoot +7.2), set_loaves 13 (paler 13th on top), braziers flicker set_oven per frame; custom cameras (24 / 22 mm)",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film6/audio/narration_bankky.wav at +0.10 s; captions film6/script/captions.json",
+ "light": "AFTERNOON",
+ "cast": "v3/cast6: kit (29b, 30b), henry (pale, held), guard1 + guard2 (hands pinned on henry's hands), woman1 + man1 (lowering tomato / cabbage), inspector_royal (NOD); all mouths static (talk_* mouths removed)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30
+}

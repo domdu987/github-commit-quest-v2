@@ -1,0 +1,137 @@
+{
+ "take": "s31",
+ "film": 6,
+ "shots": [
+  31,
+  32
+ ],
+ "g0": 2587,
+ "g1": 2836,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": "cut",
+ "transition_in_note": "plan grammar: market -> bakery may dissolve 9-12 f; in-handle g 2581..2586 rendered in 3D (31a push + full steam)",
+ "transition_out": {
+  "type": "cut",
+  "note": "shot 33 (market pillory_low) follows; out-handle g 2836..2841 (afternoon beam held at -8, drops drifting)"
+ },
+ "transitions": [
+  {
+   "at": 2581,
+   "type": "in-handle",
+   "handle": [
+    2581,
+    2586
+   ]
+  },
+  {
+   "at": 2630,
+   "type": "cut (31a -> 31b closer)"
+  },
+  {
+   "at": 2673,
+   "type": "cut (31b -> 31c ECU)"
+  },
+  {
+   "at": 2715,
+   "type": "cut (shot 32)"
+  },
+  {
+   "at": 2751,
+   "type": "cut (32a -> 32b closer)"
+  },
+  {
+   "at": 2781,
+   "type": "dissolve MORNING -> AFTERNOON (inside shot 32, done in deliver.py)",
+   "frames": [
+    2781,
+    2792
+   ]
+  },
+  {
+   "at": 2836,
+   "type": "out-handle",
+   "handle": [
+    2836,
+    2841
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "31": [
+   2587,
+   2714
+  ],
+  "32": [
+   2715,
+   2835
+  ]
+ },
+ "framings": {
+  "31a": [
+   2581,
+   2629
+  ],
+  "31b": [
+   2630,
+   2672
+  ],
+  "31c": [
+   2673,
+   2714
+  ],
+  "32a": [
+   2715,
+   2750
+  ],
+  "32b": [
+   2751,
+   2792
+  ],
+  "32c": [
+   2781,
+   2841
+  ]
+ },
+ "events": {
+  "steam_full": [
+   2581,
+   2640
+  ],
+  "steam_thins_to_drops": [
+   2640,
+   2664
+  ],
+  "drops_start": 2638,
+  "up_arrows": [
+   2675,
+   2714
+  ],
+  "small_scale_settles_level": [
+   2715,
+   2738
+  ],
+  "dissolve_to_afternoon": [
+   2781,
+   2792
+  ],
+  "loaf_side_rises_0_to_-8": [
+   2796,
+   2826
+  ]
+ },
+ "set": "v3/set3d6/bakery.py: bakery MORNING (shots 31, 32a/b) and AFTERNOON (32c, with a runtime light tweak in shot.py: sun x1.3 warmer, shafts 0.55); set_steam / set_oven / set_scale keyed per frame; custom cameras near the table_insert / small_scale_insert presets (26 mm)",
+ "props": "2D droplet cards (water drop, diagram look: pale-blue gradient, white glint, plum ink #3a2832 outline) and dashed up-arrow cards drawn in shot.py, rasterised with common.svg_pngs, on common.PropCard emission cards facing the camera, keyed per frame",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film6/audio/narration_bankky.wav at +0.10 s; captions film6/script/captions.json",
+ "light": "MORNING -> AFTERNOON",
+ "cast": "none (inserts)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30
+}

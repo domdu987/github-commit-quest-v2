@@ -1,0 +1,78 @@
+{
+ "take": "s29",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); frame = film frame g; narration at +0.10 s",
+ "cues": [
+  {
+   "time": 81.367,
+   "duration": 5.067,
+   "frame": 2441,
+   "end_frame": 2593,
+   "kind": "ambience",
+   "label": "market square, afternoon: hushed crowd murmur (everyone watching the scale), distant brazier crackle"
+  },
+  {
+   "time": 81.833,
+   "duration": 1.233,
+   "frame": 2455,
+   "end_frame": 2492,
+   "kind": "prop",
+   "label": "big wooden balance beam creaks slowly as it tips, chains clink, the bread pan sinks",
+   "peak_frame": 2470
+  },
+  {
+   "time": 83.067,
+   "duration": 0.467,
+   "frame": 2492,
+   "end_frame": 2506,
+   "kind": "prop",
+   "label": "beam settles: wooden thunk + small chain jingle (overshoot and settle)",
+   "peak_frame": 2493
+  },
+  {
+   "time": 82.833,
+   "duration": 0.5,
+   "frame": 2485,
+   "end_frame": 2500,
+   "kind": "crowd",
+   "label": "crowd gasps / murmurs 'ooh' as the scale passes",
+   "peak_frame": 2488
+  },
+  {
+   "time": 83.233,
+   "duration": 0.2,
+   "frame": 2497,
+   "end_frame": 2503,
+   "kind": "accent",
+   "label": "kit springs into a proud pose: tiny bright 'ting'",
+   "peak_frame": 2497
+  },
+  {
+   "time": 84.2,
+   "duration": 1.033,
+   "frame": 2526,
+   "end_frame": 2557,
+   "kind": "gesture",
+   "label": "henry trembling, guards' mail rustles as they hold his arms; colour drains ('whoosh' down-sweep)",
+   "peak_frame": 2530
+  },
+  {
+   "time": 84.4,
+   "duration": 0.8,
+   "frame": 2532,
+   "end_frame": 2556,
+   "kind": "crowd",
+   "label": "the crowd lowers its rotten veg: disappointed murmur, a soft cabbage plop",
+   "peak_frame": 2545
+  },
+  {
+   "time": 85.433,
+   "duration": 0.833,
+   "frame": 2563,
+   "end_frame": 2588,
+   "kind": "gesture",
+   "label": "the inspector's slow nod: chain of office clinks once",
+   "peak_frame": 2572
+  }
+ ]
+}
