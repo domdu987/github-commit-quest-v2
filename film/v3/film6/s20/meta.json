@@ -1,0 +1,62 @@
+{
+ "take": "s20",
+ "film": 6,
+ "shots": [
+  20
+ ],
+ "first_g": 1572,
+ "n_frames": 73,
+ "g0": 1578,
+ "g1": 1639,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: cut from shot 19 (bakery small_scale_insert); 6 in-handle frames g 1572..1577 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: cut to shot 21 (bakery counter, AFTERNOON) at g 1639; 6 out-handle frames g 1639..1644 (push continues)"
+ },
+ "cuts_inside": [
+  1606
+ ],
+ "shot_ranges": {
+  "20": [
+   1578,
+   1638
+  ]
+ },
+ "events": {
+  "20a_empty_pillory_long_shadows": [
+   1572,
+   1605
+  ],
+  "20b_kit_reverse": [
+   1606,
+   1644
+  ],
+  "eyes_widen": 1614,
+  "turn_to_lens": [
+   1616,
+   1622
+  ]
+ },
+ "set": "v3/set3d6/bakery.py: market AFTERNOON (low warm sun 26 deg from the WSW: long shadows); 20a near the pillory_low preset (lifted to 1.5-1.75 D to see the shadows on the planks / cobbles), 20b custom reverse with the pillory behind kit; braziers flicker keyed per frame",
+ "light": "AFTERNOON",
+ "cast": "v3/cast6: kit (flour boy) in 20b only: kit_think (hand on chin) -> stunned -> shocked, hands open",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film6/audio/narration_bankky.wav at +0.10 s; captions film6/script/captions.json",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 16.23,
+ "s_per_frame_cpu_mean": 24.48
+}

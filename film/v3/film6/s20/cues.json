@@ -1,0 +1,49 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 52.4,
+   "duration": 2.433,
+   "frame": 1572,
+   "end_frame": 1645,
+   "kind": "ambience",
+   "label": "market square in the afternoon, quiet: distant market murmur, a crow caws once, a creak of the empty pillory board"
+  },
+  {
+   "time": 53.533,
+   "duration": 0.0,
+   "frame": 1606,
+   "end_frame": 1606,
+   "kind": "cut",
+   "label": "cut: reverse on kit (tiny whoosh)"
+  },
+  {
+   "time": 53.8,
+   "duration": 0.2,
+   "frame": 1614,
+   "end_frame": 1620,
+   "kind": "accent",
+   "label": "kit's eyes go wide: realisation sting (bright 'ding!' + string stab)",
+   "peak_frame": 1614
+  },
+  {
+   "time": 53.867,
+   "duration": 0.2,
+   "frame": 1616,
+   "end_frame": 1622,
+   "kind": "gesture",
+   "label": "head snaps round to the lens (cloth swish)",
+   "peak_frame": 1618
+  },
+  {
+   "time": 54.633,
+   "duration": 0.0,
+   "frame": 1639,
+   "end_frame": 1639,
+   "kind": "cut",
+   "label": "plan: cut to shot 21 (bakery counter, the hooded stranger)"
+  }
+ ]
+}
