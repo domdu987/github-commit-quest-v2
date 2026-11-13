@@ -1,0 +1,81 @@
+{
+ "take": "s18",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 53.1,
+   "duration": 3.333,
+   "frame": 1593,
+   "end_frame": 1693,
+   "kind": "ambience",
+   "label": "inside the pagoda: muffled quake rumble, deep wooden knocking of the storeys, chain of the pillar creaking"
+  },
+  {
+   "time": 54.7,
+   "duration": 0.0,
+   "frame": 1641,
+   "end_frame": 1641,
+   "kind": "cut",
+   "label": "cut closer: storeys slide one way, the pillar the other"
+  },
+  {
+   "time": 54.7,
+   "duration": 0.633,
+   "frame": 1641,
+   "end_frame": 1660,
+   "kind": "accent",
+   "label": "'dancing out of the way': a soft rhythmic swish per swing",
+   "peak_frame": 1641
+  },
+  {
+   "time": 56.033,
+   "duration": 0.4,
+   "frame": 1681,
+   "end_frame": 1693,
+   "kind": "dissolve",
+   "label": "dissolve to the day diagram: the rumble falls away, a calm explanatory music bed starts"
+  },
+  {
+   "time": 56.233,
+   "duration": 5.2,
+   "frame": 1687,
+   "end_frame": 1843,
+   "kind": "ambience",
+   "label": "diagram: soft whooshes as the arrows flip with each sway (every 1.0 s at 0.5 Hz)"
+  },
+  {
+   "time": 57.7,
+   "duration": 0.0,
+   "frame": 1731,
+   "end_frame": 1731,
+   "kind": "cut",
+   "label": "cut inside the diagram (soft swoosh)"
+  },
+  {
+   "time": 58.9,
+   "duration": 0.0,
+   "frame": 1767,
+   "end_frame": 1767,
+   "kind": "cut",
+   "label": "cut inside the diagram (soft swoosh)"
+  },
+  {
+   "time": 60.133,
+   "duration": 0.0,
+   "frame": 1804,
+   "end_frame": 1804,
+   "kind": "cut",
+   "label": "cut inside the diagram (soft swoosh)"
+  },
+  {
+   "time": 60.267,
+   "duration": 0.4,
+   "frame": 1808,
+   "end_frame": 1820,
+   "kind": "accent",
+   "label": "'pendulum': a slow tick-tock creak of the hanging pillar",
+   "peak_frame": 1808
+  }
+ ]
+}
