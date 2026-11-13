@@ -1,0 +1,31 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film4/audio/narration_bankky.wav at +0.10 s, captions_bankky.json",
+ "cues": [
+  {
+   "time": 60.967,
+   "duration": 4.633,
+   "frame": 1829,
+   "end_frame": 1968,
+   "kind": "ambience",
+   "label": "dawn: birds, a light breeze, quiet; settling timber creaks under the master's feet"
+  },
+  {
+   "time": 62.967,
+   "duration": 0.0,
+   "frame": 1889,
+   "end_frame": 1889,
+   "kind": "accent",
+   "label": "'looking at the central pillar': faint creak of the chain as the pillar swings"
+  },
+  {
+   "time": 64.333,
+   "duration": 1.267,
+   "frame": 1930,
+   "end_frame": 1968,
+   "kind": "ambience",
+   "label": "the pillar's gentle swing: a soft slow wooden creak; music resolves to the end"
+  }
+ ]
+}
