@@ -29,16 +29,16 @@ Framing changes: g 593, 629, 662, 688-696: gaps 1.2, 1.1, 0.9-1.1 s; then the ou
 ```
 set                                             red orange yellow  green   cyan   blue violet magent   sat  val dark
 s09 9a (g 593-628)                              3.2   26.6    0.1    0.0    0.0   67.3    1.5    1.4  0.48 0.71 0.04
-s09 9b (g 629-661)                             23.8   10.8    0.0    0.0    0.0   52.1    1.2   12.0  0.45 0.39 0.35
+s09 9b (g 629-661)                              9.8   40.5    0.0    0.0    0.0   43.4    1.0    5.3  0.45 0.45 0.34
 s09 9c (g 662-709)                             10.8   12.3    0.4    0.0    0.0   68.9    4.6    2.9  0.64 0.56 0.08
-s09 all (g 586-716)                             9.9   17.1    0.2    0.0    0.0   66.3    3.1    3.5  0.54 0.56 0.13
+s09 all (g 586-716)                             8.1   21.4    0.2    0.0    0.0   64.6    3.0    2.7  0.55 0.58 0.13
 ref a t0039 t0041 t0043                        37.5   20.7    0.9    0.2    0.0   23.1   10.1    7.6  0.33 0.46 0.11
 ```
-Exterior DAY sky makes 9a / 9c blue-heavy (ref is an interior). 9b magenta 12: the brown sill's shaded faces under the tower's skirt
-roof read mauve (the set's own crack_insert stills are 9.5-19.5 for the same reason: plaster / wood in shade).
+Exterior DAY sky makes 9a / 9c blue-heavy (ref is an interior). 9b: the first render had a brown sill whose shaded faces read mauve
+(magenta 12.0); the sill is now ochre (#a8823e / #6e5430) and 9b was re-rendered: magenta 5.3, orange 40 (warm wood + tea).
 
 ## Seconds per frame
-8.5 s wall / 16.7 s CPU mean (9a 7.4 / 14.4, 9b 10.5 / 20.7, 9c 8.2 / 16.1), two render processes with 2 threads each.
+8.6 s wall / 16.8 s CPU mean (9a 7.4 / 14.4, 9b 10.8 / 21.2, 9c 8.2 / 16.1), two render processes with 2 threads each.
 
 ## Differences from the plan / the reference
 - The cup sits on a sill the take adds on the tower's south face (x 11.6-12.4, z 3.2, under the first skirt roof); the camera looks
