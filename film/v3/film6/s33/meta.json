@@ -1,0 +1,76 @@
+{
+ "take": "s33",
+ "film": 6,
+ "shots": [
+  33
+ ],
+ "first_g": 2830,
+ "n_frames": 141,
+ "g0": 2836,
+ "g1": 2965,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": "dissolve",
+ "transition_in_detail": {
+  "type": "dissolve",
+  "frames": 10,
+  "note": "plan: dissolve in from shot 32 (bakery small_scale_insert); in-handle g 2830..2835 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "dissolve",
+  "note": "plan: dissolve to shot 34 (bakery DAWN counter); out-handle g 2965..2970 rendered in 3D (tilt + steam continue)"
+ },
+ "shot_ranges": {
+  "33": [
+   2836,
+   2964
+  ]
+ },
+ "framings": {
+  "A": [
+   2830,
+   2878
+  ],
+  "B": [
+   2879,
+   2922
+  ],
+  "C": [
+   2923,
+   2970
+  ]
+ },
+ "events": {
+  "A_row_of_three_bakers_steaming_baskets": [
+   2830,
+   2878
+  ],
+  "B_punch_in_middle_baker_tears_steam": [
+   2879,
+   2922
+  ],
+  "C_steam_rises_past_faces_tilt_up": [
+   2923,
+   2970
+  ],
+  "bakers_look_up_after_the_steam": [
+   2929,
+   2951
+  ]
+ },
+ "set": "v3/set3d6/bakery.py: market AFTERNOON; the set pillory's 3D board + post cut out of the 'pillory' mesh at runtime (platform, rails, lanterns, splats kept); three cast6 'pillory' pose cards (baker2 + runtime recolours baker3 / baker4); three cast6.basket_svg PropCards on the platform with local camera-only steam cards (the set's steam material, set_steam 1.5)",
+ "dof": "none (client rule: cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film6/audio/narration_bankky.wav at +0.10 s; captions film6/script/captions.json",
+ "mouths": "no quoted line in this shot: static expression mouths only",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 18.9,
+ "s_per_frame_cpu_mean": 36.71,
+ "blender_frame": "g - 2700"
+}

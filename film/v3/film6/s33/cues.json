@@ -1,0 +1,66 @@
+{
+ "take": "s33",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 94.333,
+   "duration": 4.7,
+   "frame": 2830,
+   "end_frame": 2971,
+   "kind": "ambience",
+   "label": "market square in the late afternoon: distant crowd murmur, a crow, a soft breeze, the bunting flapping"
+  },
+  {
+   "time": 94.333,
+   "duration": 4.7,
+   "frame": 2830,
+   "end_frame": 2971,
+   "kind": "music",
+   "label": "sad, slow musical bed: a lone low woodwind (the bakers' innocence)"
+  },
+  {
+   "time": 95.0,
+   "duration": 1.833,
+   "frame": 2850,
+   "end_frame": 2905,
+   "kind": "vocal-nonverbal",
+   "label": "three slow sighs from the pilloried bakers, a creak of the boards",
+   "peak_frame": 2858
+  },
+  {
+   "time": 95.967,
+   "duration": 0.0,
+   "frame": 2879,
+   "end_frame": 2879,
+   "kind": "cut",
+   "label": "framing change (cut): punch-in on the middle baker over his steaming basket"
+  },
+  {
+   "time": 95.967,
+   "duration": 1.433,
+   "frame": 2879,
+   "end_frame": 2922,
+   "kind": "accent",
+   "label": "a soft airy 'whoosh' rising with the steam, a tiny sniff from the crying baker",
+   "peak_frame": 2895
+  },
+  {
+   "time": 97.433,
+   "duration": 0.0,
+   "frame": 2923,
+   "end_frame": 2923,
+   "kind": "cut",
+   "label": "framing change (cut): low from the right, tilt up after the steam"
+  },
+  {
+   "time": 97.633,
+   "duration": 1.2,
+   "frame": 2929,
+   "end_frame": 2965,
+   "kind": "accent",
+   "label": "airy rising shimmer as the steam floats away into the sky ('\u0e25\u0e2d\u0e22\u0e2b\u0e32\u0e22\u0e44\u0e1b\u0e43\u0e19\u0e2d\u0e32\u0e01\u0e32\u0e28')",
+   "peak_frame": 2945
+  }
+ ]
+}
