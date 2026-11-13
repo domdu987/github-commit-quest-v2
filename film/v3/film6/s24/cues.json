@@ -1,0 +1,103 @@
+{
+ "take": "s24",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 64.3,
+   "duration": 6.7,
+   "frame": 1929,
+   "end_frame": 2130,
+   "kind": "ambience",
+   "label": "market square, afternoon: crowd murmur, distant hawkers, braziers crackle"
+  },
+  {
+   "time": 64.5,
+   "duration": 0.067,
+   "frame": 1935,
+   "end_frame": 1937,
+   "kind": "accent",
+   "label": "cut on the inspector at the balance: low brass sting (royal authority)",
+   "peak_frame": 1935
+  },
+  {
+   "time": 66.133,
+   "duration": 0.2,
+   "frame": 1984,
+   "end_frame": 1990,
+   "kind": "prop",
+   "label": "wicker basket tipped: creak",
+   "peak_frame": 1987
+  },
+  {
+   "time": 66.333,
+   "duration": 0.8,
+   "frame": 1990,
+   "end_frame": 2014,
+   "kind": "prop",
+   "label": "12 loaves tumble onto the brass pan: a run of soft crusty thumps on metal",
+   "peak_frame": 1995
+  },
+  {
+   "time": 67.133,
+   "duration": 0.4,
+   "frame": 2014,
+   "end_frame": 2026,
+   "kind": "prop",
+   "label": "the big beam creaks... and does NOT move (chains clink once)",
+   "peak_frame": 2016
+  },
+  {
+   "time": 68.433,
+   "duration": 1.3,
+   "frame": 2053,
+   "end_frame": 2092,
+   "kind": "accent",
+   "label": "ECU needle off the mark: a tense single low string note / clock tick",
+   "peak_frame": 2055
+  },
+  {
+   "time": 69.767,
+   "duration": 1.2,
+   "frame": 2093,
+   "end_frame": 2129,
+   "kind": "accent",
+   "label": "inspector's brows drop: a short 'uh-oh' bassoon",
+   "peak_frame": 2102
+  },
+  {
+   "time": 71.0,
+   "duration": 3.067,
+   "frame": 2130,
+   "end_frame": 2222,
+   "kind": "ambience",
+   "label": "crowd stirs, jeers rising"
+  },
+  {
+   "time": 71.0,
+   "duration": 1.533,
+   "frame": 2130,
+   "end_frame": 2176,
+   "kind": "foley",
+   "label": "henry dragged: heels scraping on cobbles, mail jingling, guards grunting",
+   "peak_frame": 2140
+  },
+  {
+   "time": 72.667,
+   "duration": 0.333,
+   "frame": 2180,
+   "end_frame": 2190,
+   "kind": "foley",
+   "label": "the crowd raises rotten vegetables: squelchy rustle + 'ooooh'",
+   "peak_frame": 2186
+  },
+  {
+   "time": 73.867,
+   "duration": 0.0,
+   "frame": 2216,
+   "end_frame": 2216,
+   "kind": "cut",
+   "label": "plan: cut to shot 27, kit runs down the lane"
+  }
+ ]
+}

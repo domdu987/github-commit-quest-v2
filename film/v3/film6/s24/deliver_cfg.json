@@ -1,0 +1,227 @@
+{
+ "take": "s24",
+ "g0": 1935,
+ "g1": 2216,
+ "shot_ranges": {
+  "24": [
+   1929,
+   2052
+  ],
+  "25": [
+   2053,
+   2129
+  ],
+  "26": [
+   2130,
+   2221
+  ]
+ },
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: hard cut from shot 23 (hood drop, square_eye) to the inspector at the big balance; in-handle g 1929..1934 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: cut to shot 27 (run_lane); out-handle g 2216..2221 rendered in 3D (veg raised, henry hauled on)"
+ },
+ "transitions": [
+  {
+   "at": 1935,
+   "type": "cut",
+   "handle": [
+    1929,
+    1934
+   ]
+  },
+  {
+   "at": 1975,
+   "type": "cut",
+   "note": "inside shot 24: A -> B"
+  },
+  {
+   "at": 2019,
+   "type": "cut",
+   "note": "inside shot 24: B -> C"
+  },
+  {
+   "at": 2053,
+   "type": "cut",
+   "note": "shot 25"
+  },
+  {
+   "at": 2093,
+   "type": "cut",
+   "note": "inside shot 25: D -> E"
+  },
+  {
+   "at": 2130,
+   "type": "cut",
+   "note": "shot 26"
+  },
+  {
+   "at": 2177,
+   "type": "cut",
+   "note": "inside shot 26: F -> G"
+  },
+  {
+   "at": 2216,
+   "type": "out",
+   "handle": [
+    2216,
+    2221
+   ]
+  }
+ ],
+ "framings": {
+  "A": [
+   1929,
+   1974,
+   "medium low: inspector_royal with the basket of 12 at the big balance, turns to the bread pan, slow push"
+  ],
+  "B": [
+   1975,
+   2018,
+   "two-shot: he tips the basket over the bread pan, loaves tumble, the pile grows 0 -> 12"
+  ],
+  "C": [
+   2019,
+   2052,
+   "wide frontal of the whole balance: beam stays down on the weights side (-7); he looks up at it; two bystanders"
+  ],
+  "D": [
+   2053,
+   2092,
+   "ECU pivot: needle off the red centre mark of the dial (runtime prop)"
+  ],
+  "E": [
+   2093,
+   2129,
+   "low close-up: inspector under the tilted beam, brows down ('a hair short'), glances up then down"
+  ],
+  "F": [
+   2130,
+   2176,
+   "pillory side: guard1 (leaning back) and guard2 drag pale henry toward the pillory; pillory board at left"
+  ],
+  "G": [
+   2177,
+   2221,
+   "over the crowd: woman1 (tomato) and man1 (cabbage) raise rotten veg (g 2180-2190); henry hauled to the steps"
+  ]
+ },
+ "events": {
+  "pour_tilt": [
+   1984,
+   1990
+  ],
+  "loaves_fall": [
+   1990,
+   2014
+  ],
+  "pan_loaves_12": 2014,
+  "beam": "set_big_scale(-7) every frame",
+  "veg_raised": [
+   2180,
+   2190
+  ]
+ },
+ "set": "v3/set3d6/bakery.py: market AFTERNOON; big balance -7 the whole take, set_loaves 0 -> 12 during the pour (12 from g 2014); braziers flicker keyed per frame; runtime props in shot.py: a cream dial with ticks + red centre mark and an iron needle parented to big_beam_pivot (in front of the pivot)",
+ "light": "AFTERNOON",
+ "cast": "v3/cast6: inspector_royal (basket prop, pose key basket loaves 12 -> 0, tilt, pour), henry (pale 1, shocked), guard1 / guard2 (hands pinned on henry's hands from his sprite anchors, walk-cycle legs), woman1 (tomato) / man1 (cabbage) foreground, bystanders woman1 / man1 / baker2",
+ "cues": [
+  {
+   "frame": 1929,
+   "end_frame": 2130,
+   "kind": "ambience",
+   "label": "market square, afternoon: crowd murmur, distant hawkers, braziers crackle"
+  },
+  {
+   "frame": 1935,
+   "end_frame": 1937,
+   "kind": "accent",
+   "label": "cut on the inspector at the balance: low brass sting (royal authority)",
+   "peak_frame": 1935
+  },
+  {
+   "frame": 1984,
+   "end_frame": 1990,
+   "kind": "prop",
+   "label": "wicker basket tipped: creak",
+   "peak_frame": 1987
+  },
+  {
+   "frame": 1990,
+   "end_frame": 2014,
+   "kind": "prop",
+   "label": "12 loaves tumble onto the brass pan: a run of soft crusty thumps on metal",
+   "peak_frame": 1995
+  },
+  {
+   "frame": 2014,
+   "end_frame": 2026,
+   "kind": "prop",
+   "label": "the big beam creaks... and does NOT move (chains clink once)",
+   "peak_frame": 2016
+  },
+  {
+   "frame": 2053,
+   "end_frame": 2092,
+   "kind": "accent",
+   "label": "ECU needle off the mark: a tense single low string note / clock tick",
+   "peak_frame": 2055
+  },
+  {
+   "frame": 2093,
+   "end_frame": 2129,
+   "kind": "accent",
+   "label": "inspector's brows drop: a short 'uh-oh' bassoon",
+   "peak_frame": 2102
+  },
+  {
+   "frame": 2130,
+   "end_frame": 2222,
+   "kind": "ambience",
+   "label": "crowd stirs, jeers rising"
+  },
+  {
+   "frame": 2130,
+   "end_frame": 2176,
+   "kind": "foley",
+   "label": "henry dragged: heels scraping on cobbles, mail jingling, guards grunting",
+   "peak_frame": 2140
+  },
+  {
+   "frame": 2180,
+   "end_frame": 2190,
+   "kind": "foley",
+   "label": "the crowd raises rotten vegetables: squelchy rustle + 'ooooh'",
+   "peak_frame": 2186
+  },
+  {
+   "frame": 2216,
+   "end_frame": 2216,
+   "kind": "cut",
+   "label": "plan: cut to shot 27, kit runs down the lane"
+  }
+ ],
+ "compare": [
+  [
+   1960,
+   35
+  ],
+  [
+   2005,
+   55
+  ],
+  [
+   2075,
+   105
+  ],
+  [
+   2200,
+   55
+  ]
+ ]
+}
