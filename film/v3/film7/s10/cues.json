@@ -1,0 +1,179 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 30.467,
+   "duration": 1.2,
+   "frame": 914,
+   "end_frame": 950,
+   "kind": "ambience",
+   "label": "Paris at dusk, Sunday: last birds, a far church bell, a fiacre trotting away, the hiss and pop of gas lamps lighting one by one"
+  },
+  {
+   "time": 30.6,
+   "duration": 0.033,
+   "frame": 918,
+   "end_frame": 919,
+   "kind": "prop",
+   "label": "a gas lamp catches: soft 'fwoomp' + hiss",
+   "peak_frame": 918
+  },
+  {
+   "time": 30.867,
+   "duration": 0.033,
+   "frame": 926,
+   "end_frame": 927,
+   "kind": "prop",
+   "label": "a gas lamp catches: soft 'fwoomp' + hiss",
+   "peak_frame": 926
+  },
+  {
+   "time": 31.133,
+   "duration": 0.033,
+   "frame": 934,
+   "end_frame": 935,
+   "kind": "prop",
+   "label": "a gas lamp catches: soft 'fwoomp' + hiss",
+   "peak_frame": 934
+  },
+  {
+   "time": 31.4,
+   "duration": 0.033,
+   "frame": 942,
+   "end_frame": 943,
+   "kind": "prop",
+   "label": "a gas lamp catches: soft 'fwoomp' + hiss",
+   "peak_frame": 942
+  },
+  {
+   "time": 31.667,
+   "duration": 0.0,
+   "frame": 950,
+   "end_frame": 950,
+   "kind": "cut",
+   "label": "hard cut into the closet: the sound closes in"
+  },
+  {
+   "time": 31.667,
+   "duration": 2.5,
+   "frame": 950,
+   "end_frame": 1025,
+   "kind": "ambience",
+   "label": "closet room tone: muffled, the storm lantern's flame flutter and a tiny tin creak, his held breath"
+  },
+  {
+   "time": 32.833,
+   "duration": 0.5,
+   "frame": 985,
+   "end_frame": 1000,
+   "kind": "foley",
+   "label": "distant footsteps of a night guard passing in the corridor; he freezes (glance at the door)",
+   "peak_frame": 990
+  },
+  {
+   "time": 33.033,
+   "duration": 0.0,
+   "frame": 991,
+   "end_frame": 991,
+   "kind": "cut",
+   "label": "cut: punch-in on his face"
+  },
+  {
+   "time": 33.833,
+   "duration": 0.3,
+   "frame": 1015,
+   "end_frame": 1024,
+   "kind": "transition",
+   "label": "DISSOLVE to Monday morning (10 frames, centred on g 1020)"
+  },
+  {
+   "time": 33.833,
+   "duration": 3.5,
+   "frame": 1015,
+   "end_frame": 1120,
+   "kind": "ambience",
+   "label": "the closed museum on Monday: big empty echo, skylight hum, a broom somewhere, workmen whistling far off"
+  },
+  {
+   "time": 34.333,
+   "duration": 0.033,
+   "frame": 1030,
+   "end_frame": 1031,
+   "kind": "foley",
+   "label": "workmen's boots on the parquet, smocks rustling",
+   "peak_frame": 1030
+  },
+  {
+   "time": 34.8,
+   "duration": 0.033,
+   "frame": 1044,
+   "end_frame": 1045,
+   "kind": "foley",
+   "label": "workmen's boots on the parquet, smocks rustling",
+   "peak_frame": 1044
+  },
+  {
+   "time": 35.267,
+   "duration": 0.033,
+   "frame": 1058,
+   "end_frame": 1059,
+   "kind": "foley",
+   "label": "workmen's boots on the parquet, smocks rustling",
+   "peak_frame": 1058
+  },
+  {
+   "time": 35.733,
+   "duration": 0.033,
+   "frame": 1072,
+   "end_frame": 1073,
+   "kind": "foley",
+   "label": "workmen's boots on the parquet, smocks rustling",
+   "peak_frame": 1072
+  },
+  {
+   "time": 36.2,
+   "duration": 0.033,
+   "frame": 1086,
+   "end_frame": 1087,
+   "kind": "foley",
+   "label": "workmen's boots on the parquet, smocks rustling",
+   "peak_frame": 1086
+  },
+  {
+   "time": 36.667,
+   "duration": 0.033,
+   "frame": 1100,
+   "end_frame": 1101,
+   "kind": "foley",
+   "label": "workmen's boots on the parquet, smocks rustling",
+   "peak_frame": 1100
+  },
+  {
+   "time": 37.133,
+   "duration": 0.033,
+   "frame": 1114,
+   "end_frame": 1115,
+   "kind": "foley",
+   "label": "workmen's boots on the parquet, smocks rustling",
+   "peak_frame": 1114
+  },
+  {
+   "time": 35.433,
+   "duration": 0.0,
+   "frame": 1063,
+   "end_frame": 1063,
+   "kind": "cut",
+   "label": "cut closer"
+  },
+  {
+   "time": 37.133,
+   "duration": 0.0,
+   "frame": 1114,
+   "end_frame": 1114,
+   "kind": "cut",
+   "label": "plan: shot 12 (wall_eye, he lifts the painting) starts at g 1114; out-handle 1114-1119 rendered in 3D"
+  }
+ ]
+}
