@@ -1,0 +1,125 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film7/audio/narration_bankky.wav at +0.10 s; captions film7/script/captions.json",
+ "cues": [
+  {
+   "time": 51.0,
+   "duration": 4.433,
+   "frame": 1530,
+   "end_frame": 1663,
+   "kind": "ambience",
+   "label": "Salon Carre all day: a soft hubbub of footsteps and murmurs on parquet, sped up (time-lapse), thinning toward evening"
+  },
+  {
+   "time": 51.0,
+   "duration": 1.533,
+   "frame": 1530,
+   "end_frame": 1576,
+   "kind": "foley",
+   "label": "quick time-lapse footsteps and skirts swishing past, nobody stops",
+   "peak_frame": 1550
+  },
+  {
+   "time": 51.0,
+   "duration": 4.433,
+   "frame": 1530,
+   "end_frame": 1663,
+   "kind": "music",
+   "label": "a ticking clock speeding up, the light warming: a gentle rising string pad"
+  },
+  {
+   "time": 52.567,
+   "duration": 0.0,
+   "frame": 1577,
+   "end_frame": 1577,
+   "kind": "cut",
+   "label": "cut"
+  },
+  {
+   "time": 53.167,
+   "duration": 0.333,
+   "frame": 1595,
+   "end_frame": 1605,
+   "kind": "accent",
+   "label": "the guard's head turn to the empty spot: a small 'hm?' pizzicato",
+   "peak_frame": 1600
+  },
+  {
+   "time": 53.933,
+   "duration": 0.0,
+   "frame": 1618,
+   "end_frame": 1618,
+   "kind": "cut",
+   "label": "punch-in"
+  },
+  {
+   "time": 54.167,
+   "duration": 0.5,
+   "frame": 1625,
+   "end_frame": 1640,
+   "kind": "accent",
+   "label": "the shrug: a bored double bassoon 'bwomp-bwomp'",
+   "peak_frame": 1628
+  },
+  {
+   "time": 54.667,
+   "duration": 0.767,
+   "frame": 1640,
+   "end_frame": 1663,
+   "kind": "ambience",
+   "label": "gas torcheres hiss as they come up at dusk"
+  },
+  {
+   "time": 55.467,
+   "duration": 0.0,
+   "frame": 1664,
+   "end_frame": 1664,
+   "kind": "cut",
+   "label": "cut: next morning, birdsong through the skylight"
+  },
+  {
+   "time": 55.467,
+   "duration": 1.6,
+   "frame": 1664,
+   "end_frame": 1712,
+   "kind": "ambience",
+   "label": "quiet morning gallery: distant pigeons on the skylight, a single pair of footsteps (the painter) on parquet"
+  },
+  {
+   "time": 56.667,
+   "duration": 0.133,
+   "frame": 1700,
+   "end_frame": 1704,
+   "kind": "foley",
+   "label": "easel legs set down, a brush tapping the palette",
+   "peak_frame": 1702
+  },
+  {
+   "time": 57.1,
+   "duration": 0.0,
+   "frame": 1713,
+   "end_frame": 1713,
+   "kind": "cut",
+   "label": "cut"
+  },
+  {
+   "time": 57.333,
+   "duration": 0.833,
+   "frame": 1720,
+   "end_frame": 1745,
+   "kind": "foley",
+   "label": "brush dabs on canvas",
+   "peak_frame": 1730
+  },
+  {
+   "time": 58.167,
+   "duration": 0.8,
+   "frame": 1745,
+   "end_frame": 1769,
+   "kind": "accent",
+   "label": "the point at the empty hooks: a sharp 'dun!' sting",
+   "peak_frame": 1747
+  }
+ ]
+}
