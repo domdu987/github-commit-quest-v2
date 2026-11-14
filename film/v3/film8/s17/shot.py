@@ -245,6 +245,22 @@ def key_spread(spv, v, f):
     spv.outputs[0].keyframe_insert("default_value", frame=f)
 
 
+# ----------------------------------------------------------------------------- no sawn hole on the first night
+def patch_hole():
+    """the set's ice sheet in channel 2 has an opening at CUT (the sawn hole of later nights): fill it with an ice quad of the same
+    material and UV scheme, parented to the ice sheet so it follows its height (set_ice)."""
+    S = D.STATE; M = S["M"]; ice = S["ice"]["ice"]
+    a, b = D.CH_Y[1] - D.CH_W / 2, D.CH_Y[1] + D.CH_W / 2
+    h0, h1 = D.CUT; m0, m1 = a + 0.3, b - 0.25
+    mb = D.MB()
+    mb.quad((h0 - 0.01, m0 - 0.01, 0), (h1 - h0 + 0.02, 0, 0), (0, m1 - m0 + 0.02, 0), M["ice"], (h0 / 4, (m0 - a) / 2, h1 / 4, (m1 - a) / 2))
+    ob = D._obj(mb, "s17_ice_patch", S["SET"])
+    ob.parent = ice
+    ob.matrix_parent_inverse.identity()
+    ob.location = (0.0, 0.0, 0.0)
+    return ob
+
+
 # ----------------------------------------------------------------------------- runtime dressing
 def dress(shot):
     S = D.STATE; M = S["M"]; mb = D.MB()
@@ -289,6 +305,8 @@ class Take(C.Take):
         self.dress = dress(18 if self.light == "NOON" else 17)
         self.wisps = Wisps() if self.light == "NIGHT" else None
         self.spread = add_frost_front() if self.light == "NIGHT" else None
+        self.patch = patch_hole()
+
 
     def pose(self, shot, gs):
         for g in gs:
