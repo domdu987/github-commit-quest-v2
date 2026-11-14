@@ -194,7 +194,7 @@ def cam23(g):
 def cam24(g):
     u = ez((g - S24) / float(S25 - S24), "sine")
     a = SCALE_B
-    b = ((1.60, 1.40, 1.86), (1.88, 0.74, 1.82))         # keeps pushing, tilts up with the rising pan
+    b = ((1.54, 1.54, 1.88), (1.90, 0.74, 1.80))         # keeps pushing, tilts up with the rising pan
     return Vector(lerp(a[0], b[0], u)), Vector(lerp(a[1], b[1], u)), 26.0
 
 
@@ -240,6 +240,7 @@ class Take(C.Take):
         self.shot = shot
         C.Take.__init__(self, "bakery", PRESET[shot], quality=quality, lens=24.0, name="cam_s%d" % shot)
         self.puffs = None
+        self.scene.cycles.transparent_max_bounces = 128     # dense overlapping steam cards went black at the default limit
         sd = os.path.join(TMP, "sprites%d" % shot)
         if shot == 22:
             self.actors["kit"] = C.make_actor("kit", "kit", sd, CANVAS_KIT)

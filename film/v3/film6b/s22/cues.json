@@ -1,0 +1,101 @@
+{
+ "take": "s22",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film6b/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 41.067,
+   "duration": 2.6,
+   "frame": 1232,
+   "end_frame": 1310,
+   "kind": "ambience",
+   "label": "empty bakery in the afternoon: quiet, a fly buzzing, distant street murmur"
+  },
+  {
+   "time": 41.967,
+   "duration": 0.2,
+   "frame": 1259,
+   "end_frame": 1265,
+   "kind": "accent",
+   "label": "kit's eyes narrow (determined): small low 'hmm' sting",
+   "peak_frame": 1259
+  },
+  {
+   "time": 42.9,
+   "duration": 0.1,
+   "frame": 1287,
+   "end_frame": 1290,
+   "kind": "transition",
+   "label": "punch-in on the loaf held up: quick whoosh",
+   "peak_frame": 1287
+  },
+  {
+   "time": 43.7,
+   "duration": 0.0,
+   "frame": 1311,
+   "end_frame": 1311,
+   "kind": "cut",
+   "label": "cut to dawn (cool): soft morning birds"
+  },
+  {
+   "time": 43.7,
+   "duration": 0.633,
+   "frame": 1311,
+   "end_frame": 1330,
+   "kind": "prop",
+   "label": "brass balance wobbles and settles level: light metallic tick-tick",
+   "peak_frame": 1313
+  },
+  {
+   "time": 44.333,
+   "duration": 0.2,
+   "frame": 1330,
+   "end_frame": 1336,
+   "kind": "accent",
+   "label": "'500 \u0e01.' tag: tiny bright ding",
+   "peak_frame": 1330
+  },
+  {
+   "time": 44.8,
+   "duration": 0.0,
+   "frame": 1344,
+   "end_frame": 1344,
+   "kind": "cut",
+   "label": "cut to afternoon (gold)"
+  },
+  {
+   "time": 44.933,
+   "duration": 0.6,
+   "frame": 1348,
+   "end_frame": 1366,
+   "kind": "prop",
+   "label": "loaf pan rises, weights pan clunks down: rising slide whistle + clunk",
+   "peak_frame": 1364
+  },
+  {
+   "time": 45.367,
+   "duration": 0.2,
+   "frame": 1361,
+   "end_frame": 1367,
+   "kind": "accent",
+   "label": "tag flips to red '480 \u0e01.': paper flip + low 'bonk'",
+   "peak_frame": 1364
+  },
+  {
+   "time": 46.267,
+   "duration": 2.5,
+   "frame": 1388,
+   "end_frame": 1463,
+   "kind": "ambience",
+   "label": "fresh loaves at dawn: soft hiss of steam, warm whoosh rising with the crane"
+  },
+  {
+   "time": 47.6,
+   "duration": 0.0,
+   "frame": 1428,
+   "end_frame": 1428,
+   "kind": "cut",
+   "label": "cut: crane up into the white steam cloud"
+  }
+ ]
+}

@@ -1,0 +1,94 @@
+{
+ "take": "s22",
+ "film": "6b",
+ "shots": [
+  22,
+  23,
+  24,
+  25
+ ],
+ "g0": 1238,
+ "g1": 1458,
+ "first_g": 1232,
+ "n_frames": 232,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "22": [
+   1238,
+   1310
+  ],
+  "23": [
+   1311,
+   1343
+  ],
+  "24": [
+   1344,
+   1387
+  ],
+  "25": [
+   1388,
+   1457
+  ]
+ },
+ "handles": {
+  "in": [
+   1232,
+   1237
+  ],
+  "out": [
+   1458,
+   1463
+  ]
+ },
+ "internal_cuts": [
+  1287,
+  1311,
+  1344,
+  1388,
+  1428
+ ],
+ "events": {
+  "kit_worried_to_determined": 1259,
+  "punch_in_loaf": 1287,
+  "beam_settles_level": [
+   1311,
+   1330
+  ],
+  "beam_rises": [
+   1348,
+   1366
+  ],
+  "tag_flip_500_to_480": [
+   1361,
+   1367
+  ],
+  "big_steam": [
+   1388,
+   1463
+  ],
+  "crane_up": 1428
+ },
+ "set": "v3/set3d6/bakery.py: 22 + 24 AFTERNOON (steam 0), 23 + 25 MORNING (steam 0.35 / 1.5); set_scale keyed per frame (23 settle to level, 24 rise to -8); extra billboard steam puffs (emission cards, shot.py Puffs) in 23 and 25",
+ "props": "parchment tag PropCard '500 \u0e01.' / red '480 \u0e01.' (Kanit Black via SVG -> Chromium raster), parented to the loaf pan",
+ "grade": "deliver.py per-shot numpy grade: afternoon gold highlights + blue-violet shadows; dawn cool, whites kept white",
+ "dof": "none (cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) before every render)",
+ "narration": "film6b/audio/narration.wav at +0.10 s",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 21.85,
+ "s_per_frame_cpu_mean": 43.18
+}

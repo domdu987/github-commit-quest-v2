@@ -106,3 +106,9 @@ subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "30", "-star
                 os.path.join(OUT, "g_%04d.png"), "-frames:v", str(N), "-c:v", "libx264rgb", "-crf", "6", "-preset", "slow", mkv], check=True)
 print("delivered %d frames g %d..%d; mean wall %.2f s, cpu %.2f s; mkv %.1f MB" % (N, FIRST, LAST, np.mean(walls), np.mean(cpus),
                                                                                   os.path.getsize(mkv) / 1e6))
+
+for p in glob.glob(mkv + ".part*"):
+    os.remove(p)
+if os.path.getsize(mkv) > 45e6:
+    subprocess.run(["split", "-b", "40M", mkv, mkv + ".part"], check=True)
+    print("split:", sorted(os.path.basename(p) for p in glob.glob(mkv + ".part*")))
