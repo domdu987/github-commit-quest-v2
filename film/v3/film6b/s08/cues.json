@@ -1,0 +1,121 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6b/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 10.267,
+   "duration": 10.667,
+   "frame": 308,
+   "end_frame": 628,
+   "kind": "ambience",
+   "label": "inside the bakery, morning: oven fire crackle, low room tone"
+  },
+  {
+   "time": 10.467,
+   "duration": 0.0,
+   "frame": 314,
+   "end_frame": 314,
+   "kind": "cut",
+   "label": "cut to henry: low brass 'boss' sting"
+  },
+  {
+   "time": 12.0,
+   "duration": 1.067,
+   "frame": 360,
+   "end_frame": 392,
+   "kind": "prop",
+   "label": "the hand balance wobbles: small metal creaks, chains tinkle",
+   "peak_frame": 360
+  },
+  {
+   "time": 13.067,
+   "duration": 0.067,
+   "frame": 392,
+   "end_frame": 394,
+   "kind": "accent",
+   "label": "beam stops dead level on 'เป๊ะ': crisp 'tick'",
+   "peak_frame": 392
+  },
+  {
+   "time": 13.8,
+   "duration": 0.133,
+   "frame": 414,
+   "end_frame": 418,
+   "kind": "prop",
+   "label": "crumb drops on the brass pan: tiny 'tink', beam dips (creak)",
+   "peak_frame": 418
+  },
+  {
+   "time": 14.533,
+   "duration": 0.2,
+   "frame": 436,
+   "end_frame": 442,
+   "kind": "prop",
+   "label": "crumb plucked off: tiny pop, beam levels (creak)",
+   "peak_frame": 436
+  },
+  {
+   "time": 14.6,
+   "duration": 0.9,
+   "frame": 438,
+   "end_frame": 465,
+   "kind": "gesture",
+   "label": "finger wag 'tut tut' (two wag whooshes)",
+   "peak_frame": 449
+  },
+  {
+   "time": 15.967,
+   "duration": 0.067,
+   "frame": 479,
+   "end_frame": 481,
+   "kind": "prop",
+   "label": "the 13th loaf thumps on top of the basket pile",
+   "peak_frame": 480
+  },
+  {
+   "time": 16.467,
+   "duration": 0.167,
+   "frame": 494,
+   "end_frame": 499,
+   "kind": "accent",
+   "label": "SNAP ZOOM to henry: fast whoosh + hit",
+   "peak_frame": 499
+  },
+  {
+   "time": 16.633,
+   "duration": 1.167,
+   "frame": 499,
+   "end_frame": 534,
+   "kind": "accent",
+   "label": "henry's eyes go wide: rising tension string",
+   "peak_frame": 499
+  },
+  {
+   "time": 17.8,
+   "duration": 2.933,
+   "frame": 534,
+   "end_frame": 622,
+   "kind": "fx",
+   "label": "henry's YELL: steam whistles from his ears, kettle boil under the line",
+   "peak_frame": 596
+  },
+  {
+   "time": 19.733,
+   "duration": 0.033,
+   "frame": 592,
+   "end_frame": 593,
+   "kind": "accent",
+   "label": "punch-in on 'ข้าเจ๊งเหรอ!': hit",
+   "peak_frame": 592
+  },
+  {
+   "time": 20.733,
+   "duration": 0.0,
+   "frame": 622,
+   "end_frame": 622,
+   "kind": "cut",
+   "label": "plan: cut to shot 13 (market, pillories)"
+  }
+ ]
+}

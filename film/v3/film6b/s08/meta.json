@@ -1,0 +1,89 @@
+{
+ "take": "s08",
+ "film": "6b",
+ "shots": [
+  8,
+  9,
+  10,
+  11,
+  12
+ ],
+ "g0": 314,
+ "g1": 622,
+ "first_g": 308,
+ "n_frames": 320,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "8": [
+   314,
+   359
+  ],
+  "9": [
+   360,
+   398
+  ],
+  "10": [
+   399,
+   465
+  ],
+  "11": [
+   466,
+   533
+  ],
+  "12": [
+   534,
+   621
+  ]
+ },
+ "framings": {
+  "8": "low CU henry + board 'ร้านลุงเฮนรี่', push up (handle g 308..313 = same framing)",
+  "9": "ECU loaf pan + tag '500 ก.', henry's face behind the beam",
+  "10": "MCU behind the balance g 399..437; punch-in CU g 438..465 (finger wag)",
+  "11": "CU kit + basket g 466..493; snap zoom g 494..499; CU henry wide eyes g 500..533",
+  "12": "low CU yell, kit in the foreground g 534..591; punch-in ECU purple face g 592..621 (+ handle to 627)"
+ },
+ "events": {
+  "beam_settles_level": 392,
+  "crumb_dropped": 414,
+  "crumb_lands_beam_dips": 418,
+  "crumb_picked_off": 436,
+  "finger_wag": [
+   438,
+   465
+  ],
+  "loaf_13_drops": 480,
+  "henry_spots": 486,
+  "snap_zoom": [
+   494,
+   499
+  ],
+  "eyes_wide": 495,
+  "quote_lipsync": [
+   536,
+   621
+  ],
+  "punch_in_yell": 592
+ },
+ "set": "v3/set3d6/bakery.py bakery MORNING, steam 0.30, oven flicker keyed per frame; small balance keyed (set_scale) per frame; added at runtime: 2 cool blue area lights on the back wall / upper back wall (complementary colour), PropCards: board 'ร้านลุงเฮนรี่', tag '500 ก.' riding the loaf pan, crumb, basket 12/13 (cast6.basket_svg)",
+ "signs": "Kanit Black embedded in SVG, rasterised with headless Chromium after document.fonts.ready (signs.py, raster_fonts.js)",
+ "dof": "none (C.Take: use_dof False + B.setup_dof(None) at build and before every render)",
+ "narration": "film6b/audio/narration.wav at +0.10 s; lip-sync from the narration RMS envelope g 536..621",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 16.3,
+ "s_per_frame_cpu_mean": 32.12
+}
