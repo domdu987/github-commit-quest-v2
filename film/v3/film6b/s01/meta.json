@@ -1,0 +1,258 @@
+{
+ "take": "s01",
+ "film": "6b",
+ "shots": [
+  1,
+  2,
+  3
+ ],
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "film opening (first frame of the film)"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "cut to shot 4 (market crane) at g 123; out-handle g 123..128 rendered in 3D (push + grin continue)"
+ },
+ "shot_starts": {
+  "1": 0,
+  "2": 48,
+  "3": 72
+ },
+ "events": {
+  "glance_left": [
+   6,
+   16
+  ],
+  "glance_right": [
+   18,
+   28
+  ],
+  "pale_loaf_up_on_palm": 30,
+  "smirk": 38,
+  "loaf_leaves_hand": 53,
+  "loaf13_lands": 56,
+  "steam_puff": [
+   56,
+   71
+  ],
+  "customer_walks_off": [
+   84,
+   112
+  ],
+  "wink": [
+   98,
+   104
+  ],
+  "grin": 105
+ },
+ "set": "v3/set3d6/bakery.py: bakery MORNING, steam 0.35, oven flicker keyed per frame; extra blue area light L_cool_window (cool counter-colour, formula rule 7); Thai fascia sign '\u0e23\u0e49\u0e32\u0e19\u0e25\u0e38\u0e07\u0e40\u0e2e\u0e19\u0e23\u0e35\u0e48' card over the painted HENRY \u00b7 BAKER fascia",
+ "dof": "none (cam.data.dof.use_dof False + B.setup_dof(scene, None, None, cam=cam) before every render)",
+ "light": "MORNING",
+ "narration": "film6b/audio/narration.wav at +0.10 s; captions film6b/script/captions.json",
+ "cast": "v3/cast6: kit (hidden stool behind the counter), woman1 = the customer with the basket of 13; basket_svg(12) PropCard x1.4 on the counter; pale 13th loaf = loaf_svg lightened (lib6b.pale_png) on a PropCard; steam puff cards (lib6b.puff_svg)",
+ "first_g": 0,
+ "n_frames": 129,
+ "g0": 0,
+ "g1": 123,
+ "handle_in": 0,
+ "handle_out": 6,
+ "shot_ranges": {
+  "1": [
+   0,
+   47
+  ],
+  "2": [
+   48,
+   71
+  ],
+  "3": [
+   72,
+   122
+  ]
+ },
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 17.82,
+ "s_per_frame_cpu_mean": 33.36,
+ "head_px_range": {
+  "kit s1": {
+   "w": [
+    302,
+    375
+   ],
+   "y": [
+    563,
+    566
+   ]
+  },
+  "kit s2": {
+   "w": [
+    342,
+    397
+   ],
+   "y": [
+    377,
+    429
+   ]
+  },
+  "kit s3": {
+   "w": [
+    127,
+    253
+   ],
+   "y": [
+    560,
+    569
+   ]
+  },
+  "woman s3": {
+   "w": [
+    255,
+    370
+   ],
+   "y": [
+    697,
+    789
+   ]
+  }
+ },
+ "frame_source": {
+  "0": "1",
+  "1": "1",
+  "2": "1",
+  "3": "1",
+  "4": "1",
+  "5": "1",
+  "6": "1",
+  "7": "1",
+  "8": "1",
+  "9": "1",
+  "10": "1",
+  "11": "1",
+  "12": "1",
+  "13": "1",
+  "14": "1",
+  "15": "1",
+  "16": "1",
+  "17": "1",
+  "18": "1",
+  "19": "1",
+  "20": "1",
+  "21": "1",
+  "22": "1",
+  "23": "1",
+  "24": "1",
+  "25": "1",
+  "26": "1",
+  "27": "1",
+  "28": "1",
+  "29": "1",
+  "30": "1",
+  "31": "1",
+  "32": "1",
+  "33": "1",
+  "34": "1",
+  "35": "1",
+  "36": "1",
+  "37": "1",
+  "38": "1",
+  "39": "1",
+  "40": "1",
+  "41": "1",
+  "42": "1",
+  "43": "1",
+  "44": "1",
+  "45": "1",
+  "46": "1",
+  "47": "1",
+  "48": "2",
+  "49": "2",
+  "50": "2",
+  "51": "2",
+  "52": "2",
+  "53": "2",
+  "54": "2",
+  "55": "2",
+  "56": "2",
+  "57": "2",
+  "58": "2",
+  "59": "2",
+  "60": "2",
+  "61": "2",
+  "62": "2",
+  "63": "2",
+  "64": "2",
+  "65": "2",
+  "66": "2",
+  "67": "2",
+  "68": "2",
+  "69": "2",
+  "70": "2",
+  "71": "2",
+  "72": "3",
+  "73": "3",
+  "74": "3",
+  "75": "3",
+  "76": "3",
+  "77": "3",
+  "78": "3",
+  "79": "3",
+  "80": "3",
+  "81": "3",
+  "82": "3",
+  "83": "3",
+  "84": "3",
+  "85": "3",
+  "86": "3",
+  "87": "3",
+  "88": "3",
+  "89": "3",
+  "90": "3",
+  "91": "3",
+  "92": "3",
+  "93": "3",
+  "94": "3",
+  "95": "3",
+  "96": "3",
+  "97": "3",
+  "98": "3",
+  "99": "3",
+  "100": "3",
+  "101": "3",
+  "102": "3",
+  "103": "3",
+  "104": "3",
+  "105": "3",
+  "106": "3",
+  "107": "3",
+  "108": "3",
+  "109": "3",
+  "110": "3",
+  "111": "3",
+  "112": "3",
+  "113": "3",
+  "114": "3",
+  "115": "3",
+  "116": "3",
+  "117": "3",
+  "118": "3",
+  "119": "3",
+  "120": "3",
+  "121": "3",
+  "122": "3",
+  "123": "3",
+  "124": "3",
+  "125": "3",
+  "126": "3",
+  "127": "3",
+  "128": "3"
+ }
+}

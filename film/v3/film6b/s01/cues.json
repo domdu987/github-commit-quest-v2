@@ -1,0 +1,119 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6b/audio/narration.wav at +0.10 s, captions PROJ/film6b/script/captions.json",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 4.3,
+   "frame": 0,
+   "end_frame": 129,
+   "kind": "ambience",
+   "label": "bakery morning inside: oven fire crackle, soft street murmur through the counter opening"
+  },
+  {
+   "time": 0.2,
+   "duration": 0.333,
+   "frame": 6,
+   "end_frame": 16,
+   "kind": "gesture",
+   "label": "kit's sneaky glance screen-left: tiny 'tik' / pizzicato",
+   "peak_frame": 7
+  },
+  {
+   "time": 0.6,
+   "duration": 0.333,
+   "frame": 18,
+   "end_frame": 28,
+   "kind": "gesture",
+   "label": "glance screen-right: second 'tik'",
+   "peak_frame": 19
+  },
+  {
+   "time": 0.867,
+   "duration": 0.2,
+   "frame": 26,
+   "end_frame": 32,
+   "kind": "prop",
+   "label": "the pale 13th loaf comes up on his palm: soft cloth swish",
+   "peak_frame": 30
+  },
+  {
+   "time": 1.267,
+   "duration": 0.133,
+   "frame": 38,
+   "end_frame": 42,
+   "kind": "accent",
+   "label": "deadpan turns into a smirk: sly little sting",
+   "peak_frame": 38
+  },
+  {
+   "time": 1.6,
+   "duration": 0.0,
+   "frame": 48,
+   "end_frame": 48,
+   "kind": "cut",
+   "label": "cut to ECU of the basket"
+  },
+  {
+   "time": 1.767,
+   "duration": 0.1,
+   "frame": 53,
+   "end_frame": 56,
+   "kind": "prop",
+   "label": "the 13th loaf drops onto the pile: crusty thump + wicker creak",
+   "peak_frame": 56
+  },
+  {
+   "time": 1.867,
+   "duration": 0.467,
+   "frame": 56,
+   "end_frame": 70,
+   "kind": "prop",
+   "label": "white steam puff off the landed loaf: soft whoosh",
+   "peak_frame": 57
+  },
+  {
+   "time": 2.4,
+   "duration": 0.0,
+   "frame": 72,
+   "end_frame": 72,
+   "kind": "cut",
+   "label": "cut to the street over the counter"
+  },
+  {
+   "time": 2.8,
+   "duration": 0.933,
+   "frame": 84,
+   "end_frame": 112,
+   "kind": "foley",
+   "label": "the customer walks off screen-left with the basket: footsteps on cobbles, wicker creak"
+  },
+  {
+   "time": 3.267,
+   "duration": 0.2,
+   "frame": 98,
+   "end_frame": 104,
+   "kind": "accent",
+   "label": "kit winks at the camera: bright 'ting' / sparkle",
+   "peak_frame": 98
+  },
+  {
+   "time": 3.5,
+   "duration": 0.8,
+   "frame": 105,
+   "end_frame": 129,
+   "kind": "accent",
+   "label": "kit grins at us (cheeky musical sting)",
+   "peak_frame": 105
+  },
+  {
+   "time": 4.1,
+   "duration": 0.0,
+   "frame": 123,
+   "end_frame": 123,
+   "kind": "cut",
+   "label": "plan: cut to shot 4 (market, crane down)"
+  }
+ ]
+}
