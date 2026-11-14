@@ -38,6 +38,6 @@ time passing. `meta.json` (events, set-ups, frame_source incl. the blend weights
 - Dressing: jars, buckets, rocks, shrubs on the banks (17/19) and on the sunlit north side (18).
 
 ## Numbers (`work/qa.txt`)
-s / frame (2 threads, two processes): shot 17 11.6 wall / 22.8 CPU, shot 18 6.3 / 12.3, shot 19 ~12.4 / 24.7. No pops, no near-still
-frames (median change 1.26 levels), no black / magenta frames, no retried frames. Hue: night shots 91-96 % blue (ref a night 93 %),
+s / frame (2 threads, two processes): shot 17 11.6 wall / 22.8 CPU, shot 18 6.3 / 12.3, shot 19 12.5 / 24.8. No pops, no near-still
+frames (median change 1.28 levels), no black / magenta frames, no retried frames. Hue: night shots 91-96 % blue (ref a night 93 %),
 magenta <= 1; shot 18 orange 25 / blue 62 / violet 6 (day sky + wall shade; desert_API notes day frames are bluer than ref a).

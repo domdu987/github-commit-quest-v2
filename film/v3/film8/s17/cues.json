@@ -1,0 +1,74 @@
+{
+ "take": "s17",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film8/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 44.7,
+   "duration": 4.733,
+   "frame": 1341,
+   "end_frame": 1483,
+   "kind": "ambience",
+   "label": "clear desert night, absolute stillness: the faintest cold breeze, a soft high airy shimmer pad (the reveal), very quiet water lapping"
+  },
+  {
+   "time": 44.7,
+   "duration": 3.3,
+   "frame": 1341,
+   "end_frame": 1440,
+   "kind": "accent",
+   "label": "heat wisps lift off the water: a slow rising breathy whoosh, a glassy shimmer climbing in pitch with the tilt",
+   "peak_frame": 1420
+  },
+  {
+   "time": 48.0,
+   "duration": 1.433,
+   "frame": 1440,
+   "end_frame": 1483,
+   "kind": "accent",
+   "label": "the Milky Way fills the frame: a wide twinkling star-chime bloom",
+   "peak_frame": 1462
+  },
+  {
+   "time": 49.133,
+   "duration": 0.3,
+   "frame": 1474,
+   "end_frame": 1483,
+   "kind": "transition",
+   "label": "dissolve night -> blazing noon: the shimmer pad swells into warm daylight air"
+  },
+  {
+   "time": 49.3,
+   "duration": 2.867,
+   "frame": 1479,
+   "end_frame": 1565,
+   "kind": "ambience",
+   "label": "blazing noon by the wall: hot dry wind, cicada-like heat buzz far off, but cool calm in the long shadow"
+  },
+  {
+   "time": 51.867,
+   "duration": 0.3,
+   "frame": 1556,
+   "end_frame": 1565,
+   "kind": "transition",
+   "label": "dissolve noon -> night: the heat buzz fades, cold quiet returns"
+  },
+  {
+   "time": 52.033,
+   "duration": 3.7,
+   "frame": 1561,
+   "end_frame": 1672,
+   "kind": "foley",
+   "label": "cold night close-up: crystalline crackle and fine tinkling as frost needles spread across the water from the banks",
+   "peak_frame": 1610
+  },
+  {
+   "time": 55.567,
+   "duration": 0.0,
+   "frame": 1667,
+   "end_frame": 1667,
+   "kind": "cut",
+   "label": "plan: cut to shot 20 (dome_wide SUMMER, the merchant arrives)"
+  }
+ ]
+}
