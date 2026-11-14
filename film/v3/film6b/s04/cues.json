@@ -1,0 +1,117 @@
+{
+ "take": "s04",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film6b/audio/narration.wav at +0.10 s, captions PROJ/film6b/script/captions.json",
+ "cues": [
+  {
+   "time": 3.9,
+   "duration": 6.767,
+   "frame": 117,
+   "end_frame": 320,
+   "kind": "ambience",
+   "label": "medieval market afternoon: crowd murmur, distant hawkers, a hen, wind in the bunting"
+  },
+  {
+   "time": 3.9,
+   "duration": 2.067,
+   "frame": 117,
+   "end_frame": 179,
+   "kind": "whoosh",
+   "label": "camera cranes down from the sky into the square: long airy whoosh",
+   "peak_frame": 150
+  },
+  {
+   "time": 6.0,
+   "duration": 0.0,
+   "frame": 180,
+   "end_frame": 180,
+   "kind": "cut",
+   "label": "cut to CU baker2 at the big balance"
+  },
+  {
+   "time": 6.333,
+   "duration": 0.333,
+   "frame": 190,
+   "end_frame": 200,
+   "kind": "prop",
+   "label": "the big balance tips to the weights side: wooden creak + chain rattle, low 'bonk'",
+   "peak_frame": 200
+  },
+  {
+   "time": 6.467,
+   "duration": 0.2,
+   "frame": 194,
+   "end_frame": 200,
+   "kind": "accent",
+   "label": "baker2 shocked: sweat-drop 'plip'",
+   "peak_frame": 196
+  },
+  {
+   "time": 6.767,
+   "duration": 0.3,
+   "frame": 203,
+   "end_frame": 212,
+   "kind": "prop",
+   "label": "the sign '\u0e02\u0e32\u0e14\u0e19\u0e49\u0e33\u0e2b\u0e19\u0e31\u0e01!' drops in on its cords: wooden clack + swing",
+   "peak_frame": 209
+  },
+  {
+   "time": 7.6,
+   "duration": 0.0,
+   "frame": 228,
+   "end_frame": 228,
+   "kind": "cut",
+   "label": "cut to the pillory (low)"
+  },
+  {
+   "time": 7.6,
+   "duration": 1.467,
+   "frame": 228,
+   "end_frame": 272,
+   "kind": "foley",
+   "label": "baker2 struggles in the board: wood creaks, chains"
+  },
+  {
+   "time": 9.1,
+   "duration": 0.0,
+   "frame": 273,
+   "end_frame": 273,
+   "kind": "cut",
+   "label": "cut to CU baker2 in the pillory"
+  },
+  {
+   "time": 9.467,
+   "duration": 0.367,
+   "frame": 284,
+   "end_frame": 295,
+   "kind": "whoosh",
+   "label": "tomato thrown: short whistle in the air",
+   "peak_frame": 290
+  },
+  {
+   "time": 9.867,
+   "duration": 0.133,
+   "frame": 296,
+   "end_frame": 300,
+   "kind": "impact",
+   "label": "tomato SPLAT on his face: wet squelch",
+   "peak_frame": 296
+  },
+  {
+   "time": 9.867,
+   "duration": 0.8,
+   "frame": 296,
+   "end_frame": 320,
+   "kind": "crowd",
+   "label": "townsfolk burst out laughing"
+  },
+  {
+   "time": 10.467,
+   "duration": 0.0,
+   "frame": 314,
+   "end_frame": 314,
+   "kind": "cut",
+   "label": "plan: cut to shot 8 (bakery, Henry)"
+  }
+ ]
+}
