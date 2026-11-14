@@ -46,6 +46,19 @@ BAK=[(0,4.037866997222414),(9.358400477469415,25.08936482795033),(30.75521887840
 MKT=[(4.037866997222414,9.358400477469415),(25.08936482795033,30.75521887840599),(35.89387324105319,44.22455753735969),(56.0960080802516,T)]
 for a_,b_ in MKT: sfx.append({"file":B6+"market.mp3","at":a_,"peak_db":-32,"len":min(6,b_-a_),"align":"onset","fade_out":0.3})
 for a_,b_ in BAK: sfx.append({"file":B6+"oven.mp3","at":a_,"peak_db":-32,"len":min(4,b_-a_),"align":"onset","fade_out":0.3})
+spec_voice_file=P+"/film6e/audio/narration.wav"
+# duck: SFX overlapping narration get -6 dB, beds -3 dB
+import numpy as _np
+_v=_np.frombuffer(subprocess.run(["ffmpeg","-v","error","-i",spec_voice_file,"-ac","1","-ar","8000","-f","f32le","-"],capture_output=True).stdout,_np.float32)
+_env=_np.sqrt(_np.convolve(_v**2,_np.ones(800)/800,"same"))[::80]
+def _talk(a,ln):
+    i0=int((a-OFF)*100); i1=int((a-OFF+ln)*100)
+    seg=_env[max(0,i0):max(0,i1)]
+    return seg.size>0 and (seg>0.02).mean()>0.3
+for _x in sfx:
+    if _talk(_x["at"],_x["len"]): _x["peak_db"]-=6 if _x["len"]<3 else 3
+    if _talk(_x["at"],_x["len"]) and any(k in _x["file"] for k in ("laugh","gasp","drag","paper","cheer","murmur","search")): _x["peak_db"]-=4
+sfx=[_x for _x in sfx if "trunk" not in _x["file"] or _x["len"]>0.5]
 spec={"duration":T,"out_wav":out+".wav","video_in":out+"_silent.mp4","video_out":out+".mp4",
  "voice":{"file":P+"/film6e/audio/narration.wav","at":OFF,"gain":10**((float(os.environ.get("VOICE_DB","-14.4"))-float(os.environ.get("NARR_DB","-17.2")))/20)},
  "music":{"file":P+os.environ.get("MUSICF","/film6/audio/music_suno_full.wav"),"at":0,"rms_db":float(os.environ.get("MUSIC_DB","-38")),"fade_in":0.3,"fade_out":0.6},"sfx":sfx}
