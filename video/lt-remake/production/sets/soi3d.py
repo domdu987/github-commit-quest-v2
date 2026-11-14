@@ -3,7 +3,10 @@ World: 1 unit = 1 m, Z up, ground z = 0. The soi runs along +y (camera end y ~ -
 Soi concrete x -2.25..2.25, drain gutters to |x| 2.6, painted curb to 2.75, aprons to the shophouse fronts at x = XL (-5.0, left row,
 facing +x, hero shop y 4..12) and x = XR (4.4, right row, facing -x).
 Light model from office3d.mat_lit: ambient as emission (blue-violet shade) + one hard sun, toon key. Sky = camera-only world texture.
-CLI: python3 soi3d.py stills [preset] [final|preview] [cam ...]      -> out_soi/<cam>.png (+ timing.json)
+Preset 'evening' (just after sunset, every practical light ON): toon materials from toonlit.py that take the key from real lights
+(shop fluorescent tubes = area lights, street lamps = spots, bulbs = points) plus a dim moon; lit windows, LED / neon signs and the
+7-storey block's windows are emission terms. set_lights(False) switches all of them off on the same camera (moonlight only).
+CLI: python3 soi3d.py stills [preset] [final|preview] [off] [cam ...]   -> out_soi/<cam>[_preset][_off].png (+ timing.json)
      python3 soi3d.py land [preset]                                  -> out_soi/wide_soi_16x9.png (1920x1080)"""
 import os, sys, math, json, time, random
 HERE = os.path.dirname(os.path.abspath(__file__)); PROJ = os.path.dirname(HERE)
@@ -12,6 +15,7 @@ import bpy
 from mathutils import Vector, Matrix, Euler
 import office3d as S
 import tex_soi
+import toonlit as TL
 MB = S.MB
 OUT = os.path.join(HERE, 'out_soi')
 
@@ -27,8 +31,14 @@ PRESETS = {
     'night_blackout': dict(shade=(0.050, 0.055, 0.15), key=(0.42, 0.50, 0.85), lift=(0.004, 0.004, 0.012), key_dir=(0.45, 0.35, -0.82), sun_angle=0.8,
                            form=(0.0, 0.0, 0.22), falloff_y=0.0, bloom_size=0.06, grade_offset=(0.002, 0.002, 0.008), grade_saturation=1.05,
                            sky='sky_night', tubes=0.0, lamps=0.0, phones=4.0, gain=0.52),
+    # just after sunset: blue-violet dusk ambient, a dim moon high behind the camera, every practical light on (set_lights toggles them)
+    'evening': dict(shade=(0.092, 0.099, 0.240), key=(0.15, 0.19, 0.34), lift=(0.006, 0.007, 0.018), key_dir=(0.30, 0.42, -0.86), sun_angle=0.6,
+                    form=(0.0, 0.0, 0.22), falloff_y=0.0, bloom_size=0.06, grade_offset=(0.002, 0.003, 0.010), grade_saturation=1.18,
+                    sky='sky_evening', tubes=3.0, lamps=7.0, phones=0.0, gain=0.55, practicals=True, lambert=0.35, amb_off=0.66,
+                    shop=dict(color='#e4f2ff', K=1.6), lamp=dict(color='#ffb45c', K=2.6), led=dict(color='#dcefff', K=2.2),
+                    bulb=dict(color='#ffc27a', K=1.25), window_glow=(1.15, 0.0, 0.95, 1.05, 0.0, 0.8)),
 }
-A = {}; P = {}; M = {}; TX = {}
+A = {}; P = {}; M = {}; TX = {}; PR = []          # PR: practical lights collected while building (evening)
 
 # ----------------------------------------------------------------------------- materials
 _MEAN = {}
@@ -50,11 +60,15 @@ def shade_fix(mean, strength=0.8):
     L = max(lum(mean), 1e-4); want = [x / lum(sh) * L for x in sh]; got = [max(m * x, 1e-5) for m, x in zip(mean, sh)]
     return tuple(min(2.2, max(0.45, (w / g) ** strength)) for w, g in zip(want, got))
 
-def lit(name, img=None, color='#808080', gain=0.9, shade=None, alpha=False, fix=0.8):
+def lit(name, img=None, color='#808080', gain=0.9, shade=None, alpha=False, fix=0.8, glow=None, glow_strength=0.0):
     sm = shade if shade is not None else shade_fix(art_mean(img, color), fix)
+    if P.get('practicals'):                                              # evening: toon key from every light (lamps, tubes, bulbs, moon)
+        return TL.mat_toon('SOI_' + name, P, color=color, image=img and TX[img], gain=gain * P['gain'], shade_mul=sm, alpha=alpha, form=P['form'],
+                           glow=glow and TX[glow], glow_strength=glow_strength, lambert=P.get('lambert', 0.0), amb_off=P.get('amb_off'))
     return S.mat_lit('SOI_' + name, color=color, image=img and TX[img], gain=gain * P['gain'], shade_mul=sm, alpha=alpha, form=P['form'])
 
-def emit(name, color='#ffffff', strength=1.0, img=None):
+def emit(name, color='#ffffff', strength=1.0, img=None, off=0.03, off_color=None):
+    if P.get('practicals'): return TL.mat_glow('SOI_G_' + name, color, strength, image=img and TX[img], off=off, off_color=off_color)
     return S.mat_emit('SOI_E_' + name, color, image=img and TX[img], strength=strength)
 
 def flat(hexcol, gain=0.85, shade=None):
@@ -83,12 +97,22 @@ def materials():
         tin=lit('tin', 'tin', gain=0.85), tin_blue=lit('tin_blue', 'tin_blue', gain=0.85), planks=lit('planks', 'planks', gain=0.85, ), bike=lit('bike', 'bike', gain=0.8),
         crate=lit('crate', 'crate', gain=0.8), spirit=lit('spirit', 'spirit', gain=0.85), concrete=lit('concrete', 'concrete', gain=0.9),
         concrete_dark=lit('concrete_dark', 'concrete_dark', gain=0.85),
-        tube=emit('tube', '#eef6ff', P['tubes']) if P['tubes'] > 0 else flat('#d8dcd8'), phone=emit('phone', strength=P['phones'], img='phone') if P['phones'] > 0 else flat('#1a1a22'),
-        lamp=emit('lamp', '#ffd890', P['lamps']) if P['lamps'] > 0 else flat('#d8d4c0'), red_bulb=emit('red_bulb', '#ff3a20', 2.5 if P['tubes'] > 0 else 0.3),
+        tube=emit('tube', '#eef6ff', P['tubes'], off_color='#7a7e88') if P['tubes'] > 0 else flat('#d8dcd8'), phone=emit('phone', strength=P['phones'], img='phone') if P['phones'] > 0 else flat('#1a1a22'),
+        lamp=emit('lamp', '#ffd890', P['lamps'], off_color='#8a8678') if P['lamps'] > 0 else flat('#d8d4c0'), red_bulb=emit('red_bulb', '#ff3a20', 2.5 if P['tubes'] > 0 else 0.3),
         glass=lit('glass', color='#2a3444', gain=0.6),
     )
     for i in range(8): m[f'fac{i}'] = lit(f'fac{i}', f'fac{i}', gain=0.88, ); m[f'pier{i}'] = lit(f'pier{i}', f'pier{i}', gain=0.88, )
     for i in range(6): m[f'win{i}'] = lit(f'win{i}', f'win{i}', gain=0.7)
+    if P.get('practicals'):                                              # evening: lit rooms, lightbox signs, the block's windows, a flood-lit billboard
+        for i, g in enumerate(P['window_glow']):
+            if g > 0: m[f'win{i}'] = lit(f'win{i}_lit', f'win{i}', gain=0.7, glow=f'win{i}_glow', glow_strength=g)
+        m['signs'] = lit('signs_lit', 'signs', gain=0.85, glow='signs', glow_strength=0.62)
+        m['tower'] = lit('tower_lit', 'tower', gain=0.9, glow='tower_glow', glow_strength=1.1)
+        m['billboard'] = lit('billboard_lit', 'billboard', gain=0.85, glow='billboard', glow_strength=0.55)
+        m['interiors'] = lit('interiors_lit', 'interiors', gain=0.7, glow='interiors', glow_strength=0.12)
+        for nm, col in (('led_cyan', '#40e8ff'), ('led_green', '#50ff90'), ('led_warm', '#fff0c0'), ('led_red', '#ff4a30'), ('led_blue', '#4a8aff'), ('led_yellow', '#ffd040')):
+            m[nm] = emit(nm, col, 3.2, off=0.0, off_color='#3a3a40')
+        m['bulb'] = emit('bulb', '#fff0c8', 8.0, off=0.02, off_color='#8a8478')
     M.update(m)
 
 # ----------------------------------------------------------------------------- geometry helpers
@@ -217,6 +241,7 @@ def bay(G, fr, a0, a1, cfg, r):
     fr.box(mb, b0, b1, -0.05, 0.0, 0.0, 0.15, flat('#7a766c'))                       # threshold step
     if st in ('up', 'half') and P['tubes'] > 0:
         fr.box(mb, (b0 + b1) / 2 - 0.6, (b0 + b1) / 2 + 0.6, -D * 0.5 - 0.03, -D * 0.5 + 0.03, zo - 0.08, zo - 0.04, M['tube'])
+        if P.get('practicals'): PR.append(('shop', tuple(fr.P((b0 + b1) / 2, -D * 0.5, zo - 0.1)), tuple(fr.na)))
     # roller shutter
     sh = M[cfg['shtex']]; fr.box(mb, b0 - 0.05, b1 + 0.05, 0, 0.32, zo - 0.25, zo + 0.15, flat('#8a8e90'))
     zb = {'down': 0.0, 'half': 1.55 + r.uniform(-0.3, 0.3), 'up': zo - 0.3, 'grille': zo - 0.3}[st]
@@ -242,6 +267,9 @@ def bay(G, fr, a0, a1, cfg, r):
             fr.box(mb, a0, a1, 0.98, 1.1, 3.8, 4.8, M[f"fac{cfg['wall']}"], tile=(4, 11.2)); fr.box(mb, a0, a1, 0.94, 1.14, 4.8, 4.86, flat('#8a8478'))
             for k in range(r.randint(2, 4) if cfg.get('plants', True) else 0): pot_plant(mb, tuple(fr.P(r.uniform(a0 + 0.4, a1 - 0.4), 1.04, 4.86)), 0.14, 0.22, 0.8, mb_alpha=mba)
             if cfg.get('laundry', True): laundry_line(mb, mba, fr, a0 + 0.4, a1 - 0.3, 0.6, 6.3, r)
+            if P.get('practicals') and int(abs(a0) * 10) % 3 != 1:          # a bare bulb on the open balcony
+                bp = fr.P((a0 + a1) / 2 + 0.6, 0.35, 6.85); fr.box(mb, (a0 + a1) / 2 + 0.58, (a0 + a1) / 2 + 0.62, 0.33, 0.37, 6.85, 7.05, flat('#2a2a2e')); mb.sphere(tuple(bp), 0.045, M['bulb'], 10, 6)
+                PR.append(('balcony', tuple(bp - Vector((0, 0, 0.06))), None))
         else:
             fr.quad(mba, a0 + 0.05, a1, 3.8, 6.9, 1.08, M[cfg['grille']], (0, 0, W, 3.1))
             fr.side(mba, a0 + 0.05, 0, 1.08, 3.8, 6.9, M[cfg['grille']], -1, (0, 0, 1.08, 3.1)); fr.side(mba, a1 - 0.01, 0, 1.08, 3.8, 6.9, M[cfg['grille']], 1, (0, 0, 1.08, 3.1))
@@ -262,6 +290,11 @@ def bay(G, fr, a0, a1, cfg, r):
         if r.random() < 0.6: ac_unit(mb, fr, r.uniform(a0 + 0.8, a1 - 0.8), 0.05, 4.95 if r.random() < 0.5 else 6.75)
     if cfg['sign'] is not None and signz:
         z0, z1, d = signz; fr.box(mb, a0 + 0.42, a1 - 0.12, d - 0.06, d, z0 - 0.02, z1 + 0.02, flat('#3a3634')); fr.quad(mb, a0 + 0.45, a1 - 0.15, z0, z1, d + 0.005, M['signs'], atlas_row(cfg['sign']))
+        if P.get('practicals'):                                          # LED strip round the lightbox (colour from the sign row, no random draw)
+            lm = M[['led_cyan', 'led_warm', 'led_green', 'led_red', 'led_blue', 'led_yellow', 'led_cyan', 'led_red'][cfg['sign']]]; e = 0.025
+            for (p0, p1, q0, q1) in ((a0 + 0.42, a1 - 0.12, z0 - 0.04, z0 - 0.04 + e), (a0 + 0.42, a1 - 0.12, z1 + 0.04 - e, z1 + 0.04), (a0 + 0.42, a0 + 0.42 + e, z0 - 0.04, z1 + 0.04), (a1 - 0.12 - e, a1 - 0.12, z0 - 0.04, z1 + 0.04)):
+                fr.box(mb, p0, p1, d, d + 0.02, q0, q1, lm)
+            PR.append(('sign', tuple(fr.P((a0 + a1) / 2, d + 0.5, (z0 + z1) / 2)), cfg['sign']))
     if top < 8:                                                          # two-storey bay: low roof with a tin shack and plants on top
         fr.box(mb, a0 + 0.3, a1 - 0.3, -3.5, -0.6, top - 0.6, top + 1.9, M['planks'], tile=(1.5, 3)); fr.box(mb, a0 + 0.1, a1 - 0.1, -3.7, -0.3, top + 1.9, top + 2.0, M['tin'], tile=(2, 2))
         for k in range(3): pot_plant(mb, tuple(fr.P(a0 + 0.6 + k * 1.2, -0.25, top + 0.1)), 0.2, 0.35, 1.2, mb_alpha=mba)
@@ -291,6 +324,8 @@ def row_mass(mb, fr, a0, a1, depth=12.0, top=FH):
 HERO = (4.0, 12.0)
 def hero_shop(G, r):
     fr = Fr('L'); mb, mba, pm = G['hero'], G['alpha'], G['props']; a0, a1 = HERO; W = a1 - a0; wall = M['fac_hero']
+    mi = mb
+    if P.get('practicals'): mi = pm = G['hero_in']                     # evening: the workshop interior is its own object (light linking)
     U = lambda a: (a - a0) / W; V = lambda z: z / FH; zo = 3.45; D = 6.0
     ops = [(a0 + 0.36, 7.82), (8.18, a1 - 0.36)]
     fr.quad(mb, a0, a1, zo, FH, 0, wall, (0, V(zo), 1, 1))
@@ -299,15 +334,16 @@ def hero_shop(G, r):
     for z in (3.75, 7.05): fr.box(mb, a0, a1, 0, 0.08, z, z + 0.22, flat('#c8c2b4'))
     fr.box(mb, a0, a1, -0.1, 0.1, FH, FH + 0.1, flat('#9a968c'))
     # interior: 8 x 6 m workshop
-    fr.quad(mb, a0 + 0.36, a1 - 0.36, 0.12, 3.6, -D, M['hero_wall'], (0, 0.03, 1, 0.93))
-    fr.hquad(mb, a0 + 0.36, a1 - 0.36, -D, 0, 0.12, M['hero_floor'], True, (0, 0, 2, 1.5)); fr.hquad(mb, a0 + 0.36, a1 - 0.36, -D, 0, 3.6, flat('#3e3a38'), False)
-    fr.side(mb, a0 + 0.36, -D, 0, 0, 3.6, M['concrete_dark'], 1, (0, 0, 3, 1.8)); fr.side(mb, a1 - 0.36, -D, 0, 0, 3.6, M['concrete_dark'], -1, (0, 0, 3, 1.8))
-    fr.quad(mb, a0, a1, zo, 3.6, -0.02, flat('#3a3634'))
+    fr.quad(mi, a0 + 0.36, a1 - 0.36, 0.12, 3.6, -D, M['hero_wall'], (0, 0.03, 1, 0.93))
+    fr.hquad(mi, a0 + 0.36, a1 - 0.36, -D, 0, 0.12, M['hero_floor'], True, (0, 0, 2, 1.5)); fr.hquad(mi, a0 + 0.36, a1 - 0.36, -D, 0, 3.6, flat('#3e3a38'), False)
+    fr.side(mi, a0 + 0.36, -D, 0, 0, 3.6, M['concrete_dark'], 1, (0, 0, 3, 1.8)); fr.side(mi, a1 - 0.36, -D, 0, 0, 3.6, M['concrete_dark'], -1, (0, 0, 3, 1.8))
+    fr.quad(mi, a0, a1, zo, 3.6, -0.02, flat('#3a3634'))
     for (p0, p1) in ops:
         fr.box(mb, p0 - 0.04, p1 + 0.04, 0, 0.34, zo - 0.3, zo + 0.12, flat('#7a7e80'))                # rolled-up shutter box
         fr.box(mb, p0, p1, 0.02, 0.08, zo - 0.36, zo - 0.3, flat('#4a4e50'))
         if P['tubes'] > 0:
             for dd in (-1.5, -4.0): fr.box(mb, (p0 + p1) / 2 - 0.6, (p0 + p1) / 2 + 0.6, dd - 0.03, dd + 0.03, 3.5, 3.55, M['tube'])
+            if P.get('practicals') and p0 < 8.0: PR.append(('hero_tube', tuple(fr.P(8.0, -1.5, 3.46)), tuple(fr.na)))   # one long light for the whole workshop
     fr.box(mb, a0 + 0.36, a1 - 0.36, -0.06, 0.0, 0.0, 0.12, flat('#6a665e'))
     st = flat('#5a5c60', 0.8); rust = flat('#8a4a28', 0.8); stl = flat('#9aa0a4', 0.85)
     # steel stock rack on the left wall: cantilever arms with long bars along d
@@ -342,6 +378,8 @@ def hero_shop(G, r):
     fr.box(mb, a0 + 0.1, a1 - 0.1, 0.05, 0.16, 3.95, 5.62, flat('#5a2a1a')); fr.quad(mb, a0 + 0.2, a1 - 0.2, 4.0, 5.57, 0.165, M['sign_hero'])
     for aa in (a0 + 1.6, a0 + 4.0, a1 - 1.6):
         tube(mb, [fr.P(aa, 0.05, 5.85), fr.P(aa, 0.7, 5.95)], 0.02, flat('#2a2a2e'), 4); fr.box(mb, aa - 0.12, aa + 0.12, 0.6, 0.8, 5.82, 5.95, flat('#2a2a2e'))
+        if P.get('practicals'):
+            fr.box(mb, aa - 0.1, aa + 0.1, 0.62, 0.78, 5.8, 5.82, M['lamp']); PR.append(('sign_spot', tuple(fr.P(aa, 0.7, 5.78)), tuple(fr.P(aa, 0.16, 4.5))))
     # tin awning over the apron (attaches under the sign)
     F(mb, [fr.P(a0, 0.0, 3.92), fr.P(a1, 0.0, 3.92), fr.P(a1, 1.55, 3.55), fr.P(a0, 1.55, 3.55)], M['tin'], [(0, 0), (4, 0), (4, 0.8), (0, 0.8)], (0, 0, 1))
     F(mb, [fr.P(a0, 0.0, 3.91), fr.P(a1, 0.0, 3.91), fr.P(a1, 1.55, 3.54), fr.P(a0, 1.55, 3.54)], M['tin'], [(0, 0), (4, 0), (4, 0.8), (0, 0.8)], (0, 0, -1))
@@ -357,6 +395,9 @@ def hero_shop(G, r):
     fr.box(mb, a0, a1, 0, 1.05, 9.9, 10.0, M['tin'], tile=(2, 2)); fr.box(mb, a0, a1, 0.93, 1.0, 8.72, 8.8, flat('#1e1c1e'))
     for aa in (a0 + 0.04, 8.0, a1 - 0.04): fr.box(mb, aa - 0.025, aa + 0.025, 0.95, 1.0, 7.3, 9.9, flat('#1e1c1e'))
     laundry_line(mb, mba, fr, a0 + 0.4, a1 - 0.4, 0.55, 9.5, r, 12)
+    if P.get('practicals'):
+        bp = fr.P(a0 + 2.2, 0.55, 9.7); mb.sphere(tuple(bp), 0.05, M['bulb'], 10, 6); tube(mb, [bp + Vector((0, 0, 0.04)), bp + Vector((0, 0, 0.2))], 0.004, flat('#1a1a1a'), 4)
+        PR.append(('balcony', tuple(bp - Vector((0, 0, 0.07))), None))
     for k in range(6): pot_plant(mb, tuple(fr.P(a0 + 0.5 + k * 1.4, 0.8, 7.3)), 0.15, 0.25, 0.9, mb_alpha=mba)
     tube(mb, [fr.P(a0 + 0.18, 0.2, FH), fr.P(a0 + 0.18, 0.2, 0.1)], 0.05, flat('#d8d2c4'), 8)
     row_mass(mb, fr, a0, a1)
@@ -504,6 +545,9 @@ def vacant_lot(G, r):
             F(mb2, [Vector((x + sgn * w * 1.2, y - w, h0)), Vector((x + sgn * w * 1.2, y + w, h0)), Vector((x + sgn * w * 1.25, y, h0 + 0.24))], gold, None, (sgn, 0, 0))
             tube(mb2, [Vector((x + sgn * w * 1.25, y, h0 + 0.24)), Vector((x + sgn * w * 1.4, y, h0 + 0.36))], 0.012, gold, 4)
     mb2.frustum((x, y, 2.48), (x, y, 2.85), 0.05, 0.0, gold, seg=8)
+    if P.get('practicals'):                                              # the little red/orange bulbs of the spirit house
+        for k in range(5): mb2.sphere((x - 0.24 + k * 0.12, y - 0.43, 1.83), 0.018, M['led_red'] if k % 2 else M['led_yellow'], 6, 4)
+        PR.append(('spirit', (x, y - 0.6, 1.75), None))
     for k in range(4): mb2.sphere((x - 0.3 + k * 0.2, y - 0.36, 1.47), 0.035, flat('#f08a20'), 8, 4)   # marigold garlands
     for k in range(5): mb2.frustum((x - 0.35 + k * 0.08, y + 0.33, 1.42), (x - 0.35 + k * 0.08, y + 0.33, 1.6), 0.022, 0.018, flat('#d8281e', 0.8, (0.9, 1.05, 1.25)), seg=6)   # red soda bottles
     mb2.frustum((x + 0.3, y + 0.3, 1.42), (x + 0.3, y + 0.3, 1.5), 0.05, 0.06, flat('#8a6a3a'), seg=8)
@@ -560,6 +604,10 @@ def wooden_house(G, r):
     fr.box(mb, a0 + 1.2, a1 - 1.6, 1.62, 1.68, 2.0, 2.44, flat('#3a3634')); fr.quad(mb, a0 + 1.25, a1 - 1.65, 2.02, 2.42, 1.685, M['signs'], atlas_row(0))
     nc = (a1 - 1.6, 0.6); fr.box(pm, nc[0] - 0.75, nc[0] + 0.75, nc[1] - 0.4, nc[1] + 0.4, 0, 0.9, flat('#b8bcc0')); fr.box(pm, nc[0] - 0.72, nc[0] + 0.72, nc[1] - 0.38, nc[1] + 0.38, 0.9, 1.4, M['glass'])
     fr.box(pm, nc[0] - 0.75, nc[0] + 0.75, nc[1] - 0.4, nc[1] + 0.4, 1.4, 1.44, flat('#c8302a'))
+    if P.get('practicals'):                                              # bare bulb over the noodle cart, a tube under the awning
+        bp = fr.P(nc[0], 0.9, 2.2); pm.sphere(tuple(bp), 0.05, M['bulb'], 10, 6); tube(pm, [bp + Vector((0, 0, 0.04)), fr.P(nc[0], 0.9, 2.55)], 0.004, flat('#1a1a1a'), 4)
+        PR.append(('stall', tuple(bp - Vector((0, 0, 0.07))), None))
+        fr.box(pm, a0 + 1.2, a0 + 2.4, 0.8, 0.86, 2.62, 2.66, M['tube']); PR.append(('stall_tube', tuple(fr.P(a0 + 1.8, 0.83, 2.6)), tuple(fr.na)))
     for k in range(2): fr.cyl(pm, nc[0] - 0.4 + k * 0.6, nc[1], 1.44, 1.75, 0.2, flat('#c8ccd0'), 14)
     for k in range(3):
         tb = (a0 + 1.0 + k * 1.6, -0.6); fr.box(pm, tb[0] - 0.5, tb[0] + 0.5, tb[1] - 0.35, tb[1] + 0.35, 0.72, 0.75, flat('#e8e4d8'))
@@ -673,6 +721,13 @@ def poles(G, r):
     # street lamp arm (toward the road) and the soi number sign facing the camera end
     tube(mb, [Vector((x + 0.1, y, 8.4)), Vector((x + 1.0, y, 8.75)), Vector((x + 1.8, y, 8.8))], 0.035, grey, 6)
     mb.box((x + 1.6, y - 0.13, 8.66), (x + 2.15, y + 0.13, 8.82), grey); mb.box((x + 1.65, y - 0.1, 8.62), (x + 2.1, y + 0.1, 8.66), M['lamp'])
+    if P.get('practicals'):
+        PR.append(('lamp', (x + 1.88, y, 8.58), 'lamp'))
+        for (px, py, sx, kind) in ((3.0, 17.5, -1, 'led'), (-3.0, 29.0, 1, 'lamp'), (3.0, 40.0, -1, 'lamp'), (-3.0, 51.0, 1, 'led')):     # the soi's other street lamps
+            tube(mb, [Vector((px + sx * 0.1, py, 8.0)), Vector((px + sx * 1.0, py, 8.35)), Vector((px + sx * 1.6, py, 8.4))], 0.03, grey, 6)
+            mb.box((px + sx * 1.45 - 0.25, py - 0.12, 8.28), (px + sx * 1.45 + 0.25, py + 0.12, 8.42), grey)
+            mb.box((px + sx * 1.45 - 0.21, py - 0.09, 8.25), (px + sx * 1.45 + 0.21, py + 0.09, 8.28), M['lamp'] if kind == 'lamp' else M['led_warm'])
+            PR.append(('lamp', (px + sx * 1.45, py, 8.2), kind))
     sg = MB(); sg.quad((x - 0.26, y - 0.2, 2.75), (0.52, 0, 0), (0, 0, 0.26), M['soi_sign']); sg.box((x - 0.27, y - 0.19, 2.74), (x + 0.27, y - 0.17, 3.02), flat('#d8d8d0'))
     for so in sg.v: pass
     sgo = sg.obj('soi_sign', G['coll'])
@@ -725,6 +780,8 @@ def far_end(G, r):
     for k in range(29): xx = bx0 + k * (bx1 - bx0) / 28; tube(mb, [(xx, by - 1.15, bz0), (xx, by - 1.15, bz0 + 1.0)], 0.015, stl, 4)
     tube(mb, [(bx0, by - 1.15, bz0 + 1.0), (bx1, by - 1.15, bz0 + 1.0)], 0.025, stl, 4)
     for k in range(5): xx = bx0 + 1 + k * 3; tube(mb, [(xx, by - 1.0, bz0 - 0.05), (xx + 0.3, by - 1.6, bz0 + 0.4)], 0.03, stl, 4)    # flood-lamp arms
+    if P.get('practicals'):
+        for k in range(5): xx = bx0 + 1 + k * 3; mb.box((xx + 0.15, by - 1.75, bz0 + 0.35), (xx + 0.45, by - 1.6, bz0 + 0.5), M['led_warm'])
     tube(mb, [(x1 - 1.0, y0 + 0.4, h + 1.0), (x1 - 1.0, y0 + 0.4, bz0)], 0.03, stl, 4)
     for k in range(int((bz0 - h - 1) / 0.35)): zz = h + 1 + k * 0.35; tube(mb, [(x1 - 1.25, y0 + 0.4, zz), (x1 - 0.75, y0 + 0.4, zz)], 0.015, stl, 4)  # ladder
     # distant skyline: blocks, a wat roof, water towers
@@ -771,11 +828,11 @@ def unit_cfg(r, side, y0):
 def build(preset='afternoon_storm', clear=True):
     scene = bpy.context.scene
     if clear: bpy.ops.wm.read_factory_settings(use_empty=True); scene = bpy.context.scene
-    P.clear(); P.update(PRESETS[preset]); S.STATE.clear(); S.STATE['P'] = P; M.clear(); A.clear()
+    P.clear(); P.update(PRESETS[preset]); S.STATE.clear(); S.STATE['P'] = P; M.clear(); A.clear(); PR.clear(); TL.reset()
     TX.clear(); TX.update(tex_soi.build_all())
     coll = S._coll('SET', scene); S._wipe(coll); lc = S._coll('LIGHTS', scene); S._wipe(lc)
     materials(); r = random.Random(20261113)
-    G = dict(coll=coll, ground=MB(), row=MB(), hero=MB(), props=MB(), alpha=MB(), poles=MB(), cables=MB(), far=MB())
+    G = dict(coll=coll, ground=MB(), row=MB(), hero=MB(), props=MB(), alpha=MB(), poles=MB(), cables=MB(), far=MB(), hero_in=MB())
     ground(G, r)
     for side, units in (('L', UNITS_L), ('R', UNITS_R)):
         fr = Fr(side)
@@ -795,16 +852,78 @@ def build(preset='afternoon_storm', clear=True):
         ph = MB()
         for (x, y, z) in ((-2.4, 7.9, 1.35), (2.9, 1.2, 1.2), (-0.6, 20.0, 1.4), (3.2, 25.0, 4.9), (-4.6, 31.0, 5.2)): rect(ph, (x, y, z), (0.04, 0, 0), (0, 0, 0.08), M['phone'], n=(0, -1, 0))
         ph.obj('soi_phones', coll)
-    for nm in ('ground', 'row', 'hero', 'props', 'alpha', 'poles', 'cables', 'far'): G[nm].obj('soi_' + nm, coll)
+    for nm in ('ground', 'row', 'hero', 'props', 'alpha', 'poles', 'cables', 'far', 'hero_in'):
+        if G[nm].f: G[nm].obj('soi_' + nm, coll)
     for ob in coll.objects: S.no_bounce(ob)
     bpy.data.objects['soi_alpha'].visible_shadow = True
     sd = bpy.data.lights.new('key_sun', 'SUN'); kmax = max(P['key']); sd.energy = math.pi * kmax; sd.color = tuple(c / kmax for c in P['key']); sd.angle = math.radians(P['sun_angle'])
     sd.use_shadow = True; so = bpy.data.objects.new('key_sun', sd); lc.objects.link(so)
     so.rotation_euler = Vector(P['key_dir']).normalized().to_track_quat('-Z', 'Y').to_euler()
+    if P.get('practicals'):
+        A['practicals'] = practicals(lc)
+        # light linking: the workshop interior is lit only by its own tube; every other light (and the moon) skips it, so the light tree
+        # never spends interior samples on lamps that cannot reach it (that was the grain)
+        out_c = bpy.data.collections.new('RX_outside')
+        for ob in coll.objects:
+            if ob.name != 'soi_hero_in': out_c.objects.link(ob)
+        rx = dict(outside=out_c)
+        for key, names in (('workshop', ('soi_hero_in', 'soi_ground', 'soi_props', 'soi_alpha')), ('hero', ('soi_hero',)), ('props', ('soi_props', 'soi_row')),
+                           ('noground', [o.name for o in out_c.objects if o.name != 'soi_ground'])):
+            c_ = rx[key] = bpy.data.collections.new('RX_' + key)
+            for nm in names:
+                if nm in bpy.data.objects: c_.objects.link(bpy.data.objects[nm])
+        for ob in list(lc.objects): ob.light_linking.receiver_collection = rx[ob.get('rx', 'outside')]
     world_sky(scene, P['sky']); S.setup_render(scene, 'fast'); scene.cycles.samples = 12; scene.render.use_persistent_data = False; S.setup_grade(scene, bloom=True)
+    if P.get('practicals'): scene.cycles.use_light_tree = True; A['lights_on'] = True
     A['key_dir'] = tuple(round(v, 4) for v in Vector(P['key_dir']).normalized()); A['preset'] = preset; A['cams'] = CAMS; A['cams_16x9'] = CAMS_16x9; A['units'] = 1.0
     A['soi'] = dict(road_x=(-2.25, 2.25), gutter_x=(2.25, 2.6), curb_x=(2.6, 2.75), facade_left_x=XL, facade_right_x=XR, hero_shop_y=HERO, far_end_y=58.0)
     return A
+
+def pool_tex():
+    """Soft elliptical light-pool mask (alpha) for the camera-only decals of the far shops' tube light."""
+    path = os.path.join(tex_soi.TEX, 'pool_v1.png')
+    if not os.path.exists(path):
+        import numpy as np
+        from PIL import Image
+        y, x = np.mgrid[-1:1:256j, -1:1:256j]; r2 = x * x + y * y; a = np.clip(1 - r2, 0, 1) ** 1.8
+        im = np.zeros((256, 256, 4), np.uint8); im[..., :3] = 255; im[..., 3] = (a * 255).astype(np.uint8); Image.fromarray(im, 'RGBA').save(path)
+    return path
+
+NEAR_Y = (-3.0, 21.0)          # shops in this stretch (around the hero shop) get real area lights; further ones a pool decal (noise budget)
+def practicals(lc):
+    """Real lights for the evening, from the positions collected while building (PR). Returns a list for the anchors.
+    Noise budget at 12 samples: about 18 real lights; lightbox signs and most balcony bulbs are emission only, the shops far down the
+    soi spill a camera-only pool decal instead of a light."""
+    out = []; n = {}; dec = MB(); pm = TL.mat_additive('SOI_A_pool', P['shop']['color'], 0.3, image=pool_tex()); hero_balc = True
+    for kind, pos, extra in PR:
+        n[kind] = n.get(kind, 0) + 1; nm = f'{kind}_{n[kind]}'
+        if kind in ('shop', 'stall_tube'):                                # every shop spills a pool decal on the apron (no shadow, no sampling noise)
+            x = (-4.1 if pos[0] < 0 else 3.5) if kind == 'shop' else 3.2; rect(dec, (x, pos[1], 0.055), (1.5, 0, 0), (0, 1.7, 0), pm, n=(0, 0, 1))
+            if not (NEAR_Y[0] <= pos[1] <= NEAR_Y[1]): out.append((nm + '_decal', (x, pos[1], 0.055))); continue
+        if kind in ('shop', 'hero_tube', 'stall_tube'):                   # fluorescent tubes: small area lights facing down (cold pools out over the apron)
+            c = P['shop']; K = c['K'] * (1.15 if kind == 'hero_tube' else 0.85 if kind == 'stall_tube' else 1.0)
+            ob = TL.area(lc, nm, pos, (0, 0, -1), c['color'], K * (1.6 if kind == 'hero_tube' else 1.0), pos[2], size=6.6 if kind == 'hero_tube' else 1.2, size_y=0.06)
+            ob['rx'] = 'workshop' if kind == 'hero_tube' else 'noground'
+            ob.rotation_euler = (0, 0, math.pi / 2) if abs(extra[1]) > 0.5 else (0, 0, 0)
+        elif kind == 'lamp':                                              # street lamps: spots straight down, sodium or LED
+            c = P['lamp'] if extra == 'lamp' else P['led']; TL.spot(lc, nm, pos, (0, 0, -1), c['color'], c['K'], pos[2], 78 if n[kind] == 1 else 64, 0.3, 0.06)
+        elif kind == 'sign_spot':                                         # gooseneck lamps washing the hero sign
+            d = Vector(extra) - Vector(pos); ob = TL.spot(lc, nm, pos, tuple(d), '#ffe0a0', 1.15, d.length, 108, 0.55, 0.03); ob['rx'] = 'hero'
+        elif kind == 'sign': continue                                     # lightbox: emission only
+        elif kind == 'balcony':
+            if pos[0] > XL + 0.4 or not (HERO[0] <= pos[1] <= HERO[1]): continue   # only the hero shop's balcony bulb is a real light
+            TL.point(lc, nm, pos, P['bulb']['color'], 0.9, 1.6, radius=0.03)
+        elif kind == 'stall': TL.point(lc, nm, pos, P['bulb']['color'], P['bulb']['K'], 2.1, radius=0.03)
+        elif kind == 'spirit': ob = TL.point(lc, nm, pos, '#ff8a50', 0.5, 1.0, radius=0.05); ob['rx'] = 'props'
+        out.append((nm, tuple(round(v, 3) for v in pos)))
+    if dec.f: do = dec.obj('soi_pool_decals', bpy.data.collections['SET']); do.visible_shadow = False; S.no_bounce(do)
+    return out
+
+def set_lights(on=True):
+    """Every practical light of the soi (shop tubes, street lamps, sign lamps, balcony / stall / spirit-house bulbs) and every emissive
+    window, sign, LED strip and tube on (True) or off (False). Off = dark blue moonlight only (the ambient drops to amb_off).
+    Only meaningful for the 'evening' preset (other presets have nothing registered). Returns the number of switched items."""
+    n = TL.set_lights(on); A['lights_on'] = bool(on); return n
 
 CAMS = dict(
     wide_soi=dict(loc=(1.35, -4.6, 2.2), look_at=(-1.6, 22.0, 6.6), lens=21),
@@ -823,10 +942,11 @@ def render_cam(name, path, res=(720, 1280), cam=None):
 if __name__ == '__main__':
     args = sys.argv[1:]; cmd = args[0] if args else 'stills'
     preset = args[1] if len(args) > 1 and args[1] in PRESETS else 'afternoon_storm'
-    rest = [a for a in args[1:] if a not in PRESETS]
+    rest = [a for a in args[1:] if a not in PRESETS]; off = 'off' in rest
     q = 'preview' if 'preview' in rest else 'final'; cams = [a for a in rest if a in CAMS] or list(CAMS)
     os.makedirs(OUT, exist_ok=True); t0 = time.time(); build(preset); tb = time.time() - t0; scene = bpy.context.scene
     tag = '' if preset == 'afternoon_storm' else '_' + preset
+    if off: set_lights(False); tag += '_off'
     times = {}
     if cmd == 'stills':
         if q == 'preview': scene.cycles.samples = 6

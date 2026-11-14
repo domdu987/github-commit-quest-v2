@@ -237,6 +237,41 @@ def window(seed, W=256, H=320):
     o.append(f'<path d="M{W/2},0V{H}M0,{H/2}H{W}" stroke="#b8bcc0" stroke-width="10"/><rect x="0" y="0" width="{W}" height="{H}" fill="none" stroke="#a8acb0" stroke-width="16"/>')
     return svg(W, H, ''.join(o))
 
+def window_glow(seed, W=256, H=320):
+    """Emission mask for window(seed) at dusk: warm room light through the glass, curtains glowing in their own colour, frame and
+    taped cardboard black. Consumes the random stream exactly as window() does, so curtains line up with the base texture."""
+    r = R(seed); cur = r.choice(['#e07a8a', '#7aa0d8', '#e8c860', '#f0ece0', '#8ac080', '#c8a0e0'])
+    room = R(seed * 7 + 1).choice(['#ffd08a', '#ffe0a8', '#ffc878', '#bfe0ff'])
+    o = [f'<rect width="{W}" height="{H}" fill="{room}"/>', f'<path d="M0,{H*0.3:.0f}L{W},{H*0.05:.0f}V{H*0.25:.0f}L0,{H*0.5:.0f}Z" fill="#000" opacity=".15"/>']
+    if r.random() < 0.8:
+        a = r.uniform(0.25, 0.5) * W; o.append(f'<rect x="0" y="0" width="{a:.0f}" height="{H}" fill="{cur}" opacity=".85"/>')
+        for i in range(5): o.append(f'<path d="M{i*a/5+5:.0f},0V{H}" stroke="#000" stroke-width="6" opacity=".35"/>')
+        if r.random() < 0.6: b = r.uniform(0.15, 0.35) * W; o.append(f'<rect x="{W-b:.0f}" y="0" width="{b:.0f}" height="{H}" fill="{cur}" opacity=".85"/>')
+    if r.random() < 0.4: o.append(f'<rect x="{W*0.55:.0f}" y="{H*0.55:.0f}" width="{W*0.3:.0f}" height="{H*0.3:.0f}" fill="#000"/>')
+    o.append(f'<path d="M{W/2},0V{H}M0,{H/2}H{W}" stroke="#000" stroke-width="10"/><rect x="0" y="0" width="{W}" height="{H}" fill="none" stroke="#000" stroke-width="16"/>')
+    return svg(W, H, ''.join(o))
+
+def tower_glow(W=2048, H=2048, wm=20.0, hm=24.5):
+    """Emission mask for tower_facade(): about 60 percent of the flats lit (warm, a few cold TV-blue), curtains, the lit ground-floor
+    shops and the blue LED name sign. Same window grid as the base texture."""
+    r = R(122); kx = W / wm; ky = H / hm; Z = lambda z: (hm - z) * ky; o = [f'<rect width="{W}" height="{H}" fill="#000"/>']
+    for f in range(7):
+        z0 = 3.5 * f
+        if f == 0:
+            for i in range(5):
+                x = (0.4 + i * 3.9) * kx
+                if i != 2: o.append(f'<rect x="{x:.0f}" y="{Z(3.0):.0f}" width="{3.4*kx:.0f}" height="{2.6*ky:.0f}" fill="{r.choice(["#e8f4ff", "#fff0c8", "#d8ecff"])}"/>')
+            continue
+        for i in range(8):
+            x = (0.55 + i * 2.45) * kx; zz = z0 + 1.0
+            if r.random() < 0.6:
+                c = r.choice(['#ffd08a', '#ffc070', '#ffe0a8', '#ffd08a', '#a8d0ff']); o.append(f'<rect x="{x:.0f}" y="{Z(zz+1.5):.0f}" width="{1.5*kx:.0f}" height="{1.5*ky:.0f}" fill="{c}"/>')
+                if r.random() < 0.6: o.append(f'<rect x="{x:.0f}" y="{Z(zz+1.5):.0f}" width="{r.uniform(0.3,0.75)*kx:.0f}" height="{1.5*ky:.0f}" fill="{r.choice(["#e07a6a","#7aa0d8","#e8c860","#f0ece0"])}" opacity=".8"/>')
+                o.append(f'<path d="M{x:.0f},{Z(zz+0.75):.0f}h{1.5*kx:.0f}M{x+0.75*kx:.0f},{Z(zz+1.5):.0f}v{1.5*ky:.0f}" stroke="#000" stroke-width="8"/>')
+                for g in range(5): o.append(f'<path d="M{x+g*0.375*kx:.0f},{Z(zz+1.5):.0f}v{1.5*ky:.0f}" stroke="#000" stroke-width="4" opacity=".8"/>')
+    o.append(f'<rect x="{W*0.3:.0f}" y="{Z(5.4):.0f}" width="{W*0.4:.0f}" height="{1.1*ky:.0f}" fill="#1e5ad0"/>' + T(W / 2, Z(4.6), 0.75 * ky, 'ร่วมใจ แมนชั่น', '#ffffff', k=True))
+    return svg(W, H, ''.join(o), font=True)
+
 def ac_front(W=256, H=192):
     o = [f'<rect width="{W}" height="{H}" fill="#e4e2da"/><circle cx="{W*0.4:.0f}" cy="{H/2}" r="{H*0.4:.0f}" fill="#3a3c40"/>']
     for i in range(-8, 9): o.append(f'<path d="M{W*0.4-H*0.4:.0f},{H/2+i*H*0.045:.0f}h{H*0.8:.0f}" stroke="#b8b8b0" stroke-width="2.5"/>')
@@ -612,7 +647,7 @@ def _clouds(r, cx, cy, s, body, rim, shade, n=9, flat=0.55, lit=(-0.5, -0.8)):
     return ''.join(o)
 
 def sky(kind, W=4096, H=2048):
-    r = R({'storm': 7, 'day': 8, 'night': 9}[kind]); o = []
+    r = R({'storm': 7, 'day': 8, 'night': 9, 'evening': 10}[kind]); o = []
     hz = H / 2
     if kind == 'storm':
         o.append('<defs><linearGradient id="z" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e2c5e"/><stop offset=".35" stop-color="#4e4c84"/><stop offset=".47" stop-color="#e8a878"/><stop offset=".5" stop-color="#f6c890"/><stop offset="1" stop-color="#6a5a6a"/></linearGradient>'
@@ -649,6 +684,34 @@ def sky(kind, W=4096, H=2048):
         for _ in range(110):
             x, y = r.uniform(0, W), r.uniform(hz - 0.3 * H, hz - 0.03 * H); s = r.uniform(40, 130)
             o.append(_clouds(r, x, y, s, '#e8eef6', '#ffffff', '#a8bad2', 9, 0.5))
+    elif kind == 'evening':
+        # just after sunset behind the 7-storey block (+y, u 0.75): deep blue-violet zenith, dusk blue, a warm band low over the block
+        # that fades through peach into a greyed lavender (never through saturated pink), lit undersides of a few streaks, first stars, a young moon
+        o.append('<defs><linearGradient id="z" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121236"/><stop offset=".22" stop-color="#1e2058"/>'
+                 '<stop offset=".36" stop-color="#2e3474"/><stop offset=".44" stop-color="#4a5490"/><stop offset=".485" stop-color="#7a7c9e"/><stop offset=".5" stop-color="#b08a7a"/>'
+                 '<stop offset="1" stop-color="#2a2a40"/></linearGradient>'
+                 '<radialGradient id="glow" cx=".5" cy="1" r="1" fx=".5" fy="1"><stop offset="0" stop-color="#ffc070"/><stop offset=".22" stop-color="#ffa050" stop-opacity=".95"/>'
+                 '<stop offset=".45" stop-color="#f29c62" stop-opacity=".85"/><stop offset=".68" stop-color="#b8968e" stop-opacity=".55"/><stop offset="1" stop-color="#5a5a90" stop-opacity="0"/></radialGradient>'
+                 '<radialGradient id="m" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f4f2e0" stop-opacity=".6"/><stop offset="1" stop-color="#8090c0" stop-opacity="0"/></radialGradient>'
+                 '<filter id="b"><feGaussianBlur stdDeviation="10"/></filter></defs>')
+        o.append(f'<rect width="{W}" height="{H}" fill="url(#z)"/>')
+        gx, gw, gh = 0.75 * W, 0.3 * W, 0.26 * H
+        for sh in (0.0, -W, W): o.append(f'<ellipse cx="{gx+sh:.0f}" cy="{hz:.0f}" rx="{gw:.0f}" ry="{gh:.0f}" fill="url(#glow)"/>')
+        for _ in range(26):                          # thin altostratus streaks: warm-lit undersides near the glow, blue-violet away from it
+            u = r.gauss(0.75, 0.14) % 1.0; el = r.uniform(6, 34); y = hz - el / 180 * H; L = r.uniform(120, 420) * W / 4096; t = r.uniform(4, 14) * W / 4096
+            near = math.exp(-((u - 0.75) / 0.12) ** 2) * math.exp(-el / 22)
+            col = '#f2a86a' if near > 0.35 else ('#a88aa0' if near > 0.12 else '#3a3c70'); body = '#2a2c60' if near < 0.35 else '#5a4a78'
+            o.append(f'<g filter="url(#b)" opacity=".85"><ellipse cx="{u*W:.0f}" cy="{y:.0f}" rx="{L:.0f}" ry="{t*1.6:.0f}" fill="{body}"/></g><ellipse cx="{u*W:.0f}" cy="{y+t*0.8:.0f}" rx="{L*0.8:.0f}" ry="{t*0.5:.0f}" fill="{col}" opacity=".8"/>')
+        for _ in range(220): o.append(f'<circle cx="{r.uniform(0,W):.0f}" cy="{r.uniform(0,hz*0.55):.0f}" r="{r.uniform(1,2.4):.1f}" fill="#fff" opacity="{r.uniform(.25,.8):.2f}"/>')
+        for _ in range(64):                          # toon cloud banks (u 0.35 .. 0.95, elevation 28 .. 78 deg): blue-violet bodies, a dusky warm rim only low toward the sunset
+            u = r.uniform(0.35, 0.95); el = r.uniform(28, 78); y = hz - el / 180 * H; sz = r.uniform(34, 80) * W / 4096 * (1 + (el - 28) / 50)
+            warm = el < 44 and abs(u - 0.75) < 0.1
+            o.append(_clouds(r, u * W, y, sz, '#2a2b62', '#a8806e' if warm else '#3c3e7a', '#1d1d4a', 9, 0.4, (0.0, 0.9)))
+        for _ in range(18):                          # high thin cloudlets over the top of the frame
+            u = r.uniform(0.6, 0.9); el = r.uniform(58, 84); y = hz - el / 180 * H; sz = r.uniform(30, 70) * W / 4096
+            o.append(_clouds(r, u * W, y, sz, '#23245a', '#34367a', '#1a1a44', 7, 0.3, (0.0, 0.9)))
+        mx, my = 0.62 * W, hz - 0.30 * H; o.append(f'<circle cx="{mx:.0f}" cy="{my:.0f}" r="160" fill="url(#m)"/><circle cx="{mx:.0f}" cy="{my:.0f}" r="34" fill="#f6f2dc"/><circle cx="{mx+12:.0f}" cy="{my-6:.0f}" r="31" fill="#262a66"/>')
+        o.append(f'<rect x="0" y="{hz:.0f}" width="{W}" height="{hz:.0f}" fill="#2a2a40"/>')
     else:
         o.append('<defs><linearGradient id="z" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0c22"/><stop offset=".45" stop-color="#1a1e44"/><stop offset=".5" stop-color="#2a2a52"/><stop offset="1" stop-color="#14142a"/></linearGradient>'
                  '<radialGradient id="m" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#e8ecff"/><stop offset=".2" stop-color="#c8d0f0" stop-opacity=".6"/><stop offset="1" stop-color="#8090c0" stop-opacity="0"/></radialGradient></defs>')
@@ -691,6 +754,8 @@ JOBS = dict(
     concrete=(lambda: concrete(195), 512, 512, False), concrete_dark=(lambda: concrete(196, '#8a857a'), 512, 512, False),
     sky_storm=(lambda: sky('storm', 6144, 3072), 6144, 3072, False), sky_day=(lambda: sky('day'), 4096, 2048, False), sky_night=(lambda: sky('night'), 4096, 2048, False),
     phone=(phone, 128, 256, False),
+    sky_evening=(lambda: sky('evening'), 4096, 2048, False), tower_glow=(tower_glow, 2048, 2048, False),
+    **{f'win{i}_glow': ((lambda i=i: window_glow(300 + i)), 256, 320, False) for i in range(6)},
 )
 
 def build_all(force=False, only=None):
