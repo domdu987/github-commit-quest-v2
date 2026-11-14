@@ -78,8 +78,10 @@ def vignette(im):
 
 def frame(src, g):
     t = g / FPS; im = Image.open(src).convert('RGB').resize((1080, 1920), Image.LANCZOS).convert('RGBA')
-    if 4.5 <= t < 4.62: im = Image.blend(im, Image.new('RGBA', im.size, (235, 245, 255, 255)), 0.85)
-    elif 4.62 <= t < 4.8: im = Image.blend(im, Image.new('RGBA', im.size, (235, 245, 255, 255)), 0.35)
+    u = t - LK.ST
+    if 0 <= u < 0.034: im = Image.blend(im, Image.new('RGBA', im.size, (240, 248, 255, 255)), 0.9)       # the white frame
+    elif LK.strike_on(t): im = Image.blend(im, Image.new('RGBA', im.size, (225, 238, 255, 255)), 0.22)
+    elif 0 <= u < 0.6: im = Image.blend(im, Image.new('RGBA', im.size, (8, 6, 24, 255)), 0.25)            # the dark beats between flashes
     vignette(im); hud(im, t); battery(im, t)
     c = cap_at(t)
     if c: draw_cap(im, c)
@@ -114,8 +116,8 @@ def cmd_mix():
         if af: x = ff(x, af)
         a = int(t * SR); sfx[a:a + len(x)] += g * x[:n - a]
     for s in LK.SHOTS[1:]:
-        if s['n'] not in ('R3',): put('whoosh', s['t0'] - 0.12, 0.26, 'lowpass=f=1200')
-    put('boom', 4.5, 0.9, 'lowpass=f=400'); put('pop', 4.52, 0.5, 'lowpass=f=2500')
+        if s['n'] not in ('R3', 'R3b'): put('whoosh', s['t0'] - 0.12, 0.26, 'lowpass=f=1200')
+    put('boom', LK.ST, 1.0, 'lowpass=f=400'); put('pop', LK.ST + 0.01, 0.6, 'lowpass=f=2500'); put('pop', LK.ST + 0.18, 0.35, 'lowpass=f=2000'); put('pop', LK.ST + 0.38, 0.3, 'lowpass=f=2000')
     put('ding', 9.2, 0.35, 'lowpass=f=4000'); put('pop', 22.1, 0.35, 'lowpass=f=2500')
     sfx = level(sfx, -27)
     env = np.convolve(np.abs(vo), np.ones(int(0.05 * SR)) / int(0.05 * SR), 'same')
