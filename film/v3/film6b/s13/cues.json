@@ -1,0 +1,111 @@
+{
+ "take": "s13",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film6b/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 20.533,
+   "duration": 3.933,
+   "frame": 616,
+   "end_frame": 734,
+   "kind": "ambience",
+   "label": "market square, morning: crowd murmur, jeers, distant hooves"
+  },
+  {
+   "time": 23.233,
+   "duration": 0.1,
+   "frame": 697,
+   "end_frame": 700,
+   "kind": "accent",
+   "label": "head pops into pillory 1: wooden CLACK + comic 'boing'; yellow count word pops",
+   "peak_frame": 697
+  },
+  {
+   "time": 23.733,
+   "duration": 0.1,
+   "frame": 712,
+   "end_frame": 715,
+   "kind": "accent",
+   "label": "head pops into pillory 2: wooden CLACK + comic 'boing'; yellow count word pops",
+   "peak_frame": 712
+  },
+  {
+   "time": 24.133,
+   "duration": 0.1,
+   "frame": 724,
+   "end_frame": 727,
+   "kind": "accent",
+   "label": "head pops into pillory 3: wooden CLACK + comic 'boing'; yellow count word pops",
+   "peak_frame": 724
+  },
+  {
+   "time": 24.5,
+   "duration": 2.033,
+   "frame": 735,
+   "end_frame": 796,
+   "kind": "ambience",
+   "label": "pilloried bakers sob and protest (muffled, no words), crowd laughter under"
+  },
+  {
+   "time": 26.233,
+   "duration": 0.1,
+   "frame": 787,
+   "end_frame": 790,
+   "kind": "accent",
+   "label": "speech bubble '\u0e0a\u0e31\u0e48\u0e07\u0e40\u0e1b\u0e4a\u0e30!' pops: pop accent",
+   "peak_frame": 787
+  },
+  {
+   "time": 26.567,
+   "duration": 2.7,
+   "frame": 797,
+   "end_frame": 878,
+   "kind": "ambience",
+   "label": "bakery: oven crackle; henry's belly laugh 797-841 (no words), then he speaks the quote 842-874"
+  },
+  {
+   "time": 28.067,
+   "duration": 0.0,
+   "frame": 842,
+   "end_frame": 842,
+   "kind": "cut",
+   "label": "punch-in on henry for '\u0e1e\u0e27\u0e01\u0e02\u0e35\u0e49\u0e42\u0e01\u0e07\u0e17\u0e31\u0e49\u0e07\u0e19\u0e31\u0e49\u0e19!' (whoosh)"
+  },
+  {
+   "time": 29.767,
+   "duration": 0.067,
+   "frame": 893,
+   "end_frame": 895,
+   "kind": "prop",
+   "label": "henry plucks the pale 13th loaf off a basket: wicker rustle + soft 'plip'",
+   "peak_frame": 893
+  },
+  {
+   "time": 30.467,
+   "duration": 0.067,
+   "frame": 914,
+   "end_frame": 916,
+   "kind": "prop",
+   "label": "henry plucks the pale 13th loaf off a basket: wicker rustle + soft 'plip'",
+   "peak_frame": 914
+  },
+  {
+   "time": 31.167,
+   "duration": 0.067,
+   "frame": 935,
+   "end_frame": 937,
+   "kind": "prop",
+   "label": "henry plucks the pale 13th loaf off a basket: wicker rustle + soft 'plip'",
+   "peak_frame": 935
+  },
+  {
+   "time": 31.5,
+   "duration": 0.233,
+   "frame": 945,
+   "end_frame": 952,
+   "kind": "accent",
+   "label": "widen to kit, deadpan: one dry 'tsk' accent",
+   "peak_frame": 945
+  }
+ ]
+}
