@@ -1,0 +1,103 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film8/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 25.833,
+   "duration": 3.533,
+   "frame": 775,
+   "end_frame": 881,
+   "kind": "ambience",
+   "label": "desert night, deep quiet, faint cold wind, distant crickets; a crystalline high pad"
+  },
+  {
+   "time": 26.333,
+   "duration": 1.333,
+   "frame": 790,
+   "end_frame": 830,
+   "kind": "accent",
+   "label": "freezing: delicate crackling / tinkling of ice crystals spreading over the water",
+   "peak_frame": 812
+  },
+  {
+   "time": 28.0,
+   "duration": 0.0,
+   "frame": 840,
+   "end_frame": 840,
+   "kind": "cut",
+   "label": "cut to night ten (ambience continues, colder)"
+  },
+  {
+   "time": 28.333,
+   "duration": 0.0,
+   "frame": 850,
+   "end_frame": 850,
+   "kind": "foley",
+   "label": "fingertip tap on thick ice: a solid 'tok'",
+   "peak_frame": 850
+  },
+  {
+   "time": 28.6,
+   "duration": 0.0,
+   "frame": 858,
+   "end_frame": 858,
+   "kind": "foley",
+   "label": "second tap 'tok'",
+   "peak_frame": 858
+  },
+  {
+   "time": 28.867,
+   "duration": 0.0,
+   "frame": 866,
+   "end_frame": 866,
+   "kind": "foley",
+   "label": "third tap 'tok' (on '\u0e2b\u0e19\u0e32\u0e40\u0e17\u0e48\u0e32\u0e19\u0e34\u0e49\u0e27')",
+   "peak_frame": 866
+  },
+  {
+   "time": 29.0,
+   "duration": 0.367,
+   "frame": 870,
+   "end_frame": 881,
+   "kind": "accent",
+   "label": "pleased little 'hm!' sting",
+   "peak_frame": 872
+  },
+  {
+   "time": 29.4,
+   "duration": 2.9,
+   "frame": 882,
+   "end_frame": 969,
+   "kind": "ambience",
+   "label": "pre-dawn to sunrise desert: cool wind, first birds, a warm rising pad"
+  },
+  {
+   "time": 29.4,
+   "duration": 0.967,
+   "frame": 882,
+   "end_frame": 911,
+   "kind": "foley",
+   "label": "ice saw rasping through thick ice, rhythmic strokes every third of a second",
+   "peak_frame": 890
+  },
+  {
+   "time": 30.4,
+   "duration": 0.3,
+   "frame": 912,
+   "end_frame": 921,
+   "kind": "foley",
+   "label": "the block cracks free and is lifted with a grunt, water drips",
+   "peak_frame": 914
+  },
+  {
+   "time": 30.733,
+   "duration": 1.567,
+   "frame": 922,
+   "end_frame": 969,
+   "kind": "foley",
+   "label": "footsteps on packed earth carrying the heavy block, a slight strain",
+   "peak_frame": 935
+  }
+ ]
+}
