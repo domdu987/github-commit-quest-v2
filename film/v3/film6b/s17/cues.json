@@ -1,0 +1,276 @@
+{
+ "take": "s17",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film6b/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 31.933,
+   "duration": 2.367,
+   "frame": 958,
+   "end_frame": 1029,
+   "kind": "ambience",
+   "label": "afternoon market square: low murmur, distant chickens, a brazier crackle"
+  },
+  {
+   "time": 32.133,
+   "duration": 1.2,
+   "frame": 964,
+   "end_frame": 1000,
+   "kind": "foley",
+   "label": "slow footsteps on cobbles, cloak swish (the hooded stranger)"
+  },
+  {
+   "time": 33.567,
+   "duration": 0.3,
+   "frame": 1007,
+   "end_frame": 1016,
+   "kind": "foley",
+   "label": "hood thrown back: heavy cloth whoosh",
+   "peak_frame": 1010
+  },
+  {
+   "time": 33.9,
+   "duration": 0.167,
+   "frame": 1017,
+   "end_frame": 1022,
+   "kind": "accent",
+   "label": "royal reveal: short brass fanfare sting + snap-zoom whoosh",
+   "peak_frame": 1017
+  },
+  {
+   "time": 34.3,
+   "duration": 1.8,
+   "frame": 1029,
+   "end_frame": 1083,
+   "kind": "ambience",
+   "label": "bakery interior: oven crackle"
+  },
+  {
+   "time": 34.367,
+   "duration": 0.033,
+   "frame": 1031,
+   "end_frame": 1032,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 34.467,
+   "duration": 0.033,
+   "frame": 1034,
+   "end_frame": 1035,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 34.567,
+   "duration": 0.033,
+   "frame": 1037,
+   "end_frame": 1038,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 34.667,
+   "duration": 0.033,
+   "frame": 1040,
+   "end_frame": 1041,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 34.767,
+   "duration": 0.033,
+   "frame": 1043,
+   "end_frame": 1044,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 34.867,
+   "duration": 0.033,
+   "frame": 1046,
+   "end_frame": 1047,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 34.967,
+   "duration": 0.033,
+   "frame": 1049,
+   "end_frame": 1050,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 35.067,
+   "duration": 0.033,
+   "frame": 1052,
+   "end_frame": 1053,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 35.167,
+   "duration": 0.033,
+   "frame": 1055,
+   "end_frame": 1056,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 35.267,
+   "duration": 0.033,
+   "frame": 1058,
+   "end_frame": 1059,
+   "kind": "accent",
+   "label": "finger count tick"
+  },
+  {
+   "time": 35.4,
+   "duration": 0.067,
+   "frame": 1062,
+   "end_frame": 1064,
+   "kind": "accent",
+   "label": "punch-in whoosh on the '12 \u0e01\u0e49\u0e2d\u0e19' tag; smug 'hmph'",
+   "peak_frame": 1062
+  },
+  {
+   "time": 36.1,
+   "duration": 1.633,
+   "frame": 1083,
+   "end_frame": 1132,
+   "kind": "ambience",
+   "label": "market ambience, the balance creaks"
+  },
+  {
+   "time": 36.467,
+   "duration": 0.033,
+   "frame": 1094,
+   "end_frame": 1095,
+   "kind": "prop",
+   "label": "loaf 1 thuds onto the brass pan"
+  },
+  {
+   "time": 36.533,
+   "duration": 0.033,
+   "frame": 1096,
+   "end_frame": 1097,
+   "kind": "prop",
+   "label": "loaf 2 thuds onto the brass pan"
+  },
+  {
+   "time": 36.633,
+   "duration": 0.033,
+   "frame": 1099,
+   "end_frame": 1100,
+   "kind": "prop",
+   "label": "loaf 3 thuds onto the brass pan"
+  },
+  {
+   "time": 36.733,
+   "duration": 0.033,
+   "frame": 1102,
+   "end_frame": 1103,
+   "kind": "prop",
+   "label": "loaf 4 thuds onto the brass pan"
+  },
+  {
+   "time": 36.8,
+   "duration": 0.033,
+   "frame": 1104,
+   "end_frame": 1105,
+   "kind": "prop",
+   "label": "loaf 5 thuds onto the brass pan"
+  },
+  {
+   "time": 36.867,
+   "duration": 0.033,
+   "frame": 1106,
+   "end_frame": 1107,
+   "kind": "prop",
+   "label": "loaf 6 thuds onto the brass pan"
+  },
+  {
+   "time": 36.967,
+   "duration": 0.033,
+   "frame": 1109,
+   "end_frame": 1110,
+   "kind": "prop",
+   "label": "loaf 7 thuds onto the brass pan"
+  },
+  {
+   "time": 37.067,
+   "duration": 0.033,
+   "frame": 1112,
+   "end_frame": 1113,
+   "kind": "prop",
+   "label": "loaf 8 thuds onto the brass pan"
+  },
+  {
+   "time": 37.133,
+   "duration": 0.033,
+   "frame": 1114,
+   "end_frame": 1115,
+   "kind": "prop",
+   "label": "loaf 9 thuds onto the brass pan"
+  },
+  {
+   "time": 37.2,
+   "duration": 0.033,
+   "frame": 1116,
+   "end_frame": 1117,
+   "kind": "prop",
+   "label": "loaf 10 thuds onto the brass pan"
+  },
+  {
+   "time": 37.3,
+   "duration": 0.033,
+   "frame": 1119,
+   "end_frame": 1120,
+   "kind": "prop",
+   "label": "loaf 11 thuds onto the brass pan"
+  },
+  {
+   "time": 37.4,
+   "duration": 0.033,
+   "frame": 1122,
+   "end_frame": 1123,
+   "kind": "prop",
+   "label": "loaf 12 thuds onto the brass pan"
+  },
+  {
+   "time": 37.733,
+   "duration": 1.067,
+   "frame": 1132,
+   "end_frame": 1164,
+   "kind": "music",
+   "label": "tense held note, chains creak, needle tremble"
+  },
+  {
+   "time": 38.567,
+   "duration": 0.1,
+   "frame": 1157,
+   "end_frame": 1160,
+   "kind": "accent",
+   "label": "BIG drum hit on '\u0e02\u0e32\u0e14!' (label flares)",
+   "peak_frame": 1157
+  },
+  {
+   "time": 38.8,
+   "duration": 2.667,
+   "frame": 1164,
+   "end_frame": 1244,
+   "kind": "ambience",
+   "label": "crowd jeers and laughter, guards' boots, henry's heels scraping on cobbles"
+  },
+  {
+   "time": 39.9,
+   "duration": 0.067,
+   "frame": 1197,
+   "end_frame": 1199,
+   "kind": "accent",
+   "label": "cut to the pillory: crowd 'ooh'",
+   "peak_frame": 1197
+  }
+ ]
+}
