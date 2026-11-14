@@ -1,0 +1,22 @@
+wrote /tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast4/lineup.png
+/tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast4/lineup.png (1780x702) rc=0
+wrote /tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast4/poses.png
+/tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-f4e29c068ae7/scratchpad/proj/v3/cast4/poses.png (1740x2800) rc=0
+kenta    range (-1.507, -3.540, 1.884, 0.215)  canvas (-1.9375, -3.9375, 1.9375, 0.25)  head room 0.40 D  ok
+master   range (-1.703, -4.520, 2.128, 0.147)  canvas (-2.1875, -4.875, 2.1875, 0.1875)  head room 0.35 D  ok
+merchant range (-1.629, -4.242, 2.037, 0.141)  canvas (-2.125, -4.625, 2.125, 0.1875)  head room 0.38 D  ok
+woman2   range (-1.588, -4.175, 1.985, 0.210)  canvas (-2.0625, -4.5625, 2.0625, 0.25)  head room 0.39 D  ok
+farmer   range (-1.604, -4.448, 2.005, 0.032)  canvas (-2.0625, -4.8125, 2.0625, 0.125)  head room 0.36 D  ok
+sprites.DEFAULT_CANVAS has the new members: yes
+head_flip: 26 STORY4 poses checked, 0 problems
+presets, expressions, props, effects                     61440 checks  ok
+numeric key sweeps (40 and 240 steps)                   172550 checks  ok
+arm targets: circles and lines through the shoulder     955390 checks  ok
+foot targets                                            271590 checks  ok
+garbage input                                           196827 checks  ok
+random poses                                             18000 checks  ok
+determinism, ids, mirror, resolve / lerp                   140 checks  ok
+    slowest pose: 1.01 ms per call
+speed                                                        6 checks  ok
+1675943 checks, 0 failed, 140.0 s
+rc=0
