@@ -1,0 +1,68 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film8/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 20.067,
+   "duration": 6.133,
+   "frame": 602,
+   "end_frame": 786,
+   "kind": "ambience",
+   "label": "dawn desert, cool morning wind over sand, a few early birds; a light quick time-lapse pulse (plucked strings / ticking) under the montage"
+  },
+  {
+   "time": 20.067,
+   "duration": 3.9,
+   "frame": 602,
+   "end_frame": 719,
+   "kind": "foley",
+   "label": "time-lapse: rapid repeated thud-thud of mud bricks being stacked (one every half second), sped-up shuffles and scrapes",
+   "peak_frame": 610
+  },
+  {
+   "time": 20.067,
+   "duration": 3.667,
+   "frame": 602,
+   "end_frame": 712,
+   "kind": "accent",
+   "label": "rising whoosh / ascending tone as the wall climbs to three storeys",
+   "peak_frame": 712
+  },
+  {
+   "time": 23.733,
+   "duration": 0.233,
+   "frame": 712,
+   "end_frame": 719,
+   "kind": "accent",
+   "label": "the wall tops out: a solid low 'thoom' settle",
+   "peak_frame": 713
+  },
+  {
+   "time": 24.0,
+   "duration": 0.0,
+   "frame": 720,
+   "end_frame": 720,
+   "kind": "cut",
+   "label": "cut to the dome"
+  },
+  {
+   "time": 23.933,
+   "duration": 1.467,
+   "frame": 718,
+   "end_frame": 762,
+   "kind": "accent",
+   "label": "soft rising swell as the giant dome finishes growing",
+   "peak_frame": 760
+  },
+  {
+   "time": 25.4,
+   "duration": 0.8,
+   "frame": 762,
+   "end_frame": 786,
+   "kind": "accent",
+   "label": "warm sustained chord: the finished dome glowing at sunrise, farid proud",
+   "peak_frame": 770
+  }
+ ]
+}
