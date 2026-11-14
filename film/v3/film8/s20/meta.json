@@ -1,0 +1,306 @@
+{
+ "take": "s20",
+ "film": 8,
+ "shots": [
+  20,
+  21
+ ],
+ "first_g": 1661,
+ "n_frames": 178,
+ "g0": 1667,
+ "g1": 1839,
+ "handle_in": 6,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: shot 19 (NIGHT channel_ecu) cuts to SUMMER day here; in-handle g 1661..1666 rendered in 3D (the walk + truck continue backward) in case the conform dissolves"
+ },
+ "transition_out": {
+  "type": "end",
+  "frames": 0,
+  "note": "last film frame g 1838 (N = 1839); no out-handle"
+ },
+ "transitions": [
+  {
+   "at": 1661,
+   "type": "in_handle",
+   "handle": [
+    1661,
+    1666
+   ]
+  },
+  {
+   "at": 1667,
+   "type": "cut"
+  },
+  {
+   "at": 1752,
+   "type": "cut",
+   "note": "plan cut shot 20 -> shot 21 at 58.40 s, inside the take (same location and light, new set-up)"
+  },
+  {
+   "at": 1839,
+   "type": "end"
+  }
+ ],
+ "shot_ranges": {
+  "20": [
+   1667,
+   1751
+  ],
+  "21": [
+   1752,
+   1838
+  ]
+ },
+ "setups": {
+  "20": {
+   "g": [
+    1661,
+    1751
+   ],
+   "set": "desert_ice plain (dome_wide build), SUMMER, ice 'mud'; custom camera south-west over the mud channels looking NE (az 52 -> 55, pitch +5), z 2.7, 22 mm, trucks 1.85 D east with the queue"
+  },
+  "21": {
+   "g": [
+    1752,
+    1838
+   ],
+   "set": "desert_ice plain, SUMMER, ice 'mud'; custom camera south of the pair over channel 3 looking N (az 6 -> 9, pitch +4), z 2.4, 22 mm, slow push 0.75 D + slight pan"
+  }
+ },
+ "events": {
+  "queue_walks_to_dome": [
+   1661,
+   1751
+  ],
+  "cut_to_two_shot": 1752,
+  "purse_held_out_scratching_turban": [
+   1752,
+   1816
+  ],
+  "lipsync_merchant": [
+   1797,
+   1827
+  ],
+  "farid_holds_out_ice_block": [
+   1798,
+   1812
+  ],
+  "swap_purse_for_block": 1817,
+  "merchant_looks_at_his_one_block": [
+   1821,
+   1838
+  ],
+  "hold_to_end": [
+   1828,
+   1838
+  ]
+ },
+ "set": "v3/set3d8/desert.py desert_ice plain, SUMMER (white-hot sun, haze): set_ice('mud') + set_flames + set_stars keyed per frame; runtime dressing from shot.py dress(): a couched camel with saddle bags beyond the channels + two standing camels far north, 4 date palms, 3 water jars, a straw mat with 3 ice blocks by the porch, shrubs, rocks",
+ "dof": "none (client rule: cam.data.dof.use_dof False + D.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+ "narration": "film8/audio/narration.wav at +0.10 s; captions film8/script/captions.json",
+ "light": "SUMMER",
+ "cast": "v3/cast8: shot 20 merchant walk cycle (worried, sweat + heat, coin purse in the right hand), queue woman (water jar on the shoulder), oldman (stick), boy, woman (fanning) walking behind in single file, farid at the porch door (farid_smile, arms folded); shot 21 merchant_pay (sheepish, blush, scratching his turban, purse out; talk_mouth 1797..1827 only), farid (mirrored) holding out one ice block; props swap at g 1817",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 14.24,
+ "s_per_frame_cpu_mean": 27.95,
+ "s_per_frame_by_setup": {
+  "wide": {
+   "wall": 14.13,
+   "cpu": 27.75
+  },
+  "two_shot": {
+   "wall": 14.36,
+   "cpu": 28.17
+  }
+ },
+ "frame_source": {
+  "1661": "20",
+  "1662": "20",
+  "1663": "20",
+  "1664": "20",
+  "1665": "20",
+  "1666": "20",
+  "1667": "20",
+  "1668": "20",
+  "1669": "20",
+  "1670": "20",
+  "1671": "20",
+  "1672": "20",
+  "1673": "20",
+  "1674": "20",
+  "1675": "20",
+  "1676": "20",
+  "1677": "20",
+  "1678": "20",
+  "1679": "20",
+  "1680": "20",
+  "1681": "20",
+  "1682": "20",
+  "1683": "20",
+  "1684": "20",
+  "1685": "20",
+  "1686": "20",
+  "1687": "20",
+  "1688": "20",
+  "1689": "20",
+  "1690": "20",
+  "1691": "20",
+  "1692": "20",
+  "1693": "20",
+  "1694": "20",
+  "1695": "20",
+  "1696": "20",
+  "1697": "20",
+  "1698": "20",
+  "1699": "20",
+  "1700": "20",
+  "1701": "20",
+  "1702": "20",
+  "1703": "20",
+  "1704": "20",
+  "1705": "20",
+  "1706": "20",
+  "1707": "20",
+  "1708": "20",
+  "1709": "20",
+  "1710": "20",
+  "1711": "20",
+  "1712": "20",
+  "1713": "20",
+  "1714": "20",
+  "1715": "20",
+  "1716": "20",
+  "1717": "20",
+  "1718": "20",
+  "1719": "20",
+  "1720": "20",
+  "1721": "20",
+  "1722": "20",
+  "1723": "20",
+  "1724": "20",
+  "1725": "20",
+  "1726": "20",
+  "1727": "20",
+  "1728": "20",
+  "1729": "20",
+  "1730": "20",
+  "1731": "20",
+  "1732": "20",
+  "1733": "20",
+  "1734": "20",
+  "1735": "20",
+  "1736": "20",
+  "1737": "20",
+  "1738": "20",
+  "1739": "20",
+  "1740": "20",
+  "1741": "20",
+  "1742": "20",
+  "1743": "20",
+  "1744": "20",
+  "1745": "20",
+  "1746": "20",
+  "1747": "20",
+  "1748": "20",
+  "1749": "20",
+  "1750": "20",
+  "1751": "20",
+  "1752": "21",
+  "1753": "21",
+  "1754": "21",
+  "1755": "21",
+  "1756": "21",
+  "1757": "21",
+  "1758": "21",
+  "1759": "21",
+  "1760": "21",
+  "1761": "21",
+  "1762": "21",
+  "1763": "21",
+  "1764": "21",
+  "1765": "21",
+  "1766": "21",
+  "1767": "21",
+  "1768": "21",
+  "1769": "21",
+  "1770": "21",
+  "1771": "21",
+  "1772": "21",
+  "1773": "21",
+  "1774": "21",
+  "1775": "21",
+  "1776": "21",
+  "1777": "21",
+  "1778": "21",
+  "1779": "21",
+  "1780": "21",
+  "1781": "21",
+  "1782": "21",
+  "1783": "21",
+  "1784": "21",
+  "1785": "21",
+  "1786": "21",
+  "1787": "21",
+  "1788": "21",
+  "1789": "21",
+  "1790": "21",
+  "1791": "21",
+  "1792": "21",
+  "1793": "21",
+  "1794": "21",
+  "1795": "21",
+  "1796": "21",
+  "1797": "21",
+  "1798": "21",
+  "1799": "21",
+  "1800": "21",
+  "1801": "21",
+  "1802": "21",
+  "1803": "21",
+  "1804": "21",
+  "1805": "21",
+  "1806": "21",
+  "1807": "21",
+  "1808": "21",
+  "1809": "21",
+  "1810": "21",
+  "1811": "21",
+  "1812": "21",
+  "1813": "21",
+  "1814": "21",
+  "1815": "21",
+  "1816": "21",
+  "1817": "21",
+  "1818": "21",
+  "1819": "21",
+  "1820": "21",
+  "1821": "21",
+  "1822": "21",
+  "1823": "21",
+  "1824": "21",
+  "1825": "21",
+  "1826": "21",
+  "1827": "21",
+  "1828": "21",
+  "1829": "21",
+  "1830": "21",
+  "1831": "21",
+  "1832": "21",
+  "1833": "21",
+  "1834": "21",
+  "1835": "21",
+  "1836": "21",
+  "1837": "21",
+  "1838": "21"
+ }
+}

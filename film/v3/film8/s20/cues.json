@@ -1,0 +1,93 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film8/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 55.367,
+   "duration": 5.9,
+   "frame": 1661,
+   "end_frame": 1838,
+   "kind": "ambience",
+   "label": "desert summer noon: hot dry wind, cicada-like heat buzz, distant camel grunt; a warm, gently comic ending pad"
+  },
+  {
+   "time": 55.567,
+   "duration": 0.0,
+   "frame": 1667,
+   "end_frame": 1667,
+   "kind": "cut",
+   "label": "cut from the cold starry night to blazing summer: a bright warm swell"
+  },
+  {
+   "time": 55.567,
+   "duration": 2.8,
+   "frame": 1667,
+   "end_frame": 1751,
+   "kind": "foley",
+   "label": "the queue's footsteps on hard dry earth, the merchant's heavy coin purse jingling with each step, a palm fan flapping",
+   "peak_frame": 1700
+  },
+  {
+   "time": 56.667,
+   "duration": 0.4,
+   "frame": 1700,
+   "end_frame": 1712,
+   "kind": "foley",
+   "label": "the merchant puffs and pants in the heat",
+   "peak_frame": 1705
+  },
+  {
+   "time": 58.4,
+   "duration": 0.0,
+   "frame": 1752,
+   "end_frame": 1752,
+   "kind": "cut",
+   "label": "cut to the two-shot at the dome door"
+  },
+  {
+   "time": 58.4,
+   "duration": 1.433,
+   "frame": 1752,
+   "end_frame": 1795,
+   "kind": "foley",
+   "label": "sheepish turban scratch (a small cloth rustle), coins clink as he holds out the purse",
+   "peak_frame": 1770
+  },
+  {
+   "time": 59.9,
+   "duration": 1.0,
+   "frame": 1797,
+   "end_frame": 1827,
+   "kind": "dialogue",
+   "label": "merchant's line '\u0e02\u0e49\u0e32\u0e08\u0e30\u0e0b\u0e37\u0e49\u0e2d\u0e2b\u0e21\u0e14\u0e40\u0e25\u0e22' (in the narration) lip-synced"
+  },
+  {
+   "time": 59.933,
+   "duration": 0.467,
+   "frame": 1798,
+   "end_frame": 1812,
+   "kind": "accent",
+   "label": "farid holds out one ice block: a cold crystal shimmer",
+   "peak_frame": 1810
+  },
+  {
+   "time": 60.567,
+   "duration": 0.1,
+   "frame": 1817,
+   "end_frame": 1820,
+   "kind": "prop",
+   "label": "the swap: a heavy coin thud into farid's hand + an ice clink",
+   "peak_frame": 1817
+  },
+  {
+   "time": 60.933,
+   "duration": 0.333,
+   "frame": 1828,
+   "end_frame": 1838,
+   "kind": "accent",
+   "label": "the merchant looks at his single block: a light comic button / sting to end the film",
+   "peak_frame": 1830
+  }
+ ]
+}

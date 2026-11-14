@@ -1,0 +1,6 @@
+raw/
+frames/
+work/
+work_*.log
+take.mkv
+__pycache__/
