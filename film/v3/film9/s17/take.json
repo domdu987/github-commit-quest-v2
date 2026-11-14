@@ -1,0 +1,100 @@
+{
+ "first_g": 1407,
+ "last_g": 1559,
+ "setups": {
+  "1": [
+   1407,
+   1559
+  ]
+ },
+ "meta": {
+  "take": "s17",
+  "film": 9,
+  "shots": [
+   17
+  ],
+  "g0": 1413,
+  "g1": 1554,
+  "handle_in": 6,
+  "handle_out": 6,
+  "transition_in": {
+   "type": "dissolve",
+   "frames": 8,
+   "note": "time passes: the battle night (macro, shot 16) -> dawn after the battle; 6 in-handle frames g 1407..1412 rendered in 3D"
+  },
+  "transition_out": {
+   "type": "cut",
+   "frames": 0,
+   "note": "shot 18 (s18) cuts in at g 1554; out-handle g 1554..1559 rendered (move continues)"
+  },
+  "shot_ranges": {
+   "17": [
+    1413,
+    1553
+   ]
+  },
+  "setups": {
+   "1": {
+    "g": [
+     1407,
+     1559
+    ],
+    "set": "wall_site (two_sections_out build), light DAWN with the sun moved at runtime to az -35 el 9 (field side) so it rakes Lin's outer face; heights lin 26 / general 30; enemy cannons standing abandoned (army on, no gunners), smoke 0.35, flames 0.7; Lin's three dents (set_impact lin 0..2 t 1, balls embedded) + hairlines (set_cracks lin 0.6); custom camera from the field (between cannons and wall) looking west along Lin's section, 20 mm, slow push + rise + orbit (0.35 sine + 0.65 linear)"
+   }
+  },
+  "events": {
+   "lin_looks_up_at_wall": [
+    1407,
+    1500
+   ],
+   "turns_to_us_calm_smile": [
+    1496,
+    1510
+   ],
+   "blinks": [
+    1440,
+    1501,
+    1540
+   ]
+  },
+  "set": "v3/set3d9/wall.py wall_site: set_wall_height, set_impact, set_cracks, set_collapse(0), set_smoke, set_army, set_flames keyed every frame; runtime only: W.LIGHTS['DAWN'] key_dir/sun_elev override in this process (wall.py untouched)",
+  "cast": "v3/cast9 lin: STORY9 lin_watch mirrored (looking up at his wall, screen-left) -> lin_calm (arms folded, calm smile) behind the blink at g 1501 ('ยังตั้งอยู่' 49.97 s)",
+  "dof": "none (cam.data.dof.use_dof False + setup_dof(None) at build and before every render)",
+  "light": "DAWN (sun az -35)",
+  "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json"
+ },
+ "cues": [
+  [
+   1407,
+   1560,
+   "ambience",
+   "dawn after the battle: hush, a few birds returning, a soft wind over the field, the last embers ticking, distant crows; a warm slow pad (relief)"
+  ],
+  [
+   1407,
+   1560,
+   "fx",
+   "thin smoke drifting, faint crackle of a dying fire pot by an abandoned cannon"
+  ],
+  [
+   1440,
+   1500,
+   "accent",
+   "a gentle low string swell as the camera rises along the dented but whole rice-mortar wall",
+   1470
+  ],
+  [
+   1496,
+   1512,
+   "accent",
+   "Lin turns to us with a calm smile: a soft warm pluck / chime",
+   1502
+  ],
+  [
+   1554,
+   1554,
+   "cut",
+   "cut to shot 18 (battle, the general's section)"
+  ]
+ ]
+}

@@ -1,0 +1,232 @@
+{
+ "first_g": 1548,
+ "last_g": 1766,
+ "setups": {
+  "1": [
+   1548,
+   1625
+  ],
+  "2": [
+   1626,
+   1665
+  ],
+  "3": [
+   1666,
+   1766
+  ]
+ },
+ "meta": {
+  "take": "s18",
+  "film": 9,
+  "shots": [
+   18,
+   19
+  ],
+  "g0": 1554,
+  "g1": 1767,
+  "handle_in": 6,
+  "handle_out": 0,
+  "transition_in": {
+   "type": "cut",
+   "frames": 0,
+   "note": "dawn (s17) -> back to the battle; in-handle g 1548..1553 rendered in 3D"
+  },
+  "transition_out": {
+   "type": "end",
+   "frames": 0,
+   "note": "last film frame g 1766 (N 1767), no out-handle; 'ข้างบน' ends at 58.40 s = g 1755"
+  },
+  "shot_ranges": {
+   "18": [
+    1554,
+    1625
+   ],
+   "19": [
+    1626,
+    1766
+   ]
+  },
+  "transitions": [
+   {
+    "at": 1626,
+    "type": "cut",
+    "note": "plan cut shot 18 -> 19 (wall_top)"
+   },
+   {
+    "at": 1666,
+    "type": "cut",
+    "note": "inside shot 19: wall_top -> wide from the field for the collapse (plan 'wall_top -> two_sections')"
+   }
+  ],
+  "setups": {
+   "1": {
+    "g": [
+     1548,
+     1625
+    ],
+    "set": "wall_site two_sections_out build, BATTLE (army, smoke 1, fires); custom camera from the field, oblique onto the general's section, 20 mm, slow push, small kick on each hit; the general laughs on top (y 1.0, z 16)"
+   },
+   "2": {
+    "g": [
+     1626,
+     1665
+    ],
+    "set": "same build; wall_top camera +2 D for 30 courses, slow push, shake on the 3rd hit; the general laughs mid-top"
+   },
+   "3": {
+    "g": [
+     1666,
+     1766
+    ],
+    "set": "same build; custom wide camera from the field (x -3..-0.8, y -19.6..-17.8), slow push + tilt down to the rubble; collapse + slide"
+   }
+  },
+  "events": {
+   "hit_1": 1592,
+   "cracks_0.33": [
+    1592,
+    1600
+   ],
+   "hit_2": 1613,
+   "cracks_0.66": [
+    1613,
+    1632
+   ],
+   "cut_wall_top": 1626,
+   "hit_3": 1653,
+   "cracks_1": [
+    1653,
+    1660
+   ],
+   "cut_wide": 1666,
+   "collapse": [
+    1660,
+    1715
+   ],
+   "general_drops": [
+    1666,
+    1692
+   ],
+   "helmet_flies": [
+    1672,
+    1690
+   ],
+   "slides_down_rubble": [
+    1692,
+    1714
+   ],
+   "sits_laughing": [
+    1714,
+    1766
+   ]
+  },
+  "set": "v3/set3d9/wall.py wall_site: set_wall_height (26/30), set_impact (lin 0..2 at t 1; general 0..2 animated, hit at t 0.35 = g 1592 / 1613 / 1653, 46 frames per shot), set_cracks general 0 -> 0.33 -> 0.66 -> 1, set_collapse 0 -> 1 (g 1660..1715), set_smoke 1, set_army, set_flames keyed every frame; runtime: a helmet card (cast9.helmet_svg) lying in the rubble from g 1691",
+  "cast": "v3/cast9 general (CANVAS9_FALL canvas throughout): general_wall_laugh (wobbles on each hit) -> general_fall with expr laughing (lie 42 +- 10, flailing, helmet_off 0 -> 1 g 1672..1690, dust) along the set's slide_out path -> general_land (sitting in the dust, bare topknot, laughing). Static mouths (no quote).",
+  "dof": "none",
+  "light": "BATTLE",
+  "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json"
+ },
+ "cues": [
+  [
+   1548,
+   1767,
+   "ambience",
+   "battle dusk: crackling fires, smoke, distant drums and shouting of the enemy camp; tense low percussion building"
+  ],
+  [
+   1576,
+   1580,
+   "sfx",
+   "cannon 1 fires: deep boom + whoosh of the ball",
+   1576
+  ],
+  [
+   1592,
+   1604,
+   "sfx",
+   "impact on plain mortar: hard crack, brittle stone splitting (crackle runs outward)",
+   1592
+  ],
+  [
+   1597,
+   1601,
+   "sfx",
+   "cannon 2 fires: boom + whoosh",
+   1597
+  ],
+  [
+   1613,
+   1632,
+   "sfx",
+   "impact + long tearing crackle racing along the whole row of courses",
+   1613
+  ],
+  [
+   1548,
+   1665,
+   "voice_fx",
+   "the general's big belly laugh on top (non-verbal, under the narration)"
+  ],
+  [
+   1626,
+   1626,
+   "cut",
+   "cut to the top of the wall"
+  ],
+  [
+   1637,
+   1641,
+   "sfx",
+   "cannon 3 fires",
+   1637
+  ],
+  [
+   1653,
+   1665,
+   "sfx",
+   "impact below the parapet: heavy thud, the whole wall shudders (rumble), general's laugh hiccups",
+   1653
+  ],
+  [
+   1666,
+   1666,
+   "cut",
+   "cut to the wide"
+  ],
+  [
+   1660,
+   1720,
+   "sfx",
+   "the section collapses: grinding rumble, bricks tumbling, a huge dusty whoomph",
+   1680
+  ],
+  [
+   1666,
+   1692,
+   "comic",
+   "the general drops with a long cartoon 'wheee' slide-whistle down, still laughing",
+   1675
+  ],
+  [
+   1672,
+   1690,
+   "comic",
+   "helmet pops off: a 'boing' + whirring spin, then a tin clank as it lands",
+   1690
+  ],
+  [
+   1692,
+   1714,
+   "comic",
+   "he slides down the rubble on his backside: bumpy scraping slide, dust puffs",
+   1700
+  ],
+  [
+   1714,
+   1766,
+   "comic",
+   "he sits in the dust, coughs once and keeps laughing; a playful button-ending sting on the last word 'ข้างบน'",
+   1755
+  ]
+ ]
+}
