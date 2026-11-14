@@ -88,7 +88,8 @@ def cmd_card():
     out = os.path.join(FIN, 'card'); os.makedirs(out, exist_ok=True)
     subprocess.run(['python3', os.path.join(os.path.dirname(os.path.dirname(HERE)), 'card2.py'), bg, out, 'ช่างเชื่อมสายฟ้า · EP.1', 'V', str(CARD)], check=True)
     n = len([f for f in os.listdir(out) if f.endswith('.png')])
-    for i in range(n): Image.open(os.path.join(out, '%04d.png' % i)).convert('RGB').save(os.path.join(FIN, 'g_%04d.jpg' % (E.N + i)), quality=94)
+    step = max(1, round(n / (CARD * FPS)))   # card2.py renders at 60 fps; keep every 2nd frame for 30 fps
+    for k, i in enumerate(range(0, n, step)): Image.open(os.path.join(out, '%04d.png' % i)).convert('RGB').save(os.path.join(FIN, 'g_%04d.jpg' % (E.N + k)), quality=94)
     print('card frames', n)
 
 def cmd_mix():
