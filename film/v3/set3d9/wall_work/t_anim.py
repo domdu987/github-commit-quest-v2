@@ -1,0 +1,30 @@
+"""Hook test: key each hook over frames, then evaluate mid-shot frames and check the state moved. python3 t_anim.py"""
+import sys; sys.path.insert(0, '..'); import wall as W, bpy
+sc = bpy.context.scene; ok = []
+def chk(name, cond): ok.append((name, bool(cond))); print(('OK  ' if cond else 'FAIL') + ' ' + name)
+A = W.build('wall_site', 'two_sections_out', light='BATTLE'); W.make_camera(A['cam'])
+for f in range(1, 31):
+    t = (f - 1) / 29; W.set_impact('general', 0, t, frame=f); W.set_cracks('general', 0.33 * t, frame=f); W.set_smoke(1.0, frame=f); W.set_flames(1.0, frame=f); W.set_rain(1.0, frame=f)
+for f in range(31, 61): W.set_collapse((f - 31) / 29, frame=f)
+sc.frame_set(5); b5 = bpy.data.objects['ball_general_0'].location.copy(); sc.frame_set(9); b9 = bpy.data.objects['ball_general_0'].location.copy()
+chk('impact ball flies', (b9 - b5).length > 1.0)
+sc.frame_set(30); chk('dent decal shows after the hit', W.STATE['decals']['general'][0]['mat'].node_tree.nodes['vis'].outputs[0].default_value > 0.5)
+chk('cracks keyed', W.STATE['crack_mats']['general'].node_tree.nodes['lvl'].outputs[0].default_value > 0.3)
+s1 = W.STATE['smoke'][0]['ob'].location.z; sc.frame_set(20); chk('smoke rises', abs(W.STATE['smoke'][0]['ob'].location.z - s1) > 0.05)
+r1 = W.STATE['rain']['layers'][0][1].inputs['Y'].default_value; sc.frame_set(25); chk('rain scrolls', W.STATE['rain']['layers'][0][1].inputs['Y'].default_value != r1)
+sc.frame_set(45); ch = W.STATE['chunks'][5]['ob']; chk('collapse chunks fall', (ch.location - W.STATE['chunks'][5]['s']).length > 0.5 and not ch.hide_render)
+sc.frame_set(60); chk('rubble risen', W.STATE['rubble'].scale.z > 0.9 and not W.STATE['rubble'].hide_render)
+chk('top course gone', W.STATE['courses']['general'][29].hide_render)
+A = W.build('wall_site', 'cauldron'); 
+for f in (1, 30): W.set_cauldron_steam(1.0, frame=f)
+sc.frame_set(1); z1 = W.STATE['steam'][0]['ob'].location.z; sc.frame_set(15); chk('steam rises', W.STATE['steam'][0]['ob'].location.z != z1)
+W.clear_keys(); W.set_wall_height('lin', 10, frame=1); W.set_wall_height('lin', 20, frame=30); sc.frame_set(1); h1 = sum(not o.hide_render for o in W.STATE['courses']['lin']); sc.frame_set(30); h2 = sum(not o.hide_render for o in W.STATE['courses']['lin'])
+chk('wall height keyed 10 -> 20', (h1, h2) == (10, 20))
+W.set_mortar_wet(0.0, frame=1); W.set_mortar_wet(1.0, frame=30); sc.frame_set(15); chk('mortar wet eases', 0.2 < W.STATE['M']['brick_rice'].node_tree.nodes['wet'].outputs[0].default_value < 0.8)
+A = W.build('wall_site', 'mortar_macro_rice')
+for f in range(1, 31): W.set_macro((f - 1) / 29, frame=f)
+sc.frame_set(12); chk('rice dent + flex', W.STATE['macro']['web'].data.shape_keys.key_blocks['dent'].value > 0.3)
+A = W.build('wall_site', 'mortar_macro')
+for f in range(1, 31): W.set_macro((f - 1) / 29, frame=f)
+sc.frame_set(25); chk('plain crack spreads', W.STATE['macro']['mats'][0].node_tree.nodes['lvl'].outputs[0].default_value > 0.5)
+print('ALL OK' if all(c for _, c in ok) else 'FAILURES')
