@@ -10,7 +10,7 @@ out-handle: the film cuts on g 1940** (the last frame of the take = the last fra
 - **29a** g 1698-1747 low, up at Henry's shop front: a new hanging oak sign "13 =" (with a loaf icon) / "โหลของคนทำขนมปัง" swings
   on its rings over the shop opening (oven glow behind), slow pull + tilt. ("ฝรั่งเลยเรียกสิบสามว่า")
 - **29b** g 1748-1790 kit in front of the shop under the sign: looks up at it, then turns to the lens with a big grin holding a loaf up;
-  the loaf hops on "ขนมปัง" (g 1776). Kit head centre y 700-790... see numbers below.
+  the loaf hops on "ขนมปัง" (g 1776). Kit head 179-199 px wide, centre y 747-763.
 - **30a** g 1791-1830 Henry (pale 0.9, sweat drops, worried) locked in the pillory on the platform; a jeering woman and farmer in the
   foreground corners raise rotten tomatoes overhead (static open jeer mouths). Slow push. ("ส่วนลุงเฮนรี่ วันนั้นได้")
 - **30b** g 1831-1871 CU Henry (head ~420-475 px = 58-66 % of the width), eyes darting, "stunned" from "ของครบโหล", a gulp on "เป๊ะ";
@@ -22,14 +22,29 @@ out-handle: the film cuts on g 1940** (the last frame of the take = the last fra
 
 ## Client rules
 - **No depth of field** (common.Take: off at build and before every render). Background houses, bunting and sky sharp.
-- **Heads above y 880 / main head centre 0.35-0.59 H**: Henry 585-700 px in 30-31 (0.46-0.55 H). Kit in 29b ~ 700-790 px
-  (0.55-0.62 H, the sign above him needs the room; the whole head is above 880). 30a foreground townsfolk heads 700-770 px.
+- **Heads above y 880 / main head centre 0.35-0.59 H**: Henry centre y 567-618 px in 30, 620-699 px in 31 (0.44-0.55 H); head 149 px in 30a (wide with the crowd), 420-482 px in 30b, 473-510 px in 31. Kit in 29b 747-763 px
+  (0.58-0.60 H: up to 8 px past the 0.59 line because the sign above him needs the room; the whole head is above 880). 30a foreground townsfolk heads 700-770 px.
 - **Mouths**: nobody speaks; every mouth is the static mouth of its expression (Henry's "shocked"/"stunned" open mouth is static).
 - **Comic, not cruel**: splats are cartoon star-blobs with seeds and a drip (drawn in shot.py `splat_svg`; cast6's squash drawing
   read as a flat disc on a face), no injury; Henry flinches and blinks.
 - **Continuity**: Henry = round bald baker, pale + sweat as the plan's `henry_in_pillory`; pillory from cast6 (`pillory=True`), the
   set's 3D board + post cut out at runtime as in film-6 s33; kit the floury boy with a loaf.
 - **Thai text**: sign and counter rendered with PIL + raqm (Kanit Black, ink outline, glyph loops closed), readable at phone size.
+
+## Colour (`hue_report.row`, every 3rd final frame)
+```
+set                                            red orange yellow  green   cyan   blue violet magent   sat  val dark
+s29 shot 29                                   17.4   68.6    0.8    0.7    0.0    8.2    2.4    1.9  0.49 0.66 0.04
+s29 shots 30-31                               56.0   27.0    0.4    1.3    0.4    7.8    1.5    5.7  0.45 0.66 0.06
+```
+Warm shop front / sunny facade with blue sky and blue shade; 30-31 are red-heavy (Henry's tunic, tomatoes, bunting). No magenta cast.
+
+## Seconds per frame
+Mean 15.0 s wall / 25.0 s CPU per frame (market; two 2-thread processes in parallel on 4 cores).
+
+## Delivery
+`take.mkv` is 59.8 MB, so it is pushed as `take.mkv.partaa` + `take.mkv.partab` (`split -b 40M`); rejoin with
+`cat take.mkv.part* > take.mkv`.
 
 ## Notes
 - Cycles `transparent_max_bounces` raised to 64 in this take: with 12 splat cards stacked on Henry's card the default 12 gave a

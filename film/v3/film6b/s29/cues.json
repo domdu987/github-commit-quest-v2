@@ -1,0 +1,167 @@
+{
+ "take": "s29",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film6b/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 56.6,
+   "duration": 3.067,
+   "frame": 1698,
+   "end_frame": 1790,
+   "kind": "ambience",
+   "label": "market morning: birds, distant chatter; the sign creaks on its rings"
+  },
+  {
+   "time": 58.267,
+   "duration": 1.4,
+   "frame": 1748,
+   "end_frame": 1790,
+   "kind": "accent",
+   "label": "kit grins at us holding up a loaf: cheeky sting",
+   "peak_frame": 1770
+  },
+  {
+   "time": 59.7,
+   "duration": 2.667,
+   "frame": 1791,
+   "end_frame": 1871,
+   "kind": "ambience",
+   "label": "market crowd jeering, murmur rising"
+  },
+  {
+   "time": 62.2,
+   "duration": 0.2,
+   "frame": 1866,
+   "end_frame": 1872,
+   "kind": "accent",
+   "label": "henry gulps (cartoon gulp)",
+   "peak_frame": 1868
+  },
+  {
+   "time": 62.567,
+   "duration": 0.2,
+   "frame": 1877,
+   "end_frame": 1883,
+   "kind": "fx",
+   "label": "first tomato whoosh",
+   "peak_frame": 1880
+  },
+  {
+   "time": 62.767,
+   "duration": 0.1,
+   "frame": 1883,
+   "end_frame": 1886,
+   "kind": "fx",
+   "label": "SPLAT (big wet cartoon splat) on '\u0e21\u0e30\u0e40\u0e02\u0e37\u0e2d\u0e40\u0e17\u0e28'",
+   "peak_frame": 1883
+  },
+  {
+   "time": 63.0,
+   "duration": 0.067,
+   "frame": 1890,
+   "end_frame": 1892,
+   "kind": "fx",
+   "label": "splat 2 + counter tick",
+   "peak_frame": 1890
+  },
+  {
+   "time": 63.2,
+   "duration": 0.067,
+   "frame": 1896,
+   "end_frame": 1898,
+   "kind": "fx",
+   "label": "splat 3 + counter tick",
+   "peak_frame": 1896
+  },
+  {
+   "time": 63.367,
+   "duration": 0.067,
+   "frame": 1901,
+   "end_frame": 1903,
+   "kind": "fx",
+   "label": "splat 4 + counter tick",
+   "peak_frame": 1901
+  },
+  {
+   "time": 63.533,
+   "duration": 0.067,
+   "frame": 1906,
+   "end_frame": 1908,
+   "kind": "fx",
+   "label": "splat 5 + counter tick",
+   "peak_frame": 1906
+  },
+  {
+   "time": 63.667,
+   "duration": 0.067,
+   "frame": 1910,
+   "end_frame": 1912,
+   "kind": "fx",
+   "label": "splat 6 + counter tick",
+   "peak_frame": 1910
+  },
+  {
+   "time": 63.8,
+   "duration": 0.067,
+   "frame": 1914,
+   "end_frame": 1916,
+   "kind": "fx",
+   "label": "splat 7 + counter tick",
+   "peak_frame": 1914
+  },
+  {
+   "time": 63.933,
+   "duration": 0.067,
+   "frame": 1918,
+   "end_frame": 1920,
+   "kind": "fx",
+   "label": "splat 8 + counter tick",
+   "peak_frame": 1918
+  },
+  {
+   "time": 64.033,
+   "duration": 0.067,
+   "frame": 1921,
+   "end_frame": 1923,
+   "kind": "fx",
+   "label": "splat 9 + counter tick",
+   "peak_frame": 1921
+  },
+  {
+   "time": 64.133,
+   "duration": 0.067,
+   "frame": 1924,
+   "end_frame": 1926,
+   "kind": "fx",
+   "label": "splat 10 + counter tick",
+   "peak_frame": 1924
+  },
+  {
+   "time": 64.233,
+   "duration": 0.067,
+   "frame": 1927,
+   "end_frame": 1929,
+   "kind": "fx",
+   "label": "splat 11 + counter tick",
+   "peak_frame": 1927
+  },
+  {
+   "time": 64.333,
+   "duration": 0.067,
+   "frame": 1930,
+   "end_frame": 1932,
+   "kind": "fx",
+   "label": "splat 12 + counter tick",
+   "peak_frame": 1930
+  },
+  {
+   "time": 64.333,
+   "duration": 0.333,
+   "frame": 1930,
+   "end_frame": 1940,
+   "kind": "accent",
+   "label": "'12' counter: final ding; crowd cheer; HARD CUT at g 1940 (end of film)",
+   "peak_frame": 1930
+  }
+ ]
+}
