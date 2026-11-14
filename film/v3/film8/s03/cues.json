@@ -1,0 +1,101 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film8/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 5.733,
+   "duration": 0.267,
+   "frame": 172,
+   "end_frame": 180,
+   "kind": "transition",
+   "label": "dissolve from the cold desert night into the blazing noon bazaar: night ambience crossfades into the town"
+  },
+  {
+   "time": 5.733,
+   "duration": 14.733,
+   "frame": 172,
+   "end_frame": 614,
+   "kind": "ambience",
+   "label": "Persian bazaar at blazing noon: distant crowd murmur, a copper hammer tinkling far off, a donkey bray, cicada-like heat buzz, soft wind flapping awnings"
+  },
+  {
+   "time": 5.733,
+   "duration": 2.867,
+   "frame": 172,
+   "end_frame": 258,
+   "kind": "music",
+   "label": "crane down: a warm swelling oud / santur phrase, a high shimmering heat tone"
+  },
+  {
+   "time": 8.6,
+   "duration": 3.333,
+   "frame": 258,
+   "end_frame": 358,
+   "kind": "foley",
+   "label": "fans flapping (soft papery whoosh every ~4 frames), townsfolk sigh in the heat"
+  },
+  {
+   "time": 10.6,
+   "duration": 1.333,
+   "frame": 318,
+   "end_frame": 358,
+   "kind": "foley",
+   "label": "the boy hops on the burning ground: quick 'ow-ow' hops, bare feet slapping hot paving",
+   "peak_frame": 340
+  },
+  {
+   "time": 11.933,
+   "duration": 2.467,
+   "frame": 358,
+   "end_frame": 432,
+   "kind": "foley",
+   "label": "the merchant's huge belly laugh (booming, echoing off the arcade), jars ring faintly",
+   "peak_frame": 380
+  },
+  {
+   "time": 14.467,
+   "duration": 0.4,
+   "frame": 434,
+   "end_frame": 446,
+   "kind": "foley",
+   "label": "the merchant's ringed finger snaps up to point: a jangle of rings",
+   "peak_frame": 440
+  },
+  {
+   "time": 15.867,
+   "duration": 0.4,
+   "frame": 476,
+   "end_frame": 488,
+   "kind": "accent",
+   "label": "'\u0e44\u0e2d\u0e49\u0e1a\u0e49\u0e32!' jab: a comic sting",
+   "peak_frame": 480
+  },
+  {
+   "time": 16.667,
+   "duration": 0.1,
+   "frame": 500,
+   "end_frame": 503,
+   "kind": "accent",
+   "label": "farid's calm blink: a tiny soft tick",
+   "peak_frame": 500
+  },
+  {
+   "time": 18.033,
+   "duration": 2.433,
+   "frame": 541,
+   "end_frame": 614,
+   "kind": "foley",
+   "label": "the whole bazaar jeers and laughs, overlapping voices, pointing",
+   "peak_frame": 584
+  },
+  {
+   "time": 20.267,
+   "duration": 0.0,
+   "frame": 608,
+   "end_frame": 608,
+   "kind": "cut",
+   "label": "plan: cut to shot 8, the desert at dawn (wall_low)"
+  }
+ ]
+}
