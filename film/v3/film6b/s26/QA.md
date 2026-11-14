@@ -37,8 +37,17 @@ All drawn in shot.py: `loaf_cut_svg` (3 dryness variants), `drop_svg`, `puff_svg
 Drop simulation `DropSim` is deterministic (seeded): ~24 drops always in the crumb until shot 27, each leaving drop turns into a
 puff at 1.2-1.45 D above the base.
 
+## Colour (`hue_report.row`, every 3rd final frame)
+```
+set                                            red orange yellow  green   cyan   blue violet magent   sat  val dark
+s26 diagram 26-27                              0.5   11.8    0.0    0.0    0.0   87.2    0.0    0.4  0.55 0.84 0.03
+s26 bakery 28                                 17.0   66.9    8.0    0.0    0.0    2.3    2.5    3.3  0.43 0.56 0.06
+```
+The diagram is deliberately the cool counter-colour (blue 87 %, bright) against the warm bread; the bakery insert measures like the
+rest of the bakery set (warm, s01/s31 film-6 QA say the same). Not graded per shot; no magenta.
+
 ## Seconds per frame
-See meta.json (`s_per_frame_wall_*`): diagram ~3.5-4.5 s wall, bakery ~20 s wall (two 2-thread processes in parallel on 4 cores).
+Mean 13.2 s wall / 21.2 s CPU: diagram 4.5 s wall, bakery 23.7 s wall (two 2-thread processes in parallel on 4 cores).
 
 ## Differences from the plan
 - Shot 28 "ECU basket" is staged on the counter's hand balance (a little basket of 12 on the loaf pan), so "+1 balances the beam"

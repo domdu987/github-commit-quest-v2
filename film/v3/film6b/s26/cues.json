@@ -1,0 +1,103 @@
+{
+ "take": "s26",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film6b/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 48.4,
+   "duration": 4.667,
+   "frame": 1452,
+   "end_frame": 1592,
+   "kind": "ambience",
+   "label": "diagram: soft airy 'science' pad, light bubbly plinks as the drops leave the crumb"
+  },
+  {
+   "time": 48.767,
+   "duration": 0.167,
+   "frame": 1463,
+   "end_frame": 1468,
+   "kind": "accent",
+   "label": "red X stamped on the '\u0e04\u0e27\u0e31\u0e19' label: rubber-stamp thunk",
+   "peak_frame": 1463
+  },
+  {
+   "time": 49.633,
+   "duration": 0.167,
+   "frame": 1489,
+   "end_frame": 1494,
+   "kind": "accent",
+   "label": "'\u0e19\u0e49\u0e33' label pops in: bubble pop",
+   "peak_frame": 1489
+  },
+  {
+   "time": 51.067,
+   "duration": 0.7,
+   "frame": 1532,
+   "end_frame": 1553,
+   "kind": "fx",
+   "label": "drops race out of the crust: rising string of pops / whoosh up into the steam",
+   "peak_frame": 1535
+  },
+  {
+   "time": 51.8,
+   "duration": 1.267,
+   "frame": 1554,
+   "end_frame": 1592,
+   "kind": "prop",
+   "label": "pull back to the balance: the beam creaks as the loaf pan rises",
+   "peak_frame": 1570
+  },
+  {
+   "time": 52.467,
+   "duration": 0.133,
+   "frame": 1574,
+   "end_frame": 1578,
+   "kind": "accent",
+   "label": "tag flips 500 -> 480: card flip 'flick' + low 'bwomp'",
+   "peak_frame": 1574
+  },
+  {
+   "time": 53.1,
+   "duration": 3.867,
+   "frame": 1593,
+   "end_frame": 1709,
+   "kind": "ambience",
+   "label": "bakery morning: oven crackle, street murmur"
+  },
+  {
+   "time": 53.233,
+   "duration": 0.3,
+   "frame": 1597,
+   "end_frame": 1606,
+   "kind": "prop",
+   "label": "the pale 13th loaf drops into the basket: soft crusty thump + wicker creak",
+   "peak_frame": 1606
+  },
+  {
+   "time": 53.533,
+   "duration": 0.8,
+   "frame": 1606,
+   "end_frame": 1630,
+   "kind": "prop",
+   "label": "the balance swings and settles level: brass ting",
+   "peak_frame": 1610
+  },
+  {
+   "time": 53.667,
+   "duration": 0.167,
+   "frame": 1610,
+   "end_frame": 1615,
+   "kind": "accent",
+   "label": "'+1' badge pops: bright ding",
+   "peak_frame": 1610
+  },
+  {
+   "time": 54.967,
+   "duration": 2.0,
+   "frame": 1649,
+   "end_frame": 1709,
+   "kind": "fx",
+   "label": "tiny drops rising off the basket: faint plinks"
+  }
+ ]
+}
