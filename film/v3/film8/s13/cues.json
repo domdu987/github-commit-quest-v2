@@ -1,0 +1,102 @@
+{
+ "take": "s13",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film8/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 31.933,
+   "duration": 7.4,
+   "frame": 958,
+   "end_frame": 1180,
+   "kind": "ambience",
+   "label": "desert at blazing noon: hot dry wind over sand, cicada-like heat buzz, flies; distant camel bell; a lazy heat-haze drone"
+  },
+  {
+   "time": 31.933,
+   "duration": 0.7,
+   "frame": 958,
+   "end_frame": 979,
+   "kind": "foley",
+   "label": "farid snoring softly in the shade of the wall (slow in-out breaths, a little whistle)",
+   "peak_frame": 970
+  },
+  {
+   "time": 32.667,
+   "duration": 0.2,
+   "frame": 980,
+   "end_frame": 986,
+   "kind": "accent",
+   "label": "jolts awake: a sharp gasp + a comic 'boing' / spring stinger",
+   "peak_frame": 983
+  },
+  {
+   "time": 32.867,
+   "duration": 0.567,
+   "frame": 986,
+   "end_frame": 1003,
+   "kind": "foley",
+   "label": "panicked breaths, sandals scuffing as he springs up",
+   "peak_frame": 990
+  },
+  {
+   "time": 33.467,
+   "duration": 2.0,
+   "frame": 1004,
+   "end_frame": 1064,
+   "kind": "accent",
+   "label": "a slow wet squelch / bubbling mud (the ice has melted to mud); a sad descending 'wah-wah' brass",
+   "peak_frame": 1010
+  },
+  {
+   "time": 35.5,
+   "duration": 0.0,
+   "frame": 1065,
+   "end_frame": 1065,
+   "kind": "cut",
+   "label": "cut to the merchant, same place (ambience continues)"
+  },
+  {
+   "time": 35.5,
+   "duration": 1.567,
+   "frame": 1065,
+   "end_frame": 1112,
+   "kind": "foley",
+   "label": "the merchant's huge belly laugh, wheezing, slapping his knee (slaps on the right hand's down-beats)",
+   "peak_frame": 1085
+  },
+  {
+   "time": 35.867,
+   "duration": 1.2,
+   "frame": 1076,
+   "end_frame": 1112,
+   "kind": "foley",
+   "label": "laughing to tears: high-pitched helpless giggle, sniffles",
+   "peak_frame": 1095
+  },
+  {
+   "time": 37.1,
+   "duration": 1.9,
+   "frame": 1113,
+   "end_frame": 1170,
+   "kind": "dialogue",
+   "label": "merchant's quote (narration voice): '\u0e40\u0e2b\u0e47\u0e19\u0e21\u0e31\u0e49\u0e22 \u0e17\u0e30\u0e40\u0e25\u0e17\u0e23\u0e32\u0e22\u0e44\u0e21\u0e48\u0e21\u0e35\u0e19\u0e49\u0e33\u0e41\u0e02\u0e47\u0e07\u0e2b\u0e23\u0e2d\u0e01!' -- lip-sync"
+  },
+  {
+   "time": 38.733,
+   "duration": 0.6,
+   "frame": 1162,
+   "end_frame": 1180,
+   "kind": "foley",
+   "label": "bursts out laughing again on '\u0e2b\u0e23\u0e2d\u0e01!'",
+   "peak_frame": 1168
+  },
+  {
+   "time": 39.133,
+   "duration": 0.0,
+   "frame": 1174,
+   "end_frame": 1174,
+   "kind": "cut",
+   "label": "plan: cut to shot 15, the bazaar in summer"
+  }
+ ]
+}
