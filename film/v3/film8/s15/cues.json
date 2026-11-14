@@ -1,0 +1,92 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film8/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 38.933,
+   "duration": 3.433,
+   "frame": 1168,
+   "end_frame": 1271,
+   "kind": "ambience",
+   "label": "bazaar in high summer: oppressive heat buzz (cicadas), murmuring crowd, flies, a slow sweltering drone"
+  },
+  {
+   "time": 38.933,
+   "duration": 1.233,
+   "frame": 1168,
+   "end_frame": 1205,
+   "kind": "foley",
+   "label": "the merchant's palm fan flapping (one beat every 8 frames), heavy panting; soft simmering hiss of steam over the jars",
+   "peak_frame": 1180
+  },
+  {
+   "time": 40.2,
+   "duration": 0.0,
+   "frame": 1206,
+   "end_frame": 1206,
+   "kind": "cut",
+   "label": "cut to the well in the square (ambience continues)"
+  },
+  {
+   "time": 40.333,
+   "duration": 0.4,
+   "frame": 1210,
+   "end_frame": 1222,
+   "kind": "prop",
+   "label": "the woman tips the wooden bucket",
+   "peak_frame": 1216
+  },
+  {
+   "time": 40.467,
+   "duration": 1.9,
+   "frame": 1214,
+   "end_frame": 1271,
+   "kind": "foley",
+   "label": "warm water pouring into the clay jar (hollow glugging), a faint steam hiss",
+   "peak_frame": 1222
+  },
+  {
+   "time": 40.2,
+   "duration": 2.167,
+   "frame": 1206,
+   "end_frame": 1271,
+   "kind": "foley",
+   "label": "fans flapping (old man), the boy flapping his hand, sighs 'phew'",
+   "peak_frame": 1235
+  },
+  {
+   "time": 42.0,
+   "duration": 0.367,
+   "frame": 1260,
+   "end_frame": 1271,
+   "kind": "transition",
+   "label": "DISSOLVE to the inside of the dome: the bazaar noise fades out, a cool hollow room tone fades in"
+  },
+  {
+   "time": 42.2,
+   "duration": 2.9,
+   "frame": 1266,
+   "end_frame": 1353,
+   "kind": "ambience",
+   "label": "inside the yakhchal: cool reverberant hush, slow drips of meltwater, the lantern flame's soft flutter; a cool crystalline shimmer pad"
+  },
+  {
+   "time": 43.333,
+   "duration": 0.467,
+   "frame": 1300,
+   "end_frame": 1314,
+   "kind": "accent",
+   "label": "farid turns to us with a knowing smile: a light glassy 'ting'",
+   "peak_frame": 1310
+  },
+  {
+   "time": 44.9,
+   "duration": 0.0,
+   "frame": 1347,
+   "end_frame": 1347,
+   "kind": "cut",
+   "label": "plan: cut to shot 17 (night sky reveal)"
+  }
+ ]
+}

@@ -142,12 +142,31 @@ def pose_farid_d(g):
 
 
 # ----------------------------------------------------------------------------- steam (camera-only scrolling wisp cards)
+def _side_fade(mat):
+    """multiply the card alpha by sin(pi * frac(2 u)) ** 1.5: the steam fades out at the card's left and right edges (the wisp
+    texture runs to the sides; without this the cards showed hard vertical edges)."""
+    nt = mat.node_tree; N = nt.nodes.new; L = nt.links.new
+    kv = nt.nodes['steam_k']
+    st = [l.to_node for l in kv.outputs[0].links][0]             # the alpha x k multiply
+    other = [i for i in st.inputs if i.links and i.links[0].from_node != kv][0]
+    src = other.links[0].from_socket
+    uv = N('ShaderNodeUVMap'); sp = N('ShaderNodeSeparateXYZ'); L(uv.outputs['UV'], sp.inputs[0])
+    m2 = N('ShaderNodeMath'); m2.operation = 'MULTIPLY'; m2.inputs[1].default_value = 2.0; L(sp.outputs['X'], m2.inputs[0])
+    fr = N('ShaderNodeMath'); fr.operation = 'FRACT'; L(m2.outputs[0], fr.inputs[0])
+    mp = N('ShaderNodeMath'); mp.operation = 'MULTIPLY'; mp.inputs[1].default_value = math.pi; L(fr.outputs[0], mp.inputs[0])
+    sn = N('ShaderNodeMath'); sn.operation = 'SINE'; L(mp.outputs[0], sn.inputs[0])
+    pw = N('ShaderNodeMath'); pw.operation = 'POWER'; pw.inputs[1].default_value = 1.5; L(sn.outputs[0], pw.inputs[0])
+    mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; L(src, mu.inputs[0]); L(pw.outputs[0], mu.inputs[1])
+    L(mu.outputs[0], other)
+
+
 def make_steam(name, mouths, w=0.7, h=2.4, k=0.5, crossed=True):
     S = D.STATE
     mat = D.BK._mat_add("s15_steam_" + name, S['tx']['wisp'], (1.0, 1.0, 1.0), k, node='steam_k', scroll=True, fade=True)
+    _side_fade(mat)
     wb = D.MB()
     for i, (x, y, z) in enumerate(mouths):
-        u0 = 0.37 * i
+        u0 = 0.5 * i                                    # each card spans exactly half a texture width (side fade)
         dirs = ((1, 0), (0, 1)) if crossed else ((1, 0),)
         for (dx, dy) in dirs:
             wb.face([(x - dx * w / 2, y - dy * w / 2, z), (x + dx * w / 2, y + dy * w / 2, z), (x + dx * w / 2, y + dy * w / 2, z + h), (x - dx * w / 2, y - dy * w / 2, z + h)],

@@ -1,0 +1,338 @@
+{
+ "take": "s15",
+ "film": 8,
+ "shots": [
+  15,
+  16
+ ],
+ "first_g": 1168,
+ "n_frames": 185,
+ "g0": 1174,
+ "g1": 1347,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: shot 14 (merchant laughing) cuts to shot 15 at g 1174; in-handle g 1168..1173 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: shot 17 (NIGHT sky_reveal) follows at g 1347; handle g 1347..1352 rendered in 3D"
+ },
+ "transitions": [
+  {
+   "at": 1174,
+   "type": "cut",
+   "handle": [
+    1168,
+    1173
+   ]
+  },
+  {
+   "at": 1206,
+   "type": "cut",
+   "note": "inside shot 15: merchant's stall -> the well in the square (same bazaar, same light), on '\u0e19\u0e49\u0e33\u0e43\u0e19\u0e1a\u0e48\u0e2d\u0e17\u0e31\u0e49\u0e07\u0e40\u0e21\u0e37\u0e2d\u0e07'"
+  },
+  {
+   "at": 1266,
+   "type": "dissolve",
+   "frames": 12,
+   "blend": [
+    1260,
+    1271
+   ],
+   "note": "plan shot 15 -> 16 dissolve (bazaar -> inside the dome), blended in this take; both sides rendered 8 frames past the centre (raw/s2 to g 1274, raw/s3 from g 1258)"
+  },
+  {
+   "at": 1347,
+   "type": "out",
+   "handle": [
+    1347,
+    1352
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "15": [
+   1174,
+   1265
+  ],
+  "16": [
+   1266,
+   1346
+  ]
+ },
+ "setups": {
+  "1": {
+   "g": [
+    1168,
+    1205
+   ],
+   "set": "bazaar SUMMER, the water merchant's stall: camera from the street WSW of the takht looking NE (22 mm, z 3.7 -> 3.6), push 1.3 D + orbit; steam over the five great jars"
+  },
+  "2": {
+   "g": [
+    1206,
+    1274
+   ],
+   "set": "bazaar SUMMER, the square by the well (near the well_eye preset): camera SW looking NNE up at the iwan and minaret (22 mm, z 2.5, pitch +4), push 1.6 D; steam over the well and the poured jar"
+  },
+  "3": {
+   "g": [
+    1258,
+    1352
+   ],
+   "set": "desert_ice dome_interior SUMMER: camera on the walkway (20 mm) cranes down 0.7 D + pushes 1.7 D + pans onto farid on the ice; runtime ice-block stacks 2-5 high round him; warm lantern light + halo keyed to the drawn lantern"
+  }
+ },
+ "events": {
+  "merchant_sweats_fans": [
+   1168,
+   1205
+  ],
+  "cut_to_well": 1206,
+  "bucket_tips_pour": [
+   1210,
+   1222
+  ],
+  "pour_and_steam": [
+   1214,
+   1274
+  ],
+  "fanning": [
+   1206,
+   1274
+  ],
+  "dissolve": [
+   1260,
+   1271
+  ],
+  "farid_with_lantern": [
+   1260,
+   1352
+  ],
+  "farid_turns_to_us_smug": [
+   1300,
+   1314
+  ]
+ },
+ "lipsync": "none (no quote in shots 15-16; static mouths)",
+ "set": "v3/set3d8/desert.py: bazaar SUMMER (merchant_stall build) + desert_ice dome_interior SUMMER; set_flames + set_stars keyed every frame; runtime from shot.py: scrolling camera-only steam cards (bakery._mat_add with the set's wisp texture) over the merchant's five jars, the well water and the woman's jar; four jars + two pots in the square; a jar under the pour (keyed to the drawn stream end); 13 columns of ice blocks 2-5 high on the ice top in the dome; a warm point light + halo at farid's lantern",
+ "dof": "none (client rule)",
+ "denoiser": "OpenImageDenoise, prefilter FAST",
+ "narration": "film8/audio/narration.wav at +0.10 s; captions film8/script/captions.json",
+ "light": "SUMMER",
+ "cast": "v3/cast8: merchant (merchant_sweat, fan beating every 8 frames), woman (bucket pour 0.3 -> 0.86 into a jar, sweat + heat), oldman (town_fan_oldman mirrored), boy (town_fan_boy flapping hand), farid (lantern held up, happy -> smug, calm)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.82,
+ "s_per_frame_cpu_mean": 21.01,
+ "s_per_frame_by_setup": {
+  "15a_stall": {
+   "wall": 14.88,
+   "cpu": 28.78
+  },
+  "15b_well": {
+   "wall": 9.71,
+   "cpu": 19.31
+  },
+  "16_dome": {
+   "wall": 10.0,
+   "cpu": 19.14
+  }
+ },
+ "frame_source": {
+  "1168": "1",
+  "1169": "1",
+  "1170": "1",
+  "1171": "1",
+  "1172": "1",
+  "1173": "1",
+  "1174": "1",
+  "1175": "1",
+  "1176": "1",
+  "1177": "1",
+  "1178": "1",
+  "1179": "1",
+  "1180": "1",
+  "1181": "1",
+  "1182": "1",
+  "1183": "1",
+  "1184": "1",
+  "1185": "1",
+  "1186": "1",
+  "1187": "1",
+  "1188": "1",
+  "1189": "1",
+  "1190": "1",
+  "1191": "1",
+  "1192": "1",
+  "1193": "1",
+  "1194": "1",
+  "1195": "1",
+  "1196": "1",
+  "1197": "1",
+  "1198": "1",
+  "1199": "1",
+  "1200": "1",
+  "1201": "1",
+  "1202": "1",
+  "1203": "1",
+  "1204": "1",
+  "1205": "1",
+  "1206": "2",
+  "1207": "2",
+  "1208": "2",
+  "1209": "2",
+  "1210": "2",
+  "1211": "2",
+  "1212": "2",
+  "1213": "2",
+  "1214": "2",
+  "1215": "2",
+  "1216": "2",
+  "1217": "2",
+  "1218": "2",
+  "1219": "2",
+  "1220": "2",
+  "1221": "2",
+  "1222": "2",
+  "1223": "2",
+  "1224": "2",
+  "1225": "2",
+  "1226": "2",
+  "1227": "2",
+  "1228": "2",
+  "1229": "2",
+  "1230": "2",
+  "1231": "2",
+  "1232": "2",
+  "1233": "2",
+  "1234": "2",
+  "1235": "2",
+  "1236": "2",
+  "1237": "2",
+  "1238": "2",
+  "1239": "2",
+  "1240": "2",
+  "1241": "2",
+  "1242": "2",
+  "1243": "2",
+  "1244": "2",
+  "1245": "2",
+  "1246": "2",
+  "1247": "2",
+  "1248": "2",
+  "1249": "2",
+  "1250": "2",
+  "1251": "2",
+  "1252": "2",
+  "1253": "2",
+  "1254": "2",
+  "1255": "2",
+  "1256": "2",
+  "1257": "2",
+  "1258": "2",
+  "1259": "2",
+  "1260": "2+3",
+  "1261": "2+3",
+  "1262": "2+3",
+  "1263": "2+3",
+  "1264": "2+3",
+  "1265": "2+3",
+  "1266": "2+3",
+  "1267": "2+3",
+  "1268": "2+3",
+  "1269": "2+3",
+  "1270": "2+3",
+  "1271": "2+3",
+  "1272": "3",
+  "1273": "3",
+  "1274": "3",
+  "1275": "3",
+  "1276": "3",
+  "1277": "3",
+  "1278": "3",
+  "1279": "3",
+  "1280": "3",
+  "1281": "3",
+  "1282": "3",
+  "1283": "3",
+  "1284": "3",
+  "1285": "3",
+  "1286": "3",
+  "1287": "3",
+  "1288": "3",
+  "1289": "3",
+  "1290": "3",
+  "1291": "3",
+  "1292": "3",
+  "1293": "3",
+  "1294": "3",
+  "1295": "3",
+  "1296": "3",
+  "1297": "3",
+  "1298": "3",
+  "1299": "3",
+  "1300": "3",
+  "1301": "3",
+  "1302": "3",
+  "1303": "3",
+  "1304": "3",
+  "1305": "3",
+  "1306": "3",
+  "1307": "3",
+  "1308": "3",
+  "1309": "3",
+  "1310": "3",
+  "1311": "3",
+  "1312": "3",
+  "1313": "3",
+  "1314": "3",
+  "1315": "3",
+  "1316": "3",
+  "1317": "3",
+  "1318": "3",
+  "1319": "3",
+  "1320": "3",
+  "1321": "3",
+  "1322": "3",
+  "1323": "3",
+  "1324": "3",
+  "1325": "3",
+  "1326": "3",
+  "1327": "3",
+  "1328": "3",
+  "1329": "3",
+  "1330": "3",
+  "1331": "3",
+  "1332": "3",
+  "1333": "3",
+  "1334": "3",
+  "1335": "3",
+  "1336": "3",
+  "1337": "3",
+  "1338": "3",
+  "1339": "3",
+  "1340": "3",
+  "1341": "3",
+  "1342": "3",
+  "1343": "3",
+  "1344": "3",
+  "1345": "3",
+  "1346": "3",
+  "1347": "3",
+  "1348": "3",
+  "1349": "3",
+  "1350": "3",
+  "1351": "3",
+  "1352": "3"
+ }
+}
