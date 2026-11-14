@@ -132,16 +132,16 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 10.82,
- "s_per_frame_cpu_mean": 21.01,
+ "s_per_frame_wall_mean": 10.86,
+ "s_per_frame_cpu_mean": 21.14,
  "s_per_frame_by_setup": {
   "15a_stall": {
-   "wall": 14.88,
-   "cpu": 28.78
+   "wall": 14.84,
+   "cpu": 29.15
   },
   "15b_well": {
-   "wall": 9.71,
-   "cpu": 19.31
+   "wall": 9.85,
+   "cpu": 19.49
   },
   "16_dome": {
    "wall": 10.0,
