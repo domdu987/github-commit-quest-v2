@@ -30,7 +30,7 @@
     1407,
     1559
    ],
-   "set": "wall_site preset aftermath_dawn (round-3 set: warm low dawn sun az 326 raking Lin's outer face, DAWNG sky, rubble / spent ball / snapped stake / torn banner foreground), heights lin 26 / general 30, army off, smoke 0.2, flames 0.7; Lin's three dents (set_impact lin 0..2 t 1, balls embedded) + hairlines set_cracks lin 1.0; custom camera from the field near the preset camera (-13.4,-16.4,2.2)->(-10.6,-14.6,2.3) looking at Lin's section, 20 mm, slow push + drift (0.35 sine + 0.65 linear)"
+   "set": "wall_site preset aftermath_dawn (warm low dawn sun raking Lin's outer face, rubble / spent ball / snapped stake foreground), heights 26 / 30, army off, smoke 0.2; runtime (shot.py fix_set, wall.py untouched): Lin's dents 1.35x, painted soot + radiating crack cards over each dent, crack overlay alpha x4, embedded balls subdivided, foreground ball replaced by a smooth 64x32 sphere; wide camera (-8.8,-14.8,3.0)->(-10.6,-14.0,3.2) looking (-12.6..-12.8, 0, 5.4..5.5), 16 mm, slow push + drift"
   }
  },
  "events": {
@@ -49,7 +49,7 @@
   ]
  },
  "set": "v3/set3d9/wall.py (commit 5d511aa) wall_site aftermath_dawn: set_wall_height, set_impact, set_cracks, set_collapse(0), set_smoke, set_army, set_flames keyed every frame; no runtime changes to the set",
- "cast": "v3/cast9 lin: STORY9 lin_watch mirrored (looking up at his wall, screen-left) -> lin_calm (arms folded, calm smile) behind the blink at g 1501 ('\u0e22\u0e31\u0e07\u0e15\u0e31\u0e49\u0e07\u0e2d\u0e22\u0e39\u0e48' 49.97 s)",
+ "cast": "v3/cast9 lin at (-12.0,-4.2): lin_watch mirrored, expr stunned, head + gaze up at the wall (quiet wonder, no smile) until the blink g 1501-1503; on the closed frame g 1502 -> lin_calm with expr happy + smile, turning to the lens (g 1502-1512). No proxy shadow (it fell detached on the wall); contact decal 1.15 x 0.5 D, opacity 0.75.",
  "dof": "none (cam.data.dof.use_dof False + setup_dof(None) at build and before every render)",
  "light": "DAWN (aftermath_dawn override built into the set)",
  "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json",
@@ -62,8 +62,8 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 13.11,
- "s_per_frame_cpu_mean": 25.42,
+ "s_per_frame_wall_mean": 13.39,
+ "s_per_frame_cpu_mean": 25.26,
  "frame_source": {
   "1407": 1,
   "1408": 1,
@@ -219,9 +219,5 @@
   "1558": 1,
   "1559": 1
  },
- "mkv_parts": [
-  "take.mkv.partaa",
-  "take.mkv.partab"
- ],
- "mkv_note": "cat take.mkv.part* > take.mkv"
+ "qa_round": "QA-tech round 1 fixes: wide framing, bigger darker scorched dents + visible cracks, contact shadow, look-up then smile at the blink, smooth ball"
 }

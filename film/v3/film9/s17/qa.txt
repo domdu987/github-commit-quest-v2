@@ -1,8 +1,8 @@
-set-up 1 lin  head w  54.. 62 px, centre y  756.. 782 (0.59..0.61 H), x 211..277; bottom below 880: none
-set-up 1 render: wall 13.11 s, cpu 25.42 s per frame
+set-up 1 lin  head w  52.. 59 px, centre y  751.. 768 (0.59..0.60 H), x 337..367; bottom below 880: none
+set-up 1 render: wall 13.39 s, cpu 25.26 s per frame
 popcheck: pops []
 near-still transitions (< 0.35 levels): 0, longest run 0 frames []
-frame change median 1.31, max 1.70 levels
+frame change median 0.91, max 1.21 levels
 magenta / black frames: []
 set                                         red orange yellow  green   cyan   blue violet magent   sat  val dark
-s17 set-up 1 (g 1407-1559)                     40.0   32.4    7.1    0.0    0.0   16.2    1.9    2.4  0.33 0.62 0.02   OUT: sat,dark
+s17 set-up 1 (g 1407-1559)                     31.4   34.5    9.3    0.0    0.0   20.9    1.8    2.2  0.34 0.60 0.02   OUT: sat,dark
