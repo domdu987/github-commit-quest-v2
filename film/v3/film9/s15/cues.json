@@ -64,12 +64,12 @@
    "label": "inside the rice mortar joint: warm low drone, soft glowing hum"
   },
   {
-   "time": 43.0,
-   "duration": 1.567,
-   "frame": 1290,
-   "end_frame": 1337,
+   "time": 42.8,
+   "duration": 2.233,
+   "frame": 1284,
+   "end_frame": 1351,
    "kind": "accent",
-   "label": "the golden web spreads and wraps the crystals: a rising shimmering, sticky-stretchy sparkle",
+   "label": "the golden web around the crystals breathes with a soft glow: a gentle shimmering hum",
    "peak_frame": 1320
   },
   {
@@ -105,7 +105,7 @@
    "frame": 1386,
    "end_frame": 1413,
    "kind": "foley",
-   "label": "the ball bounces off and away, a light thud far off",
+   "label": "the ball settles, held in the web: a soft settling creak, warm glow tone",
    "peak_frame": 1395
   }
  ]

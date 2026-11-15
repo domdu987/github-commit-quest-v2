@@ -1,26 +1,25 @@
-# QA, film 9 take s15 (shots 15 + 16, the reveal), worker 4
+# QA, film 9 take s15 (shots 15 + 16, the reveal), worker 4, round 2 (QA-tech round 1 fixes)
 Frames g 1147..1418 (272 = 6 in-handle + shot 15 g 1153..1283 + shot 16 g 1284..1412 + 6 out-handle), 720x1280, 12 samples, 30 fps.
-`take.mkv` is 90 MB: delivered as `take.mkv.partaa` + `take.mkv.partab` + `take.mkv.partac` (`cat take.mkv.part* > take.mkv`). first_g 1147, n_frames 272.
+`take.mkv` 93.5 MB, delivered as `take.mkv.partaa` + `.partab` + `.partac` (`cat take.mkv.part* > take.mkv`). first_g 1147, n_frames 272.
 
-## What is on screen
-- Shot 15 (mortar_macro, plain, BATTLE, macro_front, slow push 2 D): calm grey joint with cyan lime crystals on
-  "ปูนธรรมดา แข็งก็จริง แต่เปราะ"; the ball enters at g ~1195 and hits on "โดนกระแทก" (g 1207): star-burst flash, small camera jolt,
-  black jagged cracks with orange running fronts race along the joint and into the bricks on "ทีเดียวก็ร้าวทั้งแผ่น" (g 1207..1262),
-  red / grey grit spalls, the ball drops away.
-- Shot 16 (mortar_macro_rice, same camera family, push from the other side): the gold starch net around the crystals on
-  "ส่วนแป้งข้าวเหนียว ไปพันกับผลึกปูนเป็นตาข่ายเหนียวหนึบ"; the ball flies in and hits at g 1380 ("ลูกปืนกระแทก"): gold ring pulse,
-  web flexes and holds; the ball springs back slightly and stays HELD in its glowing dent ring to the end ("แค่ไหนก็แค่บุบ"), visible (round-3 set note).
+## QA-tech round 1 -> fixes
+1. Ring: the set's thin pulse ring (expanding to the frame edge, turning olive) is hidden every frame.  New: a thick soft-glow emissive
+   gold ring hugging the ball (radial profile 1.3..2.5 x the ball radius, scale 0.82 -> 1.1) that fades to transparent with no colour
+   change (g 1380..1406); a gold glow burst along the web on impact (web strengths x ~2.9 at the hit, Gaussian 6 frames).
+2. Web flex: a 'bulge' shape key on the web (strands round the ball pushed outward ~0.42 D and into the joint) driven as a damped
+   spring from the hit, settling at a small held stretch; the ball stays held and visible in its glowing dent to the end.
+3. The calm part (g 1284..1351): longer camera push (10 -> 6.9 D) with a small orbit and a gentle gold glow pulse of the web
+   (+-24 %, 46-frame period).  Near-still transitions: 0.
+4. Recommended tilt: both halves now use an oblique orbit camera (24 -> 19 deg / 17 -> 23 deg yaw from the front-left, 6.5-11 deg
+   down, 24 mm): the warm fire key rakes across the bricks, crystals and web; same tilt family in both halves.
+Plain half: unchanged in content (star-burst flash at the hit g 1207, black cracks with orange fronts race through the joint).
 
 ## Checks (deliver.py -> work/qa.txt)
-- Pops: g 1283 -> 1284 = the planned cut (31.7); g 1182 -> 1183 (2.0) = the ball entering frame. No other pops.
-- Near-still transitions (< 0.35 levels): 0 (median frame change 1.57).
-- Black / magenta / blank frames: none. No DOF. No people (no heads, no mouths). No text.
-- Hue: red 83.6 / orange 7.0 / yellow 4.3 / cyan 3.0, sat 0.43, val 0.59: red-heavy by the set's macro design (warm-lit fired clay;
-  the set API reports macro plain ~75 % red); gold + cyan accents on the subject. No magenta (0.2).
-- s/frame: 12.0 s wall / 23.5 s CPU (2 threads, two processes): plain 11.9 / 23.4, rice 12.1 / 23.7.
+- Pops: only g 1283 -> 1284 = the planned cut (37.3). Near-still transitions: 0 (median frame change 2.15).
+- No heads / mouths / text; no DOF; no black or magenta frames. Smoke billows: none in front of the impact (bf() phase offset kept).
+- Hue: red 76.8 / orange 10.3 / yellow 4.7 / blue 4.5 / cyan 3.1, sat 0.42: warm fired-clay macro by the set's design, gold + cyan accents.
+- s/frame: 12.6 s wall / 22.8 s CPU (two processes, 2 threads): plain 12.4 / 22.5, rice 12.7 / 23.1.
 
-## Differences from the plan / notes
-- Plan: rice "the ball only dents and bounces off". Round-3 set + director: the ball is held in the dent (stays visible); followed the set.
-- The set's macro smoke billows take their phase from the Blender frame; shot 15's Blender frames are offset by one smoke cycle
-  (bf() in shot.py) so no billow drifts across the lens (at the first offset big billows covered the impact).
-- Shot 15 -> 16 is a hard cut inside the take (both macro_front, mirrored push directions).
+## Differences from the plan
+- Rice: the ball is held in its dent (round-3 set + director), not bouncing off.
+- The dark navy area at the lower left of some frames is the cool-shaded joint below the lower brick course (set geometry).

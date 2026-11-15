@@ -29,7 +29,7 @@
   {
    "at": 1284,
    "type": "cut",
-   "note": "plan cut shot 15 (plain) -> shot 16 (rice) at 42.80 s, inside the take; same camera angle on purpose (1:1 comparison)"
+   "note": "plan cut shot 15 (plain) -> shot 16 (rice) at 42.80 s, inside the take; same oblique camera family (1:1 comparison)"
   },
   {
    "at": 1413,
@@ -56,14 +56,14 @@
     1147,
     1283
    ],
-   "set": "wall.py mortar_macro (plain), BATTLE; custom oblique along the joint from the front-left (preset macro_plain moved), 22 mm, push ~2.1 D, jolt on the hit"
+   "set": "wall.py mortar_macro (plain), BATTLE; camera orbiting the impact 24-19 deg yaw from the front-left, 10-7 deg down, 9.8 -> 7.8 D, 24 mm (QA: oblique, raking light), jolt on the hit"
   },
   "16": {
    "g": [
     1284,
     1418
    ],
-   "set": "wall.py mortar_macro_rice, BATTLE; same oblique, closer start, push ~2.7 D, jolt on the hit; runtime radial reveal of the web material (the web spreads over the face g 1290..1337)"
+   "set": "wall.py mortar_macro_rice, BATTLE; same oblique family 17-23 deg yaw, 11-6.5 deg down, push 10 -> 6.9 D, 24 mm, jolt on the hit; runtime: set pulse ring hidden, soft gold glow ring hugging the ball (1.3-2.5 x ball r) fading to transparent, web glow breathing before / gold burst on impact, web bulge shape key (damped spring)"
   }
  },
  "events": {
@@ -81,25 +81,29 @@
    1230
   ],
   "cut_to_rice": 1284,
-  "web_spreads": [
-   1290,
-   1337
+  "web_glow_breathes": [
+   1284,
+   1351
   ],
   "rice_ball_flies_in": [
    1352,
    1380
   ],
   "rice_hit": 1380,
-  "web_flexes_and_holds": [
+  "gold_glow_ring": [
    1380,
-   1405
+   1406
   ],
-  "ball_bounces_off": [
-   1385,
-   1413
+  "web_bulges_springs_back_holds": [
+   1380,
+   1410
+  ],
+  "ball_held_in_dent": [
+   1386,
+   1418
   ]
  },
- "set": "v3/set3d9/wall.py macro area: set_macro(t) + set_flames keyed every frame; shot 16 adds a keyed radial transparent mix + glow scale on the web material (shot.py web_reveal_nodes / key_web)",
+ "set": "v3/set3d9/wall.py macro area: set_macro(t) + set_flames keyed every frame; shot 16 runtime additions in shot.py (make_glow_ring / key_rice)",
  "dof": "none",
  "denoiser": "OpenImageDenoise, prefilter FAST",
  "light": "BATTLE",
@@ -112,16 +116,16 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 12.0,
- "s_per_frame_cpu_mean": 23.54,
+ "s_per_frame_wall_mean": 12.55,
+ "s_per_frame_cpu_mean": 22.78,
  "s_per_frame_by_setup": {
   "15": {
-   "wall": 11.94,
-   "cpu": 23.41
+   "wall": 12.4,
+   "cpu": 22.49
   },
   "16": {
-   "wall": 12.07,
-   "cpu": 23.66
+   "wall": 12.71,
+   "cpu": 23.07
   }
  }
 }
