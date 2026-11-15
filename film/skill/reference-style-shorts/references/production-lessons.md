@@ -62,3 +62,13 @@ Automated final checks: frozen/black frame scan; per-sentence STT on the final m
 ## 5. Session hygiene
 Finished render teams can be archived (read-only, transcripts kept, unarchive possible; all work is on their git branches and the
 releases on the main branch in film/release*). Never touch sessions you did not create.
+
+## 6. Lessons from film 9 (sticky-rice mortar)
+- **Set gate before render.** Show the set contact sheet and wait for the client's OK before you launch any render team. Teams launched early had to be paused and redone.
+- **Never pause a worker session with a "wait for the user" instruction.** Afterwards it refuses a director "go", because messages from other sessions are not the user. If a worker blocks like that, spawn a fresh session for its takes and tell the old one to stand down. Do not argue with it.
+- **Watchdogs.** Before ending a turn with work in flight, schedule a progress check every 20-30 min with send_later. Background agents die silently on container restarts, so keep backups after every fix round.
+- **QA loop cap.** QA-tech (Sonnet) is strict. If the same take FAILs a third time on minor items, the director views 3-4 frames and overrides to PASS with a note in QA_TECH.md. An extra round costs about 30 min of render.
+- **Final QA that worked:**
+  - frozen/black-frame scan (qa_check.py)
+  - per-sentence faster-whisper STT on the final mix vs the clean narration, all ratios >= 0.93; pass numpy audio, not a file path, because newer PyAV breaks faster_whisper's decode
+  - QA-art (Opus) on a 1 fps sheet plus dense frames around the reveal and the ending
