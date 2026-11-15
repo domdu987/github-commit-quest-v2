@@ -1,6 +1,6 @@
 # QA, film 9 take s15 (shots 15 + 16, the reveal), worker 4
 Frames g 1147..1418 (272 = 6 in-handle + shot 15 g 1153..1283 + shot 16 g 1284..1412 + 6 out-handle), 720x1280, 12 samples, 30 fps.
-`take.mkv` is 90 MB: delivered as `take.mkv.partaa` + `take.mkv.partab` (`cat take.mkv.part* > take.mkv`). first_g 1147, n_frames 272.
+`take.mkv` is 90 MB: delivered as `take.mkv.partaa` + `take.mkv.partab` + `take.mkv.partac` (`cat take.mkv.part* > take.mkv`). first_g 1147, n_frames 272.
 
 ## What is on screen
 - Shot 15 (mortar_macro, plain, BATTLE, macro_front, slow push 2 D): calm grey joint with cyan lime crystals on
