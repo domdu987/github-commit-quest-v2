@@ -1,0 +1,84 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film9/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 23.033,
+   "duration": 6.7,
+   "frame": 691,
+   "end_frame": 892,
+   "kind": "ambience",
+   "label": "Ming construction site by day: mallets on brick, trowels scraping, distant shouts of workers, the cauldron fire crackling, banners flapping in the wind"
+  },
+  {
+   "time": 23.233,
+   "duration": 0.0,
+   "frame": 697,
+   "end_frame": 697,
+   "kind": "cut",
+   "label": "cut in to the two sections (month 1)"
+  },
+  {
+   "time": 24.633,
+   "duration": 0.0,
+   "frame": 739,
+   "end_frame": 739,
+   "kind": "accent",
+   "label": "a brick course thunks into place on the general's section (wooden 'tok')",
+   "peak_frame": 739
+  },
+  {
+   "time": 24.9,
+   "duration": 0.0,
+   "frame": 747,
+   "end_frame": 747,
+   "kind": "accent",
+   "label": "second course thunks into place, a little higher pitch",
+   "peak_frame": 747
+  },
+  {
+   "time": 25.267,
+   "duration": 0.0,
+   "frame": 758,
+   "end_frame": 758,
+   "kind": "accent",
+   "label": "third course thunks into place: a proud brass 'ta-da' sting on 'สามชั้น'",
+   "peak_frame": 758
+  },
+  {
+   "time": 25.467,
+   "duration": 0.9,
+   "frame": 764,
+   "end_frame": 791,
+   "kind": "foley",
+   "label": "the general's armour clinks as he puffs up; a smug 'hmph'",
+   "peak_frame": 768
+  },
+  {
+   "time": 26.4,
+   "duration": 0.0,
+   "frame": 792,
+   "end_frame": 792,
+   "kind": "cut",
+   "label": "cut to the top of the general's wall (month 2): wind gust up high"
+  },
+  {
+   "time": 26.4,
+   "duration": 3.133,
+   "frame": 792,
+   "end_frame": 886,
+   "kind": "foley",
+   "label": "the general's big booming belly laugh, armour plates rattling with each shake",
+   "peak_frame": 830
+  },
+  {
+   "time": 29.567,
+   "duration": 0.0,
+   "frame": 887,
+   "end_frame": 887,
+   "kind": "cut",
+   "label": "plan: cut to shot 12 (rain): thunder roll and rain start"
+  }
+ ]
+}
