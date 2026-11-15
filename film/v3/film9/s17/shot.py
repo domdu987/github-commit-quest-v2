@@ -36,9 +36,9 @@ def bf(shot, g):
 
 
 LIN = Vector((-12.0, -4.2, 0.0))
-CAM0 = ((-8.8, -14.8, 3.0), (-12.6, 0.0, 5.4))
-CAM1 = ((-10.6, -14.0, 3.2), (-12.8, 0.0, 5.5))
-LENS = 16.0
+CAM0 = ((-11.0, -18.6, 4.2), (-11.6, 0.0, 6.0))
+CAM1 = ((-12.2, -17.4, 4.0), (-12.0, 0.0, 6.1))
+LENS = 14.0
 PPD = 200
 
 
@@ -57,12 +57,12 @@ def pose(g):
     and gaze up-left; the expression and the turn to the lens change on the closed frame g 1502 ('happy' smile, arms folded)."""
     if g < G_TURN:                                       # g < 1502 (closed eyes frame of the blink 1501..1503)
         p = dict(cast9.STORY9["lin_watch"][1])
-        p.update(mirror=True, pitch=-0.8 + 0.06 * math.sin(g * 0.09), gaze=(0.55 + 0.15 * math.sin(g * 0.07), -0.95), expr="stunned", mouth="dash",
-                 yaw=0.45, head_roll=3.0 + 2.0 * math.sin(g * 0.11), lean=-1.0 + 0.8 * math.sin(g * 0.06))
+        p.update(mirror=True, pitch=-1.15 + 0.06 * math.sin(g * 0.09), gaze=(0.55 + 0.15 * math.sin(g * 0.07), -0.95), expr="stunned", mouth="dash",
+                 yaw=0.9, head_roll=9.0 + 2.0 * math.sin(g * 0.11), lean=-3.0 + 0.8 * math.sin(g * 0.06))
     else:
         tu = u_of(g, G_TURN, G_TURN + 10)
         p = dict(cast9.STORY9["lin_calm"][1])
-        p.update(expr="happy", mouth="smile", gaze=(0.0, 0.0), yaw=lerp(0.35, 0.2, tu), pitch=lerp(-0.45, -0.2, tu) + 0.05 * math.sin(g * 0.1),
+        p.update(expr="happy", mouth="smile", gaze=(0.0, 0.0), yaw=lerp(0.6, 0.2, tu), pitch=lerp(-0.8, -0.2, tu) + 0.05 * math.sin(g * 0.1),
                  head_roll=-5.0 + 2.0 * math.sin(g * 0.11), lean=1.2 * math.sin(g * 0.08))
     p["blink"] = blink(g, [1440, G_TURN - 1, 1545])
     p["t"] = g / 30.0
@@ -164,7 +164,9 @@ class Take(C.Take):
         fix_set()
         # no proxy shadow (the low sun threw it onto the wall, detached from his feet); a darker contact decal under the feet instead
         self.lin = self.actors["lin"] = C.make_actor("lin", "lin", os.path.join(TMP, "sprites"), shadow=None,
-                                                     contact=dict(width=1.15, depth=0.5, color="#1e1a24", opacity=0.75))
+                                                     contact=dict(width=1.6, depth=0.7, color="#140c08", opacity=0.9))
+        if self.lin.contact is not None:
+            self.lin.contact.location.z = 0.035              # just above the uneven soil
 
     def pose(self, shot, gs):
         for g in gs:
