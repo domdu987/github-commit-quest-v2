@@ -35,11 +35,10 @@ def bf(shot, g):
     return int(g) - 1300                                  # Blender frame (one set-up)
 
 
-LIN = Vector((-5.0, -7.0, 0.0))
-CAM0 = ((4.6, -18.2, 2.3), (-11.0, 0.0, 6.4))
-CAM1 = ((2.6, -15.6, 2.5), (-12.5, 0.0, 6.0))
+LIN = Vector((-13.8, -3.0, 0.0))
+CAM0 = ((-13.4, -16.4, 2.2), (-12.0, 0.0, 5.4))
+CAM1 = ((-10.6, -14.6, 2.3), (-11.6, 0.0, 5.6))
 LENS = 20.0
-SUN_AZ = -35.0
 PPD = 200
 
 
@@ -70,10 +69,7 @@ def pose(g):
 
 class Take(C.Take):
     def __init__(self, quality="preview", shot=1):
-        # runtime light tweak (set module untouched): the DAWN sun moved from az 20 (edge-on to the outer face) to az SUN_AZ, el 9 on
-        # the field side, so the low pink-gold dawn sun rakes across Lin's dented outer face (warm lit) instead of leaving it in shade.
-        W.LIGHTS["DAWN"] = dict(W.LIGHTS["DAWN"], key_dir=W._kdaz(SUN_AZ, 9.0), sun_elev=9.0)
-        C.Take.__init__(self, "wall_site", "two_sections_out", quality=quality, lens=LENS, name="cam_s17", light="DAWN")
+        C.Take.__init__(self, "wall_site", "aftermath_dawn", quality=quality, lens=LENS, name="cam_s17", light="DAWN")
         self.lin = self.actors["lin"] = C.make_actor("lin", "lin", os.path.join(TMP, "sprites"))
 
     def pose(self, shot, gs):
@@ -83,8 +79,8 @@ class Take(C.Take):
             self.key_cam(f, loc, look, lens=LENS)
             C.place(self.lin, f, LIN)
             W.set_wall_height("lin", 26, frame=f); W.set_wall_height("general", 30, frame=f)
-            self.key_set(f, flames=0.7, smoke=0.35, army=True, impact=[("lin", i, 1.0) for i in range(3)] + [("general", i, 0.0) for i in range(3)],
-                         cracks=("lin", 0.6), collapse=0.0)
+            self.key_set(f, flames=0.7, smoke=0.2, army=False, impact=[("lin", i, 1.0) for i in range(3)] + [("general", i, 0.0) for i in range(3)],
+                         cracks=("lin", 1.0), collapse=0.0)
             W.set_cracks("general", 0.0, frame=f)
         for g in gs:
             f = bf(shot, g)

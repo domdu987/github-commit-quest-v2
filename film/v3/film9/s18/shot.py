@@ -41,12 +41,12 @@ RANGES = {1: (G0 - H, G_19 - 1), 2: (G_19, G_19B - 1), 3: (G_19B, G_LAST)}
 HIT = [C.g_of(52.96), C.g_of(53.68), C.g_of(54.99)]      # 1592, 1613, 1653
 T_IMP = 46.0                                             # frames for set_impact t 0 -> 1; the hit is at t 0.35
 G_COL = (1660, 1715)                                     # set_collapse 0 -> 1
-TOP = Vector((8.0, 1.0, 16.0))                           # the general on his section's top (30 courses: top z 16)
-SLIDE = [Vector(p) for p in [(8.0, 1.0, 16.0), (8.0, -1.5, 4.6), (8.0, -5.0, 2.0), (8.0, -8.5, 0.2)]]
+TOP = Vector((5.4, 1.0, 16.0))                           # the general on his section's top (30 courses: top z 16)
+SLIDE = [Vector(p) for p in [(5.4, 1.0, 16.0), (8.0, -1.5, 4.6), (8.6, -5.0, 1.8), (9.1, -9.6, 0.1)]]
 G_DROP = (1666, 1692)                                    # through the air with the breaking top
 G_SLIDE = (1692, 1714)                                   # down the rubble mound
 G_HELM = (1672, 1690)
-HELMET_AT = Vector((10.6, -7.4, 0.25))                   # where the helmet lies in the rubble (shown from g 1691)
+HELMET_AT = Vector((11.2, -9.0, 0.25))                   # where the helmet lies in the rubble (shown from g 1691)
 
 
 def bf(shot, g):
@@ -84,9 +84,9 @@ def kick(g, amp):
 
 # ----------------------------------------------------------------------------- cameras
 LENS = 20.0
-CAM1 = (((-3.6, -15.6, 2.4), (9.0, 0.0, 9.4)), ((-2.4, -14.2, 2.7), (9.6, 0.0, 9.6)))
-CAM2 = (((17.5, 2.9, 20.0), (3.0, 2.2, 15.6)), ((16.2, 3.4, 19.6), (3.0, 2.0, 15.5)))
-CAM3 = (((-3.0, -19.6, 3.4), (6.5, 0.0, 8.0)), ((-0.8, -17.8, 2.9), (7.2, -2.0, 5.8)))
+CAM1 = (((3.0, -13.6, 2.1), (3.6, 0.0, 8.4)), ((5.2, -13.0, 2.3), (7.6, 0.0, 8.4)))
+CAM2 = (((18.5, 2.6, 19.0), (1.0, 3.2, 16.6)), ((17.0, 2.9, 18.7), (1.0, 3.0, 16.5)))
+CAM3 = (((2.4, -17.4, 2.6), (5.4, 0.0, 8.4)), ((4.8, -17.0, 3.4), (10.4, -3.0, 3.6)))
 
 
 def cam_of(shot, g):
@@ -103,7 +103,7 @@ def cam_of(shot, g):
 def gen_where(shot, g):
     """feet point of the general."""
     if shot == 2:
-        return Vector((8.0, 2.2, 16.0))                 # wall_top: mid-top (from the field, shot 1 / 3, nearer the outer edge to read)
+        return Vector((8.0, 2.4, 16.0))                 # wall_top_battle staging mark general_top (from the field, shot 1 / 3, nearer the outer edge to read)
     if shot < 3 or g < G_DROP[0]:
         return TOP
     if g < G_DROP[1]:
@@ -148,7 +148,7 @@ def gen_pose(shot, g):
     p = dict(cast9.STORY9["general_land"][1])
     q = (g - G_SLIDE[1])
     p.update(head_roll=-8 + 5.0 * math.sin(g * 0.33), pitch=-0.5 + 0.07 * math.sin(g * 0.41), lean=2.0 * math.sin(g * 0.27),
-             dust=max(0.25, 0.8 - 0.012 * q), squash=(1.0 + 0.025 * math.sin(g * 0.66), 1.0 - 0.025 * math.sin(g * 0.66)))
+             dust=max(0.08, 0.6 - 0.025 * q), squash=(1.0 + 0.025 * math.sin(g * 0.66), 1.0 - 0.025 * math.sin(g * 0.66)))
     p["t"] = g / 30.0
     return p
 
@@ -156,7 +156,8 @@ def gen_pose(shot, g):
 # ----------------------------------------------------------------------------- take
 class Take(C.Take):
     def __init__(self, quality="preview", shot=1):
-        C.Take.__init__(self, "wall_site", "two_sections_out", quality=quality, lens=LENS, name="cam_s18", light="BATTLE")
+        self.preset = "wall_top_battle" if shot == 2 else "two_sections_out"     # one preset per build (final_loop rebuilds on change)
+        C.Take.__init__(self, "wall_site", self.preset, quality=quality, lens=LENS, name="cam_s18", light="BATTLE")
         self.gen = self.actors["gen"] = C.make_actor("gen", "general", os.path.join(TMP, "sprites"), canvas=cast9.CANVAS9_FALL["general"])
         svg, top = cast9.helmet_svg("s18h", rot=104.0, yaw=0.2)
         png = C.svg_png(svg, (-1.1, -1.9, 1.1, 0.7), 220, os.path.join(TMP, "svg"))
@@ -198,8 +199,10 @@ if __name__ == "__main__":
     cmd = sys.argv[1]
     shots = [int(s) for s in sys.argv[2].split(",")]
     if cmd in ("probe", "stills"):
-        Tk = Take("preview")
+        Tk, key = None, None
         for shot in shots:
+            if key != (shot == 2):
+                Tk, key = Take("preview", shot), (shot == 2)
             gs = [g for g in C.parse(sys.argv[3]) if RANGES[shot][0] <= g <= RANGES[shot][1]]
             if not gs:
                 continue
@@ -216,4 +219,5 @@ if __name__ == "__main__":
     elif cmd == "final":
         scale = float(sys.argv[4]) if len(sys.argv) > 4 else 1.0
         samples = int(sys.argv[5]) if len(sys.argv) > 5 else 12
-        C.final_loop(lambda q: Take(q), shots, sys.argv[3], RANGES, HERE, scale=scale, samples=samples)
+        C.final_loop(lambda q, shot: Take(q, shot), shots, sys.argv[3], RANGES, HERE, scale=scale, samples=samples,
+                     take_key=lambda shot: 'top' if shot == 2 else 'out')

@@ -39,7 +39,7 @@
      1407,
      1559
     ],
-    "set": "wall_site (two_sections_out build), light DAWN with the sun moved at runtime to az -35 el 9 (field side) so it rakes Lin's outer face; heights lin 26 / general 30; enemy cannons standing abandoned (army on, no gunners), smoke 0.35, flames 0.7; Lin's three dents (set_impact lin 0..2 t 1, balls embedded) + hairlines (set_cracks lin 0.6); custom camera from the field (between cannons and wall) looking west along Lin's section, 20 mm, slow push + rise + orbit (0.35 sine + 0.65 linear)"
+    "set": "wall_site preset aftermath_dawn (round-3 set: warm low dawn sun az 326 raking Lin's outer face, DAWNG sky, rubble / spent ball / snapped stake / torn banner foreground), heights lin 26 / general 30, army off, smoke 0.2, flames 0.7; Lin's three dents (set_impact lin 0..2 t 1, balls embedded) + hairlines set_cracks lin 1.0; custom camera from the field near the preset camera (-13.4,-16.4,2.2)->(-10.6,-14.6,2.3) looking at Lin's section, 20 mm, slow push + drift (0.35 sine + 0.65 linear)"
    }
   },
   "events": {
@@ -57,10 +57,10 @@
     1540
    ]
   },
-  "set": "v3/set3d9/wall.py wall_site: set_wall_height, set_impact, set_cracks, set_collapse(0), set_smoke, set_army, set_flames keyed every frame; runtime only: W.LIGHTS['DAWN'] key_dir/sun_elev override in this process (wall.py untouched)",
+  "set": "v3/set3d9/wall.py (commit 5d511aa) wall_site aftermath_dawn: set_wall_height, set_impact, set_cracks, set_collapse(0), set_smoke, set_army, set_flames keyed every frame; no runtime changes to the set",
   "cast": "v3/cast9 lin: STORY9 lin_watch mirrored (looking up at his wall, screen-left) -> lin_calm (arms folded, calm smile) behind the blink at g 1501 ('ยังตั้งอยู่' 49.97 s)",
   "dof": "none (cam.data.dof.use_dof False + setup_dof(None) at build and before every render)",
-  "light": "DAWN (sun az -35)",
+  "light": "DAWN (aftermath_dawn override built into the set)",
   "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json"
  },
  "cues": [
