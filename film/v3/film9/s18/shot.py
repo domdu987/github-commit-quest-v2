@@ -46,7 +46,7 @@ SLIDE = [Vector(p) for p in [(5.4, 1.0, 16.0), (7.6, -1.5, 4.6), (8.4, -3.8, 1.8
 G_DROP = (1666, 1692)                                    # through the air with the breaking top
 G_SLIDE = (1692, 1714)                                   # down the rubble mound
 G_HELM = (1672, 1690)
-HELMET_AT = Vector((9.6, -7.1, 0.0))                     # lands beside him, front-right, inside the frame (shown from g 1691)
+HELMET_AT = Vector((8.5, -9.0, 0.0))                     # lands beside him, front-right, inside the frame (shown from g 1691)
 
 
 def bf(shot, g):
@@ -254,6 +254,8 @@ class Take(C.Take):
         C.Take.__init__(self, "wall_site", self.preset, quality=quality, lens=LENS, name="cam_s18", light="BATTLE")
         self.gen = self.actors["gen"] = C.make_actor("gen", "general", os.path.join(TMP, "sprites"), canvas=cast9.CANVAS9_FALL["general"],
                                                      contact=dict(width=1.6, depth=0.6, color="#1e1a24", opacity=0.6))
+        import bpy
+        self.smoke_obs = [o for o in bpy.data.objects if o.name.startswith("smoke_")]
         self.gunners = []
         if shot == 1 and USE_GUNNERS:
             for nm, ck, p, sl in GUNNERS:
@@ -261,7 +263,7 @@ class Take(C.Take):
                 self.gunners.append((a, ck, p, sl))
         svg, top = cast9.helmet_svg("s18h", rot=104.0, yaw=0.2)
         png = C.svg_png(svg, (-1.1, -1.9, 1.1, 0.7), 220, os.path.join(TMP, "svg"))
-        self.helm = C.PropCard("s18_helmet", [png], (-1.1, -1.9, 1.1, 0.7), scale=0.9, shadow=True, scene=self.scene)
+        self.helm = C.PropCard("s18_helmet", [png], (-1.1, -1.9, 1.1, 0.7), scale=1.05, shadow=True, scene=self.scene)
         self.helm_shadow = _contact_disc("s18_helmet_contact", (HELMET_AT.x, HELMET_AT.y, 0.02), 0.75, 0.45, 0.7)
         self.land_shadow = _contact_disc("s18_land_contact", (SLIDE[3].x, SLIDE[3].y, 0.015), 1.5, 0.75, 0.65)
 
@@ -275,6 +277,9 @@ class Take(C.Take):
             self.key_set(f, flames=1.0, smoke=1.0, army=True, impact=imps, collapse=collapse(g))
             W.set_cracks("general", cracks(g), frame=f); W.set_cracks("lin", 0.5, frame=f)
             soft_dust(f, g)
+            for o in self.smoke_obs:                    # a battlefield smoke billow drifting through the lens hazed g 1548-1555: hide near ones
+                if (o.matrix_world.translation - loc).length < 9.0 or (o.location - loc).length < 9.0:
+                    o.hide_render = True; o.keyframe_insert("hide_render", frame=f)
             p = gen_where(shot, g); C.place(self.gen, f, p, z=p.z)
             air = shot == 3 and G_DROP[0] <= g < G_SLIDE[1]          # no contact decal while he flies / slides (it would float)
             if self.gen.contact is not None:
