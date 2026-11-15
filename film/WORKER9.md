@@ -7,6 +7,12 @@ Follow film/WORKER.md (setup section 1, delivery section 4, rules section 5) exa
 - Set PROJ/v3/set3d9/wall.py (+ wall_API.md incl. gaps: presets site_wide, cauldron, two_sections, two_sections_out, wall_top,
   cannon_line, mortar_macro, mortar_macro_rice; lights DAY DAWN DUSK RAIN BATTLE; hooks set_wall_height, set_cauldron_steam, set_rain,
   set_mortar_wet, set_cracks, set_impact, set_collapse, set_smoke, set_flames, set_army, set_macro, clear_keys — animated hooks every frame).
+- SET UPDATED (client-approved after 3 QA rounds): extra presets pour_close (shot 2), gate_dusk (shot 4), two_shot_low with stand
+  points two_shot_general / two_shot_lin (shot 6), wall_top_battle (30 courses, shot 19), aftermath_dawn (shot 17, warm dawn, dents),
+  macro_front is the default camera of mortar_macro / mortar_macro_rice (shots 15-16). Read set3d9/QA_TECH.md + QA_ART.md (take notes:
+  site_wide Lin chin near 880 -> lower camera ~1 D; shots 7/12 need a closer camera so figures read; two_shot_low look-at +0.5 D x;
+  keep the ball visible at macro 0.9).
+- Your take will pass a QA-tech check (film/QA_TEAM.md) before conform; run your own qa.py first.
 - Cast PROJ/v3/cast9 (+ API.md; general_fall needs CANVAS9_FALL["general"]; helmet_off, wet, dust keys).
 - WORKED EXAMPLE (previous film, same conventions): PROJ/v3/film8/s01/shot.py + QA.md and PROJ/v3/film8/common.py (read its gotchas,
   esp. "moves must move", key every hook every frame, one location per process). Make YOUR OWN helper module inside your take folder
