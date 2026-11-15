@@ -42,11 +42,11 @@ HIT = [C.g_of(52.96), C.g_of(53.68), C.g_of(54.99)]      # 1592, 1613, 1653
 T_IMP = 46.0                                             # frames for set_impact t 0 -> 1; the hit is at t 0.35
 G_COL = (1660, 1715)                                     # set_collapse 0 -> 1
 TOP = Vector((5.4, 1.0, 16.0))                           # the general on his section's top (30 courses: top z 16)
-SLIDE = [Vector(p) for p in [(5.4, 1.0, 16.0), (8.0, -1.5, 4.6), (8.6, -5.0, 1.8), (9.1, -9.6, 0.1)]]
+SLIDE = [Vector(p) for p in [(5.4, 1.0, 16.0), (8.0, -1.5, 4.6), (8.4, -5.6, 1.6), (7.2, -11.4, 0.1)]]
 G_DROP = (1666, 1692)                                    # through the air with the breaking top
 G_SLIDE = (1692, 1714)                                   # down the rubble mound
 G_HELM = (1672, 1690)
-HELMET_AT = Vector((11.2, -9.0, 0.25))                   # where the helmet lies in the rubble (shown from g 1691)
+HELMET_AT = Vector((9.0, -10.8, 0.25))                   # where the helmet lies in the rubble (shown from g 1691)
 
 
 def bf(shot, g):
@@ -86,7 +86,7 @@ def kick(g, amp):
 LENS = 20.0
 CAM1 = (((3.0, -13.6, 2.1), (3.6, 0.0, 8.4)), ((5.2, -13.0, 2.3), (7.6, 0.0, 8.4)))
 CAM2 = (((18.5, 2.6, 19.0), (1.0, 3.2, 16.6)), ((17.0, 2.9, 18.7), (1.0, 3.0, 16.5)))
-CAM3 = (((2.4, -17.4, 2.6), (5.4, 0.0, 8.4)), ((4.8, -17.0, 3.4), (10.4, -3.0, 3.6)))
+CAM3 = (((2.4, -17.4, 2.6), (5.4, 0.0, 8.4)), ((4.8, -17.0, 3.4), (10.4, -3.0, 2.4)))
 
 
 def cam_of(shot, g):
@@ -94,6 +94,8 @@ def cam_of(shot, g):
     r0, r1 = RANGES[shot]
     x = (g - r0) / float(r1 - r0)
     u = 0.35 * ez(x, "sine") + 0.65 * x
+    if shot == 3:                                       # lead the general to his landing spot (pan done ~70 % by g 1712), still moving at the end
+        u = 0.7 * (1.0 - (1.0 - x) ** 2.5) + 0.3 * x
     loc, look = Vector(lerp(a0[0], a1[0], u)), Vector(lerp(a0[1], a1[1], u))
     k = kick(g, {1: 0.06, 2: 0.16, 3: 0.0}[shot])
     return loc + k, look + k * 0.6
@@ -148,7 +150,7 @@ def gen_pose(shot, g):
     p = dict(cast9.STORY9["general_land"][1])
     q = (g - G_SLIDE[1])
     p.update(head_roll=-8 + 5.0 * math.sin(g * 0.33), pitch=-0.5 + 0.07 * math.sin(g * 0.41), lean=2.0 * math.sin(g * 0.27),
-             dust=max(0.08, 0.6 - 0.025 * q), squash=(1.0 + 0.025 * math.sin(g * 0.66), 1.0 - 0.025 * math.sin(g * 0.66)))
+             dust=max(0.08, 0.35 - 0.02 * q), squash=(1.0 + 0.025 * math.sin(g * 0.66), 1.0 - 0.025 * math.sin(g * 0.66)))
     p["t"] = g / 30.0
     return p
 
