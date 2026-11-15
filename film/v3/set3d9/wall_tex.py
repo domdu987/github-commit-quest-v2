@@ -18,7 +18,7 @@ from PIL import Image, ImageDraw, ImageFilter                    # noqa: E402
 
 TEX = os.path.join(HERE, 'tex_wall')
 DESERT_TEX = os.path.join(PROJ, 'v3', 'set3d8', 'tex_desert')
-TEX_V = 'w9.6'
+TEX_V = 'w9.23'
 PANO_R = 120.0; PANO_Z0, PANO_Z1 = -1.5, 34.0                   # = desert_tex (desert._sky builds the ring with these)
 JOBS = {}
 
@@ -331,14 +331,82 @@ def rain(p, out):
 
 # ============================================================================= macro (inside the joint)
 def macro_clay(p, out):
-    """Fired-clay brick seen at macro scale 8 x 8 D: porous grey-buff body, pores, sand grains, firing streaks."""
-    S = 512; rs = np.random.RandomState(p['seed'])
-    n = pfbm(rs, S, S, 4, 4, 6); n2 = pnoise(rs, S, S, 90, 90); n3 = pnoise(rs, S, S, 30, 30)
-    img = hexf(p['col'])[None, None] * (0.78 + 0.35 * n[..., None]) * (0.92 + 0.14 * n2[..., None])
-    pores = np.clip((n3 - 0.78) * 8, 0, 1) * 0.6 + np.clip((n2 - 0.85) * 10, 0, 1) * 0.4
-    img = img * (1 - 0.6 * pores[..., None])
-    grains = (pnoise(rs, S, S, 160, 160) > 0.87).astype('float32'); img = img + 0.12 * grains[..., None]
+    """Fired-clay brick at macro scale (5 x 5 D per tile): round 3 reads as fired brick, not asphalt - a warm terracotta body with soft
+    broad mottling (oxidised orange patches, a little kiln-flash grey), a fine sand texture of low-contrast light / dark grains,
+    a few sparse open pores, darker firing streaks and hairline firing cracks. Also writes <name>_h.png (height) for the bump."""
+    S = 1024; rs = np.random.RandomState(p['seed'])
+    n = pfbm(rs, S, S, 3, 3, 6); n2 = pnoise(rs, S, S, 140, 140); flash = pfbm(rs, S, S, 2, 4, 4); hot = pfbm(rs, S, S, 4, 4, 4)
+    warm, grey, dark, ox = hexf(p['warm']), hexf(p['grey']), hexf('#5a2e1e'), hexf(p.get('ox', '#d8844a'))
+    t = np.clip((flash - 0.5) * 2.2, 0, 0.7)[..., None]
+    img = warm[None, None] * (1 - t) + grey[None, None] * t
+    o = np.clip((hot - 0.5) * 2.5, 0, 0.7)[..., None]; img = img * (1 - o) + ox[None, None] * o           # oxidised orange patches
+    img = img * (0.72 + 0.5 * n[..., None]) * (0.95 + 0.08 * n2[..., None])
+    streak = np.clip((pfbm(rs, S, S, 10, 2, 3) - 0.64) * 3, 0, 1)[..., None] * 0.28; img = img * (1 - streak) + dark * streak
+    sand = pnoise(rs, S, S, 260, 260); img = img * (1 + 0.05 * np.clip((sand - 0.5) * 3, -1, 1))[..., None]       # fine sand body
+    gl = (pnoise(rs, S, S, 330, 330) > 0.88).astype('float32'); img = img + 0.10 * gl[..., None] * hexf('#fff0d8')   # light grains
+    gd = (pnoise(rs, S, S, 300, 300) > 0.9).astype('float32'); img = img * (1 - 0.22 * gd[..., None])                # dark grains
+    p1 = pnoise(rs, S, S, 40, 40); pore = np.clip((p1 - 0.93) * 14, 0, 1)
+    rim = np.clip((p1 - 0.86) * 12, 0, 1) - np.clip((p1 - 0.92) * 12, 0, 1)
+    img = img * (1 - 0.5 * pore[..., None]) + 0.05 * rim[..., None]
+    im = Image.fromarray((np.clip(img, 0, 1) * 255).astype('uint8')); d = ImageDraw.Draw(im)
+    for _ in range(5):
+        x, y = rs.rand() * S, rs.rand() * S; ang = rs.rand() * 6.28
+        pts = [(x, y)]
+        for k in range(12): ang += rs.normal(0, 0.35); x += 10 * math.cos(ang); y += 10 * math.sin(ang); pts.append((x, y))
+        d.line(pts, fill=(70, 36, 24), width=2)
+    im.save(out)
+    h = np.clip(0.6 - 0.55 * pore + 0.12 * gl - 0.1 * gd + 0.12 * n2 + 0.08 * np.clip((sand - 0.5) * 3, -1, 1), 0, 1)
+    Image.fromarray((h * 255).astype('uint8'), 'L').save(out[:-4] + '_h.png')
+
+def brick_atlas(p, out):
+    """24 individual brick faces (3 x 8 cells, each 4/3 x 0.5 D) for the per-brick wall geometry: each its own body colour, mottle,
+    pits, sand grains, darker burnt edges, chipped corners and edge nicks (pale broken clay), soot / lime / cream-mortar smears
+    (rice: creamy smears from the sticky mortar)."""
+    cw, ch, ppd = 4 / 3.0, 0.5, p['ppd']; W, H = int(3 * cw * ppd), int(8 * ch * ppd); rs = np.random.RandomState(p['seed'])
+    img = np.zeros((H, W, 3), 'float32'); cpw, cph = W // 3, H // 8
+    for j in range(8):
+        for i in range(3):
+            y0, x0 = j * cph, i * cpw; yy, xx = np.mgrid[0:cph, 0:cpw].astype('float32')
+            base = hexf(rs.choice(p['cols'])) * rs.uniform(0.82, 1.1)
+            n = pfbm(rs, cph, cpw, 3, 2, 4); n2 = pnoise(rs, cph, cpw, 40, 14)
+            c = base[None, None] * (0.86 + 0.24 * n[..., None]) * (0.93 + 0.12 * n2[..., None])
+            pits = (pnoise(rs, cph, cpw, 60, 22) > 0.82).astype('float32'); c = c * (1 - 0.25 * pits[..., None])
+            gr = (pnoise(rs, cph, cpw, 120, 44) > 0.88).astype('float32'); c = c + 0.06 * gr[..., None]
+            e = np.minimum(np.minimum(xx, cpw - 1 - xx), np.minimum(yy, cph - 1 - yy)) / ppd
+            c = c * (1 - 0.3 * np.clip(1 - e / 0.06, 0, 1)[..., None])
+            sm = np.clip((pfbm(rs, cph, cpw, 4, 2, 3) - 0.55) * 3, 0, 1) * np.clip(1 - e / 0.12, 0, 1) * p['smear']
+            c = c * (1 - sm[..., None]) + sm[..., None] * hexf(p['smear_col'])
+            jag = pnoise(rs, cph, cpw, 30, 12) * 0.6 + 0.7
+            for _ in range(rs.randint(0, 3)):                                 # chips / nicks at edges and corners (ragged)
+                side = rs.randint(4); r_ = rs.uniform(0.025, 0.06) * ppd
+                cx_ = rs.choice([0, cpw]) if side < 2 else rs.uniform(0, cpw); cy_ = rs.uniform(0, cph) if side < 2 else rs.choice([0, cph])
+                dd_ = np.sqrt((xx - cx_) ** 2 + ((yy - cy_) * 1.6) ** 2) / jag
+                m = (dd_ < r_).astype('float32'); c = c * (1 - m[..., None]) + m[..., None] * (c * 0.72 + base * 0.12)
+                ring = (dd_ < r_ + 1.5).astype('float32') - m; c = c * (1 - 0.18 * ring[..., None])
+            img[y0:y0 + cph, x0:x0 + cpw] = c
     save(img, out)
+
+def stain(p, out):
+    """Base stains, 4 x 4.5 D (u tiles, v from the ground up): a dark damp band rising to a ragged tide line (~1.6-2.6 D), dark
+    run-down streaks below it, splash dirt at the very bottom, moss patches (three greens) thick at the foot and creeping up the
+    joints, pale lichen speckles. Alpha = how much of it covers the wall."""
+    W, H = 1024, 512; rs = np.random.RandomState(p['seed']); yy, xx = np.mgrid[0:H, 0:W].astype('float32'); z = 1.0 - yy / H     # z 0 ground .. 1 top (4.5 D)
+    n = pfbm(rs, H, W, 16, 6, 4); n2 = pfbm(rs, H, W, 48, 12, 3)
+    tide = 0.36 + 0.14 * pnoise(rs, 1, W, 12, 1)[0][None, :] + 0.05 * (n - 0.5)
+    damp = np.clip((tide - z) / 0.08, 0, 1) * (0.72 + 0.25 * n)
+    st = pnoise(rs, H, W, 160, 1); streak = np.clip((st - 0.72) * 5, 0, 1) * np.clip((tide + 0.12 - z) / 0.25, 0, 1) * (z > 0.08)
+    splash = np.clip((0.12 - z) / 0.1, 0, 1) * (0.5 + 0.5 * n2)
+    mz = np.clip((0.3 - z) / 0.24, 0, 1) ** 0.8
+    moss = np.clip((pfbm(rs, H, W, 24, 10, 4) - 0.62 + 0.35 * mz) * 4.5, 0, 1) * (z < 0.42) * np.clip(mz * 1.6, 0, 1)
+    lich = (pnoise(rs, H, W, 220, 90) > 0.86).astype('float32') * (z > 0.15) * (z < 0.6) * 0.5
+    rgb = np.ones((H, W, 3), 'float32') * hexf('#262218') * (0.7 + 0.4 * n[..., None])
+    rgb = rgb * (1 - splash[..., None] * 0.5) + splash[..., None] * 0.5 * hexf('#6a5038')
+    gsel = pnoise(rs, H, W, 30, 12)[..., None]
+    mc = np.where(gsel < 0.4, hexf('#3a5222'), np.where(gsel < 0.7, hexf('#4e6a2a'), hexf('#6a7434'))) * (0.75 + 0.5 * n2[..., None])
+    rgb = rgb * (1 - moss[..., None]) + mc * moss[..., None]
+    rgb = rgb * (1 - lich[..., None]) + hexf('#c8c4a0') * lich[..., None]
+    a = np.maximum.reduce([damp, streak * 0.6, splash * 0.8, moss * 0.95, lich])
+    save(rgb, out, a)
 
 def macro_matrix(p, out):
     """Mortar matrix at macro scale 4 x 4 D: plain (grey, grainy, angular sand) / rice (creamy, smoother, with a faint fibrous
@@ -356,7 +424,7 @@ def macro_matrix(p, out):
 SKY_W = 4096
 def sky(p, out):
     import desert_tex as DT
-    mode = p['mode']; W = SKY_W; H = int(round(W * 105 / 360)); rs = np.random.RandomState({'DAY': 3, 'DUSK': 5, 'DAWN': 7, 'RAIN': 9, 'BATTLE': 11}[mode])
+    mode = p['mode']; W = SKY_W; H = int(round(W * 105 / 360)); rs = np.random.RandomState({'DAY': 3, 'DUSK': 5, 'DAWN': 7, 'RAIN': 9, 'BATTLE': 11, 'DAWNG': 13}[mode])
     el = 90.0 - (np.arange(H, dtype='float32') + 0.5) / H * 105.0
     az = (np.arange(W, dtype='float32') + 0.5) / W * 2 * math.pi
     E = np.radians(el)[:, None] * np.ones((1, W), 'float32'); A = np.ones((H, 1), 'float32') * az[None, :]
@@ -369,15 +437,52 @@ def sky(p, out):
         sx, sy, sz = math.cos(math.radians(eld)) * math.cos(math.radians(azd)), math.cos(math.radians(eld)) * math.sin(math.radians(azd)), math.sin(math.radians(eld))
         d = np.degrees(np.arccos(np.clip(dx * sx + dy * sy + dz * sz, -1, 1))); return (np.exp(-(d / rad) ** 2) * k)[..., None] * hexf(col)[None, None], d
     sun = p['sun']                                                           # (azimuth deg, elevation deg)
+    def disc_clouds(img, dd, n, el_lo, el_hi, c_body, c_top, c_bot, w_rng=(7, 18), h_rng=(1.4, 3.2), warm_rad=None, seed=1, bot_k=0.42, nd_rng=(4, 8), spread=1.05):
+        """Cartoon clouds as in ref A t0062: each cloud a row of overlapping discs with a flat bottom, crisp 1 px edges, three flat
+        bands (gold-lit top, body, shaded bottom), elongated along the horizon; brighter near the sun."""
+        rr = np.random.RandomState(seed); ppd = W / 360.0; out_ = img.copy()
+        for _ in range(n):
+            az0 = rr.uniform(0, 360); e0 = rr.uniform(el_lo, el_hi); wd = rr.uniform(*w_rng) / max(0.35, math.cos(math.radians(e0))); hd = rr.uniform(*h_rng)
+            cx0 = az0 * ppd; by = (90 - e0) / 105 * H; nd = rr.randint(*nd_rng)
+            x0, x1 = int(cx0 - wd * ppd * 0.7), int(cx0 + wd * ppd * 0.7); y0, y1 = int(by - hd * ppd * 2.6), int(by + 2)
+            if y0 < 0 or y1 >= H: continue
+            xs = np.arange(x0, x1) % W; X = np.arange(x0, x1)[None, :].astype('float32'); Y = np.arange(y0, y1)[:, None].astype('float32')
+            cov = np.zeros((y1 - y0, x1 - x0), 'float32'); top = np.zeros_like(cov)
+            for k in range(nd):
+                u = (k + 0.5) / nd - 0.5; cx = cx0 + u * wd * ppd * spread + rr.uniform(-0.05, 0.05) * wd * ppd
+                rd = hd * ppd * rr.uniform(0.7, 1.25) * (1.0 - 0.9 * u * u * 2); cy = by - rd * rr.uniform(0.15, 0.5)
+                d = np.sqrt((X - cx) ** 2 + (Y - cy) ** 2)
+                cov = np.maximum(cov, np.clip(rd - d + 0.5, 0, 1))
+                top = np.maximum(top, np.clip(rd * 0.82 - np.sqrt((X - cx + rd * 0.12) ** 2 + (Y - cy + rd * 0.3) ** 2) + 0.5, 0, 1))
+            cov = cov * np.clip(by - Y + 0.5, 0, 1)                                                   # flat bottom
+            bot = np.clip((Y - (by - hd * ppd * bot_k)) + 0.5, 0, 1)
+            body = hexf(c_body)[None, None] * np.ones_like(cov)[..., None]
+            tc = hexf(c_top)[None, None] * (1.0 + (0.35 * np.exp(-(dd[y0:y1][:, xs] / warm_rad) ** 2)[..., None] if warm_rad else 0.0))
+            col = body * (1 - top[..., None]) + tc * top[..., None]
+            col = col * (1 - bot[..., None]) + hexf(c_bot)[None, None] * bot[..., None]
+            sl = out_[y0:y1][:, xs]; out_[y0:y1, :][:, xs] = sl * (1 - cov[..., None]) + col * cov[..., None]
+        return out_
+    def toon_clouds(img, dd, cover, lo, hi, cell, c_lit, c_mid, c_dark, warm_rad=None):
+        """Crisp cartoon clouds: hard edges (steep threshold), flat lit / mid / shade bands (the shade on the lower side: the cloud mask
+        shifted up), lit colour strongest toward the sun. No soft gradients."""
+        cl = DT._fbm(rs, H, W, cell, 4); env = np.clip((el[:, None] - lo) / 3, 0, 1) * np.clip((hi - el[:, None]) / 8, 0, 1)
+        raw = (cl - (1 - cover)) * env; m = np.clip(raw * 120, 0, 1)
+        sh = np.roll(raw, -int(H * 0.012), axis=0); low = np.clip((raw - sh) * 30 + 0.5, 0, 1)            # lower rims: in shade
+        lit = np.clip(raw * 5 - 0.5, 0, 1); lit = (lit > 0.5).astype('float32') * 0.85 + 0.15 * lit           # flat lit core, hard step
+        base = hexf(c_mid)[None, None] * (1 - lit[..., None]) + hexf(c_lit)[None, None] * lit[..., None]
+        if warm_rad: base = base + np.exp(-(dd / warm_rad) ** 2)[..., None] * hexf(c_lit) * 0.5
+        col = base * (1 - 0.6 * low[..., None]) + hexf(c_dark)[None, None] * 0.6 * low[..., None]
+        return img * (1 - m[..., None]) + col * m[..., None]
     def clouds(col_lit, col_dark, cover, lo, hi, cell=180, k=0.9, lit_dir=None):
         cl = DT._fbm(rs, H, W, cell, 5); m = np.clip((cl - (1 - cover)) * 5, 0, 1) * np.clip((el[:, None] - lo) / 4, 0, 1) * np.clip((hi - el[:, None]) / 10, 0, 1)
         sh = DT._fbm(rs, H, W, cell // 2, 3)
         c = hexf(col_lit)[None, None] * (1 - sh[..., None] * 0.6) + hexf(col_dark)[None, None] * (sh[..., None] * 0.6)
         return m[..., None] * k, c
     if mode == 'DAY':
-        img = grad([(-15, '#c8d0d8'), (0, '#e8eef0'), (5, '#cfe0ee'), (18, '#86b8e6'), (45, '#4a8ad8'), (90, '#2a64c0')])
-        g, dd = glow(sun[0], sun[1], 16.0, '#fff2d0', 0.7); img += g; img += (np.exp(-(dd / 1.4) ** 2) * 3.0)[..., None] * hexf('#fffaf0')
-        m, c = clouds('#ffffff', '#b8c4dc', 0.36, 4, 40, 200); img = img * (1 - m) + c * m
+        # warm blue sky (no white top third): gold haze only in the last few degrees, crisp painted cumulus lit gold on the sun side
+        img = grad([(-15, '#c8a880'), (0, '#f2cf96'), (3, '#e6c8a0'), (7, '#b4bccc'), (16, '#7c9ccc'), (35, '#5682c4'), (90, '#3a66b0')])
+        g, dd = glow(sun[0], sun[1], 26.0, '#ffd890', 0.28); img += g; img += (np.exp(-(dd / 1.2) ** 2) * 1.2)[..., None] * hexf('#fff0c8')
+        img = disc_clouds(img, dd, 48, 5, 36, '#ecc2b4', '#ffd890', '#b29cc2', w_rng=(10, 26), h_rng=(1.8, 3.8), warm_rad=60, seed=5)
     elif mode in ('DUSK', 'DAWN'):
         if mode == 'DUSK': img = grad([(-15, '#3a3a5a'), (0, '#ffa050'), (5, '#ffb868'), (12, '#f8c088'), (24, '#a8b0c8'), (45, '#5a78b8'), (90, '#26387e')])
         else: img = grad([(-15, '#6a4a6a'), (0, '#ffc89a'), (6, '#f8c0a0'), (16, '#e0b8a8'), (30, '#a8b0d8'), (60, '#5a80c8'), (90, '#3a5aa8')])
@@ -386,6 +491,15 @@ def sky(p, out):
         img += (np.exp(-(dd / 2.6) ** 2) * 2.5)[..., None] * hexf('#fff0c8')
         cl = DT._fbm(rs, H, W, 220, 4); streak = np.clip((cl - 0.52) * 5, 0, 1) * np.exp(-((el[:, None] - 10) / 7) ** 2)
         img = img * (1 - 0.8 * streak[..., None]) + streak[..., None] * hexf('#ff9a5a' if mode == 'DUSK' else '#ffc0a0') * (0.8 + 0.8 * np.exp(-(dd / 45) ** 2))[..., None]
+    elif mode == 'DAWNG':
+        # round 3, the ending (aftermath_dawn): a warm clear dawn - peach low, soft lavender-blue above, and crisp cartoon clouds lit
+        # gold on top with rose-lavender undersides filling the band the field camera sees over Lin's wall (el ~35..65, az 40..140)
+        img = grad([(-15, '#7a5a6a'), (0, '#ffc898'), (8, '#fcc8a0'), (20, '#f0c4b0'), (36, '#c4b8d4'), (60, '#8aa0d4'), (90, '#6a84c4')])
+        g, dd = glow(sun[0], sun[1], 30.0, '#ffd080', 0.9); img += g
+        g2, _ = glow(sun[0], sun[1], 85.0, '#ffa060', 0.3); img += g2
+        img += (np.exp(-(dd / 2.4) ** 2) * 2.2)[..., None] * hexf('#fff0c8')
+        img = disc_clouds(img, dd, 40, 6, 34, '#f6c8b4', '#ffe0a0', '#c8a0b8', w_rng=(10, 24), h_rng=(1.8, 3.4), warm_rad=90, seed=21, nd_rng=(7, 12), spread=0.95)
+        img = disc_clouds(img, dd, 30, 34, 62, '#f8d2bc', '#ffe6a8', '#d0aac0', w_rng=(12, 22), h_rng=(2.4, 3.8), warm_rad=110, seed=23, bot_k=0.24, nd_rng=(9, 14), spread=0.9)
     elif mode == 'RAIN':
         img = grad([(-15, '#5a6470'), (0, '#9aa4b0'), (8, '#8a96a8'), (30, '#6a7890'), (90, '#4a5670')])
         m, c = clouds('#a8b0bc', '#4a5262', 0.75, -2, 95, 150, 1.0); img = img * (1 - m) + c * m
@@ -394,13 +508,12 @@ def sky(p, out):
         img = grad([(-15, '#2a2434'), (0, '#ff7a3a'), (4, '#f07a3a'), (10, '#d87a3a'), (20, '#6a5a58'), (32, '#34446e'), (55, '#20305e'), (90, '#141c46')])
         g, dd = glow(sun[0], sun[1], 22.0, '#ffb060', 1.1); img += g
         img += (np.exp(-(dd / 2.2) ** 2) * 2.4)[..., None] * hexf('#ffe0a0')
-        cl = DT._fbm(rs, H, W, 160, 5); sm = np.clip((cl - 0.45) * 3, 0, 1) * np.clip((el[:, None] + 2) / 8, 0, 1) * np.clip((70 - el[:, None]) / 30, 0, 1)
-        smc = hexf('#2e2a3a')[None, None] * (1 - DT._fbm(rs, H, W, 80, 3)[..., None] * 0.5) + np.exp(-(dd / 40) ** 2)[..., None] * hexf('#a04a2a') * 0.8
-        img = img * (1 - 0.85 * sm[..., None]) + 0.85 * sm[..., None] * smc
+        g3, _ = glow(90.0, 6.0, 48.0, '#ff5a28', 0.95); img += g3 * np.clip((60 - el[:, None]) / 40, 0, 1)[..., None]   # fires glow behind the wall (field-side views)
+        img = disc_clouds(img, dd, 60, 4, 34, '#3a2a36', '#5a3a44', '#82402e', w_rng=(14, 34), h_rng=(2.6, 5.0), seed=9, bot_k=0.2)   # dark smoke banks, fire-lit undersides
     Image.fromarray((np.clip(img, 0, 1) * 255 + 0.5).astype('uint8'), 'RGB').save(out)
 
 PAN = dict(
-    DAY=dict(far='#8aa0c8', mid='#6a8aa8', hill='#5a7a4a', tree='#3e5a32', roof='#4a4a58', wall='#c8bca8', pag='#7a6a68', river='#a8c8e0', fog='#dce6f0', win=None),
+    DAY=dict(far='#a8a4b8', mid='#8a8c90', hill='#6a7a42', tree='#46582a', roof='#5a4a48', wall='#e0ccaa', pag='#8a5a48', river='#c8d0d0', fog='#f2e2c4', win=None),
     DUSK=dict(far='#8a80b0', mid='#5e5a88', hill='#4a4a5e', tree='#2e3446', roof='#2e3040', wall='#c89a88', pag='#5a4050', river='#f0a878', fog='#ffc8a0', win='#ffb048'),
     DAWN=dict(far='#a8acd0', mid='#8090b8', hill='#64707e', tree='#4a5060', roof='#4a4858', wall='#d8c0b8', pag='#6a5868', river='#f8d0b8', fog='#f8e0e0', win='#ffc070'),
     RAIN=dict(far='#7a8494', mid='#68748a', hill='#4e5e58', tree='#3a4a44', roof='#3a3e48', wall='#9a9a9a', pag='#545460', river='#8a96a8', fog='#a8b0bc', win='#ffb048'),
@@ -485,30 +598,40 @@ def all_jobs():
     reg('drips', dict(ppd=96, seed=45), drips)
     reg('rain_near', dict(seed=54, n=170, len=(70, 150), val=(110, 200), w=(1.4, 2.4), blur=0.8), rain_screen)
     reg('rain_far', dict(seed=56, n=1100, len=(14, 40), val=(80, 190), w=(0.8, 1.3), blur=0.3), rain_screen)
-    reg('clay_macro', dict(seed=55, col='#8c8c92'), macro_clay)
+    reg('clay_macro', dict(seed=55, warm='#a6553c', grey='#86685e', ox='#c87848'), macro_clay)
+    reg('clay_macro_g', dict(seed=56, warm='#8e5440', grey='#6e5c5a', ox='#b8683e'), macro_clay)          # a greyer, kiln-flashed brick
+    reg('clay_macro_o', dict(seed=58, warm='#b4643c', grey='#927060', ox='#d08850'), macro_clay)          # a bright orange terracotta brick
+    reg('atlas_plain', dict(seed=71, ppd=128, cols=['#7c8188', '#747a82', '#868a8e', '#6e737a', '#8a8c8c'], smear=0.25, smear_col='#5a5e64'), brick_atlas)
+    reg('atlas_rice', dict(seed=73, ppd=128, cols=['#b4a68e', '#aa9a80', '#bcac92', '#a49482', '#b8a288'], smear=0.7, smear_col='#ece0c2'), brick_atlas)
+    reg('stain', dict(seed=75), stain)
     reg('matrix_plain', dict(seed=57, kind='plain', col='#8c8e90'), macro_matrix)
     reg('matrix_rice', dict(seed=59, kind='rice', col='#e4d6b2'), macro_matrix)
-    for m, s in (('DAY', (135.0, 42.0)), ('DUSK', (35.0, 6.0)), ('DAWN', (200.0, 5.0)), ('RAIN', (90.0, 60.0)), ('BATTLE', (262.0, 5.0))):
+    for m, s in (('DAY', (135.0, 32.0)), ('DUSK', (35.0, 6.0)), ('DAWN', (200.0, 5.0)), ('RAIN', (90.0, 60.0)), ('BATTLE', (262.0, 5.0))):
         reg('sky_' + m, dict(mode=m, sun=s, w=SKY_W), sky); reg('pano_' + m, dict(mode=m, ppd=8), pano)
+    reg('sky_DAWNG', dict(mode='DAWNG', sun=(330.0, 8.0), w=SKY_W), sky)                  # the ending's warm dawn sky (aftermath_dawn)
 
 def add_cracks(name, kind, W, H, impacts, ppd=40, seed=61):
-    reg(name, dict(kind=kind, W=W, H=H, impacts=[list(map(float, i)) for i in impacts], ppd=ppd, seed=seed, wk=1.8 if kind == 'general' else 1.4), cracks)
+    reg(name, dict(kind=kind, W=W, H=H, impacts=[list(map(float, i)) for i in impacts], ppd=ppd, seed=seed, wk=3.4 if kind == 'general' else 2.6), cracks)
 
 def ensure(extra=None, verbose=True):
     """Paint every changed texture; return {name: png path} (+ shared desert glow images, + '<name>_mask' / '_ord' companions).
     extra: callable registering more jobs (wall.py adds the crack maps, whose impact points it owns)."""
     os.makedirs(TEX, exist_ok=True); all_jobs()
     if extra: extra()
-    mpath = os.path.join(TEX, 'manifest.json'); man = json.load(open(mpath)) if os.path.exists(mpath) else {}
+    mpath = os.path.join(TEX, 'manifest.json')
+    try: man = json.load(open(mpath)) if os.path.exists(mpath) else {}
+    except ValueError: man = {}                                     # half-written by a parallel process: repaint what differs
+    man0 = dict(man)
     out = {}
     for name, (params, fn) in JOBS.items():
         h = hashlib.sha1((TEX_V + fn.__name__ + json.dumps(params, sort_keys=True)).encode()).hexdigest(); png = os.path.join(TEX, name + '.png'); out[name] = png
         if man.get(name) != h or not os.path.exists(png):
             fn(params, png); man[name] = h
             if verbose: print('painted', name, flush=True)
-        for suf in ('_mask', '_ord'):
+        for suf in ('_mask', '_ord', '_h'):
             if os.path.exists(png[:-4] + suf + '.png'): out[name + suf] = png[:-4] + suf + '.png'
-    json.dump(man, open(mpath, 'w'), indent=0, sort_keys=True)
+    if man != man0:                                                 # atomic write (two render processes share tex_wall/)
+        tmp = '%s.%d.tmp' % (mpath, os.getpid()); json.dump(man, open(tmp, 'w'), indent=0, sort_keys=True); os.replace(tmp, mpath)
     for nm in ('pool', 'shaft', 'glint', 'wisp'): out[nm] = os.path.join(DESERT_TEX, nm + '.png')
     return out
 
