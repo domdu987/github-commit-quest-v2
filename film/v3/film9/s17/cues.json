@@ -1,0 +1,49 @@
+{
+ "take": "s17",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film9/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 46.9,
+   "duration": 5.1,
+   "frame": 1407,
+   "end_frame": 1560,
+   "kind": "ambience",
+   "label": "dawn after the battle: hush, a few birds returning, a soft wind over the field, the last embers ticking, distant crows; a warm slow pad (relief)"
+  },
+  {
+   "time": 46.9,
+   "duration": 5.1,
+   "frame": 1407,
+   "end_frame": 1560,
+   "kind": "fx",
+   "label": "thin smoke drifting, faint crackle of a dying fire pot by an abandoned cannon"
+  },
+  {
+   "time": 48.0,
+   "duration": 2.0,
+   "frame": 1440,
+   "end_frame": 1500,
+   "kind": "accent",
+   "label": "a gentle low string swell as the camera rises along the dented but whole rice-mortar wall",
+   "peak_frame": 1470
+  },
+  {
+   "time": 49.867,
+   "duration": 0.533,
+   "frame": 1496,
+   "end_frame": 1512,
+   "kind": "accent",
+   "label": "Lin turns to us with a calm smile: a soft warm pluck / chime",
+   "peak_frame": 1502
+  },
+  {
+   "time": 51.8,
+   "duration": 0.0,
+   "frame": 1554,
+   "end_frame": 1554,
+   "kind": "cut",
+   "label": "cut to shot 18 (battle, the general's section)"
+  }
+ ]
+}
