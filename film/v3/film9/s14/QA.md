@@ -1,28 +1,29 @@
-# QA, film 9 take s14 (shot 14, BATTLE: the enemy cannons), worker 4
-Frames g 1035..1158 (124 = 6 in-handle + shot 14 g 1041..1152 + 6 out-handle), 720x1280, 12 samples, 30 fps; take.mkv 41.2 MB (one file).
+# QA, film 9 take s14 (shot 14, BATTLE: the enemy cannons), worker 4, round 2 (QA-tech round 1 fixes)
+Frames g 1035..1158 (124 = 6 in-handle + shot 14 g 1041..1152 + 6 out-handle), 720x1280, 12 samples, 30 fps; take.mkv 40.9 MB (one file).
 
-## What is on screen
-- Set-up 1 (g 1035..1096, "แล้วทัพศัตรูก็มาถึง ลากปืนใหญ่มา"): wall_site cannon_line build, BATTLE; custom wide behind the cannon row
-  (moved in from the preset so the gunners read: heads 45-56 px instead of ~30), slow track right + crane up: bronze guns with fire pots in
-  a diagonal toward both sections, black banners, gate tower, smoke columns. Gunner_a (gun 2) and gunner_b (gun 3) hold smouldering
-  linstocks, then crouch toward the touch holes (g 1078..1098).
-- Set-up 2 (g 1097..1158, "เรียงหน้ากำแพงทั้งสองช่วง"): low medium behind-right of gun 3 (aimed at the general's section): gunner_b brings
-  the match to the touch hole (g 1100..1112), fuse sparks + flickering light (g 1112..1139), both gunners duck and cover their ears
-  (g 1126..1137), gun 3 FIRES at g 1140 (set_impact general slot 0: muzzle flash, smoke, camera shake); the ball and its smoke trail fly
-  toward the wall in the handle. Cut to s15 (the ball hits the plain mortar).
+## QA-tech round 1 -> fixes
+1. Army / framing / gunner size: set-up 1 is now a wide cannon_line view (camera (-23, -30.5, 3.3), 20 mm, slow track right + crane):
+   the gun row with fire pots runs in front of BOTH sections and the gate, set_army on every frame; 4 gunners (gunner_a x2, gunner_b x2
+   at guns 0-3), the foreground one at the hero gun 0 with head 78-88 px; dust round all crews' feet (cast9 'dust' 0.45 -> 0.18).
+   One set smoke column (behind gun 0) is hidden in this set-up because it covered Lin's section.
+2. Blast: the set's muzzle smoke, flash ball and 9-puff ball trail (the "opaque white cylinder") are hidden every frame; replaced by a
+   bright soft muzzle flash + core AT the barrel mouth with a 6000 W flash light (g 1140..1145) and 12 soft translucent smoke billows
+   that start at the muzzle, roll forward / up and thin out (fire-lit at first).  The set's dark iron ball (r 0.75) flies at the
+   general's section (slower: t +1/75 per frame) and the camera's look eases up after it (g 1143..1158): the ball reads against the
+   lit wall through the cut.
+3. gunner_a: closed frown under the moustache (mouth 'frown', expr 'determined'; ducking: squeezed eyes + frown).
+4. Contact shadows: darker, larger contact decals under every gunner (1.5 x 0.62 D, #100c16 at 0.82).
 
 ## Checks (deliver.py -> work/qa.txt)
-- Pops: only g 1096 -> 1097 = the set-up cut (29.8). Near-still transitions: 0 (median change 1.67).
-- Heads: gunner_a w 52..75 px, gunner_b w 45..108 px; all heads above y 880 (lowest centre 782). Set-up 2 main head (gb) centre 0.54-0.59 H.
-  Set-up 1 is a wide (exempt). gunner_a sits at the left edge in set-up 2 (secondary, head inside frame).
-- Sprite clipping: the linstock / smoke wisp clipped the default canvas on g 1088-1091 and 1097-1100; fixed with a wider canvas
-  (-2.5, -5.25, 2.5, 0.125) and those 8 frames re-rendered (no visible step: frame change 1.8-3.0 around them).
-- No mouths move (static expressions). No DOF, no text, no black / magenta frames.
-- Hue: red 34.8 / orange 31.5 / blue 15.8 / violet 7.2 / magenta 7.1, sat 0.34: warm BATTLE dusk vs blue sky; magenta from the
-  set's pink-violet BATTLE horizon (set design), below the set's own per-frame max.
-- s/frame: 13.7 s wall / 26.0 s CPU (2 threads, two processes): wide 13.8 / 25.4, medium 13.7 / 26.5.
+- Pops: only g 1096 -> 1097 = the set-up cut. Near-still transitions: 0 (median change 2.17).
+- Heads (centre px, 720x1280): ga0 w 78-88, y 758-835; gb1 w 45-48; ga w 33-77; gb w 29-116, y 688-774. No head below y 880.
+  Set-up 2 main head (gb) centre 0.54-0.60 H; after the shot the camera follows the ball and the gunners move toward the left edge.
+- Sprites: no clipping (wide canvas (-2.5, -5.25, 2.5, 0.125)). No mouths move. No DOF, no text, no black / magenta frames.
+- Hue: red 32.0 / orange 29.1 / blue 22.3 / violet 6.3 / magenta 6.9, sat 0.35 (BATTLE dusk; magenta from the set's pink-violet horizon).
+- s/frame: 14.5 s wall / 24.7 s CPU (two processes, 2 threads).
+- Note: a full-disk incident (a 27 GB temp pack from a failed git fetch) stopped the first final at 48 frames; those frames were
+  verified intact (all decode, json present) and the rest rendered with the same code.
 
 ## Differences from the plan
-- "Enemy army arrives" is told by the cannon line itself (no marching troops: the set has none) plus the gunners readying.
-- Shot 14 has an internal set-up cut (wide -> medium) at g 1097 for the 1.2-1.6 s framing-change rule and to show the fuse lighting.
-- One gun fires at the end (g 1140) to lead into the macro hit of shot 15.
+- "Enemy army arrives" = the cannon line, banners, 4 crews in fresh dust (the set has no marching troops).
+- An internal set-up cut (wide -> medium) at g 1097; one gun fires at g 1140 to lead into shot 15's hit.

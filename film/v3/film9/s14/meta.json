@@ -51,14 +51,14 @@
     1035,
     1096
    ],
-   "set": "wall.py cannon_line, BATTLE (army, smoke 1, lin 26 / gen 30 courses); preset camera, slow track right + crane up 1 D, 20 mm"
+   "set": "wall.py cannon_line, BATTLE (set_army on, smoke 1 minus the column behind gun 0, lin 26 / gen 30 courses); camera near the preset (-23, -30.5, 3.3), 20 mm, slow track right + crane up; 4 gunners (big foreground one at gun 0, guns 1-3), dust at their feet, contact shadows"
   },
   "2": {
    "g": [
     1097,
     1158
    ],
-   "set": "same build; custom low medium behind-right of gun 3 (aimed at the general's section), 22 mm, slow push, shake on the shot"
+   "set": "same build; custom low medium behind-right of gun 3 (aimed at the general's section), 22 mm, slow push, shake on the shot, then the look eases up after the flying ball"
   }
  },
  "events": {
@@ -79,17 +79,25 @@
    1137
   ],
   "gun_3_fires": 1140,
+  "muzzle_flash": [
+   1140,
+   1145
+  ],
+  "soft_smoke": [
+   1140,
+   1158
+  ],
   "ball_in_flight": [
-   1144,
+   1143,
    1158
   ]
  },
- "set": "v3/set3d9/wall.py: set_flames, set_smoke(1), set_army(True), set_wall_height lin 26 / general 30, set_cauldron_steam(0.4), set_impact('general', 0, t) (t 0.02 at g 1140, +1/60 per frame) keyed every frame; runtime: 9 emissive fuse sparks + a flickering point light at gun 3's touch hole (g 1112..1139)",
+ "set": "v3/set3d9/wall.py: set_flames, set_smoke(1), set_army(True), set_wall_height lin 26 / general 30, set_cauldron_steam(0.4), set_impact('general', 0, t) (t 0.02 at g 1140, +1/75 per frame) keyed every frame; runtime (shot.py): 9 emissive fuse sparks + flickering light at gun 3's touch hole (g 1112..1139); the set's opaque muzzle smoke / flash / ball trail hidden and replaced by a soft bright muzzle flash at the barrel mouth + flash light and 12 soft translucent smoke billows from the muzzle; one smoke column hidden in set-up 1",
  "dof": "none",
  "denoiser": "OpenImageDenoise, prefilter FAST",
  "light": "BATTLE",
  "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json",
- "cast": "v3/cast9 gunner_a (gun 2, mirrored) + gunner_b (gun 3): gunner_stand -> gunner_light (linstock angle tweened, match_glow 1) -> gunner_ears; no mouths move",
+ "cast": "v3/cast9 gunner_a x2 (gun 0 foreground + gun 2) and gunner_b x2 (gun 1 + gun 3): gunner_stand -> gunner_light (linstock angle tweened, match_glow 1) -> gunner_ears; gunner_a closed frown (QA), dust 0.45..0.18 in set-up 1, contact shadow decals; no mouths move",
  "samples": 12,
  "resolution": [
   720,
@@ -97,16 +105,16 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 13.74,
- "s_per_frame_cpu_mean": 25.96,
+ "s_per_frame_wall_mean": 14.51,
+ "s_per_frame_cpu_mean": 24.74,
  "s_per_frame_by_setup": {
   "1": {
-   "wall": 13.77,
-   "cpu": 25.43
+   "wall": 13.86,
+   "cpu": 23.53
   },
   "2": {
-   "wall": 13.71,
-   "cpu": 26.49
+   "wall": 15.15,
+   "cpu": 25.96
   }
  }
 }
