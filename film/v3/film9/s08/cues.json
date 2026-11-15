@@ -1,0 +1,59 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film9/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 16.7,
+   "duration": 3.8,
+   "frame": 501,
+   "end_frame": 615,
+   "kind": "ambience",
+   "label": "busy site by day: masons tapping, bricks clacking, a distant hoist pulley creaking"
+  },
+  {
+   "time": 17.333,
+   "duration": 0.967,
+   "frame": 520,
+   "end_frame": 549,
+   "kind": "accent",
+   "label": "the general's arm swish down the seam: a whoosh + a firm 'chop' woodblock hit",
+   "peak_frame": 540
+  },
+  {
+   "time": 18.7,
+   "duration": 0.333,
+   "frame": 561,
+   "end_frame": 571,
+   "kind": "foley",
+   "label": "armour clink as he turns and points proudly at his grey section",
+   "peak_frame": 566
+  },
+  {
+   "time": 16.7,
+   "duration": 3.767,
+   "frame": 501,
+   "end_frame": 614,
+   "kind": "foley",
+   "label": "the worker's footsteps and the bricks clinking in his arms",
+   "peak_frame": 590
+  },
+  {
+   "time": 20.5,
+   "duration": 0.0,
+   "frame": 615,
+   "end_frame": 615,
+   "kind": "cut",
+   "label": "cut to dawn: quiet morning, birds chirping, a rooster far off"
+  },
+  {
+   "time": 20.5,
+   "duration": 2.9,
+   "frame": 615,
+   "end_frame": 702,
+   "kind": "ambience",
+   "label": "the cauldron simmering and bubbling, fire crackling, the paddle scraping round the wok in a slow rhythm",
+   "peak_frame": 650
+  }
+ ]
+}
