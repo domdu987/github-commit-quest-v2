@@ -1,6 +1,6 @@
 # s05 QA: film 9, shots 5-7 (the boss laughs, the nickname), wall_site DAY
 
-Delivered: `take.mkv.partaa` + `take.mkv.partab` (= `take.mkv` split at 40 MB: `cat take.mkv.part* > take.mkv`; libx264rgb crf 6, 30 fps,
+Delivered: `take.mkv.partaa..partac` (= `take.mkv` split at 40 MB: `cat take.mkv.part* > take.mkv`; libx264rgb crf 6, 30 fps,
 first_g 264, 249 frames g 264..512, 720x1280, 12 samples, 2 threads, denoise FAST, no captions, no audio). Plan range g 270..506
 (9.01-16.90 s) + 6 handle frames each side rendered in 3D (g 264..269 = shot 5 set-up backwards, the general still off screen;
 g 507..512 = shot 7 set-up continued). Set: the client-approved `set3d9/wall.py` (commit 5d511aa). Also `meta.json`, `cues.json`
