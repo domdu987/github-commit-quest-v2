@@ -1,0 +1,73 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film9/audio/narration.wav at +0.10 s, captions PROJ/film9/script/captions.json",
+ "cues": [
+  {
+   "time": 3.433,
+   "duration": 3.033,
+   "frame": 103,
+   "end_frame": 194,
+   "kind": "ambience",
+   "label": "big busy construction site by day: many hammers and chisels on stone, bricks clacking, workers calling, a hoist pulley creaking, wind, the river far off"
+  },
+  {
+   "time": 3.633,
+   "duration": 0.0,
+   "frame": 109,
+   "end_frame": 109,
+   "kind": "cut",
+   "label": "cut to the crane over the whole site"
+  },
+  {
+   "time": 3.633,
+   "duration": 2.833,
+   "frame": 109,
+   "end_frame": 194,
+   "kind": "accent",
+   "label": "slow descending crane: a wide airy Chinese-flavoured pad (erhu / dizi swell) under the narration",
+   "peak_frame": 150
+  },
+  {
+   "time": 4.0,
+   "duration": 2.467,
+   "frame": 120,
+   "end_frame": 194,
+   "kind": "foley",
+   "label": "worker's footsteps on the plank ramp (hollow wood), bricks shifting in his arms"
+  },
+  {
+   "time": 6.5,
+   "duration": 0.0,
+   "frame": 195,
+   "end_frame": 195,
+   "kind": "cut",
+   "label": "cut to the gate tower at dusk"
+  },
+  {
+   "time": 6.5,
+   "duration": 2.667,
+   "frame": 195,
+   "end_frame": 275,
+   "kind": "ambience",
+   "label": "dusk: the site quieting, evening wind on the wall, lanterns' small flames; far beyond the wall a low rumble of war drums / a distant horn"
+  },
+  {
+   "time": 7.5,
+   "duration": 1.167,
+   "frame": 225,
+   "end_frame": 260,
+   "kind": "accent",
+   "label": "ominous low drum hit and a rising string tremolo as the enemy banners and dust show on the horizon ('ทัพศัตรูจะมาถึง')",
+   "peak_frame": 243
+  },
+  {
+   "time": 9.0,
+   "duration": 0.0,
+   "frame": 270,
+   "end_frame": 270,
+   "kind": "cut",
+   "label": "plan: cut to shot 5 (the general strides in, cauldron DAY)"
+  }
+ ]
+}
