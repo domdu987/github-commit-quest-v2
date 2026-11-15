@@ -1,0 +1,67 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film9/audio/narration.wav at +0.10 s, captions.json",
+ "cues": [
+  {
+   "time": 29.367,
+   "duration": 5.5,
+   "frame": 881,
+   "end_frame": 1046,
+   "kind": "ambience",
+   "label": "steady rain on bricks, roof tiles and puddles, gurgling run-off, a low rumble of thunder far off"
+  },
+  {
+   "time": 29.567,
+   "duration": 0.0,
+   "frame": 887,
+   "end_frame": 887,
+   "kind": "cut",
+   "label": "cut in to Lin in the rain (first rain): a thunder roll",
+   "peak_frame": 887
+  },
+  {
+   "time": 29.567,
+   "duration": 1.8,
+   "frame": 887,
+   "end_frame": 941,
+   "kind": "foley",
+   "label": "soft wet squelch / drip of milky mortar running down the joints",
+   "peak_frame": 910
+  },
+  {
+   "time": 30.4,
+   "duration": 0.467,
+   "frame": 912,
+   "end_frame": 926,
+   "kind": "accent",
+   "label": "Lin looks up worried: a small uneasy descending woodwind figure",
+   "peak_frame": 920
+  },
+  {
+   "time": 32.0,
+   "duration": 0.0,
+   "frame": 960,
+   "end_frame": 960,
+   "kind": "cut",
+   "label": "cut to the general on his wall in the rain: wind and rain gust up high"
+  },
+  {
+   "time": 32.1,
+   "duration": 2.533,
+   "frame": 963,
+   "end_frame": 1039,
+   "kind": "voice",
+   "label": "the general shouts and laughs in the rain (his quote 'เห็นมั้ย ขนมเปียกฝนก็เละ!'; lip-sync window)",
+   "peak_frame": 1000
+  },
+  {
+   "time": 34.7,
+   "duration": 0.0,
+   "frame": 1041,
+   "end_frame": 1041,
+   "kind": "cut",
+   "label": "plan: cut to shot 14 (enemy army, cannon line, BATTLE): war drums"
+  }
+ ]
+}

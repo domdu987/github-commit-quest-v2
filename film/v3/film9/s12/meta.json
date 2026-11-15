@@ -1,0 +1,122 @@
+{
+ "take": "s12",
+ "film": 9,
+ "shots": [
+  12,
+  13
+ ],
+ "g0": 887,
+ "g1": 1041,
+ "first_g": 881,
+ "n_frames": 166,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan cut from the previous shot at g 887; in-handle g 881..886 rendered in 3D"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan cut to the next shot at g 1041; out-handle g 1041..1046 rendered in 3D"
+ },
+ "transitions": [
+  {
+   "at": 887,
+   "type": "in",
+   "handle": [
+    881,
+    886
+   ]
+  },
+  {
+   "at": 960,
+   "type": "cut",
+   "note": "plan cut shot 12 -> shot 13 inside the take (same location and light, new set-up)"
+  },
+  {
+   "at": 1041,
+   "type": "out",
+   "handle": [
+    1041,
+    1046
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "12": [
+   887,
+   959
+  ],
+  "13": [
+   960,
+   1040
+  ]
+ },
+ "setups": {
+  "12": {
+   "g": [
+    881,
+    959
+   ],
+   "set": "wall_site two_sections build, RAIN, lin 20 / general 26; custom medium camera from the site on Lin at the foot of his rice section (z 4.5 -> 4.3, 24 mm), slow push 1.8 D; set_mortar_wet 0.55 -> 1.0 over g 881..941"
+  },
+  "13": {
+   "g": [
+    960,
+    1046
+   ],
+   "set": "wall_site, RAIN, lin 20 / general 26; wall_top-like camera along the general's top (x 15.6 -> 13.6, z 16.4 -> 16.1, 20 mm), slow push 2.1 D"
+  }
+ },
+ "events": {
+  "mortar_softens": [
+   881,
+   941
+  ],
+  "lin_looks_at_soft_mortar": [
+   881,
+   911
+  ],
+  "lin_looks_up_worried": [
+   912,
+   926
+  ],
+  "cut_to_wall_top": 960,
+  "general_shouts_lipsync": [
+   963,
+   1039
+  ],
+  "quote_text_in_narration": [
+   993,
+   1043
+  ]
+ },
+ "set": "v3/set3d9/wall.py wall_site (two_sections build), RAIN light: set_rain(1) (compositor streaks), set_mortar_wet (0.55 -> 1.0 in shot 12, 1.0 in shot 13), set_flames, set_cauldron_steam(1), set_wall_height lin 20 / general 26, all keyed on every frame. No runtime set changes.",
+ "cast": "v3/cast9: shot 12 lin (lin_rain, wet=1: first looks down at the soft mortar beside him, then up into the rain worried, palm out); shot 13 general on his top (general_rain_shout, wet=1, pointing down at the site, fist up, body shake)",
+ "mouths": "only the general's quote moves the mouth: cast9.talk_mouth on g 963..1039 (~32.0-34.5 s, as the worker brief's 32.0-34.6); g 960..962 and 1040..1046 hold the open shout shape still; Lin's worried mouth is static",
+ "dof": "none (cam.data.dof.use_dof False + wall.setup_dof(scene, None, None, cam=cam) at build and before every render)",
+ "denoiser": "OpenImageDenoise, prefilter FAST",
+ "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json",
+ "light": "RAIN",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 11.47,
+ "s_per_frame_cpu_mean": 22.5,
+ "s_per_frame_by_setup": {
+  "shot12_lin_rain": {
+   "wall": 15.21,
+   "cpu": 29.94
+  },
+  "shot13_wall_top_rain": {
+   "wall": 8.06,
+   "cpu": 15.76
+  }
+ }
+}
