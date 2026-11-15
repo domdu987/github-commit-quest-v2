@@ -1,0 +1,94 @@
+{
+ "take": "s05",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film9/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 8.8,
+   "duration": 8.3,
+   "frame": 264,
+   "end_frame": 513,
+   "kind": "ambience",
+   "label": "Ming construction site by day: distant hammering of masons, the crackle and roar of the stove fire, the cauldron bubbling, steam hiss"
+  },
+  {
+   "time": 8.8,
+   "duration": 1.067,
+   "frame": 264,
+   "end_frame": 296,
+   "kind": "foley",
+   "label": "heavy armoured footsteps (lamellar armour clinking) striding in from the left",
+   "peak_frame": 290
+  },
+  {
+   "time": 9.867,
+   "duration": 0.133,
+   "frame": 296,
+   "end_frame": 300,
+   "kind": "accent",
+   "label": "the general stops short: armour clank, a surprised 'hm?'",
+   "peak_frame": 298
+  },
+  {
+   "time": 10.0,
+   "duration": 1.267,
+   "frame": 300,
+   "end_frame": 338,
+   "kind": "voice_fx",
+   "label": "big booming belly laugh (the general), armour rattling with each laugh",
+   "peak_frame": 310
+  },
+  {
+   "time": 11.3,
+   "duration": 0.0,
+   "frame": 339,
+   "end_frame": 339,
+   "kind": "cut",
+   "label": "cut to the low two-shot: ambience continues"
+  },
+  {
+   "time": 11.7,
+   "duration": 2.033,
+   "frame": 351,
+   "end_frame": 412,
+   "kind": "accent",
+   "label": "the general points and mocks (narration carries the quote); a little 'wah-wah' comic tuba sting under 'ทำขนม'",
+   "peak_frame": 384
+  },
+  {
+   "time": 13.933,
+   "duration": 0.467,
+   "frame": 418,
+   "end_frame": 432,
+   "kind": "voice_fx",
+   "label": "second burst of laughter from the general",
+   "peak_frame": 424
+  },
+  {
+   "time": 14.433,
+   "duration": 0.0,
+   "frame": 433,
+   "end_frame": 433,
+   "kind": "cut",
+   "label": "cut to the workers"
+  },
+  {
+   "time": 14.433,
+   "duration": 2.633,
+   "frame": 433,
+   "end_frame": 512,
+   "kind": "walla",
+   "label": "a crowd of workers laughing and jeering (walla), one slaps his knee",
+   "peak_frame": 488
+  },
+  {
+   "time": 16.2,
+   "duration": 0.2,
+   "frame": 486,
+   "end_frame": 492,
+   "kind": "accent",
+   "label": "comic 'boing' sting on 'ไอ้ช่างขนม'",
+   "peak_frame": 488
+  }
+ ]
+}
