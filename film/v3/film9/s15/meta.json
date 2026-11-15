@@ -1,0 +1,127 @@
+{
+ "take": "s15",
+ "film": 9,
+ "shots": [
+  15,
+  16
+ ],
+ "g0": 1153,
+ "g1": 1413,
+ "first_g": 1147,
+ "n_frames": 272,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "from shot 14 (cannon_line, the gun fires); in-handle g 1147..1152 = the calm macro before"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "to shot 17 (site_wide DAWN); out-handle g 1413..1418 = the web settling, push continues"
+ },
+ "transitions": [
+  {
+   "at": 1153,
+   "type": "cut"
+  },
+  {
+   "at": 1284,
+   "type": "cut",
+   "note": "plan cut shot 15 (plain) -> shot 16 (rice) at 42.80 s, inside the take; same camera angle on purpose (1:1 comparison)"
+  },
+  {
+   "at": 1413,
+   "type": "out",
+   "handle": [
+    1413,
+    1418
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "15": [
+   1153,
+   1283
+  ],
+  "16": [
+   1284,
+   1412
+  ]
+ },
+ "setups": {
+  "15": {
+   "g": [
+    1147,
+    1283
+   ],
+   "set": "wall.py mortar_macro (plain), BATTLE; custom oblique along the joint from the front-left (preset macro_plain moved), 22 mm, push ~2.1 D, jolt on the hit"
+  },
+  "16": {
+   "g": [
+    1284,
+    1418
+   ],
+   "set": "wall.py mortar_macro_rice, BATTLE; same oblique, closer start, push ~2.7 D, jolt on the hit; runtime radial reveal of the web material (the web spreads over the face g 1290..1337)"
+  }
+ },
+ "events": {
+  "plain_ball_flies_in": [
+   1180,
+   1207
+  ],
+  "plain_hit": 1207,
+  "plain_crack_races": [
+   1207,
+   1262
+  ],
+  "shards_dust": [
+   1207,
+   1230
+  ],
+  "cut_to_rice": 1284,
+  "web_spreads": [
+   1290,
+   1337
+  ],
+  "rice_ball_flies_in": [
+   1352,
+   1380
+  ],
+  "rice_hit": 1380,
+  "web_flexes_and_holds": [
+   1380,
+   1405
+  ],
+  "ball_bounces_off": [
+   1385,
+   1413
+  ]
+ },
+ "set": "v3/set3d9/wall.py macro area: set_macro(t) + set_flames keyed every frame; shot 16 adds a keyed radial transparent mix + glow scale on the web material (shot.py web_reveal_nodes / key_web)",
+ "dof": "none",
+ "denoiser": "OpenImageDenoise, prefilter FAST",
+ "light": "BATTLE",
+ "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json",
+ "cast": "none on screen",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 12.0,
+ "s_per_frame_cpu_mean": 23.54,
+ "s_per_frame_by_setup": {
+  "15": {
+   "wall": 11.94,
+   "cpu": 23.41
+  },
+  "16": {
+   "wall": 12.07,
+   "cpu": 23.66
+  }
+ }
+}

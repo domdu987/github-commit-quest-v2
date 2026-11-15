@@ -1,0 +1,112 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film9/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 38.233,
+   "duration": 4.567,
+   "frame": 1147,
+   "end_frame": 1284,
+   "kind": "ambience",
+   "label": "inside the plain mortar joint: muffled distant battle rumble, low tense drone, faint crackle of the fire light"
+  },
+  {
+   "time": 39.333,
+   "duration": 0.9,
+   "frame": 1180,
+   "end_frame": 1207,
+   "kind": "foley",
+   "label": "a heavy cannonball whoosh growing from behind the listener's left shoulder",
+   "peak_frame": 1204
+  },
+  {
+   "time": 40.233,
+   "duration": 0.267,
+   "frame": 1207,
+   "end_frame": 1215,
+   "kind": "impact",
+   "label": "HIT: deep stony thud + bright flash crack",
+   "peak_frame": 1207
+  },
+  {
+   "time": 40.233,
+   "duration": 1.833,
+   "frame": 1207,
+   "end_frame": 1262,
+   "kind": "foley",
+   "label": "brittle crack racing: a fast dry splitting / ice-crackle sweeping left and right, shards skittering",
+   "peak_frame": 1215
+  },
+  {
+   "time": 40.833,
+   "duration": 1.5,
+   "frame": 1225,
+   "end_frame": 1270,
+   "kind": "foley",
+   "label": "the ball drops away, grit and dust patter",
+   "peak_frame": 1240
+  },
+  {
+   "time": 42.8,
+   "duration": 0.0,
+   "frame": 1284,
+   "end_frame": 1284,
+   "kind": "cut",
+   "label": "cut to the rice mortar: same place, the drone turns warm"
+  },
+  {
+   "time": 42.8,
+   "duration": 4.5,
+   "frame": 1284,
+   "end_frame": 1419,
+   "kind": "ambience",
+   "label": "inside the rice mortar joint: warm low drone, soft glowing hum"
+  },
+  {
+   "time": 43.0,
+   "duration": 1.567,
+   "frame": 1290,
+   "end_frame": 1337,
+   "kind": "accent",
+   "label": "the golden web spreads and wraps the crystals: a rising shimmering, sticky-stretchy sparkle",
+   "peak_frame": 1320
+  },
+  {
+   "time": 45.067,
+   "duration": 0.933,
+   "frame": 1352,
+   "end_frame": 1380,
+   "kind": "foley",
+   "label": "cannonball whoosh again",
+   "peak_frame": 1377
+  },
+  {
+   "time": 46.0,
+   "duration": 0.2,
+   "frame": 1380,
+   "end_frame": 1386,
+   "kind": "impact",
+   "label": "HIT: a dull rubbery 'thoomp' (no crack)",
+   "peak_frame": 1380
+  },
+  {
+   "time": 46.0,
+   "duration": 0.833,
+   "frame": 1380,
+   "end_frame": 1405,
+   "kind": "accent",
+   "label": "the web stretches and springs back: elastic boing-wobble, a glow swell",
+   "peak_frame": 1384
+  },
+  {
+   "time": 46.2,
+   "duration": 0.9,
+   "frame": 1386,
+   "end_frame": 1413,
+   "kind": "foley",
+   "label": "the ball bounces off and away, a light thud far off",
+   "peak_frame": 1395
+  }
+ ]
+}
