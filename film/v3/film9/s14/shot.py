@@ -43,9 +43,9 @@ GUN_B = Vector((CX[3] - 1.3, CY - 2.3, 0.0))      # gunner_b at gun 3 (x 4.5, ai
                                                   # in front of its bucket: from both cameras the gun is screen-right of him
 TOUCH = Vector((CX[3], CY - 1.05, 1.62))          # gun 3's touch hole (top of the breech)
 
-CAM = {1: (((-23.0, -28.5, 3.4), (5.0, -13.0, 5.4)), ((-20.6, -30.2, 4.4), (6.6, -13.6, 5.6))),
+CAM = {1: (((-12.5, -34.0, 3.3), (4.0, -14.0, 5.0)), ((-10.4, -34.6, 4.0), (4.0, -14.3, 5.3))),   # cannon_line moved in: gunners read; track + crane
        2: (((9.6, -30.0, 2.05), (1.7, -20.2, 3.3)), ((8.8, -29.15, 1.85), (1.5, -19.9, 3.4)))}
-LENS = {1: 20.0, 2: 22.0}
+LENS = {1: 22.0, 2: 22.0}
 PPD = {1: 160, 2: 288}
 
 

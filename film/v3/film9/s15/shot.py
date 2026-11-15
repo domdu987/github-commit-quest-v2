@@ -2,18 +2,18 @@
 """shot.py -- film 9 take s15: shots 15 + 16 (g 1153..1412, handles g 1147..1152 and g 1413..1418), THE REVEAL inside the mortar joint
 (wall.py macro area, 1 D ~ 2 mm, BATTLE light).  Two set-ups, two processes (one macro kind per build):
 
-    id 15  g 1147..1283  mortar_macro (plain lime mortar): oblique along the grey bed joint packed with white lime crystals, slow push.
+    id 15  g 1147..1283  mortar_macro (plain lime mortar): macro_front, near square-on to the grey joint with cyan lime crystals, slow push.
                          "ปูนธรรมดา แข็งก็จริง แต่เปราะ" calm; the cannonball flies in over the camera's left shoulder (g 1180..1207)
                          and strikes on "โดนกระแทก" (40.12 s -> g 1207): flash, small camera jolt, a BLACK brittle crack with a pale
                          chipped lip races along the whole joint both ways and branches up / down into the bricks on
                          "ทีเดียวก็ร้าวทั้งแผ่น" (g 1207..1262), shards spall toward the lens, dust puff; the ball drops away.
-    id 16  g 1284..1418  mortar_macro_rice: the mirrored oblique from the right (reads as "the other wall"), creamy matrix.
-                         On "ส่วนแป้งข้าวเหนียว ไปพันกับผลึกปูน เป็นตาข่ายเหนียวหนึบ" (41.95-45.39 s) the glowing gold starch web
-                         SPREADS out from the frame centre and wraps the crystals (runtime radial reveal on the web material,
-                         g 1290..1338), then glows; on "ลูกปืนกระแทก" the ball flies in (g 1352..1381) and hits (g 1381): the face dents,
-                         the web stretches, flares, flexes back in a damped spring and HOLDS; the ball bounces back out and drops away on
-                         "แค่ไหนก็แค่บุบ" (46.12-47.10 s).  Out-handle g 1413..1418 continues.
-Mouths: nobody on screen.  NO depth of field (C.Take).  Blender frame of (id, g) = 1000 * (id - 1) + g + 1 - 1000 * 14 (bf below).
+    id 16  g 1284..1418  mortar_macro_rice: macro_front again (push from slightly right / below), creamy matrix.
+                         On "ส่วนแป้งข้าวเหนียว ไปพันกับผลึกปูน เป็นตาข่ายเหนียวหนึบ" (41.95-45.39 s) the slow push shows the glowing
+                         gold starch net wrapped round the cyan lime crystals; on "ลูกปืนกระแทก" the ball flies in (g 1352..1380) and hits
+                         (g 1380): the face dents, a bright gold ring pulses out over the net, the web stretches, flexes back in a damped
+                         spring and HOLDS; the ball springs back a little and settles, held in its shallow dent with a glowing dent ring,
+                         on "แค่ไหนก็แค่บุบ" (46.12-47.10 s) (round-3 set: the ball stays visible).  Out-handle g 1413..1418 continues.
+Mouths: nobody on screen.  NO depth of field (C.Take).  Blender frame: bf() below (smoke phase).
 
     python3 shot.py stills 15|16 a:b[:step] <out_dir> [scale] [samples]
     python3 shot.py final 15|16 a:b[:step] [scale] [samples]
@@ -44,7 +44,10 @@ G_FLY16 = G_HIT16 - 28             # 1352
 
 
 def bf(shot, g):
-    return 1000 * (shot - 14) + int(g) + 1
+    """Blender frame.  The set's macro smoke billows / embers take their phase from the Blender frame (rate 0.003 = one cycle per
+    333.3 frames).  Shot 16 (f 3285..3420) has a clean phase (no billow in front of the impact); shot 15 is placed exactly one cycle
+    earlier (f 2952..3088) so it gets the same clean phase (at f 2148.. big billows drifted across the lens)."""
+    return (2000 + int(g) + 1) if shot == 16 else (int(g) + 1805)
 
 
 def macro_t(shot, g):
@@ -63,12 +66,12 @@ def macro_t(shot, g):
     return min(1.0, 0.3 + 0.7 * (g - G_HIT16) / 40.0)
 
 
-# cameras: (loc, look) at the start / end of each set-up; 22 mm.  Both = the preset's oblique (from the front-left, joint receding
-# right, the impact point mid-frame) so plain vs rice compare 1:1; the rice set-up starts closer and pushes further in.
-# (a mirrored oblique from the front-right was tried: hot-lit brick ends, weak web -> dropped.)
-CAM = {15: (((-5.6, -5.2, 1.25), (2.4, 0.2, -0.05)), ((-3.9, -3.75, 0.75), (2.55, 0.2, -0.15))),
-       16: (((-4.9, -4.95, 1.05), (2.3, 0.2, -0.05)), ((-3.0, -3.05, 0.55), (2.05, 0.2, -0.12)))}
-LENS = 22.0
+# cameras: (loc, look) at the start / end of each set-up.  Round-3 set: the default macro_front (1.4, -8.6, 0.25) -> (1.5, 0.22, 0),
+# 24 mm, near square-on, impact dead centre, the joint a horizontal band.  Plain: slow push in from slightly left + above; rice: the
+# same push from slightly right + below (a fresh framing at the cut, same subject placement for the 1:1 comparison).
+CAM = {15: (((0.95, -9.5, 0.55), (1.45, 0.22, 0.02)), ((1.75, -7.7, 0.12), (1.5, 0.22, 0.0))),
+       16: (((2.35, -9.5, -0.15), (1.55, 0.22, -0.02)), ((1.3, -7.4, 0.3), (1.5, 0.22, 0.0)))}
+LENS = 24.0
 
 
 def cam_of(shot, g):
@@ -86,49 +89,10 @@ def cam_of(shot, g):
     return loc, look
 
 
-# ----------------------------------------------------------------------------- runtime: the web spreads over the face (rice only)
-def web_reveal_nodes():
-    """insert transparent-mix on the web material: visible where |p - c| < R (R keyed), soft edge 0.6 D, a bright front at the edge."""
-    m = W.STATE['M']['web']; nt = m.node_tree
-    em = nt.nodes['strength']; out = nt.nodes['Material Output']
-    tc = nt.nodes.new('ShaderNodeTexCoord')
-    dist = nt.nodes.new('ShaderNodeVectorMath'); dist.operation = 'DISTANCE'; dist.inputs[1].default_value = (0.9, 0.2, 0.0)
-    nz = nt.nodes.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 0.6
-    add = nt.nodes.new('ShaderNodeMath'); add.operation = 'MULTIPLY_ADD'; add.inputs[1].default_value = 2.5
-    rad = nt.nodes.new('ShaderNodeValue'); rad.name = 's15_R'; rad.outputs[0].default_value = 99.0
-    mr = nt.nodes.new('ShaderNodeMapRange'); mr.name = 's15_map'
-    tr = nt.nodes.new('ShaderNodeBsdfTransparent'); mx = nt.nodes.new('ShaderNodeMixShader')
-    nt.links.new(tc.outputs['Object'], dist.inputs[0]); nt.links.new(tc.outputs['Object'], nz.inputs['Vector'])
-    nt.links.new(nz.outputs['Fac'], add.inputs[0]); nt.links.new(dist.outputs['Value'], add.inputs[2])     # noisy distance
-    nt.links.new(add.outputs[0], mr.inputs['Value'])
-    sub = nt.nodes.new('ShaderNodeMath'); sub.operation = 'SUBTRACT'; sub.inputs[1].default_value = 0.8
-    nt.links.new(rad.outputs[0], sub.inputs[0]); nt.links.new(sub.outputs[0], mr.inputs['From Min']); nt.links.new(rad.outputs[0], mr.inputs['From Max'])
-    mr.inputs['To Min'].default_value = 1.0; mr.inputs['To Max'].default_value = 0.0
-    nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mr.outputs[0], mx.inputs[0])
-    nt.links.new(mx.outputs[0], out.inputs['Surface'])
-    return rad
-
-
-def key_web(rad, f, g):
-    u = clamp((g - G_WEB[0]) / float(G_WEB[1] - G_WEB[0]))
-    R = -1.0 + 32.0 * ez(u, "sine") ** 1.6 if g >= G_WEB[0] else -1.0
-    rad.outputs[0].default_value = R
-    rad.outputs[0].keyframe_insert('default_value', frame=f)
-    # glow: dim while it spreads, then the web settles at the set's 1.8 (set_macro keys it each frame; we scale on top)
-    sk = W.STATE['M']['web'].node_tree.nodes['strength'].inputs['Strength']
-    t = macro_t(16, g)
-    base = 1.8 * (1.0 + 1.4 * math.exp(-((t - 0.36) / 0.1) ** 2) + 0.25 * W._ss(0.3, 0.6, t)) if t > 0 else 1.8
-    breathe = 1.0 + 0.10 * math.sin(g * 0.21) if t == 0 else 1.0
-    spread = 1.0 + 0.35 * math.exp(-((u - 0.55) / 0.3) ** 2) if 0 < u < 1 else 1.0     # it glows hot while it wraps
-    sk.default_value = base * breathe * spread
-    sk.keyframe_insert('default_value', frame=f)
-
-
 class Take(C.Take):
     def __init__(self, quality="preview", shot=15):
         C.Take.__init__(self, "wall_site", PRESET[shot], quality=quality, lens=LENS, name="cam_s15_%d" % shot, light="BATTLE")
         self.shot = shot
-        self.rad = web_reveal_nodes() if shot == 16 else None
 
     def pose(self, shot, gs):
         for g in gs:
@@ -136,8 +100,6 @@ class Take(C.Take):
             loc, look = cam_of(shot, g)
             self.key_cam(f, loc, look, lens=LENS)
             self.key_set(f, macro=macro_t(shot, g))
-            if self.rad is not None:
-                key_web(self.rad, f, g)
 
     def report(self, shot, g):
         loc, look = cam_of(shot, g)
