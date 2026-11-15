@@ -1,0 +1,83 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film9/audio/narration.wav at +0.10 s, captions PROJ/film9/script/captions.json",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 3.833,
+   "frame": 0,
+   "end_frame": 115,
+   "kind": "ambience",
+   "label": "Ming construction site by day: distant hammering and chisels, workers calling far off, wind over the river plain; the fire under the cauldron crackling close"
+  },
+  {
+   "time": 0.0,
+   "duration": 1.767,
+   "frame": 0,
+   "end_frame": 53,
+   "kind": "foley",
+   "label": "the big wooden paddle stirring thick sticky rice soup: slow heavy gloop-swish every 0.8 s, soup bubbling",
+   "peak_frame": 12
+  },
+  {
+   "time": 0.0,
+   "duration": 1.767,
+   "frame": 0,
+   "end_frame": 53,
+   "kind": "foley",
+   "label": "steam hiss and the stove fire roaring softly under the wok"
+  },
+  {
+   "time": 1.8,
+   "duration": 0.0,
+   "frame": 54,
+   "end_frame": 54,
+   "kind": "cut",
+   "label": "cut to the mortar trough (same place)"
+  },
+  {
+   "time": 1.8,
+   "duration": 0.3,
+   "frame": 54,
+   "end_frame": 63,
+   "kind": "prop",
+   "label": "wooden bucket tips, the rope bail creaks",
+   "peak_frame": 58
+  },
+  {
+   "time": 1.9,
+   "duration": 0.8,
+   "frame": 57,
+   "end_frame": 81,
+   "kind": "foley",
+   "label": "milky rice soup pours in a thick glugging stream into the wet lime mortar",
+   "peak_frame": 62
+  },
+  {
+   "time": 2.733,
+   "duration": 0.0,
+   "frame": 82,
+   "end_frame": 82,
+   "kind": "cut",
+   "label": "cut to the wall foot (same place)"
+  },
+  {
+   "time": 2.733,
+   "duration": 1.067,
+   "frame": 82,
+   "end_frame": 114,
+   "kind": "foley",
+   "label": "steel trowel scraping and pressing wet mortar into the brick joints, a stroke every ~0.5 s, light taps on brick",
+   "peak_frame": 90
+  },
+  {
+   "time": 3.633,
+   "duration": 0.0,
+   "frame": 109,
+   "end_frame": 109,
+   "kind": "cut",
+   "label": "plan: cut to shot 3, the crane over the whole construction site (take s03)"
+  }
+ ]
+}
