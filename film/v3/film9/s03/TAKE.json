@@ -1,0 +1,35 @@
+{
+ "first_g": 103, "last_g": 275,
+ "setup_ranges": {"1": [103, 194], "2": [195, 275]},
+ "shot_of": {"shot 3": [109, 194], "shot 4": [195, 269]},
+ "cuts": [194],
+ "meta": {
+  "take": "s03", "film": 9, "shots": [3, 4], "g0": 109, "g1": 270, "handle_in": 6, "handle_out": 6,
+  "transition_in": {"type": "cut", "frames": 0},
+  "transition_out": {"type": "cut", "frames": 0, "note": "plan: shot 5 (cauldron DAY, the general strides in) follows at g 270; handle g 270..275 rendered in 3D (the push continues)"},
+  "transitions": [{"at": 103, "type": "in", "handle": [103, 108]},
+                  {"at": 109, "type": "cut", "note": "plan cut shot 2 -> shot 3 at 3.62 s"},
+                  {"at": 195, "type": "cut", "note": "plan cut shot 3 -> shot 4 at 6.50 s (DAY -> DUSK, separate build)"},
+                  {"at": 270, "type": "out", "handle": [270, 275]}],
+  "shot_ranges": {"3": [109, 194], "4": [195, 269]},
+  "setups": {"1": {"g": [103, 194], "set": "wall_site site_wide DAY; crane: camera (-19.4, 33.0, 20.6) -> (-17.0, 29.8, 16.6) (sinks 4 D, pushes in 3.9 D), look-at (-2.6, 7.0, 1.0) -> (-3.4, 7.6, 1.6), 20 mm; lower than the preset at the end (QA note: Lin chin) and panned west so Lin and the cauldron sit inside the frame"},
+             "2": {"g": [195, 275], "set": "wall_site gate_dusk DUSK; preset camera (14, 26, 21) -> (15.4, 24.2, 20.3), look-at (31, 2, 10.6) -> (31, 2, 11.6) (tilted up 1.1 D vs the preset to give the horizon more room), 20 mm"}},
+  "events": {"crane_down_and_in": [103, 194], "worker_climbs_ramp": [103, 194], "gate_push": [195, 275], "host_on_horizon": [195, 275]},
+  "set": "v3/set3d9/wall.py wall_site; shot 3 preset site_wide DAY (lin 18 / general 21, steam 1); shot 4 preset gate_dusk DUSK (army on, smoke 0.6, steam 1); keyed every frame: set_flames 1, set_cauldron_steam 1, set_wall_height 18/21, shot 4 also set_smoke 0.6 + set_army(True). Runtime change (shot 4 only, from shot.py): object 'army_horizon' scaled 1.7x in z (taller banners + dust bank, QA_TECH set note B).",
+  "dof": "none (client rule: cam.data.dof.use_dof False + setup_dof(scene, None, None, cam=cam) at build and before every render)",
+  "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+  "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json",
+  "light": "DAY (shot 3), DUSK (shot 4)",
+  "cast": "v3/cast9, shot 3 only: lin (lin_stir on his platform, flipped to face the wok), worker_a + worker_b + worker_c carrying brick stacks (workers_carry* + cast9.cycle walk, arms kept): worker_a along the site, worker_b toward the wall, worker_c up the plank ramp of the general's scaffold. The general is not shown (he enters in shot 5). Shot 4: no figures. No lip-sync."
+ },
+ "cues": [
+  {"frame": 103, "end_frame": 194, "kind": "ambience", "label": "big busy construction site by day: many hammers and chisels on stone, bricks clacking, workers calling, a hoist pulley creaking, wind, the river far off"},
+  {"frame": 109, "end_frame": 109, "kind": "cut", "label": "cut to the crane over the whole site"},
+  {"frame": 109, "end_frame": 194, "kind": "accent", "label": "slow descending crane: a wide airy Chinese-flavoured pad (erhu / dizi swell) under the narration", "peak_frame": 150},
+  {"frame": 120, "end_frame": 194, "kind": "foley", "label": "worker's footsteps on the plank ramp (hollow wood), bricks shifting in his arms"},
+  {"frame": 195, "end_frame": 195, "kind": "cut", "label": "cut to the gate tower at dusk"},
+  {"frame": 195, "end_frame": 275, "kind": "ambience", "label": "dusk: the site quieting, evening wind on the wall, lanterns' small flames; far beyond the wall a low rumble of war drums / a distant horn"},
+  {"frame": 225, "end_frame": 260, "kind": "accent", "label": "ominous low drum hit and a rising string tremolo as the enemy banners and dust show on the horizon ('ทัพศัตรูจะมาถึง')", "peak_frame": 243},
+  {"frame": 270, "end_frame": 270, "kind": "cut", "label": "plan: cut to shot 5 (the general strides in, cauldron DAY)"}
+ ]
+}

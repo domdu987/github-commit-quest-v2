@@ -1,0 +1,37 @@
+{
+ "first_g": 0, "last_g": 114,
+ "setup_ranges": {"1": [0, 53], "2": [54, 81], "3": [82, 114]},
+ "shot_of": {"shot 1": [0, 53], "shot 2a pour": [54, 81], "shot 2b trowel": [82, 108]},
+ "cuts": [53, 81],
+ "meta": {
+  "take": "s01", "film": 9, "shots": [1, 2], "g0": 0, "g1": 109, "handle_in": 0, "handle_out": 6,
+  "transition_in": {"type": "open", "frames": 0},
+  "transition_out": {"type": "cut", "frames": 0, "note": "plan: shot 3 (site_wide DAY crane, take s03) follows at g 109; handle g 109..114 rendered in 3D (trowelling + camera move continue)"},
+  "transitions": [{"at": 0, "type": "open"},
+                  {"at": 54, "type": "cut", "note": "plan cut shot 1 -> shot 2 at 1.80 s (same location / light, pour_close set-up)"},
+                  {"at": 82, "type": "cut", "note": "inside shot 2, on 'ปูนก่อ' (2.64 s): pour -> trowelling the joints at the wall foot (same location / light)"},
+                  {"at": 109, "type": "out", "handle": [109, 114]}],
+  "shot_ranges": {"1": [0, 53], "2": [54, 108]},
+  "setups": {"1": {"g": [0, 53], "set": "wall_site DAY, cauldron area; custom camera near the preset 'cauldron' (closer on Lin): (-9.0, 20.8, 6.1) -> (-9.9, 19.6, 5.7), 24 mm, push + slight orbit"},
+             "2": {"g": [54, 81], "set": "wall_site DAY; preset camera 'pour_close' (-0.4, 12.9, 3.6) -> (-1.0, 12.7, 3.35), 24 mm, slow push; Lin at lin_trough (-5.2, 11.2)"},
+             "3": {"g": [82, 114], "set": "wall_site DAY; custom medium along Lin's rice-mortar section from the site side (-10.2, 9.0, 2.5) -> (-9.5, 8.6, 2.45) looking at (-5.6, 5.3, 2.0), 24 mm; Lin at the wall foot (-6.0, 6.3)"}},
+  "events": {"stir": [0, 53], "pour_tip": [54, 63], "soup_stream_into_trough": [56, 81], "cut_to_trowel": 82, "trowel_strokes_every_16_frames": [82, 114]},
+  "set": "v3/set3d9/wall.py wall_site, built with preset 'cauldron' (DAY, lin 18 / general 21); keyed every frame: set_flames 1.0, set_cauldron_steam (0.75 in shot 1 so the plume does not swallow Lin, 1.0 after), set_wall_height lin 18 / general 21. No runtime set changes.",
+  "dof": "none (client rule: cam.data.dof.use_dof False + setup_dof(scene, None, None, cam=cam) at build and before every render)",
+  "denoiser": "OpenImageDenoise, albedo+normal, prefilter FAST",
+  "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json",
+  "light": "DAY",
+  "cast": "v3/cast9: lin only. Shot 1 STORY9 lin_stir (hands on a 24-frame ellipse, paddle 58 +- 8 deg), mirrored (flip) so he faces the wok; shot 2a lin_pour mirrored (pour 0.35 -> 0.95, bucket_water 1 -> 0.2, pour_len 1.4); shot 2b lin_trowel (trowel scale 1.8, 16-frame strokes along the joint, mortar on the blade 1 -> 0.4). No lip-sync (no quote)."
+ },
+ "cues": [
+  {"frame": 0, "end_frame": 115, "kind": "ambience", "label": "Ming construction site by day: distant hammering and chisels, workers calling far off, wind over the river plain; the fire under the cauldron crackling close"},
+  {"frame": 0, "end_frame": 53, "kind": "foley", "label": "the big wooden paddle stirring thick sticky rice soup: slow heavy gloop-swish every 0.8 s, soup bubbling", "peak_frame": 12},
+  {"frame": 0, "end_frame": 53, "kind": "foley", "label": "steam hiss and the stove fire roaring softly under the wok"},
+  {"frame": 54, "end_frame": 54, "kind": "cut", "label": "cut to the mortar trough (same place)"},
+  {"frame": 54, "end_frame": 63, "kind": "prop", "label": "wooden bucket tips, the rope bail creaks", "peak_frame": 58},
+  {"frame": 57, "end_frame": 81, "kind": "foley", "label": "milky rice soup pours in a thick glugging stream into the wet lime mortar", "peak_frame": 62},
+  {"frame": 82, "end_frame": 82, "kind": "cut", "label": "cut to the wall foot (same place)"},
+  {"frame": 82, "end_frame": 114, "kind": "foley", "label": "steel trowel scraping and pressing wet mortar into the brick joints, a stroke every ~0.5 s, light taps on brick", "peak_frame": 90},
+  {"frame": 109, "end_frame": 109, "kind": "cut", "label": "plan: cut to shot 3, the crane over the whole construction site (take s03)"}
+ ]
+}
