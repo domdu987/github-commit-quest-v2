@@ -160,27 +160,32 @@ def pose_gen_a(g):
 
 
 def pose_gen_b(g):
-    """shot 6: laughs, then points at lin and mocks (lip-sync), a second laugh on 'กินเหรอ!'."""
+    """shot 6: laughs, then points at lin and mocks (lip-sync), a second laugh on 'กินเหรอ!'.  The laugh and the mock are both
+    computed every frame and blended with puppet.lerp_pose over 10 / 8 frames (g 345..355, 410..418); the drawing switches
+    (expression laughing <-> smug) sit behind blinks at g 350 and 414."""
     k = g - G6
-    mock = json.loads(json.dumps(cast9.STORY9["general_mock"][1]))
-    laugh = json.loads(json.dumps(cast9.STORY9["general_laugh"][1]))
-    if g < G6 + 12 or g >= C.g_of(13.98) - 4:          # laugh beats at both ends
-        p = laugh
-        p["squash"] = (1.02, 0.98) if (k // 3) % 2 == 0 else (0.99, 1.01)
-        p["head_roll"] = -10 + 3 * math.sin(k * 0.7)
-        p["lean"] = -8 + 2 * math.sin(k * 0.9)
-        p["yaw"] = 0.45
+    L = json.loads(json.dumps(cast9.STORY9["general_laugh"][1]))
+    L["squash"] = (1.02, 0.98) if (k // 3) % 2 == 0 else (0.99, 1.01)
+    L["head_roll"] = -10 + 3 * math.sin(k * 0.7)
+    L["lean"] = -8 + 2 * math.sin(k * 0.9)
+    L["yaw"] = 0.45
+    M = json.loads(json.dumps(cast9.STORY9["general_mock"][1]))
+    f = u_of(g, G6 + 10, G6 + 20)
+    M["arm_r"]["hand"] = (lerp(0.45, 1.05, f), lerp(0.95, 0.1 + 0.05 * math.sin(k * 0.5), f))
+    M["arm_r"]["shape"] = "point" if f > 0.5 else "open"
+    M["head_roll"] = 8 + 3 * math.sin(k * 0.21)
+    M["lean"] = 2 * math.sin(k * 0.17) + 3 * f
+    M["pitch"] = -0.3 + 0.08 * math.sin(k * 0.3)
+    M["gaze"] = (0.9, -0.5)
+    w = u_of(g, 345, 355) * (1.0 - u_of(g, 410, 418))
+    if w <= 0.0:
+        p = L
+    elif w >= 1.0:
+        p = M
     else:
-        p = mock
-        f = u_of(g, G6 + 12, G6 + 20)
-        p["arm_r"]["hand"] = (lerp(0.45, 1.05, f), lerp(0.95, 0.1 + 0.05 * math.sin(k * 0.5), f))
-        p["arm_r"]["shape"] = "point" if f > 0.5 else "open"
-        p["head_roll"] = 8 + 3 * math.sin(k * 0.21)
-        p["lean"] = 2 * math.sin(k * 0.17) + 3 * f
-        p["pitch"] = -0.3 + 0.08 * math.sin(k * 0.3)
-        p["gaze"] = (0.9, -0.5)
+        p = cast9.puppet.lerp_pose("general", L, M, w) if hasattr(cast9, "puppet") else __import__("puppet").lerp_pose("general", L, M, w)
     p["mouth"] = mouth_of(g)
-    p["blink"] = C.blink(g, [366, 404])
+    p["blink"] = C.blink(g, [350, 366, 404, 414])
     p["t"] = g / 30.0
     return p
 

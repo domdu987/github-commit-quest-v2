@@ -42,7 +42,7 @@ PRESET = {8: "two_sections", 9: "cauldron"}
 # ----------------------------------------------------------------------------- staging
 GEN = Vector((1.5, 10.6, 0.0))             # at the seam, a little on his own side
 LIN8 = Vector((-1.7, 10.3, 0.0))           # in front of his rice section
-WK0, WK1 = Vector((5.6, 9.2, 0.0)), Vector((3.1, 9.1, 0.0))   # brick carrier walks screen-right toward the seam, behind the general
+WK0 = WK1 = Vector((3.6, 8.9, 0.0))   # brick carrier waiting behind the general (screen-left), shifting his load
 LIN9 = Vector((-15.15, 13.3, 1.5))         # W mark lin_stir
 
 
@@ -51,7 +51,7 @@ def aim(loc, look):
 
 
 CAM = {8: (aim((0.3, 17.8, 4.2), (0.0, 5.0, 2.9)), aim((0.6, 16.9, 4.1), (0.2, 5.0, 2.9))),
-       9: (aim((-12.0, 21.8, 6.6), (-13.6, 12.5, 3.5)), aim((-12.5, 20.4, 6.2), (-14.0, 12.6, 3.6)))}
+       9: (aim((-12.4, 21.8, 6.6), (-14.4, 12.5, 3.5)), aim((-12.9, 20.4, 6.2), (-14.8, 12.6, 3.6)))}
 LENS = {8: 20.0, 9: 24.0}
 PPD = {8: 256, 9: 256}
 
@@ -96,35 +96,35 @@ def pose_stir(g):
 
 
 def pose_gen(g):
-    """at the seam: smug -> the chop down the seam (right arm up high, then down) -> points at his own section (screen-left: the
-    pose is mirrored, so 'screen-right' arm work points left) -> akimbo, chin up.  Static smug mouth (no quote here)."""
+    """at the seam: smug akimbo -> the chop: right hand rises high above the head (519..529), holds (529..537), cuts straight down the
+    seam (537..546) -> faces the camera, both hands on the hips (549..558) -> behind the blink at g 558 the drawing flips (mirror, at
+    yaw 0 with symmetric akimbo arms, so the flip does not pop) -> turns to his own grey section (screen-left) and points at it
+    (561..571, 'ช่วงของแม่ทัพ') -> akimbo again, chin up (602..612).  Static smug mouth (no quote here)."""
     k = g - RANGES[8][0]
-    chop = u_of(g, *G_SPLIT)
-    up = bump(g, G_SPLIT[0], G_SPLIT[0] + 16) if g < G_SPLIT[0] + 8 else 1.0 - chop
-    mine = u_of(g, *G_MINE) * (1.0 - u_of(g, *G_AKIMBO))
-    p = dict(yaw=0.35, pitch=-0.3 + 0.05 * math.sin(k * 0.13), expr="smug", head_roll=4 + 2.5 * math.sin(k * 0.11),
-             lean=1.5 * math.sin(k * 0.09), legs="wide", arm_l="akimbo", mirror=False)
-    if g < G_MINE[0]:
-        # the chop: right hand rises above the head (g 520..536), then cuts down to the waist (536..549); facing the camera
-        if g < G_SPLIT[0]:
-            p["arm_r"] = "akimbo"
-        else:
-            r = u_of(g, G_SPLIT[0], G_SPLIT[0] + 14)
-            d = u_of(g, G_SPLIT[0] + 16, G_SPLIT[1])
-            hy = lerp(lerp(0.9, -0.9, r), 0.55, d)
-            p["arm_r"] = dict(hand=(lerp(0.45, 0.62, r), hy), shape="open", bend=-0.2, stretch=1.15)
-            p["yaw"] = lerp(0.35, 0.1, r)
+    AK = dict(hand=(0.45, 0.95), bend=0.6)
+    face = u_of(g, 546, 556)                          # yaw / roll to neutral before the flip
+    p = dict(yaw=0.35, pitch=-0.3 + 0.05 * math.sin(k * 0.13), expr="smug", head_roll=(4 + 2.5 * math.sin(k * 0.11)),
+             lean=1.5 * math.sin(k * 0.09), legs="wide", arm_l="akimbo", arm_r=dict(AK), mirror=False)
+    if g < 558:
+        r = u_of(g, 519, 529); d = u_of(g, 537, 546); back = u_of(g, 547, 556)
+        if g >= 519:
+            hx = lerp(lerp(0.45, 0.30, r), 0.32, d)
+            hy = lerp(lerp(0.95, -1.35, r), 0.70, d) + (0.04 * math.sin(k * 1.3) if 529 <= g < 537 else 0.0)
+            hx, hy = lerp(hx, 0.45, back), lerp(hy, 0.95, back)
+            p["arm_r"] = dict(hand=(hx, hy), shape="open" if back < 0.5 else "ball", bend=lerp(-0.2, 0.6, back), stretch=lerp(1.2, 1.0, back))
+        p["yaw"] = lerp(lerp(0.35, 0.12, r), 0.0, face)
+        p["head_roll"] = lerp(p["head_roll"], 0.0, face)
     else:
-        # mirrored: he turns to his own section (screen-left) and points at it, then akimbo
+        turn = u_of(g, 560, 570)
+        mine = u_of(g, 561, 571) * (1.0 - u_of(g, 602, 612))
         p["mirror"] = True
-        p["yaw"] = 0.45
-        p["head_roll"] = 7 + 2 * math.sin(k * 0.2)
-        p["gaze"] = (0.6, -0.2)
-        p["arm_r"] = dict(hand=(lerp(0.45, 1.05, mine), lerp(0.95, -0.15 + 0.04 * math.sin(k * 0.5), mine)), shape="point" if mine > 0.4 else "ball",
+        p["yaw"] = lerp(0.0, 0.45, turn)
+        p["head_roll"] = lerp(0.0, 7 + 2 * math.sin(k * 0.2), turn)
+        p["gaze"] = (lerp(0.0, 0.7, turn), -0.15)
+        p["arm_r"] = dict(hand=(lerp(0.45, 1.15, mine), lerp(0.95, -0.12 + 0.04 * math.sin(k * 0.5), mine)), shape="point" if mine > 0.4 else "ball",
                           bend=lerp(0.6, -0.5, mine), stretch=lerp(1.0, 1.3, mine))
-        if g >= G_AKIMBO[1]:
-            p["arm_r"] = "akimbo"
-            p["pitch"] = -0.45
+        if g >= 606:
+            p["pitch"] = lerp(-0.3, -0.45, u_of(g, 606, 614))
     p["blink"] = C.blink(g, [512, 558, 596])
     p["t"] = g / 30.0
     return p
@@ -143,9 +143,13 @@ def pose_lin8(g):
 
 
 def pose_worker(g):
-    base = json.loads(json.dumps(cast9.STORY9["workers_carry_b"][1]))
-    ph = (g - RANGES[8][0]) / 26.0
-    p = cast9.cycle("worker_b", ph, "walk", facing=1, base=base, arms="none", speed=0.8)
+    """worker_b holding a stack of bricks, waiting: weight shifts, the load bobs, glances at the general (static mouth)."""
+    p = json.loads(json.dumps(cast9.STORY9["workers_carry_b"][1]))
+    k = g - RANGES[8][0]
+    p["lean"] = p.get("lean", 0) + 2.0 * math.sin(k * 0.12)
+    p["head_roll"] = p.get("head_roll", 0) + 3.0 * math.sin(k * 0.09)
+    p["squash"] = (1.0 + 0.012 * math.sin(k * 0.5), 1.0 - 0.012 * math.sin(k * 0.5))
+    p["blink"] = C.blink(g, [540, 590])
     p["t"] = g / 30.0
     return p
 
