@@ -66,10 +66,11 @@ def mouth_of(g):
 LIN = Vector((-15.15, 13.3, 1.5))           # W mark lin_stir: platform beside the wok
 GEN_A0 = Vector((-5.7, 17.8, 0.0))          # shot 5: enters from screen-left (+x) ...
 GEN_A1 = Vector((-9.5, 17.4, 0.0))          # ... stops at the stove (wok rim r 3.0 round (-11, 13.5))
-GEN_B = Vector((-9.9, 18.4, 0.0))           # shot 6: site side of the stove, foreground left
-WORKERS = [("worker_a", "workers_laugh", Vector((-20.1, 21.0, 0.0))),
-           ("worker_b", "workers_laugh_b", Vector((-20.6, 20.1, 0.0))),
-           ("worker_c", "workers_point_c", Vector((-22.4, 17.4, 0.0)))]
+GEN_B = Vector((-4.5, 19.4, 0.0))           # shot 6: W mark two_shot_general (preset two_shot_low)
+LIN6 = Vector((-7.6, 16.4, 0.0))            # shot 6: W mark two_shot_lin
+WORKERS = [("worker_a", "workers_laugh", Vector((-20.4, 22.2, 0.0))),
+           ("worker_b", "workers_laugh_b", Vector((-21.05, 21.45, 0.0))),
+           ("worker_c", "workers_point_c", Vector((-22.7, 20.9, 0.0)))]
 
 
 def aim(loc, look):
@@ -79,9 +80,9 @@ def aim(loc, look):
 # all three cameras look from the site side (+y) and west of the wok, so lin on his platform (-x side of the wok) is clear of the
 # rim and on screen-RIGHT of the wok: lin is drawn mirrored (stirs screen-left).
 CAM = {5: (aim((-9.6, 24.6, 5.6), (-11.8, 12.0, 2.2)), aim((-10.3, 23.6, 5.4), (-12.0, 12.0, 2.2))),
-       6: (aim((-10.2, 23.4, 2.8), (-11.3, 13.0, 3.6)), aim((-10.6, 22.85, 2.76), (-11.6, 13.0, 3.6))),
-       7: (aim((-28.3, 23.9, 5.2), (-12.5, 13.0, 1.4)), aim((-28.0, 22.6, 5.0), (-12.5, 13.2, 1.4)))}
-LENS = {5: 22.0, 6: 22.0, 7: 24.0}
+       6: (aim((-4.3, 24.6, 2.7), (-6.6, 14.0, 1.9)), aim((-4.6, 24.0, 2.65), (-6.8, 14.0, 1.95))),   # two_shot_low, panned so Lin clears the right edge
+       7: (aim((-25.1, 24.9, 3.6), (-13.5, 13.5, 1.0)), aim((-24.8, 24.4, 3.55), (-13.5, 13.8, 1.0)))}
+LENS = {5: 22.0, 6: 22.0, 7: 22.0}
 PPD = {5: 256, 6: 320, 7: 256}
 
 
@@ -119,6 +120,20 @@ def pose_stir(g, calm=0.0):
         p["pitch"] = lerp(0.45, 0.1, calm)
     p["mirror"] = True
     p["blink"] = C.blink(g, [281, 352, 395, 450, 497])
+    return p
+
+
+def pose_lin6(g):
+    """shot 6: lin stands beside the stove, arms folded, calm confident smile, looking at the general (screen-left: mirrored)."""
+    p = json.loads(json.dumps(cast9.STORY9["lin_calm"][1]))
+    k = g - G6
+    p["mirror"] = True
+    p["gaze"] = (0.55, 0.0)
+    p["head_roll"] = -5 + 2.0 * math.sin(k * 0.1)
+    p["lean"] = 1.2 * math.sin(k * 0.08)
+    p["pitch"] = -0.15 + 0.05 * math.sin(k * 0.07)
+    p["blink"] = C.blink(g, [352, 395, 424])
+    p["t"] = g / 30.0
     return p
 
 
@@ -203,8 +218,11 @@ class Take(C.Take):
             f = bf(shot, g)
             loc, look = cam_of(shot, g)
             self.key_cam(f, loc, look, lens=LENS[shot])
-            self.key_set(f, steam=1.1, heights=(16, 16))
-            C.place(self.lin, f, LIN, z=LIN.z)
+            self.key_set(f, steam=1.0, heights=(16, 16))
+            if shot == 6:
+                C.place(self.lin, f, LIN6)
+            else:
+                C.place(self.lin, f, LIN, z=LIN.z)
             if shot == 5:
                 gp = GEN_A0.lerp(GEN_A1, clamp((g - RANGES[5][0]) / float(G_STOP - RANGES[5][0])))
             else:
@@ -218,7 +236,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(shot, g)
             self.scene.frame_set(f)
-            self.lin.pose(f, pose_stir(g, calm=0.0 if shot == 5 else 1.0), camera=self.cam)
+            self.lin.pose(f, pose_lin6(g) if shot == 6 else pose_stir(g, calm=0.0 if shot == 5 else 1.0), camera=self.cam)
             if shot != 7:
                 self.gen.pose(f, pose_gen_a(g) if shot == 5 else pose_gen_b(g), camera=self.cam)
             else:

@@ -40,9 +40,9 @@ LIGHT = {8: "DAY", 9: "DAWN"}
 PRESET = {8: "two_sections", 9: "cauldron"}
 
 # ----------------------------------------------------------------------------- staging
-GEN = Vector((1.3, 10.6, 0.0))             # at the seam, a little on his own side
-LIN8 = Vector((-3.9, 10.2, 0.0))           # in front of his rice section
-WK0, WK1 = Vector((5.4, 12.0, 0.0)), Vector((10.6, 11.8, 0.0))   # brick carrier walks screen-left along the general's side
+GEN = Vector((1.5, 10.6, 0.0))             # at the seam, a little on his own side
+LIN8 = Vector((-1.7, 10.3, 0.0))           # in front of his rice section
+WK0, WK1 = Vector((5.6, 9.2, 0.0)), Vector((3.1, 9.1, 0.0))   # brick carrier walks screen-right toward the seam, behind the general
 LIN9 = Vector((-15.15, 13.3, 1.5))         # W mark lin_stir
 
 
@@ -50,7 +50,7 @@ def aim(loc, look):
     return (tuple(loc), tuple(look))
 
 
-CAM = {8: (aim((-0.4, 20.2, 4.6), (0.2, 5.0, 3.6)), aim((0.7, 18.7, 4.4), (1.3, 5.0, 3.5))),
+CAM = {8: (aim((0.3, 17.8, 4.2), (0.0, 5.0, 2.9)), aim((0.6, 16.9, 4.1), (0.2, 5.0, 2.9))),
        9: (aim((-12.0, 21.8, 6.6), (-13.6, 12.5, 3.5)), aim((-12.5, 20.4, 6.2), (-14.0, 12.6, 3.6)))}
 LENS = {8: 20.0, 9: 24.0}
 PPD = {8: 256, 9: 256}
@@ -145,7 +145,7 @@ def pose_lin8(g):
 def pose_worker(g):
     base = json.loads(json.dumps(cast9.STORY9["workers_carry_b"][1]))
     ph = (g - RANGES[8][0]) / 26.0
-    p = cast9.cycle("worker_b", ph, "walk", facing=-1, base=base, arms="none", speed=0.8)
+    p = cast9.cycle("worker_b", ph, "walk", facing=1, base=base, arms="none", speed=0.8)
     p["t"] = g / 30.0
     return p
 
@@ -168,11 +168,11 @@ class Take(C.Take):
             f = bf(shot, g)
             loc, look = cam_of(shot, g)
             self.key_cam(f, loc, look, lens=LENS[shot])
-            self.key_set(f, steam=1.1, heights=HEIGHTS)
+            self.key_set(f, steam=1.0, heights=HEIGHTS)
             if shot == 8:
                 C.place(self.lin, f, LIN8)
                 C.place(self.gen, f, GEN)
-                C.place(self.wk, f, WK0.lerp(WK1, 1.0 - (g - a) / float(b - a)))
+                C.place(self.wk, f, WK0.lerp(WK1, (g - a) / float(b - a)))
             else:
                 C.place(self.lin, f, LIN9, z=LIN9.z)
         for g in gs:
