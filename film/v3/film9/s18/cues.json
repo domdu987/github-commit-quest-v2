@@ -1,0 +1,138 @@
+{
+ "take": "s18",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration PROJ/film9/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 51.6,
+   "duration": 7.3,
+   "frame": 1548,
+   "end_frame": 1767,
+   "kind": "ambience",
+   "label": "battle dusk: crackling fires, smoke, distant drums and shouting of the enemy camp; tense low percussion building"
+  },
+  {
+   "time": 52.533,
+   "duration": 0.133,
+   "frame": 1576,
+   "end_frame": 1580,
+   "kind": "sfx",
+   "label": "cannon 1 fires: deep boom + whoosh of the ball",
+   "peak_frame": 1576
+  },
+  {
+   "time": 53.067,
+   "duration": 0.4,
+   "frame": 1592,
+   "end_frame": 1604,
+   "kind": "sfx",
+   "label": "impact on plain mortar: hard crack, brittle stone splitting (crackle runs outward)",
+   "peak_frame": 1592
+  },
+  {
+   "time": 53.233,
+   "duration": 0.133,
+   "frame": 1597,
+   "end_frame": 1601,
+   "kind": "sfx",
+   "label": "cannon 2 fires: boom + whoosh",
+   "peak_frame": 1597
+  },
+  {
+   "time": 53.767,
+   "duration": 0.633,
+   "frame": 1613,
+   "end_frame": 1632,
+   "kind": "sfx",
+   "label": "impact + long tearing crackle racing along the whole row of courses",
+   "peak_frame": 1613
+  },
+  {
+   "time": 51.6,
+   "duration": 3.9,
+   "frame": 1548,
+   "end_frame": 1665,
+   "kind": "voice_fx",
+   "label": "the general's big belly laugh on top (non-verbal, under the narration)"
+  },
+  {
+   "time": 54.2,
+   "duration": 0.0,
+   "frame": 1626,
+   "end_frame": 1626,
+   "kind": "cut",
+   "label": "cut to the top of the wall"
+  },
+  {
+   "time": 54.567,
+   "duration": 0.133,
+   "frame": 1637,
+   "end_frame": 1641,
+   "kind": "sfx",
+   "label": "cannon 3 fires",
+   "peak_frame": 1637
+  },
+  {
+   "time": 55.1,
+   "duration": 0.4,
+   "frame": 1653,
+   "end_frame": 1665,
+   "kind": "sfx",
+   "label": "impact below the parapet: heavy thud, the whole wall shudders (rumble), general's laugh hiccups",
+   "peak_frame": 1653
+  },
+  {
+   "time": 55.533,
+   "duration": 0.0,
+   "frame": 1666,
+   "end_frame": 1666,
+   "kind": "cut",
+   "label": "cut to the wide"
+  },
+  {
+   "time": 55.333,
+   "duration": 2.0,
+   "frame": 1660,
+   "end_frame": 1720,
+   "kind": "sfx",
+   "label": "the section collapses: grinding rumble, bricks tumbling, a huge dusty whoomph",
+   "peak_frame": 1680
+  },
+  {
+   "time": 55.533,
+   "duration": 0.867,
+   "frame": 1666,
+   "end_frame": 1692,
+   "kind": "comic",
+   "label": "the general drops with a long cartoon 'wheee' slide-whistle down, still laughing",
+   "peak_frame": 1675
+  },
+  {
+   "time": 55.733,
+   "duration": 0.6,
+   "frame": 1672,
+   "end_frame": 1690,
+   "kind": "comic",
+   "label": "helmet pops off: a 'boing' + whirring spin, then a tin clank as it lands",
+   "peak_frame": 1690
+  },
+  {
+   "time": 56.4,
+   "duration": 0.733,
+   "frame": 1692,
+   "end_frame": 1714,
+   "kind": "comic",
+   "label": "he slides down the rubble on his backside: bumpy scraping slide, dust puffs",
+   "peak_frame": 1700
+  },
+  {
+   "time": 57.133,
+   "duration": 1.733,
+   "frame": 1714,
+   "end_frame": 1766,
+   "kind": "comic",
+   "label": "he sits in the dust, coughs once and keeps laughing; a playful button-ending sting on the last word '\u0e02\u0e49\u0e32\u0e07\u0e1a\u0e19'",
+   "peak_frame": 1755
+  }
+ ]
+}
