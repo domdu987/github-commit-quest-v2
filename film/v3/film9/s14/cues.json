@@ -1,0 +1,77 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film9/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 34.5,
+   "duration": 4.133,
+   "frame": 1035,
+   "end_frame": 1159,
+   "kind": "ambience",
+   "label": "battlefield at smoky dusk: distant war drums, crackling fire pots and camp fires, wind, banners flapping, far shouts"
+  },
+  {
+   "time": 34.5,
+   "duration": 2.067,
+   "frame": 1035,
+   "end_frame": 1097,
+   "kind": "foley",
+   "label": "heavy wooden gun carriages creak, a horn call far off",
+   "peak_frame": 1050
+  },
+  {
+   "time": 35.933,
+   "duration": 0.667,
+   "frame": 1078,
+   "end_frame": 1098,
+   "kind": "foley",
+   "label": "gunners crouch: leather and cloth rustle",
+   "peak_frame": 1090
+  },
+  {
+   "time": 36.567,
+   "duration": 0.0,
+   "frame": 1097,
+   "end_frame": 1097,
+   "kind": "cut",
+   "label": "cut to the medium on the gunner"
+  },
+  {
+   "time": 37.067,
+   "duration": 0.9,
+   "frame": 1112,
+   "end_frame": 1139,
+   "kind": "foley",
+   "label": "the match touches the touch hole: a hissing, spitting fuse",
+   "peak_frame": 1114
+  },
+  {
+   "time": 37.533,
+   "duration": 0.367,
+   "frame": 1126,
+   "end_frame": 1137,
+   "kind": "accent",
+   "label": "gunners duck and cover their ears: a held breath, tension riser",
+   "peak_frame": 1137
+  },
+  {
+   "time": 38.0,
+   "duration": 0.333,
+   "frame": 1140,
+   "end_frame": 1150,
+   "kind": "impact",
+   "label": "BOOM: the cannon fires (deep blast, low-end thump), shake",
+   "peak_frame": 1140
+  },
+  {
+   "time": 38.133,
+   "duration": 0.5,
+   "frame": 1144,
+   "end_frame": 1159,
+   "kind": "foley",
+   "label": "the ball's whoosh flying away toward the wall",
+   "peak_frame": 1150
+  }
+ ]
+}

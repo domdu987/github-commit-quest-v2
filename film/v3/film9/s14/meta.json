@@ -1,0 +1,112 @@
+{
+ "take": "s14",
+ "film": 9,
+ "shots": [
+  14
+ ],
+ "g0": 1041,
+ "g1": 1153,
+ "first_g": 1035,
+ "n_frames": 124,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "from shot 13 (wall_top RAIN); in-handle g 1035..1040 rendered in 3D (track continues)"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "to shot 15 (mortar_macro): the ball fired here hits the plain mortar; out-handle g 1153..1158 = ball in flight, smoke, shake"
+ },
+ "transitions": [
+  {
+   "at": 1041,
+   "type": "cut"
+  },
+  {
+   "at": 1097,
+   "type": "cut",
+   "note": "set-up cut inside shot 14 (wide -> medium, same location / light) at 36.57 s, between '\u0e25\u0e32\u0e01\u0e1b\u0e37\u0e19\u0e43\u0e2b\u0e0d\u0e48\u0e21\u0e32' and '\u0e40\u0e23\u0e35\u0e22\u0e07\u0e2b\u0e19\u0e49\u0e32'"
+  },
+  {
+   "at": 1153,
+   "type": "out",
+   "handle": [
+    1153,
+    1158
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "14": [
+   1041,
+   1152
+  ]
+ },
+ "setups": {
+  "1": {
+   "g": [
+    1035,
+    1096
+   ],
+   "set": "wall.py cannon_line, BATTLE (army, smoke 1, lin 26 / gen 30 courses); preset camera, slow track right + crane up 1 D, 20 mm"
+  },
+  "2": {
+   "g": [
+    1097,
+    1158
+   ],
+   "set": "same build; custom low medium behind-right of gun 3 (aimed at the general's section), 22 mm, slow push, shake on the shot"
+  }
+ },
+ "events": {
+  "gunners_crouch": [
+   1078,
+   1098
+  ],
+  "match_to_touch_hole": [
+   1100,
+   1112
+  ],
+  "fuse_sparks": [
+   1112,
+   1139
+  ],
+  "gunners_duck_cover_ears": [
+   1126,
+   1137
+  ],
+  "gun_3_fires": 1140,
+  "ball_in_flight": [
+   1144,
+   1158
+  ]
+ },
+ "set": "v3/set3d9/wall.py: set_flames, set_smoke(1), set_army(True), set_wall_height lin 26 / general 30, set_cauldron_steam(0.4), set_impact('general', 0, t) (t 0.02 at g 1140, +1/60 per frame) keyed every frame; runtime: 9 emissive fuse sparks + a flickering point light at gun 3's touch hole (g 1112..1139)",
+ "dof": "none",
+ "denoiser": "OpenImageDenoise, prefilter FAST",
+ "light": "BATTLE",
+ "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json",
+ "cast": "v3/cast9 gunner_a (gun 2, mirrored) + gunner_b (gun 3): gunner_stand -> gunner_light (linstock angle tweened, match_glow 1) -> gunner_ears; no mouths move",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 13.74,
+ "s_per_frame_cpu_mean": 25.96,
+ "s_per_frame_by_setup": {
+  "1": {
+   "wall": 13.77,
+   "cpu": 25.43
+  },
+  "2": {
+   "wall": 13.71,
+   "cpu": 26.49
+  }
+ }
+}

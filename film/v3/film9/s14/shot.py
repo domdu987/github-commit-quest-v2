@@ -47,6 +47,7 @@ CAM = {1: (((-12.5, -34.0, 3.3), (4.0, -14.0, 5.0)), ((-10.4, -34.6, 4.0), (4.0,
        2: (((9.6, -30.0, 2.05), (1.7, -20.2, 3.3)), ((8.8, -29.15, 1.85), (1.5, -19.9, 3.4)))}
 LENS = {1: 22.0, 2: 22.0}
 PPD = {1: 160, 2: 288}
+CANVAS = (-2.5, -5.25, 2.5, 0.125)
 
 
 def bf(shot, g):
@@ -138,8 +139,9 @@ def key_sparks(obs, lo, f, g):
 class Take(C.Take):
     def __init__(self, quality="preview", shot=1):
         C.Take.__init__(self, "wall_site", "cannon_line", quality=quality, lens=LENS[1], name="cam_s14", light="BATTLE")
-        self.ga = self.actors["ga"] = C.make_actor("ga", "gunner_a", os.path.join(TMP, "sprites"))
-        self.gb = self.actors["gb"] = C.make_actor("gb", "gunner_b", os.path.join(TMP, "sprites"))
+        # wider canvas than the default: the linstock + its smoke wisp left the default canvas mid-swing (cast9 API known limit)
+        self.ga = self.actors["ga"] = C.make_actor("ga", "gunner_a", os.path.join(TMP, "sprites"), canvas=CANVAS)
+        self.gb = self.actors["gb"] = C.make_actor("gb", "gunner_b", os.path.join(TMP, "sprites"), canvas=CANVAS)
         self.sparks, self.fuse = make_sparks()
 
     def pose(self, shot, gs):
