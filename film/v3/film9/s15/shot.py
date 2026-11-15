@@ -17,6 +17,9 @@ Mouths: nobody on screen.  NO depth of field (C.Take).  Blender frame: bf() belo
 
     python3 shot.py stills 15|16 a:b[:step] <out_dir> [scale] [samples]
     python3 shot.py final 15|16 a:b[:step] [scale] [samples]
+QA round 1 fixes: both halves use an oblique orbit camera (17-24 deg from the front-left, raking fire light); rice: the set's thin pulse
+ring is hidden and replaced by a soft gold glow ring hugging the ball that fades out; a gold glow burst along the web on impact; a web
+bulge shape key (damped spring); the web glow breathes before the hit while the camera pushes in; the ball stays held and visible.
 """
 import math, os, sys, json
 
@@ -66,20 +69,27 @@ def macro_t(shot, g):
     return min(1.0, 0.3 + 0.7 * (g - G_HIT16) / 40.0)
 
 
-# cameras: (loc, look) at the start / end of each set-up.  Round-3 set: the default macro_front (1.4, -8.6, 0.25) -> (1.5, 0.22, 0),
-# 24 mm, near square-on, impact dead centre, the joint a horizontal band.  Plain: slow push in from slightly left + above; rice: the
-# same push from slightly right + below (a fresh framing at the cut, same subject placement for the 1:1 comparison).
-CAM = {15: (((0.95, -9.5, 0.55), (1.45, 0.22, 0.02)), ((1.75, -7.7, 0.12), (1.5, 0.22, 0.0))),
-       16: (((2.35, -9.5, -0.15), (1.55, 0.22, -0.02)), ((1.3, -7.4, 0.3), (1.5, 0.22, 0.0)))}
+# cameras (QA round 1: "flat top-down" -> oblique): orbit the impact point by yaw (deg, + = camera to the right) / elevation (deg) /
+# distance d, 24 mm, a 17-24 deg oblique from the front-left so the warm raking fire key from the front-left grazes the bricks, the
+# crystals and the web (a lit 3D world); same tilt family in both halves.  Plain: slow push + small orbit; rice: a longer push (QA:
+# 1297-1372 read near-still) with the orbit the other way.
+ORBIT = {15: ((-24.0, 10.0, 9.8), (-19.0, 7.0, 7.8)),
+         16: ((-17.0, 11.0, 10.0), (-23.0, 6.5, 6.9))}
 LENS = 24.0
 
 
+def orbit_loc(yaw, el, d):
+    a, e = math.radians(yaw), math.radians(el)
+    return IMP + Vector((d * math.sin(a) * math.cos(e), -d * math.cos(a) * math.cos(e), d * math.sin(e)))
+
+
 def cam_of(shot, g):
-    a, b = CAM[shot]
+    (y0, e0, d0), (y1, e1, d1) = ORBIT[shot]
     lo, hi = RANGES[shot]
     x = (g - lo) / float(hi - lo)
     u = 0.35 * ez(x, "sine") + 0.65 * x
-    loc, look = Vector(lerp(a[0], b[0], u)), Vector(lerp(a[1], b[1], u))
+    loc = orbit_loc(lerp(y0, y1, u), lerp(e0, e1, u), lerp(d0, d1, u))
+    look = IMP + Vector((0.15, 0.0, -0.05))
     gh = G_HIT15 if shot == 15 else G_HIT16
     if g >= gh:                                      # a small jolt on the hit, decaying over ~10 frames
         k = (g - gh)
@@ -89,10 +99,83 @@ def cam_of(shot, g):
     return loc, look
 
 
+# ----------------------------------------------------------------------------- rice: runtime fixes (QA round 1)
+# 1. the set's thin pulse ring (expands to the frame edge, turns olive) is hidden every frame; instead a thick soft-glow emissive gold
+#    ring hugs the ball (1.3..2.5 x the ball radius) and fades to transparent with no colour change; the web flares gold on impact.
+# 2. a 'bulge' shape key on the web: the strands round the ball stretch outward / into the joint on impact and spring back.
+# 3. before the hit the web breathes (a gentle gold glow pulse) while the camera pushes in.
+GOLD = (1.0, 0.58, 0.12)
+
+
+def make_glow_ring():
+    import bmesh
+    Mc = W.STATE["macro"]; RB = W.MAC["ball_r"]; ix, iz = W.MAC["impact"]; fy = W.MAC["face_y"]
+    m = bpy.data.materials.new("s15_glowring"); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    tc = nt.nodes.new("ShaderNodeTexCoord"); ln = nt.nodes.new("ShaderNodeVectorMath"); ln.operation = "LENGTH"
+    cr = nt.nodes.new("ShaderNodeValToRGB"); el = cr.color_ramp; el.interpolation = "B_SPLINE"
+    el.elements[0].position = 0.46; el.elements[0].color = (0, 0, 0, 1); el.elements[1].position = 0.98; el.elements[1].color = (0, 0, 0, 1)
+    for pos, v in ((0.56, 1.0), (0.66, 0.85), (0.82, 0.35)):
+        e = el.elements.new(pos); e.color = (v, v, v, 1)
+    op = nt.nodes.new("ShaderNodeValue"); op.name = "op"; op.outputs[0].default_value = 0.0
+    mul = nt.nodes.new("ShaderNodeMath"); mul.operation = "MULTIPLY"
+    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = GOLD + (1.0,); em.inputs["Strength"].default_value = 4.2
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent"); mx = nt.nodes.new("ShaderNodeMixShader"); out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(tc.outputs["Object"], ln.inputs[0]); nt.links.new(ln.outputs["Value"], cr.inputs[0])
+    nt.links.new(cr.outputs["Color"], mul.inputs[0]); nt.links.new(op.outputs[0], mul.inputs[1]); nt.links.new(mul.outputs[0], mx.inputs[0])
+    nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0])
+    me = bpy.data.meshes.new("s15_glowring"); bm = bmesh.new()
+    bmesh.ops.create_circle(bm, cap_ends=True, segments=96, radius=1.0); bm.to_mesh(me); bm.free()
+    ob = bpy.data.objects.new("s15_glowring", me); ob.data.materials.append(m)
+    ob.rotation_euler = (math.pi / 2, 0, 0)                          # disc in the x-z plane (the joint face)
+    ob.location = Vector((ix, fy + 0.1 - RB - 0.05, iz))            # through the held ball's centre: the ball hides the inner half
+    ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False
+    bpy.context.scene.collection.objects.link(ob); ob.hide_render = True
+    # bulge shape key on the web
+    wo = Mc["web"]
+    def bulge(p):
+        dx, dz = p.x - ix, p.z - iz; d = math.hypot(dx, dz) + 1e-6
+        r = 0.42 * math.exp(-((d - 1.05) ** 2) / 0.55)
+        return Vector((dx / d * r, 0.30 * math.exp(-d * d / 1.6), dz / d * r * 0.8))
+    W._shape_key(wo, "s15_bulge", bulge)
+    return dict(ob=ob, op=op, RB=RB)
+
+
+def key_rice(R, f, g):
+    Mc = W.STATE["macro"]
+    pu = Mc.get("pulse")
+    if pu is not None:
+        pu.hide_render = True; pu.keyframe_insert("hide_render", frame=f)
+    k = g - G_HIT16
+    # glow ring
+    ob = R["ob"]; on = 0 <= k <= 26
+    u = max(0.0, min(1.0, k / 24.0))
+    sc = R["RB"] * 2.6 * (0.82 + 0.28 * ez(u))
+    ob.scale = (sc, sc, sc); ob.hide_render = not on
+    ob.keyframe_insert("scale", frame=f); ob.keyframe_insert("hide_render", frame=f)
+    R["op"].outputs[0].default_value = (min(1.0, (k + 1) / 2.0) * (1.0 - u) ** 1.4) if on else 0.0
+    R["op"].outputs[0].keyframe_insert("default_value", frame=f)
+    # web glow: breathing before the hit, a gold burst along the web on impact (scales the set's keyed strength of this frame)
+    if g < G_FLY16:
+        mul = 1.0 + 0.24 * math.sin(2 * math.pi * (g - G_CUT) / 46.0)
+    else:
+        mul = 1.0 + 1.9 * math.exp(-(((k - 1) / 6.0) ** 2)) if k >= -2 else 1.0
+    for nm in ("web", "web_fine"):
+        sk = W.STATE["M"][nm].node_tree.nodes["strength"].inputs["Strength"]
+        sk.default_value = sk.default_value * mul; sk.keyframe_insert("default_value", frame=f)
+    # web bulge: out and in on the hit, a damped spring, settles at a small held stretch
+    kb = Mc["web"].data.shape_keys.key_blocks["s15_bulge"]
+    if k < 0:
+        v = 0.0
+    else:
+        v = math.sin(min(1.0, k / 2.0) * math.pi / 2) * math.exp(-k / 9.0) * math.cos(max(0, k - 2) * 0.5) + 0.12 * min(1.0, k / 6.0)
+    kb.value = max(-0.6, v); kb.keyframe_insert("value", frame=f)
+
+
 class Take(C.Take):
     def __init__(self, quality="preview", shot=15):
         C.Take.__init__(self, "wall_site", PRESET[shot], quality=quality, lens=LENS, name="cam_s15_%d" % shot, light="BATTLE")
         self.shot = shot
+        self.rice = make_glow_ring() if shot == 16 else None
 
     def pose(self, shot, gs):
         for g in gs:
@@ -100,6 +183,8 @@ class Take(C.Take):
             loc, look = cam_of(shot, g)
             self.key_cam(f, loc, look, lens=LENS)
             self.key_set(f, macro=macro_t(shot, g))
+            if self.rice is not None:
+                key_rice(self.rice, f, g)
 
     def report(self, shot, g):
         loc, look = cam_of(shot, g)

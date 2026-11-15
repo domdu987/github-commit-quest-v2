@@ -30,14 +30,14 @@ meta = {"take": TAKE, "film": 9, "shots": SHOTS, "g0": G0, "g1": G1, "first_g": 
         "transitions": [{"at": G0, "type": "cut"}, {"at": G_CUT, "type": "cut", "note": "set-up cut inside shot 14 (wide -> medium, same location / light) at 36.57 s, between 'ลากปืนใหญ่มา' and 'เรียงหน้า'"},
                         {"at": G1, "type": "out", "handle": [G1, LAST]}],
         "shot_ranges": {"14": [G0, G1 - 1]},
-        "setups": {"1": {"g": [FIRST, G_CUT - 1], "set": "wall.py cannon_line, BATTLE (army, smoke 1, lin 26 / gen 30 courses); preset camera, slow track right + crane up 1 D, 20 mm"},
-                   "2": {"g": [G_CUT, LAST], "set": "same build; custom low medium behind-right of gun 3 (aimed at the general's section), 22 mm, slow push, shake on the shot"}},
+        "setups": {"1": {"g": [FIRST, G_CUT - 1], "set": "wall.py cannon_line, BATTLE (set_army on, smoke 1 minus the column behind gun 0, lin 26 / gen 30 courses); camera near the preset (-23, -30.5, 3.3), 20 mm, slow track right + crane up; 4 gunners (big foreground one at gun 0, guns 1-3), dust at their feet, contact shadows"},
+                   "2": {"g": [G_CUT, LAST], "set": "same build; custom low medium behind-right of gun 3 (aimed at the general's section), 22 mm, slow push, shake on the shot, then the look eases up after the flying ball"}},
         "events": {"gunners_crouch": [1078, 1098], "match_to_touch_hole": [1100, 1112], "fuse_sparks": [1112, 1139], "gunners_duck_cover_ears": [1126, 1137],
-                   "gun_3_fires": 1140, "ball_in_flight": [1144, 1158]},
-        "set": "v3/set3d9/wall.py: set_flames, set_smoke(1), set_army(True), set_wall_height lin 26 / general 30, set_cauldron_steam(0.4), set_impact('general', 0, t) (t 0.02 at g 1140, +1/60 per frame) keyed every frame; runtime: 9 emissive fuse sparks + a flickering point light at gun 3's touch hole (g 1112..1139)",
+                   "gun_3_fires": 1140, "muzzle_flash": [1140, 1145], "soft_smoke": [1140, 1158], "ball_in_flight": [1143, 1158]},
+        "set": "v3/set3d9/wall.py: set_flames, set_smoke(1), set_army(True), set_wall_height lin 26 / general 30, set_cauldron_steam(0.4), set_impact('general', 0, t) (t 0.02 at g 1140, +1/75 per frame) keyed every frame; runtime (shot.py): 9 emissive fuse sparks + flickering light at gun 3's touch hole (g 1112..1139); the set's opaque muzzle smoke / flash / ball trail hidden and replaced by a soft bright muzzle flash at the barrel mouth + flash light and 12 soft translucent smoke billows from the muzzle; one smoke column hidden in set-up 1",
         "dof": "none", "denoiser": "OpenImageDenoise, prefilter FAST", "light": "BATTLE",
         "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json",
-        "cast": "v3/cast9 gunner_a (gun 2, mirrored) + gunner_b (gun 3): gunner_stand -> gunner_light (linstock angle tweened, match_glow 1) -> gunner_ears; no mouths move",
+        "cast": "v3/cast9 gunner_a x2 (gun 0 foreground + gun 2) and gunner_b x2 (gun 1 + gun 3): gunner_stand -> gunner_light (linstock angle tweened, match_glow 1) -> gunner_ears; gunner_a closed frown (QA), dust 0.45..0.18 in set-up 1, contact shadow decals; no mouths move",
         "samples": 12, "resolution": [720, 1280], "threads": 2, "fps": 30,
         "s_per_frame_wall_mean": mw(None), "s_per_frame_cpu_mean": mc(None),
         "s_per_frame_by_setup": {"1": {"wall": mw(1), "cpu": mc(1)}, "2": {"wall": mw(2), "cpu": mc(2)}}}
@@ -90,7 +90,7 @@ print("near-still transitions (< 0.35):", len(still), "longest run", best, file=
 print("frame change median %.2f max %.2f" % (float(np.median(d)), max(d)), file=q)
 print("s/frame wall %.2f cpu %.2f; by setup %s; mkv %.1f MB" % (mw(None), mc(None), meta["s_per_frame_by_setup"], os.path.getsize(mkv) / 1e6), file=q)
 import glob
-for nm in ("ga", "gb"):
+for nm in ("ga0", "gb1", "ga", "gb"):
     hs = [(r["g"], r["heads"][nm]) for r in rows if nm in r.get("heads", {}) and -40 < r["heads"][nm]["x"] < 760]
     if hs:
         print("%s head w %.0f..%.0f px, x %.0f..%.0f, y %.0f..%.0f; bottom below 880: %s" % (nm, min(h["w"] for g, h in hs), max(h["w"] for g, h in hs),

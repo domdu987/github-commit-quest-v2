@@ -27,15 +27,15 @@ mc = lambda s: round(float(np.mean([r["cpu"] for r in rows if s is None or r["sh
 meta = {"take": TAKE, "film": 9, "shots": SHOTS, "g0": G0, "g1": G1, "first_g": FIRST, "n_frames": N, "handle_in": H, "handle_out": H,
         "transition_in": {"type": "cut", "frames": 0, "note": "from shot 14 (cannon_line, the gun fires); in-handle g 1147..1152 = the calm macro before"},
         "transition_out": {"type": "cut", "frames": 0, "note": "to shot 17 (site_wide DAWN); out-handle g 1413..1418 = the web settling, push continues"},
-        "transitions": [{"at": G0, "type": "cut"}, {"at": G_CUT, "type": "cut", "note": "plan cut shot 15 (plain) -> shot 16 (rice) at 42.80 s, inside the take; same camera angle on purpose (1:1 comparison)"},
+        "transitions": [{"at": G0, "type": "cut"}, {"at": G_CUT, "type": "cut", "note": "plan cut shot 15 (plain) -> shot 16 (rice) at 42.80 s, inside the take; same oblique camera family (1:1 comparison)"},
                         {"at": G1, "type": "out", "handle": [G1, LAST]}],
         "shot_ranges": {"15": [G0, G_CUT - 1], "16": [G_CUT, G1 - 1]},
-        "setups": {"15": {"g": [FIRST, G_CUT - 1], "set": "wall.py mortar_macro (plain), BATTLE; custom oblique along the joint from the front-left (preset macro_plain moved), 22 mm, push ~2.1 D, jolt on the hit"},
-                   "16": {"g": [G_CUT, LAST], "set": "wall.py mortar_macro_rice, BATTLE; same oblique, closer start, push ~2.7 D, jolt on the hit; runtime radial reveal of the web material (the web spreads over the face g 1290..1337)"}},
+        "setups": {"15": {"g": [FIRST, G_CUT - 1], "set": "wall.py mortar_macro (plain), BATTLE; camera orbiting the impact 24-19 deg yaw from the front-left, 10-7 deg down, 9.8 -> 7.8 D, 24 mm (QA: oblique, raking light), jolt on the hit"},
+                   "16": {"g": [G_CUT, LAST], "set": "wall.py mortar_macro_rice, BATTLE; same oblique family 17-23 deg yaw, 11-6.5 deg down, push 10 -> 6.9 D, 24 mm, jolt on the hit; runtime: set pulse ring hidden, soft gold glow ring hugging the ball (1.3-2.5 x ball r) fading to transparent, web glow breathing before / gold burst on impact, web bulge shape key (damped spring)"}},
         "events": {"plain_ball_flies_in": [1180, 1207], "plain_hit": 1207, "plain_crack_races": [1207, 1262], "shards_dust": [1207, 1230],
-                   "cut_to_rice": G_CUT, "web_spreads": [1290, 1337], "rice_ball_flies_in": [1352, 1380], "rice_hit": 1380,
-                   "web_flexes_and_holds": [1380, 1405], "ball_bounces_off": [1385, 1413]},
-        "set": "v3/set3d9/wall.py macro area: set_macro(t) + set_flames keyed every frame; shot 16 adds a keyed radial transparent mix + glow scale on the web material (shot.py web_reveal_nodes / key_web)",
+                   "cut_to_rice": G_CUT, "web_glow_breathes": [1284, 1351], "rice_ball_flies_in": [1352, 1380], "rice_hit": 1380, "gold_glow_ring": [1380, 1406],
+                   "web_bulges_springs_back_holds": [1380, 1410], "ball_held_in_dent": [1386, 1418]},
+        "set": "v3/set3d9/wall.py macro area: set_macro(t) + set_flames keyed every frame; shot 16 runtime additions in shot.py (make_glow_ring / key_rice)",
         "dof": "none", "denoiser": "OpenImageDenoise, prefilter FAST", "light": "BATTLE",
         "narration": "film9/audio/narration.wav at +0.10 s; captions film9/script/captions.json", "cast": "none on screen",
         "samples": 12, "resolution": [720, 1280], "threads": 2, "fps": 30,
@@ -54,11 +54,11 @@ add(1207, 1262, "brittle crack racing: a fast dry splitting / ice-crackle sweepi
 add(1225, 1270, "the ball drops away, grit and dust patter", "foley", peak_frame=1240)
 add(G_CUT, G_CUT, "cut to the rice mortar: same place, the drone turns warm", "cut")
 add(G_CUT, LAST + 1, "inside the rice mortar joint: warm low drone, soft glowing hum", "ambience")
-add(1290, 1337, "the golden web spreads and wraps the crystals: a rising shimmering, sticky-stretchy sparkle", "accent", peak_frame=1320)
+add(1284, 1351, "the golden web around the crystals breathes with a soft glow: a gentle shimmering hum", "accent", peak_frame=1320)
 add(1352, 1380, "cannonball whoosh again", "foley", peak_frame=1377)
 add(1380, 1386, "HIT: a dull rubbery 'thoomp' (no crack)", "impact", peak_frame=1380)
 add(1380, 1405, "the web stretches and springs back: elastic boing-wobble, a glow swell", "accent", peak_frame=1384)
-add(1386, 1413, "the ball bounces off and away, a light thud far off", "foley", peak_frame=1395)
+add(1386, 1413, "the ball settles, held in the web: a soft settling creak, warm glow tone", "foley", peak_frame=1395)
 json.dump(dict(take=TAKE, fps=30, note="time = film seconds (g / 30); narration film9/audio/narration.wav at +0.10 s", cues=ev),
           open(os.path.join(HERE, "cues.json"), "w"), indent=1)
 
