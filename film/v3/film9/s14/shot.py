@@ -18,7 +18,7 @@ QA round 1 fixes: set-up 1 is a wider cannon_line view (20 mm) with 4 gunners (a
 dust at their feet, stronger contact shadows; gunner_a keeps a closed frown; the set's opaque muzzle smoke / ball trail are replaced
 by a soft bright muzzle flash at the barrel mouth + soft translucent smoke from the muzzle, and the camera eases up after the ball.
 """
-import math, os, sys, json
+import math, os, sys, json, random
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -48,11 +48,11 @@ TOUCH = Vector((CX[3], CY - 1.05, 1.62))          # gun 3's touch hole (top of t
 # set-up 1 only (QA round 1: 'army missing / gunners too small'): two more gunners, one big in the foreground at the hero gun 0
 GUN_A0 = Vector((CX[0] + 1.3, CY - 3.7, 0.0))     # gunner_a copy beside the trail of the hero gun 0 (x -16.5), near frame centre, mirrored
 GUN_B1 = Vector((CX[1] + 1.3, CY - 1.6, 0.0))     # gunner_b copy at gun 1 (x -9.5), mirrored
-CONTACT = dict(width=1.5, depth=0.62, color="#100c16", opacity=0.82)     # QA: visible contact shadows under the gunners
+CONTACT = dict(width=1.6, depth=0.7, color="#07050a", opacity=0.95)     # QA: visible contact shadows under the gunners
 
-CAM = {1: (((-23.0, -30.5, 3.3), (0.5, -13.5, 5.4)), ((-21.0, -31.6, 3.9), (1.8, -14.0, 5.6))),   # cannon_line (wide, both sections) + track / crane
-       2: (((9.6, -30.0, 2.05), (1.7, -20.2, 3.3)), ((8.8, -29.15, 1.85), (1.5, -19.9, 3.4)))}
-LENS = {1: 20.0, 2: 22.0}
+CAM = {1: (((-12.8, -44.0, 9.6), (2.0, -9.0, 1.4)), ((-11.6, -42.4, 9.0), (2.6, -9.0, 1.6))),   # QA r2: high oblique from back-left: ranks, the gun diagonal, Lin's + the general's sections + gate; track
+       2: (((7.4, -37.0, 5.2), (1.6, -19.0, 2.4)), ((6.8, -35.8, 4.8), (1.4, -19.0, 2.6)))}   # QA r2: pulled back + up over the ranks (18 mm)
+LENS = {1: 20.0, 2: 18.0}
 PPD = {1: 160, 2: 288}
 CANVAS = (-2.5, -5.25, 2.5, 0.125)
 
@@ -242,6 +242,120 @@ def key_blast(B, f, g):
         em.keyframe_insert("default_value", frame=f)
 
 
+# ----------------------------------------------------------------------------- runtime (QA round 2): the army, shadows, the ball
+# Ranks of enemy soldiers behind the gun row: static cards (cast9 gunners standing with upright linstocks / pikes, 8 drawings,
+# mirrored, rasterised once) in 3 staggered rows; each card bobs a little (breathing) so the ranks are alive.  Dark soft shadow decals
+# under every soldier, gunner and gun wheel.  The flying ball 1.5x with a fiery trail of glowing puffs and a warm rim light.
+RANK_Y = (-28.4, -31.2)
+
+
+def soldier_pngs():
+    items = []
+    for k in range(8):
+        cast = "gunner_a" if k % 2 == 0 else "gunner_b"
+        base = dict(cast9.STORY9["gunner_stand" if cast == "gunner_a" else "gunner_stand_b"][1])
+        base.update(mirror=bool(k // 2 % 2), yaw=(0.15, 0.45, -0.2, 0.3)[k // 2], head_roll=(-3, 2, 4, -2)[k % 4],
+                    expr=("determined", "angry", "neutral", "determined")[k % 4], mouth="flat" if cast == "gunner_a" else None,
+                    prop_r=dict(type="linstock", angle=-84 + 4 * (k % 3)), match_glow=0.0 if k % 3 else 0.6, t=0.3 * k)
+        if base.get("mouth") is None:
+            base.pop("mouth", None)
+        fig = puppet.figure(cast, base, "rk%d" % k)
+        x0, y0, x1, y1 = fig["bbox"]; fy = fig["feet_y"]
+        frag = '<g transform="translate(0,%.4f)">%s</g>' % (-fy, fig["svg"])
+        box = (x0 - 0.1, y0 - fy - 0.1, x1 + 0.1, y1 - fy + 0.05)
+        items.append((frag, box, 96))
+    return C.svg_pngs(items, os.path.join(TMP, "ranks")), [b for _, b, _ in items]
+
+
+def _shadow_mat():
+    m = bpy.data.materials.get("s14_shadow")
+    if m: return m
+    m = bpy.data.materials.new("s14_shadow"); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    tc = nt.nodes.new("ShaderNodeTexCoord"); ln = nt.nodes.new("ShaderNodeVectorMath"); ln.operation = "LENGTH"
+    mr = nt.nodes.new("ShaderNodeMapRange"); mr.inputs["From Min"].default_value = 0.35; mr.inputs["From Max"].default_value = 1.0
+    mr.inputs["To Min"].default_value = 0.78; mr.inputs["To Max"].default_value = 0.0
+    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (0.012, 0.01, 0.02, 1.0); em.inputs["Strength"].default_value = 1.0
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent"); mx = nt.nodes.new("ShaderNodeMixShader"); out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(tc.outputs["Object"], ln.inputs[0]); nt.links.new(ln.outputs["Value"], mr.inputs["Value"]); nt.links.new(mr.outputs["Result"], mx.inputs[0])
+    nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0])
+    return m
+
+
+def shadow_decal(name, loc, rx, ry):
+    import bmesh
+    me = bpy.data.meshes.new(name); bm = bmesh.new(); bmesh.ops.create_circle(bm, cap_ends=True, segments=32, radius=1.0); bm.to_mesh(me); bm.free()
+    ob = bpy.data.objects.new(name, me); ob.data.materials.append(_shadow_mat())
+    ob.location = (loc[0], loc[1], 0.025); ob.scale = (rx, ry, 1.0)
+    ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False
+    bpy.context.scene.collection.objects.link(ob)
+    return ob
+
+
+def make_army(shot, cam_loc):
+    pngs, boxes = soldier_pngs()
+    rnd = random.Random(9); cards = []
+    for r, y in enumerate(RANK_Y):
+        x = -21.5 + 1.15 * (r % 2)
+        while x < 22.5:
+            xx = x + rnd.uniform(-0.35, 0.35); yy = y + rnd.uniform(-0.4, 0.4)
+            x += 1.9
+            if shot == 2 and 0.5 < xx < 12.0:          # keep set-up 2's sight line onto gun 3 and its crew clear
+                continue
+            if any(abs(xx - gx) < 1.7 for gx in CX):     # a clear lane behind every gun: the guns read through the ranks
+                continue
+            if shot == 1 and (Vector((xx, yy)) - Vector(CAM[1][0][0][:2])).length < 14.5:   # heads of the nearest would cross y 880
+                continue
+            if any(abs(xx - gx) < 1.6 and abs(yy - gy) < 1.2 for gx, gy in ((GUN_A0.x, GUN_A0.y), (GUN_B1.x, GUN_B1.y))):
+                continue
+            v = rnd.randrange(len(pngs))
+            pc = C.PropCard("s14_rank_%d_%d" % (r, len(cards)), [pngs[v]], boxes[v], scale=rnd.uniform(0.95, 1.05))
+            pc.put((xx, yy, 0.0), face=cam_loc)
+            shadow_decal("s14_rshadow_%d" % len(cards), (xx, yy), 0.75, 0.38)
+            cards.append(dict(pc=pc, loc=Vector((xx, yy, 0.0)), ph=rnd.uniform(0, 6.28)))
+    return cards
+
+
+def key_army(cards, f, g):
+    for c in cards:
+        c["pc"].root.location = c["loc"] + Vector((0, 0, 0.025 * math.sin(g * 0.21 + c["ph"])))
+        c["pc"].root.keyframe_insert("location", frame=f)
+
+
+def make_static_shadows():
+    for i, x in enumerate(CX):                                  # gun wheels (wheel centres x +-0.82, y CANNON_Y + 0.1) + trail end
+        for sx in (-1, 1):
+            shadow_decal("s14_wshadow_%d_%d" % (i, sx), (x + sx * 0.85, CY + 0.1), 0.42, 1.05)
+        shadow_decal("s14_tshadow_%d" % i, (x, CY - 3.0), 0.45, 0.5)
+    for k, p in enumerate((GUN_A, GUN_B, GUN_A0, GUN_B1)):          # under the 4 crews' feet
+        shadow_decal("s14_gshadow_%d" % k, (p.x, p.y), 0.85, 0.42)
+
+
+def make_ball_fx():
+    trail = []
+    for j in range(9):
+        m = _soft_mat("s14_trail_%d" % j, (1.0, 0.55, 0.18), 7.0)
+        trail.append((_sphere("s14_trail_%d" % j, 0.42 * (1.0 - j / 11.0), m), m, j))
+    ld = bpy.data.lights.new("s14_ballrim", "POINT"); ld.color = (1.0, 0.62, 0.3); ld.shadow_soft_size = 0.3; ld.energy = 0.0
+    lo = bpy.data.objects.new("s14_ballrim", ld); bpy.context.scene.collection.objects.link(lo)
+    return dict(trail=trail, light=lo)
+
+
+def key_ball_fx(Bf, f, g):
+    S = W.STATE["slots"]["general"][0]; ball = S["ball"]
+    ball.scale = (1.5, 1.5, 1.5); ball.keyframe_insert("scale", frame=f)
+    t = impact_t(g); fly = 0.06 < t < 0.35
+    p = ball_pos(g)
+    for ob, m, j in Bf["trail"]:
+        gj = g - 0.7 * (j + 1)
+        q = ball_pos(gj); on = fly and impact_t(gj) > 0.06
+        ob.location = q; ob.hide_render = not on
+        ob.keyframe_insert("location", frame=f); ob.keyframe_insert("hide_render", frame=f)
+        op = m.node_tree.nodes["op"].outputs[0]; op.default_value = 0.85 * (1.0 - j / 10.0) if on else 0.0
+        op.keyframe_insert("default_value", frame=f)
+    Bf["light"].location = p + Vector((0.6, 1.2, 1.1)); Bf["light"].keyframe_insert("location", frame=f)
+    Bf["light"].data.energy = 900.0 if fly else 0.0; Bf["light"].data.keyframe_insert("energy", frame=f)
+
+
 class Take(C.Take):
     def __init__(self, quality="preview", shot=1):
         self.shot = shot
@@ -256,6 +370,9 @@ class Take(C.Take):
             self.gb1 = self.actors["gb1"] = C.make_actor("gb1", "gunner_b", sd, canvas=CANVAS, contact=CONTACT)
         self.sparks, self.fuse = make_sparks()
         self.blast = make_blast() if shot == 2 else None
+        self.ballfx = make_ball_fx() if shot == 2 else None
+        self.army = make_army(shot, CAM[shot][0][0])
+        make_static_shadows()
 
     def pose(self, shot, gs):
         for g in gs:
@@ -267,9 +384,9 @@ class Take(C.Take):
                 C.place(self.ga0, f, GUN_A0); C.place(self.gb1, f, GUN_B1)
             W.set_flames(1.0, frame=f)
             W.set_smoke(1.0, frame=f)
-            if shot == 1:                                     # the smoke column right behind gun 0 hid Lin's section from this camera
+            if shot == 1:                                     # smoke columns near this high camera (camp fires) hid the view
                 for b in W.STATE["smoke"]:
-                    if (Vector((b["base"].x, b["base"].y)) - Vector((CX[0] + 0.5, CY + 1.5))).length < 0.6:
+                    if b["base"].y < -30.0:
                         b["ob"].hide_render = True; b["ob"].keyframe_insert("hide_render", frame=f)
             W.set_army(True, frame=f)
             W.set_wall_height("lin", 26, frame=f); W.set_wall_height("general", 30, frame=f)
@@ -278,12 +395,15 @@ class Take(C.Take):
             key_sparks(self.sparks, self.fuse, f, g if shot == 2 else 0)
             if self.blast is not None:
                 key_blast(self.blast, f, g)
+            if self.ballfx is not None:
+                key_ball_fx(self.ballfx, f, g)
+            key_army(self.army, f, g)
         for g in gs:
             f = bf(shot, g)
             self.scene.frame_set(f)
             if shot == 1:
                 ca = u_of(g, *G_CROUCH_A); cb = u_of(g, G_CROUCH_A[0] + 4, G_CROUCH_A[1] + 4) * 0.55
-                dust = 0.45 * (1.0 - 0.6 * u_of(g, 1040, 1096))        # the guns were just dragged up: dust round the crews' feet
+                dust = 0.22 * (1.0 - 0.6 * u_of(g, 1040, 1096))        # the guns were just dragged up: light dust round the crews' feet
                 pa = pose_gunner("gunner_a", g, ca, seed=0.0, dust=dust)
                 pb = pose_gunner("gunner_b", g, cb, seed=1.3, mirror=False, dust=dust)
                 c0 = u_of(g, G_CROUCH_A[0] - 6, G_CROUCH_A[1] - 6); c1 = u_of(g, G_CROUCH_A[0] + 2, G_CROUCH_A[1] + 2) * 0.8
