@@ -71,7 +71,7 @@ def dark_surround(hide_beams=True):
     if hide_beams:
         o = bpy.data.objects.get("floor_beams")
         if o is not None: o.hide_render = True
-    mb = S.MB(); S.sbox(mb, (S.CX0 - 1.0, S.CY0 - 1.0, -0.6), (S.CX1 + 1.2, S.CY1 + 1.0, 0.0), STATE['M']['dirt2'], 0.1)
+    mb = S.MB(); S.sbox(mb, (S.CX0 - 1.0, S.CY0 - 1.0, -0.6), (S.CX1 + 1.2, S.CY1 + 1.0, 0.0), STATE['M']['plank_f'], 0.25)
     S._obj(mb, "floor_mine", STATE['SET'])
 
 def close_hall(zt=12.0):
@@ -82,3 +82,15 @@ def close_hall(zt=12.0):
     S.sbox(mb, (S.CX0, S.CY1, 5.2), (S.CX1, Y1, zt), M['brick_d'], 1 / 6); S.sbox(mb, (X0, Y0, -0.6), (X1, S.CY0 - 0.2, zt), M['brick_d'], 1 / 6)
     S.sbox(mb, (X0, Y0, zt), (X1, Y1, zt + 0.5), M['plank_d'], 0.12)
     o = S._obj(mb, "hall_upper", STATE['SET'], shadow=False); o.visible_shadow = False
+
+def scatter_floor(n_crates=70, n_barrels=45, seed=9):
+    """floor clutter over the whole cellar footprint (crate stacks, barrels, sacks, planks): gives the sparse early frames real edges; the jacks later stand among them."""
+    import random, math
+    M = STATE['M']; r = random.Random(seed); mb = S.MB()
+    for k in range(n_crates): S._crate_stack(mb, (r.uniform(-7.5, 17.5), r.uniform(6, 66), 0.0), M, 100 + k, 2 + k % 3)
+    for k in range(n_barrels): S._barrel(mb, (r.uniform(-7.5, 17.5), r.uniform(6, 66), 0.0), M, 'wood')
+    for k in range(40): S._sack(mb, (r.uniform(-7.5, 17.5), r.uniform(6, 66), 0.0), M, k, 1.0)
+    for k in range(60):
+        x, y, yw = r.uniform(-7.5, 17.5), r.uniform(5, 66), r.uniform(0, math.pi)
+        c, s = math.cos(yw), math.sin(yw); S.obox(mb, (x, y, 0.08), (c, s, 0), (-s, c, 0), (0, 0, 1), 1.3, 0.22, 0.08, M['timber_w'], 0.3)
+    S._obj(mb, "floor_clutter", STATE['SET'])

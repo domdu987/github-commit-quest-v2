@@ -13,8 +13,8 @@ G0, G1 = C.g_bound(32.50), C.g_bound(34.70) - 1          # 975..1040
 H = 6
 RANGE = (G0 - H, G1 + H)
 G_100, G_1000, G_5000 = 978, 996, 1011      # director: 100 at narration 32.52, 1000 at 33.10, 5000 at 33.62 (plan g = int((t + 0.10) * 30))
-CAM0 = ((6.5, -3.0, 5.0), (6.5, 30.0, 2.8))
-CAM1 = ((6.5, -3.4, 10.8), (6.5, 44.0, 0.8))
+CAM0 = ((6.5, -3.0, 6.5), (6.5, 21.0, 0.0))
+CAM1 = ((6.5, -3.4, 13.6), (6.5, 40.0, -2.0))
 LENS = 22.0
 
 def count_at(g):
@@ -26,7 +26,7 @@ def cam_of(g):
 class Take(C.Take):
     def __init__(self, quality="preview"):
         C.Take.__init__(self, "under_rows", quality, lens=LENS, name="cam_s15")
-        U.dark_surround(True); U.close_hall(); self.scene.cycles.filter_width = 2.0
+        U.dark_surround(True); U.close_hall(zt=16.0); U.scatter_floor(); self.scene.cycles.filter_width = 3.0
         self.pts = U.dense_slots(500); self.crowd = U.make_crowd(self.pts, seed=5)
         self.flip_t = [random.Random(k).randrange(14, 40) for k in range(500)]
         self.last = {}
@@ -44,7 +44,7 @@ class Take(C.Take):
                 if k * 10 + 10 > n: continue
                 p = world_to_camera_view(sc, cam, Vector((x, y, 2.2)))     # chin height ~ z 2.2
                 hid[k] = (1 - p.y) * 1280 > 862 or p.x < 0.02 or p.x > 0.98 or p.y > 1.02 or p.z <= 0
-            U.key_crowd(self.crowd, f, g, lambda k: k * 10 + 10 <= max(n, 12 if False else 0), lambda k, g: ((g // self.flip_t[k]) + k) % 2, lambda k: hid.get(k, False))
+            U.key_crowd(self.crowd, f, g, lambda k: n < 1000 and k * 10 + 10 <= n, lambda k, g: ((g // self.flip_t[k]) + k) % 2, lambda k: hid.get(k, False))
 
     def report(self, g):
         loc, look = cam_of(g); return dict(shot=SHOT, g=g, cam=[round(c, 2) for c in loc], count=count_at(g))
