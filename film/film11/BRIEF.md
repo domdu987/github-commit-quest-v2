@@ -35,3 +35,5 @@ Cast (film/v3/cast11): Jenner, James Phipps (8, + sick/in-bed pose, + "cow horns
 hand prop) and a 2nd milkmaid, the town doctor/mocker (wig, cane, laugh/point/rolls up sleeve), the boy's mother, 3 villagers with
 pockmarked faces, 2 plain villagers, the cow Blossom as a 2D puppet (side view, head turn, tail swish, udder visible).
 Props: lancet, small glass jar, notebook, milk pail, candle.
+
+FINAL gate note (film 10 client lesson): the blind viewer gets the narration as heard (timed text from captions.json), not an ASR transcript. QA-tech also checks smoke is not a blob stack and riders are parented to moving things.
