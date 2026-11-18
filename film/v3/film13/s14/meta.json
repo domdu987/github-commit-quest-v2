@@ -1,0 +1,52 @@
+{
+ "take": "s14",
+ "film": 13,
+ "shots": [
+  14
+ ],
+ "first_g": 906,
+ "n_frames": 75,
+ "g0": 912,
+ "g1": 975,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "14": [
+   912,
+   974
+  ]
+ },
+ "events": {
+  "file_enters_trench": [
+   906,
+   980
+  ],
+  "camera_push": [
+   906,
+   980
+  ]
+ },
+ "set": "v3/set3d13/chicago.py street_wide build, DAY, lift 0; runtime trench (terrain faces removed, rim walls, 45 deg bank, plank ramp, timbered tunnel mouth), prop jack pile",
+ "light": "DAY",
+ "cast": "cast13 worker13_a/b/c carrying iron jacks (STORY13 worker_carry_jack, cycle 28 f)",
+ "dof": "none (cam.data.dof.use_dof False)",
+ "denoiser": "OpenImageDenoise (set pipeline)",
+ "narration": "film13/audio/narration.wav at +0.10 s",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 18.92,
+ "s_per_frame_cpu_mean": 35.36
+}

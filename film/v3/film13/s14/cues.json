@@ -1,0 +1,31 @@
+{
+ "take": "s14",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film13/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 30.2,
+   "duration": 2.5,
+   "frame": 906,
+   "end_frame": 981,
+   "kind": "ambience",
+   "label": "Chicago 1861 street, daylight, distant town murmur, wind, a cart creaking far off"
+  },
+  {
+   "time": 30.2,
+   "duration": 2.5,
+   "frame": 906,
+   "end_frame": 981,
+   "kind": "foley",
+   "label": "heavy boots on plank ramp, iron jacks clanking against shoulders, steady rhythm of the file (one clank per step)"
+  },
+  {
+   "time": 31.2,
+   "duration": 1.5,
+   "frame": 936,
+   "end_frame": 981,
+   "kind": "foley",
+   "label": "hollow thud of boots down into the trench, a dry creak of timbers at the tunnel mouth"
+  }
+ ]
+}
