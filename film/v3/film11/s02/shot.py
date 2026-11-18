@@ -18,11 +18,11 @@ RANGE = (G0 - H, G1 + H)
 PRESET, LIGHT = "garden_hut", "A"
 R = Vector((0.48, 0.88, 0.0))                          # screen-right on the ground for the preset camera
 JAMES = Vector((-7.66, -4.00, 0.0))                    # feet point: hip over the 3D stool (-8.0, -3.4), card 0.6 D in front of it
-JEN = Vector((-8.55, -5.35, 0.0))
+JEN = Vector((-8.3, -5.0, 0.0))
 G_TOUCH, G_DOT = 106, 109
 
-CAM0 = ((-1.8, -6.4, 1.55), (-8.2, -3.8, 1.9))
-CAM1 = ((-3.9, -6.0, 1.6), (-8.4, -4.0, 1.95))
+CAM0 = ((-1.8, -6.4, 1.55), (-8.2, -3.8, 1.65))
+CAM1 = ((-3.9, -6.0, 1.6), (-8.4, -4.0, 1.7))
 
 
 def cam_of(g):
@@ -38,6 +38,7 @@ def stage_of(f):
 
 def pose_james(g):
     p = dict(cast11.STORY11["james_sit_sleeve"][1])
+    p["legs"] = cast11._sit("james", fx=0.32)
     wince = ez((g - G_TOUCH + 2) / 4.0) * (1.0 - ez((g - G_TOUCH - 14) / 8.0))
     p["expr"] = "worried" if wince > 0.5 else ("determined" if g > G_TOUCH else "determined")
     if wince > 0.5:
@@ -69,8 +70,14 @@ class Take(C.Take):
         sd = os.path.join(TMP, "sprites")
         self.jam = self.actors["jam"] = C.make_actor("jam", "james", sd)
         self.jen = self.actors["jen"] = C.make_actor("jen", "jenner", sd)
-        self.ov = C.sore_overlay("james", stage_of)
+        self.ov = C.sore_overlay("james", stage_of, frac=0.4, k=1.5, cuff=True)
         self.hide("vhen42")
+        S_ = D.STATE
+        mb, hm = D.MB(), D.MB()
+        D.fg_props(mb, hm, S_["M"], S_["protos"], S_["SET"], D.R(5), dict(loc=CAM0[0], look_at=CAM0[1]),
+                   [("basket", 1.9, 5.4, 0.3, 0.7), ("hay", 0.9, 4.7, 0, 0.35), ("pot", 2.8, 6.4, 0, 0.5), ("pail", 3.4, 5.0, 0.4, 0.45), ("hay", -2.2, 4.4, 0, 0.3)], hooks=False)
+        for nm, m_ in (("s02_dress", mb), ("s02_dress_flora", hm)):
+            o = m_.obj(nm, S_["SET"]); D.no_bounce(o)
 
     def pose(self, gs):
         fr = [bf(1, g) for g in gs]
@@ -86,7 +93,7 @@ class Take(C.Take):
         self.sprites_for([(self.jam, 320)], fr)
         for g in gs:
             f = bf(1, g); self.scene.frame_set(f)
-            pt = actors.local_to_world(self.jam, self.anch[("jam", f)]["upper_arm_l"], f, camera=self.cam)
+            pt = actors.local_to_world(self.jam, C.sore_point("james", pose_james(g), 0.4), f, camera=self.cam)
             tt = ez((g - G0 + 6) / (G_TOUCH - G0 + 6))
             tip = Vector(pt) + Vector((0.0, 0.0, 0.0))
             ang = lerp(45, 60, ez((g - G0) / 40.0))

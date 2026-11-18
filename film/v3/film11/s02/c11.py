@@ -318,23 +318,33 @@ def final_loop(make_take, shots, gs_spec, ranges, here, scale=1.0, samples=12, t
 
 
 # ----------------------------------------------------------------------------- the vaccination sore on James's upper arm (a flat card drawn in his sprite)
-def sore_overlay(cast, stage_of, **fig_kw):
+def sore_point(cast, pose, frac=0.4):
+    a = puppet.figure(cast, dict(pose), "ov")["anchors"]
+    (sx, sy), (ex, ey) = a["shoulder_l"], a["elbow_l"]
+    return (sx + frac * (ex - sx), sy + frac * (ey - sy))
+
+
+def sore_overlay(cast, stage_of, frac=None, k=1.0, cuff=False, **fig_kw):
     """callable(frame, pose) for Actor.render_sprites(overlay=...): stage_of(frame) -> 0 none, 1 red dot, 2 pale blister with a red ring
     (value between 0 and 1 / 1 and 2 fades).  Sits on the puppet's anchor upper_arm_l (puppet-local, so it follows the arm)."""
     def ov(f, pose):
         s = stage_of(f)
         if s <= 0:
             return ""
-        a = puppet.figure(cast, dict(pose), "ov")["anchors"]["upper_arm_l"]
-        x, y = a
+        x, y = sore_point(cast, pose, frac) if frac is not None else puppet.figure(cast, dict(pose), "ov")["anchors"]["upper_arm_l"]
+        pre = ""
+        if cuff and frac is not None:
+            (sx, sy), (ex, ey) = (lambda an: (an["shoulder_l"], an["elbow_l"]))(puppet.figure(cast, dict(pose), "ov")["anchors"])
+            cx_, cy_ = sx + 0.12 * (ex - sx), sy + 0.12 * (ey - sy)
+            pre = ('<ellipse cx="%.4f" cy="%.4f" rx="0.13" ry="0.035" fill="#f3e6c8" stroke="#8a7350" stroke-width="0.012"/>' % (cx_, cy_))
         if s < 2:                                   # red dot
-            r = 0.060 * min(1.0, s * 1.6)
-            return ('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#c2271f" stroke="#7d140f" stroke-width="0.012"/>'
+            r = 0.060 * k * min(1.0, s * 1.6)
+            return pre + ('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#c2271f" stroke="#7d140f" stroke-width="0.012"/>'
                     '<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#f08a78" opacity="0.6"/>' % (x, y, r, x - r * 0.25, y - r * 0.3, r * 0.3))
-        k = min(1.0, s - 1.0)                       # blister: pale dome in a red ring
-        return ('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#e87a6a" opacity="%.2f"/>'
+        kk = min(1.0, s - 1.0)                       # blister: pale dome in a red ring
+        return pre + ('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#e87a6a" opacity="%.2f"/>'
                 '<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#fdf1d0" stroke="#c2271f" stroke-width="0.016"/>'
-                '<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#ffffff" opacity="0.7"/>' % (x, y, 0.095, 0.5 + 0.4 * k, x, y, 0.065, x - 0.02, y - 0.025, 0.02))
+                '<circle cx="%.4f" cy="%.4f" r="%.4f" fill="#ffffff" opacity="0.7"/>' % (x, y, 0.095 * k, 0.5 + 0.4 * kk, x, y, 0.065, x - 0.02, y - 0.025, 0.02))
     return ov
 
 
