@@ -113,6 +113,9 @@ class Take(object):
         self.cam.data.clip_start = 0.05
         self.cam.data.clip_end = 4000
         self.no_dof()
+        for h in self.A['hooks']:                       # director note 2026-11-18: no blob-stack smoke -> hide the chimney smoke
+            if h['kind'] == 'smoke' and bpy.data.objects.get(h['obj']) is not None:
+                bpy.data.objects[h['obj']].hide_render = True
         self.actors = {}
         self.anch = {}
         self.quality = quality

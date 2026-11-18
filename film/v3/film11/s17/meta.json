@@ -24,8 +24,8 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 12.29,
- "s_per_frame_cpu_mean": 23.89,
+ "s_per_frame_wall_mean": 13.45,
+ "s_per_frame_cpu_mean": 26.25,
  "max_chin_y": 766.1,
  "head_report": "raw/s17/g_*.json"
 }
