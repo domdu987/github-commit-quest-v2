@@ -1,0 +1,60 @@
+{
+ "take": "s15",
+ "film": 13,
+ "shots": [
+  15
+ ],
+ "first_g": 969,
+ "n_frames": 78,
+ "g0": 975,
+ "g1": 1041,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "15": [
+   975,
+   1040
+  ]
+ },
+ "events": {
+  "count_100": [
+   979,
+   979
+  ],
+  "count_1000": [
+   997,
+   997
+  ],
+  "count_5000": [
+   1012,
+   1012
+  ],
+  "camera_crane_up": [
+   969,
+   1046
+  ]
+ },
+ "set": "v3/set3d13/chicago.py under_rows build (dense field, cut-away), CELLAR; set_jack_count keyed 100 -> 1000 (g 997) -> 5000 (g 1012); one worker per 10 jacks (cast13 turn-bar cards A/B)",
+ "light": "CELLAR",
+ "cast": "cast13 worker13_a/b/c bar-pose cards, hidden when their jacks are not yet shown or their chin passes y 862",
+ "dof": "none (cam.data.dof.use_dof False)",
+ "denoiser": "OpenImageDenoise (set pipeline)",
+ "narration": "film13/audio/narration.wav at +0.10 s",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 17.24,
+ "s_per_frame_cpu_mean": 31.97
+}

@@ -1,0 +1,39 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film13/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 32.3,
+   "duration": 2.2,
+   "frame": 969,
+   "end_frame": 1035,
+   "kind": "ambience",
+   "label": "under the hotel: low reverberant cellar, oil lamp hiss, dust, distant men"
+  },
+  {
+   "time": 32.433,
+   "duration": 0.067,
+   "frame": 973,
+   "end_frame": 975,
+   "kind": "foley",
+   "label": "a handful of iron jacks set down, short metal clank (100)"
+  },
+  {
+   "time": 33.033,
+   "duration": 0.133,
+   "frame": 991,
+   "end_frame": 995,
+   "kind": "foley",
+   "label": "metal rattle multiplying, jacks clacking into place (1000)"
+  },
+  {
+   "time": 33.533,
+   "duration": 0.967,
+   "frame": 1006,
+   "end_frame": 1035,
+   "kind": "foley",
+   "label": "dense metallic rattle swelling to a roar (5000), rising whoosh as the camera rises"
+  }
+ ]
+}
