@@ -18,6 +18,14 @@ Branch: `claude/new-session-73ou27`. Only rows with status `READY` may be posted
 | # | Film | Title | Video | Status |
 |---|---|---|---|---|
 | 10 | ไอ้ช่างม้าลาย | ไอ้ช่างม้าลาย | film/release10/zebra_v2.mp4 | POSTED (manually by owner, 2026-11-18) — do not post |
+| 11 | ไอ้หมอวัว | ไอ้หมอวัว | https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/release11/cowdoc_v1.mp4 | WAIT (client to review, then READY) |
 
 ## Captions
 (Each READY clip gets a heading here, `### <#> <Title>`, followed by the exact description text to paste.)
+
+### 11 ไอ้หมอวัว
+หมอคนนี้ขูดหนองจากมือสาวรีดนมวัว แล้วเอามาป้ายใส่แขนเด็ก 🐄💉 หมอใหญ่หัวเราะเยาะ "เดี๋ยวเด็กมันก็งอกเขาวัวหรอก!" ทั้งหมู่บ้านเรียกเขาว่า "ไอ้หมอวัว"...
+
+แล้วใครกันแน่ที่ต้องอาย ดูให้จบ 😂
+
+#ไอ้หมอวัว #วัคซีน #เรื่องจริง #ประวัติศาสตร์ #ประวัติการแพทย์ #เรื่องเล่า #การ์ตูน #shorts
