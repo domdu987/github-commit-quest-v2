@@ -21,11 +21,10 @@ G0, G1, H = C.g_bound(57.30), C.g_bound(60.20), 6
 RANGES = {SHOT: (G0 - H, G1 - 1 + H)}
 PRESET, LIGHT = "garden_queue", "A"
 QY = -3.1
-QUEUE = [("q0", "villager_c", "villager_c_queue", 1.0), ("q1", "villager_a", "villager_a_queue", 2.9), ("q2", "villager_e", "villager_e_queue", -0.9)]   # behind the towndoc (+x) and one ahead
+QUEUE = [("q0", "villager_c", "villager_c_queue", -4.9), ("q1", "villager_e", "villager_e_queue", -6.1), ("q2", "villager_a", "villager_a_queue", -7.0)]   # behind (farther than) the towndoc, on the way to the hut
 DOC = Vector((-3.0, QY, 0.0))
-JENNER = Vector((-7.8, -4.3, 0.0))
-JAMES = Vector((-6.2, -2.6, 0.0))
-QUEUE = [("q0", "villager_c", "villager_c_queue", -1.0), ("q1", "villager_a", "villager_a_queue", 1.0), ("q2", "villager_e", "villager_e_queue", 3.0)]
+JENNER = Vector((-9.0, -4.6, 0.0))
+JAMES = Vector((-8.0, -3.3, 0.0))
 CAM0 = ((4.5, -6.5, 2.0), (-5.6, -2.4, 1.9))
 CAM1 = ((0.8, -5.9, 1.95), (-5.8, -2.4, 1.9))
 
@@ -93,13 +92,40 @@ class Take(C.Take):
         self.jam = self.actors["jam"] = C.make_actor("jam", "james", sd, canvas=cast11.CANVAS11["james"])
         self.sore = C.make_sore(self, "blister", TMP, size=0.55)
 
+    def sleeve_overlay(self, frame):
+        """SVG fragment (puppet-local D) for the towndoc: the left sleeve turned back to a cream cuff and a bare forearm, growing over g 1745-1775
+        and held to the end; built from the anchors of the first sprite pass."""
+        g = frame - 1
+        k = clamp((g - 1745) / 30.0)
+        if k <= 0:
+            return ""
+        an = self.anch[("doc", frame)]
+        ex, ey = an["elbow_l"]
+        hx, hy = an["hand_l"]
+        dx, dy = hx - ex, hy - ey
+        L = math.hypot(dx, dy) or 1.0
+        ux, uy = dx / L, dy / L
+        nx, ny = -uy, ux
+        tc = lerp(0.88, 0.42, ez(k))                          # the cuff climbs towards the elbow
+        cx, cy = ex + dx * tc, ey + dy * tc
+        w = 0.22
+        skin = "#f1c8a4"
+        bare = [(cx + nx * w * 0.9, cy + ny * w * 0.9), (cx - nx * w * 0.9, cy - ny * w * 0.9),
+                (ex + dx * 0.97 - nx * w * 0.7, ey + dy * 0.97 - ny * w * 0.7), (ex + dx * 0.97 + nx * w * 0.7, ey + dy * 0.97 + ny * w * 0.7)]
+        pts = " ".join("%.4f,%.4f" % p for p in bare)
+        cuff = [(cx + nx * 0.31 - ux * 0.07, cy + ny * 0.31 - uy * 0.07), (cx - nx * 0.31 - ux * 0.07, cy - ny * 0.31 - uy * 0.07),
+                (cx - nx * 0.31 + ux * 0.07, cy - ny * 0.31 + uy * 0.07), (cx + nx * 0.31 + ux * 0.07, cy + ny * 0.31 + uy * 0.07)]
+        cp = " ".join("%.4f,%.4f" % p for p in cuff)
+        return ('<polygon points="%s" fill="%s" stroke="#5a3a2a" stroke-width="0.025" stroke-linejoin="round"/>'
+                '<polygon points="%s" fill="#fbf1dc" stroke="#7a5a45" stroke-width="0.03" stroke-linejoin="round"/>' % (pts, skin, cp))
+
     def pose(self, shot, gs):
         for g in gs:
             f = bf(shot, g)
             loc, look = cam_of(g)
             self.key_cam(f, loc, look)
             for a, (nm, cast, key, x) in zip(self.q, QUEUE):
-                C.place(a, f, (x, QY, 0.0))
+                C.place(a, f, (x, QY + 0.9 + 0.5 * QUEUE.index((nm, cast, key, x)), 0.0))
             C.place(self.jen, f, JENNER)
             C.place(self.jam, f, JAMES)
             C.place(self.doc, f, DOC)
@@ -113,6 +139,7 @@ class Take(C.Take):
             self.doc.pose(f, pose_doc(g), camera=self.cam)
         fr = [bf(shot, g) for g in gs]
         self.sprites_for([(a, 288) for a in self.q + [self.jen, self.jam]] + [(self.doc, 320)], fr)
+        self.doc.render_sprites(320, frames=fr, overlay=lambda f, p: self.sleeve_overlay(f))
         for g in gs:
             C.put_sore(self.sore, self, self.jam, bf(shot, g))
 

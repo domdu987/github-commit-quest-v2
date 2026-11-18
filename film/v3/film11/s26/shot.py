@@ -21,14 +21,16 @@ SHOT = 26
 G0, G1, H = C.g_bound(54.33), C.g_bound(57.30), 6
 RANGES = {SHOT: (G0 - H, G1 - 1 + H)}
 PRESET, LIGHT = "garden_queue", "A"
-# queue from the gate end (right of frame, x +) to the hut (left): (name, cast, pose key, x)
-QUEUE = [("q0", "villager_a", "villager_a_queue", 5.0), ("q1", "villager_d", "villager_d_queue", 3.2), ("q2", "villager_b", "villager_b_queue", 1.4),
-         ("q3", "villager_e", "villager_e_queue", -0.4), ("q4", "villager_c", "villager_c_queue", -2.2), ("q5", "milkmaid2", "milkmaid2_smile", -4.0)]
-QY = -3.1
-JENNER = Vector((-8.9, -1.4, 0.0))
-JAMES = Vector((-6.2, -3.1, 0.0))
-CAM0 = ((11.5, -18.0, 3.0), (-0.5, -3.0, 1.8))
-CAM1 = ((8.5, -16.5, 2.8), (-1.5, -3.0, 1.85))
+# queue from near the camera (x +, front right) back to the hut door (x -): (name, cast, pose key, x, mirror)
+_X = [-3.4 + 1.5 * i for i in range(9)]                                # from the hut door to the right, out of frame at the far end
+_Y = [-3.0 + (0.0 if i % 2 == 0 else -1.1) for i in range(9)]           # staggered in depth: a diagonal-ish ragged line, no pile-up
+QUEUE = [("q0", "villager_a", "villager_a_queue", _X[0]), ("q1", "villager_d", "villager_d_queue", _X[1]), ("q2", "villager_b", "villager_b_queue", _X[2]),
+         ("q3", "villager_e", "villager_e_queue", _X[3]), ("q4", "villager_c", "villager_c_queue", _X[4]), ("q5", "milkmaid2", "milkmaid2_smile", _X[5]),
+         ("q6", "villager_a", "villager_a_queue", _X[6]), ("q7", "villager_d", "villager_d_queue", _X[7]), ("q8", "villager_b", "villager_b_queue", _X[8])]
+JENNER = Vector((-6.9, -1.7, 0.0))
+JAMES = Vector((-5.3, -3.0, 0.0))
+CAM0 = ((1.8, -13.4, 2.6), (-2.6, -3.0, 1.6))
+CAM1 = ((0.2, -12.4, 2.5), (-2.8, -3.0, 1.65))
 
 
 def cam_of(g):
@@ -42,9 +44,11 @@ def pose_q(i, key, g):
     ph = i * 1.7
     p["lean"] = 1.6 * math.sin(g * 0.05 + ph)
     p["head_roll"] = p.get("head_roll", 0) + 2.0 * math.sin(g * 0.07 + ph)
-    p["yaw"] = p.get("yaw", 0) + 0.12 * math.sin(g * 0.04 + ph)
+    p["yaw"] = -0.3 + 0.12 * math.sin(g * 0.04 + ph)
     p["blink"] = blink(g, [1640 + 13 * i, 1690 + 9 * i])
     p["t"] = g / 30.0
+    if i >= 6:
+        p["mirror"] = True
     return p
 
 
@@ -58,7 +62,7 @@ def pose_james(g):
 
 def pose_jenner(g):
     p = dict(cast11.STORY11["jenner_lancet_up"][1])
-    p.update(yaw=0.55, pitch=-0.05 + 0.04 * math.sin(g * 0.06), head_roll=-2 + 1.5 * math.sin(g * 0.05), lean=1.2 * math.sin(g * 0.04), t=g / 30.0)
+    p.update(yaw=0.45, pitch=-0.05 + 0.04 * math.sin(g * 0.06), head_roll=-2 + 1.5 * math.sin(g * 0.05), lean=1.2 * math.sin(g * 0.04), t=g / 30.0)
     p["arm_r"] = dict(hand=(0.55, 0.2 + 0.03 * math.sin(g * 0.08)), bend=-0.5)
     p["blink"] = blink(g, [1660, 1705])
     return p
@@ -82,7 +86,7 @@ class Take(C.Take):
             loc, look = cam_of(g)
             self.key_cam(f, loc, look)
             for a, (nm, cast, key, x) in zip(self.q, QUEUE):
-                C.place(a, f, (x, QY, 0.0))
+                C.place(a, f, (x, _Y[QUEUE.index((nm, cast, key, x))], 0.0))
             C.place(self.jen, f, JENNER)
             C.place(self.jam, f, JAMES)
         for g in gs:
@@ -93,7 +97,7 @@ class Take(C.Take):
             self.jen.pose(f, pose_jenner(g), camera=self.cam)
             self.jam.pose(f, pose_james(g), camera=self.cam)
         fr = [bf(shot, g) for g in gs]
-        self.sprites_for([(a, 256) for a in self.q + [self.jen, self.jam]], fr)
+        self.sprites_for([(a, 192) for a in self.q + [self.jen, self.jam]], fr)
         for g in gs:
             C.put_sore(self.sore, self, self.jam, bf(shot, g))
 

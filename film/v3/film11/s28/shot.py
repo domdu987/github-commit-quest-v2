@@ -22,8 +22,8 @@ RANGES = {SHOT: (G0 - H, G1 - 1)}          # no frames beyond N: the film's last
 PRESET, LIGHT = "barn_wide", "A"
 BLOSSOM = Vector((-2.2, 5.8, 0.0))
 G_WORD = C.g_of(62.20)                     # "วัว" ~ 62.3 s: she looks round around here
-CAM0 = ((2.4, -1.6, 1.5), (-2.4, 6.0, 0.9))
-CAM1 = ((0.9, -0.9, 1.4), (-3.5, 5.8, 0.8))
+CAM0 = ((2.4, -1.6, 1.3), (-3.4, 6.0, 1.6))
+CAM1 = ((0.5, -0.4, 1.1), (-6.2, 5.8, 2.05))
 
 
 def cam_of(g):
@@ -32,23 +32,29 @@ def cam_of(g):
     return Vector([lerp(CAM0[0][i], CAM1[0][i], u) for i in range(3)]), Vector([lerp(CAM0[1][i], CAM1[1][i], u) for i in range(3)])
 
 
+TURN_DEG = 32.0                      # card yaw at the end (sign chosen so the head end swings towards the lens)
+
+
+def turn_of(g):
+    return ez((g - 1846) / 12.0)       # 0 -> 1 over g 1846..1858, still from 1860
+
+
 def pose_blossom(g):
-    """chewing, tail swish; from g ~1846 the head comes up (alert, knowing look), ear flicks at g 1858-1863 and again on the word (g 1866-1869), hold to the cut."""
+    """chews and swishes; over g 1846-1858 the head comes up and the card turns ~32 deg (three-quarter, head towards the lens), still from 1860;
+    eye wide open on the turn, ear flicks, then the knowing half-lid + ear flick on the word (g 1866-1871)."""
     p = dict(cast11.STORY11["blossom_chew"][1])
-    up = ez((g - 1846) / 14.0)
-    p.update(head_turn=lerp(0.0, -0.15, up), head_down=lerp(0.1, -0.5, up), chew=g / 12.0 if up < 0.4 else None, chew_amp=1.0,
-             tail=0.7 * math.sin(g / 8.0), mirror=True)
+    up = ez((g - 1846) / 12.0)
+    p.update(head_turn=lerp(0.0, -0.15, up), head_down=lerp(0.1, -0.5, up), chew=g / 12.0 if up < 0.3 else None, chew_amp=1.0,
+             tail=0.7 * math.sin(g / 8.0) * (1.0 if g < 1858 else 0.35), mirror=True)
     if p["chew"] is None:
         del p["chew"]
     k = (g - G0 + 20) % 70
-    p["ear"] = (1.0 if k < 3 else (-0.3 if k < 6 else 0.0))
-    if 1858 <= g <= 1860 or 1866 <= g <= 1868:
+    p["ear"] = (1.0 if k < 3 else (-0.3 if k < 6 else 0.0)) if g < 1846 else 0.0
+    if 1856 <= g <= 1858 or 1866 <= g <= 1868:
         p["ear"] = 1.0
-    elif 1861 <= g <= 1863 or 1869 <= g <= 1871:
+    elif 1859 <= g <= 1860 or 1869 <= g <= 1871:
         p["ear"] = -0.3
-    elif g >= 1850:
-        p["ear"] = 0.0
-    p["blink"] = blink(g, [1825, 1852, 1870])
+    p["blink"] = 2 if g in (1825, 1826, 1862, 1863) else (1 if g >= 1866 else 0)     # open eye on the turn, half-lid only on the word
     return p
 
 
@@ -87,8 +93,19 @@ class Take(C.Take):
         return dict(shot=shot, g=g, cam=[round(c, 3) for c in loc], pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1),
                     heads=C.head_report(self, f))
 
+    def on_frame(self, f):
+        """per-frame card yaw: the camera-parallel yaw plus the turn (set before the stage syncs the cards)."""
+        g = f - 1
+        r = self.cam.matrix_world.to_3x3() @ Vector((1.0, 0.0, 0.0))
+        base = math.degrees(math.atan2(r.y, r.x))
+        self.blo.yaw_fixed = base + TURN_DEG * turn_of(g)
+
     def render(self, shot, gs, out_dir, scale=1.0, samples=12, threads=2):
-        return C.Take.render(self, [bf(shot, g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+        self.scene.camera = self.cam
+        self.no_dof()
+        self.scene.cycles.samples = samples
+        return C.render.render_frames([bf(shot, g) for g in gs], out_dir, scale=scale, threads=threads, scene=self.scene, camera=self.cam,
+                                      verbose=False, on_frame=self.on_frame)
 
 
 if __name__ == "__main__":
