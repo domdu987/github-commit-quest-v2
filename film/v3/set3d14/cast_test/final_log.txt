@@ -1,0 +1,9 @@
+00:03.095  cycles           | WARNING CUEW initialization failed: Error opening the library
+/home/user/github-commit-quest-v2/film/v3/set3d14/cast_test/cast_test.py:60: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m = bpy.data.materials.new('cm_' + tag); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); Nn = nt.nodes.new; Lk = nt.links.new
+00:33.328  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d14/cast_test/s1_NIGHT.png.tmp.png'
+s1 final wall 30 s {"calf": {"head": [475, 666], "feet": [535, 753], "chest_push": [483, 679], "trunk_tip": [426, 742], "ear_tip": [507, 616], "tusk_tip": [436, 700], "chest_push_world": [-0.78, 4.3, 0.85]}, "ele_c": {"head": [74, 569], "feet": [152, 728], "chest_push": [85, 593], "trunk_tip": [23, 725], "ear_tip": [108, 503], "tusk_tip": [29, 607], "chest_push_world": [-7.9, 3.8, 2.19]}, "mat": {"head": [320, 523], "feet": [475, 759], "chest_push": [341, 555], "trunk_tip": [133, 581], "ear_tip": [381, 417], "tusk_tip": [220, 574], "chest_push_world": [-2.28, 3.4, 2.38]}}
+01:29.850  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d14/cast_test/s2_NIGHT.png.tmp.png'
+s2 final wall 53 s {"mat": {"head": [573, 619], "feet": [378, 916], "chest_push": [549, 690], "trunk_tip": [773, 561], "ear_tip": [557, 554], "tusk_tip": [663, 659], "chest_push_world": [6.0, 5.15, 1.98]}}
+02:03.573  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d14/cast_test/s3_NIGHT.png.tmp.png'
+s3 final wall 30 s {"mat": {"head": [429, 484], "feet": [191, 816], "chest_push": [393, 515], "trunk_tip": [627, 376], "ear_tip": [344, 292], "tusk_tip": [590, 477], "chest_push_world": [9.45, 3.9, 2.51]}}
