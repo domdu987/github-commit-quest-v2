@@ -1,0 +1,21 @@
+{
+ "take": "s04",
+ "shots": "shots 4-5: street_high crane, market",
+ "g0": 172,
+ "g1": 315,
+ "first_g": 166,
+ "n_frames": 156,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "fps": 30,
+ "size": [
+  720,
+  1280
+ ],
+ "cuts": [
+  240
+ ],
+ "samples": 20
+}
