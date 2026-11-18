@@ -14,7 +14,7 @@
   "type": "cut",
   "frames": 0
  },
- "set": "v3/set3d11/dairy.py lane_wide A: pockmarked villagers walk and whisper, camera tracks along the lane",
+ "set": "v3/set3d11/dairy.py lane_wide A: pockmarked villagers walk and whisper, camera tracks along the lane (smoke hidden)",
  "samples": 12,
  "resolution": [
   720,
@@ -23,7 +23,7 @@
  "threads": 2,
  "fps": 30,
  "dof": "none",
- "s_per_frame_wall_mean": 8.39,
- "s_per_frame_cpu_mean": 15.81,
+ "s_per_frame_wall_mean": 7.81,
+ "s_per_frame_cpu_mean": 15.17,
  "narration": "film11/audio/narration.wav at +0.10 s"
 }

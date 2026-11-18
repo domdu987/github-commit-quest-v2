@@ -14,7 +14,7 @@
   "type": "cut",
   "frames": 0
  },
- "set": "v3/set3d11/dairy.py lane_high A: high drift over the crowd, pockmarked faces, mother pulls James",
+ "set": "v3/set3d11/dairy.py lane_high A: high drift over the crowd, pockmarked faces, mother pulls James (smoke hidden)",
  "samples": 12,
  "resolution": [
   720,
@@ -23,7 +23,7 @@
  "threads": 2,
  "fps": 30,
  "dof": "none",
- "s_per_frame_wall_mean": 9.23,
- "s_per_frame_cpu_mean": 18.1,
+ "s_per_frame_wall_mean": 9.04,
+ "s_per_frame_cpu_mean": 17.62,
  "narration": "film11/audio/narration.wav at +0.10 s"
 }

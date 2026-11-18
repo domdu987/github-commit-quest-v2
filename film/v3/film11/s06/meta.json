@@ -14,7 +14,7 @@
   "type": "cut",
   "frames": 0
  },
- "set": "v3/set3d11/dairy.py lane_wide A: towndoc arrives at Jenner's gate, laughs, lip-sync from g449",
+ "set": "v3/set3d11/dairy.py lane_wide A: towndoc arrives at Jenner's gate, laughs, lip-sync from g449 (smoke hidden)",
  "samples": 12,
  "resolution": [
   720,
@@ -23,7 +23,7 @@
  "threads": 2,
  "fps": 30,
  "dof": "none",
- "s_per_frame_wall_mean": 7.89,
- "s_per_frame_cpu_mean": 14.88,
+ "s_per_frame_wall_mean": 7.15,
+ "s_per_frame_cpu_mean": 14.42,
  "narration": "film11/audio/narration.wav at +0.10 s"
 }
