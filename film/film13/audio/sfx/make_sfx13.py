@@ -4,7 +4,7 @@ LIB=[
  ("street","1860s busy muddy city street ambience, horse hooves in mud, distant chatter, cart wheels, no music",6.0),
  ("rain","steady heavy rain on a muddy street and wooden planks, calm ambience, no thunder, no music",6.0),
  ("cart_sink","wooden cart wheel creaking and sinking into thick wet mud, squelch, horse snort",2.5),
- ("boot_sink","a boot squelching deep into thick wet mud, comic suck sound",1.2),
+ ("boot_sink","a leather shoe stepping into thick wet mud, loud squelch, comic",1.2),
  ("shovel","shovels digging wet earth and tossing soil, several workers",3.0),
  ("rich_laugh","a fat rich old man bursting into a big booming mocking laugh, indoor, no music",2.5),
  ("crowd_laugh","a street crowd of townsfolk laughing and jeering together, outdoor",2.5),
@@ -27,12 +27,12 @@ def gen(item):
     name,text,dur=item
     if os.path.exists(name+".mp3"): return name,"exists"
     body={"text":text,"duration_seconds":dur,"prompt_influence":0.6,"output_format":"mp3_44100_128"}
-    r=subprocess.run(["curl","-sS","-m","180","-X","POST","https://fal.run/fal-ai/elevenlabs/sound-effects/v2","-H","Authorization: Key "+os.environ["Key"],"-H","Content-Type: application/json","-d",json.dumps(body),"-w","\n%{http_code}"],capture_output=True,text=True)
+    r=subprocess.run(["curl","-sS","-m","400","-X","POST","https://fal.run/fal-ai/elevenlabs/sound-effects/v2","-H","Authorization: Key "+os.environ["Key"],"-H","Content-Type: application/json","-d",json.dumps(body),"-w","\n%{http_code}"],capture_output=True,text=True)
     t,c=r.stdout.rsplit("\n",1)
     if c!="200": return name,"HTTP "+c+" "+t[:150]
     url=json.loads(t)["audio"]["url"]; subprocess.run(["curl","-sS","-o",name+".mp3",url])
     v=subprocess.run(["ffmpeg","-i",name+".mp3","-af","volumedetect","-f","null","-"],capture_output=True,text=True).stderr
     return name,[l.split(":")[-1].strip() for l in v.splitlines() if "max_volume" in l]
 want=sys.argv[1:]
-with cf.ThreadPoolExecutor(6) as ex:
+with cf.ThreadPoolExecutor(3) as ex:
     for r in ex.map(gen,[x for x in LIB if not want or x[0] in want]): print(r)
