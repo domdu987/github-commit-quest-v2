@@ -42,3 +42,44 @@ Missing or insufficient:
 
 ## Counts
 Heads above 880: all staged cards (446-764), PASS. Heads/key content below 880: tiles 12, 13 (issue 9) FAIL. DOF/blur: none seen, PASS. Black/magenta/blank areas: none, except issue 11 (magenta-leaning coach wheels in 11). Text/letters: none, PASS. Interpenetration: issue 5, 6.
+
+## Re-check r1
+
+Verdict: FAIL (one blocking item: the floating glow orb on the road, item 4). Everything else is FIXED or a non-blocking note.
+`cd street_work && python3 t_anim.py | tail -2` -> "checks 152 / ALL OK". All 25 tiles in `street_work/final/` opened at 720x1280 (numbers = API.md section 9 table; `contact.jpg` is the same order). No text or letters in any tile. No blur / DOF. No tile has a staged card head below y 880 (heads 420-760). No stray `cast12/tmp`; `git status` shows only QA_ART.md modified (not mine).
+
+### Earlier issues
+1. Grain/speckle (puddles, setts): FIXED in 01, 03, 05, 07, 08, 10, 14; PARTLY in 12 and 23 (faint grain in the deep puddle, y 1000-1200, x 100-500) and 16 (y 900-1000). Non-blocking.
+2. Deep-puddle speckle 07/18: FIXED (07 clean; 18 bottom puddle y 1100-1280 clean).
+3. Hard pale rectangle on road 08/16: FIXED (08 x 50-330, y 860-1060 now a normal puddle sheen).
+4. Floating glow blob: OPEN, BLOCKING. A round white orb sits on the road with no lamp or object: 01 and 18 at (180, 815), 24 at (558, 1022) right beside the hero's feet (reads as a glowing ball), 19/21 at about (610, 970) on the pavement, 11 at (510, 935). API.md section 11 admits it. Fix: hide or lower the lantern/halo reflection for those lamps, or clamp the glossy highlight; then re-render 01, 11, 18, 24.
+5. Mud wave (23): PARTLY. It is now a shaded, textured fan with brown balls, Hanway is visible in front of it with mud spots and a clear face; but the wave is pale beige stacked sheets (paper-cut look, hard edges at x 190-440, y 280-800), is cropped by the left frame edge, and still overlaps the coach front wheel (x 360-440, y 600-800). Stills only at t 0.4; check t 0.2-0.6 in the take. Non-blocking.
+6. Rush placeholders: FIXED. 13/14 use real cast cards (push pose, angry faces) at the coach door; feet at y 880, heads 690-760; hands meet the wheel/door, no body in the wheel. Note: only 5-6 cards, heavily overlapped, so the mob is thin (non-blocking, add more in the take).
+7. Tile 17 not wide: FIXED. 15 (rank_wide) shows coach_0 plus 3 coaches receding with the horse; wheels are static in a still, roll is hook-driven.
+8. Pink umbrella: PARTLY. The pole no longer crosses the face; canopy centred over the head in 22, rosettes are now white/cream, canopy coral-salmon with dark ribs. But the shaft ends behind the hat at (395, 540) and no hand holds it, so the canopy reads as stuck on the hat (props detached from hands). Non-blocking; add a visible hand on the shaft or lower the canopy onto the shoulder line.
+9. Clipped umbrellas below 880 (old 12/13): FIXED. New 20/21 (street_high B) have no clipped content at the bottom edge.
+10. Loose black disc / green prop on the road: FIXED (not seen in 02, 04, 20, 21).
+11. Dusk magenta coach/horse: PARTLY. 25 wheels now red-orange and horse brown, good; 14 horse flank and coach body still maroon-purple (x 570-720, y 660-860); 23 (RAIN light) coach is deep purple with magenta spokes (x 400-560, y 690-780). Non-blocking, warm the DUSK/shade tint on coach and horse.
+12. Placeholder umbrella scale: FIXED (01, 02, 04, 07, 11: black umbrella is about one body width wider than the head, smaller than the pink one).
+13. Sky arcs under clouds: OPEN, non-blocking. Dark thin ledge lines still extend beyond the cloud billboards (01 y 185 and 380, 07 y 360 and 420, 13 y 300 and 380, 16 y 290). Softer than before and read as a stylised cloud shadow.
+14. busy_0 vs 03 (empty rank): PARTLY. New 16 (rank_idle, horses bored, box_a/b/c) is distinct from other tiles; the horse head is cropped at the right edge so the drooping head is not seen. Non-blocking.
+15. Cast sheet label overlap: NOT RE-CHECKED (cast12 sheet is outside the 25 tiles); remains cosmetic.
+16. Cast purse/coins: NOT in any tile; unchanged until a cast12 re-check. Pole-hand see 8.
+17. egg_tilt / cabbage_flinch: NOT in any tile; no change to verify.
+18. Stale `*_RAIN_final.png`: FIXED (final/ holds exactly 25 files).
+
+### Coverage gaps
+- Shot 20 (street_wide_rev): FIXED, 03. Note the pavement crowd there is faceless blocky placeholders at y 690-760 with a soft look (non-blocking, cards replace them).
+- Shot 9 (low wide): FIXED, 02.
+- Shots 7/15 close two-shot: FIXED, 06 (Hanway head 695, coachman head 421).
+- Shot 2 three coachmen: PARTLY. 10 shows box_a (big, head 423) and box_b (small, about (362, 590)); box_c is not readable in the frame. 
+- Shot 14 other coachmen nodding: PARTLY: 25 shows box_b small at (203, 620); box_c still not framed.
+- Shot 13 (dusk, bare heads + one umbrella): FIXED, 19 (hero's black umbrella among bare placeholders; placeholders are faceless cylinders from the high angle).
+- Shot 17: FIXED, 15. Shot 18 queue: FIXED, 08 (two queue cards at (175-225, 720-830), small but legible). Shot 16 reveal: FIXED in principle, 13 (thin mob, see 6). Shot 22 empty rank: PARTLY, 16.
+- Shots 3, 10, 11 throws: PARTLY. 24 shows the cabbage mid-arc (green block at (555, 355), correct, in the air); there is still no tile with a splat decal on the umbrella or a hero_track throw.
+
+### New failures
+- None blocking apart from item 4. Hanway card head/umbrella contact in 06, 07, 12, 24 is correct (hand on the handle). Rush cards touch the door, not floating. No interpenetration of cards with the coach except the mud wave and wheel in 23.
+- Non-blocking: 23 mud wave is cropped on the left edge (x 0-60, y 250-500); 03 and 19 crowd placeholders look soft.
+
+Re-check fix list for the next round: (1) remove the orb at the 5 positions in item 4, (2) optional: hand on the pink pole, warmer purple coaches, framing of box_c, splat tile.
