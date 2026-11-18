@@ -9,3 +9,6 @@
 - Pockmarked villager c (with e and a) now stands behind (farther than) the towndoc on the hut side, hidden by his body: the towndoc is the biggest, unblocked figure (head 107-167 px). James (blister card, by the hut stool) and Jenner (lancet up) beside the hut.
 - Sleeve roll: from g 1745 to 1775 a cream turned-back cuff (climbing from wrist to mid-forearm) and a bare skin forearm are drawn on his left arm as a sprite overlay built from the elbow_l / hand_l anchors; held to the end of the take. His right hand still tugs at it. The hat is not in his hand (no prop for it), hat_off stays.
 - 11.2 s / frame, QA_AUTO PASS. Heads on screen y <= 645.
+
+## Gate 3 re-render (QA-art note: sleeve overlay read as a board, eyes sly)
+- The rolled-sleeve overlay is now a thin cream cuff (about 0.07 D thick) with a narrow bare strip at the wrist of the left forearm (g 1745-1775, held to the end); no board across the chest. Eyes: closed-arc "happy" eyes with the smirk mouth, blush and sweat, head tipped down (pitch 0.4): sheepish for the whole take, no half-lid. QA_AUTO PASS.
