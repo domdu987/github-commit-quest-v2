@@ -1,0 +1,48 @@
+{
+ "take": "s24",
+ "film": 13,
+ "shots": [
+  24
+ ],
+ "first_g": 1531,
+ "n_frames": 77,
+ "g0": 1537,
+ "g1": 1602,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "24": [
+   1537,
+   1601
+  ]
+ },
+ "events": {
+  "slow_crane": [
+   1531,
+   1607
+  ]
+ },
+ "set": "v3/set3d13/chicago.py front_stair build (street, DAY, lift 0.9 keyed), stair cut short with void; runtime: street lamp / gap lamp glows / planks / piles hidden; 8 cast13 worker cards (stand + cheer) inside the gap among the cribbing",
+ "light": "DAY",
+ "cast": "cast13 worker13_a/b/c stand + cheer cards in the gap, distant town cards",
+ "dof": "none (cam.data.dof.use_dof False)",
+ "denoiser": "OpenImageDenoise (set pipeline)",
+ "narration": "film13/audio/narration.wav at +0.10 s",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 11.79,
+ "s_per_frame_cpu_mean": 23.22
+}

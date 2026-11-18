@@ -1,0 +1,23 @@
+{
+ "take": "s24",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film13/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 51.033,
+   "duration": 2.767,
+   "frame": 1531,
+   "end_frame": 1614,
+   "kind": "ambience",
+   "label": "Chicago 1861 street, daylight, a quiet hush, distant town murmur, timber creaks under the raised hotel"
+  },
+  {
+   "time": 51.7,
+   "duration": 0.667,
+   "frame": 1551,
+   "end_frame": 1571,
+   "kind": "foley",
+   "label": "soft cheer from the tiny workers under the hotel"
+  }
+ ]
+}
