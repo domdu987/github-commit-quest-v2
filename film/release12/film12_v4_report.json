@@ -1,0 +1,65 @@
+{
+ "output": "/home/user/github-commit-quest-v2/film/release12/film12_v4.mp4",
+ "frames": 1785,
+ "expected_frames": 1785,
+ "duration_s": 59.5,
+ "lufs": -12.2,
+ "true_peak_dbtp": -2.1,
+ "lufs_ok": true,
+ "tp_ok": true,
+ "music_used": true,
+ "music_WARNING": null,
+ "takes": [
+  [
+   "s01",
+   0,
+   172
+  ],
+  [
+   "s04",
+   172,
+   315
+  ],
+  [
+   "s06",
+   315,
+   571
+  ],
+  [
+   "s09",
+   572,
+   650
+  ],
+  [
+   "s10",
+   651,
+   858
+  ],
+  [
+   "s13",
+   858,
+   1049
+  ],
+  [
+   "s15",
+   1049,
+   1339
+  ],
+  [
+   "s19",
+   1340,
+   1578
+  ],
+  [
+   "s22",
+   1579,
+   1784
+  ]
+ ],
+ "placeholder_ranges": [],
+ "handle_fallback_frames": 5,
+ "dissolve_blend_frames": 6,
+ "sfx_events": 25,
+ "narration_rms_db": -17.724807703094147,
+ "pass": true
+}
