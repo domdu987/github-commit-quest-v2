@@ -5,3 +5,4 @@
 - Deviation: bed shot uses a custom camera (the preset room_night camera does not see the bed); the sore is an overlay in the sprite rather than a separate card.
 - Gate fix 2026-11-18: camera raised to z 3.75 -> 3.55 looking down on the bed (James head ~100-130 px), sky/hills hidden behind the window (deep-blue plates), candle light x2.8, sore card hidden (QA-art). QA_AUTO PASS.
 - Gate round 2: the upright patchwork square (my quilt overlay) removed (he lies on top of the quilt), curtains hidden, a deep-blue night pane outside the left window. QA_AUTO PASS.
+- QA-tech round 2: mother moved to (-3.0, 7.4) so her head stays inside the right frame edge (max head right edge < 720). QA_AUTO PASS.
