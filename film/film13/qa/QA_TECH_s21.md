@@ -1,0 +1,10 @@
+# QA_TECH s21 (shot 21, 500 workers push together) - FAIL
+Checked: qa_auto every frame (planned cuts passed), own frame-diff/pop scan, 6 fps sheets + cut +-3 frames, full-size key frames, joins with neighbours. Scratch: /tmp/claude-0/-home-user-github-commit-quest-v2/f68faafd-58e7-5eaf-b5d5-5d4b103780c5/scratchpad/qa13b2/s21/ (sheet_*.jpg, full/). Take files untouched. G1 cut offset: now FIXED in all re-renders (pops/cuts sit exactly on the plan g: s17 1173/1255, s26 1743/1775/1871/1909); qa_auto's 'no change' on in/out handle boundaries is expected.
+Auto: PASS (65 frames, no frozen/pop/blur).
+What works: dense 3D field, ~200 visible workers in rows, lamp on the aisle, warm DAY light, camera pushes in; heads < 880 (nearest worker head y ~ 690-780, OK).
+1. g 1362-1376 (first 15 frames of the shot, incl. handle): stray geometry in the foreground bottom-left: a dark navy box on its side and a white thin spike/sliver stuck in the brick path (visible at 6 fps, labels n0-n20). Fix: hide the debris mesh, re-render g 1356-1380.
+2. g 1362-1420: location/continuity break. s20 and s22 are an enclosed timber cellar (beams, ceiling); s21 is an open brick-walled pit under a sky with the hotel absent and the jack heads capped by flat dark slabs, so the viewer sees men pushing bars under nothing. Fix: add the beam/hotel underside above the jacks (or keep the cut-away but show the beam grid lifting) and keep the cellar timber walls.
+3. g 1362-1420: sky is stepped pastel cloud slabs/domes with hard edges (cartoon cut-outs), different from every other take. Fix: soft gradient sky or crop it out (top 30 %).
+4. g 1362-1420: foreground/mid workers shout with open, bared-teeth mouths (no quote); bars sit at different angles, 'rows ripple in sync' is only weakly visible (a few levers swing). Fix: closed mouths; key bar angle as a travelling wave.
+5. g 1362-1420: bottom 35 % is smooth mud with pockmark rings and a few scattered straw bits; fine but soft.
+Joins: in s20 (cellar) -> s21 (open pit): hard cut, see 2. Out s21 -> s22: pit -> cellar interior close, OK.
