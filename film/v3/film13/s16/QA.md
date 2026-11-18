@@ -1,7 +1,5 @@
-# QA s16 (film 13, shot 16, g 1041..1106, take g 1035..1112)
-- qa_auto: PASS (78 frames, no frozen/black/magenta/blur flags). Camera dollies forward along the aisle every frame.
-- ~520 worker cards (3 per aisle slot, A/B bar poses cycling every 20-60 frames, hidden when chin y > 862), pullman walks the central aisle toward the camera
-  (walk cycle, head turns, scale 0.78 so his head clears the 2.8 D crawlspace beams), foreman with whistle at the far end (tiny).
-- Set fix at runtime: the oil lamps' 2.6 D halos washed out actors in the aisle, so 'cellar_lamps' is hidden and rebuilt without halos (lights unchanged).
-- Notes: pullman's charcoal coat is dark against the shadowed aisle; the near workers at the frame edges are large (head ~80-120 px) but above y 880;
-  a pale light cone from the vent at the lower left of the first frames comes from the set.
+# QA s16 (film 13, shot 16, g 1041..1106, take g 1035..1112) - reworked after director QA_TECH
+- qa_auto PASS. Fixes: tan wedge removed (the set's front light-shaft card 'shafts' hidden); flat mud blobs gone (raised plank slab over the aisle covers the floor bumps);
+  ~520 worker cards now neutral/focused (expr neutral, dash mouth); pullman walks toward the camera along the aisle (y 12 -> 6.4), head centre ~0.44 H, clearly visible by g 1085+.
+- Lamps rebuilt without halos; pullman/crowd scaled 0.78-0.82 to fit the 2.8 D crawlspace. Camera dollies down the aisle every frame.
+- Notes: upper third is the timber ceiling/beams (set); workers' legs are the cast's thin limbs.
