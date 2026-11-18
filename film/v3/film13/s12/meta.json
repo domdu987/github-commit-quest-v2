@@ -1,0 +1,79 @@
+{
+ "take": "s12",
+ "film": 13,
+ "shots": [
+  12,
+  13
+ ],
+ "first_g": 720,
+ "n_frames": 198,
+ "g0": 726,
+ "g1": 912,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transitions": [
+  {
+   "at": 726,
+   "type": "cut"
+  },
+  {
+   "at": 780,
+   "type": "cut",
+   "note": "framing B inside shot 12 (plan: 2nd framing at 26.0 s)"
+  },
+  {
+   "at": 843,
+   "type": "cut",
+   "note": "plan cut shot 12 -> 13 at 28.09 s, same location and light, new set-up"
+  },
+  {
+   "at": 912,
+   "type": "cut"
+  }
+ ],
+ "shot_ranges": {
+  "12": [
+   720,
+   842
+  ],
+  "13": [
+   843,
+   917
+  ]
+ },
+ "set": "v3/set3d13/chicago.py street (preset hotel_front build, state lift0, DAY); shot 12 custom cameras (in the air before the facade / crane down to the street, 22 mm), shot 13 crowd_street camera numbers (24 mm) + slow drift; runtime: the two burlap sacks of street_props removed in shot 13",
+ "cast": "v3/cast13: shot 12 rich_mock_point at stand point top_window (talk_mouth through the whole shot, all inside Q1), pullman_look_up_confident at (-1.5,-17); shot 13 pullman walk cycle with the iron_jack on the shoulder + ~32 crowd cards from cast13 (town_laugh_point a/b/c, mirrored toward the lane, worker_cheer_a, gentleman/lady/town stand) bouncing on every frame, a bigger shared jump at g 895 (the nickname)",
+ "lipsync": {
+  "window_g": [
+   720,
+   850
+  ],
+  "note": "rich talk_mouth for every frame of shot 12 (Q1 runs to 28.09 s = g 843 +-0.15 s); nobody speaks in shot 13"
+ },
+ "events": {
+  "framing_B": 780,
+  "crane_down": [
+   806,
+   842
+  ],
+  "nickname_lands": 895
+ },
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "dof": "none",
+ "s_per_frame_wall_mean": 13.7,
+ "s_per_frame_cpu_mean": 27.39
+}

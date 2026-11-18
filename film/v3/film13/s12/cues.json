@@ -1,0 +1,75 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film13/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 24.0,
+   "duration": 4.1,
+   "frame": 720,
+   "end_frame": 843,
+   "kind": "ambience",
+   "label": "Chicago street 1861 seen from high on the facade: wind past the cornice, a distant bustle of carts, hooves and voices far below, a lake gull"
+  },
+  {
+   "time": 24.2,
+   "duration": 3.9,
+   "frame": 726,
+   "end_frame": 843,
+   "kind": "foley",
+   "label": "the rich man leans out of the window above the street: cloth and wood creak, his mocking voice-over (narration) carries the quote",
+   "peak_frame": 750
+  },
+  {
+   "time": 26.0,
+   "duration": 0.033,
+   "frame": 780,
+   "end_frame": 781,
+   "kind": "cut",
+   "label": "framing B (plan 26.0 s): push in on him, then the crane descends"
+  },
+  {
+   "time": 26.867,
+   "duration": 1.233,
+   "frame": 806,
+   "end_frame": 843,
+   "kind": "accent",
+   "label": "crane down the brick facade: a soft airy whoosh falling away, street sounds rising as the camera nears the ground",
+   "peak_frame": 825
+  },
+  {
+   "time": 28.1,
+   "duration": 0.033,
+   "frame": 843,
+   "end_frame": 844,
+   "kind": "cut",
+   "label": "cut to the nickname crowd shot: the street murmur turns into a crowd"
+  },
+  {
+   "time": 28.1,
+   "duration": 2.5,
+   "frame": 843,
+   "end_frame": 918,
+   "kind": "ambience",
+   "label": "crowd of townsfolk laughing and jeering in the street, boots on planks, a horse, a cart far off"
+  },
+  {
+   "time": 28.1,
+   "duration": 1.733,
+   "frame": 843,
+   "end_frame": 895,
+   "kind": "foley",
+   "label": "Pullman's boots on the plank walk and the iron jack clanking on his shoulder as he strolls past, townsfolk giggling and pointing",
+   "peak_frame": 860
+  },
+  {
+   "time": 29.767,
+   "duration": 0.8,
+   "frame": 893,
+   "end_frame": 917,
+   "kind": "accent",
+   "label": "the nickname lands (29.73 s, g 895): the whole crowd bursts into one big roaring laugh and cheers, feet stamping on the planks",
+   "peak_frame": 897
+  }
+ ]
+}
