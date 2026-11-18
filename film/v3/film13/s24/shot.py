@@ -16,9 +16,9 @@ G0 = C.g_of(51.13); G1 = C.g_of(53.30) - 1
 H = 6
 RANGE = (G0 - H, G1 + H)
 LIFT_H = 0.9
-LENS = float(os.environ.get("S24_LENS", "20"))
-CAM0 = eval(os.environ.get("S24_CAM0", "((-29,-9,2.4),(-4,2,4.0))"))
-CAM1 = eval(os.environ.get("S24_CAM1", "((-24,-8,5.2),(-3,2,4.6))"))
+LENS = float(os.environ.get("S24_LENS", "15"))
+CAM0 = eval(os.environ.get("S24_CAM0", "((0.0,-16.0,12.5),(0.0,0.0,12.5))"))
+CAM1 = eval(os.environ.get("S24_CAM1", "((0.0,-18.5,15.5),(0.0,0.0,15.5))"))
 LIFT = B.LIFT_MAX * LIFT_H
 
 def cam_of(g):
@@ -36,13 +36,13 @@ def swap_cast():
     T = B.T; P = lambda k: dict(S13[k][1])
     for s in "abc":
         T.PH["ws_" + s] = ("worker13_" + s, dict(P("worker_stand_" + s), expr="neutral", mouth="smile"), 3.2)
-        T.PH["wc_" + s] = ("worker13_" + s, P("worker_cheer_" + s), 3.2)
+        T.PH["wc_" + s] = ("worker13_" + s, dict(P("worker_cheer_" + s), expr="neutral", mouth="smile"), 3.2)
     T.PH.update(worker=("worker13_a", P("worker_stand_a"), 3.2), foreman=("foreman13", P("foreman_stand"), 3.3), rich=("rich", P("rich_look_window_smug"), 3.4),
         maid=("town_b", P("town_stand_b"), 3.0), clerk=("worker13_b", P("worker_stand_b"), 3.2), kid=("town_c", P("town_stand_c"), 2.5),
         towns_m=("town_a", P("town_stand_a"), 3.2), towns_f=("town_b", P("town_stand_b"), 3.0), towns_o=("worker13_c", P("worker_stand_c"), 3.1))
 
 # workers: (x, y, kind, scale)  inside the gap, in front of the first jack row (y 1.3), between crib piers
-WORKERS = eval(os.environ.get("S24_WORKERS", "[(-14,-0.6,'ws_a',0.85),(-9.6,-1.4,'wc_c',0.85),(-4.6,-0.4,'ws_b',0.85),(-0.2,-1.4,'ws_c',0.85),(4.6,-0.6,'wc_b',0.85),(9.6,-1.4,'ws_a',0.85),(14,-0.6,'ws_b',0.85),(-6.8,-2.4,'ws_a',0.85)]"))
+WORKERS = eval(os.environ.get("S24_WORKERS", "[(-10.6,-1.2,'ws_a',0.92),(-7.6,-0.6,'wc_c',0.92),(-4.6,-1.4,'ws_b',0.92),(-1.6,-0.6,'ws_c',0.92),(1.6,-1.4,'wc_b',0.92),(4.6,-0.6,'ws_a',0.92),(7.6,-1.4,'ws_b',0.92),(10.6,-0.6,'ws_c',0.92)]"))
 
 class Take(object):
     def __init__(self, quality="preview"):

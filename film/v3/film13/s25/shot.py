@@ -16,33 +16,34 @@ RANGE = (G0 - H, G1 + H)
 SW = [(1612, 1624), (1650, 1662)]
 H0 = float(os.environ.get("S25_H0", "0.45"))              # cellar lift state (1 D at h=1): +0.2 per swing
 LENS = float(os.environ.get("S25_LENS", "15"))
-CAM0 = eval(os.environ.get("S25_CAM0", "((5.5,66.4,6.4),(5.5,40.0,-4.5))"))
-CAM1 = eval(os.environ.get("S25_CAM1", "((5.5,66.8,7.1),(5.5,38.0,-5.0))"))
+CAM0 = eval(os.environ.get("S25_CAM0", "((5.4,67.2,3.4),(5.4,47.2,-1.5))"))
+CAM1 = eval(os.environ.get("S25_CAM1", "((5.4,66.0,3.7),(5.4,46.0,-1.5))"))
 DX = 0.56
-ZS = float(os.environ.get("S25_ZS", "1.9"))
+ZS = float(os.environ.get("S25_ZS", "1.0"))
 
-def h_at(g):
-    h = H0
+STEP = float(os.environ.get("S25_STEP", "0.3"))
+
+def deck_at(g):
+    """beams step up STEP D at the END of each swing window (smoothstep over 5 frames), held otherwise."""
+    z = 0.0
     for (a, b) in SW:
-        h += 0.2 * C.clamp((g - a) / float(b - a))
-    return h
+        z += STEP * C.ez((g - (b - 5)) / 5.0)
+    return z
+
+def h_at(g): return H0 + deck_at(g)
 
 def flip_at(g):
-    """1 = pose B. Out of the swing windows: pose A; in them the whole field alternates every 2 frames (one beat)."""
-    for (a, b) in SW:
-        if a <= g <= b: return ((g - a) // 2) % 2 == 1
-    return False
+    """ONE held swing per window: pose A -> B at the middle of window 1 (g 1618), B -> A at the middle of window 2 (g 1656); everyone on the same frame."""
+    return SW[0][0] + 6 <= g < SW[1][0] + 6
 
 def cam_of(g):
     x = (g - RANGE[0]) / float(RANGE[1] - RANGE[0]); u = 0.3 * C.ez(x) + 0.7 * x
     return [tuple(lerp(CAM0[k][i], CAM1[k][i], u) for i in range(3)) for k in (0, 1)]
 
 def rows_pts():
-    """(x, y, tag) of the jack each worker pushes: three rows going away from the camera."""
-    out = []
-    for (row, cols, tag) in ((98, range(14, 40, 4), 0), (91, range(11, 44, 4), 1), (85, range(4, 48, 3), 2), (70, range(1, 48, 3), 3), (50, range(0, 48, 3), 4)):
-        for c in cols: out.append((-8.3 + c * DX, 5.0 + row * DX, tag))
-    return out
+    """(x, y, tag): workers standing IN the aisle (their sprite draws its own jack collar + bar), staggered left/right, shrinking into depth."""
+    ys = [63.8, 61.4, 59.0, 56.6, 54.2, 51.6, 48.6, 45.0, 40.5, 35.0]
+    return [((4.3 if k % 2 == 0 else 6.5), y, 0) for k, y in enumerate(ys)]
 
 def make_deck(SET, M, mat_b, mat_d):
     """beams (every 1.12) + plank deck resting on the jack caps (z 4.15); keyed up 0.2 D at each swing; no shadow (the lamps light the aisles)."""
@@ -58,11 +59,17 @@ class Take(C.Take):
         C.Take.__init__(self, "under_rows", quality, lens=LENS, name="cam_s25")
         U.dark_surround(True); U.close_hall(zt=16.0); self.scene.cycles.filter_width = 3.0
         S.set_bars_visible(False)
-        ROW_CLEAR = int(os.environ.get("S25_CLEAR", "84"))
-        for i, ob in enumerate(S.STATE["dense_chunks"]):
-            if i // 2 >= ROW_CLEAR: ob.hide_render = True
-        S.STATE["dense_chunks"] = S.STATE["dense_chunks"][:ROW_CLEAR * 2]
-        for ob in S.STATE["dense_chunks"]: ob.scale.z = ZS           # taller shafts so the camera can look down over the workers from under the deck
+        import bmesh
+        for ob in S.STATE["dense_chunks"]:                       # cut an aisle (x 3.7 .. 7.1, 6 columns) through the whole field
+            bm = bmesh.new(); bm.from_mesh(ob.data)
+            bmesh.ops.delete(bm, geom=[v for v in bm.verts if 3.7 < v.co.x < 7.1], context="VERTS"); bm.to_mesh(ob.data); bm.free()
+        for nm in ("iron_k", "iron_d"):                               # lighter iron so the shafts read as jacks in the lamp light
+            m = S.STATE["M"].get(nm)
+            if m is not None and m.use_nodes:
+                for n in m.node_tree.nodes:
+                    for key in ("Base Color", "Color"):
+                        if key in n.inputs and hasattr(n.inputs[key], "default_value") and len(n.inputs[key].default_value) == 4 and not n.inputs[key].is_linked:
+                            n.inputs[key].default_value = (0.30, 0.31, 0.38, 1.0)
         self.add_lights()
         self.deck = make_deck(S.STATE["SET"], S.STATE["M"], "timber_w", "plank_d")
         for n in ("shafts", "cellar_lamps"):
@@ -74,7 +81,7 @@ class Take(C.Take):
         # re-seat the feet so the drawn jack collar lines up with the 3D jack
         loc, look = cam_of(RANGE[0]); camv = Vector(loc)
         for (x, y, t), (a, b) in zip(self.pts, self.crowd):
-            fx, fy = S._jack_hands(camv, x, y)[:2] if True else (x, y)
+            fx, fy = x, y
             for ob in (a, b):
                 ob.location.x, ob.location.y = fx, fy
                 ob.scale = (1.0, 1.0, 1.0)
@@ -82,11 +89,11 @@ class Take(C.Take):
     def add_lights(self):
         """warm lamps hanging under the beams (lit glass heads + point lights) so the aisles and the workers are lit (the sun does not reach the cellar floor)."""
         bpy = C.bpy; M = S.STATE["M"]; mb = S.MB()
-        for k, (x, y) in enumerate([(-4.5, 60.0), (16.0, 60.0), (-4.5, 48.0), (16.0, 48.0), (-4.0, 36.0), (15.5, 36.0), (6.0, 24.0)]):
-            c = Vector((x, y, 6.0)); mb.frustum(c - Vector((0, 0, 0.35)), c + Vector((0, 0, 0.35)), 0.2, 0.26, M["lamp_glass"], seg=7)
-            S.rod(mb, c + Vector((0, 0, 0.35)), Vector((x, y, 7.8)), 0.03, M["iron_d"], seg=4)
-            L = bpy.data.lights.new("lamp_s25_%d" % k, "POINT"); L.energy = float(os.environ.get("S25_LE", "1200")); L.color = (1.0, 0.72, 0.4); L.shadow_soft_size = 0.4
-            o = bpy.data.objects.new("lamp_s25_%d" % k, L); o.location = (x, y, 6.0); S.STATE["SET"].objects.link(o)
+        for k, (x, y) in enumerate([(5.4, 56.0), (5.4, 47.0), (5.4, 38.0), (5.4, 29.0), (5.4, 20.0), (5.4, 11.0)]):
+            c = Vector((x, y, 3.5)); mb.frustum(c - Vector((0, 0, 0.35)), c + Vector((0, 0, 0.35)), 0.2, 0.26, M["lamp_glass"], seg=7)
+            S.rod(mb, c + Vector((0, 0, 0.35)), Vector((x, y, 4.2)), 0.03, M["iron_d"], seg=4)
+            L = bpy.data.lights.new("lamp_s25_%d" % k, "POINT"); L.energy = float(os.environ.get("S25_LE", "2800")); L.color = (1.0, 0.72, 0.4); L.shadow_soft_size = 0.4
+            o = bpy.data.objects.new("lamp_s25_%d" % k, L); o.location = (x, y, 3.4); S.STATE["SET"].objects.link(o)
         S._obj(mb, "lamp_heads_s25", S.STATE["SET"], shadow=False)
 
     def pose(self, gs):
