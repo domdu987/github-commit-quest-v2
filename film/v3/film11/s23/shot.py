@@ -18,8 +18,8 @@ RANGE = (G0 - H, G1 - 1 + H)
 PRESET = "barn_high"
 STORY = cast11.STORY11
 
-CAM0 = ((-0.3, 5.4, 4.9), (-5.4, 13.0, 1.3))
-CAM1 = ((-0.8, 6.3, 4.55), (-5.3, 13.1, 1.4))
+CAM0 = ((-3.2, 5.6, 4.3), (-7.4, 13.0, 1.5))
+CAM1 = ((0.2, 6.4, 3.9), (-3.6, 13.3, 1.5))
 COW = (-3.0, 18.8, 0.0)
 SARAH = (-3.8, 12.4, 0.0)
 MAID = (-3.0, 13.8, 0.0)
@@ -29,7 +29,7 @@ VILL = dict(a=("villager_a", (-8.0, 11.8)), b=("villager_b", (-8.4, 14.4)), c=("
 
 def cam_of(g):
     x = (g - RANGE[0]) / float(RANGE[1] - RANGE[0])
-    u = 0.35 * ez(x, "sine") + 0.65 * x
+    u = x
     return Vector([lerp(CAM0[0][i], CAM1[0][i], u) for i in range(3)]), Vector([lerp(CAM0[1][i], CAM1[1][i], u) for i in range(3)])
 
 
@@ -64,6 +64,7 @@ def jenner_pose(g):
     r = dict(p["arm_r"]); h = r["hand"]
     r["hand"] = (h[0] + 0.05 * math.sin(k * 3.0), h[1] + 0.06 * math.sin(k * 2.3 + 1))
     p["arm_r"] = r
+    p["arm_l"] = dict(hand=(-0.78 + 0.04 * math.sin(k * 2.7), 0.42 + 0.05 * math.sin(k * 2.1)), bend=-0.6, shape="open")   # open hand towards the villagers (screen-left), right hand towards the milkmaids
     p = sway(p, g, 0.6, 2.5, 1.2)
     p["blink"] = blink(g, [G0 + 22, G0 + 80])
     return p
