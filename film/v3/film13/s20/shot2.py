@@ -43,7 +43,7 @@ def prog(g, k): a, b = SW[k]; return clamp((g - a) / float(b - a))
 def swung(g): return sum(prog(g, k) for k in range(len(SW)))
 def swinging(g): return any(0 < prog(g, k) < 1 for k in range(len(SW)))
 def lift_of(g):
-    if SHOT == 25: return 0.40
+    if SHOT == 25: return 0.20 + 0.20 * (prog(g, 3) + prog(g, 4)) + (0.0 if g > SW[3][0] else 0.0)
     if SHOT in (21, 22): return 0.40 + 0.20 * swung(g)          # beams step up with every swing (0.20 D)
     if SHOT == 23: return lerp(0.50, 0.85, mix(g, G0 - H, G1 + H, 0.1))
     return lerp(0.90, 1.0, mix(g, G0 - H, G1 + H, 0.1))
@@ -56,10 +56,10 @@ def cam_of(g):
     x = mix(g, G0 - H, G1 + H)
     if SHOT == 21: return lerp3((4.5, -2.5, 2.3), (4.6, -2.4, 2.3), x), lerp3((1.0, 27.0, 2.9), (1.0, 27.0, 2.9), x), 22.0
     if SHOT == 22:
-        c = lerp3((9.7, 9.7, 2.5), (9.5, 10.4, 2.5), x); return c, (7.9, 14.4, 3.4), 25.0
+        c = lerp3((9.7, 9.7, 2.5), (9.5, 10.4, 2.5), x); return c, (7.9, 14.4, 2.7), 25.0
     if SHOT == 23: return lerp3((-18.0, -8.0, 1.8), (-17.6, -8.2, 1.85), x), lerp3((-2.0, -1.0, 4.5), (-2.0, -1.0, 4.6), x), 22.0
-    if SHOT == 24: return lerp3((-24.0, -8.5, 1.8), (-23.5, -8.7, 1.85), x), lerp3((-2.0, -1.0, 2.6), (-2.0, -1.0, 2.7), x), 17.0
-    return lerp3((6.5, 2.0, 16.0), (6.5, -4.0, 22.0), x), lerp3((6.5, 24.0, 1.5), (6.5, 26.0, 1.5), x), 24.0
+    if SHOT == 24: return lerp3((-48.0, -30.0, 4.0), (-46.0, -31.0, 4.2), x), lerp3((-2.0, 0.0, 10.0), (-2.0, 0.0, 10.2), x), 28.0
+    return lerp3((12.0, -3.5, 7.5), (10.0, -4.0, 11.5), x), lerp3((3.0, 15.0, 2.0), (3.0, 18.0, 2.0), x), 28.0
 
 def jack_feet(loc, jx, jy, th):
     f = Vector((jx - loc[0], jy - loc[1], 0)).normalized(); rt = Vector((f.y, -f.x, 0))
@@ -82,10 +82,10 @@ def pose_stand(base):
 STREET = {23: [("pullman", "pullman_look_up_confident", (-1.0, -12.5), 1.0),
                ("worker13_a", "worker_stand_a", (3.5, -10.5), 1.0),
                ("foreman13", "foreman_stand", (8.0, -13.5), 1.0)],
-          24: [("worker13_a", "worker_stand_a", (-15.0, 2.5), 0.9), ("worker13_b", "worker_stand_b", (-13.0, 6.0), 0.9), ("worker13_c", "worker_stand_c", (7.0, 6.5), 0.9), ("worker13_b", "worker_stand_b", (-10.0, 2.0), 0.9),
-               ("worker13_c", "worker_stand_c", (-5.0, 2.5), 0.9), ("worker13_a", "worker_stand_a", (4.0, 2.0), 0.9),
-               ("worker13_b", "worker_stand_b", (9.0, 2.5), 0.9), ("worker13_c", "worker_stand_c", (14.0, 2.0), 0.9),
-               ("foreman13", "foreman_stand", (0.0, 3.0), 0.9)]}
+          24: [("worker13_a", "worker_stand_a", (-15.0, 2.5), 0.9), ("worker13_b", "worker_stand_b", (-9.0, 3.5), 0.9),
+               ("worker13_c", "worker_cheer_c", (-3.5, 2.5), 0.9), ("worker13_a", "worker_stand_a", (3.0, 3.0), 0.9),
+               ("worker13_b", "worker_stand_b", (9.0, 2.5), 0.9), ("worker13_c", "worker_stand_c", (14.0, 3.5), 0.9),
+               ("foreman13", "foreman_stand", (0.0, 5.5), 0.9)]}
 
 # ----------------------------------------------------------------------------- the take
 def objs(*names):
@@ -124,11 +124,26 @@ class Take(C.Take):
             D.sbox(mb, (px - 0.2, py - 0.2, 0.0), (px + 0.2, py + 0.2, 7.0), M["timber_d"], 0.3)
             D.sbox(mb, (px - 0.23, py - 0.23, 3.38), (px + 0.23, py + 0.23, 3.46), M["cream"], 0.3)
             D._obj(mb, "mark_post", D.STATE["SET"])
-            pm = D.MB(); D.sbox(pm, (-1.1, -0.8, 0.0), (1.1, 0.8, 0.3), M["timber"], 0.3)       # bearing plank sitting on the screw cap
-            self.plank = D._obj(pm, "bearing_plank", D.STATE["SET"]); self.plank.location = (7.5, 14.1, 2.6 + lift_of(RANGE[0]))
+            pm = D.MB(); D.sbox(pm, (-1.3, -0.75, 0.0), (1.3, 0.75, 0.55), M["timber_d"], 0.3)       # bearing plank sitting on the screw cap
+            self.plank = D._obj(pm, "bearing_plank", D.STATE["SET"]); self.plank.location = (7.5, 14.1, 2.12 + lift_of(RANGE[0]))
 
     def setup_dense(self):
-        S = D.STATE; M = S["M"]; SET = S["SET"]
+        """the dense 5000-jack field inside a closed hall (brick walls to z 22, plank ceiling + beam grid, no sky / plain), a worker per 10 jacks,
+        every bar-end lever turning in unison on the swing beats; framing from the right-hand side (s15 looks down the middle)."""
+        from bpy_extras.object_utils import world_to_camera_view
+        S = D.STATE; M = S["M"]; SET = S["SET"]; bpy = C.bpy
+        for n in ("sky", "backdrop", "far_ground", "floor"):
+            o = bpy.data.objects.get(n)
+            if o is not None: o.hide_render = True
+        mb = D.MB(); D.sbox(mb, (D.CX0 - 1.0, D.CY0 - 1.0, -0.6), (D.CX1 + 1.2, D.CY1 + 1.0, 0.0), M["plank_f"], 0.25); D._obj(mb, "floor_mine", SET)
+        zt = 22.0; mb = D.MB(); X0, X1, Y0, Y1 = D.CX0 - 1.0, D.CX1 + 1.2, D.CY0 - 1.0, D.CY1 + 1.0
+        D.sbox(mb, (X0, Y0, 5.2), (D.CX0, Y1, zt), M["brick_d"], 1 / 6); D.sbox(mb, (D.CX1, Y0, 5.2), (X1, Y1, zt), M["brick_d"], 1 / 6)
+        D.sbox(mb, (D.CX0, D.CY1, 5.2), (D.CX1, Y1, zt), M["brick_d"], 1 / 6); D.sbox(mb, (X0, Y0, -0.6), (X1, D.CY0 - 0.2, zt), M["brick_d"], 1 / 6)
+        D.sbox(mb, (X0, Y0, zt), (X1, Y1, zt + 0.5), M["plank_d"], 0.12)
+        for yb in range(-4, 70, 4): D.sbox(mb, (X0, yb - 0.35, zt - 1.1), (X1, yb + 0.35, zt), M["timber_w"], 0.25)       # the hotel's joist grid
+        for xb in (-8.0, 0.0, 8.0, 16.0): D.sbox(mb, (xb - 0.4, Y0, zt - 2.0), (xb + 0.4, Y1, zt - 1.1), M["timber"], 0.25)
+        o = D._obj(mb, "hall_upper", SET); o.visible_shadow = False
+        # dense bars (unison): 4 angle meshes (0, 45, 90, 135 deg), chunky
         self.dbars = []
         for a in range(4):
             mb = D.MB(); ang = math.radians(a * 45.0); dx, dy = math.cos(ang) * 0.27, math.sin(ang) * 0.27
@@ -138,6 +153,20 @@ class Take(C.Take):
                     x = -8.3 + i * D.DENSE_DX
                     D.rod(mb, (x - dx, y - dy, 4.35), (x + dx, y + dy, 4.35), 0.075, M["iron_k"], seg=4)
             ob = D._obj(mb, "dbar_%d" % a, SET); ob.hide_render = a != 0; ob.visible_shadow = False; self.dbars.append(ob)
+        # workers: one per 10 jacks, A / B bar poses (unison), jack drawn by the sprite
+        jobs, boxes = [], []
+        for L in "abc":
+            for ab in "AB":
+                name = "worker_turn_bar_%s_%s" % (ab, L); c, p = cast13.STORY13[name]; p = copy.deepcopy(p); p["mouth"] = "flat"
+                jobs.append((c, p, 192, cast13.CANVAS13_POSE[name])); boxes.append(cast13.CANVAS13_POSE[name])
+        pngs = C.sprite_files(jobs, SPR); rnd = random.Random(5); self.dw = []
+        for k in range(500):
+            idx = 10 * k + 5; row, col = divmod(idx, D.DENSE_COLS)
+            x, y = -8.3 + col * D.DENSE_DX, 5.0 + row * D.DENSE_DX - 0.34
+            c3 = rnd.randrange(3)
+            it = self.cards.add("dw%d" % k, [pngs[2 * c3], pngs[2 * c3 + 1]], [boxes[2 * c3], boxes[2 * c3 + 1]], (x, y), 1.7, contact=False)
+            self.dw.append(dict(it=it, x=x, y=y))
+        self.proj = world_to_camera_view
         mb = D.MB(); sites = [(-9.6, y) for y in (10.0, 22.0, 34.0, 46.0, 58.0)] + [(19.6, y) for y in (16.0, 28.0, 40.0, 52.0, 62.0)]
         for k, (x, y) in enumerate(sites):
             D.rod(mb, (x, y, 0.0), (x, y, 7.0), 0.07, M["iron_d"], seg=5)
@@ -173,13 +202,18 @@ class Take(C.Take):
                 p = prog(g, k)
                 if 0 < p < 1: idx = int(p * 4) % 4 + 0
             for a, ob in enumerate(self.dbars): ob.hide_render = a != idx
+            sc = self.scene; sc.frame_set(f)
+            for k, w in enumerate(self.dw):
+                p = self.proj(sc, self.cam, Vector((w["x"], w["y"], 2.2)))
+                hide = (1 - p.y) * 1280 > 862 or p.x < 0.02 or p.x > 0.98 or p.y > 1.02 or p.z <= 0
+                self.cards.show(w["it"], None if hide else (1 if idx else 0))
             return
         if SHOT not in (21, 22): return
         loc, look, lens = cam_of(g); L = lift_of(g); th = theta_of(g); sw = swinging(g)
         for (bo, bz, ph, x, y) in D.STATE["bars"]:
             bo.rotation_euler.z = math.radians(th)
         if SHOT == 22:
-            self.plank.location.z = 2.6 + L
+            self.plank.location.z = 2.12 + L
         for w in self.crowd:
             fx, fy = jack_feet(loc, w["jx"], w["jy"], th)
             self.cards.move(w["it"], (fx, fy), z=0.0, block=False)
