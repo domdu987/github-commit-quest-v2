@@ -4,3 +4,11 @@ raw/
 sprites/
 work/
 __pycache__/
+d2[0-4]/
+d_t/
+l2*.txt
+log2*.txt
+work_log_*.txt
+sheet2*.jpg
+sheet_t.jpg
+draft*/
