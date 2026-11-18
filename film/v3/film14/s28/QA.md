@@ -9,3 +9,6 @@
 - Shot 28: uncle 3/4 toward farmer holding the empty hive box in both hands at chest height, sad brows + wavy mouth + downcast gaze, shrug/head tilt; farmer grin and hat-tip; camera lower/tilted up and pushed in (ground ~35 %, sky ~22 %); both fully in frame.
 - Shot 29: visible lift of the hive onto the bar g1962-1985; bee flies from the hive and touches the nose at g1990, red nose g1990-1991; camera lowered so stool/grass end near y 880.
 - Shot 30: closer (about 1.3x), no stool continuity break, hive and hook in frame, trunk tip curl g2086+ and blink g2095-2099; trunk tip stays above y 880.
+
+## v3 (director re-check)
+Shot 30 only re-rendered: he stands on the same stool as in shot 29 (stool=1, CANVAS14_STOOL), so the cut 29->30 no longer drops him by the stool height. Deviation: "bottom edge above his knees" is incompatible with the full-length trunk tip staying above y 880 at this head size (knees at about y 900), so the stool and feet remain visible in the lower frame (stool top ~y 985). Shots 28-29 unchanged.
