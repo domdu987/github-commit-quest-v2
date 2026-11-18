@@ -14,3 +14,7 @@ v3/film*/*/frames/
 v3/film*/*/work/
 v3/set3d*/*_work/*
 !v3/set3d*/*_work/*.py
+v3/film12/*/frames/
+v3/film12/*/draft/
+v3/film12/*/*.log
+v3/film12/*/d*.jpg

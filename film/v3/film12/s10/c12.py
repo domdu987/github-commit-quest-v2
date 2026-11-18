@@ -1,0 +1,69 @@
+"""c12.py -- helpers for film-12 take scripts (street.py set + cast12 cards, one card per frame). Copied per take."""
+import os, sys, json, time, math
+HERE = os.path.dirname(os.path.abspath(__file__))
+PROJ = os.path.abspath(os.path.join(HERE, '..', '..', '..'))          # .../film
+for p in (os.path.join(PROJ, 'v3', 'set3d12'), os.path.join(PROJ, 'v3', 'cast12'), os.path.join(PROJ, 'v3', 'cast10')):
+    if p not in sys.path: sys.path.insert(0, p)
+DRAFT = os.environ.get('DRAFT') == '1'
+if DRAFT: os.environ.setdefault('SAMPLES', '6')
+import street as S, bpy
+import cast12
+from mathutils import Vector
+S_ = S
+tint_dusk = '#d8d0f4'
+
+def g_of(t): return int(round((t + 0.10) * 30))
+def g_bound(t): return int(round(t * 30))
+
+def setup(preset, light='RAIN', u=0.0, figures=False):
+    A = S.shot(preset, light, u=u, placeholders=False, figures=figures)
+    sc = bpy.context.scene
+    if DRAFT: sc.render.resolution_percentage = 50
+    S.STATE['light'] = light
+    return A
+
+def linear_cam(cam):
+    for _, fc in S._fcs(cam):
+        for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
+
+def move_cam(preset, f0, f1, u0=0.0, u1=1.0):
+    """key a straight camera move between pose u0 at f0 and pose u1 at f1 (linear)."""
+    cam = bpy.context.scene.camera
+    for f, u in ((f0, u0), (f1, u1)):
+        S.make_camera(S.camera_pose(preset, u)); cam.keyframe_insert('location', frame=int(f)); cam.keyframe_insert('rotation_euler', frame=int(f))
+    linear_cam(cam)
+
+def clear_cards():
+    for ob in list(bpy.data.objects):
+        if ob.get('card'): bpy.data.objects.remove(ob, do_unlink=True)
+
+def card(name, cast, pose, mark, light='RAIN', over=None, mirror=False, rim=None, tint='auto', tilt=0.0):
+    cl = bpy.context.scene.camera.matrix_world.translation
+    if tint == 'auto': tint = tint_dusk if light == 'DUSK_RAIN' else None
+    return S.cast_card('actor_' + name, cast, pose, tuple(mark), cl, tilt=tilt, tint=tint, rim=rim, mirror=mirror, over=over)
+
+def story(key, **over):
+    c, p = cast12.STORY12[key]; return c, dict(p, **over)
+
+def cyc(name, phase, facing=1):
+    return cast12.cycle_frame(name, phase, facing=facing)
+
+def lerp(a, b, u): return a + (b - a) * max(0.0, min(1.0, u))
+def lerp3(a, b, u): return tuple(lerp(x, y, u) for x, y in zip(a, b))
+
+def head_px(mark, h):
+    cam = bpy.context.scene.camera; return S.project_px(cam, (mark[0], mark[1], mark[2] + h))
+
+def render_range(build, frames, outdir, tag):
+    """build(g) is called after frame_set(g) with the cards cleared; writes outdir/g_%04d.png (+ .json), resumable."""
+    os.makedirs(outdir, exist_ok=True); sc = bpy.context.scene; todo = []
+    for g in frames:
+        if not os.path.exists(os.path.join(outdir, 'g_%04d.png' % g)): todo.append(g)
+    print('%s: %d to render, %d done' % (tag, len(todo), len(frames) - len(todo)), flush=True)
+    for g in todo:
+        sc.frame_set(g); clear_cards(); info = build(g) or {}
+        bpy.context.view_layer.update()
+        out = os.path.join(outdir, 'g_%04d.png' % g)
+        w, c = S.render(out + '.tmp.png'); os.replace(out + '.tmp.png', out)
+        json.dump(dict(g=g, wall=round(w, 1), cpu=round(c, 1), **info), open(out[:-4] + '.json', 'w'))
+        print('%s g %d  %.1f s wall  %.1f s cpu  %s' % (tag, g, w, c, info), flush=True)
