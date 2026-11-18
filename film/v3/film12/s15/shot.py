@@ -28,7 +28,7 @@ LENS = {15: 25.0, 16: 22.0, 17: 22.0, 18: 22.0}
 
 CAM17 = dict(loc=(-2.6, -1.0, 2.1), look_at=(3.4, 26.0, 3.8), loc_b=(-2.0, 2.5, 2.3), look_b=(3.4, 28.0, 3.9), lens=22.0)
 CAM15 = dict(loc=(-0.6, 11.4, 3.4), look_at=(3.5, 18.7, 6.0), loc_b=(1.9, 14.4, 4.7), look_b=(3.55, 18.6, 6.0), lens=25.0)
-CAM16 = dict(loc=(-3.4, 1.0, 3.0), look_at=(1.6, 24.0, 3.9), loc_b=(-2.9, 5.0, 3.1), look_b=(2.6, 33.0, 4.0), lens=22.0)
+CAM16 = dict(loc=(-1.8, 8.5, 2.7), look_at=(2.2, 22.0, 3.6), loc_b=(-1.0, 12.5, 2.9), look_b=(3.0, 28.0, 3.9), lens=22.0)
 
 def cam_for(g):
     k = shot_of(g); a, b = SH[k]; x = (g - a) / float(b - a)
@@ -49,7 +49,7 @@ ROLL = (SH[17][0] - 2, SH[17][1] + H + 2)                # coaches pull away
 ROLL_DY = {0: -4.0, 1: -9.0, 2: -9.0, 3: -9.0}
 HAN_A, HAN_C = Vector((-1.2, 8.0, 0.0)), Vector((-1.2, 17.8, 0.0))
 RUSH_MEM = ['crowd_man_a', 'crowd_man_b', 'crowd_man_c', 'crowd_man_d', 'crowd_woman_a', 'crowd_woman_b']
-RUSH_PICK = [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13, 14, 15, 17, 18, 20, 21]   # which of the 24 anchors get a card (16 shot)
+RUSH_PICK = list(range(24))   # which of the 24 anchors get a card (16 shot)
 
 def coach_dy(i, g):
     r0, r1 = ROLL; u = clamp((g - r0) / float(r1 - r0))
@@ -111,7 +111,7 @@ def build_cards(g, cl):
         kk = lerp(0.35, 1.0, clamp((g - RUSH0) / float(RUSH1 - RUSH0)))
         for n, j in enumerate(RUSH_PICK):
             r = S.STATE['rush_slots'][j]; d = r['delay']; e = clamp((kk - d) / (1 - d))
-            p0, p1 = Vector(r['start']), Vector(r['end']); pos = p0 + (p1 - p0) * (e * (2 - e) if e < 1 else 1.0)   # ease out at the door
+            p0, p1 = Vector(r['start']), Vector(r['end']); pos = p0 + (p1 - p0) * (e * (2 - e) if e < 1 else 1.0); pos = Vector((pos.x + 0.45 * math.sin(j * 2.1) * (1 - e * 0.5), pos.y, 0.0))   # ease out at the door
             m = RUSH_MEM[j % 6]
             if e >= 0.97:
                 c_, pz = SC[m + '_push']; sh = 0.07 * math.sin(g * 0.9 + j)
