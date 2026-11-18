@@ -19,7 +19,7 @@ from wall_tex import hexf, hex8, pnoise, pfbm, save             # noqa: E402
 import harbour_tex as HX                                        # noqa: E402  (sky_rich painter)
 
 TEX = os.path.join(HERE, 'tex_street')
-TEX_V = 's12.8'
+TEX_V = 's12.10'
 JOBS = {}
 def reg(name, params, fn): JOBS[name] = (params, fn)
 
@@ -479,11 +479,28 @@ def _cloud_tile(rs, wpx, hpx, ss=2):
         for (x, y, r) in circ: od.ellipse([x - r + dx, y - r + dy, x + r + dx, y + r + dy], fill=255)
         od.rounded_rectangle([W * 0.1 + dx, base - H * 0.2 + dy, W * 0.9 + dx, base + dy], radius=int(H * 0.08), fill=255); od.rectangle([0, base, W, H], fill=0)
         return np.asarray(o).astype('float32') / 255
-    body = shifted(-H * 0.035, -H * 0.075) * sil_a                                 # lit upper-left volume (flat colour)
+    body = shifted(-H * 0.03, -H * 0.055) * sil_a                                 # lit upper-left volume (flat colour)
     rim = shifted(H * 0.016, H * 0.022)
     rim = sil_a * (1 - rim)                                                       # thin band along the top-left edges
     ds = lambda a: np.asarray(Image.fromarray((a * 255).astype('uint8')).resize((int(wpx), int(hpx)), Image.LANCZOS)).astype('float32') / 255
     return ds(sil_a), ds(body), ds(rim)
+
+def splat(p, out):
+    """Comic splat decal (RGBA, 512 px): kind 'egg' = irregular white blob with spikes, a golden yolk and little drips; 'cab' = crumpled green leaf pieces with pale veins."""
+    S = 512; ss = 2; rs = np.random.RandomState(p['seed']); im = Image.new('RGBA', (S * ss, S * ss), (0, 0, 0, 0)); dr = ImageDraw.Draw(im); c = S * ss / 2
+    if p['kind'] == 'egg':
+        pts = []
+        for i in range(36):
+            a = 2 * math.pi * i / 36; r = c * (0.42 + 0.1 * math.sin(3 * a + 1) + 0.05 * math.sin(7 * a)) * (1.25 if i % 6 == 0 else 1.0) * rs.uniform(0.9, 1.1); pts.append((c + r * math.cos(a), c + r * math.sin(a)))
+        dr.polygon(pts, fill=(246, 240, 222, 255))
+        for k in range(5): a = rs.uniform(0, 6.28); r = c * rs.uniform(0.5, 0.8); dr.ellipse([c + r * math.cos(a) - 14 * ss, c + r * math.sin(a) - 14 * ss, c + r * math.cos(a) + 14 * ss, c + r * math.sin(a) + 14 * ss], fill=(246, 240, 222, 255))
+        dr.ellipse([c - c * 0.2, c - c * 0.17, c + c * 0.2, c + c * 0.23], fill=(244, 176, 28, 255)); dr.ellipse([c - c * 0.1, c - c * 0.1, c - c * 0.03, c - c * 0.02], fill=(255, 226, 120, 255))
+    else:
+        for k in range(9):
+            a = 2 * math.pi * k / 9 + rs.uniform(-0.3, 0.3); r = c * rs.uniform(0.15, 0.6); cx, cy = c + r * math.cos(a), c + r * math.sin(a); w, h = c * rs.uniform(0.2, 0.34), c * rs.uniform(0.1, 0.2)
+            pts = [(cx + math.cos(t) * w * math.cos(a + 0.5) - math.sin(t) * h * math.sin(a + 0.5), cy + math.cos(t) * w * math.sin(a + 0.5) + math.sin(t) * h * math.cos(a + 0.5)) for t in np.linspace(0, 2 * math.pi, 14)]
+            dr.polygon(pts, fill=(96 + int(rs.uniform(0, 40)), 164 + int(rs.uniform(-10, 30)), 70, 255)); dr.line([pts[0], pts[7]], fill=(200, 232, 160, 255), width=3 * ss)
+    im = im.resize((S, S), Image.LANCZOS); a = np.asarray(im).astype('float32') / 255; save(a[..., :3], out, alpha=a[..., 3])
 
 def coach_win(p, out):
     """Coach window glass (emission): warm amber lamp-lit interior, a dark pillar in the middle, darker toward the edges (the curtain), 2 : 1."""
@@ -508,7 +525,7 @@ def sky_rain(p, out):
         pal = [('#7c82c0', '#4e5a9c', '#f6b8a0'), ('#6c74b2', '#444e8c', '#f6a67c'), ('#5e66a4', '#3a4480', '#ff9a60')]
     else:
         img = grad([(-15, '#c89888'), (0, '#f0c49c'), (7, '#e6b8a8'), (20, '#b8bedc'), (45, '#98a8d0'), (90, '#7c8cb8')]); gcol, gk = '#ffd8a0', 0.7
-        pal = [('#c4cce8', '#8c9acc', '#fbe2cc'), ('#b6c0e0', '#7e8cc0', '#f8d6bc'), ('#a8b4d8', '#7482b6', '#f4cab0')]
+        pal = [('#e2e4f4', '#98a4d4', '#fff0dc'), ('#d6daee', '#8c98cc', '#fde6cc'), ('#c8cee8', '#8290c4', '#f8dcc0')]
     d_az = np.minimum(np.abs(az - 90.0), 360 - np.abs(az - 90.0))[None, :]
     glow = np.exp(-((d_az / 38.0) ** 2) - ((el[:, None] - 4.0) / 16.0) ** 2); img = img + hexf(gcol)[None, None] * glow[..., None] * gk
     ppd = W / 360.0
@@ -570,7 +587,7 @@ def all_jobs():
     for k, sd in (('boots', 61), ('teapots', 62), ('pretzels', 63), ('greens', 64), ('hats', 65), ('jars', 66)): reg('shopwin_' + k, dict(kind=k, seed=sd), _shopwin)
     reg('sign_hat', dict(kind='hat', bg='#6a3a6e'), sign); reg('sign_jar', dict(kind='jar', bg='#2e4a6a'), sign); reg('sign_boot', dict(kind='boot', bg='#2e5a4a'), sign); reg('sign_teapot', dict(kind='teapot', bg='#7a2a34'), sign); reg('sign_pretzel', dict(kind='pretzel', bg='#2b4a7a'), sign)
     reg('brickwall_a', dict(seed=71, brick='red', brick2='ochre'), brickwall); reg('brickwall_b', dict(seed=72, brick='brown', brick2='rust'), brickwall); reg('halo', dict(), halo)
-    reg('coach_side', dict(v=2), coach_side); reg('coach_win', dict(v=1), coach_win)
+    reg('coach_side', dict(v=2), coach_side); reg('coach_win', dict(v=1), coach_win); reg('splat_egg', dict(seed=5, kind='egg'), splat); reg('splat_cab', dict(seed=6, kind='cab'), splat)
     reg('sky_rain', dict(seed=15, mode='rain'), sky_rain); reg('sky_dusk', dict(seed=17, mode='dusk'), sky_rain)
 
 def ensure(verbose=True, only=None):
