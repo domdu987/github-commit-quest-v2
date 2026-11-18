@@ -1,0 +1,40 @@
+{
+ "take": "s26",
+ "film": 13,
+ "shots": [
+  26,
+  27,
+  28,
+  29,
+  30
+ ],
+ "first_g": 1671,
+ "n_frames": 324,
+ "g0": 1677,
+ "g1": 1994,
+ "handle_in": 6,
+ "handle_out": 0,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transitions": [
+  {
+   "at": 1740,
+   "type": "cut"
+  },
+  {
+   "at": 1772,
+   "type": "cut"
+  },
+  {
+   "at": 1868,
+   "type": "cut"
+  },
+  {
+   "at": 1906,
+   "type": "cut"
+  }
+ ],
+ "note": "ends on the hard cut at g 1994 (narration 66.38 s, '\u0e40\u0e2d\u0e07')"
+}

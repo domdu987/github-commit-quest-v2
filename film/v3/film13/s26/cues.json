@@ -1,0 +1,17 @@
+[
+ {
+  "t": 55.9,
+  "dur": 1.5,
+  "label": "door open"
+ },
+ {
+  "t": 62.3,
+  "dur": 0.6,
+  "label": "whoosh + splat (impact g1893 = 63.1 s)"
+ },
+ {
+  "t": 64.3,
+  "dur": 0.6,
+  "label": "coin purse jingle"
+ }
+]
