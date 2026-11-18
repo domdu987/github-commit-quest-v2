@@ -14,7 +14,7 @@ def _mud(A):
     sys.path.insert(0, os.path.join(S.PROJ, 'v3', 'cast12')); sys.path.insert(0, os.path.join(S.PROJ, 'v3', 'cast10')); import cast12
     c, p = cast12.STORY12['hanway_mud_splash']; S.cast_card('actor_hanway_mud', c, p, (-4.3, 11.0, 0.0), bpy.context.scene.camera.matrix_world.translation, rim='#f2b25c')
 def _ending(A):
-    _drop('actor_box_a'); S.stage_cards([('box_a', 'coachman_sulk', (3.55, 18.6, 4.22), None)])
+    _drop('actor_box_a'); c = S.stage_cards([('box_a', 'coachman_sulk', (3.55, 18.6, 4.22), None)])[0]; S.pink_to_hand(c, dx=0.55, up=-0.1)
 def _throw(A):
     S.throw('cabbage', (-5.0, 11.4, 5.0), (-2.45, 10.5, 5.2), 10, 22, bounce=(1.6, -1.8)); bpy.context.scene.frame_set(18)
 def _queue(A):
@@ -50,7 +50,7 @@ TILES = [  # name, preset, light, u, state, extra, figures, label, cards
     ('20_umb_05', 'street_high', 'RAIN', 1.0, dict(umb=0.5), None, 'umb', 'umbrellas 0.5 (street_high B)'),
     ('21_umb_10', 'street_high', 'RAIN', 1.0, dict(umb=1.0), None, 'umb', 'umbrellas 1.0 (street_high B)'),
     ('22_ending_pink', 'box_seat', 'RAIN', 0.55, dict(pink=1.0), _ending, False, 'box_seat pink umbrella, sulking (shot 23)'),
-    ('23_mud', 'puddle_low', 'RAIN', 0.0, dict(mud=0.4), _mud, False, 'puddle_low mud splash t 0.4 (shot 12)'),
+    ('23_mud', 'puddle_low', 'RAIN', 0.0, dict(mud=0.3), _mud, False, 'puddle_low mud splash t 0.3 (shot 12)'),
     ('24_throw', 'market', 'RAIN', 1.0, dict(), _throw, False, 'market cabbage mid-arc (frame 18 of 10-22)'),
     ('25_coach_dusk', 'coach_low', 'DUSK_RAIN', 1.0, dict(busy=1.0), None, False, 'coach_low DUSK_RAIN busy 1'),
 ]

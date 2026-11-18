@@ -19,7 +19,7 @@ from wall_tex import hexf, hex8, pnoise, pfbm, save             # noqa: E402
 import harbour_tex as HX                                        # noqa: E402  (sky_rich painter)
 
 TEX = os.path.join(HERE, 'tex_street')
-TEX_V = 's12.13'
+TEX_V = 's12.15'
 JOBS = {}
 def reg(name, params, fn): JOBS[name] = (params, fn)
 
@@ -114,7 +114,7 @@ def puddle_mask(p, out):
     edge = 0.62 + sum(a * np.sin((k + 2) * ang + ph[k]) for k, a in enumerate(amp)) + (pfbm(rs, S, S, 6, 6, 3) - 0.5) * 0.16
     d = (edge - rr)                                                               # > 0 inside
     body = np.clip(d / 0.07, 0, 1) ** 1.2
-    rim = np.clip(1 - np.abs(d - 0.012) / 0.013, 0, 1) * 0.9 * (0.55 + 0.45 * pnoise(rs, S, S, 18, 18))
+    rim = np.clip(1 - np.abs(d - 0.02) / 0.04, 0, 1) ** 1.5 * 0.7 * (0.5 + 0.5 * pnoise(rs, S, S, 18, 18)) * np.clip(body * 2.0, 0, 1)
     core = np.clip((d - 0.12) / 0.2, 0, 1)
     save(np.stack([body, rim, core], -1), out)
 
@@ -527,7 +527,7 @@ def sky_rain(p, out):
         img = grad([(-15, '#c08878'), (0, '#e8b48c'), (7, '#dca898'), (20, '#aeb4d6'), (45, '#94a4cc'), (90, '#8090bc')]); gcol, gk = '#ffd09a', 0.6
         pal = [('#e6e0ec', '#9ea4d0', '#ffe4c4'), ('#dad8ea', '#929ccc', '#fdd8b8'), ('#ccd0e6', '#8894c4', '#f8cca8')]
     d_az = np.minimum(np.abs(az - 90.0), 360 - np.abs(az - 90.0))[None, :]
-    glow = np.exp(-((d_az / 38.0) ** 2) - ((el[:, None] - 4.0) / 16.0) ** 2); img = img + hexf(gcol)[None, None] * glow[..., None] * gk
+    glow = np.exp(-((d_az / 60.0) ** 2) - ((el[:, None] - 4.0) / 22.0) ** 2); img = np.minimum(img + hexf(gcol)[None, None] * glow[..., None] * gk * 0.75, 0.9)    # wide soft glow, capped: no hot spot to mirror as an orb in puddles
     ppd = W / 360.0
     # (elevation range, count, width deg, height factor) far to near layers: small low clouds first, big high clouds last
     layers = [((1.5, 9.0), 26, (14, 26), 0), ((9.0, 22.0), 22, (18, 34), 1), ((22.0, 38.0), 14, (24, 40), 2)]     # nothing above el ~42: the zenith is a plain gradient (no dome-pole arcs)

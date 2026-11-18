@@ -109,3 +109,6 @@ Reviewed: the new contact.jpg (25 tiles); the full-size finals 01, 06, 09, 13, 1
 - 13 rush: break the single file (stagger the `end` points by ±1.2 on y and add a second row), and vary the cards.
 - Big pillow setts under the low cameras.
 - Horse faceting.
+
+## Director re-look r2 (tiles 01, 13, 14, 18, 22, 23)
+Road orbs and shore wire gone; mud splash now dark brown mud with Hanway readable (stylised, re-check over the full take); ending and reveal read on phone. Blocking items from Re-check r1 closed. Non-blocking notes carried to the take gate: hook figure small at phone size (shot 1 pushes in), faceted horse, blocky 3D placeholder crowd, mild grain in deepest puddles. SET gate: PASS -> client sheet.

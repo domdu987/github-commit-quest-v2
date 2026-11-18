@@ -49,7 +49,7 @@ Camera name `cam` (the scene camera). `S.CAMS[preset]` has `loc, look_at, loc_b,
 | `puddle_low` | (-5.3, 3.6, 0.75) -> (-1.8, 12.6, 2.0) | (-5.3, 4.6, 0.7) -> (-2.2, 12.6, 2.2) (lens 22) |
 | `rank_rush` | (-3.2, 8.0, 2.8) -> (1.8, 25.0, 4.0) | (-2.6, 14.0, 3.0) -> (3.0, 37.0, 4.0) (lens 22) |
 | `rank_wide` | (-3.4, -4.0, 4.6) -> (3.4, 42.0, 3.4) | (-2.4, 4.0, 3.8) -> (3.4, 48.0, 3.4) (lens 22) |
-| `rank_idle` | (-3.2, 6.0, 1.8) -> (3.6, 34.0, 3.4) | (-2.2, 9.0, 2.0) -> (3.6, 40.0, 3.4) (lens 22) |
+| `rank_idle` | (-2.2, 2.0, 2.0) -> (2.6, 34.0, 3.4) | (-1.6, 5.0, 2.2) -> (3.0, 40.0, 3.4) (lens 22) |
 
 | preset | what it shows | plan shots |
 |---|---|---|
@@ -152,64 +152,64 @@ All are driven by custom properties of the empty `CTRL` through drivers, so a si
 All hooks work on an animated scene: after keying call `scene.frame_set(f)` before every render.
 
 ## 8. Render cost (720x1280, 14 samples, OIDN denoise, 2 threads, direct light + 1 glossy bounce)
-- Per frame (tiles at 24 samples): **27 s wall (min 16, max 34) and about 54 CPU-s** (2 threads; with 4 threads about half the wall time). Default 20 samples is about 20 % cheaper. Puddle and coach shots are the slowest, box shots the fastest. Cast cards add 0.3-0.5 s each the first time (raster cache).
+- Per frame (tiles at 24 samples): **26 s wall (min 17, max 34) and about 53 CPU-s** (2 threads; with 4 threads about half the wall time). Default 20 samples is about 20 % cheaper. Puddle and coach shots are the slowest, box shots the fastest. Cast cards add 0.3-0.5 s each the first time (raster cache).
 - One-time per process: texture load + `shot()` build about 3-8 s. A 60-frame take at 2 threads: about 16-18 min.
 - Rain, drivers and halos are evaluated by Blender; nothing is baked. Keep `SAMPLES` >= 20 (lower shows speckle in the puddles).
 
 ## 9. Contact tiles (finals with real cast cards; wall / cpu s; head pixel y of every staged card) and colour
-| 01_hook_wide | street_wide RAIN (hook) | 27 / 54 | hanway_a 689, man_road_1 692, box_a 587, pave_R1 692 |
-| 02_wide_low | street_wide_low RAIN (shot 9) | 27 / 54 | hanway_a 606, man_road_1 657, box_a 551, pave_R1 625 |
-| 03_wide_rev | street_wide_rev umb 0.6 (shot 20) | 29 / 58 | hanway_rev 677, rev_a 684, rev_b 680, rev_pave_L 681, rev_pave_R 676 |
+| 01_hook_wide | street_wide RAIN (hook) | 28 / 55 | hanway_a 689, man_road_1 692, box_a 587, pave_R1 692 |
+| 02_wide_low | street_wide_low RAIN (shot 9) | 28 / 55 | hanway_a 606, man_road_1 657, box_a 551, pave_R1 625 |
+| 03_wide_rev | street_wide_rev umb 0.6 (shot 20) | 28 / 56 | hanway_rev 677, rev_a 684, rev_b 680, rev_pave_L 681, rev_pave_R 676 |
 | 04_high_hunched | street_high RAIN bare heads (shot 4) | 23 / 46 | hanway_crowd 760, box_a 674 |
-| 05_coach_low | coach_low busy 1 (shot 2) | 34 / 67 | box_a 446, box_b 574, hanway_low 546 |
-| 06_coach_close | coach_close two-shot (shots 7, 15) | 23 / 47 | box_a 421, hanway_low2 695 |
-| 07_hero_track | hero_track RAIN (shots 3, 11) | 30 / 60 | hanway_b 639, box_a 540, box_b 621 |
-| 08_queue | hero_track + rank queue (shot 18) | 30 / 60 | hanway_b 639, box_a 540, box_b 621 |
-| 09_box_face | box_seat B (shots 6, 8) | 16 / 33 | box_a 536 |
-| 10_box_trio | box_trio three coachmen (shots 2, 14) | 29 / 59 | box_a 423, box_b 579, box_c 646 |
+| 05_coach_low | coach_low busy 1 (shot 2) | 33 / 65 | box_a 446, box_b 574, hanway_low 546 |
+| 06_coach_close | coach_close two-shot (shots 7, 15) | 24 / 48 | box_a 421, hanway_low2 695 |
+| 07_hero_track | hero_track RAIN (shots 3, 11) | 31 / 62 | hanway_b 639, box_a 540, box_b 621 |
+| 08_queue | hero_track + rank queue (shot 18) | 30 / 61 | hanway_b 639, box_a 540, box_b 621 |
+| 09_box_face | box_seat B (shots 6, 8) | 17 / 33 | box_a 536 |
+| 10_box_trio | box_trio three coachmen (shots 2, 14) | 29 / 58 | box_a 423, box_b 579, box_c 646 |
 | 11_market | market RAIN (shot 5) | 29 / 58 | hanway_market 680, lady_market 699, gent_wet 713, seller 700 |
-| 12_puddle_low | puddle_low RAIN (shot 12) | 28 / 56 | hanway_mud 476 |
+| 12_puddle_low | puddle_low RAIN (shot 12) | 26 / 53 | hanway_mud 476 |
 | 13_reveal | rank_rush REVEAL rush 1 busy 1 (shot 16) | 26 / 52 | box_a 401, box_b 557 |
-| 14_rush_dusk | rank_rush DUSK_RAIN rush 1 | 28 / 56 | box_a 401, box_b 557 |
-| 15_rank_rolling | rank_wide coaches rolling (shot 17) | 30 / 59 |  |
-| 16_rank_idle | rank_idle busy 0 bored (shot 22) | 30 / 60 | box_a 372, box_b 530, box_c 596 |
-| 17_box_dusk | box_seat DUSK_RAIN (shot 14) | 19 / 38 | box_a 551 |
-| 18_wide_dusk | street_wide DUSK_RAIN | 26 / 53 | hanway_a 689, man_road_1 692, box_a 587, pave_R1 692 |
-| 19_high_dusk_bare | street_high DUSK bare heads + ONE umbrella (shot 13) | 28 / 56 | hanway_crowd 759, box_a 625 |
-| 20_umb_05 | umbrellas 0.5 (street_high B) | 27 / 54 | hanway_crowd 759, box_a 625 |
-| 21_umb_10 | umbrellas 1.0 (street_high B) | 27 / 55 | hanway_crowd 759, box_a 625 |
-| 22_ending_pink | box_seat pink umbrella, sulking (shot 23) | 19 / 37 | box_a 554 |
-| 23_mud | puddle_low mud splash t 0.4 (shot 12) | 32 / 65 | hanway_mud 476 |
-| 24_throw | market cabbage mid-arc (frame 18 of 10-22) | 26 / 52 | hanway_market 680, lady_market 704, gent_wet 731, seller 717 |
-| 25_coach_dusk | coach_low DUSK_RAIN busy 1 | 29 / 59 | box_a 421, box_b 611 |
+| 14_rush_dusk | rank_rush DUSK_RAIN rush 1 | 27 / 53 | box_a 401, box_b 557 |
+| 15_rank_rolling | rank_wide coaches rolling (shot 17) | 29 / 58 |  |
+| 16_rank_idle | rank_idle busy 0 bored (shot 22) | 34 / 68 | box_a 432, box_b 542, box_c 597 |
+| 17_box_dusk | box_seat DUSK_RAIN (shot 14) | 17 / 34 | box_a 551 |
+| 18_wide_dusk | street_wide DUSK_RAIN | 27 / 54 | hanway_a 689, man_road_1 692, box_a 587, pave_R1 692 |
+| 19_high_dusk_bare | high DUSK bare heads, 1 umbrella (13) | 27 / 54 | hanway_crowd 759, box_a 625 |
+| 20_umb_05 | umbrellas 0.5 (street_high B) | 27 / 55 | hanway_crowd 759, box_a 625 |
+| 21_umb_10 | umbrellas 1.0 (street_high B) | 27 / 53 | hanway_crowd 759, box_a 625 |
+| 22_ending_pink | box_seat pink umbrella, sulking (shot 23) | 17 / 35 | box_a 554 |
+| 23_mud | puddle_low mud splash t 0.3 (shot 12) | 27 / 53 | hanway_mud 476 |
+| 24_throw | market cabbage mid-arc (frame 18 of 10-22) | 25 / 50 | hanway_market 680, lady_market 704, gent_wet 731, seller 717 |
+| 25_coach_dusk | coach_low DUSK_RAIN busy 1 | 27 / 54 | box_a 421, box_b 611 |
 
 Shade hue (target 240-260) and magenta share (target <= 10 %) per tile (`street_hue.py`, which uses `tools/hue_report.py`):
 ```
-  01_hook_wide               shade hue  244.8  shaded 0.37  magenta   4.8 %  ok
-  02_wide_low                shade hue  242.4  shaded 0.43  magenta   3.9 %  ok
-  03_wide_rev                shade hue  243.6  shaded 0.51  magenta   4.2 %  ok
-  04_high_hunched            shade hue  247.6  shaded 0.29  magenta   6.9 %  ok
-  05_coach_low               shade hue  252.3  shaded 0.40  magenta   5.0 %  ok
-  06_coach_close             shade hue  253.2  shaded 0.27  magenta   6.5 %  ok
-  07_hero_track              shade hue  247.6  shaded 0.35  magenta   4.4 %  ok
-  08_queue                   shade hue  247.5  shaded 0.34  magenta   4.6 %  ok
-  09_box_face                shade hue  257.7  shaded 0.16  magenta   3.5 %  ok
-  10_box_trio                shade hue  253.6  shaded 0.37  magenta   6.5 %  ok
-  11_market                  shade hue  246.8  shaded 0.51  magenta   3.0 %  ok
-  12_puddle_low              shade hue  245.6  shaded 0.42  magenta   5.2 %  ok
-  13_reveal                  shade hue  242.7  shaded 0.41  magenta   5.0 %  ok
-  14_rush_dusk               shade hue  241.9  shaded 0.45  magenta   4.7 %  ok
-  15_rank_rolling            shade hue  255.3  shaded 0.43  magenta   6.3 %  ok
-  16_rank_idle               shade hue  255.7  shaded 0.44  magenta   7.1 %  ok
-  17_box_dusk                shade hue  257.5  shaded 0.21  magenta   5.0 %  ok
-  18_wide_dusk               shade hue  243.9  shaded 0.45  magenta   3.5 %  ok
-  19_high_dusk_bare          shade hue  244.3  shaded 0.49  magenta   4.9 %  ok
-  20_umb_05                  shade hue  245.4  shaded 0.41  magenta   7.1 %  ok
-  21_umb_10                  shade hue  245.0  shaded 0.41  magenta   7.1 %  ok
-  22_ending_pink             shade hue  258.7  shaded 0.13  magenta   4.8 %  ok
-  23_mud                     shade hue  242.9  shaded 0.50  magenta   3.2 %  ok
-  24_throw                   shade hue  243.8  shaded 0.46  magenta   4.8 %  ok
-  25_coach_dusk              shade hue  253.4  shaded 0.40  magenta   5.3 %  ok
+  01_hook_wide               shade hue  246.7  shaded 0.38  magenta   4.7 %  ok
+  02_wide_low                shade hue  243.1  shaded 0.44  magenta   3.9 %  ok
+  03_wide_rev                shade hue  245.8  shaded 0.51  magenta   3.4 %  ok
+  04_high_hunched            shade hue  250.1  shaded 0.29  magenta   7.4 %  ok
+  05_coach_low               shade hue  248.0  shaded 0.40  magenta   4.4 %  ok
+  06_coach_close             shade hue  251.9  shaded 0.26  magenta   5.6 %  ok
+  07_hero_track              shade hue  249.8  shaded 0.37  magenta   3.8 %  ok
+  08_queue                   shade hue  249.7  shaded 0.36  magenta   4.0 %  ok
+  09_box_face                shade hue  257.5  shaded 0.14  magenta   3.2 %  ok
+  10_box_trio                shade hue  247.8  shaded 0.41  magenta   5.6 %  ok
+  11_market                  shade hue  249.4  shaded 0.51  magenta   2.9 %  ok
+  12_puddle_low              shade hue  247.1  shaded 0.41  magenta   4.8 %  ok
+  13_reveal                  shade hue  240.6  shaded 0.40  magenta   4.5 %  ok
+  14_rush_dusk               shade hue  240.8  shaded 0.45  magenta   4.3 %  ok
+  15_rank_rolling            shade hue  250.6  shaded 0.44  magenta   5.5 %  ok
+  16_rank_idle               shade hue  249.8  shaded 0.45  magenta   5.4 %  ok
+  17_box_dusk                shade hue  258.8  shaded 0.20  magenta   4.4 %  ok
+  18_wide_dusk               shade hue  246.2  shaded 0.46  magenta   3.4 %  ok
+  19_high_dusk_bare          shade hue  247.3  shaded 0.49  magenta   4.9 %  ok
+  20_umb_05                  shade hue  247.9  shaded 0.41  magenta   7.1 %  ok
+  21_umb_10                  shade hue  247.5  shaded 0.41  magenta   7.0 %  ok
+  22_ending_pink             shade hue  259.3  shaded 0.13  magenta   4.4 %  ok
+  23_mud                     shade hue  247.5  shaded 0.49  magenta   7.8 %  ok
+  24_throw                   shade hue  245.9  shaded 0.48  magenta   4.8 %  ok
+  25_coach_dusk              shade hue  250.1  shaded 0.41  magenta   4.7 %  ok
 ```
 A Hue Correct node in the grade (`_hue_guard`) pulls the magenta band toward blue-violet; pink / red stays.
 
@@ -224,13 +224,13 @@ A Hue Correct node in the grade (`_hue_guard`) pulls the magenta band toward blu
 - Colour rule: shade hue 240-260 and magenta <= 10 %: if you add a coloured prop, keep reds orange-leaning or use warm unshaded materials.
 - No text anywhere: signs are pictures; if you add anything, no letters.
 
-## 11. Weak points (honest list, SET gate round 2)
-- The horse is still low-poly and flat-toon shaded (22 segments, faceted at close range); legs do not walk (a bob with travel only). The coach cabin and its lit windows are partly hidden by the box from low angles.
-- The 3D placeholder crowd (`crowd_figures`) is blocky: bare-headed people for the umbrella slots and rush crowd are only for scale. Real cards: `stage_rush_cards`.
-- Mud splash: stylised lit-brown fins + spray, tested at t 0.4 only in stills; it is not a fluid. Check t 0.2-0.6 in the take.
-- Hue guard: shaded reds (hammercloth, wheels) lean orange/violet; pink / coral stays. Dusk horses read purple-brown.
-- Residual fine grain in dark puddle reflections below 20 samples; lantern reflections in puddles can still read as a glowing orb when the puddle outline is not visible (tile 24, bottom right).
-- Setts are regular; 16 facade types repeat along the street; cloud bottoms are flat. Rain is camera-parented (no parallax).
-- The egg-on-umbrella impact on hero_track (shot 11) and the cabbage hit on the card's own umbrella are not placed for you: `throw()` needs the target point from the card pose anchors (`umb_top_r`).
+## 11. Weak points (honest list, after fix round r2)
+- Horse: low-poly, flat-toon, faceted at close range (box_seat B shows a big orange mass at the bottom); legs do not walk (bob with travel only). The drooping head in `rank_idle` is small in frame.
+- 3D placeholder crowd (`crowd_figures`) is blocky and faceless; use `stage_rush_cards` / your own cards.
+- Mud splash: now lit dark-brown fins with lighter tips, thin dark spray on every 3rd fin, droplets avoiding the face, fin height -25 %. Still stylised (not fluid), tile rendered at t 0.3 only; the crest is a wall behind Hanway's left side; check t 0.2-0.6 in the take. The coach passing in that shot is ochre with orange wheels.
+- Floating white orbs on the road: fixed by hiding point-light specular (`visible_glossy=False` on lamp / shop / lantern point lights), dimming lit-window and lantern emission 0.3x for glossy rays, a softer shore line (0.12 x) and a lower, capped sky glow. If a new orb appears, check lights and emission seen in puddles.
+- Pink umbrella: pole now goes to the sulk card's hand (`S.pink_to_hand(card, dx, up)`), but the card's hand sits in front of the chest so the pole still starts low; fine at phone size.
+- DUSK: horses and coach bodies are warmed (tile 14 close to tile 25) but the horse flank can still look brown-purple.
+- Fine grain left in the darkest puddle reflections (12, 16, 23); big pillow setts under the lowest cameras; 16 facades repeat; cloud under-band strokes and a few triangle shards in the cel clouds; rain is camera-parented (no parallax).
+- Hook (01) is small and high at phone size; box_c is hard to read in `box_trio`; no tile for the egg splat or a hero_track throw (`throw()` needs the card's `umb_top_r` anchor as target).
 - Real point lights are picked at `shot()` for the camera's middle pose.
-- Stale files of the first round were moved to `street_work/old/`.
