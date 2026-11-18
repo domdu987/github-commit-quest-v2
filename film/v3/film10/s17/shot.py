@@ -92,7 +92,7 @@ def ghost_off(g):
     """ghost x offset: 5 s puts its centre exactly on the real ship's (hull on hull, mirrored); from shot 19 it peels away to the left."""
     s = s_of(g)
     slide = 50.0 * ez((g - G19) / 66.0)
-    return 5.0 * s - slide
+    return 5.0 * s - 15.0 - slide
 
 
 def ghost_k(g):
@@ -100,8 +100,8 @@ def ghost_k(g):
     if g < G18:
         return 0.0
     if g < G19:
-        return 0.85 * ez((g - (G18 + 6)) / 40.0)
-    return 0.85 - 0.55 * ez((g - G19) / 36.0) - 0.2 * ez((g - (G20 - 40)) / 40.0)
+        return 1.0 * ez((g - (G18 + 6)) / 40.0)
+    return 1.0 - 0.7 * ez((g - G19) / 36.0) - 0.2 * ez((g - (G20 - 40)) / 40.0)
 
 
 def lead_k(g):
@@ -131,10 +131,25 @@ class Take(C.Take):
             ob.location.x += LEAD_DX                         # runtime set change: the lead buoy is 23 D further ahead
         H.set_ghost(0.0, offset=GHOST_OFF)
         self.strip_wires()
-        H.STATE['torp']['ob'].scale = (1.8, 1.8, 1.8)                 # readable from the high camera
+        self.fix_torpedo_and_buoys()
         U = H.STATE["uboat"]
         import bpy
         self.near_eye = [U["head"], bpy.data.objects["uboat_mast"]]      # the periscope camera sits inside them
+
+    def fix_torpedo_and_buoys(self):
+        """QA: torpedo 3x without its arrow-like foam V (the soft bubble wake carries it); buoys 1.5x about their own centres."""
+        import bmesh
+        o = H.STATE["torp"]["ob"]
+        bm = bmesh.new(); bm.from_mesh(o.data)
+        fm = [i for i, m in enumerate(o.data.materials) if m and "foam" in m.name]
+        bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index in fm], context="FACES")
+        bm.to_mesh(o.data); bm.free()
+        o.scale = (3.0, 3.0, 3.0)
+        mk = H.STATE["markers"]
+        for key, c in (("buoy", (H.LEAD[0], 0.0)), ("ghost_buoy", H.GHOST_AIM)):
+            for ob in mk[key]:
+                ob.scale = (1.5, 1.5, 1.5)
+                ob.location = (ob.location.x + c[0] * (1 - 1.5), c[1] * (1 - 1.5), 0.0)
 
     def strip_wires(self):
         """QA-art: drop the ghost's rigging wires (the 6-vertex loose parts of the hull mesh)."""
@@ -152,7 +167,8 @@ class Take(C.Take):
                     w = e.other_vert(x)
                     if w.index not in seen:
                         seen.add(w.index); st.append(w); comp.append(w)
-            if len(comp) == 6:
+            zs = [v.co.z for v in comp]
+            if len(comp) == 6 or (len(comp) == 24 and max(zs) - min(zs) > 12):
                 kill += comp
         bmesh.ops.delete(bm, geom=kill, context="VERTS")
         bm.to_mesh(o.data); bm.free()

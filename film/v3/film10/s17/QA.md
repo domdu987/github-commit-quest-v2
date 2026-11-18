@@ -6,3 +6,8 @@ Fixes:
 - 19: ghost peels away left and fades to 0.3 right after the cut (g 1296-1332), then 0.1 at the end; camera holds on the crossing (g ~1320-1375, torpedo reaches the cyan buoy in clear water behind the real stern) before following the ship.
 - Buoy lamp lights keyed to 0 energy: no glare streaks on the water.
 Known: ship is smaller on screen in 17/19 (about 25-30% width) because torpedo, ship and buoy must share the frame.
+
+## Round 3 (QA-tech addendum)
+- 18: ghost mirrored over the real hull, offset -15 D so its reversed bow sticks out past the real stern (~23%), opacity up to 1.0 with the emissive rim; funnel cylinders and rigging wires removed (no glass look).
+- 19: ghost peels left and fades to 0.3 before the pass; ONE torpedo, one soft bubble wake, passing behind the real stern.
+- 17/19: torpedo 3x, arrow-like foam V removed (soft bubble wake only); both buoys 1.5x, inside the frame.
