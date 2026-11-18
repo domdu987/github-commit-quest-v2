@@ -51,9 +51,9 @@
   1280
  ],
  "fps": 30,
- "s_per_frame_wall_mean": 12.29,
- "s_per_frame_cpu_mean": 23.99,
- "take_mkv_bytes": 66276603,
+ "s_per_frame_wall_mean": 13.27,
+ "s_per_frame_cpu_mean": 25.95,
+ "take_mkv_bytes": 67493258,
  "frame_source": {
   "1621": "22",
   "1622": "22",
