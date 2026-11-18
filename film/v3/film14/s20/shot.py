@@ -46,10 +46,11 @@ def _hive_swing(s, t, s0=None):
 def cam_of(g):
     s = shot_of(g)
     if s == 20:
+        # INSIDE the fence (field side), looking OUT: her chest presses the V-bent wire toward the camera, then slide along the wire past the hives
         u = (g - 1307) / 60.0; e = mvx(u)
-        loc = (lerp(12.0, -0.4, e), lerp(2.3, 2.3, e), lerp(1.45, 1.35, e))
-        look = (loc[0] - lerp(1.9, 4.2, e), lerp(6.3, 5.2, sm(u * 1.5)), lerp(2.0, 1.85, e))
-        return loc, look, lerp(28, 28, e)
+        loc = (lerp(9.6, -0.6, e), lerp(10.6, 8.6, e), lerp(1.6, 1.45, e))
+        look = (loc[0] + lerp(0.4, -4.0, e), lerp(6.1, 5.2, sm(u * 1.5)), lerp(1.9, 1.85, e))
+        return loc, look, lerp(30, 28, e)
     if s == 21:
         u = mvx((g - 1368) / 85.0)
         return (lerp(-15.5, -13.5, u), lerp(1.1, 1.3, u), 1.55), (lerp(-0.5, 1.5, u), 5.3, 1.0), 58
@@ -103,14 +104,14 @@ class Driver:
         C.register_preset('s%d' % shot, c0, l0, ln0)
         F.WAVE_C = WAVE_V; F.hive_swing = _hive_swing; F._q = _q_sharp; F.PUSH_A = 1.8
         C.build('s%d' % shot, quality, threads=threads, samples=int(os.environ.get('SAMPLES', 6 if quality == 'preview' else 24)), dense_bees=520 if shot == 22 else 240)
-        self.cam = C.Cam(); print('maize rows hidden', C.hide_maize_rows(7.0))
+        self.cam = C.Cam(); print('maize rows hidden', C.hide_maize_rows(12.5 if shot == 20 else 7.0))
         if shot == 20:
             C.cut_boxes([(13.5, 43, 1.7, 2.3, 1.2), (15.0, 19.5, 3.6, 6.4, 1.0)])
-            print('roof cut', C.cut_roofs(7.0, 11.6, 3.0, 8.0), 'post cut', C.cut_roofs(9.0, 11.4, 3.0, 8.0, zmin=-1.0, prefix='posts_')); C.hide_grass_box(6.0, 14.0, 1.5, 6.5, 1.2)
+            print('roof cut', C.cut_roofs(6.5, 12.6, 3.0, 13.0), 'post cut', C.cut_roofs(9.0, 11.8, 3.0, 9.0, zmin=-1.0, prefix='posts_')); C.hide_grass_box(6.0, 14.0, 1.5, 6.5, 1.2); C.cut_boxes([(9.5, 15.5, 7.5, 14.0, 4.5)])
         if shot == 20: print('mountains hidden', sum(1 for o in bpy.data.objects if 'mount' in o.name.lower() and not setattr(o, 'hide_render', True)))
         if shot in (21, 22): C.cut_boxes([(-8.0, -3.0, -1.5, 5.2, 2.8), (-15, -8, -4, 6.0, 1.5)])
         pts = [cam_of(g)[0] for g in range(CUT[shot], CUT.get(shot + 1, 1678) + 1, 6)]
-        C.cut_path(pts, 2.6 if shot == 21 else 1.3, names=('grass', 'flowers', 'edge', 'pebbles'), keep=lambda w: w.y > 4.2 and w.x > -13.3 and w.x < 10.4)
+        C.cut_path(pts, 2.6 if shot == 21 else 1.3, names=('grass', 'flowers', 'edge', 'pebbles'), keep=None if shot == 20 else (lambda w: w.y > 4.2 and w.x > -13.3 and w.x < 10.4))
         if shot == 20: C.cut_boxes([(4.2, 5.7, 1.9, 3.3, 9.0)])
         if shot in (21, 22): print('lamps dimmed', C.dim_lamps(pts[0], 16.0, 0.12))
         if shot == 20: print('lamps dimmed', C.dim_lamps((4.9, 2.6, 2.0), 6.0, 0.3))
@@ -170,7 +171,7 @@ class Driver:
         if self.mat is not None:
             r = self.mat.sprite(mat_pose(g), '%04d' % g)
             if shot == 20:
-                cx, cy = push_chest(g); yaw = 0.6 * C.yaw_to(loc, (cx, cy, 1.6)); self.mat.put_anchor('chest_push', (cx, cy), yaw)
+                cx, cy = push_chest(g); dxx, dyy = loc[0] - cx, loc[1] - cy; yaw = (math.pi - 0.6 * math.atan2(dxx, dyy)) if dyy > 0 else 0.6 * C.yaw_to(loc, (cx, cy, 1.6)); self.mat.put_anchor('chest_push', (cx, cy), yaw)
             else:
                 if self.mk0 is None:
                     c, bp = C.story('matriarch_swatted'); self.mat.sprite(bp, 'base'); self.mat.put_anchor('head', HEAD_GROUND, 0.0); self.mk0 = Vector(self.mat.mk)
