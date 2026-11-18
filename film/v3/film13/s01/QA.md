@@ -1,7 +1,5 @@
-# QA s01 (plan shot 1, hook) — g 0..62 + out-handle 63..68
-- qa_auto: PASS (69 frames, no frozen runs/pops/blur, magenta 0 %). See QA_AUTO.md, phone_sheet.jpg, contact.jpg.
-- Look: hotel_front DAY worm's-eye, 17 mm; crane up 0.45 -> 1.35 D with tilt; lift keyed 0.55 -> 0.65 (continues into handle); crib pier + jacks left foreground; dust motes trickle from the base. Pullman (centre, chin up, fists on hips) + 3 workers on the old street level, contact shadows ok.
-- Heads: head-centre + radius max 881.5 px (only at handle frame 68; all plan frames < 880).
-- Mouths: none. No DOF, no text.
-- Deviations: lift change is 0.36 D in the shot (as specified) so the rise reads mainly through the crane/dust; mud occupies the lower third (preset framing).
-- Cost: ~16-21 s/frame wall (two processes, 2 threads each).
+# QA s01 (plan shot 1, hook), round 2 after QA-art FIX-FIRST — g 0..62 + out-handle 63..68
+- qa_auto: PASS (69 frames). QA_AUTO.md, phone_sheet.jpg, contact.jpg.
+- Fixes: lift 0.40 -> 0.95 (flash-forward) so a full-width dark gap with glowing cribbing and jacks sits under the ground floor; old stair hidden (cannot reach the door); camera crane DOWN (1.9 -> 0.55 D) + tilt up, so the facade rises against the static foreground crib pier; people moved to the flanks / foreground (nobody covers the foundation line); mud ~20 %; dust motes 0.2-0.5 D, brighter, 70 of them along the foundation edge.
+- Limit: the set's lift is 3.6 D max, i.e. ~15 px/D at the framing that fits the whole hotel, so the facade climb is ~50-60 px against the pier (crane + lift), not 100.
+- Heads: chin (head centre + radius) max 869 px; mouths none; no DOF/text.

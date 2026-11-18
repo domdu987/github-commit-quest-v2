@@ -1,7 +1,6 @@
-# QA s02 (plan shots 2+3) — take g 57..164 (in-handle 57..62, shot 2 g 63..107, shot 3 g 108..158, out-handle 159..164)
-- qa_auto: PASS (108 frames, no frozen runs/pops/blur, magenta 0 %); cut at g 108 detected as planned. QA_AUTO.md, phone_sheet.jpg, contact.jpg.
-- Shot 2 suite_two (custom camera 8 -> 7 D back, 22 mm, slow push): lady (lady_sip_tea, teal armchair) and gentleman (standing, cup+saucer) sip calmly (lady g 78-122, gentleman g 102-146); heads y ~ 470-640 (< 880); feet/contact shadows on the rug. Preset's rich man not used (not in the plan beat).
-- Shot 3 tea_close (40 mm, push + pan): tea ripple keyed 0 every frame (mirror-still); window with rooftops behind.
-- Street drift: every object outside the room (street, shops, opposite row, church, town, crowd cards) is lowered per frame by (h-0.65)*3.6*2.0 D with h 0.65 -> 0.80 over g 63..159 (continues shot 1's rate). DEVIATION: x2 visual gain so the slide reads; set lift hook not used (suite has no lift).
-- No mouths, no DOF, no text. Cost ~12-19 s/frame wall.
-- Note: the first run was interrupted at g 107 / 153; resumed (same settings), frames identical in setup.
+# QA s02 (plan shots 2+3), round 2 after QA-art FIX-FIRST — take g 57..164
+- qa_auto: PASS (108 frames, cut at g 108). QA_AUTO.md, phone_sheet.jpg, contact.jpg.
+- Shot 3: camera now ABOVE the cups (like s17 shot 18): two clear mirror-still tea discs (ripple 0 every frame), pot, window filling the top half; the opposite row, town and a new clock-tower landmark slide down continuously (drift 6 D/s, ~70-90 px at this lens).
+- Shot 2: lower frontal camera (rug ~25 %), guests larger (heads ~100 px), clock tower outside slides down between them; lady's sip is one clear 36-frame lift/hold/lower (g 72-108); gentleman sips g 96+. Chandelier corner visible at the top-left.
+- Not fixed: the stepped lime cloud slabs above the window are part of the set's sky texture (cannot edit the set); a wallpaper/painting wall is not in the frontal framing; deviation: drift is a deliberate exaggeration.
+- No mouths, no DOF/text. Heads (shot 2) bottom max under 880.

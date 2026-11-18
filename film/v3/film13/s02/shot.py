@@ -26,12 +26,15 @@ def lift_of(g):                       # continues shot 1 (0.55 -> 0.65 at g 63) 
     return 0.65 + 0.15 * (g - G2) / float(G4 - G2)
 
 
+DRIFT_RATE = 6.0 / 30.0               # D per frame (QA-art: the street must visibly slide >= 60-100 px; true lift would be ~0.55 D / 3 s)
+
+
 def drift(g):
-    return (lift_of(g) - 0.65) * D.LIFT_MAX * DRIFT_K
+    return DRIFT_RATE * (g - G2)
 
 
-CAMS = {2: (((-0.6, 8.0, 32.3), (0.2, 0.0, 31.6)), ((-0.1, 7.0, 32.25), (0.15, 0.0, 31.7)), 22.0),
-        3: (((-0.2, 5.6, 32.9), (-3.7, 1.9, 32.2)), ((-0.8, 4.8, 32.65), (-3.8, 1.9, 32.0)), 40.0)}
+CAMS = {2: (((-0.5, 8.4, 31.45), (0.1, 0.0, 32.9)), ((-0.1, 7.2, 31.45), (0.1, 0.0, 33.0)), 22.0),
+        3: (((-2.4, 7.4, 34.6), (-3.3, 1.2, 32.4)), ((-2.7, 6.7, 34.3), (-3.3, 1.2, 32.5)), 34.0)}
 
 
 def cam_of(shot, g):
@@ -49,17 +52,22 @@ PPD = 192
 ZF = 30.0
 
 
-def sip(g, t0, dur=44):
-    """0..1..0 bump for one calm sip starting at g t0."""
-    u = (g - t0) / float(dur)
-    return math.sin(math.pi * u) ** 2 if 0.0 <= u <= 1.0 else 0.0
+def sip(g, t0, up=10, hold=16, down=10):
+    """0..1 trapezoid: cup rises (up frames), is held at the lips (hold), lowers (down)."""
+    u = g - t0
+    if u < 0 or u > up + hold + down:
+        return 0.0
+    if u < up:
+        return math.sin(0.5 * math.pi * u / up) ** 2
+    if u < up + hold:
+        return 1.0
+    return math.cos(0.5 * math.pi * (u - up - hold) / down) ** 2
 
 
 def p_lady(g):
     p = dict(cast13.STORY13["lady_sip_tea"][1])
-    s = sip(g, 78) + sip(g, 150)
-    s = min(1.0, s)
-    p["arm_r"] = dict(hand=(lerp(0.38, 0.30, s), lerp(0.55, 0.12, s)), bend=lerp(-0.5, -0.8, s), stretch=1.2, layer="front")
+    s = min(1.0, sip(g, 72) + sip(g, 150))
+    p["arm_r"] = dict(hand=(lerp(0.38, 0.27, s), lerp(0.55, 0.30, s)), bend=lerp(-0.5, -0.9, s), stretch=1.2, layer="front")
     p["pitch"] = lerp(-0.05, 0.10, s) + 0.03 * math.sin(g * 0.09)
     p["head_roll"] = 3 + 1.2 * math.sin(g * 0.06)
     p["t"] = g / 30.0
@@ -69,7 +77,7 @@ def p_lady(g):
 
 def p_gent(g):
     p = dict(cast13.STORY13["gentleman_stand"][1])
-    s = min(1.0, sip(g, 102) + sip(g, 170))
+    s = min(1.0, sip(g, 96, 8, 6, 8) + sip(g, 170))
     p.update(yaw=0.5, expr="neutral", mouth="smile", arm_r="behind",
              arm_l=dict(hand=(lerp(0.12, 0.06, s), lerp(0.95, 0.28, s)), bend=lerp(0.5, -0.4, s), stretch=1.2, layer="front"),
              prop_l=dict(type="teacup_saucer", scale=1.5), tea=1.0)
@@ -82,13 +90,28 @@ def p_gent(g):
 
 
 ROOM = ("floor_room", "rug", "curtains", "room", "paintings", "furniture", "tea", "chandelier", "candles")
-STATIC = ("sky", "backdrop", "far_ground")
+STATIC = ("sky", "backdrop")
+
+
+def make_tower():
+    """a clock tower with a spire on the opposite row (runtime dressing): a clear landmark outside the window that drifts down with the street."""
+    S = D.STATE; M = S["M"]; mb = D.MB()
+    x, y = 4.5, -76.0
+    D.sbox(mb, (x - 2.6, y - 2.6, 14.0), (x + 2.6, y + 2.6, 30.0), M["brick_d"], 0.15)
+    D.sbox(mb, (x - 2.9, y - 2.9, 29.6), (x + 2.9, y + 2.9, 30.6), M["cream"], 0.3)
+    D.sbox(mb, (x - 1.7, y - 2.7, 24.0), (x + 1.7, y - 2.5, 28.4), M["cream"], 0.3)
+    D.sbox(mb, (x - 1.1, y - 2.8, 25.0), (x + 1.1, y - 2.6, 27.4), M["dark"], 0.3)
+    mb.frustum((x, y, 30.6), (x, y, 42.0), 2.7, 0.15, M["slate"], seg=4)
+    D.rod(mb, (x, y, 42.0), (x, y, 45.0), 0.1, M["brass"], seg=4)
+    ob = D._obj(mb, "s02_tower", S["SET"])
+    return ob
 
 
 class Take(C.Take):
     def __init__(self, quality="preview", shot=2):
         C.Take.__init__(self, "suite", SUITE_PRESET, quality=quality, lens=22.0, name="cam_s02", light=LIGHT)
         sd = os.path.join(TMP, "sprites")
+        self.tower = make_tower()
         pre_names = set(ob.name for ob in D.STATE["SET"].objects)
         self.lady = self.actors["lady"] = C.make_actor("lady", "lady13_seat", sd, canvas=cast13.CANVAS13_POSE["lady_sip_tea"])
         self.gent = self.actors["gent"] = C.make_actor("gent", "gentleman13", sd)

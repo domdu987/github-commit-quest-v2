@@ -15,12 +15,12 @@ G1 = C.g_bound(2.10)                  # 63: shot 2 starts
 H_OUT = 6
 RANGES = {1: (0, G1 + H_OUT - 1)}
 PRESET, LIGHT = "hotel_front", "DAY"
-H0, H1 = 0.55, 0.65                   # lift 0.55 -> 0.65 over the shot (continues through the handle)
-CAM0 = ((-4.6, -25.0, 0.45), (0.2, 0.0, 9.0))
-CAM1 = ((-3.2, -24.2, 1.35), (0.0, 0.0, 12.2))
+H0, H1 = 0.40, 0.95                   # lift 0.55 -> 0.65 over the shot (continues through the handle)
+CAM0 = ((-4.4, -26.0, 1.9), (0.2, 0.0, 12.4))
+CAM1 = ((-3.6, -25.4, 0.55), (0.2, 0.0, 12.6))
 LENS = 17.0
 PPD = 160
-PULL_XY, WA_XY, WB_XY, WC_XY = (-1.0, -11.2), (-8.0, -10.0), (6.2, -10.5), (2.8, -9.8)
+PULL_XY, WA_XY, WB_XY, WC_XY = (1.2, -11.8), (-7.2, -8.0), (7.4, -7.8), (-5.0, -10.3)
 
 
 def cam_of(g):
@@ -30,7 +30,7 @@ def cam_of(g):
 
 
 def lift_of(g):
-    return lerp(H0, H1, g / float(G1 - 1))
+    return lerp(H0, H1, clamp(g / float(G1 - 1)) * 0.8 + 0.2 * ez(g / float(G1 - 1)) + 0.0) if g <= G1 - 1 else H1 + (g - G1 + 1) * 0.0015
 
 
 def p_pull(g):
@@ -51,14 +51,14 @@ def p_work(key, g, ph):
     return p
 
 
-def make_dust(n=46, seed=4):
+def make_dust(n=70, seed=4):
     """a trickle of cream-grey dust motes falling from the hotel's base (runtime set dressing, camera-only soft discs)."""
     import bpy, random
     r = random.Random(seed); SET = D.STATE["SET"]
     mat = bpy.data.materials.new("s01_dust"); mat.use_nodes = True; nt = mat.node_tree; nt.nodes.clear()
-    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (0.86, 0.74, 0.58, 1.0); em.inputs["Strength"].default_value = 0.9
+    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (1.0, 0.86, 0.62, 1.0); em.inputs["Strength"].default_value = 1.0
     tr = nt.nodes.new("ShaderNodeBsdfTransparent"); mx = nt.nodes.new("ShaderNodeMixShader"); out = nt.nodes.new("ShaderNodeOutputMaterial")
-    mx.inputs[0].default_value = 0.55
+    mx.inputs[0].default_value = 0.6
     nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0])
     obs = []
     for i in range(n):
@@ -67,8 +67,8 @@ def make_dust(n=46, seed=4):
         for c in list(ob.users_collection): c.objects.unlink(ob)
         SET.objects.link(ob); ob.data.materials.append(mat)
         ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False
-        ob.scale = (r.uniform(0.12, 0.3),) * 3
-        ob["x"] = r.uniform(-17.0, 17.0); ob["y"] = r.uniform(-3.2, -0.6); ob["ph"] = r.random(); ob["sp"] = r.uniform(0.6, 1.2); ob["dr"] = r.uniform(-0.6, 0.6)
+        ob.scale = (r.uniform(0.2, 0.5),) * 3
+        ob["x"] = r.uniform(-16.0, 16.0); ob["y"] = r.uniform(-3.0, -0.4); ob["ph"] = r.random(); ob["sp"] = r.uniform(0.6, 1.2); ob["dr"] = r.uniform(-0.6, 0.6)
         obs.append(ob)
     return obs
 
@@ -91,6 +91,9 @@ class Take(C.Take):
         self.wb = self.actors["wb"] = C.make_actor("wb", "worker13_b", sd)
         self.wc = self.actors["wc"] = C.make_actor("wc", "worker13_c", sd)
         self.dust = make_dust()
+        st = C.bpy.data.objects.get("stair")
+        if st is not None:                      # flash-forward: the old stair is left behind (QA-art: it must not reach the door)
+            st.hide_render = True
 
     def pose(self, shot, gs):
         for g in gs:
