@@ -1,8 +1,7 @@
-# s13 QA (shots 13-14, DUSK_RAIN), g 850-1055 (858-1049 + 8 dissolve-in handle + 6 after)
-Checked at 6 fps contact + cut 944/945 + phone sheet; qa_auto PASS (206 frames, no frozen/black/magenta, magenta 0.0 %). qa_auto lists the planned cut 945 as "no visible change": false flag, the frame diff 944->945 is 56 levels (a real cut).
-- Heads: shot 13 Hanway head y 820-836 (< 880), crowd cards smaller; shot 14 coachman head y 538-563. No head crosses 880.
-- Shot 13: street_high crane (u 0.35 -> 1), Hanway with his black umbrella among bare-headed crowd cards (their umbrellas removed) and the set's blocky placeholder crowd far back; the umbrella is small and low-contrast at phone size (non-blocking note). DUSK tint on all cards.
-- Shot 14: box_seat push-in (u 0.3 -> 1); head coachman stands on the plank (no coach_box), mirrored toward the road. Mouth: still (gloat) 945-992; moves ONLY 993-1052 (quote 33.00-34.95 s, talk_mouth lip-sync, poses shout / point_mock / boast, whip waving); frames >= 1053 flat.
-- Not done: the other coachmen nodding in shot 14 (not in frame of box_seat; plan says "others nod").
-- Director note (mud/coach): not applicable to s13.
-- Continuity: Hanway coat/umbrella as s10; light DUSK_RAIN as planned. Frames 850-857 are the dissolve handle (picture already shot 13).
+# s13 QA, round 2 (shots 13-14, DUSK_RAIN), g 850-1055 (858-1049 + 8 dissolve-in handle + 6 after)
+qa_auto PASS (206 frames, magenta 0.0 %, no frozen/black frames). It lists the planned cut 945 as "no visible change": false flag (frame diff 944->945 is large; seen on the contact sheet).
+Fixes after the director's TAKE gate r1:
+- Shot 13 (g850-944): Hanway is solved per frame (bisection) so his head sits at y 790 and he is much bigger than before (warm amber rim, black umbrella). 13 bare-headed crowd cards (hunched / hat walkers, women without umbrellas) around and behind him; every card is dropped if its head projects below y 850 or its feet below the frame bottom, so there are no foreground heads below y 880 and nothing is cut by the bottom edge. Crowd cards 14 per frame (checked in the frame json).
+- Shot 14 (g945-1055): mouth FIXED closed grin until g993 (neutral eyes, no blink, no wink), eyes open and gaze down at the street; arms ease into the shout pose over g985-993 (no arm pop at the first word); during the quote the SAME shout pose (whip raised, waving whip_t) with angry expression and talk_mouth lip-sync g993-1052 only, closed grin again afterwards; a soft contact shadow decal sits on the plank. Head y 535-563.
+- Not done: the other coachmen nodding beside him (not in the box_seat frame).
+- Colour: shade blue-violet, magenta 0.0 %. Light DUSK_RAIN as planned; Hanway coat / umbrella consistent with s10.

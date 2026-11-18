@@ -67,3 +67,36 @@ def render_range(build, frames, outdir, tag):
         w, c = S.render(out + '.tmp.png'); os.replace(out + '.tmp.png', out)
         json.dump(dict(g=g, wall=round(w, 1), cpu=round(c, 1), **info), open(out[:-4] + '.json', 'w'))
         print('%s g %d  %.1f s wall  %.1f s cpu  %s' % (tag, g, w, c, info), flush=True)
+
+def png_card(name, png, mark, w_u, h_u):
+    """an upright transparent PNG card (origin = bottom centre at `mark`, w_u x h_u units) facing the camera; removed by clear_cards()."""
+    import math
+    me = bpy.data.meshes.new(name); me.from_pydata([(-w_u / 2, 0, 0), (w_u / 2, 0, 0), (w_u / 2, 0, h_u), (-w_u / 2, 0, h_u)], [], [(0, 1, 2, 3)]); me.update()
+    uvl = me.uv_layers.new(name='UVMap')
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
+    me.materials.append(S.T.mat_card(name + '_mat', png)); ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob)
+    ob.location = mark; S.no_bounce(ob); ob.visible_glossy = False
+    d = bpy.context.scene.camera.matrix_world.translation - Vector(mark); ob.rotation_euler = (0, 0, math.atan2(d.x, -d.y)); ob['card'] = name
+    return ob
+
+def png_card_flat(name, png, mark, w_u, z=0.04):
+    """a transparent PNG lying flat on the ground (w_u x w_u units, centred on mark); removed by clear_cards()."""
+    h = w_u / 2.0
+    me = bpy.data.meshes.new(name); me.from_pydata([(-h, -h, 0), (h, -h, 0), (h, h, 0), (-h, h, 0)], [], [(0, 1, 2, 3)]); me.update()
+    uvl = me.uv_layers.new(name='UVMap')
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
+    me.materials.append(S.T.mat_card(name + '_mat', png)); ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob)
+    ob.location = (mark[0], mark[1], mark[2] + z); S.no_bounce(ob); ob.visible_glossy = False; ob['card'] = name
+    return ob
+
+def png_card_roll(name, png, mark, w_u, h_u, roll=0.0, yoff=0.0):
+    """billboard PNG centred on mark (not bottom-centred) with a roll about the view axis."""
+    ob = png_card(name, png, (mark[0], mark[1], mark[2] - h_u / 2.0), w_u, h_u)
+    ob.rotation_euler = (0, roll, ob.rotation_euler[2]); ob.location = Vector(ob.location) + Vector((0, 0, h_u / 2.0)) - Vector((0, 0, 0))
+    return ob
+
+def hand_world(ob, key='hand_r'):
+    bpy.context.view_layer.update(); hx, hz = ob[key]; return tuple(ob.matrix_world @ Vector((hx, 0.0, hz)))
+
+def parabola(p0, p1, u, arc):
+    return (p0[0] + (p1[0] - p0[0]) * u, p0[1] + (p1[1] - p0[1]) * u, p0[2] + (p1[2] - p0[2]) * u + arc * 4 * u * (1 - u))
