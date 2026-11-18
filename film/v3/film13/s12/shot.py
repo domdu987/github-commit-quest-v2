@@ -26,13 +26,16 @@ G_NICK = C.g_of(29.73)            # 895: the nickname lands
 RANGES = {12: (G_A - 6, G_CUT - 1), 13: (G_CUT, C.g_bound(30.41) + 5)}
 LENS = {12: 22.0, 13: 24.0}
 
+
+def lens12(g):
+    return 28.0 if g < G_B else 22.0
+
 # ----------------------------------------------------------------------------- cameras
 # A: in the air in front of the top-floor window; B1: push in; B2: crane down the facade to the street; C13: crowd_street preset + a slow drift
-CAM_A = [((5.5, -9.5, 32.2), (0.2, -0.5, 31.3)), ((3.5, -7.4, 32.3), (0.1, -0.5, 31.4))]
-CAM_B1 = ((-7.0, -6.6, 29.6), (0.4, -0.5, 31.3))
-CAM_B2 = ((-1.0, -9.0, 31.0), (0.0, -0.5, 31.0))
-CAM_B3 = ((-3.5, -25.0, 2.3), (-1.3, -13.0, 4.8))
-CAM_C = [((-6.0, -34.0, 2.6), (0.0, -8.0, 7.5)), ((-3.2, -33.0, 2.6), (-2.0, -8.0, 7.3))]
+CAM_A = [((-4.4, -31.5, 1.0), (0.3, -0.5, 11.9)), ((-1.0, -31.5, 1.3), (0.0, -0.5, 12.0))]     # street two-shot, 28 mm
+CAM_B1 = ((-10.5, -15.0, 29.4), (0.0, -0.5, 27.6))                                           # framing B: from the left, in the air, wider, the street below
+CAM_B2 = ((-4.6, -7.4, 30.7), (0.2, -0.5, 30.4))                                           # ... pushing in on him
+CAM_C = [((-6.0, -34.0, 3.4), (0.0, -8.0, 5.8)), ((-3.2, -33.0, 3.4), (-2.0, -8.0, 5.7))]
 
 
 def _mix(c0, c1, u):
@@ -44,15 +47,10 @@ def cam_of(shot, g):
         a, b = RANGES[13]; x = (g - a) / float(b - a); u = 0.35 * ez(x, "sine") + 0.65 * x
         return _mix(CAM_C[0], CAM_C[1], u)
     if g < G_B:
-        x = (g - RANGES[12][0]) / float(G_B - RANGES[12][0]); u = 0.35 * ez(x, "sine") + 0.65 * x
+        x = (g - RANGES[12][0]) / float(G_B - 1 - RANGES[12][0]); u = 0.35 * ez(x, "sine") + 0.65 * x
         return _mix(CAM_A[0], CAM_A[1], u)
-    g1 = G_B + 20                                          # B1: a short push in on him, then the crane down
-    if g < g1:
-        x = (g - G_B) / 20.0
-        return _mix(CAM_B1, CAM_B2, 0.4 * x + 0.6 * ez(x, "sine"))
-    x = (g - g1) / float(G_CUT - 1 - g1)
-    u = 0.55 * x + 0.45 * ez(x, "sine")
-    return _mix(CAM_B2, CAM_B3, u)
+    x = (g - G_B) / float(G_CUT - 1 - G_B)
+    return _mix(CAM_B1, CAM_B2, 0.4 * x + 0.6 * ez(x, "sine"))
 
 
 # ----------------------------------------------------------------------------- cast
@@ -73,15 +71,18 @@ def rich_pose(g):
 
 
 def pullman_pose12(g):
-    p = dict(cast13.STORY13["pullman_look_up_confident"][1])
+    p = dict(cast13.STORY13["pullman_point_plan"][1])
     p["head_roll"] = p.get("head_roll", 0) + 1.5 * math.sin(g * 0.09)
     p["lean"] = p.get("lean", 0) + 1.0 * math.sin(g * 0.07)
+    p["arm_r"] = dict(hand=(0.7, -0.45), bend=-0.5, stretch=1.25, layer="front")      # the rolled plans held up toward the window
+    p["prop_r"] = {"type": "plans", "angle": -50}
+    p["gaze"] = (0.5, -0.8)
     p["blink"] = blink(g, [748, 800])
     p["t"] = g / 30.0
     return p
 
 
-PULL12 = (-1.5, -17.0)
+PULL12 = (-1.8, -24.2)
 PULL13 = ((9.0, -27.5), (-8.0, -27.5))
 
 
@@ -100,7 +101,7 @@ def pull13_xy(g):
     loc, look = cam_of(13, g)
     F = Vector((look.x - loc.x, look.y - loc.y, 0.0)).normalized(); R = Vector((F.y, -F.x, 0.0))
     s = lerp(2.0, -2.0, x)
-    p = loc + F * 6.8 + R * s
+    p = loc + F * 8.8 + R * s
     return p.x, p.y
 
 
@@ -134,18 +135,18 @@ def make_crowd(cam, n=34, seed=11):
         if (x - 0) ** 2 * 0 + abs(y + 27.5) < 2.4 and abs(x) < 12:           # keep Pullman's lane clear
             continue
         z = gnd(x, y)
-        if all((x - a) ** 2 + (y - b) ** 2 >= 2.0 ** 2 for a, b in pts) and D._visible(cam, x, y, z, 3.4, chin_max=868):
+        if all((x - a) ** 2 + (y - b) ** 2 >= 2.0 ** 2 for a, b in pts) and D._visible(cam, x, y, z, 3.4, chin_max=800):
             pts.append((x, y))
     out = []
     for i, (x, y) in enumerate(pts):
         sx = (x - (-1.0))
         side = "r" if sx < 0 else "l"                     # point toward the middle of the street, where Pullman walks
         roll = r.random()
-        if roll < 0.62:
+        if roll < 0.80:
             role = "tl_%s_%s" % (r.choice("abc"), side)
-        elif roll < 0.75:
-            role = r.choice(["wc_a", "ts_a", "ts_b"])
         elif roll < 0.88:
+            role = r.choice(["wc_a", "ts_a", "ts_b"])
+        elif roll < 0.95:
             role = r.choice(["gs", "ld", "ts_c"])
         else:
             role = "tl_c_%s" % side
@@ -203,7 +204,9 @@ class Take(C.Take):
             self.rich = self.actors["rich"] = C.make_actor("rich", "rich", S)
             self.pul = self.actors["pul"] = C.make_actor("pul", "pullman", S)
             self.rich_xyz = tuple(D.STATE["marks"]["top_window"][:3])
-        else:
+        if shot == 12:
+            remove_near([(-3.0, -26.0), (-1.8, -26.6)], 1.3, 3.0)
+        if shot == 13:
             self.pul = self.actors["pul"] = C.make_actor("pul", "pullman", S)
             remove_near([(-3.0, -26.0), (-1.8, -26.6)], 1.3, 3.0)
             c0, l0 = _mix(CAM_C[0], CAM_C[1], 0.5)
@@ -219,7 +222,7 @@ class Take(C.Take):
         for g in gs:
             f = bf(shot, g)
             loc, look = cam_of(shot, g)
-            self.key_cam(f, loc, look, lens=LENS[shot])
+            self.key_cam(f, loc, look, lens=(lens12(g) if shot == 12 else LENS[shot]))
             D.set_flames(1.0, frame=f)
             if shot == 12:
                 C.place(self.rich, f, self.rich_xyz)
