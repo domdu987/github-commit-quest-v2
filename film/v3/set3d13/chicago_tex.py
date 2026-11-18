@@ -15,7 +15,7 @@ from wall_tex import hexf, hex8, pnoise, pfbm, save              # noqa: E402
 
 TEX = os.path.join(HERE, 'tex_chicago')
 DESERT_TEX = os.path.join(PROJ, 'v3', 'set3d8', 'tex_desert')
-TEX_V = 'c13.8'
+TEX_V = 'c13.9'
 PANO_R = 420.0; PANO_Z0, PANO_Z1 = -4.0, 90.0
 SUN_DAY = (325.0, 33.0)          # sky-texture azimuth (from +x CCW) / elevation of the key sun (street: sun at +x, -y side)
 JOBS = {}
@@ -293,8 +293,8 @@ def lace(p, out):
 def thread_tex(p, out):
     """screw thread: horizontal dark grooves on mid-grey iron (v along the screw); tile 1 x 1 (u around, v repeats via uv_wrap)."""
     S = 128; rs = _rs(p); yy = np.linspace(0, 1, S, dtype='float32')[:, None]; xx = np.linspace(0, 1, S, dtype='float32')[None, :]
-    g = np.sin((yy * 8 + xx * 0.9) * 2 * math.pi) * 0.5 + 0.5; base = hexf('#5c606c')
-    col = base[None, None] * (0.55 + 0.7 * g[..., None]) * (0.9 + 0.2 * pfbm(rs, S, S, 4, 4, 3)[..., None]); save(np.clip(col, 0, 1), out)
+    g = np.sin((yy * 8 + xx * 0.9) * 2 * math.pi) * 0.5 + 0.5; base = hexf('#3c3f4a')
+    col = base[None, None] * (0.5 + 0.8 * g[..., None]) * (0.9 + 0.2 * pfbm(rs, S, S, 4, 4, 3)[..., None]); save(np.clip(col, 0, 1), out)
 
 def scum(p, out):
     """floating scum / soft foam on puddles: alpha blotches of pale tan-grey, tileable 12 x 12 D."""

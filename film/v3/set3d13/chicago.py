@@ -75,22 +75,24 @@ PRESETS = dict(
     under_rows=dict(loc='under', light='CELLAR', cam='under_rows', state='lift0.2,cut1'),
     jack_close=dict(loc='under', light='CELLAR', cam='jack_close', state='lift0.2,jack30'),
     suite_window=dict(loc='suite', light='SUITE', cam='suite_window', state=''),
+    suite_room=dict(loc='suite', light='SUITE', cam='suite_room', state=''),
     tea_close=dict(loc='suite', light='SUITE', cam='tea_close', state='tea0'),
     suite_two=dict(loc='suite', light='SUITE', cam='suite_two', state=''),
 )
 CAMS = dict(
     street_wide=dict(loc=(-30.0, -58.0, 2.8), look_at=(-4.0, 0.0, 15.5), lens=22),
-    hotel_front=dict(loc=(-6.0, -26.0, 1.3), look_at=(0.0, 0.0, 17.0), lens=20),
-    front_stair=dict(loc=(5.0, -15.0, 2.8), look_at=(0.0, -2.0, 6.8), lens=24),
+    hotel_front=dict(loc=(-7.0, -38.0, 1.6), look_at=(0.0, 0.0, 13.0), lens=18),
+    front_stair=dict(loc=(7.0, -25.0, 3.4), look_at=(0.0, -3.0, 6.2), lens=24),
     mud_low=dict(loc=(-14.0, -38.0, 0.9), look_at=(0.0, -12.0, 3.2), lens=20),
     rain_street=dict(loc=(-22.0, -52.0, 3.4), look_at=(0.0, 0.0, 13.0), lens=22),
     crowd_street=dict(loc=(-6.0, -34.0, 2.6), look_at=(0.0, -8.0, 7.5), lens=24),
     under_wide=dict(loc=(3.0, -3.0, 2.3), look_at=(8.0, 30.0, 2.3), lens=22),
     under_rows=dict(loc=(4.0, -6.0, 17.0), look_at=(5.0, 30.0, 1.5), lens=24),
     jack_close=dict(loc=(2.0, 5.0, 2.0), look_at=(7.0, 14.0, 2.2), lens=26),
-    suite_window=dict(loc=(-2.6, 2.2, 32.5), look_at=(2.0, -12.0, 22.0), lens=22),
-    tea_close=dict(loc=(0.4, 4.6, 33.2), look_at=(-1.6, 2.0, 31.6), lens=32),
-    suite_two=dict(loc=(-3.4, 2.8, 32.6), look_at=(0.8, -8.0, 27.4), lens=22),
+    suite_window=dict(loc=(-2.0, 1.6, 32.6), look_at=(2.2, -14.0, 18.5), lens=20),
+    suite_room=dict(loc=(5.2, 13.0, 32.4), look_at=(-1.0, 0.0, 31.2), lens=22),
+    tea_close=dict(loc=(3.6, 9.6, 33.7), look_at=(0.4, 4.9, 31.8), lens=30),
+    suite_two=dict(loc=(-5.0, 4.2, 32.6), look_at=(0.0, -8.0, 28.4), lens=22),
 )
 CAM_NOTES = {}
 
@@ -213,9 +215,9 @@ def _materials(P, C, TX, tx, pre):
              wallpaper=TX('wallpaper'), parquet=TX('parquet', form=False), rug=TX('rug', form=False), velvet_red=TX('velvet_red', smix=0.25), velvet_teal=TX('velvet_teal', smix=0.25),
              p_lake=TX('paint_lake'), p_land=TX('paint_land'), p_still=TX('paint_still'), p_portrait=TX('paint_portrait'), frame=_glossy(TX('frame_gold', sm=(2.0, 1.4, 0.6), smix=0.15), (1.0, 0.8, 0.5), 0.5, 0.25),
              iron=_glossy(C('#5a5e6c', 1.0, 1.6), (1.0, 0.85, 0.7), 0.35, 0.3), iron_d=C('#34363f', 1.0, 1.8),
-             iron_k=_glossy(C('#2c2e38', 1.0, 1.9), (1.0, 0.85, 0.7), 0.45, 0.28), iron_bar=_glossy(C('#4c505e', 1.0, 1.7), (1.0, 0.85, 0.7), 0.5, 0.25), thread=TX('thread', gain=0.75, sm=1.5),
+             iron_k=_glossy(C('#202229', 1.0, 1.9), (1.0, 0.85, 0.7), 0.16, 0.42), iron_bar=_glossy(C('#4c505e', 1.0, 1.7), (1.0, 0.85, 0.7), 0.5, 0.25), thread=TX('thread', gain=0.55, sm=1.5),
              jack_red=_glossy(C('#c04a2c', 1.0, (1.5, 0.9, 0.8), smix=0.25), (1.0, 0.8, 0.6), 0.4, 0.3), brass=_glossy(C('#b8923e', 1.0, (2.0, 1.5, 0.6), smix=0.2), (1.0, 0.8, 0.5), 0.5, 0.22),
-             dirt=TX('mud_wet', form=False), stair_stone=TX('ash'), wood=C('#8a5e36'), wood_d=C('#5a3a22'), wood_l=C('#b8925e'), rope=C('#c8a868'), cream=C('#ecdcb6'), white=C('#efe8d8'),
+             dirt=TX('mud_wet', form=False), dirt2=TX('mud', form=False, gain=1.3), stair_stone=TX('ash'), wood=C('#8a5e36'), wood_d=C('#5a3a22'), wood_l=C('#b8925e'), rope=C('#c8a868'), cream=C('#ecdcb6'), white=C('#efe8d8'),
              dark=C('#2a2a32', 1.0, 1.6, form=False), red=C('#b02a22', 1.0, (1.4, 0.8, 0.7), smix=0.25), teal=C('#2f8a82', 1.0, 1.0, smix=0.3), green=C('#3e6a46'), slate=C('#59607a'), stone=C('#b0a898'),
              canvas=C('#d8c89a'), sack=C('#c9b78c'), hay=C('#d4b45c'), door=C('#2e5a4c'), door_r=C('#7a2a24', 1.0, (1.4, 0.8, 0.7), smix=0.25), horse=C('#8a5230'), horse_d=C('#4a2c1a'), horse_g=C('#8a8680'),
              horse_w=C('#dcd2bc'), skin=C('#d8a880'), coal=C('#26262a', 1.0, 0.9),
@@ -553,8 +555,8 @@ def _street(SET, P, M, hotel=True, opp=False):
             c = Vector((xl, yl, 0.0)); rod(fl, c + Vector((0, 0, -0.9)), c + Vector((0, 0, -0.55)), 0.03, M['iron_d'], seg=4)
             fl.frustum(c + Vector((0, 0, -1.2)), c + Vector((0, 0, -0.62)), 0.2, 0.26, M['lamp_glass'], seg=7); _halo(fl, c + Vector((0, 0, -0.95)), 2.2, M)
         lo = _obj(fl, 'under_lamps', SET, shadow=False); STATE['movers'].append((lo, 0.0))
-        for k, xl in enumerate((-12.0, 3.0, 12.0)): D._flame_light('gap_%d' % k, (xl, 3.0, 1.4), LAMP, 700, radius=0.3, shadow=False)
-        gb = MB(); gb.face([Vector((HX0, 0.8, 0.02)), Vector((HX1, 0.8, 0.02)), Vector((HX1, HY1, 0.02)), Vector((HX0, HY1, 0.02))], M['dirt'], [(0, 0), (4, 0), (4, 3), (0, 3)]); _obj(gb, 'under_floor', SET)
+        for k, xl in enumerate((-16.0, -9.0, -3.0, 3.0, 9.0, 16.0)): D._flame_light('gap_%d' % k, (xl, 2.6, 1.3), LAMP, 1500, radius=0.3, shadow=False)
+        gb = MB(); gb.face([Vector((HX0, 0.8, 0.02)), Vector((HX1, 0.8, 0.02)), Vector((HX1, HY1, 0.02)), Vector((HX0, HY1, 0.02))], M['dirt2'], [(0, 0), (4, 0), (4, 3), (0, 3)]); _obj(gb, 'under_floor', SET)
     _neighbours(SET, M, hotel=hotel)
     if opp: _opposite(SET, M)
     _street_dress(SET, M, mud_z, hotel=hotel); _church(SET, M)
@@ -726,7 +728,7 @@ def _street_dress(SET, M, mud_z, hotel=True):
     STATE['marks'].update(
         door=(0.0, -0.9, GF, 1), stair_top=(0.0, -3.0, GF - 0.1, 0), stair_mid=(0.0, -6.5, GF * 0.5, 0), stair_foot=(0.0, -9.6, 0.0, 0), mud_fall=(2.0, -6.4, 0.0, 0), door_b=(-3.5, -0.9, GF, 1),
         walk_a=(-14.0, -41.0, 0.0, 0), walk_b=(-8.0, -35.0, 0.0, 0), walk_c=(8.0, -20.0, 0.0, 0), cart_a=(-21.0, -29.5, 0.0, 0), cart_b=(-27.5, -31.5, 0.0, 0), cart_c=(-14.5, -31.0, 0.0, 0),
-        front_a=(-9.0, -13.0, 0.0, 0), front_b=(9.0, -13.5, 0.0, 0), front_c=(-1.5, -17.0, 0.0, 0), pile_a=(-30.0, -20.5, 0.0, 0), pile_b=(5.0, -40.0, 0.0, 0), sidewalk_r=(24.0, -5.6, 0.5, 0), sidewalk_l=(-36.0, -5.6, 1.3, 0))
+        hf_a=(-9.0, -10.0, 0.0, 0), hf_b=(9.0, -10.0, 0.0, 0), hf_c=(-3.8, -11.5, 0.0, 0), front_a=(-9.0, -13.0, 0.0, 0), front_b=(9.0, -13.5, 0.0, 0), front_c=(-1.5, -17.0, 0.0, 0), pile_a=(-30.0, -20.5, 0.0, 0), pile_b=(5.0, -40.0, 0.0, 0), sidewalk_r=(24.0, -5.6, 0.5, 0), sidewalk_l=(-36.0, -5.6, 1.3, 0))
 
 def _church(SET, M):
     mb = MB(); x, y = 105.0, 210.0
@@ -742,9 +744,9 @@ def _opposite(SET, M):
     mb = MB()
     spec = [(-70, -46, 24.0, 'fac_a'), (-46, -26, 20.0, 'fac_b'), (-26, -2, 28.0, 'fac_c'), (-2, 18, 22.0, 'fac_d'), (18, 44, 25.0, 'fac_e'), (44, 66, 19.0, 'fac_f'), (66, 90, 26.0, 'fac_a')]
     for (x0, x1, h, fac) in spec:
-        mb.box((x0, -68.0, -1.0), (x1, -52.0, h), M['brick_b'], mats=dict(back=M[fac]), tile=(6, 6))
-        sbox(mb, (x0 - 0.3, -52.3, h - 0.9), (x1 + 0.3, -50.9, h), M['cream'], 0.3); sbox(mb, (x0, -68.0, h), (x1, -51.8, h + 0.5), M['cream'], 0.3); sbox(mb, (x0 + 3.0, -64.0, h + 0.5), (x0 + 4.6, -62.4, h + 4.0), M['brick_d'], 1 / 6)
-    sb = MB(); sbox(sb, (-110, -52.0, 0.0), (110, -47.0, 0.45), M['walk'], 0.2); _obj(sb, 'opp_walk', SET); _obj(mb, 'opp_shops', SET)
+        mb.box((x0, -84.0, -1.0), (x1, -66.0, h), M['brick_b'], mats=dict(back=M[fac]), tile=(6, 6))
+        sbox(mb, (x0 - 0.3, -66.3, h - 0.9), (x1 + 0.3, -64.9, h), M['cream'], 0.3); sbox(mb, (x0, -84.0, h), (x1, -65.8, h + 0.5), M['cream'], 0.3); sbox(mb, (x0 + 3.0, -80.0, h + 0.5), (x0 + 4.6, -78.4, h + 4.0), M['brick_d'], 1 / 6)
+    sb = MB(); sbox(sb, (-110, -71.0, 0.0), (110, -66.0, 0.45), M['walk'], 0.2); _obj(sb, 'opp_walk', SET); _obj(mb, 'opp_shops', SET)
 
 # ============================================================================= cellar (crawlspace under the hotel)
 CX0, CX1, CY0, CY1 = -9.0, 19.0, -4.0, 68.0
@@ -783,11 +785,11 @@ def _under(SET, P, M):
     so, mo, nj = _jackfield(SET, M, UX, UY, 'jf', 0.0, 1, 3.3, CZ_B, hd=1.0); STATE['njacks'] = nj
     pr = MB()
     for (xx, yy) in ((-7.0, 3.0), (-7.5, 20.0), (17.0, 14.0), (16.0, 36.0), (-7.0, 52.0), (16.5, 62.0)): _crate_stack(pr, (xx, yy, 0.0), M, int(yy), 4)
-    for (xx, yy) in ((-7.0, 8.0), (3.0, 4.5), (15.5, 25.0), (-7.2, 33.0), (17.0, 46.0), (-7.0, 60.0)): _barrel(pr, (xx, yy, 0.0), M, 'wood')
-    for (xx, yy) in ((-7.4, 14.0), (17.5, 30.0), (3.0, 3.0)): rod(pr, (xx, yy, 0.0), (xx, yy, 0.8), 0.4, M['iron'], seg=8, r1=0.5)
+    for (xx, yy) in ((-7.0, 8.0), (15.5, 25.0), (-7.2, 33.0), (17.0, 46.0), (-7.0, 60.0)): _barrel(pr, (xx, yy, 0.0), M, 'wood')
+    for (xx, yy) in ((-7.4, 14.0), (17.5, 30.0)): rod(pr, (xx, yy, 0.0), (xx, yy, 0.8), 0.4, M['iron'], seg=8, r1=0.5)
     for yy in (9.4, 20.2, 31.0, 42.0):                                                                 # long turning bars leaning on the beams
         rod(pr, (3.2, yy, 0.0), (4.0, yy + 0.3, 3.3), 0.08, M['iron_bar'], seg=4)
-    for k, (xx, yy) in enumerate(((2.2, 6.0), (3.0, 16.0), (4.5, 27.0), (2.6, 38.0))): _sack(pr, (xx, yy, 0.0), M, k, 1.0)
+    for k, (xx, yy) in enumerate(((2.2, 12.0), (3.0, 22.0), (4.5, 32.0), (2.6, 42.0))): _sack(pr, (xx, yy, 0.0), M, k, 1.0)
     _obj(pr, 'cellar_props', SET)
     lamps = [(1.5, 9.0, 2.6), (9.0, 17.0, 2.6), (3.0, 26.0, 2.6), (10.0, 34.0, 2.6), (2.0, 44.0, 2.6), (9.0, 54.0, 2.6), (4.0, 63.0, 2.6)]
     fl = MB()
@@ -807,12 +809,12 @@ def _under(SET, P, M):
     # stand points: aisles between the jack columns (x = column + 1.3), between beam rows
     for k in range(4):
         for j, yy in enumerate((9.35, 17.45, 28.25, 41.75)): STATE['marks']['aisle_%d_%d' % (k, j)] = (UX[2 * k + 1] + 1.3 if 2 * k + 1 < len(UX) else UX[-1] + 1.3, yy, 0.0, 0)
-    STATE['marks'].update(foreman=(0.0, 7.4, 0.0, 0), worker_a=(3.6, 12.0, 0.0, 0), worker_b=(9.4, 19.0, 0.0, 0), worker_c=(1.0, 24.4, 0.0, 0), worker_d=(6.2, 30.0, 0.0, 0), jack_hands=(8.6, 12.4, 0.0, 0))
+    STATE['marks'].update(foreman=(0.0, 7.4, 0.0, 0), foreman_far=(1.0, 27.0, 0.0, 0), worker_a=(3.6, 12.0, 0.0, 0), worker_b=(9.4, 19.0, 0.0, 0), worker_c=(1.0, 24.4, 0.0, 0), worker_d=(6.2, 30.0, 0.0, 0), jack_hands=(8.6, 12.4, 0.0, 0))
 
 # ============================================================================= suite (rich guest's top-floor room, window looks down on the muddy street)
 RX0, RX1, RY1 = -11.0, 11.0, 18.0
 ZF = 30.0; RH = 6.2
-TEA = dict(x=-1.4, y=2.5, top=ZF + 1.5)
+TEA = dict(x=0.6, y=5.4, top=ZF + 1.5)
 def _cup(mb, tea_mb, cx, cy, z0, s):
     """a proper teacup on a saucer (lathe profiles, 20 segments): saucer dish, foot, bowl with an inner wall, rim, a looped handle; the tea disc is a separate flat mesh just under the rim."""
     seg = 20
@@ -850,10 +852,9 @@ def _suite(SET, P, M):
     for xx in (WX0, WX1): sbox(mb, (xx - 0.18, -0.1, WZ0), (xx + 0.18, 0.5, WZ1), M['white'], 0.3)
     for xx in (-2.5, 0.0, 2.5): sbox(mb, (xx - 0.07, 0.1, WZ0), (xx + 0.07, 0.25, WZ1), M['white'], 0.3)
     for zz in (ZF + 4.1, WZ1 - 0.1): sbox(mb, (WX0, 0.1, zz - 0.08), (WX1, 0.25, zz + 0.08), M['white'], 0.3)
-    sbox(mb, (WX0 - 0.6, -1.0, ZF - 0.4), (WX1 + 0.6, 0.0, ZF + 0.05), M['ash'], 0.3)                                              # Juliet balcony ledge + see-through iron rail
-    for k in range(int((WX1 - WX0 + 1.2) / 0.55) + 1):
-        xx = WX0 - 0.6 + k * 0.55; rod(mb, (xx, -0.9, ZF + 0.05), (xx, -0.9, ZF + 2.3), 0.05, M['iron_d'], seg=4)
-    beam(mb, (WX0 - 0.6, -0.9, ZF + 2.3), (WX1 + 0.6, -0.9, ZF + 2.3), 0.12, 0.12, M['iron_d']); beam(mb, (WX0 - 0.6, -0.9, ZF + 0.3), (WX1 + 0.6, -0.9, ZF + 0.3), 0.08, 0.08, M['iron_d'])
+    for k in range(int((WX1 - WX0) / 0.6) + 1):                                                                     # low see-through iron rail in the window plane (no balcony ledge: the street stays visible)
+        xx = WX0 + k * 0.6; rod(mb, (xx, -0.15, ZF + 0.05), (xx, -0.15, ZF + 1.6), 0.04, M['iron_d'], seg=4)
+    beam(mb, (WX0, -0.15, ZF + 1.6), (WX1, -0.15, ZF + 1.6), 0.1, 0.1, M['iron_d'])
     for (x0, x1, y0, y1) in ((RX0, RX0 + 0.35, 0.5, RY1), (RX1 - 0.35, RX1, 0.5, RY1)): sbox(mb, (x0, y0, ZF), (x1, y1, ZF + 2.0), M['plank_f'], 0.2); sbox(mb, (x0 - 0.1, y0, ZF + 2.0), (x1 + 0.1, y1, ZF + 2.2), M['cream'], 0.3)
     sbox(mb, (RX0, RY1 - 0.35, ZF), (RX1, RY1, ZF + 2.0), M['plank_f'], 0.2); sbox(mb, (RX0, RY1 - 0.5, ZF + 2.0), (RX1, RY1, ZF + 2.2), M['cream'], 0.3)
     sbox(mb, (RX0, 0, ZF + RH - 0.9), (RX1, 0.5, ZF + RH), M['cream'], 0.3); sbox(mb, (RX0, 0, ZF + RH - 0.6), (RX0 + 0.6, RY1, ZF + RH), M['cream'], 0.3)
@@ -881,7 +882,7 @@ def _suite(SET, P, M):
     picture(M['p_portrait'], 8.0, 0.5, ZF + 3.6, 1.8, 2.4, 'y+'); picture(M['p_lake'], -8.2, 0.5, ZF + 3.6, 3.0, 2.2, 'y+')
     _obj(pf, 'paintings', SET)
     fb = MB(); tmb = MB(); _furniture(fb, tmb, M); _obj(fb, 'furniture', SET); to = _obj(tmb, 'tea', SET, shadow=False); STATE['tea_obj'] = to
-    ch = MB(); fl = MB(); c = Vector((-1.2, 5.0, ZF + 4.4)); rod(ch, (c.x, c.y, ZF + RH), c + Vector((0, 0, 0.3)), 0.06, M['brass'], seg=6)
+    ch = MB(); fl = MB(); c = Vector((0.6, 5.6, ZF + 4.4)); rod(ch, (c.x, c.y, ZF + RH), c + Vector((0, 0, 0.3)), 0.06, M['brass'], seg=6)
     ell(ch, c, 0.5, 0.5, 0.5, M['brass'], seg=8, rings=5); rod(ch, c + Vector((0, 0, -0.5)), c + Vector((0, 0, -1.0)), 0.04, M['brass'], seg=5); ell(ch, c + Vector((0, 0, -1.05)), 0.2, 0.2, 0.2, M['brass'], seg=6, rings=4)
     for k in range(6):
         a = 2 * math.pi * k / 6; e = c + Vector((1.5 * math.cos(a), 1.5 * math.sin(a), -0.1))
@@ -890,11 +891,11 @@ def _suite(SET, P, M):
         for j in range(3): rod(ch, e + Vector((0.08 * j, 0, 0.0)), e + Vector((0.08 * j, 0, -0.55 - 0.1 * j)), 0.02, M['white'], seg=3)
     D._flame_light('chandelier', tuple(c + Vector((0, 0, 0.5))), LAMP, 700, radius=0.3, shadow=True)
     _obj(ch, 'chandelier', SET); _obj(fl, 'candles', SET, shadow=False)
-    STATE['marks'].update(window=(0.4, 1.4, ZF, 0), window_l=(-3.2, 1.6, ZF, 0), window_r=(3.4, 1.6, ZF, 0), tea_side=(-3.6, 3.8, ZF, 0), chair_side=(3.2, 5.8, ZF, 0), room_c=(-1.0, 8.0, ZF, 0))
+    STATE['marks'].update(window=(0.8, 1.0, ZF, 0), window_l=(-1.8, 0.9, ZF, 0), window_r=(3.4, 1.8, ZF, 0), tea_side=(-2.6, 5.6, ZF, 0), chair_side=(3.2, 6.8, ZF, 0), room_c=(-1.0, 9.0, ZF, 0))
     STATE['tea_xyz'] = (TEA['x'] - 0.2, TEA['y'] - 0.5, TEA['top'] + 0.03)
     # a busy street below: carts (street dress) + a crowd of workers and townsfolk standing in the mud and on the plank walks
-    crowd(30, [(-34, 34, -46, -20)], seed=21, ground=lambda x, y: float(mud_z(np.array([x]), np.array([y]))[0]))
-    crowd(8, [(-30, 30, -8.2, -3.5)], seed=33, ground=lambda x, y: 0.4)
+    crowd(46, [(-38, 38, -64, -27)], seed=21, ground=lambda x, y: float(mud_z(np.array([x]), np.array([y]))[0]), min_dist=2.2)
+    cm2 = MB(); wm2 = MB(); _cart(cm2, wm2, (-8.0, -42.0, 0.0), math.radians(170), M, sink=0.5, load='crates', seed=7); _cart(cm2, wm2, (24.0, -52.0, 0.0), math.radians(10), M, sink=0.5, load='barrels', seed=8, hmat='horse_g'); _obj(cm2, 'carts2', SET); _obj(wm2, 'cart_wheels2', SET)
 
 def _furniture(mb, tmb, M):
     """red velvet armchair (visible), teal armchair, round tea table with cup / saucer / pot / plate, side table with vase, sideboard."""
@@ -1052,17 +1053,18 @@ def crowd_aisles(n, seed=1, kinds=None, rows=None):
 # ----------------------------------------------------------------------------- staging
 STAGING = dict(
     street_wide=[('rich', 'front_a'), ('worker', 'front_b'), ('foreman', 'walk_a'), ('clerk', 'sidewalk_r')],
-    hotel_front=[('rich', 'front_c'), ('worker', 'front_b'), ('foreman', 'front_a')],
+    hotel_front=[('rich', 'hf_c'), ('worker', 'hf_b'), ('foreman', 'hf_a')],
     front_stair=[('rich', 'door'), ('clerk', 'stair_foot'), ('worker', 'mud_fall')],
     mud_low=[('worker', 'cart_c'), ('foreman', 'walk_b')],
     rain_street=[('worker', 'front_a'), ('clerk', 'sidewalk_r'), ('foreman', 'walk_a')],
     crowd_street=[('rich', 'front_c')],
     under_wide=[('worker', 'worker_a'), ('worker', 'worker_b'), ('foreman', 'foreman'), ('worker', 'worker_c'), ('worker', 'worker_d')],
-    under_rows=[('foreman', 'foreman')],
+    under_rows=[('foreman', 'foreman_far')],
     jack_close=[('worker', 'jack_hands')],
-    suite_window=[('rich', 'window_r')],
+    suite_window=[],
+    suite_room=[('rich', 'window_l')],
     tea_close=[],
-    suite_two=[('rich', 'window')])
+    suite_two=[('rich', 'window_l')])
 PRESET_CROWD = dict(
     crowd_street=lambda: crowd(24, [(-16, 16, -26, -14)], seed=5, ground=lambda x, y: float(STATE['mud_z'](np.array([x]), np.array([y]))[0]), min_dist=1.7) + crowd(8, [(-28, -10, -7.5, -4)], seed=8, ground=1.3, min_dist=1.7),
     street_wide=lambda: crowd(10, [(-30, 30, -30, -14)], seed=6, ground=lambda x, y: float(STATE['mud_z'](np.array([x]), np.array([y]))[0]), min_dist=3.0),
@@ -1084,7 +1086,7 @@ def stage_placeholders(A, name, cam_loc, with_crowd=True):
 def head_pixels(name):
     """[(role, mark, chin_y_px, feet_y_px)] at 720x1280 for the preset's staged actors (rule: chin y < 880)."""
     from bpy_extras.object_utils import world_to_camera_view
-    sc = bpy.context.scene; cam = sc.camera; out = []
+    sc = bpy.context.scene; cam = sc.camera; out = []; bpy.context.view_layer.update()
     for (role, mk) in STAGING.get(name, []):
         pos = Vector(stand(mk) if isinstance(mk, str) else mk); h = T.PH[role][2]
         b = world_to_camera_view(sc, cam, pos + Vector((0, 0, h - 1.0))); f = world_to_camera_view(sc, cam, pos)
