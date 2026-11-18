@@ -1,0 +1,29 @@
+final: shot 22, 89 to render, 0 done
+00:00.383  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built harbour harbour_wide in 1.4 s
+00:23.073  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22622.png'
+shot 22 g 1621  10.8 s wall  20.8 s cpu
+00:33.744  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22623.png'
+shot 22 g 1622  10.7 s wall  20.7 s cpu
+00:44.386  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22624.png'
+shot 22 g 1623  10.6 s wall  20.6 s cpu
+00:54.891  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22625.png'
+shot 22 g 1624  10.5 s wall  20.4 s cpu
+01:05.386  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22626.png'
+shot 22 g 1625  10.5 s wall  20.4 s cpu
+01:16.190  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22627.png'
+shot 22 g 1626  10.8 s wall  20.8 s cpu
+01:26.668  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22628.png'
+shot 22 g 1627  10.5 s wall  20.4 s cpu
+01:37.170  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22629.png'
+shot 22 g 1628  10.5 s wall  20.5 s cpu
+01:47.734  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22630.png'
+shot 22 g 1629  10.5 s wall  20.6 s cpu
+01:58.175  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22631.png'
+shot 22 g 1630  10.4 s wall  20.3 s cpu
+02:08.579  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22632.png'
+shot 22 g 1631  10.4 s wall  20.3 s cpu
+02:19.316  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22633.png'
+shot 22 g 1632  10.7 s wall  20.9 s cpu
+02:30.073  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film10/s22/raw/s22/f_22634.png'
+shot 22 g 1633  10.8 s wall  20.4 s cpu
