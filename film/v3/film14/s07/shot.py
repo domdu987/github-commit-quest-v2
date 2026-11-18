@@ -23,13 +23,14 @@ G_NOSE = C.g_of(21.04)                           # "ต่อยจมูกข�
 def blink(g, o, period=96): return cast14.blink_at(g, period, o)
 def sway(g, k=1.0): return math.sin(g * 0.21) * k
 
-U = (-1.2, 1.2, 0.0); FM = (-3.0, 1.2, 0.0)       # uncle / farmer marks of yard_two_shot
+U = (-1.4, 3.2, 0.0); FM = (-2.9, 3.4, 0.0)       # uncle / farmer: near the maize wall so the frame is filled by field and village, not sky
 
+CUT = [(-12, 6, -8, 5.6, 2.2)]                   # clear ALL yard clutter (tubs, pumpkins, fowl, sacks, stools) in front of the maize wall
 CAMS = {
- 7: (((-2.3, -2.7, 1.4), (-2.1, 1.5, 1.1), 22), ((-2.2, -2.2, 1.4), (-2.1, 1.5, 1.2), 22)),
- 8: (((-2.2, -2.2, 1.4), (-1.6, 1.5, 1.3), 22), ((-1.6, -0.6, 1.45), (-1.3, 1.5, 1.55), 22)),
- 9: (((-2.0, -0.3, 1.45), (-1.2, 1.5, 1.6), 24), ((-1.7, 0.0, 1.5), (-1.2, 1.5, 1.65), 24)),
- 10: (((-2.2, -4.4, 1.45), (-2.2, 2.0, 1.15), 22), ((-2.0, -3.4, 1.45), (-2.2, 2.0, 1.25), 22)),
+ 7: (((-2.3, -0.3, 1.3), (-2.1, 3.3, 1.05), 22), ((-2.2, 0.1, 1.3), (-2.1, 3.3, 1.1), 22)),
+ 8: (((-2.2, 0.1, 1.3), (-1.7, 3.3, 1.1), 22), ((-1.7, 1.2, 1.45), (-1.4, 3.3, 1.25), 22)),
+ 9: (((-1.9, 1.3, 1.5), (-1.4, 3.3, 1.35), 24), ((-1.6, 1.45, 1.5), (-1.4, 3.3, 1.4), 24)),
+ 10: (((-2.1, -1.9, 1.25), (-2.1, 3.2, 1.1), 22), ((-2.1, -1.3, 1.3), (-2.1, 3.2, 1.15), 22)),
 }
 def cam_of(shot, g):
     a, b = CAMS[shot]; g0, g1 = RANGES[shot]; x = (g - g0) / float(g1 - g0)
@@ -48,9 +49,15 @@ def laugh(name, g, ph, k=1.0):
     p['blink'] = blink(g, ph + 10, 70)
     return c, p
 
+def pointy(p, look=0.9):
+    p['arm_r'] = dict(hand=(0.9, 0.05), shape='point', bend=-0.5, stretch=1.3)
+    p['arm_l'] = dict(hand=(-0.25, 0.75), bend=0.9)
+    p['gaze'] = (look, 0.05); p['yaw'] = 0.5; p['mouth'] = 'talk_b'
+    return p
+
 def farmer_hold(g):
     c, p = story('farmer_hang_hive'); p['arm_r'] = dict(hand=(0.62, 0.7), bend=0.5, stretch=1.0, layer='front')
-    p['prop_r'] = dict(type='tophive', scale=0.85); p['expr'] = 'worried'; p['mouth'] = 'smile'; p['gaze'] = (0.8, 0.0)
+    p['prop_r'] = dict(type='tophive', scale=0.85); p['expr'] = 'worried'; p['mouth'] = 'smile'; p['gaze'] = (0.9, 0.0)
     p['lean'] = 2 + 0.8 * sway(g); p['t'] = g / 30.0; p['blink'] = blink(g, 30); p['yaw'] = -0.35
     return c, p
 
@@ -90,15 +97,17 @@ def frame(T, shot, g):
         c, p = uncle_pose(shot, g); rep['uncle'] = T.put('uncle', c, p, U, ppd=ppd, canvas=cast14.CANVAS14[c])
     else:
         F.set_crowd_props(0)
-        c, p = uncle_pose(10, g); rep['uncle'] = T.put('uncle', c, p, S['uncle_night'], ppd=ppd, canvas=cast14.CANVAS14[c])
-        def bang(name, g, ph, a, b):
-            c, p = story(name); p['t'] = (g + ph) / 30.0; k = math.sin((g + ph) * 0.9)
-            p['lean'] = p.get('lean', 0) + 2 * k; p['blink'] = blink(g, ph + 5, 70)
-            return c, p
-        for tag, nm, mk, ph in (('woman', 'villager_woman_laugh', S['crowd_a'], 0), ('old', 'villager_oldman_laugh', S['crowd_c'], 3), ('woman2', 'villager_woman_laugh', S['crowd_d'], 9), ('youth', 'villager_youth_point_laugh', S['crowd_e'], 11)):
-            c, p = laugh(nm, g, ph); rep[tag] = T.put(tag, c, p, mk, ppd=ppd, canvas=cast14.CANVAS14[c], mirror=(tag in ('woman2', 'youth')))
-        c, p = story('villager_kid_bang_pot'); p['t'] = g / 30.0 * 2; p['lean'] = 2 * math.sin(g * 0.9); p['blink'] = blink(g, 20, 70)
-        rep['kid'] = T.put('kid', c, p, S['crowd_b'], ppd=ppd, canvas=cast14.CANVAS14[c])
+        # a laughing crowd round the uncle, everyone looks / points toward the farmer (screen-left, mirrored cards)
+        c, p = uncle_pose(10, g); p = pointy(p); p['expr'] = 'laughing'
+        rep['uncle'] = T.put('uncle', c, p, (-1.6, 3.0, 0), ppd=ppd, canvas=cast14.CANVAS14[c], mirror=True)
+        for tag, nm, mk, ph, pt in (('old', 'villager_oldman_laugh', (-3.3, 3.5, 0), 3, False), ('woman', 'villager_woman_laugh', (-2.5, 2.4, 0), 0, True),
+                                    ('woman2', 'villager_woman_laugh', (-0.7, 3.6, 0), 9, True), ('youth', 'villager_youth_point_laugh', (-0.2, 2.5, 0), 11, True)):
+            c, p = laugh(nm, g, ph)
+            if pt: p = pointy(p)
+            p['gaze'] = (0.9, 0.05)
+            rep[tag] = T.put(tag, c, p, mk, ppd=ppd, canvas=cast14.CANVAS14[c], mirror=True)
+        c, p = story('villager_kid_bang_pot'); p['t'] = g / 30.0 * 2; p['lean'] = 2 * math.sin(g * 0.9); p['blink'] = blink(g, 20, 70); p['gaze'] = (0.9, 0.0)
+        rep['kid'] = T.put('kid', c, p, (-1.0, 2.2, 0), ppd=ppd, canvas=cast14.CANVAS14[c], mirror=True)
     F.set_wire_push(-1.0); bpy.context.view_layer.update(); F.set_bees(-1.0)
     return rep
 
@@ -110,7 +119,7 @@ if __name__ == '__main__':
     cmd = sys.argv[1]; shot = int(sys.argv[2]); a, b, *st = (sys.argv[3] + ':1').split(':'); out = sys.argv[4]
     os.makedirs(out, exist_ok=True); q = 'preview' if cmd == 'stills' else 'final'
     samples = int(sys.argv[5]) if len(sys.argv) > 5 else None
-    T = C.Take(os.path.join(HERE, 'work'), PRESET[shot], LIGHT[shot], quality=q, samples=samples)
+    T = C.Take(os.path.join(HERE, 'work'), PRESET[shot], LIGHT[shot], quality=q, samples=samples, dress=False, cut=CUT)
     for g in range(int(a), int(b) + 1, int(st[0]) if st else 1):
         png = os.path.join(out, 'g_%04d.png' % g)
         if cmd == 'final' and os.path.exists(png) and os.path.exists(png[:-4] + '.json'): continue

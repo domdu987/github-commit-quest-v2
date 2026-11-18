@@ -28,15 +28,26 @@ def story(name, **over):
     c, p = cast14.STORY14[name]; p = dict(p); p.update(over); return c, p
 
 class Take:
-    def __init__(self, work, preset, light=None, quality='preview', samples=None, threads=2):
+    def __init__(self, work, preset, light=None, quality='preview', samples=None, threads=2, dress=False, cut=None):
         self.work = work; self.spr = os.path.join(work, 'sprites'); os.makedirs(self.spr, exist_ok=True)
         self.q = quality; self.preset = preset
-        self.A = F.build(preset, light, dress=True)
+        self.A = F.build(preset, light, dress=dress)
+        if cut: self.cut_region(cut)
         self.sc = bpy.context.scene; F.setup_render(self.sc, quality)
         self.sc.render.threads = threads
         self.sc.cycles.samples = samples or (24 if quality == 'final' else 6)
         c = F.CAMS[preset]; self.cam = F.make_camera(c); self.cd = self.cam.data
         self.n = 0; self.heads = []
+
+    def cut_region(self, boxes):
+        """delete set-dressing vertices of the joined 'props' meshes inside (x0,x1,y0,y1,zmax) boxes: clears yard clutter (tubs, pumpkins, chickens, sacks) from the action."""
+        import bmesh
+        for ob in list(bpy.data.objects):
+            if ob.type != 'MESH' or not ob.name.startswith('props'): continue
+            bm = bmesh.new(); bm.from_mesh(ob.data); mw = ob.matrix_world
+            dl = [v for v in bm.verts if any(b[0] < (mw @ v.co).x < b[1] and b[2] < (mw @ v.co).y < b[3] and (mw @ v.co).z < b[4] for b in boxes)]
+            if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS'); bm.to_mesh(ob.data)
+            bm.free()
 
     # ---- camera
     def set_cam(self, loc, look, lens):
@@ -56,7 +67,7 @@ class Take:
             if i.users == 0 and i.name.startswith(('f14', 'contact_')): bpy.data.images.remove(i)
         for k in [k for k in G.MATS if k.startswith('f14_')]: G.MATS.pop(k)
 
-    def put(self, tag, cast, pose, mark, ppd=128, mirror=False, canvas=None, shadow=True, yaw_off=0.0, yaw_fixed=None, contact=(0.22, 0.12)):
+    def put(self, tag, cast, pose, mark, ppd=128, mirror=False, canvas=None, shadow=True, yaw_off=0.0, yaw_fixed=None, contact=(0.30, 0.16)):
         """real puppet sprite -> card standing at `mark` (feet), turned to the camera (yaw only). Returns anchors in world + screen."""
         pose = dict(pose); pose['mirror'] = bool(mirror)
         cv = canvas or cast14.CANVAS14[cast]
@@ -90,7 +101,7 @@ class Take:
         m = bpy.data.materials.new('cm_' + tag); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); Nn = nt.nodes.new; Lk = nt.links.new
         out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission')
         em.inputs['Color'].default_value = (0.03, 0.02, 0.07, 1); em.inputs['Strength'].default_value = 1
-        tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 0.7
+        tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 0.9
         Lk(ti.outputs['Alpha'], mu.inputs[0]); Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
         me.materials.append(m); ob = bpy.data.objects.new('actor_c_' + tag, me); bpy.context.scene.collection.objects.link(ob)
         ob.location = (mk.x, mk.y, mk.z + 0.02); ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False

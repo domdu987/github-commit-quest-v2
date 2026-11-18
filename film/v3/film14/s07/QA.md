@@ -1,6 +1,6 @@
-# s07 QA (render team 1)
-- qa_auto: PASS (QA_AUTO.md, phone_sheet.jpg). Cut 564 (shot 8 -> 9) is a continuous push-in with a small framing jump (medium -> close), not a hard change; the other cuts are visible.
-- Chins < y 880 in all 362 frames (per-frame json, not committed). Uncle talk_mouth only for g 464..665; outside it flat/held.
-- Bean-size gap is approximated by a raised pointing finger (the puppet has no pinch hand shape). Nose tap uses the pointing finger at the nose.
-- Shot 10: yard_crowd DUSK with set torches off (cr0), cards hold pots/laughs; the kid bangs the pot (pose bob). Background hive ring fs3.
-- 44.5 s/frame average wall, 24 samples, 2 processes x 2 threads.
+# s07 QA v2 (render team 1) -- re-rendered after the director's s01 take-gate notes
+- Applied: all yard clutter cut from the action (props meshes cleared in front of the maize wall, no edge dressing), no floating tub; action moved to y 3.2 by the maize wall so sky is ~20-25 % and the top is field/village; contact shadows under every person (larger, darker blob); villagers look and point toward the farmer/uncle (pointing arms, gaze, mirrored cards), no T-arms; uncle head 150-280 px in shots 8-9 (push from 3 m to 2 m / 1.7 m).
+- qa_auto PASS. Chins < y 880 in all 362 frames. Uncle talk_mouth only g 464..665; everything else held.
+- Bean-size gap approximated by a raised pointing finger (no pinch hand shape). Cut 564 (8 -> 9) is a push-in with a small framing change.
+- Known: lower third of shots 7-10 is clear red ground (by request: no clutter); a hard-edged lighter ground band is visible at the bottom of shot 7's first frames (set ground texture edge).
+- 54 s/frame average wall, 24 samples, 2 processes x 2 threads.
