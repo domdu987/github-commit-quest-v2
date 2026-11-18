@@ -1,3 +1,8 @@
+# ROUND 4 (director gate r3) -- g1163-1174 and g1200-1271 re-rendered; qa_auto PASS
+1. Coin pass REMOVED (director allowed it): no pop-in disc crosses his face any more; his purse shake and the crowd rush carry g1173.
+2. Shot 17 camera aimed further right (look x 5.4/7.2): the coachman stays fully in frame to the cut at g1272 (hat within a few px of the edge on the very last frame only); runners start further away and move less, so nobody crowds the left edge.
+Not done: Hanway's face to the left edge at g1339 was optional and not touched (path unchanged since round 3).
+
 # ROUND 3 (director gate r2: QA-art PASS, QA-tech FAIL on 2 breaks) -- all frames re-rendered, qa_auto PASS
 1. The diagonal line across the coachman's mouth/chest was the set's rein objects (`coach_i_reins`): hidden in render, his face and chest are clean in all of 15-18 (checked g1085, 1173, 1255, 1307, 1320, 1339).
 2. Shot 18 has its own camera (CAM18) re-aimed right and closer: the coachman is fully in frame and larger through g1339, Hanway stays in frame (path x -2.3 -> -2.0), the grin drop at g1307 is clear (the first passenger of coach 0 is skipped in 18 so nothing covers him). Shot 17 camera aimed further right: no hat/head clip at g1252-1262.

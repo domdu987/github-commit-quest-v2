@@ -26,7 +26,7 @@ def shot_of(g):
 PRESET = {15: 'coach_close', 16: 'rank_rush', 17: 'rank_wide', 18: 'hero_track'}
 LENS = {15: 25.0, 16: 22.0, 17: 22.0, 18: 22.0}
 
-CAM17 = dict(loc=(-2.6, 6.0, 1.7), look_at=(5.4, 26.0, 4.4), loc_b=(-2.0, 9.0, 1.9), look_b=(5.9, 28.0, 4.5), lens=22.0)
+CAM17 = dict(loc=(-2.6, 6.0, 1.7), look_at=(5.4, 26.0, 4.4), loc_b=(-2.0, 9.0, 1.9), look_b=(7.2, 28.0, 4.5), lens=22.0)
 CAM18 = dict(loc=(-3.8, 0.4, 2.2), look_at=(0.4, 9.0, 3.7), loc_b=(-3.5, 9.0, 2.6), look_b=(1.9, 16.5, 4.4), lens=22.0)
 CAM15 = dict(loc=(-0.6, 11.4, 3.4), look_at=(3.5, 18.7, 6.0), loc_b=(1.9, 14.4, 4.9), look_b=(3.55, 18.6, 6.1), lens=25.0)
 CAM16 = dict(loc=(-1.8, 8.5, 2.7), look_at=(2.3, 22.0, 4.7), loc_b=(-1.0, 12.5, 2.9), look_b=(4.4, 28.0, 5.0), lens=22.0)
@@ -60,7 +60,7 @@ def busy_of(g):
     return BUSY_KEYS[-1][1]
 COACH_Y0 = [22.0, 38.5, 55.0, 71.5]
 PASS = [('passenger_a_seated', -1.5), ('passenger_b_laugh', 0.2), ('passenger_a_laugh', 1.9)]
-G_COIN_UP = (1163, 1174)    # (pose, y offset from the coach origin)
+G_COIN_UP = (1, 0)                      # coin pass removed (director gate r3)    # (pose, y offset from the coach origin)
 
 def coach_dy(i, g):
     r0, r1 = ROLL; u = clamp((g - r0) / float(r1 - r0))
@@ -170,8 +170,8 @@ def build_cards(g, cl):
                 C.card('actor_rush_%02d' % n, cast12.cycle_frame(m + '_rush', (g * 1.0 / 16.0 + j * 0.13) % 1.0, facing=1), (pos.x, pos.y, 0.0), cl)
     # --- shot 17: leftover runners chase the coaches, one hand up with coins
     if k == 17:
-        for n, (m, x0, y0) in enumerate((('crowd_man_a', -1.2, 21.0), ('crowd_woman_a', -0.2, 24.5), ('crowd_man_d', -2.2, 19.0), ('crowd_man_c', 0.5, 28.0))):
-            u = (g - SH[17][0]) / 72.0; pos = (x0 + 0.5 * math.sin(n), y0 - 5.0 * u, 0.0)
+        for n, (m, x0, y0) in enumerate((('crowd_man_a', -1.2, 23.0), ('crowd_woman_a', -0.2, 26.5), ('crowd_man_d', -2.2, 21.0), ('crowd_man_c', 0.5, 30.0))):
+            u = (g - SH[17][0]) / 72.0; pos = (x0 + 0.5 * math.sin(n), y0 - 3.0 * u, 0.0)
             C.card('actor_run_%d' % n, cast12.cycle_frame(m + '_rush', (g / 16.0 + n * 0.21) % 1.0, facing=-1), pos, cl, mirror=False)
     # --- shot 18: hanway strolls dry, a soaked queue waits at the coach
     if k == 18:
