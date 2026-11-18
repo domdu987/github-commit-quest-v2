@@ -1,0 +1,75 @@
+{
+ "take": "s10",
+ "film": 13,
+ "shots": [
+  10,
+  11
+ ],
+ "first_g": 585,
+ "n_frames": 147,
+ "g0": 591,
+ "g1": 726,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transitions": [
+  {
+   "at": 591,
+   "type": "cut"
+  },
+  {
+   "at": 650,
+   "type": "cut",
+   "note": "plan cut shot 10 -> 11 at 21.68 s, same location, new set-up"
+  },
+  {
+   "at": 726,
+   "type": "cut"
+  }
+ ],
+ "shot_ranges": {
+  "10": [
+   585,
+   649
+  ],
+  "11": [
+   650,
+   731
+  ]
+ },
+ "set": "v3/set3d13/chicago.py suite (preset suite_room build, state tea0, SUITE light, DAY-blue sky); custom cameras in the room, 22 mm, no DOF",
+ "cast": "v3/cast13 rich: shot 10 rich_look_window_smug (cup + saucer) -> rich_laugh_big (cup kept in the left hand, belly squash 4-frame loop); shot 11 rich_mock_point with talk_mouth lip-sync inside Q1 (g 650..850)",
+ "lipsync": {
+  "window_g": [
+   647,
+   850
+  ],
+  "note": "talk_mouth only for g >= 649 (Q1 21.68 s - 0.15 s); flat before; the laugh pose keeps its own held laugh mouth"
+ },
+ "events": {
+  "hears": [
+   606,
+   614
+  ],
+  "laugh_burst": 612,
+  "cut_to_mock": 650,
+  "lip_sync_start": 649
+ },
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "dof": "none",
+ "s_per_frame_wall_mean": 12.66,
+ "s_per_frame_cpu_mean": 24.84
+}

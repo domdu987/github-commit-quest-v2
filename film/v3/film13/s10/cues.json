@@ -1,0 +1,59 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film13/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 19.5,
+   "duration": 4.9,
+   "frame": 585,
+   "end_frame": 732,
+   "kind": "ambience",
+   "label": "top-floor hotel suite, day: a soft room tone, muffled street murmur and a distant cart far below through the open window, a faint chandelier tinkle"
+  },
+  {
+   "time": 19.5,
+   "duration": 0.5,
+   "frame": 585,
+   "end_frame": 600,
+   "kind": "prop",
+   "label": "porcelain cup and saucer: a small calm clink as the rich man holds his tea",
+   "peak_frame": 590
+  },
+  {
+   "time": 20.2,
+   "duration": 0.267,
+   "frame": 606,
+   "end_frame": 614,
+   "kind": "accent",
+   "label": "he hears the plan: a short surprised intake, a pizzicato 'huh?'",
+   "peak_frame": 611
+  },
+  {
+   "time": 20.4,
+   "duration": 1.267,
+   "frame": 612,
+   "end_frame": 650,
+   "kind": "foley",
+   "label": "big belly-laugh (his own voice, hearty, wheezing): the cup rattles on its saucer in time with the shaking belly",
+   "peak_frame": 618
+  },
+  {
+   "time": 21.667,
+   "duration": 0.133,
+   "frame": 650,
+   "end_frame": 654,
+   "kind": "cut",
+   "label": "cut to shot 11: same room, the laugh dies down into the mocking line (narration voice-over carries the quote)"
+  },
+  {
+   "time": 21.8,
+   "duration": 2.567,
+   "frame": 654,
+   "end_frame": 731,
+   "kind": "foley",
+   "label": "fabric / waistcoat creak and a small pompous cough as he points down at the street",
+   "peak_frame": 690
+  }
+ ]
+}
