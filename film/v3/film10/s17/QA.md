@@ -15,3 +15,8 @@ Known: ship is smaller on screen in 17/19 (about 25-30% width) because torpedo, 
 ## Round 4 (QA-art round 2: shot 18 only re-rendered; 17 and 19 frames unchanged)
 - 18: ghost directly over the real ship (offset 5 s, no sideways offset; slow drift to shot 19's first-frame offset), opacity 0.8 fading in over the first 1.5 s, rim kept; wires hidden.
 - Last ~0.6 s (g 1278-1295): the view swings left and the cyan aim buoy enters the circle on the left (placed on the line of sight for this shot only), so the cut to 19 reads as "he aimed there".
+
+## Round 5 (QA-tech addendum: shots 18 and 19 re-rendered, 17 unchanged)
+- Ghost = flat clean cyan silhouette (constant alpha = opacity, no fresnel falloff, so the real stripes do not show through), bright rim kept; its smoke puffs (cyan discs over the funnels), funnel cylinders, rigging wires and thin rail rods removed.
+- 18: lens 30 -> 31 so both ends of the real ship are inside the circle; ghost 0.8 directly over the hull; aim buoy in the circle at the end.
+- 19: miss staging unchanged; only the ghost style changed.

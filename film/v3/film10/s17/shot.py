@@ -68,7 +68,7 @@ def sm(x):
 CAM17 = ((6.0, -64.0, 125.0), (6.0, 4.0, 0.0), 14.5), ((12.0, -58.0, 122.0), (12.0, 12.0, 0.0), 15.0)
 CAM19 = ((-8.0, -62.0, 125.0), (-8.0, 10.0, 0.0), 14.5), ((16.0, -58.0, 120.0), (16.0, 12.0, 0.0), 15.0)
 # 18: inside the periscope (eye fixed at the head); a slow sweep over the real ship, lens 30 -> 33.
-POV_LOOK = ((8.0, 0.0, 5.6), 35.0), ((22.0, 0.0, 5.0), 36.5)
+POV_LOOK = ((8.0, 0.0, 5.6), 30.0), ((22.0, 0.0, 5.0), 31.0)
 
 
 def lerp_cam(c0, c1, x, raw=False):
@@ -171,10 +171,24 @@ class Take(C.Take):
                     if w.index not in seen:
                         seen.add(w.index); st.append(w); comp.append(w)
             zs = [v.co.z for v in comp]
-            if len(comp) == 6 or (len(comp) == 24 and max(zs) - min(zs) > 12):
+            dims = sorted(max(v.co[i] for v in comp) - min(v.co[i] for v in comp) for i in range(3))
+            thin_rod = len(comp) == 8 and dims[1] < 0.16 and dims[2] > 1.5
+            if len(comp) == 6 or thin_rod or (len(comp) == 24 and max(zs) - min(zs) > 12):
                 kill += comp
         bmesh.ops.delete(bm, geom=kill, context="VERTS")
         bm.to_mesh(o.data); bm.free()
+        # flat clean cyan silhouette: constant alpha = gk (no fresnel falloff: the real stripes no longer show through), one cyan
+        import bpy
+        m = bpy.data.materials["HB_sea_SEA_DAY_ghost"]
+        for n in m.node_tree.nodes:
+            if n.bl_idname == "ShaderNodeMath" and n.operation == "MULTIPLY_ADD":
+                n.inputs[1].default_value = 0.0; n.inputs[2].default_value = 1.0
+            if n.bl_idname == "ShaderNodeMix":
+                n.inputs[6].default_value = (0.48, 0.9, 1.0, 1.0); n.inputs[7].default_value = (0.62, 0.95, 1.0, 1.0)
+            if n.bl_idname == "ShaderNodeEmission":
+                n.inputs["Strength"].default_value = 1.15
+        g = H.STATE["ghost"]
+        self.ghost_smoke = [o for o in bpy.data.objects if o.name.startswith("ghost_smoke")]
         self.lamps = [bpy_obj("L_lead_buoy_lamp"), bpy_obj("L_ghost_buoy_lamp")]
 
     def pose(self, shot, gs):
@@ -196,6 +210,9 @@ class Take(C.Take):
             H.set_torpedo(u_of(g), frame=f)
             H.set_ghost(ghost_k(g), frame=f, offset=ghost_off(g))
             H.set_convoy(s, frame=f)
+            for ob in self.ghost_smoke:                      # QA: no cyan bubble discs over the funnels
+                ob.hide_render = True
+                ob.keyframe_insert("hide_render", frame=f)
             H.set_lead_marker(lead_k(g), frame=f)
             H.set_ghost_marker(gmark_k(g) if shot != 17 else 0.0, frame=f)
             H.set_hit(-1.0, frame=f)
