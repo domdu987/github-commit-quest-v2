@@ -14,3 +14,4 @@
 | 3 | s15 | session_017iwyCvfFfjuTS5ZjjvfeGn | render14/team3 |
 | 4 | s20 | session_017iwyCuhPdSWFUE5zBbj5cS | render14/team4 |
 | 5 | s25 | session_017iwyCti53BRy8hjVYHsKwV | render14/team5 |
+| 6 | s01 redo (after TAKE gate FAIL) | session_017iwyCtekqvVfqPAq1JhmK4 | render14/team6 |
