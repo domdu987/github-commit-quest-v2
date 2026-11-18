@@ -114,7 +114,8 @@ def palette(mode):
     d['wood'] = mat('wood', '#6b3f22', '#8a5530', 6, aniso=(1, 1, 0.25), contrast=1.5)
     d['woodpale'] = mat('woodpale', '#b0763e', '#d09a58', 8, aniso=(0.3, 1, 1))
     d['hive'] = mat('hive', '#b5763a', '#d7a05a', 7, aniso=(0.4, 1, 1))
-    d['tin'] = mat('tin', '#a85a38', '#bd6e44', 0.6, wave=(26, '#d8b49c'), rough=0.6, sheen=0.3, contrast=0.5)
+    d['tin'] = mat('tin', '#a9b3bb', '#a45f3a', 1.1, wave=(40, '#e6ecf0'), rough=0.55, sheen=0.35, contrast=1.3)
+    d['tinunder'] = mat('tinunder', '#c9915f', '#d6a070', 0.8, contrast=0.4)
     d['tin2'] = mat('tin2', '#5f7e9a', '#8396a8', 1.2, wave=(30, '#b9c6cf'), rough=0.6, sheen=0.3, contrast=1.2)
     d['thatch'] = mat('thatch', '#a8803a', '#d9b660', 7, aniso=(1.6, 1.6, 0.25), contrast=1.8, zgrad=(1.8, 3.6, '#6e5026'))
     d['thatchold'] = mat('thatchold', '#8a6a3a', '#b89a58', 7, aniso=(1.6, 1.6, 0.25), contrast=1.8)
@@ -135,13 +136,15 @@ def palette(mode):
     d['banana'] = mat('banana', '#4fa03a', '#9cc24a', 3, contrast=1.4)
     d['grass'] = mat('grassblade', '#b39c3a', '#d4be5a', 6, zgrad=(0.0, 0.7, '#6a8a30'))
     d['goat'] = mat('goat', '#e6dcc8', '#8a5a3a', 1.5, contrast=2)
-    d['hen'] = mat('hen', '#a0502a', '#e8d6b0', 4, contrast=2)
+    d['hen'] = mat('hen', '#a8582e', '#e0c8a0', 4, contrast=0.8)
     d['comb'] = mat('comb', '#d8322a', '#d8322a')
     d['beak'] = mat('beak', '#e0a030', '#e0a030')
     d['bee'] = mat('bee', '#4a3414', '#b8841c', 40, contrast=2)
     d['wing'] = mat('wing', '#e8f0ff', '#e8f0ff', emit='#cfe0ff', emit_k=0.6)
-    d['elephant'] = mat('elephant', '#2e2c3c', '#464456', 2.5, rough=1)
+    d['elephant'] = mat('elephant', '#4a5578', '#7886a8', 11, aniso=(1, 1, 2.2), contrast=2.2, rough=0.85, sheen=0.15)
     d['tusk'] = mat('tusk', '#cfc8b8', '#cfc8b8')
+    d['ember'] = mat_emit('ember', '#ff7a2a', 9.0)
+    d['basket'] = mat('basket', '#b88a4a', '#8a5f30', 14)
     d['char'] = mat('char', '#2a2020', '#3a2c28', 4)
     d['flame'] = mat_emit('flame', '#ff9a30', 14.0)
     d['flame2'] = mat_emit('flame2', '#ffd060', 22.0)
@@ -252,6 +255,22 @@ def chicken(mb, M, c, yaw=0.0, s=1.0):
     for sy in (-0.05, 0.05): mb.rod(M['beak'], (0, sy, 0.15), (0.02, sy, 0.0), 0.012, 0.012, 4)
     mb.pop()
 
+def stool(mb, M, c, yaw=0.0):
+    x, y, z = c
+    mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
+    mb.box(M['woodpale'], (0, 0, 0.42), (0.42, 0.42, 0.07))
+    for dx, dy in ((-0.15, -0.15), (0.15, -0.15), (-0.15, 0.15), (0.15, 0.15)): mb.rod(M['wood'], (dx, dy, 0.0), (dx * 1.1, dy * 1.1, 0.4), 0.035, 0.03, 6)
+    mb.pop()
+
+def basket(mb, M, c):
+    x, y, z = c
+    mb.rod(M['basket'], (x, y, z), (x, y, z + 0.42), 0.26, 0.36, 14)
+    mb.ell(M['basket'], (x, y, z + 0.42), (0.37, 0.37, 0.05), (14, 4))
+    rr = rnd(4)
+    for i in range(16):
+        a = rr.random() * 6.283; r = rr.random() * 0.24
+        mb.ell(M['cob'], (x + math.cos(a) * r, y + math.sin(a) * r, z + 0.5 + rr.random() * 0.1), (0.13, 0.05, 0.05), (8, 5), (0, rr.random() * 0.5, rr.random() * 6.28))
+
 def goat(mb, M, c, yaw=0.0, s=1.0):
     mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Diagonal((s, s, s, 1)))
     mb.ell(M['goat'], (0, 0, 0.62), (0.5, 0.2, 0.22), (12, 8)); mb.ell(M['goat'], (0.55, 0, 0.85), (0.14, 0.1, 0.12), (8, 6)); mb.rod(M['goat'], (0.4, 0, 0.7), (0.52, 0, 0.82), 0.09, 0.07, 6)
@@ -315,6 +334,7 @@ def hive_unit(mb, M, x, y, swing=0.0, along='x'):
     for sgn in (-1, 1):
         q = [(x0, y + sgn * rw, 2.48), (x1, y + sgn * rw, 2.48), (x1, y, 2.48 + rh), (x0, y, 2.48 + rh)]
         mb.quad(M['tin'], q if sgn > 0 else q[::-1])
+        qu = [(a, b, c - 0.025) for (a, b, c) in q]; mb.quad(M['tinunder'], qu[::-1] if sgn > 0 else qu)
         mb.quad(M['tin'], [(x0, y + sgn * rw, 2.48), (x1, y + sgn * rw, 2.48), (x1, y + sgn * rw, 2.43), (x0, y + sgn * rw, 2.43)])
     for ex in (x0, x1): mb.tri(M['tin'], [(ex, y - rw, 2.48), (ex, y + rw, 2.48), (ex, y, 2.48 + rh)])
     mb.box(M['thatchold'], (x, y, 2.5 + rh), (2.8, 0.12, 0.07))
@@ -360,6 +380,8 @@ def ground(mode, extent=130):
     def disc(c, r, col=(255, 0, 0)): a = px(c[0] - r, c[1] + r); b = px(c[0] + r, c[1] - r); d.ellipse([a, b], fill=col)
     line([(-60, -3), (-30, -2.5), (0, -3.2), (30, -2.2), (60, -3)], 4.0)
     line([(-14, 2.6), (14, 2.6)], 2.0)
+    line([(3.6, -9), (3.4, -4), (2.2, 1), (0.6, 5)], 2.6)
+    line([(2.95, -9), (2.75, -4), (1.6, 1), (0.0, 5)], 0.28, (255, 0, 255)); line([(4.25, -9), (4.05, -4), (2.8, 1), (1.2, 5)], 0.28, (255, 0, 255))
     line([(15, -3), (15.5, 5), (17, 12), (19, 18)], 2.2)
     line([(15.5, 6), (30, 8), (40, 6)], 1.6)
     line([(10.8, 3), (10.8, 24)], 1.4); line([(-14.8, 3), (-14.8, 24)], 1.2)
@@ -400,7 +422,12 @@ def ground(mode, extent=130):
     soil = mixc(None, None, ramp2.outputs[0], '#8f4a2c', '#a85a34')
     m1 = N('ShaderNodeMix'); m1.data_type = 'RGBA'; L(grass.outputs[2], m1.inputs[6]); L(soil.outputs[2], m1.inputs[7]); L(sm.outputs['Green'], m1.inputs[0])
     m2 = N('ShaderNodeMix'); m2.data_type = 'RGBA'; L(m1.outputs[2], m2.inputs[6]); L(redd.outputs[2], m2.inputs[7]); L(sm.outputs['Red'], m2.inputs[0])
-    L(m2.outputs[2], bs.inputs['Base Color']); L(bs.outputs[0], out.inputs['Surface']); ob.data.materials.append(m)
+    rb = N('ShaderNodeMath'); rb.operation = 'MULTIPLY'; rb.inputs[1].default_value = 0.75; L(sm.outputs['Blue'], rb.inputs[0])
+    m3 = N('ShaderNodeMix'); m3.data_type = 'RGBA'; m3.blend_type = 'MULTIPLY'; L(m2.outputs[2], m3.inputs[6]); m3.inputs[7].default_value = (0.3, 0.25, 0.24, 1); L(rb.outputs[0], m3.inputs[0])
+    nz3 = N('ShaderNodeTexNoise'); nz3.inputs['Scale'].default_value = 55; nz3.inputs['Detail'].default_value = 8; L(mp.outputs[0], nz3.inputs[0])
+    r3 = N('ShaderNodeValToRGB'); L(nz3.outputs['Fac'], r3.inputs[0]); r3.color_ramp.elements[0].position = 0.35; r3.color_ramp.elements[0].color = (0.72, 0.72, 0.72, 1); r3.color_ramp.elements[1].position = 0.65; r3.color_ramp.elements[1].color = (1.12, 1.12, 1.12, 1)
+    m4 = N('ShaderNodeMix'); m4.data_type = 'RGBA'; m4.blend_type = 'MULTIPLY'; m4.inputs[0].default_value = 0.8; L(m3.outputs[2], m4.inputs[6]); L(r3.outputs[0], m4.inputs[7])
+    L(m4.outputs[2], bs.inputs['Base Color']); L(bs.outputs[0], out.inputs['Surface']); ob.data.materials.append(m)
 
 def sky(mode, P):
     w = bpy.data.worlds.new('sky'); bpy.context.scene.world = w; w.use_nodes = True; nt = w.node_tree; nt.nodes.clear(); N = nt.nodes.new; L = nt.links.new
@@ -448,17 +475,24 @@ def hills(mode, P):
 
 # ------------------------------------------------------------------ elephant stand-in (rough low-poly, dark silhouette)
 def elephant(mb, M, c, yaw, s=1.0):
-    mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Diagonal((s, s, s, 1)))   # local +x forward
-    E = M['elephant']
-    mb.ell(E, (0, 0, 2.2), (1.9, 1.05, 1.15), (16, 10)); mb.ell(E, (-1.2, 0, 2.55), (1.0, 0.95, 1.0), (14, 8)); mb.ell(E, (1.7, 0, 2.55), (0.85, 0.8, 0.9), (14, 8))
-    mb.ell(E, (2.35, 0, 2.7), (0.65, 0.6, 0.7), (14, 8))                                                                   # head
-    for sy in (-1, 1): mb.ell(E, (2.0, sy * 0.85, 2.7), (0.18, 0.75, 0.85), (10, 8), (0.0, 0.0, sy * 0.25))               # ears
-    pts = [(2.75, 0, 2.4), (3.1, 0, 1.7), (3.25, 0, 1.0), (3.3, 0, 0.45)]
-    for i in range(3): mb.rod(E, pts[i], pts[i + 1], 0.24 - 0.06 * i, 0.18 - 0.06 * i, 8, smooth=True)                      # trunk
-    for sy in (-1, 1): mb.rod(M['tusk'], (2.75, sy * 0.3, 2.1), (3.5, sy * 0.4, 1.7), 0.07, 0.015, 6)
-    for lx in (-1.2, 1.4):
-        for sy in (-0.55, 0.55): mb.rod(E, (lx, sy, 2.0), (lx, sy, 0.0), 0.42, 0.36, 10, smooth=True)
-    mb.rod(E, (-1.95, 0, 2.6), (-2.2, 0, 1.4), 0.1, 0.04, 6)
+    """Stand-in: smooth overlapping ellipsoids, tapered legs, curved trunk, tusks, big ears. Local +x is forward."""
+    mb.push(Matrix.Translation(c) @ Euler((0, 0, yaw)).to_matrix().to_4x4() @ Matrix.Diagonal((s, s, s, 1)))
+    E = M['elephant']; sg = (24, 16)
+    mb.ell(E, (0.0, 0, 2.25), (1.95, 1.1, 1.2), sg); mb.ell(E, (-1.1, 0, 2.4), (1.0, 1.0, 1.12), sg); mb.ell(E, (1.05, 0, 2.45), (1.0, 0.95, 1.1), sg)
+    mb.ell(E, (1.7, 0, 2.5), (0.5, 0.6, 0.85), sg)                                                              # neck / shoulders
+    mb.ell(E, (2.25, 0, 2.62), (0.72, 0.64, 0.78), sg)                                                          # head
+    mb.ell(E, (2.7, 0, 2.95), (0.35, 0.4, 0.3), (14, 10))                                                       # forehead dome
+    for sy in (-1, 1):
+        mb.ell(E, (1.85, sy * 0.78, 2.78), (0.12, 0.62, 0.78), (16, 12), (0.0, 0.0, sy * 0.5))                  # ears (spread, flat)
+        mb.ell(E, (1.55, sy * 1.12, 2.62), (0.1, 0.46, 0.62), (14, 10), (0.0, 0.0, sy * 0.7))
+    pts = [(2.75, 0, 2.45), (3.15, 0, 1.95), (3.4, 0, 1.3), (3.45, 0, 0.7), (3.3, 0, 0.35), (3.1, 0, 0.3)]
+    for i in range(len(pts) - 1): mb.rod(E, pts[i], pts[i + 1], 0.27 - 0.035 * i, 0.27 - 0.035 * (i + 1), 12, smooth=True)   # trunk
+    for p in pts[1:4]: mb.ell(E, p, (0.28, 0.28, 0.28), (10, 8))
+    for sy in (-1, 1): mb.rod(M['tusk'], (2.7, sy * 0.38, 2.15), (3.65, sy * 0.5, 1.7), 0.11, 0.015, 10, smooth=True)   # tusks
+    for lx in (-1.15, 1.25):
+        for sy in (-0.58, 0.58):
+            mb.rod(E, (lx, sy, 2.1), (lx, sy, 0.15), 0.46, 0.36, 14, smooth=True); mb.ell(E, (lx, sy, 0.12), (0.4, 0.4, 0.14), (12, 8))
+    mb.rod(E, (-2.0, 0, 2.7), (-2.3, 0, 1.3), 0.11, 0.05, 8, smooth=True); mb.ell(E, (-2.3, 0, 1.25), (0.08, 0.08, 0.16), (6, 4))
     mb.pop()
 
 # ------------------------------------------------------------------ the whole set
@@ -509,12 +543,16 @@ def build(mode):
     for dx in (-1.0, 1.0): mb.rod(M['wood'], (24.0 + dx, 8.9, 0.0), (24.0 + dx, 8.9, 1.2), 0.04, 0.04, 5)
     mb.ell(M['metal'], (24.0, 8.9, 1.15), (0.28, 0.2, 0.2), (10, 6))
     for (x, y, yw) in [(17.0, 8.0, 0.2), (17.35, 8.1, 1.0), (16.8, 8.45, 2.0)]: jerrycan(mb, M, (x, y, 0.0), yw)
-    jerrycan(mb, M, (6.2, 1.2, 0.0), 0.7); jerrycan(mb, M, (6.6, 1.5, 0.0), 1.2); jerrycan(mb, M, (6.5, 0.9, 0.0), 2.2)
-    hoe(mb, M, (5.0, 1.3, 0.0), 0.5)
-    mb.box(M['woodpale'], (8.2, 1.4, 0.25), (1.1, 0.4, 0.5))
+    if mode == 'day':
+        for (x, y, yw) in [(-6.6, 0.4, 0.7), (-6.2, 0.75, 1.3), (-6.55, 0.05, 2.2), (-6.3, 0.2, 0.2)]: jerrycan(mb, M, (x, y, 0.0), yw)
+        hoe(mb, M, (-7.4, 1.9, 0.0), 0.6)
+        stool(mb, M, (-5.0, 1.4, 0.0)); stool(mb, M, (-4.4, 0.9, 0.0), 0.5)
+        basket(mb, M, (-7.9, 0.8, 0.0))
+        for i, (x, y) in enumerate([(-4.2, 0.1), (-8.3, 1.2), (-3.4, 1.6), (-5.6, -0.6), (-7.3, -0.4)]): chicken(mb, M, (x, y, 0.0), i * 1.9, 1.15)
+        goat(mb, M, (-2.0, 0.6, 0.0), 0.5, 1.3)
     mb.box(M['woodpale'], (18.5, 10.4, 0.2), (0.9, 0.35, 0.4)); mb.box(M['woodpale'], (21.5, 9.4, 0.2), (0.35, 0.8, 0.4))   # stools / bench
-    for i, (x, y) in enumerate([(8.0, -0.5), (9.4, 0.8), (14.3, 4.5), (23.0, 5.0)]): chicken(mb, M, (x, y, 0.0), i * 1.7, 1.15)
-    goat(mb, M, (11.8, -0.2, 0.0), 0.6, 1.1); goat(mb, M, (28.0, 5.5, 0.0), 2.4, 0.9)
+    for i, (x, y) in enumerate([(14.3, 4.5), (23.0, 5.0)]): chicken(mb, M, (x, y, 0.0), i * 1.7, 1.15)
+    goat(mb, M, (28.0, 5.5, 0.0), 2.4, 0.9)
     mb.finish()
     mb = MB('trees')
     acacia(mb, M, (-20.0, 20.0, 0.0), 1.5, 1, 0.3); acacia(mb, M, (35.0, 5.0, 0.0), 1.3, 2, 1.1); acacia(mb, M, (-33.0, 6.0, 0.0), 1.1, 3, 2.1); acacia(mb, M, (0.0, 44.0, 0.0), 1.7, 4, 0.5)
@@ -523,9 +561,12 @@ def build(mode):
     mb.finish()
     # tall grass clumps (verge, around huts, fence line)
     mb = MB('grass'); rg = rnd(11)
-    for i in range(1300 + (120 if mode == 'night' else 0)):
+    for i in range(1300 + (520 if mode == 'night' else 0)):
         t = rg.random()
-        if i >= 1300: mb.finish if False else None; x, y = rg.choice([-1, 1]) * rg.uniform(4.5, 7.5) + 0.5, rg.uniform(-8, -4); grass_clump(mb, M, (x, y, 0.0), rg, rg.uniform(0.4, 0.8)); continue
+        if i >= 1300:
+            y = rg.uniform(-8, 2.2); x = rg.uniform(-7.5, 8.0); px_ = 3.4 - (y + 4) * 0.3 if y > -4 else 3.5
+            if abs(x - px_) < 1.5: continue
+            grass_clump(mb, M, (x, y, 0.0), rg, rg.uniform(0.45, 0.95)); continue
         if t < 0.35: x, y = rg.uniform(-30, 14), rg.uniform(-1.8, 3.6)
         elif t < 0.55: x, y = rg.uniform(-30, -15.5), rg.uniform(4, 30)
         elif t < 0.8: x, y = rg.uniform(11.8, 40), rg.uniform(-1, 30)
@@ -540,10 +581,22 @@ def build(mode):
     if mode == 'night':
         mb = MB('elephant_STANDIN'); elephant(mb, M, P['ele'][0], P['ele'][1], P['ele'][2]); mb.finish()
     if mode == 'night':
-        mb = MB('lantern'); mb.rod(M['wood'], (-0.9, 4.2, 0), (-0.9, 4.2, 2.5), 0.06, 0.05, 6); mb.rod(M['wood'], (-0.9, 4.2, 2.45), (-0.9, 5.0, 2.45), 0.04, 0.04, 5); mb.rod(M['rope'], (-0.9, 4.2, 2.4), (-0.9, 4.2, 2.2), 0.01, 0.01, 4); mb.ell(M['lamp'], (-0.9, 4.2, 2.1), (0.1, 0.1, 0.14), (8, 6)); mb.finish()
+        mb = MB('nightprops')
+        firepit(mb, M, (1.3, 0.5, 0.0), True)
+        for i in range(14):
+            a = rg.random() * 6.283; r = rg.uniform(0.2, 0.9); mb.ell(M['ember'], (1.3 + math.cos(a) * r, 0.5 + math.sin(a) * r, rg.uniform(0.02, 0.12)), (0.025, 0.025, 0.015), (6, 4))
+        for (x, y, yw) in [(3.4, -2.6, 0.5), (3.78, -2.4, 1.4), (3.5, -2.1, 2.6)]: jerrycan(mb, M, (x, y, 0.0), yw)
+        basket(mb, M, (2.5, -3.3, 0.0)); hoe(mb, M, (4.1, -1.4, 0.0), 2.2)
+        mb.finish()
+        mz = rnd(21)
+        for (x, y) in [(-1.3, -1.2), (-1.9, -1.5), (-2.4, -0.7), (-2.9, -1.4), (-2.0, -2.4)]:
+            for src in vars_[mz.randrange(4)]:
+                ob = bpy.data.objects.new('mzf', src.data); ob.location = (x, y, 0); ob.rotation_euler = (0, 0, mz.random() * 6.28); ob.scale = (1.0, 1.0, 1.05); sc.collection.objects.link(ob)
     if mode == 'night':
-        kd0 = Vector(P['key_dir']).normalized(); mb = MB('moon'); mm = mat_emit('moon', '#dfe8ff', 9.0); cp = Vector(P['cam']['loc']) - kd0 * 330
-        mb.ell(mm, cp, (9, 9, 9), (16, 10)); mb.finish()
+        mb = MB('lantern'); mb.rod(M['wood'], (1.9, 2.8, 0), (1.9, 2.8, 2.5), 0.06, 0.05, 6); mb.rod(M['wood'], (1.9, 2.8, 2.45), (1.9, 3.5, 2.45), 0.04, 0.04, 5); mb.rod(M['rope'], (1.9, 2.8, 2.4), (1.9, 2.8, 2.2), 0.01, 0.01, 4); mb.ell(M['lamp'], (1.9, 2.8, 2.1), (0.1, 0.1, 0.14), (8, 6)); mb.finish()
+    if mode == 'night':
+        kd0 = Vector(P['key_dir']).normalized(); mb = MB('moon'); mm = mat_emit('moon', '#c4d4ff', 1.15); cp = Vector(P['cam']['loc']) - kd0 * 330
+        mb.ell(mm, cp, (4.2, 4.2, 4.2), (24, 16)); mb.finish()
     # --- lights
     k = P['key']; kd = Vector(P['key_dir']).normalized()
     d = bpy.data.lights.new('key', 'SUN'); d.color = k[:3]; d.energy = k[3]; d.angle = math.radians(P['sun_angle'])
@@ -571,16 +624,16 @@ def kdir(az, el):
 PRESETS = {
  'day': dict(
     sky=[(0.0, '#8aa3d8'), (0.42, '#e9b98c'), (0.5, '#f7d49c'), (0.56, '#f0d8b4'), (0.64, '#a9c6ec'), (0.8, '#5a8ee0'), (1.0, '#3a68c8')], sky_k=1.0,
-    key=(1.0, 0.78, 0.5, 4.6), key_dir=kdir(-60, 27), sun_angle=1.0,
+    key=(1.0, 0.78, 0.5, 4.2), key_dir=kdir(-60, 27), sun_angle=1.0, exposure=-0.12, mount_x=250,
     hills=[(120, 6, 14, '#9a8fc0'), (170, 18, 26, '#8d9cca'), (205, 30, 30, '#7f9ed0')], hill_k=1.0, mount='#6f8fd4', cap='#f7e6dc',
-    cam=dict(loc=(3.5, -6.5, 5.4), look=(10.0, 14.0, 1.7), lens=22)),
+    cam=dict(loc=(-8.4, -0.8, 2.8), look=(3.5, 7.0, -0.2), lens=22)),
  'night': dict(
     sky=[(0.0, '#1a2250'), (0.46, '#2d3b78'), (0.52, '#4a5a98'), (0.6, '#25316e'), (1.0, '#0d1445')], sky_k=2.0, stars=True,
     key=(0.46, 0.62, 1.0, 3.0), key_dir=kdir(-12, 33), sun_angle=1.2,
-    hills=[(120, 6, 14, '#232c66'), (170, 18, 26, '#1f2a63'), (205, 30, 30, '#1c2760')], hill_k=0.9, mount='#222e70', cap='#7f93d0',
-    lamps=[((-0.9, 4.2, 2.1), (1.0, 0.6, 0.26), 700, 0.12), ((18.2, 11.5, 1.6), (1.0, 0.62, 0.28), 900, 0.15), ((24.0, 8.6, 1.0), (1.0, 0.5, 0.2), 700, 0.3), ((30.5, 18.3, 1.8), (1.0, 0.65, 0.3), 700, 0.15), ((21.5, 20.0, 1.5), (1.0, 0.6, 0.3), 450, 0.15)],
-    ele=((-2.6, -0.8, 0.0), math.radians(25), 0.85),
-    cam=dict(loc=(2.0, -9.0, 1.25), look=(-3.8, 5.0, 1.7), lens=22)),
+    hills=[(120, 6, 14, '#232c66'), (170, 18, 26, '#1f2a63'), (205, 30, 30, '#1c2760')], hill_k=0.9, mount_x=-100, mount='#222e70', cap='#7f93d0',
+    lamps=[((1.3, 0.5, 0.55), (1.0, 0.5, 0.18), 650, 0.25), ((1.9, 2.8, 2.1), (1.0, 0.6, 0.26), 700, 0.12), ((18.2, 11.5, 1.6), (1.0, 0.62, 0.28), 900, 0.15), ((24.0, 8.6, 1.0), (1.0, 0.5, 0.2), 700, 0.3), ((30.5, 18.3, 1.8), (1.0, 0.65, 0.3), 700, 0.15), ((21.5, 20.0, 1.5), (1.0, 0.6, 0.3), 450, 0.15)],
+    ele=((1.2, 2.4, 0.0), math.radians(12), 0.8),
+    cam=dict(loc=(3.6, -6.5, 1.3), look=(-1.0, 6.0, 1.35), lens=22)),
  'close': dict(
     sky=[(0.0, '#2c3a82'), (0.44, '#d9806e'), (0.5, '#f4a868'), (0.58, '#6a74c0'), (1.0, '#1d2d78')], sky_k=0.85,
     key=(1.0, 0.55, 0.3, 3.3), key_dir=kdir(-115, 7), sun_angle=1.0,
@@ -620,7 +673,7 @@ def run(mode, draft=False):
         pass
     setup_camera(P)
     out = os.path.join(HERE, ('d_' if draft else '') + NAMES[mode])
-    render(mode, out, 24 if draft else P.get('samples', 96), draft); print(mode, 'done %.0fs' % (time.time() - t))
+    render(mode, out, 24 if draft else P.get('samples', 112), draft); print(mode, 'done %.0fs' % (time.time() - t))
 
 if __name__ == '__main__':
     args = [a for a in sys.argv[1:] if a != 'draft']; draft = 'draft' in sys.argv
