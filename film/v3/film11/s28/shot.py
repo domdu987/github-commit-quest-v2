@@ -20,10 +20,10 @@ SHOT = 28
 G0, G1, H = C.g_bound(60.20), 1875, 6
 RANGES = {SHOT: (G0 - H, G1 - 1)}          # no frames beyond N: the film's last frame is g 1874 (hard cut)
 PRESET, LIGHT = "barn_wide", "A"
-BLOSSOM = Vector((-2.8, 8.2, 0.0))
+BLOSSOM = Vector((-2.2, 5.8, 0.0))
 G_WORD = C.g_of(62.20)                     # "วัว" ~ 62.3 s: she looks round around here
-CAM0 = ((2.0, -1.0, 2.6), (-3.4, 12.0, 0.2))
-CAM1 = ((1.0, 0.8, 2.3), (-4.8, 9.0, 1.1))
+CAM0 = ((2.4, -1.6, 1.5), (-2.4, 6.0, 0.9))
+CAM1 = ((0.9, -0.9, 1.4), (-3.5, 5.8, 0.8))
 
 
 def cam_of(g):
@@ -33,24 +33,39 @@ def cam_of(g):
 
 
 def pose_blossom(g):
+    """chewing, tail swish; from g ~1846 the head comes up (alert, knowing look), ear flicks at g 1858-1863 and again on the word (g 1866-1869), hold to the cut."""
     p = dict(cast11.STORY11["blossom_chew"][1])
-    turn = ez((g - (G_WORD - 22)) / 18.0)                         # head swings round to us just before the word
-    p.update(head_turn=lerp(0.0, 1.0, turn), head_down=0.15 * (1 - turn), chew=g / 12.0 if turn < 0.5 else None,
-             chew_amp=1.0, tail=0.7 * math.sin(g / 8.0), mirror=True)
+    up = ez((g - 1846) / 14.0)
+    p.update(head_turn=lerp(0.0, -0.15, up), head_down=lerp(0.1, -0.5, up), chew=g / 12.0 if up < 0.4 else None, chew_amp=1.0,
+             tail=0.7 * math.sin(g / 8.0), mirror=True)
     if p["chew"] is None:
         del p["chew"]
     k = (g - G0 + 20) % 70
     p["ear"] = (1.0 if k < 3 else (-0.3 if k < 6 else 0.0))
-    if G_WORD - 6 <= g <= G_WORD - 2:
+    if 1858 <= g <= 1860 or 1866 <= g <= 1868:
         p["ear"] = 1.0
-    p["blink"] = blink(g, [1825, 1850, 1868])
+    elif 1861 <= g <= 1863 or 1869 <= g <= 1871:
+        p["ear"] = -0.3
+    elif g >= 1850:
+        p["ear"] = 0.0
+    p["blink"] = blink(g, [1825, 1852, 1870])
     return p
 
 
 class Take(C.Take):
     def __init__(self, quality="preview", shot=SHOT):
         C.Take.__init__(self, PRESET, quality=quality, name="cam_s28", light=LIGHT)
+        self.warm_fill()
         self.blo = self.actors["blo"] = C.make_actor("blo", "blossom", os.path.join(TMP, "sprites"), canvas=cast11.CANVAS11["blossom"])
+
+    def warm_fill(self):
+        """director gate note: Blossom in warm golden light (no-shadow warm area fill from the door side, as the milking nook's door spill) and the flat
+        yellow lantern rectangles hidden."""
+        D.area_fill("s28_warm", (-9.0, 4.5, 2.8), (1.0, 0.25, -0.2), (6.0, 5.0), (1.0, 0.9, 0.5), 1700)
+        for h in D.STATE.get("hooks", []):
+            if h["kind"] == "lantern":
+                bpy_obj = C.bpy.data.objects[h["obj"]]
+                bpy_obj.hide_render = True
 
     def pose(self, shot, gs):
         for g in gs:
