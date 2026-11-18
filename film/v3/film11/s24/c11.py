@@ -210,10 +210,17 @@ class Take(object):
         self.cam.data.clip_start = 0.02
         self.cam.data.clip_end = 4000
         self.no_dof()
+        self.hide_smoke()
         self.actors = {}
         self.anch = {}
         if verbose:
             print("take: built %s in %.1f s" % (preset, time.time() - t0), flush=True)
+
+    def hide_smoke(self):
+        """director note 2026-11-18: the set's chimney smoke is a stack of round white blobs -> hidden (hide_render) in every take."""
+        for h in B.STATE.get("hooks", []):
+            if h["kind"] == "smoke":
+                bpy.data.objects[h["obj"]].hide_render = True
 
     def no_dof(self):
         self.cam.data.dof.use_dof = False
