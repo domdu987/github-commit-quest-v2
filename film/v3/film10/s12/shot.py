@@ -19,7 +19,7 @@ HO = 6
 G12, G13, G14, GE = C.g_bound(26.27), C.g_bound(28.80), C.g_bound(30.90), C.g_bound(33.27)   # 788 864 927 998
 RANGES = {12: (G12 - HO, G13 - 1), 13: (G13, G14 - 1), 14: (G14, GE + HO - 1)}
 PRESET = {12: "convoy_wide", 13: "periscope_pov", 14: "bridge_deck"}
-LENS = {12: 30.0, 13: 42.0, 14: 24.0}
+LENS = {12: 30.0, 13: 50.0, 14: 24.0}
 G_LIP0, G_LIP1 = C.g_of(31.60), C.g_of(33.25)            # 951 .. 1000: the admiral's mouth moves only here
 G_SHOUT_EXPR = G_LIP0 - 3
 
@@ -97,7 +97,7 @@ class Take(C.Take):
         a_dz = az_deg(eye, dz)
         a_l = az_deg(eye, pos["c1"])
         t = (g - RANGES[13][0]) / 30.0                  # 0 .. 2.1 s
-        T_SW = 1.0                                     # one sweep c1 -> dazzle ship (nearly linear: grey ships fly past), then it stops
+        T_SW = 0.7                                     # one sweep c1 -> dazzle ship (nearly linear: grey ships fly past), then it stops
         if t < T_SW:
             x = t / T_SW
             az = lerp(a_l - 8.0, a_dz, 0.2 * ez(x, "sine") + 0.8 * x)
