@@ -22,7 +22,7 @@ RANGE = (G0 - H, G1 + H - 1)
 SHOT = 8
 LOC = ("harbour", "harbour_wide")
 LIGHT = "DAY"
-STRIPES = 0.6
+STRIPES = 0.505                              # = s09 stage at its first frame (g 613): continuity across the s08 -> s09 cut
 PPD = 256
 LENS = 21.0
 BRUSH = cast10.BRUSH

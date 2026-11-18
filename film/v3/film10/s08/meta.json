@@ -26,8 +26,8 @@
  "dof": "none",
  "cuts": [],
  "lipsync_window_g": null,
- "stripes": 0.6,
- "s_per_frame_wall_mean": 12.43,
- "s_per_frame_cpu_mean": 24.53,
- "take_mkv_mb": 24.2
+ "stripes": 0.505,
+ "s_per_frame_wall_mean": 12.39,
+ "s_per_frame_cpu_mean": 23.97,
+ "take_mkv_mb": 24.3
 }

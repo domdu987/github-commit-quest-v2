@@ -31,7 +31,7 @@ walls = [m["wall"] for m in rows]; cpus = [m["cpu"] for m in rows]
 meta = {"take": TAKE, "film": 10, "shots": CFG["shots_l"], "g0": CFG["g0"], "g1": CFG["g1"], "first_g": FIRST, "n_frames": N,
         "handle_in": CFG["g0"] - FIRST, "handle_out": LAST + 1 - CFG["g1"], "transition_in": CFG["tin"],
         "set": CFG["set"], "light": "DAY", "cast": CFG["cast"], "samples": 12, "resolution": [720, 1280], "fps": 30, "dof": "none",
-        "cuts": CFG["cuts"], "lipsync_window_g": CFG["lipsync"], "stripes": 0.6,
+        "cuts": CFG["cuts"], "lipsync_window_g": CFG["lipsync"], "stripes": 0.505,
         "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2),
         "take_mkv_mb": round(sz, 1)}
 json.dump(meta, open(os.path.join(HERE, "meta.json"), "w"), indent=1)
