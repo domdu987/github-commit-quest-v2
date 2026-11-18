@@ -88,7 +88,7 @@
  "dof": "none",
  "denoiser": "OpenImageDenoise (set default)",
  "light": "SUITE",
- "cast": "v3/cast13: lady_sip_tea with teacup_saucer in one hand (cup AND saucer), gentleman13 standing + cup/saucer",
+ "cast": "v3/cast13: lady_sip_tea (lady13_seat), gentleman13 (stand + teacup_saucer, sips); no mouth lip-sync",
  "samples": 20,
  "resolution": [
   720,
@@ -96,6 +96,6 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 28.07,
- "s_per_frame_cpu_mean": 38.06
+ "s_per_frame_wall_mean": 31.91,
+ "s_per_frame_cpu_mean": 37.94
 }

@@ -9,3 +9,6 @@
 - Nothing stands on the hotel (nobody on the stair/portico/windows), so no parenting needed.
 - Chin line: all heads < 880 except the smallest worker (wc) by up to 4 px at g 40-68 (head-centre + radius estimate).
 - Cut convention left as delivered (round(t*30)), the conform handles the +3 offset via handles.
+
+## Round 4 (QA r2 blocking items)
+- Lift now starts at h 0.62 (dark void with lit cribbing visible from frame 0) and climbs to 1.00; dust grains are dark brown thin streaks (<= 3 px wide), no white/round blobs; spare-jack props on the left crib pile (the lamp-like object) and the puddles hidden; workers at the jacks turn bars (A/B cycle).

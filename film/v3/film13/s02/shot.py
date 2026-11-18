@@ -33,7 +33,7 @@ def drift(g):
     return DRIFT_RATE * (g - G2)
 
 
-CAMS = {2: (((-0.5, 8.4, 31.45), (0.1, 0.0, 32.9)), ((-0.1, 7.2, 31.45), (0.1, 0.0, 33.0)), 22.0),
+CAMS = {2: (((0.45, 8.4, 31.45), (1.05, 0.0, 32.9)), ((0.85, 7.2, 31.45), (1.05, 0.0, 33.0)), 22.0),
         3: (((-2.4, 7.4, 34.6), (-3.3, 1.2, 32.4)), ((-2.7, 6.7, 34.3), (-3.3, 1.2, 32.5)), 34.0)}
 
 
@@ -46,8 +46,8 @@ def cam_of(shot, g):
 
 
 # ----------------------------------------------------------------------------- guests
-LADY_XY = (-1.1, 1.5)
-GENT_XY = (1.3, 1.0)
+LADY_XY = (-0.2, 1.5)
+GENT_XY = (2.2, 1.0)
 PPD = 192
 ZF = 30.0
 
@@ -81,9 +81,9 @@ def p_lady(g):
 
 def p_gent(g):
     p = dict(cast13.STORY13["gentleman_stand"][1])
-    s = min(1.0, sip(g, 96, 8, 6, 8) + sip(g, 170))
+    s = 0.22 * sip(g, 92, 12, 10, 12)          # a small lift of the cup + saucer toward the chest, the cup stays visible to the cut
     p.update(yaw=0.5, expr="neutral", mouth="smile", arm_r="behind",
-             arm_l=dict(hand=(lerp(0.12, 0.06, s), lerp(0.95, 0.28, s)), bend=lerp(0.5, -0.4, s), stretch=1.2, layer="front"),
+             arm_l=dict(hand=(lerp(0.12, 0.10, s), lerp(0.95, 0.80, s)), bend=lerp(0.5, 0.3, s), stretch=1.2, layer="front"),
              prop_l=dict(type="teacup_saucer", scale=1.5), tea=1.0)
     p["pitch"] = -0.08 + 0.12 * s + 0.03 * math.sin(g * 0.08)
     p["lean"] = 1.0 * math.sin(g * 0.07)
@@ -116,6 +116,12 @@ class Take(C.Take):
         C.Take.__init__(self, "suite", SUITE_PRESET, quality=quality, lens=22.0, name="cam_s02", light=LIGHT)
         sd = os.path.join(TMP, "sprites")
         self.tower = make_tower()
+        try:                                        # soften the rug texture (fine diagonal stripes alias into scan-line shimmer at grazing angles)
+            for n in D.STATE["M"]["rug"].node_tree.nodes:
+                if n.bl_idname == "ShaderNodeTexImage":
+                    n.image.scale(336, 240)
+        except Exception as e:
+            print("rug soften failed", e)
         pre_names = set(ob.name for ob in D.STATE["SET"].objects)
         self.lady = self.actors["lady"] = C.make_actor("lady", "lady13_seat", sd, canvas=cast13.CANVAS13_POSE["lady_sip_tea"])
         self.gent = self.actors["gent"] = C.make_actor("gent", "gentleman13", sd)
@@ -143,6 +149,12 @@ class Take(C.Take):
             C.place(self.lady, f, LADY_XY, z=ZF)
             C.place(self.gent, f, GENT_XY, z=ZF)
         if shot == 2:
+            for nm in ("chandelier", "candles", "tea"):          # shot 2 only: chandelier fragment + the shot-3 teacup that floats at the window edge
+                ob = C.bpy.data.objects.get(nm)
+                if ob is not None:
+                    for g in gs:
+                        ob.hide_render = True
+                        ob.keyframe_insert("hide_render", frame=bf(shot, g))
             for g in gs:
                 f = bf(shot, g)
                 self.scene.frame_set(f)

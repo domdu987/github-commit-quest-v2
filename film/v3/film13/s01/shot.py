@@ -15,7 +15,7 @@ G1 = C.g_bound(2.10)                  # 63: shot 2 starts
 H_OUT = 6
 RANGES = {1: (0, G1 + H_OUT - 1)}
 PRESET, LIGHT = "hotel_front", "DAY"
-H0, H1 = 0.40, 0.95                   # lift 0.55 -> 0.65 over the shot (continues through the handle)
+H0, H1 = 0.62, 1.00                   # lift 0.55 -> 0.65 over the shot (continues through the handle)
 CAM0 = ((-4.4, -26.0, 1.7), (0.2, 0.0, 11.6))
 CAM1 = ((-3.6, -25.4, 0.8), (0.2, 0.0, 12.0))
 LENS = 17.0
@@ -65,7 +65,7 @@ def make_dust(streams=11, per=7, seed=4):
     import bpy, random
     r = random.Random(seed); SET = D.STATE["SET"]
     mat = bpy.data.materials.new("s01_dust"); mat.use_nodes = True; nt = mat.node_tree; nt.nodes.clear()
-    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (0.78, 0.60, 0.42, 1.0); em.inputs["Strength"].default_value = 0.8
+    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (0.30, 0.22, 0.15, 1.0); em.inputs["Strength"].default_value = 0.5
     tr = nt.nodes.new("ShaderNodeBsdfTransparent"); mx = nt.nodes.new("ShaderNodeMixShader"); out = nt.nodes.new("ShaderNodeOutputMaterial")
     mx.inputs[0].default_value = 0.7
     nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0])
@@ -78,7 +78,7 @@ def make_dust(streams=11, per=7, seed=4):
             for c in list(ob.users_collection): c.objects.unlink(ob)
             SET.objects.link(ob); ob.data.materials.append(mat)
             ob.visible_shadow = False; ob.visible_diffuse = False; ob.visible_glossy = False
-            k = r.uniform(0.7, 1.1); ob.scale = (0.1 * k, 0.1 * k, 0.5 * k)
+            k = r.uniform(0.7, 1.1); ob.scale = (0.07 * k, 0.07 * k, 0.35 * k)
             ob["x"] = sx + r.uniform(-0.3, 0.3); ob["y"] = r.uniform(-1.8, -0.5); ob["ph"] = (j + r.random() * 0.5) / per; ob["sp"] = r.uniform(0.9, 1.1) * (0.8 + 0.4 * ((si * 7) % 5) / 4.0); ob["dr"] = r.uniform(-0.3, 0.3)
             obs.append(ob)
     return obs
@@ -117,7 +117,7 @@ class Take(C.Take):
         self.dust = make_dust()
         make_foreground()
         D.set_bars_visible(False)
-        for nm in ("puddles", "scum"):                  # smeared puddle reflections read as blur on the phone
+        for nm in ("puddles", "scum", "prop_jack_head0", "prop_jack_bar0", "prop_jack_head1", "prop_jack_bar1"):                  # smeared puddle reflections read as blur on the phone
             o = C.bpy.data.objects.get(nm)
             if o is not None:
                 o.hide_render = True

@@ -32,7 +32,7 @@
     0,
     68
    ],
-   "set": "street hotel_front DAY round 3: lift 0.40 -> 0.95, camera crane (1.7 -> 0.8 D) + tilt, stair + puddles hidden, three workers turn jack bars (worker_turn_bar A/B) in the gap at the foundation line, pullman in front, crates/barrels foreground, dust as 11 falling streams"
+   "set": "street hotel_front DAY, worm's-eye 17 mm, crane up 0.45 -> 1.35 D + tilt, lift keyed 0.55 -> 0.65 (continues in the handle); crib pier + spare jacks left foreground; dust motes trickle from the base"
   }
  },
  "events": {
@@ -49,7 +49,7 @@
  "dof": "none",
  "denoiser": "OpenImageDenoise (set default)",
  "light": "DAY",
- "cast": "v3/cast13: pullman_look_up_confident, worker_turn_bar_A/B a/b/c",
+ "cast": "v3/cast13: pullman_look_up_confident (centre, idle sway + blinks), worker_stand_a/b/c",
  "samples": 12,
  "resolution": [
   720,
@@ -57,6 +57,6 @@
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 29.02,
- "s_per_frame_cpu_mean": 29.36
+ "s_per_frame_wall_mean": 28.39,
+ "s_per_frame_cpu_mean": 29.53
 }

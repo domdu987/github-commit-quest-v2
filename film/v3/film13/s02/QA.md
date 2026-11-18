@@ -9,3 +9,6 @@
 - Lady now holds cup AND saucer together (teacup_saucer) and lifts both to her lips; no clipped cup at the left edge in shot 3 (camera from above).
 - Rendered at 20 samples (was 12) to cut the carpet/glass shimmer.
 - Cut convention unchanged (round(t*30); conform covers +3 offset with handles).
+
+## Round 4 (shot 2 re-rendered g 57-107; shot 3 frames unchanged)
+- Gentleman keeps cup + saucer at the chest to the cut (tiny lift only); lady's cup stays in her hand; chandelier fragment hidden; the floating teacup at the window edge is out of frame (camera + guests shifted +0.9 D; a red armchair/curtain now shows at the left edge); rug texture downscaled to remove the scan-line shimmer; 20 samples.
