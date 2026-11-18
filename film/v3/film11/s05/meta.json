@@ -1,0 +1,29 @@
+{
+ "take": "s05",
+ "film": 11,
+ "shots": [
+  5
+ ],
+ "first_g": 312,
+ "n_frames": 101,
+ "g0": 318,
+ "g1": 406,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "set": "v3/set3d11/dairy.py barn_wide A: Sarah and milkmaid2 carry pails on yokes through the barn",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "dof": "none",
+ "s_per_frame_wall_mean": 9.39,
+ "s_per_frame_cpu_mean": 17.96,
+ "narration": "film11/audio/narration.wav at +0.10 s"
+}
