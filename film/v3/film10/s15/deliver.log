@@ -1,0 +1,9 @@
+take.mkv 22136 KB, 104 frames, first_g 992
+# QA_AUTO PASS  (take.mkv, 104 frames, 30.00 fps, g 992-1095)
+
+## Notes
+- magenta share 0.0 %
+
+Phone sheet: phone_sheet.jpg (cyan line = caption band y 880). Judge legibility on it.
+qa_auto exit 0
+finished
