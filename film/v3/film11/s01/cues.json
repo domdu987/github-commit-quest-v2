@@ -1,0 +1,14 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 2.6,
+   "frame": 0,
+   "end_frame": 78,
+   "kind": "ambience",
+   "label": "barn_milking A: Sarah holds out blistered hand, Jenner takes pus into jar"
+  }
+ ]
+}
