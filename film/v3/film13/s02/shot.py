@@ -65,9 +65,13 @@ def sip(g, t0, up=10, hold=16, down=10):
 
 
 def p_lady(g):
+    """lady in the teal armchair holds cup AND saucer together (teacup_saucer) in her right hand and lifts them to her lips; the other hand rests in her lap."""
     p = dict(cast13.STORY13["lady_sip_tea"][1])
     s = min(1.0, sip(g, 72) + sip(g, 150))
-    p["arm_r"] = dict(hand=(lerp(0.38, 0.27, s), lerp(0.55, 0.30, s)), bend=lerp(-0.5, -0.9, s), stretch=1.2, layer="front")
+    p["arm_r"] = dict(hand=(lerp(0.34, 0.26, s), lerp(0.62, 0.34, s)), bend=lerp(-0.5, -0.9, s), stretch=1.2, layer="front")
+    p["prop_r"] = dict(type="teacup_saucer", scale=1.5)
+    p["arm_l"] = dict(hand=(0.05, 0.95), bend=0.4, stretch=1.2, layer="front")
+    p.pop("prop_l", None)
     p["pitch"] = lerp(-0.05, 0.10, s) + 0.03 * math.sin(g * 0.09)
     p["head_roll"] = 3 + 1.2 * math.sin(g * 0.06)
     p["t"] = g / 30.0

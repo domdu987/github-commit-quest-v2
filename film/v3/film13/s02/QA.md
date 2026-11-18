@@ -4,3 +4,8 @@
 - Shot 2: lower frontal camera (rug ~25 %), guests larger (heads ~100 px), clock tower outside slides down between them; lady's sip is one clear 36-frame lift/hold/lower (g 72-108); gentleman sips g 96+. Chandelier corner visible at the top-left.
 - Not fixed: the stepped lime cloud slabs above the window are part of the set's sky texture (cannot edit the set); a wallpaper/painting wall is not in the frontal framing; deviation: drift is a deliberate exaggeration.
 - No mouths, no DOF/text. Heads (shot 2) bottom max under 880.
+
+## Round 3 (QA-tech notes)
+- Lady now holds cup AND saucer together (teacup_saucer) and lifts both to her lips; no clipped cup at the left edge in shot 3 (camera from above).
+- Rendered at 20 samples (was 12) to cut the carpet/glass shimmer.
+- Cut convention unchanged (round(t*30); conform covers +3 offset with handles).

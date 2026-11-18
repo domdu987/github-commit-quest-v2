@@ -60,14 +60,14 @@
     57,
     107
    ],
-   "set": "suite suite_two SUITE round 2: camera lower/frontal (z 31.45, tilt up), rug ~25 %, clock-tower landmark added outside, one clear lady sip (g 72-108) then gentleman"
+   "set": "suite suite_two SUITE: lady in the teal armchair + gentleman sip tea at the window; camera 8.0 -> 7.0 D back, 22 mm, slow push"
   },
   "3": {
    "g": [
     108,
     164
    ],
-   "set": "suite tea_close round 2: camera ABOVE the cups (z 34.5, pitch -19), tea discs mirror (ripple 0), window fills the top half with rooftops + tower sliding down"
+   "set": "suite tea_close SUITE: cup + saucer, tea ripple 0 keyed every frame; 40 mm slow push + pan; the street/rooftops outside are lowered by drift(g) per frame"
   }
  },
  "events": {
@@ -84,18 +84,18 @@
    164
   ]
  },
- "set": "v3/set3d13/chicago.py suite; every object outside the room except sky/backdrop lowered by 0.2 D/frame from g 63 (6 D/s, deliberately exaggerated; true lift is far slower)",
+ "set": "v3/set3d13/chicago.py suite (drift: every object outside the room lowered by (h-0.65)*3.6*2.0 D, h 0.65 -> 0.80 over g 63..159, continuing shot 1)",
  "dof": "none",
  "denoiser": "OpenImageDenoise (set default)",
  "light": "SUITE",
- "cast": "v3/cast13: lady_sip_tea (lady13_seat), gentleman13 (stand + teacup_saucer, sips); no mouth lip-sync",
- "samples": 12,
+ "cast": "v3/cast13: lady_sip_tea with teacup_saucer in one hand (cup AND saucer), gentleman13 standing + cup/saucer",
+ "samples": 20,
  "resolution": [
   720,
   1280
  ],
  "threads": 2,
  "fps": 30,
- "s_per_frame_wall_mean": 23.07,
- "s_per_frame_cpu_mean": 25.03
+ "s_per_frame_wall_mean": 28.07,
+ "s_per_frame_cpu_mean": 38.06
 }

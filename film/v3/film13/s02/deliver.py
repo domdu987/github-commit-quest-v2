@@ -27,7 +27,7 @@ meta = {"take": TAKE, "film": FILM, "shots": SHOTS, "first_g": FIRST, "n_frames"
         "set": "v3/set3d13/chicago.py suite (drift: every object outside the room lowered by (h-0.65)*3.6*2.0 D, h 0.65 -> 0.80 over g 63..159, continuing shot 1)",
         "dof": "none", "denoiser": "OpenImageDenoise (set default)", "light": "SUITE",
         "cast": "v3/cast13: lady_sip_tea (lady13_seat), gentleman13 (stand + teacup_saucer, sips); no mouth lip-sync",
-        "samples": 12, "resolution": [720, 1280], "threads": 2, "fps": 30,
+        "samples": 20, "resolution": [720, 1280], "threads": 2, "fps": 30,
         "s_per_frame_wall_mean": round(float(np.mean(walls)), 2), "s_per_frame_cpu_mean": round(float(np.mean(cpus)), 2)}
 json.dump(meta, open(os.path.join(HERE, "meta.json"), "w"), indent=1)
 t = lambda g: round(g / 30.0, 3)
