@@ -26,7 +26,8 @@ def shot_of(g):
 PRESET = {15: 'coach_close', 16: 'rank_rush', 17: 'rank_wide', 18: 'hero_track'}
 LENS = {15: 25.0, 16: 22.0, 17: 22.0, 18: 22.0}
 
-CAM17 = dict(loc=(-2.6, 6.0, 1.7), look_at=(4.6, 26.0, 4.4), loc_b=(-2.0, 9.0, 1.9), look_b=(4.7, 28.0, 4.5), lens=22.0)
+CAM17 = dict(loc=(-2.6, 6.0, 1.7), look_at=(5.4, 26.0, 4.4), loc_b=(-2.0, 9.0, 1.9), look_b=(5.9, 28.0, 4.5), lens=22.0)
+CAM18 = dict(loc=(-3.8, 0.4, 2.2), look_at=(0.4, 9.0, 3.7), loc_b=(-3.5, 9.0, 2.6), look_b=(1.9, 16.5, 4.4), lens=22.0)
 CAM15 = dict(loc=(-0.6, 11.4, 3.4), look_at=(3.5, 18.7, 6.0), loc_b=(1.9, 14.4, 4.9), look_b=(3.55, 18.6, 6.1), lens=25.0)
 CAM16 = dict(loc=(-1.8, 8.5, 2.7), look_at=(2.3, 22.0, 4.7), loc_b=(-1.0, 12.5, 2.9), look_b=(4.4, 28.0, 5.0), lens=22.0)
 
@@ -34,7 +35,7 @@ def cam_for(g):
     k = shot_of(g); a, b = SH[k]; x = (g - a) / float(b - a)
     u = 0.3 * ez(clamp(x)) + 0.7 * x                      # mostly linear (never static), mild ease at the start
     u = clamp(u, -0.12, 1.12)
-    cs = {15: CAM15, 16: CAM16, 17: CAM17}.get(k) or S.CAMS[PRESET[k]]
+    cs = {15: CAM15, 16: CAM16, 17: CAM17, 18: CAM18}.get(k) or S.CAMS[PRESET[k]]
     L = lambda p, q: tuple(pp + (qq - pp) * u for pp, qq in zip(p, q))
     return L(cs['loc'], cs['loc_b']), L(cs['look_at'], cs['look_b']), cs['lens']
 
@@ -44,11 +45,11 @@ G_THUNDER = g_of(37.2)
 RUSH0, RUSH1 = SH[16][0] + 2, SH[16][0] + 62            # rush k 0.35 .. 1.0
 G_COIN2 = g_of(39.0)       # coins clink: purse close-up pose
 G_DROP = g_bound(43.55)    # the grin drops as Hanway passes beneath
-SEAT_DZ = -0.9; PASS_X, PASS_Z = 1.95, 1.9
+SEAT_DZ = -0.9; PASS_X, PASS_Z = 2.35, 1.9
 BOX_A = (3.55, 18.6, 4.22); BOX_B = (3.55, 35.1, 4.22); BOX_C = (3.55, 51.6, 4.22)
 ROLL = (SH[17][0] - 2, SH[17][1] + H + 2)                # coaches pull away
 ROLL_DY = {0: -4.0, 1: -9.0, 2: -9.0, 3: -9.0}
-HAN_A, HAN_C = Vector((-2.5, 7.0, 0.0)), Vector((-2.5, 17.0, 0.0))
+HAN_A, HAN_C = Vector((-2.3, 7.0, 0.0)), Vector((-2.0, 16.5, 0.0))
 RUSH_MEM = ['crowd_man_a', 'crowd_man_b', 'crowd_man_c', 'crowd_man_d', 'crowd_woman_a', 'crowd_woman_b']
 RUSH_PICK = list(range(24))   # which of the 24 anchors get a card (16 shot)
 
@@ -58,7 +59,8 @@ def busy_of(g):
         if f0 <= g <= f1: return lerp(v0, v1, (g - f0) / float(f1 - f0))
     return BUSY_KEYS[-1][1]
 COACH_Y0 = [22.0, 38.5, 55.0, 71.5]
-PASS = [('passenger_a_seated', -1.5), ('passenger_b_laugh', 0.2), ('passenger_a_laugh', 1.9)]    # (pose, y offset from the coach origin)
+PASS = [('passenger_a_seated', -1.5), ('passenger_b_laugh', 0.2), ('passenger_a_laugh', 1.9)]
+G_COIN_UP = (1163, 1174)    # (pose, y offset from the coach origin)
 
 def coach_dy(i, g):
     r0, r1 = ROLL; u = clamp((g - r0) / float(r1 - r0))
@@ -74,6 +76,8 @@ def build_set(quality):
     RAIN_K = 1.0                                        # rain intensity multiplier probe: the hook accepts >1 (more streaks)?
     S.rain(0.70, frame=G0); S.rain(1.4, frame=SH[15][0] + 52); S.rain(1.5, frame=SH[16][0] + 10); S.rain(1.5, frame=G1)
     for f, v in BUSY_KEYS: S.set_rank_busy(v, frame=f)
+    for ob in list(bpy.data.objects):
+        if ob.name.endswith('_reins'): ob.hide_render = True           # the diagonal rein line crossed the coachman's face
     for i in range(4):                                  # the set's black pin silhouettes are replaced by passenger cards
         o = bpy.data.objects.get('coach_%d_pass' % i)
         if o: o.hide_render = True
@@ -140,8 +144,18 @@ def build_cards(g, cl):
             if bz > i / 4.0 + 0.001 or (k == 17 and True):
                 if k == 16 and not (bz > i / 4.0 + 0.001): continue
                 for q, (pn, dyo) in enumerate(PASS):
+                    if k == 18 and i == 0 and q == 0: continue          # keep the grin-drop face clear
                     cpos = (PASS_X, COACH_Y0[i] + dyo + coach_dy(i, g), PASS_Z)
                     C.card('actor_pass_%d_%d' % (i, q), SC[pn], cpos, cl, over=dict(blink=cast12.blink_at(g + 13 * q, 90, 5)), mirror=(q % 2 == 1))
+    # --- shot 16: a crowd hand passes a big gold coin up into the purse
+    if k == 16 and G_COIN_UP[0] <= g <= G_COIN_UP[1]:
+        u = (g - G_COIN_UP[0]) / float(G_COIN_UP[1] - G_COIN_UP[0]); box = [o for o in C._cards if o.name == 'actor_box_a'][0]
+        bpy.context.view_layer.update(); hx, hz = box['hand_r']; tgt = box.matrix_world @ Vector((hx, 0.0, hz))
+        p0 = Vector((-0.2, 14.5, 3.3)); pos = p0.lerp(tgt, ez(u)) + Vector((0, 0, 1.2 * 4 * u * (1 - u)))
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.36, location=pos); co = bpy.context.active_object; co.name = 'coin_up'; co.scale = (1.0, 0.22, 1.0); co.rotation_euler = (0, 0, u * 12.0)
+        m = bpy.data.materials.new('coin_m'); m.use_nodes = True; bs = m.node_tree.nodes['Principled BSDF']; bs.inputs['Base Color'].default_value = (1.0, 0.72, 0.12, 1); bs.inputs['Metallic'].default_value = 0.8; bs.inputs['Roughness'].default_value = 0.25
+        bs.inputs['Emission Color'].default_value = (1.0, 0.7, 0.1, 1); bs.inputs['Emission Strength'].default_value = 1.4
+        co.data.materials.append(m); co.visible_glossy = False; C._cards.append(co)
     # --- the rush (shot 16)
     if k == 16:
         kk = lerp(0.35, 1.0, clamp((g - RUSH0) / float(RUSH1 - RUSH0)))
