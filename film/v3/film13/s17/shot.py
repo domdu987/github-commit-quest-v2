@@ -30,13 +30,13 @@ PRESET = "suite_two"
 LIGHT = None
 
 RICH17 = Vector((1.2, 1.0, 30.0))
-RICH19 = Vector((3.0, 1.0, 30.0))
-LADY, GENT = Vector((-1.5, 1.0, 30.0)), Vector((0.5, 1.0, 30.0))
+RICH19 = Vector((2.7, 1.0, 30.0))
+LADY, GENT = Vector((-1.2, 1.0, 30.0)), Vector((0.6, 1.0, 30.0))
 
 CAMS = {
     17: (((-5.2, 4.6, 31.3), (1.0, 0.5, 33.2), 22.0), ((-4.2, 4.1, 31.3), (1.3, 0.5, 33.2), 22.0)),
     18: (((-0.4, 6.4, 33.9), (-3.6, 2.0, 31.6), 30.0), ((-0.9, 5.9, 33.8), (-3.6, 2.0, 31.7), 30.0)),
-    19: (((0.4, 8.6, 30.9), (0.6, 0.0, 33.4), 22.0), ((0.4, 7.7, 30.9), (0.6, 0.0, 33.4), 22.0)),
+    19: (((1.1, 7.7, 30.9), (1.2, 0.0, 32.3), 21.0), ((1.1, 7.0, 30.9), (1.2, 0.0, 32.3), 21.0)),
 }
 PPD = {17: 256, 18: 256, 19: 256}
 
@@ -83,7 +83,7 @@ def rich_pose(shot, g):
             p[k] = "behind"
         p["prop_l"] = None
         p["prop_r"] = None
-        p["arm_" + arm] = dict(hand=(sx * lerp(0.3, 0.95, up), lerp(0.95, 0.10, up) + bob), bend=lerp(0.4, -0.5, up), stretch=1.25, layer="front")
+        p["arm_" + arm] = dict(hand=(sx * lerp(0.3, 0.7, up), lerp(0.95, 0.10, up) + bob), bend=lerp(0.4, -0.5, up), stretch=1.25, layer="front")
         p["prop_" + arm] = dict(type="teacup_saucer", scale=1.5)
         if Q2[0] - 2 <= g <= Q2[1] + 1:
             p["mouth"] = cast13.talk_mouth(g, 1.0)

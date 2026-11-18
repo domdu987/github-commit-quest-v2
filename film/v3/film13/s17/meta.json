@@ -62,6 +62,6 @@
   1280
  ],
  "fps": 30,
- "s_per_frame_wall_mean": 7.61,
- "s_per_frame_cpu_mean": 15.01
+ "s_per_frame_wall_mean": 7.64,
+ "s_per_frame_cpu_mean": 14.98
 }

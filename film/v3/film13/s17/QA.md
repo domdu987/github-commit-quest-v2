@@ -19,3 +19,6 @@ Mean 7.5 s/frame wall (12 samples, 720x1280, 2 threads, two processes in paralle
 - Shot 17: morning feel (sun lower, warmer, brighter, keyed per frame); he is three-quarter to the window, gaze out of the glass; hand and fingers on the cup visible at chest height.
 - Shot 19: cup raised on his open outer side (away from the gentleman), clear gap, no arm over any face; lip-sync inside Q2 (g 1257-1301).
 - Shot 18 kept as is (new sky only).
+
+## Round 3 (director: QA-art keys2, shot 19 only re-rendered; 17 and 18 untouched)
+- Shot 19: rich in the left third, cup + saucer fully in frame beside his face with the hand on it, camera closer (lens 21) and tilted down so the ceiling is about 15 %; lady and gentleman fully in frame. Lip-sync unchanged (g 1257-1301).
