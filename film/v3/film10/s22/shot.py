@@ -41,18 +41,22 @@ def lerp_v(a, b, u):
 
 
 CAM22_A = ((-24.0, -28.0, 19.0), (20.0, 18.0, 3.0))
-CAM22_B = ((5.0, -18.5, 6.5), (15.5, 7.0, 4.6))
+CAM22_B = ((5.0, -18.5, 6.5), (15.5, 7.0, 1.8))
 LENS22 = 22.0
-CAM23_A = ((-4.0, -8.4, 3.9), (-3.8, 1.2, 4.7))
-CAM23_B = ((-2.2, -4.9, 4.0), (-1.9, 1.2, 4.7))
+CAM23_A = ((-4.7, -8.4, 3.9), (-4.5, 1.2, 4.7))
+CAM23_B = ((-2.5, -4.9, 4.0), (-2.3, 1.2, 4.7))
 LENS23 = 24.0
 STRIPE_END = 0.62
 
 
 def cam_of(shot, g):
     if shot == 22:
-        x = clamp((g - RANGES[22][0]) / float(RANGES[22][1] - RANGES[22][0]))
+        x = clamp((g - RANGES[22][0]) / float(1658 - RANGES[22][0]))          # arrives close by g 1658 (heads >= 40 px), then drifts on
         a, b = CAM22_A, CAM22_B
+        u = ez(x, "sine")
+        base = Vector(lerp_v(a[0], b[0], u)), Vector(lerp_v(a[1], b[1], u))
+        d = clamp((g - 1658) / float(RANGES[22][1] - 1658))
+        return base[0] + Vector((0.9, 0.6, 0.1)) * d, base[1] + Vector((0.5, 0.2, 0.0)) * d
     else:
         x = clamp((g - G23) / float(GEND - G23))
         a, b = CAM23_A, CAM23_B
@@ -64,8 +68,8 @@ def adm22(g):
     cast, p = pose_of("admiral_arms_akimbo", expr="worried", mouth="flat", fx=["sweat"])
     u = u_of(g, 1650, 1700)
     p["head_roll"] = 4 * u + 1.5 * math.sin(g * 0.1)
-    look = u_of(g, 1650, 1685)                             # he looks UP at his own grey ship before the cut
-    p["pitch"] = lerp(-0.3, -0.95, look)
+    look = u_of(g, 1655, 1690)                             # he looks UP at his own grey ship before the cut
+    p["pitch"] = lerp(-0.3, -1.05, look)
     p["gaze"] = (lerp(0.2, 0.35, look), lerp(0.0, -1.0, look))
     p["yaw"] = lerp(p.get("yaw", 0.4), 0.15, look)
     p["blink"] = blink(g, [1640, 1688])
@@ -73,21 +77,28 @@ def adm22(g):
 
 
 def pai22(g):
-    cast, p = pose_of("painter_calm_smile")
+    cast, p = pose_of("painter_calm_smile", expr="neutral", mouth="smile")      # calm closed-mouth smile
     p["lean"] = 1.2 * math.sin(g * 0.09)
     p["blink"] = blink(g, [1655, 1696])
     return p
 
 
 G_LAST = 1798                                              # his last stroke lands on the cut at "เอง" (59.9 s)
-BRUSH_DX = 1.25                                            # brush tip is this far right of his feet (D)
+BRUSH_DX = 1.12                                            # brush tip is this far right of his feet (D)
 FRONT_OFF = 0.0                                            # calibration of the stripe front vs the brush (D)
 
 
 def adm_x(g):
     """he shuffles along the stage to the right while he paints (the stripe front follows the brush)."""
     x = clamp((g - G23) / float(G_LAST - G23))
-    return lerp(-5.0, -2.5, 0.3 * ez(x, "sine") + 0.7 * x)
+    return lerp(-5.6, -3.4, 0.3 * ez(x, "sine") + 0.7 * x)
+
+
+def front_x(g):
+    """world x of the brush tip (the painted front sits exactly there)."""
+    ph = (g - G23) / 22.0 * 2 * math.pi
+    sw = 0.5 - 0.5 * math.cos(ph)
+    return adm_x(g) + BRUSH_DX + 0.2 * (sw - 0.5)
 
 
 def stripe_of(g):
@@ -100,13 +111,23 @@ def stripe_of(g):
 
 
 def blobs(f, pose):
-    """big paint blobs for phone size (puppet-local D, head centre at the origin): navy on the moustache and the cheek, white on the cap."""
-    return ('<g stroke="#10173a" stroke-width="0.012">'
-            '<path d="M-0.02,0.15 C0.10,0.10 0.30,0.14 0.30,0.25 C0.28,0.36 0.08,0.36 -0.02,0.28 Z" fill="#1f2f5a"/>'
-            '<ellipse cx="0.20" cy="0.34" rx="0.035" ry="0.07" fill="#1f2f5a"/>'
-            '<path d="M-0.30,-0.40 C-0.20,-0.52 0.00,-0.50 0.02,-0.38 C-0.05,-0.30 -0.25,-0.30 -0.30,-0.40 Z" fill="#f4f1e6"/>'
-            '<circle cx="-0.33" cy="0.10" r="0.085" fill="#1f2f5a"/><circle cx="-0.38" cy="0.20" r="0.035" fill="#f4f1e6"/>'
-            '</g>')
+    """wet paint blobs for phone size (puppet-local D, head centre at the origin): WHITE on the moustache and the cap peak, NAVY on the cheek,
+    each with a gloss highlight and a drip, dark outlines so they read against the same-coloured ground."""
+    ol = 'stroke="#10173a" stroke-width="0.016" stroke-linejoin="round"'
+    return (
+        # moustache: white blob + shade crescent + gloss + drip
+        '<path d="M-0.04,0.16 C0.08,0.10 0.30,0.15 0.31,0.25 C0.29,0.34 0.06,0.35 -0.04,0.27 Z" fill="#fdfdf8" %s/>' % ol +
+        '<path d="M0.02,0.31 C0.12,0.34 0.24,0.33 0.29,0.27 C0.22,0.36 0.08,0.36 0.02,0.31 Z" fill="#aab6d6"/>'
+        '<ellipse cx="0.10" cy="0.19" rx="0.05" ry="0.018" fill="#ffffff" transform="rotate(-12 0.10 0.19)"/>'
+        '<path d="M0.17,0.33 C0.15,0.42 0.15,0.47 0.18,0.47 C0.21,0.47 0.21,0.42 0.20,0.33 Z" fill="#fdfdf8" %s/>' % ol +
+        # cap peak: white blob + gloss + drip
+        '<path d="M-0.34,-0.40 C-0.24,-0.54 0.00,-0.52 0.03,-0.38 C-0.05,-0.29 -0.27,-0.28 -0.34,-0.40 Z" fill="#fdfdf8" %s/>' % ol +
+        '<ellipse cx="-0.14" cy="-0.44" rx="0.06" ry="0.02" fill="#ffffff" transform="rotate(-10 -0.14 -0.44)"/>'
+        '<path d="M-0.20,-0.31 C-0.22,-0.22 -0.22,-0.18 -0.19,-0.18 C-0.16,-0.18 -0.16,-0.22 -0.17,-0.31 Z" fill="#fdfdf8" %s/>' % ol +
+        # cheek: navy blob + gloss + drip
+        '<path d="M-0.42,0.02 C-0.36,-0.06 -0.20,-0.04 -0.19,0.06 C-0.20,0.15 -0.38,0.17 -0.42,0.09 Z" fill="#1f2f5a" %s/>' % ol +
+        '<ellipse cx="-0.33" cy="0.00" rx="0.045" ry="0.016" fill="#8aa0e0" transform="rotate(-15 -0.33 0.00)"/>'
+        '<path d="M-0.30,0.14 C-0.32,0.24 -0.32,0.29 -0.29,0.29 C-0.26,0.29 -0.26,0.24 -0.27,0.14 Z" fill="#1f2f5a" %s/>' % ol)
 
 
 def adm23(g):
@@ -130,6 +151,78 @@ def adm23(g):
     return p
 
 
+# ----------------------------------------------------------------------------- the zebra bands he paints (runtime set dressing)
+BAND_W, BAND_LEAN, Z0, Z1, ZB = 1.2, 0.7, 3.15, 6.1, 5.1   # band width (D), slant (dx per dz), painted height range, brush height
+BAND_X0 = -10.0
+NAVY, WHITE = "#1f2f5a", "#f2eee2"
+
+
+def band_polys(fx):
+    """[(colour, [(x,z) ...quad grid cells]) ...] of the finished bands and the growing one, up to the front fx (at brush height)."""
+    out = []
+    zs = [Z0 + i * (Z1 - Z0) / 6.0 for i in range(7)]
+    k = 0
+    while BAND_X0 + k * BAND_W < fx:
+        a = BAND_X0 + k * BAND_W
+        b = min(a + BAND_W, fx)
+        quads = []
+        for i in range(6):
+            za, zb = zs[i], zs[i + 1]
+            la, lb = BAND_LEAN * (za - ZB), BAND_LEAN * (zb - ZB)
+            quads.append([(a + la, za), (b + la, za), (b + lb, zb), (a + lb, zb)])
+        out.append((WHITE if k % 2 == 0 else NAVY, quads))
+        k += 1
+    return out
+
+
+class Bands(object):
+    """paint bands as thin meshes laid on the hull (raycast to the plating), one object per rendered frame, shown only on its frame."""
+
+    def __init__(self, take):
+        import bpy
+        self.bpy, self.take = bpy, take
+        self.hull = bpy.data.objects["hull_berth"]
+        self.mats = {WHITE: D.STATE["C"](WHITE, 1.0, 1.0, True), NAVY: D.STATE["C"](NAVY, 1.0, 1.0, True)}
+
+    def hull_y(self, x, z):
+        sc = self.bpy.context.scene
+        dg = self.bpy.context.evaluated_depsgraph_get()
+        o = Vector((x, -12.0, z))
+        for _ in range(6):
+            ok, loc, nor, idx, ob, mat = sc.ray_cast(dg, o, Vector((0, 1, 0)))
+            if not ok:
+                return 1.2
+            if ob.name == "hull_berth":
+                return loc.y - 0.035
+            o = loc + Vector((0, 0.01, 0))
+        return 1.2
+
+    def make(self, f, fx):
+        bpy = self.bpy
+        for col, quads in band_polys(fx):
+            verts, faces = [], []
+            for q in quads:
+                base = len(verts)
+                for (x, z) in q:
+                    verts.append((x, self.hull_y(x, z), z))
+                faces.append((base, base + 1, base + 2, base + 3))
+            me = bpy.data.meshes.new("band_%d" % f)
+            me.from_pydata(verts, [], faces)
+            me.update()
+            ob = bpy.data.objects.new("band_%d_%s" % (f, col[1:]), me)
+            D.STATE["SET"].objects.link(ob)
+            me.materials.append(self.mats[col])
+            ob.visible_shadow = False
+            ob.visible_glossy = False
+            for fr, hid in ((f - 1, True), (f, False), (f + 1, True)):
+                ob.hide_render = hid
+                ob.keyframe_insert("hide_render", frame=fr)
+            fc = C._fcurve(ob, "hide_render")
+            if fc is not None:
+                for kp in fc.keyframe_points:
+                    kp.interpolation = "CONSTANT"
+
+
 class Take(C.Take):
     def __init__(self, quality="preview", shot=22):
         loc, preset, light = LOCS[shot]
@@ -145,6 +238,7 @@ class Take(C.Take):
             self.pai = self.actors["pai"] = C.make_actor("pai", "painter10", sd)
         else:
             self.adm = self.actors["adm"] = C.make_actor("adm", "admiral", sd)
+            self.bands = Bands(self)
 
     def pose(self, shot, gs):
         A = self.A
@@ -159,8 +253,10 @@ class Take(C.Take):
                 C.place(self.pai, f, (10.4, -9.4, 0.0))
             else:
                 ax = adm_x(g)
-                self.key_set(f, harbour_dazzle=1.0, stripes=stripe_of(g))
+                self.key_set(f, harbour_dazzle=1.0, stripes=0.30 * clamp((g - G23) / float(G_LAST - G23)))
                 C.place(self.adm, f, (ax, mk["admiral_plank"][1], mk["admiral_plank"][2]))
+                self.scene.frame_set(f)
+                self.bands.make(f, front_x(g))
         for g in gs:
             f = bf(shot, g)
             self.scene.frame_set(f)
