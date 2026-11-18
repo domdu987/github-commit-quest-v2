@@ -6,6 +6,7 @@ One build (street, DAY, lift 0), custom cameras per shot (NO DOF), cast13 actors
 import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import c13 as C
+import fx13
 import bpy
 from mathutils import Vector
 import numpy as np
@@ -21,9 +22,9 @@ def shot_of(g):
         if a <= g <= b: return s
     return 7 if g < 367 else 9
 
-CAMS = {7: (((-6, -32, 2.8), (-36, -17, 4.5), 22), ((-4, -30, 3.0), (-8, -9, 6.5), 22)),
-        8: (((-5, -26, 2.6), (4, -8, 4.5), 22), ((0, -22, 2.8), (7, -8, 4.6), 22)),
-        9: (((-12, -31, 2.5), (-8, -12, 8.5), 22), ((-9, -27, 2.5), (-6, -12, 8.0), 22))}
+CAMS = {7: (((-9.5, -31.5, 2.0), (-18.5, -23.0, 3.2), 22), ((-15.5, -30.0, 2.3), (-31.0, -12.0, 4.4), 22)),
+        8: (((-18, -21.5, 2.6), (-6, -9.5, 3.7), 22), ((-16.5, -20.0, 2.8), (-5.5, -9.0, 3.9), 22)),
+        9: (((-7.5, -20.5, 2.0), (-5, -14, 3.2), 22), ((-6.0, -19.5, 2.0), (-3.8, -14, 3.5), 22))}
 def cam_of(g):
     s = shot_of(g); a, b = SH[s]; u = (g - a) / float(b - a)
     u = 0.3 * ez(clamp(u)) + 0.7 * u
@@ -33,7 +34,7 @@ def cam_of(g):
 def fill_of(g):
     return lerp(0.05, 0.15, clamp((g - 367) / 140.0))
 def mound_of(g):
-    return lerp(0.25, 0.85, ez((g - 447) / 66.0)) if g >= 447 else (0.25 if g >= 380 else 0.0)
+    return lerp(0.40, 1.0, ez((g - 447) / 66.0)) if g >= 447 else 0.0
 
 def gz(x, y, plank=False, fill=None):
     z = float(STATE["mud_z"](np.array([x]), np.array([y]))[0])
@@ -84,12 +85,14 @@ def pullman_fn():
             base = dict(walk); base.pop("legs", None); base.pop("yaw", None); base["arm_l"] = "akimbo"
             p = cast13.cycle("pullman", (g - GW) * 0.5 / 14.0, "walk", facing=1, base=base, speed=0.85)
         else:
-            k = ez((g - GU) / 10.0); p = puppet.lerp_pose("pullman", cast13.STORY13["pullman_point_plan"][1], up, k)
-            p["pitch"] = lerp(-0.15, -0.75, k) + 0.04 * math.sin(g * 0.2)
+            k = ez((g - GU) / 10.0)
+            p = dict(cast13.STORY13["pullman_point_plan"][1]); p["yaw"] = 0.30; p["expr"] = "happy"; p["mouth"] = "smile"
+            p["gaze"] = (0.5, lerp(-0.1, -0.9, k)); p["head_roll"] = -3 * k
+            p["pitch"] = lerp(-0.15, -0.60, k) + 0.03 * math.sin(g * 0.2)
+            p["arm_r"] = dict(hand=(0.80, lerp(0.18, 0.55, k)), bend=-0.5, stretch=1.25, layer="front")
             if g >= GN:
-                nn = math.sin((g - GN) * 0.33)                                   # confident nod: down and up twice
-                p["pitch"] = lerp(-0.75, 0.2, ez((g - GN) / 6.0)) - 0.35 * max(0.0, math.sin((g - GN - 6) * 0.33)) * -1 if False else -0.35 + 0.45 * max(0.0, nn) - 0.05
-                p["expr"] = "smirk"
+                nn = max(0.0, math.sin((g - GN) * 0.33))
+                p["pitch"] = -0.55 + 0.75 * nn
         p["blink"] = C.blink(g, [530, 575]); p["t"] = g / 30.0
         return xy, p, True
     return f
@@ -99,18 +102,24 @@ class Take(C.Take):
         C.Take.__init__(self, PRESET, light=LIGHT, state=BSTATE, quality=quality, name="cam_s07")
         self.tracks, self.crowd_objs = [], []
         # shot 7: diggers at the fill piles, a wheelbarrow walker, townsfolk
-        self.add("d7a", "worker13_a", digger("worker13_a", "worker_stand_a", (-17.0, -22.0), 0), 128, False, (7,))
-        self.add("d7b", "worker13_b", digger("worker13_b", "worker_stand_b", (-21.5, -23.5), 9), 128, False, (7,))
-        self.add("d7c", "worker13_c", digger("worker13_c", "worker_stand_c", (-26.0, -22.0), 4), 128, False, (7,))
-        self.add("f7", "foreman13", walker("foreman13", "foreman_stand", (-27, -28), (-33, -28.5), 362, 450, -1, 0.7), 128, False, (7,))
+        self.add("d7a", "worker13_a", digger("worker13_a", "worker_stand_a", (-14.0, -24.0), 0), 128, False, (7,))
+        self.add("d7b", "worker13_b", digger("worker13_b", "worker_stand_b", (-18.5, -25.0), 9), 128, False, (7,))
+        self.add("d7c", "worker13_c", digger("worker13_c", "worker_stand_c", (-22.5, -23.5), 4), 128, False, (7,))
+        self.add("f7", "foreman13", walker("foreman13", "foreman_stand", (-24, -28), (-34, -27), 362, 450, -1, 0.7), 128, False, (7,))
         # shot 8: foreman at the stair foot, two diggers on the mound
         self.add("f8", "foreman13", walker("foreman13", "foreman_stand", (-4.5, -10.5), (-1.5, -10.5), 440, 515, 1, 0.5), 224, False, (8,))
-        self.add("w8a", "worker13_a", digger("worker13_a", "worker_stand_a", (8.0, -15.0), 3, -1), 224, False, (8,))
-        self.add("w8b", "worker13_b", digger("worker13_b", "worker_stand_b", (13.0, -15.0), 11, -1), 224, False, (8,))
+        self.add("w8a", "worker13_a", digger("worker13_a", "worker_stand_a", (-13.0, -12.8), 3, 1), 224, False, (8,))
+        self.add("w8b", "worker13_b", digger("worker13_b", "worker_stand_b", (-7.6, -12.8), 11, -1), 224, False, (8,))
         # shot 9: pullman + two bystanders
         self.add("pul", "pullman", pullman_fn(), 192, False, (9,))
-        self.add("w9", "worker13_c", digger("worker13_c", "worker_stand_c", (-16.0, -20.0), 6), 160, False, (9,))
+        self.add("w9", "worker13_c", digger("worker13_c", "worker_stand_c", (-15.0, -19.0), 6), 160, False, (9,))
         self.horse = None
+        fx13.tame_puddles(B, rain=False)
+        self.walk = fx13.raised_walk(B)
+        bpy.data.objects['pile_a'].hide_render = True
+        mo = STATE.get("mound")
+        if mo is not None: mo.location = (-21.0, 2.5, 0.0)
+        self.clods = fx13.Clods(10)
 
     def add(self, name, cast, fn, ppd, plank, shots):
         a = C.make_actor(name, cast, SPRITES)
@@ -145,6 +154,7 @@ class Take(C.Take):
             for ob in self.crowd_objs:
                 ob.hide_render = (self.crowd_shot[ob.name] != s); ob.keyframe_insert("hide_render", frame=f)
                 ob.location.z = ob["base_z"] + fill_of(g) * B.FILL_MAX; ob.keyframe_insert("location", index=2, frame=f)
+            self.clods.key(f, self.throws(g, s))
             for tr in self.tracks:
                 xy, p, vis = tr.fn(g)
                 C.place(self.actors[tr.name], f, xy, self._z(tr, xy, g))
@@ -157,6 +167,19 @@ class Take(C.Take):
         for tr in self.tracks:
             fr = [bf(1, g) for g in gs if shot_of(g) in tr.shots]
             if fr: self.sprites_for([(self.actors[tr.name], tr.ppd)], fr)
+
+    def throws(self, g, s):
+        out = []
+        if s == 7:
+            fz = fill_of(g) * B.FILL_MAX
+            for (x, y, ph) in ((-14.0, -24.0, 0), (-18.5, -25.0, 9), (-22.5, -23.5, 4)):
+                z0 = gz(x, y, False, fill_of(g)) + 1.6
+                out.append(((x - 0.4, y, z0), (x - 2.6, y - 0.6, gz(x - 2.6, y - 0.6, False, fill_of(g)) + 0.3), ph, 20, True))
+        elif s == 8:
+            for (x, y, ph, d) in ((-13.0, -12.8, 3, 1), (-7.6, -12.8, 11, -1)):
+                z0 = gz(x, y, False, fill_of(g)) + 1.7
+                out.append(((x + 0.3 * d, y, z0), (x + 2.6 * d, y + 1.2, gz(x + 2.6 * d, y + 1.2, False, fill_of(g)) + 1.2), ph, 20, True))
+        return out
 
     def report(self, g):
         f = bf(1, g); self.scene.frame_set(f)

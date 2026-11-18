@@ -6,6 +6,7 @@ One build (street, RAIN, lift 0, fill 0), custom cameras per shot (NO DOF), cast
 import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import c13 as C
+import fx13
 from mathutils import Vector
 B, STATE, lerp, clamp, ez, bf = C.B, C.B.STATE, C.lerp, C.clamp, C.ez, C.bf
 cast13 = C.cast13
@@ -20,9 +21,9 @@ def shot_of(g):
     return 4 if g < 162 else 6
 
 # ---- cameras: (loc, look, lens) start/end per shot; u = (g - a) / (b - a) over the shot's own range (handles extrapolate)
-CAMS = {4: (((-36, -62, 27), (0, -5, 28), 22), ((-30, -60, 3.6), (-6, -14, 8), 22)),
-        5: (((-8, -41, 1.7), (-16.5, -33.5, 2.9), 22), ((-11, -38.5, 1.5), (-16.8, -33.3, 2.8), 22)),
-        6: (((-8, -31, 2.7), (-5.5, -16, 3.6), 22), ((-6.5, -27.5, 2.6), (-4.5, -15.5, 3.6), 22))}
+CAMS = {4: (((-14, -40, 46), (0, 4, 43), 22), ((-30, -58, 3.4), (-6, -14, 7), 22)),
+        5: (((-29, -46.5, 1.5), (-22.0, -37.5, 2.4), 22), ((-26.5, -45.0, 1.4), (-20.8, -37.5, 2.2), 22)),
+        6: (((-9, -27, 2.3), (-10.5, -21, 2.4), 22), ((-6.5, -19.5, 2.0), (-3, -14.2, 2.1), 22))}
 def cam_of(g):
     s = shot_of(g); a, b = SH[s]; u = (g - a) / float(b - a)
     u = 0.3 * ez(clamp(u)) + 0.7 * u
@@ -59,17 +60,21 @@ class Take(C.Take):
         import bpy
         self.horse = bpy.data.objects["cartA_horse"]
         self.crowd_objs = []
+        fx13.tame_puddles(B, rain=True)
+        spots = fx13.puddle_spots(B)
+        self.ripples = fx13.Ripples(spots, n=16, life=26, seed=3, rmax=0.8)
+        self.crowns = [fx13.Crown(B, 10, "fx_c%d" % i) for i in range(4)]
         W = lambda *a, **k: walker(*a, **k)
         # shot 4: far walkers on the plank walk (away from camera it reads small)
         self.add("t4a", "town_a", W("town_a", "town_stand_a", (-12, -22), (0, -11), 150, 250, 1), ppd=128, shots=(4,))
         self.add("t4b", "worker13_a", W("worker13_a", "worker_stand_a", (0, -11), (-12, -22), 150, 250, -1), ppd=128, shots=(4,))
         # shot 5: worker at the stuck cart, townsfolk crossing behind
         S = cast13.STORY13
-        self.add("w5", "worker13_b", self._still("worker13_b", "worker_stand_b", (-13.8, -35.2), (-22, -34), 237, 302, 5), ppd=256, plank=False, shots=(5,))
+        self.add("w5", "worker13_b", self._still("worker13_b", "worker_stand_b", (-19.8, -42.0), (-22, -34), 237, 302, 5), ppd=256, plank=True, shots=(5,))
         # shot 6: townsfolk hop along the planks, the gentleman steps off and sinks
         self.add("g6", "gentleman13", self._gent((-12.5, -22.5), (0.5, -11.2), 296, 345), ppd=224, shots=(6,))
-        self.add("b6", "town_b", W("town_b", "town_stand_b", (-12, -22.5), (0.5, -11.2), 318, 372, 1), ppd=224, shots=(6,))
-        self.add("c6", "town_c", W("town_c", "town_stand_c", (0.5, -11.3), (-12.5, -22.8), 296, 372, -1), ppd=224, shots=(6,))
+        self.add("b6", "town_b", W("town_b", "town_stand_b", (-5.5, -16.0), (1.5, -10.5), 322, 372, 1), ppd=224, shots=(6,))
+        self.add("c6", "town_c", W("town_c", "town_stand_c", (0.5, -11.3), (-12.5, -22.8), 296, 372, -1), ppd=224, shots=())
 
     def add(self, name, cast, fn, ppd=192, plank=True, shots=None):
         a = C.make_actor(name, cast, SPRITES)
@@ -141,6 +146,25 @@ class Take(C.Take):
             hh.location.z = STATE.get("fill", 0.0) * B.FILL_MAX + (0.10 * math.sin(g * 0.45) + 0.07 * math.sin(g * 0.9)) * (1 if s == 5 else 0.3)
             hh.location.x = 0.06 * math.sin(g * 0.37)
             hh.keyframe_insert("location", index=2, frame=f); hh.keyframe_insert("location", index=0, frame=f)
+            # straining: rear up / pitch about the hooves (pivot -15,-34)
+            k = 1.0 if s == 5 else 0.35
+            pitch = k * (math.radians(4.5) * math.sin(g * 0.33) + math.radians(2.5) * math.sin(g * 0.71)) - k * math.radians(2.0)
+            roll = k * math.radians(1.6) * math.sin(g * 0.52)
+            hh.rotation_euler = (roll, pitch, 0)
+            px, py = -15.0, -34.0
+            c, sn = math.cos(pitch), math.sin(pitch)
+            hh.location.x += px - (c * px); hh.location.z += (sn * px)
+            hh.keyframe_insert("location", frame=f); hh.keyframe_insert("rotation_euler", frame=f)
+            self.ripples.key(f)
+            wz = 1.4 - 0.9 * STATE.get("sink", 0.0)
+            wsink = 0.12 + 0.75 * ez((g - 230) / 70.0)
+            plays = ((0, 243, (-24.0, -39.4, 0.0), 1.1), (1, 262, (-15.4, -34.6, 0.0), 0.8), (2, 281, (-24.0, -39.4, 0.0), 1.3))
+            for i, cr in enumerate(self.crowns[:3]):
+                _, f0, pos, sz = plays[i]; cr.play(f, bf(1, f0), pos, sz, life=20, seed=i + 5)
+            gp = (-2.75, -14.03, gz(-2.75, -14.03, True) - 0.15)
+            for k2, f0 in enumerate((337, 350)):
+                self.crowns[3].play(f, bf(1, f0), gp, 1.1, life=18, seed=11 + k2) if (f >= bf(1, f0) and f <= bf(1, f0) + 18) else None
+            if not (bf(1, 337) <= f <= bf(1, 337) + 18 or bf(1, 350) <= f <= bf(1, 350) + 18): self.crowns[3].play(f, bf(1, 9999), gp, 1.0)
             for tr in self.tracks:
                 a = self.actors[tr.name]
                 xy, p, vis = tr.fn(g)
