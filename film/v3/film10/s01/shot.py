@@ -32,13 +32,15 @@ H_OUT = 6
 RANGES = {1: (0, G_CUT - 1), 2: (G_CUT, G_END + H_OUT - 1)}
 LOC = ("harbour", "hull_plank")
 LIGHT = "DAY"
-STAGE0, STAGE1, STAGE2 = 0.30, 0.48, 0.50      # shot 1 start / end, shot 2 end
+STAGE0, STAGE1, STAGE2 = 0.43, 0.48, 0.90      # shot 1 start / end, shot 2 end (QA-art: stripe from frame 1, bold full zigzag in shot 2)
+STAGE2_0 = 0.80
+HULL_X0, HULL_L = -32.0, 64.0                     # the stripe front sits at x = HULL_X0 + HULL_L * stage
 
 # ----------------------------------------------------------------------------- cameras
 # shot 1: the preset (-1.5,-10,3.6) -> (-2.4,1.2,4.6) 24 mm, a slow push and a drift to the right with the brush
-CAM1 = [((-1.9, -10.6, 3.55), (-2.55, 1.2, 4.55), 24.0), ((-1.5, -8.7, 3.7), (-1.9, 1.2, 4.6), 26.0)]
+CAM1 = [((-5.6, -10.4, 3.7), (-5.2, 1.2, 4.35), 24.0), ((-3.6, -8.8, 3.75), (-3.2, 1.2, 4.35), 26.0)]
 # shot 2: crane OUT: starts low over the quay near the striped hull, rises and pulls back to the preset harbour_wide
-CAM2 = [((-22.0, -16.0, 11.0), (2.0, 12.0, 4.0), 20.0), ((-46.0, -33.0, 30.0), (10.0, 24.0, 0.0), 20.0)]
+CAM2 = [((-22.0, -16.0, 11.0), (2.0, 12.0, 4.0), 20.0), ((-38.0, -33.0, 29.0), (20.0, 24.0, 0.0), 20.0)]
 PPD = {"painter": {1: 224, 2: 64}, "bg": 48}
 
 
@@ -52,11 +54,20 @@ def cam_of(shot, g):
 def stage_of(shot, g):
     if shot == 1:
         return lerp(STAGE0, STAGE1, g / float(G_CUT - 1))
-    return lerp(STAGE1, STAGE2, (g - G_CUT) / float(G_END + H_OUT - 1 - G_CUT))
+    return lerp(STAGE2_0, STAGE2, (g - G_CUT) / float(G_END + H_OUT - 1 - G_CUT))
 
 
 # ----------------------------------------------------------------------------- poses
 PLANK = None   # filled from the set: painter_plank mark
+
+
+def painter_x(g):
+    if g >= G_CUT:
+        return PNT_X1
+    return HULL_X0 + HULL_L * stage_of(1, g) - 1.35
+
+
+PNT_X1 = HULL_X0 + HULL_L * STAGE1 - 1.35
 
 
 def pose_painter1(g):
@@ -68,6 +79,8 @@ def pose_painter1(g):
     base["arm_r"] = dict(hand=(lerp(0.74, 0.66, s), lerp(0.58, -0.28, s)), bend=lerp(-0.2, -0.65, s), stretch=1.3, layer="front")
     base["prop_r"] = dict(type="bigbrush", scale=0.9, angle=lerp(-20, -62, s))
     base["arm_l"] = dict(hand=(-0.4, 1.0), bend=0.3)
+    if g < G_CUT:
+        base["legs"] = dict(preset="step", stride=0.18 + 0.12 * math.sin(g * 0.55))
     base["lean"] = lerp(-1.0, -3.5, s)
     base["pitch"] = lerp(-0.1, -0.35, s)
     base["head_roll"] = -4 + 1.2 * math.sin(g * 0.21)
@@ -106,6 +119,7 @@ class Take(C.Take):
         self.pl = Vector(self.A["marks"]["painter_plank"])
         self.pnt = self.actors["pnt"] = C.make_actor("pnt", "painter10", os.path.join(TMP, "sprites"), canvas=cast10.CANVAS10_PLANK["painter10"])
         self.bg = []
+        self.nosh = [o for o in H.STATE['SET'].objects if o.name.split('.')[0] in ('scaffold', 'harbour_extras', 'quay_dress', 'cranes', 'tug', 'chimneys_root')]
         self._swap_cards()
 
     def _swap_cards(self):
@@ -147,7 +161,10 @@ class Take(C.Take):
             H.set_stripes(stage_of(shot, g), frame=f)
             H.set_smoke(1.0, frame=f)
             self.pnt.hide_render = False
-            C.place(self.pnt, f, self.pl[:2], self.pl[2])
+            for ob in self.nosh:
+                ob.visible_shadow = shot != 1
+                ob.keyframe_insert('visible_shadow', frame=f)
+            C.place(self.pnt, f, (painter_x(g), self.pl[1]), self.pl[2])
             for a in self.bg:
                 C.place(a, f, a.base[:2], a.base[2])
         for g in gs:
