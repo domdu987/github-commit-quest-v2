@@ -27,7 +27,7 @@ def pw(g, kn):
     (g0, v0), (g1, v1) = kn[-2], kn[-1]; return v1 + (g - g1) * (v1 - v0) / (g1 - g0)
 
 # ----------------------------------------------------------------------------- scene
-def register_preset(name, loc, look, lens, wire_r=0.021):
+def register_preset(name, loc, look, lens, wire_r=0.03):
     F.CAMS[name] = dict(loc=tuple(loc), look=tuple(look), lens=lens)
     F.PRESETS[name] = dict(light='NIGHT', state='fs3', wire_r=wire_r, staging=[])
 
@@ -46,6 +46,12 @@ def build(name, quality, threads=2, samples=None, dense_bees=240):
     wm = F.STATE['M']['beewing']; em = [n for n in wm.node_tree.nodes if n.type == 'EMISSION'][0]; mx = [n for n in wm.node_tree.nodes if n.type == 'MIX_SHADER'][0]
     em.inputs['Color'].default_value = (1.0, 0.82, 0.42, 1); em.inputs['Strength'].default_value = 0.9; mx.inputs[0].default_value = 0.30      # warm, thin wing blur: gold dots at distance, not blue snow
     bm = F.STATE['M']['beegold']
+    wmat = F.STATE['M']['wire']                      # matte grey-silver wire (director continuity note), reads as wire not a pipe
+    for n in wmat.node_tree.nodes:
+        if n.type == 'BSDF_PRINCIPLED':
+            n.inputs['Base Color'].default_value = (0.52, 0.53, 0.56, 1); n.inputs['Roughness'].default_value = 0.55
+            if 'Emission Strength' in n.inputs: n.inputs['Emission Strength'].default_value = 0.0
+        if n.type == 'EMISSION': n.inputs['Strength'].default_value = 0.0
     F._clear_actors(); F.apply_state('fs3'); F.STATE['wire_r'] = F.PRESETS[name]['wire_r']; F._update_fence()
     return A
 
