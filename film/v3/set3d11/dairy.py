@@ -31,15 +31,16 @@ from tower import MB, no_bounce, setup_grade, mat_emit  # noqa: E402
 from mine import obox, beam, rod, lumpy, _untoon        # noqa: E402
 HERE = G.HERE; STATE = T.STATE; WORK = os.path.join(HERE, 'dairy_work')
 FORM = (0.0, -0.05, 0.22)
+SAMPLES_FINAL = 24                                       # final: 24 samples + OIDN denoise, 4 threads (~10 s per frame)
 
 # ============================================================================= light states
 def _base(**k):
     d = dict(toon=1.0, key_desat=0.0, ink='#24160e', night=False, form=FORM, bloom_size=0.05, sun_angle=0.6, wet=0.0, lamps=1.0, grade_saturation=1.18); d.update(k); return d
 LIGHTS = dict(
-    A=_base(key=(1.95, 1.50, 0.88), key_dir=W9._kdaz(205, 20), shade=(0.102, 0.136, 0.34), shade_tint=(0.087, 0.118, 0.37), shade_mix=0.62, lift=(0.010, 0.018, 0.036),
-            grade_offset=(-0.006, -0.01, -0.014), bounce=(1.0, 0.66, 0.36, 0.20), beams=0.03, air=('#f4cf94', 0.30, 14.0, 160.0), sky='day', sun_elev=20),
-    C=_base(key=(2.25, 1.28, 0.50), key_dir=W9._kdaz(185, 11), shade=(0.070, 0.105, 0.36), shade_tint=(0.06, 0.10, 0.41), shade_mix=0.8, lift=(0.002, 0.008, 0.026),
-            grade_offset=(-0.004, -0.010, -0.008), bounce=(1.0, 0.55, 0.30, 0.10), beams=0.03, air=('#f0a870', 0.34, 14.0, 160.0), sky='eve', sun_angle=0.5, grade_saturation=1.15, sun_elev=11),
+    A=_base(key=(1.95, 1.50, 0.88), key_dir=W9._kdaz(205, 20), shade=(0.108, 0.118, 0.36), shade_tint=(0.104, 0.106, 0.38), shade_mix=0.82, lift=(0.007, 0.018, 0.036),
+            grade_offset=(-0.006, -0.01, -0.014), bounce=(1.0, 0.72, 0.40, 0.07), beams=0.03, air=('#f4cf94', 0.30, 14.0, 160.0), sky='day', sun_elev=20),
+    C=_base(key=(1.65, 0.92, 0.36), key_dir=W9._kdaz(185, 11), shade=(0.085, 0.088, 0.40), shade_tint=(0.082, 0.078, 0.43), shade_mix=0.85, lift=(0.004, 0.008, 0.03),
+            grade_offset=(-0.004, -0.010, -0.008), bounce=(1.0, 0.62, 0.34, 0.05), beams=0.03, air=('#f0a870', 0.34, 14.0, 160.0), sky='eve', sun_angle=0.5, grade_saturation=1.15, sun_elev=11),
 )
 SKY = dict(day=dict(top='#5a8ae0', mid='#8ab4ee', hor='#f6e2bc', cloud_lit='#fff2dc', cloud_sh='#b6b2e8'),
            eve=dict(top='#4c64c8', mid='#9a98dc', hor='#f8c892', cloud_lit='#ffe2b4', cloud_sh='#9a8ad0'))
@@ -48,26 +49,26 @@ SKY = dict(day=dict(top='#5a8ae0', mid='#8ab4ee', hor='#f6e2bc', cloud_lit='#fff
 ADULT, BOY = 3.2, 2.3                                    # 1 D = head: adults 3.1-3.4 D, the 8-year-old boy 2.3 D
 ROLES = dict(jenner=3.3, boy=BOY, sarah=3.1, maid=3.1, doctor=3.4, mother=3.1, villager=3.2, villager_p=3.2, cow=0.0)
 PRESETS = dict(
-    barn_wide=dict(loc='barn', light='A', cam='barn_wide', sun=(240, 24), look_az=100),
-    barn_milking=dict(loc='barn', light='A', cam='barn_milking', sun=(215, 24), look_az=90),
-    barn_high=dict(loc='barn', light='C', cam='barn_high', sun=(185, 11), look_az=70),
-    barn_door=dict(loc='barn', light='A', cam='barn_door', sun=(240, 22), look_az=180),
-    garden_hut=dict(loc='village', light='A', cam='garden_hut', sun=(300, 34), look_az=165),
-    lane_wide=dict(loc='village', light='A', cam='lane_wide', sun=(300, 40), look_az=182),
-    lane_high=dict(loc='village', light='A', cam='lane_high', sun=(300, 36), look_az=95),
-    garden_queue=dict(loc='village', light='A', cam='garden_queue', sun=(300, 36), look_az=100),
-    room_day=dict(loc='cottage', light='A', cam='room_day', sun=(163, 26), look_az=90, P=dict(shade=(0.176, 0.235, 0.58), lift=(0.03, 0.045, 0.08))),
-    room_night=dict(loc='cottage', light='C', cam='room_night', sun=(166, 9), look_az=90, candle=True, P=dict(shade=(0.12, 0.175, 0.52), lift=(0.015, 0.025, 0.065))),
-    room_morning=dict(loc='cottage', light='A', cam='room_morning', sun=(160, 19), look_az=90, P=dict(shade=(0.176, 0.235, 0.58), lift=(0.03, 0.045, 0.08))),
+    barn_wide=dict(loc='barn', light='A', cam='barn_wide', sun=(240, 24), look_az=100, P=dict(shade=(0.146, 0.153, 0.47), shade_tint=(0.144, 0.136, 0.49), lift=(0.011, 0.022, 0.047))),
+    barn_milking=dict(loc='barn', light='A', cam='barn_milking', sun=(215, 24), look_az=90, P=dict(shade=(0.146, 0.153, 0.47), shade_tint=(0.144, 0.136, 0.49), lift=(0.011, 0.022, 0.047))),
+    barn_high=dict(loc='barn', light='C', cam='barn_high', sun=(185, 11), look_az=70, P=dict(shade=(0.105, 0.108, 0.49), shade_tint=(0.10, 0.096, 0.53), lift=(0.006, 0.012, 0.04), key=(1.6, 0.9, 0.36))),
+    barn_door=dict(loc='barn', light='A', cam='barn_door', sun=(240, 22), look_az=180, P=dict(shade=(0.146, 0.153, 0.47), shade_tint=(0.144, 0.136, 0.49), lift=(0.011, 0.022, 0.047))),
+    garden_hut=dict(loc='village', light='A', cam='garden_hut', sun=(300, 34), look_az=165, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
+    lane_wide=dict(loc='village', light='A', cam='lane_wide', sun=(300, 40), look_az=182, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
+    lane_high=dict(loc='village', light='A', cam='lane_high', sun=(300, 36), look_az=95, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
+    garden_queue=dict(loc='village', light='A', cam='garden_queue', sun=(300, 36), look_az=100, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
+    room_day=dict(loc='cottage', light='A', cam='room_day', sun=(163, 26), look_az=90, P=dict(shade=(0.18, 0.195, 0.59), shade_tint=(0.18, 0.172, 0.63), lift=(0.03, 0.04, 0.08), air=('#f4cf94', 0.10, 14.0, 160.0))),
+    room_night=dict(loc='cottage', light='C', cam='room_night', sun=(166, 9), look_az=90, candle=True, P=dict(shade=(0.13, 0.135, 0.52), shade_tint=(0.13, 0.122, 0.55), lift=(0.015, 0.022, 0.065), air=('#f0a870', 0.10, 14.0, 160.0))),
+    room_morning=dict(loc='cottage', light='A', cam='room_morning', sun=(160, 19), look_az=90, P=dict(shade=(0.18, 0.195, 0.59), shade_tint=(0.18, 0.172, 0.63), lift=(0.03, 0.04, 0.08), air=('#f4cf94', 0.10, 14.0, 160.0))),
 )
 LOC_PRESETS = {l: [k for k, v in PRESETS.items() if v['loc'] == l] for l in ('barn', 'village', 'cottage')}
 LOC_LIGHTS = dict(barn=['A', 'C'], village=['A', 'C'], cottage=['A', 'C'])
 
 CAMS = dict(
-    barn_wide=dict(loc=(1.0, -1.0, 2.8), look_at=(0.0, 15.0, -0.9), lens=22),
-    barn_milking=dict(loc=(-1.6, 6.0, 1.5), look_at=(-3.2, 15.0, 2.0), lens=22),
-    barn_high=dict(loc=(3.2, 4.0, 6.6), look_at=(-6.0, 14.0, 0.4), lens=22),
-    barn_door=dict(loc=(1.2, 15.0, 1.2), look_at=(-12.0, 15.8, 3.0), lens=22),
+    barn_wide=dict(loc=(2.6, -1.0, 2.8), look_at=(0.6, 15.0, -0.9), lens=22),
+    barn_milking=dict(loc=(-0.4, 6.6, 1.6), look_at=(-3.0, 15.0, 1.5), lens=22),
+    barn_high=dict(loc=(-2.0, 4.6, 6.0), look_at=(-5.4, 13.6, 0.6), lens=22),
+    barn_door=dict(loc=(2.2, 15.0, 1.3), look_at=(-12.0, 15.6, 2.6), lens=22),
     garden_hut=dict(loc=(3.5, -6.6, 1.5), look_at=(-10.0, 0.8, 2.6), lens=22),
     lane_wide=dict(loc=(41.0, -12.3, 1.7), look_at=(-40.0, -9.2, 4.6), lens=22),
     lane_high=dict(loc=(8.0, -34.0, 13.0), look_at=(-1.0, -11.0, 1.0), lens=22),
@@ -96,16 +97,16 @@ STAND = dict(
     barn_wide=dict(sarah=_mk('sarah', (-3.4, 11.8, 0.0), note='milkmaid Sarah Nelmes, standing in the sun pool by the stool'), maid=_mk('maid', (0.4, 12.6, 0.0), note='2nd milkmaid'),
                    jenner=_mk('jenner', (-6.4, 10.0, 0.0), note='Jenner at the door side'), blossom=_mk('cow', (-1.6, 16.2, 0.0), note='Blossom 2D puppet, side view, head to -x, 4.4 D long', length=4.4),
                    boy=_mk('boy', (2.0, 9.0, 0.0), note='James near the aisle')),
-    barn_milking=dict(sarah=_mk('sarah', (-5.2, 13.0, 0.85), seated=True, note='milkmaid SEATED on the milking stool (z = stool top)'), blossom=_mk('cow', (-3.4, 15.4, 0.0), note='Blossom 2D, side view, flank to camera', length=4.4),
-                      maid=_mk('maid', (-8.0, 12.0, 0.0), note='2nd milkmaid standing left'), pail=_mk('cow', (-4.0, 13.6, 0.0), note='pail under the udder (3D pail already there)', length=0.0)),
-    barn_high=dict(sarah=_mk('sarah', (-3.0, 12.2, 0.0), note='clear-faced milkmaid'), maid=_mk('maid', (-0.8, 13.6, 0.0), note='clear-faced milkmaid 2'),
+    barn_milking=dict(sarah=_mk('sarah', (-3.2, 13.1, 0.85), seated=True, note='milkmaid SEATED on the milking stool (z = stool top), at the udder side'), blossom=_mk('cow', (-3.1, 15.4, 0.0), note='Blossom 2D, side view, head to -x, flank to camera, udder at x -2.0', length=4.4),
+                      maid=_mk('maid', (-6.8, 12.0, 0.0), note='2nd milkmaid standing left'), pail=_mk('cow', (-2.1, 14.0, 0.0), note='pail under the udder (3D pail already there)', length=0.0)),
+    barn_high=dict(sarah=_mk('sarah', (-3.4, 12.2, 0.0), note='clear-faced milkmaid'), maid=_mk('maid', (-1.2, 13.4, 0.0), note='clear-faced milkmaid 2'),
                    vill_a=_mk('villager_p', (-8.8, 12.4, 0.0), note='pockmarked villager in the door'), vill_b=_mk('villager_p', (-9.6, 15.2, 0.0), note='pockmarked villager in the door'),
                    vill_c=_mk('villager_p', (-8.6, 18.0, 0.0), note='pockmarked villager in the door'), vill_d=_mk('villager', (-11.4, 14.0, 0.0), note='plain villager outside the door'),
                    blossom=_mk('cow', (-4.2, 17.4, 0.0), length=4.4)),
-    barn_door=dict(sarah=_mk('sarah', (-3.5, 14.6, 0.0), note='milkmaid in the foreground, back to the light'), jenner=_mk('jenner', (-12.5, 17.0, 0.0), note='Jenner on the lane in the sun'),
+    barn_door=dict(sarah=_mk('sarah', (-5.2, 14.2, 0.0), note='milkmaid in the foreground, back to the light'), jenner=_mk('jenner', (-12.5, 17.0, 0.0), note='Jenner on the lane in the sun'),
                    vill_a=_mk('villager', (-14.5, 13.6, 0.0)), vill_b=_mk('villager_p', (-16.0, 19.0, 0.0)), blossom=_mk('cow', (-2.0, 12.0, 0.0), length=4.4)),
     garden_hut=dict(boy=_mk('boy', (-8.0, -3.4, 0.8), seated=True, note='James SEATED on the stool at the hut door (z = stool top)'), jenner=_mk('jenner', (-6.2, -0.8, 0.0), note='Jenner with the lancet, beside the boy'),
-                    sarah=_mk('sarah', (-3.0, 0.2, 0.0), note='milkmaid at the bed edge'), doctor=_mk('doctor', (-1.4, -5.2, 0.0), note='town doctor at the gate')),
+                    sarah=_mk('sarah', (-3.0, 0.2, 0.0), note='milkmaid at the bed edge'), doctor=_mk('doctor', (-4.4, 2.6, 0.0), note='town doctor in the garden, behind the others')),
     lane_wide=dict(doctor=_mk('doctor', (27.0, -11.6, 0.0), note='town doctor arriving, centre of the lane'), villager_a=_mk('villager', (23.0, -9.4, 0.0)), villager_b=_mk('villager_p', (31.5, -13.0, 0.0)),
                    villager_c=_mk('villager', (20.0, -12.8, 0.0)), maid=_mk('maid', (29.0, -9.2, 0.0)), jenner=_mk('jenner', (17.5, -10.6, 0.0)), boy=_mk('boy', (24.6, -13.6, 0.0))),
     lane_high=dict(**{'c%d' % i: _mk('villager' if i % 3 else 'villager_p', p, note='crowd slot %d' % i) for i, p in enumerate(
@@ -114,12 +115,12 @@ STAND = dict(
     garden_queue=dict(**{'q%d' % i: _mk('villager' if i % 3 else 'villager_p', (4.6 - i * 1.9, -3.2, 0.0), note='queue slot %d (0 = near the gate)' % i) for i in range(7)},
                       jenner=_mk('jenner', (-9.0, -1.5, 0.0), note='Jenner at the hut door'), boy=_mk('boy', (-8.0, -3.4, 0.0), note='James first in the queue'), doctor=_mk('doctor', (8.2, -3.6, 0.0), note='the mocker, rolls up his sleeve at the tail')),
     room_day=dict(mother=_mk('mother', (-0.8, 3.0, 0.0), note='mother by the bed'), boy_bed=_mk('boy', (-5.2, 7.2, 1.7), pose='in bed', note='James lying in bed: z = mattress top, pillow at the window end'),
-                  jenner=_mk('jenner', (1.6, 1.8, 0.0), note='Jenner at the bedside')),
+                  jenner=_mk('jenner', (1.0, 4.8, 0.0), note='Jenner at the bedside')),
     room_night=dict(mother=_mk('mother', (-1.4, 3.0, 0.0)), boy_bed=_mk('boy', (-5.2, 7.2, 1.7), pose='in bed', note='feverish in bed'), doctor=_mk('doctor', (6.4, 4.8, 0.0), note='town doctor in the doorway, pointing (door opening y 3.0..6.6, x 7.5)'),
                     jenner=_mk('jenner', (1.2, 2.2, 0.0), note='Jenner')),
     room_morning=dict(boy=_mk('boy', (-2.0, 3.2, 0.0), note='James jumps out of bed (floor)'), mother=_mk('mother', (1.6, 2.6, 0.0), note='mother'), boy_bed=_mk('boy', (-5.2, 7.2, 1.7), pose='in bed')),
 )
-STAGING = dict(barn_wide=['sarah', 'maid', 'jenner'], barn_milking=['sarah', 'maid'], barn_high=['sarah', 'maid', 'vill_a', 'vill_b', 'vill_c', 'vill_d'], barn_door=['sarah', 'jenner', 'vill_a'],
+STAGING = dict(barn_wide=['sarah', 'maid', 'jenner', 'blossom'], barn_milking=['sarah', 'maid', 'blossom'], barn_high=['sarah', 'maid', 'vill_a', 'vill_b', 'vill_c', 'vill_d'], barn_door=['sarah', 'jenner', 'vill_a'],
                garden_hut=['boy', 'jenner', 'sarah', 'doctor'], lane_wide=['doctor', 'villager_a', 'villager_b', 'villager_c', 'maid'], lane_high=['c%d' % i for i in range(9)] + ['doctor'],
                garden_queue=['q%d' % i for i in (0, 1, 2, 4, 6)] + ['jenner', 'boy'], room_day=['mother', 'boy_bed', 'jenner'], room_night=['mother', 'boy_bed', 'doctor'], room_morning=['boy', 'mother'])
 T.PH.update(jenner=('boss', dict(yaw=0.3, expr='neutral', arm_l='down', arm_r='down', legs='stand'), ROLES['jenner']), sarah=('beach_woman', dict(yaw=-0.25, expr='neutral', arm_l='down', arm_r='down', legs='stand'), ROLES['sarah']),
@@ -143,7 +144,7 @@ def new_scene(lkey, sun=None, over=None):
     bg = nt.nodes.new('ShaderNodeBackground'); wo = nt.nodes.new('ShaderNodeOutputWorld'); bg.inputs['Color'].default_value = (0, 0, 0, 1); bg.inputs['Strength'].default_value = 0.0
     nt.links.new(bg.outputs['Background'], wo.inputs['Surface'])
     MN.setup_render(scene, 'final'); scene.frame_start = 1; scene.frame_end = 300; scene.frame_current = 1; scene.render.threads_mode = 'FIXED'; scene.render.threads = 4
-    scene.cycles.samples = 12
+    scene.cycles.samples = SAMPLES_FINAL
     pre = 'DY_%s_' % lkey; cache = {}
     def C(hexcol, gain=1.0, sm=1.0, form=True, smix=None):
         k = ('c', hexcol, gain, sm, form, smix)
@@ -182,7 +183,7 @@ def mats(C, TX, E):
         comb=C('#d8321e'), beak=C('#e3a63a'), leather=C('#6b3d1e'), brass=C('#d7a43a'), sack=C('#cdb48a'), sack2=C('#b89b6c'), red=C('#b6402e'), green=C('#4a7a38'), door=C('#3f6f7a'),
         cat1=C('#d8873a'), cat2=C('#5a5a68'), catw=C('#efe6d4'), dog=C('#a8743c'), tile=C('#b8553a'), glass=C('#8fb4d0', 1.1), black=C('#2c2430'), straw=C('#e0b84e', 1.0, 1.6, smix=0.3), straw2=C('#c99a3c', 1.0, 1.6, smix=0.3),
         apple=C('#a8c24a'), bloom_w=C('#f7ecdc'), bloom_p=C('#f2b6c8'), wicker=C('#b88a4c'), wicker2=C('#8a6232'), egg=C('#f0e2c4'), cabbage=C('#9cc07a'), shutter=C('#4f7a8a'),
-        shaft=mat_emit('DY_shaft_%s' % STATE['light'], '#ffd596', strength=0.20, additive=True, camera_only=True), mote=mat_emit('DY_mote_%s' % STATE['light'], '#fff0c0', strength=3.2),
+        shaft=mat_emit('DY_shaft_%s' % STATE['light'], '#ffcf88', strength=(0.11 if STATE['light'] == 'A' else 0.06), additive=True, camera_only=True), mote=mat_emit('DY_mote_%s' % STATE['light'], '#ffe4a8', strength=1.6),
         cream=C('#efe2bd'), blue=C('#3f5fb8'), violet=C('#7a62c8'), yellow=C('#f0c43a'), orange=C('#e8802a'), rose=C('#d8586a'), lav=C('#8a78d0'), leaf=C('#3f7a34'), leaf2=C('#5c9040'), smoke=C('#f2ead8'),
         gate=C('#3d6a72'), pebble=C('#b4a486'), pebble2=C('#8e8068'), pond=C('#6f9fb8', 1.0), yew=C('#2f5a30'), sheep=C('#f0e8d4'), sheep_f=C('#3a2c28'), cloth=C('#e8dcc0'), cloth2=C('#a8504a'), cloth3=C('#5a78a8'), dress=C('#b05a4a'), copper=C('#c47a3c', 1.0),
         candle=C('#f4e8c4'), flame=mat_emit('DY_flame_%s' % STATE['light'], '#ffcf7a', strength=12.0), ember=mat_emit('DY_ember_%s' % STATE['light'], '#ff8a3a', strength=5.0), blackiron=C('#34303a'), glass_d=C('#6f90b4', 1.0))
@@ -205,7 +206,7 @@ def hill_grid(SET, M, x0, x1, y0, y1, nx, ny, hf, name='hills', uvs=(1.5, 1.5)):
         for i in range(nx):
             q = [(i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1)]
             mb.oface([(pts[b][a][0], pts[b][a][1], Z[b][a]) for a, b in q], M['hills'], [(a / nx * uvs[0], b / ny * uvs[1]) for a, b in q], (0, 0, 1))
-    return mb.obj(name, SET)
+    ob = mb.obj(name, SET); ob.visible_shadow = False; return ob                 # far hills never shade the set (a low sun must reach the barn floor)
 
 def make_camera(setup, name='cam', scene=None):
     ob = T.make_camera(setup, name, scene); ob.data.clip_end = 4000.0; ob.data.dof.use_dof = False; return ob
@@ -230,7 +231,7 @@ class Protos:
     def hen(s, v): return s.get(('hen', v), lambda: hen_local(s.M, v))
     def flower(s, kind, seed=0): return s.get(('fl', kind, seed), lambda: flower_local(kind, s.M, R(hash(kind) % 1000 + seed)))
 
-def mote_groups(SET, M, rg, boxes, n=60, groups=4, name='motes', rad=(0.03, 0.06), amp=0.7):
+def mote_groups(SET, M, rg, boxes, n=60, groups=4, name='motes', rad=(0.02, 0.04), amp=0.7):
     """Dust motes: `groups` objects, each a cloud of tiny emissive specks inside the given light boxes (x0, x1, y0, y1, z0, z1); drift by drivers."""
     for g in range(groups):
         mb = MB()
@@ -268,7 +269,7 @@ def barn(SET, M, P, kd, lkey, PR):
         x = BX0 - 0.6
         while x < BX1 + 0.6:
             xc = x + pw / 2; top = 5.8 + 3.8 * (1 - min(1, abs(xc) / 11.0)) - 0.3; z0_ = 5.7 if (yy < 0 and -8.4 < xc < 8.4) else 0.0; bx(mb if yy > 0 else fw, (x, yy, z0_), (x + pw, yy + th, max(top, 5.85)), mt, PT); x += pw + 0.1
-    bx(mb, (BX0 - 0.7, DOOR[0] - 0.05, DOOR[2]), (BX0 + 0.1, DOOR[1] + 0.05, DOOR[2] + 0.55), M['oak'], (3, 3))
+    if PR['cam'] != 'barn_door': bx(mb, (BX0 - 0.7, DOOR[0] - 0.05, DOOR[2]), (BX0 + 0.1, DOOR[1] + 0.05, DOOR[2] + 0.55), M['oak'], (3, 3))
     for yy in (DOOR[0] - 0.45, DOOR[1] + 0.45): post(mb, BX0 + 0.1, yy, 0, DOOR[2], 0.8, M['oak'])
     obox(mb, (BX0 - 1.7, DOOR[0] - 2.1, 2.9), (0.95, 0.3, 0), (-0.3, 0.95, 0), (0, 0, 1), 1.9, 0.16, 2.9, M['oak_d'], 0.4)             # the door leaf swung back
     for sx in (-1, 1): rod(mb, (BX0 - 1.7 + sx * 0.2, DOOR[0] - 2.0, 4.9), (BX0 - 1.7 + sx * 0.2, DOOR[0] - 2.0, 1.0), 0.04, M['iron'], seg=3)
@@ -278,6 +279,7 @@ def barn(SET, M, P, kd, lkey, PR):
             if xx < 0 and DOOR[0] - 0.6 < yy < DOOR[1] + 0.6: continue
             post(mb, xx, yy, 0, 5.8, 0.55, M['oak'])
     for sg in (-1, 1):
+        if sg < 0 and PR['cam'] == 'barn_door': continue
         bx(mb, (sg * 9.7 - 0.3, -0.5, 5.6), (sg * 9.7 + 0.3, BY1 + 0.5, 6.1), M['oak'], (3, 3))
     bx(mb, (-0.25, -0.5, 9.5), (0.25, BY1 + 0.5, 10.0), M['oak'], (3, 3))                                                           # ridge beam, receding
     for sg in (-1, 1):
@@ -297,11 +299,10 @@ def barn(SET, M, P, kd, lkey, PR):
         ell(mb, (x_, y_, z_), (0.28, 0.22, 0.22), M['wood2'], seg=6, rings=4)
     # ---------------- hay loft (back) with a ladder, front rail posts, hay in strands
     LY = 22.0
-    bx(mb, (BX0, LY, 4.4), (BX1, BY1, 4.8), M['oak'], (4, 4)); bx(mb, (BX0, LY - 0.2, 4.0), (BX1, LY + 0.2, 4.6), M['oak'], (3, 3))
+    bx(mb, (BX0, LY, 4.4), (BX1, BY1, 4.8), M['oak'], (4, 4))                                            # loft floor (no heavy beam across the frame: posts + a thin edge only)
     for xx in (-9.55, -4.8, 0, 4.8, 9.55): post(mb, xx, LY, 0, 4.6, 0.55, M['oak'])
     for xx in np.arange(-9.0, 9.1, 2.0): bx(mb, (xx - 0.15, LY, 3.9), (xx + 0.15, BY1, 4.4), M['oak'], (3, 3))
     for xx in np.arange(-9.5, 9.6, 1.6): rod(mb, (xx, LY + 0.1, 4.8), (xx, LY + 0.1, 5.9), 0.06, M['oak'], seg=4)
-    bx(mb, (BX0, LY, 5.9), (BX1, LY + 0.14, 6.1), M['oak'], (3, 3))
     for i, (cx_, cy_) in enumerate(((-6, 25), (-1, 26), (5, 25), (-8, 30), (2, 31), (8, 30), (-4, 32), (6, 28), (-2, 23.2), (3.5, 23.6))): hay_heap(hm, (cx_, cy_, 4.8), M, 2.2, 40 + i * 5, 6)
     hay_heap(hm, (-3.0, LY + 0.5, 4.8), M, 1.5, 99, 4); hay_heap(hm, (4.4, LY + 0.5, 4.8), M, 1.2, 98, 4)
     for i in range(30):                                                                                    # hay hanging over the loft edge
@@ -323,7 +324,7 @@ def barn(SET, M, P, kd, lkey, PR):
     rod(mb, (-7.3, 27.6, 0.0), (-7.3, 27.6, 2.2), 0.1, M['wood2'], seg=5); rod(mb, (-7.3, 27.6, 1.7), (-6.6, 28.0, 1.4), 0.03, M['twine'], seg=3)
     # ---------------- the milking nook (Blossom is a 2D puppet at the stand point): stool, pail, straw bedding
     P_ = Protos(M); STATE['protos'] = P_
-    stamp(mb, P_.stool(), (-4.0, 12.8, 0.0), 0.3); stamp(mb, P_.pail(True), (-2.0, 13.7, 0.0)); stamp(mb, P_.pail(), (-5.4, 11.2, 0.0), 0.4)
+    stamp(mb, P_.stool(), (-3.2, 13.1, 0.0), 0.3); stamp(mb, P_.pail(True), (-2.1, 14.0, 0.0)); stamp(mb, P_.pail(), (-5.4, 11.6, 0.0), 0.4)
     straw_floor(hm, M, rg, [(rg.uniform(-8.6, -0.8), rg.uniform(10.2, 20.5), 0.02) for _ in range(150)], 5, 0.4)
     for (x_, y_) in ((-7.4, 15.5), (-6.8, 17.0), (-2.0, 19.0), (-0.8, 13.6)): hay_heap(hm, (x_, y_, 0.0), M, 0.7, int(x_ * 10 + y_), 3)
     # ---------------- bale stacks, sacks
@@ -341,13 +342,13 @@ def barn(SET, M, P, kd, lkey, PR):
     wheel(mb, (-9.3, 9.0, 2.0), 2.0, M, (1, 0, 0))
     for (px, py, lean, kind) in ((9.5, 2.6, -0.35, 'fork'), (-9.4, 16.0, 0.0, 'rake'), (9.5, 4.2, -0.3, 'rake'), (-9.2, 6.2, 0.1, 'shovel'), (-9.0, 8.4, 0.1, 'broom')):
         stamp(mb, P_.tool(kind), (px, py, 0), math.pi * (px < 0), pitch=-lean * 0.45 if px > 0 else lean * 0.45 + 0.1)
-    stamp(mb, P_.tool('rake'), (-1.0, 3.0, 0.08), 0.6, pitch=1.52); stamp(mb, P_.tool('fork'), (2.6, 3.4, 0.08), 2.2, pitch=1.5); stamp(mb, P_.tool('shovel'), (-4.2, 5.4, 0.08), 1.2, pitch=1.52)
+    stamp(mb, P_.tool('rake'), (-1.0, 7.0, 0.08), 0.6, pitch=1.52); stamp(mb, P_.tool('shovel'), (-4.2, 7.4, 0.08), 1.2, pitch=1.52)
     for (x_, y_) in ((-1.0, 3.8), (2.0, 5.8), (-4.6, 1.8), (4.4, 6.6), (-2.4, 6.4), (0.4, 7.6), (-5.6, 5.0), (3.4, 1.8)): hay_heap(hm, (x_, y_, 0), M, 0.45, int(x_ * 17 + y_ * 3), 3)
     straw_floor(hm, M, rg, [(rg.uniform(-9.4, 9.4), rg.uniform(0.6, 10.0), 0.02) for _ in range(2600)], 5, 0.16)
     for (fx, fy) in [(rg.uniform(-9.6, 9.6), rg.uniform(1.0, 33.0)) for _ in range(700)]:
         a = rg.uniform(0, 6.28); l = rg.uniform(0.3, 0.8); rod(mb, (fx, fy, 0.03), (fx + math.cos(a) * l, fy + math.sin(a) * l, 0.05 + rg.random() * 0.05), 0.011, M['straw'], seg=3)
     for i in range(70):                                                                                     # a few stones and cobbles pushed up through the earth
-        lumpy(mb, (rg.uniform(-9.5, 9.5), rg.uniform(0.5, 30), 0.0), rg.uniform(0.12, 0.28), M['pebble'] if i % 2 else M['pebble2'], i, seg=6, rings=4, rough=0.2, squash=0.6)
+        rr = rg.uniform(0.12, 0.28); ell(mb, (rg.uniform(-9.5, 9.5), rg.uniform(0.5, 30), rr * 0.2), (rr, rr * 0.8, rr * 0.45), M['pebble'] if i % 2 else M['pebble2'], rg.uniform(0, 6), seg=8, rings=4)
     for (x_, y_, yw, v) in ((-4.6, 8.8, 0.6, 0), (-3.6, 10.0, 2.4, 1), (0.2, 11.6, -0.8, 2), (-1.8, 12.4, 1.4, 0), (3.2, 8.4, 2.0, 1), (-6.2, 5.0, 0.2, 2), (-0.8, 4.4, 3.0, 0), (2.0, 2.6, 5.0, 1), (-2.4, 2.8, 1.0, 0), (6.0, 9.2, 4.0, 2), (-8.0, 9.8, 0.8, 1), (1.4, 10.4, 2.8, 0)):
         hen(SET, M, (x_, y_, 0), yw, v, True, rg.uniform(0, 6.28), 'hen%d' % len(STATE['hooks']), proto=P_.hen(v))
     for (x_, y_, z_, yw, sit, k) in ((6.6, 3.2, 2.8, -2.0, True, 0), (-1.2, 7.6, 0.0, 0.7, False, 1), (-8.4, 26.5, 2.8, 0.0, True, 2), (2.8, 9.4, 0.0, 2.8, True, 0)): stamp(mb, P_.cat(sit, k), (x_, y_, z_), yw)
@@ -369,15 +370,20 @@ def barn(SET, M, P, kd, lkey, PR):
     bx(mb, (9.6, 21.0, 3.5), (9.9, 30.0, 3.7), M['oak'], (3, 3))
     for yy in (21.8, 23.5, 25.2, 27.0, 28.6): rod(mb, (9.6, yy, 3.6), (8.8, yy, 3.6), 0.07, M['iron'], seg=4); rod(mb, (8.9, yy, 3.6), (8.9, yy, 1.6 + rg.random()), 0.07, M['leather'], seg=4)
     # ---------------- lanterns on long chains from the ridge: they swing (hooks)
-    for (x_, y_, z_, nm, ph) in ((-0.6, 9.5, 5.8, 'lamp1', 0.0), (3.6, 17.0, 5.4, 'lamp2', 1.9), (0.6, 27.0, 4.6, 'lamp3', 3.3)):
+    for (x_, y_, z_, nm, ph) in (((-0.6, 9.5, 5.8, 'lamp1', 0.0), (3.6, 17.0, 5.4, 'lamp2', 1.9), (0.6, 27.0, 4.6, 'lamp3', 3.3)) if PR['cam'] not in ('barn_high', 'barn_milking') else ((3.6, 17.0, 5.4, 'lamp2', 1.9), (0.6, 27.0, 4.6, 'lamp3', 3.3))):
         rod(mb, (x_, y_, 9.5), (x_, y_, z_), 0.022, M['iron'], seg=4); swing_lantern(SET, M, (x_, y_, z_), nm, ph, 1500, 0.09)
+    FGB = dict(barn_wide=[('hen', -1.6, 4.2, 0.5, 1.0), ('basket', 2.0, 4.8, 0.3, 0.8), ('pail', -2.4, 5.4, 0, 0.6), ('hay', 2.6, 6.2, 0, 0.5), ('stool', -3.0, 6.8, 0.5, 0.7), ('milk', 1.2, 3.4, 0, 0.55)],
+               barn_milking=[('hen', -1.2, 3.6, 2.0, 1.0), ('pail', 1.6, 3.8, 0.2, 0.6), ('hay', -2.0, 4.4, 0, 0.5), ('stool', 2.2, 5.6, 0.3, 0.7), ('basket', -2.3, 2.8, 0.4, 0.8), ('hen', 2.8, 4.6, 5.0, 1.0)],
+               barn_high=[('hay', -2.0, 3.0, 0, 0.6), ('pail', 1.5, 3.4, 0.2, 0.6), ('hen', 2.6, 5.2, 1.0, 1.0), ('basket', -1.2, 4.6, 0.5, 0.8), ('stool', -3.4, 5.4, 0.5, 0.7)],
+               barn_door=[('hen', -1.5, 3.4, 0.3, 1.0), ('pail', 1.4, 4.2, 0.2, 0.42), ('hay', -2.4, 5.6, 0, 0.5), ('basket', 2.4, 4.6, 0.4, 0.7), ('stool', 0.4, 6.2, 0.5, 0.6), ('hen', 2.8, 7.0, 4.0, 1.0), ('milk', -0.4, 3.0, 0.2, 0.4)])
+    fg_props(mb, hm, M, P_, SET, rg, CAMS[PR['cam']], FGB[PR['cam']])
     # ---------------- sun shafts (additive wedges along the key) + dust motes
-    ke = Vector(kdv); sf = M['shaft']; p0 = Vector((BX0, DOOR[0], 0.3)); t_ = (DOOR[2]) / -ke.z
+    ke = Vector(kdv); sf = M['shaft']; p0 = Vector((BX0, DOOR[0], 0.3)); t_ = min((DOOR[2]) / -ke.z, 10.0)
     def par(p, ex, ey, ez):
         p, ex, ey, ez = map(Vector, (p, ex, ey, ez))
         for a, b, o in ((ex, ey, Vector()), (ex, ey, ez), (ex, ez, Vector()), (ex, ez, ey), (ey, ez, Vector()), (ey, ez, ex)): gm.pid += 1; gm.face([p + o, p + o + a, p + o + a + b, p + o + b], sf)
     par(p0, Vector((0, DOOR[1] - DOOR[0], 0)), Vector((0, 0, DOOR[2] - 0.3)), ke * (t_ * 0.9))
-    for yy in (21.4, 23.3, 25.2, 27.1, 29.0, 30.9): tt = 5.4 / -ke.z; par(Vector((BX0, yy, 0.2)), Vector((0, 0.16, 0)), Vector((0, 0, 5.3)), ke * (tt * 0.95))
+    for yy in (21.4, 23.3, 25.2, 27.1, 29.0, 30.9): tt = min(5.4 / -ke.z, 8.0); par(Vector((BX0, yy, 0.2)), Vector((0, 0.16, 0)), Vector((0, 0, 5.3)), ke * (tt * 0.95))
     boxes = []
     for i in range(6):
         y0 = rg.uniform(DOOR[0], DOOR[1] - 2); z0 = rg.uniform(0.8, DOOR[2] - 1.0); t = rg.uniform(0.5, (z0 - 0.3) / -ke.z * 0.9); pm = Vector((BX0, y0, z0)) + ke * t
@@ -391,10 +397,10 @@ def barn(SET, M, P, kd, lkey, PR):
 
 def yard_out(SET, M, P, kd):
     """Outside the open door (x < -10): the lane, farmyard stone wall, hay wagon, geese, hens, trees, the field."""
-    rg = R(8); mb = MB(); hm = MB(); P_ = STATE['protos']; lv = [M['green'], M['leaf2'], M['leaf']]
+    rg = R(8); mb = MB(); hm = MB(); tm = MB(); P_ = STATE['protos']; lv = [M['green'], M['leaf2'], M['leaf']]
     drystone(mb, (-36.0, -8.0), (-36.0, 72.0), 2.4, 1.0, [M['stone'], M['moss'], M['stone2']], rg)
     for yy in np.arange(-6, 70, 4.5): bx(mb, (-37.2, yy, 0), (-36.9, yy + 0.3, 2.9), M['oak'], (1, 1)) if False else None
-    for (tx_, ty_, h, r) in ((-44, 8, 9, 5), (-50, 26, 11, 6), (-46, 44, 10, 5.5), (-60, 15, 12, 6.5), (-62, 38, 12, 6.5), (-40, 60, 9, 5), (-52, -4, 10, 5.5), (-34, 28, 6, 3.4)): tree(mb, (tx_, ty_, 0), h, r, M['wood2'], lv, int(ty_ * 3), nclump=18)
+    for (tx_, ty_, h, r) in ((-44, 8, 9, 5), (-50, 26, 11, 6), (-46, 44, 10, 5.5), (-60, 15, 12, 6.5), (-62, 38, 12, 6.5), (-40, 60, 9, 5), (-52, -4, 10, 5.5), (-34, 28, 6, 3.4)): tree(tm, (tx_, ty_, 0), h, r, M['wood2'], lv, int(ty_ * 3), nclump=18)
     obox(mb, (-24, 24, 1.6), (1, 0, 0), (0, 1, 0), (0, 0, 1), 3.0, 1.5, 0.5, M['oak'], 0.4); wheel(mb, (-24.0, 22.4, 2.0), 1.9, M, (0, 1, 0)); wheel(mb, (-24.0, 25.6, 2.0), 1.9, M, (0, 1, 0))
     for sg in (-1, 1): bx(mb, (-27.0, 24 + sg * 1.4, 2.0), (-21.0, 24 + sg * 1.4 + 0.12, 3.8), M['oak_d'], (2, 2)) if False else None
     hay_heap(hm, (-24, 24, 2.1), M, 2.0, 600, 6); rod(mb, (-29.0, 24, 1.6), (-34.0, 24, 1.0), 0.1, M['wood2'], seg=5)
@@ -406,7 +412,7 @@ def yard_out(SET, M, P, kd):
     flw = [P_.flower(k) for k in ('daisy', 'buttercup', 'cowparsley', 'poppy', 'viola')]
     scatter_flowers(mb, rg, flw, (-35.5, -14, -8, 70), 420, hmin=0.6, hmax=1.0, keep=lambda x, y: not (-14 > x > -16 and 8 < y < 23))
     scatter_grass(mb, rg, [M['leaf2'], M['leaf'], M['grass_d']], (-35.5, -10.5, -8, 70), 1300, keep=lambda x, y: not (7 < y < 22 and x > -34))
-    mb.obj('yard', SET); hm.obj('yard_hay', SET)
+    mb.obj('yard', SET); hm.obj('yard_hay', SET); tm.obj('yard_trees', SET).visible_shadow = False
     def hf(x, y): d = max(0.0, -x - 50.0); r_ = sm(0, 300, d); return -0.1 + 30 * r_ ** 1.3 * (0.55 + 0.45 * math.sin(y * 0.008 + 1.3)) + 8 * r_ * math.sin(y * 0.03 + x * 0.01)
     hill_grid(SET, M, -760, -40, -300, 420, 48, 60, hf)
 
@@ -437,7 +443,7 @@ def house(mb, M, x0, x1, y0, y1, ze, zr, face, seed, wall='stone', roof='thatch'
     for k in range(dormers):
         cx_ = x0 + L * (0.22 + 0.56 * k / max(1, dormers - 1) if dormers > 1 else 0.5); yy = (y0 + yf) / 2 + face * ((y1 - y0) / 2 - 0.2) if False else yf
         lumpy(mb, (cx_, yf - face * -0.2 + (0.1 * face), ze + 2.3), 1.7, M['thatch'], seed * 7 + k, seg=10, rings=6, rough=0.08, squash=0.6) if roof == 'thatch' else None
-        casement(mb, M, cx_, yf - face * 0.55 * 0 + face * -0.9 * -1 if False else yf + face * -0.0, ze + 1.3, 1.5, 1.2, face, False, rg) if False else None
+        if roof == 'thatch': bx(mb, (cx_ - 0.7, min(yf + face * 1.9, yf + face * 2.05), ze + 1.75), (cx_ + 0.7, max(yf + face * 1.9, yf + face * 2.05), ze + 2.6), M['glass'], (1, 1)); bx(mb, (cx_ - 0.82, min(yf + face * 1.95, yf + face * 2.1), ze + 1.65), (cx_ + 0.82, max(yf + face * 1.95, yf + face * 2.1), ze + 1.78), M['cream'], (1, 1)); bx(mb, (cx_ - 0.04, min(yf + face * 1.95, yf + face * 2.1), ze + 1.75), (cx_ + 0.04, max(yf + face * 1.95, yf + face * 2.1), ze + 2.6), M['cream'], (1, 1))
     if roses:
         for k in range(14):
             px = x0 + rg.uniform(0.3, L - 0.3); pz = rg.uniform(0.4, ze - 0.5); lumpy(mb, (px, yf + face * -0.35 * -1 + face * 0.15 * 0 - 0.4 * (face < 0) + 0.4 * (face > 0), pz), 0.34, M['leaf2'] if k % 3 else M['leaf'], seed * 11 + k, seg=6, rings=4, rough=0.25)
@@ -503,9 +509,9 @@ def litter(mb, hm, M, P_, rg, rect, n, okp, nobar=()):
         x, y = rg.uniform(x0, x1), rg.uniform(y0, y1)
         if not okp((x, y), 1.6): continue
         k = i % 6
-        if k < 3: lumpy(mb, (x, y, 0.0), rg.uniform(0.08, 0.24), M['pebble'] if i % 2 else M['pebble2'], i, seg=6, rings=4, rough=0.25, squash=0.6)
+        if k < 3: rr = rg.uniform(0.08, 0.24); ell(mb, (x, y, rr * 0.2), (rr, rr * rg.uniform(0.7, 1.0), rr * 0.45), M['pebble'] if i % 2 else M['pebble2'], rg.uniform(0, 6), seg=8, rings=4)
         elif k == 3: strand_tuft(hm, (x, y, 0.02), M['straw'], n=5, h=0.25, spread=1.5, lean=1.0, w=0.014, rg=rg, flat=0.6)
-        elif k == 4: lumpy(mb, (x, y, 0.0), 0.12, M['brown'], i, seg=5, rings=3, rough=0.3, squash=0.6)
+        elif k == 4: ell(mb, (x, y, 0.04), (0.13, 0.1, 0.06), M['brown'], rg.uniform(0, 6), seg=7, rings=4)
         else: rod(mb, (x, y, 0.03), (x + rg.uniform(-0.7, 0.7), y + rg.uniform(-0.7, 0.7), 0.05), 0.025, M['wood2'], seg=3)
 
 def fg_props(mb, hm, M, P_, SET, rg, cam, items, hooks=True):
@@ -545,7 +551,7 @@ def village(SET, M, P, kd, lkey, PR):
     # ---------------- Jenner's cottage (honey stone, deep layered thatch, two chimneys, a kitchen wing)
     tops = house(mb, M, -10.0, 10.0, 9.0, 17.0, 5.6, 10.4, -1, 3, 'stone', 'thatch', (0.14, 0.7), 2, True, False)
     tops2 = house(mb, M, 10.0, 17.0, 9.5, 15.5, 4.2, 7.6, -1, 5, 'stone', 'thatch', (0.5,), 0, False, False)
-    for k, (tx_, ty_, tz_) in enumerate(tops + tops2): smoke_puffs(SET, M, (tx_, ty_, tz_), 6, 12.0, (1.2, 0.3), 0.010, 'smoke%d' % k, k)
+    for k, (tx_, ty_, tz_) in enumerate(tops + tops2): smoke_puffs(SET, M, (tx_, ty_, tz_), 9, 12.0, (0.45, 0.1), 0.008, 'smoke%d' % k, k)
     bx(mb, (-4.2, 6.7, 4.1), (0.2, 9.1, 4.5), M['thatch_d'], (3, 3)); post(mb, -4.0, 7.0, 0, 4.1, 0.2, M['oak']); post(mb, 0.0, 7.0, 0, 4.1, 0.2, M['oak'])
     # ---------------- picket fence on the lane side, stone walls east and west, hedge, orchard gate
     picket(mb, M, -22.0, 22.0, -8.0, rg, (-2.6, -0.4))
@@ -603,7 +609,6 @@ def village(SET, M, P, kd, lkey, PR):
     scatter_flowers(hm, rg, fl, (-60, 60, -16.0, -15.0), 160, 0.6, 0.95); scatter_flowers(hm, rg, fl, (-60, 60, -8.8, -8.0), 140, 0.6, 0.95)
     scatter_grass(hm, rg, [M['leaf2'], M['leaf'], M['grass_d']], (-36, 36, -50, -16), 2800, (0.2, 0.4), keep=lambda x, y: okp((x, y), 1.2) and not (math.hypot(x + 18, y + 32) < 6.5))
     scatter_flowers(hm, rg, fl, (-36, 36, -50, -16), 520, 0.6, 0.95, keep=lambda x, y: not (math.hypot(x + 18, y + 32) < 6.5))
-    for i in range(160): lumpy(mb, (rg.uniform(-40, 40), rg.uniform(-15.0, -8.4), 0.0), rg.uniform(0.1, 0.25), M['moss'], i, seg=6, rings=4, rough=0.2, squash=0.6) if okp((0, 0), 0) else None
     # ---------------- the green: pond with reeds and ducks, the old oak, a stone well, a handcart and a wain, barrels
     pnd = MB(); pnd.pid += 1; pts = [(-18 + math.cos(a * 6.2832 / 24) * (6.0 + 0.7 * math.sin(a * 2.3)), -32 + math.sin(a * 6.2832 / 24) * (4.4 + 0.5 * math.sin(a * 1.7))) for a in range(24)]
     pnd.face([Vector((x, y, 0.04)) for x, y in pts], M['pond'], [(0, 0)] * 24); pnd.obj('pond', SET).visible_shadow = False
@@ -623,7 +628,7 @@ def village(SET, M, P, kd, lkey, PR):
            (18, 38, -30.0, -22.0, 1, 25, 'plaster', 'thatch'), (-34, -14, -30.0, -22.2, 1, 26, 'stone', 'thatch'), (-58, -38, -30.0, -22.0, 1, 27, 'moss', 'thatch'), (-84, -62, -30.0, -22.2, 1, 28, 'plaster', 'tile'), (42, 62, -30.0, -22.0, 1, 29, 'stone', 'thatch'), (42, 64, -6.2, 1.8, -1, 30, 'stone', 'thatch')]
     for k, (x0, x1, y0, y1, fc, sd, wl, rf) in enumerate(row):
         t_ = house(mb, M, x0, x1, y0, y1, 5.4 + (k % 3) * 0.3, 10.0 + (k % 4) * 0.5, fc, sd, wl, rf, (0.2 + 0.5 * (k % 2),), 1, True, k % 2 == 0)
-        if k % 3 == 0: smoke_puffs(SET, M, t_[0], 5, 11.0, (1.2, 0.3), 0.009, 'hsmoke%d' % k, k + 20)
+        if k % 3 == 0: smoke_puffs(SET, M, t_[0], 7, 10.0, (0.45, 0.1), 0.009, 'hsmoke%d' % k, k + 20)
         facade_dress(mb, hm, M, P_, rg, x0, x1, y0 if fc < 0 else y1, fc, okp, 6)
     litter(mb, hm, M, P_, rg, (-60, 60, -15.0, -8.2), 520, okp); litter(mb, hm, M, P_, rg, (-30, 30, -48, -22), 300, okp)
     for (x_, y_, yw) in ((26.0, -12.0, 0.3), (12.0, -10.0, 2.2), (-8.0, -9.4, 4.0), (-4.0, -14.0, 1.0), (3.0, -9.0, 5.2), (34.0, -10.0, 3.0)): stamp(mb, P_.goose(), (x_, y_, 0.0), yw, 0.85) if okp((x_, y_), 4.0) else None
@@ -649,10 +654,10 @@ def village(SET, M, P, kd, lkey, PR):
         r_ = math.hypot(x * 0.9, y + 8); k = sm(130, 480, r_); return -0.12 + 85 * k ** 1.15 * (0.55 + 0.45 * math.sin(x * 0.011 + 1.3) * math.cos(y * 0.009)) + 9 * k * math.sin(x * 0.03 + y * 0.012)
     hill_grid(SET, M, -720, 720, -720, 720, 120, 120, hf, uvs=(1.6, 1.6))
     FG = dict(
-        garden_hut=[('pot', -2.2, 3.6, 0, 1.0), ('hen', 1.5, 4.8, 2.0, 1.0), ('basket', 2.4, 3.9, 0.3, 0.9), ('hay', -2.7, 5.0, 0, 0.45), ('wood', 3.2, 6.0, 1.0, 0.9), ('pail', 0.3, 3.2, 0, 0.7), ('goose', -1.0, 6.4, 5.0, 0.9)],
-        lane_wide=[('barrel', -2.6, 5.0, 0, 1.0), ('crate', -2.0, 5.2, 0.5, 0.9), ('wheelbarrow', 2.5, 6.5, 2.8, 1.0), ('goose', 0.2, 4.2, 1.0, 0.9), ('hen', -0.6, 8.0, 2.0, 1.0), ('sack', 2.8, 4.0, 0.3, 0.9), ('hay', -2.5, 8.0, 0, 0.6)],
+        garden_hut=[('pot', -2.2, 4.0, 0, 0.8), ('hen', 1.5, 5.4, 2.0, 1.0), ('basket', 2.4, 4.2, 0.3, 0.7), ('hay', -2.7, 5.4, 0, 0.4), ('pail', 0.5, 3.6, 0, 0.5), ('goose', -1.0, 7.0, 5.0, 0.8)],
+        lane_wide=[('barrel', -2.8, 6.0, 0, 0.8), ('crate', -2.2, 6.2, 0.5, 0.8), ('wheelbarrow', 2.8, 7.5, 2.8, 1.0), ('goose', 0.6, 5.0, 1.0, 0.8), ('hen', -0.6, 8.5, 2.0, 1.0), ('hay', -2.5, 9.0, 0, 0.6), ('basket', 1.8, 4.4, 0.2, 0.6)],
         lane_high=[('barrel', -5.0, 8.0, 0, 1.0), ('hay', 4.5, 7.0, 0, 0.8), ('goose', 1.5, 6.0, 2.0, 1.0), ('crate', -3.2, 6.0, 0.3, 0.9), ('hen', -1.0, 9.0, 3.0, 1.0), ('basket', 3.0, 5.2, 0.2, 0.9)],
-        garden_queue=[('barrel', -3.2, 4.5, 0, 1.0), ('crate', -2.4, 4.8, 0.5, 0.9), ('hay', 3.0, 4.6, 0, 0.7), ('wheelbarrow', 3.0, 7.0, 3.3, 1.0), ('goose', 0.5, 3.8, 1.0, 0.9), ('sack', -1.0, 4.0, 0.3, 0.9), ('dog', 1.0, 6.2, 2.6, 0.95), ('basket', -3.4, 7.0, 0.3, 0.9), ('hen', -1.6, 6.0, 4.0, 1.0)])
+        garden_queue=[('barrel', -3.4, 5.5, 0, 0.8), ('crate', -2.6, 5.8, 0.5, 0.7), ('hay', 3.2, 5.4, 0, 0.5), ('wheelbarrow', 3.4, 8.0, 3.3, 1.0), ('goose', 0.8, 4.6, 1.0, 0.7), ('dog', 1.0, 6.8, 2.6, 0.9), ('basket', -3.2, 8.0, 0.3, 0.8), ('hen', -1.6, 6.4, 4.0, 1.0), ('pail', -1.2, 4.2, 0.2, 0.5)])
     fg_props(mb, hm, M, P_, SET, rg, CAMS[PR['cam']], FG[PR['cam']])
     mb.obj('village', SET); hm.obj('village_flora', SET)
 
@@ -746,9 +751,9 @@ def room(SET, M, P, kd, lkey, PR):
     if night:
         fl = MB(); ell(fl, (0, 0, 0.0), (0.07, 0.07, 0.17), M['flame'], seg=6, rings=4); fo2 = mk_obj(fl, 'candle_flame', SET, (cx_c, cy_c, 3.2), shadow=False)
         drv(fo2, 'scale', 2, '1.0+0.18*sin(frame*0.8)+0.1*sin(frame*1.9+2)'); drv(fo2, 'scale', 0, '1.0+0.1*sin(frame*1.3)'); hook('candle', fo2)
-        li = MN._light('candle_light', (cx_c, cy_c, 3.3), (1.0, 0.62, 0.30), 260.0, 0.12); drv(li.data, 'energy', -1, '260*(1.0+0.1*sin(frame*0.8)+0.06*sin(frame*2.1+1))') if False else None
-        fc = li.data.driver_add('energy'); fc.driver.type = 'SCRIPTED'; fc.driver.expression = '260*(1.0+0.1*sin(frame*0.8)+0.06*sin(frame*2.1+1))'; hook('candle_light', li)
-        li2 = MN._light('hearth_light', (4.0, 10.6, 1.6), (1.0, 0.55, 0.22), 520.0, 0.4); fc = li2.data.driver_add('energy'); fc.driver.type = 'SCRIPTED'; fc.driver.expression = '520*(1.0+0.12*sin(frame*0.7)+0.08*sin(frame*1.9))'
+        li = MN._light('candle_light', (cx_c, cy_c, 3.3), (1.0, 0.72, 0.36), 120.0, 0.12); drv(li.data, 'energy', -1, '120*(1.0+0.1*sin(frame*0.8)+0.06*sin(frame*2.1+1))') if False else None
+        fc = li.data.driver_add('energy'); fc.driver.type = 'SCRIPTED'; fc.driver.expression = '120*(1.0+0.1*sin(frame*0.8)+0.06*sin(frame*2.1+1))'; hook('candle_light', li)
+        li2 = MN._light('hearth_light', (4.0, 10.6, 1.6), (1.0, 0.62, 0.28), 260.0, 0.4); fc = li2.data.driver_add('energy'); fc.driver.type = 'SCRIPTED'; fc.driver.expression = '260*(1.0+0.12*sin(frame*0.7)+0.08*sin(frame*1.9))'
     for (x_, y_, yw) in ((1.0, 4.4, 1.0), (5.5, 6.4, 3.0)):                                                              # two chairs
         c_ = MB(); bx(c_, (-0.45, -0.45, 1.0), (0.45, 0.45, 1.12), M['wood'], (1, 1)); [post(c_, sx * 0.38, sy * 0.38, 0, 1.0, 0.12, M['wood2']) for sx in (-1, 1) for sy in (-1, 1)]
         [post(c_, sx * 0.38, 0.4, 1.0, 2.6, 0.12, M['wood2']) for sx in (-1, 1)]; [bx(c_, (-0.4, 0.38, z_), (0.4, 0.44, z_ + 0.14), M['wood2'], (1, 1)) for z_ in (1.7, 2.2)]; stamp(mb, c_, (x_, y_, 0), yw)
@@ -774,19 +779,19 @@ def room(SET, M, P, kd, lkey, PR):
     for (x_, y_) in ((-6.8, 0.8), (4.6, 0.2), (-1.0, -3.2), (6.4, -4.8)): stamp(mb, P_.pail(False), (x_, y_, 0), 0.3, 0.6)
     for (x_, y_, yw, k) in ((-3.8, -2.2, 0.4, 1), (3.6, -3.6, 2.4, 0)): stamp(mb, P_.cat(False, k), (x_, y_, 0.02), yw, 0.8)
     for (x_, y_) in ((-6.4, -5.6), (-2.6, -5.4), (1.5, -5.8), (5.4, -5.6)): stamp(mb, P_.basket(True), (x_, y_, 0.0), x_, 0.9) if okp((x_, y_), 1.2) else None
+    FGR = [('basket', -2.2, 3.6, 0.3, 0.8), ('stool', 1.6, 4.2, 0.6, 0.75), ('cat', -0.6, 5.0, 2.8, 0.8), ('pail', 2.6, 3.4, 0.2, 0.55), ('wood', -3.0, 6.2, 1.57, 0.7), ('crate', 3.2, 6.0, 0.4, 0.8), ('sack', -1.6, 7.2, 0.5, 0.6), ('milk', 0.8, 3.2, 0.3, 0.5)]
+    fg_props(mb, hm, M, P_, SET, rg, CAMS[PR['cam']], FGR)
     # sun shafts + motes in the window light
     ke = Vector(kdv); sf = mat_emit('DY_rshaft_%s' % lkey, '#ffd596', strength=0.07, additive=True, camera_only=True)
     def par(p, ex, ey, ez):
         p, ex, ey, ez = map(Vector, (p, ex, ey, ez))
         for a, b, o in ((ex, ey, Vector()), (ex, ey, ez), (ex, ez, Vector()), (ex, ez, ey), (ey, ez, Vector()), (ey, ez, ex)): gm.pid += 1; gm.face([p + o, p + o + a, p + o + a + b, p + o + b], sf)
-    t1 = 2.6 / max(0.05, -ke.z); par(Vector((RX0, WIN1[0], WIN1[2])), Vector((0, WIN1[1] - WIN1[0], 0)), Vector((0, 0, WIN1[3] - WIN1[2])), ke * min(t1, 9.0))
-    if ke.y < -0.05: par(Vector((0.8, RY1, 2.6)), Vector((3.4, 0, 0)), Vector((0, 0, 2.7)), ke * min(5.0 / max(0.05, -ke.z), 8.0))
     boxes = []
     for (p0, ex, ey, ez) in (((RX0, WIN1[0], WIN1[2]), (0, 4.0, 0), (0, 0, 2.6), None),):
         for t in (3.0, 6.0, 9.0):
             pm = Vector((RX0 + 0.5, 6.6, 4.2)) + ke * t
             if RX0 < pm.x < RX1 and 0.4 < pm.z < RZ: boxes.append((pm.x - 1.3, pm.x + 1.3, pm.y - 1.3, pm.y + 1.3, max(0.4, pm.z - 1.0), pm.z + 1.0))
-    mote_groups(SET, M, rg, boxes or [(-3, 2, 3, 8, 0.8, 4)], 60, 3, amp=0.5)
+    mote_groups(SET, M, rg, boxes or [(-3, 2, 3, 8, 0.8, 4)], 40, 3, amp=0.5)
     STATE['fw'] = fw
     mb.obj('room', SET); gm.obj('room_glow', SET).visible_shadow = False; hm.obj('room_straw', SET); fo = fw.obj('frontwall', SET); fo.visible_camera = False
     def hf(x, y): d = max(0.0, x - 50.0); r_ = sm(0, 300, d); return -0.1 + 40 * r_ ** 1.3 * (0.55 + 0.45 * math.sin(y * 0.008 + 1.3)) + 9 * r_ * math.sin(y * 0.03 + x * 0.01)
@@ -797,7 +802,7 @@ def build(preset=None, light=None, clear=True):
     """Build the preset's location with its light, sky, hooks and camera data into the current scene. Returns the anchors dict (API.md)."""
     preset = preset or 'barn_wide'; assert preset in PRESETS, 'preset %s is not one of %s' % (preset, list(PRESETS))
     PRc = PRESETS[preset]; loc = PRc['loc']; lkey = light or PRc['light']; assert lkey in LOC_LIGHTS[loc]
-    scene, SET, P, kd = new_scene(lkey, PRc['sun'], PRc.get('P')); C, TX, E = STATE['C'], STATE['TX'], STATE['E']; M = mats(C, TX, E); STATE['M'] = M; STATE['preset'] = preset; STATE['loc'] = loc
+    scene, SET, P, kd = new_scene(lkey, PRc['sun'], dict(PRc.get('P') or {}, **(json.loads(os.environ['DAIRY_P']) if os.environ.get('DAIRY_P') else {}))); C, TX, E = STATE['C'], STATE['TX'], STATE['E']; M = mats(C, TX, E); STATE['M'] = M; STATE['preset'] = preset; STATE['loc'] = loc
     sky_dome(SET, lkey, (PRc.get('look_az', 90) % 360) / 360.0)
     if loc == 'barn': barn(SET, M, P, kd, lkey, PRc); yard_out(SET, M, P, kd)
     elif loc == 'village': village(SET, M, P, kd, lkey, PRc)
@@ -808,15 +813,21 @@ def build(preset=None, light=None, clear=True):
 def anchors():
     P = STATE['P']; pr = STATE['preset']; PRc = PRESETS[pr]; cams = {k: dict(v) for k, v in CAMS.items() if PRESETS[k]['loc'] == PRc['loc']}
     return dict(location=PRc['loc'], preset=pr, light=STATE['light'], cams=cams, cam=dict(CAMS[PRc['cam']]), cam_name=PRc['cam'], cam_notes={k: CAM_NOTES[k] for k in cams},
-                render=dict(samples_final=12, resolution=(720, 1280), threads=4, denoise='OIDN', dof=None), key_dir=tuple(Vector(P['key_dir']).normalized()), sun_elevation_deg=P['sun_elev'],
+                render=dict(samples_final=SAMPLES_FINAL, resolution=(720, 1280), threads=4, denoise='OIDN', dof=None), key_dir=tuple(Vector(P['key_dir']).normalized()), sun_elevation_deg=P['sun_elev'],
                 heights=dict(ROLES), stand={k: {n: dict(v) for n, v in STAND[k].items()} for k in cams}, staging={k: list(STAGING[k]) for k in cams}, hooks=list(STATE.get('hooks', [])),
                 lights=[o.name for o in STATE['LIGHTS'].objects], candle=STATE.get('candle'))
 
-def stage_placeholders(A, preset=None, cam_loc=None, names=None):
+def _cow_marker(s):
+    """3D stand-in for the 2D Blossom puppet (tests / contact sheets only): a cow in side view, head to -x, centred on the stand point."""
+    M = STATE['M']; cmb = MB(); cow(STATE['SET'], cmb, M, (s['pos'][0], s['pos'][1], s['pos'][2]), math.pi, 'a', 0.0, 0.0, 'blossom_marker'); o = cmb.obj('blossom_marker_body', STATE['SET'], smooth=True); no_bounce(o)
+
+def stage_placeholders(A, preset=None, cam_loc=None, names=None, cow_marker=True):
     preset = preset or A['preset']; cam_loc = cam_loc or CAMS[PRESETS[preset]['cam']]['loc']; T._clear_actors(); out = []
     for nm in (names or STAGING[preset]):
         s = STAND[preset][nm]; role = s['role']
-        if role == 'cow': continue
+        if role == 'cow':
+            if s.get('length') and cow_marker: _cow_marker(s)
+            continue
         pos = Vector(s['pos']); d = Vector(cam_loc) - pos; el = math.degrees(math.atan2(d.z - 1.5, math.hypot(d.x, d.y)))
         out.append(T.placeholder_actor(role, tuple(pos), face_to=cam_loc, tilt=max(0.0, el - 25) * 0.55, name='actor_%s_%s' % (preset, nm)))
     return out
@@ -841,6 +852,7 @@ def cli_render(specs=None, quality='final', outdir=None, actors=True, samples=No
     for spec in (specs or list(PRESETS)):
         parts = spec.split(':'); pr = parts[0]; lt = parts[1] if len(parts) > 1 and parts[1] else None
         t0 = time.time(); A = build(pr, light=lt); tb = time.time() - t0; sc = bpy.context.scene; MN.setup_render(sc, quality); sc.render.threads_mode = 'FIXED'; sc.render.threads = 4
+        if quality == 'final': sc.cycles.samples = SAMPLES_FINAL
         if samples: sc.cycles.samples = samples
         cs = A['cam']; make_camera(cs)
         if actors: stage_placeholders(A, pr, cs['loc'])

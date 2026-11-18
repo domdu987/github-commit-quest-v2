@@ -111,7 +111,7 @@ def hay_heap(mb, c, M, r, seed, n=5, strands=True, h=None):
     rg = R(seed); c = Vector(c)
     for i in range(n):
         p = c + Vector((rg.uniform(-r, r) * 1.2, rg.uniform(-r, r) * 0.9, rg.uniform(0, r * 0.55))); rr = r * rg.uniform(0.55, 0.95)
-        lumpy_uv(mb, p, rr, M['hay'], seed + i, seg=10, rings=6, rough=0.22, squash=0.78, uvk=2.2)
+        lumpy_uv(mb, p, rr, M['hay'], seed + i, seg=10, rings=6, rough=0.22, squash=0.62, uvk=2.2)
     if strands:
         for k in range(int(n * 30 * r)):
             a = rg.uniform(0, 6.28); d = rg.uniform(0, r * 1.15); z = max(0.02, rg.uniform(0.05, r * 0.95) * (1 - d / (r * 1.5)))
