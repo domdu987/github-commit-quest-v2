@@ -239,8 +239,10 @@ class Take(object):
 
     def sprites_for(self, jobs, frames):
         """jobs = [(actor, px_per_D)]: rasterise the stored poses, remember the anchors per (actor name, frame)."""
-        for a, ppd in jobs:
-            for f, r in zip(frames, a.render_sprites(ppd, frames=frames)):
+        for job in jobs:
+            a, ppd = job[0], job[1]
+            ov = job[2] if len(job) > 2 else None                  # optional overlay: callable(frame, pose) -> SVG in puppet-local D
+            for f, r in zip(frames, a.render_sprites(ppd, frames=frames, overlay=ov)):
                 self.anch[(a.name, f)] = r["anchors"]
                 if r.get("clipped"):
                     print("take: WARNING sprite of %s clipped on frame %d" % (a.name, f), flush=True)

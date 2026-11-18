@@ -41,10 +41,10 @@ def lerp_v(a, b, u):
 
 
 CAM22_A = ((-24.0, -28.0, 19.0), (20.0, 18.0, 3.0))
-CAM22_B = ((-8.0, -24.0, 12.0), (24.0, 14.0, 4.0))
+CAM22_B = ((5.0, -18.5, 6.5), (15.5, 7.0, 4.6))
 LENS22 = 22.0
-CAM23_A = ((-1.5, -10.0, 3.6), (-2.4, 1.2, 4.6))
-CAM23_B = ((-3.0, -6.2, 3.8), (-3.2, 1.2, 4.6))
+CAM23_A = ((-4.0, -8.4, 3.9), (-3.8, 1.2, 4.7))
+CAM23_B = ((-2.2, -4.9, 4.0), (-1.9, 1.2, 4.7))
 LENS23 = 24.0
 STRIPE_END = 0.62
 
@@ -64,7 +64,10 @@ def adm22(g):
     cast, p = pose_of("admiral_arms_akimbo", expr="worried", mouth="flat", fx=["sweat"])
     u = u_of(g, 1650, 1700)
     p["head_roll"] = 4 * u + 1.5 * math.sin(g * 0.1)
-    p["pitch"] = lerp(-0.3, 0.1, u)
+    look = u_of(g, 1650, 1685)                             # he looks UP at his own grey ship before the cut
+    p["pitch"] = lerp(-0.3, -0.95, look)
+    p["gaze"] = (lerp(0.2, 0.35, look), lerp(0.0, -1.0, look))
+    p["yaw"] = lerp(p.get("yaw", 0.4), 0.15, look)
     p["blink"] = blink(g, [1640, 1688])
     return p
 
@@ -76,19 +79,49 @@ def pai22(g):
     return p
 
 
+G_LAST = 1798                                              # his last stroke lands on the cut at "เอง" (59.9 s)
+BRUSH_DX = 1.25                                            # brush tip is this far right of his feet (D)
+FRONT_OFF = 0.0                                            # calibration of the stripe front vs the brush (D)
+
+
+def adm_x(g):
+    """he shuffles along the stage to the right while he paints (the stripe front follows the brush)."""
+    x = clamp((g - G23) / float(G_LAST - G23))
+    return lerp(-5.0, -2.5, 0.3 * ez(x, "sine") + 0.7 * x)
+
+
+def stripe_of(g):
+    """set_stripes stage whose front sits at the brush tip: lags behind by 3 D at the start, closes to 0 at g_last (about 52 D per stage unit,
+    stage 0.45 = front at x -3 at brush height)."""
+    x = clamp((g - G23) / float(G_LAST - G23))
+    lag = 3.2 * (1.0 - x) ** 1.5
+    fx = adm_x(g) + BRUSH_DX - lag + FRONT_OFF
+    return clamp(0.4 + (fx + 5.8) / 60.0, 0.0, 0.5)         # measured: at brush height the front runs x -5.8 (stage 0.40) .. +0.3 (0.50), then stops
+
+
+def blobs(f, pose):
+    """big paint blobs for phone size (puppet-local D, head centre at the origin): navy on the moustache and the cheek, white on the cap."""
+    return ('<g stroke="#10173a" stroke-width="0.012">'
+            '<path d="M-0.02,0.15 C0.10,0.10 0.30,0.14 0.30,0.25 C0.28,0.36 0.08,0.36 -0.02,0.28 Z" fill="#1f2f5a"/>'
+            '<ellipse cx="0.20" cy="0.34" rx="0.035" ry="0.07" fill="#1f2f5a"/>'
+            '<path d="M-0.30,-0.40 C-0.20,-0.52 0.00,-0.50 0.02,-0.38 C-0.05,-0.30 -0.25,-0.30 -0.30,-0.40 Z" fill="#f4f1e6"/>'
+            '<circle cx="-0.33" cy="0.10" r="0.085" fill="#1f2f5a"/><circle cx="-0.38" cy="0.20" r="0.035" fill="#f4f1e6"/>'
+            '</g>')
+
+
 def adm23(g):
     """on the stage, brush sweeping the hull (screen-right), a sheepish glance back at us; the brush goes up and down."""
     cast, p = pose_of("admiral_plank_sheepish", plank=0, expr="sheepish")
     ph = (g - G23) / 22.0 * 2 * math.pi
     sw = 0.5 - 0.5 * math.cos(ph)                         # 0..1 sweep
     ar = dict(p["arm_r"])
-    ar["hand"] = (lerp(0.72, 0.95, sw), lerp(0.55, 0.22, sw))
+    ar["hand"] = (lerp(0.78, 0.98, sw), lerp(0.50, 0.20, sw))
     p["arm_r"] = ar
     pr = dict(p["prop_r"])
     pr["angle"] = lerp(-12, -44, sw)
     p["prop_r"] = pr
     p["t"] = g / 30.0
-    p["paint_spots"] = lerp(0.7, 1.0, u_of(g, G23, G23 + 60))
+    p["paint_spots"] = 1.0
     al = dict(p["arm_l"])
     al["hand"] = (al["hand"][0], al["hand"][1] + 0.05 * math.sin(g * 0.3))     # the scratching hand fidgets
     p["arm_l"] = al
@@ -125,9 +158,9 @@ class Take(C.Take):
                 C.place(self.adm, f, (14.0, -8.0, 0.0))
                 C.place(self.pai, f, (10.4, -9.4, 0.0))
             else:
-                st = STRIPE_END * clamp((g - G23) / float(1800 - G23))
-                self.key_set(f, harbour_dazzle=1.0, stripes=st)
-                C.place(self.adm, f, mk["admiral_plank"])
+                ax = adm_x(g)
+                self.key_set(f, harbour_dazzle=1.0, stripes=stripe_of(g))
+                C.place(self.adm, f, (ax, mk["admiral_plank"][1], mk["admiral_plank"][2]))
         for g in gs:
             f = bf(shot, g)
             self.scene.frame_set(f)
@@ -140,7 +173,7 @@ class Take(C.Take):
         if shot == 22:
             self.sprites_for([(self.adm, 200), (self.pai, 200)], fr)
         else:
-            self.sprites_for([(self.adm, 320)], fr)
+            self.sprites_for([(self.adm, 320, blobs)], fr)
 
     def report(self, shot, g):
         f = bf(shot, g)
