@@ -35,8 +35,9 @@ G_DIVE = (244, 288)                # periscope sinks
 
 CAM3 = [((-58.5, -107.5, 2.6), (-11.5, -19.0, 5.2), 23.0), ((-58.0, -104.0, 2.8), (-9.0, -15.0, 5.4), 28.0)]
 # shot 4: lower and closer to the periscope, looking at the far merchant c3 (tracked in x by the convoy's speed)
-CAM4 = [((-72.0, -108.0, 4.2), (6.8, -46.4, 4.6), 22.0), ((-67.0, -103.0, 4.0), (10.0, -44.0, 4.4), 28.0)]
-C3_OFF = (14.0, -106.0, 0.0)           # the hit merchant is moved to a clear lane in front of the other ships so the hit reads
+CAM4 = [((-72.0, -108.0, 4.2), (-5.0, -33.0, 5.0), 22.0), ((-67.0, -103.0, 4.0), (-1.0, -30.0, 5.4), 27.0)]
+LIST_ROLL, LIST_PITCH = 0.34, 0.14
+C3_OFF = (-42.0, -105.0, 0.0)           # the hit merchant is moved to a clear lane in front of the other ships so the hit reads
 
 
 def s_of(g):
@@ -65,6 +66,14 @@ class Take(C.Take):
     def __init__(self, quality="preview", shot=3):
         C.Take.__init__(self, LOC[0], LOC[1], quality=quality, lens=22.0, name="cam_s03", light=LIGHT)
         self.bg = []
+        global CHARCOAL
+        CHARCOAL = bpy.data.materials.new("charcoal_smoke"); CHARCOAL.use_nodes = True
+        bs = CHARCOAL.node_tree.nodes["Principled BSDF"]; bs.inputs["Base Color"].default_value = (0.012, 0.012, 0.016, 1); bs.inputs["Roughness"].default_value = 1.0
+        for m in bpy.data.materials:                   # no soft pale whitecap flecks on the water near the camera
+            if m.node_tree:
+                for n in m.node_tree.nodes:
+                    if n.bl_idname == "ShaderNodeMapRange" and abs(n.inputs["From Min"].default_value - 0.5) < 1e-6 and abs(n.inputs["From Max"].default_value - 0.62) < 1e-6:
+                        n.inputs["From Min"].default_value = 0.98; n.inputs["From Max"].default_value = 1.0
         self._swap_cards()
 
     def _swap_cards(self):
@@ -92,9 +101,16 @@ class Take(C.Take):
             H.set_uboat(1.0, frame=f, periscope=peri_k(g) if shot == 4 else 1.0)
             H.set_torpedo(-1, frame=f)
             H.set_hit(hit_t(g) if shot == 4 else -1.0, frame=f)
-            for b in H.STATE['plume']:                    # bigger, readable plume + smoke
-                b['ob'].scale = tuple(v * 1.2 for v in b['ob'].scale); b['ob'].keyframe_insert('scale', frame=f)
-            rt = H.ship_root('c3'); rt.rotation_euler.x = 0.17 * ez((g - G_HIT - 4) / 60.0) if shot == 4 else 0.0
+            for b in H.STATE['plume']:                    # tall white column (2-3x the funnel), then a big charcoal smoke column
+                o = b['ob']
+                if b['k'] < 8:
+                    o.location.z *= 1.9; o.scale = tuple(v * 1.3 for v in o.scale)
+                else:
+                    o.scale = tuple(v * 0.95 for v in o.scale); o.location.z += 7.0
+                    if o.data.materials: o.data.materials[0] = CHARCOAL
+                o.keyframe_insert('scale', frame=f); o.keyframe_insert('location', frame=f)
+            rt = H.ship_root('c3'); u = ez((g - G_HIT - 4) / 66.0) if shot == 4 else 0.0
+            rt.rotation_euler.x = LIST_ROLL * u; rt.rotation_euler.y = LIST_PITCH * u          # the hit merchant lists and sinks by the bow
             rt.keyframe_insert('rotation_euler', frame=f)          # the hit merchant lists
             self.scene.frame_set(f)
             bpy.context.view_layer.update()
