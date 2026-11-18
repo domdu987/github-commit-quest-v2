@@ -1,0 +1,24 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 20.63,
+   "frame": 619,
+   "kind": "sfx",
+   "label": "day 1: brush on the hull, scaffold creak, gulls"
+  },
+  {
+   "time": 22.5,
+   "frame": 675,
+   "kind": "sfx",
+   "label": "day 2: paint bucket clank, brush strokes"
+  },
+  {
+   "time": 24.3,
+   "frame": 729,
+   "kind": "sfx",
+   "label": "day 3 dusk: lamps, harbour hum, a satisfied sigh"
+  }
+ ]
+}

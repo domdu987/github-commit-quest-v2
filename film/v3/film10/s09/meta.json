@@ -1,0 +1,59 @@
+{
+ "take": "s09",
+ "film": 10,
+ "shots": [
+  9,
+  10,
+  11
+ ],
+ "g0": 619,
+ "g1": 788,
+ "first_g": 613,
+ "n_frames": 181,
+ "handle_in": 6,
+ "handle_out": 5,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transitions": [
+  {
+   "at": 675,
+   "type": "cut"
+  },
+  {
+   "at": 729,
+   "type": "cut"
+  }
+ ],
+ "shot_ranges": {
+  "9": [
+   613,
+   674
+  ],
+  "10": [
+   675,
+   728
+  ],
+  "11": [
+   729,
+   793
+  ]
+ },
+ "setups": {
+  "9": "hull_side DAY, high 3/4 from the quay over the scaffold, painter on the hanging plank, stripes 0.3 -> 1 (day 1 zigzags)",
+  "10": "new angle: low from the bow side of the plank, DAY, stripes 1 -> 2 (day 2 staircases)",
+  "11": "harbour_wide DUSK, lower crane view, stripes 2 -> 3 (day 3 full dazzle), painter steps back proud on the quay"
+ },
+ "set": "v3/set3d10/harbour.py",
+ "cast": "v3/cast10",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "dof": "none",
+ "s_per_frame_wall_mean": 10.46,
+ "s_per_frame_cpu_mean": 20.24
+}
