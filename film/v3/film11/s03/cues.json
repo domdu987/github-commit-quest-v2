@@ -1,0 +1,14 @@
+{
+ "take": "s03",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 5.367,
+   "duration": 2.533,
+   "frame": 161,
+   "end_frame": 237,
+   "kind": "ambience",
+   "label": "lane_wide A: pockmarked villagers walk and whisper, camera tracks along the lane"
+  }
+ ]
+}
