@@ -49,10 +49,10 @@ SKY = dict(day=dict(top='#5a8ae0', mid='#8ab4ee', hor='#f6e2bc', cloud_lit='#fff
 ADULT, BOY = 3.2, 2.3                                    # 1 D = head: adults 3.1-3.4 D, the 8-year-old boy 2.3 D
 ROLES = dict(jenner=3.3, boy=BOY, sarah=3.1, maid=3.1, doctor=3.4, mother=3.1, villager=3.2, villager_p=3.2, cow=0.0)
 PRESETS = dict(
-    barn_wide=dict(loc='barn', light='A', cam='barn_wide', sun=(240, 24), look_az=100, P=dict(lift=(0.011, 0.018, 0.036))),
-    barn_milking=dict(loc='barn', light='A', cam='barn_milking', sun=(200, 18), look_az=90, P=dict(shade_mix=0.82, bounce_z=0.2, lift=(0.005, 0.020, 0.036)), fills=[dict(loc=(-9.4, 14.5, 3.0), dir=(1.0, 0.1, -0.35), size=(5.0, 4.5), rgb=(1.0, 0.92, 0.50), energy=900)]),
-    barn_high=dict(loc='barn', light='C', cam='barn_high', sun=(160, 15), look_az=70, P=dict(lift=(0.004, 0.012, 0.030), bounce_z=0.3), fills=[dict(loc=(-9.4, 15.5, 3.0), dir=(1.0, -0.35, -0.3), size=(5.0, 5.0), rgb=(1.0, 0.96, 0.50), energy=1500)]),
-    barn_door=dict(loc='barn', light='A', cam='barn_door', sun=(195, 18), look_az=180, P=dict(air=('#f4cf94', 0.12, 14.0, 160.0), bounce_z=0.1)),
+    barn_wide=dict(loc='barn', light='A', cam='barn_wide', sun=(240, 24), look_az=100, P=dict(lift=(0.0125, 0.018, 0.036))),
+    barn_milking=dict(loc='barn', light='A', cam='barn_milking', sun=(200, 18), look_az=90, P=dict(shade_mix=0.82, bounce_z=0.2, bounce=(1.0, 0.9, 0.3, 0.12), lift=(0.007, 0.020, 0.036)), fills=[dict(loc=(-9.4, 14.5, 3.0), dir=(1.0, 0.1, -0.35), size=(5.0, 4.5), rgb=(1.0, 0.92, 0.50), energy=1600)]),
+    barn_high=dict(loc='barn', light='C', cam='barn_high', sun=(160, 15), look_az=70, P=dict(lift=(0.004, 0.012, 0.030), bounce_z=0.3), fills=[dict(loc=(-9.4, 15.5, 3.0), dir=(1.0, -0.35, -0.3), size=(5.0, 5.0), rgb=(1.0, 0.96, 0.50), energy=1250)]),
+    barn_door=dict(loc='barn', light='A', cam='barn_door', sun=(195, 18), look_az=180, P=dict(air=('#f4cf94', 0.12, 14.0, 160.0), bounce_z=0.2, bounce=(1.0, 0.9, 0.3, 0.12)), fills=[dict(loc=(-9.4, 15.5, 3.0), dir=(1.0, 0.05, -0.3), size=(5.0, 5.0), rgb=(1.0, 0.92, 0.50), energy=1500)]),
     garden_hut=dict(loc='village', light='A', cam='garden_hut', sun=(300, 34), look_az=165, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
     lane_wide=dict(loc='village', light='A', cam='lane_wide', sun=(300, 40), look_az=182, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.130, 0.104, 0.38), lift=(0.012, 0.011, 0.036))),
     lane_high=dict(loc='village', light='A', cam='lane_high', sun=(300, 36), look_az=95, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
