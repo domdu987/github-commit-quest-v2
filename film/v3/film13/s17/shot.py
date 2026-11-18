@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""shot.py -- film 13 take s17: shots 17, 18, 19 (g 1107..1296 + 6 handle frames each side: g 1101..1302), the FALSE PAYOFF.
+"""shot.py -- film 13 take s17: shots 17, 18, 19 (cuts at g 1110 / 1173 / 1255, out at 1300; 6 handle frames each side: g 1104..1305), the FALSE PAYOFF.
 One location (suite, light SUITE; the plan's MORNING / DAY are not available for the suite location, SUITE is the DAY-blue-sky variant).
 
     id 17  g 1101..1169  suite_window set-up: two days later the rich man stands at the open window, smug, cup + saucer in hand, the muddy
@@ -22,7 +22,7 @@ D, actors, camrig, cast13, bpy = C.D, C.actors, C.camrig, C.cast13, C.bpy
 lerp, clamp, blink, ez, bf = C.lerp, C.clamp, C.blink, C.ez, C.bf
 TMP = os.path.join(HERE, "work")
 
-G17, G18, G19, G_END = C.g_bound(36.90), C.g_bound(39.00), C.g_bound(41.72), C.g_bound(43.22)   # 1107 1170 1252 1297
+G17, G18, G19, G_END = C.g_of(36.90), C.g_of(39.00), C.g_of(41.72), C.g_of(43.22)   # plan g = round((t+0.10)*30): 1110 1173 1255 1300
 H = 6
 RANGES = {17: (G17 - H, G18 - 1), 18: (G18, G19 - 1), 19: (G19, G_END + H - 1)}
 Q2 = (C.g_of(41.72), C.g_of(43.22))                      # mouth window (narration +-0.15 s is allowed; we use the exact line)
@@ -66,6 +66,7 @@ def rich_pose(shot, g):
     p["lean"] = 1.2 * sway
     if shot == 17:                                        # smug, looking out of the window; a slow nod of satisfaction
         p["head_roll"] = -3 + 1.5 * math.sin(g * 0.07)
+        p["arm_l"] = dict(hand=(0.55, 0.72), bend=0.1, stretch=1.2, layer="front")      # the hand and fingers on the cup are in view
         p["pitch"] = -0.25 + 0.05 * math.sin(g * 0.11)
         p["gaze"] = (0.9, 0.05 * math.sin(g * 0.05))
     elif shot == 18:                                      # tea shot: he is only a hint at the edge; keep the idle pose
@@ -190,6 +191,12 @@ class Take(C.Take):
             for o in rich.objects():
                 o.hide_render = False
                 o.keyframe_insert("hide_render", frame=f)
+            sun = D.STATE["sun"]                                 # shot 17 = 'two days later', morning feel: lower, warmer, softer key
+            mor = shot == 17
+            kd = Vector(D.W9._kdaz(318 if mor else 305, 17 if mor else 36)).normalized()
+            sun.rotation_euler = (-kd).to_track_quat("Z", "Y").to_euler(); sun.keyframe_insert("rotation_euler", frame=f)
+            sun.data.color = (1.0, 0.74, 0.46) if mor else (1.0, 0.728, 0.42); sun.data.keyframe_insert("color", frame=f)
+            sun.data.energy = (1.0 if not mor else 1.3) * math.pi * 1.95; sun.data.keyframe_insert("energy", frame=f)
             vis = shot == 18                                    # table, armchairs and cups are only wanted in the tea shot
             if self.furn is not None:
                 self.furn.visible_camera = vis; self.furn.keyframe_insert("visible_camera", frame=f)
