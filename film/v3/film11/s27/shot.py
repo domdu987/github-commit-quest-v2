@@ -23,11 +23,11 @@ PRESET, LIGHT = "garden_queue", "A"
 QY = -3.1
 QUEUE = [("q0", "villager_c", "villager_c_queue", 1.0), ("q1", "villager_a", "villager_a_queue", 2.9), ("q2", "villager_e", "villager_e_queue", -0.9)]   # behind the towndoc (+x) and one ahead
 DOC = Vector((-3.0, QY, 0.0))
-JENNER = Vector((-8.4, -1.5, 0.0))
+JENNER = Vector((-7.8, -4.3, 0.0))
 JAMES = Vector((-6.2, -2.6, 0.0))
-QUEUE = [("q0", "villager_c", "villager_c_queue", 1.6), ("q1", "villager_a", "villager_a_queue", 4.2), ("q2", "villager_e", "villager_e_queue", 6.0)]
-CAM0 = ((6.0, -13.0, 2.3), (-4.8, -3.0, 2.0))
-CAM1 = ((1.6, -11.0, 2.2), (-5.6, -2.8, 2.0))
+QUEUE = [("q0", "villager_c", "villager_c_queue", -1.0), ("q1", "villager_a", "villager_a_queue", 1.0), ("q2", "villager_e", "villager_e_queue", 3.0)]
+CAM0 = ((4.5, -6.5, 2.0), (-5.6, -2.4, 1.9))
+CAM1 = ((0.8, -5.9, 1.95), (-5.8, -2.4, 1.9))
 
 
 def cam_of(g):
