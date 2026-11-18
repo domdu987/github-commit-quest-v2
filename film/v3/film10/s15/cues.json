@@ -1,0 +1,55 @@
+{
+ "take": "s15",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film10/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 33.267,
+   "duration": 1.633,
+   "frame": 998,
+   "end_frame": 1047,
+   "kind": "ambience",
+   "label": "open sea, North Atlantic 1917: low swell, wind, a distant ship's engine and steam whistles; inside the U-boat tower creaking steel and the hum of the diesels"
+  },
+  {
+   "time": 33.333,
+   "duration": 1.333,
+   "frame": 1000,
+   "end_frame": 1040,
+   "kind": "foley",
+   "label": "periscope handles squeak as the captain turns them; leather coat creak; one sharp breath through the nose as he squints"
+  },
+  {
+   "time": 34.133,
+   "duration": 0.467,
+   "frame": 1024,
+   "end_frame": 1038,
+   "kind": "accent",
+   "label": "fist comes up: tight tense string stab"
+  },
+  {
+   "time": 34.9,
+   "duration": 0.0,
+   "frame": 1047,
+   "end_frame": 1047,
+   "kind": "cut",
+   "label": "cut to the torpedo chase"
+  },
+  {
+   "time": 34.9,
+   "duration": 0.933,
+   "frame": 1047,
+   "end_frame": 1075,
+   "kind": "foley",
+   "label": "torpedo launch: compressed-air whoosh and a heavy plunge, then a high propeller whine with a rushing bubble wake"
+  },
+  {
+   "time": 35.333,
+   "duration": 1.0,
+   "frame": 1060,
+   "end_frame": 1090,
+   "kind": "ambience",
+   "label": "bubbling, hissing wake racing over the water, the whine rising slightly"
+  }
+ ]
+}

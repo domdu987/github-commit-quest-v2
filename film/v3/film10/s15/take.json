@@ -1,0 +1,10 @@
+{"take": "s15", "shots": [15, 16], "ranges": {"15": [992, 1046], "16": [1047, 1095]}, "g0": 998, "g1": 1090, "cuts": [1047],
+ "setups": {"15": {"g": [992, 1046], "set": "sea periscope_close: low camera local to the U-boat conning tower, push-in + slight orbit; the captain (cast10 uboat_captain, STORY10 uboat_periscope -> uboat_aim) on the tower, cast-drawn periscope (3D tube/head hidden), U-boat awash, convoy s -1.6..0"},
+            "16": {"g": [1047, 1095], "set": "sea torpedo_chase: camera behind the torpedo (H.torpedo_cam, back 16->12.5, up 8->4.4, slight drift), the U-boat dives under it, torpedo u 0..0.09 (+handles), convoy s 0..1.6"}},
+ "events": {"squint_and_turn_grips": [998, 1023], "fist_up_aim": [1024, 1038], "cut_to_chase": 1047, "torpedo_launch": 1047, "uboat_dives": [1047, 1090]},
+ "cues": [[998, 1047, "ambience", "open sea, North Atlantic 1917: low swell, wind, a distant ship's engine and steam whistles; inside the U-boat tower creaking steel and the hum of the diesels"],
+          [1000, 1040, "foley", "periscope handles squeak as the captain turns them; leather coat creak; one sharp breath through the nose as he squints"],
+          [1024, 1038, "accent", "fist comes up: tight tense string stab"],
+          [1047, 1047, "cut", "cut to the torpedo chase"],
+          [1047, 1075, "foley", "torpedo launch: compressed-air whoosh and a heavy plunge, then a high propeller whine with a rushing bubble wake"],
+          [1060, 1090, "ambience", "bubbling, hissing wake racing over the water, the whine rising slightly"]]}
