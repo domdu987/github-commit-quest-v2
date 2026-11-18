@@ -1,0 +1,43 @@
+{
+ "take": "s19",
+ "fps": 30,
+ "note": "time = film seconds (g/30); narration at +0.10 s",
+ "cues": [
+  {
+   "time": 44.666666666666664,
+   "frame": 1340,
+   "kind": "ambience",
+   "label": "steady rain bed on the wet street"
+  },
+  {
+   "time": 45.6,
+   "frame": 1368,
+   "kind": "prop",
+   "label": "umbrella pop (gentleman opens his umbrella, cue 45.5 s)"
+  },
+  {
+   "time": 47.266666666666666,
+   "frame": 1418,
+   "kind": "prop",
+   "label": "umbrella pop 2 (47.2 s)"
+  },
+  {
+   "time": 47.86666666666667,
+   "frame": 1436,
+   "kind": "prop",
+   "label": "umbrella pop 3 (47.8 s)"
+  },
+  {
+   "time": 48.4,
+   "frame": 1452,
+   "kind": "prop",
+   "label": "umbrella pop 4 (48.3 s)"
+  },
+  {
+   "time": 49.0,
+   "frame": 1470,
+   "kind": "ambience",
+   "label": "rain pattering on a sea of umbrellas"
+  }
+ ]
+}
