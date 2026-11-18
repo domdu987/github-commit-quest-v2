@@ -1,0 +1,101 @@
+{
+ "take": "s02",
+ "film": 13,
+ "shots": [
+  2,
+  3
+ ],
+ "first_g": 57,
+ "n_frames": 108,
+ "g0": 63,
+ "g1": 159,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "from shot 1 (hotel_front); in-handle g 57..62 is the suite_two set-up continued backwards"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: shot 4 (street_wide RAIN) at g 159; out-handle g 159..164 = tea_close push continues"
+ },
+ "transitions": [
+  {
+   "at": 63,
+   "type": "in",
+   "handle": [
+    57,
+    62
+   ]
+  },
+  {
+   "at": 108,
+   "type": "cut",
+   "note": "plan cut shot 2 -> 3 at 3.60 s inside the take (same suite, new set-up)"
+  },
+  {
+   "at": 159,
+   "type": "out",
+   "handle": [
+    159,
+    164
+   ]
+  }
+ ],
+ "shot_ranges": {
+  "2": [
+   63,
+   107
+  ],
+  "3": [
+   108,
+   158
+  ]
+ },
+ "setups": {
+  "2": {
+   "g": [
+    57,
+    107
+   ],
+   "set": "suite suite_two SUITE: lady in the teal armchair + gentleman sip tea at the window; camera 8.0 -> 7.0 D back, 22 mm, slow push"
+  },
+  "3": {
+   "g": [
+    108,
+    164
+   ],
+   "set": "suite tea_close SUITE: cup + saucer, tea ripple 0 keyed every frame; 40 mm slow push + pan; the street/rooftops outside are lowered by drift(g) per frame"
+  }
+ },
+ "events": {
+  "lady_sips": [
+   78,
+   122
+  ],
+  "gentleman_sips": [
+   102,
+   146
+  ],
+  "street_drift": [
+   57,
+   164
+  ]
+ },
+ "set": "v3/set3d13/chicago.py suite (drift: every object outside the room lowered by (h-0.65)*3.6*2.0 D, h 0.65 -> 0.80 over g 63..159, continuing shot 1)",
+ "dof": "none",
+ "denoiser": "OpenImageDenoise (set default)",
+ "light": "SUITE",
+ "cast": "v3/cast13: lady_sip_tea (lady13_seat), gentleman13 (stand + teacup_saucer, sips); no mouth lip-sync",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 13.41,
+ "s_per_frame_cpu_mean": 25.67
+}

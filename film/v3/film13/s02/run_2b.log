@@ -1,0 +1,5 @@
+final: shot 2, 1 to render, 50 done
+00:00.564  cycles           | WARNING CUEW initialization failed: Error opening the library
+take: built suite suite_two in 1.6 s
+00:23.254  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film13/s02/raw/s2/f_1108.png'
+shot 2 g 107  18.7 s wall  24.4 s cpu

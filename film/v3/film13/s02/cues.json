@@ -1,0 +1,67 @@
+{
+ "take": "s02",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film13/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 2.1,
+   "duration": 3.167,
+   "frame": 63,
+   "end_frame": 158,
+   "kind": "ambience",
+   "label": "hush of a rich room: a quiet clock tick, a distant muffled street far below, a calm warm string pad (hook flash-forward, nothing is wrong)"
+  },
+  {
+   "time": 2.6,
+   "duration": 1.467,
+   "frame": 78,
+   "end_frame": 122,
+   "kind": "foley",
+   "label": "the lady lifts her cup: a tiny china clink as it meets the saucer, a soft sip",
+   "peak_frame": 100
+  },
+  {
+   "time": 3.4,
+   "duration": 1.467,
+   "frame": 102,
+   "end_frame": 146,
+   "kind": "foley",
+   "label": "the gentleman sips: soft sip, cup settles on its saucer",
+   "peak_frame": 124
+  },
+  {
+   "time": 2.1,
+   "duration": 3.167,
+   "frame": 63,
+   "end_frame": 158,
+   "kind": "foley",
+   "label": "very faint wood creak and brick groan from the rising building under the calm (barely audible, builds slightly)",
+   "peak_frame": 140
+  },
+  {
+   "time": 3.6,
+   "duration": 0.0,
+   "frame": 108,
+   "end_frame": 108,
+   "kind": "cut",
+   "label": "cut to the tea close-up (shot 3)"
+  },
+  {
+   "time": 3.6,
+   "duration": 1.667,
+   "frame": 108,
+   "end_frame": 158,
+   "kind": "accent",
+   "label": "the tea lies perfectly still: a single high crystal tone, a stretched glassy silence",
+   "peak_frame": 130
+  },
+  {
+   "time": 5.3,
+   "duration": 0.0,
+   "frame": 159,
+   "end_frame": 159,
+   "kind": "cut",
+   "label": "cut to shot 4: rain (pivot, 1861 Chicago)"
+  }
+ ]
+}
