@@ -41,5 +41,6 @@
  "light": "RAIN",
  "samples": 20,
  "res": "720x1280",
- "fps": 30
+ "fps": 30,
+ "take_split": "take.mkv.part00.. (cat to rejoin)"
 }
