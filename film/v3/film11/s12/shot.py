@@ -22,8 +22,8 @@ def cam_of(g):
     return CAM0[0].lerp(CAM1[0], u), CAM0[1].lerp(CAM1[1], u)
 
 def pose_james(g):
-    """sits on the bed edge, faces screen-right (mirror), rubs the armpit of the sore arm with the other hand (circles), wince (worried + head roll)."""
-    p = dict(cast11.STORY11["james_sit_sleeve"][1]); p.update(stool=0, mirror=True, expr="worried", mouth="frown", yaw=-0.3, gaze=(-0.4, 0.5),
+    """sits on the bed edge, faces the camera / slightly right (unmirrored), rubs the armpit of the sore arm with the other hand (circles), wince (worried + head roll)."""
+    p = dict(cast11.STORY11["james_sit_sleeve"][1]); p.update(stool=0, mirror=False, expr="worried", mouth="frown", yaw=0.15, gaze=(0.1, 0.5),
                                                            blink=blink(g, 60, 23), t=g / 30.0)
     w = 0.5 - 0.5 * math.cos(math.pi * clamp((g - FIRST) / 8.0))
     cx, cy = -0.30 + 0.07 * math.sin(g * 0.55), 0.92 + 0.06 * math.cos(g * 0.55)
@@ -42,6 +42,8 @@ def pose_mom(g):
 class Take(C.Take):
     def __init__(self):
         C.Take.__init__(self, PRESET, name="cam_s12")
+        # gate fix: the hanging herb bundles (green cone + string) sit on James's head -> delete their geometry from the merged room mesh
+        self.cut_boxes([(-4.45, -3.55, 6.0, 6.85, 3.0, 9.0), (-0.45, 0.45, 4.8, 5.65, 3.0, 9.0)])
         sd = os.path.join(TMP, "sprites")
         self.jam = self.actors["jam"] = C.make_actor("jam", "james", sd, contact=False)
         self.mom = self.actors["mom"] = C.make_actor("mom", "mother", sd)
@@ -57,7 +59,7 @@ class Take(C.Take):
         self.sprites_for([(self.jam, 320), (self.mom, 256)], fr)
         for g in gs:
             f = bf(g); loc, _ = cam_of(g)
-            self.sore.key(f, SORE, self.world_anchor(self.jam, "upper_arm_r", f), loc)  # mirrored James: anchors are named by screen side, his front arm is *_r
+            self.sore.key(f, SORE, self.world_anchor(self.jam, "upper_arm_l", f), loc)  # sore on the viewer-left arm (same as s02/s07/s08)
     def report(self, g):
         loc, look = cam_of(g)
         return dict(g=g, cam=[round(c, 3) for c in loc], heads=self.head_report(bf(g)))
