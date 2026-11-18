@@ -98,6 +98,7 @@ def adm20(g):
         p["squash"] = (1.0 + 0.008 * math.sin(g * 0.21), 1.0 - 0.008 * math.sin(g * 0.21))
         p["lean"] = p.get("lean", 0.0) + 1.5 * math.sin(g * 0.11)
     p["blink"] = blink(g, [1442, 1493])
+    p["gaze"] = (0.95, 0.0)                               # eye-line toward the dazzle ship
     return p
 
 
@@ -105,6 +106,9 @@ def pai20(g):
     cast, p = pose_of("painter_grin")
     p["head_roll"] = 6 + 2.0 * math.sin(g * 0.13)
     p["lean"] = 1.2 * math.sin(g * 0.09)
+    p["mouth"] = "grin"                                   # one held grin, never toggled
+    p["pitch"] = -0.05
+    p["gaze"] = (0.95, 0.05)                              # eye-line out to sea / the dazzle ship (screen-right)
     p["blink"] = blink(g, [1470, 1512])
     return p
 
@@ -143,6 +147,8 @@ class Take(C.Take):
         lens = 24.0 if shot == 20 else LENS21
         C.Take.__init__(self, loc, preset, quality=quality, lens=lens, name="cam_s20", light=light)
         self.shot = shot
+        if shot == 21:                                       # QA-tech: no mirrored ships (they read as translucent blue panels on the water)
+            self.scene.cycles.glossy_bounces = 0
         for ob in D.STATE.get("cards", []):               # the set's placeholder background cards (old cast): hidden, cast10 sailors replace them
             ob.hide_render = True
         sd = os.path.join(TMP, "sprites")

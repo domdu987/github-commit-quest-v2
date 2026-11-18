@@ -102,6 +102,8 @@ class Take(C.Take):
         loc, preset, light = LOCS[shot]
         C.Take.__init__(self, loc, preset, quality=quality, lens=LENS22 if shot == 22 else LENS23, name="cam_s22", light=light)
         self.shot = shot
+        if shot == 22:                                       # QA-tech: no mirrored ships (they read as translucent blue panels on the water)
+            self.scene.cycles.glossy_bounces = 0
         for ob in D.STATE.get("cards", []):               # old placeholder cards hidden
             ob.hide_render = True
         sd = os.path.join(TMP, "sprites")
