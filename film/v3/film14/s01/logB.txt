@@ -393,3 +393,6 @@ retry 3
 {"shot": 3, "g": 185, "cam": [-8.3, 1.2, 2.3], "heads": {"farmer": [715, 772]}, "wall": 36.2, "cpu": 71.3}
 39:08.982  render           | Saved: 'frames/g_0186.png.tmp.png'
 {"shot": 3, "g": 186, "cam": [-8.3, 1.2, 2.3], "heads": {"farmer": [715, 772]}, "wall": 37.5, "cpu": 73.2}
+00:02.562  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:56.557  render           | Saved: 'frames/g_0155.png.tmp.png'
+{"shot": 3, "g": 155, "cam": [-8.4, 1.15, 2.3], "heads": {"farmer": [707, 765]}, "wall": 53.9, "cpu": 70.0}

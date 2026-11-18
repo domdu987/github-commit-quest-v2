@@ -388,3 +388,6 @@
 {"shot": 2, "g": 93, "cam": [-3.49, 1.09, 2.3], "heads": {"farmer": [383, 448], "old": [518, 552], "woman": [504, 541], "youth": [498, 543], "kid": [565, 609]}, "wall": 23.7, "cpu": 89.7}
 14:34.945  render           | Saved: 'frames/g_0094.png.tmp.png'
 {"shot": 2, "g": 94, "cam": [-3.5, 1.1, 2.3], "heads": {"farmer": [383, 448], "old": [518, 552], "woman": [506, 542], "youth": [501, 546], "kid": [563, 607]}, "wall": 23.7, "cpu": 90.0}
+00:02.626  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:57.430  render           | Saved: 'frames/g_0123.png.tmp.png'
+{"shot": 3, "g": 123, "cam": [-8.5, 1.1, 2.3], "heads": {"farmer": [697, 753]}, "wall": 54.6, "cpu": 70.9}
