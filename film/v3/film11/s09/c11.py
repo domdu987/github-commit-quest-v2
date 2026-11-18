@@ -87,6 +87,10 @@ class Take(object):
         self.cam.data.clip_start = 0.02; self.cam.data.clip_end = 4000
         self.cam.data.dof.use_dof = False
         sc.camera = self.cam
+        # director note 2026-11-18: the set's chimney smoke is a stack of round white blobs -> hide it (hook kind 'smoke')
+        for h in self.A["hooks"]:
+            if h["kind"] == "smoke" and bpy.data.objects.get(h["obj"]) is not None:
+                bpy.data.objects[h["obj"]].hide_render = True
         self.stand = self.A["stand"][preset]
         self.actors = {}; self.anch = {}
         print("take: built %s in %.1f s" % (preset, time.time() - t0), flush=True)
