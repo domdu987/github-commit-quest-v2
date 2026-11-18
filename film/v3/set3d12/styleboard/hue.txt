@@ -1,0 +1,10 @@
+still                         red orange yellow  green   cyan   blue violet magent   sat  val dark
+sb1_street_wide                                23.0   14.2    0.3    0.5    0.0   37.2   15.6    9.2  0.32 0.67 0.02   OUT: red,orange,blue,violet,sat,val,dark
+sb2_coach_low                                  21.6   11.3    0.8    0.9    0.0   44.5   11.8    9.1  0.40 0.61 0.07   OUT: red,orange,blue,violet,dark
+sb3_street_high                                31.6   18.3    1.0    0.1    0.0   26.4   12.6    9.9  0.30 0.65 0.01   OUT: orange,violet,sat,val,dark
+ALL                                            25.0   14.4    0.7    0.5    0.0   36.7   13.2    9.4  0.34 0.64 0.03   OUT: red,orange,blue,violet,sat,val,dark
+
+shade hue (target 240-260), shaded fraction, magenta share (target <= 10 %):
+  sb1_street_wide            shade hue  253.7  shaded 0.20  magenta   9.2 %  ok
+  sb2_coach_low              shade hue  244.9  shaded 0.20  magenta   9.1 %  ok
+  sb3_street_high            shade hue  255.9  shaded 0.26  magenta   9.9 %  ok
