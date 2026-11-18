@@ -22,15 +22,22 @@ G0, G1, H = C.g_bound(54.33), C.g_bound(57.30), 6
 RANGES = {SHOT: (G0 - H, G1 - 1 + H)}
 PRESET, LIGHT = "garden_queue", "A"
 # queue from near the camera (x +, front right) back to the hut door (x -): (name, cast, pose key, x, mirror)
-_X = [-3.4 + 1.5 * i for i in range(9)]                                # from the hut door to the right, out of frame at the far end
-_Y = [-3.0 + (0.0 if i % 2 == 0 else -1.1) for i in range(9)]           # staggered in depth: a diagonal-ish ragged line, no pile-up
-QUEUE = [("q0", "villager_a", "villager_a_queue", _X[0]), ("q1", "villager_d", "villager_d_queue", _X[1]), ("q2", "villager_b", "villager_b_queue", _X[2]),
-         ("q3", "villager_e", "villager_e_queue", _X[3]), ("q4", "villager_c", "villager_c_queue", _X[4]), ("q5", "milkmaid2", "milkmaid2_smile", _X[5]),
-         ("q6", "villager_a", "villager_a_queue", _X[6]), ("q7", "villager_d", "villager_d_queue", _X[7]), ("q8", "villager_b", "villager_b_queue", _X[8])]
-JENNER = Vector((-6.9, -1.7, 0.0))
-JAMES = Vector((-5.3, -3.0, 0.0))
-CAM0 = ((1.8, -13.4, 2.6), (-2.6, -3.0, 1.6))
-CAM1 = ((0.2, -12.4, 2.5), (-2.8, -3.0, 1.65))
+# director gate 3: a DIAGONAL queue inside the fence, from near the camera (frame right) back to the hut door; camera inside the garden, no fence in front
+NQ = 10
+N0, H0 = (4.8, 0.6), (-6.6, -2.6)                                      # near end / far end of the line (world x, y)
+def _slot(i):
+    t = i / float(NQ - 1)
+    x = N0[0] + (H0[0] - N0[0]) * t
+    y = N0[1] + (H0[1] - N0[1]) * t + (0.35 if i % 2 else -0.35)         # small side-step so two heads never line up exactly
+    return x, y
+_CASTS = [("villager_a", "villager_a_queue"), ("villager_d", "villager_d_queue"), ("villager_b", "villager_b_queue"), ("villager_e", "villager_e_queue"),
+          ("villager_c", "villager_c_queue"), ("milkmaid2", "milkmaid2_smile"), ("villager_a", "villager_a_queue"), ("villager_d", "villager_d_queue"),
+          ("villager_b", "villager_b_queue"), ("villager_e", "villager_e_queue")]
+QUEUE = [("q%d" % i, _CASTS[i][0], _CASTS[i][1], _slot(i)[0]) for i in range(NQ)]
+JENNER = Vector((-9.3, -3.9, 0.0))
+JAMES = Vector((-8.0, -2.9, 0.0))
+CAM0 = ((11.6, -6.5, 1.65), (-3.0, -1.6, 1.7))
+CAM1 = ((9.6, -6.1, 1.6), (-3.4, -1.5, 1.7))
 
 
 def cam_of(g):
@@ -44,10 +51,10 @@ def pose_q(i, key, g):
     ph = i * 1.7
     p["lean"] = 1.6 * math.sin(g * 0.05 + ph)
     p["head_roll"] = p.get("head_roll", 0) + 2.0 * math.sin(g * 0.07 + ph)
-    p["yaw"] = -0.3 + 0.12 * math.sin(g * 0.04 + ph)
+    p["yaw"] = -0.55 + 0.12 * math.sin(g * 0.04 + ph)
     p["blink"] = blink(g, [1640 + 13 * i, 1690 + 9 * i])
     p["t"] = g / 30.0
-    if i >= 6:
+    if i in (6, 7, 8, 9):
         p["mirror"] = True
     return p
 
@@ -78,6 +85,9 @@ class Take(C.Take):
             self.q.append(a)
         self.jen = self.actors["jen"] = C.make_actor("jen", "jenner", sd, canvas=cast11.CANVAS11["jenner"])
         self.jam = self.actors["jam"] = C.make_actor("jam", "james", sd, canvas=cast11.CANVAS11["james"])
+        for o in C.bpy.data.objects:                                   # hens only at the edges: hide the ones near the line / path
+            if o.name.startswith(("vhen", "fghen", "lhen")):
+                o.hide_render = True
         self.sore = C.make_sore(self, "blister", TMP, size=0.55)
 
     def pose(self, shot, gs):
@@ -86,7 +96,7 @@ class Take(C.Take):
             loc, look = cam_of(g)
             self.key_cam(f, loc, look)
             for a, (nm, cast, key, x) in zip(self.q, QUEUE):
-                C.place(a, f, (x, _Y[QUEUE.index((nm, cast, key, x))], 0.0))
+                C.place(a, f, (_slot(QUEUE.index((nm, cast, key, x)))[0], _slot(QUEUE.index((nm, cast, key, x)))[1], 0.0))
             C.place(self.jen, f, JENNER)
             C.place(self.jam, f, JAMES)
         for g in gs:
