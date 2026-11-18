@@ -67,3 +67,14 @@ def render_range(build, frames, outdir, tag):
         w, c = S.render(out + '.tmp.png'); os.replace(out + '.tmp.png', out)
         json.dump(dict(g=g, wall=round(w, 1), cpu=round(c, 1), **info), open(out[:-4] + '.json', 'w'))
         print('%s g %d  %.1f s wall  %.1f s cpu  %s' % (tag, g, w, c, info), flush=True)
+
+def png_card(name, png, mark, w_u, h_u):
+    """an upright transparent PNG card (origin = bottom centre at `mark`, w_u x h_u units) facing the camera; removed by clear_cards()."""
+    import math
+    me = bpy.data.meshes.new(name); me.from_pydata([(-w_u / 2, 0, 0), (w_u / 2, 0, 0), (w_u / 2, 0, h_u), (-w_u / 2, 0, h_u)], [], [(0, 1, 2, 3)]); me.update()
+    uvl = me.uv_layers.new(name='UVMap')
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
+    me.materials.append(S.T.mat_card(name + '_mat', png)); ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob)
+    ob.location = mark; S.no_bounce(ob); ob.visible_glossy = False
+    d = bpy.context.scene.camera.matrix_world.translation - Vector(mark); ob.rotation_euler = (0, 0, math.atan2(d.x, -d.y)); ob['card'] = name
+    return ob

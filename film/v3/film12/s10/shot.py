@@ -61,7 +61,6 @@ def sub_C():
     A = C.setup('puddle_low', 'RAIN'); C.move_cam('puddle_low', C0, LAST)
     fc = 786
     S.run_coach(768, 808, y0=26, y1=0)
-    for g in range(fc - 2, LAST + 1): S.mud_splash(max(0.0, min(1.0, (g - (fc - 1)) / 25.0)), frame=g)
     hp = (-4.3, 11.0, 0.0)
     def build(g):
         k = g - C0
@@ -69,6 +68,11 @@ def sub_C():
         elif g < fc + 14: c, p = C.story('hanway_mud_splash'); p = dict(p, mud=min(1.0, 0.35 + 0.22 * (g - fc)))
         else: c, p = C.story('hanway_mud_deadpan'); p = dict(p, soaked=1.0, t=k * 0.04)
         C.card('hanway', c, p, hp, rim='#f2b25c')
+        rel = g - (fc - 1)
+        if 0 < rel < 26:                       # painted spray crown behind him, droplets in front (the 3D hook was too blobby)
+            import splash
+            C.png_card('splash_back', splash.path(rel, 'crown'), (-2.0, 11.9, 0.0), splash.W_U * 1.5, splash.H_U * 1.5)
+            C.png_card('splash_front', splash.path(rel, 'drops'), (-1.2, 10.0, 0.0), splash.W_U * 1.3, splash.H_U * 1.3)
         return dict(h=[round(v) for v in C.head_px(hp, 3.3)[:2]])
     return build, range(C0, LAST + 1)
 
