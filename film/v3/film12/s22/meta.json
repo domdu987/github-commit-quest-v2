@@ -27,5 +27,6 @@
  ],
  "light": "RAIN",
  "samples": 20,
- "notes": "shot 22 rank_idle-type custom camera (2 poses), shot 23 box_seat A->B linear push; picture runs to g 1784 (59.5 s), last word ends 58.99 s = g 1770."
+ "notes": "shot 22 rank_idle-type custom camera (2 poses), shot 23 box_seat A->B linear push; picture runs to g 1784 (59.5 s), last word ends 58.99 s = g 1770.",
+ "take_mkv_parts": true
 }
