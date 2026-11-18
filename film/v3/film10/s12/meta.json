@@ -1,0 +1,59 @@
+{
+ "take": "s12",
+ "film": 10,
+ "shots": [
+  12,
+  13,
+  14
+ ],
+ "g0": 788,
+ "g1": 998,
+ "first_g": 782,
+ "n_frames": 222,
+ "handle_in": 6,
+ "handle_out": 5,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transitions": [
+  {
+   "at": 864,
+   "type": "cut"
+  },
+  {
+   "at": 927,
+   "type": "cut"
+  }
+ ],
+ "shot_ranges": {
+  "12": [
+   782,
+   863
+  ],
+  "13": [
+   864,
+   926
+  ],
+  "14": [
+   927,
+   1003
+  ]
+ },
+ "setups": {
+  "12": "convoy_wide SEA_DAY, periscope foreground, convoy sailing (set_convoy s = g/30-35), slow drift",
+  "13": "periscope_pov lens 50, one sweep from the left grey ship to the dazzle ship, stops with slow drift; overlay on, periscope head hidden",
+  "14": "bridge_deck, camera carried with the flagship; admiral_shout, mouth only g 951-1000"
+ },
+ "set": "v3/set3d10/harbour.py",
+ "cast": "v3/cast10",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "dof": "none",
+ "s_per_frame_wall_mean": 10.08,
+ "s_per_frame_cpu_mean": 19.19
+}

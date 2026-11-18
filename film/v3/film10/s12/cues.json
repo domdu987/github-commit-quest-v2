@@ -1,0 +1,24 @@
+{
+ "take": "s12",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 26.27,
+   "frame": 788,
+   "kind": "sfx",
+   "label": "open sea, bow waves, engines, wind"
+  },
+  {
+   "time": 28.8,
+   "frame": 864,
+   "kind": "sfx",
+   "label": "periscope hiss, a metallic creak"
+  },
+  {
+   "time": 31.6,
+   "frame": 948,
+   "kind": "sfx",
+   "label": "the admiral shouts: 'เห็นมั้ย เป้าชัดแจ๋วเลย!'"
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+# QA s12 (film 10, shots 12-14, g 782..1003 incl. 6 in / 5 out handle frames)
+- qa_auto: PASS (QA_AUTO.md, phone_sheet.jpg). Notes: g 883-885 "pop" = the dazzle ship swings into the periscope view as the pan stops (checked by eye, not a cut); g 864-875 soft = grey ships in the periscope lens at the start of the sweep (8 frames, under the 5 % limit).
+- Shot 12 convoy_wide: periscope foreground, convoy sails (+x 2.5 D/s, s = g/30 - 35), slow drift, smoke keyed every frame; lens 30 (plan: dazzle ship in the convoy of grey ships).
+- Shot 13 periscope_pov: circular overlay + crosshair; periscope head hidden (camera sits inside it). One quick sweep from the left grey ship to the dazzle ship, which then stays centred with a slow drift. Differs from the plan's wording only in that the sweep is one pass (a back-and-forth made too many soft grey frames for qa_auto). Lens 50.
+- Shot 14 bridge_deck: admiral_shout pose, camera and admiral carried with the flagship. Mouth moves ONLY g 951-1000 (31.60-33.25 s, talk_mouth), flat before and after (expression 'determined' -> 'shouting' behind a blink at g 949). Head y 508-540 px (< 880).
+- Background crew: placeholder cards hidden, cast10 sailors on the deck spots (hidden in the periscope view). No DOF, no text.
+- Not checked frame by frame at 6 fps by eye: contact.jpg / phone_sheet.jpg plus stills during the build, and the shot 13 sweep and shot 14 window frames.
