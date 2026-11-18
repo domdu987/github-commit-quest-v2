@@ -1,0 +1,19 @@
+# QA-tech s28 (shots 28-30, g1908-2104): FAIL
+
+Method: all 197 frames extracted; viewed at full size at 6 fps plus cuts +-3 (g1959-1965, g2029-2035) and the last frames. Cuts are at g1962 and g2032 as planned (diff spikes at those frames only). No frozen runs, no black or blank frames. Last frame g2104 checked.
+
+Checks that pass: cuts on plan; no lip-sync (held mouths only); nose_swell grows from about g2038, full length by about g2088; nose tip never lower than y~780 and the head is above y~100-300 (< 880); the uncle on the stool is one sprite with the stool and shifts only with the camera (no sliding); the sting is visible (bee at g1988-1993, red nose and surprised face from g1993, bee flies off g2003-2008); g2104 is a clean, sharp frame with no bee or debris, fine for the hard cut; the empty hive box is visible in shot 28 (see issue 2 for its legibility); no steep elephant view (no elephants).
+
+## Issues
+1. g1908-1961 (shot 28), framing. The farmer's hat brim and bee-net are cut by the left frame edge (x<0). The uncle's arm and the hive box touch or cross the right edge from g1948. Fix: widen the camera or move both cards 40-60 px inward so both full silhouettes are inside the frame.
+2. g1908-1961 (shot 28), the "empty hive box" is a small flat tray at the uncle's side and is partly cut at the right edge. It is barely readable on a phone. Fix: carry it in front of him at chest height, or scale it up, and keep it fully inside the frame.
+3. g1908-1961 (shot 28), composition. About 45% of the frame (y>700) is bare red soil, and the characters are small, with the sky and hut roof behind them. The bottom third is empty ground as required. But the two-shot is too loose for the beat (sheepish uncle, grinning farmer), and the faces are small at phone size. Fix: lower the camera and push in about 25%, keeping the heads above y 880 and the lower third empty.
+4. g1908-1961 (shot 28), motion. Both characters hold nearly the same pose for 48 frames. The only change is the camera drift and the sweat drop. Fix: add a small head tilt or shoulder shrug for the uncle, and a slow grin or hat-tip for the farmer.
+5. g1962-2031 (shot 29), caption band. The stool legs, a rock and foreground grass blades sit in y>880 (stool legs reach about y 1150). They are not empty ground, so the caption will sit on clutter. Fix: raise the camera or crop so the stool and grass end above y 880, or lower the stool and grass contrast in the bottom 400 px.
+6. g1988-1990 (shot 29), sting beat. At g1988 the bee is in front of the uncle's belly, not coming from a hive. At g1993 it is next to his cheek, and its stinger never touches the nose. The red nose appears at g1993, about 3 frames after the 1990 target. Fix: fly the bee in from the hive or from off-frame, make it touch the nose tip at g1990, and show the red nose at 1990-1991.
+7. g2029->2032 (cut 29 to 30), continuity. In shot 29 he stands on the stool, with the hive at chest height. In shot 30 his feet are on bare ground at y~950, with no stool, and the hive is at waist height. He has dropped about the height of the stool. Fix: show the stool top under his feet in shot 30 (the CANVAS14_STOOL pose), or reframe shot 30 so his legs and the ground are out of frame (a head-and-chest close-up).
+8. g2032-2104 (shot 30), props. The uncle's raised hand is a mitten holding a black hook ball while the hive hangs unattached at the left edge, cut off by the frame. The hand-to-hive link is unclear. Fix: show the rope or hook running to the hive, or bring the hive inside the frame.
+9. g2032-2104 (shot 30), bottom zone. His legs and feet (to y~950) and grass or rocks occupy y 880-1280. This is minor. Fix: the reframe in issue 7 resolves it.
+10. g1908-1913 (head handle). The handle frames match g1914 (the plan says the dissolve is done at conform). Not baked in; no action.
+
+Overrides: none.
