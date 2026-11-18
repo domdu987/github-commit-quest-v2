@@ -11,6 +11,7 @@ def lin(c):
 def hexc(h):
     h = h.lstrip('#'); return tuple(lin(int(h[i:i + 2], 16)) for i in (0, 2, 4)) + (1.0,)
 def rnd(s): return random.Random(s)
+def _c3(c): return (c[0], c[1], c[2] if len(c) > 2 else 0.0)
 def R(a, b, rr): return a + (b - a) * rr.random()
 
 # ------------------------------------------------------------------ materials
@@ -263,7 +264,7 @@ def palette(mode):
 
 # ------------------------------------------------------------------ props
 def hut_round(mb, M, c, r=1.75, h=2.0, rt=2.45, ht=2.0, door_yaw=0.0, thatch='thatch', walls='mud', band='ochre', seed=0):
-    x, y, z = c; rr = rnd(seed + 5)
+    x, y, z = _c3(c); rr = rnd(seed + 5)
     mb.lathe(M[walls], (x, y, z), [(r + 0.12, -0.05), (r + 0.1, 0.35), (r + 0.02, 0.4), (r, h)], 28)
     mb.lathe(M[band], (x, y, z), [(r + 0.125, 0.0), (r + 0.125, 0.3)], 28)                       # painted base band
     for i in range(14):                                                                          # base stones
@@ -292,7 +293,7 @@ def hut_round(mb, M, c, r=1.75, h=2.0, rt=2.45, ht=2.0, door_yaw=0.0, thatch='th
     mb.pop()
 
 def house_tin(mb, M, c, sx=7.0, sy=4.0, h=2.7, yaw=0.0, roof='tin', walls='plaster', seed=0, door='door'):
-    x, y, z = c; rr = rnd(seed + 9)
+    x, y, z = _c3(c); rr = rnd(seed + 9)
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
     mb.box(M[walls], (0, 0, h / 2), (sx, sy, h)); mb.box(M['stone'], (0, 0, 0.17), (sx + 0.14, sy + 0.14, 0.34))
     ov = 0.75; rh = 1.35; hw = sy / 2 + ov; x0 = -sx / 2 - ov; x1 = sx / 2 + ov
@@ -317,7 +318,7 @@ def house_tin(mb, M, c, sx=7.0, sy=4.0, h=2.7, yaw=0.0, roof='tin', walls='plast
     mb.pop()
 
 def granary(mb, M, c):
-    x, y, z = c
+    x, y, z = _c3(c)
     for dx in (-0.7, 0.7):
         for dy in (-0.7, 0.7): mb.rod(M['wood'], (x + dx, y + dy, z), (x + dx, y + dy, z + 0.9), 0.09, 0.08, 6); mb.cone(M['stone'], (x + dx, y + dy, z + 0.6), 0.2, 0.2, 0.05, 8)
     mb.cone(M['thatchold'], (x, y, z + 0.9), 1.15, 1.0, 0.25, 20)
@@ -373,27 +374,27 @@ def papaya(mb, M, c, s=1.0, seed=0):
     for i in range(4): a = i * 1.6; mb.ell(M['pumpkin'], (x + math.cos(a) * 0.16, y + math.sin(a) * 0.16, z + h - 0.25), (0.1, 0.1, 0.17), (8, 6))
 
 def jerrycan(mb, M, c, yaw=0.0):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
     mb.box(M['jerry'], (0, 0, 0.26), (0.34, 0.18, 0.5)); mb.box(M['jerry'], (-0.06, 0, 0.56), (0.18, 0.12, 0.1)); mb.box(M['jcap'], (0.1, 0, 0.55), (0.07, 0.07, 0.07))
     mb.box(M['dark'], (-0.06, 0, 0.56), (0.08, 0.14, 0.04)); mb.box(M['jerry'], (0, 0.095, 0.3), (0.28, 0.02, 0.36))
     mb.pop()
 
 def hoe(mb, M, c, yaw=0.0, lean=1.3):
-    x, y, z = c
+    x, y, z = _c3(c)
     ex, ey = x + math.cos(yaw) * 1.0, y + math.sin(yaw) * 1.0
     mb.rod(M['woodpale'], (x, y, z + 0.05), (ex, ey, z + lean), 0.025, 0.022, 6)
     mb.box(M['metal'], (ex, ey, z + lean), (0.22, 0.08, 0.15), rz=yaw + 0.3, ry=0.3)
 
 def stool(mb, M, c, yaw=0.0):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
     mb.box(M['woodpale'], (0, 0, 0.42), (0.42, 0.42, 0.07))
     for dx, dy in ((-0.15, -0.15), (0.15, -0.15), (-0.15, 0.15), (0.15, 0.15)): mb.rod(M['wood'], (dx, dy, 0.0), (dx * 1.1, dy * 1.1, 0.4), 0.035, 0.03, 6)
     mb.pop()
 
 def bench(mb, M, c, yaw=0.0, L=1.6):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
     mb.box(M['woodpale'], (0, 0, 0.42), (L, 0.34, 0.07))
     for dx in (-L / 2 + 0.15, L / 2 - 0.15):
@@ -401,7 +402,7 @@ def bench(mb, M, c, yaw=0.0, L=1.6):
     mb.pop()
 
 def basket(mb, M, c, full=True, seed=4):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.lathe(M['basket'], (x, y, z), [(0.25, 0.0), (0.3, 0.2), (0.37, 0.42)], 14); mb.lathe(M['woodpale'], (x, y, z), [(0.37, 0.4), (0.39, 0.44)], 14)
     rr = rnd(seed)
     if full:
@@ -411,27 +412,27 @@ def basket(mb, M, c, full=True, seed=4):
             if i % 3 == 0: mb.ell(M['husk'], (x + math.cos(a) * r, y + math.sin(a) * r, z + 0.5 + rr.random() * 0.12), (0.12, 0.06, 0.04), (8, 5), (0, rr.random() * 0.5, rr.random() * 6.28))
 
 def pot_clay(mb, M, c, s=1.0):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.lathe(M['clay'], (x, y, z), [(0.0, 0.0), (0.16 * s, 0.01 * s), (0.27 * s, 0.14 * s), (0.31 * s, 0.3 * s), (0.22 * s, 0.46 * s), (0.17 * s, 0.52 * s), (0.2 * s, 0.56 * s)], 16)
     mb.lathe(M['claydark'], (x, y, z), [(0.19 * s, 0.55 * s), (0.0, 0.5 * s)], 16)
 
 def metal_pot(mb, M, c, s=1.0):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.lathe(M['pot'], (x, y, z), [(0.0, 0.0), (0.2 * s, 0.0), (0.24 * s, 0.25 * s), (0.25 * s, 0.3 * s)], 16)
     mb.lathe(M['dark'], (x, y, z), [(0.24 * s, 0.29 * s), (0.0, 0.26 * s)], 16)
     mb.box(M['pot'], (x + 0.3 * s, y, z + 0.27 * s), (0.18 * s, 0.05 * s, 0.03 * s))
 
 def bucket(mb, M, c, mt='jerry'):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.lathe(M[mt], (x, y, z), [(0.0, 0.0), (0.16, 0.0), (0.21, 0.3)], 14); mb.lathe(M['dark'], (x, y, z), [(0.2, 0.29), (0.0, 0.27)], 14)
 
 def sack(mb, M, c, yaw=0.0, s=1.0, full=True):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.ell(M['sack'], (x, y, z + 0.28 * s), (0.28 * s, 0.2 * s, 0.3 * s), (12, 8), (0, 0, yaw)); mb.ell(M['sack'], (x, y, z + 0.55 * s), (0.17 * s, 0.14 * s, 0.1 * s), (8, 6), (0, 0, yaw))
     mb.rod(M['rope'], (x - 0.1 * s, y, z + 0.52 * s), (x + 0.1 * s, y, z + 0.52 * s), 0.02, 0.02, 4)
 
 def wheelbarrow(mb, M, c, yaw=0.0, mt='bike'):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
     for sx in (-1, 1): mb.quad(M[mt], [(-0.45, sx * 0.3, 0.45), (0.25, sx * 0.3, 0.45), (0.3, sx * 0.17, 0.25), (-0.4, sx * 0.17, 0.25)]) if False else None
     mb.box(M[mt], (-0.1, 0, 0.42), (0.7, 0.55, 0.05)); mb.box(M[mt], (-0.1, 0.27, 0.58), (0.7, 0.04, 0.3), rx=0.1); mb.box(M[mt], (-0.1, -0.27, 0.58), (0.7, 0.04, 0.3), rx=-0.1)
@@ -443,7 +444,7 @@ def wheelbarrow(mb, M, c, yaw=0.0, mt='bike'):
     mb.pop()
 
 def firewood(mb, M, c, yaw=0.0, n=3, L=1.0):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4()); rr = rnd(int(x * 3 + y))
     for row in range(n):
         for i in range(n - row + 1):
@@ -451,7 +452,7 @@ def firewood(mb, M, c, yaw=0.0, n=3, L=1.0):
     mb.pop()
 
 def water_tank(mb, M, c):
-    x, y, z = c
+    x, y, z = _c3(c)
     for dx in (-0.5, 0.5):
         for dy in (-0.5, 0.5): mb.rod(M['wood'], (x + dx, y + dy, z), (x + dx, y + dy, z + 1.2), 0.07, 0.07, 6)
     mb.box(M['woodpale'], (x, y, z + 1.2), (1.3, 1.3, 0.1))
@@ -460,7 +461,7 @@ def water_tank(mb, M, c):
     mb.rod(M['metal'], (x + 0.55, y, z + 1.3), (x + 0.55, y, z + 0.85), 0.03, 0.03, 6); mb.rod(M['metal'], (x + 0.55, y, z + 0.85), (x + 0.75, y, z + 0.85), 0.03, 0.03, 6)
 
 def washing_line(mb, M, c, yaw=0.0, L=4.0, seed=0):
-    x, y, z = c; rr = rnd(seed + 3)
+    x, y, z = _c3(c); rr = rnd(seed + 3)
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
     for sx in (-L / 2, L / 2): mb.rod(M['wood'], (sx, 0, 0), (sx, 0, 2.0), 0.05, 0.04, 6)
     mb.poly(M['rope'], [(-L / 2, 0, 1.95), (0, 0, 1.86), (L / 2, 0, 1.95)], 0.012, 0.012, 4)
@@ -473,7 +474,7 @@ def washing_line(mb, M, c, yaw=0.0, L=4.0, seed=0):
     mb.pop()
 
 def bicycle(mb, M, c, yaw=0.0):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.push(Matrix.Translation((x, y, z)) @ Euler((0, 0, yaw)).to_matrix().to_4x4())
     def wheel(cx):
         for i in range(18):
@@ -488,7 +489,7 @@ def bicycle(mb, M, c, yaw=0.0):
     mb.pop()
 
 def tripod_pot_fire(mb, M, c, lit=True):
-    x, y, z = c
+    x, y, z = _c3(c)
     for i in range(3):
         a = i * 2.094 + 0.3; mb.ell(M['stone'], (x + math.cos(a) * 0.3, y + math.sin(a) * 0.3, z + 0.12), (0.2, 0.15, 0.13), (8, 5), (0, 0, a))
     for i in range(5):
@@ -540,7 +541,7 @@ def goat(mb, M, c, yaw=0.0, s=1.0, coat=0):
     mb.pop()
 
 def firepit(mb, M, c, lit=True):
-    x, y, z = c
+    x, y, z = _c3(c)
     for i in range(10):
         a = i / 10 * 6.283; mb.ell(M['stone'], (x + math.cos(a) * 0.6, y + math.sin(a) * 0.6, z + 0.1), (0.2, 0.16, 0.14), (8, 5), (0, 0, a))
     for i in range(5):
@@ -551,13 +552,13 @@ def firepit(mb, M, c, lit=True):
         for sdx in (-0.18, 0.18): mb.cone(M['flame'], (x + sdx, y + 0.1, z + 0.15), 0.14, 0.01, 0.45, 6)
 
 def torch(mb, M, c, h=1.3, lit=True, s=1.0):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.rod(M['torch'], (x, y, z), (x, y, z + h), 0.025 * s, 0.03 * s, 6); mb.ell(M['char'], (x, y, z + h + 0.03), (0.05 * s, 0.05 * s, 0.07 * s), (6, 4))
     if lit:
         mb.cone(M['flame'], (x, y, z + h), 0.09 * s, 0.01, 0.34 * s, 8); mb.cone(M['flame2'], (x, y, z + h), 0.05 * s, 0.005, 0.2 * s, 8)
 
 def grass_clump(mb, M, c, rr, h=0.9, mt='grass', n=9):
-    x, y, z = c
+    x, y, z = _c3(c)
     for i in range(n):
         a = rr.random() * 6.283; L = h * rr.uniform(0.6, 1.2); bend = rr.uniform(0.15, 0.5)
         d = Vector((math.cos(a), math.sin(a), 0)); sd = Vector((-d.y, d.x, 0)) * 0.026
@@ -585,7 +586,7 @@ def sunflower(mb, M, c, rr, h=None):
     for i in range(2): mb.ell(M['vine'], (x, y, z + h * 0.5 + i * 0.25), (0.15, 0.06, 0.02), (6, 4), (0, 0, a + i * 3))
 
 def pumpkin_patch(mb, M, c, rr, n=4):
-    x, y, z = c
+    x, y, z = _c3(c)
     for i in range(n):
         px = x + rr.uniform(-0.9, 0.9); py = y + rr.uniform(-0.9, 0.9); s = rr.uniform(0.7, 1.2)
         mb.ell(M['pumpkin'], (px, py, z + 0.14 * s), (0.2 * s, 0.2 * s, 0.14 * s), (10, 7)); mb.rod(M['vine'], (px, py, z + 0.27 * s), (px + 0.03, py, z + 0.34 * s), 0.02, 0.015, 4)
@@ -620,7 +621,7 @@ def tin_can_line(mb, M, p0, p1, n=5, seed=0):
         mb.rod(M['rope'], p, p - Vector((0, 0, L)), 0.006, 0.006, 3, caps=False); mb.lathe(M['tincan'], p - Vector((0, 0, L + 0.12)), [(0.0, 0.0), (0.045, 0.0), (0.05, 0.02), (0.05, 0.11), (0.0, 0.11)], 10)
 
 def termite_mound(mb, M, c, s=1.0):
-    x, y, z = c
+    x, y, z = _c3(c)
     mb.lathe(M['mudpale'], (x, y, z), [(0.9 * s, -0.05), (0.7 * s, 0.4 * s), (0.45 * s, 1.0 * s), (0.3 * s, 1.5 * s), (0.1 * s, 1.9 * s), (0.0, 1.95 * s)], 14)
 
 def giraffe(mb, M, c, yaw=0.0, s=1.0):
