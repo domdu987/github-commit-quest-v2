@@ -74,3 +74,7 @@ When a film passes the FINAL gate and is sent to the client:
    `https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/releaseN/<file>.mp4`.
    Use a short Thai title that is unique per film, plus a `### N <Title>` caption section.
 3. Never mark a row READY before the client has seen the final film, unless he has said to auto-post without review.
+
+## 8. From film 15: film-2 camera rhythm (client decision 2026-11-18)
+Read skill production-lessons §10 before planning shots, and use film/plan/shot_plan.md (film 2) as the camera-grammar example.
+The voice stays Bankky at the original setting.

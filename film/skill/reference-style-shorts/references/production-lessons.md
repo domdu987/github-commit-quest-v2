@@ -95,3 +95,26 @@ The full rules are in film/QA_TEAM.md, section "Stricter QA".
 - **Water plumes:** do not build them as a stack of round white blobs; that reads as a cartoon snowman column. Use a splash with a spray crown and falling droplets.
 - **Characters on moving decks or ships:** parent them to the ship root (set3d10 `ship_root()`) so they move WITH the deck. A card that stays still while the deck or ship moves under it looks like it is sliding. Check this in QA-tech at every shot on a moving ship.
 - **Blind viewer:** give the narration as heard (timed text), not an ASR transcript. Its catch (an aim-buoy flare read as "the ship was hit") was real and worth a re-render.
+
+## 10. Camera and cut rhythm (client decision 2026-11-18; applies from film 15)
+The client felt films 9-10 did not match film 2 "ไม้จิ้มฟ้า" (release/sky_poker_v3.mp4, plan film/plan/shot_plan.md) in zoom rhythm, cut rhythm and detail.
+**Measured**, as frame-diff on 90x160 grey frames, inside shots:
+
+| Film | median | p90 |
+|---|---|---|
+| film 2 | 5.3 | 19.1 |
+| film 9 | 1.9 | 4.8 |
+| film 10 | 2.2 | 5.6 |
+
+Film 2 also used many 11-frame dissolves and foreground props near the lens.
+
+**Rules from film 15 on:**
+- **Every shot has a clear camera move.**
+  - Push or pull 6-10 % of framing per second, with a lateral slide of about 40 px/s at 720 wide.
+  - Use quick push-ins on punch lines and jokes, and occasional whip or snap moves on reveals.
+  - No near-static holds longer than 1 s.
+- **Transitions.** Use dissolves (about 11 frames) between location or time changes. Use hard cuts on beats and quotes.
+- **Foreground.** Put foreground props 1-2 D from the lens (lamps, bottles, ropes, crates) for parallax and depth in most shots.
+- **Character life.** Laughing characters bounce (about 0.06 D at about 3 Hz) and keep secondary motion; nobody stands frozen.
+- **Acceptance (qa_auto/QA-tech):** median in-shot frame-diff ≥ 4 across the film, and p90 ≥ 12. Measure it with the analyser used in film 10, and the director shows the numbers next to film 2's at the FINAL gate.
+- **Voice stays as is.** Bankky at the ORIGINAL setting (speed 1.15, default stability), NOT the expressive mode film 2 used. The client confirmed this on 2026-11-18.
