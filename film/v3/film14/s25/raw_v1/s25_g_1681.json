@@ -1,0 +1,1 @@
+{"elephant_b": {"head": [-122, 669], "feet": [1, 836]}, "calf": {"head": [103, 779], "feet": [162, 861]}, "matriarch": {"head": [326, 635], "feet": [326, 817]}, "elephant_c": {"head": [361, 655], "feet": [496, 836]}, "elephant_d": {"head": [627, 676], "feet": [629, 813]}, "wall": 54.3, "cpu": 109.5, "scale": 1.0, "samples": 24}

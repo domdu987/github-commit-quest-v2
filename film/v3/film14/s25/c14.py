@@ -49,12 +49,16 @@ def _card_mesh(tag, x0, z0, x1, z1):
     for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
     _FRAME['meshes'].append(me); return me
 
-def _mat(tag, png, k=None, tint=None):
+def _mat(tag, png, k=None, tint=None, fade=1.0):
     P = F.STATE['P']; m = G.mat_card(tag, png, P.get('card_k', 1.0) if k is None else k); _FRAME['mats'].append(m)
     if tint is not None:                        # multiply the card colour (director QA: night elephants no brighter than the lit soil)
         nt = m.node_tree; ti = [n for n in nt.nodes if n.type == 'TEX_IMAGE'][0]; em = nt.nodes[m['card_em']]
         mx = nt.nodes.new('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.blend_type = 'MULTIPLY'; mx.inputs[0].default_value = 1.0; mx.inputs[7].default_value = (tint[0], tint[1], tint[2], 1.0)
         nt.links.new(ti.outputs['Color'], mx.inputs[6]); nt.links.new(mx.outputs[2], em.inputs['Color'])
+    if fade < 0.999:                            # alpha x fade (turn cross-fade between the frontal and the side card)
+        nt = m.node_tree; ti = [n for n in nt.nodes if n.type == 'TEX_IMAGE'][0]; mixn = [n for n in nt.nodes if n.type == 'MIX_SHADER'][0]
+        mu = nt.nodes.new('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = max(0.0, fade)
+        nt.links.new(ti.outputs['Alpha'], mu.inputs[0]); nt.links.new(mu.outputs[0], mixn.inputs[0])
     for n in m.node_tree.nodes:
         if n.type == 'TEX_IMAGE': _FRAME['imgs'].append(n.image)
     return m
@@ -73,13 +77,13 @@ def _contact(tag, mk, yaw, L, Wd, strength=0.8):
     for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
     img = bpy.data.images.load(p); img.alpha_mode = 'STRAIGHT'; _FRAME['imgs'].append(img)
     m = bpy.data.materials.new('cm_' + tag); m.use_nodes = True; _FRAME['mats'].append(m); nt = m.node_tree; nt.nodes.clear(); Nn = nt.nodes.new; Lk = nt.links.new
-    out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.03, 0.02, 0.07, 1); em.inputs['Strength'].default_value = 1
+    out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.004, 0.003, 0.02, 1); em.inputs['Strength'].default_value = 1
     tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = strength
     Lk(ti.outputs['Alpha'], mu.inputs[0]); Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
-    me.materials.append(m); ob = _link(bpy.data.objects.new('actor_c_' + tag, me)); ob.location = (mk.x, mk.y, mk.z + 0.03); ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False
+    me.materials.append(m); ob = _link(bpy.data.objects.new('actor_c_' + tag, me)); ob.location = (mk.x, mk.y, mk.z + 0.08); ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False
 
 _SCALE = dict(matriarch=1.0, elephant_b=.86, elephant_c=.93, elephant_d=.77, calf=.36)
-def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shadow=True, contact=None, dz=0.0, yaw_fixed=None, anchor_ground=None, yaw_off=0.0, roll=0.0):
+def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shadow=True, contact=None, dz=0.0, yaw_fixed=None, anchor_ground=None, yaw_off=0.0, roll=0.0, yaw_extra=0.0, fade=1.0, shadow_k=1.0):
     """real puppet sprite -> metre card with its FEET at `mark` (x, y, z), turned to face the camera (yaw only) unless yaw_fixed.
     anchor_ground=(anchor, (x, y)): shift the card in its plane so that the anchor sits over the ground point.
     Returns dict(world=fn(local D point)->world Vector, anchors, res, mark, yaw)."""
@@ -91,7 +95,7 @@ def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shad
     assert not r['clipped'], 'sprite clipped by canvas: %s %s' % (tag, r.get('bbox'))
     x0, y0, x1, y1 = r['canvas']; fx, fy = r['feet']
     X0, X1 = x0 * MPD, x1 * MPD; Z0, Z1 = -y1 * MPD, -y0 * MPD
-    me = _card_mesh(tag, X0, Z0, X1, Z1); me.materials.append(_mat('%s_mat_%s' % (tag, key), out, tint=(0.80, 0.85, 1.0) if (cast in _SCALE and F.STATE['light'] == 'NIGHT') else None))
+    me = _card_mesh(tag, X0, Z0, X1, Z1); me.materials.append(_mat('%s_mat_%s' % (tag, key), out, tint=(0.62, 0.67, 0.86) if (cast in _SCALE and F.STATE['light'] == 'NIGHT') else None, fade=fade))
     mk = Vector(mark) + Vector((0, 0, dz))
     def yaw_of(m):
         if yaw_fixed is not None: return yaw_fixed
@@ -100,16 +104,16 @@ def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shad
         an, gp = anchor_ground; a = r['anchors'][an]
         for _ in range(4):
             yw = yaw_of(mk); axx = Vector((math.cos(yw), math.sin(yw), 0)); mk = Vector((gp[0], gp[1], mk.z)) - axx * ((a[0] - fx) * MPD)
-    yaw = yaw_of(mk)
+    yaw = yaw_of(mk) + math.radians(yaw_extra)
     ob = _link(bpy.data.objects.new('actor_' + tag, me)); ob.location = mk; ob.rotation_euler = (0, 0, yaw)
     ax = Vector((math.cos(yaw), math.sin(yaw), 0))
     def w(a): return mk + ax * ((a[0] - fx) * MPD) + Vector((0, 0, (fy - a[1]) * MPD))
     if shadow:
         s = _SCALE.get(cast)
-        if s is not None: L, Wd = 5.0 * s, 1.9 * s
+        if s is not None: L, Wd = 6.4 * s, 2.4 * s
         else: L, Wd = 1.5, 0.7
         if contact is not None: L, Wd = contact
-        _contact(tag, mk, yaw, L, Wd, 1.0)
+        _contact(tag, mk, yaw - math.radians(yaw_extra), L, Wd, min(1.0, 0.85 * shadow_k) if fade > 0.5 else 0.0)
     return dict(world=w, anchors=r['anchors'], res=r, mark=mk, yaw=yaw)
 
 def card(tag, png, x0, z0, x1, z1, loc, yaw=0.0, k=None, shadow=False):
@@ -143,15 +147,15 @@ class Dust(object):
             a = r.uniform(0.15, 1.45) * math.pi / 2 * 1.0   # elevation 15..130 deg-ish fan
             ang = r.uniform(math.radians(18), math.radians(160)); sp = r.uniform(2.0, 6.0) * power
             vx = math.cos(ang) * sp * (-0.7 if dirx < 0 else 0.7) + dirx * r.uniform(0.2, 1.8); vz = math.sin(ang) * sp * zspread
-            self.parts.append(dict(g=g, k='d', x=x + r.uniform(-0.5, 0.5), vx=vx, vz=vz, s=r.uniform(0.022, 0.060), life=r.uniform(16, 32)))
+            self.parts.append(dict(g=g, k='d', x=x + r.uniform(-0.5, 0.5), vx=vx, vz=vz, s=r.uniform(0.05, 0.12), life=r.uniform(18, 36)))
         for i in range(max(6, n // 6)):
-            self.parts.append(dict(g=g, k='w', x=x + r.uniform(-0.7, 0.7), vx=dirx * r.uniform(0.6, 2.4) + r.uniform(-0.5, 0.5), vz=r.uniform(0.5, 2.1), s=r.uniform(0.9, 2.0), w=r.uniform(0.10, 0.24), life=r.uniform(30, 54), bend=r.uniform(-1, 1)))
+            self.parts.append(dict(g=g, k='w', x=x + r.uniform(-0.7, 0.7), vx=dirx * r.uniform(0.6, 2.4) + r.uniform(-0.5, 0.5), vz=r.uniform(0.5, 2.1), s=r.uniform(1.8, 3.6), w=r.uniform(0.2, 0.42), life=r.uniform(34, 60), bend=r.uniform(-1, 1)))
     def trail(self, g, x, dirx=-1.0, power=1.0, n=4):
         r = self.rs
         for i in range(n):
             ang = r.uniform(math.radians(25), math.radians(110)); sp = r.uniform(1.0, 3.4) * power
-            self.parts.append(dict(g=g, k='d', x=x + r.uniform(-0.6, 0.6), vx=-dirx * math.cos(ang) * sp * -1 * 0.5 + dirx * r.uniform(0.3, 1.4), vz=math.sin(ang) * sp, s=r.uniform(0.02, 0.052), life=r.uniform(12, 26)))
-        if r.rand() < 0.45: self.parts.append(dict(g=g, k='w', x=x + r.uniform(-0.5, 0.5), vx=dirx * r.uniform(0.4, 1.6), vz=r.uniform(0.3, 1.3), s=r.uniform(0.7, 1.5), w=r.uniform(0.08, 0.18), life=r.uniform(26, 44), bend=r.uniform(-1, 1)))
+            self.parts.append(dict(g=g, k='d', x=x + r.uniform(-0.6, 0.6), vx=-dirx * math.cos(ang) * sp * -1 * 0.5 + dirx * r.uniform(0.3, 1.4), vz=math.sin(ang) * sp, s=r.uniform(0.045, 0.10), life=r.uniform(14, 30)))
+        if r.rand() < 0.45: self.parts.append(dict(g=g, k='w', x=x + r.uniform(-0.5, 0.5), vx=dirx * r.uniform(0.4, 1.6), vz=r.uniform(0.3, 1.3), s=r.uniform(1.4, 2.8), w=r.uniform(0.16, 0.34), life=r.uniform(30, 50), bend=r.uniform(-1, 1)))
     def paint(self, g, xa, xb, zh=3.4, tag='dust', light_k=1.0):
         ppm = self.PPM; SS = 2; Wp, Hp = int((xb - xa) * ppm), int(zh * ppm); im = Image.new('RGBA', (Wp * SS, Hp * SS), (0, 0, 0, 0)); d = ImageDraw.Draw(im, 'RGBA'); n = 0
         def P(x, z): return ((x - xa) * ppm * SS, (zh - z) * ppm * SS)
@@ -165,17 +169,17 @@ class Dust(object):
                 if z < 0.02: z = 0.02
                 a = int(235 * (1 - u) ** 0.8); s = p['s'] * (1 - 0.35 * u)
                 vx, vz = p['vx'] * (1 - 0.35 * u), p['vz'] - 9.0 * age
-                L = min(0.16, 0.01 + 0.025 * math.hypot(vx, vz)); th = math.atan2(-vz, vx)
+                L = min(0.12, 0.01 + 0.02 * math.hypot(vx, vz)); th = math.atan2(-vz, vx)
                 cx, cy = P(x, z); lx, ly = math.cos(th) * L * ppm * SS, math.sin(th) * L * ppm * SS; rr = s * ppm * SS
                 # droplet: a round head with a short tapered tail along the motion (teardrop), a darker underside crescent
-                ux, uy = math.cos(th), math.sin(th); nx, ny = -uy, ux; tl = L * ppm * SS * 1.6
+                ux, uy = math.cos(th), math.sin(th); nx, ny = -uy, ux; tl = L * ppm * SS * 1.3
                 d.polygon([(cx - ux * tl, cy - uy * tl), (cx + nx * rr * 0.8, cy + ny * rr * 0.8), (cx - nx * rr * 0.8, cy - ny * rr * 0.8)], fill=(r0, g0, b0, int(a * 0.55)))
                 d.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], fill=(int(r0 * 0.7), int(g0 * 0.66), int(b0 * 0.7), a))
                 d.ellipse([cx - rr * 0.85, cy - rr * 0.95, cx + rr * 0.75, cy + rr * 0.55], fill=(min(255, r0 + 34), min(255, g0 + 28), min(255, b0 + 24), a)); n += 1
             else:
                 # wisp: a curved tapered ribbon drifting up and back, fading
                 x0 = p['x'] + p['vx'] * age * 0.9; z0 = 0.15 + p['vz'] * age * 0.7 - 0.25 * age * age; Ln = p['s'] * (0.5 + 0.9 * min(1, u * 2)); w = p['w'] * (0.5 + 0.7 * u)
-                a = int(150 * (1 - u) ** 1.2 * min(1, u * 8 + 0.3)); pts = []; N = 14
+                a = int(190 * (1 - u) ** 1.1 * min(1, u * 8 + 0.35)); pts = []; N = 14
                 dirx = 1 if p['vx'] > 0 else -1
                 for i in range(N + 1):
                     t = i / N; px = x0 - dirx * Ln * t * 0.9; pz = z0 + (0.25 + 0.5 * p['bend']) * Ln * t + 0.4 * p['bend'] * Ln * t * t
