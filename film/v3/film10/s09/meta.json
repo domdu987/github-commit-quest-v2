@@ -54,6 +54,6 @@
  ],
  "fps": 30,
  "dof": "none",
- "s_per_frame_wall_mean": 11.24,
- "s_per_frame_cpu_mean": 22.05
+ "s_per_frame_wall_mean": 12.06,
+ "s_per_frame_cpu_mean": 23.5
 }
