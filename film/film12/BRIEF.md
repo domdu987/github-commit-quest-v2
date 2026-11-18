@@ -9,3 +9,7 @@ Set: NEW set v3/set3d12 (rainy Georgian street + coach rank). Cast: v3/cast12.
 Styles: playful baroque chamber comedy, pizzicato strings, harpsichord, sneaky bassoon, light tuba bounce, sly 3/4 waltz feel, rainy-street mischief, warm and whimsical, slow build to a cheeky finish, 100 bpm, instrumental underscore
 Exclude styles: vocals, choir, heavy drums, EDM, trap, rock guitar, epic orchestral, sad piano, lo-fi
 Settings: Instrumental ON, Weirdness 35 %, Style influence 70 %, length over 60 s.
+
+## Sound / conform (prepared 2026-11-18)
+SFX library film12/audio/sfx (14 files, fal ElevenLabs sound-effects v2, ~58 s generated, est. US$0.10-0.15), cues in film12/audio/sfx_cues.json.
+Conform: `python3 film/conform12.py --name film12_v1 <take folders>` -> film/release12/<name>.mp4 + report (LUFS target -12, TP <= -1). Test on 4 passed takes: 1785 frames, -12.2 LUFS, -1.4 dBTP, Thai captions OK. Music: waiting for the client's Suno track (film12/audio/music_suno.wav).
