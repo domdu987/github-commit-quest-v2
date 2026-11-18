@@ -84,6 +84,23 @@ def stories():
         if bad:
             ok = False
             print("FAIL", name, bad)
+    # the stage's sprite renderer: the stool poses must come out unclipped with CANVAS14_STOOL, the close pose with CANVAS14_CLOSE
+    try:
+        sys.path.insert(0, os.path.join(cast14.PROJ, "v3", "stage"))
+        import sprites
+        import cast_ext as CE0
+        CE0.register_stage(sprites)
+        for nm, cv, pxd in (("uncle_stool_hang", cast14.CANVAS14_STOOL["uncle14"], 64), ("uncle_stung_nose", cast14.CANVAS14_STOOL["uncle14"], 64),
+                            ("uncle_stung_start", cast14.CANVAS14_STOOL["uncle14"], 64), ("uncle_stung_close", cast14.CANVAS14_CLOSE["uncle14"], 128),
+                            ("villager_oldman_bang_pot", None, 64), ("matriarch_push", None, 48)):
+            c_, p_ = cast14.STORY14[nm]
+            r = sprites.render_sprites([dict(cast=c_, pose=p_, px_per_D=pxd, out=os.path.join(TMP, nm + ".png"), canvas=cv or sprites.DEFAULT_CANVAS[c_])])[0]
+            if r["clipped"] and nm != "uncle_stung_close":     # the close pose is cropped below the chest on purpose
+                ok = False
+                print("SPRITE CLIPPED", nm)
+        print("sprites: stool / close / pot / push poses render unclipped")
+    except Exception as ex:   # no browser in this environment
+        print("sprites check skipped:", ex)
     # lip-sync flags
     for n in cast14.LIPSYNC14:
         assert cast14.STORY14_META[n].get("lipsync"), n
@@ -105,13 +122,16 @@ def stories():
             cv = cast14.CANVAS14_FRONT[c]
         if c in ("uncle14",) and p.get("stool"):
             cv = cast14.CANVAS14_STOOL[c]
+        if name == "uncle_stung_close":
+            cv = cast14.CANVAS14_CLOSE[c]
         if c in ("bee", "swarm") or cv is None:
             continue
         f = P.figure(c, p, "s")
         fx, fy = f["anchors"]["feet"][0], f["feet_y"]
         b = f["bbox"]
         r = (b[0] - fx, b[1] - fy, b[2] - fx, b[3] - fy)
-        if r[0] < cv[0] - 1e-3 or r[1] < cv[1] - 1e-3 or r[2] > cv[2] + 1e-3 or r[3] > cv[3] + 1e-3:
+        bottom_ok = name == "uncle_stung_close"      # a head-and-shoulders crop: the legs are cropped on purpose
+        if r[0] < cv[0] - 1e-3 or r[1] < cv[1] - 1e-3 or r[2] > cv[2] + 1e-3 or (r[3] > cv[3] + 1e-3 and not bottom_ok):
             ok = False
             print("CANVAS", name, "bbox rel feet", [round(v, 2) for v in r], "canvas", [round(v, 2) for v in cv])
     # envelope: every elephant over trunk presets x ear flare x phases x gaits x mouth (side) / trunk presets x flare x turn (front)

@@ -32,8 +32,8 @@ New CAST keys / registries: costumes `tee14`, `check14`, `kanga14`, `kanzu14` (c
 ### New pose keys
 | key | range (default) | effect |
 |---|---|---|
-| `nose_swell` | 0..1 (0) | any cast14 person: the comic stung nose. 0.05 a pink tip, 0.3 a red knob, 0.6 a fat shiny nose with nostrils, 1.0 a trunk-like swollen nose that curls toward the facing side with ring wrinkles, nostrils, a sting mark and a rosy halo. Continuous, animate with an ease-out over about 20 frames; `t` sways the tip. Pair with `gaze=(0, 0.6..0.8)`, `expr="shocked"`, `mouth="o"` |
-| `stool` | 0 / 1 (0) | uncle: draws a three-legged stool under the soles (top at the soles, legs down `stool_h` 0.78 D, width `stool_w` 1.30). Canvas `CANVAS14_STOOL["uncle14"]`. Anchors `stool_top`, `stool_bottom`. Use 0 if the set carries its own stool |
+| `nose_swell` | 0..1 (0) | any cast14 person: the comic stung nose. 0.05 a pink tip, 0.3 a red knob, 0.6 a fat shiny nose with nostrils, 1.0 a long droopy trunk-like swollen nose, about 1.8 D (1.8 head widths) long, curving down past the chin onto the chest, red-pink and shiny, ring wrinkles, two nostrils at the tip, a sting mark near the root, lumps and a rosy halo. Continuous, animate with an ease-out over about 20 frames; `t` sways the tip. Pair with `gaze=(0, 0.6..0.8)`, `expr="shocked"`, `mouth="o"` |
+| `stool` | 0 / 1 (0) | uncle: draws a three-legged stool under the soles (top at the soles, legs down `stool_h` 0.78 D, width `stool_w` 1.30). Canvas `CANVAS14_STOOL["uncle14"]` (-2.19, -5.5, 2.19, 0.94) is REQUIRED for every pose with `stool=1` (`uncle_stool_hang`, `uncle_stung_nose`, `uncle_stung_start`): build the Actor with it (`a.build(cast14.CANVAS14_STOOL["uncle14"], sprite_dir)`); the default uncle canvas would clip the stool legs. Anchors `stool_top`, `stool_bottom`. `test_cast14.py stories` renders these poses through `sprites.render_sprites` and fails on `clipped`. Use 0 if the set carries its own stool |
 | `t` | float | flame flicker of `torch14` (animate 0..1 loop) |
 
 ### Props (`prop_r` / `prop_l`; `puppet.PROP_TYPES` / `PROP_TIP` extended; film 2's `hammer` is reused)
@@ -68,6 +68,8 @@ Side view faces screen-right; `mirror=True` for left. Origin = head centre, `fee
 Anchors: the standard puppet names plus `trunk_tip`, `trunk_base`, `tusk_tip`, `chest`, `chest_push`, `shoulder_top`, `rump`, `tail_tip`, `belly`, `ear_tip` (`hand_r` = trunk tip, `hand_l` = trunk base).
 **Canvases** (feet-relative, D): `CANVAS14[cast]` = side view, symmetric so it fits both facings and every trunk / flare / phase / push combination (matriarch +-11.3 D wide, 9.3 D up; wide because the trunk can reach 9 D forward); `CANVAS14_FRONT[cast]` for the front view (ears spread); the test checks the whole envelope. Use px_per_D 96..128 for wide shots.
 `cycle(cast, phase, mode, facing, base, arms, speed)`: people as cast6 (`walk` 28 frames, `run` 16); elephants: `walk` about 48 frames per cycle, `run` about 28, facing -1 sets `mirror`. `cycle_distance(cast, mode, speed)` = D the elephant body moves per cycle with no foot slip (matriarch walk: 3.4 D).
+
+**Close shot of the gag:** `uncle_stung_close` (head and shoulders, hive in the raised hand, cross-eyed, watering eyes, sweat drop, `nose_swell` 1.0, `limb_w` 0.058). Sprite canvas `CANVAS14_CLOSE["uncle14"]` = (-2.19, -4.0, 2.5, -0.5), px_per_D 384-512. It has `stool=0` (the set's stool is below the frame). Lead into it with `uncle_stung_start` (nose_swell 0.3) and animate `nose_swell` 0 to 1 with an ease-out.
 
 ## Bees and the swarm
 `bee`: a small gold-and-black card facing +x, 0.20 D long by default (about 8 x life size so it reads at phone size); pose keys `size` (D), `angle`, `t` (wing beat 0..1 loop; blurred ghost wings while flying, `blur` 0..1), `rest` 1 (wings folded, eye closed: the sleeping bees), `mirror`. Anchor `stinger`. Canvas `CANVAS14["bee"]` (1 D square; scale `size` up only with a bigger canvas).

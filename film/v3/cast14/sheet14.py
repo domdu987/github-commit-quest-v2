@@ -178,12 +178,12 @@ def sec_creatures(D=80):
 def head_clip(uid, x, y, D, svg, w=1.6):
     """show only the head and shoulders of a figure placed with its head centre at (x, y)."""
     return ('<clipPath id="%s_hcl"><rect x="%.1f" y="%.1f" width="%.1f" height="%.1f"/></clipPath><g clip-path="url(#%s_hcl)"><g transform="translate(%d %d) scale(%d)">%s</g></g>'
-            % (uid, x - w / 2 * D, y - 0.95 * D, w * D, 2.45 * D, uid, x, y, D, svg))
+            % (uid, x - w / 2 * D, y - 0.95 * D, w * D, 3.0 * D, uid, x, y, D, svg))
 
 
 def sec_faces(D=120):
     W = 1800
-    H = 1450
+    H = 1540
     o = ['<rect width="%d" height="%d" fill="%s"/>' % (W, H, BG)]
     o.append(title(16, 30, "Faces: uncle nose_swell 0, .2, .4, .6, .8, 1 (the comic sting) and the uncle's lip-sync mouths; village faces; elephant expressions"))
     for i, n in enumerate((0.0, 0.2, 0.4, 0.6, 0.8, 1.0)):
@@ -197,8 +197,8 @@ def sec_faces(D=120):
     people = [("farmer14", "happy"), ("farmer14", "determined"), ("farmer14", "stunned"), ("woman14", "laughing"), ("kid14", "laughing"), ("oldman14", "laughing"), ("youth14", "shouting"), ("uncle14", "laughing")]
     for i, (c, ex) in enumerate(people):
         f = P.figure(c, dict(expr=ex, yaw=0.3), "pf%d" % i)
-        o.append(head_clip("pf%d" % i, 100 + i * 215, 470, D, f["svg"], 1.7))
-        o.append(label(100 + i * 215, 610, "%s %s" % (c[:-2], ex), 12))
+        o.append(head_clip("pf%d" % i, 100 + i * 215, 560, D, f["svg"], 1.7))
+        o.append(label(100 + i * 215, 700, "%s %s" % (c[:-2], ex), 12))
     exs = ["calm", "happy", "curious", "alarmed", "trumpet", "shut", "grumpy", "calf happy"]
     for i, ex in enumerate(exs):
         r, cc = divmod(i, 4)
@@ -207,7 +207,7 @@ def sec_faces(D=120):
         cast = "calf" if ex.startswith("calf") else "matriarch"
         DD = 56 if cast == "matriarch" else 80
         f = P.figure(cast, p, "ee%d" % i)
-        gy = 1000 + r * 330
+        gy = 1090 + r * 330
         x = 120 + cc * 440
         cy = gy - 150
         if cast == "calf":

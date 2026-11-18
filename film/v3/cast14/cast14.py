@@ -416,10 +416,10 @@ def _nose_swell(k, L, P_, n, t):
     cx = L["mx"] + 0.02 * yaw
     top = L["ey"] + 0.06
     e = n * n * (3 - 2 * n)
-    ln = 0.06 + 0.36 * e                        # length below the root
-    w = 0.050 + 0.175 * e                       # half width at the tip bulb
-    wr = 0.040 + 0.045 * e                      # half width at the root
-    curl = 0.24 * e * (1.0 if yaw >= -0.05 else -1.0)
+    ln = 0.06 + 1.70 * e                        # length below the root: 1.76 D at n = 1 (1.5-2 head widths, past the chin)
+    w = 0.050 + 0.145 * e                       # half width at the tip bulb
+    wr = 0.040 + 0.060 * e                      # half width at the root
+    curl = 0.34 * e * (1.0 if yaw >= -0.05 else -1.0)
     sway = 0.012 * math.sin(t * 2 * math.pi) * e
     ink = k.ink
     c0, c1, c2 = SKIN_TRUNK_PINK["light"], SKIN_TRUNK_PINK["base"], SKIN_TRUNK_PINK["dark"]
@@ -428,9 +428,9 @@ def _nose_swell(k, L, P_, n, t):
     N = 9
     for i in range(N + 1):
         u = i / N
-        x = cx + curl * u * u + sway * u
+        x = cx + curl * u * u + sway * u + 0.05 * e * math.sin(u * 3.0)
         y = top + ln * u
-        ww = wr + (w - wr) * (u ** 1.6) * (1.0 + 0.10 * math.sin(u * 3.14))
+        ww = wr + (w - wr) * (u ** 0.9) * (1.0 + 0.08 * math.sin(u * 3.14))
         if i == N:
             ww *= 0.8
         pts_l.append((x - ww, y))
@@ -445,7 +445,7 @@ def _nose_swell(k, L, P_, n, t):
     o = ['<path d="%s" fill="url(#%s_c14nsg)" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (path, u, ink)]
     # nostril dots and wrinkle rings like a trunk
     if e > 0.15:
-        rings = int(2 + 5 * e)
+        rings = int(2 + 9 * e)
         for i in range(rings):
             uu = 0.25 + 0.65 * i / max(1, rings - 1)
             x = cx + curl * uu * uu + sway * uu
@@ -457,14 +457,14 @@ def _nose_swell(k, L, P_, n, t):
         o.append('<ellipse cx="%.4f" cy="%.4f" rx="%.4f" ry="%.4f" fill="%s" opacity="0.95"/>' % (tipx + s * w * 0.38, tipy - w * 0.25, 0.020 + 0.022 * e, 0.014 + 0.016 * e, ink))
     # shine
     o.append('<path d="M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f" fill="none" stroke="#ffffff" stroke-width="%.4f" stroke-linecap="round" opacity="0.8"/>'
-             % (cx - wr * 0.5, top + 0.04, cx - wr * 0.7 + curl * 0.2, top + ln * 0.5, cx - w * 0.55 + curl * 0.8, top + ln * 0.85, 0.012 + 0.008 * e))
+             % (cx - wr * 0.5, top + 0.04, cx - wr * 0.7 + curl * 0.2, top + ln * 0.5, cx - w * 0.55 + curl * 0.75, top + ln * 0.88, 0.012 + 0.008 * e))
     # the sting: a small dark point with three lines, a few lumps
-    sx, sy = cx + wr * 0.4, top + 0.06 + 0.1 * e
+    sx, sy = cx + wr * 0.4, top + 0.10 + 0.22 * e
     if n > 0.25:
         o.append('<path d="M%.4f,%.4f l0.012,0.040" stroke="%s" stroke-width="0.010" stroke-linecap="round"/>' % (sx, sy, ink))
         o.append('<path d="M%.4f,%.4f l-0.022,-0.010 M%.4f,%.4f l0.0,-0.026 M%.4f,%.4f l0.022,-0.010" fill="none" stroke="%s" stroke-width="0.008" stroke-linecap="round" opacity="0.8"/>'
                  % (sx, sy, sx, sy, sx, sy, k.c(c2)))
-    for (dx_, dy_, r_) in ((-0.55, 0.45, 0.022), (0.5, 0.62, 0.018), (-0.2, 0.30, 0.014)):
+    for (dx_, dy_, r_) in ((-0.55, 0.45, 0.022), (0.5, 0.62, 0.018), (-0.2, 0.30, 0.014), (0.3, 0.80, 0.020), (-0.4, 0.88, 0.016)):
         if e > 0.35:
             o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s" opacity="0.6"/>' % (cx + dx_ * w + curl * dy_ * dy_, top + ln * dy_, r_ * (0.5 + e), k.c(c2)))
     # a rosy halo on the cheeks around it
@@ -1739,7 +1739,8 @@ def _ecanvas(cast):
 CANVAS14.update({c: _ecanvas(c) for c in ELEPHANTS})
 CANVAS14["bee"] = (-0.5, -0.5, 0.5, 0.5)
 CANVAS14["swarm"] = (-3.0, -5.0, 3.0, 1.0)
-CANVAS14_STOOL = {"uncle14": (-2.0625, -5.5, 2.0625, 0.9375)}
+CANVAS14_STOOL = {"uncle14": (-2.1875, -5.5, 2.1875, 0.9375)}      # uncle_stool_hang, uncle_stung_nose, uncle_stung_start (stool=1: stool legs below the soles)
+CANVAS14_CLOSE = {"uncle14": (-2.1875, -4.0, 2.5, -0.5)}          # uncle_stung_close: head, nose and shoulders only (px_per_D 384-512)
 # the elephant canvases above are for poses that stay in the walk / push / flee envelope; the front view with spread ears and the raised
 # trunk is wider: use CANVAS14_FRONT
 CANVAS14_FRONT = {c: (round(-5.0 * SPEC14[c]["s"] * S_D * 16) / 16.0, round((-5.3 * SPEC14[c]["s"] * S_D - 0.1) * 16) / 16.0, round(5.0 * SPEC14[c]["s"] * S_D * 16) / 16.0, 0.5) for c in ELEPHANTS}
@@ -1809,6 +1810,12 @@ def _story():
                                      "with an ease-out, `t` sways the tip), eyes cross to look at it, hand hovering. stool=1 (set to 0 if the set has the stool)")
     S["uncle_stung_start"] = (U, dict(S["uncle_stung_nose"][1], nose_swell=0.30, expr="shocked", mouth="talk_o", arm_r=dict(hand=(0.50, 0.10), bend=-0.5, stretch=1.1, shape="open", layer="top")))
     M["uncle_stung_start"] = dict(note="the instant of the sting (nose_swell 0.3); blend into uncle_stung_nose")
+    S["uncle_stung_close"] = (U, dict(yaw=0.20, pitch=0.12, expr="shocked", mouth=("open", 0.12, 0.10), nose_swell=1.0, gaze=(0.0, 0.8), fx=["tears", "sweat"], head_roll=-6, t=0.3,
+                                      lean=-2, arm_r=dict(hand=(0.95, -0.15), bend=-0.6, stretch=1.3, layer="front"), prop_r=dict(type="tophive", scale=0.62),
+                                      arm_l=dict(hand=(-0.55, 0.40), bend=0.6, shape="open"), legs="stand", limb_w=0.058))
+    M["uncle_stung_close"] = dict(note="HEAD-AND-SHOULDERS close-up of the gag: on the stool (the set's stool is under him; stool=0 here), the first hive still in his raised hand, "
+                                       "the nose swollen to a long droopy trunk (nose_swell 1.0, ~1.8 D), cross-eyed, watering eyes (tears) and a sweat drop. Sprite canvas "
+                                       "CANVAS14_CLOSE['uncle14'] at px_per_D 384-512. Animate nose_swell 0 -> 1 first (uncle_stung_start)")
     S["uncle_stick_idle"] = (U, dict(yaw=0.30, pitch=-0.15, expr="smug", mouth="flat", head_roll=4, arm_r=dict(hand=(0.45, 0.62), bend=0.5, stretch=1.0),
                                      prop_r=dict(type="stick14", angle=82, scale=1.0), arm_l="akimbo", legs="stand"))
     M["uncle_stick_idle"] = dict(note="leaning on his walking stick (anchor stick_tip_r on the ground)")
@@ -1832,6 +1839,9 @@ def _story():
     S["villager_oldman_laugh"] = (O, dict(yaw=0.20, pitch=0.2, expr="laughing", blink=2, mouth="talk_b", fx=["tears"], head_roll=-9, lean=8, t=0.6,
                                           arm_r=dict(hand=(0.44, 0.40), bend=0.6, stretch=1.0, shape="open"), prop_r=dict(type="stick14", angle=78, scale=1.0),
                                           arm_l=dict(hand=(-0.30, 0.96), bend=0.9, shape="open"), legs=dict(preset="crouch", crouch=0.12, spread=0.08)))
+    S["villager_oldman_bang_pot"] = (O, dict(yaw=0.30, pitch=-0.1, expr="laughing", mouth="talk_b", fx=["tears"], head_roll=5, t=0.2,
+                                             arm_l=dict(hand=(-0.24, 0.62), bend=0.5), prop_l="pot14",
+                                             arm_r=dict(hand=(0.56, 0.32), bend=-0.6, stretch=1.1), prop_r=dict(type="spoon14", angle=210, scale=1.0), legs="wide"))
     S["villager_oldman_wave_torch"] = (O, dict(yaw=0.35, pitch=-0.2, expr="shouting", mouth="talk_a", head_roll=4, t=0.2,
                                                arm_r=dict(hand=(0.62, -0.50), bend=-0.7, stretch=1.3, layer="front"), prop_r=dict(type="torch14", angle=-80, scale=0.95),
                                                arm_l=dict(hand=(-0.45, 0.95), bend=0.3), legs="stand"))
@@ -1850,6 +1860,7 @@ def _story():
                      ("villager_kid_bang_pot", "the kid bangs a small pot"),
                      ("villager_oldman_laugh", "the old man cackles, leaning on his stick"),
                      ("villager_oldman_wave_torch", "the old man waves a torch"),
+                     ("villager_oldman_bang_pot", "the old man bangs a pot with a wooden spoon, laughing (spoon_r hits pot_face_l)"),
                      ("villager_youth_wave_torch", "the youth waves a torch and yells at the elephants"),
                      ("villager_youth_point_laugh", "the youth points and laughs (calls him ไอ้บ้าผึ้ง)"),
                      ("villager_youth_bang_pot", "the youth bangs a pot")):
