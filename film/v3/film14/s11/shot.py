@@ -27,9 +27,9 @@ C13 = ((-9.2, 0.2, 1.9), (-8.8, 0.3, 1.9)); L13 = ((-7.0, 5.0, 2.15), (-6.6, 5.0
 C14 = ((-18.2, 2.0, 3.5), (-17.5, 5.5, 3.8)); L14 = ((-7.5, 7.0, 3.3), (-12.0, 12.0, 3.2)); LENS14 = (17, 18)
 
 def cam_at(shot, g):
-    a, b = BOUND[shot]; x = clamp((g - a) / float(b - a))
+    a, b = BOUND[shot]; xr = (g - a) / float(b - a); x = clamp(xr)
     Cs, Ls, Ln = {11: (C11, L11, LENS11), 12: (C12, L12, LENS12), 13: (C13, L13, LENS13), 14: (C14, L14, LENS14)}[shot]
-    e = ease(x)
+    e = ease(x) + (xr - x) * 0.55          # handle frames keep moving (extrapolated), never frozen
     return L3(Cs[0], Cs[1], e), L3(Ls[0], Ls[1], e), lerp(Ln[0], Ln[1], e)
 
 F.CAMS['fence_ring'] = dict(loc=C12[0], look=L12[0], lens=22)

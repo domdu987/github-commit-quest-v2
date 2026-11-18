@@ -1,4 +1,4 @@
 {"g0": 759, "g1": 1000, "first_g": 753, "n_frames": 254, "handles": {"before": 6, "after": 6},
  "transition_in": {"type": "cut", "frames": 0},
  "shot_ranges": {"11": [759, 820], "12": [821, 863], "13": [864, 929], "14": [930, 1000]},
- "take_file": "take.mkv.partaa+ab+ac (cat to rebuild take.mkv)"}
+ "take_file": "take.mkv.partaa+ab+ac (cat take.mkv.part* > take.mkv)", "version": "redo v2 (team7)", "s_per_frame": 68}

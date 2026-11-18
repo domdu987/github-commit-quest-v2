@@ -1,4 +1,10 @@
-# s11 QA (shots 11-14)
-- qa_auto PASS (see QA_AUTO.md, phone_sheet.jpg); 254 frames g753-1006, 24 samples.
-- Own 6 fps pass: heads above y880, farmer on stool parented (no slide), contact shadows present, mouth held, no steep elephant views (none in take), light beads travel along wire in shot 14.
-- Deviations: farmer uses farmer_tie_wire on a stool (set hive already hung); ladder cut at runtime; shot 12 wide foreground soft from set grass.
+# s11 QA (shots 11-14), redo v2 by team 7 (answers film14/qa/s11_QA_TECH.md)
+- qa_auto PASS (QA_AUTO.md, phone_sheet.jpg); 254 frames g753-1006, 24 samples, ~68 s/frame (2 procs). Handle frames 1001-1006 keep moving (qa_auto flagged a frozen run in the first encode; re-rendered).
+- Own 6 fps contact-sheet pass: heads y 450-660 of 1280 (all above 880 limit), farmer parented to stool (fixed stool, no slide), stool contact shadow added, no elephants, mouth held 'flat' in all shots, no magenta.
+- Item 1 (ground/high view): fence_ring high view removed. 12 and 14 are medium-height (3.3-5.6 m) dollies along the fence on the yard side; hive roofs 150-400 px on 720 near camera. Ground is still about 25-35 % of frame in 11-13 (not under 20 %: a camera close enough for big hives with the horizon high was not achievable), but road is sharp; one soft green grass patch still visible at lower-left in 12/14. Near-camera yard clutter removed at runtime.
+- Item 2/3 (count): 11 = ONE hive on bare posts (fs1); 12 = row of hives, fs2, no wire (about 5-7 hives visible, not all 10: the 10 do not fit at roof size); 14 = fs3 with thick glowing wire through every hive running round the front-left corner and up the left side, light beads travel along it. 12 and 14 use the same fence but different camera spots (12 front row from the left end; 14 dollies round the corner).
+- Item 4 (shot 11): camera orbits about 40 deg and pushes; hive reads as a box (top bars, trapezoid sides, end slot with bees); farmer ties it on with a 24-frame looped 3-pose arm cycle + cord to the hanging rope.
+- Item 5 (shot 13): wire tip animated from his hand THROUGH two eyelet rings on the bar, then on along the row to the next hives (tip travels ~9 m); coil prop shrinks 1.15 -> 0.55 and slack wire shortens.
+- Item 6/9: mouth held; cameras: 11 orbit+push, 12 dolly 4.7 m + 1.2 m rise, 13 slow dolly, 14 dolly 4.7 m + pan about 30 deg + rise.
+- Item 7: stool contact shadow added, sapling/kale removed (cut_near), farmer feet on stool top.
+- Known weak points: farmer eyes (puppet gaze) point toward the wire/hive but the 2D head is turned a little to the camera; wire in 14 is very thick/bright near the camera.
