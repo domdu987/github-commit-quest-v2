@@ -1,0 +1,43 @@
+{
+ "take": "s03",
+ "film": 10,
+ "plan": "shots 3-4: convoy_wide periscope / hit and dive",
+ "g0": 134,
+ "g1": 293,
+ "first_g": 128,
+ "n_frames": 171,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "cuts": [
+  213
+ ],
+ "shot_ranges": {
+  "3": [
+   128,
+   212
+  ],
+  "4": [
+   213,
+   298
+  ]
+ },
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30,
+ "threads": 2,
+ "s_per_frame_wall_mean": 7.8,
+ "s_per_frame_cpu_mean": 15.01,
+ "dof": "none",
+ "narration": "film10/audio/narration.wav at +0.10 s"
+}

@@ -1,0 +1,5 @@
+{"take":"s03","fps":30,"cues":[
+{"time":4.27,"duration":2.8,"frame":128,"end_frame":213,"kind":"ambience","label":"open North Atlantic, low swell, far engines of the convoy, wind"},
+{"time":4.27,"duration":2.8,"frame":128,"end_frame":213,"kind":"prop","label":"periscope slicing the water, thin hiss","peak_frame":170},
+{"time":7.5,"duration":0.6,"frame":226,"end_frame":244,"kind":"impact","label":"distant torpedo explosion and rushing water column","peak_frame":228},
+{"time":8.7,"duration":1.1,"frame":262,"end_frame":292,"kind":"foley","label":"periscope sinks, bubbling water"}]}
