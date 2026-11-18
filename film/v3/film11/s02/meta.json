@@ -14,7 +14,7 @@
   "type": "cut",
   "frames": 0
  },
- "set": "v3/set3d11/dairy.py garden_hut A: Jenner scratches James's arm with the lancet, red dot appears",
+ "set": "v3/set3d11/dairy.py garden_hut A: Jenner scratches James's left upper arm (near shoulder), red dot appears g109; fix pass",
  "samples": 12,
  "resolution": [
   720,
@@ -23,7 +23,7 @@
  "threads": 2,
  "fps": 30,
  "dof": "none",
- "s_per_frame_wall_mean": 9.44,
- "s_per_frame_cpu_mean": 17.0,
+ "s_per_frame_wall_mean": 8.8,
+ "s_per_frame_cpu_mean": 17.9,
  "narration": "film11/audio/narration.wav at +0.10 s"
 }
