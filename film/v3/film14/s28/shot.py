@@ -159,7 +159,7 @@ def shot29(g, rep):
 def pose30(g):
     c, p = story('uncle_stung_close'); p = dict(p); p.pop('prop_r', None); p['stool'] = 1      # he stands on the same stool as in shot 29 (continuity)
     k = g - 2032; u = 1 - (1 - min(1.0, max(0.0, (g - G_SW0) / float(G_SW1 - G_SW0)))) ** 2   # ease-out
-    base = lerp(0.11, 0.15, min(1.0, k / 13.0)) if g < G_SW0 else 0.15
+    base = 0.40      # continuity with the end of shot 29 (nose_swell ~0.40 at g2031): hold to g2044, then ease 0.40 -> 1.0 over g2045-2088
     p['nose_swell'] = base + (1.0 - base) * u if g >= G_SW0 else base
     p['t'] = k * 0.09 + (1.6 * math.sin((g - 2086) * 0.55) * ez((g - 2086) / 4.0) if g >= 2086 else 0.0)   # the trunk tip curls / wiggles at the end
     p['blink'] = 2 if 2096 <= g <= 2098 else (1 if g in (2095, 2099) else 0)
@@ -174,7 +174,7 @@ def shot30(g, rep):
     r = put('s30_uncle', c, p, UNC, loc, ppd=256, canvas=cast14.CANVAS14_STOOL['uncle14'], yaw_fixed=0.0, mirror=True)
     head = r['world'](r['anchors']['head']); hand = r['world'](r['anchors']['hand_r'])
     for _ in range(5):
-        cam_set(loc, tuple(look), 22.0); yy = screen(head)[1]; look[2] -= (yy - 230) * dist / 782.0
+        cam_set(loc, tuple(look), 22.0); yy = screen(head)[1]; look[2] -= (yy - 248) * dist / 782.0
     cam_set(loc, tuple(look), 22.0)
     F.set_uncle_hive(1.0); pin_hive(hand, 9999)
     rep['uncle'] = dict(head=screen(head), hand=screen(hand), hip=screen(r['world'](r['anchors']['hip'])), feet=screen(r['world'](r['anchors']['feet'])), nose_swell=round(p['nose_swell'], 3))
