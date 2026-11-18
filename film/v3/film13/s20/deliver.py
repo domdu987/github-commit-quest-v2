@@ -6,7 +6,7 @@ CUES = {20:[dict(t=44.69,dur=1.2,label="whistle"),dict(t=43.3,dur=1.5,label="cel
  22:[dict(t=47.1,dur=1.7,label="ratchet pawl + iron screw groan"),dict(t=48.0,dur=0.8,label="beam creak")],
  23:[dict(t=48.8,dur=2.3,label="long wood creak, dust trickle")],24:[dict(t=51.13,dur=2.1,label="low timber settle, distant street")],
  25:[dict(t=53.3,dur=2.6,label="thousands of ratchets, rising swell")]}
-for s in B:
+for s in [21,22,23,24,25]:
     g0, g1 = B[s]; fg = g0 - 6; lg = g1 - 1 + 6; d = os.path.join(V, "s%d" % s); os.makedirs(d, exist_ok=True)
     raw = os.path.join(HERE, "raw", "s%d" % s)
     mk = os.path.join(d, "take.mkv")
@@ -16,5 +16,5 @@ for s in B:
     json.dump(dict(take="s%d"%s, film=13, shots=[s], first_g=fg, n_frames=lg-fg+1, g0=g0, g1=g1, handle_in=6, handle_out=6,
         transition_in=dict(type="cut", frames=0)), open(d+"/meta.json","w"), indent=1)
     json.dump(CUES[s], open(d+"/cues.json","w"), indent=1)
-    for f in ("shot.py","c13.py","deliver.py"):
-        if s == 20 or f == "shot.py": shutil.copy(os.path.join(HERE, f), d) if os.path.abspath(d) != HERE else None
+    for f in ("shot2.py",):
+        shutil.copy(os.path.join(HERE, f), d) if os.path.abspath(d) != HERE else None
