@@ -58,6 +58,20 @@ def tube(mb, pts, rl, rn, mat, seg=10, uu=1.0, vv=1.0, caps=True):
         rings.append([p + lat * (rl[k] * math.sin(2 * math.pi * i / seg)) + nrm * (rn[k] * -math.cos(2 * math.pi * i / seg)) for i in range(seg)])
     loft(mb, rings, mat, uu, vv, caps, caps)
 
+def lumpy_uv(mb, c, r, mat, seed, seg=10, rings=6, rough=0.2, squash=1.0, uvk=1.0):
+    """mine.lumpy with a texture scale (uvk tiles per unit of radius) so strand textures keep their size on big heaps."""
+    c = Vector(c); Rw = []; mb.pid += 1
+    for k in range(rings + 1):
+        th = math.pi * k / rings; row = []
+        for i in range(seg):
+            ph = 2 * math.pi * i / seg; d = Vector((math.sin(th) * math.cos(ph), math.sin(th) * math.sin(ph), -math.cos(th)))
+            rr = r * (1 + rough * (MN.vnoise(2.2 * d.x + 3, 2.2 * d.y + 2.2 * d.z, seed) - 0.5) * 2); row.append(c + Vector((d.x * rr, d.y * rr, d.z * rr * squash)))
+        Rw.append(row)
+    u = max(1.0, r * uvk)
+    for k in range(rings):
+        for i in range(seg):
+            j = (i + 1) % seg; mb.face([Rw[k][i], Rw[k][j], Rw[k + 1][j], Rw[k + 1][i]], mat, [(u * i / seg, u * k / rings), (u * (i + 1) / seg, u * k / rings), (u * (i + 1) / seg, u * (k + 1) / rings), (u * i / seg, u * (k + 1) / rings)])
+
 # ----------------------------------------------------------------------------- stamping of prototypes
 def stamp(mb, proto, pos=(0, 0, 0), yaw=0.0, s=1.0, pitch=0.0, roll=0.0, sz=None):
     """Append a prototype MB (local frame) to mb at pos, rotated Rz(yaw) Ry(pitch) Rx(roll) and scaled by s (sz = extra z scale)."""
@@ -97,11 +111,11 @@ def hay_heap(mb, c, M, r, seed, n=5, strands=True, h=None):
     rg = R(seed); c = Vector(c)
     for i in range(n):
         p = c + Vector((rg.uniform(-r, r) * 1.2, rg.uniform(-r, r) * 0.9, rg.uniform(0, r * 0.55))); rr = r * rg.uniform(0.55, 0.95)
-        lumpy(mb, p, rr, M['hayc'] if i % 3 else M['hayc2'], seed + i, seg=9, rings=6, rough=0.22, squash=0.78)
+        lumpy_uv(mb, p, rr, M['hay'], seed + i, seg=10, rings=6, rough=0.22, squash=0.78, uvk=2.2)
     if strands:
-        for k in range(int(n * 9 * r)):
+        for k in range(int(n * 30 * r)):
             a = rg.uniform(0, 6.28); d = rg.uniform(0, r * 1.15); z = max(0.02, rg.uniform(0.05, r * 0.95) * (1 - d / (r * 1.5)))
-            strand_tuft(mb, (c.x + math.cos(a) * d * 1.1, c.y + math.sin(a) * d * 0.85, c.z + z), M['straw'] if k % 3 else M['straw2'], n=4, h=r * 0.38, spread=0.9, lean=0.5, w=0.028, rg=rg)
+            strand_tuft(mb, (c.x + math.cos(a) * d * 1.1, c.y + math.sin(a) * d * 0.85, c.z + z), M['straw'] if k % 3 else M['straw2'], n=4, h=r * 0.2, spread=1.0, lean=0.5, w=0.02, rg=rg)
 
 def straw_floor(mb, M, rg, pts, n=5, h=0.35):
     for (x, y, z) in pts: strand_tuft(mb, (x, y, z), M['straw'] if rg.random() < 0.7 else M['straw2'], n=n, h=h * rg.uniform(0.5, 1.2), spread=1.6, lean=1.0, w=0.014, rg=rg, flat=0.55)
@@ -223,9 +237,9 @@ def goose_local(M):
 
 # ----------------------------------------------------------------------------- props
 def pail_local(M, r=0.5, h=0.95, milk=False):
-    mb = MB(); rod(mb, (0, 0, 0), (0, 0, h), r * 0.85, M['wood'], seg=10, r1=r); rod(mb, (0, 0, h * 0.25), (0, 0, h * 0.33), r * 0.89, M['iron'], seg=10, r1=r * 0.91)
-    rod(mb, (0, 0, h * 0.74), (0, 0, h * 0.82), r * 0.97, M['iron'], seg=10, r1=r * 0.99)
-    if milk: rod(mb, (0, 0, h * 0.9), (0, 0, h * 0.93), r * 0.97, M['milk'], seg=10)
+    mb = MB(); rod(mb, (0, 0, 0), (0, 0, h), r * 0.85, M['wood'], seg=16, r1=r); rod(mb, (0, 0, h * 0.25), (0, 0, h * 0.33), r * 0.89, M['iron'], seg=16, r1=r * 0.91)
+    rod(mb, (0, 0, h * 0.74), (0, 0, h * 0.82), r * 0.97, M['iron'], seg=16, r1=r * 0.99)
+    if milk: rod(mb, (0, 0, h * 0.9), (0, 0, h * 0.93), r * 0.97, M['milk'], seg=16)
     for sg in (-1, 1): rod(mb, (sg * r, 0, h * 0.8), (0, 0, h * 1.35), 0.022, M['iron'], seg=4)
     return mb
 

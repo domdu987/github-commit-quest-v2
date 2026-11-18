@@ -117,7 +117,18 @@ def brick():
             c = H(pal[r.randint(len(pal))]) * (0.9 + 0.2 * r.rand()); x0, x1 = max(x, 0), min(x + 64, W); out[row * 32:(row + 1) * 32, x0:x1] = c; out[row * 32:(row + 1) * 32, x0:x0 + 3] = H('#d8c8a0'); out[row * 32:row * 32 + 3, x0:x1] = H('#d8c8a0'); x += 64
     return out
 
-ALL = dict(thatch2=thatch2, thatch_dark=thatch_dark, hay2=hay2, cow_a=lambda: cow_hide('a'), cow_b=lambda: cow_hide('b'), flag=flag, cobble=cobble, rug=rug, quilt=quilt,
+def lane2():
+    """Village lane: packed ochre earth, two wheel ruts, a grassy crown, scattered pebbles and horse droppings (u along the lane, v across)."""
+    W = 512; Hh = 512; yy, xx = np.mgrid[0:Hh, 0:W].astype(np.float32) / np.array([Hh, W], np.float32)[:, None, None]
+    o = lerp(H('#9c8660'), H('#bca27a'), fbm(W, Hh, [(5, 1), (20, .7), (60, .4)], 6)); rut = np.exp(-((yy - 0.30) / 0.05) ** 2) + np.exp(-((yy - 0.72) / 0.05) ** 2)
+    o = o * (1 - 0.26 * rut[..., None]); crown = np.exp(-((yy - 0.51) / 0.07) ** 2) * (fbm(W, Hh, [(30, 1), (90, .6)], 7) > 0.42)
+    o = o * (1 - crown[..., None] * 0.55) + crown[..., None] * H('#7d9a48') * 0.55; edge = np.clip((abs(yy - 0.5) - 0.40) / 0.1, 0, 1) * (fbm(W, Hh, [(20, 1), (60, .6)], 8) > 0.35); o = o * (1 - edge[..., None] * 0.7) + edge[..., None] * H('#7d9a48') * 0.7
+    im = _im(o); d = ImageDraw.Draw(im); r = np.random.RandomState(31)
+    for i in range(240):
+        x, y, s = r.randint(0, W), r.randint(0, Hh), r.randint(3, 9); c = [(196, 182, 150), (160, 144, 116), (214, 200, 168), (130, 112, 88)][r.randint(4)]; d.ellipse([x, y, x + s, y + s * 0.7], fill=c)
+    return _ar(im)
+
+ALL = dict(lane2=lane2, thatch2=thatch2, thatch_dark=thatch_dark, hay2=hay2, cow_a=lambda: cow_hide('a'), cow_b=lambda: cow_hide('b'), flag=flag, cobble=cobble, rug=rug, quilt=quilt,
            plaster2=plaster2, wood_floor=wood_floor, stone_wall=stone_wall, moss_stone=moss_stone, brick=brick)
 def get(name):
     p = os.path.join(TD, '%s_v%d.png' % (name, TEX_V))
