@@ -1,0 +1,30 @@
+{
+ "take": "s22",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 52.64,
+   "frame": 1579,
+   "kind": "ambience",
+   "label": "steady rain bed continues over the empty rank; a sad horse snort at 53.0"
+  },
+  {
+   "time": 53.0,
+   "frame": 1590,
+   "kind": "sfx",
+   "label": "sad horse snort"
+  },
+  {
+   "time": 55.2,
+   "frame": 1656,
+   "kind": "sfx",
+   "label": "soft creak of the coach box, rain drumming on the pink lace umbrella"
+  },
+  {
+   "time": 58.99,
+   "frame": 1770,
+   "kind": "cut",
+   "label": "hard cut on the last word"
+  }
+ ]
+}
