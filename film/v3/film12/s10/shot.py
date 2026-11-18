@@ -31,7 +31,7 @@ def sub_A():
             u = (g - gr) / float(gi - gr); q = C.parabola(p0, (pa[0], pa[1] - 0.1, pa[2]), u, 1.6)
             C.png_card_roll('cabbage_fly', art.cabbage(), q, 0.85, 0.85, roll=u * 9.0)
         if g >= gi:                                    # big leaf stuck on the dome, rides with Hanway
-            C.png_card_roll('leaf_dome', art.leaf(), (apex[0], apex[1] - 0.15, apex[2] + 0.08), 1.2, 0.82, roll=-0.2)
+            C.png_card_roll('leaf_dome', art.leaf(), (apex[0], apex[1] - 0.15, apex[2] - 0.12), 1.2, 0.82, roll=-0.12)
         if g < gr: c, p = C.story('coachman_b_throw_windup'); p = mouth(p, 'frown')
         elif g < 664: c, p = C.story('coachman_b_throw_release'); p = mouth(dict(p, expr='angry'), 'frown')
         else: c, p = C.story('coachman_b_nod'); p = mouth(p, 'smirk')
@@ -86,8 +86,8 @@ def sub_C():
         C.card('hanway', c, p, hp, rim='#f2b25c')
         if rel >= 0:
             C.png_card_flat('ripples', art.ripple_path(rel), (-1.7, 12.2, 0.0), art.RP_W)
-            if 0 < rel < 28: C.png_card('crown', art.crown_path(rel), (-1.7 - art.BASE_DX, 12.3, 0.0), art.W_U, art.H_U)
-            if 2 < rel < 26: C.png_card_flat('near_ripples', art.near_path(rel), (-3.6, 6.8, 0.0), art.NR_W, z=0.05)
+            if 0 < rel < 25: C.png_card('crown', art.crown_path(rel), (-1.7 - art.BASE_DX, 12.3, 0.0), art.W_U, art.H_U)
+            if 2 < rel < 25: C.png_card_flat('near_ripples', art.near_path(rel), (-3.6, 6.8, 0.0), art.NR_W, z=0.05)
             if 9 <= rel < 24: C.png_card('landing', art.landing_path(rel), (hp[0], hp[1] - 0.8, 0.0), art.LAND_W, art.LAND_W)
         return dict(h=[round(v) for v in C.head_px(hp, 3.3)[:2]], rel=rel)
     return build, range(C0, LAST + 1)

@@ -1,3 +1,9 @@
+# s10 QA, round 4 (rounds 3 and 2 below)
+Round 4 fixes (director TAKE gate r3; re-rendered g663-713 and g786-812 only; qa_auto PASS, magenta 0.0 %):
+- Cabbage leaf: lowered onto the canopy (overlaps the dome edge), tilted to the dome tangent, still follows the umbrella-middle anchor of the walking sprite every frame.
+- The large soft tan ovals were the falling spray pieces (0.6 u wide, see-through while fading) and wide landing splats. Falling pieces are now narrow (0.17 u) tapered-both-ends streaks along the fall, solid until they shrink away (gone by g809, no ghost streaks); landing splats are small, opaque, confined to his body width/height.
+- Near-puddle ripples: 3 impacts x 2-3 smooth soft rings, ~35 % strength, tinted to the sky reflection (150,166,222), thinning as they spread; the wheel ripple card softened the same way.
+
 # s10 QA, round 3 (round 2 notes below)
 Round 3 fixes (director TAKE gate r2; only g645-713 and g786-866 re-rendered):
 - Spray falling phase: after the apex every finger breaks into 5 separate pointed streaks that fall and fade (no slabs, no rods); all spray fades smoothly to nothing by g812 (rel 27), no one-frame vanish. Rise phase keeps the passed look (heights lowered a little so the crown stays in frame).

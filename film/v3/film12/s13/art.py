@@ -68,21 +68,21 @@ def _ribbon(d, pts, wfun, tone, alpha, u, W, base_y, rim=None):
     if rim: d.line([px(q) for q in L[:-1]], fill=RIM + (int(alpha * 0.8),), width=max(3, int(0.10 * u)))
 
 def fade(rel):
-    return 1.0 if rel <= 16 else max(0.0, 1.0 - (rel - 16) / 12.0)          # everything is gone by rel 28 (smooth, no one-frame vanish)
+    return 1.0 if rel <= 14 else max(0.0, 1.0 - (rel - 14) / 10.0)          # everything is gone by rel 24 (g809); shrinks instead of going see-through
 
 def _finger(d, P, ph, tone, u, W, base_y, rel, w0=1.1, ln=0.46):
-    th = min(1.0, ph); tt = max(0.0, min(1.0, ph - ln)); A = 222 * fade(rel)
-    if th <= 0.01 or tt >= 1.0 or A <= 2: return
+    th = min(1.0, ph); tt = max(0.0, min(1.0, ph - ln)); A = 222 * min(1.0, fade(rel) * 3.0)
+    if th <= 0.01 or tt >= 1.0 or fade(rel) <= 0.02: return
     if ph < 0.4:                                                           # rising: one tapered finger with a pointed teardrop at the tip
         _ribbon(d, _pts(P, tt, th), lambda s: w0 * (1 - s) ** 0.9, tone, A, u, W, base_y, rim=True)
         if ph > 0.2:
             x, y = _path(P, th); x2, y2 = _path(P, max(0.0, th - 0.03)); dx, dy = x - x2, y - y2; m = math.hypot(dx, dy) or 1.0; _drop(d, (x, y), (dx / m, dy / m), u, W, base_y, tone, A)
         return
-    g = min(0.85, (ph - 0.4) * 3.2); span = th - tt; k = 5                  # breaking up: separate pointed streaks that fall and fade
+    g = min(0.8, (ph - 0.4) * 3.2); span = th - tt; k = 5                  # breaking up: separate NARROW pointed streaks stretched along the fall
     for j in range(k):
         a = tt + span * j / k; b = a + span / k * (1 - g)
         if b <= a: continue
-        _ribbon(d, _pts(P, a, min(1.0, b), 6), lambda s: w0 * 0.55 * math.sin(math.pi * s) ** 0.8 + 0.02, tone, A * (1.0 - 0.15 * j / k), u, W, base_y)
+        _ribbon(d, _pts(P, a, min(1.0, b), 6), lambda s: (0.17 * math.sin(math.pi * s) ** 0.9 + 0.01) * (0.4 + 0.6 * fade(rel)), tone, min(232, A * 2.2), u, W, base_y)
 
 def _drop(d, tip, dirv, u, W, base_y, tone, A=226, size=0.85):
     x, y = tip; dx, dy = dirv; nx, ny = -dy, dx; l = size; w = size * 0.2
@@ -91,7 +91,7 @@ def _drop(d, tip, dirv, u, W, base_y, tone, A=226, size=0.85):
 
 def crown(rel):
     W, H = int(W_U * PPD) * SS, int(H_U * PPD) * SS; im = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    if rel <= 0 or rel >= 28: return im.resize((W // SS, H // SS), Image.LANCZOS)
+    if rel <= 0 or rel >= 25: return im.resize((W // SS, H // SS), Image.LANCZOS)
     d = ImageDraw.Draw(im); u = PPD * SS; base_y = H - 0.3 * u; n = 13
     fingers = []
     for i in range(n):
@@ -102,7 +102,7 @@ def crown(rel):
     for j in range(26):                                                  # streak droplets (short pointed streaks, no rim)
         r = random.Random(500 + j); P = (BASE_DX + r.uniform(-0.8, 0.8), 2.0 + 4.5 * r.random(), 0.5 + 4.0 * r.random(), -1 if j % 5 else 1)
         ph = rel / 20.0 - r.uniform(0, 0.3)
-        if 0.02 < ph < 1.0 and fade(rel) > 0.02: _ribbon(d, _pts(P, max(0, ph - 0.09), ph, 4), lambda s: 0.26 * math.sin(math.pi * s) ** 0.8 + 0.02, TONES[j % 3], 235 * fade(rel), u, W, base_y)
+        if 0.02 < ph < 1.0 and fade(rel) > 0.02: _ribbon(d, _pts(P, max(0, ph - 0.09), ph, 4), lambda s: 0.26 * math.sin(math.pi * s) ** 0.8 + 0.02, TONES[j % 3], 235 * min(1.0, fade(rel) * 3.0), u, W, base_y)
     return im.resize((W // SS, H // SS), Image.LANCZOS)
 
 def crown_path(rel):
@@ -121,7 +121,7 @@ def ripples(rel):
         for k in range(3):
             t = rel - 3 * k
             if t > 0:
-                r = (0.35 + 0.28 * t) * u; al = int(220 * max(0.0, 1 - t / 22.0)); d.ellipse([c - r, c - r, c + r, c + r], outline=(214, 224, 246, al), width=max(3, int(0.09 * u)))
+                r = (0.35 + 0.28 * t) * u; al = int(220 * max(0.0, 1 - t / 22.0)); d.ellipse([c - r, c - r, c + r, c + r], outline=(150, 166, 222, int(al * 0.5)), width=max(3, int(0.06 * u)))
     return im
 
 def ripple_path(rel):
@@ -143,14 +143,14 @@ def landing(rel):
     """spray landing ON Hanway (card in front of him, 6 x 6 units, bottom centre at his feet): pointed brown streaks fall onto head / coat, small splat dots where they land."""
     N = 600; im = Image.new('RGBA', (N, N), (0, 0, 0, 0)); d = ImageDraw.Draw(im); u = N / LAND_W; cx = N / 2
     for i in range(34):
-        r = random.Random(77 + i); s0 = 9 + r.uniform(0, 7); x = r.uniform(-1.3, 1.3); y0 = 4.9 + r.random(); yl = r.uniform(0.3, 3.3); t = rel - s0
+        r = random.Random(77 + i); s0 = 9 + r.uniform(0, 7); x = r.uniform(-0.55, 0.55); y0 = 4.9 + r.random(); yl = r.uniform(0.5, 3.0); t = rel - s0
         if t < 0: continue
         y = y0 - 1.05 * t; tone = TONES[i % 3]
         if y > yl:
             pts = [(cx + (x - 0.04 * t) * u, N - (y + 0.5) * u), (cx + (x + 0.07) * u, N - (y + 0.05) * u), (cx + (x - 0.04 * t) * u + 0.0, N - (y - 0.1) * u), (cx + (x - 0.07) * u, N - (y + 0.05) * u)]
             d.polygon(pts, fill=tone + (235,))
-        elif y > yl - 2.2 * 1.05:                                           # a splat where it landed, for a few frames
-            rr = 0.13 * u; X, Y = cx + x * u, N - yl * u; d.ellipse([X - rr * 1.6, Y - rr, X + rr * 1.6, Y + rr], fill=tone + (225,))
+        elif y > yl - 1.3 * 1.05:                                           # a splat where it landed, for a few frames
+            rr = 0.085 * u; X, Y = cx + x * u, N - yl * u; d.ellipse([X - rr, Y - rr * 0.9, X + rr, Y + rr * 0.9], fill=tone + (255,))
     return im
 
 def landing_path(rel):
@@ -160,16 +160,19 @@ def landing_path(rel):
 
 NR_W = 9.0
 def near_ripples(rel):
-    """flat ground card in the NEAR puddle (9 x 9 units): rings + a few tiny pointed droplets landing, g788-805."""
-    N = 720; im = Image.new('RGBA', (N, N), (0, 0, 0, 0)); d = ImageDraw.Draw(im); u = N / NR_W; c = N / 2
-    for j in range(7):
-        r = random.Random(33 + j); cx, cy = c + r.uniform(-3.2, 3.2) * u, c + r.uniform(-3.0, 3.0) * u; s0 = 3 + 2 * j; t = rel - s0
-        if t < 0 or t > 16: continue
-        al = int(140 * (1 - t / 16.0)); rr = (0.12 + 0.2 * t) * u
-        d.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], outline=(214, 224, 246, al), width=max(3, int(0.05 * u)))
-        if t < 3:                                                              # tiny droplet landing
-            q = 0.18 * u; d.polygon([(cx, cy - 0.5 * u * (1 - t / 3.0)), (cx + q * 0.4, cy), (cx - q * 0.4, cy)], fill=TONES[j % 3] + (235,))
-    return im
+    """flat ground card in the NEAR puddle: 3 impacts, 2-3 soft sky-tinted rings each (low contrast, smooth), thinning as they spread, a tiny droplet at the first moment."""
+    N = 720; SSn = 2; M = N * SSn; im = Image.new('RGBA', (M, M), (0, 0, 0, 0)); d = ImageDraw.Draw(im); u = M / NR_W; c = M / 2
+    spots = ((-2.2, 1.6, 3), (1.0, -1.2, 6), (-0.4, 2.8, 9))
+    for (x, y, s0) in spots:
+        for ring in range(3):
+            t = rel - s0 - 2 * ring
+            if t < 0 or t > 14: continue
+            k = 1 - t / 14.0; al = int(84 * k); rr = (0.10 + 0.14 * t) * u; wd = max(2, int((0.075 * k + 0.02) * u))
+            cx, cy = c + x * u, c + y * u; d.ellipse([cx - rr, cy - rr, cx + rr, cy + rr], outline=(150, 166, 222, al), width=wd)
+        t = rel - s0
+        if 0 <= t < 3:
+            cx, cy = c + x * u, c + y * u; q = 0.10 * u; h = 0.45 * u * (1 - t / 3.0); d.polygon([(cx, cy - h), (cx + q * 0.5, cy), (cx - q * 0.5, cy)], fill=TONES[0] + (200,))
+    return im.filter(ImageFilter.GaussianBlur(2.2)).resize((N, N), Image.LANCZOS)
 
 def near_path(rel):
     p = os.path.join(WORK, 'near_%03d.png' % rel)
