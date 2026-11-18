@@ -1,0 +1,10 @@
+{
+ "take": "s17",
+ "events": [
+  {
+   "frame": 1078,
+   "label": "lancet touches the arm",
+   "kind": "foley"
+  }
+ ]
+}
