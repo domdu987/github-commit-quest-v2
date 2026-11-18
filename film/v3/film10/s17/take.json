@@ -1,0 +1,13 @@
+{"take": "s17", "shots": [17, 18, 19], "ranges": {"17": [1084, 1193], "18": [1194, 1295], "19": [1296, 1433]}, "g0": 1090, "g1": 1428, "cuts": [1194, 1296],
+ "setups": {"17": {"g": [1084, 1193], "set": "sea topdown_sea A: high oblique camera that tracks right (look x -14 -> 28, lens 21 -> 22); torpedo (scaled 1.8 for readability) creeping up from the U-boat, the dazzle ship sails toward the gold lead buoy (moved to x 64, fades in g 1094-1116, pulsing), s 1.6..5.0, u 0.09..0.30"},
+            "18": {"g": [1194, 1295], "set": "sea periscope_pov: camera in the raised periscope head (head/mast hidden), overlay on, slow sweep over the dazzle ship, lens 27 -> 29; ghost ship (offset +30, translucent cyan, facing -x) fades in over the real ship g 1200..1248 to 0.8, cyan aim buoy lights up at the end; s 5.0..8.2"},
+            "19": {"g": [1296, 1433], "set": "sea topdown_sea C: oblique camera tracking right (look x -18 -> 26, lens 20.5 -> 22); torpedo crosses the ghost's course line (x -41, cyan buoy) at s ~10 (g ~1347) and the wake passes behind the real stern; the dazzle ship sails on toward the gold buoy; ghost fades 0.8 -> 0.4 at the end; s 8.2..12.6"}},
+ "events": {"gold_buoy_fades_in": [1094, 1116], "cut_to_periscope": 1194, "ghost_fades_in": [1200, 1248], "cyan_buoy_on": [1270, 1288], "cut_to_topdown_C": 1296, "torpedo_crosses_ghost_course": 1347, "ghost_fades_out": [1388, 1428]},
+ "cues": [[1090, 1194, "ambience", "calm open sea; a slow low pulse of the torpedo's propeller beneath it; a soft chime as the gold buoy lights"],
+          [1094, 1116, "accent", "soft bright bell-glint as the gold buoy fades in"],
+          [1194, 1194, "cut", "cut to the periscope view (lens ring, a small servo click)"],
+          [1200, 1248, "accent", "ghost ship fades in: a thin eerie glassy shimmer, a rising airy tone"],
+          [1296, 1296, "cut", "cut to the high view"],
+          [1330, 1370, "foley", "torpedo whine sweeps past and fades behind the stern; a rushing bubble hiss"],
+          [1347, 1356, "accent", "comic 'whoosh... nothing' beat as the torpedo runs through the phantom"],
+          [1390, 1428, "ambience", "the real ship sails on: steady engine thrum, bow wave, a relieved rise in the music"]]}

@@ -1,0 +1,71 @@
+{
+ "take": "s17",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film10/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 36.333,
+   "duration": 3.467,
+   "frame": 1090,
+   "end_frame": 1194,
+   "kind": "ambience",
+   "label": "calm open sea; a slow low pulse of the torpedo's propeller beneath it; a soft chime as the gold buoy lights"
+  },
+  {
+   "time": 36.467,
+   "duration": 0.733,
+   "frame": 1094,
+   "end_frame": 1116,
+   "kind": "accent",
+   "label": "soft bright bell-glint as the gold buoy fades in"
+  },
+  {
+   "time": 39.8,
+   "duration": 0.0,
+   "frame": 1194,
+   "end_frame": 1194,
+   "kind": "cut",
+   "label": "cut to the periscope view (lens ring, a small servo click)"
+  },
+  {
+   "time": 40.0,
+   "duration": 1.6,
+   "frame": 1200,
+   "end_frame": 1248,
+   "kind": "accent",
+   "label": "ghost ship fades in: a thin eerie glassy shimmer, a rising airy tone"
+  },
+  {
+   "time": 43.2,
+   "duration": 0.0,
+   "frame": 1296,
+   "end_frame": 1296,
+   "kind": "cut",
+   "label": "cut to the high view"
+  },
+  {
+   "time": 44.333,
+   "duration": 1.333,
+   "frame": 1330,
+   "end_frame": 1370,
+   "kind": "foley",
+   "label": "torpedo whine sweeps past and fades behind the stern; a rushing bubble hiss"
+  },
+  {
+   "time": 44.9,
+   "duration": 0.3,
+   "frame": 1347,
+   "end_frame": 1356,
+   "kind": "accent",
+   "label": "comic 'whoosh... nothing' beat as the torpedo runs through the phantom"
+  },
+  {
+   "time": 46.333,
+   "duration": 1.267,
+   "frame": 1390,
+   "end_frame": 1428,
+   "kind": "ambience",
+   "label": "the real ship sails on: steady engine thrum, bow wave, a relieved rise in the music"
+  }
+ ]
+}

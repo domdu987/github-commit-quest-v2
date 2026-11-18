@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+"""shot.py -- film 10 take s17: shots 17 + 18 + 19 (g 1090..1427 + 6 handle frames each side), THE REVEAL ("the sea is not a
+guessing game": the stripes make the captain read the ship's heading wrongly, and the torpedo runs at a ghost).
+One location (sea, SEA_DAY).  NO dashed lines or arrows: the idea is told by three things in the water -- the glowing GOLD LEAD BUOY (where
+the ship will be: the right aim), the translucent pale-cyan GHOST ship sailing the other way (the captain's wrong reading) and the cyan
+buoy ahead of it (where he aims), and the torpedo's white wake.
+
+    id 17  g 1084..1193  topdown_sea A: the high oblique over the sea.  The torpedo is SLOW (foam V + bubble wake creeping up from the
+                         U-boat at the bottom), the dazzle ship SAILS (bow wave, smoke) toward the gold buoy that appears ahead of its
+                         bow (fades in, pulsing).  Slow push + drift.
+    id 18  g 1194..1295  periscope_pov: the circular lens view; the dazzle ship's stripes make its bow read as its stern; the ghost
+                         ship (facing the other way) fades in over it (set_ghost, offset +30 (it sits on the real ship, reversed)), then the cyan aim buoy lights up.
+                         The view sweeps slowly.
+    id 19  g 1296..1433  topdown_sea C: the torpedo runs at the ghost's guessed course (cyan buoy), through the phantom, and its wake
+                         passes harmlessly BEHIND the real stern while the dazzle ship sails on toward the gold buoy.
+
+Torpedo and sea time are shared with s15 (U(g), S table): u = 0.0021 (g - 1047) until g 1090, then 0.09 + 0.002 (g - 1090); sea s runs
+1.6 .. 5.0 (17), 5.0 .. 8.2 (18), 8.2 .. 12.6 (19), about real time, so the torpedo crosses the ghost's course line (u 0.607, x -41)
+at s ~ 10 in the middle of shot 19.  The gold buoy is moved 23 D ahead (x 64) so the ship's bow only reaches it at the end of 19.
+
+Blender frame of (id, g) = 1000 * (id - 1) + g + 1.
+
+    python3 shot.py probe 17,18,19 a:b[:step]
+    python3 shot.py stills 17,18,19 a:b[:step] <out_dir> [scale] [samples]
+    python3 shot.py final 17|18|19 a:b[:step] [scale] [samples]
+"""
+import math, os, sys, json
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import c10 as C                                          # noqa: E402
+from mathutils import Vector                             # noqa: E402
+
+H, camrig = C.B, C.camrig
+lerp, clamp, ez, bf = C.lerp, C.clamp, C.ez, C.bf
+
+# ----------------------------------------------------------------------------- timing
+G16, G17, G18, G19, G20 = C.g_bound(34.90), C.g_bound(36.35), C.g_bound(39.80), C.g_bound(43.20), C.g_bound(47.59)   # 1047 1090 1194 1296 1428
+H_IN, H_OUT = 6, 6
+RANGES = {17: (G17 - H_IN, G18 - 1), 18: (G18, G19 - 1), 19: (G19, G20 + H_OUT - 1)}
+S_ANCH = [(G17, 1.6), (G18, 5.0), (G19, 8.2), (G20, 12.6)]            # sea time (shared across the take; s15 ends at 1.6)
+LEAD_DX = 23.0                                                       # the gold buoy is moved ahead: x 41 -> 64
+GHOST_OFF = 30.0
+
+
+def s_of(g):
+    a = S_ANCH
+    for (g0, s0), (g1, s1) in zip(a, a[1:]):
+        if g <= g1:
+            return lerp(s0, s1, (g - g0) / float(g1 - g0))
+    return a[-1][1] + (g - a[-1][0]) * (a[-1][1] - a[-2][1]) / float(a[-1][0] - a[-2][0])
+
+
+def u_of(g):
+    """torpedo path parameter, continuous with s15 (0.09 at g 1090) at 0.002 / frame (9 D/s)."""
+    return 0.09 + 0.002 * (g - G17)
+
+
+def sm(x):
+    """0.35 sine + 0.65 linear: calm, no dead ends."""
+    x = clamp(x)
+    return 0.35 * ez(x, "sine") + 0.65 * x
+
+
+# ----------------------------------------------------------------------------- cameras
+# 17: the high oblique, widened a little so the sub's bubble track, the real ship, the ghost's lane and the gold buoy all fit;
+#     it pushes in and drifts toward the real ship / buoy.  19: lower and nearer, drifting with the ship, so the wake runs under the stern.
+CAM17 = ((-12.0, -108.0, 108.0), (-14.0, -32.0, 0.0), 21.0), ((30.0, -84.0, 98.0), (28.0, -6.0, 0.0), 22.0)
+CAM19 = ((-24.0, -100.0, 104.0), (-18.0, -14.0, 0.0), 20.5), ((24.0, -84.0, 96.0), (26.0, -4.0, 0.0), 22.0)
+# 18: inside the periscope (eye fixed at the head); a slow sweep over the real ship, lens 30 -> 33.
+POV_LOOK = ((8.0, 0.0, 5.6), 27.0), ((22.0, 0.0, 5.0), 29.0)
+
+
+def lerp_cam(c0, c1, x):
+    u = sm(x)
+    return (Vector([lerp(c0[0][i], c1[0][i], u) for i in range(3)]), Vector([lerp(c0[1][i], c1[1][i], u) for i in range(3)]), lerp(c0[2], c1[2], u))
+
+
+def cam_of(shot, g, eye=None):
+    if shot == 17:
+        return lerp_cam(CAM17[0], CAM17[1], (g - G17) / float(G18 - G17))
+    if shot == 19:
+        return lerp_cam(CAM19[0], CAM19[1], (g - G19) / float(G20 - G19))
+    u = sm((g - G18) / float(G19 - G18))
+    look = Vector([lerp(POV_LOOK[0][0][i], POV_LOOK[1][0][i], u) for i in range(3)])
+    return Vector(eye), look, lerp(POV_LOOK[0][1], POV_LOOK[1][1], u)
+
+
+def ghost_k(g):
+    """ghost opacity: fades in over shot 18 (0 -> 0.95 across 1202..1250), held through 19."""
+    if g < G18:
+        return 0.0
+    if g < G19:
+        return 0.8 * ez((g - (G18 + 6)) / 48.0)
+    return 0.8 - 0.4 * ez((g - (G20 - 40)) / 40.0)
+
+
+def lead_k(g):
+    if g < G18:
+        return clamp((g - (G17 + 4)) / 22.0) * (1.0 + 0.12 * math.sin(g * 0.35))
+    return 0.0 if g < G19 else (1.0 + 0.12 * math.sin(g * 0.35))
+
+
+def gmark_k(g):
+    """the cyan aim buoy lights up at the end of shot 18 and stays."""
+    return clamp((g - (G19 - 26)) / 18.0) if g >= G18 else 0.0
+
+
+# ----------------------------------------------------------------------------- the take
+class Take(C.Take):
+    def __init__(self, quality="preview", shot=17):
+        C.Take.__init__(self, "sea", "topdown_sea", quality=quality, lens=22.0, name="cam_s17")
+        H.set_uboat(1.0, periscope=1.0)                      # for periscope_eye(): the head position of the raised periscope
+        self.eye = Vector(H.periscope_eye())
+        mk = H.STATE["markers"]
+        for ob in list(mk["buoy"]) + [mk["lamp"]]:
+            ob.location.x += LEAD_DX                         # runtime set change: the lead buoy is 23 D further ahead
+        H.set_ghost(0.0, offset=GHOST_OFF)
+        H.STATE['torp']['ob'].scale = (1.8, 1.8, 1.8)                 # readable from the high camera
+        U = H.STATE["uboat"]
+        import bpy
+        self.near_eye = [U["head"], bpy.data.objects["uboat_mast"]]      # the periscope camera sits inside them
+
+    def pose(self, shot, gs):
+        for g in gs:
+            f = bf(shot, g)
+            s = s_of(g)
+            pov = shot == 18
+            if pov:
+                dive, peri = 1.0, 1.0
+            else:
+                dive, peri = 1.0, 0.0
+            H.set_smoke(1.0, frame=f); H.set_flames(1.0, frame=f)
+            H.set_uboat(dive, frame=f, periscope=peri)
+            H.set_convoy(s, frame=f)
+            H.set_torpedo(u_of(g), frame=f)
+            H.set_ghost(ghost_k(g), frame=f)
+            H.set_lead_marker(lead_k(g), frame=f)
+            H.set_ghost_marker(gmark_k(g) if shot != 17 else 0.0, frame=f)
+            H.set_hit(-1.0, frame=f)
+            H.periscope_overlay(pov, frame=f)
+            loc, look, lens = cam_of(shot, g, self.eye)
+            self.key_cam(f, loc, look, lens=lens)
+            for ob in self.near_eye:
+                ob.hide_render = pov
+                ob.keyframe_insert("hide_render", frame=f)
+
+    def report(self, shot, g):
+        loc, look, lens = cam_of(shot, g, self.eye)
+        v = look - loc
+        return dict(shot=shot, g=g, cam=[round(c, 3) for c in loc], lens=round(lens, 2), s=round(s_of(g), 3), u=round(u_of(g), 4),
+                    ghost=round(ghost_k(g), 3), lead=round(lead_k(g), 3), pitch=round(math.degrees(math.atan2(v.z, math.hypot(v.x, v.y))), 1))
+
+    def render(self, shot, gs, out_dir, scale=1.0, samples=12, threads=2):
+        return C.Take.render(self, [bf(shot, g) for g in gs], out_dir, scale=scale, samples=samples, threads=threads)
+
+
+if __name__ == "__main__":
+    cmd = sys.argv[1]
+    shots = [int(s) for s in sys.argv[2].split(",")]
+    if cmd in ("probe", "stills"):
+        Tk = Take("preview")
+        for shot in shots:
+            gs = [g for g in C.parse(sys.argv[3]) if RANGES[shot][0] <= g <= RANGES[shot][1]]
+            if not gs:
+                continue
+            Tk.pose(shot, gs)
+            for g in gs:
+                print(json.dumps(Tk.report(shot, g)), flush=True)
+                if cmd == "stills":
+                    out = sys.argv[4]
+                    scale = float(sys.argv[5]) if len(sys.argv) > 5 else 0.5
+                    samples = int(sys.argv[6]) if len(sys.argv) > 6 else 6
+                    st = Tk.render(shot, [g], out, scale=scale, samples=samples)[0]
+                    os.replace(st["path"], os.path.join(out, "s%d_g_%04d.png" % (shot, g)))
+                    print("shot %d g %d  %.1f s wall %.1f cpu" % (shot, g, st["wall"], st["cpu"]), flush=True)
+    elif cmd == "final":
+        scale = float(sys.argv[4]) if len(sys.argv) > 4 else 1.0
+        samples = int(sys.argv[5]) if len(sys.argv) > 5 else 12
+        C.final_loop(lambda q, shot=17: Take(q), shots, sys.argv[3], RANGES, HERE, scale=scale, samples=samples)
