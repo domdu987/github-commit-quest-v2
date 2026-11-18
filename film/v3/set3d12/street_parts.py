@@ -58,14 +58,14 @@ def horse(mb, M, c0, coat='horse', mane='horse_d', sock=(0, 3), head='up', S=2.0
     # torso: sections along y (rump -> chest), each (y, zc, rz, rx)
     T = [(-0.98, 1.16, 0.12, 0.10), (-0.92, 1.18, 0.30, 0.24), (-0.78, 1.19, 0.40, 0.31), (-0.5, 1.15, 0.43, 0.33), (-0.15, 1.11, 0.42, 0.32), (0.2, 1.12, 0.44, 0.31),
          (0.5, 1.16, 0.47, 0.29), (0.76, 1.15, 0.43, 0.26), (0.94, 1.10, 0.32, 0.20), (1.02, 1.07, 0.15, 0.1)]
-    loft(mb, [(P(0, y, z), X, Z, rx * S, rz * S) for (y, z, rz, rx) in T], hm, seg=14)
+    loft(mb, [(P(0, y, z), X, Z, rx * S, rz * S) for (y, z, rz, rx) in T], hm, seg=22)
     # neck (arched) and head
     if head == 'up': NP = [(0.62, 1.30), (0.80, 1.52), (0.97, 1.74), (1.10, 1.90), (1.17, 1.97)]; HP = [(1.17, 1.97), (1.30, 1.93), (1.52, 1.72), (1.70, 1.52), (1.78, 1.45)]
     else: NP = [(0.62, 1.28), (0.82, 1.40), (1.02, 1.46), (1.20, 1.42), (1.30, 1.38)]; HP = [(1.30, 1.38), (1.38, 1.30), (1.44, 1.05), (1.48, 0.82), (1.5, 0.74)]
-    nr = [(0.27, 0.23), (0.23, 0.2), (0.2, 0.17), (0.17, 0.14), (0.15, 0.13)]
-    tube(mb, [P(0, y, z) for (y, z) in NP], [(a * S, b * S) for a, b in nr], hm, seg=10)
-    hr = [(0.14, 0.15), (0.13, 0.14), (0.1, 0.11), (0.085, 0.085), (0.095, 0.09)]
-    tube(mb, [P(0, y, z) for (y, z) in HP], [(a * S, b * S) for a, b in hr], hm, seg=10)
+    nr = [(0.28, 0.25), (0.25, 0.23), (0.22, 0.2), (0.19, 0.17), (0.17, 0.16)]
+    tube(mb, [P(0, y, z) for (y, z) in NP], [(a * S, b * S) for a, b in nr], hm, seg=16)
+    hr = [(0.17, 0.18), (0.155, 0.17), (0.12, 0.13), (0.1, 0.1), (0.11, 0.1)]
+    tube(mb, [P(0, y, z) for (y, z) in HP], [(a * S, b * S) for a, b in hr], hm, seg=16)
     hv = (Vector((0, HP[-1][0] - HP[0][0], HP[-1][1] - HP[0][1]))).normalized()                          # head axis
     hup = hv.cross(X).normalized(); hup = -hup if hup.z < 0 else hup
     hc = P(0, *HP[0]); mz = P(0, *HP[-1])
@@ -97,7 +97,7 @@ def horse(mb, M, c0, coat='horse', mane='horse_d', sock=(0, 3), head='up', S=2.0
         else: pts = [(ys, 0.98), (ys - 0.16, 0.62), (ys - 0.04, 0.45), (ys - 0.02, 0.14), (ys - 0.01, 0.05)]; rad = [0.17, 0.095, 0.058, 0.05, 0.062]
         mat = hm
         P3 = [P(x, y, z) for (y, z) in pts]
-        tube(mb, P3[:4], [r * S for r in rad[:4]], hm, seg=8)
+        tube(mb, P3[:4], [r * S for r in rad[:4]], hm, seg=12)
         mb.sphere(P3[2], rad[2] * 1.15 * S, hm, seg=7, rings=5)                                              # knee / hock
         if sock:
             tube(mb, [P3[3], P(x, pts[3][0] + 0.005, 0.04)], [0.056 * S, 0.062 * S], hw_, seg=8) if True else None

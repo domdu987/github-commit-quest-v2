@@ -16,8 +16,7 @@ def shade_hue(f):
     if w.sum() == 0: return float('nan'), 0.0
     a = np.radians(h[sel]); m = math.degrees(math.atan2((np.sin(a) * w).sum(), (np.cos(a) * w).sum())) % 360
     return m, float(sel.mean())
-if __name__ == '__main__':
-    sb = os.path.join(HERE, 'styleboard'); fs = sys.argv[1:] or [os.path.join(sb, n) for n in ('sb1_street_wide.png', 'sb2_coach_low.png', 'sb3_street_high.png')]
+def main(fs, out=None):
     buf = io.StringIO()
     with contextlib.redirect_stdout(buf):
         print(f"{'still':26s} " + " ".join(f"{n[:6]:>6s}" for n in H.NAMES) + "   sat  val dark")
@@ -27,4 +26,9 @@ if __name__ == '__main__':
         for f in fs:
             m, fr = shade_hue(f); mag = H.stats([f])[0]['magenta']
             print(f"  {os.path.basename(f)[:-4]:26s} shade hue {m:6.1f}  shaded {fr:.2f}  magenta {mag:5.1f} %  {'ok' if 240 <= m <= 260 and mag <= 10 else 'OUT'}")
-    txt = buf.getvalue(); print(txt); open(os.path.join(sb, 'hue.txt'), 'w').write(txt)
+    txt = buf.getvalue()
+    if out: open(out, 'w').write(txt)
+    return txt
+if __name__ == '__main__':
+    sb = os.path.join(HERE, 'styleboard'); fs = sys.argv[1:] or [os.path.join(sb, n) for n in ('sb1_street_wide.png', 'sb2_coach_low.png', 'sb3_street_high.png')]
+    print(main(fs, os.path.join(sb, 'hue.txt')))

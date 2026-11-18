@@ -19,7 +19,7 @@ from wall_tex import hexf, hex8, pnoise, pfbm, save             # noqa: E402
 import harbour_tex as HX                                        # noqa: E402  (sky_rich painter)
 
 TEX = os.path.join(HERE, 'tex_street')
-TEX_V = 's12.10'
+TEX_V = 's12.11'
 JOBS = {}
 def reg(name, params, fn): JOBS[name] = (params, fn)
 
@@ -50,7 +50,7 @@ def cobbles(p, out):
     q = (np.abs(cu2 / pw) ** 4.0 + np.abs(cv2 / ph_) ** 4.0) ** 0.25               # superellipse: 0 centre .. 1 at the sett edge
     inside = np.clip((1.0 - q) / 0.07, 0, 1)                                       # anti-aliased sett mask
     dome = np.clip(1.0 - q, 0, 1) ** 0.55
-    pal = np.array([hexf('#8f8c92'), hexf('#837d92'), hexf('#a08e76'), hexf('#6f6e7e'), hexf('#a4906f'), hexf('#78828f'), hexf('#928076')])
+    pal = np.array([hexf('#8f8c92'), hexf('#7a8294'), hexf('#a08e76'), hexf('#68727f'), hexf('#a4906f'), hexf('#78848f'), hexf('#928076')])
     pick = (r[bid, 0] * len(pal)).astype(int) % len(pal)
     base = pal[pick] * (0.74 + 0.5 * r[bid, 1:2])
     mot = pfbm(rs, S, S, 24, 24, 4)[..., None]
@@ -572,9 +572,9 @@ def all_jobs():
     reg('ripples_a', dict(seed=31, n=7), ripples); reg('ripples_b', dict(seed=32, n=5), ripples)
     for i, (sx, sy) in enumerate(((1.0, 1.0), (1.0, 0.7), (0.75, 1.0), (1.0, 0.85))): reg('pud_' + 'abcd'[i], dict(seed=300 + i, sx=sx, sy=sy), puddle_mask)
     reg('wood', dict(seed=41, col='#8a5e3a', w=0.5), wood); reg('wood_d', dict(seed=42, col='#5e3c26', w=0.4), wood)
-    reg('barrel', dict(col='#8c5c34'), barrel); reg('slate', dict(seed=51, col='#4a4e66'), slate)
+    reg('barrel', dict(col='#8c5c34'), barrel); reg('slate', dict(seed=51, col='#44566e'), slate)
     reg('awn_a', dict(n=10, a='#c8483a', b='#efe4cc'), stripes); reg('awn_b', dict(n=8, a='#2f6a52', b='#efe4cc'), stripes)
-    reg('lace', dict(col='#f0a8c0'), lace)
+    reg('lace', dict(col='#f4a0aa'), lace)
     specs = [('fac_a', 'red', 'ochre', 'house', 1, GREEN, 0.55, 101, 'fan'), ('fac_b', 'brown', 'plum', 'house', 0, OXBLOOD, 0.62, 102, 'transom'), ('fac_c', 'ochre', 'stock', 'house', 2, NAVY, 0.75, 103, 'arch'),
              ('fac_d', 'red', 'rust', 'house', 0, GREEN, 0.6, 104, 'transom'), ('fac_e', 'rust', 'brown', 'house', 1, OXBLOOD, 0.68, 105, 'fan'), ('fac_f', 'plum', 'brown', 'house', 2, GREEN, 0.7, 106, 'arch'),
              ('fac_g', 'stock', 'red', 'house', 1, '#8a2c2c', 0.5, 107, 'arch'), ('fac_h', 'ochre', 'rust', 'house', 0, '#2c4c5c', 0.72, 108, 'fan'), ('fac_i', 'red', 'plum', 'house', 2, '#3a3a52', 0.64, 109, 'transom'),

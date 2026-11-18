@@ -63,10 +63,10 @@ CAMS = dict(
     street_high=_cam((-3.0, -20.0, 32.0), (-2.0, -9.0, 17.0), (0.5, 34.0, 1.0), (0.5, 32.0, 2.0)),
     coach_low=_cam((-3.6, 4.2, 1.35), (-1.0, 7.5, 1.5), (3.6, 19.0, 3.3), (3.55, 19.5, 3.9)),
     hero_track=_cam((-3.8, 0.4, 2.2), (-3.6, 10.2, 2.2), (-0.6, 8.0, 3.3), (-0.6, 17.8, 3.3)),
-    box_seat=_cam((0.2, 12.0, 1.4), (1.4, 14.5, 2.6), (3.55, 18.6, 5.8), (3.55, 18.6, 6.6)),
-    market=_cam((-0.6, 2.0, 2.0), (-1.8, 5.5, 2.1), (-6.2, 11.5, 2.8), (-6.4, 11.5, 2.9)),
-    puddle_low=_cam((2.4, 3.0, 0.9), (1.8, 4.2, 0.8), (-3.2, 13.5, 2.4), (-3.6, 13.0, 2.6)),
-    rank_rush=_cam((-2.6, 6.0, 2.8), (-1.0, 14.0, 3.4), (3.4, 27.0, 3.4), (3.4, 36.0, 3.4)),
+    box_seat=_cam((-1.6, 10.0, 1.5), (0.2, 12.4, 2.3), (3.2, 18.6, 5.9), (3.4, 18.6, 6.3)),
+    market=_cam((0.4, 0.4, 2.0), (-0.8, 3.0, 2.1), (-6.0, 11.0, 2.9), (-6.4, 11.5, 3.0)),
+    puddle_low=_cam((-5.3, 3.6, 0.75), (-5.3, 4.6, 0.7), (-1.8, 12.6, 2.0), (-2.2, 12.6, 2.2)),
+    rank_rush=_cam((-3.4, 4.0, 3.0), (-3.4, 10.0, 3.6), (3.4, 28.0, 3.4), (3.4, 36.0, 3.4)),
 )
 PRESETS = list(CAMS)
 LIGHT_NAMES = list(LIGHTS)
@@ -80,8 +80,8 @@ STAND = {
     'hanway_b':      _stand(-1.2, 8.0, 0.0, 0.2, -1.0, 'hero_track start: medium, rank behind right'),
     'hanway_c':      _stand(-1.2, 17.8, 0.0, 0.2, -1.0, 'hero_track end (walk a -> b -> c along +y, face the camera)'),
     'hanway_low':    _stand(-2.4, 12.5, 0.0, 0.5, -1.0, 'coach_low: passes below the first coach'),
-    'hanway_market': _stand(-3.2, 9.0, 0.0, 0.6, -1.0, 'market: passes the barrow corner'),
-    'hanway_mud':    _stand(-6.55, 12.8, ZP, 0.9, -0.4, 'puddle_low: on the left pavement edge, the splash target'),
+    'hanway_market': _stand(-2.6, 10.5, 0.0, 0.5, -1.0, 'market: passes the barrow corner'),
+    'hanway_mud':    _stand(-3.8, 14.2, 0.0, 0.5, -1.0, 'puddle_low: beside the big puddle, the splash target (faces the camera)'),
     'hanway_crowd':  _stand(-1.0, 16.0, 0.0, 0.0, -1.0, 'street_high: the one umbrella among many'),
     # --- the three coachmen on their boxes (feet on the seat plank, z 4.22; the coaches face -y)
     'box_a':         _stand(RANK_X, RANK_Y[0] - 3.4, BOX_Z, -0.5, -0.85, 'HEAD coachman (coach_0 box)'),
@@ -91,29 +91,31 @@ STAND = {
     # --- road / pavement people
     'man_road_1':    _stand(-4.2, 16.0, 0.0, 0.5, -1.0, 'passer-by on the left of the road'),
     'man_road_2':    _stand(0.2, 22.0, 0.0, 0.0, -1.0, 'passer-by mid road'),
-    'lady_market':   _stand(-3.0, 5.4, 0.0, 0.5, -1.0, 'market: the dry lady under a parasol-umbrella'),
-    'gent_wet':      _stand(-5.0, 8.2, 0.0, 0.7, -0.7, 'market: the soaked gentleman (wrings his wig)'),
+    'lady_market':   _stand(-4.4, 8.0, 0.0, 0.5, -1.0, 'market: the dry lady under a parasol-umbrella'),
+    'gent_wet':      _stand(-5.4, 11.8, 0.0, 0.7, -0.7, 'market: the soaked gentleman (wrings his wig)'),
     'seller':        _stand(-7.9, 12.6, ZP, 0.8, -0.6, 'market: stall holder behind the barrow'),
-    'jeer_a':        _stand(-6.9, 8.0, ZP, 0.8, -0.5, 'market jeerer on the pavement'),
+    'jeer_a':        _stand(-7.0, 7.0, ZP, 0.8, -0.5, 'market jeerer on the pavement'),
     'jeer_b':        _stand(-4.5, 11.6, 0.0, 0.8, -0.6, 'market jeerer in the road (the thrower)'),
     'pave_L1':       _stand(-7.4, 4.0, ZP, 0.6, -1.0, 'left pavement, street_wide foreground'),
     'pave_R1':       _stand(7.7, 6.0, ZP, -0.4, -1.0, 'right pavement, street_wide foreground'),
     'pave_R2':       _stand(7.6, 20.5, ZP, -0.5, -1.0, 'right pavement'),
     'pave_L2':       _stand(-7.4, 21.0, ZP, 0.5, -1.0, 'left pavement'),
     # --- passengers' side of the rank: the crowd rushes here (see A['rush'])
-    'queue_a':       _stand(1.0, 17.8, 0.0, 0.9, 0.0, 'by the head coach door (street side), faces the coach'),
-    'mud_wheel':     _stand(-1.0, 12.0, 0.0, 0.0, -1.0, 'mud_splash: the wheel contact point (a position, not an actor)'),
+    'queue_a':       _stand(1.0, 22.0, 0.0, 0.9, 0.0, 'by the head coach street-side door (coach_0), faces the coach'),
+    'mud_wheel':     _stand(-1.7, 12.2, 0.0, 0.0, -1.0, 'mud_splash: the wheel contact point (a position, not an actor)'),
 }
 STAGE = {                   # placeholder cards staged by stage_placeholders (name, role, umbrella)
     'street_wide': [('hanway_a', 'hero', 'umb_dark'), ('man_road_1', 'man', 'umb_brown'), ('box_a', 'coachman', None), ('pave_R1', 'woman', 'umb_blue')],
     'street_high': [('hanway_crowd', 'hero', 'umb_dark'), ('box_a', 'coachman', None)],
     'coach_low': [('box_a', 'coachman', None), ('box_b', 'man', None), ('hanway_low', 'hero', 'umb_dark')],
-    'hero_track': [('hanway_b', 'hero', 'umb_dark'), ('box_a', 'coachman', None), ('box_b', 'man', None)],
+    'hero_track': [('hanway_b', 'hero', 'umb_dark'), ('hanway_c', 'hero', 'umb_dark'), ('box_a', 'coachman', None), ('box_b', 'man', None)],
     'box_seat': [('box_a', 'coachman', None)],
     'market': [('hanway_market', 'hero', 'umb_dark'), ('lady_market', 'woman', 'umb_green'), ('gent_wet', 'man', None), ('seller', 'coachman', None)],
     'puddle_low': [('hanway_mud', 'hero', 'umb_dark')],
     'rank_rush': [('box_a', 'coachman', None), ('box_b', 'man', None)],
 }
+STAGE_B = {                 # which stand points are valid (in frame, heads above y 880) at the END pose B of the camera move; default = all of STAGE
+    'street_wide': ['hanway_a', 'man_road_1', 'box_a'], 'coach_low': ['box_a', 'box_b'], 'hero_track': ['hanway_c'], 'rank_rush': ['box_b'], 'market': ['hanway_market', 'lady_market', 'gent_wet', 'seller']}
 PH_ROLES = dict(hero=('priest', 3.1), man=('extra_a', 2.9), coachman=('extra_c', 3.0), woman=('extra_b', 2.9))
 
 # ----------------------------------------------------------------------------- materials
@@ -226,19 +228,19 @@ def _materials(P, C, TX, tx, pre):
     M['coach_green'] = C('#2c5c48', 1.0, 1.3); M['coach_green_d'] = C('#18322a', 1.0, 1.3); M['coach_ox'] = C('#7c2c38', 1.0, 1.3); M['coach_ox_d'] = C('#3a141c', 1.0, 1.3)
     M['coach_navy'] = C('#2e4880', 1.0, 1.3); M['coach_navy_d'] = C('#161e3c', 1.0, 1.3); M['coach_ochre'] = C('#b88a3c', 1.0, 1.3); M['coach_ochre_d'] = C('#4a3418', 1.0, 1.3)
     M['coach_gold'] = C('#d8b048', 1.0, (1.6, 1.3, 0.7), smix=0.2); M['coach_crest'] = C('#9c2c34', 1.0, 1.2)
-    M['wheel'] = C('#3a2a1c', 1.0, 1.1); M['wheel_r'] = C('#8a3028', 1.0, (1.3, 0.9, 0.8), smix=0.3); M['wheel_r2'] = C('#6a2420', 1.0, (1.3, 0.9, 0.8), smix=0.3)
-    M['cloth'] = C('#7a2434', 1.0, (1.4, 0.8, 0.8), smix=0.3); M['leather'] = C('#3a2a22', 1.0, 1.1); M['passenger'] = C('#0e1018', 1.0, 0.8)
-    M['horse'] = C('#8a4a28', 1.0, (1.3, 1.0, 0.9), smix=0.3); M['horse_b'] = C('#5c3220', 1.0, (1.3, 1.0, 0.9), smix=0.3); M['horse_c'] = C('#a8a4b4', 1.0, (1.1, 1.1, 1.1), smix=0.3)
-    M['horse_k'] = C('#26222a', 1.0, (1.2, 1.1, 1.2), smix=0.3)
+    M['wheel'] = C('#3a2a1c', 1.0, 1.1); M['wheel_r'] = C('#8a3028', 1.0, (1.3, 0.9, 0.8), smix=0.8); M['wheel_r2'] = C('#6a2420', 1.0, (1.3, 0.9, 0.8), smix=0.8)
+    M['cloth'] = C('#7a2434', 1.0, (1.4, 0.8, 0.8), smix=0.8); M['leather'] = C('#3a2a22', 1.0, 1.1); M['passenger'] = C('#0e1018', 1.0, 0.8)
+    M['horse'] = C('#8a4a28', 1.0, (1.3, 1.0, 0.9), smix=0.65); M['horse_b'] = C('#5c3220', 1.0, (1.3, 1.0, 0.9), smix=0.65); M['horse_c'] = C('#a8a4b4', 1.0, (1.1, 1.1, 1.1), smix=0.65)
+    M['horse_k'] = C('#26222a', 1.0, (1.2, 1.1, 1.2), smix=0.65)
     M['horse_d'] = C('#2e1c14'); M['horse_dk'] = C('#1c1820'); M['horse_wm'] = C('#e8e2d4'); M['horse_w'] = C('#f0e6d4'); M['hoof'] = C('#1c1a1e')
     M['canvas'] = C('#d4c298'); M['sack'] = C('#b8a070'); M['umb_dark'] = C('#141622', 0.8, 1.0)
     M['umb_brown'] = C('#6a4632'); M['umb_green'] = C('#2c5a46'); M['umb_blue'] = C('#2a3e78'); M['umb_red'] = C('#8a2a32'); M['umb_ochre'] = C('#a07a30'); M['umb_grey'] = C('#58586a')
-    M['pink'] = TX('lace', form=False, alpha=True, sm=(1.2, 1.0, 1.1), smix=0.3)
-    M['cabbage'] = C('#5c9a4a', 1.0, (1.2, 1.1, 1.0), smix=0.3); M['carrot'] = C('#e07a2a', 1.0, (1.3, 0.9, 0.8), smix=0.3); M['apple'] = C('#b8302a', 1.0, (1.3, 0.8, 0.8), smix=0.3)
+    M['pink'] = mat_emit(pre + 'e_pink', image=tx['lace'], strength=0.95, alpha=True)
+    M['cabbage'] = C('#5c9a4a', 1.0, (1.2, 1.1, 1.0), smix=0.5); M['carrot'] = C('#e07a2a', 1.0, (1.3, 0.9, 0.8), smix=0.6); M['apple'] = C('#b8302a', 1.0, (1.3, 0.8, 0.8), smix=0.7)
     M['turnip'] = C('#e8dcc8'); M['onion'] = C('#c89a50'); M['turnip_top'] = C('#8a4a8a'); M['egg'] = C('#f4ecd8', 1.0, 1.2)
     M['fig_a'] = C('#3a3a5c', 1.0, 1.2); M['fig_b'] = C('#5c4630', 1.0, 1.2); M['fig_c'] = C('#2c4a3c', 1.0, 1.2); M['fig_d'] = C('#6c3438', 1.0, 1.2); M['fig_e'] = C('#6a6a7c', 1.0, 1.2)
     M['fig_skin'] = C('#e4bc98', 1.0, (1.1, 1.0, 1.0), smix=0.3); M['fig_leg'] = C('#2c2830'); M['fig_hat'] = C('#1c1a22')
-    M['mud'] = C('#6c5238', 1.0, (1.2, 1.1, 1.0), smix=0.35); M['mud_hi'] = C('#98825c', 1.0, (1.2, 1.1, 1.0), smix=0.35)
+    M['mud'] = mat_emit(pre + 'e_mud', '#8a6840', strength=0.75); M['mud_hi'] = mat_emit(pre + 'e_mudhi', '#dcc490', strength=0.9)
     M['glass_lamp'] = mat_emit(pre + 'e_lamp', '#ffd890', strength=4.2); M['lantern'] = mat_emit(pre + 'e_lantern', '#ffc070', strength=3.4)
     M['shopwin'] = {k: mat_emit(pre + 'e_sw_' + k, image=tx['shopwin_' + k], strength=1.25) for k in ('boots', 'teapots', 'pretzels', 'greens', 'hats', 'jars')}
     M['sign'] = {k: TX('sign_' + k, form=False, alpha=True) for k in ('boot', 'teapot', 'pretzel', 'hat', 'jar')}
@@ -308,7 +310,7 @@ def _puddles(SET, M):
     darker core (all from one 512 px mask, irregular outline, soft edge), plus soft ripple rings that appear with the rain intensity. Returns the list of
     (x, y, radius) incl. the named big ones: BIG puddle (puddle_low) at (-1.5, 12.0)."""
     rs = _rnd(5)
-    spots = [(-1.5, 12.0, 3.4), (0.9, 2.8, 2.3), (-2.8, 6.2, 1.9), (2.6, 8.6, 1.7), (-4.1, 18.5, 2.1), (1.2, 27.0, 2.3), (-1.8, 34.0, 2.5), (-3.2, -4.0, 2.2), (1.8, -9.0, 2.6),
+    spots = [(-1.7, 12.4, 3.3), (-4.2, 6.6, 2.0), (-0.2, 6.8, 1.6), (2.6, 8.6, 1.7), (-4.1, 18.5, 2.1), (1.2, 27.0, 2.3), (-1.8, 34.0, 2.5), (-3.2, -4.0, 2.2), (1.8, -9.0, 2.6),
              (-0.6, 19.5, 1.6), (4.4, 2.0, 1.5), (-4.6, 26.0, 1.7), (0.4, 44.0, 2.4), (-2.4, 52.0, 2.2), (2.0, 62.0, 2.2), (-3.6, 70.0, 2.0), (0.0, -16.0, 2.4)]
     for i in range(44):
         y = rs.uniform(-14, 80); side = rs.choice([-1, 1]); x = rs.choice([rs.uniform(-4.0, 4.0), side * rs.uniform(3.4, 5.0)]); r = rs.uniform(0.7, 1.8) * (1.3 if rs.random() < 0.2 else 1.0)
@@ -772,16 +774,20 @@ def _coach(SET, M, i, loc_xy, yaw=180.0, name=None):
 def _umb_slots():
     rs = _rnd(21); slots = []
     cols = ['umb_dark'] * 5 + ['umb_brown', 'umb_green', 'umb_blue', 'umb_red', 'umb_ochre', 'umb_grey']
+    keep = [(c['loc'][0], c['loc'][1], 2.4) for c in CAMS.values()] + [(c['loc_b'][0], c['loc_b'][1], 2.4) for c in CAMS.values()] + [(s['pos'][0], s['pos'][1], 1.6) for s in STAND.values()]
     def add(x, y, z, thr):
-        look = (rs.uniform(-0.6, 0.6), -1.0); slots.append(dict(i=len(slots), pos=(x, y, z), look=look, thr=min(0.96, thr), mat=cols[rs.randrange(len(cols))], r=rs.uniform(1.75, 2.15)))
+        if any((x - a) ** 2 + (y - b) ** 2 < r * r for a, b, r in keep): return
+        look = (rs.uniform(-0.6, 0.6), -1.0); slots.append(dict(i=len(slots), pos=(x, y, z), look=look, thr=min(0.96, thr), mat=cols[rs.randrange(len(cols))], r=rs.uniform(1.8, 2.3)))
     for s in (-1, 1):
-        for j, y in enumerate(np.arange(-8.0, 66.0, 4.4)):
-            x = s * (7.1 if j % 2 == 0 else 8.7); y = float(y) + rs.uniform(-0.6, 0.6)
-            add(x, y, ZP, 0.03 + 0.55 * abs(y - 12.0) / 60.0 + rs.uniform(0, 0.08))
-    for j in range(22):                                          # the roadway fills later
-        x = rs.uniform(-4.9, -0.6) if j % 3 else rs.uniform(-4.6, 1.4); y = -6.0 + j * 3.1 + rs.uniform(-0.8, 0.8)
-        if x > 1.2 and y > 8.0: x = rs.uniform(-4.6, -0.8)
-        add(x, y, 0.0, 0.42 + 0.5 * abs(y - 12.0) / 60.0 + rs.uniform(0, 0.1))
+        for j, y in enumerate(np.arange(-10.0, 76.0, 3.7)):
+            x = s * (7.0 if j % 2 == 0 else 8.7); y = float(y) + rs.uniform(-0.5, 0.5)
+            add(x, y, ZP, 0.03 + 0.55 * abs(y - 12.0) / 70.0 + rs.uniform(0, 0.08))
+    pts = []                                                     # the roadway fills later: Poisson-disc, min 3.3 apart, rank side (x > 1.4, y > 8) left to the coaches
+    for _ in range(900):
+        x = rs.uniform(-5.0, 4.6); y = rs.uniform(-8.0, 76.0)
+        if x > 1.4 and y > 8.0: continue
+        if all((x - a) ** 2 + (y - b) ** 2 > 3.3 ** 2 for a, b in pts): pts.append((x, y))
+    for (x, y) in pts: add(x, y, 0.0, 0.42 + 0.5 * abs(y - 12.0) / 70.0 + rs.uniform(0, 0.08))
     return slots
 
 def _rush_slots():
@@ -893,6 +899,20 @@ def _grade(scene, P, bloom=0.22):
         warnings.simplefilter('ignore')
         G.build(scene, preset=dict(vignette_strength=0.0, bloom_strength=bloom, bloom_size=P.get('bloom_size', 0.05), offset=tuple(P['grade_offset']), saturation=float(P['grade_saturation'])))
     scene.render.use_compositing = True
+    ng = [g for g in bpy.data.node_groups if g.name.startswith('GradeCLP')][-1]; _hue_guard(ng)
+
+def _hue_guard(ng):
+    """Colour rule (client: magenta share <= 10 %): a Hue Correct in the grade pulls the magenta band (hue 290-345) toward blue-violet; pink / red and blue stay.
+    Warm key + blue shade mix to magenta on dark surfaces in partial light; this keeps them blue-violet."""
+    hs = [n for n in ng.nodes if n.bl_idname == 'CompositorNodeHueSat'][0]; mx = [n for n in ng.nodes if n.bl_idname == 'ShaderNodeMix'][0]
+    hc = ng.nodes.new('CompositorNodeHueCorrect'); hc.location = (-200, 0)
+    cv = hc.mapping.curves[0]
+    for x, y in ((0.70, 0.48), (0.75, 0.45), (0.80, 0.41), (0.875, 0.35), (0.92, 0.32), (0.955, 0.41), (0.985, 0.5)):
+        near = [p for p in cv.points if abs(p.location[0] - x) < 0.02]
+        if near: near[0].location = (x, y)
+        else: cv.points.new(x, y)
+    hc.mapping.update()
+    lk = hs.outputs['Image'].links[0]; dst = lk.to_socket; ng.links.remove(lk); ng.links.new(hs.outputs['Image'], hc.inputs['Image']); ng.links.new(hc.outputs['Image'], dst)
 
 def setup_render(scene, quality='final'):
     MN.setup_render(scene, quality); c = scene.cycles; c.transparent_max_bounces = 24; c.glossy_bounces = 1; c.max_bounces = 2
@@ -984,7 +1004,7 @@ def _street(SET, LIG, P, M):
     STATE['rows'] = rows
     # coaches: the rank (4) on the right kerb facing -y, plus the running coach (parked far up the street; drive it with run_coach)
     for i, y in enumerate(RANK_Y): STATE['coach_data'].append(_coach(SET, M, i, (RANK_X, y)))
-    STATE['coach_data'].append(_coach(SET, M, 4, (-1.4, 140.0), name='coach_run'))
+    STATE['coach_data'].append(_coach(SET, M, 4, (0.2, 140.0), name='coach_run'))
     # crowd: umbrella slots (umbrellas popped by `umb`, placeholder people in CROWD), rush figures, pink umbrella, mud splash
     _crowd_objects(SET, CROWD, M, ctrl); _pink_umbrella(SET, M, ctrl); _mud_objects(SET, M, ctrl)
 
@@ -1019,15 +1039,15 @@ def _pink_umbrella(SET, M, ctrl):
 def _mud_objects(SET, M, ctrl):
     """Big comic mud-water wave: 13 curved fins in a fan + bulb tips + droplets, built at full size in a frame whose +x points along the throw; scale drivers on
     CTRL['mud'] (0..1): rise, peak at ~0.35, collapse by 1."""
-    src = Vector((-3.0, 12.0, 0.0)); tgt = Vector((-6.55, 12.8, 1.0)); dxy = (tgt - src); dxy.z = 0; ang = math.atan2(dxy.y, dxy.x); rs = _rnd(66)
+    src = Vector((-1.7, 12.2, 0.0)); tgt = Vector((-3.8, 14.2, 1.2)); dxy = (tgt - src); dxy.z = 0; ang = math.atan2(dxy.y, dxy.x); rs = _rnd(66)
     mb = MB(); X = Vector((1, 0, 0))
     for j in range(13):
-        phi = math.radians(-58 + 116 * j / 12) + rs.uniform(-0.05, 0.05); Hh = 4.6 * (1 - 0.45 * abs(phi) / 1.0) * rs.uniform(0.8, 1.1); Rr = 4.2 * (1 - 0.3 * abs(phi)) * rs.uniform(0.85, 1.1)
+        phi = math.radians(-58 + 116 * j / 12) + rs.uniform(-0.05, 0.05); Hh = 3.9 * (1 - 0.45 * abs(phi) / 1.0) * rs.uniform(0.8, 1.1); Rr = 4.2 * (1 - 0.3 * abs(phi)) * rs.uniform(0.85, 1.1)
         dirh = Vector((math.cos(phi), math.sin(phi), 0)); lat = Vector((-math.sin(phi), math.cos(phi), 0)); pts = []; rad = []
         for n in range(8):
-            t = n / 7.0; pts.append(dirh * (Rr * t ** 0.9) + Vector((0, 0, Hh * 4 * t * (1 - t) * 1.0 + 0.1 * t))); rad.append((0.55 * (1 - 0.55 * t), 0.17))
+            t = n / 7.0; pts.append(dirh * (Rr * 0.85 * t ** 0.8) + Vector((0, 0, Hh * (1 - (1 - t) ** 2.2) + 0.1))); rad.append((0.7 * (1 - 0.6 * t), 0.2 * (1 - 0.4 * t)))
         PT.tube(mb, pts, rad, M['mud'], seg=6, up=lat)
-        mb.sphere(pts[-1] + Vector((0, 0, 0.1)), rs.uniform(0.38, 0.6), M['mud_hi'], seg=7, rings=5)
+        mb.sphere(pts[-1] + Vector((0, 0, 0.15)), rs.uniform(0.5, 0.75), M['mud_hi'], seg=7, rings=5)
     PT.loft(mb, [(Vector((0, 0, 0.12)), Vector((1, 0, 0)), Vector((0, 1, 0)), 1.6, 1.6), (Vector((0, 0, 0.9)), Vector((1, 0, 0)), Vector((0, 1, 0)), 0.9, 0.9)], M['mud'], seg=12)     # the boiling base
     o = _obj(mb, 'mud_wave', SET); o.location = src + Vector((0, 0, 0.02)); o.rotation_euler = (0, 0, ang)
     env = 'min(1,k/0.3)*(1-min(1,max(0,(k-0.55)/0.45)))'
@@ -1041,16 +1061,25 @@ def _mud_objects(SET, M, ctrl):
         s_ = 'max(0.001,min(1,k*20)*(1-min(1,max(0,(k-0.8)/0.2)))*(location[2]>0))' if False else 'max(0.001,min(1,k*20)*(1-min(1,max(0,(k-0.85)/0.15))))'
         for ax in range(3): _drv(do, 'scale', s_, {'k': (ctrl, '["mud"]')}, ax)
     STATE['mud_info'] = dict(wheel_contact=(src.x, src.y, 0.0), toward=(round(math.cos(ang), 3), round(math.sin(ang), 3)), target_stand='hanway_mud', t_peak=0.35,
-                             note='drive the coach through (-1.4 .. -3.0, 12) with run_coach; key mud_splash(0)->(1) over ~1 s')
+                             note='drive coach_run along x 0.2 (run_coach(f0, f1, y0, y1, x=0.2)): its left wheels (x -1.7) cross the puddle at y 12.2 when the origin is at y 14.5; key mud_splash(0)->(1) over ~1 s from that moment')
 
 # ----------------------------------------------------------------------------- hooks (all frame-keyable: pass frame=N to key, omit to set the value now)
+def _fcs(idb):
+    """All F-curves of an ID's action (Blender 5 slotted actions: layers > strips > channelbags; older: action.fcurves) as (owner_collection, fcurve)."""
+    ad = getattr(idb, 'animation_data', None); out = []
+    if not ad or not ad.action: return out
+    act = ad.action
+    if hasattr(act, 'fcurves'): return [(act.fcurves, fc) for fc in act.fcurves]
+    for ly in act.layers:
+        for st in ly.strips:
+            for cb in st.channelbags: out += [(cb.fcurves, fc) for fc in cb.fcurves]
+    return out
+
 def _setprop(prop, v, frame=None):
     ctrl = _ctrl()
     if frame is None:
-        ad = ctrl.animation_data
-        if ad and ad.action:
-            for fc in list(ad.action.fcurves):
-                if fc.data_path == '["%s"]' % prop: ad.action.fcurves.remove(fc)
+        for owner, fc in _fcs(ctrl):
+            if fc.data_path == '["%s"]' % prop: owner.remove(fc)
         ctrl[prop] = float(v)
     else:
         ctrl[prop] = float(v); ctrl.keyframe_insert('["%s"]' % prop, frame=int(frame))
@@ -1082,19 +1111,20 @@ def mud_splash(t, frame=None):
     """Big comic mud-water wave from the wheel contact A['mud']['wheel_contact'] toward the Hanway stand 'hanway_mud'; t 0 = none, ~0.35 peak, 1 = collapsed."""
     _setprop('mud', t, frame)
 
-def run_coach(f0, f1, y0=40.0, y1=-14.0, x=-1.4):
+def run_coach(f0, f1, y0=40.0, y1=-14.0, x=0.2):
     """Drive the running coach `coach_run` (with its horse) along the roadway from y0 to y1 between frames f0 and f1 (wheels roll, horse bobs). It faces -y."""
     r = bpy.data.objects['coach_run']
     for f, y in ((f0, y0), (f1, y1)):
         r.location = (x, y, 0.0); r.keyframe_insert('location', frame=int(f))
-    for fc in r.animation_data.action.fcurves:
+    for _, fc in _fcs(r):
         for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
     bpy.context.view_layer.update()
 
 def crowd_figures(on=True):
-    """Show / hide the 3D placeholder people (umbrella holders, rush crowd). Hide them when the cast cards occupy the slots."""
-    STATE['CROWD'].hide_render = not on; STATE['CROWD'].hide_viewport = not on
-    for ob in STATE['CROWD'].objects: ob.hide_render = not on
+    """Show / hide the 3D placeholder people: True or 'all', 'umb' (the umbrella holders), 'rush' (the rush crowd), False. Hide them when the cast cards occupy the slots."""
+    which = 'all' if on is True else on                        # True / 'all' | 'umb' | 'rush' | False
+    for ob in STATE['CROWD'].objects:
+        ob.hide_render = not (which == 'all' or (which == 'umb' and ob.name.startswith('crowd_')) or (which == 'rush' and ob.name.startswith('rush_')))
 
 def throw(prop, p0, p1, t0, t1, normal=(0, 0, 1), arc=2.2, bounce=None, splat=True, name=None):
     """A cabbage ('cabbage') or egg ('egg') flies a parabola from p0 to p1 between frames t0 and t1 (spinning), then hits: a splat decal (egg yolk / cabbage leaves) appears at p1
@@ -1118,16 +1148,15 @@ def throw(prop, p0, p1, t0, t1, normal=(0, 0, 1), arc=2.2, bounce=None, splat=Tr
             o.keyframe_insert('location', frame=f); o.keyframe_insert('rotation_euler', frame=f)
         end = end + 11
     o.location = p1; o.hide_render = True; o.keyframe_insert('hide_render', frame=end + 1)
-    if o.animation_data and o.animation_data.action:
-        for fc in o.animation_data.action.fcurves:
-            for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT' if fc.data_path == 'hide_render' else 'LINEAR'
+    for _, fc in _fcs(o):
+        for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT' if fc.data_path == 'hide_render' else 'LINEAR'
     if splat:
         sm = MB(); sz = 0.9 if prop == 'egg' else 1.3
         sm.face([Vector((-sz, -sz, 0)), Vector((sz, -sz, 0)), Vector((sz, sz, 0)), Vector((-sz, sz, 0))], M['splat_egg' if prop == 'egg' else 'splat_cab'], [(0, 0), (1, 0), (1, 1), (0, 1)])
         so = _obj(sm, name + '_splat', SET, shadow=False); nv = Vector(normal).normalized(); so.location = p1 + nv * 0.04; so.rotation_euler = nv.to_track_quat('Z', 'Y').to_euler()
         so.rotation_euler.rotate_axis('Z', rs.uniform(0, 6.28)); so.visible_glossy = False
         so.hide_render = True; so.keyframe_insert('hide_render', frame=int(t1) - 1); so.hide_render = False; so.keyframe_insert('hide_render', frame=int(t1))
-        for fc in so.animation_data.action.fcurves:
+        for _, fc in _fcs(so):
             for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT'
     return o
 
@@ -1157,12 +1186,19 @@ def _placeholder(role, mark, face_to, name, tilt=0.0):
     ob = T.placeholder_actor(PH_ROLES[role][0], mark, face_to=face_to, tilt=tilt, name=name); ob.visible_glossy = True
     return ob
 
-def stage_placeholders(preset=None, names=None, figures=True, tilt=None):
+def staged(preset, u=0.0):
+    """The (stand point, role, umbrella) list staged for a preset at move position u (A: STAGE; B (u >= 0.5): STAGE_B names only; hero_track A skips hanway_c, B skips hanway_b)."""
+    L = list(STAGE[preset])
+    if preset == 'hero_track': L = [s for s in L if s[0] != ('hanway_c' if u < 0.5 else 'hanway_b') and (u < 0.5 or s[0] == 'hanway_c')]
+    elif u >= 0.5 and preset in STAGE_B: L = [s for s in L if s[0] in STAGE_B[preset]]
+    return L
+
+def stage_placeholders(preset=None, names=None, figures=True, tilt=None, u=0.0):
     """Placeholder actor cards (1 unit = 1 head, adults 2.9-3.1) at the stand points of the preset (STAGE) facing the camera, umbrellas for those who hold one,
     plus the 3D placeholder crowd figures (figures=True). Returns the card objects."""
     scene = bpy.context.scene; cam = scene.camera; cl = cam.matrix_world.translation; M = STATE['M']; SET = STATE['SHOT']; out = []
     preset = preset or STATE.get('preset'); crowd_figures(figures)
-    for (nm, role, umb) in STAGE[preset]:
+    for (nm, role, umb) in staged(preset, u):
         if names and nm not in names: continue
         st = STAND[nm]; x, y, z = st['pos']; tl = 0.0 if tilt is None else tilt
         if preset == 'street_high' and tilt is None: tl = 22.0
@@ -1179,7 +1215,7 @@ def shot(preset='street_wide', light='RAIN', u=0.0, placeholders=True, figures=F
     A = build(preset, light); sc = bpy.context.scene; setup_render(sc, quality)
     cam = make_camera(camera_pose(preset, u)); bpy.context.view_layer.update(); A['cam'] = cam
     _shot_extras(cam, preset)
-    if placeholders: stage_placeholders(preset, figures=figures)
+    if placeholders: stage_placeholders(preset, figures=figures, u=u)
     bpy.context.view_layer.update()
     return A
 
