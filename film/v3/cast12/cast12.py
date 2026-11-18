@@ -51,7 +51,7 @@ _X, _ln, _circ = CE._X, CE._ln, CE._circ
 _f = C6._f
 _lin = C9._lin
 _O12 = {}
-_POSE12 = {"umb": 1.0, "ucol": None, "egg": 0.0, "leaf": 0.0, "mud": 0.0, "soaked": 0.0, "hat_off": 0.0, "box": 0.0, "whip_t": 0.0,
+_POSE12 = {"umb": 1.0, "ucol": None, "egg": 0.0, "leaf": 0.0, "mud": 0.0, "soaked": 0.0, "hat_off": 0.0, "wig_off": 0.0, "box": 0.0, "whip_t": 0.0,
            "purse": 0.5, "t": 0.0}
 
 cycle, talk_mouth, blink_at, NOD = C6.cycle, C6.talk_mouth, C6.blink_at, C6.NOD
@@ -174,7 +174,7 @@ def _lace_frill(k, tips, rim, sd, R, o):
                 t = (x - xa) / (xb - xa) if abs(xb - xa) > 1e-9 else 0.0
                 return rim - 4 * sd * t * (1 - t)
         return rim
-    fh = 0.075 + 0.035 * o
+    fh = 0.105 + 0.050 * o
     for rowi, (h, col, ot) in enumerate(((fh * 1.0, LACE["base"], LACE["dark"]),)):
         for i in range(n):
             xa = x0 + (x1 - x0) * i / n
@@ -200,11 +200,11 @@ def _egg_on_canopy(k, R, top, rim, H, lev):
     o = [_splat(k, x, y, r, EGG["light"], 4.4)]
     o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s" stroke="%s" stroke-width="0.010"/>' % (x - 0.02, y + 0.01, r * 0.50, k.c(YOLK["base"]), k.c(YOLK["dark"])))
     o.append('<circle cx="%.4f" cy="%.4f" r="%.4f" fill="%s" opacity="0.9"/>' % (x - 0.05, y - 0.02, r * 0.16, k.c(YOLK["light"])))
-    for dx, ln in ((-0.10, 0.34), (0.06, 0.46), (0.17, 0.28)):
+    for dx, ln in ((-0.10, 0.20), (0.06, 0.28), (0.17, 0.17)):
         xx = x + dx * (r / 0.2)
         L = ln * lev
-        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.040" stroke-linecap="round"/>' % (xx, y + r * 0.5, xx, y + r * 0.5 + L, k.c(EGG["base"])))
-        o.append('<circle cx="%.4f" cy="%.4f" r="0.032" fill="%s"/>' % (xx, y + r * 0.5 + L, k.c(EGG["base"])))
+        o.append('<path d="M%.4f,%.4f L%.4f,%.4f" stroke="%s" stroke-width="0.024" stroke-linecap="round"/>' % (xx, y + r * 0.5, xx, y + r * 0.5 + L, k.c(EGG["base"])))
+        o.append('<circle cx="%.4f" cy="%.4f" r="0.022" fill="%s"/>' % (xx, y + r * 0.5 + L, k.c(EGG["base"])))
     for dx, dy, a in ((0.20, -0.06, 20), (-0.22, -0.02, -30), (0.05, -0.20, 60)):
         o.append('<path d="M%.4f,%.4f l0.050,-0.020 l0.010,0.050 Z" fill="%s" stroke="%s" stroke-width="0.007" transform="rotate(%d %.4f %.4f)"/>'
                  % (x + dx * (r / 0.2), y + dy * (r / 0.2), k.c(EGG["light"]), k.c(EGG["dark"]), a, x + dx, y + dy))
@@ -244,12 +244,12 @@ def _whip_stock(k):
 def _whip_lash(k, T, u, t):
     """the lash from the stock tip T (screen frame), first along u (unit), then drooping and curling by gravity; t animates a wave."""
     w = math.sin(t * 2 * math.pi) * 0.12
-    c1 = (T[0] + 0.50 * u[0], T[1] + 0.50 * u[1])
-    c2 = (T[0] + 0.95 * u[0] + w, T[1] + 0.95 * u[1] + 0.30)
-    e = (T[0] + 1.20 * u[0] - 0.28 * w, T[1] + 1.15 * u[1] + 0.95)
+    c1 = (T[0] + 0.65 * u[0], T[1] + 0.65 * u[1])
+    c2 = (T[0] + 1.25 * u[0] + w, T[1] + 1.25 * u[1] + 0.35)
+    e = (T[0] + 1.55 * u[0] - 0.28 * w, T[1] + 1.45 * u[1] + 1.10)
     d = "M%.4f,%.4f C%.4f,%.4f %.4f,%.4f %.4f,%.4f" % (T + c1 + c2 + e)
-    o = ['<path d="%s" fill="none" stroke="%s" stroke-width="0.032" stroke-linecap="round"/>' % (d, k.ink)]
-    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.016" stroke-linecap="round"/>' % (d, k.c("#d8c8a0")))
+    o = ['<path d="%s" fill="none" stroke="%s" stroke-width="0.044" stroke-linecap="round"/>' % (d, k.ink)]
+    o.append('<path d="%s" fill="none" stroke="%s" stroke-width="0.024" stroke-linecap="round"/>' % (d, k.c("#e8d8b0")))
     o.append('<path d="M%.4f,%.4f l0.07,0.10 M%.4f,%.4f l-0.02,0.12 M%.4f,%.4f l-0.08,0.08" stroke="%s" stroke-width="0.012" stroke-linecap="round"/>' % (e + e + e + (k.c("#d8c8a0"),)))
     return "".join(o), e
 
@@ -351,7 +351,7 @@ def _tricorn_body(k, col, dx=0.0, fx=0.0, tag="tri"):
     return "".join(o)
 
 
-def _wig(k, col, dx, yaw, tag="wg"):
+def _wig(k, col, dx, yaw, tag="wg", natural=False):
     """powdered wig: a dome over the head, a curved hairline, two rolled side curls (buckles) each side, and a queue with a black ribbon
     hanging behind the head on the side away from where he faces."""
     o = []
@@ -362,9 +362,11 @@ def _wig(k, col, dx, yaw, tag="wg"):
     # queue behind (drawn first, so the head and wig cover its root)
     sd = -1.0 if yaw >= -0.02 else 1.0
     qx = sd * (0.50 + 0.02 * a)
-    o.append('<path d="M%.4f,0.04 Q%.4f,0.22 %.4f,0.50 Q%.4f,0.64 %.4f,0.66 Q%.4f,0.58 %.4f,0.46 Q%.4f,0.22 %.4f,0.06 Z" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>'
+    if not natural:
+      o.append('<path d="M%.4f,0.04 Q%.4f,0.22 %.4f,0.50 Q%.4f,0.64 %.4f,0.66 Q%.4f,0.58 %.4f,0.46 Q%.4f,0.22 %.4f,0.06 Z" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>'
              % (qx - sd * 0.03, qx + sd * 0.08, qx + sd * 0.12, qx + sd * 0.10, qx + sd * 0.02, qx - sd * 0.02, qx - sd * 0.06, qx - sd * 0.02, qx - sd * 0.10, g, k.ink))
-    o.append('<path d="M%.4f,0.18 l%.4f,0.04 M%.4f,0.52 l%.4f,0.04" fill="none" stroke="%s" stroke-width="0.032" stroke-linecap="round"/>' % (qx - sd * 0.02, sd * 0.12, qx + sd * 0.02, sd * 0.10, k.c("#1e1c24")))
+    if not natural:
+      o.append('<path d="M%.4f,0.18 l%.4f,0.04 M%.4f,0.52 l%.4f,0.04" fill="none" stroke="%s" stroke-width="0.032" stroke-linecap="round"/>' % (qx - sd * 0.02, sd * 0.12, qx + sd * 0.02, sd * 0.10, k.c("#1e1c24")))
     # dome
     dome = ("M%.4f,0.10 C%.4f,-0.12 %.4f,-0.50 %.4f,-0.60 C%.4f,-0.67 %.4f,-0.67 %.4f,-0.60 C%.4f,-0.50 %.4f,-0.12 %.4f,0.10 "
             "L%.4f,0.04 Q%.4f,-0.22 %.4f,-0.30 Q%.4f,-0.35 %.4f,-0.30 Q%.4f,-0.22 %.4f,0.04 Z"
@@ -372,7 +374,7 @@ def _wig(k, col, dx, yaw, tag="wg"):
                0.47 + dx, 0.44 + dx, 0.28 + dx, dx, -0.28 + dx, -0.44 + dx, -0.47 + dx))
     o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.022" stroke-linejoin="round"/>' % (dome, g, k.ink))
     # side curls
-    for s in (-1, 1):
+    for s in ((-1, 1) if not natural else ()):
         far = (s * yaw > 0.0)
         sx = 1.0 - (0.30 * a if far else 0.0)
         for j, (cy, rr) in enumerate(((0.00, 0.080), (0.145, 0.072))):
@@ -391,8 +393,14 @@ def _hat_tricorn12(k, C, yaw):
     dx = -0.03 * yaw
     fx = 0.20 * yaw
     o = ['<g transform="rotate(%.3f)">' % C["hat_tilt"]]
+    if _POSE12["wig_off"] > 0.5:
+        o.append('</g>')
+        return "".join(o), (0.0, -0.50)
     if C.get("wig", True):
         o.append(_wig(k, col, dx, yaw))
+    elif C.get("hair") and C["hair"].get("color"):
+        hc = C["hair"]["color"]
+        o.append(_wig(k, dict(wig=hc, wig_d=P._shade(hc, 0.72)), dx, yaw, "hr", True))
     if not _POSE12["hat_off"] > 0.5:
         o.append(_tricorn_body(k, col, dx, fx))
         top = (dx, -0.705)
@@ -733,11 +741,11 @@ def _chops(k, L, C, yaw):
         return math.sqrt(max(0.0, 0.47 * 0.47 - (y + 0.02) * (y + 0.02)))
     for sd in (-1, 1):
         s = L["sR"] if sd > 0 else L["sL"]
-        yt = L["ey"] - 0.12
-        ym = min(L["my"] + 0.06, 0.34)
+        yt = L["ey"] - 0.01
+        ym = min(L["my"] + 0.05, 0.33)
         ys = [yt, L["ey"] + 0.06, L["my"] - 0.06, ym]
         outer = [(cx * 0.5 + sd * (hw(y) - 0.02) * (0.55 + 0.45 * s), y) for y in ys]
-        inner = [(cx + sd * w * s, y) for (w, y) in ((0.30, ys[0]), (0.285, ys[1]), (0.255, ys[2]), (0.225, ys[3]))]
+        inner = [(cx + sd * w * s, y) for (w, y) in ((0.37, ys[0]), (0.34, ys[1]), (0.29, ys[2]), (0.24, ys[3]))]
         pts = outer + [(outer[-1][0] + (inner[-1][0] - outer[-1][0]) * 0.5, ym + 0.035)] + inner[::-1]
         o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.016" stroke-linejoin="round"/>' % (P._smooth_closed(pts), k.c(col), k.ink))
         st = []
@@ -815,10 +823,10 @@ def _ink_limb(k, S, E, H, kk, w, seed, tail=None):
 
 
 # ============================================================================= props held in the hand
-NEW_PROPS12 = ("umbrella_black", "umbrella_black_closed", "umbrella_pink", "umbrella_pink_closed", "umbrella_small", "whip", "cabbage", "egg",
+NEW_PROPS12 = ("umbrella_black", "umbrella_black_closed", "umbrella_pink", "umbrella_pink_closed", "umbrella_small", "whip", "cabbage12", "egg",
                "purse", "coins", "tricorn_held", "wig")
 NEW_TIP12 = {"umbrella_black": -UMB_TOP, "umbrella_black_closed": -UMB_TOP, "umbrella_pink": -UMB_TOP, "umbrella_pink_closed": -UMB_TOP,
-             "umbrella_small": -UMB_TOP, "whip": WHIP_STOCK, "cabbage": 0.15, "egg": 0.07, "purse": 0.37, "coins": 0.10, "tricorn_held": 0.10, "wig": 0.0}
+             "umbrella_small": -UMB_TOP, "whip": WHIP_STOCK, "cabbage12": 0.15, "egg": 0.07, "purse": 0.37, "coins": 0.10, "tricorn_held": 0.10, "wig": 0.0}
 HAT_COL_DEFAULT = dict(base="#2a2830", light="#55515f", dark="#14121a", bind="#c8c4d4", btn="#d8d4e0")
 
 
@@ -861,7 +869,7 @@ def _prop(k, kind, H, ang, sc=1.0):
         an["whip_tip_" + key] = e
         an["whip_stock_" + key] = T
         return o + ls, T
-    if kind == "cabbage":
+    if kind == "cabbage12":
         o = '<g transform="translate(%.4f %.4f) scale(%.4f)">%s</g>' % (H[0], H[1], sc, _cabbage_body(k, 0.0, -0.15, 0.19, 0.0, "cb" + key))
         k.ext.extend(((H[0], H[1] - 0.34 * sc, 0.03), (H[0] - 0.20 * sc, H[1] - 0.15 * sc, 0.03), (H[0] + 0.20 * sc, H[1] - 0.15 * sc, 0.03)))
         an["cabbage_" + key] = (H[0], H[1] - 0.15 * sc)
@@ -1005,6 +1013,7 @@ def _norm(C, pose):
     _POSE12["mud"] = _f(g("mud"), 0.0, 0.0, 1.0)
     _POSE12["soaked"] = _f(g("soaked"), 0.0, 0.0, 1.0)
     _POSE12["hat_off"] = _f(g("hat_off"), 0.0, 0.0, 1.0)
+    _POSE12["wig_off"] = _f(g("wig_off"), 0.0, 0.0, 1.0)
     _POSE12["box"] = _f(g("coach_box"), 0.0, 0.0, 1.0)
     _POSE12["whip_t"] = _f(g("whip_t"), 0.0, -1e6, 1e6)
     _POSE12["purse"] = _f(g("purse_open"), 0.5, 0.0, 1.0)
@@ -1012,7 +1021,7 @@ def _norm(C, pose):
     _POSE12["t"] = t if math.isfinite(t) else 0.0
     if isinstance(pose, dict) and _POSE12["soaked"] > 0.02 and pose.get("tint") is None:
         s = _POSE12["soaked"]
-        pose = dict(pose, tint=(255 - 62 * s, 255 - 48 * s, 255 - 14 * s))
+        pose = dict(pose, tint=(255 - 22 * s, 255 - 17 * s, 255 - 5 * s))
     return _O12["_norm"](C, pose)
 
 
@@ -1051,7 +1060,8 @@ def egg_splat_svg(uid="es", r=0.22, ink=P.INK, tint=None):
 def purse_svg(uid="pu", open_=0.5, ink=P.INK, tint=None):
     """the coin purse hanging from its neck at (0, 0), bottom at y 0.37."""
     k = _ctx(uid, ink, tint)
-    return '<g id="%s_purse"><defs>%s</defs>%s</g>' % (k.uid, "".join(k.defs), _purse_body(k, _clamp(_num(open_, 0.5), 0.0, 1.0)))
+    body = _purse_body(k, _clamp(_num(open_, 0.5), 0.0, 1.0))
+    return '<g id="%s_purse"><defs>%s</defs>%s</g>' % (k.uid, "".join(k.defs), body)
 
 
 def coin_svg(uid="co", r=0.05, tilt=0.0, ink=P.INK, tint=None):
@@ -1064,7 +1074,8 @@ def whip_svg(uid="wh", t=0.0, ink=P.INK, tint=None):
     """the whip alone, stock along +x from the grip at (0, 0), lash hanging from x 1.05."""
     k = _ctx(uid, ink, tint)
     ls, e = _whip_lash(k, (WHIP_STOCK, -0.012), (1.0, 0.0), _num(t, 0.0))
-    return '<g id="%s_whip">%s%s</g>' % (k.uid, _whip_stock(k), ls)
+    st = _whip_stock(k)
+    return '<g id="%s_whip">%s%s</g>' % (k.uid, st, ls)
 
 
 def coach_box_svg(uid="cx", w=BOX_W, h=0.9, ink=P.INK, tint=None):
@@ -1099,7 +1110,7 @@ def _man(seed, build, tw, th, leg, coat, vest, hat, wig, hair, prof, eye=0.03, m
 def _woman(seed, build, tw, th, leg, gown, bonnet, hair, prof, shawl, mouth="smile"):
     return dict(_FLAGS, build=build, seed=seed, torso_w=tw, torso_h=th, profile=prof, shift_pow=1.1, shoulder=(0.12 + tw * 0.20, 0.47), arm=0.70, hip_x=0.15,
                 leg=leg, stance=0.06, wide=0.26, limb_w=0.054, eye_y=0.030, brow="dome", brow_th=0.040, mouth=mouth, moustache=False, smirk_side=-1, cheeks="#f2a094", lashes=True,
-                hat="newsboy", hat_style="bonnet12", hat_tilt=-2.0, ear_pencil=False, hat_colors=dict(bonnet), hair=hair, costume="dress12", coat_len=0.88, coat_flare=0.40,
+                hat="newsboy", hat_style="bonnet12", hat_tilt=-2.0, ear_pencil=False, hat_colors=dict(bonnet), hair=dict(hair, front=0.0, grow=0.0), costume="dress12", coat_len=0.88, coat_flare=0.40,
                 sleeve=dict(color=gown[0], dark=gown[1], cuff="#fbfaf6", len=0.80, w=0.140),
                 boots=dict(color="#2e2420", cuff="#2e2420", h=0.05, toe=0.15),
                 colors=dict(base=gown[0], dark=gown[1], apron="#f4eee0", fichu="#fbfaf6", lace="#e8d8b8", trim=gown[2], shawl=shawl[0], shawl_d=shawl[1]))
@@ -1165,13 +1176,13 @@ NEW_CAST12 = {
     "crowd_man_a": _man(14.2, "regular", 0.88, 1.00, 1.20, dict(base="#8a5a3a", dark="#5a3a24", lapel="#a46e48", pants="#3a2e26"), ("#e0d2ae", "#a89868", "#9a8458"),
                         dict(HAT_BLACK, base="#3a3430", light="#645c54", dark="#1c1814"), True, dict(color="#e8e4ee", front=0.0, grow=0.0), CE.PROFILE_PEAR, mouth="smirk", hat_tilt=6.0),
     "crowd_man_b": _man(27.7, "slim", 0.72, 1.00, 1.30, dict(base="#8a3446", dark="#5c1e2c", lapel="#a84c60", pants="#3a2c2c"), ("#d8d0b8", "#a09878", "#8a8060"),
-                        dict(HAT_BLACK, base="#2e2c34", light="#58566a", dark="#16141c"), False, dict(color="#c86a30", front=0.10, grow=0.22), CE.PROFILE_ATHLETE, eye=0.04,
+                        dict(HAT_BLACK, base="#2e2c34", light="#58566a", dark="#16141c"), False, dict(color="#c86a30", front=0.08, grow=0.10), CE.PROFILE_ATHLETE, eye=0.04,
                         mouth="dash", hat_tilt=-6.0, brow="dome"),
     "crowd_man_c": _man(53.1, "stout", 1.22, 1.00, 1.00, dict(base="#5e7462", dark="#3a4c40", lapel="#7a9080", pants="#40382e"), ("#e8dcc0", "#b0a47c", "#a08c60"),
                         dict(HAT_BLACK, base="#4a4440", light="#746c64", dark="#26221e"), True, dict(color="#d8d4dc", front=0.0, grow=0.0), C2.PROFILE_ROUND, mouth="frown",
                         cheeks="#f08a78", hat_tilt=3.0, tache=(0.8, "#8a8490"), limb=0.064),
     "crowd_man_d": _man(76.9, "slim", 0.78, 1.02, 1.32, dict(base="#b4822e", dark="#7a5618", lapel="#cc9a46", pants="#463a2c"), ("#f0e6cc", "#b8a878", "#a89460"),
-                        dict(HAT_BLACK, base="#26242c", light="#4e4c5c", dark="#100e16"), False, dict(color="#5a3a26", front=0.08, grow=0.20), CE.PROFILE_ATHLETE, eye=0.02,
+                        dict(HAT_BLACK, base="#26242c", light="#4e4c5c", dark="#100e16"), False, dict(color="#5a3a26", front=0.08, grow=0.10), CE.PROFILE_ATHLETE, eye=0.02,
                         mouth="smirk", hat_tilt=-2.0, tache=(0.62, "#5a3a26")),
     # crowd women (bonnets, shawls; the small umbrella is a prop): a rose gown, ochre shawl; b teal gown, terracotta shawl
     "crowd_woman_a": _woman(35.5, "regular", 0.80, 1.00, 1.05, ("#c04858", "#842a38", "#ecc27a"), dict(base="#f2e6d0", light="#fffaf0", dark="#c8b898", ribbon="#2f8a8a", frill="#fffaf0"),
@@ -1185,15 +1196,274 @@ NEW_CAST12 = {
                           dict(color="#a8704a", front=0.10, grow=0.20), CE.PROFILE_HOURGLASS, ("#d8c8e0", "#a894b4")),
 }
 
-CANVAS12 = {n: (-2.0, -4.75, 2.0, 0.125) for n in NEW12}
+CANVAS12 = {
+    "hanway": (-3.3125, -5.375, 3.3125, 0.1875),
+    "coachman": (-3.6875, -5.3125, 3.6875, 0.25),
+    "coachman_b": (-3.3125, -5.625, 3.3125, 0.125),
+    "coachman_c": (-3.4375, -4.75, 3.4375, 0.1875),
+    "crowd_man_a": (-3.3125, -5.125, 3.3125, 0.125),
+    "crowd_man_b": (-3.3125, -5.25, 3.3125, 0.125),
+    "crowd_man_c": (-3.375, -4.875, 3.375, 0.125),
+    "crowd_man_d": (-3.3125, -5.3125, 3.3125, 0.125),
+    "crowd_woman_a": (-3.3125, -4.9375, 3.3125, 0.25),
+    "crowd_woman_b": (-3.3125, -5.0, 3.3125, 0.25),
+    "passenger_a": (-3.3125, -5.0, 3.3125, 0.125),
+    "passenger_b": (-3.3125, -4.9375, 3.3125, 0.4375),
+}
 CANVAS12_BOX = {}
 
 
 STORY12, STORY12_META = {}, {}
 
 
+# ============================================================================= story poses
+def _sh(c, key, dx, dy):
+    """hand target relative to the shoulder of arm `key`: dx outward (away from the body), dy down."""
+    sx, sy = P.CAST[c]["shoulder"]
+    return ((sx + dx) if key == "r" else -(sx + dx), sy + dy)
+
+
+def _arm(c, key, dx, dy, bend=None, stretch=1.0, shape="ball", layer="front"):
+    d = dict(hand=_sh(c, key, dx, dy), stretch=stretch, shape=shape, layer=layer)
+    if bend is not None:
+        d["bend"] = bend
+    return d
+
+
+def _sit(c, yaw_dir=1.0):
+    """legs of a seated figure (thighs forward, shins down) for the cast member c, facing screen-right (mirror=True for left)."""
+    f = P.figure(c, {}, "q")
+    hp = f["anchors"]["hip"]
+    hx = P.CAST[c]["hip_x"]
+    lg = P.CAST[c]["leg"]
+    fx, fy = 0.52 * lg, 0.52 * lg
+    return dict(foot_r=(hp[0] + hx * 0.4 + fx, hp[1] + fy), foot_l=(hp[0] - hx * 0.4 + fx * 0.85, hp[1] + fy), knee_r=1.0, knee_l=1.0, toe_r=0.8, toe_l=0.8)
+
+
+HU = dict(type="umbrella_black", angle=-100)
+WHIP = dict(type="whip", angle=-12)
+
+
+CYCLE_BASE12 = {}          # story pose name -> (cast, mode, base pose, arms): the arguments that produced a cycle() frame
+_LAST = [None]
+
+
+def _cycle_rec(c, phase, mode="walk", facing=1, base=None, arms="both", speed=1.0):
+    r = cycle(c, phase, mode, facing, base, arms, speed)
+    _LAST[0] = (c, mode, dict(base or {}), arms)
+    return r
+
+
+class _Rec(dict):
+    def __setitem__(self, key, val):
+        if _LAST[0] is not None:
+            CYCLE_BASE12[key] = _LAST[0]
+            _LAST[0] = None
+        dict.__setitem__(self, key, val)
+
+
+def cycle_frame(name, phase, facing=1, speed=1.0):
+    """one frame of the walk / run cycle that belongs to the story pose `name` (hanway_walk_umbrella, crowd_man_a_walk_hat, crowd_woman_a_rush ...):
+    returns (cast, pose).  phase 0..1 loops (walk 28 frames per cycle, run 16)."""
+    c, mode, base, arms = CYCLE_BASE12[name]
+    return c, cycle(c, phase, mode, facing, base, arms, speed)
+
+
 def _story():
-    return {}, {}
+    S, M = _Rec(), {}
+    cycle = _cycle_rec
+    H = "hanway"
+
+    def hold(c="hanway", dx=0.40, dy=0.10):
+        return dict(hand=_sh(c, "r", dx, dy), bend=0.5, stretch=1.0, layer="front")
+    # ------------------------------------------------------------------ Hanway
+    S["hanway_walk_umbrella"] = (H, cycle(H, 0.30, "walk", base=dict(expr="neutral", mouth="smirk", pitch=-0.15, prop_r=dict(HU), arm_r=hold(), yaw=0.75), arms="l"))
+    M["hanway_walk_umbrella"] = dict(note="walk frame, open black umbrella in the screen-right hand (angle -100: leaning over him). Animate: cast12.cycle_frame('hanway_walk_umbrella', frame / 28.0, facing) "
+                                          "(the umbrella arm stays still, the other arm swings)")
+    S["hanway_stroll_smug"] = (H, dict(yaw=0.40, pitch=-0.40, expr="smug", mouth="smirk", head_roll=-4, lean=-3, arm_r=hold(dx=0.42, dy=0.08), prop_r=dict(HU, angle=-98),
+                                       arm_l="behind", legs=dict(preset="step", stride=0.55), t=0.3))
+    M["hanway_stroll_smug"] = dict(note="dry smug stroll: chin up, umbrella steady, free hand behind his back (shot 18, 21)")
+    S["hanway_calm_front"] = (H, dict(yaw=0.0, pitch=-0.15, expr="neutral", mouth="smirk", arm_r=hold(dx=0.30, dy=0.12), prop_r=dict(HU, angle=-95), arm_l="behind", legs="stand"))
+    M["hanway_calm_front"] = dict(note="standing calmly under the umbrella, facing the camera (hook, shot 1 / reaction frames)")
+    S["hanway_cabbage_flinch"] = (H, dict(yaw=0.45, pitch=-0.10, expr="unimpressed", mouth="flat", head_roll=3, lean=2, arm_r=hold(dx=0.40, dy=0.12), prop_r=dict(HU, angle=-112),
+                                          arm_l="behind", legs=dict(preset="step", stride=0.40), leaf_stick=1.0, squash=(1.0, 0.99)))
+    M["hanway_cabbage_flinch"] = dict(note="the umbrella knocked back by the cabbage (angle -112), a cabbage leaf stuck on the dome (leaf_stick=1: set it to 0 when the set throws "
+                                           "the leaf itself); he keeps walking, unbothered (shots 3, 10)")
+    S["hanway_egg_tilt"] = (H, dict(yaw=0.30, pitch=-0.30, expr="smug", mouth="smirk", gaze=(0.3, -0.9), head_roll=4, arm_r=hold(dx=0.42, dy=0.12), prop_r=dict(HU, angle=-74),
+                                    arm_l="behind", legs=dict(preset="step", stride=0.30), egg_splat=1.0))
+    M["hanway_egg_tilt"] = dict(note="egg splat on the umbrella top (egg_splat 0..1), he tilts the umbrella and glances up, unbothered (shot 11). Animate egg_splat 0 -> 1 on impact")
+    S["hanway_mud_splash"] = (H, dict(yaw=0.20, pitch=-0.05, expr="shocked", mouth="o", mud=1.0, squash=(1.06, 0.94), head_roll=-5, lean=-4,
+                                      arm_r=dict(hand=_sh(H, "r", 0.55, -0.55), bend=-0.7, stretch=1.2), prop_r=dict(HU, angle=-128), arm_l=dict(hand=_sh(H, "l", 0.50, 0.05), bend=-0.5, shape="open"),
+                                      legs="wide", fx=["sweat"]))
+    M["hanway_mud_splash"] = dict(note="the mud wave hits: mud=1 (splatters over face, hat, coat, stockings), shocked, umbrella flung back, arms out. Animate mud 0 -> 1 over ~6 frames")
+    S["hanway_mud_deadpan"] = (H, dict(yaw=0.0, pitch=0.10, expr="unimpressed", mouth="frown", mud=1.0, blink=0, arm_r=hold(dx=0.30, dy=0.12), prop_r=dict(HU, angle=-96),
+                                       arm_l=dict(hand=_sh(H, "l", 0.10, 0.62), bend=0.6), legs="stand", t=0.3))
+    M["hanway_mud_deadpan"] = dict(note="after the splash: mud-spattered head to toe, deadpan, umbrella still up (comic, shot 12 end)")
+    S["hanway_walk_closed"] = (H, cycle(H, 0.30, "walk", base=dict(expr="neutral", mouth="smirk", pitch=-0.10, yaw=0.75,
+                                                                   prop_r=dict(type="umbrella_black_closed", angle=96, scale=0.85), arm_r=dict(hand=_sh(H, "r", 0.30, 0.62), bend=0.5)), arms="l"))
+    M["hanway_walk_closed"] = dict(note="walk frame with the furled umbrella as a walking stick (tip down)")
+    S["hanway_smile_walk"] = (H, cycle(H, 0.30, "walk", base=dict(expr="happy", mouth="smile", pitch=-0.20, yaw=0.60, prop_r=dict(HU, angle=-98), arm_r=hold(dx=0.42, dy=0.10)), arms="l"))
+    M["hanway_smile_walk"] = dict(note="the ending: he smiles as he walks among the sea of umbrellas")
+
+    # ------------------------------------------------------------------ the head coachman
+    C = "coachman"
+    sit = _sit(C)
+
+    def laugh(c, seated):
+        p = dict(yaw=0.20, pitch=-0.85, expr="laughing", mouth="talk_b", fx=["tears"], head_roll=-10, lean=-7, t=0.3, squash=(1.02, 0.98),
+                 arm_r=_arm(c, "r", 0.0, 0.58, 0.9, shape="open"), arm_l=_arm(c, "l", 0.0, 0.58, 0.9, shape="open"), legs=sit if seated else "wide")
+        return p
+
+    def pointm(c, seated, lip=False):
+        p = dict(yaw=0.40, pitch=-0.30, expr="smug", mouth="talk_b", head_roll=8, arm_r=_arm(c, "r", 0.58, -0.10, -0.5, 1.3), prop_r=dict(WHIP, angle=-14),
+                 arm_l="akimbo", legs=sit if seated else "wide", whip_t=0.2)
+        return p
+
+    def boast(c, seated):
+        return dict(yaw=0.30, pitch=-0.55, expr="smug", mouth="talk_a", head_roll=-5, lean=-7, squash=(1.02, 1.0), arm_r=_arm(c, "r", 0.35, 0.25, 0.3, 1.0),
+                    prop_r=dict(WHIP, angle=-70), arm_l=dict(hand=(-0.18, 0.78), bend=0.8, shape="open", layer="front"), legs=sit if seated else "wide", whip_t=0.5)
+
+    def shout(c, seated):
+        return dict(yaw=0.40, pitch=-0.45, expr="shouting", mouth="talk_b", head_roll=6, lean=4, arm_r=_arm(c, "r", 0.35, -0.80, -0.6, 1.3, layer="front"),
+                    prop_r=dict(WHIP, angle=-60), arm_l=_arm(c, "l", 0.62, -0.10, -0.5, 1.3, shape="point"), legs=sit if seated else "wide", whip_t=0.8)
+
+    def gloat(c, seated):
+        return dict(yaw=0.25, pitch=-0.60, expr="grinning", mouth="grin", head_roll=-6, lean=-5, arm_r="akimbo", arm_l="akimbo", legs=sit if seated else "wide")
+
+    def count(c, seated):
+        return dict(yaw=0.15, pitch=0.55, expr="grinning", mouth="grin", head_roll=4, arm_r=_arm(c, "r", -0.05, 0.55, 0.7), prop_r=dict(type="purse"), purse_open=1.0,
+                    arm_l=_arm(c, "l", 0.00, 0.40, 0.7), prop_l="coins", legs=sit if seated else "stand")
+
+    def count_sky(c, seated):
+        return dict(yaw=0.30, pitch=-0.90, expr="grinning", mouth="grin", head_roll=-8, lean=-4, arm_r=_arm(c, "r", 0.25, 0.10, -0.4, 1.0), prop_r=dict(type="purse"), purse_open=1.0,
+                    arm_l="akimbo", legs=sit if seated else "stand")
+
+    def grindrop(c, seated):
+        return dict(yaw=0.25, pitch=0.10, expr="stunned", mouth="flat", head_roll=3, arm_r="down", arm_l="down", legs=sit if seated else "stand", fx=["sweat"])
+
+    def sulk(c, seated):
+        return dict(yaw=0.45, pitch=0.55, expr="sad", mouth="frown", head_roll=7, lean=3, arm_l="chin", arm_r=dict(hand=_sh(c, "r", 0.22, 0.05), bend=0.3, layer="front"),
+                    prop_r=dict(type="umbrella_pink", angle=-96), legs=sit if seated else "stand", t=0.3)
+
+    def windup(c, seated, veg="cabbage12"):
+        return dict(yaw=0.40, pitch=-0.10, expr="grinning", mouth="grin", head_roll=-6, lean=-9, arm_r=_arm(c, "r", 0.10, -0.85, -1.0, 1.3), prop_r=dict(type=veg),
+                    arm_l="akimbo", legs=dict(preset="step", stride=-0.4) if not seated else sit)
+
+    def release(c, seated):
+        return dict(yaw=0.45, pitch=-0.10, expr="shouting", mouth="talk_b", head_roll=4, lean=9, squash=(0.98, 1.02), arm_r=_arm(c, "r", 0.85, -0.35, -0.3, 1.3, shape="open"),
+                    arm_l=dict(hand=_sh(c, "l", -0.05, 0.55), bend=0.5), legs=dict(preset="step", stride=0.8) if not seated else sit)
+
+    def glare(c, seated):
+        return dict(yaw=0.55, pitch=-0.20, expr="angry", mouth="flat", head_roll=4, arm_r="akimbo", arm_l="akimbo", legs=sit if seated else "wide")
+
+    def nod(c, seated):
+        return dict(yaw=0.30, pitch=0.25, expr="smug", mouth="smirk", head_roll=-3, arm_r="akimbo", arm_l=dict(hand=_sh(c, "l", 0.0, 0.58), bend=0.7), legs=sit if seated else "stand")
+
+    def roar(c, seated):
+        return dict(yaw=0.20, pitch=-0.70, expr="laughing", mouth="talk_b", fx=["tears"], head_roll=8, lean=5, t=0.3, arm_r=_arm(c, "r", 0.30, -0.60, -0.8, 1.2, shape="open"),
+                    arm_l=_arm(c, "l", 0.10, 0.50, 0.8, shape="open"), legs=sit if seated else "wide")
+
+    def point_laugh(c, seated):
+        return dict(yaw=0.40, pitch=-0.55, expr="laughing", mouth="talk_b", head_roll=-8, lean=-4, t=0.3, arm_r=_arm(c, "r", 0.58, -0.10, -0.5, 1.3, shape="point"),
+                    arm_l=_arm(c, "l", 0.0, 0.58, 0.9, shape="open"), legs=sit if seated else "wide")
+    for seated in (False, True):
+        pre = "coachman_box_" if seated else "coachman_"
+        for nm, fn in (("laugh", laugh), ("point_mock", pointm), ("boast", boast), ("shout", shout), ("gloat", gloat), ("count_coins", count), ("grin_drop", grindrop),
+                       ("throw_windup", windup), ("throw_release", release), ("nod", nod)):
+            S[pre + nm] = (C, fn(C, seated))
+        S[pre + "count_coins_sky"] = (C, count_sky(C, seated))
+    S["coachman_sulk_under_pink_umbrella"] = (C, sulk(C, True))
+    S["coachman_sulk_standing"] = (C, sulk(C, False))
+    for nm in ("point_mock", "boast", "shout"):
+        for pre in ("coachman_", "coachman_box_"):
+            M[pre + nm] = dict(lipsync=True, note="head coachman quote pose: LIP-SYNC (mouth = talk_mouth(g) inside the quote windows 12.66-19.0 s and 33.0-34.9 s, 'flat' otherwise). "
+                                                 "pose key whip_t animates the lash")
+    M["coachman_laugh"] = dict(note="belly laugh, hands on the belly, tears; the open laugh mouth is a held shape; animate squash (1.02, 0.98) <-> (0.99, 1.01) every 4 frames. "
+                                    "coachman_box_laugh = the same seated on the coach box (legs of the seat; the box itself comes from the set, or pose coach_box=1)")
+    M["coachman_sulk_under_pink_umbrella"] = dict(note="the ending: seated on the empty coach box under his wife's pink frilled lace umbrella (prop umbrella_pink), chin on his hand, sulking. "
+                                                       "coach_box=0: the set supplies the box; pass coach_box=1 for a self-contained seat. anchors umb_top_r / umb_mid_r / umb_edge1_r / umb_edge2_r")
+    M["coachman_count_coins"] = dict(note="looking down at the purse (prop purse, anchor purse_bottom_r) with coins in the other palm; _sky looks up at the rain grinning (shot 15)")
+    M["coachman_throw_windup"] = dict(note="arm back holding a cabbage (prop cabbage12, anchor cabbage_r) ready to throw; spawn the flying cabbage from the anchor, or use cabbage_svg")
+    M["coachman_throw_release"] = dict(note="the arm snapped forward, hand open, the cabbage gone (the set flies it): lean forward, shouting")
+    M["coachman_grin_drop"] = dict(note="the grin drops (shot 18): stunned eyes, flat mouth, sweat")
+
+    # ------------------------------------------------------------------ the two jeerers
+    for c, tag in (("coachman_b", "_b"), ("coachman_c", "_c")):
+        sit_c = _sit(c)
+        for seated in (False, True):
+            pre = c + ("_box_" if seated else "_")
+            lst = (("laugh", laugh), ("point_laugh", point_laugh), ("glare", glare), ("nod", nod), ("roar", roar), ("throw_windup", windup), ("throw_release", release))
+            for nm, fn in lst:
+                p = fn(c, seated)
+                if seated:
+                    p["legs"] = sit_c
+                S[pre + nm] = (c, p)
+        S[c + "_throw_egg_windup"] = (c, windup(c, False, "egg"))
+        M[c + "_throw_windup"] = dict(note="cabbage wind-up; _throw_egg_windup holds an egg (prop egg) instead; _throw_release = the arm snapped forward")
+        M[c + "_roar"] = dict(note="roaring with laughter (the other coachmen roar at the boast, shot 8)")
+        M[c + "_glare"] = dict(note="glaring at Hanway (shot 2)")
+        M[c + "_box_laugh"] = dict(note="seated on the coach box (see coachman_box_*)")
+
+    # ------------------------------------------------------------------ crowd men
+    def men_poses(c):
+        sx, sy = P.CAST[c]["shoulder"]
+        S[c + "_walk_hat"] = (c, cycle(c, 0.30, "walk", base=dict(expr="worried", mouth="frown", pitch=0.35, lean=5, yaw=0.75, hat_off=1.0, soaked=0.55,
+                                                                   prop_r=dict(type="tricorn_held", angle=0), arm_r=dict(hand=(sx + 0.10, -0.34), bend=-0.9, stretch=1.25, layer="top")), arms="l"))
+        S[c + "_walk_soaked"] = (c, cycle(c, 0.30, "walk", base=dict(expr="unimpressed", mouth="frown", pitch=0.30, lean=6, yaw=0.75, soaked=0.9, fx=["sweat"]), arms="both"))
+        S[c + "_point_laugh"] = (c, dict(yaw=0.40, pitch=-0.35, expr="laughing", mouth="talk_b", head_roll=-8, t=0.3, arm_r=_arm(c, "r", 0.58, -0.10, -0.5, 1.3, shape="point"),
+                                         arm_l=_arm(c, "l", 0.0, 0.55, 0.9, shape="open"), legs="wide"))
+        S[c + "_rush"] = (c, cycle(c, 0.20, "run", base=dict(expr="shouting", mouth="talk_b", pitch=-0.10, yaw=0.80), arms="both"))
+        S[c + "_push"] = (c, dict(yaw=0.70, pitch=0.05, expr="angry", mouth="clench", lean=15, arm_r=_arm(c, "r", 0.62, 0.05, -0.4, 1.3, shape="open"),
+                                  arm_l=_arm(c, "l", 0.62, 0.15, -0.4, 1.3, shape="open", layer="back"), legs=dict(preset="step", stride=0.9)))
+        M[c + "_walk_hat"] = dict(note="hunched walk, soaked tint, hat held over the head with the right hand (hat_off=1 + prop tricorn_held). Animate with cast12.cycle_frame(name, frame / 28.0, facing)")
+        M[c + "_walk_soaked"] = dict(note="hunched, soaked (soaked=0.9: blue-grey tint, drips, sweat); animate with cast12.cycle_frame(name, frame / 28.0, facing)")
+        M[c + "_rush"] = dict(note="running frame (run cycle), shouting; animate cast12.cycle_frame(name, frame / 16.0, facing) for the crowd rushing the coaches (shot 16)")
+        M[c + "_push"] = dict(note="shoving through the crowd: both arms forward, leaning in, teeth clenched")
+    for c in ("crowd_man_a", "crowd_man_b", "crowd_man_c", "crowd_man_d"):
+        men_poses(c)
+    for c in ("crowd_man_a", "crowd_man_c", "crowd_man_d"):
+        S[c + "_wring_wig"] = (c, dict(yaw=0.20, pitch=0.30, expr="worried", mouth="wavy", soaked=1.0, wig_off=1.0, hat_off=1.0, t=0.3, arm_r=dict(hand=(0.10, 0.80), bend=0.7, layer="front"),
+                                       prop_r=dict(type="wig"), arm_l=dict(hand=(-0.08, 0.95), bend=0.7, layer="front"), legs="stand", fx=["sweat"]))
+        M[c + "_wring_wig"] = dict(note="a soaked gentleman wrings out his wig (the head is bare: wig_off=1; prop wig; soaked=1 animates the drips with t) (shot 5)")
+    # the gentleman who opens his umbrella (3 stages) (shot 19-20)
+    for c in ("crowd_man_a", "crowd_man_d", "crowd_man_c"):
+        sx, sy = P.CAST[c]["shoulder"]
+        S[c + "_open_1"] = (c, dict(yaw=0.50, pitch=-0.10, expr="stunned", mouth="flat", head_roll=-3, gaze=(0.8, 0.0), arm_r=dict(hand=(sx + 0.30, 0.55), bend=0.5),
+                                    prop_r=dict(type="umbrella_black_closed", angle=-62), arm_l="hip", legs="stand"))
+        S[c + "_open_2"] = (c, dict(yaw=0.30, pitch=-0.20, expr="excited", mouth="o", head_roll=2, umb_open=0.5, arm_r=dict(hand=(sx + 0.25, 0.05), bend=-0.6, stretch=1.15),
+                                    prop_r=dict(type="umbrella_black", angle=-82), arm_l=dict(hand=(sx + 0.10, 0.18), bend=-0.2, shape="open", layer="front"), legs="stand"))
+        S[c + "_open_3"] = (c, dict(yaw=0.20, pitch=-0.30, expr="happy", mouth="smile", head_roll=-3, umb_open=1.0, arm_r=dict(hand=(sx + 0.25, 0.30), bend=0.3),
+                                    prop_r=dict(type="umbrella_black", angle=-98), arm_l="hip", legs="stand"))
+        M[c + "_open_1"] = dict(note="stage 1 of a gentleman opening his umbrella: the furled umbrella in his hand, staring at Hanway")
+        M[c + "_open_2"] = dict(note="stage 2: the umbrella half open (umb_open=0.5; animate 0.15 -> 0.9), surprised mouth")
+        M[c + "_open_3"] = dict(note="stage 3: fully open overhead, smiling (umb_open=1). Animate the three stages with umb_open from 0 to 1 and prop type umbrella_black")
+
+    # ------------------------------------------------------------------ crowd women
+    def women_poses(c, col):
+        sx, sy = P.CAST[c]["shoulder"]
+        U = dict(type="umbrella_small", angle=-105, scale=0.78)
+        S[c + "_walk_umbrella"] = (c, cycle(c, 0.30, "walk", base=dict(expr="neutral", mouth="smile", yaw=0.75, umb_col=col, prop_r=dict(U), arm_r=dict(hand=(sx + 0.15, 0.16), bend=0.5)), arms="l"))
+        S[c + "_dry_pass"] = (c, dict(yaw=0.40, pitch=-0.45, expr="smug", mouth="smirk", head_roll=-4, umb_col=col, prop_r=dict(U, angle=-100), arm_r=dict(hand=(sx + 0.15, 0.16), bend=0.5),
+                                      arm_l=dict(hand=(-sx - 0.05, 0.60), bend=0.8), legs=dict(preset="step", stride=0.5)))
+        S[c + "_point_laugh"] = (c, dict(yaw=0.40, pitch=-0.35, expr="laughing", mouth="talk_b", head_roll=-8, t=0.3, umb_col=col, prop_l=dict(U, angle=-75), arm_l=dict(hand=(-sx - 0.18, 0.22), bend=0.5),
+                                         arm_r=_arm(c, "r", 0.55, -0.10, -0.5, 1.3, shape="point"), legs="stand"))
+        S[c + "_rush"] = (c, cycle(c, 0.20, "run", base=dict(expr="shocked", mouth="o", yaw=0.80, umb_col=col, prop_r=dict(U, angle=-125), arm_r=dict(hand=(sx + 0.25, 0.05), bend=-0.6), pitch=0.0), arms="l"))
+        S[c + "_push"] = (c, dict(yaw=0.70, expr="angry", mouth="clench", lean=12, umb_col=col, arm_r=_arm(c, "r", 0.55, 0.05, -0.4, 1.3, shape="open"), arm_l=_arm(c, "l", 0.55, 0.15, -0.4, 1.3, shape="open", layer="back"),
+                                  legs=dict(preset="step", stride=0.8)))
+        M[c + "_walk_umbrella"] = dict(note="walk frame under a small umbrella (prop umbrella_small, scale 0.78, colour by pose key umb_col); animate with cast12.cycle_frame(name, frame / 28.0, facing)")
+        M[c + "_dry_pass"] = dict(note="passes by dry and smug under her umbrella (shot 5)")
+    women_poses("crowd_woman_a", "maroon")
+    women_poses("crowd_woman_b", "green")
+
+    # ------------------------------------------------------------------ passengers
+    for c in ("passenger_a", "passenger_b"):
+        sit_p = _sit(c)
+        S[c + "_seated"] = (c, dict(yaw=0.30, expr="neutral", mouth="smirk", arm_r=dict(hand=(0.30, 1.02), bend=0.7), arm_l=dict(hand=(-0.30, 1.02), bend=0.7), legs=sit_p))
+        S[c + "_peek"] = (c, dict(yaw=0.80, pitch=0.0, expr="shocked", mouth="o", lean=8, head_dx=0.06, arm_r=_arm(c, "r", 0.45, 0.10, -0.4, 1.0, shape="open"), arm_l="down", legs=sit_p))
+        S[c + "_laugh"] = (c, dict(yaw=0.30, pitch=-0.60, expr="laughing", mouth="talk_b", fx=["tears"], head_roll=-8, t=0.3, arm_r=dict(hand=(0.30, 1.00), bend=0.8, shape="open"),
+                                   arm_l=dict(hand=(-0.30, 1.00), bend=0.8, shape="open"), legs=sit_p))
+        M[c + "_seated"] = dict(note="a coach passenger seated (thighs forward); the set's coach body hides the lower half. _peek leans out to look, _laugh laughs")
+    return dict(S), M
 
 
 # ============================================================================= registration
