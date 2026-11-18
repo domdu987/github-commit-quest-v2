@@ -24,7 +24,7 @@ PRESET, LIGHT = "garden_queue", "A"
 # queue from near the camera (x +, front right) back to the hut door (x -): (name, cast, pose key, x, mirror)
 # director gate 3: a DIAGONAL queue inside the fence, from near the camera (frame right) back to the hut door; camera inside the garden, no fence in front
 NQ = 10
-N0, H0 = (4.8, 0.6), (-6.6, -2.6)                                      # near end / far end of the line (world x, y)
+N0, H0 = (3.4, 0.4), (-6.6, -2.6)                                      # near end / far end of the line (world x, y)
 def _slot(i):
     t = i / float(NQ - 1)
     x = N0[0] + (H0[0] - N0[0]) * t
@@ -36,8 +36,8 @@ _CASTS = [("villager_a", "villager_a_queue"), ("villager_d", "villager_d_queue")
 QUEUE = [("q%d" % i, _CASTS[i][0], _CASTS[i][1], _slot(i)[0]) for i in range(NQ)]
 JENNER = Vector((-9.3, -3.9, 0.0))
 JAMES = Vector((-8.0, -2.9, 0.0))
-CAM0 = ((11.6, -6.5, 1.65), (-3.0, -1.6, 1.7))
-CAM1 = ((9.6, -6.1, 1.6), (-3.4, -1.5, 1.7))
+CAM0 = ((8.8, -6.3, 1.65), (-5.2, -1.9, 1.7))
+CAM1 = ((7.6, -6.0, 1.6), (-5.4, -1.8, 1.7))
 
 
 def cam_of(g):

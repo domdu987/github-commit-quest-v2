@@ -54,7 +54,9 @@ def pose_doc(g):
     p["hat_off"] = 1.0
     p["arm_r"] = dict(hand=(lerp(-0.34, -0.20, ez(k)) + 0.05 * tug, lerp(1.06, 0.98, ez(k)) - 0.06 * tug), bend=0.6, shape="open", layer="front")
     p["yaw"] = 0.3 + 0.08 * math.sin(g * 0.05)
-    p["pitch"] = lerp(0.35, 0.5, ez(k)) + 0.05 * math.sin(g * 0.09)
+    p["pitch"] = 0.4 + 0.04 * math.sin(g * 0.09)
+    p["gaze"] = (-0.3, 0.9)
+    p["expr"] = "happy"; p["mouth"] = "smirk"          # closed-arc sheepish eyes (not the sly half-lid), blush + sweat stay
     p["head_roll"] = 5 + 2.0 * math.sin(g * 0.06)
     p["lean"] = 1.2 * math.sin(g * 0.05)
     p["sweat"] = 0.4 + 0.3 * ez(k)
@@ -106,15 +108,15 @@ class Take(C.Take):
         L = math.hypot(dx, dy) or 1.0
         ux, uy = dx / L, dy / L
         nx, ny = -uy, ux
-        tc = lerp(0.88, 0.42, ez(k))                          # the cuff climbs towards the elbow
+        tc = lerp(0.90, 0.72, ez(k))                          # the cuff climbs towards the elbow
         cx, cy = ex + dx * tc, ey + dy * tc
-        w = 0.22
+        w = 0.10
         skin = "#f1c8a4"
         bare = [(cx + nx * w * 0.9, cy + ny * w * 0.9), (cx - nx * w * 0.9, cy - ny * w * 0.9),
                 (ex + dx * 0.97 - nx * w * 0.7, ey + dy * 0.97 - ny * w * 0.7), (ex + dx * 0.97 + nx * w * 0.7, ey + dy * 0.97 + ny * w * 0.7)]
         pts = " ".join("%.4f,%.4f" % p for p in bare)
-        cuff = [(cx + nx * 0.31 - ux * 0.07, cy + ny * 0.31 - uy * 0.07), (cx - nx * 0.31 - ux * 0.07, cy - ny * 0.31 - uy * 0.07),
-                (cx - nx * 0.31 + ux * 0.07, cy - ny * 0.31 + uy * 0.07), (cx + nx * 0.31 + ux * 0.07, cy + ny * 0.31 + uy * 0.07)]
+        cuff = [(cx + nx * 0.15 - ux * 0.035, cy + ny * 0.15 - uy * 0.035), (cx - nx * 0.15 - ux * 0.035, cy - ny * 0.15 - uy * 0.035),
+                (cx - nx * 0.15 + ux * 0.035, cy - ny * 0.15 + uy * 0.035), (cx + nx * 0.15 + ux * 0.035, cy + ny * 0.15 + uy * 0.035)]
         cp = " ".join("%.4f,%.4f" % p for p in cuff)
         return ('<polygon points="%s" fill="%s" stroke="#5a3a2a" stroke-width="0.025" stroke-linejoin="round"/>'
                 '<polygon points="%s" fill="#fbf1dc" stroke="#7a5a45" stroke-width="0.03" stroke-linejoin="round"/>' % (pts, skin, cp))
