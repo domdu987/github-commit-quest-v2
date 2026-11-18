@@ -1,0 +1,5 @@
+raw/
+frames/
+work/
+*.mkv.part*
+__pycache__/
