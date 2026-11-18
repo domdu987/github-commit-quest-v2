@@ -240,12 +240,12 @@ def canvas_check():
 
 
 def _hash_story10():
-    code = ("import sys; sys.path.insert(0, %r); import hashlib\n%s\nimport puppet as P, cast10\n"
+    """sha1 of every cast10 STORY10 pose's svg, in a fresh interpreter without and with cast13 imported."""
+    base = ("import sys, hashlib; sys.path.insert(0, %r)\nimport cast10\nimport puppet as P\n%%s"
             "h = hashlib.sha1()\nfor n in sorted(cast10.STORY10):\n    c, p = cast10.STORY10[n]\n    h.update(P.figure(c, p, 'z')['svg'].encode())\nprint(h.hexdigest())\n"
-            % (os.path.join(PROJ, "v3", "cast10"), "import cast13" if False else ""))
-    plain = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True).stdout.strip()
-    code2 = code.replace("import puppet as P, cast10", "import puppet as P, cast10\nsys.path.insert(0, %r)\nimport cast13" % HERE)
-    withc = subprocess.run([sys.executable, "-c", code2], capture_output=True, text=True).stdout.strip()
+            % os.path.join(PROJ, "v3", "cast10"))
+    plain = subprocess.run([sys.executable, "-c", base % ""], capture_output=True, text=True).stdout.strip()
+    withc = subprocess.run([sys.executable, "-c", base % ("sys.path.insert(0, %r)\nimport cast13\n" % HERE)], capture_output=True, text=True).stdout.strip()
     return plain, withc
 
 

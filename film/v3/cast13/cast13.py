@@ -730,7 +730,7 @@ def _build_cast():
     C = {}
     # Pullman: slim young engineer, dark frock coat with the sleeves rolled to cream cuffs, an ochre-and-rust waistcoat, a teal cravat,
     # a low bowler, a small brown moustache, a brass whistle on a chain.
-    C["pullman"] = _mk("gentleman", seed=61.3, chain=False, hat_style="bowler", moustache_style="bushy", tache_scale=0.50, mouth="smile", eye_y=0.03,
+    C["pullman"] = _mk("gentleman", seed=61.3, chain=False, hat_style="derby", moustache_style="bushy", tache_scale=0.50, mouth="smile", eye_y=0.03,
                        torso_w=0.78, coat_len=0.40, costume="pull13",
                        hat_colors=dict(base="#4a3a32", dark="#2c211c", light="#7a6a5c", band="#1c1418", brim="#3a2c24", edge="#8a7a6a", shine="#aa9a8a"),
                        hair=dict(color="#4a3224"),
@@ -822,7 +822,7 @@ CANVAS13 = {
     "town_c": (-1.5000, -3.8125, 1.5000, 0.1250),
 }
 CANVAS13_POSE = {
-    "pullman_hand_on_jack_bar": (-1.8750, -3.2500, 1.8750, 0.1250),
+    "pullman_hand_on_jack_bar": (-1.8750, -3.3125, 1.8750, 0.1250),
     "rich_sit_tea": (-1.3125, -3.6250, 1.3125, 0.1250),
     "rich_fall": (-4.1250, -5.3750, 4.1250, 0.8125),
     "rich_sit_in_mud": (-1.5625, -3.5625, 1.5625, 0.2500),

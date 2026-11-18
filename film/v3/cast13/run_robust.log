@@ -1,4 +1,4 @@
-cast13 pose keys + garbage: 3600 ok, 0 failed, deterministic True, 6.1 s
-cast10 STORY10 svg hash without / with cast13:  /   -> DIFFERENT
+cast13 pose keys + garbage: 3600 ok, 0 failed, deterministic True, 5.4 s
+cast10 STORY10 svg hash without / with cast13: d1a0c43aa466 / d1a0c43aa466  -> identical
 presets, expressions, props, effects                    249552 checks  ok
 numeric key sweeps (40 and 240 steps)                   414120 checks  ok
