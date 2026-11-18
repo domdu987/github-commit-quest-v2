@@ -90,6 +90,22 @@ class Take(object):
         self.stand = self.A["stand"][preset]
         self.actors = {}; self.anch = {}
         print("take: built %s in %.1f s" % (preset, time.time() - t0), flush=True)
+    def cut_boxes(self, boxes):
+        """collapse every vertex inside the boxes to one point per mesh (zero-area faces vanish); bmesh.ops.delete hangs in bpy 5.3 here."""
+        import numpy as np
+        n = 0
+        for ob in list(bpy.data.objects):
+            if ob.type != "MESH" or len(ob.data.vertices) == 0: continue
+            nv = len(ob.data.vertices); co = np.empty(nv * 3, dtype=np.float32); ob.data.vertices.foreach_get("co", co); co = co.reshape(-1, 3)
+            mw = np.array(ob.matrix_world, dtype=np.float32); w = co @ mw[:3, :3].T + mw[:3, 3]
+            m = np.zeros(nv, dtype=bool)
+            for b in boxes:
+                mb_ = (w[:, 0] >= b[0]) & (w[:, 0] <= b[1]) & (w[:, 1] >= b[2]) & (w[:, 1] <= b[3]) & (w[:, 2] >= b[4]) & (w[:, 2] <= b[5])
+                if mb_.any(): co[mb_] = co[mb_].mean(0)          # each box collapses to its own centroid (its faces only touch its own vertices)
+                m |= mb_
+            if m.any():
+                ob.data.vertices.foreach_set("co", co.reshape(-1)); ob.data.update(); n += int(m.sum())
+        print("cut_boxes: collapsed %d vertices" % n, flush=True)
     def key_cam(self, f, loc, look, lens=None):
         camrig.key_camera(f, Vector(loc), Vector(look), cam=self.cam, lens=lens, interp="LINEAR", easing="AUTO")
     def sprites_for(self, jobs, frames):
