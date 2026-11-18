@@ -1,7 +1,8 @@
-# s17 QA: film 10, shots 17-19 (the reveal): sea, SEA_DAY
-Delivered: take.mkv (g 1084..1433, 350 frames, first_g 1084; g0 1090, g1 1428; handles 6+6) split into take.mkv.part* (cat to rebuild). 720x1280, 12 samples, ~29 CPU s (topdown), ~17 (pov).
-- 17 topdown A: torpedo (scaled 1.8) creeps up, ship sails right, gold buoy (moved to x 64) fades in and pulses; camera tracks right. No lines/arrows.
-- 18 periscope_pov: lens overlay, dazzle ship; translucent cyan ghost (facing the other way, offset +30) fades in over it to 0.8; cyan aim buoy lights at the end.
-- 19 topdown C: torpedo runs at the ghost's course (cyan buoy x -41), crossing ~g 1347; wake passes behind the real stern; ship sails on toward the gold buoy; ghost fades 0.8->0.4.
-- Torpedo/sea time continuous with s15 (u 0.09 at g 1090, s 1.6). Cuts at g 1194 and 1296. qa_auto PASS. No DOF, no text. Phone sheet reviewed: buoy, ghost and wake read; ghost over the stripes is busy at phone size in 19.
-- Set changes at runtime only: lead buoy moved +23 D, torpedo scaled 1.8, periscope head/mast hidden in the pov shot.
+# s17 QA (round 2, after QA-art FIX-FIRST): film 10, shots 17-19 (the reveal)
+Delivered: take.mkv as take.mkv.part* (cat to rebuild), g 1084..1433, 350 frames, first_g 1084, g0 1090, g1 1428. qa_auto PASS.
+Fixes: 
+- 17: wider steeper camera (lens 14.5-15, loc z 125) keeps torpedo, ship, gold buoy in frame the whole shot; top third now sea + convoy row.
+- 18: ghost laid hull-on-hull on the real ship (offset 5 s, mirrored), opacity 0.85; lens 35-36.5, camera follows the ship, ship fills ~90% of the circle; ghost rigging wires removed from the mesh.
+- 19: ghost peels away left and fades to 0.3 right after the cut (g 1296-1332), then 0.1 at the end; camera holds on the crossing (g ~1320-1375, torpedo reaches the cyan buoy in clear water behind the real stern) before following the ship.
+- Buoy lamp lights keyed to 0 energy: no glare streaks on the water.
+Known: ship is smaller on screen in 17/19 (about 25-30% width) because torpedo, ship and buoy must share the frame.

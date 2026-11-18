@@ -65,14 +65,14 @@ def sm(x):
 # ----------------------------------------------------------------------------- cameras
 # 17: the high oblique, widened a little so the sub's bubble track, the real ship, the ghost's lane and the gold buoy all fit;
 #     it pushes in and drifts toward the real ship / buoy.  19: lower and nearer, drifting with the ship, so the wake runs under the stern.
-CAM17 = ((-12.0, -108.0, 108.0), (-14.0, -32.0, 0.0), 21.0), ((30.0, -84.0, 98.0), (28.0, -6.0, 0.0), 22.0)
-CAM19 = ((-24.0, -100.0, 104.0), (-18.0, -14.0, 0.0), 20.5), ((24.0, -84.0, 96.0), (26.0, -4.0, 0.0), 22.0)
+CAM17 = ((6.0, -64.0, 125.0), (6.0, 4.0, 0.0), 14.5), ((12.0, -58.0, 122.0), (12.0, 12.0, 0.0), 15.0)
+CAM19 = ((-8.0, -62.0, 125.0), (-8.0, 10.0, 0.0), 14.5), ((16.0, -58.0, 120.0), (16.0, 12.0, 0.0), 15.0)
 # 18: inside the periscope (eye fixed at the head); a slow sweep over the real ship, lens 30 -> 33.
-POV_LOOK = ((8.0, 0.0, 5.6), 27.0), ((22.0, 0.0, 5.0), 29.0)
+POV_LOOK = ((8.0, 0.0, 5.6), 35.0), ((22.0, 0.0, 5.0), 36.5)
 
 
-def lerp_cam(c0, c1, x):
-    u = sm(x)
+def lerp_cam(c0, c1, x, raw=False):
+    u = x if raw else sm(x)
     return (Vector([lerp(c0[0][i], c1[0][i], u) for i in range(3)]), Vector([lerp(c0[1][i], c1[1][i], u) for i in range(3)]), lerp(c0[2], c1[2], u))
 
 
@@ -80,10 +80,19 @@ def cam_of(shot, g, eye=None):
     if shot == 17:
         return lerp_cam(CAM17[0], CAM17[1], (g - G17) / float(G18 - G17))
     if shot == 19:
-        return lerp_cam(CAM19[0], CAM19[1], (g - G19) / float(G20 - G19))
+        lin = (g - G19) / float(G20 - G19)
+        u = 0.25 * lin + 0.75 * ez((g - 1355) / 70.0)          # holds on the crossing (g ~1320-1375), then follows the ship on
+        return lerp_cam(CAM19[0], CAM19[1], u, raw=True)
     u = sm((g - G18) / float(G19 - G18))
-    look = Vector([lerp(POV_LOOK[0][0][i], POV_LOOK[1][0][i], u) for i in range(3)])
+    look = Vector((2.5 * s_of(g) + 1.0, 0.0, lerp(5.6, 5.0, u)))        # follows the ship's centre
     return Vector(eye), look, lerp(POV_LOOK[0][1], POV_LOOK[1][1], u)
+
+
+def ghost_off(g):
+    """ghost x offset: 5 s puts its centre exactly on the real ship's (hull on hull, mirrored); from shot 19 it peels away to the left."""
+    s = s_of(g)
+    slide = 50.0 * ez((g - G19) / 66.0)
+    return 5.0 * s - slide
 
 
 def ghost_k(g):
@@ -91,8 +100,8 @@ def ghost_k(g):
     if g < G18:
         return 0.0
     if g < G19:
-        return 0.8 * ez((g - (G18 + 6)) / 48.0)
-    return 0.8 - 0.4 * ez((g - (G20 - 40)) / 40.0)
+        return 0.85 * ez((g - (G18 + 6)) / 40.0)
+    return 0.85 - 0.55 * ez((g - G19) / 36.0) - 0.2 * ez((g - (G20 - 40)) / 40.0)
 
 
 def lead_k(g):
@@ -107,6 +116,11 @@ def gmark_k(g):
 
 
 # ----------------------------------------------------------------------------- the take
+def bpy_obj(n):
+    import bpy
+    return bpy.data.objects[n]
+
+
 class Take(C.Take):
     def __init__(self, quality="preview", shot=17):
         C.Take.__init__(self, "sea", "topdown_sea", quality=quality, lens=22.0, name="cam_s17")
@@ -116,10 +130,33 @@ class Take(C.Take):
         for ob in list(mk["buoy"]) + [mk["lamp"]]:
             ob.location.x += LEAD_DX                         # runtime set change: the lead buoy is 23 D further ahead
         H.set_ghost(0.0, offset=GHOST_OFF)
+        self.strip_wires()
         H.STATE['torp']['ob'].scale = (1.8, 1.8, 1.8)                 # readable from the high camera
         U = H.STATE["uboat"]
         import bpy
         self.near_eye = [U["head"], bpy.data.objects["uboat_mast"]]      # the periscope camera sits inside them
+
+    def strip_wires(self):
+        """QA-art: drop the ghost's rigging wires (the 6-vertex loose parts of the hull mesh)."""
+        import bmesh
+        o = H.STATE["ghost"]["hull"]
+        bm = bmesh.new(); bm.from_mesh(o.data)
+        seen, kill = set(), []
+        for v in bm.verts:
+            if v.index in seen:
+                continue
+            st, comp = [v], [v]; seen.add(v.index)
+            while st:
+                x = st.pop()
+                for e in x.link_edges:
+                    w = e.other_vert(x)
+                    if w.index not in seen:
+                        seen.add(w.index); st.append(w); comp.append(w)
+            if len(comp) == 6:
+                kill += comp
+        bmesh.ops.delete(bm, geom=kill, context="VERTS")
+        bm.to_mesh(o.data); bm.free()
+        self.lamps = [bpy_obj("L_lead_buoy_lamp"), bpy_obj("L_ghost_buoy_lamp")]
 
     def pose(self, shot, gs):
         for g in gs:
@@ -134,10 +171,14 @@ class Take(C.Take):
             H.set_uboat(dive, frame=f, periscope=peri)
             H.set_convoy(s, frame=f)
             H.set_torpedo(u_of(g), frame=f)
-            H.set_ghost(ghost_k(g), frame=f)
+            H.set_ghost(ghost_k(g), frame=f, offset=ghost_off(g))
+            H.set_convoy(s, frame=f)
             H.set_lead_marker(lead_k(g), frame=f)
             H.set_ghost_marker(gmark_k(g) if shot != 17 else 0.0, frame=f)
             H.set_hit(-1.0, frame=f)
+            for L in self.lamps:                              # QA-art: no glare streaks from the buoy lamps on the water
+                L.data.energy = 0.0
+                L.data.keyframe_insert("energy", frame=f)
             H.periscope_overlay(pov, frame=f)
             loc, look, lens = cam_of(shot, g, self.eye)
             self.key_cam(f, loc, look, lens=lens)
