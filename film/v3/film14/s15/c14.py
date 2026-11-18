@@ -36,7 +36,7 @@ def _contact(tag, mk, ax, yaw, L, Wd):
     for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
     img = bpy.data.images.load(p); img.alpha_mode = 'STRAIGHT'; CREATED.extend([img, me])
     m = bpy.data.materials.new('cm_' + tag); CREATED.append(m); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); Nn = nt.nodes.new; Lk = nt.links.new
-    out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.015, 0.01, 0.04, 1); em.inputs['Strength'].default_value = 1
+    out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.005, 0.004, 0.02, 1); em.inputs['Strength'].default_value = 1
     tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 1.0
     Lk(ti.outputs['Alpha'], mu.inputs[0]); Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
     me.materials.append(m); ob = bpy.data.objects.new('actor_c_' + tag, me); bpy.context.scene.collection.objects.link(ob)
@@ -49,7 +49,7 @@ def _grade(path, r, cast, ppd):
     """director QA: night elephants x0.70 and tinted (0.78, 0.82, 1.0); torch glow discs of the people feathered into soft radial glows."""
     im = np.asarray(Image.open(path).convert('RGBA'), dtype=np.float32) / 255.0; ch = False
     if cast in ELE:
-        im[..., 0] *= 0.70 * 0.78; im[..., 1] *= 0.70 * 0.82; im[..., 2] *= 0.70; ch = True
+        im[..., 0] *= 0.52 * 0.78; im[..., 1] *= 0.52 * 0.82; im[..., 2] *= 0.52; ch = True
     fl = r['anchors'].get('flame_r')
     if fl is not None:
         ox, oy = r['origin_px']; fx_, fy_ = r['feet']; cx = ox + (fl[0] - fx_) * ppd; cy = oy + (fl[1] - fy_) * ppd
@@ -91,7 +91,8 @@ def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=None, yawk=1.0, yaw_fixe
     ax = Vector((math.cos(yaw), math.sin(yaw), 0))
     def w(a): return mk + ax * ((a[0] - fx) * MPD) + Vector((0, 0, (fy - a[1]) * MPD))
     if cast in CONTACT and mk.z < 0.1:
-        L, Wd = CONTACT[cast]; _contact(tag, Vector((mk.x, mk.y, mk.z)), ax, yaw, L, Wd)
+        L, Wd = CONTACT[cast]; kd = Vector(F.STATE['P']['key_dir']); kd.z = 0; kd.normalize()
+        off = kd * (0.35 if cast in ELE else 0.12); _contact(tag, Vector((mk.x + off.x, mk.y + off.y, mk.z)), ax, yaw, L, Wd)
     return dict(world=w, anchors=r['anchors'], mk=mk, yaw=yaw)
 
 def torch_light(tag, pos, energy=150.0, flick=0.0):
@@ -138,3 +139,41 @@ def setup(preset, q, dress=True):
 def render(path):
     """final grade as farm.render; returns wall seconds"""
     wall, cpu = F.render(path); return wall
+
+
+def hide_objs(prefix, box):
+    """hide_render every object whose name starts with prefix and whose location is inside box (x0,x1,y0,y1)"""
+    n = 0
+    for o in bpy.data.objects:
+        if o.name.startswith(prefix) and box[0] < o.location.x < box[1] and box[2] < o.location.y < box[3]: o.hide_render = True; o.hide_viewport = True; n += 1
+    return n
+
+def cut_named(prefixes, boxes):
+    """delete vertices of the meshes whose name starts with one of prefixes inside the (x0,x1,y0,y1,z0,z1) boxes (world)"""
+    for ob in list(bpy.data.objects):
+        if ob.type != 'MESH' or not ob.name.startswith(tuple(prefixes)): continue
+        bm = bmesh.new(); bm.from_mesh(ob.data); mw = ob.matrix_world
+        dl = [v for v in bm.verts if any(b[0] < (mw @ v.co).x < b[1] and b[2] < (mw @ v.co).y < b[3] and b[4] < (mw @ v.co).z < b[5] for b in boxes)]
+        if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS'); bm.to_mesh(ob.data)
+        bm.free()
+
+def scale_light(name_prefix, k):
+    for o in bpy.data.objects:
+        if o.type == 'LIGHT' and o.name.startswith(name_prefix): o.data.energy *= k
+
+def darken_mats(names, k):
+    """multiply emission/base colours of the named set materials (roof tin etc.) by k"""
+    for m in bpy.data.materials:
+        if m.name in names and m.use_nodes:
+            for n in m.node_tree.nodes:
+                for key in ('Base Color', 'Emission Color', 'Color'):
+                    if key in n.inputs and n.inputs[key].is_linked is False and hasattr(n.inputs[key], 'default_value') and len(n.inputs[key].default_value) == 4:
+                        c = n.inputs[key].default_value; n.inputs[key].default_value = (c[0] * k, c[1] * k, c[2] * k, c[3])
+                if 'Emission Strength' in n.inputs: n.inputs['Emission Strength'].default_value *= k
+
+def trim_wire(xmax):
+    """hide the wire beyond x > xmax (call AFTER every set_wire_push: the hook rebuilds the mesh): the near stub / right side must not cross the elephant's face"""
+    ob = bpy.data.objects['wire']; bm = bmesh.new(); bm.from_mesh(ob.data)
+    dl = [v for v in bm.verts if v.co.x > xmax]
+    if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS')
+    bm.to_mesh(ob.data); bm.free()

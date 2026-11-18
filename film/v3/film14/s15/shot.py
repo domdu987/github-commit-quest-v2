@@ -33,10 +33,10 @@ def base_of(name):
     return c, p
 
 # ------------------------------------------------------------------------------------------------ shot 15: herd to the ring (wide, camera low)
-CAM15 = lambda u: (mix((5.0, -12.6, 2.0), (2.4, -10.8, 2.1), u), mix((-1.0, 4.0, 0.7), (-2.2, 4.0, 0.7), u), 22)
+CAM15 = lambda u: (mix((5.5, -9.8, 1.4), (2.2, -6.6, 1.4), u), mix((-1.2, 3.0, 3.9), (-1.6, 3.0, 3.8), u), 26)
 HERD = [  # cast, story base, feet x at g=1001, y, stride, phase offset, ppd
-    ('elephant_d', 'elephant_d_walk', 6.8, 3.3, 0.9, 0.35, 96), ('elephant_b', 'elephant_b_walk', 4.8, 1.4, 0.95, 0.60, 96),
-    ('elephant_c', 'elephant_c_walk', 2.2, 3.0, 1.0, 0.10, 96), ('calf', 'calf_walk', 0.4, 0.2, 1.0, 0.85, 96), ('matriarch', 'matriarch_walk', -0.6, 1.8, 0.95, 0.0, 112)]
+    ('elephant_d', 'elephant_d_walk', 6.6, 2.8, 1.2, 0.35, 96), ('elephant_b', 'elephant_b_walk', 4.6, 1.2, 1.25, 0.60, 96),
+    ('elephant_c', 'elephant_c_walk', 2.6, 2.6, 1.3, 0.10, 96), ('calf', 'calf_walk', 0.6, 0.0, 1.3, 0.85, 96), ('matriarch', 'matriarch_walk', 0.0, 1.8, 1.2, 0.0, 112)]
 def f15(g, cl):
     out = {}
     for cast, nm, x0, y, st, ph, ppd in HERD:
@@ -47,80 +47,79 @@ def f15(g, cl):
     return out
 
 # ------------------------------------------------------------------------------------------------ shot 16: matriarch arrives (fence_low_night)
-CAM16 = lambda u: (mix((3.9, -4.5, 1.15), (2.7, -4.3, 1.2), u), mix((0.4, 2.4, 0.9), (-1.0, 2.6, 1.0), u), 22)
+CAM16 = lambda u: (mix((1.8, -1.8, 1.3), (0.2, -2.0, 1.35), u), mix((0.2, 4.2, 2.9), (-1.4, 4.2, 2.9), u), 26)
 def f16(g, cl):
-    u = span(g, 1062, 1126); out = {}
-    # matriarch: walks left, slows to a stop and sniffs the wire; stride falls to 0 over the last 14 frames
-    s = 0.85 * (1 - ease(span(g, 1108, 1126))); n = g - 1062
-    x = M16_X0 - sum(walk_step('matriarch', 0.85 * (1 - ease(span(k, 1108, 1126)))) for k in range(1062, g))
+    out = {}; n = g - 1062
+    sp = lambda k: 0.85 * (1 - ease(span(k, 1108, 1126)))
+    x = M16_X0 - sum(walk_step('matriarch', sp(k)) for k in range(1062, g))
     c, b = base_of('matriarch_walk_to_fence'); w = ease(span(g, 1112, 1124))
     if w > 0.5: b = dict(base_of('matriarch_sniff_fence')[1])
-    b['head_dip'] = lerp(3, 6, w)
-    p = epose('matriarch', 0.1 + n / 48.0, 0.85, b, -1, stride=s)
-    r = put('mat_%d' % g, 'matriarch', p, (x, M16_Y, 0), cl, ppd=128, mirror=True, yawk=0.5); out['mat'] = screen(r['world'](r['anchors']['head']))
-    # calf: walks in behind (further from the lens), stands when the mother stops
-    sc_ = 0.9 * (1 - ease(span(g, 1112, 1126)))
-    xc = CALF_X0 - sum(walk_step('calf', 0.9 * (1 - ease(span(k, 1112, 1126)))) for k in range(1062, g))
-    cc, cb = base_of('calf_walk'); p = epose('calf', 0.4 + n / 48.0, 0.9, cb, -1, stride=sc_)
-    r = put('calf_%d' % g, 'calf', p, (xc, CALF_Y, 0), cl, ppd=128, mirror=True, yawk=0.5); out['calf'] = screen(r['world'](r['anchors']['head']))
-    # elephant_c waiting far ahead, standing, slow sway of the trunk
-    cc, cb = base_of('elephant_c_stand'); cb['t'] = n / 90.0; cb['trunk'] = 'sniff' if (n // 40) % 2 else 'hang'
-    r = put('ec_%d' % g, 'elephant_c', dict(cb, view='side'), (-8.0, 4.4, 0), cl, ppd=112, mirror=True, yawk=0.5)
+    b['head_dip'] = lerp(3, 6, w); b['trunk'] = b.get('trunk', 'forward') if w <= 0.5 else 'sniff'
+    p = epose('matriarch', 0.1 + n / 48.0, 0.85, b, -1, stride=sp(g))
+    r = put('mat_%d' % g, 'matriarch', p, (x, M16_Y, 0), cl, ppd=128, mirror=True, yawk=0.0); out['mat'] = screen(r['world'](r['anchors']['head']))
+    xc = x + 1.4 + 0.15 * math.sin(n / 30.0)                      # the calf trots behind its mother (right of her tail), nearer the lens: no trunk crosses it
+    cc, cb = base_of('calf_walk'); p = epose('calf', 0.4 + n / 48.0, 0.9, cb, -1, stride=0.9 * (1 - ease(span(g, 1112, 1126))))
+    r = put('calf_%d' % g, 'calf', p, (xc, 2.1, 0), cl, ppd=128, mirror=True, yawk=0.0); out['calf'] = screen(r['world'](r['anchors']['head']))
     return out
-M16_X0, M16_Y, CALF_X0, CALF_Y = 1.4, 3.4, -1.2, 2.3
+M16_X0, M16_Y = 1.0, 3.9
 
 # ------------------------------------------------------------------------------------------------ shot 17: hive_close, bees asleep
-CAM17 = lambda u: (mix((-10.2, 1.7, 1.15), (-8.3, 3.0, 1.25), u), mix((-5.4, 5.0, 1.55), (-5.9, 5.0, 1.5), u), 24)
-def f17(g, cl): return {}
+CAM17 = lambda u: (mix((-9.3, 2.7, 1.0), (-8.3, 3.4, 1.0), u), mix((-6.9, 4.9, 1.0), (-6.85, 4.9, 1.0), u), 24)
+REST_SPOTS = [(-0.60, -0.10, -0.66), (-0.52, -0.12, -0.70), (-0.66, -0.14, -0.58), (-0.44, -0.10, -0.68), (-0.58, -0.16, -0.76), (-0.70, -0.08, -0.70), (-0.48, -0.15, -0.60),
+              (-0.62, -0.12, -0.50), (-0.40, -0.14, -0.75), (-0.72, -0.12, -0.62), (-0.55, -0.09, -0.80), (-0.36, -0.12, -0.64)]
+def f17(g, cl):
+    out = {}; h = bpy.data.objects.get('hive_1'); mw = h.matrix_world; n = g - 1127
+    for i, (sx, sy, sz) in enumerate(REST_SPOTS):
+        wp = mw @ Vector((sx, sy, sz)); wob = 0.004 * math.sin(n * 0.09 + i)          # a slow breathing wobble of the sleepers
+        c, p = story('bee_rest'); p = dict(p); p['size'] = 0.27; p['angle'] = (i * 37) % 50 - 25
+        r = put('bee%d_%d' % (i, g), 'bee', p, (wp.x - 0.0, wp.y - 0.06, wp.z + wob), cl, ppd=160, yaw_fixed=0.0, canvas=cast14.CANVAS14['bee'])
+    return out
 
 # ------------------------------------------------------------------------------------------------ shot 18: the uncle with the torch (LIP-SYNC)
-CAM18 = lambda u: (mix((-3.7, -1.9, 1.35), (-3.2, -0.6, 1.4), u), mix((-2.2, 2.6, 1.55), (-2.25, 2.6, 1.6), u), 30)
+CAM18 = lambda u: (mix((-3.1, -1.9, 1.35), (-2.9, -1.1, 1.4), u), mix((-2.45, 2.6, 1.55), (-2.45, 2.6, 1.6), u), 30)
 UNCLE = (-2.4, 2.6, 0.0)
 def uncle_pose(g):
     c, p = story('uncle_shout_torch'); p['t'] = (g * 0.11) % 1.0
     talk = G_LIP[0] <= g <= G_LIP[1]
+    p['expr'] = 'excited'; p['gaze'] = (1.0, -0.1); p['yaw'] = 0.55
     if talk: p['mouth'] = cast14.talk_mouth(g, 1.0, hold=2)
     else: p['mouth'] = 'flat'; p['expr'] = 'smug'
-    ph = (g - 1168) / 30.0 * 6.28; p['arm_r'] = dict(p['arm_r']); p['arm_r']['hand'] = (0.8 + 0.03 * math.sin(ph * 0.8), -0.62 + 0.05 * math.sin(ph)); p['head_roll'] = 6 + 2.5 * math.sin(ph * 0.7)
-    p['blink'] = cast14.blink_at(g, 90)
+    ph = (g - 1168) / 30.0 * 6.28
+    p['arm_r'] = dict(p['arm_r']); p['arm_r']['hand'] = (1.25 + 0.03 * math.sin(ph * 0.8), -0.42 + 0.04 * math.sin(ph)); p['arm_r']['bend'] = -0.25
+    p['prop_r'] = dict(p['prop_r']); p['prop_r']['angle'] = -38 + 4 * math.sin(ph * 0.9)          # the torch points out to the right, toward the elephants
+    p['head_roll'] = 4 + 2.0 * math.sin(ph * 0.7); p['blink'] = cast14.blink_at(g, 90)
     return c, p
 def f18(g, cl):
     out = {}; c, p = uncle_pose(g)
     r = put('unc_%d' % g, c, p, UNCLE, cl, ppd=288, yawk=1.0); out['uncle'] = dict(head=screen(r['world'](r['anchors']['head'])), mouth=p['mouth'])
     fl = r['anchors'].get('flame_r')
     if fl: torch_light('u%d' % g, r['world'](fl) + Vector((0, -0.25, 0.1)), 150, g * 0.11)
-    for tag, cast, nm, mk, ppd in (('wom', 'woman14', 'villager_woman_wave_torch', (-3.1, 3.5, 0), 192), ('old', 'oldman14', 'villager_oldman_wave_torch', (-1.0, 3.7, 0), 192)):
-        c2, p2 = story(nm); p2['t'] = (g * 0.09 + (0.4 if tag == 'old' else 0)) % 1.0; p2['mouth'] = 'o'
+    for tag, cast, nm, mk, ppd in (('wom', 'woman14', 'villager_woman_wave_torch', (-3.65, 3.4, 0), 192), ('old', 'oldman14', 'villager_oldman_wave_torch', (-1.25, 3.6, 0), 192)):
+        c2, p2 = story(nm); p2['t'] = (g * 0.09 + (0.4 if tag == 'old' else 0)) % 1.0
+        p2['expr'] = 'neutral'; p2['mouth'] = 'flat'; p2['gaze'] = (1.0, 0.0); p2['yaw'] = 0.5          # quiet, mouth closed, looking where the uncle points
         r2 = put('%s_%d' % (tag, g), c2, p2, mk, cl, ppd=ppd, yawk=1.0); out[tag] = screen(r2['world'](r2['anchors']['head']))
         f2 = r2['anchors'].get('flame_r')
         if f2: torch_light(tag + str(g), r2['world'](f2) + Vector((0, -0.25, 0.1)), 110, g * 0.09)
     return out
 
 # ------------------------------------------------------------------------------------------------ shot 19: LOW push camera (cast_test s2)
-CAM19 = lambda u: (mix((18.0, -0.6, 1.4), (16.3, -0.9, 1.4), u), mix((PX0 - 0.6, 5.4, 1.45), (PX0 - 1.1, 5.4, 1.5), u), 24)
-G_PUSH0 = 1246                                                                  # she starts to lean in / walk into the wire
+CAM19 = lambda u: (mix((2.6, -3.0, 1.35), (4.0, -2.8, 1.35), u), mix((PX0 - 0.5, 5.0, 3.1), (PX0 - 0.2, 5.0, 3.1), u), 34)
+G_PUSH0 = RANGE[19][0]; T_MAX = 0.11
 def t_eff(g):
     u = span(g, G_PUSH0, BOW_END_G)
-    if u <= 0: return -1.0                                                      # rest
-    if u >= 1: return T_MAX + (g - BOW_END_G) * RATE                            # handle frames: real clock continues (spring-back)
+    if u <= 0: return 0.0
+    if u >= 1: return T_MAX + (g - BOW_END_G) * RATE                            # handle frames: real clock continues
     return T_MAX * (0.5 * ease(u) + 0.5 * u)
 def f19(g, cl):
     out = {}; te = t_eff(g); F.set_wire_push(te, PS0)
-    bow = float(F.wire_disp(np.array([PS0]), te, PS0)[0]) if te >= 0 else 0.0
-    a_ = span(g, 1226, G_PUSH0)                                                 # approach: sniffing at the wire
-    wlean = ease(span(g, 1238, BOW_END_G))                                      # sniff -> push pose blend
-    c, ps = story('matriarch_sniff_fence'); c, pp = story('matriarch_push')
-    p = cast14.lerp_pose('matriarch', ps, pp, wlean)
-    if te >= 0:                                                                 # walking into the wire: legs step at the pace the chest advances
-        te0 = t_eff(g - 1); b0 = float(F.wire_disp(np.array([PS0]), te0, PS0)[0]) if te0 >= 0 else 0.0
-        v = max(0.0, bow - b0) * 30.0
-        st = clamp(v / (walk_step('matriarch', 1.0) * 30.0), 0.25, 1.3) if g < BOW_END_G else 0.0
-        p['gait'] = 'walk'; p['stride'] = st; PH[0] += 1.0 / 48.0; p['phase'] = PH[0] % 1.0; p['t'] = 0.2 + g * 0.01
-    else: p['t'] = 0.15 + g * 0.01
-    p['mirror'] = False
-    gap = 0.1 + 0.8 * (1 - ease(a_))
-    yb = 5.0 + bow
-    r = put('mat_%d' % g, 'matriarch', p, (0, 0, 0), cl, ppd=128, yawk=1.0, anchor_ground=('chest_push', (PX0, yb - gap)))
+    bow = float(F.wire_disp(np.array([PS0]), te, PS0)[0])
+    w = ease(span(g, G_PUSH0, BOW_END_G))
+    c, pp = story('matriarch_push'); p = dict(pp)
+    p['push'] = lerp(0.35, 1.0, w); p['lean'] = lerp(0.5, 4.0, w); p['head_dip'] = lerp(5, 9, w); p['ear_flare'] = 0.1 + 0.05 * w
+    te0 = t_eff(g - 1); b0 = float(F.wire_disp(np.array([PS0]), te0, PS0)[0]); v = max(0.0, bow - b0) * 30.0
+    st = clamp(v / (walk_step('matriarch', 1.0) * 30.0), 0.3, 1.2) if g < BOW_END_G else 0.0
+    PH[0] += 1.0 / 48.0; p['gait'] = 'walk'; p['stride'] = st; p['phase'] = PH[0] % 1.0; p['t'] = 0.2 + g * 0.01; p['mirror'] = False
+    r = put('mat_%d' % g, 'matriarch', p, (0, 0, 0), cl, ppd=128, yawk=1.0, anchor_ground=('chest_push', (PX0, 5.0 + bow - 0.06)))
     out['head'] = screen(r['world'](r['anchors']['head'])); out['chest'] = screen(r['world'](r['anchors']['chest_push'])); out['t_wire'] = round(te, 4); out['bow'] = round(bow, 3)
     return out
 PH = [0.0]
@@ -133,11 +132,16 @@ def setup_shot(shot, q):
     if name not in F.CAMS or name.startswith('s1'): reg_cam(name, c, l, lens)
     if shot == 19:
         A = c14.setup(name, q, dress=False); cut_region([(13.5, 43, 1.7, 2.3, 1.2), (15.0, 19.5, 3.6, 6.4, 1.0)])
+        cut_named(['posts_', 'roof'], [(6.2, 13.5, 3.0, 12.0, -1, 9)]); hide_objs('mz', (3.5, 13.5, 5.5, 8.0)); cut_named(['props_'], [(4.2, 5.7, 1.8, 3.4, -1, 5)]); [setattr(bpy.data.objects[n], 'hide_render', True) for n in ('hive_4', 'bar_4')]; cut_named(['trees_', 'scrub_acacia'], [(2, 30, 6.0, 90, -1, 30)])
     else:
-        A = c14.setup(name, q, dress=(shot not in (16, 18)))
-    F.apply_state('fs3'); F.STATE['wire_r'] = 0.075 if shot != 15 else 0.12; F._update_fence()
+        A = c14.setup(name, q, dress=(shot not in (16, 17, 18)))
+    F.apply_state('fs3'); F.STATE['wire_r'] = (0.05 if shot == 19 else 0.03) if shot != 15 else 0.06; F._update_fence()
     F.set_crowd_props(0)
-    if shot == 17: F.set_wire_push(-1.0); F.set_bees(-1.0)
+    if shot == 17:
+        F.set_wire_push(-1.0); cut_named(['props_'], [(-13, -4.2, -3, 4.35, -1, 1.7)])
+        scale_light('bounce', 0.3); scale_light('lamp', 0.3); bpy.context.scene.view_settings.exposure = -0.7; darken_mats(['tinunder'], 0.35)
+        for o in list(bpy.data.objects):
+            if o.name == 'bees': o.hide_render = True
     return name, camf, fn
 
 def run(mode, shot, a, b, step, outdir):
@@ -149,7 +153,7 @@ def run(mode, shot, a, b, step, outdir):
         u = (g - r0) / float(r1 - r0 + 1)
         c, l, lens = camf(u); set_camera(c, l, lens); cl = c; bpy.context.view_layer.update()
         if shot == 19: PH[0] = (g - 1226) * 0.0     # walking phase restarts per process only through the stride integral (see f19)
-        if shot in (17,): F.set_wire_push(-1.0); bpy.context.view_layer.update(); F.set_bees(-1.0)
+        if shot == 17: F.set_wire_push(-1.0)
         info = fn(g, cl)
         bpy.context.view_layer.update()
         if shot == 19: F.set_bees(-1.0)
