@@ -1,10 +1,10 @@
-# s10 QA (shots 10-12, RAIN), g 645-866 (651-858 + 6 lead + 8 dissolve-out handle)
-qa_auto PASS (222 frames, magenta 0.0 %, no frozen/black frames). It lists the planned cuts 714 and 774 as "no visible change": false flags (camera / preset change, large frame differences); checked by eye on the contact sheet.
-- Shot 10 (market, 645-713): cabbage thrown by coachman_b (windup -> release 655, flight 655-663, thwack 663, bounce away), the leaf stays stuck on the dome; Hanway walks toward the camera, jeering cards left. Head y 650-700.
-- Shot 11 (hero_track, 714-773): coachman_c throws an egg (725-732), yellow yolk splat on the dome (card pose egg_splat), Hanway tilts the umbrella, head coachman laughs on his box (laugh pose). Head y 590-640.
-- Shot 12 (puddle_low, 774-866): coach charges through the puddle at 786; MUD SPLASH = painted sprite cards (splash.py): pointed fin spray crown with bulb tips and teardrop droplets behind Hanway plus droplets in front, rising to a peak ~795 and collapsing by 812. The set's 3D mud hook was dropped (it read as a stack of round blobs; director rule). Hanway: shocked mud pose 786-799, then deadpan, mud-spotted and dripping. Head y ~473.
-- Director rule (coachman on a moving coach moves with it): no one rides the charging coach, so nothing to parent.
-- Mouths: no quote in this take; only open laugh mouths in laugh poses; thrower release mouth forced to a grin.
-- Heads all above y 880. No floating feet seen at 6 fps (cards have the set's contact shadow).
-- Known weak points (non-blocking): mud crown is flat-shaded 2D against the 3D coach, the stuck cabbage leaf is small at phone size, thrower cards stand close to the rank.
-- Continuity: Hanway coat/umbrella/rim as s13; RAIN light (s13 is DUSK_RAIN, ten years on).
+# s10 QA, round 2 (shots 10-12, RAIN), g 645-866 (651-858 + 6 lead + 8 dissolve-out handle)
+qa_auto PASS (222 frames, magenta 0.0 %, no frozen/black frames). It lists the planned cuts 714 / 774 as "no visible change": false flags (preset change; large frame differences, checked on the contact sheet).
+Fixes after the director's TAKE gate r1:
+- Mud (shot 12, g774-866): the set's 3D mud hook is not used. Painted spray: ~15 curved, tapered, slightly translucent fingers in 3 brown tones with a warm rim that end in pointed TEARDROPS (no round bulbs) plus streak droplets, rising from the coach's left wheel (-1.7, 12.2) through the foreground puddle and arcing over Hanway's hat around g795, falling back by ~g815; a flat ground card adds a brown wake and three expanding ripple rings (g786-815). It builds from g786 over several frames (fingers grow out of the wheel), no one-frame pop. Hanway: smug -> shocked over 5 frames (lerped arms, umbrella angle flips over those frames), cast12 `mud` fx ramps 0.15 -> 1.0 (head to toe), then the mud-spotted soaked deadpan hold g808-866. He stands ~25 % closer (-3.8, 8.7): head centre y ~372 (720x1280), face about 90+ px.
+- Egg (shot 11): coachman_c visible, the painted cream egg leaves his windup hand at g723 and flies a real arc (9 frames, spinning) to the dome; the egg splat appears on the dome at g732 exactly as the egg arrives, never both.
+- Cabbage (shot 10): ONE painted cabbage sprite leaves coachman_b's windup hand at g654, 9-frame arc, hits at g663; the same green big leaf then sits on the dome (and rides with Hanway). No second cabbage, no bounce, sprite leaf_stick removed.
+- Mouths: all coachmen in s10 have CLOSED mouths (frown scowl while throwing, smirk afterwards); crowd jeerers smirk; nobody speaks.
+- Coach rule: nobody rides the charging coach, nothing to parent.
+- Heads all above y 880 (Hanway 372-700 centre). Light RAIN, Hanway coat / umbrella consistent with s13.
+- Known weak points (non-blocking): spray is flat 2D against the 3D coach; the dome leaf is a flat ellipse; thrower cards stand close to the rank.
