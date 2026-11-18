@@ -89,14 +89,21 @@ def shot27(g, rep):
 
 # ------------------------------------------------------------------------------------------------ shot 28: the sheepish uncle asks the farmer (MORNING)
 def cam28(g):
-    u = mixu((g - 1911) / 54.0); return lerp3((-2.7, -2.2, 1.15), (-2.3, -1.7, 1.15), u), lerp3((-2.2, 1.5, 0.4), (-2.2, 1.2, 0.5), u), 21.0
+    u = mixu((g - 1911) / 54.0); return lerp3((-2.3, -1.7, 0.55), (-2.3, -1.2, 0.6), u), lerp3((-2.3, 1.5, 0.95), (-2.3, 1.2, 1.0), u), 21.0
 def shot28(g, rep):
     loc, look, lens = cam28(g); cam_set(loc, look, lens); k = g - 1911
-    c, p = story('farmer_calm_smile' if False else 'farmer_proud'); p = dict(p); p.update(expr='smug', mouth='smile', arm_r='akimbo', arm_l='akimbo', yaw=0.3, gaze=[0.7, 0.0], head_roll=-4 + 1.5 * math.sin(k * 0.12), pitch=-0.2 + 0.05 * math.sin(k * 0.09), blink=cast14.blink_at(g, 90, 7), squash=[1.0, 1.0 + 0.01 * math.sin(k * 0.2)])
-    rf = put('s28_farmer', c, p, (-3.1, 1.15, 0), loc, ppd=128, yaw_fixed=None); rep['farmer'] = dict(head=screen(rf['world'](rf['anchors']['head'])))
-    c, p = story('uncle_ask_sheepish'); p = dict(p); sc_ = math.sin(k * 0.35)
-    p.update(blink=cast14.blink_at(g, 80, 3), head_roll=6 + 2 * math.sin(k * 0.1), gaze=[-0.6 + 0.2 * math.sin(k * 0.07), 0.2], arm_l=dict(p['arm_l'], hand=[-0.4 + 0.07 * sc_, -0.3 + 0.05 * math.cos(k * 0.35)]), squash=[1.0, 1.0 + 0.01 * math.sin(k * 0.2 + 1)])
-    ru = put('s28_uncle', c, p, (-1.35, 1.15, 0), loc, ppd=128, yaw_fixed=None); rep['uncle'] = dict(head=screen(ru['world'](ru['anchors']['head'])))
+    c, p = story('farmer_proud'); p = dict(p); p.update(expr='smug', mouth='smile', arm_r='akimbo', arm_l='akimbo', yaw=0.3, gaze=[0.9, 0.5], head_roll=-4 + 1.5 * math.sin(k * 0.12), pitch=-0.2 + 0.05 * math.sin(k * 0.09), blink=cast14.blink_at(g, 90, 7), squash=[1.0, 1.0 + 0.01 * math.sin(k * 0.2)])
+    # grin grows, hat-tip (head roll) late in the shot
+    p['head_roll'] = -4 + 1.5 * math.sin(k * 0.12) - 5 * ez((k - 20) / 14.0) * (1 - ez((k - 40) / 10.0))
+    rf = put('s28_farmer', c, p, (-2.7, 1.15, 0), loc, ppd=128, yaw_fixed=None); rep['farmer'] = dict(head=screen(rf['world'](rf['anchors']['head'])))
+    c, p = story('uncle_ask_sheepish'); p = dict(p); sh = math.sin(k * 0.16)
+    # three-quarter toward the farmer, the EMPTY box held out in both hands at chest height, apologetic face (brows up, eyes down, wobbly mouth), a shrug + head tilt
+    shrug = ez((k - 14) / 10.0) * (1 - ez((k - 30) / 12.0))
+    p.update(yaw=0.75, pitch=0.22, expr='sad', mouth='wavy', fx=['sweat'], head_roll=8 + 3 * math.sin(k * 0.13) + 4 * shrug, gaze=[-0.5, 0.75],
+             blink=cast14.blink_at(g, 80, 3), squash=[1.0, 1.0 + 0.01 * math.sin(k * 0.2 + 1) + 0.02 * shrug],
+             arm_r=dict(hand=[0.50 + 0.03 * sh, 0.48 + 0.04 * shrug], bend=0.3, stretch=1.2), prop_r=dict(type='hivebox', scale=1.05),
+             arm_l=dict(hand=[0.12, 0.46 + 0.04 * shrug], bend=0.3, stretch=1.2, shape='open', layer='front'))
+    ru = put('s28_uncle', c, p, (-1.9, 1.15, 0), loc, ppd=128, yaw_fixed=None); rep['uncle'] = dict(head=screen(ru['world'](ru['anchors']['head'])), hand=screen(ru['world'](ru['anchors']['hand_r'])))
     F.set_uncle_field(1.0)
 
 # ------------------------------------------------------------------------------------------------ shots 29 + 30: on the stool, the sting, the nose (MORNING)
@@ -106,7 +113,7 @@ G_HANG = 1982; G_STING = ge(66.23); G_SW0 = ge(68.07); G_SW1 = ge(69.48)
 def hang_pose(g):
     """uncle_stool_hang -> hand raises the hive to the wire (hang), then the sting reaction."""
     c, a = story('uncle_stool_hang'); a = dict(a, stool=1); a.pop('prop_r', None); k = g - B[29][0]
-    a['arm_r'] = dict(a['arm_r'], hand=[lerp(0.66, 0.92, ez((g - 1962) / 20.0)), lerp(0.25, -0.30, ez((g - 1962) / 20.0))])
+    a['arm_r'] = dict(a['arm_r'], hand=[lerp(0.50, 0.92, ez((g - 1962) / 23.0)), lerp(0.62, -0.30, ez((g - 1962) / 23.0))])
     a['t'] = k * 0.1
     return c, a
 def sting_pose(g):
@@ -115,14 +122,14 @@ def pose29(g):
     k = g - B[29][0]
     if g < G_STING: c, p = hang_pose(g)
     else:
-        c, p0 = hang_pose(G_STING - 1); c, p1 = sting_pose(g); u = ez((g - G_STING) / 5.0)
+        c, p0 = hang_pose(G_STING - 1); c, p1 = sting_pose(g); u = ez((g - G_STING + 1) / 3.0)
         p = cast14.lerp_pose(c, p0, p1, u); p['stool'] = 1
-        p['nose_swell'] = lerp(0.0, 0.07, ez((g - G_STING) / 6.0)) + 0.05 * ez((g - G_STING) / 40.0)
+        p['nose_swell'] = lerp(0.0, 0.30, ez((g - G_STING + 1) / 2.0)) + 0.1 * ez((g - G_STING) / 40.0)
         p['t'] = k * 0.1; p['squash'] = [1.0, 1.02 + 0.03 * math.sin((g - G_STING) * 1.3) * math.exp(-(g - G_STING) / 9.0)]
     p['blink'] = cast14.blink_at(g, 70, 5) if g < G_STING else 0
     return c, p
 def cam29(g):
-    u = mixu((g - 1962) / 70.0); return lerp3((-21.3, 1.55, 1.55), (-22.1, 2.45, 1.75), u), lerp3((-22.9, 4.2, 1.75), (-22.8, 4.1, 1.8), u), 22.0
+    u = mixu((g - 1962) / 70.0); return lerp3((-21.3, 1.55, 1.55), (-22.1, 2.45, 1.75), u), lerp3((-22.9, 4.2, 1.2), (-22.8, 4.1, 1.25), u), 22.0
 def fix_unc():
     """place the stool card so that the raised hand (final hang pose) is exactly under the hook of the uncle's wire"""
     c, p = hang_pose(1982); loc = (-21.5, 0.35, 1.75)
@@ -151,25 +158,25 @@ def shot29(g, rep):
 
 def pose30(g):
     c, p = story('uncle_stung_close'); p = dict(p); p.pop('prop_r', None)
-    k = g - 2032; u = ez((g - G_SW0) / float(G_SW1 - G_SW0), 'sine'); u = 1 - (1 - min(1.0, max(0.0, (g - G_SW0) / float(G_SW1 - G_SW0)))) ** 2   # ease-out
+    k = g - 2032; u = 1 - (1 - min(1.0, max(0.0, (g - G_SW0) / float(G_SW1 - G_SW0)))) ** 2   # ease-out
     base = lerp(0.11, 0.15, min(1.0, k / 13.0)) if g < G_SW0 else 0.15
     p['nose_swell'] = base + (1.0 - base) * u if g >= G_SW0 else base
-    p['t'] = k * 0.09; p['blink'] = 0
+    p['t'] = k * 0.09 + (1.6 * math.sin((g - 2086) * 0.55) * ez((g - 2086) / 4.0) if g >= 2086 else 0.0)   # the trunk tip curls / wiggles at the end
+    p['blink'] = 2 if 2096 <= g <= 2098 else (1 if g in (2095, 2099) else 0)
     p['squash'] = [1.0, 1.0 + 0.012 * math.sin(k * 0.3)]; p['head_roll'] = p.get('head_roll', -4) + 1.6 * math.sin(k * 0.17)
     return c, p
 CAM30N = lambda g: None
 def shot30(g, rep):
     c, p = pose30(g); k = g - 2032; u = mixu(k / 72.0)
-    Hz = UNC[2] + 1.58; dist = lerp(1.95, 1.72, u)
+    Hz = UNC[2] + 1.58; dist = lerp(1.50, 1.36, u)
     loc = (UNC[0] - 0.28 + 0.07 * u, UNC[1] - dist, Hz - 0.35)
-    look = [UNC[0] + 0.04, UNC[1], Hz - 0.9]
+    look = [UNC[0] - 0.12, UNC[1], Hz - 0.9]
     r = put('s30_uncle', c, p, UNC, loc, ppd=256, canvas=(-2.1875, -4.0, 2.5, 0.125), yaw_fixed=0.0, mirror=True)
     head = r['world'](r['anchors']['head']); hand = r['world'](r['anchors']['hand_r'])
     for _ in range(5):
-        cam_set(loc, tuple(look), 22.0); yy = screen(head)[1]; look[2] -= (yy - 280) * dist / 782.0
+        cam_set(loc, tuple(look), 22.0); yy = screen(head)[1]; look[2] -= (yy - 230) * dist / 782.0
     cam_set(loc, tuple(look), 22.0)
     F.set_uncle_hive(1.0); pin_hive(hand, 9999)
-    # nose tip estimate: lowest opaque pixel row of the sprite -> screen
     rep['uncle'] = dict(head=screen(head), hand=screen(hand), nose_swell=round(p['nose_swell'], 3))
 
 # ------------------------------------------------------------------------------------------------ setup / CLI
