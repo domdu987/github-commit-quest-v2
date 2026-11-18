@@ -17,7 +17,7 @@ WORK = os.path.join(HERE, 'farm_work'); TEX = os.path.join(HERE, 'tex'); os.make
 
 # ============================================================================ the fence ring (hero field)
 RX0, RX1, RY0, RY1 = -14.0, 11.0, 5.0, 25.5          # ring corners (the wire's plan), outside = away from the field
-WIRE_Z = 2.0; WIRE_OFF = 0.09; WIRE_R = 0.038
+WIRE_Z = 2.0; WIRE_OFF = 0.09; WIRE_R = 0.046
 SIDES = [((RX0, RY0), (1, 0), RX1 - RX0, 5), ((RX1, RY0), (0, 1), RY1 - RY0, 3), ((RX1, RY1), (-1, 0), RX1 - RX0, 5), ((RX0, RY1), (0, -1), RY1 - RY0, 3)]
 S_TOT = sum(s[2] for s in SIDES); S_CORNER = np.cumsum([0.0] + [s[2] for s in SIDES])
 def ring_at(s):
@@ -37,9 +37,9 @@ for a, b in zip(POST_S, POST_S[1:] + [POST_S[0] + S_TOT]):                      
     _ps.append(a)
     if b - a > 3.7:
         n = int(math.ceil((b - a) / 3.7)); _ps += [a + (b - a) * q / n for q in range(1, n)]
-POST_S = sorted(set(round(x % S_TOT, 4) for x in _ps)); PUSH_S0 = 1.0 + 14.0              # push point: front row x = 1.0, mid-span between unit 2 and 3
+POST_S = sorted(set(round(x % S_TOT, 4) for x in _ps)); PUSH_S0 = 6.0 + 14.0              # push point: front row x = 1.0, mid-span between unit 2 and 3
 SEQ_T = 5.0                                                                      # seconds covered by t 0..1 of set_wire_push / set_bees
-WAVE_C = 15.0; WAVE_F = 1.1; WAVE_D = 1.3; PUSH_A = 1.3
+WAVE_C = 11.0; WAVE_F = 1.1; WAVE_D = 1.5; PUSH_A = 1.6
 
 def _post_dist(s):
     d = np.abs(np.asarray(POST_S)[None, :] - np.asarray(s)[:, None]); d = np.minimum(d, S_TOT - d); return d.min(1)
@@ -68,30 +68,30 @@ def hive_swing(s, t, s0=None):
     s = np.asarray(s, dtype=float)
     if t is None or t < 0: return np.zeros_like(s), np.zeros_like(s)
     s0 = PUSH_S0 if s0 is None else s0; d = _ring_dist(s, s0); tau = t * SEQ_T - d / WAVE_C - 0.12
-    return 0.72 * _amp(d) * _h(tau), 0.22 * _amp(d) * np.where(tau <= 0, 0.0, np.sin(2 * math.pi * 1.7 * tau) * np.exp(-np.maximum(tau, 0) / 1.2))
+    return 0.9 * _amp(d) * _h(tau), 0.22 * _amp(d) * np.where(tau <= 0, 0.0, np.sin(2 * math.pi * 1.7 * tau) * np.exp(-np.maximum(tau, 0) / 1.2))
 
 # ============================================================================ light states
 def kdir(az, el):
     a = math.radians(az); e = math.radians(el); return (-math.sin(a) * math.cos(e), -math.cos(a) * math.cos(e), -math.sin(e))
 LIGHTS = dict(
  DAY=dict(sky=[(0.0, '#8aa3d8'), (0.42, '#e9b98c'), (0.5, '#f7d49c'), (0.56, '#f0d8b4'), (0.64, '#b0b8f0'), (0.8, '#7a80e6'), (1.0, '#5c64d8')], sky_k=1.45,
-          key=(1.0, 0.78, 0.5, 4.6), key_dir=kdir(-60, 27), sun_angle=1.0, exposure=-0.2, sat=1.14, fill=(1.0, 0.62, 0.4, 0.35), mount_x=250, card_k=1.0,
+          key=(1.0, 0.78, 0.5, 4.6), key_dir=kdir(-60, 27), sun_angle=1.0, exposure=-0.2, sat=1.14, shade_tint=0.9, fill=(1.0, 0.62, 0.4, 0.35), mount_x=250, card_k=1.0,
           hills=[(120, 6, 14, '#a290c4'), (170, 18, 26, '#9498d0'), (205, 30, 30, '#8690d8')], hill_k=1.0, mount='#7488dc', cap='#f7e6dc', clouds=1.0, cloud_col=1.0, birds=True,
           lamps=[((24.0, 8.5, 0.9), (1.0, 0.5, 0.2), 120, 0.3)]),
  MORNING=dict(sky=[(0.0, '#8fa0d4'), (0.42, '#f0c29c'), (0.5, '#fbdcae'), (0.56, '#f6e2c6'), (0.64, '#bcc4f2'), (0.8, '#7e86e8'), (1.0, '#6068d8')], sky_k=1.4,
-          key=(1.0, 0.80, 0.55, 4.2), key_dir=kdir(64, 17), sun_angle=1.2, exposure=-0.15, sat=1.14, fill=(1.0, 0.7, 0.45, 0.35), mount_x=250, card_k=1.0,
+          key=(1.0, 0.80, 0.55, 4.2), key_dir=kdir(64, 17), sun_angle=1.2, exposure=-0.15, sat=1.14, shade_tint=0.9, fill=(1.0, 0.7, 0.45, 0.35), mount_x=250, card_k=1.0,
           hills=[(120, 6, 14, '#a8a0c8'), (170, 18, 26, '#9aa8d2'), (205, 30, 30, '#88a8d8')], hill_k=1.0, mount='#7a98d8', cap='#fbeee4', clouds=1.0, cloud_col=1.0, birds=True,
           lamps=[((24.0, 8.5, 0.9), (1.0, 0.5, 0.2), 200, 0.3)]),
  DUSK=dict(sky=[(0.0, '#3a3a8e'), (0.44, '#d9806e'), (0.5, '#f4a868'), (0.58, '#7676c8'), (1.0, '#2a2c84')], sky_k=1.1,
-          key=(1.0, 0.55, 0.3, 3.4), key_dir=kdir(-115, 8), sun_angle=1.0, exposure=-0.02, sat=1.12, fill=(1.0, 0.5, 0.3, 1.0), mount_x=250, card_k=0.95,
+          key=(1.0, 0.55, 0.3, 3.4), key_dir=kdir(-115, 8), sun_angle=1.0, exposure=-0.02, sat=1.12, shade_tint=0.5, fill=(1.0, 0.5, 0.3, 1.0), mount_x=250, card_k=0.95,
           hills=[(120, 6, 14, '#625aa0'), (170, 18, 26, '#6068ac'), (205, 30, 30, '#5870b4')], hill_k=0.85, mount='#4a62a8', cap='#e8b8b0', clouds=0.8, cloud_col=0.7, birds=False,
-          lamps=[((1.3, 0.5, 0.55), (1.0, 0.5, 0.18), 420, 0.25), ((4.9, 2.6, 2.1), (1.0, 0.6, 0.26), 420, 0.12), ((18.2, 11.5, 1.6), (1.0, 0.62, 0.28), 420, 0.15),
+          lamps=[((-10.4, 1.4, 0.55), (1.0, 0.5, 0.18), 420, 0.25), ((4.9, 2.6, 2.1), (1.0, 0.6, 0.26), 420, 0.12), ((18.2, 11.5, 1.6), (1.0, 0.62, 0.28), 420, 0.15),
                  ((24.0, 8.6, 1.0), (1.0, 0.5, 0.2), 500, 0.3), ((30.5, 18.3, 1.8), (1.0, 0.65, 0.3), 420, 0.15), ((21.5, 20.0, 1.5), (1.0, 0.6, 0.3), 300, 0.15),
                  ((-30.0, 27.0, 1.6), (1.0, 0.62, 0.28), 300, 0.15)]),
- NIGHT=dict(sky=[(0.0, '#2c2a6e'), (0.5, '#524e9c'), (0.64, '#34327e'), (1.0, '#1c1a5e')], sky_k=2.0, stars=True,
+ NIGHT=dict(sky=[(0.0, '#24206a'), (0.46, '#5a54a8'), (0.52, '#6e68b4'), (0.62, '#3a3684'), (0.8, '#24226e'), (1.0, '#16145a')], sky_k=2.0, stars=True,
           key=(0.56, 0.58, 1.0, 3.2), key_dir=kdir(-32, 27), sun_angle=1.2, exposure=0.0, sat=1.12, fill=(0.5, 0.45, 0.8, 0.5), mount_x=-100, card_k=0.72,
           hills=[(120, 6, 14, '#322e78'), (170, 18, 26, '#2e2c76'), (205, 30, 30, '#2a2a74')], hill_k=0.95, mount='#2a3478', cap='#8a9cd8', clouds=0.3, cloud_col=0.5, birds=False, moon=True,
-          lamps=[((1.3, 0.5, 0.55), (1.0, 0.5, 0.18), 650, 0.25), ((4.9, 2.6, 2.1), (1.0, 0.6, 0.26), 700, 0.12), ((18.2, 11.5, 1.6), (1.0, 0.62, 0.28), 900, 0.15),
+          lamps=[((-10.4, 1.4, 0.55), (1.0, 0.5, 0.18), 650, 0.25), ((4.9, 2.6, 2.1), (1.0, 0.6, 0.26), 700, 0.12), ((18.2, 11.5, 1.6), (1.0, 0.62, 0.28), 900, 0.15),
                  ((24.0, 8.6, 1.0), (1.0, 0.5, 0.2), 700, 0.3), ((30.5, 18.3, 1.8), (1.0, 0.65, 0.3), 700, 0.15), ((21.5, 20.0, 1.5), (1.0, 0.6, 0.3), 450, 0.15),
                  ((-30.0, 27.0, 1.6), (1.0, 0.62, 0.28), 600, 0.15), ((-29.0, 2.9, 0.8), (1.0, 0.55, 0.22), 350, 0.2), ((-5.0, 3.6, 1.1), (1.0, 0.62, 0.3), 160, 0.1)]),
 )
@@ -161,10 +161,10 @@ def sky(P):
     bg.inputs['Strength'].default_value = P['sky_k']; L(cr.outputs[0], bg.inputs['Color'])
     if P.get('stars'):
         vo = N('ShaderNodeTexVoronoi'); vo.inputs['Scale'].default_value = 260; vo.feature = 'F1'; L(tc.outputs['Generated'], vo.inputs[0])
-        sr = N('ShaderNodeValToRGB'); sr.color_ramp.elements[0].position = 0.0; sr.color_ramp.elements[1].position = 0.05; sr.color_ramp.elements[0].color = (1, 1, 1, 1); sr.color_ramp.elements[1].color = (0, 0, 0, 1); L(vo.outputs['Distance'], sr.inputs[0])
+        sr = N('ShaderNodeValToRGB'); sr.color_ramp.elements[0].position = 0.0; sr.color_ramp.elements[1].position = 0.09; sr.color_ramp.elements[0].color = (1, 1, 1, 1); sr.color_ramp.elements[1].color = (0, 0, 0, 1); L(vo.outputs['Distance'], sr.inputs[0])
         zm = N('ShaderNodeMapRange'); L(sp.outputs['Z'], zm.inputs['Value']); zm.inputs['From Min'].default_value = 0.53; zm.inputs['From Max'].default_value = 0.65
         mu = N('ShaderNodeMath'); mu.operation = 'MULTIPLY'; L(sr.outputs[0], mu.inputs[0]); L(zm.outputs['Result'], mu.inputs[1])
-        ma = N('ShaderNodeMath'); ma.operation = 'MULTIPLY'; ma.inputs[1].default_value = 9.0; L(mu.outputs[0], ma.inputs[0])
+        ma = N('ShaderNodeMath'); ma.operation = 'MULTIPLY'; ma.inputs[1].default_value = 16.0; L(mu.outputs[0], ma.inputs[0])
         ad = N('ShaderNodeMix'); ad.data_type = 'RGBA'; ad.blend_type = 'ADD'; L(cr.outputs[0], ad.inputs[6]); ad.inputs[7].default_value = (0.8, 0.9, 1.0, 1); L(ma.outputs[0], ad.inputs[0]); L(ad.outputs[2], bg.inputs['Color'])
     L(bg.outputs[0], out.inputs['Surface'])
 
@@ -311,7 +311,7 @@ def _update_fence():
     tg = np.gradient(P, axis=0); tg /= np.maximum(np.linalg.norm(tg, axis=1, keepdims=True), 1e-9)
     up = np.array([0, 0, 1.0]); sd = np.cross(tg, up); sd /= np.maximum(np.linalg.norm(sd, axis=1, keepdims=True), 1e-9); uu = np.cross(sd, tg)
     NS = 6; ang = np.linspace(0, 2 * math.pi, NS, endpoint=False); verts = np.zeros((len(S), NS, 3))
-    for q, a in enumerate(ang): verts[:, q] = P + WIRE_R * (math.cos(a) * sd + math.sin(a) * uu)
+    for q, a in enumerate(ang): verts[:, q] = P + STATE.get('wire_r', WIRE_R) * (math.cos(a) * sd + math.sin(a) * uu)
     faces = []
     for k in range(len(S) - 1):
         if not show[k]: continue
@@ -322,7 +322,7 @@ def _update_fence():
     if STATE.get('bees_args'): _bees_apply(*STATE['bees_args'])
 
 # ----------------------------------------------------------------------------- bees (one mesh rebuilt per call: gold-black spindles + wing triangles)
-BEE_PER_HIVE = 150; BEE_L = 0.075
+BEE_PER_HIVE = 90; BEE_L = 0.075
 def _bee_seed():
     rr = np.random.RandomState(14); n = BEE_PER_HIVE * 16
     d = rr.normal(size=(n, 3)); d /= np.linalg.norm(d, axis=1, keepdims=True); d[:, 2] = np.abs(d[:, 2]) * 0.8 + 0.3
@@ -349,7 +349,7 @@ def _bees_apply(t, burst, target, local):
     for (e, ex, u, dly, outv) in ent:
         i = u['i']; sl = slice(i * BEE_PER_HIVE + (0 if ex < 0 else BEE_PER_HIVE // 2), i * BEE_PER_HIVE + (BEE_PER_HIVE // 2 if ex < 0 else BEE_PER_HIVE))
         u_ = S_['u'][sl]; dr = S_['dir'][sl].copy(); n = len(u_); age = sec - dly
-        sleep = np.arange(n) < 5
+        sleep = np.arange(n) < 14
         if t < 0 or age <= 0:
             m = sleep; pos = np.array(e) + np.stack([S_['jit'][sl][:, 0] * 0.01 + ex * 0.04, np.cos(S_['jit'][sl][:, 1]) * 0.05, np.sin(S_['jit'][sl][:, 2]) * 0.07 - 0.02], 1); pos = pos[m]; allsleep.append(np.ones(m.sum(), bool)); allp.append(pos); continue
         ramp = _sm(age / 0.8); show = (u_ < burst * ramp) | sleep
@@ -368,18 +368,18 @@ def _bees_apply(t, burst, target, local):
     if not allp: return
     P = np.concatenate(allp); n = len(P)
     if n == 0: return
-    rr = np.random.RandomState(int(sec * 30) % 997 + 3); yaw = rr.uniform(0, 6.283, n); pit = rr.uniform(-0.5, 0.5, n); fl = rr.uniform(0.35, 1.2, n); s = BEE_L
+    rr = np.random.RandomState(int(sec * 30) % 997 + 3); yaw = rr.uniform(0, 6.283, n); pit = rr.uniform(-0.5, 0.5, n); fl = rr.uniform(0.35, 1.2, n)
+    cam = bpy.context.scene.camera; cl = np.array(cam.location) if cam is not None else np.array([0.0, -8.0, 2.0]); dist = np.linalg.norm(P - cl, axis=1); s = np.clip(0.07 + 0.006 * dist, 0.07, 0.17)      # bigger with distance so they read as bees, not glitter
     cy, sy_, cp, sp_ = np.cos(yaw), np.sin(yaw), np.cos(pit), np.sin(pit)
     fw = np.stack([cy * cp, sy_ * cp, sp_], 1); sd = np.stack([-sy_, cy, np.zeros(n)], 1); up = np.cross(fw, sd)
-    def pt(a, b, c): return P + fw * (a * s)[:, None] + sd * (b * s)[:, None] + up * (c * s)[:, None] if hasattr(a, '__len__') else P + fw * (a * s) + sd * (b * s) + up * (c * s)
+    def pt(a, b, c): return P + fw * (a * s)[:, None] + sd * (b * s)[:, None] + up * (c * s)[:, None]
     ring = lambda x, r: [pt(x, r, 0.0), pt(x, 0.0, r), pt(x, -r, 0.0), pt(x, 0.0, -r)]
     head = pt(0.62, 0, 0); tail = pt(-0.62, 0, 0); r1 = ring(0.22, 0.2); r2 = ring(-0.18, 0.22); r3 = ring(0.5, 0.11)
     vs = [head, tail] + r1 + r2 + r3 + [pt(0.12, 0.0, 0.18), pt(-0.1, 0.0, 0.18), pt(0.12, 0.0, 0.18), pt(-0.1, 0.0, 0.18)]
-    wl = [pt(0.1, 0.1, 0.12), pt(-0.12, 0.1, 0.12), pt(-0.05, 1.0 * 0.95, 0.12 + 0.8 * fl[0] * 0 + 0.0)]
     # wings: two triangles with flap angle fl (per bee, rebuilt each call)
     wing = []
     for sg in (-1, 1):
-        wing.append((pt(0.12, 0.12 * sg, 0.18), pt(-0.1, 0.12 * sg, 0.18), P + sd * (sg * 0.95 * s * np.cos(fl))[:, None] + up * (0.75 * s * np.sin(fl) + 0.18 * s)[:, None] + fw * (-0.05 * s)))
+        wing.append((pt(0.12, 0.12 * sg, 0.18), pt(-0.1, 0.12 * sg, 0.18), P + sd * (sg * 0.62 * s * np.cos(fl))[:, None] + up * (0.5 * s * np.sin(fl) + 0.18 * s)[:, None] + fw * (-0.05 * s)[:, None]))
     V = np.stack(vs[:14] + [w[2] for w in wing] + [w[0] for w in wing] + [w[1] for w in wing], 1)         # (n, 20, 3)
     Vf = V.reshape(-1, 3); nv = V.shape[1]; base = (np.arange(n) * nv)[:, None]
     # indices: 0 head, 1 tail, 2-5 ring1 (x .22), 6-9 ring2 (x -.18), 10-13 ring3 (x .5), 14,15 wing tips, 16,17 wing roots front, 18,19 wing roots back
@@ -417,16 +417,20 @@ def set_wire_push(t, point=None):
     _update_fence()
 
 # ============================================================================ the world
-STAND = {   # name -> (x, y, z, facing): floor points for actor cards (card bottom = feet), heights in HEIGHT
- 'hero_yard': (-3.4, 1.0, 0.0), 'hero_fence': (-8.8, 3.4, 0.0), 'hero_hive': (-6.5, 3.6, 0.0), 'hero_proud': (-1.2, 2.4, 0.0),
- 'uncle_yard': (-0.4, 0.5, 0.0), 'uncle_night': (3.6, 1.2, 0.0),
- 'villager_woman': (-7.0, 0.2, 0.0), 'villager_kid': (-5.6, -0.6, 0.0), 'villager_oldman': (-4.2, 0.0, 0.0), 'villager_woman2': (-1.6, -0.3, 0.0), 'villager_man': (1.8, -0.5, 0.0),
- 'matriarch_push': (0.4, 4.3, 0.0), 'matriarch_arrive': (-0.2, 0.3, 0.0),
- 'ele_2': (-6.2, 2.0, 0.0), 'ele_3': (6.4, 1.4, 0.0), 'ele_4': (-11.0, 0.6, 0.0), 'calf': (-3.2, -0.8, 0.0),
- 'herd_a': (-8.5, -2.0, 0.0), 'herd_b': (-3.0, -3.6, 0.0), 'herd_c': (5.5, -2.4, 0.0), 'herd_d': (10.0, 0.4, 0.0), 'herd_calf': (2.0, -3.4, 0.0),
- 'uncle_stool': (-22.4, 2.4, 0.0), 'uncle_field': (-27.0, 1.2, 0.0), 'uncle_fence_hive': (-23.0, 5.0, 0.0),
+STAND = {   # name -> (x, y, z): floor points for actor cards (card bottom = feet)
+ 'hero_yard': (-3.0, 1.2, 0.0), 'hero_fence': (-8.8, 3.4, 0.0), 'hero_hive': (-6.6, 3.2, 0.0), 'hero_proud': (-1.2, 2.4, 0.0), 'hero_ladder': (-6.0, 4.0, 1.25),
+ 'uncle_yard': (-1.2, 1.2, 0.0), 'uncle_night': (-2.4, 2.6, 0.0),
+ 'crowd_a': (-4.2, 1.2, 0.0), 'crowd_b': (-3.3, 0.2, 0.0), 'crowd_c': (-1.2, 1.2, 0.0), 'crowd_d': (-0.4, 0.1, 0.0), 'crowd_e': (-2.0, 0.0, 0.0),
+ 'villager_woman': (-4.0, 1.9, 0.0), 'villager_kid': (-3.0, 1.0, 0.0), 'villager_oldman': (-4.9, 1.3, 0.0), 'villager_woman2': (-2.4, 1.9, 0.0), 'villager_man': (-1.6, 2.4, 0.0),
+ 'matriarch_push': (5.4, 4.3, 0.0), 'matriarch_arrive': (-0.6, 2.3, 0.0),
+ 'ele_2': (-6.2, 2.4, 0.0), 'ele_3': (8.6, 2.0, 0.0), 'ele_4': (-11.0, 0.6, 0.0), 'calf': (3.0, 1.6, 0.0),
+ 'herd_a': (-9.0, 0.2, 0.0), 'herd_b': (-2.5, -0.8, 0.0), 'herd_c': (4.5, 0.4, 0.0), 'herd_d': (9.5, 1.4, 0.0), 'herd_calf': (1.0, 1.4, 0.0),
+ 'uncle_stool': (-22.4, 2.4, 0.46), 'uncle_field': (-27.0, 1.2, 0.0), 'uncle_fence_hive': (-23.0, 5.0, 0.0),
 }
-HEIGHT = dict(hero=1.75, uncle=1.72, woman=1.62, kid=1.15, oldman=1.6, man=1.75, matriarch=3.3, elephant=3.0, calf=1.5)
+# heights in m. The real cast14 scale: 1 D = 0.583 m, matriarch 3.3 m, elephant_b/c/d 0.86/0.93/0.77 of that, calf 0.36 (1.2 m); real canvases CANVAS14 (+-11.3 D wide, 9.3 D tall for the matriarch)
+HEIGHT = dict(hero=1.75, uncle=1.72, woman=1.62, kid=1.15, oldman=1.6, man=1.75, matriarch=3.3, elephant_b=2.84, elephant_c=3.07, elephant_d=2.54, elephant=3.0, calf=1.2)
+BIG = ('matriarch', 'elephant', 'elephant_b', 'elephant_c', 'elephant_d', 'calf')
+CANVAS_M = (26.4, 5.4)     # matriarch canvas in metres (x2 11.3 D, 9.3 D), scaled by H / 3.3 for the other elephants
 
 def _hero_field(M, vars_, light):
     sc = bpy.context.scene; rr = rnd(7); n = 0
@@ -438,6 +442,7 @@ def _hero_field(M, vars_, light):
             s = rr.uniform(0.85, 1.18); ob.scale = (s, s, s * rr.uniform(0.92, 1.12)); sc.collection.objects.link(ob); n += 1
     return n
 
+UTRACKS = (-39.5, -33.0, -27.5)
 def _uncle_field(M, vars_, dry):
     sc = bpy.context.scene; rr = rnd(17); plants = []
     for ix in range(0, 24):
@@ -446,7 +451,7 @@ def _uncle_field(M, vars_, dry):
             if y > 25.6 or rr.random() < 0.03: continue
             v = vars_[rr.randrange(len(vars_))]; ob = bpy.data.objects.new('umz', v.data); rz = rr.random() * 6.283; s = rr.uniform(0.85, 1.15); zs = s * rr.uniform(0.92, 1.1)
             ob.location = (x, y, 0); ob.rotation_euler = (0, 0, rz); ob.scale = (s, s, zs); sc.collection.objects.link(ob)
-            plants.append(dict(dry=dry[rr.randrange(len(dry))], green=v, ob=ob, loc=(x, y, 0.0), rz=rz, s=s, zs=zs, thr=rr.uniform(0.05, 0.85), fall=rr.uniform(1.15, 1.5), phi=rr.uniform(0, 6.283), eaten=rr.random() < 0.6, gone=rr.random() < 0.7))
+            plants.append(dict(dry=dry[rr.randrange(len(dry))], green=v, ob=ob, loc=(x, y, 0.0), rz=rz, s=s, zs=zs, thr=rr.uniform(0.05, 0.85), fall=rr.uniform(1.15, 1.5), phi=rr.uniform(0, 6.283), eaten=rr.random() < 0.6, gone=(rr.random() < (0.97 if min(abs(x - t) for t in UTRACKS) < 1.4 else 0.78))))
     STATE['uplants'] = plants
 
 def _uncle_fence(M, light):
@@ -457,7 +462,7 @@ def _uncle_fence(M, light):
     for y in np.arange(uy0 + 1.5, uy1, 3.0): segs += [((ux0, y), 1.5708), ((ux1, y), 1.5708)]
     for (c, yaw) in segs:
         mb = MB('thorn'); G.thorn_pile(mb, M, (0, 0, 0), yaw, 3.0, 1.15, pid + 5); ob = mb.finish(join=True)[0]; ob.location = (c[0], c[1], 0.0)
-        broken = (pid % 3 == 0) and (c[1] in (uy0, uy1) or c[0] == ux0)
+        broken = (c[1] == uy0 and pid % 4 in (0, 2)) or (c[1] == uy1 and pid % 2 == 0) or (pid % 3 == 0)
         STATE['upiles'].append(dict(ob=ob, loc=(c[0], c[1], 0.0), yaw=yaw, broken=broken, dirv=(rr.uniform(-1, 1), rr.uniform(0.6, 1.6)))); pid += 1
     for k, x in enumerate(np.arange(ux0 + 3.0, ux1 - 2.0, 6.0)):
         mb = MB('cans'); G.tin_can_line(mb, M, (-1.5, 0, 1.55), (1.5, 0, 1.45), 5, 40 + k)
@@ -467,11 +472,11 @@ def _uncle_fence(M, light):
     STATE['ufoot'] = []; mbf = MB('foot'); rrf = rnd(41); objs = []
     for tx in (-39.5, -33.0, -27.5):
         for j in range(18):
-            y = 27.0 - j * 1.55; x = tx + rrf.uniform(-0.4, 0.4) + (0.55 if j % 2 else -0.55); r = rrf.uniform(0.4, 0.5)
-            mbf2 = MB('fp'); mbf2.rod(M['foot'], (0, 0, 0.0), (0, 0, 0.03), r, r, 10); mbf2.rod(M['dust'], (0, 0, 0.0), (0, 0, 0.022), r * 1.3, r * 1.3, 10); o = mbf2.finish(join=True)[0]
+            y = 27.0 - j * 1.55; x = tx + rrf.uniform(-0.4, 0.4) + (0.55 if j % 2 else -0.55); r = rrf.uniform(0.38, 0.46)
+            mbf2 = MB('fp'); mbf2.lathe(M['foot'], (0, 0, 0), [(0.0, 0.014), (r * 0.92, 0.014)], 16, False); mbf2.lathe(M['dust'], (0, 0, 0), [(r * 0.95, 0.0), (r * 1.02, 0.09), (r * 1.3, 0.05), (r * 1.55, 0.0)], 16); o = mbf2.finish(join=True)[0]
             o.location = (x, y, 0.0); o.scale = (0.01, 0.01, 0.01); STATE['ufoot'].append(dict(ob=o, thr=rrf.uniform(0.0, 0.7), s=rrf.uniform(0.9, 1.2)))
     for j in range(26):
-        x = rrf.uniform(-45, -22.5); y = rrf.uniform(7, 25); r = rrf.uniform(0.9, 1.9); m2 = MB('mud'); m2.rod(M['foot'], (0, 0, 0), (0, 0, 0.02), r, r, 12); o = m2.finish()[0]; o.location = (x, y, 0.0); o.scale = (0.01, 0.01, 0.01); STATE['ufoot'].append(dict(ob=o, thr=rrf.uniform(0.0, 0.6), s=1.0))
+        x = rrf.uniform(-45, -22.5); y = rrf.uniform(7, 25); r = rrf.uniform(0.9, 1.9); m2 = MB('mud'); m2.lathe(M['mudpatch'], (0, 0, 0), [(0.0, 0.012), (r * 0.8, 0.012), (r, 0.004)], 14, False); o = m2.finish()[0]; o.location = (x, y, 0.0); o.scale = (0.01, 0.01, 0.01); STATE['ufoot'].append(dict(ob=o, thr=rrf.uniform(0.0, 0.6), s=1.0))
     # chewed cobs + pulled stalks
     mc = MB('chew'); rc = rnd(43)
     for i in range(70):
@@ -480,58 +485,49 @@ def _uncle_fence(M, light):
         if i % 5 == 0: mc.rod(M['stalk'], (x, y, 0.05), (x + rc.uniform(-1, 1), y + rc.uniform(-1, 1), 0.07), 0.03, 0.02, 5)
     for i in range(12):
         x = rc.uniform(-45, -22); y = rc.uniform(7, 25)
-        for q in range(5): mc.ell(M['char'], (x + rc.uniform(-.25, .25), y + rc.uniform(-.25, .25), 0.14 + 0.1 * (q > 3)), (0.18, 0.18, 0.15), (8, 6))
+        for q in range(5): mc.ell(M['dung'], (x + rc.uniform(-.25, .25), y + rc.uniform(-.25, .25), 0.14 + 0.1 * (q > 3)), (0.18, 0.18, 0.15), (8, 6))
     STATE['uchew'] = mc.finish(); 
 
 def _uncle_farm(M, light, props):
     G.house_tin(props, M, (-34.0, 34.5, 0.0), 6.5, 4.0, 2.6, yaw=0.08, roof='tinred', walls='plaster2', seed=3, door='doorred')
     G.hut_round(props, M, (-43.0, 32.0, 0.0), r=1.55, rt=2.2, ht=1.8, door_yaw=0.3, thatch='thatchold', seed=9); G.granary(props, M, (-26.5, 32.5, 0.0))
     for i, (x, y) in enumerate([(-20.5, 29.5), (-48.8, 30.0), (-30.0, 38.0)]): G.banana(props, M, (x, y, 0.0), 300 + i, 1.0)
-    G.stool(props, M, (-22.4, 1.8)); G.bench(props, M, (-28.5, 0.4), 0.2); G.bucket(props, M, (-27.4, 0.8)); G.basket(props, M, (-30.5, 1.0), True, 8)
+    G.stool(props, M, (-22.4, 2.4)); G.bench(props, M, (-28.5, 0.4), 0.2); G.bucket(props, M, (-27.4, 0.8)); G.basket(props, M, (-30.5, 1.0), True, 8)
     G.jerrycan(props, M, (-31.4, 0.2, 0.0), 0.4); G.jerrycan(props, M, (-31.7, 0.55, 0.0), 1.2); G.hoe(props, M, (-26.0, 2.2, 0.0), 2.3); G.pot_clay(props, M, (-29.4, 1.6))
-    G.firepit(props, M, (-29.0, 2.9, 0.0), light in ('NIGHT', 'DUSK', 'MORNING'))
+    G.firepit(props, M, (-29.0, 2.9, 0.0), light in ('NIGHT', 'DUSK'))
     if light != 'NIGHT':
         for i, (x, y) in enumerate([(-32.4, 2.2), (-24.8, -0.4), (-33.2, -1.0), (-19.6, 0.6)]): G.chicken(props, M, (x, y, 0.0), i * 2.1, 1.15, i % 4, 0.5 if i % 2 else 0.0)
     for i, (x, y) in enumerate([(-45.0, 38.0), (-24.0, 40.0), (-38.0, 44.0)]): G.bush(props, M, (x, y, 0.0), 1.3, 50 + i)
 
 def _hero_yard(M, light, props):
-    day = light != 'NIGHT'
-    for (x, y, yw) in [(-6.6, 0.4, 0.7), (-6.2, 0.75, 1.3), (-6.55, 0.05, 2.2), (-6.3, 0.2, 0.2), (-7.0, 0.8, 1.9)]: G.jerrycan(props, M, (x, y, 0.0), yw)
-    G.hoe(props, M, (-7.4, 1.9, 0.0), 0.6); G.hoe(props, M, (-7.8, 1.5, 0.0), 0.9, 1.15)
-    G.stool(props, M, (-5.0, 1.4)); G.stool(props, M, (-4.4, 0.9), 0.5); G.bench(props, M, (-9.8, 0.8), 0.3)
-    G.basket(props, M, (-7.9, 0.8), True, 4); G.basket(props, M, (-8.6, -0.1), True, 6)
-    G.wheelbarrow(props, M, (7.8, 2.4, 0.0), 0.5); G.firewood(props, M, (6.3, 0.9, 0.0), 0.2, 4)
+    day = light != 'NIGHT'; fire_lit = light in ('NIGHT', 'DUSK')
+    for (x, y, yw) in [(-12.0, 2.2, 0.7), (-11.6, 2.55, 1.3), (-12.05, 1.8, 2.2), (-11.5, 2.0, 0.2), (-12.5, 2.6, 1.9)]: G.jerrycan(props, M, (x, y, 0.0), yw)
+    G.hoe(props, M, (-13.2, 2.0, 0.0), 0.6); G.hoe(props, M, (-13.6, 1.6, 0.0), 0.9, 1.15)
+    G.stool(props, M, (-5.6, 1.8)); G.stool(props, M, (-5.9, 1.3), 0.5); G.bench(props, M, (-9.8, 1.4), 0.3)
+    G.basket(props, M, (-12.6, 0.2), True, 4); G.basket(props, M, (-13.2, -0.6), True, 6)
+    G.wheelbarrow(props, M, (-10.6, -1.8, 0.0), 0.5); G.firewood(props, M, (-12.3, 3.5, 0.0), 0.2, 4)
     for i, (x, y, z) in enumerate([(-12.6, -0.6, 0.0), (-12.6, -0.6, 0.38), (-12.2, -1.2, 0.0)]):          # spare hives stacked on the ground
-        props.push(Matrix.Translation((x, y, 0.85 + z)) @ Euler((0, 0, 0.3 + i * 0.2)).to_matrix().to_4x4()); G.MB.finish if False else None
-        _hive_ground(props, M); props.pop()
-    props.corrugated(M['tin'], (6.0, 3.3, 0.0), (0.3, 0.0, 1.0), (0.97, 0.25, 0), (0.25, -0.95, 0.1), 2.3, 1.6, 0.1, 0.025)                # tin sheets leaned on a post
-    props.corrugated(M['tin'], (5.4, 3.25, 0.0), (0.3, 0.0, 1.0), (0.97, 0.25, 0), (0.25, -0.95, 0.1), 2.2, 1.6, 0.1, 0.025)
-    for (x, y) in [(-4.4, -0.4), (-3.7, -0.7)]: _spool(props, M, (x, y, 0.0))
-    G.bucket(props, M, (-2.3, 2.4, 0.0), 'jcap'); G.pot_clay(props, M, (4.9, -0.6, 0.0)); G.pot_clay(props, M, (5.3, -0.9, 0.0), 0.8)
-    for i in range(3): G.sack(props, M, (7.0 + i * 0.35, -0.6 + (i % 2) * 0.2, 0.0), i * 1.1)
-    # ladder leaning on the fence
-    for sx in (-0.22, 0.22): props.rod(M['woodpale'], (-3.5 + sx, 3.7, 0.0), (-3.5 + sx, 4.55, 2.35), 0.035, 0.03, 5)
-    for i in range(7): z = 0.3 + i * 0.32; props.rod(M['woodpale'], (-3.72, 3.7 + 0.85 * z / 2.35, z), (-3.28, 3.7 + 0.85 * z / 2.35, z), 0.022, 0.022, 4)
-    G.basket(props, M, (-4.8, -1.7), True, 21); G.bucket(props, M, (-3.0, -1.5)); G.sack(props, M, (-2.0, -1.9), 0.5, 0.8); G.sack(props, M, (-1.6, -1.6), 1.7, 0.8); G.hoe(props, M, (-5.8, -2.1, 0.0), 1.2, 1.1); G.stool(props, M, (-0.6, -2.0), 0.3)
-    G.pumpkin_patch(props, M, (-1.0, -1.2, 0.0), rnd(5), 3)
-    G.firepit(props, M, (1.3, 0.5, 0.0), light in ('NIGHT', 'DUSK', 'MORNING'))
-    G.metal_pot(props, M, (1.3, 0.5, 0.3), 1.0) if light == 'DAY' and False else None
-    if light in ('NIGHT', 'DUSK'):
+        props.push(Matrix.Translation((x, y, 0.85 + z)) @ Euler((0, 0, 0.3 + i * 0.2)).to_matrix().to_4x4()); _hive_ground(props, M); props.pop()
+    for (x, y) in [(-8.0, -0.6), (-7.3, -0.9)]: _spool(props, M, (x, y, 0.0))
+    G.bucket(props, M, (-11.2, 1.0, 0.0), 'jcap'); G.pot_clay(props, M, (-10.4, 3.0, 0.0)); G.pot_clay(props, M, (-10.0, 3.3, 0.0), 0.8)
+    for i in range(3): G.sack(props, M, (-13.3 + i * 0.35, -0.2 + (i % 2) * 0.2, 0.0), i * 1.1, 0.9)
+    # ladder leaning on unit 1 (hook_close: the hero stands on it)
+    for sx in (-0.22, 0.22): props.rod(M['woodpale'], (-6.0 + sx, 3.55, 0.0), (-6.0 + sx, 4.75, 2.6), 0.035, 0.03, 5)
+    for i in range(7): z = 0.3 + i * 0.34; props.rod(M['woodpale'], (-6.22, 3.55 + 1.2 * z / 2.6, z), (-5.78, 3.55 + 1.2 * z / 2.6, z), 0.022, 0.022, 4)
+    G.firepit(props, M, (-10.4, 1.4, 0.0), fire_lit)
+    if fire_lit:
         for i in range(14):
-            a = i * 0.45; r = 0.2 + (i % 5) * 0.15; props.ell(M['ember'], (1.3 + math.cos(a) * r, 0.5 + math.sin(a) * r, 0.03 + 0.03 * (i % 3)), (0.025, 0.025, 0.015), (6, 4))
+            a = i * 0.45; r = 0.2 + (i % 5) * 0.15; props.ell(M['ember'], (-10.4 + math.cos(a) * r, 1.4 + math.sin(a) * r, 0.03 + 0.03 * (i % 3)), (0.025, 0.025, 0.015), (6, 4))
     props.rod(M['wood'], (4.9, 2.6, 0), (4.9, 2.6, 2.5), 0.06, 0.05, 6); props.rod(M['wood'], (4.9, 2.6, 2.45), (4.9, 3.3, 2.45), 0.04, 0.04, 5); props.rod(M['rope'], (4.9, 2.6, 2.4), (4.9, 2.6, 2.2), 0.01, 0.01, 4)
-    props.ell(M['lamp'], (4.9, 2.6, 2.1), (0.1, 0.1, 0.14), (8, 6)); props.lathe(M['glass'], (1.9, 2.8, 1.95), [(0.0, 0.0), (0.11, 0.0), (0.11, 0.32), (0.0, 0.32)], 8) if False else None
+    props.ell(M['lamp'], (4.9, 2.6, 2.1), (0.1, 0.1, 0.14), (8, 6))
     if day:
-        for i, (x, y) in enumerate([(-4.2, 0.1), (-8.3, 1.2), (-3.4, 1.6), (-5.6, -0.6), (-7.3, -0.4), (1.4, -1.0), (2.0, 1.8)]): G.chicken(props, M, (x, y, 0.0), i * 1.9, 1.15, i % 4, 0.7 if i % 3 == 0 else 0.0)
-        G.goat(props, M, (-2.0, 0.6, 0.0), 0.5, 1.3, 0); G.goat(props, M, (-1.0, 2.0, 0.0), 2.2, 0.95, 1)
-    else:
-        G.goat(props, M, (-2.6, 2.2, 0.0), 0.5, 1.2, 0)
-    # kitchen garden + sunflowers + papaya + pumpkins
+        for i, (x, y) in enumerate([(-8.3, 1.2), (-10.4, -0.9), (-11.4, 0.4), (1.8, 0.6), (2.6, 1.8), (-9.5, 2.4)]): G.chicken(props, M, (x, y, 0.0), i * 1.9, 1.15, i % 4, 0.7 if i % 3 == 0 else 0.0)
+        G.goat(props, M, (-12.8, 3.0, 0.0), 0.5, 1.3, 0)
+    # kitchen garden + sunflowers + papaya + pumpkins, to the left of the yard (behind the low cameras)
     rk = rnd(61)
-    for i in range(5): G.kale_row(props, M, (6.8 + i * 0.7, -1.6, 0.0), (6.8 + i * 0.7, 3.8, 0.0), rk)
-    for i in range(14): G.sunflower(props, M, (12.8 + rk.uniform(-.25, .25), -1.0 + i * 0.5, 0.0), rk)
-    G.papaya(props, M, (13.6, 2.6, 0.0), 1.1, 5); G.pumpkin_patch(props, M, (9.5, 1.5, 0.0), rk, 5)
-    # beans along the field edge, a woven twig fence round the yard's right side
+    for i in range(5): G.kale_row(props, M, (-19.0 + i * 0.7, -1.0, 0.0), (-19.0 + i * 0.7, 3.6, 0.0), rk)
+    for i in range(12): G.sunflower(props, M, (-15.6 + rk.uniform(-.25, .25), -1.0 + i * 0.5, 0.0), rk)
+    G.papaya(props, M, (-16.2, -2.0, 0.0), 1.1, 5); G.pumpkin_patch(props, M, (-17.2, 0.5, 0.0), rk, 5)
     for i in range(24):
         x = -12.6 + i * 1.0; props.rod(M['bean'], (x, 4.2, 0.0), (x, 4.2, 0.5), 0.015, 0.012, 4)
         for k in range(4): a = rk.random() * 6.28; props.ell(M['bean'], (x + math.cos(a) * 0.12, 4.2 + math.sin(a) * 0.12, 0.2 + 0.1 * k), (0.12, 0.07, 0.015), (6, 4), (0, 0, a))
@@ -550,7 +546,7 @@ def _village(M, light, props):
     G.hut_round(props, M, (38.0, 14.0, 0.0), r=1.4, rt=2.0, ht=1.7, door_yaw=-0.9, seed=4)
     G.house_tin(props, M, (31.0, 21.0, 0.0), 7.0, 4.2, 2.7, yaw=-0.12, seed=1); G.house_tin(props, M, (44.0, 26.0, 0.0), 5.0, 3.6, 2.5, yaw=0.15, roof='tin2', walls='plaster3', seed=2, door='doorred')
     G.granary(props, M, (15.5, 19.5, 0.0)); G.granary(props, M, (36.0, 29.0, 0.0))
-    G.tripod_pot_fire(props, M, (24.0, 8.5, 0.0), light in ('NIGHT', 'DUSK', 'MORNING'))
+    G.tripod_pot_fire(props, M, (24.0, 8.5, 0.0), light in ('NIGHT', 'DUSK'))
     for dx in (-1.0, 1.0): props.rod(M['wood'], (24.0 + dx, 8.9, 0.0), (24.0 + dx, 8.9, 1.2), 0.04, 0.04, 5)
     for (x, y, yw) in [(17.0, 8.0, 0.2), (17.35, 8.1, 1.0), (16.8, 8.45, 2.0), (33.6, 17.2, 0.4), (33.1, 17.0, 1.4)]: G.jerrycan(props, M, (x, y, 0.0), yw)
     props.box(M['woodpale'], (18.5, 10.4, 0.2), (0.9, 0.35, 0.4)); G.bench(props, M, (21.5, 9.4), 1.57); G.bench(props, M, (26.4, 6.6), 0.1)
@@ -597,9 +593,11 @@ def _trees(M, light):
     if light in ('DAY', 'MORNING'):
         mb = MB('giraffes'); G.giraffe(mb, M, (46.0, 78.0, 0.0), 2.0, 1.0); G.giraffe(mb, M, (54.0, 84.0, 0.0), 2.4, 0.8); mb.finish()
 
-def _grass(M, light, cam_locs):
+def _grass(M, light, cam_locs, cull=()):
     mb = MB('grass'); rg = rnd(11)
     def ok(x, y):
+        for (qx, qy, qr) in cull:
+            if (x - qx) ** 2 + (y - qy) ** 2 < qr * qr: return False
         if 10.0 < x < 18.0 and -3 < y < 3: return False
         if -13.3 < x < 10.4 and 4.2 < y < 25.8: return False
         if -46.8 < x < -21.0 and 4.5 < y < 27.0: return False
@@ -617,20 +615,20 @@ def _grass(M, light, cam_locs):
     # camera-side foreground tufts: dense near every preset camera, thinning with distance
     for (cx, cy, fx, fy, n, dmax) in cam_locs:
         for i in range(n):
-            d = rg.uniform(1.8, dmax); a = math.atan2(fy, fx) + rg.uniform(-0.62, 0.62); x = cx + math.cos(a) * d; y = cy + math.sin(a) * d
+            d = rg.uniform(4.6, max(dmax, 6.0)); a = math.atan2(fy, fx) + rg.uniform(-0.62, 0.62); x = cx + math.cos(a) * d; y = cy + math.sin(a) * d
             if not ok(x, y) or -0.6 < y < 0.0 and rg.random() < 0.0: continue
             if -4.8 < y < -1.2 and 0.0 < x < 8.0 and rg.random() < 0.9: continue         # keep the cart track clear
-            G.grass_clump(mb, M, (x, y, 0.0), rg, rg.uniform(0.25, 0.65), 'grassgreen' if rg.random() < 0.35 else 'grass', 6)
+            G.grass_clump(mb, M, (x, y, 0.0), rg, rg.uniform(0.25, 0.55), 'grassgreen' if rg.random() < 0.35 else 'grass', 5)
     mb.finish()
     mb = MB('flowers'); rf = rnd(13)
     for i in range(520):
         x = rf.uniform(-60, 50); y = rf.uniform(-5.5, 5.0)
         if not ok(x, y): continue
-        G.flower_tuft(mb, M, (x, y, 0.0), rf, 4)
+        if ok(x, y) and not any((x - qx) ** 2 + (y - qy) ** 2 < 36 for (qx, qy, qr) in cull[:1]): G.flower_tuft(mb, M, (x, y, 0.0), rf, 4)
     for (cx, cy, fx, fy, n, dmax) in cam_locs:
         for i in range(n // 4):
             d = rf.uniform(2.0, dmax * 0.9); a = math.atan2(fy, fx) + rf.uniform(-0.6, 0.6); x = cx + math.cos(a) * d; y = cy + math.sin(a) * d
-            if ok(x, y) and not (-4.8 < y < -1.2): G.flower_tuft(mb, M, (x, y, 0.0), rf, 5)
+            if ok(x, y) and not (-4.8 < y < -1.2) and d > 6.0: G.flower_tuft(mb, M, (x, y, 0.0), rf, 5)
     mb.finish()
     mb = MB('pebbles'); rp = rnd(14)
     for i in range(700):
@@ -651,7 +649,7 @@ def set_uncle_field(k):
         ob.rotation_euler = (a * math.cos(p['phi']), a * math.sin(p['phi']), p['rz']); z = p['zs'] * (1 - (0.6 if p['eaten'] else 0.35) * f); ob.scale = (p['s'], p['s'], z)
     for pl in STATE['upiles']:
         ob = pl['ob']; f = _sm((k - 0.15) / 0.2) if pl['broken'] else 0.0
-        ob.location = (pl['loc'][0] + pl['dirv'][0] * 1.3 * f, pl['loc'][1] + pl['dirv'][1] * 1.0 * f, 0.0); ob.rotation_euler = (0, 0, 0.7 * f * pl['dirv'][0]); ob.scale = (1, 1, 1 - 0.65 * f)
+        ob.location = (pl['loc'][0] + pl['dirv'][0] * 2.2 * f, pl['loc'][1] + pl['dirv'][1] * 1.8 * f, 0.0); ob.rotation_euler = (0, 0, 1.1 * f * pl['dirv'][0]); ob.scale = (1, 1, 1 - 0.55 * f)
     for c in STATE['ucans']:
         ob = c['ob']; f = _sm((k - 0.1) / 0.2) if c['brk'] else 0.0
         ob.location = (c['loc'][0], c['loc'][1] + 0.6 * f, c['loc'][2] - 0.0); ob.rotation_euler = (1.25 * f, 0, 0.2 * f); ob.scale = (1, 1, 1 - 0.3 * f)
@@ -687,7 +685,7 @@ def set_crowd_props(k):
 def _crowd(M, light):
     sc = bpy.context.scene; STATE['crowd_objs'] = []; STATE['crowd_lights'] = []
     mb = MB('crowd')
-    spots = [('villager_woman', 'pot'), ('villager_kid', 'pot'), ('villager_oldman', 'torch'), ('villager_woman2', 'torch'), ('villager_man', 'torch'), ('uncle_night', 'torch')]
+    spots = [('crowd_a', 'pot'), ('crowd_b', 'pot'), ('crowd_c', 'torch'), ('crowd_d', 'torch'), ('crowd_e', 'torch'), ('uncle_night', 'torch')]
     for nm, kind in spots:
         x, y, z = STAND[nm]
         if kind == 'torch':
@@ -702,65 +700,70 @@ def _crowd(M, light):
 
 # ============================================================================ placeholder actor cards (flat plum-outlined puppets, PIL)
 INK = (58, 34, 50, 255); SKIN = (138, 90, 58, 255)
+def _elephant_art(role):
+    S = 3; w, h = 1200, 800; im = Image.new('RGBA', (w * S, h * S), (0, 0, 0, 0)); d = ImageDraw.Draw(im); k = S
+    body = (140, 146, 170, 255) if role != 'calf' else (152, 156, 178, 255); shade = (104, 110, 140, 255); lw = 9 * k
+    def E(box, fill): d.ellipse([c * k for c in box], fill=fill, outline=INK, width=lw)
+    for lx in (300, 400, 760, 860): d.rounded_rectangle([lx * k, 470 * k, (lx + 110) * k, 770 * k], radius=30 * k, fill=shade if lx in (400, 860) else body, outline=INK, width=lw)
+    E((200, 190, 930, 620), body); E((780, 250, 1000, 520), body)
+    d.polygon([(a * k, b * k) for a, b in [(930, 340), (1010, 470), (1060, 640), (1090, 720), (1150, 760), (1160, 700), (1120, 640), (1100, 520), (1050, 380), (990, 290)]], fill=body, outline=INK, width=lw)
+    E((690, 230, 900, 520), shade)
+    d.polygon([(a * k, b * k) for a, b in [(950, 470), (1010, 560), (1090, 590), (1000, 520)]], fill=(226, 218, 196, 255), outline=INK, width=6 * k)
+    E((955, 330, 985, 360), INK); d.line([(215 * k, 360 * k), (170 * k, 560 * k)], fill=INK, width=14 * k)
+    return im.resize((w, h), Image.LANCZOS)
+
+def _person_art(role):
+    S = 3; w, h = 400, 1000; im = Image.new('RGBA', (w * S, h * S), (0, 0, 0, 0)); d = ImageDraw.Draw(im); k = S; lw = 7 * k
+    spec = dict(hero=dict(shirt=(224, 120, 42, 255), pants=(184, 160, 112, 255), hat=(214, 200, 170, 255), hair=(40, 28, 28, 255), belly=0),
+                uncle=dict(shirt=(190, 70, 60, 255), pants=(96, 84, 70, 255), hat=(110, 112, 122, 255), hair=(150, 150, 150, 255), belly=1),
+                woman=dict(shirt=(46, 110, 170, 255), pants=(46, 110, 170, 255), hat=(240, 196, 48, 255), hair=(40, 28, 28, 255), belly=0, dress=1),
+                kid=dict(shirt=(232, 196, 60, 255), pants=(70, 110, 170, 255), hat=None, hair=(40, 28, 28, 255), belly=0),
+                oldman=dict(shirt=(170, 150, 120, 255), pants=(100, 90, 80, 255), hat=(200, 190, 160, 255), hair=(236, 236, 236, 255), belly=0),
+                man=dict(shirt=(70, 140, 90, 255), pants=(80, 90, 120, 255), hat=None, hair=(40, 28, 28, 255), belly=0))[role]
+    cx = 200
+    def Rr(x0, y0, x1, y1, f, r=24): d.rounded_rectangle([x0 * k, y0 * k, x1 * k, y1 * k], radius=r * k, fill=f, outline=INK, width=lw)
+    dress = spec.get('dress')
+    Rr(cx - 62, 640, cx - 8, 960, SKIN if dress else spec['pants'], 18); Rr(cx + 8, 640, cx + 62, 960, SKIN if dress else spec['pants'], 18)
+    for sx in (-1, 1): Rr(cx + sx * 35 - 38, 940, cx + sx * 35 + 38, 990, (70, 56, 50, 255), 12)
+    Rr(cx - 125, 370, cx - 82, 650, SKIN, 16); Rr(cx + 82, 370, cx + 125, 650, SKIN, 16)
+    if spec['belly']: d.ellipse([(cx - 112) * k, 340 * k, (cx + 112) * k, 720 * k], fill=spec['shirt'], outline=INK, width=lw)
+    else: Rr(cx - 92, 340, cx + 92, 880 if dress else 700, spec['shirt'], 36)
+    if role == 'uncle':
+        for q in range(-4, 5): d.line([((cx + q * 22) * k, 360 * k), ((cx + q * 22) * k, 700 * k)], fill=(240, 230, 220, 160), width=4 * k)
+        d.polygon([((cx - 100) * k, 350 * k), ((cx - 40) * k, 340 * k), ((cx + 105) * k, 690 * k), ((cx + 40) * k, 700 * k)], fill=(60, 90, 170, 230), outline=INK)
+        d.line([((cx + 150) * k, 520 * k), ((cx + 165) * k, 990 * k)], fill=(120, 80, 48, 255), width=12 * k)
+    hr = 165; hy = 175
+    if role == 'hero': d.ellipse([(cx - 195) * k, (hy - 190) * k, (cx + 195) * k, (hy + 40) * k], fill=spec['hat'], outline=INK, width=lw)
+    d.ellipse([(cx - hr) * k, (hy - hr) * k, (cx + hr) * k, (hy + hr) * k], fill=SKIN, outline=INK, width=lw)
+    if spec['hat'] is not None and role != 'hero': d.chord([(cx - hr) * k, (hy - hr * 1.02) * k, (cx + hr) * k, (hy + hr * 0.45) * k], 180, 360, fill=spec['hat'], outline=INK, width=lw)
+    elif spec['hat'] is None: d.chord([(cx - hr) * k, (hy - hr) * k, (cx + hr) * k, (hy + hr * 0.35) * k], 180, 360, fill=spec['hair'], outline=INK, width=lw)
+    elif role == 'hero': d.chord([(cx - hr) * k, (hy - hr) * k, (cx + hr) * k, (hy - hr * 0.1) * k], 180, 360, fill=spec['hair'], outline=INK, width=lw)
+    for sx in (-1, 1): d.ellipse([(cx + sx * 60 - 15) * k, (hy + 5 - 17) * k, (cx + sx * 60 + 15) * k, (hy + 5 + 17) * k], fill=INK)
+    d.arc([(cx - 55) * k, (hy + 40) * k, (cx + 55) * k, (hy + 115) * k], 20, 160, fill=INK, width=8 * k)
+    return im.resize((w, h), Image.LANCZOS)
+
 def _card_art(role, path):
     if os.path.exists(path): return
-    S = 3
-    if role in ('matriarch', 'elephant', 'calf'):
-        w, h = 1200, 800; im = Image.new('RGBA', (w * S, h * S), (0, 0, 0, 0)); d = ImageDraw.Draw(im); k = S
-        body = (140, 146, 170, 255) if role != 'calf' else (150, 154, 176, 255); shade = (104, 110, 140, 255); lw = 9 * k
-        def E(box, fill): d.ellipse([c * k for c in box], fill=fill, outline=INK, width=lw)
-        for lx in (300, 400, 760, 860):                                           # legs
-            d.rounded_rectangle([lx * k, 470 * k, (lx + 110) * k, 770 * k], radius=30 * k, fill=shade if lx in (400, 860) else body, outline=INK, width=lw)
-        E((200, 190, 930, 620), body); E((780, 250, 1000, 520), body)               # body, head
-        d.polygon([(a * k, b * k) for a, b in [(930, 340), (1010, 470), (1060, 640), (1090, 720), (1150, 760), (1160, 700), (1120, 640), (1100, 520), (1050, 380), (990, 290)]], fill=body, outline=INK, width=lw)  # trunk
-        E((690, 230, 900, 520), shade)                                              # ear
-        d.polygon([(a * k, b * k) for a, b in [(950, 470), (1010, 560), (1090, 590), (1000, 520)]], fill=(226, 218, 196, 255), outline=INK, width=6 * k)   # tusk
-        E((955, 330, 985, 360), INK); d.line([(215 * k, 360 * k), (170 * k, 560 * k)], fill=INK, width=14 * k)
-        im = im.resize((w, h), Image.LANCZOS); im.save(path); return
-    w, h = 400, 1000; im = Image.new('RGBA', (w * S, h * S), (0, 0, 0, 0)); d = ImageDraw.Draw(im); k = S; lw = 7 * k
-    spec = dict(hero=dict(shirt=(224, 120, 42, 255), pants=(184, 160, 112, 255), hat=(214, 200, 170, 255), hair=(40, 28, 28, 255), belly=0, wid=1.0),
-                uncle=dict(shirt=(190, 70, 60, 255), pants=(96, 84, 70, 255), hat=(110, 112, 122, 255), hair=(150, 150, 150, 255), belly=1, wid=1.15),
-                woman=dict(shirt=(46, 110, 170, 255), pants=(46, 110, 170, 255), hat=(240, 196, 48, 255), hair=(40, 28, 28, 255), belly=0, wid=1.0, dress=1),
-                kid=dict(shirt=(232, 196, 60, 255), pants=(70, 110, 170, 255), hat=None, hair=(40, 28, 28, 255), belly=0, wid=1.0),
-                oldman=dict(shirt=(170, 150, 120, 255), pants=(100, 90, 80, 255), hat=(200, 190, 160, 255), hair=(236, 236, 236, 255), belly=0, wid=0.95),
-                man=dict(shirt=(70, 140, 90, 255), pants=(80, 90, 120, 255), hat=None, hair=(40, 28, 28, 255), belly=0, wid=1.0))[role]
-    cx = 200; hr = 82 if role != 'kid' else 98; headc = (cx, 150 if role != 'kid' else 400 if False else 150); fy = 985
-    if role == 'kid': top = 1000 * 0.0; hr = 95
-    wd = 85 * spec['wid']; bt = 270; bb = 560 if not spec.get('dress') else 700
-    def R_(x0, y0, x1, y1, f, r=24): d.rounded_rectangle([x0 * k, y0 * k, x1 * k, y1 * k], radius=r * k, fill=f, outline=INK, width=lw)
-    ytop = 240 if role != 'kid' else 430
-    scale = 1.0 if role != 'kid' else 0.6; oy = 0 if role != 'kid' else 400
-    def Y(v): return (v * scale + oy)
-    R_(cx - 60 * scale, Y(560), cx - 12 * scale, Y(960), spec['pants'] if not spec.get('dress') else SKIN, 16); R_(cx + 12 * scale, Y(560), cx + 60 * scale, Y(960), spec['pants'] if not spec.get('dress') else SKIN, 16)
-    for sx in (-1, 1): R_(cx + sx * 12 * scale - 34 * scale, Y(950), cx + sx * 12 * scale + 34 * scale, Y(990), (70, 56, 50, 255), 10)
-    R_(cx - 105 * scale * spec['wid'], Y(270), cx - 62 * scale * spec['wid'], Y(560), SKIN, 14); R_(cx + 62 * scale * spec['wid'], Y(270), cx + 105 * scale * spec['wid'], Y(560), SKIN, 14)
-    if spec['belly']: d.ellipse([(cx - 120 * scale) * k, Y(250) * k, (cx + 120 * scale) * k, Y(650) * k], fill=spec['shirt'], outline=INK, width=lw)
-    else: R_(cx - 78 * scale * spec['wid'], Y(250), cx + 78 * scale * spec['wid'], Y(bb if not spec.get('dress') else 760), spec['shirt'], 36)
-    if role == 'uncle':
-        for q in range(-5, 6): d.line([((cx + q * 20 * scale) * k, Y(280) * k), ((cx + q * 20 * scale) * k, Y(620) * k)], fill=(240, 230, 220, 160), width=4 * k)
-        d.polygon([((cx - 100 * scale) * k, Y(270) * k), ((cx - 40 * scale) * k, Y(260) * k), ((cx + 110 * scale) * k, Y(600) * k), ((cx + 40 * scale) * k, Y(610) * k)], fill=(60, 90, 170, 230), outline=INK)
-        d.line([((cx + 150 * scale) * k, Y(420) * k), ((cx + 170 * scale) * k, Y(985) * k)], fill=(120, 80, 48, 255), width=12 * k)
-    d.ellipse([(cx - hr * scale) * k, (Y(150) - hr * scale) * k, (cx + hr * scale) * k, (Y(150) + hr * scale) * k], fill=SKIN, outline=INK, width=lw)
-    if spec['hat'] is not None:
-        if role == 'hero': d.ellipse([(cx - hr * 1.25 * scale) * k, (Y(150) - hr * 1.3 * scale) * k, (cx + hr * 1.25 * scale) * k, (Y(150) - hr * 0.2 * scale) * k], fill=spec['hat'], outline=INK, width=lw)
-        else: d.chord([(cx - hr * scale) * k, (Y(150) - hr * 1.05 * scale) * k, (cx + hr * scale) * k, (Y(150) + hr * 0.5 * scale) * k], 180, 360, fill=spec['hat'], outline=INK, width=lw)
-    else: d.chord([(cx - hr * scale) * k, (Y(150) - hr * scale) * k, (cx + hr * scale) * k, (Y(150) + hr * 0.4 * scale) * k], 180, 360, fill=spec['hair'], outline=INK, width=lw)
-    for sx in (-1, 1): d.ellipse([(cx + sx * 30 * scale - 7) * k, (Y(150) - 8) * k, (cx + sx * 30 * scale + 7) * k, (Y(150) + 8) * k], fill=INK)
-    d.arc([(cx - 28 * scale) * k, (Y(150) + 12 * scale) * k, (cx + 28 * scale) * k, (Y(150) + 50 * scale) * k], 20, 160, fill=INK, width=5 * k)
-    im = im.resize((w, h), Image.LANCZOS); im.save(path)
+    if role in BIG:
+        s_ = HEIGHT[role] / 3.3; ppm = 100; body = _elephant_art(role); bw, bh = int(1.5 * HEIGHT[role] * ppm), int(HEIGHT[role] * ppm); body = body.resize((bw, bh), Image.LANCZOS)
+        cw, ch = int(CANVAS_M[0] * s_ * ppm), int(CANVAS_M[1] * s_ * ppm); im = Image.new('RGBA', (cw, ch), (0, 0, 0, 0)); im.paste(body, ((cw - bw) // 2, ch - bh), body); im.save(path)
+    else: _person_art(role).save(path)
 
-def place_actor(role, mark, face_to=None, name=None):
-    """flat placeholder puppet card (emission-only, shadow-casting) standing at `mark` (feet), turned to face `face_to` (yaw only)."""
-    P = STATE['P']; name = name or 'actor_' + role; h = HEIGHT[role]; wide = role in ('matriarch', 'elephant', 'calf'); asp = 1.5 if wide else 0.4
-    png = os.path.join(TEX, 'card_%s.png' % role); _card_art(role, png); w = h * asp
-    me = bpy.data.meshes.new(name); me.from_pydata([(-w / 2, 0, 0), (w / 2, 0, 0), (w / 2, 0, h), (-w / 2, 0, h)], [], [(0, 1, 2, 3)]); me.update()
+def place_actor(role, mark, face_to=None, name=None, yaw_off=0.0):
+    """flat placeholder puppet card (emission-only, shadow-casting) standing at `mark` (feet), turned to face `face_to` (yaw only), plus yaw_off degrees.
+    Elephants use a card the size of the REAL cast14 canvas (matriarch 26.4 x 5.4 m, scaled by height/3.3) with the body in its middle, so occlusion matches the real puppets."""
+    P = STATE['P']; name = name or 'actor_' + role; h = HEIGHT[role]; big = role in BIG
+    png = os.path.join(TEX, 'card2_%s.png' % role); _card_art(role, png)
+    if big: w = CANVAS_M[0] * h / 3.3; hh = CANVAS_M[1] * h / 3.3
+    else: w = h * 0.4; hh = h
+    me = bpy.data.meshes.new(name); me.from_pydata([(-w / 2, 0, 0), (w / 2, 0, 0), (w / 2, 0, hh), (-w / 2, 0, hh)], [], [(0, 1, 2, 3)]); me.update()
     uvl = me.uv_layers.new(name='UVMap')
     for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
     m = mat_card(name + '_mat', png, P.get('card_k', 1.0)); me.materials.append(m)
     ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.location = mark
     yaw = 0.0
     if face_to is not None: d = Vector(face_to) - Vector(mark); yaw = math.atan2(d.x, -d.y)
-    ob.rotation_euler = (0, 0, yaw); return ob
+    ob.rotation_euler = (0, 0, yaw + math.radians(yaw_off)); return ob
 def _clear_actors():
     for o in list(bpy.data.objects):
         if o.name.startswith('actor_'): bpy.data.objects.remove(o)
@@ -768,43 +771,54 @@ def _clear_actors():
 # ============================================================================ presets, cameras, staging
 def _roles(): return HEIGHT
 CAMS = dict(
- village_wide=dict(loc=(-6.0, -17.0, 6.5), look=(10.0, 7.0, 0.2), lens=20),
- fence_line=dict(loc=(-16.5, 1.7, 1.6), look=(3.0, 5.3, 0.95), lens=22),
+ village_wide=dict(loc=(3.0, -10.5, 5.2), look=(14.0, 12.0, 1.0), lens=20),
+ fence_line=dict(loc=(-9.9, 0.9, 1.45), look=(-5.7, 5.0, 1.25), lens=22),
+ fence_ring=dict(loc=(-1.5, -14.5, 18.0), look=(-1.5, 15.0, 0.0), lens=20),
  hive_close=dict(loc=(-9.7, 2.4, 1.2), look=(-5.2, 5.0, 1.45), lens=24),
- yard_two_shot=dict(loc=(-2.4, -3.7, 1.5), look=(-1.9, 3.0, 0.75), lens=22),
+ hook_close=dict(loc=(-5.2, -2.7, 1.5), look=(-3.9, 4.0, 1.15), lens=20),
+ yard_two_shot=dict(loc=(-2.1, -2.5, 1.4), look=(-2.1, 1.5, 0.7), lens=22),
+ yard_crowd=dict(loc=(-2.2, -4.4, 1.45), look=(-2.2, 2.0, 0.85), lens=22),
  field_night_wide=dict(loc=(-4.0, -13.5, 9.0), look=(-0.5, 10.0, 0.8), lens=22),
- fence_low_night=dict(loc=(4.8, -3.2, 1.1), look=(-1.0, 5.0, 1.7), lens=22),
- push_side=dict(loc=(-9.0, -0.9, 2.2), look=(1.5, 5.0, 0.8), lens=22),
- trunk_close=dict(loc=(-0.4, -1.0, 2.3), look=(2.0, 4.2, 1.2), lens=28),
- uncle_field_morning=dict(loc=(-26.0, -2.2, 2.6), look=(-33.0, 12.0, 0.3), lens=22),
- uncle_hang=dict(loc=(-20.0, -1.0, 1.4), look=(-22.6, 4.0, 1.5), lens=22),
+ fence_low_night=dict(loc=(3.4, -4.4, 1.15), look=(-1.3, 2.4, 1.3), lens=22),
+ push_side=dict(loc=(12.5, -2.2, 3.4), look=(-2.2, 7.5, 0.2), lens=26),
+ trunk_close=dict(loc=(5.2, 0.2, 1.5), look=(6.9, 4.3, 1.4), lens=28),
+ uncle_field_morning=dict(loc=(-27.0, -3.5, 4.8), look=(-33.5, 14.0, 0.0), lens=22),
+ uncle_hang=dict(loc=(-20.4, -1.2, 1.5), look=(-22.4, 2.4, 1.5), lens=22),
+ uncle_nose_close=dict(loc=(-23.4, 1.1, 2.0), look=(-22.2, 2.7, 2.15), lens=22),
 )
 NOTES = dict(
  village_wide='high wide: the beehive-fenced maize field, hero yard, the village of huts and tin house to the right, the uncle farm to the left, acacias, hills and the blue mountain',
- fence_line='eye level along the hive fence from its front-left corner: posts, tin roofs, hives and the wire receding past the maize',
+ fence_line='eye level at the front-left of the fence, aimed at unit 1 (x -6.5): one hive centred (fs1), the row of units receding (fs0 posts)',
+ fence_ring='high wide over the front yard: the whole ring (front 5, right 3, back 5, left 3 units) so ten hives (fs2) and all 16 + wire (fs3) are countable',
  hive_close='one hive hanging on the wire under its tin roof, the wire and the next hives receding (bees dormant at the slots)',
- yard_two_shot='hero and uncle in the yard in front of the fence: jerrycans, stools, baskets, hoes, chickens, the goat, the fire pit',
- field_night_wide='high wide at night: the whole fence ring round the field, the herd outside it, fire and lantern pools, moon key',
- fence_low_night='low at the fence at night: hives and wire in the moonlight, the matriarch arriving, firelight pool in the yard',
- push_side='side view along the front fence for the push: the wire bows in and the wave travels outward with the swinging hives and bees',
- trunk_close='close on the matriarch head height at the fence: bees at eyes and trunk, wire and hives behind',
- uncle_field_morning="the uncle's trampled field in morning light: flattened stalks, broken thorn fence, footprints, cans down",
- uncle_hang='the uncle on his stool by his own fence hanging his first hive: morning light, trampled field behind',
+ hook_close='the hook: hero on the ladder hanging a hive on unit 1, laughing villagers 3-5 m in front of the fence (DAY)',
+ yard_two_shot='hero and uncle (heads 120+ px) in front of unit 2, the fence behind; clear ground round their feet',
+ yard_crowd='the crowd of villagers + uncle in the yard at DUSK with torches and pots (cr1)',
+ field_night_wide='high wide at night: the whole fence ring, the herd walking toward it, fire and lantern pools, moon key',
+ fence_low_night='low at the fence at night: the matriarch arriving in front of unit 1-2, hives and wire in the moonlight, moon in frame',
+ push_side='3/4 view ALONG the front wire from the right: matriarch at the near end pushing, 6+ hives receding left; the bow and the travelling wave',
+ trunk_close='the whole matriarch head + trunk at the fence: bees at eye and trunk, wire and hives behind',
+ uncle_field_morning="high-ish view of the uncle's trampled field in morning light: flattened stalks, broken thorn fence, big footprints, cobs",
+ uncle_hang='medium: the uncle ON his stool by his own fence hanging his first hive, morning light',
+ uncle_nose_close='close: the uncle on the stool, head 260-300 px wide, hive and roof above-left (the swollen nose beat)',
 )
 PRESETS = dict(
  village_wide=dict(light='DAY', state='fs3', staging=[('hero', 'hero_fence'), ('uncle', 'uncle_yard'), ('woman', 'villager_woman'), ('kid', 'villager_kid'), ('oldman', 'villager_oldman')]),
- fence_line=dict(light='DAY', state='fs3', staging=[('hero', 'hero_hive')]),
+ hook_close=dict(light='DAY', state='fs1', staging=[('hero', 'hero_ladder'), ('woman', 'villager_woman'), ('kid', 'villager_kid'), ('oldman', 'villager_oldman'), ('uncle', 'villager_man')]),
+ fence_line=dict(light='DAY', state='fs1', staging=[('hero', 'hero_hive')]),
+ fence_ring=dict(light='DAY', state='fs3', wire_r=0.12, staging=[]),
  hive_close=dict(light='DUSK', state='fs3,bees-1', staging=[]),
  yard_two_shot=dict(light='DAY', state='fs3', staging=[('hero', 'hero_yard'), ('uncle', 'uncle_yard')]),
- field_night_wide=dict(light='NIGHT', state='fs3', staging=[('elephant', 'herd_a'), ('matriarch', 'herd_b'), ('elephant', 'herd_c'), ('elephant', 'herd_d'), ('calf', 'herd_calf')]),
- fence_low_night=dict(light='NIGHT', state='fs3', staging=[('matriarch', 'matriarch_arrive'), ('elephant', 'ele_3')]),
- push_side=dict(light='NIGHT', state='fs3,wp0.35,bees0.35', staging=[('matriarch', 'matriarch_push'), ('elephant', 'ele_3')]),
- trunk_close=dict(light='NIGHT', state='fs3,wp0.5,bees0.55,bloc', staging=[('matriarch', 'matriarch_push')]),
+ yard_crowd=dict(light='DUSK', state='fs3,cr1', staging=[('uncle', 'uncle_night'), ('woman', 'crowd_a'), ('kid', 'crowd_b'), ('oldman', 'crowd_c'), ('woman', 'crowd_d'), ('man', 'crowd_e')]),
+ field_night_wide=dict(light='NIGHT', state='fs3', staging=[('elephant_c', 'herd_a', 62), ('matriarch', 'herd_b', 58), ('elephant_b', 'herd_c', 70), ('elephant_d', 'herd_d', 66), ('calf', 'herd_calf', 55)]),
+ fence_low_night=dict(light='NIGHT', state='fs3', staging=[('matriarch', 'matriarch_arrive')]),
+ push_side=dict(light='NIGHT', state='fs3,wp0.35,bees0.35', wire_r=0.075, staging=[('matriarch', 'matriarch_push')]),
+ trunk_close=dict(light='NIGHT', state='fs3,wp0.5,bees0.55,bloc', wire_r=0.06, staging=[('matriarch', 'matriarch_push')]),
  uncle_field_morning=dict(light='MORNING', state='fs3,uf1', staging=[('uncle', 'uncle_field')]),
  uncle_hang=dict(light='MORNING', state='fs3,uf1,uh1', staging=[('uncle', 'uncle_stool')]),
+ uncle_nose_close=dict(light='MORNING', state='fs3,uf1,uh1', staging=[('uncle', 'uncle_stool')]),
 )
-CROWD_STAGING = [('uncle', 'uncle_night'), ('woman', 'villager_woman'), ('kid', 'villager_kid'), ('oldman', 'villager_oldman'), ('woman', 'villager_woman2'), ('man', 'villager_man')]
-MATRIARCH_EYE = (1.9, 4.2, 1.9)
+MATRIARCH_EYE = (6.9, 4.2, 1.9)
 
 def apply_state(state):
     """CLI state tokens (comma separated): fs<k> fence stage, wp<t> wire push, bees<t>[/<burst>] (t<0 sleeping), btgt (stream to the matriarch's eyes), bloc (local cloud at her head),
@@ -815,7 +829,7 @@ def apply_state(state):
         elif tk.startswith('wp'): push = float(tk[2:])
         elif tk.startswith('bees'): v = tk[4:].split('/'); bees = (float(v[0]), float(v[1]) if len(v) > 1 else 1.0)
         elif tk == 'btgt': tgt = MATRIARCH_EYE
-        elif tk == 'bloc': loc = ((2.3, 4.0, 1.9), 0.9, 380)
+        elif tk == 'bloc': loc = ((7.0, 4.0, 1.5), 0.9, 160)
         elif tk.startswith('uf'): set_uncle_field(float(tk[2:]))
         elif tk.startswith('uh'): set_uncle_hive(float(tk[2:]))
         elif tk.startswith('cr'): set_crowd_props(float(tk[2:]))
@@ -836,6 +850,9 @@ def build(preset=None, light=None, clear=True, dress=True):
     global _BS
     G.MATS.clear(); STATE.clear(); _BS = None
     sc = bpy.context.scene; P = LIGHTS[light]; M = palette(light); STATE.update(M=M, light=light, preset=preset, P=P)
+    if light == 'NIGHT':
+        P = dict(P); lk = Vector(CAMS[preset]['look']) - Vector(CAMS[preset]['loc']); P['key_dir'] = kdir(math.degrees(math.atan2(lk.x, lk.y)) - 22.0, 24.0); STATE['P'] = P
+    STATE['wire_r'] = PR.get('wire_r', WIRE_R)
     sky(P); hills(light, P); ground(light); clouds(M, light, P)
     if P.get('birds'): birds(M)
     vars_ = [G.maize_variant(M, 100 + i)[0] for i in range(2)] + [G.maize_variant(M, 110, ('maize2', 'cob', 'stalk', 'tassel', 'husk'))[0], G.maize_variant(M, 111, ('maize2', 'cob', 'stalk', 'tassel', 'husk'))[0]]
@@ -843,15 +860,17 @@ def build(preset=None, light=None, clear=True, dress=True):
     _hero_field(M, vars_, light)
     uvars = [G.maize_variant(M, 120 + i, ('maize2', 'cob', 'stalk', 'tassel', 'husk'))[0] for i in range(2)] + [G.maize_variant(M, 130, ('maize', 'cob', 'stalk', 'tassel', 'husk'))[0]]
     for v in uvars: v.hide_render = True; v.hide_viewport = True
-    dvars = [G.maize_variant(M, 140 + i, ('maizedry', 'cob', 'stalk', 'tassel', 'husk'))[0] for i in range(2)]
+    dvars = [G.maize_variant(M, 140 + i, ('maizefall', 'cob', 'stalk', 'tassel', 'husk'))[0] for i in range(2)]
     for v in dvars: v.hide_render = True; v.hide_viewport = True
     _uncle_field(M, uvars, dvars)
     build_fence(M)
     props = MB('props'); _hero_yard(M, light, props); _village(M, light, props); _uncle_farm(M, light, props); props.finish()
     _trees(M, light)
-    cams = {k: dict(v) for k, v in CAMS.items()}
-    cl = [(c['loc'][0], c['loc'][1], c['look'][0] - c['loc'][0], c['look'][1] - c['loc'][1], (800 if k in ('village_wide', 'field_night_wide') else 90) if dress else 0, 24.0 if k in ('village_wide', 'field_night_wide') else 11.0) for k, c in cams.items()]
-    _grass(M, light, cl if dress else [])
+    cc = CAMS[preset]; wide = preset in ('village_wide', 'field_night_wide', 'fence_ring', 'uncle_field_morning')
+    cl = [(cc['loc'][0], cc['loc'][1], cc['look'][0] - cc['loc'][0], cc['look'][1] - cc['loc'][1], (500 if wide else 70) if dress else 0, 26.0 if wide else 10.0)]
+    cull = [(cc['loc'][0], cc['loc'][1], 2.0 if wide else 4.8)] + [(STAND[st[1]][0], STAND[st[1]][1], 1.9) for st in PRESETS[preset]['staging']]
+    if not wide: cull += [((cc['loc'][0] * 0.6 + STAND[st[1]][0] * 0.4), (cc['loc'][1] * 0.6 + STAND[st[1]][1] * 0.4), 1.6) for st in PRESETS[preset]['staging']]
+    _grass(M, light, cl if dress else [], cull)
     _uncle_fence(M, light); _uncle_hive_unit(M); _crowd(M, light)
     # --- lights
     k = P['key']; kd = Vector(P['key_dir']).normalized(); d = bpy.data.lights.new('key', 'SUN'); d.color = k[:3]; d.energy = k[3]; d.angle = math.radians(P['sun_angle'])
@@ -870,24 +889,23 @@ def anchors(preset=None):
     preset = preset or STATE['preset']; PR = PRESETS[preset]
     return dict(preset=preset, light=STATE['light'], cams={k: dict(loc=v['loc'], look_at=v['look'], lens=v['lens']) for k, v in CAMS.items()}, cam=dict(loc=CAMS[preset]['loc'], look_at=CAMS[preset]['look'], lens=CAMS[preset]['lens']),
                 cam_name=preset, cam_notes=dict(NOTES), stand=dict(STAND), heights=dict(HEIGHT), units=[dict(i=u['i'], s=round(float(u['s']), 3), pos=tuple(round(c, 3) for c in u['pos']), yaw=round(u['yaw'], 4)) for u in UNITS],
-                wire=dict(z=WIRE_Z, ring=(RX0, RY0, RX1, RY1), length=round(float(S_TOT), 2), push_point=PUSH_S0, push_xy=(1.0, RY0), seq_s=SEQ_T, wave_speed=WAVE_C), matriarch_eye=MATRIARCH_EYE,
-                staging={k: [(r, m) for r, m in v['staging']] for k, v in PRESETS.items()}, render=dict(samples_final=SAMPLES_FINAL, resolution=(W, H), threads=4, denoise='OIDN', dof=None), key_dir=tuple(Vector(STATE['P']['key_dir']).normalized()))
+                wire=dict(z=WIRE_Z, ring=(RX0, RY0, RX1, RY1), length=round(float(S_TOT), 2), push_point=PUSH_S0, push_xy=(6.0, RY0), seq_s=SEQ_T, wave_speed=WAVE_C), matriarch_eye=MATRIARCH_EYE,
+                staging={k: [tuple(x[:2]) for x in v['staging']] for k, v in PRESETS.items()}, render=dict(samples_final=SAMPLES_FINAL, resolution=(W, H), threads=4, denoise='OIDN', dof=None), key_dir=tuple(Vector(STATE['P']['key_dir']).normalized()))
 
 def _staging(preset, state=''):
-    if 'cr' in (state or '') and any(t.startswith('cr') and float(t[2:] or 0) > 0 for t in state.split(',')): return CROWD_STAGING
-    return PRESETS[preset]['staging']
+    return [(st + (0,))[:3] if len(st) < 3 else st for st in PRESETS[preset]['staging']]
 
 def stage_placeholders(preset, cam_loc, state=''):
     _clear_actors(); out = []
-    for i, (role, mk) in enumerate(_staging(preset, state)): out.append(place_actor(role, STAND[mk], face_to=cam_loc, name='actor_%s_%d' % (role, i)))
+    for i, (role, mk, yo) in enumerate(_staging(preset, state)): out.append(place_actor(role, STAND[mk], face_to=cam_loc, name='actor_%s_%d' % (role, i), yaw_off=yo))
     return out
 
 def head_pixels(preset, state=''):
     """[(role, stand, head_top_y_px, chin_y_px, feet_y_px)] at 720x1280 (caption rule: chins above y 880)."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene; cam = sc.camera; out = []
-    for (role, mk) in _staging(preset, state):
-        h = HEIGHT[role]; m = Vector(STAND[mk]); big = role in ('matriarch', 'elephant', 'calf'); top = m + Vector((0, 0, h)); chin = m + Vector((0, 0, h * (0.62 if big else 0.84)))
+    for (role, mk, _yo) in _staging(preset, state):
+        h = HEIGHT[role]; m = Vector(STAND[mk]); big = role in BIG; top = m + Vector((0, 0, h)); chin = m + Vector((0, 0, h * (0.62 if big else 0.67)))
         a = world_to_camera_view(sc, cam, top); b = world_to_camera_view(sc, cam, chin); f = world_to_camera_view(sc, cam, m)
         out.append((role, mk, round((1 - a.y) * H), round((1 - b.y) * H), round((1 - f.y) * H)))
     return out
@@ -906,6 +924,10 @@ def render(path):
     """render the current scene to path (PNG) with the light-state grade; returns (wall s, cpu s)."""
     sc = bpy.context.scene; t0 = time.time(); c0 = time.process_time(); sc.render.filepath = path + '.tmp.png'; bpy.ops.render.render(write_still=True)
     im = Image.open(path + '.tmp.png').convert('RGB'); a = np.asarray(im, dtype=np.float32) / 255.0; g = a.mean(-1, keepdims=True); a = np.clip(g + (a - g) * STATE['P'].get('sat', 1.12), 0, 1)
+    st = STATE['P'].get('shade_tint', 0.0)
+    if st > 0:                                  # shadow tint: dark pixels are first desaturated (no detour through magenta) then pushed to blue-violet (hue about 245), the series' shade rule
+        lum = (0.3 * a[..., 0] + 0.59 * a[..., 1] + 0.11 * a[..., 2])[..., None]; w = np.clip((0.42 - lum) / 0.3, 0, 1) ** 1.2 * st
+        gray = np.clip(a * (1 - 0.8 * w) + lum * 0.8 * w, 0, 1) * (1 + w * (np.array([0.78, 0.9, 1.45]) - 1)); a = np.clip(gray, 0, 1)
     Image.fromarray((a * 255 + 0.5).astype(np.uint8)).save(path); os.remove(path + '.tmp.png'); return time.time() - t0, time.process_time() - c0
 
 def cli_render(specs=None, quality='final', outdir=None, actors=True):
@@ -916,6 +938,7 @@ def cli_render(specs=None, quality='final', outdir=None, actors=True):
         A = build(pr, lt); sc = bpy.context.scene; setup_render(sc, quality)
         if st is not None: apply_state(st)
         stt = st if st is not None else PRESETS[pr]['state']; c = CAMS[nm]; make_camera(c)
+        if STATE.get('bees_args'): _bees_apply(*STATE['bees_args'])
         if actors: stage_placeholders(pr, c['loc'], stt)
         bpy.context.view_layer.update(); hp = head_pixels(pr, stt) if actors else []
         tag = '%s_%s' % (nm, STATE['light']) + ('_' + stt.replace(',', '_').replace('/', '-') if st is not None else '')

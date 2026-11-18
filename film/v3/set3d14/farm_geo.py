@@ -164,6 +164,9 @@ def palette(mode):
     night = mode == 'NIGHT'
     d['maize'] = mat('maize', '#6c9a2c', '#c2b13a', 5, contrast=1.4, zgrad=(0.0, 1.3, '#3d6a22'))
     d['maize2'] = mat('maize2', '#85a935', '#d3c248', 5, contrast=1.3, zgrad=(0.0, 1.2, '#4a7a28'))
+    d['maizefall'] = mat('maizefall', '#68783a', '#8a7e42', 5, contrast=1.4)
+    d['mudpatch'] = mat('mudpatch', '#8c4a30', '#a2593a', 2.5)
+    d['dung'] = mat('dung', '#7a6830', '#5e5428', 6)
     d['maizedry'] = mat('maizedry', '#b09a42', '#d4bd62', 5, contrast=1.3)
     d['stalk'] = mat('stalk', '#8f9a45', '#b8a850', 6)
     d['cob'] = mat('cob', '#e0c24a', '#9bb04a', 8)
@@ -550,8 +553,8 @@ def firepit(mb, M, c, lit=True):
         a = i / 10 * 6.283; mb.ell(M['stone'], (x + math.cos(a) * 0.6, y + math.sin(a) * 0.6, z + 0.1), (0.2, 0.16, 0.14), (8, 5), (0, 0, a))
     for i in range(5):
         a = i * 1.26 + 0.4; mb.rod(M['char'], (x + math.cos(a) * 0.5, y + math.sin(a) * 0.5, z + 0.18), (x, y, z + 0.3), 0.06, 0.05, 6)
-    mb.ell(M['ember'], (x, y, z + 0.14), (0.3, 0.3, 0.06), (10, 5))
     if lit:
+        mb.ell(M['ember'], (x, y, z + 0.14), (0.3, 0.3, 0.06), (10, 5))
         mb.cone(M['flame'], (x, y, z + 0.15), 0.28, 0.02, 0.8, 8); mb.cone(M['flame2'], (x, y, z + 0.15), 0.15, 0.01, 0.5, 8)
         for sdx in (-0.18, 0.18): mb.cone(M['flame'], (x + sdx, y + 0.1, z + 0.15), 0.14, 0.01, 0.45, 6)
 

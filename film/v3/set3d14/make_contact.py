@@ -1,4 +1,4 @@
-"""contact.jpg (8 columns, 720x1280 tiles, label strip UNDER each image, cyan y-880 line) + contact_small.jpg (1/3) from farm_work/final/ in farm_work/contact_order.txt order (spec|label).
+"""contact.jpg (6 columns, 720x1280 tiles, label strip UNDER each image, cyan y-880 line) + contact_small.jpg (1/3) from farm_work/final/ in farm_work/contact_order.txt order (spec|label).
 usage: python3 make_contact.py"""
 import os
 from PIL import Image, ImageDraw, ImageFont
@@ -6,7 +6,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); WK = os.path.join(HERE, 'farm
 rows_ = [l.strip().split('|') for l in open(os.path.join(WK, 'contact_order.txt')) if l.strip()]
 def tag(spec):
     p = spec.split(':'); return '%s_%s_%s' % (p[0], p[1], p[2].replace(',', '_').replace('/', '-')) if len(p) > 2 else '%s_%s' % (p[0], p[1])
-W, H, LB, C = 720, 1280, 56, 8
+W, H, LB, C = 720, 1280, 56, 6
 F = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 28)
 rows = (len(rows_) + C - 1) // C
 S = Image.new('RGB', (W * C, (H + LB) * rows), (16, 16, 20)); d = ImageDraw.Draw(S)
