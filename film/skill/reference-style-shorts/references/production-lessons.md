@@ -85,3 +85,8 @@ The full rules are in film/QA_TEAM.md, section "Stricter QA".
   - a blind Sonnet viewer who must explain the hook, mocker, mechanism and ending from the pictures alone
 - **No solo director overrides:** an override needs a second Opus reviewer who has seen the frames.
 - **Delivery report:** lists every gate's numbers and any overrides.
+
+## 8. Speed policy (client decision, 2026-11-18)
+- **Do NOT reuse sets between films.** Every film gets a new set; the client wants it fresh.
+- **Render teams run on Sonnet.** Opus is only for set and cast building, QA-art and the director.
+- **Agree the look in one round.** Before building a set, show a small style board (2-3 quick stills of the location's key preset with palette and detail level) and get the client's OK on look, colour and detail. Only then build the full set, which should leave one fix round at most at the SET gate.
