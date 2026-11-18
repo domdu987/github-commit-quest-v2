@@ -19,7 +19,7 @@ from wall_tex import hexf, hex8, pnoise, pfbm, save             # noqa: E402
 import harbour_tex as HX                                        # noqa: E402  (sky_rich painter)
 
 TEX = os.path.join(HERE, 'tex_street')
-TEX_V = 's12.11'
+TEX_V = 's12.13'
 JOBS = {}
 def reg(name, params, fn): JOBS[name] = (params, fn)
 
@@ -524,13 +524,13 @@ def sky_rain(p, out):
         img = grad([(-15, '#b87c78'), (0, '#f0a468'), (5, '#d890a0'), (14, '#7a78b4'), (40, '#4c58a0'), (90, '#2c3a84')]); gcol, gk = '#ffb870', 0.8
         pal = [('#7c82c0', '#4e5a9c', '#f6b8a0'), ('#6c74b2', '#444e8c', '#f6a67c'), ('#5e66a4', '#3a4480', '#ff9a60')]
     else:
-        img = grad([(-15, '#c89888'), (0, '#f0c49c'), (7, '#e6b8a8'), (20, '#b8bedc'), (45, '#98a8d0'), (90, '#7c8cb8')]); gcol, gk = '#ffd8a0', 0.7
-        pal = [('#e2e4f4', '#98a4d4', '#fff0dc'), ('#d6daee', '#8c98cc', '#fde6cc'), ('#c8cee8', '#8290c4', '#f8dcc0')]
+        img = grad([(-15, '#c08878'), (0, '#e8b48c'), (7, '#dca898'), (20, '#aeb4d6'), (45, '#94a4cc'), (90, '#8090bc')]); gcol, gk = '#ffd09a', 0.6
+        pal = [('#e6e0ec', '#9ea4d0', '#ffe4c4'), ('#dad8ea', '#929ccc', '#fdd8b8'), ('#ccd0e6', '#8894c4', '#f8cca8')]
     d_az = np.minimum(np.abs(az - 90.0), 360 - np.abs(az - 90.0))[None, :]
     glow = np.exp(-((d_az / 38.0) ** 2) - ((el[:, None] - 4.0) / 16.0) ** 2); img = img + hexf(gcol)[None, None] * glow[..., None] * gk
     ppd = W / 360.0
     # (elevation range, count, width deg, height factor) far to near layers: small low clouds first, big high clouds last
-    layers = [((1.5, 9.0), 26, (14, 26), 0), ((9.0, 22.0), 22, (18, 34), 1), ((22.0, 46.0), 16, (26, 46), 2), ((46.0, 72.0), 8, (40, 70), 2)]
+    layers = [((1.5, 9.0), 26, (14, 26), 0), ((9.0, 22.0), 22, (18, 34), 1), ((22.0, 38.0), 14, (24, 40), 2)]     # nothing above el ~42: the zenith is a plain gradient (no dome-pole arcs)
     for (e0, e1), cnt, (w0, w1), pi_ in layers:
         body_c, shade_c, rim_c = [hexf(c) for c in pal[pi_]]
         for k in range(cnt):
@@ -574,7 +574,7 @@ def all_jobs():
     reg('wood', dict(seed=41, col='#8a5e3a', w=0.5), wood); reg('wood_d', dict(seed=42, col='#5e3c26', w=0.4), wood)
     reg('barrel', dict(col='#8c5c34'), barrel); reg('slate', dict(seed=51, col='#44566e'), slate)
     reg('awn_a', dict(n=10, a='#c8483a', b='#efe4cc'), stripes); reg('awn_b', dict(n=8, a='#2f6a52', b='#efe4cc'), stripes)
-    reg('lace', dict(col='#f4a0aa'), lace)
+    reg('lace', dict(col='#f4907e'), lace)
     specs = [('fac_a', 'red', 'ochre', 'house', 1, GREEN, 0.55, 101, 'fan'), ('fac_b', 'brown', 'plum', 'house', 0, OXBLOOD, 0.62, 102, 'transom'), ('fac_c', 'ochre', 'stock', 'house', 2, NAVY, 0.75, 103, 'arch'),
              ('fac_d', 'red', 'rust', 'house', 0, GREEN, 0.6, 104, 'transom'), ('fac_e', 'rust', 'brown', 'house', 1, OXBLOOD, 0.68, 105, 'fan'), ('fac_f', 'plum', 'brown', 'house', 2, GREEN, 0.7, 106, 'arch'),
              ('fac_g', 'stock', 'red', 'house', 1, '#8a2c2c', 0.5, 107, 'arch'), ('fac_h', 'ochre', 'rust', 'house', 0, '#2c4c5c', 0.72, 108, 'fan'), ('fac_i', 'red', 'plum', 'house', 2, '#3a3a52', 0.64, 109, 'transom'),

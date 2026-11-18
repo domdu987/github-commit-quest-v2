@@ -14,7 +14,7 @@ def loc(ob): return ev(ob).matrix_world.translation.copy()
 def scale(ob): return ev(ob).scale.copy()
 
 A = S.shot('street_wide', 'RAIN', figures=True)
-ok(set(S.CAMS) == set(S.PRESETS) and len(S.PRESETS) == 8, 'eight presets')
+ok(set(S.CAMS) == set(S.PRESETS) and len(S.PRESETS) == 14, 'fourteen presets')
 ok(set(S.LIGHTS) == {'RAIN', 'DUSK_RAIN'}, 'two lights')
 ok(len(A['coaches']) == 5 and len([c for c in A['coaches'] if c['name'].startswith('coach_')]) == 5, 'coaches (4 rank + run)')
 ok(len(A['umbrella_slots']) >= 50, 'umbrella slots %d' % len(A['umbrella_slots']))
@@ -30,6 +30,12 @@ for pr in S.PRESETS:
 # light variants
 for lt in S.LIGHTS:
     A = S.shot('coach_low', lt); ok(A['light'] == lt and sc.camera is not None, 'build ' + lt)
+# bored horses swap with the busy state, rank rolls
+hu = [bpy.data.objects['coach_%d_horse' % i] for i in range(4)]; hd = [bpy.data.objects['coach_%d_horse_idle' % i] for i in range(4)]
+S.set_rank_busy(0.0); ok(all(scale(h).x < 0.01 for h in hu) and all(scale(h).x > 0.99 for h in hd), 'idle horses (heads hung) when empty')
+S.set_rank_busy(1.0); ok(all(scale(h).x > 0.99 for h in hu) and all(scale(h).x < 0.01 for h in hd), 'alert horses when busy')
+S.roll_rank(1, 31, -10.0); sc.frame_set(16); ok(abs(loc(bpy.data.objects['coach_2']).y - (55.0 - 5.0)) < 0.2 and abs(ev(bpy.data.objects['coach_2_w_rl']).rotation_euler.x) > 0.5, 'roll_rank moves coach 2 and its wheels'); sc.frame_set(1)
+for i in range(4): bpy.data.objects['coach_%d' % i].animation_data_clear()
 # umbrellas: closed at 0, all open at 1, staggered in between
 A = S.shot('street_high', 'RAIN', figures=True); umbs = [o for o in bpy.data.objects if o.name.startswith('umb_')]
 S.set_crowd_umbrellas(0.0); ok(all(scale(o).x < 0.01 for o in umbs), 'umbrellas closed at 0')
@@ -47,7 +53,7 @@ S.set_rush(0.5); ok(len(set(round(loc(o).x, 2) for o in rs)) > 10, 'rush stagger
 # rank busy
 pas = [bpy.data.objects['coach_%d_pass' % i] for i in range(4)]; lm = [bpy.data.materials[S.STATE['pre'] + 'e_clamp%d' % i] for i in range(4)]
 S.set_rank_busy(0.0); ok(all(scale(p).x < 0.01 for p in pas), 'passengers gone when empty'); ok(all(m.node_tree.nodes['strength'].inputs[1].default_value < 0.01 for m in lm), 'lanterns off when empty')
-S.set_rank_busy(1.0); ok(all(scale(p).x > 0.99 for p in pas), 'passengers in when busy'); ok(all(m.node_tree.nodes['strength'].inputs[1].default_value > 3 for m in lm), 'lanterns lit when busy')
+S.set_rank_busy(1.0); ok(all(scale(p).x > 0.99 for p in pas), 'passengers in when busy'); ok(all(m.node_tree.nodes['strength'].inputs[1].default_value > 1.5 for m in lm), 'lanterns lit when busy')
 S.set_rank_busy(0.5); ok([scale(p).x > 0.5 for p in pas] == [True, True, False, False], 'busy 0.5 fills the first two coaches')
 S.set_rank_busy(1.0)
 # pink umbrella

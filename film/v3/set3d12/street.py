@@ -40,7 +40,7 @@ def _kdaz(az, el):
 
 P_RAIN = dict(toon=1.0, key_desat=0.08, ink='#24160e', night=False, form=(0.0, -0.05, 0.22), bloom_size=0.05, sun_angle=0.6, wet=1.0, lamps=1.0, lamp_k=1.0,
               key=(2.0, 1.16, 0.5), key_dir=_kdaz(205, 60), sun_elev=60, shade=(0.17, 0.165, 0.46), shade_tint=(0.16, 0.15, 0.46), shade_mix=0.78,
-              grade_offset=(0.0, -0.004, -0.008), lift=(0.008, 0.008, 0.026), sky='sky_rain', sky_k=1.0, grade_saturation=1.14,
+              grade_offset=(0.0, -0.004, -0.008), lift=(0.008, 0.008, 0.026), sky='sky_rain', sky_k=0.85, grade_saturation=1.14,
               bounce=(1.0, 0.7, 0.45, 0.07), air=('#d8b8a8', 0.5, 60.0, 260.0), beams=0.0, rain=1.0)
 P_DUSK_RAIN = dict(P_RAIN, key=(1.55, 0.86, 0.38), key_dir=_kdaz(205, 40), sun_elev=40, shade=(0.105, 0.115, 0.36), shade_tint=(0.10, 0.10, 0.40), shade_mix=0.8,
                    lamps=1.6, lamp_k=1.7, sky='sky_dusk', sky_k=0.95, grade_saturation=1.1, lift=(0.006, 0.007, 0.03), air=('#a49cc8', 0.5, 60.0, 260.0), bounce=(0.9, 0.6, 0.5, 0.06))
@@ -59,14 +59,20 @@ BOX_Z = 4.22                                              # standing height of a
 # ----------------------------------------------------------------------------- cameras, presets, stand points
 def _cam(a, b, la, lb, lens=22): return dict(loc=a, look_at=la, lens=lens, loc_b=b, look_b=lb)
 CAMS = dict(
-    street_wide=_cam((1.0, -14.0, 3.4), (0.6, -4.0, 3.3), (0.3, 40.0, 3.2), (0.3, 40.0, 3.5)),
+    street_wide=_cam((1.0, -14.0, 3.4), (0.6, -4.0, 3.3), (0.3, 40.0, 6.4), (0.3, 40.0, 6.7)),
+    street_wide_low=_cam((0.8, -12.0, 1.4), (0.5, -4.0, 1.3), (0.3, 40.0, 5.6), (0.3, 40.0, 6.0)),
+    street_wide_rev=_cam((-0.6, 72.0, 3.4), (-0.2, 62.0, 3.3), (0.2, 10.0, 6.2), (0.2, 10.0, 6.4)),
     street_high=_cam((-3.0, -20.0, 32.0), (-2.0, -9.0, 17.0), (0.5, 34.0, 1.0), (0.5, 32.0, 2.0)),
     coach_low=_cam((-3.6, 4.2, 1.35), (-1.0, 7.5, 1.5), (3.6, 19.0, 3.3), (3.55, 19.5, 3.9)),
+    coach_close=_cam((-2.6, 12.0, 1.5), (0.3, 13.2, 2.5), (3.55, 19.4, 4.9), (3.55, 18.8, 6.3), 25),
     hero_track=_cam((-3.8, 0.4, 2.2), (-3.6, 10.2, 2.2), (-0.6, 8.0, 3.3), (-0.6, 17.8, 3.3)),
-    box_seat=_cam((-1.6, 10.0, 1.5), (0.2, 12.4, 2.3), (3.2, 18.6, 5.9), (3.4, 18.6, 6.3)),
-    market=_cam((0.4, 0.4, 2.0), (-0.8, 3.0, 2.1), (-6.0, 11.0, 2.9), (-6.4, 11.5, 3.0)),
+    box_seat=_cam((-1.2, 10.5, 3.2), (0.9, 14.2, 4.4), (3.4, 18.8, 6.6), (3.45, 18.7, 6.7), 26),
+    box_trio=_cam((-2.2, 5.5, 2.2), (-1.0, 9.5, 2.6), (3.55, 36.0, 5.6), (3.55, 44.0, 5.4), 24),
+    market=_cam((0.4, 0.4, 2.0), (-0.8, 3.0, 2.1), (-6.0, 11.0, 4.2), (-6.4, 11.5, 4.3)),
     puddle_low=_cam((-5.3, 3.6, 0.75), (-5.3, 4.6, 0.7), (-1.8, 12.6, 2.0), (-2.2, 12.6, 2.2)),
-    rank_rush=_cam((-3.4, 4.0, 3.0), (-3.4, 10.0, 3.6), (3.4, 28.0, 3.4), (3.4, 36.0, 3.4)),
+    rank_rush=_cam((-3.2, 8.0, 2.8), (-2.6, 14.0, 3.0), (1.8, 25.0, 4.0), (3.0, 37.0, 4.0)),
+    rank_wide=_cam((-3.4, -4.0, 4.6), (-2.4, 4.0, 3.8), (3.4, 42.0, 3.4), (3.4, 48.0, 3.4)),
+    rank_idle=_cam((-3.2, 6.0, 1.8), (-2.2, 9.0, 2.0), (3.6, 34.0, 3.4), (3.6, 40.0, 3.4)),
 )
 PRESETS = list(CAMS)
 LIGHT_NAMES = list(LIGHTS)
@@ -81,7 +87,7 @@ STAND = {
     'hanway_c':      _stand(-1.2, 17.8, 0.0, 0.2, -1.0, 'hero_track end (walk a -> b -> c along +y, face the camera)'),
     'hanway_low':    _stand(-2.4, 12.5, 0.0, 0.5, -1.0, 'coach_low: passes below the first coach'),
     'hanway_market': _stand(-2.6, 10.5, 0.0, 0.5, -1.0, 'market: passes the barrow corner'),
-    'hanway_mud':    _stand(-3.8, 14.2, 0.0, 0.5, -1.0, 'puddle_low: beside the big puddle, the splash target (faces the camera)'),
+    'hanway_mud':    _stand(-4.3, 11.0, 0.0, 0.5, -1.0, 'puddle_low: beside the big puddle, the splash target (faces the camera)'),
     'hanway_crowd':  _stand(-1.0, 16.0, 0.0, 0.0, -1.0, 'street_high: the one umbrella among many'),
     # --- the three coachmen on their boxes (feet on the seat plank, z 4.22; the coaches face -y)
     'box_a':         _stand(RANK_X, RANK_Y[0] - 3.4, BOX_Z, -0.5, -0.85, 'HEAD coachman (coach_0 box)'),
@@ -101,22 +107,40 @@ STAND = {
     'pave_R2':       _stand(7.6, 20.5, ZP, -0.5, -1.0, 'right pavement'),
     'pave_L2':       _stand(-7.4, 21.0, ZP, 0.5, -1.0, 'left pavement'),
     # --- passengers' side of the rank: the crowd rushes here (see A['rush'])
-    'queue_a':       _stand(1.0, 22.0, 0.0, 0.9, 0.0, 'by the head coach street-side door (coach_0), faces the coach'),
+    'queue_a':       _stand(0.1, 21.0, 0.0, 0.9, 0.0, 'by the head coach street-side door (coach_0), faces the coach (x <= 0.3 keeps 1.2 from the wheels)'),
+    'queue_b':       _stand(-0.2, 23.4, 0.0, 0.9, 0.0, 'the rank queue, 2nd'),
+    'queue_c':       _stand(0.1, 25.8, 0.0, 0.9, 0.0, 'the rank queue, 3rd'),
+    'queue_d':       _stand(0.0, 14.8, 0.0, 0.9, 0.3, 'the rank queue, in front of the head horse'),
+    'hanway_low2':   _stand(0.9, 17.2, 0.0, 0.0, -1.0, 'coach_close: Hanway passing below the head coach'),
+    'hanway_rev':    _stand(-0.8, 27.0, 0.0, 0.0, 1.0, 'street_wide_rev: Hanway, the street opened umbrellas around him (faces the camera at y 70)'),
+    'rev_a':         _stand(-4.0, 40.0, 0.0, 0.0, 1.0, 'street_wide_rev: gentleman on the left of the road'),
+    'rev_b':         _stand(1.0, 33.0, 0.0, 0.0, 1.0, 'street_wide_rev: gentleman mid road'),
+    'rev_pave_L':    _stand(-7.5, 44.0, ZP, 0.0, 1.0, 'street_wide_rev: left pavement'),
+    'rev_pave_R':    _stand(7.6, 30.0, ZP, 0.0, 1.0, 'street_wide_rev: right pavement'),
     'mud_wheel':     _stand(-1.7, 12.2, 0.0, 0.0, -1.0, 'mud_splash: the wheel contact point (a position, not an actor)'),
 }
-STAGE = {                   # placeholder cards staged by stage_placeholders (name, role, umbrella)
+STAGE = {                   # placeholder / cast cards staged by stage_placeholders (stand, role, umbrella-colour for the 3D placeholder umbrella)
     'street_wide': [('hanway_a', 'hero', 'umb_dark'), ('man_road_1', 'man', 'umb_brown'), ('box_a', 'coachman', None), ('pave_R1', 'woman', 'umb_blue')],
+    'street_wide_low': [('hanway_a', 'hero', 'umb_dark'), ('man_road_1', 'man', 'umb_brown'), ('box_a', 'coachman', None), ('pave_R1', 'woman', 'umb_blue')],
+    'street_wide_rev': [('hanway_rev', 'hero', 'umb_dark'), ('rev_a', 'man', None), ('rev_b', 'man_b', None), ('rev_pave_L', 'woman', 'umb_green'), ('rev_pave_R', 'man', None)],
     'street_high': [('hanway_crowd', 'hero', 'umb_dark'), ('box_a', 'coachman', None)],
-    'coach_low': [('box_a', 'coachman', None), ('box_b', 'man', None), ('hanway_low', 'hero', 'umb_dark')],
-    'hero_track': [('hanway_b', 'hero', 'umb_dark'), ('hanway_c', 'hero', 'umb_dark'), ('box_a', 'coachman', None), ('box_b', 'man', None)],
+    'coach_low': [('box_a', 'coachman', None), ('box_b', 'coachman_b', None), ('hanway_low', 'hero', 'umb_dark')],
+    'coach_close': [('box_a', 'coachman', None), ('hanway_low2', 'hero', 'umb_dark')],
+    'hero_track': [('hanway_b', 'hero', 'umb_dark'), ('hanway_c', 'hero', 'umb_dark'), ('box_a', 'coachman', None), ('box_b', 'coachman_b', None)],
     'box_seat': [('box_a', 'coachman', None)],
+    'box_trio': [('box_a', 'coachman', None), ('box_b', 'coachman_b', None), ('box_c', 'coachman_c', None)],
     'market': [('hanway_market', 'hero', 'umb_dark'), ('lady_market', 'woman', 'umb_green'), ('gent_wet', 'man', None), ('seller', 'coachman', None)],
     'puddle_low': [('hanway_mud', 'hero', 'umb_dark')],
-    'rank_rush': [('box_a', 'coachman', None), ('box_b', 'man', None)],
+    'rank_rush': [('box_a', 'coachman', None), ('box_b', 'coachman_b', None)],
+    'rank_wide': [],
+    'rank_idle': [('box_a', 'coachman_sulk', None), ('box_b', 'coachman_b', None), ('box_c', 'coachman_c', None)],
 }
 STAGE_B = {                 # which stand points are valid (in frame, heads above y 880) at the END pose B of the camera move; default = all of STAGE
-    'street_wide': ['hanway_a', 'man_road_1', 'box_a'], 'coach_low': ['box_a', 'box_b'], 'hero_track': ['hanway_c'], 'rank_rush': ['box_b'], 'market': ['hanway_market', 'lady_market', 'gent_wet', 'seller']}
-PH_ROLES = dict(hero=('priest', 3.1), man=('extra_a', 2.9), coachman=('extra_c', 3.0), woman=('extra_b', 2.9))
+    'street_wide': ['hanway_a', 'man_road_1', 'box_a'], 'street_wide_low': ['hanway_a', 'man_road_1', 'box_a'], 'coach_low': ['box_a', 'box_b'], 'hero_track': ['hanway_c'], 'rank_rush': ['box_b'], 'market': ['hanway_market', 'lady_market', 'gent_wet', 'seller'], 'box_trio': ['box_a', 'box_b', 'box_c'], 'coach_close': ['box_a']}
+PH_ROLES = dict(hero=('priest', 3.28), man=('extra_a', 3.06), man_b=('extra_a', 3.16), coachman=('extra_c', 3.19), coachman_b=('extra_c', 3.48), coachman_c=('extra_c', 2.71), coachman_sulk=('extra_c', 3.19), woman=('extra_b', 2.91))
+# real cast12 cards: role -> ('walk' cycle name, phase) | ('story' pose name), plus pose overrides
+CAST_ROLE = dict(hero=('walk', 'hanway_walk_umbrella', 0.2), man=('walk', 'crowd_man_a_walk_hat', 0.1), man_b=('walk', 'crowd_man_b_walk_soaked', 0.3), woman=('walk', 'crowd_woman_a_walk_umbrella', 0.1),
+                 coachman=('story', 'coachman_gloat'), coachman_b=('story', 'coachman_b_glare'), coachman_c=('story', 'coachman_c_nod'), coachman_sulk=('story', 'coachman_sulk_standing'))
 
 # ----------------------------------------------------------------------------- materials
 def _wetgloss(m, k, rough, hmap=None, hscale=1.0, bump=0.25, fres=True, tint=(1.0, 0.95, 0.9)):
@@ -142,10 +166,15 @@ def _mat_pud(name, tex, layer, TXf, tint=(0.5, 0.55, 0.8), k=0.8, rough=0.04, st
     band is stochastic, no noisy see-through film inside). Mask RGB (non-colour): R body alpha, G shore line, B deep core. The road texture is sampled with the
     mesh's 2nd UV map 'UVW' (world / road tile). layer: 'shallow' | 'core' | 'halo'."""
     if name in bpy.data.materials: return bpy.data.materials[name]
-    base = TXf('cobbles', form=False, sm=tint); m = base.copy(); m.name = name; nt = m.node_tree; N = nt.nodes.new; L = nt.links.new
-    uvn = N('ShaderNodeUVMap'); uvn.uv_map = 'UVW'
-    for n in list(nt.nodes):
-        if n.bl_idname == 'ShaderNodeTexImage': L(uvn.outputs['UV'], n.inputs['Vector'])
+    if layer == 'core':                                                         # deep part: a flat dark water mirror (no road texture, no bump)
+        m = bpy.data.materials.new(name); nt = T._tree(m); N = nt.nodes.new; L = nt.links.new
+        o_ = N('ShaderNodeOutputMaterial'); em_ = N('ShaderNodeEmission'); em_.inputs['Color'].default_value = (*T.hex_lin('#222c66'), 1); em_.inputs['Strength'].default_value = 1.0
+        nt.links.new(em_.outputs['Emission'], o_.inputs['Surface'])
+    else:
+        base = TXf('cobbles', form=False, sm=tint); m = base.copy(); m.name = name; nt = m.node_tree; N = nt.nodes.new; L = nt.links.new
+        uvn = N('ShaderNodeUVMap'); uvn.uv_map = 'UVW'
+        for n in list(nt.nodes):
+            if n.bl_idname == 'ShaderNodeTexImage': L(uvn.outputs['UV'], n.inputs['Vector'])
     out = [n for n in nt.nodes if n.bl_idname == 'ShaderNodeOutputMaterial'][0]; last = out.inputs['Surface'].links[0].from_socket
     if layer != 'halo':
         def make(nt_):
@@ -162,7 +191,7 @@ def _mat_pud(name, tex, layer, TXf, tint=(0.5, 0.55, 0.8), k=0.8, rough=0.04, st
     else: L(sp.outputs[0], fac.inputs[0]); fac.inputs[1].default_value = 0.9 if layer == 'halo' else 1.0
     mx = N('ShaderNodeMixShader'); L(fac.outputs[0], mx.inputs['Fac']); L(tr.outputs['BSDF'], mx.inputs[1]); L(last, mx.inputs[2]); last = mx.outputs['Shader']
     if layer == 'shallow':                                                      # pale shore line, a thin glint (emission), weighted by the G channel
-        rim = N('ShaderNodeEmission'); rim.inputs['Color'].default_value = (0.6, 0.68, 0.95, 1); rm = N('ShaderNodeMath'); rm.operation = 'MULTIPLY'; rm.inputs[1].default_value = 0.12 * strength
+        rim = N('ShaderNodeEmission'); rim.inputs['Color'].default_value = (0.6, 0.68, 0.95, 1); rm = N('ShaderNodeMath'); rm.operation = 'MULTIPLY'; rm.inputs[1].default_value = 0.35 * strength
         L(sp.outputs[1], rm.inputs[0]); L(rm.outputs[0], rim.inputs['Strength']); a2 = N('ShaderNodeAddShader'); L(last, a2.inputs[0]); L(rim.outputs['Emission'], a2.inputs[1]); last = a2.outputs['Shader']
     L(last, out.inputs['Surface']); m.cycles.emission_sampling = 'NONE'
     return m
@@ -209,7 +238,7 @@ def _mat_halo(name, image, rgb, k):
 
 def _materials(P, C, TX, tx, pre):
     M = {}
-    M['cobbles'] = _wetgloss(TX('cobbles', form=False), 0.16, 0.3, hmap=tx['cobbles_h'], bump=0.7)
+    M['cobbles'] = _wetgloss(TX('cobbles', form=False), 0.14, 0.4, hmap=tx['cobbles_h'], bump=0.35)
     M['pave'] = _wetgloss(TX('pave', form=False), 0.3, 0.14)
     M['kerb'] = _wetgloss(TX('kerb'), 0.22, 0.14)
     M['gutter_flow'] = _wetgloss(TX('gutter', form=False, glow='gutter', glow_k=0.18), 0.55, 0.08, fres=True, tint=(0.9, 0.95, 1.0))
@@ -228,9 +257,9 @@ def _materials(P, C, TX, tx, pre):
     M['coach_green'] = C('#2c5c48', 1.0, 1.3); M['coach_green_d'] = C('#18322a', 1.0, 1.3); M['coach_ox'] = C('#7c2c38', 1.0, 1.3); M['coach_ox_d'] = C('#3a141c', 1.0, 1.3)
     M['coach_navy'] = C('#2e4880', 1.0, 1.3); M['coach_navy_d'] = C('#161e3c', 1.0, 1.3); M['coach_ochre'] = C('#b88a3c', 1.0, 1.3); M['coach_ochre_d'] = C('#4a3418', 1.0, 1.3)
     M['coach_gold'] = C('#d8b048', 1.0, (1.6, 1.3, 0.7), smix=0.2); M['coach_crest'] = C('#9c2c34', 1.0, 1.2)
-    M['wheel'] = C('#3a2a1c', 1.0, 1.1); M['wheel_r'] = C('#8a3028', 1.0, (1.3, 0.9, 0.8), smix=0.8); M['wheel_r2'] = C('#6a2420', 1.0, (1.3, 0.9, 0.8), smix=0.8)
-    M['cloth'] = C('#7a2434', 1.0, (1.4, 0.8, 0.8), smix=0.8); M['leather'] = C('#3a2a22', 1.0, 1.1); M['passenger'] = C('#0e1018', 1.0, 0.8)
-    M['horse'] = C('#8a4a28', 1.0, (1.3, 1.0, 0.9), smix=0.65); M['horse_b'] = C('#5c3220', 1.0, (1.3, 1.0, 0.9), smix=0.65); M['horse_c'] = C('#a8a4b4', 1.0, (1.1, 1.1, 1.1), smix=0.65)
+    M['wheel'] = C('#3a2a1c', 1.0, 1.1); M['wheel_r'] = C('#b4501e', 1.0, (1.3, 0.9, 0.8), smix=0.4); M['wheel_r2'] = C('#964016', 1.0, (1.3, 0.9, 0.8), smix=0.4)
+    M['cloth'] = C('#9a4020', 1.1, (1.5, 1.0, 0.8), smix=0.2); M['leather'] = C('#3a2a22', 1.0, 1.1); M['passenger'] = C('#0e1018', 1.0, 0.8)
+    M['horse'] = C('#8a4a28', 1.0, (1.3, 1.0, 0.9), smix=0.3); M['horse_b'] = C('#5c3220', 1.0, (1.3, 1.0, 0.9), smix=0.3); M['horse_c'] = C('#a8a4b4', 1.0, (1.1, 1.1, 1.1), smix=0.65)
     M['horse_k'] = C('#26222a', 1.0, (1.2, 1.1, 1.2), smix=0.65)
     M['horse_d'] = C('#2e1c14'); M['horse_dk'] = C('#1c1820'); M['horse_wm'] = C('#e8e2d4'); M['horse_w'] = C('#f0e6d4'); M['hoof'] = C('#1c1a1e')
     M['canvas'] = C('#d4c298'); M['sack'] = C('#b8a070'); M['umb_dark'] = C('#141622', 0.8, 1.0)
@@ -238,14 +267,15 @@ def _materials(P, C, TX, tx, pre):
     M['pink'] = mat_emit(pre + 'e_pink', image=tx['lace'], strength=0.95, alpha=True)
     M['cabbage'] = C('#5c9a4a', 1.0, (1.2, 1.1, 1.0), smix=0.5); M['carrot'] = C('#e07a2a', 1.0, (1.3, 0.9, 0.8), smix=0.6); M['apple'] = C('#b8302a', 1.0, (1.3, 0.8, 0.8), smix=0.7)
     M['turnip'] = C('#e8dcc8'); M['onion'] = C('#c89a50'); M['turnip_top'] = C('#8a4a8a'); M['egg'] = C('#f4ecd8', 1.0, 1.2)
-    M['fig_a'] = C('#3a3a5c', 1.0, 1.2); M['fig_b'] = C('#5c4630', 1.0, 1.2); M['fig_c'] = C('#2c4a3c', 1.0, 1.2); M['fig_d'] = C('#6c3438', 1.0, 1.2); M['fig_e'] = C('#6a6a7c', 1.0, 1.2)
-    M['fig_skin'] = C('#e4bc98', 1.0, (1.1, 1.0, 1.0), smix=0.3); M['fig_leg'] = C('#2c2830'); M['fig_hat'] = C('#1c1a22')
-    M['mud'] = mat_emit(pre + 'e_mud', '#8a6840', strength=0.75); M['mud_hi'] = mat_emit(pre + 'e_mudhi', '#dcc490', strength=0.9)
+    M['fig_a'] = C('#9a4a2c', 1.0, 1.3, smix=0.5); M['fig_b'] = C('#b8843a', 1.0, 1.3, smix=0.5); M['fig_c'] = C('#3c7468', 1.0, 1.3, smix=0.5); M['fig_d'] = C('#8a3a46', 1.0, 1.3, smix=0.5); M['fig_e'] = C('#a86a46', 1.0, 1.3, smix=0.5)
+    M['fig_skin'] = C('#e4bc98', 1.0, (1.1, 1.0, 1.0), smix=0.3); M['fig_leg'] = C('#2c2830'); M['fig_hat'] = C('#2a2630'); M['fig_hair'] = C('#e6dccf'); M['fig_hair2'] = C('#6a4a32'); M['rosette'] = mat_emit(pre + 'e_rosette', '#f8d6cc', strength=0.95)
+    M['mud'] = _wetgloss(C('#6a4a2a', 1.25, (1.5, 1.3, 1.1), smix=0.12), 0.35, 0.18, fres=False, tint=(1.0, 0.9, 0.8)); M['mud_hi'] = C('#b8955f', 1.3, (1.5, 1.4, 1.2), smix=0.1)
+    M['mud_spray'] = _mat_streak(pre + 'mudspray', (0.72, 0.56, 0.36), 1.0, 0.3)
     M['glass_lamp'] = mat_emit(pre + 'e_lamp', '#ffd890', strength=4.2); M['lantern'] = mat_emit(pre + 'e_lantern', '#ffc070', strength=3.4)
     M['shopwin'] = {k: mat_emit(pre + 'e_sw_' + k, image=tx['shopwin_' + k], strength=1.25) for k in ('boots', 'teapots', 'pretzels', 'greens', 'hats', 'jars')}
     M['sign'] = {k: TX('sign_' + k, form=False, alpha=True) for k in ('boot', 'teapot', 'pretzel', 'hat', 'jar')}
     M['pud_s'] = {k: _mat_pud(pre + 'pud_s' + k, tx['pud_' + k], 'shallow', TX, (0.46, 0.5, 0.82), 0.8, 0.07) for k in 'abcd'}
-    M['pud_c'] = {k: _mat_pud(pre + 'pud_c' + k, tx['pud_' + k], 'core', TX, (0.28, 0.32, 0.62), 1.0, 0.05) for k in 'abcd'}
+    M['pud_c'] = {k: _mat_pud(pre + 'pud_c' + k, tx['pud_' + k], 'core', TX, (0.28, 0.32, 0.62), 1.0, 0.03) for k in 'abcd'}
     M['pud_h'] = {k: _mat_pud(pre + 'pud_h' + k, tx['pud_' + k], 'halo', TX, (0.62, 0.64, 0.82)) for k in 'abcd'}
     M['ripple'] = {k: mat_emit(pre + 'e_rip_' + k, image=tx['ripples_' + k], strength=0.55, alpha=True) for k in ('a', 'b')}
     M['rain'] = _mat_streak(pre + 'rain', (0.84, 0.91, 1.0), 1.5, 0.34); M['drip'] = _mat_streak(pre + 'drip', (0.86, 0.92, 1.0), 1.5, 0.5)
@@ -341,7 +371,7 @@ def _puddles(SET, M):
     for i, o in enumerate(ro): _drv(o, 'hide_render', 'k <= %g' % (i / 4.0), {'k': (ctrl, '["rain"]')})
     return spots
 # ----------------------------------------------------------------------------- houses
-ROAD_TILE = 3.2                                       # world units per cobble tile (5 x 8 setts: 0.64 x 0.4)
+ROAD_TILE = 2.4                                       # world units per cobble tile (5 x 8 setts: 0.64 x 0.4)
 LANE = (40.0, 48.0)                                   # the cross lane on the left (a gap in the left terrace)
 LEFT_SEQ = ['fac_b', 'fac_s2', 'fac_h', 'fac_a', 'fac_s5', 'fac_f', 'fac_s1', 'fac_e', 'fac_i', 'fac_s3', 'fac_g', 'fac_c', None, 'fac_j', 'fac_s4', 'fac_a', 'fac_d', 'fac_s6', 'fac_h', 'fac_b', 'fac_f', 'fac_s2']
 RIGHT_SEQ = ['fac_d', 'fac_a', 'fac_s1', 'fac_g', 'fac_c', 'fac_s5', 'fac_b', 'fac_i', 'fac_s3', 'fac_f', 'fac_h', 'fac_s4', 'fac_e', 'fac_s2', 'fac_j', 'fac_a', 'fac_s6', 'fac_c', 'fac_d', 'fac_e', 'fac_s1', 'fac_b']
@@ -591,6 +621,38 @@ def _balcony(R, M, Y, xf, dirn, u0, u1, z):
             a0, a1 = 2 * math.pi * k / 8, 2 * math.pi * (k + 1) / 8
             R.iron.frustum(c + Vector((0, 0.13 * math.cos(a0), 0.13 * math.sin(a0))), c + Vector((0, 0.13 * math.cos(a1), 0.13 * math.sin(a1))), 0.018, 0.018, M['iron'], seg=3, cap0=False, cap1=False)
 
+def _end_block_south(SET, M):
+    """A terrace closing the SOUTH end of the street (y = Y0, seen by the reverse shots): seven fronts across, cornice, parapet, slate roof and chimneys."""
+    ye = Y0 - 0.4; fb = MB(); tb = MB(); rb = MB(); kb = MB(); rs = _rnd(31)
+    for k, fac in enumerate(('fac_c', 'fac_a', 'fac_e', 'fac_s3', 'fac_b', 'fac_f', 'fac_d', 'fac_a', 'fac_c')):
+        x0 = -36.0 + k * LOT
+        qface(fb, (x0, ye, 0), (LOT, 0, 0), (0, 0, H_FAC), M[fac], (0, 0, 1, H_FAC / ST.FACADE_H), (0, 1, 0))
+        tb.box((x0, ye, 19.35), (x0 + LOT, ye + 0.95, 19.62), M['cream']); tb.box((x0, ye, 19.62), (x0 + LOT, ye + 0.7, 19.9), M['cream_w'])
+        tb.box((x0, ye, 5.45), (x0 + LOT, ye + 0.16, 5.85), M['cream'])
+        kb.box((x0, ye - 0.55, 19.9), (x0 + LOT, ye, 20.9), M['brick_a' if k % 2 else 'brick_b'], tile=(4, 4))
+        qface(rb, (x0, ye - 0.5, 19.6), (LOT, 0, 0), (0, -11.5 / 2, 4.6 + 0.3), M['slate'], (0, 0, LOT / 4, 1.3), (0, 0.6, 1))
+        for xx in (x0 + 0.7, x0 + LOT - 0.7):
+            kb.box((xx - 0.45, ye - 4.9, 22.0), (xx + 0.45, ye - 4.0, 25.2), M['brick_b']); tb.frustum(Vector((xx, ye - 4.45, 25.2)), Vector((xx, ye - 4.45, 26.1)), 0.2, 0.15, M['pot'], seg=8)
+    for nm, mb in (('endS_fac', fb), ('endS_trim', tb), ('endS_roof', rb), ('endS_brick', kb)): _obj(mb, nm, SET)
+
+
+def _balcony(R, M, Y, xf, dirn, u0, u1, z):
+    """Wrought-iron balcony across the first-floor windows: slab, front and side rails with spear-top bars, scroll panels."""
+    d = 0.75; ya, yb = sorted((Y(u0), Y(u1))); xa, xb = sorted((xf + dirn * 0.1, xf + dirn * (0.1 + d)))
+    R.trim.box((xa, ya, z - 0.2), (xb, yb, z), M['stone'])
+    xr = xf + dirn * (0.1 + d - 0.05); n = int((yb - ya) / 0.38)
+    for i in range(n + 1):
+        y = ya + (yb - ya) * i / n; R.iron.frustum(Vector((xr, y, z)), Vector((xr, y, z + 1.0)), 0.03, 0.03, M['iron'], seg=4, cap0=False, cap1=False)
+        R.iron.frustum(Vector((xr, y, z + 1.0)), Vector((xr, y, z + 1.16)), 0.06, 0.0, M['iron'], seg=4, cap0=True, cap1=False)
+    for zr in (z + 0.12, z + 0.55, z + 1.02): R.iron.frustum(Vector((xr, ya, zr)), Vector((xr, yb, zr)), 0.03, 0.03, M['iron'], seg=4)
+    for y in (ya, yb):
+        R.iron.frustum(Vector((xf + dirn * 0.1, y, z + 1.02)), Vector((xr, y, z + 1.02)), 0.03, 0.03, M['iron'], seg=4); R.iron.frustum(Vector((xr, y, z)), Vector((xr, y, z + 1.1)), 0.06, 0.06, M['iron'], seg=5)
+    for i in range(n):                                      # small scroll rings between the bars
+        y = ya + (yb - ya) * (i + 0.5) / n; c = Vector((xr, y, z + 0.4))
+        for k in range(8):
+            a0, a1 = 2 * math.pi * k / 8, 2 * math.pi * (k + 1) / 8
+            R.iron.frustum(c + Vector((0, 0.13 * math.cos(a0), 0.13 * math.sin(a0))), c + Vector((0, 0.13 * math.cos(a1), 0.13 * math.sin(a1))), 0.018, 0.018, M['iron'], seg=3, cap0=False, cap1=False)
+
 # ----------------------------------------------------------------------------- street furniture
 # ----------------------------------------------------------------------------- street furniture
 def _lamp_post(R, M, x, y, h=7.8, side=1):
@@ -719,7 +781,7 @@ def _empty(name, loc, rot_z=0.0, coll=None):
     return ob
 
 # ----------------------------------------------------------------------------- coaches
-COACH_SPEC = [('green', 'horse', 'up', False), ('oxblood', 'horse_b', 'down', True), ('navy', 'horse_c', 'up', False), ('ochre', 'horse_k', 'down', True), ('green', 'horse_b', 'up', False)]
+COACH_SPEC = [('ochre', 'horse', 'up', False), ('oxblood', 'horse_b', 'down', True), ('navy', 'horse_c', 'up', False), ('green', 'horse_k', 'down', True), ('green', 'horse_b', 'up', False)]
 
 def _wheel_obj(SET, M, name, root, loc, R_, w, y0):
     mb = MB(); PT.wheel(mb, M, Vector((0, 0, 0)), (1, 0, 0), R_, w=w); ob = _obj(mb, name, SET); ob.location = loc; _parent(ob, root)
@@ -734,7 +796,7 @@ def _coach(SET, M, i, loc_xy, yaw=180.0, name=None):
     mb = MB(); anc = PT.coach_body(mb, M, style, trunk); body = _obj(mb, name + '_body', SET); _parent(body, root)
     win = mat_emit(pre + 'e_cwin%d' % i, image=STATE['tx']['coach_win'], strength=1.5)
     gb = MB(); panes = PT.coach_glass(gb, win); glass = _obj(gb, name + '_glass', SET); _parent(glass, root)
-    lam = mat_emit(pre + 'e_clamp%d' % i, '#ffc070', strength=3.4)
+    lam = mat_emit(pre + 'e_clamp%d' % i, '#ff9234', strength=1.7)
     lb = MB()
     for sg in (-1, 1):
         c = Vector((sg * (PT.HW + 0.1), 4.3, 4.8)); lb.frustum(c - Vector((0, 0, 0.35)), c + Vector((0, 0, 0.35)), 0.26, 0.3, lam, seg=6, cap0=False, cap1=False)
@@ -757,8 +819,14 @@ def _coach(SET, M, i, loc_xy, yaw=180.0, name=None):
     pas.location = Vector((0, 0, 0))
     wheels = [_wheel_obj(SET, M, name + '_w_rl', root, (-2.0, -1.3, 2.3), 2.3, 0.32, loc_xy[1]), _wheel_obj(SET, M, name + '_w_rr', root, (2.0, -1.3, 2.3), 2.3, 0.32, loc_xy[1]),
               _wheel_obj(SET, M, name + '_w_fl', root, (-1.9, 2.3, 1.5), 1.5, 0.3, loc_xy[1]), _wheel_obj(SET, M, name + '_w_fr', root, (1.9, 2.3, 1.5), 1.5, 0.3, loc_xy[1])]
-    hb = MB(); hinfo = PT.horse(hb, M, Vector((0, 0, 0)), coat=coat, mane='horse_d' if coat != 'horse_c' else 'horse_dk', head=head, blaze=(i % 2 == 0)); horse = _obj(hb, name + '_horse', SET)
-    horse.location = (0, 5.6, 0); _parent(horse, root); _drv(horse, 'location', '0.1*abs(sin((ry-%g)*0.9))' % loc_xy[1], {'ry': (root, 'location[1]')}, 2)
+    hinfo = None; horses = []
+    for hv in ('up', 'down'):                                   # alert (busy) and bored (idle, head hung low) horse; swapped by CTRL['busy'] against the coach threshold
+        hb = MB(); hi = PT.horse(hb, M, Vector((0, 0, 0)), coat=coat, mane='horse_d' if coat != 'horse_c' else 'horse_dk', head=hv, blaze=(i % 2 == 0)); ho = _obj(hb, name + ('_horse' if hv == 'up' else '_horse_idle'), SET)
+        ho.location = (0, 5.6, 0); _parent(ho, root); _drv(ho, 'location', '0.1*abs(sin((ry-%g)*0.9))' % loc_xy[1], {'ry': (root, 'location[1]')}, 2); horses.append(ho)
+        if hv == 'up': hinfo = hi
+        sc_ = 'min(1,max(0,(k-%g)/0.05))' % (-0.1 if i == 4 else thr)
+        for ax in range(3): _drv(ho, 'scale', ('max(0.001,%s)' if hv == 'up' else 'max(0.001,1-%s)') % sc_, {'k': (ctrl, '["busy"]')}, ax)
+    horse = horses[0]
     # reins: from the bit back to the box (thin dark rods), parented to the root
     rb = MB(); bit = Vector((0, 5.6, 0)) + Vector((0, hinfo['bit'].y, hinfo['bit'].z)); hand = Vector((0.0, 3.5, 5.3))
     for sg in (-1, 1): rod(rb, bit + Vector((sg * 0.18, 0, 0)), hand + Vector((sg * 0.25, 0, 0)), 0.025, M['leather'], seg=3)
@@ -774,10 +842,15 @@ def _coach(SET, M, i, loc_xy, yaw=180.0, name=None):
 def _umb_slots():
     rs = _rnd(21); slots = []
     cols = ['umb_dark'] * 5 + ['umb_brown', 'umb_green', 'umb_blue', 'umb_red', 'umb_ochre', 'umb_grey']
-    keep = [(c['loc'][0], c['loc'][1], 2.4) for c in CAMS.values()] + [(c['loc_b'][0], c['loc_b'][1], 2.4) for c in CAMS.values()] + [(s['pos'][0], s['pos'][1], 1.6) for s in STAND.values()]
+    keep = [(c['loc'][0], c['loc'][1], 3.6) for c in CAMS.values()] + [(c['loc_b'][0], c['loc_b'][1], 3.6) for c in CAMS.values()] + [(s['pos'][0], s['pos'][1], 1.6) for s in STAND.values()]
+    def _py(c, u, p):                                           # pixel y of a world point for preset camera c at move position u (22 mm, 720 x 1280)
+        e = u * u * (3 - 2 * u); lerp = lambda a, b: Vector([x + (y - x) * e for x, y in zip(a, b)]); lo = lerp(c['loc'], c['loc_b']); la = lerp(c['look_at'], c['look_b'])
+        fw = (la - lo).normalized(); rt = fw.cross(Vector((0, 0, 1))).normalized(); up = rt.cross(fw); d = Vector(p) - lo; zc = d.dot(fw)
+        return 640 - 782.2 * (c['lens'] / 22.0) * d.dot(up) / max(zc, 0.01)
     def add(x, y, z, thr):
+        if any(_py(CAMS['street_high'], u_, (x, y, z)) > 870 for u_ in (0.0, 0.5, 1.0)): return      # feet must not project into the caption band at street_high
         if any((x - a) ** 2 + (y - b) ** 2 < r * r for a, b, r in keep): return
-        look = (rs.uniform(-0.6, 0.6), -1.0); slots.append(dict(i=len(slots), pos=(x, y, z), look=look, thr=min(0.96, thr), mat=cols[rs.randrange(len(cols))], r=rs.uniform(1.8, 2.3)))
+        look = (rs.uniform(-0.6, 0.6), -1.0); slots.append(dict(i=len(slots), pos=(x, y, z), look=look, thr=min(0.94, thr), mat=cols[rs.randrange(len(cols))], r=rs.uniform(2.0, 2.5)))
     for s in (-1, 1):
         for j, y in enumerate(np.arange(-10.0, 76.0, 3.7)):
             x = s * (7.0 if j % 2 == 0 else 8.7); y = float(y) + rs.uniform(-0.5, 0.5)
@@ -791,11 +864,15 @@ def _umb_slots():
     return slots
 
 def _rush_slots():
+    """24 rush anchors: 12 around the street-side door of coach 0 and 12 around coach 1, packed into a jostling clump at x -1.6..0.1 (>= 1.5 from the wheel line x 1.55),
+    started from the left kerb at different rows and delays."""
     rs = _rnd(22); out = []
-    for ci, yc in enumerate(RANK_Y):
-        ring = [(0.9, yc - 1.8), (0.55, yc - 0.3), (1.15, yc + 1.2), (-0.1, yc - 2.6), (-0.35, yc + 0.5), (-0.45, yc + 2.2)]
-        for j, (x1, y1) in enumerate(ring):
-            p0 = (-5.2 + 0.5 * (j % 3), yc - 12.0 + 3.2 * j + rs.uniform(-1, 1)); d = 0.04 * j + 0.05 * ci
+    for ci in (0, 1):
+        yc = RANK_Y[ci]
+        for j in range(12):
+            col, row = j % 3, j // 3
+            x1 = 0.15 - 0.55 * col - rs.uniform(0, 0.25); y1 = yc - 2.6 + 1.7 * row + (0.5 if col == 1 else 0.0) + rs.uniform(-0.2, 0.2)
+            p0 = (-5.4 + 0.5 * (j % 4), yc - 9.0 + 1.9 * j + rs.uniform(-1, 1)); d = 0.025 * j + 0.1 * rs.random()
             out.append(dict(name='rush_%d_%d' % (ci, j), coach=ci, p0=p0 + (0.0,), p1=(x1, y1, 0.0), look=(0.95, 0.1), delay=d))
     return out
 
@@ -877,14 +954,14 @@ def _shot_extras(cam, preset):
     _rain(SHOT, M, cam); _drips(SHOT, M)
     lk = P['lamp_k']
     pts = sorted(STATE.get('lamp_pts', []), key=lambda p: (p - mid).length)
-    for i, p in enumerate(pts[:7]): _light('lamp_%d' % i, p, (1.0, 0.64, 0.3), 1500.0 * lk, radius=0.35)
+    for i, p in enumerate(pts[:7]): _light('lamp_%d' % i, p, (1.0, 0.64, 0.3), 1500.0 * lk, radius=0.35).data.specular_factor = 0.2
     for p in [q for q in pts if (q - mid).length < 140]: _halo_quad(SHOT, M, p, 3.6 * (1 + 0.25 * (lk - 1)), 'halo', cam=cam, name='halo_lamp')
     sl = sorted(STATE.get('shop_lights', []), key=lambda t: (t[0] - mid).length)[:6]
-    for i, (p, kind) in enumerate(sl): _light('shop_%d' % i, p, (1.0, 0.66, 0.34), 1000.0 * lk, radius=0.5)
+    for i, (p, kind) in enumerate(sl): _light('shop_%d' % i, p, (1.0, 0.66, 0.34), 1000.0 * lk, radius=0.5).data.specular_factor = 0.2
     for cd in STATE['coach_data'][:4]:
         for j, lp in enumerate(cd['lamp_pts']):
             if (lp - mid).length < 60 or (lp - cen).length < 40:
-                lt = _light('clamp_%d_%d' % (cd['i'], j), lp, (1.0, 0.62, 0.28), 380.0 * lk, radius=0.2)
+                lt = _light('clamp_%d_%d' % (cd['i'], j), lp, (1.0, 0.62, 0.28), 380.0 * lk, radius=0.2); lt.data.specular_factor = 0.2
                 _drv(lt.data, 'energy', '%g*min(1,max(0,(k-%g)/0.05))' % (380.0 * lk, cd['thr']), {'k': (ctrl, '["busy"]')})
             _halo_quad(SHOT, M, lp, 1.5, 'halo', ctrl=ctrl, thr=cd['thr'], cam=cam, name='halo_coach')
     for ob in SHOT.objects: no_bounce(ob); ob.visible_glossy = False
@@ -907,7 +984,7 @@ def _hue_guard(ng):
     hs = [n for n in ng.nodes if n.bl_idname == 'CompositorNodeHueSat'][0]; mx = [n for n in ng.nodes if n.bl_idname == 'ShaderNodeMix'][0]
     hc = ng.nodes.new('CompositorNodeHueCorrect'); hc.location = (-200, 0)
     cv = hc.mapping.curves[0]
-    for x, y in ((0.70, 0.48), (0.75, 0.45), (0.80, 0.41), (0.875, 0.35), (0.92, 0.32), (0.955, 0.41), (0.985, 0.5)):
+    for x, y in ((0.70, 0.49), (0.75, 0.46), (0.80, 0.41), (0.875, 0.35), (0.92, 0.32), (0.955, 0.41), (0.985, 0.5)):
         near = [p for p in cv.points if abs(p.location[0] - x) < 0.02]
         if near: near[0].location = (x, y)
         else: cv.points.new(x, y)
@@ -916,10 +993,10 @@ def _hue_guard(ng):
 
 def setup_render(scene, quality='final'):
     MN.setup_render(scene, quality); c = scene.cycles; c.transparent_max_bounces = 24; c.glossy_bounces = 1; c.max_bounces = 2
-    scene.render.threads = int(os.environ.get('THREADS', '2')); c.denoising_prefilter = 'ACCURATE'; c.sample_clamp_direct = float(os.environ.get('CLAMPD', '12'))
+    c.sample_clamp_indirect = 1.6; scene.render.threads = int(os.environ.get('THREADS', '2')); c.denoising_prefilter = 'ACCURATE'; c.sample_clamp_direct = float(os.environ.get('CLAMPD', '10')); c.blur_glossy = float(os.environ.get('BLURG', '1.0')); c.caustics_reflective = False; c.caustics_refractive = False
     if os.environ.get('SAMPLES'): c.samples = int(os.environ['SAMPLES'])
-    elif quality == 'final': c.samples = 14
-    elif quality == 'hq': c.samples = 16
+    elif quality == 'final': c.samples = 20
+    elif quality == 'hq': c.samples = 24
 
 def build(preset='street_wide', light='RAIN', clear=True):
     """Build the whole street (identical for every preset; `preset` only picks the camera, extras and placeholder staging in shot()). light: RAIN | DUSK_RAIN."""
@@ -968,7 +1045,7 @@ def build(preset='street_wide', light='RAIN', clear=True):
     for ob in SET.objects: no_bounce(ob); ob.visible_glossy = not ob.name.startswith(('rain', 'drips'))
     for ob in CROWD.objects: no_bounce(ob); ob.visible_glossy = False
     A = dict(preset=preset, light=light, cams=CAMS, key_dir=tuple(kd), units='1 unit = 1 head; z up; street along +y', stand=STAND, coaches=[_coach_anchor(cd) for cd in STATE['coach_data']],
-             umbrella_slots=STATE['umb_slots'], rush=STATE['rush_slots'], puddles=STATE['puddles'], pink_hand=(RANK_X + 0.2, RANK_Y[0] - 3.55, 6.0), mud=dict(STATE['mud_info']))
+             umbrella_slots=STATE['umb_slots'], rush=STATE['rush_slots'], puddles=STATE['puddles'], pink_hand=(RANK_X + 0.3, RANK_Y[0] - 3.3, 5.7), mud=dict(STATE['mud_info']))
     STATE['A'] = A
     return A
 
@@ -1000,7 +1077,7 @@ def _street(SET, LIG, P, M):
     _obj(dm, 'barrels_crates', SET)
     _market(SET, M); _rank_props(SET, M)
     for side, R in rows.items(): _row_finish(SET, R, side)
-    _lane_walls(SET, M, rs); _end_block(SET, M)
+    _lane_walls(SET, M, rs); _end_block(SET, M); _end_block_south(SET, M)
     STATE['rows'] = rows
     # coaches: the rank (4) on the right kerb facing -y, plus the running coach (parked far up the street; drive it with run_coach)
     for i, y in enumerate(RANK_Y): STATE['coach_data'].append(_coach(SET, M, i, (RANK_X, y)))
@@ -1014,7 +1091,7 @@ def _crowd_objects(SET, CROWD, M, ctrl):
         x, y, z = sl['pos']; hand = Vector((x, y, z + 1.95))
         mb = MB(); PT.umbrella(mb, M, Vector((0, 0, 2.35)), r=sl['r'], h=0.85, mat=sl['mat'], n=10, pole_to=Vector((0, 0, 0)), tilt=(sl['look'][0] * 0.15, 0.0))
         o = _obj(mb, 'umb_%02d' % sl['i'], SET); o.location = hand; _pop_scale(o, ctrl, 'umb', sl['thr'], 0.05)
-        fb = MB(); PT.figure(fb, M, Vector((x, y, z)), h=3.2, coat='fig_' + 'abcde'[sl['i'] % 5], hat=True); fo = _obj(fb, 'crowd_%02d' % sl['i'], CROWD)
+        fb = MB(); PT.figure(fb, M, Vector((x, y, z)), h=3.0 + 0.25 * (sl['i'] % 3), coat='fig_' + 'abcde'[sl['i'] % 5], hat=False, hair='fig_hair' if sl['i'] % 2 else 'fig_hair2'); fo = _obj(fb, 'crowd_%02d' % sl['i'], CROWD)
         STATE['umb_slots'].append(dict(i=sl['i'], feet=(round(x, 2), round(y, 2), z), look=(round(sl['look'][0], 2), round(sl['look'][1], 2)), hand=tuple(round(v, 2) for v in hand),
                                        open_at=round(sl['thr'], 2), radius=round(sl['r'], 2), colour=sl['mat']))
     rsl = _rush_slots(); STATE['rush_slots'] = []
@@ -1030,37 +1107,41 @@ def _crowd_objects(SET, CROWD, M, ctrl):
         STATE['rush_slots'].append(dict(name=r['name'], coach=r['coach'], start=tuple(round(v, 2) for v in p0), end=tuple(round(v, 2) for v in p1), look=r['look'], delay=round(dly, 2)))
 
 def _pink_umbrella(SET, M, ctrl):
-    mb = MB(); PT.umbrella(mb, M, Vector((0, 0, 2.7)), r=2.45, h=0.95, n=14, canopy_mat=M['pink'], pole_to=Vector((0, 0, 0)))
+    mb = MB(); PT.umbrella(mb, M, Vector((0, 0, 2.7)), r=2.2, h=0.9, n=14, canopy_mat=M['pink'], pole_to=Vector((0, 0, 0)))
     for k in range(14):                                          # frill: small pale rosettes round the rim
-        a = 2 * math.pi * k / 14; mb.sphere(Vector((2.45 * 0.97 * math.cos(a), 2.45 * 0.97 * math.sin(a), 2.7 - 0.95)), 0.16, M['cream_w'], seg=5, rings=3)
-    o = _obj(mb, 'pink_umbrella', SET); o.location = (RANK_X + 0.2, RANK_Y[0] - 3.55, 6.0); _pop_scale(o, ctrl, 'pink', 0.0, 1.0)
+        a = 2 * math.pi * k / 14; mb.sphere(Vector((2.2 * 0.97 * math.cos(a), 2.2 * 0.97 * math.sin(a), 2.7 - 0.9)), 0.1, M['rosette'], seg=7, rings=5)
+    o = _obj(mb, 'pink_umbrella', SET); o.location = (RANK_X + 0.3, RANK_Y[0] - 3.3, 5.7); _pop_scale(o, ctrl, 'pink', 0.0, 1.0)
     STATE['pink_obj'] = o
 
 def _mud_objects(SET, M, ctrl):
     """Big comic mud-water wave: 13 curved fins in a fan + bulb tips + droplets, built at full size in a frame whose +x points along the throw; scale drivers on
     CTRL['mud'] (0..1): rise, peak at ~0.35, collapse by 1."""
-    src = Vector((-1.7, 12.2, 0.0)); tgt = Vector((-3.8, 14.2, 1.2)); dxy = (tgt - src); dxy.z = 0; ang = math.atan2(dxy.y, dxy.x); rs = _rnd(66)
+    src = Vector((-2.75, 13.2, 0.0)); tgt = Vector((-4.3, 11.0, 1.2)); dxy = (tgt - src); dxy.z = 0; ang = math.atan2(dxy.y, dxy.x); rs = _rnd(66)
     mb = MB(); X = Vector((1, 0, 0))
-    for j in range(13):
-        phi = math.radians(-58 + 116 * j / 12) + rs.uniform(-0.05, 0.05); Hh = 3.9 * (1 - 0.45 * abs(phi) / 1.0) * rs.uniform(0.8, 1.1); Rr = 4.2 * (1 - 0.3 * abs(phi)) * rs.uniform(0.85, 1.1)
+    sp = MB()
+    for j in range(12):
+        sg = -1 if j % 2 else 1; k = j // 2; phi = sg * math.radians(14 + 5.5 * k + rs.uniform(-2, 2)); Hh = (3.2 + 0.7 * (1 - k / 5.0)) * rs.uniform(0.85, 1.1); Rr = 4.0 * (1 - 0.12 * k) * rs.uniform(0.9, 1.1)
         dirh = Vector((math.cos(phi), math.sin(phi), 0)); lat = Vector((-math.sin(phi), math.cos(phi), 0)); pts = []; rad = []
-        for n in range(8):
-            t = n / 7.0; pts.append(dirh * (Rr * 0.85 * t ** 0.8) + Vector((0, 0, Hh * (1 - (1 - t) ** 2.2) + 0.1))); rad.append((0.7 * (1 - 0.6 * t), 0.2 * (1 - 0.4 * t)))
-        PT.tube(mb, pts, rad, M['mud'], seg=6, up=lat)
-        mb.sphere(pts[-1] + Vector((0, 0, 0.15)), rs.uniform(0.5, 0.75), M['mud_hi'], seg=7, rings=5)
-    PT.loft(mb, [(Vector((0, 0, 0.12)), Vector((1, 0, 0)), Vector((0, 1, 0)), 1.6, 1.6), (Vector((0, 0, 0.9)), Vector((1, 0, 0)), Vector((0, 1, 0)), 0.9, 0.9)], M['mud'], seg=12)     # the boiling base
+        for n in range(9):
+            t_ = n / 8.0; pts.append(dirh * (0.4 + Rr * 0.85 * t_ ** 0.8) + Vector((0, 0, Hh * (1 - (1 - t_) ** 2.2) + 0.1))); rad.append((0.55 * (1 - 0.6 * t_), 0.18 * (1 - 0.4 * t_)))
+        PT.tube(mb, pts, rad, M['mud'], seg=10, up=lat)
+        mb.sphere(pts[-1] + Vector((0, 0, 0.15)), rs.uniform(0.26, 0.4), M['mud_hi'], seg=10, rings=7)
+        pts2 = [p_ + Vector((0, 0, 0.0)) for p_ in pts]; PT.tube(sp, pts2, [(1.3 * (1 - 0.3 * n / 8.0), 0.04) for n in range(9)], M['mud_spray'], seg=6, up=lat)   # translucent spray sheet beside each fin
+    PT.loft(mb, [(Vector((0, 0, 0.12)), Vector((1, 0, 0)), Vector((0, 1, 0)), 0.65, 0.65), (Vector((0, 0, 0.9)), Vector((1, 0, 0)), Vector((0, 1, 0)), 0.4, 0.4)], M['mud'], seg=12)     # the boiling base
     o = _obj(mb, 'mud_wave', SET); o.location = src + Vector((0, 0, 0.02)); o.rotation_euler = (0, 0, ang)
+    so_ = _obj(sp, 'mud_spray', SET, shadow=False); so_.location = o.location; so_.rotation_euler = o.rotation_euler; so_.visible_glossy = False; STATE['mud_spray_obj'] = so_
     env = 'min(1,k/0.3)*(1-min(1,max(0,(k-0.55)/0.45)))'
-    for ax, e in enumerate(('max(0.001,%s*(0.4+0.9*min(1,k/0.5)))' % env, 'max(0.001,%s*(0.4+0.9*min(1,k/0.5)))' % env, 'max(0.001,%s)' % env)): _drv(o, 'scale', e, {'k': (ctrl, '["mud"]')}, ax)
+    for ob_ in (o, so_):
+        for ax, e in enumerate(('max(0.001,%s*(0.4+0.9*min(1,k/0.5)))' % env, 'max(0.001,%s*(0.4+0.9*min(1,k/0.5)))' % env, 'max(0.001,%s)' % env)): _drv(ob_, 'scale', e, {'k': (ctrl, '["mud"]')}, ax)
     for q in range(16):                                           # droplets on parabolas (world space)
-        vx = rs.uniform(2.0, 7.0); vy = rs.uniform(-2.5, 2.5); vz = rs.uniform(4.0, 9.0); r_ = rs.uniform(0.12, 0.3); mb2 = MB(); mb2.sphere(Vector((0, 0, 0)), r_, M['mud_hi'] if q % 3 == 0 else M['mud'], seg=6, rings=4)
+        vx = rs.uniform(2.0, 7.0); vy = rs.uniform(-2.5, 2.5); vz = rs.uniform(4.0, 9.0); r_ = rs.uniform(0.07, 0.17); mb2 = MB(); mb2.sphere(Vector((0, 0, 0)), r_, M['mud_hi'] if q % 3 == 0 else M['mud'], seg=6, rings=4)
         do = _obj(mb2, 'mud_drop_%02d' % q, SET); ca, sa = math.cos(ang), math.sin(ang); wx = vx * ca - vy * sa; wy = vx * sa + vy * ca
         T_ = 'min(1.6,k*2.2)'
         _drv(do, 'location', '%g+%g*%s' % (src.x, wx, T_), {'k': (ctrl, '["mud"]')}, 0); _drv(do, 'location', '%g+%g*%s' % (src.y, wy, T_), {'k': (ctrl, '["mud"]')}, 1)
         _drv(do, 'location', '0.2+%g*%s-4.5*%s*%s' % (vz, T_, T_, T_), {'k': (ctrl, '["mud"]')}, 2)
         s_ = 'max(0.001,min(1,k*20)*(1-min(1,max(0,(k-0.8)/0.2)))*(location[2]>0))' if False else 'max(0.001,min(1,k*20)*(1-min(1,max(0,(k-0.85)/0.15))))'
         for ax in range(3): _drv(do, 'scale', s_, {'k': (ctrl, '["mud"]')}, ax)
-    STATE['mud_info'] = dict(wheel_contact=(src.x, src.y, 0.0), toward=(round(math.cos(ang), 3), round(math.sin(ang), 3)), target_stand='hanway_mud', t_peak=0.35,
+    STATE['mud_info'] = dict(wheel_contact=(-1.7, 12.2, 0.0), toward=(round(math.cos(ang), 3), round(math.sin(ang), 3)), target_stand='hanway_mud', t_peak=0.35,
                              note='drive coach_run along x 0.2 (run_coach(f0, f1, y0, y1, x=0.2)): its left wheels (x -1.7) cross the puddle at y 12.2 when the origin is at y 14.5; key mud_splash(0)->(1) over ~1 s from that moment')
 
 # ----------------------------------------------------------------------------- hooks (all frame-keyable: pass frame=N to key, omit to set the value now)
@@ -1118,6 +1199,18 @@ def run_coach(f0, f1, y0=40.0, y1=-14.0, x=0.2):
         r.location = (x, y, 0.0); r.keyframe_insert('location', frame=int(f))
     for _, fc in _fcs(r):
         for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
+    bpy.context.view_layer.update()
+
+def roll_rank(f0, f1, dy=-14.0, coaches=(0, 1, 2, 3)):
+    """Shot 17: the rank pulls away: keys coaches 0..3 (empty `coach_i`, with horse and rolling wheels) by dy along y between frames f0 and f1 (linear; horse bob and wheel roll come
+    from the travel). Call after the hooks; the camera presets `rank_wide` / `rank_rush` frame it."""
+    for i in coaches:
+        r = bpy.data.objects['coach_%d' % i]; y0 = r.location.y
+        for f, y in ((f0, y0), (f1, y0 + dy)):
+            r.location = (r.location.x, y, 0.0); r.keyframe_insert('location', frame=int(f))
+        for _, fc in _fcs(r):
+            for kp in fc.keyframe_points: kp.interpolation = 'LINEAR'
+        r.location = (r.location.x, y0, 0.0)
     bpy.context.view_layer.update()
 
 def crowd_figures(on=True):
@@ -1186,6 +1279,51 @@ def _placeholder(role, mark, face_to, name, tilt=0.0):
     ob = T.placeholder_actor(PH_ROLES[role][0], mark, face_to=face_to, tilt=tilt, name=name); ob.visible_glossy = True
     return ob
 
+def cast_card(name, cast, pose, mark, face_to=None, tilt=0.0, ppd=150, tint=None, rim=None, mirror=False, over=None):
+    """A REAL cast12 card (v3/cast12 puppet figure rasterised like the placeholders): 1 unit = 1 head (D), feet at `mark`, facing `face_to` (yaw only), leaned back by `tilt`.
+    `pose` is a pose dict; `over` merges extra pose keys (mud, rim, tint, mirror ...)."""
+    import hashlib, subprocess
+    for p in (os.path.join(PROJ, 'v3', 'cast12'), os.path.join(PROJ, 'v3', 'cast10')):
+        if p not in sys.path: sys.path.insert(0, p)
+    import cast12                                                            # noqa: F401  (registers on import)
+    import puppet
+    pose = dict(pose); pose.update(over or {})
+    if tint: pose['tint'] = tint
+    if rim: pose.update(rim=rim, rim_w=0.03, rim_opacity=0.85)
+    if mirror: pose['mirror'] = True
+    f = puppet.figure(cast, pose, name); bx0, by0, bx1, by1 = f['bbox']; pad = 0.08; bx0 -= pad; by0 -= pad; bx1 += pad; by1 = max(by1, f['feet_y']) + pad
+    w, h = bx1 - bx0, by1 - by0; Wp, Hp = int(round(w * ppd)), int(round(h * ppd))
+    svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="%.4f %.4f %.4f %.4f" style="display:block">%s</svg>' % (Wp, Hp, bx0, by0, w, h, f['svg']))
+    os.makedirs(T.ACT, exist_ok=True); tag = 'card_' + hashlib.sha1(svg.encode()).hexdigest()[:14]; sp = os.path.join(T.ACT, tag + '.svg'); pp = os.path.join(T.ACT, tag + '.png')
+    if not os.path.exists(pp):
+        open(sp, 'w').write(svg); jp = os.path.join(T.ACT, tag + '_job.json'); json.dump([dict(src=sp, out=pp, w=Wp, h=Hp, transparent=True)], open(jp, 'w'))
+        r = subprocess.run(['node', T.TT.RASTER, jp], capture_output=True, env=dict(os.environ, NODE_PATH=os.environ.get('NODE_PATH', '/opt/node22/lib/node_modules')))
+        if r.returncode != 0: raise RuntimeError('card raster failed: ' + r.stderr.decode()[-500:])
+    fx = f['anchors']['feet'][0]; fy = f['feet_y']
+    me = bpy.data.meshes.new(name); xs = ((bx0 - fx), (bx1 - fx)); zs = ((fy - by1), (fy - by0))
+    me.from_pydata([(xs[0], 0, zs[0]), (xs[1], 0, zs[0]), (xs[1], 0, zs[1]), (xs[0], 0, zs[1])], [], [(0, 1, 2, 3)]); me.update(); uvl = me.uv_layers.new(name='UVMap')
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
+    me.materials.append(T.mat_card(name + '_mat', pp)); ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob); ob.location = mark; no_bounce(ob); ob.visible_glossy = True
+    yaw = 0.0
+    if face_to is not None:
+        d = Vector(face_to) - Vector(mark); yaw = math.atan2(d.x, -d.y)
+    ob.rotation_euler = (math.radians(-tilt), 0, yaw); ob['card'] = name
+    return ob
+
+def cast_role_card(role, mark, face_to, name, tilt=0.0, light=None, over=None, mirror=False):
+    """Card of a role (CAST_ROLE): hanway gets the amber rim (and the dusk tint), everyone else is untinted in RAIN, tinted toward the shade colour in DUSK_RAIN."""
+    for p in (os.path.join(PROJ, 'v3', 'cast12'), os.path.join(PROJ, 'v3', 'cast10')):
+        if p not in sys.path: sys.path.insert(0, p)
+    import cast12
+    spec = CAST_ROLE[role]
+    if spec[0] == 'walk': cast, pose = cast12.cycle_frame(spec[1], spec[2], facing=1)
+    else: cast, pose = cast12.STORY12[spec[1]]
+    light = light or STATE.get('light', 'RAIN'); kw = {}
+    if light == 'DUSK_RAIN': kw.update(tint='#d8d0f4')
+    if role == 'hero': kw.update(rim='#f2b25c')
+    if role == 'coachman_sulk': over = dict(over or {}, prop_r=None)         # the 3D pink umbrella (set_pink_umbrella) replaces the sprite prop
+    return cast_card(name, cast, pose, mark, face_to, tilt, mirror=mirror, over=over, **kw)
+
 def staged(preset, u=0.0):
     """The (stand point, role, umbrella) list staged for a preset at move position u (A: STAGE; B (u >= 0.5): STAGE_B names only; hero_track A skips hanway_c, B skips hanway_b)."""
     L = list(STAGE[preset])
@@ -1193,29 +1331,53 @@ def staged(preset, u=0.0):
     elif u >= 0.5 and preset in STAGE_B: L = [s for s in L if s[0] in STAGE_B[preset]]
     return L
 
-def stage_placeholders(preset=None, names=None, figures=True, tilt=None, u=0.0):
-    """Placeholder actor cards (1 unit = 1 head, adults 2.9-3.1) at the stand points of the preset (STAGE) facing the camera, umbrellas for those who hold one,
-    plus the 3D placeholder crowd figures (figures=True). Returns the card objects."""
+def stage_placeholders(preset=None, names=None, figures=True, tilt=None, u=0.0, cards='cast'):
+    """Cards at the stand points of the preset (STAGE) facing the camera. cards='cast': the REAL cast12 cards (hanway with an amber rim; coachmen mirrored to face the road; for a
+    coachman on the box the standing pose, never coach_box); cards='ph': the old film-2 placeholder puppets + 3D umbrellas; cards=None: nothing. figures: the 3D placeholder crowd
+    people (True / 'all' / 'umb' / 'rush' / False). Returns the card objects."""
     scene = bpy.context.scene; cam = scene.camera; cl = cam.matrix_world.translation; M = STATE['M']; SET = STATE['SHOT']; out = []
     preset = preset or STATE.get('preset'); crowd_figures(figures)
-    for (nm, role, umb) in staged(preset, u):
+    for (nm, role, umb) in (staged(preset, u) if cards else []):
         if names and nm not in names: continue
         st = STAND[nm]; x, y, z = st['pos']; tl = 0.0 if tilt is None else tilt
         if preset == 'street_high' and tilt is None: tl = 22.0
+        if cards == 'cast': out.append(cast_role_card(role, (x, y, z), cl, 'actor_%s' % nm, tilt=tl, mirror=role.startswith('coachman'))); continue
         out.append(_placeholder(role, (x, y, z), cl, 'actor_%s' % nm, tilt=tl))
         if umb:
-            um = MB(); h = PH_ROLES[role][1]; PT.umbrella(um, M, Vector((0.05, 0.0, z + h + 1.0)) + Vector((x, y, 0)), r=2.2, h=0.8, mat=umb, pole_to=Vector((x + 0.55, y - 0.05, z + 1.9))); _obj(um, 'ph_umbrella_%s' % nm, SET)
+            um = MB(); h = PH_ROLES[role][1]; PT.umbrella(um, M, Vector((0.05, 0.0, z + h + 1.0)) + Vector((x, y, 0)), r=2.6, h=0.9, mat=umb, pole_to=Vector((x + 0.55, y - 0.05, z + 1.9))); _obj(um, 'ph_umbrella_%s' % nm, SET)
     for ob in SET.objects: no_bounce(ob); ob.visible_glossy = ob.name.startswith(('ph_umb',))
     for o in out: o.visible_glossy = True
     return out
 
-def shot(preset='street_wide', light='RAIN', u=0.0, placeholders=True, figures=False, quality='final'):
+def stage_rush_cards(k=1.0, n=24, light=None):
+    """Real cast12 crowd cards (men a-d, women a-b) at the rush anchors A['rush'] for rush value k: running (the `_rush` cycle) while on the way, pushing (`_push`) at the door.
+    Static cards for stills; hide the 3D rush figures (figures=False / 'umb') when you use them."""
+    for p in (os.path.join(PROJ, 'v3', 'cast12'), os.path.join(PROJ, 'v3', 'cast10')):
+        if p not in sys.path: sys.path.insert(0, p)
+    import cast12
+    cam = bpy.context.scene.camera; cl = cam.matrix_world.translation; mem = ['crowd_man_a', 'crowd_man_b', 'crowd_man_c', 'crowd_man_d', 'crowd_woman_a', 'crowd_woman_b']; out = []
+    light = light or STATE.get('light', 'RAIN')
+    for j, r in enumerate(STATE['rush_slots'][:n]):
+        d = r['delay']; e = max(0.0, min(1.0, (k - d) / (1 - d))); p0, p1 = Vector(r['start']), Vector(r['end']); pos = p0 + (p1 - p0) * e; m = mem[j % 6]
+        if e >= 0.97: cast, pose = cast12.STORY12[m + '_push']
+        else: cast, pose = cast12.cycle_frame(m + '_rush', (j * 0.17) % 1.0, facing=1)
+        out.append(cast_card('actor_rush_%02d' % j, cast, pose, pos, cl, tint='#d8d0f4' if light == 'DUSK_RAIN' else None, mirror=(j % 2 == 1)))
+    return out
+
+def stage_cards(items, light=None, tilt=0.0):
+    """Extra cast cards by hand: items = [(name, role_or_(cast, pose), (x, y, z), over_dict_or_None)] facing the camera."""
+    cam = bpy.context.scene.camera; cl = cam.matrix_world.translation; out = []
+    for (nm, role, mark, over) in items: out.append(cast_role_card(role, mark, cl, 'actor_' + nm, tilt=tilt, light=light, over=over, mirror=role.startswith('coachman')))
+    return out
+
+def shot(preset='street_wide', light='RAIN', u=0.0, placeholders=True, figures=False, quality='final', cards='cast'):
     """Build the set (light), the preset camera at move position u (0 = A, 1 = B), the camera-dependent extras and (optionally) the placeholder cards. Returns the anchors dict A,
     A['cam'] = the camera object."""
     A = build(preset, light); sc = bpy.context.scene; setup_render(sc, quality)
     cam = make_camera(camera_pose(preset, u)); bpy.context.view_layer.update(); A['cam'] = cam
     _shot_extras(cam, preset)
-    if placeholders: stage_placeholders(preset, figures=figures, u=u)
+    if placeholders: stage_placeholders(preset, figures=figures, u=u, cards=cards)
+    else: crowd_figures(figures)
     bpy.context.view_layer.update()
     return A
 

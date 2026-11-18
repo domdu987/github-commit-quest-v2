@@ -256,12 +256,13 @@ def passenger(mb, M, sg, y, z, hat=True, kind=0):
     if hat: obox(mb, V(x, y, z + 0.28), Vector((0, 0, 1)), Vector((0, 1, 0)), Vector((1, 0, 0)), 0.04, 0.3, 0.22, mat, uvk=0.5) if False else mb.frustum(V(x, y, z + 0.22), V(x, y, z + 0.4), 0.3, 0.2, mat, seg=8)
 
 # ----------------------------------------------------------------------------- crowd placeholder
-def figure(mb, M, c, h=3.2, coat='fig_a', hat=True, yaw=0.0, mat_hat='fig_hat'):
+def figure(mb, M, c, h=3.2, coat='fig_a', hat=True, yaw=0.0, mat_hat='fig_hat', hair='fig_hair'):
     """A simple standing 3D placeholder person (coat cone, head, tricorn/bonnet): c = feet, total height h. Used where the cast cards are not placed."""
     c = Vector(c); cm = M[coat]; sk = M['fig_skin']; s = h / 3.2
     mb.frustum(c + V(0, 0, 0.0), c + V(0, 0, 0.9 * s), 0.34 * s, 0.3 * s, M['fig_leg'], seg=8)                                  # legs / skirts
     mb.frustum(c + V(0, 0, 0.9 * s), c + V(0, 0, 2.3 * s), 0.52 * s, 0.34 * s, cm, seg=9)                                           # coat
     mb.sphere(c + V(0, 0, 2.7 * s), 0.46 * s, sk, seg=8, rings=5)
+    if not hat: mb.sphere(c + V(0, 0, 2.82 * s), 0.5 * s, M[hair], seg=8, rings=4)             # bare head: wig / hair cap
     if hat:
         mb.frustum(c + V(0, 0, 2.95 * s), c + V(0, 0, 3.0 * s), 0.7 * s, 0.7 * s, M[mat_hat], seg=3)                          # tricorn brim
         mb.frustum(c + V(0, 0, 2.97 * s), c + V(0, 0, 3.2 * s), 0.4 * s, 0.36 * s, M[mat_hat], seg=8)
