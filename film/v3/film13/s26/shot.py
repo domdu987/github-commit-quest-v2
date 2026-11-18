@@ -38,7 +38,7 @@ G_WALK0, G_WALK1 = G[26] + 2, G[26] + 44             # strolls out of the door t
 G_FALL0 = G[29] + 4                                  # launch
 G_HIT = C.g_of(63.1)                                 # 1896: lands in the mud (sfx splat)
 G_PURSE0 = G[30] + 8                                # purse comes up
-G_TAKE = G[30] + 52                                  # pullman takes it (1974)
+G_TAKE = G[30] + 60                                  # pullman takes it (1974)
 BF = lambda g: C.bf(26, g)
 
 
@@ -48,7 +48,7 @@ DOOR = Vector((0.0, -1.0, 0.0))
 LIFT = B.LIFT_MAX
 Z_PORT = 2.65 + LIFT                                 # 6.25 portico floor
 LAND = Vector((1.2, -11.6, 0.0))                     # where he lands (outside the stair footprint y -9..-4, mud)
-PULL = Vector((3.0, -12.4, 0.0))
+PULL = Vector((3.5, -12.4, 0.0))
 
 CAMS = {
     26: (((-2.4, -17.0, 4.4), (0.0, -3.0, 7.6)), ((-1.2, -12.6, 5.4), (0.0, -3.3, 7.9)), 22.0),
@@ -78,8 +78,9 @@ def idle(g, amp=1.0):
     return amp * math.sin(g * 0.13), amp * math.sin(g * 0.09 + 1.0)
 
 
-RICH_STEP = dict(base("rich_step_out"), mouth="flat", arm_l=dict(hand=(-0.7, 0.9), bend=0.3, stretch=1.2, shape="open"))
-RICH_FALL = dict(base("rich_fall"), mouth="flat")
+RICH_STEP = dict(base("rich_step_out"), expr="stunned", arm_l=dict(hand=(-0.7, 0.9), bend=0.3, stretch=1.2, shape="open"))
+RICH_FALL = dict(base("rich_fall"), expr="stunned")
+RICH_FALL.pop("mouth", None)
 RICH_SIT = base("rich_sit_in_mud")
 RICH_PAY = base("rich_pay_sad")
 PULL_CALM = base("pullman_stand_calm")
@@ -95,15 +96,33 @@ def rich_walk(g):
 
 
 def rich_edge(g, k):
-    """the foot goes out over the edge (k 0..1): step_out pose, then the head drops to look at the air below."""
+    """the foot goes out over the edge: ring eyes + closed mouth ('stunned'), then (shot 27, from g+6) he LOOKS DOWN at the void: head down, eyes down."""
     p = dict(RICH_STEP)
     i, j = idle(g, 1.0)
-    p["lean"] = lerp(-2.0, -6.0, k) + 0.6 * i
-    p["pitch"] = lerp(0.05, 0.55, k)
-    p["gaze"] = (0.3, lerp(0.3, 1.0, k))
-    p["blink"] = cast13.blink_at(g, 90, 7)
+    look = ez((g - (G[27] + 6)) / 10.0) if g >= G[27] else 0.0
+    p["lean"] = lerp(-2.0, -9.0, max(k, look)) + 0.6 * i
+    p["pitch"] = lerp(0.05, 0.95, look)
+    p["gaze"] = (0.1, lerp(0.3, 1.0, look))
+    if look > 0.5:
+        p["expr"] = "worried"                        # half lids, eyes down, wavy closed mouth; the switch sits behind a blink
+    p["blink"] = 1.0 if G[27] + 5 <= g <= G[27] + 7 else cast13.blink_at(g, 90, 7)
     p["t"] = g / 30.0
     return p
+
+
+def cane_overlay(f, pose):
+    """the walking cane (cast13 has no cane prop): drawn into the sprite in the left hand (hand_l), planted at the feet line; gold knob.
+    Only until the drop (G_FALL0): afterwards it stays behind on the portico (not drawn)."""
+    if f >= BF(G_FALL0):
+        return ""
+    fig = puppet.figure("rich", pose, "c")
+    hx, hy = fig["anchors"]["hand_l"]
+    fy = fig["feet_y"]
+    tx = hx - 0.12
+    return ('<g stroke-linecap="round"><line x1="%.3f" y1="%.3f" x2="%.3f" y2="%.3f" stroke="#1b1210" stroke-width="0.115"/>'
+            '<line x1="%.3f" y1="%.3f" x2="%.3f" y2="%.3f" stroke="#7a4a22" stroke-width="0.066"/>'
+            '<circle cx="%.3f" cy="%.3f" r="0.125" fill="#e3b53a" stroke="#1b1210" stroke-width="0.03"/></g>'
+            % (hx, hy, tx, fy, hx, hy, tx, fy, hx, hy))
 
 
 def pose_rich(g):
@@ -175,11 +194,14 @@ def rich_pay(g, hand_local):
     p["head_roll"] = lerp(p["head_roll"], 6.0, u)
     given = g >= G_TAKE
     if given:
-        p["arm_r"] = dict(hand=lerp_t((1.1, -0.5), (0.9, 1.3), ez((g - G_TAKE) / 6.0)), bend=0.2, stretch=1.2)
+        gk = ez((g - G_TAKE) / 8.0)                   # he sulks: arm drops, head sinks, eyes down
+        p["arm_r"] = dict(hand=lerp_t((1.3, -0.5), (0.9, 1.3), gk), bend=0.2, stretch=lerp(1.6, 1.2, gk))
+        p["pitch"] = lerp(-0.35, 0.55, gk)
+        p["head_roll"] = lerp(6.0, 10.0, gk)
     else:
-        p["arm_r"] = dict(hand=lerp_t((0.9, 1.3), (1.15, -0.55), u), bend=lerp(0.2, -0.3, u), stretch=lerp(1.2, 1.5, u))
+        p["arm_r"] = dict(hand=lerp_t((0.9, 1.3), (1.3, -0.5), u), bend=lerp(0.2, -0.3, u), stretch=lerp(1.2, 1.6, u))
         if u > 0.05:
-            p["prop_r"] = {"type": "purse", "scale": 1.45}
+            p["prop_r"] = {"type": "purse", "scale": 1.7}
     return p
 
 
@@ -435,7 +457,7 @@ class Take(object):
             f = BF(g)
             pa = self.pull
             if g >= G[30]:
-                u = ez((g - (G[30] + 4)) / 26.0)
+                u = ez((g - (G[30] + 14)) / 30.0)
                 px = lerp(PULL.x + 5.0, PULL.x, u)
                 C_place(pa, f, (px, PULL.y, land_z()), False)
                 scene.frame_set(f)
@@ -451,11 +473,11 @@ class Take(object):
                     if an is not None:
                         w = actors.local_to_world(self.rich["sit"], an["hand_r"], BF(gr), camera=cam)
                         k = ez((g - G_TAKE) / 12.0) if g >= G_TAKE else 0.0
-                        tgt = (w.x - 0.05, w.y - 0.15, w.z - 0.40 - 1.25 * k)
+                        tgt = (w.x - 0.05, w.y - 0.15, w.z - 0.40 + 0.9 * k)
                         p["arm_l"] = "down"
                         hands = {"l": {"hand": tgt, "bend": 0.2}}
                         if g >= G_TAKE:
-                            p["prop_l"] = {"type": "purse", "scale": 1.45}
+                            p["prop_l"] = {"type": "purse", "scale": 1.7}
                 else:
                     p["arm_l"] = p.get("arm_l", "akimbo")
                 pa.pose(f, p, hands=hands, camera=cam)
@@ -468,7 +490,7 @@ class Take(object):
         for k, a in self.rich.items():
             fr = [BF(g) for g in ext if BF(g) in a.poses]
             if fr:
-                for f, r in zip(fr, a.render_sprites(PPD.get(k, 256), frames=fr)):
+                for f, r in zip(fr, a.render_sprites(PPD.get(k, 256), frames=fr, overlay=cane_overlay if k == "std" else None)):
                     self.anch[(a.name, f)] = r["anchors"]
 
     def sprites(self, gs):
