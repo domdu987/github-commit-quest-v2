@@ -54,7 +54,7 @@ def quilt_svg():
 
 
 def james_overlay(f, pose, an):
-    return quilt_svg()      # QA-art: the sore card floated beside his head -> hidden in this shot (arm under the quilt)
+    return ""      # QA-art: the sore card floated beside his head -> hidden in this shot (arm under the quilt)
 
 
 def pose_james(g):
@@ -91,6 +91,15 @@ def night_look():
         o = bpy.data.objects.get(on)
         if o is not None:
             o.hide_render = True
+    for o in list(bpy.data.objects):                 # gate round 2: curtains read as an orange panel / green hill beside the window -> hidden
+        if o.name.startswith("curtain"):
+            o.hide_render = True
+    mt = bpy.data.materials.new("s13_night_pane"); mt.use_nodes = True; nt = mt.node_tree; nt.nodes.clear()
+    em = nt.nodes.new("ShaderNodeEmission"); em.inputs["Color"].default_value = (0.03, 0.05, 0.24, 1.0); em.inputs["Strength"].default_value = 0.8
+    ot = nt.nodes.new("ShaderNodeOutputMaterial"); nt.links.new(em.outputs[0], ot.inputs[0])
+    bpy.ops.mesh.primitive_plane_add(size=1.0, location=(-7.45, 6.5, 3.8))        # a deep-blue night pane just outside the left window
+    pn = bpy.context.active_object; pn.name = "s13_night_pane"; pn.rotation_euler = (0, math.radians(90), 0); pn.scale = (8.0, 12.0, 1.0)
+    pn.data.materials.append(mt); pn.visible_shadow = False; pn.visible_diffuse = False; pn.visible_glossy = False
     li = bpy.data.objects["candle_light"].data
     for fc in li.animation_data.drivers:
         if fc.data_path == "energy":
