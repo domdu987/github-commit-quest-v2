@@ -1,0 +1,31 @@
+{
+ "take": "s16",
+ "film": 11,
+ "shots": [
+  16
+ ],
+ "first_g": 977,
+ "n_frames": 85,
+ "g0": 983,
+ "g1": 1056,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "dissolve",
+  "frames": 8
+ },
+ "set": "v3/set3d11/dairy.py preset garden_hut (light preset default)",
+ "cast": "v3/cast11 cards (see shot.py)",
+ "dof": "none",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 10.77,
+ "s_per_frame_cpu_mean": 20.39,
+ "max_chin_y": 788.6,
+ "head_report": "raw/s16/g_*.json"
+}
