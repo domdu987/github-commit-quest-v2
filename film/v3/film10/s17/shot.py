@@ -84,7 +84,8 @@ def cam_of(shot, g, eye=None):
         u = 0.25 * lin + 0.75 * ez((g - 1355) / 70.0)          # holds on the crossing (g ~1320-1375), then follows the ship on
         return lerp_cam(CAM19[0], CAM19[1], u, raw=True)
     u = sm((g - G18) / float(G19 - G18))
-    look = Vector((2.5 * s_of(g) + 1.0, 0.0, lerp(5.6, 5.0, u)))        # follows the ship's centre
+    pan = 30.0 * ez((g - (G19 - 26)) / 22.0)                             # last ~0.7 s: the view swings left so the aim buoy enters the circle
+    look = Vector((2.5 * s_of(g) + 1.0 - pan, 0.0, lerp(5.6, 5.0, u)))   # follows the ship's centre
     return Vector(eye), look, lerp(POV_LOOK[0][1], POV_LOOK[1][1], u)
 
 
@@ -92,6 +93,8 @@ def ghost_off(g):
     """ghost x offset: 5 s puts its centre exactly on the real ship's (hull on hull, mirrored); from shot 19 it peels away to the left."""
     s = s_of(g)
     slide = 50.0 * ez((g - G19) / 66.0)
+    if g < G19:                                   # shot 18: directly over the real hull, a slow drift to shot 19's first-frame offset
+        return 5.0 * s - 15.0 * sm((g - G18) / float(G19 - G18))
     return 5.0 * s - 15.0 - slide
 
 
@@ -100,7 +103,7 @@ def ghost_k(g):
     if g < G18:
         return 0.0
     if g < G19:
-        return 1.0 * ez((g - (G18 + 6)) / 40.0)
+        return 0.8 * ez((g - G18) / 45.0)
     return 1.0 - 0.7 * ez((g - G19) / 36.0) - 0.2 * ez((g - (G20 - 40)) / 40.0)
 
 
@@ -112,7 +115,7 @@ def lead_k(g):
 
 def gmark_k(g):
     """the cyan aim buoy lights up at the end of shot 18 and stays."""
-    return clamp((g - (G19 - 26)) / 18.0) if g >= G18 else 0.0
+    return clamp((g - (G19 - 18)) / 8.0) if g >= G18 else 0.0
 
 
 # ----------------------------------------------------------------------------- the take
@@ -175,6 +178,10 @@ class Take(C.Take):
         self.lamps = [bpy_obj("L_lead_buoy_lamp"), bpy_obj("L_ghost_buoy_lamp")]
 
     def pose(self, shot, gs):
+        if shot == 18:                                    # the cyan aim buoy is shown on the line of sight, inside the left of the circle
+            mk = H.STATE["markers"]
+            for ob in list(mk["ghost_buoy"]) + [mk["ghost_lamp"]]:
+                ob.location = (ob.location.x + 11.0, ob.location.y - 10.0, ob.location.z)
         for g in gs:
             f = bf(shot, g)
             s = s_of(g)

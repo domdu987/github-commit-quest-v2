@@ -94,11 +94,11 @@
  "threads": 2,
  "fps": 30,
  "narration": "film10/audio/narration.wav at +0.10 s",
- "s_per_frame_cpu_mean": 27.35,
- "s_per_frame_wall_mean": 13.87,
+ "s_per_frame_cpu_mean": 27.59,
+ "s_per_frame_wall_mean": 13.99,
  "s_per_frame_cpu_by_shot": {
   "17": 30.91,
-  "18": 17.45,
+  "18": 18.28,
   "19": 31.83
  },
  "frame_source": {

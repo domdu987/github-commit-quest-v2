@@ -11,3 +11,7 @@ Known: ship is smaller on screen in 17/19 (about 25-30% width) because torpedo, 
 - 18: ghost mirrored over the real hull, offset -15 D so its reversed bow sticks out past the real stern (~23%), opacity up to 1.0 with the emissive rim; funnel cylinders and rigging wires removed (no glass look).
 - 19: ghost peels left and fades to 0.3 before the pass; ONE torpedo, one soft bubble wake, passing behind the real stern.
 - 17/19: torpedo 3x, arrow-like foam V removed (soft bubble wake only); both buoys 1.5x, inside the frame.
+
+## Round 4 (QA-art round 2: shot 18 only re-rendered; 17 and 19 frames unchanged)
+- 18: ghost directly over the real ship (offset 5 s, no sideways offset; slow drift to shot 19's first-frame offset), opacity 0.8 fading in over the first 1.5 s, rim kept; wires hidden.
+- Last ~0.6 s (g 1278-1295): the view swings left and the cyan aim buoy enters the circle on the left (placed on the line of sight for this shot only), so the cut to 19 reads as "he aimed there".
