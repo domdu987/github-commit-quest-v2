@@ -1,0 +1,14 @@
+{
+ "take": "s05",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 10.6,
+   "duration": 2.967,
+   "frame": 318,
+   "end_frame": 407,
+   "kind": "ambience",
+   "label": "barn_wide A: Sarah and milkmaid2 carry pails on yokes through the barn"
+  }
+ ]
+}

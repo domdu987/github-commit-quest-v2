@@ -1,0 +1,23 @@
+{
+ "take": "s24",
+ "film": 11,
+ "shots": [
+  24
+ ],
+ "first_g": 1479,
+ "n_frames": 87,
+ "g0": 1485,
+ "g1": 1559,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "fps": 30
+}

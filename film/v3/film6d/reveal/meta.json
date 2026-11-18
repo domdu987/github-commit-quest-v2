@@ -1,0 +1,44 @@
+{
+ "take": "reveal",
+ "film": 6,
+ "first_g": 1346,
+ "n_frames": 136,
+ "content": [
+  1349,
+  1478
+ ],
+ "handles": [
+  [
+   1346,
+   1348
+  ],
+  [
+   1479,
+   1481
+  ]
+ ],
+ "shots": {
+  "A": [
+   1349,
+   1395
+  ],
+  "B": [
+   1396,
+   1437
+  ],
+  "C": [
+   1438,
+   1478
+  ]
+ },
+ "transition_in": "cut",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "s_per_frame_wall_mean": 16.83,
+ "s_per_frame_cpu_mean": 33.32,
+ "dof": "none",
+ "text": "none"
+}

@@ -1,0 +1,14 @@
+{
+ "take": "s04",
+ "fps": 30,
+ "cues": [
+  {
+   "time": 7.9,
+   "duration": 2.7,
+   "frame": 237,
+   "end_frame": 318,
+   "kind": "ambience",
+   "label": "lane_high A: high drift over the crowd, pockmarked faces, mother pulls James (smoke hidden)"
+  }
+ ]
+}

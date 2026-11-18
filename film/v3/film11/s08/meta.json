@@ -1,0 +1,35 @@
+{
+ "take": "s08",
+ "film": 11,
+ "shots": [
+  8
+ ],
+ "g0": 508,
+ "g1": 545,
+ "first_g": 502,
+ "n_frames": 49,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "set": "v3/set3d11/dairy.py preset garden_hut, light A (closer; horns/cow_ears 0->1 from g 511; Blossom puppet peeks behind the hut; sore dot card)",
+ "cast": "v3/cast11",
+ "dof": "none",
+ "denoiser": "OIDN (set pipeline)",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 8.93,
+ "s_per_frame_cpu_mean": 17.22,
+ "narration": "film11/audio/narration.wav at +0.10 s"
+}

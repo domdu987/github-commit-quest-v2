@@ -1,0 +1,41 @@
+[
+ {
+  "file": "still_A.png",
+  "shade_hue": 240.4,
+  "shaded_frac": 0.37,
+  "magenta": 6.9,
+  "violet": 4.9,
+  "blue": 20.6,
+  "red": 42.3,
+  "orange": 21.9,
+  "sat": 0.39,
+  "val": 0.46,
+  "dark": 0.01
+ },
+ {
+  "file": "still_B.png",
+  "shade_hue": 242.4,
+  "shaded_frac": 0.07,
+  "magenta": 1.4,
+  "violet": 1.9,
+  "blue": 25.5,
+  "red": 5.0,
+  "orange": 36.1,
+  "sat": 0.4,
+  "val": 0.73,
+  "dark": 0.0
+ },
+ {
+  "file": "still_C.png",
+  "shade_hue": 244.0,
+  "shaded_frac": 0.66,
+  "magenta": 6.6,
+  "violet": 17.9,
+  "blue": 44.3,
+  "red": 17.6,
+  "orange": 10.0,
+  "sat": 0.46,
+  "val": 0.44,
+  "dark": 0.02
+ }
+]

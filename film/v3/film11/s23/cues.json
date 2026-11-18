@@ -1,0 +1,15 @@
+{
+ "take": "s23",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film11/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 45.6,
+   "duration": 3.9,
+   "frame": 1368,
+   "end_frame": 1485,
+   "kind": "ambience",
+   "label": "barn at golden-amber late light, a murmuring crowd settling, soft shuffling feet and a cough, a cow chewing and swishing her tail, a hushed calm pause as the idea dawns"
+  }
+ ]
+}

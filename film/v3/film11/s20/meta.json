@@ -1,0 +1,29 @@
+{
+ "take": "s20",
+ "film": 11,
+ "shots": [
+  20
+ ],
+ "first_g": 1179,
+ "n_frames": 59,
+ "g0": 1185,
+ "g1": 1232,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "size_bytes": 20372283,
+ "s_per_frame_wall": 10.25,
+ "s_per_frame_cpu": 18.62,
+ "max_head_chin_y": [
+  728.3,
+  1226,
+  "james"
+ ]
+}

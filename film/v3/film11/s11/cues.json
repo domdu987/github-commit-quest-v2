@@ -1,0 +1,15 @@
+{
+ "take": "s11",
+ "fps": 30,
+ "note": "time = film seconds (g/30)",
+ "cues": [
+  {
+   "time": 22.4,
+   "duration": 1.7,
+   "frame": 672,
+   "end_frame": 723,
+   "kind": "ambience",
+   "label": "Cottage room by day: fire crackle, quill scratching on paper"
+  }
+ ]
+}

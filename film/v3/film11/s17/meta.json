@@ -1,0 +1,31 @@
+{
+ "take": "s17",
+ "film": 11,
+ "shots": [
+  17
+ ],
+ "first_g": 1050,
+ "n_frames": 72,
+ "g0": 1056,
+ "g1": 1116,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "set": "v3/set3d11/dairy.py preset garden_hut (light preset default)",
+ "cast": "v3/cast11 cards (see shot.py)",
+ "dof": "none",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 13.45,
+ "s_per_frame_cpu_mean": 26.25,
+ "max_chin_y": 766.1,
+ "head_report": "raw/s17/g_*.json"
+}

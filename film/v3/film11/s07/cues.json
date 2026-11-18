@@ -1,0 +1,15 @@
+{
+ "take": "s07",
+ "fps": 30,
+ "note": "time = film seconds (g/30)",
+ "cues": [
+  {
+   "time": 15.8,
+   "duration": 1.133,
+   "frame": 474,
+   "end_frame": 508,
+   "kind": "ambience",
+   "label": "Jenner's garden, morning: birdsong, hens, a distant cart; the town doctor's pompous voice (narration), a cane tap"
+  }
+ ]
+}
