@@ -1,0 +1,20 @@
+[
+ {
+  "time": 9.767,
+  "duration": 1.0,
+  "label": "admiral's boots and heavy stride on quay stones, coat creak",
+  "kind": "foley"
+ },
+ {
+  "time": 10.667,
+  "duration": 0.9,
+  "label": "admiral bursts out laughing (big belly laugh, wheeze)",
+  "kind": "voice_fx"
+ },
+ {
+  "time": 11.433,
+  "duration": 6.6,
+  "label": "harbour ambience: gulls, ropes, distant crane clank under the quote",
+  "kind": "ambience"
+ }
+]

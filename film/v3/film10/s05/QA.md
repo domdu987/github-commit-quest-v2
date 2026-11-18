@@ -1,0 +1,10 @@
+# QA s05 (film 10, shots 5-7, g 293-537; frames g 287-543 with 6 handle frames each side)
+- Set: harbour quay_low world, DAY, custom cameras (24 mm); stripes held at 0.6 (half-striped hull). Cuts: shot 5 -> 6 at g 366, 6 -> 7 at g 450 (framings differ: 5 from the east low and wide, 6 two-shot from the south, 7 push-in from the south-east).
+- Shot 5: the admiral walks in screen-left (cast10.cycle), stops and laughs g 320-342 (narration "หัวเราะลั่น", held laugh mouth), then turns to the grey ships at g 343. The painter strokes, turns to him and calms (g 322-332). Shot 6: point_mock, painter calm_smile. Shot 7: finger_up_promise, push-in 5.9 D -> 3.4 D.
+- Differs from plan: the plan has the mocking start in shot 6; lip-sync starts at the quote start (g 343), so the last 23 frames of shot 5 already show him mocking. The painter stands at (17.2, -6.6), not painter_quay, to avoid the crates/ladder and the line-up with the admiral. Cameras avoid the foreground ladder at (16, -10). The grey ships behind are mostly hidden by the berth hull in these angles.
+- Mouths: admiral mouth moves only g 343-540 (quote 11.33-17.90 s + 0.10 s); flat outside. The laugh pose holds a fixed open mouth. Painter: no mouth movement.
+- Heads: all above y 880 (lowest head edge 780 px). Main heads 0.47-0.55 H. The painter is partly cut by the left frame edge in shot 7 (body only; the head stays in).
+- qa_auto: PASS. Notes: see QA_AUTO.md, phone_sheet.jpg. Looked at the 8-frame contact sheet and the cuts +-3 frames.
+- Not run: hue_report (reference frames missing in this checkout).
+- Cost: see meta.json (about 12.5 s wall / 24 s CPU per frame, two processes in parallel).
+- Notes: the admiral's laugh reads weaker than hoped at phone size (tears and the open mouth are small); the walk-in starts off-screen right for the first ~10 frames.
