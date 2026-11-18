@@ -6,5 +6,6 @@
 - Heads: all above y 880 (lowest head edge 780 px). Main heads 0.47-0.55 H. The painter is partly cut by the left frame edge in shot 7 (body only; the head stays in).
 - qa_auto: PASS. Notes: see QA_AUTO.md, phone_sheet.jpg. Looked at the 8-frame contact sheet and the cuts +-3 frames.
 - Not run: hue_report (reference frames missing in this checkout).
+- take.mkv is 70 MB, so it is delivered as take.mkv.partaa + take.mkv.partab (cat them to rebuild take.mkv).
 - Cost: see meta.json (about 12.5 s wall / 24 s CPU per frame, two processes in parallel).
 - Notes: the admiral's laugh reads weaker than hoped at phone size (tears and the open mouth are small); the walk-in starts off-screen right for the first ~10 frames.

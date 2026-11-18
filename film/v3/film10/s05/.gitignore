@@ -1,6 +1,6 @@
 raw/
 frames/
 work/
-*.mkv.part*
 __pycache__/
 *.log
+take.mkv
