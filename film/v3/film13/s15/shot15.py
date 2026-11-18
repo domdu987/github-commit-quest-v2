@@ -18,7 +18,7 @@ CAM1 = ((6.5, -3.4, 13.6), (6.5, 40.0, -2.0))
 LENS = 22.0
 
 def count_at(g):
-    return 12 if g < G_100 else (100 if g < G_1000 else (1000 if g < G_5000 else 5000))
+    return 48 if g < G_100 else (100 if g < G_1000 else (1000 if g < G_5000 else 5000))
 def cam_of(g):
     x = (g - RANGE[0]) / float(RANGE[1] - RANGE[0]); u = 0.25 * C.ez(x) + 0.75 * x
     return [tuple(lerp(CAM0[k][i], CAM1[k][i], u) for i in range(3)) for k in (0, 1)]
