@@ -1,0 +1,126 @@
+{
+ "take": "s20",
+ "fps": 30,
+ "note": "time = film seconds (g/30); narration PROJ/film14/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 43.367,
+   "duration": 12.767,
+   "frame": 1301,
+   "end_frame": 1684,
+   "kind": "ambience",
+   "label": "African night over the maize field: crickets, a far hyena, a low wind; under it the taut wire hums faintly"
+  },
+  {
+   "time": 43.567,
+   "duration": 0.767,
+   "frame": 1307,
+   "end_frame": 1330,
+   "kind": "foley",
+   "label": "the pushed wire creaks and twangs, ringing out down the row",
+   "peak_frame": 1310
+  },
+  {
+   "time": 44.333,
+   "duration": 1.267,
+   "frame": 1330,
+   "end_frame": 1368,
+   "kind": "foley",
+   "label": "hives knock and rattle on the wire one after another as the camera slides past (wooden thuds, rope creak)",
+   "peak_frame": 1350
+  },
+  {
+   "time": 45.6,
+   "duration": 2.833,
+   "frame": 1368,
+   "end_frame": 1453,
+   "kind": "foley",
+   "label": "the swing wave runs down the hive row: a travelling wooden clatter, tin roofs ticking, a rising low hum",
+   "peak_frame": 1425
+  },
+  {
+   "time": 48.6,
+   "duration": 1.5,
+   "frame": 1458,
+   "end_frame": 1503,
+   "kind": "accent",
+   "label": "the hive jolts and the swarm bursts out: a sudden roar of wings (thousands of bees), rising",
+   "peak_frame": 1472
+  },
+  {
+   "time": 50.1,
+   "duration": 3.233,
+   "frame": 1503,
+   "end_frame": 1600,
+   "kind": "foley",
+   "label": "swarm buzzing around the matriarch's head, ear flaps and snorts",
+   "peak_frame": 1530
+  },
+  {
+   "time": 53.333,
+   "duration": 1.767,
+   "frame": 1600,
+   "end_frame": 1653,
+   "kind": "foley",
+   "label": "bees swirl up her trunk, muffled elephant rumble building",
+   "peak_frame": 1640
+  },
+  {
+   "time": 55.1,
+   "duration": 1.0,
+   "frame": 1653,
+   "end_frame": 1683,
+   "kind": "accent",
+   "label": "the matriarch TRUMPETS (comic, unhurt), swarm still buzzing",
+   "peak_frame": 1655
+  },
+  {
+   "time": 43.567,
+   "duration": 0.0,
+   "frame": 1307,
+   "end_frame": 1307,
+   "kind": "cut",
+   "label": "plan: cut in from shot 19 (push_side low): the camera starts on the same low view of her chest on the wire"
+  },
+  {
+   "time": 45.6,
+   "duration": 0.0,
+   "frame": 1368,
+   "end_frame": 1368,
+   "kind": "cut",
+   "label": "plan cut shot 20 -> 21 (hive-row cut-away, no elephant)"
+  },
+  {
+   "time": 48.433,
+   "duration": 0.0,
+   "frame": 1453,
+   "end_frame": 1453,
+   "kind": "cut",
+   "label": "plan cut shot 21 -> 22 (hive_close: the jolt)"
+  },
+  {
+   "time": 50.1,
+   "duration": 0.0,
+   "frame": 1503,
+   "end_frame": 1503,
+   "kind": "cut",
+   "label": "plan cut shot 22 -> 23 (trunk_close: the swarm reaches her)"
+  },
+  {
+   "time": 53.3,
+   "duration": 0.0,
+   "frame": 1599,
+   "end_frame": 1599,
+   "kind": "cut",
+   "label": "plan cut shot 23 -> 24 (tighter on the head)"
+  },
+  {
+   "time": 55.933,
+   "duration": 0.0,
+   "frame": 1678,
+   "end_frame": 1678,
+   "kind": "cut",
+   "label": "plan: cut to shot 25 (field_night_wide, the herd flees); handle g 1678..1683 rendered"
+  }
+ ]
+}
