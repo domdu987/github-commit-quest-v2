@@ -1,0 +1,41 @@
+{
+ "take": "s01",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film13/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 0.0,
+   "duration": 2.1,
+   "frame": 0,
+   "end_frame": 63,
+   "kind": "ambience",
+   "label": "HOOK: low rumble of a huge weight rising: slow timber creaks and a deep brick-and-iron groan under a calm warm bed (flash-forward, no rain)"
+  },
+  {
+   "time": 0.167,
+   "duration": 1.833,
+   "frame": 5,
+   "end_frame": 60,
+   "kind": "foley",
+   "label": "fine dust and grit trickling down from the base of the hotel: soft sandy hiss, a few pebbles",
+   "peak_frame": 30
+  },
+  {
+   "time": 0.0,
+   "duration": 2.1,
+   "frame": 0,
+   "end_frame": 63,
+   "kind": "foley",
+   "label": "faint iron ratchet clicks far below (jacks), slow, unhurried",
+   "peak_frame": 20
+  },
+  {
+   "time": 2.1,
+   "duration": 0.0,
+   "frame": 63,
+   "end_frame": 63,
+   "kind": "cut",
+   "label": "cut to the suite window (shot 2): the groan drops away to a hush"
+  }
+ ]
+}

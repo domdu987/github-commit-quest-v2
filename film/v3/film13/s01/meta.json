@@ -1,0 +1,62 @@
+{
+ "take": "s01",
+ "film": 13,
+ "shots": [
+  1
+ ],
+ "first_g": 0,
+ "n_frames": 69,
+ "g0": 0,
+ "g1": 63,
+ "handle_in": 0,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0,
+  "note": "film opens on this shot"
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0,
+  "note": "plan: shot 2 (suite_two) at g 63; out-handle g 63..68 = the same hotel_front crane continues (h 0.65 -> 0.66)"
+ },
+ "shot_ranges": {
+  "1": [
+   0,
+   62
+  ]
+ },
+ "setups": {
+  "1": {
+   "g": [
+    0,
+    68
+   ],
+   "set": "street hotel_front DAY, worm's-eye 17 mm, crane up 0.45 -> 1.35 D + tilt, lift keyed 0.55 -> 0.65 (continues in the handle); crib pier + spare jacks left foreground; dust motes trickle from the base"
+  }
+ },
+ "events": {
+  "lift": [
+   0,
+   62
+  ],
+  "crane_up": [
+   0,
+   68
+  ]
+ },
+ "set": "v3/set3d13/chicago.py hotel_front, DAY (set_lift + dust motes keyed per frame)",
+ "dof": "none",
+ "denoiser": "OpenImageDenoise (set default)",
+ "light": "DAY",
+ "cast": "v3/cast13: pullman_look_up_confident (centre, idle sway + blinks), worker_stand_a/b/c",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 17.36,
+ "s_per_frame_cpu_mean": 32.5
+}
