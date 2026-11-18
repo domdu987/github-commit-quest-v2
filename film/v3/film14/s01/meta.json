@@ -31,5 +31,5 @@
   1280
  ],
  "parts": "take.mkv.part* (cat to restore take.mkv)",
- "revision": "v4 (team6): g0 pop fixed (per-process sprite dir), 14-frame hang landing mid-frame, soles on rung, shot 2 laughing, shot 3 full-arm sweep held toward the peak"
+ "revision": "v5 (team6): shot 3 re-rendered: full arm out and up toward the peak, held g164-186, no right-edge drift"
 }

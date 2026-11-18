@@ -5,3 +5,7 @@
 - 3. Shot 3: arm sweep = 3 keyed hand poses over 16 frames (g148-164) then HELD g164-186 with the full arm up toward the peak (card mirrored so the mountain is on his pointing side), camera pans toward it; ground about 25 %; contact shadow under him enlarged; ladder out of the hive's way.
 - Shot 2: villagers back to laugh-with-tears expressions (eyes squeezed, open grin); kid chin above y 830; farmer on the rung.
 - Weak: farmer's raised arm in shot 3 is more "arm up" than a long point; sky is ~35 % in shot 3 (mountain/acacias fill it); shot 2 villagers are small side groups.
+
+## v5 (shot 3 re-rendered, g123-186; shots 1-2 identical to v4)
+- Arm: 3 keyed hand poses (low -> out front -> (1.75,-0.6)), tweened g148-164, then HELD g164-186; the card is mirrored so the peak is on his pointing side and the arm extends out and up diagonally, clear of his head and hat; camera nearly static (look x -5.3 -> -5.4) so he stays well inside the right edge (no drift); hung hive no longer cut by the left edge. Whole shot re-rendered (camera path changed) so there is no cut at g148.
+- qa_auto PASS; frame diffs: median 2.3, only cuts g65/g122 and the hang (g29-40) above 2.2 x median.
