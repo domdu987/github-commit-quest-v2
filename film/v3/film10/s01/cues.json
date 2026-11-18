@@ -1,0 +1,4 @@
+{"take":"s01","fps":30,"cues":[
+{"time":0.0,"duration":4.67,"frame":0,"end_frame":140,"kind":"ambience","label":"British naval dockyard 1917, gulls, distant clanking, lapping water"},
+{"time":0.0,"duration":2.3,"frame":0,"end_frame":69,"kind":"foley","label":"brush strokes on steel hull, paint splash, plank ropes creak","peak_frame":20},
+{"time":2.3,"duration":2.37,"frame":69,"end_frame":140,"kind":"foley","label":"crane and winch rumble far off, ships horns, wide harbour bustle"}]}
