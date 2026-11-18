@@ -49,8 +49,12 @@ def _card_mesh(tag, x0, z0, x1, z1):
     for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))): uvl.data[i].uv = c
     _FRAME['meshes'].append(me); return me
 
-def _mat(tag, png, k=None):
+def _mat(tag, png, k=None, tint=None):
     P = F.STATE['P']; m = G.mat_card(tag, png, P.get('card_k', 1.0) if k is None else k); _FRAME['mats'].append(m)
+    if tint is not None:                        # multiply the card colour (director QA: night elephants no brighter than the lit soil)
+        nt = m.node_tree; ti = [n for n in nt.nodes if n.type == 'TEX_IMAGE'][0]; em = nt.nodes[m['card_em']]
+        mx = nt.nodes.new('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.blend_type = 'MULTIPLY'; mx.inputs[0].default_value = 1.0; mx.inputs[7].default_value = (tint[0], tint[1], tint[2], 1.0)
+        nt.links.new(ti.outputs['Color'], mx.inputs[6]); nt.links.new(mx.outputs[2], em.inputs['Color'])
     for n in m.node_tree.nodes:
         if n.type == 'TEX_IMAGE': _FRAME['imgs'].append(n.image)
     return m
@@ -87,7 +91,7 @@ def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shad
     assert not r['clipped'], 'sprite clipped by canvas: %s %s' % (tag, r.get('bbox'))
     x0, y0, x1, y1 = r['canvas']; fx, fy = r['feet']
     X0, X1 = x0 * MPD, x1 * MPD; Z0, Z1 = -y1 * MPD, -y0 * MPD
-    me = _card_mesh(tag, X0, Z0, X1, Z1); me.materials.append(_mat('%s_mat_%s' % (tag, key), out))
+    me = _card_mesh(tag, X0, Z0, X1, Z1); me.materials.append(_mat('%s_mat_%s' % (tag, key), out, tint=(0.80, 0.85, 1.0) if (cast in _SCALE and F.STATE['light'] == 'NIGHT') else None))
     mk = Vector(mark) + Vector((0, 0, dz))
     def yaw_of(m):
         if yaw_fixed is not None: return yaw_fixed
@@ -102,10 +106,10 @@ def put(tag, cast, pose, mark, cam_loc, ppd=128, mirror=False, canvas=None, shad
     def w(a): return mk + ax * ((a[0] - fx) * MPD) + Vector((0, 0, (fy - a[1]) * MPD))
     if shadow:
         s = _SCALE.get(cast)
-        if s is not None: L, Wd = 4.2 * s, 1.5 * s
+        if s is not None: L, Wd = 5.0 * s, 1.9 * s
         else: L, Wd = 1.5, 0.7
         if contact is not None: L, Wd = contact
-        _contact(tag, mk, yaw, L, Wd)
+        _contact(tag, mk, yaw, L, Wd, 1.0)
     return dict(world=w, anchors=r['anchors'], res=r, mark=mk, yaw=yaw)
 
 def card(tag, png, x0, z0, x1, z1, loc, yaw=0.0, k=None, shadow=False):
