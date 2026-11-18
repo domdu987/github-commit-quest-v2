@@ -10,7 +10,8 @@ PROJ = '/tmp/claude-0/-home-user-github-commit-quest-v2/e8b79665-ba86-5bba-9861-
 sys.path.insert(0, PROJ + '/v3/set3d12')
 G0, G_CUT, G1, H_IN = 1579, 1656, 1784, 6
 RANGES = {22: (G0 - H_IN, G_CUT - 1), 23: (G_CUT, G1)}
-CUSTOM22 = (dict(loc=(-2.6, 0.5, 1.9), look_at=(2.4, 30.0, 3.6), lens=22.0), dict(loc=(-1.0, 7.5, 2.3), look_at=(3.2, 26.0, 4.3), lens=22.0))
+CUSTOM22 = (dict(loc=(-3.6, -3.0, 2.5), look_at=(3.8, 34.0, 4.9), lens=32.0), dict(loc=(-3.2, 2.5, 2.5), look_at=(4.2, 34.0, 5.0), lens=32.0))
+CUSTOM23 = (dict(loc=(-2.4, 8.5, 3.6), look_at=(4.4, 21.5, 6.9), lens=24.0), dict(loc=(-1.2, 10.6, 3.9), look_at=(4.4, 21.0, 7.1), lens=24.0))
 CFG = {22: dict(preset='rank_idle', mid=0.5), 23: dict(preset='box_seat', mid=0.5)}
 
 def parse(s):
@@ -28,7 +29,7 @@ def build(shot):
     # camera move A -> B over the whole shot, linear (never static)
     ga, gb = (G0 - H_IN, G_CUT - 1) if shot == 22 else (G_CUT, G1)
     for g, u in ((ga, 0.0), (gb, 1.0)):
-        S.make_camera(CUSTOM22[int(u)] if shot == 22 else S.camera_pose(c['preset'], u)); cam.keyframe_insert('location', frame=g); cam.keyframe_insert('rotation_euler', frame=g)
+        S.make_camera((CUSTOM22 if shot == 22 else CUSTOM23)[int(u)]); cam.keyframe_insert('location', frame=g); cam.keyframe_insert('rotation_euler', frame=g)
     ad = cam.animation_data
     for fc in ad.action.layers[0].strips[0].channelbags[0].fcurves if hasattr(ad.action, 'layers') else ad.action.fcurves:
         for k in fc.keyframe_points: k.interpolation = 'LINEAR'
@@ -38,12 +39,54 @@ def build(shot):
         cards = S.stage_cards([('box_a', 'coachman_sulk', S.STAND['box_a']['pos'], None), ('box_b', 'cb_glare', S.STAND['box_b']['pos'], None), ('box_c', 'cc_glare', S.STAND['box_c']['pos'], None)])
     else:
         S.set_rank_busy(0.0)
-        cards = S.stage_cards([('box_a', 'coachman_sulk', S.STAND['box_a']['pos'], None)])
+        cards = [held_card(S, bpy, S.STAND['box_a']['pos'])]
         S.set_pink_umbrella(1.0)
-        S.pink_to_hand(cards[0], dx=0.55, up=-0.1)
+        place_pole(S, bpy, cards[0])
+        slate_lamps(bpy)
     S.rain(1.0)
     bpy.context.view_layer.update()
     return S, bpy, A, cards, cam
+
+CLIPY = -0.72                # the sprite pole is kept from the fist up to this y (above the hat); the 3D pink umbrella continues it
+
+def held_card(S, bpy, pos):
+    """The sulking coachman WITH his own fist gripping the pole (sprite prop kept), but the sprite canopy clipped away: the 3D pink umbrella carries on from the pole."""
+    for p in (PROJ + '/v3/cast12', PROJ + '/v3/cast10'):
+        if p not in sys.path: sys.path.insert(0, p)
+    import cast12, puppet
+    orig = puppet.figure; store = {}
+    def fig(cast, pose, name):
+        clip = pose.get('_clipy')
+        if clip is not None: pose = {k: v for k, v in pose.items() if k != '_clipy'}
+        f = orig(cast, pose, name)
+        if clip is not None:
+            f = dict(f); f['svg'] = '<defs><clipPath id="cpy"><rect x="-50" y="%.4f" width="100" height="100"/><rect x="-0.62" y="-0.77" width="0.92" height="1"/></clipPath></defs><g clip-path="url(#cpy)">%s</g>' % (clip, f['svg'])
+            store['an'] = f['anchors']; store['fy'] = f['feet_y']
+        return f
+    puppet.figure = fig
+    try:
+        cast, pose = cast12.STORY12['coachman_sulk_standing']
+        cl = bpy.context.scene.camera.matrix_world.translation
+        c = S.cast_card('actor_box_a', cast, pose, pos, cl, mirror=True, over=dict(_clipy=CLIPY))
+    finally:
+        puppet.figure = orig
+    an = store['an']; fx = an['feet'][0]
+    (hx, hy), (mx, my) = an['hand_l'], an['umb_mid_l']
+    px = hx + (mx - hx) * (hy - CLIPY) / (hy - my)
+    c['pole_local'] = (float(px - fx), float(store['fy'] - CLIPY))
+    return c
+
+def place_pole(S, bpy, c):
+    bpy.context.view_layer.update()
+    px, pz = c['pole_local']
+    S.STATE['pink_obj'].location = c.matrix_world @ __import__('mathutils').Vector((px, 0.0, pz))
+
+def slate_lamps(bpy):
+    """Unlit coach lanterns: dark slate glass instead of pure black."""
+    m = bpy.data.materials.new('slate_lamp'); m.use_nodes = True; b = m.node_tree.nodes['Principled BSDF']
+    b.inputs['Base Color'].default_value = (0.07, 0.09, 0.2, 1); b.inputs['Roughness'].default_value = 0.35
+    for o in bpy.data.objects:
+        if o.name.startswith('coach_') and o.name.endswith('_lamps'): o.hide_render = True      # box lanterns are out on an empty coach (black boxes read as holes)
 
 def breathe(S, bpy, cards, g, shot):
     """tiny sulking sway so the card is never frozen: z-scale breath + 0.6 deg lean."""
@@ -62,7 +105,7 @@ if __name__ == '__main__':
     os.makedirs(out, exist_ok=True)
     for g in gs:
         sc.frame_set(g); breathe(S, bpy, cards, g, shot)
-        if shot == 23: S.pink_to_hand(cards[0], dx=0.55, up=-0.1)
+        if shot == 23: place_pole(S, bpy, cards[0])
         bpy.context.view_layer.update()
         heads = {c.name: [round(v) for v in S.project_px(cam, (c.location.x, c.location.y, c.location.z + 3.2))[:2]] for c in cards}
         w, cpu = S.render(os.path.join(out, 'g_%04d.png' % g))
