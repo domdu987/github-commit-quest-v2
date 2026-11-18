@@ -18,9 +18,9 @@
   "type": "cut",
   "frames": 0
  },
- "size_bytes": 29490653,
- "s_per_frame_wall": 11.93,
- "s_per_frame_cpu": 22.87,
+ "size_bytes": 29465552,
+ "s_per_frame_wall": 11.81,
+ "s_per_frame_cpu": 23.05,
  "max_head_chin_y": [
   743.4,
   1373,

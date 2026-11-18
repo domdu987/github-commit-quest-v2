@@ -6,3 +6,4 @@ Own check at 6 fps (contact.jpg), full-size looks at g 1340 and the first / last
 - Slight hand sway (+-0.02 / 0.03 D) keeps the held hand alive; blinks at g 1316 / 1354.
 - Mouths: nobody speaks (smile mouth held).
 - Deviation: the hand is beside her face rather than right at the udder (the pose holds it straight up); the udder is just below and to the right of it.
+- Colour (own measure, every 10th frame): shade hue 242.1-245.0 (band 240-260), magenta max 4.8 %. Per-shot light override in shot.py: DAIRY_P lift (0.007, 0.020, 0.042) instead of the preset (0.007, 0.020, 0.036): the preset view measured shade hue 236-239 on this camera.

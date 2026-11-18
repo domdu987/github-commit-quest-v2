@@ -5,6 +5,7 @@ blisters (blister_hand prop, scale 1.3) to the camera; Blossom (mirrored, faces 
 Mouths: nobody speaks."""
 import math, os, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__))
+os.environ["DAIRY_P"] = '{"lift": [0.007, 0.020, 0.042]}'   # per-shot light override: lifts the shade hue of barn_milking from 236-239 to 242-245 (more blue lift; less green lift raised the magenta share above 10 %)
 sys.path.insert(0, HERE)
 import c11 as C                                          # noqa: E402
 from mathutils import Vector                             # noqa: E402
