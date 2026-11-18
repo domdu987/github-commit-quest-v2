@@ -7,7 +7,7 @@ CUES = {20:[dict(t=44.69,dur=1.2,label="whistle"),dict(t=43.3,dur=1.5,label="cel
  23:[dict(t=48.8,dur=2.3,label="long wood creak, dust trickle")],24:[dict(t=51.13,dur=2.1,label="low timber settle, distant street")],
  25:[dict(t=53.3,dur=2.6,label="thousands of ratchets, rising swell")]}
 for s in B:
-    g0, g1 = B[s]; fg = g0 - 6; lg = g1 - 1 + 6; d = os.path.join(V, "film13", "s%d" % s); os.makedirs(d, exist_ok=True)
+    g0, g1 = B[s]; fg = g0 - 6; lg = g1 - 1 + 6; d = os.path.join(V, "s%d" % s); os.makedirs(d, exist_ok=True)
     raw = os.path.join(HERE, "raw", "s%d" % s)
     mk = os.path.join(d, "take.mkv")
     subprocess.run(["ffmpeg","-y","-v","error","-framerate","30","-start_number",str(fg),"-i",raw+"/g_%04d.png","-c:v","libx264rgb","-crf","6","-preset","slow",mk],check=True)

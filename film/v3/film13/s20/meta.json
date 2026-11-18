@@ -1,0 +1,17 @@
+{
+ "take": "s20",
+ "film": 13,
+ "shots": [
+  20
+ ],
+ "first_g": 1294,
+ "n_frames": 74,
+ "g0": 1300,
+ "g1": 1362,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ }
+}

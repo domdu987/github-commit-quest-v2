@@ -1,0 +1,17 @@
+{
+ "take": "s23",
+ "film": 13,
+ "shots": [
+  23
+ ],
+ "first_g": 1461,
+ "n_frames": 82,
+ "g0": 1467,
+ "g1": 1537,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ }
+}
