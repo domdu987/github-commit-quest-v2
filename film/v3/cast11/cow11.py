@@ -207,6 +207,7 @@ def cow_svg(k, pose):
     # knee and hock marks
     o.append('<path d="M0.88,1.10 Q1.0,1.16 1.12,1.10 M-1.70,1.12 Q-1.52,1.20 -1.30,1.10" fill="none" stroke="%s" stroke-width="0.012" stroke-linecap="round" opacity="0.6"/>' % k.c(BROWN["dark"]))
     # --- head
+    HS = 1.22
     a_turn = 14.0 + 66.0 * ht + 34.0 * hd
     J = (2.10, -0.14)
     ra = math.radians(a_turn)
@@ -217,15 +218,15 @@ def cow_svg(k, pose):
         ph = _num(chew, 0.0) * 2 * math.pi
         s = math.sin(ph)
         jaw = (0.035 * amp * math.sin(ph + 1.2), 0.060 * amp * max(0.0, s) + 0.008 * amp)
-    o.append('<g transform="translate(%.4f %.4f) rotate(%.3f)">%s</g>' % (Hc[0], Hc[1], a_turn, _head(k, jaw, ear, blink)))
+    o.append('<g transform="translate(%.4f %.4f) rotate(%.3f) scale(%.3f)">%s</g>' % (Hc[0], Hc[1], a_turn, HS, _head(k, jaw, ear, blink)))
     # head extents
     for (x, y) in ((-0.34, -0.6), (0.84, -0.46), (0.84, 0.50), (-0.5, 0.5)):
         c, s_ = math.cos(ra), math.sin(ra)
-        k.ext.append((Hc[0] + x * c - y * s_, Hc[1] + x * s_ + y * c, 0.04))
+        k.ext.append((Hc[0] + HS * (x * c - y * s_), Hc[1] + HS * (x * s_ + y * c), 0.04))
     c, s_ = math.cos(ra), math.sin(ra)
 
     def HL(x, y):
-        return (Hc[0] + x * c - y * s_, Hc[1] + x * s_ + y * c)
+        return (Hc[0] + HS * (x * c - y * s_), Hc[1] + HS * (x * s_ + y * c))
     an["head"] = Hc
     an["mouth"] = HL(0.70, 0.31)
     an["muzzle"] = HL(0.80, 0.20)
@@ -235,7 +236,7 @@ def cow_svg(k, pose):
     for (x, y, r) in ((-2.0, -0.4, 0.1), (2.3, 0.0, 0.1), (0.0, -0.9, 0.1), (-1.9, 1.8, 0.05), (1.5, 1.8, 0.05), (ttip[0], ttip[1], 0.1)):
         k.ext.append((x, y, r))
     an.update(feet=(-0.30, FEET_Y), udder=(-0.72, 0.85), teat_r=(-0.52, 1.20), teat_l=(-0.90, 1.20), back=(0.0, -0.80), withers=(0.90, -0.88),
-              flank=(-0.60, 0.20), tail_tip=ttip, tail_root=(-1.83, -0.56), pail_spot=(-0.72, FEET_Y), milker_feet=(-0.15, FEET_Y + 0.10),
+              flank=(-0.60, 0.20), tail_tip=ttip, tail_root=(-1.83, -0.56), pail_spot=(-0.72, FEET_Y), milker_feet=(-1.50, FEET_Y + 0.10),
               hip=(-0.30, 0.0), shoulder_r=(0.95, -0.4), shoulder_l=(0.95, -0.4), hand_r=(0.95, 0.2), hand_l=(0.95, 0.2), head_top=(Hc[0], Hc[1] - 0.6), hat_top=(Hc[0], Hc[1] - 0.7),
               chest=(1.4, 0.2), knee_r=(0.95, 1.1), knee_l=(-1.5, 1.1), foot_r=(1.0, FEET_Y), foot_l=(-1.5, FEET_Y), eye_r=an["eye"], eye_l=an["eye"],
               prop_tip_r=(0.95, 0.2), prop_tip_l=(0.95, 0.2), elbow_r=(0.95, 0.5), elbow_l=(0.95, 0.5))

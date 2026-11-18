@@ -42,7 +42,7 @@ _X, _ln, _circ = CE._X, CE._ln, CE._circ
 _poly_d = P._poly_d
 _f = C6._f
 _O11 = {}
-_POSE11 = {"seated": False, "pocks": None, "flush": 0.0, "horns": 0.0, "ears": 0.0, "hat_off": 0.0, "t": 0.0}
+_POSE11 = {"seated": False, "sitfront": False, "pocks": None, "flush": 0.0, "horns": 0.0, "ears": 0.0, "hat_off": 0.0, "t": 0.0}
 
 cycle, talk_mouth, blink_at, NOD = C6.cycle, C6.talk_mouth, C6.blink_at, C6.NOD
 CYCLE_MODES = C6.CYCLE_MODES
@@ -161,8 +161,8 @@ def _hat_wig11(k, C, yaw):
     svg = "".join(o)
     if _POSE11["hat_off"] < 0.5 and C.get("tricorn11", True):
         ts, tt = C2._hat_tricorn(k, C, yaw)
-        svg += '<g transform="translate(0 -0.10)">%s</g>' % ts
-        top = (tt[0], tt[1] - 0.10)
+        svg += '<g transform="translate(%.3f -0.14) scale(1.14)">%s</g>' % (-0.14 * dx, ts)
+        top = (tt[0], tt[1] * 1.14 - 0.14)
         k.ext.append((dx, -0.86, 0.03))
         CE._ext(k, C, ((dx - 0.68, -0.62), (dx + 0.68, -0.62)))
     return svg, top
@@ -438,11 +438,11 @@ def _cos_gown11(k, C, m):
         for s in (-1, 1):
             o.append(_ln([X(s * 0.15, 0.73), X(s * 0.20, 0.44)], k.c(col["apron_d"]), 0.020))
     inside = "".join(o)
-    if _POSE11["seated"]:
+    if _POSE11["seated"] and not _POSE11["sitfront"]:
         return inside, "", _seated_skirt(k, C, m, X, yB, hw, col)
     # skirt (petticoat) over the legs
     yt = yB - 0.10
-    hem = yB + C.get("skirt_len", 0.78)
+    hem = yB + (0.50 if _POSE11["seated"] else C.get("skirt_len", 0.78))
     a = hw * 0.99
     b = hw + C.get("skirt_flare", 0.26)
     fill = _stripe_fill(k, "ps", col["skirt_a"], col["skirt_b"], 0.055) if col.get("skirt_b") else k.c(col["skirt_a"])
@@ -840,6 +840,7 @@ def _norm(C, pose):
     pk = g("pocks")
     _POSE11["pocks"] = None if pk is None else _f(pk, 0.0, 0.0, 1.0)
     _POSE11["flush"] = _f(g("flush"), 0.0, 0.0, 1.0)
+    _POSE11["sitfront"] = _f(g("sit_front"), 0.0, 0.0, 1.0) >= 0.5
     _POSE11["seated"] = _f(g("stool"), 0.0, 0.0, 1.0) >= 0.5 or _f(g("seated"), 0.0, 0.0, 1.0) >= 0.5
     _POSE11["horns"] = _f(g("horns"), 0.0, 0.0, 1.0)
     _POSE11["ears"] = _f(g("cow_ears"), 0.0, 0.0, 1.0)
@@ -915,7 +916,7 @@ NEW_CAST11 = {
         hair=dict(color="#b8683a", front=0.0, grow=0.0),
         costume="gown11", skirt_len=0.72, skirt_flare=0.24,
         sleeve=dict(color="#4f77a8", cuff="#f2ead8", dark="#34527a", len=0.55, roll=True, w=0.15),
-        shorts=dict(color="#d9604a", cuff="#d9604a", dark="#8a3a2a", len=0.9, w=0.13),
+        shorts=dict(color="#efe6d6", cuff="#efe6d6", dark="#8a3a2a", len=0.9, w=0.13),
         boots=dict(color="#4a3428", cuff="#4a3428", h=0.06, toe=0.11),
         colors=_gown("#4f77a8", "#d9604a", "#f1e6cf"),
     ),
@@ -929,7 +930,7 @@ NEW_CAST11 = {
         hair=dict(color="#e8bf5a", front=0.0, grow=0.0, shine="#fff0a8"),
         costume="gown11", skirt_len=0.74, skirt_flare=0.26,
         sleeve=dict(color="#5f8f5a", cuff="#f2ead8", dark="#3e6a3e", len=0.55, roll=True, w=0.15),
-        shorts=dict(color="#4a6a98", cuff="#4a6a98", dark="#2a4268", len=0.9, w=0.13),
+        shorts=dict(color="#efe6d6", cuff="#efe6d6", dark="#2a4268", len=0.9, w=0.13),
         boots=dict(color="#4a3428", cuff="#4a3428", h=0.06, toe=0.11),
         colors=_gown("#5f8f5a", "#4a6a98", "#efe6d2"),
     ),
@@ -962,7 +963,7 @@ NEW_CAST11 = {
         hair=dict(color="#8a7868", front=0.0, grow=0.0),
         costume="gown11", shawl="#a8685a", skirt_len=0.80, skirt_flare=0.28,
         sleeve=dict(color="#7a6a58", cuff="#e6decb", dark="#544838", len=0.84, w=0.15),
-        shorts=dict(color="#6a5a4a", cuff="#6a5a4a", dark="#3a3028", len=0.9, w=0.13),
+        shorts=dict(color="#d8cdb8", cuff="#d8cdb8", dark="#3a3028", len=0.9, w=0.13),
         boots=dict(color="#3a2c24", cuff="#3a2c24", h=0.06, toe=0.11),
         colors=_gown("#7a6a58", "#6a5a4a", None),
     ),
@@ -992,7 +993,7 @@ NEW_CAST11 = {
         hair=dict(color="#6a4a36", front=0.0, grow=0.0),
         costume="gown11", skirt_len=0.74, skirt_flare=0.28,
         sleeve=dict(color="#c48a3a", cuff="#f2ead8", dark="#8a5a22", len=0.84, w=0.15),
-        shorts=dict(color="#7a4a3a", cuff="#7a4a3a", dark="#4a2a20", len=0.9, w=0.13),
+        shorts=dict(color="#efe6d6", cuff="#efe6d6", dark="#4a2a20", len=0.9, w=0.13),
         boots=dict(color="#3a2c24", cuff="#3a2c24", h=0.06, toe=0.11),
         colors=_gown("#c48a3a", "#8a4a3a", "#e8d9b8"),
     ),
@@ -1003,7 +1004,7 @@ NEW_CAST11 = {
         eye_y=0.010, brow="stroke", brow_th=0.066, mouth="frown", moustache=True, moustache_style="bushy", tache_scale=0.95, smirk_side=1, cheeks="#e48a78", age_lines=True,
         hat="newsboy", hat_style="baldtuft", hat_tilt=0.0, ear_pencil=False,
         hat_colors=dict(base="#9a948c", dark="#6a645c", light="#c8c2ba"),
-        hair=dict(color="#aaa49c", front=0.12, grow=0.22, style="fringe", top=-0.1),
+        hair=dict(color="#aaa49c", front=0.09, grow=0.20),
         costume="shirt11", vest_on=True,
         sleeve=dict(color="#d8ccb0", cuff="#e8dec6", dark="#b0a284", len=0.55, roll=True, w=0.18),
         shorts=dict(color="#5a6a4a", cuff="#5a6a4a", dark="#38442c", len=0.52, w=0.14),
@@ -1036,15 +1037,29 @@ NEW_CAST11 = {
         hair=dict(color="#3a2a22", front=0.0, grow=0.0),
         costume="gown11", skirt_len=0.70, skirt_flare=0.24,
         sleeve=dict(color="#5a8a8a", cuff="#f2ead8", dark="#38605e", len=0.84, w=0.14),
-        shorts=dict(color="#8a4a5a", cuff="#8a4a5a", dark="#522a34", len=0.9, w=0.13),
+        shorts=dict(color="#efe6d6", cuff="#efe6d6", dark="#522a34", len=0.9, w=0.13),
         boots=dict(color="#3a2c24", cuff="#3a2c24", h=0.06, toe=0.11),
         colors=_gown("#5a8a8a", "#8a4a5a", "#e8d9b8"),
     ),
 }
 
 # feet-relative sprite canvases (x0, y0, x1, y1) in D; filled in by the canvas check (see test_cast11.py)
-CANVAS11 = {}
-CANVAS11_SICK = {}          # lying in bed (pose lie=90, CANVAS of cast7's lying frame)
+CANVAS11 = {
+    "jenner": (-1.75, -4.5, 1.75, 0.125),
+    "james": (-1.25, -3.75, 1.25, 0.125),
+    "sarah": (-1.75, -4.3125, 1.75, 0.125),
+    "milkmaid2": (-1.5, -4.375, 1.5, 0.125),
+    "towndoc": (-2.75, -5.375, 2.75, 0.125),
+    "mother": (-1.5, -4.3125, 1.5, 0.125),
+    "villager_a": (-1.375, -4.375, 1.375, 0.125),
+    "villager_b": (-1.5, -4.3125, 1.5, 0.125),
+    "villager_c": (-1.375, -4.1875, 1.375, 0.125),
+    "villager_d": (-1.25, -4.5625, 1.25, 0.125),
+    "villager_e": (-1.25, -4.1875, 1.25, 0.125),
+    "blossom": (-4.5625, -3.1875, 4.5625, 0.125),
+}
+CANVAS11_LIE = {"james": (-1.5, -1.5, 1.5, 0.25)}          # lying in bed (pose lie=90 / -90): pass to Actor.build
+CANVAS11_YOKE = {"sarah": (-1.875, -3.5625, 1.875, 0.125), "milkmaid2": (-1.875, -3.5625, 1.875, 0.125)}   # carrying the yoke + pails
 
 
 SIT = dict(crouch=0.45, foot_r=(0.60, 1.9), foot_l=(0.42, 1.9), knee_r=1, knee_l=1)
@@ -1055,6 +1070,13 @@ def _sit(cast, base_y=None, fx=0.58):
     hip = {"james": 1.08, "sarah": 1.24, "milkmaid2": 1.24, "mother": 1.26}.get(cast, 1.25)
     fy = hip + (0.62 if cast != "james" else 0.55)
     return dict(crouch=0.45, foot_r=(fx + 0.04, fy), foot_l=(fx - 0.14, fy), knee_r=1, knee_l=1)
+
+
+def _sit_front(cast):
+    """sitting on the stool seen from the front / three-quarter (knees forward to the viewer): the feet under the hips, a short skirt (pose sit_front=1)."""
+    hip = {"sarah": 1.24, "milkmaid2": 1.24}.get(cast, 1.25)
+    fy = hip + 0.62
+    return dict(crouch=0.45, foot_r=(0.17, fy), foot_l=(-0.13, fy), knee_r=0.4, knee_l=-0.4)
 
 
 def _story():
@@ -1072,7 +1094,7 @@ def _story():
     S["jenner_jar_up"] = (J, dict(yaw=0.35, pitch=-0.10, expr="happy", arm_r=dict(hand=(0.55, 0.20), bend=-0.7), prop_r="jar",
                                   arm_l=dict(hand=(-0.40, 1.00), bend=0.5), legs="stand"))
     M["jenner_jar_up"] = dict(note="holds the small glass jar up to the light; anchor jar_r = jar centre")
-    S["jenner_scratch_arm"] = (J, dict(yaw=0.70, pitch=0.35, lean=14, expr="determined", mouth="smile", gaze=(0.8, 0.5), head_dy=0.0,
+    S["jenner_scratch_arm"] = (J, dict(yaw=0.70, pitch=0.35, lean=9, expr="determined", mouth="smile", gaze=(0.8, 0.5), head_dy=0.0,
                                        arm_r=dict(hand=(0.62, 0.98), bend=0.2, stretch=1.0), prop_r=dict(type="lancet", angle=60),
                                        arm_l=dict(hand=(0.30, 0.88), bend=0.4, shape="open"), legs=dict(preset="step", stride=0.2)))
     M["jenner_scratch_arm"] = dict(note="bends towards the boy (screen-right) and scratches his upper arm: put anchor lancet_r (blade tip) on James's "
@@ -1104,9 +1126,9 @@ def _story():
     S["james_scared"] = (B, dict(yaw=-0.30, pitch=0.35, expr="worried", sweat=0.5, stool=1, legs=_sit(B), squash=(1.0, 0.97),
                                  arm_l=dict(hand=(-0.05, 0.98), bend=0.7), arm_r=dict(hand=(0.08, 0.98), bend=0.7)))
     M["james_scared"] = dict(note="scared: hunched, worried, a drop of sweat, hands clenched in his lap")
-    S["james_in_bed"] = (B, dict(yaw=0.0, pitch=-0.2, expr="sad", flush=1.0, sweat=1.0, lie=90, t=0.3, arm_r=dict(hand=(0.18, 0.90), bend=0.6),
+    S["james_in_bed"] = (B, dict(yaw=0.0, expr="sad", flush=1.0, sweat=1.0, lie=90, head_roll=72, t=0.3, arm_r=dict(hand=(0.18, 0.90), bend=0.6),
                                  arm_l=dict(hand=(-0.18, 0.90), bend=0.6), legs="narrow"))
-    M["james_in_bed"] = dict(note="sick in bed on his back (lie=90, head to screen-left; lie=-90 head to the right), flushed cheeks, sweat drops; anchor feet = middle of the body on "
+    M["james_in_bed"] = dict(note="sick in bed on his back (lie=90, head to screen-left; for the other side lie=-90 AND head_roll=-72; head_roll=72 keeps the face upright like a head propped on a pillow), flushed cheeks, sweat drops; anchor feet = middle of the body on "
                                   "the mattress line. Canvas CANVAS11_LIE")
     S["james_jump_up"] = (B, dict(yaw=0.0, pitch=-0.2, expr="excited", arm_r="reach_up", arm_l="reach_up", legs=dict(preset="wide", lift_r=0.9, lift_l=0.9), squash=(0.97, 1.05)))
     M["james_jump_up"] = dict(note="jumps out of bed: arms up, both feet off the floor (raise the sprite by hand, or use it as the mid-jump key)")
@@ -1121,15 +1143,15 @@ def _story():
     M["james_horns"] = dict(gag=True, note="GAG: the mocker's imagined 'he will grow horns': small cow horns + brown cow ears. Pose keys horns / cow_ears (0..1) work on any james pose")
     # ------------------------------------------------------------------ Sarah and milkmaid2
     for (n, c, nm) in ((SA, SA, "sarah"), (M2, M2, "milkmaid2")):
-        S[nm + "_milk"] = (c, dict(yaw=0.50, pitch=0.35, lean=8, expr="happy", mouth="smile", gaze=(0.8, 0.8), stool=1, legs=_sit(c),
-                                   arm_r=dict(hand=(0.52, 1.20), bend=0.3, shape="ball"), arm_l=dict(hand=(0.32, 1.26), bend=0.3), t=0.3))
-        M[nm + "_milk"] = dict(note="milking on a stool (stool=1), facing screen-right, hands at udder height (about 0.65 D above the floor); the cow's teat_l/teat_r "
-                                    "and pail_spot give the matching place. Pace the hands: arm_r / arm_l hand y 1.20 / 1.26, +-0.06 in antiphase")
+        S[nm + "_milk"] = (c, dict(yaw=0.50, pitch=0.35, lean=8, expr="happy", mouth="smile", gaze=(0.8, 0.8), stool=1, sit_front=1, legs=_sit_front(c),
+                                   arm_r=dict(hand=(0.54, 1.18), bend=0.3, shape="ball"), arm_l=dict(hand=(0.34, 1.24), bend=0.3), t=0.3))
+        M[nm + "_milk"] = dict(note="milking on a stool (stool=1, sit_front=1: three-quarter, knees to the viewer), head and hands towards screen-right, hands at udder height (about 0.65 D above the floor). "
+                                    "Plant her feet on the cow's anchor milker_feet (hands then reach the teats teat_l / teat_r; pail on pail_spot). Pace the hands: arm_r / arm_l hand y 1.20 / 1.26, +-0.06 in antiphase")
         S[nm + "_smile"] = (c, dict(yaw=0.25, expr="happy", mouth="smile", arm_r=dict(hand=(0.14, 1.02), bend=0.7), arm_l=dict(hand=(-0.14, 1.02), bend=0.7), legs="stand"))
         M[nm + "_smile"] = dict(note="smiling, hands folded in front of the apron")
         S[nm + "_yoke"] = (c, dict(yaw=0.35, expr="happy", yoke=1, arm_r=dict(hand=(0.66, 0.62), bend=0.3), arm_l=dict(hand=(-0.66, 0.62), bend=0.3), legs=dict(preset="step", stride=0.25)))
         M[nm + "_yoke"] = dict(note="carries two milk pails on a yoke (yoke=1): anchors pail_l / pail_r; yoke_w, yoke_rope, milk keys. Canvas CANVAS11_YOKE")
-    S["sarah_show_hand"] = (SA, dict(yaw=0.30, expr="happy", mouth="smile", gaze=(0.8, 0.3), arm_r=dict(hand=(0.74, 0.74), bend=-0.2), prop_r=dict(type="blister_hand", angle=-58),
+    S["sarah_show_hand"] = (SA, dict(yaw=0.30, expr="happy", mouth="smile", gaze=(0.8, 0.3), arm_r=dict(hand=(0.74, 0.74), bend=-0.2), prop_r=dict(type="blister_hand", angle=-58, scale=1.25),
                                      arm_l=dict(hand=(-0.14, 1.02), bend=0.7), legs="stand"))
     M["sarah_show_hand"] = dict(note="holds out her right hand, back to us, with the cowpox blisters (prop blister_hand: six big pale blisters in red halos); anchor blister_hand_r = the fingertips. "
                                     "Her face stays clear and smooth")
