@@ -22,3 +22,4 @@
 | s04 | v2 PASS (render14/team2 @7bf169b) |
 | s01 | v1 FAIL -> team 6 redo |
 | s11 | v1 FAIL -> team 7 redo |
+| s25 | team 5 renders died (restarted 18:45); split: team 5 = shots 25-27 (s25, g1678-1913), team 2 = shots 28-30 (new take s28, g1914-2105) |
