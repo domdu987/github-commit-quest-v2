@@ -42,7 +42,7 @@ _X, _ln, _circ = CE._X, CE._ln, CE._circ
 _poly_d = P._poly_d
 _f = C6._f
 _O11 = {}
-_POSE11 = {"pocks": None, "flush": 0.0, "horns": 0.0, "ears": 0.0, "hat_off": 0.0, "t": 0.0}
+_POSE11 = {"seated": False, "pocks": None, "flush": 0.0, "horns": 0.0, "ears": 0.0, "hat_off": 0.0, "t": 0.0}
 
 cycle, talk_mouth, blink_at, NOD = C6.cycle, C6.talk_mouth, C6.blink_at, C6.NOD
 CYCLE_MODES = C6.CYCLE_MODES
@@ -313,7 +313,7 @@ def _hat_messy11(k, C, yaw):
     g = CE._gradient(k, "ms", dict(light=sh, base=hc, dark=dk), x0=-0.55, x1=0.55, mid=0.4)
     o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.024" stroke-linejoin="round"/>' % (d, g, k.ink))
     # tufts sticking up
-    for (x, ang, ln) in ((-0.28, -35, 0.10), (-0.02, -8, 0.12), (0.24, 28, 0.10)):
+    for (x, ang, ln) in ((-0.28, -35, 0.07), (-0.02, -8, 0.08), (0.24, 28, 0.07)):
         x += dx
         y = -0.58 + 0.03 * abs(x - dx)
         a = math.radians(ang - 90)
@@ -392,6 +392,23 @@ def _stripe_fill(k, name, c1, c2, w=0.07):
     return "url(#%s_%s)" % (u, name)
 
 
+def _seated_skirt(k, C, m, X, yB, hw, col):
+    """the skirt of a woman sitting on a low stool facing screen-right (the _sit() leg geometry): it spreads over the lap, drops over
+    the knees and hangs behind to the stool; the apron lies over the lap."""
+    fill = _stripe_fill(k, "ps", col["skirt_a"], col["skirt_b"], 0.055) if col.get("skirt_b") else k.c(col["skirt_a"])
+    yt = yB - 0.12
+    pts = [X(-hw * 0.95, yt), X(hw * 0.95, yt), X(0.62, yB + 0.06), X(0.90, yB + 0.20), X(0.92, yB + 0.50), X(0.60, yB + 0.58), X(0.0, yB + 0.50),
+           X(-0.42, yB + 0.46), X(-hw - 0.14, yB + 0.30)]
+    o = ['<path d="%s" fill="%s" stroke="%s" stroke-width="0.026" stroke-linejoin="round"/>' % (P._smooth_closed(pts), fill, k.ink)]
+    o.append('<path d="M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f M%.4f,%.4f Q%.4f,%.4f %.4f,%.4f" fill="none" stroke="%s" stroke-width="0.014" stroke-linecap="round" opacity="0.7"/>'
+             % (X(0.35, yB + 0.05) + X(0.55, yB + 0.30) + X(0.60, yB + 0.52) + X(-0.10, yB + 0.10) + X(-0.18, yB + 0.30) + X(-0.20, yB + 0.48) + (k.c(col.get("skirt_d", "#5a3a30")),)))
+    if not C.get("shawl"):
+        ap = [X(-0.18, yB - 0.10), X(0.30, yB - 0.10), X(0.74, yB + 0.14), X(0.80, yB + 0.40), X(0.36, yB + 0.30), X(-0.12, yB + 0.20)]
+        o.append('<path d="%s" fill="%s" stroke="%s" stroke-width="0.020" stroke-linejoin="round"/>' % (P._smooth_closed(ap), k.c(col["apron"]), k.ink))
+        o.append(_ln([X(0.2, yB + 0.02), X(0.58, yB + 0.30)], k.c(col["apron_d"]), 0.012, ' opacity="0.7"'))
+    return "".join(o)
+
+
 def _cos_gown11(k, C, m):
     """a countrywoman: a short gown (CAST colors base) with a white fichu crossed over the bodice, a striped petticoat skirt
     (colors skirt_a / skirt_b) falling over the legs to C['skirt_len'] below the torso, a linen apron (colors apron) with a bib, waist
@@ -421,6 +438,8 @@ def _cos_gown11(k, C, m):
         for s in (-1, 1):
             o.append(_ln([X(s * 0.15, 0.73), X(s * 0.20, 0.44)], k.c(col["apron_d"]), 0.020))
     inside = "".join(o)
+    if _POSE11["seated"]:
+        return inside, "", _seated_skirt(k, C, m, X, yB, hw, col)
     # skirt (petticoat) over the legs
     yt = yB - 0.10
     hem = yB + C.get("skirt_len", 0.78)
@@ -821,6 +840,7 @@ def _norm(C, pose):
     pk = g("pocks")
     _POSE11["pocks"] = None if pk is None else _f(pk, 0.0, 0.0, 1.0)
     _POSE11["flush"] = _f(g("flush"), 0.0, 0.0, 1.0)
+    _POSE11["seated"] = _f(g("stool"), 0.0, 0.0, 1.0) >= 0.5 or _f(g("seated"), 0.0, 0.0, 1.0) >= 0.5
     _POSE11["horns"] = _f(g("horns"), 0.0, 0.0, 1.0)
     _POSE11["ears"] = _f(g("cow_ears"), 0.0, 0.0, 1.0)
     _POSE11["hat_off"] = _f(g("hat_off"), 0.0, 0.0, 1.0)
