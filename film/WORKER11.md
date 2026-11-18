@@ -36,3 +36,9 @@ The director's QA-tech re-checks every take; QA-art reviews key takes (1-2 hook,
 meta.json: g0, g1, first_g, n_frames, transition_in {"type":"cut"|"dissolve","frames":n} (dissolve 8 where the plan says D). Render 6 handle
 frames each side. take.mkv over 45 MB -> `split -b 40M take.mkv take.mkv.part`. Commit only your take folders, push to your own branch as
 soon as each take is final. No pull requests. Work autonomously: the client has approved the set, the cast and the render.
+
+## Added 2026-11-18 13:05 (client notes carried over from film 10)
+1. Smoke/water must NOT be a stack of round white blobs. The set's chimney smoke (lane_high, garden_queue, lane_wide, garden_hut) is a
+   blob stack: in your shot.py hide it (hide_render) or replace it with a thin, soft, low-contrast wisp (2-3 elongated translucent-grey
+   ribbons, no hard white balls). Prefer hiding if in doubt.
+2. Anything standing on something that moves must be parented to it and move with it (no sliding). QA-tech checks this.
