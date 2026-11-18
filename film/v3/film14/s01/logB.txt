@@ -1,0 +1,129 @@
+00:03.513  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:36.366  render           | Saved: 'frames/g_0123.png.tmp.png'
+{"shot": 3, "g": 123, "cam": [-9.9, 0.9, 1.45], "heads": {"farmer": [593, 651]}, "wall": 32.7, "cpu": 125.4}
+01:10.138  render           | Saved: 'frames/g_0124.png.tmp.png'
+{"shot": 3, "g": 124, "cam": [-9.89, 0.9, 1.45], "heads": {"farmer": [593, 651]}, "wall": 33.0, "cpu": 126.9}
+01:46.956  render           | Saved: 'frames/g_0125.png.tmp.png'
+{"shot": 3, "g": 125, "cam": [-9.88, 0.91, 1.45], "heads": {"farmer": [593, 651]}, "wall": 36.4, "cpu": 123.2}
+02:51.254  render           | Saved: 'frames/g_0126.png.tmp.png'
+{"shot": 3, "g": 126, "cam": [-9.86, 0.91, 1.45], "heads": {"farmer": [593, 651]}, "wall": 63.8, "cpu": 127.2}
+03:54.919  render           | Saved: 'frames/g_0127.png.tmp.png'
+{"shot": 3, "g": 127, "cam": [-9.85, 0.92, 1.45], "heads": {"farmer": [593, 651]}, "wall": 63.3, "cpu": 125.9}
+05:25.120  render           | Saved: 'frames/g_0128.png.tmp.png'
+{"shot": 3, "g": 128, "cam": [-9.84, 0.92, 1.45], "heads": {"farmer": [593, 652]}, "wall": 89.7, "cpu": 128.0}
+07:01.532  render           | Saved: 'frames/g_0129.png.tmp.png'
+{"shot": 3, "g": 129, "cam": [-9.83, 0.93, 1.45], "heads": {"farmer": [593, 652]}, "wall": 96.1, "cpu": 130.8}
+08:06.925  render           | Saved: 'frames/g_0130.png.tmp.png'
+{"shot": 3, "g": 130, "cam": [-9.81, 0.93, 1.45], "heads": {"farmer": [593, 652]}, "wall": 64.9, "cpu": 128.3}
+09:12.445  render           | Saved: 'frames/g_0131.png.tmp.png'
+{"shot": 3, "g": 131, "cam": [-9.8, 0.94, 1.46], "heads": {"farmer": [592, 652]}, "wall": 65.0, "cpu": 129.0}
+10:15.746  render           | Saved: 'frames/g_0132.png.tmp.png'
+{"shot": 3, "g": 132, "cam": [-9.79, 0.95, 1.46], "heads": {"farmer": [592, 652]}, "wall": 62.9, "cpu": 124.3}
+11:16.274  render           | Saved: 'frames/g_0133.png.tmp.png'
+{"shot": 3, "g": 133, "cam": [-9.77, 0.95, 1.46], "heads": {"farmer": [592, 652]}, "wall": 60.1, "cpu": 119.9}
+12:16.165  render           | Saved: 'frames/g_0134.png.tmp.png'
+{"shot": 3, "g": 134, "cam": [-9.76, 0.96, 1.46], "heads": {"farmer": [592, 652]}, "wall": 59.6, "cpu": 119.1}
+13:17.460  render           | Saved: 'frames/g_0135.png.tmp.png'
+{"shot": 3, "g": 135, "cam": [-9.74, 0.96, 1.46], "heads": {"farmer": [592, 653]}, "wall": 60.9, "cpu": 120.5}
+14:18.181  render           | Saved: 'frames/g_0136.png.tmp.png'
+{"shot": 3, "g": 136, "cam": [-9.73, 0.97, 1.46], "heads": {"farmer": [592, 653]}, "wall": 60.3, "cpu": 119.7}
+15:21.819  render           | Saved: 'frames/g_0137.png.tmp.png'
+{"shot": 3, "g": 137, "cam": [-9.71, 0.98, 1.46], "heads": {"farmer": [592, 653]}, "wall": 63.3, "cpu": 125.1}
+16:23.996  render           | Saved: 'frames/g_0138.png.tmp.png'
+{"shot": 3, "g": 138, "cam": [-9.69, 0.98, 1.46], "heads": {"farmer": [592, 653]}, "wall": 61.8, "cpu": 122.3}
+17:24.445  render           | Saved: 'frames/g_0139.png.tmp.png'
+{"shot": 3, "g": 139, "cam": [-9.68, 0.99, 1.46], "heads": {"farmer": [592, 654]}, "wall": 60.1, "cpu": 118.6}
+18:25.457  render           | Saved: 'frames/g_0140.png.tmp.png'
+{"shot": 3, "g": 140, "cam": [-9.66, 1.0, 1.46], "heads": {"farmer": [592, 654]}, "wall": 60.4, "cpu": 118.8}
+19:27.497  render           | Saved: 'frames/g_0141.png.tmp.png'
+{"shot": 3, "g": 141, "cam": [-9.64, 1.0, 1.46], "heads": {"farmer": [592, 654]}, "wall": 61.7, "cpu": 121.9}
+20:30.434  render           | Saved: 'frames/g_0142.png.tmp.png'
+{"shot": 3, "g": 142, "cam": [-9.63, 1.01, 1.46], "heads": {"farmer": [592, 655]}, "wall": 62.4, "cpu": 123.5}
+21:32.241  render           | Saved: 'frames/g_0143.png.tmp.png'
+{"shot": 3, "g": 143, "cam": [-9.61, 1.02, 1.46], "heads": {"farmer": [592, 655]}, "wall": 61.5, "cpu": 122.3}
+22:35.525  render           | Saved: 'frames/g_0144.png.tmp.png'
+{"shot": 3, "g": 144, "cam": [-9.59, 1.02, 1.47], "heads": {"farmer": [592, 655]}, "wall": 62.8, "cpu": 124.2}
+23:39.305  render           | Saved: 'frames/g_0145.png.tmp.png'
+{"shot": 3, "g": 145, "cam": [-9.57, 1.03, 1.47], "heads": {"farmer": [592, 656]}, "wall": 63.3, "cpu": 126.6}
+24:41.680  render           | Saved: 'frames/g_0146.png.tmp.png'
+{"shot": 3, "g": 146, "cam": [-9.56, 1.04, 1.47], "heads": {"farmer": [592, 656]}, "wall": 62.0, "cpu": 123.1}
+25:44.665  render           | Saved: 'frames/g_0147.png.tmp.png'
+{"shot": 3, "g": 147, "cam": [-9.54, 1.04, 1.47], "heads": {"farmer": [592, 657]}, "wall": 62.5, "cpu": 123.8}
+26:47.997  render           | Saved: 'frames/g_0148.png.tmp.png'
+{"shot": 3, "g": 148, "cam": [-9.52, 1.05, 1.47], "heads": {"farmer": [592, 657]}, "wall": 63.0, "cpu": 123.8}
+27:48.354  render           | Saved: 'frames/g_0149.png.tmp.png'
+{"shot": 3, "g": 149, "cam": [-9.5, 1.06, 1.47], "heads": {"farmer": [592, 657]}, "wall": 59.9, "cpu": 118.3}
+28:50.162  render           | Saved: 'frames/g_0150.png.tmp.png'
+{"shot": 3, "g": 150, "cam": [-9.48, 1.07, 1.47], "heads": {"farmer": [593, 658]}, "wall": 61.3, "cpu": 121.1}
+29:52.772  render           | Saved: 'frames/g_0151.png.tmp.png'
+{"shot": 3, "g": 151, "cam": [-9.46, 1.07, 1.47], "heads": {"farmer": [593, 659]}, "wall": 62.2, "cpu": 122.8}
+30:55.157  render           | Saved: 'frames/g_0152.png.tmp.png'
+{"shot": 3, "g": 152, "cam": [-9.45, 1.08, 1.47], "heads": {"farmer": [593, 659]}, "wall": 61.9, "cpu": 123.1}
+32:00.330  render           | Saved: 'frames/g_0153.png.tmp.png'
+{"shot": 3, "g": 153, "cam": [-9.43, 1.09, 1.47], "heads": {"farmer": [594, 660]}, "wall": 64.8, "cpu": 127.9}
+33:06.128  render           | Saved: 'frames/g_0154.png.tmp.png'
+{"shot": 3, "g": 154, "cam": [-9.41, 1.1, 1.47], "heads": {"farmer": [595, 661]}, "wall": 65.3, "cpu": 129.1}
+34:12.714  render           | Saved: 'frames/g_0155.png.tmp.png'
+{"shot": 3, "g": 155, "cam": [-9.39, 1.1, 1.48], "heads": {"farmer": [595, 662]}, "wall": 66.1, "cpu": 131.0}
+35:17.717  render           | Saved: 'frames/g_0156.png.tmp.png'
+{"shot": 3, "g": 156, "cam": [-9.37, 1.11, 1.48], "heads": {"farmer": [596, 663]}, "wall": 64.6, "cpu": 128.1}
+36:21.411  render           | Saved: 'frames/g_0157.png.tmp.png'
+{"shot": 3, "g": 157, "cam": [-9.35, 1.12, 1.48], "heads": {"farmer": [597, 664]}, "wall": 63.0, "cpu": 124.8}
+37:26.239  render           | Saved: 'frames/g_0158.png.tmp.png'
+{"shot": 3, "g": 158, "cam": [-9.34, 1.13, 1.48], "heads": {"farmer": [597, 665]}, "wall": 64.3, "cpu": 127.1}
+38:29.424  render           | Saved: 'frames/g_0159.png.tmp.png'
+{"shot": 3, "g": 159, "cam": [-9.32, 1.13, 1.48], "heads": {"farmer": [598, 666]}, "wall": 62.8, "cpu": 124.2}
+39:33.111  render           | Saved: 'frames/g_0160.png.tmp.png'
+{"shot": 3, "g": 160, "cam": [-9.3, 1.14, 1.48], "heads": {"farmer": [599, 667]}, "wall": 63.3, "cpu": 125.3}
+40:37.320  render           | Saved: 'frames/g_0161.png.tmp.png'
+{"shot": 3, "g": 161, "cam": [-9.28, 1.15, 1.48], "heads": {"farmer": [599, 668]}, "wall": 63.7, "cpu": 126.5}
+41:41.977  render           | Saved: 'frames/g_0162.png.tmp.png'
+{"shot": 3, "g": 162, "cam": [-9.26, 1.16, 1.48], "heads": {"farmer": [600, 668]}, "wall": 64.4, "cpu": 128.4}
+42:48.732  render           | Saved: 'frames/g_0163.png.tmp.png'
+{"shot": 3, "g": 163, "cam": [-9.24, 1.16, 1.48], "heads": {"farmer": [600, 669]}, "wall": 66.3, "cpu": 131.7}
+43:53.457  render           | Saved: 'frames/g_0164.png.tmp.png'
+{"shot": 3, "g": 164, "cam": [-9.23, 1.17, 1.48], "heads": {"farmer": [600, 669]}, "wall": 64.2, "cpu": 128.0}
+44:59.268  render           | Saved: 'frames/g_0165.png.tmp.png'
+{"shot": 3, "g": 165, "cam": [-9.21, 1.18, 1.48], "heads": {"farmer": [600, 670]}, "wall": 65.3, "cpu": 130.1}
+46:05.835  render           | Saved: 'frames/g_0166.png.tmp.png'
+{"shot": 3, "g": 166, "cam": [-9.19, 1.18, 1.49], "heads": {"farmer": [600, 670]}, "wall": 66.2, "cpu": 130.7}
+47:10.656  render           | Saved: 'frames/g_0167.png.tmp.png'
+{"shot": 3, "g": 167, "cam": [-9.17, 1.19, 1.49], "heads": {"farmer": [600, 671]}, "wall": 64.1, "cpu": 127.8}
+48:13.585  render           | Saved: 'frames/g_0168.png.tmp.png'
+{"shot": 3, "g": 168, "cam": [-9.16, 1.2, 1.49], "heads": {"farmer": [600, 671]}, "wall": 62.4, "cpu": 124.3}
+49:18.150  render           | Saved: 'frames/g_0169.png.tmp.png'
+{"shot": 3, "g": 169, "cam": [-9.14, 1.2, 1.49], "heads": {"farmer": [600, 672]}, "wall": 64.2, "cpu": 128.0}
+50:21.201  render           | Saved: 'frames/g_0170.png.tmp.png'
+{"shot": 3, "g": 170, "cam": [-9.12, 1.21, 1.49], "heads": {"farmer": [600, 672]}, "wall": 62.5, "cpu": 124.4}
+51:26.502  render           | Saved: 'frames/g_0171.png.tmp.png'
+{"shot": 3, "g": 171, "cam": [-9.11, 1.22, 1.49], "heads": {"farmer": [601, 673]}, "wall": 64.9, "cpu": 128.9}
+52:33.127  render           | Saved: 'frames/g_0172.png.tmp.png'
+{"shot": 3, "g": 172, "cam": [-9.09, 1.22, 1.49], "heads": {"farmer": [601, 673]}, "wall": 66.1, "cpu": 131.1}
+53:38.762  render           | Saved: 'frames/g_0173.png.tmp.png'
+{"shot": 3, "g": 173, "cam": [-9.07, 1.23, 1.49], "heads": {"farmer": [601, 674]}, "wall": 65.2, "cpu": 129.0}
+54:46.715  render           | Saved: 'frames/g_0174.png.tmp.png'
+{"shot": 3, "g": 174, "cam": [-9.06, 1.24, 1.49], "heads": {"farmer": [601, 674]}, "wall": 67.3, "cpu": 134.6}
+55:54.204  render           | Saved: 'frames/g_0175.png.tmp.png'
+{"shot": 3, "g": 175, "cam": [-9.04, 1.24, 1.49], "heads": {"farmer": [601, 674]}, "wall": 67.1, "cpu": 132.9}
+57:02.174  render           | Saved: 'frames/g_0176.png.tmp.png'
+{"shot": 3, "g": 176, "cam": [-9.03, 1.25, 1.49], "heads": {"farmer": [601, 675]}, "wall": 67.3, "cpu": 134.4}
+58:09.747  render           | Saved: 'frames/g_0177.png.tmp.png'
+{"shot": 3, "g": 177, "cam": [-9.01, 1.25, 1.49], "heads": {"farmer": [601, 675]}, "wall": 67.2, "cpu": 133.3}
+59:16.175  render           | Saved: 'frames/g_0178.png.tmp.png'
+{"shot": 3, "g": 178, "cam": [-9.0, 1.26, 1.49], "heads": {"farmer": [601, 676]}, "wall": 66.0, "cpu": 131.1}
+01:00:19.484  render           | Saved: 'frames/g_0179.png.tmp.png'
+{"shot": 3, "g": 179, "cam": [-8.99, 1.27, 1.5], "heads": {"farmer": [601, 676]}, "wall": 62.9, "cpu": 125.3}
+01:01:26.107  render           | Saved: 'frames/g_0180.png.tmp.png'
+{"shot": 3, "g": 180, "cam": [-8.97, 1.27, 1.5], "heads": {"farmer": [601, 676]}, "wall": 66.2, "cpu": 131.3}
+01:02:31.956  render           | Saved: 'frames/g_0181.png.tmp.png'
+{"shot": 3, "g": 181, "cam": [-8.96, 1.28, 1.5], "heads": {"farmer": [601, 677]}, "wall": 65.4, "cpu": 130.4}
+01:03:38.501  render           | Saved: 'frames/g_0182.png.tmp.png'
+{"shot": 3, "g": 182, "cam": [-8.95, 1.28, 1.5], "heads": {"farmer": [601, 677]}, "wall": 66.0, "cpu": 131.0}
+01:04:43.444  render           | Saved: 'frames/g_0183.png.tmp.png'
+{"shot": 3, "g": 183, "cam": [-8.94, 1.29, 1.5], "heads": {"farmer": [601, 678]}, "wall": 64.5, "cpu": 127.8}
+01:05:49.295  render           | Saved: 'frames/g_0184.png.tmp.png'
+{"shot": 3, "g": 184, "cam": [-8.92, 1.29, 1.5], "heads": {"farmer": [601, 678]}, "wall": 65.5, "cpu": 129.7}
+01:06:56.511  render           | Saved: 'frames/g_0185.png.tmp.png'
+{"shot": 3, "g": 185, "cam": [-8.91, 1.3, 1.5], "heads": {"farmer": [601, 678]}, "wall": 66.7, "cpu": 132.2}
+01:08:01.250  render           | Saved: 'frames/g_0186.png.tmp.png'
+{"shot": 3, "g": 186, "cam": [-8.9, 1.3, 1.5], "heads": {"farmer": [601, 679]}, "wall": 64.4, "cpu": 131.1}
