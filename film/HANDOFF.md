@@ -65,3 +65,12 @@ Stricter QA stays on:
   - script, narration and shot plan are in `film10/`
   - set `v3/set3d10` (copied into the repo when approved), cast `v3/cast10`
 - Ideas for film 11 and later: pick a concrete object plus a counter-intuitive true story with a mocker. Avoid explainers.
+
+## 7. Auto-posting (client decision, 2026-11-18)
+A Chrome AI extension checks `film/POST_QUEUE.md` on branch `claude/new-session-73ou27` every hour and posts READY rows to YouTube Shorts.
+When a film passes the FINAL gate and is sent to the client:
+1. Push the release mp4 and caption.txt to `claude/new-session-73ou27`: fetch first, then rebase.
+2. Add a row with status `READY`. The Video link is
+   `https://github.com/domdu987/github-commit-quest-v2/raw/claude/new-session-73ou27/film/releaseN/<file>.mp4`.
+   Use a short Thai title that is unique per film, plus a `### N <Title>` caption section.
+3. Never mark a row READY before the client has seen the final film, unless he has said to auto-post without review.
