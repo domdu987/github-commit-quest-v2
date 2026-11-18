@@ -128,3 +128,46 @@ def final_loop(make_take, shots, gs_spec, ranges, here, scale=1.0, samples=12, t
             rep.update(wall=round(st["wall"], 2), cpu=round(st["cpu"], 2), scale=scale, samples=samples)
             json.dump(rep, open(png[:-4] + ".json.tmp", "w")); os.replace(png[:-4] + ".json.tmp", png[:-4] + ".json")
             print("shot %d g %d  %.1f s wall  %.1f s cpu" % (shot, g, st["wall"], st["cpu"]), flush=True)
+
+
+# ----------------------------------------------------------------------------- background crew: real cast10 sailors replace the set's placeholder cards
+class Crew(object):
+    """Hides the set's placeholder bgcards (H.STATE['cards']) and stands a cast10 sailor on each one's world spot (read per frame, so
+    deck crew sail with their ship).  Cards face the camera by themselves (actors.sync).  Idle poses sway gently."""
+    NAMES = ("sailor_a", "sailor_b", "sailor_c")
+
+    def __init__(self, take, sprite_dir, ppd=96, skip=()):
+        self.take, self.ppd, self.items = take, ppd, []
+        for i, ob in enumerate(list(H.STATE.get("cards", []))):
+            ob.hide_render = True
+            if i in skip:
+                continue
+            m = self.NAMES[i % 3]
+            a = make_actor("crew%d" % i, m, sprite_dir)
+            take.actors[a.name] = a
+            self.items.append((i, ob, a, m))
+
+    def key(self, f):
+        """call after the frame's hooks are keyed: places every sailor on its card's world spot."""
+        self.take.scene.frame_set(f)
+        for i, ob, a, m in self.items:
+            p = ob.matrix_world.translation
+            a.place(f, (p.x, p.y, p.z))
+            sx, sy, dep = render.world_to_screen(self.take.cam, (p.x, p.y, p.z + 2.7), frame=f)   # head centre: captions rule y < 880
+            hide = sy > 850 or dep < 1.0
+            a.card.hide_render = hide
+            a.card.keyframe_insert("hide_render", frame=f)
+            for o in (a.proxy, a.contact):
+                if o is not None:
+                    o.hide_render = hide; o.keyframe_insert("hide_render", frame=f)
+
+    def pose(self, f, g):
+        self.take.scene.frame_set(f)
+        for i, ob, a, m in self.items:
+            base = dict(cast10.STORY10["sailor_idle_" + m[-1]][1])
+            base["t"] = g / 30.0
+            base["head_roll"] = base.get("head_roll", 0) + 2.0 * math.sin(g * 0.07 + i)
+            a.pose(f, base, camera=self.take.cam)
+
+    def sprites(self, frames):
+        self.take.sprites_for([(a, self.ppd) for _, _, a, _ in self.items], frames)
