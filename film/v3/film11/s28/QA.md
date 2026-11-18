@@ -1,0 +1,4 @@
+# s28 QA: film 11 shot 28 (Blossom, the ending; barn_wide / A), g 1806..1874 + 6 in-handle frames 1800..1805 (75 frames; the film ends at N = 1875, hard cut on "วัว" ~ g 1869, so no out-handle)
+- 12 samples, 720x1280, 2 threads, 11.1 s wall / frame. QA_AUTO PASS (cut note = cut from s27).
+- Blossom (2D puppet, chew, ear flick on a 70-frame cycle, tail swish) stands in the sun pool of the barn at (-2.8, 8.2); the head swings round from g ~1848 and she stops chewing; ear flick at g 1863-1867, so she "knows the word is hers" at g ~1869. Slow push 2.5 D. Head y <= 656, no mouth lip-sync, no other actors.
+- Deviation: Blossom moved from the preset mark (-1.2, 16.4) to (-2.8, 8.2) (closer to the camera, out of the dim back); the camera is a custom move from the barn_wide start. Hens / pails / stools along the lower third are the set's dressing.
