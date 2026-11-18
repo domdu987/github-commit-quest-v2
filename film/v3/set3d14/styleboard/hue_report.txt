@@ -1,0 +1,6 @@
+hue_report.py stats (reference rows unavailable in this container: ref frames not present)
+still                   red orange yellow  green   cyan   blue violet magent   sat  val dark
+sb1_day_wide                                   12.8   55.7   13.6    0.6    0.0   17.0    0.2    0.0  0.54 0.69 0.03   OUT: red,orange,sat,val,dark
+sb2_night_fence                                 1.2    3.1   16.3    6.6    0.0   72.5    0.0    0.3  0.59 0.46 0.23   OUT: red,orange,blue,sat,dark
+sb3_hive_close                                 47.0   30.0    0.4    0.0    0.0   21.0    0.4    1.2  0.75 0.42 0.30   OUT: red,sat,val,dark
+target band: red 30-41, orange 22-38, blue 14-30, violet 0-5, magenta 0-10, sat 0.38-0.48, val 0.45-0.63, dark 0.08-0.15
