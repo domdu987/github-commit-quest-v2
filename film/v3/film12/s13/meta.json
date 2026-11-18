@@ -1,0 +1,3 @@
+{"take":"s13","shots":[13,14],"g0":858,"g1":1049,"first_g":850,"n_frames":206,"last_g":1055,
+ "transition_in":{"type":"dissolve","frames":12},"light":"DUSK_RAIN","presets":["street_high","box_seat"],"cut_g":945,"samples":22,"res":"720x1280","fps":30,
+ "quote_window_g":[993,1052]}
