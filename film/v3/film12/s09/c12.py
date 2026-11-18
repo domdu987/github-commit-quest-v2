@@ -46,7 +46,7 @@ def key_cam(g, setup):
 # ---- per-frame cards
 class Actor(object):
     """add(g, cast, pose, pos, ...) per frame, then bake(cam_pos_of_g): one card object per distinct drawing, shown by keyed hide_render."""
-    def __init__(self, name): self.name = name; self.rec = {}
+    def __init__(self, name, scale=1.0): self.name = name; self.rec = {}; self.scale = scale
     def add(self, g, cast, pose, pos, mirror=False, rim=None, tint=None, roll=0.0, tilt=0.0, hide=False, over=None):
         self.rec[g] = (cast, dict(pose, **(over or {})), tuple(pos), mirror, rim, tint, roll, tilt, hide)
     def bake(self, campos, fa=None, fb=None):
@@ -72,6 +72,7 @@ class Actor(object):
         for ob in vars_.values():
             for _, fc in S._fcs(ob):
                 for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT' if fc.data_path == 'hide_render' else 'LINEAR'
+        for ob in vars_.values(): ob.scale = (self.scale,) * 3
         self.vars = vars_
         return vars_
 
@@ -87,3 +88,34 @@ def render_range(first, last, outdir, draft=False, shard=None):
         if os.path.exists(p): continue
         sc.frame_set(g); t = time.time(); S.render(p + '.tmp.png'); os.replace(p + '.tmp.png', p)
         print('g %d  %.1f s' % (g, time.time() - t), flush=True)
+
+# ---- contact shadow blob (soft dark ellipse on the ground, follows a foot mark; keyed per frame)
+class Blob(object):
+    def __init__(self, name, r=0.9, k=0.55, squash=0.45):
+        self.name, self.r, self.k, self.sq = name, r, k, squash; self.rec = {}
+        me = bpy.data.meshes.new(name); me.from_pydata([(-1, -1, 0), (1, -1, 0), (1, 1, 0), (-1, 1, 0)], [], [(0, 1, 2, 3)]); me.update()
+        m = bpy.data.materials.new(name + '_m'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+        tc = nt.nodes.new('ShaderNodeTexCoord'); gr = nt.nodes.new('ShaderNodeTexGradient'); gr.gradient_type = 'SPHERICAL'
+        mp = nt.nodes.new('ShaderNodeMapping'); mp.inputs['Location'].default_value = (0.5, 0.5, 0.0); mp.inputs['Scale'].default_value = (0.5, 0.5, 0.5)
+        nt.links.new(tc.outputs['UV'] if False else tc.outputs['Object'], gr.inputs['Vector'])
+        cr = nt.nodes.new('ShaderNodeMapRange'); cr.inputs['From Min'].default_value = 0.0; cr.inputs['From Max'].default_value = 1.0
+        cr.inputs['To Min'].default_value = 0.0; cr.inputs['To Max'].default_value = 1.0
+        nt.links.new(gr.outputs['Fac'], cr.inputs['Value'])
+        mu = nt.nodes.new('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = k; nt.links.new(cr.outputs['Result'], mu.inputs[0])
+        sq_ = nt.nodes.new('ShaderNodeMath'); sq_.operation = 'MULTIPLY'; nt.links.new(mu.outputs[0], sq_.inputs[0]); nt.links.new(cr.outputs['Result'], sq_.inputs[1])
+        em = nt.nodes.new('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.02, 0.02, 0.06, 1); tr = nt.nodes.new('ShaderNodeBsdfTransparent')
+        mx = nt.nodes.new('ShaderNodeMixShader'); nt.links.new(sq_.outputs[0], mx.inputs['Fac']); nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2])
+        out = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(mx.outputs[0], out.inputs['Surface'])
+        me.materials.append(m); ob = bpy.data.objects.new(name, me); bpy.context.scene.collection.objects.link(ob)
+        ob.visible_shadow = False; ob.visible_glossy = False; ob.visible_camera = True; self.ob = ob; ob.hide_render = True
+    def add(self, g, pos, r=None, k=1.0, hide=False): self.rec[g] = (tuple(pos), (r or self.r) * k, hide)
+    def bake(self, fa, fb):
+        ob = self.ob
+        for g in range(fa, fb + 1):
+            if g in self.rec and not self.rec[g][2]:
+                pos, r, _ = self.rec[g]; ob.hide_render = False; ob.location = (pos[0], pos[1], pos[2] + 0.03)
+                ob.scale = (r, r * self.sq * 2.0, 1.0)
+            else: ob.hide_render = True
+            ob.keyframe_insert('hide_render', frame=g); ob.keyframe_insert('location', frame=g); ob.keyframe_insert('scale', frame=g)
+        for _, fc in S._fcs(ob):
+            for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT' if fc.data_path == 'hide_render' else 'LINEAR'
