@@ -7,3 +7,6 @@
 - Checked at ~6 fps and every cut +-3 frames: contact shadows present, props in hands, eye-lines OK, no text.
 - Deviations: the plan's "medium two-shot" of rich and Pullman is impossible in one frame (31 D apart vertically at readable head size), so shot 12 reveals Pullman at the end of a crane down instead; the rich man is out of frame for the last ~1 s of Q1 (audio continues). Rich stands in the window (no leaning pose exists).
 - take.mkv is split in take.mkv.part* (cat them to rejoin).
+
+## Open item (caption band)
+- g 836-840 (5 frames, 0.17 s): Pullman's head slides in from below the frame edge during the last crane move and has its chin below y 880 until g 841 (head y 1190 -> 849 -> final 809 at g 842; shot 13 and the rest of the take keep heads < 880). A figure entering from the bottom edge must cross the band; fixing it needs a different crane end (tilt down instead of up). Flagged for QA-tech: either accept (entering frames) or ask me to re-render g 820-842 with a changed end camera.
