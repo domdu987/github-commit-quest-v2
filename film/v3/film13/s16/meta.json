@@ -1,0 +1,52 @@
+{
+ "take": "s16",
+ "film": 13,
+ "shots": [
+  16
+ ],
+ "first_g": 1035,
+ "n_frames": 78,
+ "g0": 1041,
+ "g1": 1107,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "transition_out": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "16": [
+   1041,
+   1106
+  ]
+ },
+ "events": {
+  "pullman_walks": [
+   1035,
+   1112
+  ],
+  "dolly_in": [
+   1035,
+   1112
+  ]
+ },
+ "set": "v3/set3d13/chicago.py under_wide build, CELLAR; runtime: set's oil lamps rebuilt without the 2.6 D halos; ~520 worker cards (3 per aisle slot, A/B bar pose cycling slowly)",
+ "light": "CELLAR",
+ "cast": "cast13 pullman (cycle walk, derby, head turns, scale 0.78 for the 2.8 D crawlspace), foreman13 with whistle at the far end, worker13_a/b/c cards",
+ "dof": "none (cam.data.dof.use_dof False)",
+ "denoiser": "OpenImageDenoise (set pipeline)",
+ "narration": "film13/audio/narration.wav at +0.10 s",
+ "samples": 12,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 17.2,
+ "s_per_frame_cpu_mean": 34.58
+}

@@ -1,0 +1,31 @@
+{
+ "take": "s16",
+ "fps": 30,
+ "note": "time = film seconds (g / 30); narration film13/audio/narration.wav at +0.10 s",
+ "cues": [
+  {
+   "time": 34.5,
+   "duration": 2.2,
+   "frame": 1035,
+   "end_frame": 1101,
+   "kind": "ambience",
+   "label": "cellar crowd: five hundred men waiting, low murmur, shuffling boots, lamp hiss, dripping"
+  },
+  {
+   "time": 34.5,
+   "duration": 2.2,
+   "frame": 1035,
+   "end_frame": 1101,
+   "kind": "foley",
+   "label": "pullman's footsteps on the plank aisle, one step every 14 frames"
+  },
+  {
+   "time": 35.5,
+   "duration": 0.333,
+   "frame": 1065,
+   "end_frame": 1075,
+   "kind": "foley",
+   "label": "a few jack bars clink as men settle their hands"
+  }
+ ]
+}
