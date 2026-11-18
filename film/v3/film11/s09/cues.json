@@ -1,0 +1,15 @@
+{
+ "take": "s09",
+ "fps": 30,
+ "note": "time = film seconds (g/30)",
+ "cues": [
+  {
+   "time": 18.167,
+   "duration": 2.533,
+   "frame": 545,
+   "end_frame": 621,
+   "kind": "ambience",
+   "label": "Village lane: villagers jeer and laugh, hens and geese, footsteps on the dirt lane"
+  }
+ ]
+}

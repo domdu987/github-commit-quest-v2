@@ -1,0 +1,15 @@
+{
+ "take": "s10",
+ "fps": 30,
+ "note": "time = film seconds (g/30)",
+ "cues": [
+  {
+   "time": 20.7,
+   "duration": 1.7,
+   "frame": 621,
+   "end_frame": 672,
+   "kind": "ambience",
+   "label": "Cottage room by day: soft fire crackle, a clock, quiet breathing"
+  }
+ ]
+}

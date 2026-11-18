@@ -1,0 +1,15 @@
+{
+ "take": "s08",
+ "fps": 30,
+ "note": "time = film seconds (g/30)",
+ "cues": [
+  {
+   "time": 16.933,
+   "duration": 1.233,
+   "frame": 508,
+   "end_frame": 545,
+   "kind": "ambience",
+   "label": "Garden: hens, a cow moos over the wall (Blossom), a comic pop as the horns grow"
+  }
+ ]
+}
