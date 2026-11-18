@@ -54,7 +54,7 @@ PRESETS = dict(
     barn_high=dict(loc='barn', light='C', cam='barn_high', sun=(160, 15), look_az=70, P=dict(lift=(0.004, 0.012, 0.030), bounce_z=0.3), fills=[dict(loc=(-9.4, 15.5, 3.0), dir=(1.0, -0.35, -0.3), size=(5.0, 5.0), rgb=(1.0, 0.96, 0.50), energy=1100)]),
     barn_door=dict(loc='barn', light='A', cam='barn_door', sun=(195, 18), look_az=180, P=dict(air=('#f4cf94', 0.12, 14.0, 160.0), bounce_z=0.1)),
     garden_hut=dict(loc='village', light='A', cam='garden_hut', sun=(300, 34), look_az=165, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
-    lane_wide=dict(loc='village', light='A', cam='lane_wide', sun=(300, 40), look_az=182, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
+    lane_wide=dict(loc='village', light='A', cam='lane_wide', sun=(300, 40), look_az=182, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.130, 0.104, 0.38), lift=(0.012, 0.011, 0.036))),
     lane_high=dict(loc='village', light='A', cam='lane_high', sun=(300, 36), look_az=95, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
     garden_queue=dict(loc='village', light='A', cam='garden_queue', sun=(300, 36), look_az=100, P=dict(shade_mix=0.95, shade=(0.134, 0.104, 0.36), shade_tint=(0.134, 0.102, 0.38), lift=(0.016, 0.010, 0.036))),
     room_day=dict(loc='cottage', light='A', cam='room_day', sun=(140, 38), look_az=90, P=dict(shade=(0.065, 0.072, 0.23), shade_tint=(0.076, 0.062, 0.25), shade_mix=0.66, lift=(0.003, 0.010, 0.022), bounce=(1.0, 0.95, 0.50, 0.10), bounce_z=0.2, air=('#f4cf94', 0.10, 14.0, 160.0), key=(1.95, 1.50, 0.88)),
@@ -97,10 +97,10 @@ def _mk(role, pos, face='cam', note='', **kw): d = dict(pos=tuple(pos), role=rol
 # STAND POINTS: name -> dict(pos=(x, y, floor z), role, height (D), note). z is the CONTACT z (floor, or the stool top for seated figures).
 STAND = dict(
     barn_wide=dict(sarah=_mk('sarah', (-3.4, 12.2, 0.0), note='milkmaid Sarah Nelmes, standing in the sun pool by the stool'), maid=_mk('maid', (0.6, 12.8, 0.0), note='2nd milkmaid'),
-                   jenner=_mk('jenner', (-5.2, 9.8, 0.0), note='Jenner at the door side'), blossom=_mk('cow', (-1.2, 16.4, 0.0), note='Blossom 2D puppet, side view, head to -x, 4.4 D long', length=4.4),
-                   boy=_mk('boy', (2.0, 9.0, 0.0), note='James near the aisle')),
+                   jenner=_mk('jenner', (-1.0, 9.2, 0.0), note='Jenner, mid aisle'), blossom=_mk('cow', (-1.2, 16.4, 0.0), note='Blossom 2D puppet, side view, head to -x, 4.4 D long', length=4.4),
+                   boy=_mk('boy', (2.8, 8.8, 0.0), note='James near the aisle')),
     barn_milking=dict(sarah=_mk('sarah', (-5.6, 12.6, 0.85), seated=True, note='milkmaid SEATED on the milking stool (z = stool top), at the udder side'), blossom=_mk('cow', (-5.4, 15.0, 0.0), note='Blossom 2D, side view, head to -x, flank to camera, udder at x -4.4', length=4.4),
-                      maid=_mk('maid', (-8.6, 11.6, 0.0), note='2nd milkmaid standing left'), pail=_mk('cow', (-4.6, 13.4, 0.0), note='pail under the udder (3D pail already there)', length=0.0)),
+                      maid=_mk('maid', (-7.4, 12.2, 0.0), note='2nd milkmaid standing left'), pail=_mk('cow', (-4.6, 13.4, 0.0), note='pail under the udder (3D pail already there)', length=0.0)),
     barn_high=dict(sarah=_mk('sarah', (-3.8, 12.4, 0.0), note='clear-faced milkmaid'), maid=_mk('maid', (-1.8, 13.6, 0.0), note='clear-faced milkmaid 2'),
                    vill_a=_mk('villager_p', (-8.0, 11.8, 0.0), note='pockmarked villager in the door'), vill_b=_mk('villager_p', (-8.4, 14.4, 0.0), note='pockmarked villager in the door'),
                    vill_c=_mk('villager_p', (-8.0, 17.0, 0.0), note='pockmarked villager in the door'), vill_d=_mk('villager', (-10.6, 15.6, 0.0), note='plain villager outside the door'),
@@ -568,7 +568,7 @@ def village(SET, M, P, kd, lkey, PR):
     # ---------------- Jenner's cottage (honey stone, deep layered thatch, two chimneys, a kitchen wing)
     tops = house(mb, M, -10.0, 10.0, 9.0, 17.0, 5.6, 10.4, -1, 3, 'stone', 'thatch', (0.14, 0.7), 2, True, False)
     tops2 = house(mb, M, 10.0, 17.0, 9.5, 15.5, 4.2, 7.6, -1, 5, 'stone', 'thatch', (0.5,), 0, False, False)
-    for k, (tx_, ty_, tz_) in enumerate(tops + tops2): smoke_puffs(SET, M, (tx_, ty_, tz_), 9, 12.0, (0.45, 0.1), 0.008, 'smoke%d' % k, k)
+    for k, (tx_, ty_, tz_) in enumerate(tops + tops2): smoke_puffs(SET, M, (tx_, ty_, tz_), 14, 12.0, (0.45, 0.1), 0.008, 'smoke%d' % k, k)
     bx(mb, (-4.2, 6.7, 4.1), (0.2, 9.1, 4.5), M['thatch_d'], (3, 3)); post(mb, -4.0, 7.0, 0, 4.1, 0.2, M['oak']); post(mb, 0.0, 7.0, 0, 4.1, 0.2, M['oak'])
     # ---------------- picket fence on the lane side, stone walls east and west, hedge, orchard gate
     picket(mb, M, -22.0, 22.0, -8.0, rg, (-2.6, -0.4), h=(1.0 if PR['cam'] == 'garden_queue' else 1.4))
@@ -648,7 +648,7 @@ def village(SET, M, P, kd, lkey, PR):
            (18, 38, -30.0, -22.0, 1, 25, 'plaster', 'thatch'), (-34, -14, -30.0, -22.2, 1, 26, 'stone', 'thatch'), (-58, -38, -30.0, -22.0, 1, 27, 'moss', 'thatch'), (-84, -62, -30.0, -22.2, 1, 28, 'plaster', 'tile'), (42, 62, -30.0, -22.0, 1, 29, 'stone', 'thatch'), (42, 64, -6.2, 1.8, -1, 30, 'stone', 'thatch')]
     for k, (x0, x1, y0, y1, fc, sd, wl, rf) in enumerate(row):
         t_ = house(mb, M, x0, x1, y0, y1, 5.4 + (k % 3) * 0.3, 10.0 + (k % 4) * 0.5, fc, sd, wl, rf, (0.2 + 0.5 * (k % 2),), 1, True, k % 2 == 0)
-        if k % 3 == 0: smoke_puffs(SET, M, t_[0], 7, 10.0, (0.45, 0.1), 0.009, 'hsmoke%d' % k, k + 20)
+        if k % 3 == 0: smoke_puffs(SET, M, t_[0], 11, 10.0, (0.45, 0.1), 0.009, 'hsmoke%d' % k, k + 20)
         facade_dress(mb, hm, M, P_, rg, x0, x1, y0 if fc < 0 else y1, fc, okp, 6)
     litter(mb, hm, M, P_, rg, (-60, 60, -15.0, -8.2), 520, okp); litter(mb, hm, M, P_, rg, (-30, 30, -48, -22), 300, okp); litter(mb, hm, M, P_, rg, (14, 40, -15.0, -8.4), 700, okp, small=True)
     for k in range(26):                                                                                   # puddles in the wheel ruts catch the sky; cabbage leaves, straw, a dropped basket

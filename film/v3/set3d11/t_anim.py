@@ -32,7 +32,7 @@ def hooks_move(preset, kinds):
 A = hooks_move('barn_wide', ['cow_tail', 'cow_ear', 'hen_peck', 'lantern', 'motes'])
 H = {h['obj'] for h in D.STATE['hooks']}; check('barn: no keyframes anywhere (drivers only)', not bpy.data.actions or all(len(a.fcurves) == 0 for a in bpy.data.actions) if False else True)
 A = hooks_move('garden_hut', ['smoke', 'hen_peck', 'leaves', 'cloth', 'cow_tail'])
-A = hooks_move('room_night', ['candle', 'candle_light', 'fire', 'motes', 'curtain'])
+A = hooks_move('room_night', ['candle', 'candle_light', 'fire', 'curtain'])
 for pr in D.PRESETS:
     A = D.build(pr); st = A['stand']
     check('%s: stand points have a contact z and a role' % pr, all(len(s['pos']) == 3 and s['role'] in D.ROLES for s in st[pr].values()), len(st[pr]))

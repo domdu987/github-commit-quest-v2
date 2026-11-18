@@ -480,7 +480,7 @@ def smoke_puffs(SET, M, base, n=7, rise=11.0, drift=(0.8, 0.2), speed=0.011, nam
         mb = MB(); lumpy(mb, (0, 0, 0), 1.0, M['smoke'], 1200 + k + seed, seg=14, rings=8, rough=0.05)
         o = mk_obj(mb, '%s_%d' % (name, k), SET, base, shadow=False); off = k / n + rg.uniform(-0.02, 0.02); t = 'fmod(frame*%.4f+%.3f,1.0)' % (speed, off)
         drv(o, 'location', 2, '%.3f+%.2f*%s' % (base[2], rise, t)); drv(o, 'location', 0, '%.3f+%.2f*%s+0.25*sin(frame*0.05+%.2f)' % (base[0], drift[0] * rise, t, k)); drv(o, 'location', 1, '%.3f+%.2f*%s' % (base[1], drift[1] * rise, t))
-        for i in range(3): drv(o, 'scale', i, '0.28+0.65*sin(3.14159*%s)*(0.5+%s)' % (t, t))
+        for i in range(3): drv(o, 'scale', i, '0.5+0.9*sin(3.14159*%s)*(0.5+%s)' % (t, t))
         hook('smoke', o)
 
 def falling_leaves(SET, M, area, n=26, groups=3, zmax=12.0, name='leaves', mats=None, seed=1, size=0.16):
