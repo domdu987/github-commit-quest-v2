@@ -30,13 +30,13 @@ PRESET = "suite_two"
 LIGHT = None
 
 RICH17 = Vector((1.2, 1.0, 30.0))
-RICH19 = Vector((2.3, 1.0, 30.0))
-LADY, GENT = Vector((-1.2, 1.0, 30.0)), Vector((0.7, 1.0, 30.0))
+RICH19 = Vector((3.0, 1.0, 30.0))
+LADY, GENT = Vector((-1.5, 1.0, 30.0)), Vector((0.5, 1.0, 30.0))
 
 CAMS = {
-    17: (((-3.0, 5.8, 32.9), (1.0, -1.0, 31.0), 22.0), ((-2.0, 4.6, 32.8), (1.3, -1.0, 31.1), 22.0)),
+    17: (((-5.2, 4.6, 31.3), (1.0, 0.5, 33.2), 22.0), ((-4.2, 4.1, 31.3), (1.3, 0.5, 33.2), 22.0)),
     18: (((-0.4, 6.4, 33.9), (-3.6, 2.0, 31.6), 30.0), ((-0.9, 5.9, 33.8), (-3.6, 2.0, 31.7), 30.0)),
-    19: (((-1.0, 8.6, 32.4), (0.6, -2.0, 30.9), 22.0), ((-0.4, 7.7, 32.3), (0.7, -2.0, 30.9), 22.0)),
+    19: (((0.4, 8.6, 30.9), (0.6, 0.0, 33.4), 22.0), ((0.4, 7.7, 30.9), (0.6, 0.0, 33.4), 22.0)),
 }
 PPD = {17: 256, 18: 256, 19: 256}
 
@@ -72,15 +72,18 @@ def rich_pose(shot, g):
         p["head_roll"] = -3 + 1.0 * math.sin(g * 0.07)
     else:                                                 # 19: turns to us / the guests, raises the cup, speaks
         up = u_of(g, G19 - 4, G19 + 14)
-        p["yaw"] = lerp(0.85, 0.45, u_of(g, G19 - 6, G19 + 10))
-        p["gaze"] = (lerp(0.9, 0.3, up), 0.0)
-        p["pitch"] = lerp(-0.25, -0.40, up) + 0.04 * math.sin(g * 0.2)
-        p["head_roll"] = lerp(-3, 6, up) + 1.2 * math.sin(g * 0.13)
+        p["yaw"] = lerp(0.85, 0.25, u_of(g, G19 - 6, G19 + 10))
+        p["gaze"] = (lerp(0.9, 0.15, up), 0.0)
+        p["pitch"] = lerp(-0.25, -0.35, up) + 0.04 * math.sin(g * 0.2)
+        p["head_roll"] = lerp(-3, 4, up) + 1.2 * math.sin(g * 0.13)
         bob = 0.03 * up * math.sin((g - G19) * 0.3)
-        p["arm_l"] = "behind"
+        arm, sx = os.environ.get("CUPARM", "l"), float(os.environ.get("CUPX", "-1"))
+        for k in ("arm_l", "arm_r"):
+            p[k] = "behind"
         p["prop_l"] = None
-        p["arm_r"] = dict(hand=(lerp(0.30, 0.95, up), lerp(0.95, 0.15, up) + bob), bend=lerp(0.4, -0.5, up), stretch=1.25, layer="front")
-        p["prop_r"] = dict(type="teacup_saucer", scale=1.5)
+        p["prop_r"] = None
+        p["arm_" + arm] = dict(hand=(sx * lerp(0.3, 0.95, up), lerp(0.95, 0.10, up) + bob), bend=lerp(0.4, -0.5, up), stretch=1.25, layer="front")
+        p["prop_" + arm] = dict(type="teacup_saucer", scale=1.5)
         if Q2[0] - 2 <= g <= Q2[1] + 1:
             p["mouth"] = cast13.talk_mouth(g, 1.0)
         p["expr"] = "smug"
@@ -158,11 +161,18 @@ class Take(C.Take):
         self.crowd = make_crowd(sd)
         for pc in self.crowd:
             pc.put(pc.root.location, face=(-1.0, 5.5, 32.7))
-        for n in ('chandelier', 'candles'):                  # out of the frame in shot 19; light and shadows stay
-            ob = bpy.data.objects.get(n)
-            if ob is not None:
-                ob.visible_camera = False
+        self.sky_fix()
+        self.furn = bpy.data.objects.get("furniture")
+        self.tea = D.STATE.get('tea_obj')
+        self.chand = [bpy.data.objects.get(n) for n in ("chandelier", "candles")]
         self.shot_now = None
+
+    def sky_fix(self):
+        """QA-art: the painted cloud sprites show as stepped lime slabs above the window; swap in a cloudless gradient with soft clouds."""
+        m = D.STATE["M"]["sky"]
+        for n in m.node_tree.nodes:
+            if n.bl_idname == "ShaderNodeTexImage":
+                n.image = bpy.data.images.load(os.path.join(TMP, "sky_clean.png"), check_existing=True)
 
     def pose(self, shot, gs):
         rich, lady, gent = self.rich, self.lady, self.gent
@@ -180,6 +190,14 @@ class Take(C.Take):
             for o in rich.objects():
                 o.hide_render = False
                 o.keyframe_insert("hide_render", frame=f)
+            vis = shot == 18                                    # table, armchairs and cups are only wanted in the tea shot
+            if self.furn is not None:
+                self.furn.visible_camera = vis; self.furn.keyframe_insert("visible_camera", frame=f)
+            for ob in self.chand:
+                if ob is not None:
+                    ob.visible_camera = shot == 19; ob.keyframe_insert("visible_camera", frame=f)
+            if self.tea is not None:
+                self.tea.visible_camera = vis; self.tea.keyframe_insert('visible_camera', frame=f)
             D.set_tea_ripple(0.0, frame=f)                      # tea: perfectly flat mirror, keyed on EVERY rendered frame
             for pc in self.crowd:                                # turn the street cards to the moving camera
                 pc.put(pc.root.location, face=loc, frame=f)
