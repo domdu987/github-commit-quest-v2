@@ -18,13 +18,13 @@ GR = {11: (753, 820), 12: (821, 863), 13: (864, 929), 14: (930, 1006)}      # wi
 def L3(a, b, x): return tuple(lerp(p, q, x) for p, q in zip(a, b))
 def ease(x, k=0.45): x = clamp(x); return k * sm(x) + (1 - k) * x
 # shot 11: ORBIT round the one hive, left-front -> front (hive 1 at x -6.5, y 5): the trapezoid box + end slot read in 3/4
-C11 = ((-10.6, 1.6, 2.0), (-6.4, 0.3, 1.9)); L11 = ((-6.5, 5.0, 2.1), (-6.2, 5.0, 2.1)); LENS11 = (28, 28)
-# shot 12: dolly along the front of the fence from its left end (yard side, 3-4.5 m up), rising: the row of hives under their roofs
-C12 = ((-17.5, 2.6, 3.3), (-13.8, 3.4, 4.4)); L12 = ((-1.0, 7.0, 4.3), (2.0, 7.5, 4.0)); LENS12 = (20, 20)
+C11 = ((-8.5, 1.7, 1.75), (-6.9, 1.0, 1.7)); L11 = ((-6.1, 5.0, 1.65), (-6.0, 5.0, 1.65)); LENS11 = (24, 24)
+# shot 12: dolly along the front of the fence from its left end at hive height (boxes visible under the roofs); stays 5+ m clear of every roof
+C12 = ((-23.0, 1.9, 2.0), (-17.5, 2.1, 2.1)); L12 = ((-4.0, 6.5, 1.3), (-2.0, 6.6, 1.3)); LENS12 = (40, 38)
 # shot 13: close on the bar, farmer on the left of the hive, the camera drifts right and in
-C13 = ((-9.2, 0.2, 1.9), (-8.8, 0.3, 1.9)); L13 = ((-7.0, 5.0, 2.15), (-6.6, 5.0, 2.15)); LENS13 = (26, 26)
-# shot 14: dolly + pan round the front-left corner: the wire runs along the row, round the corner and up the left side
-C14 = ((-18.2, 2.0, 3.5), (-17.5, 5.5, 3.8)); L14 = ((-7.5, 7.0, 3.3), (-12.0, 12.0, 3.2)); LENS14 = (17, 18)
+C13 = ((-9.0, 1.2, 1.75), (-8.3, 1.5, 1.75)); L13 = ((-7.2, 5.0, 1.6), (-6.6, 5.0, 1.6)); LENS13 = (24, 24)
+# shot 14: dolly + pan round the front-left corner at hive height: the thin wire runs through every hive bar, round the corner and up the left side
+C14 = ((-19.5, 2.4, 2.0), (-17.0, 4.0, 2.0)); L14 = ((-8.0, 7.5, 1.2), (-12.0, 11.0, 1.2)); LENS14 = (32, 30)
 
 def cam_at(shot, g):
     a, b = BOUND[shot]; xr = (g - a) / float(b - a); x = clamp(xr)
@@ -33,7 +33,7 @@ def cam_at(shot, g):
     return L3(Cs[0], Cs[1], e), L3(Ls[0], Ls[1], e), lerp(Ln[0], Ln[1], e)
 
 F.CAMS['fence_ring'] = dict(loc=C12[0], look=L12[0], lens=22)
-F.PRESETS['fence_ring'] = dict(light='DAY', state='fs2', wire_r=0.085, staging=[])
+F.PRESETS['fence_ring'] = dict(light='DAY', state='fs2', wire_r=0.03, staging=[])
 F.CAMS['hive_close'] = dict(loc=C13[0], look=L13[0], lens=24)
 F.PRESETS['hive_close'] = dict(light='DUSK', state='fs3', staging=[])
 F.CAMS['fence_line'] = dict(loc=C11[0], look=L11[0], lens=24)
@@ -81,6 +81,21 @@ def wire_at_s(s):
     S, base = wire_pts(); s = s % F.S_TOT; i = int(np.searchsorted(S, s, side='right') - 1); i = max(0, min(i, len(S) - 2)); u = (s - S[i]) / max(S[i + 1] - S[i], 1e-9)
     return Vector(base[i]) * (1 - u) + Vector(base[i + 1]) * u
 
+def sharp_ground():
+    """remove the soft green grass-patch mask from the ground material (it reads as a blurry blotch): the mask's Green channel no longer drives the mix."""
+    m = bpy.data.materials.get('ground'); nt = m.node_tree
+    for n in nt.nodes:
+        if n.type == 'MIX' and n.inputs[0].links and n.inputs[0].links[0].from_node.type == 'SEPARATE_COLOR' and n.inputs[0].links[0].from_socket.name == 'Green':
+            nt.links.remove(n.inputs[0].links[0]); n.inputs[0].default_value = 1.0
+def matte_wire():
+    """thin taut grey-silver, non-emissive wire (cut every link into the material's colour / emission sockets)."""
+    m = F.STATE['M']['wire']; nt = m.node_tree
+    for n in nt.nodes:
+        if n.type == 'BSDF_PRINCIPLED':
+            for nm in ('Base Color', 'Emission Color', 'Emission Strength'):
+                for l in list(n.inputs[nm].links): nt.links.remove(l)
+            n.inputs['Base Color'].default_value = (0.50, 0.52, 0.55, 1); n.inputs['Emission Strength'].default_value = 0.0
+            n.inputs['Emission Color'].default_value = (0, 0, 0, 1); n.inputs['Roughness'].default_value = 0.45; n.inputs['Metallic'].default_value = 0.35
 def glow_wire(k):
     """raise the emission of the set's wire material (the wire must read as ONE bright line at phone size)."""
     m = F.STATE['M']['wire']
@@ -94,8 +109,8 @@ def hide_set_wire(on=True):
     F.STATE['wire_ob'].hide_render = on; F.STATE['wire_ob'].hide_viewport = on
 
 # -------------------------------------------------------------------- the farmer on his stool
-STOOL11 = (-5.55, 4.25, 0.44)       # shot 11: right of hive 1 (mirror: faces the hive on his left)
-STOOL13 = (-7.95, 4.25, 0.44)       # shot 13: left of hive 1 (faces right: the bar, the wire and the row of hives)
+STOOL11 = (-5.55, 4.25, 0.26)       # shot 11: right of hive 1 (mirror: faces the hive on his left)
+STOOL13 = (-7.95, 4.25, 0.26)       # shot 13: left of hive 1 (faces right: the bar, the wire and the row of hives)
 def stool_at(pos, scale=0.3):
     mb = C.G.MB('s_stool'); C.G.stool(mb, F.STATE['M'], (pos[0], pos[1], 0.0), scale); mb.finish()
 
@@ -127,7 +142,7 @@ def farmer13(g, x):
 def build_for(shot):
     def b():
         pr, light = PRESET[shot]
-        F.build(pr, light, dress=False); cam = F.make_camera(F.CAMS[pr])
+        F.build(pr, light, dress=False); cam = F.make_camera(F.CAMS[pr]); sharp_ground()
         a, b = BOUND[shot]; path = []
         for g in range(a, b + 1, 6):
             lo, lk, _ = cam_at(shot, g)
@@ -155,7 +170,7 @@ def frame11(st, g):
 EY_R = 0.12
 def frame13(st, g):
     loc, look, lens = cam_at(13, g); C.set_cam(st['cam'], loc, look, lens)
-    F.set_fence_stage(3); F.set_wire_push(-1); bpy.context.view_layer.update(); F.set_bees(-1); hide_set_wire(True)
+    F.set_fence_stage(3); F.set_wire_push(-1); bpy.context.view_layer.update(); F.set_bees(-1); hide_set_wire(True); matte_wire()
     x = clamp((g - 864) / 65.0); M = F.STATE['M']
     c, p, hand = farmer13(g, x)
     r = put(c, p, STOOL13, loc, ppd=128, mirror=False, contact=True, shadow_k=1.7)
@@ -196,13 +211,7 @@ def frame12(st, g):
 
 def frame14(st, g):
     loc, look, lens = cam_at(14, g); C.set_cam(st['cam'], loc, look, lens)
-    F.set_fence_stage(3); F.set_wire_push(-1); bpy.context.view_layer.update(); F.set_bees(-1); glow_wire(2.0)
-    for k in range(3):
-        s = 3.0 + k * F.S_TOT / 3.0 + (g - 930) * 0.9
-        for q, (dq, r) in enumerate(((0.0, 0.17), (-0.7, 0.11), (-1.3, 0.07))):
-            p = wire_at_s(s + dq)
-            bpy.ops.mesh.primitive_uv_sphere_add(segments=12, ring_count=8, radius=r, location=p); b = bpy.context.active_object; b.name = 'actor_bead'
-            b.data.materials.append(C.G.mat_emit('bead%d' % q, '#ffd27a', 9.0 - 2.5 * q)); b.visible_shadow = False
+    F.set_fence_stage(3); F.set_wire_push(-1); bpy.context.view_layer.update(); F.set_bees(-1); matte_wire()
     return dict(cam=[round(v, 2) for v in loc])
 
 FR = {11: frame11, 12: frame12, 13: frame13, 14: frame14}
