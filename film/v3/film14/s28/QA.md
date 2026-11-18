@@ -12,3 +12,6 @@
 
 ## v3 (director re-check)
 Shot 30 only re-rendered: he stands on the same stool as in shot 29 (stool=1, CANVAS14_STOOL), so the cut 29->30 no longer drops him by the stool height. Deviation: "bottom edge above his knees" is incompatible with the full-length trunk tip staying above y 880 at this head size (knees at about y 900), so the stool and feet remain visible in the lower frame (stool top ~y 985). Shots 28-29 unchanged.
+
+## v4
+Shot 30 only: nose_swell starts at 0.40 (matches the end of shot 29), held to g2044, eased 0.40 -> 1.0 over g2045-2088; trunk curl + blink kept; camera nudged so the cap top is inside the frame; trunk tip ~y 840 (< 880). qa_auto PASS.
