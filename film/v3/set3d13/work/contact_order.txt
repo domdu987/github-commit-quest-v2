@@ -1,0 +1,15 @@
+street_wide:DAY:lift0.7|street_wide DAY lift 0.7
+street_wide:MORNING:lift1,fill0.5|street_wide MORNING (day 5) lift 1 fill 0.5
+hotel_front:DAY:lift0.7|hotel_front DAY lift 0.7
+front_stair:DAY:lift1|front_stair DAY lift 1 (door 3.6 D above stair)
+front_stair:MORNING:lift1,fill0.5|front_stair MORNING lift 1 fill 0.5
+mud_low:DAY:lift0.5|mud_low DAY lift 0.5
+rain_street:RAIN:lift0|rain_street RAIN (pivot)
+crowd_street:DAY:lift0.8|crowd_street DAY lift 0.8
+under_wide:CELLAR:lift0.2|under_wide CELLAR lift 0.2
+under_rows:CELLAR:lift0.2,cut1|under_rows CELLAR cut-away
+jack_close:CELLAR:lift0.2,jack30|jack_close CELLAR jack turn 30
+suite_window:SUITE:|suite_window SUITE (street below)
+suite_room:SUITE:|suite_room SUITE (armchair)
+tea_close:SUITE:tea0|tea_close SUITE tea ripple 0
+suite_two:SUITE:|suite_two SUITE (rich man, street)

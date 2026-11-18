@@ -56,7 +56,7 @@ LIGHTS = dict(
     RAIN=dict(_B, lamps=1.0, key=(0.62, 0.66, 0.82), key_dir=_kdaz(325, 52), sun_elev=52, sun_angle=9.0, shade=(0.12, 0.125, 0.335), shade_tint=(0.11, 0.115, 0.36), shade_mix=0.7,
               grade_offset=(-0.004, -0.006, -0.004), lift=(0.016, 0.016, 0.034), sky='CH_RAIN', sky_k=0.95, pano='CHI', pano_k=0.5, grade_saturation=1.12,
               bounce=(0.7, 0.75, 0.95, 0.10), beams=0.0, air=('#8c94b4', 0.5, 20.0, 300.0), wet=1.0),
-    CELLAR=dict(_B, key=(1.95, 1.34, 0.72), key_dir=_kdaz(300, 30), sun_elev=30, sun_angle=0.5, shade=(0.092, 0.108, 0.30), shade_tint=(0.088, 0.104, 0.34), shade_mix=0.6,
+    CELLAR=dict(_B, key=(1.95, 1.34, 0.72), key_dir=_kdaz(300, 30), sun_elev=30, sun_angle=0.5, shade=(0.100, 0.100, 0.31), shade_tint=(0.095, 0.095, 0.335), shade_mix=0.6,
                 grade_offset=(-0.006, -0.01, -0.012), lift=(0.008, 0.012, 0.028), sky='CH_DAY', sky_k=0.95, pano='CHI', pano_k=0.95, grade_saturation=1.2,
                 bounce=None, beams=0.05, air=('#d8b090', 0.12, 20.0, 160.0), lamps=1.0),
     SUITE=dict(_B, key=(1.95, 1.42, 0.82), key_dir=_kdaz(305, 36), sun_elev=36, shade=(0.20, 0.19, 0.55), shade_tint=(0.19, 0.18, 0.55), shade_mix=0.6,
@@ -290,7 +290,7 @@ def _sky(SET, P, M, R):
         _obj(mb, 'backdrop', SET, shadow=False)
 
 def _far_ground(SET, M, z=-2.5):
-    mb = MB(); R = 430.0; fm = STATE['TX']('far_ground', form=False)
+    mb = MB(); R = 430.0; fm = STATE['TX']('far_ground', form=False, smix=0.95)
     mb.face([Vector((-R, -R, z)), Vector((R, -R, z)), Vector((R, R, z)), Vector((-R, R, z))], fm, [(0, 0), (R / 8, 0), (R / 8, R / 8), (0, R / 8)]); _obj(mb, 'far_ground', SET)
 
 # ============================================================================= terrain: mud with ruts and layered puddles
