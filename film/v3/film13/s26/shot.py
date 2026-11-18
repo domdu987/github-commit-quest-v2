@@ -27,7 +27,7 @@ TMP = os.path.join(HERE, "work")
 S13 = cast13.STORY13
 
 # ----------------------------------------------------------------------------- timing
-G = {26: C.g_bound(55.89), 27: C.g_bound(57.99), 28: C.g_bound(59.06), 29: C.g_bound(62.26), 30: C.g_bound(63.53)}
+G = {26: C.g_of(55.89), 27: C.g_of(57.99), 28: C.g_of(59.06), 29: C.g_of(62.26), 30: C.g_of(63.53)}   # WORKER13: g = round((t + 0.10) * 30)
 G_LAST = C.N_FILM - 1                    # 1994 (hard cut on the last word)
 H_IN = 6
 RANGES = {26: (G[26] - H_IN, G[27] - 1), 27: (G[27], G[28] - 1), 28: (G[28], G[29] - 1), 29: (G[29], G[30] - 1), 30: (G[30], G_LAST)}
@@ -36,7 +36,7 @@ CUTS = [G[27], G[28], G[29], G[30]]
 
 G_WALK0, G_WALK1 = G[26] + 2, G[26] + 44             # strolls out of the door to the portico edge
 G_FALL0 = G[29] + 4                                  # launch
-G_HIT = C.g_of(63.1) - 3                             # 1893: lands in the mud (sfx splat)
+G_HIT = C.g_of(63.1)                                 # 1896: lands in the mud (sfx splat)
 G_PURSE0 = G[30] + 8                                # purse comes up
 G_TAKE = G[30] + 52                                  # pullman takes it (1974)
 BF = lambda g: C.bf(26, g)
@@ -51,7 +51,7 @@ LAND = Vector((1.2, -11.6, 0.0))                     # where he lands (outside t
 PULL = Vector((3.0, -12.4, 0.0))
 
 CAMS = {
-    26: (((-2.2, -12.8, 5.0), (0.0, -3.2, 7.9)), ((-1.2, -10.2, 5.6), (0.0, -3.4, 7.9)), 24.0),
+    26: (((-2.4, -17.0, 4.4), (0.0, -3.0, 7.6)), ((-1.2, -12.6, 5.4), (0.0, -3.3, 7.9)), 22.0),
     27: (((-4.2, -9.5, 7.2), (0.0, -3.8, 6.2)), ((-2.6, -7.8, 7.4), (0.0, -3.8, 6.6)), 22.0),
     28: (((-22.0, -13.5, 3.6), (0.0, -3.8, 7.6)), ((-9.2, -8.6, 4.8), (0.0, -3.9, 7.0)), 22.0),
     29: (((-4.2, -16.8, 2.6), (0.1, -6.5, 5.8)), ((-3.2, -17.2, 1.9), (1.0, -10.2, 2.6)), 22.0),
@@ -78,8 +78,8 @@ def idle(g, amp=1.0):
     return amp * math.sin(g * 0.13), amp * math.sin(g * 0.09 + 1.0)
 
 
-RICH_STEP = base("rich_step_out")
-RICH_FALL = base("rich_fall")
+RICH_STEP = dict(base("rich_step_out"), mouth="flat", arm_l=dict(hand=(-0.7, 0.9), bend=0.3, stretch=1.2, shape="open"))
+RICH_FALL = dict(base("rich_fall"), mouth="flat")
 RICH_SIT = base("rich_sit_in_mud")
 RICH_PAY = base("rich_pay_sad")
 PULL_CALM = base("pullman_stand_calm")
