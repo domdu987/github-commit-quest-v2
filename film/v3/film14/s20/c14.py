@@ -27,7 +27,7 @@ def pw(g, kn):
     (g0, v0), (g1, v1) = kn[-2], kn[-1]; return v1 + (g - g1) * (v1 - v0) / (g1 - g0)
 
 # ----------------------------------------------------------------------------- scene
-def register_preset(name, loc, look, lens, wire_r=0.075):
+def register_preset(name, loc, look, lens, wire_r=0.021):
     F.CAMS[name] = dict(loc=tuple(loc), look=tuple(look), lens=lens)
     F.PRESETS[name] = dict(light='NIGHT', state='fs3', wire_r=wire_r, staging=[])
 
@@ -97,7 +97,7 @@ def _contact(tag, L, Wd):
     img = bpy.data.images.load(p); img.alpha_mode = 'STRAIGHT'
     m = bpy.data.materials.new('cm_' + tag); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); Nn = nt.nodes.new; Lk = nt.links.new
     out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission'); em.inputs['Color'].default_value = (0.03, 0.02, 0.07, 1); em.inputs['Strength'].default_value = 1
-    tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 0.8
+    tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 1.0
     Lk(ti.outputs['Alpha'], mu.inputs[0]); Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
     me.materials.append(m); ob = bpy.data.objects.new('actor_c_' + tag, me); bpy.context.scene.collection.objects.link(ob); ob.visible_shadow = False
     return ob
@@ -107,7 +107,7 @@ class Card:
     def __init__(self, tag, cast, canvas, ppd, contact=None, card_k=None):
         self.tag, self.cast, self.canvas, self.ppd = tag, cast, canvas, ppd
         x0, y0, x1, y1 = canvas; self.me = None; self.ob = None; self.node = None; self.contact = None; self.card_k = card_k
-        self.contact_size = contact
+        self.contact_size = contact; self.grade = False
     def _make(self, r):
         x0, y0, x1, y1 = r['canvas']; X0, X1 = x0 * MPD, x1 * MPD; Z0, Z1 = -y1 * MPD, -y0 * MPD
         me = bpy.data.meshes.new(self.tag); me.from_pydata([(X0, 0, Z0), (X1, 0, Z0), (X1, 0, Z1), (X0, 0, Z1)], [], [(0, 1, 2, 3)]); me.update()
@@ -123,11 +123,23 @@ class Card:
         if r['clipped']: print('WARNING clipped', self.tag, key, flush=True)
         r['out'] = out
         if self.cast == 'swarm': out = self._warm_wings(out); r['out'] = out
+        if self.grade: out = self._night(out); r['out'] = out
         if self.ob is None: self._make(r)
         else:
             old = self.node.image; img = bpy.data.images.load(out); img.alpha_mode = 'STRAIGHT'; self.node.image = img
             if old is not None and old.users == 0: bpy.data.images.remove(old)
         self.r = r; return r
+    @staticmethod
+    def _night(path):
+        """elephant card for NIGHT (director note): x0.70, tint (0.78,0.82,1.0), cool moon rim on the top edge, warm hut tint on the right side. Writes <name>_n.png (cache hard link untouched)."""
+        o2 = path[:-4] + '_n.png'
+        im = np.asarray(Image.open(path).convert('RGBA'), dtype=np.float32) / 255.0; a = im[..., 3]; rgb = im[..., :3] * np.array([0.70 * 0.78, 0.70 * 0.82, 0.70], np.float32)
+        ys, xs = np.nonzero(a > 0.1)
+        if len(xs):
+            x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max(); fx = np.clip((np.arange(im.shape[1]) - x0) / max(1, x1 - x0), 0, 1)[None, :]
+            warm = np.clip((fx - 0.5) / 0.5, 0, 1) ** 1.3 * 0.42; rgb = rgb * (1 + warm[..., None] * np.array([0.55, 0.12, -0.35], np.float32))
+            fy = np.clip(1 - (np.arange(im.shape[0]) - y0) / max(1, 0.18 * (y1 - y0)), 0, 1)[:, None] ** 2 * 0.22; rgb = rgb + fy[..., None] * np.array([0.04, 0.07, 0.14], np.float32) * (a[..., None] > 0.5)
+        out = np.concatenate([np.clip(rgb, 0, 1), a[..., None]], -1); Image.fromarray((out * 255 + 0.5).astype(np.uint8)).save(o2); return o2
     @staticmethod
     def _warm_wings(path):
         """swarm sprites: pale-blue wing ghosts glow like snow at night; make them thin and warm so the gold-black bodies read. Writes <name>_w.png (the cache hard link is untouched)."""
@@ -155,7 +167,7 @@ class Card:
 def yaw_to(cam_loc, p): d = Vector(cam_loc) - Vector(p); return math.atan2(d.x, -d.y)
 
 def matriarch_card(ppd, tag='mat'):
-    s = 1.0; return Card(tag, 'matriarch', cast14.CANVAS14['matriarch'], ppd, contact=(1.0 * MPD * 8, 0.30 * MPD * 8))
+    s = 1.0; return Card(tag, 'matriarch', cast14.CANVAS14['matriarch'], ppd, contact=(1.0 * MPD * 11, 0.30 * MPD * 11))
 
 def swarm_card(tag, canvas, ppd=96):
     return Card(tag, 'swarm', canvas, ppd, contact=None, card_k=1.0)
@@ -198,3 +210,18 @@ def hide_maize_rows(ymax=7.0):
     for o in bpy.data.objects:
         if o.name.startswith('mz') and o.location.y < ymax: o.hide_render = True; n += 1
     return n
+
+
+def cut_roofs(x0, x1, y0, y1, zmin=1.9, prefix='roof'):
+    """delete roof-mesh vertices inside the box (the near roof must not cut through the elephant card)"""
+    n = 0
+    for ob in list(bpy.data.objects):
+        if ob.type != 'MESH' or not ob.name.startswith(prefix): continue
+        bm = bmesh.new(); bm.from_mesh(ob.data); mw = ob.matrix_world
+        dl = [v for v in bm.verts if x0 < (mw @ v.co).x < x1 and y0 < (mw @ v.co).y < y1 and (mw @ v.co).z > zmin]
+        if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS'); bm.to_mesh(ob.data); n += len(dl)
+        bm.free()
+    return n
+
+def hide_grass_box(x0, x1, y0, y1, zmax=1.0):
+    return cut_boxes([(x0, x1, y0, y1, zmax)], names=('grass', 'flowers', 'edge', 'pebbles', 'xdress'))
