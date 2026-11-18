@@ -1,0 +1,40 @@
+cut props_bluetank 40
+cut props_dark 4
+cut props_metal 28
+cut props_rubber 28
+cut props_wood 288
+cut props_woodgrey 336
+cut props_woodpale 2
+00:02.891  cycles           | WARNING CUEW initialization failed: Error opening the library
+wire bow y at push point 6.392683292807813
+/home/user/github-commit-quest-v2/film/v3/set3d14/cast_test/cast_test.py:60: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m = bpy.data.materials.new('cm_' + tag); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); Nn = nt.nodes.new; Lk = nt.links.new
+00:30.224  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d14/cast_test/s2_NIGHT.png.tmp.png'
+s2 final wall 28 s {"mat": {"head": [464, 575], "feet": [268, 810], "chest_push": [449, 642], "trunk_tip": [747, 638], "ear_tip": [431, 501], "tusk_tip": [606, 689], "chest_push_world": [10.25, 6.29, 1.98]}}
+cut props_basket 84
+cut props_bean 880
+cut props_bike 40
+cut props_char 60
+cut props_clay 224
+cut props_claydark 64
+cut props_cob 1496
+cut props_dark 164
+cut props_ember 322
+cut props_flame 40
+cut props_flame2 16
+cut props_hive 72
+cut props_hivetop 240
+cut props_husk 544
+cut props_jcap 82
+cut props_jerry 120
+cut props_metal 44
+cut props_rope 48
+cut props_rubber 28
+cut props_sack 288
+cut props_stone 340
+cut props_wire 144
+cut props_wood 188
+cut props_woodgrey 196
+cut props_woodpale 540
+01:06.882  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/set3d14/cast_test/s2b_NIGHT.png.tmp.png'
+s2b final wall 33 s {}

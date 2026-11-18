@@ -81,16 +81,36 @@ def s1(q):
     m, mp = story('matriarch_walk_to_fence'); rep['mat'] = put('s1_m', m, mp, (0, 0, 0), cl, mirror=True, head_ground=P['mat'], yaw_fixed=0.0)
     bpy.context.view_layer.update(); return rep, 'fence_low_night NIGHT: the matriarch arrives at the fence, herd and calf behind'
 
+import bmesh
+def cut_region(boxes):
+    """review-still only: delete set-dressing vertices inside the (x0,x1,y0,y1,zmax) boxes (the village twig fence and the blue wheelbarrow that sit between this low camera and the elephant)."""
+    for ob in list(bpy.data.objects):
+        if ob.type != 'MESH' or not ob.name.startswith('props'): continue
+        bm = bmesh.new(); bm.from_mesh(ob.data); mw = ob.matrix_world
+        dl = [v for v in bm.verts if any(b[0] < (mw @ v.co).x < b[1] and b[2] < (mw @ v.co).y < b[3] and (mw @ v.co).z < b[4] for b in boxes)]
+        if dl: bmesh.ops.delete(bm, geom=dl, context='VERTS'); bm.to_mesh(ob.data); print('cut', ob.name, len(dl))
+        bm.free()
+PX0 = 10.25; PS0 = 14.0 + 10.25
+F.CAMS['s2low'] = dict(loc=(18.0, -0.6, 1.4), look=(PX0 - 0.6, 5.4, 2.0), lens=24)
+F.PRESETS['s2low'] = dict(light='NIGHT', state='fs3', wire_r=0.075, staging=[])
+F.CAMS['s2b'] = dict(loc=(-13.0, 0.0, 1.35), look=(-3.0, 5.4, 1.9), lens=24)
+F.PRESETS['s2b'] = dict(light='NIGHT', state='fs3', wire_r=0.075, staging=[])
+BOW_T = 0.12
 def s2(q):
-    pr = 'push_side'; A = F.build(pr, 'NIGHT'); sc = bpy.context.scene; F.setup_render(sc, q); c = F.CAMS[pr]; cam = F.make_camera(c); cl = c['loc']
-    F.apply_state('fs3,wp0.5'); F.STATE['wire_r'] = 0.075; F._update_fence()
+    pr = 's2low'; A = F.build(pr, 'NIGHT', dress=False); cut_region([(13.5, 43, 1.7, 2.3, 1.2), (15.0, 19.5, 3.6, 6.4, 1.0)]); sc = bpy.context.scene; F.setup_render(sc, q); c = F.CAMS[pr]; cam = F.make_camera(c); cl = c['loc']
+    F.apply_state('fs3'); F.STATE['wire_r'] = 0.075; F._update_fence()
     F._clear_actors(); rep = {}
+    yb = 5.0 + float(F.wire_disp(np.array([PS0]), BOW_T, PS0)[0]); print('wire bow y at push point', yb)
     m, mp = story('matriarch_push')
-    # card in the y-z plane (normal +x), head toward +y = toward the wire: her chest_push lands on the wire at the push point
-    rep['mat'] = put('s2_m', m, mp, (0, 0, 0), cl, ppd=128, yaw_fixed=math.pi / 2, anchor_ground=('chest_push', PL['s2']['chest']))
-    a = rep['mat']; hw = a['world'](a['anchors']['head']); ew = a['world'](a['anchors']['eye_r'])
-    F.set_wire_push(0.5); F.set_bees(0.5, 1.0, ew, (hw, 0.9, 120))
-    bpy.context.view_layer.update(); return rep, 'push_side NIGHT, push 0.5 + bees: her chest on the wire'
+    rep['mat'] = put('s2_m', m, mp, (0, 0, 0), cl, ppd=128, yaw_fixed=None, anchor_ground=('chest_push', (PX0, yb - 0.1)))
+    F.set_wire_push(BOW_T, PS0); bpy.context.view_layer.update(); F.set_bees(0.3, 0.5)
+    bpy.context.view_layer.update(); return rep, 'push_side low'
+
+def s2b(q):
+    pr = 's2b'; A = F.build(pr, 'NIGHT', dress=False); cut_region([(-8.0, -3.0, -1.5, 5.2, 2.8), (-15, -8, -4, 6.0, 1.5)]); sc = bpy.context.scene; F.setup_render(sc, q); c = F.CAMS[pr]; cam = F.make_camera(c)
+    F.apply_state('fs3'); F.STATE['wire_r'] = 0.075; F._update_fence(); F._clear_actors()
+    F.set_wire_push(0.35, 6.0); bpy.context.view_layer.update(); F.set_bees(0.5, 1.0)
+    bpy.context.view_layer.update(); return {}, 's2b'
 
 def s3(q):
     pr = 'trunk_close'; A = F.build(pr, 'NIGHT'); sc = bpy.context.scene; F.setup_render(sc, q); c = dict(F.CAMS[pr]); c['lens'] = PL['s3']['lens']
