@@ -38,6 +38,15 @@ class Take:
             return _ch(mb, M, c, *a, **k)
         G.chicken = chick
         G.firepit = lambda *a, **k: None; F._spool = lambda *a, **k: None; G.wheelbarrow = lambda *a, **k: None; G.stool = lambda *a, **k: None
+        dx = float(os.environ.get('LADDER_DX', '0'))
+        if dx:
+            from farm_geo import MB as _MB
+            _rod = _MB.rod
+            def rod(self, m, p0, p1, *a, **k):
+                if abs(p0[0] + 6.22) < 1e-6 or abs(p0[0] + 5.78) < 1e-6 or abs(p0[0] + 6.22 + 0.0) < 1e-6:
+                    if 3.4 < p0[1] < 5.0 and p0[2] <= 2.7 and (p1[0] in (p0[0],) or True): p0 = (p0[0] + dx, p0[1], p0[2]); p1 = (p1[0] + dx, p1[1], p1[2])
+                return _rod(self, m, p0, p1, *a, **k)
+            _MB.rod = rod
         self.A = F.build(preset, light, dress=True)
         self.add_background()
         self.sc = bpy.context.scene; F.setup_render(self.sc, quality)
@@ -95,7 +104,7 @@ class Take:
             if i.users == 0 and i.name.startswith(('f14', 'contact_')): bpy.data.images.remove(i)
         for k in [k for k in G.MATS if k.startswith('f14_')]: G.MATS.pop(k)
 
-    def put(self, tag, cast, pose, mark, ppd=128, mirror=False, canvas=None, shadow=True, yaw_off=0.0, yaw_fixed=None, contact=(0.22, 0.12)):
+    def put(self, tag, cast, pose, mark, ppd=128, mirror=False, canvas=None, shadow=True, yaw_off=0.0, yaw_fixed=None, contact=(0.30, 0.16)):
         """real puppet sprite -> card standing at `mark` (feet), turned to the camera (yaw only). Returns anchors in world + screen."""
         pose = dict(pose); pose['mirror'] = bool(mirror)
         cv = canvas or cast14.CANVAS14[cast]
@@ -129,7 +138,7 @@ class Take:
         m = bpy.data.materials.new('cm_' + tag); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear(); Nn = nt.nodes.new; Lk = nt.links.new
         out = Nn('ShaderNodeOutputMaterial'); ti = Nn('ShaderNodeTexImage'); ti.image = img; ti.extension = 'CLIP'; em = Nn('ShaderNodeEmission')
         em.inputs['Color'].default_value = (0.03, 0.02, 0.07, 1); em.inputs['Strength'].default_value = 1
-        tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 0.7
+        tr = Nn('ShaderNodeBsdfTransparent'); mx = Nn('ShaderNodeMixShader'); mu = Nn('ShaderNodeMath'); mu.operation = 'MULTIPLY'; mu.inputs[1].default_value = 0.95
         Lk(ti.outputs['Alpha'], mu.inputs[0]); Lk(mu.outputs[0], mx.inputs[0]); Lk(tr.outputs[0], mx.inputs[1]); Lk(em.outputs[0], mx.inputs[2]); Lk(mx.outputs[0], out.inputs['Surface'])
         me.materials.append(m); ob = bpy.data.objects.new('actor_c_' + tag, me); bpy.context.scene.collection.objects.link(ob)
         ob.location = (mk.x, mk.y, mk.z + 0.02); ob.rotation_euler = (0, 0, yaw); ob.visible_shadow = False

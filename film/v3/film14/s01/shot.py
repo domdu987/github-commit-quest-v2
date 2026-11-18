@@ -25,8 +25,8 @@ def blink(g, offs, period=96):
 # ------------------------------------------------------------------ cameras: (loc, look, lens) at t = 0 / 1
 CAMS = {
  1: (((-8.6, 1.0, 3.3), (-5.7, 4.6, 2.1), 26), ((-8.0, 1.8, 3.3), (-5.55, 4.6, 2.2), 26)),
- 2: (((-2.0, -0.2, 2.5), (-6.0, 4.2, 2.1), 23), ((-2.3, 0.1, 2.5), (-6.1, 4.25, 2.12), 23)),
- 3: (((-8.8, 0.9, 2.4), (-5.9, 4.6, 0.9), 19), ((-8.5, 1.1, 2.4), (-5.5, 4.6, 0.95), 19)),
+ 2: (((-3.3, 0.9, 2.3), (-6.0, 4.4, 1.1), 21), ((-3.7, 1.3, 2.3), (-6.1, 4.4, 1.15), 21)),
+ 3: (((-8.5, 1.1, 2.2), (-5.9, 4.6, 1.2), 20), ((-8.2, 1.3, 2.2), (-5.4, 4.6, 1.25), 20)),
 }
 def cam_of(shot, g):
     a, b = CAMS[shot]; g0, g1 = RANGES[shot]; x = (g - g0) / float(g1 - g0)
@@ -36,13 +36,37 @@ def cam_of(shot, g):
 # ------------------------------------------------------------------ poses
 def sway(g, k=1.0): return math.sin(g * 0.21) * k
 
+HOLD = (-0.6, -0.45, 0.0)
+G_REL0, G_REL1 = 32, 42                      # release: the bar travels from the hand onto the hook over these frames
+
 def pose_farmer1(g):
-    c, p = story('farmer_hang_hive'); p['prop_r'] = dict(p['prop_r']); p['prop_r']['scale'] = 1.4
-    up = u_of(g, 0, 30)                           # lifts the hive up to the hook
+    c, p = story('farmer_hang_hive'); p.pop('prop_r', None)
+    up = u_of(g, 0, 30); ext = u_of(g, 28, 40) * (1 - u_of(g, 44, 56))
+    hx = lerp(0.72, 0.9, up) + 0.25 * ext; hy = lerp(0.30, -0.12, up) - 0.1 * ext
+    p['arm_r'] = dict(hand=(hx, hy), bend=-0.5, stretch=1.2, layer='front')
     p['lean'] = lerp(1.0, 3.0, up) + 0.6 * sway(g)
     p['t'] = g / 30.0; p['blink'] = blink(g, 20)
-    if g >= G_HANG: p.pop('prop_r', None); p['arm_r'] = dict(hand=(0.9, -0.2), bend=-0.4, stretch=1.2)
     return c, p
+
+HAND0, HAND1 = (-5.677, 3.72, 2.626), (-5.586, 3.641, 2.852)   # hand_r anchor of the carry pose at g0 / g30 (measured), pure function of g
+
+def carry_at(g):
+    u = u_of(g, 0, 30)
+    return Vector([lerp(HAND0[i], HAND1[i], u) + HOLD[i] for i in range(3)]) + Vector((0, 0, 0.12))
+
+def hang_hive(g):
+    """ONE hive: the set's own hive + bar, held at the hand until G_REL0, then tweened onto the hook (G_REL0..G_REL1); returns its centre for the bees"""
+    h = F.STATE['hive'][1]; b = F.STATE['bar'][1]
+    hook = F._pivot(1, -1.0, F.STATE['push_s0'])
+    if g < G_REL0: P = carry_at(g) + Vector((0.04 * sway(g), 0, 0.02 * sway(g + 3)))
+    elif g < G_REL1:
+        u = u_of(g, G_REL0, G_REL1); P = carry_at(G_REL0).lerp(hook, u); P.z += 0.10 * math.sin(math.pi * u)
+    else: P = hook.copy()
+    h.location = P; b.location = P
+    h.rotation_euler = (0.0, 0.0, F.UNITS[1]['yaw']); b.rotation_euler = h.rotation_euler
+    b.scale = (1.0, 1.0, lerp(0.3, 1.0, u_of(g, G_REL0, G_REL1)))
+    bpy.context.view_layer.update()
+    return (P.x, P.y - 0.12, P.z - 0.45)
 
 def rel(shot, d, r):
     """floor point d m ahead of / r m to the right of the shot's first camera (villagers stay put while the camera moves)"""
@@ -75,18 +99,17 @@ def frame(T, shot, g):
     T.clear(); rep = {}
     S = F.STAND
     if shot == 1:
-        F.set_fence_stage(0 if g < G_HANG else 1)
+        F.set_fence_stage(1)
         c, p = pose_farmer1(g); rep['farmer'] = T.put('farmer', c, p, S['hero_ladder'], ppd=128, canvas=(-2.9, -5.0, 2.9, 0.125))
-        hc = hive_centre(g, rep['farmer']); T.bees(hc, 9, g)
-        for tag, nm, (d, r), ph, mir in (('woman', 'villager_woman_laugh', (6.2, 1.6), 0, True), ('kid', 'villager_kid_laugh_point', (4.2, 1.5), 7, True)):
+        for tag, nm, (d, r), ph, mir in (('woman', 'villager_woman_laugh', (6.6, 1.9), 0, True), ('kid', 'villager_kid_laugh_point', (5.4, 1.0), 7, True)):
             c, p = pose_laugh(nm, g, ph, up=True); rep[tag] = T.put(tag, c, p, rel(1, d, r), ppd=128, mirror=mir, canvas=cast14.CANVAS14[c])
     if shot == 2:
         F.set_fence_stage(1)
         c, p = pose_farmer1(80); p['t'] = g / 30.0; p['blink'] = blink(g, 20); p['lean'] = 3.0 + 0.6 * sway(g)
         p['arm_r'] = dict(hand=(0.95, -0.35), bend=-0.4, stretch=1.2); rep['farmer'] = T.put('farmer', c, p, S['hero_ladder'], ppd=128, canvas=cast14.CANVAS14['farmer14'])
         for tag, nm, (d, r), ph, mir, up in (('old', 'villager_oldman_laugh', (6.6, -2.3), 3, False, False), ('woman', 'villager_woman_laugh', (6.4, 2.3), 0, True, False),
-                                         ('youth', 'villager_youth_point_laugh', (5.0, 1.55), 11, True, True), ('kid', 'villager_kid_laugh_point', (5.0, -1.55), 7, False, True)):
-            c, p = pose_laugh(nm, g, ph, up=up); rep[tag] = T.put(tag, c, p, rel(2, d, r), ppd=128, mirror=mir, canvas=cast14.CANVAS14[c])
+                                         ('youth', 'villager_youth_point_laugh', (5.2, 1.2), 11, True, True), ('kid', 'villager_kid_laugh_point', (5.2, -1.2), 7, False, True)):
+            c, p = pose_laugh(nm, g, ph, up=up); p['expr'] = 'excited'; p['gaze'] = (0.9, -0.5); p.pop('fx', None); rep[tag] = T.put(tag, c, p, rel(2, d, r), ppd=128, mirror=mir, canvas=cast14.CANVAS14[c])
     if shot == 3:
         F.set_fence_stage(1)
         a = story('farmer_calm_smile')[1]; b = story('farmer_proud')[1]; d = story('farmer_boast')[1]
@@ -95,16 +118,18 @@ def frame(T, shot, g):
         p = cast14.lerp_pose('farmer14', a, b, u1); p = cast14.lerp_pose('farmer14', p, d, u2)
         sw = u_of(g, 150, 178)
         p['t'] = g / 30.0; p['blink'] = blink(g, 150); p['lean'] = p.get('lean', 0) + 1.2 * sway(g)
-        if u2 > 0.02:
-            # arm sweep: from low-front, up and out toward the hills ("a whole herd")
-            ang = lerp(0.2, 1.0, sw)
-            hx = lerp(0.35, 1.45, ang); hy = lerp(0.75, -0.55, ang) - 0.35 * math.sin(math.pi * ang)
-            p['arm_r'] = dict(hand=(hx, hy), shape='point' if sw > 0.5 else 'open', bend=-0.5, stretch=1.3)
-        T.bees(hive_centre(g, None), 8, g, seed=5)
-        rep['farmer'] = T.put('farmer', 'farmer14', p, (-4.9, 3.4, 0.0), ppd=170, canvas=cast14.CANVAS14['farmer14'])
+        if g >= 146:
+            # real sweep: 3 keyed hand poses tweened over ~26 frames, low-front -> out front -> up toward the hills
+            K = [(0.45, 0.70), (1.05, 0.10), (1.50, -0.70)]; x = clamp((g - 148) / 28.0); seg = min(int(x * 2), 1); lu = ez(x * 2 - seg)
+            hx = lerp(K[seg][0], K[seg + 1][0], lu); hy = lerp(K[seg][1], K[seg + 1][1], lu)
+            p['arm_r'] = dict(hand=(hx, hy), shape='point' if x > 0.7 else 'open', bend=-0.5, stretch=1.3)
+            p['lean'] = p.get('lean', 0) - 3.0 * ez(x)
+        rep['farmer'] = T.put('farmer', 'farmer14', p, (-5.1, 3.3, 0.0), ppd=170, canvas=cast14.CANVAS14['farmer14'])
     F.set_crowd_props(0)
     F.set_wire_push(-1.0)
     bpy.context.view_layer.update(); F.set_bees(-1.0)
+    if shot == 1: T.bees(hang_hive(g), 9, g)
+    else: T.bees(hive_centre(g, None), 7 if shot == 2 else 8, g, seed=5)
     return rep
 
 def report(T, shot, g, rep):
