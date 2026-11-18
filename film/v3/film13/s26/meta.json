@@ -8,9 +8,9 @@
   29,
   30
  ],
- "first_g": 1671,
- "n_frames": 324,
- "g0": 1677,
+ "first_g": 1674,
+ "n_frames": 321,
+ "g0": 1680,
  "g1": 1994,
  "handle_in": 6,
  "handle_out": 0,
@@ -20,21 +20,21 @@
  },
  "transitions": [
   {
-   "at": 1740,
+   "at": 1743,
    "type": "cut"
   },
   {
-   "at": 1772,
+   "at": 1775,
    "type": "cut"
   },
   {
-   "at": 1868,
+   "at": 1871,
    "type": "cut"
   },
   {
-   "at": 1906,
+   "at": 1909,
    "type": "cut"
   }
  ],
- "note": "ends on the hard cut at g 1994 (narration 66.38 s, '\u0e40\u0e2d\u0e07')"
+ "note": "cuts at round((t+0.10)*30) per WORKER13; ends on the hard cut at g 1994 (narration 66.38 s, '\u0e40\u0e2d\u0e07')"
 }

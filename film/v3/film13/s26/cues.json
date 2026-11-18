@@ -7,7 +7,12 @@
  {
   "t": 62.3,
   "dur": 0.6,
-  "label": "whoosh + splat (impact g1893 = 63.1 s)"
+  "label": "whoosh (fall starts g1875)"
+ },
+ {
+  "t": 63.1,
+  "dur": 0.6,
+  "label": "mud splat (impact g1896)"
  },
  {
   "t": 64.3,
