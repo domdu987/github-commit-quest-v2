@@ -149,6 +149,7 @@ def run(mode, shot, a, b, step, outdir):
     if mode == 'draft': bpy.context.scene.cycles.samples = 6
     os.makedirs(outdir, exist_ok=True); r0, r1 = RANGE[shot]; rep = {}
     for g in range(a, b + 1, step):
+        if mode == 'final' and os.path.exists(os.path.join(outdir, 'g_%04d.png' % g)): continue
         t0 = time.time(); clear_frame()
         u = (g - r0) / float(r1 - r0 + 1)
         c, l, lens = camf(u); set_camera(c, l, lens); cl = c; bpy.context.view_layer.update()
