@@ -103,6 +103,7 @@ if __name__ == '__main__':
     if scale != 1.0: sc.render.resolution_percentage = int(scale * 100)
     sc.cycles.samples = samples
     os.makedirs(out, exist_ok=True)
+    gs = [g for g in gs if not os.path.exists(os.path.join(out, 'g_%04d.png' % g))]
     for g in gs:
         sc.frame_set(g); breathe(S, bpy, cards, g, shot)
         if shot == 23: place_pole(S, bpy, cards[0])
