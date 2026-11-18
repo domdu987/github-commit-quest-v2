@@ -1,0 +1,59 @@
+{
+ "take": "s04",
+ "film": 14,
+ "shots": [
+  4,
+  5,
+  6
+ ],
+ "first_g": 175,
+ "n_frames": 240,
+ "g0": 181,
+ "g1": 408,
+ "handle_in": 6,
+ "handle_out": 6,
+ "transition_in": {
+  "type": "cut",
+  "frames": 0
+ },
+ "shot_ranges": {
+  "4": [
+   181,
+   251
+  ],
+  "5": [
+   252,
+   323
+  ],
+  "6": [
+   324,
+   408
+  ]
+ },
+ "cuts_inside": [
+  {
+   "at": 252,
+   "type": "cut"
+  },
+  {
+   "at": 324,
+   "type": "cut"
+  },
+  {
+   "at": 367,
+   "type": "cut",
+   "note": "6a crowd wide -> 6b medium on youth/elephant, inside shot 6"
+  }
+ ],
+ "split": "take.mkv.part* (cat take.mkv.part* > take.mkv)",
+ "samples": 24,
+ "resolution": [
+  720,
+  1280
+ ],
+ "threads": 2,
+ "fps": 30,
+ "s_per_frame_wall_mean": 36.7,
+ "set": "v3/set3d14/farm.py: p4 village_wide DUSK fs0 (crane down), p5 uncle field NIGHT (acacia cut, stalks fall with set_uncle_field 0.45->0.80 retimed to sweep with the herd, lane cleared), p6 yard NIGHT fs0 (set torches/pots off; puppets carry torch14/pot14 + point lights)",
+ "cast": "cast14: villagers walk cycle (shot 4), matriarch/elephant_b/c/d/calf walk and eat (shot 5), villager_*_bang_pot / wave_torch + matriarch chewing (shot 6); held mouths only"
+}
