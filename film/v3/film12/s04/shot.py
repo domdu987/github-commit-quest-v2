@@ -37,11 +37,11 @@ def wring(g):
 
 def shot5(cards, g, A):
     t = (g - 240) / 81.0
-    cards.walk('hero', 'hanway_walk_umbrella', g, (-1.6 + 0.3 * t, 12.5 - 3.5 * t, 0.0), rim='#f2b25c', shadow=SHD)
+    cards.walk('hero', 'hanway_walk_umbrella', g, (-3.5 + 0.2 * t, 12.5 - 2.5 * t, 0.0), rim='#f2b25c', shadow=SHD)
     cast, pose, k = wring(g)
     cards.put('wet', cast, pose, (-5.4, 11.8, 0.0), key=('w', k), roll=1.5 * k, shadow=SHD)
     cards.walk('lady', 'crowd_woman_a_walk_umbrella', g, (-4.0, 4.5 + 3.0 * t, 0.0), shadow=SHD)
-    cards.story('jeer', 'crowd_man_d_point_laugh', (-7.9, 12.6, 0.28), over=FLAT)
+    cards.walk('jeer', 'crowd_man_d_walk_hat', g + 7, (-7.8, 19.0 - 3.0 * t, 0.28), over=FLAT, shadow=SHD)
 
 def run_shot(n, a, b, preset, fn, ka, kb):
     frames = [g for g in range(a, b) if (not ONLY or g in ONLY) and not os.path.exists(os.path.join(OUT, 'g_%04d.png' % g))]
