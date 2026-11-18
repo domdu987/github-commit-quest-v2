@@ -1,0 +1,3 @@
+{"take":"s07","film":14,"g0":409,"g1":758,"first_g":403,"n_frames":362,"handle_in":6,"handle_out":6,
+ "shots":{"7":[409,460],"8":[461,563],"9":[564,663],"10":[664,758]},"transition_in":{"type":"cut","frames":0},"samples":24,"resolution":[720,1280],
+ "parts":"take.mkv.part* (cat to restore take.mkv)"}

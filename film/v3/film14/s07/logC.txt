@@ -1,0 +1,324 @@
+00:02.956  cycles           | WARNING CUEW initialization failed: Error opening the library
+01:03.280  render           | Saved: 'frames/g_0403.png.tmp.png'
+{"shot": 7, "g": 403, "cam": [-2.3, -2.7, 1.4], "heads": {"farmer": [493, 554], "uncle": [503, 562]}, "mouth_window": false, "wall": 60.2, "cpu": 119.9}
+02:04.652  render           | Saved: 'frames/g_0404.png.tmp.png'
+{"shot": 7, "g": 404, "cam": [-2.3, -2.69, 1.4], "heads": {"farmer": [493, 554], "uncle": [497, 557]}, "mouth_window": false, "wall": 60.5, "cpu": 119.4}
+03:06.297  render           | Saved: 'frames/g_0405.png.tmp.png'
+{"shot": 7, "g": 405, "cam": [-2.3, -2.69, 1.4], "heads": {"farmer": [493, 554], "uncle": [491, 552]}, "mouth_window": false, "wall": 61.1, "cpu": 121.0}
+04:06.898  render           | Saved: 'frames/g_0406.png.tmp.png'
+{"shot": 7, "g": 406, "cam": [-2.3, -2.68, 1.4], "heads": {"farmer": [493, 554], "uncle": [488, 549]}, "mouth_window": false, "wall": 60.0, "cpu": 118.9}
+05:05.162  render           | Saved: 'frames/g_0407.png.tmp.png'
+{"shot": 7, "g": 407, "cam": [-2.29, -2.67, 1.4], "heads": {"farmer": [493, 554], "uncle": [489, 550]}, "mouth_window": false, "wall": 57.9, "cpu": 114.8}
+06:03.969  render           | Saved: 'frames/g_0408.png.tmp.png'
+{"shot": 7, "g": 408, "cam": [-2.29, -2.67, 1.4], "heads": {"farmer": [493, 554], "uncle": [493, 554]}, "mouth_window": false, "wall": 58.2, "cpu": 114.2}
+07:02.446  render           | Saved: 'frames/g_0409.png.tmp.png'
+{"shot": 7, "g": 409, "cam": [-2.29, -2.66, 1.4], "heads": {"farmer": [493, 554], "uncle": [499, 559]}, "mouth_window": false, "wall": 58.1, "cpu": 115.1}
+08:02.277  render           | Saved: 'frames/g_0410.png.tmp.png'
+{"shot": 7, "g": 410, "cam": [-2.29, -2.65, 1.4], "heads": {"farmer": [493, 554], "uncle": [505, 564]}, "mouth_window": false, "wall": 59.4, "cpu": 117.6}
+09:01.176  render           | Saved: 'frames/g_0411.png.tmp.png'
+{"shot": 7, "g": 411, "cam": [-2.29, -2.64, 1.4], "heads": {"farmer": [493, 554], "uncle": [508, 567]}, "mouth_window": false, "wall": 58.2, "cpu": 115.7}
+09:59.870  render           | Saved: 'frames/g_0412.png.tmp.png'
+{"shot": 7, "g": 412, "cam": [-2.29, -2.64, 1.4], "heads": {"farmer": [493, 555], "uncle": [508, 568]}, "mouth_window": false, "wall": 58.3, "cpu": 115.9}
+10:59.665  render           | Saved: 'frames/g_0413.png.tmp.png'
+{"shot": 7, "g": 413, "cam": [-2.29, -2.63, 1.4], "heads": {"farmer": [493, 555], "uncle": [504, 564]}, "mouth_window": false, "wall": 59.4, "cpu": 118.0}
+11:59.559  render           | Saved: 'frames/g_0414.png.tmp.png'
+{"shot": 7, "g": 414, "cam": [-2.28, -2.62, 1.4], "heads": {"farmer": [493, 555], "uncle": [497, 559]}, "mouth_window": false, "wall": 59.3, "cpu": 117.5}
+13:00.724  render           | Saved: 'frames/g_0415.png.tmp.png'
+{"shot": 7, "g": 415, "cam": [-2.28, -2.61, 1.4], "heads": {"farmer": [493, 555], "uncle": [491, 554]}, "mouth_window": false, "wall": 60.7, "cpu": 119.8}
+14:03.333  render           | Saved: 'frames/g_0416.png.tmp.png'
+{"shot": 7, "g": 416, "cam": [-2.28, -2.6, 1.4], "heads": {"farmer": [493, 555], "uncle": [488, 551]}, "mouth_window": false, "wall": 62.1, "cpu": 123.2}
+15:04.471  render           | Saved: 'frames/g_0417.png.tmp.png'
+{"shot": 7, "g": 417, "cam": [-2.28, -2.59, 1.4], "heads": {"farmer": [493, 555], "uncle": [488, 551]}, "mouth_window": false, "wall": 60.6, "cpu": 120.3}
+16:04.847  render           | Saved: 'frames/g_0418.png.tmp.png'
+{"shot": 7, "g": 418, "cam": [-2.28, -2.58, 1.4], "heads": {"farmer": [493, 556], "uncle": [492, 555]}, "mouth_window": false, "wall": 59.9, "cpu": 118.6}
+17:05.323  render           | Saved: 'frames/g_0419.png.tmp.png'
+{"shot": 7, "g": 419, "cam": [-2.27, -2.57, 1.4], "heads": {"farmer": [493, 556], "uncle": [499, 560]}, "mouth_window": false, "wall": 59.9, "cpu": 119.0}
+18:05.566  render           | Saved: 'frames/g_0420.png.tmp.png'
+{"shot": 7, "g": 420, "cam": [-2.27, -2.57, 1.4], "heads": {"farmer": [493, 556], "uncle": [505, 565]}, "mouth_window": false, "wall": 59.6, "cpu": 117.8}
+19:05.800  render           | Saved: 'frames/g_0421.png.tmp.png'
+{"shot": 7, "g": 421, "cam": [-2.27, -2.56, 1.4], "heads": {"farmer": [493, 556], "uncle": [508, 569]}, "mouth_window": false, "wall": 59.6, "cpu": 118.2}
+20:06.427  render           | Saved: 'frames/g_0422.png.tmp.png'
+{"shot": 7, "g": 422, "cam": [-2.27, -2.55, 1.4], "heads": {"farmer": [493, 557], "uncle": [509, 570]}, "mouth_window": false, "wall": 60.2, "cpu": 119.4}
+21:06.349  render           | Saved: 'frames/g_0423.png.tmp.png'
+{"shot": 7, "g": 423, "cam": [-2.27, -2.54, 1.4], "heads": {"farmer": [493, 557], "uncle": [505, 567]}, "mouth_window": false, "wall": 59.4, "cpu": 117.9}
+22:06.146  render           | Saved: 'frames/g_0424.png.tmp.png'
+{"shot": 7, "g": 424, "cam": [-2.27, -2.53, 1.4], "heads": {"farmer": [494, 557], "uncle": [498, 562]}, "mouth_window": false, "wall": 59.3, "cpu": 117.4}
+23:05.341  render           | Saved: 'frames/g_0425.png.tmp.png'
+{"shot": 7, "g": 425, "cam": [-2.26, -2.52, 1.4], "heads": {"farmer": [494, 557], "uncle": [492, 556]}, "mouth_window": false, "wall": 58.8, "cpu": 116.3}
+24:04.927  render           | Saved: 'frames/g_0426.png.tmp.png'
+{"shot": 7, "g": 426, "cam": [-2.26, -2.51, 1.4], "heads": {"farmer": [494, 557], "uncle": [488, 553]}, "mouth_window": false, "wall": 58.9, "cpu": 116.8}
+25:03.068  render           | Saved: 'frames/g_0427.png.tmp.png'
+{"shot": 7, "g": 427, "cam": [-2.26, -2.5, 1.4], "heads": {"farmer": [494, 558], "uncle": [488, 552]}, "mouth_window": false, "wall": 57.8, "cpu": 114.5}
+26:03.532  render           | Saved: 'frames/g_0428.png.tmp.png'
+{"shot": 7, "g": 428, "cam": [-2.26, -2.49, 1.4], "heads": {"farmer": [494, 558], "uncle": [492, 556]}, "mouth_window": false, "wall": 60.0, "cpu": 118.5}
+27:04.205  render           | Saved: 'frames/g_0429.png.tmp.png'
+{"shot": 7, "g": 429, "cam": [-2.26, -2.48, 1.4], "heads": {"farmer": [494, 558], "uncle": [498, 561]}, "mouth_window": false, "wall": 60.2, "cpu": 118.3}
+28:04.507  render           | Saved: 'frames/g_0430.png.tmp.png'
+{"shot": 7, "g": 430, "cam": [-2.25, -2.47, 1.4], "heads": {"farmer": [494, 558], "uncle": [504, 567]}, "mouth_window": false, "wall": 59.7, "cpu": 118.9}
+29:03.467  render           | Saved: 'frames/g_0431.png.tmp.png'
+{"shot": 7, "g": 431, "cam": [-2.25, -2.46, 1.4], "heads": {"farmer": [494, 558], "uncle": [508, 571]}, "mouth_window": false, "wall": 58.3, "cpu": 115.7}
+30:03.144  render           | Saved: 'frames/g_0432.png.tmp.png'
+{"shot": 7, "g": 432, "cam": [-2.25, -2.44, 1.4], "heads": {"farmer": [493, 558], "uncle": [509, 572]}, "mouth_window": false, "wall": 59.2, "cpu": 118.6}
+31:02.130  render           | Saved: 'frames/g_0433.png.tmp.png'
+{"shot": 7, "g": 433, "cam": [-2.25, -2.43, 1.4], "heads": {"farmer": [493, 558], "uncle": [506, 569]}, "mouth_window": false, "wall": 58.3, "cpu": 115.3}
+32:00.402  render           | Saved: 'frames/g_0434.png.tmp.png'
+{"shot": 7, "g": 434, "cam": [-2.24, -2.42, 1.4], "heads": {"farmer": [493, 559], "uncle": [500, 564]}, "mouth_window": false, "wall": 57.8, "cpu": 114.6}
+32:59.698  render           | Saved: 'frames/g_0435.png.tmp.png'
+{"shot": 7, "g": 435, "cam": [-2.24, -2.41, 1.4], "heads": {"farmer": [493, 559], "uncle": [493, 559]}, "mouth_window": false, "wall": 58.8, "cpu": 117.0}
+33:59.657  render           | Saved: 'frames/g_0436.png.tmp.png'
+{"shot": 7, "g": 436, "cam": [-2.24, -2.4, 1.4], "heads": {"farmer": [493, 559], "uncle": [488, 555]}, "mouth_window": false, "wall": 59.4, "cpu": 117.8}
+35:02.928  render           | Saved: 'frames/g_0437.png.tmp.png'
+{"shot": 7, "g": 437, "cam": [-2.24, -2.39, 1.4], "heads": {"farmer": [493, 559], "uncle": [487, 554]}, "mouth_window": false, "wall": 62.7, "cpu": 124.0}
+36:04.154  render           | Saved: 'frames/g_0438.png.tmp.png'
+{"shot": 7, "g": 438, "cam": [-2.24, -2.38, 1.4], "heads": {"farmer": [493, 559], "uncle": [491, 557]}, "mouth_window": false, "wall": 60.8, "cpu": 120.7}
+37:04.296  render           | Saved: 'frames/g_0439.png.tmp.png'
+{"shot": 7, "g": 439, "cam": [-2.23, -2.37, 1.4], "heads": {"farmer": [493, 559], "uncle": [497, 562]}, "mouth_window": false, "wall": 59.5, "cpu": 117.9}
+38:07.389  render           | Saved: 'frames/g_0440.png.tmp.png'
+{"shot": 7, "g": 440, "cam": [-2.23, -2.36, 1.4], "heads": {"farmer": [493, 559], "uncle": [504, 568]}, "mouth_window": false, "wall": 62.6, "cpu": 124.5}
+39:07.987  render           | Saved: 'frames/g_0441.png.tmp.png'
+{"shot": 7, "g": 441, "cam": [-2.23, -2.35, 1.4], "heads": {"farmer": [493, 560], "uncle": [508, 573]}, "mouth_window": false, "wall": 60.2, "cpu": 119.8}
+40:08.912  render           | Saved: 'frames/g_0442.png.tmp.png'
+{"shot": 7, "g": 442, "cam": [-2.23, -2.34, 1.4], "heads": {"farmer": [493, 560], "uncle": [510, 574]}, "mouth_window": false, "wall": 60.4, "cpu": 119.6}
+41:08.129  render           | Saved: 'frames/g_0443.png.tmp.png'
+{"shot": 7, "g": 443, "cam": [-2.23, -2.33, 1.4], "heads": {"farmer": [493, 560], "uncle": [507, 572]}, "mouth_window": false, "wall": 58.6, "cpu": 116.3}
+42:06.646  render           | Saved: 'frames/g_0444.png.tmp.png'
+{"shot": 7, "g": 444, "cam": [-2.23, -2.33, 1.4], "heads": {"farmer": [493, 560], "uncle": [501, 567]}, "mouth_window": false, "wall": 58.1, "cpu": 115.1}
+43:04.206  render           | Saved: 'frames/g_0445.png.tmp.png'
+{"shot": 7, "g": 445, "cam": [-2.22, -2.32, 1.4], "heads": {"farmer": [493, 560], "uncle": [494, 561]}, "mouth_window": false, "wall": 57.0, "cpu": 113.2}
+44:02.160  render           | Saved: 'frames/g_0446.png.tmp.png'
+{"shot": 7, "g": 446, "cam": [-2.22, -2.31, 1.4], "heads": {"farmer": [493, 561], "uncle": [488, 557]}, "mouth_window": false, "wall": 57.4, "cpu": 114.4}
+44:58.726  render           | Saved: 'frames/g_0447.png.tmp.png'
+{"shot": 7, "g": 447, "cam": [-2.22, -2.3, 1.4], "heads": {"farmer": [493, 561], "uncle": [487, 555]}, "mouth_window": false, "wall": 56.1, "cpu": 112.0}
+45:58.960  render           | Saved: 'frames/g_0448.png.tmp.png'
+{"shot": 7, "g": 448, "cam": [-2.22, -2.29, 1.4], "heads": {"farmer": [493, 561], "uncle": [490, 558]}, "mouth_window": false, "wall": 59.9, "cpu": 118.2}
+46:59.030  render           | Saved: 'frames/g_0449.png.tmp.png'
+{"shot": 7, "g": 449, "cam": [-2.22, -2.28, 1.4], "heads": {"farmer": [494, 561], "uncle": [496, 563]}, "mouth_window": false, "wall": 59.5, "cpu": 118.2}
+48:00.622  render           | Saved: 'frames/g_0450.png.tmp.png'
+{"shot": 7, "g": 450, "cam": [-2.21, -2.27, 1.4], "heads": {"farmer": [494, 562], "uncle": [503, 569]}, "mouth_window": false, "wall": 61.0, "cpu": 121.9}
+49:00.258  render           | Saved: 'frames/g_0451.png.tmp.png'
+{"shot": 7, "g": 451, "cam": [-2.21, -2.26, 1.4], "heads": {"farmer": [494, 562], "uncle": [508, 574]}, "mouth_window": false, "wall": 59.2, "cpu": 117.8}
+49:58.537  render           | Saved: 'frames/g_0452.png.tmp.png'
+{"shot": 7, "g": 452, "cam": [-2.21, -2.26, 1.4], "heads": {"farmer": [494, 562], "uncle": [510, 576]}, "mouth_window": false, "wall": 57.9, "cpu": 115.2}
+50:59.655  render           | Saved: 'frames/g_0453.png.tmp.png'
+{"shot": 7, "g": 453, "cam": [-2.21, -2.25, 1.4], "heads": {"farmer": [494, 562], "uncle": [508, 575]}, "mouth_window": false, "wall": 60.5, "cpu": 119.0}
+52:01.370  render           | Saved: 'frames/g_0454.png.tmp.png'
+{"shot": 7, "g": 454, "cam": [-2.21, -2.24, 1.4], "heads": {"farmer": [494, 563], "uncle": [502, 570]}, "mouth_window": false, "wall": 61.1, "cpu": 121.5}
+53:01.910  render           | Saved: 'frames/g_0455.png.tmp.png'
+{"shot": 7, "g": 455, "cam": [-2.21, -2.23, 1.4], "heads": {"farmer": [494, 563], "uncle": [494, 564]}, "mouth_window": false, "wall": 60.1, "cpu": 120.2}
+53:48.979  render           | Saved: 'frames/g_0456.png.tmp.png'
+{"shot": 7, "g": 456, "cam": [-2.21, -2.23, 1.4], "heads": {"farmer": [494, 563], "uncle": [489, 559]}, "mouth_window": false, "wall": 46.4, "cpu": 117.5}
+54:23.004  render           | Saved: 'frames/g_0457.png.tmp.png'
+{"shot": 7, "g": 457, "cam": [-2.2, -2.22, 1.4], "heads": {"farmer": [494, 563], "uncle": [487, 557]}, "mouth_window": false, "wall": 33.4, "cpu": 116.2}
+55:16.018  render           | Saved: 'frames/g_0458.png.tmp.png'
+{"shot": 7, "g": 458, "cam": [-2.2, -2.21, 1.4], "heads": {"farmer": [494, 563], "uncle": [489, 559]}, "mouth_window": false, "wall": 52.5, "cpu": 117.6}
+55:46.877  render           | Saved: 'frames/g_0459.png.tmp.png'
+{"shot": 7, "g": 459, "cam": [-2.2, -2.21, 1.4], "heads": {"farmer": [494, 563], "uncle": [495, 564]}, "mouth_window": false, "wall": 30.4, "cpu": 110.1}
+56:16.118  render           | Saved: 'frames/g_0460.png.tmp.png'
+{"shot": 7, "g": 460, "cam": [-2.2, -2.2, 1.4], "heads": {"farmer": [494, 563], "uncle": [502, 570]}, "mouth_window": false, "wall": 28.7, "cpu": 109.8}
+00:02.748  cycles           | WARNING CUEW initialization failed: Error opening the library
+00:31.609  render           | Saved: 'frames/g_0461.png.tmp.png'
+{"shot": 8, "g": 461, "cam": [-2.2, -2.2, 1.4], "heads": {"farmer": [511, 583], "uncle": [519, 585]}, "mouth_window": false, "wall": 28.8, "cpu": 109.6}
+01:02.027  render           | Saved: 'frames/g_0462.png.tmp.png'
+{"shot": 8, "g": 462, "cam": [-2.2, -2.19, 1.4], "heads": {"farmer": [511, 583], "uncle": [519, 585]}, "mouth_window": false, "wall": 29.6, "cpu": 113.1}
+01:31.779  render           | Saved: 'frames/g_0463.png.tmp.png'
+{"shot": 8, "g": 463, "cam": [-2.19, -2.18, 1.4], "heads": {"farmer": [511, 583], "uncle": [519, 585]}, "mouth_window": false, "wall": 29.2, "cpu": 111.4}
+02:02.587  render           | Saved: 'frames/g_0464.png.tmp.png'
+{"shot": 8, "g": 464, "cam": [-2.19, -2.17, 1.4], "heads": {"farmer": [511, 584], "uncle": [519, 585]}, "mouth_window": true, "wall": 30.3, "cpu": 115.9}
+02:32.956  render           | Saved: 'frames/g_0465.png.tmp.png'
+{"shot": 8, "g": 465, "cam": [-2.18, -2.15, 1.4], "heads": {"farmer": [511, 584], "uncle": [519, 586]}, "mouth_window": true, "wall": 29.8, "cpu": 114.0}
+03:04.653  render           | Saved: 'frames/g_0466.png.tmp.png'
+{"shot": 8, "g": 466, "cam": [-2.18, -2.14, 1.4], "heads": {"farmer": [510, 584], "uncle": [519, 586]}, "mouth_window": true, "wall": 31.1, "cpu": 119.1}
+03:34.796  render           | Saved: 'frames/g_0467.png.tmp.png'
+{"shot": 8, "g": 467, "cam": [-2.17, -2.13, 1.4], "heads": {"farmer": [510, 584], "uncle": [519, 586]}, "mouth_window": true, "wall": 29.7, "cpu": 113.7}
+04:06.214  render           | Saved: 'frames/g_0468.png.tmp.png'
+{"shot": 8, "g": 468, "cam": [-2.17, -2.12, 1.4], "heads": {"farmer": [510, 584], "uncle": [519, 586]}, "mouth_window": true, "wall": 30.9, "cpu": 117.9}
+04:36.252  render           | Saved: 'frames/g_0469.png.tmp.png'
+{"shot": 8, "g": 469, "cam": [-2.16, -2.1, 1.4], "heads": {"farmer": [510, 584], "uncle": [518, 587]}, "mouth_window": true, "wall": 29.4, "cpu": 112.5}
+05:06.086  render           | Saved: 'frames/g_0470.png.tmp.png'
+{"shot": 8, "g": 470, "cam": [-2.16, -2.09, 1.4], "heads": {"farmer": [510, 584], "uncle": [518, 587]}, "mouth_window": true, "wall": 29.5, "cpu": 112.2}
+05:36.431  render           | Saved: 'frames/g_0471.png.tmp.png'
+{"shot": 8, "g": 471, "cam": [-2.15, -2.08, 1.4], "heads": {"farmer": [510, 585], "uncle": [518, 587]}, "mouth_window": true, "wall": 29.7, "cpu": 113.4}
+06:06.104  render           | Saved: 'frames/g_0472.png.tmp.png'
+{"shot": 8, "g": 472, "cam": [-2.15, -2.07, 1.4], "heads": {"farmer": [510, 585], "uncle": [518, 587]}, "mouth_window": true, "wall": 29.1, "cpu": 111.4}
+06:35.287  render           | Saved: 'frames/g_0473.png.tmp.png'
+{"shot": 8, "g": 473, "cam": [-2.14, -2.05, 1.4], "heads": {"farmer": [510, 585], "uncle": [518, 587]}, "mouth_window": true, "wall": 28.6, "cpu": 109.4}
+07:03.906  render           | Saved: 'frames/g_0474.png.tmp.png'
+{"shot": 8, "g": 474, "cam": [-2.14, -2.04, 1.41], "heads": {"farmer": [509, 585], "uncle": [518, 588]}, "mouth_window": true, "wall": 28.1, "cpu": 107.7}
+07:32.655  render           | Saved: 'frames/g_0475.png.tmp.png'
+{"shot": 8, "g": 475, "cam": [-2.13, -2.02, 1.41], "heads": {"farmer": [509, 586], "uncle": [518, 588]}, "mouth_window": true, "wall": 28.4, "cpu": 108.4}
+08:01.222  render           | Saved: 'frames/g_0476.png.tmp.png'
+{"shot": 8, "g": 476, "cam": [-2.13, -2.01, 1.41], "heads": {"farmer": [509, 586], "uncle": [518, 588]}, "mouth_window": true, "wall": 28.0, "cpu": 107.2}
+08:29.797  render           | Saved: 'frames/g_0477.png.tmp.png'
+{"shot": 8, "g": 477, "cam": [-2.12, -2.0, 1.41], "heads": {"farmer": [509, 586], "uncle": [518, 589]}, "mouth_window": true, "wall": 28.1, "cpu": 107.5}
+08:59.017  render           | Saved: 'frames/g_0478.png.tmp.png'
+{"shot": 8, "g": 478, "cam": [-2.12, -1.98, 1.41], "heads": {"farmer": [509, 587], "uncle": [518, 589]}, "mouth_window": true, "wall": 28.8, "cpu": 110.1}
+09:48.289  render           | Saved: 'frames/g_0479.png.tmp.png'
+{"shot": 8, "g": 479, "cam": [-2.11, -1.97, 1.41], "heads": {"farmer": [509, 587], "uncle": [518, 589]}, "mouth_window": true, "wall": 48.8, "cpu": 111.3}
+10:46.855  render           | Saved: 'frames/g_0480.png.tmp.png'
+{"shot": 8, "g": 480, "cam": [-2.11, -1.95, 1.41], "heads": {"farmer": [509, 588], "uncle": [518, 589]}, "mouth_window": true, "wall": 58.1, "cpu": 118.2}
+11:45.069  render           | Saved: 'frames/g_0481.png.tmp.png'
+{"shot": 8, "g": 481, "cam": [-2.1, -1.94, 1.41], "heads": {"farmer": [509, 588], "uncle": [518, 590]}, "mouth_window": true, "wall": 57.6, "cpu": 114.8}
+12:41.846  render           | Saved: 'frames/g_0482.png.tmp.png'
+{"shot": 8, "g": 482, "cam": [-2.1, -1.92, 1.41], "heads": {"farmer": [509, 588], "uncle": [518, 590]}, "mouth_window": true, "wall": 56.3, "cpu": 112.0}
+13:38.870  render           | Saved: 'frames/g_0483.png.tmp.png'
+{"shot": 8, "g": 483, "cam": [-2.09, -1.91, 1.41], "heads": {"farmer": [509, 589], "uncle": [518, 590]}, "mouth_window": true, "wall": 56.5, "cpu": 112.0}
+14:37.664  render           | Saved: 'frames/g_0484.png.tmp.png'
+{"shot": 8, "g": 484, "cam": [-2.08, -1.89, 1.41], "heads": {"farmer": [509, 589], "uncle": [518, 591]}, "mouth_window": true, "wall": 58.3, "cpu": 116.3}
+15:36.231  render           | Saved: 'frames/g_0485.png.tmp.png'
+{"shot": 8, "g": 485, "cam": [-2.08, -1.87, 1.41], "heads": {"farmer": [509, 589], "uncle": [518, 591]}, "mouth_window": true, "wall": 57.9, "cpu": 115.0}
+16:32.992  render           | Saved: 'frames/g_0486.png.tmp.png'
+{"shot": 8, "g": 486, "cam": [-2.07, -1.86, 1.41], "heads": {"farmer": [509, 590], "uncle": [518, 591]}, "mouth_window": true, "wall": 56.3, "cpu": 111.6}
+17:28.712  render           | Saved: 'frames/g_0487.png.tmp.png'
+{"shot": 8, "g": 487, "cam": [-2.07, -1.84, 1.41], "heads": {"farmer": [509, 590], "uncle": [518, 592]}, "mouth_window": true, "wall": 55.2, "cpu": 111.4}
+18:25.857  render           | Saved: 'frames/g_0488.png.tmp.png'
+{"shot": 8, "g": 488, "cam": [-2.06, -1.83, 1.41], "heads": {"farmer": [509, 590], "uncle": [518, 592]}, "mouth_window": true, "wall": 56.6, "cpu": 112.7}
+19:23.631  render           | Saved: 'frames/g_0489.png.tmp.png'
+{"shot": 8, "g": 489, "cam": [-2.05, -1.81, 1.41], "heads": {"farmer": [509, 591], "uncle": [518, 592]}, "mouth_window": true, "wall": 57.3, "cpu": 113.3}
+20:22.923  render           | Saved: 'frames/g_0490.png.tmp.png'
+{"shot": 8, "g": 490, "cam": [-2.05, -1.79, 1.41], "heads": {"farmer": [508, 591], "uncle": [518, 593]}, "mouth_window": true, "wall": 58.8, "cpu": 116.3}
+21:18.423  render           | Saved: 'frames/g_0491.png.tmp.png'
+{"shot": 8, "g": 491, "cam": [-2.04, -1.78, 1.41], "heads": {"farmer": [508, 591], "uncle": [518, 593]}, "mouth_window": true, "wall": 55.1, "cpu": 111.2}
+22:14.647  render           | Saved: 'frames/g_0492.png.tmp.png'
+{"shot": 8, "g": 492, "cam": [-2.03, -1.76, 1.41], "heads": {"farmer": [508, 591], "uncle": [517, 593]}, "mouth_window": true, "wall": 55.8, "cpu": 110.8}
+23:10.555  render           | Saved: 'frames/g_0493.png.tmp.png'
+{"shot": 8, "g": 493, "cam": [-2.03, -1.74, 1.41], "heads": {"farmer": [508, 592], "uncle": [517, 594]}, "mouth_window": true, "wall": 55.5, "cpu": 110.5}
+24:03.346  render           | Saved: 'frames/g_0494.png.tmp.png'
+{"shot": 8, "g": 494, "cam": [-2.02, -1.72, 1.41], "heads": {"farmer": [507, 592], "uncle": [517, 594]}, "mouth_window": true, "wall": 52.3, "cpu": 106.1}
+24:55.082  render           | Saved: 'frames/g_0495.png.tmp.png'
+{"shot": 8, "g": 495, "cam": [-2.02, -1.71, 1.42], "heads": {"farmer": [507, 592], "uncle": [517, 595]}, "mouth_window": true, "wall": 51.4, "cpu": 101.8}
+25:49.407  render           | Saved: 'frames/g_0496.png.tmp.png'
+{"shot": 8, "g": 496, "cam": [-2.01, -1.69, 1.42], "heads": {"farmer": [507, 593], "uncle": [517, 595]}, "mouth_window": true, "wall": 53.9, "cpu": 107.1}
+26:43.123  render           | Saved: 'frames/g_0497.png.tmp.png'
+{"shot": 8, "g": 497, "cam": [-2.0, -1.67, 1.42], "heads": {"farmer": [506, 593], "uncle": [517, 595]}, "mouth_window": true, "wall": 53.3, "cpu": 107.4}
+27:37.112  render           | Saved: 'frames/g_0498.png.tmp.png'
+{"shot": 8, "g": 498, "cam": [-2.0, -1.65, 1.42], "heads": {"farmer": [506, 593], "uncle": [517, 596]}, "mouth_window": true, "wall": 53.5, "cpu": 105.7}
+28:31.969  render           | Saved: 'frames/g_0499.png.tmp.png'
+{"shot": 8, "g": 499, "cam": [-1.99, -1.64, 1.42], "heads": {"farmer": [506, 593], "uncle": [517, 596]}, "mouth_window": true, "wall": 54.4, "cpu": 108.3}
+29:25.687  render           | Saved: 'frames/g_0500.png.tmp.png'
+{"shot": 8, "g": 500, "cam": [-1.98, -1.62, 1.42], "heads": {"farmer": [506, 594], "uncle": [517, 597]}, "mouth_window": true, "wall": 53.3, "cpu": 106.7}
+30:18.265  render           | Saved: 'frames/g_0501.png.tmp.png'
+{"shot": 8, "g": 501, "cam": [-1.98, -1.6, 1.42], "heads": {"farmer": [505, 594], "uncle": [517, 597]}, "mouth_window": true, "wall": 52.1, "cpu": 103.2}
+31:10.133  render           | Saved: 'frames/g_0502.png.tmp.png'
+{"shot": 8, "g": 502, "cam": [-1.97, -1.58, 1.42], "heads": {"farmer": [505, 595], "uncle": [517, 598]}, "mouth_window": true, "wall": 51.4, "cpu": 101.7}
+32:01.753  render           | Saved: 'frames/g_0503.png.tmp.png'
+{"shot": 8, "g": 503, "cam": [-1.96, -1.56, 1.42], "heads": {"farmer": [505, 595], "uncle": [517, 598]}, "mouth_window": true, "wall": 51.2, "cpu": 102.8}
+32:53.925  render           | Saved: 'frames/g_0504.png.tmp.png'
+{"shot": 8, "g": 504, "cam": [-1.95, -1.55, 1.42], "heads": {"farmer": [505, 596], "uncle": [517, 598]}, "mouth_window": true, "wall": 51.9, "cpu": 102.4}
+33:48.463  render           | Saved: 'frames/g_0505.png.tmp.png'
+{"shot": 8, "g": 505, "cam": [-1.95, -1.53, 1.42], "heads": {"farmer": [505, 596], "uncle": [517, 599]}, "mouth_window": true, "wall": 54.0, "cpu": 107.0}
+34:42.321  render           | Saved: 'frames/g_0506.png.tmp.png'
+{"shot": 8, "g": 506, "cam": [-1.94, -1.51, 1.42], "heads": {"farmer": [505, 597], "uncle": [516, 599]}, "mouth_window": true, "wall": 53.3, "cpu": 107.5}
+35:35.977  render           | Saved: 'frames/g_0507.png.tmp.png'
+{"shot": 8, "g": 507, "cam": [-1.93, -1.49, 1.42], "heads": {"farmer": [505, 597], "uncle": [516, 600]}, "mouth_window": true, "wall": 53.2, "cpu": 106.1}
+36:29.026  render           | Saved: 'frames/g_0508.png.tmp.png'
+{"shot": 8, "g": 508, "cam": [-1.93, -1.47, 1.42], "heads": {"farmer": [504, 598], "uncle": [516, 600]}, "mouth_window": true, "wall": 52.6, "cpu": 104.5}
+37:20.883  render           | Saved: 'frames/g_0509.png.tmp.png'
+{"shot": 8, "g": 509, "cam": [-1.92, -1.46, 1.42], "heads": {"farmer": [504, 598], "uncle": [516, 601]}, "mouth_window": true, "wall": 51.5, "cpu": 103.8}
+38:13.839  render           | Saved: 'frames/g_0510.png.tmp.png'
+{"shot": 8, "g": 510, "cam": [-1.91, -1.44, 1.42], "heads": {"farmer": [504, 599], "uncle": [516, 601]}, "mouth_window": true, "wall": 52.5, "cpu": 104.2}
+39:06.292  render           | Saved: 'frames/g_0511.png.tmp.png'
+{"shot": 8, "g": 511, "cam": [-1.91, -1.42, 1.42], "heads": {"farmer": [504, 600], "uncle": [516, 602]}, "mouth_window": true, "wall": 52.1, "cpu": 103.6}
+39:56.253  render           | Saved: 'frames/g_0512.png.tmp.png'
+{"shot": 8, "g": 512, "cam": [-1.9, -1.4, 1.42], "heads": {"farmer": [504, 600], "uncle": [516, 602]}, "mouth_window": true, "wall": 49.6, "cpu": 100.1}
+40:46.334  render           | Saved: 'frames/g_0513.png.tmp.png'
+{"shot": 8, "g": 513, "cam": [-1.89, -1.38, 1.43], "heads": {"farmer": [504, 601], "uncle": [516, 603]}, "mouth_window": true, "wall": 49.7, "cpu": 98.8}
+41:36.407  render           | Saved: 'frames/g_0514.png.tmp.png'
+{"shot": 8, "g": 514, "cam": [-1.89, -1.36, 1.43], "heads": {"farmer": [504, 601], "uncle": [516, 603]}, "mouth_window": true, "wall": 49.6, "cpu": 100.6}
+42:26.325  render           | Saved: 'frames/g_0515.png.tmp.png'
+{"shot": 8, "g": 515, "cam": [-1.88, -1.34, 1.43], "heads": {"farmer": [504, 602], "uncle": [516, 604]}, "mouth_window": true, "wall": 49.7, "cpu": 98.9}
+43:18.130  render           | Saved: 'frames/g_0516.png.tmp.png'
+{"shot": 8, "g": 516, "cam": [-1.87, -1.33, 1.43], "heads": {"farmer": [503, 602], "uncle": [516, 604]}, "mouth_window": true, "wall": 51.3, "cpu": 101.6}
+44:09.427  render           | Saved: 'frames/g_0517.png.tmp.png'
+{"shot": 8, "g": 517, "cam": [-1.87, -1.31, 1.43], "heads": {"farmer": [503, 603], "uncle": [515, 605]}, "mouth_window": true, "wall": 50.9, "cpu": 102.9}
+45:01.398  render           | Saved: 'frames/g_0518.png.tmp.png'
+{"shot": 8, "g": 518, "cam": [-1.86, -1.29, 1.43], "heads": {"farmer": [503, 603], "uncle": [515, 605]}, "mouth_window": true, "wall": 51.6, "cpu": 102.3}
+45:51.678  render           | Saved: 'frames/g_0519.png.tmp.png'
+{"shot": 8, "g": 519, "cam": [-1.85, -1.27, 1.43], "heads": {"farmer": [502, 604], "uncle": [515, 606]}, "mouth_window": true, "wall": 49.9, "cpu": 101.5}
+46:43.147  render           | Saved: 'frames/g_0520.png.tmp.png'
+{"shot": 8, "g": 520, "cam": [-1.85, -1.25, 1.43], "heads": {"farmer": [502, 604], "uncle": [515, 607]}, "mouth_window": true, "wall": 51.1, "cpu": 101.4}
+47:34.814  render           | Saved: 'frames/g_0521.png.tmp.png'
+{"shot": 8, "g": 521, "cam": [-1.84, -1.24, 1.43], "heads": {"farmer": [502, 605], "uncle": [515, 607]}, "mouth_window": true, "wall": 51.3, "cpu": 101.5}
+48:29.138  render           | Saved: 'frames/g_0522.png.tmp.png'
+{"shot": 8, "g": 522, "cam": [-1.83, -1.22, 1.43], "heads": {"farmer": [501, 605], "uncle": [515, 608]}, "mouth_window": true, "wall": 53.9, "cpu": 106.4}
+49:21.634  render           | Saved: 'frames/g_0523.png.tmp.png'
+{"shot": 8, "g": 523, "cam": [-1.82, -1.2, 1.43], "heads": {"farmer": [501, 605], "uncle": [515, 608]}, "mouth_window": true, "wall": 52.0, "cpu": 102.5}
+50:12.339  render           | Saved: 'frames/g_0524.png.tmp.png'
+{"shot": 8, "g": 524, "cam": [-1.82, -1.18, 1.43], "heads": {"farmer": [500, 606], "uncle": [515, 609]}, "mouth_window": true, "wall": 50.4, "cpu": 101.1}
+51:05.405  render           | Saved: 'frames/g_0525.png.tmp.png'
+{"shot": 8, "g": 525, "cam": [-1.81, -1.16, 1.43], "heads": {"farmer": [500, 606], "uncle": [514, 609]}, "mouth_window": true, "wall": 52.6, "cpu": 104.4}
+51:55.906  render           | Saved: 'frames/g_0526.png.tmp.png'
+{"shot": 8, "g": 526, "cam": [-1.8, -1.15, 1.43], "heads": {"farmer": [499, 607], "uncle": [514, 610]}, "mouth_window": true, "wall": 50.0, "cpu": 102.0}
+52:49.310  render           | Saved: 'frames/g_0527.png.tmp.png'
+{"shot": 8, "g": 527, "cam": [-1.8, -1.13, 1.43], "heads": {"farmer": [499, 607], "uncle": [514, 611]}, "mouth_window": true, "wall": 52.9, "cpu": 104.4}
+53:41.397  render           | Saved: 'frames/g_0528.png.tmp.png'
+{"shot": 8, "g": 528, "cam": [-1.79, -1.11, 1.43], "heads": {"farmer": [498, 608], "uncle": [514, 611]}, "mouth_window": true, "wall": 51.8, "cpu": 103.1}
+54:33.006  render           | Saved: 'frames/g_0529.png.tmp.png'
+{"shot": 8, "g": 529, "cam": [-1.78, -1.09, 1.43], "heads": {"farmer": [498, 608], "uncle": [514, 612]}, "mouth_window": true, "wall": 51.2, "cpu": 102.4}
+55:25.230  render           | Saved: 'frames/g_0530.png.tmp.png'
+{"shot": 8, "g": 530, "cam": [-1.78, -1.08, 1.44], "heads": {"farmer": [497, 609], "uncle": [514, 612]}, "mouth_window": true, "wall": 51.7, "cpu": 102.3}
+56:16.164  render           | Saved: 'frames/g_0531.png.tmp.png'
+{"shot": 8, "g": 531, "cam": [-1.77, -1.06, 1.44], "heads": {"farmer": [497, 609], "uncle": [514, 613]}, "mouth_window": true, "wall": 50.6, "cpu": 102.3}
+57:07.306  render           | Saved: 'frames/g_0532.png.tmp.png'
+{"shot": 8, "g": 532, "cam": [-1.77, -1.04, 1.44], "heads": {"farmer": [496, 610], "uncle": [513, 614]}, "mouth_window": true, "wall": 50.7, "cpu": 100.9}
+57:57.598  render           | Saved: 'frames/g_0533.png.tmp.png'
+{"shot": 8, "g": 533, "cam": [-1.76, -1.02, 1.44], "heads": {"farmer": [496, 610], "uncle": [513, 614]}, "mouth_window": true, "wall": 49.8, "cpu": 100.8}
+58:46.970  render           | Saved: 'frames/g_0534.png.tmp.png'
+{"shot": 8, "g": 534, "cam": [-1.75, -1.01, 1.44], "heads": {"farmer": [496, 611], "uncle": [513, 615]}, "mouth_window": true, "wall": 49.0, "cpu": 97.6}
+59:40.211  render           | Saved: 'frames/g_0535.png.tmp.png'
+{"shot": 8, "g": 535, "cam": [-1.75, -0.99, 1.44], "heads": {"farmer": [496, 612], "uncle": [513, 615]}, "mouth_window": true, "wall": 52.9, "cpu": 105.4}
+01:00:30.294  render           | Saved: 'frames/g_0536.png.tmp.png'
+{"shot": 8, "g": 536, "cam": [-1.74, -0.97, 1.44], "heads": {"farmer": [495, 612], "uncle": [513, 616]}, "mouth_window": true, "wall": 49.7, "cpu": 99.0}
+01:01:20.104  render           | Saved: 'frames/g_0537.png.tmp.png'
+{"shot": 8, "g": 537, "cam": [-1.73, -0.96, 1.44], "heads": {"farmer": [495, 613], "uncle": [513, 617]}, "mouth_window": true, "wall": 49.4, "cpu": 98.3}
+01:02:08.585  render           | Saved: 'frames/g_0538.png.tmp.png'
+{"shot": 8, "g": 538, "cam": [-1.73, -0.94, 1.44], "heads": {"farmer": [495, 614], "uncle": [513, 617]}, "mouth_window": true, "wall": 48.1, "cpu": 97.8}
+01:02:57.861  render           | Saved: 'frames/g_0539.png.tmp.png'
+{"shot": 8, "g": 539, "cam": [-1.72, -0.93, 1.44], "heads": {"farmer": [495, 615], "uncle": [512, 618]}, "mouth_window": true, "wall": 48.9, "cpu": 97.3}
+01:03:48.693  render           | Saved: 'frames/g_0540.png.tmp.png'
+{"shot": 8, "g": 540, "cam": [-1.72, -0.91, 1.44], "heads": {"farmer": [495, 615], "uncle": [512, 619]}, "mouth_window": true, "wall": 50.5, "cpu": 102.8}
+01:04:40.208  render           | Saved: 'frames/g_0541.png.tmp.png'
+{"shot": 8, "g": 541, "cam": [-1.71, -0.89, 1.44], "heads": {"farmer": [495, 616], "uncle": [512, 619]}, "mouth_window": true, "wall": 51.1, "cpu": 101.2}
+01:05:31.135  render           | Saved: 'frames/g_0542.png.tmp.png'
+{"shot": 8, "g": 542, "cam": [-1.7, -0.88, 1.44], "heads": {"farmer": [495, 617], "uncle": [512, 620]}, "mouth_window": true, "wall": 50.5, "cpu": 102.6}
+01:06:26.215  render           | Saved: 'frames/g_0543.png.tmp.png'
+{"shot": 8, "g": 543, "cam": [-1.7, -0.86, 1.44], "heads": {"farmer": [494, 618], "uncle": [512, 620]}, "mouth_window": true, "wall": 54.6, "cpu": 108.3}
+01:07:20.602  render           | Saved: 'frames/g_0544.png.tmp.png'
+{"shot": 8, "g": 544, "cam": [-1.69, -0.85, 1.44], "heads": {"farmer": [494, 618], "uncle": [512, 621]}, "mouth_window": true, "wall": 53.9, "cpu": 107.8}
+01:08:13.740  render           | Saved: 'frames/g_0545.png.tmp.png'
+{"shot": 8, "g": 545, "cam": [-1.69, -0.83, 1.44], "heads": {"farmer": [494, 619], "uncle": [511, 622]}, "mouth_window": true, "wall": 52.7, "cpu": 104.9}
+01:09:07.537  render           | Saved: 'frames/g_0546.png.tmp.png'
+{"shot": 8, "g": 546, "cam": [-1.68, -0.82, 1.44], "heads": {"farmer": [493, 620], "uncle": [511, 622]}, "mouth_window": true, "wall": 53.4, "cpu": 106.4}
+01:10:01.067  render           | Saved: 'frames/g_0547.png.tmp.png'
+{"shot": 8, "g": 547, "cam": [-1.68, -0.8, 1.44], "heads": {"farmer": [493, 620], "uncle": [511, 623]}, "mouth_window": true, "wall": 53.0, "cpu": 106.6}
+01:10:54.444  render           | Saved: 'frames/g_0548.png.tmp.png'
+{"shot": 8, "g": 548, "cam": [-1.67, -0.79, 1.44], "heads": {"farmer": [492, 621], "uncle": [511, 624]}, "mouth_window": true, "wall": 52.9, "cpu": 106.0}
+01:11:47.843  render           | Saved: 'frames/g_0549.png.tmp.png'
+{"shot": 8, "g": 549, "cam": [-1.67, -0.78, 1.44], "heads": {"farmer": [492, 621], "uncle": [511, 624]}, "mouth_window": true, "wall": 52.8, "cpu": 106.9}
+01:12:42.487  render           | Saved: 'frames/g_0550.png.tmp.png'
+{"shot": 8, "g": 550, "cam": [-1.66, -0.76, 1.44], "heads": {"farmer": [491, 622], "uncle": [511, 625]}, "mouth_window": true, "wall": 54.2, "cpu": 107.7}
+01:13:33.023  render           | Saved: 'frames/g_0551.png.tmp.png'
+{"shot": 8, "g": 551, "cam": [-1.66, -0.75, 1.45], "heads": {"farmer": [491, 622], "uncle": [510, 625]}, "mouth_window": true, "wall": 50.1, "cpu": 105.2}
+01:14:27.330  render           | Saved: 'frames/g_0552.png.tmp.png'
+{"shot": 8, "g": 552, "cam": [-1.65, -0.73, 1.45], "heads": {"farmer": [490, 622], "uncle": [510, 626]}, "mouth_window": true, "wall": 53.8, "cpu": 108.0}
+01:15:21.818  render           | Saved: 'frames/g_0553.png.tmp.png'
+{"shot": 8, "g": 553, "cam": [-1.65, -0.72, 1.45], "heads": {"farmer": [489, 623], "uncle": [510, 627]}, "mouth_window": true, "wall": 54.0, "cpu": 108.3}
+01:16:16.678  render           | Saved: 'frames/g_0554.png.tmp.png'
+{"shot": 8, "g": 554, "cam": [-1.64, -0.71, 1.45], "heads": {"farmer": [489, 623], "uncle": [510, 627]}, "mouth_window": true, "wall": 54.5, "cpu": 108.1}
+01:17:12.216  render           | Saved: 'frames/g_0555.png.tmp.png'
+{"shot": 8, "g": 555, "cam": [-1.64, -0.7, 1.45], "heads": {"farmer": [488, 624], "uncle": [510, 628]}, "mouth_window": true, "wall": 54.9, "cpu": 109.2}
+01:18:07.757  render           | Saved: 'frames/g_0556.png.tmp.png'
+{"shot": 8, "g": 556, "cam": [-1.63, -0.68, 1.45], "heads": {"farmer": [487, 624], "uncle": [509, 629]}, "mouth_window": true, "wall": 55.1, "cpu": 108.9}
+01:19:05.612  render           | Saved: 'frames/g_0557.png.tmp.png'
+{"shot": 8, "g": 557, "cam": [-1.63, -0.67, 1.45], "heads": {"farmer": [486, 624], "uncle": [509, 629]}, "mouth_window": true, "wall": 57.3, "cpu": 114.3}
+01:20:10.228  render           | Saved: 'frames/g_0558.png.tmp.png'
+{"shot": 8, "g": 558, "cam": [-1.62, -0.66, 1.45], "heads": {"farmer": [486, 625], "uncle": [509, 630]}, "mouth_window": true, "wall": 64.1, "cpu": 127.1}
+01:21:14.413  render           | Saved: 'frames/g_0559.png.tmp.png'
+{"shot": 8, "g": 559, "cam": [-1.62, -0.65, 1.45], "heads": {"farmer": [485, 625], "uncle": [509, 630]}, "mouth_window": true, "wall": 63.6, "cpu": 126.5}
+01:22:21.024  render           | Saved: 'frames/g_0560.png.tmp.png'
+{"shot": 8, "g": 560, "cam": [-1.61, -0.63, 1.45], "heads": {"farmer": [485, 626], "uncle": [509, 631]}, "mouth_window": true, "wall": 65.9, "cpu": 131.3}
+01:23:19.138  render           | Saved: 'frames/g_0561.png.tmp.png'
+{"shot": 8, "g": 561, "cam": [-1.61, -0.62, 1.45], "heads": {"farmer": [484, 626], "uncle": [509, 632]}, "mouth_window": true, "wall": 57.4, "cpu": 114.8}
+01:24:10.811  render           | Saved: 'frames/g_0562.png.tmp.png'
+{"shot": 8, "g": 562, "cam": [-1.6, -0.61, 1.45], "heads": {"farmer": [484, 627], "uncle": [508, 632]}, "mouth_window": true, "wall": 51.3, "cpu": 102.2}
+01:25:00.344  render           | Saved: 'frames/g_0563.png.tmp.png'
+{"shot": 8, "g": 563, "cam": [-1.6, -0.6, 1.45], "heads": {"farmer": [483, 628], "uncle": [508, 633]}, "mouth_window": true, "wall": 49.2, "cpu": 98.5}
