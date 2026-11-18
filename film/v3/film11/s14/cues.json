@@ -1,0 +1,10 @@
+{
+ "take": "s14",
+ "events": [
+  {
+   "frame": 849,
+   "label": "the doctor shouts the accusation (quote window g 849-899)",
+   "kind": "voice-window"
+  }
+ ]
+}
