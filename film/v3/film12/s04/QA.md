@@ -1,6 +1,7 @@
-# QA s04 (shots 4-5, g 166-321 = 172-315 plus 6 handle frames each side; cut at g 240; 720x1280, 20 samples)
-- qa_auto: PASS. The "no visible change" note at cut 240 is a tool quirk: checked by eye, 239 street_high / 240 market.
-- Shot 4: street_high crane A->B over g166-240; 15 cast12 hunched men with hats over heads (walk_hat cycles) and women under small umbrellas walking the pavements and road; Hanway walks with his umbrella in the road; set_crowd_umbrellas 0 (no 3D umbrellas). Max projected head point y 811 (limit 880).
-- Shot 5: market A->B g240-321: the soaked gentleman wrings his wig (static pose with a small wobble/bob), a dry lady with a small umbrella walks by, a jeerer laughs, Hanway passes in the road.
-- Mouths fixed everywhere; no text; light RAIN.
-- Known weaknesses: crowd cards are tiny from the crane (street_high is far); the wig-wring is one pose wobbled, not a real animation; in shot 5 Hanway sits at the right frame edge.
+# QA s04 revision 2 (shots 4-5, g 166-321; cut at g 240; 720x1280, 24 samples)
+Director gate fixes applied:
+- Shot 4: custom lower, closer crane (z 13.5 -> 10.5): 18 crowd cards (hunched, soaked, hats held over heads; 2 women under small umbrellas) + Hanway, all readable; the crowd stays in frame to the end; set puddles only. Heads above y 880 (card heads checked per frame).
+- Shot 5: the soaked gentleman wrings his wig with ANIMATED arms (7-stage hand/drip cycle + body wobble); the dry lady walks past under her umbrella; the extra walker was removed so no sprites cross; Hanway stays inside the frame; the jeerer holds a closed mouth.
+- Mouths closed everywhere (mouth='flat'); no leaf anywhere; same RAIN light and sky as s01.
+- qa_auto PASS (cut-note is a tool quirk).
+- Known weaknesses: crowd figures are small from the crane; lower half of the aerial road is cobbles and puddles.
