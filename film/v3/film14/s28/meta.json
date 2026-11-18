@@ -1,0 +1,5 @@
+{"take":"s28","film":14,"shots":[28,29,30],"first_g":1908,"n_frames":197,"g0":1914,"g1":2104,"handle_in":6,"handle_out":0,
+ "transition_in":{"type":"dissolve","frames":6,"note":"night->morning dissolve done at conform; not baked in"},
+ "transition_out":{"type":"hard cut to black","note":"last frame g2104; no handle after"},
+ "shot_ranges":{"28":[1914,1961],"29":[1962,2031],"30":[2032,2104]},
+ "samples":24,"size":[720,1280],"take_file":"take.mkv.partaa+ab (cat to rebuild take.mkv)"}
