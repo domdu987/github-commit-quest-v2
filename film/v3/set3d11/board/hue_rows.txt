@@ -1,0 +1,7 @@
+still                                           red orange yellow  green   cyan   blue violet magent   sat  val dark
+still_A                                        42.3   21.9    3.4    0.0    0.0   20.6    4.9    6.9  0.39 0.46 0.01   OUT: red,orange,dark
+   shade hue 240.4 (target 240-260) shaded 0.37  magenta 6.9 %  ok
+still_B                                         5.0   36.1    1.2   28.7    0.2   25.5    1.9    1.4  0.40 0.73 0.00   OUT: red,val,dark
+   shade hue 242.4 (target 240-260) shaded 0.07  magenta 1.4 %  ok
+still_C                                        17.6   10.0    3.6    0.0    0.0   44.3   17.9    6.6  0.46 0.44 0.02   OUT: red,orange,blue,violet,val,dark
+   shade hue 244.0 (target 240-260) shaded 0.66  magenta 6.6 %  ok
