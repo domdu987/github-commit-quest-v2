@@ -30,8 +30,8 @@
  ],
  "fps": 30,
  "threads": 2,
- "s_per_frame_wall_mean": 15.23,
- "s_per_frame_cpu_mean": 29.73,
+ "s_per_frame_wall_mean": 16.24,
+ "s_per_frame_cpu_mean": 31.82,
  "set": "v3/set3d13/chicago.py street (runtime: cast13 cards for crowd roles, own cameras, hooks keyed every frame)",
  "cast": "v3/cast13",
  "take_mkv_split": true

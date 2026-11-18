@@ -1,4 +1,6 @@
-# QA s07 (shots 7-9, DAY, g 361..599)
-- qa_auto: PASS (see QA_AUTO.md); soft frames g 361-366, 397 are camera-move streaks, checked by eye. Cuts 447/513 +-3 frames checked: heads above y 880, shadows OK, no text, no DOF.
-- Fill 0.05->0.15 across the take, lift h 0.
-- Deviations: no shovel prop (jack_bar stand-in); shot 9 camera closer (~18 D) than the wide so the pullman with plans reads on a phone.
+# s07 QA (shots 7-9, DAY, g361..599, 239 frames, ~16 s/frame wall, 12 samples)
+Rework after TAKE gate QA-tech FAIL. qa_auto: PASS (QA_AUTO.md, phone_sheet.jpg).
+- Shot 7: bigger workers digging with thrown soil clods, runtime-built raised plank walk (shops mesh is merged) only weakly visible at left.
+- Shot 8: mound relocated to (-10,-9) rising toward hotel door; worker in frame; pile_a hidden.
+- Shot 9: pullman closer, above y 880, plans in hand, look-up/nod-smile.
+Deviations: jack_bar used as shovel stand-in; puddles tamed/rippled as in s04.
