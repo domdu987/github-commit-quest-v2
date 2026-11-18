@@ -16,3 +16,9 @@
 | 5 | s25 | session_017iwyCti53BRy8hjVYHsKwV | render14/team5 |
 | 6 | s01 redo (after TAKE gate FAIL) | session_017iwyCtekqvVfqPAq1JhmK4 | render14/team6 |
 | 7 | s11 redo (after TAKE gate FAIL) | session_017iwyCweXY8bMdDFHzPwHME | render14/team7 |
+## Take status
+| take | status |
+|---|---|
+| s04 | v2 PASS (render14/team2 @7bf169b) |
+| s01 | v1 FAIL -> team 6 redo |
+| s11 | v1 FAIL -> team 7 redo |
