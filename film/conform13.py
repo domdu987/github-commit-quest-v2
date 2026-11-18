@@ -66,3 +66,7 @@ spec={"duration":T,"out_wav":out+".wav","video_in":out+"_silent.mp4","video_out"
  "music":{"file":P+os.environ.get("MUSICF","/film13/audio/music_suno.wav"),"at":0,"rms_db":float(os.environ.get("MUSIC_DB","-31")),"fade_in":0.3,"fade_out":0.6},"sfx":sfx}
 json.dump(spec,open(out+"_mix.json","w"),indent=1)
 subprocess.run([sys.executable,P+"/audio/mixer.py",out+"_mix.json"],check=True)
+# final true-peak guard (AAC overshoot): limiter on the delivered mp4 audio, picture copied
+_tp=out+"_tp.mp4"
+subprocess.run(["ffmpeg","-y","-v","error","-i",out+".mp4","-c:v","copy","-af","alimiter=limit=0.70:level=false:attack=1:release=50,aresample=48000","-c:a","aac","-b:a","192k",_tp],check=True)
+os.replace(_tp,out+".mp4")
