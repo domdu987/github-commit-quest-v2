@@ -147,6 +147,8 @@ class Crew(object):
             take.actors[a.name] = a
             self.items.append((i, ob, a, m))
 
+    avoid = None          # optional world point (e.g. a main actor's head): sailors within 150 px of it on screen are hidden
+
     def key(self, f):
         """call after the frame's hooks are keyed: places every sailor on its card's world spot."""
         self.take.scene.frame_set(f)
@@ -155,6 +157,9 @@ class Crew(object):
             a.place(f, (p.x, p.y, p.z))
             sx, sy, dep = render.world_to_screen(self.take.cam, (p.x, p.y, p.z + 2.7), frame=f)   # head centre: captions rule y < 880
             hide = sy > 850 or dep < 1.0
+            if self.avoid is not None:
+                ax, ay, _ = render.world_to_screen(self.take.cam, self.avoid(f), frame=f)
+                hide = hide or math.hypot(sx - ax, sy - ay) < 150
             a.card.hide_render = hide
             a.card.keyframe_insert("hide_render", frame=f)
             for o in (a.proxy, a.contact):

@@ -19,16 +19,16 @@ HO = 6
 G9, G10, G11, GE = C.g_bound(20.63), C.g_bound(22.50), C.g_bound(24.30), C.g_bound(26.27)   # 619 675 729 788
 RANGES = {9: (G9 - HO, G10 - 1), 10: (G10, G11 - 1), 11: (G11, GE + HO - 1)}
 PRESET = {9: ("hull_side", "DAY"), 10: ("hull_side", "DAY"), 11: ("harbour_wide", "DUSK")}
-LENS = {9: 22.0, 10: 24.0, 11: 22.0}
+LENS = {9: 24.0, 10: 24.0, 11: 24.0}
 PPD = {9: 320, 10: 320, 11: 192}
 
 # camera paths: (loc0, look0, loc1, look1)
 CAMS = {
-    9: ((-20.0, -13.0, 12.5), (4.0, 5.0, 4.0), (-15.0, -12.0, 11.0), (3.0, 5.0, 4.2)),
-    10: ((11.0, -9.0, 6.0), (-4.0, 1.5, 4.0), (8.0, -9.0, 5.6), (-5.0, 1.5, 4.0)),
-    11: ((-40.0, -21.0, 13.0), (12.0, 18.0, 2.0), (-33.0, -19.0, 11.0), (15.0, 17.0, 2.5)),
+    9: ((-8.6, -5.9, 3.5), (-1.6, 1.0, 4.7), (-7.4, -5.7, 3.6), (-1.4, 1.0, 4.8)),
+    10: ((3.6, -5.4, 3.0), (-2.8, 1.5, 6.8), (2.7, -5.3, 3.1), (-3.0, 1.5, 7.0)),
+    11: ((6.0, -10.5, 1.9), (-5.0, 0.5, 5.5), (5.2, -10.3, 2.0), (-5.4, 0.5, 5.6)),
 }
-PAINTER = {9: (-3.1, 0.51, 2.74), 10: (-4.2, 0.51, 2.74), 11: (15.6, -4.2, 0.0)}
+PAINTER = {9: (-3.9, 0.51, 2.74), 10: (-2.6, 0.51, 2.74), 11: (-1.2, -3.0, 0.0)}
 
 
 def u_of(g, a, b):
@@ -44,8 +44,8 @@ def cam_of(shot, g):
 
 
 def stage_of(g):
-    """stripes: 0.3 at g 613 -> 1.0 at 674 (day 1), -> 2.0 at 728 (day 2), -> 3.0 at 770 (day 3), hold."""
-    pts = [(613, 0.3), (674, 1.0), (675, 1.0), (728, 2.0), (729, 2.0), (770, 3.0), (793, 3.0)]
+    """day 1: the zigzag front crosses the brush tip (0.40 -> 0.52); day 2: staircase bands grow (1.10 -> 1.75); day 3: -> 3.0."""
+    pts = [(613, 0.40), (674, 0.52), (675, 1.10), (728, 1.75), (729, 2.0), (770, 3.0), (793, 3.0)]
     for (g0, v0), (g1, v1) in zip(pts, pts[1:]):
         if g0 <= g <= g1:
             return lerp(v0, v1, (g - g0) / float(g1 - g0))
@@ -67,6 +67,7 @@ def pose_of(shot, g):
     p = dict(cast10.STORY10["painter_step_back_proud"][1])
     u = u_of(g, 729, 756)
     p["lean"] = lerp(-2.0, -8.0, u)
+    p["legs"] = {"preset": "step", "stride": lerp(0.55, -0.35, u)}
     p["t"] = t
     p["blink"] = blink(g, [800])
     return p
@@ -81,13 +82,24 @@ class Take(C.Take):
         self.pa = self.actors["pa"] = C.make_actor("pa", "painter10", os.path.join(TMP, "sprites%d" % shot))
         self.crew = C.Crew(self, os.path.join(TMP, "crew%d" % shot), ppd=96)
 
+        def _avoid(f, shot=shot):
+            g = f - 1000 * (shot - 1) - 1
+            px, py, pz = PAINTER[shot]
+            if shot == 11:
+                py -= 1.5 * u_of(g, 729, 752)
+            return (px, py, pz + 2.7)
+        self.crew.avoid = _avoid
+
     def pose(self, shot, gs):
         pa = self.pa
         for g in gs:
             f = C.bf(shot, g)
             loc, look = cam_of(shot, g)
             self.key_cam(f, loc, look, lens=LENS[shot])
-            C.place(pa, f, PAINTER[shot])
+            px, py, pz = PAINTER[shot]
+            if shot == 11:                                   # steps back from the hull (toward the lens) and stops, proud
+                py -= 1.5 * u_of(g, 729, 752)
+            C.place(pa, f, (px, py), z=pz)
             H.set_stripes(stage_of(g), frame=f, interp="LINEAR")
             H.set_smoke(1.0, frame=f)
             H.set_flames(1.0, frame=f)
