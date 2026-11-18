@@ -1,0 +1,5 @@
+shot 19: 1 frames, 1 to do
+00:00.497  cycles           | WARNING CUEW initialization failed: Error opening the library
+shot 19 built (105 people) in 44.4 s
+00:49.789  render           | Saved: '/home/user/github-commit-quest-v2/film/v3/film12/s19/draft/g_1340.png'
+g 1340  4.7 s  heads {'hanway': [343, 698], 'g0': [177, 696], 'g1': [224, 699], 'g2': [430, 698], 'g3': [306, 699], 'coach': [510, 549]}
