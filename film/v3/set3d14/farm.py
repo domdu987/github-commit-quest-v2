@@ -422,10 +422,10 @@ STAND = {   # name -> (x, y, z): floor points for actor cards (card bottom = fee
  'uncle_yard': (-1.2, 1.2, 0.0), 'uncle_night': (-2.4, 2.6, 0.0),
  'crowd_a': (-4.2, 1.2, 0.0), 'crowd_b': (-3.3, 0.2, 0.0), 'crowd_c': (-1.2, 1.2, 0.0), 'crowd_d': (-0.4, 0.1, 0.0), 'crowd_e': (-2.0, 0.0, 0.0),
  'villager_woman': (-4.0, 1.9, 0.0), 'villager_kid': (-3.0, 1.0, 0.0), 'villager_oldman': (-4.9, 1.3, 0.0), 'villager_woman2': (-2.4, 1.9, 0.0), 'villager_man': (-1.6, 2.4, 0.0),
- 'matriarch_push': (5.4, 4.3, 0.0), 'matriarch_arrive': (-0.6, 2.3, 0.0),
+ 'matriarch_push': (5.4, 4.0, 0.0), 'matriarch_push_in': (6.6, 4.3, 0.0), 'matriarch_arrive': (-0.6, 2.3, 0.0),
  'ele_2': (-6.2, 2.4, 0.0), 'ele_3': (8.6, 2.0, 0.0), 'ele_4': (-11.0, 0.6, 0.0), 'calf': (3.0, 1.6, 0.0),
  'herd_a': (-9.0, 0.2, 0.0), 'herd_b': (-2.5, -0.8, 0.0), 'herd_c': (4.5, 0.4, 0.0), 'herd_d': (9.5, 1.4, 0.0), 'herd_calf': (1.0, 1.4, 0.0),
- 'uncle_stool': (-22.4, 2.4, 0.46), 'uncle_field': (-27.0, 1.2, 0.0), 'uncle_fence_hive': (-23.0, 5.0, 0.0),
+ 'uncle_stool': (-22.4, 2.4, 0.46), 'uncle_field': (-30.0, 4.6, 0.0), 'uncle_fence_hive': (-23.0, 5.0, 0.0),
 }
 # heights in m. The real cast14 scale: 1 D = 0.583 m, matriarch 3.3 m, elephant_b/c/d 0.86/0.93/0.77 of that, calf 0.36 (1.2 m); real canvases CANVAS14 (+-11.3 D wide, 9.3 D tall for the matriarch)
 HEIGHT = dict(hero=1.75, uncle=1.72, woman=1.62, kid=1.15, oldman=1.6, man=1.75, matriarch=3.3, elephant_b=2.84, elephant_c=3.07, elephant_d=2.54, elephant=3.0, calf=1.2)
@@ -575,6 +575,27 @@ def _village(M, light, props):
         x = 14.0 + i * 0.95; props.rod(M['wood'], (x, 2.0 + rw.uniform(-.05, .05), 0), (x, 2.0, 0.9 + rw.uniform(-.1, .1)), 0.025, 0.022, 4)
     for z in (0.35, 0.6, 0.85): props.poly(M['woodgrey'], [(14.0 + k * 1.9, 2.0, z) for k in range(15)], 0.014, 0.014, 4, smooth=False)
 
+EDGE_PRESETS = ('hook_close', 'fence_line', 'hive_close', 'yard_two_shot', 'yard_crowd', 'uncle_hang', 'fence_low_night', 'uncle_nose_close')
+def _edge_dress(M, light, preset):
+    """props already in the set (kale, cob baskets, pumpkins, chickens, sacks, short tufts) 1.9-4.4 m from the camera at the frame edges: no flowers, clear lane + clear stand points."""
+    c = CAMS[preset]; cl = Vector(c['loc']); lk = Vector(c['look']) - cl; az = math.atan2(lk.y, lk.x); half = math.atan(10.125 / c['lens']); rr = rnd(900 + len(preset))
+    stands = [(STAND[st[1]][0], STAND[st[1]][1]) for st in PRESETS[preset]['staging']]; mb = MB('edge'); n = 0
+    for i in range(120):
+        if n >= 16: break
+        side = -1 if i % 2 else 1; ang = az + side * rr.uniform(0.5, 0.95) * half; d = rr.uniform(1.9, 4.6); x = cl.x + math.cos(ang) * d; y = cl.y + math.sin(ang) * d
+        if y > 3.6 and -15 < x < 12.5: continue
+        if y > 4.0 and -47 < x < -21: continue
+        if any((x - sx) ** 2 + (y - sy) ** 2 < 1.7 ** 2 for sx, sy in stands): continue
+        k = n % 6; n += 1
+        if k == 0: dx, dy = math.cos(ang + 1.5708), math.sin(ang + 1.5708); G.kale_row(mb, M, (x, y, 0.0), (x + dx * 1.3, y + dy * 1.3, 0.0), rr, 0.5)
+        elif k == 1: G.basket(mb, M, (x, y), True, int(x * 7))
+        elif k == 2: G.pumpkin_patch(mb, M, (x, y, 0.0), rr, 3)
+        elif k == 3 and light != 'NIGHT': G.chicken(mb, M, (x, y, 0.0), rr.uniform(0, 6.28), 1.15, int(abs(x)) % 4, 0.7 if int(abs(y)) % 2 else 0.0)
+        elif k == 4: G.sack(mb, M, (x, y, 0.0), rr.uniform(0, 6), 0.9)
+        else:
+            for q in range(4): G.grass_clump(mb, M, (x + rr.uniform(-.5, .5), y + rr.uniform(-.5, .5), 0.0), rr, rr.uniform(0.25, 0.45), 'grassgreen', 5)
+    mb.finish()
+
 def _trees(M, light):
     mb = MB('trees')
     for i, (x, y, s, yw) in enumerate([(-20.0, 20.0, 1.5, 0.3), (35.0, 5.0, 1.3, 1.1), (-33.0, 6.0, 1.1, 2.1), (0.0, 44.0, 1.7, 0.5), (-6.0, 60.0, 1.4, 1.5), (26.0, 34.0, 1.2, 0.9),
@@ -615,7 +636,7 @@ def _grass(M, light, cam_locs, cull=()):
     # camera-side foreground tufts: dense near every preset camera, thinning with distance
     for (cx, cy, fx, fy, n, dmax) in cam_locs:
         for i in range(n):
-            d = rg.uniform(4.6, max(dmax, 6.0)); a = math.atan2(fy, fx) + rg.uniform(-0.62, 0.62); x = cx + math.cos(a) * d; y = cy + math.sin(a) * d
+            d = rg.uniform(3.0 if n > 400 else 4.6, max(dmax, 6.0)); a = math.atan2(fy, fx) + rg.uniform(-0.62, 0.62); x = cx + math.cos(a) * d; y = cy + math.sin(a) * d
             if not ok(x, y) or -0.6 < y < 0.0 and rg.random() < 0.0: continue
             if -4.8 < y < -1.2 and 0.0 < x < 8.0 and rg.random() < 0.9: continue         # keep the cart track clear
             G.grass_clump(mb, M, (x, y, 0.0), rg, rg.uniform(0.25, 0.55), 'grassgreen' if rg.random() < 0.35 else 'grass', 5)
@@ -772,19 +793,19 @@ def _clear_actors():
 def _roles(): return HEIGHT
 CAMS = dict(
  village_wide=dict(loc=(3.0, -10.5, 5.2), look=(14.0, 12.0, 1.0), lens=20),
- fence_line=dict(loc=(-9.9, 0.9, 1.45), look=(-5.7, 5.0, 1.25), lens=22),
- fence_ring=dict(loc=(-1.5, -14.5, 18.0), look=(-1.5, 15.0, 0.0), lens=20),
- hive_close=dict(loc=(-9.7, 2.4, 1.2), look=(-5.2, 5.0, 1.45), lens=24),
- hook_close=dict(loc=(-5.2, -2.7, 1.5), look=(-3.9, 4.0, 1.15), lens=20),
- yard_two_shot=dict(loc=(-2.1, -2.5, 1.4), look=(-2.1, 1.5, 0.7), lens=22),
- yard_crowd=dict(loc=(-2.2, -4.4, 1.45), look=(-2.2, 2.0, 0.85), lens=22),
- field_night_wide=dict(loc=(-4.0, -13.5, 9.0), look=(-0.5, 10.0, 0.8), lens=22),
+ fence_line=dict(loc=(-9.9, 0.9, 1.45), look=(-5.7, 5.0, 1.55), lens=22),
+ fence_ring=dict(loc=(-1.5, -12.5, 18.0), look=(-1.5, 15.0, -1.5), lens=20),
+ hive_close=dict(loc=(-9.7, 2.4, 1.2), look=(-5.2, 5.0, 1.7), lens=24),
+ hook_close=dict(loc=(-5.2, -2.7, 1.5), look=(-3.9, 4.0, 1.5), lens=20),
+ yard_two_shot=dict(loc=(-2.1, -2.5, 1.4), look=(-2.1, 1.5, 1.0), lens=22),
+ yard_crowd=dict(loc=(-2.2, -4.4, 1.45), look=(-2.2, 2.0, 1.15), lens=22),
+ field_night_wide=dict(loc=(-4.0, -13.5, 9.0), look=(-0.5, 10.0, 1.6), lens=22),
  fence_low_night=dict(loc=(3.4, -4.4, 1.15), look=(-1.3, 2.4, 1.3), lens=22),
- push_side=dict(loc=(12.5, -2.2, 3.4), look=(-2.2, 7.5, 0.2), lens=26),
+ push_side=dict(loc=(10.5, -0.6, 8.2), look=(3.0, 5.0, 0.8), lens=26),
  trunk_close=dict(loc=(5.2, 0.2, 1.5), look=(6.9, 4.3, 1.4), lens=28),
  uncle_field_morning=dict(loc=(-27.0, -3.5, 4.8), look=(-33.5, 14.0, 0.0), lens=22),
- uncle_hang=dict(loc=(-20.4, -1.2, 1.5), look=(-22.4, 2.4, 1.5), lens=22),
- uncle_nose_close=dict(loc=(-23.4, 1.1, 2.0), look=(-22.2, 2.7, 2.15), lens=22),
+ uncle_hang=dict(loc=(-20.4, -1.2, 1.5), look=(-22.4, 2.4, 1.8), lens=22),
+ uncle_nose_close=dict(loc=(-23.55, 0.8, 1.9), look=(-22.4, 2.4, 1.42), lens=22),
 )
 NOTES = dict(
  village_wide='high wide: the beehive-fenced maize field, hero yard, the village of huts and tin house to the right, the uncle farm to the left, acacias, hills and the blue mountain',
@@ -796,7 +817,7 @@ NOTES = dict(
  yard_crowd='the crowd of villagers + uncle in the yard at DUSK with torches and pots (cr1)',
  field_night_wide='high wide at night: the whole fence ring, the herd walking toward it, fire and lantern pools, moon key',
  fence_low_night='low at the fence at night: the matriarch arriving in front of unit 1-2, hives and wire in the moonlight, moon in frame',
- push_side='3/4 view ALONG the front wire from the right: matriarch at the near end pushing, 6+ hives receding left; the bow and the travelling wave',
+ push_side='high 3/4 view (about 40 deg down) along the front wire from the right: from above the bowed wire shows over the matriarch\'s back at the push point (x 6.0), hives and roofs recede left',
  trunk_close='the whole matriarch head + trunk at the fence: bees at eye and trunk, wire and hives behind',
  uncle_field_morning="high-ish view of the uncle's trampled field in morning light: flattened stalks, broken thorn fence, big footprints, cobs",
  uncle_hang='medium: the uncle ON his stool by his own fence hanging his first hive, morning light',
@@ -866,8 +887,9 @@ def build(preset=None, light=None, clear=True, dress=True):
     build_fence(M)
     props = MB('props'); _hero_yard(M, light, props); _village(M, light, props); _uncle_farm(M, light, props); props.finish()
     _trees(M, light)
+    if dress and preset in EDGE_PRESETS: _edge_dress(M, light, preset)
     cc = CAMS[preset]; wide = preset in ('village_wide', 'field_night_wide', 'fence_ring', 'uncle_field_morning')
-    cl = [(cc['loc'][0], cc['loc'][1], cc['look'][0] - cc['loc'][0], cc['look'][1] - cc['loc'][1], (500 if wide else 70) if dress else 0, 26.0 if wide else 10.0)]
+    cl = [(cc['loc'][0], cc['loc'][1], cc['look'][0] - cc['loc'][0], cc['look'][1] - cc['loc'][1], (1500 if wide else 70) if dress else 0, 26.0 if wide else 10.0)]
     cull = [(cc['loc'][0], cc['loc'][1], 2.0 if wide else 4.8)] + [(STAND[st[1]][0], STAND[st[1]][1], 1.9) for st in PRESETS[preset]['staging']]
     if not wide: cull += [((cc['loc'][0] * 0.6 + STAND[st[1]][0] * 0.4), (cc['loc'][1] * 0.6 + STAND[st[1]][1] * 0.4), 1.6) for st in PRESETS[preset]['staging']]
     _grass(M, light, cl if dress else [], cull)

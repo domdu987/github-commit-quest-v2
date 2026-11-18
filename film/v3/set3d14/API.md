@@ -4,6 +4,12 @@ Files: `farm.py` (set, hooks, presets, cameras, stand points, placeholders, CLI)
 `contact.jpg` / `contact_small.jpg` (16 tiles, 720x1280 each, label under the tile, cyan line at y 880), `farm_work/` (`final/` the 16 PNGs, `final_log.txt`, `hue_rows.txt`, `contact_order.txt`, `stills/`), `tex/` (ground mask, placeholder card art), `styleboard/` (the approved board).
 Grown from `styleboard/sb.py`: same palette, same hard warm key + blue-violet ambient, painterly noise materials, red laterite, blue Mt Kenya. **No depth of field. No text in any picture.** Build takes about 4 s.
 
+## Round 3 changes (QA re-check). Backup of round 2: `bak_r1/`.
+- **Low tiles:** `look_at` raised 0.3-0.5 m on hook_close, fence_line, hive_close, yard_two_shot, yard_crowd, uncle_hang (floor now about 25 % of the frame); `_edge_dress` places set props (kale rows, cob baskets, pumpkins, chickens, sacks, short wide tufts) 1.9-4.6 m from the camera at the frame edges (`EDGE_PRESETS`), never within 1.7 m of a stand point, no flowers. The props are large because they are near; thin them with `dress=False` or lower `n` in `_edge_dress`.
+- **fence_ring / field_night_wide:** tilted so the blotchy near ground leaves the frame, 1500 short tufts from 3 m out.
+- **push_side:** camera is now (10.5,-0.6,8.2) -> (3,5,0.8), 26 mm: about 40 deg down, so the bowed wire is seen from above, over the matriarch's back at the push point (the wire is behind her in a low view; a high view is the only way to see the bow against her). `matriarch_push` stand is (5.4, 4.0). `farm_work/push_strip.jpg` shows push 0 / 0.2 / 0.4 / 0.7: the wire kinks at the push point and the roofs/hives tilt in sequence along the row; the bees show only on the far-left hives (near hives are hidden under their roofs from above). Cost 53 s (dense foreground) - over the 40 s budget; lower samples to 16 for this tile.
+- **uncle_nose_close:** camera 1.95 m from the head, pitched 14 deg down: head y 327-566 (about 240 px), so a 1.0 nose (1.76 head widths below the face) ends at about y 868. **uncle_field_morning:** uncle stand moved to (-30, 4.6): head y 711-757.
+
 ## Round 2 changes (QA-tech FAIL / QA-art FIX-FIRST). Backup of round 1: `bak_r0/`.
 - Push point moved to the front row x 6.0 (arc 20.0); wave speed 11 m/s, bow 1.6 m, hive swing up to 0.9 rad; wire radius is per preset (`wire_r`: default 4.6 cm, push_side 7.5, trunk_close 6, fence_ring 12).
 - Bees: 45 per hive end (4 x 16 hives = 1440 max), sized by distance to the camera (7 cm near, 17 cm at 17 m) so they read as bees; 14 resting bees per end when asleep; wings smaller. **Call `set_bees` after the camera exists/moves** (the CLI does).
@@ -86,15 +92,14 @@ Contact sheet: edit `farm_work/contact_order.txt` (spec|label), render the specs
 ## Render cost (720x1280 final, 24 samples, OIDN, 4 threads, nothing else running)
 Wall 25-41 s per frame (mean 33 s), 95-153 CPU s; build 3 s extra per process. Slowest: `hive_close` 40.7 s, `uncle_field_morning` 40.2 s, `field_night_wide` 39.6 s. Previews (360x640, 14 samples): 5-8 s.
 
-## Hue (tools/hue_report.py, farm_hue.py; `farm_work/hue_rows.txt`, 18 tiles)
-Magenta: max 6.1 % (village_wide DUSK), everything else 0.3-5.2 %; **all tiles under 10 %**.
-Shade hue (blue>=red shaded pixels, shaded fraction 1-18 %): in band 240-260: fence_low_night 241.1, field_night_wide 241.7, hive_close 258.9, hook_close 250.9, push_side x2 244.0, uncle_field_morning 258.5, uncle_hang 248.4, uncle_nose_close 252.6, village_wide DUSK 250.1, yard_two_shot 253.1.
-Out of band: fence_line fs0/fs1 267.0/264.4, fence_ring fs2/fs3 269.4/271.9, village_wide DAY 233.1, trunk_close 238.9, yard_crowd 232.5 (the blue placeholder dresses count as shade pixels). DAY frames still only have about 1-2 % measurable shade (shade on red laterite is desaturated violet-grey after the tint, not strongly blue).
-Light groups: DAY red 43 / orange 41 / blue 6 %, MORNING 29 / 47 / 9, DUSK 53 / 33 / 7, NIGHT blue 58 %, saturation 0.39-0.58.
+## Hue (tools/hue_report.py, farm_hue.py; `farm_work/hue_rows.txt`, 18 tiles, after round 3)
+Magenta: max 6.8 % (yard_crowd), village_wide DUSK 6.1 %; all others under 5 %: **every tile is under the 10 % limit**.
+Shade hue in 240-260: fence_line fs0/fs1 242.2/243.4, fence_low_night 241.1, field_night_wide 241.6, push_side x2 251.7, uncle_field_morning 253.1, village_wide DUSK 250.1.
+Out of band: fence_ring fs2/fs3 270.7/273.4, hive_close 230.5, hook_close 169.1, trunk_close 238.9, uncle_hang 160.3, uncle_nose_close 227.6, village_wide DAY 233.1, yard_crowd 238.4, yard_two_shot 201.3. The measured shade share is 0.5-1.3 % on DAY/MORNING tiles, and the new near-camera props (green kale, blue placeholder cards, grey stones) now dominate the few b>=r pixels (169 / 160 / 201 are those), so the number says little there; the shadow-tint grade itself is unchanged since round 2.
 
 ## Known weak points
-- Shade hue is out of band on the DAY fence tiles (264-272) and village_wide DAY (233); the metric counts few pixels there.
-- hook_close: villagers are 80-95 px head height, the hero on the ladder only 65 px (he is 6.5 m away); fence_line hero head 114 px.
-- Low presets are now clear red earth in the bottom 35 %: clean for the cast, but bare compared with round 1. Foreground detail can be added at the frame edges.
-- Placeholder cards are flat; the trampled field's footprints read as round pits/donuts; push_side bees and the wire bow read, but the wire is a thick cartoon line (7.5 cm).
-- No 6-frame shimmer test was run this round (thicker wire, fewer wider blades, no flower dots within 6 m were used to reduce it).
+- Shade hue is not measurable on DAY/MORNING tiles (see Hue); 10 of 18 are out of band.
+- Edge props are big and cover the bottom 25-30 % of the low tiles; they could be thinned or pushed to y > 4 m.
+- push_side is a high view: hives are hidden by their roofs, the near bees are few, and it costs 53 s.
+- Footprints still read as pits with a rim; the remaining plants in the uncle field read as low bushes.
+- hook_close: hero head 64 px; no 6-frame shimmer test yet.
