@@ -1,9 +1,11 @@
-# s19 QA (film 12, shots 19-21, g 1340-1578, take g 1334-1584, 251 frames)
-- qa_auto: PASS (see QA_AUTO.md). Its note 'no visible change at cuts 1410/1470' is a false positive: measured mean abs diff 48 / 64 across the cuts vs ~18 between rain-only neighbours.
-- Heads: every card head projects above y 880 (max head y 795 over all frames; wides exempt from the 0.35-0.59 H rule, gentleman/Hanway at y 690-760 = 0.54-0.59 H).
-- Mouths: all still (no quote in this take); blink only.
-- Light RAIN throughout, shade blue-violet, magenta 0.0 %. No DOF, no text. Camera moves continuously (0.35 sine + 0.65 linear), cards sway so nothing is static.
-- Acting: shot 19 gentleman (furled umbrella, staring) opens it at g 1368 (cue 45.5 s) as Hanway passes; shot 20 three more sprite gentlemen open at g 1418/1436/1452 plus 3D crowd umbrellas popping by set_crowd_umbrellas (k 0->0.45); shot 21 crane, k 0.45->1.0 by g ~1522, Hanway smiling, coach rank full.
-- Deviations: shots 19 and 20 use closer custom camera moves (s19_wide, s20_rev) instead of the presets; crowd cards at the umbrella slots are men only (a, c, d) standing, 3D umbrellas from the set; take ends at g 1584 (shot 21 last frame 1578 + 6 handles). 3D umbrellas of slots outside the shot's culled range are hidden.
-- Known weak: crowd cards are static (sway only); the 3D umbrellas read dark at street_high distance; red coach wheel large at left of shot 20.
-- Cost: 35.9 s/frame (2 threads, 20 samples, two processes).
+# s19 QA, round 2 (film 12, shots 19-21, g 1340-1578, take g 1334-1584, 251 frames, 26 samples)
+Director gate (round 1) fixes:
+1. Shot 21: ~105 cast12 men, each under his own adult-scale 3D umbrella (canopy radius 1.1-1.3 head units), colours green / ochre / oxblood / brown / blue / dark / grey; the set's oversized umbrellas are hidden (nothing over the coachman). Crane pulled back/higher so every head stays above y 880 (max head y 835 over all frames, checked from the per-frame json). Hanway (amber rim, smile walk) stands inside the crowd. The crowd drifts slowly with bob and sway, so the last 3.6 s are never still.
+2. Continuity at g 1470: same crowd, same sprite gentlemen (open from shot 20), umbrellas ~45 % open at the cut, ramp continues until the street is full (~g 1522).
+3. Shot 19: gentleman looks toward Hanway (not the lens) and opens his umbrella from g 1368 with arm, angle and umb_open blended from the furled pose to the open pose over 14 frames (handle always in the hand, no teleport). Closer camera, less empty cobble, no card at the right edge.
+4. Shot 20: gentlemen 2-4 open at g 1418 / 1436 / 1452 in the mid-ground and foreground at large size, plus the 3D crowd popping (k 0 -> 0.45); camera moved off the lamp post, red wheel smaller, nothing clipped at the right edge in the checked frames.
+5. Mouths: opening gentlemen use mouth flat / neutral expression until open, smile after; crowd uses 'unimpressed' with a flat mouth. No quote in this take. Minor: 26 samples instead of 20.
+- qa_auto PASS. Its note 'no visible change at cuts 1410 / 1470' is a false positive (the cuts change camera, set and cast; earlier measured mean abs diff 48 / 64 vs ~18 between rain-only neighbours).
+- Light RAIN throughout, magenta 0.0 %, no DOF, no text.
+- Not done: contact shadows were not changed; the lower third of shot 21 is still open cobble (cards whose head would fall below y 860 are culled); crowd cards are walk-in-place with bob and drift, not leg cycles.
+- Cost: 45.5 s/frame average (2 threads, 26 samples, two processes).
