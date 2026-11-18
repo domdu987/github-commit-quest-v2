@@ -5,3 +5,4 @@ Delivered: take.mkv g 0..139 (140 frames, 720x1280, 12 samples, libx264rgb crf 6
 - Cut at g 69 detected by qa_auto (PASS, no frozen/pops/blur/magenta). Heads: painter y ~560 (0.44 H) in shot 1, all heads < 880.
 - Mouths: none move (no quote). No DOF. Own review at 6 fps via contact.jpg: no problems found.
 - QA-art rework (round 2): stripe visible from frame 1 attached to the brush; stage capped at 0.48 in shot 1 (front cannot outrun the plank, which spans x -6..-0.2; 0.75 would be x +16); shot 2 camera moved right to drop the cyan water wedge at the left edge.
+- Round 2b (QA-tech): scene glossy bounces set to 0 in this take, which removes the translucent mirrored ship panels in the harbour water (shot 2, g100-139).

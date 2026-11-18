@@ -30,12 +30,13 @@ RANGES = {3: (C.g_bound(4.48) - H_IN, G_CUT - 1), 4: (G_CUT, G_END + H_OUT - 1)}
 G0 = RANGES[3][0]
 LOC = ("sea", "convoy_wide")
 LIGHT = "SEA_DAY"
-G_HIT = 226                        # the column shoots up (t = 0)
-G_DIVE = (262, 292)                # periscope sinks
+G_HIT = 222                        # the column shoots up (t = 0)
+G_DIVE = (244, 288)                # periscope sinks
 
-CAM3 = [((-64.0, -143.0, 10.0), (-16.0, 8.0, -3.0), 22.0), ((-57.0, -134.0, 9.0), (-8.0, 14.0, -2.0), 22.0)]
+CAM3 = [((-58.5, -107.5, 2.6), (-11.5, -19.0, 5.2), 23.0), ((-58.0, -104.0, 2.8), (-9.0, -15.0, 5.4), 28.0)]
 # shot 4: lower and closer to the periscope, looking at the far merchant c3 (tracked in x by the convoy's speed)
-CAM4 = [((-60.0, -136.0, 8.5), (20.0, 62.0, 1.0), 26.0), ((-57.0, -133.0, 8.0), (30.0, 62.0, 2.0), 28.0)]
+CAM4 = [((-72.0, -108.0, 4.2), (6.8, -46.4, 4.6), 22.0), ((-67.0, -103.0, 4.0), (10.0, -44.0, 4.4), 28.0)]
+C3_OFF = (14.0, -106.0, 0.0)           # the hit merchant is moved to a clear lane in front of the other ships so the hit reads
 
 
 def s_of(g):
@@ -49,9 +50,6 @@ def cam_of(shot, g):
     u = 0.30 * ez(x, "sine") + 0.70 * x
     loc = Vector([lerp(a[0][i], b[0][i], u) for i in range(3)])
     look = Vector([lerp(a[1][i], b[1][i], u) for i in range(3)])
-    if shot == 4:                                # the convoy sails +x at 4 D/s: keep the merchant framed
-        sh = 4.0 * (g - G_CUT) / 30.0 * 0.45
-        look.x += sh
     return loc, look, lerp(a[2], b[2], u)
 
 
@@ -83,13 +81,21 @@ class Take(C.Take):
         for g in gs:
             f = bf(shot, g)
             loc, look, lens = cam_of(shot, g)
-            self.key_cam(f, loc, look, lens=lens)
             H.set_convoy(s_of(g), frame=f)
+            if shot == 4:
+                self.scene.frame_set(f)
+                rt = H.ship_root('c3'); p = rt.location.copy()
+                rt.location = (p.x + C3_OFF[0], p.y + C3_OFF[1], p.z); rt.keyframe_insert('location', frame=f)
+            self.key_cam(f, loc, look, lens=lens)
             H.set_stripes(0.0, frame=f)
             H.set_smoke(1.0, frame=f)
             H.set_uboat(1.0, frame=f, periscope=peri_k(g) if shot == 4 else 1.0)
             H.set_torpedo(-1, frame=f)
             H.set_hit(hit_t(g) if shot == 4 else -1.0, frame=f)
+            for b in H.STATE['plume']:                    # bigger, readable plume + smoke
+                b['ob'].scale = tuple(v * 1.2 for v in b['ob'].scale); b['ob'].keyframe_insert('scale', frame=f)
+            rt = H.ship_root('c3'); rt.rotation_euler.x = 0.17 * ez((g - G_HIT - 4) / 60.0) if shot == 4 else 0.0
+            rt.keyframe_insert('rotation_euler', frame=f)          # the hit merchant lists
             self.scene.frame_set(f)
             bpy.context.view_layer.update()
             for a in self.bg:

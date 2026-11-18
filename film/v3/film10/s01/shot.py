@@ -116,6 +116,7 @@ def pose_bg(i, g):
 class Take(C.Take):
     def __init__(self, quality="preview", shot=1):
         C.Take.__init__(self, LOC[0], LOC[1], quality=quality, lens=24.0, name="cam_s01", light=LIGHT)
+        self.scene.cycles.glossy_bounces = 0               # QA: no mirrored translucent ship panels in the harbour water
         self.pl = Vector(self.A["marks"]["painter_plank"])
         self.pnt = self.actors["pnt"] = C.make_actor("pnt", "painter10", os.path.join(TMP, "sprites"), canvas=cast10.CANVAS10_PLANK["painter10"])
         self.bg = []
