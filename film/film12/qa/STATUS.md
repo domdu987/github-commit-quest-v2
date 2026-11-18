@@ -7,6 +7,6 @@
 | s09 | 2 | PASS r2 (QA-tech), source render12/team2 @ 18:18 |
 | s10 | 3 | r2: shots 10-11 PASS; shot 12 splash falling phase + leaf -> narrow re-render |
 | s13 | 3 | PASS r2 (QA-tech), source render12/team3 @ 19:54 |
-| s15 | 4 | r3: QA-art PASS (r2); QA-tech: coin pop + shot 17 head clip -> narrow re-render |
+| s15 | 4 | PASS r4 (QA-tech r4 + QA-art r2), source render12/team4 @ 20:42 |
 | s19 | 5 | PASS r2 (QA-tech), source render12/team5 @ 18:32 |
 | s22 | 6 | PASS r2 (QA-tech + QA-art), source render12/team6 @ 16:33 |
