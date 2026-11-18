@@ -84,7 +84,7 @@ def cam_of(shot, g, eye=None):
         u = 0.25 * lin + 0.75 * ez((g - 1355) / 70.0)          # holds on the crossing (g ~1320-1375), then follows the ship on
         return lerp_cam(CAM19[0], CAM19[1], u, raw=True)
     u = sm((g - G18) / float(G19 - G18))
-    pan = 30.0 * ez((g - (G19 - 26)) / 22.0)                             # last ~0.7 s: the view swings left so the aim buoy enters the circle
+    pan = 40.0 * ez((g - (G19 - 26)) / 22.0)                             # last ~0.7 s: the view swings left so the aim buoy enters the circle
     look = Vector((2.5 * s_of(g) + 1.0 - pan, 0.0, lerp(5.6, 5.0, u)))   # follows the ship's centre
     return Vector(eye), look, lerp(POV_LOOK[0][1], POV_LOOK[1][1], u)
 
@@ -196,6 +196,16 @@ class Take(C.Take):
             mk = H.STATE["markers"]
             for ob in list(mk["ghost_buoy"]) + [mk["ghost_lamp"]]:
                 ob.location = (ob.location.x + 11.0, ob.location.y - 10.0, ob.location.z)
+        if shot == 18:                                    # QA: the aim buoy is CYAN like the ghost (body recoloured)
+            import bpy
+            def _em(name, col, k):
+                m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+                e = nt.nodes.new("ShaderNodeEmission"); e.inputs["Color"].default_value = col; e.inputs["Strength"].default_value = k
+                o = nt.nodes.new("ShaderNodeOutputMaterial"); nt.links.new(e.outputs[0], o.inputs[0]); return m
+            gb = bpy.data.objects["ghost_buoy"]
+            cy, pw = _em("gb_cyan", (0.30, 0.78, 0.95, 1), 0.9), _em("gb_pale", (0.78, 0.97, 1.0, 1), 1.0)
+            for i, sl in enumerate(gb.material_slots):
+                sl.material = cy if i % 2 == 0 else pw
         for g in gs:
             f = bf(shot, g)
             s = s_of(g)
@@ -216,6 +226,8 @@ class Take(C.Take):
             H.set_lead_marker(lead_k(g), frame=f)
             H.set_ghost_marker(gmark_k(g) if shot != 17 else 0.0, frame=f)
             H.set_hit(-1.0, frame=f)
+            if shot == 18 and g >= G19 - 26:               # QA: the buoy lamp is a small steady glow, not a flare disc
+                H._keyval(H.STATE["M"]["halo_cyan"], "cyan_k", 0.35 * gmark_k(g), f)
             for L in self.lamps:                              # QA-art: no glare streaks from the buoy lamps on the water
                 L.data.energy = 0.0
                 L.data.keyframe_insert("energy", frame=f)

@@ -20,3 +20,6 @@ Known: ship is smaller on screen in 17/19 (about 25-30% width) because torpedo, 
 - Ghost = flat clean cyan silhouette (constant alpha = opacity, no fresnel falloff, so the real stripes do not show through), bright rim kept; its smoke puffs (cyan discs over the funnels), funnel cylinders, rigging wires and thin rail rods removed.
 - 18: lens 30 -> 31 so both ends of the real ship are inside the circle; ghost 0.8 directly over the hull; aim buoy in the circle at the end.
 - 19: miss staging unchanged; only the ghost style changed.
+
+## Round 6 (final gate): shot 18 g 1270-1295 only
+- The aim buoy is cyan (body and lamp) like the ghost; its halo is cut to ~1/3 (small steady glow, no flare disc); the swing now settles with the buoy near the crosshair (pan 40 D). All other frames unchanged.
